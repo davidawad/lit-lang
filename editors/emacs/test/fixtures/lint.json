@@ -1,0 +1,110 @@
+{
+  "ok": true,
+  "api_version": 1,
+  "op": "lint",
+  "result": {
+    "count": 11,
+    "diagnostics": [
+      {
+        "severity": "info",
+        "code": "no-authority",
+        "at": "cofc::patent-claim-fork->limitations-check",
+        "message": "choice `§1498(a) claim; plaintiff skips the optional administrative claim` has no authority cite"
+      },
+      {
+        "severity": "info",
+        "code": "no-authority",
+        "at": "cofc::bid-protest-injunctive-relief-fork->bid-protest-merits-briefing",
+        "message": "choice `No TRO/PI sought -- proceed directly to administrative-record briefing` has no authority cite"
+      },
+      {
+        "severity": "info",
+        "code": "no-authority",
+        "at": "cofc::adr-referral-decision->discovery-open",
+        "message": "choice `Decline ADR for now; proceed to discovery` has no authority cite"
+      },
+      {
+        "severity": "info",
+        "code": "no-authority",
+        "at": "cofc::discovery-closed->trial-bench",
+        "message": "choice `No dispositive motion filed; proceed directly to trial` has no authority cite"
+      },
+      {
+        "severity": "info",
+        "code": "mixed-node",
+        "at": "cofc::patent-claim-fork",
+        "message": "choices and world edges share this node; see scenario.mixed"
+      },
+      {
+        "severity": "info",
+        "code": "mixed-node",
+        "at": "cofc::service-on-united-states",
+        "message": "choices and world edges share this node; see scenario.mixed"
+      },
+      {
+        "severity": "info",
+        "code": "chance-unquantified",
+        "at": "cofc::government-response-fork",
+        "message": "0/2 outcome probabilities authored"
+      },
+      {
+        "severity": "info",
+        "code": "chance-unquantified",
+        "at": "cofc::case-type-fork",
+        "message": "0/2 outcome probabilities authored"
+      },
+      {
+        "severity": "info",
+        "code": "mixed-node",
+        "at": "cofc::discovery-open",
+        "message": "choices and world edges share this node; see scenario.mixed"
+      },
+      {
+        "severity": "info",
+        "code": "chance-unquantified",
+        "at": "cofc::patent-14b-notice-fork",
+        "message": "0/2 outcome probabilities authored"
+      },
+      {
+        "severity": "info",
+        "code": "mixed-node",
+        "at": "cofc::post-trial-motion-window",
+        "message": "choices and world edges share this node; see scenario.mixed"
+      }
+    ]
+  },
+  "warnings": [],
+  "provenance": {
+    "engine": "litgraph 0.2.0",
+    "api_version": 1,
+    "packs": [
+      {
+        "id": "cofc",
+        "schema_version": 2,
+        "fingerprint": "fnv1a64:67e772863ca46c68",
+        "sources": 17
+      }
+    ],
+    "nodes": 68,
+    "edges": 84,
+    "params": {
+      "carry_per_day": 0.0,
+      "loss_aversion": 2.25,
+      "opp_rate": 550.0,
+      "rate": 650.0,
+      "stakes": 1.0
+    },
+    "modes": {
+      "mixed": "nature-first",
+      "opponent": "auto",
+      "prob_fill": "residual",
+      "objective": {
+        "type": "expected"
+      },
+      "cost": "dollars",
+      "utility": "ev"
+    },
+    "calibration": []
+  },
+  "elapsed_ms": 10.675
+}

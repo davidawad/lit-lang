@@ -1,0 +1,179 @@
+;;; litgraph-integration-test.el --- Tests against the real litgraph binary -*- lexical-binding: t; -*-
+
+;; SPDX-License-Identifier: GPL-3.0-or-later
+
+;;; Commentary:
+
+;; Every test here skips itself when no `litgraph' binary is installed.
+
+;;; Code:
+
+(require 'litgraph-test-helper)
+(require 'litgraph)
+(require 'litgraph-view)
+(require 'litgraph-graph)
+(require 'litgraph-org)
+(require 'litgraph-scenario)
+(require 'ob-litgraph)
+
+(defmacro litgraph-it (&rest body)
+  "Run BODY against the real binary with a clean session, or skip."
+  (declare (indent 0))
+  `(let ((binary (litgraph-test-real-binary)))
+     (unless binary (ert-skip "litgraph binary not installed"))
+     (let ((litgraph-executable binary)
+           (litgraph--cache (make-hash-table :test #'equal))
+           (litgraph-scenario nil) (litgraph-packs nil) (litgraph-params nil)
+           (litgraph-default-scenario nil) (litgraph-default-packs nil))
+       ,@body)))
+
+(ert-deftest litgraph-it-describe-discovers-ops ()
+  (litgraph-it
+    (let ((response (litgraph-request-sync (litgraph-obj "op" (litgraph-obj "op" "describe")))))
+      (should (litgraph-get response 'ok))
+      (litgraph-with-describe #'ignore)
+      (litgraph-with-schema #'ignore)
+      (let ((deadline (+ (float-time) 10)))
+        (while (and (< (float-time) deadline)
+                    (not (and (litgraph--cached-describe)
+                              (gethash (litgraph--cache-key 'schema)
+                                       litgraph--cache))))
+          (accept-process-output nil 0.05)))
+      (should (member "solve" (litgraph-op-names)))
+      (should (member "deadlines" (litgraph-op-names)))
+      (should (assoc "cofc" (litgraph-pack-candidates)))
+      (should (assoc "cofc-1498-patent-case" (litgraph-scenario-candidates)))
+      (let ((schema (gethash (litgraph--cache-key 'schema) litgraph--cache)))
+        (dolist (op (litgraph-op-names))
+          (when (member op '("solve" "chain" "sweep" "deadlines"))
+            (should (litgraph-op-arg-specs schema op))))))))
+
+(ert-deftest litgraph-it-solve-chain-render ()
+  (litgraph-it
+    (dolist (op '("solve" "chain" "tornado" "simulate" "pareto" "structure"))
+      (let* ((request (litgraph-build-request op "cofc-1498-patent-case"))
+             (response (litgraph-request-sync request)))
+        (should (litgraph-get response 'ok))
+        (with-temp-buffer
+          (litgraph-view-mode)
+          (litgraph-view--render response request)
+          (should (string-match-p "^\\* Summary" (buffer-string)))
+          (should (string-match-p "cofc-1498-patent-case" (buffer-string))))))))
+
+(ert-deftest litgraph-it-engine-error-is-reported ()
+  (litgraph-it
+    (should-error (litgraph-request-sync
+                   (litgraph-build-request (litgraph-obj "op" "explain" "node" "nope")
+                                           "cofc-1498-patent-case"))
+                  :type 'error)))
+
+(ert-deftest litgraph-it-graph-dot-is-valid-graphviz ()
+  (litgraph-it
+    (let* ((graph (litgraph-get (litgraph-request-sync
+                                 (litgraph-build-request "graph" "cofc-1498-patent-case"))
+                                'result))
+           (solve (litgraph-request-sync (litgraph-build-request "solve" "cofc-1498-patent-case")))
+           (dot (litgraph-graph-dot graph (litgraph-graph--best-edge-ids solve) "t")))
+      (should (> (length (litgraph-graph-text graph nil)) 20))
+      (if (executable-find "dot")
+          (with-temp-buffer
+            (insert dot)
+            (should (zerop (call-process-region (point-min) (point-max) "dot" t nil nil
+                                                "-Tsvg" "-o" null-device))))
+        (ert-skip "graphviz not installed")))))
+
+(ert-deftest litgraph-it-deadlines-to-org ()
+  (litgraph-it
+    (let* ((file (make-temp-file "lg-it" nil ".org"))
+           (litgraph-org-file file) (litgraph-org-jump nil)
+           (litgraph-org-offer-agenda nil)
+           (request (litgraph-build-request
+                     (litgraph-obj "op" "deadlines" "trigger" "2026-01-05"
+                                   "node" "frcp-civil-procedure::service-completed")
+                     "frcp-civil-case"))
+           (response (litgraph-request-sync request)))
+      (unwind-protect
+          (progn
+            (delete-file file)
+            (should (>= (plist-get (litgraph-org-import response request "IT") :added) 1))
+            (let ((text (with-temp-buffer (insert-file-contents file) (buffer-string))))
+              (should (string-match-p "DEADLINE: <2026-01-26 Mon>" text))
+              (should (string-match-p "FRCP 6" text))))
+        (when-let* ((buffer (find-buffer-visiting file))) (kill-buffer buffer))
+        (delete-file file)))))
+
+(ert-deftest litgraph-it-flymake-validates-real-documents ()
+  (litgraph-it
+    (dolist (case '(("{\"scenario\": {\"bogus\": 1}, \"op\": {\"op\": \"solve\"}}" . t)
+                    ("{\"scenario\": \"cofc-1498-patent-case\", \"op\": {\"op\": \"solve\"}}" . nil)
+                    ("{\"scenario\": \"cofc-1498-patent-case\", \"remove_edges\": [\"nope::x\"], \"op\": {\"op\": \"solve\"}}" . t)))
+      (with-temp-buffer
+        (insert (car case))
+        (let ((reported 'unset) (litgraph-process-function #'litgraph--spawn))
+          (litgraph-flymake (lambda (diags &rest _) (setq reported diags)))
+          (let ((deadline (+ (float-time) 10)))
+            (while (and (eq reported 'unset) (< (float-time) deadline))
+              (accept-process-output nil 0.05)))
+          (should-not (eq reported 'unset))
+          (if (cdr case)
+              (should (seq-some (lambda (d) (eq :error (flymake-diagnostic-type d)))
+                                reported))
+            (should-not reported)))))))
+
+(ert-deftest litgraph-it-babel-block ()
+  (litgraph-it
+    (let ((org-confirm-babel-evaluate nil)
+          (litgraph-executable (litgraph-test-real-binary)))
+      (with-temp-buffer
+        (org-mode)
+        (insert "#+begin_src litgraph :var rate=900\n{\"scenario\":\"cofc-1498-patent-case\",\"op\":{\"op\":\"chain\"}}\n#+end_src\n")
+        (goto-char (point-min))
+        (org-babel-execute-src-block)
+        (should (string-match-p "| Outcome" (buffer-string)))
+        (should (string-match-p "| Utility" (buffer-string)))))))
+
+(ert-deftest litgraph-it-async-does-not-block ()
+  (litgraph-it
+    (let ((done nil) (ticks 0))
+      (litgraph-request (litgraph-build-request "simulate" "cofc-1498-patent-case")
+                        (lambda (_) (setq done t)))
+      ;; The call returned immediately; we can do other work until it lands.
+      (should-not done)
+      (let ((deadline (+ (float-time) 30)))
+        (while (and (not done) (< (float-time) deadline))
+          (cl-incf ticks)
+          (accept-process-output nil 0.01)))
+      (should done))))
+
+(ert-deftest litgraph-it-timeout-kills-process ()
+  (litgraph-it
+    (let ((litgraph-timeout 0.001) (result nil))
+      (litgraph-request (litgraph-build-request
+                         (litgraph-obj "op" "simulate" "runs" 50000000)
+                         "cofc-1498-patent-case")
+                        #'ignore
+                        (lambda (message &optional _r) (setq result message)))
+      (let ((deadline (+ (float-time) 15)))
+        (while (and (not result) (< (float-time) deadline))
+          (accept-process-output nil 0.05)))
+      (should (and result (string-match-p "timed out" result))))))
+
+(ert-deftest litgraph-it-graphviz-renders-svg-asynchronously ()
+  (litgraph-it
+    (unless (executable-find "dot") (ert-skip "graphviz not installed"))
+    (let* ((graph (litgraph-get (litgraph-request-sync
+                                 (litgraph-build-request "graph" "cofc-1498-patent-case"))
+                                'result))
+           (dot (litgraph-graph-dot graph nil "t"))
+           (result 'pending))
+      (litgraph-graph--render-image dot (lambda (data) (setq result data)))
+      (should (eq result 'pending))
+      (let ((deadline (+ (float-time) 30)))
+        (while (and (eq result 'pending) (< (float-time) deadline))
+          (accept-process-output nil 0.05)))
+      (should (stringp result))
+      (should (string-match-p "<svg" result)))))
+
+(provide 'litgraph-integration-test)
+
+;;; litgraph-integration-test.el ends here

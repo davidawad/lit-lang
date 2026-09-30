@@ -1,0 +1,656 @@
+{
+  "ok": true,
+  "api_version": 1,
+  "op": "deadlines",
+  "result": {
+    "trigger": "2026-01-05",
+    "node": "frcp-civil-procedure::rule12-response-window",
+    "reachable": true,
+    "count": 25,
+    "deadlines": [
+      {
+        "edge": {
+          "id": "frcp-civil-procedure::rule12-response-window->answer-filed#0",
+          "label": "File answer within 21 days (baseline)",
+          "from": "frcp-civil-procedure::rule12-response-window",
+          "to": "frcp-civil-procedure::answer-filed",
+          "authority": "FRCP 12(a)(1)(A)(i)"
+        },
+        "rule_set": "frcp6",
+        "rule_set_label": "FRCP 6",
+        "source_url": "https://www.law.cornell.edu/rules/frcp/rule_6",
+        "deadline_length": 21.0,
+        "unit": "calendar",
+        "trigger": "2026-01-05",
+        "base_date": "2026-01-26",
+        "due_date": "2026-01-26",
+        "last_day_rolled": false,
+        "service_days_added": false,
+        "clerk_inaccessibility_applied": false,
+        "steps": [
+          "FRCP 6(a)(1)(A): exclude the trigger date 2026-01-05",
+          "FRCP 6(a)(1)(B): count 21 calendar day(s) after the trigger, including weekends/holidays -> 2026-01-26"
+        ]
+      },
+      {
+        "edge": {
+          "id": "frcp-civil-procedure::12b-motion-filed",
+          "label": "File pre-answer Rule 12(b) motion instead of answering",
+          "from": "frcp-civil-procedure::rule12-response-window",
+          "to": "frcp-civil-procedure::motion-to-dismiss-filed{waived-12h-defenses}",
+          "authority": "FRCP 12(b)"
+        },
+        "rule_set": "frcp6",
+        "rule_set_label": "FRCP 6",
+        "source_url": "https://www.law.cornell.edu/rules/frcp/rule_6",
+        "deadline_length": 21.0,
+        "unit": "calendar",
+        "trigger": "2026-01-05",
+        "base_date": "2026-01-26",
+        "due_date": "2026-01-26",
+        "last_day_rolled": false,
+        "service_days_added": false,
+        "clerk_inaccessibility_applied": false,
+        "steps": [
+          "FRCP 6(a)(1)(A): exclude the trigger date 2026-01-05",
+          "FRCP 6(a)(1)(B): count 21 calendar day(s) after the trigger, including weekends/holidays -> 2026-01-26"
+        ]
+      },
+      {
+        "edge": {
+          "id": "frcp-civil-procedure::mtd-ruling->answer-filed#0{waived-12h-defenses}",
+          "label": "Motion denied -- answer due within 14 days",
+          "from": "frcp-civil-procedure::mtd-ruling{waived-12h-defenses}",
+          "to": "frcp-civil-procedure::answer-filed{waived-12h-defenses}",
+          "authority": "FRCP 12(a)(4)(A)"
+        },
+        "rule_set": "frcp6",
+        "rule_set_label": "FRCP 6",
+        "source_url": "https://www.law.cornell.edu/rules/frcp/rule_6",
+        "deadline_length": 14.0,
+        "unit": "calendar",
+        "trigger": "2026-01-05",
+        "base_date": "2026-01-19",
+        "due_date": "2026-01-20",
+        "last_day_rolled": true,
+        "service_days_added": false,
+        "clerk_inaccessibility_applied": false,
+        "steps": [
+          "FRCP 6(a)(1)(A): exclude the trigger date 2026-01-05",
+          "FRCP 6(a)(1)(B): count 14 calendar day(s) after the trigger, including weekends/holidays -> 2026-01-19",
+          "FRCP 6(a)(1)(C): last day fell on a Saturday, Sunday, or legal holiday; roll forward -> 2026-01-20"
+        ]
+      },
+      {
+        "edge": {
+          "id": "frcp-civil-procedure::amended-complaint-filed->rule12-response-window#0{waived-12h-defenses}",
+          "label": "Responsive-pleading window reopens for the amended pleading",
+          "from": "frcp-civil-procedure::amended-complaint-filed{waived-12h-defenses}",
+          "to": "frcp-civil-procedure::rule12-response-window{waived-12h-defenses}",
+          "authority": "FRCP 15(a)(3)"
+        },
+        "rule_set": "frcp6",
+        "rule_set_label": "FRCP 6",
+        "source_url": "https://www.law.cornell.edu/rules/frcp/rule_6",
+        "deadline_length": 14.0,
+        "unit": "calendar",
+        "trigger": "2026-01-05",
+        "base_date": "2026-01-19",
+        "due_date": "2026-01-20",
+        "last_day_rolled": true,
+        "service_days_added": false,
+        "clerk_inaccessibility_applied": false,
+        "steps": [
+          "FRCP 6(a)(1)(A): exclude the trigger date 2026-01-05",
+          "FRCP 6(a)(1)(B): count 14 calendar day(s) after the trigger, including weekends/holidays -> 2026-01-19",
+          "FRCP 6(a)(1)(C): last day fell on a Saturday, Sunday, or legal holiday; roll forward -> 2026-01-20"
+        ]
+      },
+      {
+        "edge": {
+          "id": "frcp-civil-procedure::rule12-response-window->answer-filed#0{waived-12h-defenses}",
+          "label": "File answer within 21 days (baseline)",
+          "from": "frcp-civil-procedure::rule12-response-window{waived-12h-defenses}",
+          "to": "frcp-civil-procedure::answer-filed{waived-12h-defenses}",
+          "authority": "FRCP 12(a)(1)(A)(i)"
+        },
+        "rule_set": "frcp6",
+        "rule_set_label": "FRCP 6",
+        "source_url": "https://www.law.cornell.edu/rules/frcp/rule_6",
+        "deadline_length": 21.0,
+        "unit": "calendar",
+        "trigger": "2026-01-05",
+        "base_date": "2026-01-26",
+        "due_date": "2026-01-26",
+        "last_day_rolled": false,
+        "service_days_added": false,
+        "clerk_inaccessibility_applied": false,
+        "steps": [
+          "FRCP 6(a)(1)(A): exclude the trigger date 2026-01-05",
+          "FRCP 6(a)(1)(B): count 21 calendar day(s) after the trigger, including weekends/holidays -> 2026-01-26"
+        ]
+      },
+      {
+        "edge": {
+          "id": "frcp-civil-procedure::12b-motion-filed{waived-12h-defenses}",
+          "label": "File pre-answer Rule 12(b) motion instead of answering",
+          "from": "frcp-civil-procedure::rule12-response-window{waived-12h-defenses}",
+          "to": "frcp-civil-procedure::motion-to-dismiss-filed{waived-12h-defenses}",
+          "authority": "FRCP 12(b)"
+        },
+        "rule_set": "frcp6",
+        "rule_set_label": "FRCP 6",
+        "source_url": "https://www.law.cornell.edu/rules/frcp/rule_6",
+        "deadline_length": 21.0,
+        "unit": "calendar",
+        "trigger": "2026-01-05",
+        "base_date": "2026-01-26",
+        "due_date": "2026-01-26",
+        "last_day_rolled": false,
+        "service_days_added": false,
+        "clerk_inaccessibility_applied": false,
+        "steps": [
+          "FRCP 6(a)(1)(A): exclude the trigger date 2026-01-05",
+          "FRCP 6(a)(1)(B): count 21 calendar day(s) after the trigger, including weekends/holidays -> 2026-01-26"
+        ]
+      },
+      {
+        "edge": {
+          "id": "frcp-civil-procedure::jury-demand-timely{waived-12h-defenses}",
+          "label": "Serve and file timely written jury demand",
+          "from": "frcp-civil-procedure::jury-demand-decision{waived-12h-defenses}",
+          "to": "frcp-civil-procedure::amendment-as-of-right-window{waived-12h-defenses}",
+          "authority": "FRCP 38(b)"
+        },
+        "rule_set": "frcp6",
+        "rule_set_label": "FRCP 6",
+        "source_url": "https://www.law.cornell.edu/rules/frcp/rule_6",
+        "deadline_length": 14.0,
+        "unit": "calendar",
+        "trigger": "2026-01-05",
+        "base_date": "2026-01-19",
+        "due_date": "2026-01-20",
+        "last_day_rolled": true,
+        "service_days_added": false,
+        "clerk_inaccessibility_applied": false,
+        "steps": [
+          "FRCP 6(a)(1)(A): exclude the trigger date 2026-01-05",
+          "FRCP 6(a)(1)(B): count 14 calendar day(s) after the trigger, including weekends/holidays -> 2026-01-19",
+          "FRCP 6(a)(1)(C): last day fell on a Saturday, Sunday, or legal holiday; roll forward -> 2026-01-20"
+        ]
+      },
+      {
+        "edge": {
+          "id": "frcp-civil-procedure::amendment-as-of-right-window->amended-complaint-filed#0{waived-12h-defenses}",
+          "label": "Amend as of right within the 21-day matter-of-course window",
+          "from": "frcp-civil-procedure::amendment-as-of-right-window{waived-12h-defenses}",
+          "to": "frcp-civil-procedure::amended-complaint-filed{waived-12h-defenses}",
+          "authority": "FRCP 15(a)(1)(B)"
+        },
+        "rule_set": "frcp6",
+        "rule_set_label": "FRCP 6",
+        "source_url": "https://www.law.cornell.edu/rules/frcp/rule_6",
+        "deadline_length": 21.0,
+        "unit": "calendar",
+        "trigger": "2026-01-05",
+        "base_date": "2026-01-26",
+        "due_date": "2026-01-26",
+        "last_day_rolled": false,
+        "service_days_added": false,
+        "clerk_inaccessibility_applied": false,
+        "steps": [
+          "FRCP 6(a)(1)(A): exclude the trigger date 2026-01-05",
+          "FRCP 6(a)(1)(B): count 21 calendar day(s) after the trigger, including weekends/holidays -> 2026-01-26"
+        ]
+      },
+      {
+        "edge": {
+          "id": "frcp-civil-procedure::rule26f-conference->initial-disclosures#0{waived-12h-defenses}",
+          "label": "Conduct Rule 26(f) conference and submit discovery plan",
+          "from": "frcp-civil-procedure::rule26f-conference{waived-12h-defenses}",
+          "to": "frcp-civil-procedure::initial-disclosures{waived-12h-defenses}",
+          "authority": "FRCP 26(f)(1); 26(f)(2)"
+        },
+        "rule_set": "frcp6",
+        "rule_set_label": "FRCP 6",
+        "source_url": "https://www.law.cornell.edu/rules/frcp/rule_6",
+        "deadline_length": 14.0,
+        "unit": "calendar",
+        "trigger": "2026-01-05",
+        "base_date": "2026-01-19",
+        "due_date": "2026-01-20",
+        "last_day_rolled": true,
+        "service_days_added": false,
+        "clerk_inaccessibility_applied": false,
+        "steps": [
+          "FRCP 6(a)(1)(A): exclude the trigger date 2026-01-05",
+          "FRCP 6(a)(1)(B): count 14 calendar day(s) after the trigger, including weekends/holidays -> 2026-01-19",
+          "FRCP 6(a)(1)(C): last day fell on a Saturday, Sunday, or legal holiday; roll forward -> 2026-01-20"
+        ]
+      },
+      {
+        "edge": {
+          "id": "frcp-civil-procedure::notice-of-appeal-window->notice-of-appeal-filed#0{waived-12h-defenses}",
+          "label": "File notice of appeal within 30 days of entry of judgment",
+          "from": "frcp-civil-procedure::notice-of-appeal-window{waived-12h-defenses}",
+          "to": "frcp-civil-procedure::notice-of-appeal-filed{waived-12h-defenses}",
+          "authority": "FRAP 4(a)(1)(A)"
+        },
+        "rule_set": "frcp6",
+        "rule_set_label": "FRCP 6",
+        "source_url": "https://www.law.cornell.edu/rules/frcp/rule_6",
+        "deadline_length": 30.0,
+        "unit": "calendar",
+        "trigger": "2026-01-05",
+        "base_date": "2026-02-04",
+        "due_date": "2026-02-04",
+        "last_day_rolled": false,
+        "service_days_added": false,
+        "clerk_inaccessibility_applied": false,
+        "steps": [
+          "FRCP 6(a)(1)(A): exclude the trigger date 2026-01-05",
+          "FRCP 6(a)(1)(B): count 30 calendar day(s) after the trigger, including weekends/holidays -> 2026-02-04"
+        ]
+      },
+      {
+        "edge": {
+          "id": "frcp-civil-procedure::cross-appeal-window->cross-appeal-filed#0{waived-12h-defenses}",
+          "label": "File cross-appeal",
+          "from": "frcp-civil-procedure::cross-appeal-window{waived-12h-defenses}",
+          "to": "frcp-civil-procedure::cross-appeal-filed{waived-12h-defenses}",
+          "authority": "FRAP 4(a)(3)"
+        },
+        "rule_set": "frcp6",
+        "rule_set_label": "FRCP 6",
+        "source_url": "https://www.law.cornell.edu/rules/frcp/rule_6",
+        "deadline_length": 14.0,
+        "unit": "calendar",
+        "trigger": "2026-01-05",
+        "base_date": "2026-01-19",
+        "due_date": "2026-01-20",
+        "last_day_rolled": true,
+        "service_days_added": false,
+        "clerk_inaccessibility_applied": false,
+        "steps": [
+          "FRCP 6(a)(1)(A): exclude the trigger date 2026-01-05",
+          "FRCP 6(a)(1)(B): count 14 calendar day(s) after the trigger, including weekends/holidays -> 2026-01-19",
+          "FRCP 6(a)(1)(C): last day fell on a Saturday, Sunday, or legal holiday; roll forward -> 2026-01-20"
+        ]
+      },
+      {
+        "edge": {
+          "id": "frcp-civil-procedure::post-trial-motion-window->rule50b-jmol-filed#0{waived-12h-defenses}",
+          "label": "Renew motion for JMOL (requires a preceding Rule 50(a) motion)",
+          "from": "frcp-civil-procedure::post-trial-motion-window{waived-12h-defenses}",
+          "to": "frcp-civil-procedure::rule50b-jmol-filed{waived-12h-defenses}",
+          "authority": "FRCP 50(b)"
+        },
+        "rule_set": "frcp6",
+        "rule_set_label": "FRCP 6",
+        "source_url": "https://www.law.cornell.edu/rules/frcp/rule_6",
+        "deadline_length": 28.0,
+        "unit": "calendar",
+        "trigger": "2026-01-05",
+        "base_date": "2026-02-02",
+        "due_date": "2026-02-02",
+        "last_day_rolled": false,
+        "service_days_added": false,
+        "clerk_inaccessibility_applied": false,
+        "steps": [
+          "FRCP 6(a)(1)(A): exclude the trigger date 2026-01-05",
+          "FRCP 6(a)(1)(B): count 28 calendar day(s) after the trigger, including weekends/holidays -> 2026-02-02"
+        ]
+      },
+      {
+        "edge": {
+          "id": "frcp-civil-procedure::post-trial-motion-window->rule59-new-trial-filed#0{waived-12h-defenses}",
+          "label": "Move for a new trial",
+          "from": "frcp-civil-procedure::post-trial-motion-window{waived-12h-defenses}",
+          "to": "frcp-civil-procedure::rule59-new-trial-filed{waived-12h-defenses}",
+          "authority": "FRCP 59(b)"
+        },
+        "rule_set": "frcp6",
+        "rule_set_label": "FRCP 6",
+        "source_url": "https://www.law.cornell.edu/rules/frcp/rule_6",
+        "deadline_length": 28.0,
+        "unit": "calendar",
+        "trigger": "2026-01-05",
+        "base_date": "2026-02-02",
+        "due_date": "2026-02-02",
+        "last_day_rolled": false,
+        "service_days_added": false,
+        "clerk_inaccessibility_applied": false,
+        "steps": [
+          "FRCP 6(a)(1)(A): exclude the trigger date 2026-01-05",
+          "FRCP 6(a)(1)(B): count 28 calendar day(s) after the trigger, including weekends/holidays -> 2026-02-02"
+        ]
+      },
+      {
+        "edge": {
+          "id": "frcp-civil-procedure::post-trial-motion-window->rule59e-amend-filed#0{waived-12h-defenses}",
+          "label": "Move to alter or amend the judgment",
+          "from": "frcp-civil-procedure::post-trial-motion-window{waived-12h-defenses}",
+          "to": "frcp-civil-procedure::rule59e-amend-filed{waived-12h-defenses}",
+          "authority": "FRCP 59(e)"
+        },
+        "rule_set": "frcp6",
+        "rule_set_label": "FRCP 6",
+        "source_url": "https://www.law.cornell.edu/rules/frcp/rule_6",
+        "deadline_length": 28.0,
+        "unit": "calendar",
+        "trigger": "2026-01-05",
+        "base_date": "2026-02-02",
+        "due_date": "2026-02-02",
+        "last_day_rolled": false,
+        "service_days_added": false,
+        "clerk_inaccessibility_applied": false,
+        "steps": [
+          "FRCP 6(a)(1)(A): exclude the trigger date 2026-01-05",
+          "FRCP 6(a)(1)(B): count 28 calendar day(s) after the trigger, including weekends/holidays -> 2026-02-02"
+        ]
+      },
+      {
+        "edge": {
+          "id": "frcp-civil-procedure::post-trial-motion-window->rule60-relief-filed#0{waived-12h-defenses}",
+          "label": "Move for relief from judgment",
+          "from": "frcp-civil-procedure::post-trial-motion-window{waived-12h-defenses}",
+          "to": "frcp-civil-procedure::rule60-relief-filed{waived-12h-defenses}",
+          "authority": "FRCP 60(b)"
+        },
+        "rule_set": "frcp6",
+        "rule_set_label": "FRCP 6",
+        "source_url": "https://www.law.cornell.edu/rules/frcp/rule_6",
+        "deadline_length": 365.0,
+        "unit": "calendar",
+        "trigger": "2026-01-05",
+        "base_date": "2027-01-05",
+        "due_date": "2027-01-05",
+        "last_day_rolled": false,
+        "service_days_added": false,
+        "clerk_inaccessibility_applied": false,
+        "steps": [
+          "FRCP 6(a)(1)(A): exclude the trigger date 2026-01-05",
+          "FRCP 6(a)(1)(B): count 365 calendar day(s) after the trigger, including weekends/holidays -> 2027-01-05"
+        ]
+      },
+      {
+        "edge": {
+          "id": "frcp-civil-procedure::jury-demand-timely",
+          "label": "Serve and file timely written jury demand",
+          "from": "frcp-civil-procedure::jury-demand-decision",
+          "to": "frcp-civil-procedure::amendment-as-of-right-window",
+          "authority": "FRCP 38(b)"
+        },
+        "rule_set": "frcp6",
+        "rule_set_label": "FRCP 6",
+        "source_url": "https://www.law.cornell.edu/rules/frcp/rule_6",
+        "deadline_length": 14.0,
+        "unit": "calendar",
+        "trigger": "2026-01-05",
+        "base_date": "2026-01-19",
+        "due_date": "2026-01-20",
+        "last_day_rolled": true,
+        "service_days_added": false,
+        "clerk_inaccessibility_applied": false,
+        "steps": [
+          "FRCP 6(a)(1)(A): exclude the trigger date 2026-01-05",
+          "FRCP 6(a)(1)(B): count 14 calendar day(s) after the trigger, including weekends/holidays -> 2026-01-19",
+          "FRCP 6(a)(1)(C): last day fell on a Saturday, Sunday, or legal holiday; roll forward -> 2026-01-20"
+        ]
+      },
+      {
+        "edge": {
+          "id": "frcp-civil-procedure::amendment-as-of-right-window->amended-complaint-filed#0",
+          "label": "Amend as of right within the 21-day matter-of-course window",
+          "from": "frcp-civil-procedure::amendment-as-of-right-window",
+          "to": "frcp-civil-procedure::amended-complaint-filed",
+          "authority": "FRCP 15(a)(1)(B)"
+        },
+        "rule_set": "frcp6",
+        "rule_set_label": "FRCP 6",
+        "source_url": "https://www.law.cornell.edu/rules/frcp/rule_6",
+        "deadline_length": 21.0,
+        "unit": "calendar",
+        "trigger": "2026-01-05",
+        "base_date": "2026-01-26",
+        "due_date": "2026-01-26",
+        "last_day_rolled": false,
+        "service_days_added": false,
+        "clerk_inaccessibility_applied": false,
+        "steps": [
+          "FRCP 6(a)(1)(A): exclude the trigger date 2026-01-05",
+          "FRCP 6(a)(1)(B): count 21 calendar day(s) after the trigger, including weekends/holidays -> 2026-01-26"
+        ]
+      },
+      {
+        "edge": {
+          "id": "frcp-civil-procedure::rule26f-conference->initial-disclosures#0",
+          "label": "Conduct Rule 26(f) conference and submit discovery plan",
+          "from": "frcp-civil-procedure::rule26f-conference",
+          "to": "frcp-civil-procedure::initial-disclosures",
+          "authority": "FRCP 26(f)(1); 26(f)(2)"
+        },
+        "rule_set": "frcp6",
+        "rule_set_label": "FRCP 6",
+        "source_url": "https://www.law.cornell.edu/rules/frcp/rule_6",
+        "deadline_length": 14.0,
+        "unit": "calendar",
+        "trigger": "2026-01-05",
+        "base_date": "2026-01-19",
+        "due_date": "2026-01-20",
+        "last_day_rolled": true,
+        "service_days_added": false,
+        "clerk_inaccessibility_applied": false,
+        "steps": [
+          "FRCP 6(a)(1)(A): exclude the trigger date 2026-01-05",
+          "FRCP 6(a)(1)(B): count 14 calendar day(s) after the trigger, including weekends/holidays -> 2026-01-19",
+          "FRCP 6(a)(1)(C): last day fell on a Saturday, Sunday, or legal holiday; roll forward -> 2026-01-20"
+        ]
+      },
+      {
+        "edge": {
+          "id": "frcp-civil-procedure::notice-of-appeal-window->notice-of-appeal-filed#0",
+          "label": "File notice of appeal within 30 days of entry of judgment",
+          "from": "frcp-civil-procedure::notice-of-appeal-window",
+          "to": "frcp-civil-procedure::notice-of-appeal-filed",
+          "authority": "FRAP 4(a)(1)(A)"
+        },
+        "rule_set": "frcp6",
+        "rule_set_label": "FRCP 6",
+        "source_url": "https://www.law.cornell.edu/rules/frcp/rule_6",
+        "deadline_length": 30.0,
+        "unit": "calendar",
+        "trigger": "2026-01-05",
+        "base_date": "2026-02-04",
+        "due_date": "2026-02-04",
+        "last_day_rolled": false,
+        "service_days_added": false,
+        "clerk_inaccessibility_applied": false,
+        "steps": [
+          "FRCP 6(a)(1)(A): exclude the trigger date 2026-01-05",
+          "FRCP 6(a)(1)(B): count 30 calendar day(s) after the trigger, including weekends/holidays -> 2026-02-04"
+        ]
+      },
+      {
+        "edge": {
+          "id": "frcp-civil-procedure::cross-appeal-window->cross-appeal-filed#0",
+          "label": "File cross-appeal",
+          "from": "frcp-civil-procedure::cross-appeal-window",
+          "to": "frcp-civil-procedure::cross-appeal-filed",
+          "authority": "FRAP 4(a)(3)"
+        },
+        "rule_set": "frcp6",
+        "rule_set_label": "FRCP 6",
+        "source_url": "https://www.law.cornell.edu/rules/frcp/rule_6",
+        "deadline_length": 14.0,
+        "unit": "calendar",
+        "trigger": "2026-01-05",
+        "base_date": "2026-01-19",
+        "due_date": "2026-01-20",
+        "last_day_rolled": true,
+        "service_days_added": false,
+        "clerk_inaccessibility_applied": false,
+        "steps": [
+          "FRCP 6(a)(1)(A): exclude the trigger date 2026-01-05",
+          "FRCP 6(a)(1)(B): count 14 calendar day(s) after the trigger, including weekends/holidays -> 2026-01-19",
+          "FRCP 6(a)(1)(C): last day fell on a Saturday, Sunday, or legal holiday; roll forward -> 2026-01-20"
+        ]
+      },
+      {
+        "edge": {
+          "id": "frcp-civil-procedure::post-trial-motion-window->rule50b-jmol-filed#0",
+          "label": "Renew motion for JMOL (requires a preceding Rule 50(a) motion)",
+          "from": "frcp-civil-procedure::post-trial-motion-window",
+          "to": "frcp-civil-procedure::rule50b-jmol-filed",
+          "authority": "FRCP 50(b)"
+        },
+        "rule_set": "frcp6",
+        "rule_set_label": "FRCP 6",
+        "source_url": "https://www.law.cornell.edu/rules/frcp/rule_6",
+        "deadline_length": 28.0,
+        "unit": "calendar",
+        "trigger": "2026-01-05",
+        "base_date": "2026-02-02",
+        "due_date": "2026-02-02",
+        "last_day_rolled": false,
+        "service_days_added": false,
+        "clerk_inaccessibility_applied": false,
+        "steps": [
+          "FRCP 6(a)(1)(A): exclude the trigger date 2026-01-05",
+          "FRCP 6(a)(1)(B): count 28 calendar day(s) after the trigger, including weekends/holidays -> 2026-02-02"
+        ]
+      },
+      {
+        "edge": {
+          "id": "frcp-civil-procedure::post-trial-motion-window->rule59-new-trial-filed#0",
+          "label": "Move for a new trial",
+          "from": "frcp-civil-procedure::post-trial-motion-window",
+          "to": "frcp-civil-procedure::rule59-new-trial-filed",
+          "authority": "FRCP 59(b)"
+        },
+        "rule_set": "frcp6",
+        "rule_set_label": "FRCP 6",
+        "source_url": "https://www.law.cornell.edu/rules/frcp/rule_6",
+        "deadline_length": 28.0,
+        "unit": "calendar",
+        "trigger": "2026-01-05",
+        "base_date": "2026-02-02",
+        "due_date": "2026-02-02",
+        "last_day_rolled": false,
+        "service_days_added": false,
+        "clerk_inaccessibility_applied": false,
+        "steps": [
+          "FRCP 6(a)(1)(A): exclude the trigger date 2026-01-05",
+          "FRCP 6(a)(1)(B): count 28 calendar day(s) after the trigger, including weekends/holidays -> 2026-02-02"
+        ]
+      },
+      {
+        "edge": {
+          "id": "frcp-civil-procedure::post-trial-motion-window->rule59e-amend-filed#0",
+          "label": "Move to alter or amend the judgment",
+          "from": "frcp-civil-procedure::post-trial-motion-window",
+          "to": "frcp-civil-procedure::rule59e-amend-filed",
+          "authority": "FRCP 59(e)"
+        },
+        "rule_set": "frcp6",
+        "rule_set_label": "FRCP 6",
+        "source_url": "https://www.law.cornell.edu/rules/frcp/rule_6",
+        "deadline_length": 28.0,
+        "unit": "calendar",
+        "trigger": "2026-01-05",
+        "base_date": "2026-02-02",
+        "due_date": "2026-02-02",
+        "last_day_rolled": false,
+        "service_days_added": false,
+        "clerk_inaccessibility_applied": false,
+        "steps": [
+          "FRCP 6(a)(1)(A): exclude the trigger date 2026-01-05",
+          "FRCP 6(a)(1)(B): count 28 calendar day(s) after the trigger, including weekends/holidays -> 2026-02-02"
+        ]
+      },
+      {
+        "edge": {
+          "id": "frcp-civil-procedure::post-trial-motion-window->rule60-relief-filed#0",
+          "label": "Move for relief from judgment",
+          "from": "frcp-civil-procedure::post-trial-motion-window",
+          "to": "frcp-civil-procedure::rule60-relief-filed",
+          "authority": "FRCP 60(b)"
+        },
+        "rule_set": "frcp6",
+        "rule_set_label": "FRCP 6",
+        "source_url": "https://www.law.cornell.edu/rules/frcp/rule_6",
+        "deadline_length": 365.0,
+        "unit": "calendar",
+        "trigger": "2026-01-05",
+        "base_date": "2027-01-05",
+        "due_date": "2027-01-05",
+        "last_day_rolled": false,
+        "service_days_added": false,
+        "clerk_inaccessibility_applied": false,
+        "steps": [
+          "FRCP 6(a)(1)(A): exclude the trigger date 2026-01-05",
+          "FRCP 6(a)(1)(B): count 365 calendar day(s) after the trigger, including weekends/holidays -> 2027-01-05"
+        ]
+      },
+      {
+        "edge": {
+          "id": "frcp-civil-procedure::amended-complaint-filed->rule12-response-window#0",
+          "label": "Responsive-pleading window reopens for the amended pleading",
+          "from": "frcp-civil-procedure::amended-complaint-filed",
+          "to": "frcp-civil-procedure::rule12-response-window",
+          "authority": "FRCP 15(a)(3)"
+        },
+        "rule_set": "frcp6",
+        "rule_set_label": "FRCP 6",
+        "source_url": "https://www.law.cornell.edu/rules/frcp/rule_6",
+        "deadline_length": 14.0,
+        "unit": "calendar",
+        "trigger": "2026-01-05",
+        "base_date": "2026-01-19",
+        "due_date": "2026-01-20",
+        "last_day_rolled": true,
+        "service_days_added": false,
+        "clerk_inaccessibility_applied": false,
+        "steps": [
+          "FRCP 6(a)(1)(A): exclude the trigger date 2026-01-05",
+          "FRCP 6(a)(1)(B): count 14 calendar day(s) after the trigger, including weekends/holidays -> 2026-01-19",
+          "FRCP 6(a)(1)(C): last day fell on a Saturday, Sunday, or legal holiday; roll forward -> 2026-01-20"
+        ]
+      }
+    ]
+  },
+  "warnings": [],
+  "provenance": {
+    "engine": "litgraph 0.2.0",
+    "api_version": 1,
+    "packs": [
+      {
+        "id": "frcp-civil-procedure",
+        "schema_version": 2,
+        "fingerprint": "fnv1a64:47526c18e135e7ef",
+        "sources": 13
+      }
+    ],
+    "nodes": 121,
+    "edges": 193,
+    "params": {
+      "carry_per_day": 0.0,
+      "loss_aversion": 2.25,
+      "opp_rate": 500.0,
+      "rate": 500.0,
+      "stakes": 1.0
+    },
+    "modes": {
+      "mixed": "nature-first",
+      "opponent": "auto",
+      "prob_fill": "residual",
+      "objective": {
+        "type": "expected"
+      },
+      "cost": "dollars",
+      "utility": "ev"
+    },
+    "calibration": []
+  },
+  "elapsed_ms": 0.852
+}

@@ -1,0 +1,509 @@
+{
+  "ok": true,
+  "api_version": 1,
+  "op": "solve",
+  "result": {
+    "start": {
+      "id": "cofc::claim-accrues",
+      "label": "Claim Against the United States Accrues"
+    },
+    "value": 48423.073363,
+    "converged": true,
+    "iterations": 40,
+    "fee_shift_rounds": 0,
+    "best_line": [
+      {
+        "id": "cofc::e-accrual-to-patentfork",
+        "label": "Determine whether the claim is a §1498(a) patent/copyright use claim",
+        "from": "cofc::claim-accrues",
+        "to": "cofc::patent-claim-fork",
+        "role": "nature",
+        "authority": "28 U.S.C. § 2501; 28 U.S.C. § 1498(a)",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 48423.073363
+      },
+      {
+        "id": "cofc::e-patentfork-nonpatent",
+        "label": "Not a §1498(a) claim -- proceed directly to the limitations check",
+        "from": "cofc::patent-claim-fork",
+        "to": "cofc::limitations-check",
+        "role": "nature",
+        "p": 1.0,
+        "kind": "wait-likely-draw",
+        "step_p": 1.0,
+        "q": 48423.073363
+      },
+      {
+        "id": "cofc::e-limitations-timely",
+        "label": "Petition filed within 6 years of accrual (as tolled)",
+        "from": "cofc::limitations-check",
+        "to": "cofc::section-1500-check",
+        "role": "nature",
+        "authority": "28 U.S.C. § 2501",
+        "p": 0.95,
+        "kind": "likely-draw",
+        "step_p": 0.95,
+        "q": 50971.656172
+      },
+      {
+        "id": "cofc::e-1500-clear",
+        "label": "No suit on the same claim currently pending in any other court",
+        "from": "cofc::section-1500-check",
+        "to": "cofc::filing-track-fork",
+        "role": "nature",
+        "authority": "28 U.S.C. § 1500",
+        "p": 0.95,
+        "kind": "likely-draw",
+        "step_p": 0.95,
+        "q": 53654.374917
+      },
+      {
+        "id": "cofc::e-filingfork-standard",
+        "label": "File a standard RCFC 3 complaint",
+        "from": "cofc::filing-track-fork",
+        "to": "cofc::complaint-filed",
+        "role": "self",
+        "authority": "RCFC 3; RCFC 5.5",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 53654.374917
+      },
+      {
+        "id": "cofc::e-complaint-to-service",
+        "label": "Clerk delivers the complaint to the Attorney General",
+        "from": "cofc::complaint-filed",
+        "to": "cofc::service-on-united-states",
+        "role": "nature",
+        "authority": "RCFC 4(a)",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 61859.374917
+      },
+      {
+        "id": "cofc::e-service-to-responsefork",
+        "label": "Case proceeds; government's responsive-pleading clock begins",
+        "from": "cofc::service-on-united-states",
+        "to": "cofc::government-response-fork",
+        "role": "nature",
+        "authority": "RCFC 12(a)(1)(A)",
+        "p": 1.0,
+        "kind": "wait-likely-draw",
+        "step_p": 1.0,
+        "q": 61859.374917
+      },
+      {
+        "id": "cofc::e-responsefork-motion",
+        "label": "United States moves under RCFC 12(b) instead of answering",
+        "from": "cofc::government-response-fork",
+        "to": "cofc::motion-12b-filed",
+        "role": "opponent",
+        "authority": "RCFC 12(b)",
+        "deadline_days": 60.0,
+        "kind": "opponent-choice",
+        "step_p": 1.0,
+        "q": 61859.374917
+      },
+      {
+        "id": "cofc::e-motion12b-to-ruling",
+        "label": "Briefing completes; court rules on the RCFC 12(b) motion",
+        "from": "cofc::motion-12b-filed",
+        "to": "cofc::ruling-12b",
+        "role": "nature",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 100859.374991
+      },
+      {
+        "id": "cofc::e-ruling12b-denied",
+        "label": "Motion denied",
+        "from": "cofc::ruling-12b",
+        "to": "cofc::answer-filed",
+        "role": "nature",
+        "authority": "RCFC 12(a)(4)",
+        "deadline_days": 14.0,
+        "p": 0.55,
+        "kind": "likely-draw",
+        "step_p": 0.55,
+        "q": 163250.0
+      },
+      {
+        "id": "cofc::e-answer-to-casetype",
+        "label": "Answer triggers the JPSR clock (general or patent track)",
+        "from": "cofc::answer-filed",
+        "to": "cofc::case-type-fork",
+        "role": "nature",
+        "authority": "RCFC Appendix J Rule 1(a)",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 163250.0
+      },
+      {
+        "id": "cofc::e-casetype-patent",
+        "label": "§1498(a) patent case -- Appendix J (Patent Rules) applies",
+        "from": "cofc::case-type-fork",
+        "to": "cofc::patent-early-meeting",
+        "role": "nature",
+        "authority": "RCFC Appendix J Rule 1(a)",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 163250.0
+      },
+      {
+        "id": "cofc::e-earlymeeting-to-14bfork",
+        "label": "Early-meeting agenda includes whether to notice a government contractor",
+        "from": "cofc::patent-early-meeting",
+        "to": "cofc::patent-14b-notice-fork",
+        "role": "nature",
+        "authority": "RCFC Appendix J Rule 2; RCFC 14(b)",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 163250.0
+      },
+      {
+        "id": "cofc::e-14bfork-notice",
+        "label": "United States moves to notice the contractor who performed the accused use/manufacture",
+        "from": "cofc::patent-14b-notice-fork",
+        "to": "cofc::patent-14b-notice-served",
+        "role": "opponent",
+        "authority": "RCFC 14(b)(2)",
+        "kind": "opponent-choice",
+        "step_p": 1.0,
+        "q": 163250.0
+      },
+      {
+        "id": "cofc::e-14bserved-to-jpsr",
+        "label": "Noticed party's responsive pleading is filed; JPSR proceeds on the extended clock",
+        "from": "cofc::patent-14b-notice-served",
+        "to": "cofc::patent-jpsr-filed",
+        "role": "nature",
+        "authority": "RCFC 14(c)(2); RCFC Appendix J Rule 3",
+        "deadline_days": 98.0,
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 173000.0
+      },
+      {
+        "id": "cofc::e-patentjpsr-to-po",
+        "label": "Parties negotiate and the court enters a patent protective order before technical discovery exchanges",
+        "from": "cofc::patent-jpsr-filed",
+        "to": "cofc::patent-protective-order-entered",
+        "role": "nature",
+        "authority": "RCFC 26(c)(1); PRCFC Rule 19(b); Appendix of Forms Form 8A",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 173000.0
+      },
+      {
+        "id": "cofc::e-po-to-infringement",
+        "label": "Plaintiff serves Preliminary Disclosure of Infringement Contentions",
+        "from": "cofc::patent-protective-order-entered",
+        "to": "cofc::patent-infringement-contentions",
+        "role": "self",
+        "authority": "RCFC Appendix J Rule 4-5",
+        "deadline_days": 56.0,
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 173000.0
+      },
+      {
+        "id": "cofc::e-infringement-to-invalidity",
+        "label": "Defendant (and any defendant-intervenors) serve Preliminary Disclosure of Invalidity Contentions",
+        "from": "cofc::patent-infringement-contentions",
+        "to": "cofc::patent-invalidity-contentions",
+        "role": "opponent",
+        "authority": "RCFC Appendix J Rule 6-7",
+        "deadline_days": 56.0,
+        "kind": "opponent-choice",
+        "step_p": 1.0,
+        "q": 231500.0
+      },
+      {
+        "id": "cofc::e-invalidity-to-ccexchange",
+        "label": "Parties identify claim terms for construction and exchange proposed constructions",
+        "from": "cofc::patent-invalidity-contentions",
+        "to": "cofc::patent-claim-construction-exchange",
+        "role": "self",
+        "authority": "RCFC Appendix J Rule 9-10",
+        "deadline_days": 42.0,
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 290000.0
+      },
+      {
+        "id": "cofc::e-ccexchange-to-jcc",
+        "label": "File the Joint Claim Construction Chart and Joint Appendix/Prehearing Statement",
+        "from": "cofc::patent-claim-construction-exchange",
+        "to": "cofc::patent-joint-claim-construction-chart",
+        "role": "nature",
+        "authority": "RCFC Appendix J Rule 11-12",
+        "deadline_days": 35.0,
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 355000.0
+      },
+      {
+        "id": "cofc::e-jcc-to-ccdiscoveryclosed",
+        "label": "Complete claim-construction discovery (including any expert depositions)",
+        "from": "cofc::patent-joint-claim-construction-chart",
+        "to": "cofc::patent-claim-construction-discovery-closed",
+        "role": "self",
+        "authority": "RCFC Appendix J Rule 13",
+        "deadline_days": 28.0,
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 355000.0
+      },
+      {
+        "id": "cofc::e-ccdiscoveryclosed-to-hearing",
+        "label": "Status conference held and Claim Construction Hearing scheduled",
+        "from": "cofc::patent-claim-construction-discovery-closed",
+        "to": "cofc::patent-claim-construction-hearing",
+        "role": "nature",
+        "authority": "RCFC Appendix J Rule 14-15",
+        "deadline_days": 7.0,
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 394000.0
+      },
+      {
+        "id": "cofc::e-hearing-to-order",
+        "label": "Court holds the Claim Construction Hearing and issues its Markman-style ruling",
+        "from": "cofc::patent-claim-construction-hearing",
+        "to": "cofc::patent-claim-construction-order",
+        "role": "nature",
+        "authority": "RCFC Appendix J Rule 14",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 394000.0
+      },
+      {
+        "id": "cofc::e-order-to-settlement",
+        "label": "Mandatory settlement discussion",
+        "from": "cofc::patent-claim-construction-order",
+        "to": "cofc::patent-mandatory-settlement-discussion",
+        "role": "nature",
+        "authority": "RCFC Appendix J Rule 16(a)",
+        "deadline_days": 14.0,
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 394000.0
+      },
+      {
+        "id": "cofc::e-settlementmeet-to-fork",
+        "label": "Parties report the outcome of the discussion",
+        "from": "cofc::patent-mandatory-settlement-discussion",
+        "to": "cofc::patent-settlement-fork",
+        "role": "nature",
+        "authority": "RCFC Appendix J Rule 17",
+        "deadline_days": 7.0,
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 394000.0
+      },
+      {
+        "id": "cofc::e-settlementfork-continues",
+        "label": "No settlement; case continues",
+        "from": "cofc::patent-settlement-fork",
+        "to": "cofc::patent-final-contentions-expert-discovery",
+        "role": "nature",
+        "p": 0.7,
+        "kind": "likely-draw",
+        "step_p": 0.7,
+        "q": 370000.0
+      },
+      {
+        "id": "cofc::e-finalcontentions-to-dispositivefork",
+        "label": "Supplement final contentions, complete expert discovery on infringement/invalidity/damages",
+        "from": "cofc::patent-final-contentions-expert-discovery",
+        "to": "cofc::patent-dispositive-motion-fork",
+        "role": "self",
+        "authority": "RCFC Appendix J Rule 23; RCFC 26(a)(2)",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 370000.0
+      },
+      {
+        "id": "cofc::e-dispositivefork-trial",
+        "label": "No dispositive motion; proceed to a bench trial on damages ('reasonable and entire compensation') and any remaining liability issues",
+        "from": "cofc::patent-dispositive-motion-fork",
+        "to": "cofc::trial-bench",
+        "role": "self",
+        "authority": "28 U.S.C. §1498(a)",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 487000.0
+      },
+      {
+        "id": "cofc::e-trial-to-verdict",
+        "label": "Bench trial concludes",
+        "from": "cofc::trial-bench",
+        "to": "cofc::verdict-rendered",
+        "role": "nature",
+        "authority": "RCFC 39; RCFC 52(a)",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 500000.0
+      },
+      {
+        "id": "cofc::e-verdict-to-judgment58",
+        "label": "Court's findings and conclusions are entered as a judgment",
+        "from": "cofc::verdict-rendered",
+        "to": "cofc::judgment-rcfc58-entered",
+        "role": "nature",
+        "authority": "RCFC 52(a); RCFC 58",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 500000.0
+      },
+      {
+        "id": "cofc::e-judgment58-to-posttrialwindow",
+        "label": "Judgment entered in a separate document; RCFC 59 clock begins",
+        "from": "cofc::judgment-rcfc58-entered",
+        "to": "cofc::post-trial-motion-window",
+        "role": "nature",
+        "authority": "RCFC 58",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 500000.0
+      },
+      {
+        "id": "cofc::e-posttrialwindow-lapse",
+        "label": "No RCFC 59 motion filed within 28 days; window lapses",
+        "from": "cofc::post-trial-motion-window",
+        "to": "cofc::post-trial-resolved",
+        "role": "nature",
+        "authority": "RCFC 59(b)",
+        "p": 1.0,
+        "kind": "wait-likely-draw",
+        "step_p": 1.0,
+        "q": 500000.0
+      },
+      {
+        "id": "cofc::e-posttrialresolved-to-costs",
+        "label": "Judgment positioned to become final; cost/fee clocks begin",
+        "from": "cofc::post-trial-resolved",
+        "to": "cofc::costs-and-fees-window",
+        "role": "nature",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 500000.0
+      },
+      {
+        "id": "cofc::e-costs-to-prevailing",
+        "label": "Bill of Costs (RCFC 54(d), Form 4) and any EAJA application (28 U.S.C. §2412(d)(1)(B), Form 5) are filed within 30 days of final judgment",
+        "from": "cofc::costs-and-fees-window",
+        "to": "cofc::prevailing-party-fork",
+        "role": "nature",
+        "authority": "RCFC 54(d); 28 U.S.C. §2412(d)(1)(B)",
+        "deadline_days": 30.0,
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 500000.0
+      },
+      {
+        "id": "cofc::e-prevailing-government",
+        "label": "Government prevailed",
+        "from": "cofc::prevailing-party-fork",
+        "to": "cofc::judgment-for-government",
+        "role": "nature",
+        "p": 0.5,
+        "kind": "likely-draw",
+        "step_p": 0.5,
+        "q": 0.0
+      }
+    ],
+    "policy_size": 16,
+    "policy": null,
+    "values": null
+  },
+  "warnings": [
+    {
+      "code": "fact-unset",
+      "count": 2,
+      "example": "matter fact not set via scenario.facts; using the authored prior (2 of 2 out-edges authored) instead of this matter's actual fact -- see docs/PACK_SCHEMA.md#matter-facts",
+      "at": [
+        "cofc::limitations-check",
+        "cofc::section-1500-check"
+      ]
+    },
+    {
+      "code": "mixed-node",
+      "count": 5,
+      "example": "self may act here, and 1 world edge(s) have no probabilities; modeled as act-or-wait (act, or let the world edges fire). Author probabilities summing < 1 on them to model a true interrupt",
+      "at": [
+        "cofc::patent-claim-fork",
+        "cofc::service-on-united-states",
+        "cofc::discovery-open",
+        "cofc::patent-14b-notice-fork",
+        "cofc::post-trial-motion-window"
+      ]
+    },
+    {
+      "code": "probability-fill",
+      "count": 27,
+      "example": "1 of 1 out-edges lack probabilities; filled (Residual)",
+      "at": [
+        "cofc::claim-accrues",
+        "cofc::patent-admin-claim-filed",
+        "cofc::patent-admin-claim-resolved",
+        "cofc::bid-protest-complaint-filed",
+        "cofc::bid-protest-initial-status-conference",
+        "cofc::complaint-filed",
+        "cofc::motion-12b-filed",
+        "cofc::answer-filed"
+      ]
+    }
+  ],
+  "provenance": {
+    "engine": "litgraph 0.2.0",
+    "api_version": 1,
+    "packs": [
+      {
+        "id": "cofc",
+        "schema_version": 2,
+        "fingerprint": "fnv1a64:67e772863ca46c68",
+        "sources": 17
+      }
+    ],
+    "nodes": 68,
+    "edges": 84,
+    "params": {
+      "carry_per_day": 0.0,
+      "loss_aversion": 2.25,
+      "opp_rate": 550.0,
+      "rate": 650.0,
+      "stakes": 1.0
+    },
+    "modes": {
+      "mixed": "nature-first",
+      "opponent": "auto",
+      "prob_fill": "residual",
+      "objective": {
+        "type": "expected"
+      },
+      "cost": "dollars",
+      "utility": "ev"
+    },
+    "calibration": []
+  },
+  "elapsed_ms": 1.384
+}

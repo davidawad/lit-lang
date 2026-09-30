@@ -1,0 +1,830 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Request",
+  "description": "A request: which packs, which scenario, which operation.",
+  "type": "object",
+  "properties": {
+    "packs": {
+      "description": "Pack ids, forum keys, file stems, or paths. Empty = every pack, or —\nwhen `scenario` names a scenario that declares `packs` — that\nscenario's packs.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "links": {
+      "description": "Apply `links.json` between loaded packs.",
+      "type": "boolean",
+      "default": true
+    },
+    "no_continuations": {
+      "description": "Keep v1 absorbing-terminal semantics (no `accept` continuations).",
+      "type": "boolean",
+      "default": false
+    },
+    "no_flags": {
+      "description": "Ignore every edge's `sets`/`clears`/`requires`/`forbids` state flags\n(v1/no-memory semantics) even on packs that declare them.",
+      "type": "boolean",
+      "default": false
+    },
+    "max_product_nodes": {
+      "description": "Hard cap on compiled `(node, flag-set)` product states; a clear error\nabove this rather than an unbounded compile. Ignored unless a pack\nedge declares `sets`/`clears`/`requires`/`forbids`.",
+      "type": "integer",
+      "format": "uint",
+      "minimum": 0,
+      "default": 20000
+    },
+    "scenario": {
+      "description": "The matter: an inline scenario object (unknown fields rejected, as\nalways), a string naming a scenario from the library\n(`litgraph describe` lists them), or `{\"extends\": \"<name>\", ...}`\ncomposing a named scenario with inline overrides deep-merged\n(RFC 7386) on top. See `litgraph schema request` and\n`docs/PACK_SCHEMA.md`.",
+      "default": null
+    },
+    "op": {
+      "description": "The operation (default `describe`).",
+      "$ref": "#/$defs/Op",
+      "default": {
+        "op": "describe"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "Op": {
+      "description": "One operation. `from` overrides the scenario's start node.",
+      "oneOf": [
+        {
+          "description": "The machine-readable manual.",
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "const": "describe"
+            }
+          },
+          "required": [
+            "op"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "description": "Packs with data-quality statistics.",
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "const": "packs"
+            }
+          },
+          "required": [
+            "op"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "description": "Content diagnostics for the selected packs.",
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "const": "lint"
+            }
+          },
+          "required": [
+            "op"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "description": "Resolve the scenario against the packs without running anything.",
+          "type": "object",
+          "properties": {
+            "op": {
+              "type": "string",
+              "const": "validate"
+            }
+          },
+          "required": [
+            "op"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "description": "Nodes and edges (a node's neighborhood if `node`).",
+          "type": "object",
+          "properties": {
+            "node": {
+              "description": "Neighborhood center.",
+              "type": [
+                "string",
+                "null"
+              ],
+              "default": null
+            },
+            "op": {
+              "type": "string",
+              "const": "graph"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "op"
+          ]
+        },
+        {
+          "description": "Evaluate a metric on every edge (test custom functions here).",
+          "type": "object",
+          "properties": {
+            "spec": {
+              "description": "Metric name or expression.",
+              "type": "string"
+            },
+            "top": {
+              "description": "Rows to return.",
+              "type": "integer",
+              "format": "uint",
+              "minimum": 0,
+              "default": 25
+            },
+            "op": {
+              "type": "string",
+              "const": "metric"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "op",
+            "spec"
+          ]
+        },
+        {
+          "description": "Who decides at a node, and every option with value, regret, cost and what follows.",
+          "type": "object",
+          "properties": {
+            "node": {
+              "description": "Node (default: start).",
+              "type": [
+                "string",
+                "null"
+              ],
+              "default": null
+            },
+            "from": {
+              "description": "Start override.",
+              "type": [
+                "string",
+                "null"
+              ],
+              "default": null
+            },
+            "op": {
+              "type": "string",
+              "const": "explain"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "op"
+          ]
+        },
+        {
+          "description": "Value and best line under the scenario.",
+          "type": "object",
+          "properties": {
+            "from": {
+              "description": "Start override.",
+              "type": [
+                "string",
+                "null"
+              ],
+              "default": null
+            },
+            "full_policy": {
+              "description": "Include every chosen option.",
+              "type": "boolean",
+              "default": false
+            },
+            "all_values": {
+              "description": "Include every node's value.",
+              "type": "boolean",
+              "default": false
+            },
+            "max_steps": {
+              "description": "Best-line length cap.",
+              "type": "integer",
+              "format": "uint",
+              "minimum": 0,
+              "default": 40
+            },
+            "op": {
+              "type": "string",
+              "const": "solve"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "op"
+          ]
+        },
+        {
+          "description": "Exact absorption probabilities and expected totals under the optimal policy.",
+          "type": "object",
+          "properties": {
+            "from": {
+              "description": "Start override.",
+              "type": [
+                "string",
+                "null"
+              ],
+              "default": null
+            },
+            "metrics": {
+              "description": "Metrics to total (first one is netted against utility).",
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                "dollars",
+                "elapsed",
+                "hours"
+              ]
+            },
+            "top": {
+              "description": "Most-visited nodes to list.",
+              "type": "integer",
+              "format": "uint",
+              "minimum": 0,
+              "default": 15
+            },
+            "op": {
+              "type": "string",
+              "const": "chain"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "op"
+          ]
+        },
+        {
+          "description": "Monte Carlo outcome distribution, `CVaR` and P(loss).",
+          "type": "object",
+          "properties": {
+            "from": {
+              "description": "Start override.",
+              "type": [
+                "string",
+                "null"
+              ],
+              "default": null
+            },
+            "runs": {
+              "description": "Number of runs.",
+              "type": "integer",
+              "format": "uint",
+              "minimum": 0,
+              "default": 10000
+            },
+            "seed": {
+              "description": "RNG seed.",
+              "type": "integer",
+              "format": "uint64",
+              "minimum": 0,
+              "default": 7
+            },
+            "metrics": {
+              "description": "Metrics to summarize.",
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                "dollars",
+                "elapsed"
+              ]
+            },
+            "alpha": {
+              "description": "`CVaR` tail fraction.",
+              "type": "number",
+              "format": "double",
+              "default": 0.1
+            },
+            "max_steps": {
+              "description": "Step cap per run.",
+              "type": "integer",
+              "format": "uint",
+              "minimum": 0,
+              "default": 10000
+            },
+            "sample_durations": {
+              "description": "Sample durations from (min, mode, max).",
+              "type": "boolean",
+              "default": true
+            },
+            "samples": {
+              "description": "Sample trajectories to return.",
+              "type": "integer",
+              "format": "uint",
+              "minimum": 0,
+              "default": 3
+            },
+            "op": {
+              "type": "string",
+              "const": "simulate"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "op"
+          ]
+        },
+        {
+          "description": "Shortest or k-shortest lines to `to` (node, `terminals`, or `tag:<outcome>`).",
+          "type": "object",
+          "properties": {
+            "from": {
+              "description": "Start override.",
+              "type": [
+                "string",
+                "null"
+              ],
+              "default": null
+            },
+            "to": {
+              "description": "Target spec.",
+              "type": "string",
+              "default": "terminals"
+            },
+            "metric": {
+              "description": "Metric to minimize.",
+              "type": "string",
+              "default": "dollars"
+            },
+            "k": {
+              "description": "Number of alternatives.",
+              "type": "integer",
+              "format": "uint",
+              "minimum": 0,
+              "default": 1
+            },
+            "report": {
+              "description": "Extra metrics to total along each path.",
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            },
+            "op": {
+              "type": "string",
+              "const": "path"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "op"
+          ]
+        },
+        {
+          "description": "N-objective Pareto frontier to `to`.",
+          "type": "object",
+          "properties": {
+            "from": {
+              "description": "Start override.",
+              "type": [
+                "string",
+                "null"
+              ],
+              "default": null
+            },
+            "to": {
+              "description": "Target spec.",
+              "type": "string",
+              "default": "terminals"
+            },
+            "objectives": {
+              "description": "Objectives (metric names or expressions, all non-negative).",
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                "dollars",
+                "elapsed",
+                "surprise"
+              ]
+            },
+            "max_labels": {
+              "description": "Label budget.",
+              "type": "integer",
+              "format": "uint",
+              "minimum": 0,
+              "default": 200000
+            },
+            "limit": {
+              "description": "Frontier paths to return.",
+              "type": "integer",
+              "format": "uint",
+              "minimum": 0,
+              "default": 25
+            },
+            "op": {
+              "type": "string",
+              "const": "pareto"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "op"
+          ]
+        },
+        {
+          "description": "Value curve and policy breakpoints as any parameter moves.",
+          "type": "object",
+          "properties": {
+            "param": {
+              "description": "Parameter name (any, including ones only a custom function reads).",
+              "type": "string"
+            },
+            "lo": {
+              "description": "Low end.",
+              "type": "number",
+              "format": "double",
+              "default": 100.0
+            },
+            "hi": {
+              "description": "High end.",
+              "type": "number",
+              "format": "double",
+              "default": 1500.0
+            },
+            "steps": {
+              "description": "Grid points.",
+              "type": "integer",
+              "format": "uint",
+              "minimum": 0,
+              "default": 15
+            },
+            "watch": {
+              "description": "Nodes to watch (default all).",
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            },
+            "tol": {
+              "description": "Breakpoint tolerance.",
+              "type": "number",
+              "format": "double",
+              "default": 0.001
+            },
+            "op": {
+              "type": "string",
+              "const": "sweep"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "op",
+            "param"
+          ]
+        },
+        {
+          "description": "Sensitivity of the value to parameters and authored probabilities.",
+          "type": "object",
+          "properties": {
+            "params": {
+              "description": "Parameters to perturb.",
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                "rate",
+                "stakes"
+              ]
+            },
+            "rel": {
+              "description": "Relative perturbation for parameters.",
+              "type": "number",
+              "format": "double",
+              "default": 0.25
+            },
+            "dp": {
+              "description": "Absolute perturbation for probabilities.",
+              "type": "number",
+              "format": "double",
+              "default": 0.1
+            },
+            "probabilities": {
+              "description": "Include authored probabilities.",
+              "type": "boolean",
+              "default": true
+            },
+            "top": {
+              "description": "Rows to return.",
+              "type": "integer",
+              "format": "uint",
+              "minimum": 0,
+              "default": 20
+            },
+            "op": {
+              "type": "string",
+              "const": "tornado"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "op"
+          ]
+        },
+        {
+          "description": "Uncalibrated probabilities and durations, ranked by decision\nsensitivity — what to calibrate first.",
+          "type": "object",
+          "properties": {
+            "top": {
+              "description": "Rows to return, per kind (probabilities / durations).",
+              "type": "integer",
+              "format": "uint",
+              "minimum": 0,
+              "default": 20
+            },
+            "dp": {
+              "description": "Absolute perturbation for uncalibrated probabilities.",
+              "type": "number",
+              "format": "double",
+              "default": 0.1
+            },
+            "rel": {
+              "description": "Relative perturbation for uncalibrated durations.",
+              "type": "number",
+              "format": "double",
+              "default": 0.25
+            },
+            "max_candidates": {
+              "description": "Cap on edges scanned per kind (bounds cost on a large selection).",
+              "type": "integer",
+              "format": "uint",
+              "minimum": 0,
+              "default": 300
+            },
+            "op": {
+              "type": "string",
+              "const": "calibration"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "op"
+          ]
+        },
+        {
+          "description": "Structural analyses.",
+          "type": "object",
+          "properties": {
+            "from": {
+              "description": "Start override.",
+              "type": [
+                "string",
+                "null"
+              ],
+              "default": null
+            },
+            "what": {
+              "description": "Which analysis.",
+              "$ref": "#/$defs/StructureWhat",
+              "default": "summary"
+            },
+            "to": {
+              "description": "Target node (dominators, mincut).",
+              "type": [
+                "string",
+                "null"
+              ],
+              "default": null
+            },
+            "capacity": {
+              "description": "Edge capacity metric for mincut.",
+              "type": "string",
+              "default": "1"
+            },
+            "top": {
+              "description": "Rows to return.",
+              "type": "integer",
+              "format": "uint",
+              "minimum": 0,
+              "default": 15
+            },
+            "op": {
+              "type": "string",
+              "const": "structure"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "op"
+          ]
+        },
+        {
+          "description": "Concrete due dates, with computation steps, for authored pack\n`deadline` specs (`FRCP 6` / `RCFC 6` / `FRAP 26` / `19 CFR\n210.6(a)`, chosen from the owning pack's `forum`/id).",
+          "type": "object",
+          "properties": {
+            "trigger": {
+              "description": "The triggering event date, `\"YYYY-MM-DD\"`.",
+              "type": "string"
+            },
+            "edge": {
+              "description": "Compute only this edge's deadline (overrides `node`/`reachable`).",
+              "type": [
+                "string",
+                "null"
+              ],
+              "default": null
+            },
+            "node": {
+              "description": "Node whose out-edges to compute (default: start).",
+              "type": [
+                "string",
+                "null"
+              ],
+              "default": null
+            },
+            "reachable": {
+              "description": "Walk every edge reachable from `node` (not just its immediate\nout-edges).",
+              "type": "boolean",
+              "default": false
+            },
+            "service_method": {
+              "description": "Service method adding days before the last-day roll\n(6(d)/26(c)/201.16), if any.",
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/ServiceMethod"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "additional_holidays": {
+              "description": "State-declared or presidential/congressional holidays beyond\nthe computed federal set, each `\"YYYY-MM-DD\"`.",
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": []
+            },
+            "clerk_inaccessible": {
+              "description": "Clerk's office inaccessible on the last day (`FRCP`/`RCFC\n6(a)(3)`; ignored with a step note under rule sets that don't\ndefine it).",
+              "type": "boolean",
+              "default": false
+            },
+            "op": {
+              "type": "string",
+              "const": "deadlines"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "op",
+            "trigger"
+          ]
+        },
+        {
+          "description": "Run `inner` under the scenario and under the scenario merge-patched with `variant`.",
+          "type": "object",
+          "properties": {
+            "variant": {
+              "description": "JSON merge-patch applied to the scenario.",
+              "default": null
+            },
+            "inner": {
+              "description": "The op to compare (default `chain`).",
+              "$ref": "#/$defs/Op",
+              "default": {
+                "op": "chain",
+                "from": null,
+                "metrics": [
+                  "dollars",
+                  "elapsed",
+                  "hours"
+                ],
+                "top": 15
+              }
+            },
+            "op": {
+              "type": "string",
+              "const": "compare"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "op"
+          ]
+        },
+        {
+          "description": "Several ops against one request's packs and scenario.",
+          "type": "object",
+          "properties": {
+            "ops": {
+              "description": "Ops.",
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Op"
+              }
+            },
+            "op": {
+              "type": "string",
+              "const": "batch"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "op",
+            "ops"
+          ]
+        }
+      ]
+    },
+    "StructureWhat": {
+      "description": "What `structure` computes.",
+      "oneOf": [
+        {
+          "description": "Counts.",
+          "type": "string",
+          "const": "summary"
+        },
+        {
+          "description": "Cycles (strongly connected components).",
+          "type": "string",
+          "const": "scc"
+        },
+        {
+          "description": "Immediate dominators, or the unavoidable gateways to `to`.",
+          "type": "string",
+          "const": "dominators"
+        },
+        {
+          "description": "Min cut to `to` under `capacity`.",
+          "type": "string",
+          "const": "mincut"
+        },
+        {
+          "description": "Betweenness centrality.",
+          "type": "string",
+          "const": "betweenness"
+        },
+        {
+          "description": "Reachable terminals / unreachable nodes.",
+          "type": "string",
+          "const": "reachability"
+        }
+      ]
+    },
+    "ServiceMethod": {
+      "description": "Service methods that add calendar days before the last-day roll, unioned\nacross every rule set. Each rule set accepts only its own subset —\nsee `general::service_days` and `itc::service_days`.",
+      "oneOf": [
+        {
+          "description": "`FRCP`/`RCFC 5(b)(2)(C)`; `FRAP 25`; domestic mail under `19 CFR\n201.16(d)`.",
+          "type": "string",
+          "const": "mail"
+        },
+        {
+          "description": "`FRCP`/`RCFC 5(b)(2)(D)` — leaving with the clerk.",
+          "type": "string",
+          "const": "clerk"
+        },
+        {
+          "description": "`FRCP`/`RCFC 5(b)(2)(F)` — other means consented to.",
+          "type": "string",
+          "const": "other-consented"
+        },
+        {
+          "description": "`FRAP 26(c)` — third-party commercial carrier.",
+          "type": "string",
+          "const": "commercial-carrier"
+        },
+        {
+          "description": "`FRAP 26(c)` — prison mailing system.",
+          "type": "string",
+          "const": "prison-mail"
+        },
+        {
+          "description": "`19 CFR 201.16(d)` — mail to a foreign address (+10 days, vs. +3\ndomestic).",
+          "type": "string",
+          "const": "mail-foreign"
+        },
+        {
+          "description": "`19 CFR 201.16(e)` — domestic express delivery (+1 day).",
+          "type": "string",
+          "const": "express"
+        },
+        {
+          "description": "`19 CFR 201.16(e)` — express delivery to a foreign destination (+5\ndays).",
+          "type": "string",
+          "const": "express-foreign"
+        }
+      ]
+    }
+  }
+}

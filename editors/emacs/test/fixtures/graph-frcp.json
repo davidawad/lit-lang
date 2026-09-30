@@ -1,0 +1,3473 @@
+{
+  "ok": true,
+  "api_version": 1,
+  "op": "graph",
+  "result": {
+    "nodes": [
+      {
+        "id": "frcp-civil-procedure::pre-filing",
+        "kind": "state",
+        "label": "Pre-Filing Investigation",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::jurisdiction-venue-check",
+        "kind": "state",
+        "label": "Subject-Matter Jurisdiction & Venue Assessment",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::complaint-filed",
+        "kind": "state",
+        "label": "Complaint Filed",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::service-window",
+        "kind": "decision",
+        "label": "Rule 4(m) Service Window",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::waiver-requested",
+        "kind": "decision",
+        "label": "Waiver of Service Requested",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::service-completed",
+        "kind": "decision",
+        "label": "Service of Process Completed",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::service-window-blown",
+        "kind": "terminal",
+        "label": "DISMISSED WITHOUT PREJUDICE -- No Timely Service",
+        "control": "terminal",
+        "payoff": 0.0,
+        "payoff_source": "authored",
+        "outcome": [
+          "loss",
+          "procedural-default",
+          "waiver-trap"
+        ]
+      },
+      {
+        "id": "frcp-civil-procedure::removal-window",
+        "kind": "decision",
+        "label": "Removal Window (Defendant's Election)",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::removed-to-federal",
+        "kind": "decision",
+        "label": "Case Removed to Federal Court",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::remand-ruling",
+        "kind": "decision",
+        "label": "Court Rules on Motion to Remand",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::remand-ordered",
+        "kind": "terminal",
+        "label": "Remanded to State Court",
+        "control": "terminal",
+        "payoff": 500000.0,
+        "payoff_source": "authored",
+        "outcome": [
+          "neutral"
+        ]
+      },
+      {
+        "id": "frcp-civil-procedure::rule12-response-window",
+        "kind": "decision",
+        "label": "Rule 12 Response Window",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::answer-filed",
+        "kind": "state",
+        "label": "Answer Filed",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::motion-to-dismiss-filed",
+        "kind": "state",
+        "label": "Rule 12(b) Motion Filed",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::mtd-ruling",
+        "kind": "decision",
+        "label": "Court Rules on Motion to Dismiss",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::dismissed-with-prejudice",
+        "kind": "terminal",
+        "label": "DISMISSED WITH PREJUDICE",
+        "control": "terminal",
+        "payoff": 0.0,
+        "payoff_source": "authored",
+        "outcome": [
+          "loss",
+          "dismissal",
+          "waiver-trap"
+        ]
+      },
+      {
+        "id": "frcp-civil-procedure::default-entered",
+        "kind": "decision",
+        "label": "Clerk's Entry of Default",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::default-judgment-entered",
+        "kind": "terminal",
+        "label": "DEFAULT JUDGMENT ENTERED",
+        "control": "terminal",
+        "payoff": 900000.0,
+        "payoff_source": "authored",
+        "outcome": [
+          "win",
+          "default-judgment"
+        ]
+      },
+      {
+        "id": "frcp-civil-procedure::voluntary-dismissal",
+        "kind": "terminal",
+        "label": "VOLUNTARY / STIPULATED DISMISSAL",
+        "control": "terminal",
+        "payoff": 400000.0,
+        "payoff_source": "authored",
+        "outcome": [
+          "settlement",
+          "voluntary"
+        ]
+      },
+      {
+        "id": "frcp-civil-procedure::amendment-as-of-right-window",
+        "kind": "decision",
+        "label": "Rule 15(a)(1) Amendment-as-of-Right Window",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::amended-complaint-filed",
+        "kind": "state",
+        "label": "Amended Complaint Filed",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::leave-to-amend-motion",
+        "kind": "state",
+        "label": "Motion for Leave to Amend Filed",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::leave-to-amend-ruling",
+        "kind": "decision",
+        "label": "Court Rules on Leave to Amend",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::joinder-decision",
+        "kind": "decision",
+        "label": "Joinder of Parties",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::parties-joined",
+        "kind": "state",
+        "label": "Additional Parties Joined",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::rule26f-conference",
+        "kind": "state",
+        "label": "Rule 26(f) Conference",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::initial-disclosures",
+        "kind": "state",
+        "label": "Rule 26(a)(1) Initial Disclosures",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::scheduling-order-issued",
+        "kind": "state",
+        "label": "Rule 16(b) Scheduling Order",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::discovery-open",
+        "kind": "decision",
+        "label": "Discovery Open",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::meet-and-confer",
+        "kind": "decision",
+        "label": "Meet-and-Confer on Discovery Dispute",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::motion-to-compel-ruling",
+        "kind": "decision",
+        "label": "Court Rules on Motion to Compel",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::protective-order-motion",
+        "kind": "state",
+        "label": "Motion for Protective Order",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::protective-order-ruling",
+        "kind": "decision",
+        "label": "Court Rules on Protective-Order Motion",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::rule37-sanctions-ruling",
+        "kind": "decision",
+        "label": "Court Rules on Rule 37 Sanctions",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::discovery-sanctions-dismissal",
+        "kind": "terminal",
+        "label": "CASE DISMISSED -- Discovery Sanction",
+        "control": "terminal",
+        "payoff": 0.0,
+        "payoff_source": "authored",
+        "outcome": [
+          "loss",
+          "sanctions",
+          "dismissal"
+        ]
+      },
+      {
+        "id": "frcp-civil-procedure::discovery-sanctions-default",
+        "kind": "terminal",
+        "label": "DEFAULT JUDGMENT -- Discovery Sanction",
+        "control": "terminal",
+        "payoff": 900000.0,
+        "payoff_source": "authored",
+        "outcome": [
+          "win",
+          "sanctions",
+          "default-judgment"
+        ]
+      },
+      {
+        "id": "frcp-civil-procedure::discovery-closed",
+        "kind": "decision",
+        "label": "Discovery Closed",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::summary-judgment-motion",
+        "kind": "state",
+        "label": "Motion for Summary Judgment Filed",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::sj-briefing-complete",
+        "kind": "state",
+        "label": "Summary Judgment Briefing Complete",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::sj-ruling",
+        "kind": "decision",
+        "label": "Court Rules on Summary Judgment",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::summary-judgment-granted",
+        "kind": "terminal",
+        "label": "SUMMARY JUDGMENT ENTERED",
+        "control": "terminal",
+        "payoff": 500000.0,
+        "payoff_source": "authored",
+        "outcome": [
+          "final"
+        ]
+      },
+      {
+        "id": "frcp-civil-procedure::partial-summary-judgment",
+        "kind": "state",
+        "label": "Partial Summary Judgment",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::daubert-motion-filed",
+        "kind": "state",
+        "label": "Daubert / Rule 702 Motion Filed",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::daubert-ruling",
+        "kind": "decision",
+        "label": "Court Rules on Daubert Motion",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::motions-in-limine-filed",
+        "kind": "state",
+        "label": "Motions in Limine",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::final-pretrial-conference",
+        "kind": "state",
+        "label": "Final Pretrial Conference",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::jury-demand-decision",
+        "kind": "decision",
+        "label": "Jury Demand Window",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::trial-commences",
+        "kind": "state",
+        "label": "Trial Commences",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::verdict-rendered",
+        "kind": "decision",
+        "label": "Verdict / Findings Rendered",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::final-judgment-entered",
+        "kind": "decision",
+        "label": "Final Judgment Entered",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::post-trial-motion-window",
+        "kind": "decision",
+        "label": "Post-Trial Motion Window",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::rule50b-jmol-filed",
+        "kind": "state",
+        "label": "Renewed Motion for JMOL Filed",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::rule59-new-trial-filed",
+        "kind": "state",
+        "label": "Motion for New Trial Filed",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::rule59e-amend-filed",
+        "kind": "state",
+        "label": "Motion to Alter/Amend Judgment Filed",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::rule60-relief-filed",
+        "kind": "state",
+        "label": "Motion for Relief from Judgment Filed",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::post-trial-ruling",
+        "kind": "decision",
+        "label": "Court Rules on Post-Trial Motion",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::notice-of-appeal-window",
+        "kind": "decision",
+        "label": "Notice of Appeal Window",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::notice-of-appeal-filed",
+        "kind": "state",
+        "label": "Notice of Appeal Filed",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::appeal-window-blown",
+        "kind": "terminal",
+        "label": "APPEAL FORFEITED -- Judgment Final",
+        "control": "terminal",
+        "payoff": 350000.0,
+        "payoff_source": "authored",
+        "outcome": [
+          "procedural-default",
+          "waiver-trap",
+          "final"
+        ]
+      },
+      {
+        "id": "frcp-civil-procedure::judgment-final-no-appeal",
+        "kind": "terminal",
+        "label": "JUDGMENT FINAL -- No Appeal Taken",
+        "control": "terminal",
+        "payoff": 500000.0,
+        "payoff_source": "authored",
+        "outcome": [
+          "final"
+        ]
+      },
+      {
+        "id": "frcp-civil-procedure::cross-appeal-window",
+        "kind": "decision",
+        "label": "Cross-Appeal Window",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::cross-appeal-filed",
+        "kind": "state",
+        "label": "Cross-Appeal Filed",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::appellate-briefing",
+        "kind": "state",
+        "label": "Appellate Briefing & Argument",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::court-of-appeals-decision",
+        "kind": "decision",
+        "label": "Court of Appeals Decision",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::judgment-affirmed",
+        "kind": "terminal",
+        "label": "JUDGMENT AFFIRMED ON APPEAL",
+        "control": "terminal",
+        "payoff": 500000.0,
+        "payoff_source": "authored",
+        "outcome": [
+          "affirmed",
+          "final"
+        ]
+      },
+      {
+        "id": "frcp-civil-procedure::judgment-reversed-remanded",
+        "kind": "terminal",
+        "label": "JUDGMENT REVERSED / VACATED AND REMANDED",
+        "control": "terminal",
+        "payoff": 400000.0,
+        "payoff_source": "authored",
+        "outcome": [
+          "remand"
+        ]
+      },
+      {
+        "id": "frcp-civil-procedure::motion-to-dismiss-filed{waived-12h-defenses}",
+        "kind": "state",
+        "label": "Rule 12(b) Motion Filed",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::mtd-ruling{waived-12h-defenses}",
+        "kind": "decision",
+        "label": "Court Rules on Motion to Dismiss",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::answer-filed{waived-12h-defenses}",
+        "kind": "state",
+        "label": "Answer Filed",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::amended-complaint-filed{waived-12h-defenses}",
+        "kind": "state",
+        "label": "Amended Complaint Filed",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::dismissed-with-prejudice{waived-12h-defenses}",
+        "kind": "terminal",
+        "label": "DISMISSED WITH PREJUDICE",
+        "control": "terminal",
+        "payoff": 0.0,
+        "payoff_source": "authored",
+        "outcome": [
+          "loss",
+          "dismissal",
+          "waiver-trap"
+        ]
+      },
+      {
+        "id": "frcp-civil-procedure::jury-demand-decision{waived-12h-defenses}",
+        "kind": "decision",
+        "label": "Jury Demand Window",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::rule12-response-window{waived-12h-defenses}",
+        "kind": "decision",
+        "label": "Rule 12 Response Window",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::amendment-as-of-right-window{waived-12h-defenses}",
+        "kind": "decision",
+        "label": "Rule 15(a)(1) Amendment-as-of-Right Window",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::default-entered{waived-12h-defenses}",
+        "kind": "decision",
+        "label": "Clerk's Entry of Default",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::leave-to-amend-motion{waived-12h-defenses}",
+        "kind": "state",
+        "label": "Motion for Leave to Amend Filed",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::joinder-decision{waived-12h-defenses}",
+        "kind": "decision",
+        "label": "Joinder of Parties",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::default-judgment-entered{waived-12h-defenses}",
+        "kind": "terminal",
+        "label": "DEFAULT JUDGMENT ENTERED",
+        "control": "terminal",
+        "payoff": 900000.0,
+        "payoff_source": "authored",
+        "outcome": [
+          "win",
+          "default-judgment"
+        ]
+      },
+      {
+        "id": "frcp-civil-procedure::leave-to-amend-ruling{waived-12h-defenses}",
+        "kind": "decision",
+        "label": "Court Rules on Leave to Amend",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::parties-joined{waived-12h-defenses}",
+        "kind": "state",
+        "label": "Additional Parties Joined",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::rule26f-conference{waived-12h-defenses}",
+        "kind": "state",
+        "label": "Rule 26(f) Conference",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::initial-disclosures{waived-12h-defenses}",
+        "kind": "state",
+        "label": "Rule 26(a)(1) Initial Disclosures",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::scheduling-order-issued{waived-12h-defenses}",
+        "kind": "state",
+        "label": "Rule 16(b) Scheduling Order",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::discovery-open{waived-12h-defenses}",
+        "kind": "decision",
+        "label": "Discovery Open",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::meet-and-confer{waived-12h-defenses}",
+        "kind": "decision",
+        "label": "Meet-and-Confer on Discovery Dispute",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::protective-order-motion{waived-12h-defenses}",
+        "kind": "state",
+        "label": "Motion for Protective Order",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::voluntary-dismissal{waived-12h-defenses}",
+        "kind": "terminal",
+        "label": "VOLUNTARY / STIPULATED DISMISSAL",
+        "control": "terminal",
+        "payoff": 400000.0,
+        "payoff_source": "authored",
+        "outcome": [
+          "settlement",
+          "voluntary"
+        ]
+      },
+      {
+        "id": "frcp-civil-procedure::discovery-closed{waived-12h-defenses}",
+        "kind": "decision",
+        "label": "Discovery Closed",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::motion-to-compel-ruling{waived-12h-defenses}",
+        "kind": "decision",
+        "label": "Court Rules on Motion to Compel",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::protective-order-ruling{waived-12h-defenses}",
+        "kind": "decision",
+        "label": "Court Rules on Protective-Order Motion",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::summary-judgment-motion{waived-12h-defenses}",
+        "kind": "state",
+        "label": "Motion for Summary Judgment Filed",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::daubert-motion-filed{waived-12h-defenses}",
+        "kind": "state",
+        "label": "Daubert / Rule 702 Motion Filed",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::final-pretrial-conference{waived-12h-defenses}",
+        "kind": "state",
+        "label": "Final Pretrial Conference",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::rule37-sanctions-ruling{waived-12h-defenses}",
+        "kind": "decision",
+        "label": "Court Rules on Rule 37 Sanctions",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::sj-briefing-complete{waived-12h-defenses}",
+        "kind": "state",
+        "label": "Summary Judgment Briefing Complete",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::daubert-ruling{waived-12h-defenses}",
+        "kind": "decision",
+        "label": "Court Rules on Daubert Motion",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::trial-commences{waived-12h-defenses}",
+        "kind": "state",
+        "label": "Trial Commences",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::discovery-sanctions-dismissal{waived-12h-defenses}",
+        "kind": "terminal",
+        "label": "CASE DISMISSED -- Discovery Sanction",
+        "control": "terminal",
+        "payoff": 0.0,
+        "payoff_source": "authored",
+        "outcome": [
+          "loss",
+          "sanctions",
+          "dismissal"
+        ]
+      },
+      {
+        "id": "frcp-civil-procedure::discovery-sanctions-default{waived-12h-defenses}",
+        "kind": "terminal",
+        "label": "DEFAULT JUDGMENT -- Discovery Sanction",
+        "control": "terminal",
+        "payoff": 900000.0,
+        "payoff_source": "authored",
+        "outcome": [
+          "win",
+          "sanctions",
+          "default-judgment"
+        ]
+      },
+      {
+        "id": "frcp-civil-procedure::sj-ruling{waived-12h-defenses}",
+        "kind": "decision",
+        "label": "Court Rules on Summary Judgment",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::motions-in-limine-filed{waived-12h-defenses}",
+        "kind": "state",
+        "label": "Motions in Limine",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::verdict-rendered{waived-12h-defenses}",
+        "kind": "decision",
+        "label": "Verdict / Findings Rendered",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::summary-judgment-granted{waived-12h-defenses}",
+        "kind": "terminal",
+        "label": "SUMMARY JUDGMENT ENTERED",
+        "control": "terminal",
+        "payoff": 500000.0,
+        "payoff_source": "authored",
+        "outcome": [
+          "final"
+        ]
+      },
+      {
+        "id": "frcp-civil-procedure::partial-summary-judgment{waived-12h-defenses}",
+        "kind": "state",
+        "label": "Partial Summary Judgment",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::final-judgment-entered{waived-12h-defenses}",
+        "kind": "decision",
+        "label": "Final Judgment Entered",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::post-trial-motion-window{waived-12h-defenses}",
+        "kind": "decision",
+        "label": "Post-Trial Motion Window",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::notice-of-appeal-window{waived-12h-defenses}",
+        "kind": "decision",
+        "label": "Notice of Appeal Window",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::rule50b-jmol-filed{waived-12h-defenses}",
+        "kind": "state",
+        "label": "Renewed Motion for JMOL Filed",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::rule59-new-trial-filed{waived-12h-defenses}",
+        "kind": "state",
+        "label": "Motion for New Trial Filed",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::rule59e-amend-filed{waived-12h-defenses}",
+        "kind": "state",
+        "label": "Motion to Alter/Amend Judgment Filed",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::rule60-relief-filed{waived-12h-defenses}",
+        "kind": "state",
+        "label": "Motion for Relief from Judgment Filed",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::notice-of-appeal-filed{waived-12h-defenses}",
+        "kind": "state",
+        "label": "Notice of Appeal Filed",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::appeal-window-blown{waived-12h-defenses}",
+        "kind": "terminal",
+        "label": "APPEAL FORFEITED -- Judgment Final",
+        "control": "terminal",
+        "payoff": 350000.0,
+        "payoff_source": "authored",
+        "outcome": [
+          "procedural-default",
+          "waiver-trap",
+          "final"
+        ]
+      },
+      {
+        "id": "frcp-civil-procedure::judgment-final-no-appeal{waived-12h-defenses}",
+        "kind": "terminal",
+        "label": "JUDGMENT FINAL -- No Appeal Taken",
+        "control": "terminal",
+        "payoff": 500000.0,
+        "payoff_source": "authored",
+        "outcome": [
+          "final"
+        ]
+      },
+      {
+        "id": "frcp-civil-procedure::post-trial-ruling{waived-12h-defenses}",
+        "kind": "decision",
+        "label": "Court Rules on Post-Trial Motion",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::cross-appeal-window{waived-12h-defenses}",
+        "kind": "decision",
+        "label": "Cross-Appeal Window",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::cross-appeal-filed{waived-12h-defenses}",
+        "kind": "state",
+        "label": "Cross-Appeal Filed",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::appellate-briefing{waived-12h-defenses}",
+        "kind": "state",
+        "label": "Appellate Briefing & Argument",
+        "control": "me",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::court-of-appeals-decision{waived-12h-defenses}",
+        "kind": "decision",
+        "label": "Court of Appeals Decision",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "frcp-civil-procedure::judgment-affirmed{waived-12h-defenses}",
+        "kind": "terminal",
+        "label": "JUDGMENT AFFIRMED ON APPEAL",
+        "control": "terminal",
+        "payoff": 500000.0,
+        "payoff_source": "authored",
+        "outcome": [
+          "affirmed",
+          "final"
+        ]
+      },
+      {
+        "id": "frcp-civil-procedure::judgment-reversed-remanded{waived-12h-defenses}",
+        "kind": "terminal",
+        "label": "JUDGMENT REVERSED / VACATED AND REMANDED",
+        "control": "terminal",
+        "payoff": 400000.0,
+        "payoff_source": "authored",
+        "outcome": [
+          "remand"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "id": "frcp-civil-procedure::pre-filing->jurisdiction-venue-check#0",
+        "label": "Conduct Rule 11 pre-filing investigation",
+        "from": "frcp-civil-procedure::pre-filing",
+        "to": "frcp-civil-procedure::jurisdiction-venue-check",
+        "role": "self",
+        "authority": "FRCP 11(b)",
+        "active": true,
+        "hours": 15.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::jurisdiction-venue-check->complaint-filed#0",
+        "label": "File complaint establishing subject-matter jurisdiction and venue",
+        "from": "frcp-civil-procedure::jurisdiction-venue-check",
+        "to": "frcp-civil-procedure::complaint-filed",
+        "role": "self",
+        "authority": "28 U.S.C. 1331; 1332(a); 1391(b); FRCP 3",
+        "active": true,
+        "hours": 10.0,
+        "fees": 405.0
+      },
+      {
+        "id": "frcp-civil-procedure::complaint-filed->service-window#0",
+        "label": "Clerk signs, seals, and issues the summons",
+        "from": "frcp-civil-procedure::complaint-filed",
+        "to": "frcp-civil-procedure::service-window",
+        "role": "nature",
+        "authority": "FRCP 4(b)",
+        "p": 1.0,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::service-window->service-completed#0",
+        "label": "Serve defendant via formal process",
+        "from": "frcp-civil-procedure::service-window",
+        "to": "frcp-civil-procedure::service-completed",
+        "role": "self",
+        "authority": "FRCP 4(e); 4(h); 4(f)",
+        "deadline_days": 90.0,
+        "active": true,
+        "hours": 3.0,
+        "fees": 150.0
+      },
+      {
+        "id": "frcp-civil-procedure::service-window->waiver-requested#0",
+        "label": "Request waiver of service instead of formal process",
+        "from": "frcp-civil-procedure::service-window",
+        "to": "frcp-civil-procedure::waiver-requested",
+        "role": "self",
+        "authority": "FRCP 4(d)(1)",
+        "active": true,
+        "hours": 2.0,
+        "fees": 20.0
+      },
+      {
+        "id": "frcp-civil-procedure::service-window->service-window-blown#0",
+        "label": "Fail to serve within 90 days -- no good cause shown",
+        "from": "frcp-civil-procedure::service-window",
+        "to": "frcp-civil-procedure::service-window-blown",
+        "role": "self",
+        "authority": "FRCP 4(m)",
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::waiver-requested->rule12-response-window#0",
+        "label": "Defendant returns executed waiver",
+        "from": "frcp-civil-procedure::waiver-requested",
+        "to": "frcp-civil-procedure::rule12-response-window",
+        "role": "self",
+        "authority": "FRCP 4(d)(3)",
+        "deadline_days": 60.0,
+        "active": true,
+        "hours": 1.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::waiver-requested->service-completed#0",
+        "label": "Defendant refuses waiver without good cause -- formal service completed, costs shift under Rule 4(d)(2)",
+        "from": "frcp-civil-procedure::waiver-requested",
+        "to": "frcp-civil-procedure::service-completed",
+        "role": "self",
+        "authority": "FRCP 4(d)(2)",
+        "active": true,
+        "hours": 3.0,
+        "fees": 150.0
+      },
+      {
+        "id": "frcp-civil-procedure::service-completed->removal-window#0",
+        "label": "Defendant considers removal to federal court",
+        "from": "frcp-civil-procedure::service-completed",
+        "to": "frcp-civil-procedure::removal-window",
+        "role": "self",
+        "authority": "28 U.S.C. 1441",
+        "active": true,
+        "hours": 2.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::service-completed->rule12-response-window#0",
+        "label": "No removal -- Rule 12 response clock runs in the original forum",
+        "from": "frcp-civil-procedure::service-completed",
+        "to": "frcp-civil-procedure::rule12-response-window",
+        "role": "self",
+        "authority": "FRCP 12(a)(1)(A)(i)",
+        "deadline_days": 21.0,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::service-completed->voluntary-dismissal#0",
+        "label": "Plaintiff dismisses by notice before an answer or SJ motion is served",
+        "from": "frcp-civil-procedure::service-completed",
+        "to": "frcp-civil-procedure::voluntary-dismissal",
+        "role": "self",
+        "authority": "FRCP 41(a)(1)(A)(i)",
+        "active": true,
+        "hours": 1.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::removal-window->removed-to-federal#0",
+        "label": "File notice of removal within 30 days of formal service",
+        "from": "frcp-civil-procedure::removal-window",
+        "to": "frcp-civil-procedure::removed-to-federal",
+        "role": "self",
+        "authority": "28 U.S.C. 1446(a); 1446(b)(1)",
+        "deadline_days": 30.0,
+        "active": true,
+        "hours": 6.0,
+        "fees": 405.0
+      },
+      {
+        "id": "frcp-civil-procedure::removal-window->rule12-response-window#0",
+        "label": "Decline removal -- remain in the original forum",
+        "from": "frcp-civil-procedure::removal-window",
+        "to": "frcp-civil-procedure::rule12-response-window",
+        "role": "self",
+        "authority": "28 U.S.C. 1446(b)",
+        "deadline_days": 21.0,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::removed-to-federal->remand-ruling#0",
+        "label": "Plaintiff moves to remand",
+        "from": "frcp-civil-procedure::removed-to-federal",
+        "to": "frcp-civil-procedure::remand-ruling",
+        "role": "self",
+        "authority": "28 U.S.C. 1447(c)",
+        "deadline_days": 30.0,
+        "active": true,
+        "hours": 10.0,
+        "fees": 3000.0
+      },
+      {
+        "id": "frcp-civil-procedure::removed-to-federal->rule12-response-window#0",
+        "label": "No remand motion -- case proceeds in federal court",
+        "from": "frcp-civil-procedure::removed-to-federal",
+        "to": "frcp-civil-procedure::rule12-response-window",
+        "role": "self",
+        "authority": "FRCP 81(c)(2)",
+        "deadline_days": 21.0,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::remand-ruling->remand-ordered#0",
+        "label": "Court grants remand -- lack of subject-matter jurisdiction or removal defect",
+        "from": "frcp-civil-procedure::remand-ruling",
+        "to": "frcp-civil-procedure::remand-ordered",
+        "role": "nature",
+        "authority": "28 U.S.C. 1447(c)",
+        "p": 0.3,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::remand-ruling->rule12-response-window#0",
+        "label": "Court denies remand -- federal forum retained",
+        "from": "frcp-civil-procedure::remand-ruling",
+        "to": "frcp-civil-procedure::rule12-response-window",
+        "role": "nature",
+        "authority": "28 U.S.C. 1447(c)",
+        "deadline_days": 21.0,
+        "p": 0.7,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::rule12-response-window->answer-filed#0",
+        "label": "File answer within 21 days (baseline)",
+        "from": "frcp-civil-procedure::rule12-response-window",
+        "to": "frcp-civil-procedure::answer-filed",
+        "role": "self",
+        "authority": "FRCP 12(a)(1)(A)(i)",
+        "deadline_days": 21.0,
+        "active": true,
+        "hours": 15.0,
+        "fees": 4000.0
+      },
+      {
+        "id": "frcp-civil-procedure::12b-motion-filed",
+        "label": "File pre-answer Rule 12(b) motion instead of answering",
+        "from": "frcp-civil-procedure::rule12-response-window",
+        "to": "frcp-civil-procedure::motion-to-dismiss-filed{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 12(b)",
+        "deadline_days": 21.0,
+        "active": true,
+        "hours": 30.0,
+        "fees": 8000.0
+      },
+      {
+        "id": "frcp-civil-procedure::rule12-response-window->default-entered#0",
+        "label": "Fail to answer or move -- default exposure",
+        "from": "frcp-civil-procedure::rule12-response-window",
+        "to": "frcp-civil-procedure::default-entered",
+        "role": "self",
+        "authority": "FRCP 55(a)",
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::answer-filed->jury-demand-decision#0",
+        "label": "Last pleading directed to the issue served -- 14-day jury demand clock starts",
+        "from": "frcp-civil-procedure::answer-filed",
+        "to": "frcp-civil-procedure::jury-demand-decision",
+        "role": "self",
+        "authority": "FRCP 38(b)",
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::motion-to-dismiss-filed->mtd-ruling#0",
+        "label": "Complete Rule 12(b) briefing",
+        "from": "frcp-civil-procedure::motion-to-dismiss-filed",
+        "to": "frcp-civil-procedure::mtd-ruling",
+        "role": "self",
+        "authority": "FRCP 12(b)",
+        "active": true,
+        "hours": 20.0,
+        "fees": 6000.0
+      },
+      {
+        "id": "frcp-civil-procedure::mtd-ruling->answer-filed#0",
+        "label": "Motion denied -- answer due within 14 days",
+        "from": "frcp-civil-procedure::mtd-ruling",
+        "to": "frcp-civil-procedure::answer-filed",
+        "role": "nature",
+        "authority": "FRCP 12(a)(4)(A)",
+        "deadline_days": 14.0,
+        "p": 0.45,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::mtd-ruling->amended-complaint-filed#0",
+        "label": "Motion granted with leave to amend",
+        "from": "frcp-civil-procedure::mtd-ruling",
+        "to": "frcp-civil-procedure::amended-complaint-filed",
+        "role": "nature",
+        "authority": "FRCP 15(a)(2)",
+        "p": 0.35,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::mtd-ruling->dismissed-with-prejudice#0",
+        "label": "Motion granted without leave to amend -- futility",
+        "from": "frcp-civil-procedure::mtd-ruling",
+        "to": "frcp-civil-procedure::dismissed-with-prejudice",
+        "role": "nature",
+        "authority": "FRCP 12(b)(6); 41(b)",
+        "p": 0.2,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::default-entered->answer-filed#0",
+        "label": "Move to set aside entry of default for good cause",
+        "from": "frcp-civil-procedure::default-entered",
+        "to": "frcp-civil-procedure::answer-filed",
+        "role": "self",
+        "authority": "FRCP 55(c)",
+        "active": true,
+        "hours": 10.0,
+        "fees": 3500.0
+      },
+      {
+        "id": "frcp-civil-procedure::default-entered->default-judgment-entered#0",
+        "label": "Clerk or court enters default judgment",
+        "from": "frcp-civil-procedure::default-entered",
+        "to": "frcp-civil-procedure::default-judgment-entered",
+        "role": "nature",
+        "authority": "FRCP 55(b)(1); 55(b)(2)",
+        "p": 1.0,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::amendment-as-of-right-window->amended-complaint-filed#0",
+        "label": "Amend as of right within the 21-day matter-of-course window",
+        "from": "frcp-civil-procedure::amendment-as-of-right-window",
+        "to": "frcp-civil-procedure::amended-complaint-filed",
+        "role": "self",
+        "authority": "FRCP 15(a)(1)(B)",
+        "deadline_days": 21.0,
+        "active": true,
+        "hours": 8.0,
+        "fees": 2500.0
+      },
+      {
+        "id": "frcp-civil-procedure::amendment-as-of-right-window->leave-to-amend-motion#0",
+        "label": "Seek leave to amend outside the matter-of-course window",
+        "from": "frcp-civil-procedure::amendment-as-of-right-window",
+        "to": "frcp-civil-procedure::leave-to-amend-motion",
+        "role": "self",
+        "authority": "FRCP 15(a)(2)",
+        "active": true,
+        "hours": 6.0,
+        "fees": 3000.0
+      },
+      {
+        "id": "frcp-civil-procedure::amendment-as-of-right-window->joinder-decision#0",
+        "label": "No amendment -- proceed; consider joinder of parties",
+        "from": "frcp-civil-procedure::amendment-as-of-right-window",
+        "to": "frcp-civil-procedure::joinder-decision",
+        "role": "self",
+        "authority": "FRCP 19; 20; 24",
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::amended-complaint-filed->rule12-response-window#0",
+        "label": "Responsive-pleading window reopens for the amended pleading",
+        "from": "frcp-civil-procedure::amended-complaint-filed",
+        "to": "frcp-civil-procedure::rule12-response-window",
+        "role": "nature",
+        "authority": "FRCP 15(a)(3)",
+        "deadline_days": 14.0,
+        "p": 1.0,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::leave-to-amend-motion->leave-to-amend-ruling#0",
+        "label": "Complete Rule 15(a)(2) motion briefing",
+        "from": "frcp-civil-procedure::leave-to-amend-motion",
+        "to": "frcp-civil-procedure::leave-to-amend-ruling",
+        "role": "self",
+        "authority": "FRCP 15(a)(2)",
+        "active": true,
+        "hours": 5.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::leave-to-amend-ruling->amended-complaint-filed#0",
+        "label": "Leave granted -- justice so requires",
+        "from": "frcp-civil-procedure::leave-to-amend-ruling",
+        "to": "frcp-civil-procedure::amended-complaint-filed",
+        "role": "nature",
+        "authority": "FRCP 15(a)(2)",
+        "p": 0.75,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::leave-to-amend-ruling->joinder-decision#0",
+        "label": "Leave denied",
+        "from": "frcp-civil-procedure::leave-to-amend-ruling",
+        "to": "frcp-civil-procedure::joinder-decision",
+        "role": "nature",
+        "authority": "FRCP 15(a)(2)",
+        "p": 0.25,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::joinder-required-or-permissive",
+        "label": "Join a required party (Rule 19) or a permissive party (Rule 20)",
+        "from": "frcp-civil-procedure::joinder-decision",
+        "to": "frcp-civil-procedure::parties-joined",
+        "role": "self",
+        "authority": "FRCP 19(a); 20(a)",
+        "active": true,
+        "hours": 8.0,
+        "fees": 2500.0
+      },
+      {
+        "id": "frcp-civil-procedure::joinder-intervention",
+        "label": "Nonparty intervenes as of right or permissively",
+        "from": "frcp-civil-procedure::joinder-decision",
+        "to": "frcp-civil-procedure::parties-joined",
+        "role": "self",
+        "authority": "FRCP 24(a); 24(b)",
+        "active": true,
+        "hours": 8.0,
+        "fees": 2500.0
+      },
+      {
+        "id": "frcp-civil-procedure::joinder-decision->rule26f-conference#0",
+        "label": "No joinder -- proceed to discovery planning",
+        "from": "frcp-civil-procedure::joinder-decision",
+        "to": "frcp-civil-procedure::rule26f-conference",
+        "role": "self",
+        "authority": "FRCP 26(f)",
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::parties-joined->rule26f-conference#0",
+        "label": "Case proceeds toward discovery planning with joined parties",
+        "from": "frcp-civil-procedure::parties-joined",
+        "to": "frcp-civil-procedure::rule26f-conference",
+        "role": "nature",
+        "authority": "FRCP 16(b)",
+        "p": 1.0,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::rule26f-conference->initial-disclosures#0",
+        "label": "Conduct Rule 26(f) conference and submit discovery plan",
+        "from": "frcp-civil-procedure::rule26f-conference",
+        "to": "frcp-civil-procedure::initial-disclosures",
+        "role": "self",
+        "authority": "FRCP 26(f)(1); 26(f)(2)",
+        "deadline_days": 14.0,
+        "active": true,
+        "hours": 6.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::initial-disclosures->scheduling-order-issued#0",
+        "label": "Exchange Rule 26(a)(1) initial disclosures",
+        "from": "frcp-civil-procedure::initial-disclosures",
+        "to": "frcp-civil-procedure::scheduling-order-issued",
+        "role": "self",
+        "authority": "FRCP 26(a)(1)(A); 26(a)(1)(C)",
+        "active": true,
+        "hours": 10.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::scheduling-order-issued->discovery-open#0",
+        "label": "Court issues Rule 16(b) scheduling order",
+        "from": "frcp-civil-procedure::scheduling-order-issued",
+        "to": "frcp-civil-procedure::discovery-open",
+        "role": "nature",
+        "authority": "FRCP 16(b)",
+        "p": 1.0,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::discovery-serve-interrogatories",
+        "label": "Serve interrogatories (max 25 including discrete subparts, Rule 33(a)(1))",
+        "from": "frcp-civil-procedure::discovery-open",
+        "to": "frcp-civil-procedure::discovery-open",
+        "role": "self",
+        "authority": "FRCP 33(a)(1)",
+        "active": true,
+        "hours": 4.0,
+        "fees": 100.0
+      },
+      {
+        "id": "frcp-civil-procedure::discovery-serve-rfp",
+        "label": "Serve requests for production (Rule 34)",
+        "from": "frcp-civil-procedure::discovery-open",
+        "to": "frcp-civil-procedure::discovery-open",
+        "role": "self",
+        "authority": "FRCP 34(a)(1)",
+        "active": true,
+        "hours": 3.0,
+        "fees": 100.0
+      },
+      {
+        "id": "frcp-civil-procedure::discovery-serve-rfa",
+        "label": "Serve requests for admission (Rule 36) -- no timely response is deemed admitted (36(a)(3))",
+        "from": "frcp-civil-procedure::discovery-open",
+        "to": "frcp-civil-procedure::discovery-open",
+        "role": "self",
+        "authority": "FRCP 36(a); 36(a)(3)",
+        "active": true,
+        "hours": 2.0,
+        "fees": 50.0
+      },
+      {
+        "id": "frcp-civil-procedure::discovery-take-deposition",
+        "label": "Take deposition (Rule 30) -- 10 depositions per side and 1 day of 7 hours absent stipulation or leave (Rule 30(a)(2)(A)(i); 30(d)(1))",
+        "from": "frcp-civil-procedure::discovery-open",
+        "to": "frcp-civil-procedure::discovery-open",
+        "role": "self",
+        "authority": "FRCP 30(a); 30(d)(1)",
+        "active": true,
+        "hours": 10.0,
+        "fees": 3000.0
+      },
+      {
+        "id": "frcp-civil-procedure::discovery-serve-30b6-notice",
+        "label": "Serve Rule 30(b)(6) deposition notice on an organization",
+        "from": "frcp-civil-procedure::discovery-open",
+        "to": "frcp-civil-procedure::discovery-open",
+        "role": "self",
+        "authority": "FRCP 30(b)(6)",
+        "active": true,
+        "hours": 4.0,
+        "fees": 500.0
+      },
+      {
+        "id": "frcp-civil-procedure::discovery-serve-subpoena",
+        "label": "Serve nonparty subpoena (Rule 45)",
+        "from": "frcp-civil-procedure::discovery-open",
+        "to": "frcp-civil-procedure::discovery-open",
+        "role": "self",
+        "authority": "FRCP 45(a)",
+        "active": true,
+        "hours": 3.0,
+        "fees": 300.0
+      },
+      {
+        "id": "frcp-civil-procedure::discovery-open->meet-and-confer#0",
+        "label": "Meet and confer on a discovery dispute",
+        "from": "frcp-civil-procedure::discovery-open",
+        "to": "frcp-civil-procedure::meet-and-confer",
+        "role": "self",
+        "authority": "FRCP 37(a)(1)",
+        "active": true,
+        "hours": 2.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::discovery-open->protective-order-motion#0",
+        "label": "Move for a protective order",
+        "from": "frcp-civil-procedure::discovery-open",
+        "to": "frcp-civil-procedure::protective-order-motion",
+        "role": "nature",
+        "authority": "FRCP 26(c)",
+        "p": 0.5,
+        "active": true,
+        "hours": 8.0,
+        "fees": 4000.0
+      },
+      {
+        "id": "frcp-civil-procedure::discovery-open->voluntary-dismissal#0",
+        "label": "Parties settle -- file stipulation of dismissal",
+        "from": "frcp-civil-procedure::discovery-open",
+        "to": "frcp-civil-procedure::voluntary-dismissal",
+        "role": "nature",
+        "authority": "FRCP 41(a)(1)(A)(ii)",
+        "p": 0.5,
+        "active": true,
+        "hours": 4.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::discovery-open->discovery-closed#0",
+        "label": "Discovery record complete -- proceed toward dispositive motions",
+        "from": "frcp-civil-procedure::discovery-open",
+        "to": "frcp-civil-procedure::discovery-closed",
+        "role": "self",
+        "authority": "FRCP 16(b)(3)",
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::meet-and-confer->motion-to-compel-ruling#0",
+        "label": "File motion to compel after good-faith conferral fails",
+        "from": "frcp-civil-procedure::meet-and-confer",
+        "to": "frcp-civil-procedure::motion-to-compel-ruling",
+        "role": "self",
+        "authority": "FRCP 37(a)(1); 37(a)(3)",
+        "active": true,
+        "hours": 12.0,
+        "fees": 5000.0
+      },
+      {
+        "id": "frcp-civil-procedure::meet-and-confer->discovery-open#0",
+        "label": "Dispute resolved informally -- discovery resumes",
+        "from": "frcp-civil-procedure::meet-and-confer",
+        "to": "frcp-civil-procedure::discovery-open",
+        "role": "self",
+        "authority": "FRCP 37(a)(1)",
+        "active": true,
+        "hours": 1.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::compel-granted-fee-shift",
+        "label": "Motion granted -- movant's fees shifted to the noncompliant party (Rule 37(a)(5)(A))",
+        "from": "frcp-civil-procedure::motion-to-compel-ruling",
+        "to": "frcp-civil-procedure::discovery-open",
+        "role": "nature",
+        "authority": "FRCP 37(a)(5)(A)",
+        "p": 0.65,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::motion-to-compel-ruling->rule37-sanctions-ruling#0",
+        "label": "Party still fails to obey the compel order -- Rule 37(b) sanctions considered",
+        "from": "frcp-civil-procedure::motion-to-compel-ruling",
+        "to": "frcp-civil-procedure::rule37-sanctions-ruling",
+        "role": "nature",
+        "authority": "FRCP 37(b)(2)",
+        "p": 0.2,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::compel-denied-fee-shift",
+        "label": "Motion denied -- movant's fees shifted absent substantial justification (Rule 37(a)(5)(B))",
+        "from": "frcp-civil-procedure::motion-to-compel-ruling",
+        "to": "frcp-civil-procedure::discovery-open",
+        "role": "nature",
+        "authority": "FRCP 37(a)(5)(B)",
+        "p": 0.15,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::protective-order-motion->protective-order-ruling#0",
+        "label": "Complete Rule 26(c) briefing -- good-cause showing",
+        "from": "frcp-civil-procedure::protective-order-motion",
+        "to": "frcp-civil-procedure::protective-order-ruling",
+        "role": "self",
+        "authority": "FRCP 26(c)",
+        "active": true,
+        "hours": 6.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::protective-order-granted",
+        "label": "Protective order granted",
+        "from": "frcp-civil-procedure::protective-order-ruling",
+        "to": "frcp-civil-procedure::discovery-open",
+        "role": "nature",
+        "authority": "FRCP 26(c)",
+        "p": 0.8,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::protective-order-denied",
+        "label": "Protective order denied -- discovery proceeds unrestricted",
+        "from": "frcp-civil-procedure::protective-order-ruling",
+        "to": "frcp-civil-procedure::discovery-open",
+        "role": "nature",
+        "authority": "FRCP 26(c)",
+        "p": 0.2,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::rule37-sanctions-ruling->discovery-open#0",
+        "label": "Lesser sanction imposed -- adverse inference, fee-shifting, or evidence preclusion (Rule 37(b)(2)(A)(i)-(iv))",
+        "from": "frcp-civil-procedure::rule37-sanctions-ruling",
+        "to": "frcp-civil-procedure::discovery-open",
+        "role": "nature",
+        "authority": "FRCP 37(b)(2)(A)",
+        "p": 0.7,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::rule37-sanctions-ruling->discovery-sanctions-dismissal#0",
+        "label": "Case-dispositive sanction -- dismissal for willful noncompliance or spoliation",
+        "from": "frcp-civil-procedure::rule37-sanctions-ruling",
+        "to": "frcp-civil-procedure::discovery-sanctions-dismissal",
+        "role": "nature",
+        "authority": "FRCP 37(b)(2)(A)(v); 37(e)(2)(C)",
+        "p": 0.15,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::rule37-sanctions-ruling->discovery-sanctions-default#0",
+        "label": "Case-dispositive sanction -- default judgment against the disobedient defendant",
+        "from": "frcp-civil-procedure::rule37-sanctions-ruling",
+        "to": "frcp-civil-procedure::discovery-sanctions-default",
+        "role": "nature",
+        "authority": "FRCP 37(b)(2)(A)(vi)",
+        "p": 0.15,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::discovery-closed->summary-judgment-motion#0",
+        "label": "Move for summary judgment",
+        "from": "frcp-civil-procedure::discovery-closed",
+        "to": "frcp-civil-procedure::summary-judgment-motion",
+        "role": "nature",
+        "authority": "FRCP 56(a); 56(b)",
+        "p": 0.5,
+        "active": true,
+        "hours": 80.0,
+        "fees": 20000.0
+      },
+      {
+        "id": "frcp-civil-procedure::discovery-closed->daubert-motion-filed#0",
+        "label": "Move to exclude opposing expert testimony pretrial",
+        "from": "frcp-civil-procedure::discovery-closed",
+        "to": "frcp-civil-procedure::daubert-motion-filed",
+        "role": "nature",
+        "authority": "FRE 702",
+        "p": 0.5,
+        "active": true,
+        "hours": 35.0,
+        "fees": 15000.0
+      },
+      {
+        "id": "frcp-civil-procedure::discovery-closed->final-pretrial-conference#0",
+        "label": "No dispositive or Daubert motion -- proceed to final pretrial conference",
+        "from": "frcp-civil-procedure::discovery-closed",
+        "to": "frcp-civil-procedure::final-pretrial-conference",
+        "role": "self",
+        "authority": "FRCP 16(e)",
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::summary-judgment-motion->sj-briefing-complete#0",
+        "label": "Complete Rule 56 briefing",
+        "from": "frcp-civil-procedure::summary-judgment-motion",
+        "to": "frcp-civil-procedure::sj-briefing-complete",
+        "role": "self",
+        "authority": "FRCP 56(c)",
+        "active": true,
+        "hours": 60.0,
+        "fees": 12000.0
+      },
+      {
+        "id": "frcp-civil-procedure::sj-briefing-complete->sj-ruling#0",
+        "label": "Motion taken under submission",
+        "from": "frcp-civil-procedure::sj-briefing-complete",
+        "to": "frcp-civil-procedure::sj-ruling",
+        "role": "nature",
+        "authority": "FRCP 56(a)",
+        "p": 1.0,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::sj-ruling->summary-judgment-granted#0",
+        "label": "Granted in full -- no genuine dispute of material fact",
+        "from": "frcp-civil-procedure::sj-ruling",
+        "to": "frcp-civil-procedure::summary-judgment-granted",
+        "role": "nature",
+        "authority": "FRCP 56(a)",
+        "p": 0.25,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::sj-ruling->partial-summary-judgment#0",
+        "label": "Granted in part -- remaining claims proceed to trial",
+        "from": "frcp-civil-procedure::sj-ruling",
+        "to": "frcp-civil-procedure::partial-summary-judgment",
+        "role": "nature",
+        "authority": "FRCP 56(a)",
+        "p": 0.2,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::sj-ruling->daubert-motion-filed#0",
+        "label": "Denied -- genuine dispute of material fact; case proceeds toward trial",
+        "from": "frcp-civil-procedure::sj-ruling",
+        "to": "frcp-civil-procedure::daubert-motion-filed",
+        "role": "nature",
+        "authority": "FRCP 56(a)",
+        "p": 0.55,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::partial-summary-judgment->daubert-motion-filed#0",
+        "label": "Proceed toward trial on the remaining claims",
+        "from": "frcp-civil-procedure::partial-summary-judgment",
+        "to": "frcp-civil-procedure::daubert-motion-filed",
+        "role": "self",
+        "authority": "FRE 702",
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::daubert-motion-filed->daubert-ruling#0",
+        "label": "Complete FRE 702 gatekeeping briefing (FRE 104(a))",
+        "from": "frcp-civil-procedure::daubert-motion-filed",
+        "to": "frcp-civil-procedure::daubert-ruling",
+        "role": "self",
+        "authority": "FRE 702; FRE 104(a)",
+        "active": true,
+        "hours": 20.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::daubert-admitted",
+        "label": "Expert testimony admitted -- reliability and fit satisfied",
+        "from": "frcp-civil-procedure::daubert-ruling",
+        "to": "frcp-civil-procedure::motions-in-limine-filed",
+        "role": "nature",
+        "authority": "FRE 702",
+        "p": 0.6,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::daubert-excluded",
+        "label": "Expert testimony excluded in whole or in part",
+        "from": "frcp-civil-procedure::daubert-ruling",
+        "to": "frcp-civil-procedure::motions-in-limine-filed",
+        "role": "nature",
+        "authority": "FRE 702",
+        "p": 0.4,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::motions-in-limine-filed->final-pretrial-conference#0",
+        "label": "Complete motions in limine (FRE 103(d))",
+        "from": "frcp-civil-procedure::motions-in-limine-filed",
+        "to": "frcp-civil-procedure::final-pretrial-conference",
+        "role": "self",
+        "authority": "FRE 103(d)",
+        "active": true,
+        "hours": 10.0,
+        "fees": 4000.0
+      },
+      {
+        "id": "frcp-civil-procedure::final-pretrial-conference->trial-commences#0",
+        "label": "Court enters final pretrial order",
+        "from": "frcp-civil-procedure::final-pretrial-conference",
+        "to": "frcp-civil-procedure::trial-commences",
+        "role": "nature",
+        "authority": "FRCP 16(e)",
+        "p": 1.0,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::jury-demand-timely",
+        "label": "Serve and file timely written jury demand",
+        "from": "frcp-civil-procedure::jury-demand-decision",
+        "to": "frcp-civil-procedure::amendment-as-of-right-window",
+        "role": "self",
+        "authority": "FRCP 38(b)",
+        "deadline_days": 14.0,
+        "active": true,
+        "hours": 0.5,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::jury-demand-waived",
+        "label": "Fail to demand within 14 days -- jury trial waived",
+        "from": "frcp-civil-procedure::jury-demand-decision",
+        "to": "frcp-civil-procedure::amendment-as-of-right-window",
+        "role": "self",
+        "authority": "FRCP 38(d)",
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::trial-commences->verdict-rendered#0",
+        "label": "Evidence closed -- case submitted to the factfinder",
+        "from": "frcp-civil-procedure::trial-commences",
+        "to": "frcp-civil-procedure::verdict-rendered",
+        "role": "nature",
+        "authority": "FRCP 50(a)",
+        "p": 1.0,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::verdict-for-plaintiff",
+        "label": "Verdict / findings for plaintiff",
+        "from": "frcp-civil-procedure::verdict-rendered",
+        "to": "frcp-civil-procedure::final-judgment-entered",
+        "role": "nature",
+        "authority": "FRCP 52(a); 58",
+        "p": 0.5,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::verdict-for-defendant",
+        "label": "Verdict / findings for defendant",
+        "from": "frcp-civil-procedure::verdict-rendered",
+        "to": "frcp-civil-procedure::final-judgment-entered",
+        "role": "nature",
+        "authority": "FRCP 52(a); 58",
+        "p": 0.5,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::final-judgment-entered->post-trial-motion-window#0",
+        "label": "28-day post-trial motion window opens",
+        "from": "frcp-civil-procedure::final-judgment-entered",
+        "to": "frcp-civil-procedure::post-trial-motion-window",
+        "role": "self",
+        "authority": "FRCP 50(b); 59(b); 59(e)",
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::final-judgment-entered->notice-of-appeal-window#0",
+        "label": "No post-trial motion -- proceed directly toward appeal",
+        "from": "frcp-civil-procedure::final-judgment-entered",
+        "to": "frcp-civil-procedure::notice-of-appeal-window",
+        "role": "self",
+        "authority": "FRAP 4(a)(1)(A)",
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::post-trial-motion-window->rule50b-jmol-filed#0",
+        "label": "Renew motion for JMOL (requires a preceding Rule 50(a) motion)",
+        "from": "frcp-civil-procedure::post-trial-motion-window",
+        "to": "frcp-civil-procedure::rule50b-jmol-filed",
+        "role": "self",
+        "authority": "FRCP 50(b)",
+        "deadline_days": 28.0,
+        "active": true,
+        "hours": 30.0,
+        "fees": 8000.0
+      },
+      {
+        "id": "frcp-civil-procedure::post-trial-motion-window->rule59-new-trial-filed#0",
+        "label": "Move for a new trial",
+        "from": "frcp-civil-procedure::post-trial-motion-window",
+        "to": "frcp-civil-procedure::rule59-new-trial-filed",
+        "role": "self",
+        "authority": "FRCP 59(b)",
+        "deadline_days": 28.0,
+        "active": true,
+        "hours": 25.0,
+        "fees": 8000.0
+      },
+      {
+        "id": "frcp-civil-procedure::post-trial-motion-window->rule59e-amend-filed#0",
+        "label": "Move to alter or amend the judgment",
+        "from": "frcp-civil-procedure::post-trial-motion-window",
+        "to": "frcp-civil-procedure::rule59e-amend-filed",
+        "role": "self",
+        "authority": "FRCP 59(e)",
+        "deadline_days": 28.0,
+        "active": true,
+        "hours": 20.0,
+        "fees": 6000.0
+      },
+      {
+        "id": "frcp-civil-procedure::post-trial-motion-window->rule60-relief-filed#0",
+        "label": "Move for relief from judgment",
+        "from": "frcp-civil-procedure::post-trial-motion-window",
+        "to": "frcp-civil-procedure::rule60-relief-filed",
+        "role": "self",
+        "authority": "FRCP 60(b)",
+        "deadline_days": 365.0,
+        "active": true,
+        "hours": 25.0,
+        "fees": 7000.0
+      },
+      {
+        "id": "frcp-civil-procedure::post-trial-motion-window->notice-of-appeal-window#0",
+        "label": "No post-trial motion -- proceed to appeal",
+        "from": "frcp-civil-procedure::post-trial-motion-window",
+        "to": "frcp-civil-procedure::notice-of-appeal-window",
+        "role": "self",
+        "authority": "FRAP 4(a)(1)(A)",
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::rule50b-jmol-filed->post-trial-ruling#0",
+        "label": "Complete Rule 50(b) briefing",
+        "from": "frcp-civil-procedure::rule50b-jmol-filed",
+        "to": "frcp-civil-procedure::post-trial-ruling",
+        "role": "self",
+        "authority": "FRCP 50(b)",
+        "active": true,
+        "hours": 10.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::rule59-new-trial-filed->post-trial-ruling#0",
+        "label": "Complete Rule 59 briefing",
+        "from": "frcp-civil-procedure::rule59-new-trial-filed",
+        "to": "frcp-civil-procedure::post-trial-ruling",
+        "role": "self",
+        "authority": "FRCP 59(b)",
+        "active": true,
+        "hours": 10.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::rule59e-amend-filed->post-trial-ruling#0",
+        "label": "Complete Rule 59(e) briefing",
+        "from": "frcp-civil-procedure::rule59e-amend-filed",
+        "to": "frcp-civil-procedure::post-trial-ruling",
+        "role": "self",
+        "authority": "FRCP 59(e)",
+        "active": true,
+        "hours": 8.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::rule60-relief-filed->post-trial-ruling#0",
+        "label": "Complete Rule 60(b) briefing",
+        "from": "frcp-civil-procedure::rule60-relief-filed",
+        "to": "frcp-civil-procedure::post-trial-ruling",
+        "role": "self",
+        "authority": "FRCP 60(b)",
+        "active": true,
+        "hours": 10.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::post-trial-ruling->notice-of-appeal-window#0",
+        "label": "Post-trial motion denied -- FRAP 4(a)(4) tolling ends, appeal clock now runs",
+        "from": "frcp-civil-procedure::post-trial-ruling",
+        "to": "frcp-civil-procedure::notice-of-appeal-window",
+        "role": "nature",
+        "authority": "FRAP 4(a)(4)",
+        "p": 0.7,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::post-trial-ruling->final-judgment-entered#0",
+        "label": "Post-trial motion granted -- amended or new judgment entered",
+        "from": "frcp-civil-procedure::post-trial-ruling",
+        "to": "frcp-civil-procedure::final-judgment-entered",
+        "role": "nature",
+        "authority": "FRCP 50(b); 59(a); 59(e)",
+        "p": 0.3,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::notice-of-appeal-window->notice-of-appeal-filed#0",
+        "label": "File notice of appeal within 30 days of entry of judgment",
+        "from": "frcp-civil-procedure::notice-of-appeal-window",
+        "to": "frcp-civil-procedure::notice-of-appeal-filed",
+        "role": "self",
+        "authority": "FRAP 4(a)(1)(A)",
+        "deadline_days": 30.0,
+        "active": true,
+        "hours": 4.0,
+        "fees": 605.0
+      },
+      {
+        "id": "frcp-civil-procedure::notice-of-appeal-window->appeal-window-blown#0",
+        "label": "Miss the FRAP 4(a) deadline -- no timely extension sought",
+        "from": "frcp-civil-procedure::notice-of-appeal-window",
+        "to": "frcp-civil-procedure::appeal-window-blown",
+        "role": "self",
+        "authority": "FRAP 4(a)(1)(A); Bowles v. Russell, 551 U.S. 205 (2007)",
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::notice-of-appeal-window->judgment-final-no-appeal#0",
+        "label": "Elect not to appeal -- judgment becomes final",
+        "from": "frcp-civil-procedure::notice-of-appeal-window",
+        "to": "frcp-civil-procedure::judgment-final-no-appeal",
+        "role": "self",
+        "authority": "28 U.S.C. 1291",
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::notice-of-appeal-filed->cross-appeal-window#0",
+        "label": "Notice served on all parties",
+        "from": "frcp-civil-procedure::notice-of-appeal-filed",
+        "to": "frcp-civil-procedure::cross-appeal-window",
+        "role": "nature",
+        "authority": "FRAP 3(d)",
+        "p": 1.0,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::cross-appeal-window->cross-appeal-filed#0",
+        "label": "File cross-appeal",
+        "from": "frcp-civil-procedure::cross-appeal-window",
+        "to": "frcp-civil-procedure::cross-appeal-filed",
+        "role": "self",
+        "authority": "FRAP 4(a)(3)",
+        "deadline_days": 14.0,
+        "active": true,
+        "hours": 6.0,
+        "fees": 605.0
+      },
+      {
+        "id": "frcp-civil-procedure::cross-appeal-window->appellate-briefing#0",
+        "label": "No cross-appeal -- appellee will defend the judgment on the existing record",
+        "from": "frcp-civil-procedure::cross-appeal-window",
+        "to": "frcp-civil-procedure::appellate-briefing",
+        "role": "self",
+        "authority": "FRAP 28.1",
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::cross-appeal-filed->appellate-briefing#0",
+        "label": "Cross-appeal docketed with the lead appeal",
+        "from": "frcp-civil-procedure::cross-appeal-filed",
+        "to": "frcp-civil-procedure::appellate-briefing",
+        "role": "nature",
+        "authority": "FRAP 3; 28.1",
+        "p": 1.0,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::appellate-briefing->court-of-appeals-decision#0",
+        "label": "Complete FRAP 28 briefing and oral argument",
+        "from": "frcp-civil-procedure::appellate-briefing",
+        "to": "frcp-civil-procedure::court-of-appeals-decision",
+        "role": "self",
+        "authority": "FRAP 28; 34",
+        "active": true,
+        "hours": 160.0,
+        "fees": 45000.0
+      },
+      {
+        "id": "frcp-civil-procedure::coa-affirms",
+        "label": "Court of appeals affirms",
+        "from": "frcp-civil-procedure::court-of-appeals-decision",
+        "to": "frcp-civil-procedure::judgment-affirmed",
+        "role": "nature",
+        "authority": "28 U.S.C. 1291",
+        "p": 0.55,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::court-of-appeals-decision->judgment-reversed-remanded#0",
+        "label": "Court of appeals reverses or vacates and remands",
+        "from": "frcp-civil-procedure::court-of-appeals-decision",
+        "to": "frcp-civil-procedure::judgment-reversed-remanded",
+        "role": "nature",
+        "authority": "28 U.S.C. 2106",
+        "p": 0.35,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::coa-affirmed-in-part",
+        "label": "Affirmed in part, reversed in part -- net affirmance for appellee",
+        "from": "frcp-civil-procedure::court-of-appeals-decision",
+        "to": "frcp-civil-procedure::judgment-affirmed",
+        "role": "nature",
+        "authority": "28 U.S.C. 1291; 2106",
+        "p": 0.1,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::motion-to-dismiss-filed->mtd-ruling#0{waived-12h-defenses}",
+        "label": "Complete Rule 12(b) briefing",
+        "from": "frcp-civil-procedure::motion-to-dismiss-filed{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::mtd-ruling{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 12(b)",
+        "active": true,
+        "hours": 20.0,
+        "fees": 6000.0
+      },
+      {
+        "id": "frcp-civil-procedure::mtd-ruling->answer-filed#0{waived-12h-defenses}",
+        "label": "Motion denied -- answer due within 14 days",
+        "from": "frcp-civil-procedure::mtd-ruling{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::answer-filed{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "FRCP 12(a)(4)(A)",
+        "deadline_days": 14.0,
+        "p": 0.45,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::mtd-ruling->amended-complaint-filed#0{waived-12h-defenses}",
+        "label": "Motion granted with leave to amend",
+        "from": "frcp-civil-procedure::mtd-ruling{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::amended-complaint-filed{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "FRCP 15(a)(2)",
+        "p": 0.35,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::mtd-ruling->dismissed-with-prejudice#0{waived-12h-defenses}",
+        "label": "Motion granted without leave to amend -- futility",
+        "from": "frcp-civil-procedure::mtd-ruling{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::dismissed-with-prejudice{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "FRCP 12(b)(6); 41(b)",
+        "p": 0.2,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::answer-filed->jury-demand-decision#0{waived-12h-defenses}",
+        "label": "Last pleading directed to the issue served -- 14-day jury demand clock starts",
+        "from": "frcp-civil-procedure::answer-filed{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::jury-demand-decision{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 38(b)",
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::amended-complaint-filed->rule12-response-window#0{waived-12h-defenses}",
+        "label": "Responsive-pleading window reopens for the amended pleading",
+        "from": "frcp-civil-procedure::amended-complaint-filed{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::rule12-response-window{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "FRCP 15(a)(3)",
+        "deadline_days": 14.0,
+        "p": 1.0,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::jury-demand-timely{waived-12h-defenses}",
+        "label": "Serve and file timely written jury demand",
+        "from": "frcp-civil-procedure::jury-demand-decision{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::amendment-as-of-right-window{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 38(b)",
+        "deadline_days": 14.0,
+        "active": true,
+        "hours": 0.5,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::jury-demand-waived{waived-12h-defenses}",
+        "label": "Fail to demand within 14 days -- jury trial waived",
+        "from": "frcp-civil-procedure::jury-demand-decision{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::amendment-as-of-right-window{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 38(d)",
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::rule12-response-window->answer-filed#0{waived-12h-defenses}",
+        "label": "File answer within 21 days (baseline)",
+        "from": "frcp-civil-procedure::rule12-response-window{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::answer-filed{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 12(a)(1)(A)(i)",
+        "deadline_days": 21.0,
+        "active": true,
+        "hours": 15.0,
+        "fees": 4000.0
+      },
+      {
+        "id": "frcp-civil-procedure::12b-motion-filed{waived-12h-defenses}",
+        "label": "File pre-answer Rule 12(b) motion instead of answering",
+        "from": "frcp-civil-procedure::rule12-response-window{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::motion-to-dismiss-filed{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 12(b)",
+        "deadline_days": 21.0,
+        "active": true,
+        "hours": 30.0,
+        "fees": 8000.0
+      },
+      {
+        "id": "frcp-civil-procedure::rule12-response-window->default-entered#0{waived-12h-defenses}",
+        "label": "Fail to answer or move -- default exposure",
+        "from": "frcp-civil-procedure::rule12-response-window{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::default-entered{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 55(a)",
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::amendment-as-of-right-window->amended-complaint-filed#0{waived-12h-defenses}",
+        "label": "Amend as of right within the 21-day matter-of-course window",
+        "from": "frcp-civil-procedure::amendment-as-of-right-window{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::amended-complaint-filed{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 15(a)(1)(B)",
+        "deadline_days": 21.0,
+        "active": true,
+        "hours": 8.0,
+        "fees": 2500.0
+      },
+      {
+        "id": "frcp-civil-procedure::amendment-as-of-right-window->leave-to-amend-motion#0{waived-12h-defenses}",
+        "label": "Seek leave to amend outside the matter-of-course window",
+        "from": "frcp-civil-procedure::amendment-as-of-right-window{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::leave-to-amend-motion{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 15(a)(2)",
+        "active": true,
+        "hours": 6.0,
+        "fees": 3000.0
+      },
+      {
+        "id": "frcp-civil-procedure::amendment-as-of-right-window->joinder-decision#0{waived-12h-defenses}",
+        "label": "No amendment -- proceed; consider joinder of parties",
+        "from": "frcp-civil-procedure::amendment-as-of-right-window{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::joinder-decision{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 19; 20; 24",
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::default-entered->answer-filed#0{waived-12h-defenses}",
+        "label": "Move to set aside entry of default for good cause",
+        "from": "frcp-civil-procedure::default-entered{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::answer-filed{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 55(c)",
+        "active": true,
+        "hours": 10.0,
+        "fees": 3500.0
+      },
+      {
+        "id": "frcp-civil-procedure::default-entered->default-judgment-entered#0{waived-12h-defenses}",
+        "label": "Clerk or court enters default judgment",
+        "from": "frcp-civil-procedure::default-entered{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::default-judgment-entered{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "FRCP 55(b)(1); 55(b)(2)",
+        "p": 1.0,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::leave-to-amend-motion->leave-to-amend-ruling#0{waived-12h-defenses}",
+        "label": "Complete Rule 15(a)(2) motion briefing",
+        "from": "frcp-civil-procedure::leave-to-amend-motion{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::leave-to-amend-ruling{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 15(a)(2)",
+        "active": true,
+        "hours": 5.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::joinder-required-or-permissive{waived-12h-defenses}",
+        "label": "Join a required party (Rule 19) or a permissive party (Rule 20)",
+        "from": "frcp-civil-procedure::joinder-decision{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::parties-joined{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 19(a); 20(a)",
+        "active": true,
+        "hours": 8.0,
+        "fees": 2500.0
+      },
+      {
+        "id": "frcp-civil-procedure::joinder-intervention{waived-12h-defenses}",
+        "label": "Nonparty intervenes as of right or permissively",
+        "from": "frcp-civil-procedure::joinder-decision{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::parties-joined{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 24(a); 24(b)",
+        "active": true,
+        "hours": 8.0,
+        "fees": 2500.0
+      },
+      {
+        "id": "frcp-civil-procedure::joinder-decision->rule26f-conference#0{waived-12h-defenses}",
+        "label": "No joinder -- proceed to discovery planning",
+        "from": "frcp-civil-procedure::joinder-decision{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::rule26f-conference{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 26(f)",
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::leave-to-amend-ruling->amended-complaint-filed#0{waived-12h-defenses}",
+        "label": "Leave granted -- justice so requires",
+        "from": "frcp-civil-procedure::leave-to-amend-ruling{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::amended-complaint-filed{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "FRCP 15(a)(2)",
+        "p": 0.75,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::leave-to-amend-ruling->joinder-decision#0{waived-12h-defenses}",
+        "label": "Leave denied",
+        "from": "frcp-civil-procedure::leave-to-amend-ruling{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::joinder-decision{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "FRCP 15(a)(2)",
+        "p": 0.25,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::parties-joined->rule26f-conference#0{waived-12h-defenses}",
+        "label": "Case proceeds toward discovery planning with joined parties",
+        "from": "frcp-civil-procedure::parties-joined{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::rule26f-conference{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "FRCP 16(b)",
+        "p": 1.0,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::rule26f-conference->initial-disclosures#0{waived-12h-defenses}",
+        "label": "Conduct Rule 26(f) conference and submit discovery plan",
+        "from": "frcp-civil-procedure::rule26f-conference{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::initial-disclosures{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 26(f)(1); 26(f)(2)",
+        "deadline_days": 14.0,
+        "active": true,
+        "hours": 6.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::initial-disclosures->scheduling-order-issued#0{waived-12h-defenses}",
+        "label": "Exchange Rule 26(a)(1) initial disclosures",
+        "from": "frcp-civil-procedure::initial-disclosures{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::scheduling-order-issued{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 26(a)(1)(A); 26(a)(1)(C)",
+        "active": true,
+        "hours": 10.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::scheduling-order-issued->discovery-open#0{waived-12h-defenses}",
+        "label": "Court issues Rule 16(b) scheduling order",
+        "from": "frcp-civil-procedure::scheduling-order-issued{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::discovery-open{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "FRCP 16(b)",
+        "p": 1.0,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::discovery-serve-interrogatories{waived-12h-defenses}",
+        "label": "Serve interrogatories (max 25 including discrete subparts, Rule 33(a)(1))",
+        "from": "frcp-civil-procedure::discovery-open{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::discovery-open{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 33(a)(1)",
+        "active": true,
+        "hours": 4.0,
+        "fees": 100.0
+      },
+      {
+        "id": "frcp-civil-procedure::discovery-serve-rfp{waived-12h-defenses}",
+        "label": "Serve requests for production (Rule 34)",
+        "from": "frcp-civil-procedure::discovery-open{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::discovery-open{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 34(a)(1)",
+        "active": true,
+        "hours": 3.0,
+        "fees": 100.0
+      },
+      {
+        "id": "frcp-civil-procedure::discovery-serve-rfa{waived-12h-defenses}",
+        "label": "Serve requests for admission (Rule 36) -- no timely response is deemed admitted (36(a)(3))",
+        "from": "frcp-civil-procedure::discovery-open{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::discovery-open{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 36(a); 36(a)(3)",
+        "active": true,
+        "hours": 2.0,
+        "fees": 50.0
+      },
+      {
+        "id": "frcp-civil-procedure::discovery-take-deposition{waived-12h-defenses}",
+        "label": "Take deposition (Rule 30) -- 10 depositions per side and 1 day of 7 hours absent stipulation or leave (Rule 30(a)(2)(A)(i); 30(d)(1))",
+        "from": "frcp-civil-procedure::discovery-open{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::discovery-open{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 30(a); 30(d)(1)",
+        "active": true,
+        "hours": 10.0,
+        "fees": 3000.0
+      },
+      {
+        "id": "frcp-civil-procedure::discovery-serve-30b6-notice{waived-12h-defenses}",
+        "label": "Serve Rule 30(b)(6) deposition notice on an organization",
+        "from": "frcp-civil-procedure::discovery-open{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::discovery-open{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 30(b)(6)",
+        "active": true,
+        "hours": 4.0,
+        "fees": 500.0
+      },
+      {
+        "id": "frcp-civil-procedure::discovery-serve-subpoena{waived-12h-defenses}",
+        "label": "Serve nonparty subpoena (Rule 45)",
+        "from": "frcp-civil-procedure::discovery-open{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::discovery-open{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 45(a)",
+        "active": true,
+        "hours": 3.0,
+        "fees": 300.0
+      },
+      {
+        "id": "frcp-civil-procedure::discovery-open->meet-and-confer#0{waived-12h-defenses}",
+        "label": "Meet and confer on a discovery dispute",
+        "from": "frcp-civil-procedure::discovery-open{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::meet-and-confer{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 37(a)(1)",
+        "active": true,
+        "hours": 2.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::discovery-open->protective-order-motion#0{waived-12h-defenses}",
+        "label": "Move for a protective order",
+        "from": "frcp-civil-procedure::discovery-open{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::protective-order-motion{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "FRCP 26(c)",
+        "p": 0.5,
+        "active": true,
+        "hours": 8.0,
+        "fees": 4000.0
+      },
+      {
+        "id": "frcp-civil-procedure::discovery-open->voluntary-dismissal#0{waived-12h-defenses}",
+        "label": "Parties settle -- file stipulation of dismissal",
+        "from": "frcp-civil-procedure::discovery-open{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::voluntary-dismissal{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "FRCP 41(a)(1)(A)(ii)",
+        "p": 0.5,
+        "active": true,
+        "hours": 4.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::discovery-open->discovery-closed#0{waived-12h-defenses}",
+        "label": "Discovery record complete -- proceed toward dispositive motions",
+        "from": "frcp-civil-procedure::discovery-open{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::discovery-closed{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 16(b)(3)",
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::meet-and-confer->motion-to-compel-ruling#0{waived-12h-defenses}",
+        "label": "File motion to compel after good-faith conferral fails",
+        "from": "frcp-civil-procedure::meet-and-confer{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::motion-to-compel-ruling{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 37(a)(1); 37(a)(3)",
+        "active": true,
+        "hours": 12.0,
+        "fees": 5000.0
+      },
+      {
+        "id": "frcp-civil-procedure::meet-and-confer->discovery-open#0{waived-12h-defenses}",
+        "label": "Dispute resolved informally -- discovery resumes",
+        "from": "frcp-civil-procedure::meet-and-confer{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::discovery-open{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 37(a)(1)",
+        "active": true,
+        "hours": 1.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::protective-order-motion->protective-order-ruling#0{waived-12h-defenses}",
+        "label": "Complete Rule 26(c) briefing -- good-cause showing",
+        "from": "frcp-civil-procedure::protective-order-motion{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::protective-order-ruling{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 26(c)",
+        "active": true,
+        "hours": 6.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::discovery-closed->summary-judgment-motion#0{waived-12h-defenses}",
+        "label": "Move for summary judgment",
+        "from": "frcp-civil-procedure::discovery-closed{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::summary-judgment-motion{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "FRCP 56(a); 56(b)",
+        "p": 0.5,
+        "active": true,
+        "hours": 80.0,
+        "fees": 20000.0
+      },
+      {
+        "id": "frcp-civil-procedure::discovery-closed->daubert-motion-filed#0{waived-12h-defenses}",
+        "label": "Move to exclude opposing expert testimony pretrial",
+        "from": "frcp-civil-procedure::discovery-closed{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::daubert-motion-filed{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "FRE 702",
+        "p": 0.5,
+        "active": true,
+        "hours": 35.0,
+        "fees": 15000.0
+      },
+      {
+        "id": "frcp-civil-procedure::discovery-closed->final-pretrial-conference#0{waived-12h-defenses}",
+        "label": "No dispositive or Daubert motion -- proceed to final pretrial conference",
+        "from": "frcp-civil-procedure::discovery-closed{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::final-pretrial-conference{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 16(e)",
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::compel-granted-fee-shift{waived-12h-defenses}",
+        "label": "Motion granted -- movant's fees shifted to the noncompliant party (Rule 37(a)(5)(A))",
+        "from": "frcp-civil-procedure::motion-to-compel-ruling{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::discovery-open{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "FRCP 37(a)(5)(A)",
+        "p": 0.65,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::motion-to-compel-ruling->rule37-sanctions-ruling#0{waived-12h-defenses}",
+        "label": "Party still fails to obey the compel order -- Rule 37(b) sanctions considered",
+        "from": "frcp-civil-procedure::motion-to-compel-ruling{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::rule37-sanctions-ruling{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "FRCP 37(b)(2)",
+        "p": 0.2,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::compel-denied-fee-shift{waived-12h-defenses}",
+        "label": "Motion denied -- movant's fees shifted absent substantial justification (Rule 37(a)(5)(B))",
+        "from": "frcp-civil-procedure::motion-to-compel-ruling{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::discovery-open{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "FRCP 37(a)(5)(B)",
+        "p": 0.15,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::protective-order-granted{waived-12h-defenses}",
+        "label": "Protective order granted",
+        "from": "frcp-civil-procedure::protective-order-ruling{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::discovery-open{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "FRCP 26(c)",
+        "p": 0.8,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::protective-order-denied{waived-12h-defenses}",
+        "label": "Protective order denied -- discovery proceeds unrestricted",
+        "from": "frcp-civil-procedure::protective-order-ruling{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::discovery-open{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "FRCP 26(c)",
+        "p": 0.2,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::summary-judgment-motion->sj-briefing-complete#0{waived-12h-defenses}",
+        "label": "Complete Rule 56 briefing",
+        "from": "frcp-civil-procedure::summary-judgment-motion{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::sj-briefing-complete{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 56(c)",
+        "active": true,
+        "hours": 60.0,
+        "fees": 12000.0
+      },
+      {
+        "id": "frcp-civil-procedure::daubert-motion-filed->daubert-ruling#0{waived-12h-defenses}",
+        "label": "Complete FRE 702 gatekeeping briefing (FRE 104(a))",
+        "from": "frcp-civil-procedure::daubert-motion-filed{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::daubert-ruling{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRE 702; FRE 104(a)",
+        "active": true,
+        "hours": 20.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::final-pretrial-conference->trial-commences#0{waived-12h-defenses}",
+        "label": "Court enters final pretrial order",
+        "from": "frcp-civil-procedure::final-pretrial-conference{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::trial-commences{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "FRCP 16(e)",
+        "p": 1.0,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::rule37-sanctions-ruling->discovery-open#0{waived-12h-defenses}",
+        "label": "Lesser sanction imposed -- adverse inference, fee-shifting, or evidence preclusion (Rule 37(b)(2)(A)(i)-(iv))",
+        "from": "frcp-civil-procedure::rule37-sanctions-ruling{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::discovery-open{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "FRCP 37(b)(2)(A)",
+        "p": 0.7,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::rule37-sanctions-ruling->discovery-sanctions-dismissal#0{waived-12h-defenses}",
+        "label": "Case-dispositive sanction -- dismissal for willful noncompliance or spoliation",
+        "from": "frcp-civil-procedure::rule37-sanctions-ruling{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::discovery-sanctions-dismissal{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "FRCP 37(b)(2)(A)(v); 37(e)(2)(C)",
+        "p": 0.15,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::rule37-sanctions-ruling->discovery-sanctions-default#0{waived-12h-defenses}",
+        "label": "Case-dispositive sanction -- default judgment against the disobedient defendant",
+        "from": "frcp-civil-procedure::rule37-sanctions-ruling{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::discovery-sanctions-default{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "FRCP 37(b)(2)(A)(vi)",
+        "p": 0.15,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::sj-briefing-complete->sj-ruling#0{waived-12h-defenses}",
+        "label": "Motion taken under submission",
+        "from": "frcp-civil-procedure::sj-briefing-complete{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::sj-ruling{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "FRCP 56(a)",
+        "p": 1.0,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::daubert-admitted{waived-12h-defenses}",
+        "label": "Expert testimony admitted -- reliability and fit satisfied",
+        "from": "frcp-civil-procedure::daubert-ruling{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::motions-in-limine-filed{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "FRE 702",
+        "p": 0.6,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::daubert-excluded{waived-12h-defenses}",
+        "label": "Expert testimony excluded in whole or in part",
+        "from": "frcp-civil-procedure::daubert-ruling{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::motions-in-limine-filed{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "FRE 702",
+        "p": 0.4,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::trial-commences->verdict-rendered#0{waived-12h-defenses}",
+        "label": "Evidence closed -- case submitted to the factfinder",
+        "from": "frcp-civil-procedure::trial-commences{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::verdict-rendered{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "FRCP 50(a)",
+        "p": 1.0,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::sj-ruling->summary-judgment-granted#0{waived-12h-defenses}",
+        "label": "Granted in full -- no genuine dispute of material fact",
+        "from": "frcp-civil-procedure::sj-ruling{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::summary-judgment-granted{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "FRCP 56(a)",
+        "p": 0.25,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::sj-ruling->partial-summary-judgment#0{waived-12h-defenses}",
+        "label": "Granted in part -- remaining claims proceed to trial",
+        "from": "frcp-civil-procedure::sj-ruling{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::partial-summary-judgment{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "FRCP 56(a)",
+        "p": 0.2,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::sj-ruling->daubert-motion-filed#0{waived-12h-defenses}",
+        "label": "Denied -- genuine dispute of material fact; case proceeds toward trial",
+        "from": "frcp-civil-procedure::sj-ruling{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::daubert-motion-filed{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "FRCP 56(a)",
+        "p": 0.55,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::motions-in-limine-filed->final-pretrial-conference#0{waived-12h-defenses}",
+        "label": "Complete motions in limine (FRE 103(d))",
+        "from": "frcp-civil-procedure::motions-in-limine-filed{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::final-pretrial-conference{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRE 103(d)",
+        "active": true,
+        "hours": 10.0,
+        "fees": 4000.0
+      },
+      {
+        "id": "frcp-civil-procedure::verdict-for-plaintiff{waived-12h-defenses}",
+        "label": "Verdict / findings for plaintiff",
+        "from": "frcp-civil-procedure::verdict-rendered{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::final-judgment-entered{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "FRCP 52(a); 58",
+        "p": 0.5,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::verdict-for-defendant{waived-12h-defenses}",
+        "label": "Verdict / findings for defendant",
+        "from": "frcp-civil-procedure::verdict-rendered{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::final-judgment-entered{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "FRCP 52(a); 58",
+        "p": 0.5,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::partial-summary-judgment->daubert-motion-filed#0{waived-12h-defenses}",
+        "label": "Proceed toward trial on the remaining claims",
+        "from": "frcp-civil-procedure::partial-summary-judgment{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::daubert-motion-filed{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRE 702",
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::final-judgment-entered->post-trial-motion-window#0{waived-12h-defenses}",
+        "label": "28-day post-trial motion window opens",
+        "from": "frcp-civil-procedure::final-judgment-entered{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::post-trial-motion-window{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 50(b); 59(b); 59(e)",
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::final-judgment-entered->notice-of-appeal-window#0{waived-12h-defenses}",
+        "label": "No post-trial motion -- proceed directly toward appeal",
+        "from": "frcp-civil-procedure::final-judgment-entered{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::notice-of-appeal-window{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRAP 4(a)(1)(A)",
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::post-trial-motion-window->rule50b-jmol-filed#0{waived-12h-defenses}",
+        "label": "Renew motion for JMOL (requires a preceding Rule 50(a) motion)",
+        "from": "frcp-civil-procedure::post-trial-motion-window{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::rule50b-jmol-filed{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 50(b)",
+        "deadline_days": 28.0,
+        "active": true,
+        "hours": 30.0,
+        "fees": 8000.0
+      },
+      {
+        "id": "frcp-civil-procedure::post-trial-motion-window->rule59-new-trial-filed#0{waived-12h-defenses}",
+        "label": "Move for a new trial",
+        "from": "frcp-civil-procedure::post-trial-motion-window{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::rule59-new-trial-filed{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 59(b)",
+        "deadline_days": 28.0,
+        "active": true,
+        "hours": 25.0,
+        "fees": 8000.0
+      },
+      {
+        "id": "frcp-civil-procedure::post-trial-motion-window->rule59e-amend-filed#0{waived-12h-defenses}",
+        "label": "Move to alter or amend the judgment",
+        "from": "frcp-civil-procedure::post-trial-motion-window{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::rule59e-amend-filed{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 59(e)",
+        "deadline_days": 28.0,
+        "active": true,
+        "hours": 20.0,
+        "fees": 6000.0
+      },
+      {
+        "id": "frcp-civil-procedure::post-trial-motion-window->rule60-relief-filed#0{waived-12h-defenses}",
+        "label": "Move for relief from judgment",
+        "from": "frcp-civil-procedure::post-trial-motion-window{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::rule60-relief-filed{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 60(b)",
+        "deadline_days": 365.0,
+        "active": true,
+        "hours": 25.0,
+        "fees": 7000.0
+      },
+      {
+        "id": "frcp-civil-procedure::post-trial-motion-window->notice-of-appeal-window#0{waived-12h-defenses}",
+        "label": "No post-trial motion -- proceed to appeal",
+        "from": "frcp-civil-procedure::post-trial-motion-window{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::notice-of-appeal-window{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRAP 4(a)(1)(A)",
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::notice-of-appeal-window->notice-of-appeal-filed#0{waived-12h-defenses}",
+        "label": "File notice of appeal within 30 days of entry of judgment",
+        "from": "frcp-civil-procedure::notice-of-appeal-window{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::notice-of-appeal-filed{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRAP 4(a)(1)(A)",
+        "deadline_days": 30.0,
+        "active": true,
+        "hours": 4.0,
+        "fees": 605.0
+      },
+      {
+        "id": "frcp-civil-procedure::notice-of-appeal-window->appeal-window-blown#0{waived-12h-defenses}",
+        "label": "Miss the FRAP 4(a) deadline -- no timely extension sought",
+        "from": "frcp-civil-procedure::notice-of-appeal-window{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::appeal-window-blown{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRAP 4(a)(1)(A); Bowles v. Russell, 551 U.S. 205 (2007)",
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::notice-of-appeal-window->judgment-final-no-appeal#0{waived-12h-defenses}",
+        "label": "Elect not to appeal -- judgment becomes final",
+        "from": "frcp-civil-procedure::notice-of-appeal-window{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::judgment-final-no-appeal{waived-12h-defenses}",
+        "role": "self",
+        "authority": "28 U.S.C. 1291",
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::rule50b-jmol-filed->post-trial-ruling#0{waived-12h-defenses}",
+        "label": "Complete Rule 50(b) briefing",
+        "from": "frcp-civil-procedure::rule50b-jmol-filed{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::post-trial-ruling{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 50(b)",
+        "active": true,
+        "hours": 10.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::rule59-new-trial-filed->post-trial-ruling#0{waived-12h-defenses}",
+        "label": "Complete Rule 59 briefing",
+        "from": "frcp-civil-procedure::rule59-new-trial-filed{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::post-trial-ruling{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 59(b)",
+        "active": true,
+        "hours": 10.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::rule59e-amend-filed->post-trial-ruling#0{waived-12h-defenses}",
+        "label": "Complete Rule 59(e) briefing",
+        "from": "frcp-civil-procedure::rule59e-amend-filed{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::post-trial-ruling{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 59(e)",
+        "active": true,
+        "hours": 8.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::rule60-relief-filed->post-trial-ruling#0{waived-12h-defenses}",
+        "label": "Complete Rule 60(b) briefing",
+        "from": "frcp-civil-procedure::rule60-relief-filed{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::post-trial-ruling{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRCP 60(b)",
+        "active": true,
+        "hours": 10.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::notice-of-appeal-filed->cross-appeal-window#0{waived-12h-defenses}",
+        "label": "Notice served on all parties",
+        "from": "frcp-civil-procedure::notice-of-appeal-filed{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::cross-appeal-window{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "FRAP 3(d)",
+        "p": 1.0,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::post-trial-ruling->notice-of-appeal-window#0{waived-12h-defenses}",
+        "label": "Post-trial motion denied -- FRAP 4(a)(4) tolling ends, appeal clock now runs",
+        "from": "frcp-civil-procedure::post-trial-ruling{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::notice-of-appeal-window{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "FRAP 4(a)(4)",
+        "p": 0.7,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::post-trial-ruling->final-judgment-entered#0{waived-12h-defenses}",
+        "label": "Post-trial motion granted -- amended or new judgment entered",
+        "from": "frcp-civil-procedure::post-trial-ruling{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::final-judgment-entered{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "FRCP 50(b); 59(a); 59(e)",
+        "p": 0.3,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::cross-appeal-window->cross-appeal-filed#0{waived-12h-defenses}",
+        "label": "File cross-appeal",
+        "from": "frcp-civil-procedure::cross-appeal-window{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::cross-appeal-filed{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRAP 4(a)(3)",
+        "deadline_days": 14.0,
+        "active": true,
+        "hours": 6.0,
+        "fees": 605.0
+      },
+      {
+        "id": "frcp-civil-procedure::cross-appeal-window->appellate-briefing#0{waived-12h-defenses}",
+        "label": "No cross-appeal -- appellee will defend the judgment on the existing record",
+        "from": "frcp-civil-procedure::cross-appeal-window{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::appellate-briefing{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRAP 28.1",
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::cross-appeal-filed->appellate-briefing#0{waived-12h-defenses}",
+        "label": "Cross-appeal docketed with the lead appeal",
+        "from": "frcp-civil-procedure::cross-appeal-filed{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::appellate-briefing{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "FRAP 3; 28.1",
+        "p": 1.0,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::appellate-briefing->court-of-appeals-decision#0{waived-12h-defenses}",
+        "label": "Complete FRAP 28 briefing and oral argument",
+        "from": "frcp-civil-procedure::appellate-briefing{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::court-of-appeals-decision{waived-12h-defenses}",
+        "role": "self",
+        "authority": "FRAP 28; 34",
+        "active": true,
+        "hours": 160.0,
+        "fees": 45000.0
+      },
+      {
+        "id": "frcp-civil-procedure::coa-affirms{waived-12h-defenses}",
+        "label": "Court of appeals affirms",
+        "from": "frcp-civil-procedure::court-of-appeals-decision{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::judgment-affirmed{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "28 U.S.C. 1291",
+        "p": 0.55,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::court-of-appeals-decision->judgment-reversed-remanded#0{waived-12h-defenses}",
+        "label": "Court of appeals reverses or vacates and remands",
+        "from": "frcp-civil-procedure::court-of-appeals-decision{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::judgment-reversed-remanded{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "28 U.S.C. 2106",
+        "p": 0.35,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "frcp-civil-procedure::coa-affirmed-in-part{waived-12h-defenses}",
+        "label": "Affirmed in part, reversed in part -- net affirmance for appellee",
+        "from": "frcp-civil-procedure::court-of-appeals-decision{waived-12h-defenses}",
+        "to": "frcp-civil-procedure::judgment-affirmed{waived-12h-defenses}",
+        "role": "nature",
+        "authority": "28 U.S.C. 1291; 2106",
+        "p": 0.1,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      }
+    ]
+  },
+  "warnings": [
+    {
+      "code": "compile",
+      "count": 1,
+      "example": "state flags expanded the graph: 55 additional node(s) for reachable flag combinations",
+      "at": []
+    },
+    {
+      "code": "mixed-node",
+      "count": 6,
+      "example": "self may act here, and 1 world edge(s) have no probabilities; modeled as act-or-wait (act, or let the world edges fire). Author probabilities summing < 1 on them to model a true interrupt",
+      "at": [
+        "frcp-civil-procedure::default-entered",
+        "frcp-civil-procedure::discovery-open",
+        "frcp-civil-procedure::discovery-closed",
+        "frcp-civil-procedure::default-entered{waived-12h-defenses}",
+        "frcp-civil-procedure::discovery-open{waived-12h-defenses}",
+        "frcp-civil-procedure::discovery-closed{waived-12h-defenses}"
+      ]
+    },
+    {
+      "code": "probability-fill",
+      "count": 17,
+      "example": "1 of 1 out-edges lack probabilities; filled (Residual)",
+      "at": [
+        "frcp-civil-procedure::complaint-filed",
+        "frcp-civil-procedure::amended-complaint-filed",
+        "frcp-civil-procedure::parties-joined",
+        "frcp-civil-procedure::scheduling-order-issued",
+        "frcp-civil-procedure::sj-briefing-complete",
+        "frcp-civil-procedure::final-pretrial-conference",
+        "frcp-civil-procedure::trial-commences",
+        "frcp-civil-procedure::notice-of-appeal-filed"
+      ]
+    }
+  ],
+  "provenance": {
+    "engine": "litgraph 0.2.0",
+    "api_version": 1,
+    "packs": [
+      {
+        "id": "frcp-civil-procedure",
+        "schema_version": 2,
+        "fingerprint": "fnv1a64:47526c18e135e7ef",
+        "sources": 13
+      }
+    ],
+    "nodes": 121,
+    "edges": 193,
+    "params": {
+      "carry_per_day": 0.0,
+      "loss_aversion": 2.25,
+      "opp_rate": 500.0,
+      "rate": 500.0,
+      "stakes": 1.0
+    },
+    "modes": {
+      "mixed": "nature-first",
+      "opponent": "auto",
+      "prob_fill": "residual",
+      "objective": {
+        "type": "expected"
+      },
+      "cost": "dollars",
+      "utility": "ev"
+    },
+    "calibration": []
+  },
+  "elapsed_ms": 1.507
+}

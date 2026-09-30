@@ -1,0 +1,131 @@
+{
+  "ok": true,
+  "api_version": 1,
+  "op": "explain",
+  "result": {
+    "node": {
+      "id": "cofc::claim-accrues",
+      "label": "Claim Against the United States Accrues",
+      "kind": "state",
+      "cite": "28 U.S.C. § 2501",
+      "note": "The event giving rise to the claim (breach of a government contract, taking, illegal exaction, statutory pay claim, or -- for §1498(a) claims -- unlicensed government use/manufacture of a patented invention) occurs. Accrual starts the 6-year §2501 limitations clock running. §2501 is jurisdictional and not subject to equitable tolling (John R. Sand & Gravel Co. v. United States, 552 U.S. 130 (2008))."
+    },
+    "control": "chance",
+    "who_decides": "tribunal/chance",
+    "value": 48423.073363,
+    "interrupt_mass": 1.0,
+    "options": [
+      {
+        "id": "cofc::e-accrual-to-patentfork",
+        "label": "Determine whether the claim is a §1498(a) patent/copyright use claim",
+        "from": "cofc::claim-accrues",
+        "to": "cofc::patent-claim-fork",
+        "role": "nature",
+        "authority": "28 U.S.C. § 2501; 28 U.S.C. § 1498(a)",
+        "p": 1.0,
+        "q": 48423.073363,
+        "cost": 0.0,
+        "hours": 0.0,
+        "fees": 0.0,
+        "chosen": false,
+        "kind": "draw",
+        "then": [
+          {
+            "terminal": "judgment-for-plaintiff",
+            "p": 0.217164
+          },
+          {
+            "terminal": "judgment-for-government",
+            "p": 0.217164
+          },
+          {
+            "terminal": "settled-adr",
+            "p": 0.186141
+          },
+          {
+            "terminal": "dismissed-lack-of-jurisdiction",
+            "p": 0.169219
+          }
+        ]
+      }
+    ],
+    "warnings_here": [
+      {
+        "code": "probability-fill",
+        "at": "cofc::claim-accrues",
+        "message": "1 of 1 out-edges lack probabilities; filled (Residual)"
+      }
+    ]
+  },
+  "warnings": [
+    {
+      "code": "fact-unset",
+      "count": 2,
+      "example": "matter fact not set via scenario.facts; using the authored prior (2 of 2 out-edges authored) instead of this matter's actual fact -- see docs/PACK_SCHEMA.md#matter-facts",
+      "at": [
+        "cofc::limitations-check",
+        "cofc::section-1500-check"
+      ]
+    },
+    {
+      "code": "mixed-node",
+      "count": 5,
+      "example": "self may act here, and 1 world edge(s) have no probabilities; modeled as act-or-wait (act, or let the world edges fire). Author probabilities summing < 1 on them to model a true interrupt",
+      "at": [
+        "cofc::patent-claim-fork",
+        "cofc::service-on-united-states",
+        "cofc::discovery-open",
+        "cofc::patent-14b-notice-fork",
+        "cofc::post-trial-motion-window"
+      ]
+    },
+    {
+      "code": "probability-fill",
+      "count": 27,
+      "example": "1 of 1 out-edges lack probabilities; filled (Residual)",
+      "at": [
+        "cofc::claim-accrues",
+        "cofc::patent-admin-claim-filed",
+        "cofc::patent-admin-claim-resolved",
+        "cofc::bid-protest-complaint-filed",
+        "cofc::bid-protest-initial-status-conference",
+        "cofc::complaint-filed",
+        "cofc::motion-12b-filed",
+        "cofc::answer-filed"
+      ]
+    }
+  ],
+  "provenance": {
+    "engine": "litgraph 0.2.0",
+    "api_version": 1,
+    "packs": [
+      {
+        "id": "cofc",
+        "schema_version": 2,
+        "fingerprint": "fnv1a64:67e772863ca46c68",
+        "sources": 17
+      }
+    ],
+    "nodes": 68,
+    "edges": 84,
+    "params": {
+      "carry_per_day": 0.0,
+      "loss_aversion": 2.25,
+      "opp_rate": 550.0,
+      "rate": 650.0,
+      "stakes": 1.0
+    },
+    "modes": {
+      "mixed": "nature-first",
+      "opponent": "auto",
+      "prob_fill": "residual",
+      "objective": {
+        "type": "expected"
+      },
+      "cost": "dollars",
+      "utility": "ev"
+    },
+    "calibration": []
+  },
+  "elapsed_ms": 0.36
+}

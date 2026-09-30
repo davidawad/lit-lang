@@ -1,0 +1,149 @@
+{
+  "ok": true,
+  "api_version": 1,
+  "op": "sweep",
+  "result": {
+    "param": "rate",
+    "curve": [
+      [
+        100.0,
+        261771.252905
+      ],
+      [
+        200.0,
+        222980.674806
+      ],
+      [
+        300.0,
+        184190.096708
+      ],
+      [
+        400.0,
+        145399.518609
+      ],
+      [
+        500.0,
+        106608.940511
+      ],
+      [
+        600.0,
+        67818.362412
+      ],
+      [
+        700.0,
+        29027.784314
+      ],
+      [
+        800.0,
+        -9762.793785
+      ],
+      [
+        900.0,
+        -11737.0125
+      ],
+      [
+        1000.0,
+        -13000.5125
+      ],
+      [
+        1100.0,
+        -14264.0125
+      ],
+      [
+        1200.0,
+        -15527.5125
+      ],
+      [
+        1300.0,
+        -16791.0125
+      ],
+      [
+        1400.0,
+        -18054.5125
+      ],
+      [
+        1500.0,
+        -19318.0125
+      ]
+    ],
+    "breakpoints": [
+      {
+        "node": "cofc::service-on-united-states",
+        "at": 801.893997,
+        "before": "wait (let the proceeding move)",
+        "after": "Plaintiff dismisses by notice or stipulation before an answer, SJ motion, or motion for judgment on the administrative record is served"
+      }
+    ]
+  },
+  "warnings": [
+    {
+      "code": "fact-unset",
+      "count": 2,
+      "example": "matter fact not set via scenario.facts; using the authored prior (2 of 2 out-edges authored) instead of this matter's actual fact -- see docs/PACK_SCHEMA.md#matter-facts",
+      "at": [
+        "cofc::limitations-check",
+        "cofc::section-1500-check"
+      ]
+    },
+    {
+      "code": "mixed-node",
+      "count": 5,
+      "example": "self may act here, and 1 world edge(s) have no probabilities; modeled as act-or-wait (act, or let the world edges fire). Author probabilities summing < 1 on them to model a true interrupt",
+      "at": [
+        "cofc::patent-claim-fork",
+        "cofc::service-on-united-states",
+        "cofc::discovery-open",
+        "cofc::patent-14b-notice-fork",
+        "cofc::post-trial-motion-window"
+      ]
+    },
+    {
+      "code": "probability-fill",
+      "count": 27,
+      "example": "1 of 1 out-edges lack probabilities; filled (Residual)",
+      "at": [
+        "cofc::claim-accrues",
+        "cofc::patent-admin-claim-filed",
+        "cofc::patent-admin-claim-resolved",
+        "cofc::bid-protest-complaint-filed",
+        "cofc::bid-protest-initial-status-conference",
+        "cofc::complaint-filed",
+        "cofc::motion-12b-filed",
+        "cofc::answer-filed"
+      ]
+    }
+  ],
+  "provenance": {
+    "engine": "litgraph 0.2.0",
+    "api_version": 1,
+    "packs": [
+      {
+        "id": "cofc",
+        "schema_version": 2,
+        "fingerprint": "fnv1a64:67e772863ca46c68",
+        "sources": 17
+      }
+    ],
+    "nodes": 68,
+    "edges": 84,
+    "params": {
+      "carry_per_day": 0.0,
+      "loss_aversion": 2.25,
+      "opp_rate": 550.0,
+      "rate": 650.0,
+      "stakes": 1.0
+    },
+    "modes": {
+      "mixed": "nature-first",
+      "opponent": "auto",
+      "prob_fill": "residual",
+      "objective": {
+        "type": "expected"
+      },
+      "cost": "dollars",
+      "utility": "ev"
+    },
+    "calibration": []
+  },
+  "elapsed_ms": 1.166
+}

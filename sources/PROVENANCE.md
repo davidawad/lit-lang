@@ -265,3 +265,23 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   `ptab-tpg`) — these back a pack's dollar/probability figures, not a
   `cite`/`authority` string, so cite verification has no reason to vendor
   them; out of this corpus's scope entirely.
+
+### `cfr-37-part2.txt` — 37 C.F.R. Part 2 (trademark rules of practice incl. TTAB Subpart A, 155 sections)
+
+- Source: the eCFR text of 37 C.F.R. Part 2 as of 2026-10-19, read from David's
+  library copy (`37 CFR Part 2 - Rules of Practice in Trademark Cases (eCFR
+  2026-10-19).md`; official source `https://www.ecfr.gov/current/title-37/chapter-I/subchapter-B/part-2`).
+  Split mechanically on the `### § 2.N` headings into one `## 37 C.F.R. § 2.N`
+  block per section (section number and heading restated as the first body
+  line, `#### ` subpart headings and `*[NN FR ...]*` amendment-history lines
+  dropped). No wording changed. Used by `packs/ttab-trademark-trial-and-appeal-board.json`.
+- sha256 (this file): `66402ce5e48bf2a9aa039058b3bfc181d3511b9e94137fac8b6a3d84a26b33a7`
+
+### `usc-15-lanham.txt` — Lanham Act sections (12 sections of 15 U.S.C.)
+
+- Source: the USPTO compilation "US Trademark Law - Rules of Practice and
+  Federal Statutes" dated 2026-07-15, `pdftotext -layout`, then the sections
+  15 U.S.C. §§ 1051, 1052, 1057, 1063, 1064, 1068, 1071, 1114, 1116, 1117, 1125
+  and 1127 cut at the `§ N (15 U.S.C. § NNNN)` heading lines (form feeds and
+  running page headers removed). No wording changed. Used by the TTAB pack.
+- sha256 (this file): `9ea6b13b33cf0bb61a2a1ea337097c0981665d4d30a045fece2a77324dae6c4c`

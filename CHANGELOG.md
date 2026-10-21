@@ -11,6 +11,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **TTAB pack** (`packs/ttab-trademark-trial-and-appeal-board.json`, forum
+  `ttab`): an opposition to an application from the applicant's side, from
+  the extension-of-time-to-oppose clock (30/90/60/final 60, 37 CFR 2.102(c))
+  through standstill and settlement, institution and answer (40/60 days),
+  the Section 18 restriction counterclaim, discovery, trial, briefs, final
+  decision, and appeal (15 USC 1071), with exits at four stages (2.135
+  judgment vs consented abandonment, suspension for settlement 2.117(c),
+  ACR) and a parallel infringement-suit branch. New vendored sources
+  `sources/cfr-37-part2.txt` and `sources/usc-15-lanham.txt`; named scenario
+  `ttab-opposition-applicant-defense`; `cafc@ttab` instance and
+  `ttab-appeal-to-cafc` / `cafc-remand-to-ttab` links (the cafc pack gains an
+  `entry-ttab` origin, authored at remand probability 0 so existing outputs
+  do not change); `ttab` forum maps to FRCP 6 day counting (37 CFR 2.196).
 - **Famous-case tests** (`tests/cases/`, `crates/litgraph/tests/famous_cases.rs`):
   ten real, sourced procedural histories (Twombly, Iqbal, Celotex, eBay v.
   MercExchange, Oil States, SAS Institute, United States v. Arthrex, Hughes

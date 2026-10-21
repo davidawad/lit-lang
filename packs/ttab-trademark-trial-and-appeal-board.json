@@ -1,0 +1,2334 @@
+{
+ "schemaVersion": 2,
+ "id": "ttab-trademark-trial-and-appeal-board",
+ "title": "TTAB Trademark Trial and Appeal Board: Opposition (applicant perspective), extension of time through final decision and appeal",
+ "description": "Opposition to an application (37 CFR Part 2 Subpart A, TBMP): extension of time to oppose, lapse/allowance, standstill and settlement, institution and answer, optional Section 18 counterclaim, discovery, trial, briefs, final decision, appeal (15 USC 1071), plus a parallel infringement-suit branch. Terminal attrs: rb = fraction of rebrand cost incurred, fx = other applicant USD, sh = 1 if the opposer pays a cost share, sw = opposer win fraction, sfx = opposer other USD; opp_hours/opp_fees on edges are the opposer's own cost. A scenario supplies the utility, opponent_objective and stakes from those attrs (see scenarios/ttab-opposition-applicant-defense.json). All probabilities and hours are teaching estimates.",
+ "jurisdiction": "Trademark Trial and Appeal Board (USPTO)",
+ "forum": "ttab",
+ "startNodeId": "published",
+ "groups": [
+  {
+   "id": "pre",
+   "label": "Pre-opposition"
+  },
+  {
+   "id": "standstill",
+   "label": "Standstill and negotiation"
+  },
+  {
+   "id": "lapse",
+   "label": "Lapse, allowance, registration"
+  },
+  {
+   "id": "opposition",
+   "label": "Opposition: institution and answer"
+  },
+  {
+   "id": "discovery",
+   "label": "Discovery"
+  },
+  {
+   "id": "trial",
+   "label": "Trial and briefs"
+  },
+  {
+   "id": "decision",
+   "label": "Decision"
+  },
+  {
+   "id": "appeal",
+   "label": "Appeal"
+  },
+  {
+   "id": "abandon",
+   "label": "Abandon now"
+  },
+  {
+   "id": "threat",
+   "label": "Infringement suit threat"
+  },
+  {
+   "id": "terminals",
+   "label": "Terminals"
+  }
+ ],
+ "roles": {
+  "applicant": "self",
+  "opposer": "opponent",
+  "board": "nature",
+  "office": "nature",
+  "either": "nature"
+ },
+ "sources": [
+  {
+   "id": "cfr2",
+   "title": "37 CFR Part 2 - Rules of Practice in Trademark Cases (eCFR)",
+   "url": "https://www.ecfr.gov/current/title-37/chapter-I/subchapter-B/part-2",
+   "path": "sources/cfr-37-part2.txt",
+   "sha256": "66402ce5e48bf2a9aa039058b3bfc181d3511b9e94137fac8b6a3d84a26b33a7",
+   "asOf": "2026-10-19"
+  },
+  {
+   "id": "lanham",
+   "title": "Lanham Act sections cited (15 U.S.C. 1051, 1052, 1057, 1063, 1064, 1068, 1071, 1114, 1116, 1117, 1125)",
+   "url": "https://www.law.cornell.edu/uscode/text/15/1051",
+   "path": "sources/usc-15-lanham.txt",
+   "sha256": "9ea6b13b33cf0bb61a2a1ea337097c0981665d4d30a045fece2a77324dae6c4c",
+   "asOf": "2026-07-15"
+  },
+  {
+   "id": "frcp-rules",
+   "title": "Federal Rules of Civil Procedure, as amended to Dec. 1, 2024 (FRCP 26(f), 41, 55 applied via 37 CFR 2.116(a), 2.120)",
+   "url": "https://www.uscourts.gov/sites/default/files/2025-02/federal-rules-of-civil-procedure-dec-1-2024_0.pdf",
+   "sha256": "c86b327b3bbe7dd3e68ea434a2bf0bc62aee8e85229f3456f094a1b232568317",
+   "asOf": "2024-12-01",
+   "path": "sources/frcp.txt"
+  },
+  {
+   "id": "usc28-1295",
+   "title": "28 U.S.C. 1295 (Federal Circuit jurisdiction; (a)(4)(B) TTAB appeals)",
+   "url": "https://www.law.cornell.edu/uscode/text/28/1295",
+   "path": "sources/usc-additional.txt"
+  },
+  {
+   "id": "tbmp",
+   "title": "TTAB Manual of Procedure (TBMP), June 2026",
+   "url": "https://tbmp.uspto.gov/RDMS/TBMP/current",
+   "sha256": "015cf2b665d74b25080321f67dad7ffebe412118f6f0460ec3530f4801639b8e",
+   "asOf": "2026-06"
+  }
+ ],
+ "nodes": [
+  {
+   "id": "published",
+   "label": "Application published for opposition",
+   "kind": "state",
+   "cite": "15 USC 1063(a); 37 CFR 2.101(c)",
+   "group": "pre",
+   "tags": [
+    "entry"
+   ],
+   "note": "Start of the 30-day opposition period after publication (37 CFR 2.101(c)). A matter scenario sets scenario.start to the node matching its current posture."
+  },
+  {
+   "id": "ext-first-30",
+   "label": "First extension (30 days, granted on request)",
+   "kind": "state",
+   "cite": "37 CFR 2.102(c)(1)(i)",
+   "group": "pre"
+  },
+  {
+   "id": "ext-first-90",
+   "label": "First extension (90 days, good cause)",
+   "kind": "state",
+   "cite": "37 CFR 2.102(c)(1)(ii)",
+   "group": "pre"
+  },
+  {
+   "id": "ext-second-60",
+   "label": "Second extension (additional 60 days, good cause)",
+   "kind": "state",
+   "cite": "37 CFR 2.102(c)(2)",
+   "group": "pre"
+  },
+  {
+   "id": "period-ends-day120",
+   "label": "Day 120: opposition period expires unless the applicant consents to the final 60-day extension",
+   "kind": "decision",
+   "cite": "37 CFR 2.102(c)(3); TBMP 207.03",
+   "group": "pre",
+   "tags": [
+    "entry",
+    "day120"
+   ],
+   "note": "Day 120 from publication. The final 60 days (to day 180) is available only on the applicant's written consent or a showing of extraordinary circumstances; settlement talks, letters of protest, pending amendments and civil litigation are not extraordinary (TBMP 207.03)."
+  },
+  {
+   "id": "standstill-period",
+   "label": "Standstill: final 60-day extension by consent",
+   "kind": "state",
+   "cite": "37 CFR 2.102(c)(3)",
+   "group": "standstill",
+   "note": "Applicant consents to the final extension in exchange for a standstill (no suit, no opposition, talks). Cost of consent: the potential opposer keeps the option to oppose until day 180."
+  },
+  {
+   "id": "neg-posture",
+   "label": "Choose negotiating posture during standstill",
+   "kind": "decision",
+   "cite": "37 CFR 2.102(c)(3); TBMP 605",
+   "group": "standstill"
+  },
+  {
+   "id": "neg-rebrand",
+   "label": "Talks led by rebrand-with-transition and cost share",
+   "kind": "state",
+   "cite": "TBMP 605.01",
+   "group": "standstill",
+   "tags": [
+    "negotiation"
+   ]
+  },
+  {
+   "id": "neg-coexist",
+   "label": "Talks led by coexistence / consent agreement",
+   "kind": "state",
+   "cite": "TBMP 605.03; TMEP 1207.01(d)(viii)",
+   "group": "standstill",
+   "tags": [
+    "negotiation"
+   ]
+  },
+  {
+   "id": "opposer-d120",
+   "label": "No consent: the opposer must oppose by end of day 120 or lose the right to oppose",
+   "kind": "decision",
+   "cite": "37 CFR 2.101(c); 2.102(c)(3)",
+   "group": "pre",
+   "tags": [
+    "opponent-decision"
+   ]
+  },
+  {
+   "id": "opposer-d180",
+   "label": "Standstill expired without a deal: the opposer must oppose by day 180 or lose the right to oppose",
+   "kind": "decision",
+   "cite": "37 CFR 2.102(c)(3)",
+   "group": "standstill",
+   "tags": [
+    "opponent-decision"
+   ]
+  },
+  {
+   "id": "abandon-chance",
+   "label": "Application abandoned before any opposition (37 CFR 2.68; no 2.135 judgment)",
+   "kind": "state",
+   "cite": "37 CFR 2.68; 37 CFR 2.135; TBMP 602.01",
+   "group": "pre",
+   "note": "Before commencement of an opposition the Board has no jurisdiction; express abandonment (37 CFR 2.68) carries no 2.135 judgment. Any use-based dispute outside the Board remains."
+  },
+  {
+   "id": "period-lapsed",
+   "label": "Opposition period closed with no opposition filed",
+   "kind": "state",
+   "cite": "15 USC 1063(b)(2); 37 CFR 2.102(c)",
+   "group": "lapse",
+   "note": "Opposition period closed. The opposer loses the opposition but keeps a petition to cancel within 5 years of registration (15 USC 1064(1)) and any infringement action."
+  },
+  {
+   "id": "notice-of-allowance",
+   "label": "Notice of allowance issued; 6 months to file statement of use (extendable to 24 months)",
+   "kind": "state",
+   "cite": "15 USC 1063(b)(2); 15 USC 1051(d)(1)-(2)",
+   "group": "lapse"
+  },
+  {
+   "id": "post-registration-risk",
+   "label": "Registered; opposer's residual options (cancellation within 5 years, infringement suit)",
+   "kind": "state",
+   "cite": "15 USC 1064(1); 15 USC 1114; 15 USC 1125(a)",
+   "group": "lapse",
+   "tags": [
+    "fact-free"
+   ]
+  },
+  {
+   "id": "cancellation-merits",
+   "label": "Petition to cancel (2(d)) tried to decision",
+   "kind": "state",
+   "cite": "15 USC 1064(1); TBMP 309.03",
+   "group": "lapse"
+  },
+  {
+   "id": "opposition-filed",
+   "label": "Notice of opposition filed (commenced)",
+   "kind": "state",
+   "cite": "37 CFR 2.101(a); 37 CFR 2.105",
+   "group": "opposition",
+   "tags": [
+    "commenced"
+   ],
+   "note": "From here, abandonment without the opposer's written consent = judgment against the applicant (37 CFR 2.135). Opposers can add grounds (e.g. void ab initio for wrong applicant / no bona fide intent) after discovery."
+  },
+  {
+   "id": "instituted",
+   "label": "Board institutes; answer due 60 days from institution order (historically 40)",
+   "kind": "decision",
+   "cite": "37 CFR 2.105(a); 2.106(a); TBMP 310.03(a)",
+   "group": "opposition"
+  },
+  {
+   "id": "notice-of-default",
+   "label": "Notice of default for no answer: applicant must show good cause",
+   "kind": "state",
+   "cite": "37 CFR 2.106(a); FRCP 55(c) via 37 CFR 2.116(a)",
+   "group": "opposition"
+  },
+  {
+   "id": "answered",
+   "label": "Answer on file; exits and next stage",
+   "kind": "decision",
+   "cite": "37 CFR 2.106(b); TBMP 311",
+   "group": "opposition"
+  },
+  {
+   "id": "talks-instituted",
+   "label": "Suspended for settlement after institution",
+   "kind": "state",
+   "cite": "37 CFR 2.117(c); TBMP 605.02",
+   "group": "opposition",
+   "tags": [
+    "negotiation"
+   ]
+  },
+  {
+   "id": "opposer-consent-decision",
+   "label": "Opposer decides whether to consent to abandonment",
+   "kind": "decision",
+   "cite": "37 CFR 2.135",
+   "group": "opposition",
+   "tags": [
+    "opponent-decision"
+   ],
+   "note": "Consent is the opposer's to give. Refusing yields a judgment against the applicant (issue-preclusion value for a later infringement suit, B&B Hardware v. Hargis, 575 U.S. 138 (2015)), so the opposer will not consent for free."
+  },
+  {
+   "id": "talks-answered",
+   "label": "Suspended for settlement after answer",
+   "kind": "state",
+   "cite": "37 CFR 2.117(c); TBMP 605.02",
+   "group": "opposition",
+   "tags": [
+    "negotiation"
+   ]
+  },
+  {
+   "id": "discovery-conference",
+   "label": "Discovery conference held (Board attorney on request)",
+   "kind": "state",
+   "cite": "37 CFR 2.120(a)(2)(i); FRCP 26(f)",
+   "group": "discovery"
+  },
+  {
+   "id": "initial-disclosures",
+   "label": "Initial disclosures served (30 days after discovery opens)",
+   "kind": "state",
+   "cite": "37 CFR 2.120(a)(2)(ii); TBMP 401.02",
+   "group": "discovery"
+  },
+  {
+   "id": "discovery-open",
+   "label": "Discovery open (180 days)",
+   "kind": "decision",
+   "cite": "37 CFR 2.120(a)(2)(i)",
+   "group": "discovery"
+  },
+  {
+   "id": "discovery-closed",
+   "label": "Discovery closed; ACR/trial/settlement decision",
+   "kind": "decision",
+   "cite": "37 CFR 2.121(a); TBMP 702.04",
+   "group": "discovery"
+  },
+  {
+   "id": "talks-discovery",
+   "label": "Suspended for settlement during discovery",
+   "kind": "state",
+   "cite": "37 CFR 2.117(c); TBMP 605.02",
+   "group": "discovery",
+   "tags": [
+    "negotiation"
+   ]
+  },
+  {
+   "id": "talks-trial",
+   "label": "Suspended for settlement after discovery",
+   "kind": "state",
+   "cite": "37 CFR 2.117(c); TBMP 605.02",
+   "group": "discovery",
+   "tags": [
+    "negotiation"
+   ]
+  },
+  {
+   "id": "acr-record",
+   "label": "ACR: stipulated record, Board decides on summary-judgment-style briefs",
+   "kind": "state",
+   "cite": "TBMP 702.04; TBMP 528.05(a)(2); TTAB ACR notice (2011-12-22)",
+   "note": "Accelerated Case Resolution. Cost saving is an assumption (see edge).",
+   "group": "trial"
+  },
+  {
+   "id": "trial-periods",
+   "label": "Trial periods: pretrial disclosures, plaintiff 30d, defendant 30d, rebuttal 15d",
+   "kind": "state",
+   "cite": "37 CFR 2.121(a)-(c); TBMP 702.01",
+   "group": "trial"
+  },
+  {
+   "id": "trial-closed",
+   "label": "Trial closed; briefing decision",
+   "kind": "decision",
+   "cite": "37 CFR 2.128(a)",
+   "group": "trial"
+  },
+  {
+   "id": "talks-briefs",
+   "label": "Suspended for settlement before briefs",
+   "kind": "state",
+   "cite": "37 CFR 2.117(c); TBMP 605.02",
+   "group": "trial",
+   "tags": [
+    "negotiation"
+   ]
+  },
+  {
+   "id": "briefs-filed",
+   "label": "Final briefs filed (plaintiff 60d, defendant +30d, reply +15d)",
+   "kind": "state",
+   "cite": "37 CFR 2.128(a)(1)",
+   "group": "trial"
+  },
+  {
+   "id": "final-decision",
+   "label": "Board final decision",
+   "kind": "state",
+   "cite": "37 CFR 2.129; 2.133(b); 2.136",
+   "group": "decision",
+   "note": "Merits probability is the key judgment input and is matter-specific; the authored 0.60/0.34/0.06 split is a teaching placeholder. With the Section 18 counterclaim pleaded (state flag s18) a scenario probability_fn shifts mass; see ttab-opposition-applicant-defense."
+  },
+  {
+   "id": "decision-sustained",
+   "label": "Opposition sustained: appeal choice (63 days, 37 CFR 2.145(d))",
+   "kind": "decision",
+   "cite": "15 USC 1071; 37 CFR 2.145(d)(1),(3); TBMP 901.01, 902.02",
+   "group": "decision"
+  },
+  {
+   "id": "cafc-outcome",
+   "label": "Federal Circuit decides",
+   "kind": "state",
+   "cite": "15 USC 1071(a); 28 USC 1295(a)(4)(B)",
+   "group": "appeal"
+  },
+  {
+   "id": "district-outcome",
+   "label": "District court decides (de novo on new evidence)",
+   "kind": "state",
+   "cite": "15 USC 1071(b)",
+   "group": "appeal"
+  },
+  {
+   "id": "decision-dismissed",
+   "label": "Opposition dismissed: the opposer may appeal",
+   "kind": "state",
+   "cite": "15 USC 1071; 37 CFR 2.145(d)",
+   "group": "decision"
+  },
+  {
+   "id": "opposer-appeal-outcome",
+   "label": "Opposer appeal decided",
+   "kind": "state",
+   "cite": "15 USC 1071",
+   "group": "appeal"
+  },
+  {
+   "id": "decision-restricted",
+   "label": "Registrable with restriction: applicant must move to amend",
+   "kind": "state",
+   "cite": "37 CFR 2.133(b)",
+   "group": "decision"
+  },
+  {
+   "id": "noa-post-decision",
+   "label": "Judgment final; application returns to prior status, notice of allowance",
+   "kind": "state",
+   "cite": "37 CFR 2.136; 15 USC 1063(b)(2)",
+   "group": "decision"
+  },
+  {
+   "id": "abandon-aftermath",
+   "label": "Opposer decides whether to press its use-based claims after the application is gone",
+   "kind": "state",
+   "cite": "15 USC 1114(1); 15 USC 1125(a)",
+   "group": "abandon"
+  },
+  {
+   "id": "infringement-suit-filed",
+   "label": "Opposer files federal infringement suit",
+   "kind": "decision",
+   "cite": "15 USC 1114(1); 15 USC 1125(a); 15 USC 1117(a)",
+   "group": "threat",
+   "tags": [
+    "threat"
+   ],
+   "note": "Fees only in exceptional cases (15 USC 1117(a)); no fee shifting otherwise."
+  },
+  {
+   "id": "suit-merits",
+   "label": "Suit tried to judgment",
+   "kind": "state",
+   "cite": "15 USC 1114(1); Frisch's Restaurants v. Elby's Big Boy, 670 F.2d 642 (6th Cir. 1982)",
+   "group": "threat"
+  },
+  {
+   "id": "suit-lost-fees-chance",
+   "label": "Opposer won: exceptional-case fee award?",
+   "kind": "state",
+   "cite": "15 USC 1117(a)",
+   "group": "threat"
+  },
+  {
+   "id": "suit-won-fees-chance",
+   "label": "Applicant won: exceptional-case fee award?",
+   "kind": "state",
+   "cite": "15 USC 1117(a)",
+   "group": "threat"
+  },
+  {
+   "id": "registered",
+   "label": "Registration issues (opposition lapsed or defeated)",
+   "kind": "terminal",
+   "cite": "15 USC 1051(d); 15 USC 1057",
+   "note": "Baseline: keeps the name with a registration; payoff 0 by construction (all payoffs are relative to this). [applicant payoff at defaults = 0; judgment inputs rb=0, fx=0, sh=0] Applicant payoff at placeholder inputs = 0 (rb=0, fx=0, sh=0); scenarios recompute it from params.",
+   "group": "terminals",
+   "payoff": 0,
+   "outcome": [
+    "win",
+    "registered"
+   ],
+   "attrs": {
+    "rb": 0,
+    "fx": 0,
+    "sh": 0,
+    "sw": 0,
+    "sfx": 0
+   }
+  },
+  {
+   "id": "registration-restricted",
+   "label": "Restricted registration (ID narrowed by consent or Board 2.133(b))",
+   "kind": "terminal",
+   "cite": "37 CFR 2.133(b); TBMP 212",
+   "group": "terminals",
+   "payoff": -6000,
+   "outcome": [
+    "restricted",
+    "registered"
+   ],
+   "attrs": {
+    "rb": 0,
+    "fx": -6000,
+    "sh": 0,
+    "sw": 0.15,
+    "sfx": 0
+   },
+   "note": "Applicant payoff at placeholder inputs = -6,000 (rb=0, fx=-6000, sh=0); scenarios recompute it from params."
+  },
+  {
+   "id": "opposition-sustained",
+   "label": "Opposition sustained: application refused; no damages, no fees (37 CFR 2.127(f))",
+   "kind": "terminal",
+   "cite": "37 CFR 2.127(f); 37 CFR 2.136; B&B Hardware v. Hargis, 575 U.S. 138 (2015)",
+   "group": "terminals",
+   "payoff": -115000,
+   "outcome": [
+    "loss",
+    "sustained"
+   ],
+   "attrs": {
+    "rb": 1,
+    "fx": -15000,
+    "sh": 0,
+    "sw": 1.0,
+    "sfx": 0
+   },
+   "note": "Applicant payoff at placeholder inputs = -115,000 (rb=1, fx=-15000, sh=0); scenarios recompute it from params."
+  },
+  {
+   "id": "judgment-2135",
+   "label": "Abandoned without consent after commencement: judgment against applicant",
+   "kind": "terminal",
+   "cite": "37 CFR 2.135; TBMP 602.01",
+   "group": "terminals",
+   "payoff": -115000,
+   "outcome": [
+    "loss",
+    "judgment"
+   ],
+   "attrs": {
+    "rb": 1,
+    "fx": -15000,
+    "sh": 0,
+    "sw": 1.0,
+    "sfx": 10000
+   },
+   "note": "Applicant payoff at placeholder inputs = -115,000 (rb=1, fx=-15000, sh=0); scenarios recompute it from params."
+  },
+  {
+   "id": "rebrand-orderly",
+   "label": "Orderly rebrand on negotiated timetable, no cost contribution",
+   "kind": "terminal",
+   "note": "Teaching estimate. Rebrand cost $135-150K at market (midpoint 142,500). [applicant payoff at defaults = -100,000; judgment inputs rb=1, fx=0, sh=0] Applicant payoff at placeholder inputs = -100,000 (rb=1, fx=0, sh=0); scenarios recompute it from params.",
+   "group": "terminals",
+   "payoff": -100000,
+   "outcome": [
+    "rebrand"
+   ],
+   "attrs": {
+    "rb": 1,
+    "fx": 0,
+    "sh": 0,
+    "sw": 1.0,
+    "sfx": 0
+   }
+  },
+  {
+   "id": "settle-rebrand-transition",
+   "label": "Settlement: rebrand on a transition period with the opposer cost contribution",
+   "kind": "terminal",
+   "cite": "TBMP 605.03",
+   "group": "terminals",
+   "payoff": -70000,
+   "outcome": [
+    "settlement",
+    "rebrand",
+    "cost-share"
+   ],
+   "attrs": {
+    "rb": 1,
+    "fx": 0,
+    "sh": 1,
+    "sw": 1.0,
+    "sfx": 0
+   },
+   "note": "Applicant payoff at placeholder inputs = -70,000 (rb=1, fx=0, sh=1); scenarios recompute it from params."
+  },
+  {
+   "id": "settle-coexistence",
+   "label": "Settlement: coexistence agreement; registration proceeds",
+   "kind": "terminal",
+   "cite": "TBMP 605.03; TMEP 1207.01(d)(viii)",
+   "group": "terminals",
+   "payoff": -10000,
+   "outcome": [
+    "settlement",
+    "coexistence",
+    "registered"
+   ],
+   "attrs": {
+    "rb": 0,
+    "fx": -10000,
+    "sh": 0,
+    "sw": 0.15,
+    "sfx": 0
+   },
+   "note": "Applicant payoff at placeholder inputs = -10,000 (rb=0, fx=-10000, sh=0); scenarios recompute it from params."
+  },
+  {
+   "id": "abandoned-keeps-using",
+   "label": "Abandoned application; the opposer drops C&D; client keeps using unregistered",
+   "kind": "terminal",
+   "note": "Teaching estimate. Placeholder for lost registration value and continuing exposure. [applicant payoff at defaults = -12,000; judgment inputs rb=0, fx=-12000, sh=0] Applicant payoff at placeholder inputs = -12,000 (rb=0, fx=-12000, sh=0); scenarios recompute it from params.",
+   "group": "terminals",
+   "payoff": -12000,
+   "outcome": [
+    "abandon",
+    "unregistered"
+   ],
+   "attrs": {
+    "rb": 0,
+    "fx": -12000,
+    "sh": 0,
+    "sw": 0.4,
+    "sfx": 0
+   }
+  },
+  {
+   "id": "cancelled-rebrand",
+   "label": "Registration cancelled after registering: rebrand",
+   "kind": "terminal",
+   "cite": "15 USC 1064(1)",
+   "note": "Teaching estimate. As for sustained. [applicant payoff at defaults = -115,000; judgment inputs rb=1, fx=-15000, sh=0] Applicant payoff at placeholder inputs = -115,000 (rb=1, fx=-15000, sh=0); scenarios recompute it from params.",
+   "group": "terminals",
+   "payoff": -115000,
+   "outcome": [
+    "loss",
+    "cancelled"
+   ],
+   "attrs": {
+    "rb": 1,
+    "fx": -15000,
+    "sh": 0,
+    "sw": 1.0,
+    "sfx": 0
+   }
+  },
+  {
+   "id": "suit-lost",
+   "label": "Infringement suit lost: injunction and rebrand",
+   "kind": "terminal",
+   "cite": "15 USC 1116; 15 USC 1117(a)",
+   "note": "Teaching estimate. Rebrand + $40K for monetary relief/compressed timeline (small business, 3 months of sales). [applicant payoff at defaults = -140,000; judgment inputs rb=1, fx=-40000, sh=0] Applicant payoff at placeholder inputs = -140,000 (rb=1, fx=-40000, sh=0); scenarios recompute it from params.",
+   "group": "terminals",
+   "payoff": -140000,
+   "outcome": [
+    "loss",
+    "suit"
+   ],
+   "attrs": {
+    "rb": 1,
+    "fx": -40000,
+    "sh": 0,
+    "sw": 1.0,
+    "sfx": 0
+   }
+  },
+  {
+   "id": "suit-lost-fees",
+   "label": "Infringement suit lost with exceptional-case fee award to the opposer",
+   "kind": "terminal",
+   "cite": "15 USC 1117(a)",
+   "group": "terminals",
+   "payoff": -350000,
+   "outcome": [
+    "loss",
+    "suit",
+    "fees"
+   ],
+   "attrs": {
+    "rb": 1,
+    "fx": -250000,
+    "sh": 0,
+    "sw": 1.0,
+    "sfx": 0
+   },
+   "note": "Applicant payoff at placeholder inputs = -350,000 (rb=1, fx=-250000, sh=0); scenarios recompute it from params."
+  },
+  {
+   "id": "suit-won",
+   "label": "Infringement suit won",
+   "kind": "terminal",
+   "note": "Teaching estimate. Name kept; defense cost is on the edge. [applicant payoff at defaults = -5,000; judgment inputs rb=0, fx=-5000, sh=0] Applicant payoff at placeholder inputs = -5,000 (rb=0, fx=-5000, sh=0); scenarios recompute it from params.",
+   "group": "terminals",
+   "payoff": -5000,
+   "outcome": [
+    "win",
+    "suit"
+   ],
+   "attrs": {
+    "rb": 0,
+    "fx": -5000,
+    "sh": 0,
+    "sw": 0,
+    "sfx": 0
+   }
+  },
+  {
+   "id": "suit-won-fees",
+   "label": "Infringement suit won with exceptional-case fee award to applicant",
+   "kind": "terminal",
+   "cite": "15 USC 1117(a)",
+   "note": "Teaching estimate. Fees recovered approximate own cost (~160 h x $500 = $80K); low probability. [applicant payoff at defaults = 80,000; judgment inputs rb=0, fx=80000, sh=0] Applicant payoff at placeholder inputs = 80,000 (rb=0, fx=80000, sh=0); scenarios recompute it from params.",
+   "group": "terminals",
+   "payoff": 80000,
+   "outcome": [
+    "win",
+    "suit",
+    "fees"
+   ],
+   "attrs": {
+    "rb": 0,
+    "fx": 80000,
+    "sh": 0,
+    "sw": 0,
+    "sfx": 0
+   }
+  }
+ ],
+ "edges": [
+  {
+   "from": "published",
+   "to": "ext-first-30",
+   "label": "Opposer requests 30-day extension (granted on request)",
+   "actor": "opposer",
+   "authority": "37 CFR 2.102(c)(1)(i)",
+   "deadline": {
+    "length": 30,
+    "unit": "calendar",
+    "extendable": true,
+    "extensionAuthority": "37 CFR 2.102(c)(2)-(3)"
+   },
+   "attrs": {
+    "opp_hours": 1
+   }
+  },
+  {
+   "from": "published",
+   "to": "ext-first-90",
+   "label": "Opposer requests 90-day extension (good cause)",
+   "actor": "opposer",
+   "authority": "37 CFR 2.102(c)(1)(ii)",
+   "deadline": {
+    "length": 90,
+    "unit": "calendar",
+    "extendable": true,
+    "extensionAuthority": "37 CFR 2.102(c)(3)"
+   },
+   "attrs": {
+    "opp_hours": 1,
+    "opp_fees": 200
+   }
+  },
+  {
+   "from": "ext-first-30",
+   "to": "ext-second-60",
+   "label": "Opposer requests additional 60 days (good cause)",
+   "actor": "opposer",
+   "authority": "37 CFR 2.102(c)(2)",
+   "deadline": {
+    "length": 60,
+    "unit": "calendar",
+    "extendable": true,
+    "extensionAuthority": "37 CFR 2.102(c)(3)"
+   },
+   "attrs": {
+    "opp_hours": 1,
+    "opp_fees": 200
+   }
+  },
+  {
+   "from": "ext-second-60",
+   "to": "period-ends-day120",
+   "label": "Extensions run to day 120",
+   "actor": "board",
+   "authority": "37 CFR 2.102(c)",
+   "duration": {
+    "mode": 0,
+    "min": 0,
+    "max": 0
+   }
+  },
+  {
+   "from": "ext-first-90",
+   "to": "period-ends-day120",
+   "label": "Extension runs to day 120",
+   "actor": "board",
+   "authority": "37 CFR 2.102(c)",
+   "duration": {
+    "mode": 0,
+    "min": 0,
+    "max": 0
+   }
+  },
+  {
+   "from": "published",
+   "to": "opposition-filed",
+   "label": "Opposer opposes within the original 30 days",
+   "actor": "opposer",
+   "authority": "37 CFR 2.101(c)",
+   "deadline": {
+    "length": 30,
+    "unit": "calendar",
+    "extendable": true,
+    "extensionAuthority": "37 CFR 2.102(c)"
+   },
+   "attrs": {
+    "opp_hours": 14,
+    "opp_fees": 600
+   },
+   "note": "Notice of opposition via ESTTA with $600 per class fee (37 CFR 2.6(a)(17)(ii)); application is Class 37 only (one class)."
+  },
+  {
+   "from": "period-ends-day120",
+   "to": "standstill-period",
+   "label": "Consent to final 60-day extension under standstill",
+   "actor": "applicant",
+   "authority": "37 CFR 2.102(c)(3)",
+   "hours": 3,
+   "duration": {
+    "mode": 1,
+    "min": 1,
+    "max": 3
+   },
+   "attrs": {
+    "opp_hours": 2
+   }
+  },
+  {
+   "from": "period-ends-day120",
+   "to": "opposer-d120",
+   "label": "Refuse consent; let the period expire",
+   "actor": "applicant",
+   "authority": "37 CFR 2.101(c); 2.102(c)(3)",
+   "hours": 1,
+   "duration": {
+    "mode": 1,
+    "min": 0,
+    "max": 1
+   },
+   "tags": [
+    "refuse-consent"
+   ]
+  },
+  {
+   "from": "period-ends-day120",
+   "to": "abandon-chance",
+   "label": "Abandon application now (before opposition)",
+   "actor": "applicant",
+   "authority": "37 CFR 2.68",
+   "hours": 2,
+   "attrs": {
+    "opp_hours": 1
+   },
+   "tags": [
+    "abandon-now"
+   ]
+  },
+  {
+   "from": "standstill-period",
+   "to": "neg-posture",
+   "label": "Standstill begins",
+   "actor": "board",
+   "authority": "37 CFR 2.102(c)(3)",
+   "duration": {
+    "mode": 1,
+    "min": 1,
+    "max": 1
+   }
+  },
+  {
+   "from": "neg-posture",
+   "to": "neg-rebrand",
+   "label": "Lead with rebrand-with-transition + the opposer cost contribution",
+   "actor": "applicant",
+   "authority": "TBMP 605.01",
+   "hours": 12,
+   "duration": {
+    "mode": 45,
+    "min": 20,
+    "max": 60
+   },
+   "attrs": {
+    "opp_hours": 8
+   },
+   "tags": [
+    "posture-rebrand"
+   ]
+  },
+  {
+   "from": "neg-posture",
+   "to": "neg-coexist",
+   "label": "Lead with coexistence agreement (field limits, styling, mutual non-challenge)",
+   "actor": "applicant",
+   "authority": "TBMP 605.03; TMEP 1207.01(d)(viii)",
+   "hours": 14,
+   "duration": {
+    "mode": 50,
+    "min": 20,
+    "max": 60
+   },
+   "attrs": {
+    "opp_hours": 10
+   },
+   "tags": [
+    "posture-coexist"
+   ]
+  },
+  {
+   "from": "neg-rebrand",
+   "to": "settle-rebrand-transition",
+   "label": "Deal: rebrand on a transition period with the opposer cost contribution",
+   "actor": "board",
+   "authority": "TBMP 605.03",
+   "probability": 0.38,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed.",
+   "tags": [
+    "deal"
+   ]
+  },
+  {
+   "from": "neg-rebrand",
+   "to": "settle-coexistence",
+   "label": "Deal: coexistence / consent agreement, registration proceeds",
+   "actor": "board",
+   "authority": "TBMP 605.03; TMEP 1207.01(d)(viii)",
+   "probability": 0.12,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed.",
+   "tags": [
+    "deal"
+   ]
+  },
+  {
+   "from": "neg-rebrand",
+   "to": "registration-restricted",
+   "label": "Deal: consent with narrowed ID (restricted registration)",
+   "actor": "board",
+   "authority": "TBMP 212.01-.02; 37 CFR 2.133(a)",
+   "probability": 0.05,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed.",
+   "tags": [
+    "deal"
+   ]
+  },
+  {
+   "from": "neg-rebrand",
+   "to": "opposer-d180",
+   "label": "No deal by day 180",
+   "actor": "board",
+   "authority": "37 CFR 2.102(c)(3)",
+   "probability": 0.45,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed.",
+   "tags": [
+    "no-deal"
+   ],
+   "sets": [
+    "sfail"
+   ]
+  },
+  {
+   "from": "neg-coexist",
+   "to": "settle-rebrand-transition",
+   "label": "Deal: rebrand on a transition period with the opposer cost contribution",
+   "actor": "board",
+   "authority": "TBMP 605.03",
+   "probability": 0.1,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed.",
+   "tags": [
+    "deal"
+   ]
+  },
+  {
+   "from": "neg-coexist",
+   "to": "settle-coexistence",
+   "label": "Deal: coexistence / consent agreement, registration proceeds",
+   "actor": "board",
+   "authority": "TBMP 605.03; TMEP 1207.01(d)(viii)",
+   "probability": 0.28,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed.",
+   "tags": [
+    "deal"
+   ]
+  },
+  {
+   "from": "neg-coexist",
+   "to": "registration-restricted",
+   "label": "Deal: consent with narrowed ID (restricted registration)",
+   "actor": "board",
+   "authority": "TBMP 212.01-.02; 37 CFR 2.133(a)",
+   "probability": 0.12,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed.",
+   "tags": [
+    "deal"
+   ]
+  },
+  {
+   "from": "neg-coexist",
+   "to": "opposer-d180",
+   "label": "No deal by day 180",
+   "actor": "board",
+   "authority": "37 CFR 2.102(c)(3)",
+   "probability": 0.5,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed.",
+   "tags": [
+    "no-deal"
+   ],
+   "sets": [
+    "sfail"
+   ]
+  },
+  {
+   "from": "opposer-d120",
+   "to": "opposition-filed",
+   "label": "Opposer files notice of opposition (ESTTA, $600/class)",
+   "actor": "opposer",
+   "authority": "37 CFR 2.101(a)-(c), 2.6(a)(17)(ii)",
+   "deadline": {
+    "length": 120,
+    "unit": "calendar",
+    "extendable": true,
+    "extensionAuthority": "37 CFR 2.102(c)(3) (applicant consent only)"
+   },
+   "attrs": {
+    "opp_hours": 14,
+    "opp_fees": 600
+   },
+   "tags": [
+    "file-opposition"
+   ]
+  },
+  {
+   "from": "opposer-d120",
+   "to": "period-lapsed",
+   "label": "Opposer lets the opposition period lapse",
+   "actor": "opposer",
+   "authority": "37 CFR 2.101(c); 15 USC 1063(b)",
+   "tags": [
+    "lapse"
+   ]
+  },
+  {
+   "from": "opposer-d180",
+   "to": "opposition-filed",
+   "label": "Opposer files notice of opposition by day 180",
+   "actor": "opposer",
+   "authority": "37 CFR 2.101(c), 2.102(c)(3)",
+   "deadline": {
+    "length": 180,
+    "unit": "calendar",
+    "extendable": false
+   },
+   "attrs": {
+    "opp_hours": 14,
+    "opp_fees": 600
+   },
+   "tags": [
+    "file-opposition"
+   ]
+  },
+  {
+   "from": "opposer-d180",
+   "to": "period-lapsed",
+   "label": "Opposer lets the opposition period lapse",
+   "actor": "opposer",
+   "authority": "37 CFR 2.101(c); 15 USC 1063(b)",
+   "tags": [
+    "lapse"
+   ]
+  },
+  {
+   "from": "period-lapsed",
+   "to": "notice-of-allowance",
+   "label": "Office issues notice of allowance",
+   "actor": "board",
+   "authority": "15 USC 1063(b)(2)",
+   "duration": {
+    "mode": 60,
+    "min": 30,
+    "max": 120
+   }
+  },
+  {
+   "from": "notice-of-allowance",
+   "to": "post-registration-risk",
+   "label": "File statement of use ($150/class) and register",
+   "actor": "applicant",
+   "authority": "15 USC 1051(d); 37 CFR 2.88; 37 CFR 2.6(a)(3)(ii)",
+   "hours": 1.5,
+   "cost": 150,
+   "duration": {
+    "mode": 120,
+    "min": 60,
+    "max": 360
+   }
+  },
+  {
+   "from": "post-registration-risk",
+   "to": "registered",
+   "label": "Opposer takes no further action",
+   "actor": "board",
+   "authority": "15 USC 1064(1)",
+   "probability": 0.8,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
+  },
+  {
+   "from": "post-registration-risk",
+   "to": "cancellation-merits",
+   "label": "Opposer petitions to cancel on 2(d) priority/confusion",
+   "actor": "board",
+   "authority": "15 USC 1064(1); 37 CFR 2.111; 2.6(a)(16)(ii)",
+   "hours": 118,
+   "probability": 0.15,
+   "duration": {
+    "mode": 900,
+    "min": 700,
+    "max": 1200
+   },
+   "attrs": {
+    "opp_hours": 138,
+    "opp_fees": 600
+   },
+   "note": "Teaching estimate. Same evidence as above; cost mirrors a tried opposition (hours = stage sum below)."
+  },
+  {
+   "from": "post-registration-risk",
+   "to": "infringement-suit-filed",
+   "label": "Opposer sues for infringement instead (15 USC 1114(1), 1125(a))",
+   "actor": "board",
+   "authority": "15 USC 1114(1); 15 USC 1125(a)",
+   "probability": 0.05,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed.",
+   "tags": [
+    "threat"
+   ]
+  },
+  {
+   "from": "cancellation-merits",
+   "to": "cancelled-rebrand",
+   "label": "Opposer wins: registration cancelled",
+   "actor": "board",
+   "authority": "15 USC 1064(1); 15 USC 1052(d)",
+   "probability": 0.6,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed.",
+   "tags": [
+    "merits-opposer",
+    "cancel"
+   ]
+  },
+  {
+   "from": "cancellation-merits",
+   "to": "registered",
+   "label": "Applicant wins: registration stands",
+   "actor": "board",
+   "authority": "15 USC 1064(1)",
+   "probability": 0.4,
+   "tags": [
+    "merits-applicant",
+    "cancel"
+   ]
+  },
+  {
+   "from": "opposition-filed",
+   "to": "instituted",
+   "label": "Board issues notice of institution (answer clock starts)",
+   "actor": "board",
+   "authority": "37 CFR 2.105(a)",
+   "hours": 4,
+   "duration": {
+    "mode": 21,
+    "min": 7,
+    "max": 45
+   },
+   "note": "Teaching estimate. 4 h review of the complaint and institution order."
+  },
+  {
+   "from": "instituted",
+   "to": "answered",
+   "label": "File answer (denials, crowded-field amplification), no counterclaim",
+   "actor": "applicant",
+   "authority": "37 CFR 2.106(b)(1)-(2)",
+   "id": "answer-plain",
+   "hours": 8,
+   "deadline": {
+    "length": 60,
+    "unit": "calendar",
+    "extendable": true,
+    "extensionAuthority": "37 CFR 2.127(a); consented motion TBMP 509"
+   },
+   "tags": [
+    "answer-plain"
+   ],
+   "note": "Answer due 60 days from the institution order (TBMP 310.03(a): practice changing from 40 to 60 days)."
+  },
+  {
+   "from": "instituted",
+   "to": "answered",
+   "label": "File answer WITH Section 18 restriction counterclaim against the opposer's pleaded registration ($600/class)",
+   "actor": "applicant",
+   "authority": "37 CFR 2.106(b)(3); 2.133(d); 15 USC 1068; 37 CFR 2.6(a)(16)(ii); TBMP 313.02, 309.03(d)",
+   "id": "answer-s18",
+   "hours": 33,
+   "cost": 600,
+   "deadline": {
+    "length": 60,
+    "unit": "calendar",
+    "extendable": true,
+    "extensionAuthority": "37 CFR 2.127(a)"
+   },
+   "attrs": {
+    "opp_hours": 18
+   },
+   "tags": [
+    "answer-s18"
+   ],
+   "sets": [
+    "s18"
+   ],
+   "note": "Counterclaim to restrict the opposer's pleaded registration (Section 18, 15 USC 1068; 37 CFR 2.133(d)); compulsory if grounds are known at answer (2.106(b)(3)(i)). $600 per class (2.6(a)(16)(ii)). Hours: 8 answer + 25 counterclaim (teaching estimate)."
+  },
+  {
+   "from": "instituted",
+   "to": "notice-of-default",
+   "label": "File no answer (waiver trap)",
+   "actor": "applicant",
+   "authority": "37 CFR 2.106(a)",
+   "deadline": {
+    "length": 60,
+    "unit": "calendar",
+    "extendable": false
+   },
+   "tags": [
+    "waiver-trap"
+   ],
+   "valence": "bad"
+  },
+  {
+   "from": "instituted",
+   "to": "judgment-2135",
+   "label": "Abandon application without opposer's consent (judgment)",
+   "actor": "applicant",
+   "authority": "37 CFR 2.135; TBMP 602.01",
+   "hours": 1,
+   "attrs": {
+    "opp_hours": 1
+   },
+   "tags": [
+    "abandon-no-consent"
+   ],
+   "valence": "bad"
+  },
+  {
+   "from": "instituted",
+   "to": "talks-instituted",
+   "label": "Suspend for settlement negotiations (stipulated, up to 6 months)",
+   "actor": "applicant",
+   "authority": "37 CFR 2.117(c); TBMP 605.02",
+   "hours": 15,
+   "duration": {
+    "mode": 90,
+    "min": 45,
+    "max": 180
+   },
+   "attrs": {
+    "opp_hours": 12
+   },
+   "tags": [
+    "suspend-settle"
+   ],
+   "sets": [
+    "talked"
+   ],
+   "forbids": [
+    "talked"
+   ]
+  },
+  {
+   "from": "notice-of-default",
+   "to": "answered",
+   "label": "Default set aside for good cause; answer filed",
+   "actor": "board",
+   "authority": "FRCP 55(c) via 37 CFR 2.116(a); TBMP 312",
+   "hours": 12,
+   "probability": 0.7,
+   "note": "Teaching estimate. Board applies liberal good-cause standard for setting aside default; first-time pro-se-adjacent applicant, short delay. No data point in the KB; treat as an assumption."
+  },
+  {
+   "from": "notice-of-default",
+   "to": "opposition-sustained",
+   "label": "Judgment by default",
+   "actor": "board",
+   "authority": "37 CFR 2.106(a)",
+   "probability": 0.3,
+   "note": "Teaching estimate. Complement."
+  },
+  {
+   "from": "talks-instituted",
+   "to": "settle-rebrand-transition",
+   "label": "Settlement: rebrand on transition period, cost contribution",
+   "actor": "board",
+   "authority": "TBMP 605.03",
+   "probability": 0.3,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed.",
+   "tags": [
+    "deal",
+    "inproc"
+   ]
+  },
+  {
+   "from": "talks-instituted",
+   "to": "settle-coexistence",
+   "label": "Settlement: coexistence agreement",
+   "actor": "board",
+   "authority": "TBMP 605.03",
+   "probability": 0.25,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed.",
+   "tags": [
+    "deal",
+    "inproc"
+   ]
+  },
+  {
+   "from": "talks-instituted",
+   "to": "registration-restricted",
+   "label": "Settlement: consent with narrowed ID (2.133(a) approval)",
+   "actor": "board",
+   "authority": "37 CFR 2.133(a)",
+   "probability": 0.1,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed.",
+   "tags": [
+    "deal",
+    "inproc"
+   ]
+  },
+  {
+   "from": "talks-instituted",
+   "to": "answered",
+   "label": "Talks fail; proceedings resume",
+   "actor": "board",
+   "authority": "TBMP 605.02",
+   "probability": 0.35,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed.",
+   "tags": [
+    "no-deal",
+    "inproc"
+   ]
+  },
+  {
+   "from": "opposer-consent-decision",
+   "to": "rebrand-orderly",
+   "label": "Opposer consents (no judgment)",
+   "actor": "opposer",
+   "authority": "37 CFR 2.135",
+   "tags": [
+    "consent"
+   ]
+  },
+  {
+   "from": "opposer-consent-decision",
+   "to": "judgment-2135",
+   "label": "Opposer withholds consent; judgment entered",
+   "actor": "opposer",
+   "authority": "37 CFR 2.135",
+   "tags": [
+    "no-consent"
+   ]
+  },
+  {
+   "from": "answered",
+   "to": "judgment-2135",
+   "label": "Abandon application without opposer's consent (judgment, 37 CFR 2.135)",
+   "actor": "applicant",
+   "authority": "37 CFR 2.135; TBMP 602.01",
+   "hours": 1,
+   "attrs": {
+    "opp_hours": 1
+   },
+   "tags": [
+    "abandon-no-consent"
+   ],
+   "valence": "bad"
+  },
+  {
+   "from": "answered",
+   "to": "opposer-consent-decision",
+   "label": "Seek opposer's written consent to abandonment",
+   "actor": "applicant",
+   "authority": "37 CFR 2.135; TBMP 602.01",
+   "hours": 3,
+   "attrs": {
+    "opp_hours": 2
+   },
+   "tags": [
+    "abandon-with-consent"
+   ]
+  },
+  {
+   "from": "answered",
+   "to": "talks-answered",
+   "label": "Suspend for settlement negotiations",
+   "actor": "applicant",
+   "authority": "37 CFR 2.117(c); TBMP 605.02",
+   "hours": 15,
+   "duration": {
+    "mode": 90,
+    "min": 45,
+    "max": 180
+   },
+   "attrs": {
+    "opp_hours": 12
+   },
+   "tags": [
+    "suspend-settle"
+   ],
+   "sets": [
+    "talked"
+   ],
+   "forbids": [
+    "talked"
+   ]
+  },
+  {
+   "from": "talks-answered",
+   "to": "settle-rebrand-transition",
+   "label": "Settlement: rebrand on transition period, cost contribution",
+   "actor": "board",
+   "authority": "TBMP 605.03",
+   "probability": 0.3,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed.",
+   "tags": [
+    "deal",
+    "inproc"
+   ]
+  },
+  {
+   "from": "talks-answered",
+   "to": "settle-coexistence",
+   "label": "Settlement: coexistence agreement",
+   "actor": "board",
+   "authority": "TBMP 605.03",
+   "probability": 0.25,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed.",
+   "tags": [
+    "deal",
+    "inproc"
+   ]
+  },
+  {
+   "from": "talks-answered",
+   "to": "registration-restricted",
+   "label": "Settlement: consent with narrowed ID (2.133(a) approval)",
+   "actor": "board",
+   "authority": "37 CFR 2.133(a)",
+   "probability": 0.1,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed.",
+   "tags": [
+    "deal",
+    "inproc"
+   ]
+  },
+  {
+   "from": "talks-answered",
+   "to": "discovery-conference",
+   "label": "Talks fail; proceedings resume",
+   "actor": "board",
+   "authority": "TBMP 605.02",
+   "probability": 0.35,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed.",
+   "tags": [
+    "no-deal",
+    "inproc"
+   ]
+  },
+  {
+   "from": "answered",
+   "to": "discovery-conference",
+   "label": "Proceed to discovery conference (30 days after answer due)",
+   "actor": "applicant",
+   "authority": "37 CFR 2.120(a)(2)(i); TBMP 401.01",
+   "hours": 5,
+   "duration": {
+    "mode": 30,
+    "min": 30,
+    "max": 45
+   },
+   "attrs": {
+    "opp_hours": 6
+   },
+   "tags": [
+    "continue"
+   ]
+  },
+  {
+   "from": "discovery-conference",
+   "to": "initial-disclosures",
+   "label": "Serve initial disclosures",
+   "actor": "applicant",
+   "authority": "37 CFR 2.120(a)(2)(ii)",
+   "hours": 8,
+   "deadline": {
+    "length": 30,
+    "unit": "calendar",
+    "extendable": true,
+    "extensionAuthority": "37 CFR 2.120(a)(2)(iv)"
+   },
+   "duration": {
+    "mode": 30,
+    "min": 30,
+    "max": 45
+   },
+   "attrs": {
+    "opp_hours": 8
+   }
+  },
+  {
+   "from": "initial-disclosures",
+   "to": "discovery-open",
+   "label": "Discovery period opens",
+   "actor": "board",
+   "authority": "37 CFR 2.120(a)(2)(i)",
+   "duration": {
+    "mode": 0,
+    "min": 0,
+    "max": 1
+   }
+  },
+  {
+   "from": "discovery-open",
+   "to": "judgment-2135",
+   "label": "Abandon application without opposer's consent (judgment, 37 CFR 2.135)",
+   "actor": "applicant",
+   "authority": "37 CFR 2.135; TBMP 602.01",
+   "hours": 1,
+   "attrs": {
+    "opp_hours": 1
+   },
+   "tags": [
+    "abandon-no-consent"
+   ],
+   "valence": "bad"
+  },
+  {
+   "from": "discovery-open",
+   "to": "opposer-consent-decision",
+   "label": "Seek opposer's written consent to abandonment",
+   "actor": "applicant",
+   "authority": "37 CFR 2.135; TBMP 602.01",
+   "hours": 3,
+   "attrs": {
+    "opp_hours": 2
+   },
+   "tags": [
+    "abandon-with-consent"
+   ]
+  },
+  {
+   "from": "discovery-open",
+   "to": "talks-discovery",
+   "label": "Suspend for settlement negotiations",
+   "actor": "applicant",
+   "authority": "37 CFR 2.117(c); TBMP 605.02",
+   "hours": 15,
+   "duration": {
+    "mode": 90,
+    "min": 45,
+    "max": 180
+   },
+   "attrs": {
+    "opp_hours": 12
+   },
+   "tags": [
+    "suspend-settle"
+   ],
+   "sets": [
+    "talked"
+   ],
+   "forbids": [
+    "talked"
+   ]
+  },
+  {
+   "from": "talks-discovery",
+   "to": "settle-rebrand-transition",
+   "label": "Settlement: rebrand on transition period, cost contribution",
+   "actor": "board",
+   "authority": "TBMP 605.03",
+   "probability": 0.3,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed.",
+   "tags": [
+    "deal",
+    "inproc"
+   ]
+  },
+  {
+   "from": "talks-discovery",
+   "to": "settle-coexistence",
+   "label": "Settlement: coexistence agreement",
+   "actor": "board",
+   "authority": "TBMP 605.03",
+   "probability": 0.25,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed.",
+   "tags": [
+    "deal",
+    "inproc"
+   ]
+  },
+  {
+   "from": "talks-discovery",
+   "to": "registration-restricted",
+   "label": "Settlement: consent with narrowed ID (2.133(a) approval)",
+   "actor": "board",
+   "authority": "37 CFR 2.133(a)",
+   "probability": 0.1,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed.",
+   "tags": [
+    "deal",
+    "inproc"
+   ]
+  },
+  {
+   "from": "talks-discovery",
+   "to": "discovery-closed",
+   "label": "Talks fail; proceedings resume",
+   "actor": "board",
+   "authority": "TBMP 605.02",
+   "probability": 0.35,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed.",
+   "tags": [
+    "no-deal",
+    "inproc"
+   ]
+  },
+  {
+   "from": "discovery-open",
+   "to": "discovery-closed",
+   "label": "Conduct discovery (written discovery, depositions, protective order)",
+   "actor": "applicant",
+   "authority": "37 CFR 2.120(a)(2)(i); 2.120(a)(3)",
+   "hours": 35,
+   "deadline": {
+    "length": 180,
+    "unit": "calendar",
+    "extendable": true,
+    "extensionAuthority": "37 CFR 2.120(a)(2)(iv)"
+   },
+   "duration": {
+    "mode": 180,
+    "min": 180,
+    "max": 270
+   },
+   "attrs": {
+    "opp_hours": 40
+   },
+   "tags": [
+    "continue"
+   ]
+  },
+  {
+   "from": "discovery-closed",
+   "to": "judgment-2135",
+   "label": "Abandon application without opposer's consent (judgment, 37 CFR 2.135)",
+   "actor": "applicant",
+   "authority": "37 CFR 2.135; TBMP 602.01",
+   "hours": 1,
+   "attrs": {
+    "opp_hours": 1
+   },
+   "tags": [
+    "abandon-no-consent"
+   ],
+   "valence": "bad"
+  },
+  {
+   "from": "discovery-closed",
+   "to": "opposer-consent-decision",
+   "label": "Seek opposer's written consent to abandonment",
+   "actor": "applicant",
+   "authority": "37 CFR 2.135; TBMP 602.01",
+   "hours": 3,
+   "attrs": {
+    "opp_hours": 2
+   },
+   "tags": [
+    "abandon-with-consent"
+   ]
+  },
+  {
+   "from": "discovery-closed",
+   "to": "talks-trial",
+   "label": "Suspend for settlement negotiations",
+   "actor": "applicant",
+   "authority": "37 CFR 2.117(c); TBMP 605.02",
+   "hours": 15,
+   "duration": {
+    "mode": 90,
+    "min": 45,
+    "max": 180
+   },
+   "attrs": {
+    "opp_hours": 12
+   },
+   "tags": [
+    "suspend-settle"
+   ],
+   "sets": [
+    "talked"
+   ],
+   "forbids": [
+    "talked"
+   ]
+  },
+  {
+   "from": "talks-trial",
+   "to": "settle-rebrand-transition",
+   "label": "Settlement: rebrand on transition period, cost contribution",
+   "actor": "board",
+   "authority": "TBMP 605.03",
+   "probability": 0.3,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed.",
+   "tags": [
+    "deal",
+    "inproc"
+   ]
+  },
+  {
+   "from": "talks-trial",
+   "to": "settle-coexistence",
+   "label": "Settlement: coexistence agreement",
+   "actor": "board",
+   "authority": "TBMP 605.03",
+   "probability": 0.25,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed.",
+   "tags": [
+    "deal",
+    "inproc"
+   ]
+  },
+  {
+   "from": "talks-trial",
+   "to": "registration-restricted",
+   "label": "Settlement: consent with narrowed ID (2.133(a) approval)",
+   "actor": "board",
+   "authority": "37 CFR 2.133(a)",
+   "probability": 0.1,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed.",
+   "tags": [
+    "deal",
+    "inproc"
+   ]
+  },
+  {
+   "from": "talks-trial",
+   "to": "trial-periods",
+   "label": "Talks fail; proceedings resume",
+   "actor": "board",
+   "authority": "TBMP 605.02",
+   "probability": 0.35,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed.",
+   "tags": [
+    "no-deal",
+    "inproc"
+   ]
+  },
+  {
+   "from": "discovery-closed",
+   "to": "acr-record",
+   "label": "Propose ACR (stipulate to record and expedited decision)",
+   "actor": "applicant",
+   "authority": "TBMP 702.04; 37 CFR 2.120(a)(2)(iv)",
+   "hours": 40,
+   "duration": {
+    "mode": 150,
+    "min": 90,
+    "max": 240
+   },
+   "attrs": {
+    "opp_hours": 45
+   },
+   "note": "Teaching estimate. ACR assumed to cost ~55% of full trial + briefs (hours 40 vs 65 for trial 30 + briefs 30 + prep). Evidence: ACR notice and FAQ in the KB describe stipulated records; no cost data there.",
+   "tags": [
+    "acr"
+   ]
+  },
+  {
+   "from": "acr-record",
+   "to": "final-decision",
+   "label": "Board decides on the ACR record",
+   "actor": "board",
+   "authority": "TBMP 702.04",
+   "duration": {
+    "mode": 120,
+    "min": 90,
+    "max": 180
+   }
+  },
+  {
+   "from": "discovery-closed",
+   "to": "trial-periods",
+   "label": "Proceed to trial",
+   "actor": "applicant",
+   "authority": "37 CFR 2.121",
+   "duration": {
+    "mode": 45,
+    "min": 45,
+    "max": 60
+   },
+   "tags": [
+    "continue"
+   ]
+  },
+  {
+   "from": "trial-periods",
+   "to": "trial-closed",
+   "label": "Take trial testimony / notices of reliance",
+   "actor": "applicant",
+   "authority": "37 CFR 2.121; 2.123; 2.125",
+   "hours": 30,
+   "duration": {
+    "mode": 150,
+    "min": 120,
+    "max": 240
+   },
+   "attrs": {
+    "opp_hours": 35
+   }
+  },
+  {
+   "from": "trial-closed",
+   "to": "judgment-2135",
+   "label": "Abandon application without opposer's consent (judgment, 37 CFR 2.135)",
+   "actor": "applicant",
+   "authority": "37 CFR 2.135; TBMP 602.01",
+   "hours": 1,
+   "attrs": {
+    "opp_hours": 1
+   },
+   "tags": [
+    "abandon-no-consent"
+   ],
+   "valence": "bad"
+  },
+  {
+   "from": "trial-closed",
+   "to": "opposer-consent-decision",
+   "label": "Seek opposer's written consent to abandonment",
+   "actor": "applicant",
+   "authority": "37 CFR 2.135; TBMP 602.01",
+   "hours": 3,
+   "attrs": {
+    "opp_hours": 2
+   },
+   "tags": [
+    "abandon-with-consent"
+   ]
+  },
+  {
+   "from": "trial-closed",
+   "to": "talks-briefs",
+   "label": "Suspend for settlement negotiations",
+   "actor": "applicant",
+   "authority": "37 CFR 2.117(c); TBMP 605.02",
+   "hours": 15,
+   "duration": {
+    "mode": 90,
+    "min": 45,
+    "max": 180
+   },
+   "attrs": {
+    "opp_hours": 12
+   },
+   "tags": [
+    "suspend-settle"
+   ],
+   "sets": [
+    "talked"
+   ],
+   "forbids": [
+    "talked"
+   ]
+  },
+  {
+   "from": "talks-briefs",
+   "to": "settle-rebrand-transition",
+   "label": "Settlement: rebrand on transition period, cost contribution",
+   "actor": "board",
+   "authority": "TBMP 605.03",
+   "probability": 0.3,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed.",
+   "tags": [
+    "deal",
+    "inproc"
+   ]
+  },
+  {
+   "from": "talks-briefs",
+   "to": "settle-coexistence",
+   "label": "Settlement: coexistence agreement",
+   "actor": "board",
+   "authority": "TBMP 605.03",
+   "probability": 0.25,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed.",
+   "tags": [
+    "deal",
+    "inproc"
+   ]
+  },
+  {
+   "from": "talks-briefs",
+   "to": "registration-restricted",
+   "label": "Settlement: consent with narrowed ID (2.133(a) approval)",
+   "actor": "board",
+   "authority": "37 CFR 2.133(a)",
+   "probability": 0.1,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed.",
+   "tags": [
+    "deal",
+    "inproc"
+   ]
+  },
+  {
+   "from": "talks-briefs",
+   "to": "briefs-filed",
+   "label": "Talks fail; proceedings resume",
+   "actor": "board",
+   "authority": "TBMP 605.02",
+   "probability": 0.35,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed.",
+   "tags": [
+    "no-deal",
+    "inproc"
+   ]
+  },
+  {
+   "from": "trial-closed",
+   "to": "briefs-filed",
+   "label": "File briefs (55-page cap) and any oral hearing",
+   "actor": "applicant",
+   "authority": "37 CFR 2.128(a)-(b); TBMP 801.02",
+   "hours": 30,
+   "duration": {
+    "mode": 105,
+    "min": 105,
+    "max": 150
+   },
+   "attrs": {
+    "opp_hours": 35
+   },
+   "tags": [
+    "continue"
+   ]
+  },
+  {
+   "from": "briefs-filed",
+   "to": "final-decision",
+   "label": "Board panel decides",
+   "actor": "board",
+   "authority": "37 CFR 2.129; TBMP 801",
+   "duration": {
+    "mode": 120,
+    "min": 90,
+    "max": 240
+   }
+  },
+  {
+   "from": "final-decision",
+   "to": "decision-sustained",
+   "label": "Opposition sustained",
+   "actor": "board",
+   "authority": "15 USC 1052(d); 37 CFR 2.136",
+   "id": "fd-sustained",
+   "probability": 0.6,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed.",
+   "tags": [
+    "merits-opposer"
+   ]
+  },
+  {
+   "from": "final-decision",
+   "to": "decision-dismissed",
+   "label": "Opposition dismissed (with s18: opposer's registration restricted to exclude mobile roadside charging)",
+   "actor": "board",
+   "authority": "37 CFR 2.136; 15 USC 1068; 37 CFR 2.133(d)",
+   "id": "fd-dismissed",
+   "probability": 0.34,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed.",
+   "tags": [
+    "merits-applicant"
+   ]
+  },
+  {
+   "from": "final-decision",
+   "to": "decision-restricted",
+   "label": "Board: registrable only with ID restriction (applicant must move to amend)",
+   "actor": "board",
+   "authority": "37 CFR 2.133(b)",
+   "id": "fd-restricted",
+   "probability": 0.06,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed.",
+   "tags": [
+    "restrict"
+   ]
+  },
+  {
+   "from": "decision-sustained",
+   "to": "opposition-sustained",
+   "label": "Accept the decision; application refused",
+   "actor": "applicant",
+   "authority": "37 CFR 2.136",
+   "tags": [
+    "accept"
+   ]
+  },
+  {
+   "from": "decision-sustained",
+   "to": "cafc-outcome",
+   "label": "Appeal to the Federal Circuit (on the Board record)",
+   "actor": "applicant",
+   "authority": "15 USC 1071(a); 37 CFR 2.145(d)(1)",
+   "hours": 120,
+   "cost": 1200,
+   "duration": {
+    "mode": 540,
+    "min": 450,
+    "max": 720
+   },
+   "attrs": {
+    "opp_hours": 150
+   },
+   "note": "Teaching estimate. 120 h: opening/reply briefs + argument; fees = docketing + notice. Affirmance on the Board record is the norm (see cafc-outcome).",
+   "tags": [
+    "appeal-cafc"
+   ]
+  },
+  {
+   "from": "decision-sustained",
+   "to": "district-outcome",
+   "label": "Civil action in district court (15 USC 1071(b); new evidence)",
+   "actor": "applicant",
+   "authority": "15 USC 1071(b); 37 CFR 2.145(d)(3)",
+   "hours": 260,
+   "cost": 5000,
+   "deadline": {
+    "length": 63,
+    "unit": "calendar",
+    "extendable": false
+   },
+   "duration": {
+    "mode": 720,
+    "min": 540,
+    "max": 1000
+   },
+   "attrs": {
+    "opp_hours": 300
+   },
+   "note": "Teaching estimate. Costly; allows new evidence (e.g. marketplace facts). Expenses of the proceeding payable by the party bringing the action (15 USC 1071(b)(3)); verify before relying (UNVERIFIED).",
+   "tags": [
+    "civil-action"
+   ]
+  },
+  {
+   "from": "cafc-outcome",
+   "to": "opposition-sustained",
+   "label": "Affirmed",
+   "actor": "board",
+   "authority": "28 USC 1295(a)(4)(B)",
+   "probability": 0.88,
+   "note": "Teaching estimate. Substantial-evidence review of Board fact findings; affirmance rates for TTAB are high (no KB data; assumption)."
+  },
+  {
+   "from": "cafc-outcome",
+   "to": "noa-post-decision",
+   "label": "Reversed/vacated; application returns to allowance",
+   "actor": "board",
+   "authority": "15 USC 1071(a)",
+   "probability": 0.12,
+   "note": "Teaching estimate. Complement."
+  },
+  {
+   "from": "district-outcome",
+   "to": "opposition-sustained",
+   "label": "Court upholds refusal",
+   "actor": "board",
+   "authority": "15 USC 1071(b)",
+   "probability": 0.72,
+   "note": "Teaching estimate. New evidence gives a real chance; still follows the Board on 2(d) usually (assumption)."
+  },
+  {
+   "from": "district-outcome",
+   "to": "noa-post-decision",
+   "label": "Court orders registration",
+   "actor": "board",
+   "authority": "15 USC 1071(b)(1)",
+   "probability": 0.28,
+   "note": "Teaching estimate. Complement."
+  },
+  {
+   "from": "decision-dismissed",
+   "to": "noa-post-decision",
+   "label": "Opposer does not appeal; judgment final after 63 days",
+   "actor": "board",
+   "authority": "37 CFR 2.136; 2.145(d)",
+   "probability": 0.75,
+   "duration": {
+    "mode": 63,
+    "min": 63,
+    "max": 63
+   },
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
+  },
+  {
+   "from": "decision-dismissed",
+   "to": "opposer-appeal-outcome",
+   "label": "Opposer appeals to CAFC or files a civil action",
+   "actor": "board",
+   "authority": "15 USC 1071",
+   "hours": 100,
+   "cost": 1200,
+   "probability": 0.25,
+   "duration": {
+    "mode": 540,
+    "min": 450,
+    "max": 720
+   },
+   "attrs": {
+    "opp_hours": 140
+   },
+   "note": "Teaching estimate. Complement; defending an appeal."
+  },
+  {
+   "from": "opposer-appeal-outcome",
+   "to": "noa-post-decision",
+   "label": "Dismissal affirmed",
+   "actor": "board",
+   "authority": "15 USC 1071",
+   "probability": 0.85,
+   "note": "Teaching estimate. Assumption."
+  },
+  {
+   "from": "opposer-appeal-outcome",
+   "to": "opposition-sustained",
+   "label": "Reversed: opposition sustained",
+   "actor": "board",
+   "authority": "15 USC 1071",
+   "probability": 0.15,
+   "note": "Teaching estimate. Complement."
+  },
+  {
+   "from": "noa-post-decision",
+   "to": "registered",
+   "label": "File statement of use ($150/class) and register",
+   "actor": "applicant",
+   "authority": "15 USC 1051(d); 37 CFR 2.6(a)(3)(ii)",
+   "hours": 1.5,
+   "cost": 150,
+   "duration": {
+    "mode": 180,
+    "min": 60,
+    "max": 360
+   }
+  },
+  {
+   "from": "decision-restricted",
+   "to": "registration-restricted",
+   "label": "Move to amend ID to conform to the findings",
+   "actor": "applicant",
+   "authority": "37 CFR 2.133(b)",
+   "hours": 6,
+   "attrs": {
+    "opp_hours": 4
+   },
+   "tags": [
+    "restricted-amend"
+   ]
+  },
+  {
+   "from": "abandon-chance",
+   "to": "abandon-aftermath",
+   "label": "Application expressly abandoned",
+   "actor": "board",
+   "authority": "37 CFR 2.68",
+   "duration": {
+    "mode": 1,
+    "min": 1,
+    "max": 3
+   }
+  },
+  {
+   "from": "abandon-aftermath",
+   "to": "abandoned-keeps-using",
+   "label": "Opposer drops the C&D; applicant keeps using the mark unregistered",
+   "actor": "board",
+   "authority": "15 USC 1125(a)",
+   "probability": 0.35,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
+  },
+  {
+   "from": "abandon-aftermath",
+   "to": "rebrand-orderly",
+   "label": "Opposer presses; applicant rebrands on a negotiated timetable",
+   "actor": "board",
+   "authority": "15 USC 1125(a)",
+   "probability": 0.55,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
+  },
+  {
+   "from": "abandon-aftermath",
+   "to": "infringement-suit-filed",
+   "label": "Opposer sues",
+   "actor": "board",
+   "authority": "15 USC 1114(1); 1125(a)",
+   "probability": 0.1,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed.",
+   "tags": [
+    "threat"
+   ]
+  },
+  {
+   "from": "infringement-suit-filed",
+   "to": "suit-merits",
+   "label": "Litigate to judgment",
+   "actor": "applicant",
+   "authority": "15 USC 1114(1); 1125(a)",
+   "hours": 160,
+   "cost": 15000,
+   "duration": {
+    "mode": 540,
+    "min": 420,
+    "max": 900
+   },
+   "attrs": {
+    "opp_hours": 260
+   },
+   "tags": [
+    "litigate-suit"
+   ]
+  },
+  {
+   "from": "infringement-suit-filed",
+   "to": "rebrand-orderly",
+   "label": "Settle early: rebrand on transition (no cost share)",
+   "actor": "applicant",
+   "authority": "FRCP 41(a)(1)(A)(ii)",
+   "hours": 20,
+   "attrs": {
+    "opp_hours": 25
+   },
+   "note": "Teaching estimate. Assumption.",
+   "tags": [
+    "settle-suit"
+   ]
+  },
+  {
+   "from": "suit-merits",
+   "to": "suit-lost-fees-chance",
+   "label": "Opposer wins: injunction, rebrand",
+   "actor": "board",
+   "authority": "15 USC 1116; 1114(1)",
+   "probability": 0.45,
+   "note": "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
+  },
+  {
+   "from": "suit-merits",
+   "to": "suit-won-fees-chance",
+   "label": "Applicant wins: no infringement",
+   "actor": "board",
+   "authority": "15 USC 1114(1)",
+   "probability": 0.55,
+   "note": "Teaching estimate. Complement."
+  },
+  {
+   "from": "suit-lost-fees-chance",
+   "to": "suit-lost-fees",
+   "label": "Exceptional case: fees shifted to applicant",
+   "actor": "board",
+   "authority": "15 USC 1117(a)",
+   "probability": 0.05,
+   "note": "Teaching estimate. Exceptional-case standard (Octane Fitness applied to Lanham Act) is hard to meet; assumption."
+  },
+  {
+   "from": "suit-lost-fees-chance",
+   "to": "suit-lost",
+   "label": "No fee award",
+   "actor": "board",
+   "authority": "15 USC 1117(a)",
+   "probability": 0.95,
+   "note": "Teaching estimate. Complement."
+  },
+  {
+   "from": "suit-won-fees-chance",
+   "to": "suit-won-fees",
+   "label": "Exceptional case: fees shifted to the opposer",
+   "actor": "board",
+   "authority": "15 USC 1117(a)",
+   "probability": 0.05,
+   "note": "Teaching estimate. Assumption."
+  },
+  {
+   "from": "suit-won-fees-chance",
+   "to": "suit-won",
+   "label": "No fee award",
+   "actor": "board",
+   "authority": "15 USC 1117(a)",
+   "probability": 0.95,
+   "note": "Teaching estimate. Complement."
+  }
+ ]
+}

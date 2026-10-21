@@ -281,6 +281,30 @@
       "note": "PERMADEATH. Each origin's notice-of-appeal deadline is jurisdictional and, on this record, effectively unextendable once it lapses (see the edge authority for the specific unextendability rule for this origin). No equitable exception restores appellate jurisdiction."
     },
     {
+      "id": "window-blown-ttab",
+      "kind": "terminal",
+      "label": "TTAB-Origin Notice of Appeal Untimely — Window Blown",
+      "group": "entry-group",
+      "payoff": 0,
+      "outcome": [
+        "loss",
+        "procedural-default"
+      ],
+      "valence": "bad",
+      "tags": [
+        "waiver-trap"
+      ],
+      "note": "PERMADEATH unless the Director extends: 37 C.F.R. § 2.145(e) allows an extension requested before expiry on good cause, or after expiry on excusable neglect. Otherwise the Board decision becomes final."
+    },
+    {
+      "id": "entry-ttab",
+      "kind": "state",
+      "label": "TTAB Final Decision (Opposition, Cancellation or Ex Parte Appeal)",
+      "group": "entry-group",
+      "cite": "28 U.S.C. § 1295(a)(4)(B); 15 U.S.C. § 1071(a); 37 C.F.R. § 2.145",
+      "note": "Reached from ttab-trademark-trial-and-appeal-board.json's decision nodes. A party dissatisfied with a final TTAB decision may appeal on the Board record to the Federal Circuit (15 U.S.C. § 1071(a)) or instead file a de novo civil action in district court under § 1071(b) (not modeled here). Electing the civil action forecloses the appeal and vice versa, and an adverse party can force the civil-action route by electing it within the period to respond (§ 1071(a)(1))."
+    },
+    {
       "id": "notice-of-appeal-filed",
       "kind": "state",
       "label": "Notice of Appeal Filed (Convergence)",
@@ -619,6 +643,18 @@
       "note": "Illustrative payoff per the authoring brief (~40% of the full-reversal value — a real but incomplete win; the case is not over). This terminal's id is deliberately stable so packs/links.json composition can link it back into the corresponding origin pack's post-remand posture (e.g. mpep-prosecution.json for PTAB, itc-337.json's commission-final-determination for a remand, frcp-civil-procedure.json for district court)."
     },
     {
+      "id": "remanded-to-ttab",
+      "kind": "terminal",
+      "label": "Remanded to the TTAB",
+      "group": "decision-group",
+      "payoff": 400000,
+      "outcome": [
+        "remand"
+      ],
+      "valence": "caution",
+      "note": "Illustrative payoff per the authoring brief (~40% of the full-reversal value — a real but incomplete win; the case is not over). This terminal's id is deliberately stable so packs/links.json composition can link it back into the corresponding origin pack's post-remand posture (e.g. mpep-prosecution.json for TTAB, itc-337.json's commission-final-determination for a remand, frcp-civil-procedure.json for district court)."
+    },
+    {
       "id": "rehearing-window",
       "kind": "decision",
       "label": "Losing Party Weighs Rehearing",
@@ -776,6 +812,14 @@
       "authority": "28 U.S.C. § 1295(a)(3)"
     },
     {
+      "id": "origin-to-ttab",
+      "from": "appeal-origin",
+      "to": "entry-ttab",
+      "label": "Judgment below is a TTAB final decision",
+      "actor": "either",
+      "authority": "28 U.S.C. § 1295(a)(4)(B)"
+    },
+    {
       "id": "district-court-file-noa",
       "from": "entry-district-court",
       "to": "notice-of-appeal-filed",
@@ -882,6 +926,32 @@
       "label": "Let the 60-day window lapse",
       "actor": "applicant",
       "authority": "28 U.S.C. § 2522; Bowles v. Russell, 551 U.S. 205 (2007)"
+    },
+    {
+      "id": "ttab-file-noa",
+      "from": "entry-ttab",
+      "to": "notice-of-appeal-filed",
+      "label": "File notice of appeal with the Director (USPTO)",
+      "actor": "applicant",
+      "authority": "15 U.S.C. § 1071(a)(2); 37 C.F.R. § 2.145(d)(1)",
+      "hours": 4,
+      "deadline": {
+        "length": 63,
+        "extendable": true,
+        "extensionAuthority": "37 C.F.R. § 2.145(e) (Director may extend on good cause if requested before expiry, or on excusable neglect if requested after)",
+        "note": "63 days after the final TTAB decision (or after action on a timely request for reconsideration). Filed with the Director, then docketed at the Federal Circuit. A cross-appeal may be filed within 14 days after service of the notice of appeal or 63 days, whichever is later. Notice-of-appeal fee not modeled (UNVERIFIED)."
+      },
+      "tags": [
+        "appeal"
+      ]
+    },
+    {
+      "id": "ttab-window-blown",
+      "from": "entry-ttab",
+      "to": "window-blown-ttab",
+      "label": "Let the 63-day window lapse",
+      "actor": "applicant",
+      "authority": "37 C.F.R. § 2.145(d)(1), (e)"
     },
     {
       "id": "noa-to-docketed",
@@ -1244,7 +1314,9 @@
       "actor": "office",
       "authority": "FRAP 36(a)",
       "probability": 0.1,
-      "sets": ["panel-reversed"],
+      "sets": [
+        "panel-reversed"
+      ],
       "note": "Teaching estimate — not independently sourced."
     },
     {
@@ -1265,7 +1337,9 @@
       "actor": "office",
       "authority": "FRAP 36(a)",
       "probability": 0.17,
-      "sets": ["panel-mixed"],
+      "sets": [
+        "panel-mixed"
+      ],
       "note": "Teaching estimate — not independently sourced."
     },
     {
@@ -1317,6 +1391,16 @@
       "authority": "FRAP 36(a)",
       "probability": 0.25,
       "note": "Structural, not statistical — see remand-destination's note."
+    },
+    {
+      "id": "remand-route-ttab",
+      "from": "remand-destination",
+      "to": "remanded-to-ttab",
+      "label": "Case originated at the TTAB",
+      "actor": "office",
+      "authority": "FRAP 36(a)",
+      "probability": 0.0,
+      "note": "Structural, not statistical — see remand-destination's note. Authored 0.0 in the unscoped base so the existing four 0.25 splits (and every base-pack output) are unchanged; the cafc@ttab instance sets this route to 1.0."
     },
     {
       "id": "rule36-to-rehearing",
@@ -1427,7 +1511,11 @@
       "label": "Case reheard/modified — fresh disposition",
       "actor": "office",
       "authority": "Fed. Cir. R. 40(e)",
-      "clears": ["panel-affirmed", "panel-reversed", "panel-mixed"],
+      "clears": [
+        "panel-affirmed",
+        "panel-reversed",
+        "panel-mixed"
+      ],
       "note": "A fresh disposition replaces the prior one, so the panel-outcome flag from the disposition being reheard is cleared here — the new panel-to-affirmed/panel-to-reversed/panel-to-mixed edge that follows sets the flag that matters going forward. Without this, a case that goes through rehearing more than once could accumulate contradictory flags (e.g. panel-affirmed AND panel-reversed at once)."
     },
     {

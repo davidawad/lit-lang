@@ -9,7 +9,9 @@
         "origin-to-itc",
         "remand-route-district-court",
         "remand-route-ptab",
-        "remand-route-itc"
+        "remand-route-itc",
+        "origin-to-ttab",
+        "remand-route-ttab"
       ],
       "probabilities": {
         "remand-route-cofc": 1.0
@@ -38,7 +40,9 @@
         "origin-to-itc",
         "remand-route-district-court",
         "remand-route-ptab",
-        "remand-route-itc"
+        "remand-route-itc",
+        "origin-to-ttab",
+        "remand-route-ttab"
       ],
       "probabilities": {
         "remand-route-cofc": 1.0
@@ -72,7 +76,9 @@
         "origin-to-cofc",
         "remand-route-district-court",
         "remand-route-itc",
-        "remand-route-cofc"
+        "remand-route-cofc",
+        "origin-to-ttab",
+        "remand-route-ttab"
       ],
       "probabilities": {
         "remand-route-ptab": 1.0
@@ -87,7 +93,9 @@
         "origin-to-cofc",
         "remand-route-district-court",
         "remand-route-ptab",
-        "remand-route-cofc"
+        "remand-route-cofc",
+        "origin-to-ttab",
+        "remand-route-ttab"
       ],
       "probabilities": {
         "remand-route-itc": 1.0
@@ -116,10 +124,29 @@
         "origin-to-itc",
         "remand-route-cofc",
         "remand-route-ptab",
-        "remand-route-itc"
+        "remand-route-itc",
+        "origin-to-ttab",
+        "remand-route-ttab"
       ],
       "probabilities": {
         "remand-route-district-court": 1.0
+      }
+    },
+    "cafc@ttab": {
+      "pack": "cafc",
+      "note": "Federal Circuit as entered from a final TTAB decision (15 U.S.C. § 1071(a); 28 U.S.C. § 1295(a)(4)(B)). Remand can only return to the TTAB.",
+      "remove_edges": [
+        "origin-to-district-court",
+        "origin-to-ptab",
+        "origin-to-itc",
+        "origin-to-cofc",
+        "remand-route-district-court",
+        "remand-route-ptab",
+        "remand-route-itc",
+        "remand-route-cofc"
+      ],
+      "probabilities": {
+        "remand-route-ttab": 1.0
       }
     }
   },
@@ -345,6 +372,33 @@
         "frcp-civil-procedure::notice-of-appeal-filed->cross-appeal-window#0"
       ],
       "note": "The Federal Circuit has exclusive jurisdiction over an appeal from a final district-court judgment in a civil action arising under an Act of Congress relating to patents (or plant variety protection), or in which a party asserted a compulsory patent counterclaim -- including a final judgment under 28 U.S.C. § 1292(c)(1)-(2). Coexists with `frcp-appeal-to-regional-circuit` as the other route out of `notice-of-appeal-filed`; a matter scenario selects the applicable one with `scenario.remove_edges` (see that link's note). Routes into the `cafc@district-court` instance, which mirrors `cafc@ptab`/`cafc@itc`/`cafc@cofc`: it keeps only `origin-to-district-court` and remands only back to the district court."
+    },
+    {
+      "id": "ttab-appeal-to-cafc",
+      "from": "ttab-trademark-trial-and-appeal-board::decision-sustained",
+      "to": "cafc@ttab::entry-ttab",
+      "label": "Appeal the TTAB decision to the Federal Circuit on the Board record",
+      "actor": "applicant",
+      "authority": "15 U.S.C. § 1071(a); 28 U.S.C. § 1295(a)(4)(B)",
+      "tags": [
+        "appeal"
+      ],
+      "replaces": [
+        "ttab-trademark-trial-and-appeal-board::decision-sustained->cafc-outcome#0"
+      ],
+      "note": "Supersedes the TTAB pack's abstract Federal Circuit outcome node when both packs are loaded. The 15 U.S.C. § 1071(b) civil-action alternative stays abstract (district-court de novo review is not a good fit for the FRCP pack's generic civil case); a matter scenario removes whichever route it does not use."
+    },
+    {
+      "id": "cafc-remand-to-ttab",
+      "from": "cafc@ttab::remanded-to-ttab",
+      "to": "ttab-trademark-trial-and-appeal-board::final-decision",
+      "label": "Remand: Board issues a new final decision",
+      "actor": "office",
+      "probability": 1.0,
+      "authority": "28 U.S.C. § 2106",
+      "tags": [
+        "remand"
+      ]
     }
   ]
 }

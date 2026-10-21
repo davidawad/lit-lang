@@ -81,6 +81,9 @@ pub fn ruleset_for_forum(forum: Option<&str>, pack_id: &str) -> Option<RuleSet> 
             "cafc" | "frap" => return Some(RuleSet::Frap26),
             "itc" => return Some(RuleSet::Itc210),
             "frcp" => return Some(RuleSet::Frcp6),
+            // TTAB periods are counted in calendar days with a weekend/holiday roll
+            // (37 C.F.R. § 2.196), the same arithmetic as FRCP 6(a)(1).
+            "ttab" => return Some(RuleSet::Frcp6),
             _ => {}
         }
     }
@@ -115,6 +118,10 @@ mod tests {
         assert_eq!(
             ruleset_for_forum(Some("itc"), "itc-337"),
             Some(RuleSet::Itc210)
+        );
+        assert_eq!(
+            ruleset_for_forum(Some("ttab"), "ttab-trademark-trial-and-appeal-board"),
+            Some(RuleSet::Frcp6)
         );
     }
 

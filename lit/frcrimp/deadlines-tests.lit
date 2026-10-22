@@ -1,0 +1,96 @@
+module frcrimp.deadlines.tests
+
+import core.frcp6.{ frcp6 }
+import core.time.{ Scheduled, Served }
+
+deadline appearance-period: 3.days after Served() counted_by frcp6 effective [2024-12-01, ..) cite FRCrimP 5(a)
+deadline prelim-period: 14.days after Served() counted_by frcp6 effective [2024-12-01, ..) cite FRCrimP 5.1(c)
+deadline indictment: 30.days after Served() counted_by frcp6 effective [2024-12-01, ..) cite 18 U.S.C. § 3161(b)
+deadline speedy-trial: 70.days after Served() counted_by frcp6 effective [2024-12-01, ..) cite 18 U.S.C. § 3161(c)(1)
+deadline speedy-trial-from-arraignment: 70.days after Served() counted_by frcp6 effective [2024-12-01, ..) cite 18 U.S.C. § 3161(c)(1)
+deadline rule29: 14.days after Served() counted_by frcp6 effective [2024-12-01, ..) cite FRCrimP 29(c)
+deadline rule33: 14.days after Served() counted_by frcp6 effective [2024-12-01, ..) cite FRCrimP 33(b)
+deadline psr-disclosure: 35.days before Scheduled() counted_by frcp6 effective [2024-12-01, ..) cite FRCrimP 32(e)(2)
+deadline rule35: 14.days after Served() counted_by frcp6 effective [2024-12-01, ..) cite FRCrimP 35(a)
+deadline criminal-appeal: 14.days after Served() counted_by frcp6 effective [2024-12-01, ..) cite FRAP 4(b)(1)(A)
+deadline appeal-file-period: 14.days after Served() counted_by frcp6 effective [2024-12-01, ..) cite FRAP 4(b)(1)(A)
+deadline appeal-missed-period: 14.days after Served() counted_by frcp6 effective [2024-12-01, ..) cite FRAP 4(b)(1)(A)
+deadline holiday-roll: 11.days after Served() counted_by frcp6 effective [2024-12-01, ..) cite FRCrimP 6(a)(1)(C)
+
+test "Rule 5 appearance period counted from arrest" cite FRCrimP 5(a)
+{
+  given Served(Personal) on 2025-03-03
+  expect deadline(appearance-period) == 2025-03-06
+}
+
+test "Rule 5.1 preliminary hearing period" cite FRCrimP 5.1(c)
+{
+  given Served(Personal) on 2025-03-03
+  expect deadline(prelim-period) == 2025-03-17
+}
+
+test "Speedy Trial Act indictment period" cite 18 U.S.C. § 3161(b)
+{
+  given Served(Personal) on 2025-03-03
+  expect deadline(indictment) == 2025-04-02
+}
+
+test "Speedy Trial Act 70-day trial period" cite 18 U.S.C. § 3161(c)(1)
+{
+  given Served(Personal) on 2025-03-03
+  expect deadline(speedy-trial) == 2025-05-12
+}
+
+test "Rule 29 post-verdict deadline" cite FRCrimP 29(c)
+{
+  given Served(Personal) on 2025-03-03
+  expect deadline(rule29) == 2025-03-17
+}
+
+test "Rule 33 new-trial deadline" cite FRCrimP 33(b)
+{
+  given Served(Personal) on 2025-03-03
+  expect deadline(rule33) == 2025-03-17
+}
+
+test "Rule 32 PSR disclosure before sentencing" cite FRCrimP 32(e)(2)
+{
+  given Scheduled() on 2025-04-07
+  expect deadline(psr-disclosure) == 2025-03-03
+}
+
+test "Rule 35 correction deadline" cite FRCrimP 35(a)
+{
+  given Served(Personal) on 2025-03-03
+  expect deadline(rule35) == 2025-03-17
+}
+
+test "FRAP 4(b) criminal appeal period" cite FRAP 4(b)(1)(A)
+{
+  given Served(Personal) on 2025-03-03
+  expect deadline(criminal-appeal) == 2025-03-17
+}
+
+test "FRCP 6 rolls an Independence Day deadline to Monday" cite FRCrimP 6(a)(1)(C)
+{
+  given Served(Personal) on 2026-06-22
+  expect deadline(holiday-roll) == 2026-07-06
+}
+
+test "Speedy Trial Act trial period from arraignment" cite 18 U.S.C. § 3161(c)(1)
+{
+  given Served(Personal) on 2025-03-03
+  expect deadline(speedy-trial-from-arraignment) == 2025-05-12
+}
+
+test "FRAP 4(b) timely notice period" cite FRAP 4(b)(1)(A)
+{
+  given Served(Personal) on 2025-03-03
+  expect deadline(appeal-file-period) == 2025-03-17
+}
+
+test "FRAP 4(b) missed notice period" cite FRAP 4(b)(1)(A)
+{
+  given Served(Personal) on 2025-03-03
+  expect deadline(appeal-missed-period) == 2025-03-17
+}

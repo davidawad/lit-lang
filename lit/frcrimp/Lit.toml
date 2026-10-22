@@ -1,0 +1,112 @@
+# Imported by `litigate import` from packs/frcrimp-criminal-procedure.json;
+# package metadata below is pinned to the vendored current rule set.
+[package]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+language = 1
+pack_id = "frcrimp-criminal-procedure"
+forum = "frcrimp"
+authority = "FederalRule"
+title = "Federal Criminal Procedure Under the FRCrimP Rules"
+description = "Pre-charge investigation and grand jury -> criminal complaint or indictment -> arrest, initial appearance, and detention/bail determination -> arraignment and pretrial release -> Rule 12 pretrial motions (defective indictment, suppression, Speedy Trial Act) -> Rule 16 and Brady/Giglio discovery -> Rule 11 plea negotiations and the change-of-plea colloquy -> trial (Rule 29 acquittal motions, jury verdict) -> post-trial motions and U.S.S.G. sentencing -> Rule 35 correction, the FRAP 4(b) notice-of-appeal window, and direct appeal. Citations checked against the Federal Rules of Criminal Procedure, Title 18, the Sentencing Guidelines, and the Federal Rules of Appellate Procedure. Walk mode teaches the Rule 12(c)(3) pretrial-motions waiver trap, the jurisdictional (Bowles v. Russell) character of the FRAP 4(b) notice-of-appeal deadline, and the unextendable 14-day Rule 29(c)/33/35(a) post-verdict clocks."
+jurisdiction = "Federal Rules of Criminal Procedure / U.S. District Courts"
+in_force = "2024-12-01"
+known_at = "2024-12-01"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[package.roles]
+applicant = "self"
+either = "nature"
+examiner = "nature"
+office = "nature"
+
+[sources.frcrimp-rules]
+title = "Federal Rules of Criminal Procedure, as amended to Dec. 1, 2024"
+url = "https://www.uscourts.gov/sites/default/files/2025-02/federal-rules-of-criminal-procedure-dec-1-2024_0.pdf"
+path = "sources/frcrimp.txt"
+sha256 = "c89161b8a258b62af4d5298de832c43bd72f2eea1104c7625a5b561658e5875c"
+as_of = "2024-12-01"
+
+[sources.frap-rules]
+title = "Federal Rules of Appellate Procedure, as amended to Dec. 1, 2024 (FRAP 4(b) criminal appeal clock)"
+url = "https://www.uscourts.gov/sites/default/files/2025-02/federal-rules-of-appellate-procedure-dec-1-2024_0.pdf"
+path = "sources/frap.txt"
+sha256 = "d61711eca8e1f65955d12f1b7d29d4cc453d9ee1e30c4fff6c54b23f113454f6"
+as_of = "2024-12-01"
+
+[sources.usc18-3161]
+title = "18 U.S.C. §§ 3161-3162 (Speedy Trial Act)"
+url = "https://www.law.cornell.edu/uscode/text/18/3161"
+path = "sources/usc-additional.txt"
+cite_prefixes = ["18 U.S.C."]
+
+[sources.usc18-3282]
+title = "18 U.S.C. § 3282 (Offenses not capital -- 5-year limitations)"
+url = "https://www.law.cornell.edu/uscode/text/18/3282"
+path = "sources/usc-additional.txt"
+
+[sources.usc28-1291]
+title = "28 U.S.C. § 1291 (Final decisions of district courts)"
+url = "https://www.law.cornell.edu/uscode/text/28/1291"
+path = "sources/usc-additional.txt"
+
+[sources.usc28-2255]
+title = "28 U.S.C. § 2255 (Collateral attack on a federal sentence)"
+url = "https://www.law.cornell.edu/uscode/text/28/2255"
+path = "sources/usc-additional.txt"
+
+[sources.usc18-3142]
+title = "18 U.S.C. § 3142 (Release or detention of a defendant pending trial)"
+url = "https://www.law.cornell.edu/uscode/text/18/3142"
+path = "sources/usc-additional.txt"
+
+[sources.usc18-3162]
+title = "18 U.S.C. § 3162 (Speedy Trial Act sanctions)"
+url = "https://www.law.cornell.edu/uscode/text/18/3162"
+path = "sources/usc-additional.txt"
+
+[sources.usc18-3501]
+title = "18 U.S.C. § 3501 (Admissibility of confessions)"
+url = "https://www.law.cornell.edu/uscode/text/18/3501"
+path = "sources/usc-additional.txt"
+
+[sources.usc18-3552]
+title = "18 U.S.C. § 3552 (Presentence report)"
+url = "https://www.law.cornell.edu/uscode/text/18/3552"
+path = "sources/usc-additional.txt"
+
+[sources.usc18-3553]
+title = "18 U.S.C. § 3553 (Imposition of a sentence)"
+url = "https://www.law.cornell.edu/uscode/text/18/3553"
+path = "sources/usc-additional.txt"
+
+[sources.usc28-1914]
+title = "28 U.S.C. § 1914 (District court filing fee -- applies only to civil actions, suits or proceedings)"
+url = "https://www.law.cornell.edu/uscode/text/28/1914"
+
+[sources.coa-fee-schedule]
+title = "Court of Appeals Miscellaneous Fee Schedule (docketing fee $600, effective 12/1/2023)"
+url = "https://www.uscourts.gov/court-programs/fees/court-appeals-miscellaneous-fee-schedule"
+as_of = "2023-12-01"
+
+[sources.usc28-1917]
+title = "28 U.S.C. § 1917 (District courts; fee on filing notice of or application for appeal, $5)"
+url = "https://www.law.cornell.edu/uscode/text/28/1917"
+
+[[cite_syntax.rules]]
+prefixes = ["FRCrimP", "Fed. R. Crim. P.", "Fed R Crim P", "F.R.Crim.P."]
+heading = "Fed. R. Crim. P. {}"
+source = "frcrimp-rules"
+
+[[cite_syntax.rules]]
+prefixes = ["FRAP", "Fed. R. App. P.", "Fed R App P", "F.R.A.P."]
+heading = "FRAP {}"
+source = "frap-rules"
+
+[[cite_syntax.rules]]
+prefixes = ["18 U.S.C."]
+heading = "18 U.S.C. § {}"
+source = "usc18-3161"
+

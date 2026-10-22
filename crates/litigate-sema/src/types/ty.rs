@@ -172,8 +172,8 @@ pub fn resolve(scope: &Scope<'_>, t: &TypeRef, reports: &mut Vec<Report>) -> Opt
                     TypeSig::Alias(target) => target.clone(),
                     TypeSig::Enum(_) | TypeSig::Event(_) => Some(Type::Named(canonical)),
                 },
-                Err(report) => {
-                    reports.push(report);
+                Err(unresolved) => {
+                    reports.extend(unresolved.into_report());
                     None
                 }
             }

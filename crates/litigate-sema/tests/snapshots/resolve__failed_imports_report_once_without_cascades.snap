@@ -1,0 +1,10 @@
+---
+source: crates/litigate-sema/tests/resolve.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:2:22 L1002 module `shared.types` declares no `Documnt` [fix: \"Document\"]",
+    "pkgs/demo/main.lit:3:8 L1002 cannot find module `shared.nodez` [fix: \"shared.types\"]",
+    "pkgs/demo/main.lit:6:26 L1002 cannot find function or event `Served`",
+    "pkgs/demo/main.lit:7:30 L1002 `Document` is not an imported module",
+]

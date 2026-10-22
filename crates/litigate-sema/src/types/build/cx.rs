@@ -41,8 +41,8 @@ pub fn nested(f: &Field) -> &[Field] {
 }
 
 impl Cx<'_, '_> {
-    /// Records a report.
-    pub fn report(&mut self, r: Report) {
+    /// Records a report (see [`crate::types::expr::Checker::report`]).
+    pub fn report(&mut self, r: impl Into<Option<Report>>) {
         self.ck.report(r);
     }
 

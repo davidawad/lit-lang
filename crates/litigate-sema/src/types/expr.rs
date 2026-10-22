@@ -50,9 +50,10 @@ impl<'s, 'a> Checker<'s, 'a> {
         }
     }
 
-    /// Records a report.
-    pub fn report(&mut self, report: Report) {
-        self.reports.push(report);
+    /// Records a report; a lookup failure already reported at its import
+    /// (`Unresolved::AlreadyReported`) records nothing.
+    pub fn report(&mut self, report: impl Into<Option<Report>>) {
+        self.reports.extend(report.into());
     }
 
     pub(crate) fn span(&self, range: TextRange) -> Option<litigate_base::Span> {
@@ -298,7 +299,8 @@ impl<'s, 'a> Checker<'s, 'a> {
                     self.error(r)
                 }
             },
-            Err(report) => {
+            Err(crate::resolve::scope::Unresolved::AlreadyReported) => self.error(r),
+            Err(crate::resolve::scope::Unresolved::Report(report)) => {
                 let report = match expected {
                     Some(Type::Named(en))
                         if path.is_simple() && self.scope.enum_variants(en).is_some() =>
@@ -375,7 +377,8 @@ impl<'s, 'a> Checker<'s, 'a> {
                 C::UnresolvedName,
                 callee.range,
                 format!("cannot find function `{}`", callee.display()),
-            ))
+            )
+            .into())
         };
         let (name, params) = match lookup {
             Ok((name, found)) => {
@@ -393,7 +396,8 @@ impl<'s, 'a> Checker<'s, 'a> {
                     return self.error(r);
                 }
             }
-            Err(report) => {
+            Err(crate::resolve::scope::Unresolved::AlreadyReported) => return self.error(r),
+            Err(crate::resolve::scope::Unresolved::Report(report)) => {
                 let report = Report {
                     message: report
                         .message

@@ -120,10 +120,10 @@ pub fn print(op: &str, outcome: Outcome, format: Format, color: bool, elapsed_ms
         }
     };
     let envelope = envelope(op, &report, elapsed_ms);
-    let code = if !envelope.ok {
-        2
-    } else {
+    let code = if envelope.ok {
         u8::from(report.failed) * 2
+    } else {
+        2
     };
     let stdout = match format {
         Format::Json => serde_json::to_string(&envelope)

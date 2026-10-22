@@ -13,10 +13,14 @@ mod test;
 mod value;
 mod where_;
 
+pub use explain::phase;
+
 use crate::cli::Command;
 use crate::out::Outcome;
 
 /// Runs `command`.
+// One arm per subcommand, each only unpacking its arguments.
+#[allow(clippy::too_many_lines)]
 pub fn dispatch(command: Command) -> Outcome {
     match command {
         Command::Describe => Ok(crate::out::Report::of(crate::describe::describe())),

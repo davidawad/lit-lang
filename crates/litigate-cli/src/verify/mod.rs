@@ -100,7 +100,11 @@ pub fn package(
         out.extend(
             pkg.files
                 .iter()
-                .filter(|(p, _)| p.ends_with(".lit"))
+                .filter(|(p, _)| {
+                    std::path::Path::new(p)
+                        .extension()
+                        .is_some_and(|e| e.eq_ignore_ascii_case("lit"))
+                })
                 .filter_map(|(p, text)| {
                     litigate_syntax::check_format(text, FileKind::Lit, &p.as_str().into())
                 }),

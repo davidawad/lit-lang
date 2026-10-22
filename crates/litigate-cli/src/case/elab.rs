@@ -216,8 +216,7 @@ fn event_call(cx: &mut Cx<'_>, call: &ast::CallExpr) -> Option<Expr> {
         let at = cx.node_span(arg.syntax());
         let text = arg
             .reference()
-            .map(|r| r.text())
-            .unwrap_or_else(|| arg.syntax().text().to_string());
+            .map_or_else(|| arg.syntax().text().to_string(), |r| r.text());
         let Some((enum_name, cases)) = variants(cx, pty) else {
             cx.error(
                 C::LoweringUnsupported,
@@ -228,7 +227,7 @@ fn event_call(cx: &mut Cx<'_>, call: &ast::CallExpr) -> Option<Expr> {
             );
             return None;
         };
-        if !cases.iter().any(|c| *c == text) {
+        if !cases.contains(&text) {
             cx.error(
                 C::TypeMismatch,
                 at,
@@ -296,7 +295,7 @@ pub(super) fn case<'a>(
 ) -> Option<hir::Case> {
     let id = file.name()?.text().to_owned();
     let pins = uses(cx, session, file);
-    cx.as_of = file.as_of()?.text().to_owned();
+    file.as_of()?.text().clone_into(&mut cx.as_of);
     if pins.is_empty() {
         return None;
     }

@@ -23,8 +23,6 @@ pub struct Checked {
     pub findings: Vec<Finding>,
     /// The profile.
     pub profile: Profile,
-    /// Clock fragments.
-    pub clocks: Clocks,
 }
 
 /// Loads and checks `paths`.
@@ -93,7 +91,6 @@ pub fn check_session(session: Session, profile: Profile, as_of: Option<&str>) ->
         diagnostics,
         findings,
         profile,
-        clocks,
     }
 }
 

@@ -4,6 +4,7 @@ use crate::span::byte_range;
 use ariadne::{Color, Config, Label, Report, ReportKind, Source};
 use litigate_base::{Diagnostic, Envelope, Severity};
 use serde_json::Value;
+use std::fmt::Write as _;
 
 /// One diagnostic as text, with its excerpt when the source is known.
 #[must_use]
@@ -93,13 +94,14 @@ pub fn human(envelope: &Envelope<Value>, sources: &[(String, String)], color: bo
             .filter(|d| d.severity == s)
             .count()
     };
-    out.push_str(&format!(
-        "litigate {}: {} ({} error(s), {} warning(s))\n",
+    let _ = writeln!(
+        out,
+        "litigate {}: {} ({} error(s), {} warning(s))",
         envelope.op,
         if envelope.ok { "ok" } else { "failed" },
         count(Severity::Error),
         count(Severity::Warning)
-    ));
+    );
     if let Some(result) = &envelope.result {
         out.push_str(&serde_json::to_string_pretty(result).unwrap_or_default());
         out.push('\n');

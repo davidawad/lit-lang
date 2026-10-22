@@ -18,7 +18,7 @@ fn loaded(imported: &Imported) -> (Vec<LoadedPackage>, Vec<CaseText>) {
     let mut packages: BTreeMap<String, LoadedPackage> = BTreeMap::new();
     let mut cases = Vec::new();
     for file in &imported.files {
-        if file.path.ends_with(".case") {
+        if is_case(&file.path) {
             cases.push(CaseText {
                 path: file.path.clone(),
                 text: file.text.clone(),
@@ -52,6 +52,13 @@ fn loaded(imported: &Imported) -> (Vec<LoadedPackage>, Vec<CaseText>) {
     (packages.into_values().collect(), cases)
 }
 
+/// True for a `.case` path.
+fn is_case(path: &str) -> bool {
+    Path::new(path)
+        .extension()
+        .is_some_and(|e| e.eq_ignore_ascii_case("case"))
+}
+
 /// The generated document an input must equal.
 fn counterpart(text: &str) -> Option<String> {
     let value: Value = serde_json::from_str(text).ok()?;
@@ -78,7 +85,7 @@ fn start(file: &str) -> Span {
 /// True when a diagnostic in `file` belongs to generated file `generated`:
 /// the file itself, or any file of the package directory it lies in.
 fn owns(generated: &str, file: &str) -> bool {
-    if generated.ends_with(".case") {
+    if is_case(generated) {
         return generated == file;
     }
     generated
@@ -89,42 +96,51 @@ fn owns(generated: &str, file: &str) -> bool {
 
 /// Round-trip diagnostics: generated source that does not check, or does
 /// not lower back to its input.
-fn round_trip(imported: &Imported, inputs: &[Input]) -> Vec<Diagnostic> {
-    let (packages, cases) = loaded(imported);
-    let checked = check_session(Session::from_loaded(&packages, cases), Profile::Dev, None);
-    let mut out: Vec<Diagnostic> = Vec::new();
+/// One L6002 per input whose generated source has check errors.
+fn unchecked(
+    imported: &Imported,
+    inputs: &[Input],
+    checked: &super::check::Checked,
+) -> Vec<Diagnostic> {
     // `Lit.lock` is written by `litigate lock`, never by import (SPEC §4.2).
     let errors: Vec<&Diagnostic> = checked
         .diagnostics
         .iter()
         .filter(|d| d.severity == Severity::Error && d.code != C::StaleLock)
         .collect();
-    for input in inputs {
-        let generated: Vec<&str> = imported
-            .files
-            .iter()
-            .filter(|f| f.from == input.path)
-            .map(|f| f.path.as_str())
-            .collect();
-        let own: Vec<Note> = errors
-            .iter()
-            .filter(|d| generated.iter().any(|g| owns(g, &d.span.file.0)))
-            .map(|d| Note {
-                span: Some(d.span.clone()),
-                message: format!("{}: {}", d.code.as_str(), d.message),
-            })
-            .collect();
-        if !own.is_empty() {
-            out.push(Diagnostic {
+    inputs
+        .iter()
+        .filter_map(|input| {
+            let generated: Vec<&str> = imported
+                .files
+                .iter()
+                .filter(|f| f.from == input.path)
+                .map(|f| f.path.as_str())
+                .collect();
+            let own: Vec<Note> = errors
+                .iter()
+                .filter(|d| generated.iter().any(|g| owns(g, &d.span.file.0)))
+                .map(|d| Note {
+                    span: Some(d.span.clone()),
+                    message: format!("{}: {}", d.code.as_str(), d.message),
+                })
+                .collect();
+            (!own.is_empty()).then(|| Diagnostic {
                 notes: own,
                 ..Diagnostic::error(
                     C::SemanticDiff,
                     start(&input.path),
                     "the imported source does not check",
                 )
-            });
-        }
-    }
+            })
+        })
+        .collect()
+}
+
+fn round_trip(imported: &Imported, inputs: &[Input]) -> Vec<Diagnostic> {
+    let (packages, cases) = loaded(imported);
+    let checked = check_session(Session::from_loaded(&packages, cases), Profile::Dev, None);
+    let mut out = unchecked(imported, inputs, &checked);
     if !out.is_empty() {
         return out;
     }

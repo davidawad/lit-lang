@@ -1,3 +1,10 @@
-//! Domain types, exact values, and the expression type checker (SPEC §6).
+//! Domain types, exact values, the expression type checker (SPEC §6), and
+//! construction of HIR from checked items.
+pub mod build;
+pub mod builtins;
 pub mod date;
+pub mod expr;
+pub mod ops;
 pub mod rational;
+pub mod shape;
+pub mod ty;

@@ -1,0 +1,473 @@
+//! Expression type checking (SPEC §6): literals, names, calls, and the
+//! bidirectional `check` that resolves enum variants, `Dist` records,
+//! probability literals, and holes against an expected type.
+use super::ops;
+use super::rational::{self, ArithError};
+use super::ty::display;
+use crate::db::parse::tree::{Expr, ExprKind, RefPath};
+use crate::db::span::{to_span, Report, TextRange};
+use crate::hir::{self, DayUnit, Money, Rational, Type, Value};
+use crate::resolve::{scope::Scope, sig::TypeSig, sig::ValueKind};
+use litigate_base::{Applicability, DiagnosticCode as C, FileId, LineIndex};
+use std::collections::BTreeSet;
+
+/// A checked expression: its HIR, type (`None` after an error), and
+/// constant value when it folds.
+#[derive(Debug, Clone)]
+pub struct Checked {
+    /// Typed HIR.
+    pub hir: hir::Expr,
+    /// Type; `None` suppresses cascading errors.
+    pub ty: Option<Type>,
+    /// Exact constant value, when known.
+    pub value: Option<Value>,
+}
+
+/// Expression checker for one module.
+pub struct Checker<'s, 'a> {
+    /// Name lookup.
+    pub scope: &'s Scope<'a>,
+    /// Reports produced so far.
+    pub reports: Vec<Report>,
+    /// Holes seen: range and reason.
+    pub holes: Vec<(TextRange, Option<String>)>,
+    /// Declared actors (values of type `Role`).
+    pub actors: BTreeSet<String>,
+    /// File for HIR spans.
+    pub file: Option<(&'s FileId, &'s LineIndex)>,
+}
+
+impl<'s, 'a> Checker<'s, 'a> {
+    /// A checker with no actors and no span information.
+    #[must_use]
+    pub fn new(scope: &'s Scope<'a>) -> Self {
+        Self {
+            scope,
+            reports: Vec::new(),
+            holes: Vec::new(),
+            actors: BTreeSet::new(),
+            file: None,
+        }
+    }
+
+    /// Records a report.
+    pub fn report(&mut self, report: Report) {
+        self.reports.push(report);
+    }
+
+    pub(crate) fn span(&self, range: TextRange) -> Option<litigate_base::Span> {
+        self.file.map(|(f, i)| to_span(f, i, range))
+    }
+
+    pub(crate) fn node(
+        &self,
+        kind: hir::ExprKind,
+        ty: Option<Type>,
+        value: Option<Value>,
+        range: TextRange,
+    ) -> Checked {
+        Checked {
+            hir: hir::Expr {
+                ty: ty.clone().unwrap_or(Type::Unit),
+                kind,
+                span: self.span(range),
+            },
+            ty,
+            value,
+        }
+    }
+
+    pub(crate) fn literal(&self, value: Value, ty: Type, range: TextRange) -> Checked {
+        self.node(
+            hir::ExprKind::Literal {
+                value: value.clone(),
+            },
+            Some(ty),
+            Some(value),
+            range,
+        )
+    }
+
+    pub(crate) fn error(&self, range: TextRange) -> Checked {
+        self.node(
+            hir::ExprKind::Literal { value: Value::Unit },
+            None,
+            None,
+            range,
+        )
+    }
+
+    pub(crate) fn arith(&mut self, range: TextRange, e: ArithError) -> Checked {
+        self.report(Report::new(C::ArithmeticError, range, e.message()));
+        self.error(range)
+    }
+
+    /// Infers the type of `e` with no expectation.
+    pub fn infer(&mut self, e: &Expr) -> Checked {
+        let r = e.range;
+        match &e.kind {
+            ExprKind::Number(text) => match rational::parse_decimal(text) {
+                Ok(v) => self.literal(Value::Number(v), Type::Number, r),
+                Err(err) => self.arith(r, err),
+            },
+            ExprKind::Money(text) => self.money(text, r),
+            ExprKind::Duration(text) => self.duration(text, r),
+            ExprKind::Str(s) => self.literal(Value::String(s.clone()), Type::String, r),
+            ExprKind::Date(d) => self.literal(Value::Date(d.clone()), Type::Date, r),
+            ExprKind::Bool(b) => self.literal(Value::Boolean(*b), Type::Boolean, r),
+            ExprKind::Unit => self.literal(Value::Unit, Type::Unit, r),
+            ExprKind::Cite(c) => self.literal(Value::Cite(c.clone()), Type::Cite, r),
+            ExprKind::Hole(reason) => {
+                self.holes.push((r, reason.clone()));
+                self.report(
+                    Report::new(C::TypeMismatch, r, "cannot infer the type of this hole")
+                        .note("holes are allowed only where the expected type is known"),
+                );
+                self.error(r)
+            }
+            ExprKind::Ref(path) => self.reference(path, None),
+            ExprKind::Call(callee, args) => self.call(callee, args, r),
+            ExprKind::Unary(op, inner) => ops::unary(self, *op, inner, r),
+            ExprKind::Binary(op, lhs, rhs) => ops::binary(self, *op, lhs, rhs, r),
+            ExprKind::Paren(inner) => self.infer(inner),
+            ExprKind::Record(fields) => super::shape::record(self, fields, r),
+            ExprKind::List(items) => super::shape::list(self, items, None, r),
+            ExprKind::Field(base, name) => super::shape::field(self, base, name, r),
+            ExprKind::Match(scrutinee, arms) => {
+                super::shape::matching(self, scrutinee, arms, None, r)
+            }
+            ExprKind::Error => self.error(r),
+        }
+    }
+
+    /// Checks `e` against `expected`, reporting L2001 on a mismatch.
+    pub fn check(&mut self, e: &Expr, expected: &Type) -> Checked {
+        let r = e.range;
+        let got = match (&e.kind, expected) {
+            (ExprKind::Hole(reason), _) => {
+                self.holes.push((r, reason.clone()));
+                return self.literal(Value::Hole(reason.clone()), expected.clone(), r);
+            }
+            (ExprKind::Paren(inner), _) => return self.check(inner, expected),
+            (ExprKind::Ref(path), Type::Named(_) | Type::Boolean) => {
+                self.reference(path, Some(expected))
+            }
+            (ExprKind::Record(fields), Type::Distribution(en)) => {
+                return super::shape::distribution(self, fields, en, r)
+            }
+            (ExprKind::List(items), Type::List(inner)) => {
+                super::shape::list(self, items, Some(inner), r)
+            }
+            (ExprKind::Match(s, arms), _) => {
+                super::shape::matching(self, s, arms, Some(expected), r)
+            }
+            _ => self.infer(e),
+        };
+        self.coerce(got, expected, r)
+    }
+
+    /// Accepts `got` where `expected` is required: equal types, or a
+    /// constant `Number` in `[0,1]` as a `Probability`.
+    pub fn coerce(&mut self, got: Checked, expected: &Type, r: TextRange) -> Checked {
+        match (&got.ty, expected) {
+            (None, _) => got,
+            (Some(t), e) if t == e => got,
+            (Some(Type::Number), Type::Probability) => match got.value {
+                Some(Value::Number(v)) if rational::is_probability(v) => {
+                    self.literal(Value::Probability(v), Type::Probability, r)
+                }
+                Some(Value::Number(v)) => {
+                    self.report(Report::new(
+                        C::ArithmeticError,
+                        r,
+                        format!("probability {} is outside [0, 1]", rational::display(v)),
+                    ));
+                    self.error(r)
+                }
+                _ => {
+                    self.report(Report::new(
+                        C::TypeMismatch,
+                        r,
+                        "expected a constant probability in [0, 1]",
+                    ));
+                    self.error(r)
+                }
+            },
+            (Some(t), e) => {
+                let mut report = Report::new(
+                    C::TypeMismatch,
+                    r,
+                    format!("expected `{}`, found `{}`", display(e), display(t)),
+                );
+                if let (Type::Days(a), Type::Days(b)) = (t, e) {
+                    report = Report::new(
+                        C::UnitMismatch,
+                        r,
+                        format!("expected `{}`, found `{}`", display(e), display(t)),
+                    );
+                    report = ops::counting_hint(self, report, *a, *b, r);
+                }
+                self.report(report);
+                self.error(r)
+            }
+        }
+    }
+
+    fn money(&mut self, text: &str, r: TextRange) -> Checked {
+        let (amount, currency) = text.rsplit_once('.').unwrap_or((text, "usd"));
+        let decimals = amount.split_once('.').map_or(0, |(_, f)| f.len());
+        if decimals > 2 {
+            self.report(Report::new(
+                C::ArithmeticError,
+                r,
+                format!("`{currency}` has 2 minor-unit digits; `{amount}` has {decimals}"),
+            ));
+            return self.error(r);
+        }
+        let minor =
+            rational::parse_decimal(amount).and_then(|v| rational::mul(v, Rational::integer(100)));
+        match minor {
+            Ok(v) if v.denominator == 1 => {
+                let money = Money {
+                    minor_units: v.numerator,
+                    currency: currency.to_owned(),
+                };
+                self.literal(Value::Money(money), Type::Money(currency.to_owned()), r)
+            }
+            Ok(_) | Err(_) => self.arith(r, ArithError::Overflow),
+        }
+    }
+
+    fn duration(&mut self, text: &str, r: TextRange) -> Checked {
+        let (amount, unit) = text.rsplit_once('.').unwrap_or((text, "days"));
+        let value = match rational::parse_decimal(amount) {
+            Ok(v) => v,
+            Err(err) => return self.arith(r, err),
+        };
+        let unit = match unit {
+            "hours" => return self.literal(Value::Hours(value), Type::Hours, r),
+            "court_days" => DayUnit::Court,
+            "business_days" => DayUnit::Business,
+            _ => DayUnit::Calendar,
+        };
+        if value.denominator != 1 {
+            self.report(Report::new(
+                C::InvalidNumber,
+                r,
+                "day amounts must be integers",
+            ));
+            return self.error(r);
+        }
+        self.literal(
+            Value::Days {
+                amount: value.numerator,
+                unit,
+            },
+            Type::Days(unit),
+            r,
+        )
+    }
+
+    /// Resolves a name in expression position.
+    pub fn reference(&mut self, path: &RefPath, expected: Option<&Type>) -> Checked {
+        let r = path.range;
+        if let Some(Type::Named(en)) = expected {
+            if let Some(variants) = self.scope.enum_variants(en) {
+                if path.is_simple() && variants.iter().any(|v| *v == path.head.text) {
+                    return self.literal(
+                        Value::Variant(format!("{en}::{}", path.head.text)),
+                        Type::Named(en.clone()),
+                        r,
+                    );
+                }
+            }
+        }
+        if path.is_simple()
+            && expected == Some(&Type::Boolean)
+            && matches!(path.head.text.as_str(), "true" | "false")
+        {
+            return self.literal(Value::Boolean(path.head.text == "true"), Type::Boolean, r);
+        }
+        if path.is_simple() && self.actors.contains(&path.head.text) {
+            return self.node(
+                hir::ExprKind::Ref {
+                    target: path.head.text.clone(),
+                },
+                Some(Type::Role),
+                None,
+                r,
+            );
+        }
+        if path.rest.len() == 1 && path.instance.is_none() {
+            if let Ok((en, found)) = self.scope.user_type(&path.head, &[]) {
+                if let TypeSig::Enum(variants) = found.item {
+                    let variant = &path.rest[0].1.text;
+                    if variants.contains(variant) {
+                        return self.literal(
+                            Value::Variant(format!("{en}::{variant}")),
+                            Type::Named(en),
+                            r,
+                        );
+                    }
+                    self.report(
+                        Report::new(
+                            C::UnresolvedName,
+                            path.rest[0].1.range,
+                            format!("`{en}` has no variant `{variant}`"),
+                        )
+                        .note(format!("variants: {}", variants.join(", "))),
+                    );
+                    return self.error(r);
+                }
+            }
+        }
+        match self.scope.value(path) {
+            Ok((target, found)) => match &found.item.kind {
+                ValueKind::Default(ty) => {
+                    self.node(hir::ExprKind::Ref { target }, ty.clone(), None, r)
+                }
+                kind => {
+                    let mut report = Report::new(
+                        C::TypeMismatch,
+                        r,
+                        format!("{} `{}` is not a value", kind.noun(), path.display()),
+                    );
+                    if matches!(kind, ValueKind::Deadline) {
+                        report = report.note("its due date is `deadline(..)`").fix(
+                            r,
+                            format!("deadline({})", path.display()),
+                            Applicability::MachineApplicable,
+                        );
+                    }
+                    self.report(report);
+                    self.error(r)
+                }
+            },
+            Err(report) => {
+                let report = self.hyphen_fix(path, report);
+                self.report(report);
+                self.error(r)
+            }
+        }
+    }
+
+    /// `a-b` that does not resolve while `a` and `b` do: offer `a - b`.
+    fn hyphen_fix(&self, path: &RefPath, report: Report) -> Report {
+        if !path.is_simple() {
+            return report;
+        }
+        let names = self.scope.value_names();
+        let known = |s: &str| names.contains(&s) || self.actors.contains(s);
+        let text = &path.head.text;
+        let split = text
+            .match_indices('-')
+            .map(|(i, _)| (&text[..i], &text[i + 1..]))
+            .find(|(a, b)| known(a) && known(b));
+        match split {
+            Some((a, b)) => report
+                .note("identifiers may contain `-`; subtraction needs spaces")
+                .fix(
+                    path.head.range,
+                    format!("{a} - {b}"),
+                    Applicability::MachineApplicable,
+                ),
+            None => report,
+        }
+    }
+
+    fn call(&mut self, callee: &RefPath, args: &[Expr], r: TextRange) -> Checked {
+        if callee.is_simple() {
+            if let Some(checked) = super::builtins::call(self, &callee.head.text, args, r) {
+                return checked;
+            }
+        }
+        self.event_call(callee, args, false, r)
+    }
+
+    /// An event constructor call; `partial` permits omitted trailing
+    /// arguments (patterns in deadline triggers and edge `event`).
+    pub fn event_call(
+        &mut self,
+        callee: &RefPath,
+        args: &[Expr],
+        partial: bool,
+        r: TextRange,
+    ) -> Checked {
+        let lookup = if callee.is_simple() {
+            self.scope.user_type(&callee.head, &super::builtins::NAMES)
+        } else {
+            Err(Report::new(
+                C::UnresolvedName,
+                callee.range,
+                format!("cannot find function `{}`", callee.display()),
+            ))
+        };
+        let (name, params) = match lookup {
+            Ok((name, found)) => match found.item {
+                TypeSig::Event(params) => (name, params.clone()),
+                _ => {
+                    self.report(Report::new(
+                        C::InvalidOperation,
+                        callee.range,
+                        format!(
+                            "`{}` is not an event constructor or builtin",
+                            callee.display()
+                        ),
+                    ));
+                    return self.error(r);
+                }
+            },
+            Err(report) => {
+                let report = Report {
+                    message: report
+                        .message
+                        .replace("cannot find type", "cannot find function or event"),
+                    ..report
+                };
+                self.report(report);
+                return self.error(r);
+            }
+        };
+        let arity_ok = if partial {
+            args.len() <= params.len()
+        } else {
+            args.len() == params.len()
+        };
+        if !arity_ok {
+            let need = if partial {
+                format!("at most {}", params.len())
+            } else {
+                params.len().to_string()
+            };
+            self.report(
+                Report::new(
+                    C::TypeMismatch,
+                    r,
+                    format!(
+                        "`{name}` takes {need} argument{}, found {}",
+                        if params.len() == 1 { "" } else { "s" },
+                        args.len()
+                    ),
+                )
+                .note(format!(
+                    "`{name}({})`",
+                    params
+                        .iter()
+                        .map(|(p, t)| format!("{p}: {}", t.as_ref().map_or("?".into(), display)))
+                        .collect::<Vec<_>>()
+                        .join(", ")
+                )),
+            );
+        }
+        let args: Vec<hir::Expr> = args
+            .iter()
+            .zip(params.iter().map(Some).chain(std::iter::repeat(None)))
+            .map(|(a, p)| match p.and_then(|(_, t)| t.as_ref()) {
+                Some(t) => self.check(a, t).hir,
+                None => self.infer(a).hir,
+            })
+            .collect();
+        let ty = arity_ok.then(|| Type::Named(name.clone()));
+        self.node(hir::ExprKind::Call { callee: name, args }, ty, None, r)
+    }
+}

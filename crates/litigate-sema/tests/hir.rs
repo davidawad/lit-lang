@@ -21,7 +21,7 @@ transition t amends answer@2024-12-01 cite FRCP 86(a)
 }
 default standing when has_event(Served(complaint, Mail)) => 14.days
 exception local rebuts standing when has_event(Answered(complaint)) => 7.days priority 2
-exception moot undercuts standing when !has_event(Served(complaint, Mail))
+exception moot undercuts standing when !has_event(Served(complaint, Mail)) priority 3
 state pending: "Pending" by Defendant {
   respond "Respond" -> done { within answer, effort 2.hours, cost 1_500.usd }
 }

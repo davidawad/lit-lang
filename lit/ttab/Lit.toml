@@ -1,0 +1,68 @@
+# Imported by `litigate import` from packs/ttab-trademark-trial-and-appeal-board.json.
+# in_force and authority are placeholders: legacy JSON records neither.
+[package]
+name = "ttab-trademark-trial-and-appeal-board"
+version = "0.1.0"
+language = 1
+pack_id = "ttab-trademark-trial-and-appeal-board"
+forum = "ttab"
+authority = "Unclassified"
+title = "TTAB Trademark Trial and Appeal Board: Opposition (applicant perspective), extension of time through final decision and appeal"
+description = "Opposition to an application (37 CFR Part 2 Subpart A, TBMP): extension of time to oppose, lapse/allowance, standstill and settlement, institution and answer, optional Section 18 counterclaim, discovery, trial, briefs, final decision, appeal (15 USC 1071), plus a parallel infringement-suit branch. Terminal attrs: rb = fraction of rebrand cost incurred, fx = other applicant USD, sh = 1 if the opposer pays a cost share, sw = opposer win fraction, sfx = opposer other USD; opp_hours/opp_fees on edges are the opposer's own cost. A scenario supplies the utility, opponent_objective and stakes from those attrs (see scenarios/ttab-opposition-applicant-defense.json). All probabilities and hours are teaching estimates."
+jurisdiction = "Trademark Trial and Appeal Board (USPTO)"
+in_force = "2026-10-19"
+known_at = "2026-10-19"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+board = "nature"
+either = "nature"
+office = "nature"
+opposer = "opponent"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.cfr2]
+title = "37 CFR Part 2 - Rules of Practice in Trademark Cases (eCFR)"
+url = "https://www.ecfr.gov/current/title-37/chapter-I/subchapter-B/part-2"
+path = "sources/cfr-37-part2.txt"
+cite_prefixes = ["37 CFR", "37 C.F.R."]
+section_heading = "37 C.F.R. § {n}"
+sha256 = "66402ce5e48bf2a9aa039058b3bfc181d3511b9e94137fac8b6a3d84a26b33a7"
+as_of = "2026-10-19"
+
+[sources.lanham]
+title = "Lanham Act sections cited (15 U.S.C. 1051, 1052, 1057, 1063, 1064, 1068, 1071, 1114, 1116, 1117, 1125)"
+url = "https://www.law.cornell.edu/uscode/text/15/1051"
+path = "sources/usc-15-lanham.txt"
+cite_prefixes = ["15 USC", "15 U.S.C."]
+section_heading = "15 U.S.C. § {n}"
+sha256 = "9ea6b13b33cf0bb61a2a1ea337097c0981665d4d30a045fece2a77324dae6c4c"
+as_of = "2026-07-15"
+
+[sources.frcp-rules]
+title = "Federal Rules of Civil Procedure, as amended to Dec. 1, 2024 (FRCP 26(f), 41, 55 applied via 37 CFR 2.116(a), 2.120)"
+url = "https://www.uscourts.gov/sites/default/files/2025-02/federal-rules-of-civil-procedure-dec-1-2024_0.pdf"
+path = "sources/frcp.txt"
+sha256 = "c86b327b3bbe7dd3e68ea434a2bf0bc62aee8e85229f3456f094a1b232568317"
+as_of = "2024-12-01"
+
+[sources.usc28-1295]
+title = "28 U.S.C. 1295 (Federal Circuit jurisdiction; (a)(4)(B) TTAB appeals)"
+url = "https://www.law.cornell.edu/uscode/text/28/1295"
+path = "sources/usc-additional.txt"
+cite_prefixes = ["28 USC", "28 U.S.C."]
+section_heading = "28 U.S.C. § {n}"
+
+[sources.tbmp]
+title = "TTAB Manual of Procedure (TBMP), June 2026"
+url = "https://tbmp.uspto.gov/RDMS/TBMP/current"
+sha256 = "015cf2b665d74b25080321f67dad7ffebe412118f6f0460ec3530f4801639b8e"
+as_of = "2026-06"
+
+[[cite_syntax.rules]]
+prefixes = ["FRCP", "Fed. R. Civ. P.", "Fed R Civ P", "F.R.C.P."]
+heading = "Rule {}"
+source = "frcp-rules"

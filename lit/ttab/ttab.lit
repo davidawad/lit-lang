@@ -1,0 +1,30 @@
+// Imported by `litigate import` from packs/ttab-trademark-trial-and-appeal-board.json.
+module ttab
+
+import core.frcp6.{ frcp6 }
+
+group pre: "Pre-opposition"
+group standstill: "Standstill and negotiation"
+group lapse: "Lapse, allowance, registration"
+group opposition: "Opposition: institution and answer"
+group discovery: "Discovery"
+group trial: "Trial and briefs"
+group decision: "Decision"
+group appeal: "Appeal"
+group abandon: "Abandon now"
+group threat: "Infringement suit threat"
+group terminals: "Terminals"
+
+/// TTAB opposition period from publication; the Board applies FRCP 6(a) counting.
+event Publication()
+
+rule duty opposition-deadline-rule cite 37 CFR 2.101(c)
+{
+  deadline opposition-period: 30.days from Publication() counted_by frcp6
+}
+
+test "a 30-day opposition period rolls a Saturday deadline to Monday" cite 37 CFR 2.101(c)
+{
+  given Publication() on 2026-10-27
+  expect deadline(opposition-period) == 2026-11-27
+}

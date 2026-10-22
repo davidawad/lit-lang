@@ -80,6 +80,7 @@ impl Lattice {
         world
             .ranks
             .iter()
+            .rev()
             .filter(|r| r.pack == pack && (r.above == r.below || self.outranks(&r.below, &r.above)))
             .filter_map(|r| {
                 let members: BTreeSet<String> = self

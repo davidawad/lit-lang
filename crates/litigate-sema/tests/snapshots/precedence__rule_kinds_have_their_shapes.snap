@@ -1,0 +1,18 @@
+---
+source: crates/litigate-sema/tests/precedence.rs
+expression: "table(&[(\"1 duty with its deadline\",\n&format!(\"rule duty answer {{\\n  {deadline}\\n}}\")),\n(\"2 duty without a deadline\",\n\"rule duty answer {\\n  state x: \\\"X\\\" { _ \\\"go\\\" -> t }\\n}\"),\n(\"3 power granting a decision\",\n\"rule power move {\\n  decision m: \\\"Move?\\\" by Defendant { _ \\\"yes\\\" -> t }\\n}\"),\n(\"4 power without a decision\",\n&format!(\"rule power move {{\\n  {deadline}\\n}}\")),\n(\"5 liability with consequences\",\n\"rule liability defaulted {\\n  state dr: \\\"Default\\\" { _ \\\"entered\\\" -> t { sets [defaulted] } }\\n}\"),\n(\"6 liability imposing a deadline\",\n&format!(\"rule liability defaulted {{\\n  state dr: \\\"Default\\\" {{ _ \\\"entered\\\" -> t }}\\n  {deadline}\\n}}\"),),])"
+---
+{
+    "1 duty with its deadline": [],
+    "2 duty without a deadline": [
+        "pkgs/demo/main.lit:13:11 L2007 a `duty` rule must contain the deadline it imposes\n    note: rule `answer` is a `duty`",
+    ],
+    "3 power granting a decision": [],
+    "4 power without a decision": [
+        "pkgs/demo/main.lit:13:12 L2007 a `power` rule must contain the `decision` it grants\n    note: rule `move` is a `power`",
+    ],
+    "5 liability with consequences": [],
+    "6 liability imposing a deadline": [
+        "pkgs/demo/main.lit:13:16 L2007 a `liability` is a consequence and imposes no deadline; move the deadline into a `duty`\n    note: rule `defaulted` is a `liability`",
+    ],
+}

@@ -1,0 +1,27 @@
+---
+source: crates/litigate-sema/tests/precedence.rs
+expression: got
+---
+{
+    "01 override without delegation": [
+        "pkgs/local/rules.lit:7:95 L3004 `local-answer` (LocalRule) overrides `frcp::answer-period` (FederalRule), but `frcp::answer-period` does not delegate to LocalRule: missing `delegable_to [LocalRule]`\n    note @9:1: `frcp::answer-period@2009-12-01` [2009-12-01, ..) delegates to no LocalRule\n    note: only a rule's own text can delegate; an override cannot grant itself the power\n    fix @9:96-9:96: \" delegable_to [LocalRule]\"",
+    ],
+    "02 delegated override": [],
+    "03 two overrides at one level tie": [
+        "pkgs/local/rules.lit:8:84 L3003 `b@2012-01-01` and `a@2012-01-01` both apply to `frcp::answer-period` on [2012-01-01, ..), and neither prevails\n    note @7:84: `a@2012-01-01` is declared here\n    note: no declared relation (`notwithstanding`, `override`, `subject_to`) orders them\n    note: the canons tie: both are LocalRule; equally specific (both at package level, same window length); both take effect on 2012-01-01\n    note: declare `b notwithstanding a` or `b subject_to a`",
+    ],
+    "04 notwithstanding orders them": [],
+    "05 higher authority wins": [],
+    "06 inside a rule beats package level": [],
+    "07 narrower window wins": [],
+    "08 later from wins": [],
+    "09 delegation must point downward": [
+        "pkgs/frcp/rules.lit:9:97 L3004 `answer-period` (FederalRule) delegates to `Statute`, which is not a lower authority\n    note: `Statute` outranks `FederalRule`",
+    ],
+    "10 override of a rule not yet in force": [
+        "pkgs/local/rules.lit:7:92 L3007 `a` overrides `frcp::answer-period`, which is not in force during [2005-01-01, 2006-01-01)\n    note: `frcp::answer-period` is in force on [2009-12-01, ..)",
+    ],
+    "11 authority cycle": [
+        "pkgs/core/authority.lit:3:11 L3006 authority `CaseOrder > Statute` makes the order cyclic\n    note: levels on the cycle: CaseOrder, FederalRule, LocalRule, StandingOrder, Statute\n    note: authority is a strict partial order: no level may outrank itself",
+    ],
+}

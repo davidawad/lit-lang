@@ -1,0 +1,13 @@
+---
+source: crates/litigate-sema/tests/precedence.rs
+expression: "[outcome(&[]), outcome(&[\"Served\"]), outcome(&[\"Served\", \"Ordered\"]),\noutcome(&[\"Served\", \"Answered\"]), outcome(&[\"Served\", \"Ordered\", \"Answered\"]),\noutcome(&[\"Served\", \"Ordered\", \"Hearing\"]),\noutcome(&[\"Served\", \"Ordered\", \"Hearing\", \"Answered\"]),]"
+---
+[
+    "not applicable",
+    "Literal { value: Days { amount: 21, unit: Calendar } } via d",
+    "Literal { value: Days { amount: 7, unit: Calendar } } via d > shorter",
+    "disabled via d > moot",
+    "Literal { value: Days { amount: 7, unit: Calendar } } via d > shorter",
+    "Literal { value: Days { amount: 21, unit: Calendar } } via d",
+    "disabled via d > moot",
+]

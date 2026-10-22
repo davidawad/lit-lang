@@ -1,0 +1,16 @@
+---
+source: crates/litigate-sema/tests/precedence.rs
+expression: "table(&[(\"1 notwithstanding both ways\",\n&(d(\"a\", \"notwithstanding b\") + &d(\"b\", \"notwithstanding a\"))),\n(\"2 subject_to agrees with notwithstanding\",\n&(d(\"a\", \"notwithstanding b\") + &d(\"b\", \"subject_to a\"))),\n(\"3 supersession cycle\", &(d(\"a\", \"supersedes b\") + &d(\"b\", \"supersedes a\"))),\n(\"4 exceptions targeting each other\",\n\"default d when true => 1\\nexception e1 rebuts e2 when true => 2\\nexception e2 rebuts e1 when true => 3\",),])"
+---
+{
+    "1 notwithstanding both ways": [
+        "pkgs/demo/main.lit:13:57 L3006 declared precedence (`notwithstanding`, `override`, `subject_to`) forms a cycle: a -> b -> a\n    note @14:57: `b` continues the cycle here\n    note: remove one of the relations so the order is acyclic",
+    ],
+    "2 subject_to agrees with notwithstanding": [],
+    "3 supersession cycle": [
+        "pkgs/demo/main.lit:13:57 L3006 supersession forms a cycle: a -> b -> a\n    note @14:57: `b` continues the cycle here\n    note: remove one of the relations so the order is acyclic",
+    ],
+    "4 exceptions targeting each other": [
+        "pkgs/demo/main.lit:14:29 L3006 default/exception references forms a cycle: e1 -> e2 -> e1\n    note @15:29: `e2` continues the cycle here\n    note: remove one of the relations so the order is acyclic",
+    ],
+}

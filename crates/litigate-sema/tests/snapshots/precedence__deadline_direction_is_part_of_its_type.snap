@@ -1,0 +1,16 @@
+---
+source: crates/litigate-sema/tests/precedence.rs
+expression: "table(&[(\"1 backward deadline on its own\", before),\n(\"2 within a backward deadline\",\n&format!(\"{before}\\nstate w: \\\"W\\\" {{ file \\\"File\\\" -> t {{ within brief }} }}\")),\n(\"3 versions change direction\",\n\"deadline q: 14.days before Hearing(motion) counted_by c6 effective [2009-12-01, 2016-12-01)\\n\\\n             deadline q: 14.days from Hearing(motion) counted_by c6 effective [2016-12-01, ..)\",),\n(\"4 backward with a next-business-day anchor\",\n\"counting itc { anchor next_business_day, holidays cal }\\ndeadline r: 7.days before Hearing(motion) counted_by itc\",),])"
+---
+{
+    "1 backward deadline on its own": [],
+    "2 within a backward deadline": [
+        "pkgs/demo/main.lit:14:16 L2001 `within brief` needs a forward deadline, but `brief` counts backward (`before`)\n    note: a deadline's direction is part of its type: an edge window runs forward from the trigger",
+    ],
+    "3 versions change direction": [
+        "pkgs/demo/main.lit:14:10 L2001 version `q@2016-12-01` counts forward, but `q@2009-12-01` counts backward\n    note @13:1: versions of a deadline share its type, direction included",
+    ],
+    "4 backward with a next-business-day anchor": [
+        "pkgs/demo/main.lit:14:54 L3009 `r` counts backward, but `itc` anchors on the next business day, which only counts forward\n    note: count backward deadlines with a rule anchored on the trigger day",
+    ],
+}

@@ -97,7 +97,7 @@ fn coverage(
                             .meta
                             .relations
                             .iter()
-                            .any(|r| matches!(r, Relation::Supersedes(_) | Relation::Revives(_)))
+                            .any(|r| !matches!(r, Relation::DelegableTo(_)))
                 });
             !revived && !temporary && !gaps(g, &suspended).is_empty()
         })

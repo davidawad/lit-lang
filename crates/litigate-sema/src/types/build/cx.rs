@@ -97,6 +97,22 @@ impl Cx<'_, '_> {
         })
     }
 
+    /// Text of a `cite` clause or `authority` field. A cite hole
+    /// `cite ?("text")` gives its reason, so imported citations stay
+    /// lossless (SPEC §8.1), and is recorded as a hole.
+    pub fn cite_text(&mut self, f: Option<&&Field>) -> Option<String> {
+        match f.and_then(|f| first_expr(f)) {
+            Some(Expr {
+                kind: ExprKind::Hole(reason),
+                range,
+            }) => {
+                self.ck.holes.push((*range, reason.clone()));
+                reason.clone()
+            }
+            _ => Self::string(f),
+        }
+    }
+
     /// Simple identifiers of an `IdList` field (opaque tags and flags).
     pub fn idents(&mut self, f: Option<&&Field>) -> Vec<String> {
         let Some(ExprKind::List(items)) = f.and_then(|f| first_expr(f)).map(|e| &e.kind) else {
@@ -328,7 +344,7 @@ impl Cx<'_, '_> {
                 .map(|l| l.text.clone())
                 .or_else(|| item.doc.clone())
                 .unwrap_or_default(),
-            cite: cites.first().and_then(|f| Self::string(Some(f))),
+            cite: cites.first().and_then(|f| self.cite_text(Some(f))),
             effective: self.effective(item, rule),
             authority: self
                 .manifest

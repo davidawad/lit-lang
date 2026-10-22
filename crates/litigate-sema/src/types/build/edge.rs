@@ -56,7 +56,7 @@ impl Cx<'_, '_> {
             to,
             label: e.label.text.clone(),
             actor,
-            authority: Self::string(fields.get("authority")),
+            authority: self.cite_text(fields.get("authority")),
             probability,
             hours: fields
                 .get("effort")

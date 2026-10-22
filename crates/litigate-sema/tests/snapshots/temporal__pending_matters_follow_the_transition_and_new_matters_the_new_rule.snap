@@ -1,0 +1,10 @@
+---
+source: crates/litigate-sema/tests/temporal.rs
+expression: "[format!(\"served 2016-11-20, answer 2016-12-12: {}\", rule(&pending, 1)),\nformat!(\"same, court ordered prior rules 2016-12-02: {}\", rule(&ordered, 2)),\nformat!(\"served 2017-01-04: {}\", rule(&fresh, 0)),\nformat!(\"served 2016-11-20 itself: {}\", rule(&before, 0)),]"
+---
+[
+    "served 2016-11-20, answer 2016-12-12: 21.days (transition `amend-2016` arm 1)",
+    "same, court ordered prior rules 2016-12-02: 20.days (transition `amend-2016` arm 0)",
+    "served 2017-01-04: 21.days (in force on the event date)",
+    "served 2016-11-20 itself: 20.days (in force on the event date)",
+]

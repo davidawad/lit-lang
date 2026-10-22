@@ -94,6 +94,11 @@ pub fn check_package(db: &dyn salsa::Database, pkg: PackageInput) -> PackageChec
         .collect();
     diagnostics.extend(checks.iter().flat_map(|c| c.diagnostics.iter().cloned()));
     diagnostics.extend(namespace_duplicates(db, pkg));
+    diagnostics.extend(
+        crate::precedence::query::legal_checks(db, pkg)
+            .iter()
+            .cloned(),
+    );
     let starts: Vec<_> = checks.iter().flat_map(|c| c.starts.iter()).collect();
     diagnostics.extend(shape(
         &checks,

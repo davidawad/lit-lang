@@ -1,0 +1,16 @@
+---
+source: crates/litigate-sema/tests/temporal.rs
+expression: got
+---
+[
+    "p as_of 2016-11-30 known_at None: 20.days",
+    "p as_of 2016-12-01 known_at None: 21.days",
+    "p as_of 2017-01-03 known_at Some(\"2016-01-01\"): L3007 no version of `p` is in force on 2017-01-03 [[2016-12-01, ..) in force then, but recorded after known_at 2016-01-01]",
+    "p as_of 2017-01-03 known_at Some(\"2016-04-28\"): 21.days",
+    "p as_of 2009-11-30 known_at None: L3007 no version of `p` is in force on 2009-11-30 [versions: [2009-12-01, 2016-12-01), [2016-12-01, ..)]",
+    "r as_of 2011-12-31 known_at None: 7.days",
+    "r as_of 2013-01-01 known_at None: L3007 no version of `r` is in force on 2013-01-01 [superseded by `q` from 2012-01-01; repeal does not revive it (declare `revives r`)]",
+    "r as_of 2015-01-01 known_at None: L3007 no version of `r` is in force on 2015-01-01 [superseded by `q` from 2012-01-01; repeal does not revive it (declare `revives r`)]",
+    "u as_of 2013-01-01 known_at None: L3007 no version of `u` is in force on 2013-01-01 [superseded by `w` from 2012-01-01]",
+    "u as_of 2015-01-01 known_at None: 7.days",
+]

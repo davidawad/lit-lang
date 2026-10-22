@@ -3,7 +3,9 @@
 pub mod db;
 pub mod hir;
 pub mod pkg;
+pub mod precedence;
 pub mod resolve;
+pub mod temporal;
 pub mod types;
 
 pub use db::inputs::{PackageInput, SourceFile, Workspace};

@@ -1,0 +1,22 @@
+---
+source: crates/litigate-sema/tests/temporal.rs
+expression: "table(&[(\"1 FRCP 86(a)-shaped transition\", &well_formed),\n(\"2 amends a first version\", &first_version),\n(\"3 arm selects another declaration\", &other_decl),\n(\"4 arm selects a version that is not adjacent\", &ancient),\n(\"5 condition outside the matter history\", &not_history),\n(\"6 two transitions for one amendment\", &twice),])"
+---
+{
+    "1 FRCP 86(a)-shaped transition": [],
+    "2 amends a first version": [
+        "pkgs/demo/main.lit:15:25 L3008 `p@2009-12-01` replaces no version: no version of `p` ends on 2009-12-01, so no proceeding is pending across it\n    note: a transition amends a version that directly follows an earlier one",
+    ],
+    "3 arm selects another declaration": [
+        "pkgs/demo/main.lit:16:47 L3008 arm selects `q@2009-12-01`, but `amend` amends `p`",
+    ],
+    "4 arm selects a version that is not adjacent": [
+        "pkgs/demo/main.lit:16:47 L3008 arm selects `p@2009-12-01`, which is neither the amended version `p@2016-12-01` nor the version it replaces\n    note: the replaced version is `p@2012-01-01`",
+    ],
+    "5 condition outside the matter history": [
+        "pkgs/demo/main.lit:15:47 L3008 a transition condition may test only `has_event(...)`, `true`/`false`, and `!`, `&&`, `||`\n    note: a transition chooses between versions from the matter's history alone",
+    ],
+    "6 two transitions for one amendment": [
+        "pkgs/demo/main.lit:20:31 L3008 `p@2016-12-01` already has transition `amend-2016`\n    note @15:1: the first transition is declared here",
+    ],
+}

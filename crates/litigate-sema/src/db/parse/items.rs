@@ -1,494 +1,287 @@
 //! Module header and declarations (SPEC §3.1).
-use super::fields::{
-    CITE_CLAUSES, COUNTING_ITEMS, DECL_CLAUSES, EDGE_CLAUSES, EDGE_FIELDS, INSTANCE_FIELDS,
-    NODE_CLAUSES, NODE_FIELDS, PACKAGE_FIELDS, VERSION_CLAUSES,
-};
-use super::lex::Tok;
+use super::expr::{expr_children, is_expr, ref_path, type_ref};
 use super::tree::{
     ArmItem, EdgeItem, HolidayItem, Import, Item, ItemKind, ItemTree, Name, NodeItem,
     PackageHeader, TestStmt,
 };
-use super::{PResult, Parser};
-use crate::db::span::{Report, TextRange};
-use litigate_base::DiagnosticCode as C;
+use super::{
+    docs, elements, ident, label, name, node_of, nodes_after, nodes_of, range, significant_range,
+    token_of, Lower, SyntaxElement,
+};
+use litigate_syntax::{SyntaxKind as K, SyntaxNode};
 
-impl Parser {
-    pub(crate) fn file(&mut self) -> ItemTree {
+/// Identifier tokens directly under `node`, in order.
+fn idents(node: &SyntaxNode) -> Vec<Name> {
+    elements(node)
+        .filter_map(SyntaxElement::into_token)
+        .filter(|t| t.kind() == K::Ident)
+        .map(|t| name(&t))
+        .collect()
+}
+
+/// Direct child nodes before the first direct token of kind `stop`.
+fn before(node: &SyntaxNode, stop: K) -> impl Iterator<Item = SyntaxNode> {
+    node.children_with_tokens()
+        .take_while(move |e| e.kind() != stop)
+        .filter_map(SyntaxElement::into_node)
+}
+
+/// The first keyword token directly under `node` after its leading keyword.
+fn second_keyword(node: &SyntaxNode) -> Option<Name> {
+    elements(node)
+        .filter_map(SyntaxElement::into_token)
+        .filter(|t| t.kind().is_keyword())
+        .nth(1)
+        .map(|t| name(&t))
+}
+
+impl Lower {
+    pub(crate) fn file(&mut self, root: &SyntaxNode) -> ItemTree {
         let mut tree = ItemTree::default();
-        let header = self.header(&mut tree);
-        if header.is_err() {
-            self.recover_top();
-        }
-        while self.peek().kind != Tok::Eof {
-            match self.item_with_doc() {
-                Ok(Some(item)) => tree.items.push(item),
-                Ok(None) => {}
-                Err(_) => self.recover_top(),
+        for node in root.children() {
+            match node.kind() {
+                K::ModuleDecl => {
+                    tree.module = node_of(&node, K::Ref).map_or_else(Vec::new, |r| idents(&r));
+                }
+                K::ImportDecl => tree.imports.extend(import(&node)),
+                K::PackageDecl => {
+                    if let Some(name) = ident(&node) {
+                        tree.package = Some(PackageHeader {
+                            name,
+                            fields: node_of(&node, K::FieldList)
+                                .map(|f| self.field_list(&f))
+                                .unwrap_or_default(),
+                            range: significant_range(&node),
+                        });
+                    }
+                }
+                _ => tree.items.extend(self.item(&node)),
             }
         }
         tree
     }
 
-    fn module_path(&mut self) -> PResult<Vec<Name>> {
-        let mut path = vec![self.ident()?];
-        while self.at_punct(".") && self.nth(1).kind == Tok::Ident {
-            self.bump();
-            path.push(self.ident()?);
-        }
-        Ok(path)
-    }
-
-    fn header(&mut self, tree: &mut ItemTree) -> PResult<()> {
-        self.skip_docs_before_header();
-        self.expect_kw("module")?;
-        tree.module = self.module_path()?;
-        while self.at_kw("import") {
-            let start = self.bump().range.start;
-            let path = self.module_path()?;
-            let mut names = None;
-            if self.at_punct(".") && self.nth_punct(1, "{") {
-                self.bump();
-                let open = self.bump().range;
-                let mut list = Vec::new();
-                while !self.at_punct("}") && self.peek().kind != Tok::Eof {
-                    list.push(self.ident()?);
-                    if !self.eat_punct(",") {
-                        break;
-                    }
-                }
-                self.close(open, "}")?;
-                names = Some(list);
+    /// One declaration (top level or inside a `rule`); `None` for nodes that
+    /// are not declarations or are missing a required part.
+    pub(crate) fn item(&mut self, node: &SyntaxNode) -> Option<Item> {
+        let kind = match node.kind() {
+            K::StartDecl => ItemKind::Start(ref_path(&node_of(node, K::Ref)?)?),
+            K::GroupDecl => ItemKind::Group(ident(node)?, label(node)?),
+            K::TypeDecl => {
+                ItemKind::TypeAlias(ident(node)?, type_ref(&node_of(node, K::TypeExpr)?)?)
             }
-            let range = TextRange::new(start, self.prev_end());
-            tree.imports.push(Import { path, names, range });
-        }
-        if self.at_kw("package") {
-            let start = self.bump().range.start;
-            let name = self.ident()?;
-            let fields = self.field_block(PACKAGE_FIELDS)?;
-            let range = TextRange::new(start, self.prev_end());
-            tree.package = Some(PackageHeader {
-                name,
-                fields,
-                range,
-            });
-        }
-        Ok(())
-    }
-
-    fn skip_docs_before_header(&mut self) {
-        while self.peek().kind == Tok::DocComment {
-            let t = self.bump();
-            self.report(Report::new(
-                C::DanglingDocComment,
-                t.range,
-                "doc comment is not followed by a declaration",
-            ));
-        }
-    }
-
-    fn item_with_doc(&mut self) -> PResult<Option<Item>> {
-        let mut doc: Vec<String> = Vec::new();
-        let mut doc_range = None::<TextRange>;
-        while self.peek().kind == Tok::DocComment {
-            let t = self.bump();
-            doc_range = Some(doc_range.map_or(t.range, |r| r.cover(t.range)));
-            doc.push(t.text);
-        }
-        if self.peek().kind == Tok::Eof {
-            if let Some(range) = doc_range {
-                self.report(Report::new(
-                    C::DanglingDocComment,
-                    range,
-                    "doc comment is not followed by a declaration",
-                ));
+            K::EnumDecl => {
+                let mut names = idents(node).into_iter();
+                ItemKind::Enum(names.next()?, names.collect())
             }
-            return Ok(None);
-        }
-        let mut item = self.item()?;
-        if !doc.is_empty() {
-            item.doc = Some(doc.join("\n"));
-        }
-        Ok(Some(item))
-    }
-
-    fn label(&mut self) -> PResult<Name> {
-        self.expect_punct(":")?;
-        self.string()
-    }
-
-    /// One declaration (top level or inside a `rule`).
-    #[allow(clippy::too_many_lines)] // one arm per item of the SPEC §3.1 grammar
-    pub(crate) fn item(&mut self) -> PResult<Item> {
-        let t = self.peek().clone();
-        let start = t.range.start;
-        if t.kind != Tok::Ident {
-            return self.unexpected("a declaration");
-        }
-        let kind = match t.text.as_str() {
-            "start" => {
-                self.bump();
-                ItemKind::Start(self.ref_path()?)
+            K::EventDecl => {
+                let params = node_of(node, K::ParamList)?;
+                let params = nodes_of(&params, K::Param)
+                    .map(|p| Some((ident(&p)?, type_ref(&node_of(&p, K::TypeExpr)?)?)))
+                    .collect::<Option<_>>()?;
+                ItemKind::Event(ident(node)?, params)
             }
-            "group" => {
-                self.bump();
-                let name = self.ident()?;
-                ItemKind::Group(name, self.label()?)
+            K::StateDecl | K::DecisionDecl | K::ChanceDecl | K::TerminalDecl => {
+                ItemKind::Node(self.node(node)?)
             }
-            "type" => {
-                self.bump();
-                let name = self.ident()?;
-                self.expect_punct("=")?;
-                ItemKind::TypeAlias(name, self.type_ref()?)
+            K::LinkDecl => ItemKind::Link(self.edge(node, true)?),
+            K::InstanceDecl => {
+                let names = idents(node);
+                let fields = node_of(node, K::FieldList)
+                    .map(|f| self.field_list(&f))
+                    .unwrap_or_default();
+                ItemKind::Instance(names.first()?.clone(), names.get(1)?.clone(), fields)
             }
-            "enum" => {
-                self.bump();
-                let name = self.ident()?;
-                let open = self.expect_punct("{")?.range;
-                let mut variants = Vec::new();
-                while !self.at_punct("}") && self.peek().kind != Tok::Eof {
-                    variants.push(self.ident()?);
-                    if !self.eat_punct(",") {
-                        break;
-                    }
-                }
-                self.close(open, "}")?;
-                ItemKind::Enum(name, variants)
-            }
-            "event" => {
-                self.bump();
-                let name = self.ident()?;
-                let open = self.expect_punct("(")?.range;
-                let mut params = Vec::new();
-                while !self.at_punct(")") && self.peek().kind != Tok::Eof {
-                    let p = self.ident()?;
-                    self.expect_punct(":")?;
-                    params.push((p, self.type_ref()?));
-                    if !self.eat_punct(",") {
-                        break;
-                    }
-                }
-                self.close(open, ")")?;
-                ItemKind::Event(name, params)
-            }
-            "state" | "decision" | "chance" | "terminal" => ItemKind::Node(self.node()?),
-            "link" => {
-                self.bump();
-                ItemKind::Link(self.edge(true)?)
-            }
-            "instance" => {
-                self.bump();
-                let base = self.ident()?;
-                self.expect_punct("@")?;
-                let origin = self.ident()?;
-                ItemKind::Instance(base, origin, self.field_block(INSTANCE_FIELDS)?)
-            }
-            "rule" => self.rule()?,
-            "deadline" => self.deadline()?,
-            "counting" => {
-                self.bump();
-                let name = self.ident()?;
-                let clauses = self.clauses(DECL_CLAUSES)?;
-                ItemKind::Counting(name, clauses, self.field_block(COUNTING_ITEMS)?)
-            }
-            "calendar" => self.calendar()?,
-            "transition" => self.transition()?,
-            "authority" => {
-                self.bump();
-                let mut chain = vec![self.ident()?];
-                while self.eat_punct(">") {
-                    chain.push(self.ident()?);
-                }
-                ItemKind::Authority(chain)
-            }
-            "default" => {
-                self.bump();
-                let name = self.ident()?;
-                let clauses = self.clauses(DECL_CLAUSES)?;
-                self.expect_kw("when")?;
-                let when = self.expr()?;
-                self.expect_punct("=>")?;
-                ItemKind::Default(name, clauses, when, self.expr()?)
-            }
-            "exception" => self.exception()?,
-            "test" => self.test()?,
-            _ => return self.unexpected("a declaration"),
+            K::RuleDecl => ItemKind::Rule(
+                second_keyword(node)?,
+                ident(node)?,
+                self.clauses(node),
+                node.children().filter_map(|n| self.item(&n)).collect(),
+            ),
+            K::DeadlineDecl => self.deadline(node)?,
+            K::CountingDecl => ItemKind::Counting(
+                ident(node)?,
+                self.clauses(node),
+                self.field_list(&node_of(node, K::FieldList)?),
+            ),
+            K::CalendarDecl => ItemKind::Calendar(
+                ident(node)?,
+                self.clauses(node),
+                nodes_of(node, K::HolidayDecl)
+                    .filter_map(|h| self.holiday(&h))
+                    .collect(),
+            ),
+            K::TransitionDecl => ItemKind::Transition(
+                ident(node)?,
+                ref_path(&node_of(node, K::Ref)?)?,
+                self.clauses(node),
+                nodes_of(node, K::TransitionArm)
+                    .map(|a| self.arm(&a))
+                    .collect::<Option<_>>()?,
+            ),
+            K::AuthorityDecl => ItemKind::Authority(idents(node)),
+            K::DefaultDecl => ItemKind::Default(
+                ident(node)?,
+                self.clauses_in(before(node, K::KwWhen)),
+                self.expr(&nodes_after(node, K::KwWhen).next()?)?,
+                self.expr(&nodes_after(node, K::FatArrow).next()?)?,
+            ),
+            K::ExceptionDecl => self.exception(node)?,
+            K::TestDecl => self.test(node)?,
+            _ => return None,
         };
-        Ok(Item {
-            doc: None,
+        Some(Item {
+            doc: docs(node),
             kind,
-            range: TextRange::new(start, self.prev_end()),
+            range: significant_range(node),
         })
     }
 
-    fn node(&mut self) -> PResult<NodeItem> {
-        let keyword = self.ident()?;
-        let name = self.ident()?;
-        let label = self.label()?;
-        let clauses = self.clauses(NODE_CLAUSES)?;
-        let mut node = NodeItem {
-            keyword,
-            name,
-            label,
-            clauses,
+    fn node(&mut self, node: &SyntaxNode) -> Option<NodeItem> {
+        let keyword = elements(node).find_map(SyntaxElement::into_token)?;
+        let body = node_of(node, K::EdgeBlock);
+        let mut item = NodeItem {
+            keyword: name(&keyword),
+            name: ident(node)?,
+            label: label(node)?,
+            clauses: self.clauses(node),
             fields: Vec::new(),
             edges: Vec::new(),
         };
-        if !self.at_punct("{") {
-            return Ok(node);
-        }
-        let open = self.bump().range;
-        while !self.at_punct("}") && self.peek().kind != Tok::Eof {
-            let t = self.peek().clone();
-            let is_edge = matches!(t.kind, Tok::Ident | Tok::Underscore)
-                && self.nth(1).kind == Tok::Str
-                && self.nth_punct(2, "->");
-            let result = if t.kind == Tok::DocComment {
-                self.bump();
-                continue;
-            } else if is_edge {
-                self.edge(false).map(|e| node.edges.push(e))
-            } else if let Some((_, shape)) = NODE_FIELDS
-                .iter()
-                .find(|(k, _)| t.kind == Tok::Ident && *k == t.text)
-            {
-                self.field(*shape).map(|f| node.fields.push(f))
-            } else {
-                self.unknown_key(NODE_FIELDS);
-                Err(super::Fail)
-            };
-            if result.is_err() {
-                self.recover_in_body();
+        for child in body.iter().flat_map(SyntaxNode::children) {
+            match child.kind() {
+                K::Field => item.fields.extend(self.field(&child)),
+                K::EdgeDecl => item.edges.extend(self.edge(&child, false)),
+                _ => {}
             }
-            self.sep();
         }
-        self.close(open, "}")?;
-        Ok(node)
+        Some(item)
     }
 
-    /// `(Ident | "_") String "->" Ref {EdgeClause} [EdgeFields]`; links put
-    /// `":" Ref` before the arrow.
-    fn edge(&mut self, link: bool) -> PResult<EdgeItem> {
-        let first = self.peek().clone();
-        let start = first.range.start;
-        let name = if first.kind == Tok::Underscore {
-            self.bump();
-            None
-        } else {
-            Some(self.ident()?)
-        };
-        let label = self.string()?;
+    /// `(Ident | "_") String ["{:} Ref] "->" Ref {EdgeClause} [EdgeFields]`.
+    fn edge(&mut self, node: &SyntaxNode, link: bool) -> Option<EdgeItem> {
+        let first = elements(node)
+            .filter_map(SyntaxElement::into_token)
+            .find(|t| matches!(t.kind(), K::Ident | K::Underscore))?;
+        let mut refs = nodes_of(node, K::Ref);
         let from = if link {
-            self.expect_punct(":")?;
-            Some(self.ref_path()?)
+            Some(ref_path(&refs.next()?)?)
         } else {
             None
         };
-        self.expect_punct("->")?;
-        let to = self.ref_path()?;
-        let clauses = self.clauses(EDGE_CLAUSES)?;
-        let fields = if self.at_punct("{") {
-            self.field_block(EDGE_FIELDS)?
-        } else {
-            Vec::new()
-        };
-        Ok(EdgeItem {
-            name,
-            name_range: first.range,
-            label,
+        Some(EdgeItem {
+            name: (first.kind() == K::Ident).then(|| name(&first)),
+            name_range: range(first.text_range()),
+            label: label(node)?,
             from,
-            to,
-            clauses,
-            fields,
-            range: TextRange::new(start, self.prev_end()),
+            to: ref_path(&refs.next()?)?,
+            clauses: self.clauses(node),
+            fields: node_of(node, K::FieldList)
+                .map(|f| self.field_list(&f))
+                .unwrap_or_default(),
+            range: significant_range(node),
         })
     }
 
-    fn rule(&mut self) -> PResult<ItemKind> {
-        self.bump();
-        let kind = self.ident()?;
-        if !matches!(kind.text.as_str(), "duty" | "power" | "liability") {
-            self.report(Report::new(
-                C::UnexpectedToken,
-                kind.range,
-                format!(
-                    "expected `duty`, `power`, or `liability`, found `{}`",
-                    kind.text
-                ),
-            ));
-        }
-        let name = self.ident()?;
-        let clauses = self.clauses(DECL_CLAUSES)?;
-        let open = self.expect_punct("{")?.range;
-        let mut items = Vec::new();
-        while !self.at_punct("}") && self.peek().kind != Tok::Eof {
-            match self.item_with_doc() {
-                Ok(Some(item)) => items.push(item),
-                Ok(None) => {}
-                Err(_) => self.recover_in_body(),
-            }
-            self.sep();
-        }
-        self.close(open, "}")?;
-        Ok(ItemKind::Rule(kind, name, clauses, items))
-    }
-
-    fn deadline(&mut self) -> PResult<ItemKind> {
-        self.bump();
-        let name = self.ident()?;
-        self.expect_punct(":")?;
-        let amount = self.atom()?;
-        let direction = self.ident()?;
-        if !matches!(direction.text.as_str(), "from" | "after" | "before") {
-            self.report(Report::new(
-                C::UnexpectedToken,
-                direction.range,
-                format!(
-                    "expected `from`, `after`, or `before`, found `{}`",
-                    direction.text
-                ),
-            ));
-        }
-        let trigger = self.expr()?;
-        self.expect_kw("counted_by")?;
-        let counted_by = self.ref_path()?;
-        let clauses = self.clauses(DECL_CLAUSES)?;
-        let opts = if self.at_punct("{") {
-            self.field_block(super::fields::DEADLINE_OPTS)?
-        } else {
-            Vec::new()
-        };
-        Ok(ItemKind::Deadline {
-            name,
-            amount,
-            direction,
-            trigger,
-            counted_by,
-            clauses,
-            opts,
+    fn deadline(&mut self, node: &SyntaxNode) -> Option<ItemKind> {
+        let direction = elements(node)
+            .filter_map(SyntaxElement::into_token)
+            .find(|t| matches!(t.kind(), K::KwFrom | K::KwAfter | K::KwBefore))?;
+        Some(ItemKind::Deadline {
+            name: ident(node)?,
+            amount: self.expr(&expr_children(node).next()?)?,
+            trigger: self.expr(&nodes_after(node, direction.kind()).next()?)?,
+            direction: name(&direction),
+            counted_by: ref_path(&nodes_after(node, K::KwCountedBy).find(|n| n.kind() == K::Ref)?)?,
+            clauses: self.clauses_in(nodes_after(node, K::KwCountedBy)),
+            opts: node_of(node, K::FieldList)
+                .map(|f| self.field_list(&f))
+                .unwrap_or_default(),
         })
     }
 
-    fn calendar(&mut self) -> PResult<ItemKind> {
-        self.bump();
-        let name = self.ident()?;
-        let clauses = self.clauses(VERSION_CLAUSES)?;
-        let open = self.expect_punct("{")?.range;
-        let mut holidays = Vec::new();
-        while !self.at_punct("}") && self.peek().kind != Tok::Eof {
-            match self.holiday() {
-                Ok(h) => holidays.push(h),
-                Err(_) => self.recover_in_body(),
-            }
-            self.sep();
-        }
-        self.close(open, "}")?;
-        Ok(ItemKind::Calendar(name, clauses, holidays))
-    }
-
-    fn holiday(&mut self) -> PResult<HolidayItem> {
-        let name = self.ident()?;
-        self.expect_punct(":")?;
-        let rule = self.atom()?;
-        self.expect_kw("effective")?;
-        let effective = self.interval()?;
-        let observed = if self.eat_kw("observed") {
-            Some(self.ident()?)
-        } else {
-            None
-        };
-        Ok(HolidayItem {
-            name,
-            rule,
+    fn holiday(&mut self, node: &SyntaxNode) -> Option<HolidayItem> {
+        let effective = node_of(node, K::VersionClause)
+            .and_then(|v| node_of(&v, K::Interval))
+            .and_then(|i| super::fields::interval(&i))?;
+        Some(HolidayItem {
+            name: ident(node)?,
+            rule: self.expr(&expr_children(node).next()?)?,
             effective,
-            observed,
+            observed: node_of(node, K::Field)
+                .and_then(|f| node_of(&f, K::Ref))
+                .and_then(|r| ref_path(&r))
+                .map(|r| r.head),
         })
     }
 
-    fn transition(&mut self) -> PResult<ItemKind> {
-        self.bump();
-        let name = self.ident()?;
-        self.expect_kw("amends")?;
-        let amends = self.ref_path()?;
-        let clauses = self.clauses(CITE_CLAUSES)?;
-        let open = self.expect_punct("{")?.range;
-        let mut arms = Vec::new();
-        while !self.at_punct("}") && self.peek().kind != Tok::Eof {
-            let start = self.peek().range.start;
-            let unless = if self.eat_kw("unless") {
-                Some(self.expr()?)
-            } else {
-                self.expect_kw("otherwise")?;
-                None
-            };
-            self.expect_punct("->")?;
-            let target = self.ref_path()?;
-            arms.push(ArmItem {
-                unless,
-                target,
-                range: TextRange::new(start, self.prev_end()),
-            });
-            self.sep();
-        }
-        self.close(open, "}")?;
-        Ok(ItemKind::Transition(name, amends, clauses, arms))
+    fn arm(&mut self, node: &SyntaxNode) -> Option<ArmItem> {
+        let unless = if token_of(node, K::KwUnless).is_some() {
+            Some(self.expr(&expr_children(node).find(|n| n.kind() != K::Ref)?)?)
+        } else {
+            token_of(node, K::KwOtherwise)?;
+            None
+        };
+        Some(ArmItem {
+            unless,
+            target: ref_path(&nodes_after(node, K::Arrow).find(|n| n.kind() == K::Ref)?)?,
+            range: significant_range(node),
+        })
     }
 
-    fn exception(&mut self) -> PResult<ItemKind> {
-        self.bump();
-        let name = self.ident()?;
-        let kind = self.ident()?;
-        if !matches!(kind.text.as_str(), "rebuts" | "undercuts") {
-            self.report(Report::new(
-                C::UnexpectedToken,
-                kind.range,
-                format!("expected `rebuts` or `undercuts`, found `{}`", kind.text),
-            ));
-        }
-        let target = self.ref_path()?;
-        let clauses = self.clauses(CITE_CLAUSES)?;
-        self.expect_kw("when")?;
-        let when = self.expr()?;
-        let then = if self.eat_punct("=>") {
-            Some(self.expr()?)
-        } else {
-            None
+    fn exception(&mut self, node: &SyntaxNode) -> Option<ItemKind> {
+        let kind = elements(node)
+            .filter_map(SyntaxElement::into_token)
+            .find(|t| matches!(t.kind(), K::KwRebuts | K::KwUndercuts))?;
+        let priority = node
+            .children()
+            .find(|n| n.kind() == K::Field && token_of(n, K::KwPriority).is_some());
+        let then = match token_of(node, K::FatArrow) {
+            Some(_) => {
+                Some(self.expr(&nodes_after(node, K::FatArrow).find(|n| is_expr(n.kind()))?)?)
+            }
+            None => None,
         };
-        let priority = if self.eat_kw("priority") {
-            Some(self.atom()?)
-        } else {
-            None
+        let priority = match priority {
+            Some(p) => Some(self.expr(&expr_children(&p).next()?)?),
+            None => None,
         };
-        Ok(ItemKind::Exception {
-            name,
-            kind,
-            target,
-            clauses,
-            when,
+        Some(ItemKind::Exception {
+            name: ident(node)?,
+            kind: name(&kind),
+            target: ref_path(&nodes_after(node, kind.kind()).find(|n| n.kind() == K::Ref)?)?,
+            clauses: self.clauses_in(before(node, K::KwWhen)),
+            when: self.expr(&nodes_after(node, K::KwWhen).next()?)?,
             then,
             priority,
         })
     }
 
-    fn test(&mut self) -> PResult<ItemKind> {
-        self.bump();
-        let name = self.string()?;
-        let clauses = self.clauses(CITE_CLAUSES)?;
-        let open = self.expect_punct("{")?.range;
-        let mut stmts = Vec::new();
-        while !self.at_punct("}") && self.peek().kind != Tok::Eof {
-            let stmt = if self.eat_kw("given") {
-                let e = self.expr()?;
-                self.expect_kw("on")?;
-                TestStmt::Given(e, self.date()?)
-            } else if self.eat_kw("expect") {
-                TestStmt::Expect(self.expr()?)
-            } else {
-                return self.unexpected("`given` or `expect`");
-            };
-            stmts.push(stmt);
-        }
-        self.close(open, "}")?;
-        Ok(ItemKind::Test(name, clauses, stmts))
+    fn test(&mut self, node: &SyntaxNode) -> Option<ItemKind> {
+        let stmts = node
+            .children()
+            .filter(|s| matches!(s.kind(), K::GivenStmt | K::ExpectStmt))
+            .map(|s| self.stmt(&s))
+            .collect::<Option<_>>()?;
+        Some(ItemKind::Test(label(node)?, self.clauses(node), stmts))
     }
+
+    fn stmt(&mut self, node: &SyntaxNode) -> Option<TestStmt> {
+        let value = self.expr(&expr_children(node).next()?)?;
+        if node.kind() == K::ExpectStmt {
+            return Some(TestStmt::Expect(value));
+        }
+        let date = nodes_after(node, K::KwOn)
+            .next()
+            .and_then(|l| token_of(&l, K::Date))?;
+        Some(TestStmt::Given(value, name(&date)))
+    }
+}
+
+fn import(node: &SyntaxNode) -> Option<Import> {
+    Some(Import {
+        path: idents(&node_of(node, K::Ref)?),
+        names: node_of(node, K::ImportList).map(|l| idents(&l)),
+        range: significant_range(node),
+    })
 }

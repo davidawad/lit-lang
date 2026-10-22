@@ -101,7 +101,7 @@ syntax_kinds! {
         KwEvent = "event", KwAmends = "amends", KwAllowHours = "allow_hours",
         KwBelow = "below", KwCount = "count",
         KwCase = "case", KwUses = "uses", KwAsOf = "as_of", KwKnownAt = "known_at",
-        KwSummary = "summary", KwNotes = "notes", KwSource = "source", KwUrl = "url",
+        KwSummary = "summary", KwNotes = "notes", KwSource = "source",
         KwPerspective = "perspective", KwParties = "parties", KwEvents = "events",
         KwFacts = "facts", KwStakes = "stakes", KwBeliefs = "beliefs",
         KwObserve = "observe", KwAnalysis = "analysis", KwUnvalued = "unvalued",

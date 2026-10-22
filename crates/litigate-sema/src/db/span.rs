@@ -46,6 +46,9 @@ pub struct Report {
     pub notes: Vec<(Option<TextRange>, String)>,
     /// Suggested edits in the same file.
     pub fixes: Vec<(TextRange, String, Applicability)>,
+    /// A consequence of an error already reported elsewhere (a name whose
+    /// import failed): it still fails the module but is not shown.
+    pub suppressed: bool,
 }
 
 impl Report {
@@ -57,6 +60,7 @@ impl Report {
             message: message.into(),
             notes: Vec::new(),
             fixes: Vec::new(),
+            suppressed: false,
         }
     }
 

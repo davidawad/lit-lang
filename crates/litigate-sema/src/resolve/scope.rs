@@ -37,6 +37,8 @@ pub struct Scope<'a> {
     pub bindings: Vec<Binding<'a>>,
     /// Every module signature reachable through `::` qualification.
     pub packs: Vec<&'a Signature>,
+    /// Names whose `import m.{x}` failed; lookups of them are suppressed.
+    pub poisoned: Vec<String>,
 }
 
 impl<'a> Scope<'a> {
@@ -49,6 +51,25 @@ impl<'a> Scope<'a> {
         imports: &[&'a Signature],
         packs: Vec<&'a Signature>,
     ) -> Self {
+        let poisoned = tree
+            .imports
+            .iter()
+            .flat_map(|i| {
+                let sig = imports.iter().find(|s| s.module == dotted(&i.path));
+                i.names
+                    .iter()
+                    .flatten()
+                    .filter(move |n| {
+                        sig.is_none_or(|s| {
+                            !s.values.contains_key(&n.text)
+                                && !s.types.contains_key(&n.text)
+                                && !s.groups.contains(&n.text)
+                                && !s.authorities.contains(&n.text)
+                        })
+                    })
+                    .map(|n| n.text.clone())
+            })
+            .collect();
         let bindings = tree
             .imports
             .iter()
@@ -66,6 +87,7 @@ impl<'a> Scope<'a> {
             own,
             bindings,
             packs,
+            poisoned,
         }
     }
 
@@ -118,6 +140,15 @@ impl<'a> Scope<'a> {
     }
 
     fn unresolved(&self, name: &Name, what: &str, candidates: &[&str]) -> Report {
+        if self.poisoned.contains(&name.text) {
+            let mut report = Report::new(
+                C::UnresolvedName,
+                name.range,
+                format!("`{}` was not imported", name.text),
+            );
+            report.suppressed = true;
+            return report;
+        }
         let mut report = Report::new(
             C::UnresolvedName,
             name.range,

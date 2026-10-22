@@ -1,0 +1,379 @@
+module ptab.deadlines
+
+import core.authority.{ CaseOrder }
+import core.rcfc6.{ rcfc6 }
+
+import ptab.{
+  AmendmentOppositionFiled,
+  BoardDecision,
+  ComplaintServed,
+  DecisionEntered,
+  FilingDateNoticed,
+  IncompletePetitionNoticed,
+  PatentGranted,
+  PatentOwnerResponseFiled,
+  PetitionerReplyFiled,
+  PreliminaryGuidanceIssued,
+  PreliminaryResponseFiled,
+  PreliminaryResponseWaived,
+  RevisedMotionToAmendFiled,
+  TrialInstituted,
+}
+
+// Counting. A PTAB period counts calendar days (37 C.F.R. § 1.7(a), which
+// 37 C.F.R. § 42.1(a) applies to the Board), and a last day on a Saturday,
+// Sunday or "Federal holiday within the District of Columbia" moves to the
+// next business day (35 U.S.C. § 21(b); 37 C.F.R. § 90.3(b)(2) for appeals).
+// lit/core has no USPTO counting rule, and declaring one here would give
+// the lowered pack a `counting` field the legacy pack lacks. `rcfc6` (in
+// force from 2010) counts these periods the same way: every day counts, the
+// trigger day is excluded, the last day rolls off weekends and legal
+// holidays, and its calendar adds Inauguration Day to the 5 U.S.C. § 6103(a)
+// holidays, as § 6103(c) does for federal employees in the District of
+// Columbia area. Its service extensions never apply: no PTAB trigger carries
+// a service method. Day counts in months or years ("9 months", "1 year",
+// "three months") are the legacy pack's day counts, kept verbatim; the
+// language has no month unit.
+//
+// Delegation. "Times set by rule are default and may be modified by order"
+// (37 C.F.R. § 42.5(c)(1)), so every period a Part 42 rule sets is
+// `delegable_to [CaseOrder]`. Statutory periods (35 U.S.C. §§ 314(b),
+// 315(b), 321(c)) are not.
+/// 35 U.S.C. § 321(c): a post-grant review petition may be filed no later
+/// than 9 months after the grant (the pack's 270 days).
+rule duty pgr-filing-deadline cite 35 U.S.C. § 321(c)
+{
+  deadline pgr-filing-period: 270.days after PatentGranted() counted_by rcfc6 known_at 2011-09-16 cite 35 U.S.C. § 321(c)
+}
+
+test "PGR window: 270 days from a Tuesday grant ends on a Saturday and rolls to Monday" cite 35 U.S.C. § 321(c)
+{
+  given PatentGranted() on 2025-03-04
+  expect deadline(pgr-filing-period) == 2025-12-01
+}
+
+test "PGR window: a Saturday last day before Columbus Day rolls to Tuesday" cite 35 U.S.C. § 321(c)
+{
+  given PatentGranted() on 2025-01-14
+  expect deadline(pgr-filing-period) == 2025-10-14
+}
+
+/// 35 U.S.C. § 315(b): no inter partes review is instituted on a petition
+/// filed more than 1 year (the pack's 365 days) after the petitioner, its
+/// real party in interest, or a privy is served with an infringement
+/// complaint.
+rule duty ipr-time-bar-deadline cite 35 U.S.C. § 315(b)
+{
+  deadline ipr-time-bar: 365.days after ComplaintServed() counted_by rcfc6 known_at 2011-09-16 cite 35 U.S.C. § 315(b)
+}
+
+test "315(b) bar: one year (365 days) from service" cite 35 U.S.C. § 315(b)
+{
+  given ComplaintServed() on 2025-03-03
+  expect deadline(ipr-time-bar) == 2026-03-03
+}
+
+test "315(b) bar: a last day on observed Independence Day rolls to Monday" cite 35 U.S.C. § 315(b)
+{
+  given ComplaintServed() on 2025-07-03
+  expect deadline(ipr-time-bar) == 2026-07-06
+}
+
+/// Correcting an incomplete petition. The pack's 14 days have no source:
+/// 37 C.F.R. § 42.106(b) (and § 42.206(b) for PGR) allows "one month from
+/// the notice of an incomplete petition". The pack's value is kept for
+/// semantic equality and the cite stays a hole until the pack is fixed.
+rule duty petition-correction-deadline cite 37 C.F.R. § 42.106(b)
+{
+  deadline petition-correction-period: 14.days after IncompletePetitionNoticed() counted_by rcfc6 delegable_to [CaseOrder] cite ?("legacy pack: 14 days; 37 C.F.R. § 42.106(b) allows one month from the notice of an incomplete petition")
+}
+
+test "petition correction: 14 days from the notice" cite 37 C.F.R. § 42.106(b)
+{
+  given IncompletePetitionNoticed() on 2025-03-03
+  expect deadline(petition-correction-period) == 2025-03-17
+}
+
+test "petition correction: a last day on Labor Day rolls to Tuesday" cite 37 C.F.R. § 42.106(b)
+{
+  given IncompletePetitionNoticed() on 2025-08-18
+  expect deadline(petition-correction-period) == 2025-09-02
+}
+
+/// The patent owner preliminary response is due "no later than three
+/// months" (the pack's 90 days) after the notice according the petition a
+/// filing date (37 C.F.R. §§ 42.107(b), 42.207(b)). The 2012 rule (77 Fed.
+/// Reg. 48680) set the same period; the 2016 amendment (81 Fed. Reg. 18750,
+/// Apr. 1, 2016, effective May 2, 2016; the vendored section's history line)
+/// changed other paragraphs. UNVERIFIED against the 2012 text, which is not
+/// vendored.
+rule duty popr-deadline cite 37 C.F.R. § 42.107(b)
+{
+  deadline popr-period: 90.days after FilingDateNoticed() counted_by rcfc6 effective [2012-09-16, 2016-05-02) known_at 2012-08-14 delegable_to [CaseOrder] cite ?("the 2012 text (77 Fed. Reg. 48680 (Aug. 14, 2012)) is not vendored: 37 C.F.R. § 42.107(b) as promulgated")
+  deadline popr-period: 90.days after FilingDateNoticed() counted_by rcfc6 effective [2016-05-02, ..) known_at 2016-04-01 supersedes popr-period@2012-09-16 delegable_to [CaseOrder] cite 37 C.F.R. § 42.107(b); 37 C.F.R. § 42.207(b); 37 C.F.R. § 42.5(c)(1)
+}
+
+test "POPR: three months (90 days) from the filing-date notice" cite 37 C.F.R. § 42.107(b)
+{
+  given FilingDateNoticed() on 2025-03-04
+  expect deadline(popr-period) == 2025-06-02
+}
+
+test "POPR: a last day on Memorial Day rolls to Tuesday" cite 37 C.F.R. § 42.107(b)
+{
+  given FilingDateNoticed() on 2025-02-25
+  expect deadline(popr-period) == 2025-05-27
+}
+
+test "POPR under the 2012 rule: a Sunday last day rolls to Monday" cite 37 C.F.R. § 42.107(b)
+{
+  given FilingDateNoticed() on 2015-06-01
+  expect deadline(popr-period) == 2015-08-31
+}
+
+/// 35 U.S.C. § 314(b)(1): the Director decides whether to institute within
+/// 3 months (the pack's 90 days) after receiving the preliminary response.
+deadline institution-period: 90.days after PreliminaryResponseFiled() counted_by rcfc6 known_at 2011-09-16 cite 35 U.S.C. § 314(b)
+
+test "institution: three months (90 days) after the preliminary response" cite 35 U.S.C. § 314(b)
+{
+  given PreliminaryResponseFiled() on 2025-04-01
+  expect deadline(institution-period) == 2025-06-30
+}
+
+test "institution: a last day on Veterans Day rolls to Wednesday" cite 35 U.S.C. § 314(b)
+{
+  given PreliminaryResponseFiled() on 2025-08-13
+  expect deadline(institution-period) == 2025-11-12
+}
+
+/// 35 U.S.C. § 314(b)(2): with no preliminary response, the 3 months run
+/// from the last date one could be filed. The pack runs them from the
+/// patent owner's waiver election (37 C.F.R. § 42.107(b)), which ends the
+/// response period early; UNVERIFIED reading.
+deadline institution-period-on-waiver: 90.days after PreliminaryResponseWaived() counted_by rcfc6 known_at 2011-09-16 cite 35 U.S.C. § 314(b); 37 C.F.R. § 42.107(b)
+
+test "institution after waiver: 90 days from the election" cite 35 U.S.C. § 314(b)
+{
+  given PreliminaryResponseWaived() on 2025-05-01
+  expect deadline(institution-period-on-waiver) == 2025-07-30
+}
+
+test "institution after waiver: a last day on Christmas rolls to Friday" cite 35 U.S.C. § 314(b)
+{
+  given PreliminaryResponseWaived() on 2025-09-26
+  expect deadline(institution-period-on-waiver) == 2025-12-26
+}
+
+/// No rule fixes when the scheduling order issues: the 30 days are the
+/// pack's practice estimate, and the Board sets the trial's times by order
+/// (37 C.F.R. § 42.5(c)(1)).
+deadline scheduling-order-period: 30.days after TrialInstituted() counted_by rcfc6 delegable_to [CaseOrder] cite ?("no rule: the pack's estimate that the scheduling order issues within 30 days of institution; times are set by order, 37 C.F.R. § 42.5(c)(1)")
+
+test "scheduling order: 30 days from institution" cite 37 C.F.R. § 42.5(c)(1)
+{
+  given TrialInstituted() on 2025-03-03
+  expect deadline(scheduling-order-period) == 2025-04-02
+}
+
+test "scheduling order: a last day on Juneteenth rolls to Friday" cite 37 C.F.R. § 42.5(c)(1)
+{
+  given TrialInstituted() on 2025-05-20
+  expect deadline(scheduling-order-period) == 2025-06-20
+}
+
+/// "If no time for filing a patent owner response to a petition is provided
+/// in a Board order, the default date ... is three months from the date the
+/// inter partes review was instituted" (37 C.F.R. § 42.120(b); the pack's 90
+/// days). The 2020 amendment (85 Fed. Reg. 79120, Dec. 9, 2020, effective
+/// Jan. 8, 2021; the history line's 85 FR 79129) rewrote paragraph (a).
+/// UNVERIFIED against the 2012 text, which is not vendored.
+rule duty patent-owner-response-deadline cite 37 C.F.R. § 42.120(b)
+{
+  deadline patent-owner-response-period: 90.days after TrialInstituted() counted_by rcfc6 effective [2012-09-16, 2021-01-08) known_at 2012-08-14 delegable_to [CaseOrder] cite ?("the 2012 text (77 Fed. Reg. 48680 (Aug. 14, 2012)) is not vendored: 37 C.F.R. § 42.120(b) as promulgated")
+  deadline patent-owner-response-period: 90.days after TrialInstituted() counted_by rcfc6 effective [2021-01-08, ..) known_at 2020-12-09 supersedes patent-owner-response-period@2012-09-16 delegable_to [CaseOrder] cite 37 C.F.R. § 42.120(b); 37 C.F.R. § 42.5(c)(1)
+}
+
+test "patent owner response: three months (90 days) from institution" cite 37 C.F.R. § 42.120(b)
+{
+  given TrialInstituted() on 2025-03-05
+  expect deadline(patent-owner-response-period) == 2025-06-03
+}
+
+test "patent owner response: a last day on Columbus Day rolls to Tuesday" cite 37 C.F.R. § 42.120(b)
+{
+  given TrialInstituted() on 2025-07-15
+  expect deadline(patent-owner-response-period) == 2025-10-14
+}
+
+test "patent owner response under the 2012 rule" cite 37 C.F.R. § 42.120(b)
+{
+  given TrialInstituted() on 2019-03-01
+  expect deadline(patent-owner-response-period) == 2019-05-30
+}
+
+/// The petitioner's reply. No rule sets it (37 C.F.R. § 42.23 governs only
+/// content); the 60 days after the patent owner response are the pack's
+/// "typically ... per the scheduling order". UNVERIFIED.
+deadline petitioner-reply-period: 60.days after PatentOwnerResponseFiled() counted_by rcfc6 delegable_to [CaseOrder] cite ?("scheduling order: the pack's typical 60 days after the patent owner response; not set by 37 C.F.R. § 42.23")
+
+test "petitioner reply: 60 days from the patent owner response" cite 37 C.F.R. § 42.5(c)(1)
+{
+  given PatentOwnerResponseFiled() on 2025-03-03
+  expect deadline(petitioner-reply-period) == 2025-05-02
+}
+
+test "petitioner reply: a last day on Washington's Birthday rolls to Tuesday" cite 37 C.F.R. § 42.5(c)(1)
+{
+  given PatentOwnerResponseFiled() on 2025-12-18
+  expect deadline(petitioner-reply-period) == 2026-02-17
+}
+
+/// The patent owner's sur-reply: the pack's typical 30 days after the
+/// reply, set by scheduling order, not by rule. UNVERIFIED.
+deadline sur-reply-period: 30.days after PetitionerReplyFiled() counted_by rcfc6 delegable_to [CaseOrder] cite ?("scheduling order: the pack's typical 30 days after the petitioner reply; not set by 37 C.F.R. § 42.23")
+
+test "sur-reply: 30 days from the reply" cite 37 C.F.R. § 42.5(c)(1)
+{
+  given PetitionerReplyFiled() on 2025-04-01
+  expect deadline(sur-reply-period) == 2025-05-01
+}
+
+test "sur-reply: a last day on New Year's Day rolls to Friday" cite 37 C.F.R. § 42.5(c)(1)
+{
+  given PetitionerReplyFiled() on 2025-12-02
+  expect deadline(sur-reply-period) == 2026-01-02
+}
+
+/// A revised motion to amend after the Board's preliminary guidance exists
+/// only from the MTA Pilot Program (84 Fed. Reg. 9497, Mar. 15, 2019, as the
+/// pack cites it); the 30 days are the pack's typical period. UNVERIFIED:
+/// the notice is not vendored.
+deadline revised-mta-period: 30.days after PreliminaryGuidanceIssued() counted_by rcfc6 effective [2019-03-15, ..) known_at 2019-03-15 delegable_to [CaseOrder] cite ?("MTA Pilot Program, 84 Fed. Reg. 9497 (Mar. 15, 2019): the pack's typical 30 days after preliminary guidance")
+
+test "revised motion to amend: 30 days from preliminary guidance" cite ?("MTA Pilot Program, 84 Fed. Reg. 9497 (Mar. 15, 2019)") {
+  given PreliminaryGuidanceIssued() on 2025-06-02
+  expect deadline(revised-mta-period) == 2025-07-02
+}
+
+test "revised motion to amend: a Saturday last day rolls to Monday" cite ?("MTA Pilot Program, 84 Fed. Reg. 9497 (Mar. 15, 2019)") {
+  given PreliminaryGuidanceIssued() on 2025-01-02
+  expect deadline(revised-mta-period) == 2025-02-03
+}
+
+/// The petitioner's opposition to a revised motion to amend: the pack's
+/// typical 30 days, set by Board order under the MTA Pilot Program.
+/// UNVERIFIED.
+deadline amendment-opposition-period: 30.days after RevisedMotionToAmendFiled() counted_by rcfc6 effective [2019-03-15, ..) known_at 2019-03-15 delegable_to [CaseOrder] cite ?("MTA Pilot Program, 84 Fed. Reg. 9497 (Mar. 15, 2019): the pack's typical 30 days after the revised motion; 37 C.F.R. § 42.121(c)")
+
+test "opposition to a revised motion to amend: 30 days" cite 37 C.F.R. § 42.121(c)
+{
+  given RevisedMotionToAmendFiled() on 2025-07-01
+  expect deadline(amendment-opposition-period) == 2025-07-31
+}
+
+test "opposition to a revised motion to amend: a last day on Thanksgiving rolls to Friday" cite 37 C.F.R. § 42.121(c)
+{
+  given RevisedMotionToAmendFiled() on 2025-10-28
+  expect deadline(amendment-opposition-period) == 2025-11-28
+}
+
+/// Rehearing of a final decision: "Within 30 days of the entry of a final
+/// decision" (37 C.F.R. § 42.71(d)(2)). The section was amended in 2015 (80
+/// Fed. Reg. 28561, May 19, 2015) and 2020 (85 Fed. Reg. 79120, effective
+/// Jan. 8, 2021), per its vendored history line; neither changed the 30 days.
+/// UNVERIFIED against the earlier texts, which are not vendored.
+rule duty rehearing-deadline cite 37 C.F.R. § 42.71(d)(2)
+{
+  deadline rehearing-period: 30.days after DecisionEntered(FinalWritten) counted_by rcfc6 effective [2012-09-16, 2021-01-08) known_at 2012-08-14 delegable_to [CaseOrder] cite ?("the 2012 and 2015 texts (77 Fed. Reg. 48612 (Aug. 14, 2012); 80 Fed. Reg. 28561 (May 19, 2015)) are not vendored: 37 C.F.R. § 42.71(d)(2) before the 2020 amendment")
+  deadline rehearing-period: 30.days after DecisionEntered(FinalWritten) counted_by rcfc6 effective [2021-01-08, ..) known_at 2020-12-09 supersedes rehearing-period@2012-09-16 delegable_to [CaseOrder] cite 37 C.F.R. § 42.71(d)(2); 37 C.F.R. § 42.5(c)(1)
+}
+
+test "rehearing: 30 days from the final written decision" cite 37 C.F.R. § 42.71(d)(2)
+{
+  given DecisionEntered(FinalWritten) on 2025-03-03
+  expect deadline(rehearing-period) == 2025-04-02
+}
+
+test "rehearing: a Sunday last day before Labor Day rolls to Tuesday" cite 37 C.F.R. § 42.71(d)(2)
+{
+  given DecisionEntered(FinalWritten) on 2025-08-01
+  expect deadline(rehearing-period) == 2025-09-02
+}
+
+test "rehearing under the pre-2021 rule: a Sunday last day rolls to Monday" cite 37 C.F.R. § 42.71(d)(2)
+{
+  given DecisionEntered(FinalWritten) on 2018-06-01
+  expect deadline(rehearing-period) == 2018-07-02
+}
+
+/// Director review: a request within 30 days of the final written decision
+/// (or of a decision on rehearing, below), under the USPTO's Interim
+/// Director Review Process of June 29, 2021, which the pack cites. The
+/// pack's "37 CFR 42.73(d)(1)" is the estoppel rule, not Director review.
+/// UNVERIFIED: the process is not vendored.
+rule duty director-review-deadline cite ?("USPTO Interim Director Review Process (June 29, 2021); not vendored") {
+  deadline director-review-period: 30.days after DecisionEntered(FinalWritten) counted_by rcfc6 effective [2021-06-29, ..) known_at 2021-06-29 delegable_to [CaseOrder] cite ?("USPTO Interim Director Review Process (June 29, 2021): 30 days from the final written decision, per the pack; the pack's 37 CFR 42.73(d)(1) is the estoppel rule")
+  deadline director-review-after-rehearing-period: 30.days after DecisionEntered(Rehearing) counted_by rcfc6 effective [2021-06-29, ..) known_at 2021-06-29 delegable_to [CaseOrder] cite ?("USPTO Interim Director Review Process (June 29, 2021): 30 days from the rehearing decision, per the pack; the pack's 37 CFR 42.73(d)(1) is the estoppel rule")
+}
+
+test "Director review: 30 days from the final written decision" cite ?("USPTO Interim Director Review Process (June 29, 2021)") {
+  given DecisionEntered(FinalWritten) on 2025-09-02
+  expect deadline(director-review-period) == 2025-10-02
+}
+
+test "Director review: a Sunday last day before Columbus Day rolls to Tuesday" cite ?("USPTO Interim Director Review Process (June 29, 2021)") {
+  given DecisionEntered(FinalWritten) on 2025-09-12
+  expect deadline(director-review-period) == 2025-10-14
+}
+
+test "Director review after rehearing: 30 days from the rehearing decision" cite ?("USPTO Interim Director Review Process (June 29, 2021)") {
+  given DecisionEntered(FinalWritten) on 2025-09-02
+  given DecisionEntered(Rehearing) on 2025-11-03
+  expect deadline(director-review-after-rehearing-period) == 2025-12-03
+}
+
+test "Director review after rehearing: a Sunday last day before MLK Day rolls to Tuesday" cite ?("USPTO Interim Director Review Process (June 29, 2021)") {
+  given DecisionEntered(Rehearing) on 2025-12-19
+  expect deadline(director-review-after-rehearing-period) == 2026-01-20
+}
+
+/// The notice of appeal is due "no later than sixty-three (63) days after
+/// the date of the final Board decision" (37 C.F.R. § 90.3(a)(1)); a timely
+/// rehearing request resets that to 63 days "after action on the request"
+/// (§ 90.3(b)(1)), so the period runs from the latest decision entered. The
+/// vendored history: "Added, 77 FR 48612, Aug. 14, 2012, effective Sept. 16,
+/// 2012; paras. (c)(1) introductory text and (c)(2) revised, 89 FR 22084,
+/// Mar. 29, 2024, effective Mar. 29, 2024"; paragraph (a) is unchanged.
+/// Not delegated: § 90.3(c) lets the Director extend it on request, which
+/// the pack's `extendable false` does not model.
+rule duty appeal-deadline cite 37 C.F.R. § 90.3(a)(1)
+{
+  deadline appeal-period: 63.days after DecisionEntered() counted_by rcfc6 effective [2012-09-16, 2024-03-29) known_at 2012-08-14 cite 37 C.F.R. § 90.3(a)(1); 37 C.F.R. § 90.3(b)(1)
+  deadline appeal-period: 63.days after DecisionEntered() counted_by rcfc6 effective [2024-03-29, ..) known_at 2024-03-29 supersedes appeal-period@2012-09-16 cite 37 C.F.R. § 90.3(a)(1); 37 C.F.R. § 90.3(b)(1)
+}
+
+test "appeal: 63 days from the final written decision" cite 37 C.F.R. § 90.3(a)(1)
+{
+  given DecisionEntered(FinalWritten) on 2025-03-03
+  expect deadline(appeal-period) == 2025-05-05
+}
+
+test "appeal: a last day on Christmas rolls to Friday" cite 37 C.F.R. § 90.3(b)(2)
+{
+  given DecisionEntered(FinalWritten) on 2025-10-23
+  expect deadline(appeal-period) == 2025-12-26
+}
+
+test "appeal: a rehearing decision resets the 63 days" cite 37 C.F.R. § 90.3(b)(1)
+{
+  given DecisionEntered(FinalWritten) on 2025-03-03
+  given DecisionEntered(Rehearing) on 2025-04-15
+  expect deadline(appeal-period) == 2025-06-17
+}
+
+test "appeal under the 2012 text" cite 37 C.F.R. § 90.3(a)(1)
+{
+  given DecisionEntered(FinalWritten) on 2020-01-02
+  expect deadline(appeal-period) == 2020-03-05
+}

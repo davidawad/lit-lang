@@ -1,0 +1,124 @@
+# PTAB AIA trials (inter partes review and post-grant review) under 35
+# U.S.C. ch. 31-32 and 37 C.F.R. Part 42, ported from
+# packs/ptab-patent-trial-appeal-board.json (`litigate import`, then typed
+# deadlines, sources and tests by hand).
+#
+# in_force: the AIA trial provisions and the Part 42 trial rules took effect
+# September 16, 2012 (AIA, Pub. L. 112-29, § 6(c)(2)(A), 125 Stat. 284;
+# the trial rules, 77 Fed. Reg. 48612 and 48680 (Aug. 14, 2012), which the
+# vendored 37 C.F.R. § 90.3 history line dates "effective Sept. 16, 2012").
+# authority: 37 C.F.R. Part 42 is agency regulation (lit/core's `Regulation`,
+# between `Statute` and `CaseOrder`).
+[package]
+name = "ptab-patent-trial-appeal-board"
+version = "0.1.0"
+language = 1
+pack_id = "ptab-patent-trial-appeal-board"
+forum = "ptab"
+authority = "Regulation"
+title = "PTAB Patent Trial and Appeal Board Proceedings"
+description = "Post-grant adversarial challenges to issued patents before the USPTO Patent Trial and Appeal Board — inter partes review (IPR) and post-grant review (PGR), from petition filing through institution, trial on the merits, final written decision, rehearing/Director review, and Federal Circuit appeal."
+jurisdiction = "35 U.S.C. Chapter 31 (AIA Trials) / 37 C.F.R. Part 42 / USPTO PTAB"
+in_force = "2012-09-16"
+known_at = "2026-08-26"
+
+[package.roles]
+applicant = "self"
+either = "nature"
+examiner = "nature"
+office = "nature"
+
+[sources.usc35-311]
+title = "35 U.S.C. § 311 (Inter partes review)"
+url = "https://www.law.cornell.edu/uscode/text/35/311"
+path = "sources/usc-additional.txt"
+cite_prefixes = ["35 U.S.C."]
+section_heading = "35 U.S.C. § {n}"
+
+[sources.usc35-314]
+title = "35 U.S.C. § 314 (Institution; 314(d) no-appeal bar)"
+url = "https://www.law.cornell.edu/uscode/text/35/314"
+path = "sources/usc-additional.txt"
+
+[sources.usc35-315]
+title = "35 U.S.C. § 315 (Relation to other proceedings; 315(b) time bar; 315(e) estoppel)"
+url = "https://www.law.cornell.edu/uscode/text/35/315"
+path = "sources/usc-additional.txt"
+
+[sources.usc35-316]
+title = "35 U.S.C. § 316 (Conduct of inter partes review; 1-year FWD deadline)"
+url = "https://www.law.cornell.edu/uscode/text/35/316"
+path = "sources/usc-additional.txt"
+
+[sources.usc35-317]
+title = "35 U.S.C. § 317 (Settlement)"
+url = "https://www.law.cornell.edu/uscode/text/35/317"
+path = "sources/usc-additional.txt"
+
+[sources.usc35-318]
+title = "35 U.S.C. § 318 (Final written decision)"
+url = "https://www.law.cornell.edu/uscode/text/35/318"
+path = "sources/usc-additional.txt"
+
+[sources.usc35-319]
+title = "35 U.S.C. § 319 (Appeal to the Federal Circuit; 63-day window)"
+url = "https://www.law.cornell.edu/uscode/text/35/319"
+path = "sources/usc-additional.txt"
+# 28 U.S.C. § 1295(a)(4)(A) is the Federal Circuit jurisdiction § 319
+# appeals invoke; the pack has no 28 U.S.C. source of its own, and the
+# section is vendored in this same file.
+cite_prefixes = ["28 U.S.C."]
+section_heading = "28 U.S.C. § {n}"
+
+[sources.cfr-42]
+title = "37 C.F.R. Part 42 (Trial Practice Before the Patent Trial and Appeal Board), current"
+url = "https://www.ecfr.gov/current/title-37/chapter-I/subchapter-A/part-42"
+path = "sources/cfr-37-part42.txt"
+as_of = "2026-08-26"
+cite_prefixes = ["37 C.F.R.", "37 CFR"]
+section_heading = "37 C.F.R. § {n}"
+
+[sources.ptab-tpg]
+title = "PTAB Consolidated Trial Practice Guide (Nov. 2019, updated Oct. 2025)"
+url = "https://www.uspto.gov/sites/default/files/documents/trial_practice_guide_nov2019_oct2025_web.pdf"
+sha256 = "260c05b6def096819a9bf724438247b34fe839ba4d8351bb2339d6fa20c512b3"
+as_of = "2025-10-01"
+
+[sources.usc35-151-cite]
+title = "35 U.S.C. § 151 (Issue of patent)"
+url = "https://www.law.cornell.edu/uscode/text/35/151"
+path = "sources/usc-cfr-prosecution-fragments.txt"
+cite_prefixes = ["35 U.S.C."]
+section_heading = "35 U.S.C. § {n}"
+
+[sources.usc35-312-cite]
+title = "35 U.S.C. § 312 (Petitions for inter partes review)"
+url = "https://www.law.cornell.edu/uscode/text/35/312"
+path = "sources/usc-additional.txt"
+
+[sources.cfr37-90-cite]
+title = "37 C.F.R. § 90.3 (Time for appeal from PTAB)"
+url = "https://www.ecfr.gov/current/title-37/chapter-I/subchapter-A/part-90"
+path = "sources/usc-cfr-prosecution-fragments.txt"
+cite_prefixes = ["37 C.F.R.", "37 CFR"]
+section_heading = "37 C.F.R. § {n}"
+
+[sources.usc5-706]
+title = "5 U.S.C. § 706 (APA scope of review)"
+url = "https://www.law.cornell.edu/uscode/text/5/706"
+path = "sources/usc-additional.txt"
+cite_prefixes = ["5 U.S.C."]
+section_heading = "5 U.S.C. § {n}"
+
+[sources.cfr37-4215]
+title = "37 C.F.R. § 42.15 (PTAB IPR/PGR request, post-institution, and per-excess-claim fees, effective/last-amended 1/14/2025)"
+url = "https://www.law.cornell.edu/cfr/text/37/42.15"
+as_of = "2025-01-14"
+
+[sources.coa-fee-schedule]
+title = "Court of Appeals Miscellaneous Fee Schedule (docketing fee $600, effective 12/1/2023)"
+url = "https://www.uscourts.gov/court-programs/fees/court-appeals-miscellaneous-fee-schedule"
+as_of = "2023-12-01"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }

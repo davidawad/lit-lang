@@ -155,3 +155,11 @@ ts-test:
     "${ts[@]}" generate
     git diff --exit-code --stat -- src || { echo "ts-test: src/ is stale; commit the regenerated parser" >&2; exit 1; }
     "${ts[@]}" test
+
+# Editor modes (editors/{emacs,helix,nvim}): Emacs ERT batch suite, Helix
+# query sync/compile + `hx --health`, headless Neovim. Each part skips (and
+# logs to $TEST_SKIP_LOG) when its editor is not installed.
+editors-test:
+    editors/emacs/test/run.sh
+    editors/helix/test/check.sh
+    editors/nvim/test/run.sh

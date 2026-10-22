@@ -114,10 +114,23 @@ pub fn beats(world: &World<'_>, lattice: &Lattice, a: usize, b: usize) -> Option
 #[must_use]
 pub fn claimants(world: &World<'_>, t: &Key) -> Vec<usize> {
     let mut out: Vec<usize> = world.versions(t).versions.iter().map(|v| v.decl).collect();
-    out.extend(
-        (0..world.decls.len()).filter(|&a| world.key(a) != *t && claim(world, a, t).is_some()),
-    );
+    let mut by: Vec<usize> = world
+        .incoming(t)
+        .iter()
+        .filter(|r| is_claim(r.relation))
+        .map(|r| r.by)
+        .filter(|&a| world.key(a) != *t)
+        .collect();
+    by.dedup();
+    out.extend(by);
     out
+}
+
+fn is_claim(r: &Relation) -> bool {
+    matches!(
+        r,
+        Relation::Override(_) | Relation::Notwithstanding(_) | Relation::SubjectTo(_)
+    )
 }
 
 /// Claimants of `t` active on `date`.
@@ -203,25 +216,11 @@ pub fn check(
     loc: &dyn Locate,
     pack: usize,
 ) -> Vec<Diagnostic> {
-    let mut targets: Vec<Key> = (0..world.decls.len())
-        .flat_map(|a| {
-            let p = world.pack_of(a).to_owned();
-            world.decls[a]
-                .meta
-                .relations
-                .iter()
-                .filter_map(move |r| match r {
-                    Relation::Override(x)
-                    | Relation::Notwithstanding(x)
-                    | Relation::SubjectTo(x) => Some(x.clone()),
-                    _ => None,
-                })
-                .map(move |x| (p.clone(), x))
-        })
-        .map(|(p, x)| world.target(&p, &x).key)
+    let targets: Vec<Key> = world
+        .targets()
+        .filter(|(_, rs)| rs.iter().any(|r| is_claim(r.relation)))
+        .map(|(k, _)| k.clone())
         .collect();
-    targets.sort();
-    targets.dedup();
     let mut out = Vec::new();
     let mut reported: BTreeSet<(usize, usize)> = BTreeSet::new();
     for t in &targets {

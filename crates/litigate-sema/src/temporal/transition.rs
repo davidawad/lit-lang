@@ -46,13 +46,7 @@ pub enum Ungoverned {
 /// The transition (declaration index) amending `key@from`, if one exists.
 #[must_use]
 pub fn transition_for(world: &World<'_>, key: &Key, from: &str) -> Option<usize> {
-    (0..world.decls.len()).find(|&i| match world.decls[i].decl {
-        Declaration::Transition(t) => {
-            let a = world.target(world.pack_of(i), &t.amendment);
-            a.key == *key && a.version.as_deref() == Some(from)
-        }
-        _ => false,
-    })
+    world.transition_for(key, from)
 }
 
 /// The version of `key` governing `events[at]` in a matter whose events

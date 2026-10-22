@@ -37,43 +37,33 @@ pub enum Inactive {
     Superseded(Suspension),
 }
 
-fn targets<'w>(
-    world: &'w World<'_>,
-    i: usize,
-    want: fn(&Relation) -> Option<&String>,
-) -> impl Iterator<Item = super::world::Target> + 'w {
-    let pack = world.pack_of(i).to_owned();
-    world.decls[i]
-        .meta
-        .relations
+/// True when declaration `by` has a relation of kind `want` on `key`.
+fn says(world: &World<'_>, key: &Key, by: usize, want: fn(&Relation) -> bool) -> bool {
+    world
+        .incoming(key)
         .iter()
-        .filter_map(want)
-        .map(move |t| world.target(&pack, t))
+        .any(|r| r.by == by && want(r.relation))
 }
 
-fn supersedes(r: &Relation) -> Option<&String> {
-    match r {
-        Relation::Supersedes(t) => Some(t),
-        _ => None,
-    }
+fn is_supersedes(r: &Relation) -> bool {
+    matches!(r, Relation::Supersedes(_))
 }
 
-fn revives(r: &Relation) -> Option<&String> {
-    match r {
-        Relation::Revives(t) => Some(t),
-        _ => None,
-    }
+fn is_revives(r: &Relation) -> bool {
+    matches!(r, Relation::Revives(_))
 }
 
 /// Dates from which `key` is revived: the end of every superseding window
 /// that declares `revives`, and the start of every other `revives` of it.
 #[must_use]
 pub fn revival_points(world: &World<'_>, key: &Key) -> Vec<String> {
-    let mut out: Vec<String> = (0..world.decls.len())
-        .filter(|&i| targets(world, i, revives).any(|t| t.key == *key))
-        .filter_map(|i| {
-            let w = Window::of(&world.decls[i].meta.effective);
-            if targets(world, i, supersedes).any(|t| t.key == *key) {
+    let mut out: Vec<String> = world
+        .incoming(key)
+        .iter()
+        .filter(|r| is_revives(r.relation))
+        .filter_map(|r| {
+            let w = Window::of(&world.decls[r.by].meta.effective);
+            if says(world, key, r.by, is_supersedes) {
                 w.to
             } else {
                 Some(w.from)
@@ -88,39 +78,40 @@ pub fn revival_points(world: &World<'_>, key: &Key) -> Vec<String> {
 /// Every suspension of `key`.
 #[must_use]
 pub fn suspensions(world: &World<'_>, key: &Key) -> Vec<Suspension> {
+    let incoming = world.incoming(key);
+    if !incoming.iter().any(|r| is_supersedes(r.relation)) {
+        return Vec::new();
+    }
     let revivals = revival_points(world, key);
     let mut out = Vec::new();
-    for i in 0..world.decls.len() {
-        let own = world.key(i) == *key;
+    for r in incoming.iter().filter(|r| is_supersedes(r.relation)) {
+        let i = r.by;
+        if world.key(i) == *key && r.version.is_none() {
+            // `p@D supersedes p` documents succession; earlier versions
+            // already end by D, so it suspends nothing.
+            continue;
+        }
         let window = Window::of(&world.decls[i].meta.effective);
-        for t in targets(world, i, supersedes).filter(|t| t.key == *key) {
-            if own && t.version.is_none() {
-                // `p@D supersedes p` documents succession; earlier versions
-                // already end by D, so it suspends nothing.
-                continue;
-            }
-            let revives_self = targets(world, i, revives).any(|r| r.key == *key);
-            let (end, revived) = if revives_self {
-                (window.to.clone(), true)
-            } else {
-                let next = revivals
-                    .iter()
-                    .find(|d| d.as_str() > window.from.as_str())
-                    .cloned();
-                (next.clone(), next.is_some())
-            };
-            let suspended = Window {
-                from: window.from.clone(),
-                to: end,
-            };
-            if !suspended.is_empty() {
-                out.push(Suspension {
-                    by: i,
-                    window: suspended,
-                    version: t.version,
-                    revived,
-                });
-            }
+        let (end, revived) = if says(world, key, i, is_revives) {
+            (window.to.clone(), true)
+        } else {
+            let next = revivals
+                .iter()
+                .find(|d| d.as_str() > window.from.as_str())
+                .cloned();
+            (next.clone(), next.is_some())
+        };
+        let suspended = Window {
+            from: window.from.clone(),
+            to: end,
+        };
+        if !suspended.is_empty() {
+            out.push(Suspension {
+                by: i,
+                window: suspended,
+                version: r.version.clone(),
+                revived,
+            });
         }
     }
     out

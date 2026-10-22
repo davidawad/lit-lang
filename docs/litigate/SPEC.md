@@ -456,6 +456,34 @@ must cover the package lifetime. A gap is legal only when declared with
 version with `from <= as_of < to`, among versions whose `known_at <=` the
 query's `known_at` (latest when omitted). No version is L3007.
 
+Refinements (temporal bead, `litigate-sema/src/temporal`):
+
+- **Lifetime.** A declaration's lifetime runs from its earliest version's
+  `from` to the package's end (`in_force_until`, else open). A declaration
+  may begin after its package does; coverage is checked inside the
+  lifetime only.
+- **Declared gaps.** An uncovered day is legal when a declaration that
+  `supersedes` this one covers it, when the version starting right after
+  the gap `revives` it, or, for the trailing gap, when the version that
+  ends there carries a relation other than `delegable_to` (a sunset or a
+  temporary override: it declares what it amends). Disjointness ignores
+  `known_at`: two versions never restate one window.
+- **Supersession.** `A supersedes B` deactivates the versions of B that
+  took effect before A did, from A's `from`. When A's window ends, B stays
+  inactive unless A also says `revives B` (B returns after A's window), or
+  another declaration `revives B` (B returns at its `from`). A version of B
+  enacted after A took effect is new law and is not suspended. `B@E
+  supersedes B@D` documents succession and must name an earlier version
+  (`D < E`, else L3006). `as_of` honours supersession: a superseded version
+  is L3007 with a note naming the superseding declaration.
+- **Transitions.** For an event, the version in force on its date governs,
+  unless that version took effect after the matter's first event and a
+  transition amends it; then the arms decide. Each arm must select the
+  amended version `d@D` or the version it replaces (the one ending on
+  `D`), and `d@D` must replace one (L3008). One transition per amended
+  version (L3008). Conditions may use only `has_event`, `true`/`false`,
+  `!`, `&&`, `||`, and boolean `==`/`!=` (L3008).
+
 `transition t amends d@D { unless C -> v, otherwise -> w }` handles
 proceedings pending when version `d@D` takes effect. For each event on or
 after `D` in a matter whose first event precedes `D`, the arms are evaluated
@@ -491,6 +519,49 @@ for any assignment of the `has_event` atoms they mention) or carry distinct
 deadline to be met (a case event missing it is L4002 unless excused). `power`
 contains the decisions it grants. `liability` contains the consequence edges
 taken when a duty is missed.
+
+Refinements (precedence bead, `litigate-sema/src/precedence`):
+
+- **Lattice.** The order is the transitive closure of every `authority`
+  chain in the package and its dependencies (`lit/core` declares the
+  shared one). A level no chain names is incomparable to every other.
+- **Claimants.** The declarations that "apply to the same target" T are T
+  itself and every declaration with `override T`, `notwithstanding T`, or
+  `subject_to T`. On each day, the active claimant that beats every other
+  active claimant wins. Stage 1: `notwithstanding` and `override` win,
+  `subject_to` yields; a `@D` target applies only while version D is
+  active. Stage 2, for pairs stage 1 leaves open: authority, then inside a
+  `rule` over package level, then the shorter window (open-ended is
+  longest), then the later `from`. L3003 is reported once per unordered
+  pair, at the later declaration's relation clause with a note at the
+  other. A pair whose declared relations contradict each other is L3006
+  only, not also L3003.
+- **Cycles (L3006).** Declared wins (`notwithstanding`/`override` edges
+  A→B, `subject_to` B→A), supersession between different declarations, and
+  default/exception references (an exception to its target; a default or
+  exception to every default or exception its expressions name) must each
+  be acyclic.
+- **Delegation.** `A override B` needs no delegation when A's authority
+  equals or outranks B's. Otherwise every version of B that overlaps A's
+  window must list A's authority, exactly, in `delegable_to` (L3004 at the
+  `override` clause, naming the missing `delegable_to [Level]`, with a
+  `maybe_incorrect` fix inserting it into B). `delegable_to X` must name a
+  level strictly below the declaration's own (L3004). An override of a
+  declaration never in force during the override's window is L3007, as is
+  an exception never in force alongside its target.
+- **Evaluation.** An exception applies only while its target's condition
+  holds. Among an applicable node's applicable, undefeated exceptions the
+  highest `priority` wins (an absent priority ranks lowest). A winning
+  rebutting exception replaces the conclusion; a winning undercutting one
+  disables its target, and a disabled exception has no effect on its own
+  target.
+- **Rule shapes (L2007).** A `duty` contains at least one deadline. A
+  `power` contains at least one `decision`. A `liability` contains at least
+  one node and no deadline.
+- **Direction.** A deadline's direction is part of its type. Every version
+  shares it (L2001), `within d` needs a forward `d` (L2001), and a backward
+  deadline cannot use a counting rule anchored on `next_business_day`
+  (L3009).
 
 ### 5.6 Matters (`.case`)
 

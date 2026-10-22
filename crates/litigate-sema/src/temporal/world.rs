@@ -3,7 +3,7 @@
 //! `(pack id, local id)`, with version sets and source locations.
 use super::interval::Window;
 use super::version::{Version, VersionSet};
-use crate::hir::{self, Declaration, Metadata, RuleKind};
+use crate::hir::{self, Declaration, Metadata, Relation, RuleKind};
 use litigate_base::{Applicability, Diagnostic, DiagnosticCode, FileId, Fix, Note, Span};
 use std::collections::BTreeMap;
 
@@ -111,6 +111,34 @@ pub struct World<'a> {
     /// Authority order links.
     pub ranks: Vec<Rank>,
     by_key: BTreeMap<Key, Vec<usize>>,
+    incoming: BTreeMap<Key, Vec<Incoming<'a>>>,
+    exceptions: BTreeMap<Key, Vec<usize>>,
+    transitions: BTreeMap<(Key, String), usize>,
+}
+
+/// A relation pointing at a declaration: who declares it, and on which
+/// version (`@D`) if any.
+#[derive(Debug, Clone)]
+pub struct Incoming<'a> {
+    /// The declaring declaration (index into [`World::decls`]).
+    pub by: usize,
+    /// The relation.
+    pub relation: &'a Relation,
+    /// The `@D` version selector of the target, if any.
+    pub version: Option<String>,
+}
+
+/// The target text of a relation that names a declaration.
+#[must_use]
+pub fn relation_target(r: &Relation) -> Option<&String> {
+    match r {
+        Relation::SubjectTo(t)
+        | Relation::Notwithstanding(t)
+        | Relation::Supersedes(t)
+        | Relation::Revives(t)
+        | Relation::Override(t) => Some(t),
+        Relation::DelegableTo(_) => None,
+    }
 }
 
 /// The metadata of a rule-bearing declaration.
@@ -165,7 +193,32 @@ impl<'a> World<'a> {
                     pack: self.packs[pack].pack.clone(),
                     name: meta.id.clone(),
                 };
-                self.by_key.entry(key).or_default().push(self.decls.len());
+                let i = self.decls.len();
+                let own = key.pack.clone();
+                self.by_key.entry(key.clone()).or_default().push(i);
+                for relation in &meta.relations {
+                    if let Some(text) = relation_target(relation) {
+                        let t = self.target(&own, text);
+                        self.incoming.entry(t.key).or_default().push(Incoming {
+                            by: i,
+                            relation,
+                            version: t.version,
+                        });
+                    }
+                }
+                match decl {
+                    Declaration::Exception(e) => {
+                        let t = self.target(&own, &e.target).key;
+                        self.exceptions.entry(t).or_default().push(i);
+                    }
+                    Declaration::Transition(t) => {
+                        let a = self.target(&own, &t.amendment);
+                        if let Some(v) = a.version {
+                            self.transitions.entry((a.key, v)).or_insert(i);
+                        }
+                    }
+                    _ => {}
+                }
                 self.decls.push(Decl {
                     pack,
                     decl,
@@ -184,6 +237,36 @@ impl<'a> World<'a> {
             world.add(PackInfo::of(&p.manifest), &p.modules);
         }
         world
+    }
+
+    /// Relations that name `key`, in declaration order.
+    #[must_use]
+    pub fn incoming(&self, key: &Key) -> &[Incoming<'a>] {
+        self.incoming.get(key).map_or(&[], Vec::as_slice)
+    }
+
+    /// Every declaration some relation names.
+    pub fn targets(&self) -> impl Iterator<Item = (&Key, &[Incoming<'a>])> + '_ {
+        self.incoming.iter().map(|(k, v)| (k, v.as_slice()))
+    }
+
+    /// Exceptions (declaration indexes) whose target is `key`.
+    #[must_use]
+    pub fn exceptions_on(&self, key: &Key) -> &[usize] {
+        self.exceptions.get(key).map_or(&[], Vec::as_slice)
+    }
+
+    /// Every exception target.
+    pub fn exception_targets(&self) -> impl Iterator<Item = &Key> + '_ {
+        self.exceptions.keys()
+    }
+
+    /// The first transition amending `key@from`.
+    #[must_use]
+    pub fn transition_for(&self, key: &Key, from: &str) -> Option<usize> {
+        self.transitions
+            .get(&(key.clone(), from.to_owned()))
+            .copied()
     }
 
     /// The key of declaration `i`.

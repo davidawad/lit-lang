@@ -43,11 +43,10 @@ pub fn counting_hint(
         .value_names()
         .into_iter()
         .filter(|n| {
-            c.scope
-                .own
-                .values
-                .get(*n)
-                .is_some_and(|v| matches!(v.kind, ValueKind::Counting))
+            std::iter::once(c.scope.own)
+                .chain(c.scope.bindings.iter().map(|b| b.sig))
+                .filter_map(|s| s.values.get(*n))
+                .any(|v| matches!(v.kind, ValueKind::Counting))
         })
         .map(str::to_owned)
         .collect();

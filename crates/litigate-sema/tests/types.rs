@@ -69,3 +69,25 @@ fn field_types_and_placement() {
     );
     insta::assert_debug_snapshot!(out);
 }
+
+#[test]
+fn unit_mixing_note_names_an_imported_counting_rule() {
+    let rules = "module rules\ncounting frcp6 { holidays cal }\ncalendar cal { new-year: fixed(1, 1) effective [1870-06-28, ..) }\n";
+    let main = "module main\nimport rules.{frcp6}\nstart s\nterminal s: \"S\"\ndefault d when true => 21.days + 5.court_days\n";
+    let (db, ws) = common::workspace(&[common::package(
+        "demo",
+        &[],
+        &[("main.lit", main), ("rules.lit", rules)],
+    )]);
+    let checks = litigate_sema::check_workspace(&db, ws);
+    let notes: Vec<&str> = checks
+        .iter()
+        .flat_map(|c| c.diagnostics.iter())
+        .filter(|d| d.code == litigate_base::DiagnosticCode::UnitMismatch)
+        .flat_map(|d| d.notes.iter().map(|n| n.message.as_str()))
+        .collect();
+    assert!(
+        notes.iter().any(|n| n.contains("counted_by frcp6")),
+        "{notes:?}"
+    );
+}

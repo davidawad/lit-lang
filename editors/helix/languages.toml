@@ -1,0 +1,26 @@
+# Helix configuration for litigate (.lit rule modules, .case matters).
+# Merge into ~/.config/helix/languages.toml (see editors/README.md), then:
+#   hx --grammar fetch && hx --grammar build
+#   cp -r editors/helix/queries/litigate ~/.config/helix/runtime/queries/
+#   hx --health litigate
+
+[[language]]
+name = "litigate"
+scope = "source.litigate"
+injection-regex = "^litigate$"
+file-types = ["lit", "case"]
+roots = ["Lit.toml", "Lit.lock"]
+comment-tokens = ["//", "///"]
+block-comment-tokens = { start = "/*", end = "*/" }
+indent = { tab-width = 2, unit = "  " }
+language-servers = ["litigate-lsp"]
+auto-format = false
+
+[language-server.litigate-lsp]
+command = "litigate"
+args = ["lsp", "--stdio"]
+
+[[grammar]]
+name = "litigate"
+# A local checkout works too: source = { path = "/path/to/litgraph/editors/tree-sitter-litigate" }
+source = { git = "https://github.com/davidawad/litgraph", rev = "2e6383008538da91140c440e46193ace266e423c", subpath = "editors/tree-sitter-litigate" }

@@ -5,6 +5,9 @@ all build on one grammar, [`tree-sitter-litigate`](tree-sitter-litigate/README.m
 and its queries (`tree-sitter-litigate/queries/*.scm`). Each one also
 registers the language server, `litigate lsp --stdio` (SPEC §9).
 
+Tooling (grammar builds, Helix query generation, the editor tests) lives in
+the [`litigate-editors`](litigate-editors) crate.
+
 | Editor | Directory | Highlight | Indent | Folds | Symbols | LSP |
 |---|---|---|---|---|---|---|
 | Emacs 29+ (`treesit`) | [`emacs/`](emacs) | `litigate-ts-mode` font-lock (mirrors `highlights.scm`) | `treesit-simple-indent-rules` (mirrors `indents.scm`) | outline over top-level declarations (Emacs 30+) | imenu, `beginning-of-defun` | eglot |
@@ -28,10 +31,10 @@ and the pinned `tree-sitter-cli`, run through `npx` when it isn't on
 1. Build the grammar. From a checkout:
 
    ```sh
-   editors/emacs/build-grammar.sh            # -> ~/.emacs.d/tree-sitter/libtree-sitter-litigate.so
+   cargo run -p litigate-editors --bin litigate-grammar   # -> ~/.emacs.d/tree-sitter/libtree-sitter-litigate.so
    ```
 
-   The script asks your `emacs` for `treesit-library-abi-version` and
+   The tool asks your `emacs` for `treesit-library-abi-version` and
    regenerates an ABI 14 parser when it needs one. `--out DIR` and `--abi N`
    override both. If your Emacs loads ABI 15 (libtree-sitter 0.25+), you can
    use `M-x treesit-install-language-grammar RET litigate` instead. The
@@ -56,8 +59,8 @@ and the pinned `tree-sitter-cli`, run through `npx` when it isn't on
    declarations. `treesit-font-lock-level` 4 enables all highlighting
    (operators, brackets, plain identifiers).
 
-**Test.** `editors/emacs/test/run.sh` builds the grammar into a temporary
-directory for the `emacs` on `PATH` and byte-compiles the mode with
+**Test.** `editors/litigate-editors/tests/emacs.rs` builds the grammar into a
+scratch directory for the `emacs` on `PATH` and byte-compiles the mode with
 warnings as errors. It then runs the ERT suite in `emacs --batch`, which:
 
 - loads every `.lit`/`.case` file in the repository through `auto-mode-alist`,
@@ -104,20 +107,22 @@ Helix's capture names differ from the common convention (for example
 `@constant.numeric` instead of `@number`, `@namespace` instead of `@module`).
 So `helix/queries/litigate/{highlights,indents,locals,injections}.scm` are
 generated from the canonical queries by
-[`helix/sync-queries.sh`](helix/sync-queries.sh). After you change a
-canonical query, rerun it. `textobjects.scm` is hand-written and Helix-only:
+`cargo run -p litigate-editors --bin helix-queries`
+([`litigate-editors/src/helix.rs`](litigate-editors/src/helix.rs) holds the
+capture renames). After you change a canonical query, rerun it. `textobjects.scm` is hand-written and Helix-only:
 `mf`/`]f` select declarations, `mt` selects tests and `me` selects edges.
 
-**Test.** `editors/helix/test/check.sh` runs four checks:
+**Test.** `editors/litigate-editors/tests/helix.rs` runs these checks:
 
-- the generated queries are in sync (`sync-queries.sh --check`),
+- the generated queries are current (`helix-queries --check` in test form),
 - every Helix query compiles against the grammar and runs over the corpus
-  (`tree-sitter query`),
+  (the `tree-sitter` crate, so no CLI is needed), and textobjects use
+  Helix's object names,
 - the pinned `rev` carries the grammar,
 - when `hx` is on `PATH`, `hx --grammar build` succeeds in a throwaway
   config dir and `hx --health litigate` reports all four ✓ lines.
 
-It skips (logged) only the steps whose tool is missing.
+Only the `hx` step skips (logged) when `hx` is missing.
 
 ## Neovim (0.10+)
 
@@ -146,7 +151,7 @@ It skips (logged) only the steps whose tool is missing.
    `parser/` directory on the runtimepath:
 
    ```sh
-   editors/emacs/build-grammar.sh --abi 15 --out ~/.local/share/nvim/site/parser
+   cargo run -p litigate-editors --bin litigate-grammar -- --abi 15 --out ~/.local/share/nvim/site/parser
    mv ~/.local/share/nvim/site/parser/libtree-sitter-litigate.so ~/.local/share/nvim/site/parser/litigate.so
    ```
 
@@ -180,8 +185,8 @@ It skips (logged) only the steps whose tool is missing.
 4. Check: `:checkhealth vim.treesitter` lists `litigate`, and
    `:Inspect` on a keyword in a `.lit` buffer shows `@keyword`.
 
-**Test.** `editors/nvim/test/run.sh` builds the parser for the `nvim` on
-`PATH` and runs [`nvim/test/litigate_test.lua`](nvim/test/litigate_test.lua)
+**Test.** `editors/litigate-editors/tests/nvim.rs` builds the parser for the
+`nvim` on `PATH` and runs [`nvim/test/litigate_test.lua`](nvim/test/litigate_test.lua)
 headless. It checks filetype detection and the ftplugin, and that every
 corpus file parses clean with the highlighter attached. Every query
 compiles and runs over the corpus. The tree-sitter highlight assertions in
@@ -193,17 +198,20 @@ nvim-treesitter registration for both branches. It skips (logged) when
 ## Running all editor tests
 
 ```sh
-TEST_SKIP_LOG=/tmp/editors-skips.log just editors-test
+TEST_SKIP_LOG=/tmp/editors-skips.log cargo nextest run -p litigate-editors   # or: just editors-test
 ```
 
-The recipe runs the three scripts above. The Emacs and Neovim tests regenerate
-the parser through `npx` when the editor needs ABI 14, so node must be
-installed.
+These tests are part of the workspace gate (`cargo nextest run --workspace`).
+When an editor isn't installed, its test passes but writes a `SKIP` line
+to stderr and to `$TEST_SKIP_LOG`. A skip is not a pass, so check the log.
+The Emacs and Neovim tests regenerate the parser through `npx` when the
+editor needs ABI 14, so node must be installed.
 
 ## Keeping the editors in sync with the grammar
 
 - Change a highlight or indent query: edit
-  `tree-sitter-litigate/queries/*.scm`, run `editors/helix/sync-queries.sh`,
+  `tree-sitter-litigate/queries/*.scm`, run
+  `cargo run -p litigate-editors --bin helix-queries`,
   and mirror any new keyword, operator or indent node type in
   `emacs/litigate-ts-mode.el`. The ERT suite fails until the lists match.
   Neovim follows automatically through the symlinks.

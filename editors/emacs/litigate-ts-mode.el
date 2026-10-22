@@ -27,7 +27,7 @@
 ;;   for `.lit' and `.case'.
 ;;
 ;; Install the grammar with `M-x treesit-install-language-grammar RET
-;; litigate', or with `editors/emacs/build-grammar.sh' when your Emacs is
+;; litigate', or with `cargo run -p litigate-editors --bin litigate-grammar' when your Emacs is
 ;; linked against libtree-sitter older than 0.25 (it needs an ABI 14
 ;; parser).  See `editors/README.md'.
 

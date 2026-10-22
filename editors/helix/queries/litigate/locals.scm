@@ -1,5 +1,6 @@
 ; Generated from editors/tree-sitter-litigate/queries/locals.scm by
-; editors/helix/sync-queries.sh. Do not edit; edit the source and rerun.
+; `cargo run -p litigate-editors --bin helix-queries`. Do not edit;
+; edit the source and rerun.
 
 ; Scopes, definitions and references for litigate.
 ; A file is one scope; rule bodies nest (their declarations are hoisted into

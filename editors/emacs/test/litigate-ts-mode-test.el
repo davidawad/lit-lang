@@ -2,7 +2,7 @@
 
 ;;; Commentary:
 
-;; Run through `editors/emacs/test/run.sh', which builds the grammar and
+;; Run by `cargo nextest run -p litigate-editors' (tests/emacs.rs), which builds the grammar and
 ;; sets LITIGATE_REPO (repository root) and LITIGATE_TS_GRAMMAR_DIR (the
 ;; directory holding libtree-sitter-litigate).
 

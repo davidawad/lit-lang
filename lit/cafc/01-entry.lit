@@ -1,0 +1,283 @@
+// The four origin tribunals and their notice-of-appeal periods (28 U.S.C.
+// § 1295(a)). Each period is a duty the appellant must meet; missing it ends
+// the appeal at the matching `window-blown-*` terminal.
+module cafc.entry
+
+import cafc.docketing.{ notice-of-appeal-filed }
+import cafc.{ BecameFinal, Entered, Filed, Order, Paper, entry-group }
+import core.authority.{ CaseOrder }
+import core.frap26.{ frap26 }
+
+start appeal-origin
+
+decision appeal-origin: "Adverse Ruling From an Origin Tribunal" cite 28 U.S.C. § 1295(a)
+{
+  group entry-group
+  note "Router node. The Federal Circuit has exclusive jurisdiction over appeals from these four tribunals (among others not modeled here, e.g. MSPB, Court of International Trade, Board of Contract Appeals) under 28 U.S.C. § 1295(a)'s various subsections."
+  origin-to-district-court "Judgment below is a district-court patent judgment" -> entry-district-court {
+    authority cite 28 U.S.C. § 1295(a)(1)
+  }
+  origin-to-ptab "Judgment below is a PTAB final written decision" -> entry-ptab {
+    authority cite 28 U.S.C. § 1295(a)(4)(A)
+  }
+  origin-to-itc "Judgment below is an ITC final determination" -> entry-itc {
+    authority cite 28 U.S.C. § 1295(a)(6)
+  }
+  origin-to-cofc "Judgment below is a CoFC judgment" -> entry-cofc {
+    authority cite 28 U.S.C. § 1295(a)(3)
+  }
+  origin-to-ttab "Judgment below is a TTAB final decision" -> entry-ttab {
+    authority cite 28 U.S.C. § 1295(a)(4)(B)
+  }
+}
+
+state entry-district-court: "District Court Patent Judgment Entered" by applicant cite 28 U.S.C. § 1295(a)(1)
+{
+  group entry-group
+  note "Final judgment (or an appealable interlocutory order under 28 U.S.C. § 1292(c)(1)-(2)) in a civil action arising under an Act of Congress relating to patents or plant variety protection, or in which a party asserted a compulsory patent counterclaim. Non-patent district-court appeals with a patent counterclaim removed on appeal still route here; purely non-patent district-court appeals go to the regional circuit, not modeled in this pack."
+  district-court-file-noa "File notice of appeal with the district clerk" -> notice-of-appeal-filed {
+    authority cite FRAP 4(a)(1)(A)-(B); 28 U.S.C. § 1295(a)(1)
+    effort 3.hours
+    cost 605.usd
+    event Filed(NoticeOfAppeal)
+    within district-court-noa-period {
+      extendable true
+      extension_authority "FRAP 4(a)(5) (up to 30 additional days, excusable neglect/good cause)"
+      note "30 days; 60 days if the United States or a U.S. officer/agency/employee is a party (FRAP 4(a)(1)(B)). Jurisdictional under Bowles v. Russell, 551 U.S. 205 (2007) as applied by the regional circuits and this court alike; 28 U.S.C. § 2107."
+    }
+    tags [appeal]
+  }
+  district-court-window-blown "Let the 30/60-day window lapse" -> window-blown-district-court {
+    authority cite ?("Bowles v. Russell, 551 U.S. 205 (2007); 28 U.S.C. § 2107; FRAP 4(a)")
+  }
+}
+
+/// imported
+state entry-ptab: "PTAB Final Written Decision (or Operative Post-FWD Decision)" by applicant cite ?("28 U.S.C. § 1295(a)(4)(A); 35 U.S.C. §§ 141-144, 319") {
+  group entry-group
+  note "Reached from ptab-patent-trial-appeal-board.json's fwd-all-unpatentable / fwd-all-confirmed / fwd-mixed terminals, or from a later rehearing/Director-review decision if one was sought. Only actual trial participants may appeal (35 U.S.C. § 319) — no § 145 civil-action alternative exists for AIA trials, unlike ex parte prosecution appeals under § 145."
+  ptab-file-noa "File notice of appeal with the Director (USPTO)" -> notice-of-appeal-filed {
+    authority cite 37 C.F.R. § 90.3(a); 35 U.S.C. § 142
+    effort 4.hours
+    cost 600.usd
+    event Filed(NoticeOfAppeal)
+    within ptab-noa-period {
+      extendable true
+      extension_authority "37 C.F.R. § 90.3(c) (Director may extend on a timely, good-cause request filed before expiration, or post-expiration on a showing of excusable neglect)"
+      note "63 days after the date of the final Board decision (or 63 days after action on a timely rehearing request). Filed with the Director, not directly with the Federal Circuit clerk — mirrors ptab-patent-trial-appeal-board.json's federal-circuit-window node, modeled here as the CAFC-side counterpart."
+    }
+    tags [appeal]
+  }
+  ptab-window-blown "Let the 63-day window lapse" -> window-blown-ptab {
+    authority cite 37 C.F.R. § 90.3(a); 35 U.S.C. § 319
+  }
+}
+
+state entry-itc: "ITC Final Determination — Presidential (USTR) Review Period Expired" by applicant cite ?("28 U.S.C. § 1295(a)(6); 19 U.S.C. § 1337(c), (j)") {
+  group entry-group
+  note "Reached from itc-337.json's no-violation-outcome or remedy-in-effect nodes, i.e. only after the 60-day § 1337(j) Presidential/USTR disapproval window has run without a veto (a veto is itc-337.json's determination-vetoed terminal — no force or effect, nothing to appeal). Any person adversely affected, including the complainant on a no-violation determination, may appeal."
+  itc-file-noa "File notice of appeal to the Federal Circuit" -> notice-of-appeal-filed {
+    authority cite 19 U.S.C. § 1337(c); 28 U.S.C. § 1295(a)(6)
+    effort 6.hours
+    cost 600.usd
+    event Filed(NoticeOfAppeal)
+    within itc-noa-period {
+      extendable false
+      note "60 days, unextendable per 19 U.S.C. § 1337(c) — mirrors itc-337.json's appeal-filed edge (flag itc337/fedcir-appeal-forfeited on a miss)."
+    }
+    tags [appeal]
+  }
+  itc-window-blown "Let the 60-day window lapse" -> window-blown-itc {
+    authority cite 19 U.S.C. § 1337(c)
+  }
+}
+
+state entry-cofc: "Court of Federal Claims Judgment Entered" by applicant cite 28 U.S.C. § 1295(a)(3); 28 U.S.C. § 2522
+{
+  group entry-group
+  note "Final judgment of the U.S. Court of Federal Claims, including patent/copyright takings (28 U.S.C. § 1498) and other CoFC matters within Federal Circuit jurisdiction."
+  cofc-file-noa "File notice of appeal with the CoFC clerk" -> notice-of-appeal-filed {
+    authority cite 28 U.S.C. § 2522; 28 U.S.C. § 1295(a)(3); FRAP 4(a)(1)(B)
+    effort 3.hours
+    cost 605.usd
+    event Filed(NoticeOfAppeal)
+    within cofc-noa-period {
+      extendable true
+      extension_authority "FRAP 4(a)(5) (up to 30 additional days, excusable neglect/good cause)"
+      note "60 days after CoFC entry of judgment — the United States is necessarily a party to every CoFC judgment, so the FRAP 4(a)(1)(B) 60-day (not 30-day) period governs as a matter of course. Jurisdictional; cannot be waived even for excusable neglect in most circumstances."
+    }
+    note "Docketing fee for a CoFC-origin appeal is not separately itemized on the CAFC fee schedule reviewed (which lists 'appeal from a district court' at $605 and 'petition for review' at $600); $605 used here as a reasonable proxy since both are Judicial-Conference-set fees under 28 U.S.C. § 1913 collected on filing the notice of appeal — UNVERIFIED to the exact cent."
+    tags [appeal]
+  }
+  cofc-window-blown "Let the 60-day window lapse" -> window-blown-cofc {
+    authority cite ?("28 U.S.C. § 2522; Bowles v. Russell, 551 U.S. 205 (2007)")
+  }
+}
+
+terminal window-blown-district-court: "District-Court-Origin Notice of Appeal Untimely — Window Blown" outcome [loss, procedural-default] {
+  group entry-group
+  note "PERMADEATH. Each origin's notice-of-appeal deadline is jurisdictional and, on this record, effectively unextendable once it lapses (see the edge authority for the specific unextendability rule for this origin). No equitable exception restores appellate jurisdiction."
+  valence bad
+  tags [waiver-trap]
+  payoff 0.usd
+}
+
+terminal window-blown-ptab: "PTAB-Origin Notice of Appeal Untimely — Window Blown" outcome [loss, procedural-default] {
+  group entry-group
+  note "PERMADEATH. Each origin's notice-of-appeal deadline is jurisdictional and, on this record, effectively unextendable once it lapses (see the edge authority for the specific unextendability rule for this origin). No equitable exception restores appellate jurisdiction."
+  valence bad
+  tags [waiver-trap]
+  payoff 0.usd
+}
+
+terminal window-blown-itc: "ITC-Origin Notice of Appeal Untimely — Window Blown" outcome [loss, procedural-default] {
+  group entry-group
+  note "PERMADEATH. Each origin's notice-of-appeal deadline is jurisdictional and, on this record, effectively unextendable once it lapses (see the edge authority for the specific unextendability rule for this origin). No equitable exception restores appellate jurisdiction."
+  valence bad
+  tags [waiver-trap]
+  payoff 0.usd
+}
+
+terminal window-blown-cofc: "CoFC-Origin Notice of Appeal Untimely — Window Blown" outcome [loss, procedural-default] {
+  group entry-group
+  note "PERMADEATH. Each origin's notice-of-appeal deadline is jurisdictional and, on this record, effectively unextendable once it lapses (see the edge authority for the specific unextendability rule for this origin). No equitable exception restores appellate jurisdiction."
+  valence bad
+  tags [waiver-trap]
+  payoff 0.usd
+}
+
+terminal window-blown-ttab: "TTAB-Origin Notice of Appeal Untimely — Window Blown" outcome [loss, procedural-default] {
+  group entry-group
+  note "PERMADEATH unless the Director extends: 37 C.F.R. § 2.145(e) allows an extension requested before expiry on good cause, or after expiry on excusable neglect. Otherwise the Board decision becomes final."
+  valence bad
+  tags [waiver-trap]
+  payoff 0.usd
+}
+
+/// imported
+state entry-ttab: "TTAB Final Decision (Opposition, Cancellation or Ex Parte Appeal)" by applicant cite 28 U.S.C. § 1295(a)(4)(B); 15 U.S.C. § 1071(a); 37 C.F.R. § 2.145
+{
+  group entry-group
+  note "Reached from ttab-trademark-trial-and-appeal-board.json's decision nodes. A party dissatisfied with a final TTAB decision may appeal on the Board record to the Federal Circuit (15 U.S.C. § 1071(a)) or instead file a de novo civil action in district court under § 1071(b) (not modeled here). Electing the civil action forecloses the appeal and vice versa, and an adverse party can force the civil-action route by electing it within the period to respond (§ 1071(a)(1))."
+  ttab-file-noa "File notice of appeal with the Director (USPTO)" -> notice-of-appeal-filed {
+    authority cite 15 U.S.C. § 1071(a)(2); 37 C.F.R. § 2.145(d)(1)
+    effort 4.hours
+    event Filed(NoticeOfAppeal)
+    within ttab-noa-period {
+      extendable true
+      extension_authority "37 C.F.R. § 2.145(e) (Director may extend on good cause if requested before expiry, or on excusable neglect if requested after)"
+      note "63 days after the final TTAB decision (or after action on a timely request for reconsideration). Filed with the Director, then docketed at the Federal Circuit. A cross-appeal may be filed within 14 days after service of the notice of appeal or 63 days, whichever is later. Notice-of-appeal fee not modeled (UNVERIFIED)."
+    }
+    tags [appeal]
+  }
+  ttab-window-blown "Let the 63-day window lapse" -> window-blown-ttab {
+    authority cite ?("37 C.F.R. § 2.145(d)(1), (e)")
+  }
+}
+
+/// FRAP 4(a)(1)(A): 30 days after entry of the judgment. The period is the
+/// one FRAP has set since it took effect on July 1, 1968 (Supreme Court
+/// order of December 4, 1967); the district court may extend it under FRAP
+/// 4(a)(5)(A), a delegation to an order in the case.
+rule duty district-court-notice-of-appeal cite FRAP 4(a)(1)(A)
+{
+  deadline district-court-noa-period: 30.days after Entered(Judgment) counted_by frap26 effective [1968-07-01, ..) known_at 1967-12-04 delegable_to [CaseOrder] cite FRAP 4(a)(1)(A); FRAP 4(a)(5)(A)
+}
+
+/// 37 C.F.R. § 90.3(a)(1): 63 days after the final Board decision, in force
+/// since the AIA trial rules took effect on September 16, 2012 (77 FR 48677,
+/// Aug. 14, 2012; amended 89 FR 22086, Mar. 29, 2024, without changing the
+/// period). The Director may extend it under § 90.3(c).
+rule duty ptab-notice-of-appeal cite 37 C.F.R. § 90.3(a)(1)
+{
+  deadline ptab-noa-period: 63.days after Entered(BoardDecision) counted_by frap26 effective [2012-09-16, ..) known_at 2012-08-14 delegable_to [CaseOrder] cite 37 C.F.R. § 90.3(a)(1); 37 C.F.R. § 90.3(c)
+}
+
+/// 19 U.S.C. § 1337(c): 60 days after the determination becomes final. The
+/// statute names no extension, so nothing below it may change the period.
+/// Its appeal to this court dates from the court's creation (Federal Courts
+/// Improvement Act of 1982, effective October 1, 1982).
+rule duty itc-notice-of-appeal cite 19 U.S.C. § 1337(c)
+{
+  deadline itc-noa-period: 60.days after BecameFinal() counted_by frap26 effective [1982-10-01, ..) known_at 1982-04-02 cite 19 U.S.C. § 1337(c)
+}
+
+/// 28 U.S.C. § 2522 adopts the district-court time: the United States is a
+/// party to every CoFC judgment, so FRAP 4(a)(1)(B)'s 60 days run from
+/// entry. § 2522 names the Court of Federal Claims since the Federal Courts
+/// Administration Act of 1992 (Pub. L. 102-572, § 902, effective October 29,
+/// 1992). FRAP 4(a)(5)(A) extensions apply through § 2522.
+rule duty cofc-notice-of-appeal cite 28 U.S.C. § 2522
+{
+  deadline cofc-noa-period: 60.days after Entered(Judgment) counted_by frap26 effective [1992-10-29, ..) known_at 1992-10-29 delegable_to [CaseOrder] cite 28 U.S.C. § 2522; FRAP 4(a)(1)(B); FRAP 4(a)(5)(A)
+}
+
+/// 37 C.F.R. § 2.145(d)(1): 63 days from the date of the final TTAB
+/// decision, as promulgated at 81 FR 69986 (Oct. 7, 2016), effective
+/// January 14, 2017. The Director may extend it under § 2.145(e). Its cite
+/// is a hole: § 2.145 is vendored (sources/cfr-37-part2.txt), but the pack
+/// has no source for that file and binds 37 C.F.R. to the § 90.3 source,
+/// and a hole whose text names § 2.145 is still checked against it.
+rule duty ttab-notice-of-appeal {
+  /// 37 C.F.R. § 2.145(d)(1), (e).
+  deadline ttab-noa-period: 63.days after Entered(BoardDecision) counted_by frap26 effective [2017-01-14, ..) known_at 2016-10-07 delegable_to [CaseOrder] cite ?("the TTAB notice-of-appeal rule this deadline's doc comment names; no pack source binds it")
+}
+
+test "a district-court notice of appeal is due 30 days after entry" cite FRAP 4(a)(1)(A)
+{
+  given Entered(Judgment) on 2026-03-02
+  expect deadline(district-court-noa-period) == 2026-04-01
+}
+
+test "a Sunday 30th day rolls to Monday" cite FRAP 26(a)(1)(C)
+{
+  given Entered(Judgment) on 2026-04-03
+  expect deadline(district-court-noa-period) == 2026-05-04
+}
+
+test "a PTAB notice of appeal is due 63 days after the final decision" cite 37 C.F.R. § 90.3(a)(1)
+{
+  given Entered(BoardDecision) on 2026-03-02
+  expect deadline(ptab-noa-period) == 2026-05-04
+}
+
+test "a 63rd day on Memorial Day rolls to Tuesday" cite FRAP 26(a)(6)(A)
+{
+  given Entered(BoardDecision) on 2026-03-23
+  expect deadline(ptab-noa-period) == 2026-05-26
+}
+
+test "an ITC notice of appeal is due 60 days after the determination becomes final" cite 19 U.S.C. § 1337(c)
+{
+  given BecameFinal() on 2026-03-02
+  expect deadline(itc-noa-period) == 2026-05-01
+}
+
+test "a Sunday 60th day rolls to Monday" cite FRAP 26(a)(1)(C)
+{
+  given BecameFinal() on 2026-03-04
+  expect deadline(itc-noa-period) == 2026-05-04
+}
+
+test "a CoFC notice of appeal is due 60 days after entry" cite 28 U.S.C. § 2522
+{
+  given Entered(Judgment) on 2026-03-02
+  expect deadline(cofc-noa-period) == 2026-05-01
+}
+
+test "a 60th day on observed Independence Day rolls to Monday" cite FRAP 26(a)(6)(A)
+{
+  given Entered(Judgment) on 2026-05-04
+  expect deadline(cofc-noa-period) == 2026-07-06
+}
+
+test "a TTAB notice of appeal is due 63 days after the final decision" {
+  given Entered(BoardDecision) on 2026-03-02
+  expect deadline(ttab-noa-period) == 2026-05-04
+}
+
+test "a 63rd day on Labor Day rolls to Tuesday" cite FRAP 26(a)(6)(A)
+{
+  given Entered(BoardDecision) on 2026-07-06
+  expect deadline(ttab-noa-period) == 2026-09-08
+}

@@ -1,0 +1,271 @@
+// The panel's decision (Fed. Cir. IOP #8-#9; Fed. Cir. R. 36), the remand
+// router, and rehearing (Fed. Cir. R. 40), whose 30-day period is the
+// Federal Circuit's local extension of FRAP 40(d)(1)'s 14 days.
+module cafc.decision-to-rehearing
+
+import cafc.mandate.{ mandate-issued }
+import cafc.{ Entered, Filed, Order, Paper, decision-group, rehearing-group }
+import core.authority.{ CaseOrder }
+import core.frap26.{ frap26 }
+
+/// A tribunal-discretion draw. It stays a `decision` by `office`, as in the
+/// pack, because a `chance` node lowers to kind `state`; its probabilities
+/// are the pack's, with their bases in each edge's note.
+decision panel-decision: "Panel Decides the Appeal" by office cite ?("Fed. Cir. IOP #8-#9; FRAP 36") {
+  group decision-group
+  note "Straw vote in reverse seniority order on outcome and disposition vehicle (precedential opinion, nonprecedential opinion, or Rule 36 judgment) — IOP #8 ¶ 1; IOP #9 ¶ 1. Probability basis: the Federal Circuit issued Rule 36 summary affirmances in ~20% of merits terminations in 2024 (Jason Rantanen, 'Federal Circuit Decisions - 2024 Stats and Datapack,' Patently-O, June 2025) — the only figure on this node's edges independently sourced to a cited statistic; note the same source finds the Rule 36 rate is far higher in PTAB-origin appeals specifically (43% of PTAB appeals 2011-2024, and 67% vs 18% depending on whether the patent owner or the petitioner is the appellant) — not separately modeled here since this pack does not branch panel-decision by origin. The remaining five splits (opinion-affirmed, reversed outright, vacated/remanded, mixed, dismissed) apportion the balance as teaching estimates and are NOT independently sourced — flagged APPROXIMATE, consistent with ptab-patent-trial-appeal-board.json's and itc-337.json's own convention for unsourced splits."
+  panel-to-rule36 "Panel enters a Rule 36 judgment of affirmance without opinion" -> rule36-affirmance p 0.2 {
+    authority cite Fed. Cir. R. 36(a)
+    note "~20% of 2024 merits terminations per patentlyo-2024-datapack. Sets panel-affirmed so cert-not-sought/cert-denied can restore this outcome's payoff if rehearing/cert is entered and denied — see docs/PACK_SCHEMA.md#state-flags and docs/CRITIQUE.md."
+    sets [panel-affirmed]
+  }
+  panel-to-affirmed "Panel affirms with an opinion" -> affirmed p 0.28 {
+    authority cite FRAP 36(a)
+    note "Teaching estimate apportioning the non-Rule-36 balance — not independently sourced."
+    sets [panel-affirmed]
+  }
+  panel-to-reversed "Panel reverses outright, no remand" -> reversed p 0.1 {
+    authority cite FRAP 36(a)
+    note "Teaching estimate — not independently sourced."
+    sets [panel-reversed]
+  }
+  panel-to-remand "Panel vacates and remands" -> remand-destination p 0.2 {
+    authority cite FRAP 36(a)
+    note "Teaching estimate — not independently sourced."
+  }
+  panel-to-mixed "Panel splits the result" -> affirmed-in-part-reversed-in-part p 0.17 {
+    authority cite FRAP 36(a)
+    note "Teaching estimate — not independently sourced."
+    sets [panel-mixed]
+  }
+  panel-to-dismissed "Panel dismisses for a jurisdictional/mootness defect" -> dismissed-jurisdictional-defect p 0.05 {
+    authority cite 28 U.S.C. § 1295; FRAP 3
+    note "Teaching estimate — not independently sourced."
+  }
+}
+
+terminal rule36-affirmance: "Rule 36 Judgment of Affirmance Without Opinion" by applicant outcome [loss] cite Fed. Cir. R. 36(a)-(b)
+{
+  group decision-group
+  note "Entered when an opinion would have no precedential value and one of Rule 36(a)(1)-(5) applies (findings not clearly erroneous; sufficient evidence for a jury verdict; record supports SJ/directed verdict/JOP; agency decision warrants affirmance under its governing standard of review; or no error of law). No separate judgment is prepared — the order is the judgment (Fed. Cir. R. 36(b)). Payoff 0 per the authoring brief's convention (affirmed-for-appellee)."
+  valence bad
+  payoff 0.usd
+  rule36-to-rehearing "Losing party weighs rehearing" -> rehearing-window {
+    authority cite Fed. Cir. R. 40(a)(1)
+  }
+}
+
+terminal affirmed: "Affirmed (With Opinion)" by applicant outcome [loss] cite FRAP 36(a)
+{
+  group decision-group
+  valence bad
+  payoff 0.usd
+  affirmed-to-rehearing "Losing party weighs rehearing" -> rehearing-window {
+    authority cite Fed. Cir. R. 40(a)(1)
+  }
+}
+
+terminal reversed: "Reversed (No Remand)" by applicant outcome [win] cite FRAP 36(a)
+{
+  group decision-group
+  note "Relatively rare outright disposition — most reversals on questions requiring further fact-finding or application of law route through vacatur-and-remand instead."
+  valence good
+  payoff 1_000_000.usd
+  reversed-to-rehearing "Losing party weighs rehearing" -> rehearing-window {
+    authority cite Fed. Cir. R. 40(a)(1)
+  }
+}
+
+terminal affirmed-in-part-reversed-in-part: "Affirmed in Part, Reversed in Part" by applicant outcome [remand] cite FRAP 36(a)
+{
+  group decision-group
+  note "Illustrative mixed-result payoff (between the 0 affirmance and 1,000,000 reversal anchors); in practice a mixed disposition often carries its own remand on the reversed portion, not separately modeled as a route into the remand-destination node to keep the graph tractable."
+  valence caution
+  tags [mixed]
+  payoff 250_000.usd
+  mixed-to-rehearing "Either party weighs rehearing" -> rehearing-window {
+    authority cite Fed. Cir. R. 40(a)(1)
+  }
+}
+
+terminal dismissed-jurisdictional-defect: "Dismissed — Jurisdictional/Mootness Defect Found on Appeal" outcome [procedural-default] cite 28 U.S.C. § 1295; FRAP 3
+{
+  group decision-group
+  note "E.g., prematurity, mootness, or a defect in the judgment appealed from discovered at the merits stage rather than screened out earlier."
+  valence bad
+  payoff 0.usd
+}
+
+/// A structural router, not a discretion draw: the pack's equal split only
+/// stands in for the origin the playthrough entered from (see its note).
+decision remand-destination: "Vacated/Remanded — Destination Tribunal" by office cite FRAP 36(a)
+{
+  group decision-group
+  note "Structural router, not an independent statistical draw: which of the four remand terminals applies is determined entirely by which entry-* node this playthrough started from, not by chance. The 0.25/0.25/0.25/0.25 split exists only because the engine's schema requires probabilities on a chance node's out-edges to sum to 1 — see cafc-SOURCES-NOTES.md."
+  remand-route-district-court "Case originated at the district court" -> remanded-to-district-court p 0.25 {
+    authority cite FRAP 36(a)
+    note "Structural, not statistical — see remand-destination's note."
+  }
+  remand-route-ptab "Case originated at the PTAB" -> remanded-to-ptab p 0.25 {
+    authority cite FRAP 36(a)
+    note "Structural, not statistical — see remand-destination's note."
+  }
+  remand-route-itc "Case originated at the ITC" -> remanded-to-itc p 0.25 {
+    authority cite FRAP 36(a)
+    note "Structural, not statistical — see remand-destination's note."
+  }
+  remand-route-cofc "Case originated at the CoFC" -> remanded-to-cofc p 0.25 {
+    authority cite FRAP 36(a)
+    note "Structural, not statistical — see remand-destination's note."
+  }
+  remand-route-ttab "Case originated at the TTAB" -> remanded-to-ttab p 0 {
+    authority cite FRAP 36(a)
+    note "Structural, not statistical — see remand-destination's note. Authored 0.0 in the unscoped base so the existing four 0.25 splits (and every base-pack output) are unchanged; the cafc@ttab instance sets this route to 1.0."
+  }
+}
+
+terminal remanded-to-district-court: "Remanded to the District Court" outcome [remand] {
+  group decision-group
+  note "Illustrative payoff per the authoring brief (~40% of the full-reversal value — a real but incomplete win; the case is not over). This terminal's id is deliberately stable so packs/links.json composition can link it back into the corresponding origin pack's post-remand posture (e.g. mpep-prosecution.json for PTAB, itc-337.json's commission-final-determination for a remand, frcp-civil-procedure.json for district court)."
+  valence caution
+  payoff 400_000.usd
+}
+
+terminal remanded-to-ptab: "Remanded to the PTAB" outcome [remand] {
+  group decision-group
+  note "Illustrative payoff per the authoring brief (~40% of the full-reversal value — a real but incomplete win; the case is not over). This terminal's id is deliberately stable so packs/links.json composition can link it back into the corresponding origin pack's post-remand posture (e.g. mpep-prosecution.json for PTAB, itc-337.json's commission-final-determination for a remand, frcp-civil-procedure.json for district court)."
+  valence caution
+  payoff 400_000.usd
+}
+
+terminal remanded-to-itc: "Remanded to the ITC" outcome [remand] {
+  group decision-group
+  note "Illustrative payoff per the authoring brief (~40% of the full-reversal value — a real but incomplete win; the case is not over). This terminal's id is deliberately stable so packs/links.json composition can link it back into the corresponding origin pack's post-remand posture (e.g. mpep-prosecution.json for PTAB, itc-337.json's commission-final-determination for a remand, frcp-civil-procedure.json for district court)."
+  valence caution
+  payoff 400_000.usd
+}
+
+terminal remanded-to-cofc: "Remanded to the Court of Federal Claims" outcome [remand] {
+  group decision-group
+  note "Illustrative payoff per the authoring brief (~40% of the full-reversal value — a real but incomplete win; the case is not over). This terminal's id is deliberately stable so packs/links.json composition can link it back into the corresponding origin pack's post-remand posture (e.g. mpep-prosecution.json for PTAB, itc-337.json's commission-final-determination for a remand, frcp-civil-procedure.json for district court)."
+  valence caution
+  payoff 400_000.usd
+}
+
+terminal remanded-to-ttab: "Remanded to the TTAB" outcome [remand] {
+  group decision-group
+  note "Illustrative payoff per the authoring brief (~40% of the full-reversal value — a real but incomplete win; the case is not over). This terminal's id is deliberately stable so packs/links.json composition can link it back into the corresponding origin pack's post-remand posture (e.g. mpep-prosecution.json for TTAB, itc-337.json's commission-final-determination for a remand, frcp-civil-procedure.json for district court)."
+  valence caution
+  payoff 400_000.usd
+}
+
+decision rehearing-window: "Losing Party Weighs Rehearing" by applicant cite ?("Fed. Cir. R. 40(a)(1), (f)") {
+  group rehearing-group
+  rehearing-file "File petition for panel rehearing/rehearing en banc/combined petition" -> rehearing-petition-filed {
+    authority cite ?("Fed. Cir. R. 40(a)-(b), (f)")
+    effort 90.hours
+    cost 0.usd
+    event Filed(RehearingPetition)
+    within rehearing-period {
+      extendable false
+      note "30 days after entry of judgment on the panel decision; 45 days if the United States or its officer/agency is a party (Fed. Cir. R. 40(f)(1))."
+    }
+    tags [appeal]
+  }
+  rehearing-time-expires "No rehearing sought — time expires" -> mandate-issued {
+    authority cite FRAP 41(b); Fed. Cir. R. 41
+    within rehearing-period {
+      note "If no petition is timely filed (30/45 days), the mandate issues 7 days after that period expires."
+    }
+  }
+}
+
+state rehearing-petition-filed: "Petition for Panel Rehearing / Rehearing En Banc / Combined Petition Filed" by office cite ?("Fed. Cir. R. 40(a)(1)-(2), (b)") {
+  group rehearing-group
+  note "Panel rehearing is the ordinary means of reconsideration; rehearing en banc 'is not favored' (Rule 40(a)(1)). A party seeking both must combine them in a single document unless a local rule says otherwise."
+  rehearing-panel-considers "Panel (and full court, if en banc sought) considers the petition" -> panel-en-banc-rehearing-decision {
+    authority cite Fed. Cir. R. 40(a)(1)-(4)
+  }
+}
+
+/// A tribunal-discretion draw. It stays a `decision` by `office`, as in the
+/// pack, because a `chance` node lowers to kind `state`; its probabilities
+/// are the pack's, with their bases in each edge's note.
+decision panel-en-banc-rehearing-decision: "Panel (and, if Combined, the Full Court) Rules on the Petition" by office cite ?("Fed. Cir. R. 40(a)(1)-(4), (c)") {
+  group rehearing-group
+  rehearing-denied-edge "Deny rehearing and rehearing en banc" -> rehearing-denied p 0.93 {
+    authority cite Fed. Cir. R. 40(a)(1)
+    note "No CAFC-specific published combined grant rate located. Estimate carried over from frap-appellate-procedure.json's panel-rehearing (0.05 grant) and en-banc-poll (0.02 grant) figures, combined and complemented here — 'rehearing en banc is not favored' (Rule 40(a)(1)) and grant rates are exceptionally low across circuits. Flagged APPROXIMATE."
+  }
+  rehearing-granted-edge "Grant panel rehearing, or grant rehearing en banc" -> rehearing-relief-granted p 0.07 {
+    authority cite Fed. Cir. R. 40(e)
+    note "See rehearing-denied-edge's note — same combined-estimate basis, flagged APPROXIMATE."
+  }
+}
+
+state rehearing-denied: "Rehearing Denied — Panel Decision Stands" by office cite Fed. Cir. R. 40(a)(4)
+{
+  group rehearing-group
+  rehearing-denied-to-mandate "Mandate clock resumes" -> mandate-issued {
+    authority cite FRAP 41(b); Fed. Cir. R. 41
+    within mandate-period {
+      note "Mandate issues 7 days after entry of the order denying a timely petition for panel rehearing and/or rehearing en banc."
+    }
+  }
+}
+
+state rehearing-relief-granted: "Rehearing Granted — Panel Modifies, or Case Reheard En Banc" by office cite Fed. Cir. R. 40(e)
+{
+  group rehearing-group
+  note "For a granted en banc petition, the panel opinion is vacated and the case is reargued before the full active court; the case is modeled here as looping back into panel-decision to represent the fresh disposition that follows."
+  rehearing-granted-to-decision "Case reheard/modified — fresh disposition" -> panel-decision {
+    authority cite Fed. Cir. R. 40(e)
+    note "A fresh disposition replaces the prior one, so the panel-outcome flag from the disposition being reheard is cleared here — the new panel-to-affirmed/panel-to-reversed/panel-to-mixed edge that follows sets the flag that matters going forward. Without this, a case that goes through rehearing more than once could accumulate contradictory flags (e.g. panel-affirmed AND panel-reversed at once)."
+    clears [panel-affirmed, panel-reversed, panel-mixed]
+  }
+}
+
+/// Fed. Cir. R. 40(f)(1): a petition for panel rehearing, rehearing en banc,
+/// or both is due 30 days after entry of judgment (45 days in a civil case
+/// with the United States as a party). FRAP 40(d)(1) sets 14 days "unless
+/// the time is shortened or extended by order or local rule"; this rule is
+/// that local rule, and an order may still change the time.
+rule duty rehearing-petition cite Fed. Cir. R. 40(f)(1)
+{
+  deadline rehearing-period: 30.days after Entered(PanelJudgment) counted_by frap26 effective [2025-12-01, ..) known_at 2025-12-01 delegable_to [CaseOrder] cite Fed. Cir. R. 40(f)(1); FRAP 40(d)(1)
+}
+
+/// FRAP 41(b): the mandate must issue 7 days after entry of an order
+/// denying a timely petition for rehearing, and "the court may shorten or
+/// extend the time by order". The current text dates from the 2018
+/// amendment (Supreme Court order of April 26, 2018, effective December 1,
+/// 2018); the 2009 amendment had made the period 7 days, not 7 calendar
+/// days, under FRAP 26(a).
+rule duty mandate-issuance cite FRAP 41(b)
+{
+  deadline mandate-period: 7.days after Entered(RehearingDenial) counted_by frap26 effective [2018-12-01, ..) known_at 2018-04-26 delegable_to [CaseOrder] cite FRAP 41(b)
+}
+
+test "a rehearing petition is due 30 days after entry of judgment" cite Fed. Cir. R. 40(f)(1)
+{
+  given Entered(PanelJudgment) on 2026-03-02
+  expect deadline(rehearing-period) == 2026-04-01
+}
+
+test "a 30th day on Juneteenth rolls the rehearing petition to Monday" cite FRAP 26(a)(6)(A)
+{
+  given Entered(PanelJudgment) on 2026-05-20
+  expect deadline(rehearing-period) == 2026-06-22
+}
+
+test "the mandate issues 7 days after rehearing is denied" cite FRAP 41(b)
+{
+  given Entered(RehearingDenial) on 2026-02-27
+  expect deadline(mandate-period) == 2026-03-06
+}
+
+test "a 7th day on Christmas rolls the mandate to Monday" cite FRAP 26(a)(6)(A)
+{
+  given Entered(RehearingDenial) on 2026-12-18
+  expect deadline(mandate-period) == 2026-12-28
+}

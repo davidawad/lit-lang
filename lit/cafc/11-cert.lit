@@ -1,0 +1,94 @@
+// Certiorari to the Supreme Court. The Supreme Court Rules are not vendored
+// under sources/, so their cites stay holes carrying the pack's text.
+module cafc.cert
+
+import cafc.{ Entered, Filed, Order, Paper, cert-group }
+import core.authority.{ CaseOrder }
+import core.frap26.{ frap26 }
+
+decision cert-petition-window: "Certiorari Petition Window" by applicant cite ?("28 U.S.C. § 2101(c); Sup. Ct. R. 13.1, 13.3") {
+  group cert-group
+  cert-window-file "File petition for certiorari" -> cert-petition-filed {
+    authority cite ?("28 U.S.C. § 2101(c); Sup. Ct. R. 13.1, 13.3")
+    effort 150.hours
+    cost 15_000.usd
+    event Filed(CertPetition)
+    within cert-period {
+      extendable true
+      extension_authority "Sup. Ct. R. 13.5 (single application to a Circuit Justice, before the deadline, for good cause)"
+      note "90 days from entry of judgment or from denial of a timely rehearing petition."
+    }
+    tags [appeal]
+  }
+  cert-window-lapse "90-day window lapses" -> cert-not-sought {
+    authority cite ?("Sup. Ct. R. 13.1")
+  }
+}
+
+terminal cert-not-sought: "FINAL — Certiorari Not Sought" outcome [final] cite ?("Sup. Ct. R. 13.1") {
+  group cert-group
+  note "Not seeking certiorari leaves the panel's disposition undisturbed, so this restores whatever the panel actually decided (panel-decision's own panel-to-affirmed/panel-to-reversed/panel-to-mixed edges `sets` the matching flag, carried forward through rehearing/mandate by the state-flag product graph — docs/PACK_SCHEMA.md#state-flags). `payoff: 0` is the fallback only when this terminal is reached with none of those flags set (e.g. a direct scenario.start here). See docs/CRITIQUE.md and cafc-SOURCES-NOTES.md."
+  valence good
+  payoff 0.usd
+  payoff_by_flag { panel-affirmed: 0.usd, panel-mixed: 250_000.usd, panel-reversed: 1_000_000.usd }
+}
+
+state cert-petition-filed: "Petition for Certiorari Filed" by office cite ?("Sup. Ct. R. 10; 28 U.S.C. § 1254(1)") {
+  group cert-group
+  cert-filed-to-review "Supreme Court considers the petition" -> cert-review-decision {
+    authority cite ?("Sup. Ct. R. 10")
+  }
+}
+
+/// A tribunal-discretion draw. It stays a `decision` by `office`, as in the
+/// pack, because a `chance` node lowers to kind `state`; its probabilities
+/// are the pack's, with their bases in each edge's note.
+decision cert-review-decision: "Supreme Court Grants or Denies Certiorari" by office cite ?("Sup. Ct. R. 10") {
+  group cert-group
+  cert-review-deny "Certiorari denied" -> cert-denied p 0.99 {
+    authority cite ?("Sup. Ct. R. 10")
+    note "Widely cited SCOTUS-wide grant rate of roughly 1% of petitions (rule of four, Sup. Ct. R. 10); not Federal-Circuit-specific. Carried over from frap-appellate-procedure.json's identical figure."
+  }
+  cert-review-grant "Certiorari granted" -> cert-granted p 0.01 {
+    authority cite ?("28 U.S.C. § 1254(1); Sup. Ct. R. 10")
+    note "See cert-review-deny's note — same source and basis."
+  }
+}
+
+terminal cert-denied: "CERT DENIED (Final)" outcome [final] cite ?("Sup. Ct. R. 10") {
+  group cert-group
+  note "Denial of certiorari is not a ruling on the merits and carries zero precedential weight — the Federal Circuit's judgment simply stands, so payoffByFlag restores whatever the panel actually decided, same mechanism and rationale as cert-not-sought."
+  valence good
+  payoff 0.usd
+  payoff_by_flag { panel-affirmed: 0.usd, panel-mixed: 250_000.usd, panel-reversed: 1_000_000.usd }
+}
+
+terminal cert-granted: "CERT GRANTED — Case Transfers to the Supreme Court" outcome [remand] cite ?("28 U.S.C. § 1254(1); Sup. Ct. R. 10") {
+  group cert-group
+  note "This pack's jurisdiction over the case ends here; payoff is a neutral placeholder, not a merits prediction about the eventual Supreme Court disposition."
+  valence good
+  payoff 0.usd
+}
+
+/// 28 U.S.C. § 2101(c): a petition for certiorari in a civil case is due 90
+/// days after entry of the judgment; "a justice of the Supreme Court, for
+/// good cause shown, may extend" it by up to 60 days. The period dates from
+/// the 1948 recodification of Title 28 (Act of June 25, 1948, effective
+/// September 1, 1948). Counting it with FRAP 26 approximates Sup. Ct. R.
+/// 30.1, which is not vendored.
+rule duty certiorari-petition cite 28 U.S.C. § 2101(c)
+{
+  deadline cert-period: 90.days after Entered(PanelJudgment) counted_by frap26 effective [1948-09-01, ..) known_at 1948-06-25 delegable_to [CaseOrder] cite 28 U.S.C. § 2101(c)
+}
+
+test "a certiorari petition is due 90 days after entry of judgment" cite 28 U.S.C. § 2101(c)
+{
+  given Entered(PanelJudgment) on 2026-04-08
+  expect deadline(cert-period) == 2026-07-07
+}
+
+test "a Sunday 90th day rolls the certiorari petition to Monday" cite FRAP 26(a)(1)(C)
+{
+  given Entered(PanelJudgment) on 2026-03-02
+  expect deadline(cert-period) == 2026-06-01
+}

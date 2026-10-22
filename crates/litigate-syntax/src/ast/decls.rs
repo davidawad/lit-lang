@@ -2,8 +2,8 @@
 use super::{
     child, child_after, children, fields_of, keyword, token, AstNode, CalendarDecl, CallExpr, Cite,
     CountingDecl, DeadlineDecl, DefaultDecl, ExceptionDecl, ExpectStmt, Expr, Field, GivenStmt,
-    HolidayDecl, InstanceDecl, Literal, PatchDecl, RecordExpr, Ref, RuleDecl, TestDecl, Token,
-    TransitionArm, TransitionDecl, VersionClause,
+    Hole, HolidayDecl, InstanceDecl, Literal, PatchDecl, RecordExpr, Ref, RuleDecl, TestDecl,
+    Token, TransitionArm, TransitionDecl, VersionClause,
 };
 use crate::ast::items::Item;
 use crate::syntax_kind::SyntaxKind;
@@ -280,5 +280,11 @@ impl Cite {
                 .collect::<Vec<_>>()
                 .join(" ")
         })
+    }
+
+    /// The hole of a `cite ?("reason")` clause, if this is one.
+    #[must_use]
+    pub fn hole(&self) -> Option<Hole> {
+        child(self.syntax())
     }
 }

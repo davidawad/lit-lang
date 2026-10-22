@@ -67,7 +67,8 @@ fn semver_lexes_as_number_dot_number() {
 fn literal_validation_reports_stable_codes() {
     assert_eq!(codes("1_"), [DiagnosticCode::InvalidNumber]);
     assert_eq!(codes("1__0"), [DiagnosticCode::InvalidNumber]);
-    assert_eq!(codes("1.5.days"), [DiagnosticCode::InvalidNumber]);
+    // Whole days are a parser check (`duration` estimates may be decimal).
+    assert_eq!(codes("1.5.days"), []);
     assert_eq!(codes("2025-02-29"), [DiagnosticCode::InvalidDate]);
     assert_eq!(codes("2024-02-29"), []);
     assert_eq!(codes("2025-01-01x"), [DiagnosticCode::InvalidToken]);
@@ -155,4 +156,37 @@ fn dates_follow_the_gregorian_calendar() {
     assert!(!valid_date("1900-02-29"));
     assert!(!valid_date("2025-04-31"));
     assert!(!valid_date("2025-00-10"));
+}
+
+#[test]
+fn digits_then_a_letter_start_an_identifier() {
+    assert_eq!(
+        kinds("12b-motion-filed"),
+        [(Ident, "12b-motion-filed".into())]
+    );
+    assert_eq!(kinds("12"), [(Number, "12".into())]);
+    assert_eq!(kinds("2_000.usd"), [(Money, "2_000.usd".into())]);
+    assert_eq!(
+        kinds("0-rc"),
+        [
+            (Number, "0".into()),
+            (Minus, "-".into()),
+            (Ident, "rc".into())
+        ]
+    );
+}
+
+#[test]
+fn a_question_mark_after_cite_is_a_hole_not_citation_text() {
+    assert_eq!(
+        kinds("cite ?(\"A, B\")"),
+        [
+            (KwCite, "cite".into()),
+            (Question, "?".into()),
+            (LParen, "(".into()),
+            (String, "\"A, B\"".into()),
+            (RParen, ")".into()),
+        ]
+    );
+    assert_eq!(codes("cite ?"), []);
 }

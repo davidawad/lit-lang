@@ -2,8 +2,9 @@
 //! options, counting rules, instances, packages, and sources.
 use super::clauses::keyword_field;
 use super::values::{
-    boolean, call, cite, date, duration, id_list, json_record, money_or_hole, number, prob_value,
-    record, reference, require, signed_money, signed_number, string, Key, Value,
+    boolean, call, cite, date, duration, duration_estimate, id_list, json_record, money_or_hole,
+    number, prob_value, record, reference, require, signed_money, signed_number, string, Key,
+    Value,
 };
 use super::{brace_list, delimited_node, Sep};
 use crate::error::{range, SyntaxError};
@@ -102,11 +103,27 @@ pub(crate) fn field_list(p: &mut Parser<'_>, specs: &[Spec]) -> bool {
 /// `FieldList` of `Field`s, or (`as_record`) a `RecordExpr` of
 /// `key: value` `RecordField`s.
 pub(crate) fn fixed_fields(p: &mut Parser<'_>, specs: &[Spec], as_record: bool) -> bool {
+    ordered_fields(p, specs, as_record, &[])
+}
+
+/// [`fixed_fields`] where the keywords in `optional` may be left out.
+fn ordered_fields(
+    p: &mut Parser<'_>,
+    specs: &[Spec],
+    as_record: bool,
+    optional: &[SyntaxKind],
+) -> bool {
     if !p.at(LBrace) {
         return false;
     }
     let mut index = 0usize;
     let mut elem = |p: &mut Parser<'_>| {
+        while specs
+            .get(index)
+            .is_some_and(|(kw, _)| optional.contains(kw) && !p.at_kw(*kw))
+        {
+            index += 1;
+        }
         let Some((kw, value)) = specs.get(index) else {
             return false;
         };
@@ -137,7 +154,12 @@ pub(crate) fn fixed_fields(p: &mut Parser<'_>, specs: &[Spec], as_record: bool) 
         &keywords(specs),
         &mut elem,
     );
-    if let Some((missing, _)) = specs.get(index) {
+    let missing = specs
+        .get(index..)
+        .unwrap_or_default()
+        .iter()
+        .find(|(kw, _)| !optional.contains(kw));
+    if let Some((missing, _)) = missing {
         let end = p.last_end();
         let text = missing.text().unwrap_or_default();
         p.push_error(SyntaxError::new(
@@ -189,14 +211,15 @@ fn deadline_literal(p: &mut Parser<'_>) -> bool {
     }
 }
 
-/// `duration (Duration | { min D mode D max D })`.
+/// `duration (Duration | { [min D] mode D [max D] })`. These are
+/// elapsed-time estimates, so day amounts may be decimal.
 fn duration_value(p: &mut Parser<'_>) -> bool {
     const RANGE: &[Spec] = &[
-        (KwMin, Some(duration)),
-        (KwMode, Some(duration)),
-        (KwMax, Some(duration)),
+        (KwMin, Some(duration_estimate)),
+        (KwMode, Some(duration_estimate)),
+        (KwMax, Some(duration_estimate)),
     ];
-    duration(p) || fixed_fields(p, RANGE, false)
+    duration_estimate(p) || ordered_fields(p, RANGE, false, &[KwMin, KwMax])
 }
 
 /// `service_extension { Method: Duration } [Cite]`.

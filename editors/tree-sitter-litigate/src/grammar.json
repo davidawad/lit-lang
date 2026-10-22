@@ -1596,23 +1596,36 @@
           "value": "{"
         },
         {
-          "type": "STRING",
-          "value": "min"
-        },
-        {
-          "type": "FIELD",
-          "name": "min",
-          "content": {
-            "type": "SYMBOL",
-            "name": "duration"
-          }
-        },
-        {
           "type": "CHOICE",
           "members": [
             {
-              "type": "STRING",
-              "value": ","
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "min"
+                },
+                {
+                  "type": "FIELD",
+                  "name": "min",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "duration"
+                  }
+                },
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "STRING",
+                      "value": ","
+                    },
+                    {
+                      "type": "BLANK"
+                    }
+                  ]
+                }
+              ]
             },
             {
               "type": "BLANK"
@@ -1635,25 +1648,38 @@
           "type": "CHOICE",
           "members": [
             {
-              "type": "STRING",
-              "value": ","
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "STRING",
+                      "value": ","
+                    },
+                    {
+                      "type": "BLANK"
+                    }
+                  ]
+                },
+                {
+                  "type": "STRING",
+                  "value": "max"
+                },
+                {
+                  "type": "FIELD",
+                  "name": "max",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "duration"
+                  }
+                }
+              ]
             },
             {
               "type": "BLANK"
             }
           ]
-        },
-        {
-          "type": "STRING",
-          "value": "max"
-        },
-        {
-          "type": "FIELD",
-          "name": "max",
-          "content": {
-            "type": "SYMBOL",
-            "name": "duration"
-          }
         },
         {
           "type": "STRING",
@@ -3489,8 +3515,17 @@
           "type": "FIELD",
           "name": "text",
           "content": {
-            "type": "SYMBOL",
-            "name": "cite_text"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "cite_text"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "hole"
+              }
+            ]
           }
         }
       ]
@@ -5792,7 +5827,7 @@
     },
     "identifier": {
       "type": "PATTERN",
-      "value": "[_\\p{XID_Start}]\\p{XID_Continue}*(-\\p{XID_Continue}+)*"
+      "value": "([_\\p{XID_Start}]|[0-9]+\\p{XID_Start})\\p{XID_Continue}*(-\\p{XID_Continue}+)*"
     },
     "line_comment": {
       "type": "TOKEN",

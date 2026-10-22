@@ -183,7 +183,8 @@ module.exports = {
 
   escape_sequence: _ => token.immediate(/\\["\\nrt]/),
 
-  identifier: _ => /[_\p{XID_Start}]\p{XID_Continue}*(-\p{XID_Continue}+)*/,
+  // Digits then a letter also start an identifier (`12b-motion-filed`).
+  identifier: _ => /([_\p{XID_Start}]|[0-9]+\p{XID_Start})\p{XID_Continue}*(-\p{XID_Continue}+)*/,
 
   line_comment: _ => token(seq('//', optional(seq(/[^/\n]/, /[^\n]*/)))),
 

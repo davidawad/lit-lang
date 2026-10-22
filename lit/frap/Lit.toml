@@ -75,6 +75,9 @@ path = "sources/usc-additional.txt"
 [sources.scotus-rules]
 title = "Rules of the Supreme Court of the United States (2023) (Rules 10, 13)"
 url = "https://www.supremecourt.gov/filingandrules/2023RulesoftheCourt.pdf"
+# Not vendored (no `path`), so `Sup. Ct. R. n` cites bind here by prefix
+# and resolve to this source without a heading check.
+cite_prefixes = ["Sup. Ct. R."]
 sha256 = "05f435c766fd596333828846d097828238ff89a266c24e3afca9ecd2fb9c19db"
 as_of = "2023-01-01"
 

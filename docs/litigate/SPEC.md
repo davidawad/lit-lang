@@ -604,6 +604,20 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
   and matches a `waived`/`extended`/`excused` event type declared by the
   package. The replayed node becomes the scenario `start`. An explicit
   `start` that disagrees with the replayed node is L4008.
+- Option-removing events. A waiver or an order striking a defense does not
+  move the matter; it takes an option away for the rest of it. An event
+  whose type is named `Struck`, `Forfeited`, or `Withdrawn` (any case) and
+  declares a parameter `option: String` is option-removing: its `option`
+  names an edge by id, `edge` in the primary package or `pack::edge`
+  otherwise (any version, link edges included). Replay handles it at the
+  posture it finds, after following `facts`, and does not move: it records
+  a removal `{edge, date, event, authority}` in `Case.removals`, in replay
+  order. The event must carry a `cite` (otherwise L4001 and nothing is
+  removed). An `option` naming no edge is L1002 with a `maybe_incorrect`
+  fix to the nearest id. Removing an already removed edge is L4001 with a
+  note at the first removal. A later event that matches only removed edges
+  is L4001 (a note locates the removal) and replay stops. Removals are
+  derived, never asserted: checking replaces any `removals` in the HIR.
 - `facts { node: edge }`: the node must be a `fact` chance node and the edge
   must be its own (L4003).
 - `stakes`: every terminal reachable from the replayed start needs a value
@@ -802,6 +816,7 @@ loader (`ClockLibrary::from_json`), so an invalid one is L6001.
 | `facts` | `scenario.facts` qualified node to qualified edge |
 | `stakes` | `scenario.payoffs` qualified terminal to major-unit number |
 | `beliefs` | `scenario.observe` qualified node to `{qualified edge: count}` |
+| `Case.removals` (§5.6) | `scenario.remove_edges`: any `analysis.remove_edges` entries in order, then each removed edge not already listed; the source map has one entry per removed edge (`/scenario/remove_edges/i`) with the removing event's span and its cite located in L0 under the edge's package. A non-list `analysis.remove_edges` is left for litgraph to reject (L4007) |
 | `analysis { f: v }` | `scenario.f` = JSON of `v` (numbers exact to binary64; `unset` = JSON null) |
 | `as_of`, `known_at`, parties, events | not emitted; recorded in the provenance sidecar |
 

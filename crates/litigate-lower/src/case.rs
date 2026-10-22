@@ -1,6 +1,6 @@
 //! A `.case` matter to a litgraph `NamedScenario` (SPEC §8.3).
 use crate::diag::Sink;
-use crate::source_map::{Entry, SourceMap};
+use crate::source_map::{Citations, CiteMap, Entry, SourceMap};
 use crate::Build;
 use litgraph::model::Role;
 use litgraph::scenario::{NamedScenario, ScenarioSource};
@@ -122,6 +122,9 @@ fn scenario(build: &Build<'_, '_>, sink: &mut Sink, case: &hir::Case) -> Option<
     if !observe.is_empty() {
         put("observe", Value::Object(observe));
     }
+    if let Some(edges) = remove_edges(object.get("remove_edges"), case) {
+        object.insert("remove_edges".to_owned(), edges);
+    }
     match serde_json::from_value::<Scenario>(Value::Object(object)) {
         Ok(s) => {
             expressions(sink, &s);
@@ -137,6 +140,69 @@ fn scenario(build: &Build<'_, '_>, sink: &mut Sink, case: &hir::Case) -> Option<
             None
         }
     }
+}
+
+/// `scenario.remove_edges`: any `analysis` entries, then each edge the
+/// replayed events removed (SPEC §8.3), once. `None` leaves the field as
+/// it is: nothing was removed, or `analysis` wrote a non-list, which
+/// litgraph's serde then rejects.
+fn remove_edges(authored: Option<&Value>, case: &hir::Case) -> Option<Value> {
+    if case.removals.is_empty() {
+        return None;
+    }
+    let mut edges = match authored {
+        None => Vec::new(),
+        Some(Value::Array(items)) => items.clone(),
+        Some(_) => return None,
+    };
+    for r in &case.removals {
+        let edge = Value::String(r.edge.clone());
+        if !edges.contains(&edge) {
+            edges.push(edge);
+        }
+    }
+    Some(Value::Array(edges))
+}
+
+/// One source-map entry per removed edge: the removing event and its cite,
+/// located in L0 under the cite syntax of the edge's package.
+fn removal_entries(build: &Build<'_, '_>, named: &NamedScenario, case: &hir::Case) -> Vec<Entry> {
+    let mut sink = Sink::new("");
+    case.removals
+        .iter()
+        .filter_map(|r| {
+            let i = named
+                .scenario
+                .remove_edges
+                .iter()
+                .position(|e| *e == r.edge)?;
+            let pack = r.edge.split_once("::").map_or("", |(p, _)| p);
+            let cite = build
+                .packages
+                .iter()
+                .find(|p| p.manifest.pack_id == pack)
+                .map_or_else(
+                    || {
+                        Some(CiteMap {
+                            text: r.authority.clone(),
+                            sections: Vec::new(),
+                        })
+                    },
+                    |p| {
+                        let syntax = crate::pack::cite_syntax(&mut sink, &p.manifest);
+                        Citations::new(syntax, &p.manifest.sources, build.corpus)
+                            .map(Some(&r.authority))
+                    },
+                );
+            Some(Entry {
+                pointer: format!("/scenario/remove_edges/{i}"),
+                id: r.edge.clone(),
+                span: case.events.get(r.event).and_then(|e| e.action.span.clone()),
+                decl: None,
+                cite,
+            })
+        })
+        .collect()
 }
 
 /// Expression-valued fields must parse as litgraph expressions (L6003).
@@ -210,13 +276,15 @@ pub(crate) fn case(
         package: None,
         as_of: case.as_of.clone(),
         known_at: case.known_at.clone(),
-        entries: vec![Entry {
+        entries: std::iter::once(Entry {
             pointer: String::new(),
             id: case.id.clone(),
             span: Some(sink.fallback.clone()),
             decl: None,
             cite: None,
-        }],
+        })
+        .chain(removal_entries(build, &named, case))
+        .collect(),
         generated: crate::source_map::Generated::default(),
     };
     Some((named, map))

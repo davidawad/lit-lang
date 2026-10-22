@@ -18,7 +18,7 @@ mod value;
 
 pub use case::{
     Analysis, Case, CaseSource, Event, EventParty, Observation, PackagePin, Party, Perspective,
-    Stake,
+    Removal, Stake,
 };
 pub use expr::{BinaryOp, Expr, ExprKind, Pattern, UnaryOp};
 pub use graph::{

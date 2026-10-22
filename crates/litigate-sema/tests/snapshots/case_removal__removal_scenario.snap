@@ -1,0 +1,25 @@
+---
+source: crates/litigate-sema/tests/case_removal.rs
+expression: render_scenario(&lowered.scenario).unwrap_or_default()
+---
+{
+  "id": "pending-2009",
+  "summary": "A matter pending across the 2009 amendments.",
+  "notes": "",
+  "packs": [
+    "frcp"
+  ],
+  "sources": [],
+  "scenario": {
+    "remove_edges": [
+      "frcp::granted",
+      "frcp::move-dismiss"
+    ],
+    "payoffs": {
+      "frcp::answered": 0.0,
+      "frcp::defaulted": -1000.0,
+      "frcp::dismissed": 0.0
+    },
+    "start": "frcp::respond"
+  }
+}

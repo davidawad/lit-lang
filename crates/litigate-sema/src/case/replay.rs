@@ -5,12 +5,14 @@ use super::deadline::{self, Clock};
 use super::graph::{display, is_excusal, Graph};
 use super::spans::{error, Build, CaseSpans, EventSpans};
 use crate::hir::{
-    Case, DeadlineWindow, Declaration, Edge, Event, EventParty, Expr, Node, NodeKind,
+    Case, DeadlineWindow, Declaration, Edge, Event, EventParty, Expr, Node, NodeKind, Removal,
 };
 use crate::temporal::condition::matches;
 use crate::temporal::{MatterEvent, Ungoverned};
 use litigate_base::{Applicability, Diagnostic, DiagnosticCode as C};
 use std::collections::BTreeMap;
+
+mod removal;
 
 /// Replay outcome.
 #[derive(Debug, Clone, PartialEq)]
@@ -19,6 +21,8 @@ pub(super) struct Replayed {
     pub posture: Option<String>,
     /// Replay diagnostics.
     pub diagnostics: Vec<Diagnostic>,
+    /// Options removed by the events replayed, in replay order.
+    pub removals: Vec<Removal>,
 }
 
 struct Cx<'c, 'g> {
@@ -30,6 +34,8 @@ struct Cx<'c, 'g> {
     sorted: Vec<(usize, &'c Event)>,
     /// Sorted events in each package's view, by pack id.
     views: BTreeMap<String, Vec<Expr>>,
+    /// Options removed so far.
+    removed: Vec<Removal>,
     out: Vec<Diagnostic>,
 }
 
@@ -68,6 +74,7 @@ pub(super) fn replay(
         clock,
         sorted,
         views,
+        removed: Vec::new(),
         out: Vec::new(),
     };
     cx.order();
@@ -79,6 +86,7 @@ pub(super) fn replay(
                 return Replayed {
                     posture: None,
                     diagnostics: cx.out,
+                    removals: cx.removed,
                 }
             }
         }
@@ -86,6 +94,7 @@ pub(super) fn replay(
     Replayed {
         posture: Some(posture),
         diagnostics: cx.out,
+        removals: cx.removed,
     }
 }
 
@@ -208,16 +217,20 @@ impl<'g> Cx<'_, 'g> {
             self.out.push(d);
         }
         let posture = self.follow_facts(posture.to_owned(), k)?;
+        if let Some(arg) = removal::option(self.graph, &event.action) {
+            self.remove(k, arg);
+            return Some(posture);
+        }
         let node = self.node(&posture, k)?;
         let edges = self.graph.edges(&posture, node);
-        let matching: Vec<(String, &Edge)> = edges
+        let (matching, removed): (Vec<(String, &Edge)>, Vec<_>) = edges
             .into_iter()
             .filter(|(pack, e)| {
                 e.event
                     .as_ref()
                     .is_some_and(|p| matches(p, &self.view(pack, k)))
             })
-            .collect();
+            .partition(|(pack, e)| self.removal(pack, e).is_none());
         let actor = self.actor(event);
         let (fits, misfits): (Vec<_>, Vec<_>) = matching
             .into_iter()
@@ -227,6 +240,7 @@ impl<'g> Cx<'_, 'g> {
                 self.deadline(k, pack, edge);
                 Some(self.graph.target(pack, edge))
             }
+            ([], []) if !removed.is_empty() => self.takes_removed(k, &posture, &removed[0]),
             ([], []) if self.timing_only(k) => Some(posture),
             ([], []) => {
                 self.illegal(k, &posture, node);

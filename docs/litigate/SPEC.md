@@ -475,7 +475,9 @@ Refinements (temporal bead, `litigate-sema/src/temporal`):
   enacted after A took effect is new law and is not suspended. `B@E
   supersedes B@D` documents succession and must name an earlier version
   (`D < E`, else L3006). `as_of` honours supersession: a superseded version
-  is L3007 with a note naming the superseding declaration.
+  is L3007 with a note naming the superseding declaration. Supersession and
+  revival are bitemporal too: at `known_at` K only declarations recorded by
+  K (their `known_at <= K`) suspend or revive.
 - **Transitions.** For an event, the version in force on its date governs,
   unless that version took effect after the matter's first event and a
   transition amends it; then the arms decide. Each arm must select the
@@ -535,7 +537,10 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
   longest), then the later `from`. L3003 is reported once per unordered
   pair, at the later declaration's relation clause with a note at the
   other. A pair whose declared relations contradict each other is L3006
-  only, not also L3003.
+  only, not also L3003. A declaration is inside a `rule` when the rule's
+  source span contains it. Each package is checked with its dependencies;
+  claimants in two packages that do not depend on each other meet only
+  where a matter `uses` both, and are resolved there with the same order.
 - **Cycles (L3006).** Declared wins (`notwithstanding`/`override` edges
   A→B, `subject_to` B→A), supersession between different declarations, and
   default/exception references (an exception to its target; a default or

@@ -132,7 +132,9 @@ fn as_of_is_bitemporal_and_honours_supersession() {
         + "deadline r: 7.days from Served(complaint) counted_by c6\n\
            deadline q: 9.days from Served(complaint) counted_by c6 effective [2012-01-01, 2014-01-01) supersedes r\n\
            deadline u: 7.days from Served(complaint) counted_by c6\n\
-           deadline w: 9.days from Served(complaint) counted_by c6 effective [2012-01-01, 2014-01-01) supersedes u revives u\n";
+           deadline w: 9.days from Served(complaint) counted_by c6 effective [2012-01-01, 2014-01-01) supersedes u revives u\n\
+           deadline k: 7.days from Served(complaint) counted_by c6 known_at 2009-04-01\n\
+           deadline k2: 9.days from Served(complaint) counted_by c6 effective [2012-01-01, ..) known_at 2011-06-01 supersedes k\n";
     let (db, ws) = demo(&body);
     assert_eq!(render(&db, ws), Vec::<String>::new());
     with_world(&db, ws, |world| {
@@ -147,6 +149,8 @@ fn as_of_is_bitemporal_and_honours_supersession() {
             ("r", "2015-01-01", None),
             ("u", "2013-01-01", None),
             ("u", "2015-01-01", None),
+            ("k", "2013-01-01", Some("2010-01-01")),
+            ("k", "2013-01-01", None),
         ]
         .iter()
         .map(|(n, d, k)| {

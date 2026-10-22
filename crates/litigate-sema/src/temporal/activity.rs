@@ -45,6 +45,12 @@ fn says(world: &World<'_>, key: &Key, by: usize, want: fn(&Relation) -> bool) ->
         .any(|r| r.by == by && want(r.relation))
 }
 
+/// True when the corpus recorded declaration `i` by `known_at` (`None`:
+/// the latest corpus).
+fn recorded(world: &World<'_>, i: usize, known_at: Option<&str>) -> bool {
+    known_at.is_none_or(|k| world.decls[i].meta.effective.known_at.as_str() <= k)
+}
+
 fn is_supersedes(r: &Relation) -> bool {
     matches!(r, Relation::Supersedes(_))
 }
@@ -54,13 +60,14 @@ fn is_revives(r: &Relation) -> bool {
 }
 
 /// Dates from which `key` is revived: the end of every superseding window
-/// that declares `revives`, and the start of every other `revives` of it.
+/// that declares `revives`, and the start of every other `revives` of it,
+/// among declarations recorded by `known_at`.
 #[must_use]
-pub fn revival_points(world: &World<'_>, key: &Key) -> Vec<String> {
+pub fn revival_points(world: &World<'_>, key: &Key, known_at: Option<&str>) -> Vec<String> {
     let mut out: Vec<String> = world
         .incoming(key)
         .iter()
-        .filter(|r| is_revives(r.relation))
+        .filter(|r| is_revives(r.relation) && recorded(world, r.by, known_at))
         .filter_map(|r| {
             let w = Window::of(&world.decls[r.by].meta.effective);
             if says(world, key, r.by, is_supersedes) {
@@ -75,16 +82,20 @@ pub fn revival_points(world: &World<'_>, key: &Key) -> Vec<String> {
     out
 }
 
-/// Every suspension of `key`.
+/// Every suspension of `key` declared by declarations recorded by
+/// `known_at`.
 #[must_use]
-pub fn suspensions(world: &World<'_>, key: &Key) -> Vec<Suspension> {
+pub fn suspensions(world: &World<'_>, key: &Key, known_at: Option<&str>) -> Vec<Suspension> {
     let incoming = world.incoming(key);
     if !incoming.iter().any(|r| is_supersedes(r.relation)) {
         return Vec::new();
     }
-    let revivals = revival_points(world, key);
+    let revivals = revival_points(world, key, known_at);
     let mut out = Vec::new();
-    for r in incoming.iter().filter(|r| is_supersedes(r.relation)) {
+    for r in incoming
+        .iter()
+        .filter(|r| is_supersedes(r.relation) && recorded(world, r.by, known_at))
+    {
         let i = r.by;
         if world.key(i) == *key && r.version.is_none() {
             // `p@D supersedes p` documents succession; earlier versions
@@ -131,7 +142,7 @@ pub fn active<'v>(
     known_at: Option<&str>,
 ) -> Result<&'v Version<usize>, Inactive> {
     let v = set.as_of(date, known_at).map_err(Inactive::Miss)?;
-    match suspensions(world, key).into_iter().find(|s| {
+    match suspensions(world, key, known_at).into_iter().find(|s| {
         s.window.contains(date)
             && v.in_force.from < s.window.from
             && s.version.as_ref().is_none_or(|d| *d == v.in_force.from)
@@ -144,7 +155,7 @@ pub fn active<'v>(
 /// Windows during which `key` is suspended as a whole.
 #[must_use]
 pub fn suspended_windows(world: &World<'_>, key: &Key) -> Vec<Window> {
-    suspensions(world, key)
+    suspensions(world, key, None)
         .into_iter()
         .filter(|s| s.version.is_none())
         .map(|s| s.window)

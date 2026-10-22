@@ -36,8 +36,10 @@ pub enum Reason {
     Later,
 }
 
-/// The claimant clause of `a` on `t`, if any.
-fn claim(world: &World<'_>, a: usize, t: &Key) -> Option<(&'static str, Option<String>)> {
+/// The claim `a` makes on `t` that applies to version `of` of `t` (a
+/// `t@D` claim applies only to the version starting on D; `of = None`
+/// accepts only unversioned claims).
+fn claim(world: &World<'_>, a: usize, t: &Key, of: Option<usize>) -> Option<&'static str> {
     let pack = world.pack_of(a).to_owned();
     world.decls[a].meta.relations.iter().find_map(|r| {
         let (key, text) = match r {
@@ -47,25 +49,43 @@ fn claim(world: &World<'_>, a: usize, t: &Key) -> Option<(&'static str, Option<S
             _ => return None,
         };
         let target = world.target(&pack, text);
-        (target.key == *t).then_some((key, target.version))
+        let applies = target
+            .version
+            .as_ref()
+            .is_none_or(|d| of.is_some_and(|o| world.decls[o].meta.effective.from == *d));
+        (target.key == *t && applies).then_some(key)
     })
+}
+
+/// The first relation clause of `a` naming `t` (for spans).
+fn clause_on(world: &World<'_>, a: usize, t: &Key) -> &'static str {
+    let pack = world.pack_of(a).to_owned();
+    world.decls[a]
+        .meta
+        .relations
+        .iter()
+        .find_map(|r| {
+            let (key, text) = match r {
+                Relation::Override(x) => ("override", x),
+                Relation::Notwithstanding(x) => ("notwithstanding", x),
+                Relation::SubjectTo(x) => ("subject_to", x),
+                _ => return None,
+            };
+            (world.target(&pack, text).key == *t).then_some(key)
+        })
+        .unwrap_or("")
 }
 
 /// Stage 1 for the ordered pair: `Some(true)` when `a` is declared to win
 /// over `b`, `Some(false)` when `b` is.
 fn declared(world: &World<'_>, a: usize, b: usize) -> Option<(bool, &'static str)> {
-    let (ka, kb) = (world.key(a), world.key(b));
-    let version_ok = |v: &Option<String>, of: usize| {
-        v.as_ref()
-            .is_none_or(|d| *d == world.decls[of].meta.effective.from)
-    };
-    let forward = claim(world, a, &kb).filter(|(_, v)| version_ok(v, b));
-    let backward = claim(world, b, &ka).filter(|(_, v)| version_ok(v, a));
+    let forward = claim(world, a, &world.key(b), Some(b));
+    let backward = claim(world, b, &world.key(a), Some(a));
     let a_wins = |k: &str| k != "subject_to";
     match (forward, backward) {
-        (Some((k, _)), None) => Some((a_wins(k), k)),
-        (None, Some((k, _))) => Some((!a_wins(k), k)),
-        (Some((k1, _)), Some((k2, _))) if a_wins(k1) != a_wins(k2) => Some((a_wins(k1), k1)),
+        (Some(k), None) => Some((a_wins(k), k)),
+        (None, Some(k)) => Some((!a_wins(k), k)),
+        (Some(k1), Some(k2)) if a_wins(k1) != a_wins(k2) => Some((a_wins(k1), k1)),
         _ => None,
     }
 }
@@ -142,13 +162,15 @@ pub fn active_claimants(world: &World<'_>, t: &Key, date: &str) -> Vec<usize> {
         .collect();
     keys.sort();
     keys.dedup();
+    let live = |k: &Key| {
+        active(world, k, &world.versions(k), date, None)
+            .ok()
+            .map(|v| v.decl)
+    };
+    let base = live(t);
     keys.iter()
-        .filter_map(|k| {
-            active(world, k, &world.versions(k), date, None)
-                .ok()
-                .map(|v| v.decl)
-        })
-        .filter(|&c| world.key(c) == *t || claim(world, c, t).is_some())
+        .filter_map(&live)
+        .filter(|&c| world.key(c) == *t || claim(world, c, t, base).is_some())
         .collect()
 }
 
@@ -202,7 +224,7 @@ fn points(world: &World<'_>, t: &Key) -> Vec<String> {
                 .iter()
                 .map(|v| v.in_force.clone()),
         );
-        windows.extend(suspensions(world, k).into_iter().map(|s| s.window));
+        windows.extend(suspensions(world, k, None).into_iter().map(|s| s.window));
     }
     boundaries(&windows)
 }
@@ -234,8 +256,9 @@ pub fn check(
                 let owned = world.decls[a].pack == pack || world.decls[b].pack == pack;
                 // Contradictory declared relations are a cycle (L3006), not
                 // a canon tie.
-                let contradictory = claim(world, a, &world.key(b)).is_some()
-                    && claim(world, b, &world.key(a)).is_some();
+                let (a, b) = (a.min(b), a.max(b));
+                let contradictory = claim(world, a, &world.key(b), Some(b)).is_some()
+                    && claim(world, b, &world.key(a), Some(a)).is_some();
                 if owned && !contradictory && reported.insert((a, b)) {
                     out.push(unresolved(world, lattice, loc, t, a, b, &window));
                 }
@@ -255,7 +278,7 @@ fn unresolved(
     window: &Window,
 ) -> Diagnostic {
     let (da, db) = (&world.decls[a], &world.decls[b]);
-    let clause = |i: usize| claim(world, i, t).map_or("", |(k, _)| k);
+    let clause = |i: usize| clause_on(world, i, t);
     let target = t.display(world.pack_of(b));
     let (na, nb) = (world.versioned(a, b), world.versioned(b, b));
     let mut d = error(

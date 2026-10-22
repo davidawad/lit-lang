@@ -141,6 +141,24 @@ pub fn relation_target(r: &Relation) -> Option<&String> {
     }
 }
 
+/// The `rule` enclosing the declaration with `meta`: the rule whose source
+/// span contains it, or (for HIR without spans) the rule that lists its name.
+fn enclosing<'r>(rules: &[&'r hir::Rule], meta: &Metadata) -> Option<(&'r str, RuleKind)> {
+    let inside = |outer: &Span, inner: &Span| {
+        outer.file == inner.file
+            && outer != inner
+            && (outer.line, outer.col) <= (inner.line, inner.col)
+            && (inner.end_line, inner.end_col) <= (outer.end_line, outer.end_col)
+    };
+    rules
+        .iter()
+        .find(|r| match (&r.meta.span, &meta.span) {
+            (Some(outer), Some(inner)) => inside(outer, inner),
+            _ => r.declarations.contains(&meta.id),
+        })
+        .map(|r| (r.meta.id.as_str(), r.rule_kind))
+}
+
 /// The metadata of a rule-bearing declaration.
 #[must_use]
 pub fn meta_of(d: &Declaration) -> Option<&Metadata> {
@@ -163,17 +181,12 @@ impl<'a> World<'a> {
         let pack = self.packs.len();
         self.packs.push(info);
         for module in modules {
-            let rules: BTreeMap<&str, (&str, RuleKind)> = module
+            let rules: Vec<&hir::Rule> = module
                 .declarations
                 .iter()
                 .filter_map(|d| match d {
                     Declaration::Rule(r) => Some(r),
                     _ => None,
-                })
-                .flat_map(|r| {
-                    r.declarations
-                        .iter()
-                        .map(move |n| (n.as_str(), (r.meta.id.as_str(), r.rule_kind)))
                 })
                 .collect();
             for decl in &module.declarations {
@@ -223,7 +236,7 @@ impl<'a> World<'a> {
                     pack,
                     decl,
                     meta,
-                    rule: rules.get(meta.id.as_str()).copied(),
+                    rule: enclosing(&rules, meta),
                 });
             }
         }

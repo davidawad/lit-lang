@@ -22,6 +22,9 @@ pub(crate) fn import_pack(pack: &Pack, from: &str, dir: &str, issues: &mut Issue
             ),
         );
     }
+    // The directory is also the root module's path, so it must be an
+    // identifier (it is the forum key, or else the pack id).
+    issues.ident(dir, "/id", false);
     let forum = pack.forum.clone().unwrap_or_else(|| {
         issues.report("/forum", "a package needs a `forum` key (SPEC §4.1)");
         String::new()

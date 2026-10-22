@@ -52,7 +52,6 @@ state entry-district-court: "District Court Patent Judgment Entered" by applican
   }
 }
 
-/// imported
 state entry-ptab: "PTAB Final Written Decision (or Operative Post-FWD Decision)" by applicant cite ?("28 U.S.C. § 1295(a)(4)(A); 35 U.S.C. §§ 141-144, 319") {
   group entry-group
   note "Reached from ptab-patent-trial-appeal-board.json's fwd-all-unpatentable / fwd-all-confirmed / fwd-mixed terminals, or from a later rehearing/Director-review decision if one was sought. Only actual trial participants may appeal (35 U.S.C. § 319) — no § 145 civil-action alternative exists for AIA trials, unlike ex parte prosecution appeals under § 145."
@@ -154,7 +153,6 @@ terminal window-blown-ttab: "TTAB-Origin Notice of Appeal Untimely — Window Bl
   payoff 0.usd
 }
 
-/// imported
 state entry-ttab: "TTAB Final Decision (Opposition, Cancellation or Ex Parte Appeal)" by applicant cite 28 U.S.C. § 1295(a)(4)(B); 15 U.S.C. § 1071(a); 37 C.F.R. § 2.145
 {
   group entry-group
@@ -214,13 +212,10 @@ rule duty cofc-notice-of-appeal cite 28 U.S.C. § 2522
 
 /// 37 C.F.R. § 2.145(d)(1): 63 days from the date of the final TTAB
 /// decision, as promulgated at 81 FR 69986 (Oct. 7, 2016), effective
-/// January 14, 2017. The Director may extend it under § 2.145(e). Its cite
-/// is a hole: § 2.145 is vendored (sources/cfr-37-part2.txt), but the pack
-/// has no source for that file and binds 37 C.F.R. to the § 90.3 source,
-/// and a hole whose text names § 2.145 is still checked against it.
-rule duty ttab-notice-of-appeal {
-  /// 37 C.F.R. § 2.145(d)(1), (e).
-  deadline ttab-noa-period: 63.days after Entered(BoardDecision) counted_by frap26 effective [2017-01-14, ..) known_at 2016-10-07 delegable_to [CaseOrder] cite ?("the TTAB notice-of-appeal rule this deadline's doc comment names; no pack source binds it")
+/// January 14, 2017. The Director may extend it under § 2.145(e).
+rule duty ttab-notice-of-appeal cite 37 C.F.R. § 2.145(d)(1)
+{
+  deadline ttab-noa-period: 63.days after Entered(BoardDecision) counted_by frap26 effective [2017-01-14, ..) known_at 2016-10-07 delegable_to [CaseOrder] cite 37 C.F.R. § 2.145(d)(1); 37 C.F.R. § 2.145(e)
 }
 
 test "a district-court notice of appeal is due 30 days after entry" cite FRAP 4(a)(1)(A)
@@ -271,7 +266,8 @@ test "a 60th day on observed Independence Day rolls to Monday" cite FRAP 26(a)(6
   expect deadline(cofc-noa-period) == 2026-07-06
 }
 
-test "a TTAB notice of appeal is due 63 days after the final decision" {
+test "a TTAB notice of appeal is due 63 days after the final decision" cite 37 C.F.R. § 2.145(d)(1)
+{
   given Entered(BoardDecision) on 2026-03-02
   expect deadline(ttab-noa-period) == 2026-05-04
 }

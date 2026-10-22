@@ -137,3 +137,20 @@ tests/golden/          hand-checked 2-6 node graphs; tests/README.md explains th
 
 Issue tracking: [GitHub Issues](https://github.com/davidawad/litgraph/issues)
 on this repository.
+
+## litigate (the authoring language, in progress)
+
+`docs/litigate/DESIGN.md` is the root design: `.lit` rule modules and `.case`
+matters compile to this engine's pack/links/scenario JSON. Read it before
+touching `crates/litigate-*`, `lit/`, `cases/` or `editors/`. Rules while
+the epic is open:
+
+1. Work only inside the paths your bead owns; shared contracts (AST, HIR,
+   diagnostics, CLI envelope) change only through the bead that owns them.
+2. No forum knowledge in `crates/*/src` (DESIGN §9). Forum facts live in
+   packs today and in `lit/` after the flip.
+3. Every new crate follows the workspace lints, `deny.toml`, the 500-line
+   file ceiling, and `just ci`. Add tests with the code, never after.
+4. After the flip (DESIGN §11) never hand-edit `packs/*.json` or
+   `scenarios/*.json`; edit `lit/` or `cases/` and run `just lit-sync`.
+   The epic is tracked in the local br store (prefix `lg`).

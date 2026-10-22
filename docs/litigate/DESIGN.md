@@ -164,9 +164,18 @@ two things:
 1. Versions of one declaration never overlap.
 2. Their union covers the declaration's lifetime, or the gaps are explicit.
 
-Resolution is always `as_of <Date>`. A case replays each event as of that
-event's own date, so a matter that straddles an amendment is modeled
-correctly.
+Resolution is always `as_of <Date>`. Versions are bitemporal (Snodgrass):
+`in_force` is when the law applied, and `known_at` is when the corpus
+recorded it. A query can therefore ask both what the law was on D and what we
+believed on K.
+
+When a matter straddles an amendment, a declared transition rule decides, not
+a hard-coded one. FRCP 86(a) applies amendments to pending proceedings unless
+the Court orders otherwise or doing so would not be "just and practicable".
+In `.lit` that is a `transition` declaration attached to the amendment. Its
+discretionary leg is a `chance ... discretion` node the case can resolve with
+an order event. By default each event is replayed under the rules in force on
+that event's date, as the declared transition rule directs.
 
 Following LegalRuleML, three time axes are distinct: enactment, effect and
 applicability. The core library and the spec name each one.
@@ -191,6 +200,31 @@ missing delegation. Within one authority, Catala-style `default` and
 `exception` blocks express rule-plus-exceptions. Exceptions are checked to be
 non-overlapping or explicitly prioritized. Together this is Governatori and
 Rotolo's temporal defeasible logic, made static.
+
+Refinements from the library research (`research/library-ideas.md`):
+
+- **Two-stage conflict resolution.** First declared relations apply, then
+  the canons:
+  - Declared relations: `subject_to X`, `notwithstanding X`, `supersedes X`
+    and `revives X`. Repeal does not revive a repealed rule unless the
+    declaration says `revives` (Scalia and Garner, *Reading Law* §§ 13,
+    27–29, 55–57).
+  - Canons: higher authority, then specific over general, then later over
+    earlier.
+  - A conflict still left open is a compile error with both spans. It is
+    never resolved silently.
+- **Two exception kinds** (Pollock 1987).
+  - A *rebutting* exception concludes the opposite.
+  - An *undercutting* exception only disables the rule.
+  - They lower differently and are explained differently.
+- **Rule kinds** (Hart): `duty` rules (must act within D), `power` rules
+  (may move; creates a decision edge) and `liability` consequences (a missed
+  duty sets a flag or forces an edge).
+- **Direction-dependent counting.** "At least N days before" counts
+  backward, and the counting rule's direction is part of its type.
+- **Typestate.** Submission types are closed sums. A `.case` posture is
+  typed by stage, so `Answer` cannot be filed against a case already in
+  `Judgment`.
 
 ### 4.6 Deadline counting and calendars
 

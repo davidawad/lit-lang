@@ -792,12 +792,17 @@ its cited trace `text`.
 - A package that declares no `counting` lowers the manifest's `counting`
   key (§4.1) to `Pack.counting` verbatim: it names a rule of the shared
   library, which is all `litigate import` needs.
-- A package that declares `counting c` (at most one; more is L6001) gets
-  `Pack.counting = "c"`, and a manifest `counting` naming another id is
-  L6001. Lowering then also emits a clock fragment holding rule `c` and the
-  calendar it names, written beside the pack as `clock/<c>.json`. Library
-  ids are global: a generated fragment replaces the hand-authored one with
-  the same id (the engine skips and reports a duplicate).
+- A package that declares one counting rule `c` gets `Pack.counting =
+  "c"`. One that declares several and whose manifest names none is a
+  **counting-rule library** (`lit/core`): its pack has no `counting`, and
+  packages that import its rules name them in their own manifests. A
+  manifest `counting` naming a rule the package does not declare, while it
+  declares some, is L6001. Lowering also emits one clock fragment holding
+  every declared rule (the versions in force at the build dates) and, once
+  each, the calendars they name, written beside the pack as
+  `clock/<pack id>.json`. Library ids are global: a generated fragment
+  replaces the hand-authored one with the same id (the engine skips and
+  reports a duplicate).
 
 A counting rule lowers field by field; anything outside this table is
 L6001:
@@ -812,21 +817,22 @@ L6001:
 | `anchor next_business_day` (no `exclude_trigger_day`) | `{"op": "anchor", "kind": "adjacent-business-day"}`, `minLength: {days: 1}` |
 | `short_period { below: K.days, count: U }` | first `count` period `{unit: "calendar", below: K, count}` (`calendar` for calendar days, else `business`) |
 | (always) | `count` periods `{unit: "calendar", count: "calendar"}`, `{unit: "court", count: "business"}` |
-| `include_last_day`, `roll_forward_on [weekend, legal_holiday]` | `roll` after `base`: forward `toward: later`, backward `toward: earlier` |
+| `include_last_day`, `roll_forward_on [weekend, legal_holiday]` | `roll` before `base`: forward `toward: later`, backward `toward: earlier` |
 | `service_extension { M: K.days }` | `service` `{method, days: K}`, then a second `roll`; `M` in kebab case must be an engine method (`mail`, `clerk`, `other-consented`, `commercial-carrier`, `prison-mail`, `mail-foreign`, `express`, `express-foreign`); non-calendar days are L6001 |
 | `inaccessible` in `roll_forward_on` | `clerkInaccessible` step |
 | `allow_hours` | `hours` provision |
 
-The pipeline is therefore `anchor, count, base, roll, service, roll,
+The pipeline is therefore `anchor, count, roll, base, service, roll,
 clerkInaccessible` (absent steps dropped): §5.3 steps 1-6 in order. The
 engine always includes the last day and rolls off any closed day, so a
 rule without `include_last_day`, or whose `roll_forward_on` lists only one
 of `weekend`/`legal_holiday`, is L6001. Service days are added after the
 roll, as FRCP 6(d) and FRAP 26(c) read ("3 days are added after the
-period would otherwise expire under Rule 6(a)"); the shipped `frcp6`, `rcfc6`, and
-`frap26` fragments add them to the unrolled date, which differs when the
-unextended last day is closed. A port that must reproduce those fragments
-exactly is a SPEC change, not a lowering option.
+period would otherwise expire under Rule 6(a)"), and `base` records that
+day: the period's own last day after its roll, before any added days. The
+shipped `frcp6`, `rcfc6`, and `frap26` fragments use the same order, so a
+lowered rule reproduces their `due_date`, `base_date` and
+`last_day_rolled`.
 
 | `calendar k` / holiday | `HolidayCalendar` / `Holiday` |
 |---|---|

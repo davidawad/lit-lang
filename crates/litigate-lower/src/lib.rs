@@ -80,9 +80,9 @@ pub struct LoweredPackage {
     pub document: Document,
     /// Its sidecar.
     pub source_map: SourceMap,
-    /// The clock-library fragment of the package's own counting rule and
-    /// calendar, with its sidecar (absent when `Pack.counting` names a
-    /// rule of the shared library, or there is none).
+    /// The clock-library fragment of the package's own counting rules
+    /// and the calendars they name, with its sidecar (absent when the
+    /// package declares no counting rule).
     pub clock: Option<(ClockLibrary, SourceMap)>,
 }
 
@@ -191,7 +191,7 @@ impl<'a> Lowerer<'a> {
         } else {
             let (pack, source_map) = pack::pack(&build, pkg, &mut sink);
             let decls = pack::emitted(&build, pkg, &mut Sink::new(""));
-            let clock = clock::fragment(&build, pkg, &decls, pack.counting.as_deref(), &mut sink);
+            let clock = clock::fragment(&build, pkg, &decls, None, &mut sink);
             LoweredPackage {
                 document: Document::Pack(Box::new(pack)),
                 source_map,

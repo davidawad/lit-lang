@@ -159,9 +159,11 @@ fn node(sink: &mut Sink, n: &hir::Node) -> RawNode {
     }
 }
 
-/// `Pack.schemaVersion`, `Pack.counting`: version 3 exactly when the
-/// package has a counting rule (SPEC §8.1).
-fn counting(sink: &mut Sink, pkg: &hir::Package, decls: &[&Declaration]) -> Option<String> {
+/// `Pack.counting`, and whether the package has a counting rule at all
+/// (`Pack.schemaVersion` 3, SPEC §8.1). A package that declares several
+/// counting rules and names none in `Lit.toml` is a counting-rule library:
+/// its pack names no rule, and its clock fragment holds them all (§8.2).
+fn counting(sink: &mut Sink, pkg: &hir::Package, decls: &[&Declaration]) -> (Option<String>, bool) {
     let declared: Vec<&hir::Counting> = decls
         .iter()
         .filter_map(|d| match d {
@@ -169,27 +171,23 @@ fn counting(sink: &mut Sink, pkg: &hir::Package, decls: &[&Declaration]) -> Opti
             _ => None,
         })
         .collect();
-    if let [_, second, ..] = declared.as_slice() {
-        sink.unsupported(
-            second.meta.span.as_ref(),
-            "a pack has one counting rule (`Pack.counting`); this package declares more than one",
-        );
-    }
-    match (&pkg.manifest.counting, declared.first()) {
-        (Some(id), Some(c)) if *id != c.meta.id => {
+    let named = match (&pkg.manifest.counting, declared.as_slice()) {
+        (Some(id), [first, ..]) if declared.iter().all(|c| c.meta.id != *id) => {
             sink.unsupported(
-                c.meta.span.as_ref(),
+                first.meta.span.as_ref(),
                 format!(
                     "Lit.toml names counting rule `{id}`, but the package declares `{}`",
-                    c.meta.id
+                    first.meta.id
                 ),
             );
             None
         }
         (Some(id), _) => Some(id.clone()),
-        (None, Some(c)) => Some(c.meta.id.clone()),
-        (None, None) => None,
-    }
+        (None, [only]) => Some(only.meta.id.clone()),
+        (None, _) => None,
+    };
+    let has_rule = named.is_some() || !declared.is_empty();
+    (named, has_rule)
 }
 
 /// L3007 for a local edge target or start node with no version in force
@@ -258,9 +256,9 @@ pub(crate) fn pack(
         }
     }
     dangling(build, sink, &pkg.start, &nodes, &edges);
-    let counting = counting(sink, pkg, &decls);
+    let (counting, has_rule) = counting(sink, pkg, &decls);
     let pack = Pack {
-        schema_version: if counting.is_some() { 3 } else { 2 },
+        schema_version: if has_rule { 3 } else { 2 },
         id: m.pack_id.clone(),
         title: m.title.clone(),
         description: m.description.clone(),

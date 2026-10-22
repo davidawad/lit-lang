@@ -105,9 +105,6 @@ expression: render(clock).unwrap_or_default()
           ]
         },
         {
-          "op": "base"
-        },
-        {
           "op": "roll",
           "forward": {
             "toward": "later",
@@ -117,6 +114,9 @@ expression: render(clock).unwrap_or_default()
             "toward": "earlier",
             "text": "FRCP 6(a): the last day is a weekend or legal holiday; roll backward -> {date}"
           }
+        },
+        {
+          "op": "base"
         },
         {
           "op": "service",

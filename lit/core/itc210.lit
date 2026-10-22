@@ -1,0 +1,100 @@
+module core.itc210
+
+import core.calendar.{ us-federal-holidays }
+import core.time.{ Served, ServiceMethod }
+
+/// 19 C.F.R. § 210.6(a): Part 210 periods are computed under §§ 201.14 and
+/// 201.16(d)-(e). § 201.14(a): computation "shall begin with the first
+/// business day following" the triggering event (day 1); a last day on a
+/// Saturday, Sunday, or Federal legal holiday runs to the end of the next
+/// business day; under 7 days, intermediate weekends and holidays are
+/// excluded. § 201.16(d): mail adds 3 calendar days (10 to a foreign
+/// country); § 201.16(e): express delivery adds 1 day (5 abroad); § 201.16(f):
+/// electronic service adds none.
+///
+/// The section dates from 41 FR 17710 (April 27, 1976), amended in 1991,
+/// 2003 and 2011 (its source note); the vendored 2024 text is the only one
+/// here, so this version stands for the whole window. UNVERIFIED: that the
+/// computation sentences of (a) are unchanged since 1976. A backward
+/// period cannot use this rule: its anchor is the next business day
+/// (SPEC §5.5, L3009), and § 201.14 defines no backward count.
+counting itc210 effective [1976-04-27, ..) known_at 2024-04-01 cite 19 C.F.R. § 201.14(a)
+{
+  anchor next_business_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday]
+  short_period { below: 7.days, count: business_days }
+  service_extension {
+    Mail: 3.days
+    MailForeign: 10.days
+    Express: 1.days
+    ExpressForeign: 5.days
+  } cite 19 C.F.R. § 201.16(d)
+  holidays us-federal-holidays
+}
+
+deadline itc210-1-day: 1.days after Served() counted_by itc210 cite 19 C.F.R. § 201.14(a)
+deadline itc210-3-days: 3.days after Served() counted_by itc210 cite 19 C.F.R. § 201.14(a)
+deadline itc210-5-days: 5.days after Served() counted_by itc210 cite 19 C.F.R. § 201.14(a)
+deadline itc210-12-days: 12.days after Served() counted_by itc210 cite 19 C.F.R. § 210.43(a)(1)
+deadline itc210-20-days: 20.days after Served() counted_by itc210 cite 19 C.F.R. § 210.13(a)
+
+test "twenty days from a Monday" cite 19 C.F.R. § 201.14(a)
+{
+  given Served(Personal) on 2026-06-01
+  expect deadline(itc210-20-days) == 2026-06-22
+}
+
+test "three days after a Friday run Monday through Wednesday" cite 19 C.F.R. § 201.14(a)
+{
+  given Served(Personal) on 2026-01-02
+  expect deadline(itc210-3-days) == 2026-01-07
+}
+
+test "a short period skips an intermediate holiday" cite 19 C.F.R. § 201.14(a)
+{
+  given Served(Personal) on 2026-11-20
+  expect deadline(itc210-5-days) == 2026-11-30
+}
+
+test "mail adds three calendar days" cite 19 C.F.R. § 201.16(d)
+{
+  given Served(Mail) on 2026-06-01
+  expect deadline(itc210-20-days) == 2026-06-25
+}
+
+test "mail to a foreign country adds ten calendar days" cite 19 C.F.R. § 201.16(d)
+{
+  given Served(MailForeign) on 2026-06-01
+  expect deadline(itc210-20-days) == 2026-07-02
+}
+
+test "express delivery adds one day" cite 19 C.F.R. § 201.16(e)
+{
+  given Served(Express) on 2026-06-01
+  expect deadline(itc210-20-days) == 2026-06-23
+}
+
+test "express delivery abroad adds five days; a Saturday rolls to Monday" cite 19 C.F.R. § 201.16(e)
+{
+  given Served(ExpressForeign) on 2026-06-01
+  expect deadline(itc210-20-days) == 2026-06-29
+}
+
+test "electronic service adds nothing" cite 19 C.F.R. § 201.16(f)
+{
+  given Served(Electronic) on 2026-06-01
+  expect deadline(itc210-20-days) == 2026-06-22
+}
+
+test "Suprema: 12 days from Friday June 17, 2011 begin Monday June 20 and end Friday July 1" cite 19 C.F.R. § 210.43(a)(1)
+{
+  given Served(Personal) on 2011-06-17
+  expect deadline(itc210-12-days) == 2011-07-01
+}
+
+test "June 20, 2011 was a business day: Juneteenth dates from 2021" cite 19 C.F.R. § 201.14(a)
+{
+  given Served(Personal) on 2011-06-17
+  expect deadline(itc210-1-day) == 2011-06-20
+}

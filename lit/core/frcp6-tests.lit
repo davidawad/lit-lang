@@ -1,0 +1,259 @@
+module core.frcp6.tests
+
+import core.frcp6.{ frcp6 }
+import core.time.{ Served, Scheduled, ServiceMethod }
+
+// Fixture periods for testing `frcp6`: each is N days counted under FRCP 6
+// from a `Served` event (forward) or to a `Scheduled` one (backward). The
+// known answers reproduce crates/litgraph/tests/clock_parity.rs,
+// clock_parity_other_forums.rs and clock_rules.rs for the engine's
+// `packs/clock/frcp6.json`, plus the superseded versions' own rules.
+deadline frcp6-0-days: 0.days after Served() counted_by frcp6 cite FRCP 6(a)(1)
+deadline frcp6-1-day: 1.days after Served() counted_by frcp6 cite FRCP 6(a)(1)
+deadline frcp6-3-days: 3.days after Served() counted_by frcp6 cite FRCP 6(a)(1)
+deadline frcp6-5-days: 5.days after Served() counted_by frcp6 cite FRCP 6(a)(1)
+deadline frcp6-7-days: 7.days after Served() counted_by frcp6 cite FRCP 6(a)(1)
+deadline frcp6-10-days: 10.days after Served() counted_by frcp6 cite FRCP 6(a)(1)
+deadline frcp6-11-days: 11.days after Served() counted_by frcp6 cite FRCP 6(a)(1)
+deadline frcp6-14-days: 14.days after Served() counted_by frcp6 cite FRCP 6(a)(1)
+deadline frcp6-20-days: 20.days after Served() counted_by frcp6 cite FRCP 6(a)(1)
+deadline frcp6-26-days: 26.days after Served() counted_by frcp6 cite FRCP 6(a)(1)
+deadline frcp6-30-days: 30.days after Served() counted_by frcp6 cite FRCP 6(a)(1)
+deadline frcp6-2-days-before: 2.days before Scheduled() counted_by frcp6 cite FRCP 6(a)(5)
+deadline frcp6-3-days-before: 3.days before Scheduled() counted_by frcp6 cite FRCP 6(a)(5)
+deadline frcp6-7-days-before: 7.days before Scheduled() counted_by frcp6 cite FRCP 6(a)(5)
+deadline frcp6-14-days-before: 14.days before Scheduled() counted_by frcp6 cite FRCP 6(a)(5)
+deadline frcp6-0-court-days-before: 0.court_days before Scheduled() counted_by frcp6 cite FRCP 6(a)(5)
+deadline frcp6-3-court-days-before: 3.court_days before Scheduled() counted_by frcp6 cite FRCP 6(a)(5)
+/// A backward period from a served paper: 6(d) adds days only to periods
+/// that run after service.
+deadline frcp6-10-days-before-service: 10.days before Served() counted_by frcp6 cite FRCP 6(d)
+deadline frcp6-14-days-before-service: 14.days before Served() counted_by frcp6 cite FRCP 6(d)
+
+test "the trigger day is excluded" cite FRCP 6(a)(1)(A)
+{
+  given Served(Personal) on 2026-01-06
+  expect deadline(frcp6-1-day) == 2026-01-07
+}
+
+test "every day counts, weekends included" cite FRCP 6(a)(1)(B)
+{
+  given Served(Personal) on 2026-07-22
+  expect deadline(frcp6-7-days) == 2026-07-29
+}
+
+test "a last day on Saturday rolls to Monday" cite FRCP 6(a)(1)(C)
+{
+  given Served(Personal) on 2026-07-18
+  expect deadline(frcp6-7-days) == 2026-07-27
+}
+
+test "a last day on Sunday rolls to Monday" cite FRCP 6(a)(1)(C)
+{
+  given Served(Personal) on 2026-07-19
+  expect deadline(frcp6-7-days) == 2026-07-27
+}
+
+test "a fourteen-day period" cite FRCP 6(a)(1)
+{
+  given Served(Personal) on 2026-07-01
+  expect deadline(frcp6-14-days) == 2026-07-15
+}
+
+test "a zero-day period is due on the trigger day" cite FRCP 6(a)(1)
+{
+  given Served(Personal) on 2026-07-15
+  expect deadline(frcp6-0-days) == 2026-07-15
+}
+
+test "a thirty-day period from a Friday" cite FRCP 6(a)(1)
+{
+  given Served(Personal) on 2025-06-13
+  expect deadline(frcp6-30-days) == 2025-07-14
+}
+
+test "a last day on MLK Day 2026 rolls" cite FRCP 6(a)(6)(A)
+{
+  given Served(Personal) on 2026-01-08
+  expect deadline(frcp6-11-days) == 2026-01-20
+}
+
+test "Christmas 2021 is observed Friday December 24" cite FRCP 6(a)(6)(A)
+{
+  given Served(Personal) on 2021-12-17
+  expect deadline(frcp6-7-days) == 2021-12-27
+}
+
+test "a last day on Juneteenth 2026 rolls" cite FRCP 6(a)(6)(A)
+{
+  given Served(Personal) on 2026-06-08
+  expect deadline(frcp6-11-days) == 2026-06-22
+}
+
+test "Independence Day 2026 is observed Friday July 3" cite FRCP 6(a)(6)(A)
+{
+  given Served(Personal) on 2026-06-22
+  expect deadline(frcp6-11-days) == 2026-07-06
+}
+
+test "a period crosses a year boundary" cite FRCP 6(a)(1)
+{
+  given Served(Personal) on 2025-12-28
+  expect deadline(frcp6-14-days) == 2026-01-12
+}
+
+test "fourteen days before a hearing" cite FRCP 6(a)(5)
+{
+  given Scheduled() on 2026-07-31
+  expect deadline(frcp6-14-days-before) == 2026-07-17
+}
+
+test "backward onto Saturday rolls to Friday" cite FRCP 6(a)(5)
+{
+  given Scheduled() on 2026-07-27
+  expect deadline(frcp6-2-days-before) == 2026-07-24
+}
+
+test "backward onto Sunday rolls to Friday" cite FRCP 6(a)(5)
+{
+  given Scheduled() on 2026-07-28
+  expect deadline(frcp6-2-days-before) == 2026-07-24
+}
+
+test "backward onto MLK Day 2026 rolls to Friday" cite FRCP 6(a)(5)
+{
+  given Scheduled() on 2026-01-22
+  expect deadline(frcp6-3-days-before) == 2026-01-16
+}
+
+test "backward onto observed Christmas 2021 rolls to Thursday" cite FRCP 6(a)(5)
+{
+  given Scheduled() on 2021-12-31
+  expect deadline(frcp6-7-days-before) == 2021-12-23
+}
+
+test "backward counting crosses a year boundary" cite FRCP 6(a)(5)
+{
+  given Scheduled() on 2026-01-05
+  expect deadline(frcp6-14-days-before) == 2025-12-22
+}
+
+test "zero court days before a Sunday is the Friday before" cite FRCP 6(a)(5)
+{
+  given Scheduled() on 2026-07-26
+  expect deadline(frcp6-0-court-days-before) == 2026-07-24
+}
+
+test "three court days before a Monday" cite FRCP 6(a)(5)
+{
+  given Scheduled() on 2026-07-27
+  expect deadline(frcp6-3-court-days-before) == 2026-07-22
+}
+
+test "service by mail adds three days" cite FRCP 6(d)
+{
+  given Served(Mail) on 2026-07-20
+  expect deadline(frcp6-14-days) == 2026-08-06
+}
+
+test "leaving a copy with the clerk adds three days" cite FRCP 6(d)
+{
+  given Served(Clerk) on 2026-07-20
+  expect deadline(frcp6-14-days) == 2026-08-06
+}
+
+test "other consented means add three days" cite FRCP 6(d)
+{
+  given Served(OtherConsented) on 2026-07-20
+  expect deadline(frcp6-14-days) == 2026-08-06
+}
+
+test "personal service adds nothing" cite FRCP 6(d)
+{
+  given Served(Personal) on 2026-07-20
+  expect deadline(frcp6-14-days) == 2026-08-03
+}
+
+test "since 2016 electronic service adds nothing" cite FRCP 6(d)
+{
+  given Served(Electronic) on 2026-07-20
+  expect deadline(frcp6-14-days) == 2026-08-03
+}
+
+test "the three days follow the period's own roll" cite FRCP 6(d)
+{
+  given Served(Mail) on 2026-07-17
+  expect deadline(frcp6-14-days) == 2026-08-03
+}
+
+test "a Sunday last day rolls to Monday before the three days" cite FRCP 6(d)
+{
+  given Served(Mail) on 2026-07-05
+  expect deadline(frcp6-14-days) == 2026-07-23
+}
+
+test "a Saturday last day rolls to Monday, then three days end Thursday" cite FRCP 6(d)
+{
+  given Served(Mail) on 2026-01-05
+  expect deadline(frcp6-26-days) == 2026-02-05
+}
+
+test "the extended last day on a holiday rolls" cite FRCP 6(d)
+{
+  given Served(Mail) on 2026-01-02
+  expect deadline(frcp6-14-days) == 2026-01-20
+}
+
+test "backward periods take no service extension" cite FRCP 6(d)
+{
+  given Served(Mail) on 2026-07-31
+  expect deadline(frcp6-14-days-before-service) == 2026-07-17
+}
+
+test "ten days before mail service take no extension" cite FRCP 6(d)
+{
+  given Served(Mail) on 2026-07-27
+  expect deadline(frcp6-10-days-before-service) == 2026-07-17
+}
+
+test "three days from a Friday end Monday under FRCP 6" cite FRCP 6(a)(1)(C)
+{
+  given Served(Personal) on 2026-01-02
+  expect deadline(frcp6-3-days) == 2026-01-05
+}
+
+test "Christmas 2026 is a legal holiday" cite FRCP 6(a)(6)(A)
+{
+  given Served(Personal) on 2026-12-24
+  expect deadline(frcp6-1-day) == 2026-12-28
+}
+
+test "an ordinary Monday is not a legal holiday" cite FRCP 6(a)(6)
+{
+  given Served(Personal) on 2026-03-15
+  expect deadline(frcp6-1-day) == 2026-03-16
+}
+
+test "New Year's Day 2022 is observed Friday December 31, 2021" cite FRCP 6(a)(6)(A)
+{
+  given Served(Personal) on 2021-12-30
+  expect deadline(frcp6-1-day) == 2022-01-03
+}
+
+test "Christmas 2021 is observed on the Friday, not the Saturday" cite FRCP 6(a)(6)(A)
+{
+  given Served(Personal) on 2021-12-23
+  expect deadline(frcp6-1-day) == 2021-12-27
+}
+
+test "Juneteenth is a holiday once Pub. L. 117-17 takes effect" cite FRCP 6(a)(6)(A)
+{
+  given Served(Personal) on 2021-06-08
+  expect deadline(frcp6-10-days) == 2021-06-21
+}
+
+test "Juneteenth 2020 was an ordinary Friday" cite FRCP 6(a)(6)(A)
+{
+  given Served(Personal) on 2020-06-09
+  expect deadline(frcp6-10-days) == 2020-06-19
+}

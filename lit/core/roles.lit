@@ -1,0 +1,44 @@
+module core.roles
+
+/// The three roles an actor plays in litgraph (`[package.roles]` values
+/// `self`, `opponent`, `nature`): the party being advised, its adversary, and
+/// every decision-maker or chance the analysis does not control.
+enum Posture { Protagonist, Opponent, Nature }
+
+/// Designations of a party across the federal fora `lit/` models.
+enum Party {
+  Plaintiff,
+  Defendant,
+  CounterclaimDefendant,
+  ThirdPartyPlaintiff,
+  ThirdPartyDefendant,
+  Intervenor,
+  Petitioner,
+  Respondent,
+  Appellant,
+  Appellee,
+  CrossAppellant,
+  Movant,
+  Nonmovant,
+  Applicant,
+  PatentOwner,
+  Opposer,
+  Complainant,
+  Prosecution,
+  Accused,
+  UnitedStates,
+}
+
+/// Decision-makers and offices: the actors a package maps to `nature`.
+enum Tribunal {
+  DistrictCourt,
+  CourtOfAppeals,
+  CourtOfFederalClaims,
+  SupremeCourt,
+  AdministrativeLawJudge,
+  Commission,
+  Board,
+  Examiner,
+  Office,
+  Clerk,
+}

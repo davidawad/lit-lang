@@ -1,0 +1,160 @@
+module core.frcp6.history
+
+import core.frcp6.tests.{
+  frcp6-1-day,
+  frcp6-5-days,
+  frcp6-7-days,
+  frcp6-10-days,
+  frcp6-14-days,
+  frcp6-20-days,
+  frcp6-30-days,
+}
+
+import core.frcp6.{ frcp6 }
+import core.time.{ Served, ServiceMethod }
+
+// The superseded versions of FRCP 6, each through the version in force on
+// the trigger date, and the worked examples the rule texts, committee
+// notes and tests/cases/ give.
+/// FRCP 81(c)(2)(C): after removal, a defendant who has not answered must
+/// answer within 7 days after the notice of removal is filed (when that is
+/// the longest of the three periods 81(c)(2) lists).
+event NoticeOfRemovalFiled()
+/// FRCP 14(a)(1): a defending party may implead without the court's leave
+/// within 14 days after serving its original answer.
+event AnswerServed()
+
+deadline removal-answer: 7.days after NoticeOfRemovalFiled() counted_by frcp6 cite FRCP 81(c)(2)(C)
+deadline third-party-complaint: 14.days after AnswerServed() counted_by frcp6 cite FRCP 14(a)(1)
+
+test "Glannon: removal on Wednesday December 28, 2016; answer due Wednesday January 4, 2017" cite FRCP 81(c)(2)(C)
+{
+  given NoticeOfRemovalFiled() on 2016-12-28
+  expect deadline(removal-answer) == 2017-01-04
+}
+
+test "Glannon: implead without leave within 14 days of serving that answer" cite FRCP 14(a)(1)
+{
+  given AnswerServed() on 2017-01-04
+  expect deadline(third-party-complaint) == 2017-01-18
+}
+
+test "before 2009, a period under 11 days skips weekends and Veterans Day" cite FRCP (2008 ed.) 6(a)(2)
+{
+  given Served(Personal) on 2009-11-06
+  expect deadline(frcp6-10-days) == 2009-11-23
+}
+
+test "from December 1, 2009, the same ten days count every day" cite FRCP 6(a)(1)(B)
+{
+  given Served(Personal) on 2009-12-04
+  expect deadline(frcp6-10-days) == 2009-12-14
+}
+
+test "before 2009, mail adds three days and a Sunday rolls to Monday" cite FRCP (2008 ed.) 6(d)
+{
+  given Served(Mail) on 2009-10-02
+  expect deadline(frcp6-20-days) == 2009-10-26
+}
+
+test "2005 Committee Note: a Saturday 30th day before a Monday holiday expires Tuesday, plus three days" cite FRCP (2008 ed.) 6 (2005 Committee Note)
+{
+  given Served(Mail) on 2008-07-31
+  expect deadline(frcp6-30-days) == 2008-09-05
+}
+
+test "2005 Committee Note: ten days after mailing on a Friday, plus Saturday, Sunday and Monday" cite FRCP (2008 ed.) 6 (2005 Committee Note)
+{
+  given Served(Mail) on 2008-03-07
+  expect deadline(frcp6-10-days) == 2008-03-24
+}
+
+test "2001: leaving a copy with the clerk adds three days" cite FRCP (2008 ed.) 6(d)
+{
+  given Served(Clerk) on 2008-03-07
+  expect deadline(frcp6-10-days) == 2008-03-24
+}
+
+test "1985-2001: only mail adds three days" cite FRCP (2008 ed.) 6 (2001 Committee Note)
+{
+  given Served(Clerk) on 1999-03-05
+  expect deadline(frcp6-10-days) == 1999-03-19
+}
+
+test "1985: ten days skip weekends and Veterans Day" cite FRCP (2008 ed.) 6 (1985 Advisory Committee Note)
+{
+  given Served(Personal) on 1999-11-05
+  expect deadline(frcp6-10-days) == 1999-11-22
+}
+
+test "MLK Day is a legal holiday from 1986" cite 5 U.S.C. § 6103 (Effective Date of 1983 Amendment)
+{
+  given Served(Personal) on 1986-01-19
+  expect deadline(frcp6-1-day) == 1986-01-21
+}
+
+test "MLK Day was an ordinary Monday in 1985" cite 5 U.S.C. § 6103 (Effective Date of 1983 Amendment)
+{
+  given Served(Personal) on 1985-01-20
+  expect deadline(frcp6-1-day) == 1985-01-21
+}
+
+test "before 1985, a ten-day period counted every day" cite FRCP (2008 ed.) 6 (1985 Advisory Committee Note)
+{
+  given Served(Personal) on 1984-03-02
+  expect deadline(frcp6-10-days) == 1984-03-12
+}
+
+test "before 1985, a period under 7 days skipped weekends" cite FRCP (2008 ed.) 6 (1963 Advisory Committee Note)
+{
+  given Served(Personal) on 1984-03-02
+  expect deadline(frcp6-5-days) == 1984-03-09
+}
+
+test "before 1971, Veterans Day was November 11" cite 5 U.S.C. § 6103 (Effective Date of 1968 Amendment)
+{
+  given Served(Personal) on 1970-11-10
+  expect deadline(frcp6-1-day) == 1970-11-12
+}
+
+test "1971-1977, Veterans Day was the fourth Monday in October" cite 5 U.S.C. § 6103 (Effective Date of 1975 Amendment)
+{
+  given Served(Personal) on 1975-10-26
+  expect deadline(frcp6-1-day) == 1975-10-28
+}
+
+test "1971-1977, November 11 was an ordinary day" cite 5 U.S.C. § 6103 (Effective Date of 1975 Amendment)
+{
+  given Served(Personal) on 1975-11-10
+  expect deadline(frcp6-1-day) == 1975-11-11
+}
+
+test "before 1971, Washington's Birthday was February 22" cite 5 U.S.C. § 6103 (Effective Date of 1968 Amendment)
+{
+  given Served(Personal) on 1968-02-21
+  expect deadline(frcp6-1-day) == 1968-02-23
+}
+
+test "Celotex: 30 days from July 21, 1982 end Friday August 20" cite FRCP (2008 ed.) 6 (1963 Advisory Committee Note)
+{
+  given Served(Personal) on 1982-07-21
+  expect deadline(frcp6-30-days) == 1982-08-20
+}
+
+test "Twombly: 30 days from October 8, 2003 end Friday November 7" cite FRCP (2008 ed.) 6(a)
+{
+  given Served(Personal) on 2003-10-08
+  expect deadline(frcp6-30-days) == 2003-11-07
+}
+
+test "a seven-day period under the 1985 rule skips the weekend" cite FRCP (2008 ed.) 6 (1985 Advisory Committee Note)
+{
+  given Served(Personal) on 1995-06-02
+  expect deadline(frcp6-7-days) == 1995-06-13
+}
+
+test "fourteen days under the 2001 rule count every day" cite FRCP (2008 ed.) 6(a)(2)
+{
+  given Served(Personal) on 2005-06-03
+  expect deadline(frcp6-14-days) == 2005-06-17
+}

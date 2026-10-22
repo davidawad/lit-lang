@@ -77,6 +77,7 @@ syntax_kinds! {
         Date => "Date literal `YYYY-MM-DD`.",
         CiteText => "Citation text following the `cite` keyword.",
         ErrorToken => "Unrecognized input kept for lossless recovery.",
+        Eof => "End-of-input lookahead sentinel; never stored in a tree (additive, W1 syntax).",
     }
     punct {
         LBrace = "{", RBrace = "}", LParen = "(", RParen = ")",
@@ -127,6 +128,7 @@ syntax_kinds! {
         KwRebuts = "rebuts", KwUndercuts = "undercuts", KwPriority = "priority",
         KwUnless = "unless", KwOtherwise = "otherwise", KwGiven = "given",
         KwExpect = "expect", KwTrue = "true", KwFalse = "false", KwUnit = "unit",
+        KwUrl = "url",
     }
     nodes {
         SourceFile => "Root of a `.lit` module.",
@@ -205,6 +207,10 @@ syntax_kinds! {
         ObserveDecl => "`observe node: { edge: count }`.",
         AnalysisBlock => "`analysis { field: value }`.",
         Error => "Recovered parse error node.",
+        ImportList => "Braced name list of `import m.{x, y}` (additive, W1 syntax).",
+        Param => "One `name: Type` event parameter (additive, W1 syntax).",
+        FieldExpr => "Field projection `expr.field` after a non-ref primary (additive, W1 syntax).",
+        Ratio => "Probability ratio `n/d` written without spaces (additive, W1 syntax).",
     }
 }
 

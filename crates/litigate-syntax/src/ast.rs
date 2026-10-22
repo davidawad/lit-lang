@@ -3,7 +3,8 @@
 //! W1 adds accessors; the set of wrappers and the kinds each one casts from
 //! are frozen by SPEC §3.
 use crate::syntax_kind::{LitLanguage, SyntaxKind};
-use rowan::{ast::AstNode, SyntaxNode};
+pub use rowan::ast::AstNode;
+use rowan::SyntaxNode;
 
 type Node = rowan::SyntaxNode<LitLanguage>;
 

@@ -1,0 +1,310 @@
+//! Atoms shared by declarations, fields, and case blocks: refs, id lists,
+//! literals, holes, citations, intervals, records, JSON values, and types.
+use super::{delimited, delimited_node, expr, Sep};
+use crate::parser::Parser;
+use crate::syntax_kind::SyntaxKind::{self, *};
+
+/// A value parser: parses one construct or returns false untouched.
+pub(crate) type Value = fn(&mut Parser<'_>) -> bool;
+
+/// Runs `value`, reporting L0001 with `expected` when it can't start.
+pub(crate) fn require(p: &mut Parser<'_>, value: Value, expected: &[SyntaxKind]) -> bool {
+    value(p) || {
+        p.error_expected(expected);
+        false
+    }
+}
+
+/// `Ref = Ident ["@" Ident] {("::" | ".") Ident} ["@" Date]`.
+pub(crate) fn reference(p: &mut Parser<'_>) -> bool {
+    if !p.at(Ident) {
+        return false;
+    }
+    p.start(Ref);
+    p.bump();
+    if p.at(At) && p.nth(1) == Ident {
+        p.bump();
+        p.bump();
+    }
+    while matches!(p.nth(0), ColonColon | Dot) && p.nth(1) == Ident {
+        p.bump();
+        p.bump();
+    }
+    if p.at(At) && p.nth(1) == Date {
+        p.bump();
+        p.bump();
+    }
+    p.finish();
+    true
+}
+
+/// `IdList = "[" [Ref {"," Ref} [","]] "]"`.
+pub(crate) fn id_list(p: &mut Parser<'_>) -> bool {
+    if !p.at(LBracket) {
+        return false;
+    }
+    delimited_node(
+        p,
+        IdList,
+        (LBracket, RBracket),
+        Sep::Required,
+        &[Ident],
+        &mut reference,
+    );
+    true
+}
+
+/// A `Literal` node holding one token of `kind`.
+pub(crate) fn token_literal(p: &mut Parser<'_>, kind: SyntaxKind) -> bool {
+    if !p.at(kind) {
+        return false;
+    }
+    p.start(Literal);
+    p.bump();
+    p.finish();
+    true
+}
+
+/// A `Literal` node holding one keyword literal (`true`, `unset`, ...).
+pub(crate) fn keyword_literal(p: &mut Parser<'_>, keywords: &[SyntaxKind]) -> bool {
+    let Some(kw) = p.at_any_kw(keywords) else {
+        return false;
+    };
+    p.start(Literal);
+    p.bump_as(kw);
+    p.finish();
+    true
+}
+
+pub(crate) fn string(p: &mut Parser<'_>) -> bool {
+    token_literal(p, String)
+}
+
+pub(crate) fn number(p: &mut Parser<'_>) -> bool {
+    token_literal(p, Number)
+}
+
+pub(crate) fn duration(p: &mut Parser<'_>) -> bool {
+    token_literal(p, Duration)
+}
+
+pub(crate) fn date(p: &mut Parser<'_>) -> bool {
+    token_literal(p, Date)
+}
+
+pub(crate) fn boolean(p: &mut Parser<'_>) -> bool {
+    keyword_literal(p, &[KwTrue, KwFalse])
+}
+
+/// `Hole = "?" ["(" String ")"]`.
+pub(crate) fn hole(p: &mut Parser<'_>) -> bool {
+    if !p.at(Question) {
+        return false;
+    }
+    p.start(HoleExpr);
+    p.bump();
+    if p.at(LParen) {
+        let opener = p.current_range();
+        p.bump();
+        if !string(p) {
+            p.error_expected(&[String]);
+        }
+        if !p.eat(RParen) {
+            p.unclosed(opener, ")");
+        }
+    }
+    p.finish();
+    true
+}
+
+/// `Cite = "cite" CiteText`.
+pub(crate) fn cite(p: &mut Parser<'_>) -> bool {
+    if !p.at(KwCite) {
+        return false;
+    }
+    p.start(CiteExpr);
+    p.bump();
+    p.eat(CiteText);
+    p.finish();
+    true
+}
+
+/// `["-"] literal(kind)`: a `UnaryExpr` when negated.
+pub(crate) fn signed(p: &mut Parser<'_>, kind: SyntaxKind) -> bool {
+    if p.at(Minus) && p.nth(1) == kind {
+        p.start(UnaryExpr);
+        p.bump();
+        token_literal(p, kind);
+        p.finish();
+        return true;
+    }
+    token_literal(p, kind)
+}
+
+pub(crate) fn signed_number(p: &mut Parser<'_>) -> bool {
+    signed(p, Number)
+}
+
+pub(crate) fn signed_money(p: &mut Parser<'_>) -> bool {
+    signed(p, Money)
+}
+
+pub(crate) fn money_or_hole(p: &mut Parser<'_>) -> bool {
+    signed_money(p) || hole(p)
+}
+
+/// `ProbValue = Number ["/" Number] | Hole | "(" Expr ")"`.
+pub(crate) fn prob_value(p: &mut Parser<'_>) -> bool {
+    if p.at(Number) && p.nth(1) == Slash {
+        p.start(Ratio);
+        p.bump();
+        p.bump();
+        if !p.eat(Number) {
+            p.error_expected(&[Number]);
+        }
+        p.finish();
+        return true;
+    }
+    number(p) || hole(p) || (p.at(LParen) && expr::primary(p))
+}
+
+/// `Interval = "[" Date "," (Date | "..") ")"`.
+pub(crate) fn interval(p: &mut Parser<'_>) -> bool {
+    if !p.at(LBracket) {
+        return false;
+    }
+    p.start(Interval);
+    let opener = p.current_range();
+    p.bump();
+    let complete = p.expect(Date) && p.expect(Comma) && (p.eat(DotDot) || p.expect(Date));
+    if complete && p.at(RBracket) {
+        let at = p.current_range();
+        p.push_error(
+            crate::error::SyntaxError::new(
+                litigate_base::DiagnosticCode::UnexpectedToken,
+                at,
+                "intervals are half-open: close with `)`, not `]`",
+            )
+            .with_fix(at, ")", litigate_base::Applicability::MachineApplicable),
+        );
+        p.bump_error();
+    } else if complete && !p.eat(RParen) {
+        p.unclosed(opener, ")");
+    }
+    p.finish();
+    true
+}
+
+/// How a record field's key is written.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum Key {
+    /// A plain identifier.
+    Ident,
+    /// A (possibly qualified) `Ref` node.
+    Ref,
+    /// An identifier or a string (JSON records).
+    Json,
+}
+
+/// `{ key ":" value Sep }` as a `RecordExpr`.
+pub(crate) fn record(p: &mut Parser<'_>, key: Key, value: Value) -> bool {
+    if !p.at(LBrace) {
+        return false;
+    }
+    let mut field = |p: &mut Parser<'_>| record_field(p, key, value);
+    delimited_node(
+        p,
+        RecordExpr,
+        (LBrace, RBrace),
+        Sep::Optional,
+        &[Ident],
+        &mut field,
+    );
+    true
+}
+
+fn record_field(p: &mut Parser<'_>, key: Key, value: Value) -> bool {
+    let starts = match key {
+        Key::Ident | Key::Ref => p.at(Ident),
+        Key::Json => p.at(Ident) || p.at(String),
+    };
+    if !starts {
+        return false;
+    }
+    p.start(RecordField);
+    if key == Key::Ref {
+        reference(p);
+    } else {
+        p.bump();
+    }
+    if p.expect(Colon) && !value(p) {
+        p.error_expected(&[Ident]);
+    }
+    p.finish();
+    true
+}
+
+/// `{ (Ident | String) ":" JsonValue Sep }`.
+pub(crate) fn json_record(p: &mut Parser<'_>) -> bool {
+    record(p, Key::Json, json_value)
+}
+
+/// `JsonValue = SignedNumber | String | Bool | "unset" | JsonRecord | "[" ... "]"`.
+pub(crate) fn json_value(p: &mut Parser<'_>) -> bool {
+    if p.at(LBracket) {
+        p.start(ListExpr);
+        delimited(
+            p,
+            (LBracket, RBracket),
+            Sep::Required,
+            &[Number],
+            &mut json_value,
+        );
+        p.finish();
+        return true;
+    }
+    signed_number(p)
+        || string(p)
+        || keyword_literal(p, &[KwTrue, KwFalse, KwUnset])
+        || json_record(p)
+}
+
+/// `Type = Ident ["<" Type {"," Type} ">"]`.
+pub(crate) fn type_expr(p: &mut Parser<'_>) -> bool {
+    if !p.at(Ident) {
+        return false;
+    }
+    p.start(TypeExpr);
+    p.bump();
+    if p.at(Less) {
+        p.nested(|p| {
+            delimited_node(
+                p,
+                TypeArgs,
+                (Less, Greater),
+                Sep::Required,
+                &[Ident],
+                &mut type_expr,
+            );
+        });
+    }
+    p.finish();
+    true
+}
+
+/// `CallExpr = Ref "(" args ")"` where the parenthesis is required.
+pub(crate) fn call(p: &mut Parser<'_>) -> bool {
+    if !p.at(Ident) {
+        return false;
+    }
+    let checkpoint = p.checkpoint();
+    reference(p);
+    p.start_at(checkpoint, CallExpr);
+    if p.at(LParen) {
+        expr::arg_list(p);
+    } else {
+        p.error_expected(&[LParen]);
+    }
+    p.finish();
+    true
+}

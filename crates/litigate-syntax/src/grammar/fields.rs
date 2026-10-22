@@ -1,0 +1,238 @@
+//! Keyword fields (`keyword value`) of node bodies, edges, deadline
+//! options, counting rules, instances, packages, and sources.
+use super::clauses::keyword_field;
+use super::values::{
+    boolean, call, cite, date, duration, id_list, json_record, money_or_hole, number, prob_value,
+    record, reference, require, signed_money, signed_number, string, Key, Value,
+};
+use super::{brace_list, delimited_node, Sep};
+use crate::error::{range, SyntaxError};
+use crate::parser::Parser;
+use crate::syntax_kind::SyntaxKind::{self, *};
+use litigate_base::DiagnosticCode;
+
+/// A field keyword and its value parser (`None`: the keyword stands alone).
+pub(crate) type Spec = (SyntaxKind, Option<Value>);
+
+pub(crate) const NODE_FIELDS: &[Spec] = &[
+    (KwGroup, Some(reference)),
+    (KwNote, Some(string)),
+    (KwValence, Some(reference)),
+    (KwCourtListenerUrl, Some(string)),
+    (KwTags, Some(id_list)),
+    (KwAttrs, Some(num_record)),
+    (KwPayoff, Some(money_or_hole)),
+    (KwPayoffByFlag, Some(money_record)),
+];
+
+pub(crate) const EDGE_FIELDS: &[Spec] = &[
+    (KwEvent, Some(call)),
+    (KwAuthority, Some(string_or_cite)),
+    (KwEffort, Some(duration)),
+    (KwCost, Some(money_or_hole)),
+    (KwWithin, Some(within)),
+    (KwDeadline, Some(deadline_literal)),
+    (KwDuration, Some(duration_value)),
+    (KwValence, Some(reference)),
+    (KwCourtListenerUrl, Some(string)),
+    (KwActionId, Some(string)),
+    (KwNote, Some(string)),
+    (KwTags, Some(id_list)),
+    (KwAttrs, Some(num_record)),
+    (KwSets, Some(id_list)),
+    (KwClears, Some(id_list)),
+    (KwRequires, Some(id_list)),
+    (KwForbids, Some(id_list)),
+    (KwReplaces, Some(id_list)),
+];
+
+pub(crate) const DEADLINE_OPTS: &[Spec] = &[
+    (KwExtendable, Some(boolean)),
+    (KwExtensionAuthority, Some(string)),
+    (KwNote, Some(string)),
+];
+
+pub(crate) const COUNTING_ITEMS: &[Spec] = &[
+    (KwExcludeTriggerDay, None),
+    (KwIncludeLastDay, None),
+    (KwAllowHours, None),
+    (KwRollForwardOn, Some(id_list)),
+    (KwServiceExtension, Some(service_extension)),
+    (KwHolidays, Some(reference)),
+    (KwAnchor, Some(reference)),
+    (KwShortPeriod, Some(short_period)),
+];
+
+pub(crate) const INSTANCE_FIELDS: &[Spec] = &[
+    (KwPack, Some(reference)),
+    (KwNote, Some(string)),
+    (KwRemoveEdges, Some(id_list)),
+    (KwProbabilities, Some(probabilities)),
+    (KwRoles, Some(name_record)),
+    (KwPayoffTransform, Some(string)),
+];
+
+pub(crate) const SOURCE_FIELDS: &[Spec] = &[(KwUrl, Some(string)), (KwAsOf, Some(date))];
+
+/// Keywords of a spec table (for "expected" messages).
+pub(crate) fn keywords(specs: &[Spec]) -> Vec<SyntaxKind> {
+    specs.iter().map(|(kw, _)| *kw).collect()
+}
+
+/// Parses one field from `specs`, or returns false untouched.
+pub(crate) fn field(p: &mut Parser<'_>, specs: &[Spec]) -> bool {
+    let Some((kw, value)) = specs.iter().find(|(kw, _)| p.at_kw(*kw)) else {
+        return false;
+    };
+    keyword_field(p, *kw, *value);
+    true
+}
+
+/// `{ field Sep }` over `specs` as a `FieldList`.
+pub(crate) fn field_list(p: &mut Parser<'_>, specs: &[Spec]) -> bool {
+    if !p.at(LBrace) {
+        return false;
+    }
+    let expected = keywords(specs);
+    brace_list(p, Sep::Optional, &expected, &mut |p| field(p, specs));
+    true
+}
+
+/// Braced fields that must appear exactly once each, in order. As a
+/// `FieldList` of `Field`s, or (`as_record`) a `RecordExpr` of
+/// `key: value` `RecordField`s.
+pub(crate) fn fixed_fields(p: &mut Parser<'_>, specs: &[Spec], as_record: bool) -> bool {
+    if !p.at(LBrace) {
+        return false;
+    }
+    let mut index = 0usize;
+    let mut elem = |p: &mut Parser<'_>| {
+        let Some((kw, value)) = specs.get(index) else {
+            return false;
+        };
+        index += 1;
+        if !p.at_kw(*kw) {
+            p.error_expected(&[*kw]);
+            p.skip_to(&[Comma, RBrace]);
+            return true;
+        }
+        if as_record {
+            p.start(RecordField);
+            p.bump_as(*kw);
+            if p.expect(Colon) {
+                value.map(|value| require(p, value, &[Ident]));
+            }
+            p.finish();
+        } else {
+            keyword_field(p, *kw, *value);
+        }
+        true
+    };
+    let kind = if as_record { RecordExpr } else { FieldList };
+    delimited_node(
+        p,
+        kind,
+        (LBrace, RBrace),
+        Sep::Optional,
+        &keywords(specs),
+        &mut elem,
+    );
+    if let Some((missing, _)) = specs.get(index) {
+        let end = p.last_end();
+        let text = missing.text().unwrap_or_default();
+        p.push_error(SyntaxError::new(
+            DiagnosticCode::UnexpectedToken,
+            range(end.saturating_sub(1), end),
+            format!("expected `{text}` before the closing `}}`"),
+        ));
+    }
+    true
+}
+
+fn string_or_cite(p: &mut Parser<'_>) -> bool {
+    string(p) || cite(p)
+}
+
+fn num_record(p: &mut Parser<'_>) -> bool {
+    record(p, Key::Ident, signed_number)
+}
+
+fn money_record(p: &mut Parser<'_>) -> bool {
+    record(p, Key::Ident, signed_money)
+}
+
+fn name_record(p: &mut Parser<'_>) -> bool {
+    record(p, Key::Ident, reference)
+}
+
+fn probabilities(p: &mut Parser<'_>) -> bool {
+    record(p, Key::Ident, prob_value)
+}
+
+fn deadline_opts(p: &mut Parser<'_>) {
+    field_list(p, DEADLINE_OPTS);
+}
+
+/// `within Ref [DeadlineOpts]`.
+fn within(p: &mut Parser<'_>) -> bool {
+    reference(p) && {
+        deadline_opts(p);
+        true
+    }
+}
+
+/// `deadline Duration [DeadlineOpts]`.
+fn deadline_literal(p: &mut Parser<'_>) -> bool {
+    duration(p) && {
+        deadline_opts(p);
+        true
+    }
+}
+
+/// `duration (Duration | { min D mode D max D })`.
+fn duration_value(p: &mut Parser<'_>) -> bool {
+    const RANGE: &[Spec] = &[
+        (KwMin, Some(duration)),
+        (KwMode, Some(duration)),
+        (KwMax, Some(duration)),
+    ];
+    duration(p) || fixed_fields(p, RANGE, false)
+}
+
+/// `service_extension { Method: Duration } [Cite]`.
+fn service_extension(p: &mut Parser<'_>) -> bool {
+    record(p, Key::Ident, duration) && {
+        cite(p);
+        true
+    }
+}
+
+/// `short_period { below: Duration, count: Ident }`.
+fn short_period(p: &mut Parser<'_>) -> bool {
+    const KEYS: &[Spec] = &[(KwBelow, Some(duration)), (KwCount, Some(reference))];
+    fixed_fields(p, KEYS, true)
+}
+
+/// `priority Number` and other number-valued fields.
+pub(crate) fn number_value(p: &mut Parser<'_>) -> bool {
+    number(p)
+}
+
+/// Value of a stake: signed money or `unvalued`.
+pub(crate) fn stake_value(p: &mut Parser<'_>) -> bool {
+    signed_money(p) || super::values::keyword_literal(p, &[KwUnvalued])
+}
+
+/// `patch Ident JsonRecord` inside an instance.
+pub(crate) fn patch(p: &mut Parser<'_>) -> bool {
+    if !p.at_kw(KwPatch) {
+        return false;
+    }
+    p.start(PatchDecl);
+    p.bump_as(KwPatch);
+    if p.expect(Ident) {
+        require(p, json_record, &[LBrace]);
+    }
+    p.finish();
+    true
+}

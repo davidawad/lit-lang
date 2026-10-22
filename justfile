@@ -132,11 +132,11 @@ clean:
     rm -r -f dist result
 
 # --- litigate authoring language (recipes become enforcing with the flip) ---
-lit-check *ARGS:
+lit-check *ARGS='--profile strict lit cases':
     cargo run -q -p litigate-cli -- check {{ARGS}}
 
 lit-sync:
     @echo "lit-sync is not implemented until the generated-source flip"
 
 lit-test:
-    cargo test -p litigate-base -p litigate-syntax -p litigate-sema
+    cargo test -p litigate-base -p litigate-syntax -p litigate-sema -p litigate-verify -p litigate-lower -p litigate-import -p litigate-cli -p litigate-lsp

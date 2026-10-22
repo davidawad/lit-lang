@@ -1,210 +1,130 @@
-//! Closed diagnostic-code registry and short explanations.
+//! Closed diagnostic-code registry and short explanations (SPEC §9.1).
+use crate::{Profile, Severity};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-/// Stable diagnostic codes. Numeric ranges are reserved by compiler phase.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-pub enum DiagnosticCode {
-    /// Unexpected token or malformed syntax (L0001).
-    UnexpectedToken,
-    /// Unterminated string or comment (L0002).
-    UnterminatedLiteral,
-    /// Invalid lexical token (L0003).
-    InvalidToken,
-    /// Duplicate or invalid declaration name (L1001).
-    DuplicateName,
-    /// Unresolved name or import (L1002).
-    UnresolvedName,
-    /// Import cycle (L1003).
-    ImportCycle,
-    /// Type mismatch (L2001).
-    TypeMismatch,
-    /// Invalid operation for domain type (L2002).
-    InvalidOperation,
-    /// Distribution is not exact or exhaustive (L2003).
-    InvalidDistribution,
-    /// Effective intervals overlap (L3001).
-    EffectiveOverlap,
-    /// Effective interval coverage has an unexplained gap (L3002).
-    EffectiveGap,
-    /// Rule conflict has no declared or canonical winner (L3003).
-    UnresolvedPrecedence,
-    /// Override lacks delegation (L3004).
-    MissingDelegation,
-    /// Exception ordering is ambiguous (L3005).
-    ExceptionConflict,
-    /// Invalid, out-of-order, or unreachable case event (L4001).
-    InvalidCaseEvent,
-    /// Case event violates a deadline (L4002).
-    DeadlineMissed,
-    /// Missing or invalid matter fact (L4003).
-    InvalidCaseFact,
-    /// Required terminal valuation is absent (L4004).
-    MissingStake,
-    /// Named verification obligation failed (L5001).
-    VerificationFailed,
-    /// Strict profile rejects an unresolved hole (L5002).
-    HoleInStrict,
-    /// HIR construct cannot be represented in the target schema (L6001).
-    LoweringUnsupported,
-    /// Generated output differs semantically from expected output (L6002).
-    SemanticDiff,
-    /// Deadline or counting declaration lacks an inline test (L9001).
-    RuleWithoutTest,
-    /// Declaration contains an explicitly permitted unknown (L9002).
-    HolePresent,
+macro_rules! registry {
+    ($count:literal; $($variant:ident = $code:literal => $explain:literal,)+) => {
+        /// Stable diagnostic codes. Numeric ranges are reserved by compiler phase.
+        #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+        pub enum DiagnosticCode {
+            $(
+                #[doc = concat!($explain, " (", $code, ").")]
+                $variant,
+            )+
+        }
+
+        impl DiagnosticCode {
+            /// Complete code registry in stable (ascending code) order.
+            pub const ALL: [Self; $count] = [$(Self::$variant,)+];
+
+            /// Returns the stable five-character code.
+            #[must_use]
+            pub const fn as_str(self) -> &'static str {
+                match self {
+                    $(Self::$variant => $code,)+
+                }
+            }
+
+            /// Returns the stable short explanation used by `litigate explain`.
+            #[must_use]
+            pub const fn explain(self) -> &'static str {
+                match self {
+                    $(Self::$variant => $explain,)+
+                }
+            }
+
+            /// Parses a stable diagnostic code string.
+            #[must_use]
+            pub fn parse(value: &str) -> Option<Self> {
+                match value {
+                    $($code => Some(Self::$variant),)+
+                    _ => None,
+                }
+            }
+        }
+    };
+}
+
+registry! { 57;
+    UnexpectedToken = "L0001" => "The token is not valid at this position in the grammar",
+    UnterminatedLiteral = "L0002" => "A string, block comment, or other delimited literal was not closed",
+    InvalidToken = "L0003" => "The source contains a character sequence that is not a token",
+    InvalidDate = "L0004" => "A date literal is not a valid proleptic Gregorian YYYY-MM-DD date",
+    InvalidNumber = "L0005" => "A numeric literal has misplaced separators, an unknown unit suffix, or overflows",
+    DanglingDocComment = "L0006" => "A documentation comment is not followed by a declaration",
+    DuplicateName = "L1001" => "A declaration name is duplicated in the same namespace",
+    UnresolvedName = "L1002" => "A referenced declaration or imported module could not be resolved",
+    ImportCycle = "L1003" => "Module imports must form an acyclic dependency graph",
+    InvalidManifest = "L1004" => "Lit.toml is missing a required key or has an invalid value",
+    PackageMismatch = "L1005" => "A package declaration disagrees with Lit.toml or the file's package",
+    UndeclaredDependency = "L1006" => "An import or use names a package that is not a declared dependency",
+    StaleLock = "L1007" => "Lit.lock is missing or does not match the resolved package graph",
+    InvalidStart = "L1008" => "A package must declare exactly one start node",
+    UndeclaredActor = "L1009" => "An actor is not declared in the package's roles table",
+    UnboundCite = "L1010" => "A citation does not resolve through a declared source binding",
+    TypeMismatch = "L2001" => "The expression type does not match the required type",
+    InvalidOperation = "L2002" => "This operation is not permitted for the operand domain types",
+    InvalidDistribution = "L2003" => "A distribution must cover every enum variant exactly once and sum to one",
+    UnitMismatch = "L2004" => "Day units or currencies are mixed without an explicit conversion",
+    NonExhaustiveMatch = "L2005" => "A match does not cover every variant, or has an unreachable arm",
+    ArithmeticError = "L2006" => "Exact arithmetic overflowed, divided by zero, or left its domain",
+    InvalidField = "L2007" => "A field is unknown, duplicated, or not allowed on this declaration kind",
+    InvalidProbability = "L2008" => "An edge probability is outside [0,1], on a self edge, or missing at a chance node",
+    EffectiveOverlap = "L3001" => "Two versions of the same declaration overlap in in-force time",
+    EffectiveGap = "L3002" => "A declaration version gap is not explicitly declared",
+    UnresolvedPrecedence = "L3003" => "Conflicting rules remain unordered after relations and canons are applied",
+    MissingDelegation = "L3004" => "An override requires an explicit delegation from the higher-authority rule",
+    ExceptionConflict = "L3005" => "Exceptions overlap without an explicit priority or disjointness proof",
+    PrecedenceCycle = "L3006" => "Authority or precedence relations form a cycle",
+    NoVersionInForce = "L3007" => "No version of the declaration is in force at the selected date",
+    InvalidTransition = "L3008" => "A transition's arms are not total or select an unknown version",
+    InvalidCounting = "L3009" => "A counting rule or calendar is inconsistent or references unknown data",
+    InvalidCaseEvent = "L4001" => "The event is out of order or is not a legal transition from the replayed posture",
+    DeadlineMissed = "L4002" => "The event missed its governing deadline without an excusing event",
+    InvalidCaseFact = "L4003" => "The fact is not a fact-tagged node or names an edge that is not its own",
+    MissingStake = "L4004" => "A reachable terminal needs a value or an explicit unvalued marker",
+    InvalidParty = "L4005" => "A party, party role, or perspective is undeclared or ambiguous",
+    InvalidBelief = "L4006" => "An observation is not at a chance node or names an edge that is not its own",
+    InvalidAnalysis = "L4007" => "An analysis field is unknown, has a dedicated block, or has the wrong shape",
+    StartConflict = "L4008" => "An explicit start disagrees with the posture derived from the events",
+    VerificationFailed = "L5001" => "A required static verification obligation was not discharged",
+    HoleInStrict = "L5002" => "Strict profile does not permit unresolved holes",
+    UnreachableNode = "L5003" => "A node is not reachable from start and is not tagged entry",
+    NoExit = "L5004" => "A non-terminal node has no outgoing edge",
+    DeadlineUnsatisfiable = "L5005" => "Mandatory deadlines on a reachable state have an empty intersection",
+    TestFailed = "L5006" => "An inline test assertion does not hold",
+    LoweringUnsupported = "L6001" => "The source construct has no lowering in the target litgraph schema",
+    SemanticDiff = "L6002" => "Generated output is not semantically equal to the expected document",
+    InvalidEngineExpression = "L6003" => "An embedded litgraph expression string does not parse",
+    NonFiniteNumber = "L6004" => "An exact value has no finite binary64 representation",
+    OutputError = "L6005" => "A generated file could not be written atomically",
+    RuleWithoutTest = "L9001" => "A deadline or counting rule should include an inline test",
+    HolePresent = "L9002" => "The source explicitly leaves this value unknown",
+    AnonymousEdge = "L9003" => "An anonymous edge cannot be referenced by cases or links",
+    NonCanonicalFormat = "L9004" => "The file is not in litigate fmt canonical form",
+    UnusedDeclaration = "L9005" => "The declaration or import is never used",
 }
 
 impl DiagnosticCode {
-    /// Complete code registry in stable order.
-    pub const ALL: [Self; 24] = [
-        Self::UnexpectedToken,
-        Self::UnterminatedLiteral,
-        Self::InvalidToken,
-        Self::DuplicateName,
-        Self::UnresolvedName,
-        Self::ImportCycle,
-        Self::TypeMismatch,
-        Self::InvalidOperation,
-        Self::InvalidDistribution,
-        Self::EffectiveOverlap,
-        Self::EffectiveGap,
-        Self::UnresolvedPrecedence,
-        Self::MissingDelegation,
-        Self::ExceptionConflict,
-        Self::InvalidCaseEvent,
-        Self::DeadlineMissed,
-        Self::InvalidCaseFact,
-        Self::MissingStake,
-        Self::VerificationFailed,
-        Self::HoleInStrict,
-        Self::LoweringUnsupported,
-        Self::SemanticDiff,
-        Self::RuleWithoutTest,
-        Self::HolePresent,
-    ];
-
-    /// Returns the stable five-character code.
+    /// Severity of this code under `profile` (SPEC §9.1 severity table).
+    /// Every non-lint code is an error in both profiles.
     #[must_use]
-    pub const fn as_str(self) -> &'static str {
-        match self {
-            Self::UnexpectedToken => "L0412",
-            Self::UnterminatedLiteral => "L0002",
-            Self::InvalidToken => "L0003",
-            Self::DuplicateName => "L1001",
-            Self::UnresolvedName => "L1002",
-            Self::ImportCycle => "L1003",
-            Self::TypeMismatch => "L2001",
-            Self::InvalidOperation => "L2002",
-            Self::InvalidDistribution => "L2003",
-            Self::EffectiveOverlap => "L3001",
-            Self::EffectiveGap => "L3002",
-            Self::UnresolvedPrecedence => "L3003",
-            Self::MissingDelegation => "L3004",
-            Self::ExceptionConflict => "L3005",
-            Self::InvalidCaseEvent => "L4001",
-            Self::DeadlineMissed => "L4002",
-            Self::InvalidCaseFact => "L4003",
-            Self::MissingStake => "L4004",
-            Self::VerificationFailed => "L5001",
-            Self::HoleInStrict => "L5002",
-            Self::LoweringUnsupported => "L6001",
-            Self::SemanticDiff => "L6002",
-            Self::RuleWithoutTest => "L9001",
-            Self::HolePresent => "L9002",
+    pub const fn severity(self, profile: Profile) -> Severity {
+        match (self, profile) {
+            (Self::AnonymousEdge, _) => Severity::Info,
+            (Self::UnusedDeclaration, _)
+            | (
+                Self::RuleWithoutTest | Self::HolePresent | Self::NonCanonicalFormat,
+                Profile::Dev,
+            ) => Severity::Warning,
+            _ => Severity::Error,
         }
     }
 
-    /// Returns the stable short explanation used by `litigate explain`.
+    /// True for the lint range (L9xxx).
     #[must_use]
-    pub const fn explain(self) -> &'static str {
-        match self {
-            Self::UnexpectedToken => "The token is not valid at this position in the grammar.",
-            Self::UnterminatedLiteral => {
-                "A string, block comment, or other delimited literal was not closed."
-            }
-            Self::InvalidToken => "The source contains a character sequence that is not a token.",
-            Self::DuplicateName => "A declaration name is duplicated in the same namespace.",
-            Self::UnresolvedName => {
-                "A referenced declaration or imported module could not be resolved."
-            }
-            Self::ImportCycle => "Module imports must form an acyclic dependency graph.",
-            Self::TypeMismatch => "The expression type does not match the required type.",
-            Self::InvalidOperation => {
-                "This operation is not permitted for the operand domain types."
-            }
-            Self::InvalidDistribution => {
-                "A distribution must cover every enum variant exactly once and sum to one."
-            }
-            Self::EffectiveOverlap => {
-                "Two versions of the same declaration overlap in in-force time."
-            }
-            Self::EffectiveGap => "A declaration version gap is not explicitly declared.",
-            Self::UnresolvedPrecedence => {
-                "Conflicting rules remain unordered after relations and canons are applied."
-            }
-            Self::MissingDelegation => {
-                "An override requires an explicit delegation from the higher-authority rule."
-            }
-            Self::ExceptionConflict => {
-                "Exceptions overlap without an explicit priority or disjointness proof."
-            }
-            Self::InvalidCaseEvent => {
-                "The event is out of order or is not a legal transition from the replayed posture."
-            }
-            Self::DeadlineMissed => {
-                "The event missed its governing deadline without an excusing event."
-            }
-            Self::InvalidCaseFact => {
-                "The fact is absent from the forum fact schema or has an invalid variant."
-            }
-            Self::MissingStake => {
-                "A reachable terminal needs a value or an explicit unvalued marker."
-            }
-            Self::VerificationFailed => {
-                "A required static verification obligation was not discharged."
-            }
-            Self::HoleInStrict => "Strict profile does not permit unresolved holes.",
-            Self::LoweringUnsupported => {
-                "The source construct has no lowering in the target litgraph schema."
-            }
-            Self::SemanticDiff => {
-                "Generated output is not semantically equal to the expected document."
-            }
-            Self::RuleWithoutTest => "A deadline or counting rule should include an inline test.",
-            Self::HolePresent => "The source explicitly leaves this value unknown.",
-        }
-    }
-
-    /// Parses a stable diagnostic code string.
-    #[must_use]
-    pub fn parse(value: &str) -> Option<Self> {
-        Some(match value {
-            "L0412" => Self::UnexpectedToken,
-            "L0002" => Self::UnterminatedLiteral,
-            "L0003" => Self::InvalidToken,
-            "L1001" => Self::DuplicateName,
-            "L1002" => Self::UnresolvedName,
-            "L1003" => Self::ImportCycle,
-            "L2001" => Self::TypeMismatch,
-            "L2002" => Self::InvalidOperation,
-            "L2003" => Self::InvalidDistribution,
-            "L3001" => Self::EffectiveOverlap,
-            "L3002" => Self::EffectiveGap,
-            "L3003" => Self::UnresolvedPrecedence,
-            "L3004" => Self::MissingDelegation,
-            "L3005" => Self::ExceptionConflict,
-            "L4001" => Self::InvalidCaseEvent,
-            "L4002" => Self::DeadlineMissed,
-            "L4003" => Self::InvalidCaseFact,
-            "L4004" => Self::MissingStake,
-            "L5001" => Self::VerificationFailed,
-            "L5002" => Self::HoleInStrict,
-            "L6001" => Self::LoweringUnsupported,
-            "L6002" => Self::SemanticDiff,
-            "L9001" => Self::RuleWithoutTest,
-            "L9002" => Self::HolePresent,
-            _ => return None,
-        })
+    pub fn is_lint(self) -> bool {
+        self.as_str().starts_with("L9")
     }
 }
 
@@ -223,13 +143,4 @@ impl<'de> Deserialize<'de> for DiagnosticCode {
 }
 
 #[cfg(test)]
-mod tests {
-    use super::DiagnosticCode;
-    #[test]
-    fn code_registry_round_trips_and_explains() {
-        let code = DiagnosticCode::MissingDelegation;
-        assert_eq!(DiagnosticCode::parse(code.as_str()), Some(code));
-        assert!(code.explain().contains("delegation"));
-        assert_eq!(DiagnosticCode::parse("L3999"), None);
-    }
-}
+mod tests;

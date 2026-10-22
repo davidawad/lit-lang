@@ -457,6 +457,7 @@ checksum = "b67d3d2e287e4b86c10b3f3b641033d1f89b74bdb39d05f34952e2b9a6fe21cd"
 dependencies = [
  "console",
  "once_cell",
+ "serde",
  "similar",
  "tempfile",
 ]
@@ -559,6 +560,8 @@ name = "litigate-cli"
 version = "0.3.0"
 dependencies = [
  "clap",
+ "litigate-base",
+ "serde_json",
 ]
 
 [[package]]
@@ -577,8 +580,10 @@ version = "0.3.0"
 name = "litigate-sema"
 version = "0.3.0"
 dependencies = [
+ "insta",
  "litigate-base",
  "serde",
+ "serde_json",
 ]
 
 [[package]]

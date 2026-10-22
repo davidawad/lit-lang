@@ -1,0 +1,129 @@
+---
+source: crates/litigate-sema/src/hir/tests.rs
+expression: "Declaration::Node(chance_node())"
+---
+{
+  "decl": "node",
+  "meta": {
+    "id": "mtd-ruling",
+    "label": "Motion to dismiss ruling",
+    "cite": "FRCP 12(b)(6)",
+    "effective": {
+      "from": "2009-12-01",
+      "to": null,
+      "known_at": "2025-01-01"
+    },
+    "authority": "FederalRule",
+    "relations": [
+      {
+        "relation": "subject_to",
+        "target": "frcp.rule6::computing-time"
+      }
+    ],
+    "span": null
+  },
+  "kind": {
+    "kind": "chance",
+    "discretion": true
+  },
+  "group": "motions",
+  "note": null,
+  "valence": null,
+  "court_listener_url": null,
+  "tags": [
+    "fact"
+  ],
+  "attrs": {},
+  "actor": "office",
+  "edges": [
+    {
+      "id": "granted",
+      "to": "dismissed",
+      "label": "Granted",
+      "actor": "office",
+      "authority": null,
+      "probability": {
+        "state": "known",
+        "value": {
+          "numerator": 1,
+          "denominator": 3
+        }
+      },
+      "hours": {
+        "numerator": 8,
+        "denominator": 1
+      },
+      "cost": null,
+      "event": null,
+      "deadline": {
+        "window": {
+          "window": "inline",
+          "length": 21,
+          "unit": "calendar"
+        },
+        "extendable": true,
+        "extension_authority": null,
+        "note": null
+      },
+      "duration": null,
+      "valence": "bad",
+      "court_listener_url": null,
+      "action_id": null,
+      "note": null,
+      "tags": [
+        "dispositive"
+      ],
+      "attrs": {},
+      "sets": [],
+      "clears": [],
+      "requires": [],
+      "forbids": [
+        "defaulted"
+      ],
+      "span": null
+    },
+    {
+      "id": null,
+      "to": "answered",
+      "label": "Granted",
+      "actor": "office",
+      "authority": null,
+      "probability": {
+        "state": "hole",
+        "value": "no calibration yet"
+      },
+      "hours": {
+        "numerator": 8,
+        "denominator": 1
+      },
+      "cost": null,
+      "event": null,
+      "deadline": {
+        "window": {
+          "window": "inline",
+          "length": 21,
+          "unit": "calendar"
+        },
+        "extendable": true,
+        "extension_authority": null,
+        "note": null
+      },
+      "duration": null,
+      "valence": "bad",
+      "court_listener_url": null,
+      "action_id": null,
+      "note": null,
+      "tags": [
+        "dispositive"
+      ],
+      "attrs": {},
+      "sets": [],
+      "clears": [],
+      "requires": [],
+      "forbids": [
+        "defaulted"
+      ],
+      "span": null
+    }
+  ]
+}

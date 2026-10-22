@@ -29,6 +29,8 @@ pub enum Obligation {
     DeadlineSatisfiable,
     /// Case events replay as legal transitions.
     CaseReplay,
+    /// Every inline `test` block's assertions hold.
+    TestsPass,
     /// Holes are listed and conform to the selected profile.
     Holes,
 }

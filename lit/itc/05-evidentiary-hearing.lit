@@ -1,0 +1,15 @@
+// Imported by `litigate import` from packs/itc-337.json.
+module itc.evidentiary-hearing
+
+import itc.post-hearing-briefing.{ post-hearing-briefing }
+import itc.{ evidentiary-hearing-group }
+
+/// imported
+state evidentiary-hearing: "Evidentiary Hearing" cite cfr210.37.b
+{
+  group evidentiary-hearing-group
+  note "'Relevant, material, and reliable evidence shall be admitted. Irrelevant, immaterial, unreliable, or unduly repetitious evidence shall be excluded' — the controlling admissibility standard, NOT the Federal Rules of Evidence. Tracks 5 U.S.C. § 556(d)'s APA formal-adjudication standard ('reliable, probative, and substantial evidence') almost word for word; the ALJ is an APA-556 presiding officer, not an Article III judge bound by the FRE. The proponent of any factual proposition bears the burden of proof (210.37(a)); objections must be timely and briefly state their grounds, with rulings on the record (210.37(e)); no formal exception to an adverse ruling is required (210.37(f))."
+  _ "Hearing concludes — evidence closed under the 'relevant, material, and reliable' standard (Rule 210.37(b); APA 556(d))" -> post-hearing-briefing {
+    authority cite cfr210.37.b
+  }
+}

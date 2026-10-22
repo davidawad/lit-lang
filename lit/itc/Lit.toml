@@ -1,0 +1,61 @@
+# Imported by `litigate import` from packs/itc-337.json.
+# in_force and authority are placeholders: legacy JSON records neither.
+[package]
+name = "itc-337"
+version = "0.1.0"
+language = 1
+pack_id = "itc-337"
+forum = "itc"
+authority = "Unclassified"
+title = "ITC Section 337 Unfair Import Investigation"
+description = "Institution → response/default → discovery (incl. CBI protective-order posture) → prehearing/summary determination → evidentiary hearing → Initial Determination → Commission petition-for-review → Commission Final Determination/remedy → Presidential (USTR) review → remedy enforcement → optional Federal Circuit appeal, under 19 U.S.C. § 1337 and 19 CFR Part 210. Direct structural counterpart to content/statecharts/mpep-prosecution.json for the non-FRCP ITC pack. Stage ids and rule refs are drawn verbatim from content/rulepacks/itc-337-pack.json."
+jurisdiction = "USITC / 19 CFR Part 210"
+in_force = "0001-01-01"
+known_at = "2026-08-26"
+counting = "itc210"
+
+[package.roles]
+applicant = "self"
+either = "nature"
+examiner = "nature"
+office = "nature"
+
+[sources.usc-1337]
+title = "19 U.S.C. § 1337 (Unfair practices in import trade)"
+url = "https://www.law.cornell.edu/uscode/text/19/1337"
+path = "sources/usc-19-1337.txt"
+
+[sources.cfr-210]
+title = "19 C.F.R. Part 210 (USITC Rules of Adjudication and Enforcement), current"
+url = "https://www.ecfr.gov/current/title-19/chapter-II/part-210"
+path = "sources/cfr-19-part210.txt"
+as_of = "2026-08-26"
+
+[sources.usc5-556]
+title = "5 U.S.C. § 556 (APA hearing procedure)"
+url = "https://www.law.cornell.edu/uscode/text/5/556"
+path = "sources/usc-additional.txt"
+
+[sources.usc28-1295]
+title = "28 U.S.C. § 1295(a)(6) (CAFC jurisdiction over ITC § 337 appeals)"
+url = "https://www.law.cornell.edu/uscode/text/28/1295"
+path = "sources/usc-additional.txt"
+
+[sources.coa-fee-schedule]
+title = "Court of Appeals Miscellaneous Fee Schedule (docketing fee $600, effective 12/1/2023)"
+url = "https://www.uscourts.gov/court-programs/fees/court-appeals-miscellaneous-fee-schedule"
+as_of = "2023-12-01"
+
+[[cite_syntax.shorthands]]
+prefix = "cfr"
+code = "cfr"
+title = 19
+section_parts = 2
+source = "cfr-210"
+
+[[cite_syntax.shorthands]]
+prefix = "usc"
+code = "usc"
+title = 19
+section_parts = 1
+source = "usc-1337"

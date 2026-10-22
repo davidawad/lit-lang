@@ -1,0 +1,41 @@
+// Imported by `litigate import` from packs/itc-337.json.
+module itc.pre-institution
+
+import itc.instituted.{ instituted }
+import itc.{ pre-institution-group }
+
+start complaint-filed
+
+/// imported
+state complaint-filed: "Complaint Filed" by office cite cfr210.10.a
+{
+  group pre-institution-group
+  note "Complainant files a Section 337 complaint with the Commission seeking a limited exclusion order, general exclusion order, and/or cease-and-desist order (19 CFR 210.12; only a complainant may file — a named respondent cannot initiate the investigation it defends). The Commission must decide within 30 days whether to institute, absent exceptional circumstances (preinstitution temporary-relief motions, complainant-requested postponement, withdrawal, or excessive confidentiality designations). No filing fee: verified against 19 CFR Part 210's filing/complaint provisions (210.4, 210.8, 210.10, 210.12) and the Commission's own complaint-filing guidance, none of which impose a fee -- unlike the district courts (28 U.S.C. § 1914) or the USPTO (fee-funded under 35 U.S.C. §§ 41-42), the Commission's Section 337 docket is funded by appropriation, not party filing fees."
+  _ "Commission reviews the complaint for institution (30-day clock, Rule 210.10(a))" -> institution-decision {
+    authority cite cfr210.10.a
+    duration { mode 30.days, max 35.days }
+    note "Duration: 19 CFR 210.10(a) requires an institution determination within 30 days of filing (35 if a motion for temporary relief is pending) -- sourced, not an estimate."
+  }
+}
+
+/// imported
+decision institution-decision: "Institution Decision" by office cite cfr210.10.a
+{
+  group pre-institution-group
+  note "Institution rate authored at 0.85 / declination at 0.15 — APPROXIMATE, not a live USITC figure; a properly pleaded, properly noticed complaint is instituted in the great majority of cases, but declination for pleading defects or excessive confidentiality designations is real and recurring."
+  _ "Commission institutes — Federal Register notice published (Rule 210.10(b))" -> instituted p 0.85 {
+    authority cite cfr210.10.b
+  }
+  _ "Commission declines to institute — complaint dismissed with written reasons (Rule 210.10(c))" -> complaint-dismissed p 0.15 {
+    authority cite cfr210.10.c
+  }
+}
+
+/// imported
+terminal complaint-dismissed: "Complaint Dismissed — Not Instituted" outcome [loss, dismissal] cite cfr210.10.c
+{
+  group pre-institution-group
+  note "The complaint is dismissed and complainant and all proposed respondents receive written notice of the reason(s). No investigation number is ever assigned. A fresh complaint curing the defect is a new matter, not modeled as a re-entry here. PLACEHOLDER PAYOFF: $0, override per matter. The complaint never reaches an investigation."
+  valence bad
+  payoff 0.usd
+}

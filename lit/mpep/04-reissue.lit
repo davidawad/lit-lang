@@ -1,0 +1,36 @@
+// Imported by `litigate import` from packs/mpep-prosecution.json.
+module mpep.reissue
+
+import mpep.{ reissue-group }
+
+/// imported
+chance reissue-pending: "Reissue Application Pending" by office discretion effective [2024-01-31, ..) cite 35 U.S.C. § 251; 37 CFR 1.171; MPEP 1401
+{
+  group reissue-group
+  note "A reissue application has been filed, surrendering the original patent. The original patent remains in force during reissue prosecution (35 U.S.C. § 252). The reissue application is examined like an original application: no new matter may be introduced (35 U.S.C. § 251, ¶ 3); broadening claims must have been filed within the 2-year window (35 U.S.C. § 251, ¶ 4). Recapture rule (MPEP 1412.02): scope surrendered by amendment or argument during original prosecution to overcome prior art cannot be reclaimed in reissue."
+  court_listener_url "https://www.courtlistener.com/opinion/214772/in-re-tanaka/"
+  _ "Reissue examination completes — reissue patent granted" -> reissue-granted p 0.7 {
+    authority cite 35 U.S.C. § 251; MPEP 1460
+  }
+  _ "Reissue abandoned (failure to reply or rejection sustained)" -> reissue-abandoned p 0.3 {
+    authority cite 35 U.S.C. § 251; 37 CFR 1.135
+    note "TRAP: abandonment of the reissue does NOT revive the original patent — both are lost."
+  }
+}
+
+/// imported
+terminal reissue-granted: "Reissue Patent Granted" outcome [win, reissue] effective [2024-01-31, ..) cite ?("35 U.S.C. § 251; § 252; MPEP 1460") {
+  group reissue-group
+  note "The reissued patent issues for the unexpired term of the original patent. The original patent is surrendered as of the reissue date. Intervening rights (35 U.S.C. § 252, ¶ 2) protect persons who, before the reissue grant, made, purchased, or used subject matter patented by the reissued claims, or made substantial preparations therefor. PLACEHOLDER PAYOFF: $1,000,000, override per matter."
+  valence good
+  payoff 1_000_000.usd
+}
+
+/// imported
+terminal reissue-abandoned: "Reissue Abandoned — Original Patent Lost" outcome [loss, reissue-abandoned, waiver-trap] effective [2024-01-31, ..) cite 35 U.S.C. § 251; 37 CFR 1.135
+{
+  group reissue-group
+  note "Reissue application abandoned for failure to reply or sustained rejection of the corrected claims. CRITICAL: the original patent was surrendered upon filing the reissue application and does NOT revive upon abandonment of the reissue. The patentee loses both the reissue and the original patent. PLACEHOLDER PAYOFF: $0, override per matter. Per this terminal's own note, the patentee loses both the reissue and the original (surrendered) patent -- worse than a typical loss, though the payoff floor here is the same $0 used for every other full loss in this project."
+  valence bad
+  payoff 0.usd
+}

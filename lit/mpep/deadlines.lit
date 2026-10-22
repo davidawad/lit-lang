@@ -1,0 +1,215 @@
+// The source pack stores fixed-day edge windows. These typed test declarations
+// exercise every legacy length against the core FRCP 6 clock.
+module mpep.deadlines
+
+import core.frcp6.{ frcp6 }
+
+event MpepAction()
+
+/// imported
+deadline edge-period-01: 365.days from MpepAction() counted_by frcp6 effective [2024-01-31, ..) cite ?("35 U.S.C. 111(b); 37 CFR 1.53(c)")
+
+test "edge-period-01 counts under core FRCP 6" {
+  given MpepAction() on 2025-01-01
+  expect deadline(edge-period-01) == 2026-01-02
+}
+
+/// imported
+deadline edge-period-02: 365.days from MpepAction() counted_by frcp6 effective [2024-01-31, ..) cite ?("35 U.S.C. 111(a); 35 U.S.C. 119(e); 37 CFR 1.53(b)")
+
+test "edge-period-02 counts under core FRCP 6" {
+  given MpepAction() on 2025-01-01
+  expect deadline(edge-period-02) == 2026-01-02
+}
+
+/// imported
+deadline edge-period-03: 60.days from MpepAction() counted_by frcp6 effective [2024-01-31, ..) cite 37 CFR 1.53(f); 37 CFR 1.16(f)
+
+test "edge-period-03 counts under core FRCP 6" {
+  given MpepAction() on 2025-01-01
+  expect deadline(edge-period-03) == 2025-03-03
+}
+
+/// imported
+deadline edge-period-04: 60.days from MpepAction() counted_by frcp6 effective [2024-01-31, ..) cite 37 CFR 1.142; 37 CFR 1.143; MPEP 818.01
+
+test "edge-period-04 counts under core FRCP 6" {
+  given MpepAction() on 2025-01-01
+  expect deadline(edge-period-04) == 2025-03-03
+}
+
+/// imported
+deadline edge-period-05: 60.days from MpepAction() counted_by frcp6 effective [2024-01-31, ..) cite 37 CFR 1.143; 37 CFR 1.144; MPEP 818.01(d)
+
+test "edge-period-05 counts under core FRCP 6" {
+  given MpepAction() on 2025-01-01
+  expect deadline(edge-period-05) == 2025-03-03
+}
+
+/// imported
+deadline edge-period-06: 90.days from MpepAction() counted_by frcp6 effective [2024-01-31, ..) cite 37 CFR 1.111; MPEP 714
+
+test "edge-period-06 counts under core FRCP 6" {
+  given MpepAction() on 2025-01-01
+  expect deadline(edge-period-06) == 2025-04-01
+}
+
+/// imported
+deadline edge-period-07: 30.days from MpepAction() counted_by frcp6 effective [2024-01-31, ..) cite 37 CFR 1.136(a); 37 CFR 1.17(a)
+
+test "edge-period-07 counts under core FRCP 6" {
+  given MpepAction() on 2025-01-01
+  expect deadline(edge-period-07) == 2025-01-31
+}
+
+/// imported
+deadline edge-period-08: 30.days from MpepAction() counted_by frcp6 effective [2024-01-31, ..) cite 37 CFR 1.111; MPEP 714
+
+test "edge-period-08 counts under core FRCP 6" {
+  given MpepAction() on 2025-01-01
+  expect deadline(edge-period-08) == 2025-01-31
+}
+
+/// imported
+deadline edge-period-09: 30.days from MpepAction() counted_by frcp6 effective [2024-01-31, ..) cite 37 CFR 1.136(a); 37 CFR 1.17(a)
+
+test "edge-period-09 counts under core FRCP 6" {
+  given MpepAction() on 2025-01-01
+  expect deadline(edge-period-09) == 2025-01-31
+}
+
+/// imported
+deadline edge-period-10: 90.days from MpepAction() counted_by frcp6 effective [2024-01-31, ..) cite 37 CFR 1.116; MPEP 714.12
+
+test "edge-period-10 counts under core FRCP 6" {
+  given MpepAction() on 2025-01-01
+  expect deadline(edge-period-10) == 2025-04-01
+}
+
+/// imported
+deadline edge-period-11: 90.days from MpepAction() counted_by frcp6 effective [2024-01-31, ..) cite 37 CFR 1.114; MPEP 706.07(h)
+
+test "edge-period-11 counts under core FRCP 6" {
+  given MpepAction() on 2025-01-01
+  expect deadline(edge-period-11) == 2025-04-01
+}
+
+/// imported
+deadline edge-period-12: 90.days from MpepAction() counted_by frcp6 effective [2024-01-31, ..) cite ?("37 CFR 41.31(a)(1); 37 CFR 1.134; MPEP 1204")
+
+test "edge-period-12 counts under core FRCP 6" {
+  given MpepAction() on 2025-01-01
+  expect deadline(edge-period-12) == 2025-04-01
+}
+
+/// imported
+deadline edge-period-13: 90.days from MpepAction() counted_by frcp6 effective [2024-01-31, ..) cite 37 CFR 1.53(b); 35 U.S.C. 120; MPEP 201.07
+
+test "edge-period-13 counts under core FRCP 6" {
+  given MpepAction() on 2025-01-01
+  expect deadline(edge-period-13) == 2025-04-01
+}
+
+/// imported
+deadline edge-period-14: 60.days from MpepAction() counted_by frcp6 effective [2024-01-31, ..) cite ?("37 CFR 41.37; MPEP 1205")
+
+test "edge-period-14 counts under core FRCP 6" {
+  given MpepAction() on 2025-01-01
+  expect deadline(edge-period-14) == 2025-03-03
+}
+
+/// imported
+deadline edge-period-15: 60.days from MpepAction() counted_by frcp6 effective [2024-01-31, ..) cite ?("37 CFR 41.37(a); MPEP 1215.04; MPEP 710.02(e)")
+
+test "edge-period-15 counts under core FRCP 6" {
+  given MpepAction() on 2025-01-01
+  expect deadline(edge-period-15) == 2025-03-03
+}
+
+/// imported
+deadline edge-period-16: 60.days from MpepAction() counted_by frcp6 effective [2024-01-31, ..) cite ?("37 CFR 41.20(b)(4); 37 CFR 41.45; MPEP 1208.01")
+
+test "edge-period-16 counts under core FRCP 6" {
+  given MpepAction() on 2025-01-01
+  expect deadline(edge-period-16) == 2025-03-03
+}
+
+/// imported
+deadline edge-period-17: 63.days from MpepAction() counted_by frcp6 effective [2024-01-31, ..) cite ?("35 U.S.C. 141; 37 CFR 90.1")
+
+test "edge-period-17 counts under core FRCP 6" {
+  given MpepAction() on 2025-01-01
+  expect deadline(edge-period-17) == 2025-03-05
+}
+
+/// imported
+deadline edge-period-18: 63.days from MpepAction() counted_by frcp6 effective [2024-01-31, ..) cite ?("35 U.S.C. 145; 37 CFR 90.3")
+
+test "edge-period-18 counts under core FRCP 6" {
+  given MpepAction() on 2025-01-01
+  expect deadline(edge-period-18) == 2025-03-05
+}
+
+/// imported
+deadline edge-period-19: 90.days from MpepAction() counted_by frcp6 effective [2024-01-31, ..) cite 37 CFR 1.311(a); 37 CFR 1.18(a); MPEP 1306
+
+test "edge-period-19 counts under core FRCP 6" {
+  given MpepAction() on 2025-01-01
+  expect deadline(edge-period-19) == 2025-04-01
+}
+
+/// imported
+deadline edge-period-20: 365.days from MpepAction() counted_by frcp6 effective [2024-01-31, ..) cite ?("35 U.S.C. 311–314; 37 CFR 42.100")
+
+test "edge-period-20 counts under core FRCP 6" {
+  given MpepAction() on 2025-01-01
+  expect deadline(edge-period-20) == 2026-01-02
+}
+
+/// imported
+deadline edge-period-21: 270.days from MpepAction() counted_by frcp6 effective [2024-01-31, ..) cite ?("35 U.S.C. 321–324; 37 CFR 42.200")
+
+test "edge-period-21 counts under core FRCP 6" {
+  given MpepAction() on 2025-01-01
+  expect deadline(edge-period-21) == 2025-09-29
+}
+
+/// imported
+deadline edge-period-22: 90.days from MpepAction() counted_by frcp6 effective [2024-01-31, ..) cite ?("37 CFR 42.107; 35 U.S.C. 313")
+
+test "edge-period-22 counts under core FRCP 6" {
+  given MpepAction() on 2025-01-01
+  expect deadline(edge-period-22) == 2025-04-01
+}
+
+/// imported
+deadline edge-period-23: 90.days from MpepAction() counted_by frcp6 effective [2024-01-31, ..) cite ?("37 CFR 42.207; 35 U.S.C. 323")
+
+test "edge-period-23 counts under core FRCP 6" {
+  given MpepAction() on 2025-01-01
+  expect deadline(edge-period-23) == 2025-04-01
+}
+
+/// imported
+deadline edge-period-24: 60.days from MpepAction() counted_by frcp6 effective [2024-01-31, ..) cite 35 U.S.C. 304; 37 CFR 1.530(b); MPEP 2249
+
+test "edge-period-24 counts under core FRCP 6" {
+  given MpepAction() on 2025-01-01
+  expect deadline(edge-period-24) == 2025-03-03
+}
+
+/// imported
+deadline edge-period-25: 730.days from MpepAction() counted_by frcp6 effective [2024-01-31, ..) cite ?("35 U.S.C. § 251, ¶ 4; MPEP 1412")
+
+test "edge-period-25 counts under core FRCP 6" {
+  given MpepAction() on 2025-01-01
+  expect deadline(edge-period-25) == 2027-01-04
+}
+
+/// imported
+deadline holiday-roll: 31.days from MpepAction() counted_by frcp6 effective [2024-01-31, ..) cite FRCP 6(a)(1)(C)
+
+test "deadline rolls across New Year holiday and weekend" {
+  given MpepAction() on 2027-12-01
+  expect deadline(holiday-roll) == 2028-01-03
+}

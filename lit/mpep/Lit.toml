@@ -1,0 +1,134 @@
+# Imported by `litigate import` from packs/mpep-prosecution.json.
+# in_force and authority are placeholders: legacy JSON records neither.
+[package]
+name = "mpep-prosecution"
+version = "0.1.0"
+language = 1
+pack_id = "mpep-prosecution"
+forum = "uspto"
+authority = "FederalRule"
+title = "U.S. Utility Patent Prosecution"
+description = "Canonical pre-filing → prosecution → appeal → issuance flowchart for a U.S. nonprovisional utility application. MPEP and 37 CFR citations verified against live USPTO/eCFR sources (2024-07-01 edition). Walk mode teaches the RCE-vs-appeal fork economics, the unextendable 6-month ceiling, and abandonment-as-permadeath."
+jurisdiction = "USPTO / MPEP"
+in_force = "2024-01-31"
+known_at = "2026-10-22"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[package.roles]
+applicant = "self"
+either = "nature"
+examiner = "nature"
+office = "nature"
+
+[sources.usc35-111]
+title = "35 U.S.C. § 111 (Application)"
+url = "https://www.law.cornell.edu/uscode/text/35/111"
+path = "sources/usc-cfr-prosecution-fragments.txt"
+
+[sources.usc35-132]
+title = "35 U.S.C. § 132 (Notice of rejection; reexamination)"
+url = "https://www.law.cornell.edu/uscode/text/35/132"
+path = "sources/usc-cfr-prosecution-fragments.txt"
+
+[sources.usc35-133]
+title = "35 U.S.C. § 133 (Time for prosecuting application)"
+url = "https://www.law.cornell.edu/uscode/text/35/133"
+path = "sources/usc-cfr-prosecution-fragments.txt"
+
+[sources.usc35-134]
+title = "35 U.S.C. § 134 (Appeal to the Patent Trial and Appeal Board)"
+url = "https://www.law.cornell.edu/uscode/text/35/134"
+path = "sources/usc-additional.txt"
+
+[sources.usc35-151]
+title = "35 U.S.C. § 151 (Issue of patent)"
+url = "https://www.law.cornell.edu/uscode/text/35/151"
+path = "sources/usc-cfr-prosecution-fragments.txt"
+
+[sources.usc35-154]
+title = "35 U.S.C. § 154 (Contents and term of patent)"
+url = "https://www.law.cornell.edu/uscode/text/35/154"
+path = "sources/usc-additional.txt"
+cite_prefixes = ["35 U.S.C."]
+section_heading = "35 U.S.C. § {n}"
+
+[sources.usc35-251]
+title = "35 U.S.C. § 251 (Reissue of defective patents)"
+url = "https://www.law.cornell.edu/uscode/text/35/251"
+path = "sources/usc-additional.txt"
+
+[sources.usc35-304]
+title = "35 U.S.C. § 304 (Ex parte reexamination order; owner statement)"
+url = "https://www.law.cornell.edu/uscode/text/35/304"
+path = "sources/usc-additional.txt"
+
+[sources.mpep-0700]
+title = "MPEP Chapter 700 -- Examination of Applications (9th ed., Rev. 01.2024)"
+url = "https://www.uspto.gov/web/offices/pac/mpep/mpep-0700.pdf"
+path = "sources/mpep.txt"
+sha256 = "bb3e9e43f169ae0fc5c84126c4fad8614b064187743d74ff404c3088ef643047"
+as_of = "2024-01-31"
+cite_prefixes = ["MPEP"]
+section_heading = "MPEP § {n}"
+
+[sources.mpep-1200]
+title = "MPEP Chapter 1200 -- Appeal (9th ed., Rev. 01.2024)"
+url = "https://www.uspto.gov/web/offices/pac/mpep/mpep-1200.pdf"
+path = "sources/mpep.txt"
+sha256 = "1cd10af8745143604b548231887b6ed90c2f734b0b109f6cacfe212c50d7fa8a"
+as_of = "2024-01-31"
+
+[sources.mpep-1300]
+title = "MPEP Chapter 1300 -- Allowance and Issue (9th ed., Rev. 01.2024)"
+url = "https://www.uspto.gov/web/offices/pac/mpep/mpep-1300.pdf"
+path = "sources/mpep.txt"
+sha256 = "4b16e0071ed2d41cf7e35691902b2b3a4409af994bb223f098d03ac96c4b4787"
+as_of = "2024-01-31"
+
+[sources.mpep-1400]
+title = "MPEP Chapter 1400 -- Correction of Patents (9th ed., Rev. 01.2024)"
+url = "https://www.uspto.gov/web/offices/pac/mpep/mpep-1400.pdf"
+path = "sources/mpep.txt"
+sha256 = "41252e1ccdec27ce787dc8242a4f9026b8080bb7756c5a6e0c5bde2b50271420"
+as_of = "2024-01-31"
+
+[sources.cfr-37-patents]
+title = "37 C.F.R. Part 1 (Rules of Practice in Patent Cases) et al. -- USPTO Consolidated Patent Rules"
+url = "https://www.uspto.gov/web/offices/pac/mpep/consolidated_rules.pdf"
+path = "sources/cfr-37-part1.txt"
+sha256 = "54c190418121ba3ede5240a1b1466522e48b08a95129caf2d7825e5acd5a6f89"
+as_of = "2026-01-01"
+cite_prefixes = ["37 CFR", "37 C.F.R."]
+section_heading = "37 C.F.R. § {n}"
+
+[sources.cfr-42-cite]
+title = "37 C.F.R. Part 42 (PTAB trial practice, for AIA-trial cross-references from prosecution)"
+url = "https://www.ecfr.gov/current/title-37/chapter-I/subchapter-A/part-42"
+path = "sources/cfr-37-part42.txt"
+
+[sources.usc35-312]
+title = "35 U.S.C. § 312 (Petitions for inter partes review)"
+url = "https://www.law.cornell.edu/uscode/text/35/312"
+path = "sources/usc-additional.txt"
+
+[sources.cfr-37-part41-cite]
+title = "37 C.F.R. Part 41 (Board of Patent Appeals and Interferences / PTAB ex parte appeal rules)"
+url = "https://www.ecfr.gov/current/title-37/chapter-I/subchapter-A/part-41"
+path = "sources/cfr-37-part41.txt"
+
+[sources.uspto-fee-schedule]
+title = "USPTO Fee Schedule (patent filing, search, examination, RCE, extension, appeal, issue, revival, maintenance, and reissue fees; regular/undiscounted, effective 1/19/2025)"
+url = "https://www.uspto.gov/learning-and-resources/fees-and-payment/uspto-fee-schedule"
+as_of = "2025-01-19"
+
+[sources.cfr37-4215]
+title = "37 C.F.R. § 42.15 (PTAB IPR/PGR request, post-institution, and per-excess-claim fees, effective/last-amended 1/14/2025)"
+url = "https://www.law.cornell.edu/cfr/text/37/42.15"
+as_of = "2025-01-14"
+
+[[cite_syntax.rules]]
+prefixes = ["MPEP"]
+heading = "MPEP § {}"
+source = "mpep-0700"

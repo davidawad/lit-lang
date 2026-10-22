@@ -1,6 +1,6 @@
 //! One module per subcommand; [`dispatch`] routes the parsed command.
 mod build;
-mod check;
+pub(crate) mod check;
 mod diff;
 mod explain;
 mod fix;

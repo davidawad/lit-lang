@@ -29,12 +29,15 @@ pub mod span;
 pub mod verdict;
 pub mod ws;
 
+pub use cmd::check::{check_session, Checked};
+
 use clap::Parser;
 use cli::{Cli, Format};
 use out::Printed;
 use std::ffi::OsString;
 use std::io::{IsTerminal, Write};
-use std::process::ExitCode;
+use std::path::PathBuf;
+use std::process::{Command, ExitCode};
 use std::time::Instant;
 
 /// Parses `args` (including the program name), runs the command, and
@@ -86,26 +89,42 @@ where
 {
     let args: Vec<OsString> = args.into_iter().map(Into::into).collect();
     if args.get(1).is_some_and(|arg| arg == "lsp") {
-        if args.get(2).is_some_and(|arg| arg == "--stdio") && args.len() == 3 {
-            let runtime = match tokio::runtime::Builder::new_multi_thread()
-                .enable_all()
-                .build()
-            {
-                Ok(runtime) => runtime,
-                Err(error) => {
-                    eprintln!("failed to start LSP runtime: {error}");
-                    return ExitCode::FAILURE;
-                }
-            };
-            runtime.block_on(litigate_lsp::run_stdio());
-            return ExitCode::SUCCESS;
-        }
-        eprintln!("usage: litigate lsp --stdio");
-        return ExitCode::from(1);
+        return lsp(&args[2..]);
     }
     let printed = execute(args);
     // A closed pipe cannot be reported anywhere; the exit code still is.
     let _ = std::io::stdout().write_all(printed.stdout.as_bytes());
     let _ = std::io::stderr().write_all(printed.stderr.as_bytes());
     ExitCode::from(printed.code)
+}
+
+/// `litigate lsp --stdio` (SPEC §9.3): the `litigate-lsp` server, which
+/// links this library (so it cannot be linked into it), run from beside
+/// this binary (else from `PATH`) with stdio inherited.
+fn lsp(args: &[OsString]) -> ExitCode {
+    if args != ["--stdio"] {
+        eprintln!("usage: litigate lsp --stdio");
+        return ExitCode::from(1);
+    }
+    let name = format!("litigate-lsp{}", std::env::consts::EXE_SUFFIX);
+    let program = std::env::current_exe()
+        .ok()
+        .and_then(|exe| Some(exe.parent()?.join(&name)))
+        .filter(|path| path.is_file())
+        .unwrap_or_else(|| PathBuf::from(&name));
+    match Command::new(&program).arg("--stdio").status() {
+        Ok(status) => ExitCode::from(
+            status
+                .code()
+                .and_then(|c| u8::try_from(c).ok())
+                .unwrap_or(1),
+        ),
+        Err(error) => {
+            eprintln!(
+                "litigate lsp: cannot run `{}`: {error} (install it with `cargo install --path crates/litigate-lsp`)",
+                program.display()
+            );
+            ExitCode::from(1)
+        }
+    }
 }

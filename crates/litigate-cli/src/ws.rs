@@ -381,7 +381,9 @@ impl Session {
     }
 }
 
-fn package(db: &LitDatabase, input: PackageInput, requested: &BTreeSet<String>) -> Pkg {
+/// One package input as loaded: its sema check, files, and digest.
+#[must_use]
+pub fn package(db: &LitDatabase, input: PackageInput, requested: &BTreeSet<String>) -> Pkg {
     let root = input.root(db).clone();
     let check = litigate_sema::db::queries::check_package(db, input).clone();
     let manifest = parse_manifest(input.manifest_text(db)).ok();

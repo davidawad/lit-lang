@@ -944,7 +944,6 @@ dependencies = [
  "litigate-base",
  "litigate-import",
  "litigate-lower",
- "litigate-lsp",
  "litigate-sema",
  "litigate-syntax",
  "litigate-verify",
@@ -953,7 +952,6 @@ dependencies = [
  "serde",
  "serde_json",
  "sha2",
- "tokio",
 ]
 
 [[package]]
@@ -1002,8 +1000,17 @@ dependencies = [
 name = "litigate-lsp"
 version = "0.3.0"
 dependencies = [
+ "insta",
+ "litgraph",
  "litigate-base",
+ "litigate-cli",
+ "litigate-lower",
+ "litigate-sema",
  "litigate-syntax",
+ "proptest",
+ "rowan",
+ "salsa",
+ "serde_json",
  "tokio",
  "tower-lsp",
 ]

@@ -128,6 +128,7 @@ syntax_kinds! {
         KwRebuts = "rebuts", KwUndercuts = "undercuts", KwPriority = "priority",
         KwUnless = "unless", KwOtherwise = "otherwise", KwGiven = "given",
         KwExpect = "expect", KwTrue = "true", KwFalse = "false", KwUnit = "unit",
+        KwUrl = "url",
     }
     nodes {
         SourceFile => "Root of a `.lit` module.",

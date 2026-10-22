@@ -121,7 +121,10 @@ impl<'a> Scope<'a> {
         let mut report = Report::new(
             C::UnresolvedName,
             name.range,
-            format!("cannot find {what} `{}`", name.text),
+            match what.split_once(" in ") {
+                Some((noun, place)) => format!("cannot find {noun} `{}` in {place}", name.text),
+                None => format!("cannot find {what} `{}`", name.text),
+            },
         );
         if let Some(best) = suggest::nearest(&name.text, candidates.iter().copied()) {
             report = report
@@ -297,6 +300,27 @@ impl<'a> Scope<'a> {
                 Some(TypeSig::Enum(v)) => Some(v.as_slice()),
                 _ => None,
             })
+    }
+
+    /// Canonical names of visible enums whose variants include every key
+    /// (the enum a `Dist` record literal denotes).
+    #[must_use]
+    pub fn enums_covering(&self, keys: &[&str]) -> Vec<String> {
+        let mut out: Vec<String> = std::iter::once(self.own)
+            .chain(self.bindings.iter().map(|b| b.sig))
+            .flat_map(|s| s.types.iter().map(move |(n, t)| (s, n, t)))
+            .filter_map(|(s, n, t)| match t {
+                TypeSig::Enum(v)
+                    if !keys.is_empty() && keys.iter().all(|k| v.iter().any(|x| x == k)) =>
+                {
+                    Some(self.canonical(s, n))
+                }
+                _ => None,
+            })
+            .collect();
+        out.sort();
+        out.dedup();
+        out
     }
 
     /// Checks a group name.

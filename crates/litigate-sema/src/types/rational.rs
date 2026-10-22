@@ -12,6 +12,8 @@ pub enum ArithError {
     DivisionByZero,
     /// `%` on a non-integer operand.
     NonInteger,
+    /// A money or day result that is not a whole number of units.
+    Inexact,
 }
 
 impl ArithError {
@@ -22,6 +24,7 @@ impl ArithError {
             Self::Overflow => "exact arithmetic overflowed",
             Self::DivisionByZero => "division by zero",
             Self::NonInteger => "`%` needs integer operands",
+            Self::Inexact => "the exact result is not a whole number of minor units or days",
         }
     }
 }

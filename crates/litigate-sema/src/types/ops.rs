@@ -225,7 +225,7 @@ fn int(r: Rational) -> Result<i64, ArithError> {
     if r.denominator == 1 {
         Ok(r.numerator)
     } else {
-        Err(ArithError::NonInteger)
+        Err(ArithError::Inexact)
     }
 }
 
@@ -360,7 +360,7 @@ mod tests {
         assert_eq!(fold(BinaryOp::Mul, &usd(100), &n(3)), Ok(Some(usd(300))));
         assert_eq!(
             fold(BinaryOp::Div, &usd(100), &n(3)),
-            Err(ArithError::NonInteger)
+            Err(ArithError::Inexact)
         );
         assert_eq!(
             fold(BinaryOp::Div, &n(1), &n(0)),

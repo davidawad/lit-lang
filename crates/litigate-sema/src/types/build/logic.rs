@@ -158,11 +158,12 @@ impl Cx<'_, '_> {
                                 rhs: *rhs,
                             });
                         }
-                        _ => self.report(Report::new(
+                        _ if ch.ty.is_some() => self.report(Report::new(
                             C::TypeMismatch,
                             e.range,
                             "`expect` takes a comparison such as `deadline(d) == 2025-03-24`",
                         )),
+                        _ => {}
                     }
                 }
             }

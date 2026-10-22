@@ -344,7 +344,27 @@ impl<'s, 'a> Checker<'s, 'a> {
                 }
             },
             Err(report) => {
-                let report = self.hyphen_fix(path, report);
+                let report = match expected {
+                    Some(Type::Named(en))
+                        if path.is_simple() && self.scope.enum_variants(en).is_some() =>
+                    {
+                        let variants = self.scope.enum_variants(en).unwrap_or_default();
+                        let mut r2 = Report::new(
+                            C::TypeMismatch,
+                            r,
+                            format!("expected a `{en}` variant, found `{}`", path.head.text),
+                        )
+                        .note(format!("variants: {}", variants.join(", ")));
+                        if let Some(best) = crate::resolve::suggest::nearest(
+                            &path.head.text,
+                            variants.iter().map(String::as_str),
+                        ) {
+                            r2 = r2.fix(r, best, Applicability::MaybeIncorrect);
+                        }
+                        r2
+                    }
+                    _ => self.hyphen_fix(path, report),
+                };
                 self.report(report);
                 self.error(r)
             }

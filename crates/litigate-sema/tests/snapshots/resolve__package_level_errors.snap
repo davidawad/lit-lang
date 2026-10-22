@@ -1,0 +1,12 @@
+---
+source: crates/litigate-sema/tests/resolve.rs
+expression: "render(&db, ws)"
+---
+[
+    "pkgs/demo/Lit.toml:18:1 L1006 dependency `missing` was not found (check its `path`)",
+    "pkgs/demo/one.lit:2:9 L1005 package name `other` disagrees with Lit.toml (`demo`) [fix: \"demo\"]",
+    "pkgs/demo/one.lit:2:39 L1005 package authority `Statute` disagrees with Lit.toml (`FederalRule`) [fix: \"FederalRule\"]",
+    "pkgs/demo/one.lit:4:17 L1009 actor `Judge` is not declared in `[package.roles]`",
+    "pkgs/demo/two.lit:2:1 L1008 a package has exactly one `start`",
+    "pkgs/demo/two.lit:4:7 L1001 `s2` is also declared in module `one`",
+]

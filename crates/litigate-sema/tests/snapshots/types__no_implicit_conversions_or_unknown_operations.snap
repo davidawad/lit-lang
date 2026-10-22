@@ -1,0 +1,10 @@
+---
+source: crates/litigate-sema/tests/types.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:10:16 L2001 expected `Bool`, found `Number`",
+    "pkgs/demo/main.lit:11:16 L2002 operator `<` is not defined for `Bool` and `Bool`",
+    "pkgs/demo/main.lit:12:24 L2002 operator `+` is not defined for `String` and `String`",
+    "pkgs/demo/main.lit:13:16 L2002 operator `!` is not defined for `Number`",
+]

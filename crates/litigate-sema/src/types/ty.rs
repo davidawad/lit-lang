@@ -162,10 +162,11 @@ pub fn resolve(scope: &Scope<'_>, t: &TypeRef, reports: &mut Vec<Report>) -> Opt
             }
         }
         _ => {
-            if !arity(t, 0, reports) {
+            let resolved = scope.user_type(&t.name, &BUILTINS);
+            if resolved.is_ok() && !arity(t, 0, reports) {
                 return None;
             }
-            match scope.user_type(&t.name, &BUILTINS) {
+            match resolved {
                 Ok((canonical, found)) => match found.item {
                     TypeSig::Alias(target) => target.clone(),
                     TypeSig::Enum(_) | TypeSig::Event(_) => Some(Type::Named(canonical)),

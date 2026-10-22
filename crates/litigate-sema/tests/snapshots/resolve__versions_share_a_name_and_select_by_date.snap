@@ -1,0 +1,9 @@
+---
+source: crates/litigate-sema/tests/resolve.rs
+expression: "render(&db, ws)"
+---
+[
+    "pkgs/demo/main.lit:10:10 L1001 `q` is already declared in this module",
+    "pkgs/demo/main.lit:12:23 L1002 no version of `p` takes effect on 1999-01-01",
+    "pkgs/demo/main.lit:12:49 L3008 `p` must name a version (`p@YYYY-MM-DD`)",
+]

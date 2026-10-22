@@ -172,8 +172,42 @@ fn deadline_ref(c: &mut Checker<'_, '_>, arg: &Expr) -> Option<hir::Expr> {
     }
 }
 
+/// Infers a `Dist` argument; a record literal is typed by the unique
+/// visible enum whose variants include all its keys.
+fn dist_arg(c: &mut Checker<'_, '_>, arg: &Expr) -> Checked {
+    let ExprKind::Record(fields) = &arg.kind else {
+        return c.infer(arg);
+    };
+    let keys: Vec<&str> = fields.iter().map(|(n, _)| n.text.as_str()).collect();
+    match c.scope.enums_covering(&keys).as_slice() {
+        [en] => super::shape::distribution(c, fields, en, arg.range),
+        [] => {
+            c.report(
+                Report::new(
+                    C::InvalidDistribution,
+                    arg.range,
+                    "no visible enum has these variants",
+                )
+                .note("a `Dist` literal names every variant of one enum"),
+            );
+            c.error(arg.range)
+        }
+        many => {
+            c.report(Report::new(
+                C::TypeMismatch,
+                arg.range,
+                format!(
+                    "ambiguous distribution: enums {} all have these variants",
+                    many.join(", ")
+                ),
+            ));
+            c.error(arg.range)
+        }
+    }
+}
+
 fn dist_call(c: &mut Checker<'_, '_>, name: &str, args: &[Expr], r: TextRange) -> Checked {
-    let d = c.infer(&args[0]);
+    let d = dist_arg(c, &args[0]);
     let en = match &d.ty {
         Some(Type::Distribution(en)) => en.clone(),
         Some(other) => {

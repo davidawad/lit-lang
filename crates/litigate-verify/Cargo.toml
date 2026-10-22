@@ -7,6 +7,13 @@ publish.workspace = true
 
 [dependencies]
 serde.workspace = true
+litigate-base = { path = "../litigate-base" }
+litigate-sema = { path = "../litigate-sema" }
+litigate-lower = { path = "../litigate-lower" }
+litgraph = { path = "../litgraph" }
+
+[dev-dependencies]
+insta = { workspace = true, features = ["json"] }
 
 [lints]
 workspace = true

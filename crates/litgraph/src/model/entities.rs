@@ -172,6 +172,8 @@ pub struct PackMeta {
     pub title: String,
     /// Forum key.
     pub forum: Option<String>,
+    /// Authored deadline-counting rule id.
+    pub counting: Option<String>,
     /// Jurisdiction.
     pub jurisdiction: Option<String>,
     /// Schema version.

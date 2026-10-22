@@ -24,7 +24,7 @@ fn pack(json: serde_json::Value) -> (String, String) {
 /// a no-deadline edge, and a non-integer-length edge.
 fn frcp_pack() -> (String, String) {
     pack(json!({
-        "schemaVersion": 2, "id": "frcp-test", "title": "FRCP test", "startNodeId": "trigger",
+        "schemaVersion": 3, "counting": "frcp6", "id": "frcp-test", "title": "FRCP test", "startNodeId": "trigger",
         "nodes": [
             {"id": "trigger", "kind": "state", "label": "Trigger"},
             {"id": "due", "kind": "state", "label": "Due"},
@@ -63,7 +63,7 @@ fn mystery_pack() -> (String, String) {
 /// should still resolve to `Rcfc6` (forum takes priority over id).
 fn explicit_forum_pack() -> (String, String) {
     pack(json!({
-        "schemaVersion": 2, "id": "custom-id-cofc", "forum": "cofc",
+        "schemaVersion": 3, "counting": "rcfc6", "id": "custom-id-cofc", "forum": "cofc",
         "title": "Explicit forum", "startNodeId": "trigger",
         "nodes": [
             {"id": "trigger", "kind": "state", "label": "Trigger"},
@@ -81,7 +81,7 @@ fn explicit_forum_pack() -> (String, String) {
 /// `ruleset_for_edge` (keyed by the *origin* node's pack — here `frcp-link-origin`).
 fn link_origin_pack() -> (String, String) {
     pack(json!({
-        "schemaVersion": 2, "id": "frcp-link-origin", "title": "Origin", "startNodeId": "leaves",
+        "schemaVersion": 3, "counting": "frcp6", "id": "frcp-link-origin", "title": "Origin", "startNodeId": "leaves",
         "nodes": [{"id": "leaves", "kind": "state", "label": "Leaves"}],
         "edges": []
     }))
@@ -219,7 +219,7 @@ fn edge_mode_errors_when_the_edge_has_no_deadline() {
 }
 
 #[test]
-fn edge_mode_errors_on_unresolvable_rule_set() {
+fn edge_mode_reports_unresolvable_counting_as_a_warning() {
     let c = catalog(vec![mystery_pack()]);
     let resp = handle(
         &deadlines_req(
@@ -228,8 +228,12 @@ fn edge_mode_errors_on_unresolvable_rule_set() {
         ),
         &c,
     );
-    assert!(!resp.ok);
-    assert!(resp.error.unwrap().message.contains("no known"));
+    assert!(resp.ok, "{resp:?}");
+    assert_eq!(resp.result.unwrap()["count"], json!(0));
+    assert!(resp
+        .warnings
+        .iter()
+        .any(|w| w.code == "deadline-uncomputable"));
 }
 
 #[test]

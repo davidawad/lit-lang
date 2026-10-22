@@ -69,79 +69,9 @@ pub fn compute_hour_deadline(
     general::compute_hour_deadline(dl, rule_set, cfg)
 }
 
-/// Best-effort guess of which [`RuleSet`] governs a pack, from its `forum`
-/// key (preferred) or, failing that, a substring of its pack id. Returns
-/// `None` if nothing matches, so the caller can warn instead of guessing
-/// silently.
-#[must_use]
-pub fn ruleset_for_forum(forum: Option<&str>, pack_id: &str) -> Option<RuleSet> {
-    if let Some(f) = forum {
-        match f {
-            "cofc" => return Some(RuleSet::Rcfc6),
-            "cafc" | "frap" => return Some(RuleSet::Frap26),
-            "itc" => return Some(RuleSet::Itc210),
-            "frcp" => return Some(RuleSet::Frcp6),
-            // TTAB periods are counted in calendar days with a weekend/holiday roll
-            // (37 C.F.R. § 2.196), the same arithmetic as FRCP 6(a)(1).
-            "ttab" => return Some(RuleSet::Frcp6),
-            _ => {}
-        }
-    }
-    let id = pack_id.to_lowercase();
-    if id.contains("cofc") {
-        Some(RuleSet::Rcfc6)
-    } else if id.contains("frap") || id.contains("cafc") {
-        Some(RuleSet::Frap26)
-    } else if id.contains("itc") {
-        Some(RuleSet::Itc210)
-    } else if id.contains("frcp") {
-        Some(RuleSet::Frcp6)
-    } else {
-        None
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    #[test]
-    fn ruleset_from_forum_key() {
-        assert_eq!(
-            ruleset_for_forum(Some("cofc"), "cofc"),
-            Some(RuleSet::Rcfc6)
-        );
-        assert_eq!(
-            ruleset_for_forum(Some("cafc"), "cafc"),
-            Some(RuleSet::Frap26)
-        );
-        assert_eq!(
-            ruleset_for_forum(Some("itc"), "itc-337"),
-            Some(RuleSet::Itc210)
-        );
-        assert_eq!(
-            ruleset_for_forum(Some("ttab"), "ttab-trademark-trial-and-appeal-board"),
-            Some(RuleSet::Frcp6)
-        );
-    }
-
-    #[test]
-    fn ruleset_from_pack_id_when_forum_absent() {
-        assert_eq!(
-            ruleset_for_forum(None, "frcp-civil-procedure"),
-            Some(RuleSet::Frcp6)
-        );
-        assert_eq!(
-            ruleset_for_forum(None, "frap-appellate-procedure"),
-            Some(RuleSet::Frap26)
-        );
-        assert_eq!(ruleset_for_forum(None, "itc-337"), Some(RuleSet::Itc210));
-    }
-
-    #[test]
-    fn ruleset_unknown_for_unrelated_pack() {
-        assert_eq!(ruleset_for_forum(None, "mpep-prosecution"), None);
-    }
 
     #[test]
     fn dispatch_routes_itc_to_the_itc_module() {

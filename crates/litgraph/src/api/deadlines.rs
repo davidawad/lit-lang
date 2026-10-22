@@ -31,17 +31,8 @@ struct Ctx {
     clerk_inaccessible: bool,
 }
 
-fn pack_forum<'a>(g: &'a Graph, pack_id: &str) -> Option<&'a str> {
-    g.packs
-        .iter()
-        .find(|p| p.id == pack_id)
-        .and_then(|p| p.forum.as_deref())
-}
-
-/// The rule set that governs `e`'s pack. A cross-pack link edge is keyed by
-/// its *origin* node's pack — no pack edge currently authors a `deadline`
-/// on a `links.json` entry, so this is an untested-in-practice fallback,
-/// documented rather than silently guessed.
+/// Resolve the authored counting rule for `e`'s pack. A cross-pack link
+/// edge is keyed by its origin node's pack.
 fn ruleset_for_edge(g: &Graph, e: EdgeIx) -> Option<RuleSet> {
     let edge = &g.edges[e];
     let pack_id: &str = if edge.link {
@@ -49,7 +40,19 @@ fn ruleset_for_edge(g: &Graph, e: EdgeIx) -> Option<RuleSet> {
     } else {
         &edge.pack
     };
-    clock::ruleset_for_forum(pack_forum(g, pack_id), pack_id)
+    let counting = g
+        .packs
+        .iter()
+        .find(|p| p.id == pack_id)?
+        .counting
+        .as_deref()?;
+    match counting {
+        "frcp6" | "ttab-calendar" => Some(RuleSet::Frcp6),
+        "rcfc6" => Some(RuleSet::Rcfc6),
+        "frap26" => Some(RuleSet::Frap26),
+        "itc210" => Some(RuleSet::Itc210),
+        _ => None,
+    }
 }
 
 fn unit_of(d: &PackDeadline) -> Result<Unit> {
@@ -106,7 +109,7 @@ fn compute_for_edge(g: &Graph, e: EdgeIx, ctx: &Ctx) -> Result<Value> {
         .ok_or_else(|| Error::Invalid(format!("edge {} has no deadline", edge.id)))?;
     let rs = ruleset_for_edge(g, e).ok_or_else(|| {
         Error::Invalid(format!(
-            "edge {}: no known FRCP/RCFC/FRAP/ITC rule set for pack {:?} (forum unrecognized)",
+            "edge {}: pack {:?} has no recognized authored counting rule",
             edge.id, edge.pack
         ))
     })?;
@@ -165,6 +168,19 @@ pub(super) fn deadlines_op(g: &Graph, a: &DeadlinesArgs) -> Result<(Value, Vec<W
 
     if let Some(r) = a.edge {
         let e = g.edge(r)?;
+        if ruleset_for_edge(g, e).is_none() {
+            return Ok((
+                json!({ "trigger": a.trigger, "count": 0, "deadlines": [] }),
+                vec![Warn {
+                    code: "deadline-uncomputable".into(),
+                    at: Some(g.edges[e].id.clone()),
+                    message: format!(
+                        "pack {:?} has no recognized authored counting rule",
+                        g.edges[e].pack
+                    ),
+                }],
+            ));
+        }
         let v = compute_for_edge(g, e, &ctx)?;
         return Ok((
             json!({ "trigger": a.trigger, "count": 1, "deadlines": [v] }),

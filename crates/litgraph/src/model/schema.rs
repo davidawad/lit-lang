@@ -245,6 +245,11 @@ pub struct Pack {
     /// Short forum key (`cofc`, `cafc`, ...).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub forum: Option<String>,
+    /// Id of the deadline-counting rule used by this pack (schema v3).
+    /// The id is resolved from authored pack data, never inferred from the
+    /// forum name.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub counting: Option<String>,
     /// Where walks and default analyses begin.
     pub start_node_id: String,
     /// Node groups.
@@ -270,7 +275,7 @@ impl Pack {
     /// `schemaVersion`.
     pub fn from_json(text: &str) -> Result<Pack> {
         let pack: Pack = serde_json::from_str(text).map_err(|e| Error::Parse(e.to_string()))?;
-        if pack.schema_version != 1 && pack.schema_version != 2 {
+        if pack.schema_version != 1 && pack.schema_version != 2 && pack.schema_version != 3 {
             return Err(Error::Parse(format!(
                 "pack {}: unsupported schemaVersion {}",
                 pack.id, pack.schema_version

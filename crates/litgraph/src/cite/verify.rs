@@ -221,6 +221,7 @@ mod tests {
             description: None,
             jurisdiction: None,
             forum: None,
+            counting: None,
             start_node_id: nodes.first().map_or_else(|| "n1".into(), |n| n.id.clone()),
             groups: vec![],
             roles: std::collections::BTreeMap::new(),

@@ -200,6 +200,7 @@ impl Graph {
             id: pack.id.clone(),
             title: pack.title.clone(),
             forum: pack.forum.clone(),
+            counting: pack.counting.clone(),
             jurisdiction: pack.jurisdiction.clone(),
             schema_version: pack.schema_version,
             start,

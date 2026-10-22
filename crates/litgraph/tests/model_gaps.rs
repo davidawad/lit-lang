@@ -180,7 +180,7 @@ fn edge_at_resolves_directly_by_id_before_falling_back_to_label() {
 #[test]
 fn pack_from_json_rejects_an_unsupported_schema_version() {
     let err = Pack::from_json(
-        r#"{"schemaVersion": 3, "id": "x", "title": "T", "startNodeId": "s",
+        r#"{"schemaVersion": 4, "id": "x", "title": "T", "startNodeId": "s",
             "nodes": [{"id": "s", "label": "S", "kind": "terminal", "payoff": 1.0}], "edges": []}"#,
     )
     .unwrap_err();

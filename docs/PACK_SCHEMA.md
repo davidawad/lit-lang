@@ -1,10 +1,10 @@
-# Pack schema (v2)
+# Pack schema (v3)
 
 A **pack** is one forum's procedure as a directed graph: nodes are procedural
 postures, edges are transitions (moves, rulings, draws). Packs are JSON files in
 `packs/`. v1 packs (the civ-pro-the-gathering statechart format) load unchanged;
-v2 adds the fields marked **v2** below. Every v2 field is optional so a v1 file
-is a valid v2 file with `schemaVersion: 1`.
+v2 adds the fields marked **v2** below; v3 adds the optional counting-rule
+reference below. Every added field is optional, so older files remain valid.
 
 The engine never guesses silently. Anything it has to infer (a payoff from a
 label, a uniform draw where probabilities are missing, an elapsed time from a
@@ -16,10 +16,11 @@ are fallbacks.
 
 | field | type | notes |
 |---|---|---|
-| `schemaVersion` | `1` or `2` | |
+| `schemaVersion` | `1`, `2`, or `3` | |
 | `id` | string | pack id, also the namespace prefix when composing (`cofc::complaint-filed`) |
 | `title`, `description`, `jurisdiction` | string | |
 | `forum` | string | **v2** short forum key: `frcp`, `frap`, `cafc`, `cofc`, `ptab`, `itc`, `uspto`, ... |
+| `counting` | string | **v3** authored deadline-counting rule id. Supported ids are `frcp6`, `rcfc6`, `frap26`, `itc210`, and `ttab-calendar`. The `deadlines` op resolves this field rather than inferring clock behavior from `forum` or pack id. Missing or unknown ids produce the structured `deadline-uncomputable` warning. |
 | `startNodeId` | node id | where walks and default analyses begin |
 | `groups` | `[{id,label}]` | visual/hierarchical clustering |
 | `roles` | object | **v2** actor → role mapping, see below |
@@ -48,7 +49,7 @@ are fallbacks.
 | `from`, `to`, `label` | string | |
 | `actor` | `applicant` \| `examiner` \| `office` \| `either` | v1 vocabulary kept for compatibility. Interpreted through `roles` |
 | `authority` | string | the rule/statute that authorizes or compels this transition |
-| `deadline` | `{length, unit?, extendable?, extensionAuthority?, note?}` | `length` in days. **v2** `unit`: `calendar` (default) or `court` (court days). The `deadlines` API op turns this into a concrete due date from a trigger date, choosing `FRCP 6`/`RCFC 6`/`FRAP 26`/`19 CFR 210.6(a)` by the pack's `forum` (see `docs/ARCHITECTURE.md`'s "Deadline clock") |
+| `deadline` | `{length, unit?, extendable?, extensionAuthority?, note?}` | `length` in days. **v2** `unit`: `calendar` (default) or `court` (court days). The `deadlines` API op turns this into a concrete due date from a trigger date using the pack's v3 `counting` reference (see `docs/ARCHITECTURE.md`'s "Deadline clock") |
 | `duration` | `{min?, mode, max?}` days | **v2** expected elapsed calendar time for this transition. Distinct from `deadline` (a window you must act inside). If absent the engine falls back to `deadline.length` and says so |
 | `cost` | USD | out-of-pocket fees (filing fees, USPTO fees, bonds) |
 | `hours` | number | attorney hours to execute (self/opponent moves only) |

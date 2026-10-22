@@ -213,10 +213,11 @@ Circuit; shares FRCP 6(a)(1)'s day-counting mechanics but a different
 service-method set for its 3-day extension), and `19 CFR 210.6(a)` (ITC
 Section 337 — a genuinely different algorithm: a business-day anchor and
 business-day counting for periods under 7 days). The `deadlines` API op
-resolves which rule set governs from the owning pack's `forum` (or, failing
-that, its id) and returns the due date with every computation step cited to
-its subsection, for one edge, a node's out-edges, or every deadline
-reachable from a node. The holiday calendar respects when Juneteenth (2021)
+resolves the owning pack's explicit schema-v3 `counting` rule id and returns
+the due date with every computation step cited to its subsection, for one
+edge, a node's out-edges, or every deadline reachable from a node. A missing
+or unknown id produces a structured `deadline-uncomputable` warning. The
+holiday calendar respects when Juneteenth (2021)
 and Martin Luther King, Jr. Day (1986) took effect, so historical dates
 (e.g. the famous cases in `tests/cases/`) compute as they did at the time.
 The rule text itself is today's: a pre-2009 FRCP 6 short-period count, for

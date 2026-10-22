@@ -169,7 +169,7 @@ pub fn resolve(scope: &Scope<'_>, t: &TypeRef, reports: &mut Vec<Report>) -> Opt
             }
             match resolved {
                 Ok((canonical, found)) => match found.item {
-                    TypeSig::Alias(target) => target.clone(),
+                    TypeSig::Alias(target) => target.as_ref().map(|t| scope.localize(found.sig, t)),
                     TypeSig::Enum(_) | TypeSig::Event(_) => Some(Type::Named(canonical)),
                 },
                 Err(unresolved) => {

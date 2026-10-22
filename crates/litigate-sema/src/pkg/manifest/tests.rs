@@ -104,3 +104,57 @@ fn errors_carry_the_offending_span() {
         Some((C::InvalidManifest, start.unwrap_or(0)))
     );
 }
+
+#[test]
+fn accepts_pack_schema_v3_keys() {
+    let text = MINIMAL
+        .replace(
+            "known_at = \"2025-01-01\"\n",
+            "known_at = \"2025-01-01\"\ncounting = \"frcp6\"\n",
+        )
+        .replace("office = \"nature\"", "office = \"nature\"\neither = \"nature\"")
+        .replace("cite_prefixes = [\"A\"]", "as_of = \"2025-06\"")
+        + "\n[[cite_syntax.rules]]\nprefixes = [\"FRCP\"]\nheading = \"Rule {}\"\nsource = \"a\"\n\n[[cite_syntax.shorthands]]\nprefix = \"cfr\"\ncode = \"cfr\"\ntitle = 19\nsection_parts = 2\n";
+    let m = parse_manifest(&text).map(|p| p.manifest);
+    let m = m.unwrap_or_else(|e| panic!("{e:?}"));
+    assert_eq!(m.counting.as_deref(), Some("frcp6"));
+    assert_eq!(m.roles.get("either"), Some(&ActorRole::Nature));
+    assert_eq!(m.sources[1].as_of.as_deref(), Some("2025-06"));
+    assert_eq!(m.cite_syntax.rules[0].source.as_deref(), Some("a"));
+    assert_eq!(m.cite_syntax.shorthands[0].section_parts, 2);
+    assert!(!m.links);
+    assert_eq!(
+        errors(
+            &text
+                .replace("heading = \"Rule {}\"", "heading = \"Rule\"")
+                .replace("source = \"a\"\n\n", "source = \"z\"\n\n")
+        ),
+        [
+            "`heading` must contain exactly one `{}`",
+            "`source = \"z\"` names no `[sources.z]` table",
+        ]
+    );
+    assert!(
+        errors(&text.replace("as_of = \"2025-06\"", "as_of = \"2025-13\""))[0]
+            .contains("YYYY-MM-DD or YYYY-MM")
+    );
+}
+
+#[test]
+fn links_manifests_have_no_pack_identity() {
+    let links = "[package]\nname = \"links\"\nversion = \"0.1.0\"\nlanguage = 1\nin_force = \"0001-01-01\"\nknown_at = \"2026-10-19\"\n\n[dependencies]\ncafc = { version = \"^0.1.0\", path = \"../cafc\" }\n";
+    let m = parse_manifest(links).map(|p| p.manifest);
+    let m = m.unwrap_or_else(|e| panic!("{e:?}"));
+    assert!(m.links);
+    assert!(m.pack_id.is_empty() && m.roles.is_empty());
+    assert_eq!(
+        errors(&links.replace("language = 1\n", "language = 1\ncounting = \"frcp6\"\n"))[0]
+            .split(':')
+            .next(),
+        Some("`counting` needs a pack identity")
+    );
+    assert_eq!(
+        errors(&MINIMAL.replace("pack_id = \"demo-pack\"\n", "")),
+        ["invalid Lit.toml: missing field `pack_id`"]
+    );
+}

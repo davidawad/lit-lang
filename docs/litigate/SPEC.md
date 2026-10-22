@@ -299,7 +299,7 @@ core = { version = "^1.0.0", path = "../core" }
 title = "Federal Rules of Civil Procedure"
 url = "https://..."             # and/or path = "sources/frcp.txt" (repo-relative)
 sha256 = "..."
-as_of = "2024-12-01"
+as_of = "2024-12-01"             # YYYY-MM-DD, or YYYY-MM when only the month is known
 cite_prefixes = ["FRCP", "Fed. R. Civ. P."]
 section_heading = "Rule {n}."   # optional; locates pinpoints in `path`
 
@@ -323,7 +323,12 @@ source for cite resolution (§4.3), as the source's `cite_prefixes` would,
 with `heading` locating the pinpoint. A **links package** (§8.4) has no
 pack identity: its manifest has only `name`, `version`, `language`,
 `in_force`, `known_at`, and `[dependencies]` on every package its links
-and instances reference.
+and instances reference. A manifest with none of `pack_id`, `forum`,
+`authority`, `title`, `package.roles` is a links manifest; one with some
+but not all of them is L1004, as is a links manifest whose package
+declares nodes. A link's actors are the `[package.roles]` keys of the pack
+its `from` node belongs to. `either` may be a `[package.roles]` key (it
+gives the implicit actor's role).
 
 Unknown keys, missing required keys (`name`, `version`, `language`, `pack_id`,
 `forum`, `authority`, `title`, `in_force`, `known_at`, `package.roles`), or
@@ -391,14 +396,18 @@ itself is excluded and line endings are not normalized.
   (L2007).
 - An edge's actor is its own `by`, else the node's `by`, else `either`.
   `p` is allowed on any edge, with any actor. A self edge (`to` = its node)
-  must not carry `p` (L2008).
+  of a `chance` node must not carry `p` (L2008): it is outside the node's
+  distribution. On other kinds a self edge with `p` is a retry loop (a
+  continuance re-entering the same state) and is allowed.
 - `event` binds an edge to an event pattern for case replay (§5.6). `within d`
   ties the edge to deadline declaration `d`. `deadline 30.days` is a literal
   window with no trigger semantics, kept for legacy edges.
 - `_` edges have no id. Lowering omits `id` and litgraph derives
   `from->to#n`. Such edges can't be referenced (L9003 info).
 - Tags `entry` (an extra root for reachability) and `fact` (a matter fact,
-  allowed only on `chance`, L2007) carry meaning. All other tags are opaque.
+  allowed only on `chance` nodes and on mixed nodes with at least one `p`
+  edge, whose `p` edges carry the authored prior; L2007 otherwise) carry
+  meaning. All other tags are opaque.
 - `group` must name a declared group (L1002).
 
 ### 5.2 Types, enums, events, match

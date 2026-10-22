@@ -276,12 +276,10 @@ fn package_table(c: &mut Checker, p: &RawPackage) {
 /// whether the manifest is a links manifest.
 fn identity(c: &mut Checker, text: &str, raw: &RawManifest) -> bool {
     let p = &raw.package;
-    let at = text
-        .find("[package]")
-        .map_or(TextRange::default(), |s| {
-            let f = |n: usize| u32::try_from(n).unwrap_or(u32::MAX);
-            TextRange::new(f(s), f(s + "[package]".len()))
-        });
+    let at = text.find("[package]").map_or(TextRange::default(), |s| {
+        let f = |n: usize| u32::try_from(n).unwrap_or(u32::MAX);
+        TextRange::new(f(s), f(s + "[package]".len()))
+    });
     let required = [
         ("pack_id", p.pack_id.is_some()),
         ("forum", p.forum.is_some()),
@@ -291,7 +289,9 @@ fn identity(c: &mut Checker, text: &str, raw: &RawManifest) -> bool {
     ];
     if required.iter().any(|(_, present)| *present) {
         for (key, present) in required {
-            c.check(present, at, || format!("invalid Lit.toml: missing field `{key}`"));
+            c.check(present, at, || {
+                format!("invalid Lit.toml: missing field `{key}`")
+            });
         }
         return false;
     }
@@ -396,8 +396,7 @@ fn source(c: &mut Checker, id: &str, s: &Spanned<RawSource>) -> SourceBinding {
         // A document version date may be known only to the month (legacy
         // `sources[].asOf` "2025-06"); it is metadata, never computed with.
         let v = as_of.get_ref();
-        let month = v.len() == 7
-            && date::is_valid(&format!("{v}-01"));
+        let month = v.len() == 7 && date::is_valid(&format!("{v}-01"));
         c.check(month || date::is_valid(v), range(as_of), || {
             format!("`as_of` must be a YYYY-MM-DD or YYYY-MM date, found `{v}`")
         });

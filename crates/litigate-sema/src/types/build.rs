@@ -263,6 +263,41 @@ fn pack_signatures(db: &dyn salsa::Database, file: SourceFile) -> Vec<&Signature
         .collect()
 }
 
+/// Signatures of `file`'s direct imports and of [`transitive_imports`].
+fn import_signatures(
+    db: &dyn salsa::Database,
+    file: SourceFile,
+) -> (Vec<&Signature>, Vec<&Signature>) {
+    let graph = module_graph(db, file.workspace(db));
+    let sigs = |files: Vec<SourceFile>| files.into_iter().map(|f| signature(db, f)).collect();
+    (
+        sigs(graph.imports(file)),
+        sigs(transitive_imports(graph, file)),
+    )
+}
+
+/// Modules imported by `file`'s imports, transitively (not `file`'s own
+/// direct imports), in discovery order.
+fn transitive_imports(
+    graph: &crate::resolve::graph::ModuleGraph,
+    file: SourceFile,
+) -> Vec<SourceFile> {
+    let direct = graph.imports(file);
+    let mut seen: Vec<SourceFile> = direct.clone();
+    let mut out = Vec::new();
+    let mut queue: Vec<SourceFile> = direct;
+    while let Some(next) = queue.pop() {
+        for f in graph.imports(next) {
+            if f != file && !seen.contains(&f) {
+                seen.push(f);
+                out.push(f);
+                queue.push(f);
+            }
+        }
+    }
+    out
+}
+
 /// Checks one module and builds its HIR.
 pub fn check_module(db: &dyn salsa::Database, file: SourceFile) -> ModuleCheck {
     let parsed = item_tree(db, file);
@@ -280,11 +315,7 @@ pub fn check_module(db: &dyn salsa::Database, file: SourceFile) -> ModuleCheck {
     if let (Some(header), Some(m)) = (&tree.package, m) {
         package_header(header, m, &mut reports);
     }
-    let import_sigs: Vec<&Signature> = module_graph(db, file.workspace(db))
-        .imports(file)
-        .into_iter()
-        .map(|f| signature(db, f))
-        .collect();
+    let (import_sigs, transitive) = import_signatures(db, file);
     let links = tree
         .items
         .iter()
@@ -298,7 +329,8 @@ pub fn check_module(db: &dyn salsa::Database, file: SourceFile) -> ModuleCheck {
         } else {
             Vec::new()
         },
-    );
+    )
+    .with_transitive(transitive);
     let mut ck = Checker::new(&scope);
     ck.actors = m
         .map(|m| m.roles.keys().cloned().collect())

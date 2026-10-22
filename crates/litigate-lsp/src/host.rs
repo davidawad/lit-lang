@@ -151,7 +151,7 @@ impl Host {
     }
 
     /// What to check: `lit/` and `cases/` under the root when present (the
-    /// `just lit-check` layout), else the whole root; plus the package or
+    /// `just lit-check` layout), else the whole client root; plus the package or
     /// matter of every open document, and the library packages matters use.
     fn targets(&self, root: &Path) -> (Vec<PathBuf>, Vec<PathBuf>) {
         let conventional: Vec<PathBuf> = ["lit", "cases"]
@@ -159,10 +159,11 @@ impl Host {
             .map(|d| root.join(d))
             .filter(|d| d.is_dir())
             .collect();
-        let scan = if conventional.is_empty() {
-            vec![root.to_path_buf()]
-        } else {
-            conventional
+        // Without a client root the guessed root is not walked whole.
+        let scan = match (conventional.is_empty(), &self.root) {
+            (false, _) => conventional,
+            (true, Some(_)) => vec![root.to_path_buf()],
+            (true, None) => Vec::new(),
         };
         let names: Vec<String> = scan
             .iter()
@@ -300,5 +301,58 @@ pub fn real_path(root: &Path, relative: &str) -> PathBuf {
         here
     } else {
         rooted
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::json;
+
+    #[test]
+    fn settings_read_the_initialization_options() {
+        let strict =
+            Settings::from_options(Some(&json!({"profile": "strict", "asOf": "2025-01-01"})));
+        assert_eq!(strict.profile, Profile::Strict);
+        assert_eq!(strict.as_of.as_deref(), Some("2025-01-01"));
+        assert_eq!(
+            Settings::from_options(Some(&json!({"profile": 7}))),
+            Settings::default()
+        );
+        assert_eq!(Settings::from_options(None).profile, Profile::Dev);
+    }
+
+    #[test]
+    fn a_matter_names_the_packages_it_uses() {
+        let uses = uses_of("case m\nuses a ^1.0.0, b =2.0.0\nas_of 2025-01-01\n");
+        assert_eq!(uses.into_iter().collect::<Vec<_>>(), ["a", "b"]);
+        assert!(uses_of("not a case").is_empty());
+    }
+
+    #[test]
+    fn paths_outside_the_root_stay_absolute() {
+        let root = std::env::temp_dir().join("litigate-lsp-no-such-root");
+        assert_eq!(real_path(&root, "lit/x.lit"), root.join("lit/x.lit"));
+        let outside = std::env::current_dir().unwrap_or_default();
+        let rel = relative_to(&root, &outside);
+        assert_eq!(real_path(&root, &rel), outside);
+    }
+
+    #[test]
+    fn without_a_root_only_open_documents_are_analyzed() {
+        let dir = std::env::temp_dir().join(format!("litigate-lsp-loose-{}", std::process::id()));
+        let file = dir.join("x.lit");
+        let mut host = Host::default();
+        host.open.insert(
+            file.clone(),
+            Open {
+                text: "module x\nstart s\n".into(),
+                version: 1,
+            },
+        );
+        let analysis = host.analyze();
+        let rel = relative_to(&analysis.root, &file);
+        assert_eq!(analysis.files.keys().collect::<Vec<_>>(), [&rel]);
+        assert_eq!(host.rebuilds, 1);
     }
 }

@@ -1,6 +1,7 @@
 //! Inlay hints on a `.case`: after each event that triggers a deadline,
 //! the due date the engine clock computes for it (`// answer-period due
-//! 2025-03-26 (FRCP 6(a))`), from the same replay and counting as
+//! 2025-03-26 (<counting rule cite>)`, plus `rolled` and the service
+//! extension when they applied), from the same replay and counting as
 //! `litigate check`'s deadline schedule.
 use crate::analysis::Analysis;
 use crate::convert;

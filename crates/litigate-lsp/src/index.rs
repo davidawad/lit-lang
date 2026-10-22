@@ -178,7 +178,7 @@ fn owner(node: &SyntaxNode) -> String {
         .unwrap_or_default()
 }
 
-/// A module path as written, without trivia (`frcp.rule12`).
+/// A module path as written, without trivia (`civil.rule12`).
 fn dotted(node: &SyntaxNode) -> String {
     node.text().to_string().split_whitespace().collect()
 }

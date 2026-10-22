@@ -762,7 +762,7 @@ parses with no diagnostics, and it follows these conventions:
 - `Lit.toml`: `version = "0.1.0"`; `in_force = "0001-01-01"` and
   `authority = "Unclassified"` are explicit placeholders (legacy JSON
   records neither); `known_at` is the newest `sources[].asOf`.
-- Every node carries the `/// imported` marker (§7). Edges nest under
+- Every node and link carries the `/// imported` marker (§7). Edges nest under
   their source node in pack order. A node's `by` is its edges' most common
   actor; an edge repeats `by` only when it differs. A `state` whose every
   out-edge carries `p` and none loops back is written `chance`.

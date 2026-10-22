@@ -66,7 +66,7 @@ pub(crate) fn import_links(
     ]
 }
 
-/// The pack id of a qualified reference (`cafc@cofc::entry` gives `cafc`).
+/// The pack id of a qualified reference (`base@origin::entry` gives `base`).
 fn pack_of(reference: &str) -> &str {
     let head = reference.split("::").next().unwrap_or(reference);
     head.split('@').next().unwrap_or(head)

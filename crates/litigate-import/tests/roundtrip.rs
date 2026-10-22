@@ -135,3 +135,42 @@ fn outputs_carry_no_absolute_paths() {
         assert!(!file.text.contains(root.as_ref()), "{}", file.path);
     }
 }
+
+/// Every `ERROR` or `MISSING` node of the editor grammar's parse.
+fn tree_sitter_errors(text: &str) -> Vec<String> {
+    fn walk(node: tree_sitter::Node<'_>, out: &mut Vec<String>) {
+        if node.is_error() || node.is_missing() {
+            let at = node.start_position();
+            out.push(format!("{}:{} {}", at.row + 1, at.column + 1, node.kind()));
+        }
+        let mut cursor = node.walk();
+        for child in node.children(&mut cursor) {
+            walk(child, out);
+        }
+    }
+    let mut parser = tree_sitter::Parser::new();
+    let mut out = Vec::new();
+    if parser
+        .set_language(&tree_sitter_litigate::LANGUAGE.into())
+        .is_err()
+    {
+        return vec!["grammar failed to load".to_owned()];
+    }
+    match parser.parse(text, None) {
+        Some(tree) => walk(tree.root_node(), &mut out),
+        None => out.push("no tree".to_owned()),
+    }
+    out
+}
+
+/// Porters commit this output under `lit/` and `cases/`, where the
+/// tree-sitter conformance test parses it too; it must already agree.
+#[test]
+fn the_editor_grammar_parses_every_output() {
+    for file in import_ok(&corpus()) {
+        if support::is_ext(&file.path, "lit") || support::is_ext(&file.path, "case") {
+            let errors = tree_sitter_errors(&file.text);
+            assert!(errors.is_empty(), "{}: {errors:?}", file.path);
+        }
+    }
+}

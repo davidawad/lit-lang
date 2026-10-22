@@ -1,16 +1,34 @@
-# Imported by `litigate import` from packs/itc-337.json.
-# in_force and authority are placeholders: legacy JSON records neither.
+# USITC Section 337 investigations, ported from packs/itc-337.json
+# (`litigate import`, then made typed, dated, cited and tested by hand).
+#
+# Lifetime: the graph models 19 C.F.R. Part 210 as amended by 90 FR 225
+# (Jan. 3, 2025; effective Feb. 3, 2025), the text the pack's notes describe
+# (proportional discovery in § 210.27(b), the 7-hour deposition day in
+# § 210.28(b)). That rule "shall apply to investigations and proceedings
+# instituted subsequent to" its effective date, so a matter instituted
+# earlier has no version in force (L3007) rather than a wrong one; the
+# pre-2025 sections are not modeled. Each node and period carries the
+# effective date of the latest amendment in its cited section's source note
+# (19 C.F.R. §§ 210.5, 210.29: 78 FR 23474, effective May 20, 2013; every
+# other Part 210 section the pack cites: 90 FR 225) or, for 19 U.S.C.
+# § 1337(b)-(j), Pub. L. 103-465, § 321(a), applicable from Jan. 1, 1995
+# (§ 322). Source notes are per section, so versions are too.
+#
+# Part 210 is an agency's rules of practice under 19 U.S.C. §§ 1333, 1335
+# and 1337 (19 C.F.R. § 210.1): authority `Regulation`. Its periods yield to
+# a Commission or administrative law judge order (§ 210.6(a)), so each
+# delegates to `CaseOrder`.
 [package]
 name = "itc-337"
 version = "0.1.0"
 language = 1
 pack_id = "itc-337"
 forum = "itc"
-authority = "Unclassified"
+authority = "Regulation"
 title = "ITC Section 337 Unfair Import Investigation"
 description = "Institution → response/default → discovery (incl. CBI protective-order posture) → prehearing/summary determination → evidentiary hearing → Initial Determination → Commission petition-for-review → Commission Final Determination/remedy → Presidential (USTR) review → remedy enforcement → optional Federal Circuit appeal, under 19 U.S.C. § 1337 and 19 CFR Part 210. Direct structural counterpart to content/statecharts/mpep-prosecution.json for the non-FRCP ITC pack. Stage ids and rule refs are drawn verbatim from content/rulepacks/itc-337-pack.json."
 jurisdiction = "USITC / 19 CFR Part 210"
-in_force = "0001-01-01"
+in_force = "2025-02-03"
 known_at = "2026-08-26"
 counting = "itc210"
 
@@ -59,3 +77,8 @@ code = "usc"
 title = 19
 section_parts = 1
 source = "usc-1337"
+
+[dependencies]
+# The authority lattice, the 19 C.F.R. § 201.14 (`itc210`) and FRAP 26
+# counting rules, and the service methods.
+core = { version = "^1.0.0", path = "../core" }

@@ -1,11 +1,12 @@
-// Imported by `litigate import` from packs/itc-337.json.
 module itc.initial-determination
 
 import itc.commission-review-to-federal-circuit-appeal.{ petition-for-review-window }
 import itc.{ initial-determination-group }
 
-/// imported
-decision initial-determination: "ALJ Issues Initial Determination on Violation" by examiner cite cfr210.42.a.1
+/// A ruling under a legal standard, so `chance` without `discretion` (the
+/// legacy pack has kind `decision`): 19 C.F.R. § 210.42(a)(1): the merits
+/// initial determination on violation.
+chance initial-determination: "ALJ Issues Initial Determination on Violation" by examiner effective [2025-02-03, ..) cite cfr210.42.a.1
 {
   group initial-determination-group
   note "Must be filed no later than 4 months before the target date. Violation-found authored at 0.55 / no-violation at 0.45 — APPROXIMATE. This is the single dominator gateway every non-default path to a Commission Final Determination must pass through — the ITC analog of mpep-prosecution.json's noa-received dominating patent-issued."
@@ -13,8 +14,7 @@ decision initial-determination: "ALJ Issues Initial Determination on Violation" 
   _ "ID finds no violation" -> no-violation-id p 0.45 { authority cite cfr210.42.a.1 }
 }
 
-/// imported
-state violation-id: "ID: Violation Found" by examiner cite cfr210.42.a.1
+state violation-id: "ID: Violation Found" by examiner effective [2025-02-03, ..) cite cfr210.42.a.1
 {
   group initial-determination-group
   note "Also the rejoin point for the default track: a defaulting respondent's presumed-true facts feed directly into a violation finding here (usc1337.g)."
@@ -23,8 +23,7 @@ state violation-id: "ID: Violation Found" by examiner cite cfr210.42.a.1
   }
 }
 
-/// imported
-state no-violation-id: "ID: No Violation Found" by office cite cfr210.42.a.1
+state no-violation-id: "ID: No Violation Found" by office effective [2025-02-03, ..) cite cfr210.42.a.1
 {
   group initial-determination-group
   note "Complainant's case fails on the merits before the ALJ; still subject to petition for Commission review like any other ID."
@@ -33,8 +32,7 @@ state no-violation-id: "ID: No Violation Found" by office cite cfr210.42.a.1
   }
 }
 
-/// imported
-state recommended-determination: "Recommended Determination on Remedy" by office cite cfr210.42.rd
+state recommended-determination: "Recommended Determination on Remedy" by office effective [2025-02-03, ..) cite cfr210.42.rd
 {
   group initial-determination-group
   note "Within 14 days after the violation ID, the ALJ issues findings and recommendations on the appropriate remedy, bonding amount, and public-interest matters. The RD is ADVISORY to the Commission — it is not itself the remedy order; the Commission sets the actual remedy in its Final Determination downstream."

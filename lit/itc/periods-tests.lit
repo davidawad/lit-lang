@@ -1,0 +1,225 @@
+module itc.periods-tests
+
+import itc.events.{
+  ConfidentialVersionFiled,
+  DeterminationFinal,
+  PrivilegeClaimed,
+  ServedPaper,
+  SubpoenaReceived,
+}
+
+import itc.periods.{
+  admission-answer-period,
+  federal-circuit-appeal-period,
+  interrogatory-answer-period,
+  petition-for-review-period,
+  petition-response-period,
+  privilege-log-period,
+  production-response-period,
+  public-version-period,
+  quash-period,
+  response-period,
+  summary-determination-opposition-period,
+}
+
+// Each period from an ordinary trigger, across a weekend, and across a
+// federal holiday; Part 210 periods also with the 19 C.F.R. § 201.16(d)-(e)
+// service days. Expected dates were computed independently of the engine
+// from the 19 C.F.R. § 201.14(a) and FRAP 26(a) texts.
+test "response due 20 days after service on a Tuesday" cite cfr210.13.a
+{
+  given ServedPaper(ComplaintAndNotice, Personal) on 2026-01-06
+  expect deadline(response-period) == 2026-01-26
+}
+
+test "a response period ending on a Sunday runs to Monday" cite cfr210.13.a
+{
+  given ServedPaper(ComplaintAndNotice, Personal) on 2026-01-05
+  expect deadline(response-period) == 2026-01-26
+}
+
+test "a response period ending on Memorial Day runs to Tuesday" cite cfr210.13.a
+{
+  given ServedPaper(ComplaintAndNotice, Personal) on 2026-05-05
+  expect deadline(response-period) == 2026-05-26
+}
+
+test "service on the Friday before Martin Luther King Jr. Day: day one is Tuesday" cite cfr210.13.a
+{
+  given ServedPaper(ComplaintAndNotice, Personal) on 2026-01-16
+  expect deadline(response-period) == 2026-02-09
+}
+
+test "mail service adds three days to the response period" cite cfr210.6.b
+{
+  given ServedPaper(ComplaintAndNotice, Mail) on 2026-01-06
+  expect deadline(response-period) == 2026-01-29
+}
+
+test "interrogatory answers due ten days after service" cite cfr210.29.b.2
+{
+  given ServedPaper(Interrogatories, Personal) on 2026-01-05
+  expect deadline(interrogatory-answer-period) == 2026-01-15
+}
+
+test "interrogatory answers due on Juneteenth run to Monday" cite cfr210.29.b.2
+{
+  given ServedPaper(Interrogatories, Personal) on 2026-06-09
+  expect deadline(interrogatory-answer-period) == 2026-06-22
+}
+
+test "express delivery adds one day to the interrogatory period" cite cfr210.6.c
+{
+  given ServedPaper(Interrogatories, Express) on 2026-01-05
+  expect deadline(interrogatory-answer-period) == 2026-01-16
+}
+
+test "production response due ten days after service" cite cfr210.30.b.2
+{
+  given ServedPaper(ProductionRequests, Personal) on 2026-01-06
+  expect deadline(production-response-period) == 2026-01-16
+}
+
+test "a production response due on a Saturday runs to Monday" cite cfr210.30.b.2
+{
+  given ServedPaper(ProductionRequests, Personal) on 2026-01-14
+  expect deadline(production-response-period) == 2026-01-26
+}
+
+test "admission answers due ten days after service" cite cfr210.31.b
+{
+  given ServedPaper(AdmissionRequests, Personal) on 2026-01-06
+  expect deadline(admission-answer-period) == 2026-01-16
+}
+
+test "admission answers due on Thanksgiving run to Friday" cite cfr210.31.b
+{
+  given ServedPaper(AdmissionRequests, Personal) on 2026-11-16
+  expect deadline(admission-answer-period) == 2026-11-27
+}
+
+test "mail to a foreign country adds ten days to the admission period" cite cfr210.6.b
+{
+  given ServedPaper(AdmissionRequests, MailForeign) on 2026-01-06
+  expect deadline(admission-answer-period) == 2026-01-26
+}
+
+test "a subpoena received on a Friday: day one is Monday" cite cfr210.32.d.2
+{
+  given SubpoenaReceived() on 2026-01-09
+  expect deadline(quash-period) == 2026-01-21
+}
+
+test "a motion to quash due on Christmas runs to Monday" cite cfr210.32.d.2
+{
+  given SubpoenaReceived() on 2026-12-15
+  expect deadline(quash-period) == 2026-12-28
+}
+
+test "privilege log due ten days after the claim" cite cfr210.27.e.1
+{
+  given PrivilegeClaimed() on 2026-01-05
+  expect deadline(privilege-log-period) == 2026-01-15
+}
+
+test "a privilege log due on a Sunday runs to Monday" cite cfr210.27.e.1
+{
+  given PrivilegeClaimed() on 2026-01-15
+  expect deadline(privilege-log-period) == 2026-01-26
+}
+
+test "a privilege log due on Veterans Day runs to Thursday" cite cfr210.27.e.1
+{
+  given PrivilegeClaimed() on 2026-10-30
+  expect deadline(privilege-log-period) == 2026-11-12
+}
+
+test "public version due thirty days after the confidential one" cite cfr210.5.f
+{
+  given ConfidentialVersionFiled() on 2026-01-05
+  expect deadline(public-version-period) == 2026-02-04
+}
+
+test "a public version due on a Saturday runs to Monday" cite cfr210.5.f
+{
+  given ConfidentialVersionFiled() on 2026-01-08
+  expect deadline(public-version-period) == 2026-02-09
+}
+
+test "a public version due on New Year's Day runs to Monday" cite cfr210.5.f
+{
+  given ConfidentialVersionFiled() on 2026-12-02
+  expect deadline(public-version-period) == 2027-01-04
+}
+
+test "opposing affidavits due ten days after service of the motion" cite cfr210.18.b
+{
+  given ServedPaper(SummaryDeterminationMotion, Personal) on 2026-01-06
+  expect deadline(summary-determination-opposition-period) == 2026-01-16
+}
+
+test "opposing affidavits due on the observed Independence Day run to Monday" cite cfr210.18.b
+{
+  given ServedPaper(SummaryDeterminationMotion, Personal) on 2026-06-23
+  expect deadline(summary-determination-opposition-period) == 2026-07-06
+}
+
+test "mail service adds three days after the roll" cite cfr210.6.b
+{
+  given ServedPaper(SummaryDeterminationMotion, Mail) on 2026-06-23
+  expect deadline(summary-determination-opposition-period) == 2026-07-09
+}
+
+test "petition for review due 12 days after service of the initial determination" cite cfr210.43.a.1
+{
+  given ServedPaper(InitialDetermination, Personal) on 2026-01-14
+  expect deadline(petition-for-review-period) == 2026-01-26
+}
+
+test "a petition for review due on a Saturday runs to Monday" cite cfr210.43.a.1
+{
+  given ServedPaper(InitialDetermination, Personal) on 2026-01-12
+  expect deadline(petition-for-review-period) == 2026-01-26
+}
+
+test "a petition for review due on Martin Luther King Jr. Day runs to Tuesday" cite cfr210.43.a.1
+{
+  given ServedPaper(InitialDetermination, Personal) on 2026-01-07
+  expect deadline(petition-for-review-period) == 2026-01-20
+}
+
+test "petition response due eight days after service" cite cfr210.43.c
+{
+  given ServedPaper(PetitionForReview, Personal) on 2026-01-05
+  expect deadline(petition-response-period) == 2026-01-13
+}
+
+test "a petition response due on Labor Day runs to Tuesday" cite cfr210.43.c
+{
+  given ServedPaper(PetitionForReview, Personal) on 2026-08-28
+  expect deadline(petition-response-period) == 2026-09-08
+}
+
+test "a petition served the Friday before a Monday holiday: day one is Tuesday" cite cfr210.43.c
+{
+  given ServedPaper(PetitionForReview, Personal) on 2026-01-16
+  expect deadline(petition-response-period) == 2026-01-27
+}
+
+test "appeal due 60 days after the determination becomes final" cite usc1337.c
+{
+  given DeterminationFinal() on 2026-01-05
+  expect deadline(federal-circuit-appeal-period) == 2026-03-06
+}
+
+test "an appeal period ending on a Saturday runs to Monday" cite usc1337.c
+{
+  given DeterminationFinal() on 2026-01-06
+  expect deadline(federal-circuit-appeal-period) == 2026-03-09
+}
+
+test "an appeal period ending on Juneteenth runs to Monday" cite usc1337.c
+{
+  given DeterminationFinal() on 2026-04-20
+  expect deadline(federal-circuit-appeal-period) == 2026-06-22
+}

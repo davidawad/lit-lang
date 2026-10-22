@@ -341,3 +341,37 @@ fn amendment_replay_table() {
         .collect();
     insta::assert_debug_snapshot!(table);
 }
+
+/// A matter built as HIR (no source) is checked the same way; findings
+/// fall back to a placeholder location naming the case.
+#[test]
+fn hir_without_source_is_checked_with_placeholder_spans() {
+    let resolved = litigate_sema::case::resolve(
+        "cases/examples/acme.case",
+        &acme(),
+        &examples().iter().collect::<Vec<_>>(),
+        Some(&lock(examples())),
+    );
+    let mut case = resolved
+        .case
+        .unwrap_or_else(|| panic!("{:#?}", resolved.diagnostics));
+    case.events[1].date = "2025-03-27".into();
+    let refs: Vec<&Package> = examples().iter().collect();
+    let lock = lock(examples());
+    let checked = litigate_sema::case::check(
+        case,
+        &litigate_sema::case::CaseSpans::default(),
+        litigate_sema::case::Env {
+            packages: &refs,
+            lock: Some(&lock),
+            clock: examples_clock(),
+            profile: Profile::Dev,
+        },
+    );
+    let codes: Vec<(String, &str)> = checked
+        .diagnostics
+        .iter()
+        .map(|d| (d.span.file.0.clone(), d.code.as_str()))
+        .collect();
+    assert_eq!(codes, [("<case acme-v-widget>".to_owned(), "L4002")]);
+}

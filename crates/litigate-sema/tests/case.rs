@@ -1,0 +1,343 @@
+//! `.case` checking (SPEC §5.6): replay success and failure tables over
+//! the SPEC §12 worked example and the FRCP 2009 amendment fixture,
+//! deadlines counted by the engine clock over the lowered counting rules.
+mod case_support;
+
+use case_support::{
+    acme, check_2009, check_example, check_with, examples, examples_clock, lock, matter_2009,
+    render,
+};
+use litigate_base::Profile;
+use litigate_lower::Lowerer;
+use litigate_sema::hir::Package;
+use std::collections::BTreeMap;
+
+/// `acme.case` with `edits` applied (`(from, to)`, each must occur).
+fn edited(edits: &[(&str, &str)]) -> String {
+    edits.iter().fold(acme(), |text, (from, to)| {
+        assert!(text.contains(from), "acme.case has no {from:?}");
+        text.replacen(from, to, 1)
+    })
+}
+
+fn row(text: &str, profile: Profile) -> Vec<String> {
+    let checked = check_example(text, profile);
+    let mut out = render(&checked.diagnostics);
+    if checked.ok() {
+        let start = checked.case.and_then(|c| c.start).unwrap_or_default();
+        out.push(format!("ok: start {start}"));
+    }
+    out
+}
+
+#[test]
+fn the_worked_example_replays_to_the_motion_ruling() {
+    let checked = check_example(&acme(), Profile::Strict);
+    assert!(checked.ok(), "{:#?}", render(&checked.diagnostics));
+    let case = checked.case.unwrap_or_else(|| panic!("resolved"));
+    assert_eq!(
+        case.start.as_deref(),
+        Some("frcp-rule12-example::mtd-ruling")
+    );
+    insta::assert_json_snapshot!("acme_case_hir", case);
+    let refs: Vec<&Package> = examples().iter().collect();
+    let lowered = Lowerer::new(&refs)
+        .case(&case, "cases/examples/acme.case")
+        .unwrap_or_else(|d| panic!("{d:#?}"));
+    assert_eq!(
+        lowered.scenario.scenario.start.as_deref(),
+        Some("frcp-rule12-example::mtd-ruling")
+    );
+}
+
+#[test]
+#[allow(clippy::too_many_lines)] // one table row per case
+fn example_replay_table() {
+    let served = "2025-03-05 Served(complaint, Personal) on widget";
+    let moved = "2025-03-20 MovedToDismiss(complaint) by widget";
+    let rows: Vec<(&str, String, Profile)> = vec![
+        ("ok: the worked example", acme(), Profile::Dev),
+        (
+            "ok: mail service adds three days and rolls off the weekend",
+            edited(&[
+                ("Served(complaint, Personal)", "Served(complaint, Mail)"),
+                ("2025-03-20 MovedToDismiss", "2025-03-31 MovedToDismiss"),
+            ]),
+            Profile::Dev,
+        ),
+        (
+            "ok: answering instead leaves only judgment reachable",
+            edited(&[(moved, "2025-03-26 Answered(complaint) by widget")]),
+            Profile::Dev,
+        ),
+        (
+            "ok: no events, replay stays at the package start",
+            edited(&[(served, ""), (moved, "")]),
+            Profile::Dev,
+        ),
+        (
+            "missed: one day after the answer period",
+            edited(&[("2025-03-20 MovedToDismiss", "2025-03-27 MovedToDismiss")]),
+            Profile::Dev,
+        ),
+        (
+            "missed: mail service, one day after the rolled due date",
+            edited(&[
+                ("Served(complaint, Personal)", "Served(complaint, Mail)"),
+                ("2025-03-20 MovedToDismiss", "2025-04-01 MovedToDismiss"),
+            ]),
+            Profile::Dev,
+        ),
+        (
+            "order: events out of date order",
+            edited(&[(served, "@@"), (moved, served), ("@@", moved)]),
+            Profile::Dev,
+        ),
+        (
+            "typestate: nothing moves a pending ruling",
+            edited(&[(
+                moved,
+                &format!("{moved}\n  2025-03-25 Answered(complaint) by widget"),
+            )]),
+            Profile::Dev,
+        ),
+        (
+            "typestate: the plaintiff cannot answer",
+            edited(&[(moved, "2025-03-20 Answered(complaint) by acme")]),
+            Profile::Dev,
+        ),
+        (
+            "typestate: an event after as_of",
+            edited(&[("2025-03-20 MovedToDismiss", "2025-07-01 MovedToDismiss")]),
+            Profile::Dev,
+        ),
+        (
+            "events: unknown constructor",
+            edited(&[("MovedToDismiss(complaint)", "MovedToDismis(complaint)")]),
+            Profile::Dev,
+        ),
+        (
+            "events: incomplete arguments",
+            edited(&[("Served(complaint, Personal)", "Served(complaint)")]),
+            Profile::Dev,
+        ),
+        (
+            "events: not a variant",
+            edited(&[("Served(complaint, Personal)", "Served(complaint, Fax)")]),
+            Profile::Dev,
+        ),
+        (
+            "parties: undeclared actor",
+            edited(&[("acme: Plaintiff", "acme: Plantiff")]),
+            Profile::Dev,
+        ),
+        (
+            "parties: undeclared event party",
+            edited(&[("by widget", "by wigdet")]),
+            Profile::Dev,
+        ),
+        (
+            "parties: duplicate party",
+            edited(&[(
+                "widget: Defendant Corporation",
+                "widget: Defendant Corporation\n  widget: Defendant Corporation",
+            )]),
+            Profile::Dev,
+        ),
+        (
+            "facts: not the node's own edge",
+            edited(&[("time-barred: not-barred", "time-barred: granted")]),
+            Profile::Dev,
+        ),
+        (
+            "facts: not a fact node",
+            edited(&[("time-barred: not-barred", "mtd-ruling: granted")]),
+            Profile::Dev,
+        ),
+        (
+            "stakes: a reachable terminal without a stake",
+            edited(&[(", dismissed: 0.usd", "")]),
+            Profile::Dev,
+        ),
+        (
+            "stakes: unvalued is fine in dev",
+            edited(&[("dismissed: 0.usd", "dismissed: unvalued")]),
+            Profile::Dev,
+        ),
+        (
+            "stakes: unvalued is an error in strict",
+            edited(&[("dismissed: 0.usd", "dismissed: unvalued")]),
+            Profile::Strict,
+        ),
+        (
+            "stakes: only terminals take stakes",
+            edited(&[("dismissed: 0.usd", "dismissed: 0.usd, respond: 5.usd")]),
+            Profile::Dev,
+        ),
+        (
+            "beliefs: not a chance node",
+            edited(&[("observe mtd-ruling", "observe respond")]),
+            Profile::Dev,
+        ),
+        (
+            "beliefs: not the node's own outcome",
+            edited(&[("granted: 3", "barred: 3")]),
+            Profile::Dev,
+        ),
+        (
+            "start: an explicit start the events move past",
+            edited(&[("perspective widget", "start respond\n\nperspective widget")]),
+            Profile::Dev,
+        ),
+        (
+            "start: an explicit start that agrees",
+            edited(&[
+                (
+                    "perspective widget",
+                    "start mtd-ruling\n\nperspective widget",
+                ),
+                (served, ""),
+                (moved, ""),
+            ]),
+            Profile::Dev,
+        ),
+        (
+            "names: unknown node",
+            edited(&[("observe mtd-ruling", "observe mtd-ruing")]),
+            Profile::Dev,
+        ),
+        (
+            "uses: requirement the lock does not satisfy",
+            edited(&[("^0.1.0", "^0.2.0")]),
+            Profile::Dev,
+        ),
+    ];
+    let table: BTreeMap<&str, Vec<String>> = rows
+        .iter()
+        .map(|(name, text, profile)| (*name, row(text, *profile)))
+        .collect();
+    insta::assert_debug_snapshot!(table);
+}
+
+#[test]
+fn pins_must_match_the_lock() {
+    let mut stale = lock(examples());
+    stale.packages[0].digest = format!("sha256:{}", "0".repeat(64));
+    let table: BTreeMap<&str, Vec<String>> = [("no lock", None), ("stale digest", Some(&stale))]
+        .into_iter()
+        .map(|(name, lock)| {
+            let checked = check_with(&acme(), examples(), lock, examples_clock(), Profile::Dev);
+            assert!(!checked.ok());
+            (name, render(&checked.diagnostics))
+        })
+        .collect();
+    insta::assert_debug_snapshot!(table);
+}
+
+fn row_2009(events: &[&str]) -> Vec<String> {
+    let checked = check_2009(&matter_2009(events));
+    let mut out = render(&checked.diagnostics);
+    if checked.ok() {
+        let start = checked.case.and_then(|c| c.start).unwrap_or_default();
+        out.push(format!("ok: start {start}"));
+    }
+    out
+}
+
+/// A matter straddling the December 1, 2009 amendments: FRCP 86(a)(2)
+/// transitions pick the version for each event, and the counting rule's
+/// own versions count each period.
+#[test]
+#[allow(clippy::too_many_lines)] // one table row per case
+fn amendment_replay_table() {
+    let served = "2009-11-20 Served(complaint, Personal) on widget";
+    let rows: Vec<(&str, Vec<&str>)> = vec![
+        (
+            "pending: the amended 21 days govern (due 2009-12-11)",
+            vec![served, "2009-12-11 MovedToDismiss(complaint) by widget"],
+        ),
+        (
+            "pending: an order keeps the prior 20 days (due 2009-12-10), missed",
+            vec![
+                served,
+                "2009-11-25 OrderedPriorRules() by court",
+                "2009-12-11 MovedToDismiss(complaint) by widget",
+            ],
+        ),
+        (
+            "pending: the prior rules, excused by a cited extension",
+            vec![
+                served,
+                "2009-11-25 OrderedPriorRules() by court",
+                "2009-12-09 Extended(complaint) by court cite FRCP 6(b)(1)(A)",
+                "2009-12-11 MovedToDismiss(complaint) by widget",
+            ],
+        ),
+        (
+            "pending: an uncited extension is not an order",
+            vec![
+                served,
+                "2009-11-25 OrderedPriorRules() by court",
+                "2009-12-09 Extended(complaint) by court",
+                "2009-12-11 MovedToDismiss(complaint) by widget",
+            ],
+        ),
+        (
+            "pending: an extension before the trigger does not cover it",
+            vec![
+                "2009-11-18 Extended(complaint) by court cite FRCP 6(b)(1)(A)",
+                served,
+                "2009-11-25 OrderedPriorRules() by court",
+                "2009-12-11 MovedToDismiss(complaint) by widget",
+            ],
+        ),
+        (
+            "before: 2007 counting skips weekends and Veterans Day after denial (due 2009-11-23)",
+            vec![
+                "2009-10-01 Served(complaint, Personal) on widget",
+                "2009-10-15 MovedToDismiss(complaint) by widget",
+                "2009-11-06 Denied(motion) by court",
+                "2009-11-23 Answered(complaint) by widget",
+            ],
+        ),
+        (
+            "before: one day late after denial",
+            vec![
+                "2009-10-01 Served(complaint, Personal) on widget",
+                "2009-10-15 MovedToDismiss(complaint) by widget",
+                "2009-11-06 Denied(motion) by court",
+                "2009-11-24 Answered(complaint) by widget",
+            ],
+        ),
+        (
+            "before: mail adds 3 days and Sunday rolls to Monday (due 2009-10-26)",
+            vec![
+                "2009-10-02 Served(complaint, Mail) on widget",
+                "2009-10-26 Answered(complaint) by widget",
+            ],
+        ),
+        (
+            "after: Christmas rolls the 21st day to Monday (due 2009-12-28)",
+            vec![
+                "2009-12-04 Served(complaint, Personal) on widget",
+                "2009-12-28 Answered(complaint) by widget",
+            ],
+        ),
+        (
+            "after: one day late",
+            vec![
+                "2009-12-04 Served(complaint, Personal) on widget",
+                "2009-12-29 Answered(complaint) by widget",
+            ],
+        ),
+        (
+            "typestate: answering before service",
+            vec!["2009-12-04 Answered(complaint) by widget"],
+        ),
+    ];
+    let table: BTreeMap<&str, Vec<String>> = rows
+        .iter()
+        .map(|(name, events)| (*name, row_2009(events)))
+        .collect();
+    insta::assert_debug_snapshot!(table);
+}

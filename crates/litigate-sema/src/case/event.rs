@@ -1,0 +1,222 @@
+//! Typing a case event call against the used packages' event types (SPEC
+//! §5.2: case events are complete constructor calls). The result is HIR in
+//! the primary package's view: a name declared in the primary package is
+//! bare, any other is `pack::Name`.
+use super::graph::Graph;
+use crate::db::parse::tree::{Expr as Src, ExprKind as S, RefPath};
+use crate::db::span::{Report, TextRange};
+use crate::hir::{Expr, ExprKind, Type, Value};
+use crate::resolve::suggest::nearest;
+use crate::types::{date, rational};
+use litigate_base::{Applicability, DiagnosticCode as C, Span};
+
+/// Converts a range to a span.
+pub(super) type ToSpan<'a> = &'a dyn Fn(TextRange) -> Span;
+
+/// Splits `q::Name` into `(pack, Name)` when `q` is a used pack.
+fn split(graph: &Graph<'_>, path: &RefPath) -> (String, String) {
+    let text = path.display();
+    match text.split_once("::") {
+        Some((p, rest)) if graph.packages.iter().any(|k| k.manifest.pack_id == p) => {
+            (p.to_owned(), rest.to_owned())
+        }
+        _ => (graph.primary().to_owned(), text),
+    }
+}
+
+/// `name` declared in `pack`, spelled in the primary view.
+fn spelled(graph: &Graph<'_>, pack: &str, name: &str) -> String {
+    if pack == graph.primary() {
+        name.to_owned()
+    } else {
+        format!("{pack}::{name}")
+    }
+}
+
+/// Types `e` as a complete event call; `None` after reporting.
+pub(super) fn call(
+    graph: &Graph<'_>,
+    e: &Src,
+    span: ToSpan<'_>,
+    out: &mut Vec<Report>,
+) -> Option<Expr> {
+    let S::Call(callee, args) = &e.kind else {
+        out.push(Report::new(
+            C::InvalidCaseEvent,
+            e.range,
+            "a case event is an event constructor call, like `Served(complaint, Mail)`",
+        ));
+        return None;
+    };
+    let (pack, name) = split(graph, callee);
+    let Some(ty) = graph.event_type(&pack, &name) else {
+        let names: Vec<&str> = graph
+            .event_types()
+            .filter(|(p, _)| *p == pack)
+            .map(|(_, t)| t.name.as_str())
+            .collect();
+        let mut r = Report::new(
+            C::UnresolvedName,
+            callee.range,
+            format!("`{pack}` declares no event `{name}`"),
+        );
+        if let Some(best) = nearest(&name, names.iter().copied()) {
+            r = r.fix(
+                callee.range,
+                spelled(graph, &pack, best),
+                Applicability::MaybeIncorrect,
+            );
+        }
+        out.push(r.note(format!("events: {}", names.join(", "))));
+        return None;
+    };
+    if args.len() != ty.params.len() {
+        let sig: Vec<String> = ty
+            .params
+            .iter()
+            .map(|(p, t)| format!("{p}: {}", crate::types::ty::display(t)))
+            .collect();
+        out.push(
+            Report::new(
+                C::TypeMismatch,
+                e.range,
+                format!(
+                    "`{name}` takes {} argument{}, found {}",
+                    ty.params.len(),
+                    if ty.params.len() == 1 { "" } else { "s" },
+                    args.len()
+                ),
+            )
+            .note(format!(
+                "`{name}({})`; case events must be complete",
+                sig.join(", ")
+            )),
+        );
+        return None;
+    }
+    let typed: Option<Vec<Expr>> = args
+        .iter()
+        .zip(&ty.params)
+        .map(|(a, (_, t))| argument(graph, &pack, a, t, span, out))
+        .collect();
+    let callee = spelled(graph, &pack, &name);
+    Some(Expr {
+        ty: Type::Named(callee.clone()),
+        kind: ExprKind::Call {
+            callee,
+            args: typed?,
+        },
+        span: Some(span(e.range)),
+    })
+}
+
+fn literal(value: Value, ty: Type, r: TextRange, span: ToSpan<'_>) -> Expr {
+    Expr {
+        ty,
+        kind: ExprKind::Literal { value },
+        span: Some(span(r)),
+    }
+}
+
+/// One argument against parameter type `t` (written in `pack`'s view).
+fn argument(
+    graph: &Graph<'_>,
+    pack: &str,
+    a: &Src,
+    t: &Type,
+    span: ToSpan<'_>,
+    out: &mut Vec<Report>,
+) -> Option<Expr> {
+    let mismatch = |out: &mut Vec<Report>, what: &str| {
+        out.push(Report::new(
+            C::TypeMismatch,
+            a.range,
+            format!("expected {what} here"),
+        ));
+        None
+    };
+    match (t, &a.kind) {
+        (Type::Named(n), S::Ref(path)) => variant(graph, pack, n, path, span, out),
+        (Type::Named(n), _) => mismatch(out, &format!("a `{n}` variant")),
+        (Type::Date, S::Date(d)) if date::is_valid(d) => {
+            Some(literal(Value::Date(d.clone()), Type::Date, a.range, span))
+        }
+        (Type::Date, _) => mismatch(out, "a valid date"),
+        (Type::String, S::Str(s)) => Some(literal(
+            Value::String(s.clone()),
+            Type::String,
+            a.range,
+            span,
+        )),
+        (Type::String, _) => mismatch(out, "a string"),
+        (Type::Boolean, S::Bool(b)) => {
+            Some(literal(Value::Boolean(*b), Type::Boolean, a.range, span))
+        }
+        (Type::Boolean, _) => mismatch(out, "`true` or `false`"),
+        (Type::Number, S::Number(n)) => match rational::parse_decimal(n) {
+            Ok(r) => Some(literal(Value::Number(r), Type::Number, a.range, span)),
+            Err(_) => mismatch(out, "an exact number"),
+        },
+        (Type::Number, _) => mismatch(out, "a number"),
+        (Type::Money(cur), S::Money(text)) => match super::resolve::money(text) {
+            Some(m) if m.currency == *cur => Some(literal(
+                Value::Money(m),
+                Type::Money(cur.clone()),
+                a.range,
+                span,
+            )),
+            _ => mismatch(out, &format!("a `{cur}` amount")),
+        },
+        (other, _) => {
+            out.push(Report::new(
+                C::TypeMismatch,
+                a.range,
+                format!(
+                    "an event argument of type `{}` cannot be written in a case",
+                    crate::types::ty::display(other)
+                ),
+            ));
+            None
+        }
+    }
+}
+
+/// A variant of enum `n` (written in `pack`'s view): `v`, `Enum::v`, or
+/// `q::Enum::v`.
+fn variant(
+    graph: &Graph<'_>,
+    pack: &str,
+    n: &str,
+    path: &RefPath,
+    span: ToSpan<'_>,
+    out: &mut Vec<Report>,
+) -> Option<Expr> {
+    let qualified = graph.qualify(pack, n);
+    let (enum_pack, enum_name) = qualified.split_once("::").unwrap_or((pack, n));
+    let variants = graph.variants(enum_pack, enum_name).unwrap_or_default();
+    let written = path.display();
+    let local = written.rsplit("::").next().unwrap_or(&written);
+    let prefix_ok = written == local
+        || written == format!("{enum_name}::{local}")
+        || written == format!("{enum_pack}::{enum_name}::{local}");
+    if prefix_ok && variants.iter().any(|v| v == local) {
+        let ty = spelled(graph, enum_pack, enum_name);
+        return Some(literal(
+            Value::Variant(format!("{ty}::{local}")),
+            Type::Named(ty),
+            path.range,
+            span,
+        ));
+    }
+    let mut r = Report::new(
+        C::TypeMismatch,
+        path.range,
+        format!("expected a `{enum_name}` variant, found `{written}`"),
+    )
+    .note(format!("variants: {}", variants.join(", ")));
+    if let Some(best) = nearest(local, variants.iter().map(String::as_str)) {
+        r = r.fix(path.range, best, Applicability::MaybeIncorrect);
+    }
+    out.push(r);
+    None
+}

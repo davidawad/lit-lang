@@ -29,6 +29,7 @@ mod clock;
 mod diag;
 pub mod diff;
 mod edge;
+mod engine_clock;
 mod links;
 pub mod num;
 mod pack;
@@ -39,6 +40,7 @@ pub use diff::{
     semantic_diff, semantic_diff_clock, semantic_diff_json, semantic_diff_links,
     semantic_diff_scenarios, Change, ChangeKind, DocumentKind,
 };
+pub use engine_clock::EngineClock;
 pub use litgraph::clock::ClockLibrary;
 pub use litgraph::model::{LinkFile, Pack};
 pub use litgraph::scenario::NamedScenario;
@@ -197,6 +199,25 @@ impl<'a> Lowerer<'a> {
             }
         };
         sink.finish(lowered)
+    }
+
+    /// The clock fragment of `pkg`'s counting rule `id` as in force at
+    /// `options` (SPEC §8.2). Case replay judges each deadline under its
+    /// governing counting version, which need not be the build date's.
+    ///
+    /// # Errors
+    /// The fragment's lowering diagnostics.
+    pub fn clock_at(
+        &self,
+        pkg: &hir::Package,
+        id: &str,
+        options: &Options,
+    ) -> Result<Option<ClockLibrary>, Vec<Diagnostic>> {
+        let build = self.build(&pkg.manifest.in_force.known_at, options);
+        let mut sink = Sink::new(&manifest_file(pkg));
+        let decls = pack::emitted(&build, pkg, &mut Sink::new(""));
+        let fragment = clock::fragment(&build, pkg, &decls, Some(id), &mut sink);
+        sink.finish(fragment.map(|(library, _)| library))
     }
 
     /// Lowers a checked matter. `file` is its repository-relative path,

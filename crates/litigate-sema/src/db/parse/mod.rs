@@ -9,6 +9,8 @@ mod fields;
 mod items;
 pub mod tree;
 
+pub(crate) use expr::{is_expr, ref_path};
+
 use crate::db::span::{Report, TextRange};
 use litigate_syntax::{SyntaxKind as K, SyntaxNode, SyntaxToken};
 use tree::{ItemTree, Name};
@@ -44,7 +46,7 @@ pub fn lower(parse: &litigate_syntax::Parse) -> Parsed {
     Parsed { tree, reports }
 }
 
-fn syntax_report(e: &litigate_syntax::SyntaxError) -> Report {
+pub(crate) fn syntax_report(e: &litigate_syntax::SyntaxError) -> Report {
     let mut report = Report::new(e.code, range(e.range), e.message.clone());
     for note in &e.notes {
         report = report.note(note.clone());

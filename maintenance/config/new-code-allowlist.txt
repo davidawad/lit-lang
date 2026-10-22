@@ -1,0 +1,8 @@
+# Globs of new non-Rust source files that are allowed in this repository.
+# Each entry says why the file cannot be Rust.
+
+# tree-sitter grammars are written in tree-sitter's JavaScript DSL: the
+# `tree-sitter generate` CLI evaluates grammar.js (and the modules it
+# requires) with Node to produce src/parser.c. There is no Rust front end.
+editors/tree-sitter-litigate/grammar.js
+editors/tree-sitter-litigate/grammar/*.js

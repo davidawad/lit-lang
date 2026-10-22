@@ -31,6 +31,23 @@ fn row(text: &str, profile: Profile) -> Vec<String> {
 }
 
 #[test]
+fn the_replay_trace_ends_where_the_posture_does() {
+    let checked = check_example(&acme(), Profile::Dev);
+    insta::assert_json_snapshot!("acme_replay_trace", checked.trace);
+    let last = checked.trace.last().map(|s| s.to.as_str());
+    assert_eq!(last, checked.case.and_then(|c| c.start).as_deref());
+    let illegal = check_example(
+        &edited(&[(
+            "2025-03-20 MovedToDismiss(complaint) by widget",
+            "2025-03-20 Answered(complaint) by acme",
+        )]),
+        Profile::Dev,
+    );
+    assert!(!illegal.ok());
+    assert!(illegal.trace.len() < checked.trace.len());
+}
+
+#[test]
 fn the_worked_example_replays_to_the_motion_ruling() {
     let checked = check_example(&acme(), Profile::Strict);
     assert!(checked.ok(), "{:#?}", render(&checked.diagnostics));

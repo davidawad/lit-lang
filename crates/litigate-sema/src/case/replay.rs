@@ -4,6 +4,7 @@
 use super::deadline::{self, Clock};
 use super::graph::{display, is_excusal, Graph};
 use super::spans::{error, Build, CaseSpans, EventSpans};
+use super::{Effect, Step};
 use crate::hir::{
     Case, DeadlineWindow, Declaration, Edge, Event, EventParty, Expr, Node, NodeKind, Removal,
 };
@@ -23,6 +24,8 @@ pub(super) struct Replayed {
     pub diagnostics: Vec<Diagnostic>,
     /// Options removed by the events replayed, in replay order.
     pub removals: Vec<Removal>,
+    /// The transitions replay made, in order.
+    pub trace: Vec<Step>,
 }
 
 struct Cx<'c, 'g> {
@@ -37,6 +40,7 @@ struct Cx<'c, 'g> {
     /// Options removed so far.
     removed: Vec<Removal>,
     out: Vec<Diagnostic>,
+    trace: Vec<Step>,
 }
 
 /// Events in date order, ties in source order.
@@ -76,6 +80,7 @@ pub(super) fn replay(
         views,
         removed: Vec::new(),
         out: Vec::new(),
+        trace: Vec::new(),
     };
     cx.order();
     let mut posture = start.to_owned();
@@ -87,6 +92,7 @@ pub(super) fn replay(
                     posture: None,
                     diagnostics: cx.out,
                     removals: cx.removed,
+                    trace: cx.trace,
                 }
             }
         }
@@ -95,6 +101,7 @@ pub(super) fn replay(
         posture: Some(posture),
         diagnostics: cx.out,
         removals: cx.removed,
+        trace: cx.trace,
     }
 }
 
@@ -199,6 +206,14 @@ impl<'g> Cx<'_, 'g> {
                 .iter()
                 .find(|e| e.id.as_deref() == Some(local))
                 .map(|e| self.graph.target(&pack, e))?;
+            self.trace.push(Step {
+                date: String::new(),
+                event: "fact".to_owned(),
+                effect: Effect::Fact,
+                from: posture,
+                to: next.clone(),
+                edge: Some(edge.clone()),
+            });
             posture = next;
         }
         Some(posture)
@@ -238,10 +253,16 @@ impl<'g> Cx<'_, 'g> {
         match (fits.as_slice(), misfits.as_slice()) {
             ([(pack, edge)], _) => {
                 self.deadline(k, pack, edge);
-                Some(self.graph.target(pack, edge))
+                let to = self.graph.target(pack, edge);
+                let id = edge.id.as_ref().map(|id| format!("{pack}::{id}"));
+                self.record(k, Effect::Took, &posture, &to, id);
+                Some(to)
             }
             ([], []) if !removed.is_empty() => self.takes_removed(k, &posture, &removed[0]),
-            ([], []) if self.timing_only(k) => Some(posture),
+            ([], []) if self.timing_only(k) => {
+                self.record(k, Effect::Timing, &posture, &posture, None);
+                Some(posture)
+            }
             ([], []) => {
                 self.illegal(k, &posture, node);
                 None
@@ -283,6 +304,19 @@ impl<'g> Cx<'_, 'g> {
                 None
             }
         }
+    }
+
+    /// Records event `k` moving the matter from `from` to `to`.
+    fn record(&mut self, k: usize, effect: Effect, from: &str, to: &str, edge: Option<String>) {
+        let event = self.sorted[k].1;
+        self.trace.push(Step {
+            date: event.date.clone(),
+            event: display(&event.action),
+            effect,
+            from: from.to_owned(),
+            to: to.to_owned(),
+            edge,
+        });
     }
 
     fn view(&self, pack: &str, k: usize) -> Expr {

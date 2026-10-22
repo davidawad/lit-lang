@@ -1,0 +1,44 @@
+// Imported by `litigate import` from packs/itc-337.json.
+module itc.initial-determination
+
+import itc.commission-review-to-federal-circuit-appeal.{ petition-for-review-window }
+import itc.{ initial-determination-group }
+
+/// imported
+decision initial-determination: "ALJ Issues Initial Determination on Violation" by examiner cite cfr210.42.a.1
+{
+  group initial-determination-group
+  note "Must be filed no later than 4 months before the target date. Violation-found authored at 0.55 / no-violation at 0.45 — APPROXIMATE. This is the single dominator gateway every non-default path to a Commission Final Determination must pass through — the ITC analog of mpep-prosecution.json's noa-received dominating patent-issued."
+  _ "ID finds a violation of Section 337" -> violation-id p 0.55 { authority cite cfr210.42.a.1 }
+  _ "ID finds no violation" -> no-violation-id p 0.45 { authority cite cfr210.42.a.1 }
+}
+
+/// imported
+state violation-id: "ID: Violation Found" by examiner cite cfr210.42.a.1
+{
+  group initial-determination-group
+  note "Also the rejoin point for the default track: a defaulting respondent's presumed-true facts feed directly into a violation finding here (usc1337.g)."
+  _ "ALJ issues the Recommended Determination on remedy, bonding, and public interest within 14 days (Rule 210.42(rd))" -> recommended-determination {
+    authority cite cfr210.42.rd
+  }
+}
+
+/// imported
+state no-violation-id: "ID: No Violation Found" by office cite cfr210.42.a.1
+{
+  group initial-determination-group
+  note "Complainant's case fails on the merits before the ALJ; still subject to petition for Commission review like any other ID."
+  _ "ID served — same petition-for-review track applies to a no-violation ID" -> petition-for-review-window {
+    authority cite cfr210.43.a.1
+  }
+}
+
+/// imported
+state recommended-determination: "Recommended Determination on Remedy" by office cite cfr210.42.rd
+{
+  group initial-determination-group
+  note "Within 14 days after the violation ID, the ALJ issues findings and recommendations on the appropriate remedy, bonding amount, and public-interest matters. The RD is ADVISORY to the Commission — it is not itself the remedy order; the Commission sets the actual remedy in its Final Determination downstream."
+  _ "ID and RD served — 12-day petition clock begins (Rule 210.43(a)(1))" -> petition-for-review-window {
+    authority cite cfr210.43.a.1
+  }
+}

@@ -1,0 +1,17 @@
+// Imported by `litigate import` from packs/itc-337.json.
+module itc.post-hearing-briefing
+
+import itc.initial-determination.{ initial-determination }
+import itc.{ post-hearing-briefing-group }
+
+/// imported
+state post-hearing-briefing: "Post-Hearing Briefing" by examiner cite cfr210.37.b
+{
+  group post-hearing-briefing-group
+  note "Post-hearing and reply briefs filed on the evidentiary record built at the hearing."
+  _ "ALJ issues the violation Initial Determination — no later than 4 months before the target date (Rule 210.42(a)(1))" -> initial-determination {
+    authority cite cfr210.42.a.1
+    duration { min 30.days, mode 60.days, max 120.days }
+    note "Duration: estimate for post-hearing briefing plus ALJ drafting time; 19 CFR 210.42(a)(1) only fixes the ID's relationship to the target date, not this interval directly."
+  }
+}

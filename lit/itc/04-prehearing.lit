@@ -1,0 +1,82 @@
+// Imported by `litigate import` from packs/itc-337.json.
+module itc.prehearing
+
+import itc.commission-review-to-federal-circuit-appeal.{ petition-for-review-window }
+import itc.evidentiary-hearing.{ evidentiary-hearing }
+import itc.{ prehearing-group }
+
+/// imported
+decision prehearing: "Prehearing — Summary-Determination Window" by applicant cite cfr210.18.a
+{
+  group prehearing-group
+  note "The ITC's summary-judgment analog, but on a backward-counted deadline: the motion must be filed at least 60 days BEFORE the hearing, not within a fixed period after a trigger event — the mirror image of every other deadline in this pack. If the 60th day before the hearing falls on a weekend or holiday, the period rolls FORWARD to the next business day (toward the hearing, shrinking the buffer), not backward. The counterclaim window also closes around this point in the case: a counterclaim must be filed as a separate document at least ten business days before the evidentiary hearing (19 CFR 210.14); missing that window raises flag itc337/counterclaim-window-closed and forecloses bringing the counterclaim in this investigation."
+  _ "File Motion for Summary Determination — at least 60 days before the evidentiary hearing (Rule 210.18(a))" -> summary-determination-motion-filed {
+    authority cite cfr210.18.a
+    effort 70.hours
+    cost 12_000.usd
+    deadline 60.days {
+      extendable true
+      extension_authority "ALJ good-cause exception"
+      note "19 CFR 210.18(a): must be filed at least 60 days BEFORE the hearing — a backward-counted deadline. If the 60th day before the hearing falls on a weekend/holiday, the period rolls FORWARD (toward the hearing), not backward. Missing this window raises flag itc337/summary-determination-untimely — the avenue for pretrial disposition on the merits closes and the issue proceeds to hearing."
+    }
+    duration { min 9.days, mode 30.days, max 60.days }
+    action_id "file.motion.summary-determination"
+  }
+  _ "No dispositive motion filed, or the 60-day pre-hearing window is missed — all issues proceed to hearing" -> evidentiary-hearing {
+    authority cite cfr210.18.a
+    effort 0.hours
+    duration { min 30.days, mode 60.days, max 120.days }
+    note "Duration: estimate, time from close of discovery/pretrial to the evidentiary hearing."
+  }
+}
+
+/// imported
+state summary-determination-motion-filed: "Motion for Summary Determination Filed" cite cfr210.18.a
+{
+  group prehearing-group
+  note "Any party may move for summary determination on all or any part of the issues. ALJs may grant exceptions to the 60-day-before-hearing rule for good cause."
+  _ "Opposing party files affidavits within 10 days (Rule 210.18(b))" -> summary-determination-opposition {
+    authority cite cfr210.18.b
+    cost 9_000.usd
+    deadline 10.days {
+      extendable true
+      extension_authority "ALJ discretion"
+      note "19 CFR 210.18(b): 10 days to file opposing affidavits; the ALJ may permit oral argument and briefs."
+    }
+    duration { min 1.5.days, mode 5.days, max 10.days }
+    action_id "oppose.summary-determination"
+  }
+}
+
+/// imported
+state summary-determination-opposition: "Opposing Affidavits Filed" by examiner cite cfr210.18.b
+{
+  group prehearing-group
+  note "Opposing party has 10 days to file opposing affidavits; the ALJ may permit oral argument and briefs. Granted only where 'there is no genuine issue as to any material fact and the moving party is entitled to a summary determination as a matter of law.'"
+  _ "ALJ rules whether there is a genuine issue of material fact (Rule 210.18(b))" -> summary-determination-ruling {
+    authority cite cfr210.18.b
+  }
+}
+
+/// imported
+decision summary-determination-ruling: "ALJ Rules on Summary Determination" by examiner cite cfr210.18.b
+{
+  group prehearing-group
+  note "Full or partial grant authored at 0.25 / denial (or partial-only, remaining issues proceed) at 0.75 — APPROXIMATE."
+  _ "Summary determination granted in whole or in part — the order constitutes an Initial Determination (Rule 210.18(f))" -> summary-determination-id p 0.25 {
+    authority cite cfr210.18.f
+  }
+  _ "Summary determination denied, or granted only as to some issues — remaining issues proceed to hearing" -> evidentiary-hearing p 0.75 {
+    authority cite cfr210.18.b
+  }
+}
+
+/// imported
+state summary-determination-id: "Summary Determination Order (= an Initial Determination)" by office cite cfr210.18.f
+{
+  group prehearing-group
+  note "'A summary determination order constitutes an initial administrative law judge determination.' It is therefore subject to the same 210.43 petition-for-review track as a merits Initial Determination — but on the SHORTENED 10-day timer reserved for a summary determination that would terminate the investigation entirely, rather than the ordinary 12-day violation-ID window. Same downstream machinery, different clock: the teaching point this node exists to carry."
+  _ "ID served — the shortened 10-day terminating-summary-determination petition clock begins (Rule 210.43(a)(1))" -> petition-for-review-window {
+    authority cite cfr210.43.a.1
+  }
+}

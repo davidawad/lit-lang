@@ -173,7 +173,12 @@ state remedy-in-effect: "Remedy Takes Effect" by applicant effective [1995-01-01
   }
 }
 
-decision federal-circuit-appeal-window: "Federal Circuit Appeal Window" by applicant effective [1995-01-01, ..) cite usc1337.c
+/// Dated from the Court of Appeals Miscellaneous Fee Schedule's Dec. 1,
+/// 2023 docketing fee ($600; the pack's `coa-fee-schedule` source), which
+/// the notice-of-appeal edge charges; 19 U.S.C. § 1337(c)'s 60 days are
+/// older (Pub. L. 103-465, § 321(a)(2), from Jan. 1, 1995). The earlier
+/// fee is not in the pack or its sources, so no earlier version is modeled.
+decision federal-circuit-appeal-window: "Federal Circuit Appeal Window" by applicant effective [2023-12-01, ..) cite usc1337.c
 {
   group federal-circuit-appeal-group
   note "Any person adversely affected by a final Commission determination may appeal — reachable from BOTH a no-violation outcome (complainant appeals) and a remedy-in-effect outcome (respondent appeals), the same fork viewed from either side of the caption."

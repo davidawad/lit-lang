@@ -8,7 +8,7 @@ engine stays the analysis backend. litigate replaces hand-written JSON as the
 way the engine's input is authored.
 
 Status: design accepted 2026-10-22, epic in this repo's bead store
-(`br list --label litigate`). This doc is the root of the epic: every bead
+(epic `lg-litigate-epic-tuq`, `br list --label litigate`). This doc is the root of the epic: every bead
 cites a section here, and an agent should be able to work from this doc and
 the bead alone.
 

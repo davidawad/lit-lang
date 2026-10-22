@@ -53,7 +53,7 @@ Currency     = "usd" ;                          (* closed set in v1; other suffi
 String       = '"', { Escape | char - ('"' | "\\" | "\n") }, '"' ;
 Escape       = "\\", ( "\\" | '"' | "n" | "r" | "t" ) ;
 Ident        = IdStart, { IdContinue | "-", IdContinue } ;
-IdStart      = XID_Start | "_" ;   IdContinue = XID_Continue ;
+IdStart      = XID_Start | "_" | { digit }-, XID_Start ;   IdContinue = XID_Continue ;
 Underscore   = "_" ;                            (* a lone underscore *)
 CiteText     = (* see below *) ;
 Punct        = "::" | "->" | "=>" | "==" | "!=" | "<=" | ">=" | "&&" | "||" | ".."
@@ -62,7 +62,8 @@ Punct        = "::" | "->" | "=>" | "==" | "!=" | "<=" | ">=" | "&&" | "||" | ".
 ```
 
 - **Identifiers** may contain `-` only between two continue characters
-  (`answer-due`, not `answer-`). The hyphen is greedy, so `a-b` is one
+  (`answer-due`, not `answer-`). Digits followed by a letter also start an
+  identifier (`12b-motion-filed`); digits alone are a `Number`. The hyphen is greedy, so `a-b` is one
   identifier. Subtraction needs whitespace: `a - b`. When `a-b` doesn't
   resolve but `a` and `b` do, L1002 carries a machine-applicable fix to
   `a - b`.
@@ -74,10 +75,16 @@ Punct        = "::" | "->" | "=>" | "==" | "!=" | "<=" | ">=" | "&&" | "||" | ".
   but not including, the first newline, `{`, `}`, `,`, or `//`. Trailing
   whitespace is trimmed and internal runs of whitespace collapse to one space.
   Empty citation text is L0001. A `cite` clause therefore ends its line or
-  comes just before `{`.
+  comes just before `{`. When the first character after the spaces is `?`,
+  citation mode ends at once and the clause is a **cite hole**
+  `cite ?("text")`: citation text that has no `CiteText` spelling (it
+  contains `,`, `{`, `}`, `//`, or runs of whitespace) or that is not yet a
+  resolvable citation is kept as the hole's reason (§8.1).
 - **Typed literals.** `2_000_000.usd`, `21.days`, `5.court_days`,
   `3.business_days`, and `8.hours` are single tokens. Day amounts must be
-  integers (L0005). Hours may be decimal. Money may have at most the
+  integers (L0005), except in a `duration` value, which is an elapsed-time
+  estimate (`duration 4.5.days`); the parser enforces this, not the lexer.
+  Hours may be decimal. Money may have at most the
   currency's minor-unit digits (2 for usd), else L2006. There is no rational
   token: `1/3` is a division of two numbers, folded exactly (§6). Negative
   values use unary `-`.
@@ -130,12 +137,13 @@ EdgeFields   = "{", { EdgeField, Sep }, "}" ;
 EdgeField    = "event", CallExpr | "authority", (String | Cite) | "effort", Duration
              | "cost", (SignedMoney | Hole) | "within", Ref, [ DeadlineOpts ]
              | "deadline", Duration, [ DeadlineOpts ]
-             | "duration", (Duration | "{", "min", Duration, Sep, "mode", Duration,
-                             Sep, "max", Duration, "}")
+             | "duration", (Duration | "{", [ "min", Duration, Sep ], "mode", Duration,
+                             [ Sep, "max", Duration ], "}")
              | "valence", Ident | "court_listener_url", String | "action_id", String
              | "note", String | "tags", IdList | "attrs", NumRecord
              | "sets", IdList | "clears", IdList | "requires", IdList
-             | "forbids", IdList | "replaces", IdList ;
+             | "forbids", IdList | "replaces", ReplaceList ;
+ReplaceList  = "[", [ (Ref | String), { ",", (Ref | String) }, [","] ], "]" ;
 DeadlineOpts = "{", { ("extendable", Bool | "extension_authority", String
              | "note", String), Sep }, "}" ;
 
@@ -176,7 +184,7 @@ VersionClause= "effective", Interval | "known_at", Date ;
 Interval     = "[", Date, ",", (Date | ".."), ")" ;
 Relation     = ("subject_to" | "notwithstanding" | "supersedes" | "revives"
              | "override"), Ref | "delegable_to", IdList ;
-Cite         = "cite", CiteText ;
+Cite         = "cite", ( CiteText | Hole ) ;
 Ref          = Ident, [ "@", Ident ], { ("::" | "."), Ident }, [ "@", Date ] ;
 IdList       = "[", [ Ref, { ",", Ref }, [","] ], "]" ;
 NumRecord    = "{", { Ident, ":", SignedNumber, Sep }, "}" ;
@@ -204,7 +212,8 @@ CaseFile     = "case", Ident, UsesDecl, "as_of", Date, [ "known_at", Date ],
 UsesDecl     = "uses", UseItem, { ",", UseItem } ;
 UseItem      = Ident, VersionReq ;
 VersionReq   = ("^" | "~" | ">=" | "="), SemVer ;      (* tokens adjacent, no trivia *)
-SourceDecl   = "source", String, [ "{", { ("url", String | "as_of", Date), Sep }, "}" ] ;
+SourceDecl   = "source", String, [ "{", { ("url", String | "as_of", (Date | Hole)), Sep },
+               "}" ] ;
 PerspectiveDecl = "perspective", ( Ident | "{", { Ident, ":", Ident, Sep }, "}" ) ;
 PartiesBlock = "parties", "{", { Ident, ":", Ident, Ident, Sep }, "}" ;
 EventsBlock  = "events", "{", { Date, CallExpr, ("by" | "on"), Ident, [ Cite ] }, "}" ;
@@ -278,6 +287,7 @@ jurisdiction = "..."            # optional, Pack.jurisdiction
 in_force = "2009-12-01"         # default effective start
 in_force_until = "2030-01-01"   # optional default effective end (exclusive)
 known_at = "2025-01-01"         # default corpus date
+counting = "frcp6"              # optional; Pack.counting (v3): a counting-rule id
 
 [package.roles]                 # actor -> "self" | "opponent" | "nature"; Pack.roles
 applicant = "self"
@@ -292,7 +302,28 @@ sha256 = "..."
 as_of = "2024-12-01"
 cite_prefixes = ["FRCP", "Fed. R. Civ. P."]
 section_heading = "Rule {n}."   # optional; locates pinpoints in `path`
+
+[[cite_syntax.rules]]           # Pack.citeSyntax.rules[], in order (v3)
+prefixes = ["FRCP", "Fed. R. Civ. P."]
+heading = "Rule {}"             # exactly one {} (the section number)
+source = "frcp"                 # optional; a [sources.*] key
+
+[[cite_syntax.shorthands]]      # Pack.citeSyntax.shorthands[], in order (v3)
+prefix = "cfr"
+code = "cfr"                    # "usc" | "cfr"
+title = 19
+section_parts = 2
+source = "cfr-210"              # optional
 ```
+
+`counting` and `cite_syntax` mirror the pack-level fields litgraph added in
+schema v3 (`docs/PACK_SCHEMA.md`, "Citation syntax (v3)"). A
+`cite_syntax.rules` entry with a `source` also binds its prefixes to that
+source for cite resolution (§4.3), as the source's `cite_prefixes` would,
+with `heading` locating the pinpoint. A **links package** (§8.4) has no
+pack identity: its manifest has only `name`, `version`, `language`,
+`in_force`, `known_at`, and `[dependencies]` on every package its links
+and instances reference.
 
 Unknown keys, missing required keys (`name`, `version`, `language`, `pack_id`,
 `forum`, `authority`, `title`, `in_force`, `known_at`, `package.roles`), or
@@ -300,7 +331,10 @@ ill-typed values are L1004. A `.lit` `package` declaration is optional. When
 present, its name, `forum`, and `authority` must equal `Lit.toml` (L1005). A
 package's modules are all `*.lit` files under the directory holding
 `Lit.toml`. Module names are unique within a package (L1001) and are
-independent of file paths. They never affect node ids.
+independent of file paths. They never affect node ids. **Module order** is
+the order of the module files' package-relative POSIX paths; it orders
+`Pack.groups`, `Pack.nodes`, and edges (§8.1). Node order is observable
+(Monte Carlo analyses visit nodes in order), so it is part of the source.
 
 ### 4.2 `Lit.lock` and digests
 
@@ -520,7 +554,7 @@ The builtins (closed list) are `deadline(d) -> Date` (tests: due date from the
 from `event` declarations. There is no IO, ambient clock, mutation, float,
 implicit cast, or overloading beyond this table (L2002 otherwise). Field
 types: `p` is `Probability`, `effort` is `Hours`, `cost`/`payoff` are
-`Money<usd>`, `duration` is `Days<CalendarDays>` (`min <= mode <= max`),
+`Money<usd>`, `duration` is `Days<CalendarDays>` (`min <= mode <= max`, decimal amounts allowed),
 `deadline` is `Days<CalendarDays|CourtDays>`, and attrs are `Number`.
 
 ## 7. Verification obligations and profiles
@@ -565,18 +599,21 @@ Anything without a lowering is L6001.
 | Source | Target |
 |---|---|
 | `Lit.toml` `pack_id`, `title`, `description`, `jurisdiction`, `forum` | `Pack.id`, `title`, `description`, `jurisdiction`, `forum` |
-| (derived) | `Pack.schemaVersion` = 3 if counting/calendars are emitted, else 2 |
+| (derived) | `Pack.schemaVersion` = 3 if the package has a counting rule (manifest `counting`, or counting/calendar declarations), else 2 |
+| manifest `counting` | `Pack.counting` (the counting-rule id, verbatim) |
+| manifest `[[cite_syntax.*]]` | `Pack.citeSyntax.rules[]`/`shorthands[]` in order (`section_parts` is `sectionParts`) |
 | `start` | `Pack.startNodeId` |
 | `group` decls (module order, then source order) | `Pack.groups[]` |
 | `[package.roles]` | `Pack.roles` |
 | `[sources.*]` (declared order) | `Pack.sources[]` `{id, title, url, path, sha256, asOf}`; `cite_prefixes` and `section_heading` aren't emitted |
-| node id, label, cite | `RawNode.id` (kebab-case, no module prefix), `label`, `cite` |
+| node declarations (module order, then source order) | `Pack.nodes[]` |
+| node id, label, cite | `RawNode.id` (kebab-case, no module prefix), `label`, `cite` (a cite hole lowers to its reason, below) |
 | `state`/`chance` / `decision` / `terminal` | `RawNode.kind` `state` / `decision` / `terminal` |
 | node `group`, `note`, `valence`, `court_listener_url`, `tags`, `attrs` | same-named `RawNode` fields (`courtListenerUrl`) |
 | `outcome`, `payoff`, `payoff_by_flag` | `RawNode.outcome`, `payoff`, `payoffByFlag` (major units) |
 | edge, in node order then edge order | `Pack.edges[]`: `from` = enclosing node, `id` (omitted for `_`), `to`, `label`, `actor` |
 | `p`, `effort`, `cost` | `RawEdge.probability`, `hours`, `cost` |
-| `authority` | `RawEdge.authority` |
+| `authority` | `RawEdge.authority` (string, cite text, or cite-hole reason) |
 | `within d` | `RawEdge.deadline` `{length: N, unit, extendable, extensionAuthority, note}` from d's version in force, edge options winning |
 | `deadline N.unit {…}` | same, from the literal; `unit` omitted for calendar days, `"court"` for court days; business days are L6001 |
 | `duration` | `RawEdge.duration {min, mode, max}` (a single duration is `{mode}`) |
@@ -587,7 +624,21 @@ Anything without a lowering is L6001.
 Multiple versions: only the version selected by the build's `--as-of`/
 `--known-at` is emitted. The default is the package `known_at` date for both.
 
+A cite hole `cite ?("text")` lowers to `"text"` exactly, so imported
+citations stay lossless; a cite hole without a reason lowers to an absent
+field. Like every hole it is a warning in `dev` and an error in `strict`
+(§7), so the porter replaces it with a resolvable citation.
+
 ### 8.2 Clock IR (pack schema v3, additive)
+
+As landed by the engine bead (DESIGN §9.1), `Pack.counting` is a string:
+the id of a counting rule in litgraph's shared *clock library*
+(`packs/clock/*.json`, `docs/PACK_SCHEMA.md` "Clock library"), which holds
+the rules and holiday calendars as step lists. The manifest's `counting`
+key (§4.1) lowers to that id verbatim, which is all `litigate import`
+needs. Lowering `counting`/`calendar` declarations to the clock library is
+owned by the lowering bead; the sketch below predates the landed IR and is
+reconciled there.
 
 `Pack.counting` holds one `CountingRule` (the one named by the package's
 deadlines; more than one distinct rule per pack is L6001).
@@ -625,7 +676,7 @@ against this shape.
 
 | Source | Target |
 |---|---|
-| case id, `summary`, `notes`, `source`s | `NamedScenario.id`, `summary`, `notes` (empty string when absent), `sources[] {title, url, as_of}` |
+| case id, `summary`, `notes`, `source`s | `NamedScenario.id`, `summary`, `notes` (empty string when absent), `sources[] {title, url, as_of}`; an `as_of` hole lowers to its reason (`?("2026-06")` is `"2026-06"`) |
 | `uses` | `packs[]`: pack ids in `uses` order |
 | replayed/explicit start | `scenario.start` (qualified `pack::node`), omitted when it is the primary package's start and no events were replayed |
 | `perspective` | `scenario.perspective` actor-to-role map (only entries that differ from the primary package's roles) |
@@ -649,7 +700,9 @@ parse error is L6003.
 A package containing `link`/`instance` declarations is a links package. It
 must contain no nodes, and lowers to one `LinkFile`. A `link id "label": A ->
 B` becomes a `links[]` `RawEdge` with qualified `from`/`to` and every
-`EdgeField` as in §8.1, plus `replaces`. Each `instance base@origin` becomes
+`EdgeField` as in §8.1, plus `replaces`: a `Ref` item lowers to its text,
+and a `String` item verbatim (it names an anonymous edge by its derived
+id, `"pack::from->to#n"`, which has no `Ref` spelling). Each `instance base@origin` becomes
 `instances["base@origin"]` `{pack, note, remove_edges, probabilities, roles,
 payoff_transform, patch_edges}`. `patch` records become `patch_edges[edge]`
 verbatim as JSON merge patches (keys are `RawEdge` JSON names, `unset` is
@@ -675,12 +728,53 @@ defaults) and normalizing:
 - absent `Deadline.unit` is `calendar`
 - absent edge `id` is litgraph's derived `from->to#n` (`local_edge_ids`)
 - empty and absent collections are equal
+- `Pack.edges` is stably ordered by the position of each edge's `from` in
+  `Pack.nodes`: source groups edges under their node, so only the order
+  within one source node is significant (it fixes derived ids and the
+  engine's per-node action order; the whole test suite is unchanged under
+  this regrouping)
 
 Arrays are then compared in order, objects by key, and numbers by binary64
 bit equality. Output is byte-deterministic: two-space-indented JSON with a
 trailing newline, written atomically. Source maps (`*.map.json`: generated
 JSON pointer to source span) and provenance are sidecars excluded from
 equality.
+
+### 8.7 Import (§8 read in reverse)
+
+`litigate import` (crate `litigate-import`) turns legacy JSON into source
+that lowers back to semantically equal JSON (§8.6). A value with no exact
+spelling is L6002 at the input file, with its JSON pointer as a note; the
+importer never approximates. Its output is canonical `fmt` output that
+parses with no diagnostics, and it follows these conventions:
+
+- A pack becomes `lit/<dir>/` where `<dir>` is the pack's `forum` key (the
+  pack id when another imported pack shares the forum): `Lit.toml`, a root
+  module `<dir>.lit` (module `<dir>`) holding the `group` declarations, and
+  section modules `NN-<name>.lit` (module `<dir>.<name>`). A section is a
+  contiguous run of nodes with one group, named after it without a
+  `-group` suffix; runs whose nodes reach each other both ways are merged
+  with every run between them (`<first>-to-<last>`), so imports stay
+  acyclic (L1003). `NN` follows node order, so module order (§4.1)
+  reproduces `Pack.nodes`. Each section imports the groups and the
+  cross-section edge targets it uses, and the one holding the start node
+  declares `start`.
+- `Lit.toml`: `version = "0.1.0"`; `in_force = "0001-01-01"` and
+  `authority = "Unclassified"` are explicit placeholders (legacy JSON
+  records neither); `known_at` is the newest `sources[].asOf`.
+- Every node carries the `/// imported` marker (§7). Edges nest under
+  their source node in pack order. A node's `by` is its edges' most common
+  actor; an edge repeats `by` only when it differs. A `state` whose every
+  out-edge carries `p` and none loops back is written `chance`.
+- A `cite`/`authority` string is citation syntax when it has a `CiteText`
+  spelling and litgraph's citation parser recognizes every citation in it
+  under the pack's `citeSyntax`; otherwise it is a cite hole carrying the
+  original text. Notes stay `note` fields (they lower to `note`).
+- `links.json` becomes the links package `lit/links/` (one module `links`).
+- A named scenario becomes `cases/<id>.case`: `uses` every pack at
+  `^0.1.0`, `as_of` the primary package's `known_at`, an explicit `start`
+  (legacy scenarios assert posture; the porter replaces it with `events`),
+  and every `Scenario` field without a dedicated block under `analysis`.
 
 ## 9. Diagnostics, JSON, CLI
 
@@ -823,6 +917,12 @@ W1 added `SyntaxKind`s `ImportList`, `Param`, `FieldExpr`, `Ratio`,
 `KwUrl`, and the lookahead sentinel `Eof` (never stored in a tree), plus
 typed views for nodes that previously had none. The `Expr` view also casts
 `FieldExpr` and `Ratio`. All existing kinds and casts are unchanged.
+
+The import bead added, with no new kinds: a `CiteExpr` may hold a
+`HoleExpr` (`Cite::hole`), an `IdList` under `replaces` may hold string
+`Literal`s (`IdList::strings`), a source `as_of` may be a `HoleExpr`, and
+the forms in §2-§3 above (digit-led identifiers, decimal `duration` days,
+optional `min`/`max`). The tree-sitter grammar matches.
 
 HIR is plain serde data with every name resolved, every literal exact, and
 JSON shape frozen by an insta snapshot. Changing any of these is a SPEC

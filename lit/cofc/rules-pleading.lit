@@ -77,3 +77,9 @@ test "from January 11, 2010 the post-ruling period is 14 calendar days" cite RCF
   given MotionDisposed() on 2010-03-01
   expect deadline(answer-after-ruling) == 2010-03-15
 }
+
+test "before January 11, 2010 the ten-day period skipped weekends, Christmas and New Year's Day" cite RCFC 12 (2010 Amendment note)
+{
+  given MotionDisposed() on 2008-12-19
+  expect deadline(answer-after-ruling) == 2009-01-06
+}

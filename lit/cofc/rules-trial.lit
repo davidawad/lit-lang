@@ -19,9 +19,7 @@ rule duty post-judgment-motion cite RCFC 59(b)(1)
   /// records the change "from 10 to 30 days"). Under the RCFC 6 of the day a
   /// period under 11 days skips weekends and legal holidays, so judgment
   /// entered Friday 2009-11-20 made the motion due 2009-12-07 (Thanksgiving
-  /// skipped). `litigate test` computes exactly that; the assertion is kept
-  /// out of a `test` block until `check`'s tests-pass counts under the
-  /// counting version in force on the trigger date (it uses today's RCFC 6).
+  /// skipped), as the test below checks under the RCFC 6 then in force.
   deadline post-judgment-motion-period: 10.days after JudgmentEntered() counted_by rcfc6 effective [2002-05-01, 2010-01-11) cite RCFC 59 (2010 Amendment note)
 
   /// Amended January 11, 2010 to thirty days, conforming to the FRCP 59
@@ -65,6 +63,12 @@ test "between January 11, 2010 and July 15, 2011 the period was 30 days" cite RC
 {
   given JudgmentEntered() on 2010-06-01
   expect deadline(post-judgment-motion-period) == 2010-07-01
+}
+
+test "before January 11, 2010 the ten-day period skipped weekends and Thanksgiving" cite RCFC 59 (2010 Amendment note)
+{
+  given JudgmentEntered() on 2009-11-20
+  expect deadline(post-judgment-motion-period) == 2009-12-07
 }
 
 test "a Bill of Costs is due 30 days after final judgment" cite RCFC 54(d)(1)(B)

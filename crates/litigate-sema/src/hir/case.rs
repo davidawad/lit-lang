@@ -36,6 +36,24 @@ pub struct Case {
     pub observations: Vec<Observation>,
     /// Remaining litgraph `Scenario` fields.
     pub analysis: Analysis,
+    /// Options removed by cited option-removing events, in replay order.
+    /// Derived by the checker from `events` (SPEC §5.6), never authored:
+    /// checking replaces whatever is here.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub removals: Vec<Removal>,
+}
+
+/// An option a replayed event removed (lowers to `scenario.remove_edges`).
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Removal {
+    /// Qualified edge `pack::edge` no longer available to the matter.
+    pub edge: String,
+    /// Date of the removing event.
+    pub date: String,
+    /// Index of the removing event in [`Case::events`] (source order).
+    pub event: usize,
+    /// The removing event's cite.
+    pub authority: String,
 }
 
 /// Scenario source (`NamedScenario.sources[]`).

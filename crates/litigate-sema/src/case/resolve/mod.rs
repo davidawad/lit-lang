@@ -187,6 +187,7 @@ impl R<'_, '_> {
             stakes,
             observations,
             analysis,
+            removals: Vec::new(),
         })
     }
 

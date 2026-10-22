@@ -1,0 +1,67 @@
+---
+source: crates/litigate-sema/tests/case_removal.rs
+expression: render_json(&lowered.source_map).unwrap_or_default()
+---
+{
+  "generated": {
+    "by": "litigate-lower",
+    "version": "0.3.0",
+    "language": 1
+  },
+  "kind": "scenario",
+  "id": "pending-2009",
+  "as_of": "2010-06-01",
+  "entries": [
+    {
+      "pointer": "",
+      "id": "pending-2009",
+      "span": {
+        "file": "cases/t.case",
+        "line": 1,
+        "col": 1,
+        "end_line": 1,
+        "end_col": 1
+      }
+    },
+    {
+      "pointer": "/scenario/remove_edges/0",
+      "id": "frcp::granted",
+      "span": {
+        "file": "cases/t.case",
+        "line": 14,
+        "col": 14,
+        "end_line": 14,
+        "end_col": 31
+      },
+      "cite": {
+        "text": "FRCP 12(f)",
+        "sections": [
+          {
+            "heading": "12",
+            "source": "frcp"
+          }
+        ]
+      }
+    },
+    {
+      "pointer": "/scenario/remove_edges/1",
+      "id": "frcp::move-dismiss",
+      "span": {
+        "file": "cases/t.case",
+        "line": 15,
+        "col": 14,
+        "end_line": 15,
+        "end_col": 39
+      },
+      "cite": {
+        "text": "FRCP 12(h)(1)",
+        "sections": [
+          {
+            "heading": "12",
+            "source": "frcp"
+          }
+        ]
+      }
+    }
+  ]
+}

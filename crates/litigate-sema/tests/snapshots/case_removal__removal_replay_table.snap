@@ -1,0 +1,33 @@
+---
+source: crates/litigate-sema/tests/case_removal.rs
+expression: table
+---
+{
+    "duplicate: the same option removed twice": [
+        "15:21 L4001 `frcp::move-dismiss` was already removed on 2009-12-10\n    note @14:3: removed here",
+    ],
+    "ok: a forfeited motion leaves the answer": [
+        "ok: start frcp::answered",
+        "removed frcp::move-dismiss on 2009-12-10 (event 1, cite FRCP 12(h)(1))",
+    ],
+    "ok: a package-qualified option, removed before service": [
+        "ok: start frcp::respond",
+        "removed frcp::move-dismiss on 2009-12-01 (event 0, cite FRCP 12(h)(1))",
+    ],
+    "ok: the court strikes an outcome of a later stage": [
+        "ok: start frcp::mtd-ruling",
+        "removed frcp::granted on 2009-12-07 (event 1, cite FRCP 12(f))",
+    ],
+    "removed: an outcome struck before the ruling": [
+        "16:14 L4001 `Denied(motion)` at stage `frcp::mtd-ruling` takes `frcp::denied`, which was removed on 2009-12-07\n    note @14:3: removed here, cite FRCP 12(f)\n    note: replay stops at the first illegal event",
+    ],
+    "removed: the forfeited motion cannot be taken": [
+        "15:14 L4001 `MovedToDismiss(complaint)` at stage `frcp::respond` takes `frcp::move-dismiss`, which was removed on 2009-12-10\n    note @14:3: removed here, cite FRCP 12(h)(1)\n    note: replay stops at the first illegal event",
+    ],
+    "uncited: a removal must cite its authority": [
+        "14:14 L4001 `Forfeited(\"move-dismiss\")` removes an option only when it cites its authority\n    note: add the order or rule after the party, e.g. `cite FRCP 12(h)(1)`",
+    ],
+    "unresolved: no such edge, nearest suggested": [
+        "14:24 L1002 `frcp` has no edge `move-dismis` for `Forfeited(\"move-dismis\")` to remove\n    note: `option` names an edge by its id: `edge`, or `pack::edge` in another package\n    fix @14:24-14:37 MaybeIncorrect: \"\\\"move-dismiss\\\"\"",
+    ],
+}

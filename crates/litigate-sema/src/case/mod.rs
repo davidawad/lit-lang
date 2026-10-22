@@ -6,8 +6,9 @@
 //! [`check_source`] runs the whole pipeline on `.case` text and returns
 //! diagnostics located in that text. [`check`] does the same for a matter
 //! already in HIR (spans then come from a [`CaseSpans`], possibly empty).
-//! A checked matter's `start` is the replayed posture: posture is derived,
-//! never asserted.
+//! A checked matter's `start` is the replayed posture and its `removals`
+//! are the options its cited events took away: both are derived, never
+//! asserted.
 pub mod deadline;
 mod event;
 mod graph;
@@ -84,6 +85,7 @@ pub fn check_source(file: &str, text: &str, env: Env<'_>) -> CheckedCase {
 #[must_use]
 pub fn check(mut case: hir::Case, spans: &CaseSpans, env: Env<'_>) -> CheckedCase {
     let mut out = Vec::new();
+    case.removals.clear();
     dates(&case, spans, &mut out);
     let Some(used) = validate::pins(&case, env.packages, env.lock, spans, &mut out) else {
         return done(case, out);
@@ -106,6 +108,7 @@ pub fn check(mut case: hir::Case, spans: &CaseSpans, env: Env<'_>) -> CheckedCas
     }
     let replayed = replay::replay(&graph, &case, spans, env.clock, &start);
     out.extend(replayed.diagnostics);
+    case.removals = replayed.removals;
     validate::facts_and_beliefs(&case, &graph, spans, &mut out);
     if let Some(posture) = replayed.posture {
         validate::start(&case, &posture, spans, &mut out);

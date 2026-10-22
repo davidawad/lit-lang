@@ -229,6 +229,27 @@ impl<'a> Graph<'a> {
         out
     }
 
+    /// Ids of every named edge declared at a node of `pack` (any version),
+    /// including link edges leaving it.
+    pub fn edge_ids(&self, pack: &str) -> BTreeSet<&'a str> {
+        let own = self
+            .packages
+            .iter()
+            .filter(|p| p.manifest.pack_id == pack)
+            .flat_map(|p| declarations(p))
+            .filter_map(|d| match d {
+                Declaration::Node(n) => Some(n.edges.iter()),
+                _ => None,
+            })
+            .flatten();
+        let linked = self
+            .links
+            .iter()
+            .filter(|(from, _)| from.split_once("::").is_some_and(|(p, _)| p == pack))
+            .flat_map(|(_, edges)| edges.iter().map(|(_, e)| *e));
+        own.chain(linked).filter_map(|e| e.id.as_deref()).collect()
+    }
+
     /// Whether the used packages declare an excusing event type.
     pub fn declares_excusal(&self) -> bool {
         self.event_types().any(|(_, e)| is_excusal(&e.name))

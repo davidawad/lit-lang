@@ -1,0 +1,92 @@
+---
+source: crates/litigate-sema/tests/case.rs
+expression: table
+---
+{
+    "beliefs: not a chance node": [
+        "26:19 L4006 `frcp-rule12-example::respond` is not a chance node in force on 2025-06-01",
+    ],
+    "beliefs: not the node's own outcome": [
+        "26:33 L4006 `frcp-rule12-example::barred` is not an outcome of `frcp-rule12-example::mtd-ruling`\n    note: edges: granted, denied",
+    ],
+    "events: incomplete arguments": [
+        "20:14 L2001 `Served` takes 2 arguments, found 1\n    note: `Served(document: Document, method: ServiceMethod)`; case events must be complete",
+    ],
+    "events: not a variant": [
+        "20:32 L2001 expected a `ServiceMethod` variant, found `Fax`\n    note: variants: Personal, Mail, Electronic",
+    ],
+    "events: unknown constructor": [
+        "21:14 L1002 `frcp-rule12-example` declares no event `MovedToDismis`\n    note: events: Served, Answered, MovedToDismiss\n    fix @21:14-21:27 MaybeIncorrect: \"MovedToDismiss\"",
+    ],
+    "facts: not a fact node": [
+        "21:14 L4001 `MovedToDismiss(complaint)` is not a legal event at stage `frcp-rule12-example::time-barred` (Is the claim time-barred?)\n    note: legal events: none (no event moves this stage; it is decided by Court)\n    note: `frcp-rule12-example::time-barred` is a matter fact: resolve it with `facts { time-barred: <edge> }`\n    note: replay stops at the first illegal event",
+        "24:9 L4003 `frcp-rule12-example::mtd-ruling` is not a fact node in force on 2025-06-01\n    note: facts resolve nodes tagged `fact` (SPEC §5.1)",
+    ],
+    "facts: not the node's own edge": [
+        "24:22 L4003 `frcp-rule12-example::granted` is not an edge of fact `frcp-rule12-example::time-barred`\n    note: edges: barred, not-barred",
+    ],
+    "missed: mail service, one day after the rolled due date": [
+        "21:3 L4002 `MovedToDismiss(complaint)` on 2025-04-01 missed deadline `answer-period`, due 2025-03-31\n    note @20:3: `answer-period` runs 21 calendar days from `Served(complaint, Mail)` on 2025-03-05 under `frcp6@2009-12-01`, service by mail\n    note: no used package declares a `Waived`, `Extended`, or `Excused` event type to excuse it",
+    ],
+    "missed: one day after the answer period": [
+        "21:3 L4002 `MovedToDismiss(complaint)` on 2025-03-27 missed deadline `answer-period`, due 2025-03-26\n    note @20:3: `answer-period` runs 21 calendar days from `Served(complaint, Personal)` on 2025-03-05 under `frcp6@2009-12-01`\n    note: no used package declares a `Waived`, `Extended`, or `Excused` event type to excuse it",
+    ],
+    "names: unknown node": [
+        "26:19 L1002 no node `mtd-ruing` in `frcp-rule12-example`\n    fix @26:19-26:28 MaybeIncorrect: \"mtd-ruling\"",
+    ],
+    "ok: answering instead leaves only judgment reachable": [
+        "ok: start frcp-rule12-example::answered",
+    ],
+    "ok: mail service adds three days and rolls off the weekend": [
+        "ok: start frcp-rule12-example::mtd-ruling",
+    ],
+    "ok: no events, replay stays at the package start": [
+        "ok: start frcp-rule12-example::time-barred",
+    ],
+    "ok: the worked example": [
+        "ok: start frcp-rule12-example::mtd-ruling",
+    ],
+    "order: events out of date order": [
+        "21:3 L4001 events must be in date order: 2025-03-05 comes after 2025-03-20\n    note: replay processes events sorted by date (ties keep source order)\n    fix @20:3-21:51 MachineApplicable: \"2025-03-05 Served(complaint, Personal) on widget\\n  2025-03-20 MovedToDismiss(complaint) by widget\"",
+    ],
+    "parties: duplicate party": [
+        "17:3 L4005 party `widget` is declared twice; a party holds one role per proceeding",
+    ],
+    "parties: undeclared actor": [
+        "15:9 L4005 `Plantiff` is not an actor of `frcp-rule12-example`\n    note: actors: Court, Defendant, Plaintiff\n    fix @15:9-15:17 MaybeIncorrect: \"Plaintiff\"",
+    ],
+    "parties: undeclared event party": [
+        "21:43 L4005 `wigdet` is not a declared party",
+    ],
+    "stakes: a reachable terminal without a stake": [
+        "25:42 L4004 terminal `frcp-rule12-example::dismissed` is reachable from `frcp-rule12-example::mtd-ruling` but has no stake\n    note: give it a value, or `unvalued` while drafting (an error in strict)\n    fix @25:42-25:42 HasPlaceholders: \", dismissed: unvalued\"",
+    ],
+    "stakes: only terminals take stakes": [
+        "25:71 L4004 `frcp-rule12-example::respond` is not a terminal in force on 2025-06-01; only terminals take stakes",
+    ],
+    "stakes: unvalued is an error in strict": [
+        "25:55 L4004 terminal `frcp-rule12-example::dismissed` is `unvalued`, which `strict` does not accept",
+    ],
+    "stakes: unvalued is fine in dev": [
+        "ok: start frcp-rule12-example::mtd-ruling",
+    ],
+    "start: an explicit start that agrees": [
+        "ok: start frcp-rule12-example::mtd-ruling",
+    ],
+    "start: an explicit start the events move past": [
+        "12:7 L4008 `start frcp-rule12-example::respond` disagrees with the replayed posture `frcp-rule12-example::mtd-ruling`\n    note: posture is replayed from the events, never asserted\n    fix @12:1-12:14 MaybeIncorrect: \"\"",
+    ],
+    "typestate: an event after as_of": [
+        "21:3 L4001 event on 2025-07-01 is after the matter's as_of 2025-06-01\n    note: as_of selects the law the matter is analysed under; later events are not yet history",
+        "21:3 L4002 `MovedToDismiss(complaint)` on 2025-07-01 missed deadline `answer-period`, due 2025-03-26\n    note @20:3: `answer-period` runs 21 calendar days from `Served(complaint, Personal)` on 2025-03-05 under `frcp6@2009-12-01`\n    note: no used package declares a `Waived`, `Extended`, or `Excused` event type to excuse it",
+    ],
+    "typestate: nothing moves a pending ruling": [
+        "22:14 L4001 `Answered(complaint)` is not a legal event at stage `frcp-rule12-example::mtd-ruling` (Ruling on the motion to dismiss)\n    note: legal events: none (no event moves this stage; it is decided by Court)\n    note: replay stops at the first illegal event",
+    ],
+    "typestate: the plaintiff cannot answer": [
+        "21:37 L4001 `Answered(complaint)` at stage `frcp-rule12-example::respond` is taken by Defendant, but `acme` plays Plaintiff",
+    ],
+    "uses: requirement the lock does not satisfy": [
+        "2:6 L1007 Lit.lock pins `frcp-rule12-example` 0.1.0, which does not satisfy `^0.2.0`\n    note: run `litigate lock`",
+    ],
+}

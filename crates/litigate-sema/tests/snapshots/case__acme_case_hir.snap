@@ -1,0 +1,197 @@
+---
+source: crates/litigate-sema/tests/case.rs
+expression: case
+---
+{
+  "id": "acme-v-widget",
+  "summary": "Acme sues Widget; Widget decides whether to answer or move to dismiss.",
+  "notes": "Worked example for SPEC §12. Stakes are illustrative.",
+  "sources": [
+    {
+      "title": "Federal Rules of Civil Procedure",
+      "url": "https://www.law.cornell.edu/rules/frcp",
+      "as_of": "2024-12-01"
+    }
+  ],
+  "uses": [
+    {
+      "name": "frcp-rule12-example",
+      "pack_id": "frcp-rule12-example",
+      "version": "0.1.0",
+      "content_hash": "a9625dfeb2e385fc2f54e5e46999ce1f2f056196506b0c744ea24a5d8c187ed0"
+    }
+  ],
+  "as_of": "2025-06-01",
+  "known_at": null,
+  "start": "frcp-rule12-example::mtd-ruling",
+  "perspective": {
+    "perspective": "party",
+    "value": "widget"
+  },
+  "parties": [
+    {
+      "id": "acme",
+      "actor": "Plaintiff",
+      "entity_type": "Corporation"
+    },
+    {
+      "id": "widget",
+      "actor": "Defendant",
+      "entity_type": "Corporation"
+    }
+  ],
+  "events": [
+    {
+      "date": "2025-03-05",
+      "action": {
+        "ty": {
+          "type": "named",
+          "argument": "Served"
+        },
+        "kind": {
+          "expr": "call",
+          "callee": "Served",
+          "args": [
+            {
+              "ty": {
+                "type": "named",
+                "argument": "Document"
+              },
+              "kind": {
+                "expr": "literal",
+                "value": {
+                  "kind": "variant",
+                  "value": "Document::complaint"
+                }
+              },
+              "span": {
+                "file": "cases/t.case",
+                "line": 20,
+                "col": 21,
+                "end_line": 20,
+                "end_col": 30
+              }
+            },
+            {
+              "ty": {
+                "type": "named",
+                "argument": "ServiceMethod"
+              },
+              "kind": {
+                "expr": "literal",
+                "value": {
+                  "kind": "variant",
+                  "value": "ServiceMethod::Personal"
+                }
+              },
+              "span": {
+                "file": "cases/t.case",
+                "line": 20,
+                "col": 32,
+                "end_line": 20,
+                "end_col": 40
+              }
+            }
+          ]
+        },
+        "span": {
+          "file": "cases/t.case",
+          "line": 20,
+          "col": 14,
+          "end_line": 20,
+          "end_col": 41
+        }
+      },
+      "relation": "on",
+      "party": "widget",
+      "authority": null
+    },
+    {
+      "date": "2025-03-20",
+      "action": {
+        "ty": {
+          "type": "named",
+          "argument": "MovedToDismiss"
+        },
+        "kind": {
+          "expr": "call",
+          "callee": "MovedToDismiss",
+          "args": [
+            {
+              "ty": {
+                "type": "named",
+                "argument": "Document"
+              },
+              "kind": {
+                "expr": "literal",
+                "value": {
+                  "kind": "variant",
+                  "value": "Document::complaint"
+                }
+              },
+              "span": {
+                "file": "cases/t.case",
+                "line": 21,
+                "col": 29,
+                "end_line": 21,
+                "end_col": 38
+              }
+            }
+          ]
+        },
+        "span": {
+          "file": "cases/t.case",
+          "line": 21,
+          "col": 14,
+          "end_line": 21,
+          "end_col": 39
+        }
+      },
+      "relation": "by",
+      "party": "widget",
+      "authority": null
+    }
+  ],
+  "facts": {
+    "frcp-rule12-example::time-barred": "frcp-rule12-example::not-barred"
+  },
+  "stakes": {
+    "frcp-rule12-example::dismissed": {
+      "stake": "value",
+      "value": {
+        "minor_units": 0,
+        "currency": "usd"
+      }
+    },
+    "frcp-rule12-example::judgment-entered": {
+      "stake": "value",
+      "value": {
+        "minor_units": -200000000,
+        "currency": "usd"
+      }
+    }
+  },
+  "observations": [
+    {
+      "node": "frcp-rule12-example::mtd-ruling",
+      "outcomes": [
+        [
+          "frcp-rule12-example::granted",
+          3
+        ],
+        [
+          "frcp-rule12-example::denied",
+          1
+        ]
+      ]
+    }
+  ],
+  "analysis": {
+    "fields": {
+      "params": {
+        "rate": 650,
+        "opp_rate": 550
+      }
+    }
+  }
+}

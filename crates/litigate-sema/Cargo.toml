@@ -18,6 +18,9 @@ rowan.workspace = true
 [dev-dependencies]
 insta = { workspace = true, features = ["json"] }
 proptest.workspace = true
+# Integration tests count deadlines with the engine clock over lowered
+# counting rules (a dev-only cycle: litigate-lower depends on this crate).
+litigate-lower = { path = "../litigate-lower" }
 
 [lints]
 workspace = true

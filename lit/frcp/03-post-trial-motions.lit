@@ -117,7 +117,9 @@ state rule60-relief-filed: "Motion for Relief from Judgment Filed" by applicant 
   }
 }
 
-chance post-trial-ruling: "Court Rules on Post-Trial Motion" by examiner discretion cite FRCP 50(b); 59; 60(b)
+// Kept `decision` as the legacy pack has it. The rule text commits this
+// ruling to the court's discretion (proposed fix: `chance ... discretion`).
+decision post-trial-ruling: "Court Rules on Post-Trial Motion" by examiner cite FRCP 50(b); 59; 60(b)
 {
   group post-trial-motions-group
   note "Outcome distribution authored at 0.7 denied / 0.3 granted -- APPROXIMATE; post-trial motions asking a judge to overturn a jury's own verdict or the court's own prior ruling face real institutional headwind, though far from a rubber stamp given the wide range of triggering grounds pooled into this single fork."

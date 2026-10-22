@@ -308,11 +308,51 @@ impl Cx<'_, '_> {
                 );
             }
         }
+        replaces.extend(self.derived_replaces(fields.get("replaces")));
         Some(Link {
             from: from?,
             edge,
             replaces,
         })
+    }
+
+    /// String items of `replaces`: anonymous edges named by their derived
+    /// id `pack::from->to#n`, kept verbatim (SPEC §8.4). The pack and its
+    /// `from` node must exist.
+    fn derived_replaces(&mut self, f: Option<&&Field>) -> Vec<String> {
+        let Some(ExprKind::List(items)) = f.and_then(|x| first_expr(x)).map(|e| &e.kind) else {
+            return Vec::new();
+        };
+        let mut out = Vec::new();
+        for item in items {
+            let ExprKind::Str(text) = &item.kind else {
+                continue;
+            };
+            let known = text
+                .split_once("::")
+                .and_then(|(pack, rest)| Some((pack, rest.split_once("->")?.0)))
+                .is_some_and(|(pack, from)| {
+                    self.ck.scope.packs.iter().any(|s| {
+                        s.pack_id == pack
+                            && s.values
+                                .get(from)
+                                .is_some_and(|v| matches!(&v.kind, ValueKind::Node { .. }))
+                    })
+                });
+            if known {
+                out.push(text.clone());
+            } else {
+                self.report(
+                    Report::new(
+                        C::UnresolvedName,
+                        item.range,
+                        format!("no edge `{text}` to replace"),
+                    )
+                    .note("an anonymous edge is named by its derived id `pack::from->to#n`"),
+                );
+            }
+        }
+        out
     }
 
     fn instance_probabilities(

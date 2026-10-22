@@ -131,7 +131,11 @@ impl Lower {
                     .map(|t| name(&t).text),
             ),
             K::CiteExpr => {
-                let text = token_of(node, K::CiteText)?;
+                // A cite hole `cite ?("text")` is a hole whose reason is
+                // the citation text (SPEC §2, §8.1).
+                let Some(text) = token_of(node, K::CiteText) else {
+                    return self.expr(&node_of(node, K::HoleExpr)?);
+                };
                 return Some(Expr {
                     kind: ExprKind::Cite(cite_text(&text)),
                     range: range(text.text_range()),

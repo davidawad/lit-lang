@@ -1,6 +1,8 @@
 module frap.threshold
 
-import frap.notice.{ appeal-clock-open }
+import core.frap26.{ frap26 }
+import frap.events.{ EnteredBelow }
+import frap.notice.{ appeal-clock-open, notice-civil-period }
 import frap.{ threshold-group }
 
 start trial-court-disposition
@@ -26,7 +28,7 @@ state final-judgment-entered: "Final Judgment" by office cite 28 U.S.C. § 1291;
   note "A true final judgment ends the district court's power over the case on the merits and triggers the 30-day appeal clock. The judgment must resolve the entire controversy between the parties. Partial judgments, conditional orders, and orders that reserve jurisdiction (e.g., to tax costs or award attorney fees) may fail the finality test and block immediate appeal."
   _ "Final judgment starts appeal clock" -> appeal-clock-open {
     authority cite Fed. R. App. P. 4(a)(1)(A)
-    deadline 30.days {
+    within notice-civil-period {
       extendable true
       extension_authority "Fed. R. App. P. 4(a)(5)"
       note "Notice of appeal due within 30 days of entry of final judgment, extendable to 60 days maximum under FRAP 4(a)(5). Deadline is jurisdictional; missing it by even one day strips appellate court of jurisdiction. Post-judgment motions may alter the triggering date under FRAP 4(a)(4)."
@@ -66,7 +68,7 @@ decision interlocutory-review-fork: "Interlocutory Review Door Available?" by ap
   interlocutory-injunction-order "Injunction order — appeal as of right" -> immediately-appealable-interlocutory {
     authority cite 28 U.S.C. § 1292(a)(1)
     effort 8.hours
-    deadline 30.days {
+    within notice-civil-period {
       extendable true
       extension_authority "Fed. R. App. P. 4(a)(5)"
       note "Appeal of right from injunction/receivership orders. Notice of appeal due within 30 days of entry, extendable to 60 days maximum under FRAP 4(a)(5). Missing the deadline strips appellate jurisdiction regardless of merit."
@@ -77,7 +79,7 @@ decision interlocutory-review-fork: "Interlocutory Review Door Available?" by ap
   interlocutory-collateral-order "Order meets collateral order doctrine" -> immediately-appealable-interlocutory {
     authority cite ?("Cohen v. Beneficial Industrial Loan Corp., 337 U.S. 541 (1949)")
     effort 10.hours
-    deadline 30.days {
+    within notice-civil-period {
       extendable true
       extension_authority "Fed. R. App. P. 4(a)(5)"
       note "Collateral order doctrine requires all three Cohen factors: (1) conclusively determines a disputed question; (2) resolves an important issue separate from the merits; (3) unreviewable on appeal from final judgment. Same 30-day deadline as statutory appeals."
@@ -88,7 +90,7 @@ decision interlocutory-review-fork: "Interlocutory Review Door Available?" by ap
   interlocutory-1292b-certified "Certify for interlocutory appeal" -> immediately-appealable-interlocutory {
     authority cite 28 U.S.C. § 1292(b); Fed. R. App. P. 5(a)-(b)
     effort 20.hours
-    deadline 10.days {
+    within permission-petition-period {
       extendable false
       extension_authority "Fed. R. App. P. 5(a)(3)"
       note "Permissive appeal. District court must certify substantial ground for difference of opinion within 10 days of entry (FRAP 5(a)(1)); applicant then has 10 days to apply to the appellate court (FRAP 5(a)(3)). Neither deadline is extendable."
@@ -122,4 +124,33 @@ terminal interlocutory-review-unavailable: "No Appellate Jurisdiction — Await 
   note "This is the normal posture for most interlocutory orders: simply not appealable. Litigation continues below and the appellant must await a final judgment to seek review. This is not a trap — it is the designed statutory default. Attempting to appeal will be dismissed for lack of jurisdiction. PLACEHOLDER PAYOFF: $500,000 (stake midpoint), override per matter. The underlying case is not over -- appellate review is simply unavailable yet -- so this terminal is genuinely unresolved rather than a win or a loss."
   valence neutral
   payoff 500_000.usd
+}
+
+/// FRAP 5(a)(2): a petition for permission to appeal is due within the
+/// time the authorizing statute sets. For an order certified under 28
+/// U.S.C. § 1292(b) the statute sets 10 days after entry of the order (§
+/// 1292(b) is vendored in sources/usc-cfr-prosecution-fragments.txt). No
+/// court may extend the time to file a petition for permission to appeal
+/// (FRAP 26(b)(1)), so the period delegates to no one.
+rule duty permission-to-appeal effective [2009-12-01, ..) known_at 2009-03-26 cite FRAP 5(a)(2)
+{
+  deadline permission-petition-period: 10.days after EnteredBelow(CertifiedOrder) counted_by frap26 cite FRAP 5(a)(2)
+}
+
+test "a 1292(b) petition is due 10 days after the certified order" cite FRAP 5(a)(2)
+{
+  given EnteredBelow(CertifiedOrder) on 2025-03-03
+  expect deadline(permission-petition-period) == 2025-03-13
+}
+
+test "a 10th day on Columbus Day rolls to Tuesday" cite FRAP 26(a)(6)(A)
+{
+  given EnteredBelow(CertifiedOrder) on 2025-10-03
+  expect deadline(permission-petition-period) == 2025-10-14
+}
+
+test "an interlocutory appeal of right has the civil 30 days" cite FRAP 4(a)(1)(A)
+{
+  given EnteredBelow(InterlocutoryOrder) on 2025-03-12
+  expect deadline(notice-civil-period) == 2025-04-11
 }

@@ -1,7 +1,33 @@
 module frap.mandate
 
-import frap.cert.{ cert-petition-window }
+import core.authority.{ CaseOrder }
+import core.frap26.{ frap26 }
+import frap.cert.{ cert-period, cert-petition-window }
+import frap.events.{ RehearingClosed }
 import frap.{ mandate-group }
+
+/// FRAP 41(b): the mandate issues 7 days after the time to petition for
+/// rehearing expires, or 7 days after entry of an order denying a timely
+/// petition or a motion to stay the mandate, whichever is later. "The
+/// court may shorten or extend the time by order", so the period delegates
+/// to `CaseOrder`. It binds the clerk, not a party: the pack models it as
+/// the window the mandate edges wait out.
+rule duty issue-mandate effective [2009-12-01, ..) known_at 2009-03-26 cite FRAP 41(b)
+{
+  deadline mandate-period: 7.days after RehearingClosed() counted_by frap26 delegable_to [CaseOrder] cite FRAP 41(b)
+}
+
+test "the mandate issues 7 days after the rehearing time expires" cite FRAP 41(b)
+{
+  given RehearingClosed(TimeExpired) on 2025-03-03
+  expect deadline(mandate-period) == 2025-03-10
+}
+
+test "a 7th day on Independence Day rolls to Monday" cite FRAP 26(a)(6)(A)
+{
+  given RehearingClosed(PetitionDenied) on 2025-06-27
+  expect deadline(mandate-period) == 2025-07-07
+}
 
 state mandate-issued: "Mandate Issues" by office cite Fed. R. App. P. 41(a)–(b)
 {
@@ -9,7 +35,7 @@ state mandate-issued: "Mandate Issues" by office cite Fed. R. App. P. 41(a)–(b
   note "The mandate is the formal order returning jurisdiction to the district court — distinct from the opinion and critical for enforcing the judgment. It issues automatically 7 days after either expiration of the rehearing period or denial of a timely rehearing petition. The mandate, not the opinion, is what actually binds the district court."
   _ "Judgment final — cert clock runs" -> cert-petition-window {
     authority cite ?("Fed. R. App. P. 41(b); Sup. Ct. R. 13.3")
-    deadline 90.days {
+    within cert-period {
       extendable true
       extension_authority "Sup. Ct. R. 13.6"
       note "The 90-day deadline is measured from the date the appellate opinion is filed/docketed. Missing this deadline forecloses any Supreme Court review; the judgment becomes final and enforceable. Extensions require filing before the deadline expires."
@@ -29,7 +55,7 @@ state mandate-stayed-pending-cert: "Mandate Stayed Pending Certiorari" by examin
   note "On motion, the court of appeals may stay its mandate pending a cert petition — otherwise the district court could enforce the judgment while the Supreme Court is still deciding whether to take the case. The stay is discretionary and requires a showing of likelihood of cert grant plus irreparable harm."
   _ "Stay granted — cert proceeds" -> cert-petition-window {
     authority cite Fed. R. App. P. 41(d)(2)
-    deadline 90.days {
+    within cert-period {
       extendable true
       extension_authority "Sup. Ct. R. 13.6"
       note "If cert is denied or the 90-day window expires (whichever is earlier), the stay terminates automatically and the mandate issues to enforce the judgment."

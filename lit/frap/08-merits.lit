@@ -1,6 +1,6 @@
 module frap.merits
 
-import frap.rehearing.{ rehearing-window }
+import frap.rehearing.{ rehearing-period, rehearing-window }
 import frap.{ merits-group }
 
 terminal affirmed: "AFFIRMED" by applicant outcome [loss, affirmed] cite FRAP 36(a)
@@ -12,7 +12,7 @@ terminal affirmed: "AFFIRMED" by applicant outcome [loss, affirmed] cite FRAP 36
   _ "Losing party weighs rehearing" -> rehearing-window {
     authority cite FRAP 40(a)(1)
     effort 3.hours
-    deadline 14.days {
+    within rehearing-period {
       extendable true
       extension_authority "FRAP 40(a)(1); circuit local rules may allow additional extensions by panel order or stipulation"
       note "Losing party must file a petition for panel rehearing or rehearing en banc within 14 days of judgment entry. Missing this deadline forecloses appellate-level recourse (except discretionary certiorari); the appellate judgment becomes final."
@@ -31,7 +31,7 @@ terminal reversed: "REVERSED" by applicant outcome [win, reversed] cite FRAP 36(
   _ "Losing party weighs rehearing" -> rehearing-window {
     authority cite FRAP 40(a)(1)
     effort 3.hours
-    deadline 14.days {
+    within rehearing-period {
       extendable true
       extension_authority "FRAP 40(a)(1); circuit local rules"
       note "Losing party (the party who prevailed below) must file a petition for rehearing within 14 days or lose appellate-level recourse. Extension requires a proactive panel request or stipulation — default expiration is strict."
@@ -50,7 +50,7 @@ terminal reversed-and-remanded: "REVERSED AND REMANDED" by applicant outcome [wi
   _ "Losing party weighs rehearing" -> rehearing-window {
     authority cite FRAP 40(a)(1)
     effort 3.hours
-    deadline 14.days {
+    within rehearing-period {
       extendable true
       extension_authority "FRAP 40(a)(1); circuit local rules"
       note "Either party may file a petition for rehearing (the appellee who won on appeal may seek en banc review; the appellant who still faces remand may challenge the legal standard applied). Missing the 14-day window forecloses the petition and accelerates remand."
@@ -69,7 +69,7 @@ terminal vacated-and-remanded: "VACATED AND REMANDED" by applicant outcome [rema
   _ "Losing party weighs rehearing" -> rehearing-window {
     authority cite FRAP 40(a)(1)
     effort 3.hours
-    deadline 14.days {
+    within rehearing-period {
       extendable true
       extension_authority "FRAP 40(a)(1); circuit local rules"
       note "Either party may petition for rehearing if they contest the panel's reasoning for vacatur or seek clarification of the remand instructions. Missing the 14-day deadline leaves only the (weaker) remand process to raise objections."
@@ -88,7 +88,7 @@ terminal affirmed-in-part-reversed-in-part: "AFFIRMED IN PART, REVERSED IN PART"
   _ "Either party weighs rehearing" -> rehearing-window {
     authority cite FRAP 40(a)(1)
     effort 3.hours
-    deadline 14.days {
+    within rehearing-period {
       extendable true
       extension_authority "FRAP 40(a)(1); circuit local rules"
       note "Both parties may have grounds for rehearing: the party who lost on the reversed portion may challenge the legal rule; the party who won only on the affirmed portion may seek full reversal. A single 14-day deadline applies to the entire judgment."

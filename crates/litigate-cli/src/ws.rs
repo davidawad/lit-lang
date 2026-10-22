@@ -5,7 +5,9 @@ use crate::out::Failure;
 use litigate_sema::db::inputs::{PackageInput, Workspace};
 use litigate_sema::hir;
 use litigate_sema::pkg::load::{relative_to, LoadedPackage};
+use litigate_sema::pkg::lock::LockFile;
 use litigate_sema::pkg::manifest::parse_manifest;
+use litigate_sema::types::build::expected_lock;
 use litigate_sema::{LitDatabase, PackageCheck};
 use std::collections::BTreeSet;
 use std::path::{Path, PathBuf};
@@ -214,6 +216,8 @@ pub struct CaseText {
     pub path: String,
     /// Contents.
     pub text: String,
+    /// The `Lit.lock` beside it, which pins what it `uses` (SPEC §5.6).
+    pub lock: Option<String>,
 }
 
 /// Everything loaded for one command.
@@ -229,7 +233,7 @@ pub struct Session {
 }
 
 /// Package names a `.case` text `uses`.
-fn uses_of(text: &str) -> Vec<String> {
+pub(crate) fn uses_of(text: &str) -> Vec<String> {
     litigate_syntax::parse_case(text)
         .case_file()
         .and_then(|f| f.uses())
@@ -271,6 +275,7 @@ impl Session {
                     path: shown(p),
                     text: std::fs::read_to_string(p)
                         .map_err(|e| Failure::new(format!("{}: {e}", p.display())))?,
+                    lock: std::fs::read_to_string(p.with_file_name("Lit.lock")).ok(),
                 })
             })
             .collect::<Result<Vec<_>, Failure>>()?;
@@ -347,6 +352,22 @@ impl Session {
     /// Packages the user named.
     pub fn requested(&self) -> impl Iterator<Item = &Pkg> {
         self.packages.iter().filter(|p| p.requested)
+    }
+
+    /// The `Lit.lock` a directory of `matters` needs: every loaded package
+    /// they `use`, with its resolved dependencies (SPEC §4.2, §5.6).
+    #[must_use]
+    pub fn matter_lock<'a>(&self, matters: impl IntoIterator<Item = &'a CaseText>) -> LockFile {
+        let wanted: BTreeSet<String> = matters.into_iter().flat_map(|c| uses_of(&c.text)).collect();
+        let mut lock = LockFile::new(
+            self.packages
+                .iter()
+                .filter(|p| wanted.contains(&p.name))
+                .flat_map(|p| expected_lock(&self.db, self.ws, p.input).packages)
+                .collect(),
+        );
+        lock.packages.dedup();
+        lock
     }
 
     /// Every source text, for rendering and fixes.

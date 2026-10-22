@@ -39,6 +39,12 @@ fn import_check_run_matches_litgraph() {
 
     let lock = litigate_in(&out, &["lock", "lit/links"]);
     assert_eq!(lock.code, 0, "{}", lock.stdout);
+    let stale = litigate_in(&out, &["check", "cases"]);
+    assert_eq!(stale.code, 2, "a matter without a Lit.lock is L1007");
+    let lock = litigate_in(&out, &["lock", "cases"]);
+    assert_eq!(lock.code, 0, "{}", lock.stdout);
+    let locked = litigate_in(&out, &["lock", "--locked", "cases"]);
+    assert_eq!(locked.code, 0, "{}", locked.stdout);
     let check = litigate_in(&out, &["check", "lit", "cases"]);
     assert_eq!(check.code, 0, "{}", check.stdout);
 

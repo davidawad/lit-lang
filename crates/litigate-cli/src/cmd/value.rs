@@ -3,8 +3,8 @@
 //! in force, any override and its delegation, to the cited L0 text.
 use super::check::checked;
 use super::where_::{cite_sections, overrides};
-use crate::case::replay::Scheduled;
 use crate::hirx::{self, local};
+use crate::matter::Scheduled;
 use crate::out::{Failure, Outcome, Report};
 use litigate_base::Profile;
 use litigate_sema::hir::{self, DeadlineWindow, Relation};

@@ -14,18 +14,19 @@
 //! assert_eq!(envelope["result"]["code"], "L3004");
 //! # Ok::<(), String>(())
 //! ```
-pub mod case;
 pub mod cli;
 pub mod clock;
 mod cmd;
 pub mod describe;
 pub mod hirx;
 pub mod inline_tests;
+pub mod matter;
 pub mod out;
 pub mod prov;
 mod render;
+pub mod report;
 pub mod span;
-pub mod verify;
+pub mod verdict;
 pub mod ws;
 
 use clap::Parser;

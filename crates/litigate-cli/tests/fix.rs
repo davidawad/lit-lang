@@ -30,6 +30,8 @@ fn workspace(name: &str, case: &str) -> std::path::PathBuf {
     copy_dir(&repo().join("lit"), &dir.join("lit"));
     std::fs::create_dir_all(dir.join("cases")).unwrap();
     std::fs::write(dir.join("cases/m.case"), case).unwrap();
+    let lock = litigate_in(&dir, &["lock", "cases"]);
+    assert_eq!(lock.code, 0, "{}", lock.stdout);
     dir
 }
 
@@ -89,7 +91,7 @@ fn replay_errors_are_precise() {
         run.json["diagnostics"][0]["message"]
             .as_str()
             .unwrap()
-            .contains("only Defendant may take"),
+            .contains("is taken by Defendant, but `acme` plays Plaintiff"),
         "{}",
         run.stdout
     );

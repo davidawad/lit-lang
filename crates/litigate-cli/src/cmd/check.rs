@@ -1,11 +1,12 @@
 //! `litigate check`: every package and matter, every obligation.
-use crate::case::{self, CaseCheck};
 use crate::cli::Dates;
 use crate::clock::Clocks;
+use crate::matter::{self, CaseCheck};
 use crate::out::{Failure, Outcome, Report};
-use crate::verify::{self, Verdict};
+use crate::verdict::{self, Verdict};
 use crate::ws::{self, Session};
 use litigate_base::{Diagnostic, Profile};
+use litigate_lower::{EngineClock, Lowerer, Options};
 use litigate_verify::Finding;
 use serde_json::{json, Value};
 
@@ -55,35 +56,42 @@ pub fn checked_targets(
 /// Checks everything loaded in `session`.
 #[must_use]
 pub fn check_session(session: Session, profile: Profile, as_of: Option<&str>) -> Checked {
-    let clocks = Clocks::new(&session.hir());
+    let all = session.hir();
+    let clocks = Clocks::new(&all);
+    // A counting rule that does not lower is reported by its package's
+    // verification; replay then counts with the shared library alone.
+    let engine =
+        EngineClock::lowered(&Lowerer::new(&all), &all).unwrap_or_else(|_| EngineClock::new([]));
+    let options = Options {
+        as_of: as_of.map(str::to_owned),
+        known_at: None,
+    };
     let verdicts: Vec<(String, Verdict)> = session
         .packages
         .iter()
         .map(|p| {
             (
                 p.name.clone(),
-                verify::package(&session, p, &clocks, profile, as_of),
+                verdict::package(&session, p, &clocks, profile, &options),
             )
         })
         .collect();
     let cases: Vec<CaseCheck> = session
         .cases
         .iter()
-        .map(|c| case::check(&session, c, &clocks, profile))
+        .map(|c| matter::check(&session, c, &engine, &clocks, profile))
         .collect();
     let diagnostics: Vec<Diagnostic> = verdicts
         .iter()
         .flat_map(|(_, v)| v.diagnostics.iter().cloned())
         .chain(cases.iter().flat_map(|c| c.diagnostics.iter().cloned()))
         .collect();
-    let not_run: Vec<String> = session
-        .packages
+    let parts: Vec<&[Finding]> = verdicts
         .iter()
-        .zip(&verdicts)
-        .filter(|(_, (_, v))| !v.ran)
-        .map(|(p, _)| p.root.clone())
+        .map(|(_, v)| v.findings.as_slice())
+        .chain(cases.iter().map(|c| c.findings.as_slice()))
         .collect();
-    let findings = verify::findings(&diagnostics, &not_run, cases.len());
+    let findings = crate::report::merge(&parts);
     Checked {
         session,
         verdicts,

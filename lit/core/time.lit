@@ -1,0 +1,35 @@
+module core.time
+
+/// A period counted in calendar days (FRCP 6(a)(1)(B): count every day).
+type CalendarPeriod = Days<CalendarDays>
+/// A period counted in court days: weekends and the counting rule's
+/// holidays are skipped.
+type CourtPeriod = Days<CourtDays>
+/// A period counted in business days (no engine lowering in language 1).
+type BusinessPeriod = Days<BusinessDays>
+/// A period stated in hours (FRCP 6(a)(2)).
+type HourPeriod = Hours
+/// A half-open in-force window `[from, to)` (SPEC §5.4).
+type InForce = Interval<Date>
+
+/// How a paper was served. The counting rules' `service_extension` keys are
+/// these variants, so an event carrying one is extended when its rule says
+/// so (FRCP 6(d), RCFC 6(d), FRAP 26(c), 19 C.F.R. § 201.16(d)-(e)).
+enum ServiceMethod {
+  Personal,
+  Electronic,
+  Mail,
+  Clerk,
+  OtherConsented,
+  CommercialCarrier,
+  PrisonMail,
+  MailForeign,
+  Express,
+  ExpressForeign,
+}
+
+/// A paper or event that starts a period, served by `method` (`Personal`
+/// when service adds no time). The counting-rule tests count from it.
+event Served(method: ServiceMethod)
+/// An event a period is counted back from (a hearing or trial date).
+event Scheduled()

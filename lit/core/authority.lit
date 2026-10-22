@@ -1,0 +1,12 @@
+module core.authority
+
+/// The authority lattice (DESIGN §4.5, SPEC §5.5): a statute outranks a
+/// court's rules of procedure (28 U.S.C. § 2072), which outrank a court's
+/// local rules (FRCP 83(a)(1)), which outrank a judge's standing orders,
+/// which outrank an order in one case. Every package sees it through `core`.
+authority Statute > FederalRule > LocalRule > StandingOrder > CaseOrder
+/// Agency rules of practice (19 C.F.R. Part 210, 37 C.F.R. Parts 1, 2, 41,
+/// 42) answer to their enabling statutes and bind the agency's orders in one
+/// proceeding. They are incomparable with the courts' rules: the two never
+/// govern one deadline, so no canon may rank them.
+authority Statute > Regulation > CaseOrder

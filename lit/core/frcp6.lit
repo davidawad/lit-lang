@@ -1,0 +1,80 @@
+module core.frcp6
+
+import core.calendar.{ us-federal-holidays }
+
+/// FRCP 6(a) and 6(e) from the 1963 amendments (effective July 1, 1963):
+/// Saturdays join Sundays and legal holidays as days a period cannot end
+/// on, and inside a period of less than 7 days none of them is counted
+/// (1963 Advisory Committee Note); service by mail adds 3 days.
+counting frcp6 effective [1963-07-01, 1985-08-01) known_at 1963-01-21 cite FRCP (2008 ed.) 6 (1963 Advisory Committee Note)
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday]
+  short_period { below: 7.days, count: business_days }
+  service_extension { Mail: 3.days }
+  holidays us-federal-holidays
+}
+
+/// The 1985 amendments (effective August 1, 1985): the short-period
+/// exclusion reaches periods of less than 11 days, and a last day on which
+/// the clerk's office is inaccessible rolls forward too (1985 Advisory
+/// Committee Note).
+counting frcp6 effective [1985-08-01, 2001-12-01) known_at 1985-04-29 supersedes frcp6@1963-07-01 cite FRCP (2008 ed.) 6 (1985 Advisory Committee Note)
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  short_period { below: 11.days, count: business_days }
+  service_extension { Mail: 3.days }
+  holidays us-federal-holidays
+}
+
+/// The 2001 amendments (effective December 1, 2001): the 3 added days reach
+/// service by leaving a copy with the clerk and by other consented means,
+/// electronic service included (2001 Committee Note); restyled in 2007 as
+/// 6(a)(2) and 6(d). The 2005 amendment confirmed the order the pipeline
+/// uses: the days are added after the period expires under 6(a).
+counting frcp6 effective [2001-12-01, 2009-12-01) known_at 2001-04-23 supersedes frcp6@1985-08-01 cite FRCP (2008 ed.) 6(a)(2)
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  short_period { below: 11.days, count: business_days }
+  service_extension {
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+  } cite FRCP (2008 ed.) 6(d)
+  holidays us-federal-holidays
+}
+
+/// The 2009 time-computation amendments (adopted March 26, 2009, effective
+/// December 1, 2009): every day counts (6(a)(1)(B)), periods may be stated
+/// in hours (6(a)(2)), and the clerk's office inaccessibility rule is
+/// 6(a)(3). The 2016 amendment removed electronic service from 6(d); the
+/// engine has no electronic service method to extend, so this version
+/// already lists only mail, the clerk, and other consented means.
+counting frcp6 effective [2009-12-01, ..) known_at 2009-03-26 supersedes frcp6@2001-12-01 cite FRCP 6(a)
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension { Mail: 3.days, Clerk: 3.days, OtherConsented: 3.days } cite FRCP 6(d)
+  holidays us-federal-holidays
+  allow_hours
+}
+
+/// The court's determination under FRCP 86(a)(2)(B) that applying an
+/// amendment in a pending action "would be infeasible or work an
+/// injustice".
+event PriorTimeRulesOrdered()
+
+/// FRCP 86(a)(2): the 2009 amendments govern proceedings after December 1,
+/// 2009 in actions then pending, unless the court determines otherwise
+/// (the adopting order's "insofar as just and practicable").
+transition frcp6-2009 amends frcp6@2009-12-01 cite FRCP 86(a)(2)(B)
+{
+  unless has_event(PriorTimeRulesOrdered()) -> frcp6@2001-12-01
+  otherwise -> frcp6@2009-12-01
+}

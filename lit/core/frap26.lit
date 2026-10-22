@@ -1,0 +1,75 @@
+module core.frap26
+
+import core.calendar.{ us-federal-holidays }
+
+/// FRAP 26 from the rules' effective date, July 1, 1968: "based upon FRCP
+/// 6(a), (b) and (e)" (1967 Advisory Committee Note), so periods under 7
+/// days skip weekends and legal holidays (the rule the 1996 and 2002 notes
+/// describe) and mail service adds 3 days.
+counting frap26 effective [1968-07-01, 1989-12-01) known_at 1967-12-04 cite FRAP (2008 ed.) 26 (1967 Advisory Committee Note)
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday]
+  short_period { below: 7.days, count: business_days }
+  service_extension { Mail: 3.days }
+  holidays us-federal-holidays
+}
+
+/// The 1989 amendment: a last day the clerk's office is inaccessible rolls
+/// forward (1989 Advisory Committee Note).
+counting frap26 effective [1989-12-01, 1996-12-01) known_at 1989-04-25 supersedes frap26@1968-07-01 cite FRAP (2008 ed.) 26 (1989 Advisory Committee Note)
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  short_period { below: 7.days, count: business_days }
+  service_extension { Mail: 3.days }
+  holidays us-federal-holidays
+}
+
+/// The 1996 amendment: the 3 days follow any service delivered after the
+/// date its proof states, commercial carrier included (1996 Advisory
+/// Committee Note).
+counting frap26 effective [1996-12-01, 2002-12-01) known_at 1996-04-23 supersedes frap26@1989-12-01 cite FRAP (2008 ed.) 26(c)
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  short_period { below: 7.days, count: business_days }
+  service_extension { Mail: 3.days, CommercialCarrier: 3.days }
+  holidays us-federal-holidays
+}
+
+/// The 2002 amendment: the short-period exclusion reaches periods under 11
+/// days, as in FRCP 6(a) (2002 Committee Note). Electronic service also
+/// gained the 3 days; the engine has no electronic service method.
+counting frap26 effective [2002-12-01, 2009-12-01) known_at 2002-04-29 supersedes frap26@1996-12-01 cite FRAP (2008 ed.) 26(a)(2)
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  short_period { below: 11.days, count: business_days }
+  service_extension { Mail: 3.days, CommercialCarrier: 3.days }
+  holidays us-federal-holidays
+}
+
+/// FRAP 26 as amended December 1, 2009 (2009 Committee Note): every day
+/// counts (26(a)(1)), periods may be stated in hours (26(a)(2)), and the
+/// clerk's office inaccessibility rule is 26(a)(3). 26(c) adds 3 days after
+/// a paper is mailed, sent by commercial carrier, or deposited in a prison
+/// mailing system.
+///
+/// The engine's `packs/clock/frap26.json` has no hours provision and only
+/// ignores clerk inaccessibility; the vendored 26(a)(2)-(3) say otherwise,
+/// so this version follows them. Day counts agree exactly; the two differ
+/// only when the clerk's office is inaccessible on the last day.
+counting frap26 effective [2009-12-01, ..) known_at 2009-03-26 supersedes frap26@2002-12-01 cite FRAP 26(a)
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension { Mail: 3.days, CommercialCarrier: 3.days, PrisonMail: 3.days } cite FRAP 26(c)
+  holidays us-federal-holidays
+  allow_hours
+}

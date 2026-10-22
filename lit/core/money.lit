@@ -1,0 +1,8 @@
+module core.money
+
+/// US dollars, held exactly in integral cents (SPEC §6).
+type Usd = Money<usd>
+/// An out-of-pocket amount on an edge (`cost`).
+type Cost = Money<usd>
+/// A terminal value (`payoff`, a case's `stakes`).
+type Payoff = Money<usd>

@@ -1,0 +1,212 @@
+module core.frap26.tests
+
+import core.frap26.{ frap26 }
+import core.time.{ Served, Scheduled, ServiceMethod }
+
+// Fixture periods for testing `frap26`. Known answers reproduce
+// crates/litgraph/tests/clock_*.rs and every `frap26` deadline in
+// tests/cases/*.json (each named for its case), counted under the FRAP 26
+// version in force on the trigger date.
+deadline frap26-1-day: 1.days after Served() counted_by frap26 cite FRAP 26(a)(1)
+deadline frap26-5-days: 5.days after Served() counted_by frap26 cite FRAP 26(a)(1)
+deadline frap26-10-days: 10.days after Served() counted_by frap26 cite FRAP 26(a)(1)
+deadline frap26-14-days: 14.days after Served() counted_by frap26 cite FRAP 26(a)(1)
+deadline frap26-26-days: 26.days after Served() counted_by frap26 cite FRAP 26(a)(1)
+deadline frap26-30-days: 30.days after Served() counted_by frap26 cite FRAP 4(a)(1)(A)
+deadline frap26-45-days: 45.days after Served() counted_by frap26 cite FRAP 40(d)(1)
+deadline frap26-60-days: 60.days after Served() counted_by frap26 cite FRAP 4(a)(1)(B)
+deadline frap26-63-days: 63.days after Served() counted_by frap26 cite FRAP 26(a)(1)
+deadline frap26-90-days: 90.days after Served() counted_by frap26 cite FRAP 26(a)(1)
+deadline frap26-2-days-before: 2.days before Scheduled() counted_by frap26 cite FRAP 26(a)(5)
+
+test "a notice of appeal 30 days after entry of judgment" cite FRAP 4(a)(1)(A)
+{
+  given Served(Personal) on 2026-01-05
+  expect deadline(frap26-30-days) == 2026-02-04
+}
+
+test "commercial carrier adds three days; a Saturday rolls to Monday" cite FRAP 26(c)
+{
+  given Served(CommercialCarrier) on 2026-01-05
+  expect deadline(frap26-30-days) == 2026-02-09
+}
+
+test "a Saturday last day rolls to Monday, then three days end Thursday" cite FRAP 26(c)
+{
+  given Served(CommercialCarrier) on 2026-01-05
+  expect deadline(frap26-26-days) == 2026-02-05
+}
+
+test "prison mail adds three days" cite FRAP 26(c)
+{
+  given Served(PrisonMail) on 2026-01-05
+  expect deadline(frap26-30-days) == 2026-02-09
+}
+
+test "leaving a copy with the clerk is not a FRAP 25 method and adds nothing" cite FRAP 26(c)
+{
+  given Served(Clerk) on 2026-07-20
+  expect deadline(frap26-14-days) == 2026-08-03
+}
+
+test "backward onto Saturday rolls to Friday" cite FRAP 26(a)(5)
+{
+  given Scheduled() on 2026-07-27
+  expect deadline(frap26-2-days-before) == 2026-07-24
+}
+
+test "Inauguration Day is not a FRAP legal holiday" cite FRAP 26(a)(6)(A)
+{
+  given Served(Personal) on 2029-01-18
+  expect deadline(frap26-1-day) == 2029-01-19
+}
+
+test "Arthrex: 63 days from May 2, 2018 end on Independence Day and roll to July 5" cite FRAP 26(a)(1)(C)
+{
+  given Served(Personal) on 2018-05-02
+  expect deadline(frap26-63-days) == 2018-07-05
+}
+
+test "Arthrex: 90 days from August 11, 2022" cite FRAP 26(a)(1)
+{
+  given Served(Personal) on 2022-08-11
+  expect deadline(frap26-90-days) == 2022-11-09
+}
+
+test "Blue & Gold: 60 days from March 22, 2006 end Sunday and roll to Monday" cite FRAP (2008 ed.) 26(a)(3)
+{
+  given Served(Personal) on 2006-03-22
+  expect deadline(frap26-60-days) == 2006-05-22
+}
+
+test "Blue & Gold: 45 days from June 26, 2007" cite FRAP (2008 ed.) 26(a)
+{
+  given Served(Personal) on 2007-06-26
+  expect deadline(frap26-45-days) == 2007-08-10
+}
+
+test "Celotex: 90 days from March 8, 1985" cite FRAP (2008 ed.) 26 (1967 Advisory Committee Note)
+{
+  given Served(Personal) on 1985-03-08
+  expect deadline(frap26-90-days) == 1985-06-06
+}
+
+test "eBay: 30 days from August 6, 2003" cite FRAP (2008 ed.) 26(a)
+{
+  given Served(Personal) on 2003-08-06
+  expect deadline(frap26-30-days) == 2003-09-05
+}
+
+test "eBay: 30 days from March 16, 2005" cite FRAP (2008 ed.) 26(a)
+{
+  given Served(Personal) on 2005-03-16
+  expect deadline(frap26-30-days) == 2005-04-15
+}
+
+test "eBay: 90 days from April 26, 2005" cite FRAP (2008 ed.) 26(a)
+{
+  given Served(Personal) on 2005-04-26
+  expect deadline(frap26-90-days) == 2005-07-25
+}
+
+test "Hughes: 60 days from October 8, 1982" cite FRAP (2008 ed.) 26 (1967 Advisory Committee Note)
+{
+  given Served(Personal) on 1982-10-08
+  expect deadline(frap26-60-days) == 1982-12-07
+}
+
+test "Hughes: 90 days from July 28, 1998" cite FRAP (2008 ed.) 26 (1996 Advisory Committee Note)
+{
+  given Served(Personal) on 1998-07-28
+  expect deadline(frap26-90-days) == 1998-10-26
+}
+
+test "Iqbal: 60 days from September 27, 2005 end Saturday and roll to Monday" cite FRAP (2008 ed.) 26(a)(3)
+{
+  given Served(Personal) on 2005-09-27
+  expect deadline(frap26-60-days) == 2005-11-28
+}
+
+test "Iqbal: 90 days from September 18, 2007" cite FRAP (2008 ed.) 26(a)
+{
+  given Served(Personal) on 2007-09-18
+  expect deadline(frap26-90-days) == 2007-12-17
+}
+
+test "Oil States: 63 days end Friday July 3, 2015, the observed Independence Day" cite FRAP 26(a)(1)(C)
+{
+  given Served(Personal) on 2015-05-01
+  expect deadline(frap26-63-days) == 2015-07-06
+}
+
+test "Oil States: 90 days from July 26, 2016" cite FRAP 26(a)(1)
+{
+  given Served(Personal) on 2016-07-26
+  expect deadline(frap26-90-days) == 2016-10-24
+}
+
+test "SAS: 63 days from August 6, 2014" cite FRAP 26(a)(1)
+{
+  given Served(Personal) on 2014-08-06
+  expect deadline(frap26-63-days) == 2014-10-08
+}
+
+test "SAS: 90 days from November 7, 2016 end Sunday and roll to Monday" cite FRAP 26(a)(1)(C)
+{
+  given Served(Personal) on 2016-11-07
+  expect deadline(frap26-90-days) == 2017-02-06
+}
+
+test "Suprema: 45 days from December 13, 2013" cite FRAP 26(a)(1)
+{
+  given Served(Personal) on 2013-12-13
+  expect deadline(frap26-45-days) == 2014-01-27
+}
+
+test "Twombly: 14 days from October 3, 2005 count Columbus Day" cite FRAP (2008 ed.) 26(a)(2)
+{
+  given Served(Personal) on 2005-10-03
+  expect deadline(frap26-14-days) == 2005-10-17
+}
+
+test "Twombly: 90 days from January 3, 2006" cite FRAP (2008 ed.) 26(a)
+{
+  given Served(Personal) on 2006-01-03
+  expect deadline(frap26-90-days) == 2006-04-03
+}
+
+test "2002-2009: ten days skip weekends" cite FRAP (2008 ed.) 26(a)(2)
+{
+  given Served(Personal) on 2005-03-04
+  expect deadline(frap26-10-days) == 2005-03-18
+}
+
+test "1996-2002: five days skip the weekend" cite FRAP (2008 ed.) 26 (2002 Committee Note)
+{
+  given Served(Personal) on 2000-03-03
+  expect deadline(frap26-5-days) == 2000-03-10
+}
+
+test "1996-2002: ten days count every day" cite FRAP (2008 ed.) 26 (2002 Committee Note)
+{
+  given Served(Personal) on 2000-03-03
+  expect deadline(frap26-10-days) == 2000-03-13
+}
+
+test "1996-2002: commercial carrier adds three days" cite FRAP (2008 ed.) 26 (1996 Advisory Committee Note)
+{
+  given Served(CommercialCarrier) on 2000-03-03
+  expect deadline(frap26-10-days) == 2000-03-16
+}
+
+test "before 1996, commercial carrier added nothing" cite FRAP (2008 ed.) 26 (1996 Advisory Committee Note)
+{
+  given Served(CommercialCarrier) on 1994-03-04
+  expect deadline(frap26-10-days) == 1994-03-14
+}
+
+test "before 1996, mail added three days" cite FRAP (2008 ed.) 26 (1996 Advisory Committee Note)
+{
+  given Served(Mail) on 1994-03-04
+  expect deadline(frap26-10-days) == 1994-03-17
+}

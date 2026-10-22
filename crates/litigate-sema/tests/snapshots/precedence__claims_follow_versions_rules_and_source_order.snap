@@ -1,0 +1,18 @@
+---
+source: crates/litigate-sema/tests/precedence.rs
+expression: "table(&[(\"1 versions of a deadline in versions of its duty\",\n&format!(\"rule duty r effective [2009-12-01, 2015-01-01) {{\\n  {}}}\\nrule duty r effective [2015-01-01, ..) {{\\n  {}}}\",\nd(\"x\", 20, \"\"), d(\"x\", 21, \"\")),),\n(\"1b versions in two differently named duties (each its own rule; r1 ends undeclared)\",\n&format!(\"rule duty r1 effective [2009-12-01, 2015-01-01) {{\\n  {}}}\\nrule duty r2 effective [2015-01-01, ..) {{\\n  {}}}\",\nd(\"x\", 20, \"\"), d(\"x\", 21, \"\")),),\n(\"2 a later rule does not make a package-level version specific\",\n&(d(\"tgt\", 1, \"\") +\n&d(\"c\", 2, \"effective [2009-12-01, 2015-01-01) override tgt\") +\n&d(\"x\", 3, \"effective [2009-12-01, 2015-01-01) override tgt\") +\n\"rule duty r3 effective [2015-01-01, ..) {\\n  \" + &d(\"x\", 3, \"override tgt\") +\n\"}\"),),\n(\"3 every versioned claim is considered, in any clause order\",\n&(tgt.clone() +\n&d(\"a\", 7,\n\"effective [2015-01-01, ..) notwithstanding tgt@2009-12-01 notwithstanding tgt@2015-01-01\")),),\n(\"4 a claim on a version no longer active is not a claim\",\n&(tgt.clone() +\n&d(\"a\", 7,\n\"effective [2009-12-01, 2015-01-01) notwithstanding tgt@2009-12-01\") +\n&d(\"a\", 7, \"effective [2015-01-01, ..) notwithstanding tgt@2009-12-01\")),),\n(\"5 an unresolved pair is reported at the later declaration\",\n&(d(\"tgt\", 1, \"\") + &d(\"zeta\", 2, \"notwithstanding tgt\") +\n&d(\"alpha\", 3, \"notwithstanding tgt\")),),])"
+---
+{
+    "1 versions of a deadline in versions of its duty": [],
+    "1b versions in two differently named duties (each its own rule; r1 ends undeclared)": [
+        "pkgs/demo/main.lit:13:14 L3002 `r1` has no version in force on [2015-01-01, ..)\n    note: a gap is legal only when declared: a declaration that `supersedes r1` over the gap\n    fix @13:24-13:48: \"[2009-12-01, ..)\"",
+    ],
+    "2 a later rule does not make a package-level version specific": [
+        "pkgs/demo/main.lit:15:98 L3003 `x@2009-12-01` and `c@2009-12-01` both apply to `tgt` on [2009-12-01, 2015-01-01), and neither prevails\n    note @14:98: `c@2009-12-01` is declared here\n    note: no declared relation (`notwithstanding`, `override`, `subject_to`) orders them\n    note: the canons tie: both are FederalRule; equally specific (both at package level, same window length); both take effect on 2009-12-01\n    note: declare `x notwithstanding c` or `x subject_to c`",
+    ],
+    "3 every versioned claim is considered, in any clause order": [],
+    "4 a claim on a version no longer active is not a claim": [],
+    "5 an unresolved pair is reported at the later declaration": [
+        "pkgs/demo/main.lit:15:67 L3003 `alpha@2009-12-01` and `zeta@2009-12-01` both apply to `tgt` on [2009-12-01, ..), and neither prevails\n    note @14:66: `zeta@2009-12-01` is declared here\n    note: no declared relation (`notwithstanding`, `override`, `subject_to`) orders them\n    note: the canons tie: both are FederalRule; equally specific (both at package level, same window length); both take effect on 2009-12-01\n    note: declare `alpha notwithstanding zeta` or `alpha subject_to zeta`",
+    ],
+}

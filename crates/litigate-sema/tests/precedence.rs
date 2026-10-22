@@ -414,3 +414,53 @@ fn deadline_direction_is_part_of_its_type() {
         ),
     ]));
 }
+
+#[test]
+fn claims_follow_versions_rules_and_source_order() {
+    let d = |id: &str, n: u32, rest: &str| {
+        format!("deadline {id}: {n}.days from Served(complaint, Mail) counted_by c6 {rest}\n")
+    };
+    let tgt = d("tgt", 1, "effective [2009-12-01, 2015-01-01)")
+        + &d("tgt", 1, "effective [2015-01-01, ..)");
+    insta::assert_debug_snapshot!(table(&[
+        (
+            "1 versions of a deadline in versions of its duty",
+            &format!(
+                "rule duty r effective [2009-12-01, 2015-01-01) {{\n  {}}}\nrule duty r effective [2015-01-01, ..) {{\n  {}}}",
+                d("x", 20, ""),
+                d("x", 21, "")
+            ),
+        ),
+        (
+            "1b versions in two differently named duties (each its own rule; r1 ends undeclared)",
+            &format!(
+                "rule duty r1 effective [2009-12-01, 2015-01-01) {{\n  {}}}\nrule duty r2 effective [2015-01-01, ..) {{\n  {}}}",
+                d("x", 20, ""),
+                d("x", 21, "")
+            ),
+        ),
+        (
+            "2 a later rule does not make a package-level version specific",
+            &(d("tgt", 1, "")
+                + &d("c", 2, "effective [2009-12-01, 2015-01-01) override tgt")
+                + &d("x", 3, "effective [2009-12-01, 2015-01-01) override tgt")
+                + "rule duty r3 effective [2015-01-01, ..) {\n  "
+                + &d("x", 3, "override tgt")
+                + "}"),
+        ),
+        (
+            "3 every versioned claim is considered, in any clause order",
+            &(tgt.clone() + &d("a", 7, "effective [2015-01-01, ..) notwithstanding tgt@2009-12-01 notwithstanding tgt@2015-01-01")),
+        ),
+        (
+            "4 a claim on a version no longer active is not a claim",
+            &(tgt.clone()
+                + &d("a", 7, "effective [2009-12-01, 2015-01-01) notwithstanding tgt@2009-12-01")
+                + &d("a", 7, "effective [2015-01-01, ..) notwithstanding tgt@2009-12-01")),
+        ),
+        (
+            "5 an unresolved pair is reported at the later declaration",
+            &(d("tgt", 1, "") + &d("zeta", 2, "notwithstanding tgt") + &d("alpha", 3, "notwithstanding tgt")),
+        ),
+    ]));
+}

@@ -84,7 +84,7 @@ fn coverage(
     };
     let lifetime = &world.packs[world.decls[first].pack].lifetime;
     let suspended = suspended_windows(world, key);
-    let revivals = revival_points(world, key);
+    let revivals = revival_points(world, key, None);
     let name = world.name(first, first);
     set.gaps(lifetime)
         .into_iter()

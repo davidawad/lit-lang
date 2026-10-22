@@ -61,7 +61,7 @@ pub fn conclude<'a>(
     let set = world.versions(key);
     let v = active(world, key, &set, date, None)
         .map_err(|_| format!("`{}` is not in force on {date}", key.name))?;
-    Ok(match node(world, v.decl, date, atom)? {
+    Ok(match node(world, v.decl, date, atom, &mut Vec::new())? {
         Res::NotApplicable => Conclusion::NotApplicable,
         Res::Undercut(by) | Res::Cut(by) => Conclusion::Undercut { by },
         Res::Value(value, by) => Conclusion::Value { value, by },
@@ -73,8 +73,15 @@ fn node<'a>(
     i: usize,
     date: &str,
     atom: &mut dyn FnMut(&Expr) -> Option<bool>,
+    path: &mut Vec<usize>,
 ) -> Result<Res<'a>, String> {
     let d = &world.decls[i];
+    if path.contains(&i) {
+        return Err(format!(
+            "`{}` is part of an exception cycle (L3006)",
+            d.meta.id
+        ));
+    }
     let (condition, own): (&Expr, Option<&'a Expr>) = match d.decl {
         Declaration::Default(x) => (&x.condition, Some(&x.conclusion)),
         Declaration::Exception(e) => (&e.condition, e.conclusion.as_ref()),
@@ -90,7 +97,10 @@ fn node<'a>(
         if !Window::of(&world.decls[e].meta.effective).contains(date) {
             continue;
         }
-        let r = node(world, e, date, atom)?;
+        path.push(i);
+        let r = node(world, e, date, atom, path);
+        path.pop();
+        let r = r?;
         if !matches!(r, Res::NotApplicable | Res::Undercut(_)) {
             live.push((priority(world, e), e, r));
         }

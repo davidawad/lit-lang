@@ -36,6 +36,40 @@ pub struct CheckedCase {
     pub case: Option<hir::Case>,
     /// Every diagnostic, sorted by location then code.
     pub diagnostics: Vec<Diagnostic>,
+    /// The transitions replay made, in order; empty when replay did not
+    /// run, and ending at the first illegal event when it stopped.
+    pub trace: Vec<Step>,
+}
+
+/// One transition of a replay (SPEC §5.6).
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize)]
+pub struct Step {
+    /// Event date; empty for a fact followed before an event.
+    pub date: String,
+    /// The event as written (`Served(complaint, Personal)`), or `fact`.
+    pub event: String,
+    /// What the event did.
+    pub effect: Effect,
+    /// The qualified stage before.
+    pub from: String,
+    /// The qualified stage after.
+    pub to: String,
+    /// The qualified edge taken, if it has an id (or the `facts` edge).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub edge: Option<String>,
+}
+
+/// How a replay step moved the matter.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum Effect {
+    /// The event took an edge.
+    Took,
+    /// The event took no edge: it triggers a deadline, is history a
+    /// transition reads, or is a cited excusal.
+    Timing,
+    /// A `facts` entry resolved a fact node.
+    Fact,
 }
 
 impl CheckedCase {
@@ -73,6 +107,7 @@ pub fn check_source(file: &str, text: &str, env: Env<'_>) -> CheckedCase {
         return CheckedCase {
             case: None,
             diagnostics,
+            trace: Vec::new(),
         };
     };
     let mut checked = check(case, &resolved.spans, env);
@@ -88,7 +123,7 @@ pub fn check(mut case: hir::Case, spans: &CaseSpans, env: Env<'_>) -> CheckedCas
     case.removals.clear();
     dates(&case, spans, &mut out);
     let Some(used) = validate::pins(&case, env.packages, env.lock, spans, &mut out) else {
-        return done(case, out);
+        return done(case, out, Vec::new());
     };
     let graph = Graph::new(used);
     validate::parties(&case, &graph, spans, &mut out);
@@ -104,7 +139,7 @@ pub fn check(mut case: hir::Case, spans: &CaseSpans, env: Env<'_>) -> CheckedCas
                 format!("replay cannot begin at `{start}`: no such node"),
             ));
         }
-        return done(case, out);
+        return done(case, out, Vec::new());
     }
     let replayed = replay::replay(&graph, &case, spans, env.clock, &start);
     out.extend(replayed.diagnostics);
@@ -115,14 +150,15 @@ pub fn check(mut case: hir::Case, spans: &CaseSpans, env: Env<'_>) -> CheckedCas
         validate::stakes(&case, &graph, &posture, env.profile, spans, &mut out);
         case.start = Some(posture);
     }
-    done(case, out)
+    done(case, out, replayed.trace)
 }
 
-fn done(case: hir::Case, mut diagnostics: Vec<Diagnostic>) -> CheckedCase {
+fn done(case: hir::Case, mut diagnostics: Vec<Diagnostic>, trace: Vec<Step>) -> CheckedCase {
     sort_diagnostics(&mut diagnostics);
     CheckedCase {
         case: Some(case),
         diagnostics,
+        trace,
     }
 }
 

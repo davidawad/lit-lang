@@ -1,0 +1,29 @@
+---
+source: crates/litigate-sema/tests/case.rs
+expression: checked.trace
+---
+[
+  {
+    "date": "",
+    "event": "fact",
+    "effect": "fact",
+    "from": "frcp-rule12-example::time-barred",
+    "to": "frcp-rule12-example::respond",
+    "edge": "frcp-rule12-example::not-barred"
+  },
+  {
+    "date": "2025-03-05",
+    "event": "Served(complaint, Personal)",
+    "effect": "timing",
+    "from": "frcp-rule12-example::respond",
+    "to": "frcp-rule12-example::respond"
+  },
+  {
+    "date": "2025-03-20",
+    "event": "MovedToDismiss(complaint)",
+    "effect": "took",
+    "from": "frcp-rule12-example::respond",
+    "to": "frcp-rule12-example::mtd-ruling",
+    "edge": "frcp-rule12-example::move-dismiss"
+  }
+]

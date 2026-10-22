@@ -93,5 +93,18 @@ fn every_imported_package_passes_core_checks_and_lowers_to_hir() {
         if !hir.manifest.links {
             assert!(!hir.start.is_empty(), "{} has no start", pkg.root);
         }
+        // The `/// imported` marker reaches HIR on every node (SPEC §7).
+        let unmarked: Vec<&str> = hir
+            .modules
+            .iter()
+            .flat_map(|m| &m.declarations)
+            .filter_map(|d| match d {
+                litigate_sema::hir::Declaration::Node(n) if !n.meta.imported => {
+                    Some(n.meta.id.as_str())
+                }
+                _ => None,
+            })
+            .collect();
+        assert!(unmarked.is_empty(), "{}: {unmarked:?}", pkg.root);
     }
 }

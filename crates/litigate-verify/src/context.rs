@@ -107,11 +107,14 @@ impl<'a> Context<'a> {
         })
     }
 
-    /// Every cite of the package with its declaring span: declaration
-    /// `cite`s, edge `authority`s, and test `cite`s.
-    pub fn cites(&self) -> impl Iterator<Item = (&'a str, Option<&'a Span>)> {
+    /// Every cite of the package with its declaring span and whether its
+    /// declaration is `/// imported`: declaration `cite`s, edge
+    /// `authority`s (imported with their node), and test `cite`s.
+    pub fn cites(&self) -> impl Iterator<Item = Cite<'a>> {
         self.declarations().flat_map(|d| {
-            let own = meta_of(d).and_then(|m| Some((m.cite.as_deref()?, m.span.as_ref())));
+            let meta = meta_of(d);
+            let imported = meta.is_some_and(|m| m.imported);
+            let own = meta.and_then(|m| Some((m.cite.as_deref()?, m.span.as_ref())));
             let test = match d {
                 Declaration::Test(t) => t.cite.as_deref().map(|c| (c, t.span.as_ref())),
                 _ => None,
@@ -124,9 +127,27 @@ impl<'a> Context<'a> {
                     .collect(),
                 _ => Vec::new(),
             };
-            own.into_iter().chain(test).chain(edges)
+            own.into_iter()
+                .chain(test)
+                .chain(edges)
+                .map(move |(text, span)| Cite {
+                    text,
+                    span,
+                    imported,
+                })
         })
     }
+}
+
+/// One cite of a package.
+#[derive(Debug, Clone, Copy)]
+pub(crate) struct Cite<'a> {
+    /// The cite text.
+    pub text: &'a str,
+    /// Where it is declared.
+    pub span: Option<&'a Span>,
+    /// Its declaration carries the `/// imported` marker.
+    pub imported: bool,
 }
 
 fn declarations(pkg: &hir::Package) -> impl Iterator<Item = &Declaration> {

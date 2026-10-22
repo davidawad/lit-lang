@@ -61,11 +61,12 @@ state petition-response: "Response to Petition Filed" by office effective [2025-
   }
 }
 
-/// Tribunal discretion, so `chance ... discretion` (the legacy pack has
-/// kind `decision`): 19 C.F.R. § 210.43(d)(2): review is granted for error
-/// or abuse, or for "a policy matter ... which the Commission thinks it
-/// necessary or appropriate to address".
-chance commission-review-decision: "Commission Decides Whether to Grant Review" by office discretion effective [2025-02-03, ..) cite cfr210.43.d
+/// Kept `decision`, the legacy pack's kind. Proposed fix (not applied): a
+/// `chance ... discretion` draw, tribunal discretion: 19 C.F.R. §
+/// 210.43(d)(2): review is granted for error or abuse, or for "a policy
+/// matter ... which the Commission thinks it necessary or appropriate to
+/// address".
+decision commission-review-decision: "Commission Decides Whether to Grant Review" by office effective [2025-02-03, ..) cite cfr210.43.d
 {
   group commission-review-group
   note "Grant rate authored at 0.35 / denial at 0.65 — APPROXIMATE. Granted 'if it appears that an error or abuse... is present or if the petition raises a policy matter... which the Commission thinks it necessary or appropriate to address' — decided 'based upon the petition and response thereto, without oral argument or further written submissions unless the Commission shall order otherwise.'"
@@ -104,10 +105,11 @@ state commission-opinion: "Commission Reviews on the Merits" by office effective
   }
 }
 
-/// A ruling under a legal standard, so `chance` without `discretion` (the
-/// legacy pack has kind `decision`): 19 U.S.C. § 1337(c): the Commission
-/// "shall determine ... whether or not there is a violation".
-chance commission-final-determination: "Commission Final Determination" by office effective [1995-01-01, ..) cite usc1337.b.1
+/// Kept `decision`, the legacy pack's kind. Proposed fix (not applied): a
+/// `chance` draw without `discretion`, a ruling under a legal standard: 19
+/// U.S.C. § 1337(c): the Commission "shall determine ... whether or not
+/// there is a violation".
+decision commission-final-determination: "Commission Final Determination" by office effective [1995-01-01, ..) cite usc1337.b.1
 {
   group commission-review-group
   note "The § 1337(b)(1) 'earliest practicable time' mandate resolves here, whether the determination arrived by non-reviewed ID maturation, Commission opinion, or (see cafc-remanded below) a Federal Circuit remand. No-violation authored at 0.35 / violation-with-remedy at 0.65 — APPROXIMATE."
@@ -140,10 +142,11 @@ state remedy-determined: "Commission Determines Remedy" by office effective [199
   }
 }
 
-/// Tribunal discretion, so `chance ... discretion` (the legacy pack has
-/// kind `decision`): 19 U.S.C. § 1337(j)(2): the President (by delegation,
-/// the USTR) may disapprove "for policy reasons".
-chance presidential-review-window: "Presidential (USTR) Review Window" by office discretion effective [1995-01-01, ..) cite usc1337.j
+/// Kept `decision`, the legacy pack's kind. Proposed fix (not applied): a
+/// `chance ... discretion` draw, tribunal discretion: 19 U.S.C. §
+/// 1337(j)(2): the President (by delegation, the USTR) may disapprove "for
+/// policy reasons".
+decision presidential-review-window: "Presidential (USTR) Review Window" by office effective [1995-01-01, ..) cite usc1337.j
 {
   group presidential-review-group
   note "A 60-day window, delegated in practice to the U.S. Trade Representative (Presidential Memorandum of July 21, 2005, 70 Fed. Reg. 43,251), during which a Commission remedy is not yet enforceable as a final matter. Approval-by-silence authored at 0.9 / disapproval at 0.1 — APPROXIMATE and deliberately skewed toward approval: the veto is rare enough that its two confirmed modern instances (Certain Electronic Devices..., 337-TA-794 — the Samsung/Apple FRAND-SEP veto, August 2013, the first since 1987; and the 1987 DRAM veto candidate flagged in design/itc-classic-cases.md §2.10) are each individually notable. Contrast Certain Baseband Processor Chips, 337-TA-543, and Certain Tobacco Heating Articles, 337-TA-1199, where the same 60-day window ran and the remedy simply took effect — the ordinary case this node models most of the time."
@@ -220,11 +223,11 @@ terminal determination-final-unappealed: "Commission Determination Stands — Un
   payoff 400_000.usd
 }
 
-/// A ruling under a legal standard, so `chance` without `discretion` (the
-/// legacy pack has kind `decision`): 19 U.S.C. § 1337(c): review "in
-/// accordance with chapter 7 of title 5", a legal standard rather than
-/// discretion.
-chance federal-circuit-review: "Federal Circuit Reviews the Determination" by office effective [1995-01-01, ..) cite usc1337.c
+/// Kept `decision`, the legacy pack's kind. Proposed fix (not applied): a
+/// `chance` draw without `discretion`, a ruling under a legal standard: 19
+/// U.S.C. § 1337(c): review "in accordance with chapter 7 of title 5", a
+/// legal standard rather than discretion.
+decision federal-circuit-review: "Federal Circuit Reviews the Determination" by office effective [1995-01-01, ..) cite usc1337.c
 {
   group federal-circuit-appeal-group
   note "Affirmance authored at 0.7 / reversal-or-remand at 0.3 — APPROXIMATE. Standard of review tracks APA § 706 (substantial evidence for Commission fact-finding, de novo for legal conclusions) — see e.g. TianRui Group Co. v. ITC (337-TA-655, extraterritorial trade-secret jurisdiction affirmed) and ClearCorrect Operating v. ITC (337-TA-833, 'articles' jurisdiction REVERSED as to purely digital transmissions)."

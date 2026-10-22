@@ -16,11 +16,11 @@ state complaint-filed: "Complaint Filed" by office effective [2025-02-03, ..) ci
   }
 }
 
-/// A ruling under a legal standard, so `chance` without `discretion` (the
-/// legacy pack has kind `decision`): 19 C.F.R. § 210.10(a)(1): the
-/// Commission determines whether the complaint is properly filed and an
-/// investigation should be instituted.
-chance institution-decision: "Institution Decision" by office effective [2025-02-03, ..) cite cfr210.10.a
+/// Kept `decision`, the legacy pack's kind. Proposed fix (not applied): a
+/// `chance` draw without `discretion`, a ruling under a legal standard: 19
+/// C.F.R. § 210.10(a)(1): the Commission determines whether the complaint
+/// is properly filed and an investigation should be instituted.
+decision institution-decision: "Institution Decision" by office effective [2025-02-03, ..) cite cfr210.10.a
 {
   group pre-institution-group
   note "Institution rate authored at 0.85 / declination at 0.15 — APPROXIMATE, not a live USITC figure; a properly pleaded, properly noticed complaint is instituted in the great majority of cases, but declination for pleading defects or excessive confidentiality designations is real and recurring."

@@ -83,6 +83,25 @@ where
     I: IntoIterator<Item = T>,
     T: Into<OsString> + Clone,
 {
+    let args: Vec<OsString> = args.into_iter().map(Into::into).collect();
+    if args.get(1).is_some_and(|arg| arg == "lsp") {
+        if args.get(2).is_some_and(|arg| arg == "--stdio") && args.len() == 3 {
+            let runtime = match tokio::runtime::Builder::new_multi_thread()
+                .enable_all()
+                .build()
+            {
+                Ok(runtime) => runtime,
+                Err(error) => {
+                    eprintln!("failed to start LSP runtime: {error}");
+                    return ExitCode::FAILURE;
+                }
+            };
+            runtime.block_on(litigate_lsp::run_stdio());
+            return ExitCode::SUCCESS;
+        }
+        eprintln!("usage: litigate lsp --stdio");
+        return ExitCode::from(1);
+    }
     let printed = execute(args);
     // A closed pipe cannot be reported anywhere; the exit code still is.
     let _ = std::io::stdout().write_all(printed.stdout.as_bytes());

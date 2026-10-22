@@ -1,0 +1,21 @@
+{
+  "id": "demo-matter",
+  "summary": "A demo matter.",
+  "notes": "Illustrative only.",
+  "packs": ["demo-court"],
+  "sources": [
+    { "title": "Rule text", "url": "https://example.org/rules", "as_of": "2024-12-01" },
+    { "title": "Docket study", "as_of": "2026-06" }
+  ],
+  "scenario": {
+    "start": "demo-court::ruling",
+    "params": { "rate": 650, "p_merits": 0.6 },
+    "perspective": { "applicant": "opponent", "examiner": "self" },
+    "facts": { "demo-court::ruling": "demo-court::denied" },
+    "payoffs": { "demo-court::won": 1000000, "demo-court::lost": -2500.75 },
+    "observe": { "demo-court::ruling": { "demo-court::denied": 3 } },
+    "remove_edges": ["demo-court::denied"],
+    "utility": "applicant_value",
+    "metrics": { "dollars \"x\"": "attr(\"opp_hours\", 0) * rate" }
+  }
+}

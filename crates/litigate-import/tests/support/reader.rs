@@ -98,6 +98,12 @@ pub fn fields(list: impl Iterator<Item = ast::Field>) -> Value {
         let nodes: Vec<SyntaxNode> = field.syntax().children().collect();
         if let Some(first) = nodes.first() {
             map.insert(key.clone(), value(first));
+            let unit = first
+                .first_token()
+                .filter(|t| key == "deadline" && t.kind() == SyntaxKind::Duration);
+            if let Some((_, unit)) = unit.as_ref().and_then(|t| t.text().rsplit_once('.')) {
+                map.insert(format!("{key}:unit"), json!(unit));
+            }
         }
         if let Some(opts) = nodes.get(1) {
             map.insert(format!("{key}:opts"), value(opts));
@@ -120,6 +126,9 @@ fn edge_fields(mut f: Map<String, Value>, out: &mut Map<String, Value>) {
     if let Some(length) = f.remove("deadline") {
         let mut deadline = Map::new();
         deadline.insert("length".into(), length);
+        if f.remove("deadline:unit") == Some(json!("court_days")) {
+            deadline.insert("unit".into(), json!("court"));
+        }
         if let Some(Value::Object(mut opts)) = f.remove("deadline:opts") {
             take(&mut opts, "extendable", "extendable", &mut deadline);
             take(

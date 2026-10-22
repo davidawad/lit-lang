@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 3,
+  "id": "demo-court",
+  "title": "Demo court",
+  "description": "Every construct the importer spells.",
+  "jurisdiction": "Nowhere",
+  "forum": "demo",
+  "counting": "demo6",
+  "startNodeId": "filed",
+  "groups": [
+    { "id": "pleading-group", "label": "Pleading" },
+    { "id": "ruling-group", "label": "Ruling" }
+  ],
+  "roles": { "applicant": "self", "examiner": "opponent", "office": "nature", "either": "nature" },
+  "sources": [
+    { "id": "demo-rules", "title": "Demo Rules", "url": "https://example.org/rules", "path": "sources/demo.txt", "sha256": "abc", "asOf": "2024-12-01" }
+  ],
+  "citeSyntax": {
+    "rules": [{ "prefixes": ["DR", "Demo R."], "heading": "Rule {}", "source": "demo-rules" }],
+    "shorthands": [{ "prefix": "cfr", "code": "cfr", "title": 19, "sectionParts": 2, "source": "demo-rules" }]
+  },
+  "nodes": [
+    { "id": "filed", "kind": "decision", "label": "Complaint \"filed\"", "cite": "DR 3", "group": "pleading-group",
+      "note": "Line one.\nLine two.", "tags": ["entry"], "attrs": { "weight": -1.5 } },
+    { "id": "ruling", "kind": "state", "label": "Ruling", "cite": "DR 12, 56", "group": "ruling-group", "tags": ["fact"],
+      "valence": "caution", "courtListenerUrl": "https://example.org/op" },
+    { "id": "won", "kind": "terminal", "label": "Won", "group": "ruling-group", "outcome": ["win", "fee-eligible"],
+      "payoff": 1000000, "payoffByFlag": { "sanctioned": 12.5 } },
+    { "id": "lost", "kind": "terminal", "label": "Lost", "cite": "Doctrine of laches", "group": "pleading-group", "payoff": -350000 }
+  ],
+  "edges": [
+    { "id": "12b-move", "from": "filed", "to": "ruling", "label": "Move to dismiss", "actor": "applicant",
+      "authority": "DR 12(b)(6)", "hours": 30, "cost": 405, "sets": ["moved"],
+      "deadline": { "length": 21, "unit": "court", "extendable": true, "extensionAuthority": "DR 6(b)", "note": "Not jurisdictional." },
+      "duration": { "mode": 4.5, "max": 10.5 } },
+    { "from": "filed", "to": "lost", "label": "Default", "actor": "either", "deadline": { "length": 30, "unit": "calendar" },
+      "duration": { "min": 1, "mode": 2.1, "max": 3 }, "tags": ["waiver-trap"], "attrs": { "opp_hours": 40 }, "valence": "bad" },
+    { "from": "ruling", "to": "won", "label": "Granted", "actor": "office", "probability": 0.35, "authority": "Court's inherent power, see DR 1" },
+    { "id": "denied", "from": "ruling", "to": "lost", "label": "Denied", "actor": "office", "probability": 0.65,
+      "requires": ["moved"], "forbids": ["late"], "clears": ["moved"], "actionId": "deny-1", "note": "Typical.", "courtListenerUrl": "https://example.org/x" },
+    { "from": "filed", "to": "filed", "label": "Wait", "actor": "applicant", "duration": { "mode": 7 } }
+  ]
+}

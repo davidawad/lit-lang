@@ -3,7 +3,8 @@
 Status: normative for compiler implementation. This document refines
 [`DESIGN.md`](DESIGN.md); where the two disagree, this file wins. Language
 version `1`, `Lit.lock` format `1`. Lowering targets litgraph pack schema
-v2, plus the additive v3 clock IR (§8.2) once DESIGN §9.1 lands. The Rust
+v2, plus the additive v3 fields (`counting`, `citeSyntax`) and the engine's
+landed clock library (§8.2). The Rust
 contracts in §11 are the code form of this document. W1 beads implement
 against both and need no further design decisions; a gap found later is a
 SPEC bug and gets fixed here first.
@@ -427,9 +428,12 @@ recent event matching trigger pattern `T`. `before` counts backward. Units are
 the `Days<U>` unit of the literal. Counting rule `c` defines (FRCP 6(a)
 vocabulary):
 
-1. Anchor: `trigger_day`, or `next_business_day` (the first day that isn't a
-   weekend or calendar holiday on or after the trigger).
-2. `exclude_trigger_day`: the anchor day is day 0.
+1. Anchor: `trigger_day`, or `next_business_day` (the first day after the
+   trigger that isn't a weekend or calendar holiday).
+2. `exclude_trigger_day`: the anchor day is day 0; without it the anchor
+   day is day 1. The engine counts `trigger_day` only with
+   `exclude_trigger_day` and `next_business_day` only without it; other
+   combinations are L6001 at lowering (§8.2).
 3. Count `N` units in the direction: calendar days count every day. Court and
    business days skip weekends and calendar holidays. With
    `short_period { below: K.days, count: U }`, a calendar-day period with
@@ -693,7 +697,7 @@ Anything without a lowering is L6001.
 | `[sources.*]` (declared order) | `Pack.sources[]` `{id, title, url, path, sha256, asOf}`; `cite_prefixes` and `section_heading` aren't emitted |
 | node declarations (module order, then source order) | `Pack.nodes[]` |
 | node id, label, cite | `RawNode.id` (kebab-case, no module prefix), `label`, `cite` (a cite hole lowers to its reason, below) |
-| `state`/`chance` / `decision` / `terminal` | `RawNode.kind` `state` / `decision` / `terminal` |
+| `state`/`chance` / `decision` / `terminal` | `RawNode.kind` `state` / `decision` / `terminal`, always written |
 | node `group`, `note`, `valence`, `court_listener_url`, `tags`, `attrs` | same-named `RawNode` fields (`courtListenerUrl`) |
 | `outcome`, `payoff`, `payoff_by_flag` | `RawNode.outcome`, `payoff`, `payoffByFlag` (major units) |
 | edge, in node order then edge order | `Pack.edges[]`: `from` = enclosing node, `id` (omitted for `_`), `to`, `label`, `actor` |
@@ -703,59 +707,89 @@ Anything without a lowering is L6001.
 | `deadline N.unit {…}` | same, from the literal; `unit` omitted for calendar days, `"court"` for court days; business days are L6001 |
 | `duration` | `RawEdge.duration {min, mode, max}` (a single duration is `{mode}`) |
 | `valence`, `court_listener_url`, `action_id`, `note`, `tags`, `attrs`, `sets`, `clears`, `requires`, `forbids` | same-named `RawEdge` fields |
-| `counting` / `calendar` | `Pack.counting` / `Pack.calendars` (§8.2) |
+| `counting` / `calendar` | `Pack.counting` (the rule id) plus a clock-library fragment (§8.2) |
 | `event`, authority lattice, relations, defaults, exceptions, transitions, tests, types | not emitted (verification only) |
 
 Multiple versions: only the version selected by the build's `--as-of`/
-`--known-at` is emitted. The default is the package `known_at` date for both.
+`--known-at` is emitted, with supersession applied (§5.4); a declaration
+with no version in force then is absent, and overlapping versions are
+L3007. The default is the package `known_at` date for both. Node order is
+module order (the module files' paths, §4.1), then source order.
 
 A cite hole `cite ?("text")` lowers to `"text"` exactly, so imported
 citations stay lossless; a cite hole without a reason lowers to an absent
 field. Like every hole it is a warning in `dev` and an error in `strict`
 (§7), so the porter replaces it with a resolvable citation.
 
-### 8.2 Clock IR (pack schema v3, additive)
+### 8.2 Clock IR (pack schema v3)
 
-As landed by the engine bead (DESIGN §9.1), `Pack.counting` is a string:
-the id of a counting rule in litgraph's shared *clock library*
-(`packs/clock/*.json`, `docs/PACK_SCHEMA.md` "Clock library"), which holds
-the rules and holiday calendars as step lists. The manifest's `counting`
-key (§4.1) lowers to that id verbatim, which is all `litigate import`
-needs. Lowering `counting`/`calendar` declarations to the clock library is
-owned by the lowering bead; the sketch below predates the landed IR and is
-reconciled there.
+The engine's landed clock (DESIGN §9.1, `crates/litgraph/src/clock`) is the
+target. `Pack.counting` is a string: the id of a `CountingRule` in
+litgraph's shared *clock library* (`packs/clock/*.json`,
+`docs/PACK_SCHEMA.md` "Clock library"), a set of fragments
+`{schemaVersion: 3, calendars: [HolidayCalendar], countingRules:
+[CountingRule]}` merged by id. Rules are step pipelines; every step carries
+its cited trace `text`.
 
-`Pack.counting` holds one `CountingRule` (the one named by the package's
-deadlines; more than one distinct rule per pack is L6001).
-`Pack.calendars` holds the calendars it references.
+- A package that declares no `counting` lowers the manifest's `counting`
+  key (§4.1) to `Pack.counting` verbatim: it names a rule of the shared
+  library, which is all `litigate import` needs.
+- A package that declares `counting c` (at most one; more is L6001) gets
+  `Pack.counting = "c"`, and a manifest `counting` naming another id is
+  L6001. Lowering then also emits a clock fragment holding rule `c` and the
+  calendar it names, written beside the pack as `clock/<c>.json`. Library
+  ids are global: a generated fragment replaces the hand-authored one with
+  the same id (the engine skips and reports a duplicate).
 
-```json
-{"counting":{"id":"frcp6","excludeTriggerDay":true,"includeLastDay":true,
-  "rollForwardOn":["weekend","legalHoliday","inaccessible"],
-  "serviceExtensions":{"Mail":{"amount":3,"unit":"calendar"}},
-  "calendar":"federal-holidays","anchor":"triggerDay","shortPeriod":null,
-  "allowHours":true},
- "calendars":[{"id":"federal-holidays","holidays":[
-  {"id":"juneteenth","date":{"rule":"fixed","month":6,"day":19},
-   "inForce":{"from":"2021-06-17","to":null},"observed":"nearestWeekday"}]}]}
-```
+A counting rule lowers field by field; anything outside this table is
+L6001:
 
-`unit` is `calendar` | `court` | `business`. `anchor` is `triggerDay` |
-`nextBusinessDay`. `shortPeriod` is `null` or `{threshold, unit}`. `date` is
-one of `{"rule":"fixed",month,day}`, `{"rule":"nth",n,weekday,month}`,
-`{"rule":"last",weekday,month}`, `{"rule":"every",years,fromYear,month,day}`,
-or `{"rule":"once",date}`. `observed` is `nearestWeekday`, `nextDay`, or
-absent. Direction and unit belong to each deadline query, not to the rule
-(the engine already takes direction per query). The roll moves in the
-counting direction. The generic interpreter consumes only this IR plus
-`(trigger date, amount, unit, direction, service method, inaccessible dates)`
-and never branches on a forum or pack id. The four current regimes (FRCP 6,
-RCFC 6, FRAP 26, 19 CFR 210.6) must be expressible: RCFC adds
-`inauguration-day: every(4, 1965, 1, 20) observed next_day`. FRAP 26(c)
-service methods differ only in `service_extension` keys. ITC uses
+| `counting c` | `CountingRule` |
+|---|---|
+| id, `cite` | `id`, `label` (the cite, else the id); each step's `text` is generated as `"<cite>: ..."` |
+| the `url` of the source its cite binds to (§4.3) | `sourceUrl` (required: no bound url is L6001) |
+| (always) | `closedWeekdays: ["saturday", "sunday"]` |
+| `holidays k` | `holidays: ["k"]`, and calendar `k` in the fragment |
+| `anchor trigger_day` + `exclude_trigger_day` | `{"op": "anchor", "kind": "trigger"}` |
+| `anchor next_business_day` (no `exclude_trigger_day`) | `{"op": "anchor", "kind": "adjacent-business-day"}`, `minLength: {days: 1}` |
+| `short_period { below: K.days, count: U }` | first `count` period `{unit: "calendar", below: K, count}` (`calendar` for calendar days, else `business`) |
+| (always) | `count` periods `{unit: "calendar", count: "calendar"}`, `{unit: "court", count: "business"}` |
+| `include_last_day`, `roll_forward_on [weekend, legal_holiday]` | `roll` after `base`: forward `toward: later`, backward `toward: earlier` |
+| `service_extension { M: K.days }` | `service` `{method, days: K}`, then a second `roll`; `M` in kebab case must be an engine method (`mail`, `clerk`, `other-consented`, `commercial-carrier`, `prison-mail`, `mail-foreign`, `express`, `express-foreign`); non-calendar days are L6001 |
+| `inaccessible` in `roll_forward_on` | `clerkInaccessible` step |
+| `allow_hours` | `hours` provision |
+
+The pipeline is therefore `anchor, count, base, roll, service, roll,
+clerkInaccessible` (absent steps dropped): §5.3 steps 1-6 in order. The
+engine always includes the last day and rolls off any closed day, so a
+rule without `include_last_day`, or whose `roll_forward_on` lists only one
+of `weekend`/`legal_holiday`, is L6001. Service days are added after the
+roll, as FRCP 6(d) and FRAP 26(c) read ("3 days are added after the
+period would otherwise expire under Rule 6(a)"); the shipped `frcp6`, `rcfc6`, and
+`frap26` fragments add them to the unrolled date, which differs when the
+unextended last day is closed. A port that must reproduce those fragments
+exactly is a SPEC change, not a lowering option.
+
+| `calendar k` / holiday | `HolidayCalendar` / `Holiday` |
+|---|---|
+| id, label, cite | `id`, `title` (the label, else the id), `cite`, `sourceUrl` (bound url, if any) |
+| `h: … effective [a, b)` | `Holiday {id: h, name: h, effective: {from: a, until: b}}` |
+| `fixed(m, d)` | `date: {fixed: {month, day}}` |
+| `nth(n, w, m)` / `last(w, m)` | `date: {nthWeekday: {month, weekday, nth}}`, `nth` = n / -1 |
+| `every(y, from, m, d)` | `fixed` plus `cycle: {every: y, anchorYear: from}`, effective from no earlier than January 1 of `from` |
+| `once(date)` | `fixed` on that month and day, effective `[date, date + 1)` (widened by a day each side under `nearest_weekday`) |
+| `observed nearest_weekday` / none | `observed: "nearest-weekday"` / `"actual"` |
+| `observed next_day` | L6001: the engine has no Sunday-only observance |
+
+The generic interpreter consumes only this IR plus `(trigger date, amount,
+unit, direction, service method, inaccessible dates)` and never branches on
+a forum or pack id. The four current regimes are expressible: FRCP 6 and
+FRAP 26 differ only in `service_extension` keys; RCFC 6 adds
+`inauguration-day: every(4, 1965, 1, 20) … observed nearest_weekday` (as the
+landed `us-inauguration-day` calendar has it); 19 CFR 201.14/210.6 uses
 `anchor next_business_day` and `short_period { below: 7.days, count:
-business_days }`. Engine bead DESIGN §9.1 implements the interpreter
-against this shape.
+business_days }`. Lowering validates every fragment with the engine's own
+loader (`ClockLibrary::from_json`), so an invalid one is L6001.
 
 ### 8.3 Case to `NamedScenario`
 
@@ -763,8 +797,8 @@ against this shape.
 |---|---|
 | case id, `summary`, `notes`, `source`s | `NamedScenario.id`, `summary`, `notes` (empty string when absent), `sources[] {title, url, as_of}`; an `as_of` hole lowers to its reason (`?("2026-06")` is `"2026-06"`) |
 | `uses` | `packs[]`: pack ids in `uses` order |
-| replayed/explicit start | `scenario.start` (qualified `pack::node`), omitted when it is the primary package's start and no events were replayed |
-| `perspective` | `scenario.perspective` actor-to-role map (only entries that differ from the primary package's roles) |
+| replayed/explicit start | `scenario.start` (qualified `pack::node`): the explicit `start`, else the replayed node; omitted when neither exists (the primary package's start applies) |
+| `perspective` | `scenario.perspective` actor-to-role map: `perspective party` lists only the actors whose role differs from the primary package's roles (which must be loaded, else L6001); an explicit `{ actor: role }` map is emitted as written |
 | `facts` | `scenario.facts` qualified node to qualified edge |
 | `stakes` | `scenario.payoffs` qualified terminal to major-unit number |
 | `beliefs` | `scenario.observe` qualified node to `{qualified edge: count}` |
@@ -792,7 +826,10 @@ id, `"pack::from->to#n"`, which has no `Ref` spelling). Each `instance base@orig
 payoff_transform, patch_edges}`. `patch` records become `patch_edges[edge]`
 verbatim as JSON merge patches (keys are `RawEdge` JSON names, `unset` is
 null). The lowerer applies each patch to the base edge and deserializes the
-result as `RawEdge` (L6001 on failure). `replaces` outside a links package is
+result as `RawEdge` (L6001 on failure); the base pack must be loaded with
+the links package, else a patching instance is L6001, and a patch naming an
+edge the base lacks is L1002. `payoff_transform` must parse as a litgraph
+expression (L6003). `replaces` outside a links package is
 L2007.
 
 ### 8.5 Numbers
@@ -820,10 +857,32 @@ defaults) and normalizing:
   this regrouping)
 
 Arrays are then compared in order, objects by key, and numbers by binary64
-bit equality. Output is byte-deterministic: two-space-indented JSON with a
-trailing newline, written atomically. Source maps (`*.map.json`: generated
-JSON pointer to source span) and provenance are sidecars excluded from
-equality.
+bit equality. Clock fragments compare the same way. Output is
+byte-deterministic: two-space-indented JSON with a trailing newline,
+written atomically; a scenario omits `Scenario` fields equal to litgraph's
+defaults (serde restores them). Source maps and provenance are sidecars
+excluded from equality.
+
+`semantic_diff` (crate `litigate-lower`, the `litigate diff` oracle)
+reports `{kind, pointer, id, before, after}` with `kind` one of `added`,
+`removed`, `changed`, `order`. Nodes, edges, links, groups, sources,
+calendars and counting rules are matched by id, so pointers name ids
+(`/nodes/answer-due/label`, `/edges/respond->answered#0/cost`) and a pure
+permutation is one `order` change (`/nodes/order`, or `/edges/order/<from>`
+for edges within one source node). Other arrays are compared by index.
+
+The sidecar `<file>.map.json` is `{generated: {by: "litigate-lower",
+version, language}, kind, id, package: {name, version, digest}, as_of,
+known_at, entries}`; each entry is `{pointer, id, span, decl, cite}` for
+one generated node, edge, link, instance, counting rule or calendar:
+`pointer` its JSON pointer, `id` its litgraph id (derived for `_` edges),
+`span` its declaration, `decl` the emitted version `id@in-force-from`, and
+`cite` the `cite`/`authority` text with each citation litgraph's citation
+parser recognizes (under the pack's `citeSyntax` and the sources'
+`cite_prefixes`/`section_heading`) as `{heading, source, path, line}`: the
+`## <heading>` line in the vendored L0 file. The `generated` object is the
+generated-file marker; JSON documents carry none, since litgraph's types
+reject unknown fields.
 
 ### 8.7 Import (§8 read in reverse)
 

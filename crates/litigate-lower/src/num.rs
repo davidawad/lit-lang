@@ -26,9 +26,9 @@ pub fn money(m: &Money) -> Option<f64> {
 /// `n / d` rounded to the nearest binary64, ties to even.
 ///
 /// When both operands are exact in binary64 one IEEE division is already
-/// correctly rounded. Otherwise the quotient is scaled to a 54-bit integer
-/// `q` (`2^53 <= q < 2^54`) with remainder `r` in `u128`, rounded half to
-/// even, and scaled back exactly: every intermediate fits because
+/// correctly rounded. Otherwise the quotient is scaled to a 53-bit integer
+/// `q` (`2^52 <= q < 2^53`, a full binary64 significand) with remainder `r`
+/// in `u128`, rounded half to even, and scaled back exactly: every intermediate fits because
 /// `|n| < 2^63` and `d < 2^64`, and the result's exponent stays far from
 /// the subnormal and overflow ranges.
 #[must_use]
@@ -46,8 +46,8 @@ pub fn ratio(n: i64, d: u64) -> Option<f64> {
         return Some(0.0);
     }
     let bits = |v: u128| 128 - v.leading_zeros();
-    // Choose `shift` so that (magnitude << shift) / d lands in [2^53, 2^54).
-    let mut shift = 54 - i32::try_from(bits(u128::from(magnitude))).ok()?
+    // Choose `shift` so that (magnitude << shift) / d lands in [2^52, 2^53).
+    let mut shift = 53 - i32::try_from(bits(u128::from(magnitude))).ok()?
         + i32::try_from(bits(u128::from(d))).ok()?;
     let quotient = |shift: i32| -> (u128, u128, u128) {
         let (num, den) = if shift >= 0 {
@@ -58,11 +58,11 @@ pub fn ratio(n: i64, d: u64) -> Option<f64> {
         (num / den, num % den, den)
     };
     let (mut q, mut r, mut den) = quotient(shift);
-    while q >= 1 << 54 {
+    while q >= 1 << 53 {
         shift -= 1;
         (q, r, den) = quotient(shift);
     }
-    while q < 1 << 53 {
+    while q < 1 << 52 {
         shift += 1;
         (q, r, den) = quotient(shift);
     }
@@ -70,7 +70,7 @@ pub fn ratio(n: i64, d: u64) -> Option<f64> {
     if twice > den || (twice == den && q & 1 == 1) {
         q += 1;
     }
-    // `q < 2^55` is exact in binary64, and so is the power-of-two scaling.
+    // `q <= 2^53` is exact in binary64, and so is the power-of-two scaling.
     #[allow(clippy::cast_precision_loss)]
     let value = q as f64 * 2f64.powi(-shift);
     Some(if n < 0 { -value } else { value })
@@ -128,7 +128,7 @@ mod tests {
 
         #[test]
         fn scaling_both_operands_is_invisible(n in -(1i64 << 40)..(1i64 << 40), d in 1u64..(1u64 << 20), k in 1u64..(1u64 << 22)) {
-            // n*k / d*k needs the wide path once d*k >= 2^53; the value is
+            // n*k / d*k takes the wide path once n*k reaches 2^53; the value is
             // the same rational, so the rounding must be too.
             let big = n * i64::try_from(k).unwrap_or(1);
             prop_assert_eq!(ratio(big, d * k), ratio(n, d));

@@ -2,8 +2,8 @@
 //! to its `.lit` span, declaration version, and the L0 source sections its
 //! citation resolves to, plus the `generated` marker. Sidecars are excluded
 //! from semantic equality.
-use litgraph::cite::{parse_cite_string, CiteGrammar, SourceCorpus};
-use litgraph::model::CiteSyntax;
+use litgraph::cite::{parse_cite_string, CiteGrammar, Family, SourceCorpus};
+use litgraph::model::{CiteCode, CiteRuleForm, CiteSyntax};
 use litigate_base::Span;
 use serde::{Deserialize, Serialize};
 
@@ -45,6 +45,9 @@ pub struct PackageRef {
 pub struct L0Section {
     /// Canonical corpus heading (`Rule 12`, `28 U.S.C. § 1291`).
     pub heading: String,
+    /// The `[sources.*]` binding it resolves through, when bound.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub source: Option<String>,
     /// Repository-relative corpus file holding it, when vendored.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub path: Option<String>,
@@ -102,28 +105,72 @@ pub struct SourceMap {
     pub entries: Vec<Entry>,
 }
 
-/// Resolves citations under one pack's citation syntax against an optional
-/// vendored corpus.
+/// Resolves citations under one pack's citation syntax and source
+/// bindings against an optional vendored corpus.
 pub(crate) struct Citations<'c> {
     syntax: CiteSyntax,
+    /// Heading template or shorthand code/title to bound source id.
+    bound: Vec<(Family, String)>,
     corpus: Option<&'c SourceCorpus>,
 }
 
 impl<'c> Citations<'c> {
-    /// Citations written in `syntax`, located in `corpus` when given.
-    pub fn new(syntax: CiteSyntax, corpus: Option<&'c SourceCorpus>) -> Self {
-        Self { syntax, corpus }
+    /// Citations written in the pack's `syntax` or bound by a source's
+    /// `cite_prefixes` (with its `section_heading`, `{n}` the section;
+    /// SPEC §4.3), located in `corpus` when given.
+    pub fn new(
+        syntax: CiteSyntax,
+        sources: &[litigate_sema::hir::SourceBinding],
+        corpus: Option<&'c SourceCorpus>,
+    ) -> Self {
+        let mut syntax = syntax;
+        for s in sources.iter().filter(|s| !s.cite_prefixes.is_empty()) {
+            let heading = s
+                .section_heading
+                .as_deref()
+                .map_or_else(|| "{}".to_owned(), |h| h.replace("{n}", "{}"));
+            if !syntax.rules.iter().any(|r| r.heading == heading) {
+                syntax.rules.push(CiteRuleForm {
+                    prefixes: s.cite_prefixes.clone(),
+                    heading,
+                    source: Some(s.id.clone()),
+                });
+            }
+        }
+        let rules = syntax
+            .rules
+            .iter()
+            .filter_map(|r| Some((Family::Rules(r.heading.clone()), r.source.clone()?)));
+        let shorthands = syntax.shorthands.iter().filter_map(|s| {
+            let family = match s.code {
+                CiteCode::Usc => Family::Usc(s.title),
+                CiteCode::Cfr => Family::Cfr(s.title),
+            };
+            Some((family, s.source.clone()?))
+        });
+        let bound = rules.chain(shorthands).collect();
+        Self {
+            syntax,
+            bound,
+            corpus,
+        }
     }
 
-    /// The map of `text`: litgraph's own citation parser, then a corpus
-    /// lookup of each heading.
+    /// The map of `text`: litgraph's own citation parser, then the bound
+    /// source and a corpus lookup of each heading.
     pub fn map(&self, text: Option<&String>) -> Option<CiteMap> {
         let text = text?;
         let grammar = CiteGrammar::new(&self.syntax);
         let sections = parse_cite_string(text, &grammar)
             .iter()
-            .filter_map(litgraph::cite::normalize::CiteRef::heading)
-            .map(|heading| self.locate(heading))
+            .filter_map(|c| {
+                let source = self
+                    .bound
+                    .iter()
+                    .find(|(f, _)| *f == c.family)
+                    .map(|(_, s)| s.clone());
+                Some(self.locate(c.heading()?, source))
+            })
             .collect();
         Some(CiteMap {
             text: text.clone(),
@@ -131,7 +178,7 @@ impl<'c> Citations<'c> {
         })
     }
 
-    fn locate(&self, heading: String) -> L0Section {
+    fn locate(&self, heading: String, source: Option<String>) -> L0Section {
         let found = self
             .corpus
             .and_then(|c| Some((c, c.lookup_all(&heading).first()?)));
@@ -146,6 +193,7 @@ impl<'c> Citations<'c> {
         });
         L0Section {
             heading,
+            source,
             path,
             line,
         }

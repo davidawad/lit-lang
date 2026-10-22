@@ -1,0 +1,43 @@
+---
+source: crates/litigate-lower/tests/case.rs
+expression: text
+---
+{
+  "id": "acme-v-widget",
+  "summary": "Acme sues Widget; Widget decides whether to answer or move to dismiss.",
+  "notes": "Worked example for SPEC §12. Stakes are illustrative.",
+  "packs": [
+    "frcp-rule12-example"
+  ],
+  "sources": [
+    {
+      "title": "Federal Rules of Civil Procedure",
+      "url": "https://www.law.cornell.edu/rules/frcp",
+      "as_of": "2024-12-01"
+    }
+  ],
+  "scenario": {
+    "params": {
+      "opp_rate": 550.0,
+      "rate": 650.0
+    },
+    "perspective": {
+      "Defendant": "self",
+      "Plaintiff": "opponent"
+    },
+    "payoffs": {
+      "frcp-rule12-example::dismissed": 0.0,
+      "frcp-rule12-example::judgment-entered": -2000000.0
+    },
+    "facts": {
+      "frcp-rule12-example::time-barred": "frcp-rule12-example::not-barred"
+    },
+    "observe": {
+      "frcp-rule12-example::mtd-ruling": {
+        "frcp-rule12-example::denied": 1.0,
+        "frcp-rule12-example::granted": 3.0
+      }
+    },
+    "start": "frcp-rule12-example::mtd-ruling"
+  }
+}

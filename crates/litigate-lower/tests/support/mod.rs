@@ -23,7 +23,7 @@ pub fn corpus() -> Vec<Input> {
             .unwrap_or_default();
         for entry in entries {
             let name = entry.file_name().to_string_lossy().into_owned();
-            if name.ends_with(".json") {
+            if Path::new(&name).extension().is_some_and(|e| e == "json") {
                 paths.push(format!("{dir}/{name}"));
             }
         }

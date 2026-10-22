@@ -1,0 +1,232 @@
+---
+source: crates/litigate-lower/tests/golden.rs
+expression: render(&lowered.source_map).unwrap_or_default()
+---
+{
+  "generated": {
+    "by": "litigate-lower",
+    "version": "0.3.0",
+    "language": 1
+  },
+  "kind": "pack",
+  "id": "frcp-rule12-example",
+  "package": {
+    "name": "frcp-rule12-example",
+    "version": "0.1.0",
+    "digest": "sha256:a9625dfeb2e385fc2f54e5e46999ce1f2f056196506b0c744ea24a5d8c187ed0"
+  },
+  "as_of": "2025-01-01",
+  "known_at": "2025-01-01",
+  "entries": [
+    {
+      "pointer": "/nodes/0",
+      "id": "time-barred",
+      "span": {
+        "file": "lit/examples/rule12.lit",
+        "line": 45,
+        "col": 1,
+        "end_line": 50,
+        "end_col": 2
+      },
+      "decl": "time-barred@2009-12-01",
+      "cite": {
+        "text": "FRCP 8(c)(1)",
+        "sections": [
+          {
+            "heading": "8",
+            "source": "frcp"
+          }
+        ]
+      }
+    },
+    {
+      "pointer": "/nodes/1",
+      "id": "respond",
+      "span": {
+        "file": "lit/examples/rule12.lit",
+        "line": 52,
+        "col": 1,
+        "end_line": 67,
+        "end_col": 2
+      },
+      "decl": "respond@2009-12-01",
+      "cite": {
+        "text": "FRCP 12(a)(1)(A)(i)",
+        "sections": [
+          {
+            "heading": "12",
+            "source": "frcp"
+          }
+        ]
+      }
+    },
+    {
+      "pointer": "/nodes/2",
+      "id": "mtd-ruling",
+      "span": {
+        "file": "lit/examples/rule12.lit",
+        "line": 69,
+        "col": 1,
+        "end_line": 74,
+        "end_col": 2
+      },
+      "decl": "mtd-ruling@2009-12-01",
+      "cite": {
+        "text": "FRCP 12(b)(6)",
+        "sections": [
+          {
+            "heading": "12",
+            "source": "frcp"
+          }
+        ]
+      }
+    },
+    {
+      "pointer": "/nodes/3",
+      "id": "answered",
+      "span": {
+        "file": "lit/examples/rule12.lit",
+        "line": 76,
+        "col": 1,
+        "end_line": 76,
+        "end_col": 96
+      },
+      "decl": "answered@2009-12-01"
+    },
+    {
+      "pointer": "/nodes/4",
+      "id": "default-risk",
+      "span": {
+        "file": "lit/examples/rule12.lit",
+        "line": 77,
+        "col": 1,
+        "end_line": 77,
+        "end_col": 101
+      },
+      "decl": "default-risk@2009-12-01"
+    },
+    {
+      "pointer": "/nodes/5",
+      "id": "judgment-entered",
+      "span": {
+        "file": "lit/examples/rule12.lit",
+        "line": 79,
+        "col": 1,
+        "end_line": 79,
+        "end_col": 100
+      },
+      "decl": "judgment-entered@2009-12-01"
+    },
+    {
+      "pointer": "/nodes/6",
+      "id": "dismissed",
+      "span": {
+        "file": "lit/examples/rule12.lit",
+        "line": 80,
+        "col": 1,
+        "end_line": 80,
+        "end_col": 96
+      },
+      "decl": "dismissed@2009-12-01"
+    },
+    {
+      "pointer": "/edges/0",
+      "id": "barred",
+      "span": {
+        "file": "lit/examples/rule12.lit",
+        "line": 48,
+        "col": 3,
+        "end_line": 48,
+        "end_col": 38
+      }
+    },
+    {
+      "pointer": "/edges/1",
+      "id": "not-barred",
+      "span": {
+        "file": "lit/examples/rule12.lit",
+        "line": 49,
+        "col": 3,
+        "end_line": 49,
+        "end_col": 40
+      }
+    },
+    {
+      "pointer": "/edges/2",
+      "id": "answer",
+      "span": {
+        "file": "lit/examples/rule12.lit",
+        "line": 55,
+        "col": 3,
+        "end_line": 59,
+        "end_col": 4
+      }
+    },
+    {
+      "pointer": "/edges/3",
+      "id": "move-dismiss",
+      "span": {
+        "file": "lit/examples/rule12.lit",
+        "line": 60,
+        "col": 3,
+        "end_line": 65,
+        "end_col": 4
+      }
+    },
+    {
+      "pointer": "/edges/4",
+      "id": "default",
+      "span": {
+        "file": "lit/examples/rule12.lit",
+        "line": 66,
+        "col": 3,
+        "end_line": 66,
+        "end_col": 84
+      }
+    },
+    {
+      "pointer": "/edges/5",
+      "id": "granted",
+      "span": {
+        "file": "lit/examples/rule12.lit",
+        "line": 72,
+        "col": 3,
+        "end_line": 72,
+        "end_col": 66
+      }
+    },
+    {
+      "pointer": "/edges/6",
+      "id": "denied",
+      "span": {
+        "file": "lit/examples/rule12.lit",
+        "line": 73,
+        "col": 3,
+        "end_line": 73,
+        "end_col": 41
+      }
+    },
+    {
+      "pointer": "/edges/7",
+      "id": "answered->judgment-entered#0",
+      "span": {
+        "file": "lit/examples/rule12.lit",
+        "line": 76,
+        "col": 51,
+        "end_line": 76,
+        "end_col": 94
+      }
+    },
+    {
+      "pointer": "/edges/8",
+      "id": "default-risk->judgment-entered#0",
+      "span": {
+        "file": "lit/examples/rule12.lit",
+        "line": 77,
+        "col": 60,
+        "end_line": 77,
+        "end_col": 99
+      }
+    }
+  ]
+}

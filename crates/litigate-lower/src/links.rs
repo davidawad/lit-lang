@@ -52,7 +52,7 @@ pub(crate) fn links(
         instances,
         links: links.iter().map(|(e, _)| e.clone()).collect(),
     };
-    let citations = Citations::new(litgraph::model::CiteSyntax::default(), build.corpus);
+    let citations = Citations::new(litgraph::model::CiteSyntax::default(), &[], build.corpus);
     let link_entries = links
         .iter()
         .zip(local_edge_ids(&file.links))

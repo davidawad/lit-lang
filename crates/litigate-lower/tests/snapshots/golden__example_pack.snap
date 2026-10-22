@@ -1,0 +1,179 @@
+---
+source: crates/litigate-lower/tests/golden.rs
+expression: text
+---
+{
+  "schemaVersion": 3,
+  "id": "frcp-rule12-example",
+  "title": "FRCP Rule 12 response (worked example)",
+  "description": "Answer-or-move decision under FRCP 12(a); the shared W1 fixture.",
+  "jurisdiction": "United States district courts",
+  "forum": "frcp",
+  "counting": "frcp6",
+  "startNodeId": "time-barred",
+  "groups": [
+    {
+      "id": "pleadings",
+      "label": "Pleadings"
+    },
+    {
+      "id": "motions",
+      "label": "Motions"
+    },
+    {
+      "id": "outcomes",
+      "label": "Outcomes"
+    }
+  ],
+  "roles": {
+    "Court": "nature",
+    "Defendant": "opponent",
+    "Plaintiff": "self"
+  },
+  "sources": [
+    {
+      "id": "frcp",
+      "title": "Federal Rules of Civil Procedure",
+      "url": "https://www.law.cornell.edu/rules/frcp",
+      "asOf": "2024-12-01"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "time-barred",
+      "kind": "state",
+      "label": "Is the claim time-barred?",
+      "cite": "FRCP 8(c)(1)",
+      "tags": [
+        "fact"
+      ]
+    },
+    {
+      "id": "respond",
+      "kind": "decision",
+      "label": "Answer or move under Rule 12",
+      "cite": "FRCP 12(a)(1)(A)(i)",
+      "group": "pleadings"
+    },
+    {
+      "id": "mtd-ruling",
+      "kind": "state",
+      "label": "Ruling on the motion to dismiss",
+      "cite": "FRCP 12(b)(6)",
+      "group": "motions"
+    },
+    {
+      "id": "answered",
+      "kind": "state",
+      "label": "Answer filed",
+      "group": "pleadings"
+    },
+    {
+      "id": "default-risk",
+      "kind": "state",
+      "label": "Failure to respond",
+      "group": "outcomes"
+    },
+    {
+      "id": "judgment-entered",
+      "kind": "terminal",
+      "label": "Judgment entered",
+      "group": "outcomes",
+      "outcome": [
+        "judgment",
+        "loss"
+      ]
+    },
+    {
+      "id": "dismissed",
+      "kind": "terminal",
+      "label": "Action dismissed",
+      "group": "outcomes",
+      "payoff": 0.0,
+      "outcome": [
+        "judgment",
+        "win"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "barred",
+      "from": "time-barred",
+      "to": "dismissed",
+      "label": "Barred",
+      "actor": "Court",
+      "probability": 0.1
+    },
+    {
+      "id": "not-barred",
+      "from": "time-barred",
+      "to": "respond",
+      "label": "Timely",
+      "actor": "Court",
+      "probability": 0.9
+    },
+    {
+      "id": "answer",
+      "from": "respond",
+      "to": "answered",
+      "label": "File an answer",
+      "actor": "Defendant",
+      "deadline": {
+        "length": 21.0
+      },
+      "hours": 8.0
+    },
+    {
+      "id": "move-dismiss",
+      "from": "respond",
+      "to": "mtd-ruling",
+      "label": "Move to dismiss under Rule 12(b)(6)",
+      "actor": "Defendant",
+      "deadline": {
+        "length": 21.0
+      },
+      "hours": 30.0,
+      "tags": [
+        "dispositive"
+      ]
+    },
+    {
+      "id": "default",
+      "from": "respond",
+      "to": "default-risk",
+      "label": "Let the deadline pass",
+      "actor": "Defendant",
+      "valence": "bad",
+      "sets": [
+        "defaulted"
+      ]
+    },
+    {
+      "id": "granted",
+      "from": "mtd-ruling",
+      "to": "dismissed",
+      "label": "Motion granted",
+      "actor": "Court"
+    },
+    {
+      "id": "denied",
+      "from": "mtd-ruling",
+      "to": "answered",
+      "label": "Motion denied",
+      "actor": "Court"
+    },
+    {
+      "from": "answered",
+      "to": "judgment-entered",
+      "label": "Proceed to judgment",
+      "actor": "either"
+    },
+    {
+      "from": "default-risk",
+      "to": "judgment-entered",
+      "label": "Default entered",
+      "actor": "either"
+    }
+  ]
+}

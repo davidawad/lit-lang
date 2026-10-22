@@ -795,8 +795,17 @@ ci` gains `lit-sync` at the flip (W3).
   its own line. A `cite` clause followed by a body puts `{` on the next line.
 - One space around binary operators, `->`, `=>`, and after `:` and `,`. None
   inside brackets or parentheses.
+- `parties` and `events` blocks always put one entry per line, even when
+  they would fit on one.
+- A `cite` clause runs to the end of its line, so any clause after it
+  continues on the next line indented two more columns.
 - Numbers keep their source digit grouping. Comments and doc comments are
-  preserved verbatim.
+  preserved verbatim. A comment on its own line attaches to the next item or
+  entry. A comment after a token on the same line stays there, and a line
+  comment always ends its line. Imports are sorted by module path, and
+  separator commas are dropped from broken bodies (kept where required:
+  `enum`, `import m.{...}`). Binary operators inside expressions are
+  spaced, including `/`; the `p n/d` probability ratio is not.
 - `fmt` is idempotent (proptest over the corpus) and never changes the CST
   modulo trivia.
 
@@ -809,6 +818,11 @@ ci` gains `lit-sync` at the flip (W3).
 | typed CST views | `crates/litigate-syntax/src/ast.rs` |
 | HIR (`Package`, `Manifest`, `Module`, `Declaration`, `Node`, `Edge`, `Case`, ...) | `crates/litigate-sema/src/hir.rs` and `hir/` |
 | obligations | `crates/litigate-verify/src/lib.rs` |
+
+W1 added `SyntaxKind`s `ImportList`, `Param`, `FieldExpr`, `Ratio`,
+`KwUrl`, and the lookahead sentinel `Eof` (never stored in a tree), plus
+typed views for nodes that previously had none. The `Expr` view also casts
+`FieldExpr` and `Ratio`. All existing kinds and casts are unchanged.
 
 HIR is plain serde data with every name resolved, every literal exact, and
 JSON shape frozen by an insta snapshot. Changing any of these is a SPEC

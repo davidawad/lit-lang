@@ -4,7 +4,21 @@
 //!
 //! Parsing is total: [`parse`] never panics and always returns a tree whose
 //! text is exactly the input, with every problem reported as an L0xxx
-//! [`SyntaxError`].
+//! [`SyntaxError`]. Convert errors with [`Parse::diagnostics`].
+//!
+//! ```
+//! use litigate_syntax::{format, parse, FileKind};
+//!
+//! let parsed = parse("module m\nstart s\n", FileKind::Lit);
+//! assert!(parsed.is_ok());
+//! assert_eq!(parsed.syntax().to_string(), "module m\nstart s\n");
+//! assert_eq!(format("module   m\nstart s", FileKind::Lit).as_deref(), Ok("module m\n\nstart s\n"));
+//! ```
+//!
+//! Contract changes made by W1 are additive (SPEC §11): node kinds
+//! `ImportList`, `Param`, `FieldExpr`, `Ratio`; keyword `KwUrl`; the
+//! lookahead sentinel `Eof`; new typed views; `Expr` also casts `FieldExpr`
+//! and `Ratio`.
 pub mod ast;
 mod error;
 #[allow(clippy::enum_glob_use)]
@@ -18,6 +32,8 @@ mod parse;
 mod parser;
 mod suggest;
 pub mod syntax_kind;
+#[allow(clippy::enum_glob_use)]
+mod vocab;
 
 pub use error::{span_of, SyntaxError, TextFix};
 pub use format::{check_format, format, FormatError};

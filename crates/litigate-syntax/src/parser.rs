@@ -4,90 +4,14 @@ use crate::error::{range, SyntaxError};
 use crate::lexer::Token;
 use crate::suggest::nearest;
 use crate::syntax_kind::SyntaxKind::{self, *};
+use crate::vocab::describe_set;
+pub(crate) use crate::vocab::{is_decl, is_trivia, CASE_ITEM_KEYWORDS, LIT_ITEM_KEYWORDS};
 use litigate_base::{Applicability, DiagnosticCode};
 use rowan::{Checkpoint, GreenNode, GreenNodeBuilder, TextRange};
 
 /// Maximum nesting of expressions, lists, and blocks before the parser
 /// stops descending (keeps the parser total on adversarial input).
 const MAX_DEPTH: usize = 128;
-
-/// Top-level item keywords of `.lit` files.
-pub const LIT_ITEM_KEYWORDS: &[SyntaxKind] = &[
-    KwModule,
-    KwImport,
-    KwPackage,
-    KwStart,
-    KwGroup,
-    KwType,
-    KwEnum,
-    KwEvent,
-    KwState,
-    KwDecision,
-    KwChance,
-    KwTerminal,
-    KwLink,
-    KwInstance,
-    KwRule,
-    KwDeadline,
-    KwCounting,
-    KwCalendar,
-    KwTransition,
-    KwAuthority,
-    KwDefault,
-    KwException,
-    KwTest,
-];
-
-/// Top-level item keywords of `.case` files.
-pub const CASE_ITEM_KEYWORDS: &[SyntaxKind] = &[
-    KwCase,
-    KwUses,
-    KwAsOf,
-    KwKnownAt,
-    KwSummary,
-    KwNotes,
-    KwSource,
-    KwStart,
-    KwPerspective,
-    KwParties,
-    KwEvents,
-    KwFacts,
-    KwStakes,
-    KwBeliefs,
-    KwAnalysis,
-];
-
-/// Declarations that keep their leading doc comments inside their node.
-pub(crate) const fn is_decl(kind: SyntaxKind) -> bool {
-    matches!(
-        kind,
-        ModuleDecl
-            | ImportDecl
-            | PackageDecl
-            | StartDecl
-            | GroupDecl
-            | TypeDecl
-            | EnumDecl
-            | EventDecl
-            | StateDecl
-            | DecisionDecl
-            | ChanceDecl
-            | TerminalDecl
-            | EdgeDecl
-            | LinkDecl
-            | InstanceDecl
-            | RuleDecl
-            | DeadlineDecl
-            | CountingDecl
-            | CalendarDecl
-            | HolidayDecl
-            | TransitionDecl
-            | AuthorityDecl
-            | DefaultDecl
-            | ExceptionDecl
-            | TestDecl
-    )
-}
 
 pub(crate) struct Parser<'t> {
     text: &'t str,
@@ -469,40 +393,5 @@ impl<'t> Parser<'t> {
         body(self);
         self.depth -= 1;
         true
-    }
-}
-
-/// Whitespace and comments (doc comments included).
-#[must_use]
-pub const fn is_trivia(kind: SyntaxKind) -> bool {
-    matches!(kind, Whitespace | Comment | DocComment)
-}
-
-/// Human description of an expected token kind.
-#[must_use]
-pub fn describe(kind: SyntaxKind) -> std::string::String {
-    match kind.text() {
-        Some(text) => format!("`{text}`"),
-        None => match kind {
-            Ident => "an identifier".into(),
-            Number => "a number".into(),
-            Money => "a money literal like `100.usd`".into(),
-            Duration => "a duration like `21.days`".into(),
-            String => "a string".into(),
-            Date => "a date `YYYY-MM-DD`".into(),
-            CiteText => "citation text".into(),
-            Eof => "end of file".into(),
-            other => format!("{other:?}"),
-        },
-    }
-}
-
-fn describe_set(expected: &[SyntaxKind]) -> std::string::String {
-    let parts: Vec<std::string::String> = expected.iter().map(|kind| describe(*kind)).collect();
-    match parts.as_slice() {
-        [] => "something else".into(),
-        [one] => one.clone(),
-        [first, second] => format!("{first} or {second}"),
-        [init @ .., last] => format!("one of {}, or {last}", init.join(", ")),
     }
 }

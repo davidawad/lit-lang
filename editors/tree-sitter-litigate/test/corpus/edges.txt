@@ -338,3 +338,57 @@ state answered: "Answer filed" { group pleadings, _ "Proceed to judgment" -> jud
             (string_content))
           (ref
             (identifier)))))))
+
+================================================================================
+Import forms: cite holes, digit ids, partial and decimal duration ranges
+================================================================================
+
+module a
+state s: "S" cite ?("RCFC Appendix J, Rule 3") {
+  12b-motion-filed "Move" -> s { authority cite ?("A, B"), duration { mode 4.5.days, max 9.days } }
+  low "Low" -> s { duration { min 1.days, mode 2.days } }
+}
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (node_decl
+      (identifier)
+      (string
+        (string_content))
+      (cite
+        (hole
+          (string
+            (string_content))))
+      (node_body
+        (edge_decl
+          (identifier)
+          (string
+            (string_content))
+          (ref
+            (identifier))
+          (edge_fields
+            (edge_field
+              (cite
+                (hole
+                  (string
+                    (string_content)))))
+            (edge_field
+              (duration_range
+                (duration)
+                (duration)))))
+        (edge_decl
+          (identifier)
+          (string
+            (string_content))
+          (ref
+            (identifier))
+          (edge_fields
+            (edge_field
+              (duration_range
+                (duration)
+                (duration)))))))))

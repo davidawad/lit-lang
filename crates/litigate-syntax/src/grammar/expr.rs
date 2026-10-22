@@ -1,6 +1,6 @@
 //! Expressions (SPEC §3.3): precedence climbing over
 //! `|| < && < comparison (non-associative) < + - < * / % < unary < postfix`.
-use super::values::{cite, hole, keyword_literal, reference, token_literal};
+use super::values::{cite, hole, keyword_literal, reference, token_literal, whole_days};
 use super::{delimited, delimited_node, Sep};
 use crate::error::SyntaxError;
 use crate::parser::Parser;
@@ -117,7 +117,10 @@ fn postfix(p: &mut Parser<'_>) -> bool {
 /// `Primary = Literal | Hole | Cite | Call | Ref | Record | List | "(" Expr ")"`.
 pub(crate) fn primary(p: &mut Parser<'_>) -> bool {
     match p.nth(0) {
-        Number | Money | Duration | String | Date => token_literal(p, p.nth(0)),
+        Number | Money | Duration | String | Date => {
+            whole_days(p);
+            token_literal(p, p.nth(0))
+        }
         Question => hole(p),
         KwCite => cite(p),
         LParen => paren(p),

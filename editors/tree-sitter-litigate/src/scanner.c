@@ -47,6 +47,10 @@ bool tree_sitter_litigate_external_scanner_scan(void *payload, TSLexer *lexer,
   while (lexer->lookahead == ' ' || lexer->lookahead == '\t') {
     lexer->advance(lexer, true);
   }
+  // `cite ?("text")` is a cite hole, lexed by the grammar (SPEC §2).
+  if (lexer->lookahead == '?') {
+    return false;
+  }
   bool has_text = false;
   while (!lexer->eof(lexer) && !ends_cite(lexer->lookahead)) {
     if (lexer->lookahead == '/') {

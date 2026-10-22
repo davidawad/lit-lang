@@ -161,11 +161,12 @@ module.exports = {
     seq(field('key', 'attrs'), field('value', $.num_record)),
   ),
 
+  // `min` and `max` are optional; `mode` is required (SPEC §3.1).
   duration_range: $ => seq(
     '{',
-    'min', field('min', $.duration), optional(','),
-    'mode', field('mode', $.duration), optional(','),
-    'max', field('max', $.duration),
+    optional(seq('min', field('min', $.duration), optional(','))),
+    'mode', field('mode', $.duration),
+    optional(seq(optional(','), 'max', field('max', $.duration))),
     '}',
   ),
 
@@ -370,5 +371,6 @@ module.exports = {
     seq(field('kind', 'delegable_to'), field('target', $.id_list)),
   ),
 
-  cite: $ => seq('cite', field('text', $.cite_text)),
+  // `cite ?("text")` is a cite hole: text with no citation-mode spelling.
+  cite: $ => seq('cite', field('text', choice($.cite_text, $.hole))),
 };

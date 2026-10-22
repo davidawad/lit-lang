@@ -1,8 +1,10 @@
 //! Atoms shared by declarations, fields, and case blocks: refs, id lists,
 //! literals, holes, citations, intervals, records, JSON values, and types.
 use super::{delimited, delimited_node, expr, Sep};
+use crate::error::SyntaxError;
 use crate::parser::Parser;
 use crate::syntax_kind::SyntaxKind::{self, *};
+use litigate_base::DiagnosticCode;
 
 /// A value parser: parses one construct or returns false untouched.
 pub(crate) type Value = fn(&mut Parser<'_>) -> bool;
@@ -84,8 +86,35 @@ pub(crate) fn number(p: &mut Parser<'_>) -> bool {
     token_literal(p, Number)
 }
 
+/// A duration whose day amount must be whole (L0005 otherwise).
 pub(crate) fn duration(p: &mut Parser<'_>) -> bool {
+    whole_days(p);
     token_literal(p, Duration)
+}
+
+/// A `duration` field amount: an elapsed-time estimate, so decimal day
+/// amounts are allowed.
+pub(crate) fn duration_estimate(p: &mut Parser<'_>) -> bool {
+    token_literal(p, Duration)
+}
+
+/// Reports L0005 when the current token is a day-unit duration with a
+/// decimal amount (`1.5.days`).
+pub(crate) fn whole_days(p: &mut Parser<'_>) {
+    if !p.at(Duration) {
+        return;
+    }
+    let text = p.nth_text(0);
+    let (number, unit) = text.rsplit_once('.').unwrap_or((text, ""));
+    if unit != "hours" && number.contains('.') {
+        let error = SyntaxError::new(
+            DiagnosticCode::InvalidNumber,
+            p.current_range(),
+            format!("day amounts must be integers, found `{number}`"),
+        )
+        .with_note("only `duration` estimates may use decimal days");
+        p.push_error(error);
+    }
 }
 
 pub(crate) fn date(p: &mut Parser<'_>) -> bool {
@@ -117,14 +146,18 @@ pub(crate) fn hole(p: &mut Parser<'_>) -> bool {
     true
 }
 
-/// `Cite = "cite" CiteText`.
+/// `Cite = "cite" (CiteText | Hole)`. The hole form keeps citation text
+/// that has no `CiteText` spelling (a `,`, `{`, `}`, or `//` inside it) as
+/// the hole's reason.
 pub(crate) fn cite(p: &mut Parser<'_>) -> bool {
     if !p.at(KwCite) {
         return false;
     }
     p.start(CiteExpr);
     p.bump();
-    p.eat(CiteText);
+    if !p.eat(CiteText) {
+        hole(p);
+    }
     p.finish();
     true
 }

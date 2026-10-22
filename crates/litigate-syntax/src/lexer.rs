@@ -40,6 +40,8 @@ enum Raw {
     #[regex(r#""([^"\\\n]|\\[^\n])*\\?"#)]
     UnterminatedString,
     #[regex(r"[\p{XID_Start}_]\p{XID_Continue}*(-\p{XID_Continue}+)*")]
+    // Digits then a letter start an identifier too (`12b-motion-filed`).
+    #[regex(r"[0-9]+\p{XID_Start}\p{XID_Continue}*(-\p{XID_Continue}+)*")]
     Ident,
     #[token("_", priority = 10)]
     Underscore,
@@ -241,17 +243,9 @@ impl Lexer<'_> {
         let kind = match suffix {
             "usd" => SyntaxKind::Money,
             "hours" => SyntaxKind::Duration,
-            day if DAY_SUFFIXES.contains(&day) => {
-                if number.contains('.') {
-                    self.error(
-                        DiagnosticCode::InvalidNumber,
-                        start,
-                        end,
-                        format!("day amounts must be integers, found `{number}`"),
-                    );
-                }
-                SyntaxKind::Duration
-            }
+            // Whole-day amounts are checked by the parser: `duration`
+            // estimates may be decimal (SPEC §2).
+            day if DAY_SUFFIXES.contains(&day) => SyntaxKind::Duration,
             _ => {
                 let at = range(start + dot + 1, end);
                 let mut error = SyntaxError::new(
@@ -320,11 +314,16 @@ impl Lexer<'_> {
     }
 
     /// Citation mode: spaces, then text up to a newline, `{`, `}`, `,`, or
-    /// `//`, with trailing whitespace returned to trivia.
+    /// `//`, with trailing whitespace returned to trivia. A `?` ends citation
+    /// mode at once: `cite ?("reason")` is a cite hole.
     fn cite(&mut self, start: usize, end: usize, rest: &str) -> usize {
         let blank = rest.len() - rest.trim_start_matches([' ', '\t']).len();
         self.push(SyntaxKind::Whitespace, end, end + blank);
         let body = &rest[blank..];
+        if body.starts_with('?') {
+            // `cite ?("text")`: a hole, lexed normally (SPEC §2).
+            return blank;
+        }
         let stop = body
             .char_indices()
             .find(|(at, c)| matches!(c, '\n' | '{' | '}' | ',') || body[*at..].starts_with("//"))

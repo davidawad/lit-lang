@@ -42,17 +42,20 @@ Source: `5 U.S.C. § 6103` (<https://www.law.cornell.edu/uscode/text/5/6103>).
   2023 restyling, except the Inauguration Day holiday above.
 
 Pipeline: exclude the trigger day (6(a)(1)(A)); count calendar days
-(6(a)(1)(B)) or, for a pack-authored `court` unit, business days; add the
-6(d) service extension (mail, leaving with the clerk, other consented means:
-+3); roll a closed last day forward (6(a)(1)(C)) or, for a backward period,
-earlier (6(a)(5)); then the 6(a)(3) clerk-inaccessibility extension. The
-hours provision is 6(a)(2).
+(6(a)(1)(B)) or, for a pack-authored `court` unit, business days; roll a
+closed last day under 6(a)(1)(C) (or earlier under 6(a)(5) for a backward
+period); add the 6(d) service extension (mail, leaving with the clerk, other
+consented means: +3); roll the resulting last day again; then apply the
+6(a)(3) clerk-inaccessibility extension. The hours provision is 6(a)(2).
 
-**Ordering of 6(d) and the roll.** 6(d) adds 3 days "after the period would
-otherwise expire under Rule 6(a)". Following the TypeScript port (citing the
-2009 and 2016 Advisory Committee Notes), the 3 days are added to the
-*unrolled* count and the result is rolled once (`service` before `base` and
-`roll`).
+**Ordering of 6(d) and the rolls.** 6(d) adds 3 days "after the period would
+otherwise expire under Rule 6(a)". The 6(a) period therefore includes its
+initial last-day roll; then the three calendar days are added, and the new
+last day is rolled again if needed. This is also explicit in the FRCP 6(d)
+2005 Committee Note. FRAP 26(c) has the same ordering: its 2009 Committee
+Note instructs users to calculate the prescribed period using Rule 26(a),
+then add three calendar days, and roll the extension end day if necessary.
+Thus each pipeline places a roll before service and another after it.
 
 The `court` unit is not itself a numbered subsection of FRCP/RCFC/FRAP; it is
 a pack-authored escape hatch for a forum whose own rule counts business
@@ -66,10 +69,11 @@ third-party commercial carrier and prison mailing system (not leaving with
 the clerk or other consented means, which are FRCP/RCFC Rule 5(b)(2)(D)/(F)
 methods that FRAP 25 does not define). FRAP has no hours provision and no
 clerk-inaccessibility extension in the fetched text, so the rule has no
-`hours` and its `clerkInaccessible` step has only `ignoredText`. The 26(c)
-extension is ordered like FRCP 6(d) by direct analogy (not separately
-verified against Advisory Committee commentary on FRAP 26). Governs the
-Federal Circuit via Fed. Cir. R. 47.1.
+`hours` and its `clerkInaccessible` step has only `ignoredText`. The 26(c) extension follows the ordering stated in the 2009 Advisory
+Committee Note to Rule 26: first calculate the prescribed period using Rule
+26(a), including its last-day roll, then add three calendar days and roll
+the extension end day if necessary (¶¶ 135–137). Governs the Federal Circuit
+via Fed. Cir. R. 47.1.
 
 ## `itc210.json`
 

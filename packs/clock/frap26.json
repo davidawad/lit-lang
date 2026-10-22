@@ -34,6 +34,20 @@
           ]
         },
         {
+          "op": "roll",
+          "forward": {
+            "toward": "later",
+            "text": "Fed. R. App. P. 26(a)(1)(C): last day fell on a Saturday, Sunday, or legal holiday; roll forward -> {date}"
+          },
+          "backward": {
+            "toward": "earlier",
+            "text": "Fed. R. App. P. 26(a)(5): last day fell on a Saturday, Sunday, or legal holiday; roll backward -> {date}"
+          }
+        },
+        {
+          "op": "base"
+        },
+        {
           "op": "service",
           "methods": [
             {
@@ -49,11 +63,8 @@
               "days": 3
             }
           ],
-          "text": "Fed. R. App. P. 26(d)/(c): service by {method} adds {days} day(s) (to the unrolled count) -> {date}",
+          "text": "Fed. R. App. P. 26(d)/(c): service by {method} adds {days} day(s) (after the period expires under the counting rule) -> {date}",
           "backwardText": "Fed. R. App. P. 26(d)/(c) does not apply to backward-counted periods; ignored"
-        },
-        {
-          "op": "base"
         },
         {
           "op": "roll",

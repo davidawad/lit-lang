@@ -215,9 +215,10 @@ fn other_consented_service_adds_three_days() {
 }
 
 #[test]
-fn service_extension_then_rolling_no_roll_needed() {
+fn service_extension_follows_the_period_roll() {
     assert_eq!(forward_mail("2026-07-17", 14), "2026-08-03");
-    assert_eq!(forward_mail("2026-07-05", 14), "2026-07-22");
+    // Jul 19 is Sunday: Rule 6(a) rolls to Monday Jul 20 before adding 3.
+    assert_eq!(forward_mail("2026-07-05", 14), "2026-07-23");
 }
 
 #[test]

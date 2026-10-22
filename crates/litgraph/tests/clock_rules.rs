@@ -65,6 +65,32 @@ fn excludes_trigger_day_and_rolls_past_weekends_and_holidays() {
 }
 
 #[test]
+fn service_extension_follows_the_initial_saturday_roll() {
+    // Jan 31 is the unextended last day (Saturday): Rule 6(a) first rolls it
+    // to Monday Feb 2, then the three added days end Thursday Feb 5.
+    for id in ["frcp6", "rcfc6", "frap26"] {
+        let method = if id == "frap26" {
+            ServiceMethod::CommercialCarrier
+        } else {
+            ServiceMethod::Mail
+        };
+        let result = run(
+            id,
+            "2026-01-05",
+            26,
+            Direction::Forward,
+            Unit::Calendar,
+            Some(method),
+        )
+        .unwrap();
+        assert_eq!(result.base_date, "2026-02-02", "{id}");
+        assert_eq!(result.due_date, "2026-02-05", "{id}");
+        assert!(result.last_day_rolled);
+        assert!(result.service_days_added);
+    }
+}
+
+#[test]
 fn frap_rejects_a_service_method_it_does_not_list() {
     let err = run(
         "frap26",
@@ -372,10 +398,10 @@ fn trace_snapshots() {
     };
     let frcp = compute_due_date(&dl(30, Some(ServiceMethod::Mail)), &rule("frcp6"), &clerk);
     expect![[r#"
-        frcp6 anchor=2026-01-05 base=2026-02-07 due=2026-02-10 rolled=true service=true clerk=true
+        frcp6 anchor=2026-01-05 base=2026-02-04 due=2026-02-10 rolled=true service=true clerk=true
         FRCP 6(a)(1)(A): exclude the trigger date 2026-01-05
         FRCP 6(a)(1)(B): count 30 calendar day(s) after the trigger, including weekends/holidays -> 2026-02-04
-        FRCP 6(d)/(c): service by Mail adds 3 day(s) (to the unrolled count) -> 2026-02-07
+        FRCP 6(d)/(c): service by Mail adds 3 day(s) (after the period expires under the counting rule) -> 2026-02-07
         FRCP 6(a)(1)(C): last day fell on a Saturday, Sunday, or legal holiday; roll forward -> 2026-02-09
         FRCP 6(a)(3): clerk's office inaccessible on the last day; extend -> 2026-02-10"#]]
     .assert_eq(&trace(&frcp.unwrap()));

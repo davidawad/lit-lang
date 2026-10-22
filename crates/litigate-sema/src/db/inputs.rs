@@ -36,8 +36,10 @@ pub struct SourceFile {
     #[returns(ref)]
     pub text: String,
     /// Owning package.
+    #[returns(copy)]
     pub package: PackageInput,
     /// Owning workspace.
+    #[returns(copy)]
     pub workspace: Workspace,
 }
 

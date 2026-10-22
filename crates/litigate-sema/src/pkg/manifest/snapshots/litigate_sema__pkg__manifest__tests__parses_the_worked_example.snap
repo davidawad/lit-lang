@@ -1,0 +1,40 @@
+---
+source: crates/litigate-sema/src/pkg/manifest/tests.rs
+expression: parsed.ok()
+---
+{
+  "name": "frcp-rule12-example",
+  "version": "0.1.0",
+  "language": 1,
+  "pack_id": "frcp-rule12-example",
+  "forum": "frcp",
+  "authority": "FederalRule",
+  "title": "FRCP Rule 12 response (worked example)",
+  "description": "Answer-or-move decision under FRCP 12(a); the shared W1 fixture.",
+  "jurisdiction": "United States district courts",
+  "roles": {
+    "Court": "nature",
+    "Defendant": "opponent",
+    "Plaintiff": "self"
+  },
+  "in_force": {
+    "from": "2009-12-01",
+    "to": null,
+    "known_at": "2025-01-01"
+  },
+  "sources": [
+    {
+      "id": "frcp",
+      "title": "Federal Rules of Civil Procedure",
+      "url": "https://www.law.cornell.edu/rules/frcp",
+      "path": null,
+      "sha256": null,
+      "as_of": "2024-12-01",
+      "cite_prefixes": [
+        "FRCP"
+      ],
+      "section_heading": null
+    }
+  ],
+  "dependencies": {}
+}

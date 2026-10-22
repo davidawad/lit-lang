@@ -2,4 +2,5 @@
 //! lockfiles, name resolution, type checking, and HIR (SPEC §4-§6, §11).
 pub mod db;
 pub mod hir;
+pub mod pkg;
 pub mod types;

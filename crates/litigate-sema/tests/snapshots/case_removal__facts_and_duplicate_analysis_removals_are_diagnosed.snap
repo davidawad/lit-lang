@@ -1,0 +1,12 @@
+---
+source: crates/litigate-sema/tests/case_removal.rs
+expression: cases
+---
+{
+    "duplicate analysis removal": [
+        "1:6 L4001 option `frcp-rule12-example::move-dismiss` is removed more than once",
+    ],
+    "fact follows removed edge": [
+        "24:22 L4003 `frcp-rule12-example::not-barred` was removed and cannot resolve fact `frcp-rule12-example::time-barred`",
+    ],
+}

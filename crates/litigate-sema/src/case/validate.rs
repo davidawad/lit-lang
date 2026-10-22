@@ -162,34 +162,22 @@ pub(super) fn facts_and_beliefs(
     out: &mut Vec<Diagnostic>,
 ) {
     let known_at = case.known_at.as_deref();
+    let removed = removed_edges(case, graph);
+    duplicate_analysis_removals(case, graph, spans, out);
     for (node_id, edge) in &case.facts {
         let (key, value) = spans
             .facts
             .get(node_id)
             .cloned()
             .map_or((None, None), |(k, v)| (Some(k), Some(v)));
-        match graph.node_at(node_id, &case.as_of, known_at) {
-            Some(n) if n.tags.iter().any(|t| t == "fact") => {
-                if !own_edge(n, edge) {
-                    out.push(
-                        error(
-                            C::InvalidCaseFact,
-                            spans.at(value.as_ref(), &case.id),
-                            format!("`{edge}` is not an edge of fact `{node_id}`"),
-                        )
-                        .note(format!("edges: {}", edge_ids(n))),
-                    );
-                }
-            }
-            _ => out.push(
-                error(
-                    C::InvalidCaseFact,
-                    spans.at(key.as_ref(), &case.id),
-                    format!("`{node_id}` is not a fact node in force on {}", case.as_of),
-                )
-                .note("facts resolve nodes tagged `fact` (SPEC §5.1)"),
-            ),
-        }
+        validate_fact(
+            case,
+            graph,
+            spans,
+            &removed,
+            (node_id, edge, key.as_ref(), value.as_ref()),
+            out,
+        );
     }
     for (i, obs) in case.observations.iter().enumerate() {
         let (node_span, outcome_spans) = spans.observations.get(i).cloned().unwrap_or_default();
@@ -220,6 +208,65 @@ pub(super) fn facts_and_beliefs(
     }
 }
 
+fn validate_fact(
+    case: &Case,
+    graph: &Graph<'_>,
+    spans: &CaseSpans,
+    removed: &BTreeSet<String>,
+    (node_id, edge, key, value): (
+        &str,
+        &str,
+        Option<&litigate_base::Span>,
+        Option<&litigate_base::Span>,
+    ),
+    out: &mut Vec<Diagnostic>,
+) {
+    match graph.node_at(node_id, &case.as_of, case.known_at.as_deref()) {
+        Some(n) if n.tags.iter().any(|t| t == "fact") => {
+            if !own_edge(n, edge) {
+                out.push(
+                    error(
+                        C::InvalidCaseFact,
+                        spans.at(value, &case.id),
+                        format!("`{edge}` is not an edge of fact `{node_id}`"),
+                    )
+                    .note(format!("edges: {}", edge_ids(n))),
+                );
+            } else if let Some(removal) = case
+                .removals
+                .iter()
+                .find(|r| r.edge == qualified_edge(graph, node_id, edge))
+            {
+                out.push(
+                    error(
+                        C::InvalidCaseFact,
+                        spans.at(value, &case.id),
+                        format!("`{edge}` was removed and cannot resolve fact `{node_id}`"),
+                    )
+                    .note_at(
+                        Some(spans.event(removal.event, |s| s.whole.as_ref(), &case.id)),
+                        format!("removed here on {}", removal.date),
+                    ),
+                );
+            } else if removed.contains(&qualified_edge(graph, node_id, edge)) {
+                out.push(error(
+                    C::InvalidCaseFact,
+                    spans.at(value, &case.id),
+                    format!("`{edge}` was removed and cannot resolve fact `{node_id}`"),
+                ));
+            }
+        }
+        _ => out.push(
+            error(
+                C::InvalidCaseFact,
+                spans.at(key, &case.id),
+                format!("`{node_id}` is not a fact node in force on {}", case.as_of),
+            )
+            .note("facts resolve nodes tagged `fact` (SPEC §5.1)"),
+        ),
+    }
+}
+
 fn edge_ids(n: &Node) -> String {
     n.edges
         .iter()
@@ -231,6 +278,7 @@ fn edge_ids(n: &Node) -> String {
 /// Terminals reachable from `start` at `as_of`, pruned by `facts`.
 pub(super) fn reachable_terminals(case: &Case, graph: &Graph<'_>, start: &str) -> BTreeSet<String> {
     let known_at = case.known_at.as_deref();
+    let removed = removed_edges(case, graph);
     let mut seen = BTreeSet::new();
     let mut terminals = BTreeSet::new();
     let mut todo = vec![start.to_owned()];
@@ -252,6 +300,12 @@ pub(super) fn reachable_terminals(case: &Case, graph: &Graph<'_>, start: &str) -
             .flatten();
         let pack = id.split_once("::").map_or("", |(p, _)| p);
         for (edge_pack, e) in graph.edges(&id, node) {
+            if e.id
+                .as_deref()
+                .is_some_and(|edge| removed.contains(&format!("{edge_pack}::{edge}")))
+            {
+                continue;
+            }
             if fact.is_some_and(|f| edge_pack != pack || !own_edge_is(e, f)) {
                 continue;
             }
@@ -259,6 +313,57 @@ pub(super) fn reachable_terminals(case: &Case, graph: &Graph<'_>, start: &str) -
         }
     }
     terminals
+}
+
+fn qualified_edge(graph: &Graph<'_>, node: &str, edge: &str) -> String {
+    let pack = node
+        .split_once("::")
+        .map_or(graph.primary(), |(pack, _)| pack);
+    format!("{pack}::{}", edge.rsplit("::").next().unwrap_or(edge))
+}
+
+/// Edges removed by replay events or the explicit analysis option.
+fn removed_edges(case: &Case, graph: &Graph<'_>) -> BTreeSet<String> {
+    let mut removed: BTreeSet<String> = case.removals.iter().map(|r| r.edge.clone()).collect();
+    if let Some(serde_json::Value::Array(edges)) = case.analysis.fields.get("remove_edges") {
+        for value in edges {
+            let Some(edge) = value.as_str() else { continue };
+            let qualified = if edge.contains("::") {
+                edge.to_owned()
+            } else {
+                format!("{}::{edge}", graph.primary())
+            };
+            removed.insert(qualified);
+        }
+    }
+    removed
+}
+
+fn duplicate_analysis_removals(
+    case: &Case,
+    graph: &Graph<'_>,
+    spans: &CaseSpans,
+    out: &mut Vec<Diagnostic>,
+) {
+    let Some(serde_json::Value::Array(edges)) = case.analysis.fields.get("remove_edges") else {
+        return;
+    };
+    let mut seen: BTreeSet<String> = case.removals.iter().map(|r| r.edge.clone()).collect();
+    for value in edges {
+        let Some(edge) = value.as_str() else { continue };
+        let qualified = if edge.contains("::") {
+            edge.to_owned()
+        } else {
+            format!("{}::{edge}", graph.primary())
+        };
+        if !seen.insert(qualified.clone()) {
+            out.push(error(
+                C::InvalidCaseEvent,
+                spans.at(None, &case.id),
+                format!("option `{qualified}` is removed more than once"),
+            ));
+        }
+    }
 }
 
 fn own_edge_is(e: &crate::hir::Edge, fact: &str) -> bool {

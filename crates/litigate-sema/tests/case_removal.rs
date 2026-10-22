@@ -6,6 +6,7 @@ mod case_support;
 use case_support::{check_2009, frcp2009, matter_2009, render};
 use litigate_lower::{render as render_json, render_scenario, Lowerer};
 use litigate_sema::hir::Package;
+use proptest::prelude::*;
 use std::collections::BTreeMap;
 
 const SERVED: &str = "2009-12-04 Served(complaint, Personal) on widget";
@@ -147,4 +148,54 @@ fn removals_lower_to_remove_edges() {
         "removal_map",
         render_json(&lowered.source_map).unwrap_or_default()
     );
+}
+
+#[test]
+fn facts_and_duplicate_analysis_removals_are_diagnosed() {
+    let removed_fact = case_support::acme().replace(
+        "analysis { params: { rate: 650, opp_rate: 550 } }",
+        "analysis { params: { rate: 650, opp_rate: 550 }, remove_edges: [\"not-barred\"] }",
+    );
+    let duplicated = case_support::acme().replace(
+        "analysis { params: { rate: 650, opp_rate: 550 } }",
+        "analysis { params: { rate: 650, opp_rate: 550 }, remove_edges: [\"frcp-rule12-example::move-dismiss\", \"move-dismiss\"] }",
+    );
+    let cases = BTreeMap::from([
+        (
+            "fact follows removed edge",
+            render(
+                &case_support::check_example(&removed_fact, litigate_base::Profile::Dev)
+                    .diagnostics,
+            ),
+        ),
+        (
+            "duplicate analysis removal",
+            render(
+                &case_support::check_example(&duplicated, litigate_base::Profile::Dev).diagnostics,
+            ),
+        ),
+    ]);
+    insta::assert_debug_snapshot!(cases);
+}
+
+proptest! {
+    /// A terminal reachable only through a removed edge no longer requires a stake.
+    #[test]
+    fn removed_options_prune_unreachable_terminal_stakes(removal_mode in 0_u8..3) {
+        let mut text = case_support::matter_2009(&[SERVED]);
+        text = text.replace("  dismissed: 0.usd\n", "");
+        if removal_mode == 1 {
+            text = text.replace(
+                "events {\n",
+                "events {\n  2009-12-05 Forfeited(\"move-dismiss\") by widget cite FRCP 12(h)(1)\n",
+            );
+        } else if removal_mode == 2 {
+            text.push_str("\nanalysis { remove_edges: [\"frcp::move-dismiss\"] }\n");
+        }
+        let checked = check_2009(&text);
+        let missing_dismissed = checked.diagnostics.iter().any(|d| {
+            d.code.as_str() == "L4004" && d.message.contains("terminal `frcp::dismissed`")
+        });
+        prop_assert_eq!(missing_dismissed, removal_mode == 0);
+    }
 }

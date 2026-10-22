@@ -256,6 +256,36 @@ fn frap26_takes_the_vendored_inaccessibility_and_hours_rules() {
     assert!(compute_hour_deadline(&h, &ours("itc210"), &cfg).is_err());
 }
 
+#[test]
+fn additional_holidays_and_inaccessibility_agree_elsewhere() {
+    // FRCP 6(a)(6)(C) state holidays arrive as additional closed days; the
+    // clerk's office extension (6(a)(3)) under the Rule 6 family.
+    let dl = DayDeadline {
+        trigger: d("2026-07-27"),
+        days: 14,
+        direction: Direction::Forward,
+        unit: Unit::Calendar,
+        service_method: None,
+    };
+    let state = ClockConfig {
+        additional_holidays: vec![d("2026-08-10")],
+        clerk_inaccessible: false,
+    };
+    for (id, _) in RULES {
+        let (a, b) = both(id, &dl, &state);
+        assert_eq!(a, b, "{id}");
+    }
+    assert_eq!(both("frcp6", &dl, &state).0.unwrap()[2], "2026-08-11");
+    let closed = ClockConfig {
+        clerk_inaccessible: true,
+        ..ClockConfig::default()
+    };
+    for id in ["frcp6", "rcfc6", "itc210"] {
+        let (a, b) = both(id, &dl, &closed);
+        assert_eq!(a, b, "{id}");
+    }
+}
+
 fn rule_index() -> impl Strategy<Value = usize> {
     0..RULES.len()
 }

@@ -26,6 +26,7 @@ are fallbacks.
 | `groups` | `[{id,label}]` | visual/hierarchical clustering |
 | `roles` | object | **v2** actor → role mapping, see below |
 | `sources` | `[{id,title,url?,path?,sha256?,asOf?}]` | **v2** primary sources the pack was authored from. `cite`/`authority` strings should be traceable to one of these. `path` is **repo-relative only** (e.g. a sibling pack file) — never a local/absolute filesystem path; cite the official `url` for everything else. `litgraph lint` errors (`local-source-path`) on an absolute `path` |
+| `citeSyntax` | object | **v3** the citation syntax this pack's `cite`/`authority` strings use: rule-body prefixes and pack-private shorthands, see [Citation syntax](#citation-syntax-v3). The engine itself recognizes only U.S.C., C.F.R. and case citations |
 | `nodes`, `edges` | arrays | |
 
 ## Nodes
@@ -213,6 +214,51 @@ step's result), `{n}` (period length), `{after}` (`after`/`before`),
 `{forward}` (`forward`/`backward`), `{method}` (the service method's name,
 e.g. `Mail`) and `{days}` (days the method adds). Any other placeholder
 fails validation.
+
+## Citation syntax (v3)
+
+`citeSyntax` declares which rule bodies and shorthands `lint`'s cite
+verifier recognizes in this pack. Forum-neutral shapes (`28 U.S.C. §
+1498(a)`, `37 CFR 1.104`, `Bowles v. Russell, ...`) need no declaration;
+every rule body does, so a new forum never needs an engine change. A pack
+reads only its own declarations: a pack citing `FRAP 4` must declare FRAP
+itself, or the citation is treated as unrecognized text.
+
+```json
+"citeSyntax": {
+  "rules": [
+    { "prefixes": ["FRCP", "Fed. R. Civ. P.", "Fed R Civ P", "F.R.C.P."],
+      "heading": "Rule {}", "source": "frcp-rules" }
+  ],
+  "shorthands": [
+    { "prefix": "cfr", "code": "cfr", "title": 19, "sectionParts": 2,
+      "source": "cfr-210" }
+  ]
+}
+```
+
+| field | type | notes |
+|---|---|---|
+| `rules[].prefixes` | string[] | surface prefixes, matched case-insensitively at the start of a citation (one space in a prefix matches any run of spaces), then an optional `§` and the section number (`FRCP 12(b)(6)`) |
+| `rules[].heading` | string | the vendored corpus heading (`## <heading>`) a section resolves to, with exactly one `{}` for the section number. Forms with the same heading are the same body, so a bare trailing number carries forward across them (`FRAP 28; 34`) |
+| `rules[].source` | source id | optional; the `sources[]` entry this body normalizes into |
+| `shorthands[].prefix` | string | a compact dotted form's literal prefix (`cfr210.16.b.4`) |
+| `shorthands[].code` | `usc` \| `cfr` | the code the implied title belongs to |
+| `shorthands[].title` | integer | the implied title number (nonzero) |
+| `shorthands[].sectionParts` | integer | how many leading dotted parts form the section: `2` makes `cfr210.16.b.4` 19 C.F.R. § 210.16(b)(4); `1` makes `usc1337.b.1` 19 U.S.C. § 1337(b)(1). The first part must be all digits |
+| `shorthands[].source` | source id | optional, as for `rules` |
+
+Loading rejects a heading without exactly one `{}`, a rule with no
+prefixes, an empty prefix, a zero `title` or `sectionParts`, a `source`
+that is not a `sources[].id`, and two prefixes (rule or shorthand) where
+one is a case-insensitive prefix of the other — so declaration order never
+changes how a citation parses. Resolution still searches every vendored
+`sources[].path` the pack declares.
+
+Engine source carries no forum knowledge: the
+`no_forum_literals_in_engine` test (`crates/litgraph/tests/no_forum_literals.rs`)
+fails if any pack id or forum key from `packs/*.json` appears in
+`crates/*/src` outside test code.
 
 ## Links (composition)
 
@@ -432,7 +478,8 @@ onto a named `--scenario` via `extends` automatically. `--scenarios-dir` (or
    under `sources/` (see `sources/PROVENANCE.md`), `litgraph lint`
    verifies the cite mechanically — normalizing the surface form ("FRCP
    12(b)(6)", "Fed. R. Civ. P. 12(b)(6)", "28 U.S.C. § 1498(a)", "37
-   C.F.R. § 42.108", "RCFC 56", ... all resolve the same way), resolving
+   C.F.R. § 42.108", "RCFC 56", ... all resolve the same way; rule bodies
+   come from the pack's [`citeSyntax`](#citation-syntax-v3)), resolving
    it to a `## <heading>` span in that file, and fuzzy-matching any
    quoted phrase in `note` against that span. A cite it can't verify gets
    an `unverifiable-cite` warning naming the exact reason (no local

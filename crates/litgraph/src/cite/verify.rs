@@ -7,7 +7,7 @@
 
 use crate::cite::corpus::SourceCorpus;
 use crate::cite::fuzzy::{self, DEFAULT_THRESHOLD};
-use crate::cite::normalize::{parse_cite_string, CiteRef};
+use crate::cite::normalize::{parse_cite_string, CiteGrammar, CiteRef};
 use crate::model::Pack;
 
 /// What became of one normalized citation.
@@ -56,10 +56,12 @@ pub struct CiteCheck {
 /// `corpus`, honoring only the sources `pack` itself declares
 /// (`Pack.sources[].path`) — a cite is never "verified" against a vendored
 /// file the pack doesn't actually cite as one of its own sources, even if
-/// that file happens to be in the corpus.
+/// that file happens to be in the corpus. Citations are read under the
+/// pack's own `citeSyntax`.
 #[must_use]
 pub fn check_pack(pack: &Pack, corpus: &SourceCorpus) -> Vec<CiteCheck> {
     let vendored_paths = pack_vendored_paths(pack, corpus);
+    let grammar = CiteGrammar::new(&pack.cite_syntax);
     let mut out = vec![];
     for n in &pack.nodes {
         let Some(cite) = &n.cite else { continue };
@@ -67,7 +69,7 @@ pub fn check_pack(pack: &Pack, corpus: &SourceCorpus) -> Vec<CiteCheck> {
             &n.id,
             cite,
             n.note.as_deref(),
-            pack,
+            (pack, &grammar),
             corpus,
             &vendored_paths,
         ));
@@ -83,7 +85,7 @@ pub fn check_pack(pack: &Pack, corpus: &SourceCorpus) -> Vec<CiteCheck> {
             &at,
             authority,
             e.note.as_deref(),
-            pack,
+            (pack, &grammar),
             corpus,
             &vendored_paths,
         ));
@@ -106,12 +108,12 @@ fn check_field(
     at: &str,
     raw: &str,
     note: Option<&str>,
-    pack: &Pack,
+    (pack, grammar): (&Pack, &CiteGrammar<'_>),
     corpus: &SourceCorpus,
     vendored_paths: &[String],
 ) -> Vec<CiteCheck> {
     let quotes = note.map(extract_quotes).unwrap_or_default();
-    parse_cite_string(raw, pack.forum.as_deref())
+    parse_cite_string(raw, grammar)
         .into_iter()
         .map(|cite_ref| {
             let outcome = resolve(pack, &cite_ref, corpus, vendored_paths, &quotes);
@@ -226,6 +228,10 @@ mod tests {
             groups: vec![],
             roles: std::collections::BTreeMap::new(),
             sources,
+            cite_syntax: serde_json::from_value(serde_json::json!({"rules": [
+                {"prefixes": ["FRCP", "Fed. R. Civ. P."], "heading": "Rule {}"}
+            ]}))
+            .expect("fixture syntax parses"),
             nodes,
             edges,
         }

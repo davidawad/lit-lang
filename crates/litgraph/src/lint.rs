@@ -276,8 +276,8 @@ fn lint_pack_nodes(p: &Pack, push: &mut Push<'_>) {
 
 /// The pure-chance-node `fact-no-prior` check above is gated on "every
 /// out-edge is non-applicant", so it never ran for a *mixed* node (a choice
-/// edge plus fact-driven interrupts, e.g. ptab's petition-threshold-review:
-/// refile vs. the office's time-bar determination). Check the same thing on
+/// edge plus fact-driven interrupts, e.g. a choice to refile interrupted by
+/// an office's time-bar determination). Check the same thing on
 /// just the interrupt (non-applicant) edges -- scenario/plan.rs's `chooser()`
 /// reads the same `authored` array `chance()` does.
 fn lint_mixed_fact_node(outs: &[&RawEdge], at: &str, push: &mut Push<'_>) {

@@ -78,10 +78,11 @@ fn scenario_against(
     }
 }
 
-/// A pack compiles on its own, lints, and names a counting rule the
-/// catalog's clock library has.
+/// A pack's `citeSyntax` is well formed, it compiles on its own, lints,
+/// and names a counting rule the catalog's clock library has.
 fn validate_pack(doc: &Value, catalog: &Catalog, out: &mut Validation) {
     let compiled = parse::<Pack>(doc).and_then(|p| {
+        p.check_cite_syntax()?;
         Graph::compile(
             std::slice::from_ref(&p),
             &LinkFile::default(),
@@ -344,6 +345,25 @@ mod tests {
         assert!(validate(&pack("frcp6"), None, &c).valid);
         let v = validate(&pack("frcp7"), None, &c);
         assert!(!v.valid && v.errors[0].contains("frcp7"), "{:?}", v.errors);
+        Ok(())
+    }
+
+    #[test]
+    fn rejects_a_pack_whose_cite_syntax_names_an_unknown_source() -> Result<()> {
+        let c = Catalog::embedded()?;
+        let pack = |source: &str| {
+            json!({"schemaVersion": 3, "id": "t", "title": "t", "startNodeId": "a",
+                "sources": [{"id": "s"}],
+                "citeSyntax": {"rules": [{"prefixes": ["XR"], "heading": "XR {}", "source": source}]},
+                "nodes": [{"id": "a", "label": "a"}, {"id": "b", "kind": "terminal", "label": "b", "payoff": 1}],
+                "edges": [{"from": "a", "to": "b", "label": "go", "actor": "applicant"}]})
+        };
+        assert!(validate(&pack("s"), None, &c).valid);
+        let v = validate(&pack("nope"), None, &c);
+        assert_eq!(
+            v.errors,
+            vec!["parse: pack t: citeSyntax source `nope` is not a `sources[].id` (valid: s)"]
+        );
         Ok(())
     }
 }

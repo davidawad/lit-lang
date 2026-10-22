@@ -125,7 +125,7 @@ pub const EDGE_FUNCS: &[(&str, &str)] = &[
     ),
     ("attr(\"x\", d)", "edge attr x or d"),
     ("actor(\"examiner\")", "edge's raw actor equals"),
-    ("pack(\"frcp\")", "edge belongs to pack"),
+    ("pack(\"x\")", "edge belongs to pack x"),
     (
         "label_has(\"sanction\")",
         "case-insensitive substring of label",

@@ -4,9 +4,10 @@
 //! ```
 //! use litgraph::api::{handle, Catalog, Request};
 //! let catalog = Catalog::embedded().unwrap();
-//! let req: Request = serde_json::from_str(
-//!     r#"{ "packs": ["cofc"], "scenario": { "params": { "rate": 900 } }, "op": { "op": "solve" } }"#,
-//! ).unwrap();
+//! let pack_id = &catalog.packs[0].1.id;
+//! let req: Request = serde_json::from_value(serde_json::json!(
+//!     { "packs": [pack_id], "scenario": { "params": { "rate": 900 } }, "op": { "op": "solve" } }
+//! )).unwrap();
 //! let resp = handle(&req, &catalog);
 //! assert!(resp.ok);
 //! assert!(resp.result.unwrap()["value"].is_number());

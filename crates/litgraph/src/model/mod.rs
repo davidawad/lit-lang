@@ -12,6 +12,7 @@
 //! an IPR estoppel, a waived defense, a prior RCE — without every algorithm
 //! needing to know that. See `docs/PACK_SCHEMA.md#state-flags`.
 
+mod cite_syntax;
 mod continuations;
 mod entities;
 mod flags;
@@ -20,6 +21,7 @@ mod links;
 mod resolve;
 mod schema;
 
+pub use cite_syntax::{CiteCode, CiteRuleForm, CiteShorthand, CiteSyntax};
 pub use entities::{CompileOptions, Edge, Node, PackMeta, PayoffSource, DEFAULT_MAX_PRODUCT_NODES};
 pub use graph::{heuristic_payoff, qualify, EdgeIx, Graph, NodeIx};
 pub use links::{local_edge_ids, merge_patch, Instance, LinkFile};

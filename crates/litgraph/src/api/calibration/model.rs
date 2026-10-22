@@ -49,7 +49,7 @@ pub struct CalibrationEntry {
     /// What this entry sets.
     pub target: CalibrationTarget,
     /// Node or edge ref (qualified `pack::local` recommended — see `docs/PACK_SCHEMA.md`;
-    /// an instance-qualified ref like `cafc@cofc::panel-to-affirmed` targets one instance only).
+    /// an instance-qualified ref like `<pack>@<entered-from>::<local>` targets one instance only).
     #[serde(rename = "ref")]
     pub target_ref: String,
     /// Attribute name; required (and only meaningful) for `node-attr`.

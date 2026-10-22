@@ -8,7 +8,8 @@
 //! ```js
 //! import init, { handle, describe } from "litgraph-wasm";
 //! await init();
-//! const resp = JSON.parse(handle(JSON.stringify({ packs: ["cofc"], op: { op: "solve" } })));
+//! const packId = JSON.parse(describe()).result.packs[0].id; // any embedded pack
+//! const resp = JSON.parse(handle(JSON.stringify({ packs: [packId], op: { op: "solve" } })));
 //! ```
 
 use std::sync::OnceLock;

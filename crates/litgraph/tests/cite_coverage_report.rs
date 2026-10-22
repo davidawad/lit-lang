@@ -142,13 +142,11 @@ fn list_misses_in_fully_vendored_families() {
     let corpus = SourceCorpus::embedded();
     for (_, pack, _) in &catalog.packs {
         for check in cite::check_pack(pack, &corpus) {
-            let fully_vendored = matches!(
-                check.cite_ref.family,
-                cite::Family::Frcp
-                    | cite::Family::Frap
-                    | cite::Family::Usc(19)
-                    | cite::Family::Cfr(37)
-            );
+            let fully_vendored = match &check.cite_ref.family {
+                cite::Family::Rules(heading) => heading == "Rule {}" || heading == "FRAP {}",
+                cite::Family::Usc(19) | cite::Family::Cfr(37) => true,
+                _ => false,
+            };
             if !fully_vendored {
                 continue;
             }

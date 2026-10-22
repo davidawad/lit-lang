@@ -6,9 +6,9 @@
 //! here it is in the primary text" — or, if not, exactly why not. Three
 //! pieces:
 //!
-//! - [`normalize`]: turn "FRCP 12(b)(6)", "Fed. R. Civ. P. 12(b)(6)",
-//!   "28 U.S.C. § 1498(a)", "35 USC 315(e)", "37 C.F.R. § 42.108", "RCFC
-//!   56", ... into one canonical shape, splitting compound citations
+//! - [`normalize`]: turn "28 U.S.C. § 1498(a)", "35 USC 315(e)", "37
+//!   C.F.R. § 42.108", and the rule bodies a pack declares in its
+//!   `citeSyntax`, into one canonical shape, splitting compound citations
 //!   ("28 U.S.C. 1291; 2106") and recognizing case citations as
 //!   out-of-scope rather than malformed rule cites.
 //! - [`corpus`]: the vendored plain-text L0 sources (`sources/*.txt`,
@@ -26,5 +26,5 @@ pub mod normalize;
 pub mod verify;
 
 pub use corpus::SourceCorpus;
-pub use normalize::{parse_cite_string, CiteRef, Family};
+pub use normalize::{parse_cite_string, CiteGrammar, CiteRef, Family};
 pub use verify::{check_pack, CiteCheck, CiteOutcome};

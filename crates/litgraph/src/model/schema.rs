@@ -8,6 +8,7 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
+use super::cite_syntax::CiteSyntax;
 use crate::error::{Error, Result};
 
 /// Structural kind of a node.
@@ -242,7 +243,7 @@ pub struct Pack {
     /// Jurisdiction or rule body.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub jurisdiction: Option<String>,
-    /// Short forum key (`cofc`, `cafc`, ...).
+    /// Short forum key, as authored (a lowercase identifier).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub forum: Option<String>,
     /// Id of the deadline-counting rule used by this pack (schema v3).
@@ -261,6 +262,10 @@ pub struct Pack {
     /// Primary sources (v2).
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub sources: Vec<Source>,
+    /// Citation syntax this pack's `cite`/`authority` strings use (v3):
+    /// rule-body prefixes and shorthands, each bound to a source.
+    #[serde(default, skip_serializing_if = "CiteSyntax::is_empty")]
+    pub cite_syntax: CiteSyntax,
     /// Nodes.
     pub nodes: Vec<RawNode>,
     /// Edges.
@@ -271,8 +276,8 @@ impl Pack {
     /// Parse and version-check a pack.
     ///
     /// # Errors
-    /// `Error::Parse` on malformed JSON, unknown fields, or an unsupported
-    /// `schemaVersion`.
+    /// `Error::Parse` on malformed JSON, unknown fields, an unsupported
+    /// `schemaVersion`, or an invalid `citeSyntax`.
     pub fn from_json(text: &str) -> Result<Pack> {
         let pack: Pack = serde_json::from_str(text).map_err(|e| Error::Parse(e.to_string()))?;
         if pack.schema_version != 1 && pack.schema_version != 2 && pack.schema_version != 3 {
@@ -281,6 +286,7 @@ impl Pack {
                 pack.id, pack.schema_version
             )));
         }
+        pack.check_cite_syntax()?;
         if let Some(e) = pack.edges.iter().find(|e| !e.replaces.is_empty()) {
             return Err(Error::Parse(format!(
                 "pack {}: edge {}->{} uses `replaces`, which is only valid in links.json",
@@ -288,6 +294,16 @@ impl Pack {
             )));
         }
         Ok(pack)
+    }
+
+    /// Check `citeSyntax` against this pack's own `sources` (see
+    /// [`CiteSyntax::validate`]).
+    ///
+    /// # Errors
+    /// `Error::Parse` naming the offending `citeSyntax` entry.
+    pub fn check_cite_syntax(&self) -> Result<()> {
+        let source_ids: Vec<&str> = self.sources.iter().map(|s| s.id.as_str()).collect();
+        self.cite_syntax.validate(&self.id, &source_ids)
     }
 }
 

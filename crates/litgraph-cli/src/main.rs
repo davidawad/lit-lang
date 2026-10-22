@@ -122,7 +122,7 @@ fn shorthand(cli: &Cli) -> Result<Value> {
         None => json!({}),
     };
     if !cli.set.is_empty() {
-        // A bare named scenario (`--scenario cofc-1498-patent-case`) becomes
+        // A bare named scenario (`--scenario <name>`) becomes
         // `{"extends": "<name>"}` so `--set` composes onto it instead of
         // indexing into a JSON string.
         if let Some(name) = scenario.as_str() {

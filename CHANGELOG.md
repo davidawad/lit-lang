@@ -19,6 +19,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `clock` kind and rejects an unknown `counting` id; `schema clock` prints
   the library's JSON Schema. A zero-day backward court-day period from a
   closed day now rolls earlier (it rolled later, past the trigger).
+- **Data-driven citation syntax.** Rule-body cite prefixes (FRCP, FRAP,
+  RCFC, ...) and the ITC's dotted `cfr`/`usc` shorthands moved from the cite
+  normalizer into each pack's new `citeSyntax` field (pack schema v3); the
+  engine knows only U.S.C., C.F.R. and case citations. `cite::Family`'s
+  per-body variants become `Family::Rules(heading)`, and
+  `parse_cite_string` takes a `CiteGrammar` instead of a forum key. Lint
+  output is unchanged. A new gate test, `no_forum_literals_in_engine`,
+  fails on any pack id or forum key in `crates/*/src` outside test code;
+  `describe`'s `pack(...)` metric example now reads `pack("x")`.
 
 ## [0.3.0] - 2026-09-30
 

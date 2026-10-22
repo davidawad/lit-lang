@@ -18,6 +18,10 @@ fn pack_with_cite(sources: Vec<Source>, cite: &str) -> Pack {
         groups: vec![],
         roles: std::collections::BTreeMap::new(),
         sources,
+        cite_syntax: serde_json::from_value(serde_json::json!({"rules": [
+            {"prefixes": ["FRCP", "Fed. R. Civ. P."], "heading": "Rule {}"}
+        ]}))
+        .expect("fixture syntax parses"),
         nodes: vec![RawNode {
             id: "n1".into(),
             label: "n1".into(),

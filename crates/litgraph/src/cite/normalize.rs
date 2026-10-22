@@ -1,9 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-//! Normalize the many surface forms of a legal citation ("FRCP 12(b)(6)",
-//! "Fed. R. Civ. P. 12(b)(6)", "28 U.S.C. § 1498(a)", "35 USC 315(e)",
-//! "37 C.F.R. § 42.108", "RCFC 56", ...) into a canonical [`CiteRef`] whose
+//! Normalize the many surface forms of a legal citation ("28 U.S.C. §
+//! 1498(a)", "35 USC 315(e)", "37 C.F.R. § 42.108", and every rule body a
+//! pack declares in its `citeSyntax`) into a canonical [`CiteRef`] whose
 //! [`CiteRef::heading`] matches the `## <ref>` section headings in the
 //! vendored corpus (`sources/*.txt`, see `cite::corpus`).
+//!
+//! The engine knows only the forum-neutral shapes (U.S.C., C.F.R., case
+//! names). Rule bodies and pack-private shorthands are data
+//! ([`CiteSyntax`]), applied through a [`CiteGrammar`].
 //!
 //! Pack `cite`/`authority` strings are often compound ("28 U.S.C. 1291;
 //! 2106", "35 U.S.C. 314(a); 314(d)", "18 U.S.C. § 3142(b), (c)") and
@@ -13,27 +17,20 @@
 //! family/title of the previous citation forward onto a bare trailing
 //! number the way legal writing does ("§§ 1292(a)(1), 1292(b)").
 
+use crate::model::{CiteCode, CiteShorthand, CiteSyntax};
+
 /// Which body of law a citation belongs to. The title number on
 /// [`Family::Usc`]/[`Family::Cfr`] is what makes `28 U.S.C. § 1291` and
 /// `35 U.S.C. § 1291` (hypothetically) distinct citations.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum Family {
-    /// Federal Rules of Civil Procedure.
-    Frcp,
-    /// Federal Rules of Appellate Procedure.
-    Frap,
-    /// Federal Rules of Criminal Procedure.
-    Frcrimp,
-    /// Rules of the U.S. Court of Federal Claims.
-    Rcfc,
-    /// Federal Circuit local rules.
-    FedCirRule,
+    /// A rule/manual body declared in a pack's `citeSyntax.rules`,
+    /// identified by its heading template (`"Rule {}"`).
+    Rules(String),
     /// United States Code, title `.0`.
     Usc(u16),
     /// Code of Federal Regulations, title `.0`.
     Cfr(u16),
-    /// Manual of Patent Examining Procedure.
-    Mpep,
     /// A case citation ("*Bowles v. Russell*, 551 U.S. 205 (2007)") — not
     /// checkable against an L0 rule/statute source; recognized so it is
     /// skipped rather than misreported as a malformed rule cite.
@@ -67,15 +64,10 @@ impl CiteRef {
     /// which have no corpus to resolve against.
     #[must_use]
     pub fn heading(&self) -> Option<String> {
-        match self.family {
-            Family::Frcp => Some(format!("Rule {}", self.section)),
-            Family::Frap => Some(format!("FRAP {}", self.section)),
-            Family::Frcrimp => Some(format!("Fed. R. Crim. P. {}", self.section)),
-            Family::Rcfc => Some(format!("RCFC {}", self.section)),
-            Family::FedCirRule => Some(format!("Fed. Cir. R. {}", self.section)),
-            Family::Usc(t) if t > 0 => Some(format!("{t} U.S.C. § {}", self.section)),
-            Family::Cfr(t) if t > 0 => Some(format!("{t} C.F.R. § {}", self.section)),
-            Family::Mpep => Some(format!("MPEP § {}", self.section)),
+        match &self.family {
+            Family::Rules(heading) => Some(heading.replacen("{}", &self.section, 1)),
+            Family::Usc(t) if *t > 0 => Some(format!("{t} U.S.C. § {}", self.section)),
+            Family::Cfr(t) if *t > 0 => Some(format!("{t} C.F.R. § {}", self.section)),
             Family::Usc(_) | Family::Cfr(_) | Family::Case | Family::Other => None,
         }
     }
@@ -89,14 +81,37 @@ impl CiteRef {
     }
 }
 
-/// Split `raw` into one [`CiteRef`] per citation and normalize each.
-///
-/// `forum` is the pack's `forum` field (`"itc"`, `"cofc"`, ...); it
-/// disambiguates the handful of forums that write citations without a
-/// title number (ITC's internal `cfr210.16.b.4` shorthand for 19 C.F.R. §
-/// 210.16(b)(4)).
+/// A pack's [`CiteSyntax`], ready to apply: every rule prefix paired with
+/// its body's heading template, plus the pack's shorthands.
+#[derive(Debug, Clone, Default)]
+pub struct CiteGrammar<'a> {
+    rules: Vec<(&'a str, &'a str)>,
+    shorthands: &'a [CiteShorthand],
+}
+
+impl<'a> CiteGrammar<'a> {
+    /// The grammar of one pack's declared citation syntax. Prefixes are
+    /// tried longest first; `Pack::from_json` has already rejected
+    /// overlapping prefixes, so the order never changes a result.
+    #[must_use]
+    pub fn new(syntax: &'a CiteSyntax) -> Self {
+        let mut rules: Vec<(&str, &str)> = syntax
+            .rules
+            .iter()
+            .flat_map(|f| f.prefixes.iter().map(|p| (p.as_str(), f.heading.as_str())))
+            .collect();
+        rules.sort_by(|a, b| b.0.len().cmp(&a.0.len()).then(a.0.cmp(b.0)));
+        CiteGrammar {
+            rules,
+            shorthands: &syntax.shorthands,
+        }
+    }
+}
+
+/// Split `raw` into one [`CiteRef`] per citation and normalize each under
+/// `grammar` (the citing pack's declared rule bodies and shorthands).
 #[must_use]
-pub fn parse_cite_string(raw: &str, forum: Option<&str>) -> Vec<CiteRef> {
+pub fn parse_cite_string(raw: &str, grammar: &CiteGrammar<'_>) -> Vec<CiteRef> {
     let mut out = vec![];
     let mut last_family: Option<Family> = None;
     for segment in raw.split(';') {
@@ -107,7 +122,11 @@ pub fn parse_cite_string(raw: &str, forum: Option<&str>) -> Vec<CiteRef> {
         // A case citation's own reporter cite ("551 U.S. 205 (2007)") is
         // comma-separated from the case name — never split it up.
         if looks_like_case_citation(segment) {
-            out.extend(expand_range(parse_one(segment, last_family, forum)));
+            out.extend(expand_range(parse_one(
+                segment,
+                last_family.as_ref(),
+                grammar,
+            )));
             continue;
         }
         for piece in split_top_level_commas(segment) {
@@ -127,9 +146,9 @@ pub fn parse_cite_string(raw: &str, forum: Option<&str>) -> Vec<CiteRef> {
                     continue;
                 }
             }
-            let cref = parse_one(piece, last_family, forum);
+            let cref = parse_one(piece, last_family.as_ref(), grammar);
             if !cref.is_out_of_scope() {
-                last_family = Some(cref.family);
+                last_family = Some(cref.family.clone());
             } else if bare_number(piece).is_none() {
                 // This piece had its own (unrecognized-family or case-style)
                 // text, not just a bare trailing number hoping to inherit
@@ -229,20 +248,18 @@ fn split_top_level_commas(s: &str) -> Vec<&str> {
     out
 }
 
-fn parse_one(piece: &str, last_family: Option<Family>, forum: Option<&str>) -> CiteRef {
-    if let Some(cref) = try_rule_family(piece) {
+fn parse_one(piece: &str, last_family: Option<&Family>, grammar: &CiteGrammar<'_>) -> CiteRef {
+    if let Some(cref) = try_rule_family(piece, grammar) {
         return cref;
     }
     if let Some(cref) = try_usc_or_cfr(piece) {
         return cref;
     }
-    if let Some(cref) = try_itc_cfr_slug(piece, forum) {
-        return cref;
-    }
-    if let Some(cref) = try_itc_usc_slug(piece, forum) {
-        return cref;
-    }
-    if let Some(cref) = try_mpep(piece) {
+    if let Some(cref) = grammar
+        .shorthands
+        .iter()
+        .find_map(|sh| try_shorthand(piece, sh))
+    {
         return cref;
     }
     if looks_like_case_citation(piece) {
@@ -256,7 +273,7 @@ fn parse_one(piece: &str, last_family: Option<Family>, forum: Option<&str>) -> C
     if let Some(family) = last_family.filter(|f| !f.is_carry_forward_blocked()) {
         if let Some((section, subsections)) = bare_number(piece) {
             return CiteRef {
-                family,
+                family: family.clone(),
                 section,
                 subsections,
                 raw: piece.to_string(),
@@ -275,45 +292,23 @@ impl Family {
     /// `Case`/`Other` never seed a "bare trailing number" carry-forward —
     /// a stray "10" after a case name isn't a page pointing back at the
     /// last real rule/statute family.
-    fn is_carry_forward_blocked(self) -> bool {
+    fn is_carry_forward_blocked(&self) -> bool {
         matches!(self, Family::Case | Family::Other)
     }
 }
 
-const FRCP_PREFIXES: &[&str] = &["FRCP", "Fed. R. Civ. P.", "Fed R Civ P", "F.R.C.P."];
-const FRAP_PREFIXES: &[&str] = &["FRAP", "Fed. R. App. P.", "Fed R App P", "F.R.A.P."];
-const FRCRIMP_PREFIXES: &[&str] = &["FRCrimP", "Fed. R. Crim. P.", "Fed R Crim P", "F.R.Crim.P."];
-const RCFC_PREFIXES: &[&str] = &["RCFC"];
-const FEDCIR_PREFIXES: &[&str] = &["Fed. Cir. R.", "Fed Cir R"];
-
-fn try_rule_family(piece: &str) -> Option<CiteRef> {
-    for (prefixes, family) in [
-        (FRCP_PREFIXES, Family::Frcp),
-        (FRAP_PREFIXES, Family::Frap),
-        (FRCRIMP_PREFIXES, Family::Frcrimp),
-        (RCFC_PREFIXES, Family::Rcfc),
-        (FEDCIR_PREFIXES, Family::FedCirRule),
-    ] {
-        if let Some(rest) = strip_prefix_ci(piece, prefixes) {
-            let rest = rest.trim_start_matches('§').trim();
-            let (section, subsections) = bare_number(rest)?;
-            return Some(CiteRef {
-                family,
-                section,
-                subsections,
-                raw: piece.to_string(),
-            });
-        }
-    }
-    None
-}
-
-fn try_mpep(piece: &str) -> Option<CiteRef> {
-    let rest = strip_prefix_ci(piece, &["MPEP"])?;
+/// A citation written with one of `grammar`'s rule prefixes, then an
+/// optional `§` and a section number. A matching prefix with no number
+/// after it is not a rule citation at all (`None`), whatever else follows.
+fn try_rule_family(piece: &str, grammar: &CiteGrammar<'_>) -> Option<CiteRef> {
+    let (rest, heading) = grammar
+        .rules
+        .iter()
+        .find_map(|&(prefix, heading)| strip_prefix_ci(piece, &[prefix]).map(|r| (r, heading)))?;
     let rest = rest.trim_start_matches('§').trim();
     let (section, subsections) = bare_number(rest)?;
     Some(CiteRef {
-        family: Family::Mpep,
+        family: Family::Rules(heading.to_string()),
         section,
         subsections,
         raw: piece.to_string(),
@@ -351,56 +346,38 @@ fn try_usc_or_cfr(piece: &str) -> Option<CiteRef> {
     })
 }
 
-/// `itc-337.json`'s own shorthand: `"cfr210.16.b.4"` = 19 C.F.R. §
-/// 210.16(b)(4), title implied by the pack's `forum` (only resolved for
-/// `forum == "itc"`, where the ITC's own part of 19 C.F.R. — Part 210 — is
-/// the only body this shorthand is used for).
-fn try_itc_cfr_slug(piece: &str, forum: Option<&str>) -> Option<CiteRef> {
-    if forum != Some("itc") {
-        return None;
-    }
-    let rest = strip_prefix_ci(piece, &["cfr"])?;
+/// A pack-declared compact dotted form (`"cfr210.16.b.4"` with
+/// `sectionParts: 2` = 19 C.F.R. § 210.16(b)(4) when the shorthand implies
+/// title 19): the first `sectionParts` dotted parts are the section (the
+/// first all digits, the rest non-empty), every later non-empty part a
+/// subsection.
+fn try_shorthand(piece: &str, sh: &CiteShorthand) -> Option<CiteRef> {
+    let rest = strip_prefix_ci(piece, &[sh.prefix.as_str()])?;
     let mut parts = rest.split('.');
-    let part_no = parts.next()?;
-    if part_no.is_empty() || !part_no.chars().all(|c| c.is_ascii_digit()) {
+    let lead = parts.next()?;
+    if lead.is_empty() || !lead.chars().all(|c| c.is_ascii_digit()) {
         return None;
     }
-    let sec_no = parts.next().unwrap_or("");
-    if sec_no.is_empty() {
-        return None;
+    let mut section = lead.to_string();
+    for _ in 1..sh.section_parts {
+        let part = parts.next().unwrap_or("");
+        if part.is_empty() {
+            return None;
+        }
+        section.push('.');
+        section.push_str(part);
     }
     let subsections: Vec<String> = parts
         .map(str::to_string)
         .filter(|s| !s.is_empty())
         .collect();
+    let family = match sh.code {
+        CiteCode::Usc => Family::Usc(sh.title),
+        CiteCode::Cfr => Family::Cfr(sh.title),
+    };
     Some(CiteRef {
-        family: Family::Cfr(19),
-        section: format!("{part_no}.{sec_no}"),
-        subsections,
-        raw: piece.to_string(),
-    })
-}
-
-/// `itc-337.json`'s own shorthand for its one cited U.S.C. title: `"usc1337.b.1"`
-/// = 19 U.S.C. § 1337(b)(1). Mirrors [`try_itc_cfr_slug`]; only resolved for
-/// `forum == "itc"`, the only forum this pack's shorthand is used in.
-fn try_itc_usc_slug(piece: &str, forum: Option<&str>) -> Option<CiteRef> {
-    if forum != Some("itc") {
-        return None;
-    }
-    let rest = strip_prefix_ci(piece, &["usc"])?;
-    let mut parts = rest.split('.');
-    let sec_no = parts.next()?;
-    if sec_no.is_empty() || !sec_no.chars().all(|c| c.is_ascii_digit()) {
-        return None;
-    }
-    let subsections: Vec<String> = parts
-        .map(str::to_string)
-        .filter(|s| !s.is_empty())
-        .collect();
-    Some(CiteRef {
-        family: Family::Usc(19),
-        section: sec_no.to_string(),
+        family,
+        section,
         subsections,
         raw: piece.to_string(),
     })

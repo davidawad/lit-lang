@@ -232,8 +232,8 @@ impl PlanInputs<'_> {
                         ..base
                     };
                 }
-                // A `fact`-tagged mixed node (e.g. ptab's
-                // petition-threshold-review: a choice to correct-and-refile,
+                // A `fact`-tagged mixed node (e.g. a petition threshold
+                // review: a choice to correct-and-refile,
                 // interrupted by the office's fact-driven time-bar
                 // determination) is the chooser() counterpart of `chance()`'s
                 // fact handling above: `scenario.facts`'s probability-1.0

@@ -1,13 +1,264 @@
-//! stub
+//! `litigate diff`: the SPEC §8.6 semantic diff of two sides, where a side
+//! is a litgraph JSON file, a package directory or `.case` (built at a
+//! date), or a directory of JSON (files paired by relative path).
+//! `--against JSON` and `--check` turn every change into an L6002 error.
+use super::build::lower_all;
+use super::check::checked;
+use crate::out::{Failure, Outcome, Report};
+use litigate_base::{Diagnostic, DiagnosticCode as C, LineIndex, Note, Profile, Span};
+use litigate_lower::{Change, Options};
+use serde_json::{json, Value};
+use std::collections::BTreeMap;
+use std::path::Path;
+
+/// `diff` arguments.
 pub struct Args {
+    /// First side.
     pub a: String,
+    /// Second side.
     pub b: Option<String>,
+    /// Expected JSON for the first side.
     pub against: Option<String>,
+    /// Date for both sides (or the first).
     pub as_of: Option<String>,
+    /// Date for the second side.
     pub to_as_of: Option<String>,
+    /// Differences are errors.
     pub check: bool,
+    /// Library directories.
     pub lib: Vec<String>,
 }
-pub fn diff(_a: &Args) -> crate::out::Outcome {
-    Err(crate::out::Failure::new("x"))
+
+/// Documents of one side, by relative name, plus diagnostics building it.
+type Side = (
+    BTreeMap<String, (String, String)>,
+    Vec<Diagnostic>,
+    Vec<(String, String)>,
+);
+
+fn json_files(
+    dir: &Path,
+    base: &Path,
+    out: &mut BTreeMap<String, (String, String)>,
+) -> std::io::Result<()> {
+    let mut entries: Vec<_> = std::fs::read_dir(dir)?
+        .filter_map(Result::ok)
+        .map(|e| e.path())
+        .collect();
+    entries.sort();
+    for path in entries {
+        let name = path
+            .strip_prefix(base)
+            .unwrap_or(&path)
+            .to_string_lossy()
+            .replace('\\', "/");
+        if path.is_dir() {
+            json_files(&path, base, out)?;
+        } else if name.ends_with(".json")
+            && !name.ends_with(".map.json")
+            && !name.starts_with("litigatables/")
+        {
+            out.insert(
+                name,
+                (crate::ws::shown(&path), std::fs::read_to_string(&path)?),
+            );
+        }
+    }
+    Ok(())
+}
+
+/// Reads or builds one side.
+fn side(path: &str, as_of: Option<&String>, lib: &[String]) -> Result<Side, Failure> {
+    let p = Path::new(path);
+    let mut docs = BTreeMap::new();
+    if p.is_file() && p.extension().is_some_and(|e| e == "json") {
+        let text = std::fs::read_to_string(p).map_err(|e| Failure::new(format!("{path}: {e}")))?;
+        docs.insert(String::new(), (crate::ws::shown(p), text));
+        return Ok((docs, Vec::new(), Vec::new()));
+    }
+    if p.is_dir()
+        && !p.join("Lit.toml").is_file()
+        && !crate::ws::discover(&[path.to_owned()])
+            .is_ok_and(|t| !t.packages.is_empty() || !t.cases.is_empty())
+    {
+        json_files(p, p, &mut docs)?;
+        return Ok((docs, Vec::new(), Vec::new()));
+    }
+    let c = checked(
+        &[path.to_owned()],
+        Profile::Dev,
+        as_of.map(String::as_str),
+        lib,
+    )?;
+    let built = lower_all(
+        &c,
+        &Options {
+            as_of: as_of.cloned(),
+            known_at: None,
+        },
+    );
+    let mut diagnostics = c.diagnostics.clone();
+    diagnostics.extend(built.diagnostics);
+    for (name, text) in built.files {
+        if !name.ends_with(".map.json") && !name.starts_with("litigatables/") {
+            docs.insert(name.clone(), (format!("{path}#{name}"), text));
+        }
+    }
+    Ok((docs, diagnostics, c.session.sources()))
+}
+
+/// When exactly one side is a single file (keyed `""`), re-keys the other
+/// side's one primary document (not a clock fragment) to `""` and drops
+/// the rest, which have no counterpart by construction.
+fn align(a: &mut BTreeMap<String, (String, String)>, b: &mut BTreeMap<String, (String, String)>) {
+    let single = |m: &BTreeMap<String, (String, String)>| m.len() == 1 && m.contains_key("");
+    let rekey = |m: &mut BTreeMap<String, (String, String)>| {
+        let primary: Vec<String> = m
+            .keys()
+            .filter(|k| !k.starts_with("packs/clock/"))
+            .cloned()
+            .collect();
+        if let [one] = primary.as_slice() {
+            let doc = m.remove(one);
+            m.clear();
+            m.extend(doc.map(|d| (String::new(), d)));
+        }
+    };
+    if single(a) && !single(b) {
+        rekey(b);
+    } else if single(b) && !single(a) {
+        rekey(a);
+    }
+}
+
+/// Line/column of the first occurrence of `"id"` in `text`, for a change's span.
+fn locate(file: &str, text: &str, id: Option<&str>) -> Span {
+    let at = id
+        .and_then(|id| text.find(&format!("\"{id}\"")))
+        .unwrap_or(0);
+    let (line, col) = LineIndex::new(text).line_col(at);
+    Span {
+        file: file.into(),
+        line,
+        col,
+        end_line: line,
+        end_col: col,
+    }
+}
+
+fn change_diagnostic(file: &str, text: &str, change: &Change) -> Diagnostic {
+    let show = |v: &Option<Value>| {
+        v.as_ref()
+            .map_or_else(|| "(absent)".to_owned(), ToString::to_string)
+    };
+    let mut d = Diagnostic::error(
+        C::SemanticDiff,
+        locate(file, text, change.id.as_deref()),
+        format!(
+            "{} at {}: {} -> {}",
+            serde_json::to_value(change.kind)
+                .ok()
+                .and_then(|v| v.as_str().map(str::to_owned))
+                .unwrap_or_default(),
+            change.pointer,
+            show(&change.before),
+            show(&change.after)
+        ),
+    );
+    if let Some(id) = &change.id {
+        d.notes.push(Note {
+            span: None,
+            message: format!("belongs to `{id}`"),
+        });
+    }
+    d
+}
+
+/// `litigate diff`.
+pub fn diff(args: &Args) -> Outcome {
+    let (b_path, b_date, strict) = match (&args.against, &args.b) {
+        (Some(expected), _) => (expected.clone(), None, true),
+        (None, Some(b)) => (
+            b.clone(),
+            args.to_as_of.as_ref().or(args.as_of.as_ref()),
+            args.check,
+        ),
+        (None, None) if args.to_as_of.is_some() => {
+            (args.a.clone(), args.to_as_of.as_ref(), args.check)
+        }
+        (None, None) => {
+            return Err(Failure::new(
+                "give a second side, `--against JSON`, or `--to-as-of DATE`",
+            ))
+        }
+    };
+    let (mut a_docs, mut diagnostics, mut sources) = side(&args.a, args.as_of.as_ref(), &args.lib)?;
+    let (mut b_docs, b_diags, b_sources) = side(&b_path, b_date, &args.lib)?;
+    align(&mut a_docs, &mut b_docs);
+    diagnostics.extend(b_diags);
+    sources.extend(b_sources);
+    let mut report = Report {
+        provenance: crate::prov::of(Vec::new(), args.as_of.as_deref(), None),
+        ..Report::default()
+    };
+    if diagnostics
+        .iter()
+        .any(|d| d.severity == litigate_base::Severity::Error)
+    {
+        report.diagnostics = diagnostics;
+        report.sources = sources;
+        return Ok(report);
+    }
+    let pairs: Vec<(&String, &(String, String), &(String, String))> = a_docs
+        .iter()
+        .filter_map(|(k, a)| Some((k, a, b_docs.get(k)?)))
+        .collect();
+    let unmatched: Vec<&String> = a_docs
+        .keys()
+        .chain(b_docs.keys())
+        .filter(|k| !(a_docs.contains_key(*k) && b_docs.contains_key(*k)))
+        .collect();
+    let mut files = Vec::new();
+    let mut changes = Vec::new();
+    for (name, (a_file, a_text), (b_file, b_text)) in pairs {
+        match litigate_lower::semantic_diff_json(a_text, b_text) {
+            Ok((kind, found)) => {
+                files.push(json!({"a": a_file, "b": b_file, "kind": kind, "equal": found.is_empty(), "changes": found.len()}));
+                if strict {
+                    diagnostics.extend(found.iter().map(|c| change_diagnostic(b_file, b_text, c)));
+                    sources.push((b_file.clone(), b_text.clone()));
+                }
+                changes.extend(found.into_iter().map(|c| {
+                    let mut v = serde_json::to_value(c).unwrap_or_default();
+                    if !name.is_empty() {
+                        v["file"] = Value::String(name.clone());
+                    }
+                    v
+                }));
+            }
+            Err(message) => diagnostics.push(Diagnostic::error(
+                C::SemanticDiff,
+                locate(b_file, "", None),
+                format!("cannot compare `{a_file}` with `{b_file}`: {message}"),
+            )),
+        }
+    }
+    if pairs_empty(&files, &unmatched) {
+        return Err(Failure::new(
+            "nothing to compare: the two sides share no documents",
+        ));
+    }
+    report.result = json!({
+        "equal": changes.is_empty() && unmatched.is_empty(),
+        "files": files,
+        "changes": changes,
+        "unmatched": unmatched,
+    });
+    report.diagnostics = diagnostics;
+    report.sources = sources;
+    Ok(report)
+}
+
+fn pairs_empty(files: &[Value], unmatched: &[&String]) -> bool {
+    files.is_empty() && unmatched.is_empty()
 }

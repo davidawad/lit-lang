@@ -309,7 +309,18 @@ pub(super) fn stakes_cover(cx: &mut Cx<'_>, file: &CaseFile, case: &hir::Case) {
             continue;
         };
         let pack = pkg.manifest.pack_id.clone();
-        if matches!(node.kind, NodeKind::Terminal { .. }) && !case.stakes.contains_key(&id) {
+        // A terminal with an authored pack `payoff` already has a value.
+        let valued = matches!(
+            &node.kind,
+            NodeKind::Terminal {
+                payoff: Some(hir::Authored::Known(_)),
+                ..
+            }
+        );
+        if matches!(node.kind, NodeKind::Terminal { .. })
+            && !valued
+            && !case.stakes.contains_key(&id)
+        {
             missing.push(id.clone());
         }
         stack.extend(node.edges.iter().map(|e| {

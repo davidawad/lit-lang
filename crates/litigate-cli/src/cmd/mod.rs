@@ -16,8 +16,6 @@ mod where_;
 use crate::cli::Command;
 use crate::out::Outcome;
 
-pub use check::{checked, Checked};
-
 /// Runs `command`.
 pub fn dispatch(command: Command) -> Outcome {
     match command {

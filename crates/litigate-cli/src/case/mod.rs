@@ -108,8 +108,11 @@ impl<'a> Cx<'a> {
     }
 
     /// The node a qualified id names, in force on the case's `as_of`.
+    #[must_use]
     pub fn node(&self, qualified: &str) -> Option<(&'a hir::Package, &'a hir::Node)> {
         let (pack, id) = qualified.split_once("::")?;
+        // `base@origin::id` names a node of an instance of pack `base`.
+        let pack = pack.split('@').next().unwrap_or(pack);
         let pkg: &'a hir::Package = self
             .packages
             .iter()

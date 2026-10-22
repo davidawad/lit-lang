@@ -38,7 +38,25 @@ pub fn checked(
     lib: &[String],
 ) -> Result<Checked, Failure> {
     let targets = ws::discover(paths)?;
-    let session = Session::load(&targets, lib)?;
+    Ok(check_session(Session::load(&targets, lib)?, profile, as_of))
+}
+
+/// Loads and checks `targets`.
+///
+/// # Errors
+/// I/O failures.
+pub fn checked_targets(
+    targets: &ws::Targets,
+    profile: Profile,
+    as_of: Option<&str>,
+    lib: &[String],
+) -> Result<Checked, Failure> {
+    Ok(check_session(Session::load(targets, lib)?, profile, as_of))
+}
+
+/// Checks everything loaded in `session`.
+#[must_use]
+pub fn check_session(session: Session, profile: Profile, as_of: Option<&str>) -> Checked {
     let clocks = Clocks::new(&session.hir());
     let verdicts: Vec<(String, Verdict)> = session
         .packages
@@ -68,7 +86,7 @@ pub fn checked(
         .map(|(p, _)| p.root.clone())
         .collect();
     let findings = verify::findings(&diagnostics, &not_run, cases.len());
-    Ok(Checked {
+    Checked {
         session,
         verdicts,
         cases,
@@ -76,7 +94,7 @@ pub fn checked(
         findings,
         profile,
         clocks,
-    })
+    }
 }
 
 impl Checked {

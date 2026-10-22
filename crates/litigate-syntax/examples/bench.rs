@@ -5,8 +5,11 @@ fn main() {
     let items: String = example
         .lines()
         .filter(|l| !l.starts_with("module") && !l.starts_with("package"))
-        .map(|l| format!("{l}\n"))
-        .collect();
+        .fold(String::new(), |mut out, l| {
+            out.push_str(l);
+            out.push('\n');
+            out
+        });
     let mut text = String::from("module m\n");
     while text.len() < (1 << 20) {
         text.push_str(&items);

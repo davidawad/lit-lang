@@ -15,8 +15,11 @@ fn corpus() -> String {
     let items: String = example
         .lines()
         .filter(|line| !line.starts_with("module") && !line.starts_with("package"))
-        .map(|line| format!("{line}\n"))
-        .collect();
+        .fold(String::new(), |mut out, line| {
+            out.push_str(line);
+            out.push('\n');
+            out
+        });
     let mut text = String::from("module stdlib.synthetic\n");
     while text.len() < (1 << 20) {
         text.push_str(&items);

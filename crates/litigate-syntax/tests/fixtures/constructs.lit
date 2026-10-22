@@ -1,0 +1,60 @@
+// Constructs from SPEC §3-§8 that the §12 worked example does not use.
+module frcp.rule6.computing-time
+
+import core.calendar
+import frcp.rule12.{ answer-period, frcp6 }
+
+package frcp-civil-procedure { forum frcp, authority FederalRule }
+
+type Dates = List<Date>
+type Weights = Map<Outcome, Dist<Outcome>>
+
+enum Outcome { granted, denied }
+
+/// A filing became due on an inaccessible day.
+event Inaccessible(date: Date)
+
+counting itc-210-6 effective [2008-01-01, ..) cite 19 CFR 210.6
+{
+  anchor next_business_day
+  short_period { below: 7.days, count: business_days }
+  service_extension { Mail: 5.days, Electronic: 0.days } cite 19 CFR 210.6(b)
+}
+
+calendar rcfc-holidays known_at 2025-01-01 cite RCFC 6(a)(6)
+{
+  inauguration-day: every(4, 1965, 1, 20) effective [1965-01-20, ..) observed next_day
+  thanksgiving: nth(4, thursday, 11) effective [1942-01-01, ..)
+  memorial-day: last(monday, 5) effective [1971-01-01, ..)
+  closure: once(2018-12-05) effective [2018-12-05, 2018-12-06)
+}
+
+deadline answer-period: 21.days from Served(complaint) counted_by frcp6 effective [2009-12-01, ..)
+deadline old-answer-period: 20.days after Served(complaint, Mail) counted_by frcp6 supersedes answer-period
+
+transition rule86 amends answer-period@2009-12-01 cite FRCP 86(a)
+{
+  unless has_event(Answered(complaint)) -> answer-period@1993-12-01
+  otherwise -> answer-period@2009-12-01
+}
+
+authority Statute > FederalRule > LocalRule
+
+default standing-order when has_event(Served(complaint)) => 14.days
+
+exception local-rule rebuts standing-order cite LR 7.1
+  when !has_event(Inaccessible(2025-01-01)) => 7.days priority 2
+
+exception moot undercuts standing-order when len([1, 2]) > 1 && 3 % 2 == 1
+
+state pending: "Pending" subject_to standing-order delegable_to [LocalRule] {
+  ruling "Ruling" -> done p (1 - 1 / 4) {
+    cost ?
+    duration { min 1.days, mode 5.days, max 30.days }
+  }
+  stay "Stay" -> done by Court p 1/4 { deadline 14.court_days { extendable true, note "x" } }
+}
+
+terminal done: "Done" outcome [judgment] { payoff -1_000.50.usd, payoff_by_flag { win: 10.usd } }
+
+test "weights" { expect match prob({ granted: 1 / 2, denied: 1 / 2 }, granted) { _ => true } }

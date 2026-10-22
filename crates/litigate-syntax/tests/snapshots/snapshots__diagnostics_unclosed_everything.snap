@@ -1,0 +1,116 @@
+---
+source: crates/litigate-syntax/tests/snapshots.rs
+expression: json
+---
+[
+  {
+    "code": "L0002",
+    "severity": "error",
+    "span": {
+      "file": "unclosed_everything.lit",
+      "line": 2,
+      "col": 10,
+      "end_line": 2,
+      "end_col": 11
+    },
+    "message": "unclosed `{`: expected `}`",
+    "notes": [
+      {
+        "message": "closed by the fix on the innermost unclosed delimiter"
+      }
+    ]
+  },
+  {
+    "code": "L0002",
+    "severity": "error",
+    "span": {
+      "file": "unclosed_everything.lit",
+      "line": 2,
+      "col": 20,
+      "end_line": 2,
+      "end_col": 21
+    },
+    "message": "unclosed `(`: expected `)`",
+    "notes": [
+      {
+        "message": "closed by the fix on the innermost unclosed delimiter"
+      }
+    ]
+  },
+  {
+    "code": "L0002",
+    "severity": "error",
+    "span": {
+      "file": "unclosed_everything.lit",
+      "line": 2,
+      "col": 21,
+      "end_line": 2,
+      "end_col": 22
+    },
+    "message": "unclosed `(`: expected `)`",
+    "notes": [
+      {
+        "message": "closed by the fix on the innermost unclosed delimiter"
+      }
+    ]
+  },
+  {
+    "code": "L0002",
+    "severity": "error",
+    "span": {
+      "file": "unclosed_everything.lit",
+      "line": 2,
+      "col": 26,
+      "end_line": 2,
+      "end_col": 27
+    },
+    "message": "unclosed `[`: expected `]`",
+    "notes": [
+      {
+        "message": "closed by the fix on the innermost unclosed delimiter"
+      }
+    ]
+  },
+  {
+    "code": "L0002",
+    "severity": "error",
+    "span": {
+      "file": "unclosed_everything.lit",
+      "line": 2,
+      "col": 30,
+      "end_line": 2,
+      "end_col": 31
+    },
+    "message": "unclosed `{`: expected `}`",
+    "notes": [
+      {
+        "message": "closed by the fix on the innermost unclosed delimiter"
+      }
+    ]
+  },
+  {
+    "code": "L0002",
+    "severity": "error",
+    "span": {
+      "file": "unclosed_everything.lit",
+      "line": 2,
+      "col": 34,
+      "end_line": 2,
+      "end_col": 35
+    },
+    "message": "unterminated string literal",
+    "fixes": [
+      {
+        "span": {
+          "file": "unclosed_everything.lit",
+          "line": 2,
+          "col": 36,
+          "end_line": 2,
+          "end_col": 36
+        },
+        "replacement": "\"}]))}",
+        "applicability": "machine_applicable"
+      }
+    ]
+  }
+]

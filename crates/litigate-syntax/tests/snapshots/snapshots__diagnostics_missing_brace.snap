@@ -1,0 +1,31 @@
+---
+source: crates/litigate-syntax/tests/snapshots.rs
+expression: json
+---
+[
+  {
+    "code": "L0002",
+    "severity": "error",
+    "span": {
+      "file": "missing_brace.lit",
+      "line": 2,
+      "col": 14,
+      "end_line": 2,
+      "end_col": 15
+    },
+    "message": "unclosed `{`: expected `}`",
+    "fixes": [
+      {
+        "span": {
+          "file": "missing_brace.lit",
+          "line": 3,
+          "col": 15,
+          "end_line": 3,
+          "end_col": 15
+        },
+        "replacement": "}",
+        "applicability": "machine_applicable"
+      }
+    ]
+  }
+]

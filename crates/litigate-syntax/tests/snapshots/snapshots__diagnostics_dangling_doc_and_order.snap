@@ -1,0 +1,30 @@
+---
+source: crates/litigate-syntax/tests/snapshots.rs
+expression: json
+---
+[
+  {
+    "code": "L0001",
+    "severity": "error",
+    "span": {
+      "file": "dangling_doc_and_order.lit",
+      "line": 3,
+      "col": 1,
+      "end_line": 3,
+      "end_col": 7
+    },
+    "message": "imports must follow `module` and precede `package` and items"
+  },
+  {
+    "code": "L0006",
+    "severity": "error",
+    "span": {
+      "file": "dangling_doc_and_order.lit",
+      "line": 4,
+      "col": 1,
+      "end_line": 4,
+      "end_col": 11
+    },
+    "message": "doc comment is not followed by a declaration; use `//` for a plain comment"
+  }
+]

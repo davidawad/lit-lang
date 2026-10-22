@@ -1,0 +1,29 @@
+---
+source: crates/litigate-syntax/tests/snapshots.rs
+expression: json
+---
+{
+  "code": "L9004",
+  "severity": "warning",
+  "span": {
+    "file": "x.lit",
+    "line": 1,
+    "col": 8,
+    "end_line": 1,
+    "end_col": 8
+  },
+  "message": "file is not in canonical format; run `litigate fmt`",
+  "fixes": [
+    {
+      "span": {
+        "file": "x.lit",
+        "line": 1,
+        "col": 1,
+        "end_line": 2,
+        "end_col": 1
+      },
+      "replacement": "module m\n",
+      "applicability": "machine_applicable"
+    }
+  ]
+}

@@ -131,6 +131,7 @@ pub fn parse(text: &str, kind: FileKind) -> Parse {
     errors.extend(dangling_docs(&SyntaxNode::new_root(green.clone())));
     errors.sort_by_key(|error| error.range.start());
     errors.dedup_by_key(|error| error.range.start());
+    merge_closer_fixes(&mut errors);
     Parse {
         green,
         errors,
@@ -148,6 +149,47 @@ pub fn parse_lit(text: &str) -> Parse {
 #[must_use]
 pub fn parse_case(text: &str) -> Parse {
     parse(text, FileKind::Case)
+}
+
+/// Unclosed delimiters whose closers are inserted at the same offset get
+/// one combined fix on the innermost diagnostic (closers innermost first),
+/// so applying every machine-applicable fix yields well-nested text.
+fn merge_closer_fixes(errors: &mut [SyntaxError]) {
+    let insertion = |error: &SyntaxError| {
+        (error.code == DiagnosticCode::UnterminatedLiteral)
+            .then(|| error.fixes.first())
+            .flatten()
+            .filter(|fix| fix.range.is_empty())
+            .map(|fix| fix.range.start())
+    };
+    let mut offsets: Vec<_> = errors.iter().filter_map(insertion).collect();
+    offsets.sort_unstable();
+    offsets.dedup();
+    for offset in offsets {
+        let mut group: Vec<usize> = (0..errors.len())
+            .filter(|index| insertion(&errors[*index]) == Some(offset))
+            .collect();
+        if group.len() < 2 {
+            continue;
+        }
+        group.sort_by_key(|index| std::cmp::Reverse(errors[*index].range.start()));
+        let closers: String = group
+            .iter()
+            .filter_map(|index| errors[*index].fixes.first())
+            .map(|fix| fix.replacement.clone())
+            .collect();
+        for (position, index) in group.iter().enumerate() {
+            let error = &mut errors[*index];
+            if position == 0 {
+                error.fixes[0].replacement.clone_from(&closers);
+            } else {
+                error.fixes.clear();
+                error
+                    .notes
+                    .push("closed by the fix on the innermost unclosed delimiter".to_owned());
+            }
+        }
+    }
 }
 
 /// L0006 for every doc comment that does not lead a declaration.

@@ -1,0 +1,66 @@
+---
+source: crates/litigate-syntax/tests/snapshots.rs
+expression: json
+---
+[
+  {
+    "code": "L0001",
+    "severity": "error",
+    "span": {
+      "file": "misspelled_keyword.lit",
+      "line": 2,
+      "col": 1,
+      "end_line": 2,
+      "end_col": 7
+    },
+    "message": "expected one of `module`, `import`, `package`, `start`, `group`, `type`, `enum`, `event`, `state`, `decision`, `chance`, `terminal`, `link`, `instance`, `rule`, `deadline`, `counting`, `calendar`, `transition`, `authority`, `default`, `exception`, or `test`, found `chanse`",
+    "notes": [
+      {
+        "message": "did you mean `chance`?"
+      }
+    ],
+    "fixes": [
+      {
+        "span": {
+          "file": "misspelled_keyword.lit",
+          "line": 2,
+          "col": 1,
+          "end_line": 2,
+          "end_col": 7
+        },
+        "replacement": "chance",
+        "applicability": "machine_applicable"
+      }
+    ]
+  },
+  {
+    "code": "L0001",
+    "severity": "error",
+    "span": {
+      "file": "misspelled_keyword.lit",
+      "line": 3,
+      "col": 16,
+      "end_line": 3,
+      "end_col": 20
+    },
+    "message": "expected one of `group`, `note`, `valence`, `court_listener_url`, `tags`, `attrs`, `payoff`, `payoff_by_flag`, an identifier, or `}`, found `grop`",
+    "notes": [
+      {
+        "message": "did you mean `group`?"
+      }
+    ],
+    "fixes": [
+      {
+        "span": {
+          "file": "misspelled_keyword.lit",
+          "line": 3,
+          "col": 16,
+          "end_line": 3,
+          "end_col": 20
+        },
+        "replacement": "group",
+        "applicability": "machine_applicable"
+      }
+    ]
+  }
+]

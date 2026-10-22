@@ -66,6 +66,10 @@ pub(crate) fn delimited(
             return;
         }
         if p.current_range() == before {
+            if p.at_item_anchor() {
+                p.unclosed(opener, closer);
+                return;
+            }
             p.bump_error();
         }
     });

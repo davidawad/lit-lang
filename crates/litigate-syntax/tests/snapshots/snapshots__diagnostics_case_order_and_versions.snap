@@ -1,0 +1,54 @@
+---
+source: crates/litigate-syntax/tests/snapshots.rs
+expression: json
+---
+[
+  {
+    "code": "L0001",
+    "severity": "error",
+    "span": {
+      "file": "case_order_and_versions.case",
+      "line": 3,
+      "col": 1,
+      "end_line": 3,
+      "end_col": 5
+    },
+    "message": "`uses` is out of order: case items go uses, as_of, known_at, summary, notes, source, start, perspective, parties, events, facts, stakes, beliefs, analysis"
+  },
+  {
+    "code": "L0001",
+    "severity": "error",
+    "span": {
+      "file": "case_order_and_versions.case",
+      "line": 3,
+      "col": 11,
+      "end_line": 3,
+      "end_col": 12
+    },
+    "message": "expected a version `MAJOR.MINOR.PATCH[-pre]` with no spaces, found `.`"
+  },
+  {
+    "code": "L0001",
+    "severity": "error",
+    "span": {
+      "file": "case_order_and_versions.case",
+      "line": 5,
+      "col": 19,
+      "end_line": 5,
+      "end_col": 21
+    },
+    "message": "expected `by` or `on`, found `at`"
+  },
+  {
+    "code": "L0001",
+    "severity": "error",
+    "span": {
+      "file": "case_order_and_versions.case",
+      "line": 7,
+      "col": 1,
+      "end_line": 7,
+      "end_col": 8
+    },
+    "message": "`summary` is out of order: case items go uses, as_of, known_at, summary, notes, source, start, perspective, parties, events, facts, stakes, beliefs, analysis"
+  }
+]

@@ -1,0 +1,224 @@
+---
+source: crates/litigate-syntax/tests/snapshots.rs
+expression: parsed.debug_tree()
+---
+SourceFile@0..539
+  ModuleDecl@0..22
+    KwModule@0..6 "module"
+    Whitespace@6..7 " "
+    Ref@7..22
+      Ident@7..12 "links"
+      Dot@12..13 "."
+      Ident@13..22 "cofc-cafc"
+  Whitespace@22..24 "\n\n"
+  LinkDecl@24..175
+    KwLink@24..28 "link"
+    Whitespace@28..29 " "
+    Ident@29..35 "appeal"
+    Whitespace@35..36 " "
+    String@36..67 "\"Appeal to the Federa ..."
+    Colon@67..68 ":"
+    Whitespace@68..69 " "
+    Ref@69..83
+      Ident@69..73 "cofc"
+      ColonColon@73..75 "::"
+      Ident@75..83 "judgment"
+    Whitespace@83..84 " "
+    Arrow@84..86 "->"
+    Whitespace@86..87 " "
+    Ref@87..98
+      Ident@87..91 "cafc"
+      ColonColon@91..93 "::"
+      Ident@93..98 "entry"
+    Whitespace@98..99 " "
+    Field@99..106
+      KwBy@99..101 "by"
+      Whitespace@101..102 " "
+      Ref@102..106
+        Ident@102..106 "self"
+    Whitespace@106..107 " "
+    Field@107..112
+      KwP@107..108 "p"
+      Whitespace@108..109 " "
+      Ratio@109..112
+        Number@109..110 "1"
+        Slash@110..111 "/"
+        Number@111..112 "2"
+    Whitespace@112..113 " "
+    FieldList@113..175
+      LBrace@113..114 "{"
+      Whitespace@114..117 "\n  "
+      Field@117..144
+        KwReplaces@117..125 "replaces"
+        Whitespace@125..126 " "
+        IdList@126..144
+          LBracket@126..127 "["
+          Ref@127..143
+            Ident@127..131 "cofc"
+            ColonColon@131..133 "::"
+            Ident@133..143 "old-appeal"
+          RBracket@143..144 "]"
+      Whitespace@144..147 "\n  "
+      Field@147..173
+        KwWithin@147..153 "within"
+        Whitespace@153..154 " "
+        Ref@154..173
+          Ident@154..158 "cafc"
+          ColonColon@158..160 "::"
+          Ident@160..173 "notice-period"
+      Whitespace@173..174 "\n"
+      RBrace@174..175 "}"
+  Whitespace@175..177 "\n\n"
+  LinkDecl@177..229
+    KwLink@177..181 "link"
+    Whitespace@181..182 " "
+    Underscore@182..183 "_"
+    Whitespace@183..184 " "
+    String@184..192 "\"Remand\""
+    Colon@192..193 ":"
+    Whitespace@193..194 " "
+    Ref@194..212
+      Ident@194..198 "cafc"
+      At@198..199 "@"
+      Ident@199..203 "cofc"
+      ColonColon@203..205 "::"
+      Ident@205..212 "mandate"
+    Whitespace@212..213 " "
+    Arrow@213..215 "->"
+    Whitespace@215..216 " "
+    Ref@216..229
+      Ident@216..220 "cofc"
+      ColonColon@220..222 "::"
+      Ident@222..229 "pending"
+  Whitespace@229..231 "\n\n"
+  InstanceDecl@231..538
+    KwInstance@231..239 "instance"
+    Whitespace@239..240 " "
+    Ident@240..244 "cafc"
+    At@244..245 "@"
+    Ident@245..249 "cofc"
+    Whitespace@249..250 " "
+    FieldList@250..538
+      LBrace@250..251 "{"
+      Whitespace@251..254 "\n  "
+      Field@254..263
+        KwPack@254..258 "pack"
+        Whitespace@258..259 " "
+        Ref@259..263
+          Ident@259..263 "cafc"
+      Whitespace@263..266 "\n  "
+      Field@266..303
+        KwNote@266..270 "note"
+        Whitespace@270..271 " "
+        Literal@271..303
+          String@271..303 "\"CAFC reviewing a COF ..."
+      Whitespace@303..306 "\n  "
+      Field@306..335
+        KwRemoveEdges@306..318 "remove_edges"
+        Whitespace@318..319 " "
+        IdList@319..335
+          LBracket@319..320 "["
+          Ref@320..334
+            Ident@320..334 "entry-district"
+          RBracket@334..335 "]"
+      Whitespace@335..338 "\n  "
+      Field@338..391
+        KwProbabilities@338..351 "probabilities"
+        Whitespace@351..352 " "
+        RecordExpr@352..391
+          LBrace@352..353 "{"
+          Whitespace@353..354 " "
+          RecordField@354..366
+            Ident@354..360 "affirm"
+            Colon@360..361 ":"
+            Whitespace@361..362 " "
+            Ratio@362..366
+              Number@362..363 "7"
+              Slash@363..364 "/"
+              Number@364..366 "10"
+          Comma@366..367 ","
+          Whitespace@367..368 " "
+          RecordField@368..389
+            Ident@368..375 "reverse"
+            Colon@375..376 ":"
+            Whitespace@376..377 " "
+            HoleExpr@377..389
+              Question@377..378 "?"
+              LParen@378..379 "("
+              Literal@379..388
+                String@379..388 "\"no data\""
+              RParen@388..389 ")"
+          Whitespace@389..390 " "
+          RBrace@390..391 "}"
+      Whitespace@391..394 "\n  "
+      Field@394..419
+        KwRoles@394..399 "roles"
+        Whitespace@399..400 " "
+        RecordExpr@400..419
+          LBrace@400..401 "{"
+          Whitespace@401..402 " "
+          RecordField@402..417
+            Ident@402..411 "appellant"
+            Colon@411..412 ":"
+            Whitespace@412..413 " "
+            Ref@413..417
+              Ident@413..417 "self"
+          Whitespace@417..418 " "
+          RBrace@418..419 "}"
+      Whitespace@419..422 "\n  "
+      Field@422..446
+        KwPayoffTransform@422..438 "payoff_transform"
+        Whitespace@438..439 " "
+        Literal@439..446
+          String@439..446 "\"x * 2\""
+      Whitespace@446..449 "\n  "
+      PatchDecl@449..536
+        KwPatch@449..454 "patch"
+        Whitespace@454..455 " "
+        Ident@455..461 "affirm"
+        Whitespace@461..462 " "
+        RecordExpr@462..536
+          LBrace@462..463 "{"
+          Whitespace@463..464 " "
+          RecordField@464..481
+            Ident@464..469 "label"
+            Colon@469..470 ":"
+            Whitespace@470..471 " "
+            Literal@471..481
+              String@471..481 "\"Affirmed\""
+          Comma@481..482 ","
+          Whitespace@482..483 " "
+          RecordField@483..499
+            Ident@483..494 "probability"
+            Colon@494..495 ":"
+            Whitespace@495..496 " "
+            Literal@496..499
+              Number@496..499 "0.7"
+          Comma@499..500 ","
+          Whitespace@500..501 " "
+          RecordField@501..517
+            Ident@501..505 "tags"
+            Colon@505..506 ":"
+            Whitespace@506..507 " "
+            ListExpr@507..517
+              LBracket@507..508 "["
+              Literal@508..511
+                String@508..511 "\"a\""
+              Comma@511..512 ","
+              Whitespace@512..513 " "
+              Literal@513..516
+                String@513..516 "\"b\""
+              RBracket@516..517 "]"
+          Comma@517..518 ","
+          Whitespace@518..519 " "
+          RecordField@519..534
+            Ident@519..527 "deadline"
+            Colon@527..528 ":"
+            Whitespace@528..529 " "
+            Literal@529..534
+              KwUnset@529..534 "unset"
+          Whitespace@534..535 " "
+          RBrace@535..536 "}"
+      Whitespace@536..537 "\n"
+      RBrace@537..538 "}"
+  Whitespace@538..539 "\n"

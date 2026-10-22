@@ -35,6 +35,8 @@ const LEVELS: [&[SyntaxKind]; 5] = [
     &[Star, Slash, Percent],
 ];
 const COMPARISON: usize = 2;
+/// Longest operator chain at one precedence level (bounds tree depth).
+const MAX_CHAIN: usize = 256;
 
 fn binary(p: &mut Parser<'_>, level: usize) -> bool {
     let Some(ops) = LEVELS.get(level) else {
@@ -46,6 +48,15 @@ fn binary(p: &mut Parser<'_>, level: usize) -> bool {
     }
     let mut seen = 0usize;
     while ops.contains(&p.nth(0)) {
+        if seen >= MAX_CHAIN {
+            let at = p.current_range();
+            p.push_error(SyntaxError::new(
+                DiagnosticCode::UnexpectedToken,
+                at,
+                format!("expression chains more than {MAX_CHAIN} operators; split it"),
+            ));
+            break;
+        }
         if level == COMPARISON && seen > 0 {
             let at = p.current_range();
             p.push_error(SyntaxError::new(

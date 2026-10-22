@@ -1,0 +1,257 @@
+---
+source: crates/litigate-syntax/tests/snapshots.rs
+expression: parsed.debug_tree()
+---
+CaseFile@0..737
+  KwCase@0..4 "case"
+  Whitespace@4..5 " "
+  Ident@5..18 "acme-v-widget"
+  Whitespace@18..19 "\n"
+  UsesDecl@19..50
+    KwUses@19..23 "uses"
+    Whitespace@23..24 " "
+    UseItem@24..50
+      Ident@24..43 "frcp-rule12-example"
+      Whitespace@43..44 " "
+      VersionReq@44..50
+        Caret@44..45 "^"
+        Version@45..50
+          Number@45..48 "0.1"
+          Dot@48..49 "."
+          Number@49..50 "0"
+  Whitespace@50..51 "\n"
+  AsOfDecl@51..67
+    KwAsOf@51..56 "as_of"
+    Whitespace@56..57 " "
+    Literal@57..67
+      Date@57..67 "2025-06-01"
+  Whitespace@67..68 "\n"
+  SummaryDecl@68..148
+    KwSummary@68..75 "summary"
+    Whitespace@75..76 " "
+    Literal@76..148
+      String@76..148 "\"Acme sues Widget; Wi ..."
+  Whitespace@148..149 "\n"
+  NotesDecl@149..211
+    KwNotes@149..154 "notes"
+    Whitespace@154..155 " "
+    Literal@155..211
+      String@155..211 "\"Worked example for S ..."
+  Whitespace@211..213 "\n\n"
+  SourceDecl@213..324
+    KwSource@213..219 "source"
+    Whitespace@219..220 " "
+    Literal@220..254
+      String@220..254 "\"Federal Rules of Civ ..."
+    Whitespace@254..255 " "
+    FieldList@255..324
+      LBrace@255..256 "{"
+      Whitespace@256..259 "\n  "
+      Field@259..303
+        KwUrl@259..262 "url"
+        Whitespace@262..263 " "
+        Literal@263..303
+          String@263..303 "\"https://www.law.corn ..."
+      Whitespace@303..306 "\n  "
+      Field@306..322
+        KwAsOf@306..311 "as_of"
+        Whitespace@311..312 " "
+        Literal@312..322
+          Date@312..322 "2024-12-01"
+      Whitespace@322..323 "\n"
+      RBrace@323..324 "}"
+  Whitespace@324..326 "\n\n"
+  PerspectiveDecl@326..344
+    KwPerspective@326..337 "perspective"
+    Whitespace@337..338 " "
+    Ref@338..344
+      Ident@338..344 "widget"
+  Whitespace@344..346 "\n\n"
+  PartiesBlock@346..419
+    KwParties@346..353 "parties"
+    Whitespace@353..354 " "
+    LBrace@354..355 "{"
+    Whitespace@355..358 "\n  "
+    PartyDecl@358..385
+      Ident@358..362 "acme"
+      Colon@362..363 ":"
+      Whitespace@363..364 " "
+      Ref@364..373
+        Ident@364..373 "Plaintiff"
+      Whitespace@373..374 " "
+      Ref@374..385
+        Ident@374..385 "Corporation"
+    Whitespace@385..388 "\n  "
+    PartyDecl@388..417
+      Ident@388..394 "widget"
+      Colon@394..395 ":"
+      Whitespace@395..396 " "
+      Ref@396..405
+        Ident@396..405 "Defendant"
+      Whitespace@405..406 " "
+      Ref@406..417
+        Ident@406..417 "Corporation"
+    Whitespace@417..418 "\n"
+    RBrace@418..419 "}"
+  Whitespace@419..421 "\n\n"
+  EventsBlock@421..531
+    KwEvents@421..427 "events"
+    Whitespace@427..428 " "
+    LBrace@428..429 "{"
+    Whitespace@429..432 "\n  "
+    CaseEvent@432..480
+      Literal@432..442
+        Date@432..442 "2025-03-05"
+      Whitespace@442..443 " "
+      CallExpr@443..470
+        Ref@443..449
+          Ident@443..449 "Served"
+        ArgList@449..470
+          LParen@449..450 "("
+          RefExpr@450..459
+            Ref@450..459
+              Ident@450..459 "complaint"
+          Comma@459..460 ","
+          Whitespace@460..461 " "
+          RefExpr@461..469
+            Ref@461..469
+              Ident@461..469 "Personal"
+          RParen@469..470 ")"
+      Whitespace@470..471 " "
+      KwOn@471..473 "on"
+      Whitespace@473..474 " "
+      Ref@474..480
+        Ident@474..480 "widget"
+    Whitespace@480..483 "\n  "
+    CaseEvent@483..529
+      Literal@483..493
+        Date@483..493 "2025-03-20"
+      Whitespace@493..494 " "
+      CallExpr@494..519
+        Ref@494..508
+          Ident@494..508 "MovedToDismiss"
+        ArgList@508..519
+          LParen@508..509 "("
+          RefExpr@509..518
+            Ref@509..518
+              Ident@509..518 "complaint"
+          RParen@518..519 ")"
+      Whitespace@519..520 " "
+      KwBy@520..522 "by"
+      Whitespace@522..523 " "
+      Ref@523..529
+        Ident@523..529 "widget"
+    Whitespace@529..530 "\n"
+    RBrace@530..531 "}"
+  Whitespace@531..533 "\n\n"
+  FactsBlock@533..566
+    KwFacts@533..538 "facts"
+    Whitespace@538..539 " "
+    RecordExpr@539..566
+      LBrace@539..540 "{"
+      Whitespace@540..541 " "
+      RecordField@541..564
+        Ref@541..552
+          Ident@541..552 "time-barred"
+        Colon@552..553 ":"
+        Whitespace@553..554 " "
+        Ref@554..564
+          Ident@554..564 "not-barred"
+      Whitespace@564..565 " "
+      RBrace@565..566 "}"
+  Whitespace@566..567 "\n"
+  StakesBlock@567..628
+    KwStakes@567..573 "stakes"
+    Whitespace@573..574 " "
+    RecordExpr@574..628
+      LBrace@574..575 "{"
+      Whitespace@575..576 " "
+      RecordField@576..608
+        Ref@576..592
+          Ident@576..592 "judgment-entered"
+        Colon@592..593 ":"
+        Whitespace@593..594 " "
+        UnaryExpr@594..608
+          Minus@594..595 "-"
+          Literal@595..608
+            Money@595..608 "2_000_000.usd"
+      Comma@608..609 ","
+      Whitespace@609..610 " "
+      RecordField@610..626
+        Ref@610..619
+          Ident@610..619 "dismissed"
+        Colon@619..620 ":"
+        Whitespace@620..621 " "
+        Literal@621..626
+          Money@621..626 "0.usd"
+      Whitespace@626..627 " "
+      RBrace@627..628 "}"
+  Whitespace@628..629 "\n"
+  BeliefsBlock@629..686
+    KwBeliefs@629..636 "beliefs"
+    Whitespace@636..637 " "
+    LBrace@637..638 "{"
+    Whitespace@638..639 " "
+    ObserveDecl@639..684
+      KwObserve@639..646 "observe"
+      Whitespace@646..647 " "
+      Ref@647..657
+        Ident@647..657 "mtd-ruling"
+      Colon@657..658 ":"
+      Whitespace@658..659 " "
+      RecordExpr@659..684
+        LBrace@659..660 "{"
+        Whitespace@660..661 " "
+        RecordField@661..671
+          Ref@661..668
+            Ident@661..668 "granted"
+          Colon@668..669 ":"
+          Whitespace@669..670 " "
+          Literal@670..671
+            Number@670..671 "3"
+        Comma@671..672 ","
+        Whitespace@672..673 " "
+        RecordField@673..682
+          Ref@673..679
+            Ident@673..679 "denied"
+          Colon@679..680 ":"
+          Whitespace@680..681 " "
+          Literal@681..682
+            Number@681..682 "1"
+        Whitespace@682..683 " "
+        RBrace@683..684 "}"
+    Whitespace@684..685 " "
+    RBrace@685..686 "}"
+  Whitespace@686..687 "\n"
+  AnalysisBlock@687..736
+    KwAnalysis@687..695 "analysis"
+    Whitespace@695..696 " "
+    RecordExpr@696..736
+      LBrace@696..697 "{"
+      Whitespace@697..698 " "
+      RecordField@698..734
+        Ident@698..704 "params"
+        Colon@704..705 ":"
+        Whitespace@705..706 " "
+        RecordExpr@706..734
+          LBrace@706..707 "{"
+          Whitespace@707..708 " "
+          RecordField@708..717
+            Ident@708..712 "rate"
+            Colon@712..713 ":"
+            Whitespace@713..714 " "
+            Literal@714..717
+              Number@714..717 "650"
+          Comma@717..718 ","
+          Whitespace@718..719 " "
+          RecordField@719..732
+            Ident@719..727 "opp_rate"
+            Colon@727..728 ":"
+            Whitespace@728..729 " "
+            Literal@729..732
+              Number@729..732 "550"
+          Whitespace@732..733 " "
+          RBrace@733..734 "}"
+      Whitespace@734..735 " "
+      RBrace@735..736 "}"
+  Whitespace@736..737 "\n"

@@ -1,0 +1,85 @@
+---
+source: crates/litigate-syntax/tests/snapshots.rs
+expression: json
+---
+[
+  {
+    "code": "L0002",
+    "severity": "error",
+    "span": {
+      "file": "lexical_errors.lit",
+      "line": 2,
+      "col": 10,
+      "end_line": 2,
+      "end_col": 11
+    },
+    "message": "unterminated string literal",
+    "fixes": [
+      {
+        "span": {
+          "file": "lexical_errors.lit",
+          "line": 2,
+          "col": 15,
+          "end_line": 2,
+          "end_col": 15
+        },
+        "replacement": "\"",
+        "applicability": "machine_applicable"
+      }
+    ]
+  },
+  {
+    "code": "L0005",
+    "severity": "error",
+    "span": {
+      "file": "lexical_errors.lit",
+      "line": 3,
+      "col": 16,
+      "end_line": 3,
+      "end_col": 20
+    },
+    "message": "unknown unit suffix `dayz`",
+    "notes": [
+      {
+        "message": "valid suffixes: usd, days, court_days, business_days, hours"
+      }
+    ],
+    "fixes": [
+      {
+        "span": {
+          "file": "lexical_errors.lit",
+          "line": 3,
+          "col": 16,
+          "end_line": 3,
+          "end_col": 20
+        },
+        "replacement": "days",
+        "applicability": "machine_applicable"
+      }
+    ]
+  },
+  {
+    "code": "L0004",
+    "severity": "error",
+    "span": {
+      "file": "lexical_errors.lit",
+      "line": 4,
+      "col": 7,
+      "end_line": 4,
+      "end_col": 17
+    },
+    "message": "`2025-02-30` is not a valid proleptic Gregorian date"
+  },
+  {
+    "code": "L0003",
+    "severity": "error",
+    "span": {
+      "file": "lexical_errors.lit",
+      "line": 4,
+      "col": 18,
+      "end_line": 4,
+      "end_col": 19
+    },
+    "message": "invalid character \"$\""
+  }
+]

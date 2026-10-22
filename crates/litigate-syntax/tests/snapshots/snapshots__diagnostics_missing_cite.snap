@@ -1,0 +1,31 @@
+---
+source: crates/litigate-syntax/tests/snapshots.rs
+expression: json
+---
+[
+  {
+    "code": "L0001",
+    "severity": "error",
+    "span": {
+      "file": "missing_cite.lit",
+      "line": 2,
+      "col": 24,
+      "end_line": 2,
+      "end_col": 28
+    },
+    "message": "expected a clause, found `FRCP`; citations start with `cite`",
+    "fixes": [
+      {
+        "span": {
+          "file": "missing_cite.lit",
+          "line": 2,
+          "col": 24,
+          "end_line": 2,
+          "end_col": 24
+        },
+        "replacement": "cite ",
+        "applicability": "machine_applicable"
+      }
+    ]
+  }
+]

@@ -11,6 +11,7 @@ use litigate_base::{Diagnostic, Profile, Severity};
 use litigate_lower::{render, render_scenario, Document, LoweredPackage, Lowerer, Options};
 use serde_json::{json, Value};
 use sha2::{Digest, Sha256};
+use std::fmt::Write as _;
 use std::path::Path;
 
 /// Writes `text` to `path` atomically (temp file, then rename).
@@ -31,8 +32,10 @@ pub fn write_atomic(path: &Path, text: &str) -> Result<(), Failure> {
 #[must_use]
 pub fn sha256(bytes: &[u8]) -> String {
     let digest = Sha256::digest(bytes);
-    let hex: String = digest.iter().map(|b| format!("{b:02x}")).collect();
-    format!("sha256:{hex}")
+    digest.iter().fold(String::from("sha256:"), |mut s, b| {
+        let _ = write!(s, "{b:02x}");
+        s
+    })
 }
 
 /// One file to write: `(relative path, contents)`.

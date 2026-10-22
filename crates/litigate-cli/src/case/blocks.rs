@@ -139,16 +139,15 @@ pub(super) fn stakes(cx: &mut Cx<'_>, file: &CaseFile) -> BTreeMap<String, hir::
                 }
                 return Some((terminal, hir::Stake::Unvalued));
             }
-            match money(&value) {
-                Some(m) => Some((terminal, hir::Stake::Value(m))),
-                None => {
-                    cx.error(
-                        C::TypeMismatch,
-                        span,
-                        "a stake is a money literal such as `-2_000.usd`, or `unvalued`",
-                    );
-                    None
-                }
+            if let Some(m) = money(&value) {
+                Some((terminal, hir::Stake::Value(m)))
+            } else {
+                cx.error(
+                    C::TypeMismatch,
+                    span,
+                    "a stake is a money literal such as `-2_000.usd`, or `unvalued`",
+                );
+                None
             }
         })
         .collect()
@@ -236,16 +235,16 @@ fn json(cx: &mut Cx<'_>, expr: &Expr) -> Option<Value> {
                 .collect::<Option<Vec<_>>>()
                 .map(Value::Array)
         }
-        SyntaxKind::UnaryExpr => match json(cx, &expr.operands().into_iter().next()?)? {
-            Value::Number(n) => n
-                .as_i64()
-                .map(|i| Value::from(-i))
-                .or_else(|| n.as_f64().map(|f| Value::from(-f))),
-            _ => {
+        SyntaxKind::UnaryExpr => {
+            if let Value::Number(n) = json(cx, &expr.operands().into_iter().next()?)? {
+                n.as_i64()
+                    .map(|i| Value::from(-i))
+                    .or_else(|| n.as_f64().map(|f| Value::from(-f)))
+            } else {
                 cx.error(C::InvalidAnalysis, span, "only numbers can be negated");
                 None
             }
-        },
+        }
         SyntaxKind::Literal => {
             let token = ast::Literal::cast(expr.syntax().clone())?.token()?;
             let text = token.text().replace('_', "");

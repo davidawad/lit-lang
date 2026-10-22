@@ -130,12 +130,12 @@ pub fn resolve(
         .flat_map(bindings)
         .collect();
     hirx::declarations(pkg)
-        .filter_map(|d| match d {
-            Declaration::Test(t) => Some((t.cite.as_ref()?, t.span.as_ref(), t.name.clone())),
-            _ => {
-                let m = meta_of(d)?;
-                Some((m.cite.as_ref()?, m.span.as_ref(), m.id.clone()))
+        .filter_map(|d| {
+            if let Declaration::Test(t) = d {
+                return Some((t.cite.as_ref()?, t.span.as_ref(), t.name.clone()));
             }
+            let m = meta_of(d)?;
+            Some((m.cite.as_ref()?, m.span.as_ref(), m.id.clone()))
         })
         .filter(|(_, span, _)| !span.is_some_and(|s| cite_holes.iter().any(|h| contains(s, h))))
         .filter_map(|(cite, span, id)| {
@@ -157,7 +157,9 @@ fn deadline_refs(e: &Expr, out: &mut BTreeSet<String>) {
                     out.insert(hirx::local(target).to_owned());
                 }
             }
-            args.iter().for_each(|a| deadline_refs(a, out));
+            for a in args {
+                deadline_refs(a, out);
+            }
         }
         ExprKind::Unary { operand, .. } => deadline_refs(operand, out),
         ExprKind::Binary { lhs, rhs, .. } => {

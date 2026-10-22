@@ -54,7 +54,7 @@ fn json_files(
             .replace('\\', "/");
         if path.is_dir() {
             json_files(&path, base, out)?;
-        } else if name.ends_with(".json")
+        } else if has_ext(&name, "json")
             && !name.ends_with(".map.json")
             && !name.starts_with("litigatables/")
         {
@@ -209,26 +209,66 @@ pub fn diff(args: &Args) -> Outcome {
         report.sources = sources;
         return Ok(report);
     }
-    let pairs: Vec<(&String, &(String, String), &(String, String))> = a_docs
-        .iter()
-        .filter_map(|(k, a)| Some((k, a, b_docs.get(k)?)))
-        .collect();
-    let unmatched: Vec<&String> = a_docs
-        .keys()
-        .chain(b_docs.keys())
-        .filter(|k| !(a_docs.contains_key(*k) && b_docs.contains_key(*k)))
-        .collect();
-    let mut files = Vec::new();
-    let mut changes = Vec::new();
-    for (name, (a_file, a_text), (b_file, b_text)) in pairs {
+    let compared = compare(&a_docs, &b_docs, strict);
+    diagnostics.extend(compared.diagnostics);
+    sources.extend(compared.sources);
+    if compared.files.is_empty() && compared.unmatched.is_empty() {
+        return Err(Failure::new(
+            "nothing to compare: the two sides share no documents",
+        ));
+    }
+    report.result = json!({
+        "equal": compared.changes.is_empty() && compared.unmatched.is_empty(),
+        "files": compared.files,
+        "changes": compared.changes,
+        "unmatched": compared.unmatched,
+    });
+    report.diagnostics = diagnostics;
+    report.sources = sources;
+    Ok(report)
+}
+
+/// `(shown path, text)` of one document.
+type Doc = (String, String);
+
+/// The outcome of pairing two sides.
+#[derive(Default)]
+struct Compared {
+    files: Vec<Value>,
+    changes: Vec<Value>,
+    unmatched: Vec<String>,
+    diagnostics: Vec<Diagnostic>,
+    sources: Vec<Doc>,
+}
+
+/// Diffs every document present on both sides; `strict` makes each change L6002.
+fn compare(
+    a_docs: &BTreeMap<String, Doc>,
+    b_docs: &BTreeMap<String, Doc>,
+    strict: bool,
+) -> Compared {
+    let mut out = Compared {
+        unmatched: a_docs
+            .keys()
+            .chain(b_docs.keys())
+            .filter(|k| !(a_docs.contains_key(*k) && b_docs.contains_key(*k)))
+            .cloned()
+            .collect(),
+        ..Compared::default()
+    };
+    for (name, (a_file, a_text)) in a_docs {
+        let Some((b_file, b_text)) = b_docs.get(name) else {
+            continue;
+        };
         match litigate_lower::semantic_diff_json(a_text, b_text) {
             Ok((kind, found)) => {
-                files.push(json!({"a": a_file, "b": b_file, "kind": kind, "equal": found.is_empty(), "changes": found.len()}));
+                out.files.push(json!({"a": a_file, "b": b_file, "kind": kind, "equal": found.is_empty(), "changes": found.len()}));
                 if strict {
-                    diagnostics.extend(found.iter().map(|c| change_diagnostic(b_file, b_text, c)));
-                    sources.push((b_file.clone(), b_text.clone()));
+                    out.diagnostics
+                        .extend(found.iter().map(|c| change_diagnostic(b_file, b_text, c)));
+                    out.sources.push((b_file.clone(), b_text.clone()));
                 }
-                changes.extend(found.into_iter().map(|c| {
+                out.changes.extend(found.into_iter().map(|c| {
                     let mut v = serde_json::to_value(c).unwrap_or_default();
                     if !name.is_empty() {
                         v["file"] = Value::String(name.clone());
@@ -236,29 +276,19 @@ pub fn diff(args: &Args) -> Outcome {
                     v
                 }));
             }
-            Err(message) => diagnostics.push(Diagnostic::error(
+            Err(message) => out.diagnostics.push(Diagnostic::error(
                 C::SemanticDiff,
                 locate(b_file, "", None),
                 format!("cannot compare `{a_file}` with `{b_file}`: {message}"),
             )),
         }
     }
-    if pairs_empty(&files, &unmatched) {
-        return Err(Failure::new(
-            "nothing to compare: the two sides share no documents",
-        ));
-    }
-    report.result = json!({
-        "equal": changes.is_empty() && unmatched.is_empty(),
-        "files": files,
-        "changes": changes,
-        "unmatched": unmatched,
-    });
-    report.diagnostics = diagnostics;
-    report.sources = sources;
-    Ok(report)
+    out
 }
 
-fn pairs_empty(files: &[Value], unmatched: &[&String]) -> bool {
-    files.is_empty() && unmatched.is_empty()
+/// True when `name` ends in `.ext` (ASCII case-insensitive).
+fn has_ext(name: &str, ext: &str) -> bool {
+    Path::new(name)
+        .extension()
+        .is_some_and(|e| e.eq_ignore_ascii_case(ext))
 }

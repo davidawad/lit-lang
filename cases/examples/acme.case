@@ -1,0 +1,18 @@
+case acme_v_widget
+uses frcp ^2024.12
+as_of 2025-06-01
+perspective Defendant
+
+parties {
+  acme: Plaintiff Corporation
+  widget: Defendant Corporation
+}
+
+events {
+  2025-03-03 Filed(complaint) by acme
+  2025-03-05 Served(complaint, Personal) on widget
+}
+
+facts { time-barred: false }
+stakes { judgment-entered: -2_000_000.usd, dismissed-outcome: 0.usd }
+beliefs { observe mtd-ruling: { granted: 3, denied: 1 } }

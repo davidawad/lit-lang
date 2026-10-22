@@ -1,0 +1,43 @@
+module frcp.rule12
+import core.{time, money, roles}
+
+package frcp-civil-procedure {
+  forum frcp
+  authority FederalRule
+}
+
+start answer-due
+group pleadings: "Pleadings"
+group motions: "Motions"
+group outcomes: "Outcomes"
+
+state answer-due: "Answer or Rule 12 motion due" { group pleadings }
+state answered: "Answer filed" { group pleadings }
+state mtd-pending: "Motion to dismiss pending" { group motions }
+state dismissed: "Action dismissed" { group outcomes }
+state default-risk: "Failure to respond" { group outcomes }
+
+terminal judgment-entered outcome [judgment, win]
+terminal dismissed-outcome outcome [judgment, loss]
+
+rule duty answer-duty cite FRCP 12(a)(1)(A)(i) {
+  deadline answer-period: 21.days from Served(complaint) counted_by frcp6
+}
+
+decision respond by Defendant cite FRCP 12(a)(1)(A)(i) {
+  answer -> answered { hours 8, within answer-period }
+  move-dismiss -> mtd-pending { hours 30, within answer-period, tags [dispositive] }
+  default -> default-risk { sets [defaulted] }
+}
+
+chance mtd-ruling by Court discretion cite FRCP 12(b)(6) {
+  granted -> dismissed p ?("no calibration yet")
+  denied -> answered p ?
+}
+
+terminal dismissed outcome [loss, judgment]
+
+test "answer due 21 days after personal service" cite FRCP 12(a)(1)(A)(i) {
+  given Served(complaint, Personal) on 2025-03-03
+  expect deadline(answer-period) == 2025-03-24
+}

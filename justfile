@@ -130,3 +130,13 @@ ci: fmt-check lint test doctest cov audit deny
 clean:
     cargo clean
     rm -r -f dist result
+
+# --- litigate authoring language (recipes become enforcing with the flip) ---
+lit-check *ARGS:
+    cargo run -q -p litigate-cli -- check {{ARGS}}
+
+lit-sync:
+    @echo "lit-sync is not implemented until the generated-source flip"
+
+lit-test:
+    cargo test -p litigate-base -p litigate-syntax -p litigate-sema

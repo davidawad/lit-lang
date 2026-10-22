@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["crates/litgraph", "crates/litgraph-cli", "crates/litgraph-mcp", "crates/litgraph-wasm"]
+members = ["crates/litgraph", "crates/litgraph-cli", "crates/litgraph-mcp", "crates/litgraph-wasm", "crates/litigate-base", "crates/litigate-syntax", "crates/litigate-sema", "crates/litigate-lower", "crates/litigate-verify", "crates/litigate-import", "crates/litigate-cli", "crates/litigate-lsp"]
 
 [workspace.package]
 version = "0.3.0"
@@ -25,6 +25,13 @@ rand_chacha = "0.3"
 clap = { version = "4", features = ["derive"] }
 anyhow = "1"
 proptest = "1"
+logos = "0.15"
+rowan = "0.16"
+salsa = "0.26"
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "io-std"] }
+tower-lsp = "0.20"
+insta = "1"
+ariadne = "0.5"
 
 [workspace.lints.rust]
 unsafe_code = "forbid"

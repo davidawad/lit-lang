@@ -1,0 +1,28 @@
+---
+source: crates/litigate-verify/tests/obligations.rs
+expression: "pair(Obligation::EffectiveCovered, &\none(&versions(\"[1990-01-01, 2000-01-01)\", \"[2000-01-01, ..)\")), &\none(&versions(\"[1990-01-01, 2000-01-01)\", \"[2001-01-01, ..)\")))"
+---
+{
+  "pass": {
+    "finding": {
+      "name": "effective-covered",
+      "status": "passed",
+      "count": 0,
+      "examples": []
+    },
+    "accepted": true,
+    "diagnostics": []
+  },
+  "fail": {
+    "finding": {
+      "name": "effective-covered",
+      "status": "failed",
+      "count": 1,
+      "examples": [
+        "pkgs/demo/main.lit:55:23: L3002 `late` has no version in force on [2000-01-01, 2001-01-01)"
+      ]
+    },
+    "accepted": false,
+    "diagnostics": []
+  }
+}

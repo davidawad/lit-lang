@@ -1,0 +1,46 @@
+---
+source: crates/litigate-verify/tests/obligations.rs
+expression: "pair(Obligation::GraphExits, &\none(&onward(\"state next: \\\"Next\\\" { _ \\\"Finish\\\" -> answered }\")), &\none(&onward(\"state next: \\\"Next\\\"\")))"
+---
+{
+  "pass": {
+    "finding": {
+      "name": "graph-exits",
+      "status": "passed",
+      "count": 0,
+      "examples": []
+    },
+    "accepted": true,
+    "diagnostics": []
+  },
+  "fail": {
+    "finding": {
+      "name": "graph-exits",
+      "status": "failed",
+      "count": 1,
+      "examples": [
+        "pkgs/demo/main.lit:56:1: L5004 `next` is not a terminal and has no outgoing edge"
+      ]
+    },
+    "accepted": false,
+    "diagnostics": [
+      {
+        "code": "L5004",
+        "severity": "error",
+        "span": {
+          "file": "pkgs/demo/main.lit",
+          "line": 56,
+          "col": 1,
+          "end_line": 56,
+          "end_col": 19
+        },
+        "message": "`next` is not a terminal and has no outgoing edge",
+        "notes": [
+          {
+            "message": "add an edge out of it, or declare it `terminal` if the matter ends there"
+          }
+        ]
+      }
+    ]
+  }
+}

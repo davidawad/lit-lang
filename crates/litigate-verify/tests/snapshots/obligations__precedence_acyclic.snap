@@ -1,0 +1,28 @@
+---
+source: crates/litigate-verify/tests/obligations.rs
+expression: "pair(Obligation::PrecedenceAcyclic, & one(BASE), &\none(&with(\"authority LocalRule > Statute\")))"
+---
+{
+  "pass": {
+    "finding": {
+      "name": "precedence-acyclic",
+      "status": "passed",
+      "count": 0,
+      "examples": []
+    },
+    "accepted": true,
+    "diagnostics": []
+  },
+  "fail": {
+    "finding": {
+      "name": "precedence-acyclic",
+      "status": "failed",
+      "count": 1,
+      "examples": [
+        "pkgs/demo/main.lit:55:11: L3006 authority `LocalRule > Statute` makes the order cyclic"
+      ]
+    },
+    "accepted": false,
+    "diagnostics": []
+  }
+}

@@ -1,0 +1,63 @@
+---
+source: crates/litigate-verify/tests/obligations.rs
+expression: "pair(Obligation::DeadlineSatisfiable, &one(&two_duties(\"1990-01-01\")),\n&one(&two_duties(\"2000-01-01\")),)"
+---
+{
+  "pass": {
+    "finding": {
+      "name": "deadline-satisfiable",
+      "status": "passed",
+      "count": 0,
+      "examples": []
+    },
+    "accepted": false,
+    "diagnostics": []
+  },
+  "fail": {
+    "finding": {
+      "name": "deadline-satisfiable",
+      "status": "failed",
+      "count": 1,
+      "examples": [
+        "pkgs/demo/main.lit:36:1: L5005 at `served`, duties `answer-period`, `old-period` are never in force on the same day as the node, so no trigger date opens all their windows"
+      ]
+    },
+    "accepted": false,
+    "diagnostics": [
+      {
+        "code": "L5005",
+        "severity": "error",
+        "span": {
+          "file": "pkgs/demo/main.lit",
+          "line": 36,
+          "col": 1,
+          "end_line": 40,
+          "end_col": 2
+        },
+        "message": "at `served`, duties `answer-period`, `old-period` are never in force on the same day as the node, so no trigger date opens all their windows",
+        "notes": [
+          {
+            "span": {
+              "file": "pkgs/demo/main.lit",
+              "line": 33,
+              "col": 3,
+              "end_line": 33,
+              "end_col": 101
+            },
+            "message": "`answer-period` is in force [2000-01-01, ..)"
+          },
+          {
+            "span": {
+              "file": "pkgs/demo/main.lit",
+              "line": 59,
+              "col": 3,
+              "end_line": 59,
+              "end_col": 131
+            },
+            "message": "`old-period` is in force [1990-01-01, 2000-01-01)"
+          }
+        ]
+      }
+    ]
+  }
+}

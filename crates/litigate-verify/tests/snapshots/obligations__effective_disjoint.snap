@@ -1,0 +1,28 @@
+---
+source: crates/litigate-verify/tests/obligations.rs
+expression: "pair(Obligation::EffectiveDisjoint, &\none(&versions(\"[1990-01-01, 2000-01-01)\", \"[2000-01-01, ..)\")), &\none(&versions(\"[1990-01-01, ..)\", \"[2000-01-01, ..)\")))"
+---
+{
+  "pass": {
+    "finding": {
+      "name": "effective-disjoint",
+      "status": "passed",
+      "count": 0,
+      "examples": []
+    },
+    "accepted": true,
+    "diagnostics": []
+  },
+  "fail": {
+    "finding": {
+      "name": "effective-disjoint",
+      "status": "failed",
+      "count": 1,
+      "examples": [
+        "pkgs/demo/main.lit:56:23: L3001 versions of `late` overlap on [2000-01-01, ..): [1990-01-01, ..) and [2000-01-01, ..)"
+      ]
+    },
+    "accepted": false,
+    "diagnostics": []
+  }
+}

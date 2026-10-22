@@ -107,7 +107,7 @@ pub struct SourceMap {
 
 /// Resolves citations under one pack's citation syntax and source
 /// bindings against an optional vendored corpus.
-pub(crate) struct Citations<'c> {
+pub struct Citations<'c> {
     syntax: CiteSyntax,
     /// Heading template or shorthand code/title to bound source id.
     bound: Vec<(Family, String)>,
@@ -118,6 +118,7 @@ impl<'c> Citations<'c> {
     /// Citations written in the pack's `syntax` or bound by a source's
     /// `cite_prefixes` (with its `section_heading`, `{n}` the section;
     /// SPEC §4.3), located in `corpus` when given.
+    #[must_use]
     pub fn new(
         syntax: CiteSyntax,
         sources: &[litigate_sema::hir::SourceBinding],
@@ -156,8 +157,16 @@ impl<'c> Citations<'c> {
         }
     }
 
+    /// The citation syntax in effect: the pack's own plus one rule per
+    /// source binding with `cite_prefixes`.
+    #[must_use]
+    pub fn syntax(&self) -> &CiteSyntax {
+        &self.syntax
+    }
+
     /// The map of `text`: litgraph's own citation parser, then the bound
     /// source and a corpus lookup of each heading.
+    #[must_use]
     pub fn map(&self, text: Option<&String>) -> Option<CiteMap> {
         let text = text?;
         let grammar = CiteGrammar::new(&self.syntax);

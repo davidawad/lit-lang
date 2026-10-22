@@ -1,6 +1,7 @@
-//! The item tree: sema's syntax-independent view of one `.lit` file. Every
-//! later query consumes only this, so swapping the bootstrap reader for the
-//! `litigate-syntax` CST changes nothing downstream.
+//! The item tree: sema's syntax-independent view of one `.lit` file,
+//! lowered from the `litigate-syntax` CST. Every later query consumes only
+//! this, so CST trivia and recovery details never reach name resolution or
+//! type checking.
 use crate::db::span::TextRange;
 use crate::hir::{BinaryOp, UnaryOp};
 

@@ -1,297 +1,153 @@
-//! Bootstrap reader: `.lit` text to [`ItemTree`] (SPEC §2-§3.1, §3.3).
+//! `.lit` text to [`ItemTree`]: parse with `litigate-syntax` (SPEC §2-§3),
+//! then lower its lossless CST into sema's syntax-independent item tree.
 //!
-//! This stands in for `litigate-syntax`'s CST until that parser lands; once
-//! it does, the `item_tree` query lowers the CST instead and this module is
-//! deleted. It follows the same grammar, LL decisions, and recovery rules.
+//! Lowering is total over recovered trees: a declaration missing a required
+//! part (already reported as L0xxx by the parser) is dropped, so later
+//! queries only see well-formed items while the LSP keeps working.
 mod expr;
 mod fields;
 mod items;
-pub mod lex;
 pub mod tree;
 
 use crate::db::span::{Report, TextRange};
-use lex::{Tok, Token};
-use litigate_base::{Applicability, DiagnosticCode as C};
+use litigate_syntax::{SyntaxKind as K, SyntaxNode, SyntaxToken};
 use tree::{ItemTree, Name};
+
+/// A CST node or token.
+pub(crate) type SyntaxElement = rowan::NodeOrToken<SyntaxNode, SyntaxToken>;
 
 /// Parse output: the tree and every syntax report.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct Parsed {
     /// Item tree (recovered on error).
     pub tree: ItemTree,
-    /// L0xxx reports and field-shape reports.
+    /// L0xxx reports from the parser and shape reports from lowering.
     pub reports: Vec<Report>,
 }
 
 /// Parses one `.lit` source.
 #[must_use]
 pub fn parse(src: &str) -> Parsed {
-    let (tokens, mut reports) = lex::lex(src);
-    let mut parser = Parser {
-        tokens,
-        pos: 0,
-        reports: Vec::new(),
-    };
-    let tree = parser.file();
-    reports.append(&mut parser.reports);
+    let parse = litigate_syntax::parse_lit(src);
+    let mut reports: Vec<Report> = parse.errors().iter().map(syntax_report).collect();
+    let mut cx = Lower::default();
+    let tree = parse
+        .lit_file()
+        .map(|file| cx.file(file.syntax()))
+        .unwrap_or_default();
+    reports.append(&mut cx.reports);
     Parsed { tree, reports }
 }
 
-/// Words that begin a top-level item (recovery points).
-pub(crate) const ITEM_KEYWORDS: [&str; 22] = [
-    "module",
-    "import",
-    "package",
-    "start",
-    "group",
-    "type",
-    "enum",
-    "event",
-    "state",
-    "decision",
-    "chance",
-    "terminal",
-    "link",
-    "instance",
-    "rule",
-    "deadline",
-    "counting",
-    "calendar",
-    "transition",
-    "authority",
-    "default",
-    "exception",
-];
-
-/// Marker error: a report was already emitted; unwind to recovery.
-pub(crate) struct Fail;
-
-/// Result of a parse step.
-pub(crate) type PResult<T> = Result<T, Fail>;
-
-pub(crate) struct Parser {
-    tokens: Vec<Token>,
-    pos: usize,
-    reports: Vec<Report>,
+fn syntax_report(e: &litigate_syntax::SyntaxError) -> Report {
+    let mut report = Report::new(e.code, range(e.range), e.message.clone());
+    for note in &e.notes {
+        report = report.note(note.clone());
+    }
+    for fix in &e.fixes {
+        report = report.fix(range(fix.range), fix.replacement.clone(), fix.applicability);
+    }
+    report
 }
 
-impl Parser {
-    pub(crate) fn peek(&self) -> &Token {
-        self.nth(0)
-    }
+/// Converts a rowan range.
+pub(crate) fn range(r: litigate_syntax::TextRange) -> TextRange {
+    TextRange::new(u32::from(r.start()), u32::from(r.end()))
+}
 
-    pub(crate) fn nth(&self, n: usize) -> &Token {
-        let last = self.tokens.len().saturating_sub(1);
-        &self.tokens[(self.pos + n).min(last)]
-    }
+/// Lowering state: reports for shapes the grammar accepts but the item tree
+/// cannot represent (e.g. a non-JSON value in a `patch` record).
+#[derive(Default)]
+pub(crate) struct Lower {
+    pub(crate) reports: Vec<Report>,
+}
 
-    pub(crate) fn bump(&mut self) -> Token {
-        let token = self.peek().clone();
-        if token.kind != Tok::Eof {
-            self.pos += 1;
-        }
-        token
-    }
+pub(crate) fn is_trivia(kind: K) -> bool {
+    matches!(kind, K::Whitespace | K::Comment | K::DocComment)
+}
 
-    pub(crate) fn prev_end(&self) -> u32 {
-        self.pos
-            .checked_sub(1)
-            .and_then(|i| self.tokens.get(i))
-            .map_or(0, |t| t.range.end)
-    }
+/// Significant direct children (nodes and non-trivia tokens).
+pub(crate) fn elements(node: &SyntaxNode) -> impl Iterator<Item = SyntaxElement> {
+    node.children_with_tokens().filter(|e| !is_trivia(e.kind()))
+}
 
-    pub(crate) fn at_punct(&self, p: &str) -> bool {
-        self.nth_punct(0, p)
-    }
+/// Direct child nodes of `kind`.
+pub(crate) fn nodes_of(node: &SyntaxNode, kind: K) -> impl Iterator<Item = SyntaxNode> {
+    node.children().filter(move |n| n.kind() == kind)
+}
 
-    pub(crate) fn nth_punct(&self, n: usize, p: &str) -> bool {
-        let t = self.nth(n);
-        t.kind == Tok::Punct && t.text == p
-    }
+/// First direct child node of `kind`.
+pub(crate) fn node_of(node: &SyntaxNode, kind: K) -> Option<SyntaxNode> {
+    nodes_of(node, kind).next()
+}
 
-    pub(crate) fn at_kw(&self, kw: &str) -> bool {
-        let t = self.peek();
-        t.kind == Tok::Ident && t.text == kw
-    }
+/// First direct token of `kind`.
+pub(crate) fn token_of(node: &SyntaxNode, kind: K) -> Option<SyntaxToken> {
+    node.children_with_tokens()
+        .filter_map(SyntaxElement::into_token)
+        .find(|t| t.kind() == kind)
+}
 
-    pub(crate) fn eat_punct(&mut self, p: &str) -> bool {
-        let hit = self.at_punct(p);
-        if hit {
-            self.bump();
-        }
-        hit
-    }
+/// Direct child nodes after the first direct token of kind `after`.
+pub(crate) fn nodes_after(node: &SyntaxNode, after: K) -> impl Iterator<Item = SyntaxNode> {
+    node.children_with_tokens()
+        .skip_while(move |e| e.kind() != after)
+        .filter_map(SyntaxElement::into_node)
+}
 
-    pub(crate) fn eat_kw(&mut self, kw: &str) -> bool {
-        let hit = self.at_kw(kw);
-        if hit {
-            self.bump();
-        }
-        hit
+/// A token as a [`Name`]; string tokens are unescaped.
+pub(crate) fn name(token: &SyntaxToken) -> Name {
+    let text = if token.kind() == K::String {
+        litigate_syntax::ast::unescape(token.text())
+    } else {
+        token.text().to_owned()
+    };
+    Name {
+        text,
+        range: range(token.text_range()),
     }
+}
 
-    pub(crate) fn describe(token: &Token) -> String {
-        match token.kind {
-            Tok::Eof => "end of file".to_owned(),
-            Tok::Str => "a string".to_owned(),
-            Tok::DocComment => "a doc comment".to_owned(),
-            Tok::CiteText => "citation text".to_owned(),
-            _ => format!("`{}`", token.text),
-        }
+/// The node's range without leading doc comments or trailing trivia.
+pub(crate) fn significant_range(node: &SyntaxNode) -> TextRange {
+    let mut tokens = node
+        .descendants_with_tokens()
+        .filter_map(SyntaxElement::into_token)
+        .filter(|t| !is_trivia(t.kind()));
+    let first = tokens.next();
+    let last = tokens.last().or_else(|| first.clone());
+    match (first, last) {
+        (Some(f), Some(l)) => TextRange::new(
+            u32::from(f.text_range().start()),
+            u32::from(l.text_range().end()),
+        ),
+        _ => range(node.text_range()),
     }
+}
 
-    /// Reports L0001 at the current token and fails.
-    pub(crate) fn unexpected<T>(&mut self, expected: &str) -> PResult<T> {
-        let token = self.peek().clone();
-        let found = Self::describe(&token);
-        self.reports.push(Report::new(
-            C::UnexpectedToken,
-            token.range,
-            format!("expected {expected}, found {found}"),
-        ));
-        Err(Fail)
-    }
+/// The first direct `Ident` token (a declaration's name).
+pub(crate) fn ident(node: &SyntaxNode) -> Option<Name> {
+    token_of(node, K::Ident).map(|t| name(&t))
+}
 
-    pub(crate) fn expect_punct(&mut self, p: &str) -> PResult<Token> {
-        if self.at_punct(p) {
-            Ok(self.bump())
-        } else {
-            self.unexpected(&format!("`{p}`"))
-        }
-    }
+/// The direct `String` token (a declaration's label).
+pub(crate) fn label(node: &SyntaxNode) -> Option<Name> {
+    token_of(node, K::String).map(|t| name(&t))
+}
 
-    pub(crate) fn expect_kw(&mut self, kw: &str) -> PResult<Token> {
-        if self.at_kw(kw) {
-            Ok(self.bump())
-        } else {
-            self.unexpected(&format!("`{kw}`"))
-        }
-    }
-
-    pub(crate) fn ident(&mut self) -> PResult<Name> {
-        if self.peek().kind == Tok::Ident && self.peek().text != "cite" {
-            let t = self.bump();
-            Ok(Name {
-                text: t.text,
-                range: t.range,
-            })
-        } else {
-            self.unexpected("an identifier")
-        }
-    }
-
-    pub(crate) fn token_name(&mut self, kind: Tok, what: &str) -> PResult<Name> {
-        if self.peek().kind == kind {
-            let t = self.bump();
-            Ok(Name {
-                text: t.text,
-                range: t.range,
-            })
-        } else {
-            self.unexpected(what)
-        }
-    }
-
-    pub(crate) fn string(&mut self) -> PResult<Name> {
-        self.token_name(Tok::Str, "a string")
-    }
-
-    pub(crate) fn date(&mut self) -> PResult<Name> {
-        self.token_name(Tok::Date, "a date")
-    }
-
-    /// `cite` + citation text; the `cite` token is current.
-    pub(crate) fn cite_text(&mut self) -> PResult<Name> {
-        let cite = self.bump();
-        if self.peek().kind == Tok::CiteText && !self.peek().text.is_empty() {
-            let t = self.bump();
-            Ok(Name {
-                text: t.text,
-                range: t.range,
-            })
-        } else {
-            self.reports.push(Report::new(
-                C::UnexpectedToken,
-                cite.range,
-                "`cite` needs citation text on the same line",
-            ));
-            if self.peek().kind == Tok::CiteText {
-                self.bump();
-            }
-            Err(Fail)
-        }
-    }
-
-    pub(crate) fn report(&mut self, report: Report) {
-        self.reports.push(report);
-    }
-
-    /// Opening-delimiter bookkeeping: on a missing closer, L0002 at the
-    /// opener with a fix inserting the closer.
-    pub(crate) fn close(&mut self, open: TextRange, closer: &str) -> PResult<()> {
-        if self.eat_punct(closer) {
-            return Ok(());
-        }
-        let at = TextRange::new(self.prev_end(), self.prev_end());
-        self.reports.push(
-            Report::new(
-                C::UnterminatedLiteral,
-                open,
-                format!("unclosed delimiter; expected `{closer}`"),
-            )
-            .fix(at, closer, Applicability::MachineApplicable),
-        );
-        Err(Fail)
-    }
-
-    /// Skips to the next `,`/`}` at depth 0 or the next line start.
-    pub(crate) fn recover_in_body(&mut self) {
-        let mut depth = 0_i32;
-        let start = self.pos;
-        loop {
-            let t = self.peek();
-            if t.kind == Tok::Eof {
-                return;
-            }
-            if self.pos > start && depth == 0 && t.line_start {
-                return;
-            }
-            if t.kind == Tok::Punct {
-                match t.text.as_str() {
-                    "{" | "[" | "(" => depth += 1,
-                    "}" | "]" | ")" if depth == 0 => return,
-                    "}" | "]" | ")" => depth -= 1,
-                    "," if depth == 0 => {
-                        self.bump();
-                        return;
-                    }
-                    _ => {}
-                }
-            }
-            self.bump();
-        }
-    }
-
-    /// Skips to the next top-level item keyword at the start of a line.
-    pub(crate) fn recover_top(&mut self) {
-        let start = self.pos;
-        loop {
-            let t = self.peek();
-            let at_item = t.line_start
-                && (t.kind == Tok::DocComment
-                    || (t.kind == Tok::Ident && ITEM_KEYWORDS.contains(&t.text.as_str()))
-                    || (t.kind == Tok::Ident && t.text == "test"));
-            if t.kind == Tok::Eof || (self.pos > start && at_item) {
-                return;
-            }
-            self.bump();
-        }
-    }
-
-    /// Optional `,` separator.
-    pub(crate) fn sep(&mut self) {
-        self.eat_punct(",");
-    }
+/// Joined `///` lines leading a declaration.
+pub(crate) fn docs(node: &SyntaxNode) -> Option<String> {
+    let lines: Vec<String> = node
+        .children_with_tokens()
+        .filter_map(SyntaxElement::into_token)
+        .take_while(|t| is_trivia(t.kind()))
+        .filter(|t| t.kind() == K::DocComment)
+        .map(|t| {
+            let text = t.text().trim_start_matches("///");
+            text.strip_prefix(' ').unwrap_or(text).trim_end().to_owned()
+        })
+        .collect();
+    (!lines.is_empty()).then(|| lines.join("\n"))
 }
 
 #[cfg(test)]

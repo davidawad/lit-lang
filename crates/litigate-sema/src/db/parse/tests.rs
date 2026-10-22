@@ -1,15 +1,20 @@
 use super::parse;
-use super::tree::{ItemKind, TestStmt};
+use super::tree::{Atom, ExprKind, Item, ItemKind, Json, TestStmt};
 use litigate_base::DiagnosticCode as C;
+use proptest::prelude::*;
 
-fn fixture() -> String {
-    let path = concat!(env!("CARGO_MANIFEST_DIR"), "/../../lit/examples/rule12.lit");
+fn read(relative: &str) -> String {
+    let path = format!("{}/../../{relative}", env!("CARGO_MANIFEST_DIR"));
     std::fs::read_to_string(path).unwrap_or_default()
 }
 
+fn find(items: &[Item], pred: impl Fn(&ItemKind) -> bool) -> Option<&ItemKind> {
+    items.iter().map(|i| &i.kind).find(|k| pred(k))
+}
+
 #[test]
-fn worked_example_parses_cleanly() {
-    let parsed = parse(&fixture());
+fn worked_example_lowers_cleanly() {
+    let parsed = parse(&read("lit/examples/rule12.lit"));
     assert_eq!(parsed.reports, vec![]);
     let tree = parsed.tree;
     assert_eq!(super::tree::dotted(&tree.module), "frcp.rule12");
@@ -21,20 +26,20 @@ fn worked_example_parses_cleanly() {
         .items
         .iter()
         .filter_map(|i| match &i.kind {
-            ItemKind::Node(n) => Some((n.name.text.as_str(), n.edges.len())),
+            ItemKind::Node(n) => Some((n.name.text.as_str(), n.edges.len(), n.fields.len())),
             _ => None,
         })
         .collect();
     assert_eq!(
         nodes,
         [
-            ("time-barred", 2),
-            ("respond", 3),
-            ("mtd-ruling", 2),
-            ("answered", 1),
-            ("default-risk", 1),
-            ("judgment-entered", 0),
-            ("dismissed", 0)
+            ("time-barred", 2, 1),
+            ("respond", 3, 1),
+            ("mtd-ruling", 2, 1),
+            ("answered", 1, 1),
+            ("default-risk", 1, 1),
+            ("judgment-entered", 0, 2),
+            ("dismissed", 0, 2)
         ]
     );
     let docs: Vec<_> = tree.items.iter().filter_map(|i| i.doc.clone()).collect();
@@ -47,6 +52,85 @@ fn worked_example_parses_cleanly() {
         )
         .count();
     assert_eq!(tests, 2);
+    let Some(ItemKind::Rule(kind, name, clauses, inner)) =
+        find(&tree.items, |k| matches!(k, ItemKind::Rule(..)))
+    else {
+        panic!("rule missing");
+    };
+    assert_eq!(
+        (kind.text.as_str(), name.text.as_str()),
+        ("duty", "answer-duty")
+    );
+    assert!(
+        matches!(&clauses[0].values[0].0, Atom::Expr(e) if e.kind == ExprKind::Cite("FRCP 12(a)(1)(A)(i)".into()))
+    );
+    assert!(
+        matches!(&inner[0].kind, ItemKind::Deadline { direction, .. } if direction.text == "from")
+    );
+}
+
+#[test]
+fn every_construct_lowers_without_reports() {
+    for file in [
+        "crates/litigate-syntax/tests/fixtures/constructs.lit",
+        "crates/litigate-syntax/tests/fixtures/links.lit",
+    ] {
+        let parsed = parse(&read(file));
+        assert_eq!(parsed.reports, vec![], "{file}");
+        assert!(!parsed.tree.items.is_empty(), "{file}");
+    }
+    let tree = parse(&read(
+        "crates/litigate-syntax/tests/fixtures/constructs.lit",
+    ))
+    .tree;
+    assert_eq!(tree.imports.len(), 2);
+    assert_eq!(
+        tree.imports[1].names.as_ref().map(Vec::len),
+        Some(2),
+        "import list"
+    );
+    let exception = find(
+        &tree.items,
+        |k| matches!(k, ItemKind::Exception { name, .. } if name.text == "local-rule"),
+    );
+    assert!(matches!(
+        exception,
+        Some(ItemKind::Exception { then: Some(_), priority: Some(_), clauses, .. }) if clauses.len() == 1
+    ));
+    let undercut = find(
+        &tree.items,
+        |k| matches!(k, ItemKind::Exception { name, .. } if name.text == "moot"),
+    );
+    assert!(matches!(
+        undercut,
+        Some(ItemKind::Exception {
+            then: None,
+            priority: None,
+            ..
+        })
+    ));
+    let Some(ItemKind::Transition(_, amends, _, arms)) =
+        find(&tree.items, |k| matches!(k, ItemKind::Transition(..)))
+    else {
+        panic!("transition missing");
+    };
+    assert_eq!(
+        amends.version.as_ref().map(|d| d.text.as_str()),
+        Some("2009-12-01")
+    );
+    assert!(arms[0].unless.is_some() && arms[1].unless.is_none());
+    let links = parse(&read("crates/litigate-syntax/tests/fixtures/links.lit")).tree;
+    let Some(ItemKind::Instance(base, origin, fields)) =
+        find(&links.items, |k| matches!(k, ItemKind::Instance(..)))
+    else {
+        panic!("instance missing");
+    };
+    assert_eq!((base.text.as_str(), origin.text.as_str()), ("cafc", "cofc"));
+    let patch = fields.iter().find(|f| f.key.text == "patch");
+    assert!(matches!(
+        patch.map(|f| &f.values[1].0),
+        Some(Atom::Json(Json::Object(entries))) if entries.len() == 4 && entries[3].1 == Json::Unset
+    ));
 }
 
 fn codes(src: &str) -> Vec<C> {
@@ -54,25 +138,28 @@ fn codes(src: &str) -> Vec<C> {
 }
 
 #[test]
-fn reports_and_recovers() {
-    assert_eq!(
-        codes("module m\nstate a: \"A\" { bogus 1 }\nstate b: \"B\""),
-        [C::InvalidField]
-    );
-    assert_eq!(
-        codes("module m\nstate a \"A\"\nstate b: \"B\""),
-        [C::UnexpectedToken]
-    );
-    assert_eq!(
-        codes("module m\nenum E { a, b\nstate b: \"B\""),
-        [C::UnterminatedLiteral]
-    );
-    assert_eq!(
-        codes("module m\ndefault d when a < b < c => 1"),
-        [C::UnexpectedToken]
-    );
+fn syntax_errors_are_reported_and_later_items_survive() {
+    for src in [
+        "module m\nstate a: \"A\" { bogus 1 }\nstate b: \"B\"",
+        "module m\nstate a \"A\"\nstate b: \"B\"",
+        "module m\ndefault d when a < b < c => 1\nstate b: \"B\"",
+    ] {
+        let parsed = parse(src);
+        assert!(
+            parsed.reports.iter().any(|r| r.code == C::UnexpectedToken),
+            "{src}: {:?}",
+            parsed.reports
+        );
+        assert!(
+            parsed
+                .tree
+                .items
+                .iter()
+                .any(|i| matches!(&i.kind, ItemKind::Node(n) if n.name.text == "b")),
+            "{src}"
+        );
+    }
     assert_eq!(codes("module m\n/// dangling\n"), [C::DanglingDocComment]);
-    assert_eq!(codes("state a: \"A\""), [C::UnexpectedToken]);
 }
 
 #[test]
@@ -85,16 +172,13 @@ fn unclosed_brace_offers_machine_fix() {
     assert!(report.is_some_and(|r| r.fixes.len() == 1 && r.fixes[0].1 == "}"));
 }
 
-#[test]
-fn parses_links_instances_transitions_and_exceptions() {
-    let src = r#"module links
-link appeal "Appeal" : cofc::judgment -> cafc@cofc::entry p 1/2 { replaces [cofc::old] }
-instance cafc @ cofc { pack cafc, note "x", probabilities { a: 1/3 }, patch e { "hours": unset } }
-transition t amends d@2009-12-01 cite FRCP 86(a) { unless has_event(X()) -> d@2007-12-01, otherwise -> d@2009-12-01 }
-exception e undercuts d when !has_event(X()) priority 2
-default d when true => match k { a => 1, _ => 2 }
-"#;
-    let parsed = parse(src);
-    assert_eq!(parsed.reports, vec![]);
-    assert_eq!(parsed.tree.items.len(), 5);
+proptest! {
+    /// Lowering is total: any input yields a tree, and every report lies
+    /// inside the source.
+    #[test]
+    fn lowering_is_total(src in "(module m\n)?[a-z_ :\"{}()\\[\\],.@?>=0-9\n/-]{0,120}") {
+        let parsed = parse(&src);
+        let len = u32::try_from(src.len()).unwrap_or(u32::MAX);
+        prop_assert!(parsed.reports.iter().all(|r| r.range.start <= r.range.end && r.range.end <= len));
+    }
 }

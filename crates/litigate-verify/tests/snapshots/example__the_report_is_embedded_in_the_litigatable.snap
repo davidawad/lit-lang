@@ -1,0 +1,109 @@
+---
+source: crates/litigate-verify/tests/example.rs
+expression: litigatable
+---
+{
+  "ir": "[pack]",
+  "verification": {
+    "obligations": [
+      {
+        "name": "well-typed",
+        "status": "passed",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "cite-resolves",
+        "status": "passed",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "effective-disjoint",
+        "status": "passed",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "effective-covered",
+        "status": "passed",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "precedence-acyclic",
+        "status": "passed",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "delegation-respected",
+        "status": "passed",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "exceptions-ordered",
+        "status": "passed",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "dist-exact",
+        "status": "passed",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "graph-exits",
+        "status": "passed",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "graph-reachable",
+        "status": "passed",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "deadline-satisfiable",
+        "status": "passed",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "tests-pass",
+        "status": "passed",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "case-replay",
+        "status": "skipped",
+        "count": 0,
+        "examples": [
+          "a rule package has no events; replay is checked per case"
+        ]
+      },
+      {
+        "name": "holes",
+        "status": "warning",
+        "count": 3,
+        "examples": [
+          "lit/examples/rule12.lit:72:43: L9002 hole: no calibration yet",
+          "lit/examples/rule12.lit:73:40: L9002 hole: no reason given",
+          "lit/examples/rule12.lit:79:97: L9002 hole: no reason given"
+        ]
+      },
+      {
+        "name": "rule-without-test",
+        "status": "passed",
+        "count": 0,
+        "examples": []
+      }
+    ],
+    "profile": "dev"
+  },
+  "source_map": "[source map]"
+}

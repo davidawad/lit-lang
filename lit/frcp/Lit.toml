@@ -1,0 +1,111 @@
+# Ported from packs/frcp-civil-procedure.json (bead lg-litigate-epic-tuq.16).
+# The pack states the Federal Rules of Civil Procedure "as amended to Dec. 1,
+# 2024" (the frcp-rules source); Rule 12, the newest rule it relies on, was
+# last amended effective December 1, 2024 (sources/frcp.txt history note), so
+# the procedure as a whole is in force from that date. Declarations whose
+# current version is older say so with their own `effective` clause.
+[package]
+name = "frcp-civil-procedure"
+version = "2024.12.0"
+language = 1
+pack_id = "frcp-civil-procedure"
+forum = "frcp"
+authority = "FederalRule"
+title = "Federal Civil Litigation Under the FRCP"
+description = "Pre-filing/jurisdiction & venue -> pleading (service, Rule 12 responses, default) -> amendment & joinder -> discovery (Rule 26 conference through Rule 37 sanctions and CBI-style protective orders) -> pretrial motions (summary judgment, Daubert, motions in limine) -> trial -> post-trial motions (Rule 50/59/60) -> judgment & appeal (28 U.S.C. 1291/1292, FRAP 4, cross-appeal). Citations checked against the FRCP, FRAP, and Title 28 as reflected in content/rulepacks/frcp-fragment.json and the situations corpus; approximate figures (filing fees) are flagged inline. Direct structural counterpart to content/statecharts/mpep-prosecution.json and content/statecharts/itc-337.json for the FRCP pack. Walk mode teaches the FRAP 4(a)(4) tolling trap, the unextendable Rule 59(e)/60(b) and removal clocks, and the jurisdictional (Bowles v. Russell) character of the notice-of-appeal deadline."
+jurisdiction = "Federal Rules of Civil Procedure / U.S. District Courts"
+in_force = "2024-12-01"
+known_at = "2024-12-01"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+either = "nature"
+examiner = "nature"
+office = "nature"
+
+[sources.frcp-rules]
+title = "Federal Rules of Civil Procedure, as amended to Dec. 1, 2024"
+url = "https://www.uscourts.gov/sites/default/files/2025-02/federal-rules-of-civil-procedure-dec-1-2024_0.pdf"
+path = "sources/frcp.txt"
+sha256 = "c86b327b3bbe7dd3e68ea434a2bf0bc62aee8e85229f3456f094a1b232568317"
+as_of = "2024-12-01"
+
+[sources.frap-rules]
+title = "Federal Rules of Appellate Procedure, as amended to Dec. 1, 2024 (FRAP 4(a) civil appeal clock)"
+url = "https://www.uscourts.gov/sites/default/files/2025-02/federal-rules-of-appellate-procedure-dec-1-2024_0.pdf"
+path = "sources/frap.txt"
+sha256 = "d61711eca8e1f65955d12f1b7d29d4cc453d9ee1e30c4fff6c54b23f113454f6"
+as_of = "2024-12-01"
+
+[sources.usc28-1447]
+title = "28 U.S.C. § 1447 (Procedure after removal; 1447(d) unreviewability)"
+url = "https://www.law.cornell.edu/uscode/text/28/1447"
+path = "sources/usc-cfr-prosecution-fragments.txt"
+cite_prefixes = ["28 U.S.C."]
+section_heading = "28 U.S.C. § {n}"
+
+[sources.usc28-1291]
+title = "28 U.S.C. § 1291 (Final decisions of district courts)"
+url = "https://www.law.cornell.edu/uscode/text/28/1291"
+path = "sources/usc-additional.txt"
+# 28 U.S.C. citations resolve to the vendored `## 28 U.S.C. § N` headings:
+# §§ 1291, 1331, 1332, 1391, 1914 and 2106 here, §§ 1441, 1446 and 1447 in
+# the usc28-1447 binding's file.
+cite_prefixes = ["28 U.S.C."]
+section_heading = "28 U.S.C. § {n}"
+
+[sources.usc28-1254]
+title = "28 U.S.C. § 1254 (Courts of appeals; certiorari)"
+url = "https://www.law.cornell.edu/uscode/text/28/1254"
+path = "sources/usc-additional.txt"
+
+[sources.usc28-2106]
+title = "28 U.S.C. § 2106 (Determination of appellate court)"
+url = "https://www.law.cornell.edu/uscode/text/28/2106"
+path = "sources/usc-additional.txt"
+
+[sources.frcp-12h]
+title = "Fed. R. Civ. P. 12(h) — Waiving and Preserving Certain Defenses"
+url = "https://www.law.cornell.edu/rules/frcp/rule_12"
+
+[sources.usc28-1332]
+title = "28 U.S.C. § 1332 (Diversity jurisdiction)"
+url = "https://www.law.cornell.edu/uscode/text/28/1332"
+path = "sources/usc-additional.txt"
+
+[sources.usc28-1391]
+title = "28 U.S.C. § 1391 (Venue generally)"
+url = "https://www.law.cornell.edu/uscode/text/28/1391"
+path = "sources/usc-additional.txt"
+
+[sources.usdc-fee-schedule]
+title = "District Court Miscellaneous Fee Schedule ($350 base civil filing fee under 28 U.S.C. § 1914(a) plus $55 administrative fee, item 14, effective 12/1/2023)"
+url = "https://www.uscourts.gov/court-programs/fees/district-court-miscellaneous-fee-schedule"
+as_of = "2023-12-01"
+
+[sources.usc28-1914]
+title = "28 U.S.C. § 1914 (District court; filing and miscellaneous fees; $350 base civil filing fee)"
+url = "https://www.law.cornell.edu/uscode/text/28/1914"
+
+[sources.coa-fee-schedule]
+title = "Court of Appeals Miscellaneous Fee Schedule (docketing fee $600, effective 12/1/2023)"
+url = "https://www.uscourts.gov/court-programs/fees/court-appeals-miscellaneous-fee-schedule"
+as_of = "2023-12-01"
+
+[sources.usc28-1917]
+title = "28 U.S.C. § 1917 (District courts; fee on filing notice of or application for appeal, $5)"
+url = "https://www.law.cornell.edu/uscode/text/28/1917"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[[cite_syntax.rules]]
+prefixes = ["FRCP", "Fed. R. Civ. P.", "Fed R Civ P", "F.R.C.P."]
+heading = "Rule {}"
+source = "frcp-rules"
+
+[[cite_syntax.rules]]
+prefixes = ["FRAP", "Fed. R. App. P.", "Fed R App P", "F.R.A.P."]
+heading = "FRAP {}"
+source = "frap-rules"

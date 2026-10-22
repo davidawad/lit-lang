@@ -1,0 +1,262 @@
+module frcp.periods.tests
+
+import core.time.{ ServiceMethod }
+
+import frcp.periods.{
+  AmendedPleadingServed,
+  ComplaintFiled,
+  InitialPleadingReceived,
+  JudgmentEntered,
+  LastPleadingServed,
+  NoticeOfAppealFiled,
+  NoticeOfRemovalFiled,
+  ProcessServed,
+  ResponsivePleadingServed,
+  Rule12MotionDenied,
+  Rule26fConferenceHeld,
+  WaiverRequestSent,
+  alter-amend-period,
+  amended-response-period,
+  amendment-as-of-course-period,
+  answer-period,
+  cross-appeal-period,
+  denial-answer-period,
+  initial-disclosure-period,
+  jmol-renewal-period,
+  jury-demand-period,
+  new-trial-period,
+  notice-of-appeal-period,
+  relief-from-judgment-period,
+  remand-motion-period,
+  removal-period,
+  removed-answer-period,
+  service-period,
+  waiver-answer-period,
+}
+
+// Every period: a trigger whose last day is a business day, one whose last
+// day is a weekend or legal holiday and rolls forward (FRCP 6(a)(1)(C), FRAP
+// 26(a)(1)(C)), and, for periods that run after Rule 5(b) service, service
+// by mail adding 3 days after the roll (FRCP 6(d)). Expected dates are
+// computed outside the engine against the 5 U.S.C. § 6103 holidays.
+test "service-period: 90 days after the complaint is filed" cite FRCP 4(m)
+{
+  given ComplaintFiled() on 2025-03-04
+  expect deadline(service-period) == 2025-06-02
+}
+
+test "service-period: a last day on a legal holiday (2025-06-19) rolls forward" cite FRCP 6(a)(1)(C)
+{
+  given ComplaintFiled() on 2025-03-21
+  expect deadline(service-period) == 2025-06-20
+}
+
+test "waiver-answer-period: 60 days after the waiver request is sent" cite FRCP 12(a)(1)(A)(ii)
+{
+  given WaiverRequestSent() on 2025-03-10
+  expect deadline(waiver-answer-period) == 2025-05-09
+}
+
+test "waiver-answer-period: a last day on a Saturday (2025-05-10) rolls forward" cite FRCP 6(a)(1)(C)
+{
+  given WaiverRequestSent() on 2025-03-11
+  expect deadline(waiver-answer-period) == 2025-05-12
+}
+
+test "answer-period: 21 days after the summons and complaint are served" cite FRCP 12(a)(1)(A)(i)
+{
+  given ProcessServed() on 2025-03-17
+  expect deadline(answer-period) == 2025-04-07
+}
+
+test "answer-period: a last day on a legal holiday (2025-05-26) rolls forward" cite FRCP 6(a)(1)(C)
+{
+  given ProcessServed() on 2025-05-05
+  expect deadline(answer-period) == 2025-05-27
+}
+
+test "removal-period: 30 days after the initial pleading is received" cite 28 U.S.C. 1446(b)(1)
+{
+  given InitialPleadingReceived() on 2025-03-24
+  expect deadline(removal-period) == 2025-04-23
+}
+
+test "removal-period: a last day on a Saturday (2025-04-19) rolls forward" cite FRCP 6(a)(1)(C)
+{
+  given InitialPleadingReceived() on 2025-03-20
+  expect deadline(removal-period) == 2025-04-21
+}
+
+test "remand-motion-period: 30 days after the notice of removal is filed" cite 28 U.S.C. 1447(c)
+{
+  given NoticeOfRemovalFiled() on 2025-03-31
+  expect deadline(remand-motion-period) == 2025-04-30
+}
+
+test "remand-motion-period: a last day on a legal holiday (2025-05-26) rolls forward" cite FRCP 6(a)(1)(C)
+{
+  given NoticeOfRemovalFiled() on 2025-04-26
+  expect deadline(remand-motion-period) == 2025-05-27
+}
+
+test "removed-answer-period: 21 days after the initial pleading is received" cite FRCP 81(c)(2)(A)
+{
+  given InitialPleadingReceived() on 2025-04-07
+  expect deadline(removed-answer-period) == 2025-04-28
+}
+
+test "removed-answer-period: a last day on a Saturday (2025-04-19) rolls forward" cite FRCP 6(a)(1)(C)
+{
+  given InitialPleadingReceived() on 2025-03-29
+  expect deadline(removed-answer-period) == 2025-04-21
+}
+
+test "denial-answer-period: 14 days after notice of the denial" cite FRCP 12(a)(4)(A)
+{
+  given Rule12MotionDenied() on 2025-04-14
+  expect deadline(denial-answer-period) == 2025-04-28
+}
+
+test "denial-answer-period: a last day on a legal holiday (2025-05-26) rolls forward" cite FRCP 6(a)(1)(C)
+{
+  given Rule12MotionDenied() on 2025-05-12
+  expect deadline(denial-answer-period) == 2025-05-27
+}
+
+test "amendment-as-of-course-period: 21 days after the answer is served" cite FRCP 15(a)(1)(B)
+{
+  given ResponsivePleadingServed(Personal) on 2025-04-21
+  expect deadline(amendment-as-of-course-period) == 2025-05-12
+}
+
+test "amendment-as-of-course-period: a last day on a Saturday (2025-05-03) rolls forward" cite FRCP 6(a)(1)(C)
+{
+  given ResponsivePleadingServed(Personal) on 2025-04-12
+  expect deadline(amendment-as-of-course-period) == 2025-05-05
+}
+
+test "amendment-as-of-course-period: service by mail adds 3 days" cite FRCP 6(d)
+{
+  given ResponsivePleadingServed(Mail) on 2025-05-06
+  expect deadline(amendment-as-of-course-period) == 2025-05-30
+}
+
+test "amended-response-period: 14 days after the amended pleading is served" cite FRCP 15(a)(3)
+{
+  given AmendedPleadingServed(Personal) on 2025-04-28
+  expect deadline(amended-response-period) == 2025-05-12
+}
+
+test "amended-response-period: a last day on a legal holiday (2025-06-19) rolls forward" cite FRCP 6(a)(1)(C)
+{
+  given AmendedPleadingServed(Personal) on 2025-06-05
+  expect deadline(amended-response-period) == 2025-06-20
+}
+
+test "amended-response-period: service by mail adds 3 days" cite FRCP 6(d)
+{
+  given AmendedPleadingServed(Mail) on 2025-05-14
+  expect deadline(amended-response-period) == 2025-06-02
+}
+
+test "initial-disclosure-period: 14 days after the Rule 26(f) conference" cite FRCP 26(a)(1)(C)
+{
+  given Rule26fConferenceHeld() on 2025-05-05
+  expect deadline(initial-disclosure-period) == 2025-05-19
+}
+
+test "initial-disclosure-period: a last day on a Saturday (2025-05-03) rolls forward" cite FRCP 6(a)(1)(C)
+{
+  given Rule26fConferenceHeld() on 2025-04-19
+  expect deadline(initial-disclosure-period) == 2025-05-05
+}
+
+test "jury-demand-period: 14 days after the last pleading is served" cite FRCP 38(b)(1)
+{
+  given LastPleadingServed(Personal) on 2025-05-13
+  expect deadline(jury-demand-period) == 2025-05-27
+}
+
+test "jury-demand-period: a last day on a legal holiday (2025-09-01) rolls forward" cite FRCP 6(a)(1)(C)
+{
+  given LastPleadingServed(Personal) on 2025-08-18
+  expect deadline(jury-demand-period) == 2025-09-02
+}
+
+test "jury-demand-period: service by mail adds 3 days" cite FRCP 6(d)
+{
+  given LastPleadingServed(Mail) on 2025-06-02
+  expect deadline(jury-demand-period) == 2025-06-20
+}
+
+test "jmol-renewal-period: 28 days after entry of judgment" cite FRCP 50(b)
+{
+  given JudgmentEntered() on 2025-05-19
+  expect deadline(jmol-renewal-period) == 2025-06-16
+}
+
+test "jmol-renewal-period: a last day on a Sunday (2025-05-25) rolls forward" cite FRCP 6(a)(1)(C)
+{
+  given JudgmentEntered() on 2025-04-27
+  expect deadline(jmol-renewal-period) == 2025-05-27
+}
+
+test "new-trial-period: 28 days after entry of judgment" cite FRCP 59(b)
+{
+  given JudgmentEntered() on 2025-05-26
+  expect deadline(new-trial-period) == 2025-06-23
+}
+
+test "new-trial-period: a last day on a legal holiday (2025-09-01) rolls forward" cite FRCP 6(a)(1)(C)
+{
+  given JudgmentEntered() on 2025-08-04
+  expect deadline(new-trial-period) == 2025-09-02
+}
+
+test "alter-amend-period: 28 days after entry of judgment" cite FRCP 59(e)
+{
+  given JudgmentEntered() on 2025-06-02
+  expect deadline(alter-amend-period) == 2025-06-30
+}
+
+test "alter-amend-period: a last day on a Saturday (2025-06-07) rolls forward" cite FRCP 6(a)(1)(C)
+{
+  given JudgmentEntered() on 2025-05-10
+  expect deadline(alter-amend-period) == 2025-06-09
+}
+
+test "relief-from-judgment-period: 365 days after entry of judgment" cite FRCP 60(c)(1)
+{
+  given JudgmentEntered() on 2025-06-09
+  expect deadline(relief-from-judgment-period) == 2026-06-09
+}
+
+test "relief-from-judgment-period: a last day on a legal holiday (2026-09-07) rolls forward" cite FRCP 6(a)(1)(C)
+{
+  given JudgmentEntered() on 2025-09-07
+  expect deadline(relief-from-judgment-period) == 2026-09-08
+}
+
+test "notice-of-appeal-period: 30 days after entry of judgment" cite FRAP 4(a)(1)(A)
+{
+  given JudgmentEntered() on 2025-06-16
+  expect deadline(notice-of-appeal-period) == 2025-07-16
+}
+
+test "notice-of-appeal-period: a last day on a Saturday (2025-06-21) rolls forward" cite FRAP 26(a)(1)(C)
+{
+  given JudgmentEntered() on 2025-05-22
+  expect deadline(notice-of-appeal-period) == 2025-06-23
+}
+
+test "cross-appeal-period: 14 days after the first notice of appeal is filed" cite FRAP 4(a)(3)
+{
+  given NoticeOfAppealFiled() on 2025-06-23
+  expect deadline(cross-appeal-period) == 2025-07-07
+}
+
+test "cross-appeal-period: a last day on a legal holiday (2025-10-13) rolls forward" cite FRAP 26(a)(1)(C)
+{
+  given NoticeOfAppealFiled() on 2025-09-29
+  expect deadline(cross-appeal-period) == 2025-10-14
+}

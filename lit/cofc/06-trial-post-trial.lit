@@ -1,0 +1,119 @@
+module cofc.trial-post-trial
+
+import cofc.rules-trial.{ costs-period, post-judgment-motion-period }
+import cofc.{ trial-post-trial-group }
+
+state trial-bench: "Bench Trial (No Jury)" cite RCFC 39; RCFC 52
+{
+  group trial-post-trial-group
+  note "RCFC 38/39 (jury trial/demand) are marked '[Not used]' -- the CoFC has no jury trials; every trial is to the court. For §1498(a) patent claims this is doubly true by statute as well as rule: the patentee's remedy is 'reasonable and entire compensation,' assessed by the court, never a jury verdict."
+  e-trial-to-verdict "Bench trial concludes" -> verdict-rendered {
+    authority cite RCFC 39; RCFC 52(a)
+    note "No jury trials at the CoFC; RCFC 38/39 are marked '[Not used].'"
+  }
+}
+
+state verdict-rendered: "Court Renders Findings & Conclusions" by office cite RCFC 52(a)
+{
+  group trial-post-trial-group
+  note "For a bench trial, the court must find the facts specially and state its conclusions of law separately (RCFC 52(a)). This pack defers the win/loss determination to 'prevailing-party-fork' below (after RCFC 59 post-trial practice can still amend the judgment or order a new trial), rather than forking win/loss at the verdict itself."
+  e-verdict-to-judgment58 "Court's findings and conclusions are entered as a judgment" -> judgment-rcfc58-entered {
+    authority cite RCFC 52(a); RCFC 58
+  }
+}
+
+state judgment-rcfc58-entered: "Judgment Entered (Separate Document)" cite RCFC 58
+{
+  group trial-post-trial-group
+  note "Every judgment must be set out in a separate document. Entry of THIS document is the trigger for both the RCFC 59 post-trial-motion clock and the RCFC 58.1/28 U.S.C. §2522 notice-of-appeal clock (though a timely RCFC 59 motion tolls the appeal clock under the FRAP 4(a)(4)-style principle RCFC 58.1's Committee Notes reference)."
+  e-judgment58-to-posttrialwindow "Judgment entered in a separate document; RCFC 59 clock begins" -> post-trial-motion-window {
+    authority cite RCFC 58
+  }
+}
+
+decision post-trial-motion-window: "File a RCFC 59 Motion?" by applicant cite RCFC 59(a)-(b); 59(e)
+{
+  group trial-post-trial-group
+  note "A motion for a new trial or reconsideration (RCFC 59(a)(1)(A)/(B)), or upon a showing of fraud/wrong/injustice to the United States specifically (RCFC 59(a)(1)(C), which has NO FRCP counterpart and is a uniquely government-protective ground), or a motion to alter/amend the judgment (RCFC 59(e)), must be filed no later than 28 days after entry of judgment. RCFC 6(b) forbids the court from extending this deadline. A response may be filed only at the court's request (RCFC 59(f))."
+  e-posttrialwindow-motion "File a RCFC 59 motion for new trial, reconsideration, or to alter/amend the judgment" -> rule59-motion-ruling {
+    authority cite RCFC 59(a)-(b); 59(e)
+    effort 50.hours
+    cost 0.usd
+    within post-judgment-motion-period {
+      extendable false
+      extension_authority "none -- RCFC 6(b) forbids extension"
+      note "No later than 28 days after entry of judgment."
+    }
+  }
+  e-posttrialwindow-lapse "No RCFC 59 motion filed within 28 days; window lapses" -> post-trial-resolved by either {
+    authority cite RCFC 59(b)
+  }
+}
+
+chance rule59-motion-ruling: "Court Rules on RCFC 59 Motion" by office discretion cite RCFC 59(a); 59(d)
+{
+  group trial-post-trial-group
+  note "Outcome distribution authored at 0.15 new-trial-granted / 0.10 judgment-amended / 0.75 denied -- TEACHING ESTIMATE, reflecting that post-trial motions to overturn the court's own recent findings face real institutional headwind. The court may also order a new trial ON ITS OWN within 28 days of judgment for any reason that would justify granting one on a party's motion (RCFC 59(d))."
+  e-rule59-newtrial "New trial or reconsideration granted" -> trial-bench p 0.15 {
+    authority cite RCFC 59(a)
+    note "TEACHING ESTIMATE, reflecting that post-trial motions asking the court to overturn its own recent findings face real institutional headwind."
+    tags [loop]
+  }
+  e-rule59-amend "Judgment amended" -> judgment-rcfc58-entered p 0.1 {
+    authority cite RCFC 59(e)
+    note "TEACHING ESTIMATE, see sibling edge note."
+    tags [loop]
+  }
+  e-rule59-denied "Motion denied" -> post-trial-resolved p 0.75 {
+    note "TEACHING ESTIMATE, see sibling edge note."
+  }
+}
+
+state post-trial-resolved: "Post-Trial Motion Practice Resolved / Window Lapsed" cite RCFC 59
+{
+  group trial-post-trial-group
+  note "Either no RCFC 59 motion was filed within 28 days, or the filed motion was denied and no further motion is pending. The judgment is now positioned to become appealable and to trigger cost/fee deadlines."
+  e-posttrialresolved-to-costs "Judgment positioned to become final; cost/fee clocks begin" -> costs-and-fees-window
+}
+
+state costs-and-fees-window: "Bill of Costs & EAJA Fee Application Window" cite RCFC 54(d); 28 U.S.C. §2412(d)(1)(B); 28 U.S.C. §2412(d)(2)(G)
+{
+  group trial-post-trial-group
+  note "TWO SEPARATE 30-day clocks running from 'final judgment' (defined at 28 U.S.C. §2412(d)(2)(G) as a judgment that is final and not appealable): (1) a prevailing party's Bill of Costs (Appendix of Forms Form 4) must be filed within 30 days of final judgment, with a 28-day response window and 14-day reply (RCFC 54(d)(1)(B)-(D)); (2) a prevailing, EAJA-eligible party (net worth under the statutory cap; the United States' position not 'substantially justified') must submit its EAJA fee application within 30 days of final judgment (28 U.S.C. §2412(d)(1)(B); Appendix of Forms Form 5). NOTE the timing subtlety this pack simplifies: §2412(d)(2)(G)'s 'final judgment' generally means the judgment is no longer appealable (i.e., the notice-of-appeal window has run, or any appeal is exhausted), so the EAJA clock in practice runs later than a bare 30-days-from-RCFC-58-judgment reading would suggest -- flagged here rather than separately modeled as a parallel appeal-exhaustion gate."
+  e-costs-to-prevailing "Bill of Costs (RCFC 54(d), Form 4) and any EAJA application (28 U.S.C. §2412(d)(1)(B), Form 5) are filed within 30 days of final judgment" -> prevailing-party-fork {
+    authority cite RCFC 54(d); 28 U.S.C. §2412(d)(1)(B)
+    within costs-period {
+      extendable false
+      note "30 days after final judgment (28 U.S.C. §2412(d)(2)(G))."
+    }
+    tags [fees]
+  }
+}
+
+decision prevailing-party-fork: "Who Prevailed?" by office cite RCFC 52(a); RCFC 54(d)
+{
+  group trial-post-trial-group
+  note "Resolves the win/loss determination first modeled probabilistically at 'verdict-rendered,' carried through post-trial-motion practice. Outcome distribution authored at 0.50 plaintiff-prevails / 0.50 government-prevails -- TEACHING ESTIMATE, matching 'verdict-rendered' since this pack does not separately model RCFC 59 flipping the ultimate winner (a RCFC59-granted new trial or amended judgment loops back upstream instead, see the loop edges into 'trial-bench' and 'judgment-rcfc58-entered')."
+  e-prevailing-plaintiff "Plaintiff prevailed" -> judgment-for-plaintiff p 0.5 {
+    note "TEACHING ESTIMATE -- deliberately neutral; no cited empirical CoFC bench-trial win-rate figure was verified in this pass."
+  }
+  e-prevailing-government "Government prevailed" -> judgment-for-government p 0.5 {
+    note "TEACHING ESTIMATE, see sibling edge note."
+  }
+}
+
+terminal judgment-for-plaintiff: "JUDGMENT FOR PLAINTIFF (Bench Trial Verdict)" outcome [win, judgment, fee-eligible] cite RCFC 52(a); RCFC 58
+{
+  group trial-post-trial-group
+  note "PLACEHOLDER PAYOFF: $1,000,000 (full parameterized claim value), override per matter -- a real bench-trial damages award can land anywhere between $0 and (for a §1498 claim) 'reasonable and entire compensation,' which is inherently case-specific; this pack uses the full claim value as the illustrative ceiling. EAJA-eligible (28 U.S.C. §2412(d)) if the government's position was not substantially justified."
+  valence good
+  payoff 1_000_000.usd
+}
+
+terminal judgment-for-government: "JUDGMENT FOR THE GOVERNMENT (Bench Trial Verdict)" outcome [loss, judgment] cite RCFC 52(a); RCFC 58
+{
+  group trial-post-trial-group
+  note "PLACEHOLDER PAYOFF: $0, override per matter."
+  valence bad
+  payoff 0.usd
+}

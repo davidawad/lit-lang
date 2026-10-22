@@ -1,0 +1,15 @@
+// The United States Court of Federal Claims (lit/cofc), ported from
+// packs/cofc-court-of-federal-claims.json. Section modules 01-06 hold the
+// procedure graph in pack node order; the rules-* modules hold its
+// deadlines, each counted by lit/core's RCFC 6 and tested inline. Cites to
+// RCFC Appendices A, C, H and J and to case law stay holes carrying the
+// legacy text: those sources are not vendored under sources/.
+module cofc
+
+group threshold-group: "Threshold: Accrual, Limitations, §1500"
+group bid-protest-group: "Bid Protest Branch (28 U.S.C. §1491(b), Appendix C)"
+group pleading-group: "Complaint, Service & Rule 12"
+group general-track-group: "General Civil Track (RCFC 16, 26-37, 56)"
+group adr-group: "ADR Off-Ramp (Appendix H)"
+group patent-track-group: "§1498 Patent Track (Appendix J)"
+group trial-post-trial-group: "Trial & Post-Trial (RCFC 52, 58, 59, 54, EAJA)"

@@ -38,7 +38,8 @@ pub fn run(case: &str, op: &str, lib: &[String]) -> Outcome {
     let op = op_value(op)?;
     let mut targets = crate::ws::discover(&[case.to_owned()])?;
     // Links compose between whichever packs are loaded, as `links.json` does.
-    targets.packages.extend(crate::ws::links_packages(lib));
+    let links = crate::ws::links_packages(lib, &targets.cases);
+    targets.packages.extend(links);
     let c = checked_targets(&targets, Profile::Dev, None, lib)?;
     let mut report = Report {
         result: Value::Null,

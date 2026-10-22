@@ -1,0 +1,65 @@
+---
+source: crates/litigate-cli/tests/build.rs
+expression: "run.json[\"result\"]"
+---
+{
+  "value": "2025-03-26",
+  "type": "Date",
+  "id": "frcp-rule12-example::answer-period",
+  "steps": [
+    {
+      "rule": "answer-period@2009-12-01",
+      "cite": "FRCP 12(a)(1)(A)(i)",
+      "detail": "21 calendar day(s) after Served(complaint), counted by frcp6; in force [2009-12-01, ..)"
+    },
+    {
+      "rule": "answer-duty",
+      "cite": "FRCP 12(a)(1)(A)(i)",
+      "detail": "duty rule declaring `answer-period` (FederalRule authority)"
+    },
+    {
+      "rule": "frcp6",
+      "cite": "FRCP 6(a)",
+      "detail": "triggered by Served(complaint, Personal) on 2025-03-05"
+    },
+    {
+      "rule": "frcp6",
+      "cite": "FRCP 6(a)",
+      "detail": "FRCP 6(a): exclude the trigger date 2025-03-05"
+    },
+    {
+      "rule": "frcp6",
+      "cite": "FRCP 6(a)",
+      "detail": "FRCP 6(a): count 21 calendar day(s) after the anchor -> 2025-03-26"
+    },
+    {
+      "rule": "L0",
+      "cite": "FRCP 12(a)(1)(A)(i)",
+      "detail": "primary-law text: FRCP 12(a)(1)(A)(i)",
+      "sections": [
+        {
+          "heading": "12",
+          "source": "frcp"
+        }
+      ]
+    }
+  ],
+  "versions": [
+    {
+      "in_force": {
+        "from": "2009-12-01",
+        "to": null
+      },
+      "known_at": "2025-01-01",
+      "span": {
+        "file": "lit/examples/rule12.lit",
+        "line": 42,
+        "col": 3,
+        "end_line": 42,
+        "end_col": 74
+      },
+      "selected": true
+    }
+  ],
+  "overrides": []
+}

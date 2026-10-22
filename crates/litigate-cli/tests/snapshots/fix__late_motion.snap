@@ -1,0 +1,18 @@
+---
+source: crates/litigate-cli/tests/fix.rs
+expression: "run.json[\"diagnostics\"].as_array().unwrap().iter().filter(|d| d[\"severity\"] ==\n\"error\").collect::<Vec<_>>()"
+---
+[
+  {
+    "code": "L4002",
+    "severity": "error",
+    "span": {
+      "file": "cases/m.case",
+      "line": 13,
+      "col": 3,
+      "end_line": 13,
+      "end_col": 49
+    },
+    "message": "`MovedToDismiss(complaint)` on 2025-04-20 is after `answer-period`, due 2025-03-26 (triggered 2025-03-05)"
+  }
+]

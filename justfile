@@ -132,14 +132,28 @@ clean:
     rm -r -f dist result
 
 # --- litigate authoring language (recipes become enforcing with the flip) ---
+# Strict check of the stdlib and matters (SPEC §9.3); the epic gate once
+# lit/core lands. `just lit-check --profile dev lit/examples` for one package.
 lit-check *ARGS='--profile strict lit cases':
-    cargo run -q -p litigate-cli -- check {{ARGS}}
+    cargo run -q -p litigate-cli -- --format human check {{ARGS}}
 
+# Build lit/ and cases/ into a temp dir, then semantic-diff (SPEC §8.6) the
+# output against packs/ and scenarios/: any difference is L6002 and fails.
+# Documents pair by identity (pack id, links, scenario id); ones with no
+# counterpart are listed as unmatched, which is not an error until the flip.
 lit-sync:
-    @echo "lit-sync is not implemented until the generated-source flip"
+    #!/usr/bin/env bash
+    set -euo pipefail
+    out="$(mktemp -d)"
+    trap 'rm -rf "$out"' EXIT
+    lit=(cargo run -q -p litigate-cli -- --format human)
+    "${lit[@]}" build lit cases --out "$out" > /dev/null || "${lit[@]}" build lit cases --out "$out"
+    "${lit[@]}" diff "$out" packs --check
+    "${lit[@]}" diff "$out" scenarios --check
 
 lit-test:
-    cargo test -p litigate-base -p litigate-syntax -p litigate-sema -p litigate-verify -p litigate-lower -p litigate-import -p litigate-cli -p litigate-lsp -p tree-sitter-litigate
+    cargo nextest run -p litigate-base -p litigate-syntax -p litigate-sema -p litigate-verify -p litigate-lower -p litigate-import -p litigate-cli -p litigate-lsp -p tree-sitter-litigate
+    cargo test --doc -p litigate-base -p litigate-syntax -p litigate-sema -p litigate-lower -p litigate-import -p litigate-cli
 
 # tree-sitter grammar (editors/tree-sitter-litigate): regenerating the parser
 # from grammar.js must reproduce the committed src/ byte for byte, then the

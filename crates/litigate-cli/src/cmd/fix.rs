@@ -9,7 +9,6 @@ use crate::span::byte_range;
 use litigate_base::{Applicability, DiagnosticCode, Fix, Profile};
 use serde_json::json;
 use std::collections::BTreeMap;
-use std::path::Path;
 
 /// `fix` arguments.
 pub struct Args {
@@ -96,7 +95,7 @@ pub fn fix(args: &Args) -> Outcome {
         skipped += rest;
         if fixed != *text {
             if !args.dry_run {
-                write_atomic(Path::new(&file), &fixed)?;
+                write_atomic(&crate::ws::Session::real_path(&file), &fixed)?;
             }
             changed.push(file.clone());
         }

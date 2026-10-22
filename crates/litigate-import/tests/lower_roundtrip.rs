@@ -108,12 +108,22 @@ fn import_then_lower_is_semantically_equal() {
             .file_name()
             .map(|n| n.to_string_lossy().into_owned())
             .unwrap_or_default();
+        // Outputs are named by document id (`packs/<id>.json`, DESIGN §11),
+        // which a legacy file name need not match (`cafc-federal-circuit.json`).
+        let id_of = |text: &str| {
+            serde_json::from_str::<Value>(text)
+                .ok()
+                .and_then(|v| v.get("id").cloned())
+        };
+        let wanted = id_of(&input.text);
         let output = generated
             .iter()
             .find(|g| {
                 Path::new(g)
                     .file_name()
                     .is_some_and(|n| n.to_string_lossy() == name)
+                    || (wanted.is_some()
+                        && std::fs::read_to_string(g).ok().and_then(|t| id_of(&t)) == wanted)
             })
             .unwrap_or_else(|| panic!("{}: no lowered output among {generated:?}", input.path));
         let original = repo_root().join(&input.path);

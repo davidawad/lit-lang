@@ -1,0 +1,61 @@
+---
+source: crates/litigate-cli/tests/check.rs
+expression: "run.json[\"result\"]"
+---
+{
+  "passed": 2,
+  "failed": 0,
+  "tests": [
+    {
+      "package": "frcp-rule12-example",
+      "name": "answer due 21 days after personal service",
+      "cite": "FRCP 12(a)(1)(A)(i)",
+      "span": {
+        "file": "lit/examples/rule12.lit",
+        "line": 82,
+        "col": 1,
+        "end_line": 86,
+        "end_col": 2
+      },
+      "passed": true,
+      "expectations": [
+        {
+          "text": "deadline(answer-period) == 2025-03-24",
+          "passed": true,
+          "actual": "2025-03-24",
+          "expected": "2025-03-24",
+          "steps": [
+            "FRCP 6(a): exclude the trigger date 2025-03-03",
+            "FRCP 6(a): count 21 calendar day(s) after the anchor -> 2025-03-24"
+          ]
+        }
+      ]
+    },
+    {
+      "package": "frcp-rule12-example",
+      "name": "mail service adds three days",
+      "cite": "FRCP 6(d)",
+      "span": {
+        "file": "lit/examples/rule12.lit",
+        "line": 88,
+        "col": 1,
+        "end_line": 92,
+        "end_col": 2
+      },
+      "passed": true,
+      "expectations": [
+        {
+          "text": "deadline(answer-period) == 2025-03-27",
+          "passed": true,
+          "actual": "2025-03-27",
+          "expected": "2025-03-27",
+          "steps": [
+            "FRCP 6(a): exclude the trigger date 2025-03-03",
+            "FRCP 6(a): count 21 calendar day(s) after the anchor -> 2025-03-24",
+            "FRCP 6(a): service by Mail adds 3 day(s) -> 2025-03-27"
+          ]
+        }
+      ]
+    }
+  ]
+}

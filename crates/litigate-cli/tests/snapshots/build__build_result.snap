@@ -1,0 +1,106 @@
+---
+source: crates/litigate-cli/tests/build.rs
+expression: result
+---
+{
+  "outputs": {
+    "packs": [
+      "OUT/packs/frcp-rule12-example.json"
+    ],
+    "links": [],
+    "clock": [
+      "OUT/packs/clock/frcp-rule12-example.json"
+    ],
+    "scenarios": [
+      "OUT/scenarios/acme-v-widget.json"
+    ],
+    "source_maps": [
+      "OUT/packs/clock/frcp-rule12-example.map.json",
+      "OUT/packs/frcp-rule12-example.map.json",
+      "OUT/scenarios/acme-v-widget.map.json"
+    ],
+    "litigatables": [
+      "OUT/litigatables/frcp-rule12-example.litigatable.json"
+    ]
+  },
+  "litigatable_hash": "sha256:c061b30bedff8536a5fa70fe6c15d9fc6d45c8ddeacb2e42e057f53cefcb561e",
+  "litigatables": [
+    {
+      "package": "frcp-rule12-example",
+      "path": "OUT/litigatables/frcp-rule12-example.litigatable.json",
+      "content_hash": "sha256:c061b30bedff8536a5fa70fe6c15d9fc6d45c8ddeacb2e42e057f53cefcb561e"
+    }
+  ],
+  "obligations": [
+    {
+      "obligation": "well-typed",
+      "passed": true,
+      "detail": "discharged"
+    },
+    {
+      "obligation": "cite-resolves",
+      "passed": true,
+      "detail": "discharged"
+    },
+    {
+      "obligation": "effective-disjoint",
+      "passed": true,
+      "detail": "discharged"
+    },
+    {
+      "obligation": "effective-covered",
+      "passed": true,
+      "detail": "discharged"
+    },
+    {
+      "obligation": "precedence-acyclic",
+      "passed": true,
+      "detail": "discharged"
+    },
+    {
+      "obligation": "delegation-respected",
+      "passed": true,
+      "detail": "discharged"
+    },
+    {
+      "obligation": "exceptions-ordered",
+      "passed": true,
+      "detail": "discharged"
+    },
+    {
+      "obligation": "dist-exact",
+      "passed": true,
+      "detail": "discharged"
+    },
+    {
+      "obligation": "graph-exits",
+      "passed": true,
+      "detail": "discharged"
+    },
+    {
+      "obligation": "graph-reachable",
+      "passed": true,
+      "detail": "discharged"
+    },
+    {
+      "obligation": "deadline-satisfiable",
+      "passed": true,
+      "detail": "discharged"
+    },
+    {
+      "obligation": "tests-pass",
+      "passed": true,
+      "detail": "discharged"
+    },
+    {
+      "obligation": "case-replay",
+      "passed": true,
+      "detail": "discharged"
+    },
+    {
+      "obligation": "holes",
+      "passed": true,
+      "detail": "discharged with 3 warning(s)"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+---
+source: crates/litigate-cli/tests/build.rs
+expression: "run.json[\"result\"][\"changes\"]"
+---
+[
+  {
+    "kind": "changed",
+    "pointer": "/edges/answer/deadline/length",
+    "id": "answer",
+    "before": 20.0,
+    "after": 21.0,
+    "document": "pack:versioned-example"
+  },
+  {
+    "kind": "changed",
+    "pointer": "/edges/move-dismiss/deadline/length",
+    "id": "move-dismiss",
+    "before": 20.0,
+    "after": 21.0,
+    "document": "pack:versioned-example"
+  }
+]

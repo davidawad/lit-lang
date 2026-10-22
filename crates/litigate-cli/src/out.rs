@@ -140,3 +140,62 @@ pub fn print(op: &str, outcome: Outcome, format: Format, color: bool, elapsed_ms
         code,
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use litigate_base::{DiagnosticCode, Span};
+    use proptest::prelude::*;
+
+    fn diagnostic(code: DiagnosticCode, severity: Severity, line: u32) -> Diagnostic {
+        let span = Span {
+            file: "f.lit".into(),
+            line,
+            col: 1,
+            end_line: line,
+            end_col: 1,
+        };
+        Diagnostic {
+            severity,
+            ..Diagnostic::error(code, span, "m")
+        }
+    }
+
+    proptest! {
+        /// SPEC §9.2: `ok` is false iff an error exists, `result` is then
+        /// absent, the exit code follows, and diagnostics come out sorted.
+        #[test]
+        fn envelope_invariants(items in proptest::collection::vec((0usize..57, 0u8..3, 1u32..50), 0..12), failed: bool) {
+            let severities = [Severity::Error, Severity::Warning, Severity::Info];
+            let diagnostics: Vec<Diagnostic> = items
+                .iter()
+                .map(|(c, s, l)| diagnostic(DiagnosticCode::ALL[*c], severities[usize::from(*s)], *l))
+                .collect();
+            let errors = diagnostics.iter().any(|d| d.severity == Severity::Error);
+            let report = Report { result: serde_json::json!({"x": 1}), diagnostics, failed, ..Report::default() };
+            let printed = print("check", Ok(report), Format::Json, false, 0.0);
+            let envelope: serde_json::Value = serde_json::from_str(&printed.stdout).unwrap();
+            prop_assert_eq!(envelope["ok"].as_bool(), Some(!errors));
+            prop_assert_eq!(envelope.get("result").is_some(), !errors);
+            let expected = if errors || failed { 2 } else { 0 };
+            prop_assert_eq!(printed.code, expected);
+            let keys: Vec<(u64, String)> = envelope["diagnostics"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|d| (d["span"]["line"].as_u64().unwrap(), d["code"].as_str().unwrap().to_owned()))
+                .collect();
+            let mut sorted = keys.clone();
+            sorted.sort();
+            prop_assert_eq!(keys, sorted);
+        }
+    }
+
+    #[test]
+    fn failures_exit_1_on_stderr() {
+        let printed = print("check", Err(Failure::new("nope")), Format::Json, false, 0.0);
+        assert_eq!(printed.code, 1);
+        assert!(printed.stdout.is_empty());
+        assert_eq!(printed.stderr, "litigate check: nope\n");
+    }
+}

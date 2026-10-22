@@ -58,13 +58,27 @@ fn json_files(
             && !name.ends_with(".map.json")
             && !name.starts_with("litigatables/")
         {
+            let text = std::fs::read_to_string(&path)?;
             out.insert(
-                name,
-                (crate::ws::shown(&path), std::fs::read_to_string(&path)?),
+                identity(&text).unwrap_or(name),
+                (crate::ws::shown(&path), text),
             );
         }
     }
     Ok(())
+}
+
+/// How documents of two directories pair: `pack:<id>`, `links`, or
+/// `scenario:<id>` (file names need not match a pack's id). Clock fragments pair by path.
+fn identity(text: &str) -> Option<String> {
+    let value: Value = serde_json::from_str(text).ok()?;
+    let id = || value.get("id").and_then(Value::as_str).map(str::to_owned);
+    match litigate_lower::diff::detect(&value)? {
+        litigate_lower::DocumentKind::Pack => Some(format!("pack:{}", id()?)),
+        litigate_lower::DocumentKind::Links => Some("links".to_owned()),
+        litigate_lower::DocumentKind::Scenario => Some(format!("scenario:{}", id()?)),
+        litigate_lower::DocumentKind::Clock => None,
+    }
 }
 
 /// Reads or builds one side.
@@ -101,7 +115,8 @@ fn side(path: &str, as_of: Option<&String>, lib: &[String]) -> Result<Side, Fail
     diagnostics.extend(built.diagnostics);
     for (name, text) in built.files {
         if !name.ends_with(".map.json") && !name.starts_with("litigatables/") {
-            docs.insert(name.clone(), (format!("{path}#{name}"), text));
+            let key = identity(&text).unwrap_or_else(|| name.clone());
+            docs.insert(key, (format!("{path}#{name}"), text));
         }
     }
     Ok((docs, diagnostics, c.session.sources()))
@@ -271,7 +286,7 @@ fn compare(
                 out.changes.extend(found.into_iter().map(|c| {
                     let mut v = serde_json::to_value(c).unwrap_or_default();
                     if !name.is_empty() {
-                        v["file"] = Value::String(name.clone());
+                        v["document"] = Value::String(name.clone());
                     }
                     v
                 }));

@@ -1,12 +1,20 @@
-// Imported by `litigate import` from packs/itc-337.json.
 module itc.response-period-to-discovery
 
 import itc.initial-determination.{ violation-id }
+
+import itc.periods.{
+  admission-answer-period,
+  interrogatory-answer-period,
+  privilege-log-period,
+  public-version-period,
+  quash-period,
+  response-period,
+}
+
 import itc.prehearing.{ prehearing }
 import itc.{ discovery-group, response-period-group }
 
-/// imported
-decision response-period-open: "Response Window Open" by applicant cite cfr210.13.a
+decision response-period-open: "Response Window Open" by applicant effective [2025-02-03, ..) cite cfr210.13.a
 {
   group response-period-group
   note "Respondent has 20 days from service of the complaint and notice of investigation to answer under oath, admitting/denying/explaining each allegation (10 days if a temporary-relief motion is pending in an uncomplicated investigation). Direct structural analog of mpep-prosecution.json's applicant-response-window: the canonical player node opening this pack's response fork."
@@ -14,9 +22,7 @@ decision response-period-open: "Response Window Open" by applicant cite cfr210.1
     authority cite cfr210.13.a
     effort 90.hours
     cost 20_000.usd
-    deadline 20.days {
-      extendable true
-      extension_authority "ALJ good-cause order (Rule 210.6(a))"
+    within response-period {
       note "20 days from service of the complaint and notice of investigation; 10 days if a motion for temporary relief is pending in an uncomplicated investigation (19 CFR 210.13(a))."
     }
     duration { min 3.days, mode 10.days, max 20.days }
@@ -30,8 +36,7 @@ decision response-period-open: "Response Window Open" by applicant cite cfr210.1
   }
 }
 
-/// imported
-state response-filed: "Response Filed" by office cite cfr210.13.a
+state response-filed: "Response Filed" by office effective [2025-02-03, ..) cite cfr210.13.a
 {
   group response-period-group
   note "Written response under oath addressing each allegation; for patent complaints, non-infringement claim charts and, if invalidity is asserted, its basis and prior art."
@@ -40,8 +45,7 @@ state response-filed: "Response Filed" by office cite cfr210.13.a
   }
 }
 
-/// imported
-state default-track: "Default Exposure — No Timely Response" by examiner cite cfr210.16.a
+state default-track: "Default Exposure — No Timely Response" by examiner effective [2025-02-03, ..) cite cfr210.16.a
 {
   group response-period-group
   note "Failure to respond in the manner 19 CFR 210.13 prescribes (or otherwise failing to answer and to show cause). Default may also arise from abuse of process or discovery non-cooperation (see discovery-sanctions below, which can also route here)."
@@ -50,8 +54,7 @@ state default-track: "Default Exposure — No Timely Response" by examiner cite 
   }
 }
 
-/// imported
-decision show-cause-order: "Order to Show Cause (Default)" by applicant cite cfr210.16.b
+decision show-cause-order: "Order to Show Cause (Default)" by applicant effective [2025-02-03, ..) cite cfr210.16.b
 {
   group response-period-group
   note "The ALJ may issue a show-cause order sua sponte; a proposed respondent may instead file a Notice of Intent to Default at any time before the final Initial Determination, skipping the show-cause exchange entirely. Both are respondent choices, not ALJ determinations — modeled as a pure player node."
@@ -70,8 +73,7 @@ decision show-cause-order: "Order to Show Cause (Default)" by applicant cite cfr
   }
 }
 
-/// imported
-state default-found: "Default Entered" by office cite cfr210.16.b.4
+state default-found: "Default Entered" by office effective [2025-02-03, ..) cite cfr210.16.b.4
 {
   group response-period-group
   note "Respondent is deemed to waive its right to appear, to be served with documents, and to contest the allegations at issue. Reached either from the response-window default track or from a case-dispositive discovery sanction below (cf. Certain Opaque Polymers, 337-TA-883 — Organik Kimya's spoliation drew case-dispositive default, affirmed by the Federal Circuit)."
@@ -80,8 +82,7 @@ state default-found: "Default Entered" by office cite cfr210.16.b.4
   }
 }
 
-/// imported
-state default-relief-determination: "Default Relief Determination" by examiner cite usc1337.g
+state default-relief-determination: "Default Relief Determination" by examiner effective [1995-01-01, ..) cite usc1337.g
 {
   group response-period-group
   note "Facts alleged in the complaint are presumed true as to the defaulting respondent. Default is not a free exit for the complainant's adversary: the Commission may still issue an exclusion order or cease-and-desist order against the defaulting respondent's imports, after considering public health and welfare, competitive conditions, and consumer interests (19 CFR 210.16(c))."
@@ -90,8 +91,7 @@ state default-relief-determination: "Default Relief Determination" by examiner c
   }
 }
 
-/// imported
-decision discovery-open: "Discovery Open" by applicant cite cfr210.27.b
+decision discovery-open: "Discovery Open" by applicant effective [2025-02-03, ..) cite cfr210.27.b
 {
   group discovery-group
   note "Parties discover matters 'not privileged, that is proportional to the needs of the investigation' — broadly FRCP-26(b)(1)-shaped, but scoped to a 45-day-post-institution target date rather than a multi-year docket, with compressed 10-day response windows throughout. This hub node is a pure player node (every outgoing edge, including its self-loops, is an applicant choice) — the direct structural analog of mpep-prosecution.json's RCE-churn cycle: the SCC where time, money, and CBI risk accumulate before the case can graduate to prehearing."
@@ -105,9 +105,7 @@ decision discovery-open: "Discovery Open" by applicant cite cfr210.27.b
     authority cite cfr210.29.limits
     effort 35.hours
     cost 1_000.usd
-    deadline 10.days {
-      extendable true
-      extension_authority "ALJ-specified period"
+    within interrogatory-answer-period {
       note "19 CFR 210.29/210.30(b): 10 days to answer interrogatories or respond to document requests unless the ALJ specifies otherwise. A miss is sanction exposure under 210.33(a) — the pack does not assert an automatic waiver here, contrast the RFA trap below."
     }
     duration { min 1.5.days, mode 5.days, max 10.days }
@@ -127,9 +125,7 @@ decision discovery-open: "Discovery Open" by applicant cite cfr210.27.b
   discovery-rfa-deemed-admitted "Fail to timely answer or object to a Request for Admission — deemed admitted (Rule 210.31(b))" -> discovery-open {
     authority cite cfr210.31.b
     effort 0.hours
-    deadline 10.days {
-      extendable true
-      extension_authority "ALJ-specified period"
+    within admission-answer-period {
       note "19 CFR 210.31(b): deemed admitted absent a sworn answer or objection within 10 days or the ALJ-specified period. Flag itc337/rfa-deemed-admitted raised — the matter is conclusively established absent ALJ leave to withdraw or amend, and the respond.rfa action itself becomes illegal once the window closes."
     }
     duration { min 1.5.days, mode 5.days, max 10.days }
@@ -145,9 +141,7 @@ decision discovery-open: "Discovery Open" by applicant cite cfr210.27.b
     authority cite cfr210.32.d
     effort 12.hours
     cost 5_000.usd
-    deadline 10.days {
-      extendable true
-      extension_authority "ALJ-extended period"
+    within quash-period {
       note "19 CFR 210.32(d). The rule text does not itself state an automatic waiver-on-lateness consequence, so no waiver flag is asserted for a late motion to quash — contrast the RFA trap above."
     }
     duration { min 1.5.days, mode 5.days, max 10.days }
@@ -163,9 +157,7 @@ decision discovery-open: "Discovery Open" by applicant cite cfr210.27.b
     authority cite cfr210.27.e
     effort 4.hours
     cost 300.usd
-    deadline 10.days {
-      extendable true
-      extension_authority "good cause"
+    within privilege-log-period {
       note "19 CFR 210.27(e): privilege log due 10 days after the response listing each withheld item's date, authors, recipients, subject matter, and privilege type. A missed log is sanction exposure under 210.33(a), not an automatic waiver — the pack deliberately declines to invent a hard waiver flag the regulatory text does not itself state."
     }
     duration { min 1.5.days, mode 5.days, max 10.days }
@@ -193,9 +185,7 @@ decision discovery-open: "Discovery Open" by applicant cite cfr210.27.b
     authority cite cfr210.5.public-version
     effort 5.hours
     cost 500.usd
-    deadline 30.days {
-      extendable true
-      extension_authority "good cause"
+    within public-version-period {
       note "19 CFR 210.5: public version due within 30 days of the confidential filing absent a good-cause extension."
     }
     duration { min 4.5.days, mode 15.days, max 30.days }
@@ -210,8 +200,11 @@ decision discovery-open: "Discovery Open" by applicant cite cfr210.27.b
   }
 }
 
-/// imported
-decision order-compelling-discovery: "ALJ Rules on Motion to Compel" by examiner cite cfr210.33.a
+/// Tribunal discretion, so `chance ... discretion` (the legacy pack has
+/// kind `decision`): 19 C.F.R. § 210.33(a): the administrative law judge
+/// rules on a motion to compel; the rule states no standard, so the ruling
+/// is discretionary.
+chance order-compelling-discovery: "ALJ Rules on Motion to Compel" by examiner discretion effective [2025-02-03, ..) cite cfr210.33.a
 {
   group discovery-group
   note "Grant rate authored at 0.7 / noncompliance-continues at 0.3 — APPROXIMATE."
@@ -223,8 +216,10 @@ decision order-compelling-discovery: "ALJ Rules on Motion to Compel" by examiner
   }
 }
 
-/// imported
-decision discovery-sanctions: "ALJ Rules on Discovery Sanctions" by examiner cite cfr210.33.b
+/// Tribunal discretion, so `chance ... discretion` (the legacy pack has
+/// kind `decision`): 19 C.F.R. § 210.33(b): the administrative law judge
+/// "may take such action ... as is just".
+chance discovery-sanctions: "ALJ Rules on Discovery Sanctions" by examiner discretion effective [2025-02-03, ..) cite cfr210.33.b
 {
   group discovery-group
   note "Non-monetary sanctions include an adverse inference, treating disputed matters as resolved against the non-compliant party, evidence preclusion, striking filings, and 'other sanctions under Federal Rule of Civil Procedure 37(b)' — one of the few places Part 210 explicitly imports an FRCP provision by name. Monetary sanctions (attorney's fees) run under 210.33(c), except never against the United States, the Commission, or Commission investigative attorneys. Case-dispositive default authored at 0.15 — APPROXIMATE but grounded: Certain Opaque Polymers (337-TA-883) is the teaching case for this exact branch (Chief ALJ Pender: 'spoliation on a staggering scale'; Federal Circuit affirmed both the default sanction and the resulting 25-year exclusion order)."
@@ -238,8 +233,7 @@ decision discovery-sanctions: "ALJ Rules on Discovery Sanctions" by examiner cit
   }
 }
 
-/// imported
-state cbi-designated: "Material Designated CBI" by applicant cite cfr210.5.disclosure
+state cbi-designated: "Material Designated CBI" by applicant effective [2013-05-20, ..) cite cfr210.5.disclosure
 {
   group discovery-group
   note "Confidential business information is defined per 19 CFR 201.6(a),(c). Properly designated CBI cannot be disclosed without submitter consent except to persons granted access under a 210.34(a) protective order, Commission staff directly administering the investigation, U.S. officers conducting § 1337(j) review, or CBP officers administering an exclusion."
@@ -252,8 +246,10 @@ state cbi-designated: "Material Designated CBI" by applicant cite cfr210.5.discl
   }
 }
 
-/// imported
-decision protective-order-ruling: "ALJ Rules on Protective-Order Motion" by examiner cite cfr210.34.a
+/// Tribunal discretion, so `chance ... discretion` (the legacy pack has
+/// kind `decision`): 19 C.F.R. § 210.34(a): "for good cause shown, the
+/// administrative law judge may make any order".
+chance protective-order-ruling: "ALJ Rules on Protective-Order Motion" by examiner discretion effective [2025-02-03, ..) cite cfr210.34.a
 {
   group discovery-group
   note "Grant rate authored at 0.9 / denial at 0.1 — APPROXIMATE; ALJs routinely issue CBI protective orders on the good-cause showing this fact pattern almost always makes. A denial leaves discovery to proceed under 210.5's default confidentiality treatment rather than a case-specific order."
@@ -265,8 +261,7 @@ decision protective-order-ruling: "ALJ Rules on Protective-Order Motion" by exam
   }
 }
 
-/// imported
-state protective-order-issued: "Protective Order Issued" by examiner cite cfr210.34.a
+state protective-order-issued: "Protective Order Issued" by examiner effective [2025-02-03, ..) cite cfr210.34.a
 {
   group discovery-group
   note "Restrictions on discovery scope, confidentiality designations for trade secrets, sealed depositions — issued 'for the protection of the public interest or that justice requires' on good cause shown."
@@ -275,8 +270,9 @@ state protective-order-issued: "Protective Order Issued" by examiner cite cfr210
   }
 }
 
-/// imported
-decision public-version-filed: "Public (Redacted) Version Filed" by examiner cite cfr210.5.public-version
+/// A chance draw, not a ruling (the legacy pack has kind `decision`):
+/// whether the filer redacted all confidential business information.
+chance public-version-filed: "Public (Redacted) Version Filed" by examiner effective [2013-05-20, ..) cite cfr210.5.public-version
 {
   group discovery-group
   note "Properly-redacted acceptance authored at 0.92 / still-unredacted-CBI at 0.08 — APPROXIMATE, modeling the authoring-error case the pack's own flagRules target (file.public-version with params.unredactedCbiIncluded=true raises the violation flag below)."
@@ -289,8 +285,7 @@ decision public-version-filed: "Public (Redacted) Version Filed" by examiner cit
   }
 }
 
-/// imported
-state cbi-violation-found: "CBI Protective-Order Violation Found" by office cite cfr210.34.b
+state cbi-violation-found: "CBI Protective-Order Violation Found" by office effective [2025-02-03, ..) cite cfr210.34.b
 {
   group discovery-group
   note "A nominally 'public version' that still contains unredacted CBI is the unauthorized-disclosure event 19 CFR 210.34(b) requires immediately reporting to both the submitter and the ALJ. Flag itc337/cbi-protective-order-violated is raised — no FRCP analog exists; this is a disqualification risk for the individual attorney, not merely a discovery-sanction risk."
@@ -299,8 +294,7 @@ state cbi-violation-found: "CBI Protective-Order Violation Found" by office cite
   }
 }
 
-/// imported
-terminal counsel-disqualified: "Counsel Disqualified from the Investigation" outcome [loss, procedural-default] cite cfr210.34.c
+terminal counsel-disqualified: "Counsel Disqualified from the Investigation" outcome [loss, procedural-default] effective [2025-02-03, ..) cite cfr210.34.c
 {
   group discovery-group
   note "Official Commission reprimand, disqualification from further participation in the investigation, potential permanent disqualification from Commission practice, and referral to state licensing authorities. A genuine ITC-specific permadeath terminal with no FRCP counterpart — mishandling CBI ends the responsible lawyer's role in the matter, not just the client's discovery position. PLACEHOLDER PAYOFF: $0, override per matter. Modeled as ending the matter for the self side's own counsel; if this disqualifies opposing counsel instead, the outcome for self is very different -- override once it's clear whose counsel this was."

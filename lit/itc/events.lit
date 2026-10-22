@@ -1,0 +1,32 @@
+module itc.events
+
+import core.time.{ ServiceMethod }
+
+/// Papers whose service starts a Part 210 response period.
+enum Paper {
+  ComplaintAndNotice,
+  Interrogatories,
+  ProductionRequests,
+  AdmissionRequests,
+  SummaryDeterminationMotion,
+  InitialDetermination,
+  PetitionForReview,
+}
+
+/// `paper` served on a party by `method` (19 C.F.R. §§ 210.7, 210.11,
+/// 201.16). `itc210` adds the 19 C.F.R. § 201.16(d)-(e) days for the methods
+/// it lists, as 19 C.F.R. § 210.6(b)-(c) directs for periods that run after
+/// service.
+event ServedPaper(paper: Paper, method: ServiceMethod)
+/// A subpoena is received by the person it names (19 C.F.R. § 210.32(d)
+/// counts from receipt, not service, so no mail days are added).
+event SubpoenaReceived()
+/// A person withholds discoverable information on a claim of privilege or
+/// work-product protection (19 C.F.R. § 210.27(e)(1)).
+event PrivilegeClaimed()
+/// A confidential version of a submission or issuance is filed (19 C.F.R.
+/// § 210.5(f)).
+event ConfidentialVersionFiled()
+/// A final Commission determination becomes final, after Presidential
+/// review under 19 U.S.C. § 1337(j) (19 U.S.C. § 1337(c)).
+event DeterminationFinal()

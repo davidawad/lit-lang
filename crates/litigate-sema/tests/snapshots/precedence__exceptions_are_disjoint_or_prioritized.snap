@@ -1,0 +1,20 @@
+---
+source: crates/litigate-sema/tests/precedence.rs
+expression: "table(&[(\"1 overlapping and unordered\",\n&(DEFAULT.to_owned() +\n&e(\"e1\", \"rebuts d when has_event(Ordered()) => 7.days\") +\n&e(\"e2\", \"undercuts d when has_event(Answered(complaint))\")),),\n(\"2 provably disjoint\",\n&(DEFAULT.to_owned() +\n&e(\"e1\", \"rebuts d when has_event(Ordered()) => 7.days\") +\n&e(\"e2\",\n\"undercuts d when !has_event(Ordered()) && has_event(Answered(complaint))\")),),\n(\"3 distinct priorities\", &ordered),\n(\"4 equal priorities\",\n&(DEFAULT.to_owned() +\n&e(\"e1\", \"rebuts d when has_event(Ordered()) => 7.days priority 1\") +\n&e(\"e2\", \"undercuts d when has_event(Answered(complaint)) priority 1\")),),\n(\"5 exception outside its target's force\",\n\"default d effective [2012-01-01, ..) when has_event(Served(complaint, Personal)) => 21.days\\n\\\n             rule duty old effective [2009-12-01, 2011-01-01) {\\n\\\n               deadline z: 1.days from Served(complaint) counted_by c6\\n\\\n               exception e1 rebuts d when true => 7.days\\n\\\n             }\",),])"
+---
+{
+    "1 overlapping and unordered": [
+        "pkgs/demo/main.lit:15:31 L3005 exceptions `e2` and `e1` to `d` can both apply on [2009-12-01, ..) and are not ordered\n    note @14:1: `e1` is declared here\n    note: some history makes both conditions true\n    note: make the conditions exclusive, or give both distinct `priority` values (larger wins)\n    fix @14:58-14:58: \" priority 1\"\n    fix @15:61-15:61: \" priority 2\"",
+    ],
+    "2 provably disjoint": [],
+    "3 distinct priorities": [],
+    "4 equal priorities": [
+        "pkgs/demo/main.lit:15:31 L3005 exceptions `e2` and `e1` to `d` can both apply on [2009-12-01, ..) and are not ordered\n    note @14:1: `e1` is declared here\n    note: some history makes both conditions true\n    note: make the conditions exclusive, or give both distinct `priority` values (larger wins)\n    fix @15:71-15:72: \"2\"",
+    ],
+    "5 exception outside its target's force": [
+        "pkgs/demo/main.lit:14:15 L3002 `old` has no version in force on [2011-01-01, ..)\n    note: a gap is legal only when declared: a declaration that `supersedes old` over the gap\n    fix @14:25-14:49: \"[2009-12-01, ..)\"",
+        "pkgs/demo/main.lit:15:1 L3002 `z` has no version in force on [2011-01-01, ..)\n    note: a gap is legal only when declared: a declaration that `supersedes z` over the gap",
+        "pkgs/demo/main.lit:16:1 L3002 `e1` has no version in force on [2011-01-01, ..)\n    note: a gap is legal only when declared: a declaration that `supersedes e1` over the gap",
+        "pkgs/demo/main.lit:16:28 L3007 exception `e1` applies on [2009-12-01, 2011-01-01), when `d` is not in force",
+    ],
+}

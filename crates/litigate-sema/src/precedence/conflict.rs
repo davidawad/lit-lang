@@ -233,7 +233,11 @@ pub fn check(
             };
             for (a, b) in pairs {
                 let owned = world.decls[a].pack == pack || world.decls[b].pack == pack;
-                if owned && reported.insert((a, b)) {
+                // Contradictory declared relations are a cycle (L3006), not
+                // a canon tie.
+                let contradictory = claim(world, a, &world.key(b)).is_some()
+                    && claim(world, b, &world.key(a)).is_some();
+                if owned && !contradictory && reported.insert((a, b)) {
                     out.push(unresolved(world, lattice, loc, t, a, b, &window));
                 }
             }

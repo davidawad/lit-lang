@@ -10,7 +10,9 @@ use crate::types::build::item_name;
 use litigate_base::{Diagnostic, FileId, LineIndex, Span};
 use std::collections::BTreeMap;
 
-/// `pkg` followed by its transitive dependencies, each once.
+/// `pkg` followed by its transitive dependencies, each once, and the
+/// stdlib package `core`, which every package may import undeclared (SPEC
+/// §4.3) and whose authority lattice every package shares (§5.5).
 fn closure(db: &dyn salsa::Database, pkg: PackageInput) -> Vec<PackageInput> {
     let Some(ws) = pkg.files(db).first().map(|f| f.workspace(db)) else {
         return vec![pkg];
@@ -30,7 +32,8 @@ fn closure(db: &dyn salsa::Database, pkg: PackageInput) -> Vec<PackageInput> {
     while let Some(&p) = out.get(i) {
         i += 1;
         if let Ok(m) = manifest(db, p) {
-            for dep in m.manifest.dependencies.keys() {
+            let deps = m.manifest.dependencies.keys().map(String::as_str);
+            for dep in deps.chain(["core"]) {
                 if let Some(&d) = by_name.get(dep) {
                     if !out.contains(&d) {
                         out.push(d);

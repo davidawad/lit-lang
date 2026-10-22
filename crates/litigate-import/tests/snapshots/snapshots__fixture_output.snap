@@ -172,10 +172,12 @@ instance demo-court@appeal {
   patch denied { deadline: { length: 45, note: "U.S. party" }, tags: ["patched"], hours: unset }
 }
 
+/// imported
 link to-appeal "Appeal": demo-court::lost -> demo-court@appeal::filed by applicant p 0.5 {
   authority cite 28 U.S.C. § 1291
   tags [appeal]
   replaces [demo-court::denied, "demo-court::ruling->won#0"]
 }
 
+/// imported
 link _ "Refile": demo-court::won -> demo-court::filed

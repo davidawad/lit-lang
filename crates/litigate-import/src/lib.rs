@@ -13,7 +13,7 @@
 //!   records neither);
 //! - a citation that doesn't parse under the pack's citation syntax, or has
 //!   no `cite` spelling, is a cite hole `cite ?("original text")`;
-//! - every node carries the `/// imported` marker (SPEC §7);
+//! - every node and link carries the `/// imported` marker (SPEC §7);
 //! - a `.case` asserts its `start` rather than replaying `events`.
 //!
 //! ```

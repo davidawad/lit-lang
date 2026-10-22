@@ -191,7 +191,10 @@ impl Spelling<'_> {
             .issues
             .ident(&edge.from, &format!("{pointer}/from"), true);
         let to = self.issues.ident(&edge.to, &format!("{pointer}/to"), true);
-        let head = format!("link {id} {}: {from} -> {to}", text::string(&edge.label));
+        let head = format!(
+            "/// imported\nlink {id} {}: {from} -> {to}",
+            text::string(&edge.label)
+        );
         self.edge_rest(head, edge, "either", &pointer, true)
     }
 

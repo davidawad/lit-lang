@@ -35,6 +35,14 @@ import ptab.{
 // "three months") are the legacy pack's day counts, kept verbatim; the
 // language has no month unit.
 //
+// Effective intervals. Every deadline states its window. The AIA trial
+// provisions (35 U.S.C. §§ 314(b), 315(b), 321(c)) apply from September 16,
+// 2012 (Pub. L. 112-29, § 6(c)(2)(A), 125 Stat. 284, enacted September 16,
+// 2011: `known_at 2011-09-16`); the Part 42 trial rules took effect the same
+// day (77 Fed. Reg. 48612 and 48680, published August 14, 2012: `known_at
+// 2012-08-14`). Later versions follow the amendment dates in the vendored
+// sections' history lines.
+//
 // Delegation. "Times set by rule are default and may be modified by order"
 // (37 C.F.R. § 42.5(c)(1)), so every period a Part 42 rule sets is
 // `delegable_to [CaseOrder]`. Statutory periods (35 U.S.C. §§ 314(b),
@@ -43,7 +51,7 @@ import ptab.{
 /// than 9 months after the grant (the pack's 270 days).
 rule duty pgr-filing-deadline cite 35 U.S.C. § 321(c)
 {
-  deadline pgr-filing-period: 270.days after PatentGranted() counted_by rcfc6 known_at 2011-09-16 cite 35 U.S.C. § 321(c)
+  deadline pgr-filing-period: 270.days after PatentGranted() counted_by rcfc6 effective [2012-09-16, ..) known_at 2011-09-16 cite 35 U.S.C. § 321(c)
 }
 
 test "PGR window: 270 days from a Tuesday grant ends on a Saturday and rolls to Monday" cite 35 U.S.C. § 321(c)
@@ -64,7 +72,7 @@ test "PGR window: a Saturday last day before Columbus Day rolls to Tuesday" cite
 /// complaint.
 rule duty ipr-time-bar-deadline cite 35 U.S.C. § 315(b)
 {
-  deadline ipr-time-bar: 365.days after ComplaintServed() counted_by rcfc6 known_at 2011-09-16 cite 35 U.S.C. § 315(b)
+  deadline ipr-time-bar: 365.days after ComplaintServed() counted_by rcfc6 effective [2012-09-16, ..) known_at 2011-09-16 cite 35 U.S.C. § 315(b)
 }
 
 test "315(b) bar: one year (365 days) from service" cite 35 U.S.C. § 315(b)
@@ -85,7 +93,7 @@ test "315(b) bar: a last day on observed Independence Day rolls to Monday" cite 
 /// semantic equality and the cite stays a hole until the pack is fixed.
 rule duty petition-correction-deadline cite 37 C.F.R. § 42.106(b)
 {
-  deadline petition-correction-period: 14.days after IncompletePetitionNoticed() counted_by rcfc6 delegable_to [CaseOrder] cite ?("legacy pack: 14 days; 37 C.F.R. § 42.106(b) allows one month from the notice of an incomplete petition")
+  deadline petition-correction-period: 14.days after IncompletePetitionNoticed() counted_by rcfc6 effective [2012-09-16, ..) known_at 2012-08-14 delegable_to [CaseOrder] cite ?("legacy pack: 14 days; 37 C.F.R. § 42.106(b) allows one month from the notice of an incomplete petition")
 }
 
 test "petition correction: 14 days from the notice" cite 37 C.F.R. § 42.106(b)
@@ -133,7 +141,7 @@ test "POPR under the 2012 rule: a Sunday last day rolls to Monday" cite 37 C.F.R
 
 /// 35 U.S.C. § 314(b)(1): the Director decides whether to institute within
 /// 3 months (the pack's 90 days) after receiving the preliminary response.
-deadline institution-period: 90.days after PreliminaryResponseFiled() counted_by rcfc6 known_at 2011-09-16 cite 35 U.S.C. § 314(b)
+deadline institution-period: 90.days after PreliminaryResponseFiled() counted_by rcfc6 effective [2012-09-16, ..) known_at 2011-09-16 cite 35 U.S.C. § 314(b)
 
 test "institution: three months (90 days) after the preliminary response" cite 35 U.S.C. § 314(b)
 {
@@ -151,7 +159,7 @@ test "institution: a last day on Veterans Day rolls to Wednesday" cite 35 U.S.C.
 /// from the last date one could be filed. The pack runs them from the
 /// patent owner's waiver election (37 C.F.R. § 42.107(b)), which ends the
 /// response period early; UNVERIFIED reading.
-deadline institution-period-on-waiver: 90.days after PreliminaryResponseWaived() counted_by rcfc6 known_at 2011-09-16 cite 35 U.S.C. § 314(b); 37 C.F.R. § 42.107(b)
+deadline institution-period-on-waiver: 90.days after PreliminaryResponseWaived() counted_by rcfc6 effective [2012-09-16, ..) known_at 2011-09-16 cite 35 U.S.C. § 314(b); 37 C.F.R. § 42.107(b)
 
 test "institution after waiver: 90 days from the election" cite 35 U.S.C. § 314(b)
 {
@@ -168,7 +176,7 @@ test "institution after waiver: a last day on Christmas rolls to Friday" cite 35
 /// No rule fixes when the scheduling order issues: the 30 days are the
 /// pack's practice estimate, and the Board sets the trial's times by order
 /// (37 C.F.R. § 42.5(c)(1)).
-deadline scheduling-order-period: 30.days after TrialInstituted() counted_by rcfc6 delegable_to [CaseOrder] cite ?("no rule: the pack's estimate that the scheduling order issues within 30 days of institution; times are set by order, 37 C.F.R. § 42.5(c)(1)")
+deadline scheduling-order-period: 30.days after TrialInstituted() counted_by rcfc6 effective [2012-09-16, ..) known_at 2012-08-14 delegable_to [CaseOrder] cite ?("no rule: the pack's estimate that the scheduling order issues within 30 days of institution; times are set by order, 37 C.F.R. § 42.5(c)(1)")
 
 test "scheduling order: 30 days from institution" cite 37 C.F.R. § 42.5(c)(1)
 {
@@ -215,7 +223,7 @@ test "patent owner response under the 2012 rule" cite 37 C.F.R. § 42.120(b)
 /// The petitioner's reply. No rule sets it (37 C.F.R. § 42.23 governs only
 /// content); the 60 days after the patent owner response are the pack's
 /// "typically ... per the scheduling order". UNVERIFIED.
-deadline petitioner-reply-period: 60.days after PatentOwnerResponseFiled() counted_by rcfc6 delegable_to [CaseOrder] cite ?("scheduling order: the pack's typical 60 days after the patent owner response; not set by 37 C.F.R. § 42.23")
+deadline petitioner-reply-period: 60.days after PatentOwnerResponseFiled() counted_by rcfc6 effective [2012-09-16, ..) known_at 2012-08-14 delegable_to [CaseOrder] cite ?("scheduling order: the pack's typical 60 days after the patent owner response; not set by 37 C.F.R. § 42.23")
 
 test "petitioner reply: 60 days from the patent owner response" cite 37 C.F.R. § 42.5(c)(1)
 {
@@ -231,7 +239,7 @@ test "petitioner reply: a last day on Washington's Birthday rolls to Tuesday" ci
 
 /// The patent owner's sur-reply: the pack's typical 30 days after the
 /// reply, set by scheduling order, not by rule. UNVERIFIED.
-deadline sur-reply-period: 30.days after PetitionerReplyFiled() counted_by rcfc6 delegable_to [CaseOrder] cite ?("scheduling order: the pack's typical 30 days after the petitioner reply; not set by 37 C.F.R. § 42.23")
+deadline sur-reply-period: 30.days after PetitionerReplyFiled() counted_by rcfc6 effective [2012-09-16, ..) known_at 2012-08-14 delegable_to [CaseOrder] cite ?("scheduling order: the pack's typical 30 days after the petitioner reply; not set by 37 C.F.R. § 42.23")
 
 test "sur-reply: 30 days from the reply" cite 37 C.F.R. § 42.5(c)(1)
 {

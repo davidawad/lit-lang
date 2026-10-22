@@ -53,8 +53,11 @@ impl<'a> Graph<'a> {
             .map_or("", |p| p.manifest.pack_id.as_str())
     }
 
+    /// Whether `id` names a used pack, or an instance `base@origin` of one
+    /// (a links package composes it; its nodes are `base`'s).
     fn is_pack(&self, id: &str) -> bool {
-        self.packages.iter().any(|p| p.manifest.pack_id == id)
+        let base = id.split_once('@').map_or(id, |(b, _)| b);
+        self.packages.iter().any(|p| p.manifest.pack_id == base)
     }
 
     /// `name` written in `pack`'s view, fully qualified (`pack::name`).
@@ -103,9 +106,11 @@ impl<'a> Graph<'a> {
         }
     }
 
-    /// The temporal key of qualified `pack::id`.
+    /// The temporal key of qualified `pack::id`; an instance
+    /// `base@origin::id` keys to `base`'s declaration.
     pub fn key(qualified: &str) -> Key {
         let (pack, name) = qualified.split_once("::").unwrap_or(("", qualified));
+        let pack = pack.split_once('@').map_or(pack, |(base, _)| base);
         Key {
             pack: pack.to_owned(),
             name: name.to_owned(),

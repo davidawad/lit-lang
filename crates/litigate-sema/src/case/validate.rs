@@ -3,7 +3,7 @@
 //! exhaustiveness, and observations.
 use super::graph::Graph;
 use super::spans::{error, Build, CaseSpans};
-use crate::hir::{Case, Node, NodeKind, Package, Perspective, Stake};
+use crate::hir::{Authored, Case, Node, NodeKind, Package, Perspective, Stake};
 use crate::pkg::lock::LockFile;
 use crate::resolve::suggest::nearest;
 use litigate_base::{Applicability, Diagnostic, DiagnosticCode as C, Profile};
@@ -404,7 +404,17 @@ pub(super) fn stakes(
         }
     }
     for id in reachable_terminals(case, graph, start) {
-        if case.stakes.contains_key(&id) {
+        // A terminal whose pack authors its payoff already has a value.
+        let authored = graph.node_at(&id, &case.as_of, known_at).is_some_and(|n| {
+            matches!(
+                n.kind,
+                NodeKind::Terminal {
+                    payoff: Some(Authored::Known(_)),
+                    ..
+                }
+            )
+        });
+        if authored || case.stakes.contains_key(&id) {
             continue;
         }
         let local = id

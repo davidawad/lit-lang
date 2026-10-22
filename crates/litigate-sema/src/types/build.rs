@@ -323,7 +323,6 @@ pub fn check_module(db: &dyn salsa::Database, file: SourceFile) -> ModuleCheck {
     let has_error = reports.iter().any(|r| !r.code.is_lint());
     let mut diagnostics: Vec<Diagnostic> = reports
         .iter()
-        .filter(|r| !r.suppressed)
         .map(|r| r.to_diagnostic(&file_id, &index))
         .collect();
     sort_diagnostics(&mut diagnostics);

@@ -19,6 +19,40 @@ pub struct Binding<'a> {
     pub sig: &'a Signature,
 }
 
+/// Why a lookup failed.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Unresolved {
+    /// A fresh report (L1002 with suggestions, or a misuse) to emit.
+    Report(Report),
+    /// The name comes from an import that failed, and that failure is
+    /// already reported at the import (L1002). Reporting every use again
+    /// would only cascade; the module has failed either way.
+    AlreadyReported,
+}
+
+impl Unresolved {
+    /// The report to emit, if this failure is not already reported.
+    #[must_use]
+    pub fn into_report(self) -> Option<Report> {
+        match self {
+            Self::Report(r) => Some(r),
+            Self::AlreadyReported => None,
+        }
+    }
+}
+
+impl From<Unresolved> for Option<Report> {
+    fn from(unresolved: Unresolved) -> Self {
+        unresolved.into_report()
+    }
+}
+
+impl From<Report> for Unresolved {
+    fn from(report: Report) -> Self {
+        Self::Report(report)
+    }
+}
+
 /// A resolved name.
 #[derive(Debug, Clone, Copy)]
 pub struct Found<'a, T> {
@@ -37,8 +71,10 @@ pub struct Scope<'a> {
     pub bindings: Vec<Binding<'a>>,
     /// Every module signature reachable through `::` qualification.
     pub packs: Vec<&'a Signature>,
-    /// Names whose `import m.{x}` failed; lookups of them are suppressed.
-    pub poisoned: Vec<String>,
+    /// Names whose `import m.{x}` failed (already reported at the import).
+    pub failed_names: Vec<String>,
+    /// Modules whose `import m` failed (already reported at the import).
+    pub failed_modules: Vec<String>,
 }
 
 impl<'a> Scope<'a> {
@@ -51,7 +87,13 @@ impl<'a> Scope<'a> {
         imports: &[&'a Signature],
         packs: Vec<&'a Signature>,
     ) -> Self {
-        let poisoned = tree
+        let failed_modules = tree
+            .imports
+            .iter()
+            .map(|i| dotted(&i.path))
+            .filter(|path| !imports.iter().any(|s| s.module == *path))
+            .collect();
+        let failed_names = tree
             .imports
             .iter()
             .flat_map(|i| {
@@ -87,7 +129,8 @@ impl<'a> Scope<'a> {
             own,
             bindings,
             packs,
-            poisoned,
+            failed_names,
+            failed_modules,
         }
     }
 
@@ -139,15 +182,9 @@ impl<'a> Scope<'a> {
         out
     }
 
-    fn unresolved(&self, name: &Name, what: &str, candidates: &[&str]) -> Report {
-        if self.poisoned.contains(&name.text) {
-            let mut report = Report::new(
-                C::UnresolvedName,
-                name.range,
-                format!("`{}` was not imported", name.text),
-            );
-            report.suppressed = true;
-            return report;
+    fn unresolved(&self, name: &Name, what: &str, candidates: &[&str]) -> Unresolved {
+        if self.failed_names.contains(&name.text) {
+            return Unresolved::AlreadyReported;
         }
         let mut report = Report::new(
             C::UnresolvedName,
@@ -162,14 +199,14 @@ impl<'a> Scope<'a> {
                 .note(format!("a {what} with a similar name exists: `{best}`"))
                 .fix(name.range, best, Applicability::MaybeIncorrect);
         }
-        report
+        Unresolved::Report(report)
     }
 
     /// Resolves a value reference (node, deadline, counting rule, ...).
     ///
     /// # Errors
     /// L1002 with a suggestion when nothing matches.
-    pub fn value(&self, r: &RefPath) -> Result<(String, Found<'a, ValueSig>), Report> {
+    pub fn value(&self, r: &RefPath) -> Result<(String, Found<'a, ValueSig>), Unresolved> {
         let value_keys = |s: &'a Signature| s.values.keys().map(String::as_str).collect::<Vec<_>>();
         let (canonical, found) = if r.rest.iter().any(|(sep, _)| *sep == PathSep::Colons) {
             self.qualified(r)?
@@ -188,6 +225,9 @@ impl<'a> Scope<'a> {
                 .collect();
             let module = module.join(".");
             let last = r.last();
+            if self.failed_modules.contains(&module) {
+                return Err(Unresolved::AlreadyReported);
+            }
             let binding = self
                 .bindings
                 .iter()
@@ -223,33 +263,35 @@ impl<'a> Scope<'a> {
             Some(date) if found.item.versions.contains(&date.text) => {
                 Ok((format!("{canonical}@{}", date.text), found))
             }
-            Some(date) => Err(Report::new(
-                C::UnresolvedName,
-                date.range,
-                format!(
-                    "no version of `{}` takes effect on {}",
-                    r.display(),
-                    date.text
-                ),
-            )
-            .note(format!(
-                "versions take effect on: {}",
-                found.item.versions.join(", ")
-            ))),
+            Some(date) => Err(Unresolved::Report(
+                Report::new(
+                    C::UnresolvedName,
+                    date.range,
+                    format!(
+                        "no version of `{}` takes effect on {}",
+                        r.display(),
+                        date.text
+                    ),
+                )
+                .note(format!(
+                    "versions take effect on: {}",
+                    found.item.versions.join(", ")
+                )),
+            )),
         }
     }
 
-    fn qualified(&self, r: &RefPath) -> Result<(String, Found<'a, ValueSig>), Report> {
+    fn qualified(&self, r: &RefPath) -> Result<(String, Found<'a, ValueSig>), Unresolved> {
         let last = r.last();
         if r.rest.len() != 1 {
-            return Err(Report::new(
+            return Err(Unresolved::Report(Report::new(
                 C::UnresolvedName,
                 r.range,
                 format!(
                     "`{}` is not a valid qualified name (`pack::id`)",
                     r.display()
                 ),
-            ));
+            )));
         }
         let (prefix, pack) = match &r.instance {
             Some(origin) => {
@@ -261,7 +303,8 @@ impl<'a> Scope<'a> {
                             C::UnresolvedName,
                             r.head.range.cover(origin.range),
                             format!("no instance `{key}` is declared in this package"),
-                        ))
+                        )
+                        .into())
                     }
                 }
             }
@@ -302,7 +345,7 @@ impl<'a> Scope<'a> {
         &self,
         name: &Name,
         builtins: &[&str],
-    ) -> Result<(String, Found<'a, TypeSig>), Report> {
+    ) -> Result<(String, Found<'a, TypeSig>), Unresolved> {
         self.unqualified(&name.text, |s| s.types.get(&name.text))
             .map(|f| (self.canonical(f.sig, &name.text), f))
             .ok_or_else(|| {
@@ -358,7 +401,7 @@ impl<'a> Scope<'a> {
     ///
     /// # Errors
     /// L1002 with a suggestion.
-    pub fn group(&self, name: &Name) -> Result<(), Report> {
+    pub fn group(&self, name: &Name) -> Result<(), Unresolved> {
         self.unqualified(&name.text, |s| s.groups.get(&name.text))
             .map(|_| ())
             .ok_or_else(|| {
@@ -374,7 +417,7 @@ impl<'a> Scope<'a> {
     ///
     /// # Errors
     /// L1002 with a suggestion.
-    pub fn authority(&self, name: &Name) -> Result<(), Report> {
+    pub fn authority(&self, name: &Name) -> Result<(), Unresolved> {
         self.unqualified(&name.text, |s| s.authorities.get(&name.text))
             .map(|_| ())
             .ok_or_else(|| {

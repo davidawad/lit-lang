@@ -113,3 +113,30 @@ link bad \"Bad\": base::nowhere -> nope::entry { replaces [base::gone] }\n";
     ]);
     insta::assert_debug_snapshot!(render(&db, ws));
 }
+
+#[test]
+fn failed_imports_report_once_without_cascades() {
+    let main = "module main\nimport shared.types.{Documnt}\nimport shared.nodez\nstart s\nstate s: \"S\" { _ \"go\" -> shared.nodez.end }\ndefault d when has_event(Served(Documnt.complaint)) => 1\ndefault e when true => match Document.complaint { complaint => 1 }\n";
+    let (db, ws) = workspace(&[package(
+        "demo",
+        &[],
+        &[("main.lit", main), ("types.lit", ENUMS)],
+    )]);
+    let out = render(&db, ws);
+    // One report per failed import; uses of `Documnt` and `shared.nodez.end`
+    // add nothing. Unrelated unresolved names (`Served`, `Document` were not
+    // imported) still report.
+    assert_eq!(
+        out.iter().filter(|l| l.contains("main.lit:2:")).count(),
+        1,
+        "{out:#?}"
+    );
+    assert_eq!(
+        out.iter().filter(|l| l.contains("main.lit:3:")).count(),
+        1,
+        "{out:#?}"
+    );
+    assert!(!out.iter().any(|l| l.contains("main.lit:5:")), "{out:#?}");
+    assert!(out.iter().any(|l| l.contains("`Served`")), "{out:#?}");
+    insta::assert_debug_snapshot!(out);
+}

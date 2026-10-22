@@ -85,9 +85,12 @@ fn import_then_lower_is_semantically_equal() {
     for dir in &sources {
         run(&bin, &["lock", &dir.to_string_lossy()]);
     }
+    // A matter's `uses` resolve through the `Lit.lock` beside it (SPEC §5.6).
+    run(&bin, &["lock", &root.join("cases").to_string_lossy()]);
     let mut cases: Vec<PathBuf> = std::fs::read_dir(root.join("cases"))
         .map(|r| r.filter_map(Result::ok).map(|e| e.path()).collect())
         .unwrap_or_default();
+    cases.retain(|p| p.extension().is_some_and(|e| e == "case"));
     cases.sort();
     let mut generated: Vec<String> = Vec::new();
     for target in sources.iter().chain(&cases) {

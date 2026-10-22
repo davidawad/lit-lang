@@ -1,14 +1,15 @@
 //! `.case` matters (SPEC §3.2, §5.6). `litigate-sema`'s case checker
 //! resolves the matter, checks its pins against the `Lit.lock` beside it,
-//! and replays its events under the engine clock; the matter is then
-//! lowered to a litgraph `NamedScenario`, and `litigate-verify` reports its
-//! `case-replay` obligation.
+//! and replays its events under the engine clock, run and reported (its
+//! `case-replay` obligation) by `litigate-verify`; the matter is then
+//! lowered to a litgraph `NamedScenario`.
 //!
 //! The deadline schedule is a report over the replayed history: every
 //! deadline of the used packages whose trigger has occurred, counted by
 //! litgraph's clock with its steps (what `explain-value` traces).
 use crate::clock::{self, Clocks};
 use crate::hirx;
+use crate::report;
 use crate::ws::{CaseText, Session};
 use litigate_base::{Diagnostic, FileId, LineIndex, Profile, Severity};
 use litigate_lower::{EngineClock, LoweredCase, Lowerer};
@@ -124,11 +125,12 @@ pub fn check(
     profile: Profile,
 ) -> CaseCheck {
     let all = session.hir();
-    let (lock, mut diagnostics) = match lock(case) {
+    // CLI-side findings: an unreadable lock, and lowering errors.
+    let (lock, mut own) = match lock(case) {
         Ok(lock) => (lock, Vec::new()),
         Err(d) => (None, vec![d]),
     };
-    let checked = litigate_sema::case::check_source(
+    let verified = litigate_verify::verify_case_source(
         &case.path,
         &case.text,
         Env {
@@ -138,8 +140,8 @@ pub fn check(
             profile,
         },
     );
-    diagnostics.extend(checked.diagnostics);
-    let mut checked_case = checked.case;
+    let mut diagnostics = verified.diagnostics();
+    let mut checked_case = verified.checked.case;
     if let Some(c) = checked_case
         .as_mut()
         .filter(|c| c.events.is_empty() && !asserts_start(&case.text))
@@ -150,11 +152,11 @@ pub fn check(
     }
     let clean = checked_case
         .as_ref()
-        .filter(|_| !diagnostics.iter().any(is_error));
+        .filter(|_| !own.iter().chain(&diagnostics).any(is_error));
     let lowered = clean.and_then(|c| match Lowerer::new(&all).case(c, &case.path) {
         Ok(lowered) => Some(lowered),
         Err(errors) => {
-            diagnostics.extend(errors);
+            own.extend(errors);
             None
         }
     });
@@ -168,16 +170,9 @@ pub fn check(
         Some(c) if lowered.is_some() => schedule(&used, clocks, c),
         _ => Vec::new(),
     };
-    // A matter that did not resolve has no HIR to verify; its diagnostics
-    // still fail the obligations they bear on.
-    let findings = match &checked_case {
-        Some(c) => {
-            let v = litigate_verify::verify_case(c, &case.path, &diagnostics, profile);
-            diagnostics.extend(v.diagnostics);
-            v.report.obligations
-        }
-        None => crate::report::findings_of(&diagnostics),
-    };
+    let extra = report::findings_of(&own);
+    let findings = report::merge(&[&verified.verification.report.obligations, &extra]);
+    diagnostics.extend(own);
     if profile == Profile::Strict {
         diagnostics.extend(litigate_syntax::check_format(
             &case.text,
@@ -192,7 +187,7 @@ pub fn check(
         lowered,
         diagnostics,
         findings,
-        replay: checked.trace,
+        replay: verified.checked.trace,
         schedule,
     }
 }

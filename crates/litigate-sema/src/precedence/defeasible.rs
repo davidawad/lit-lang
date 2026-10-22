@@ -43,12 +43,7 @@ enum Res<'a> {
 /// Exceptions (declaration indexes) targeting `key`.
 #[must_use]
 pub fn exceptions_on(world: &World<'_>, key: &Key) -> Vec<usize> {
-    (0..world.decls.len())
-        .filter(|&i| match world.decls[i].decl {
-            Declaration::Exception(e) => world.target(world.pack_of(i), &e.target).key == *key,
-            _ => false,
-        })
-        .collect()
+    world.exceptions_on(key).to_vec()
 }
 
 /// Evaluates default `key` on `date`, asking `atom` for each atom (for
@@ -144,11 +139,7 @@ fn exception<'a>(world: &World<'a>, i: usize) -> Option<&'a Exception> {
 #[must_use]
 pub fn check(world: &World<'_>, loc: &dyn Locate, pack: usize) -> Vec<Diagnostic> {
     let mut out = Vec::new();
-    let mut targets: Vec<Key> = (0..world.decls.len())
-        .filter_map(|i| exception(world, i).map(|e| world.target(world.pack_of(i), &e.target).key))
-        .collect();
-    targets.sort();
-    targets.dedup();
+    let targets: Vec<Key> = world.exception_targets().cloned().collect();
     for t in &targets {
         let on = exceptions_on(world, t);
         let set = world.versions(t);

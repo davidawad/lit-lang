@@ -1,0 +1,19 @@
+---
+source: crates/litigate-verify/tests/case.rs
+expression: summary(&v)
+---
+{
+  "finding": {
+    "name": "case-replay",
+    "status": "failed",
+    "count": 1,
+    "examples": [
+      "cases/examples/acme.case:21:3: L4001 events must be in date order: 2025-03-05 comes after 2025-03-20"
+    ]
+  },
+  "accepted": false,
+  "posture": "frcp-rule12-example::mtd-ruling",
+  "diagnostics": [
+    "cases/examples/acme.case:21:3 L4001 events must be in date order: 2025-03-05 comes after 2025-03-20"
+  ]
+}

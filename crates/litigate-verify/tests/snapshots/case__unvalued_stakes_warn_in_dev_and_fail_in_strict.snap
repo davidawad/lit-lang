@@ -1,34 +1,36 @@
 ---
 source: crates/litigate-verify/tests/case.rs
-expression: replay(&strict)
+expression: "json!({ \"dev\": summary(&dev), \"strict\": summary(&strict) })"
 ---
 {
-  "finding": {
-    "name": "case-replay",
-    "status": "failed",
-    "count": 1,
-    "examples": [
-      "cases/examples/acme.case:1:1: L4004 stake `judgment-entered` is `unvalued`"
+  "dev": {
+    "finding": {
+      "name": "case-replay",
+      "status": "warning",
+      "count": 1,
+      "examples": [
+        "cases/examples/acme.case:25:55: L4004 stake `frcp-rule12-example::dismissed` is `unvalued`"
+      ]
+    },
+    "accepted": true,
+    "posture": "frcp-rule12-example::mtd-ruling",
+    "diagnostics": [
+      "cases/examples/acme.case:25:55 L4004 stake `frcp-rule12-example::dismissed` is `unvalued`"
     ]
   },
-  "accepted": false,
-  "diagnostics": [
-    {
-      "code": "L4004",
-      "severity": "error",
-      "span": {
-        "file": "cases/examples/acme.case",
-        "line": 1,
-        "col": 1,
-        "end_line": 1,
-        "end_col": 1
-      },
-      "message": "stake `judgment-entered` is `unvalued`",
-      "notes": [
-        {
-          "message": "strict requires a value for every reachable terminal"
-        }
+  "strict": {
+    "finding": {
+      "name": "case-replay",
+      "status": "failed",
+      "count": 1,
+      "examples": [
+        "cases/examples/acme.case:25:55: L4004 terminal `frcp-rule12-example::dismissed` is `unvalued`, which `strict` does not accept"
       ]
-    }
-  ]
+    },
+    "accepted": false,
+    "posture": "frcp-rule12-example::mtd-ruling",
+    "diagnostics": [
+      "cases/examples/acme.case:25:55 L4004 terminal `frcp-rule12-example::dismissed` is `unvalued`, which `strict` does not accept"
+    ]
+  }
 }

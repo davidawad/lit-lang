@@ -10,7 +10,8 @@
 //! result is a [`Verification`]: the [`VerificationReport`] embedded in the
 //! [`Litigatable`], plus the diagnostics this crate emits (sema's are
 //! aggregated, not repeated). [`check_package`] runs lowering and
-//! verification together; [`verify_case`] reports a matter's `case-replay`.
+//! verification together; [`verify_case`] and [`verify_case_source`] run
+//! sema's case replay on a matter and report its `case-replay`.
 //!
 //! Profiles change severity and acceptance, never values: holes are L9002
 //! warnings in `dev` and L5002 errors in `strict`; L9001 is a warning in
@@ -22,9 +23,11 @@ mod deadline;
 mod diag;
 mod graph;
 mod lints;
+mod matter;
 mod report;
 mod sema;
 
+pub use matter::{verify_case, verify_case_source, VerifiedCase};
 pub use report::{Finding, Obligation, ObligationStatus, VerificationReport, MAX_EXAMPLES};
 pub use sema::obligation_of;
 
@@ -32,7 +35,7 @@ pub(crate) use context::{same_expr, Context};
 
 use litgraph::cite::SourceCorpus;
 use litgraph::model::Pack;
-use litigate_base::{Diagnostic, DiagnosticCode as C, Profile, Severity};
+use litigate_base::{Diagnostic, Profile};
 use litigate_lower::{Document, LoweredPackage, Lowerer, Options, SourceMap};
 use litigate_sema::{hir, PackageCheck};
 use report::{Builder, Obligation as O};
@@ -248,51 +251,4 @@ pub fn check_package(
         verification: verify_package(&input, corpus, profile),
         lowered: lowered.ok(),
     }
-}
-
-/// The report of a matter at `file`: `case-replay` from the case checker's
-/// `diagnostics` (L4xxx; any other error counts against its own
-/// obligation), plus `unvalued` stakes, a warning in `dev` and an L4004
-/// error in `strict`.
-#[must_use]
-pub fn verify_case(
-    case: &hir::Case,
-    file: &str,
-    diagnostics: &[Diagnostic],
-    profile: Profile,
-) -> Verification {
-    let mut b = Builder::default();
-    sema::aggregate(&mut b, diagnostics);
-    let unvalued: Vec<Diagnostic> = case
-        .stakes
-        .iter()
-        .filter(|(_, s)| matches!(s, hir::Stake::Unvalued))
-        .map(|(node, _)| {
-            let d = diag::emit(
-                C::MissingStake,
-                profile,
-                diag::start_of(file),
-                format!("stake `{node}` is `unvalued`"),
-            );
-            match profile {
-                Profile::Dev => Diagnostic {
-                    severity: Severity::Warning,
-                    ..d
-                },
-                Profile::Strict => diag::note(
-                    d,
-                    None,
-                    "strict requires a value for every reachable terminal",
-                ),
-            }
-        })
-        .collect();
-    b.check(O::CaseReplay, unvalued.clone());
-    for name in O::ALL {
-        b.skip(
-            name,
-            "a matter is checked for replay only; its packages carry the rest",
-        );
-    }
-    Verification::new(b, unvalued, profile)
 }

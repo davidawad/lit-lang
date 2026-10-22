@@ -28,3 +28,159 @@ test "a 30-day opposition period rolls a Saturday deadline to Monday" cite 37 CF
   given Publication() on 2026-10-27
   expect deadline(opposition-period) == 2026-11-27
 }
+
+event FirstGoodCauseExtension()
+
+rule duty extension-90-rule cite 37 CFR 2.102(c)
+{
+  deadline extension-90: 90.days from FirstGoodCauseExtension() counted_by frcp6
+}
+
+test "90-day TTAB period rolls through calendar counting" cite 37 CFR 2.102(c)
+{
+  given FirstGoodCauseExtension() on 2026-10-27
+  expect deadline(extension-90) == 2027-01-25
+}
+
+event OppositionPeriodExtension()
+
+rule duty extension-30-rule cite 37 CFR 2.102(c)
+{
+  deadline extension-30: 30.days from OppositionPeriodExtension() counted_by frcp6
+}
+
+test "30-day TTAB period rolls through calendar counting" cite 37 CFR 2.102(c)
+{
+  given OppositionPeriodExtension() on 2026-10-27
+  expect deadline(extension-30) == 2026-11-27
+}
+
+event SecondGoodCauseExtension()
+
+rule duty extension-60-rule cite 37 CFR 2.102(c)
+{
+  deadline extension-60: 60.days from SecondGoodCauseExtension() counted_by frcp6
+}
+
+test "60-day TTAB period rolls through calendar counting" cite 37 CFR 2.102(c)
+{
+  given SecondGoodCauseExtension() on 2026-10-27
+  expect deadline(extension-60) == 2026-12-28
+}
+
+event FinalConsentExtension()
+
+rule duty extension-120-rule cite 37 CFR 2.102(c)
+{
+  deadline extension-120: 120.days from FinalConsentExtension() counted_by frcp6
+}
+
+test "120-day TTAB period rolls through calendar counting" cite 37 CFR 2.102(c)
+{
+  given FinalConsentExtension() on 2026-10-27
+  expect deadline(extension-120) == 2027-02-24
+}
+
+event InstitutionOrder()
+
+rule duty answer-60-rule cite 37 CFR 2.102(c)
+{
+  deadline answer-60: 60.days from InstitutionOrder() counted_by frcp6
+}
+
+test "60-day TTAB period rolls through calendar counting (2)" cite 37 CFR 2.102(c)
+{
+  given InstitutionOrder() on 2026-10-27
+  expect deadline(answer-60) == 2026-12-28
+}
+
+event AnswerDeadline()
+
+rule duty counterclaim-60-rule cite 37 CFR 2.102(c)
+{
+  deadline counterclaim-60: 60.days from AnswerDeadline() counted_by frcp6
+}
+
+test "60-day TTAB period rolls through calendar counting (3)" cite 37 CFR 2.102(c)
+{
+  given AnswerDeadline() on 2026-10-27
+  expect deadline(counterclaim-60) == 2026-12-28
+}
+
+event DefaultDeadline()
+
+rule duty no-answer-60-rule cite 37 CFR 2.102(c)
+{
+  deadline no-answer-60: 60.days from DefaultDeadline() counted_by frcp6
+}
+
+test "60-day TTAB period rolls through calendar counting (4)" cite 37 CFR 2.102(c)
+{
+  given DefaultDeadline() on 2026-10-27
+  expect deadline(no-answer-60) == 2026-12-28
+}
+
+event FinalDecision()
+
+rule duty appeal-63-rule cite 37 CFR 2.102(c)
+{
+  deadline appeal-63: 63.days from FinalDecision() counted_by frcp6
+}
+
+test "63-day TTAB period rolls through calendar counting" cite 37 CFR 2.102(c)
+{
+  given FinalDecision() on 2026-10-27
+  expect deadline(appeal-63) == 2026-12-29
+}
+
+event DiscoveryOrder()
+
+rule duty discovery-60-rule cite 37 CFR 2.102(c)
+{
+  deadline discovery-60: 60.days from DiscoveryOrder() counted_by frcp6
+}
+
+test "60-day TTAB period rolls through calendar counting (5)" cite 37 CFR 2.102(c)
+{
+  given DiscoveryOrder() on 2026-10-27
+  expect deadline(discovery-60) == 2026-12-28
+}
+
+event StandstillOrder()
+
+rule duty standstill-180-rule cite 37 CFR 2.102(c)
+{
+  deadline standstill-180: 180.days from StandstillOrder() counted_by frcp6
+}
+
+test "180-day TTAB period rolls through calendar counting" cite 37 CFR 2.102(c)
+{
+  given StandstillOrder() on 2026-10-27
+  expect deadline(standstill-180) == 2027-04-26
+}
+
+event DiscoveryResponse()
+
+rule duty discovery-30-rule cite 37 CFR 2.102(c)
+{
+  deadline discovery-30: 30.days from DiscoveryResponse() counted_by frcp6
+}
+
+test "30-day TTAB period rolls through calendar counting (2)" cite 37 CFR 2.102(c)
+{
+  given DiscoveryResponse() on 2026-10-27
+  expect deadline(discovery-30) == 2026-11-27
+}
+
+event InstitutionStandstill()
+
+rule duty standstill-institution-180-rule cite 37 CFR 2.102(c)
+{
+  deadline standstill-institution-180: 180.days from InstitutionStandstill() counted_by frcp6
+}
+
+test "180-day TTAB period rolls through calendar counting (2)" cite 37 CFR 2.102(c)
+{
+  given InstitutionStandstill() on 2026-10-27
+  expect deadline(standstill-institution-180) == 2027-04-26
+}

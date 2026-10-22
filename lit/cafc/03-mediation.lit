@@ -1,0 +1,63 @@
+// The Appellate Mediation Program. Selection is the Office of General
+// Counsel's discretion and no selection or settlement rate is published, so
+// the screening draw carries holes rather than invented numbers. The
+// Mediation Guidelines are not vendored under sources/, so their cites stay
+// holes carrying the pack's text.
+module cafc.mediation
+
+import cafc.motions.{ motions-fork }
+import cafc.{ mediation-group }
+
+/// A tribunal-discretion draw (Guidelines § 2: OGC "determines whether a
+/// case is a good mediation candidate"). It stays a `decision` by `office`,
+/// as in the pack: a `chance` node lowers to kind `state`, which would break
+/// semantic equality with the pack.
+decision mediation-screening: "OGC Screens for the Mediation Program" by office cite ?("Appellate Mediation Program Guidelines §§ 2-3 (2013-12-06); Fed. Cir. R. 33(b)") {
+  group mediation-group
+  note "Participation is mandatory for cases the Office of General Counsel selects; OGC contacts principal counsel, reviews the docketing statement and briefs, and determines whether a case is a good mediation candidate. If counsel represents to OGC that mediation would not be fruitful, efforts cease. No published selection rate exists — probability deliberately left unauthored on both outgoing edges (see cafc-SOURCES-NOTES.md) rather than invented; the engine's uniform-draw fallback applies if this node is queried numerically."
+  screening-to-conference "Case selected — mediation is mandatory for the parties" -> mediation-conference p ?("no published selection rate") {
+    authority cite ?("Appellate Mediation Program Guidelines § 2")
+    note "No published selection rate; probability intentionally unauthored."
+  }
+  screening-to-motions "Case not selected for mediation, or counsel represents mediation would not be fruitful" -> motions-fork p ?("no published selection rate") {
+    authority cite ?("Appellate Mediation Program Guidelines §§ 2, 7")
+    note "No published selection rate; probability intentionally unauthored."
+  }
+}
+
+state mediation-conference: "Mediation Conference Held" cite ?("Appellate Mediation Program Guidelines §§ 1, 4-6") {
+  group mediation-group
+  note "Confidential, risk-free settlement discussion before a volunteer mediator, outside mediator, or magistrate judge. Mediation committee members do not discuss the substance with the deciding judges."
+  conference-to-outcome "Mediation concludes" -> mediation-outcome {
+    authority cite ?("Appellate Mediation Program Guidelines § 7")
+  }
+}
+
+decision mediation-outcome: "Mediation Concludes" cite ?("Appellate Mediation Program Guidelines § 7") {
+  group mediation-group
+  note "No published settlement rate for the program — probability deliberately left unauthored on both outgoing edges rather than invented."
+  outcome-to-settled "Parties reach a settlement" -> settled-in-mediation {
+    authority cite ?("Appellate Mediation Program Guidelines § 7")
+    note "No published settlement rate; probability intentionally unauthored."
+    tags [settlement]
+  }
+  outcome-to-unsuccessful "Mediation does not produce a settlement" -> mediation-unsuccessful {
+    authority cite ?("Appellate Mediation Program Guidelines § 7")
+    note "No published settlement rate; probability intentionally unauthored."
+  }
+}
+
+terminal settled-in-mediation: "Case Settled Through Mediation" outcome [settlement] {
+  group mediation-group
+  note "Illustrative payoff only (per the $1,000,000-stake authoring convention): mediated settlements plausibly land well above 0 (affirmance) and below the full-reversal value, but no published average settlement value exists for this program. UNVERIFIED dollar figure."
+  valence good
+  tags [settlement]
+  payoff 350_000.usd
+}
+
+state mediation-unsuccessful: "Mediation Unsuccessful — Appeal Proceeds" by office cite ?("Appellate Mediation Program Guidelines § 7") {
+  group mediation-group
+  unsuccessful-to-motions "Appeal proceeds" -> motions-fork {
+    authority cite ?("Appellate Mediation Program Guidelines § 7")
+  }
+}

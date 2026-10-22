@@ -1,0 +1,52 @@
+// The U.S. Court of Appeals for the Federal Circuit, ported from
+// packs/cafc-federal-circuit.json (see packs/cafc-SOURCES-NOTES.md). The
+// section modules hold the procedure in pack node order; this root module
+// holds the groups and the events the deadlines count from.
+module cafc
+
+import core.time.{ ServiceMethod }
+
+group entry-group: "Entry — Four Origin Tribunals"
+group docketing-group: "Docketing & Early CAFC Steps"
+group mediation-group: "Appellate Mediation Program"
+group motions-group: "Motions Practice (Stay Pending Appeal)"
+group cross-appeal-group: "Cross-Appeals"
+group briefing-group: "Briefing"
+group appendix-group: "Joint Appendix"
+group argument-group: "Oral Argument / Submission Without Argument"
+group decision-group: "Panel Decision"
+group rehearing-group: "Rehearing & Rehearing En Banc"
+group mandate-group: "Mandate & Costs"
+group cert-group: "Certiorari to the Supreme Court"
+
+/// A judgment, decision or order whose entry starts a period.
+enum Order { Judgment, BoardDecision, PanelJudgment, RehearingDenial }
+
+/// A paper whose filing starts a period.
+enum Paper {
+  NoticeOfAppeal,
+  CrossAppealNotice,
+  EntryOfAppearance,
+  DocketingStatement,
+  ReplyBrief,
+  JointAppendix,
+  RehearingPetition,
+  BillOfCosts,
+  CertPetition,
+}
+
+/// A brief whose service starts the next brief's period.
+enum Brief { Principal, Response }
+
+/// Entry of `order` by the tribunal that issued it.
+event Entered(order: Order)
+/// An ITC final determination becomes final: the 60-day Presidential review
+/// period of 19 U.S.C. § 1337(j) has run without disapproval.
+event BecameFinal()
+/// The Federal Circuit clerk dockets the appeal.
+event Docketed()
+/// `paper` is filed.
+event Filed(paper: Paper)
+/// `brief` is served by `method`; FRAP 26(c) adds 3 days for a paper not
+/// served electronically.
+event BriefServed(brief: Brief, method: ServiceMethod)

@@ -1,0 +1,147 @@
+# The Federal Circuit's appellate procedure, ported from
+# packs/cafc-federal-circuit.json (`litigate diff --against` it is empty).
+#
+# `authority`: the Federal Circuit Rules are local rules adopted under FRAP
+# 47 (Fed. Cir. R. 47(a)), and every declaration here is the court's own
+# statement of its procedure, so the package ranks as `LocalRule`. Statutory
+# and FRAP periods it restates name their source in their cites.
+#
+# `in_force`: the December 1, 2025 edition of the Federal Circuit Rules of
+# Practice (source `fedcir-rules`), the text every node transcribes; it is
+# also the date FRAP 39(e)(3)(A), cited by the bill-of-costs edge, took
+# effect (Supreme Court order of April 23, 2025). The edition does not date
+# each local rule's last amendment, so no earlier start is claimed for the
+# procedure as a whole; the deadlines carry their own sourced intervals.
+[package]
+name = "cafc"
+version = "0.1.0"
+language = 1
+pack_id = "cafc"
+forum = "cafc"
+authority = "LocalRule"
+title = "U.S. Court of Appeals for the Federal Circuit — Appellate Procedure"
+description = "Federal Circuit appellate procedure from four origin tribunals (district court patent judgments, PTAB final written decisions, ITC final determinations, and Court of Federal Claims judgments) through docketing, the mediation program, motions practice, briefing, the joint appendix, oral argument or submission without argument, panel decision (including Fed. Cir. R. 36 judgments of affirmance without opinion), rehearing/rehearing en banc, mandate and costs, and certiorari to the Supreme Court. This is the Federal-Circuit-specific counterpart to frap-appellate-procedure.json (general FRAP flow) and the terminal that ptab-patent-trial-appeal-board.json and itc-337.json link into via their federal-circuit-window / federal-circuit-appeal-window edges."
+jurisdiction = "U.S. Court of Appeals for the Federal Circuit / Fed. Cir. R. / FRAP / 28 U.S.C. Ch. 83"
+in_force = "2025-12-01"
+known_at = "2026-06-09"
+counting = "frap26"
+
+[package.roles]
+applicant = "self"
+either = "nature"
+examiner = "opponent"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.fedcir-rules]
+title = "Federal Circuit Rules of Practice (FRAP + Federal Circuit Rules + Practice Notes + Attorney Discipline Rules, combined)"
+url = "https://www.cafc.uscourts.gov/wp-content/uploads/RulesProceduresAndForms/FederalCircuitRules/FederalCircuitRulesofPractice.pdf"
+path = "sources/fedcir-rules.txt"
+sha256 = "b6346ed56a0ef66e8a681765873caf69239cda273f8946f1625571e013712c05"
+as_of = "2025-12-01"
+
+[sources.fedcir-iops]
+title = "Federal Circuit Internal Operating Procedures"
+url = "https://www.cafc.uscourts.gov/wp-content/uploads/RulesProceduresAndForms/InternalOperatingProcedures/InternalOperatingProcedures.pdf"
+sha256 = "0529dbba781897e83ed617af7a603f7fdaf7ac4af1278d035a378c5699172397"
+as_of = "2026-06-09"
+
+[sources.fedcir-mediation-guidelines]
+title = "Appellate Mediation Program Guidelines"
+url = "https://www.cafc.uscourts.gov/wp-content/uploads/Mediation/MediationGuidelines.pdf"
+sha256 = "b70b1463ebd122dbe3287d5c7117e822f5bfe32a59a53bb9b5b5e000b7a1dfb0"
+as_of = "2013-12-06"
+
+[sources.cafc-fee-schedule]
+title = "United States Court of Appeals for the Federal Circuit — Fee Schedule"
+url = "https://www.cafc.uscourts.gov/wp-content/uploads/FeeSchedule.pdf"
+as_of = "2023-12-01"
+
+[sources.patentlyo-2024-datapack]
+title = "Federal Circuit Decisions - 2024 Stats and Datapack (Patently-O / Jason Rantanen)"
+url = "https://patentlyo.com/patent/2025/06/federal-circuit-decisions-datapack.html"
+as_of = "2025-06"
+
+[sources.frap-pack]
+title = "frap-appellate-procedure.json (model pack; source of the reused rehearing/en banc and cert grant-rate teaching estimates)"
+path = "packs/frap-appellate-procedure.json"
+
+[sources.ptab-pack]
+title = "ptab-patent-trial-appeal-board.json (links into entry-ptab / remanded-to-ptab)"
+path = "packs/ptab-patent-trial-appeal-board.json"
+
+[sources.itc-pack]
+title = "itc-337.json (links into entry-itc / remanded-to-itc)"
+path = "packs/itc-337.json"
+
+[sources.frap-rules-cite]
+title = "Federal Rules of Appellate Procedure, as amended to Dec. 1, 2024 (incorporated by Fed. Cir. R.)"
+url = "https://www.uscourts.gov/sites/default/files/2025-02/federal-rules-of-appellate-procedure-dec-1-2024_0.pdf"
+path = "sources/frap.txt"
+sha256 = "d61711eca8e1f65955d12f1b7d29d4cc453d9ee1e30c4fff6c54b23f113454f6"
+as_of = "2024-12-01"
+
+[sources.usc28-1295-cite]
+title = "28 U.S.C. § 1295 (Federal Circuit jurisdiction)"
+url = "https://www.law.cornell.edu/uscode/text/28/1295"
+path = "sources/usc-additional.txt"
+cite_prefixes = ["28 U.S.C."]
+section_heading = "28 U.S.C. § {n}"
+
+[sources.usc28-2522-cite]
+title = "28 U.S.C. § 2522 (Notice of appeal, CoFC)"
+url = "https://www.law.cornell.edu/uscode/text/28/2522"
+path = "sources/usc-additional.txt"
+
+[sources.usc28-2107-cite]
+title = "28 U.S.C. § 2107 (Time for appeal to courts of appeals)"
+url = "https://www.law.cornell.edu/uscode/text/28/2107"
+path = "sources/usc-additional.txt"
+
+[sources.usc28-2101-cite]
+title = "28 U.S.C. § 2101 (Supreme Court review time limitations)"
+url = "https://www.law.cornell.edu/uscode/text/28/2101"
+path = "sources/usc-additional.txt"
+
+[sources.usc28-1254-cite]
+title = "28 U.S.C. § 1254 (Courts of appeals; certiorari)"
+url = "https://www.law.cornell.edu/uscode/text/28/1254"
+path = "sources/usc-additional.txt"
+
+[sources.usc35-142-cite]
+title = "35 U.S.C. § 142 (Time for appeal from PTAB)"
+url = "https://www.law.cornell.edu/uscode/text/35/142"
+path = "sources/usc-additional.txt"
+cite_prefixes = ["35 U.S.C."]
+section_heading = "35 U.S.C. § {n}"
+
+[sources.usc35-319-cite]
+title = "35 U.S.C. § 319 (Appeal of a PTAB final written decision)"
+url = "https://www.law.cornell.edu/uscode/text/35/319"
+path = "sources/usc-additional.txt"
+
+[sources.usc-1337-cite]
+title = "19 U.S.C. § 1337 (ITC unfair-import-practices statute)"
+url = "https://www.law.cornell.edu/uscode/text/19/1337"
+path = "sources/usc-19-1337.txt"
+cite_prefixes = ["19 U.S.C."]
+section_heading = "19 U.S.C. § {n}"
+
+[sources.cfr37-90-cite]
+title = "37 C.F.R. § 90.3 (Time for appeal from PTAB)"
+url = "https://www.ecfr.gov/current/title-37/chapter-I/subchapter-A/part-90"
+path = "sources/usc-cfr-prosecution-fragments.txt"
+cite_prefixes = ["37 C.F.R."]
+section_heading = "37 C.F.R. § {n}"
+
+[[cite_syntax.rules]]
+prefixes = ["FRAP", "Fed. R. App. P.", "Fed R App P", "F.R.A.P."]
+heading = "FRAP {}"
+source = "frap-rules-cite"
+
+[[cite_syntax.rules]]
+prefixes = ["Fed. Cir. R.", "Fed Cir R"]
+heading = "Fed. Cir. R. {}"
+source = "fedcir-rules"

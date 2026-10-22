@@ -1,0 +1,64 @@
+// Cross-appeals: FRAP 4(a)(3)'s 14-day notice and Fed. Cir. R. 28.1's
+// cross-appeal briefing.
+module cafc.cross-appeal
+
+import cafc.briefing.{ appellant-brief-window }
+import cafc.{ Filed, Paper, cross-appeal-group }
+import core.frap26.{ frap26 }
+
+decision cross-appeal-fork: "Appellee Considers a Cross-Appeal" by applicant cite FRAP 4(a)(3); Fed. Cir. R. 28.1
+{
+  group cross-appeal-group
+  note "A cross-appeal is proper only where the appellee seeks to modify or overturn the judgment, not merely to defend it on alternative grounds — Bailey v. Dart Container Corp., 292 F.3d 1360 (Fed. Cir. 2002). Fed. Cir. R. 28.1 sets Federal-Circuit-specific page/word/color-cover limits and the four-brief sequence for cross-appeals; the 14-day filing deadline itself is the general FRAP 4(a)(3) deadline, not separately shortened by a Federal Circuit rule."
+  cross-appeal-file "File notice of cross-appeal" -> cross-appeal-filed {
+    authority cite FRAP 4(a)(3); Fed. Cir. R. 28.1
+    effort 10.hours
+    cost 605.usd
+    event Filed(CrossAppealNotice)
+    within cross-appeal-period {
+      extendable false
+      note "14 days after the first notice of appeal, or the otherwise-applicable FRAP 4(a)(1) period, whichever is later. Not extendable."
+    }
+    tags [appeal]
+  }
+  cross-appeal-decline "Decline to cross-appeal" -> no-cross-appeal { authority cite FRAP 4(a)(3) }
+}
+
+state cross-appeal-filed: "Notice of Cross-Appeal Filed" by office cite FRAP 4(a)(3); Fed. Cir. R. 28.1
+{
+  group cross-appeal-group
+  cross-appeal-filed-to-briefing "Cross-appeal docketed — briefing under Fed. Cir. R. 31(a)(1)(C)-(D)/28.1" -> appellant-brief-window {
+    authority cite Fed. Cir. R. 28.1; Fed. Cir. R. 31(a)(1)(D)
+  }
+}
+
+state no-cross-appeal: "No Cross-Appeal — Judgment Defended Only" by office cite FRAP 4(a)(3)
+{
+  group cross-appeal-group
+  no-cross-appeal-to-briefing "Proceed to ordinary briefing" -> appellant-brief-window {
+    authority cite Fed. Cir. R. 31(a)(1)
+  }
+}
+
+/// FRAP 4(a)(3): any other party may file a notice of appeal within 14 days
+/// after the first notice was filed, or within the otherwise-applicable
+/// FRAP 4(a) time, whichever ends later. The 14 days are FRAP's since it
+/// took effect on July 1, 1968. The rule text itself names no exception;
+/// the pack records the period as not extendable, so no delegation is
+/// declared (FRAP 4(a)(5)(A) motions are not modeled here).
+rule duty cross-appeal-notice cite FRAP 4(a)(3)
+{
+  deadline cross-appeal-period: 14.days after Filed(NoticeOfAppeal) counted_by frap26 effective [1968-07-01, ..) known_at 1967-12-04 cite FRAP 4(a)(3)
+}
+
+test "a notice of cross-appeal is due 14 days after the first notice" cite FRAP 4(a)(3)
+{
+  given Filed(NoticeOfAppeal) on 2026-03-02
+  expect deadline(cross-appeal-period) == 2026-03-16
+}
+
+test "a Saturday 14th day rolls the cross-appeal notice to Monday" cite FRAP 26(a)(1)(C)
+{
+  given Filed(NoticeOfAppeal) on 2026-03-21
+  expect deadline(cross-appeal-period) == 2026-04-06
+}

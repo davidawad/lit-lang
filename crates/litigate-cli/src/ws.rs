@@ -132,6 +132,26 @@ pub fn library_dirs(lib: &[String]) -> Vec<PathBuf> {
     lib.iter().map(PathBuf::from).collect()
 }
 
+/// [`library_dirs`], plus (without `--lib`) the nearest `lit` directory
+/// above each matter, so `cases/x.case` finds its sibling `lit/`.
+#[must_use]
+pub fn library_for(lib: &[String], cases: &[PathBuf]) -> Vec<PathBuf> {
+    let mut dirs = library_dirs(lib);
+    if lib.is_empty() {
+        dirs.extend(cases.iter().filter_map(|case| {
+            let absolute = case.canonicalize().ok()?;
+            absolute
+                .ancestors()
+                .skip(1)
+                .map(|a| a.join("lit"))
+                .find(|l| l.is_dir())
+        }));
+    }
+    let mut seen = BTreeSet::new();
+    dirs.retain(|d| seen.insert(d.canonicalize().unwrap_or_else(|_| d.clone())));
+    dirs
+}
+
 /// Every package directory under `dirs` with its manifest name.
 #[must_use]
 pub fn library(dirs: &[PathBuf]) -> Vec<(String, PathBuf)> {
@@ -153,8 +173,8 @@ pub fn library(dirs: &[PathBuf]) -> Vec<(String, PathBuf)> {
 
 /// Library packages that are links packages (SPEC §8.4).
 #[must_use]
-pub fn links_packages(lib: &[String]) -> Vec<PathBuf> {
-    library(&library_dirs(lib))
+pub fn links_packages(lib: &[String], cases: &[PathBuf]) -> Vec<PathBuf> {
+    library(&library_for(lib, cases))
         .into_iter()
         .filter(|(_, dir)| {
             std::fs::read_to_string(dir.join("Lit.toml"))
@@ -258,7 +278,7 @@ impl Session {
         let mut roots: Vec<PathBuf> = targets.packages.iter().map(|p| root.join(p)).collect();
         if !wanted.is_empty() {
             roots.extend(
-                library(&library_dirs(lib))
+                library(&library_for(lib, &targets.cases))
                     .into_iter()
                     .filter(|(name, _)| wanted.contains(name))
                     .map(|(_, dir)| root.join(dir)),
@@ -299,6 +319,19 @@ impl Session {
             ws,
             packages,
             cases,
+        }
+    }
+
+    /// The file a diagnostic `FileId` names. Sema keeps paths outside the
+    /// working directory root-relative (`tmp/x/a.lit` for `/tmp/x/a.lit`).
+    #[must_use]
+    pub fn real_path(file: &str) -> PathBuf {
+        let here = PathBuf::from(file);
+        let rooted = Path::new("/").join(file);
+        if here.exists() || !rooted.exists() {
+            here
+        } else {
+            rooted
         }
     }
 

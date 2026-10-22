@@ -1,0 +1,40 @@
+---
+source: crates/litigate-cli/tests/check.rs
+expression: text
+---
+[L5002] Error: strict profile does not permit the hole "no calibration yet"
+    ╭─[ lit/examples/rule12.lit:72:43 ]
+    │
+ 72 │   granted "Motion granted" -> dismissed p ?("no calibration yet")
+    │                                           ───────────┬───────────  
+    │                                                      ╰───────────── Strict profile does not permit unresolved holes
+────╯
+[L5002] Error: strict profile does not permit the hole no reason given
+    ╭─[ lit/examples/rule12.lit:73:40 ]
+    │
+ 73 │   denied "Motion denied" -> answered p ?
+    │                                        ┬  
+    │                                        ╰── Strict profile does not permit unresolved holes
+────╯
+[L9003] Advice: the edge `answered -> judgment-entered` has no id, so cases and links cannot name it
+    ╭─[ lit/examples/rule12.lit:76:51 ]
+    │
+ 76 │ state answered: "Answer filed" { group pleadings, _ "Proceed to judgment" -> judgment-entered }
+    │                                                   ─────────────────────┬─────────────────────  
+    │                                                                        ╰─────────────────────── An anonymous edge cannot be referenced by cases or links
+────╯
+[L9003] Advice: the edge `default-risk -> judgment-entered` has no id, so cases and links cannot name it
+    ╭─[ lit/examples/rule12.lit:77:60 ]
+    │
+ 77 │ state default-risk: "Failure to respond" { group outcomes, _ "Default entered" -> judgment-entered }
+    │                                                            ───────────────────┬───────────────────  
+    │                                                                               ╰───────────────────── An anonymous edge cannot be referenced by cases or links
+────╯
+[L5002] Error: strict profile does not permit the hole no reason given
+    ╭─[ lit/examples/rule12.lit:79:97 ]
+    │
+ 79 │ terminal judgment-entered: "Judgment entered" outcome [judgment, loss] { group outcomes, payoff ? }
+    │                                                                                                 ┬  
+    │                                                                                                 ╰── Strict profile does not permit unresolved holes
+────╯
+litigate check: failed (3 error(s), 0 warning(s))

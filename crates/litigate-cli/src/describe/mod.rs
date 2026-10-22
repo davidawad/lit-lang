@@ -249,7 +249,7 @@ const RESULTS: [(&str, &str); 14] = [
     ("where", "{id, kind, package, declaration_span, versions, edges, overrides, source, lowered:[json_pointer]} (or {kind: cite, cited_by} / {kind: diagnostic, ...})"),
     ("explain", "{code, explanation, phase, severity:{dev, strict}}"),
     ("explain-value", "{value, type, id, steps:[{rule, cite, detail}], versions, overrides}"),
-    ("diff", "{equal, files:[{a, b, kind, equal, changes}], changes:[{kind, pointer, id, before, after}], unmatched}"),
+    ("diff", "{equal, files:[{a, b, kind, equal, changes}], changes:[{kind, pointer, id, before, after, document}], unmatched}"),
     ("query", "{matches:[{id, kind, label, span, cite, in_force, detail}], total, next_cursor}"),
     ("import", "{files:[{path, from}], warnings}"),
     ("fix", "{edits:[{code, span, replacement, applicability}], changed_files, skipped_overlapping, dry_run}"),

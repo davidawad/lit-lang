@@ -13,9 +13,9 @@ pub fn lock(dir: Option<&str>, locked: bool) -> Outcome {
         .next()
         .ok_or_else(|| Failure::new(format!("{dir}: no Lit.toml")))?;
     let text = litigate_sema::render_lock(&session.db, session.ws, pkg.input);
-    let path = format!("{}/Lit.lock", pkg.root)
-        .trim_start_matches("./")
-        .to_owned();
+    let dir_path = targets.packages.first().cloned().unwrap_or_default();
+    let file = dir_path.join("Lit.lock");
+    let path = ws::shown(&file);
     let existing = pkg.input.lock_text(&session.db).clone();
     let changed = existing.as_deref() != Some(text.as_str());
     let mut report = Report::of(json!({
@@ -29,7 +29,7 @@ pub fn lock(dir: Option<&str>, locked: bool) -> Outcome {
     if locked {
         report.diagnostics = litigate_sema::lock_diagnostics(&session.db, session.ws, pkg.input);
     } else if changed {
-        crate::cmd::build::write_atomic(std::path::Path::new(&path), &text)?;
+        crate::cmd::build::write_atomic(&file, &text)?;
     }
     Ok(report)
 }

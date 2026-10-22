@@ -1,0 +1,473 @@
+---
+source: crates/litigate-cli/tests/describe.rs
+expression: "litigate_cli::describe::schema()"
+---
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Describe",
+  "description": "The `describe` result.",
+  "type": "object",
+  "properties": {
+    "language_version": {
+      "description": "Language version.",
+      "type": "integer",
+      "format": "uint32",
+      "minimum": 0
+    },
+    "compiler_version": {
+      "description": "Compiler version.",
+      "type": "string"
+    },
+    "grammar": {
+      "description": "EBNF (SPEC §2-§3).",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Production"
+      }
+    },
+    "constructs": {
+      "description": "Constructs with examples.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Construct"
+      }
+    },
+    "types": {
+      "description": "Built-in types (SPEC §6).",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/TypeInfo"
+      }
+    },
+    "builtins": {
+      "description": "Builtin functions.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Builtin"
+      }
+    },
+    "diagnostic_codes": {
+      "description": "Every diagnostic code.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/CodeInfo"
+      }
+    },
+    "obligations": {
+      "description": "Verification obligations.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ObligationInfo"
+      }
+    },
+    "example_case": {
+      "description": "A complete `.case` matter showing every block.",
+      "type": "string"
+    },
+    "stdlib": {
+      "description": "Packages under the library directory (`lit`).",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/StdlibPackage"
+      }
+    },
+    "commands": {
+      "description": "Subcommands.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/CommandInfo"
+      }
+    },
+    "envelope": {
+      "description": "Envelope contract.",
+      "$ref": "#/$defs/EnvelopeInfo"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "language_version",
+    "compiler_version",
+    "grammar",
+    "constructs",
+    "types",
+    "builtins",
+    "diagnostic_codes",
+    "obligations",
+    "example_case",
+    "stdlib",
+    "commands",
+    "envelope"
+  ],
+  "$defs": {
+    "Production": {
+      "description": "One EBNF production.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Nonterminal.",
+          "type": "string"
+        },
+        "rule": {
+          "description": "Right-hand side, whitespace-normalized.",
+          "type": "string"
+        },
+        "note": {
+          "description": "The SPEC's `(* ... *)` remark, if any.",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "rule"
+      ]
+    },
+    "Construct": {
+      "description": "One language construct.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Keyword or block name.",
+          "type": "string"
+        },
+        "file": {
+          "description": "`lit` or `case`.",
+          "type": "string"
+        },
+        "summary": {
+          "description": "What it means.",
+          "type": "string"
+        },
+        "example": {
+          "description": "Source that parses.",
+          "type": "string"
+        },
+        "lowers_to": {
+          "description": "What it lowers to.",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "file",
+        "summary",
+        "example",
+        "lowers_to"
+      ]
+    },
+    "TypeInfo": {
+      "description": "One built-in type (SPEC §6).",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Type syntax.",
+          "type": "string"
+        },
+        "literal": {
+          "description": "Literal forms.",
+          "type": "string"
+        },
+        "operations": {
+          "description": "Permitted operations.",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "literal",
+        "operations"
+      ]
+    },
+    "Builtin": {
+      "description": "One builtin function.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Name.",
+          "type": "string"
+        },
+        "signature": {
+          "description": "Signature.",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "signature"
+      ]
+    },
+    "CodeInfo": {
+      "description": "One diagnostic code.",
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "`L0001`.",
+          "type": "string"
+        },
+        "explain": {
+          "description": "Short explanation.",
+          "type": "string"
+        },
+        "phase": {
+          "description": "Compiler phase.",
+          "type": "string"
+        },
+        "dev": {
+          "description": "Severity under `dev`.",
+          "type": "string"
+        },
+        "strict": {
+          "description": "Severity under `strict`.",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "explain",
+        "phase",
+        "dev",
+        "strict"
+      ]
+    },
+    "ObligationInfo": {
+      "description": "One verification obligation (SPEC §7).",
+      "type": "object",
+      "properties": {
+        "obligation": {
+          "description": "Name.",
+          "type": "string"
+        },
+        "definition": {
+          "description": "Definition.",
+          "type": "string"
+        },
+        "codes": {
+          "description": "Codes a failure emits.",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "obligation",
+        "definition",
+        "codes"
+      ]
+    },
+    "StdlibPackage": {
+      "description": "One package of the stdlib index.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Name.",
+          "type": "string"
+        },
+        "version": {
+          "description": "Version.",
+          "type": "string"
+        },
+        "root": {
+          "description": "Directory.",
+          "type": "string"
+        },
+        "pack_id": {
+          "description": "litgraph pack id (empty for a links package).",
+          "type": "string"
+        },
+        "errors": {
+          "description": "Error diagnostics (modules are listed only when zero).",
+          "type": "integer",
+          "format": "uint",
+          "minimum": 0
+        },
+        "modules": {
+          "description": "Modules.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/StdlibModule"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "version",
+        "root",
+        "pack_id",
+        "errors",
+        "modules"
+      ]
+    },
+    "StdlibModule": {
+      "description": "One module of the stdlib index.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Dotted module name.",
+          "type": "string"
+        },
+        "declarations": {
+          "description": "Declarations.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/StdlibDecl"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "declarations"
+      ]
+    },
+    "StdlibDecl": {
+      "description": "One declaration of the stdlib index.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Local id.",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind.",
+          "type": "string"
+        },
+        "from": {
+          "description": "In force from.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "to": {
+          "description": "In force until (exclusive).",
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind"
+      ]
+    },
+    "CommandInfo": {
+      "description": "One subcommand.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Name.",
+          "type": "string"
+        },
+        "about": {
+          "description": "What it does.",
+          "type": "string"
+        },
+        "args": {
+          "description": "Arguments.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ArgInfo"
+          }
+        },
+        "result": {
+          "description": "Shape of `result`.",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "about",
+        "args",
+        "result"
+      ]
+    },
+    "ArgInfo": {
+      "description": "One CLI argument.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Name (`--long` for options).",
+          "type": "string"
+        },
+        "required": {
+          "description": "Required.",
+          "type": "boolean"
+        },
+        "multiple": {
+          "description": "Takes several values.",
+          "type": "boolean"
+        },
+        "help": {
+          "description": "Help text.",
+          "type": "string"
+        },
+        "default": {
+          "description": "Default value.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "values": {
+          "description": "Allowed values.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "required",
+        "multiple",
+        "help"
+      ]
+    },
+    "EnvelopeInfo": {
+      "description": "The envelope and exit-code contract.",
+      "type": "object",
+      "properties": {
+        "fields": {
+          "description": "Envelope fields.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "diagnostic": {
+          "description": "Diagnostic shape.",
+          "type": "string"
+        },
+        "exit_codes": {
+          "description": "Exit code meanings.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "formats": {
+          "description": "`--format` behaviour.",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "fields",
+        "diagnostic",
+        "exit_codes",
+        "formats"
+      ]
+    }
+  }
+}

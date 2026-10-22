@@ -1,0 +1,46 @@
+---
+source: crates/litigate-cli/tests/build.rs
+expression: "edges.json[\"result\"]"
+---
+{
+  "matches": [
+    {
+      "id": "frcp-rule12-example::answered->judgment-entered#0",
+      "kind": "edge",
+      "label": "Proceed to judgment",
+      "span": {
+        "file": "lit/examples/rule12.lit",
+        "line": 76,
+        "col": 51,
+        "end_line": 76,
+        "end_col": 94
+      },
+      "cite": null,
+      "in_force": {
+        "from": "2009-12-01",
+        "to": null
+      },
+      "detail": "answered -> judgment-entered"
+    },
+    {
+      "id": "frcp-rule12-example::default-risk->judgment-entered#0",
+      "kind": "edge",
+      "label": "Default entered",
+      "span": {
+        "file": "lit/examples/rule12.lit",
+        "line": 77,
+        "col": 60,
+        "end_line": 77,
+        "end_col": 99
+      },
+      "cite": null,
+      "in_force": {
+        "from": "2009-12-01",
+        "to": null
+      },
+      "detail": "default-risk -> judgment-entered"
+    }
+  ],
+  "total": 2,
+  "next_cursor": null
+}

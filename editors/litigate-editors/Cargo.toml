@@ -1,0 +1,20 @@
+[package]
+name = "litigate-editors"
+description = "Editor support tooling for litigate: grammar builds, generated Helix queries, editor-mode tests"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+repository.workspace = true
+
+[dependencies]
+anyhow.workspace = true
+clap.workspace = true
+
+[dev-dependencies]
+tree-sitter.workspace = true
+tree-sitter-litigate = { path = "../tree-sitter-litigate" }
+
+[lints]
+workspace = true

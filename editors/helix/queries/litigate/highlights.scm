@@ -1,5 +1,6 @@
 ; Generated from editors/tree-sitter-litigate/queries/highlights.scm by
-; editors/helix/sync-queries.sh. Do not edit; edit the source and rerun.
+; `cargo run -p litigate-editors --bin helix-queries`. Do not edit;
+; edit the source and rerun.
 
 ; Syntax highlighting for litigate (.lit and .case).
 ; Capture names follow the common tree-sitter convention shared by Neovim,

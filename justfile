@@ -157,9 +157,8 @@ ts-test:
     "${ts[@]}" test
 
 # Editor modes (editors/{emacs,helix,nvim}): Emacs ERT batch suite, Helix
-# query sync/compile + `hx --health`, headless Neovim. Each part skips (and
-# logs to $TEST_SKIP_LOG) when its editor is not installed.
+# queries + `hx --health`, headless Neovim (editors/litigate-editors/tests).
+# Part of the workspace tests too; each editor's test skips (and logs to
+# $TEST_SKIP_LOG) when that editor is not installed.
 editors-test:
-    editors/emacs/test/run.sh
-    editors/helix/test/check.sh
-    editors/nvim/test/run.sh
+    cargo nextest run -p litigate-editors

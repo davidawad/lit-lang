@@ -1,4 +1,5 @@
--- Headless test for editors/nvim; run through editors/nvim/test/run.sh.
+-- Headless test for editors/nvim; run by `cargo nextest run -p litigate-editors`
+-- (editors/litigate-editors/tests/nvim.rs).
 local repo = assert(os.getenv('LITIGATE_REPO'), 'LITIGATE_REPO unset')
 local parser_path = assert(os.getenv('LITIGATE_PARSER'), 'LITIGATE_PARSER unset')
 

@@ -1,0 +1,155 @@
+---
+source: crates/litigate-lower/tests/golden.rs
+expression: render(clock).unwrap_or_default()
+---
+{
+  "schemaVersion": 3,
+  "calendars": [
+    {
+      "id": "federal-holidays",
+      "title": "federal-holidays",
+      "cite": "FRCP 6(a)(6)",
+      "sourceUrl": "https://www.law.cornell.edu/rules/frcp",
+      "holidays": [
+        {
+          "id": "new-year",
+          "name": "new-year",
+          "date": {
+            "fixed": {
+              "month": 1,
+              "day": 1
+            }
+          },
+          "observed": "nearest-weekday",
+          "effective": {
+            "from": "1870-06-28"
+          }
+        },
+        {
+          "id": "mlk-day",
+          "name": "mlk-day",
+          "date": {
+            "nthWeekday": {
+              "month": 1,
+              "weekday": "monday",
+              "nth": 3
+            }
+          },
+          "observed": "actual",
+          "effective": {
+            "from": "1986-01-20"
+          }
+        },
+        {
+          "id": "juneteenth",
+          "name": "juneteenth",
+          "date": {
+            "fixed": {
+              "month": 6,
+              "day": 19
+            }
+          },
+          "observed": "nearest-weekday",
+          "effective": {
+            "from": "2021-06-17"
+          }
+        },
+        {
+          "id": "christmas",
+          "name": "christmas",
+          "date": {
+            "fixed": {
+              "month": 12,
+              "day": 25
+            }
+          },
+          "observed": "nearest-weekday",
+          "effective": {
+            "from": "1870-06-28"
+          }
+        }
+      ]
+    }
+  ],
+  "countingRules": [
+    {
+      "id": "frcp6",
+      "label": "FRCP 6(a)",
+      "sourceUrl": "https://www.law.cornell.edu/rules/frcp",
+      "closedWeekdays": [
+        "saturday",
+        "sunday"
+      ],
+      "holidays": [
+        "federal-holidays"
+      ],
+      "steps": [
+        {
+          "op": "anchor",
+          "kind": "trigger",
+          "text": "FRCP 6(a): exclude the trigger date {trigger}"
+        },
+        {
+          "op": "count",
+          "periods": [
+            {
+              "unit": "calendar",
+              "count": "calendar",
+              "text": "FRCP 6(a): count {n} calendar day(s) {after} the anchor -> {date}"
+            },
+            {
+              "unit": "court",
+              "count": "business",
+              "text": "FRCP 6(a): count {n} court day(s) {forward}, skipping weekends and holidays -> {date}"
+            }
+          ]
+        },
+        {
+          "op": "base"
+        },
+        {
+          "op": "roll",
+          "forward": {
+            "toward": "later",
+            "text": "FRCP 6(a): the last day is a weekend or legal holiday; roll forward -> {date}"
+          },
+          "backward": {
+            "toward": "earlier",
+            "text": "FRCP 6(a): the last day is a weekend or legal holiday; roll backward -> {date}"
+          }
+        },
+        {
+          "op": "service",
+          "methods": [
+            {
+              "method": "mail",
+              "days": 3
+            }
+          ],
+          "text": "FRCP 6(a): service by {method} adds {days} day(s) -> {date}",
+          "backwardText": "FRCP 6(a): service extensions apply to forward periods only; ignored"
+        },
+        {
+          "op": "roll",
+          "forward": {
+            "toward": "later",
+            "text": "FRCP 6(a): the last day is a weekend or legal holiday; roll forward -> {date}"
+          },
+          "backward": {
+            "toward": "earlier",
+            "text": "FRCP 6(a): the last day is a weekend or legal holiday; roll backward -> {date}"
+          }
+        },
+        {
+          "op": "clerkInaccessible",
+          "text": "FRCP 6(a): the clerk's office is inaccessible on the last day; extend -> {date}",
+          "ignoredText": "FRCP 6(a): no inaccessibility extension applies; ignored"
+        }
+      ],
+      "hours": {
+        "text": "FRCP 6(a): count every hour from the trigger; +{n} hour(s)",
+        "rollText": "FRCP 6(a): the period ends on a weekend or legal holiday; continue to the same time on {date}"
+      }
+    }
+  ]
+}

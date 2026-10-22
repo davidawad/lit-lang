@@ -262,7 +262,11 @@ fn pack_map(
     nodes: &[&hir::Node],
     edges: &[(RawEdge, &hir::Edge)],
 ) -> SourceMap {
-    let citations = Citations::new(pack.cite_syntax.clone(), build.corpus);
+    let citations = Citations::new(
+        pack.cite_syntax.clone(),
+        &pkg.manifest.sources,
+        build.corpus,
+    );
     let node_entries = pack
         .nodes
         .iter()

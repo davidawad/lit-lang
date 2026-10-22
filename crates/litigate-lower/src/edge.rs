@@ -87,16 +87,16 @@ pub(crate) fn edge(cx: &EdgeCx<'_, '_>, sink: &mut Sink, from: String, e: &hir::
 
 /// `Deadline.unit`: absent for calendar days, `"court"` for court days;
 /// business days have no litgraph unit (L6001).
-fn unit(sink: &mut Sink, unit: DayUnit, span: Option<&Span>) -> Option<Option<String>> {
+fn unit(sink: &mut Sink, unit: DayUnit, span: Option<&Span>) -> Result<Option<String>, ()> {
     match unit {
-        DayUnit::Calendar => Some(None),
-        DayUnit::Court => Some(Some("court".to_owned())),
+        DayUnit::Calendar => Ok(None),
+        DayUnit::Court => Ok(Some("court".to_owned())),
         DayUnit::Business => {
             sink.unsupported(
                 span,
                 "a business-day edge deadline has no litgraph unit (use court days)",
             );
-            None
+            Err(())
         }
     }
 }
@@ -155,7 +155,7 @@ fn deadline(
     };
     Some(Deadline {
         length,
-        unit: unit(sink, day_unit, span)?,
+        unit: unit(sink, day_unit, span).ok()?,
         extendable: d.extendable.or(declared.and_then(|x| x.extendable)),
         extension_authority: d
             .extension_authority

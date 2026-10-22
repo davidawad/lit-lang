@@ -120,6 +120,18 @@ pub(crate) fn cite_text(token: &litigate_syntax::SyntaxToken) -> String {
 }
 
 impl Lower {
+    /// A `cite` expression. A cite hole `cite ?("text")` is a hole whose
+    /// reason is the citation text (SPEC §2, §8.1).
+    fn cite(&mut self, node: &SyntaxNode) -> Option<Expr> {
+        let Some(text) = token_of(node, K::CiteText) else {
+            return self.expr(&node_of(node, K::HoleExpr)?);
+        };
+        Some(Expr {
+            kind: ExprKind::Cite(cite_text(&text)),
+            range: range(text.text_range()),
+        })
+    }
+
     /// Lowers an expression node; `None` when the node is incomplete (the
     /// parser already reported it).
     pub(crate) fn expr(&mut self, node: &SyntaxNode) -> Option<Expr> {
@@ -130,17 +142,7 @@ impl Lower {
                     .and_then(|l| token_of(&l, K::String))
                     .map(|t| name(&t).text),
             ),
-            K::CiteExpr => {
-                // A cite hole `cite ?("text")` is a hole whose reason is
-                // the citation text (SPEC §2, §8.1).
-                let Some(text) = token_of(node, K::CiteText) else {
-                    return self.expr(&node_of(node, K::HoleExpr)?);
-                };
-                return Some(Expr {
-                    kind: ExprKind::Cite(cite_text(&text)),
-                    range: range(text.text_range()),
-                });
-            }
+            K::CiteExpr => return self.cite(node),
             K::Ref => ExprKind::Ref(ref_path(node)?),
             K::RefExpr => ExprKind::Ref(ref_path(&node_of(node, K::Ref)?)?),
             K::CallExpr => {

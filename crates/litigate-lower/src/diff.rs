@@ -120,9 +120,6 @@ pub fn semantic_diff_json(a: &str, b: &str) -> Result<(DocumentKind, Vec<Change>
     if detect(&y) != Some(kind) {
         return Err(format!("second: not a {kind:?} document").to_lowercase());
     }
-    fn read<T: serde::de::DeserializeOwned>(label: &str, v: Value) -> Result<T, String> {
-        serde_json::from_value(v).map_err(|e| format!("{label}: {e}"))
-    }
     let changes = match kind {
         DocumentKind::Pack => semantic_diff(&read("first", x)?, &read("second", y)?),
         DocumentKind::Links => semantic_diff_links(&read("first", x)?, &read("second", y)?),
@@ -130,6 +127,10 @@ pub fn semantic_diff_json(a: &str, b: &str) -> Result<(DocumentKind, Vec<Change>
         DocumentKind::Clock => semantic_diff_clock(&read("first", x)?, &read("second", y)?),
     };
     Ok((kind, changes))
+}
+
+fn read<T: serde::de::DeserializeOwned>(label: &str, v: Value) -> Result<T, String> {
+    serde_json::from_value(v).map_err(|e| format!("{label}: {e}"))
 }
 
 fn normalized<T: Serialize>(value: &T) -> Value {

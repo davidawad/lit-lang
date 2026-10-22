@@ -1,0 +1,49 @@
+---
+source: crates/litigate-lower/tests/diff.rs
+expression: changes
+---
+[
+  {
+    "kind": "changed",
+    "pointer": "/edges/skip/probability",
+    "id": "skip",
+    "before": 0.5,
+    "after": 0.25
+  },
+  {
+    "kind": "removed",
+    "pointer": "/edges/b->c#0",
+    "id": "b->c#0",
+    "before": {
+      "id": "b->c#0",
+      "from": "b",
+      "to": "c",
+      "label": "end",
+      "actor": "either"
+    }
+  },
+  {
+    "kind": "changed",
+    "pointer": "/nodes/b/label",
+    "id": "b",
+    "before": "B",
+    "after": "B2"
+  },
+  {
+    "kind": "changed",
+    "pointer": "/nodes/c/payoff",
+    "id": "c",
+    "before": 45.0,
+    "after": 46.0
+  },
+  {
+    "kind": "added",
+    "pointer": "/nodes/d",
+    "id": "d",
+    "after": {
+      "id": "d",
+      "kind": "state",
+      "label": "D"
+    }
+  }
+]

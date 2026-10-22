@@ -66,7 +66,7 @@ pub struct Options {
 #[derive(Debug, Clone, PartialEq)]
 pub enum Document {
     /// A rule package's pack.
-    Pack(Pack),
+    Pack(Box<Pack>),
     /// A links package's link file.
     Links(LinkFile),
 }
@@ -191,7 +191,7 @@ impl<'a> Lowerer<'a> {
             let decls = pack::emitted(&build, pkg, &mut Sink::new(""));
             let clock = clock::fragment(&build, pkg, &decls, pack.counting.as_deref(), &mut sink);
             LoweredPackage {
-                document: Document::Pack(pack),
+                document: Document::Pack(Box::new(pack)),
                 source_map,
                 clock,
             }
@@ -230,6 +230,25 @@ fn manifest_file(pkg: &hir::Package) -> String {
                 .map(|p| p.join("Lit.toml").to_string_lossy().replace('\\', "/"))
         })
         .unwrap_or_else(|| "Lit.toml".to_owned())
+}
+
+/// [`render`] of a named scenario without the `scenario` fields that
+/// equal litgraph's own defaults, which serde fills back in on read: the
+/// output is semantically equal (SPEC §8.6) and reads like an authored
+/// scenario file.
+///
+/// # Errors
+/// L6005 when the value cannot be serialized.
+pub fn render_scenario(named: &NamedScenario) -> Result<String, Box<Diagnostic>> {
+    let defaults = serde_json::to_value(litgraph::Scenario::default()).unwrap_or_default();
+    let mut value = serde_json::to_value(named).unwrap_or_default();
+    if let Some(fields) = value
+        .get_mut("scenario")
+        .and_then(serde_json::Value::as_object_mut)
+    {
+        fields.retain(|k, v| defaults.get(k) != Some(v));
+    }
+    render(&value)
 }
 
 /// Byte-deterministic JSON (SPEC §8.6): two-space indentation and a

@@ -6,7 +6,7 @@ use super::rational::{self, ArithError};
 use super::ty::display;
 use crate::db::parse::tree::{Expr, ExprKind, RefPath};
 use crate::db::span::{to_span, Report, TextRange};
-use crate::hir::{self, DayUnit, Money, Rational, Type, Value};
+use crate::hir::{self, Type, Value};
 use crate::resolve::{scope::Scope, sig::TypeSig, sig::ValueKind};
 use litigate_base::{Applicability, DiagnosticCode as C, FileId, LineIndex};
 use std::collections::BTreeSet;
@@ -213,72 +213,18 @@ impl<'s, 'a> Checker<'s, 'a> {
         }
     }
 
-    fn money(&mut self, text: &str, r: TextRange) -> Checked {
-        let (amount, currency) = text.rsplit_once('.').unwrap_or((text, "usd"));
-        let decimals = amount.split_once('.').map_or(0, |(_, f)| f.len());
-        if decimals > 2 {
-            self.report(Report::new(
-                C::ArithmeticError,
-                r,
-                format!("`{currency}` has 2 minor-unit digits; `{amount}` has {decimals}"),
-            ));
-            return self.error(r);
-        }
-        let minor =
-            rational::parse_decimal(amount).and_then(|v| rational::mul(v, Rational::integer(100)));
-        match minor {
-            Ok(v) if v.denominator == 1 => {
-                let money = Money {
-                    minor_units: v.numerator,
-                    currency: currency.to_owned(),
-                };
-                self.literal(Value::Money(money), Type::Money(currency.to_owned()), r)
-            }
-            Ok(_) | Err(_) => self.arith(r, ArithError::Overflow),
-        }
-    }
-
-    fn duration(&mut self, text: &str, r: TextRange) -> Checked {
-        let (amount, unit) = text.rsplit_once('.').unwrap_or((text, "days"));
-        let value = match rational::parse_decimal(amount) {
-            Ok(v) => v,
-            Err(err) => return self.arith(r, err),
-        };
-        let unit = match unit {
-            "hours" => return self.literal(Value::Hours(value), Type::Hours, r),
-            "court_days" => DayUnit::Court,
-            "business_days" => DayUnit::Business,
-            _ => DayUnit::Calendar,
-        };
-        if value.denominator != 1 {
-            self.report(Report::new(
-                C::InvalidNumber,
-                r,
-                "day amounts must be integers",
-            ));
-            return self.error(r);
-        }
-        self.literal(
-            Value::Days {
-                amount: value.numerator,
-                unit,
-            },
-            Type::Days(unit),
-            r,
-        )
-    }
-
-    /// Resolves a name in expression position.
-    pub fn reference(&mut self, path: &RefPath, expected: Option<&Type>) -> Checked {
+    /// Names that denote literals: enum variants (by expected type or
+    /// `Enum.Variant`), `true`/`false` where a `Bool` is expected, actors.
+    fn literal_name(&mut self, path: &RefPath, expected: Option<&Type>) -> Option<Checked> {
         let r = path.range;
         if let Some(Type::Named(en)) = expected {
             if let Some(variants) = self.scope.enum_variants(en) {
-                if path.is_simple() && variants.iter().any(|v| *v == path.head.text) {
-                    return self.literal(
+                if path.is_simple() && variants.contains(&path.head.text) {
+                    return Some(self.literal(
                         Value::Variant(format!("{en}::{}", path.head.text)),
                         Type::Named(en.clone()),
                         r,
-                    );
+                    ));
                 }
             }
         }
@@ -286,28 +232,28 @@ impl<'s, 'a> Checker<'s, 'a> {
             && expected == Some(&Type::Boolean)
             && matches!(path.head.text.as_str(), "true" | "false")
         {
-            return self.literal(Value::Boolean(path.head.text == "true"), Type::Boolean, r);
+            return Some(self.literal(Value::Boolean(path.head.text == "true"), Type::Boolean, r));
         }
         if path.is_simple() && self.actors.contains(&path.head.text) {
-            return self.node(
+            return Some(self.node(
                 hir::ExprKind::Ref {
                     target: path.head.text.clone(),
                 },
                 Some(Type::Role),
                 None,
                 r,
-            );
+            ));
         }
         if path.rest.len() == 1 && path.instance.is_none() {
             if let Ok((en, found)) = self.scope.user_type(&path.head, &[]) {
                 if let TypeSig::Enum(variants) = found.item {
                     let variant = &path.rest[0].1.text;
                     if variants.contains(variant) {
-                        return self.literal(
+                        return Some(self.literal(
                             Value::Variant(format!("{en}::{variant}")),
                             Type::Named(en),
                             r,
-                        );
+                        ));
                     }
                     self.report(
                         Report::new(
@@ -317,9 +263,18 @@ impl<'s, 'a> Checker<'s, 'a> {
                         )
                         .note(format!("variants: {}", variants.join(", "))),
                     );
-                    return self.error(r);
+                    return Some(self.error(r));
                 }
             }
+        }
+        None
+    }
+
+    /// Resolves a name in expression position.
+    pub fn reference(&mut self, path: &RefPath, expected: Option<&Type>) -> Checked {
+        let r = path.range;
+        if let Some(checked) = self.literal_name(path, expected) {
+            return checked;
         }
         match self.scope.value(path) {
             Ok((target, found)) => match &found.item.kind {
@@ -423,9 +378,10 @@ impl<'s, 'a> Checker<'s, 'a> {
             ))
         };
         let (name, params) = match lookup {
-            Ok((name, found)) => match found.item {
-                TypeSig::Event(params) => (name, params.clone()),
-                _ => {
+            Ok((name, found)) => {
+                if let TypeSig::Event(params) = found.item {
+                    (name, params.clone())
+                } else {
                     self.report(Report::new(
                         C::InvalidOperation,
                         callee.range,
@@ -436,7 +392,7 @@ impl<'s, 'a> Checker<'s, 'a> {
                     ));
                     return self.error(r);
                 }
-            },
+            }
             Err(report) => {
                 let report = Report {
                     message: report

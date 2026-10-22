@@ -146,20 +146,17 @@ impl Lexer<'_> {
         } else if self.rest().starts_with("//") {
             self.pos += self.rest().find('\n').unwrap_or(self.rest().len());
         } else if self.rest().starts_with("/*") {
-            match self.rest()[2..].find("*/") {
-                Some(end) => {
-                    self.line_start |= self.rest()[..end + 2].contains('\n');
-                    self.pos += end + 4;
-                }
-                None => {
-                    self.report(
-                        C::UnterminatedLiteral,
-                        start,
-                        start + 2,
-                        "unterminated block comment",
-                    );
-                    self.pos = self.src.len();
-                }
+            if let Some(end) = self.rest()[2..].find("*/") {
+                self.line_start |= self.rest()[..end + 2].contains('\n');
+                self.pos += end + 4;
+            } else {
+                self.report(
+                    C::UnterminatedLiteral,
+                    start,
+                    start + 2,
+                    "unterminated block comment",
+                );
+                self.pos = self.src.len();
             }
         } else if c == '"' {
             self.string(start);
@@ -201,7 +198,7 @@ impl Lexer<'_> {
                     Some((_, 'r')) => value.push('\r'),
                     Some((_, 't')) => value.push('\t'),
                     Some((j, other)) => {
-                        bad_escapes.push((start + j - 1, start + j + other.len_utf8()))
+                        bad_escapes.push((start + j - 1, start + j + other.len_utf8()));
                     }
                     None => break,
                 },

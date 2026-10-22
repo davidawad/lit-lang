@@ -4,6 +4,7 @@ pub mod build;
 pub mod builtins;
 pub mod date;
 pub mod expr;
+pub mod literal;
 pub mod ops;
 pub mod rational;
 pub mod shape;

@@ -118,6 +118,7 @@ impl Parser {
     }
 
     /// One declaration (top level or inside a `rule`).
+    #[allow(clippy::too_many_lines)] // one arm per item of the SPEC §3.1 grammar
     pub(crate) fn item(&mut self) -> PResult<Item> {
         let t = self.peek().clone();
         let start = t.range.start;

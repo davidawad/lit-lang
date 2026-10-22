@@ -194,57 +194,7 @@ pub fn build(db: &dyn salsa::Database, file: SourceFile) -> Signature {
         ..Signature::default()
     };
     let items = flatten(tree);
-    for (item, rule) in &items {
-        if let Some((name, kind)) = value_of(item) {
-            let from = effective_from(item, *rule, m);
-            match sig.values.get_mut(name) {
-                Some(existing)
-                    if std::mem::discriminant(&existing.kind) == std::mem::discriminant(&kind) =>
-                {
-                    existing.versions.push(from)
-                }
-                Some(_) => {}
-                None => {
-                    sig.values.insert(
-                        name.to_owned(),
-                        ValueSig {
-                            kind,
-                            versions: vec![from],
-                        },
-                    );
-                }
-            }
-        }
-        match &item.kind {
-            ItemKind::Group(name, _) => {
-                sig.groups.insert(name.text.clone());
-            }
-            ItemKind::Authority(chain) => {
-                sig.authorities.extend(chain.iter().map(|n| n.text.clone()))
-            }
-            ItemKind::Enum(name, variants) => {
-                sig.types.entry(name.text.clone()).or_insert_with(|| {
-                    TypeSig::Enum(variants.iter().map(|v| v.text.clone()).collect())
-                });
-            }
-            ItemKind::Instance(base, origin, fields) => {
-                let pack = clause(fields, "pack").and_then(|f| match f.values.first() {
-                    Some((Atom::Expr(e), _)) => match &e.kind {
-                        ExprKind::Ref(r) => Some(r.display()),
-                        _ => None,
-                    },
-                    _ => None,
-                });
-                sig.values
-                    .entry(format!("{}@{}", base.text, origin.text))
-                    .or_insert(ValueSig {
-                        kind: ValueKind::Instance(pack),
-                        versions: Vec::new(),
-                    });
-            }
-            _ => {}
-        }
-    }
+    collect(&mut sig, &items, m);
     let imports: Vec<&Signature> = module_graph(db, file.workspace(db))
         .imports(file)
         .into_iter()
@@ -272,6 +222,61 @@ pub fn build(db: &dyn salsa::Database, file: SourceFile) -> Signature {
         }
     }
     sig
+}
+
+/// Records every declared name of `items` in `sig`.
+fn collect(sig: &mut Signature, items: &[(&Item, Option<&Item>)], m: Option<&Manifest>) {
+    for (item, rule) in items {
+        if let Some((name, kind)) = value_of(item) {
+            let from = effective_from(item, *rule, m);
+            match sig.values.get_mut(name) {
+                Some(existing)
+                    if std::mem::discriminant(&existing.kind) == std::mem::discriminant(&kind) =>
+                {
+                    existing.versions.push(from);
+                }
+                Some(_) => {}
+                None => {
+                    sig.values.insert(
+                        name.to_owned(),
+                        ValueSig {
+                            kind,
+                            versions: vec![from],
+                        },
+                    );
+                }
+            }
+        }
+        match &item.kind {
+            ItemKind::Group(name, _) => {
+                sig.groups.insert(name.text.clone());
+            }
+            ItemKind::Authority(chain) => {
+                sig.authorities.extend(chain.iter().map(|n| n.text.clone()));
+            }
+            ItemKind::Enum(name, variants) => {
+                sig.types.entry(name.text.clone()).or_insert_with(|| {
+                    TypeSig::Enum(variants.iter().map(|v| v.text.clone()).collect())
+                });
+            }
+            ItemKind::Instance(base, origin, fields) => {
+                let pack = clause(fields, "pack").and_then(|f| match f.values.first() {
+                    Some((Atom::Expr(e), _)) => match &e.kind {
+                        ExprKind::Ref(r) => Some(r.display()),
+                        _ => None,
+                    },
+                    _ => None,
+                });
+                sig.values
+                    .entry(format!("{}@{}", base.text, origin.text))
+                    .or_insert(ValueSig {
+                        kind: ValueKind::Instance(pack),
+                        versions: Vec::new(),
+                    });
+            }
+            _ => {}
+        }
+    }
 }
 
 /// Resolves alias targets and event parameter types (aliases in

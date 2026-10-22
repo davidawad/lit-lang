@@ -121,6 +121,7 @@ fn zero_like(v: &Value) -> Value {
 }
 
 /// Result type of `l op r`, or the code and message rejecting it.
+#[allow(clippy::match_same_arms)] // one arm per row of the SPEC §6 table
 fn result_type(op: BinaryOp, l: &Type, r: &Type) -> Result<Type, (C, String)> {
     use BinaryOp as B;
     use Type as T;

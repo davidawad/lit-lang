@@ -13,7 +13,7 @@ const C: &str = "module c\nstate c1: \"C1\" { _ \"go\" -> c1 }\n";
 
 fn ran(log: &[String], query: &str, file: SourceFile) -> bool {
     let key = format!("{query}({:?})", file.as_id());
-    log.iter().any(|e| *e == key)
+    log.contains(&key)
 }
 
 #[test]

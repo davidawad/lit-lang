@@ -2,30 +2,19 @@
 //! HIR (SPEC §5.3-§5.4). Structural checks only; overlap, coverage, and
 //! counting semantics are verified downstream.
 use super::cx::{first_expr, Cx};
-use crate::db::parse::tree::{ArmItem, Expr, ExprKind, Field, HolidayItem, Item, Name, RefPath};
+use crate::db::parse::tree::{ArmItem, Expr, ExprKind, Field, Item, Name, RefPath};
 use crate::db::span::Report;
 use crate::hir::{
-    Anchor, Calendar, Counting, DayUnit, Deadline, Direction, Holiday, HolidayDate, Interval,
-    Observance, RollOn, ShortPeriod, Transition, TransitionArm, Type, Value,
+    Anchor, Counting, DayUnit, Deadline, Direction, RollOn, ShortPeriod, Transition, TransitionArm,
+    Type, Value,
 };
 use crate::resolve::sig::ValueKind;
 use crate::resolve::suggest;
-use crate::types::date;
 use litigate_base::{Applicability, DiagnosticCode as C};
 use std::collections::BTreeMap;
 
-const WEEKDAYS: [&str; 7] = [
-    "monday",
-    "tuesday",
-    "wednesday",
-    "thursday",
-    "friday",
-    "saturday",
-    "sunday",
-];
-
 impl Cx<'_, '_> {
-    fn bad_counting(&mut self, name: &Name, expected: &[&str]) {
+    pub(super) fn bad_counting(&mut self, name: &Name, expected: &[&str]) {
         let mut report = Report::new(
             C::InvalidCounting,
             name.range,
@@ -38,7 +27,7 @@ impl Cx<'_, '_> {
         self.report(report);
     }
 
-    fn keyword<T: Copy>(&mut self, e: Option<&Expr>, table: &[(&str, T)]) -> Option<T> {
+    pub(super) fn keyword<T: Copy>(&mut self, e: Option<&Expr>, table: &[(&str, T)]) -> Option<T> {
         let ExprKind::Ref(r) = &e?.kind else {
             return None;
         };
@@ -54,9 +43,10 @@ impl Cx<'_, '_> {
 
     fn days(&mut self, e: &Expr) -> Option<(u64, DayUnit)> {
         match self.ck.infer(e).value {
-            Some(Value::Days { amount, unit }) => match u64::try_from(amount) {
-                Ok(n) => Some((n, unit)),
-                Err(_) => {
+            Some(Value::Days { amount, unit }) => {
+                if let Ok(n) = u64::try_from(amount) {
+                    Some((n, unit))
+                } else {
                     self.report(Report::new(
                         C::ArithmeticError,
                         e.range,
@@ -64,7 +54,7 @@ impl Cx<'_, '_> {
                     ));
                     None
                 }
-            },
+            }
             Some(Value::Hours(_)) => {
                 self.report(Report::new(
                     C::InvalidCounting,
@@ -182,12 +172,48 @@ impl Cx<'_, '_> {
                 )
             })
             .collect::<Vec<_>>();
-        let mut service_extensions = BTreeMap::new();
-        if let Some(ExprKind::Record(methods)) = f
-            .get("service_extension")
+        let service_extensions = self.service_extensions(f.get("service_extension"));
+        let calendar = if let Some(ExprKind::Ref(r)) = f
+            .get("holidays")
             .and_then(|x| first_expr(x))
             .map(|e| &e.kind)
         {
+            self.value_ref(r, "calendar", |k| matches!(k, ValueKind::Calendar))
+        } else {
+            self.report(Report::new(
+                C::InvalidCounting,
+                name.range,
+                format!("counting rule `{}` needs `holidays <calendar>`", name.text),
+            ));
+            None
+        };
+        let anchor = match f.get("anchor") {
+            Some(a) => self.keyword(
+                first_expr(a),
+                &[
+                    ("trigger_day", Anchor::TriggerDay),
+                    ("next_business_day", Anchor::NextBusinessDay),
+                ],
+            ),
+            None => Some(Anchor::TriggerDay),
+        };
+        let short_period = self.short_period(f.get("short_period"));
+        Some(Counting {
+            meta,
+            exclude_trigger_day: f.contains_key("exclude_trigger_day"),
+            include_last_day: f.contains_key("include_last_day"),
+            roll_on,
+            service_extensions,
+            calendar: calendar?,
+            anchor: anchor?,
+            short_period,
+            hours: f.contains_key("allow_hours"),
+        })
+    }
+
+    fn service_extensions(&mut self, f: Option<&&Field>) -> BTreeMap<String, (u64, DayUnit)> {
+        let mut service_extensions = BTreeMap::new();
+        if let Some(ExprKind::Record(methods)) = f.and_then(|x| first_expr(x)).map(|e| &e.kind) {
             for (method, e) in methods {
                 if let Some(d) = self.days(e) {
                     if service_extensions.insert(method.text.clone(), d).is_some() {
@@ -200,38 +226,11 @@ impl Cx<'_, '_> {
                 }
             }
         }
-        let calendar = match f
-            .get("holidays")
-            .and_then(|x| first_expr(x))
-            .map(|e| &e.kind)
-        {
-            Some(ExprKind::Ref(r)) => {
-                self.value_ref(r, "calendar", |k| matches!(k, ValueKind::Calendar))
-            }
-            _ => {
-                self.report(Report::new(
-                    C::InvalidCounting,
-                    name.range,
-                    format!("counting rule `{}` needs `holidays <calendar>`", name.text),
-                ));
-                None
-            }
-        };
-        let anchor = match f.get("anchor") {
-            Some(a) => self.keyword(
-                first_expr(a),
-                &[
-                    ("trigger_day", Anchor::TriggerDay),
-                    ("next_business_day", Anchor::NextBusinessDay),
-                ],
-            ),
-            None => Some(Anchor::TriggerDay),
-        };
-        let short_period = match f
-            .get("short_period")
-            .and_then(|x| first_expr(x))
-            .map(|e| (&e.kind, e.range))
-        {
+        service_extensions
+    }
+
+    fn short_period(&mut self, f: Option<&&Field>) -> Option<ShortPeriod> {
+        match f.and_then(|x| first_expr(x)).map(|e| (&e.kind, e.range)) {
             Some((ExprKind::Record(parts), range)) => {
                 let below = parts
                     .iter()
@@ -262,185 +261,7 @@ impl Cx<'_, '_> {
                     .map(|((threshold, _), unit)| ShortPeriod { threshold, unit })
             }
             _ => None,
-        };
-        Some(Counting {
-            meta,
-            exclude_trigger_day: f.contains_key("exclude_trigger_day"),
-            include_last_day: f.contains_key("include_last_day"),
-            roll_on,
-            service_extensions,
-            calendar: calendar?,
-            anchor: anchor?,
-            short_period,
-            hours: f.contains_key("allow_hours"),
-        })
-    }
-
-    fn small(&mut self, e: &Expr, lo: i64, hi: i64, what: &str) -> Option<i64> {
-        match self.ck.check(e, &Type::Number).value {
-            Some(Value::Number(v)) if v.denominator == 1 && (lo..=hi).contains(&v.numerator) => {
-                Some(v.numerator)
-            }
-            _ => {
-                self.report(Report::new(
-                    C::InvalidCounting,
-                    e.range,
-                    format!("{what} must be an integer from {lo} to {hi}"),
-                ));
-                None
-            }
         }
-    }
-
-    fn holiday_date(&mut self, rule: &Expr) -> Option<HolidayDate> {
-        let ExprKind::Call(callee, args) = &rule.kind else {
-            self.report(Report::new(
-                C::InvalidCounting,
-                rule.range,
-                "expected `fixed`, `nth`, `last`, `every`, or `once`",
-            ));
-            return None;
-        };
-        let weekday = |cx: &mut Self, e: &Expr| -> Option<String> {
-            match &e.kind {
-                ExprKind::Ref(r) if r.is_simple() && WEEKDAYS.contains(&r.head.text.as_str()) => {
-                    Some(r.head.text.clone())
-                }
-                ExprKind::Ref(r) => {
-                    cx.bad_counting(&r.head, &WEEKDAYS);
-                    None
-                }
-                _ => None,
-            }
-        };
-        let shape: &[&str] = match callee.head.text.as_str() {
-            "fixed" => &["month", "day"],
-            "nth" => &["n", "weekday", "month"],
-            "last" => &["weekday", "month"],
-            "every" => &["years", "from_year", "month", "day"],
-            "once" => &["date"],
-            _ => {
-                self.bad_counting(&callee.head, &["fixed", "nth", "last", "every", "once"]);
-                return None;
-            }
-        };
-        if args.len() != shape.len() {
-            self.report(Report::new(
-                C::InvalidCounting,
-                rule.range,
-                format!("`{}` takes ({})", callee.head.text, shape.join(", ")),
-            ));
-            return None;
-        }
-        let to8 = |v: i64| u8::try_from(v).ok();
-        let date = match callee.head.text.as_str() {
-            "fixed" => {
-                let (m, d) = (
-                    self.small(&args[0], 1, 12, "month")?,
-                    self.small(&args[1], 1, 31, "day")?,
-                );
-                if i64::from(date::days_in_month(2000, u32::try_from(m).ok()?)) < d {
-                    self.report(Report::new(
-                        C::InvalidCounting,
-                        rule.range,
-                        format!("month {m} has no day {d}"),
-                    ));
-                    return None;
-                }
-                HolidayDate::Fixed {
-                    month: to8(m)?,
-                    day: to8(d)?,
-                }
-            }
-            "nth" => HolidayDate::Nth {
-                n: to8(self.small(&args[0], 1, 4, "n")?)?,
-                weekday: weekday(self, &args[1])?,
-                month: to8(self.small(&args[2], 1, 12, "month")?)?,
-            },
-            "last" => HolidayDate::Last {
-                weekday: weekday(self, &args[0])?,
-                month: to8(self.small(&args[1], 1, 12, "month")?)?,
-            },
-            "every" => HolidayDate::Every {
-                years: u16::try_from(self.small(&args[0], 1, 100, "years")?).ok()?,
-                from_year: u16::try_from(self.small(&args[1], 1, 9999, "from_year")?).ok()?,
-                month: to8(self.small(&args[2], 1, 12, "month")?)?,
-                day: to8(self.small(&args[3], 1, 31, "day")?)?,
-            },
-            _ => match &args[0].kind {
-                ExprKind::Date(d) => HolidayDate::Once { date: d.clone() },
-                _ => {
-                    self.report(Report::new(
-                        C::InvalidCounting,
-                        args[0].range,
-                        "`once` takes a date",
-                    ));
-                    return None;
-                }
-            },
-        };
-        Some(date)
-    }
-
-    /// `calendar c { id: rule effective [a, b) observed kind }`.
-    pub fn calendar(
-        &mut self,
-        item: &Item,
-        rule: Option<&Item>,
-        name: &Name,
-        holidays: &[HolidayItem],
-    ) -> Option<Calendar> {
-        let meta = self.meta(name, None, item, rule);
-        let mut seen = std::collections::BTreeSet::new();
-        let mut out = Vec::new();
-        let mut ok = true;
-        for h in holidays {
-            if !seen.insert(h.name.text.clone()) {
-                self.report(Report::new(
-                    C::DuplicateName,
-                    h.name.range,
-                    format!("calendar `{}` already defines `{}`", name.text, h.name.text),
-                ));
-            }
-            let date = self.holiday_date(&h.rule);
-            let observed = h.observed.as_ref().and_then(|o| {
-                let e = Expr {
-                    kind: ExprKind::Ref(RefPath {
-                        head: o.clone(),
-                        instance: None,
-                        rest: vec![],
-                        version: None,
-                        range: o.range,
-                    }),
-                    range: o.range,
-                };
-                self.keyword(
-                    Some(&e),
-                    &[
-                        ("nearest_weekday", Observance::NearestWeekday),
-                        ("next_day", Observance::NextDay),
-                    ],
-                )
-            });
-            ok &= date.is_some() && (h.observed.is_none() || observed.is_some());
-            let (from, to) = &h.effective;
-            if let Some(date) = date {
-                out.push(Holiday {
-                    id: h.name.text.clone(),
-                    date,
-                    in_force: Interval {
-                        from: from.text.clone(),
-                        to: to.as_ref().map(|t| t.text.clone()),
-                        known_at: meta.effective.known_at.clone(),
-                    },
-                    observed,
-                });
-            }
-        }
-        ok.then_some(Calendar {
-            meta,
-            holidays: out,
-        })
     }
 
     /// `transition t amends d@D { unless C -> v, otherwise -> w }`.

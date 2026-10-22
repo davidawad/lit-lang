@@ -95,29 +95,11 @@ pub fn check_package(db: &dyn salsa::Database, pkg: PackageInput) -> PackageChec
     diagnostics.extend(checks.iter().flat_map(|c| c.diagnostics.iter().cloned()));
     diagnostics.extend(namespace_duplicates(db, pkg));
     let starts: Vec<_> = checks.iter().flat_map(|c| c.starts.iter()).collect();
-    let is_links = checks.iter().any(|c| c.first_link.is_some());
-    if is_links {
-        if let Some(node) = checks.iter().find_map(|c| c.first_node.clone()) {
-            diagnostics.push(Diagnostic::error(
-                C::InvalidField,
-                node,
-                "a links package (one with `link` or `instance`) must declare no nodes",
-            ));
-        }
-    } else if starts.is_empty() {
-        diagnostics.push(Diagnostic::error(
-            C::InvalidStart,
-            to_span(&manifest_file, &index, TextRange::default()),
-            "the package declares no `start` node",
-        ));
-    }
-    for (_, span) in starts.iter().skip(1) {
-        diagnostics.push(Diagnostic::error(
-            C::InvalidStart,
-            span.clone(),
-            "a package has exactly one `start`",
-        ));
-    }
+    diagnostics.extend(shape(
+        &checks,
+        &starts,
+        to_span(&manifest_file, &index, TextRange::default()),
+    ));
     sort_diagnostics(&mut diagnostics);
     let holes = checks
         .iter()
@@ -155,6 +137,39 @@ pub fn check_package(db: &dyn salsa::Database, pkg: PackageInput) -> PackageChec
         diagnostics,
         holes,
     }
+}
+
+/// One `start` (none in a links package) and no nodes in a links package.
+fn shape(
+    checks: &[&ModuleCheck],
+    starts: &[&(Option<String>, litigate_base::Span)],
+    manifest_span: litigate_base::Span,
+) -> Vec<Diagnostic> {
+    let mut diagnostics = Vec::new();
+    let is_links = checks.iter().any(|c| c.first_link.is_some());
+    if is_links {
+        if let Some(node) = checks.iter().find_map(|c| c.first_node.clone()) {
+            diagnostics.push(Diagnostic::error(
+                C::InvalidField,
+                node,
+                "a links package (one with `link` or `instance`) must declare no nodes",
+            ));
+        }
+    } else if starts.is_empty() {
+        diagnostics.push(Diagnostic::error(
+            C::InvalidStart,
+            manifest_span,
+            "the package declares no `start` node",
+        ));
+    }
+    for (_, span) in starts.iter().skip(1) {
+        diagnostics.push(Diagnostic::error(
+            C::InvalidStart,
+            span.clone(),
+            "a package has exactly one `start`",
+        ));
+    }
+    diagnostics
 }
 
 /// Names declared by more than one module of the package (L1001).

@@ -172,76 +172,9 @@ pub fn parse_manifest(text: &str) -> Result<ParsedManifest, Vec<Report>> {
         reports: Vec::new(),
     };
     let p = &raw.package;
-    c.check(is_kebab(p.name.get_ref()), range(&p.name), || {
-        format!("package name `{}` must be kebab-case", p.name.get_ref())
-    });
-    c.check(
-        Version::parse(p.version.get_ref()).is_some(),
-        range(&p.version),
-        || {
-            format!(
-                "`{}` is not a SemVer version (MAJOR.MINOR.PATCH[-pre])",
-                p.version.get_ref()
-            )
-        },
-    );
-    c.check(*p.language.get_ref() == 1, range(&p.language), || {
-        "`language` must be 1".to_owned()
-    });
-    c.check(is_kebab(p.pack_id.get_ref()), range(&p.pack_id), || {
-        format!("pack id `{}` must be kebab-case", p.pack_id.get_ref())
-    });
-    for (key, value) in [("forum", &p.forum), ("authority", &p.authority)] {
-        c.check(is_ident(value.get_ref()), range(value), || {
-            format!("`{key}` must be an identifier, found `{}`", value.get_ref())
-        });
-    }
-    c.date("in_force", &p.in_force);
-    c.date("known_at", &p.known_at);
-    if let Some(until) = &p.in_force_until {
-        c.date("in_force_until", until);
-        c.check(until.get_ref() > p.in_force.get_ref(), range(until), || {
-            "`in_force_until` must be after `in_force`".to_owned()
-        });
-    }
-    let mut roles = BTreeMap::new();
-    for (actor, role) in &p.roles.0 {
-        let parsed = match role.get_ref().as_str() {
-            "self" => Some(ActorRole::Protagonist),
-            "opponent" => Some(ActorRole::Opponent),
-            "nature" => Some(ActorRole::Nature),
-            _ => None,
-        };
-        c.check(parsed.is_some(), range(role), || {
-            format!("role of `{actor}` must be \"self\", \"opponent\", or \"nature\"")
-        });
-        c.check(is_ident(actor) && actor != "either", range(role), || {
-            format!("`{actor}` is not a valid actor name (`either` is built in)")
-        });
-        roles.insert(actor.clone(), parsed.unwrap_or(ActorRole::Nature));
-    }
-    let mut dependencies = BTreeMap::new();
-    let mut dependency_paths = BTreeMap::new();
-    for (name, dep) in &raw.dependencies.0 {
-        let d = dep.get_ref();
-        c.check(is_kebab(name), range(dep), || {
-            format!("dependency name `{name}` must be kebab-case")
-        });
-        c.check(
-            Requirement::parse(d.version.get_ref()).is_some(),
-            range(&d.version),
-            || {
-                format!(
-                    "`{}` is not a requirement (`^`, `~`, `>=`, or `=` plus a version)",
-                    d.version.get_ref()
-                )
-            },
-        );
-        dependencies.insert(name.clone(), d.version.get_ref().clone());
-        if let Some(path) = &d.path {
-            dependency_paths.insert(name.clone(), path.clone());
-        }
-    }
+    package_table(&mut c, p);
+    let roles = roles(&mut c, &p.roles);
+    let (dependencies, dependency_paths) = dependencies(&mut c, &raw.dependencies);
     let sources = raw
         .sources
         .0
@@ -274,6 +207,89 @@ pub fn parse_manifest(text: &str) -> Result<ParsedManifest, Vec<Report>> {
         manifest,
         dependency_paths,
     })
+}
+
+fn package_table(c: &mut Checker, p: &RawPackage) {
+    c.check(is_kebab(p.name.get_ref()), range(&p.name), || {
+        format!("package name `{}` must be kebab-case", p.name.get_ref())
+    });
+    c.check(
+        Version::parse(p.version.get_ref()).is_some(),
+        range(&p.version),
+        || {
+            format!(
+                "`{}` is not a SemVer version (MAJOR.MINOR.PATCH[-pre])",
+                p.version.get_ref()
+            )
+        },
+    );
+    c.check(*p.language.get_ref() == 1, range(&p.language), || {
+        "`language` must be 1".to_owned()
+    });
+    c.check(is_kebab(p.pack_id.get_ref()), range(&p.pack_id), || {
+        format!("pack id `{}` must be kebab-case", p.pack_id.get_ref())
+    });
+    for (key, value) in [("forum", &p.forum), ("authority", &p.authority)] {
+        c.check(is_ident(value.get_ref()), range(value), || {
+            format!("`{key}` must be an identifier, found `{}`", value.get_ref())
+        });
+    }
+    c.date("in_force", &p.in_force);
+    c.date("known_at", &p.known_at);
+    if let Some(until) = &p.in_force_until {
+        c.date("in_force_until", until);
+        c.check(until.get_ref() > p.in_force.get_ref(), range(until), || {
+            "`in_force_until` must be after `in_force`".to_owned()
+        });
+    }
+}
+
+fn roles(c: &mut Checker, table: &Ordered<Spanned<String>>) -> BTreeMap<String, ActorRole> {
+    let mut roles = BTreeMap::new();
+    for (actor, role) in &table.0 {
+        let parsed = match role.get_ref().as_str() {
+            "self" => Some(ActorRole::Protagonist),
+            "opponent" => Some(ActorRole::Opponent),
+            "nature" => Some(ActorRole::Nature),
+            _ => None,
+        };
+        c.check(parsed.is_some(), range(role), || {
+            format!("role of `{actor}` must be \"self\", \"opponent\", or \"nature\"")
+        });
+        c.check(is_ident(actor) && actor != "either", range(role), || {
+            format!("`{actor}` is not a valid actor name (`either` is built in)")
+        });
+        roles.insert(actor.clone(), parsed.unwrap_or(ActorRole::Nature));
+    }
+    roles
+}
+
+type Dependencies = (BTreeMap<String, String>, BTreeMap<String, String>);
+
+fn dependencies(c: &mut Checker, table: &Ordered<Spanned<RawDependency>>) -> Dependencies {
+    let mut dependencies = BTreeMap::new();
+    let mut dependency_paths = BTreeMap::new();
+    for (name, dep) in &table.0 {
+        let d = dep.get_ref();
+        c.check(is_kebab(name), range(dep), || {
+            format!("dependency name `{name}` must be kebab-case")
+        });
+        c.check(
+            Requirement::parse(d.version.get_ref()).is_some(),
+            range(&d.version),
+            || {
+                format!(
+                    "`{}` is not a requirement (`^`, `~`, `>=`, or `=` plus a version)",
+                    d.version.get_ref()
+                )
+            },
+        );
+        dependencies.insert(name.clone(), d.version.get_ref().clone());
+        if let Some(path) = &d.path {
+            dependency_paths.insert(name.clone(), path.clone());
+        }
+    }
+    (dependencies, dependency_paths)
 }
 
 fn source(c: &mut Checker, id: &str, s: &Spanned<RawSource>) -> SourceBinding {

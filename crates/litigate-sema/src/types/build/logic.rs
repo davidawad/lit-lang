@@ -51,7 +51,7 @@ impl Cx<'_, '_> {
         let resolved = self.ck.scope.value(target).map_err(|r| self.report(r)).ok();
         let target_ty = match resolved.as_ref().map(|(_, f)| &f.item.kind) {
             Some(ValueKind::Default(t)) => t.clone(),
-            Some(ValueKind::Exception) => None,
+            Some(ValueKind::Exception) | None => None,
             Some(other) => {
                 self.report(Report::new(
                     C::TypeMismatch,
@@ -64,7 +64,6 @@ impl Cx<'_, '_> {
                 ));
                 None
             }
-            None => None,
         };
         let kind = if kind.text == "undercuts" {
             ExceptionKind::Undercutting
@@ -213,7 +212,9 @@ impl Cx<'_, '_> {
         }
         let mut reports = Vec::new();
         let resolved = ty::resolve(self.ck.scope, target, &mut reports);
-        reports.into_iter().for_each(|r| self.report(r));
+        for r in reports {
+            self.report(r);
+        }
         Some(TypeAlias {
             name: name.text.clone(),
             target: resolved?,
@@ -259,7 +260,9 @@ impl Cx<'_, '_> {
             }
             let mut reports = Vec::new();
             let resolved = ty::resolve(self.ck.scope, t, &mut reports);
-            reports.into_iter().for_each(|r| self.report(r));
+            for r in reports {
+                self.report(r);
+            }
             out.push((p.text.clone(), resolved?));
         }
         Some(EventType {
@@ -308,9 +311,56 @@ impl Cx<'_, '_> {
         })
     }
 
+    fn instance_probabilities(
+        &mut self,
+        f: Option<&&Field>,
+    ) -> BTreeMap<String, crate::hir::Rational> {
+        let mut probabilities = BTreeMap::new();
+        if let Some(ExprKind::Record(ps)) = f.and_then(|x| first_expr(x)).map(|e| &e.kind) {
+            for (edge, e) in ps {
+                match self.ck.check(e, &Type::Probability).value {
+                    Some(Value::Probability(p)) if q::is_probability(p) => {
+                        probabilities.insert(edge.text.clone(), p);
+                    }
+                    _ => self.report(Report::new(
+                        C::InvalidProbability,
+                        e.range,
+                        "instance probabilities must be constants in [0, 1]",
+                    )),
+                }
+            }
+        }
+        probabilities
+    }
+
+    fn instance_roles(&mut self, f: Option<&&Field>) -> BTreeMap<String, ActorRole> {
+        let mut roles = BTreeMap::new();
+        if let Some(ExprKind::Record(rs)) = f.and_then(|x| first_expr(x)).map(|e| &e.kind) {
+            for (actor, e) in rs {
+                let role = match &e.kind {
+                    ExprKind::Ref(r) if r.head.text == "self" => Some(ActorRole::Protagonist),
+                    ExprKind::Ref(r) if r.head.text == "opponent" => Some(ActorRole::Opponent),
+                    ExprKind::Ref(r) if r.head.text == "nature" => Some(ActorRole::Nature),
+                    _ => None,
+                };
+                match role {
+                    Some(role) => {
+                        roles.insert(actor.text.clone(), role);
+                    }
+                    None => self.report(Report::new(
+                        C::TypeMismatch,
+                        e.range,
+                        "a role is `self`, `opponent`, or `nature`",
+                    )),
+                }
+            }
+        }
+        roles
+    }
+
     /// `instance base@origin { ... }`.
     pub fn instance(&mut self, base: &Name, origin: &Name, fields: &[Field]) -> Option<Instance> {
-        let f = self.once(fields);
+        let f = self.once_except(fields, "patch");
         let pack = f
             .get("pack")
             .and_then(|x| first_expr(x))
@@ -340,48 +390,8 @@ impl Cx<'_, '_> {
                 "an instance needs `pack <pack-id>`",
             ));
         }
-        let mut probabilities = BTreeMap::new();
-        if let Some(ExprKind::Record(ps)) = f
-            .get("probabilities")
-            .and_then(|x| first_expr(x))
-            .map(|e| &e.kind)
-        {
-            for (edge, e) in ps {
-                match self.ck.check(e, &Type::Probability).value {
-                    Some(Value::Probability(p)) if q::is_probability(p) => {
-                        probabilities.insert(edge.text.clone(), p);
-                    }
-                    _ => self.report(Report::new(
-                        C::InvalidProbability,
-                        e.range,
-                        "instance probabilities must be constants in [0, 1]",
-                    )),
-                }
-            }
-        }
-        let mut roles = BTreeMap::new();
-        if let Some(ExprKind::Record(rs)) =
-            f.get("roles").and_then(|x| first_expr(x)).map(|e| &e.kind)
-        {
-            for (actor, e) in rs {
-                let role = match &e.kind {
-                    ExprKind::Ref(r) if r.head.text == "self" => Some(ActorRole::Protagonist),
-                    ExprKind::Ref(r) if r.head.text == "opponent" => Some(ActorRole::Opponent),
-                    ExprKind::Ref(r) if r.head.text == "nature" => Some(ActorRole::Nature),
-                    _ => None,
-                };
-                match role {
-                    Some(role) => {
-                        roles.insert(actor.text.clone(), role);
-                    }
-                    None => self.report(Report::new(
-                        C::TypeMismatch,
-                        e.range,
-                        "a role is `self`, `opponent`, or `nature`",
-                    )),
-                }
-            }
-        }
+        let probabilities = self.instance_probabilities(f.get("probabilities"));
+        let roles = self.instance_roles(f.get("roles"));
         let mut patch_edges = BTreeMap::new();
         for p in fields.iter().filter(|x| x.key.text == "patch") {
             if let (Some(ExprKind::Ref(edge)), Some((crate::db::parse::tree::Atom::Json(j), _))) =

@@ -220,7 +220,7 @@ impl<'a> Scope<'a> {
         };
         match &r.version {
             None => Ok((canonical, found)),
-            Some(date) if found.item.versions.iter().any(|v| *v == date.text) => {
+            Some(date) if found.item.versions.contains(&date.text) => {
                 Ok((format!("{canonical}@{}", date.text), found))
             }
             Some(date) => Err(Report::new(
@@ -283,7 +283,7 @@ impl<'a> Scope<'a> {
         }
         let found = sigs
             .iter()
-            .find_map(|s| s.values.get(&last.text).map(|item| Found { sig: *s, item }));
+            .find_map(|s| s.values.get(&last.text).map(|item| Found { sig: s, item }));
         let found = found.ok_or_else(|| {
             let keys: Vec<&str> = sigs
                 .iter()

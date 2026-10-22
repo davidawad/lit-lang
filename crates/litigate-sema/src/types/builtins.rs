@@ -39,6 +39,7 @@ fn arity(c: &mut Checker<'_, '_>, name: &str, args: &[Expr], n: usize, r: TextRa
 }
 
 /// Checks a builtin call; `None` when `name` is not a builtin.
+#[allow(clippy::too_many_lines)] // one arm per builtin of the closed list
 pub fn call(c: &mut Checker<'_, '_>, name: &str, args: &[Expr], r: TextRange) -> Option<Checked> {
     if !NAMES.contains(&name) {
         return None;
@@ -69,16 +70,15 @@ pub fn call(c: &mut Checker<'_, '_>, name: &str, args: &[Expr], r: TextRange) ->
             mk(c, args, ty, None)
         }
         "has_event" => {
-            let arg = match &args[0].kind {
-                ExprKind::Call(callee, inner) => c.event_call(callee, inner, false, args[0].range),
-                _ => {
-                    c.report(Report::new(
-                        C::TypeMismatch,
-                        args[0].range,
-                        "`has_event` takes an event pattern such as `Served(complaint, Mail)`",
-                    ));
-                    c.error(args[0].range)
-                }
+            let arg = if let ExprKind::Call(callee, inner) = &args[0].kind {
+                c.event_call(callee, inner, false, args[0].range)
+            } else {
+                c.report(Report::new(
+                    C::TypeMismatch,
+                    args[0].range,
+                    "`has_event` takes an event pattern such as `Served(complaint, Mail)`",
+                ));
+                c.error(args[0].range)
             };
             let ty = arg.ty.as_ref().map(|_| Type::Boolean);
             mk(c, vec![arg.hir], ty, None)
@@ -259,45 +259,78 @@ fn dist_call(c: &mut Checker<'_, '_>, name: &str, args: &[Expr], r: TextRange) -
             .collect(),
         _ => None,
     };
-    let mut value = None;
-    if let (Some(w), Some(chosen)) = (weights, chosen) {
-        let kept: Vec<_> = w.iter().filter(|(k, _)| chosen.contains(k)).collect();
-        match rational::sum(kept.iter().map(|(_, p)| *p)) {
-            Ok(mass) if mass.numerator == 0 => {
-                c.report(Report::new(
-                    C::InvalidDistribution,
-                    args[1].range,
-                    "`given` conditions on a subset with zero probability mass",
-                ));
-                return c.error(r);
-            }
-            Ok(mass) => {
-                let renorm: Result<Vec<_>, _> = w
-                    .iter()
-                    .map(|(k, p)| {
-                        if chosen.contains(k) {
-                            rational::div(*p, mass).map(|q| (k.clone(), q))
-                        } else {
-                            Ok((k.clone(), hir::Rational::integer(0)))
-                        }
-                    })
-                    .collect();
-                match renorm {
-                    Ok(v) => value = Some(Value::Distribution(v)),
-                    Err(e) => return c.arith(r, e),
-                }
-            }
-            Err(e) => return c.arith(r, e),
+    let value = match weights
+        .zip(chosen)
+        .map(|(w, chosen)| condition(&w, &chosen))
+    {
+        None => None,
+        Some(Ok(v)) => Some(Value::Distribution(v)),
+        Some(Err(None)) => {
+            c.report(Report::new(
+                C::InvalidDistribution,
+                args[1].range,
+                "`given` conditions on a subset with zero probability mass",
+            ));
+            return c.error(r);
         }
-    }
+        Some(Err(Some(e))) => return c.arith(r, e),
+    };
     let ok = list.ty.is_some();
     c.node(
         hir::ExprKind::Call {
             callee: name.to_owned(),
             args: vec![d.hir, list.hir],
         },
-        ok.then(|| Type::Distribution(en)),
+        ok.then_some(Type::Distribution(en)),
         value,
         r,
     )
+}
+
+/// Conditions weights `w` on the variants `chosen`, renormalizing exactly.
+/// `Err(None)` is zero mass; `Err(Some(_))` an arithmetic failure.
+fn condition(
+    w: &[(String, hir::Rational)],
+    chosen: &[String],
+) -> Result<Vec<(String, hir::Rational)>, Option<rational::ArithError>> {
+    let mass = rational::sum(
+        w.iter()
+            .filter(|(k, _)| chosen.contains(k))
+            .map(|(_, p)| *p),
+    )
+    .map_err(Some)?;
+    if mass.numerator == 0 {
+        return Err(None);
+    }
+    w.iter()
+        .map(|(k, p)| {
+            let q = if chosen.contains(k) {
+                rational::div(*p, mass)?
+            } else {
+                hir::Rational::integer(0)
+            };
+            Ok((k.clone(), q))
+        })
+        .collect::<Result<_, rational::ArithError>>()
+        .map_err(Some)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::condition;
+    use crate::hir::Rational;
+
+    #[test]
+    fn conditioning_renormalizes_exactly() {
+        let r = |n, d| Rational {
+            numerator: n,
+            denominator: d,
+        };
+        let w = vec![("a".to_owned(), r(1, 4)), ("b".to_owned(), r(3, 4))];
+        assert_eq!(
+            condition(&w, &["b".to_owned()]),
+            Ok(vec![("a".to_owned(), r(0, 1)), ("b".to_owned(), r(1, 1))])
+        );
+        assert_eq!(condition(&w, &[]), Err(None));
+    }
 }

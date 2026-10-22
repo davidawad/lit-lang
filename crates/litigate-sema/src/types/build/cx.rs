@@ -48,8 +48,18 @@ impl Cx<'_, '_> {
 
     /// Indexes fields by key, reporting duplicates (L2007).
     pub fn once<'f>(&mut self, fields: &'f [Field]) -> BTreeMap<&'f str, &'f Field> {
+        self.once_except(fields, "")
+    }
+
+    /// Like [`Self::once`], but `repeatable` may appear any number of times
+    /// (and is left out of the index).
+    pub fn once_except<'f>(
+        &mut self,
+        fields: &'f [Field],
+        repeatable: &str,
+    ) -> BTreeMap<&'f str, &'f Field> {
         let mut out = BTreeMap::new();
-        for f in fields {
+        for f in fields.iter().filter(|f| f.key.text != repeatable) {
             if out.insert(f.key.text.as_str(), f).is_some() {
                 self.report(
                     Report::new(

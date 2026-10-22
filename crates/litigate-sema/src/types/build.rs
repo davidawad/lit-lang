@@ -1,7 +1,9 @@
 //! HIR construction: name resolution and type checking of every item of a
 //! module, then package-level assembly (SPEC §4-§6, §11).
+mod calendar;
 mod clock;
 mod cx;
+mod edge;
 mod logic;
 mod node;
 mod package;
@@ -74,13 +76,13 @@ fn has_effective(item: &Item, rule: Option<&Item>) -> bool {
         || rule.is_some_and(|r| clause(clauses_of(r), "effective").is_some())
 }
 
+/// First sighting of a name: value kind, versioned, and where.
+type Seen = (Option<std::mem::Discriminant<ValueKind>>, bool, TextRange);
+
 /// Duplicate declarations within one module (L1001); same-kind values that
 /// all carry `effective` clauses are versions, not duplicates.
 fn duplicates(tree: &ItemTree, reports: &mut Vec<Report>) {
-    let mut seen: BTreeMap<
-        (u8, String),
-        (Option<std::mem::Discriminant<ValueKind>>, bool, TextRange),
-    > = BTreeMap::new();
+    let mut seen: BTreeMap<(u8, String), Seen> = BTreeMap::new();
     for (item, rule) in flatten(tree) {
         let (ns, kind) = match &item.kind {
             ItemKind::TypeAlias(..) | ItemKind::Enum(..) | ItemKind::Event(..) => (1, None),
@@ -198,6 +200,48 @@ fn imports(
     resolved
 }
 
+/// A `.lit` `package` header must agree with `Lit.toml` (L1005).
+fn package_header(
+    header: &crate::db::parse::tree::PackageHeader,
+    m: &hir::Manifest,
+    reports: &mut Vec<Report>,
+) {
+    let mut expect = vec![("name", &header.name, m.name.as_str())];
+    for f in &header.fields {
+        let want = if f.key.text == "forum" {
+            m.forum.as_str()
+        } else {
+            m.authority.as_str()
+        };
+        if let Some(crate::db::parse::tree::ExprKind::Ref(r)) = cx::first_expr(f).map(|e| &e.kind) {
+            expect.push((
+                if f.key.text == "forum" {
+                    "forum"
+                } else {
+                    "authority"
+                },
+                &r.head,
+                want,
+            ));
+        }
+    }
+    for (what, got, want) in expect {
+        if got.text != want {
+            reports.push(
+                Report::new(
+                    C::PackageMismatch,
+                    got.range,
+                    format!(
+                        "package {what} `{}` disagrees with Lit.toml (`{want}`)",
+                        got.text
+                    ),
+                )
+                .fix(got.range, want, Applicability::MachineApplicable),
+            );
+        }
+    }
+}
+
 /// Signatures reachable through `::`: every module of this package and of
 /// its declared dependencies.
 fn pack_signatures(db: &dyn salsa::Database, file: SourceFile) -> Vec<&Signature> {
@@ -234,42 +278,7 @@ pub fn check_module(db: &dyn salsa::Database, file: SourceFile) -> ModuleCheck {
     let resolved_imports = imports(db, file, tree, own, &mut reports);
     duplicates(tree, &mut reports);
     if let (Some(header), Some(m)) = (&tree.package, m) {
-        let mut expect = vec![("name", &header.name, m.name.as_str())];
-        for f in &header.fields {
-            let want = if f.key.text == "forum" {
-                m.forum.as_str()
-            } else {
-                m.authority.as_str()
-            };
-            if let Some(crate::db::parse::tree::ExprKind::Ref(r)) =
-                cx::first_expr(f).map(|e| &e.kind)
-            {
-                expect.push((
-                    if f.key.text == "forum" {
-                        "forum"
-                    } else {
-                        "authority"
-                    },
-                    &r.head,
-                    want,
-                ));
-            }
-        }
-        for (what, got, want) in expect {
-            if got.text != want {
-                reports.push(
-                    Report::new(
-                        C::PackageMismatch,
-                        got.range,
-                        format!(
-                            "package {what} `{}` disagrees with Lit.toml (`{want}`)",
-                            got.text
-                        ),
-                    )
-                    .fix(got.range, want, Applicability::MachineApplicable),
-                );
-            }
-        }
+        package_header(header, m, &mut reports);
     }
     let import_sigs: Vec<&Signature> = module_graph(db, file.workspace(db))
         .imports(file)
@@ -344,6 +353,7 @@ struct Items {
     first_link: Option<Span>,
 }
 
+#[allow(clippy::too_many_lines)] // one arm per declaration kind
 fn items(cx: &mut Cx<'_, '_>, tree: &ItemTree, index: &LineIndex, file: &FileId) -> Items {
     let span = |r: TextRange| crate::db::span::to_span(file, index, r);
     let mut out = Items::default();
@@ -420,7 +430,7 @@ fn items(cx: &mut Cx<'_, '_>, tree: &ItemTree, index: &LineIndex, file: &FileId)
                     trigger,
                     counted_by,
                     opts,
-                    &allow_hours,
+                    allow_hours,
                 )
                 .map(Declaration::Deadline),
             ItemKind::Counting(n, _, fields) => cx

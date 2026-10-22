@@ -3,6 +3,7 @@
 use litigate_sema::db::inputs::create_workspace;
 use litigate_sema::pkg::load::{LoadedFile, LoadedPackage};
 use litigate_sema::{LitDatabase, Workspace};
+use std::fmt::Write as _;
 
 /// A manifest for package `name` with `deps` (`name = "^1.0.0"` path deps).
 pub fn manifest(name: &str, deps: &[&str]) -> String {
@@ -12,9 +13,7 @@ pub fn manifest(name: &str, deps: &[&str]) -> String {
     if !deps.is_empty() {
         text.push_str("\n[dependencies]\n");
         for d in deps {
-            text.push_str(&format!(
-                "{d} = {{ version = \"^1.0.0\", path = \"../{d}\" }}\n"
-            ));
+            let _ = writeln!(text, "{d} = {{ version = \"^1.0.0\", path = \"../{d}\" }}");
         }
     }
     text
@@ -50,11 +49,10 @@ pub fn render(db: &LitDatabase, ws: Workspace) -> Vec<String> {
         .into_iter()
         .flat_map(|c| c.diagnostics.iter())
         .map(|d| {
-            let fixes: String = d
-                .fixes
-                .iter()
-                .map(|f| format!(" [fix: {:?}]", f.replacement))
-                .collect();
+            let fixes = d.fixes.iter().fold(String::new(), |mut s, f| {
+                let _ = write!(s, " [fix: {:?}]", f.replacement);
+                s
+            });
             format!(
                 "{}:{}:{} {} {}{fixes}",
                 d.span.file.0,

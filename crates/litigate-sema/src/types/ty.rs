@@ -81,6 +81,7 @@ fn arity(t: &TypeRef, n: usize, reports: &mut Vec<Report>) -> bool {
 }
 
 /// Resolves `t`, pushing L1002/L2001 reports; `None` when ill-formed.
+#[allow(clippy::too_many_lines)] // one arm per built-in type constructor
 pub fn resolve(scope: &Scope<'_>, t: &TypeRef, reports: &mut Vec<Report>) -> Option<Type> {
     let simple = |ty: Type, reports: &mut Vec<Report>| arity(t, 0, reports).then_some(ty);
     match t.name.text.as_str() {

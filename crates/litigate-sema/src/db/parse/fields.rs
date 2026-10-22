@@ -185,15 +185,14 @@ impl Parser {
                 self.bump();
                 continue;
             }
-            match self.at_key(table) {
-                Some(shape) => match self.field(shape) {
+            if let Some(shape) = self.at_key(table) {
+                match self.field(shape) {
                     Ok(f) => out.push(f),
                     Err(_) => self.recover_in_body(),
-                },
-                None => {
-                    self.unknown_key(table);
-                    self.recover_in_body();
                 }
+            } else {
+                self.unknown_key(table);
+                self.recover_in_body();
             }
             self.sep();
         }
@@ -223,174 +222,87 @@ impl Parser {
     /// One `key value...`; the key token is current and known.
     pub(crate) fn field(&mut self, shape: Shape) -> PResult<Field> {
         let key = self.ident_any()?;
-        let mut values = Vec::new();
-        let mut push = |p: &Self, atom: Atom, start: u32| {
-            values.push((atom, TextRange::new(start, p.prev_end())))
-        };
         let start = self.peek().range.start;
-        match shape {
-            Shape::Flag => {}
-            Shape::Str => {
-                let s = self.string()?;
-                push(
-                    self,
-                    Atom::Expr(Expr {
-                        kind: ExprKind::Str(s.text),
-                        range: s.range,
-                    }),
-                    start,
-                );
-            }
-            Shape::Ref => {
-                let r = self.ref_path()?;
-                push(
-                    self,
-                    Atom::Expr(Expr {
-                        range: r.range,
-                        kind: ExprKind::Ref(r),
-                    }),
-                    start,
-                );
-            }
-            Shape::IdList => {
-                let e = self.id_list()?;
-                push(self, Atom::Expr(e), start);
-            }
-            Shape::Record => {
-                let e = self.record()?;
-                push(self, Atom::Expr(e), start);
-            }
-            Shape::Atom => {
-                let e = self.atom()?;
-                push(self, Atom::Expr(e), start);
+        let mut values = Vec::new();
+        let first = match shape {
+            Shape::Flag => None,
+            Shape::Interval => {
+                let (from, to) = self.interval()?;
+                Some(Atom::Interval(from, to))
             }
             Shape::Triangular if self.at_punct("{") => {
-                let f = self.field_block(TRIANGULAR)?;
-                push(self, Atom::Fields(f), start);
+                Some(Atom::Fields(self.field_block(TRIANGULAR)?))
             }
-            Shape::Triangular => {
-                let e = self.atom()?;
-                push(self, Atom::Expr(e), start);
+            Shape::Cite => {
+                self.pos -= 1;
+                Some(Atom::Expr(self.cite_expr()?))
             }
-            Shape::StrOrCite if self.at_kw("cite") => {
-                let c = self.cite_text()?;
-                push(
-                    self,
-                    Atom::Expr(Expr {
-                        kind: ExprKind::Cite(c.text),
-                        range: c.range,
-                    }),
-                    start,
-                );
+            _ => Some(Atom::Expr(self.shaped_expr(shape)?)),
+        };
+        if let Some(atom) = first {
+            values.push((atom, TextRange::new(start, self.prev_end())));
+        }
+        let next = self.peek().range.start;
+        let second = match shape {
+            Shape::Within | Shape::InlineDeadline if self.at_punct("{") => {
+                Some(Atom::Fields(self.field_block(DEADLINE_OPTS)?))
             }
-            Shape::StrOrCite => {
-                let s = self.string()?;
-                push(
-                    self,
-                    Atom::Expr(Expr {
-                        kind: ExprKind::Str(s.text),
-                        range: s.range,
-                    }),
-                    start,
-                );
+            Shape::ServiceExtension if self.at_kw("cite") => Some(Atom::Expr(self.cite_expr()?)),
+            Shape::Patch => Some(Atom::Json(self.json_record()?)),
+            _ => None,
+        };
+        if let Some(atom) = second {
+            values.push((atom, TextRange::new(next, self.prev_end())));
+        }
+        let range = TextRange::new(key.range.start, self.prev_end().max(key.range.end));
+        Ok(Field { key, values, range })
+    }
+
+    /// The expression-shaped value of `shape`.
+    fn shaped_expr(&mut self, shape: Shape) -> PResult<Expr> {
+        let token_expr = |p: &mut Self, kind: Tok, what: &str, make: fn(String) -> ExprKind| {
+            p.token_name(kind, what).map(|n| Expr {
+                kind: make(n.text),
+                range: n.range,
+            })
+        };
+        match shape {
+            Shape::StrOrCite if self.at_kw("cite") => self.cite_expr(),
+            Shape::Str | Shape::StrOrCite => token_expr(self, Tok::Str, "a string", ExprKind::Str),
+            Shape::Date => token_expr(self, Tok::Date, "a date", ExprKind::Date),
+            Shape::Ref | Shape::Within | Shape::Patch => {
+                let r = self.ref_path()?;
+                Ok(Expr {
+                    range: r.range,
+                    kind: ExprKind::Ref(r),
+                })
             }
-            Shape::Within | Shape::InlineDeadline => {
-                let e = if shape == Shape::Within {
-                    let r = self.ref_path()?;
-                    Expr {
-                        range: r.range,
-                        kind: ExprKind::Ref(r),
-                    }
-                } else {
-                    self.atom()?
-                };
-                push(self, Atom::Expr(e), start);
-                if self.at_punct("{") {
-                    let s = self.peek().range.start;
-                    let opts = self.field_block(DEADLINE_OPTS)?;
-                    push(self, Atom::Fields(opts), s);
-                }
-            }
-            Shape::Prob => {
-                let e = self.prob_value()?;
-                push(self, Atom::Expr(e), start);
-            }
+            Shape::IdList => self.id_list(),
+            Shape::Record | Shape::ServiceExtension => self.record(),
+            Shape::Prob => self.prob_value(),
             Shape::Bool => {
                 let t = self.peek().clone();
                 if t.kind == Tok::Ident && (t.text == "true" || t.text == "false") {
                     self.bump();
-                    push(
-                        self,
-                        Atom::Expr(Expr {
-                            kind: ExprKind::Bool(t.text == "true"),
-                            range: t.range,
-                        }),
-                        start,
-                    );
+                    Ok(Expr {
+                        kind: ExprKind::Bool(t.text == "true"),
+                        range: t.range,
+                    })
                 } else {
-                    return self.unexpected("`true` or `false`");
+                    self.unexpected("`true` or `false`")
                 }
             }
-            Shape::Interval => {
-                let (from, to) = self.interval()?;
-                push(self, Atom::Interval(from, to), start);
-            }
-            Shape::Date => {
-                let d = self.date()?;
-                push(
-                    self,
-                    Atom::Expr(Expr {
-                        kind: ExprKind::Date(d.text),
-                        range: d.range,
-                    }),
-                    start,
-                );
-            }
-            Shape::Cite => {
-                self.pos -= 1;
-                let c = self.cite_text()?;
-                push(
-                    self,
-                    Atom::Expr(Expr {
-                        kind: ExprKind::Cite(c.text),
-                        range: c.range,
-                    }),
-                    start,
-                );
-            }
-            Shape::Patch => {
-                let r = self.ref_path()?;
-                push(
-                    self,
-                    Atom::Expr(Expr {
-                        range: r.range,
-                        kind: ExprKind::Ref(r),
-                    }),
-                    start,
-                );
-                let s = self.peek().range.start;
-                let j = self.json_record()?;
-                push(self, Atom::Json(j), s);
-            }
-            Shape::ServiceExtension => {
-                let e = self.record()?;
-                push(self, Atom::Expr(e), start);
-                if self.at_kw("cite") {
-                    let s = self.peek().range.start;
-                    let c = self.cite_text()?;
-                    push(
-                        self,
-                        Atom::Expr(Expr {
-                            kind: ExprKind::Cite(c.text),
-                            range: c.range,
-                        }),
-                        s,
-                    );
-                }
-            }
+            _ => self.atom(),
         }
-        let range = TextRange::new(key.range.start, self.prev_end().max(key.range.end));
-        Ok(Field { key, values, range })
+    }
+
+    /// `cite` text as an expression; the `cite` token is current.
+    fn cite_expr(&mut self) -> PResult<Expr> {
+        let c = self.cite_text()?;
+        Ok(Expr {
+            kind: ExprKind::Cite(c.text),
+            range: c.range,
+        })
     }
 
     /// Any identifier including the reserved `cite` (a clause key).

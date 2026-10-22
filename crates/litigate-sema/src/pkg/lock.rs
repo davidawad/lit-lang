@@ -161,7 +161,7 @@ pub fn verify(existing: Option<&str>, expected: &LockFile) -> Result<(), Report>
                 report = report.note(format!(
                     "`{}` changed (locked {} {}, now {} {})",
                     p.name, f.version, f.digest, p.version, p.digest
-                ))
+                ));
             }
             Some(_) => {}
         }

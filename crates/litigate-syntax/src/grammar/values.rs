@@ -56,6 +56,29 @@ pub(crate) fn id_list(p: &mut Parser<'_>) -> bool {
     true
 }
 
+/// `replaces [Ref | String, ...]`: a string names an anonymous edge by its
+/// derived id (`"pack::from->to#n"`), which has no `Ref` spelling.
+pub(crate) fn replaces_list(p: &mut Parser<'_>) -> bool {
+    if !p.at(LBracket) {
+        return false;
+    }
+    delimited_node(
+        p,
+        IdList,
+        (LBracket, RBracket),
+        Sep::Required,
+        &[Ident, String],
+        &mut |p| reference(p) || string(p),
+    );
+    true
+}
+
+/// `Date | Hole`: a date, or a hole whose reason keeps text that is not a
+/// whole date (`?("2026-06")`).
+pub(crate) fn date_or_hole(p: &mut Parser<'_>) -> bool {
+    date(p) || hole(p)
+}
+
 /// A `Literal` node holding one token of `kind`.
 pub(crate) fn token_literal(p: &mut Parser<'_>, kind: SyntaxKind) -> bool {
     if !p.at(kind) {

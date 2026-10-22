@@ -155,9 +155,11 @@ module.exports = {
       field('value', $.string),
     ),
     seq(
-      field('key', choice('tags', 'sets', 'clears', 'requires', 'forbids', 'replaces')),
+      field('key', choice('tags', 'sets', 'clears', 'requires', 'forbids')),
       field('value', $.id_list),
     ),
+    // A string entry names an anonymous edge by derived id (SPEC §3.1).
+    seq(field('key', 'replaces'), field('value', $.replaces_list)),
     seq(field('key', 'attrs'), field('value', $.num_record)),
   ),
 
@@ -169,6 +171,8 @@ module.exports = {
     optional(seq(optional(','), 'max', field('max', $.duration))),
     '}',
   ),
+
+  replaces_list: $ => commaList('[', choice($.ref, $.string), ']'),
 
   deadline_opts: $ => braced($.deadline_opt),
 

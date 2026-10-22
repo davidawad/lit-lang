@@ -88,3 +88,24 @@ fn duration_ranges_may_omit_min_or_max_but_not_mode() {
 fn edge_ids_may_start_with_digits() {
     canonical("module m\n\nstart a\n\nstate a: \"A\" { 12b-motion-filed \"Move\" -> a }\n");
 }
+
+#[test]
+fn replaces_may_name_anonymous_edges_by_derived_id() {
+    canonical(
+        "module links\n\nlink l \"L\": a::x -> b::y { replaces [a::named, \"a::x->y#0\"] }\n",
+    );
+    assert_eq!(
+        codes("module m\nstate a: \"A\" { x \"X\" -> a { tags [\"t\"] } }\n"),
+        [DiagnosticCode::UnexpectedToken]
+    );
+}
+
+#[test]
+fn a_source_as_of_may_be_a_hole() {
+    let case = "case c\nuses p ^0.1.0\nas_of 2025-01-01\nsummary \"s\"\n\n\
+                source \"S\" { url \"https://x\", as_of ?(\"2026-06\") }\n";
+    let parsed = parse(case, FileKind::Case);
+    assert!(parsed.is_ok(), "{:?}", parsed.errors());
+    let once = format(case, FileKind::Case).unwrap_or_default();
+    assert_eq!(format(&once, FileKind::Case).as_deref(), Ok(once.as_str()));
+}

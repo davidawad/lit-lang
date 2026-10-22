@@ -56,7 +56,7 @@ module.exports = {
 
   source_field: $ => choice(
     seq(field('key', 'url'), field('value', $.string)),
-    seq(field('key', 'as_of'), field('value', $.date)),
+    seq(field('key', 'as_of'), field('value', choice($.date, $.hole))),
   ),
 
   case_start_decl: $ => seq('start', field('node', $.ref)),

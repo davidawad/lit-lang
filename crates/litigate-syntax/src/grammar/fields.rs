@@ -2,9 +2,9 @@
 //! options, counting rules, instances, packages, and sources.
 use super::clauses::keyword_field;
 use super::values::{
-    boolean, call, cite, date, duration, duration_estimate, id_list, json_record, money_or_hole,
-    number, prob_value, record, reference, require, signed_money, signed_number, string, Key,
-    Value,
+    boolean, call, cite, date_or_hole, duration, duration_estimate, id_list, json_record,
+    money_or_hole, number, prob_value, record, reference, replaces_list, require, signed_money,
+    signed_number, string, Key, Value,
 };
 use super::{brace_list, delimited_node, Sep};
 use crate::error::{range, SyntaxError};
@@ -44,7 +44,7 @@ pub(crate) const EDGE_FIELDS: &[Spec] = &[
     (KwClears, Some(id_list)),
     (KwRequires, Some(id_list)),
     (KwForbids, Some(id_list)),
-    (KwReplaces, Some(id_list)),
+    (KwReplaces, Some(replaces_list)),
 ];
 
 pub(crate) const DEADLINE_OPTS: &[Spec] = &[
@@ -73,7 +73,7 @@ pub(crate) const INSTANCE_FIELDS: &[Spec] = &[
     (KwPayoffTransform, Some(string)),
 ];
 
-pub(crate) const SOURCE_FIELDS: &[Spec] = &[(KwUrl, Some(string)), (KwAsOf, Some(date))];
+pub(crate) const SOURCE_FIELDS: &[Spec] = &[(KwUrl, Some(string)), (KwAsOf, Some(date_or_hole))];
 
 /// Keywords of a spec table (for "expected" messages).
 pub(crate) fn keywords(specs: &[Spec]) -> Vec<SyntaxKind> {

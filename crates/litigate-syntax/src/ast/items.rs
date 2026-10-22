@@ -2,8 +2,9 @@
 use super::{
     child, child_after, children, cites_of, fields_of, keyword, token, tokens, AuthorityDecl, Cite,
     EdgeBlock, EdgeDecl, EnumDecl, EventDecl, Expr, Field, FieldList, GroupDecl, IdList,
-    ImportDecl, ImportList, Interval, LinkDecl, LitFile, ModuleDecl, Node, NodeDecl, PackageDecl,
-    Param, RecordExpr, Ref, Relation, StartDecl, Token, TypeDecl, TypeExpr, VersionClause,
+    ImportDecl, ImportList, Interval, LinkDecl, LitFile, Literal, ModuleDecl, Node, NodeDecl,
+    PackageDecl, Param, RecordExpr, Ref, Relation, StartDecl, Token, TypeDecl, TypeExpr,
+    VersionClause,
 };
 use crate::syntax_kind::SyntaxKind;
 
@@ -422,6 +423,16 @@ impl IdList {
     #[must_use]
     pub fn items(&self) -> Vec<Ref> {
         children(self.syntax())
+    }
+
+    /// Listed string entries (a `replaces` list naming anonymous edges by
+    /// derived id), decoded.
+    #[must_use]
+    pub fn strings(&self) -> Vec<String> {
+        children::<Literal>(self.syntax())
+            .iter()
+            .filter_map(Literal::string_value)
+            .collect()
     }
 }
 

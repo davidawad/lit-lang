@@ -1,0 +1,137 @@
+//! Bead acceptance over the whole repository corpus: every pack,
+//! `links.json` and named scenario imports to canonical source that parses
+//! with zero diagnostics, and reading that source back (the CST oracle in
+//! `support::reader`, following SPEC §8) gives JSON semantically equal to
+//! the original (SPEC §8.6).
+mod support;
+
+use litgraph::model::{LinkFile, Pack};
+use litgraph::scenario::NamedScenario;
+use litigate_import::Input;
+use litigate_syntax::{format, parse, FileKind};
+use support::{
+    corpus, first_difference, import_ok, normalize_links, normalize_pack, package, read_case,
+    read_links, read_pack,
+};
+
+#[test]
+fn the_corpus_is_found() {
+    let inputs = corpus();
+    let packs = inputs
+        .iter()
+        .filter(|i| i.path.starts_with("packs/"))
+        .count();
+    let scenarios = inputs.len() - packs;
+    assert_eq!(
+        (packs, scenarios),
+        (10, 5),
+        "nine packs + links.json, five scenarios"
+    );
+}
+
+#[test]
+fn every_output_parses_cleanly_and_is_canonical() {
+    let files = import_ok(&corpus());
+    for file in &files {
+        let kind = match file.path.rsplit('.').next() {
+            Some("lit") => FileKind::Lit,
+            Some("case") => FileKind::Case,
+            _ => continue,
+        };
+        let parsed = parse(&file.text, kind);
+        assert!(parsed.is_ok(), "{}: {:#?}", file.path, parsed.errors());
+        assert_eq!(
+            format(&file.text, kind).as_deref(),
+            Ok(file.text.as_str()),
+            "{} is not canonical",
+            file.path
+        );
+    }
+}
+
+#[test]
+fn every_pack_round_trips() {
+    let inputs = corpus();
+    let files = import_ok(&inputs);
+    for input in inputs
+        .iter()
+        .filter(|i| i.path.starts_with("packs/") && !i.path.ends_with("links.json"))
+    {
+        let original =
+            Pack::from_json(&input.text).unwrap_or_else(|e| panic!("{}: {e}", input.path));
+        let dir = files
+            .iter()
+            .find(|f| f.from == input.path && f.path.ends_with("/Lit.toml"))
+            .and_then(|f| f.path.strip_suffix("/Lit.toml"))
+            .unwrap_or_else(|| panic!("{}: no package", input.path));
+        let back = read_pack(&package(&files, dir));
+        let (expected, actual) = (normalize_pack(original), normalize_pack(back));
+        assert!(
+            expected == actual,
+            "{}: {:?}",
+            input.path,
+            first_difference(&expected, &actual, "")
+        );
+    }
+}
+
+#[test]
+fn links_round_trip() {
+    let inputs = corpus();
+    let files = import_ok(&inputs);
+    let input = inputs.iter().find(|i| i.path == "packs/links.json");
+    let original: LinkFile = input
+        .and_then(|i| serde_json::from_str(&i.text).ok())
+        .unwrap_or_default();
+    let back = read_links(&package(&files, "lit/links"));
+    let (expected, actual) = (normalize_links(original), normalize_links(back));
+    assert!(
+        expected == actual,
+        "{:?}",
+        first_difference(&expected, &actual, "")
+    );
+}
+
+#[test]
+fn every_scenario_round_trips() {
+    let inputs = corpus();
+    let files = import_ok(&inputs);
+    for input in inputs.iter().filter(|i| i.path.starts_with("scenarios/")) {
+        let original =
+            NamedScenario::from_json(&input.text).unwrap_or_else(|e| panic!("{}: {e}", input.path));
+        let file = files
+            .iter()
+            .find(|f| f.from == input.path)
+            .unwrap_or_else(|| panic!("{}: no case", input.path));
+        let back = read_case(file);
+        let as_json = |s: &NamedScenario| {
+            support::numbers_as_f64(serde_json::to_value(s).unwrap_or_default())
+        };
+        let (expected, actual) = (as_json(&original), as_json(&back));
+        assert!(
+            expected == actual,
+            "{}: {:?}",
+            input.path,
+            first_difference(&expected, &actual, "")
+        );
+    }
+}
+
+#[test]
+fn import_is_deterministic_and_independent_of_input_order() {
+    let inputs = corpus();
+    let mut reversed: Vec<Input> = inputs.clone();
+    reversed.reverse();
+    assert_eq!(import_ok(&inputs), import_ok(&inputs));
+    assert_eq!(import_ok(&inputs), import_ok(&reversed));
+}
+
+#[test]
+fn outputs_carry_no_absolute_paths() {
+    let files = import_ok(&corpus());
+    let root = support::repo_root().canonicalize().unwrap_or_default();
+    let root = root.to_string_lossy();
+    for file in &files {
+        assert!(!file.text.contains(root.as_ref()), "{}", file.path);
+    }
+}

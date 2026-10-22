@@ -244,3 +244,39 @@ perspective widget
         (string_content)))
     (perspective_decl
       (identifier))))
+
+================================================================================
+A source as_of may be a hole
+================================================================================
+
+case c
+uses p ^0.1.0
+as_of 2025-01-01
+summary "s"
+source "S" { url "https://x", as_of ?("2026-06") }
+
+---
+
+(source_file
+  (case_file
+    (identifier)
+    (uses_decl
+      (use_item
+        (identifier)
+        (version_req)))
+    (as_of_decl
+      (date))
+    (summary_decl
+      (string
+        (string_content)))
+    (source_decl
+      (string
+        (string_content))
+      (source_body
+        (source_field
+          (string
+            (string_content)))
+        (source_field
+          (hole
+            (string
+              (string_content))))))))

@@ -1,0 +1,32 @@
+module cofc.rules-protest
+
+import core.rcfc6.{ rcfc6 }
+
+/// Protest counsel gives the pre-filing notice of Appendix C ¶2 to the
+/// Department of Justice, the clerk, the contracting officer and the
+/// apparently successful offeror.
+event ProtestNoticeGiven()
+
+/// Appendix C ¶2: the notice must precede the protest complaint by at least
+/// one and at most five days. The legacy pack models the window as five
+/// calendar days counted by RCFC 6 although its note reads the rule as
+/// excluding weekends and legal holidays; Appendix C is not in the vendored
+/// corpus, so neither reading can be checked here and the pack's stands.
+/// "Except in exceptional circumstances" is not a delegation to an order,
+/// so none is declared.
+rule duty protest-prefiling-notice cite ?("RCFC Appendix C ¶2") {
+  deadline protest-notice-window: 5.days after ProtestNoticeGiven() counted_by rcfc6 cite ?("RCFC Appendix C ¶2") {
+    extendable false
+  }
+}
+
+test "the protest complaint follows the notice within five days" cite ?("RCFC Appendix C ¶2") {
+  given ProtestNoticeGiven() on 2026-08-05
+  expect deadline(protest-notice-window) == 2026-08-10
+}
+
+test "a window ending on the Saturday before Labor Day runs to Tuesday" cite RCFC 6(a)(6)(A)
+{
+  given ProtestNoticeGiven() on 2026-08-31
+  expect deadline(protest-notice-window) == 2026-09-08
+}

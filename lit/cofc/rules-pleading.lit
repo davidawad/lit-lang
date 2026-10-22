@@ -1,0 +1,79 @@
+module cofc.rules-pleading
+
+import core.authority.{ CaseOrder }
+import core.rcfc6.{ rcfc6 }
+import core.time.{ ServiceMethod }
+
+/// The clerk serves the complaint on the Attorney General (RCFC 4(a)-(c)),
+/// by `method`; the responsive-pleading period runs from it.
+event ComplaintServed(method: ServiceMethod)
+/// Notice of the court's action on a RCFC 12 or 56 motion: denial, deferral
+/// to trial, or the motion's withdrawal (RCFC 12(a)(4)(A)).
+event MotionDisposed()
+
+/// RCFC 12(a)(1)(A): "The United States must file an answer to a complaint
+/// within 60 days after being served with the complaint." The 2008
+/// restyling reworded only the counterclaim reply and the 2010 amendment
+/// changed only the 10- and 20-day periods (Rules Committee Notes), so the
+/// 60-day period stands as revised and reissued May 1, 2002. RCFC 6(b)(1)
+/// lets the court extend it for good cause, which is a delegation to a
+/// case order.
+rule duty government-answer cite RCFC 12(a)(1)(A)
+{
+  deadline answer-period: 60.days after ComplaintServed() counted_by rcfc6 effective [2002-05-01, ..) delegable_to [CaseOrder] cite RCFC 12(a)(1)(A)
+  {
+    extendable true
+    extension_authority "RCFC 6(b) stipulation or court order"
+  }
+}
+
+/// RCFC 12(a)(4)(A): "Unless the court sets a different time", after the
+/// court denies or defers a RCFC 12 motion the responsive pleading is due
+/// by the later of the period after notice of its action and the date it
+/// was otherwise due. The rule text delegates to a case order.
+rule duty answer-after-motion cite RCFC 12(a)(4)(A)
+{
+  /// As revised and reissued May 1, 2002: ten days; the 2010 Amendment note
+  /// records the change from 10 to 14.
+  deadline answer-after-ruling: 10.days after MotionDisposed() counted_by rcfc6 effective [2002-05-01, 2010-01-11) delegable_to [CaseOrder] cite RCFC 12 (2010 Amendment note)
+
+  /// Amended January 11, 2010 to 14 days, conforming to the FRCP 12
+  /// amendments effective December 1, 2009.
+  deadline answer-after-ruling: 14.days after MotionDisposed() counted_by rcfc6 effective [2010-01-11, ..) supersedes answer-after-ruling@2002-05-01 delegable_to [CaseOrder] cite RCFC 12(a)(4)(A)
+}
+
+test "the United States answers 60 days after service" cite RCFC 12(a)(1)(A)
+{
+  given ComplaintServed(Electronic) on 2026-03-02
+  expect deadline(answer-period) == 2026-05-01
+}
+
+test "a 60-day answer period ending on Saturday rolls to Monday" cite RCFC 6(a)(1)(C)
+{
+  given ComplaintServed(Electronic) on 2026-02-03
+  expect deadline(answer-period) == 2026-04-06
+}
+
+test "a 60-day answer period ending on Memorial Day rolls to Tuesday" cite RCFC 6(a)(6)(A)
+{
+  given ComplaintServed(Electronic) on 2026-03-26
+  expect deadline(answer-period) == 2026-05-26
+}
+
+test "the answer is due 14 days after notice of the ruling" cite RCFC 12(a)(4)(A)
+{
+  given MotionDisposed() on 2026-06-01
+  expect deadline(answer-after-ruling) == 2026-06-15
+}
+
+test "a 14-day period ending on Juneteenth rolls to Monday" cite RCFC 6(a)(6)(A)
+{
+  given MotionDisposed() on 2026-06-05
+  expect deadline(answer-after-ruling) == 2026-06-22
+}
+
+test "from January 11, 2010 the post-ruling period is 14 calendar days" cite RCFC 12 (2010 Amendment note)
+{
+  given MotionDisposed() on 2010-03-01
+  expect deadline(answer-after-ruling) == 2010-03-15
+}

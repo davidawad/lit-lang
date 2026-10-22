@@ -1,0 +1,135 @@
+# The Court of Federal Claims package, ported from
+# packs/cofc-court-of-federal-claims.json (DESIGN §11).
+#
+# authority: the RCFC are the court's rules of practice under 28 U.S.C.
+# § 2503(b), the FederalRule level of lit/core's lattice.
+# in_force: the RCFC and Appendices J and H as amended through July 27, 2026,
+# the as-of date of every vendored rules text the pack cites (the July 27,
+# 2026 amendments revised RCFC 16, among others). Declarations whose current
+# text is older say so with their own `effective` interval.
+# Statute cites bind through usc-1491 and usc35-286, which carry the title
+# prefixes: every 28 U.S.C. section the pack cites lives in the same vendored
+# file, sources/usc-additional.txt.
+[package]
+name = "cofc"
+version = "0.1.0"
+language = 1
+pack_id = "cofc"
+forum = "cofc"
+authority = "FederalRule"
+title = "United States Court of Federal Claims"
+description = "Civil litigation against the United States in the CoFC: claim accrual and the §2501 six-year limitations bar (with 35 U.S.C. §286 administrative-claim tolling on the §1498(a) patent track), the §1500 same-claim-pending trap, an optional §1491(b) bid-protest branch (Appendix C), complaint/service/RCFC 12 pleading, the general civil track (RCFC 16 scheduling, RCFC 26-37 discovery, RCFC 56 summary judgment), an Appendix H ADR off-ramp, the §1498(a) patent track's full Appendix J deadline cascade (early meeting through claim construction, mandatory settlement discussion, and the 'reasonable and entire compensation' damages remedy), bench trial (no jury), RCFC 58 judgment, RCFC 59 post-trial motions, RCFC 54(d) costs, and EAJA fee applications. Sourced from the court's own RCFC, Appendix H, and Appendix J PDFs (as amended through 7/27/2026), the court's current fee schedule (effective 7/28/2025), and verified statutory text; see cofc-SOURCES-NOTES.md."
+jurisdiction = "United States Court of Federal Claims"
+in_force = "2026-07-27"
+known_at = "2026-09-28"
+counting = "rcfc6"
+
+[package.roles]
+applicant = "self"
+either = "nature"
+examiner = "opponent"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.rcfc-rules]
+title = "Rules of the United States Court of Federal Claims (RCFC), as amended through July 27, 2026"
+url = "https://www.uscfc.uscourts.gov/sites/cfc/files/Rules%207.27.2026.pdf"
+path = "sources/rcfc.txt"
+sha256 = "ff02c342f055be5e5f51df4de1dcec3c1264bb9907895d379d5baa796ec30a97"
+as_of = "2026-07-27"
+
+[sources.rcfc-app-j]
+title = "RCFC Appendix J -- Patent Rules of the United States Court of Federal Claims, as amended through July 27, 2026"
+url = "https://www.uscfc.uscourts.gov/sites/cfc/files/Patent%20Rules%207.27.26.pdf"
+sha256 = "3abdbdd75b8b617b2f4dd43e14f4d09a7ef7322fb3575297ddf4a917f9bb451f"
+as_of = "2026-07-27"
+
+[sources.rcfc-app-h]
+title = "RCFC Appendix H -- Procedure for Alternative Dispute Resolution"
+url = "https://www.uscfc.uscourts.gov/sites/cfc/files/23.%20Appendix%20H.pdf"
+sha256 = "41228005f2b5d60119d7b53f3bee122060a17f2234f91ab0b9cfa9f916b5ce2b"
+as_of = "2026-07-27"
+
+[sources.rcfc-form-04]
+title = "Appendix of Forms, Form 4 -- Bill of Costs"
+url = "https://www.uscfc.uscourts.gov/sites/cfc/files/form04.pdf"
+sha256 = "06b21bd64f4cc45b46206eedac01bae528040fd5733b68e43e4f7dded9b63be8"
+as_of = "2026-09-28"
+
+[sources.rcfc-form-05]
+title = "Appendix of Forms, Form 5 -- Equal Access to Justice Act Application"
+url = "https://www.uscfc.uscourts.gov/sites/cfc/files/form05.pdf"
+sha256 = "2f67be32fbdd58720d20e25c532f05b26e42cf8de9a2d136c1b2c24d48bf9681"
+as_of = "2026-09-28"
+
+[sources.rcfc-form-08a]
+title = "Appendix of Forms, Form 8A -- Protective Order in Patent Cases"
+url = "https://www.uscfc.uscourts.gov/sites/cfc/files/form08a.pdf"
+sha256 = "1e3feae3979d7389a62aa301fa57eeb7f9e453cf67e1367d37012b3ae3d77679"
+as_of = "2026-09-28"
+
+[sources.rcfc-cmecf-filing-instructions]
+title = "Attorney Guide / Instructions for Filing Complaints and Petitions in CM/ECF (Updated June 2026)"
+url = "https://www.uscfc.uscourts.gov/sites/cfc/files/Attorney%20Complaint%20Filing%20Instructions%20Update.06.2026.Final_.pdf"
+sha256 = "d9b26420ffd4af59ee15f555cf1733565f178cd3a73efe1f0784e55507f522eb"
+as_of = "2026-06-01"
+
+[sources.uscfc-fee-schedule]
+title = "U.S. Court of Federal Claims Schedule of Fees (effective 7/28/2025)"
+url = "https://www.cfc.uscourts.gov/sites/cfc/files/25.07.28%20UPDATED%20Fee%20Schedule.pdf"
+as_of = "2025-07-28"
+
+[sources.usc-1491]
+title = "28 U.S.C. § 1491 (Tucker Act)"
+url = "https://www.law.cornell.edu/uscode/text/28/1491"
+path = "sources/usc-additional.txt"
+cite_prefixes = ["28 U.S.C."]
+section_heading = "28 U.S.C. § {n}"
+
+[sources.usc-1498]
+title = "28 U.S.C. § 1498 (Patent and copyright cases)"
+url = "https://www.law.cornell.edu/uscode/text/28/1498"
+path = "sources/usc-additional.txt"
+
+[sources.usc-1500]
+title = "28 U.S.C. § 1500 (Pendency of claims in other courts)"
+url = "https://www.law.cornell.edu/uscode/text/28/1500"
+path = "sources/usc-additional.txt"
+
+[sources.usc-2501]
+title = "28 U.S.C. § 2501 (Time for filing suit)"
+url = "https://www.law.cornell.edu/uscode/text/28/2501"
+path = "sources/usc-additional.txt"
+
+[sources.usc-2503]
+title = "28 U.S.C. § 2503 (Rules of courts; trial)"
+url = "https://www.law.cornell.edu/uscode/text/28/2503"
+
+[sources.usc-2522]
+title = "28 U.S.C. § 2522 (Notice of appeal)"
+url = "https://www.law.cornell.edu/uscode/text/28/2522"
+path = "sources/usc-additional.txt"
+
+[sources.usc-1295]
+title = "28 U.S.C. § 1295(a)(3) (CAFC jurisdiction over CoFC appeals)"
+url = "https://www.law.cornell.edu/uscode/text/28/1295"
+path = "sources/usc-additional.txt"
+
+[sources.usc-2412]
+title = "28 U.S.C. § 2412 (Equal Access to Justice Act -- costs and fees)"
+url = "https://www.law.cornell.edu/uscode/text/28/2412"
+path = "sources/usc-additional.txt"
+
+[sources.usc35-286]
+title = "35 U.S.C. § 286 (Time limitation on damages; last paragraph -- administrative-claim tolling)"
+url = "https://www.law.cornell.edu/uscode/text/35/286"
+path = "sources/usc-additional.txt"
+cite_prefixes = ["35 U.S.C."]
+section_heading = "35 U.S.C. § {n}"
+
+[[cite_syntax.rules]]
+prefixes = ["RCFC"]
+heading = "RCFC {}"
+source = "rcfc-rules"

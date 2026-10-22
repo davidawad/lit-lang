@@ -1,0 +1,161 @@
+module cofc.general-track-to-adr
+
+import cofc.rules-general.{ jpsr-period, sj-motion-period }
+import cofc.trial-post-trial.{ trial-bench }
+import cofc.{ adr-group, general-track-group }
+
+state general-jpsr-filed: "Joint Preliminary Status Report Filed" cite ?("RCFC 16(b)(1)(A); RCFC Appendix A ¶4") {
+  group general-track-group
+  note "No later than 49 days after the answer (or reply to a counterclaim) is served, the parties jointly report on jurisdiction, consolidation, bifurcation, joinder, anticipated RCFC 12(b)/12(c)/56 motions, discovery plan, settlement/ADR likelihood, and (per PRCFC Rule 3) doubles as the patent track's own JPSR trigger. Deferred indefinitely if a case-dispositive motion is pending on the due date (Appendix A ¶6)."
+  e-jpsr-to-scheduling "JPSR filed; court enters or the parties await the scheduling order" -> scheduling-order-issued {
+    authority cite ?("RCFC 16(b)(1)(A); RCFC Appendix A ¶4")
+    effort 35.hours
+    within jpsr-period {
+      note "49 days after the answer or reply to a counterclaim is served; deferred indefinitely if a case-dispositive motion is pending on the due date."
+    }
+  }
+}
+
+state scheduling-order-issued: "RCFC 16(b) Scheduling Order Entered" cite ?("RCFC 16(b); RCFC Appendix A ¶7-8") {
+  group general-track-group
+  note "After the JPSR (and a preliminary scheduling conference, if the court finds one useful), the judge enters the scheduling order governing discovery, dispositive-motion deadlines, and trial. May be modified only for good cause (RCFC 16(b), mirroring FRCP 16(b)(4))."
+  e-scheduling-to-adrfork "Parties consider ADR as part of ongoing case management" -> adr-referral-decision {
+    authority cite RCFC 16(a)(5)
+  }
+}
+
+decision discovery-open: "Discovery Open (RCFC 26-37)" by applicant cite RCFC 26(b)(1)
+{
+  group general-track-group
+  note "Parties may discover any nonprivileged matter relevant to a claim or defense and proportional to the needs of the case. This hub node is the player-choice cycle -- propounding/responding to discovery, compelling, and protecting -- that runs until the scheduling order's discovery cutoff."
+  e-discovery-dispute-path "Party files a motion to compel or for a protective order" -> discovery-dispute-motion {
+    authority cite RCFC 37(a); RCFC 26(c)
+    effort 30.hours
+    cost 0.usd
+    note "Motion to compel must certify a good-faith conferral effort (RCFC Appendix A ¶10)."
+  }
+  e-discovery-to-closed "Discovery proceeds to the scheduling order's cutoff / post-discovery conference" -> discovery-closed by either {
+    authority cite ?("RCFC Appendix A ¶11-12")
+  }
+}
+
+state discovery-dispute-motion: "Motion to Compel / Motion for Protective Order" cite RCFC 37(a); RCFC 26(c)
+{
+  group general-track-group
+  note "A motion to compel must certify a good-faith conferral effort (Appendix A ¶10, mirroring FRCP 37(a)(1)). A protective order issues on a showing of good cause to protect a party from annoyance, oppression, undue burden, or expense."
+  e-discdispute-to-ruling "Court rules on the discovery motion" -> discovery-dispute-ruling
+}
+
+chance discovery-dispute-ruling: "Court Rules on Discovery Motion" by office discretion cite RCFC 37(a); RCFC 26(c)
+{
+  group general-track-group
+  note "Outcome distribution authored at 0.6 granted / 0.4 denied -- TEACHING ESTIMATE, loosely tracking the general federal-practice pattern that a certified good-faith motion to compel succeeds more often than not once actually filed."
+  e-discdispute-granted "Motion granted" -> discovery-open p 0.6 {
+    note "TEACHING ESTIMATE, loosely tracking the general federal-practice pattern for certified good-faith motions to compel."
+  }
+  e-discdispute-denied "Motion denied" -> discovery-open p 0.4 {
+    note "TEACHING ESTIMATE, see sibling edge note."
+  }
+}
+
+state discovery-closed: "Discovery Closed / Post-Discovery Conference" by applicant cite ?("RCFC Appendix A ¶11-12") {
+  group general-track-group
+  note "Upon completion of all discovery (including expert discovery), the court holds a post-discovery conference to decide whether the case proceeds by summary judgment, trial, or ADR, and enters a further scheduling order."
+  e-discclosed-to-sj "File RCFC 56 motion for summary judgment" -> summary-judgment-motion-filed {
+    authority cite RCFC 56(a)-(b)
+    effort 150.hours
+    cost 0.usd
+    within sj-motion-period {
+      note "Any time until 30 days after the close of all discovery, absent a different court-set deadline."
+    }
+  }
+  e-discclosed-to-trial "No dispositive motion filed; proceed directly to trial" -> trial-bench {
+    effort 20.hours
+  }
+}
+
+state summary-judgment-motion-filed: "RCFC 56 Motion for Summary Judgment Filed" cite RCFC 56(a)-(b)
+{
+  group general-track-group
+  note "A party may move for summary judgment (in whole or in part) at any time until 30 days after the close of all discovery, absent a different court-ordered deadline."
+  attrs { sj_deadline_days_after_discovery_close: 30 }
+  e-sj-to-ruling "Briefing completes; court rules on summary judgment" -> sj-ruling
+}
+
+decision sj-ruling: "Court Rules on Summary Judgment" by office cite RCFC 56(a)
+{
+  group general-track-group
+  note "Outcome distribution authored at 0.50 denied-proceeds-to-trial / 0.15 granted-in-part / 0.20 granted-for-government-in-full / 0.15 granted-for-plaintiff-in-full -- TEACHING ESTIMATE, not a cited empirical CoFC grant-rate figure. A full grant for the government disposes of the case; a full grant for plaintiff on liability AND damages produces a final judgment without trial (the 'judgment-entered' route this pack uses as its Federal Circuit composition anchor)."
+  e-sj-denied "Motion denied; case proceeds to trial" -> trial-bench p 0.5 {
+    authority cite RCFC 56(a)
+    note "TEACHING ESTIMATE, not a cited empirical CoFC grant-rate figure."
+  }
+  e-sj-govt "Granted in full for the government" -> summary-judgment-for-government p 0.2 {
+    authority cite RCFC 56(a)
+    valence bad
+    note "TEACHING ESTIMATE, see sibling edge note."
+    tags [dispositive]
+  }
+  e-sj-plaintiff "Granted in full for plaintiff (liability and damages both resolved)" -> judgment-entered p 0.15 {
+    authority cite RCFC 56(a); RCFC 58
+    valence good
+    note "TEACHING ESTIMATE, see sibling edge note."
+    tags [dispositive, appeal]
+  }
+  e-sj-partial "Granted in part; remaining issues proceed to trial" -> trial-bench p 0.15 {
+    note "TEACHING ESTIMATE, see sibling edge note."
+  }
+}
+
+terminal summary-judgment-for-government: "SUMMARY JUDGMENT FOR THE GOVERNMENT" outcome [loss, judgment, dispositive] cite RCFC 56(a)
+{
+  group general-track-group
+  note "PLACEHOLDER PAYOFF: $0, override per matter. Case-dispositive; reviewable on appeal de novo."
+  valence bad
+  payoff 0.usd
+}
+
+terminal judgment-entered: "JUDGMENT ENTERED FOR PLAINTIFF ON FULL SUMMARY JUDGMENT" outcome [win, judgment, fee-eligible, appealable] cite RCFC 56(a); RCFC 58
+{
+  group general-track-group
+  note "PLACEHOLDER PAYOFF: $1,000,000 (full parameterized claim value), override per matter. This is the pack's designated Federal Circuit composition anchor -- kept at id 'judgment-entered' per the litgraph pack-authoring convention so packs/links.json can attach 'cofc::judgment-entered -> cafc::notice-of-appeal-filed' (28 U.S.C. §1295(a)(3); §2522) without this pack needing to know about the CAFC pack's internals. It models the clean case where the court grants summary judgment for plaintiff on the ENTIRE claim (liability and a liquidated/undisputed damages amount) with no trial needed. A judgment reached instead via bench trial is modeled separately below as 'judgment-for-plaintiff' / 'judgment-for-government' (variable-amount trial verdicts) -- a future links.json revision could add analogous appeal-anchor links from those ids too; this pack does not create packs/links.json itself."
+  valence good
+  payoff 1_000_000.usd
+}
+
+decision adr-referral-decision: "Refer Case to ADR?" by applicant cite ?("RCFC 16(a)(5); RCFC Appendix H ¶3") {
+  group adr-group
+  note "At any point, the parties may notify the assigned judge of a desire to pursue ADR (mediation by a settlement judge, early neutral evaluation, mini-trial, outcome-prediction assistance, or non-binding arbitration -- Appendix H ¶2). Participation is voluntary; a party's good-faith determination that ADR is inappropriate is respected. For §1498 cases specifically, ADR is commonly suggested after claim construction (Appendix H ¶2(j)) -- modeled on the patent track as its own mandatory settlement-discussion node under PRCFC Rule 16."
+  e-adrfork-decline "Decline ADR for now; proceed to discovery" -> discovery-open
+  e-adrfork-pursue "Elect ADR (mediation, early neutral evaluation, mini-trial, outcome-prediction, or non-binding arbitration)" -> adr-mediation-session {
+    authority cite ?("RCFC Appendix H ¶2-3")
+    effort 15.hours
+    cost 0.usd
+  }
+}
+
+state adr-mediation-session: "ADR Session(s) Conducted" cite ?("RCFC Appendix H ¶2-3") {
+  group adr-group
+  note "Confidential, off-the-record sessions before a settlement judge or agreed third-party neutral; no transcript, and ADR communications/documents are not disclosed to the assigned judge absent a Rule 16(f)(2) sanctions violation."
+  e-adr-session-to-outcome "ADR session(s) conclude" -> adr-outcome-ruling {
+    authority cite ?("RCFC Appendix H ¶2(h)")
+  }
+}
+
+decision adr-outcome-ruling: "ADR Concludes" by office cite ?("RCFC Appendix H ¶2(h)") {
+  group adr-group
+  note "Outcome distribution authored at 0.40 settlement-reached / 0.60 impasse-returns-to-litigation -- TEACHING ESTIMATE, not a cited empirical CoFC ADR settlement-rate figure."
+  e-adr-settles "Settlement reached" -> settled-adr p 0.4 {
+    note "TEACHING ESTIMATE -- not a cited empirical CoFC ADR settlement-rate figure."
+  }
+  e-adr-impasse "Impasse; parties return to litigation" -> discovery-open p 0.6 {
+    note "TEACHING ESTIMATE, see sibling edge note."
+  }
+}
+
+terminal settled-adr: "SETTLED VIA ADR" outcome [settlement] cite ?("RCFC Appendix H") {
+  group adr-group
+  note "PLACEHOLDER PAYOFF: $450,000 (45% of the parameterized $1,000,000 claim), override per matter -- illustrative discount reflecting litigation-risk-adjusted settlement value, not a rule-derived figure."
+  valence good
+  payoff 450_000.usd
+}

@@ -1,78 +1,198 @@
-//! Language server for `.lit` and `.case` documents.
+//! The litigate language server (DESIGN §6, SPEC §9.3 `litigate lsp`).
 //!
-//! The server keeps document snapshots in memory and publishes compiler parser
-//! diagnostics after every change. Its handlers operate on the same Rowan
-//! syntax and formatter used by `litigate`.
-#![allow(clippy::redundant_closure_for_method_calls)]
+//! Every analysis runs the same pipeline as `litigate check`
+//! ([`litigate_cli::check_session`]) over one salsa database kept across
+//! edits ([`host`]): parse, sema, lowering, verification, inline tests, and
+//! case replay under the engine clock. On top of that snapshot the server
+//! offers:
+//!
+//! - `publishDiagnostics` after every change, for every checked file;
+//! - hover: a declaration's kind, qualified id, type, every effective
+//!   version, and the L0 text its `cite` resolves to (located through the
+//!   lowering's source-map sidecar, narrowed to the pinpoint);
+//! - go-to-definition and find-references across modules, packages, and
+//!   the matters that use them;
+//! - document and workspace symbols;
+//! - formatting (`litigate fmt`);
+//! - code actions from diagnostic fixes;
+//! - inlay hints on `.case` events with the deadlines they trigger, due
+//!   dates computed by the engine clock.
+//!
+//! The server is `litigate-lsp` (stdio); `litigate lsp --stdio` runs it.
+pub mod analysis;
+pub mod cite;
+pub mod convert;
+pub mod diagnostics;
+pub mod host;
+pub mod hover;
+pub mod index;
+pub mod inlay;
+pub mod symbols;
 
-use std::collections::HashMap;
-
-use litigate_base::Applicability;
-use litigate_syntax::{format, parse, FileKind};
-use tower_lsp::{
-    jsonrpc::Result,
-    lsp_types::{
-        CodeAction, CodeActionKind, CodeActionOrCommand, CodeActionParams,
-        CodeActionProviderCapability, CodeActionResponse, DidChangeTextDocumentParams,
-        DidCloseTextDocumentParams, DidOpenTextDocumentParams, DocumentFormattingParams,
-        DocumentSymbol, DocumentSymbolParams, DocumentSymbolResponse, GotoDefinitionParams,
-        GotoDefinitionResponse, Hover, HoverContents, HoverParams, HoverProviderCapability,
-        InitializeParams, InitializeResult, InitializedParams, InlayHint, InlayHintParams,
-        Location, MarkedString, MessageType, OneOf, ReferenceParams, ServerCapabilities,
-        ServerInfo, SymbolInformation, TextDocumentSyncCapability, TextDocumentSyncKind, TextEdit,
-        Url, WorkspaceEdit, WorkspaceSymbolParams,
-    },
-    Client, LanguageServer, LspService, Server as LspServer,
+use analysis::Analysis;
+use host::{Host, Open, Settings};
+use litigate_syntax::FileKind;
+use std::collections::BTreeMap;
+use std::path::PathBuf;
+use std::sync::{Mutex, MutexGuard, PoisonError};
+use tokio::io::{AsyncRead, AsyncWrite};
+use tower_lsp::jsonrpc::Result;
+use tower_lsp::lsp_types::{
+    CodeActionOrCommand, CodeActionParams, CodeActionProviderCapability, CodeActionResponse,
+    Diagnostic, DidChangeTextDocumentParams, DidCloseTextDocumentParams, DidOpenTextDocumentParams,
+    DidSaveTextDocumentParams, DocumentFormattingParams, DocumentSymbolParams,
+    DocumentSymbolResponse, GotoDefinitionParams, GotoDefinitionResponse, Hover, HoverContents,
+    HoverParams, HoverProviderCapability, InitializeParams, InitializeResult, InitializedParams,
+    InlayHint, InlayHintParams, Location, MarkupContent, MarkupKind, MessageType, OneOf,
+    ReferenceParams, ServerCapabilities, ServerInfo, SymbolInformation, TextDocumentSyncCapability,
+    TextDocumentSyncKind, TextDocumentSyncOptions, TextDocumentSyncSaveOptions, TextEdit, Url,
+    WorkspaceSymbolParams,
 };
+use tower_lsp::{Client, LanguageServer, LspService, Server as LspServer};
 
-/// Language server state.
-#[derive(Debug)]
+/// The language server.
 pub struct Server {
     client: Client,
-    documents: tokio::sync::RwLock<HashMap<Url, Document>>,
-    root: tokio::sync::RwLock<Option<std::path::PathBuf>>,
+    host: Mutex<Host>,
+    /// What each URI was last published with, so unchanged files are not
+    /// re-sent and vanished diagnostics are cleared.
+    published: Mutex<BTreeMap<Url, Vec<Diagnostic>>>,
 }
 
-#[derive(Debug, Clone)]
-struct Document {
-    text: String,
-    version: i32,
-    kind: FileKind,
+fn lock<T>(m: &Mutex<T>) -> MutexGuard<'_, T> {
+    m.lock().unwrap_or_else(PoisonError::into_inner)
 }
 
 impl Server {
-    fn new(client: Client) -> Self {
+    /// A server talking to `client`.
+    #[must_use]
+    pub fn new(client: Client) -> Self {
         Self {
             client,
-            documents: tokio::sync::RwLock::new(HashMap::new()),
-            root: tokio::sync::RwLock::new(None),
+            host: Mutex::new(Host::default()),
+            published: Mutex::new(BTreeMap::new()),
         }
     }
 
-    async fn publish(&self, uri: Url) {
-        let docs = self.documents.read().await;
-        let Some(doc) = docs.get(&uri) else {
-            return;
+    /// `litigate/status`: how many times the database was built from
+    /// scratch rather than updated in place, and the files under analysis.
+    ///
+    /// # Errors
+    /// Never; the signature is the custom-method contract.
+    #[allow(clippy::unused_async)]
+    pub async fn status(&self) -> Result<serde_json::Value> {
+        let host = lock(&self.host);
+        let files: Vec<&String> = host
+            .current()
+            .map(|a| a.files.keys().collect())
+            .unwrap_or_default();
+        Ok(serde_json::json!({"rebuilds": host.rebuilds, "files": files}))
+    }
+
+    /// Re-checks and publishes what changed.
+    async fn refresh(&self) {
+        let (fresh, versions) = {
+            let mut host = lock(&self.host);
+            let versions: BTreeMap<PathBuf, i32> = host
+                .open
+                .iter()
+                .map(|(p, o)| (p.clone(), o.version))
+                .collect();
+            let analysis = host.analyze();
+            (diagnostics::publishable(analysis), versions)
         };
-        let diagnostics = diagnostics(&uri, doc);
-        self.client
-            .publish_diagnostics(uri, diagnostics, Some(doc.version))
-            .await;
+        let sends: Vec<(Url, Vec<Diagnostic>)> = {
+            let mut published = lock(&self.published);
+            let mut sends: Vec<(Url, Vec<Diagnostic>)> = published
+                .keys()
+                .filter(|u| !fresh.iter().any(|(f, _)| f == *u))
+                .map(|u| (u.clone(), Vec::new()))
+                .collect();
+            sends.extend(
+                fresh
+                    .into_iter()
+                    .filter(|(u, ds)| published.get(u) != Some(ds)),
+            );
+            for (u, ds) in &sends {
+                if ds.is_empty() {
+                    published.remove(u);
+                } else {
+                    published.insert(u.clone(), ds.clone());
+                }
+            }
+            sends
+        };
+        for (uri, ds) in sends {
+            let version = uri
+                .to_file_path()
+                .ok()
+                .and_then(|p| versions.get(&p).copied());
+            self.client.publish_diagnostics(uri, ds, version).await;
+        }
+    }
+
+    /// Runs `f` over the current analysis and the path of `uri`.
+    fn with<R>(&self, uri: &Url, f: impl FnOnce(&Analysis, &str) -> Option<R>) -> Option<R> {
+        let host = lock(&self.host);
+        let analysis = host.current()?;
+        let file = analysis.path_of(uri)?;
+        f(analysis, &file)
+    }
+
+    /// The definition under `position` of `uri`, as `(analysis-free)` index.
+    fn definition_at(
+        analysis: &Analysis,
+        file: &str,
+        position: tower_lsp::lsp_types::Position,
+    ) -> Option<usize> {
+        let text = analysis.text(file)?;
+        let offset = convert::offset(&text, position);
+        analysis
+            .index
+            .at(file, litigate_syntax::TextSize::try_from(offset).ok()?)
+    }
+
+    fn location(
+        analysis: &Analysis,
+        file: &str,
+        range: litigate_syntax::TextRange,
+    ) -> Option<Location> {
+        let text = analysis.text(file)?;
+        Some(Location {
+            uri: analysis.uri_of(file)?,
+            range: convert::range(&text, range),
+        })
     }
 }
 
 #[tower_lsp::async_trait]
 impl LanguageServer for Server {
     async fn initialize(&self, params: InitializeParams) -> Result<InitializeResult> {
-        *self.root.write().await = params.root_uri.and_then(|uri| uri.to_file_path().ok());
+        {
+            let mut host = lock(&self.host);
+            #[allow(deprecated)]
+            let root = params
+                .workspace_folders
+                .as_ref()
+                .and_then(|f| f.first())
+                .map(|f| f.uri.clone())
+                .or(params.root_uri);
+            host.root = root.and_then(|u| u.to_file_path().ok());
+            host.settings = Settings::from_options(params.initialization_options.as_ref());
+        }
         Ok(InitializeResult {
             server_info: Some(ServerInfo {
                 name: "litigate-lsp".into(),
                 version: Some(env!("CARGO_PKG_VERSION").into()),
             }),
             capabilities: ServerCapabilities {
-                text_document_sync: Some(TextDocumentSyncCapability::Kind(
-                    TextDocumentSyncKind::INCREMENTAL,
+                text_document_sync: Some(TextDocumentSyncCapability::Options(
+                    TextDocumentSyncOptions {
+                        open_close: Some(true),
+                        change: Some(TextDocumentSyncKind::INCREMENTAL),
+                        save: Some(TextDocumentSyncSaveOptions::Supported(true)),
+                        ..TextDocumentSyncOptions::default()
+                    },
                 )),
                 hover_provider: Some(HoverProviderCapability::Simple(true)),
                 definition_provider: Some(OneOf::Left(true)),
@@ -91,77 +211,80 @@ impl LanguageServer for Server {
         self.client
             .log_message(MessageType::INFO, "litigate language server ready")
             .await;
+        self.refresh().await;
     }
+
     async fn shutdown(&self) -> Result<()> {
         Ok(())
     }
 
     async fn did_open(&self, params: DidOpenTextDocumentParams) {
-        let item = params.text_document;
-        if let Some(kind) = kind(&item.uri) {
-            self.documents.write().await.insert(
-                item.uri.clone(),
-                Document {
-                    text: item.text,
-                    version: item.version,
-                    kind,
+        let doc = params.text_document;
+        if let Ok(path) = doc.uri.to_file_path() {
+            lock(&self.host).open.insert(
+                path,
+                Open {
+                    text: doc.text,
+                    version: doc.version,
                 },
             );
-            self.publish(item.uri).await;
+            self.refresh().await;
         }
     }
 
     async fn did_change(&self, params: DidChangeTextDocumentParams) {
-        let mut docs = self.documents.write().await;
-        if let Some(doc) = docs.get_mut(&params.text_document.uri) {
+        let Ok(path) = params.text_document.uri.to_file_path() else {
+            return;
+        };
+        {
+            let mut host = lock(&self.host);
+            let Some(open) = host.open.get_mut(&path) else {
+                return;
+            };
             for change in params.content_changes {
-                doc.text = match change.range {
-                    Some(range) => replace_range(&doc.text, range, &change.text),
+                open.text = match change.range {
+                    Some(range) => convert::apply_change(&open.text, range, &change.text),
                     None => change.text,
                 };
             }
-            doc.version = params.text_document.version;
+            open.version = params.text_document.version;
         }
-        drop(docs);
-        self.publish(params.text_document.uri).await;
+        self.refresh().await;
+    }
+
+    async fn did_save(&self, _: DidSaveTextDocumentParams) {
+        self.refresh().await;
     }
 
     async fn did_close(&self, params: DidCloseTextDocumentParams) {
-        self.documents
-            .write()
-            .await
-            .remove(&params.text_document.uri);
-        self.client
-            .publish_diagnostics(params.text_document.uri, Vec::new(), None)
-            .await;
+        if let Ok(path) = params.text_document.uri.to_file_path() {
+            lock(&self.host).open.remove(&path);
+        }
+        self.refresh().await;
     }
 
     async fn hover(&self, params: HoverParams) -> Result<Option<Hover>> {
-        let uri = params.text_document_position_params.text_document.uri;
-        let position = params.text_document_position_params.position;
-        let docs = self.documents.read().await;
-        let Some(doc) = docs.get(&uri) else {
-            return Ok(None);
-        };
-        let root_path = self.root.read().await.clone();
-        let parsed = parse(&doc.text, doc.kind);
-        let Some(token) = token_at(&parsed.syntax(), position) else {
-            return Ok(None);
-        };
-        let word = token.text().trim();
-        let token_kind = token.kind();
-        let token_range = to_range(token.text_range(), &doc.text);
-        let word = word.to_owned();
-        drop(token);
-        let source = cite_source(&word, root_path.as_deref());
-        let detail = if let Some(source_text) = source {
-            format!("`{word}`\n\nSource text: {source_text}")
-        } else {
-            format!("`{word}`\n\nLitigate syntax token ({token_kind:?}).")
-        };
-        Ok(Some(Hover {
-            contents: HoverContents::Scalar(MarkedString::String(detail)),
-            range: Some(token_range),
+        let at = params.text_document_position_params;
+        Ok(self.with(&at.text_document.uri, |analysis, file| {
+            let text = analysis.text(file)?;
+            let token = hover::token_at(
+                &text,
+                Analysis::kind(file)?,
+                convert::offset(&text, at.position),
+            )?;
+            let value = if token.kind() == litigate_syntax::SyntaxKind::CiteText {
+                hover::cite_token(analysis, file, &token)?
+            } else {
+                let def = analysis.index.at(file, token.text_range().start())?;
+                hover::definition(analysis, &analysis.index.defs[def])
+            };
+            Some(Hover {
+                contents: HoverContents::Markup(MarkupContent {
+                    kind: MarkupKind::Markdown,
+                    value,
+                }),
+                range: Some(convert::range(&text, token.text_range())),
+            })
         }))
     }
 
@@ -169,214 +292,108 @@ impl LanguageServer for Server {
         &self,
         params: GotoDefinitionParams,
     ) -> Result<Option<GotoDefinitionResponse>> {
-        let tdp = params.text_document_position_params;
-        let docs = self.documents.read().await;
-        let Some(doc) = docs.get(&tdp.text_document.uri) else {
-            return Ok(None);
-        };
-        let parsed = parse(&doc.text, doc.kind);
-        let Some(token) = token_at(&parsed.syntax(), tdp.position) else {
-            return Ok(None);
-        };
-        let name = token.text();
-        for (uri, other) in docs.iter() {
-            let tree = parse(&other.text, other.kind);
-            for node in tree.syntax().descendants() {
-                if is_declaration(node.kind())
-                    && node
-                        .children_with_tokens()
-                        .find_map(|it| it.into_token())
-                        .is_some_and(|t| t.text() == name)
-                {
-                    let range = node
-                        .children_with_tokens()
-                        .find_map(|it| it.into_token())
-                        .map(|t| to_range(t.text_range(), &other.text))
-                        .unwrap_or_default();
-                    return Ok(Some(GotoDefinitionResponse::Scalar(Location {
-                        uri: uri.clone(),
-                        range,
-                    })));
-                }
-            }
-        }
-        Ok(None)
+        let at = params.text_document_position_params;
+        Ok(self.with(&at.text_document.uri, |analysis, file| {
+            let def = &analysis.index.defs[Self::definition_at(analysis, file, at.position)?];
+            Self::location(analysis, &def.file, def.name_range).map(GotoDefinitionResponse::Scalar)
+        }))
     }
 
     async fn references(&self, params: ReferenceParams) -> Result<Option<Vec<Location>>> {
-        let tdp = params.text_document_position;
-        let docs = self.documents.read().await;
-        let Some(doc) = docs.get(&tdp.text_document.uri) else {
-            return Ok(None);
-        };
-        let parsed = parse(&doc.text, doc.kind);
-        let Some(token) = token_at(&parsed.syntax(), tdp.position) else {
-            return Ok(None);
-        };
-        let needle = token.text().to_owned();
-        let mut found = Vec::new();
-        for (uri, other) in docs.iter() {
-            let tree = parse(&other.text, other.kind);
-            for tok in tree
-                .syntax()
-                .descendants_with_tokens()
-                .filter_map(|it| it.into_token())
-            {
-                if tok.text() == needle {
-                    found.push(Location {
-                        uri: uri.clone(),
-                        range: to_range(tok.text_range(), &other.text),
-                    });
-                }
-            }
-        }
-        Ok(Some(found))
+        let at = params.text_document_position;
+        let declaration = params.context.include_declaration;
+        Ok(self.with(&at.text_document.uri, |analysis, file| {
+            let i = Self::definition_at(analysis, file, at.position)?;
+            let def = &analysis.index.defs[i];
+            let own = declaration.then(|| Self::location(analysis, &def.file, def.name_range));
+            Some(
+                own.flatten()
+                    .into_iter()
+                    .chain(
+                        analysis
+                            .index
+                            .references(i)
+                            .filter_map(|u| Self::location(analysis, &u.file, u.range)),
+                    )
+                    .collect(),
+            )
+        }))
     }
 
-    #[allow(deprecated)]
     async fn document_symbol(
         &self,
         params: DocumentSymbolParams,
     ) -> Result<Option<DocumentSymbolResponse>> {
-        let docs = self.documents.read().await;
-        let Some(doc) = docs.get(&params.text_document.uri) else {
-            return Ok(None);
-        };
-        let parsed = parse(&doc.text, doc.kind);
-        let symbols = parsed
-            .syntax()
-            .descendants()
-            .filter(|node| is_declaration(node.kind()))
-            .filter_map(|node| {
-                let token = node.children_with_tokens().find_map(|it| it.into_token())?;
-                let range = to_range(node.text_range(), &doc.text);
-                let selection_range = to_range(token.text_range(), &doc.text);
-                Some(DocumentSymbol {
-                    name: token.text().to_owned(),
-                    detail: Some(format!("{:?}", node.kind())),
-                    kind: symbol_kind(node.kind()),
-                    tags: None,
-                    deprecated: None,
-                    range,
-                    selection_range,
-                    children: None,
-                })
-            })
-            .collect();
-        Ok(Some(DocumentSymbolResponse::Nested(symbols)))
+        Ok(self.with(&params.text_document.uri, |analysis, file| {
+            Some(DocumentSymbolResponse::Nested(symbols::document(
+                analysis, file,
+            )))
+        }))
     }
 
-    #[allow(deprecated)]
     async fn symbol(
         &self,
         params: WorkspaceSymbolParams,
     ) -> Result<Option<Vec<SymbolInformation>>> {
-        let docs = self.documents.read().await;
-        let mut out = Vec::new();
-        for (uri, doc) in docs.iter() {
-            let parsed = parse(&doc.text, doc.kind);
-            for node in parsed
-                .syntax()
-                .descendants()
-                .filter(|node| is_declaration(node.kind()))
-            {
-                if let Some(token) = node.children_with_tokens().find_map(|it| it.into_token()) {
-                    if token
-                        .text()
-                        .to_lowercase()
-                        .contains(&params.query.to_lowercase())
-                    {
-                        out.push(SymbolInformation {
-                            name: token.text().into(),
-                            kind: symbol_kind(node.kind()),
-                            tags: None,
-                            deprecated: None,
-                            location: Location {
-                                uri: uri.clone(),
-                                range: to_range(token.text_range(), &doc.text),
-                            },
-                            container_name: None,
-                        });
-                    }
-                }
-            }
-        }
-        Ok(Some(out))
+        let host = lock(&self.host);
+        Ok(host.current().map(|a| symbols::workspace(a, &params.query)))
     }
 
     async fn formatting(&self, params: DocumentFormattingParams) -> Result<Option<Vec<TextEdit>>> {
-        let docs = self.documents.read().await;
-        let Some(doc) = docs.get(&params.text_document.uri) else {
+        let uri = params.text_document.uri;
+        let Ok(path) = uri.to_file_path() else {
             return Ok(None);
         };
-        Ok(format::format(&doc.text, doc.kind)
+        let host = lock(&self.host);
+        let (Some(open), Some(kind)) = (host.open.get(&path), FileKind::from_path(&path)) else {
+            return Ok(None);
+        };
+        // A document that does not parse is left alone (as `litigate fmt`).
+        Ok(litigate_syntax::format(&open.text, kind)
             .ok()
-            .filter(|formatted| formatted != &doc.text)
-            .map(|new_text| {
-                vec![TextEdit {
-                    range: full_range(&doc.text),
-                    new_text,
-                }]
+            .map(|formatted| {
+                if formatted == open.text {
+                    Vec::new()
+                } else {
+                    vec![TextEdit {
+                        range: convert::full_range(&open.text),
+                        new_text: formatted,
+                    }]
+                }
             }))
     }
 
     async fn code_action(&self, params: CodeActionParams) -> Result<Option<CodeActionResponse>> {
-        let docs = self.documents.read().await;
-        let Some(doc) = docs.get(&params.text_document.uri) else {
-            return Ok(None);
-        };
-        let diagnostics = parse(&doc.text, doc.kind).diagnostics(&litigate_base::FileId(
-            params.text_document.uri.path().to_owned(),
-        ));
-        let actions = diagnostics
-            .iter()
-            .flat_map(|diag| {
-                diag.fixes
-                    .iter()
-                    .filter(|fix| fix.applicability == Applicability::MachineApplicable)
-                    .map(|fix| {
-                        CodeActionOrCommand::CodeAction(CodeAction {
-                            title: format!("Fix {}", diag.code.as_str()),
-                            kind: Some(CodeActionKind::QUICKFIX),
-                            diagnostics: Some(vec![lsp_diagnostic(diag, &doc.text)]),
-                            edit: Some(WorkspaceEdit {
-                                changes: Some(
-                                    [(
-                                        params.text_document.uri.clone(),
-                                        vec![TextEdit {
-                                            range: span_range(&fix.span, &doc.text),
-                                            new_text: fix.replacement.clone(),
-                                        }],
-                                    )]
-                                    .into_iter()
-                                    .collect(),
-                                ),
-                                ..WorkspaceEdit::default()
-                            }),
-                            ..CodeAction::default()
-                        })
-                    })
-            })
-            .collect();
-        Ok(Some(actions))
+        Ok(self.with(&params.text_document.uri, |analysis, file| {
+            Some(
+                diagnostics::actions(analysis, file, params.range)
+                    .into_iter()
+                    .map(CodeActionOrCommand::CodeAction)
+                    .collect(),
+            )
+        }))
     }
 
     async fn inlay_hint(&self, params: InlayHintParams) -> Result<Option<Vec<InlayHint>>> {
-        let _ = params;
-        Ok(Some(Vec::new()))
+        Ok(self.with(&params.text_document.uri, |analysis, file| {
+            Some(inlay::hints(analysis, file, params.range))
+        }))
     }
 }
 
-/// Runs the language server over stdio.
-pub async fn run_stdio() {
-    let stdin = tokio::io::stdin();
-    let stdout = tokio::io::stdout();
-    let (service, socket) = LspService::new(Server::new);
-    LspServer::new(stdin, stdout, socket).serve(service).await;
+/// Serves one LSP session over `input`/`output` until the client exits.
+pub async fn serve<I, O>(input: I, output: O)
+where
+    I: AsyncRead + Unpin,
+    O: AsyncWrite,
+{
+    let (service, socket) = LspService::build(Server::new)
+        .custom_method("litigate/status", Server::status)
+        .finish();
+    LspServer::new(input, output, socket).serve(service).await;
 }
 
-mod helpers;
-use helpers::{
-    cite_source, diagnostics, full_range, is_declaration, kind, lsp_diagnostic, replace_range,
-    span_range, symbol_kind, to_range, token_at,
-};
+/// Serves one LSP session over stdio.
+pub async fn run_stdio() {
+    serve(tokio::io::stdin(), tokio::io::stdout()).await;
+}

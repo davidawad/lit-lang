@@ -17,6 +17,8 @@ pub struct Cx<'s, 'a> {
     pub manifest: Option<&'s Manifest>,
     /// `::` qualification allowed (links package).
     pub links: bool,
+    /// Pack id of the link being built: its actors are that pack's.
+    pub link_from: Option<String>,
 }
 
 /// The first value of a field as an expression.
@@ -132,23 +134,39 @@ impl Cx<'_, '_> {
         }
     }
 
-    /// Checks that `actor` is declared in `[package.roles]` (or `either`).
+    /// Checks that `actor` is declared in `[package.roles]` (or `either`);
+    /// a link's actor is declared by the pack its `from` node belongs to.
     pub fn actor(&mut self, r: &RefPath) -> String {
+        let link_actors = self.link_from.as_ref().map(|pack| {
+            self.ck
+                .scope
+                .packs
+                .iter()
+                .find(|s| s.pack_id == *pack)
+                .map(|s| s.actors.iter().map(String::as_str).collect::<Vec<_>>())
+        });
+        let declared: Option<Vec<&str>> = match link_actors {
+            Some(actors) => actors,
+            None => self
+                .manifest
+                .map(|m| m.roles.keys().map(String::as_str).collect()),
+        };
         let known = r.is_simple()
             && (r.head.text == "either"
-                || self
-                    .manifest
-                    .is_none_or(|m| m.roles.contains_key(&r.head.text)));
+                || declared
+                    .as_ref()
+                    .is_none_or(|d| d.contains(&r.head.text.as_str())));
         if !known {
-            let roles: Vec<&str> = self
-                .manifest
-                .map(|m| m.roles.keys().map(String::as_str).collect())
-                .unwrap_or_default();
+            let roles = declared.unwrap_or_default();
+            let owner = self
+                .link_from
+                .as_ref()
+                .map_or_else(String::new, |pack| format!(" of pack `{pack}`"));
             let mut report = Report::new(
                 C::UndeclaredActor,
                 r.range,
                 format!(
-                    "actor `{}` is not declared in `[package.roles]`",
+                    "actor `{}` is not declared in `[package.roles]`{owner}",
                     r.display()
                 ),
             )

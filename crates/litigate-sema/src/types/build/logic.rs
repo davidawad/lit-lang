@@ -286,7 +286,9 @@ impl Cx<'_, '_> {
     pub fn link(&mut self, e: &EdgeItem) -> Option<Link> {
         let from_ref = e.from.as_ref()?;
         let from = self.value_ref(from_ref, "node", |k| matches!(k, ValueKind::Node { .. }));
+        self.link_from = Some(from_ref.head.text.clone());
         let edge = self.edge(e, from.as_deref().unwrap_or_default(), None, false);
+        self.link_from = None;
         let fields = self.once(&e.fields);
         let mut replaces = Vec::new();
         for r in Self::refs(fields.get("replaces")) {

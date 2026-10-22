@@ -22,7 +22,7 @@ pub fn kind(def: &Def) -> SymbolKind {
             SymbolKind::INTERFACE
         }
         (_, K::GroupDecl) => SymbolKind::NAMESPACE,
-        (_, K::CaseFile) => SymbolKind::MODULE,
+        (Space::Module, _) | (_, K::CaseFile) => SymbolKind::MODULE,
         (_, K::Param | K::HolidayDecl) => SymbolKind::FIELD,
         _ => SymbolKind::OBJECT,
     }

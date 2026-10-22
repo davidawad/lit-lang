@@ -28,6 +28,8 @@ pub enum Space {
     Role,
     /// A name only its own declaration uses (parameter, holiday, case id).
     Local,
+    /// A module (`module a.b`), named by its dotted path.
+    Module,
 }
 
 /// One definition.
@@ -69,6 +71,17 @@ pub struct Index {
     pub uses: Vec<Use>,
     /// Pack id to package name.
     packs: BTreeMap<String, String>,
+}
+
+/// References queued until every file has declared its names.
+#[derive(Default)]
+struct Pending {
+    /// `Ref` nodes.
+    refs: Vec<(String, SyntaxNode)>,
+    /// Imported module paths.
+    modules: Vec<(String, String, TextRange)>,
+    /// Names in `import m.{...}` lists.
+    names: Vec<(String, litigate_syntax::SyntaxToken)>,
 }
 
 /// What a file sees.
@@ -165,6 +178,11 @@ fn owner(node: &SyntaxNode) -> String {
         .unwrap_or_default()
 }
 
+/// A module path as written, without trivia (`frcp.rule12`).
+fn dotted(node: &SyntaxNode) -> String {
+    node.text().to_string().split_whitespace().collect()
+}
+
 /// The last identifier of a `Ref` (the name) and its `pack::` qualifier.
 fn ref_name(node: &SyntaxNode) -> Option<(litigate_syntax::SyntaxToken, Option<String>)> {
     let ids = idents(node);
@@ -229,34 +247,36 @@ impl Index {
                 .collect(),
             ..Self::default()
         };
-        let mut refs: Vec<(String, SyntaxNode)> = Vec::new();
+        let mut pending = Pending::default();
         let mut scopes: BTreeMap<String, FileScope> = BTreeMap::new();
         for (file, text) in files {
             let scope = scope_of(file, text, checked);
-            if file.ends_with("Lit.toml") {
-                index
-                    .defs
-                    .extend(roles(text).into_iter().map(|(name, range)| Def {
-                        name,
-                        space: Space::Role,
-                        kind: K::PackageDecl,
-                        file: file.clone(),
-                        name_range: range,
-                        full_range: range,
-                        package: scope.package.clone(),
-                    }));
-            }
-            if let Some(kind) = FileKind::from_path(Path::new(file)) {
-                let root = parse(text, kind).syntax();
-                for node in root.descendants() {
-                    if node.kind() == K::Ref {
-                        refs.push((file.clone(), node));
-                        continue;
-                    }
-                    index.declare(&node, file, &scope);
-                }
-            }
+            index.collect(file, text, &scope, &mut pending);
             scopes.insert(file.clone(), scope);
+        }
+        let Pending {
+            refs,
+            modules,
+            names,
+        } = pending;
+        for (file, name, range) in modules {
+            let target = index
+                .defs
+                .iter()
+                .position(|d| d.space == Space::Module && d.name == name);
+            index.uses.push(Use {
+                file,
+                range,
+                target,
+            });
+        }
+        for (file, token) in names {
+            let target = index.resolve(token.text(), &file, &scopes[&file], None);
+            index.uses.push(Use {
+                file,
+                range: token.text_range(),
+                target,
+            });
         }
         for (file, node) in refs {
             let Some((token, qualifier)) = ref_name(&node) else {
@@ -276,6 +296,49 @@ impl Index {
             });
         }
         index
+    }
+
+    /// Declares the names of `file` and queues its references.
+    fn collect(&mut self, file: &str, text: &str, scope: &FileScope, pending: &mut Pending) {
+        if file.ends_with("Lit.toml") {
+            self.defs
+                .extend(roles(text).into_iter().map(|(name, range)| Def {
+                    name,
+                    space: Space::Role,
+                    kind: K::PackageDecl,
+                    file: file.to_owned(),
+                    name_range: range,
+                    full_range: range,
+                    package: scope.package.clone(),
+                }));
+        }
+        let Some(kind) = FileKind::from_path(Path::new(file)) else {
+            return;
+        };
+        for node in parse(text, kind).syntax().descendants() {
+            let parent = node.parent().map(|p| p.kind());
+            match (node.kind(), parent) {
+                (K::Ref, Some(K::ModuleDecl)) => self.defs.push(Def {
+                    name: dotted(&node),
+                    space: Space::Module,
+                    kind: K::ModuleDecl,
+                    file: file.to_owned(),
+                    name_range: node.text_range(),
+                    full_range: node.text_range(),
+                    package: scope.package.clone(),
+                }),
+                (K::Ref, Some(K::ImportDecl)) => {
+                    pending
+                        .modules
+                        .push((file.to_owned(), dotted(&node), node.text_range()));
+                }
+                (K::Ref, _) => pending.refs.push((file.to_owned(), node)),
+                (K::ImportList, _) => pending
+                    .names
+                    .extend(idents(&node).into_iter().map(|t| (file.to_owned(), t))),
+                _ => self.declare(&node, file, scope),
+            }
+        }
     }
 
     fn declare(&mut self, node: &SyntaxNode, file: &str, scope: &FileScope) {

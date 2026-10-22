@@ -267,23 +267,14 @@ impl LanguageServer for Server {
         let at = params.text_document_position_params;
         Ok(self.with(&at.text_document.uri, |analysis, file| {
             let text = analysis.text(file)?;
-            let token = hover::token_at(
-                &text,
-                Analysis::kind(file)?,
-                convert::offset(&text, at.position),
-            )?;
-            let value = if token.kind() == litigate_syntax::SyntaxKind::CiteText {
-                hover::cite_token(analysis, file, &token)?
-            } else {
-                let def = analysis.index.at(file, token.text_range().start())?;
-                hover::definition(analysis, &analysis.index.defs[def])
-            };
+            let (value, range) =
+                hover::at(analysis, file, &text, convert::offset(&text, at.position))?;
             Some(Hover {
                 contents: HoverContents::Markup(MarkupContent {
                     kind: MarkupKind::Markdown,
                     value,
                 }),
-                range: Some(convert::range(&text, token.text_range())),
+                range: Some(convert::range(&text, range)),
             })
         }))
     }

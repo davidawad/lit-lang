@@ -7,7 +7,7 @@ use litgraph::cite::SourceCorpus;
 use litigate_cli::hirx;
 use litigate_sema::hir::{self, DayUnit, Declaration, NodeKind, Type};
 use litigate_sema::temporal::world::meta_of;
-use litigate_syntax::{parse, SyntaxKind as K, SyntaxToken, TextSize};
+use litigate_syntax::{parse, SyntaxKind as K, SyntaxToken, TextRange, TextSize};
 use std::fmt::Write as _;
 
 /// Most L0 lines shown inline.
@@ -184,6 +184,40 @@ fn header(text: &str, def: &Def) -> (String, String) {
     (code.to_owned(), docs.join("\n"))
 }
 
+/// The kind, type, versions, and cited L0 text of declaration `name`.
+fn declaration(out: &mut String, analysis: &Analysis, pkg: &hir::Package, name: &str) {
+    let qualified = format!("{}::{name}", pkg.manifest.pack_id);
+    let versions: Vec<&Declaration> = hirx::declarations(pkg)
+        .filter(|d| hirx::decl_id(d).as_deref() == Some(name))
+        .collect();
+    if let Some(first) = versions.first() {
+        let _ = writeln!(out, "\n{} `{qualified}`", hirx::decl_kind(first));
+        if let Some(t) = typed(first) {
+            let _ = writeln!(out, "\n{t}");
+        }
+    } else if let Some(g) = pkg.groups.iter().find(|g| g.id == name) {
+        let _ = writeln!(out, "\ngroup `{qualified}`: {}", g.label);
+    }
+    let metas: Vec<&hir::Metadata> = versions.iter().filter_map(|d| meta_of(d)).collect();
+    if !metas.is_empty() {
+        let _ = writeln!(out, "\n**versions**");
+        for m in &metas {
+            let at = m
+                .span
+                .as_ref()
+                .map(|s| format!(" — `{}:{}`", s.file.0, s.line))
+                .unwrap_or_default();
+            let _ = writeln!(out, "- {} · {}{at}", interval(&m.effective), m.authority);
+        }
+    }
+    if let Some((cite, line)) = metas
+        .iter()
+        .find_map(|m| Some((m.cite.clone()?, m.span.as_ref()?.line)))
+    {
+        cited(out, analysis, pkg, &cite, line);
+    }
+}
+
 /// Hover markdown for definition `def`.
 #[must_use]
 pub fn definition(analysis: &Analysis, def: &Def) -> String {
@@ -200,39 +234,8 @@ pub fn definition(analysis: &Analysis, def: &Def) -> String {
         }
         return out;
     };
-    let qualified = format!("{}::{}", pkg.manifest.pack_id, def.name);
     match &def.space {
-        Space::Decl => {
-            let versions: Vec<&Declaration> = hirx::declarations(pkg)
-                .filter(|d| hirx::decl_id(d).as_deref() == Some(def.name.as_str()))
-                .collect();
-            if let Some(first) = versions.first() {
-                let _ = writeln!(out, "\n{} `{qualified}`", hirx::decl_kind(first));
-                if let Some(t) = typed(first) {
-                    let _ = writeln!(out, "\n{t}");
-                }
-            } else if let Some(g) = pkg.groups.iter().find(|g| g.id == def.name) {
-                let _ = writeln!(out, "\ngroup `{qualified}`: {}", g.label);
-            }
-            let metas: Vec<&hir::Metadata> = versions.iter().filter_map(|d| meta_of(d)).collect();
-            if !metas.is_empty() {
-                let _ = writeln!(out, "\n**versions**");
-                for m in &metas {
-                    let at = m
-                        .span
-                        .as_ref()
-                        .map(|s| format!(" — `{}:{}`", s.file.0, s.line))
-                        .unwrap_or_default();
-                    let _ = writeln!(out, "- {} · {}{at}", interval(&m.effective), m.authority);
-                }
-            }
-            if let Some((cite, line)) = metas
-                .iter()
-                .find_map(|m| Some((m.cite.clone()?, m.span.as_ref()?.line)))
-            {
-                cited(&mut out, analysis, pkg, &cite, line);
-            }
-        }
+        Space::Decl => declaration(&mut out, analysis, pkg, &def.name),
         Space::Edge(owner) => {
             let edge = hirx::nodes_at(pkg, None)
                 .into_iter()
@@ -263,6 +266,9 @@ pub fn definition(analysis: &Analysis, def: &Def) -> String {
                 .map(|r| format!("{r:?}").to_lowercase());
             let _ = writeln!(out, "\nactor `{}` ({})", def.name, role.unwrap_or_default());
         }
+        Space::Module => {
+            let _ = writeln!(out, "\nmodule of package `{}`", pkg.manifest.name);
+        }
         Space::Party | Space::Local => {}
     }
     out
@@ -277,6 +283,31 @@ pub fn cite_token(analysis: &Analysis, file: &str, token: &SyntaxToken) -> Optio
     let mut out = String::new();
     cited(&mut out, analysis, pkg, token.text().trim(), line);
     Some(out.trim_start().to_owned())
+}
+
+/// Hover markdown at byte `offset` of `file` (holding `text`), with the
+/// range it describes: a cite's L0 text, else the definition named there
+/// (in a `Lit.toml`, a `[package.roles]` key).
+#[must_use]
+pub fn at(
+    analysis: &Analysis,
+    file: &str,
+    text: &str,
+    offset: usize,
+) -> Option<(String, TextRange)> {
+    let Some(kind) = Analysis::kind(file) else {
+        let def =
+            &analysis.index.defs[analysis.index.at(file, TextSize::try_from(offset).ok()?)?];
+        return Some((definition(analysis, def), def.name_range));
+    };
+    let token = token_at(text, kind, offset)?;
+    let value = if token.kind() == K::CiteText {
+        cite_token(analysis, file, &token)?
+    } else {
+        let def = analysis.index.at(file, token.text_range().start())?;
+        definition(analysis, &analysis.index.defs[def])
+    };
+    Some((value, token.text_range()))
 }
 
 /// The token at byte `offset` of `text`: the identifier or cite touching

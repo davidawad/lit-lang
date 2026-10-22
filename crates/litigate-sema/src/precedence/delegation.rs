@@ -49,7 +49,7 @@ pub fn check(
         for r in &da.meta.relations {
             match r {
                 Relation::Override(text) => {
-                    out.extend(overriding(world, lattice, loc, a, text, &window))
+                    out.extend(overriding(world, lattice, loc, a, text, &window));
                 }
                 Relation::DelegableTo(to) => {
                     let own = &da.meta.authority;
@@ -146,9 +146,25 @@ fn overriding(
             !matches!(order, Order::Above | Order::Equal) && !delegated
         })
         .collect();
-    let Some(&first) = missing.first() else {
-        return Vec::new();
-    };
+    missing_delegation(world, lattice, loc, a, &name, &missing, span)
+        .into_iter()
+        .collect()
+}
+
+/// L3004 naming the delegation `missing` versions of the override target
+/// lack.
+fn missing_delegation(
+    world: &World<'_>,
+    lattice: &Lattice,
+    loc: &dyn Locate,
+    a: usize,
+    name: &str,
+    missing: &[usize],
+    span: Span,
+) -> Option<Diagnostic> {
+    let da = &world.decls[a];
+    let mine = &da.meta.authority;
+    let &first = missing.first()?;
     let db = &world.decls[first];
     let theirs = &db.meta.authority;
     let mut d = error(
@@ -162,7 +178,7 @@ fn overriding(
     if lattice.compare(mine, theirs) == Order::Incomparable {
         d = d.with_note(None, format!("{mine} and {theirs} are not ranked by any `authority` chain, so the override needs an explicit delegation"));
     }
-    for &b in &missing {
+    for &b in missing {
         let db = &world.decls[b];
         d = d.with_note(
             db.meta.span.clone(),
@@ -183,8 +199,8 @@ fn overriding(
             );
         }
     }
-    vec![d.with_note(
+    Some(d.with_note(
         None,
         "only a rule's own text can delegate; an override cannot grant itself the power",
-    )]
+    ))
 }

@@ -1,0 +1,16 @@
+---
+source: crates/litigate-sema/tests/frcp_2009.rs
+expression: rows
+---
+[
+    "served by mail before, answered after: answer-period = answer-period@2009-12-01 (21.days) via time-2009-answer arm 1",
+    "served by mail before, answered after: frcp6 = frcp6@2009-12-01 (every day counts) via time-2009-counting arm 1",
+    "same, with an order keeping the prior rules: answer-period = answer-period@2007-12-01 (20.days) via time-2009-answer arm 0",
+    "same, with an order keeping the prior rules: frcp6 = frcp6@2007-12-01 (under 11 days skip weekends and holidays) via time-2009-counting arm 0",
+    "the order comes after the answer: answer-period = answer-period@2009-12-01 (21.days) via time-2009-answer arm 1",
+    "the order comes after the answer: frcp6 = frcp6@2009-12-01 (every day counts) via time-2009-counting arm 1",
+    "commenced after the amendments: answer-period = answer-period@2009-12-01 (21.days) via in force on the answer date",
+    "commenced after the amendments: frcp6 = frcp6@2009-12-01 (every day counts) via in force on the answer date",
+    "over before the amendments: answer-period = answer-period@2007-12-01 (20.days) via in force on the answer date",
+    "over before the amendments: frcp6 = frcp6@2007-12-01 (under 11 days skip weekends and holidays) via in force on the answer date",
+]

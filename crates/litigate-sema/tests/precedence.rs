@@ -20,7 +20,7 @@ fn core(extra: &str) -> LoadedPackage {
     )
 }
 
-/// `frcp`: a FederalRule answer period; `clauses` go on the deadline.
+/// `frcp`: a `FederalRule` answer period; `clauses` go on the deadline.
 fn frcp(clauses: &str) -> LoadedPackage {
     let text = format!(
         "module frcp.rules\nimport core.authority.{{Statute, LocalRule, StandingOrder, CaseOrder}}\nstart s\nenum Document {{ complaint }}\nevent Served(document: Document)\ncounting c6 {{ holidays cal }}\ncalendar cal {{ new-year: fixed(1, 1) effective [1870-06-28, ..) }}\nstate s: \"S\"\ndeadline answer-period: 21.days from Served(complaint) counted_by c6 effective [2009-12-01, ..){clauses}\n"
@@ -63,6 +63,7 @@ fn run(packages: &[LoadedPackage]) -> Vec<String> {
 }
 
 #[test]
+#[allow(clippy::too_many_lines)] // one table row per rule
 fn overrides_need_delegation_and_conflicts_need_an_order() {
     let ov = |id: &str, extra: &str| {
         override_decl(

@@ -1,0 +1,62 @@
+module frap.docketing
+
+import frap.record.{ transcript-order-fork }
+import frap.{ docketing-group }
+
+decision cross-appeal-fork: "Appellee Considers a Cross-Appeal" by applicant cite FRAP 4(a)(3)
+{
+  group docketing-group
+  note "A party wishing to attack a judgment (not merely defend it against the appellant's arguments) must file its own notice of cross-appeal. A cross-appeal asserts a separate basis for reversal or a request that the court award a more favorable judgment to the cross-appellant than the district court gave."
+  _ "File notice of cross-appeal" -> cross-appeal-filed {
+    authority cite FRAP 4(a)(3)
+    effort 4.hours
+    cost 605.usd
+    deadline 14.days {
+      extendable false
+      note "14 days after the first notice of appeal, or within the original FRAP 4(a)(1) period, whichever is later. Missing this deadline forecloses the cross-appeal entirely — no equitable exceptions or late filing allowed."
+    }
+    duration { min 2.1.days, mode 7.days, max 14.days }
+    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate. Same $605.00 filing fee as an initial notice of appeal (Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2023, plus 28 U.S.C. § 1917's $5.00 notice fee) — a separate notice, a separate fee."
+  }
+  _ "Decline to cross-appeal" -> cross-appeal-not-filed {
+    authority cite FRAP 4(a)(3)
+    effort 0.hours
+    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+  }
+}
+
+state cross-appeal-filed: "Notice of Cross-Appeal Filed" by office cite FRAP 4(a)(3)
+{
+  group docketing-group
+  note "Due within 14 days after the first notice of appeal, or the otherwise-applicable Rule 4(a)(1) period, whichever is later. The deadline is non-extendable under the plain text of the rule — missing it forecloses cross-appellate relief."
+  _ "Cross-appeal docketed" -> voluntary-dismissal-fork { authority cite FRAP 3; FRAP 28.1 }
+}
+
+state cross-appeal-not-filed: "No Cross-Appeal — Judgment Defended Only" by office cite ?("FRAP 4(a)(3); United States v. American Railway Express Co., 265 U.S. 425 (1924)") {
+  group docketing-group
+  note "Without a cross-appeal, a party cannot argue for reversal or a more favorable judgment on appeal. The party is confined to defending the judgment on existing grounds or alternative theories, but cannot affirmatively seek relief — this is the binding cross-appeal constraint."
+  _ "Proceed without cross-appeal" -> voluntary-dismissal-fork { authority cite FRAP 28.1 }
+}
+
+decision voluntary-dismissal-fork: "Parties Consider Dismissing the Appeal" cite FRAP 42(b)
+{
+  group docketing-group
+  note "By stipulation of all parties (with costs as agreed) or on the appellant's own motion — courts almost always grant such dismissals unless compelling institutional interests (e.g., class certification, precedential impact) require retention of the case."
+  _ "Stipulate to or move for dismissal" -> voluntarily-dismissed {
+    authority cite FRAP 42(b)
+    valence good
+  }
+  _ "Appeal proceeds — order the record" -> transcript-order-fork by applicant {
+    authority cite FRAP 10(b)
+    effort 2.hours
+    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+  }
+}
+
+terminal voluntarily-dismissed: "Appeal Voluntarily Dismissed" outcome [voluntary, dismissal] cite FRAP 42(b)
+{
+  group docketing-group
+  note "On dismissal, the underlying district court judgment stands undisturbed unless the dismissal order provides otherwise (e.g., with prejudice, without prejudice, or conditional). Voluntary dismissal typically reflects settlement and does not resolve the merits — it is neither a win nor a loss on appeal. PLACEHOLDER PAYOFF: $400,000, override per matter, matching this project's settlement/voluntary-exit tier -- the appellant's own choice, most often after a settlement."
+  valence good
+  payoff 400_000.usd
+}

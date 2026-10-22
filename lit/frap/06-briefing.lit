@@ -1,0 +1,88 @@
+module frap.briefing
+
+import frap.argument.{ oral-argument-fork }
+import frap.{ briefing-group }
+
+decision appellant-brief-window: "Appellant's Opening Brief Due" by applicant cite FRAP 31(a)(1)
+{
+  group briefing-group
+  note "The 40-day deadline runs from the date the record is filed with the court, not from the notice of appeal. Appellant must track the actual record closure date to avoid confusion; missing this self-inflicted trap is a leading cause of appellate dismissal. FRAP 28(a) sets required contents; FRAP 32(a)(7) caps the brief at 13,000 words (or 30 pages if monospaced)."
+  _ "File opening brief" -> appellant-brief-filed {
+    authority cite FRAP 31(a)(1)
+    effort 100.hours
+    deadline 40.days {
+      extendable true
+      extension_authority "FRAP 26(b); court discretion for good cause"
+      note "Failure to file by day 40 (or the extended date) permits an appellee motion to dismiss for want of prosecution under FRAP 31(c), triggering a dismissal that is nearly impossible to revive."
+    }
+    duration { min 6.days, mode 20.days, max 40.days }
+    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+  }
+  _ "Fail to file opening brief" -> appeal-dismissed-no-brief {
+    authority cite FRAP 31(c)
+    effort 0.hours
+    valence bad
+    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+  }
+}
+
+state appellant-brief-filed: "Opening Brief Filed" by applicant cite FRAP 28(a); FRAP 32(a)(7)
+{
+  group briefing-group
+  note "The opening brief frames the issues, selects the standard of review, and defines the factual universe for appellate review. The appellant is bound by these choices; the reply brief cannot resurrect abandoned arguments, and new theories in reply are waived. The 13,000-word cap forces ruthless economy in issue-spotting."
+  _ "Appellee files response brief" -> appellee-brief-filed {
+    authority cite FRAP 31(a)(1); FRAP 28(b)
+    effort 90.hours
+    deadline 30.days {
+      extendable true
+      extension_authority "FRAP 26(b); court discretion for good cause"
+      note "Appellee's failure to file within 30 days is grounds for default, but the appellee retains the right to oral argument by court permission even if the brief is late; missing this deadline is far less terminal than the appellant's miss."
+    }
+    duration { min 4.5.days, mode 15.days, max 30.days }
+    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+  }
+}
+
+terminal appeal-dismissed-no-brief: "DISMISSED — Failure to Prosecute (No Opening Brief)" outcome [loss, procedural-default, waiver-trap] cite FRAP 31(c)
+{
+  group briefing-group
+  note "Dismissal for 'want of prosecution' when the appellant fails to file timely is discretionary with the court but nearly automatic on appellee motion. This is a conduct-based sanction, not a jurisdictional defect, and is extremely difficult to revive post-dismissal because it reflects lack of diligence, not legal error. PLACEHOLDER PAYOFF: $0, override per matter."
+  valence bad
+  payoff 0.usd
+}
+
+state appellee-brief-filed: "Appellee's Response Brief Filed" by applicant cite FRAP 31(a)(1); FRAP 28(b)
+{
+  group briefing-group
+  note "The appellee enjoys asymmetric freedom: it may defend the judgment on any ground in the record without admitting any fact or standard the appellant proposed, and may attack the appellant's statement of the case or standard of review without conceding issue-framing. The 30-day period runs from service of the opening brief and can be extended for good cause."
+  _ "File reply brief" -> reply-brief-filed {
+    authority cite FRAP 31(a)(1); FRAP 28(c)
+    effort 40.hours
+    deadline 21.days {
+      extendable true
+      extension_authority "FRAP 26(b); court discretion for good cause; FRAP 31(a)(1) requires filing at least 7 days before argument"
+      note "Reply brief must be filed at least 7 days before oral argument (if scheduled) or risk rejection. Late reply briefs are rarely accepted; this is a cascading deadline that depends on the argument calendar, not a pure 21-day rule."
+    }
+    duration { min 3.1.days, mode 10.5.days, max 21.days }
+    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+  }
+  _ "Waive reply brief" -> briefing-complete {
+    authority cite FRAP 28(c)
+    effort 1.hours
+    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+  }
+}
+
+state reply-brief-filed: "Appellant's Reply Brief Filed" by office cite FRAP 31(a)(1); FRAP 28(c)
+{
+  group briefing-group
+  note "The reply brief is optional — failure to file waives no substantive right, but filing one that strays beyond the appellee's response opens waiver traps. The 6,500-word cap is non-negotiable; new arguments, new authorities, and arguments not fairly responsive to the response brief are all waived."
+  _ "Briefing closes" -> briefing-complete { authority cite FRAP 31 }
+}
+
+state briefing-complete: "Briefing Closed" by office cite FRAP 31
+{
+  group briefing-group
+  note "Once all briefs are filed or the reply deadline expires, the written record closes and is fixed. No supplemental briefs are permitted absent extraordinary circumstances (e.g., intervening Supreme Court authority). The panel's decision is now constrained to the four corners of the briefs and the certified record on appeal."
+  _ "Clerk calendars argument decision" -> oral-argument-fork { authority cite FRAP 34(a) }
+}

@@ -1,0 +1,99 @@
+# The Federal Rules of Appellate Procedure, ported from
+# packs/frap-appellate-procedure.json (`litigate import`, then made typed,
+# dated, cited and tested by hand).
+#
+# Lifetime: the graph models appellate practice under the December 1, 2009
+# time-computation amendments (Mar. 26, 2009 order; FRAP 26 2009 Committee
+# Note, vendored in sources/usc-28-app-time-history.txt), which set every
+# period the pack's deadlines use in its present length and counting
+# (frap26@2009-12-01 in lit/core). The periods it replaced (10-day criminal
+# notice, transcript order and FRCP 59 motion; 14-day reply brief) are not
+# modeled, so a query before 2009-12-01 has no version in force (L3007)
+# rather than a wrong one.
+# The FRAP are court rules under 28 U.S.C. § 2072, so the package authority
+# is `FederalRule`; its deadlines delegate to `CaseOrder`/`LocalRule` only
+# where the rule text says so (`delegable_to`, each with its cite).
+[package]
+name = "frap-appellate-procedure"
+version = "0.1.0"
+language = 1
+pack_id = "frap-appellate-procedure"
+forum = "frap"
+authority = "FederalRule"
+title = "Federal Rules of Appellate Procedure"
+description = "Federal appellate procedure from a district court disposition through direct appeal, briefing, argument, merits decision, rehearing, and certiorari to the Supreme Court — tracking FRAP jurisdictional deadlines, standards of review, and the Bowles v. Russell trap."
+jurisdiction = "Federal Rules of Appellate Procedure / U.S. Courts of Appeals"
+in_force = "2009-12-01"
+known_at = "2024-12-01"
+counting = "frap26"
+
+[package.roles]
+applicant = "self"
+either = "nature"
+examiner = "nature"
+office = "nature"
+
+[sources.frap-rules]
+title = "Federal Rules of Appellate Procedure, as amended to Dec. 1, 2024"
+url = "https://www.uscourts.gov/sites/default/files/2025-02/federal-rules-of-appellate-procedure-dec-1-2024_0.pdf"
+path = "sources/frap.txt"
+sha256 = "d61711eca8e1f65955d12f1b7d29d4cc453d9ee1e30c4fff6c54b23f113454f6"
+as_of = "2024-12-01"
+
+[sources.usc28-1291]
+title = "28 U.S.C. § 1291 (Final decisions of district courts)"
+url = "https://www.law.cornell.edu/uscode/text/28/1291"
+path = "sources/usc-additional.txt"
+# Binds `28 U.S.C. § n` cites to the vendored sections in
+# usc-additional.txt (§§ 46, 1254, 1291, 2101, 2107). Section 1292 is
+# vendored in another file, and a citation family binds one source, so its
+# cites stay holes carrying their text (see usc28-1292).
+cite_prefixes = ["28 U.S.C."]
+section_heading = "28 U.S.C. § {n}"
+
+[sources.usc28-1292]
+title = "28 U.S.C. § 1292 (Interlocutory decisions)"
+url = "https://www.law.cornell.edu/uscode/text/28/1292"
+path = "sources/usc-cfr-prosecution-fragments.txt"
+
+[sources.usc28-1254]
+title = "28 U.S.C. § 1254 (Courts of appeals; certiorari)"
+url = "https://www.law.cornell.edu/uscode/text/28/1254"
+path = "sources/usc-additional.txt"
+
+[sources.usc28-2107]
+title = "28 U.S.C. § 2107 (Time for appeal to courts of appeals)"
+url = "https://www.law.cornell.edu/uscode/text/28/2107"
+path = "sources/usc-additional.txt"
+
+[sources.scotus-rules]
+title = "Rules of the Supreme Court of the United States (2023) (Rules 10, 13)"
+url = "https://www.supremecourt.gov/filingandrules/2023RulesoftheCourt.pdf"
+sha256 = "05f435c766fd596333828846d097828238ff89a266c24e3afca9ecd2fb9c19db"
+as_of = "2023-01-01"
+
+[sources.frcp-rules-cite]
+title = "Federal Rules of Civil Procedure, as amended to Dec. 1, 2024 (FRCP 50/52/59/60 post-trial motions tolling the appeal clock)"
+url = "https://www.uscourts.gov/sites/default/files/2025-02/federal-rules-of-civil-procedure-dec-1-2024_0.pdf"
+path = "sources/frcp.txt"
+sha256 = "c86b327b3bbe7dd3e68ea434a2bf0bc62aee8e85229f3456f094a1b232568317"
+as_of = "2024-12-01"
+
+[sources.coa-fee-schedule]
+title = "Court of Appeals Miscellaneous Fee Schedule (docketing fee $600, effective 12/1/2023)"
+url = "https://www.uscourts.gov/court-programs/fees/court-appeals-miscellaneous-fee-schedule"
+as_of = "2023-12-01"
+
+[sources.usc28-1917]
+title = "28 U.S.C. § 1917 (District courts; fee on filing notice of or application for appeal, $5)"
+url = "https://www.law.cornell.edu/uscode/text/28/1917"
+
+[[cite_syntax.rules]]
+prefixes = ["FRAP", "Fed. R. App. P.", "Fed R App P", "F.R.A.P."]
+heading = "FRAP {}"
+source = "frap-rules"
+
+[[cite_syntax.rules]]
+prefixes = ["FRCP", "Fed. R. Civ. P.", "Fed R Civ P", "F.R.C.P."]
+heading = "Rule {}"
+source = "frcp-rules-cite"

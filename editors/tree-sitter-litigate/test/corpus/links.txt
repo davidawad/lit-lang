@@ -32,7 +32,7 @@ link _ "Anonymous": a::b -> c::d
           (number)))
       (edge_fields
         (edge_field
-          (id_list
+          (replaces_list
             (ref
               (identifier))))))
     (link_decl
@@ -135,3 +135,36 @@ instance cafc@cofc {
                   (identifier)
                   (signed_number
                     (number)))))))))))
+
+================================================================================
+Replaces may name an anonymous edge by its derived id
+================================================================================
+
+module links
+link l "L": a::x -> b::y { replaces [a::named, "a::x->y#0"] }
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (link_decl
+      (identifier)
+      (string
+        (string_content))
+      (ref
+        (identifier)
+        (identifier))
+      (ref
+        (identifier)
+        (identifier))
+      (edge_fields
+        (edge_field
+          (replaces_list
+            (ref
+              (identifier)
+              (identifier))
+            (string
+              (string_content))))))))

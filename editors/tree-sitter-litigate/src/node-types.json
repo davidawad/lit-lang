@@ -1329,6 +1329,10 @@
             "named": true
           },
           {
+            "type": "replaces_list",
+            "named": true
+          },
+          {
             "type": "signed_money",
             "named": true
           },
@@ -3066,6 +3070,25 @@
     }
   },
   {
+    "type": "replaces_list",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "ref",
+          "named": true
+        },
+        {
+          "type": "string",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "role_entry",
     "named": true,
     "fields": {
@@ -3349,6 +3372,10 @@
         "types": [
           {
             "type": "date",
+            "named": true
+          },
+          {
+            "type": "hole",
             "named": true
           },
           {

@@ -1,0 +1,25 @@
+# cargo-fuzz harness for the litigate parser and formatter. Not a member of
+# the root workspace (it needs nightly and libFuzzer):
+#   cargo +nightly fuzz run parse --fuzz-dir crates/litigate-syntax/fuzz
+[package]
+name = "litigate-syntax-fuzz"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+litigate-syntax = { path = ".." }
+
+[[bin]]
+name = "parse"
+path = "fuzz_targets/parse.rs"
+test = false
+doc = false
+bench = false
+
+[workspace]
+members = ["."]

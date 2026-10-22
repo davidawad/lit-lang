@@ -3,10 +3,10 @@ use crate::ast::{self, AstNode};
 use crate::error::SyntaxError;
 use crate::grammar::{case_file, lit_file};
 use crate::lexer::lex;
-use crate::parser::{is_decl, is_trivia, Parser, CASE_ITEM_KEYWORDS, LIT_ITEM_KEYWORDS};
-use crate::syntax_kind::{LitLanguage, SyntaxKind};
+use crate::parser::{Parser, CASE_ITEM_KEYWORDS, LIT_ITEM_KEYWORDS};
+use crate::syntax_kind::LitLanguage;
 use litigate_base::{Diagnostic, DiagnosticCode, FileId, LineIndex};
-use rowan::{GreenNode, NodeOrToken};
+use rowan::GreenNode;
 use std::path::Path;
 
 /// A syntax node of the litigate CST.
@@ -128,7 +128,6 @@ pub fn parse(text: &str, kind: FileKind) -> Parse {
                     .is_some_and(|r| !r.is_empty())
         })
     }));
-    errors.extend(dangling_docs(&SyntaxNode::new_root(green.clone())));
     errors.sort_by_key(|error| error.range.start());
     errors.dedup_by_key(|error| error.range.start());
     merge_closer_fixes(&mut errors);
@@ -190,29 +189,4 @@ fn merge_closer_fixes(errors: &mut [SyntaxError]) {
             }
         }
     }
-}
-
-/// L0006 for every doc comment that does not lead a declaration.
-fn dangling_docs(root: &SyntaxNode) -> Vec<SyntaxError> {
-    root.descendants_with_tokens()
-        .filter_map(NodeOrToken::into_token)
-        .filter(|token| token.kind() == SyntaxKind::DocComment && !leads_decl(token))
-        .map(|token| {
-            SyntaxError::new(
-                DiagnosticCode::DanglingDocComment,
-                token.text_range(),
-                "doc comment is not followed by a declaration; use `//` for a plain comment",
-            )
-        })
-        .collect()
-}
-
-fn leads_decl(token: &SyntaxToken) -> bool {
-    let Some(parent) = token.parent() else {
-        return false;
-    };
-    let mut before = std::iter::successors(token.prev_sibling_or_token(), |element| {
-        element.prev_sibling_or_token()
-    });
-    is_decl(parent.kind()) && before.all(|element| is_trivia(element.kind()))
 }

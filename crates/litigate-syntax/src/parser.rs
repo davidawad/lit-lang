@@ -98,6 +98,9 @@ pub(crate) struct Parser<'t> {
     builder: GreenNodeBuilder<'static>,
     pub(crate) errors: Vec<SyntaxError>,
     pub(crate) depth: usize,
+    /// True between starting a declaration and its first token: doc
+    /// comments emitted now lead it; any others are dangling (L0006).
+    leading_docs: bool,
     item_keywords: &'static [SyntaxKind],
 }
 
@@ -118,6 +121,7 @@ impl<'t> Parser<'t> {
             builder: GreenNodeBuilder::new(),
             errors: Vec::new(),
             depth: 0,
+            leading_docs: false,
             item_keywords: items,
         }
     }
@@ -227,6 +231,13 @@ impl<'t> Parser<'t> {
         }
         while self.emitted < stop {
             let token = self.tokens[self.emitted];
+            if token.kind == DocComment && !self.leading_docs {
+                self.errors.push(SyntaxError::new(
+                    DiagnosticCode::DanglingDocComment,
+                    token.range,
+                    "doc comment is not followed by a declaration; use `//` for a plain comment",
+                ));
+            }
             self.builder
                 .token(token.kind.into(), &self.text[token.range]);
             self.emitted += 1;
@@ -240,6 +251,7 @@ impl<'t> Parser<'t> {
     pub(crate) fn start(&mut self, kind: SyntaxKind) {
         self.flush_trivia(is_decl(kind));
         self.builder.start_node(kind.into());
+        self.leading_docs |= is_decl(kind);
     }
 
     pub(crate) fn finish(&mut self) {
@@ -263,6 +275,7 @@ impl<'t> Parser<'t> {
             self.builder.token(kind.into(), &self.text[token.range]);
             self.emitted = index + 1;
             self.pos += 1;
+            self.leading_docs = false;
         }
     }
 
@@ -304,6 +317,7 @@ impl<'t> Parser<'t> {
 
     pub(crate) fn finish_file(mut self) -> (GreenNode, Vec<SyntaxError>) {
         self.pos = self.sig.len();
+        self.leading_docs = false;
         self.flush_trivia(false);
         self.builder.finish_node();
         (self.builder.finish(), self.errors)

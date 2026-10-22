@@ -1,0 +1,22 @@
+case acme-appeal
+uses frcp-rule12-example ^0.1.0, cafc ~2024.12.0-rc.1
+as_of 2025-06-01
+known_at 2025-06-15
+summary "Appeal posture with every optional case item."
+notes "Fixture for SPEC §3.2."
+source "Docket"
+source "Opinion" { url "https://example.org/opinion" }
+start frcp-rule12-example::mtd-ruling
+perspective { Plaintiff: opponent, Defendant: self }
+
+parties {
+  acme: Plaintiff Corporation
+}
+
+events {
+  2025-03-05 Served(complaint, Personal) on acme cite FRCP 4(h)
+}
+
+facts { frcp-rule12-example::time-barred: frcp-rule12-example::not-barred }
+stakes { judgment-entered: unvalued }
+analysis { objective: { type: "robust" }, horizon: 3, mixed: "optimistic", seed: -1, x: false }

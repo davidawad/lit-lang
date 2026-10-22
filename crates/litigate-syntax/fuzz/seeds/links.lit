@@ -1,0 +1,18 @@
+module links.cofc-cafc
+
+link appeal "Appeal to the Federal Circuit": cofc::judgment -> cafc::entry by self p 1/2 {
+  replaces [cofc::old-appeal]
+  within cafc::notice-period
+}
+
+link _ "Remand": cafc@cofc::mandate -> cofc::pending
+
+instance cafc@cofc {
+  pack cafc
+  note "CAFC reviewing a COFC judgment"
+  remove_edges [entry-district]
+  probabilities { affirm: 7/10, reverse: ?("no data") }
+  roles { appellant: self }
+  payoff_transform "x * 2"
+  patch affirm { label: "Affirmed", probability: 0.7, tags: ["a", "b"], deadline: unset }
+}

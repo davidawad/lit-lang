@@ -10,7 +10,7 @@ use crate::syntax_kind::SyntaxKind;
 pub struct RefParts {
     /// First identifier (a pack id when qualified with `::`).
     pub head: String,
-    /// Instance after `head@` (`cafc@cofc::x` gives `cofc`).
+    /// Instance after `head@` (`base@origin::x` gives `origin`).
     pub instance: Option<String>,
     /// Remaining `(separator, identifier)` segments; separator is `.` or `::`.
     pub segments: Vec<(String, String)>,
@@ -19,7 +19,7 @@ pub struct RefParts {
 }
 
 impl Ref {
-    /// The reference text without trivia (`cafc@cofc::entry`).
+    /// The reference text without trivia (`base@origin::entry`).
     #[must_use]
     pub fn text(&self) -> String {
         tokens(self.syntax())

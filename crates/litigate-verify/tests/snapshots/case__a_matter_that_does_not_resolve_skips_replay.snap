@@ -1,0 +1,29 @@
+---
+source: crates/litigate-verify/tests/case.rs
+expression: "json!({\n    \"summary\": summary(&v), \"well-typed\":\n    v.verification.report.finding(Obligation::WellTyped),\n})"
+---
+{
+  "summary": {
+    "finding": {
+      "name": "case-replay",
+      "status": "skipped",
+      "count": 0,
+      "examples": [
+        "not checked: the matter did not resolve"
+      ]
+    },
+    "accepted": false,
+    "posture": null,
+    "diagnostics": [
+      "cases/examples/acme.case:2:6 L1006 package `no-such-package` is not loaded"
+    ]
+  },
+  "well-typed": {
+    "name": "well-typed",
+    "status": "failed",
+    "count": 1,
+    "examples": [
+      "cases/examples/acme.case:2:6: L1006 package `no-such-package` is not loaded"
+    ]
+  }
+}

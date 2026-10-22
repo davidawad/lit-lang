@@ -1,0 +1,19 @@
+---
+source: crates/litigate-verify/tests/case.rs
+expression: summary(&v)
+---
+{
+  "finding": {
+    "name": "case-replay",
+    "status": "failed",
+    "count": 1,
+    "examples": [
+      "<case acme-v-widget>:1:1: L4002 `MovedToDismiss(complaint)` on 2025-03-27 missed deadline `answer-period`, due 2025-03-26"
+    ]
+  },
+  "accepted": false,
+  "posture": "frcp-rule12-example::mtd-ruling",
+  "diagnostics": [
+    "<case acme-v-widget>:1:1 L4002 `MovedToDismiss(complaint)` on 2025-03-27 missed deadline `answer-period`, due 2025-03-26"
+  ]
+}

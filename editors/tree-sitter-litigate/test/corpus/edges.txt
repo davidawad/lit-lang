@@ -1,0 +1,340 @@
+================================================================================
+Edges with targets
+================================================================================
+
+module a
+state s: "S" {
+  go "Go" -> next
+  _ "Anonymous" -> next
+  far "Qualified" -> cafc@cofc::entry-cofc
+  old "Versioned" -> answer-period@2009-12-01
+}
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (node_decl
+      (identifier)
+      (string
+        (string_content))
+      (node_body
+        (edge_decl
+          (identifier)
+          (string
+            (string_content))
+          (ref
+            (identifier)))
+        (edge_decl
+          (anonymous)
+          (string
+            (string_content))
+          (ref
+            (identifier)))
+        (edge_decl
+          (identifier)
+          (string
+            (string_content))
+          (ref
+            (identifier)
+            (identifier)
+            (identifier)))
+        (edge_decl
+          (identifier)
+          (string
+            (string_content))
+          (ref
+            (identifier)
+            (date)))))))
+
+================================================================================
+Edge clauses
+================================================================================
+
+module a
+chance c: "C" by Court {
+  a "A" -> x p 1/10
+  b "B" -> y by Plaintiff p 0.9
+  c "C" -> z p ?
+  d "D" -> z p ?("why")
+  e "E" -> z p (1 - q)
+}
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (node_decl
+      (identifier)
+      (string
+        (string_content))
+      (by_clause
+        (ref
+          (identifier)))
+      (node_body
+        (edge_decl
+          (identifier)
+          (string
+            (string_content))
+          (ref
+            (identifier))
+          (probability
+            (fraction
+              (number)
+              (number))))
+        (edge_decl
+          (identifier)
+          (string
+            (string_content))
+          (ref
+            (identifier))
+          (by_clause
+            (ref
+              (identifier)))
+          (probability
+            (number)))
+        (edge_decl
+          (identifier)
+          (string
+            (string_content))
+          (ref
+            (identifier))
+          (probability
+            (hole)))
+        (edge_decl
+          (identifier)
+          (string
+            (string_content))
+          (ref
+            (identifier))
+          (probability
+            (hole
+              (string
+                (string_content)))))
+        (edge_decl
+          (identifier)
+          (string
+            (string_content))
+          (ref
+            (identifier))
+          (probability
+            (parenthesized_expression
+              (binary_expression
+                (number)
+                (ref
+                  (identifier))))))))))
+
+================================================================================
+Edge fields
+================================================================================
+
+module a
+decision d: "D" {
+  answer "Answer" -> answered {
+    event Answered(complaint)
+    authority "28 U.S.C. 1491"
+    authority cite FRCP 4(m)
+    effort 8.hours
+    cost -2_000.50.usd
+    within answer-period { extendable true, extension_authority "FRCP 6(b)", note "x" }
+    deadline 5.court_days { extendable false }
+    duration { min 1.days, mode 2.days max 3.days }
+    valence good
+    court_listener_url "u"
+    action_id "a"
+    note "n"
+    tags [t], attrs { a: 1 }, sets [s], clears [c], requires [r], forbids [f]
+  }
+  wait "Wait" -> waited { duration 30.days, cost ? }
+}
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (node_decl
+      (identifier)
+      (string
+        (string_content))
+      (node_body
+        (edge_decl
+          (identifier)
+          (string
+            (string_content))
+          (ref
+            (identifier))
+          (edge_fields
+            (edge_field
+              (call_expression
+                (ref
+                  (identifier))
+                (arguments
+                  (ref
+                    (identifier)))))
+            (edge_field
+              (string
+                (string_content)))
+            (edge_field
+              (cite
+                (cite_text)))
+            (edge_field
+              (duration))
+            (edge_field
+              (signed_money
+                (money)))
+            (edge_field
+              (ref
+                (identifier))
+              (deadline_opts
+                (deadline_opt
+                  (boolean))
+                (deadline_opt
+                  (string
+                    (string_content)))
+                (deadline_opt
+                  (string
+                    (string_content)))))
+            (edge_field
+              (duration)
+              (deadline_opts
+                (deadline_opt
+                  (boolean))))
+            (edge_field
+              (duration_range
+                (duration)
+                (duration)
+                (duration)))
+            (edge_field
+              (identifier))
+            (edge_field
+              (string
+                (string_content)))
+            (edge_field
+              (string
+                (string_content)))
+            (edge_field
+              (string
+                (string_content)))
+            (edge_field
+              (id_list
+                (ref
+                  (identifier))))
+            (edge_field
+              (num_record
+                (num_entry
+                  (identifier)
+                  (signed_number
+                    (number)))))
+            (edge_field
+              (id_list
+                (ref
+                  (identifier))))
+            (edge_field
+              (id_list
+                (ref
+                  (identifier))))
+            (edge_field
+              (id_list
+                (ref
+                  (identifier))))
+            (edge_field
+              (id_list
+                (ref
+                  (identifier))))))
+        (edge_decl
+          (identifier)
+          (string
+            (string_content))
+          (ref
+            (identifier))
+          (edge_fields
+            (edge_field
+              (duration))
+            (edge_field
+              (hole))))))))
+
+================================================================================
+Field keywords as edge ids
+================================================================================
+
+module a
+state s: "S" {
+  note "Edge named note" -> x
+  group "Edge named group" -> y
+  default "Edge named default" -> z
+  p "Edge named p" -> z
+}
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (node_decl
+      (identifier)
+      (string
+        (string_content))
+      (node_body
+        (edge_decl
+          (identifier)
+          (string
+            (string_content))
+          (ref
+            (identifier)))
+        (edge_decl
+          (identifier)
+          (string
+            (string_content))
+          (ref
+            (identifier)))
+        (edge_decl
+          (identifier)
+          (string
+            (string_content))
+          (ref
+            (identifier)))
+        (edge_decl
+          (identifier)
+          (string
+            (string_content))
+          (ref
+            (identifier)))))))
+
+================================================================================
+Mixed fields and edges with commas
+================================================================================
+
+module a
+state answered: "Answer filed" { group pleadings, _ "Proceed to judgment" -> judgment-entered }
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (node_decl
+      (identifier)
+      (string
+        (string_content))
+      (node_body
+        (node_field
+          (identifier))
+        (edge_decl
+          (anonymous)
+          (string
+            (string_content))
+          (ref
+            (identifier)))))))

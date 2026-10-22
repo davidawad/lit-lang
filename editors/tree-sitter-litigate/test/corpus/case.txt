@@ -1,0 +1,246 @@
+================================================================================
+Minimal case
+================================================================================
+
+case acme
+uses frcp ^1.0.0
+as_of 2025-06-01
+summary "s"
+
+---
+
+(source_file
+  (case_file
+    (identifier)
+    (uses_decl
+      (use_item
+        (identifier)
+        (version_req)))
+    (as_of_decl
+      (date))
+    (summary_decl
+      (string
+        (string_content)))))
+
+================================================================================
+Full case
+================================================================================
+
+case cofc-1498-patent-case
+uses cofc ^2024.12.0, cafc ~1.0.0-beta.1, links >=1.0.0, core =1.2.3
+as_of 2025-06-01
+known_at 2025-01-01
+summary "s"
+notes "n"
+source "A"
+source "B" { url "https://x", as_of 2024-01-01 }
+start cofc::complaint-filed
+perspective { Plaintiff: self, Defendant: opponent }
+parties { a: Plaintiff Corporation, b: Defendant Government }
+events {
+  2025-03-05 Served(complaint, Personal) on b cite RCFC 4
+  2025-03-20 Moved() by a
+}
+facts { cofc::time-barred: cofc::not-barred, x: y }
+stakes { judgment: -2_000_000.usd, other: unvalued, cafc@cofc::win: 1.50.usd }
+beliefs {
+  observe sj: { e1: 3, e2: 1 }
+  observe x: { y: 0 },
+}
+analysis {
+  params: { rate: 650, opp_rate: -5.5 },
+  "mixed": "optimistic",
+  calibration: ["ptab-fy2024"],
+  horizon: unset,
+  flag: true,
+}
+
+---
+
+(source_file
+  (case_file
+    (identifier)
+    (uses_decl
+      (use_item
+        (identifier)
+        (version_req))
+      (use_item
+        (identifier)
+        (version_req))
+      (use_item
+        (identifier)
+        (version_req))
+      (use_item
+        (identifier)
+        (version_req)))
+    (as_of_decl
+      (date))
+    (known_at_decl
+      (date))
+    (summary_decl
+      (string
+        (string_content)))
+    (notes_decl
+      (string
+        (string_content)))
+    (source_decl
+      (string
+        (string_content)))
+    (source_decl
+      (string
+        (string_content))
+      (source_body
+        (source_field
+          (string
+            (string_content)))
+        (source_field
+          (date))))
+    (case_start_decl
+      (ref
+        (identifier)
+        (identifier)))
+    (perspective_decl
+      (role_map
+        (role_entry
+          (identifier)
+          (identifier))
+        (role_entry
+          (identifier)
+          (identifier))))
+    (parties_block
+      (party_decl
+        (identifier)
+        (identifier)
+        (identifier))
+      (party_decl
+        (identifier)
+        (identifier)
+        (identifier)))
+    (events_block
+      (case_event
+        (date)
+        (call_expression
+          (ref
+            (identifier))
+          (arguments
+            (ref
+              (identifier))
+            (ref
+              (identifier))))
+        (identifier)
+        (cite
+          (cite_text)))
+      (case_event
+        (date)
+        (call_expression
+          (ref
+            (identifier))
+          (arguments))
+        (identifier)))
+    (facts_block
+      (fact_entry
+        (ref
+          (identifier)
+          (identifier))
+        (ref
+          (identifier)
+          (identifier)))
+      (fact_entry
+        (ref
+          (identifier))
+        (ref
+          (identifier))))
+    (stakes_block
+      (stake_entry
+        (ref
+          (identifier))
+        (signed_money
+          (money)))
+      (stake_entry
+        (ref
+          (identifier))
+        (unvalued))
+      (stake_entry
+        (ref
+          (identifier)
+          (identifier)
+          (identifier))
+        (signed_money
+          (money))))
+    (beliefs_block
+      (observation
+        (ref
+          (identifier))
+        (count_map
+          (count_entry
+            (ref
+              (identifier))
+            (number))
+          (count_entry
+            (ref
+              (identifier))
+            (number))))
+      (observation
+        (ref
+          (identifier))
+        (count_map
+          (count_entry
+            (ref
+              (identifier))
+            (number)))))
+    (analysis_block
+      (json_record
+        (json_entry
+          (identifier)
+          (json_record
+            (json_entry
+              (identifier)
+              (signed_number
+                (number)))
+            (json_entry
+              (identifier)
+              (signed_number
+                (number)))))
+        (json_entry
+          (string
+            (string_content))
+          (string
+            (string_content)))
+        (json_entry
+          (identifier)
+          (json_list
+            (string
+              (string_content))))
+        (json_entry
+          (identifier)
+          (unset))
+        (json_entry
+          (identifier)
+          (boolean))))))
+
+================================================================================
+Perspective by party
+================================================================================
+
+case c
+uses a ^1.0.0
+as_of 2025-01-01
+summary "s"
+perspective widget
+
+---
+
+(source_file
+  (case_file
+    (identifier)
+    (uses_decl
+      (use_item
+        (identifier)
+        (version_req)))
+    (as_of_decl
+      (date))
+    (summary_decl
+      (string
+        (string_content)))
+    (perspective_decl
+      (identifier))))

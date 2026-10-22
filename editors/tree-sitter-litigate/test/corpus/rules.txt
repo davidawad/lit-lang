@@ -1,0 +1,266 @@
+================================================================================
+Rules
+================================================================================
+
+module a
+rule duty answer-duty effective [2009-12-01, 2030-01-01) cite FRCP 12(a)
+{
+  state inner: "Inner"
+}
+rule power grant { decision x: "X" }
+rule liability missed subject_to answer-duty { }
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (rule_decl
+      (identifier)
+      (effective_clause
+        (interval
+          (date)
+          (date)))
+      (cite
+        (cite_text))
+      (rule_body
+        (node_decl
+          (identifier)
+          (string
+            (string_content)))))
+    (rule_decl
+      (identifier)
+      (rule_body
+        (node_decl
+          (identifier)
+          (string
+            (string_content)))))
+    (rule_decl
+      (identifier)
+      (relation
+        (ref
+          (identifier)))
+      (rule_body))))
+
+================================================================================
+Deadlines
+================================================================================
+
+module a
+deadline answer-period: 21.days from Served(complaint) counted_by frcp6
+deadline reply: 3.business_days before Hearing() counted_by core.frcp6@2009-12-01
+  effective [2009-12-01, ..) cite FRCP 6 { note "x" }
+deadline later: 8.hours after Filed counted_by frcp6 { extendable true }
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (deadline_decl
+      (identifier)
+      (duration)
+      (call_expression
+        (ref
+          (identifier))
+        (arguments
+          (ref
+            (identifier))))
+      (ref
+        (identifier)))
+    (deadline_decl
+      (identifier)
+      (duration)
+      (call_expression
+        (ref
+          (identifier))
+        (arguments))
+      (ref
+        (identifier)
+        (identifier)
+        (date))
+      (effective_clause
+        (interval
+          (date)
+          (open_end)))
+      (cite
+        (cite_text))
+      (deadline_opts
+        (deadline_opt
+          (string
+            (string_content)))))
+    (deadline_decl
+      (identifier)
+      (duration)
+      (ref
+        (identifier))
+      (ref
+        (identifier))
+      (deadline_opts
+        (deadline_opt
+          (boolean))))))
+
+================================================================================
+Counting rules
+================================================================================
+
+module a
+counting frcp6 cite FRCP 6(a)
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension { Mail: 3.days } cite FRCP 6(d)
+  holidays federal-holidays
+  anchor trigger_day
+  short_period { below: 7.days, count: business_days }
+  allow_hours
+}
+counting compact { exclude_trigger_day, include_last_day, anchor next_business_day }
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (counting_decl
+      (identifier)
+      (cite
+        (cite_text))
+      (counting_body
+        (counting_item)
+        (counting_item)
+        (counting_item
+          (id_list
+            (ref
+              (identifier))
+            (ref
+              (identifier))
+            (ref
+              (identifier))))
+        (counting_item
+          (service_map
+            (service_entry
+              (identifier)
+              (duration)))
+          (cite
+            (cite_text)))
+        (counting_item
+          (ref
+            (identifier)))
+        (counting_item
+          (identifier))
+        (counting_item
+          (short_period
+            (duration)
+            (identifier)))
+        (counting_item)))
+    (counting_decl
+      (identifier)
+      (counting_body
+        (counting_item)
+        (counting_item)
+        (counting_item
+          (identifier))))))
+
+================================================================================
+Calendars
+================================================================================
+
+module a
+calendar federal-holidays cite FRCP 6(a)(6)
+{
+  new-year: fixed(1, 1) effective [1870-06-28, ..) observed nearest_weekday
+  mlk-day: nth(3, monday, 1) effective [1986-01-20, ..)
+  memorial: last(monday, 5) effective [1971-01-01, ..)
+  inauguration-day: every(4, 1965, 1, 20) effective [1965-01-20, ..) observed next_day
+  one-off: once(2018-12-05) effective [2018-12-05, 2018-12-06)
+}
+calendar empty effective [1990-01-01, ..) { }
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (calendar_decl
+      (identifier)
+      (cite
+        (cite_text))
+      (calendar_body
+        (holiday_decl
+          (identifier)
+          (call_expression
+            (ref
+              (identifier))
+            (arguments
+              (number)
+              (number)))
+          (interval
+            (date)
+            (open_end))
+          (identifier))
+        (holiday_decl
+          (identifier)
+          (call_expression
+            (ref
+              (identifier))
+            (arguments
+              (number)
+              (ref
+                (identifier))
+              (number)))
+          (interval
+            (date)
+            (open_end)))
+        (holiday_decl
+          (identifier)
+          (call_expression
+            (ref
+              (identifier))
+            (arguments
+              (ref
+                (identifier))
+              (number)))
+          (interval
+            (date)
+            (open_end)))
+        (holiday_decl
+          (identifier)
+          (call_expression
+            (ref
+              (identifier))
+            (arguments
+              (number)
+              (number)
+              (number)
+              (number)))
+          (interval
+            (date)
+            (open_end))
+          (identifier))
+        (holiday_decl
+          (identifier)
+          (call_expression
+            (ref
+              (identifier))
+            (arguments
+              (date)))
+          (interval
+            (date)
+            (date)))))
+    (calendar_decl
+      (identifier)
+      (effective_clause
+        (interval
+          (date)
+          (open_end)))
+      (calendar_body))))

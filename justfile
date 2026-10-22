@@ -139,4 +139,19 @@ lit-sync:
     @echo "lit-sync is not implemented until the generated-source flip"
 
 lit-test:
-    cargo test -p litigate-base -p litigate-syntax -p litigate-sema -p litigate-verify -p litigate-lower -p litigate-import -p litigate-cli -p litigate-lsp
+    cargo test -p litigate-base -p litigate-syntax -p litigate-sema -p litigate-verify -p litigate-lower -p litigate-import -p litigate-cli -p litigate-lsp -p tree-sitter-litigate
+
+# tree-sitter grammar (editors/tree-sitter-litigate): regenerating the parser
+# from grammar.js must reproduce the committed src/ byte for byte, then the
+# corpus (test/corpus) and highlight (test/highlight) tests must pass. Uses a
+# `tree-sitter` on PATH when it is the pinned version, else npx (needs node).
+ts_cli_version := "0.27.1"
+ts-test:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    cd editors/tree-sitter-litigate
+    if tree-sitter --version 2>/dev/null | grep -q " {{ts_cli_version}}"; then ts=(tree-sitter); \
+    else ts=(npx --yes "tree-sitter-cli@{{ts_cli_version}}"); fi
+    "${ts[@]}" generate
+    git diff --exit-code --stat -- src || { echo "ts-test: src/ is stale; commit the regenerated parser" >&2; exit 1; }
+    "${ts[@]}" test

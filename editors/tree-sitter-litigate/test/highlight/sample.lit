@@ -1,0 +1,37 @@
+module frcp.rule12
+// <- keyword
+//     ^ module
+
+/// Service of a pleading.
+// <- comment.documentation
+event Served(document: Document)
+// <- keyword
+//    ^ type.definition
+//           ^ variable.parameter
+//                     ^ type
+
+chance ruling: "Ruling" by Court cite FRCP 12(b)(6)
+// <- keyword
+//     ^ label
+//              ^ string
+//                      ^ keyword
+//                         ^ type
+//                               ^ keyword.directive
+//                                    ^ string.special
+{
+  granted "Granted" -> dismissed p 1/10
+  // <- property
+  //                ^ operator
+  //                             ^ keyword
+  //                               ^ number
+  denied "Denied" -> answered p ?("no data")
+  //                            ^ constant.builtin
+}
+
+terminal dismissed: "Dismissed" { payoff -2_000.usd }
+//                                ^ keyword
+//                                        ^ number
+
+test "answer due" { expect deadline(answer-period) == 2025-03-24 }
+//                         ^ function.builtin
+//                                                    ^ number

@@ -1,0 +1,361 @@
+================================================================================
+Operator precedence
+================================================================================
+
+module a
+test "t" { expect a || b && c == d + e * f }
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (test_decl
+      (string
+        (string_content))
+      (test_body
+        (expect_stmt
+          (binary_expression
+            (ref
+              (identifier))
+            (binary_expression
+              (ref
+                (identifier))
+              (binary_expression
+                (ref
+                  (identifier))
+                (binary_expression
+                  (ref
+                    (identifier))
+                  (binary_expression
+                    (ref
+                      (identifier))
+                    (ref
+                      (identifier))))))))))))
+
+================================================================================
+Left associativity
+================================================================================
+
+module a
+test "t" { expect a - b - c / d / e % f }
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (test_decl
+      (string
+        (string_content))
+      (test_body
+        (expect_stmt
+          (binary_expression
+            (binary_expression
+              (ref
+                (identifier))
+              (ref
+                (identifier)))
+            (binary_expression
+              (binary_expression
+                (binary_expression
+                  (ref
+                    (identifier))
+                  (ref
+                    (identifier)))
+                (ref
+                  (identifier)))
+              (ref
+                (identifier)))))))))
+
+================================================================================
+Unary operators
+================================================================================
+
+module a
+test "t" { expect !a && -b < - 1 }
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (test_decl
+      (string
+        (string_content))
+      (test_body
+        (expect_stmt
+          (binary_expression
+            (unary_expression
+              (ref
+                (identifier)))
+            (binary_expression
+              (unary_expression
+                (ref
+                  (identifier)))
+              (unary_expression
+                (number)))))))))
+
+================================================================================
+Field access
+================================================================================
+
+module a
+test "t" { expect f(1).x.y == (g).z }
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (test_decl
+      (string
+        (string_content))
+      (test_body
+        (expect_stmt
+          (binary_expression
+            (field_expression
+              (field_expression
+                (call_expression
+                  (ref
+                    (identifier))
+                  (arguments
+                    (number)))
+                (identifier))
+              (identifier))
+            (field_expression
+              (parenthesized_expression
+                (ref
+                  (identifier)))
+              (identifier))))))))
+
+================================================================================
+Qualified refs
+================================================================================
+
+module a
+test "t" { expect frcp.rule6.x == cafc@cofc::entry-cofc }
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (test_decl
+      (string
+        (string_content))
+      (test_body
+        (expect_stmt
+          (binary_expression
+            (ref
+              (identifier)
+              (identifier)
+              (identifier))
+            (ref
+              (identifier)
+              (identifier)
+              (identifier))))))))
+
+================================================================================
+Records and lists
+================================================================================
+
+module a
+test "t" { expect { a: 1, b: [1, 2,] } != [] }
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (test_decl
+      (string
+        (string_content))
+      (test_body
+        (expect_stmt
+          (binary_expression
+            (record_expression
+              (record_field
+                (identifier)
+                (number))
+              (record_field
+                (identifier)
+                (list_expression
+                  (number)
+                  (number))))
+            (list_expression)))))))
+
+================================================================================
+Match
+================================================================================
+
+module a
+test "t" { expect match m || n { A => 1 == 1, Enum.B => true _ => match k { _ => false } } }
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (test_decl
+      (string
+        (string_content))
+      (test_body
+        (expect_stmt
+          (match_expression
+            (binary_expression
+              (ref
+                (identifier))
+              (ref
+                (identifier)))
+            (match_arm
+              (ref
+                (identifier))
+              (binary_expression
+                (number)
+                (number)))
+            (match_arm
+              (ref
+                (identifier)
+                (identifier))
+              (boolean))
+            (match_arm
+              (wildcard)
+              (match_expression
+                (ref
+                  (identifier))
+                (match_arm
+                  (wildcard)
+                  (boolean))))))))))
+
+================================================================================
+Literals
+================================================================================
+
+module a
+test "t" { expect [1, 2_000, 0.35, 1.usd, 21.days, 5.court_days, 3.business_days, 8.hours, "s", 2025-01-01, true, false, unit, ?, ?("r")] == x }
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (test_decl
+      (string
+        (string_content))
+      (test_body
+        (expect_stmt
+          (binary_expression
+            (list_expression
+              (number)
+              (number)
+              (number)
+              (money)
+              (duration)
+              (duration)
+              (duration)
+              (duration)
+              (string
+                (string_content))
+              (date)
+              (boolean)
+              (boolean)
+              (unit)
+              (hole)
+              (hole
+                (string
+                  (string_content))))
+            (ref
+              (identifier))))))))
+
+================================================================================
+Cite expression
+================================================================================
+
+module a
+test "t" { expect x == cite FRCP 6(a)
+}
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (test_decl
+      (string
+        (string_content))
+      (test_body
+        (expect_stmt
+          (binary_expression
+            (ref
+              (identifier))
+            (cite
+              (cite_text))))))))
+
+================================================================================
+Builtins
+================================================================================
+
+module a
+test "t" { expect prob(d, A) <= 1/2 && contains(l, x) && len([1]) == 1 }
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (test_decl
+      (string
+        (string_content))
+      (test_body
+        (expect_stmt
+          (binary_expression
+            (binary_expression
+              (binary_expression
+                (call_expression
+                  (ref
+                    (identifier))
+                  (arguments
+                    (ref
+                      (identifier))
+                    (ref
+                      (identifier))))
+                (binary_expression
+                  (number)
+                  (number)))
+              (call_expression
+                (ref
+                  (identifier))
+                (arguments
+                  (ref
+                    (identifier))
+                  (ref
+                    (identifier)))))
+            (binary_expression
+              (call_expression
+                (ref
+                  (identifier))
+                (arguments
+                  (list_expression
+                    (number))))
+              (number))))))))

@@ -1,0 +1,214 @@
+================================================================================
+State node with label only
+================================================================================
+
+module a
+state answered: "Answer filed"
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (node_decl
+      (identifier)
+      (string
+        (string_content)))))
+
+================================================================================
+Node clauses
+================================================================================
+
+module a
+chance mtd-ruling: "Ruling" by Court discretion effective [2009-12-01, ..) known_at 2024-01-01
+  cite FRCP 12(b)(6)
+terminal t: "T" outcome [judgment, loss]
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (node_decl
+      (identifier)
+      (string
+        (string_content))
+      (by_clause
+        (ref
+          (identifier)))
+      (discretion)
+      (effective_clause
+        (interval
+          (date)
+          (open_end)))
+      (known_at_clause
+        (date))
+      (cite
+        (cite_text)))
+    (node_decl
+      (identifier)
+      (string
+        (string_content))
+      (outcome_clause
+        (id_list
+          (ref
+            (identifier))
+          (ref
+            (identifier)))))))
+
+================================================================================
+Relations
+================================================================================
+
+module a
+decision d: "D" subject_to b notwithstanding c supersedes e@2009-12-01 revives f override g
+  delegable_to [LocalRule, Clerk]
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (node_decl
+      (identifier)
+      (string
+        (string_content))
+      (relation
+        (ref
+          (identifier)))
+      (relation
+        (ref
+          (identifier)))
+      (relation
+        (ref
+          (identifier)
+          (date)))
+      (relation
+        (ref
+          (identifier)))
+      (relation
+        (ref
+          (identifier)))
+      (relation
+        (id_list
+          (ref
+            (identifier))
+          (ref
+            (identifier)))))))
+
+================================================================================
+Node fields
+================================================================================
+
+module a
+terminal t: "T" {
+  group outcomes, note "n", valence bad, court_listener_url "https://x"
+  tags [entry, fact], attrs { weight: -1.5, n: 2 }
+  payoff -2_000_000.usd
+  payoff_by_flag { won: 10.usd, lost: -1.usd }
+}
+terminal u: "U" { payoff ? }
+terminal v: "V" { payoff ?("no calibration yet") }
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (node_decl
+      (identifier)
+      (string
+        (string_content))
+      (node_body
+        (node_field
+          (identifier))
+        (node_field
+          (string
+            (string_content)))
+        (node_field
+          (identifier))
+        (node_field
+          (string
+            (string_content)))
+        (node_field
+          (id_list
+            (ref
+              (identifier))
+            (ref
+              (identifier))))
+        (node_field
+          (num_record
+            (num_entry
+              (identifier)
+              (signed_number
+                (number)))
+            (num_entry
+              (identifier)
+              (signed_number
+                (number)))))
+        (node_field
+          (signed_money
+            (money)))
+        (node_field
+          (money_record
+            (money_entry
+              (identifier)
+              (signed_money
+                (money)))
+            (money_entry
+              (identifier)
+              (signed_money
+                (money)))))))
+    (node_decl
+      (identifier)
+      (string
+        (string_content))
+      (node_body
+        (node_field
+          (hole))))
+    (node_decl
+      (identifier)
+      (string
+        (string_content))
+      (node_body
+        (node_field
+          (hole
+            (string
+              (string_content))))))))
+
+================================================================================
+Contextual keywords as node ids
+================================================================================
+
+module a
+state default: "Default"
+state note: "Note"
+decision p: "P"
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (node_decl
+      (identifier)
+      (string
+        (string_content)))
+    (node_decl
+      (identifier)
+      (string
+        (string_content)))
+    (node_decl
+      (identifier)
+      (string
+        (string_content)))))

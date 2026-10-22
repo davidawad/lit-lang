@@ -1,0 +1,128 @@
+================================================================================
+Comments
+================================================================================
+
+module a // trailing
+// line
+/* block
+   comment */
+//// four slashes are a doc comment
+/// doc
+state x: "X"
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (line_comment)
+    (line_comment)
+    (block_comment)
+    (doc_comment)
+    (doc_comment)
+    (node_decl
+      (identifier)
+      (string
+        (string_content)))))
+
+================================================================================
+String escapes
+================================================================================
+
+module a
+group g: "a \"quoted\" \\ \n \r \t value"
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (group_decl
+      (identifier)
+      (string
+        (string_content)
+        (escape_sequence)
+        (string_content)
+        (escape_sequence)
+        (string_content)
+        (escape_sequence)
+        (string_content)
+        (escape_sequence)
+        (string_content)
+        (escape_sequence)
+        (string_content)
+        (escape_sequence)
+        (string_content)))))
+
+================================================================================
+Cite stops at brace, comma and comment
+================================================================================
+
+module a
+state x: "X" cite FRCP 6(a)/1 // comment
+{ tags [a], note "n" }
+terminal t: "T" { authority_free "x" -> y { authority cite 28 U.S.C. 1491, note "n" } }
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (node_decl
+      (identifier)
+      (string
+        (string_content))
+      (cite
+        (cite_text))
+      (line_comment)
+      (node_body
+        (node_field
+          (id_list
+            (ref
+              (identifier))))
+        (node_field
+          (string
+            (string_content)))))
+    (node_decl
+      (identifier)
+      (string
+        (string_content))
+      (node_body
+        (edge_decl
+          (identifier)
+          (string
+            (string_content))
+          (ref
+            (identifier))
+          (edge_fields
+            (edge_field
+              (cite
+                (cite_text)))
+            (edge_field
+              (string
+                (string_content)))))))))
+
+================================================================================
+Unicode identifiers
+================================================================================
+
+module a
+state café-öffnung: "Unicode"
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (node_decl
+      (identifier)
+      (string
+        (string_content)))))

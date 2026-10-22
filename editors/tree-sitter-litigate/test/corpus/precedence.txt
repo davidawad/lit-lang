@@ -1,0 +1,205 @@
+================================================================================
+Transitions
+================================================================================
+
+module a
+transition rule86 amends answer-period@2025-12-01 cite FRCP 86(a)
+{
+  unless has_event(Answered()) && !has_event(Served(complaint, Mail)) -> answer-period@2009-12-01
+  otherwise -> answer-period@2025-12-01
+}
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (transition_decl
+      (identifier)
+      (ref
+        (identifier)
+        (date))
+      (cite
+        (cite_text))
+      (transition_body
+        (transition_arm
+          (binary_expression
+            (call_expression
+              (ref
+                (identifier))
+              (arguments
+                (call_expression
+                  (ref
+                    (identifier))
+                  (arguments))))
+            (unary_expression
+              (call_expression
+                (ref
+                  (identifier))
+                (arguments
+                  (call_expression
+                    (ref
+                      (identifier))
+                    (arguments
+                      (ref
+                        (identifier))
+                      (ref
+                        (identifier))))))))
+          (ref
+            (identifier)
+            (date)))
+        (transition_arm
+          (ref
+            (identifier)
+            (date)))))))
+
+================================================================================
+Defaults
+================================================================================
+
+module a
+default tolled effective [2000-01-01, ..) when has_event(Filed()) => true
+default by-kind when x => match x { A => 1, B.c => 2, _ => -3 }
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (default_decl
+      (identifier)
+      (effective_clause
+        (interval
+          (date)
+          (open_end)))
+      (call_expression
+        (ref
+          (identifier))
+        (arguments
+          (call_expression
+            (ref
+              (identifier))
+            (arguments))))
+      (boolean))
+    (default_decl
+      (identifier)
+      (ref
+        (identifier))
+      (match_expression
+        (ref
+          (identifier))
+        (match_arm
+          (ref
+            (identifier))
+          (number))
+        (match_arm
+          (ref
+            (identifier)
+            (identifier))
+          (number))
+        (match_arm
+          (wildcard)
+          (unary_expression
+            (number)))))))
+
+================================================================================
+Exceptions
+================================================================================
+
+module a
+exception e1 rebuts tolled cite FRCP 1
+  when has_event(Filed()) => false priority 2
+exception e2 undercuts tolled when has_event(Waived())
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (exception_decl
+      (identifier)
+      (ref
+        (identifier))
+      (cite
+        (cite_text))
+      (call_expression
+        (ref
+          (identifier))
+        (arguments
+          (call_expression
+            (ref
+              (identifier))
+            (arguments))))
+      (boolean)
+      (number))
+    (exception_decl
+      (identifier)
+      (ref
+        (identifier))
+      (call_expression
+        (ref
+          (identifier))
+        (arguments
+          (call_expression
+            (ref
+              (identifier))
+            (arguments)))))))
+
+================================================================================
+Tests
+================================================================================
+
+module a
+/// Answer timing.
+test "answer due 21 days after personal service" cite FRCP 12(a)(1)(A)(i)
+{
+  given Served(complaint, Personal) on 2025-03-03
+  expect deadline(answer-period) == 2025-03-24
+}
+test "no cite" { expect true }
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (doc_comment)
+    (test_decl
+      (string
+        (string_content))
+      (cite
+        (cite_text))
+      (test_body
+        (given_stmt
+          (call_expression
+            (ref
+              (identifier))
+            (arguments
+              (ref
+                (identifier))
+              (ref
+                (identifier))))
+          (date))
+        (expect_stmt
+          (binary_expression
+            (call_expression
+              (ref
+                (identifier))
+              (arguments
+                (ref
+                  (identifier))))
+            (date)))))
+    (test_decl
+      (string
+        (string_content))
+      (test_body
+        (expect_stmt
+          (boolean))))))

@@ -1,0 +1,254 @@
+================================================================================
+Module declaration
+================================================================================
+
+module frcp
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))))
+
+================================================================================
+Dotted module path
+================================================================================
+
+module frcp.rule6.computing-time
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)
+        (identifier)
+        (identifier)))))
+
+================================================================================
+Imports
+================================================================================
+
+module a
+import core
+import core.time
+import frcp.rule5.{service, Served}
+import frcp.rule5.{service,}
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (import_decl
+      (module_path
+        (identifier)))
+    (import_decl
+      (module_path
+        (identifier)
+        (identifier)))
+    (import_decl
+      (module_path
+        (identifier)
+        (identifier))
+      (import_list
+        (identifier)
+        (identifier)))
+    (import_decl
+      (module_path
+        (identifier)
+        (identifier))
+      (import_list
+        (identifier)))))
+
+================================================================================
+Package declaration
+================================================================================
+
+module a
+import core
+package frcp-civil-procedure { forum frcp authority FederalRule }
+start s
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (import_decl
+      (module_path
+        (identifier)))
+    (package_decl
+      (identifier)
+      (identifier)
+      (identifier))
+    (start_decl
+      (identifier))))
+
+================================================================================
+Package declaration with comma
+================================================================================
+
+module a
+package b { forum f, authority A }
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (package_decl
+      (identifier)
+      (identifier)
+      (identifier))))
+
+================================================================================
+Start and groups
+================================================================================
+
+module a
+start complaint-filed
+group pleadings: "Pleadings"
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (start_decl
+      (identifier))
+    (group_decl
+      (identifier)
+      (string
+        (string_content)))))
+
+================================================================================
+Type aliases
+================================================================================
+
+module a
+type Window = Interval<Date>
+type Table = Map<Date, Days<CalendarDays>>
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (type_decl
+      (identifier)
+      (type
+        (identifier)
+        (type_args
+          (type
+            (identifier)))))
+    (type_decl
+      (identifier)
+      (type
+        (identifier)
+        (type_args
+          (type
+            (identifier))
+          (type
+            (identifier)
+            (type_args
+              (type
+                (identifier)))))))))
+
+================================================================================
+Enums
+================================================================================
+
+module a
+enum Document { complaint, amended_complaint }
+enum One { only, }
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (enum_decl
+      (identifier)
+      (variant_list
+        (identifier)
+        (identifier)))
+    (enum_decl
+      (identifier)
+      (variant_list
+        (identifier)))))
+
+================================================================================
+Events
+================================================================================
+
+module a
+event Filed()
+event Served(document: Document, method: ServiceMethod)
+event Trailing(a: A,)
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (event_decl
+      (identifier)
+      (param_list))
+    (event_decl
+      (identifier)
+      (param_list
+        (param
+          (identifier)
+          (type
+            (identifier)))
+        (param
+          (identifier)
+          (type
+            (identifier)))))
+    (event_decl
+      (identifier)
+      (param_list
+        (param
+          (identifier)
+          (type
+            (identifier)))))))
+
+================================================================================
+Authority lattice
+================================================================================
+
+module a
+authority Statute > FederalRule > LocalRule
+authority Alone
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (authority_decl
+      (identifier)
+      (identifier)
+      (identifier))
+    (authority_decl
+      (identifier))))

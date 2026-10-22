@@ -14,6 +14,7 @@ RUN cargo install cargo-chef --locked
 FROM chef AS planner
 COPY Cargo.toml Cargo.lock ./
 COPY crates crates
+COPY editors editors
 RUN cargo chef prepare --recipe-path recipe.json
 
 # --- builder: build deps from the recipe (cached), then the real source ----
@@ -22,6 +23,7 @@ COPY --from=planner /build/recipe.json recipe.json
 RUN cargo chef cook --release --recipe-path recipe.json
 COPY Cargo.toml Cargo.lock ./
 COPY crates crates
+COPY editors editors
 COPY packs packs
 COPY scenarios scenarios
 COPY calibration calibration

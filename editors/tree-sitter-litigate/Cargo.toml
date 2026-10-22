@@ -1,0 +1,49 @@
+[package]
+name = "tree-sitter-litigate"
+description = "tree-sitter grammar for litigate .lit rule modules and .case matters"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+repository.workspace = true
+keywords = ["tree-sitter", "parser", "litigate"]
+categories = ["parser-implementations", "text-editors"]
+build = "bindings/rust/build.rs"
+include = [
+  "bindings/rust/*",
+  "grammar.js",
+  "grammar/*",
+  "queries/*",
+  "src/*",
+  "tree-sitter.json",
+]
+
+[lib]
+path = "bindings/rust/lib.rs"
+
+[dependencies]
+tree-sitter-language.workspace = true
+
+[build-dependencies]
+cc.workspace = true
+
+[dev-dependencies]
+tree-sitter.workspace = true
+proptest.workspace = true
+litigate-syntax = { path = "../../crates/litigate-syntax" }
+
+# The workspace lint table forbids `unsafe_code`; binding the generated C
+# parser needs exactly one audited `unsafe` (the `LanguageFn` constructor),
+# so this crate restates the workspace lints with `unsafe_code = "deny"` and
+# allows it at that single site.
+[lints.rust]
+unsafe_code = "deny"
+missing_docs = "warn"
+
+[lints.clippy]
+pedantic = { level = "warn", priority = -1 }
+module_name_repetitions = "allow"
+unwrap_used = "warn"
+expect_used = "warn"
+dbg_macro = "deny"
+todo = "deny"

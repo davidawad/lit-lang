@@ -1,0 +1,137 @@
+================================================================================
+Links
+================================================================================
+
+module a
+link appeal "Appeal": cofc::judgment -> cafc::entry by Plaintiff p 1/2 { replaces [old] }
+link _ "Anonymous": a::b -> c::d
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (link_decl
+      (identifier)
+      (string
+        (string_content))
+      (ref
+        (identifier)
+        (identifier))
+      (ref
+        (identifier)
+        (identifier))
+      (by_clause
+        (ref
+          (identifier)))
+      (probability
+        (fraction
+          (number)
+          (number)))
+      (edge_fields
+        (edge_field
+          (id_list
+            (ref
+              (identifier))))))
+    (link_decl
+      (anonymous)
+      (string
+        (string_content))
+      (ref
+        (identifier)
+        (identifier))
+      (ref
+        (identifier)
+        (identifier)))))
+
+================================================================================
+Instances
+================================================================================
+
+module a
+instance cafc@cofc {
+  pack cafc
+  note "x"
+  remove_edges [a, b]
+  probabilities { a: 1/2, b: ?, c: (1 / 3) }
+  roles { Plaintiff: Appellant }
+  payoff_transform "negate"
+  patch e1 { hours: 3, "note": "x", deadline: unset, tags: ["a", 1, true, false, { k: -2 }], }
+}
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (instance_decl
+      (identifier)
+      (identifier)
+      (instance_field
+        (identifier))
+      (instance_field
+        (string
+          (string_content)))
+      (instance_field
+        (id_list
+          (ref
+            (identifier))
+          (ref
+            (identifier))))
+      (instance_field
+        (probability_map
+          (probability_entry
+            (identifier)
+            (fraction
+              (number)
+              (number)))
+          (probability_entry
+            (identifier)
+            (hole))
+          (probability_entry
+            (identifier)
+            (parenthesized_expression
+              (binary_expression
+                (number)
+                (number))))))
+      (instance_field
+        (role_map
+          (role_entry
+            (identifier)
+            (identifier))))
+      (instance_field
+        (string
+          (string_content)))
+      (instance_field
+        (identifier)
+        (json_record
+          (json_entry
+            (identifier)
+            (signed_number
+              (number)))
+          (json_entry
+            (string
+              (string_content))
+            (string
+              (string_content)))
+          (json_entry
+            (identifier)
+            (unset))
+          (json_entry
+            (identifier)
+            (json_list
+              (string
+                (string_content))
+              (signed_number
+                (number))
+              (boolean)
+              (boolean)
+              (json_record
+                (json_entry
+                  (identifier)
+                  (signed_number
+                    (number)))))))))))

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
+  "grammars": [
+    {
+      "name": "litigate",
+      "camelcase": "Litigate",
+      "title": "litigate",
+      "scope": "source.litigate",
+      "file-types": ["lit", "case"],
+      "highlights": ["queries/highlights.scm"],
+      "locals": ["queries/locals.scm"],
+      "injections": ["queries/injections.scm"],
+      "injection-regex": "^litigate$"
+    }
+  ],
+  "metadata": {
+    "version": "0.3.0",
+    "license": "GPL-3.0-or-later",
+    "description": "litigate grammar for tree-sitter (.lit rule modules and .case matters)",
+    "authors": [{ "name": "David Awad" }],
+    "links": { "repository": "https://github.com/davidawad/litgraph" }
+  },
+  "bindings": { "c": false, "go": false, "node": false, "python": false, "rust": true, "swift": false }
+}

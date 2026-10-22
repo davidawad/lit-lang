@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["crates/litgraph", "crates/litgraph-cli", "crates/litgraph-mcp", "crates/litgraph-wasm", "crates/litigate-base", "crates/litigate-syntax", "crates/litigate-sema", "crates/litigate-lower", "crates/litigate-verify", "crates/litigate-import", "crates/litigate-cli", "crates/litigate-lsp"]
+members = ["crates/litgraph", "crates/litgraph-cli", "crates/litgraph-mcp", "crates/litgraph-wasm", "crates/litigate-base", "crates/litigate-syntax", "crates/litigate-sema", "crates/litigate-lower", "crates/litigate-verify", "crates/litigate-import", "crates/litigate-cli", "crates/litigate-lsp", "editors/tree-sitter-litigate"]
 
 [workspace.package]
 version = "0.3.0"
@@ -32,6 +32,9 @@ tokio = { version = "1", features = ["macros", "rt-multi-thread", "io-std"] }
 tower-lsp = "0.20"
 insta = "1"
 ariadne = "0.5"
+tree-sitter = "0.27"
+tree-sitter-language = "0.1"
+cc = "1"
 
 [workspace.lints.rust]
 unsafe_code = "forbid"

@@ -1,0 +1,23 @@
+{
+  "name": "tree-sitter-litigate",
+  "version": "0.3.0",
+  "description": "tree-sitter grammar for litigate .lit rule modules and .case matters",
+  "license": "GPL-3.0-or-later",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidawad/litgraph.git",
+    "directory": "editors/tree-sitter-litigate"
+  },
+  "private": true,
+  "main": "grammar.js",
+  "files": ["grammar.js", "grammar/*", "queries/*", "src/**", "tree-sitter.json"],
+  "keywords": ["tree-sitter", "parser", "litigate"],
+  "devDependencies": {
+    "tree-sitter-cli": "0.27.1"
+  },
+  "scripts": {
+    "generate": "tree-sitter generate",
+    "test": "tree-sitter test",
+    "parse": "tree-sitter parse"
+  }
+}

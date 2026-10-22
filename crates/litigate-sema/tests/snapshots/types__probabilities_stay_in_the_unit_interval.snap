@@ -1,0 +1,10 @@
+---
+source: crates/litigate-sema/tests/types.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:10:30 L2008 probability 3/2 is outside [0, 1]",
+    "pkgs/demo/main.lit:11:8 L2003 probabilities of chance node `j` sum to 2/3, not exactly 1",
+    "pkgs/demo/main.lit:12:17 L2008 every edge of a chance node needs `p` [fix: \" p ?\"]",
+    "pkgs/demo/main.lit:13:29 L2008 a self edge must not carry `p`",
+]

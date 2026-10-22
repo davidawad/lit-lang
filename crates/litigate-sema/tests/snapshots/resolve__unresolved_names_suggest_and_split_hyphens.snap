@@ -1,0 +1,12 @@
+---
+source: crates/litigate-sema/tests/resolve.rs
+expression: "render(&db, ws)"
+---
+[
+    "pkgs/demo/main.lit:3:26 L1002 cannot find name `s3` [fix: \"s\"]",
+    "pkgs/demo/main.lit:7:24 L1002 cannot find name `a-b` [fix: \"a - b\"]",
+    "pkgs/demo/main.lit:8:24 L1002 cannot find name `aa` [fix: \"a\"]",
+    "pkgs/demo/main.lit:9:10 L1002 cannot find type `Mony` [fix: \"Money\"]",
+    "pkgs/demo/main.lit:10:16 L1002 unknown currency `USD` [fix: \"usd\"]",
+    "pkgs/demo/main.lit:11:10 L3006 type alias `V` refers to itself",
+]

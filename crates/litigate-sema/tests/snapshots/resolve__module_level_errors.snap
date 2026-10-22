@@ -1,0 +1,12 @@
+---
+source: crates/litigate-sema/tests/resolve.rs
+expression: "render(&db, ws)"
+---
+[
+    "pkgs/demo/a.lit:3:8 L1002 cannot find module `shared.typez` [fix: \"shared.types\"]",
+    "pkgs/demo/a.lit:4:22 L1002 module `shared.types` declares no `Documnt` [fix: \"Document\"]",
+    "pkgs/demo/b.lit:2:8 L1003 importing `a` creates a cycle",
+    "pkgs/demo/c.lit:2:22 L1001 `Document` is imported from `shared.types` but also declared in this module",
+    "pkgs/demo/dup.lit:1:8 L1001 module `a` is declared by another file of this package",
+    "pkgs/demo/types.lit:2:6 L1001 `Document` is also declared in module `c`",
+]

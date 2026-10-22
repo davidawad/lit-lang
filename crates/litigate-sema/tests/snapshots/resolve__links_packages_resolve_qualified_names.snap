@@ -1,0 +1,9 @@
+---
+source: crates/litigate-sema/tests/resolve.rs
+expression: "render(&db, ws)"
+---
+[
+    "pkgs/links/links.lit:4:23 L1002 cannot find name `nowhere` in pack `base`",
+    "pkgs/links/links.lit:4:34 L1002 cannot find pack `nope`",
+    "pkgs/links/links.lit:4:58 L1002 no edge `base::gone` to replace",
+]

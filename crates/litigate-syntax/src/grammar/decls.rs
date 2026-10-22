@@ -1,6 +1,6 @@
 //! Rule-bearing declarations: `rule`, `deadline`, `counting`, `calendar`,
 //! `transition`, `default`, `exception`, `test`, `link`, `instance`.
-use super::clauses::{clauses, keyword_field, version_clause, Clauses};
+use super::clauses::{clauses, expect_header_end, keyword_field, version_clause, Clauses};
 use super::expr::{require_expr, EXPR_START};
 use super::fields::{
     field, field_list, keywords, number_value, patch, COUNTING_ITEMS, INSTANCE_FIELDS,
@@ -122,7 +122,8 @@ fn deadline(p: &mut Parser<'_>) {
             }
             None => p.error_expected(&[KwFrom, KwAfter, KwBefore]),
         }
-        clauses(p, Clauses::RULE);
+        let keywords = clauses(p, Clauses::RULE);
+        expect_header_end(p, &keywords);
         field_list(p, super::fields::DEADLINE_OPTS);
     }
     p.finish();

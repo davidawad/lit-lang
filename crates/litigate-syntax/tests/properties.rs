@@ -325,6 +325,8 @@ fn machine_applicable_fixes_repair_obvious_mistakes() {
         "module m\ntest \"t\" { expect f((1 + [2, {a: \"x",
         "module m\nenum E { A B }\ndeadline d: 2.dys from X counted_by c\n",
         "module m\nstate s: \"S\" { a \"A\" t }\n",
+        "module m\nstate s: \"S\" bye Court {}\n",
+        "module m\ndeadline d: 1.days from X counted_by c efective [2020-01-01, ..)\n",
     ];
     for text in cases {
         let parsed = parse(text, FileKind::Lit);

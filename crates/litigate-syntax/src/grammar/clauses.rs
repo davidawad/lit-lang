@@ -6,6 +6,16 @@ use crate::parser::Parser;
 use crate::syntax_kind::SyntaxKind::{self, *};
 use litigate_base::{Applicability, DiagnosticCode};
 
+/// After a declaration header: a word on the same line that is not an item
+/// keyword is a misplaced or misspelled clause (L0001 with a keyword fix).
+pub(crate) fn expect_header_end(p: &mut Parser<'_>, keywords: &[SyntaxKind]) {
+    if p.at(Ident) && !p.newline_before() && p.at_any_kw(p.item_keywords()).is_none() {
+        let mut expected = keywords.to_vec();
+        expected.push(LBrace);
+        p.error_expected(&expected);
+    }
+}
+
 /// Which clauses a declaration accepts (a set of flags).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub(crate) struct Clauses(u8);
@@ -65,7 +75,9 @@ const RELATIONS: [SyntaxKind; 5] = [
 pub(crate) fn clauses(p: &mut Parser<'_>, allowed: Clauses) -> Vec<SyntaxKind> {
     while clause(p, allowed) {}
     let keywords = allowed.keywords();
-    if allowed.has(Clauses::CITATION) {
+    let words: Vec<&str> = keywords.iter().filter_map(|kw| kw.text()).collect();
+    let near_miss = crate::suggest::nearest(p.nth_text(0), &words).is_some();
+    if allowed.has(Clauses::CITATION) && !near_miss {
         missing_cite(p);
     }
     keywords

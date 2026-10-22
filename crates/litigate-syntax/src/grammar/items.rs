@@ -1,5 +1,5 @@
 //! `.lit` files (SPEC §3.1): header, item dispatch, and graph declarations.
-use super::clauses::{clauses, keyword_field, Clauses};
+use super::clauses::{clauses, expect_header_end, keyword_field, Clauses};
 use super::fields::{field, field_list, fixed_fields, keywords, Spec, EDGE_FIELDS, NODE_FIELDS};
 use super::values::{prob_value, reference, require, type_expr};
 use super::{decls, delimited_node, Sep};
@@ -235,7 +235,8 @@ fn node_decl(p: &mut Parser<'_>, kw: SyntaxKind) {
     p.start(kind);
     p.bump_as(kw);
     let _ = p.expect(Ident) && p.expect(Colon) && p.expect(String);
-    clauses(p, Clauses::NODE_DECL);
+    let clause_keywords = clauses(p, Clauses::NODE_DECL);
+    expect_header_end(p, &clause_keywords);
     if p.at(LBrace) {
         let mut expected = keywords(NODE_FIELDS);
         expected.push(Ident);

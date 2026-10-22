@@ -4,7 +4,7 @@
 use crate::out::Failure;
 use litigate_sema::db::inputs::{PackageInput, Workspace};
 use litigate_sema::hir;
-use litigate_sema::pkg::load::relative_to;
+use litigate_sema::pkg::load::{relative_to, LoadedPackage};
 use litigate_sema::pkg::manifest::parse_manifest;
 use litigate_sema::{LitDatabase, PackageCheck};
 use std::collections::BTreeSet;
@@ -151,6 +151,21 @@ pub fn library(dirs: &[PathBuf]) -> Vec<(String, PathBuf)> {
         .collect()
 }
 
+/// Library packages that are links packages (SPEC §8.4).
+#[must_use]
+pub fn links_packages(lib: &[String]) -> Vec<PathBuf> {
+    library(&library_dirs(lib))
+        .into_iter()
+        .filter(|(_, dir)| {
+            std::fs::read_to_string(dir.join("Lit.toml"))
+                .ok()
+                .and_then(|t| parse_manifest(&t).ok())
+                .is_some_and(|m| m.manifest.links)
+        })
+        .map(|(_, dir)| dir)
+        .collect()
+}
+
 /// One loaded package and its check.
 #[derive(Debug, Clone)]
 pub struct Pkg {
@@ -211,10 +226,13 @@ fn uses_of(text: &str) -> Vec<String> {
 #[must_use]
 pub fn shown(path: &Path) -> String {
     let root = std::env::current_dir().unwrap_or_default();
-    relative_to(
-        &root,
-        &path.canonicalize().unwrap_or_else(|_| root.join(path)),
-    )
+    let full = path.canonicalize().unwrap_or_else(|_| root.join(path));
+    let root = root.canonicalize().unwrap_or(root);
+    if full.starts_with(&root) {
+        relative_to(&root, &full)
+    } else {
+        path.to_string_lossy().replace('\\', "/")
+    }
 }
 
 impl Session {
@@ -263,6 +281,25 @@ impl Session {
             packages,
             cases,
         })
+    }
+
+    /// A session over in-memory packages (all requested) and matters.
+    #[must_use]
+    pub fn from_loaded(loaded: &[LoadedPackage], cases: Vec<CaseText>) -> Self {
+        let mut db = LitDatabase::default();
+        let ws = litigate_sema::db::inputs::create_workspace(&mut db, loaded);
+        let requested: BTreeSet<String> = loaded.iter().map(|p| p.root.clone()).collect();
+        let packages = ws
+            .packages(&db)
+            .iter()
+            .map(|input| package(&db, *input, &requested))
+            .collect();
+        Self {
+            db,
+            ws,
+            packages,
+            cases,
+        }
     }
 
     /// HIR of every package that checked without errors.

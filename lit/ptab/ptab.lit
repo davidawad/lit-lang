@@ -1,0 +1,60 @@
+module ptab
+
+package ptab-patent-trial-appeal-board { forum ptab, authority Regulation }
+
+group pre-petition-group: "Pre-Petition Posture"
+group petition-group: "Petition Filing & Threshold"
+group popr-group: "Patent Owner Preliminary Response"
+group institution-group: "Institution Decision"
+group post-institution-group: "Post-Institution Scheduling & Discovery"
+group trial-group: "Trial on the Merits"
+group hearing-group: "Oral Hearing"
+group fwd-group: "Final Written Decision & Estoppel"
+group rehearing-director-group: "Rehearing & Director Review"
+group appeal-group: "Federal Circuit Appeal"
+
+// Tribunal draws. The Board's and the Director's rulings (institution,
+// additional discovery, the final written decision, rehearing, Director
+// review) and the Federal Circuit's are discretion in DESIGN §4.3's sense,
+// but the legacy pack models each as a `decision` by a nature actor
+// (`examiner`, `office`) with authored probabilities. `discretion` is valid
+// only on `chance`, which lowers to kind `state`, so these stay `decision`
+// to keep `litigate diff` against the pack empty; their probabilities are
+// the pack's, verbatim.
+/// The Board (or Director) decision a post-decision clock runs from.
+enum BoardDecision { FinalWritten, Rehearing, DirectorReview }
+
+/// The patent issues (35 U.S.C. § 151): the post-grant review clock starts.
+event PatentGranted()
+/// A complaint alleging infringement of the patent is served on the
+/// petitioner, its real party in interest, or a privy (35 U.S.C. § 315(b)).
+event ComplaintServed()
+event PgrPetitionFiled()
+event IprPetitionFiled()
+/// The Office's notice that a petition is incomplete (37 C.F.R. § 42.106(b)).
+event IncompletePetitionNoticed()
+event PetitionCorrected()
+/// The notice according the petition a filing date (37 C.F.R. § 42.107(b)).
+event FilingDateNoticed()
+event PreliminaryResponseFiled()
+/// The patent owner's election to waive the preliminary response (37 C.F.R.
+/// § 42.107(b)).
+event PreliminaryResponseWaived()
+/// The decision instituting trial (37 C.F.R. § 42.4).
+event TrialInstituted()
+event SchedulingOrderIssued()
+event PatentOwnerResponseFiled()
+event PetitionerReplyFiled()
+event SurReplyFiled()
+/// The Board's preliminary guidance on a motion to amend (MTA Pilot
+/// Program, 84 Fed. Reg. 9497 (Mar. 15, 2019)).
+event PreliminaryGuidanceIssued()
+event RevisedMotionToAmendFiled()
+event AmendmentOppositionFiled()
+/// A final Board decision, a decision on rehearing, or a Director review
+/// decision is entered.
+event DecisionEntered(decision: BoardDecision)
+event RehearingRequested()
+event DirectorReviewRequested()
+/// The notice of appeal is filed with the Director (37 C.F.R. § 90.3(a)(1)).
+event NoticeOfAppealFiled()

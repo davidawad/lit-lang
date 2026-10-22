@@ -1,0 +1,469 @@
+module ptab.trial-to-appeal
+
+import ptab.deadlines.{
+  amendment-opposition-period,
+  appeal-period,
+  director-review-after-rehearing-period,
+  director-review-period,
+  patent-owner-response-period,
+  petitioner-reply-period,
+  rehearing-period,
+  revised-mta-period,
+  sur-reply-period,
+}
+
+import ptab.{
+  AmendmentOppositionFiled,
+  DirectorReviewRequested,
+  NoticeOfAppealFiled,
+  PatentOwnerResponseFiled,
+  PetitionerReplyFiled,
+  PreliminaryGuidanceIssued,
+  RehearingRequested,
+  RevisedMotionToAmendFiled,
+  SurReplyFiled,
+  appeal-group,
+  fwd-group,
+  hearing-group,
+  rehearing-director-group,
+  trial-group,
+}
+
+decision patent-owner-response-window: "Patent Owner Response Window" cite 37 CFR 42.120
+{
+  group trial-group
+  note "Patent owner's principal merits brief, due per the scheduling order (typically 3 months post-institution). Structural counterpart to mpep-prosecution's response cycle, except the responder is the patent owner defending validity."
+  _ "File Patent Owner Response" -> patent-owner-response-filed {
+    event PatentOwnerResponseFiled()
+    authority cite 37 CFR 42.120
+    within patent-owner-response-period {
+      extendable true
+      extension_authority "37 CFR 42.103; scheduling order"
+      note "Missing the POR deadline (typically 90 days post-institution per the scheduling order) means the Board decides on an unrebutted record — the patent owner has forfeited its right to argue on the merits and will nearly certainly lose. An extension must be requested before the deadline expires."
+    }
+    duration { min 13.5.days, mode 45.days, max 90.days }
+  }
+  _ "Elect not to respond" -> patent-owner-no-response { authority cite 37 CFR 42.120 }
+  _ "Settle instead of responding" -> settlement-decision { authority cite 35 U.S.C. 317 }
+}
+
+state patent-owner-response-filed: "Patent Owner Response Filed" by applicant cite 37 CFR 42.120(a)-(b)
+{
+  group trial-group
+  note "May include expert declarations, claim construction arguments, and objective indicia of nonobviousness. Arguments not raised here (or in prior motion practice) are waived — they cannot be resurrected in sur-reply or at the hearing, and waiver bars any estoppel defense on that theory."
+  _ "File Petitioner Reply" -> petitioner-reply-brief {
+    event PetitionerReplyFiled()
+    authority cite 37 CFR 42.23(a)
+    effort 50.hours
+    within petitioner-reply-period {
+      extendable true
+      extension_authority "37 CFR 42.103; scheduling order"
+      note "Missing the petitioner reply deadline (typically 60 days after the POR due date per the scheduling order) results in the reply not being entered or considered; the patent owner's arguments stand unrebutted."
+    }
+    duration { min 9.days, mode 30.days, max 60.days }
+    note "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move; basis: estimate."
+  }
+  _ "Settle after filing response" -> settlement-decision by either { authority cite 35 U.S.C. 317 }
+}
+
+state patent-owner-no-response: "No Patent Owner Response Filed" cite 37 CFR 42.120
+{
+  group trial-group
+  note "Rare but not automatically fatal — unlike ex parte prosecution there is no per-se sanction for silence, but the Board decides on the unrebutted petition record, crediting the petitioner's evidence unchallenged and usually resulting in a de facto loss for the patent owner."
+  _ "Proceed toward settlement" -> settlement-decision { authority cite 35 U.S.C. 317 }
+  _ "No response — still may request hearing" -> oral-hearing-request {
+    authority cite 37 CFR 42.70
+  }
+}
+
+state petitioner-reply-brief: "Petitioner Reply Filed" cite 37 CFR 42.23(a)
+{
+  group trial-group
+  note "Reply may only respond to arguments raised in the POR or the institution decision — new grounds, new prior-art combinations, or theories not foreshadowed in the petition risk being struck as an improper reply and not considered."
+  _ "File Patent Owner Sur-Reply" -> patent-owner-sur-reply {
+    event SurReplyFiled()
+    authority cite 37 CFR 42.23(b)
+    within sur-reply-period {
+      extendable true
+      extension_authority "37 CFR 42.103; scheduling order"
+      note "Missing the sur-reply deadline (typically 30 days after the petitioner reply due date) forecloses the patent owner's final opportunity to respond on the record before oral hearing or FWD; the rebuttal record closes."
+    }
+    duration { min 4.5.days, mode 15.days, max 30.days }
+  }
+}
+
+state patent-owner-sur-reply: "Patent Owner Sur-Reply Filed" cite 37 CFR 42.23(b)
+{
+  group trial-group
+  note "Purely responsive to the petitioner's reply — no new evidence permitted. Closes the merits briefing record ahead of any oral hearing; new arguments not responsive to the reply may be struck or given diminished weight."
+  _ "Briefing complete — assess amendment" -> motion-to-amend-decision {
+    authority cite 35 U.S.C. 316(d); 37 CFR 42.121
+  }
+}
+
+decision motion-to-amend-decision: "Motion to Amend Decision Point" cite 35 U.S.C. 316(d); 37 CFR 42.121
+{
+  group trial-group
+  note "Patent owner may contingently move to cancel and/or substitute claims (contingent on the originals being found unpatentable) — the only mid-IPR avenue to narrow claims rather than lose them outright; no amendment by right exists at final written decision."
+  _ "File contingent motion to amend" -> mta-filed {
+    authority cite 35 U.S.C. 316(d); 37 CFR 42.121
+  }
+  _ "No motion to amend — proceed" -> settlement-decision { authority cite 35 U.S.C. 317 }
+}
+
+state mta-filed: "Contingent Motion to Amend Filed" by examiner cite ?("37 CFR 42.121; Lectrosonics Inc. v. Zaxcom, Inc., IPR2018-01129, Paper 15 (PTAB June 4, 2019) (precedential)") {
+  group trial-group
+  note "Must propose a reasonable number of substitute claims (presumptively one-to-one), supported by the original specification without new matter, responding to the unpatentability ground raised. Lectrosonics set the burden-shifting framework the current MTA Pilot Program builds on."
+  _ "Board issues preliminary guidance" -> mta-preliminary-guidance {
+    event PreliminaryGuidanceIssued()
+    authority cite ?("MTA Pilot Program, 84 Fed. Reg. 9497 (Mar. 15, 2019)")
+  }
+  _ "Settle while amendment is pending" -> settlement-decision by either {
+    authority cite 35 U.S.C. 317
+  }
+}
+
+state mta-preliminary-guidance: "Board Issues Preliminary Guidance" cite ?("MTA Pilot Program, 84 Fed. Reg. 9497 (Mar. 15, 2019), made permanent") {
+  group trial-group
+  note "Non-binding, non-appealable preliminary assessment of the substitute claims' likely patentability — lets the patent owner course-correct with a revised MTA before final briefing closes, a courtesy unique to MTA practice."
+  _ "File a revised motion to amend" -> mta-revised-filed {
+    event RevisedMotionToAmendFiled()
+    authority cite ?("MTA Pilot Program")
+    within revised-mta-period {
+      extendable true
+      extension_authority "37 CFR 42.103"
+      note "Revised MTA deadline (typically 30 days after preliminary guidance) — missing this forecloses the second bite. The patent owner is locked into the original MTA or left with no MTA, and petitioner's opposition stands unchallenged."
+    }
+    duration { min 4.5.days, mode 15.days, max 30.days }
+  }
+  _ "Proceed without revising" -> petitioner-opposition-mta { authority cite 37 CFR 42.121(c) }
+  _ "Settle after unfavorable guidance" -> settlement-decision { authority cite 35 U.S.C. 317 }
+}
+
+state mta-revised-filed: "Revised Motion to Amend Filed" by applicant cite ?("MTA Pilot Program; 37 CFR 42.121(c)") {
+  group trial-group
+  note "Patent owner may file one revised MTA responding to the preliminary guidance and/or petitioner's opposition — a second bite unavailable in ordinary IPR motion practice, preventing unfair surprise."
+  _ "Petitioner opposes revised amendment" -> petitioner-opposition-mta {
+    event AmendmentOppositionFiled()
+    authority cite 37 CFR 42.121(c)
+    effort 40.hours
+    within amendment-opposition-period {
+      extendable true
+      extension_authority "37 CFR 42.103"
+      note "Petitioner opposition deadline (typically 30 days after the revised MTA due date per Board order) — missing this results in the opposition not being filed or considered; only the revised MTA will be assessed."
+    }
+    duration { min 4.5.days, mode 15.days, max 30.days }
+    note "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move; basis: estimate."
+  }
+}
+
+state petitioner-opposition-mta: "Petitioner Opposes Motion to Amend" cite 37 CFR 42.121(c)
+{
+  group trial-group
+  note "Once the patent owner meets its threshold burden on form/written description, the burden shifts to petitioner to prove unpatentability of substitute claims by a preponderance of the evidence — a burden-shift unique to MTA practice."
+  _ "MTA briefing closes" -> settlement-decision { authority cite 35 U.S.C. 317 }
+  _ "MTA briefing closes — proceed to hearing" -> oral-hearing-request {
+    authority cite 37 CFR 42.70
+  }
+}
+
+decision settlement-decision: "Settlement Considered" cite 35 U.S.C. 317
+{
+  group trial-group
+  note "Parties may settle any time before the FWD issues; settlement terminates the proceeding as to the settling parties. Timing trap: if the Board has substantially reached the merits, it MAY still issue a FWD despite settlement (317(a)) — rare but real, since §317(a) does not automatically prevent Board issuance of a FWD."
+  _ "Settle before final written decision" -> ipr-terminated-settlement {
+    authority cite 35 U.S.C. 317(a); 37 CFR 42.74
+    valence good
+  }
+  _ "Request adverse judgment instead" -> adverse-judgment-request {
+    authority cite 37 CFR 42.73(b)
+  }
+  _ "No settlement — proceed to hearing" -> oral-hearing-request { authority cite 37 CFR 42.70 }
+}
+
+terminal ipr-terminated-settlement: "IPR Terminated by Settlement" outcome [settlement] cite 35 U.S.C. 317(a); 37 CFR 42.74
+{
+  group trial-group
+  note "Proceeding terminates before FWD. No 315(e) estoppel attaches to the settling petitioner — estoppel requires a final written decision on the merits. Settlement agreement must be filed with the Office, potentially under seal. PLACEHOLDER PAYOFF: $400,000, override per matter, matching this project's settlement-tier convention (see cofc/cafc). No 315(e) estoppel attaches, which is itself worth something to the petitioner beyond whatever the settlement pays."
+  valence good
+  payoff 400_000.usd
+}
+
+state adverse-judgment-request: "Patent Owner Requests Adverse Judgment" by examiner cite 37 CFR 42.73(b)
+{
+  group trial-group
+  note "Patent owner may request adverse judgment (e.g., cancel all challenged claims) rather than litigate to a FWD, to cut losses — but estoppel attaches as if the claims had been found unpatentable at FWD; the waiver is identical."
+  _ "Board enters adverse judgment" -> adverse-judgment-terminal {
+    authority cite 37 CFR 42.73(b)
+    note "See the adverse-judgment-terminal node note: functionally equivalent to a merits FWD, so 35 U.S.C. § 315(e) estoppel attaches the same way."
+    sets [ipr-estopped]
+  }
+}
+
+terminal adverse-judgment-terminal: "Adverse Judgment Entered — Claims Cancelled" outcome [win, adverse-judgment] cite 37 CFR 42.73(b)(2)-(3)
+{
+  group trial-group
+  note "Board cancels the claims without reaching the merits in a FWD. Functionally equivalent to losing on the merits: full 315(e) estoppel attaches to grounds raised or that reasonably could have been raised in the petition. PLACEHOLDER PAYOFF: $900,000, override per matter. The pack's own note calls this 'functionally equivalent to losing on the merits' -- for the PATENT OWNER, whose claims are cancelled; for the petitioner (self, this pack's protagonist) that is a near-full win, reached without the cost of a full trial. The pack's authored `valence` of 'bad' tracks the patent owner's side, not self's payoff -- flagged here since it runs the other way from every other `valence: good` FWD terminal."
+  valence bad
+  payoff 900_000.usd
+}
+
+decision oral-hearing-request: "Oral Hearing Requested" cite 37 CFR 42.70(a)
+{
+  group hearing-group
+  note "Either party may request oral argument; the Board may also order one sua sponte. Not requesting one waives it — cases are often decided entirely on the papers, and waiving means no opportunity for live advocacy or Board questions before the FWD."
+  _ "Request oral argument" -> oral-hearing-held { authority cite ?("37 CFR 42.70(a), (b)") }
+  _ "Waive oral argument" -> fwd-issued {
+    authority cite 37 CFR 42.70(a)
+    duration { min 30.days, mode 60.days, max 120.days }
+    note "Duration: estimate for the interval from argument waiver to FWD issuance, the tail of 35 U.S.C. § 316(a)(11)'s 1-year-from-institution deadline (extendable 6 months for good cause); not itself separately fixed by rule."
+  }
+}
+
+state oral-hearing-held: "Oral Hearing Held" by office cite 37 CFR 42.70(b)-(c)
+{
+  group hearing-group
+  note "Argument only — no new evidence at hearing, no new documentary exhibits. Demonstratives must be served in advance and may not contain material outside the record; the Board typically probes weak spots in the written briefing."
+  _ "Hearing concludes — case submitted" -> fwd-issued {
+    authority cite 37 CFR 42.70(b)
+    duration { min 30.days, mode 60.days, max 120.days }
+    note "Duration: estimate for the interval from oral hearing to FWD issuance, the tail of 35 U.S.C. § 316(a)(11)'s 1-year-from-institution deadline (extendable 6 months for good cause); not itself separately fixed by rule."
+  }
+}
+
+/// The Board's merits determination (35 U.S.C. § 318(a)), a nature draw with
+/// the pack's probabilities.
+decision fwd-issued: "Board Issues Final Written Decision" by examiner cite 35 U.S.C. § 318(a); 37 CFR § 42.73
+{
+  group fwd-group
+  note "The Board decides the patentability of every instituted claim (SAS all-or-nothing), whether or not a hearing was held. Due within 1 year of institution, extendable to 18 months (316(a)(11))."
+  _ "Hold all instituted claims unpatentable" -> fwd-all-unpatentable p 0.55 {
+    authority cite 35 U.S.C. § 318(a)
+    sets [ipr-estopped]
+  }
+  _ "Confirm all instituted claims patentable" -> fwd-all-confirmed p 0.25 {
+    authority cite 35 U.S.C. § 318(a)
+    note "Estoppel attaches to the losing petitioner too: 315(e) is triggered by a final written decision issuing, not by which side wins it (see node note)."
+    sets [ipr-estopped]
+  }
+  _ "Cancel some claims, confirm others" -> fwd-mixed p 0.2 {
+    authority cite 35 U.S.C. § 318(a)
+    sets [ipr-estopped]
+  }
+}
+
+terminal fwd-all-unpatentable: "FWD: All Claims Unpatentable" outcome [win, fwd] cite ?("35 U.S.C. §§ 318(a), 318(b), 315(e)") {
+  group fwd-group
+  note "Every instituted claim held unpatentable. Full 315(e) estoppel attaches: petitioner and privies are barred from later asserting in the USPTO, district court, or ITC any ground raised or that reasonably could have been raised here, construed broadly. The worst terminal for the patent owner. PLACEHOLDER PAYOFF: $1,000,000, override per matter. Full win: every instituted claim invalidated."
+  valence good
+  payoff 1_000_000.usd
+  _ "Patent owner considers post-FWD relief" -> post-fwd-options {
+    authority cite 37 CFR § 42.71(d)
+  }
+}
+
+terminal fwd-all-confirmed: "FWD: All Claims Confirmed Patentable" outcome [loss, fwd, estoppel] cite 35 U.S.C. § 318(a)
+{
+  group fwd-group
+  note "Petitioner failed to prove unpatentability of any instituted claim. Trap: 315(e) estoppel STILL attaches to the losing petitioner despite losing on validity — estoppel is triggered by reaching a FWD, not by which side wins it. PLACEHOLDER PAYOFF: $0, override per matter. Full loss on the merits, and per the pack's own note 315(e) estoppel still attaches to the losing petitioner -- worse than a typical loss, though the payoff floor here is the same $0 used for every other full loss in this project."
+  valence good
+  payoff 0.usd
+  _ "Petitioner considers post-FWD relief" -> post-fwd-options { authority cite 37 CFR § 42.71(d) }
+}
+
+terminal fwd-mixed: "FWD: Mixed Result" outcome [mixed, fwd] cite ?("35 U.S.C. §§ 318(a), 318(b), 315(e)") {
+  group fwd-group
+  note "Some claims cancelled, others confirmed. 315(e) estoppel attaches claim-by-claim and ground-by-ground to what was actually decided. Patent survives but narrower — the AIA-trial analog of mpep-prosecution's claims-amended terminal. PLACEHOLDER PAYOFF: $400,000, override per matter, matching this project's partial/mixed-result tier."
+  valence good
+  payoff 400_000.usd
+  _ "Either party considers post-FWD relief" -> post-fwd-options {
+    authority cite 37 CFR § 42.71(d)
+  }
+}
+
+decision post-fwd-options: "Post-FWD Options" cite 35 U.S.C. § 319; 37 CFR 42.71(d); 37 CFR 42.73(d)
+{
+  group rehearing-director-group
+  note "A dissatisfied party chooses among rehearing (same panel), Director review (post-Arthrex), or a direct Federal Circuit appeal — paths run on different clocks (30 days for rehearing/Director review, 63 days for appeal) from the same triggering FWD."
+  _ "Request panel rehearing" -> rehearing-request-filed {
+    event RehearingRequested()
+    authority cite 37 CFR 42.71(d)
+    within rehearing-period {
+      extendable false
+      note "Missing the 30-day rehearing deadline forfeits the right to request panel rehearing. The Federal Circuit appeal window (63 days) then runs directly from the original FWD date."
+    }
+    duration { min 4.5.days, mode 15.days, max 30.days }
+  }
+  _ "Request Director review" -> director-review-request-filed {
+    event DirectorReviewRequested()
+    authority cite 37 CFR 42.73(d)(1)
+    within director-review-period {
+      extendable false
+      note "Missing the 30-day Director review request deadline forfeits the party's ability to petition for review, but the Director may still sua sponte initiate review. The Federal Circuit appeal window begins separately and is unaffected by missing this deadline."
+    }
+    duration { min 4.5.days, mode 15.days, max 30.days }
+  }
+  _ "Skip rehearing — go straight to appeal" -> federal-circuit-window {
+    authority cite 35 U.S.C. § 319
+  }
+}
+
+state rehearing-request-filed: "Rehearing Request Filed" by examiner cite 37 CFR 42.71(d)
+{
+  group rehearing-director-group
+  note "Must specifically identify matters the panel misapprehended or overlooked — no new arguments or evidence. Decided by the same panel that issued the FWD; the panel typically decides within 3-6 months, though no hard deadline governs the Board's own turnaround."
+  _ "Panel considers rehearing request" -> rehearing-decision { authority cite 37 CFR 42.71(d) }
+}
+
+/// Tribunal discretion on rehearing (37 C.F.R. § 42.71(d)). The pack authors
+/// the deny/grant draw (0.9/0.1); escalation to the Director carries none.
+decision rehearing-decision: "Panel Decides Rehearing Request" by examiner cite 37 CFR 42.71(d)
+{
+  group rehearing-director-group
+  note "Rehearing grant rate is exceptionally low (panels affirm their own prior reasoning in the large majority of requests). If granted, the panel may modify claim construction or validity findings, but this remains intra-panel review without external accountability."
+  _ "Deny rehearing — decision stands" -> rehearing-denied-affirmed p 0.9 {
+    authority cite 37 CFR 42.71(d)
+  }
+  _ "Grant rehearing — modify decision" -> rehearing-granted-modified p 0.1 {
+    authority cite 37 CFR 42.71(d)
+  }
+  _ "Escalate denied rehearing to Director" -> director-review-request-filed by either {
+    event DirectorReviewRequested()
+    authority cite 37 CFR 42.73(d)(1)
+    within director-review-after-rehearing-period {
+      extendable false
+      note "After a rehearing denial, a party may escalate to Director review within 30 days of the rehearing decision. Missing this deadline forfeits Director review eligibility (though the Director may still sua sponte review)."
+    }
+    duration { min 4.5.days, mode 15.days, max 30.days }
+  }
+}
+
+state rehearing-denied-affirmed: "Rehearing Denied — FWD Stands" cite 37 CFR 42.71(d); 35 U.S.C. § 319
+{
+  group rehearing-director-group
+  note "Original FWD stands unchanged; the 63-day Federal Circuit clock runs from the rehearing decision, not the original FWD, when a timely rehearing request was filed."
+  _ "Proceed to the appeal window" -> federal-circuit-window { authority cite 35 U.S.C. § 319 }
+}
+
+state rehearing-granted-modified: "Rehearing Granted — Decision Modified" cite 37 CFR 42.71(d)
+{
+  group rehearing-director-group
+  note "Panel modifies its own FWD, in whole or in part — uncommon but a genuinely different outcome is possible; the modified decision becomes the operative FWD for appeal purposes."
+  _ "Proceed to the appeal window" -> federal-circuit-window { authority cite 35 U.S.C. § 319 }
+}
+
+state director-review-request-filed: "Director Review Requested" by examiner cite ?("35 U.S.C. § 6(c); 37 CFR 42.73(d)(1); Arthrex v. Smith & Nephew, 141 S. Ct. 1761 (2021)") {
+  group rehearing-director-group
+  note "Arthrex required some avenue for accountable review of APJ decisions; the Director personally reviews on request or sua sponte, available on institution decisions and final written decisions. Typically decided within 3-9 months, with no hard deadline prescribed."
+  _ "Director reviews the decision" -> director-review-decision {
+    authority cite 37 CFR 42.73(d)(1)
+  }
+}
+
+/// Director review is discretionary; the pack authors the affirm, modify and
+/// remand draw (0.75/0.15/0.1).
+decision director-review-decision: "Director Decides Review Request" by examiner cite ?("37 CFR 42.73(d)(1); USPTO Interim Director Review Process (June 29, 2021)") {
+  group rehearing-director-group
+  note "Director's review is truly de novo — not bound by panel reasoning. The Director may affirm, reverse, modify (e.g., reinstate claims the panel invalidated), or remand any aspect of the panel's decision — genuine hierarchical review, unlike a panel reviewing its own work."
+  _ "Director affirms the panel" -> director-review-affirmed p 0.75 {
+    authority cite 37 CFR 42.73(d)(1)
+  }
+  _ "Director modifies the decision" -> director-review-modified p 0.15 {
+    authority cite 37 CFR 42.73(d)(1)
+  }
+  _ "Director remands for further proceedings" -> patent-owner-response-window p 0.1 {
+    authority cite 37 CFR 42.73(d)(1)
+  }
+}
+
+state director-review-affirmed: "Director Affirms" cite 37 CFR 42.73(d)(1)
+{
+  group rehearing-director-group
+  note "FWD stands as issued by the panel; the appeal clock runs from the Director's affirmance."
+  _ "Proceed to the appeal window" -> federal-circuit-window { authority cite 35 U.S.C. § 319 }
+}
+
+state director-review-modified: "Director Modifies FWD" cite 37 CFR 42.73(d)(1)
+{
+  group rehearing-director-group
+  note "Director changes the outcome on one or more claims — the most consequential post-FWD outcome, because it survives appellate review as the final agency action; parties then challenge it on the Federal Circuit record, not the panel's underlying reasoning."
+  _ "Proceed to the appeal window" -> federal-circuit-window { authority cite 35 U.S.C. § 319 }
+}
+
+/// The appeal-or-lapse choice, which the pack models as a draw (0.92/0.08)
+/// rather than a party decision.
+decision federal-circuit-window: "Federal Circuit Appeal Window" cite 35 U.S.C. § 319; 28 U.S.C. § 1295(a)(4)(A); 37 CFR § 90.3(a)
+{
+  group appeal-group
+  note "63 days to file notice of appeal, running from whichever decision is operative (original FWD, rehearing decision, or Director review decision). Only actual trial participants may appeal — no alternative civil-action route like 35 U.S.C. § 145 exists for AIA trials."
+  _ "File notice of appeal" -> federal-circuit-notice-of-appeal p 0.92 {
+    event NoticeOfAppealFiled()
+    authority cite 35 U.S.C. § 319; 37 CFR § 90.3(a)
+    cost 600.usd
+    within appeal-period {
+      extendable false
+      note "If the notice of appeal is not filed within 63 days of the Board's operative decision, the deadline expires with no remedy; the Board's decision becomes final and unreviewable, terminating all appellate rights."
+    }
+    duration { min 9.4.days, mode 31.5.days, max 63.days }
+    note "Filing fee $600.00: the Court of Appeals docketing fee (Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2023) alone -- no district-clerk equivalent of 28 U.S.C. § 1917's $5.00 notice fee applies to a direct agency-to-CAFC appeal (matches cafc-federal-circuit.json's ptab-file-noa edge and itc-337.json's federal-circuit-appeal-window->appeal-filed edge)."
+  }
+  _ "Let the 63-day window lapse" -> appeal-forfeited-unappealed p 0.08 {
+    authority cite 35 U.S.C. § 319; 37 CFR § 90.3(a)
+    within appeal-period {
+      extendable false
+      note "Lapse of the 63-day window triggers automatic forfeiture of the right to appeal; no subsequent motion for reinstatement, late filing, or equitable relief is available. The decision becomes final and binding."
+    }
+    duration { min 9.4.days, mode 31.5.days, max 63.days }
+    valence bad
+  }
+}
+
+terminal appeal-forfeited-unappealed: "No Timely Appeal — FWD Final" outcome [final, appeal-forfeited] cite 35 U.S.C. § 319; 37 CFR § 90.3(a)
+{
+  group appeal-group
+  note "PERMADEATH #2. Missing the 63-day window forfeits all further review; the FWD (as it stands after any rehearing/Director review) becomes final and unreviewable by operation of statute — no subsequent motion for reinstatement, late filing, or equitable relief is available. PLACEHOLDER PAYOFF: $400,000, override per matter. Reachable after any of the three FWD outcomes (all-unpatentable / all-confirmed / mixed) funnel through the same appeal window, so a single payoff necessarily blends a possible unappealed win with a possible unappealed loss; override once the matter's actual FWD result is known."
+  valence bad
+  payoff 400_000.usd
+}
+
+state federal-circuit-notice-of-appeal: "Notice of Appeal Filed" by office cite 35 U.S.C. § 319; 28 U.S.C. § 1295(a)(4)(A)
+{
+  group appeal-group
+  note "Federal Circuit has exclusive jurisdiction over PTAB appeals. The notice must identify the Board's final decision and the appealing party; failure to adequately name a party can waive appellability."
+  _ "Federal Circuit reviews the decision" -> federal-circuit-review {
+    authority cite ?("35 U.S.C. § 319; Federal Circuit Rule 4")
+    duration { min 240.days, mode 365.days, max 540.days }
+    note "Duration: estimate. The Federal Circuit's own published median time from docketing to disposition is roughly a year across all appeal types; PTAB-appeal-specific data is not in the local corpus."
+  }
+}
+
+/// Federal Circuit review of the Board (35 U.S.C. § 319; 5 U.S.C. § 706), a
+/// nature draw with the pack's probabilities.
+decision federal-circuit-review: "Federal Circuit Reviews the Decision" by office cite 35 U.S.C. § 319; 5 U.S.C. § 706
+{
+  group appeal-group
+  note "Substantial-evidence review for factual findings; de novo review for legal conclusions, including claim-construction subsidiary facts post-Teva v. Sandoz. The Board's discretionary decisions (e.g., Fintiv stays) receive abuse-of-discretion review. Claim-construction and §101-based PGR outcomes are reversed at higher rates than the overall average."
+  _ "Affirm the Board" -> cafc-affirms p 0.8 { authority cite 35 U.S.C. § 319 }
+  _ "Vacate or remand to the Board" -> cafc-vacates-remands p 0.2 { authority cite 35 U.S.C. § 319 }
+}
+
+terminal cafc-affirms: "Federal Circuit Affirms" outcome [affirmed, final] cite 35 U.S.C. § 319
+{
+  group appeal-group
+  note "The Board's FWD and its estoppel consequences stand as issued, becoming a final, appealable judgment. Further review only by discretionary Supreme Court certiorari (rare, not modeled here). PLACEHOLDER PAYOFF: $450,000, override per matter. Affirms whichever FWD result preceded it (blended for the same reason as `appeal-forfeited-unappealed`); override once the matter's actual FWD result is known."
+  valence good
+  payoff 450_000.usd
+}
+
+terminal cafc-vacates-remands: "Federal Circuit Vacates/Remands" by examiner outcome [remand] cite 35 U.S.C. § 319
+{
+  group appeal-group
+  note "Sends the case back to the Board for further proceedings consistent with the Federal Circuit's opinion; no fixed statutory deadline governs Board reconsideration, but the typical timeline runs 6-18 months. Modeled as this playthrough's terminal disposition even though remand loops back into a new final written decision. PLACEHOLDER PAYOFF: $400,000, override per matter, matching this project's remand-tier convention (see cafc). Modeled as this playthrough's terminal disposition even though a remand loops back into a new final written decision."
+  valence caution
+  payoff 400_000.usd
+  _ "Board reconsiders on remand" -> fwd-issued {
+    authority cite 35 U.S.C. § 319; 37 CFR § 42.73
+    duration { min 180.days, mode 365.days, max 540.days }
+    note "Duration: formalizes this edge's own note ('typical timeline runs 6-18 months') into the duration field."
+  }
+}

@@ -12,7 +12,7 @@ pub use package::{check_package, expected_lock, PackageCheck};
 
 use crate::db::inputs::SourceFile;
 use crate::db::parse::tree::{dotted, Item, ItemKind, ItemTree, Name};
-use crate::db::queries::{manifest, module_graph, module_header, parse_file, signature};
+use crate::db::queries::{item_tree, manifest, module_graph, module_header, signature};
 use crate::db::span::{sort_diagnostics, Report, TextRange};
 use crate::hir::{self, Declaration, Rule, RuleKind};
 use crate::resolve::graph::ImportTarget;
@@ -265,7 +265,7 @@ fn pack_signatures(db: &dyn salsa::Database, file: SourceFile) -> Vec<&Signature
 
 /// Checks one module and builds its HIR.
 pub fn check_module(db: &dyn salsa::Database, file: SourceFile) -> ModuleCheck {
-    let parsed = parse_file(db, file);
+    let parsed = item_tree(db, file);
     let tree = &parsed.tree;
     let file_id = FileId(file.path(db));
     let index = LineIndex::new(file.text(db));

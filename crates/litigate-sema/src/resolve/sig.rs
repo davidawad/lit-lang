@@ -4,7 +4,7 @@
 //! and its importers are not re-checked.
 use crate::db::inputs::SourceFile;
 use crate::db::parse::tree::{Atom, ExprKind, Field, Item, ItemKind, ItemTree};
-use crate::db::queries::{manifest, module_graph, parse_file, signature};
+use crate::db::queries::{item_tree, manifest, module_graph, signature};
 use crate::hir::{Manifest, Type};
 use crate::resolve::scope::Scope;
 use crate::types::{expr::Checker, ty};
@@ -184,7 +184,7 @@ pub fn value_of(item: &Item) -> Option<(&str, ValueKind)> {
 
 /// Builds the signature of `file`.
 pub fn build(db: &dyn salsa::Database, file: SourceFile) -> Signature {
-    let tree = &parse_file(db, file).tree;
+    let tree = &item_tree(db, file).tree;
     let parsed = manifest(db, file.package(db)).as_ref().ok();
     let m = parsed.map(|p| &p.manifest);
     let mut sig = Signature {

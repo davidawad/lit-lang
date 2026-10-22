@@ -28,7 +28,12 @@ pub struct Parsed {
 /// Parses one `.lit` source.
 #[must_use]
 pub fn parse(src: &str) -> Parsed {
-    let parse = litigate_syntax::parse_lit(src);
+    lower(&litigate_syntax::parse_lit(src))
+}
+
+/// Lowers a parsed `.lit` file: its syntax errors plus the item tree.
+#[must_use]
+pub fn lower(parse: &litigate_syntax::Parse) -> Parsed {
     let mut reports: Vec<Report> = parse.errors().iter().map(syntax_report).collect();
     let mut cx = Lower::default();
     let tree = parse

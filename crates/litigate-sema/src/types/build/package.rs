@@ -2,7 +2,7 @@
 //! namespaces, links-package shape) and the assembled package HIR.
 use super::{item_name, Hole, ModuleCheck};
 use crate::db::inputs::{PackageInput, Workspace};
-use crate::db::queries::{check_module, manifest, parse_file, signature};
+use crate::db::queries::{check_module, item_tree, manifest, signature};
 use crate::db::span::{sort_diagnostics, to_span, Report, TextRange};
 use crate::hir;
 use crate::pkg::lock::{digest, LockFile, LockedPackage};
@@ -188,7 +188,7 @@ fn namespace_duplicates(db: &dyn salsa::Database, pkg: PackageInput) -> Vec<Diag
             let key = (ns, name.clone());
             match owners.get(&key) {
                 Some(first) if *first != sig.module => {
-                    let tree = &parse_file(db, *file).tree;
+                    let tree = &item_tree(db, *file).tree;
                     let range = flatten(tree)
                         .iter()
                         .filter_map(|(i, _)| item_name(i))

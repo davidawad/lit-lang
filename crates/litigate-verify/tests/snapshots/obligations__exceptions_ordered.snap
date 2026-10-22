@@ -1,0 +1,28 @@
+---
+source: crates/litigate-verify/tests/obligations.rs
+expression: "pair(Obligation::ExceptionsOrdered, &\none(&with(&format!(\"{DEFAULT}\\nexception e1 rebuts d when has_event(Answered(complaint)) => 7.days priority 2\\n\\\n         exception e2 undercuts d when has_event(Answered(complaint)) priority 1\"))),\n&\none(&with(&format!(\"{DEFAULT}\\nexception e1 rebuts d when has_event(Answered(complaint)) => 7.days\\n\\\n         exception e2 undercuts d when has_event(Answered(complaint))\"))))"
+---
+{
+  "pass": {
+    "finding": {
+      "name": "exceptions-ordered",
+      "status": "passed",
+      "count": 0,
+      "examples": []
+    },
+    "accepted": true,
+    "diagnostics": []
+  },
+  "fail": {
+    "finding": {
+      "name": "exceptions-ordered",
+      "status": "failed",
+      "count": 1,
+      "examples": [
+        "pkgs/demo/main.lit:57:31: L3005 exceptions `e2` and `e1` to `d` can both apply on [1990-01-01, ..) and are not ordered"
+      ]
+    },
+    "accepted": false,
+    "diagnostics": []
+  }
+}

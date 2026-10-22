@@ -1,18 +1,43 @@
-//! Verification obligations for compiled litigate packages (SPEC §7).
+//! Verification obligations for compiled litigate packages and matters
+//! (SPEC §7, DESIGN §7).
+//!
+//! [`verify_package`] discharges every obligation of a checked, lowered
+//! rule package: sema's diagnostics are attributed to the obligations they
+//! violate (`well-typed`, the temporal and precedence obligations,
+//! `dist-exact`), and this crate checks the rest on the lowered pack and
+//! HIR (`graph-exits`, `graph-reachable`, `deadline-satisfiable`,
+//! `cite-resolves`, `tests-pass`, `holes`, `rule-without-test`). The
+//! result is a [`Verification`]: the [`VerificationReport`] embedded in the
+//! [`Litigatable`], plus the diagnostics this crate emits (sema's are
+//! aggregated, not repeated). [`check_package`] runs lowering and
+//! verification together; [`verify_case`] reports a matter's `case-replay`.
+//!
+//! Profiles change severity and acceptance, never values: holes are L9002
+//! warnings in `dev` and L5002 errors in `strict`; L9001 is a warning in
+//! `dev` and an error in `strict`; every other failure is an error.
+mod assertions;
+mod cite;
+mod context;
+mod deadline;
+mod diag;
 mod graph;
+mod lints;
 mod report;
+mod sema;
 
-pub use graph::verify_graph;
-pub use report::{Finding, Obligation, ObligationStatus, VerificationReport};
+pub use report::{Finding, Obligation, ObligationStatus, VerificationReport, MAX_EXAMPLES};
+pub use sema::obligation_of;
 
-use litgraph::{
-    cite::{CiteOutcome, SourceCorpus},
-    model::Pack,
-};
-use litigate_base::{Diagnostic, DiagnosticCode, Profile};
-use litigate_sema::{hir, types::build::PackageCheck};
+pub(crate) use context::{same_expr, Context};
 
-/// A lowered document together with its reproducible verification report.
+use litgraph::cite::SourceCorpus;
+use litgraph::model::Pack;
+use litigate_base::{Diagnostic, DiagnosticCode as C, Profile, Severity};
+use litigate_lower::{Document, LoweredPackage, Lowerer, Options, SourceMap};
+use litigate_sema::{hir, PackageCheck};
+use report::{Builder, Obligation as O};
+
+/// A lowered document with its reproducible verification report.
 #[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct Litigatable<T> {
     /// Lowered engine IR.
@@ -20,395 +45,254 @@ pub struct Litigatable<T> {
     /// Verification results for this artifact.
     pub verification: VerificationReport,
     /// Source map sidecar, when available.
-    pub source_map: Option<litigate_lower::SourceMap>,
+    pub source_map: Option<SourceMap>,
 }
 
-/// Verify a checked package and its lowered pack, aggregating sema diagnostics.
-///
-/// The sema package check carries typing, temporal, precedence, and distribution
-/// diagnostics; graph and citation checks use the exact lowered engine schema.
-#[must_use]
-pub fn verify_package(
-    package: &hir::Package,
-    pack: &Pack,
-    check: &PackageCheck,
-    corpus: &SourceCorpus,
-    profile: Profile,
-) -> VerificationReport {
-    let mut report = verify_graph(pack, corpus, profile);
-    add_sema_findings(&mut report, &check.diagnostics);
-    add_holes(&mut report, check, profile);
-    add_rule_tests(&mut report, package, profile);
-    let dist_failures = distribution_failures(package);
-    report.push(
-        Obligation::DistExact,
-        if dist_failures.is_empty() {
-            ObligationStatus::Passed
-        } else {
-            ObligationStatus::Failed
-        },
-        dist_failures.len(),
-        dist_failures,
-    );
-    report.profile = profile;
-    report
+/// The outcome of verifying one artifact.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Verification {
+    /// Every obligation's finding.
+    pub report: VerificationReport,
+    /// Diagnostics emitted by verification, sorted (SPEC §9.1). Sema and
+    /// lowering diagnostics are counted in `report`, not repeated here.
+    pub diagnostics: Vec<Diagnostic>,
 }
 
-fn add_sema_findings(report: &mut VerificationReport, diagnostics: &[Diagnostic]) {
-    for finding in findings_from_diagnostics(diagnostics) {
-        if let Some(existing) = report
-            .obligations
-            .iter_mut()
-            .find(|f| f.name == finding.name)
-        {
-            if finding.status == ObligationStatus::Failed {
-                existing.status = ObligationStatus::Failed;
-                existing.count += finding.count;
-                existing.examples.extend(finding.examples);
-                existing.examples.truncate(8);
-            }
-        } else {
-            report.obligations.push(finding);
+impl Verification {
+    /// Whether the profile accepts the artifact: no obligation failed.
+    #[must_use]
+    pub fn is_accepted(&self) -> bool {
+        self.report.is_accepted()
+    }
+
+    /// Embeds the report in a litigatable for `ir`.
+    #[must_use]
+    pub fn embed<T>(&self, ir: T, source_map: Option<SourceMap>) -> Litigatable<T> {
+        Litigatable {
+            ir,
+            verification: self.report.clone(),
+            source_map,
+        }
+    }
+
+    fn new(builder: Builder, mut diagnostics: Vec<Diagnostic>, profile: Profile) -> Self {
+        diagnostics.sort_by(diag::order);
+        Self {
+            report: builder.finish(profile),
+            diagnostics,
         }
     }
 }
 
-fn add_holes(report: &mut VerificationReport, check: &PackageCheck, profile: Profile) {
-    let holes: Vec<String> = check
-        .holes
-        .iter()
-        .map(|hole| {
-            format!(
-                "{}:{}:{} ({})",
-                hole.span.file.0,
-                hole.span.line,
-                hole.span.col,
-                hole.reason.as_deref().unwrap_or("reason not supplied")
-            )
-        })
-        .collect();
-    report.push(
-        Obligation::Holes,
-        profile_status(holes.len(), profile),
-        holes.len(),
-        holes,
-    );
+/// One checked rule package, its lowering, and the workspace around it.
+pub struct PackageInput<'a> {
+    /// The package's sema result; its HIR is the package verified.
+    pub package: &'a hir::Package,
+    /// Its sema diagnostics and holes.
+    pub check: &'a PackageCheck,
+    /// Its lowering, or the lowering's diagnostics when it failed.
+    pub lowered: Result<&'a LoweredPackage, &'a [Diagnostic]>,
+    /// Every loaded package (it and its dependencies), as given to the
+    /// lowerer.
+    pub packages: &'a [&'a hir::Package],
+    /// The build dates the package was lowered at.
+    pub options: &'a Options,
 }
 
-fn add_rule_tests(report: &mut VerificationReport, package: &hir::Package, profile: Profile) {
-    let tested: std::collections::BTreeSet<&str> = package
-        .modules
-        .iter()
-        .flat_map(|m| &m.declarations)
-        .filter_map(|d| match d {
-            hir::Declaration::Test(test) => test.cite.as_deref(),
-            _ => None,
-        })
-        .collect();
-    let missing: Vec<String> = package
-        .modules
-        .iter()
-        .flat_map(|m| &m.declarations)
-        .filter_map(|d| match d {
-            hir::Declaration::Deadline(deadline)
-                if !has_test(deadline.meta.cite.as_deref(), &tested) =>
-            {
-                Some(deadline.meta.id.clone())
+/// Discharges every obligation of a checked rule package against the L0
+/// `corpus` under `profile`.
+///
+/// The graph and citation obligations run on the lowered pack. When
+/// lowering failed, its diagnostics fail their obligations, those checks
+/// and `tests-pass` (which runs the lowered clock) are skipped, and the
+/// HIR obligations still run, `deadline-satisfiable` over every node.
+#[must_use]
+pub fn verify_package(
+    input: &PackageInput<'_>,
+    corpus: &SourceCorpus,
+    profile: Profile,
+) -> Verification {
+    let cx = Context::new(input.package, input.packages, input.options, profile);
+    let mut b = Builder::default();
+    sema::aggregate(&mut b, &input.check.diagnostics);
+    let mut out = Vec::new();
+    let mut record = |b: &mut Builder, name: O, found: Vec<Diagnostic>| {
+        out.extend(found.iter().cloned());
+        b.check(name, found);
+    };
+    match input.lowered.map(|l| &l.document) {
+        Ok(Document::Pack(pack)) => {
+            let reached = graph::reached(pack);
+            record(&mut b, O::GraphExits, graph::exits(&cx, pack));
+            record(
+                &mut b,
+                O::GraphReachable,
+                graph::unreachable(&cx, pack, &reached),
+            );
+            record(
+                &mut b,
+                O::DeadlineSatisfiable,
+                deadline::unsatisfiable(&cx, &reached),
+            );
+            record(&mut b, O::CiteResolves, cite::unresolved(&cx, pack, corpus));
+            record(&mut b, O::TestsPass, assertions::failures(&cx));
+        }
+        Ok(Document::Links(_)) => {
+            for name in [
+                O::GraphExits,
+                O::GraphReachable,
+                O::DeadlineSatisfiable,
+                O::CiteResolves,
+            ] {
+                b.skip(name, "a links package has no graph or sources of its own; checked where it composes packs");
             }
-            hir::Declaration::Counting(counting)
-                if !has_test(counting.meta.cite.as_deref(), &tested) =>
-            {
-                Some(counting.meta.id.clone())
+            record(&mut b, O::TestsPass, assertions::failures(&cx));
+        }
+        Err(lowering) => {
+            sema::aggregate(&mut b, lowering);
+            let every: std::collections::BTreeSet<String> =
+                cx.nodes().map(|n| n.meta.id.clone()).collect();
+            record(
+                &mut b,
+                O::DeadlineSatisfiable,
+                deadline::unsatisfiable(&cx, &every),
+            );
+            for name in [
+                O::GraphExits,
+                O::GraphReachable,
+                O::CiteResolves,
+                O::TestsPass,
+            ] {
+                b.skip(name, "not checked: the package did not lower");
             }
-            _ => None,
-        })
-        .collect();
-    report.push(
-        Obligation::RuleWithoutTest,
-        profile_status(missing.len(), profile),
-        missing.len(),
-        missing,
+        }
+    }
+    record(&mut b, O::DistExact, graph::empty_distributions(&cx));
+    record(&mut b, O::Holes, lints::holes(&input.check.holes, profile));
+    record(&mut b, O::RuleWithoutTest, lints::untested(&cx));
+    b.skip(
+        O::CaseReplay,
+        "a rule package has no events; replay is checked per case",
     );
+    Verification::new(b, out, profile)
 }
 
-fn has_test(cite: Option<&str>, tested: &std::collections::BTreeSet<&str>) -> bool {
-    cite.is_some_and(|cite| tested.contains(cite))
+/// The report of a package sema rejected (it has no HIR): its diagnostics
+/// fail their obligations, holes are still inventoried, and every
+/// obligation that needs HIR is skipped.
+#[must_use]
+pub fn verify_unchecked(check: &PackageCheck, profile: Profile) -> Verification {
+    let mut b = Builder::default();
+    sema::aggregate(&mut b, &check.diagnostics);
+    let holes = lints::holes(&check.holes, profile);
+    b.check(O::Holes, holes.clone());
+    for name in O::ALL {
+        b.skip(name, "not checked: the package has errors");
+    }
+    Verification::new(b, holes, profile)
 }
 
-fn profile_status(count: usize, profile: Profile) -> ObligationStatus {
-    match (count, profile) {
-        (0, _) => ObligationStatus::Passed,
-        (_, Profile::Dev) => ObligationStatus::Warning,
-        (_, Profile::Strict) => ObligationStatus::Failed,
+/// A package's sema result lowered and verified: the verification, and the
+/// lowering when there is one.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Checked {
+    /// Every obligation's result.
+    pub verification: Verification,
+    /// The lowering, absent when sema or lowering failed.
+    pub lowered: Option<LoweredPackage>,
+}
+
+impl Checked {
+    /// The lowered pack with its report and source map embedded, when the
+    /// package is a rule package that lowered.
+    #[must_use]
+    pub fn litigatable(&self) -> Option<Litigatable<Pack>> {
+        let lowered = self.lowered.as_ref()?;
+        match &lowered.document {
+            Document::Pack(pack) => Some(
+                self.verification
+                    .embed((**pack).clone(), Some(lowered.source_map.clone())),
+            ),
+            Document::Links(_) => None,
+        }
     }
 }
 
-/// Add the sema replay result for a checked case to a package report.
-pub fn add_case_replay(report: &mut VerificationReport, diagnostics: &[Diagnostic]) {
-    let failures: Vec<String> = diagnostics
-        .iter()
-        .filter(|d| {
-            matches!(
-                d.code,
-                DiagnosticCode::InvalidCaseEvent
-                    | DiagnosticCode::DeadlineMissed
-                    | DiagnosticCode::InvalidCaseFact
-                    | DiagnosticCode::InvalidParty
-                    | DiagnosticCode::MissingStake
-                    | DiagnosticCode::InvalidBelief
-                    | DiagnosticCode::StartConflict
-            )
-        })
-        .map(|d| d.message.clone())
-        .collect();
-    report.push(
-        Obligation::CaseReplay,
-        if failures.is_empty() {
-            ObligationStatus::Passed
-        } else {
-            ObligationStatus::Failed
-        },
-        diagnostics
-            .iter()
-            .filter(|d| {
-                matches!(
-                    d.code,
-                    DiagnosticCode::InvalidCaseEvent
-                        | DiagnosticCode::DeadlineMissed
-                        | DiagnosticCode::InvalidCaseFact
-                        | DiagnosticCode::InvalidParty
-                        | DiagnosticCode::MissingStake
-                        | DiagnosticCode::InvalidBelief
-                        | DiagnosticCode::StartConflict
-                )
-            })
-            .count(),
-        failures,
-    );
+/// Lowers `check`'s package (resolving names across `packages`, every
+/// loaded package) at `options`, then verifies it.
+#[must_use]
+pub fn check_package(
+    check: &PackageCheck,
+    packages: &[&hir::Package],
+    corpus: &SourceCorpus,
+    options: &Options,
+    profile: Profile,
+) -> Checked {
+    let Some(package) = check.package.as_ref() else {
+        return Checked {
+            verification: verify_unchecked(check, profile),
+            lowered: None,
+        };
+    };
+    let lowered = Lowerer::new(packages)
+        .with_corpus(corpus)
+        .package(package, options);
+    let input = PackageInput {
+        package,
+        check,
+        lowered: lowered.as_ref().map_err(Vec::as_slice),
+        packages,
+        options,
+    };
+    Checked {
+        verification: verify_package(&input, corpus, profile),
+        lowered: lowered.ok(),
+    }
 }
 
-fn findings_from_diagnostics(diagnostics: &[Diagnostic]) -> Vec<Finding> {
-    DIAGNOSTIC_GROUPS
+/// The report of a matter at `file`: `case-replay` from the case checker's
+/// `diagnostics` (L4xxx; any other error counts against its own
+/// obligation), plus `unvalued` stakes, a warning in `dev` and an L4004
+/// error in `strict`.
+#[must_use]
+pub fn verify_case(
+    case: &hir::Case,
+    file: &str,
+    diagnostics: &[Diagnostic],
+    profile: Profile,
+) -> Verification {
+    let mut b = Builder::default();
+    sema::aggregate(&mut b, diagnostics);
+    let unvalued: Vec<Diagnostic> = case
+        .stakes
         .iter()
-        .map(|(obligation, codes)| {
-            let examples: Vec<String> = diagnostics
-                .iter()
-                .filter(|d| codes.contains(&d.code))
-                .map(|d| d.message.clone())
-                .take(8)
-                .collect();
-            let count = diagnostics
-                .iter()
-                .filter(|d| codes.contains(&d.code))
-                .count();
-            Finding {
-                name: *obligation,
-                status: if examples.is_empty() {
-                    ObligationStatus::Passed
-                } else {
-                    ObligationStatus::Failed
+        .filter(|(_, s)| matches!(s, hir::Stake::Unvalued))
+        .map(|(node, _)| {
+            let d = diag::emit(
+                C::MissingStake,
+                profile,
+                diag::start_of(file),
+                format!("stake `{node}` is `unvalued`"),
+            );
+            match profile {
+                Profile::Dev => Diagnostic {
+                    severity: Severity::Warning,
+                    ..d
                 },
-                count,
-                examples,
+                Profile::Strict => diag::note(
+                    d,
+                    None,
+                    "strict requires a value for every reachable terminal",
+                ),
             }
         })
-        .collect()
-}
-
-const DIAGNOSTIC_GROUPS: [(Obligation, &[DiagnosticCode]); 10] = [
-    (
-        Obligation::WellTyped,
-        &[
-            DiagnosticCode::TypeMismatch,
-            DiagnosticCode::InvalidOperation,
-            DiagnosticCode::InvalidField,
-            DiagnosticCode::InvalidDistribution,
-            DiagnosticCode::UnitMismatch,
-            DiagnosticCode::NonExhaustiveMatch,
-            DiagnosticCode::ArithmeticError,
-            DiagnosticCode::InvalidProbability,
-            DiagnosticCode::InvalidCounting,
-        ],
-    ),
-    (
-        Obligation::EffectiveDisjoint,
-        &[DiagnosticCode::EffectiveOverlap],
-    ),
-    (
-        Obligation::EffectiveCovered,
-        &[DiagnosticCode::EffectiveGap],
-    ),
-    (
-        Obligation::PrecedenceAcyclic,
-        &[DiagnosticCode::PrecedenceCycle],
-    ),
-    (
-        Obligation::DelegationRespected,
-        &[DiagnosticCode::MissingDelegation],
-    ),
-    (
-        Obligation::ExceptionsOrdered,
-        &[DiagnosticCode::ExceptionConflict],
-    ),
-    (
-        Obligation::DeadlineSatisfiable,
-        &[DiagnosticCode::DeadlineUnsatisfiable],
-    ),
-    (
-        Obligation::DistExact,
-        &[
-            DiagnosticCode::InvalidDistribution,
-            DiagnosticCode::InvalidProbability,
-        ],
-    ),
-    (
-        Obligation::CaseReplay,
-        &[
-            DiagnosticCode::InvalidCaseEvent,
-            DiagnosticCode::DeadlineMissed,
-            DiagnosticCode::InvalidCaseFact,
-            DiagnosticCode::InvalidParty,
-            DiagnosticCode::MissingStake,
-            DiagnosticCode::InvalidBelief,
-            DiagnosticCode::StartConflict,
-        ],
-    ),
-    (Obligation::TestsPass, &[DiagnosticCode::TestFailed]),
-];
-
-fn distribution_failures(package: &hir::Package) -> Vec<String> {
-    package
-        .modules
-        .iter()
-        .flat_map(|m| &m.declarations)
-        .filter_map(|d| {
-            let hir::Declaration::Node(node) = d else {
-                return None;
-            };
-            let hir::NodeKind::Chance { .. } = node.kind else {
-                return None;
-            };
-            let mut probabilities = Vec::new();
-            let mut has_hole = false;
-            for edge in &node.edges {
-                match edge.probability.as_ref() {
-                    Some(hir::Authored::Known(probability)) => {
-                        probabilities.push(*probability);
-                    }
-                    _ => has_hole = true,
-                }
-            }
-            (has_hole || !distribution_is_exact(&probabilities)).then(|| node.meta.id.clone())
-        })
-        .collect()
-}
-
-fn distribution_is_exact(probabilities: &[hir::Rational]) -> bool {
-    let mut sum = Some((0_i128, 1_i128));
-    for probability in probabilities {
-        let numerator = i128::from(probability.numerator);
-        let denominator = i128::from(probability.denominator);
-        sum = sum.and_then(|(n, d)| {
-            n.checked_mul(denominator)
-                .and_then(|left| {
-                    numerator
-                        .checked_mul(d)
-                        .and_then(|right| left.checked_add(right))
-                })
-                .zip(d.checked_mul(denominator))
-        });
+        .collect();
+    b.check(O::CaseReplay, unvalued.clone());
+    for name in O::ALL {
+        b.skip(
+            name,
+            "a matter is checked for replay only; its packages carry the rest",
+        );
     }
-    sum.is_some_and(|(numerator, denominator)| numerator == denominator)
-}
-
-/// Resolve every cite emitted by the pack against its bound L0 source files.
-pub(crate) fn cite_failures(pack: &Pack, corpus: &SourceCorpus) -> Vec<String> {
-    litgraph::cite::check_pack(pack, corpus)
-        .into_iter()
-        .filter_map(|check| match check.outcome {
-            CiteOutcome::Unresolvable { reason } => Some(format!("{}: {}", check.at, reason)),
-            CiteOutcome::Verified { .. } | CiteOutcome::OutOfScope => None,
-        })
-        .collect()
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use litigate_base::{FileId, Span};
-
-    fn diagnostic(code: DiagnosticCode) -> Diagnostic {
-        Diagnostic::error(
-            code,
-            Span {
-                file: FileId("fixture.lit".to_owned()),
-                line: 1,
-                col: 1,
-                end_line: 1,
-                end_col: 2,
-            },
-            code.as_str(),
-        )
-    }
-
-    #[test]
-    fn holes_are_warnings_in_dev_and_failures_in_strict() {
-        assert_eq!(profile_status(1, Profile::Dev), ObligationStatus::Warning);
-        assert_eq!(profile_status(1, Profile::Strict), ObligationStatus::Failed);
-        assert_eq!(profile_status(0, Profile::Strict), ObligationStatus::Passed);
-    }
-
-    #[test]
-    fn inline_rule_test_cites_cover_their_rules() {
-        let tested = std::collections::BTreeSet::from(["FRCP 12"]);
-        assert!(has_test(Some("FRCP 12"), &tested));
-        assert!(!has_test(Some("FRCP 13"), &tested));
-        assert!(!has_test(None, &tested));
-    }
-
-    #[test]
-    fn exact_chance_probabilities_sum_as_rationals() {
-        let thirds = [
-            hir::Rational {
-                numerator: 1,
-                denominator: 3,
-            },
-            hir::Rational {
-                numerator: 2,
-                denominator: 3,
-            },
-        ];
-        let short = [
-            hir::Rational {
-                numerator: 1,
-                denominator: 2,
-            },
-            hir::Rational {
-                numerator: 1,
-                denominator: 3,
-            },
-        ];
-        assert!(distribution_is_exact(&thirds));
-        assert!(!distribution_is_exact(&short));
-    }
-
-    #[test]
-    fn sema_obligations_report_clean_and_failing_results() {
-        let passed = findings_from_diagnostics(&[]);
-        insta::assert_json_snapshot!(passed);
-
-        let diagnostics: Vec<Diagnostic> = DIAGNOSTIC_GROUPS
-            .iter()
-            .map(|(_, codes)| diagnostic(codes[0]))
-            .collect();
-        let failed = findings_from_diagnostics(&diagnostics);
-        insta::assert_json_snapshot!(failed);
-    }
-
-    #[test]
-    fn case_replay_includes_event_and_posture_failures() {
-        let mut report = VerificationReport::new(Profile::Strict);
-        add_case_replay(&mut report, &[diagnostic(DiagnosticCode::DeadlineMissed)]);
-        insta::assert_json_snapshot!(report);
-    }
+    Verification::new(b, unvalued, profile)
 }

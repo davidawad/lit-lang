@@ -1,0 +1,64 @@
+---
+source: crates/litigate-verify/tests/obligations.rs
+expression: "pair(Obligation::GraphReachable, &\none(&with(\"state island: \\\"Island\\\" { tags [entry], _ \\\"Go\\\" -> lone }\\n\\\n         terminal lone: \\\"Lone\\\" { payoff 0.usd }\")),\n&\none(&with(\"state island: \\\"Island\\\" { _ \\\"Go\\\" -> lone }\\n\\\n         terminal lone: \\\"Lone\\\" { payoff 0.usd }\")))"
+---
+{
+  "pass": {
+    "finding": {
+      "name": "graph-reachable",
+      "status": "passed",
+      "count": 0,
+      "examples": []
+    },
+    "accepted": true,
+    "diagnostics": []
+  },
+  "fail": {
+    "finding": {
+      "name": "graph-reachable",
+      "status": "failed",
+      "count": 2,
+      "examples": [
+        "pkgs/demo/main.lit:55:1: L5003 `island` is not reachable from start `served` or any `entry` node",
+        "pkgs/demo/main.lit:56:1: L5003 `lone` is not reachable from start `served` or any `entry` node"
+      ]
+    },
+    "accepted": false,
+    "diagnostics": [
+      {
+        "code": "L5003",
+        "severity": "error",
+        "span": {
+          "file": "pkgs/demo/main.lit",
+          "line": 55,
+          "col": 1,
+          "end_line": 55,
+          "end_col": 42
+        },
+        "message": "`island` is not reachable from start `served` or any `entry` node",
+        "notes": [
+          {
+            "message": "route an edge to it, tag it `entry` if a matter can begin there, or remove it"
+          }
+        ]
+      },
+      {
+        "code": "L5003",
+        "severity": "error",
+        "span": {
+          "file": "pkgs/demo/main.lit",
+          "line": 56,
+          "col": 1,
+          "end_line": 56,
+          "end_col": 39
+        },
+        "message": "`lone` is not reachable from start `served` or any `entry` node",
+        "notes": [
+          {
+            "message": "route an edge to it, tag it `entry` if a matter can begin there, or remove it"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,54 @@
+---
+source: crates/litigate-verify/tests/obligations.rs
+expression: "pair(Obligation::RuleWithoutTest, & one(BASE), &\none(&with(\"rule duty reply-duty cite FRCP 12(a)\\n{\\n  deadline reply-period: 14.days from \\\n         Answered(complaint) counted_by frcp6\\n}\")))"
+---
+{
+  "pass": {
+    "finding": {
+      "name": "rule-without-test",
+      "status": "passed",
+      "count": 0,
+      "examples": []
+    },
+    "accepted": true,
+    "diagnostics": []
+  },
+  "fail": {
+    "finding": {
+      "name": "rule-without-test",
+      "status": "failed",
+      "count": 1,
+      "examples": [
+        "pkgs/demo/main.lit:57:3: L9001 deadline `reply-period` has no test that evaluates `deadline(reply-period)`"
+      ]
+    },
+    "accepted": false,
+    "diagnostics": [
+      {
+        "code": "L9001",
+        "severity": "error",
+        "span": {
+          "file": "pkgs/demo/main.lit",
+          "line": 57,
+          "col": 3,
+          "end_line": 57,
+          "end_col": 75
+        },
+        "message": "deadline `reply-period` has no test that evaluates `deadline(reply-period)`",
+        "fixes": [
+          {
+            "span": {
+              "file": "pkgs/demo/main.lit",
+              "line": 57,
+              "col": 75,
+              "end_line": 57,
+              "end_col": 75
+            },
+            "replacement": "\n\ntest \"reply-period is due on the expected date\" {\n  given <trigger event> on <YYYY-MM-DD>\n  expect deadline(reply-period) == <YYYY-MM-DD>\n}",
+            "applicability": "has_placeholders"
+          }
+        ]
+      }
+    ]
+  }
+}

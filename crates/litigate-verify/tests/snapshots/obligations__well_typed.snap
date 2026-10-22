@@ -1,0 +1,28 @@
+---
+source: crates/litigate-verify/tests/obligations.rs
+expression: "pair(Obligation::WellTyped, & one(BASE), &\none(&edit(\"== 2025-03-24\", \"== 21.days\")))"
+---
+{
+  "pass": {
+    "finding": {
+      "name": "well-typed",
+      "status": "passed",
+      "count": 0,
+      "examples": []
+    },
+    "accepted": true,
+    "diagnostics": []
+  },
+  "fail": {
+    "finding": {
+      "name": "well-typed",
+      "status": "failed",
+      "count": 1,
+      "examples": [
+        "pkgs/demo/main.lit:46:10: L2002 cannot do date arithmetic with `Days<CalendarDays>`; dates move only through a counting rule (`deadline(..)`)"
+      ]
+    },
+    "accepted": false,
+    "diagnostics": []
+  }
+}

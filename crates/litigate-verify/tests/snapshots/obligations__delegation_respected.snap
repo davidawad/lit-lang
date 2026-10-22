@@ -1,0 +1,28 @@
+---
+source: crates/litigate-verify/tests/obligations.rs
+expression: "pair(Obligation::DelegationRespected, &\ndelegation(\" delegable_to [LocalRule]\"), & delegation(\"\"))"
+---
+{
+  "pass": {
+    "finding": {
+      "name": "delegation-respected",
+      "status": "passed",
+      "count": 0,
+      "examples": []
+    },
+    "accepted": false,
+    "diagnostics": []
+  },
+  "fail": {
+    "finding": {
+      "name": "delegation-respected",
+      "status": "failed",
+      "count": 1,
+      "examples": [
+        "pkgs/local/main.lit:6:99: L3004 `local-period` (LocalRule) overrides `demo::answer-period` (FederalRule), but `demo::answer-period` does not delegate to LocalRule: missing `delegable_to [LocalRule]`"
+      ]
+    },
+    "accepted": false,
+    "diagnostics": []
+  }
+}

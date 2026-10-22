@@ -1,0 +1,46 @@
+---
+source: crates/litigate-verify/tests/obligations.rs
+expression: "pair(Obligation::Holes, & one(BASE), &\none(&edit(\"payoff 0.usd\", \"payoff ?(\\\"no estimate yet\\\")\")))"
+---
+{
+  "pass": {
+    "finding": {
+      "name": "holes",
+      "status": "passed",
+      "count": 0,
+      "examples": []
+    },
+    "accepted": true,
+    "diagnostics": []
+  },
+  "fail": {
+    "finding": {
+      "name": "holes",
+      "status": "failed",
+      "count": 1,
+      "examples": [
+        "pkgs/demo/main.lit:41:63: L5002 strict does not permit holes: no estimate yet"
+      ]
+    },
+    "accepted": false,
+    "diagnostics": [
+      {
+        "code": "L5002",
+        "severity": "error",
+        "span": {
+          "file": "pkgs/demo/main.lit",
+          "line": 41,
+          "col": 63,
+          "end_line": 41,
+          "end_col": 83
+        },
+        "message": "strict does not permit holes: no estimate yet",
+        "notes": [
+          {
+            "message": "replace the `?` with a sourced value"
+          }
+        ]
+      }
+    ]
+  }
+}

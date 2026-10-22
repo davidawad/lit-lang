@@ -1,0 +1,41 @@
+---
+source: crates/litigate-verify/tests/obligations.rs
+expression: "pair(Obligation::DistExact, & one(&chance(\", a \\\"A\\\" -> answered p 1\")), &\none(&chance(\"\")))"
+---
+{
+  "pass": {
+    "finding": {
+      "name": "dist-exact",
+      "status": "passed",
+      "count": 0,
+      "examples": []
+    },
+    "accepted": true,
+    "diagnostics": []
+  },
+  "fail": {
+    "finding": {
+      "name": "dist-exact",
+      "status": "failed",
+      "count": 1,
+      "examples": [
+        "pkgs/demo/main.lit:55:1: L2003 chance node `odds` has no edges, so its probabilities sum to 0, not exactly 1"
+      ]
+    },
+    "accepted": false,
+    "diagnostics": [
+      {
+        "code": "L2003",
+        "severity": "error",
+        "span": {
+          "file": "pkgs/demo/main.lit",
+          "line": 55,
+          "col": 1,
+          "end_line": 55,
+          "end_col": 46
+        },
+        "message": "chance node `odds` has no edges, so its probabilities sum to 0, not exactly 1"
+      }
+    ]
+  }
+}

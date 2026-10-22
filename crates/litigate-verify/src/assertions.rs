@@ -3,17 +3,18 @@
 //! `deadline(d)` is computed by litgraph's own clock interpreter
 //! (`clock::compute_due_date`) running the counting rule exactly as
 //! lowering emits it for the engine (SPEC §8.2), from the latest `given`
-//! event matching `d`'s trigger, with that event's service method. The
-//! counting rule's lowering is reused by lowering its package with
-//! `Pack.counting` naming the rule, so a test can never pass here and the
-//! engine compute a different date. `has_event(p)` is true when a `given`
+//! event matching `d`'s trigger, with that event's service method, under
+//! the versions of `d` and of its counting rule in force on the trigger
+//! date (the rule lowered at its own `from`, as `litigate test` does), so
+//! a test can never pass here and the engine compute a different date. `has_event(p)` is true when a `given`
 //! matches `p`. An assertion this evaluator cannot compute fails: an
 //! unevaluated test is not a passing one.
+use crate::context::in_force;
 use crate::diag::{emit, note};
 use crate::{same_expr, Context};
 use litgraph::clock::{self, ClockConfig, ClockLibrary, DayDeadline, Unit};
 use litigate_base::{Diagnostic, DiagnosticCode as C};
-use litigate_lower::Lowerer;
+use litigate_lower::{Lowerer, Options};
 use litigate_sema::hir::{self, BinaryOp, Declaration, Expr, ExprKind, Value};
 use std::cell::RefCell;
 use std::collections::BTreeMap;
@@ -152,10 +153,13 @@ fn due(
         .iter()
         .find(|v| in_force(&v.meta.effective, date))
         .ok_or_else(|| format!("no version of `{target}` is in force on {date}"))?;
-    let counting = cx
-        .counting(&deadline.counting)
-        .ok_or_else(|| format!("counting rule `{}` is not declared", deadline.counting))?;
-    let library = clocks.get(cx, &deadline.counting)?;
+    let (pkg, counting) = cx.counting_at(&deadline.counting, date).ok_or_else(|| {
+        format!(
+            "no version of counting rule `{}` is in force on {date}",
+            deadline.counting
+        )
+    })?;
+    let library = clocks.get(cx, pkg, counting)?;
     let clock = library
         .clock(&counting.meta.id)
         .map_err(|e| e.to_string())?;
@@ -176,10 +180,6 @@ fn due(
     clock::compute_due_date(&request, &clock, &ClockConfig::default())
         .map(|c| c.due_date)
         .map_err(|e| e.to_string())
-}
-
-fn in_force(i: &hir::Interval, date: &str) -> bool {
-    i.from.as_str() <= date && i.to.as_deref().is_none_or(|to| date < to)
 }
 
 /// The engine service method of the first `event` argument naming one of
@@ -213,55 +213,57 @@ fn kebab(name: &str) -> String {
         .collect()
 }
 
-/// Engine clock libraries per counting rule, lowered once each.
+/// Engine clock libraries per counting-rule version, lowered once each.
 #[derive(Default)]
 struct Clocks {
-    lowered: RefCell<BTreeMap<String, Result<ClockLibrary, String>>>,
+    lowered: RefCell<BTreeMap<(String, String), Result<ClockLibrary, String>>>,
 }
 
 impl Clocks {
-    fn get(&self, cx: &Context<'_>, counting: &str) -> Result<ClockLibrary, String> {
-        if let Some(found) = self.lowered.borrow().get(counting) {
+    fn get(
+        &self,
+        cx: &Context<'_>,
+        pkg: &hir::Package,
+        counting: &hir::Counting,
+    ) -> Result<ClockLibrary, String> {
+        let key = (
+            counting.meta.id.clone(),
+            counting.meta.effective.from.clone(),
+        );
+        if let Some(found) = self.lowered.borrow().get(&key) {
             return found.clone();
         }
-        let lowered = lower_clock(cx, counting);
-        self.lowered
-            .borrow_mut()
-            .insert(counting.to_owned(), lowered.clone());
+        let lowered = lower_clock(cx, pkg, counting);
+        self.lowered.borrow_mut().insert(key, lowered.clone());
         lowered
     }
 }
 
-/// The clock fragment lowering emits for the package declaring `counting`
-/// when its pack names that rule.
-fn lower_clock(cx: &Context<'_>, counting: &str) -> Result<ClockLibrary, String> {
-    let (pkg, local) = cx.owner(counting);
-    let mut named = pkg.clone();
-    named.manifest.counting = Some(local.to_owned());
-    // Lowering emits a declaration by identity, so the renamed copy takes
-    // the original's place among the loaded packages.
-    let packages: Vec<&hir::Package> = cx
-        .packages
-        .iter()
-        .map(|p| {
-            if p.manifest.pack_id == named.manifest.pack_id {
-                &named
-            } else {
-                *p
-            }
-        })
-        .collect();
-    Lowerer::new(&packages)
-        .package(&named, cx.options)
+/// The clock fragment lowering emits for version `counting` of `pkg`,
+/// lowered at that version's `from` date.
+fn lower_clock(
+    cx: &Context<'_>,
+    pkg: &hir::Package,
+    counting: &hir::Counting,
+) -> Result<ClockLibrary, String> {
+    let options = Options {
+        as_of: Some(counting.meta.effective.from.clone()),
+        known_at: None,
+    };
+    Lowerer::new(cx.packages)
+        .clock_at(pkg, &counting.meta.id, &options)
         .map_err(|ds| {
             ds.iter()
                 .map(|d| format!("{} {}", d.code.as_str(), d.message))
                 .collect::<Vec<_>>()
                 .join("; ")
         })?
-        .clock
-        .map(|(library, _)| library)
-        .ok_or_else(|| format!("counting rule `{counting}` has no engine lowering"))
+        .ok_or_else(|| {
+            format!(
+                "counting rule `{}` has no engine lowering",
+                counting.meta.id
+            )
+        })
 }
 
 fn show(e: &Expr, v: &Value) -> String {

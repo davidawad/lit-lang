@@ -50,9 +50,44 @@ async fn publishes_the_check_diagnostics_of_the_worked_example() {
     let status = c.status().await;
     assert_eq!(
         status["files"],
-        json!([CASE, "lit/examples/Lit.toml", LIT]),
+        json!(sources(&["lit", "cases"])),
         "the analysis is `litigate check lit cases`"
     );
+}
+
+/// Every `Lit.toml`, `.lit` and `.case` file under `roots`, repo-relative
+/// and sorted: what `litigate check` analyses (`lit/core` included).
+fn sources(roots: &[&str]) -> Vec<String> {
+    fn walk(dir: &std::path::Path, out: &mut Vec<std::path::PathBuf>) {
+        for entry in std::fs::read_dir(dir).unwrap() {
+            let path = entry.unwrap().path();
+            if path.is_dir() {
+                walk(&path, out);
+            } else {
+                out.push(path);
+            }
+        }
+    }
+    let repo = support::repo();
+    let mut files = Vec::new();
+    for root in roots {
+        walk(&repo.join(root), &mut files);
+    }
+    let mut out: Vec<String> = files
+        .iter()
+        .filter(|p| {
+            p.file_name().is_some_and(|n| n == "Lit.toml")
+                || p.extension().is_some_and(|e| e == "lit" || e == "case")
+        })
+        .map(|p| {
+            p.strip_prefix(&repo)
+                .unwrap()
+                .to_string_lossy()
+                .into_owned()
+        })
+        .collect();
+    out.sort();
+    out
 }
 
 #[tokio::test]

@@ -128,7 +128,9 @@ fn strict_check_of_lit_core_passes_with_no_holes() {
     assert_eq!(run.code, 0, "{}", run.stdout);
     let result = &run.json["result"];
     for f in result["obligations"].as_array().unwrap() {
-        assert_eq!(f["passed"], true, "{f}");
+        // A rule package has no events, so only case replay is skipped.
+        let skipped = f["name"] == "case-replay" && f["status"] == "skipped";
+        assert!(f["status"] == "passed" || skipped, "{f}");
     }
     let core = &result["packages"][0];
     assert_eq!(core["name"], "core");

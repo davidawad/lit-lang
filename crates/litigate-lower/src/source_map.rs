@@ -109,8 +109,11 @@ pub struct SourceMap {
 /// bindings against an optional vendored corpus.
 pub struct Citations<'c> {
     syntax: CiteSyntax,
-    /// Heading template or shorthand code/title to bound source id.
-    bound: Vec<(Family, String)>,
+    /// Heading template or shorthand code/title to bound source id and
+    /// its vendored path. Several bindings may share one template (19
+    /// C.F.R. parts 201 and 210 in separate files); the one whose file
+    /// holds the heading wins.
+    bound: Vec<(Family, String, Option<String>)>,
     corpus: Option<&'c SourceCorpus>,
 }
 
@@ -125,12 +128,21 @@ impl<'c> Citations<'c> {
         corpus: Option<&'c SourceCorpus>,
     ) -> Self {
         let mut syntax = syntax;
+        let path = |id: &str| {
+            sources
+                .iter()
+                .find(|s| s.id == id)
+                .and_then(|s| s.path.clone())
+        };
+        let mut shared = Vec::new();
         for s in sources.iter().filter(|s| !s.cite_prefixes.is_empty()) {
             let heading = s
                 .section_heading
                 .as_deref()
                 .map_or_else(|| "{}".to_owned(), |h| h.replace("{n}", "{}"));
-            if !syntax.rules.iter().any(|r| r.heading == heading) {
+            if syntax.rules.iter().any(|r| r.heading == heading) {
+                shared.push((Family::Rules(heading), s.id.clone(), s.path.clone()));
+            } else {
                 syntax.rules.push(CiteRuleForm {
                     prefixes: s.cite_prefixes.clone(),
                     heading,
@@ -138,18 +150,21 @@ impl<'c> Citations<'c> {
                 });
             }
         }
-        let rules = syntax
-            .rules
-            .iter()
-            .filter_map(|r| Some((Family::Rules(r.heading.clone()), r.source.clone()?)));
+        let rules = syntax.rules.iter().filter_map(|r| {
+            let id = r.source.clone()?;
+            let p = path(&id);
+            Some((Family::Rules(r.heading.clone()), id, p))
+        });
         let shorthands = syntax.shorthands.iter().filter_map(|s| {
             let family = match s.code {
                 CiteCode::Usc => Family::Usc(s.title),
                 CiteCode::Cfr => Family::Cfr(s.title),
             };
-            Some((family, s.source.clone()?))
+            let id = s.source.clone()?;
+            let p = path(&id);
+            Some((family, id, p))
         });
-        let bound = rules.chain(shorthands).collect();
+        let bound = rules.chain(shorthands).chain(shared).collect();
         Self {
             syntax,
             bound,
@@ -173,12 +188,26 @@ impl<'c> Citations<'c> {
         let sections = parse_cite_string(text, &grammar)
             .iter()
             .filter_map(|c| {
-                let source = self
+                let heading = c.heading()?;
+                let candidates: Vec<_> = self
                     .bound
                     .iter()
-                    .find(|(f, _)| *f == c.family)
-                    .map(|(_, s)| s.clone());
-                Some(self.locate(c.heading()?, source))
+                    .filter(|(f, _, _)| *f == c.family)
+                    .collect();
+                let holds = |p: &Option<String>| {
+                    self.corpus.is_some_and(|corpus| {
+                        corpus
+                            .lookup_all(&heading)
+                            .iter()
+                            .any(|(file, _)| Some(file) == p.as_ref())
+                    })
+                };
+                let source = candidates
+                    .iter()
+                    .find(|(_, _, p)| holds(p))
+                    .or_else(|| candidates.first())
+                    .map(|(_, s, _)| s.clone());
+                Some(self.locate(heading, source))
             })
             .collect();
         Some(CiteMap {

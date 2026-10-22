@@ -115,7 +115,7 @@ pub fn verify_package(
     corpus: &SourceCorpus,
     profile: Profile,
 ) -> Verification {
-    let cx = Context::new(input.package, input.packages, input.options, profile);
+    let cx = Context::new(input.package, input.packages, profile);
     let mut b = Builder::default();
     sema::aggregate(&mut b, &input.check.diagnostics);
     let mut out = Vec::new();

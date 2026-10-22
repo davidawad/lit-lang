@@ -663,7 +663,41 @@ types: `p` is `Probability`, `effort` is `Hours`, `cost`/`payoff` are
 ## 7. Verification obligations and profiles
 
 `litigate check` reports every obligation as a `Finding`
-`{obligation, passed, detail}`. Each failure also emits the listed code.
+`{name, status, count, examples}`, collected in a `VerificationReport`
+`{obligations, profile}` that is embedded in every litigatable
+(`litigate_verify::{Finding, VerificationReport}`; abridged):
+
+```json
+{"obligations":[
+   {"name":"well-typed","status":"passed","count":0,"examples":[]},
+   {"name":"holes","status":"warning","count":1,
+    "examples":["lit/x/main.lit:12:3: L9002 hole: no calibration yet"]},
+   {"name":"case-replay","status":"skipped","count":0,
+    "examples":["a rule package has no events; replay is checked per case"]}],
+ "profile":"dev"}
+```
+
+- `obligations` lists every obligation of the table below, once, in table
+  order. `name` is the obligation's kebab-case name.
+- `status` is `passed` (no finding), `warning` (only warning-severity
+  findings: the profile accepts it), `failed` (at least one error-severity
+  finding), or `skipped` (not checked for this artifact).
+- `count` is the number of findings (violations, holes, warnings); `0`
+  when skipped.
+- `examples` holds at most eight findings, sorted like diagnostics (§9.1),
+  each `file:line:col: CODE message`. A skipped finding instead holds one
+  string saying why: it does not apply (a rule package has no events, a
+  matter carries no graph), or an earlier phase failed and the artifact
+  never existed.
+- The report is accepted iff no obligation is `failed`.
+
+Each finding also emits the listed code as a diagnostic. Diagnostics of
+earlier phases count against the obligation whose code the table lists
+(`litigate_verify::obligation_of`); every L4xxx counts against
+`case-replay`; L3003 against `exceptions-ordered`; L3007 and L3008 against
+`effective-covered`; L9003, L9004, and L9005 belong to no obligation; every
+other code (syntax, names, types, L3009, L5001, lowering) counts against
+`well-typed`, so no error ever leaves every obligation passed.
 
 | Obligation | Definition | Code |
 |---|---|---|
@@ -679,15 +713,25 @@ types: `p` is `Probability`, `effort` is `Hours`, `cost`/`payoff` are
 | `graph-reachable` | every node is reachable from `start` or an `entry`-tagged node | L5003 |
 | `deadline-satisfiable` | for each reachable node, the due-date windows of mandatory (`duty`) deadlines on its outgoing edges intersect for some trigger date | L5005 |
 | `tests-pass` | every `test` assertion holds | L5006 |
-| `case-replay` | events order, match, and meet deadlines (§5.6) | L4001-L4008 |
+| `case-replay` | sema's case checker accepts the matter: it resolves, its pins, parties, facts, stakes, and beliefs are valid, and its events order, match, and meet deadlines on the engine clock (§5.6) | L4001-L4008 |
 | `holes` | lists every hole with reason and span | L9002 / L5002 |
+| `rule-without-test` | every deadline and counting rule is exercised by a `test` | L9001 |
+
+A rule package's report skips `case-replay`; a matter's report checks
+`case-replay` (and counts its resolution errors against `well-typed`) and
+skips every other obligation, which its packages carry.
 
 Profiles change severity and acceptance, never values. `dev`: holes are L9002
 warnings. A failed obligation is an error. Exceptions: `cite-resolves` on
-declarations that `litigate import` marks `/// imported`, and missing tests
-(L9001), are warnings. `strict` rejects every hole (L5002), every
-`cite-resolves` failure, every untested deadline or counting rule (L9001 as
-an error), `unvalued` stakes, and non-canonical formatting (L9004).
+declarations that `litigate import` marks `/// imported`, missing tests
+(L9001), and `unvalued` stakes (L4004) are warnings. A declaration is
+imported when one of its leading `///` lines is exactly `imported`; HIR
+records it as `Metadata.imported`, and the marker line is never the
+declaration's fallback label. The exemption covers the declaration's own
+`cite` and, for a node, its edges' `authority` texts. `strict` rejects every
+hole (L5002), every `cite-resolves` failure, every untested deadline or
+counting rule (L9001 as an error), `unvalued` stakes, and non-canonical
+formatting (L9004).
 `litigate check --profile strict` passing on `lit/core` is the epic gate.
 
 ## 8. Lowering contract

@@ -1,7 +1,62 @@
 module frap.briefing
 
+import core.authority.{ CaseOrder, LocalRule }
+import core.frap26.{ frap26 }
 import frap.argument.{ oral-argument-fork }
+import frap.events.{ RecordFiled, ServedPaper }
 import frap.{ briefing-group }
+
+/// FRAP 31(a)(1): the appellant's brief is due 40 days after the record is
+/// filed, the appellee's 30 days after the appellant's brief is served,
+/// and a reply 21 days after the appellee's brief is served (the 2009
+/// amendments set 21 days in place of 14; FRAP 26, 2009 Committee Note,
+/// citing Rule 31(a)). A court of appeals "may shorten the time to serve
+/// and file briefs, either by local rule or by order in a particular case"
+/// (FRAP 31(a)(2)), and may extend it for good cause (FRAP 26(b)), so each
+/// period delegates to `LocalRule` and `CaseOrder`. The two served briefs
+/// gain FRAP 26(c)'s 3 days after mail, carrier or prison-mail service.
+rule duty serve-and-file-briefs effective [2009-12-01, ..) known_at 2009-03-26 cite FRAP 31(a)
+{
+  deadline appellant-brief-period: 40.days after RecordFiled() counted_by frap26 delegable_to [LocalRule, CaseOrder] cite FRAP 31(a)(1)
+  deadline appellee-brief-period: 30.days after ServedPaper(AppellantBrief) counted_by frap26 delegable_to [LocalRule, CaseOrder] cite FRAP 31(a)(1)
+  deadline reply-brief-period: 21.days after ServedPaper(AppelleeBrief) counted_by frap26 delegable_to [LocalRule, CaseOrder] cite FRAP 31(a)(1)
+}
+
+test "the opening brief is due 40 days after the record is filed" cite FRAP 31(a)(1)
+{
+  given RecordFiled() on 2025-02-05
+  expect deadline(appellant-brief-period) == 2025-03-17
+}
+
+test "a 40th day on a Saturday rolls to Monday" cite FRAP 26(a)(1)(C)
+{
+  given RecordFiled() on 2025-03-03
+  expect deadline(appellant-brief-period) == 2025-04-14
+}
+
+test "the appellee's brief is due 30 days after service of the opening brief" cite FRAP 31(a)(1)
+{
+  given ServedPaper(AppellantBrief, Electronic) on 2025-04-14
+  expect deadline(appellee-brief-period) == 2025-05-14
+}
+
+test "a 30th day on Independence Day rolls to Monday" cite FRAP 26(a)(6)(A)
+{
+  given ServedPaper(AppellantBrief, Electronic) on 2025-06-04
+  expect deadline(appellee-brief-period) == 2025-07-07
+}
+
+test "a reply is due 21 days after service of the appellee's brief" cite FRAP 31(a)(1)
+{
+  given ServedPaper(AppelleeBrief, Electronic) on 2025-05-14
+  expect deadline(reply-brief-period) == 2025-06-04
+}
+
+test "a 21st day on Labor Day rolls to Tuesday" cite FRAP 26(a)(6)(A)
+{
+  given ServedPaper(AppelleeBrief, Electronic) on 2025-08-11
+  expect deadline(reply-brief-period) == 2025-09-02
+}
 
 decision appellant-brief-window: "Appellant's Opening Brief Due" by applicant cite FRAP 31(a)(1)
 {
@@ -10,7 +65,7 @@ decision appellant-brief-window: "Appellant's Opening Brief Due" by applicant ci
   _ "File opening brief" -> appellant-brief-filed {
     authority cite FRAP 31(a)(1)
     effort 100.hours
-    deadline 40.days {
+    within appellant-brief-period {
       extendable true
       extension_authority "FRAP 26(b); court discretion for good cause"
       note "Failure to file by day 40 (or the extended date) permits an appellee motion to dismiss for want of prosecution under FRAP 31(c), triggering a dismissal that is nearly impossible to revive."
@@ -33,7 +88,7 @@ state appellant-brief-filed: "Opening Brief Filed" by applicant cite FRAP 28(a);
   _ "Appellee files response brief" -> appellee-brief-filed {
     authority cite FRAP 31(a)(1); FRAP 28(b)
     effort 90.hours
-    deadline 30.days {
+    within appellee-brief-period {
       extendable true
       extension_authority "FRAP 26(b); court discretion for good cause"
       note "Appellee's failure to file within 30 days is grounds for default, but the appellee retains the right to oral argument by court permission even if the brief is late; missing this deadline is far less terminal than the appellant's miss."
@@ -58,7 +113,7 @@ state appellee-brief-filed: "Appellee's Response Brief Filed" by applicant cite 
   _ "File reply brief" -> reply-brief-filed {
     authority cite FRAP 31(a)(1); FRAP 28(c)
     effort 40.hours
-    deadline 21.days {
+    within reply-brief-period {
       extendable true
       extension_authority "FRAP 26(b); court discretion for good cause; FRAP 31(a)(1) requires filing at least 7 days before argument"
       note "Reply brief must be filed at least 7 days before oral argument (if scheduled) or risk rejection. Late reply briefs are rarely accepted; this is a cascading deadline that depends on the argument calendar, not a pure 21-day rule."

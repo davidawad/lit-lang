@@ -1,7 +1,44 @@
 module frap.rehearing
 
-import frap.mandate.{ mandate-issued }
+import core.authority.{ CaseOrder, LocalRule }
+import core.frap26.{ frap26 }
+import frap.events.{ EnteredOnAppeal }
+import frap.mandate.{ mandate-issued, mandate-period }
 import frap.{ rehearing-group }
+
+/// A petition for panel rehearing or rehearing en banc is due 14 days
+/// after the judgment (or an amended decision) is entered, "unless the
+/// time is shortened or extended by order or local rule", so the period
+/// delegates to `LocalRule` and `CaseOrder`. The 45-day period for a civil
+/// case with a United States party is not on the pack's edges and is not
+/// modeled.
+///
+/// Before December 1, 2024 the period was FRAP 40(a)(1), and FRAP 35(c)
+/// gave a petition for rehearing en banc the same time; the pack's edges
+/// still cite those pinpoints. The earlier text is not vendored, so that
+/// version's cite is a hole carrying it.
+deadline rehearing-period: 14.days after EnteredOnAppeal(Judgment) counted_by frap26 effective [2009-12-01, 2024-12-01) known_at 2009-03-26 delegable_to [LocalRule, CaseOrder] cite ?("FRAP 40(a)(1) and 35(c) before the December 2024 amendment (text not vendored)")
+/// The December 1, 2024 amendment (order of Apr. 2, 2024) transferred Rule
+/// 35 into Rule 40 and moved the period to FRAP 40(d)(1), unchanged.
+deadline rehearing-period: 14.days after EnteredOnAppeal(Judgment) counted_by frap26 effective [2024-12-01, ..) known_at 2024-04-02 supersedes rehearing-period@2009-12-01 delegable_to [LocalRule, CaseOrder] cite FRAP 40(d)(1)
+
+test "a rehearing petition is due 14 days after entry of judgment" cite FRAP 40(d)(1)
+{
+  given EnteredOnAppeal(Judgment) on 2025-12-17
+  expect deadline(rehearing-period) == 2025-12-31
+}
+
+test "a 14th day on Christmas rolls to the 26th" cite FRAP 26(a)(6)(A)
+{
+  given EnteredOnAppeal(Judgment) on 2025-12-11
+  expect deadline(rehearing-period) == 2025-12-26
+}
+
+test "before the 2024 amendment: a 14th day on Independence Day rolls to July 5" cite FRAP 26(a)(1)(C)
+{
+  given EnteredOnAppeal(Judgment) on 2023-06-20
+  expect deadline(rehearing-period) == 2023-07-05
+}
 
 decision rehearing-window: "Seek Rehearing?" by applicant cite FRAP 40(a)(1)
 {
@@ -10,7 +47,7 @@ decision rehearing-window: "Seek Rehearing?" by applicant cite FRAP 40(a)(1)
   _ "Petition for rehearing / en banc" -> rehearing-petition-filed {
     authority cite FRAP 40(a)(1); FRAP 35(c)
     effort 60.hours
-    deadline 14.days {
+    within rehearing-period {
       extendable false
       extension_authority "FRAP 26(b) is silent on FRAP 40 deadlines; extension is theoretically possible for good cause but extremely rarely granted in practice"
       note "Missing the 14-day (or 45-day if the U.S. is a party) deadline forfeits the right to seek rehearing and loses the ability to toll the Supreme Court's 90-day certiorari clock under Rule 13.3."
@@ -21,7 +58,7 @@ decision rehearing-window: "Seek Rehearing?" by applicant cite FRAP 40(a)(1)
   _ "No rehearing sought — time expires" -> mandate-issued {
     authority cite FRAP 41(b)(1)
     effort 0.hours
-    deadline 14.days {
+    within rehearing-period {
       note "If no rehearing petition is filed within 14 days (or 45 days for the U.S.), the time to petition expires and the mandate issues automatically 7 days thereafter. The 90-day Supreme Court certiorari clock then runs from the original judgment date."
     }
     duration { min 2.1.days, mode 7.days, max 14.days }
@@ -64,7 +101,7 @@ state rehearing-granted-amended-opinion: "Rehearing Granted — Opinion Amended 
   note "When panel rehearing is granted, the panel may dispose of the case without further briefing, order supplemental briefing or argument, or issue other appropriate orders. For en banc rehearing, the panel opinion is vacated entirely and the case is reargued before all active judges."
   _ "Amended opinion becomes judgment" -> mandate-issued {
     authority cite FRAP 41(b)(1)
-    deadline 7.days {
+    within mandate-period {
       note "After the amended opinion is filed (or the rehearing is disposed of), the mandate issues 7 days later. The amended opinion becomes the circuit's final judgment for purposes of the Supreme Court's 90-day certiorari deadline."
     }
     duration { min 1.1.days, mode 3.5.days, max 7.days }
@@ -78,7 +115,7 @@ terminal rehearing-en-banc-both-denied: "Rehearing and Rehearing En Banc Both De
   payoff 400_000.usd
   _ "Mandate clock resumes" -> mandate-issued {
     authority cite FRAP 41(b)(1); FRAP 41(b)(3)
-    deadline 7.days {
+    within mandate-period {
       note "The mandate issues 7 days after the order denying rehearing and/or en banc rehearing, or 7 days after expiration of the petition deadline if no petition was timely filed. This triggers finality at the circuit level and starts the 90-day certiorari clock."
     }
     duration { min 1.1.days, mode 3.5.days, max 7.days }

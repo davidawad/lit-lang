@@ -1,7 +1,55 @@
 module frap.record
 
+import core.authority.{ CaseOrder }
+import core.frap26.{ frap26 }
+import frap.events.{ NoticeOfAppealFiled, TranscriptOrderReceived }
 import frap.motions.{ stay-pending-appeal-fork }
 import frap.{ record-group }
+
+/// FRAP 10(b)(1): within 14 days after filing the notice of appeal (or
+/// after entry of the order disposing of the last FRAP 4(a)(4)(A) motion,
+/// if later) the appellant must order the transcript or certify that none
+/// will be ordered. The 2009 amendments set 14 days in place of 10 (FRAP
+/// 26, 2009 Committee Note). The court of appeals may extend any time
+/// these rules prescribe for good cause (FRAP 26(b)), so the period
+/// delegates to `CaseOrder`.
+rule duty order-transcript effective [2009-12-01, ..) known_at 2009-03-26 cite FRAP 10(b)(1)
+{
+  deadline transcript-order-period: 14.days after NoticeOfAppealFiled() counted_by frap26 delegable_to [CaseOrder] cite FRAP 10(b)(1)
+}
+
+/// FRAP 11(b)(1)(B): the reporter is to complete the transcript within 30
+/// days of receiving the order, and may ask the circuit clerk to grant
+/// more time; the clerk's grant is an order in the case, so the period
+/// delegates to `CaseOrder`.
+rule duty file-transcript effective [2009-12-01, ..) known_at 2009-03-26 cite FRAP 11(b)(1)(B)
+{
+  deadline transcript-filing-period: 30.days after TranscriptOrderReceived() counted_by frap26 delegable_to [CaseOrder] cite FRAP 11(b)(1)(B)
+}
+
+test "the transcript order is due 14 days after the notice" cite FRAP 10(b)(1)
+{
+  given NoticeOfAppealFiled() on 2025-03-03
+  expect deadline(transcript-order-period) == 2025-03-17
+}
+
+test "a 14th day on Martin Luther King Jr. Day rolls to Tuesday" cite FRAP 26(a)(6)(A)
+{
+  given NoticeOfAppealFiled() on 2025-01-06
+  expect deadline(transcript-order-period) == 2025-01-21
+}
+
+test "the reporter has 30 days from receiving the order" cite FRAP 11(b)(1)(B)
+{
+  given TranscriptOrderReceived() on 2025-03-12
+  expect deadline(transcript-filing-period) == 2025-04-11
+}
+
+test "a 30th day on the Saturday after Independence Day rolls to Monday" cite FRAP 26(a)(1)(C)
+{
+  given TranscriptOrderReceived() on 2025-06-05
+  expect deadline(transcript-filing-period) == 2025-07-07
+}
 
 decision transcript-order-fork: "Transcript Needed?" by applicant cite FRAP 10(b)
 {
@@ -10,7 +58,7 @@ decision transcript-order-fork: "Transcript Needed?" by applicant cite FRAP 10(b
   _ "Order the necessary transcript" -> transcript-ordered {
     authority cite FRAP 10(b)(1)
     effort 2.hours
-    deadline 14.days {
+    within transcript-order-period {
       extendable false
       note "No extension is available for the 14-day ordering deadline; missing it leaves the appellant with only the option to seek appellate relief on an inadequate record, or risk abandonment of issues not covered by existing papers."
     }
@@ -20,7 +68,7 @@ decision transcript-order-fork: "Transcript Needed?" by applicant cite FRAP 10(b
   no-transcript-certificate "Certify that no transcript will be ordered" -> record-transmitted {
     authority cite FRAP 10(b)(1)(B)
     effort 0.5.hours
-    deadline 14.days {
+    within transcript-order-period {
       extendable false
       note "Same 14-day window as ordering a transcript: FRAP 10(b)(1) requires the appellant, within 14 days after filing the notice of appeal, either to order the transcript or to 'file a certificate stating that no transcript will be ordered.'"
     }
@@ -39,7 +87,7 @@ state transcript-ordered: "Transcript Ordered" by office cite FRAP 10(b)(1)
   note "Written order must be filed with the district clerk; appellant arranges payment with the reporter at the time of ordering. If ordering only a partial transcript, appellant must designate issues on appeal, and appellee then has 14 days to designate additional portions — refusal to order those portions gives appellee grounds to seek a court order compelling appellant to do so, shifting cost and timeline control from appellant to appellee."
   _ "Transcript completed and filed" -> record-transmitted {
     authority cite FRAP 11(b)
-    deadline 30.days {
+    within transcript-filing-period {
       extendable true
       extension_authority "FRAP 11(b) (reporter may request extension for completion beyond 30 days; no formal party motion needed)"
       note "Reporter has 30 days from receipt of the order to file the transcript with the district clerk. Requests for additional time are filed with the circuit clerk. Failure to file timely triggers circuit-clerk notice to the trial judge and risks sanction if the record becomes unavailable."

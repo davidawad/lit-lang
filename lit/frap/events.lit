@@ -1,0 +1,47 @@
+module frap.events
+
+import core.time.{ ServiceMethod }
+
+/// What the district court enters on its docket that starts an appeal
+/// period: a final judgment (28 U.S.C. § 1291), an interlocutory order
+/// appealable as of right or under the collateral-order doctrine, an
+/// order certified under 28 U.S.C. § 1292(b), or the order disposing of
+/// the last remaining FRAP 4(a)(4)(A) motion.
+enum BelowEntry { FinalJudgment, InterlocutoryOrder, CertifiedOrder, TollingDisposition }
+
+/// A judgment or order entered on the district court's civil docket (FRAP
+/// 4(a)(7); FRCP 58, 79(a)): the trigger of every notice-of-appeal period.
+event EnteredBelow(entry: BelowEntry)
+/// A notice of appeal filed with the district clerk (FRAP 3(a)(1)): it
+/// starts the cross-appeal period (FRAP 4(a)(3)) and the transcript-order
+/// period (FRAP 10(b)(1)).
+event NoticeOfAppealFiled()
+/// The court reporter receives the appellant's transcript order (FRAP
+/// 11(b)(1)(B)).
+event TranscriptOrderReceived()
+/// The record on appeal is filed with the circuit clerk (FRAP 12(c)): it
+/// starts the appellant's brief period (FRAP 31(a)(1)).
+event RecordFiled()
+
+/// Papers served on appeal whose service starts a response period.
+enum Paper { Motion, AppellantBrief, AppelleeBrief }
+
+/// A paper served under FRAP 25(c) by `method`; FRAP 26(c) adds 3 days for
+/// the methods `frap26` lists (mail, commercial carrier, prison mail).
+event ServedPaper(paper: Paper, method: ServiceMethod)
+
+/// What the court of appeals enters that starts a post-decision period:
+/// its judgment (FRAP 36), including an amended decision (FRAP 40(d)(1)),
+/// or an order denying a timely petition for rehearing (Sup. Ct. R. 13.3).
+enum AppellateEntry { Judgment, RehearingDenial }
+
+/// A judgment or order entered on the court of appeals' docket (FRAP 36(a)).
+event EnteredOnAppeal(entry: AppellateEntry)
+
+/// How the rehearing stage ended, the trigger of the mandate period (FRAP
+/// 41(b)): the time to petition expired, or an order denied a timely
+/// petition for rehearing or motion to stay the mandate.
+enum RehearingEnd { TimeExpired, PetitionDenied, StayDenied }
+
+/// The rehearing stage closed, `how`.
+event RehearingClosed(how: RehearingEnd)

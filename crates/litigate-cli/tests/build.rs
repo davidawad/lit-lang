@@ -202,25 +202,51 @@ fn where_resolves_declarations_cites_and_codes() {
     assert_eq!(edge.json["result"]["lowered"][0], "/edges/3");
 }
 
+/// Paging and filters over the worked-example package alone (`lit/core`
+/// adds library declarations to the default `lit` search).
 #[test]
 fn query_pages_and_filters() {
-    let first = litigate(&["query", "nodes", "--limit", "3"]);
+    let first = litigate(&["query", "--lib", "lit/examples", "nodes", "--limit", "3"]);
     assert_eq!(first.json["result"]["total"], 7);
     assert_eq!(first.json["result"]["next_cursor"], "3");
-    let rest = litigate(&["query", "nodes", "--limit", "10", "--cursor", "3"]);
+    let rest = litigate(&[
+        "query",
+        "--lib",
+        "lit/examples",
+        "nodes",
+        "--limit",
+        "10",
+        "--cursor",
+        "3",
+    ]);
     assert_eq!(rest.json["result"]["matches"].as_array().unwrap().len(), 4);
     assert!(rest.json["result"]["next_cursor"].is_null());
-    let holes = litigate(&["query", "holes"]);
+    let holes = litigate(&["query", "--lib", "lit/examples", "holes"]);
     assert_eq!(holes.json["result"]["total"], 3);
-    let cited = litigate(&["query", "cites", "--cite", "12(b)"]);
+    let cited = litigate(&["query", "--lib", "lit/examples", "cites", "--cite", "12(b)"]);
     assert_eq!(
         cited.json["result"]["matches"][0]["id"],
         "frcp-rule12-example::mtd-ruling"
     );
-    let edges = litigate(&["query", "edges", "--match", "judgment-entered"]);
+    let edges = litigate(&[
+        "query",
+        "--lib",
+        "lit/examples",
+        "edges",
+        "--match",
+        "judgment-entered",
+    ]);
     insta::assert_json_snapshot!("query_edges", edges.json["result"]);
     assert_eq!(
-        litigate(&["query", "deadlines", "--effective-on", "2000-01-01"]).json["result"]["total"],
+        litigate(&[
+            "query",
+            "--lib",
+            "lit/examples",
+            "deadlines",
+            "--effective-on",
+            "2000-01-01"
+        ])
+        .json["result"]["total"],
         0
     );
     let _ = repo();

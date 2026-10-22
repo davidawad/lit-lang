@@ -1,11 +1,12 @@
 //! `counting` and `calendar` declarations to the engine's clock library
 //! (SPEC §8.2): one `packs/clock`-style fragment holding the package's
-//! `CountingRule` and the `HolidayCalendar`s it closes on. `Pack.counting`
-//! names the rule by id.
+//! `CountingRule`s and the `HolidayCalendar`s they close on. `Pack.counting`
+//! names the rule by id (none in a counting-rule library such as
+//! `lit/core`, which declares several).
 //!
-//! The rule's step pipeline is fixed by SPEC §5.3: anchor, count, base,
-//! last-day roll, service extension (forward only) and a second roll, then
-//! the clerk-inaccessibility extension. Each step's trace text is
+//! The rule's step pipeline is fixed by SPEC §5.3: anchor, count,
+//! last-day roll, base, service extension (forward only) and a second roll,
+//! then the clerk-inaccessibility extension. Each step's trace text is
 //! generated from the declaration's `cite`.
 mod calendar;
 
@@ -20,19 +21,95 @@ use litgraph::clock::{ClockLibrary, CountingRule, ServiceMethod, Unit};
 use litigate_base::{DiagnosticCode as C, Span};
 use litigate_sema::hir::{self, Anchor, DayUnit, Declaration, RollOn};
 
-/// The clock fragment of `pkg` and its source map, when the package
-/// declares the counting rule its pack names.
+/// The clock fragment of `pkg` and its source map: counting rule `only`
+/// when given, else every counting rule the package declares (one, or a
+/// counting-rule library's several), each with the calendar it closes on.
+/// `None` when the package declares no selected rule.
 pub(crate) fn fragment(
     build: &Build<'_, '_>,
     pkg: &hir::Package,
     decls: &[&Declaration],
-    counting: Option<&str>,
+    only: Option<&str>,
     sink: &mut Sink,
 ) -> Option<(ClockLibrary, SourceMap)> {
-    let c = decls.iter().find_map(|d| match d {
-        Declaration::Counting(c) if Some(c.meta.id.as_str()) == counting => Some(c),
-        _ => None,
-    })?;
+    let rules: Vec<&hir::Counting> = decls
+        .iter()
+        .filter_map(|d| match d {
+            Declaration::Counting(c) if only.is_none_or(|id| id == c.meta.id) => Some(c),
+            _ => None,
+        })
+        .collect();
+    let first = rules.first()?;
+    let mut library = ClockLibrary {
+        schema_version: litgraph::clock::library::CLOCK_SCHEMA_VERSION,
+        calendars: Vec::new(),
+        counting_rules: Vec::new(),
+    };
+    let mut entries = Vec::new();
+    for c in &rules {
+        let (rule, calendar) = lowered(build, pkg, c, sink)?;
+        entries.push(entry(
+            &format!("/countingRules/{}", library.counting_rules.len()),
+            &c.meta,
+        ));
+        library.counting_rules.push(rule);
+        if library.calendars.iter().all(|k| k.id != calendar.meta.id) {
+            entries.push(entry(
+                &format!("/calendars/{}", library.calendars.len()),
+                &calendar.meta,
+            ));
+            library
+                .calendars
+                .push(calendar::holiday_calendar(sink, calendar, &pkg.manifest)?);
+        }
+    }
+    let checked = serde_json::to_string(&library)
+        .map_err(|e| e.to_string())
+        .and_then(|text| ClockLibrary::from_json(&text).map_err(|e| e.to_string()));
+    if let Err(why) = checked {
+        sink.error_with(
+            C::LoweringUnsupported,
+            first.meta.span.as_ref(),
+            format!(
+                "counting rule `{}` is not a valid engine clock rule",
+                first.meta.id
+            ),
+            why,
+        );
+        return None;
+    }
+    let map = SourceMap {
+        kind: "clock".to_owned(),
+        id: first.meta.id.clone(),
+        package: Some(build.package_ref(pkg)),
+        entries,
+        ..build.map_header()
+    };
+    Some((library, map))
+}
+
+/// The source-map entry of one generated rule or calendar.
+fn entry(pointer: &str, meta: &hir::Metadata) -> Entry {
+    Entry {
+        pointer: pointer.to_owned(),
+        id: meta.id.clone(),
+        span: meta.span.clone(),
+        decl: Some(crate::select::Selection::versioned(meta)),
+        cite: meta.cite.as_ref().map(|text| crate::source_map::CiteMap {
+            text: text.clone(),
+            sections: Vec::new(),
+        }),
+    }
+}
+
+/// Counting rule `c` as an engine rule, with the calendar declaration it
+/// names (in force at the build date).
+fn lowered<'p>(
+    build: &Build<'_, 'p>,
+    pkg: &hir::Package,
+    c: &hir::Counting,
+    sink: &mut Sink,
+) -> Option<(CountingRule, &'p hir::Calendar)> {
     let span = c.meta.span.as_ref();
     let at = span.cloned().unwrap_or_else(|| sink.fallback.clone());
     let calendar = match build
@@ -53,8 +130,7 @@ pub(crate) fn fragment(
             return None;
         }
     };
-    let url = source_url(&pkg.manifest, c.meta.cite.as_deref());
-    let Some(source_url) = url.clone() else {
+    let Some(source_url) = source_url(&pkg.manifest, c.meta.cite.as_deref()) else {
         sink.unsupported(
             span,
             format!(
@@ -65,49 +141,7 @@ pub(crate) fn fragment(
         );
         return None;
     };
-    let rule = rule(sink, c, &calendar.meta.id, source_url)?;
-    let cal = calendar::holiday_calendar(sink, calendar, &pkg.manifest)?;
-    let library = ClockLibrary {
-        schema_version: litgraph::clock::library::CLOCK_SCHEMA_VERSION,
-        calendars: vec![cal],
-        counting_rules: vec![rule],
-    };
-    let checked = serde_json::to_string(&library)
-        .map_err(|e| e.to_string())
-        .and_then(|text| ClockLibrary::from_json(&text).map_err(|e| e.to_string()));
-    if let Err(why) = checked {
-        sink.error_with(
-            C::LoweringUnsupported,
-            span,
-            format!(
-                "counting rule `{}` is not a valid engine clock rule",
-                c.meta.id
-            ),
-            why,
-        );
-        return None;
-    }
-    let entry = |pointer: &str, id: &str, meta: &hir::Metadata| Entry {
-        pointer: pointer.to_owned(),
-        id: id.to_owned(),
-        span: meta.span.clone(),
-        decl: Some(crate::select::Selection::versioned(meta)),
-        cite: meta.cite.as_ref().map(|text| crate::source_map::CiteMap {
-            text: text.clone(),
-            sections: Vec::new(),
-        }),
-    };
-    let map = SourceMap {
-        kind: "clock".to_owned(),
-        id: c.meta.id.clone(),
-        package: Some(build.package_ref(pkg)),
-        entries: vec![
-            entry("/countingRules/0", &c.meta.id, &c.meta),
-            entry("/calendars/0", &calendar.meta.id, &calendar.meta),
-        ],
-        ..build.map_header()
-    };
-    Some((library, map))
+    Some((rule(sink, c, &calendar.meta.id, source_url)?, calendar))
 }
 
 /// The `url` of the source a cite resolves to: the longest matching
@@ -338,11 +372,13 @@ fn rule(
             ignored_text: format!("{cite}: no inaccessibility extension applies; ignored"),
         });
     let second_roll = service.as_ref().and(roll.clone());
+    // `base` is the day the period "would otherwise expire" (FRCP 6(d),
+    // FRAP 26(c)): after its own last-day roll, before any added days.
     let steps = [
         Some(anchor),
         Some(Step::Count { periods }),
-        Some(Step::Base {}),
         roll,
+        Some(Step::Base {}),
     ]
     .into_iter()
     .chain([service, second_roll, clerk])

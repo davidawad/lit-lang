@@ -267,3 +267,40 @@ fn instances_are_checked_against_their_base_pack() {
     let alone = Lowerer::new(&[]).package(&bad, &Options::default());
     assert!(alone.is_err());
 }
+
+/// A package that declares several counting rules and names none in
+/// `Lit.toml` is a counting-rule library (`lit/core`): its pack names no
+/// rule, and its one clock fragment holds every rule and, once, each
+/// calendar they close on. Naming a rule it does not declare stays L6001.
+#[test]
+fn a_counting_rule_library_lowers_every_rule() {
+    let mut p = example();
+    let mut copy = counting(&mut p).clone();
+    copy.meta.id = "frcp6-copy".into();
+    p.modules[0].declarations.push(Declaration::Counting(copy));
+    let lowered = lower(&p, &Options::default()).unwrap_or_else(|d| panic!("{d:#?}"));
+    let Document::Pack(pack) = &lowered.document else {
+        panic!("expected a pack")
+    };
+    assert_eq!((pack.schema_version, pack.counting.as_deref()), (3, None));
+    let (clock, map) = lowered.clock.unwrap_or_else(|| panic!("no fragment"));
+    let rules: Vec<&str> = clock.counting_rules.iter().map(|r| r.id.as_str()).collect();
+    assert_eq!(rules, ["frcp6", "frcp6-copy"]);
+    assert_eq!(clock.calendars.len(), 1);
+    let pointers: Vec<&str> = map.entries.iter().map(|e| e.pointer.as_str()).collect();
+    assert_eq!(
+        pointers,
+        ["/countingRules/0", "/calendars/0", "/countingRules/1"]
+    );
+
+    p.manifest.counting = Some("frcp6-copy".into());
+    let lowered = lower(&p, &Options::default()).unwrap_or_else(|d| panic!("{d:#?}"));
+    let Document::Pack(pack) = &lowered.document else {
+        panic!("expected a pack")
+    };
+    assert_eq!(pack.counting.as_deref(), Some("frcp6-copy"));
+    assert_eq!(lowered.clock.map(|(c, _)| c.counting_rules.len()), Some(2));
+
+    p.manifest.counting = Some("rcfc6".into());
+    only(&p, C::LoweringUnsupported, "names counting rule `rcfc6`");
+}

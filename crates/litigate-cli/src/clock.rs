@@ -1,45 +1,104 @@
 //! Deadline computation through litgraph's own clock interpreter, over the
-//! counting rule a package lowers to (its clock fragment, else litgraph's
-//! shared clock library). One code path serves `test`, case replay, and
-//! `explain-value`, so they cannot disagree with the engine.
+//! counting rules the loaded packages lower to (each version lowered at
+//! its own `from` date), else litgraph's shared clock library. One code
+//! path serves `test`, case replay, and `explain-value`, so they cannot
+//! disagree with the engine.
 use crate::hirx;
 use litgraph::clock::{
     compute_due_date, ClockConfig, ClockLibrary, ComputedDeadline, Date, DayDeadline, Direction,
     ServiceMethod, Unit,
 };
 use litigate_lower::{Lowerer, Options};
-use litigate_sema::hir::{self, DayUnit, Expr};
-use std::collections::BTreeMap;
+use litigate_sema::hir::{self, DayUnit, Declaration, Expr};
 
-/// Clock fragments of the loaded packages, by package name.
+/// One lowered version of a declared counting rule.
+#[derive(Debug, Clone)]
+struct Version {
+    /// Package name.
+    package: String,
+    /// The declaration.
+    decl: hir::Counting,
+    /// Its clock fragment, or why it does not lower.
+    fragment: Result<ClockLibrary, String>,
+}
+
+/// Every version of every counting rule the loaded packages declare.
 #[derive(Debug, Clone, Default)]
 pub struct Clocks {
-    fragments: BTreeMap<String, ClockLibrary>,
+    versions: Vec<Version>,
 }
 
 impl Clocks {
-    /// Lowers every package to collect its own counting rules and calendars.
+    /// Lowers every version of every counting rule of `packages`.
     #[must_use]
     pub fn new(packages: &[&hir::Package]) -> Self {
         let lowerer = Lowerer::new(packages);
-        let fragments = packages
+        let versions = packages
             .iter()
-            .filter_map(|p| {
-                let lowered = lowerer.package(p, &Options::default()).ok()?;
-                Some((p.manifest.name.clone(), lowered.clock?.0))
+            .filter(|p| !p.manifest.links)
+            .flat_map(|p| {
+                hirx::declarations(p).filter_map(move |d| match d {
+                    Declaration::Counting(c) => Some((*p, c)),
+                    _ => None,
+                })
+            })
+            .map(|(p, c)| {
+                let options = Options {
+                    as_of: Some(c.meta.effective.from.clone()),
+                    known_at: None,
+                };
+                let fragment = match lowerer.clock_at(p, &c.meta.id, &options) {
+                    Ok(Some(library)) => Ok(library),
+                    Ok(None) => Err(format!("counting rule `{}` does not lower", c.meta.id)),
+                    Err(diagnostics) => Err(diagnostics.first().map_or_else(String::new, |d| {
+                        format!("{}: {}", d.code.as_str(), d.message)
+                    })),
+                };
+                Version {
+                    package: p.manifest.name.clone(),
+                    decl: c.clone(),
+                    fragment,
+                }
             })
             .collect();
-        Self { fragments }
+        Self { versions }
     }
 
-    /// The library holding counting rule `rule` for package `pkg`: its own
-    /// fragment when it declares the rule, else the shared library.
-    #[must_use]
-    pub fn library(&self, pkg: &str, rule: &str) -> &ClockLibrary {
-        self.fragments
-            .get(pkg)
-            .filter(|lib| lib.counting_rules.iter().any(|r| r.id == rule))
-            .unwrap_or(&ClockLibrary::embedded().0)
+    /// The version of counting rule `rule` in force on `date`, preferring
+    /// one `pkg` declares; `None` when no loaded package declares `rule`
+    /// (the shared library has it, or nothing does).
+    ///
+    /// # Errors
+    /// When packages declare `rule` but no version (or more than one) is
+    /// in force on `date`.
+    fn version(&self, pkg: &str, rule: &str, date: &str) -> Result<Option<&Version>, String> {
+        let declared: Vec<&Version> = self
+            .versions
+            .iter()
+            .filter(|v| v.decl.meta.id == rule)
+            .collect();
+        let owner = declared
+            .iter()
+            .find(|v| v.package == pkg)
+            .or_else(|| declared.first())
+            .map(|v| v.package.clone());
+        let Some(owner) = owner else {
+            return Ok(None);
+        };
+        let live: Vec<&Version> = declared
+            .into_iter()
+            .filter(|v| v.package == owner && hirx::in_force(&v.decl.meta, date, None))
+            .collect();
+        match live.as_slice() {
+            [one] => Ok(Some(one)),
+            [] => Err(format!(
+                "no version of counting rule `{rule}` ({owner}) is in force on {date}"
+            )),
+            _ => Err(format!(
+                "{} versions of counting rule `{rule}` ({owner}) are in force on {date}",
+                live.len()
+            )),
+        }
     }
 }
 
@@ -91,11 +150,13 @@ pub struct Due {
     pub computed: ComputedDeadline,
 }
 
-/// Computes deadline `d` of `pkg` triggered on `trigger` by `event`.
+/// Computes deadline `d` of `pkg` triggered on `trigger` by `event`,
+/// under the version of its counting rule in force on `trigger`.
 ///
 /// # Errors
 /// A message for an invalid date, business-day units (no engine lowering),
-/// an unknown counting rule, or an engine refusal.
+/// an unknown counting rule or one with no version in force, or an engine
+/// refusal.
 pub fn due(
     clocks: &Clocks,
     pkg: &hir::Package,
@@ -114,8 +175,8 @@ pub fn due(
             ))
         }
     };
-    let decl = hirx::counting(pkg, &rule);
-    let method = event.and_then(|e| method_of(e, decl));
+    let version = clocks.version(&pkg.manifest.name, &rule, trigger)?;
+    let method = event.and_then(|e| method_of(e, version.map(|v| &v.decl)));
     let request = DayDeadline {
         trigger: Date::parse_iso(trigger).map_err(|e| e.to_string())?,
         days: i64::try_from(d.amount).map_err(|e| e.to_string())?,
@@ -126,7 +187,10 @@ pub fn due(
         unit,
         service_method: method.as_ref().map(|(_, m)| *m),
     };
-    let library = clocks.library(&pkg.manifest.name, &rule);
+    let library = match version {
+        Some(v) => v.fragment.as_ref().map_err(Clone::clone)?,
+        None => &ClockLibrary::embedded().0,
+    };
     let clock = library.clock(&rule).map_err(|e| e.to_string())?;
     let computed =
         compute_due_date(&request, &clock, &ClockConfig::default()).map_err(|e| e.to_string())?;

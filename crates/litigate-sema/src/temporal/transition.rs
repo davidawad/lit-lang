@@ -1,6 +1,6 @@
 //! `transition` declarations: which version governs a proceeding pending
 //! across an amendment (SPEC §5.4, DESIGN §4.4; FRCP 86(a) is written this
-//! way in `lit/frcp`, never in compiler code).
+//! way in the stdlib, never in compiler code).
 //!
 //! By default every event is governed by the version in force on its date.
 //! When that version took effect after the matter's first event (the matter
@@ -13,7 +13,7 @@
 use super::activity::{active, Inactive};
 use super::condition::{eval, first_foreign, has_event, matches};
 use super::world::{error, span_of, DiagnosticExt, Key, Locate, World};
-use crate::hir::{Declaration, Expr, Transition};
+use crate::hir::{Declaration, Expr, Transition, TransitionArm};
 use litigate_base::{Diagnostic, DiagnosticCode as C};
 
 /// One dated event of a matter (a complete event constructor call).
@@ -186,49 +186,78 @@ fn one(world: &World<'_>, loc: &dyn Locate, i: usize, t: &Transition) -> Vec<Dia
         }
     }
     for arm in &t.arms {
-        let span = arm
-            .unless
-            .as_ref()
-            .and_then(|c| c.span.clone())
-            .unwrap_or_else(|| span_of(loc, d, "amends"));
-        if let Some(bad) = arm.unless.as_ref().and_then(first_foreign) {
-            out.push(
-                error(
-                    C::InvalidTransition,
-                    bad.span.clone().unwrap_or_else(|| span.clone()),
-                    "a transition condition may test only `has_event(...)`, `true`/`false`, and `!`, `&&`, `||`",
-                )
-                .with_note(None, "a transition chooses between versions from the matter's history alone"),
-            );
-        }
-        let sel = world.target(world.pack_of(i), &arm.selects);
-        let ok_version = sel
-            .version
-            .as_ref()
-            .is_some_and(|v| *v == at || previous.as_ref() == Some(v));
-        if sel.key != amended.key {
-            out.push(error(
+        out.extend(arm_checks(
+            world,
+            loc,
+            i,
+            t,
+            arm,
+            &amended.key,
+            &at,
+            previous.as_deref(),
+        ));
+    }
+    out
+}
+
+/// One arm: its condition reads only the history, and it selects the
+/// amended version or the one it replaces.
+#[allow(clippy::too_many_arguments)]
+fn arm_checks(
+    world: &World<'_>,
+    loc: &dyn Locate,
+    i: usize,
+    t: &Transition,
+    arm: &TransitionArm,
+    amended: &Key,
+    at: &str,
+    previous: Option<&str>,
+) -> Vec<Diagnostic> {
+    let d = &world.decls[i];
+    let name = amended.display(world.pack_of(i));
+    let mut out = Vec::new();
+    let span = arm
+        .unless
+        .as_ref()
+        .and_then(|c| c.span.clone())
+        .unwrap_or_else(|| span_of(loc, d, "amends"));
+    if let Some(bad) = arm.unless.as_ref().and_then(first_foreign) {
+        out.push(
+            error(
                 C::InvalidTransition,
-                span.clone(),
-                format!(
-                    "arm selects `{}`, but `{}` amends `{name}`",
-                    arm.selects, t.meta.id
-                ),
-            ));
-        } else if !ok_version {
-            let mut e = error(
-                C::InvalidTransition,
-                span.clone(),
-                format!(
-                    "arm selects `{}`, which is neither the amended version `{name}@{at}` nor the version it replaces",
-                    arm.selects
-                ),
-            );
-            if let Some(p) = &previous {
-                e = e.with_note(None, format!("the replaced version is `{name}@{p}`"));
-            }
-            out.push(e);
+                bad.span.clone().unwrap_or_else(|| span.clone()),
+                "a transition condition may test only `has_event(...)`, `true`/`false`, and `!`, `&&`, `||`",
+            )
+            .with_note(None, "a transition chooses between versions from the matter's history alone"),
+        );
+    }
+    let sel = world.target(world.pack_of(i), &arm.selects);
+    let ok_version = sel
+        .version
+        .as_ref()
+        .is_some_and(|v| v == at || previous == Some(v.as_str()));
+    if sel.key != *amended {
+        out.push(error(
+            C::InvalidTransition,
+            span.clone(),
+            format!(
+                "arm selects `{}`, but `{}` amends `{name}`",
+                arm.selects, t.meta.id
+            ),
+        ));
+    } else if !ok_version {
+        let mut e = error(
+            C::InvalidTransition,
+            span.clone(),
+            format!(
+                "arm selects `{}`, which is neither the amended version `{name}@{at}` nor the version it replaces",
+                arm.selects
+            ),
+        );
+        if let Some(p) = previous {
+            e = e.with_note(None, format!("the replaced version is `{name}@{p}`"));
         }
+        out.push(e);
     }
     out
 }

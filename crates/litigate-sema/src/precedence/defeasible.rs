@@ -6,7 +6,7 @@
 //! one target must be provably disjoint (no assignment of their atoms makes
 //! two conditions true together) or carry distinct priorities, larger
 //! winning (`exceptions-ordered`, L3005).
-use crate::hir::{Declaration, Exception, ExceptionKind, Expr};
+use crate::hir::{Declaration, Exception, Expr};
 use crate::temporal::activity::active;
 use crate::temporal::condition::{eval, jointly_satisfiable};
 use crate::temporal::interval::Window;
@@ -252,21 +252,12 @@ fn pair(
                 at,
                 format!(" priority {next}"),
                 Applicability::MaybeIncorrect,
-            )
+            );
         }
         (Some(_), _, Some((_, Some(value)))) => {
-            d = d.with_fix(value, next.to_string(), Applicability::MaybeIncorrect)
+            d = d.with_fix(value, next.to_string(), Applicability::MaybeIncorrect);
         }
         _ => {}
     }
     Some(d)
-}
-
-/// The exception kind as a word.
-#[must_use]
-pub fn kind_word(k: ExceptionKind) -> &'static str {
-    match k {
-        ExceptionKind::Rebutting => "rebuts",
-        ExceptionKind::Undercutting => "undercuts",
-    }
 }

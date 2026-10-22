@@ -10,8 +10,10 @@
 //! `Deadline<Backward>`: every version shares it, only a forward deadline
 //! can bound an edge (`within`), and a backward one cannot use a counting
 //! rule anchored on the next business day.
-use crate::hir::{Anchor, DeadlineWindow, Declaration, Direction, NodeKind, RuleKind};
-use crate::temporal::world::{error, span_of, DiagnosticExt, Key, Locate, World};
+use crate::hir::{
+    Anchor, Deadline, DeadlineWindow, Declaration, Direction, Node, NodeKind, Rule, RuleKind,
+};
+use crate::temporal::world::{error, span_of, Decl, DiagnosticExt, Key, Locate, World};
 use litigate_base::{Diagnostic, DiagnosticCode as C};
 
 /// The kind of the `rule` enclosing declaration `i`, if any.
@@ -50,85 +52,104 @@ pub fn check(world: &World<'_>, loc: &dyn Locate, pack: usize) -> Vec<Diagnostic
         .filter(|(_, d)| d.pack == pack)
     {
         match d.decl {
-            Declaration::Rule(r) => {
-                let inner: Vec<&Declaration> = world
-                    .decls
-                    .iter()
-                    .filter(|x| x.pack == pack && x.rule.is_some_and(|(id, _)| id == r.meta.id))
-                    .map(|x| x.decl)
-                    .collect();
-                let deadline = inner.iter().any(|x| matches!(x, Declaration::Deadline(_)));
-                let node = |want: fn(&NodeKind) -> bool| {
-                    inner
-                        .iter()
-                        .any(|x| matches!(x, Declaration::Node(n) if want(&n.kind)))
-                };
-                let problem = match r.rule_kind {
-                    RuleKind::Duty if !deadline => Some("a `duty` rule must contain the deadline it imposes"),
-                    RuleKind::Power if !node(|k| matches!(k, NodeKind::Decision)) => {
-                        Some("a `power` rule must contain the `decision` it grants")
-                    }
-                    RuleKind::Liability if !node(|_| true) => Some("a `liability` rule must contain its consequence nodes"),
-                    RuleKind::Liability if deadline => {
-                        Some("a `liability` is a consequence and imposes no deadline; move the deadline into a `duty`")
-                    }
-                    _ => None,
-                };
-                if let Some(message) = problem {
-                    out.push(
-                        error(C::InvalidField, span_of(loc, d, ""), message).with_note(
-                            None,
-                            format!("rule `{}` is a `{}`", r.meta.id, word(r.rule_kind)),
-                        ),
-                    );
-                }
-            }
-            Declaration::Node(n) => {
-                for e in &n.edges {
-                    let Some(DeadlineWindow::Declared { deadline }) =
-                        e.deadline.as_ref().map(|x| &x.window)
-                    else {
-                        continue;
-                    };
-                    let key = world.target(world.pack_of(i), deadline).key;
-                    let backward = world.versions(&key).versions.iter().any(|v| {
-                        matches!(world.decls[v.decl].decl, Declaration::Deadline(x) if x.direction == Direction::Backward)
-                    });
-                    if backward {
-                        out.push(
-                            error(
-                                C::TypeMismatch,
-                                e.span.clone().unwrap_or_else(|| span_of(loc, d, "")),
-                                format!("`within {deadline}` needs a forward deadline, but `{deadline}` counts backward (`before`)"),
-                            )
-                            .with_note(None, "a deadline's direction is part of its type: an edge window runs forward from the trigger"),
-                        );
-                    }
-                }
-            }
+            Declaration::Rule(r) => out.extend(rule_shape(world, loc, d, r)),
+            Declaration::Node(n) => out.extend(windows(world, loc, i, d, n)),
             Declaration::Deadline(x) if x.direction == Direction::Backward => {
-                let counting = world.target(world.pack_of(i), &x.counting);
-                let window = crate::temporal::interval::Window::of(&d.meta.effective);
-                let anchored = world.versions(&counting.key).versions.iter().any(|v| {
-                    v.in_force.overlaps(&window)
-                        && matches!(world.decls[v.decl].decl, Declaration::Counting(c) if c.anchor == Anchor::NextBusinessDay)
-                });
-                if anchored {
-                    out.push(
-                        error(
-                            C::InvalidCounting,
-                            span_of(loc, d, "counted_by"),
-                            format!("`{}` counts backward, but `{}` anchors on the next business day, which only counts forward", d.meta.id, x.counting),
-                        )
-                        .with_note(None, "count backward deadlines with a rule anchored on the trigger day"),
-                    );
-                }
+                out.extend(backward_anchor(world, loc, i, d, x));
             }
             _ => {}
         }
     }
     out.extend(directions(world, loc, pack));
     out
+}
+
+/// A rule contains what its kind requires.
+fn rule_shape(world: &World<'_>, loc: &dyn Locate, d: &Decl<'_>, r: &Rule) -> Option<Diagnostic> {
+    let inner: Vec<&Declaration> = world
+        .decls
+        .iter()
+        .filter(|x| x.pack == d.pack && x.rule.is_some_and(|(id, _)| id == r.meta.id))
+        .map(|x| x.decl)
+        .collect();
+    let deadline = inner.iter().any(|x| matches!(x, Declaration::Deadline(_)));
+    let node = |want: fn(&NodeKind) -> bool| {
+        inner
+            .iter()
+            .any(|x| matches!(x, Declaration::Node(n) if want(&n.kind)))
+    };
+    let message = match r.rule_kind {
+        RuleKind::Duty if !deadline => "a `duty` rule must contain the deadline it imposes",
+        RuleKind::Power if !node(|k| matches!(k, NodeKind::Decision)) => "a `power` rule must contain the `decision` it grants",
+        RuleKind::Liability if !node(|_| true) => "a `liability` rule must contain its consequence nodes",
+        RuleKind::Liability if deadline => {
+            "a `liability` is a consequence and imposes no deadline; move the deadline into a `duty`"
+        }
+        _ => return None,
+    };
+    Some(
+        error(C::InvalidField, span_of(loc, d, ""), message).with_note(
+            None,
+            format!("rule `{}` is a `{}`", r.meta.id, word(r.rule_kind)),
+        ),
+    )
+}
+
+/// `within d` needs a forward `d`.
+fn windows(
+    world: &World<'_>,
+    loc: &dyn Locate,
+    i: usize,
+    d: &Decl<'_>,
+    n: &Node,
+) -> Vec<Diagnostic> {
+    n.edges
+        .iter()
+        .filter_map(|e| {
+            let Some(DeadlineWindow::Declared { deadline }) = e.deadline.as_ref().map(|x| &x.window) else {
+                return None;
+            };
+            let key = world.target(world.pack_of(i), deadline).key;
+            let backward = world.versions(&key).versions.iter().any(|v| {
+                matches!(world.decls[v.decl].decl, Declaration::Deadline(x) if x.direction == Direction::Backward)
+            });
+            backward.then(|| {
+                error(
+                    C::TypeMismatch,
+                    e.span.clone().unwrap_or_else(|| span_of(loc, d, "")),
+                    format!("`within {deadline}` needs a forward deadline, but `{deadline}` counts backward (`before`)"),
+                )
+                .with_note(None, "a deadline's direction is part of its type: an edge window runs forward from the trigger")
+            })
+        })
+        .collect()
+}
+
+/// A backward deadline cannot anchor on the next business day.
+fn backward_anchor(
+    world: &World<'_>,
+    loc: &dyn Locate,
+    i: usize,
+    d: &Decl<'_>,
+    x: &Deadline,
+) -> Option<Diagnostic> {
+    let counting = world.target(world.pack_of(i), &x.counting);
+    let window = crate::temporal::interval::Window::of(&d.meta.effective);
+    let anchored = world.versions(&counting.key).versions.iter().any(|v| {
+        v.in_force.overlaps(&window)
+            && matches!(world.decls[v.decl].decl, Declaration::Counting(c) if c.anchor == Anchor::NextBusinessDay)
+    });
+    anchored.then(|| {
+        error(
+            C::InvalidCounting,
+            span_of(loc, d, "counted_by"),
+            format!(
+                "`{}` counts backward, but `{}` anchors on the next business day, which only counts forward",
+                d.meta.id, x.counting
+            ),
+        )
+        .with_note(None, "count backward deadlines with a rule anchored on the trigger day")
+    })
 }
 
 /// Versions of one deadline must share its direction.

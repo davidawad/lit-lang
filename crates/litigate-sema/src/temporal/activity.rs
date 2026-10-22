@@ -9,7 +9,7 @@
 //! version of B or a third declaration — says `revives B`, which ends
 //! every open suspension at its start (Scalia & Garner, *Reading Law*
 //! §§ 13, 27-29, 55-57).
-use super::interval::{cmp_end, Window};
+use super::interval::Window;
 use super::version::{Miss, Version};
 use super::world::{Key, World};
 use crate::hir::Relation;
@@ -179,10 +179,4 @@ pub fn piece(points: &[String], i: usize) -> Window {
         from: points[i].clone(),
         to: points.get(i + 1).cloned(),
     }
-}
-
-/// True when the open end `a` reaches at least `b`.
-#[must_use]
-pub fn reaches(a: Option<&str>, b: Option<&str>) -> bool {
-    cmp_end(a, b).is_ge()
 }

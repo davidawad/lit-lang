@@ -57,41 +57,7 @@ fn graphs(world: &World<'_>) -> [(Graph, &'static str); 3] {
                 clause,
             });
         }
-        let mut refs = Vec::new();
-        match d.decl {
-            Declaration::Exception(e) => {
-                defeats.entry(me.clone()).or_default().push(Edge {
-                    to: world.target(&pack, &e.target).key,
-                    by: i,
-                    clause: "when",
-                });
-                collect_refs(&e.condition, &mut refs);
-                if let Some(c) = &e.conclusion {
-                    collect_refs(c, &mut refs);
-                }
-            }
-            Declaration::Default(x) => {
-                collect_refs(&x.condition, &mut refs);
-                collect_refs(&x.conclusion, &mut refs);
-            }
-            _ => {}
-        }
-        for target in refs {
-            let t = world.target(&pack, target).key;
-            let is_logic = world.versions(&t).versions.iter().any(|v| {
-                matches!(
-                    world.decls[v.decl].decl,
-                    Declaration::Default(_) | Declaration::Exception(_)
-                )
-            });
-            if is_logic {
-                defeats.entry(me.clone()).or_default().push(Edge {
-                    to: t,
-                    by: i,
-                    clause: "when",
-                });
-            }
-        }
+        defeat_edges(world, i, &mut defeats);
     }
     [
         (
@@ -101,6 +67,49 @@ fn graphs(world: &World<'_>) -> [(Graph, &'static str); 3] {
         (supersession, "supersession"),
         (defeats, "default/exception references"),
     ]
+}
+
+/// `exception -> target` and default/exception -> referenced default or
+/// exception edges of declaration `i`.
+fn defeat_edges(world: &World<'_>, i: usize, defeats: &mut Graph) {
+    let d = &world.decls[i];
+    let me = world.key(i);
+    let pack = world.pack_of(i).to_owned();
+    let mut refs = Vec::new();
+    match d.decl {
+        Declaration::Exception(e) => {
+            defeats.entry(me.clone()).or_default().push(Edge {
+                to: world.target(&pack, &e.target).key,
+                by: i,
+                clause: "when",
+            });
+            collect_refs(&e.condition, &mut refs);
+            if let Some(c) = &e.conclusion {
+                collect_refs(c, &mut refs);
+            }
+        }
+        Declaration::Default(x) => {
+            collect_refs(&x.condition, &mut refs);
+            collect_refs(&x.conclusion, &mut refs);
+        }
+        _ => {}
+    }
+    for target in refs {
+        let t = world.target(&pack, target).key;
+        let is_logic = world.versions(&t).versions.iter().any(|v| {
+            matches!(
+                world.decls[v.decl].decl,
+                Declaration::Default(_) | Declaration::Exception(_)
+            )
+        });
+        if is_logic {
+            defeats.entry(me.clone()).or_default().push(Edge {
+                to: t,
+                by: i,
+                clause: "when",
+            });
+        }
+    }
 }
 
 fn collect_refs<'e>(e: &'e Expr, out: &mut Vec<&'e str>) {

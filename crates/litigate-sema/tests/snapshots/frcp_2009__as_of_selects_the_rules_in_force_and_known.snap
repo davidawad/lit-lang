@@ -1,0 +1,14 @@
+---
+source: crates/litigate-sema/tests/frcp_2009.rs
+expression: "[row(\"answer-period\", \"2009-11-30\", None),\nrow(\"answer-period\", \"2009-12-01\", None),\nrow(\"after-denial\", \"2009-11-30\", None),\nrow(\"after-denial\", \"2009-12-01\", None), row(\"frcp6\", \"2009-11-30\", None),\nrow(\"frcp6\", \"2009-12-01\", None),\nrow(\"answer-period\", \"2010-01-04\", Some(\"2009-01-01\")),\nrow(\"answer-period\", \"2010-01-04\", Some(\"2009-03-26\")),]"
+---
+[
+    "answer-period on 2009-11-30 known latest: answer-period@2007-12-01 (20.days)",
+    "answer-period on 2009-12-01 known latest: answer-period@2009-12-01 (21.days)",
+    "after-denial on 2009-11-30 known latest: after-denial@2007-12-01 (10.days)",
+    "after-denial on 2009-12-01 known latest: after-denial@2009-12-01 (14.days)",
+    "frcp6 on 2009-11-30 known latest: frcp6@2007-12-01 (under 11 days skip weekends and holidays)",
+    "frcp6 on 2009-12-01 known latest: frcp6@2009-12-01 (every day counts)",
+    "answer-period on 2010-01-04 known 2009-01-01: L3007 no version of `answer-period` is in force on 2010-01-04",
+    "answer-period on 2010-01-04 known 2009-03-26: answer-period@2009-12-01 (21.days)",
+]

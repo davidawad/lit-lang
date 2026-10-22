@@ -1,0 +1,34 @@
+---
+source: crates/litigate-verify/tests/case.rs
+expression: replay(&strict)
+---
+{
+  "finding": {
+    "name": "case-replay",
+    "status": "failed",
+    "count": 1,
+    "examples": [
+      "cases/examples/acme.case:1:1: L4004 stake `judgment-entered` is `unvalued`"
+    ]
+  },
+  "accepted": false,
+  "diagnostics": [
+    {
+      "code": "L4004",
+      "severity": "error",
+      "span": {
+        "file": "cases/examples/acme.case",
+        "line": 1,
+        "col": 1,
+        "end_line": 1,
+        "end_col": 1
+      },
+      "message": "stake `judgment-entered` is `unvalued`",
+      "notes": [
+        {
+          "message": "strict requires a value for every reachable terminal"
+        }
+      ]
+    }
+  ]
+}

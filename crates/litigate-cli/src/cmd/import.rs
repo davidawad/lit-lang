@@ -22,6 +22,7 @@ fn loaded(imported: &Imported) -> (Vec<LoadedPackage>, Vec<CaseText>) {
             cases.push(CaseText {
                 path: file.path.clone(),
                 text: file.text.clone(),
+                lock: None,
             });
             continue;
         }
@@ -139,7 +140,15 @@ fn unchecked(
 
 fn round_trip(imported: &Imported, inputs: &[Input]) -> Vec<Diagnostic> {
     let (packages, cases) = loaded(imported);
-    let checked = check_session(Session::from_loaded(&packages, cases), Profile::Dev, None);
+    let mut session = Session::from_loaded(&packages, cases);
+    // Nothing is locked yet (`litigate lock` writes `Lit.lock` after the
+    // import), so the round trip pins every matter to the packages as
+    // generated.
+    let lock = session.matter_lock(&session.cases).render();
+    for case in &mut session.cases {
+        case.lock = Some(lock.clone());
+    }
+    let checked = check_session(session, Profile::Dev, None);
     let mut out = unchecked(imported, inputs, &checked);
     if !out.is_empty() {
         return out;

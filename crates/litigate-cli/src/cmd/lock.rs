@@ -1,17 +1,25 @@
-//! `litigate lock [DIR] [--locked]`: write or verify `Lit.lock` (SPEC §4.2).
+//! `litigate lock [DIR] [--locked]`: write or verify `Lit.lock` (SPEC §4.2)
+//! for a package, or for each directory of matters under `DIR` (the lock
+//! beside a `.case` pins the packages it `uses`, SPEC §5.6).
 use crate::out::{Failure, Outcome, Report};
-use crate::ws::{self, Session};
-use serde_json::json;
+use crate::ws::{self, CaseText, Session};
+use litigate_base::{Diagnostic, FileId, LineIndex};
+use serde_json::{json, Value};
+use std::collections::BTreeMap;
+use std::path::{Path, PathBuf};
 
 /// `litigate lock`.
 pub fn lock(dir: Option<&str>, locked: bool) -> Outcome {
     let dir = dir.unwrap_or(".").to_owned();
     let targets = ws::discover(std::slice::from_ref(&dir))?;
     let session = Session::load(&targets, &[])?;
+    if !Path::new(&dir).join("Lit.toml").is_file() && !session.cases.is_empty() {
+        return matters(&session, &targets.cases, locked);
+    }
     let pkg = session
         .requested()
         .next()
-        .ok_or_else(|| Failure::new(format!("{dir}: no Lit.toml")))?;
+        .ok_or_else(|| Failure::new(format!("{dir}: no Lit.toml and no .case files")))?;
     let text = litigate_sema::render_lock(&session.db, session.ws, pkg.input);
     let dir_path = targets.packages.first().cloned().unwrap_or_default();
     let file = dir_path.join("Lit.lock");
@@ -21,9 +29,7 @@ pub fn lock(dir: Option<&str>, locked: bool) -> Outcome {
     let mut report = Report::of(json!({
         "lockfile": path,
         "changed": changed,
-        "packages": session.packages.iter().filter(|p| !p.name.is_empty()).map(|p| json!({
-            "name": p.name, "version": p.version, "digest": p.digest,
-        })).collect::<Vec<_>>(),
+        "packages": pinned(&session),
     }));
     report.provenance = crate::prov::session(&session.packages, None, None);
     if locked {
@@ -32,4 +38,66 @@ pub fn lock(dir: Option<&str>, locked: bool) -> Outcome {
         crate::cmd::build::write_atomic(&file, &text)?;
     }
     Ok(report)
+}
+
+fn pinned(session: &Session) -> Vec<Value> {
+    session
+        .packages
+        .iter()
+        .filter(|p| !p.name.is_empty())
+        .map(|p| json!({"name": p.name, "version": p.version, "digest": p.digest}))
+        .collect()
+}
+
+/// One `Lit.lock` per directory holding matters.
+fn matters(session: &Session, paths: &[PathBuf], locked: bool) -> Outcome {
+    let mut dirs: BTreeMap<PathBuf, Vec<&CaseText>> = BTreeMap::new();
+    for (path, case) in paths.iter().zip(&session.cases) {
+        let parent = path.parent().map(Path::to_path_buf).unwrap_or_default();
+        dirs.entry(parent).or_default().push(case);
+    }
+    let mut report = Report::of(Value::Null);
+    let mut files = Vec::new();
+    for (dir, cases) in dirs {
+        let expected = session.matter_lock(cases.iter().copied());
+        let text = expected.render();
+        let file = dir.join("Lit.lock");
+        let shown = ws::shown(&file);
+        let existing = cases.first().and_then(|c| c.lock.clone());
+        let changed = existing.as_deref() != Some(text.as_str());
+        if locked {
+            report
+                .diagnostics
+                .extend(stale(&shown, existing.as_deref(), &expected));
+        } else if changed {
+            crate::cmd::build::write_atomic(&file, &text)?;
+        }
+        files.push(json!({
+            "lockfile": shown,
+            "changed": changed,
+            "cases": cases.iter().map(|c| c.path.clone()).collect::<Vec<_>>(),
+            "packages": expected.packages.iter().map(|p| json!({
+                "name": p.name, "version": p.version, "digest": p.digest,
+            })).collect::<Vec<_>>(),
+        }));
+    }
+    report.result = json!({"lockfiles": files});
+    report.provenance = crate::prov::session(&session.packages, None, None);
+    Ok(report)
+}
+
+/// L1007 when the lock at `file` is missing or differs from `expected`.
+fn stale(
+    file: &str,
+    existing: Option<&str>,
+    expected: &litigate_sema::pkg::lock::LockFile,
+) -> Option<Diagnostic> {
+    litigate_sema::pkg::lock::verify(existing, expected)
+        .err()
+        .map(|r| {
+            r.to_diagnostic(
+                &FileId(file.to_owned()),
+                &LineIndex::new(existing.unwrap_or_default()),
+            )
+        })
 }

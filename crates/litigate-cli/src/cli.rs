@@ -91,9 +91,10 @@ pub enum QueryKind {
 pub enum Command {
     /// The whole language and CLI contract as JSON.
     Describe,
-    /// Write (or with `--locked`, verify) a package's `Lit.lock`.
+    /// Write (or with `--locked`, verify) a package's `Lit.lock`, or the one
+    /// beside each directory of `.case` matters, pinning what they `uses`.
     Lock {
-        /// Package directory (default `.`).
+        /// Package directory, or a directory of matters (default `.`).
         dir: Option<String>,
         /// Fail with L1007 instead of writing when the lock is stale.
         #[arg(long)]

@@ -6,7 +6,6 @@
 use super::check::{checked, Checked};
 use crate::cli::Dates;
 use crate::out::{Failure, Outcome, Report};
-use crate::verify;
 use litigate_base::{Diagnostic, Profile, Severity};
 use litigate_lower::{render, render_scenario, Document, LoweredPackage, Lowerer, Options};
 use serde_json::{json, Value};
@@ -76,7 +75,6 @@ fn litigatable(
 ) -> Result<(Value, String), Box<Diagnostic>> {
     let pkg = &c.session.packages[index];
     let (_, verdict) = &c.verdicts[index];
-    let findings = verify::findings(&verdict.diagnostics, &[], 0);
     let mut doc = json!({
         "litigatable": 1,
         "package": {"name": pkg.name, "version": pkg.version, "digest": pkg.digest},
@@ -85,7 +83,7 @@ fn litigatable(
         "ir": pkg.check.package,
         "verification": {
             "profile": match c.profile { Profile::Dev => "dev", Profile::Strict => "strict" },
-            "obligations": findings,
+            "obligations": verdict.findings,
             "warnings": verdict.diagnostics.iter().filter(|d| d.severity != Severity::Error).collect::<Vec<_>>(),
             "tests": verdict.tests,
         },

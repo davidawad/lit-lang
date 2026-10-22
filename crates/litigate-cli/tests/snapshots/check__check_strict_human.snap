@@ -2,19 +2,23 @@
 source: crates/litigate-cli/tests/check.rs
 expression: text
 ---
-[L5002] Error: strict profile does not permit the hole "no calibration yet"
+[L5002] Error: strict does not permit holes: no calibration yet
     ╭─[ lit/examples/rule12.lit:72:43 ]
     │
  72 │   granted "Motion granted" -> dismissed p ?("no calibration yet")
     │                                           ───────────┬───────────  
     │                                                      ╰───────────── Strict profile does not permit unresolved holes
+    │ 
+    │ Note: replace the `?` with a sourced value
 ────╯
-[L5002] Error: strict profile does not permit the hole no reason given
+[L5002] Error: strict does not permit holes: no reason given
     ╭─[ lit/examples/rule12.lit:73:40 ]
     │
  73 │   denied "Motion denied" -> answered p ?
     │                                        ┬  
     │                                        ╰── Strict profile does not permit unresolved holes
+    │ 
+    │ Note: replace the `?` with a sourced value
 ────╯
 [L9003] Advice: the edge `answered -> judgment-entered` has no id, so cases and links cannot name it
     ╭─[ lit/examples/rule12.lit:76:51 ]
@@ -30,11 +34,13 @@ expression: text
     │                                                            ───────────────────┬───────────────────  
     │                                                                               ╰───────────────────── An anonymous edge cannot be referenced by cases or links
 ────╯
-[L5002] Error: strict profile does not permit the hole no reason given
+[L5002] Error: strict does not permit holes: no reason given
     ╭─[ lit/examples/rule12.lit:79:97 ]
     │
  79 │ terminal judgment-entered: "Judgment entered" outcome [judgment, loss] { group outcomes, payoff ? }
     │                                                                                                 ┬  
     │                                                                                                 ╰── Strict profile does not permit unresolved holes
+    │ 
+    │ Note: replace the `?` with a sourced value
 ────╯
 litigate check: failed (3 error(s), 0 warning(s))

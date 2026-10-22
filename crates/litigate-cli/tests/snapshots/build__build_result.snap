@@ -23,84 +23,108 @@ expression: result
       "OUT/litigatables/frcp-rule12-example.litigatable.json"
     ]
   },
-  "litigatable_hash": "sha256:c061b30bedff8536a5fa70fe6c15d9fc6d45c8ddeacb2e42e057f53cefcb561e",
+  "litigatable_hash": "sha256:8be9d243de2055fc5f87f1e459448da31269401bc25a3149a418f7ebd0f3fdf7",
   "litigatables": [
     {
       "package": "frcp-rule12-example",
       "path": "OUT/litigatables/frcp-rule12-example.litigatable.json",
-      "content_hash": "sha256:c061b30bedff8536a5fa70fe6c15d9fc6d45c8ddeacb2e42e057f53cefcb561e"
+      "content_hash": "sha256:8be9d243de2055fc5f87f1e459448da31269401bc25a3149a418f7ebd0f3fdf7"
     }
   ],
   "obligations": [
     {
-      "obligation": "well-typed",
-      "passed": true,
-      "detail": "discharged"
+      "name": "well-typed",
+      "status": "passed",
+      "count": 0,
+      "examples": []
     },
     {
-      "obligation": "cite-resolves",
-      "passed": true,
-      "detail": "discharged"
+      "name": "cite-resolves",
+      "status": "passed",
+      "count": 0,
+      "examples": []
     },
     {
-      "obligation": "effective-disjoint",
-      "passed": true,
-      "detail": "discharged"
+      "name": "effective-disjoint",
+      "status": "passed",
+      "count": 0,
+      "examples": []
     },
     {
-      "obligation": "effective-covered",
-      "passed": true,
-      "detail": "discharged"
+      "name": "effective-covered",
+      "status": "passed",
+      "count": 0,
+      "examples": []
     },
     {
-      "obligation": "precedence-acyclic",
-      "passed": true,
-      "detail": "discharged"
+      "name": "precedence-acyclic",
+      "status": "passed",
+      "count": 0,
+      "examples": []
     },
     {
-      "obligation": "delegation-respected",
-      "passed": true,
-      "detail": "discharged"
+      "name": "delegation-respected",
+      "status": "passed",
+      "count": 0,
+      "examples": []
     },
     {
-      "obligation": "exceptions-ordered",
-      "passed": true,
-      "detail": "discharged"
+      "name": "exceptions-ordered",
+      "status": "passed",
+      "count": 0,
+      "examples": []
     },
     {
-      "obligation": "dist-exact",
-      "passed": true,
-      "detail": "discharged"
+      "name": "dist-exact",
+      "status": "passed",
+      "count": 0,
+      "examples": []
     },
     {
-      "obligation": "graph-exits",
-      "passed": true,
-      "detail": "discharged"
+      "name": "graph-exits",
+      "status": "passed",
+      "count": 0,
+      "examples": []
     },
     {
-      "obligation": "graph-reachable",
-      "passed": true,
-      "detail": "discharged"
+      "name": "graph-reachable",
+      "status": "passed",
+      "count": 0,
+      "examples": []
     },
     {
-      "obligation": "deadline-satisfiable",
-      "passed": true,
-      "detail": "discharged"
+      "name": "deadline-satisfiable",
+      "status": "passed",
+      "count": 0,
+      "examples": []
     },
     {
-      "obligation": "tests-pass",
-      "passed": true,
-      "detail": "discharged"
+      "name": "tests-pass",
+      "status": "passed",
+      "count": 0,
+      "examples": []
     },
     {
-      "obligation": "case-replay",
-      "passed": true,
-      "detail": "discharged"
+      "name": "case-replay",
+      "status": "passed",
+      "count": 0,
+      "examples": []
     },
     {
-      "obligation": "holes",
-      "passed": true,
-      "detail": "discharged with 3 warning(s)"
+      "name": "holes",
+      "status": "warning",
+      "count": 3,
+      "examples": [
+        "lit/examples/rule12.lit:72:43: L9002 hole: no calibration yet",
+        "lit/examples/rule12.lit:73:40: L9002 hole: no reason given",
+        "lit/examples/rule12.lit:79:97: L9002 hole: no reason given"
+      ]
+    },
+    {
+      "name": "rule-without-test",
+      "status": "passed",
+      "count": 0,
+      "examples": []
     }
   ]
 }

@@ -5,7 +5,15 @@ mod constructs;
 pub mod spec;
 
 use crate::cli::Cli;
-use crate::verify::OBLIGATIONS;
+use litigate_verify::Obligation;
+
+/// Obligations `litigate-verify` reports that SPEC §7's table does not
+/// list: `(name, definition, codes)`, worded after SPEC §7's profile rules.
+const EXTRA_OBLIGATIONS: [(&str, &str, &str); 1] = [(
+    "rule-without-test",
+    "every deadline and counting rule is exercised by an inline `test` (a warning in `dev`, an error in `strict`)",
+    "L9001",
+)];
 use clap::CommandFactory;
 use litigate_base::DiagnosticCode;
 use schemars::JsonSchema;
@@ -380,14 +388,24 @@ pub fn document() -> Describe {
                 strict: word(c.severity(litigate_base::Profile::Strict)),
             })
             .collect(),
-        obligations: OBLIGATIONS
+        obligations: Obligation::ALL
             .iter()
             .map(|o| {
                 let name = serde_json::to_value(o).ok().and_then(|v| v.as_str().map(str::to_owned)).unwrap_or_default();
-                let row = table.iter().find(|(n, _, _)| *n == name);
+                let row = table
+                    .iter()
+                    .find(|(n, _, _)| *n == name)
+                    .map(|(_, d, c)| (d.clone(), c.clone()))
+                    .or_else(|| {
+                        EXTRA_OBLIGATIONS
+                            .iter()
+                            .find(|(n, _, _)| *n == name)
+                            .map(|(_, d, c)| ((*d).to_owned(), (*c).to_owned()))
+                    });
+                let (definition, codes) = row.unwrap_or_default();
                 ObligationInfo {
-                    definition: row.map(|r| r.1.clone()).unwrap_or_default(),
-                    codes: row.map(|r| r.2.clone()).unwrap_or_default(),
+                    definition,
+                    codes,
                     obligation: name,
                 }
             })

@@ -103,7 +103,8 @@ pub fn check_package(db: &dyn salsa::Database, pkg: PackageInput) -> PackageChec
     diagnostics.extend(shape(
         &checks,
         &starts,
-        to_span(&manifest_file, &index, TextRange::default()),
+        m.is_some_and(|m| m.links),
+        to_span(&manifest_file, &index, find(text, "[package]")),
     ));
     sort_diagnostics(&mut diagnostics);
     let holes = checks
@@ -144,13 +145,22 @@ pub fn check_package(db: &dyn salsa::Database, pkg: PackageInput) -> PackageChec
     }
 }
 
-/// One `start` (none in a links package) and no nodes in a links package.
+/// One `start` (none in a links package), no nodes in a links package,
+/// and a pack identity in the manifest of a package with nodes.
 fn shape(
     checks: &[&ModuleCheck],
     starts: &[&(Option<String>, litigate_base::Span)],
+    links_manifest: bool,
     manifest_span: litigate_base::Span,
 ) -> Vec<Diagnostic> {
     let mut diagnostics = Vec::new();
+    if links_manifest && checks.iter().any(|c| c.first_node.is_some()) {
+        diagnostics.push(Diagnostic::error(
+            C::InvalidManifest,
+            manifest_span.clone(),
+            "invalid Lit.toml: missing field `pack_id` (a package with nodes needs a pack identity)",
+        ));
+    }
     let is_links = checks.iter().any(|c| c.first_link.is_some());
     if is_links {
         if let Some(node) = checks.iter().find_map(|c| c.first_node.clone()) {

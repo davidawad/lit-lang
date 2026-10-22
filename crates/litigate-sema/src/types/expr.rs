@@ -247,7 +247,17 @@ impl<'s, 'a> Checker<'s, 'a> {
         }
         if path.rest.len() == 1 && path.instance.is_none() {
             if let Ok((en, found)) = self.scope.user_type(&path.head, &[]) {
-                if let TypeSig::Enum(variants) = found.item {
+                // `Alias.Variant` when the alias names an enum.
+                let (en, variants) = match found.item {
+                    TypeSig::Enum(variants) => (en, Some(variants.as_slice())),
+                    TypeSig::Alias(Some(Type::Named(target))) => {
+                        let target = self.scope.localize_name(found.sig, target);
+                        let variants = self.scope.enum_variants(&target);
+                        (target, variants)
+                    }
+                    _ => (en, None),
+                };
+                if let Some(variants) = variants {
                     let variant = &path.rest[0].1.text;
                     if variants.contains(variant) {
                         return Some(self.literal(
@@ -280,7 +290,8 @@ impl<'s, 'a> Checker<'s, 'a> {
         match self.scope.value(path) {
             Ok((target, found)) => match &found.item.kind {
                 ValueKind::Default(ty) => {
-                    self.node(hir::ExprKind::Ref { target }, ty.clone(), None, r)
+                    let ty = ty.as_ref().map(|t| self.scope.localize(found.sig, t));
+                    self.node(hir::ExprKind::Ref { target }, ty, None, r)
                 }
                 kind => {
                     let mut report = Report::new(
@@ -383,7 +394,7 @@ impl<'s, 'a> Checker<'s, 'a> {
         let (name, params) = match lookup {
             Ok((name, found)) => {
                 if let TypeSig::Event(params) = found.item {
-                    (name, params.clone())
+                    (name, self.scope.localize_params(found.sig, params))
                 } else {
                     self.report(Report::new(
                         C::InvalidOperation,

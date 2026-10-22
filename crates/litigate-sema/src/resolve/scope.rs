@@ -6,6 +6,7 @@ use super::sig::{Signature, TypeSig, ValueKind, ValueSig};
 use super::suggest;
 use crate::db::parse::tree::{dotted, ItemTree, Name, PathSep, RefPath};
 use crate::db::span::Report;
+use crate::hir::Type;
 use litigate_base::{Applicability, DiagnosticCode as C};
 
 /// One import as seen by lookup.
@@ -75,6 +76,9 @@ pub struct Scope<'a> {
     pub failed_names: Vec<String>,
     /// Modules whose `import m` failed (already reported at the import).
     pub failed_modules: Vec<String>,
+    /// Modules reachable through imports of imports: the declarations of
+    /// nominal types re-exported by an alias or event of a direct import.
+    pub transitive: Vec<&'a Signature>,
 }
 
 impl<'a> Scope<'a> {
@@ -131,7 +135,15 @@ impl<'a> Scope<'a> {
             packs,
             failed_names,
             failed_modules,
+            transitive: Vec::new(),
         }
+    }
+
+    /// Adds the transitively imported signatures (see [`Self::transitive`]).
+    #[must_use]
+    pub fn with_transitive(mut self, transitive: Vec<&'a Signature>) -> Self {
+        self.transitive = transitive;
+        self
     }
 
     /// Canonical spelling of `name` declared in `sig` as seen from here.
@@ -142,6 +154,53 @@ impl<'a> Scope<'a> {
         } else {
             format!("{}::{name}", sig.pack_id)
         }
+    }
+
+    /// Respells a nominal type name written in `sig`'s view into this
+    /// scope's view. A nominal type has one identity, its declaring
+    /// package plus its name: spelled bare inside that package and
+    /// `pack::Name` everywhere else, so a name that crosses a package
+    /// boundary is requalified on the way in.
+    #[must_use]
+    pub fn localize_name(&self, sig: &Signature, name: &str) -> String {
+        if sig.package == self.own.package {
+            return name.to_owned();
+        }
+        match name.split_once("::") {
+            Some((pack, local)) if pack == self.own.pack_id => local.to_owned(),
+            Some(_) => name.to_owned(),
+            None => format!("{}::{name}", sig.pack_id),
+        }
+    }
+
+    /// [`Self::localize_name`] applied to every nominal type inside `ty`.
+    #[must_use]
+    pub fn localize(&self, sig: &Signature, ty: &Type) -> Type {
+        match ty {
+            Type::Named(n) => Type::Named(self.localize_name(sig, n)),
+            Type::Distribution(e) => Type::Distribution(self.localize_name(sig, e)),
+            Type::List(t) => Type::List(Box::new(self.localize(sig, t))),
+            Type::Record(fields) => Type::Record(
+                fields
+                    .iter()
+                    .map(|(n, t)| (n.clone(), self.localize(sig, t)))
+                    .collect(),
+            ),
+            other => other.clone(),
+        }
+    }
+
+    /// [`Self::localize`] over an event's parameters.
+    #[must_use]
+    pub fn localize_params(
+        &self,
+        sig: &Signature,
+        params: &[(String, Option<Type>)],
+    ) -> Vec<(String, Option<Type>)> {
+        params
+            .iter()
+            .map(|(n, t)| (n.clone(), t.as_ref().map(|t| self.localize(sig, t))))
+            .collect()
     }
 
     fn unqualified<T>(
@@ -365,6 +424,7 @@ impl<'a> Scope<'a> {
         std::iter::once(self.own)
             .chain(self.bindings.iter().map(|b| b.sig))
             .chain(self.packs.iter().copied())
+            .chain(self.transitive.iter().copied())
             .filter(|s| {
                 pack.map_or(s.package == self.own.package, |p| {
                     s.pack_id == p && s.package != self.own.package

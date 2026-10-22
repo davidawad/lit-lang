@@ -231,17 +231,15 @@ impl Cx<'_, '_> {
                     .strip_suffix(".days")
                     .filter(|amount| amount.contains('.'));
                 if let Some(amount) = decimal {
-                    return match q::parse_decimal(amount) {
-                        Ok(v) => Some(v),
-                        Err(_) => {
+                    return q::parse_decimal(amount)
+                        .map_err(|_| {
                             cx.report(Report::new(
                                 C::ArithmeticError,
                                 x.range,
                                 format!("`{text}` is not an exact day amount"),
                             ));
-                            None
-                        }
-                    };
+                        })
+                        .ok();
                 }
             }
             match cx.constant(x, &days) {
@@ -262,11 +260,9 @@ impl Cx<'_, '_> {
             Some(x) => get(cx, x).map(Some).ok_or(()),
             None => Ok(None),
         };
-        let (Ok(min), Ok(mode), Ok(max)) = (
-            part(self, "min"),
-            part(self, "mode"),
-            part(self, "max"),
-        ) else {
+        let (Ok(min), Ok(mode), Ok(max)) =
+            (part(self, "min"), part(self, "mode"), part(self, "max"))
+        else {
             return None;
         };
         let Some(mode) = mode else {

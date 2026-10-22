@@ -42,9 +42,11 @@ pub(super) fn check(
     let bound = |c: &mut Checker, source: Option<&Spanned<String>>| {
         let source = source?;
         let id = source.get_ref();
-        c.check(sources.0.iter().any(|(k, _)| k == id), range(source), || {
-            format!("`source = \"{id}\"` names no `[sources.{id}]` table")
-        });
+        c.check(
+            sources.0.iter().any(|(k, _)| k == id),
+            range(source),
+            || format!("`source = \"{id}\"` names no `[sources.{id}]` table"),
+        );
         Some(id.clone())
     };
     let rules = raw

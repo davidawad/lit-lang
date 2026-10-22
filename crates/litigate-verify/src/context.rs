@@ -1,7 +1,6 @@
 //! The package under verification and lookups over its HIR.
 use crate::diag::start_of;
 use litigate_base::{Profile, Span};
-use litigate_lower::Options;
 use litigate_sema::hir::{self, Declaration, RuleKind};
 use litigate_sema::temporal::world::meta_of;
 
@@ -9,7 +8,6 @@ use litigate_sema::temporal::world::meta_of;
 pub(crate) struct Context<'a> {
     pub package: &'a hir::Package,
     pub packages: &'a [&'a hir::Package],
-    pub options: &'a Options,
     pub profile: Profile,
     manifest: String,
 }
@@ -18,14 +16,12 @@ impl<'a> Context<'a> {
     pub fn new(
         package: &'a hir::Package,
         packages: &'a [&'a hir::Package],
-        options: &'a Options,
         profile: Profile,
     ) -> Self {
         Self {
             manifest: manifest_file(package),
             package,
             packages,
-            options,
             profile,
         }
     }
@@ -89,13 +85,24 @@ impl<'a> Context<'a> {
             .collect()
     }
 
-    /// The first version of counting rule `target`.
-    pub fn counting(&self, target: &str) -> Option<&'a hir::Counting> {
+    /// The version of counting rule `target` in force on `date`, with its
+    /// declaring package.
+    pub fn counting_at(
+        &self,
+        target: &str,
+        date: &str,
+    ) -> Option<(&'a hir::Package, &'a hir::Counting)> {
         let (pkg, id) = self.owner(target);
-        declarations(pkg).find_map(|d| match d {
-            Declaration::Counting(c) if c.meta.id == id => Some(c),
-            _ => None,
-        })
+        declarations(pkg)
+            .find_map(|d| match d {
+                Declaration::Counting(c)
+                    if c.meta.id == id && in_force(&c.meta.effective, date) =>
+                {
+                    Some(c)
+                }
+                _ => None,
+            })
+            .map(|c| (pkg, c))
     }
 
     /// Whether deadline `target` is declared inside a `rule duty`.
@@ -185,4 +192,9 @@ fn strip_spans(v: &mut serde_json::Value) {
         serde_json::Value::Array(items) => items.iter_mut().for_each(strip_spans),
         _ => {}
     }
+}
+
+/// `date` falls in `i` (`from` inclusive, `to` exclusive).
+pub(crate) fn in_force(i: &hir::Interval, date: &str) -> bool {
+    i.from.as_str() <= date && i.to.as_deref().is_none_or(|to| date < to)
 }

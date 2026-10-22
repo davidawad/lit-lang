@@ -128,11 +128,11 @@ impl Cx<'_, '_> {
             }
             return None;
         };
-        if self_edge {
+        if self_edge && chance {
             self.report(Report::new(
                 C::InvalidProbability,
                 p.range,
-                "a self edge must not carry `p`",
+                "a self edge of a `chance` node must not carry `p`",
             ));
             return None;
         }
@@ -223,9 +223,31 @@ impl Cx<'_, '_> {
 
     fn duration(&mut self, f: &Field) -> Option<TriangularDuration> {
         let days = Type::Days(DayUnit::Calendar);
-        let get = |cx: &mut Self, x: &Expr| match cx.constant(x, &days) {
-            Some(Value::Days { amount, .. }) => Some(Rational::integer(amount)),
-            _ => None,
+        // Estimates may use decimal calendar days (`13.5.days`, SPEC §6);
+        // every other spelling goes through the integral-days checker.
+        let get = |cx: &mut Self, x: &Expr| {
+            if let ExprKind::Duration(text) = &x.kind {
+                let decimal = text
+                    .strip_suffix(".days")
+                    .filter(|amount| amount.contains('.'));
+                if let Some(amount) = decimal {
+                    return match q::parse_decimal(amount) {
+                        Ok(v) => Some(v),
+                        Err(_) => {
+                            cx.report(Report::new(
+                                C::ArithmeticError,
+                                x.range,
+                                format!("`{text}` is not an exact day amount"),
+                            ));
+                            None
+                        }
+                    };
+                }
+            }
+            match cx.constant(x, &days) {
+                Some(Value::Days { amount, .. }) => Some(Rational::integer(amount)),
+                _ => None,
+            }
         };
         if let Some(x) = first_expr(f) {
             return get(self, x).map(|mode| TriangularDuration {
@@ -234,32 +256,38 @@ impl Cx<'_, '_> {
                 max: None,
             });
         }
+        // `min` and `max` are optional (SPEC §3.1 `duration`); `mode` is not.
         let parts = self.once(nested(f));
-        let mut vals = Vec::new();
-        for key in ["min", "mode", "max"] {
-            if let Some(x) = parts.get(key).and_then(|p| first_expr(p)) {
-                vals.push(get(self, x)?);
-            } else {
-                self.report(Report::new(
-                    C::InvalidField,
-                    f.key.range,
-                    format!("triangular `duration` needs `{key}`"),
-                ));
-                return None;
-            }
-        }
-        let (min, mode, max) = (vals[0], vals[1], vals[2]);
-        if q::cmp(min, mode).is_gt() || q::cmp(mode, max).is_gt() {
+        let part = |cx: &mut Self, key: &str| match parts.get(key).and_then(|p| first_expr(p)) {
+            Some(x) => get(cx, x).map(Some).ok_or(()),
+            None => Ok(None),
+        };
+        let (Ok(min), Ok(mode), Ok(max)) = (
+            part(self, "min"),
+            part(self, "mode"),
+            part(self, "max"),
+        ) else {
+            return None;
+        };
+        let Some(mode) = mode else {
+            self.report(Report::new(
+                C::InvalidField,
+                f.key.range,
+                "triangular `duration` needs `mode`",
+            ));
+            return None;
+        };
+        let below = |a: Option<Rational>, b: Option<Rational>| match (a, b) {
+            (Some(a), Some(b)) => q::cmp(a, b).is_gt(),
+            _ => false,
+        };
+        if below(min, Some(mode)) || below(Some(mode), max) {
             self.report(Report::new(
                 C::InvalidField,
                 f.range,
                 "`duration` needs min <= mode <= max",
             ));
         }
-        Some(TriangularDuration {
-            min: Some(min),
-            mode,
-            max: Some(max),
-        })
+        Some(TriangularDuration { min, mode, max })
     }
 }

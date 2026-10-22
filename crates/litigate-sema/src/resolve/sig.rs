@@ -97,6 +97,8 @@ pub struct Signature {
     pub groups: BTreeSet<String>,
     /// Authority levels.
     pub authorities: BTreeSet<String>,
+    /// Actors declared in the package's `[package.roles]`.
+    pub actors: BTreeSet<String>,
 }
 
 /// Items with `rule` bodies hoisted, each paired with its enclosing rule.
@@ -191,6 +193,9 @@ pub fn build(db: &dyn salsa::Database, file: SourceFile) -> Signature {
         module: crate::db::parse::tree::dotted(&tree.module),
         package: m.map(|m| m.name.clone()).unwrap_or_default(),
         pack_id: m.map(|m| m.pack_id.clone()).unwrap_or_default(),
+        actors: m
+            .map(|m| m.roles.keys().cloned().collect())
+            .unwrap_or_default(),
         ..Signature::default()
     };
     let items = flatten(tree);

@@ -27,7 +27,7 @@ fn money_is_exact_integer_cents_in_one_currency() {
 #[test]
 fn probabilities_stay_in_the_unit_interval() {
     let out = check_body(
-        "chance k: \"K\" { a \"A\" -> t p 3/2, b \"B\" -> t p 1/3 }\nchance j: \"J\" { a \"A\" -> t p 1/3, b \"B\" -> t p 1/3 }\nchance m: \"M\" { a \"A\" -> t }\nstate n: \"N\" { a \"A\" -> n p 1/2 }",
+        "chance k: \"K\" { a \"A\" -> t p 3/2, b \"B\" -> t p 1/3 }\nchance j: \"J\" { a \"A\" -> t p 1/3, b \"B\" -> t p 1/3 }\nchance m: \"M\" { a \"A\" -> t }\nchance n: \"N\" { a \"A\" -> n p 1/2, b \"B\" -> t p 1 }\nstate r: \"R\" { tags [fact]\n a \"A\" -> r p 1/4, b \"B\" -> t p 3/4 }",
     );
     insta::assert_debug_snapshot!(out);
 }

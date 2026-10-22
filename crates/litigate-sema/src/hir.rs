@@ -78,6 +78,60 @@ pub struct Manifest {
     pub sources: Vec<SourceBinding>,
     /// Dependency name to `SemVer` requirement.
     pub dependencies: BTreeMap<String, String>,
+    /// Counting-rule id (`package.counting`, litgraph `Pack.counting`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub counting: Option<String>,
+    /// Citation syntax (`[[cite_syntax.*]]`, litgraph `Pack.citeSyntax`).
+    #[serde(default, skip_serializing_if = "CiteSyntax::is_empty")]
+    pub cite_syntax: CiteSyntax,
+    /// True for a links package's manifest (SPEC §4.1, §8.4): it has no
+    /// pack identity, so `pack_id`, `forum`, `authority`, and `title` are
+    /// empty and `roles` and `sources` are empty.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub links: bool,
+}
+
+/// `[[cite_syntax.*]]` tables in declared order.
+#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
+pub struct CiteSyntax {
+    /// `[[cite_syntax.rules]]`.
+    pub rules: Vec<CiteRule>,
+    /// `[[cite_syntax.shorthands]]`.
+    pub shorthands: Vec<CiteShorthand>,
+}
+
+impl CiteSyntax {
+    /// No rules and no shorthands.
+    #[must_use]
+    pub fn is_empty(&self) -> bool {
+        self.rules.is_empty() && self.shorthands.is_empty()
+    }
+}
+
+/// One `[[cite_syntax.rules]]` entry.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct CiteRule {
+    /// Citation prefixes (`FRCP`, `Fed. R. Civ. P.`).
+    pub prefixes: Vec<String>,
+    /// Heading template with exactly one `{}`.
+    pub heading: String,
+    /// Bound `[sources.*]` key.
+    pub source: Option<String>,
+}
+
+/// One `[[cite_syntax.shorthands]]` entry.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct CiteShorthand {
+    /// Shorthand prefix (`cfr`).
+    pub prefix: String,
+    /// `usc` or `cfr`.
+    pub code: String,
+    /// Title number.
+    pub title: u32,
+    /// Dotted section parts.
+    pub section_parts: u32,
+    /// Bound `[sources.*]` key.
+    pub source: Option<String>,
 }
 
 /// Game-theoretic reading of an actor (litgraph `Role`).

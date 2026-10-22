@@ -150,12 +150,18 @@ impl Cx<'_, '_> {
         let terminal = kw == "terminal";
         self.placement(&clauses, &fields, chance, terminal);
         let tags = self.idents(fields.get("tags"));
-        if !chance && tags.iter().any(|t| t == "fact") {
+        // A fact is a draw nature controls: a `chance` node, or a mixed node
+        // whose interrupt edges carry the authored prior (SPEC §5.1).
+        let drawn = n
+            .edges
+            .iter()
+            .any(|e| e.clauses.iter().any(|c| c.key.text == "p"));
+        if !chance && !drawn && tags.iter().any(|t| t == "fact") {
             if let Some(f) = fields.get("tags") {
                 self.report(Report::new(
                     C::InvalidField,
                     f.range,
-                    "the `fact` tag is allowed only on `chance` nodes",
+                    "the `fact` tag is allowed only on `chance` nodes and nodes with `p` edges",
                 ));
             }
         }

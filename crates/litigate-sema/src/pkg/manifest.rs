@@ -2,7 +2,7 @@
 //! missing required keys, and ill-typed or invalid values are all L1004.
 use super::semver::{Requirement, Version};
 use crate::db::span::{Report, TextRange};
-use crate::hir::{ActorRole, Interval, Manifest, SourceBinding};
+use crate::hir::{ActorRole, CiteSyntax, Interval, Manifest, SourceBinding};
 use crate::types::date;
 use litigate_base::DiagnosticCode as C;
 use serde::de::{Deserializer, MapAccess, Visitor};
@@ -49,6 +49,7 @@ struct RawManifest {
     dependencies: Ordered<Spanned<RawDependency>>,
     #[serde(default)]
     sources: Ordered<Spanned<RawSource>>,
+    cite_syntax: Option<Spanned<cite_syntax::RawCiteSyntax>>,
 }
 
 #[derive(Deserialize)]
@@ -57,16 +58,18 @@ struct RawPackage {
     name: Spanned<String>,
     version: Spanned<String>,
     language: Spanned<i64>,
-    pack_id: Spanned<String>,
-    forum: Spanned<String>,
-    authority: Spanned<String>,
-    title: String,
-    description: Option<String>,
-    jurisdiction: Option<String>,
+    // Pack identity: required in a pack, absent in a links package.
+    pack_id: Option<Spanned<String>>,
+    forum: Option<Spanned<String>>,
+    authority: Option<Spanned<String>>,
+    title: Option<Spanned<String>>,
+    roles: Option<Spanned<Ordered<Spanned<String>>>>,
+    description: Option<Spanned<String>>,
+    jurisdiction: Option<Spanned<String>>,
+    counting: Option<Spanned<String>>,
     in_force: Spanned<String>,
     in_force_until: Option<Spanned<String>>,
     known_at: Spanned<String>,
-    roles: Ordered<Spanned<String>>,
 }
 
 #[derive(Deserialize)]
@@ -172,8 +175,10 @@ pub fn parse_manifest(text: &str) -> Result<ParsedManifest, Vec<Report>> {
         reports: Vec::new(),
     };
     let p = &raw.package;
+    let links = identity(&mut c, text, &raw);
     package_table(&mut c, p);
-    let roles = roles(&mut c, &p.roles);
+    let empty = Ordered::default();
+    let roles = roles(&mut c, p.roles.as_ref().map_or(&empty, |r| r.get_ref()));
     let (dependencies, dependency_paths) = dependencies(&mut c, &raw.dependencies);
     let sources = raw
         .sources
@@ -181,19 +186,34 @@ pub fn parse_manifest(text: &str) -> Result<ParsedManifest, Vec<Report>> {
         .iter()
         .map(|(id, s)| source(&mut c, id, s))
         .collect();
+    let cite_syntax = raw
+        .cite_syntax
+        .as_ref()
+        .map_or_else(CiteSyntax::default, |cs| {
+            cite_syntax::check(&mut c, cs.get_ref(), &raw.sources)
+        });
+    if let Some(counting) = &p.counting {
+        c.check(is_ident(counting.get_ref()), range(counting), || {
+            format!(
+                "`counting` must be a counting-rule id, found `{}`",
+                counting.get_ref()
+            )
+        });
+    }
     if !c.reports.is_empty() {
         return Err(c.reports);
     }
+    let text_of = |s: &Option<Spanned<String>>| s.as_ref().map(|s| s.get_ref().clone());
     let manifest = Manifest {
         name: p.name.get_ref().clone(),
         version: p.version.get_ref().clone(),
         language: 1,
-        pack_id: p.pack_id.get_ref().clone(),
-        forum: p.forum.get_ref().clone(),
-        authority: p.authority.get_ref().clone(),
-        title: p.title.clone(),
-        description: p.description.clone(),
-        jurisdiction: p.jurisdiction.clone(),
+        pack_id: text_of(&p.pack_id).unwrap_or_default(),
+        forum: text_of(&p.forum).unwrap_or_default(),
+        authority: text_of(&p.authority).unwrap_or_default(),
+        title: text_of(&p.title).unwrap_or_default(),
+        description: text_of(&p.description),
+        jurisdiction: text_of(&p.jurisdiction),
         roles,
         in_force: Interval {
             from: p.in_force.get_ref().clone(),
@@ -202,6 +222,9 @@ pub fn parse_manifest(text: &str) -> Result<ParsedManifest, Vec<Report>> {
         },
         sources,
         dependencies,
+        counting: text_of(&p.counting),
+        cite_syntax,
+        links,
     };
     Ok(ParsedManifest {
         manifest,
@@ -226,13 +249,17 @@ fn package_table(c: &mut Checker, p: &RawPackage) {
     c.check(*p.language.get_ref() == 1, range(&p.language), || {
         "`language` must be 1".to_owned()
     });
-    c.check(is_kebab(p.pack_id.get_ref()), range(&p.pack_id), || {
-        format!("pack id `{}` must be kebab-case", p.pack_id.get_ref())
-    });
-    for (key, value) in [("forum", &p.forum), ("authority", &p.authority)] {
-        c.check(is_ident(value.get_ref()), range(value), || {
-            format!("`{key}` must be an identifier, found `{}`", value.get_ref())
+    if let Some(id) = &p.pack_id {
+        c.check(is_kebab(id.get_ref()), range(id), || {
+            format!("pack id `{}` must be kebab-case", id.get_ref())
         });
+    }
+    for (key, value) in [("forum", &p.forum), ("authority", &p.authority)] {
+        if let Some(value) = value {
+            c.check(is_ident(value.get_ref()), range(value), || {
+                format!("`{key}` must be an identifier, found `{}`", value.get_ref())
+            });
+        }
     }
     c.date("in_force", &p.in_force);
     c.date("known_at", &p.known_at);
@@ -242,6 +269,51 @@ fn package_table(c: &mut Checker, p: &RawPackage) {
             "`in_force_until` must be after `in_force`".to_owned()
         });
     }
+}
+
+/// Pack identity (SPEC §4.1): a pack's manifest has every identity key; a
+/// links package's has none of them, nor any other pack-only key. Returns
+/// whether the manifest is a links manifest.
+fn identity(c: &mut Checker, text: &str, raw: &RawManifest) -> bool {
+    let p = &raw.package;
+    let at = text
+        .find("[package]")
+        .map_or(TextRange::default(), |s| {
+            let f = |n: usize| u32::try_from(n).unwrap_or(u32::MAX);
+            TextRange::new(f(s), f(s + "[package]".len()))
+        });
+    let required = [
+        ("pack_id", p.pack_id.is_some()),
+        ("forum", p.forum.is_some()),
+        ("authority", p.authority.is_some()),
+        ("title", p.title.is_some()),
+        ("package.roles", p.roles.is_some()),
+    ];
+    if required.iter().any(|(_, present)| *present) {
+        for (key, present) in required {
+            c.check(present, at, || format!("invalid Lit.toml: missing field `{key}`"));
+        }
+        return false;
+    }
+    let pack_only = [
+        ("description", p.description.as_ref().map(range)),
+        ("jurisdiction", p.jurisdiction.as_ref().map(range)),
+        ("counting", p.counting.as_ref().map(range)),
+        ("cite_syntax", raw.cite_syntax.as_ref().map(range)),
+        ("sources", raw.sources.0.first().map(|(_, s)| range(s))),
+    ];
+    for (key, found) in pack_only {
+        if let Some(found) = found {
+            c.check(false, found, || {
+                format!(
+                    "`{key}` needs a pack identity: a links package's manifest has \
+                     only `name`, `version`, `language`, `in_force`, `known_at`, and \
+                     `[dependencies]` (add `pack_id` if this is a pack)"
+                )
+            });
+        }
+    }
+    true
 }
 
 fn roles(c: &mut Checker, table: &Ordered<Spanned<String>>) -> BTreeMap<String, ActorRole> {
@@ -256,8 +328,9 @@ fn roles(c: &mut Checker, table: &Ordered<Spanned<String>>) -> BTreeMap<String, 
         c.check(parsed.is_some(), range(role), || {
             format!("role of `{actor}` must be \"self\", \"opponent\", or \"nature\"")
         });
-        c.check(is_ident(actor) && actor != "either", range(role), || {
-            format!("`{actor}` is not a valid actor name (`either` is built in)")
+        // `either` is a valid key: the implicit actor's role (SPEC §4.3).
+        c.check(is_ident(actor), range(role), || {
+            format!("`{actor}` is not a valid actor name")
         });
         roles.insert(actor.clone(), parsed.unwrap_or(ActorRole::Nature));
     }
@@ -320,7 +393,14 @@ fn source(c: &mut Checker, id: &str, s: &Spanned<RawSource>) -> SourceBinding {
         });
     }
     if let Some(as_of) = &raw.as_of {
-        c.date("as_of", as_of);
+        // A document version date may be known only to the month (legacy
+        // `sources[].asOf` "2025-06"); it is metadata, never computed with.
+        let v = as_of.get_ref();
+        let month = v.len() == 7
+            && date::is_valid(&format!("{v}-01"));
+        c.check(month || date::is_valid(v), range(as_of), || {
+            format!("`as_of` must be a YYYY-MM-DD or YYYY-MM date, found `{v}`")
+        });
     }
     c.check(
         raw.cite_prefixes.iter().all(|p| !p.trim().is_empty()),
@@ -343,6 +423,8 @@ fn source(c: &mut Checker, id: &str, s: &Spanned<RawSource>) -> SourceBinding {
         section_heading: raw.section_heading.as_ref().map(|p| p.get_ref().clone()),
     }
 }
+
+mod cite_syntax;
 
 #[cfg(test)]
 mod tests;

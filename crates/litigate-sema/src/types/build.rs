@@ -308,6 +308,7 @@ pub fn check_module(db: &dyn salsa::Database, file: SourceFile) -> ModuleCheck {
         ck,
         manifest: m,
         links,
+        link_from: None,
     };
     let out = items(&mut cx, tree, &index, &file_id);
     reports.append(&mut cx.ck.reports);

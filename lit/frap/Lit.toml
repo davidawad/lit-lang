@@ -50,8 +50,8 @@ url = "https://www.law.cornell.edu/uscode/text/28/1291"
 path = "sources/usc-additional.txt"
 # Binds `28 U.S.C. § n` cites to the vendored sections in
 # usc-additional.txt (§§ 46, 1254, 1291, 2101, 2107). Section 1292 is
-# vendored in another file, and a citation family binds one source, so its
-# cites stay holes carrying their text (see usc28-1292).
+# vendored in another file; usc28-1292 shares this heading pattern, and a
+# cite resolves to the binding whose file holds its heading.
 cite_prefixes = ["28 U.S.C."]
 section_heading = "28 U.S.C. § {n}"
 
@@ -59,6 +59,8 @@ section_heading = "28 U.S.C. § {n}"
 title = "28 U.S.C. § 1292 (Interlocutory decisions)"
 url = "https://www.law.cornell.edu/uscode/text/28/1292"
 path = "sources/usc-cfr-prosecution-fragments.txt"
+cite_prefixes = ["28 U.S.C."]
+section_heading = "28 U.S.C. § {n}"
 
 [sources.usc28-1254]
 title = "28 U.S.C. § 1254 (Courts of appeals; certiorari)"

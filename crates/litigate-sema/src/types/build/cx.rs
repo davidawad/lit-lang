@@ -342,7 +342,7 @@ impl Cx<'_, '_> {
             id: id.text.clone(),
             label: label
                 .map(|l| l.text.clone())
-                .or_else(|| item.doc.clone())
+                .or_else(|| unmarked_doc(item.doc.as_deref()))
                 .unwrap_or_default(),
             cite: cites.first().and_then(|f| self.cite_text(Some(f))),
             effective: self.effective(item, rule),
@@ -352,6 +352,23 @@ impl Cx<'_, '_> {
                 .unwrap_or_default(),
             relations,
             span: self.ck.span(item.range),
+            imported: item
+                .doc
+                .as_deref()
+                .is_some_and(|d| d.lines().any(is_import_marker)),
         }
     }
+}
+
+/// A `///` line that is exactly `imported`: the marker `litigate import`
+/// writes on every node and link (SPEC §8.7).
+fn is_import_marker(line: &str) -> bool {
+    line.trim() == "imported"
+}
+
+/// The doc comment without import-marker lines, when anything is left (a
+/// declaration's fallback label is never the marker).
+fn unmarked_doc(doc: Option<&str>) -> Option<String> {
+    let lines: Vec<&str> = doc?.lines().filter(|l| !is_import_marker(l)).collect();
+    (!lines.is_empty()).then(|| lines.join("\n"))
 }

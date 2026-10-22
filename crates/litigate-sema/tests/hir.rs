@@ -63,3 +63,39 @@ fn every_declaration_kind_lowers_to_hir() {
     }
     insta::assert_json_snapshot!(json);
 }
+
+/// `litigate import`'s `/// imported` doc line marks a declaration
+/// imported in HIR (SPEC §7, §8.7); it never becomes a fallback label.
+#[test]
+fn the_imported_doc_line_marks_a_declaration() {
+    let src = "module rules\nstart a\n\
+               /// imported\nstate a: \"A\" { _ \"Go\" -> b }\n\
+               terminal b: \"B\" { payoff 0.usd }\n\
+               /// imported\n/// Federal holidays.\n\
+               calendar fed { new-year: fixed(1, 1) effective [1870-06-28, ..) observed nearest_weekday }\n\
+               /// imported\ncalendar bare { new-year: fixed(1, 1) effective [1870-06-28, ..) observed nearest_weekday }\n";
+    let (db, ws) = workspace(&[package("rules", &[], &[("rules.lit", src)])]);
+    let checks = litigate_sema::check_workspace(&db, ws);
+    let Some(pkg) = checks.first().and_then(|c| c.package.as_ref()) else {
+        panic!("{:?}", render(&db, ws));
+    };
+    let marks: Vec<(&str, &str, bool)> = pkg
+        .modules
+        .iter()
+        .flat_map(|m| &m.declarations)
+        .filter_map(litigate_sema::temporal::world::meta_of)
+        .map(|m| (m.id.as_str(), m.label.as_str(), m.imported))
+        .collect();
+    assert_eq!(
+        marks,
+        [
+            ("a", "A", true),
+            ("b", "B", false),
+            ("fed", "Federal holidays.", true),
+            ("bare", "", true),
+        ]
+    );
+    let json = serde_json::to_value(pkg).unwrap_or_default().to_string();
+    assert_eq!(json.matches("\"imported\":true").count(), 3);
+    assert!(!json.contains("\"imported\":false"));
+}

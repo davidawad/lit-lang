@@ -19,6 +19,10 @@ pub struct Metadata {
     pub relations: Vec<Relation>,
     /// Declaration source span.
     pub span: Option<litigate_base::Span>,
+    /// Written by `litigate import` (a `/// imported` doc line, SPEC §8.7):
+    /// in `dev`, its `cite-resolves` failures are warnings (SPEC §7).
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub imported: bool,
 }
 
 /// Explicit precedence or delegation relation on a declaration.

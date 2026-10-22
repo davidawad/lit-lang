@@ -1,0 +1,26 @@
+---
+source: crates/litigate-verify/tests/profiles.rs
+expression: dev.verification.diagnostics
+---
+[
+  {
+    "code": "L1010",
+    "severity": "warning",
+    "span": {
+      "file": "pkgs/demo/main.lit",
+      "line": 37,
+      "col": 1,
+      "end_line": 40,
+      "end_col": 2
+    },
+    "message": "`FRCP 99(a)` binds to source `frcp`, but `sources/frcp.txt` has no `## Rule 99` heading",
+    "notes": [
+      {
+        "message": "cite a pinpoint that exists in the vendored text, or mark the cite `?(\"why\")` until the source is vendored"
+      },
+      {
+        "message": "a warning because the declaration is `/// imported`; `strict` rejects it"
+      }
+    ]
+  }
+]

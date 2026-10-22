@@ -8,11 +8,15 @@
 //! verdict here and the sidecar can never disagree. Case citations and
 //! other text the parser treats as out of scope are not rule cites and are
 //! never checked (the same policy as `litgraph lint`).
+//!
+//! A cite of a declaration `litigate import` marked `/// imported` is
+//! exempt in `dev`: its failures are warnings, so a freshly imported pack
+//! checks while its citations are ported. `strict` exempts nothing.
 use crate::diag::{emit, note};
 use crate::Context;
 use litgraph::cite::{parse_cite_string, CiteGrammar, SourceCorpus};
 use litgraph::model::Pack;
-use litigate_base::{Diagnostic, DiagnosticCode as C, Span};
+use litigate_base::{Diagnostic, DiagnosticCode as C, Profile, Severity, Span};
 use litigate_lower::source_map::{Citations, L0Section};
 
 /// L1010 for every citation that does not resolve.
@@ -20,8 +24,9 @@ pub(crate) fn unresolved(cx: &Context<'_>, pack: &Pack, corpus: &SourceCorpus) -
     let sources = &cx.package.manifest.sources;
     let citations = Citations::new(pack.cite_syntax.clone(), sources, Some(corpus));
     cx.cites()
-        .flat_map(|(text, span)| {
-            let span = cx.span_or_manifest(span);
+        .flat_map(|cite| {
+            let text = cite.text;
+            let span = cx.span_or_manifest(cite.span);
             let sections = citations
                 .map(Some(&text.to_owned()))
                 .map(|m| m.sections)
@@ -31,9 +36,26 @@ pub(crate) fn unresolved(cx: &Context<'_>, pack: &Pack, corpus: &SourceCorpus) -
                 .iter()
                 .filter_map(|s| section(cx, corpus, text, s, &span))
                 .chain(unkeyed)
+                .map(|d| exempt(d, cite.imported, cx.profile))
                 .collect::<Vec<_>>()
         })
         .collect()
+}
+
+/// `d` as a warning when its declaration is imported and `profile` is
+/// `dev` (SPEC §7); unchanged otherwise.
+fn exempt(d: Diagnostic, imported: bool, profile: Profile) -> Diagnostic {
+    if !imported || profile != Profile::Dev {
+        return d;
+    }
+    note(
+        Diagnostic {
+            severity: Severity::Warning,
+            ..d
+        },
+        None,
+        "a warning because the declaration is `/// imported`; `strict` rejects it",
+    )
 }
 
 /// Rule or statute citations that do not normalize to a heading at all.

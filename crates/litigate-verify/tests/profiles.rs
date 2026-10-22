@@ -111,3 +111,35 @@ fn a_clean_program_is_accepted_in_both_profiles() {
         assert_eq!(skipped, [Obligation::CaseReplay]);
     }
 }
+
+/// SPEC §7: `cite-resolves` on a `/// imported` declaration (its own cite
+/// and its edges' authorities) is a warning in `dev`; `strict` rejects it,
+/// and an unmarked declaration fails in both.
+#[test]
+fn an_imported_cite_warns_in_dev_and_fails_in_strict() {
+    let from = "state served: \"Complaint served\" by Defendant cite FRCP 12(a)";
+    let bad = "state served: \"Complaint served\" by Defendant cite FRCP 99(a)";
+    let imported = edit(from, &format!("/// imported\n{bad}"));
+    let plain = edit(from, bad);
+    let dev = verify_one(&imported, Profile::Dev);
+    let strict = verify_one(&imported, Profile::Strict);
+    let unmarked = verify_one(&plain, Profile::Dev);
+    assert_eq!(
+        status(&dev, Obligation::CiteResolves),
+        Some(ObligationStatus::Warning)
+    );
+    assert!(dev.verification.is_accepted());
+    assert_eq!(codes(&dev), [("L1010", Severity::Warning)]);
+    assert_eq!(
+        status(&strict, Obligation::CiteResolves),
+        Some(ObligationStatus::Failed)
+    );
+    assert!(!strict.verification.is_accepted());
+    assert_eq!(codes(&strict), [("L1010", Severity::Error)]);
+    assert_eq!(
+        status(&unmarked, Obligation::CiteResolves),
+        Some(ObligationStatus::Failed)
+    );
+    assert_eq!(codes(&unmarked), [("L1010", Severity::Error)]);
+    insta::assert_json_snapshot!(dev.verification.diagnostics);
+}

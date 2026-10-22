@@ -1,12 +1,23 @@
-//! Typed, intentionally minimal wrappers over lossless Rowan syntax nodes.
+//! Typed views over lossless Rowan syntax nodes.
 //!
-//! W1 adds accessors; the set of wrappers and the kinds each one casts from
-//! are frozen by SPEC §3.
-use crate::syntax_kind::{LitLanguage, SyntaxKind};
+//! The set of wrappers and the kinds each one casts from follow SPEC §3;
+//! W1 added accessors and wrappers for the additive node kinds (`Param`,
+//! `ImportList`, `FieldExpr`, `Ratio`) and for nodes that previously had
+//! no view. Accessors never panic: absent parts (in a recovered tree)
+//! are `None` or empty.
+mod case;
+mod decls;
+mod expr;
+mod items;
+
+pub use case::VersionText;
 pub use rowan::ast::AstNode;
-use rowan::SyntaxNode;
+
+use crate::syntax_kind::{LitLanguage, SyntaxKind};
+use rowan::{NodeOrToken, SyntaxNode};
 
 type Node = rowan::SyntaxNode<LitLanguage>;
+type Token = rowan::SyntaxToken<LitLanguage>;
 
 macro_rules! ast_node {
     ($name:ident, $($kind:ident)|+) => {
@@ -37,10 +48,14 @@ macro_rules! ast_node {
             /// declared name, for declarations).
             #[must_use]
             pub fn name(&self) -> Option<rowan::SyntaxToken<LitLanguage>> {
-                self.syntax
-                    .children_with_tokens()
-                    .filter_map(rowan::NodeOrToken::into_token)
-                    .find(|token| token.kind() == SyntaxKind::Ident)
+                token(&self.syntax, SyntaxKind::Ident)
+            }
+
+            /// Leading `///` doc comment lines joined with `\n` (prefix and
+            /// one optional space removed), if any.
+            #[must_use]
+            pub fn docs(&self) -> Option<String> {
+                docs(&self.syntax)
             }
         }
     };
@@ -95,6 +110,8 @@ ast_node!(
         | RecordExpr
         | ListExpr
         | MatchExpr
+        | FieldExpr
+        | Ratio
 );
 ast_node!(UsesDecl, UsesDecl);
 ast_node!(PerspectiveDecl, PerspectiveDecl);
@@ -104,6 +121,26 @@ ast_node!(
     CaseBlock,
     FactsBlock | StakesBlock | BeliefsBlock | AnalysisBlock
 );
+// Additive W1 wrappers.
+ast_node!(ImportList, ImportList);
+ast_node!(Param, Param);
+ast_node!(IdList, IdList);
+ast_node!(Interval, Interval);
+ast_node!(Cite, CiteExpr);
+ast_node!(Literal, Literal);
+ast_node!(Hole, HoleExpr);
+ast_node!(Ratio, Ratio);
+ast_node!(RecordExpr, RecordExpr);
+ast_node!(RecordField, RecordField);
+ast_node!(CallExpr, CallExpr);
+ast_node!(MatchArm, MatchArm);
+ast_node!(GivenStmt, GivenStmt);
+ast_node!(ExpectStmt, ExpectStmt);
+ast_node!(UseItem, UseItem);
+ast_node!(VersionReq, VersionReq);
+ast_node!(SourceDecl, SourceDecl);
+ast_node!(ObserveDecl, ObserveDecl);
+ast_node!(ErrorNode, Error);
 
 /// Attempts to view a syntax root as a `.lit` source file.
 #[must_use]
@@ -117,30 +154,89 @@ pub fn case_file(root: SyntaxNode<LitLanguage>) -> Option<CaseFile> {
     CaseFile::cast(root)
 }
 
-#[cfg(test)]
-mod tests {
-    use super::{Expr, NodeDecl};
-    use crate::syntax_kind::SyntaxKind;
-    use rowan::{ast::AstNode, GreenNodeBuilder, SyntaxNode};
+// ---- shared helpers -------------------------------------------------------
 
-    #[test]
-    fn multi_kind_wrappers_cast_every_listed_kind() {
-        assert!(NodeDecl::can_cast(SyntaxKind::ChanceDecl));
-        assert!(NodeDecl::can_cast(SyntaxKind::TerminalDecl));
-        assert!(!NodeDecl::can_cast(SyntaxKind::EdgeDecl));
-        assert!(Expr::can_cast(SyntaxKind::MatchExpr) && !Expr::can_cast(SyntaxKind::Ident));
-    }
-
-    #[test]
-    fn name_is_first_identifier() {
-        let mut builder = GreenNodeBuilder::new();
-        builder.start_node(SyntaxKind::StateDecl.into());
-        builder.token(SyntaxKind::KwState.into(), "state");
-        builder.token(SyntaxKind::Whitespace.into(), " ");
-        builder.token(SyntaxKind::Ident.into(), "answer-due");
-        builder.finish_node();
-        let root = SyntaxNode::new_root(builder.finish());
-        let decl = NodeDecl::cast(root).map(|d| d.name().map(|t| t.text().to_string()));
-        assert_eq!(decl, Some(Some("answer-due".to_string())));
-    }
+/// First direct child of type `N`.
+pub(crate) fn child<N: AstNode<Language = LitLanguage>>(node: &Node) -> Option<N> {
+    node.children().find_map(N::cast)
 }
+
+/// Direct children of type `N`.
+pub(crate) fn children<N: AstNode<Language = LitLanguage>>(node: &Node) -> Vec<N> {
+    node.children().filter_map(N::cast).collect()
+}
+
+/// First direct token of `kind`.
+pub(crate) fn token(node: &Node, kind: SyntaxKind) -> Option<Token> {
+    tokens(node).find(|token| token.kind() == kind)
+}
+
+/// Direct tokens (trivia included).
+pub(crate) fn tokens(node: &Node) -> impl Iterator<Item = Token> {
+    node.children_with_tokens()
+        .filter_map(NodeOrToken::into_token)
+}
+
+/// The first direct token that is a keyword.
+pub(crate) fn keyword(node: &Node) -> Option<Token> {
+    tokens(node).find(|token| token.kind().is_keyword())
+}
+
+/// The direct child of type `N` that follows the token `after`.
+pub(crate) fn child_after<N: AstNode<Language = LitLanguage>>(
+    node: &Node,
+    after: SyntaxKind,
+) -> Option<N> {
+    node.children_with_tokens()
+        .skip_while(|element| element.kind() != after)
+        .filter_map(NodeOrToken::into_node)
+        .find_map(N::cast)
+}
+
+/// `Field` children of a `FieldList` child (or of the node itself).
+pub(crate) fn fields_of(node: &Node) -> Vec<Field> {
+    child::<FieldList>(node).map_or_else(|| children(node), |list| children(list.syntax()))
+}
+
+/// `Cite` children (citation clauses) of a declaration.
+pub(crate) fn cites_of(node: &Node) -> Vec<Cite> {
+    children(node)
+}
+
+fn docs(node: &Node) -> Option<String> {
+    let lines: Vec<String> = tokens(node)
+        .take_while(|token| crate::parser::is_trivia(token.kind()))
+        .filter(|token| token.kind() == SyntaxKind::DocComment)
+        .map(|token| {
+            let text = token.text().trim_start_matches("///");
+            text.strip_prefix(' ').unwrap_or(text).trim_end().to_owned()
+        })
+        .collect();
+    (!lines.is_empty()).then(|| lines.join("\n"))
+}
+
+/// Decodes a string literal token's text (quotes and escapes removed).
+#[must_use]
+pub fn unescape(literal: &str) -> String {
+    let inner = literal.strip_prefix('"').unwrap_or(literal);
+    let inner = inner.strip_suffix('"').unwrap_or(inner);
+    let mut out = String::with_capacity(inner.len());
+    let mut chars = inner.chars();
+    while let Some(c) = chars.next() {
+        if c != '\\' {
+            out.push(c);
+            continue;
+        }
+        match chars.next() {
+            Some('n') => out.push('\n'),
+            Some('r') => out.push('\r'),
+            Some('t') => out.push('\t'),
+            Some(other) => out.push(other),
+            None => {}
+        }
+    }
+    out
+}
+
+#[cfg(test)]
+mod tests;

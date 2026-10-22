@@ -8,7 +8,7 @@ use crate::inline_tests::{self, TestResult};
 use crate::report;
 use crate::ws::{Pkg, Session};
 use litgraph::cite::SourceCorpus;
-use litigate_base::{Diagnostic, DiagnosticCode as C, Profile, Severity, Span};
+use litigate_base::{Diagnostic, DiagnosticCode as C, Profile, Severity};
 use litigate_lower::{LoweredPackage, Lowerer, Options};
 use litigate_sema::hir;
 use litigate_syntax::FileKind;
@@ -51,65 +51,6 @@ pub fn anonymous_edges(pkg: &hir::Package) -> Vec<Diagnostic> {
             )
         })
         .collect()
-}
-
-/// True when the top-level declaration holding `span` carries the
-/// `/// imported` marker (a doc line directly above its header).
-#[must_use]
-pub fn imported(span: &Span, sources: &[(String, String)]) -> bool {
-    let Some((_, text)) = sources.iter().find(|(p, _)| *p == span.file.0) else {
-        return false;
-    };
-    let lines: Vec<&str> = text.lines().collect();
-    let at = usize::try_from(span.line).unwrap_or(1).saturating_sub(1);
-    let header = (0..=at.min(lines.len().saturating_sub(1)))
-        .rev()
-        .find(|&i| {
-            let l = lines[i];
-            !l.is_empty()
-                && !l.starts_with(char::is_whitespace)
-                && !l.starts_with(['{', '}'])
-                && !l.starts_with("//")
-        });
-    header.is_some_and(|h| {
-        lines[..h]
-            .iter()
-            .rev()
-            .take_while(|l| l.trim_start().starts_with("///"))
-            .any(|l| l.trim() == "/// imported")
-    })
-}
-
-/// SPEC §7's `dev` exception: an unresolved cite (L1010) on a declaration
-/// `litigate import` marked `/// imported` is a warning, and
-/// `cite-resolves` is judged on the adjusted severities.
-fn imported_cites(
-    verification: &mut Verification,
-    sema: &[Diagnostic],
-    sources: &[(String, String)],
-) {
-    let mut changed = false;
-    for d in &mut verification.diagnostics {
-        if d.code == C::UnboundCite && d.severity == Severity::Error && imported(&d.span, sources) {
-            d.severity = Severity::Warning;
-            changed = true;
-        }
-    }
-    if !changed {
-        return;
-    }
-    let cites: Vec<Diagnostic> = sema
-        .iter()
-        .chain(&verification.diagnostics)
-        .filter(|d| d.code == C::UnboundCite)
-        .cloned()
-        .collect();
-    let adjusted = report::findings_of(&cites);
-    for f in &mut verification.report.obligations {
-        if let Some(a) = adjusted.iter().find(|a| a.name == f.name) {
-            *f = a.clone();
-        }
-    }
 }
 
 /// `Lit.lock` diagnostics: a lock that exists, or one a package with
@@ -175,10 +116,7 @@ pub fn package(
                 packages: &all,
                 options,
             };
-            let mut verification = litigate_verify::verify_package(&input, corpus, profile);
-            if profile == Profile::Dev {
-                imported_cites(&mut verification, &pkg.check.diagnostics, &pkg.files);
-            }
+            let verification = litigate_verify::verify_package(&input, corpus, profile);
             let (tests, _) = inline_tests::run(clocks, hir, &pkg.files, None);
             (verification, lowering.ok(), tests)
         }
@@ -199,30 +137,5 @@ pub fn package(
         verification,
         findings,
         lowered,
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    fn at(line: u32) -> Span {
-        Span {
-            file: "a.lit".into(),
-            line,
-            col: 3,
-            end_line: line,
-            end_col: 4,
-        }
-    }
-
-    #[test]
-    fn the_marker_covers_its_whole_declaration() {
-        let text = "/// imported\nnode a: \"A\"\n{\n  e -> b {\n    authority cite X 1\n  }\n}\n\nnode b: \"B\" {\n}\n";
-        let sources = [("a.lit".to_owned(), text.to_owned())];
-        assert!(imported(&at(2), &sources));
-        assert!(imported(&at(5), &sources));
-        assert!(!imported(&at(9), &sources));
-        assert!(!imported(&at(5), &[]));
     }
 }

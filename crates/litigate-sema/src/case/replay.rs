@@ -251,13 +251,7 @@ impl<'g> Cx<'_, 'g> {
             .into_iter()
             .partition(|(_, e)| e.actor == "either" || actor.is_none_or(|a| a == e.actor));
         match (fits.as_slice(), misfits.as_slice()) {
-            ([(pack, edge)], _) => {
-                self.deadline(k, pack, edge);
-                let to = self.graph.target(pack, edge);
-                let id = edge.id.as_ref().map(|id| format!("{pack}::{id}"));
-                self.record(k, Effect::Took, &posture, &to, id);
-                Some(to)
-            }
+            ([(pack, edge)], _) => Some(self.take(k, &posture, pack, edge)),
             ([], []) if !removed.is_empty() => self.takes_removed(k, &posture, &removed[0]),
             ([], []) if self.timing_only(k) => {
                 self.record(k, Effect::Timing, &posture, &posture, None);
@@ -304,6 +298,16 @@ impl<'g> Cx<'_, 'g> {
                 None
             }
         }
+    }
+
+    /// Event `k` takes `edge` (written in `pack`) from `posture`: its
+    /// `within` deadline is checked and the step recorded; the next posture.
+    fn take(&mut self, k: usize, posture: &str, pack: &str, edge: &Edge) -> String {
+        self.deadline(k, pack, edge);
+        let to = self.graph.target(pack, edge);
+        let id = edge.id.as_ref().map(|id| format!("{pack}::{id}"));
+        self.record(k, Effect::Took, posture, &to, id);
+        to
     }
 
     /// Records event `k` moving the matter from `from` to `to`.

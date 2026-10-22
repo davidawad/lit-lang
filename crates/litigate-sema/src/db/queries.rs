@@ -8,10 +8,16 @@ use crate::resolve::graph::{self, ModuleGraph};
 use crate::resolve::sig::{self, Signature};
 use crate::types::build::{self, ModuleCheck, PackageCheck};
 
-/// Parses a file into its item tree.
+/// The file's lossless CST and L0xxx errors (shared with the LSP).
 #[salsa::tracked(returns(ref))]
-pub fn parse_file(db: &dyn salsa::Database, file: SourceFile) -> Parsed {
-    parse::parse(file.text(db))
+pub fn syntax(db: &dyn salsa::Database, file: SourceFile) -> litigate_syntax::Parse {
+    litigate_syntax::parse_lit(file.text(db))
+}
+
+/// The file's item tree, lowered from [`syntax`].
+#[salsa::tracked(returns(ref))]
+pub fn item_tree(db: &dyn salsa::Database, file: SourceFile) -> Parsed {
+    parse::lower(syntax(db, file))
 }
 
 /// Module name and imported module paths (no ranges, so body edits backdate).
@@ -26,7 +32,7 @@ pub struct Header {
 /// The file's module header.
 #[salsa::tracked(returns(ref))]
 pub fn module_header(db: &dyn salsa::Database, file: SourceFile) -> Header {
-    let tree = &parse_file(db, file).tree;
+    let tree = &item_tree(db, file).tree;
     Header {
         module: dotted(&tree.module),
         imports: tree.imports.iter().map(|i| dotted(&i.path)).collect(),

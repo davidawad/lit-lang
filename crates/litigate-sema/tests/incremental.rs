@@ -43,7 +43,14 @@ fn edits_recheck_only_the_module_and_its_dependents() {
     assert!(check_package(&db, pkg).diagnostics.is_empty());
     let log = db.take_log();
     assert!(
-        ran(&log, "parse_file", a) && ran(&log, "signature", a) && ran(&log, "check_module", a)
+        ran(&log, "syntax", a)
+            && ran(&log, "item_tree", a)
+            && ran(&log, "signature", a)
+            && ran(&log, "check_module", a)
+    );
+    assert!(
+        !ran(&log, "syntax", b) && !ran(&log, "syntax", c),
+        "{log:?}"
     );
     assert!(
         !ran(&log, "check_module", b) && !ran(&log, "check_module", c),
@@ -63,7 +70,7 @@ fn edits_recheck_only_the_module_and_its_dependents() {
         "{log:?}"
     );
     assert!(
-        !ran(&log, "check_module", c) && !ran(&log, "parse_file", c),
+        !ran(&log, "check_module", c) && !ran(&log, "item_tree", c),
         "{log:?}"
     );
 

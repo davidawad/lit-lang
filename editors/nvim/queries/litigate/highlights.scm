@@ -1,0 +1,1 @@
+../../../tree-sitter-litigate/queries/highlights.scm

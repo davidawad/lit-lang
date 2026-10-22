@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-//! `validate`: check any litgraph document (pack, links, scenario, request)
+//! `validate`: check any litgraph document (pack, links, clock library,
+//! scenario, request)
 //! without running an analysis. Parsing is strict (unknown fields are
 //! errors); semantic checks compile the graph and resolve the scenario so
 //! bad node/edge refs and expressions surface too.
@@ -10,6 +11,7 @@ use serde_json::Value;
 use super::calibration::CalibrationSet;
 use super::catalog::Catalog;
 use super::{scenario_ref, Request};
+use crate::clock::ClockLibrary;
 use crate::error::{Error, Result};
 use crate::lint::{self, Diagnostic};
 use crate::model::{CompileOptions, Graph, LinkFile, Pack};
@@ -34,7 +36,11 @@ pub struct Validation {
 #[must_use]
 pub fn detect(doc: &Value) -> &'static str {
     let has = |k: &str| doc.get(k).is_some();
-    if has("schemaVersion") {
+    if has("countingRules") || has("calendars") {
+        // A clock-library fragment (`packs/clock/*.json`) also carries a
+        // `schemaVersion`, so it must be checked before "pack".
+        "clock"
+    } else if has("schemaVersion") {
         "pack"
     } else if has("links") || has("instances") {
         "links"
@@ -72,6 +78,49 @@ fn scenario_against(
     }
 }
 
+/// A pack compiles on its own, lints, and names a counting rule the
+/// catalog's clock library has.
+fn validate_pack(doc: &Value, catalog: &Catalog, out: &mut Validation) {
+    let compiled = parse::<Pack>(doc).and_then(|p| {
+        Graph::compile(
+            std::slice::from_ref(&p),
+            &LinkFile::default(),
+            &CompileOptions::default(),
+        )
+        .map(|g| (p, g))
+    });
+    match compiled {
+        Ok((p, g)) => {
+            if let Some(Err(e)) = p.counting.as_deref().map(|id| catalog.clock.clock(id)) {
+                out.errors.push(format!("pack {}: `counting`: {e}", p.id));
+            }
+            out.diagnostics = lint::lint(&g, &[p]);
+        }
+        Err(e) => out.errors.push(e.to_string()),
+    }
+}
+
+/// A clock-library fragment parses and validates, and every calendar its
+/// rules name exists in it or in the catalog's library.
+fn validate_clock(doc: &Value, catalog: &Catalog, out: &mut Validation) {
+    match ClockLibrary::from_json(&doc.to_string()) {
+        Ok(lib) => {
+            for r in &lib.counting_rules {
+                for h in &r.holidays {
+                    let mut known = lib.calendars.iter().chain(&catalog.clock.calendars);
+                    if !known.any(|c| &c.id == h) {
+                        out.errors.push(format!(
+                            "counting rule {}: unknown holiday calendar {h}",
+                            r.id
+                        ));
+                    }
+                }
+            }
+        }
+        Err(e) => out.errors.push(e.to_string()),
+    }
+}
+
 /// Validate `doc` as `kind` (or the detected kind).
 #[must_use]
 pub fn validate(doc: &Value, kind: Option<&str>, catalog: &Catalog) -> Validation {
@@ -81,6 +130,7 @@ pub fn validate(doc: &Value, kind: Option<&str>, catalog: &Catalog) -> Validatio
         "request" => "request",
         "calibration" => "calibration",
         "named-scenario" => "named-scenario",
+        "clock" => "clock",
         _ => "scenario",
     };
     let mut out = Validation {
@@ -91,17 +141,8 @@ pub fn validate(doc: &Value, kind: Option<&str>, catalog: &Catalog) -> Validatio
         warnings: vec![],
     };
     match kind {
-        "pack" => match parse::<Pack>(doc).and_then(|p| {
-            Graph::compile(
-                std::slice::from_ref(&p),
-                &LinkFile::default(),
-                &CompileOptions::default(),
-            )
-            .map(|g| (p, g))
-        }) {
-            Ok((p, g)) => out.diagnostics = lint::lint(&g, &[p]),
-            Err(e) => out.errors.push(e.to_string()),
-        },
+        "pack" => validate_pack(doc, catalog, &mut out),
+        "clock" => validate_clock(doc, catalog, &mut out),
         "links" => match parse::<LinkFile>(doc) {
             Ok(lf) => {
                 let packs: Vec<Pack> = catalog.packs.iter().map(|(_, p, _)| p.clone()).collect();
@@ -273,6 +314,36 @@ mod tests {
         assert_eq!(v.kind, "scenario");
         assert!(!v.valid);
         assert_eq!(v.errors.len(), 1);
+        Ok(())
+    }
+
+    #[test]
+    fn validates_clock_fragments_and_pack_counting_references() -> Result<()> {
+        let c = Catalog::embedded()?;
+        let frcp6 = include_str!("../../../../packs/clock/frcp6.json");
+        let doc: Value = serde_json::from_str(frcp6).map_err(|e| Error::Parse(e.to_string()))?;
+        let v = validate(&doc, None, &c);
+        assert!(v.kind == "clock" && v.valid, "{:?}", v.errors);
+        let mut dangling = doc.clone();
+        dangling["countingRules"][0]["holidays"] = json!(["no-such-calendar"]);
+        let v = validate(&dangling, None, &c);
+        assert!(
+            !v.valid && v.errors[0].contains("no-such-calendar"),
+            "{:?}",
+            v.errors
+        );
+        let mut typo = doc;
+        typo["countingRules"][0]["steps"][0]["text"] = json!("exclude {trigger_date}");
+        assert!(!validate(&typo, None, &c).valid);
+
+        let pack = |counting: &str| {
+            json!({"schemaVersion": 3, "id": "t", "title": "t", "startNodeId": "a", "counting": counting,
+                "nodes": [{"id": "a", "label": "a"}, {"id": "b", "kind": "terminal", "label": "b", "payoff": 1}],
+                "edges": [{"from": "a", "to": "b", "label": "go", "actor": "applicant"}]})
+        };
+        assert!(validate(&pack("frcp6"), None, &c).valid);
+        let v = validate(&pack("frcp7"), None, &c);
+        assert!(!v.valid && v.errors[0].contains("frcp7"), "{:?}", v.errors);
         Ok(())
     }
 }

@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 3,
+  "countingRules": [
+    {
+      "id": "itc210",
+      "label": "19 CFR 210.6(a)",
+      "sourceUrl": "https://www.law.cornell.edu/cfr/text/19/210.6",
+      "closedWeekdays": [
+        "saturday",
+        "sunday"
+      ],
+      "holidays": [
+        "us-federal-holidays"
+      ],
+      "minLength": {
+        "days": 1,
+        "message": "19 CFR 201.14(a) periods must be at least 1 day"
+      },
+      "steps": [
+        {
+          "op": "anchor",
+          "kind": "adjacent-business-day",
+          "text": "19 CFR 201.14(a): anchor at the first business day {after} {trigger} -> {date}"
+        },
+        {
+          "op": "count",
+          "periods": [
+            {
+              "below": 7,
+              "count": "business",
+              "text": "19 CFR 201.14(a) short-period rule (< 7 days): count {n} business day(s) from the anchor -> {date} (already a business day)"
+            },
+            {
+              "count": "calendar",
+              "text": "19 CFR 201.14(a) general rule (>= 7 days): count {n} calendar day(s) from the anchor -> {date}"
+            }
+          ]
+        },
+        {
+          "op": "roll",
+          "forward": {
+            "toward": "later",
+            "text": "19 CFR 201.14(a): last day fell on a Saturday, Sunday, or Federal legal holiday; extends until the end of the next business day -> {date}"
+          },
+          "backward": {
+            "toward": "later",
+            "text": "19 CFR 201.14(a): last day fell on a Saturday, Sunday, or Federal legal holiday; extends until the end of the next business day -> {date}"
+          }
+        },
+        {
+          "op": "base"
+        },
+        {
+          "op": "service",
+          "methods": [
+            {
+              "method": "mail",
+              "days": 3
+            },
+            {
+              "method": "mail-foreign",
+              "days": 10
+            },
+            {
+              "method": "express",
+              "days": 1
+            },
+            {
+              "method": "express-foreign",
+              "days": 5
+            }
+          ],
+          "text": "19 CFR 201.16(d)/(e): service by {method} adds {days} calendar day(s) -> {date}",
+          "backwardText": "19 CFR 201.16 service extensions apply to forward periods only; ignored"
+        },
+        {
+          "op": "roll",
+          "forward": {
+            "toward": "later",
+            "text": "19 CFR 201.14(a): re-applied after the service extension (interpretive choice; see module doc) -> {date}"
+          },
+          "backward": {
+            "toward": "later",
+            "text": "19 CFR 201.14(a): re-applied after the service extension (interpretive choice; see module doc) -> {date}"
+          }
+        }
+      ]
+    }
+  ]
+}

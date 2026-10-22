@@ -8,7 +8,7 @@ use serde_json::{json, Value};
 
 use super::Warn;
 use crate::clock::{
-    self, ClockConfig, ComputedDeadline, Date, Direction, RuleSet, ServiceMethod, Unit,
+    self, Clock, ClockConfig, ClockLibrary, ComputedDeadline, Date, Direction, ServiceMethod, Unit,
 };
 use crate::error::{Error, Result};
 use crate::model::{Deadline as PackDeadline, EdgeIx, Graph, NodeIx};
@@ -31,9 +31,12 @@ struct Ctx {
     clerk_inaccessible: bool,
 }
 
-/// Resolve the authored counting rule for `e`'s pack. A cross-pack link
-/// edge is keyed by its origin node's pack.
-fn ruleset_for_edge(g: &Graph, e: EdgeIx) -> Option<RuleSet> {
+/// Resolve the counting rule `e`'s pack names in its `counting` field
+/// against the clock library. A cross-pack link edge is keyed by its origin
+/// node's pack. Nothing is inferred from the pack's forum or id: a pack
+/// with no `counting` field, or one naming a rule the library lacks, is an
+/// error the caller reports as a `deadline-uncomputable` warning.
+fn clock_for_edge<'a>(g: &Graph, lib: &'a ClockLibrary, e: EdgeIx) -> Result<Clock<'a>> {
     let edge = &g.edges[e];
     let pack_id: &str = if edge.link {
         &g.nodes[edge.from].pack
@@ -43,16 +46,16 @@ fn ruleset_for_edge(g: &Graph, e: EdgeIx) -> Option<RuleSet> {
     let counting = g
         .packs
         .iter()
-        .find(|p| p.id == pack_id)?
-        .counting
-        .as_deref()?;
-    match counting {
-        "frcp6" | "ttab-calendar" => Some(RuleSet::Frcp6),
-        "rcfc6" => Some(RuleSet::Rcfc6),
-        "frap26" => Some(RuleSet::Frap26),
-        "itc210" => Some(RuleSet::Itc210),
-        _ => None,
-    }
+        .find(|p| p.id == pack_id)
+        .and_then(|p| p.counting.as_deref())
+        .ok_or_else(|| {
+            Error::Invalid(format!(
+                "edge {}: pack {pack_id:?} declares no `counting` rule, so its deadlines are not computed",
+                edge.id
+            ))
+        })?;
+    lib.clock(counting)
+        .map_err(|err| Error::Invalid(format!("edge {}: pack {pack_id:?}: {err}", edge.id)))
 }
 
 fn unit_of(d: &PackDeadline) -> Result<Unit> {
@@ -76,7 +79,13 @@ fn days_of(d: &PackDeadline) -> Result<i64> {
     Ok(d.length as i64)
 }
 
-fn edge_result(g: &Graph, e: EdgeIx, d: &PackDeadline, computed: &ComputedDeadline) -> Value {
+fn edge_result(
+    g: &Graph,
+    e: EdgeIx,
+    d: &PackDeadline,
+    clock: &Clock,
+    computed: &ComputedDeadline,
+) -> Value {
     let edge = &g.edges[e];
     json!({
         "edge": {
@@ -87,8 +96,8 @@ fn edge_result(g: &Graph, e: EdgeIx, d: &PackDeadline, computed: &ComputedDeadli
             "authority": edge.authority,
         },
         "rule_set": computed.rule_set,
-        "rule_set_label": computed.rule_set.label(),
-        "source_url": computed.rule_set.source_url(),
+        "rule_set_label": clock.rule.label,
+        "source_url": clock.rule.source_url,
         "deadline_length": d.length,
         "unit": d.unit.clone().unwrap_or_else(|| "calendar".into()),
         "trigger": computed.anchor_date,
@@ -101,18 +110,12 @@ fn edge_result(g: &Graph, e: EdgeIx, d: &PackDeadline, computed: &ComputedDeadli
     })
 }
 
-fn compute_for_edge(g: &Graph, e: EdgeIx, ctx: &Ctx) -> Result<Value> {
+fn compute_for_edge(g: &Graph, clock: &Clock, e: EdgeIx, ctx: &Ctx) -> Result<Value> {
     let edge = &g.edges[e];
     let d = edge
         .deadline
         .as_ref()
         .ok_or_else(|| Error::Invalid(format!("edge {} has no deadline", edge.id)))?;
-    let rs = ruleset_for_edge(g, e).ok_or_else(|| {
-        Error::Invalid(format!(
-            "edge {}: pack {:?} has no recognized authored counting rule",
-            edge.id, edge.pack
-        ))
-    })?;
     let dl = clock::DayDeadline {
         trigger: ctx.trigger,
         days: days_of(d)?,
@@ -124,8 +127,8 @@ fn compute_for_edge(g: &Graph, e: EdgeIx, ctx: &Ctx) -> Result<Value> {
         additional_holidays: ctx.additional_holidays.clone(),
         clerk_inaccessible: ctx.clerk_inaccessible,
     };
-    let computed = clock::compute_due_date(&dl, rs, &cfg)?;
-    Ok(edge_result(g, e, d, &computed))
+    let computed = clock::compute_due_date(&dl, clock, &cfg)?;
+    Ok(edge_result(g, e, d, clock, &computed))
 }
 
 /// Every edge id reachable from `start` by following out-edges (`start`
@@ -152,7 +155,11 @@ fn reachable_edges(g: &Graph, start: NodeIx) -> Vec<EdgeIx> {
     out
 }
 
-pub(super) fn deadlines_op(g: &Graph, a: &DeadlinesArgs) -> Result<(Value, Vec<Warn>)> {
+pub(super) fn deadlines_op(
+    g: &Graph,
+    lib: &ClockLibrary,
+    a: &DeadlinesArgs,
+) -> Result<(Value, Vec<Warn>)> {
     let trigger = Date::parse_iso(a.trigger)?;
     let additional_holidays: Result<Vec<Date>> = a
         .additional_holidays
@@ -168,20 +175,20 @@ pub(super) fn deadlines_op(g: &Graph, a: &DeadlinesArgs) -> Result<(Value, Vec<W
 
     if let Some(r) = a.edge {
         let e = g.edge(r)?;
-        if ruleset_for_edge(g, e).is_none() {
-            return Ok((
-                json!({ "trigger": a.trigger, "count": 0, "deadlines": [] }),
-                vec![Warn {
-                    code: "deadline-uncomputable".into(),
-                    at: Some(g.edges[e].id.clone()),
-                    message: format!(
-                        "pack {:?} has no recognized authored counting rule",
-                        g.edges[e].pack
-                    ),
-                }],
-            ));
-        }
-        let v = compute_for_edge(g, e, &ctx)?;
+        let clock = match clock_for_edge(g, lib, e) {
+            Ok(c) => c,
+            Err(err) => {
+                return Ok((
+                    json!({ "trigger": a.trigger, "count": 0, "deadlines": [] }),
+                    vec![Warn {
+                        code: "deadline-uncomputable".into(),
+                        at: Some(g.edges[e].id.clone()),
+                        message: err.to_string(),
+                    }],
+                ));
+            }
+        };
+        let v = compute_for_edge(g, &clock, e, &ctx)?;
         return Ok((
             json!({ "trigger": a.trigger, "count": 1, "deadlines": [v] }),
             vec![],
@@ -204,7 +211,7 @@ pub(super) fn deadlines_op(g: &Graph, a: &DeadlinesArgs) -> Result<(Value, Vec<W
         if g.edges[e].deadline.is_none() {
             continue;
         }
-        match compute_for_edge(g, e, &ctx) {
+        match clock_for_edge(g, lib, e).and_then(|clock| compute_for_edge(g, &clock, e, &ctx)) {
             Ok(v) => out.push(v),
             Err(err) => warns.push(Warn {
                 code: "deadline-uncomputable".into(),

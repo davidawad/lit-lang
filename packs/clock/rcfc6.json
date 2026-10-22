@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 3,
+  "countingRules": [
+    {
+      "id": "rcfc6",
+      "label": "RCFC 6",
+      "sourceUrl": "https://www.uscfc.uscourts.gov/rules",
+      "closedWeekdays": [
+        "saturday",
+        "sunday"
+      ],
+      "holidays": [
+        "us-federal-holidays",
+        "us-inauguration-day"
+      ],
+      "steps": [
+        {
+          "op": "anchor",
+          "kind": "trigger",
+          "text": "RCFC 6(a)(1)(A): exclude the trigger date {trigger}"
+        },
+        {
+          "op": "count",
+          "periods": [
+            {
+              "unit": "calendar",
+              "count": "calendar",
+              "text": "RCFC 6(a)(1)(B): count {n} calendar day(s) {after} the trigger, including weekends/holidays -> {date}"
+            },
+            {
+              "unit": "court",
+              "count": "business",
+              "text": "court days: advance {n} business day(s) {forward} from {trigger} (skipping weekends/holidays) -> {date}"
+            }
+          ]
+        },
+        {
+          "op": "service",
+          "methods": [
+            {
+              "method": "mail",
+              "days": 3
+            },
+            {
+              "method": "clerk",
+              "days": 3
+            },
+            {
+              "method": "other-consented",
+              "days": 3
+            }
+          ],
+          "text": "RCFC 6(d)/(c): service by {method} adds {days} day(s) (to the unrolled count) -> {date}",
+          "backwardText": "RCFC 6(d)/(c) does not apply to backward-counted periods; ignored"
+        },
+        {
+          "op": "base"
+        },
+        {
+          "op": "roll",
+          "forward": {
+            "toward": "later",
+            "text": "RCFC 6(a)(1)(C): last day fell on a Saturday, Sunday, or legal holiday; roll forward -> {date}"
+          },
+          "backward": {
+            "toward": "earlier",
+            "text": "RCFC 6(a)(5): last day fell on a Saturday, Sunday, or legal holiday; roll backward -> {date}"
+          }
+        },
+        {
+          "op": "clerkInaccessible",
+          "text": "RCFC 6(a)(3): clerk's office inaccessible on the last day; extend -> {date}",
+          "ignoredText": "clerk_inaccessible requested but RCFC 6 has no applicable clerk-inaccessibility extension for this direction; ignored"
+        }
+      ],
+      "hours": {
+        "text": "RCFC 6(a)(2)(A): begin counting immediately (the trigger hour counts); +{n} hour(s)",
+        "rollText": "RCFC 6(a)(2)(C): period would end on a Saturday, Sunday, or legal holiday; continue to the same time on {date}"
+      }
+    }
+  ]
+}

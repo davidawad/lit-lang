@@ -7,6 +7,7 @@ use serde_json::{json, Value};
 use super::calibration::{CalibrationCatalog, CalibrationSet};
 use super::catalog::Catalog;
 use super::{Request, Response, API_VERSION, ENGINE};
+use crate::clock::ClockLibrary;
 use crate::error::{Error, Result};
 use crate::metrics;
 use crate::model::{LinkFile, Pack};
@@ -21,6 +22,7 @@ pub const SCHEMA_KINDS: &[&str] = &[
     "pack",
     "links",
     "calibration",
+    "clock",
 ];
 
 /// The JSON Schema of a document kind.
@@ -36,6 +38,7 @@ pub fn schema(kind: &str) -> Result<Value> {
         "pack" => schema_for!(Pack),
         "links" => schema_for!(LinkFile),
         "calibration" => schema_for!(CalibrationSet),
+        "clock" => schema_for!(ClockLibrary),
         other => {
             return Err(Error::NotFound(format!(
                 "schema {other}; kinds: {}",
@@ -139,7 +142,7 @@ pub fn describe(catalog: &Catalog) -> Value {
             "posterior": "{from?, node?, samples?, seed?, credibility?} Monte Carlo over every chance node's Dirichlet posterior: credible intervals on the value and on each option's Q at node, and P(each option is optimal)",
             "voi": "{from?, samples?, seed?, top?, max_nodes?, studies?: [{node, k, cost? | cost_edge?, label?}]} value of information: EVPI of each chance node's outcome and probabilities, EVPI of everything, EVSI of each study (k observations) vs its cost",
             "structure": "{what: summary|scc|dominators|mincut|betweenness|reachability, from?, to?, capacity?, top?}",
-            "deadlines": "{trigger, edge?, node?, reachable?, service_method?, additional_holidays?, clerk_inaccessible?} concrete due dates + computation steps for authored deadline specs (FRCP 6 / RCFC 6 / FRAP 26 / 19 CFR 210.6(a), chosen by pack forum)",
+            "deadlines": "{trigger, edge?, node?, reachable?, service_method?, additional_holidays?, clerk_inaccessible?} concrete due dates + computation steps for authored deadline specs (counted under the clock-library rule named by the pack's `counting` field; `litgraph schema clock`)",
             "settle": "{node?, self_side?: plaintiff|defendant, opponent_risk?: objective, bargaining_power?, discount_annual?: {plaintiff?, defendant?}, delta?: {plaintiff?, defendant?}, rule68?: {offer, costs?, eligible?}, runs?, seed?, max_steps?} each side's walk-away value (certainty equivalent under its own objective) -> ZOPA or no-deal gap, midpoint / Nash (symmetric + weighted) / Rubinstein prices, when the surplus peaks along the likely line and how the policy changes with settling always available, FRCP/RCFC 68(d) offer-of-judgment cost shifting; needs scenario.opponent_objective (docs/SETTLEMENT.md)",
             "compare": "{variant: scenario merge-patch, inner: op} base vs variant + deltas",
             "batch": "{ops: [op, ...]} several ops on one request",

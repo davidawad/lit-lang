@@ -1,0 +1,169 @@
+{
+  "schemaVersion": 3,
+  "calendars": [
+    {
+      "id": "us-federal-holidays",
+      "title": "Legal public holidays (5 U.S.C. § 6103(a)), observed per § 6103(b)",
+      "cite": "5 U.S.C. § 6103(a)-(b)",
+      "sourceUrl": "https://www.law.cornell.edu/uscode/text/5/6103",
+      "holidays": [
+        {
+          "id": "new-years-day",
+          "name": "New Year's Day",
+          "date": {
+            "fixed": {
+              "month": 1,
+              "day": 1
+            }
+          },
+          "observed": "nearest-weekday"
+        },
+        {
+          "id": "mlk-day",
+          "name": "Birthday of Martin Luther King, Jr.",
+          "date": {
+            "nthWeekday": {
+              "month": 1,
+              "weekday": "monday",
+              "nth": 3
+            }
+          },
+          "effective": {
+            "from": "1986-01-01"
+          },
+          "cite": "Pub. L. 98-144, § 1 (effective January 1, 1986; first observed January 20, 1986)"
+        },
+        {
+          "id": "washingtons-birthday",
+          "name": "Washington's Birthday",
+          "date": {
+            "nthWeekday": {
+              "month": 2,
+              "weekday": "monday",
+              "nth": 3
+            }
+          }
+        },
+        {
+          "id": "memorial-day",
+          "name": "Memorial Day",
+          "date": {
+            "nthWeekday": {
+              "month": 5,
+              "weekday": "monday",
+              "nth": -1
+            }
+          }
+        },
+        {
+          "id": "juneteenth",
+          "name": "Juneteenth National Independence Day",
+          "date": {
+            "fixed": {
+              "month": 6,
+              "day": 19
+            }
+          },
+          "observed": "nearest-weekday",
+          "effective": {
+            "from": "2021-06-17"
+          },
+          "cite": "Pub. L. 117-17 (enacted and effective June 17, 2021; first observed Friday June 18, 2021)"
+        },
+        {
+          "id": "independence-day",
+          "name": "Independence Day",
+          "date": {
+            "fixed": {
+              "month": 7,
+              "day": 4
+            }
+          },
+          "observed": "nearest-weekday"
+        },
+        {
+          "id": "labor-day",
+          "name": "Labor Day",
+          "date": {
+            "nthWeekday": {
+              "month": 9,
+              "weekday": "monday",
+              "nth": 1
+            }
+          }
+        },
+        {
+          "id": "columbus-day",
+          "name": "Columbus Day",
+          "date": {
+            "nthWeekday": {
+              "month": 10,
+              "weekday": "monday",
+              "nth": 2
+            }
+          }
+        },
+        {
+          "id": "veterans-day",
+          "name": "Veterans Day",
+          "date": {
+            "fixed": {
+              "month": 11,
+              "day": 11
+            }
+          },
+          "observed": "nearest-weekday"
+        },
+        {
+          "id": "thanksgiving-day",
+          "name": "Thanksgiving Day",
+          "date": {
+            "nthWeekday": {
+              "month": 11,
+              "weekday": "thursday",
+              "nth": 4
+            }
+          }
+        },
+        {
+          "id": "christmas-day",
+          "name": "Christmas Day",
+          "date": {
+            "fixed": {
+              "month": 12,
+              "day": 25
+            }
+          },
+          "observed": "nearest-weekday"
+        }
+      ]
+    },
+    {
+      "id": "us-inauguration-day",
+      "title": "Inauguration Day (5 U.S.C. § 6103(c))",
+      "cite": "5 U.S.C. § 6103(c)",
+      "sourceUrl": "https://www.law.cornell.edu/uscode/text/5/6103",
+      "holidays": [
+        {
+          "id": "inauguration-day",
+          "name": "Inauguration Day",
+          "date": {
+            "fixed": {
+              "month": 1,
+              "day": 20
+            }
+          },
+          "cycle": {
+            "every": 4,
+            "anchorYear": 1965
+          },
+          "observed": "nearest-weekday",
+          "effective": {
+            "from": "1966-09-06"
+          },
+          "cite": "5 U.S.C. § 6103(c) (\"January 20 of each fourth year after 1965\"; enacted by Pub. L. 89-554, September 6, 1966). The Saturday-to-Friday shift is an interpretive choice; see packs/clock/SOURCES-NOTES.md"
+        }
+      ]
+    }
+  ]
+}

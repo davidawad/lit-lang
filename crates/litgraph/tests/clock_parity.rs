@@ -16,9 +16,14 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)]
 
 use litgraph::clock::{
-    compute_due_date, compute_hour_deadline, ClockConfig, Date, DayDeadline, Direction,
-    HourDeadline, RuleSet, ServiceMethod, Unit,
+    compute_due_date, compute_hour_deadline, Clock, ClockConfig, ClockLibrary, Date, DayDeadline,
+    Direction, HourDeadline, ServiceMethod, Unit,
 };
+
+/// A shipped counting rule from the embedded clock library (`packs/clock/`).
+fn rule(id: &str) -> Clock<'static> {
+    ClockLibrary::embedded().0.clock(id).unwrap()
+}
 
 fn forward(trigger: &str, days: i64) -> String {
     compute_due_date(
@@ -29,7 +34,7 @@ fn forward(trigger: &str, days: i64) -> String {
             unit: Unit::Calendar,
             service_method: None,
         },
-        RuleSet::Frcp6,
+        &rule("frcp6"),
         &ClockConfig::default(),
     )
     .unwrap()
@@ -45,7 +50,7 @@ fn backward(trigger: &str, days: i64) -> String {
             unit: Unit::Calendar,
             service_method: None,
         },
-        RuleSet::Frcp6,
+        &rule("frcp6"),
         &ClockConfig::default(),
     )
     .unwrap()
@@ -61,7 +66,7 @@ fn forward_mail(trigger: &str, days: i64) -> String {
             unit: Unit::Calendar,
             service_method: Some(ServiceMethod::Mail),
         },
-        RuleSet::Frcp6,
+        &rule("frcp6"),
         &ClockConfig::default(),
     )
     .unwrap()
@@ -185,7 +190,7 @@ fn clerk_service_adds_three_days() {
             unit: Unit::Calendar,
             service_method: Some(ServiceMethod::Clerk),
         },
-        RuleSet::Frcp6,
+        &rule("frcp6"),
         &ClockConfig::default(),
     )
     .unwrap();
@@ -202,7 +207,7 @@ fn other_consented_service_adds_three_days() {
             unit: Unit::Calendar,
             service_method: Some(ServiceMethod::OtherConsented),
         },
-        RuleSet::Frcp6,
+        &rule("frcp6"),
         &ClockConfig::default(),
     )
     .unwrap();
@@ -231,7 +236,7 @@ fn no_service_method_means_no_extension() {
             unit: Unit::Calendar,
             service_method: None,
         },
-        RuleSet::Frcp6,
+        &rule("frcp6"),
         &ClockConfig::default(),
     )
     .unwrap();
@@ -249,7 +254,7 @@ fn service_extension_does_not_apply_to_backward_periods() {
             unit: Unit::Calendar,
             service_method: Some(ServiceMethod::Mail),
         },
-        RuleSet::Frcp6,
+        &rule("frcp6"),
         &ClockConfig::default(),
     )
     .unwrap();
@@ -271,7 +276,7 @@ fn clerk_inaccessible_extends_to_next_accessible_day() {
             unit: Unit::Calendar,
             service_method: None,
         },
-        RuleSet::Frcp6,
+        &rule("frcp6"),
         &ClockConfig {
             clerk_inaccessible: true,
             ..ClockConfig::default()
@@ -292,7 +297,7 @@ fn clerk_inaccessible_on_friday_extends_to_next_monday() {
             unit: Unit::Calendar,
             service_method: None,
         },
-        RuleSet::Frcp6,
+        &rule("frcp6"),
         &ClockConfig {
             clerk_inaccessible: true,
             ..ClockConfig::default()
@@ -312,7 +317,7 @@ fn clerk_inaccessibility_false_by_default() {
             unit: Unit::Calendar,
             service_method: None,
         },
-        RuleSet::Frcp6,
+        &rule("frcp6"),
         &ClockConfig::default(),
     )
     .unwrap();
@@ -330,7 +335,7 @@ fn hours_from(trigger: &str, hour: i64, hours: i64) -> litgraph::clock::Computed
             trigger_epoch_seconds,
             hours,
         },
-        RuleSet::Frcp6,
+        &rule("frcp6"),
         &ClockConfig::default(),
     )
     .unwrap()
@@ -387,7 +392,7 @@ fn state_holiday_is_treated_as_a_legal_holiday() {
             unit: Unit::Calendar,
             service_method: None,
         },
-        RuleSet::Frcp6,
+        &rule("frcp6"),
         &ClockConfig {
             additional_holidays: vec![Date::parse_iso("2026-08-10").unwrap()],
             clerk_inaccessible: false,

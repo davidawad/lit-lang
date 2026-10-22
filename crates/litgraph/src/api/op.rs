@@ -334,8 +334,8 @@ pub enum Op {
         top: usize,
     },
     /// Concrete due dates, with computation steps, for authored pack
-    /// `deadline` specs (`FRCP 6` / `RCFC 6` / `FRAP 26` / `19 CFR
-    /// 210.6(a)`, chosen from the owning pack's `forum`/id).
+    /// `deadline` specs, counted under the clock-library rule the owning
+    /// pack names in its `counting` field.
     Deadlines {
         /// The triggering event date, `"YYYY-MM-DD"`.
         trigger: String,

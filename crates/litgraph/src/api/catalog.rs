@@ -6,6 +6,7 @@ use std::path::{Path, PathBuf};
 use schemars::JsonSchema;
 use serde::Serialize;
 
+use crate::clock::ClockLibrary;
 use crate::error::{Error, Result};
 use crate::model::{CompileOptions, Graph, LinkFile, Pack};
 use crate::scenario::NamedScenario;
@@ -37,8 +38,12 @@ pub struct Catalog {
     /// Cross-pack links and instances. Empty (not composed) if `links.json`
     /// itself failed to parse -- see `load_errors`.
     pub links: LinkFile,
-    /// Pack and `links.json` files that failed to parse and were skipped,
-    /// in the order encountered. Empty in the ordinary case.
+    /// Counting rules and holiday calendars (`clock/*.json` files), which
+    /// a pack's `counting` field resolves against. A source with no
+    /// `clock/` files gets the embedded library.
+    pub clock: ClockLibrary,
+    /// Pack, `links.json` and `clock/` files that failed to parse and were
+    /// skipped, in the order encountered. Empty in the ordinary case.
     pub load_errors: Vec<LoadError>,
     /// `embedded` or the directory the scenario library was read from.
     pub scenarios_origin: String,
@@ -61,6 +66,25 @@ pub(crate) fn fnv1a64(bytes: &[u8]) -> u64 {
     })
 }
 
+/// `(prefix + file name, contents)` of every `*.json` directly in `dir`.
+fn json_files(dir: &Path, prefix: &str) -> Result<Vec<(String, String)>> {
+    let read = std::fs::read_dir(dir).map_err(|e| Error::Io(format!("{}: {e}", dir.display())))?;
+    let mut files = vec![];
+    for entry in read.filter_map(std::result::Result::ok) {
+        let p = entry.path();
+        if p.extension().is_some_and(|x| x == "json") {
+            let text = std::fs::read_to_string(&p)
+                .map_err(|e| Error::Io(format!("{}: {e}", p.display())))?;
+            let name = p
+                .file_name()
+                .map(|n| n.to_string_lossy().to_string())
+                .unwrap_or_default();
+            files.push((format!("{prefix}{name}"), text));
+        }
+    }
+    Ok(files)
+}
+
 impl Catalog {
     /// Build a catalog from `(file name, JSON text)` pairs; `links.json` is
     /// the link file. A file that fails to parse is skipped and recorded in
@@ -80,8 +104,11 @@ impl Catalog {
         let mut packs = vec![];
         let mut links = LinkFile::default();
         let mut load_errors = vec![];
+        let mut clock_files = vec![];
         for (name, text) in files {
-            if name == "links.json" {
+            if name.starts_with("clock/") {
+                clock_files.push((name, text));
+            } else if name == "links.json" {
                 match serde_json::from_str(&text) {
                     Ok(lf) => links = lf,
                     Err(e) => load_errors.push(LoadError {
@@ -100,10 +127,21 @@ impl Catalog {
             }
         }
         packs.sort_by(|a, b| a.0.cmp(&b.0));
+        let (clock, clock_errors) = if clock_files.is_empty() {
+            ClockLibrary::embedded().clone()
+        } else {
+            ClockLibrary::merge(clock_files)
+        };
+        load_errors.extend(
+            clock_errors
+                .into_iter()
+                .map(|(file, message)| LoadError { file, message }),
+        );
         Ok(Catalog {
             origin,
             packs,
             links,
+            clock,
             load_errors,
             scenarios_origin: String::new(),
             scenarios: vec![],
@@ -147,21 +185,7 @@ impl Catalog {
     /// # Errors
     /// Unreadable directory or a malformed scenario file.
     pub fn with_scenarios_dir(self, dir: &Path) -> Result<Catalog> {
-        let read =
-            std::fs::read_dir(dir).map_err(|e| Error::Io(format!("{}: {e}", dir.display())))?;
-        let mut files = vec![];
-        for entry in read.filter_map(std::result::Result::ok) {
-            let p = entry.path();
-            if p.extension().is_some_and(|x| x == "json") {
-                let text = std::fs::read_to_string(&p)
-                    .map_err(|e| Error::Io(format!("{}: {e}", p.display())))?;
-                let name = p
-                    .file_name()
-                    .map(|n| n.to_string_lossy().to_string())
-                    .unwrap_or_default();
-                files.push((name, text));
-            }
-        }
+        let files = json_files(dir, "")?;
         self.with_scenario_files(dir.display().to_string(), files)
     }
 
@@ -215,25 +239,16 @@ impl Catalog {
             })
     }
 
-    /// Every `*.json` in `dir` (and `links.json` if present).
+    /// Every `*.json` in `dir` (and `links.json` if present), plus the
+    /// clock library in `dir/clock/*.json` if that directory exists.
     ///
     /// # Errors
     /// Unreadable directory or malformed pack.
     pub fn load(dir: &Path) -> Result<Catalog> {
-        let read =
-            std::fs::read_dir(dir).map_err(|e| Error::Io(format!("{}: {e}", dir.display())))?;
-        let mut files = vec![];
-        for entry in read.filter_map(std::result::Result::ok) {
-            let p = entry.path();
-            if p.extension().is_some_and(|x| x == "json") {
-                let text = std::fs::read_to_string(&p)
-                    .map_err(|e| Error::Io(format!("{}: {e}", p.display())))?;
-                let name = p
-                    .file_name()
-                    .map(|n| n.to_string_lossy().to_string())
-                    .unwrap_or_default();
-                files.push((name, text));
-            }
+        let mut files = json_files(dir, "")?;
+        let clock = dir.join("clock");
+        if clock.is_dir() {
+            files.extend(json_files(&clock, "clock/")?);
         }
         Catalog::from_files(dir.display().to_string(), files)
     }
@@ -308,189 +323,5 @@ impl Catalog {
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn embedded_catalog_loads_and_compiles_everything() -> Result<()> {
-        let c = Catalog::embedded()?;
-        assert!(c.packs.len() >= 8, "embedded packs: {}", c.packs.len());
-        assert!(!c.links.links.is_empty());
-        assert!(
-            c.load_errors.is_empty(),
-            "embedded packs should all parse cleanly: {:?}",
-            c.load_errors
-        );
-        let g = c.compile(&[], true, &CompileOptions::default())?;
-        assert!(g.nodes.len() > 400);
-        assert!(c.select(&["nope".into()]).is_err());
-        assert_eq!(c.select(&["cofc".into()])?.len(), 1);
-        Ok(())
-    }
-
-    /// The failure shape a single malformed pack must have: skipped and
-    /// recorded, not a hard failure that takes every other pack (and every
-    /// op for every user of the binary) down with it. Three files: one
-    /// good pack, one with invalid JSON, and a `links.json` that also fails
-    /// to parse -- all three loaded together, in one `from_files` call.
-    #[test]
-    fn a_malformed_pack_or_links_file_is_skipped_and_recorded_not_a_hard_failure() -> Result<()> {
-        let good = r#"{
-            "schemaVersion": 2, "id": "demo", "title": "Demo", "startNodeId": "start",
-            "nodes": [{"id": "start", "label": "Start", "kind": "terminal", "payoff": 1.0}],
-            "edges": []
-        }"#;
-        let bad_pack = r#"{ "schemaVersion": 2, "id": "broken", not valid json"#;
-        let bad_links = r#"{ "links": [ this is not valid json either"#;
-        let c = Catalog::from_files(
-            "test".into(),
-            [
-                ("good.json".to_string(), good.to_string()),
-                ("broken.json".to_string(), bad_pack.to_string()),
-                ("links.json".to_string(), bad_links.to_string()),
-            ],
-        )?;
-
-        // The good pack loaded and is usable...
-        assert_eq!(c.packs.len(), 1);
-        assert_eq!(c.select(&["demo".into()])?.len(), 1);
-        assert!(c
-            .compile(&["demo".into()], true, &CompileOptions::default())
-            .is_ok());
-
-        // ...while both bad files are named, not silently dropped, and
-        // don't appear as if they'd loaded (links stays the empty default).
-        assert_eq!(c.load_errors.len(), 2);
-        assert!(c
-            .load_errors
-            .iter()
-            .any(|e| e.file == "broken.json" && e.message.contains("broken.json")));
-        assert!(c
-            .load_errors
-            .iter()
-            .any(|e| e.file == "links.json" && e.message.contains("links.json")));
-        assert!(c.links.links.is_empty() && c.links.instances.is_empty());
-
-        // Asking for the broken pack by name is an ordinary NotFound (it
-        // was never loaded), not a panic or a global outage.
-        assert!(c.select(&["broken".into()]).is_err());
-        Ok(())
-    }
-
-    /// Every embedded pack file, checked *individually* against the strict
-    /// `Pack` struct, with a per-file assertion message naming exactly which
-    /// one failed and why.
-    ///
-    /// A prior incident: two agents each added a top-level `"sources"` key
-    /// to the same pack, at different enough line positions that git's
-    /// line-based merge combined them with no conflict marker. The result
-    /// was syntactically valid JSON (a generic parser or `serde_json::Value`
-    /// tolerates a duplicate object key, keeping the last one silently), but
-    /// serde's derived `Deserialize` for the `Pack` struct rejects a
-    /// duplicate field -- so every embedded pack failed to compile at
-    /// startup, and because dozens of unrelated test files each
-    /// independently call `Catalog::embedded()`/`Pack::from_json`, the
-    /// *entire* suite failed at once with one root cause smeared across
-    /// hundreds of lines of near-identical panics, not a single clear
-    /// signal naming the file.
-    ///
-    /// This test is the single, first, clearly-named place that class of
-    /// failure surfaces: it parses each embedded pack file on its own, in a
-    /// loop with an assertion message giving the exact file name and parse
-    /// error, so a regression reads as one focused failure instead of a
-    /// suite-wide cascade.
-    #[test]
-    fn every_embedded_pack_file_parses_individually_against_the_strict_pack_struct() {
-        let mut checked = 0;
-        for (name, text) in EMBEDDED {
-            if *name == "links.json" {
-                continue;
-            }
-            if let Err(e) = Pack::from_json(text) {
-                panic!("embedded pack {name} failed to parse against the Pack struct: {e}");
-            }
-            checked += 1;
-        }
-        assert!(
-            checked >= 8,
-            "expected at least 8 embedded packs, checked {checked}"
-        );
-    }
-
-    #[test]
-    fn embedded_catalog_loads_the_scenario_library() -> Result<()> {
-        let c = Catalog::embedded()?;
-        assert_eq!(c.scenarios_origin, "embedded");
-        assert!(
-            c.scenarios().count() >= 4,
-            "embedded scenarios: {}",
-            c.scenarios().count()
-        );
-        assert!(c.scenario("nope").is_err());
-        Ok(())
-    }
-
-    /// `with_scenarios_dir` reads every `*.json` in a directory and reports a
-    /// clear error naming the unknown id, matching pack selection.
-    #[test]
-    fn with_scenarios_dir_reads_a_directory_and_reports_unknown_names() -> Result<()> {
-        let dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../scenarios");
-        assert!(
-            dir.is_dir(),
-            "expected a scenarios/ dir at {}",
-            dir.display()
-        );
-        let c = Catalog::embedded()?.with_scenarios_dir(&dir)?;
-        assert_eq!(c.scenarios_origin, dir.display().to_string());
-        assert!(!c.scenarios().collect::<Vec<_>>().is_empty());
-        let err = c.scenario("definitely-not-a-scenario").unwrap_err();
-        assert!(err.to_string().contains("available:"), "{err}");
-        Ok(())
-    }
-
-    /// `default_source` reads `$LITGRAPH_SCENARIOS` independently of
-    /// `$LITGRAPH_PACKS` (nextest gives every test its own process).
-    #[test]
-    fn default_source_honors_litgraph_scenarios_env_var() -> Result<()> {
-        let dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../scenarios");
-        std::env::set_var("LITGRAPH_SCENARIOS", &dir);
-        let c = Catalog::default_source()?;
-        std::env::remove_var("LITGRAPH_SCENARIOS");
-        assert_eq!(c.scenarios_origin, dir.display().to_string());
-        assert_eq!(c.origin, "embedded");
-        Ok(())
-    }
-
-    #[test]
-    fn fingerprint_is_stable() {
-        assert_eq!(fingerprint(b""), "fnv1a64:cbf29ce484222325");
-        assert_ne!(fingerprint(b"a"), fingerprint(b"b"));
-    }
-
-    /// `default_source` reads `$LITGRAPH_PACKS` when set (nextest gives every
-    /// test its own process, so mutating the env var here is isolated).
-    #[test]
-    fn default_source_honors_litgraph_packs_env_var() -> Result<()> {
-        let dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../packs");
-        assert!(dir.is_dir(), "expected a packs/ dir at {}", dir.display());
-        std::env::set_var("LITGRAPH_PACKS", &dir);
-        let c = Catalog::default_source()?;
-        std::env::remove_var("LITGRAPH_PACKS");
-        assert_eq!(c.origin, dir.display().to_string());
-        assert!(!c.packs.is_empty());
-        Ok(())
-    }
-
-    /// `compile(.., links=false, ..)` drops the link file entirely: a graph
-    /// compiled without links has strictly fewer (or equal) nodes than one
-    /// compiled with them, since cross-forum link edges add `#end` twins.
-    #[test]
-    fn compile_without_links_uses_an_empty_link_file() -> Result<()> {
-        let c = Catalog::embedded()?;
-        let with_links = c.compile(&[], true, &CompileOptions::default())?;
-        let without_links = c.compile(&[], false, &CompileOptions::default())?;
-        assert!(without_links.nodes.len() <= with_links.nodes.len());
-        assert!(with_links.nodes.len() > without_links.nodes.len());
-        Ok(())
-    }
-}
+#[path = "catalog_tests.rs"]
+mod tests;

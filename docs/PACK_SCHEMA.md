@@ -3,8 +3,9 @@
 A **pack** is one forum's procedure as a directed graph: nodes are procedural
 postures, edges are transitions (moves, rulings, draws). Packs are JSON files in
 `packs/`. v1 packs (the civ-pro-the-gathering statechart format) load unchanged;
-v2 adds the fields marked **v2** below; v3 adds the optional counting-rule
-reference below. Every added field is optional, so older files remain valid.
+v2 adds the fields marked **v2** below; v3 adds the optional `counting` reference
+to the clock library (`packs/clock/`, below). Every added field is optional, so
+older files remain valid.
 
 The engine never guesses silently. Anything it has to infer (a payoff from a
 label, a uniform draw where probabilities are missing, an elapsed time from a
@@ -20,7 +21,7 @@ are fallbacks.
 | `id` | string | pack id, also the namespace prefix when composing (`cofc::complaint-filed`) |
 | `title`, `description`, `jurisdiction` | string | |
 | `forum` | string | **v2** short forum key: `frcp`, `frap`, `cafc`, `cofc`, `ptab`, `itc`, `uspto`, ... |
-| `counting` | string | **v3** authored deadline-counting rule id. Supported ids are `frcp6`, `rcfc6`, `frap26`, `itc210`, and `ttab-calendar`. The `deadlines` op resolves this field rather than inferring clock behavior from `forum` or pack id. Missing or unknown ids produce the structured `deadline-uncomputable` warning. |
+| `counting` | string | **v3** id of a counting rule in the clock library (see [Clock library](#clock-library-v3-packsclockjson)); shipped ids are `frcp6`, `rcfc6`, `frap26` and `itc210`. The `deadlines` op resolves this field and never infers clock behavior from `forum` or pack id; a pack without it, or naming an id the library lacks, gets a structured `deadline-uncomputable` warning, and `validate` rejects an unknown id |
 | `startNodeId` | node id | where walks and default analyses begin |
 | `groups` | `[{id,label}]` | visual/hierarchical clustering |
 | `roles` | object | **v2** actor → role mapping, see below |
@@ -138,6 +139,80 @@ the one whose id happens to match `node_ref` exactly: `scenario.facts`
 resolves `node_ref` to one node, then forces the same edge on every node
 sharing its `base_id` (`Graph::node_family`/`Graph::edge_family`) — the
 same reasoning as calibration's `Edge.base_id` handling above.
+
+## Clock library (v3, `packs/clock/*.json`)
+
+Deadline counting is data. `packs/clock/` holds the **clock library**:
+holiday calendars and counting rules, shared by every pack. Each file is a
+fragment:
+
+```json
+{ "schemaVersion": 3, "calendars": [ ... ], "countingRules": [ ... ] }
+```
+
+Fragments are embedded at build time (key `clock/<file>`) and read from
+`<packs dir>/clock/` by `--packs-dir`/`LITGRAPH_PACKS`; in-memory catalogs
+(`Catalog::from_files`, `litgraph-wasm`'s `handle_with_packs`) take them as
+files named `clock/<file>.json`. A source with no `clock/` files gets the
+embedded library. Fragments merge in file-name order; a fragment that fails
+to parse or validate, or redefines an id already loaded, is skipped and
+listed in `load_errors`, as is a rule naming an unknown calendar. Every
+object is strict (`deny_unknown_fields`). `litgraph validate` detects the
+kind `clock`; `litgraph schema clock` prints its JSON Schema.
+
+### `HolidayCalendar`
+
+| field | type | notes |
+|---|---|---|
+| `id`, `title` | string | `id` is what a rule's `holidays` names |
+| `cite`, `sourceUrl` | string? | authority for the calendar |
+| `holidays` | `[Holiday]` | ids unique within the calendar |
+
+`Holiday`:
+
+| field | type | notes |
+|---|---|---|
+| `id`, `name` | string | |
+| `date` | `{"fixed": {month, day}}` or `{"nthWeekday": {month, weekday, nth}}` | `weekday` is `sunday`..`saturday`; `nth` is 1..=5, or -1..=-5 from the end of the month. A fifth weekday that does not exist in a month is skipped |
+| `cycle` | `{every, anchorYear}`? | occurs only in years `anchorYear + k*every` (e.g. every 4 from 1965) |
+| `observed` | `actual` (default) \| `nearest-weekday` | `nearest-weekday`: Saturday is observed Friday, Sunday Monday |
+| `effective` | `{from?, until?}` | half-open `[from, until)` ISO dates, tested against the **observed** date |
+| `cite` | string? | authority for the holiday or its effective date |
+
+A date is a legal holiday under a rule if it is an observed holiday of any
+of the rule's calendars in that year or a neighboring one (an observance can
+cross Dec 31/Jan 1), or one of the request's `additional_holidays`.
+
+### `CountingRule`
+
+| field | type | notes |
+|---|---|---|
+| `id` | string | what a pack's `counting` names; reported as `rule_set` |
+| `label`, `sourceUrl` | string | reported as `rule_set_label` / `source_url` |
+| `closedWeekdays` | `[weekday]` | days the forum is closed (a last day on one rolls) |
+| `holidays` | `[calendar id]` | calendars the forum closes on (unioned) |
+| `minLength` | `{days, message}`? | shorter periods fail with `message` |
+| `steps` | `[Step]` | the pipeline below |
+| `hours` | `{text, rollText}`? | hours provision: count every hour from the trigger instant, then continue to the same time on the next open day. Absent: hours-based periods are rejected |
+
+`steps` run in order over a working date. `anchor` must come first and
+`count` second; `base` occurs exactly once; `service` and
+`clerkInaccessible` at most once; `roll` any number of times.
+
+| `op` | fields | effect |
+|---|---|---|
+| `anchor` | `kind`, `text` | `trigger`: the trigger day is excluded (day 1 is the next day). `adjacent-business-day`: the first business day after (forward) or before (backward) the trigger is day 1; requires `minLength.days >= 1` |
+| `count` | `periods: [{unit?, below?, count, text}]` | the first period whose `unit` (`calendar`/`court`, the deadline's authored unit) and `below` (period shorter than this) match counts `n` days in `count` units: `calendar` (every day) or `business` (open days only). No match is an error |
+| `service` | `methods: [{method, days}]`, `text`, `backwardText` | a forward period's service method adds `days`; a method not listed is an error naming the listed ones; a backward period ignores it with `backwardText` |
+| `base` | | records the working date as `base_date` |
+| `roll` | `forward`, `backward`: `{toward, text}` | moves a closed day `later` or `earlier` (chosen by counting direction); `text` is emitted, and `last_day_rolled` set, only if the date moved |
+| `clerkInaccessible` | `text?`, `ignoredText` | when the request sets `clerk_inaccessible`: a forward period moves to the next open day after the last day (`text`); otherwise, or with no `text`, `ignoredText` is emitted |
+
+Step `text` templates may use `{trigger}`, `{anchor}`, `{date}` (this
+step's result), `{n}` (period length), `{after}` (`after`/`before`),
+`{forward}` (`forward`/`backward`), `{method}` (the service method's name,
+e.g. `Mail`) and `{days}` (days the method adds). Any other placeholder
+fails validation.
 
 ## Links (composition)
 

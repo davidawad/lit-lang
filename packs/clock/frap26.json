@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 3,
+  "countingRules": [
+    {
+      "id": "frap26",
+      "label": "Fed. R. App. P. 26",
+      "sourceUrl": "https://www.law.cornell.edu/rules/frap/rule_26",
+      "closedWeekdays": [
+        "saturday",
+        "sunday"
+      ],
+      "holidays": [
+        "us-federal-holidays"
+      ],
+      "steps": [
+        {
+          "op": "anchor",
+          "kind": "trigger",
+          "text": "Fed. R. App. P. 26(a)(1)(A): exclude the trigger date {trigger}"
+        },
+        {
+          "op": "count",
+          "periods": [
+            {
+              "unit": "calendar",
+              "count": "calendar",
+              "text": "Fed. R. App. P. 26(a)(1)(B): count {n} calendar day(s) {after} the trigger, including weekends/holidays -> {date}"
+            },
+            {
+              "unit": "court",
+              "count": "business",
+              "text": "court days: advance {n} business day(s) {forward} from {trigger} (skipping weekends/holidays) -> {date}"
+            }
+          ]
+        },
+        {
+          "op": "service",
+          "methods": [
+            {
+              "method": "mail",
+              "days": 3
+            },
+            {
+              "method": "commercial-carrier",
+              "days": 3
+            },
+            {
+              "method": "prison-mail",
+              "days": 3
+            }
+          ],
+          "text": "Fed. R. App. P. 26(d)/(c): service by {method} adds {days} day(s) (to the unrolled count) -> {date}",
+          "backwardText": "Fed. R. App. P. 26(d)/(c) does not apply to backward-counted periods; ignored"
+        },
+        {
+          "op": "base"
+        },
+        {
+          "op": "roll",
+          "forward": {
+            "toward": "later",
+            "text": "Fed. R. App. P. 26(a)(1)(C): last day fell on a Saturday, Sunday, or legal holiday; roll forward -> {date}"
+          },
+          "backward": {
+            "toward": "earlier",
+            "text": "Fed. R. App. P. 26(a)(5): last day fell on a Saturday, Sunday, or legal holiday; roll backward -> {date}"
+          }
+        },
+        {
+          "op": "clerkInaccessible",
+          "ignoredText": "clerk_inaccessible requested but Fed. R. App. P. 26 has no applicable clerk-inaccessibility extension for this direction; ignored"
+        }
+      ]
+    }
+  ]
+}

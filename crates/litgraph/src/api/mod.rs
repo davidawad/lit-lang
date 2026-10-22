@@ -466,6 +466,7 @@ fn dispatch(req: &Request, catalog: &Catalog, g: &Graph, packs: &[Pack], sc: &Sc
             clerk_inaccessible,
         } => deadlines::deadlines_op(
             g,
+            &catalog.clock,
             &deadlines::DeadlinesArgs {
                 trigger,
                 node: node.as_deref(),

@@ -8,8 +8,14 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)]
 
 use litgraph::clock::{
-    compute_due_date, ClockConfig, Date, DayDeadline, Direction, RuleSet, ServiceMethod, Unit,
+    compute_due_date, Clock, ClockConfig, ClockLibrary, Date, DayDeadline, Direction,
+    ServiceMethod, Unit,
 };
+
+/// A shipped counting rule from the embedded clock library (`packs/clock/`).
+fn rule(id: &str) -> Clock<'static> {
+    ClockLibrary::embedded().0.clock(id).unwrap()
+}
 
 fn forward_frcp(trigger: &str, days: i64) -> String {
     compute_due_date(
@@ -20,7 +26,7 @@ fn forward_frcp(trigger: &str, days: i64) -> String {
             unit: Unit::Calendar,
             service_method: None,
         },
-        RuleSet::Frcp6,
+        &rule("frcp6"),
         &ClockConfig::default(),
     )
     .unwrap()
@@ -33,28 +39,17 @@ fn forward_frcp(trigger: &str, days: i64) -> String {
 
 #[test]
 fn christmas_2026_is_a_legal_holiday() {
-    use litgraph::clock::holidays::is_legal_holiday;
-    assert!(is_legal_holiday(
-        Date::parse_iso("2026-12-25").unwrap(),
-        RuleSet::Frcp6,
-        &[]
-    ));
+    assert!(rule("frcp6").is_legal_holiday(Date::parse_iso("2026-12-25").unwrap(), &[]));
 }
 
 #[test]
 fn a_random_weekday_is_not_a_legal_holiday() {
-    use litgraph::clock::holidays::is_legal_holiday;
-    assert!(!is_legal_holiday(
-        Date::parse_iso("2026-03-16").unwrap(),
-        RuleSet::Frcp6,
-        &[]
-    ));
+    assert!(!rule("frcp6").is_legal_holiday(Date::parse_iso("2026-03-16").unwrap(), &[]));
 }
 
 #[test]
 fn federal_holidays_returns_eleven_for_a_year() {
-    use litgraph::clock::holidays::federal_holidays;
-    assert_eq!(federal_holidays(2026).len(), 11);
+    assert_eq!(rule("frcp6").holidays_in(2026).len(), 11);
 }
 
 // ---------------------------------------------------------------------------
@@ -72,7 +67,7 @@ fn rcfc_ordinary_case_matches_frcp() {
             unit: Unit::Calendar,
             service_method: None,
         },
-        RuleSet::Rcfc6,
+        &rule("rcfc6"),
         &ClockConfig::default(),
     )
     .unwrap()
@@ -92,7 +87,7 @@ fn frap_notice_of_appeal_thirty_days() {
             unit: Unit::Calendar,
             service_method: None,
         },
-        RuleSet::Frap26,
+        &rule("frap26"),
         &ClockConfig::default(),
     )
     .unwrap();
@@ -111,7 +106,7 @@ fn frap_service_by_commercial_carrier_adds_three_days() {
             unit: Unit::Calendar,
             service_method: Some(ServiceMethod::CommercialCarrier),
         },
-        RuleSet::Frap26,
+        &rule("frap26"),
         &ClockConfig::default(),
     )
     .unwrap();
@@ -134,7 +129,7 @@ fn itc_response_period_twenty_days() {
             unit: Unit::Calendar,
             service_method: None,
         },
-        RuleSet::Itc210,
+        &rule("itc210"),
         &ClockConfig::default(),
     )
     .unwrap();

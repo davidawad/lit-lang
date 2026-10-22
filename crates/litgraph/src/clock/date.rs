@@ -16,12 +16,15 @@
 //! Rust's `Date::from_ymd` instead rejects an invalid calendar date with an
 //! error, matching this repo's "no silent guesses" / strict-parsing
 //! commitment (see `AGENTS.md` rule 5 and `docs/ARCHITECTURE.md` item 2).
-//! Nothing in the FRCP/RCFC/FRAP/ITC clock logic ever needs to construct an
+//! Nothing in the clock interpreter ever needs to construct an
 //! out-of-range date; every date we build starts from a validated ISO
 //! string or from `first_of_month`/`add_days` arithmetic on an already-valid
 //! `Date`.
 
 use std::fmt;
+
+use schemars::JsonSchema;
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 use crate::error::{Error, Result};
 
@@ -31,8 +34,8 @@ use crate::error::{Error, Result};
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Date(i64);
 
-/// Day of week, `Sunday` = 0 .. `Saturday` = 6 (matches `5 U.S.C. § 6103(b)`'s
-/// Saturday/Sunday framing and the civ-pro TS port's convention).
+/// Day of week, `Sunday` = 0 .. `Saturday` = 6 (the civ-pro TS port's
+/// convention).
 pub type Weekday = u8;
 
 /// Sunday.
@@ -241,6 +244,35 @@ impl fmt::Display for Date {
     }
 }
 
+/// Serialized as its ISO `YYYY-MM-DD` string (clock data files author
+/// dates this way).
+impl Serialize for Date {
+    fn serialize<S: Serializer>(&self, s: S) -> std::result::Result<S::Ok, S::Error> {
+        s.serialize_str(&self.to_iso())
+    }
+}
+
+impl<'de> Deserialize<'de> for Date {
+    fn deserialize<D: Deserializer<'de>>(d: D) -> std::result::Result<Date, D::Error> {
+        let s = String::deserialize(d)?;
+        Date::parse_iso(&s).map_err(serde::de::Error::custom)
+    }
+}
+
+impl JsonSchema for Date {
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "Date".into()
+    }
+
+    fn json_schema(_: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        schemars::json_schema!({
+            "type": "string",
+            "format": "date",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+        })
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -300,6 +332,13 @@ mod tests {
                 .to_iso(),
             "2026-05-25"
         );
+    }
+
+    #[test]
+    fn serde_roundtrips_as_an_iso_string() {
+        let d: Date = serde_json::from_str("\"2021-06-17\"").unwrap();
+        assert_eq!(serde_json::to_string(&d).unwrap(), "\"2021-06-17\"");
+        assert!(serde_json::from_str::<Date>("\"2021-02-30\"").is_err());
     }
 
     #[test]

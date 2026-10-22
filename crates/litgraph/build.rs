@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-//! Embed the repository's `packs/`, `scenarios/`, `calibration/` and
+//! Embed the repository's `packs/` (and its `packs/clock/` library), `scenarios/`, `calibration/` and
 //! `sources/` directories into the library so the binary works standalone
 //! (no directory needed at runtime). `LITGRAPH_PACKS`/`--packs-dir`,
 //! `LITGRAPH_SCENARIOS`/`--scenarios-dir`, `LITGRAPH_CALIBRATION`/
@@ -20,6 +20,14 @@ fn main() {
         "EMBEDDED",
         "`(file name, contents)` of every embedded pack file (including `links.json`).",
         &out_dir.join("embedded_packs.rs"),
+    );
+    embed_dir(
+        &manifest.join("../../packs/clock"),
+        "json",
+        Some("clock/"),
+        "EMBEDDED_CLOCK",
+        "`(clock/ file name, contents)` of every embedded clock-library fragment (counting rules and holiday calendars).",
+        &out_dir.join("embedded_clock.rs"),
     );
     embed_dir(
         &manifest.join("../../scenarios"),

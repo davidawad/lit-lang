@@ -206,22 +206,41 @@ generic clients).
 `crates/litgraph/src/clock/` computes concrete due dates from a pack-authored
 `deadline` (`docs/PACK_SCHEMA.md`'s `Deadline.length`/`unit`) and a trigger
 date, independent of the graph/scenario layers above — a deadline is a fact
-about a forum's procedure, not a scenario-dependent quantity. Four rule sets:
-`FRCP 6`, `RCFC 6` (textually identical to FRCP 6 except it also lists
-Inauguration Day as a legal holiday), `FRAP 26` (also governs the Federal
-Circuit; shares FRCP 6(a)(1)'s day-counting mechanics but a different
-service-method set for its 3-day extension), and `19 CFR 210.6(a)` (ITC
-Section 337 — a genuinely different algorithm: a business-day anchor and
-business-day counting for periods under 7 days). The `deadlines` API op
-resolves the owning pack's explicit schema-v3 `counting` rule id and returns
-the due date with every computation step cited to its subsection, for one
-edge, a node's out-edges, or every deadline reachable from a node. A missing
-or unknown id produces a structured `deadline-uncomputable` warning. The
-holiday calendar respects when Juneteenth (2021)
-and Martin Luther King, Jr. Day (1986) took effect, so historical dates
-(e.g. the famous cases in `tests/cases/`) compute as they did at the time.
-The rule text itself is today's: a pre-2009 FRCP 6 short-period count, for
-instance, is not modeled.
+about a forum's procedure, not a scenario-dependent quantity.
+
+The clock holds no forum knowledge. It is a generic interpreter over two
+data types loaded from `packs/clock/*.json` (the *clock library*, embedded
+at build time like the packs; see `docs/PACK_SCHEMA.md`, "Clock library"):
+
+- a **`HolidayCalendar`**: fixed-date and nth-weekday holidays, an optional
+  multi-year cycle, a weekend-observance rule, and a half-open effective
+  interval per holiday (Juneteenth from 2021-06-17, Martin Luther King, Jr.
+  Day from 1986-01-01, Inauguration Day every fourth year after 1965), so
+  historical dates (e.g. the famous cases in `tests/cases/`) compute as they
+  did at the time;
+- a **`CountingRule`**: closed weekdays, the calendars it closes on, an
+  optional minimum length, and an ordered step pipeline — `anchor` (exclude
+  the trigger day, or anchor on the adjacent business day as day 1),
+  `count` (first matching period: by authored unit and/or a short-period
+  threshold with an alternate unit), `service` (a method → days table),
+  `base`, `roll` (later or earlier, per counting direction),
+  `clerkInaccessible` — plus an optional hours provision. Every step carries
+  its own cited trace text.
+
+The shipped rules are `frcp6`, `rcfc6` (FRCP 6 plus the Inauguration Day
+calendar), `frap26` (a different service-method table, no hours or
+clerk-inaccessibility provision) and `itc210` (`19 CFR 210.6(a)`: a
+business-day anchor, business-day counting under 7 days, a forward roll in
+both directions, and a re-roll after service). Their sources and the
+interpretive choices they encode are in `packs/clock/SOURCES-NOTES.md`.
+
+A pack names its rule in its v3 `counting` field. The `deadlines` API op
+resolves that id against the catalog's clock library and returns the due
+date with every step cited, for one edge, a node's out-edges, or every
+deadline reachable from a node. A pack with no `counting` field, or an id
+the library lacks, produces a structured `deadline-uncomputable` warning;
+nothing is inferred from the pack's forum or id. The rule text itself is
+today's: a pre-2009 FRCP 6 short-period count, for instance, is not modeled.
 
 ## Roadmap (tracked as beads)
 

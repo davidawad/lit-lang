@@ -256,9 +256,9 @@ expected failure, and the test fails once a pack closes it.
 - **No rehearing or certiorari after a CAFC vacate-and-remand.**
   `panel-to-remand` goes straight to a `remanded-to-*` terminal (Arthrex,
   2019-20: en banc denied, then cert granted).
-- **PTAB deadlines have no rule set.** The PTAB pack's `forum: "ptab"`
-  maps to no clock rule set (37 C.F.R. § 1.7 / § 90.3(c) are not
-  implemented), so the `deadlines` op can't compute any PTAB-side
+- **PTAB deadlines have no counting rule.** The PTAB pack names no
+  `counting` rule (37 C.F.R. § 1.7 / § 90.3(c) are not in
+  `packs/clock/`), so the `deadlines` op can't compute any PTAB-side
   deadline. The CAFC instance's copy of the 63-day notice-of-appeal window
   can be computed.
 - **Anachronistic forced steps.** The PTAB pack forces a patent-owner

@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **Data-driven deadline clock.** Counting rules (`CountingRule`) and holiday
+  calendars (`HolidayCalendar`) are now data in `packs/clock/*.json` (the
+  clock library, pack schema v3); a pack names its rule in `counting`. A
+  generic interpreter replaces the hard-coded `RuleSet` enum, the
+  `general`/`itc`/`holidays` modules and forum-string rule selection.
+  `deadlines` outputs are unchanged. A pack with no `counting` rule, or an
+  unknown one, is a `deadline-uncomputable` warning; `validate` gains the
+  `clock` kind and rejects an unknown `counting` id; `schema clock` prints
+  the library's JSON Schema. A zero-day backward court-day period from a
+  closed day now rolls earlier (it rolled later, past the trigger).
+
 ## [0.3.0] - 2026-09-30
 
 ### Added

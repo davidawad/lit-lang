@@ -6,10 +6,15 @@
 
 #![allow(clippy::unwrap_used, clippy::expect_used)]
 
-use litgraph::clock::holidays::is_legal_holiday;
 use litgraph::clock::{
-    compute_due_date, ClockConfig, Date, DayDeadline, Direction, RuleSet, ServiceMethod, Unit,
+    compute_due_date, Clock, ClockConfig, ClockLibrary, Date, DayDeadline, Direction,
+    ServiceMethod, Unit,
 };
+
+/// A shipped counting rule from the embedded clock library (`packs/clock/`).
+fn rule(id: &str) -> Clock<'static> {
+    ClockLibrary::embedded().0.clock(id).unwrap()
+}
 use proptest::prelude::*;
 
 fn any_date() -> impl Strategy<Value = Date> {
@@ -17,12 +22,8 @@ fn any_date() -> impl Strategy<Value = Date> {
         .prop_map(|(y, m, d)| Date::from_ymd(y, m, d).expect("y/m/1..=28 is always a valid date"))
 }
 
-fn calendar_rule_set() -> impl Strategy<Value = RuleSet> {
-    prop_oneof![
-        Just(RuleSet::Frcp6),
-        Just(RuleSet::Rcfc6),
-        Just(RuleSet::Frap26)
-    ]
+fn calendar_rule_set() -> impl Strategy<Value = &'static str> {
+    prop_oneof![Just("frcp6"), Just("rcfc6"), Just("frap26")]
 }
 
 proptest! {
@@ -36,12 +37,12 @@ proptest! {
     ) {
         let r = compute_due_date(
             &DayDeadline { trigger, days, direction: Direction::Forward, unit: Unit::Calendar, service_method: None },
-            rs,
+            &rule(rs),
             &ClockConfig::default(),
         ).unwrap();
         let due = Date::parse_iso(&r.due_date).unwrap();
         prop_assert!(!due.is_weekend());
-        prop_assert!(!is_legal_holiday(due, rs, &[]));
+        prop_assert!(!rule(rs).is_legal_holiday(due, &[]));
     }
 
     /// Same invariant, backward direction (FRCP 6(a)(5) et al.).
@@ -51,12 +52,12 @@ proptest! {
     ) {
         let r = compute_due_date(
             &DayDeadline { trigger, days, direction: Direction::Backward, unit: Unit::Calendar, service_method: None },
-            rs,
+            &rule(rs),
             &ClockConfig::default(),
         ).unwrap();
         let due = Date::parse_iso(&r.due_date).unwrap();
         prop_assert!(!due.is_weekend());
-        prop_assert!(!is_legal_holiday(due, rs, &[]));
+        prop_assert!(!rule(rs).is_legal_holiday(due, &[]));
     }
 
     /// A forward due date is never before the trigger (0 days can equal it).
@@ -66,7 +67,7 @@ proptest! {
     ) {
         let r = compute_due_date(
             &DayDeadline { trigger, days, direction: Direction::Forward, unit: Unit::Calendar, service_method: None },
-            rs,
+            &rule(rs),
             &ClockConfig::default(),
         ).unwrap();
         prop_assert!(Date::parse_iso(&r.due_date).unwrap() >= trigger);
@@ -79,7 +80,7 @@ proptest! {
     ) {
         let r = compute_due_date(
             &DayDeadline { trigger, days, direction: Direction::Backward, unit: Unit::Calendar, service_method: None },
-            rs,
+            &rule(rs),
             &ClockConfig::default(),
         ).unwrap();
         prop_assert!(Date::parse_iso(&r.due_date).unwrap() <= trigger);
@@ -92,7 +93,7 @@ proptest! {
     ) {
         let due = |days| compute_due_date(
             &DayDeadline { trigger, days, direction: Direction::Forward, unit: Unit::Calendar, service_method: None },
-            rs,
+            &rule(rs),
             &ClockConfig::default(),
         ).unwrap().due_date;
         if d1 < d2 {
@@ -107,18 +108,19 @@ proptest! {
     fn mail_service_never_earlier_than_no_service(
         trigger in any_date(), days in 1i64..400, rs in calendar_rule_set(),
     ) {
-        let method = match rs {
-            RuleSet::Frap26 => ServiceMethod::CommercialCarrier,
-            _ => ServiceMethod::Mail,
+        let method = if rs == "frap26" {
+            ServiceMethod::CommercialCarrier
+        } else {
+            ServiceMethod::Mail
         };
         let base = compute_due_date(
             &DayDeadline { trigger, days, direction: Direction::Forward, unit: Unit::Calendar, service_method: None },
-            rs,
+            &rule(rs),
             &ClockConfig::default(),
         ).unwrap().due_date;
         let with_service = compute_due_date(
             &DayDeadline { trigger, days, direction: Direction::Forward, unit: Unit::Calendar, service_method: Some(method) },
-            rs,
+            &rule(rs),
             &ClockConfig::default(),
         ).unwrap().due_date;
         prop_assert!(with_service >= base);
@@ -133,12 +135,12 @@ proptest! {
         let direction = if forward { Direction::Forward } else { Direction::Backward };
         let r = compute_due_date(
             &DayDeadline { trigger, days, direction, unit: Unit::Court, service_method: None },
-            rs,
+            &rule(rs),
             &ClockConfig::default(),
         ).unwrap();
         let due = Date::parse_iso(&r.due_date).unwrap();
         prop_assert!(!due.is_weekend());
-        prop_assert!(!is_legal_holiday(due, rs, &[]));
+        prop_assert!(!rule(rs).is_legal_holiday(due, &[]));
     }
 
     /// ITC 210: a forward due date (>= 1 day, the only valid range) is
@@ -149,12 +151,12 @@ proptest! {
     ) {
         let r = compute_due_date(
             &DayDeadline { trigger, days, direction: Direction::Forward, unit: Unit::Calendar, service_method: None },
-            RuleSet::Itc210,
+            &rule("itc210"),
             &ClockConfig::default(),
         ).unwrap();
         let due = Date::parse_iso(&r.due_date).unwrap();
         prop_assert!(!due.is_weekend());
-        prop_assert!(!is_legal_holiday(due, RuleSet::Itc210, &[]));
+        prop_assert!(!rule("itc210").is_legal_holiday(due, &[]));
         prop_assert!(due >= trigger);
     }
 
@@ -163,11 +165,11 @@ proptest! {
     fn itc_anchor_is_always_a_business_day(trigger in any_date(), days in 1i64..400) {
         let r = compute_due_date(
             &DayDeadline { trigger, days, direction: Direction::Forward, unit: Unit::Calendar, service_method: None },
-            RuleSet::Itc210,
+            &rule("itc210"),
             &ClockConfig::default(),
         ).unwrap();
         let anchor = Date::parse_iso(&r.anchor_date).unwrap();
         prop_assert!(!anchor.is_weekend());
-        prop_assert!(!is_legal_holiday(anchor, RuleSet::Itc210, &[]));
+        prop_assert!(!rule("itc210").is_legal_holiday(anchor, &[]));
     }
 }

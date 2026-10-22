@@ -21,8 +21,8 @@ pub mod algo;
 pub mod api;
 /// Cite verification against the vendored L0 corpus (`sources/*.txt`).
 pub mod cite;
-/// Deadline computation: `FRCP 6`/`RCFC 6`/`FRAP 26`/`19 CFR 210.6(a)`
-/// court-day and calendar-day time computation.
+/// Deadline computation: a generic interpreter over the data-driven
+/// counting rules and holiday calendars in `packs/clock/`.
 pub mod clock;
 /// The crate's error type and `Result` alias.
 pub mod error;

@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 //! API-layer coverage for the `deadlines` op (`api::deadlines`): edge/node/
 //! reachable modes, options (service method, additional holidays, clerk
-//! inaccessibility), the `forum`-then-id rule-set fallback (including a
-//! cross-pack link edge, keyed by its origin node's pack), and every error/
-//! warning path (no deadline, unresolvable rule set, non-integer length,
-//! bad trigger). Small custom packs, not the shipped forums, so every
+//! inaccessibility), counting-rule resolution from the pack's `counting`
+//! field (including a cross-pack link edge, keyed by its origin node's
+//! pack), and every error/warning path (no deadline, no or unknown counting
+//! rule, non-integer length, bad trigger). Small custom packs, not the shipped forums, so every
 //! expected value is hand-traceable.
 
 #![allow(clippy::unwrap_used, clippy::expect_used)]
@@ -19,9 +19,8 @@ fn pack(json: serde_json::Value) -> (String, String) {
     (format!("{id}.json"), serde_json::to_string(&p).unwrap())
 }
 
-/// `frcp-test`: id contains "frcp" so the rule set resolves via the id
-/// fallback (no `forum` field authored). Exercises calendar + court units,
-/// a no-deadline edge, and a non-integer-length edge.
+/// `frcp-test`: names the `frcp6` counting rule. Exercises calendar +
+/// court units, a no-deadline edge, and a non-integer-length edge.
 fn frcp_pack() -> (String, String) {
     pack(json!({
         "schemaVersion": 3, "counting": "frcp6", "id": "frcp-test", "title": "FRCP test", "startNodeId": "trigger",
@@ -43,8 +42,8 @@ fn frcp_pack() -> (String, String) {
     }))
 }
 
-/// `mystery-forum`: no `forum` field and an id that matches no known forum
-/// substring, so the rule set is unresolvable.
+/// `mystery-forum`: no `counting` field, so no rule is resolved (nothing
+/// is inferred from forum or id).
 fn mystery_pack() -> (String, String) {
     pack(json!({
         "schemaVersion": 2, "id": "mystery-forum", "title": "Mystery", "startNodeId": "trigger",
@@ -59,8 +58,7 @@ fn mystery_pack() -> (String, String) {
     }))
 }
 
-/// `custom-id-cofc`: id matches nothing, but an explicit `forum: "cofc"`
-/// should still resolve to `Rcfc6` (forum takes priority over id).
+/// `custom-id-cofc`: an arbitrary id naming the `rcfc6` counting rule.
 fn explicit_forum_pack() -> (String, String) {
     pack(json!({
         "schemaVersion": 3, "counting": "rcfc6", "id": "custom-id-cofc", "forum": "cofc",
@@ -78,7 +76,7 @@ fn explicit_forum_pack() -> (String, String) {
 
 /// Two packs joined by a `links.json` link edge that itself carries a
 /// `deadline`, to exercise the cross-pack-link branch of
-/// `ruleset_for_edge` (keyed by the *origin* node's pack — here `frcp-link-origin`).
+/// `clock_for_edge` (keyed by the *origin* node's pack — here `frcp-link-origin`).
 fn link_origin_pack() -> (String, String) {
     pack(json!({
         "schemaVersion": 3, "counting": "frcp6", "id": "frcp-link-origin", "title": "Origin", "startNodeId": "leaves",
@@ -293,7 +291,7 @@ fn court_days_unit_is_computed_with_business_day_steps() {
 }
 
 #[test]
-fn explicit_forum_field_takes_priority_over_pack_id() {
+fn counting_field_selects_the_rule_regardless_of_pack_id() {
     let c = catalog(vec![explicit_forum_pack()]);
     let resp = handle(
         &deadlines_req(
@@ -416,4 +414,33 @@ fn cross_pack_link_edge_resolves_by_its_origin_nodes_pack() {
     // Origin pack is "frcp-link-origin" -> id-fallback resolves to FRCP 6,
     // not the destination pack's RCFC 6, confirming the origin-pack rule.
     assert_eq!(r["deadlines"][0]["rule_set"], json!("frcp6"));
+}
+
+/// A pack with no `counting` field, or one naming a rule the clock library
+/// lacks, gets a structured warning in edge mode, never a guessed rule.
+#[test]
+fn edge_mode_missing_or_unknown_counting_rule_is_a_structured_warning() {
+    let mut unknown: serde_json::Value = serde_json::from_str(&mystery_pack().1).unwrap();
+    unknown["schemaVersion"] = json!(3);
+    unknown["id"] = json!("unknown-rule");
+    unknown["counting"] = json!("frcp7");
+    let c = catalog(vec![
+        mystery_pack(),
+        ("unknown-rule.json".into(), unknown.to_string()),
+    ]);
+    for (pack, needle) in [
+        ("mystery-forum", "declares no `counting` rule"),
+        ("unknown-rule", "counting rule \"frcp7\""),
+    ] {
+        let resp = handle(
+            &deadlines_req(&[pack], D::new("2026-01-05").edge("respond").op()),
+            &c,
+        );
+        assert!(resp.ok, "{resp:?}");
+        assert_eq!(resp.result.unwrap()["count"], json!(0));
+        let w = &resp.warnings[0];
+        assert_eq!(w.code, "deadline-uncomputable");
+        assert!(w.at.iter().any(|a| a.ends_with("respond")), "{w:?}");
+        assert!(w.example.contains(needle), "{}", w.example);
+    }
 }

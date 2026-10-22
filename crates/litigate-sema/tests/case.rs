@@ -48,6 +48,40 @@ fn the_replay_trace_ends_where_the_posture_does() {
 }
 
 #[test]
+fn a_terminal_whose_pack_authors_a_payoff_needs_no_stake() {
+    let stakes = "stakes { judgment-entered: -2_000_000.usd, dismissed: 0.usd }";
+    let authored = check_example(
+        &edited(&[(stakes, "stakes { judgment-entered: -2_000_000.usd }")]),
+        Profile::Dev,
+    );
+    assert!(authored.ok(), "{:#?}", render(&authored.diagnostics));
+    let hole = check_example(
+        &edited(&[(stakes, "stakes { dismissed: 0.usd }")]),
+        Profile::Dev,
+    );
+    let codes: Vec<&str> = hole.diagnostics.iter().map(|d| d.code.as_str()).collect();
+    assert_eq!(codes, ["L4004"], "{:#?}", render(&hole.diagnostics));
+}
+
+#[test]
+fn an_instance_ref_names_its_base_packs_node() {
+    let stakes = "dismissed: 0.usd }";
+    let instance = check_example(
+        &edited(&[(
+            stakes,
+            "dismissed: 0.usd, frcp-rule12-example@appeal::dismissed: 1.usd }",
+        )]),
+        Profile::Dev,
+    );
+    assert!(instance.ok(), "{:#?}", render(&instance.diagnostics));
+    let unknown = check_example(
+        &edited(&[(stakes, "dismissed: 0.usd, nope@appeal::dismissed: 1.usd }")]),
+        Profile::Dev,
+    );
+    assert!(!unknown.ok());
+}
+
+#[test]
 fn the_worked_example_replays_to_the_motion_ruling() {
     let checked = check_example(&acme(), Profile::Strict);
     assert!(checked.ok(), "{:#?}", render(&checked.diagnostics));
@@ -173,7 +207,7 @@ fn example_replay_table() {
         ),
         (
             "stakes: a reachable terminal without a stake",
-            edited(&[(", dismissed: 0.usd", "")]),
+            edited(&[("judgment-entered: -2_000_000.usd, ", "")]),
             Profile::Dev,
         ),
         (

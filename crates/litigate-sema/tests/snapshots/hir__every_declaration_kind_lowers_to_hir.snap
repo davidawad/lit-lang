@@ -1,0 +1,1106 @@
+---
+source: crates/litigate-sema/tests/hir.rs
+expression: json
+---
+[
+  {
+    "manifest": {
+      "name": "rules",
+      "version": "1.0.0",
+      "language": 1,
+      "pack_id": "rules",
+      "forum": "demo",
+      "authority": "FederalRule",
+      "title": "T",
+      "description": null,
+      "jurisdiction": null,
+      "roles": {
+        "Court": "nature",
+        "Defendant": "opponent",
+        "Plaintiff": "self"
+      },
+      "in_force": {
+        "from": "2009-12-01",
+        "to": null,
+        "known_at": "2025-01-01"
+      },
+      "sources": [],
+      "dependencies": {}
+    },
+    "digest": "40e0540048d6cae6772fcc04e8baa2a58564c8c63511266706f16d6e423b37d9",
+    "modules": [
+      {
+        "name": "rules",
+        "package": "rules",
+        "imports": [],
+        "declarations": [
+          {
+            "decl": "enum",
+            "name": "Document",
+            "variants": [
+              "complaint"
+            ]
+          },
+          {
+            "decl": "enum",
+            "name": "Method",
+            "variants": [
+              "Personal",
+              "Mail"
+            ]
+          },
+          {
+            "decl": "event",
+            "name": "Served",
+            "params": [
+              [
+                "document",
+                {
+                  "type": "named",
+                  "argument": "Document"
+                }
+              ],
+              [
+                "method",
+                {
+                  "type": "named",
+                  "argument": "Method"
+                }
+              ]
+            ]
+          },
+          {
+            "decl": "event",
+            "name": "Answered",
+            "params": [
+              [
+                "document",
+                {
+                  "type": "named",
+                  "argument": "Document"
+                }
+              ]
+            ]
+          },
+          {
+            "decl": "authority",
+            "name": "Statute",
+            "outranks": [
+              "FederalRule",
+              "LocalRule"
+            ]
+          },
+          {
+            "decl": "authority",
+            "name": "FederalRule",
+            "outranks": [
+              "LocalRule"
+            ]
+          },
+          {
+            "decl": "counting",
+            "meta": {
+              "id": "c6",
+              "label": "",
+              "cite": null,
+              "effective": {
+                "from": "2009-12-01",
+                "to": null,
+                "known_at": "2025-01-01"
+              },
+              "authority": "FederalRule",
+              "relations": [],
+              "span": {
+                "file": "pkgs/rules/rules.lit",
+                "line": 8,
+                "col": 1,
+                "end_line": 8,
+                "end_col": 95
+              }
+            },
+            "exclude_trigger_day": true,
+            "include_last_day": true,
+            "roll_on": [
+              "weekend"
+            ],
+            "service_extensions": {},
+            "calendar": "cal",
+            "anchor": "triggerDay",
+            "short_period": null,
+            "hours": false
+          },
+          {
+            "decl": "calendar",
+            "meta": {
+              "id": "cal",
+              "label": "",
+              "cite": null,
+              "effective": {
+                "from": "2009-12-01",
+                "to": null,
+                "known_at": "2025-01-01"
+              },
+              "authority": "FederalRule",
+              "relations": [],
+              "span": {
+                "file": "pkgs/rules/rules.lit",
+                "line": 9,
+                "col": 1,
+                "end_line": 9,
+                "end_col": 91
+              }
+            },
+            "holidays": [
+              {
+                "id": "new-year",
+                "date": {
+                  "rule": "fixed",
+                  "month": 1,
+                  "day": 1
+                },
+                "in_force": {
+                  "from": "1870-06-28",
+                  "to": null,
+                  "known_at": "2025-01-01"
+                },
+                "observed": "nearestWeekday"
+              }
+            ]
+          },
+          {
+            "decl": "deadline",
+            "meta": {
+              "id": "answer",
+              "label": "",
+              "cite": null,
+              "effective": {
+                "from": "2009-12-01",
+                "to": "2024-12-01",
+                "known_at": "2025-01-01"
+              },
+              "authority": "FederalRule",
+              "relations": [],
+              "span": {
+                "file": "pkgs/rules/rules.lit",
+                "line": 10,
+                "col": 1,
+                "end_line": 10,
+                "end_col": 97
+              }
+            },
+            "amount": 20,
+            "unit": "calendar",
+            "direction": "forward",
+            "trigger": {
+              "ty": {
+                "type": "named",
+                "argument": "Served"
+              },
+              "kind": {
+                "expr": "call",
+                "callee": "Served",
+                "args": [
+                  {
+                    "ty": {
+                      "type": "named",
+                      "argument": "Document"
+                    },
+                    "kind": {
+                      "expr": "literal",
+                      "value": {
+                        "kind": "variant",
+                        "value": "Document::complaint"
+                      }
+                    },
+                    "span": {
+                      "file": "pkgs/rules/rules.lit",
+                      "line": 10,
+                      "col": 38,
+                      "end_line": 10,
+                      "end_col": 47
+                    }
+                  }
+                ]
+              },
+              "span": {
+                "file": "pkgs/rules/rules.lit",
+                "line": 10,
+                "col": 31,
+                "end_line": 10,
+                "end_col": 48
+              }
+            },
+            "counting": "c6",
+            "extendable": null,
+            "extension_authority": null,
+            "note": null
+          },
+          {
+            "decl": "deadline",
+            "meta": {
+              "id": "answer",
+              "label": "",
+              "cite": null,
+              "effective": {
+                "from": "2024-12-01",
+                "to": null,
+                "known_at": "2025-01-01"
+              },
+              "authority": "FederalRule",
+              "relations": [],
+              "span": {
+                "file": "pkgs/rules/rules.lit",
+                "line": 11,
+                "col": 1,
+                "end_line": 11,
+                "end_col": 89
+              }
+            },
+            "amount": 21,
+            "unit": "calendar",
+            "direction": "forward",
+            "trigger": {
+              "ty": {
+                "type": "named",
+                "argument": "Served"
+              },
+              "kind": {
+                "expr": "call",
+                "callee": "Served",
+                "args": [
+                  {
+                    "ty": {
+                      "type": "named",
+                      "argument": "Document"
+                    },
+                    "kind": {
+                      "expr": "literal",
+                      "value": {
+                        "kind": "variant",
+                        "value": "Document::complaint"
+                      }
+                    },
+                    "span": {
+                      "file": "pkgs/rules/rules.lit",
+                      "line": 11,
+                      "col": 38,
+                      "end_line": 11,
+                      "end_col": 47
+                    }
+                  }
+                ]
+              },
+              "span": {
+                "file": "pkgs/rules/rules.lit",
+                "line": 11,
+                "col": 31,
+                "end_line": 11,
+                "end_col": 48
+              }
+            },
+            "counting": "c6",
+            "extendable": null,
+            "extension_authority": null,
+            "note": null
+          },
+          {
+            "decl": "transition",
+            "meta": {
+              "id": "t",
+              "label": "",
+              "cite": "FRCP 86(a)",
+              "effective": {
+                "from": "2009-12-01",
+                "to": null,
+                "known_at": "2025-01-01"
+              },
+              "authority": "FederalRule",
+              "relations": [],
+              "span": {
+                "file": "pkgs/rules/rules.lit",
+                "line": 12,
+                "col": 1,
+                "end_line": 16,
+                "end_col": 2
+              }
+            },
+            "amendment": "answer@2024-12-01",
+            "arms": [
+              {
+                "unless": {
+                  "ty": {
+                    "type": "boolean"
+                  },
+                  "kind": {
+                    "expr": "call",
+                    "callee": "has_event",
+                    "args": [
+                      {
+                        "ty": {
+                          "type": "named",
+                          "argument": "Answered"
+                        },
+                        "kind": {
+                          "expr": "call",
+                          "callee": "Answered",
+                          "args": [
+                            {
+                              "ty": {
+                                "type": "named",
+                                "argument": "Document"
+                              },
+                              "kind": {
+                                "expr": "literal",
+                                "value": {
+                                  "kind": "variant",
+                                  "value": "Document::complaint"
+                                }
+                              },
+                              "span": {
+                                "file": "pkgs/rules/rules.lit",
+                                "line": 14,
+                                "col": 29,
+                                "end_line": 14,
+                                "end_col": 38
+                              }
+                            }
+                          ]
+                        },
+                        "span": {
+                          "file": "pkgs/rules/rules.lit",
+                          "line": 14,
+                          "col": 20,
+                          "end_line": 14,
+                          "end_col": 39
+                        }
+                      }
+                    ]
+                  },
+                  "span": {
+                    "file": "pkgs/rules/rules.lit",
+                    "line": 14,
+                    "col": 10,
+                    "end_line": 14,
+                    "end_col": 40
+                  }
+                },
+                "selects": "answer@2009-12-01"
+              },
+              {
+                "unless": null,
+                "selects": "answer@2024-12-01"
+              }
+            ]
+          },
+          {
+            "decl": "default",
+            "meta": {
+              "id": "standing",
+              "label": "",
+              "cite": null,
+              "effective": {
+                "from": "2009-12-01",
+                "to": null,
+                "known_at": "2025-01-01"
+              },
+              "authority": "FederalRule",
+              "relations": [],
+              "span": {
+                "file": "pkgs/rules/rules.lit",
+                "line": 17,
+                "col": 1,
+                "end_line": 17,
+                "end_col": 68
+              }
+            },
+            "condition": {
+              "ty": {
+                "type": "boolean"
+              },
+              "kind": {
+                "expr": "call",
+                "callee": "has_event",
+                "args": [
+                  {
+                    "ty": {
+                      "type": "named",
+                      "argument": "Served"
+                    },
+                    "kind": {
+                      "expr": "call",
+                      "callee": "Served",
+                      "args": [
+                        {
+                          "ty": {
+                            "type": "named",
+                            "argument": "Document"
+                          },
+                          "kind": {
+                            "expr": "literal",
+                            "value": {
+                              "kind": "variant",
+                              "value": "Document::complaint"
+                            }
+                          },
+                          "span": {
+                            "file": "pkgs/rules/rules.lit",
+                            "line": 17,
+                            "col": 40,
+                            "end_line": 17,
+                            "end_col": 49
+                          }
+                        },
+                        {
+                          "ty": {
+                            "type": "named",
+                            "argument": "Method"
+                          },
+                          "kind": {
+                            "expr": "literal",
+                            "value": {
+                              "kind": "variant",
+                              "value": "Method::Mail"
+                            }
+                          },
+                          "span": {
+                            "file": "pkgs/rules/rules.lit",
+                            "line": 17,
+                            "col": 51,
+                            "end_line": 17,
+                            "end_col": 55
+                          }
+                        }
+                      ]
+                    },
+                    "span": {
+                      "file": "pkgs/rules/rules.lit",
+                      "line": 17,
+                      "col": 33,
+                      "end_line": 17,
+                      "end_col": 56
+                    }
+                  }
+                ]
+              },
+              "span": {
+                "file": "pkgs/rules/rules.lit",
+                "line": 17,
+                "col": 23,
+                "end_line": 17,
+                "end_col": 57
+              }
+            },
+            "conclusion": {
+              "ty": {
+                "type": "days",
+                "argument": "calendar"
+              },
+              "kind": {
+                "expr": "literal",
+                "value": {
+                  "kind": "days",
+                  "value": {
+                    "amount": 14,
+                    "unit": "calendar"
+                  }
+                }
+              },
+              "span": {
+                "file": "pkgs/rules/rules.lit",
+                "line": 17,
+                "col": 61,
+                "end_line": 17,
+                "end_col": 68
+              }
+            }
+          },
+          {
+            "decl": "exception",
+            "meta": {
+              "id": "local",
+              "label": "",
+              "cite": null,
+              "effective": {
+                "from": "2009-12-01",
+                "to": null,
+                "known_at": "2025-01-01"
+              },
+              "authority": "FederalRule",
+              "relations": [],
+              "span": {
+                "file": "pkgs/rules/rules.lit",
+                "line": 18,
+                "col": 1,
+                "end_line": 18,
+                "end_col": 89
+              }
+            },
+            "target": "standing",
+            "kind": "rebutting",
+            "condition": {
+              "ty": {
+                "type": "boolean"
+              },
+              "kind": {
+                "expr": "call",
+                "callee": "has_event",
+                "args": [
+                  {
+                    "ty": {
+                      "type": "named",
+                      "argument": "Answered"
+                    },
+                    "kind": {
+                      "expr": "call",
+                      "callee": "Answered",
+                      "args": [
+                        {
+                          "ty": {
+                            "type": "named",
+                            "argument": "Document"
+                          },
+                          "kind": {
+                            "expr": "literal",
+                            "value": {
+                              "kind": "variant",
+                              "value": "Document::complaint"
+                            }
+                          },
+                          "span": {
+                            "file": "pkgs/rules/rules.lit",
+                            "line": 18,
+                            "col": 57,
+                            "end_line": 18,
+                            "end_col": 66
+                          }
+                        }
+                      ]
+                    },
+                    "span": {
+                      "file": "pkgs/rules/rules.lit",
+                      "line": 18,
+                      "col": 48,
+                      "end_line": 18,
+                      "end_col": 67
+                    }
+                  }
+                ]
+              },
+              "span": {
+                "file": "pkgs/rules/rules.lit",
+                "line": 18,
+                "col": 38,
+                "end_line": 18,
+                "end_col": 68
+              }
+            },
+            "conclusion": {
+              "ty": {
+                "type": "days",
+                "argument": "calendar"
+              },
+              "kind": {
+                "expr": "literal",
+                "value": {
+                  "kind": "days",
+                  "value": {
+                    "amount": 7,
+                    "unit": "calendar"
+                  }
+                }
+              },
+              "span": {
+                "file": "pkgs/rules/rules.lit",
+                "line": 18,
+                "col": 72,
+                "end_line": 18,
+                "end_col": 78
+              }
+            },
+            "priority": 2
+          },
+          {
+            "decl": "exception",
+            "meta": {
+              "id": "moot",
+              "label": "",
+              "cite": null,
+              "effective": {
+                "from": "2009-12-01",
+                "to": null,
+                "known_at": "2025-01-01"
+              },
+              "authority": "FederalRule",
+              "relations": [],
+              "span": {
+                "file": "pkgs/rules/rules.lit",
+                "line": 19,
+                "col": 1,
+                "end_line": 19,
+                "end_col": 75
+              }
+            },
+            "target": "standing",
+            "kind": "undercutting",
+            "condition": {
+              "ty": {
+                "type": "boolean"
+              },
+              "kind": {
+                "expr": "unary",
+                "op": "not",
+                "operand": {
+                  "ty": {
+                    "type": "boolean"
+                  },
+                  "kind": {
+                    "expr": "call",
+                    "callee": "has_event",
+                    "args": [
+                      {
+                        "ty": {
+                          "type": "named",
+                          "argument": "Served"
+                        },
+                        "kind": {
+                          "expr": "call",
+                          "callee": "Served",
+                          "args": [
+                            {
+                              "ty": {
+                                "type": "named",
+                                "argument": "Document"
+                              },
+                              "kind": {
+                                "expr": "literal",
+                                "value": {
+                                  "kind": "variant",
+                                  "value": "Document::complaint"
+                                }
+                              },
+                              "span": {
+                                "file": "pkgs/rules/rules.lit",
+                                "line": 19,
+                                "col": 58,
+                                "end_line": 19,
+                                "end_col": 67
+                              }
+                            },
+                            {
+                              "ty": {
+                                "type": "named",
+                                "argument": "Method"
+                              },
+                              "kind": {
+                                "expr": "literal",
+                                "value": {
+                                  "kind": "variant",
+                                  "value": "Method::Mail"
+                                }
+                              },
+                              "span": {
+                                "file": "pkgs/rules/rules.lit",
+                                "line": 19,
+                                "col": 69,
+                                "end_line": 19,
+                                "end_col": 73
+                              }
+                            }
+                          ]
+                        },
+                        "span": {
+                          "file": "pkgs/rules/rules.lit",
+                          "line": 19,
+                          "col": 51,
+                          "end_line": 19,
+                          "end_col": 74
+                        }
+                      }
+                    ]
+                  },
+                  "span": {
+                    "file": "pkgs/rules/rules.lit",
+                    "line": 19,
+                    "col": 41,
+                    "end_line": 19,
+                    "end_col": 75
+                  }
+                }
+              },
+              "span": {
+                "file": "pkgs/rules/rules.lit",
+                "line": 19,
+                "col": 40,
+                "end_line": 19,
+                "end_col": 75
+              }
+            },
+            "conclusion": null,
+            "priority": null
+          },
+          {
+            "decl": "node",
+            "meta": {
+              "id": "pending",
+              "label": "Pending",
+              "cite": null,
+              "effective": {
+                "from": "2009-12-01",
+                "to": null,
+                "known_at": "2025-01-01"
+              },
+              "authority": "FederalRule",
+              "relations": [],
+              "span": {
+                "file": "pkgs/rules/rules.lit",
+                "line": 20,
+                "col": 1,
+                "end_line": 22,
+                "end_col": 2
+              }
+            },
+            "kind": {
+              "kind": "state"
+            },
+            "group": null,
+            "note": null,
+            "valence": null,
+            "court_listener_url": null,
+            "tags": [],
+            "attrs": {},
+            "actor": "Defendant",
+            "edges": [
+              {
+                "id": "respond",
+                "to": "done",
+                "label": "Respond",
+                "actor": "Defendant",
+                "authority": null,
+                "probability": null,
+                "hours": {
+                  "numerator": 2,
+                  "denominator": 1
+                },
+                "cost": {
+                  "state": "known",
+                  "value": {
+                    "minor_units": 150000,
+                    "currency": "usd"
+                  }
+                },
+                "event": null,
+                "deadline": {
+                  "window": {
+                    "window": "declared",
+                    "deadline": "answer"
+                  },
+                  "extendable": null,
+                  "extension_authority": null,
+                  "note": null
+                },
+                "duration": null,
+                "valence": null,
+                "court_listener_url": null,
+                "action_id": null,
+                "note": null,
+                "tags": [],
+                "attrs": {},
+                "sets": [],
+                "clears": [],
+                "requires": [],
+                "forbids": [],
+                "span": {
+                  "file": "pkgs/rules/rules.lit",
+                  "line": 21,
+                  "col": 3,
+                  "end_line": 21,
+                  "end_col": 78
+                }
+              }
+            ]
+          },
+          {
+            "decl": "node",
+            "meta": {
+              "id": "done",
+              "label": "Done",
+              "cite": null,
+              "effective": {
+                "from": "2009-12-01",
+                "to": null,
+                "known_at": "2025-01-01"
+              },
+              "authority": "FederalRule",
+              "relations": [],
+              "span": {
+                "file": "pkgs/rules/rules.lit",
+                "line": 23,
+                "col": 1,
+                "end_line": 23,
+                "end_col": 66
+              }
+            },
+            "kind": {
+              "kind": "terminal",
+              "outcomes": [
+                "judgment"
+              ],
+              "payoff": {
+                "state": "known",
+                "value": {
+                  "minor_units": -100050,
+                  "currency": "usd"
+                }
+              },
+              "payoff_by_flag": {}
+            },
+            "group": null,
+            "note": null,
+            "valence": null,
+            "court_listener_url": null,
+            "tags": [],
+            "attrs": {},
+            "actor": null,
+            "edges": []
+          },
+          {
+            "decl": "test",
+            "name": "answer due",
+            "cite": null,
+            "givens": [
+              [
+                {
+                  "ty": {
+                    "type": "named",
+                    "argument": "Served"
+                  },
+                  "kind": {
+                    "expr": "call",
+                    "callee": "Served",
+                    "args": [
+                      {
+                        "ty": {
+                          "type": "named",
+                          "argument": "Document"
+                        },
+                        "kind": {
+                          "expr": "literal",
+                          "value": {
+                            "kind": "variant",
+                            "value": "Document::complaint"
+                          }
+                        },
+                        "span": {
+                          "file": "pkgs/rules/rules.lit",
+                          "line": 25,
+                          "col": 16,
+                          "end_line": 25,
+                          "end_col": 25
+                        }
+                      },
+                      {
+                        "ty": {
+                          "type": "named",
+                          "argument": "Method"
+                        },
+                        "kind": {
+                          "expr": "literal",
+                          "value": {
+                            "kind": "variant",
+                            "value": "Method::Personal"
+                          }
+                        },
+                        "span": {
+                          "file": "pkgs/rules/rules.lit",
+                          "line": 25,
+                          "col": 27,
+                          "end_line": 25,
+                          "end_col": 35
+                        }
+                      }
+                    ]
+                  },
+                  "span": {
+                    "file": "pkgs/rules/rules.lit",
+                    "line": 25,
+                    "col": 9,
+                    "end_line": 25,
+                    "end_col": 36
+                  }
+                },
+                "2025-03-03"
+              ]
+            ],
+            "expects": [
+              {
+                "lhs": {
+                  "ty": {
+                    "type": "date"
+                  },
+                  "kind": {
+                    "expr": "call",
+                    "callee": "deadline",
+                    "args": [
+                      {
+                        "ty": {
+                          "type": "unit"
+                        },
+                        "kind": {
+                          "expr": "ref",
+                          "target": "answer"
+                        },
+                        "span": {
+                          "file": "pkgs/rules/rules.lit",
+                          "line": 26,
+                          "col": 19,
+                          "end_line": 26,
+                          "end_col": 25
+                        }
+                      }
+                    ]
+                  },
+                  "span": {
+                    "file": "pkgs/rules/rules.lit",
+                    "line": 26,
+                    "col": 10,
+                    "end_line": 26,
+                    "end_col": 26
+                  }
+                },
+                "op": "eq",
+                "rhs": {
+                  "ty": {
+                    "type": "date"
+                  },
+                  "kind": {
+                    "expr": "literal",
+                    "value": {
+                      "kind": "date",
+                      "value": "2025-03-24"
+                    }
+                  },
+                  "span": {
+                    "file": "pkgs/rules/rules.lit",
+                    "line": 26,
+                    "col": 30,
+                    "end_line": 26,
+                    "end_col": 40
+                  }
+                }
+              }
+            ],
+            "span": {
+              "file": "pkgs/rules/rules.lit",
+              "line": 24,
+              "col": 1,
+              "end_line": 27,
+              "end_col": 2
+            }
+          }
+        ]
+      }
+    ],
+    "start": "pending",
+    "groups": []
+  },
+  {
+    "manifest": {
+      "name": "links",
+      "version": "1.0.0",
+      "language": 1,
+      "pack_id": "links",
+      "forum": "demo",
+      "authority": "FederalRule",
+      "title": "T",
+      "description": null,
+      "jurisdiction": null,
+      "roles": {
+        "Court": "nature",
+        "Defendant": "opponent",
+        "Plaintiff": "self"
+      },
+      "in_force": {
+        "from": "2009-12-01",
+        "to": null,
+        "known_at": "2025-01-01"
+      },
+      "sources": [],
+      "dependencies": {
+        "rules": "^1.0.0"
+      }
+    },
+    "digest": "da21997d7a661fa3ba4df2f76590a07b2e1d8d053ee596864daa026a5a3baf80",
+    "modules": [
+      {
+        "name": "links",
+        "package": "links",
+        "imports": [],
+        "declarations": [
+          {
+            "decl": "link",
+            "from": "rules::done",
+            "edge": {
+              "id": "appeal",
+              "to": "rules@copy::pending",
+              "label": "Appeal",
+              "actor": "Plaintiff",
+              "authority": null,
+              "probability": {
+                "state": "known",
+                "value": {
+                  "numerator": 1,
+                  "denominator": 2
+                }
+              },
+              "hours": null,
+              "cost": null,
+              "event": null,
+              "deadline": null,
+              "duration": null,
+              "valence": null,
+              "court_listener_url": null,
+              "action_id": null,
+              "note": "x",
+              "tags": [],
+              "attrs": {},
+              "sets": [],
+              "clears": [],
+              "requires": [],
+              "forbids": [],
+              "span": {
+                "file": "pkgs/links/links.lit",
+                "line": 2,
+                "col": 1,
+                "end_line": 2,
+                "end_col": 89
+              }
+            },
+            "replaces": []
+          },
+          {
+            "decl": "instance",
+            "name": "rules@copy",
+            "pack": "rules",
+            "note": null,
+            "remove_edges": [],
+            "probabilities": {
+              "respond": {
+                "numerator": 1,
+                "denominator": 3
+              }
+            },
+            "roles": {},
+            "payoff_transform": null,
+            "patch_edges": {
+              "respond": {
+                "hours": null
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "start": "",
+    "groups": []
+  }
+]

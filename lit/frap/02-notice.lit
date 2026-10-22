@@ -1,0 +1,156 @@
+module frap.notice
+
+import frap.docketing.{ cross-appeal-fork }
+import frap.{ notice-group }
+
+decision appeal-clock-open: "Notice of Appeal Window Open" by applicant cite FRAP 4(a)(1)(A)-(B); FRAP 4(b)(1)(A); 28 U.S.C. § 2107
+{
+  group notice-group
+  note "The appeal deadline is jurisdictional and non-waivable under Bowles v. Russell, 551 U.S. 205 (2007). Civil cases have 30 days (60 if the U.S., a U.S. agency, or officer is a party); criminal defendants have 14 days. Missing this deadline strips appellate jurisdiction permanently."
+  notice-of-appeal-civil "File notice of appeal (civil)" -> notice-of-appeal-filed {
+    authority cite FRAP 4(a)(1)(A)
+    effort 4.hours
+    cost 605.usd
+    deadline 30.days {
+      extendable false
+      extension_authority "FRAP 4(a)(5) (may extend up to 30 additional days only via motion before expiration)"
+      note "If notice is not filed within 30 days, the appeal is untimely. Under Bowles, no equitable exception or late filing is permitted — appellate jurisdiction is lost permanently and cannot be restored."
+    }
+    duration { min 4.5.days, mode 15.days, max 30.days }
+    valence good
+    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate. Filing fee $605.00: $600.00 court-of-appeals docketing fee (Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2023) plus the $5.00 statutory notice-of-appeal fee (28 U.S.C. § 1917), both collected by the district clerk on filing; waivable IFP under 28 U.S.C. § 1915."
+  }
+  notice-of-appeal-us-party "File notice of appeal (US party)" -> notice-of-appeal-filed {
+    authority cite FRAP 4(a)(1)(B)
+    effort 4.hours
+    cost 605.usd
+    deadline 60.days {
+      extendable false
+      extension_authority "FRAP 4(a)(5) (may extend up to 30 additional days only via motion before expiration)"
+      note "When the U.S., a U.S. agency, or an officer acting in official capacity is a party, the deadline is 60 days. Missing this deadline forecloses appellate jurisdiction entirely under 28 U.S.C. § 2107."
+    }
+    duration { min 9.days, mode 30.days, max 60.days }
+    valence good
+    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate. Same $605.00 filing fee as the standard notice of appeal (Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2023, plus 28 U.S.C. § 1917's $5.00 notice fee) — the longer 60-day period applies because the U.S., its agency, or officer is a party, not because the filer here is the government."
+  }
+  notice-of-appeal-criminal "File notice of appeal (criminal)" -> notice-of-appeal-filed {
+    authority cite FRAP 4(b)(1)(A)
+    effort 4.hours
+    cost 605.usd
+    deadline 14.days {
+      extendable false
+      extension_authority "FRAP 4(b)(4) (may be extended for excusable neglect or good cause, subject to Bowles jurisdictional limit)"
+      note "Criminal defendants have only 14 days to file notice of appeal. A late notice — even one day late — is untimely and strips appellate jurisdiction; no exception for prosecutor's error or trial counsel's mistake."
+    }
+    duration { min 2.1.days, mode 7.days, max 14.days }
+    valence good
+    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate. Same $605.00 fee as a civil appeal (Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2023, plus 28 U.S.C. § 1917's $5.00 notice fee) applies in principle, but most criminal appellants proceed in forma pauperis with appointed CJA counsel (FRAP 24(a); 28 U.S.C. § 1915), waiving prepayment."
+  }
+  _ "File Rule 4(a)(4) tolling motion" -> tolling-motion-filed {
+    authority cite ?("FRAP 4(a)(4)(A); FRCP 50(b), 59(e), 60(b)(2)")
+    effort 8.hours
+    deadline 28.days {
+      extendable false
+      extension_authority "FRCP 6(b) may extend the tolling-motion deadline by up to 28 days total (only for FRCP 50(b), 59(e), 60(b) motions)"
+      note "Tolling motions must be filed within the FRCP deadline (e.g., 28 days for a FRCP 59(e) motion for new trial). A tolling motion filed even one day late does not restart the appeal clock."
+    }
+    duration { min 4.2.days, mode 14.days, max 28.days }
+    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+  }
+  _ "Let the deadline lapse" -> notice-of-appeal-untimely {
+    authority cite ?("Bowles v. Russell, 551 U.S. 205 (2007); 28 U.S.C. § 2107")
+    effort 0.hours
+    valence bad
+    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+  }
+  _ "Move to extend or reopen deadline" -> post-deadline-relief-motion {
+    authority cite FRAP 4(a)(5)(A)
+    effort 10.hours
+    deadline 30.days {
+      extendable true
+      extension_authority "FRAP 4(a)(5)(A) (court may extend if motion filed before deadline expires); FRAP 4(a)(6) (may reopen for 14 days if lack of notice of entry)"
+      note "A party may file a motion to extend time to appeal before the deadline expires. The district court may grant up to 30 additional days for excusable neglect or good cause. A motion filed after the deadline expires may only invoke FRAP 4(a)(6) (reopening)."
+    }
+    duration { min 4.5.days, mode 15.days, max 30.days }
+    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+  }
+}
+
+state notice-of-appeal-filed: "Notice of Appeal Filed" by office cite ?("FRAP 3(a), (c)(1), (4)-(5)") {
+  group notice-group
+  note "The notice must specify the party taking the appeal, designate the judgment/order appealed from, and identify the court to which the appeal is taken. Courts construe informal notices liberally per Foman v. Davis, 371 U.S. 178 (1962), unless the defect is fatal (wrong party or judgment)."
+  _ "Notice omits required contents" -> deficient-notice-of-appeal {
+    authority cite FRAP 3(c); FRAP 3(e)
+  }
+  _ "Notice complies — docketed" -> docketed-in-court-of-appeals {
+    authority cite FRAP 3(d); FRAP 12(a); FRAP 12(b)(3)
+  }
+}
+
+state tolling-motion-filed: "Rule 4(a)(4) Tolling Motion Filed" by examiner cite ?("FRAP 4(a)(4)(A); FRCP 50, 59, 52(b), 60(b)") {
+  group notice-group
+  note "Motions for judgment as a matter of law, new trial, amended findings, altered/amended judgment, and certain Rule 60(b) motions toll the appeal clock when filed within their own FRCP deadlines (typically 28 days). A motion filed one day after the FRCP deadline does not toll."
+  _ "District court rules on the motion" -> tolling-motion-disposed {
+    authority cite FRAP 4(a)(4)(A)
+  }
+}
+
+state tolling-motion-disposed: "Tolling Motion Disposed" by office cite FRAP 4(a)(4)(A)
+{
+  group notice-group
+  note "The full appeal period runs anew from the entry of the order disposing of the last remaining tolling motion. If multiple tolling motions are pending, the clock does not restart until the final one is decided."
+  _ "Appeal clock restarts from disposition" -> appeal-clock-open {
+    authority cite FRAP 4(a)(4)(A)
+    deadline 30.days {
+      extendable false
+      extension_authority "FRAP 4(a)(5) (extension may apply to the restarted deadline)"
+      note "The full appeal period runs anew from the date the order disposing of the last tolling motion is entered. A new 30-day clock (or 60-day if U.S. party) begins; missing this deadline is fatal."
+    }
+    duration { min 4.5.days, mode 15.days, max 30.days }
+  }
+}
+
+terminal notice-of-appeal-untimely: "DISMISSED — Untimely Notice of Appeal (Jurisdictional)" outcome [loss, procedural-default, jurisdictional, waiver-trap] cite ?("Bowles v. Russell, 551 U.S. 205 (2007); 28 U.S.C. § 2107; FRAP 4(a)") {
+  group notice-group
+  note "PERMADEATH. A statutory appeal deadline is strictly jurisdictional and cannot be waived, excused, or extended by equitable principle. Even a district court order purporting to extend the deadline is void ab initio. Loss of jurisdiction is irrevocable. PLACEHOLDER PAYOFF: $0, override per matter. The judgment below stands unreviewed."
+  valence bad
+  payoff 0.usd
+}
+
+chance deficient-notice-of-appeal: "Notice of Appeal Contents Deficient" by examiner discretion cite ?("FRAP 3(c)(1), (4)-(5); Foman v. Davis, 371 U.S. 178 (1962); Smith v. Barry, 502 U.S. 244 (1992); Torres v. Oakland Scavenger Co., 487 U.S. 312 (1988)") {
+  group notice-group
+  note "Courts apply liberal construction to informal notices where the intent to appeal is objectively clear (Foman/Smith line). However, naming the wrong party, wrong judgment, or wrong court may be jurisdictionally fatal and incurable, even if intent is clear (Torres)."
+  _ "Court excuses the technical defect" -> docketed-in-court-of-appeals p 0.75 {
+    authority cite ?("Foman v. Davis, 371 U.S. 178 (1962); Smith v. Barry, 502 U.S. 244 (1992); FRAP 3(e)")
+    valence good
+  }
+  _ "Defect held jurisdictional, uncurable" -> notice-of-appeal-untimely p 0.25 {
+    authority cite ?("Torres v. Oakland Scavenger Co., 487 U.S. 312 (1988); FRAP 3(c)")
+    valence bad
+  }
+}
+
+chance post-deadline-relief-motion: "Motion to Extend or Reopen Time" by examiner discretion cite FRAP 4(a)(5)(A); FRAP 4(a)(6)
+{
+  group notice-group
+  note "FRAP 4(a)(5) allows the district court to extend time up to 30 additional days for excusable neglect or good cause. FRAP 4(a)(6) allows reopening for 14 days for lack of notice of entry (motion filed within 14 days of actual notice, no later than 180 days after entry). Both carry absolute outer limits."
+  _ "Court grants extension or reopening" -> notice-of-appeal-filed p 0.6 {
+    authority cite FRAP 4(a)(5)(A); FRAP 4(a)(6)
+    valence good
+  }
+  _ "Court denies relief — deadline stands" -> notice-of-appeal-untimely p 0.4 {
+    authority cite ?("Bowles v. Russell, 551 U.S. 205 (2007); FRAP 4(a)(5)-(6)")
+    valence bad
+  }
+}
+
+state docketed-in-court-of-appeals: "Appeal Docketed" by applicant cite FRAP 3(d); FRAP 12(a); FRAP 12(b)(3)
+{
+  group notice-group
+  note "The district clerk transmits the notice to the court of appeals clerk, who dockets the appeal and assigns a case number. Docketing is ministerial; appellate jurisdiction attaches when the notice is filed in the district court, not when docketed in the appellate court."
+  _ "Appellee weighs a cross-appeal" -> cross-appeal-fork {
+    authority cite FRAP 4(a)(3); FRAP 4(a)(4)
+    effort 3.hours
+    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+  }
+}

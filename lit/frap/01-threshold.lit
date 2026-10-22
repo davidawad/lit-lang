@@ -1,0 +1,125 @@
+module frap.threshold
+
+import frap.notice.{ appeal-clock-open }
+import frap.{ threshold-group }
+
+start trial-court-disposition
+
+state trial-court-disposition: "District Court Order or Judgment Entered" cite 28 U.S.C. § 1291
+{
+  group threshold-group
+  note "Entry of a district court judgment or order marks the gateway moment for appellate jurisdiction. Not every order triggers appeal rights — the order must fall within one of the narrow statutory categories. Miscategorizing an order (treating an interlocutory order as final, or vice versa) cascades into jurisdictional dismissal downstream, regardless of merit."
+  _ "Assess order for finality" -> appealability-fork { authority cite 28 U.S.C. § 1291 }
+}
+
+decision appealability-fork: "Is the Order a Final Judgment?" by office cite 28 U.S.C. § 1291
+{
+  group threshold-group
+  note "The finality inquiry is mechanical but requires precision: a final decision must dispose of all claims as to all parties, or be certified under Federal Rule of Civil Procedure 54(b). Many seemingly conclusive orders fail the test because they leave pending counterclaims, third-party claims, or unresolved damages issues. Appealing too early results in dismissal for lack of jurisdiction."
+  _ "Order is a final judgment" -> final-judgment-entered { authority cite 28 U.S.C. § 1291 }
+  _ "Order is interlocutory" -> interlocutory-order-issued { authority cite 28 U.S.C. § 1291 }
+}
+
+state final-judgment-entered: "Final Judgment" by office cite 28 U.S.C. § 1291; Fed. R. App. P. 4(a)(1)(A)
+{
+  group threshold-group
+  note "A true final judgment ends the district court's power over the case on the merits and triggers the 30-day appeal clock. The judgment must resolve the entire controversy between the parties. Partial judgments, conditional orders, and orders that reserve jurisdiction (e.g., to tax costs or award attorney fees) may fail the finality test and block immediate appeal."
+  _ "Final judgment starts appeal clock" -> appeal-clock-open {
+    authority cite Fed. R. App. P. 4(a)(1)(A)
+    deadline 30.days {
+      extendable true
+      extension_authority "Fed. R. App. P. 4(a)(5)"
+      note "Notice of appeal due within 30 days of entry of final judgment, extendable to 60 days maximum under FRAP 4(a)(5). Deadline is jurisdictional; missing it by even one day strips appellate court of jurisdiction. Post-judgment motions may alter the triggering date under FRAP 4(a)(4)."
+    }
+    duration { min 4.5.days, mode 15.days, max 30.days }
+  }
+}
+
+/// imported
+///
+/// Its § 1292 cites cannot resolve yet: 28 U.S.C. § 1292 is vendored in
+/// sources/usc-cfr-prosecution-fragments.txt, but `28 U.S.C.` binds to
+/// usc-additional.txt (§§ 46, 1254, 1291, 2101, 2107) and a citation family
+/// binds one source (`litigate_lower::source_map::Citations`). The marker
+/// keeps that a `dev` warning; `strict` rejects it.
+state interlocutory-order-issued: "Interlocutory Order" by applicant cite 28 U.S.C. § 1292
+{
+  group threshold-group
+  note "An interlocutory order does not end the litigation on the merits and thus falls outside the default appeal-of-right gate under § 1291. Section 1292 creates three narrow exceptions, but the default assumption is that an interlocutory order is not appealable. Trying to appeal without qualifying through one of the three doors results in dismissal."
+  _ "Check interlocutory review doors" -> interlocutory-review-fork {
+    authority cite 28 U.S.C. § 1292
+    effort 3.hours
+    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+  }
+}
+
+/// imported
+///
+/// Its § 1292 cites cannot resolve yet: 28 U.S.C. § 1292 is vendored in
+/// sources/usc-cfr-prosecution-fragments.txt, but `28 U.S.C.` binds to
+/// usc-additional.txt (§§ 46, 1254, 1291, 2101, 2107) and a citation family
+/// binds one source (`litigate_lower::source_map::Citations`). The marker
+/// keeps that a `dev` warning; `strict` rejects it.
+decision interlocutory-review-fork: "Interlocutory Review Door Available?" by applicant cite ?("28 U.S.C. §§ 1292(a)-(b); Cohen v. Beneficial Industrial Loan Corp., 337 U.S. 541 (1949)") {
+  group threshold-group
+  note "Three doors strictly govern interlocutory review: first, § 1292(a)(1) injunction/receivership orders (as of right); second, the collateral order doctrine (Cohen test requiring three conjunctive factors); third, § 1292(b) permissive certification (requires district court consent and substantial ground for difference of opinion). Missing all three means no appeal — litigation continues until final judgment."
+  interlocutory-injunction-order "Injunction order — appeal as of right" -> immediately-appealable-interlocutory {
+    authority cite 28 U.S.C. § 1292(a)(1)
+    effort 8.hours
+    deadline 30.days {
+      extendable true
+      extension_authority "Fed. R. App. P. 4(a)(5)"
+      note "Appeal of right from injunction/receivership orders. Notice of appeal due within 30 days of entry, extendable to 60 days maximum under FRAP 4(a)(5). Missing the deadline strips appellate jurisdiction regardless of merit."
+    }
+    duration { min 4.5.days, mode 15.days, max 30.days }
+    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+  }
+  interlocutory-collateral-order "Order meets collateral order doctrine" -> immediately-appealable-interlocutory {
+    authority cite ?("Cohen v. Beneficial Industrial Loan Corp., 337 U.S. 541 (1949)")
+    effort 10.hours
+    deadline 30.days {
+      extendable true
+      extension_authority "Fed. R. App. P. 4(a)(5)"
+      note "Collateral order doctrine requires all three Cohen factors: (1) conclusively determines a disputed question; (2) resolves an important issue separate from the merits; (3) unreviewable on appeal from final judgment. Same 30-day deadline as statutory appeals."
+    }
+    duration { min 4.5.days, mode 15.days, max 30.days }
+    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+  }
+  interlocutory-1292b-certified "Certify for interlocutory appeal" -> immediately-appealable-interlocutory {
+    authority cite 28 U.S.C. § 1292(b); Fed. R. App. P. 5(a)-(b)
+    effort 20.hours
+    deadline 10.days {
+      extendable false
+      extension_authority "Fed. R. App. P. 5(a)(3)"
+      note "Permissive appeal. District court must certify substantial ground for difference of opinion within 10 days of entry (FRAP 5(a)(1)); applicant then has 10 days to apply to the appellate court (FRAP 5(a)(3)). Neither deadline is extendable."
+    }
+    duration { min 1.5.days, mode 5.days, max 10.days }
+    note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
+  }
+  _ "No interlocutory door applies" -> interlocutory-review-unavailable by office {
+    authority cite 28 U.S.C. § 1291
+  }
+}
+
+/// imported
+///
+/// Its § 1292 cites cannot resolve yet: 28 U.S.C. § 1292 is vendored in
+/// sources/usc-cfr-prosecution-fragments.txt, but `28 U.S.C.` binds to
+/// usc-additional.txt (§§ 46, 1254, 1291, 2101, 2107) and a citation family
+/// binds one source (`litigate_lower::source_map::Citations`). The marker
+/// keeps that a `dev` warning; `strict` rejects it.
+state immediately-appealable-interlocutory: "Interlocutory Order Ripe for Appeal" by office cite ?("28 U.S.C. §§ 1292(a)(1), 1292(b); Fed. R. App. P. 5") {
+  group threshold-group
+  note "Whichever door got you here, the downstream notice-of-appeal mechanics are identical to a final-judgment appeal. The narrow jurisdictional gate is passed; the 30-day notice-of-appeal deadline and standard briefing rules now apply."
+  _ "Interlocutory order ripe for appeal" -> appeal-clock-open {
+    authority cite Fed. R. App. P. 4(a)(1)(A)
+  }
+}
+
+terminal interlocutory-review-unavailable: "No Appellate Jurisdiction — Await Final Judgment" outcome [neutral] cite 28 U.S.C. § 1291
+{
+  group threshold-group
+  note "This is the normal posture for most interlocutory orders: simply not appealable. Litigation continues below and the appellant must await a final judgment to seek review. This is not a trap — it is the designed statutory default. Attempting to appeal will be dismissed for lack of jurisdiction. PLACEHOLDER PAYOFF: $500,000 (stake midpoint), override per matter. The underlying case is not over -- appellate review is simply unavailable yet -- so this terminal is genuinely unresolved rather than a win or a loss."
+  valence neutral
+  payoff 500_000.usd
+}

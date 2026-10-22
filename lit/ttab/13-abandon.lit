@@ -1,0 +1,25 @@
+// Imported by `litigate import` from packs/ttab-trademark-trial-and-appeal-board.json.
+module ttab.abandon
+
+import ttab.terminals.{ abandoned-keeps-using, rebrand-orderly }
+import ttab.threat.{ infringement-suit-filed }
+import ttab.{ abandon }
+
+/// imported
+chance abandon-aftermath: "Opposer decides whether to press its use-based claims after the application is gone" effective [2026-10-19, ..) by board cite 15 USC 1114(1); 15 USC 1125(a)
+{
+  group abandon
+  _ "Opposer drops the C&D; applicant keeps using the mark unregistered" -> abandoned-keeps-using p 0.35 {
+    authority cite 15 USC 1125(a)
+    note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
+  }
+  _ "Opposer presses; applicant rebrands on a negotiated timetable" -> rebrand-orderly p 0.55 {
+    authority cite 15 USC 1125(a)
+    note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
+  }
+  _ "Opposer sues" -> infringement-suit-filed p 0.1 {
+    authority cite 15 USC 1114(1); 1125(a)
+    note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
+    tags [threat]
+  }
+}

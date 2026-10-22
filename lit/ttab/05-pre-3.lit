@@ -1,0 +1,15 @@
+// Imported by `litigate import` from packs/ttab-trademark-trial-and-appeal-board.json.
+module ttab.pre-3
+
+import ttab.abandon.{ abandon-aftermath }
+import ttab.{ pre }
+
+/// imported
+state abandon-chance: "Application abandoned before any opposition (37 CFR 2.68; no 2.135 judgment)" effective [2026-10-19, ..) by board cite ?("37 CFR 2.68; 37 CFR 2.135; TBMP 602.01") {
+  group pre
+  note "Before commencement of an opposition the Board has no jurisdiction; express abandonment (37 CFR 2.68) carries no 2.135 judgment. Any use-based dispute outside the Board remains."
+  _ "Application expressly abandoned" -> abandon-aftermath {
+    authority cite 37 CFR 2.68
+    duration { min 1.days, mode 1.days, max 3.days }
+  }
+}

@@ -1,0 +1,20 @@
+// Imported by `litigate import` from packs/ttab-trademark-trial-and-appeal-board.json.
+module ttab.appeal-2
+
+import ttab.decision-3.{ noa-post-decision }
+import ttab.terminals.{ opposition-sustained }
+import ttab.{ appeal }
+
+/// imported
+chance opposer-appeal-outcome: "Opposer appeal decided" effective [2026-10-19, ..) by board cite 15 USC 1071
+{
+  group appeal
+  _ "Dismissal affirmed" -> noa-post-decision p 0.85 {
+    authority cite 15 USC 1071
+    note "Teaching estimate. Assumption."
+  }
+  _ "Reversed: opposition sustained" -> opposition-sustained p 0.15 {
+    authority cite 15 USC 1071
+    note "Teaching estimate. Complement."
+  }
+}

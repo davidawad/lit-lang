@@ -200,6 +200,30 @@ fn versions_are_selected_at_the_build_dates() {
 }
 
 #[test]
+fn a_target_out_of_force_is_not_left_dangling() {
+    let mut p = example();
+    node(&mut p, "answered").meta.effective.from = "2015-01-01".into();
+    let early = Options {
+        as_of: Some("2012-06-01".into()),
+        known_at: None,
+    };
+    let found: Vec<(C, String)> = lower(&p, &early)
+        .err()
+        .unwrap_or_default()
+        .into_iter()
+        .map(|d| (d.code, d.message))
+        .collect();
+    // `answer` and `denied` both lead to `answered`.
+    assert_eq!(found.len(), 2, "{found:#?}");
+    assert!(
+        found
+            .iter()
+            .all(|(c, m)| *c == C::NoVersionInForce && m.contains("targets `answered`")),
+        "{found:#?}"
+    );
+}
+
+#[test]
 fn overlapping_versions_are_ambiguous() {
     let mut p = example();
     let twin = node(&mut p, "answered").clone();

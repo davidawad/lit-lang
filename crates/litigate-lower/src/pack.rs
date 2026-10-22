@@ -192,6 +192,37 @@ fn counting(sink: &mut Sink, pkg: &hir::Package, decls: &[&Declaration]) -> Opti
     }
 }
 
+/// L3007 for a local edge target or start node with no version in force
+/// at the build dates: dropping it would leave the pack dangling.
+fn dangling(
+    build: &Build<'_, '_>,
+    sink: &mut Sink,
+    start: &str,
+    nodes: &[RawNode],
+    edges: &[(RawEdge, &hir::Edge)],
+) {
+    let present = |id: &str| id.contains("::") || nodes.iter().any(|n| n.id == id);
+    let as_of = &build.selection.as_of;
+    if !present(start) {
+        sink.error(
+            C::NoVersionInForce,
+            None,
+            format!("start node `{start}` has no version in force on {as_of}"),
+        );
+    }
+    for (raw, e) in edges.iter().filter(|(raw, _)| !present(&raw.to)) {
+        sink.error(
+            C::NoVersionInForce,
+            e.span.as_ref(),
+            format!(
+                "edge `{}` targets `{}`, which has no version in force on {as_of}",
+                raw.id.as_deref().unwrap_or(&raw.label),
+                raw.to
+            ),
+        );
+    }
+}
+
 /// `pkg` as a `Pack` and its source map.
 pub(crate) fn pack(
     build: &Build<'_, '_>,
@@ -226,6 +257,7 @@ pub(crate) fn pack(
             _ => {}
         }
     }
+    dangling(build, sink, &pkg.start, &nodes, &edges);
     let counting = counting(sink, pkg, &decls);
     let pack = Pack {
         schema_version: if counting.is_some() { 3 } else { 2 },

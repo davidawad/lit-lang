@@ -712,8 +712,8 @@ Anything without a lowering is L6001.
 
 Multiple versions: only the version selected by the build's `--as-of`/
 `--known-at` is emitted, with supersession applied (§5.4); a declaration
-with no version in force then is absent, and overlapping versions are
-L3007. The default is the package `known_at` date for both. Node order is
+with no version in force then is absent, and overlapping versions, or an
+edge or `start` naming an absent node, are L3007. The default is the package `known_at` date for both. Node order is
 module order (the module files' paths, §4.1), then source order.
 
 A cite hole `cite ?("text")` lowers to `"text"` exactly, so imported

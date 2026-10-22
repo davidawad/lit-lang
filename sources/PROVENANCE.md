@@ -235,6 +235,50 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   decoded.
 - sha256 (this file): `5dedd90ad2e3e67185a2ae4b1ddfa68f7d7695b092666521fb9478c5c23852d8`
 
+### `usc-5-6103.txt` — 5 U.S.C. § 6103 (legal public holidays), with its notes
+
+- Fetched 2026-10-22 from `www.govinfo.gov`'s official United States Code,
+  2023 Edition (GPO), granule
+  `USCODE-2023-title5-partIII-subpartE-chap61-subchapI-sec6103.htm`
+  (sha256 of the fetched HTML:
+  `0c3ef0793a5a8106354d3d3f3d4dc0e9aa9de7803325d01ca95048ff9c4cd806`). Tags
+  stripped, entities decoded, runs of spaces collapsed; everything from the
+  `§6103. Holidays` heading to the end of the page is kept, because the
+  section's own source credits, Historical and Revision Notes, Amendments
+  and effective-date notes are what date each holiday (`lit/core`'s
+  calendar effective intervals cite them).
+- sha256 (this file): `c1c9c35af37ca67e297aa61bd83e90d34ffed96045097fc97b99dfc342903dbf`
+
+### `cfr-19-part201.txt` — 19 C.F.R. §§ 201.14, 201.16 (USITC computation of time, service)
+
+- Fetched 2026-10-22 from `www.govinfo.gov`'s official annual CFR XML
+  (`CFR-2024-title19-vol3-part201.xml`, 2024-04-01 edition; sha256 of the
+  fetched XML:
+  `68669957569c7e7071252a1202cddde538173f019665e38e9965ae9a9741f4e2`), the
+  same edition and `<SECTION>`/`<SECTNO>`/`<SUBJECT>`/`<P>` parse as
+  `cfr-19-part210.txt` above, for the two sections § 210.6(a) incorporates.
+- sha256 (this file): `436ec5247f1328fe6d6e2c15bcefd8f627cc3fcd44f0a0c034c7884609015879`
+
+### `usc-28-app-time-history.txt` — FRCP 6 and FRAP 26 as printed in the 2008 and 2011 editions of 28 U.S.C. App.
+
+- The superseded (pre-December 1, 2009) time-computation texts and the
+  amendment history `lit/core`'s earlier counting-rule versions cite:
+  `## FRCP (2008 ed.) Rule 6`, `## FRCP (2011 ed.) Rule 6`, `## FRAP (2008
+  ed.) Rule 26`, `## FRAP (2011 ed.) Rule 26` (each rule's text, its
+  amendment credits, and its Advisory Committee Notes). The headings are
+  deliberately not canonical `litgraph::cite::normalize` refs, so pack cites
+  of the current rules never match these superseded texts.
+- Fetched 2026-10-22 from `www.govinfo.gov`'s official United States Code
+  (GPO), 2008 and 2011 Editions, granules
+  `USCODE-2008-title28-app-rulesofci-rule6.htm` (sha256
+  `256bd5122ec679035921b2740daa3fa29ccd0f21d3d60356113306e7ad609ebd`),
+  `USCODE-2011-title28-app-federalru-dup1-rule6.htm` (`4661c642ad737aa66685cf08896ab474fe407f1efad0c526291d8f44772499cc`),
+  `USCODE-2008-title28-app-federalru-rule26.htm` (`c9a9e2174f36cce7706030fa5fb55be3c0661960736086b1de57afc8475d8cdc`),
+  `USCODE-2011-title28-app-federalru-rule26.htm` (`4917d6072a7e0d81eb26b2633656681265baa163a3fc3c977787482c3d190365`).
+  Same extraction as `usc-5-6103.txt`, from each page's `Rule N.` heading to
+  its end.
+- sha256 (this file): `a55dd4c3b28e99491083474806c9e8bb621e4fd43b2fddf5c4359d1202f03f20`
+
 ## Deliberately not vendored yet (follow-up)
 
 - **RCFC Appendices A/C/H/J** (case management, bid-protest, ADR, patent

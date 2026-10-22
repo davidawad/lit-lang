@@ -1,0 +1,159 @@
+---
+source: crates/litigate-import/tests/snapshots.rs
+expression: "serde_json::to_string_pretty(&diagnostics).unwrap_or_default()"
+---
+[
+  {
+    "code": "L6002",
+    "severity": "error",
+    "span": {
+      "file": "packs/p0.json",
+      "line": 1,
+      "col": 1,
+      "end_line": 1,
+      "end_col": 1
+    },
+    "message": "cost has no exact .lit spelling",
+    "notes": [
+      {
+        "message": "at JSON pointer `/edges/0/cost`"
+      }
+    ]
+  },
+  {
+    "code": "L6002",
+    "severity": "error",
+    "span": {
+      "file": "packs/p1.json",
+      "line": 1,
+      "col": 1,
+      "end_line": 1,
+      "end_col": 1
+    },
+    "message": "a whole-day deadline length has no exact .lit spelling",
+    "notes": [
+      {
+        "message": "at JSON pointer `/edges/0/deadline/length`"
+      }
+    ]
+  },
+  {
+    "code": "L6002",
+    "severity": "error",
+    "span": {
+      "file": "packs/p2.json",
+      "line": 1,
+      "col": 1,
+      "end_line": 1,
+      "end_col": 1
+    },
+    "message": "deadline unit `business` has no .lit spelling (calendar or court)",
+    "notes": [
+      {
+        "message": "at JSON pointer `/edges/0/deadline/unit`"
+      }
+    ]
+  },
+  {
+    "code": "L6002",
+    "severity": "error",
+    "span": {
+      "file": "packs/p3.json",
+      "line": 1,
+      "col": 1,
+      "end_line": 1,
+      "end_col": 1
+    },
+    "message": "`a` is not a node of this pack",
+    "notes": [
+      {
+        "message": "at JSON pointer `/edges/0/from`"
+      }
+    ]
+  },
+  {
+    "code": "L6002",
+    "severity": "error",
+    "span": {
+      "file": "packs/p3.json",
+      "line": 1,
+      "col": 1,
+      "end_line": 1,
+      "end_col": 1
+    },
+    "message": "`a b` is not a litigate identifier (SPEC §2)",
+    "notes": [
+      {
+        "message": "at JSON pointer `/nodes/0/id`"
+      }
+    ]
+  },
+  {
+    "code": "L6002",
+    "severity": "error",
+    "span": {
+      "file": "packs/p3.json",
+      "line": 1,
+      "col": 1,
+      "end_line": 1,
+      "end_col": 1
+    },
+    "message": "the start node is not a node of this pack",
+    "notes": [
+      {
+        "message": "at JSON pointer `/startNodeId`"
+      }
+    ]
+  },
+  {
+    "code": "L6002",
+    "severity": "error",
+    "span": {
+      "file": "packs/p4.json",
+      "line": 1,
+      "col": 1,
+      "end_line": 1,
+      "end_col": 1
+    },
+    "message": "`outcome`, `payoff` and `payoffByFlag` are valid only on terminals (SPEC §5.1)",
+    "notes": [
+      {
+        "message": "at JSON pointer `/nodes/0`"
+      }
+    ]
+  },
+  {
+    "code": "L6002",
+    "severity": "error",
+    "span": {
+      "file": "packs/p5.json",
+      "line": 1,
+      "col": 1,
+      "end_line": 1,
+      "end_col": 1
+    },
+    "message": "schemaVersion 3 is not derivable: lowering emits 3 exactly when the pack names a counting rule, else 2 (SPEC §8.1)",
+    "notes": [
+      {
+        "message": "at JSON pointer `/schemaVersion`"
+      }
+    ]
+  },
+  {
+    "code": "L6002",
+    "severity": "error",
+    "span": {
+      "file": "packs/p6.json",
+      "line": 1,
+      "col": 1,
+      "end_line": 1,
+      "end_col": 1
+    },
+    "message": "a duration has no exact .lit spelling",
+    "notes": [
+      {
+        "message": "at JSON pointer `/edges/0/duration/mode`"
+      }
+    ]
+  }
+]

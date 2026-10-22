@@ -1,0 +1,181 @@
+---
+source: crates/litigate-import/tests/snapshots.rs
+expression: listing
+---
+==> cases/demo-matter.case <- tests/fixtures/demo-scenario.json
+// Imported by `litigate import` from tests/fixtures/demo-scenario.json.
+case demo-matter
+uses demo-court ^0.1.0
+as_of 2024-12-01
+summary "A demo matter."
+notes "Illustrative only."
+source "Rule text" { url "https://example.org/rules", as_of 2024-12-01 }
+source "Docket study" { as_of ?("2026-06") }
+start demo-court::ruling
+perspective { applicant: opponent, examiner: self }
+facts { demo-court::ruling: demo-court::denied }
+stakes { demo-court::won: 1_000_000.usd, demo-court::lost: -2_500.75.usd }
+beliefs { observe demo-court::ruling: { demo-court::denied: 3 } }
+
+analysis {
+  params: { rate: 650, p_merits: 0.6 }
+  remove_edges: ["demo-court::denied"]
+  utility: "applicant_value"
+  metrics: { "dollars \"x\"": "attr(\"opp_hours\", 0) * rate" }
+}
+==> lit/demo/01-pleading.lit <- tests/fixtures/demo-pack.json
+// Imported by `litigate import` from tests/fixtures/demo-pack.json.
+module demo.pleading
+
+import demo.pleading-2.{ lost }
+import demo.ruling.{ ruling }
+import demo.{ pleading-group }
+
+start filed
+
+/// imported
+decision filed: "Complaint \"filed\"" by applicant cite DR 3
+{
+  group pleading-group
+  note "Line one.\nLine two."
+  tags [entry]
+  attrs { weight: -1.5 }
+  12b-move "Move to dismiss" -> ruling {
+    authority cite DR 12(b)(6)
+    effort 30.hours
+    cost 405.usd
+    deadline 21.court_days {
+      extendable true
+      extension_authority "DR 6(b)"
+      note "Not jurisdictional."
+    }
+    duration { mode 4.5.days, max 10.5.days }
+    sets [moved]
+  }
+  _ "Default" -> lost by either {
+    deadline 30.days
+    duration { min 1.days, mode 2.1.days, max 3.days }
+    valence bad
+    tags [waiver-trap]
+    attrs { opp_hours: 40 }
+  }
+  _ "Wait" -> filed { duration 7.days }
+}
+==> lit/demo/02-ruling.lit <- tests/fixtures/demo-pack.json
+// Imported by `litigate import` from tests/fixtures/demo-pack.json.
+module demo.ruling
+
+import demo.pleading-2.{ lost }
+import demo.{ ruling-group }
+
+/// imported
+chance ruling: "Ruling" by office cite ?("DR 12, 56") {
+  group ruling-group
+  valence caution
+  court_listener_url "https://example.org/op"
+  tags [fact]
+  _ "Granted" -> won p 0.35 { authority cite ?("Court's inherent power, see DR 1") }
+  denied "Denied" -> lost p 0.65 {
+    court_listener_url "https://example.org/x"
+    action_id "deny-1"
+    note "Typical."
+    clears [moved]
+    requires [moved]
+    forbids [late]
+  }
+}
+
+/// imported
+terminal won: "Won" outcome [win, fee-eligible] {
+  group ruling-group
+  payoff 1_000_000.usd
+  payoff_by_flag { sanctioned: 12.5.usd }
+}
+==> lit/demo/03-pleading-2.lit <- tests/fixtures/demo-pack.json
+// Imported by `litigate import` from tests/fixtures/demo-pack.json.
+module demo.pleading-2
+
+import demo.{ pleading-group }
+
+/// imported
+terminal lost: "Lost" cite ?("Doctrine of laches") { group pleading-group, payoff -350_000.usd }
+==> lit/demo/Lit.toml <- tests/fixtures/demo-pack.json
+# Imported by `litigate import` from tests/fixtures/demo-pack.json.
+# in_force and authority are placeholders: legacy JSON records neither.
+[package]
+name = "demo-court"
+version = "0.1.0"
+language = 1
+pack_id = "demo-court"
+forum = "demo"
+authority = "Unclassified"
+title = "Demo court"
+description = "Every construct the importer spells."
+jurisdiction = "Nowhere"
+in_force = "0001-01-01"
+known_at = "2024-12-01"
+counting = "demo6"
+
+[package.roles]
+applicant = "self"
+either = "nature"
+examiner = "opponent"
+office = "nature"
+
+[sources.demo-rules]
+title = "Demo Rules"
+url = "https://example.org/rules"
+path = "sources/demo.txt"
+sha256 = "abc"
+as_of = "2024-12-01"
+
+[[cite_syntax.rules]]
+prefixes = ["DR", "Demo R."]
+heading = "Rule {}"
+source = "demo-rules"
+
+[[cite_syntax.shorthands]]
+prefix = "cfr"
+code = "cfr"
+title = 19
+section_parts = 2
+source = "demo-rules"
+==> lit/demo/demo.lit <- tests/fixtures/demo-pack.json
+// Imported by `litigate import` from tests/fixtures/demo-pack.json.
+module demo
+
+group pleading-group: "Pleading"
+group ruling-group: "Ruling"
+==> lit/links/Lit.toml <- tests/fixtures/demo-links.json
+# Imported by `litigate import` from tests/fixtures/demo-links.json.
+# in_force is a placeholder: legacy JSON records no effective date.
+[package]
+name = "links"
+version = "0.1.0"
+language = 1
+in_force = "0001-01-01"
+known_at = "2024-12-01"
+
+[dependencies]
+demo-court = { version = "^0.1.0", path = "../demo" }
+==> lit/links/links.lit <- tests/fixtures/demo-links.json
+// Imported by `litigate import` from tests/fixtures/demo-links.json.
+module links
+
+instance demo-court@appeal {
+  pack demo-court
+  note "Entered on appeal."
+  remove_edges [denied]
+  probabilities { 12b-move: 1 }
+  roles { applicant: opponent, examiner: self }
+  payoff_transform "1000000 - payoff"
+  patch denied { deadline: { length: 45, note: "U.S. party" }, tags: ["patched"], hours: unset }
+}
+
+link to-appeal "Appeal": demo-court::lost -> demo-court@appeal::filed by applicant p 0.5 {
+  authority cite 28 U.S.C. § 1291
+  tags [appeal]
+  replaces [demo-court::denied, "demo-court::ruling->won#0"]
+}
+
+link _ "Refile": demo-court::won -> demo-court::filed

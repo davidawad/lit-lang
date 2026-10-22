@@ -1,0 +1,19 @@
+{
+  "instances": {
+    "demo-court@appeal": {
+      "pack": "demo-court",
+      "note": "Entered on appeal.",
+      "remove_edges": ["denied"],
+      "probabilities": { "12b-move": 1.0 },
+      "roles": { "applicant": "opponent", "examiner": "self" },
+      "payoff_transform": "1000000 - payoff",
+      "patch_edges": { "denied": { "deadline": { "length": 45, "note": "U.S. party" }, "tags": ["patched"], "hours": null } }
+    }
+  },
+  "links": [
+    { "id": "to-appeal", "from": "demo-court::lost", "to": "demo-court@appeal::filed", "label": "Appeal", "actor": "applicant",
+      "authority": "28 U.S.C. § 1291", "probability": 0.5, "tags": ["appeal"],
+      "replaces": ["demo-court::denied", "demo-court::ruling->won#0"] },
+    { "from": "demo-court::won", "to": "demo-court::filed", "label": "Refile" }
+  ]
+}

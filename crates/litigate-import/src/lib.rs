@@ -133,8 +133,14 @@ pub fn import(inputs: &[Input]) -> Result<Imported, Vec<Diagnostic>> {
     let mut diagnostics = Vec::new();
     let docs = read(inputs, &mut diagnostics);
     let emitted = docs.emit(&mut diagnostics);
+    // Output of an input that already failed is discarded unformatted, so
+    // its errors aren't repeated as parse failures.
+    let failed: Vec<String> = diagnostics.iter().map(|d| d.span.file.0.clone()).collect();
     let mut files = Vec::new();
     for (from, file) in emitted {
+        if failed.contains(&from) {
+            continue;
+        }
         match finish(&from, file) {
             Ok(file) => files.push(file),
             Err(diagnostic) => diagnostics.push(diagnostic),
@@ -179,6 +185,15 @@ fn read<'a>(inputs: &'a [Input], diagnostics: &mut Vec<Diagnostic>) -> Docs<'a> 
     let mut docs = Docs::default();
     for input in inputs {
         let mut issues = Issues::new(&input.path);
+        if let Err(error) = serde_json::from_str::<Value>(&input.text) {
+            issues.invalid(
+                error.line(),
+                error.column(),
+                format!("invalid JSON: {error}"),
+            );
+            diagnostics.extend(issues.into_vec());
+            continue;
+        }
         match detect(&input.text) {
             Some(Doc::Pack) => {
                 let validate = |text: &str| Pack::from_json(text).map(|_| ());

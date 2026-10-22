@@ -150,7 +150,8 @@ fn relation(p: &mut Parser<'_>) -> bool {
 /// offers a machine-applicable `cite ` insertion. The rest of the line is
 /// wrapped in an `Error` node.
 fn missing_cite(p: &mut Parser<'_>) {
-    if !p.at(Ident) || p.newline_before() || p.at_item_anchor() {
+    let keyword = SyntaxKind::from_keyword(p.nth_text(0)).is_some();
+    if !p.at(Ident) || keyword || p.newline_before() || p.at_item_anchor() {
         return;
     }
     let looks_cited = (0..16)

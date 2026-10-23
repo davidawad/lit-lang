@@ -260,7 +260,20 @@ impl Cx<'_, '_> {
         let Some(args) = deadline_call(base) else {
             return (self.pattern(x), None);
         };
-        let end = match end.text.as_str() {
+        let end = self.due_end(end);
+        let target = self.chain_target(name, base, args);
+        let (Some(end), Some(deadline)) = (end, target) else {
+            return (None, None);
+        };
+        (
+            Some(chain_expr(&deadline, end)),
+            Some(Chain { deadline, end }),
+        )
+    }
+
+    /// The end `.nominal` or `.adjusted` names; L2001 for any other field.
+    fn due_end(&mut self, end: &Name) -> Option<DueEnd> {
+        match end.text.as_str() {
             "nominal" => Some(DueEnd::Nominal),
             "adjusted" => Some(DueEnd::Adjusted),
             other => {
@@ -275,58 +288,33 @@ impl Cx<'_, '_> {
                 self.report(report);
                 None
             }
+        }
+    }
+
+    /// The deadline `deadline(...)` (`base`, with `args`) names for
+    /// deadline `name`'s chain: exactly one, and not `name` itself.
+    fn chain_target(&mut self, name: &Name, base: &Expr, args: &[Expr]) -> Option<String> {
+        let [Expr {
+            kind: ExprKind::Ref(r),
+            ..
+        }] = args
+        else {
+            self.report(Report::new(
+                C::TypeMismatch,
+                base.range,
+                "`deadline(d)` names exactly one deadline",
+            ));
+            return None;
         };
-        let target = match args.as_slice() {
-            [Expr {
-                kind: ExprKind::Ref(r),
-                ..
-            }] => {
-                if r.display() == name.text {
-                    self.report(Report::new(
-                        C::TypeMismatch,
-                        r.range,
-                        format!("`{}` cannot run from the end of its own period", name.text),
-                    ));
-                    None
-                } else {
-                    self.value_ref(r, "deadline", |k| matches!(k, ValueKind::Deadline))
-                }
-            }
-            _ => {
-                self.report(Report::new(
-                    C::TypeMismatch,
-                    base.range,
-                    "`deadline(d)` names exactly one deadline",
-                ));
-                None
-            }
-        };
-        let (Some(end), Some(deadline)) = (end, target) else {
-            return (None, None);
-        };
-        let call = crate::hir::Expr {
-            ty: Type::Unit,
-            kind: crate::hir::ExprKind::Call {
-                callee: "deadline".to_owned(),
-                args: vec![crate::hir::Expr {
-                    ty: Type::Unit,
-                    kind: crate::hir::ExprKind::Ref {
-                        target: deadline.clone(),
-                    },
-                    span: None,
-                }],
-            },
-            span: None,
-        };
-        let trigger = crate::hir::Expr {
-            ty: Type::Date,
-            kind: crate::hir::ExprKind::Field {
-                base: Box::new(call),
-                field: end.field().to_owned(),
-            },
-            span: None,
-        };
-        (Some(trigger), Some(Chain { deadline, end }))
+        if r.display() == name.text {
+            self.report(Report::new(
+                C::TypeMismatch,
+                r.range,
+                format!("`{}` cannot run from the end of its own period", name.text),
+            ));
+            return None;
+        }
+        self.value_ref(r, "deadline", |k| matches!(k, ValueKind::Deadline))
     }
 
     /// L3009 when deadline `name`, a period of `forum`'s rules, is counted
@@ -662,6 +650,33 @@ impl Cx<'_, '_> {
             amendment: amendment?,
             arms: out,
         })
+    }
+}
+
+/// The HIR trigger of a chain on `deadline`'s `end`: `deadline(d).end`,
+/// which no event pattern matches.
+fn chain_expr(deadline: &str, end: DueEnd) -> crate::hir::Expr {
+    let call = crate::hir::Expr {
+        ty: Type::Unit,
+        kind: crate::hir::ExprKind::Call {
+            callee: "deadline".to_owned(),
+            args: vec![crate::hir::Expr {
+                ty: Type::Unit,
+                kind: crate::hir::ExprKind::Ref {
+                    target: deadline.to_owned(),
+                },
+                span: None,
+            }],
+        },
+        span: None,
+    };
+    crate::hir::Expr {
+        ty: Type::Date,
+        kind: crate::hir::ExprKind::Field {
+            base: Box::new(call),
+            field: end.field().to_owned(),
+        },
+        span: None,
     }
 }
 

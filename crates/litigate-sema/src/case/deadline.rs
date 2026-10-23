@@ -83,8 +83,8 @@ pub(super) struct Due {
     pub request: DueRequest,
     /// The computed due date, or why it could not be computed.
     pub date: Result<String, String>,
-    /// For a chained period, the end it runs from (`the nominal end of
-    /// \`d\``); `None` when it runs from its trigger event.
+    /// For a chained period, the end it runs from ("the nominal end of
+    /// `d`"); `None` when it runs from its trigger event.
     pub from: Option<String>,
 }
 

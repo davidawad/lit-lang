@@ -414,8 +414,8 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   (sha256 `05f435c766fd596333828846d097828238ff89a266c24e3afca9ecd2fb9c19db`),
   `pdftotext` (no `-layout`), running headers and page numbers stripped,
   lines joined into one line per numbered paragraph. The PDF's text layer
-  drops the "fi" ligature ("fle" for "file"); it was restored word by word
-  (file, filed, filing, filers, first, final, specified, specific,
+  drops the "fi" ligature (so "file" reads "f-l-e"); it was restored word
+  by word (file, filed, filing, filers, first, final, specified, specific,
   justified, office, officer, suffices, identifiable, confined, defined,
   certified, certificate, affidavit, Notifications), and two line-break
   hyphens inside words ("inter- nal", "ear- lier") were joined. No other

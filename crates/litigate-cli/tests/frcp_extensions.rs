@@ -6,6 +6,7 @@
 #![allow(clippy::unwrap_used)]
 mod support;
 
+use std::fmt::Write as _;
 use support::{copy_dir, litigate_in, repo, scratch, Run};
 
 /// `litigate check` of one matter over copies of `lit/core` and `lit/frcp`.
@@ -15,7 +16,10 @@ fn check(name: &str, events: &[&str]) -> Run {
         copy_dir(&repo().join("lit").join(pkg), &dir.join("lit").join(pkg));
     }
     std::fs::create_dir_all(dir.join("cases")).unwrap();
-    let events: String = events.iter().map(|e| format!("  {e}\n")).collect();
+    let events = events.iter().fold(String::new(), |mut s, e| {
+        let _ = writeln!(s, "  {e}");
+        s
+    });
     std::fs::write(
         dir.join("cases/ext.case"),
         format!(

@@ -426,21 +426,15 @@ impl<'g> Cx<'_, 'g> {
         // Each grant licenses the transform when every open instance is
         // within its window and bound; otherwise the most specific refusal
         // (past the window, out of bound) is reported.
-        let mut refusals: Vec<(bool, Diagnostic)> = Vec::new();
-        for grant in grants {
-            match open
-                .iter()
-                .zip(&dues)
-                .find_map(|(&i, due)| self.problem(k, i, due, grant, new))
-            {
-                Some(refusal) => refusals.push(refusal),
-                None => {
-                    refusals.clear();
-                    break;
-                }
-            }
-        }
-        if let Some((_, e)) = refusals.into_iter().max_by_key(|(bound, _)| *bound) {
+        let refusals: Option<Vec<(bool, Diagnostic)>> = grants
+            .iter()
+            .map(|&grant| {
+                open.iter()
+                    .zip(&dues)
+                    .find_map(|(&i, due)| self.problem(k, i, due, grant, new))
+            })
+            .collect();
+        if let Some((_, e)) = refusals.and_then(|r| r.into_iter().max_by_key(|(bound, _)| *bound)) {
             self.out.push(e);
             return None;
         }

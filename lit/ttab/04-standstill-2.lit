@@ -3,16 +3,15 @@ module ttab.standstill-2
 
 import ttab.lapse.{ period-lapsed }
 import ttab.opposition-to-trial.{ opposition-filed }
-import ttab.{ standstill }
+import ttab.{ outer-limit-180, standstill }
 
-/// imported
-decision opposer-d180: "Standstill expired without a deal: the opposer must oppose by day 180 or lose the right to oppose" effective [2026-10-19, ..) by opposer cite 37 CFR 2.102(c)(3)
+decision opposer-d180: "Standstill expired without a deal: the opposer must oppose by day 180 or lose the right to oppose" by opposer cite 37 CFR 2.102(c)(3)
 {
   group standstill
   tags [opponent-decision]
   _ "Opposer files notice of opposition by day 180" -> opposition-filed {
     authority cite ?("37 CFR 2.101(c), 2.102(c)(3)")
-    deadline 180.days { extendable false }
+    within outer-limit-180 { extendable false }
     tags [file-opposition]
     attrs { opp_fees: 600, opp_hours: 14 }
   }

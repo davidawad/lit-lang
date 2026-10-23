@@ -3,8 +3,7 @@ module ttab.terminals
 
 import ttab.{ terminals }
 
-/// imported
-terminal registered: "Registration issues (opposition lapsed or defeated)" effective [2026-10-19, ..) outcome [win, registered] cite 15 USC 1051(d); 15 USC 1057
+terminal registered: "Registration issues (opposition lapsed or defeated)" outcome [win, registered] cite 15 USC 1051(d); 15 USC 1057
 {
   group terminals
   note "Baseline: keeps the name with a registration; payoff 0 by construction (all payoffs are relative to this). [applicant payoff at defaults = 0; judgment inputs rb=0, fx=0, sh=0] Applicant payoff at placeholder inputs = 0 (rb=0, fx=0, sh=0); scenarios recompute it from params."
@@ -12,64 +11,56 @@ terminal registered: "Registration issues (opposition lapsed or defeated)" effec
   payoff 0.usd
 }
 
-/// imported
-terminal registration-restricted: "Restricted registration (ID narrowed by consent or Board 2.133(b))" effective [2026-10-19, ..) outcome [restricted, registered] cite ?("37 CFR 2.133(b); TBMP 212") {
+terminal registration-restricted: "Restricted registration (ID narrowed by consent or Board 2.133(b))" outcome [restricted, registered] cite ?("37 CFR 2.133(b); TBMP 212") {
   group terminals
   note "Applicant payoff at placeholder inputs = -6,000 (rb=0, fx=-6000, sh=0); scenarios recompute it from params."
   attrs { fx: -6000, rb: 0, sfx: 0, sh: 0, sw: 0.15 }
   payoff -6_000.usd
 }
 
-/// imported
-terminal opposition-sustained: "Opposition sustained: application refused; no damages, no fees (37 CFR 2.127(f))" effective [2026-10-19, ..) outcome [loss, sustained] cite ?("37 CFR 2.127(f); 37 CFR 2.136; B&B Hardware v. Hargis, 575 U.S. 138 (2015)") {
+terminal opposition-sustained: "Opposition sustained: application refused; no damages, no fees (37 CFR 2.127(f))" outcome [loss, sustained] cite ?("37 CFR 2.127(f); 37 CFR 2.136; B&B Hardware v. Hargis, 575 U.S. 138 (2015)") {
   group terminals
   note "Applicant payoff at placeholder inputs = -115,000 (rb=1, fx=-15000, sh=0); scenarios recompute it from params."
   attrs { fx: -15000, rb: 1, sfx: 0, sh: 0, sw: 1 }
   payoff -115_000.usd
 }
 
-/// imported
-terminal judgment-2135: "Abandoned without consent after commencement: judgment against applicant" effective [2026-10-19, ..) outcome [loss, judgment] cite ?("37 CFR 2.135; TBMP 602.01") {
+terminal judgment-2135: "Abandoned without consent after commencement: judgment against applicant" outcome [loss, judgment] cite ?("37 CFR 2.135; TBMP 602.01") {
   group terminals
   note "Applicant payoff at placeholder inputs = -115,000 (rb=1, fx=-15000, sh=0); scenarios recompute it from params."
   attrs { fx: -15000, rb: 1, sfx: 10000, sh: 0, sw: 1 }
   payoff -115_000.usd
 }
 
-/// imported
-terminal rebrand-orderly: "Orderly rebrand on negotiated timetable, no cost contribution" effective [2026-10-19, ..) outcome [rebrand] {
+terminal rebrand-orderly: "Orderly rebrand on negotiated timetable, no cost contribution" outcome [rebrand] {
   group terminals
   note "Teaching estimate. Rebrand cost $135-150K at market (midpoint 142,500). [applicant payoff at defaults = -100,000; judgment inputs rb=1, fx=0, sh=0] Applicant payoff at placeholder inputs = -100,000 (rb=1, fx=0, sh=0); scenarios recompute it from params."
   attrs { fx: 0, rb: 1, sfx: 0, sh: 0, sw: 1 }
   payoff -100_000.usd
 }
 
-/// imported
-terminal settle-rebrand-transition: "Settlement: rebrand on a transition period with the opposer cost contribution" effective [2026-10-19, ..) outcome [settlement, rebrand, cost-share] cite ?("TBMP 605.03") {
+terminal settle-rebrand-transition: "Settlement: rebrand on a transition period with the opposer cost contribution" outcome [settlement, rebrand, cost-share] cite ?("TBMP 605.03") {
   group terminals
   note "Applicant payoff at placeholder inputs = -70,000 (rb=1, fx=0, sh=1); scenarios recompute it from params."
   attrs { fx: 0, rb: 1, sfx: 0, sh: 1, sw: 1 }
   payoff -70_000.usd
 }
 
-/// imported
-terminal settle-coexistence: "Settlement: coexistence agreement; registration proceeds" effective [2026-10-19, ..) outcome [settlement, coexistence, registered] cite ?("TBMP 605.03; TMEP 1207.01(d)(viii)") {
+terminal settle-coexistence: "Settlement: coexistence agreement; registration proceeds" outcome [settlement, coexistence, registered] cite ?("TBMP 605.03; TMEP 1207.01(d)(viii)") {
   group terminals
   note "Applicant payoff at placeholder inputs = -10,000 (rb=0, fx=-10000, sh=0); scenarios recompute it from params."
   attrs { fx: -10000, rb: 0, sfx: 0, sh: 0, sw: 0.15 }
   payoff -10_000.usd
 }
 
-/// imported
-terminal abandoned-keeps-using: "Abandoned application; the opposer drops C&D; client keeps using unregistered" effective [2026-10-19, ..) outcome [abandon, unregistered] {
+terminal abandoned-keeps-using: "Abandoned application; the opposer drops C&D; client keeps using unregistered" outcome [abandon, unregistered] {
   group terminals
   note "Teaching estimate. Placeholder for lost registration value and continuing exposure. [applicant payoff at defaults = -12,000; judgment inputs rb=0, fx=-12000, sh=0] Applicant payoff at placeholder inputs = -12,000 (rb=0, fx=-12000, sh=0); scenarios recompute it from params."
   attrs { fx: -12000, rb: 0, sfx: 0, sh: 0, sw: 0.4 }
   payoff -12_000.usd
 }
 
-/// imported
-terminal cancelled-rebrand: "Registration cancelled after registering: rebrand" effective [2026-10-19, ..) outcome [loss, cancelled] cite 15 USC 1064(1)
+terminal cancelled-rebrand: "Registration cancelled after registering: rebrand" outcome [loss, cancelled] cite 15 USC 1064(1)
 {
   group terminals
   note "Teaching estimate. As for sustained. [applicant payoff at defaults = -115,000; judgment inputs rb=1, fx=-15000, sh=0] Applicant payoff at placeholder inputs = -115,000 (rb=1, fx=-15000, sh=0); scenarios recompute it from params."
@@ -77,8 +68,7 @@ terminal cancelled-rebrand: "Registration cancelled after registering: rebrand" 
   payoff -115_000.usd
 }
 
-/// imported
-terminal suit-lost: "Infringement suit lost: injunction and rebrand" effective [2026-10-19, ..) outcome [loss, suit] cite 15 USC 1116; 15 USC 1117(a)
+terminal suit-lost: "Infringement suit lost: injunction and rebrand" outcome [loss, suit] cite 15 USC 1116; 15 USC 1117(a)
 {
   group terminals
   note "Teaching estimate. Rebrand + $40K for monetary relief/compressed timeline (small business, 3 months of sales). [applicant payoff at defaults = -140,000; judgment inputs rb=1, fx=-40000, sh=0] Applicant payoff at placeholder inputs = -140,000 (rb=1, fx=-40000, sh=0); scenarios recompute it from params."
@@ -86,8 +76,7 @@ terminal suit-lost: "Infringement suit lost: injunction and rebrand" effective [
   payoff -140_000.usd
 }
 
-/// imported
-terminal suit-lost-fees: "Infringement suit lost with exceptional-case fee award to the opposer" effective [2026-10-19, ..) outcome [loss, suit, fees] cite 15 USC 1117(a)
+terminal suit-lost-fees: "Infringement suit lost with exceptional-case fee award to the opposer" outcome [loss, suit, fees] cite 15 USC 1117(a)
 {
   group terminals
   note "Applicant payoff at placeholder inputs = -350,000 (rb=1, fx=-250000, sh=0); scenarios recompute it from params."
@@ -95,16 +84,14 @@ terminal suit-lost-fees: "Infringement suit lost with exceptional-case fee award
   payoff -350_000.usd
 }
 
-/// imported
-terminal suit-won: "Infringement suit won" effective [2026-10-19, ..) outcome [win, suit] {
+terminal suit-won: "Infringement suit won" outcome [win, suit] {
   group terminals
   note "Teaching estimate. Name kept; defense cost is on the edge. [applicant payoff at defaults = -5,000; judgment inputs rb=0, fx=-5000, sh=0] Applicant payoff at placeholder inputs = -5,000 (rb=0, fx=-5000, sh=0); scenarios recompute it from params."
   attrs { fx: -5000, rb: 0, sfx: 0, sh: 0, sw: 0 }
   payoff -5_000.usd
 }
 
-/// imported
-terminal suit-won-fees: "Infringement suit won with exceptional-case fee award to applicant" effective [2026-10-19, ..) outcome [win, suit, fees] cite 15 USC 1117(a)
+terminal suit-won-fees: "Infringement suit won with exceptional-case fee award to applicant" outcome [win, suit, fees] cite 15 USC 1117(a)
 {
   group terminals
   note "Teaching estimate. Fees recovered approximate own cost (~160 h x $500 = $80K); low probability. [applicant payoff at defaults = 80,000; judgment inputs rb=0, fx=80000, sh=0] Applicant payoff at placeholder inputs = 80,000 (rb=0, fx=80000, sh=0); scenarios recompute it from params."

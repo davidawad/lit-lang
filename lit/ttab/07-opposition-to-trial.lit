@@ -12,10 +12,9 @@ import ttab.terminals.{
   settle-rebrand-transition,
 }
 
-import ttab.{ discovery, opposition, trial }
+import ttab.{ answer-period, disclosure-period, discovery, discovery-period, opposition, trial }
 
-/// imported
-state opposition-filed: "Notice of opposition filed (commenced)" effective [2026-10-19, ..) by board cite 37 CFR 2.101(a); 37 CFR 2.105
+state opposition-filed: "Notice of opposition filed (commenced)" by board cite 37 CFR 2.101(a); 37 CFR 2.105
 {
   group opposition
   note "From here, abandonment without the opposer's written consent = judgment against the applicant (37 CFR 2.135). Opposers can add grounds (e.g. void ab initio for wrong applicant / no bona fide intent) after discovery."
@@ -28,13 +27,12 @@ state opposition-filed: "Notice of opposition filed (commenced)" effective [2026
   }
 }
 
-/// imported
-decision instituted: "Board institutes; answer due 60 days from institution order (historically 40)" effective [2026-10-19, ..) by applicant cite ?("37 CFR 2.105(a); 2.106(a); TBMP 310.03(a)") {
+decision instituted: "Board institutes; answer due 60 days from institution order (historically 40)" by applicant cite ?("37 CFR 2.105(a); 2.106(a); TBMP 310.03(a)") {
   group opposition
   answer-plain "File answer (denials, crowded-field amplification), no counterclaim" -> answered {
     authority cite 37 CFR 2.106(b)(1)-(2)
     effort 8.hours
-    deadline 60.days {
+    within answer-period {
       extendable true
       extension_authority "37 CFR 2.127(a); consented motion TBMP 509"
     }
@@ -45,7 +43,7 @@ decision instituted: "Board institutes; answer due 60 days from institution orde
     authority cite ?("37 CFR 2.106(b)(3); 2.133(d); 15 USC 1068; 37 CFR 2.6(a)(16)(ii); TBMP 313.02, 309.03(d)")
     effort 33.hours
     cost 600.usd
-    deadline 60.days { extendable true, extension_authority "37 CFR 2.127(a)" }
+    within answer-period { extendable true, extension_authority "37 CFR 2.127(a)" }
     note "Counterclaim to restrict the opposer's pleaded registration (Section 18, 15 USC 1068; 37 CFR 2.133(d)); compulsory if grounds are known at answer (2.106(b)(3)(i)). $600 per class (2.6(a)(16)(ii)). Hours: 8 answer + 25 counterclaim (teaching estimate)."
     tags [answer-s18]
     attrs { opp_hours: 18 }
@@ -53,7 +51,7 @@ decision instituted: "Board institutes; answer due 60 days from institution orde
   }
   _ "File no answer (waiver trap)" -> notice-of-default {
     authority cite 37 CFR 2.106(a)
-    deadline 60.days { extendable false }
+    within answer-period { extendable false }
     valence bad
     tags [waiver-trap]
   }
@@ -75,8 +73,7 @@ decision instituted: "Board institutes; answer due 60 days from institution orde
   }
 }
 
-/// imported
-chance notice-of-default: "Notice of default for no answer: applicant must show good cause" effective [2026-10-19, ..) discretion by board cite 37 CFR 2.106(a); FRCP 55(c) via 37 CFR 2.116(a)
+chance notice-of-default: "Notice of default for no answer: applicant must show good cause" discretion by board cite 37 CFR 2.106(a); FRCP 55(c) via 37 CFR 2.116(a)
 {
   group opposition
   _ "Default set aside for good cause; answer filed" -> answered p 0.7 {
@@ -90,8 +87,7 @@ chance notice-of-default: "Notice of default for no answer: applicant must show 
   }
 }
 
-/// imported
-decision answered: "Answer on file; exits and next stage" effective [2026-10-19, ..) by applicant cite ?("37 CFR 2.106(b); TBMP 311") {
+decision answered: "Answer on file; exits and next stage" by applicant cite ?("37 CFR 2.106(b); TBMP 311") {
   group opposition
   _ "Abandon application without opposer's consent (judgment, 37 CFR 2.135)" -> judgment-2135 {
     authority cite ?("37 CFR 2.135; TBMP 602.01")
@@ -124,8 +120,7 @@ decision answered: "Answer on file; exits and next stage" effective [2026-10-19,
   }
 }
 
-/// imported
-chance talks-instituted: "Suspended for settlement after institution" effective [2026-10-19, ..) by board cite ?("37 CFR 2.117(c); TBMP 605.02") {
+chance talks-instituted: "Suspended for settlement after institution" by board cite ?("37 CFR 2.117(c); TBMP 605.02") {
   group opposition
   tags [negotiation]
   _ "Settlement: rebrand on transition period, cost contribution" -> settle-rebrand-transition p 0.3 {
@@ -150,8 +145,7 @@ chance talks-instituted: "Suspended for settlement after institution" effective 
   }
 }
 
-/// imported
-decision opposer-consent-decision: "Opposer decides whether to consent to abandonment" effective [2026-10-19, ..) by opposer cite 37 CFR 2.135
+decision opposer-consent-decision: "Opposer decides whether to consent to abandonment" by opposer cite 37 CFR 2.135
 {
   group opposition
   note "Consent is the opposer's to give. Refusing yields a judgment against the applicant (issue-preclusion value for a later infringement suit, B&B Hardware v. Hargis, 575 U.S. 138 (2015)), so the opposer will not consent for free."
@@ -166,8 +160,7 @@ decision opposer-consent-decision: "Opposer decides whether to consent to abando
   }
 }
 
-/// imported
-chance talks-answered: "Suspended for settlement after answer" effective [2026-10-19, ..) by board cite ?("37 CFR 2.117(c); TBMP 605.02") {
+chance talks-answered: "Suspended for settlement after answer" by board cite ?("37 CFR 2.117(c); TBMP 605.02") {
   group opposition
   tags [negotiation]
   _ "Settlement: rebrand on transition period, cost contribution" -> settle-rebrand-transition p 0.3 {
@@ -192,21 +185,19 @@ chance talks-answered: "Suspended for settlement after answer" effective [2026-1
   }
 }
 
-/// imported
-state discovery-conference: "Discovery conference held (Board attorney on request)" effective [2026-10-19, ..) by applicant cite 37 CFR 2.120(a)(2)(i); FRCP 26(f)
+state discovery-conference: "Discovery conference held (Board attorney on request)" by applicant cite 37 CFR 2.120(a)(2)(i); FRCP 26(f)
 {
   group discovery
   _ "Serve initial disclosures" -> initial-disclosures {
     authority cite 37 CFR 2.120(a)(2)(ii)
     effort 8.hours
-    deadline 30.days { extendable true, extension_authority "37 CFR 2.120(a)(2)(iv)" }
+    within disclosure-period { extendable true, extension_authority "37 CFR 2.120(a)(2)(iv)" }
     duration { min 30.days, mode 30.days, max 45.days }
     attrs { opp_hours: 8 }
   }
 }
 
-/// imported
-state initial-disclosures: "Initial disclosures served (30 days after discovery opens)" effective [2026-10-19, ..) by board cite ?("37 CFR 2.120(a)(2)(ii); TBMP 401.02") {
+state initial-disclosures: "Initial disclosures served (30 days after discovery opens)" by board cite ?("37 CFR 2.120(a)(2)(ii); TBMP 401.02") {
   group discovery
   _ "Discovery period opens" -> discovery-open {
     authority cite 37 CFR 2.120(a)(2)(i)
@@ -214,8 +205,7 @@ state initial-disclosures: "Initial disclosures served (30 days after discovery 
   }
 }
 
-/// imported
-decision discovery-open: "Discovery open (180 days)" effective [2026-10-19, ..) by applicant cite 37 CFR 2.120(a)(2)(i)
+decision discovery-open: "Discovery open (180 days)" by applicant cite 37 CFR 2.120(a)(2)(i)
 {
   group discovery
   _ "Abandon application without opposer's consent (judgment, 37 CFR 2.135)" -> judgment-2135 {
@@ -243,15 +233,14 @@ decision discovery-open: "Discovery open (180 days)" effective [2026-10-19, ..) 
   _ "Conduct discovery (written discovery, depositions, protective order)" -> discovery-closed {
     authority cite 37 CFR 2.120(a)(2)(i); 2.120(a)(3)
     effort 35.hours
-    deadline 180.days { extendable true, extension_authority "37 CFR 2.120(a)(2)(iv)" }
+    within discovery-period { extendable true, extension_authority "37 CFR 2.120(a)(2)(iv)" }
     duration { min 180.days, mode 180.days, max 270.days }
     tags [continue]
     attrs { opp_hours: 40 }
   }
 }
 
-/// imported
-decision discovery-closed: "Discovery closed; ACR/trial/settlement decision" effective [2026-10-19, ..) by applicant cite ?("37 CFR 2.121(a); TBMP 702.04") {
+decision discovery-closed: "Discovery closed; ACR/trial/settlement decision" by applicant cite ?("37 CFR 2.121(a); TBMP 702.04") {
   group discovery
   _ "Abandon application without opposer's consent (judgment, 37 CFR 2.135)" -> judgment-2135 {
     authority cite ?("37 CFR 2.135; TBMP 602.01")
@@ -290,8 +279,7 @@ decision discovery-closed: "Discovery closed; ACR/trial/settlement decision" eff
   }
 }
 
-/// imported
-chance talks-discovery: "Suspended for settlement during discovery" effective [2026-10-19, ..) by board cite ?("37 CFR 2.117(c); TBMP 605.02") {
+chance talks-discovery: "Suspended for settlement during discovery" by board cite ?("37 CFR 2.117(c); TBMP 605.02") {
   group discovery
   tags [negotiation]
   _ "Settlement: rebrand on transition period, cost contribution" -> settle-rebrand-transition p 0.3 {
@@ -316,8 +304,7 @@ chance talks-discovery: "Suspended for settlement during discovery" effective [2
   }
 }
 
-/// imported
-chance talks-trial: "Suspended for settlement after discovery" effective [2026-10-19, ..) by board cite ?("37 CFR 2.117(c); TBMP 605.02") {
+chance talks-trial: "Suspended for settlement after discovery" by board cite ?("37 CFR 2.117(c); TBMP 605.02") {
   group discovery
   tags [negotiation]
   _ "Settlement: rebrand on transition period, cost contribution" -> settle-rebrand-transition p 0.3 {
@@ -342,8 +329,7 @@ chance talks-trial: "Suspended for settlement after discovery" effective [2026-1
   }
 }
 
-/// imported
-state acr-record: "ACR: stipulated record, Board decides on summary-judgment-style briefs" effective [2026-10-19, ..) by board cite ?("TBMP 702.04; TBMP 528.05(a)(2); TTAB ACR notice (2011-12-22)") {
+state acr-record: "ACR: stipulated record, Board decides on summary-judgment-style briefs" by board cite ?("TBMP 702.04; TBMP 528.05(a)(2); TTAB ACR notice (2011-12-22)") {
   group trial
   note "Accelerated Case Resolution. Cost saving is an assumption (see edge)."
   _ "Board decides on the ACR record" -> final-decision {
@@ -352,8 +338,7 @@ state acr-record: "ACR: stipulated record, Board decides on summary-judgment-sty
   }
 }
 
-/// imported
-state trial-periods: "Trial periods: pretrial disclosures, plaintiff 30d, defendant 30d, rebuttal 15d" effective [2026-10-19, ..) by applicant cite ?("37 CFR 2.121(a)-(c); TBMP 702.01") {
+state trial-periods: "Trial periods: pretrial disclosures, plaintiff 30d, defendant 30d, rebuttal 15d" by applicant cite ?("37 CFR 2.121(a)-(c); TBMP 702.01") {
   group trial
   _ "Take trial testimony / notices of reliance" -> trial-closed {
     authority cite 37 CFR 2.121; 2.123; 2.125
@@ -363,8 +348,7 @@ state trial-periods: "Trial periods: pretrial disclosures, plaintiff 30d, defend
   }
 }
 
-/// imported
-decision trial-closed: "Trial closed; briefing decision" effective [2026-10-19, ..) by applicant cite 37 CFR 2.128(a)
+decision trial-closed: "Trial closed; briefing decision" by applicant cite 37 CFR 2.128(a)
 {
   group trial
   _ "Abandon application without opposer's consent (judgment, 37 CFR 2.135)" -> judgment-2135 {
@@ -398,8 +382,7 @@ decision trial-closed: "Trial closed; briefing decision" effective [2026-10-19, 
   }
 }
 
-/// imported
-chance talks-briefs: "Suspended for settlement before briefs" effective [2026-10-19, ..) by board cite ?("37 CFR 2.117(c); TBMP 605.02") {
+chance talks-briefs: "Suspended for settlement before briefs" by board cite ?("37 CFR 2.117(c); TBMP 605.02") {
   group trial
   tags [negotiation]
   _ "Settlement: rebrand on transition period, cost contribution" -> settle-rebrand-transition p 0.3 {
@@ -424,8 +407,7 @@ chance talks-briefs: "Suspended for settlement before briefs" effective [2026-10
   }
 }
 
-/// imported
-state briefs-filed: "Final briefs filed (plaintiff 60d, defendant +30d, reply +15d)" effective [2026-10-19, ..) by board cite 37 CFR 2.128(a)(1)
+state briefs-filed: "Final briefs filed (plaintiff 60d, defendant +30d, reply +15d)" by board cite 37 CFR 2.128(a)(1)
 {
   group trial
   _ "Board panel decides" -> final-decision {

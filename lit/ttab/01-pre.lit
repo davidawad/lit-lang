@@ -5,47 +5,44 @@ import ttab.opposition-to-trial.{ opposition-filed }
 import ttab.pre-2.{ opposer-d120 }
 import ttab.pre-3.{ abandon-chance }
 import ttab.standstill.{ standstill-period }
-import ttab.{ pre }
+import ttab.{ first-extension-90, opposition-period, pre, second-extension-60 }
 
 start published
 
-/// imported
-state published: "Application published for opposition" effective [2026-10-19, ..) by opposer cite 15 USC 1063(a); 37 CFR 2.101(c)
+state published: "Application published for opposition" by opposer cite 15 USC 1063(a); 37 CFR 2.101(c)
 {
   group pre
   note "Start of the 30-day opposition period after publication (37 CFR 2.101(c)). A matter scenario sets scenario.start to the node matching its current posture."
   tags [entry]
   _ "Opposer requests 30-day extension (granted on request)" -> ext-first-30 {
     authority cite 37 CFR 2.102(c)(1)(i)
-    deadline 30.days { extendable true, extension_authority "37 CFR 2.102(c)(2)-(3)" }
+    within opposition-period { extendable true, extension_authority "37 CFR 2.102(c)(2)-(3)" }
     attrs { opp_hours: 1 }
   }
   _ "Opposer requests 90-day extension (good cause)" -> ext-first-90 {
     authority cite 37 CFR 2.102(c)(1)(ii)
-    deadline 90.days { extendable true, extension_authority "37 CFR 2.102(c)(3)" }
+    within first-extension-90 { extendable true, extension_authority "37 CFR 2.102(c)(3)" }
     attrs { opp_fees: 200, opp_hours: 1 }
   }
   _ "Opposer opposes within the original 30 days" -> opposition-filed {
     authority cite 37 CFR 2.101(c)
-    deadline 30.days { extendable true, extension_authority "37 CFR 2.102(c)" }
+    within opposition-period { extendable true, extension_authority "37 CFR 2.102(c)" }
     note "Notice of opposition via ESTTA with $600 per class fee (37 CFR 2.6(a)(17)(ii)); application is Class 37 only (one class)."
     attrs { opp_fees: 600, opp_hours: 14 }
   }
 }
 
-/// imported
-state ext-first-30: "First extension (30 days, granted on request)" effective [2026-10-19, ..) by opposer cite 37 CFR 2.102(c)(1)(i)
+state ext-first-30: "First extension (30 days, granted on request)" by opposer cite 37 CFR 2.102(c)(1)(i)
 {
   group pre
   _ "Opposer requests additional 60 days (good cause)" -> ext-second-60 {
     authority cite 37 CFR 2.102(c)(2)
-    deadline 60.days { extendable true, extension_authority "37 CFR 2.102(c)(3)" }
+    within second-extension-60 { extendable true, extension_authority "37 CFR 2.102(c)(3)" }
     attrs { opp_fees: 200, opp_hours: 1 }
   }
 }
 
-/// imported
-state ext-first-90: "First extension (90 days, good cause)" effective [2026-10-19, ..) by board cite 37 CFR 2.102(c)(1)(ii)
+state ext-first-90: "First extension (90 days, good cause)" by board cite 37 CFR 2.102(c)(1)(ii)
 {
   group pre
   _ "Extension runs to day 120" -> period-ends-day120 {
@@ -54,8 +51,7 @@ state ext-first-90: "First extension (90 days, good cause)" effective [2026-10-1
   }
 }
 
-/// imported
-state ext-second-60: "Second extension (additional 60 days, good cause)" effective [2026-10-19, ..) by board cite 37 CFR 2.102(c)(2)
+state ext-second-60: "Second extension (additional 60 days, good cause)" by board cite 37 CFR 2.102(c)(2)
 {
   group pre
   _ "Extensions run to day 120" -> period-ends-day120 {
@@ -64,8 +60,7 @@ state ext-second-60: "Second extension (additional 60 days, good cause)" effecti
   }
 }
 
-/// imported
-decision period-ends-day120: "Day 120: opposition period expires unless the applicant consents to the final 60-day extension" effective [2026-10-19, ..) by applicant cite ?("37 CFR 2.102(c)(3); TBMP 207.03") {
+decision period-ends-day120: "Day 120: opposition period expires unless the applicant consents to the final 60-day extension" by applicant cite ?("37 CFR 2.102(c)(3); TBMP 207.03") {
   group pre
   note "Day 120 from publication. The final 60 days (to day 180) is available only on the applicant's written consent or a showing of extraordinary circumstances; settlement talks, letters of protest, pending amendments and civil litigation are not extraordinary (TBMP 207.03)."
   tags [entry, day120]

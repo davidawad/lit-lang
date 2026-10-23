@@ -1,6 +1,7 @@
 // Imported by `litigate import` from packs/ttab-trademark-trial-and-appeal-board.json.
 module ttab
 
+import core.authority.{ CaseOrder }
 import core.frcp6.{ frcp6 }
 
 group pre: "Pre-opposition"
@@ -15,172 +16,204 @@ group abandon: "Abandon now"
 group threat: "Infringement suit threat"
 group terminals: "Terminals"
 
-/// TTAB opposition period from publication; the Board applies FRCP 6(a) counting.
-event Publication()
-
-rule duty opposition-deadline-rule cite 37 CFR 2.101(c)
-{
-  deadline opposition-period: 30.days from Publication() counted_by frcp6
-}
-
-test "a 30-day opposition period rolls a Saturday deadline to Monday" cite 37 CFR 2.101(c)
-{
-  given Publication() on 2026-10-27
-  expect deadline(opposition-period) == 2026-11-27
-}
-
-event FirstGoodCauseExtension()
-
-rule duty extension-90-rule cite 37 CFR 2.102(c)
-{
-  deadline extension-90: 90.days from FirstGoodCauseExtension() counted_by frcp6
-}
-
-test "90-day TTAB period rolls through calendar counting" cite 37 CFR 2.102(c)
-{
-  given FirstGoodCauseExtension() on 2026-10-27
-  expect deadline(extension-90) == 2027-01-25
-}
-
-event OppositionPeriodExtension()
-
-rule duty extension-30-rule cite 37 CFR 2.102(c)
-{
-  deadline extension-30: 30.days from OppositionPeriodExtension() counted_by frcp6
-}
-
-test "30-day TTAB period rolls through calendar counting" cite 37 CFR 2.102(c)
-{
-  given OppositionPeriodExtension() on 2026-10-27
-  expect deadline(extension-30) == 2026-11-27
-}
-
-event SecondGoodCauseExtension()
-
-rule duty extension-60-rule cite 37 CFR 2.102(c)
-{
-  deadline extension-60: 60.days from SecondGoodCauseExtension() counted_by frcp6
-}
-
-test "60-day TTAB period rolls through calendar counting" cite 37 CFR 2.102(c)
-{
-  given SecondGoodCauseExtension() on 2026-10-27
-  expect deadline(extension-60) == 2026-12-28
-}
-
-event FinalConsentExtension()
-
-rule duty extension-120-rule cite 37 CFR 2.102(c)
-{
-  deadline extension-120: 120.days from FinalConsentExtension() counted_by frcp6
-}
-
-test "120-day TTAB period rolls through calendar counting" cite 37 CFR 2.102(c)
-{
-  given FinalConsentExtension() on 2026-10-27
-  expect deadline(extension-120) == 2027-02-24
-}
-
-event InstitutionOrder()
-
-rule duty answer-60-rule cite 37 CFR 2.102(c)
-{
-  deadline answer-60: 60.days from InstitutionOrder() counted_by frcp6
-}
-
-test "60-day TTAB period rolls through calendar counting (2)" cite 37 CFR 2.102(c)
-{
-  given InstitutionOrder() on 2026-10-27
-  expect deadline(answer-60) == 2026-12-28
-}
-
-event AnswerDeadline()
-
-rule duty counterclaim-60-rule cite 37 CFR 2.102(c)
-{
-  deadline counterclaim-60: 60.days from AnswerDeadline() counted_by frcp6
-}
-
-test "60-day TTAB period rolls through calendar counting (3)" cite 37 CFR 2.102(c)
-{
-  given AnswerDeadline() on 2026-10-27
-  expect deadline(counterclaim-60) == 2026-12-28
-}
-
-event DefaultDeadline()
-
-rule duty no-answer-60-rule cite 37 CFR 2.102(c)
-{
-  deadline no-answer-60: 60.days from DefaultDeadline() counted_by frcp6
-}
-
-test "60-day TTAB period rolls through calendar counting (4)" cite 37 CFR 2.102(c)
-{
-  given DefaultDeadline() on 2026-10-27
-  expect deadline(no-answer-60) == 2026-12-28
-}
-
+// The deadlines every `within` edge of the pack reads. The legacy pack
+// counts them under FRCP 6 (its `counting`); the Board's own computation
+// rule is 37 C.F.R. § 2.196, which agrees for every period here (calendar
+// days, a last day on a Saturday, Sunday, or Federal holiday rolls to the
+// next day that is none of them).
+//
+// Effective dates: the vendored eCFR text drops its amendment-history lines
+// (sources/PROVENANCE.md), so the dates below come from the Federal
+// Register. 37 C.F.R. §§ 2.101, 2.102, 2.105, 2.120, and 2.145 read as
+// cited since the TTAB rules revision, 81 FR 69950 (Oct. 7, 2016),
+// effective January 14, 2017.
+/// Publication of the application for opposition (15 U.S.C. § 1062(a),
+/// 37 C.F.R. § 2.80).
+event Published()
+/// Day 30 from publication, the unextended end of the opposition period;
+/// extensions of time to oppose run from it.
+event OppositionPeriodExpired()
+/// Day 60 from publication, the end of a first 30-day extension.
+event FirstExtensionExpired()
+/// The Board's notice of institution, which sets the answer time and the
+/// trial schedule (37 C.F.R. §§ 2.105(a), 2.120(a)(1)).
+event InstitutionNoticed()
+/// The opening of the discovery period set in the institution order.
+event DiscoveryOpened()
+/// The Board's final decision in the opposition.
 event FinalDecision()
 
-rule duty appeal-63-rule cite 37 CFR 2.102(c)
+/// 37 C.F.R. § 2.101(c): an opposition is due within thirty days after
+/// publication, and a request to extend must be filed before those thirty
+/// days expire (§ 2.102(c)).
+rule duty opposition-time effective [2017-01-14, ..) known_at 2016-10-07 cite 37 CFR 2.101(c)
 {
-  deadline appeal-63: 63.days from FinalDecision() counted_by frcp6
+  deadline opposition-period: 30.days from Published() counted_by frcp6
 }
 
-test "63-day TTAB period rolls through calendar counting" cite 37 CFR 2.102(c)
+test "the opposition period runs 30 days from publication" cite 37 CFR 2.101(c)
 {
-  given FinalDecision() on 2026-10-27
-  expect deadline(appeal-63) == 2026-12-29
+  given Published() on 2025-03-03
+  expect deadline(opposition-period) == 2025-04-02
 }
 
-event DiscoveryOrder()
-
-rule duty discovery-60-rule cite 37 CFR 2.102(c)
+test "an opposition period ending on Thanksgiving rolls to Friday" cite 37 CFR 2.101(c)
 {
-  deadline discovery-60: 60.days from DiscoveryOrder() counted_by frcp6
+  given Published() on 2025-10-28
+  expect deadline(opposition-period) == 2025-11-28
 }
 
-test "60-day TTAB period rolls through calendar counting (5)" cite 37 CFR 2.102(c)
+/// 37 C.F.R. § 2.102(c): extensions of time to oppose. A first request
+/// for 90 days (good cause) or 30 days (on request), then 60 more days
+/// for good cause after the 30, then one final 60 days on the applicant's
+/// consent or extraordinary circumstances, never beyond 180 days from
+/// publication.
+rule duty extensions-of-time effective [2017-01-14, ..) known_at 2016-10-07 cite 37 CFR 2.102(c)
 {
-  given DiscoveryOrder() on 2026-10-27
-  expect deadline(discovery-60) == 2026-12-28
+  deadline first-extension-90: 90.days from OppositionPeriodExpired() counted_by frcp6 cite 37 CFR 2.102(c)(1)(ii)
+  deadline second-extension-60: 60.days from FirstExtensionExpired() counted_by frcp6 cite 37 CFR 2.102(c)(2)
+  deadline extended-period-120: 120.days from Published() counted_by frcp6 cite 37 CFR 2.102(c)(3)
+  deadline outer-limit-180: 180.days from Published() counted_by frcp6 cite 37 CFR 2.102(c)
 }
 
-event StandstillOrder()
-
-rule duty standstill-180-rule cite 37 CFR 2.102(c)
+test "a 90-day first extension runs from the end of the original period" cite 37 CFR 2.102(c)(1)(ii)
 {
-  deadline standstill-180: 180.days from StandstillOrder() counted_by frcp6
+  given OppositionPeriodExpired() on 2025-01-02
+  expect deadline(first-extension-90) == 2025-04-02
 }
 
-test "180-day TTAB period rolls through calendar counting" cite 37 CFR 2.102(c)
+test "a 90-day extension ending on Memorial Day rolls to Tuesday" cite 37 CFR 2.102(c)(1)(ii)
 {
-  given StandstillOrder() on 2026-10-27
-  expect deadline(standstill-180) == 2027-04-26
+  given OppositionPeriodExpired() on 2025-02-25
+  expect deadline(first-extension-90) == 2025-05-27
 }
 
-event DiscoveryResponse()
-
-rule duty discovery-30-rule cite 37 CFR 2.102(c)
+test "a 90-day extension ending on a Saturday rolls to Monday" cite 37 CFR 2.102(c)(1)(ii)
 {
-  deadline discovery-30: 30.days from DiscoveryResponse() counted_by frcp6
+  given OppositionPeriodExpired() on 2025-04-13
+  expect deadline(first-extension-90) == 2025-07-14
 }
 
-test "30-day TTAB period rolls through calendar counting (2)" cite 37 CFR 2.102(c)
+test "the additional 60 days run from the end of the 30-day extension" cite 37 CFR 2.102(c)(2)
 {
-  given DiscoveryResponse() on 2026-10-27
-  expect deadline(discovery-30) == 2026-11-27
+  given FirstExtensionExpired() on 2025-03-03
+  expect deadline(second-extension-60) == 2025-05-02
 }
 
-event InstitutionStandstill()
-
-rule duty standstill-institution-180-rule cite 37 CFR 2.102(c)
+test "an additional 60 days ending on a Saturday roll to Monday" cite 37 CFR 2.102(c)(2)
 {
-  deadline standstill-institution-180: 180.days from InstitutionStandstill() counted_by frcp6
+  given FirstExtensionExpired() on 2025-04-08
+  expect deadline(second-extension-60) == 2025-06-09
 }
 
-test "180-day TTAB period rolls through calendar counting (2)" cite 37 CFR 2.102(c)
+test "extensions totaling 90 days end on day 120 from publication" cite 37 CFR 2.102(c)(3)
 {
-  given InstitutionStandstill() on 2026-10-27
-  expect deadline(standstill-institution-180) == 2027-04-26
+  given Published() on 2025-01-06
+  expect deadline(extended-period-120) == 2025-05-06
+}
+
+test "a day 120 on a Sunday rolls to Monday" cite 37 CFR 2.102(c)(3)
+{
+  given Published() on 2025-01-11
+  expect deadline(extended-period-120) == 2025-05-12
+}
+
+test "no extension reaches beyond 180 days from publication" cite 37 CFR 2.102(c)
+{
+  given Published() on 2025-05-10
+  expect deadline(outer-limit-180) == 2025-11-06
+}
+
+test "a day 180 on the Saturday before Labor Day rolls to Tuesday" cite 37 CFR 2.102(c)
+{
+  given Published() on 2025-03-03
+  expect deadline(outer-limit-180) == 2025-09-02
+}
+
+/// 37 C.F.R. § 2.105(a): the notice of institution designates the answer
+/// time, not less than thirty days; § 2.106(a) lets the Board reset it.
+/// The Board designates 60 days (TBMP 310.03(a), June 2026 edition,
+/// recording the change from 40). That edition is the earliest sourced
+/// date for the 60-day practice; the date the Board switched is not in
+/// `sources/`, so the 40-day practice is not modeled as an earlier version.
+rule duty answer-time effective [2026-06-01, ..) known_at 2026-06-01 cite 37 CFR 2.105(a)
+{
+  deadline answer-period: 60.days from InstitutionNoticed() counted_by frcp6 delegable_to [CaseOrder] cite 37 CFR 2.106(a)
+}
+
+test "the answer is due 60 days from the notice of institution" cite 37 CFR 2.105(a)
+{
+  given InstitutionNoticed() on 2026-07-06
+  expect deadline(answer-period) == 2026-09-04
+}
+
+test "an answer day on a Saturday rolls to Monday" cite 37 CFR 2.105(a)
+{
+  given InstitutionNoticed() on 2026-06-09
+  expect deadline(answer-period) == 2026-08-10
+}
+
+test "an answer day on Labor Day rolls to Tuesday" cite 37 CFR 2.105(a)
+{
+  given InstitutionNoticed() on 2026-07-09
+  expect deadline(answer-period) == 2026-09-08
+}
+
+/// 37 C.F.R. § 2.120(a)(2): a 180-day discovery period, initial
+/// disclosures within its first thirty days. Both may be extended or
+/// modified "by order of the Board" (§ 2.120(a)(2)(iv)).
+rule duty discovery-schedule effective [2017-01-14, ..) known_at 2016-10-07 cite 37 CFR 2.120(a)(2)
+{
+  deadline disclosure-period: 30.days from DiscoveryOpened() counted_by frcp6 delegable_to [CaseOrder] cite 37 CFR 2.120(a)(2)(ii)
+  deadline discovery-period: 180.days from DiscoveryOpened() counted_by frcp6 delegable_to [CaseOrder] cite 37 CFR 2.120(a)(2)(i)
+}
+
+test "initial disclosures are due 30 days after discovery opens" cite 37 CFR 2.120(a)(2)(ii)
+{
+  given DiscoveryOpened() on 2025-03-03
+  expect deadline(disclosure-period) == 2025-04-02
+}
+
+test "initial disclosures due on a Saturday roll to Monday" cite 37 CFR 2.120(a)(2)(ii)
+{
+  given DiscoveryOpened() on 2026-03-05
+  expect deadline(disclosure-period) == 2026-04-06
+}
+
+test "discovery closes 180 days after it opens" cite 37 CFR 2.120(a)(2)(i)
+{
+  given DiscoveryOpened() on 2025-05-10
+  expect deadline(discovery-period) == 2025-11-06
+}
+
+test "a discovery close on a Saturday rolls to Monday" cite 37 CFR 2.120(a)(2)(i)
+{
+  given DiscoveryOpened() on 2026-01-12
+  expect deadline(discovery-period) == 2026-07-13
+}
+
+/// 37 C.F.R. § 2.145(d)(3): a civil action under 15 U.S.C. § 1071(b) must
+/// be commenced no later than 63 days after the final decision. The
+/// Director, not the Board, may extend it (§ 2.145(e)).
+rule duty review-time effective [2017-01-14, ..) known_at 2016-10-07 cite 37 CFR 2.145(d)
+{
+  deadline civil-action-period: 63.days from FinalDecision() counted_by frcp6 cite 37 CFR 2.145(d)(3)
+}
+
+test "a civil action is due 63 days after the final decision" cite 37 CFR 2.145(d)(3)
+{
+  given FinalDecision() on 2025-09-02
+  expect deadline(civil-action-period) == 2025-11-04
+}
+
+test "a day 63 on a Saturday rolls to Monday" cite 37 CFR 2.145(d)(3)
+{
+  given FinalDecision() on 2025-05-03
+  expect deadline(civil-action-period) == 2025-07-07
+}
+
+test "a day 63 on Veterans Day rolls to Wednesday" cite 37 CFR 2.145(d)(3)
+{
+  given FinalDecision() on 2025-09-09
+  expect deadline(civil-action-period) == 2025-11-12
 }

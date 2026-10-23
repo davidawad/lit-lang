@@ -134,7 +134,7 @@ fn resolve_calendar<'p>(
     build: &Build<'_, 'p>,
     pkg: &hir::Package,
     id: &str,
-    at: Span,
+    at: &Span,
     sink: &mut Sink,
 ) -> Option<&'p hir::Calendar> {
     match build
@@ -145,7 +145,7 @@ fn resolve_calendar<'p>(
         Ok(_) => {
             sink.error(
                 C::TypeMismatch,
-                Some(&at),
+                Some(at),
                 format!("`holidays {id}` does not name a calendar"),
             );
             None
@@ -167,12 +167,12 @@ fn lowered<'p>(
 ) -> Option<(CountingRule, Vec<&'p hir::Calendar>)> {
     let span = c.meta.span.as_ref();
     let at = span.cloned().unwrap_or_else(|| sink.fallback.clone());
-    let mut both = vec![resolve_calendar(build, pkg, &c.calendar, at.clone(), sink)?];
+    let mut both = vec![resolve_calendar(build, pkg, &c.calendar, &at, sink)?];
     if let Some(id) = &c.declared_calendar {
-        both.push(resolve_calendar(build, pkg, id, at.clone(), sink)?);
+        both.push(resolve_calendar(build, pkg, id, &at, sink)?);
     }
     let forward = match &c.forward_calendar {
-        Some(id) => Some(resolve_calendar(build, pkg, id, at, sink)?),
+        Some(id) => Some(resolve_calendar(build, pkg, id, &at, sink)?),
         None => None,
     };
     let cited = c.meta.cite.as_deref().and_then(|cite| {

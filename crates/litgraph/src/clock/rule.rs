@@ -305,6 +305,40 @@ impl CountingRule {
         out
     }
 
+    /// The `service` step is total over [`ServiceMethod`]: each method in
+    /// exactly one of `methods` and `unrecognized`, adding no negative days.
+    fn validate_service(
+        &self,
+        methods: &[ServiceExtension],
+        unrecognized: &[ServiceMethod],
+    ) -> Result<()> {
+        let bad = |why: String| Err(Error::Invalid(format!("counting rule {}: {why}", self.id)));
+        if methods.iter().any(|m| m.days < 0) {
+            return bad("service extension days must be >= 0".to_owned());
+        }
+        let listed: Vec<ServiceMethod> = methods
+            .iter()
+            .map(|m| m.method)
+            .chain(unrecognized.iter().copied())
+            .collect();
+        let distinct: std::collections::BTreeSet<ServiceMethod> = listed.iter().copied().collect();
+        if distinct.len() != listed.len() {
+            return bad("duplicate service method".to_owned());
+        }
+        let missing: Vec<&str> = ServiceMethod::ALL
+            .iter()
+            .filter(|m| !distinct.contains(m))
+            .map(|m| m.as_str())
+            .collect();
+        if missing.is_empty() {
+            return Ok(());
+        }
+        bad(format!(
+            "the `service` step is not total; it does not list {}",
+            missing.join(", ")
+        ))
+    }
+
     /// Check the pipeline's shape and every text template. Calendar
     /// references are checked by the library, which owns the calendars.
     ///
@@ -351,34 +385,7 @@ impl CountingRule {
                     methods,
                     unrecognized,
                     ..
-                } => {
-                    if methods.iter().any(|m| m.days < 0) {
-                        return bad("service extension days must be >= 0");
-                    }
-                    let listed: Vec<ServiceMethod> = methods
-                        .iter()
-                        .map(|m| m.method)
-                        .chain(unrecognized.iter().copied())
-                        .collect();
-                    let distinct: std::collections::BTreeSet<ServiceMethod> =
-                        listed.iter().copied().collect();
-                    if distinct.len() != listed.len() {
-                        return bad("duplicate service method");
-                    }
-                    let missing: Vec<&str> = ServiceMethod::ALL
-                        .iter()
-                        .filter(|m| !distinct.contains(m))
-                        .map(|m| m.as_str())
-                        .collect();
-                    if !missing.is_empty() {
-                        return Err(Error::Invalid(format!(
-                            "counting rule {}: the `service` step is not total; it does not \
-                             list {}",
-                            self.id,
-                            missing.join(", ")
-                        )));
-                    }
-                }
+                } => self.validate_service(methods, unrecognized)?,
                 _ => {}
             }
         }

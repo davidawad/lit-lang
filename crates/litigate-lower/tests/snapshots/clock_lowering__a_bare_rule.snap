@@ -1,0 +1,41 @@
+---
+source: crates/litigate-lower/tests/clock_lowering.rs
+expression: rule(&p)
+---
+{
+  "id": "frcp6",
+  "label": "FRCP 6(a)",
+  "sourceUrl": "https://www.law.cornell.edu/rules/frcp",
+  "closedWeekdays": [
+    "saturday",
+    "sunday"
+  ],
+  "holidays": [
+    "federal-holidays"
+  ],
+  "steps": [
+    {
+      "op": "anchor",
+      "kind": "trigger",
+      "text": "FRCP 6(a): exclude the trigger date {trigger}"
+    },
+    {
+      "op": "count",
+      "periods": [
+        {
+          "unit": "calendar",
+          "count": "calendar",
+          "text": "FRCP 6(a): count {n} calendar day(s) {after} the anchor -> {date}"
+        },
+        {
+          "unit": "court",
+          "count": "business",
+          "text": "FRCP 6(a): count {n} court day(s) {forward}, skipping weekends and holidays -> {date}"
+        }
+      ]
+    },
+    {
+      "op": "base"
+    }
+  ]
+}

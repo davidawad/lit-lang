@@ -8,75 +8,10 @@ mod support;
 use litgraph::scenario::NamedScenario;
 use litigate_base::DiagnosticCode;
 use litigate_lower::{render, render_scenario, semantic_diff_scenarios, Lowerer};
-use litigate_sema::hir::{
-    Analysis, Case, CaseSource, Money, Observation, PackagePin, Party, Perspective, Removal, Stake,
-};
+use litigate_sema::hir::{Analysis, Case, Observation, Perspective, Removal, Stake};
 use serde_json::{json, Map, Value};
 use std::collections::BTreeMap;
-use support::{load_hir, repo_root};
-
-fn usd(minor_units: i64) -> Money {
-    Money {
-        minor_units,
-        currency: "usd".into(),
-    }
-}
-
-fn pin(name: &str) -> PackagePin {
-    PackagePin {
-        name: name.into(),
-        pack_id: name.into(),
-        version: "0.1.0".into(),
-        content_hash: String::new(),
-    }
-}
-
-/// `cases/examples/acme.case` as sema will check it: replay (SPEC §12)
-/// lands on `mtd-ruling`. Events are not lowered, so none are listed.
-fn acme() -> Case {
-    let q = |id: &str| format!("frcp-rule12-example::{id}");
-    Case {
-        id: "acme-v-widget".into(),
-        summary: "Acme sues Widget; Widget decides whether to answer or move to dismiss.".into(),
-        notes: Some("Worked example for SPEC §12. Stakes are illustrative.".into()),
-        sources: vec![CaseSource {
-            title: "Federal Rules of Civil Procedure".into(),
-            url: Some("https://www.law.cornell.edu/rules/frcp".into()),
-            as_of: Some("2024-12-01".into()),
-        }],
-        uses: vec![pin("frcp-rule12-example")],
-        as_of: "2025-06-01".into(),
-        known_at: None,
-        start: Some(q("mtd-ruling")),
-        perspective: Some(Perspective::Party("widget".into())),
-        parties: vec![
-            Party {
-                id: "acme".into(),
-                actor: "Plaintiff".into(),
-                entity_type: "Corporation".into(),
-            },
-            Party {
-                id: "widget".into(),
-                actor: "Defendant".into(),
-                entity_type: "Corporation".into(),
-            },
-        ],
-        events: Vec::new(),
-        facts: BTreeMap::from([(q("time-barred"), q("not-barred"))]),
-        stakes: BTreeMap::from([
-            (q("judgment-entered"), Stake::Value(usd(-200_000_000))),
-            (q("dismissed"), Stake::Value(usd(0))),
-        ]),
-        observations: vec![Observation {
-            node: q("mtd-ruling"),
-            outcomes: vec![(q("granted"), 3), (q("denied"), 1)],
-        }],
-        analysis: Analysis {
-            fields: BTreeMap::from([("params".into(), json!({"rate": 650, "opp_rate": 550}))]),
-        },
-        removals: Vec::new(),
-    }
-}
+use support::{acme, load_hir, pin, repo_root, usd};
 
 #[test]
 fn acme_golden() {

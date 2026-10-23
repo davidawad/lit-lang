@@ -114,6 +114,11 @@ mod tests {
         assert_eq!(ratio(1, u64::MAX), Some(1.0 / 18_446_744_073_709_551_615.0));
     }
 
+    #[test]
+    fn zero_over_a_wide_denominator_is_zero() {
+        assert_eq!(ratio(0, 1 << 60), Some(0.0));
+    }
+
     proptest! {
         #[test]
         fn agrees_with_ieee_division_when_operands_are_exact(

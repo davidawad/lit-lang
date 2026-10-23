@@ -1,0 +1,16 @@
+---
+source: crates/litigate-lower/tests/diff_json.rs
+expression: "diff(&large, &small)"
+---
+[
+  {
+    "kind": "removed",
+    "pointer": "/packs/1",
+    "before": "b"
+  },
+  {
+    "kind": "removed",
+    "pointer": "/scenario/params/opp_rate",
+    "before": 2.0
+  }
+]

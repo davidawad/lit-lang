@@ -1,0 +1,5 @@
+---
+source: crates/litigate-lower/tests/engine_clock.rs
+expression: clock.due(&zero).err().unwrap_or_default()
+---
+invalid: FRCP 6(a): a period must be at least 1 day

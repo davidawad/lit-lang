@@ -1,0 +1,14 @@
+---
+source: crates/litigate-lower/tests/diff_json.rs
+expression: "errors(&[(\"{\", pack), (pack, \"nodes\"), (r#\"{\"nodes\": 5}\"#, pack),\n(pack, r#\"{\"nodes\": 5}\"#), (r#\"{\"summary\": 5}\"#, scenario),\n(scenario, r#\"{\"summary\": 5}\"#), (r#\"{\"links\": 5}\"#, links),\n(links, r#\"{\"links\": 5}\"#), (r#\"{\"calendars\": 5}\"#, &clock),\n(&clock, r#\"{\"calendars\": 5}\"#),])"
+---
+first: not JSON: EOF while parsing an object at line 1 column 1
+second: not JSON: expected ident at line 1 column 2
+first: invalid type: integer `5`, expected a sequence
+second: invalid type: integer `5`, expected a sequence
+first: invalid type: integer `5`, expected a string
+second: invalid type: integer `5`, expected a string
+first: invalid type: integer `5`, expected a sequence
+second: invalid type: integer `5`, expected a sequence
+first: invalid type: integer `5`, expected a sequence
+second: invalid type: integer `5`, expected a sequence

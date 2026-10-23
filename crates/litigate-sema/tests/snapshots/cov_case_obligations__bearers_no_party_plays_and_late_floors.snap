@@ -1,0 +1,33 @@
+---
+source: crates/litigate-sema/tests/cov_case_obligations.rs
+expression: rows
+---
+{
+    "a late answer to an amendment names its `later_of` floor": [
+        "15:3 L4002 `Answered(amended)` on 2011-01-20 missed deadline `amended`, due 2011-01-14\n    note @14:3: `amended` runs 2 calendar days from `Served(amended)` on 2011-01-06 under `oc@2009-12-01`\n    note: it may not end before 2011-01-14 (`later_of`)",
+        "trace Triggered Served(complaint) omega::open -> omega::open",
+        "trace Triggered Served(amended) omega::open -> omega::open",
+        "trace Took Answered(amended) omega::open -> omega::open via omega::answer-amended",
+        "obligation omega::answer #0 Merged bearer d by #1 linear",
+        "obligation omega::amended #1 Late bearer d floor 2011-01-14 by #2 linear",
+    ],
+    "an answer after the extended date names the extension": [
+        "15:3 L4002 `Answered(complaint)` on 2011-01-22 missed deadline `answer`, due 2011-01-20\n    note @13:3: `answer` runs 10 calendar days from `Served(complaint)` on 2011-01-04 under `oc@2009-12-01`\n    note: an order extended it to 2011-01-20",
+        "trace Triggered Served(complaint) omega::open -> omega::open",
+        "trace Extended Ordered(2011-01-20) omega::open -> omega::open",
+        "trace Took Answered(complaint) omega::open -> omega::open via omega::answer",
+        "obligation omega::answer #0 Late bearer d extended 2011-01-20 by #2 linear",
+    ],
+    "no party plays the bearer": [
+        "ok: start omega::open",
+        "trace Triggered Served(complaint) omega::open -> omega::open",
+        "obligation omega::answer #0 Lapsed linear",
+    ],
+    "unbound: an amendment absorbs the unbound answer": [
+        "ok: start omega::open",
+        "trace Triggered Served(complaint) omega::open -> omega::open",
+        "trace Triggered Served(amended) omega::open -> omega::open",
+        "obligation omega::answer #0 Merged by #1 linear",
+        "obligation omega::amended #1 Lapsed floor 2011-01-14 linear",
+    ],
+}

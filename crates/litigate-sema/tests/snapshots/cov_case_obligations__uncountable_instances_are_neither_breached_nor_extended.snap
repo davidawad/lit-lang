@@ -1,0 +1,23 @@
+---
+source: crates/litigate-sema/tests/cov_case_obligations.rs
+expression: rows
+---
+{
+    "extension": [
+        "14:14 L4001 cannot count `omega::answer` to judge `Ordered(2011-01-20)`\n    note: `answer` runs 10 calendar days from `Served(complaint)` on 2011-01-04 under `oc@2009-12-01`\n    note: no clock library is loaded to run counting rule `oc`",
+        "trace Triggered Served(complaint) omega::open -> omega::open",
+        "obligation omega::answer #0 Open bearer d linear",
+    ],
+    "later_of over an uncountable instance": [
+        "ok: start omega::open",
+        "trace Triggered Served(complaint) omega::open -> omega::open",
+        "trace Triggered Served(amended) omega::open -> omega::open",
+        "obligation omega::answer #0 Merged bearer d by #1 linear",
+        "obligation omega::amended #1 Open bearer d linear",
+    ],
+    "open at as_of": [
+        "ok: start omega::open",
+        "trace Triggered Served(complaint) omega::open -> omega::open",
+        "obligation omega::answer #0 Open bearer d linear",
+    ],
+}

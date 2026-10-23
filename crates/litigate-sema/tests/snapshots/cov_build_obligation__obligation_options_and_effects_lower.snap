@@ -1,0 +1,437 @@
+---
+source: crates/litigate-sema/tests/cov_build_obligation.rs
+expression: found
+---
+[
+    Event(
+        EventType {
+            name: "Served",
+            params: [
+                (
+                    "document",
+                    Named(
+                        "Document",
+                    ),
+                ),
+                (
+                    "method",
+                    Named(
+                        "Method",
+                    ),
+                ),
+            ],
+            effect: None,
+        },
+    ),
+    Deadline(
+        Deadline {
+            meta: Metadata {
+                id: "a",
+                label: "",
+                cite: None,
+                effective: Interval {
+                    from: "2009-12-01",
+                    to: None,
+                    known_at: "2025-01-01",
+                },
+                authority: "FederalRule",
+                relations: [],
+                span: Some(
+                    Span {
+                        file: FileId(
+                            "pkgs/demo/main.lit",
+                        ),
+                        line: 11,
+                        col: 1,
+                        end_line: 16,
+                        end_col: 2,
+                    },
+                ),
+                imported: false,
+            },
+            amount: 21,
+            unit: Calendar,
+            direction: Forward,
+            trigger: Expr {
+                ty: Named(
+                    "Served",
+                ),
+                kind: Call {
+                    callee: "Served",
+                    args: [
+                        Expr {
+                            ty: Named(
+                                "Document",
+                            ),
+                            kind: Literal {
+                                value: Variant(
+                                    "Document::complaint",
+                                ),
+                            },
+                            span: Some(
+                                Span {
+                                    file: FileId(
+                                        "pkgs/demo/main.lit",
+                                    ),
+                                    line: 11,
+                                    col: 33,
+                                    end_line: 11,
+                                    end_col: 42,
+                                },
+                            ),
+                        },
+                    ],
+                },
+                span: Some(
+                    Span {
+                        file: FileId(
+                            "pkgs/demo/main.lit",
+                        ),
+                        line: 11,
+                        col: 26,
+                        end_line: 11,
+                        end_col: 43,
+                    },
+                ),
+            },
+            counting: "c6",
+            extendable: None,
+            extension_authority: None,
+            note: None,
+            bearer: Some(
+                "Defendant",
+            ),
+            policy: Latest,
+            linear: true,
+            extend: Some(
+                Capability {
+                    by: "Court",
+                    max_days: Some(
+                        30,
+                    ),
+                    after_expiry: true,
+                },
+            ),
+            waive: Some(
+                Capability {
+                    by: "Plaintiff",
+                    max_days: None,
+                    after_expiry: false,
+                },
+            ),
+        },
+    ),
+    Deadline(
+        Deadline {
+            meta: Metadata {
+                id: "b",
+                label: "",
+                cite: None,
+                effective: Interval {
+                    from: "2009-12-01",
+                    to: None,
+                    known_at: "2025-01-01",
+                },
+                authority: "FederalRule",
+                relations: [],
+                span: Some(
+                    Span {
+                        file: FileId(
+                            "pkgs/demo/main.lit",
+                        ),
+                        line: 18,
+                        col: 1,
+                        end_line: 18,
+                        end_col: 78,
+                    },
+                ),
+                imported: false,
+            },
+            amount: 14,
+            unit: Calendar,
+            direction: Forward,
+            trigger: Expr {
+                ty: Named(
+                    "Served",
+                ),
+                kind: Call {
+                    callee: "Served",
+                    args: [
+                        Expr {
+                            ty: Named(
+                                "Document",
+                            ),
+                            kind: Literal {
+                                value: Variant(
+                                    "Document::answer",
+                                ),
+                            },
+                            span: Some(
+                                Span {
+                                    file: FileId(
+                                        "pkgs/demo/main.lit",
+                                    ),
+                                    line: 18,
+                                    col: 33,
+                                    end_line: 18,
+                                    end_col: 39,
+                                },
+                            ),
+                        },
+                    ],
+                },
+                span: Some(
+                    Span {
+                        file: FileId(
+                            "pkgs/demo/main.lit",
+                        ),
+                        line: 18,
+                        col: 26,
+                        end_line: 18,
+                        end_col: 40,
+                    },
+                ),
+            },
+            counting: "c6",
+            extendable: None,
+            extension_authority: None,
+            note: None,
+            bearer: None,
+            policy: LaterOf(
+                "a",
+            ),
+            linear: false,
+            extend: None,
+            waive: None,
+        },
+    ),
+    Deadline(
+        Deadline {
+            meta: Metadata {
+                id: "e",
+                label: "",
+                cite: None,
+                effective: Interval {
+                    from: "2009-12-01",
+                    to: None,
+                    known_at: "2025-01-01",
+                },
+                authority: "FederalRule",
+                relations: [],
+                span: Some(
+                    Span {
+                        file: FileId(
+                            "pkgs/demo/main.lit",
+                        ),
+                        line: 19,
+                        col: 1,
+                        end_line: 19,
+                        end_col: 71,
+                    },
+                ),
+                imported: false,
+            },
+            amount: 14,
+            unit: Calendar,
+            direction: Forward,
+            trigger: Expr {
+                ty: Named(
+                    "Served",
+                ),
+                kind: Call {
+                    callee: "Served",
+                    args: [
+                        Expr {
+                            ty: Named(
+                                "Document",
+                            ),
+                            kind: Literal {
+                                value: Variant(
+                                    "Document::answer",
+                                ),
+                            },
+                            span: Some(
+                                Span {
+                                    file: FileId(
+                                        "pkgs/demo/main.lit",
+                                    ),
+                                    line: 19,
+                                    col: 33,
+                                    end_line: 19,
+                                    end_col: 39,
+                                },
+                            ),
+                        },
+                    ],
+                },
+                span: Some(
+                    Span {
+                        file: FileId(
+                            "pkgs/demo/main.lit",
+                        ),
+                        line: 19,
+                        col: 26,
+                        end_line: 19,
+                        end_col: 40,
+                    },
+                ),
+            },
+            counting: "c6",
+            extendable: None,
+            extension_authority: None,
+            note: None,
+            bearer: None,
+            policy: Each,
+            linear: false,
+            extend: None,
+            waive: None,
+        },
+    ),
+    Deadline(
+        Deadline {
+            meta: Metadata {
+                id: "f",
+                label: "",
+                cite: None,
+                effective: Interval {
+                    from: "2009-12-01",
+                    to: None,
+                    known_at: "2025-01-01",
+                },
+                authority: "FederalRule",
+                relations: [],
+                span: Some(
+                    Span {
+                        file: FileId(
+                            "pkgs/demo/main.lit",
+                        ),
+                        line: 20,
+                        col: 1,
+                        end_line: 20,
+                        end_col: 122,
+                    },
+                ),
+                imported: false,
+            },
+            amount: 14,
+            unit: Calendar,
+            direction: Forward,
+            trigger: Expr {
+                ty: Named(
+                    "Served",
+                ),
+                kind: Call {
+                    callee: "Served",
+                    args: [
+                        Expr {
+                            ty: Named(
+                                "Document",
+                            ),
+                            kind: Literal {
+                                value: Variant(
+                                    "Document::answer",
+                                ),
+                            },
+                            span: Some(
+                                Span {
+                                    file: FileId(
+                                        "pkgs/demo/main.lit",
+                                    ),
+                                    line: 20,
+                                    col: 33,
+                                    end_line: 20,
+                                    end_col: 39,
+                                },
+                            ),
+                        },
+                    ],
+                },
+                span: Some(
+                    Span {
+                        file: FileId(
+                            "pkgs/demo/main.lit",
+                        ),
+                        line: 20,
+                        col: 26,
+                        end_line: 20,
+                        end_col: 40,
+                    },
+                ),
+            },
+            counting: "c6",
+            extendable: Some(
+                true,
+            ),
+            extension_authority: None,
+            note: None,
+            bearer: None,
+            policy: First,
+            linear: false,
+            extend: Some(
+                Capability {
+                    by: "Court",
+                    max_days: Some(
+                        1,
+                    ),
+                    after_expiry: false,
+                },
+            ),
+            waive: None,
+        },
+    ),
+    Event(
+        EventType {
+            name: "Moved",
+            params: [
+                (
+                    "until",
+                    Date,
+                ),
+                (
+                    "option",
+                    String,
+                ),
+            ],
+            effect: Some(
+                Extends {
+                    deadline: "a",
+                    param: 0,
+                },
+            ),
+        },
+    ),
+    Event(
+        EventType {
+            name: "Released",
+            params: [],
+            effect: Some(
+                Waives {
+                    deadline: "b",
+                },
+            ),
+        },
+    ),
+    Event(
+        EventType {
+            name: "Dropped",
+            params: [
+                (
+                    "option",
+                    String,
+                ),
+            ],
+            effect: Some(
+                Removes {
+                    param: 0,
+                },
+            ),
+        },
+    ),
+    Event(
+        EventType {
+            name: "Plain",
+            params: [],
+            effect: None,
+        },
+    ),
+]

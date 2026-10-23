@@ -1,0 +1,21 @@
+---
+source: crates/litigate-sema/tests/cov_build_obligation.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:11:34 L1002 event `E1` has no parameter `nothing`",
+    "pkgs/demo/main.lit:12:32 L2001 parameter `option` of `E2` must have type `String`",
+    "pkgs/demo/main.lit:13:23 L2007 `extends` needs `to <param>`: the `Date` parameter holding the new due date",
+    "pkgs/demo/main.lit:14:23 L2007 `to` is not allowed without `extends` [fix: \"\"]",
+    "pkgs/demo/main.lit:15:31 L1002 cannot find name `nowhere`",
+    "pkgs/demo/main.lit:16:38 L2001 parameter `until` of `E6` must have type `Date`",
+    "pkgs/demo/main.lit:17:31 L2001 `c6` is a counting rule, expected a deadline",
+    "pkgs/demo/main.lit:18:41 L2007 `waives` is not allowed here: an event declares at most one effect [fix: \"\"]",
+    "pkgs/demo/main.lit:19:19 L1002 cannot find name `zzz`",
+    "pkgs/demo/main.lit:20:32 L1002 event `E10` has no parameter `until.x`",
+    "pkgs/demo/main.lit:21:37 L1002 event `E11` has no parameter `until.x`",
+    "pkgs/demo/main.lit:22:36 L2007 `to` is not allowed without `extends` [fix: \"\"]",
+    "pkgs/demo/main.lit:23:42 L2007 `removes` is given more than once [fix: \"\"]",
+    "pkgs/demo/main.lit:23:42 L2007 `removes` is not allowed here: an event declares at most one effect [fix: \"\"]",
+    "pkgs/demo/main.lit:25:1 L0001 expected an identifier, found end of file",
+]

@@ -1,0 +1,108 @@
+---
+source: crates/litigate-sema/tests/cov_case_obligations.rs
+expression: table(rows)
+---
+{
+    "extend: a deadline with no `extend` capability admits none": [
+        "14:14 L4001 `OrderedReply(2011-01-12)` cannot extend `omega::reply`: the deadline grants no `extend` capability\n    note: a limit that grants no `extend` capability cannot be extended: no order has power over it (Bowles v. Russell, 551 U.S. 205 (2007))",
+        "trace Triggered Noticed() omega::open -> omega::open",
+        "obligation omega::reply #0 Lapsed",
+        "obligation omega::stale #0 Open linear",
+    ],
+    "extend: a second extension is bounded from the counted date": [
+        "13:3 L4009 obligation `omega::answer` borne by `d`, created by `Served(complaint)` on 2011-01-04, was neither discharged nor transformed by its due date 2011-01-24: at as_of 2011-02-01 it is breached\n    note: `answer` runs 10 calendar days from `Served(complaint)` on 2011-01-04 under `oc@2009-12-01`\n    note: a duty is consumed exactly once: by a timely act through a `within` edge, or by a breach",
+        "16:14 L4001 an extension to 2011-01-25 exceeds the bound of `omega::answer`: due 2011-01-14 + 10 days = 2011-01-24\n    note: `answer` runs 10 calendar days from `Served(complaint)` on 2011-01-04 under `oc@2009-12-01`",
+        "trace Triggered Served(complaint) omega::open -> omega::open",
+        "trace Extended Ordered(2011-01-20) omega::open -> omega::open",
+        "trace Extended Ordered(2011-01-24) omega::open -> omega::open",
+        "obligation omega::answer #0 Breached bearer d extended 2011-01-24 linear",
+    ],
+    "extend: after expiry with `after_expiry` is allowed": [
+        "ok: start omega::open",
+        "trace Triggered Served(motion) omega::open -> omega::open",
+        "trace Extended OrderedLate(2011-01-20) omega::open -> omega::open",
+        "trace Took Answered(motion) omega::open -> omega::open via omega::answer-motion",
+        "obligation omega::late #0 Discharged extended 2011-01-20 by #2 linear",
+    ],
+    "extend: after expiry without `after_expiry` is rejected": [
+        "13:3 L4009 obligation `omega::answer` borne by `d`, created by `Served(complaint)` on 2011-01-04, was neither discharged nor transformed by its due date 2011-01-14: at as_of 2011-02-01 it is breached\n    note: `answer` runs 10 calendar days from `Served(complaint)` on 2011-01-04 under `oc@2009-12-01`\n    note: a duty is consumed exactly once: by a timely act through a `within` edge, or by a breach",
+        "14:14 L4001 `omega::answer` expired on 2011-01-14, before `Ordered(2011-01-20)` on 2011-01-16; the capability does not reach an expired period (no `after_expiry`)\n    note: `answer` runs 10 calendar days from `Served(complaint)` on 2011-01-04 under `oc@2009-12-01`",
+        "trace Triggered Served(complaint) omega::open -> omega::open",
+        "obligation omega::answer #0 Breached bearer d linear",
+    ],
+    "extend: an earlier date extends nothing": [
+        "13:3 L4009 obligation `omega::answer` borne by `d`, created by `Served(complaint)` on 2011-01-04, was neither discharged nor transformed by its due date 2011-01-14: at as_of 2011-02-01 it is breached\n    note: `answer` runs 10 calendar days from `Served(complaint)` on 2011-01-04 under `oc@2009-12-01`\n    note: a duty is consumed exactly once: by a timely act through a `within` edge, or by a breach",
+        "14:14 L4001 an extension to 2011-01-10 does not extend `omega::answer`, already due 2011-01-14\n    note: `answer` runs 10 calendar days from `Served(complaint)` on 2011-01-04 under `oc@2009-12-01`",
+        "trace Triggered Served(complaint) omega::open -> omega::open",
+        "obligation omega::answer #0 Breached bearer d linear",
+    ],
+    "extend: beyond the bound is rejected and the answer is late": [
+        "14:14 L4001 an extension to 2011-01-30 exceeds the bound of `omega::answer`: due 2011-01-14 + 10 days = 2011-01-24\n    note: `answer` runs 10 calendar days from `Served(complaint)` on 2011-01-04 under `oc@2009-12-01`",
+        "15:3 L4002 `Answered(complaint)` on 2011-01-19 missed deadline `answer`, due 2011-01-14\n    note @13:3: `answer` runs 10 calendar days from `Served(complaint)` on 2011-01-04 under `oc@2009-12-01`\n    note: only a cited event of a type that `extends` this deadline, within its `extend` capability, moves the due date",
+        "trace Triggered Served(complaint) omega::open -> omega::open",
+        "trace Took Answered(complaint) omega::open -> omega::open via omega::answer",
+        "obligation omega::answer #0 Late bearer d by #2 linear",
+    ],
+    "extend: no version of the deadline governs the order": [
+        "14:3 L3007 deadline `omega::stale` has no version governing 2011-01-12",
+        "trace Triggered Noticed() omega::open -> omega::open",
+        "obligation omega::reply #0 Lapsed",
+        "obligation omega::stale #0 Open linear",
+    ],
+    "extend: nothing open to extend": [
+        "13:14 L4001 `Ordered(2011-01-20)` has no open obligation of `omega::answer` to extend\n    note: an obligation opens when its deadline's trigger happens, and closes when it is discharged, breached, waived, or superseded",
+    ],
+    "extend: one order reaches every defendant's instance": [
+        "13:3 L4009 obligation `omega::answer` borne by `d`, created by `Served(complaint)` on 2011-01-04, was neither discharged nor transformed by its due date 2011-01-20: at as_of 2011-02-01 it is breached\n    note: `answer` runs 10 calendar days from `Served(complaint)` on 2011-01-04 under `oc@2009-12-01`\n    note: a duty is consumed exactly once: by a timely act through a `within` edge, or by a breach",
+        "13:3 L4009 obligation `omega::answer` borne by `e`, created by `Served(complaint)` on 2011-01-04, was neither discharged nor transformed by its due date 2011-01-20: at as_of 2011-02-01 it is breached\n    note: `answer` runs 10 calendar days from `Served(complaint)` on 2011-01-04 under `oc@2009-12-01`\n    note: a duty is consumed exactly once: by a timely act through a `within` edge, or by a breach",
+        "ok: start omega::open",
+        "trace Triggered Served(complaint) omega::open -> omega::open",
+        "trace Extended Ordered(2011-01-20) omega::open -> omega::open",
+        "obligation omega::answer #0 Breached bearer d extended 2011-01-20 linear",
+        "obligation omega::answer #0 Breached bearer e extended 2011-01-20 linear",
+    ],
+    "extend: only the capability's actor may extend": [
+        "13:3 L4009 obligation `omega::answer` borne by `d`, created by `Served(complaint)` on 2011-01-04, was neither discharged nor transformed by its due date 2011-01-14: at as_of 2011-02-01 it is breached\n    note: `answer` runs 10 calendar days from `Served(complaint)` on 2011-01-04 under `oc@2009-12-01`\n    note: a duty is consumed exactly once: by a timely act through a `within` edge, or by a breach",
+        "14:37 L4001 only Court may extend `omega::answer`, but `p` is Plaintiff",
+        "15:37 L4001 only Court may extend `omega::answer`, but `d` is not a party acting by the event",
+        "trace Triggered Served(complaint) omega::open -> omega::open",
+        "obligation omega::answer #0 Breached bearer d linear",
+    ],
+    "extend: uncited": [
+        "13:3 L4009 obligation `omega::answer` borne by `d`, created by `Served(complaint)` on 2011-01-04, was neither discharged nor transformed by its due date 2011-01-14: at as_of 2011-02-01 it is breached\n    note: `answer` runs 10 calendar days from `Served(complaint)` on 2011-01-04 under `oc@2009-12-01`\n    note: a duty is consumed exactly once: by a timely act through a `within` edge, or by a breach",
+        "14:14 L4001 `Ordered(2011-01-20)` transforms an obligation only when it cites its authority\n    note: add the order or rule after the party, e.g. `cite FRCP 6(b)(1)(A)`",
+        "trace Triggered Served(complaint) omega::open -> omega::open",
+        "obligation omega::answer #0 Breached bearer d linear",
+    ],
+    "extend: within the bound, the late answer is timely": [
+        "ok: start omega::open",
+        "trace Triggered Served(complaint) omega::open -> omega::open",
+        "trace Extended Ordered(2011-01-20) omega::open -> omega::open",
+        "trace Took Answered(complaint) omega::open -> omega::open via omega::answer",
+        "obligation omega::answer #0 Discharged bearer d extended 2011-01-20 by #2 linear",
+    ],
+    "waive: a deadline with no `waive` capability admits none": [
+        "14:14 L4001 `ReleasedReply()` cannot waive `omega::reply`: the deadline grants no `waive` capability\n    note: a limit that grants no `waive` capability cannot be waived: no order has power over it (Bowles v. Russell, 551 U.S. 205 (2007))",
+        "trace Triggered Noticed() omega::open -> omega::open",
+        "obligation omega::reply #0 Lapsed",
+        "obligation omega::stale #0 Open linear",
+    ],
+    "waive: after expiry with `after_expiry` is allowed": [
+        "ok: start omega::open",
+        "trace Triggered Served(motion) omega::open -> omega::open",
+        "trace Waived ReleasedLate() omega::open -> omega::open",
+        "obligation omega::late #0 Waived by #1 linear",
+    ],
+    "waive: after expiry without `after_expiry` is rejected": [
+        "13:3 L4009 obligation `omega::answer` borne by `d`, created by `Served(complaint)` on 2011-01-04, was neither discharged nor transformed by its due date 2011-01-14: at as_of 2011-02-01 it is breached\n    note: `answer` runs 10 calendar days from `Served(complaint)` on 2011-01-04 under `oc@2009-12-01`\n    note: a duty is consumed exactly once: by a timely act through a `within` edge, or by a breach",
+        "14:14 L4001 `omega::answer` expired on 2011-01-14, before `Released()` on 2011-01-20; the capability does not reach an expired period (no `after_expiry`)\n    note: `answer` runs 10 calendar days from `Served(complaint)` on 2011-01-04 under `oc@2009-12-01`",
+        "trace Triggered Served(complaint) omega::open -> omega::open",
+        "obligation omega::answer #0 Breached bearer d linear",
+    ],
+    "waive: releases the instance, so nothing is breached": [
+        "ok: start omega::open",
+        "trace Triggered Served(complaint) omega::open -> omega::open",
+        "trace Waived Released() omega::open -> omega::open",
+        "obligation omega::answer #0 Waived bearer d by #1 linear",
+    ],
+}

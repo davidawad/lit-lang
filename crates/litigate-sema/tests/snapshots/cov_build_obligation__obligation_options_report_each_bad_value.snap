@@ -1,0 +1,25 @@
+---
+source: crates/litigate-sema/tests/cov_build_obligation.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:10:67 L1009 actor `Nobody` is not declared in `[package.roles]`",
+    "pkgs/demo/main.lit:11:68 L2007 unknown trigger policy; expected `first`, `latest`, `each`, or `later_of(<deadline>)`",
+    "pkgs/demo/main.lit:12:77 L2007 `later_of` names deadline `c` itself",
+    "pkgs/demo/main.lit:13:68 L2007 unknown trigger policy; expected `first`, `latest`, `each`, or `later_of(<deadline>)`",
+    "pkgs/demo/main.lit:14:68 L2007 unknown trigger policy; expected `first`, `latest`, `each`, or `later_of(<deadline>)`",
+    "pkgs/demo/main.lit:15:68 L2007 unknown trigger policy; expected `first`, `latest`, `each`, or `later_of(<deadline>)`",
+    "pkgs/demo/main.lit:16:77 L2001 `c6` is a counting rule, expected a deadline",
+    "pkgs/demo/main.lit:17:68 L0001 expected an identifier, found `3`",
+    "pkgs/demo/main.lit:18:68 L2007 unknown trigger policy; expected `first`, `latest`, `each`, or `later_of(<deadline>)`",
+    "pkgs/demo/main.lit:19:60 L2007 an `extend` capability is bounded: give `max N.days`",
+    "pkgs/demo/main.lit:20:83 L3009 an extension bound counts calendar days, such as `30.days`",
+    "pkgs/demo/main.lit:21:83 L3009 this period must be counted in days",
+    "pkgs/demo/main.lit:22:60 L2007 `extend` names the actor holding it: `by <Actor>`",
+    "pkgs/demo/main.lit:23:78 L2007 `max` is not allowed on a `waive` capability: a waiver has no extent [fix: \"\"]",
+    "pkgs/demo/main.lit:24:60 L2007 `waive` names the actor holding it: `by <Actor>`",
+    "pkgs/demo/main.lit:25:78 L2007 deadline `p` is `extendable false` but grants an `extend` capability",
+    "pkgs/demo/main.lit:26:121 L1009 actor `Courtt` is not declared in `[package.roles]` [fix: \"Court\"]",
+    "pkgs/demo/main.lit:27:68 L2007 unknown trigger policy; expected `first`, `latest`, `each`, or `later_of(<deadline>)`",
+    "pkgs/demo/main.lit:28:77 L1002 `a` is not an imported module",
+]

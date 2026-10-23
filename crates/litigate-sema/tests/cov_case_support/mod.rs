@@ -29,7 +29,7 @@ fn manifest(name: &str, deps: &[&str], roles: &str) -> String {
     text
 }
 
-fn package(name: &str, deps: &[&str], roles: &str, text: &str) -> LoadedPackage {
+pub fn package(name: &str, deps: &[&str], roles: &str, text: &str) -> LoadedPackage {
     LoadedPackage {
         root: format!("pkgs/{name}"),
         manifest: manifest(name, deps, roles),

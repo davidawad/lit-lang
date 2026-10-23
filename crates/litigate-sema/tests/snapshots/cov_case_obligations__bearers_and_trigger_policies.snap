@@ -1,0 +1,93 @@
+---
+source: crates/litigate-sema/tests/cov_case_obligations.rs
+expression: table(rows)
+---
+{
+    "bearer: none declared, so the period is unbound and lapses": [
+        "ok: start omega::open",
+        "trace Triggered Served(motion) omega::open -> omega::open",
+        "obligation omega::late #0 Lapsed linear",
+    ],
+    "bearer: service by the court binds each defendant": [
+        "13:3 L4009 obligation `omega::answer` borne by `e`, created by `Served(complaint)` on 2011-01-04, was neither discharged nor transformed by its due date 2011-01-14: at as_of 2011-02-01 it is breached\n    note: `answer` runs 10 calendar days from `Served(complaint)` on 2011-01-04 under `oc@2009-12-01`\n    note: a duty is consumed exactly once: by a timely act through a `within` edge, or by a breach",
+        "ok: start omega::open",
+        "trace Triggered Served(complaint) omega::open -> omega::open",
+        "trace Took Answered(complaint) omega::open -> omega::open via omega::answer",
+        "obligation omega::answer #0 Discharged bearer d by #1 linear",
+        "obligation omega::answer #0 Breached bearer e linear",
+    ],
+    "bearer: service on d binds d; e's answer cannot discharge it": [
+        "13:3 L4009 obligation `omega::answer` borne by `d`, created by `Served(complaint)` on 2011-01-04, was neither discharged nor transformed by its due date 2011-01-14: at as_of 2011-02-01 it is breached\n    note: `answer` runs 10 calendar days from `Served(complaint)` on 2011-01-04 under `oc@2009-12-01`\n    note: a duty is consumed exactly once: by a timely act through a `within` edge, or by a breach",
+        "14:37 L4001 `Answered(complaint)` cannot discharge `omega::answer` for `e`: the open obligation is borne by `d`\n    note @13:3: created here",
+        "trace Triggered Served(complaint) omega::open -> omega::open",
+        "trace Took Answered(complaint) omega::open -> omega::open via omega::answer",
+        "obligation omega::answer #0 Breached bearer d linear",
+    ],
+    "breach: not yet due at as_of stays open": [
+        "ok: start omega::open",
+        "trace Triggered Served(complaint) omega::open -> omega::open",
+        "obligation omega::answer #0 Open bearer d linear",
+    ],
+    "each: two motions are two instances": [
+        "ok: start omega::open",
+        "trace Triggered Served(motion) omega::open -> omega::open",
+        "trace Triggered Served(motion) omega::open -> omega::open",
+        "trace Took Answered(motion) omega::open -> omega::open via omega::answer-motion",
+        "obligation omega::late #0 Discharged by #2 linear",
+        "obligation omega::late #1 Lapsed linear",
+    ],
+    "ended: no declared effect after the matter ends": [
+        "14:14 L4001 `Struck(\"answer\")` is not a legal event at stage `omega::done` (Done)\n    note: legal events: none (the matter has ended here)\n    note: replay stops at the first illegal event",
+        "trace Took Closed() omega::open -> omega::done via omega::close",
+    ],
+    "ended: no edgeless event after the matter ends": [
+        "14:14 L4001 `Served(complaint)` is not a legal event at stage `omega::done` (Done)\n    note: legal events: none (the matter has ended here)\n    note: replay stops at the first illegal event",
+        "trace Took Closed() omega::open -> omega::done via omega::close",
+    ],
+    "first: a second service does not restart the period": [
+        "15:3 L4002 `Answered(complaint)` on 2011-01-15 missed deadline `answer`, due 2011-01-14\n    note @13:3: `answer` runs 10 calendar days from `Served(complaint)` on 2011-01-04 under `oc@2009-12-01`\n    note: only a cited event of a type that `extends` this deadline, within its `extend` capability, moves the due date",
+        "trace Triggered Served(complaint) omega::open -> omega::open",
+        "trace Triggered Served(complaint) omega::open -> omega::open",
+        "trace Took Answered(complaint) omega::open -> omega::open via omega::answer",
+        "obligation omega::answer #0 Late bearer d by #2 linear",
+    ],
+    "first: once discharged, a new service opens a new instance": [
+        "ok: start omega::open",
+        "trace Triggered Served(complaint) omega::open -> omega::open",
+        "trace Took Answered(complaint) omega::open -> omega::open via omega::answer",
+        "trace Triggered Served(complaint) omega::open -> omega::open",
+        "obligation omega::answer #0 Discharged bearer d by #1 linear",
+        "obligation omega::answer #2 Open bearer d linear",
+    ],
+    "later_of: the amendment absorbs the open answer and its later due date": [
+        "ok: start omega::open",
+        "trace Triggered Served(complaint) omega::open -> omega::open",
+        "trace Triggered Served(amended) omega::open -> omega::open",
+        "trace Took Answered(amended) omega::open -> omega::open via omega::answer-amended",
+        "obligation omega::answer #0 Merged bearer d by #1 linear",
+        "obligation omega::amended #1 Discharged bearer d floor 2011-01-14 by #2 linear",
+    ],
+    "later_of: the own period is later than the absorbed one": [
+        "ok: start omega::open",
+        "trace Triggered Served(complaint) omega::open -> omega::open",
+        "trace Triggered Served(amended) omega::open -> omega::open",
+        "trace Took Answered(amended) omega::open -> omega::open via omega::answer-amended",
+        "obligation omega::answer #0 Merged bearer d by #1 linear",
+        "obligation omega::amended #1 Discharged bearer d floor 2011-01-14 by #2 linear",
+    ],
+    "later_of: with nothing to absorb, its own period runs": [
+        "14:3 L4002 `Answered(amended)` on 2011-01-09 missed deadline `amended`, due 2011-01-08\n    note @13:3: `amended` runs 2 calendar days from `Served(amended)` on 2011-01-06 under `oc@2009-12-01`\n    note: only a cited event of a type that `extends` this deadline, within its `extend` capability, moves the due date",
+        "trace Triggered Served(amended) omega::open -> omega::open",
+        "trace Took Answered(amended) omega::open -> omega::open via omega::answer-amended",
+        "obligation omega::amended #0 Late bearer d by #1 linear",
+    ],
+    "latest: a second notice restarts the reply period": [
+        "ok: start omega::open",
+        "trace Triggered Noticed() omega::open -> omega::open",
+        "trace Triggered Noticed() omega::open -> omega::open",
+        "trace Took Replied() omega::open -> omega::open via omega::reply",
+        "obligation omega::reply #0 Superseded by #1",
+        "obligation omega::stale #0 Open linear",
+        "obligation omega::reply #1 Discharged by #2",
+    ],
+}

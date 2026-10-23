@@ -14,10 +14,10 @@ use crate::case::deadline::{self, Due};
 use crate::case::graph::{display, pack_of, Graph};
 use crate::case::spans::{error, Build};
 use crate::case::{Effect, Obligation, Status};
-use crate::hir::{Capability, Deadline, EventParty, Expr, ExprKind, TriggerPolicy, Value};
+use crate::hir::{Capability, Deadline, Expr, ExprKind, TriggerPolicy, Value};
 use crate::temporal::condition::matches;
 use crate::temporal::MatterEvent;
-use litigate_base::{DiagnosticCode as C, Severity};
+use litigate_base::{Diagnostic, DiagnosticCode as C, Severity};
 
 /// How an `extends`/`waives` event transforms an obligation.
 #[derive(Debug, Clone, Copy)]
@@ -26,6 +26,24 @@ pub(super) enum Transform<'e> {
     Extend(Option<&'e Expr>),
     /// `waives d`.
     Waive,
+}
+
+impl Transform<'_> {
+    /// The capability it needs, as a verb.
+    fn verb(self) -> &'static str {
+        match self {
+            Self::Extend(_) => "extend",
+            Self::Waive => "waive",
+        }
+    }
+
+    /// The verb's participle.
+    fn done(self) -> &'static str {
+        match self {
+            Self::Extend(_) => "extended",
+            Self::Waive => "waived",
+        }
+    }
 }
 
 /// `pack::name` of qualified `q`, an instance pack read as its base.
@@ -287,8 +305,9 @@ impl<'g> Cx<'_, 'g> {
     }
 
     /// Event `k`, whose type (declared in `pack`) extends or waives
-    /// deadline `target`, transforms one open instance; the effect when it
-    /// does.
+    /// deadline `target`, transforms every open instance of it (an order
+    /// extending "the time to answer" reaches each defendant's), all or
+    /// none; the effect when it does.
     pub(super) fn transform(
         &mut self,
         k: usize,
@@ -297,10 +316,7 @@ impl<'g> Cx<'_, 'g> {
         how: Transform<'_>,
     ) -> Option<Effect> {
         let (source, event) = self.sorted[k];
-        let verb = match how {
-            Transform::Extend(_) => "extend",
-            Transform::Waive => "waive",
-        };
+        let verb = how.verb();
         let action = display(&event.action);
         if event.authority.is_none() {
             let d = error(
@@ -313,8 +329,67 @@ impl<'g> Cx<'_, 'g> {
             return None;
         }
         let q = logical(&self.graph.qualify(pack, target));
-        let i = self.target(k, &q, verb)?;
-        let Some((w, d)) = self.governing(&q, k, false) else {
+        let open = self.open(&q, |_| true);
+        if open.is_empty() {
+            let d = error(
+                C::InvalidCaseEvent,
+                self.at(k, |e| e.action.as_ref()),
+                format!("`{action}` has no open obligation of `{q}` to {verb}"),
+            )
+            .note("an obligation opens when its deadline's trigger happens, and closes when it is discharged, breached, waived, or superseded");
+            self.out.push(d);
+            return None;
+        }
+        let (w, d, capability) = self.licence(k, &q, how)?;
+        let pack = pack_of(&w);
+        let events = self.events(pack);
+        let dues: Vec<Due> = open
+            .iter()
+            .map(|&i| self.count(i, pack, d, &events, k))
+            .collect();
+        drop(events);
+        let new = match how {
+            Transform::Extend(Some(Expr {
+                kind:
+                    ExprKind::Literal {
+                        value: Value::Date(new),
+                    },
+                ..
+            })) => Some(new.as_str()),
+            Transform::Extend(_) => return None,
+            Transform::Waive => None,
+        };
+        let problem = open
+            .iter()
+            .zip(&dues)
+            .find_map(|(&i, due)| self.problem(k, i, due, capability, new));
+        if let Some(e) = problem {
+            self.out.push(e);
+            return None;
+        }
+        let Some(new) = new else {
+            self.close(&open, Status::Waived, source);
+            return Some(Effect::Waived);
+        };
+        for i in open {
+            self.obligations[i].extended_to = Some(new.to_owned());
+        }
+        Some(Effect::Extended)
+    }
+
+    /// The deadline declaration governing `q` at event `k` (with its own
+    /// logical id, as [`Self::governing`]) and the capability it grants
+    /// for `how`, when event `k`'s party holds it.
+    fn licence(
+        &mut self,
+        k: usize,
+        q: &str,
+        how: Transform<'_>,
+    ) -> Option<(String, &'g Deadline, &'g Capability)> {
+        let event = self.sorted[k].1;
+        let action = display(&event.action);
+        let verb = how.verb();
+        let Some((w, d)) = self.governing(q, k, false) else {
             let e = error(
                 C::NoVersionInForce,
                 self.at(k, |e| e.date.as_ref()),
@@ -334,65 +409,14 @@ impl<'g> Cx<'_, 'g> {
                 format!("`{action}` cannot {verb} `{q}`: the deadline grants no `{verb}` capability"),
             )
             .note(format!(
-                "a limit without an `{verb}` capability admits no {verb}; an order cannot enlarge a limit it has no power over (Bowles v. Russell, 551 U.S. 205 (2007))"
+                "a limit that grants no `{verb}` capability cannot be {}: no order has power over it (Bowles v. Russell, 551 U.S. 205 (2007))",
+                how.done()
             ));
             self.out.push(e);
             return None;
         };
-        if !self.principal(k, &q, verb, capability) {
-            return None;
-        }
-        let Transform::Extend(to) = how else {
-            self.close(&[i], Status::Waived, source);
-            return Some(Effect::Waived);
-        };
-        let pack = pack_of(&w);
-        let due = self.count(i, pack, d, &self.events(pack), k);
-        self.extend(k, i, &due, capability, to)
-            .then_some(Effect::Extended)
-    }
-
-    /// The one open instance of `q` that event `k` can `verb`: borne by
-    /// the event's `on` party (or unbound), or the only one open.
-    fn target(&mut self, k: usize, q: &str, verb: &str) -> Option<usize> {
-        let event = self.sorted[k].1;
-        let action = display(&event.action);
-        let on = (event.relation == EventParty::On).then_some(event.party.as_str());
-        let candidates = self.open(q, |b| on.is_none_or(|p| b.is_none() || b == Some(p)));
-        let d = match candidates.as_slice() {
-            [i] => return Some(*i),
-            [] => error(
-                C::InvalidCaseEvent,
-                self.at(k, |e| e.action.as_ref()),
-                format!("`{action}` has no open obligation of `{q}` to {verb}"),
-            )
-            .note("an obligation opens when its deadline's trigger happens, and closes when it is discharged, breached, waived, or superseded"),
-            many => {
-                let bearers: Vec<String> = many
-                    .iter()
-                    .map(|&i| {
-                        self.obligations[i]
-                            .bearer
-                            .clone()
-                            .unwrap_or_else(|| "(unbound)".to_owned())
-                    })
-                    .collect();
-                error(
-                    C::InvalidCaseEvent,
-                    self.at(k, |e| e.party.as_ref()),
-                    format!(
-                        "`{action}` could {verb} {} open obligations of `{q}`",
-                        many.len()
-                    ),
-                )
-                .note(format!(
-                    "borne by {}; write the event `on <party>` to name one",
-                    bearers.join(", ")
-                ))
-            }
-        };
-        self.out.push(d);
-        None
+        self.principal(k, q, verb, capability)
+            .then_some((w, d, capability))
     }
 
     /// Whether event `k`'s party holds `capability` over `q`.
@@ -419,72 +443,61 @@ impl<'g> Cx<'_, 'g> {
         false
     }
 
-    /// Event `k` extends instance `i` (counted `due`) to the date `to`,
-    /// within `capability`; whether it did.
-    fn extend(
-        &mut self,
+    /// Why event `k` may not transform instance `i` (counted `due`) under
+    /// `capability`: extend it to `new`, or waive it when `new` is `None`.
+    fn problem(
+        &self,
         k: usize,
         i: usize,
         due: &Due,
         capability: &Capability,
-        to: Option<&Expr>,
-    ) -> bool {
-        let Some(Expr {
-            kind: ExprKind::Literal {
-                value: Value::Date(new),
-            },
-            ..
-        }) = to
-        else {
-            return false;
-        };
+        new: Option<&str>,
+    ) -> Option<Diagnostic> {
         let event = self.sorted[k].1;
         let o = &self.obligations[i];
         let how = deadline::explain(due, &self.sorted[o.at].1.action);
         let reject = |message: String| {
-            error(
-                C::InvalidCaseEvent,
-                self.at(k, |e| e.action.as_ref()),
-                message,
+            Some(
+                error(
+                    C::InvalidCaseEvent,
+                    self.at(k, |e| e.action.as_ref()),
+                    message,
+                )
+                .note(how.clone()),
             )
-            .note(how.clone())
         };
         let (Ok(current), Ok(counted)) = (effective(o, due), floored(o, due)) else {
             let why = due.date.clone().err().unwrap_or_default();
-            let e = reject(format!(
-                "cannot count `{}` to judge the extension to {new}",
-                o.deadline
+            return reject(format!(
+                "cannot count `{}` to judge `{}`",
+                o.deadline,
+                display(&event.action)
             ))
-            .note(why);
-            self.out.push(e);
-            return false;
+            .map(|e| e.note(why));
         };
+        if event.date > current && !capability.after_expiry {
+            return reject(format!(
+                "`{}` expired on {current}, before `{}` on {}; the capability does not reach an expired period (no `after_expiry`)",
+                o.deadline,
+                display(&event.action),
+                event.date
+            ));
+        }
+        let new = new?;
         let max = capability.max_days.unwrap_or_default();
         let bound = crate::types::date::add_days(&counted, max).unwrap_or_default();
-        let problem = if event.date > current && !capability.after_expiry {
-            Some(format!(
-                "`{}` expired on {current}, before this extension on {}; its `extend` capability does not reach an expired period (no `after_expiry`)",
-                o.deadline, event.date
-            ))
-        } else if *new <= current {
-            Some(format!(
+        if new <= current.as_str() {
+            return reject(format!(
                 "an extension to {new} does not extend `{}`, already due {current}",
                 o.deadline
-            ))
-        } else if *new > bound {
-            Some(format!(
+            ));
+        }
+        if new > bound.as_str() {
+            return reject(format!(
                 "an extension to {new} exceeds the bound of `{}`: due {counted} + {max} days = {bound}",
                 o.deadline
-            ))
-        } else {
-            None
-        };
-        if let Some(problem) = problem {
-            let e = reject(problem);
-            self.out.push(e);
-            return false;
+            ));
         }
-        self.obligations[i].extended_to = Some(new.clone());
-        true
+        None
     }
 }

@@ -336,6 +336,48 @@ test "a discovery close on a Saturday rolls to Monday" cite "37 CFR 2.120(a)(2)(
   expect deadline(discovery-period) == 2026-07-13
 }
 
+/// The date set for the close of rebuttal testimony, from which the
+/// plaintiff's main brief runs (37 C.F.R. § 2.128(a)(1)).
+event RebuttalTestimonyClosed()
+
+/// 37 C.F.R. § 2.128(a)(1): the plaintiff's brief is due "not later than
+/// sixty days after the date set for the close of rebuttal testimony", the
+/// defendant's "not later than thirty days after the due date of the first
+/// brief", and the plaintiff's reply "not later than fifteen days after the
+/// due date of the defendant's brief". The later two are chained periods:
+/// a period that "runs from a prior due date or close of a period (e.g.,
+/// filing a brief after the close of the last testimony period)" is
+/// "calculated from the actual due date of the prior action or close of the
+/// period, not the adjusted date under 37 C.F.R. § 2.196" (TBMP § 112), so
+/// each runs from the nominal end of the one before, even when § 2.196
+/// moved that brief to the next business day. The text is the one in force
+/// from January 14, 2017 (81 FR 69984; sources/cfr-37-part2-history.txt),
+/// its paragraph (a)(1) unchanged then and since. Where § 2.128(a)(2)
+/// applies (a counterclaim, consolidated proceedings, more than two
+/// parties) the Board sets the dates instead, which these do not model;
+/// no extension power is declared.
+deadline plaintiff-brief-period: 60.days after RebuttalTestimonyClosed() counted_by ttab-2-196 effective [2017-01-14, ..) known_at 2016-10-07 cite 37 CFR 2.128(a)(1)
+deadline defendant-brief-period: 30.days after deadline(plaintiff-brief-period).nominal counted_by ttab-2-196 effective [2017-01-14, ..) known_at 2016-10-07 cite 37 CFR 2.128(a)(1); TBMP § 112
+deadline reply-brief-period: 15.days after deadline(defendant-brief-period).nominal counted_by ttab-2-196 effective [2017-01-14, ..) known_at 2016-10-07 cite 37 CFR 2.128(a)(1); TBMP § 112
+
+test "a Sunday 30th day rolls the defendant's brief to Monday; the reply runs from the Sunday" cite TBMP § 112
+{
+  given RebuttalTestimonyClosed() on 2026-03-02
+  expect deadline(plaintiff-brief-period) == 2026-05-01
+  expect deadline(defendant-brief-period).nominal == 2026-05-31
+  expect deadline(defendant-brief-period).adjusted == 2026-06-01
+  expect deadline(reply-brief-period) == 2026-06-15
+}
+
+test "a Saturday 60th day: the plaintiff's brief rolls to Monday, and the defendant's runs from the Saturday" cite TBMP § 112
+{
+  given RebuttalTestimonyClosed() on 2026-03-03
+  expect deadline(plaintiff-brief-period).nominal == 2026-05-02
+  expect deadline(plaintiff-brief-period).adjusted == 2026-05-04
+  expect deadline(defendant-brief-period) == 2026-06-01
+  expect deadline(reply-brief-period) == 2026-06-16
+}
+
 /// 37 C.F.R. § 2.145(d)(3): a civil action under 15 U.S.C. § 1071(b) must
 /// be commenced no later than 63 days after the final decision. The
 /// Director, not the Board and not a court, may extend it "upon written

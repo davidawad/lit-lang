@@ -378,7 +378,7 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   dropped). No wording changed. Used by `packs/ttab-trademark-trial-and-appeal-board.json`.
 - sha256 (this file): `66402ce5e48bf2a9aa039058b3bfc181d3511b9e94137fac8b6a3d84a26b33a7`
 
-### `cfr-37-part2-history.txt` — 37 C.F.R. §§ 2.119 and 2.196 as in force on dated eCFR points in time
+### `cfr-37-part2-history.txt` — 37 C.F.R. §§ 2.119, 2.128 and 2.196 as in force on dated eCFR points in time
 
 - The texts that date `lit/ttab`'s counting rule (37 C.F.R. § 2.196 with
   § 2.119(c)'s service rule), which `cfr-37-part2.txt` cannot, having
@@ -387,7 +387,8 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   mail, Priority Mail Express, or overnight courier), `## 37 C.F.R. (eCFR
   2017-01-14) § 2.119` (the text in force from January 14, 2017, with no
   added time, and its source note `[81 FR 69975, Oct. 7, 2016]`), and `## 37
-  C.F.R. (eCFR 2017-01-01) § 2.196`. The headings are deliberately not
+  C.F.R. (eCFR 2017-01-01) § 2.196`; and `## 37 C.F.R. (eCFR 2017-01-14)
+  § 2.128`, which dates the TTAB briefing periods. The headings are deliberately not
   canonical refs, so cites of the current sections never match them.
 - Fetched 2026-10-23 from the eCFR point-in-time API
   (`https://www.ecfr.gov/api/versioner/v1/full/<date>/title-37.xml?section=<n>`):
@@ -395,14 +396,21 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   `baa801e7830e57f49aa20c0cf3d1953529bc932b0cd2290c348a99cacfe96a83`) and
   2017-01-14 (`ce4965c42d3239c42332c5d9636b35131b4e447259eb8b6a7fcf3ef1e578a17b`),
   § 2.196 at 2017-01-01
-  (`96acb388ef12e7b0b4ea61e5eb62a88cee212fbdab516167a218bfaeb012dd56`). The
+  (`96acb388ef12e7b0b4ea61e5eb62a88cee212fbdab516167a218bfaeb012dd56`), and
+  § 2.128 at 2017-01-14
+  (`9ec43724d120002679c5a2f68693211c33f5aaf1f445e0156c291e250a2e1d28`;
+  fetched 2026-10-23 with `part=2`, compressed). § 2.128's versions are
+  2017-01-01 and 2017-01-14 only; paragraph (a)(1) reads the same in both
+  (2017-01-01 file sha256
+  `3b05cab255163b5867057fc6a127e4cd511b888ae8885a47a19ee0ce1a6389a6`, not
+  stored), and as `cfr-37-part2.txt` vendors it today. The
   versions API (`/api/versioner/v1/versions/title-37.json?section=<n>`)
   lists § 2.119 versions on 2017-01-01, 2017-01-14 and 2018-11-30 (the last
   leaves (c) unchanged) and § 2.196 only on 2017-01-01, the start of the
   eCFR's point-in-time coverage: § 2.196 is unchanged since at least then.
   Each `<P>` paragraph, the `<HEAD>` heading and the `<CITA>` source note are
   one line each, tags stripped and entities decoded; no wording changed.
-- sha256 (this file): `ee74e8b29179176117c86a8e5789cf9ff7512e9a5bb9ced41fede0ce52f7e5ef`
+- sha256 (this file): `ea972783c810a458f4754ce2597e2f29f08235d9d5cdcb8c0e8d1cd2508688e4`
 
 ### `scotus-rules.txt` — Rules of the Supreme Court of the United States 13, 29 and 30 (adopted December 5, 2022, effective January 1, 2023)
 
@@ -430,3 +438,20 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   and 1127 cut at the `§ N (15 U.S.C. § NNNN)` heading lines (form feeds and
   running page headers removed). No wording changed. Used by the TTAB pack.
 - sha256 (this file): `9ea6b13b33cf0bb61a2a1ea337097c0981665d4d30a045fece2a77324dae6c4c`
+
+### `tbmp.txt` — Trademark Trial and Appeal Board Manual of Procedure §§ 112 and 113.05 (June 2026)
+
+- The TBMP sections the TTAB package's chained briefing periods (§ 112:
+  a period running from a prior due date counts from "the actual due date
+  ..., not the adjusted date under 37 C.F.R. § 2.196") and its service rule
+  (§ 113.05: no added time after service by mail) cite, one `## TBMP § N`
+  section each, the section's own heading as its first line.
+- Fetched 2026-10-23 from
+  `www.uspto.gov/sites/default/files/documents/tbmp-Master-June2026.pdf`
+  (sha256 `015cf2b665d74b25080321f67dad7ffebe412118f6f0460ec3530f4801639b8e`,
+  the digest `lit/ttab/Lit.toml` records for its `tbmp` source),
+  `pdftotext` (no `-layout`); running page headers and page numbers
+  removed and each section's NOTES (its footnoted authorities) omitted. No
+  wording changed. The TBMP binds no one: it restates the Board's practice
+  under 37 C.F.R. Part 2.
+- sha256 (this file): `84d70300d5b36ac966e3b65513b86726ebc5fc04c0b97218704a3c55f02a3e86`

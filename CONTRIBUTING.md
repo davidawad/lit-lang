@@ -96,72 +96,72 @@ GitHub Releases, the `ghcr.io/davidawad/litgraph` image, and the
 The tap update needs the `HOMEBREW_TAP_DEPLOY_KEY` repository secret, the
 private half of a write deploy key on `davidawad/homebrew-tap`.
 
-## Pack authoring guide
+## Procedure and matter authoring
 
-Packs (`packs/*.json`) are the highest-value place to contribute — they're
-also the place where a wrong number does the most damage, so the bar is
-specific. Read [docs/PACK_SCHEMA.md](docs/PACK_SCHEMA.md) first; this
-section is the rules distilled.
+Author procedure in the typed litigate language under `lit/<forum>/` and
+matter-specific facts and stakes in `.case` files under `cases/`. Read the
+[litigate tutorial](docs/litigate/TUTORIAL.md) for a working walkthrough and
+the [language spec](docs/litigate/SPEC.md) for the normative reference. The
+compiled files under `packs/` and `scenarios/` are outputs for litgraph; do
+not edit them by hand.
 
-1. **Target schema v2.** `schemaVersion: 2` packs carry authored terminal
-   `payoff`/`outcome`, a `sources` list, `roles`, and `attrs`. v1 packs
-   (the original civ-pro-the-gathering statecharts) still load and solve,
-   but every terminal falls back to the engine's label-heuristic payoff,
-   which is flagged on every response. Porting a v1 pack to v2 — adding
-   `sources`, authored payoffs, and outcome tags without changing any node,
-   edge, deadline, or existing probability — is a great first PR.
+### Change a forum's procedure
 
-2. **Every cite is traceable.** Every `authority`/`cite` string must
-   resolve to an entry in the pack's `sources` array (or be a bare public
-   citation an agent/reviewer can verify independently — a U.S.C. or CFR
-   section, a rule number). Each `sources` entry needs:
-   - `url` — the official, currently-live source (court/agency site,
-     Cornell LII, GovInfo — not a personal mirror or local file path).
-   - `sha256` — the hash of the document you actually read, so a future
-     re-download can be checked against what the pack was authored from.
-   - `asOf` — the date you captured it (rules change; this is how a reader
-     knows whether a cited deadline might be stale).
+Edit the relevant `.lit` module in `lit/<forum>/`. A package's `Lit.toml`
+declares its forum, dependencies, and sources. Cite the authority in the rule
+and make sure it resolves to the vendored text under `sources/` (or is a
+verifiable public citation). Do not invent rule numbers or deadlines; record
+uncertainty as `UNVERIFIED` in a note. Add a probability only when it has a
+stated basis and vintage; otherwise leave it as a hole for the engine to
+report rather than presenting a guess as data.
 
-   Never invent a rule number, statute section, or deadline. If you're not
-   sure a fact is right, mark it `UNVERIFIED` in the node/edge `note`
-   rather than asserting it.
+Check the package and run its inline tests before regenerating outputs:
 
-3. **Probabilities are optional, and only on non-`self` edges** (edges the
-   protagonist doesn't choose — court/agency/chance outcomes). Where you
-   author one, put the basis in `note`: a docket statistic with its vintage
-   ("PTAB institution rate, FY2024 AIA stats"), or explicitly "teaching
-   estimate" if it's a pedagogical guess, not data. **Unauthored beats
-   invented** — an omitted probability gets the engine's documented
-   residual-fill treatment and a warning; a made-up one looks authoritative
-   and isn't. Out-edges of a fully-authored chance node must sum to 1.
+```bash
+litigate check lit/frcp
+litigate test lit/frcp
+just lit-sync
+```
 
-4. **Cross-forum composition** goes in `packs/links.json`, not by editing a
-   terminal's payoff to fake a continuation. If a forum needs to remember
-   how it was entered (different remand routing, a perspective flip, a
-   payoff transform depending on origin — see `cafc@cofc` vs. `cafc@itc` in
-   the current links), add a named **instance** rather than branching
-   inside the shared pack.
+Replace `lit/frcp` with the package you changed. `litigate check lit cases`
+checks the full source tree. `just lit-sync` compiles the registered source
+packages and matters into `packs/*.json`, `packs/links.json`, generated clock
+fragments, and `scenarios/*.json`; commit generated outputs alongside their
+`.lit` or `.case` sources. `just lit-sync-check` verifies those outputs match
+the sources, and is part of `just ci`.
 
-5. **Validate before you open a PR:**
+When adding a new forum package or named matter, add its path to
+`lit_sync_inputs` in the root `justfile` so repository regeneration includes
+it. `lit/core` and `lit/examples` are library and teaching packages and do
+not emit packs. The shared `packs/clock/*.json` fragments and
+`packs/*-SOURCES-NOTES.md` files are hand-authored; generated clock fragments
+are produced by `just lit-sync` and must not be edited by hand.
 
-   ```bash
-   litgraph validate packs/<your-pack>.json   # parses? refs resolve? (exit 2 if not)
-   litgraph lint --packs <your-pack-id>       # content diagnostics
-   cargo test -q                              # unit + parity + your pack loads cleanly
-   ```
+### Change a matter
 
-   `validate` catches a malformed document (parsing is strict — an unknown
-   field is an error naming the valid ones) and unresolved references
-   before you even get to content quality. `lint` will name unsourced
-   packs, unquantified chance nodes, missing payoffs, and dead ends — fix
-   what it finds or explain in the PR why the gap is intentional (a
-   genuinely unauthored area of law, for instance).
+Edit or add a `.case` file in `cases/` for parties, event history, posture,
+known facts, stakes, and analysis settings. Procedure shared by matters
+belongs in `lit/`, not in the case or a generated pack. Use `litigate check
+lit cases` to typecheck rules and replay case histories, then run the case
+with `litigate run cases/<matter>.case --op solve` (or another supported
+operation) to inspect the result.
 
-6. **Don't change ids, deadlines, probabilities, or payoffs incidentally.**
-   If a PR's stated purpose is "add sources", the diff should be sources
-   (and `path`→`url`/`sha256` cleanups) — not renumbered deadlines or
-   rebalanced probabilities bundled in. Split those into a separate PR with
-   its own citation.
+### Review the generated change
+
+For a source change, regenerate and inspect the resulting diff before opening
+a PR:
+
+```bash
+just lit-sync
+just lit-diff
+just lit-sync-check
+just ci
+```
+
+`litigate diff lit/<forum> --against packs/<pack>.json` can also show the
+semantic difference for one package. Keep unrelated changes to ids,
+deadlines, probabilities, and outcomes out of the same change; cite and
+explain each substantive rule change in its `.lit` source.
 
 ## Getting started
 

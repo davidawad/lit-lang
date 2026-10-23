@@ -1,12 +1,13 @@
 //! `litigate run CASE --op OP`: compile the matter and the packages it uses,
 //! then hand litgraph a catalog of exactly that output and return its
 //! response verbatim as the result.
+use super::build::text;
 use super::check::checked_targets;
 use crate::out::{Failure, Outcome, Report};
 use litgraph::api::{handle, Catalog, Request};
 use litgraph::clock::ClockLibrary;
 use litigate_base::Profile;
-use litigate_lower::{render, Document, Lowerer, Options};
+use litigate_lower::Document;
 use serde_json::{json, Value};
 
 /// The op object for `--op`: a JSON object, or an op name.
@@ -56,38 +57,37 @@ pub fn run(case: &str, op: &str, links: bool, lib: &[String]) -> Outcome {
     let Some(lowered) = matter.lowered.as_ref().filter(|_| !report.has_errors()) else {
         return Ok(report);
     };
-    let hir = c.session.hir();
-    let used: Vec<&litigate_sema::hir::Package> = hir
-        .iter()
-        .copied()
-        .filter(|p| matter.packages.contains(&p.manifest.name) || p.manifest.links)
-        .collect();
-    let lowerer = Lowerer::new(&hir);
     let mut files = Vec::new();
     let mut clock = ClockLibrary::embedded().0.clone();
-    for pkg in used {
-        match lowerer.package(pkg, &Options::default()) {
-            Ok(out) => {
-                let (name, doc) = match &out.document {
-                    Document::Pack(pack) => (format!("{}.json", pack.id), render(pack)),
-                    Document::Links(links) => ("links.json".to_owned(), render(links)),
-                };
-                if let Some((fragment, _)) = &out.clock {
-                    clock = merged(clock, fragment);
-                }
-                match doc {
-                    Ok(text) => files.push((name, text)),
-                    Err(d) => report.diagnostics.push(*d),
-                }
-            }
-            Err(errors) => report.diagnostics.extend(errors),
+    // Verification lowered every package at the default dates already, and
+    // a clean check means each used one lowered.
+    let used = c
+        .session
+        .packages
+        .iter()
+        .zip(&c.verdicts)
+        .filter(|(p, _)| {
+            matter.packages.contains(&p.name)
+                || p.check.package.as_ref().is_some_and(|h| h.manifest.links)
+        })
+        .filter_map(|(_, (_, v))| v.lowered.as_ref());
+    for out in used {
+        files.push(match &out.document {
+            Document::Pack(pack) => (format!("{}.json", pack.id), text(pack)),
+            Document::Links(links) => ("links.json".to_owned(), text(links)),
+        });
+        if let Some((fragment, _)) = &out.clock {
+            clock = merged(clock, fragment);
         }
     }
-    if report.has_errors() {
-        return Ok(report);
-    }
-    let mut catalog =
-        Catalog::from_files("litigate".into(), files).map_err(|e| Failure::new(e.to_string()))?;
+    let request = serde_json::from_value::<Request>(
+        json!({ "scenario": lowered.scenario.id, "op": op, "links": links }),
+    )
+    .map_err(|e| Failure::new(format!("invalid litgraph op: {e}")));
+    // `from_files` records unreadable files in the catalog rather than failing.
+    let (mut catalog, request) = Catalog::from_files("litigate".into(), files)
+        .map_err(Failure::from)
+        .and_then(|catalog| Ok((catalog, request?)))?;
     catalog.clock = clock;
     let scenario_text = serde_json::to_string(&lowered.scenario).unwrap_or_default();
     let fingerprint = litgraph::api::fingerprint(scenario_text.as_bytes());
@@ -97,10 +97,6 @@ pub fn run(case: &str, op: &str, links: bool, lib: &[String]) -> Outcome {
         lowered.scenario.clone(),
         fingerprint,
     ));
-    let request: Request = serde_json::from_value(
-        json!({ "scenario": lowered.scenario.id, "op": op, "links": links }),
-    )
-    .map_err(|e| Failure::new(format!("invalid litgraph op: {e}")))?;
     let response = handle(&request, &catalog);
     report.failed = !response.ok;
     report.result = serde_json::to_value(&response).unwrap_or_default();

@@ -187,4 +187,35 @@ mod tests {
         assert_eq!(merged[0].status, S::Failed);
         assert_eq!(merged[1].examples, ["nothing was checked"]);
     }
+
+    #[test]
+    fn findings_take_the_worst_severity_with_sorted_examples() {
+        let at = |line: u32, severity: Severity| Diagnostic {
+            severity,
+            ..Diagnostic::error(
+                C::StaleLock,
+                Span {
+                    file: "Lit.lock".into(),
+                    line,
+                    col: 1,
+                    end_line: line,
+                    end_col: 1,
+                },
+                "stale",
+            )
+        };
+        let statuses =
+            |ds: &[Diagnostic]| -> Vec<S> { findings_of(ds).iter().map(|f| f.status).collect() };
+        assert_eq!(
+            statuses(&[at(2, Severity::Warning), at(1, Severity::Info)]),
+            [S::Warning]
+        );
+        assert_eq!(statuses(&[at(1, Severity::Info)]), [S::Passed]);
+        assert_eq!(statuses(&[]), []);
+        let found = findings_of(&[at(2, Severity::Error), at(1, Severity::Warning)]);
+        assert_eq!(
+            found[0].examples,
+            ["Lit.lock:1:1: L1007 stale", "Lit.lock:2:1: L1007 stale"]
+        );
+    }
 }

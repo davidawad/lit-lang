@@ -7,13 +7,6 @@ pub mod spec;
 use crate::cli::Cli;
 use litigate_verify::Obligation;
 
-/// Obligations `litigate-verify` reports that SPEC §7's table does not
-/// list: `(name, definition, codes)`, worded after SPEC §7's profile rules.
-const EXTRA_OBLIGATIONS: [(&str, &str, &str); 1] = [(
-    "rule-without-test",
-    "every deadline and counting rule is exercised by an inline `test` (a warning in `dev`, an error in `strict`)",
-    "L9001",
-)];
 use clap::CommandFactory;
 use litigate_base::DiagnosticCode;
 use schemars::JsonSchema;
@@ -263,13 +256,6 @@ const RESULTS: [(&str, &str); 14] = [
     ("fix", "{edits:[{code, span, replacement, applicability}], changed_files, skipped_overlapping, dry_run}"),
 ];
 
-fn word(s: litigate_base::Severity) -> String {
-    serde_json::to_value(s)
-        .ok()
-        .and_then(|v| v.as_str().map(str::to_owned))
-        .unwrap_or_default()
-}
-
 fn commands() -> Vec<CommandInfo> {
     Cli::command()
         .get_subcommands()
@@ -284,8 +270,7 @@ fn commands() -> Vec<CommandInfo> {
                         .get_long()
                         .map_or_else(|| a.get_id().to_string(), |l| format!("--{l}")),
                     required: a.is_required_set(),
-                    multiple: matches!(a.get_action(), clap::ArgAction::Append)
-                        || a.get_num_args().is_some_and(|n| n.max_values() > 1),
+                    multiple: matches!(a.get_action(), clap::ArgAction::Append),
                     help: a.get_help().map(ToString::to_string).unwrap_or_default(),
                     default: a
                         .get_default_values()
@@ -384,8 +369,8 @@ pub fn document() -> Describe {
                 code: c.as_str().to_owned(),
                 explain: c.explain().to_owned(),
                 phase: crate::cmd::phase(*c).to_owned(),
-                dev: word(c.severity(litigate_base::Profile::Dev)),
-                strict: word(c.severity(litigate_base::Profile::Strict)),
+                dev: crate::render::severity_word(c.severity(litigate_base::Profile::Dev)).to_owned(),
+                strict: crate::render::severity_word(c.severity(litigate_base::Profile::Strict)).to_owned(),
             })
             .collect(),
         obligations: Obligation::ALL
@@ -395,13 +380,7 @@ pub fn document() -> Describe {
                 let row = table
                     .iter()
                     .find(|(n, _, _)| *n == name)
-                    .map(|(_, d, c)| (d.clone(), c.clone()))
-                    .or_else(|| {
-                        EXTRA_OBLIGATIONS
-                            .iter()
-                            .find(|(n, _, _)| *n == name)
-                            .map(|(_, d, c)| ((*d).to_owned(), (*c).to_owned()))
-                    });
+                    .map(|(_, d, c)| (d.clone(), c.clone()));
                 let (definition, codes) = row.unwrap_or_default();
                 ObligationInfo {
                     definition,
@@ -447,11 +426,12 @@ mod tests {
     #[test]
     fn every_command_has_a_result_shape_and_every_obligation_a_row() {
         let d = document();
-        assert!(
-            d.commands.iter().all(|c| !c.result.is_empty()),
-            "{:?}",
-            d.commands.iter().map(|c| &c.name).collect::<Vec<_>>()
-        );
+        let shapeless: Vec<&str> = d
+            .commands
+            .iter()
+            .filter_map(|c| c.result.is_empty().then_some(c.name.as_str()))
+            .collect();
+        assert_eq!(shapeless, Vec::<&str>::new());
         assert_eq!(d.commands.len(), RESULTS.len());
         assert!(
             d.obligations.iter().all(|o| !o.definition.is_empty()),

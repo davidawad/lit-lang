@@ -90,3 +90,52 @@ pub fn codes(json: &Value) -> Vec<(String, String)> {
         })
         .unwrap_or_default()
 }
+
+/// A scratch workspace holding the worked example: `lit/examples` with
+/// `extra` appended to its module, and `cases/examples` with the matter
+/// text replaced by `case` when given (its `Lit.lock` regenerated).
+pub fn example(name: &str, extra: &str, case: Option<&str>) -> PathBuf {
+    let dir = scratch(name);
+    copy_dir(&repo().join("lit/examples"), &dir.join("lit/examples"));
+    copy_dir(&repo().join("cases/examples"), &dir.join("cases/examples"));
+    let module = dir.join("lit/examples/rule12.lit");
+    let text = std::fs::read_to_string(&module).unwrap();
+    std::fs::write(&module, format!("{text}\n{extra}\n")).unwrap();
+    if let Some(case) = case {
+        std::fs::write(dir.join("cases/examples/acme.case"), case).unwrap();
+    }
+    let lock = litigate_in(&dir, &["lock", "cases/examples"]);
+    assert_eq!(lock.code, 0, "{}{}", lock.stdout, lock.stderr);
+    dir
+}
+
+/// The worked example's matter text.
+pub fn acme() -> String {
+    std::fs::read_to_string(repo().join("cases/examples/acme.case")).unwrap()
+}
+
+/// Sets the Unix permission bits of `path`.
+#[cfg(unix)]
+pub fn chmod(path: &Path, mode: u32) {
+    use std::os::unix::fs::PermissionsExt;
+    std::fs::set_permissions(path, std::fs::Permissions::from_mode(mode)).unwrap();
+}
+
+/// `(code, severity, file, line)` of every diagnostic.
+pub fn located(json: &Value) -> Vec<(String, String, String, u64)> {
+    json["diagnostics"]
+        .as_array()
+        .map(|a| {
+            a.iter()
+                .map(|d| {
+                    (
+                        d["code"].as_str().unwrap_or_default().to_owned(),
+                        d["severity"].as_str().unwrap_or_default().to_owned(),
+                        d["span"]["file"].as_str().unwrap_or_default().to_owned(),
+                        d["span"]["line"].as_u64().unwrap_or_default(),
+                    )
+                })
+                .collect()
+        })
+        .unwrap_or_default()
+}

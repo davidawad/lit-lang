@@ -1,16 +1,8 @@
 //! `litigate explain CODE`: the long form of a diagnostic code.
 use crate::out::{Failure, Outcome, Report};
-use litigate_base::{DiagnosticCode, Profile, Severity};
+use crate::render::severity_word;
+use litigate_base::{DiagnosticCode, Profile};
 use serde_json::json;
-
-fn word(s: Severity) -> &'static str {
-    match s {
-        Severity::Error => "error",
-        Severity::Warning => "warning",
-        Severity::Info => "info",
-        Severity::Hint => "hint",
-    }
-}
 
 /// The phase a code's range belongs to (SPEC §9.1).
 #[must_use]
@@ -35,8 +27,8 @@ pub fn entry(code: DiagnosticCode) -> serde_json::Value {
         "explanation": code.explain(),
         "phase": phase(code),
         "severity": {
-            "dev": word(code.severity(Profile::Dev)),
-            "strict": word(code.severity(Profile::Strict)),
+            "dev": severity_word(code.severity(Profile::Dev)),
+            "strict": severity_word(code.severity(Profile::Strict)),
         },
     })
 }

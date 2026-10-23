@@ -56,21 +56,15 @@ pub fn diagnostic(d: &Diagnostic, sources: &[(String, String)], color: bool) -> 
         ));
     }
     let mut buffer = Vec::new();
-    let written = report
+    // Writing to a `Vec` cannot fail.
+    let _ = report
         .finish()
         .write((file, Source::from(text.clone())), &mut buffer);
-    match written {
-        Ok(()) => String::from_utf8_lossy(&buffer).into_owned(),
-        Err(_) => format!(
-            "{}[{}]: {}\n",
-            severity_word(d.severity),
-            d.code.as_str(),
-            d.message
-        ),
-    }
+    String::from_utf8_lossy(&buffer).into_owned()
 }
 
-fn severity_word(severity: Severity) -> &'static str {
+/// The lowercase severity name (`error`, `warning`, `info`, `hint`).
+pub(crate) fn severity_word(severity: Severity) -> &'static str {
     match severity {
         Severity::Error => "error",
         Severity::Warning => "warning",
@@ -129,5 +123,76 @@ mod tests {
         assert!(text.contains("module m"), "{text}");
         let bare = diagnostic(&d, &[], false);
         assert!(bare.starts_with("error[L1002]: no `m`"), "{bare}");
+    }
+
+    #[test]
+    fn every_severity_renders_its_notes_and_fixes() {
+        let span = Span {
+            file: "a.lit".into(),
+            line: 1,
+            col: 8,
+            end_line: 1,
+            end_col: 9,
+        };
+        let sources = [("a.lit".to_owned(), "module m\n".to_owned())];
+        for (severity, word) in [
+            (Severity::Error, "error"),
+            (Severity::Warning, "warning"),
+            (Severity::Info, "info"),
+            (Severity::Hint, "hint"),
+        ] {
+            assert_eq!(severity_word(severity), word);
+            let d = Diagnostic {
+                severity,
+                notes: vec![litigate_base::Note {
+                    span: None,
+                    message: "a note".into(),
+                }],
+                fixes: vec![litigate_base::Fix {
+                    span: span.clone(),
+                    replacement: "n".into(),
+                    applicability: litigate_base::Applicability::MachineApplicable,
+                }],
+                ..Diagnostic::error(DiagnosticCode::UnresolvedName, span.clone(), "no `m`")
+            };
+            insta::assert_snapshot!(
+                format!("diagnostic_{word}"),
+                diagnostic(&d, &sources, false)
+            );
+            let bare = diagnostic(&d, &[], false);
+            assert!(bare.starts_with(&format!("{word}[L1002]")), "{bare}");
+        }
+    }
+
+    #[test]
+    fn a_clean_envelope_prints_ok_and_its_result() {
+        let report = crate::out::Report::of(serde_json::json!({"answer": 42}));
+        let envelope = crate::out::envelope("explain", &report, 0.0);
+        insta::assert_snapshot!(human(&envelope, &[], true));
+    }
+
+    #[test]
+    fn a_failed_envelope_prints_no_result() {
+        let span = Span {
+            file: "a.lit".into(),
+            line: 1,
+            col: 1,
+            end_line: 1,
+            end_col: 2,
+        };
+        let report = crate::out::Report {
+            diagnostics: vec![Diagnostic::error(
+                DiagnosticCode::UnresolvedName,
+                span,
+                "no `m`",
+            )],
+            ..crate::out::Report::of(serde_json::json!({"answer": 42}))
+        };
+        let envelope = crate::out::envelope("check", &report, 0.0);
+        insta::assert_snapshot!(human(&envelope, &[], false), @r"
+        error[L1002]: no `m`
+          --> a.lit:1:1
+        litigate check: failed (1 error(s), 0 warning(s))
+        ");
     }
 }

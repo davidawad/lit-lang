@@ -1,0 +1,33 @@
+---
+source: crates/litigate-cli/src/describe/spec.rs
+expression: grammar_of(MARKDOWN)
+---
+[
+    Production {
+        name: "A_b",
+        rule: "\"x\"",
+        note: None,
+    },
+    Production {
+        name: "C",
+        rule: "\"y\"",
+        note: Some(
+            "note",
+        ),
+    },
+    Production {
+        name: "D",
+        rule: "\"z\" | \"w\"",
+        note: None,
+    },
+    Production {
+        name: "G",
+        rule: "\"g\"",
+        note: None,
+    },
+    Production {
+        name: "E",
+        rule: "\"no semicolon\"",
+        note: None,
+    },
+]

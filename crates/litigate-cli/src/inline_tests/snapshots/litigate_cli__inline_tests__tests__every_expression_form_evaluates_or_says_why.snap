@@ -1,0 +1,188 @@
+---
+source: crates/litigate-cli/src/inline_tests/tests.rs
+expression: results
+---
+[
+    (
+        "bool",
+        Ok(
+            Bool(true),
+        ),
+    ),
+    (
+        "number",
+        Ok(
+            String("3"),
+        ),
+    ),
+    (
+        "date",
+        Ok(
+            String("2025-01-02"),
+        ),
+    ),
+    (
+        "other literal",
+        Ok(
+            Object {
+                "kind": String("unit"),
+            },
+        ),
+    ),
+    (
+        "has_event",
+        Ok(
+            Bool(true),
+        ),
+    ),
+    (
+        "unknown call",
+        Err(
+            "`frobnicate(..)` cannot be evaluated in a test",
+        ),
+    ),
+    (
+        "deadline of a literal",
+        Err(
+            "`deadline` takes a deadline name",
+        ),
+    ),
+    (
+        "latest trigger",
+        Ok(
+            String("2025-03-24"),
+        ),
+    ),
+    (
+        "not a deadline",
+        Err(
+            "`nope` is not a deadline of this package",
+        ),
+    ),
+    (
+        "no trigger",
+        Err(
+            "no `given` event matches the trigger Served(complaint) of `answer-period`",
+        ),
+    ),
+    (
+        "no version",
+        Err(
+            "no version of `answer-period` is in force on 2000-01-01",
+        ),
+    ),
+    (
+        "bad date",
+        Err(
+            "invalid: month 13 out of range 1..=12",
+        ),
+    ),
+    (
+        "not",
+        Ok(
+            Bool(false),
+        ),
+    ),
+    (
+        "not a number",
+        Err(
+            "`!` needs a Bool",
+        ),
+    ),
+    (
+        "not an error",
+        Err(
+            "`frobnicate(..)` cannot be evaluated in a test",
+        ),
+    ),
+    (
+        "lhs error",
+        Err(
+            "`frobnicate(..)` cannot be evaluated in a test",
+        ),
+    ),
+    (
+        "rhs error",
+        Err(
+            "`frobnicate(..)` cannot be evaluated in a test",
+        ),
+    ),
+    (
+        "true and false",
+        Ok(
+            Bool(false),
+        ),
+    ),
+    (
+        "false and true",
+        Ok(
+            Bool(false),
+        ),
+    ),
+    (
+        "true or false",
+        Ok(
+            Bool(true),
+        ),
+    ),
+    (
+        "false or false",
+        Ok(
+            Bool(false),
+        ),
+    ),
+    (
+        "eq",
+        Ok(
+            Bool(true),
+        ),
+    ),
+    (
+        "ne",
+        Ok(
+            Bool(true),
+        ),
+    ),
+    (
+        "lt",
+        Ok(
+            Bool(true),
+        ),
+    ),
+    (
+        "le",
+        Ok(
+            Bool(false),
+        ),
+    ),
+    (
+        "gt",
+        Ok(
+            Bool(true),
+        ),
+    ),
+    (
+        "ge",
+        Ok(
+            Bool(true),
+        ),
+    ),
+    (
+        "unordered",
+        Err(
+            "ordering needs two dates or two numbers",
+        ),
+    ),
+    (
+        "arithmetic",
+        Err(
+            "`Add` is not a test assertion operator",
+        ),
+    ),
+    (
+        "other form",
+        Err(
+            "this expression form cannot be evaluated in a test",
+        ),
+    ),
+]

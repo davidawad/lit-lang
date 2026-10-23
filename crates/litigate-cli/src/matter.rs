@@ -269,4 +269,80 @@ mod tests {
         let d = lock(&case).err().map(|d| (d.code.as_str(), d.span.file.0));
         assert_eq!(d, Some(("L1007", "cases/Lit.lock".to_owned())));
     }
+
+    use crate::testkit::{self, ACME};
+
+    /// `matter::check` of the worked example (plus `extra`) and one matter
+    /// with `lock`, else the lock it needs.
+    fn checked(extra: &str, text: &str, lock: Option<&str>) -> CaseCheck {
+        let session = testkit::example_locked(extra, text, lock);
+        let all = session.hir();
+        let engine = EngineClock::lowered(&Lowerer::new(&all), &all).unwrap();
+        check(
+            &session,
+            &session.cases[0],
+            &engine,
+            &Clocks::new(&all),
+            Profile::Dev,
+        )
+    }
+
+    fn errors(c: &CaseCheck) -> Vec<(&str, &str)> {
+        c.diagnostics
+            .iter()
+            .filter(|d| is_error(d))
+            .map(|d| (d.code.as_str(), d.span.file.0.as_str()))
+            .collect()
+    }
+
+    #[test]
+    fn the_default_start_is_the_primary_package_start() {
+        let c = checked("", ACME, None);
+        let session = testkit::example_with("");
+        let all = session.hir();
+        let mut case = c.case.unwrap();
+        assert_eq!(
+            default_start(&all, &case).as_deref(),
+            Some("frcp-rule12-example::time-barred")
+        );
+        case.uses.clear();
+        assert_eq!(default_start(&all, &case), None);
+    }
+
+    #[test]
+    fn check_reports_an_unparseable_lock() {
+        let c = checked("", ACME, Some("version = 7\n"));
+        // The unreadable lock, and the matter it then leaves unpinned.
+        assert_eq!(
+            errors(&c),
+            [
+                ("L1007", "cases/examples/acme.case"),
+                ("L1007", "cases/examples/Lit.lock")
+            ]
+        );
+        assert!(c.lowered.is_none());
+    }
+
+    #[test]
+    fn a_matter_that_does_not_lower_has_no_scenario_or_schedule() {
+        let text = ACME.replace(
+            "analysis { params: { rate: 650, opp_rate: 550 } }",
+            "analysis { frobnicate: 1 }",
+        );
+        let c = checked("", &text, None);
+        assert_eq!(errors(&c), [("L4007", "cases/examples/acme.case")]);
+        assert!(c.lowered.is_none());
+        assert!(c.schedule.is_empty());
+    }
+
+    #[test]
+    fn a_deadline_the_engine_cannot_count_is_left_off_the_schedule() {
+        let c = checked(
+            "deadline in-business-days: 3.business_days from Served(complaint) counted_by frcp6",
+            ACME,
+            None,
+        );
+        let scheduled: Vec<&str> = c.schedule.iter().map(|s| s.deadline.as_str()).collect();
+        assert_eq!(scheduled, ["frcp-rule12-example::answer-period"]);
+    }
 }

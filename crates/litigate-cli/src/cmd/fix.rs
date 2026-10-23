@@ -56,6 +56,9 @@ pub fn apply(
     (out, applied, skipped)
 }
 
+/// One file's fixing: `(file, text, fixed text, applied fixes, skipped)`.
+type Fixed = (String, String, String, Vec<(DiagnosticCode, Fix)>, usize);
+
 /// `litigate fix`.
 pub fn fix(args: &Args) -> Outcome {
     let wanted = match &args.code {
@@ -83,24 +86,35 @@ pub fn fix(args: &Args) -> Outcome {
                 .push((d.code, f.clone()));
         }
     }
-    let sources: BTreeMap<String, String> = c.session.sources().into_iter().collect();
-    let mut edits = Vec::new();
-    let mut changed = Vec::new();
-    let mut skipped = 0;
-    for (file, fixes) in by_file {
-        let Some(text) = sources.get(&file) else {
-            continue;
-        };
-        let (fixed, applied, rest) = apply(text, fixes);
-        skipped += rest;
-        if fixed != *text {
-            if !args.dry_run {
-                write_atomic(&crate::ws::Session::real_path(&file), &fixed)?;
-            }
-            changed.push(file.clone());
+    // Fixes into files the session has no source for are dropped.
+    let fixed: Vec<Fixed> = c
+        .session
+        .sources()
+        .into_iter()
+        .collect::<BTreeMap<String, String>>()
+        .into_iter()
+        .filter_map(|(file, text)| {
+            let (out, applied, rest) = apply(&text, by_file.remove(&file)?);
+            Some((file, text, out, applied, rest))
+        })
+        .collect();
+    let skipped: usize = fixed.iter().map(|(.., rest)| rest).sum();
+    let changed: Vec<(&String, &String)> = fixed
+        .iter()
+        .filter(|(_, text, out, ..)| out != text)
+        .map(|(file, _, out, ..)| (file, out))
+        .collect();
+    if !args.dry_run {
+        for (file, out) in &changed {
+            write_atomic(&crate::ws::Session::real_path(file), out)?;
         }
-        edits.extend(applied.into_iter().map(|(code, f)| json!({"code": code, "span": f.span, "replacement": f.replacement, "applicability": f.applicability})));
     }
+    let changed: Vec<&String> = changed.into_iter().map(|(file, _)| file).collect();
+    let edits: Vec<serde_json::Value> = fixed
+        .iter()
+        .flat_map(|(.., applied, _)| applied)
+        .map(|(code, f)| json!({"code": code, "span": f.span, "replacement": f.replacement, "applicability": f.applicability}))
+        .collect();
     Ok(Report {
         result: json!({"edits": edits, "changed_files": changed, "skipped_overlapping": skipped, "dry_run": args.dry_run}),
         provenance: c.provenance(None, None),
@@ -141,6 +155,12 @@ mod tests {
         assert_eq!(text, "aZcd\nYf");
         assert_eq!(applied.len(), 2);
         assert_eq!(skipped, 1);
+    }
+
+    #[test]
+    fn a_repeated_fix_applies_once() {
+        let (text, applied, skipped) = apply("ab", vec![fix(1, 3, 3, "c"), fix(1, 3, 3, "c")]);
+        assert_eq!((text.as_str(), applied.len(), skipped), ("abc", 1, 1));
     }
 
     proptest! {

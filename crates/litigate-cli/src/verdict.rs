@@ -139,3 +139,47 @@ pub fn package(
         lowered,
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::testkit::{example_with, hir_with};
+
+    #[test]
+    fn a_spanless_anonymous_edge_is_reported_at_the_manifest() {
+        let mut pkg = hir_with("");
+        for decl in &mut pkg.modules[0].declarations {
+            if let hir::Declaration::Node(n) = decl {
+                n.edges.iter_mut().for_each(|e| e.span = None);
+            }
+        }
+        let found: Vec<(String, u32)> = anonymous_edges(&pkg)
+            .into_iter()
+            .map(|d| (d.span.file.0, d.span.line))
+            .collect();
+        assert_eq!(found, vec![("lit/examples/Lit.toml".to_owned(), 1); 2]);
+    }
+
+    #[test]
+    fn a_lowering_failure_is_a_package_diagnostic() {
+        let session = example_with(
+            "counting nourl cite XYZ 6(a)\n{\n  exclude_trigger_day\n  include_last_day\n  holidays federal-holidays\n}",
+        );
+        let clocks = Clocks::new(&session.hir());
+        let verdict = package(
+            &session,
+            &session.packages[0],
+            &clocks,
+            Profile::Dev,
+            &Options::default(),
+        );
+        assert!(verdict.lowered.is_none());
+        let codes: Vec<&str> = verdict
+            .diagnostics
+            .iter()
+            .filter(|d| d.severity == Severity::Error)
+            .map(|d| d.code.as_str())
+            .collect();
+        assert_eq!(codes, ["L6001"]);
+    }
+}

@@ -1,0 +1,25 @@
+---
+source: crates/litigate-cli/tests/cov_fix.rs
+expression: "maybe.json[\"result\"]"
+---
+{
+  "edits": [
+    {
+      "code": "L1002",
+      "span": {
+        "file": "lit/examples/rule12.lit",
+        "line": 94,
+        "col": 38,
+        "end_line": 94,
+        "end_col": 45
+      },
+      "replacement": "answered",
+      "applicability": "maybe_incorrect"
+    }
+  ],
+  "changed_files": [
+    "lit/examples/rule12.lit"
+  ],
+  "skipped_overlapping": 0,
+  "dry_run": false
+}

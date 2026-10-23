@@ -14,8 +14,11 @@ pub fn fmt(paths: &[String], check: bool) -> Outcome {
         let shown = ws::shown(path);
         let text = std::fs::read_to_string(path)
             .map_err(|e| crate::out::Failure::new(format!("{shown}: {e}")))?;
-        let Some(kind) = FileKind::from_path(path) else {
-            continue;
+        // Discovery finds `.case` matters and `.lit` modules only.
+        let kind = if targets.cases.binary_search(path).is_ok() {
+            FileKind::Case
+        } else {
+            FileKind::Lit
         };
         let file = FileId(shown.clone());
         report.sources.push((shown.clone(), text.clone()));

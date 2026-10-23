@@ -31,9 +31,11 @@ fn walk(dir: &Path, out: &mut Targets) -> std::io::Result<()> {
     if dir.join("Lit.toml").is_file() {
         out.packages.push(dir.to_path_buf());
     }
-    let mut entries: Vec<PathBuf> = std::fs::read_dir(dir)?
-        .map(|e| e.map(|e| e.path()))
-        .collect::<std::io::Result<_>>()?;
+    let mut entries: Vec<PathBuf> = std::fs::read_dir(dir).and_then(|listing| {
+        listing
+            .map(|e| e.map(|e| e.path()))
+            .collect::<std::io::Result<_>>()
+    })?;
     entries.sort();
     for path in entries {
         let name = path
@@ -101,10 +103,9 @@ pub fn discover(paths: &[String]) -> Result<Targets, Failure> {
                 out.files.push(path);
             }
             _ if name == "Lit.toml" => {
-                out.packages.push(
-                    path.parent()
-                        .map_or_else(|| PathBuf::from("."), Path::to_path_buf),
-                );
+                // An existing file always has a parent (`""` for a bare name).
+                out.packages
+                    .push(path.parent().map(Path::to_path_buf).unwrap_or_default());
             }
             _ => {
                 return Err(Failure::new(format!(

@@ -287,3 +287,6 @@ pub fn nowhere(pkg: &hir::Package) -> Span {
         end_col: 1,
     }
 }
+
+#[cfg(test)]
+mod tests;

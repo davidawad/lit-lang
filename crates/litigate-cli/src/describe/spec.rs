@@ -42,7 +42,7 @@ fn finish(name: &str, body: &str, out: &mut Vec<Production>) {
             note,
         });
         match starts_production(after) {
-            Some((next, body)) if !after.is_empty() => {
+            Some((next, body)) => {
                 next.clone_into(&mut name);
                 rest = body.trim();
             }
@@ -54,10 +54,15 @@ fn finish(name: &str, body: &str, out: &mut Vec<Production>) {
 /// Every production of every `ebnf` code block, in SPEC order.
 #[must_use]
 pub fn grammar() -> Vec<Production> {
+    grammar_of(SPEC)
+}
+
+/// Every production of every `ebnf` code block of markdown `spec`.
+fn grammar_of(spec: &str) -> Vec<Production> {
     let mut out = Vec::new();
     let mut current: Option<(String, String)> = None;
     let mut inside = false;
-    for line in SPEC.lines() {
+    for line in spec.lines() {
         if line.trim_start().starts_with("```") {
             inside = line.trim() == "```ebnf";
             if let Some((name, body)) = current.take() {
@@ -95,7 +100,12 @@ fn cells(row: &str) -> Vec<String> {
 /// The SPEC §6 type table.
 #[must_use]
 pub fn types() -> Vec<TypeInfo> {
-    let section = SPEC
+    types_of(SPEC)
+}
+
+/// The §6 type table of markdown `spec`.
+fn types_of(spec: &str) -> Vec<TypeInfo> {
+    let section = spec
         .split("\n## 6. ")
         .nth(1)
         .and_then(|s| s.split("\n## 7. ").next())
@@ -118,7 +128,12 @@ pub fn types() -> Vec<TypeInfo> {
 /// The SPEC §7 obligation table: `(obligation, definition, code)`.
 #[must_use]
 pub fn obligations() -> Vec<(String, String, String)> {
-    let section = SPEC
+    obligations_of(SPEC)
+}
+
+/// The §7 obligation table of markdown `spec`.
+fn obligations_of(spec: &str) -> Vec<(String, String, String)> {
+    let section = spec
         .split("\n## 7. ")
         .nth(1)
         .and_then(|s| s.split("\n## 8. ").next())
@@ -158,11 +173,8 @@ mod tests {
         ] {
             assert!(names.contains(&wanted), "{wanted} missing from {names:?}");
         }
-        assert!(
-            g.iter()
-                .all(|p| !p.rule.is_empty() && !p.rule.ends_with(';')),
-            "{g:?}"
-        );
+        assert!(g.iter().all(|p| !p.rule.is_empty()), "{g:?}");
+        assert!(g.iter().all(|p| !p.rule.ends_with(';')), "{g:?}");
         let date = g.iter().find(|p| p.name == "Date");
         assert_eq!(
             date.map(|p| p.rule.as_str()),
@@ -178,5 +190,40 @@ mod tests {
         assert!(t
             .iter()
             .any(|x| x.name == "`Bool`" && x.operations.contains("||")));
+    }
+
+    /// Every production shape: two on a line, a note, a continuation, a
+    /// stray `=` line, `;` without a space, a missing `;`, and blocks that
+    /// are not `ebnf`.
+    const MARKDOWN: &str = r#"
+```ebnf
+(* a comment before any production *)
+A_b = "x" ;   C = "y" ;  (* note *)
+D = "z"
+  | "w" ;
+= stray
+G = "g";
+E = "no semicolon"
+```
+
+```text
+F = "ignored" ;
+```
+"#;
+
+    #[test]
+    fn productions_of_every_shape() {
+        insta::assert_debug_snapshot!(grammar_of(MARKDOWN));
+    }
+
+    #[test]
+    fn table_rows_need_every_cell() {
+        let spec = "\n## 6. Types\n| `A` | `1` | `+` |\n| `B` | short |\n\n## 7. Obligations\n| `o` | def | L5001 |\n| `p` | short |\n\n## 8. End\n";
+        let types: Vec<String> = types_of(spec).into_iter().map(|t| t.name).collect();
+        assert_eq!(types, ["`A`"]);
+        assert_eq!(
+            obligations_of(spec),
+            [("o".to_owned(), "def".to_owned(), "L5001".to_owned())]
+        );
     }
 }

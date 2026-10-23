@@ -1,0 +1,48 @@
+---
+source: crates/litigate-cli/tests/cov_check.rs
+expression: located(&run.json)
+---
+[
+    (
+        "L1007",
+        "error",
+        "cases/examples/Lit.lock",
+        1,
+    ),
+    (
+        "L1007",
+        "error",
+        "cases/examples/acme.case",
+        2,
+    ),
+    (
+        "L9002",
+        "warning",
+        "lit/examples/rule12.lit",
+        72,
+    ),
+    (
+        "L9002",
+        "warning",
+        "lit/examples/rule12.lit",
+        73,
+    ),
+    (
+        "L9003",
+        "info",
+        "lit/examples/rule12.lit",
+        76,
+    ),
+    (
+        "L9003",
+        "info",
+        "lit/examples/rule12.lit",
+        77,
+    ),
+    (
+        "L9002",
+        "warning",
+        "lit/examples/rule12.lit",
+        79,
+    ),
+]

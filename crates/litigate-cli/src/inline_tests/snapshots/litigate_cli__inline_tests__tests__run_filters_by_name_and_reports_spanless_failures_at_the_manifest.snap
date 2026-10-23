@@ -1,0 +1,14 @@
+---
+source: crates/litigate-cli/src/inline_tests/tests.rs
+expression: found
+---
+[
+    (
+        "lit/examples/Lit.toml",
+        "test \"mail service adds three days\": `` does not hold: `frobnicate(..)` cannot be evaluated in a test",
+    ),
+    (
+        "lit/examples/Lit.toml",
+        "test \"mail service adds three days\": `` does not hold: found \"1\"",
+    ),
+]

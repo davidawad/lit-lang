@@ -1,0 +1,15 @@
+---
+source: crates/litigate-cli/src/render.rs
+expression: "diagnostic(&d, &sources, false)"
+---
+[L1002] Error: no `m`
+   ╭─[ a.lit:1:8 ]
+   │
+ 1 │ module m
+   │        ┬  
+   │        ╰── A referenced declaration or imported module could not be resolved
+   │ 
+   │ Help: replace 1:8-1:9 with `n` (MachineApplicable)
+   │ 
+   │ Note: a note
+───╯

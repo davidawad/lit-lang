@@ -205,6 +205,161 @@ pub fn due(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::testkit::hir_with;
+    use litigate_sema::hir::{ExprKind, Type, Value};
+
+    /// A version recorded after the package's corpus date (so it never
+    /// lowers) and one whose cite binds no source URL (L6001).
+    const EXTRA: &str = "
+counting late known_at 2026-01-01 cite FRCP 6(a)
+{
+  exclude_trigger_day
+  include_last_day
+  holidays federal-holidays
+}
+
+counting nourl cite XYZ 6(a)
+{
+  exclude_trigger_day
+  include_last_day
+  holidays federal-holidays
+}
+";
+    const PKG: &str = "frcp-rule12-example";
+
+    fn fixture() -> (hir::Package, Clocks) {
+        let pkg = hir_with(EXTRA);
+        let clocks = Clocks::new(&[&pkg]);
+        (pkg, clocks)
+    }
+
+    fn answer_period(pkg: &hir::Package) -> hir::Deadline {
+        hirx::deadlines(pkg, "answer-period")
+            .next()
+            .unwrap()
+            .clone()
+    }
+
+    #[test]
+    fn every_declared_version_lowers_or_says_why() {
+        let (_, clocks) = fixture();
+        let found: Vec<(&str, Result<usize, &str>)> = clocks
+            .versions
+            .iter()
+            .map(|v| {
+                (
+                    v.decl.meta.id.as_str(),
+                    v.fragment
+                        .as_ref()
+                        .map(|l| l.counting_rules.len())
+                        .map_err(String::as_str),
+                )
+            })
+            .collect();
+        assert_eq!(found.len(), 3, "{found:?}");
+        assert_eq!(found[0], ("frcp6", Ok(1)));
+        assert_eq!(
+            found[1],
+            ("late", Err("counting rule `late` does not lower"))
+        );
+        assert_eq!(found[2].0, "nourl");
+        assert!(
+            found[2]
+                .1
+                .is_err_and(|e| e.starts_with("L6001: counting rule `nourl` needs a `cite`")),
+            "{found:?}"
+        );
+    }
+
+    #[test]
+    fn version_selection_by_owner_and_date() {
+        let (_, mut clocks) = fixture();
+        assert!(matches!(
+            Clocks::default().version(PKG, "frcp6", "2025-01-01"),
+            Ok(None)
+        ));
+        let other = clocks.version("another-package", "frcp6", "2025-01-01");
+        assert_eq!(
+            other.map(|v| v.map(|v| v.package.clone())),
+            Ok(Some(PKG.to_owned()))
+        );
+        assert_eq!(
+            clocks.version(PKG, "frcp6", "2000-01-01").map(|_| ()),
+            Err(format!(
+                "no version of counting rule `frcp6` ({PKG}) is in force on 2000-01-01"
+            ))
+        );
+        clocks.versions.push(clocks.versions[0].clone());
+        assert_eq!(
+            clocks.version(PKG, "frcp6", "2025-01-01").map(|_| ()),
+            Err(format!(
+                "2 versions of counting rule `frcp6` ({PKG}) are in force on 2025-01-01"
+            ))
+        );
+    }
+
+    #[test]
+    fn only_calls_carry_a_service_method() {
+        let literal = Expr {
+            ty: Type::Unit,
+            kind: ExprKind::Literal {
+                value: Value::Variant("Mail".into()),
+            },
+            span: None,
+        };
+        assert_eq!(method_of(&literal, None), None);
+    }
+
+    #[test]
+    fn due_counts_under_the_version_in_force() {
+        let (pkg, clocks) = fixture();
+        let d = answer_period(&pkg);
+        let date = |d: &hir::Deadline| {
+            due(&clocks, &pkg, d, "2025-03-03", None).map(|d| d.computed.due_date)
+        };
+        assert_eq!(date(&d), Ok("2025-03-24".to_owned()));
+        let mut court = d.clone();
+        court.unit = DayUnit::Court;
+        assert_eq!(date(&court), Ok("2025-04-01".to_owned()));
+        let mut before = d;
+        before.direction = hir::Direction::Backward;
+        assert_eq!(date(&before), Ok("2025-02-10".to_owned()));
+    }
+
+    #[test]
+    fn due_explains_every_refusal() {
+        let (pkg, clocks) = fixture();
+        let base = answer_period(&pkg);
+        let with = |f: &dyn Fn(&mut hir::Deadline)| {
+            let mut d = base.clone();
+            f(&mut d);
+            d
+        };
+        let refusal = |clocks: &Clocks, d: &hir::Deadline, trigger: &str| {
+            due(clocks, &pkg, d, trigger, None).unwrap_err()
+        };
+        let business = with(&|d| d.unit = DayUnit::Business);
+        assert_eq!(
+            refusal(&clocks, &business, "2025-03-03"),
+            "`answer-period` counts business days, which have no engine lowering"
+        );
+        assert!(refusal(&clocks, &base, "2000-01-01").starts_with("no version of counting rule"));
+        assert!(!refusal(&clocks, &base, "2025-13-45").is_empty());
+        let huge = with(&|d| d.amount = u64::MAX);
+        assert!(!refusal(&clocks, &huge, "2025-03-03").is_empty());
+        let unlowered = with(&|d| d.counting = "nourl".into());
+        assert!(refusal(&clocks, &unlowered, "2025-03-03").starts_with("L6001"));
+        let unknown = with(&|d| d.counting = "no-such-rule".into());
+        assert!(!refusal(&Clocks::default(), &unknown, "2025-03-03").is_empty());
+        let too_short = with(&|d| {
+            d.counting = "itc210".into();
+            d.amount = 0;
+        });
+        assert_eq!(
+            refusal(&Clocks::default(), &too_short, "2025-03-03"),
+            "invalid: 19 CFR 201.14(a) periods must be at least 1 day"
+        );
+    }
 
     #[test]
     fn methods_are_kebab_case() {

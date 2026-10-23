@@ -26,6 +26,8 @@ pub mod prov;
 mod render;
 pub mod report;
 pub mod span;
+#[cfg(test)]
+mod testkit;
 pub mod verdict;
 pub mod ws;
 
@@ -36,13 +38,23 @@ use cli::{Cli, Format};
 use out::Printed;
 use std::ffi::OsString;
 use std::io::{IsTerminal, Write};
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::process::{Command, ExitCode};
 use std::time::Instant;
 
 /// Parses `args` (including the program name), runs the command, and
 /// returns what to print. Never panics on bad input.
 pub fn execute<I, T>(args: I) -> Printed
+where
+    I: IntoIterator<Item = T>,
+    T: Into<OsString> + Clone,
+{
+    execute_on(args, std::io::stdout().is_terminal())
+}
+
+/// [`execute`] for a standard output that is (`tty`) or is not a
+/// terminal: a terminal defaults to colored human output.
+fn execute_on<I, T>(args: I, tty: bool) -> Printed
 where
     I: IntoIterator<Item = T>,
     T: Into<OsString> + Clone,
@@ -70,7 +82,6 @@ where
             };
         }
     };
-    let tty = std::io::stdout().is_terminal();
     let format = cli
         .format
         .unwrap_or(if tty { Format::Human } else { Format::Json });
@@ -106,25 +117,111 @@ fn lsp(args: &[OsString]) -> ExitCode {
         eprintln!("usage: litigate lsp --stdio");
         return ExitCode::from(1);
     }
+    ExitCode::from(serve(&lsp_program(std::env::current_exe().ok().as_deref())))
+}
+
+/// The `litigate-lsp` beside `exe` when it exists, else the bare name
+/// (looked up on `PATH`).
+fn lsp_program(exe: Option<&Path>) -> PathBuf {
     let name = format!("litigate-lsp{}", std::env::consts::EXE_SUFFIX);
-    let program = std::env::current_exe()
-        .ok()
-        .and_then(|exe| Some(exe.parent()?.join(&name)))
+    exe.and_then(Path::parent)
+        .map(|dir| dir.join(&name))
         .filter(|path| path.is_file())
-        .unwrap_or_else(|| PathBuf::from(&name));
-    match Command::new(&program).arg("--stdio").status() {
-        Ok(status) => ExitCode::from(
-            status
-                .code()
-                .and_then(|c| u8::try_from(c).ok())
-                .unwrap_or(1),
-        ),
+        .unwrap_or_else(|| PathBuf::from(&name))
+}
+
+/// Runs `program --stdio` with stdio inherited; its exit code (1 when it
+/// cannot start or dies by a signal).
+fn serve(program: &Path) -> u8 {
+    match Command::new(program).arg("--stdio").status() {
+        Ok(status) => status
+            .code()
+            .and_then(|c| u8::try_from(c).ok())
+            .unwrap_or(1),
         Err(error) => {
             eprintln!(
                 "litigate lsp: cannot run `{}`: {error} (install it with `cargo install --path crates/litigate-lsp`)",
                 program.display()
             );
-            ExitCode::from(1)
+            1
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// Every call through one instantiation of the generic `execute_on`.
+    fn run(args: &[&str], tty: bool) -> Printed {
+        execute_on(args.to_vec(), tty)
+    }
+
+    #[test]
+    fn a_terminal_defaults_to_human_output() {
+        let printed = run(&["litigate", "explain", "L3004"], true);
+        assert_eq!(printed.code, 0);
+        assert!(
+            printed.stdout.starts_with("litigate explain: ok"),
+            "{}",
+            printed.stdout
+        );
+        assert!(printed.stderr.is_empty());
+    }
+
+    #[test]
+    fn a_pipe_defaults_to_json() {
+        let printed = run(&["litigate", "explain", "L3004"], false);
+        let envelope: serde_json::Value = serde_json::from_str(&printed.stdout).unwrap_or_default();
+        assert_eq!(envelope["result"]["code"], "L3004");
+    }
+
+    #[test]
+    fn help_goes_to_stdout_and_usage_errors_to_stderr() {
+        let help = run(&["litigate", "--help"], false);
+        assert_eq!((help.code, help.stderr.as_str()), (0, ""));
+        assert!(help.stdout.contains("Usage"), "{}", help.stdout);
+        let bad = run(&["litigate", "frobnicate"], false);
+        assert_eq!((bad.code, bad.stdout.as_str()), (1, ""));
+        assert!(bad.stderr.contains("frobnicate"), "{}", bad.stderr);
+    }
+
+    fn scratch(name: &str) -> PathBuf {
+        let dir = std::env::temp_dir().join(format!("litigate-lib-{name}-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        std::fs::create_dir_all(&dir).unwrap();
+        dir
+    }
+
+    #[test]
+    fn the_server_beside_the_binary_wins_over_path() {
+        let dir = scratch("beside");
+        let bare = PathBuf::from(format!("litigate-lsp{}", std::env::consts::EXE_SUFFIX));
+        let exe = dir.join("litigate");
+        assert_eq!(lsp_program(Some(&exe)), bare);
+        assert_eq!(lsp_program(None), bare);
+        assert_eq!(lsp_program(Some(Path::new("/"))), bare);
+        std::fs::write(dir.join(&bare), "").unwrap();
+        assert_eq!(lsp_program(Some(&exe)), dir.join(&bare));
+    }
+
+    #[cfg(unix)]
+    fn script(path: &Path, body: &str) {
+        use std::os::unix::fs::PermissionsExt;
+        std::fs::write(path, format!("#!/bin/sh\n{body}\n")).unwrap();
+        std::fs::set_permissions(path, std::fs::Permissions::from_mode(0o755)).unwrap();
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn serve_passes_the_server_exit_code_through() {
+        let dir = scratch("serve");
+        let exits = dir.join("exits");
+        script(&exits, "exit 7");
+        assert_eq!(serve(&exits), 7);
+        let killed = dir.join("killed");
+        script(&killed, "kill -9 $$");
+        assert_eq!(serve(&killed), 1);
+        assert_eq!(serve(&dir.join("missing")), 1);
     }
 }

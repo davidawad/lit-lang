@@ -11,6 +11,7 @@ use crate::out::{Failure, Outcome, Report};
 use litigate_base::{Diagnostic, Profile, Severity};
 use litigate_lower::{render, render_scenario, Document, LoweredPackage, Lowerer, Options};
 use litigate_sema::pkg::manifest::is_kebab;
+use serde::Serialize;
 use serde_json::{json, Value};
 use sha2::{Digest, Sha256};
 use std::collections::BTreeMap;
@@ -44,30 +45,35 @@ pub fn sha256(bytes: &[u8]) -> String {
 /// One file to write: `(relative path, contents)`.
 pub type Output = (String, String);
 
+/// [`render`]'s byte-deterministic JSON of a generated document. These
+/// are derive-`Serialize` trees with string map keys, which always
+/// serialize, so the text is never empty in practice.
+pub(crate) fn text<T: Serialize>(value: &T) -> String {
+    render(value).unwrap_or_default()
+}
+
 /// Every generated document of a package, by relative output path.
-fn package_outputs(lowered: &LoweredPackage) -> Result<Vec<Output>, Box<Diagnostic>> {
-    let mut out = Vec::new();
+fn package_outputs(lowered: &LoweredPackage) -> Vec<Output> {
+    let map = text(&lowered.source_map);
     match &lowered.document {
         Document::Pack(pack) => {
-            out.push((format!("packs/{}.json", pack.id), render(pack)?));
-            out.push((
-                format!("packs/{}.map.json", pack.id),
-                render(&lowered.source_map)?,
-            ));
-            if let Some((clock, map)) = &lowered.clock {
-                out.push((format!("packs/clock/{}.json", pack.id), render(clock)?));
-                out.push((format!("packs/clock/{}.map.json", pack.id), render(map)?));
-            }
+            let mut out = vec![
+                (format!("packs/{}.json", pack.id), text(pack)),
+                (format!("packs/{}.map.json", pack.id), map),
+            ];
+            out.extend(lowered.clock.iter().flat_map(|(clock, clock_map)| {
+                [
+                    (format!("packs/clock/{}.json", pack.id), text(clock)),
+                    (format!("packs/clock/{}.map.json", pack.id), text(clock_map)),
+                ]
+            }));
+            out
         }
-        Document::Links(links) => {
-            out.push(("packs/links.json".to_owned(), render(links)?));
-            out.push((
-                "packs/links.map.json".to_owned(),
-                render(&lowered.source_map)?,
-            ));
-        }
+        Document::Links(links) => vec![
+            ("packs/links.json".to_owned(), text(links)),
+            ("packs/links.map.json".to_owned(), map),
+        ],
     }
-    Ok(out)
 }
 
 /// The litigatable document and its content hash.
@@ -76,7 +82,7 @@ fn litigatable(
     index: usize,
     lowered: &LoweredPackage,
     options: &Options,
-) -> Result<(Value, String), Box<Diagnostic>> {
+) -> (Value, String) {
     let pkg = &c.session.packages[index];
     let (_, verdict) = &c.verdicts[index];
     let mut doc = json!({
@@ -93,9 +99,9 @@ fn litigatable(
         },
         "source_map": lowered.source_map,
     });
-    let hash = sha256(render(&doc)?.as_bytes());
+    let hash = sha256(text(&doc).as_bytes());
     doc["content_hash"] = Value::String(hash.clone());
-    Ok((doc, hash))
+    (doc, hash)
 }
 
 /// Everything a build writes, and the litigatable hashes.
@@ -135,38 +141,25 @@ pub fn lower_all(c: &Checked, options: &Options) -> Built {
                 continue;
             }
         };
-        let written = package_outputs(&lowered).and_then(|files| {
-            let (doc, hash) = litigatable(c, index, &lowered, options)?;
-            Ok((files, doc, hash))
-        });
-        match written {
-            Ok((files, doc, hash)) => {
-                let path = format!("litigatables/{}.litigatable.json", pkg.name);
-                match render(&doc) {
-                    Ok(text) => built.files.push((path.clone(), text)),
-                    Err(d) => built.diagnostics.push(*d),
-                }
-                built.files.extend(files);
-                built.litigatables.push((pkg.name.clone(), path, hash));
-            }
-            Err(d) => built.diagnostics.push(*d),
-        }
+        let (doc, hash) = litigatable(c, index, &lowered, options);
+        let path = format!("litigatables/{}.litigatable.json", pkg.name);
+        built.files.push((path.clone(), text(&doc)));
+        built.files.extend(package_outputs(&lowered));
+        built.litigatables.push((pkg.name.clone(), path, hash));
     }
     for case in &c.cases {
         let Some(lowered) = &case.lowered else {
             continue;
         };
         let id = &lowered.scenario.id;
-        match (
-            render_scenario(&lowered.scenario),
-            render(&lowered.source_map),
-        ) {
-            (Ok(doc), Ok(map)) => {
-                built.files.push((format!("scenarios/{id}.json"), doc));
-                built.files.push((format!("scenarios/{id}.map.json"), map));
-            }
-            (Err(d), _) | (_, Err(d)) => built.diagnostics.push(*d),
-        }
+        built.files.push((
+            format!("scenarios/{id}.json"),
+            render_scenario(&lowered.scenario).unwrap_or_default(),
+        ));
+        built.files.push((
+            format!("scenarios/{id}.map.json"),
+            text(&lowered.source_map),
+        ));
     }
     built.files.sort();
     built
@@ -332,7 +325,91 @@ pub fn build(args: &Args) -> Outcome {
 
 #[cfg(test)]
 mod tests {
-    use super::{pack_file_map, rename_packs, Output};
+    use super::*;
+    use crate::testkit::{self, ACME};
+    use std::path::PathBuf;
+
+    fn scratch(name: &str) -> PathBuf {
+        let dir =
+            std::env::temp_dir().join(format!("litigate-build-{name}-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        std::fs::create_dir_all(&dir).unwrap();
+        dir
+    }
+
+    #[test]
+    fn write_atomic_creates_directories_and_names_each_failing_step() {
+        let dir = scratch("write");
+        let nested = dir.join("a/b/c.json");
+        assert_eq!(write_atomic(&nested, "text"), Ok(()));
+        assert_eq!(std::fs::read_to_string(&nested).unwrap(), "text");
+        let failure = |path: &Path| write_atomic(path, "text").unwrap_err().0;
+        std::fs::write(dir.join("file"), "").unwrap();
+        let shown = dir.join("file").display().to_string();
+        assert!(failure(&dir.join("file/x.json")).starts_with(&format!("{shown}: ")));
+        std::fs::create_dir_all(dir.join("t.litigate-tmp")).unwrap();
+        let shown = dir.join("t.litigate-tmp").display().to_string();
+        assert!(failure(&dir.join("t.json")).starts_with(&format!("{shown}: ")));
+        std::fs::create_dir_all(dir.join("d/inner")).unwrap();
+        let shown = dir.join("d").display().to_string();
+        assert!(failure(&dir.join("d")).starts_with(&format!("{shown}: ")));
+        assert!(failure(Path::new("/")).starts_with("/: "));
+    }
+
+    fn lowered(extra: &str, text: &str) -> Built {
+        let session = testkit::example_locked(extra, text, None);
+        lower_all(
+            &super::super::check::check_session(session, Profile::Dev, None),
+            &Options::default(),
+        )
+    }
+
+    #[test]
+    fn a_package_that_does_not_lower_still_lets_its_matters_build() {
+        let built = lowered(
+            "counting nourl cite XYZ 6(a)\n{\n  exclude_trigger_day\n  include_last_day\n  holidays federal-holidays\n}",
+            ACME,
+        );
+        let codes: Vec<&str> = built.diagnostics.iter().map(|d| d.code.as_str()).collect();
+        assert_eq!(codes, ["L6001"]);
+        let files: Vec<&str> = built.files.iter().map(|(p, _)| p.as_str()).collect();
+        assert_eq!(
+            files,
+            [
+                "scenarios/acme-v-widget.json",
+                "scenarios/acme-v-widget.map.json"
+            ]
+        );
+        assert!(built.litigatables.is_empty());
+    }
+
+    #[test]
+    fn a_clean_package_writes_its_documents_and_litigatable() {
+        for (profile, name) in [(Profile::Dev, "dev"), (Profile::Strict, "strict")] {
+            let session = testkit::example_locked("", ACME, None);
+            let checked = super::super::check::check_session(session, profile, None);
+            let built = lower_all(&checked, &Options::default());
+            let files: Vec<&str> = built.files.iter().map(|(p, _)| p.as_str()).collect();
+            insta::assert_debug_snapshot!("clean_build_files", files);
+            let (_, litigatable) = &built.files[0];
+            let doc: Value = serde_json::from_str(litigatable).unwrap();
+            assert_eq!(doc["verification"]["profile"], name);
+            assert_eq!(
+                doc["content_hash"].as_str(),
+                Some(built.litigatables[0].2.as_str())
+            );
+        }
+    }
+
+    #[test]
+    fn packages_and_matters_that_failed_their_check_are_skipped() {
+        let built = lowered(
+            "state broken: \"Broken\" { _ \"Nowhere\" -> nowhere }",
+            ACME,
+        );
+        assert!(built.files.is_empty());
+        assert!(built.diagnostics.is_empty());
+    }
 
     fn specs(list: &[&str]) -> Vec<String> {
         list.iter().map(|s| (*s).to_owned()).collect()

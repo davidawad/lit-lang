@@ -59,6 +59,12 @@ impl From<std::io::Error> for Failure {
     }
 }
 
+impl From<litgraph::Error> for Failure {
+    fn from(error: litgraph::Error) -> Self {
+        Self(error.to_string())
+    }
+}
+
 /// Command outcome.
 pub type Outcome = Result<Report, Failure>;
 
@@ -189,6 +195,14 @@ mod tests {
             sorted.sort();
             prop_assert_eq!(keys, sorted);
         }
+    }
+
+    #[test]
+    fn io_and_engine_errors_become_their_messages() {
+        let io = std::io::Error::new(std::io::ErrorKind::NotFound, "gone");
+        assert_eq!(Failure::from(io), Failure::new("gone"));
+        let engine = litgraph::Error::Invalid("bad pack".into());
+        assert_eq!(Failure::from(engine), Failure::new("invalid: bad pack"));
     }
 
     #[test]

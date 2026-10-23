@@ -210,4 +210,108 @@ mod tests {
         assert_eq!(event_text(&call("m.Served", &["D::x"])), "Served(x)");
         assert_eq!(local("p::m.x"), "x");
     }
+
+    fn expr(kind: ExprKind) -> Expr {
+        Expr {
+            ty: Type::Unit,
+            kind,
+            span: None,
+        }
+    }
+
+    #[test]
+    fn wildcards_refs_and_literals_as_event_arguments() {
+        let wildcard = call("Served", &["_"]);
+        assert!(matches(&wildcard, &call("Served", &["D::x", "M::Mail"])));
+        let event = expr(ExprKind::Call {
+            callee: "Filed".into(),
+            args: vec![
+                expr(ExprKind::Ref {
+                    target: "m.party".into(),
+                }),
+                expr(ExprKind::Literal {
+                    value: Value::Date("2025-01-02".into()),
+                }),
+            ],
+        });
+        insta::assert_snapshot!(event_text(&event), @r#"Filed(party, {"expr":"literal","value":{"kind":"date","value":"2025-01-02"}})"#);
+        let literal = variant("D::x");
+        assert_eq!(event_parts(&literal), None);
+        assert_eq!(event_text(&literal), "");
+        assert!(!matches(&literal, &event));
+    }
+
+    #[test]
+    fn versions_are_recorded_by_their_known_at() {
+        let pkg = crate::testkit::hir_with("");
+        let meta = &deadlines(&pkg, "answer-period").next().unwrap().meta;
+        assert!(in_force(meta, "2025-03-03", None));
+        assert!(in_force(meta, "2025-03-03", Some(&meta.effective.known_at)));
+        assert!(!in_force(meta, "2025-03-03", Some("1900-01-01")));
+        assert!(nodes_at(&pkg, Some("2000-01-01")).is_empty());
+        assert_eq!(
+            nodes_at(&pkg, None).len(),
+            nodes_at(&pkg, Some("2025-03-03")).len()
+        );
+    }
+
+    #[test]
+    fn the_deadline_in_force_is_unique() {
+        let mut pkg = crate::testkit::hir_with("");
+        let name = "frcp-rule12-example";
+        assert_eq!(
+            deadline_at(&pkg, "nope", "2025-03-03").map(|_| ()),
+            Err(format!("`nope` is not a deadline of `{name}`"))
+        );
+        assert_eq!(
+            deadline_at(&pkg, "answer-period", "2000-01-01").map(|_| ()),
+            Err("no version of `answer-period` is in force on 2000-01-01".to_owned())
+        );
+        let twice = Declaration::Deadline(deadlines(&pkg, "answer-period").next().unwrap().clone());
+        pkg.modules[0].declarations.push(twice);
+        assert_eq!(
+            deadline_at(&pkg, "answer-period", "2025-03-03").map(|_| ()),
+            Err("2 versions of `answer-period` are in force on 2025-03-03".to_owned())
+        );
+    }
+
+    #[test]
+    fn counting_rules_by_local_name() {
+        let pkg = crate::testkit::hir_with(
+            "counting later cite FRCP 6(a)\n{\n  exclude_trigger_day\n  include_last_day\n  holidays federal-holidays\n}",
+        );
+        assert_eq!(
+            counting(&pkg, "m.later").map(|c| c.meta.id.as_str()),
+            Some("later")
+        );
+        assert_eq!(
+            counting(&pkg, "frcp6").map(|c| c.meta.id.as_str()),
+            Some("frcp6")
+        );
+        assert!(counting(&pkg, "none").is_none());
+    }
+
+    #[test]
+    fn every_declaration_kind_and_id() {
+        let pkg = crate::testkit::hir_with(
+            "default dd when 1 < 2 => 1\nexception ee undercuts dd when 2 < 3",
+        );
+        let kinds: Vec<(&str, Option<String>)> = declarations(&pkg)
+            .map(|d| (decl_kind(d), decl_id(d)))
+            .collect();
+        insta::assert_debug_snapshot!(kinds);
+        let targets = crate::ws::discover(&["../../lit/links".to_owned()]).unwrap();
+        let session = crate::ws::Session::load(&targets, &[]).unwrap();
+        let mut library: Vec<&str> = session
+            .hir()
+            .into_iter()
+            .flat_map(declarations)
+            .map(decl_kind)
+            .collect();
+        library.sort_unstable();
+        library.dedup();
+        for kind in ["instance", "link", "transition", "type"] {
+            assert!(library.contains(&kind), "{kind} not in {library:?}");
+        }
+    }
 }

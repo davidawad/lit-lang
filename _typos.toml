@@ -38,6 +38,8 @@ extend-exclude = [
     "sources/*.txt",  # vendored L0 primary-law text (see sources/PROVENANCE.md); PDF/HTML
                        # extraction preserves the original's line-wrap hyphenation verbatim
                        # ("Represen-\ntation"), which reads as typos but isn't ours to fix
+    "sources/change-corpus/",  # vendored primary-source rule histories and rulings
+                               # (OCR/PDF text), same reason as sources/*.txt
     # litigate tests and snapshots misspell names on purpose to exercise
     # did-you-mean suggestions and unresolved-name diagnostics.
     "crates/litigate-*/tests/",

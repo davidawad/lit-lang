@@ -126,7 +126,7 @@ const TOOLS: &[Spec] = &[
     Spec {
         name: "litigate_build",
         command: "build",
-        doc: "Check, then write litigatables and lowered pack/links/scenario JSON under `out`. Writes files; to regenerate the repository's `packs/` and `scenarios/`, run `just lit-sync` instead.",
+        doc: "Check, then write litigatables and lowered pack/links/scenario JSON under `out`. Writes files; the repository's own packs and scenarios are built by the `litgraph-packs` crate (`just lit-sync` writes a copy to target/lit-build/).",
         args: &[
             PATHS,
             arg(

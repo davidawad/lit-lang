@@ -9,6 +9,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Generated files are build outputs, not committed** (lg-flu.31). Two
+  beads changing different `lit/` packages used to conflict on
+  `packs/*.json`, `packs/links.json`, `packs/clock/mpep-prosecution.json`,
+  `scenarios/*.json` and the TypeScript bindings, which cost an
+  integration job per parallel change. The new `litgraph-packs` crate runs
+  `litigate build` (the arguments in `crates/litgraph-packs/build.args`,
+  formerly the justfile's `lit_sync_inputs`/`lit_sync_names`) over an
+  in-memory `lit/` and `cases/` in its build script and embeds the result
+  (`PACKS`, `SCENARIOS`, `PACKS_DIR`, `SCENARIOS_DIR`, `catalog()`). The
+  files are gitignored. `just lit-sync` regenerates the `Lit.lock` files and
+  writes the build to `target/lit-build/`. `just lit-sync-check` fails on a
+  stale `Lit.lock` or a committed generated file. `just ts-gen` output is
+  gitignored, `ts-build` regenerates it, and `ts-gen-check` is gone.
+  Docker, nix and release archives copy the built packs. A test rebases
+  two branches that edit different packages, with no merge driver, and
+  expects no conflicts; its control commits the generated files and
+  expects the old conflict. API: `litgraph` no longer embeds packs or
+  scenarios, because the compiler depends on it.
+  `Catalog::embedded`, `with_embedded_scenarios` and `default_source` now
+  take the embedded files (`EmbeddedFiles`), and `litgraph_packs::catalog()`
+  replaces `Catalog::embedded()`. `ClockLibrary::embedded()` is now the
+  hand-authored library only: a catalog built from `litgraph-packs` carries
+  the generated fragments too.
 - **Reserved refinement syntax** (lg-962.7; SPEC §3.5, design review
   2026-10-23 §2.2). The SMT tier's surface forms are reserved so adding
   them later cannot break a `.lit` file: a refinement type

@@ -1673,16 +1673,22 @@ mapped once, `links` is reserved, and a mapping naming no built pack, or two
 outputs landing on one path, is a usage failure (exit 1).
 
 `justfile` recipes: `lit-check` runs `litigate check --profile strict lit cases`.
-`lit-sync` regenerates the repository's generated files (§9.4); `lit-sync-check`
-runs it and fails when `git status` shows any change under `packs/` or
-`scenarios/`, and is part of `just ci`. `lit-diff` builds into a temp dir and
-runs `litigate diff --check` against `packs/` and `scenarios/` without
-writing. `lit-test` runs the litigate crates' tests.
+`lit-sync` regenerates every `Lit.lock` and builds the generated files (§9.4)
+into `target/lit-build/`; `lit-sync-check` runs it and fails when a `Lit.lock`
+changed or a generated file is tracked by git, and is part of `just ci`.
+`lit-diff` builds into a temp dir and runs `litigate diff --check` against
+the last `lit-sync` build without writing. `lit-test` runs the litigate
+crates' tests.
 
 ### 9.4 Generated repository files
 
-Since the flip (DESIGN §11.3) these files are build outputs; edit `lit/` or
-`cases/` and run `just lit-sync`, never the JSON:
+Since the flip (DESIGN §11.3) these files are build outputs, and since
+lg-flu.31 they are not committed: the `litgraph-packs` crate builds them in
+its build script (the same `litigate build`, over an in-memory copy of `lit/`
+and `cases/`) and embeds them, and `just lit-sync` writes the same build to
+`target/lit-build/`. Two changes to different packages therefore touch
+disjoint source files and never conflict on generated output. Edit `lit/` or
+`cases/`, never the JSON:
 
 | Generated file | From |
 |---|---|
@@ -1691,13 +1697,15 @@ Since the flip (DESIGN §11.3) these files are build outputs; edit `lit/` or
 | `packs/clock/<file>.json` | a forum package's own counting rules and calendars (today only `mpep-prosecution`) |
 | `scenarios/<id>.json` | each top-level `cases/<id>.case` (not `cases/requests/` nor `cases/examples/`) |
 
-`<file>` is the pack id, except where `lit-sync` maps it with `--pack-file`
+`<file>` is the pack id, except where the build maps it with `--pack-file`
 to the legacy file name the engine, its tests and external users already
 load: `cafc` → `cafc-federal-circuit`, `cofc` → `cofc-court-of-federal-claims`.
-The input list and the mappings are the justfile's `lit_sync_inputs` and
-`lit_sync_names`; a new forum package is added there. `lit-sync` deletes
-`packs/*.json` and `scenarios/*.json` before copying, so a removed package's
-file disappears; source maps and litigatables are not copied. Not generated:
+The input list and the mappings are `crates/litgraph-packs/build.args`; a
+new forum package is added there. Each build starts from an empty output
+directory, so a removed package's file disappears; source maps and
+litigatables are not kept. The hand-authored clock fragments are copied
+beside the generated ones (a fragment both hand-authored and generated is a
+build failure). Not generated:
 `lit/core`'s counting rules and calendars are not yet the engine's clock
 library, so `packs/clock/{frap26,frcp6,itc210,rcfc6,us-federal-holidays}.json`
 stay hand-authored (with `packs/clock/SOURCES-NOTES.md` and

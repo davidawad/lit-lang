@@ -18,8 +18,10 @@ are fallbacks.
 each pack from its `lit/<forum>/` package, `links.json` from `lit/links/`,
 each named scenario from `cases/<id>.case` (`docs/litigate/SPEC.md` §9.4
 lists the exact mapping; `docs/litigate/TUTORIAL.md` walks through it).
-Edit the source and run `just lit-sync`; never edit the JSON by hand —
-`just ci` fails when the committed files are stale. This document stays the
+They are never committed: `crates/litgraph-packs` builds and embeds them
+at `cargo build` time, and `just lit-sync` writes the same build to
+`target/lit-build/{packs,scenarios}/` to read. Edit the source, never the
+JSON. This document stays the
 reference for the JSON the compiler emits and the engine reads (and for
 packs you load from elsewhere with `--packs-dir`): SPEC §8 says which `.lit`
 construct lowers to each field below.
@@ -192,9 +194,9 @@ same reasoning as calibration's `Edge.base_id` handling above.
 
 Deadline counting is data. `packs/clock/` holds the **clock library**:
 holiday calendars and counting rules, shared by every pack. A forum
-package's own counting rules and calendars are generated into
-`packs/clock/<pack file>.json` by `just lit-sync` (today
-`mpep-prosecution.json`, 37 C.F.R. § 1.7); the shared fragments
+package's own counting rules and calendars are generated into the built
+`packs/clock/<pack file>.json` (today `mpep-prosecution.json`, 37 C.F.R.
+§ 1.7; a build output, not a file in the repository); the shared fragments
 (`frap26`, `frcp6`, `itc210`, `rcfc6`, `us-federal-holidays`) are still
 hand-authored (SPEC §9.4). Each file is a
 fragment:
@@ -206,11 +208,12 @@ fragment:
 A generated fragment is `schemaVersion` 4 and carries a
 [`lowered` header](#the-lowered-header); both versions are read.
 
-Fragments are embedded at build time (key `clock/<file>`) and read from
-`<packs dir>/clock/` by `--packs-dir`/`LITGRAPH_PACKS`; in-memory catalogs
-(`Catalog::from_files`, `litgraph-wasm`'s `handle_with_packs`) take them as
-files named `clock/<file>.json`. A source with no `clock/` files gets the
-embedded library. Fragments merge in file-name order; a fragment that fails
+Fragments are embedded at build time (key `clock/<file>`; the embedded
+packs carry the hand-authored and generated fragments together) and read
+from `<packs dir>/clock/` by `--packs-dir`/`LITGRAPH_PACKS`; in-memory
+catalogs (`Catalog::from_files`, `litgraph-wasm`'s `handle_with_packs`)
+take them as files named `clock/<file>.json`. A source with no `clock/`
+files gets the embedded hand-authored library (no generated fragment). Fragments merge in file-name order; a fragment that fails
 to parse or validate, or redefines an id already loaded, is skipped and
 listed in `load_errors`, as is a rule naming an unknown calendar. Every
 object is strict (`deny_unknown_fields`). `litgraph validate` detects the
@@ -565,6 +568,6 @@ generated packs.
 5. Parsing is strict: an unknown field anywhere in a pack, edge, source, or
    instance is a hard error (not a silently-ignored typo). Before opening
    a PR: `just lit-check` (or `litigate check lit/your-forum`), `just
-   lit-sync`, then `litgraph validate packs/your-pack.json` (or `--kind
+   lit-sync`, then `litgraph validate target/lit-build/packs/your-pack.json` (or `--kind
    pack` to force detection) and `litgraph lint --packs your-pack` on the
    regenerated file.

@@ -111,6 +111,28 @@ fn literal(value: Value, ty: Type, r: TextRange, span: ToSpan<'_>) -> Expr {
     }
 }
 
+/// An `EdgeRef` argument written as a string: L2001, with a fix unquoting
+/// it when the string names an edge.
+fn quoted_edge(
+    graph: &Graph<'_>,
+    s: &str,
+    range: TextRange,
+    span: ToSpan<'_>,
+    out: &mut Vec<Report>,
+) -> Option<Expr> {
+    let mut r = Report::new(
+        C::TypeMismatch,
+        range,
+        format!("expected an `EdgeRef` here, found the string {s:?}"),
+    )
+    .note("an edge is named by its id, unquoted: `edge`, or `pack::edge` in another package");
+    if edge(graph, s, range, span, &mut Vec::new()).is_some() {
+        r = r.fix(range, s.to_owned(), Applicability::MachineApplicable);
+    }
+    out.push(r);
+    None
+}
+
 /// One argument against parameter type `t` (written in `pack`'s view).
 fn argument(
     graph: &Graph<'_>,
@@ -153,21 +175,7 @@ fn argument(
         )),
         (Type::String, _) => mismatch(out, "a string"),
         (Type::Edge, S::Ref(path)) => edge(graph, &path.display(), a.range, span, out),
-        (Type::Edge, S::Str(s)) => {
-            let mut r = Report::new(
-                C::TypeMismatch,
-                a.range,
-                format!("expected an `EdgeRef` here, found the string {s:?}"),
-            )
-            .note(
-                "an edge is named by its id, unquoted: `edge`, or `pack::edge` in another package",
-            );
-            if edge(graph, s, a.range, span, &mut Vec::new()).is_some() {
-                r = r.fix(a.range, s.clone(), Applicability::MachineApplicable);
-            }
-            out.push(r);
-            None
-        }
+        (Type::Edge, S::Str(s)) => quoted_edge(graph, s, a.range, span, out),
         (Type::Edge, _) => mismatch(out, "an edge id (`edge` or `pack::edge`)"),
         (Type::Boolean, S::Bool(b)) => {
             Some(literal(Value::Boolean(*b), Type::Boolean, a.range, span))

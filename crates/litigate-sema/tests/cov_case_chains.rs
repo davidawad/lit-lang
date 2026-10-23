@@ -136,27 +136,58 @@ event Opened()
 
 deadline after-dep: 5.days from deadline(dep-base).nominal counted_by oc
 
-state open: \"Open\" { stay \"Stay\" -> open { event Opened() } }
+state open: \"Open\" { stay \"Stay\" -> open { event Opened(), within after-dep } }
 ";
 
-/// `after-dep` follows a period of a package the matter only depends on,
-/// which replay does not count (a matter's events are its used packages'):
-/// nothing starts it, so it opens nothing.
-#[test]
-fn a_chain_on_an_unreplayed_package_opens_nothing() {
+/// The matter with `events`, using `follower` only (`base-pkg` is its
+/// dependency).
+fn follow(events: &str) -> litigate_sema::case::CheckedCase {
     let packages = compile(&[
         package("base-pkg", &[], "", BASE),
         package("follower", &["base-pkg"], "", FOLLOWER),
     ]);
-    let text = "case t\nuses follower ^1.0.0\nas_of 2011-06-01\nsummary \"s\"\n\n\
-                parties {\n  d: Defendant Corporation\n}\n\
-                events {\n  2011-01-04 Opened() by d\n}\n";
+    let text = format!(
+        "case t\nuses follower ^1.0.0\nas_of 2011-06-01\nsummary \"s\"\n\n\
+         parties {{\n  d: Defendant Corporation\n}}\n\
+         events {{\n{events}}}\n"
+    );
     let used: Vec<Package> = packages
         .iter()
         .filter(|p| p.manifest.name == "follower")
         .cloned()
         .collect();
-    let checked = check(text, &packages, Some(&lock(&used)), &Plus, Profile::Dev);
+    check(&text, &packages, Some(&lock(&used)), &Plus, Profile::Dev)
+}
+
+/// `after-dep` follows a period of a package the matter only depends on.
+/// The dependency's own period is never replayed (no `dep-base`
+/// obligation), but the event starting it, a dependency event the matter
+/// may write, starts the chain: `dep-base` ends Jan 13 (nominal), so
+/// `after-dep` is due Jan 18 and an act on Jan 19 is late.
+#[test]
+fn a_chain_on_a_dependency_period_opens_from_its_event() {
+    let checked =
+        follow("  2011-01-04 base-pkg::Served(complaint) on d\n  2011-01-19 Opened() by d\n");
+    let opened: Vec<String> = checked
+        .obligations
+        .iter()
+        .map(|o| format!("{} {:?}", o.deadline, o.status))
+        .collect();
+    assert_eq!(
+        opened,
+        ["follower::after-dep Late"],
+        "{:?}",
+        outcome(&checked)
+    );
+    let late = outcome(&checked).join("\n");
+    assert!(late.contains("due 2011-01-18"), "{late}");
+}
+
+/// Without the event starting the dependency's period, nothing starts the
+/// chain.
+#[test]
+fn a_chain_on_a_dependency_period_opens_nothing_without_its_event() {
+    let checked = follow("  2011-01-04 Opened() by d\n");
     assert!(checked.obligations.is_empty(), "{:?}", outcome(&checked));
     assert!(checked
         .diagnostics

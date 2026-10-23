@@ -26,7 +26,7 @@ expression: table(&rows)
         "trace Took Answered(complaint) alpha::respond -> alpha::answered via alpha::answer",
     ],
     "uncountable: a rule of a package the matter does not use": [
-        "13:3 L3009 cannot count deadline `remote-period` for this event\n    note @12:3: `remote-period` runs 10 calendar days from `Filed(complaint, \"by mail\")` on 2010-01-04 under `bc`, service by complaint\n    note: no clock library is loaded to run counting rule `bc`",
+        "13:3 L3009 cannot count deadline `remote-period` for this event\n    note @12:3: `remote-period` runs 10 calendar days from `Filed(complaint, \"by mail\")` on 2010-01-04 under `bc@2009-12-01`\n    note: no clock library is loaded to run counting rule `bc`",
         "trace Took Filed(complaint, \"by mail\") alpha::intake -> alpha::filed via alpha::file",
         "trace Took Twin(complaint) alpha::filed -> alpha::defaulted via alpha::remote",
     ],

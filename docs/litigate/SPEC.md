@@ -682,8 +682,11 @@ longer chain is a cycle, which nothing starts), and is counted from that
 end of `e`'s period under the versions governing the event it is judged
 at, with no service method (a chain runs from a date, not from service).
 A chain whose base is not counted is not counted either, and says why. A
-period of a package a matter only depends on is never replayed (§5.6), so
-neither is a chain on one. Lowering emits a chained period's window like
+chain may follow a period of a dependency: a matter never opens the
+dependency's own instance (§5.6), but the event starting that period, a
+dependency event the matter may write as `pack::Event(...)`, opens the
+chain, counted from the base's end under the versions the dependency
+declares. Lowering emits a chained period's window like
 any other: the engine counts it from the date the request gives.
 
 A deadline is a period of a **forum**: its package's (`Lit.toml` `forum`),
@@ -1102,6 +1105,13 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
   docketed events on different dates whose numbers are equal or fall is
   L4001. Source that contradicts docket order is L4001 with a fix that
   sorts the block.
+- Replay sees the used packages and their dependencies (`core`
+  included), as `check` does: a dependency's counting rules count under
+  their own versions and transitions, and its events and enums are
+  vocabulary a matter may write qualified (`pack::Event(...)`). Its nodes
+  are never stages and its deadlines open no instances; an event of one
+  is legal only by the rules below (it fires a used package's trigger,
+  such as a chain on the dependency's period, or a transition reads it).
 - Replay: begin at `start` if given, else the package start. Process events
   in docket order, unordered same-day events in the order of their text.
   Before each event, while the current node is a `fact` chance node the

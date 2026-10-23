@@ -122,9 +122,10 @@ pub(super) fn replay(
     start: &str,
 ) -> Replayed {
     let sorted = sorted(&case.events);
+    // Dependencies too: a chain on a dependency's period matches the event
+    // starting it in that package's view.
     let views = graph
-        .packages
-        .iter()
+        .vocabulary()
         .map(|p| {
             let pack = p.manifest.pack_id.clone();
             let v = sorted
@@ -311,7 +312,14 @@ impl<'c, 'g> Cx<'c, 'g> {
         let known_at = self.case.known_at.as_deref();
         let got = self.graph.governing(posture, &events, k, known_at);
         match got {
-            Ok((q, Declaration::Node(n))) if Graph::key(&q) == Graph::key(posture) => Some(n),
+            // A dependency's nodes are law the used packages read, never
+            // a stage of the matter.
+            Ok((q, Declaration::Node(n)))
+                if Graph::key(&q) == Graph::key(posture)
+                    && self.graph.used(&Graph::key(&q).pack) =>
+            {
+                Some(n)
+            }
             Ok(_) | Err(Ungoverned::Inactive(_)) => {
                 let d = error(
                     C::NoVersionInForce,

@@ -241,10 +241,12 @@ impl<'g> Cx<'_, 'g> {
             })
             .collect();
         for (q, w, d) in &found {
-            let view = self.view(pack_of(w), k);
-            let Some(pattern) = self.root(w, d, k, CHAIN_DEPTH) else {
+            let Some((root, pattern)) = self.root(w, d, k, CHAIN_DEPTH) else {
                 continue;
             };
+            // The pattern is written in its own deadline's package, a
+            // dependency's for a chain on its period.
+            let view = self.view(pack_of(&root), k);
             let candidates = match &view.kind {
                 ExprKind::Call { args, .. } if matches(pattern, view) => {
                     deadline::variant_args(args)
@@ -277,12 +279,13 @@ impl<'g> Cx<'_, 'g> {
     }
 
     /// The event pattern that starts deadline `d` (logical `q`) at event
-    /// `k`: its own trigger, or for a chained period the one starting the
+    /// `k`, with the qualified deadline whose package it is written in:
+    /// its own trigger, or for a chained period the one starting the
     /// period it follows (at most `depth` links deep; a longer chain is a
     /// cycle, which no event starts).
-    fn root(&self, q: &str, d: &'g Deadline, k: usize, depth: usize) -> Option<&'g Expr> {
+    fn root(&self, q: &str, d: &'g Deadline, k: usize, depth: usize) -> Option<(String, &'g Expr)> {
         let Some(chain) = &d.chain else {
-            return Some(&d.trigger);
+            return Some((q.to_owned(), &d.trigger));
         };
         let base = self.graph.qualify(pack_of(q), &chain.deadline);
         let (w, base) = self.governing(&base, k, false)?;

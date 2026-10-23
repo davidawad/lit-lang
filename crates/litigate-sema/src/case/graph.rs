@@ -12,7 +12,6 @@ use crate::hir::{
     Package, Relation, Type, Value,
 };
 use crate::precedence;
-use crate::temporal::world::PackInfo;
 use crate::temporal::{self, Key, MatterEvent, World};
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -26,7 +25,9 @@ pub(super) struct Graph<'a> {
     /// and respelled into its view (see [`Graph::new`]).
     links: BTreeMap<String, Vec<(String, Edge)>>,
     /// Loaded transitive dependencies of the used packages that are not
-    /// themselves used: vocabulary only (their enums), never replayed.
+    /// themselves used: vocabulary (their enums) and law a used package's
+    /// declarations read (a chained period's base, a counting rule), but
+    /// their own triggers are never replayed.
     deps: Vec<&'a Package>,
 }
 
@@ -40,12 +41,12 @@ impl<'a> Graph<'a> {
     /// of that pack (an instance `base@origin` reads in `base`'s view).
     pub fn new(packages: Vec<&'a Package>, loaded: &[&'a Package]) -> Self {
         let deps = dependencies(&packages, loaded);
-        let mut world = World::from_packages(&packages);
-        // Precedence ranks claimants by the shared authority lattice (SPEC
+        // The law the used packages see, as `check` and lowering select it
+        // (`World::closure`): their dependencies' versioned declarations
+        // (a chain's base deadline, a counting rule and its transitions)
+        // and the authority lattice precedence ranks claimants by (SPEC
         // §5.5), which the dependencies (and `core`) declare.
-        for p in &deps {
-            world.add_authorities(PackInfo::of(&p.manifest), &p.modules);
-        }
+        let world = World::from_packages(&[packages.as_slice(), deps.as_slice()].concat());
         let mut graph = Self {
             world,
             deps,
@@ -92,7 +93,7 @@ impl<'a> Graph<'a> {
     }
 
     /// The used packages, then their dependencies.
-    fn vocabulary(&self) -> impl Iterator<Item = &'a Package> + '_ {
+    pub fn vocabulary(&self) -> impl Iterator<Item = &'a Package> + '_ {
         self.packages.iter().chain(&self.deps).copied()
     }
 
@@ -163,10 +164,21 @@ impl<'a> Graph<'a> {
         }
     }
 
-    /// Every version of node `qualified`, in declaration order.
+    /// Whether `pack` (a base pack id) is a used package's: a matter's
+    /// stages and triggers are only theirs, never a dependency's.
+    pub fn used(&self, pack: &str) -> bool {
+        self.packages.iter().any(|p| p.manifest.pack_id == pack)
+    }
+
+    /// Every version of node `qualified` of a used package, in declaration
+    /// order.
     pub fn node_versions(&self, qualified: &str) -> Vec<&'a Node> {
+        let key = Self::key(qualified);
+        if !self.used(&key.pack) {
+            return Vec::new();
+        }
         self.world
-            .versions(&Self::key(qualified))
+            .versions(&key)
             .versions
             .iter()
             .filter_map(|v| match self.world.decls[v.decl].decl {
@@ -195,6 +207,9 @@ impl<'a> Graph<'a> {
     /// displaced node, so a matter does not find it either.
     pub fn node_at(&self, qualified: &str, date: &str, known_at: Option<&str>) -> Option<&'a Node> {
         let key = Self::key(qualified);
+        if !self.used(&key.pack) {
+            return None;
+        }
         precedence::select(&self.world, &key, date, known_at)
             .ok()
             .filter(|&w| self.world.key(w) == key)
@@ -278,9 +293,16 @@ impl<'a> Graph<'a> {
         self.qualify(pack, &edge.to)
     }
 
-    /// Every event type of the used packages: (pack id, declaration).
+    /// Whether `id` is the pack id of a dependency that is not used.
+    pub fn is_dependency(&self, id: &str) -> bool {
+        self.deps.iter().any(|p| p.manifest.pack_id == id)
+    }
+
+    /// Every event type of the used packages, then of their dependencies
+    /// (vocabulary: an event starting a dependency's period that a used
+    /// package's chain follows): (pack id, declaration).
     pub fn event_types(&self) -> impl Iterator<Item = (&'a str, &'a EventType)> + '_ {
-        self.packages.iter().flat_map(|p| {
+        self.vocabulary().flat_map(|p| {
             declarations(p).filter_map(move |d| match d {
                 Declaration::Event(e) => Some((p.manifest.pack_id.as_str(), e)),
                 _ => None,
@@ -307,17 +329,17 @@ impl<'a> Graph<'a> {
             })
     }
 
-    /// Qualified ids of every logical deadline of the used packages.
+    /// Qualified ids of every logical deadline of the used packages (a
+    /// dependency's deadlines are read, never replayed: SPEC §5.6).
     pub fn deadlines(&self) -> BTreeSet<String> {
         self.world
             .decls
             .iter()
             .enumerate()
             .filter(|(_, d)| matches!(d.decl, Declaration::Deadline(_)))
-            .map(|(i, _)| {
-                let k = self.world.key(i);
-                format!("{}::{}", k.pack, k.name)
-            })
+            .map(|(i, _)| self.world.key(i))
+            .filter(|k| self.used(&k.pack))
+            .map(|k| format!("{}::{}", k.pack, k.name))
             .collect()
     }
 
@@ -353,7 +375,7 @@ impl<'a> Graph<'a> {
     /// one is legal without taking an edge.
     pub fn transition_patterns(&self) -> Vec<(&'a str, &'a Expr)> {
         let mut out = Vec::new();
-        for p in &self.packages {
+        for p in self.vocabulary() {
             for d in declarations(p) {
                 if let Declaration::Transition(t) = d {
                     for c in t.arms.iter().filter_map(|a| a.unless.as_ref()) {

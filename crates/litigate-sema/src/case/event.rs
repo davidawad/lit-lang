@@ -1,4 +1,5 @@
-//! Typing a case event call against the used packages' event types (SPEC
+//! Typing a case event call against the used packages' event types, and
+//! their dependencies' (SPEC
 //! §5.2: case events are complete constructor calls). The result is HIR in
 //! the primary package's view: a name declared in the primary package is
 //! bare, any other is `pack::Name`.
@@ -13,11 +14,14 @@ use litigate_base::{Applicability, DiagnosticCode as C, Span};
 /// Converts a range to a span.
 pub(super) type ToSpan<'a> = &'a dyn Fn(TextRange) -> Span;
 
-/// Splits `q::Name` into `(pack, Name)` when `q` is a used pack.
+/// Splits `q::Name` into `(pack, Name)` when `q` is a used pack or a
+/// dependency of one.
 fn split(graph: &Graph<'_>, path: &RefPath) -> (String, String) {
     let text = path.display();
     match text.split_once("::") {
-        Some((p, rest)) if graph.packages.iter().any(|k| k.manifest.pack_id == p) => {
+        Some((p, rest))
+            if graph.packages.iter().any(|k| k.manifest.pack_id == p) || graph.is_dependency(p) =>
+        {
             (p.to_owned(), rest.to_owned())
         }
         _ => (graph.primary().to_owned(), text),

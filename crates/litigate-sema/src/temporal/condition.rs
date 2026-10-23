@@ -108,15 +108,24 @@ pub fn eval(e: &Expr, atom: &mut dyn FnMut(&Expr) -> Option<bool>) -> Option<boo
         ExprKind::Binary { op, lhs, rhs } if is_bool(lhs) && is_bool(rhs) => {
             let (a, b) = (eval(lhs, atom), eval(rhs, atom));
             match op {
-                BinaryOp::And if a == Some(false) || b == Some(false) => Some(false),
-                BinaryOp::Or if a == Some(true) || b == Some(true) => Some(true),
-                BinaryOp::And | BinaryOp::Or => a.and(b),
-                BinaryOp::Eq => Some(a? == b?),
-                BinaryOp::Ne => Some(a? != b?),
+                BinaryOp::And => kleene(a, b, false),
+                BinaryOp::Or => kleene(a, b, true),
+                BinaryOp::Eq => a.zip(b).map(|(a, b)| a == b),
+                BinaryOp::Ne => a.zip(b).map(|(a, b)| a != b),
                 _ => atom(e),
             }
         }
         _ => atom(e),
+    }
+}
+
+/// `a && b` (`dominant` false) or `a || b` (`dominant` true) in Kleene
+/// logic: an operand equal to `dominant` decides it.
+fn kleene(a: Option<bool>, b: Option<bool>, dominant: bool) -> Option<bool> {
+    if a == Some(dominant) || b == Some(dominant) {
+        Some(dominant)
+    } else {
+        a.and(b)
     }
 }
 
@@ -210,18 +219,33 @@ fn date_term(e: &Expr) -> bool {
     }
 }
 
+/// The comparison operators.
+const COMPARISONS: [BinaryOp; 6] = [
+    BinaryOp::Eq,
+    BinaryOp::Ne,
+    BinaryOp::Lt,
+    BinaryOp::Le,
+    BinaryOp::Gt,
+    BinaryOp::Ge,
+];
+
+/// Whether atom `a` compares two date terms ([`date_term`]).
+fn date_comparison(a: &Expr) -> bool {
+    match &a.kind {
+        ExprKind::Binary { op, lhs, rhs } => {
+            COMPARISONS.contains(op) && date_term(lhs) && date_term(rhs)
+        }
+        _ => false,
+    }
+}
+
 /// The first atom of fact guard `e` that is neither `has_event(...)` nor a
-/// comparison of two date terms ([`date_term`]).
+/// comparison of two date terms.
 #[must_use]
 pub fn first_foreign_guard(e: &Expr) -> Option<&Expr> {
-    atoms(&[e]).into_iter().find(|a| {
-        has_event(a).is_none()
-            && !matches!(
-                &a.kind,
-                ExprKind::Binary { op: BinaryOp::Eq | BinaryOp::Ne | BinaryOp::Lt | BinaryOp::Le | BinaryOp::Gt | BinaryOp::Ge, lhs, rhs }
-                    if date_term(lhs) && date_term(rhs)
-            )
-    })
+    atoms(&[e])
+        .into_iter()
+        .find(|a| has_event(a).is_none() && !date_comparison(a))
 }
 
 /// The first sub-expression of `e` that is not a connective, a boolean

@@ -171,11 +171,15 @@ exactly as for a pure-chance fact node (it's the same
 just the non-applicant (interrupt) edges, so a mixed fact node needs the
 same full authored prior on those and gets the same `fact-unset`
 (not the generic `mixed-node`) warning when unset. No shipped pack has
-one: the litigate language allows `fact` only on `chance` nodes (SPEC
-§5.1), so a fact and the choice that follows it are two nodes, e.g.
+one: the litigate language has no mixed nodes and allows `fact` only on
+`chance` nodes (SPEC §5.1), so a fact and the choice that follows it are
+two nodes, e.g.
 `ptab-patent-trial-appeal-board.json`'s `petition-time-bar-check` (is the
 petition time-barred under 35 U.S.C. §315(b)?) ahead of the Office's
-compliance review and the petitioner's correct-and-refile choice.
+compliance review and the petitioner's correct-and-refile choice. Its
+value is computed, not drawn: the litigate source guards its edges with
+the petition and service dates (`when`, SPEC §5.1), and a `.case` whose
+events decide it lowers the derived edge to `scenario.facts`.
 
 A matter fact is true regardless of procedural history, so it applies to
 every [state-flag](#state-flags) product-graph copy of the node, not just

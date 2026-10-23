@@ -109,11 +109,8 @@ impl<'g> Cx<'_, 'g> {
 
     /// One guard atom before sorted event `k`; `None` when unknown.
     fn atom(&self, pack: &str, k: usize, a: &Expr) -> Option<bool> {
-        if let Some(p) = has_event(a) {
-            return Some((0..k).any(|i| matches(p, self.view(pack, i))));
-        }
         let ExprKind::Binary { op, lhs, rhs } = &a.kind else {
-            return None;
+            return has_event(a).map(|p| (0..k).any(|i| matches(p, self.view(pack, i))));
         };
         let (x, y) = (self.date(pack, k, lhs)?, self.date(pack, k, rhs)?);
         Some(match op {
@@ -132,28 +129,31 @@ impl<'g> Cx<'_, 'g> {
             ExprKind::Literal {
                 value: Value::Date(d),
             } => Some(d.clone()),
-            ExprKind::Call { callee, args } if callee == "date_of" => {
-                let p = args.first()?;
+            ExprKind::Call { callee, args } if callee == "date_of" => args.iter().find_map(|p| {
                 (0..k)
                     .rev()
                     .find(|&i| matches(p, self.view(pack, i)))
                     .map(|i| self.sorted[i].1.date.clone())
-            }
-            ExprKind::Call { args, .. } => {
-                let ExprKind::Ref { target } = &args.first()?.kind else {
-                    return None;
-                };
-                let q = logical(&self.graph.qualify(pack, target));
-                let as_of = k == self.sorted.len();
-                (0..self.obligations.len())
-                    .filter(|&i| logical(&self.obligations[i].deadline) == q)
-                    .filter_map(|i| {
-                        let due = self.due_of(i, k, as_of)?;
-                        effective(&self.obligations[i], &due).ok()
-                    })
-                    .min()
-            }
+            }),
+            ExprKind::Call { args, .. } => args.iter().find_map(|a| match &a.kind {
+                ExprKind::Ref { target } => self.due(pack, k, target),
+                _ => None,
+            }),
             _ => None,
         }
+    }
+
+    /// `deadline(target)` before sorted event `k`: the earliest current due
+    /// date of the matter's instances of the deadline; `None` with none.
+    fn due(&self, pack: &str, k: usize, target: &str) -> Option<String> {
+        let q = logical(&self.graph.qualify(pack, target));
+        let as_of = k == self.sorted.len();
+        (0..self.obligations.len())
+            .filter(|&i| logical(&self.obligations[i].deadline) == q)
+            .filter_map(|i| {
+                self.due_of(i, k, as_of)
+                    .and_then(|due| effective(&self.obligations[i], &due).ok())
+            })
+            .min()
     }
 }

@@ -82,7 +82,7 @@ registry! { 61;
     NonExhaustiveMatch = "L2005" => "A match does not cover every variant, or has an unreachable arm",
     ArithmeticError = "L2006" => "Exact arithmetic overflowed, divided by zero, or left its domain",
     InvalidField = "L2007" => "A field is unknown, duplicated, or not allowed on this declaration kind",
-    InvalidProbability = "L2008" => "An edge probability is outside [0,1], on a self edge, or missing at a chance node",
+    InvalidProbability = "L2008" => "An edge probability is outside [0,1], on a self edge, on an edge that is not a draw's, or missing at a chance node",
     EffectiveOverlap = "L3001" => "Two versions of the same declaration overlap in in-force time",
     EffectiveGap = "L3002" => "A declaration version gap is not explicitly declared",
     UnresolvedPrecedence = "L3003" => "Conflicting rules remain unordered after relations and canons are applied",

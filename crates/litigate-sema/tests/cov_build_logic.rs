@@ -147,3 +147,29 @@ fn instance_patches_lower_to_edge_fields() {
         .collect();
     insta::assert_debug_snapshot!(instances);
 }
+
+/// A link carries `p` only out of a draw: a chance node or a terminal,
+/// never a decision or a state (SPEC §5.1, L2008); nor a `when` guard.
+#[test]
+fn link_probabilities_leave_only_draws() {
+    let base = "module base\nstart entry\nstate entry: \"E\" { go \"Go\" -> draw }\n\
+decision pick: \"P\" { go \"Go\" -> done }\n\
+chance draw: \"R\" { a \"A\" -> done p 1 }\nterminal done: \"D\"\n";
+    let (db, ws) = workspace(&[
+        package("base", &[], &[("base.lit", base)]),
+        package(
+            "links",
+            &["base"],
+            &[(
+                "links.lit",
+                "module links\n\
+link a \"A\": base::draw -> base::entry p 0\n\
+link b \"B\": base::done -> base::entry p 1\n\
+link c \"C\": base::pick -> base::entry p 1\n\
+link d \"D\": base::entry -> base::done p 1\n\
+link e \"E\": base::done -> base::entry { when true }\n",
+            )],
+        ),
+    ]);
+    insta::assert_debug_snapshot!(render(&db, ws));
+}

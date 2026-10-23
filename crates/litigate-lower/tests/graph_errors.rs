@@ -370,3 +370,12 @@ fn ambiguous_span_less_versions() {
     }
     insta::assert_snapshot!(lowering_errors(&p));
 }
+
+/// An information set has no litgraph form: a solve could choose
+/// differently at decisions the actor cannot tell apart (L6001).
+#[test]
+fn an_information_set_has_no_lowering() {
+    let mut p = example();
+    node_mut(&mut p, "respond").info = Some("filing".into());
+    insta::assert_snapshot!(lowering_errors(&p));
+}

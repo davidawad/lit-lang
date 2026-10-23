@@ -175,7 +175,7 @@ impl Cx<'_, '_> {
             } else {
                 Draw::Forbidden
             };
-            let fact = chance && !misplaced_fact && tags.iter().any(|t| t == "fact");
+            let fact = chance && tags.iter().any(|t| t == "fact");
             edges.push(self.edge(e, &n.name.text, actor.as_deref(), draw, fact));
         }
         self.probability_sum(n, &edges, chance);

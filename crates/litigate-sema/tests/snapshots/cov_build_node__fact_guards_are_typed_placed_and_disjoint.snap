@@ -1,0 +1,15 @@
+---
+source: crates/litigate-sema/tests/cov_build_node.rs
+expression: check_body(&body)
+---
+[
+    "pkgs/demo/main.lit:14:38 L2007 `when` is not allowed outside the edges of a `fact` chance node [fix: \"\"]",
+    "pkgs/demo/main.lit:15:30 L2007 `when` is not allowed outside the edges of a `fact` chance node [fix: \"\"]",
+    "pkgs/demo/main.lit:17:20 L2007 `when` is not allowed on an anonymous edge: the fact it derives names its edge [fix: \"\"]",
+    "pkgs/demo/main.lit:19:25 L2001 a fact guard may test only `has_event(...)`, comparisons of dates (`date_of(...)`, `deadline(...)`, date literals), `true`/`false`, and `!`, `&&`, `||`",
+    "pkgs/demo/main.lit:21:25 L2001 expected `Bool`, found `Number`",
+    "pkgs/demo/main.lit:24:3 L2005 the guards of `Y` and `N` on fact `both` can both hold",
+    "pkgs/demo/main.lit:26:35 L2001 `has_event` takes an event pattern such as `Served(complaint, Mail)`",
+    "pkgs/demo/main.lit:28:25 L0001 expected an identifier, found `}`",
+    "pkgs/demo/main.lit:48:3 L2005 the guards of `Y` and `N` on fact `wide` can both hold",
+]

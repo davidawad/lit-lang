@@ -175,8 +175,8 @@ Param        = Ident, ":", Type, [ WhereClause ] ;
 
 NodeDecl     = NodeKw, Ident, ":", String, { NodeClause }, [ NodeBody ] ;
 NodeKw       = "state" | "decision" | "chance" | "terminal" ;
-NodeClause   = "by", Ref | "discretion" | "outcome", IdList | VersionClause
-             | Relation | Cite ;
+NodeClause   = "by", Ref | "discretion" | "info", Ref | "outcome", IdList
+             | VersionClause | Relation | Cite ;
 NodeBody     = "{", { (NodeField | EdgeDecl), Sep }, "}" ;
 NodeField    = "group", Ident | "note", String | "valence", Ident
              | "court_listener_url", String | "tags", IdList | "attrs", NumRecord
@@ -193,7 +193,7 @@ EdgeField    = "event", CallExpr | "authority", (String | Cite) | "effort", Dura
              | "valence", Ident | "court_listener_url", String | "action_id", String
              | "note", String | "tags", IdList | "attrs", NumRecord
              | "sets", IdList | "clears", IdList | "requires", IdList
-             | "forbids", IdList | "replaces", ReplaceList ;
+             | "forbids", IdList | "replaces", ReplaceList | "when", Expr ;
 ReplaceList  = "[", [ (Ref | String), { ",", (Ref | String) }, [","] ], "]" ;
 DeadlineOpts = "{", { ("extendable", Bool | "extension_authority", String
              | "note", String), Sep }, "}" ;
@@ -502,11 +502,27 @@ admits a wrong digest. An unparseable side exits 1, leaving git's conflict.
 - `outcome`, `payoff`, and `payoff_by_flag` are valid only on `terminal`
   (L2007).
 - An edge's actor is its own `by`, else the node's `by`, else `either`.
-  `p` is allowed on any edge, with any actor. A self edge (`to` = its node)
-  must not carry `p` (L2008). Any other node with a `p` edge draws among
-  its `p` edges: their known probabilities sum to at most 1, and to
-  exactly 1 when every edge but a self edge carries a known `p` (L2003);
-  the engine would otherwise renormalise them.
+  A node is a choice or a draw, never both: `p` is allowed only on the
+  edges of a `chance` node, and on a link leaving a `chance` node or a
+  terminal (whose onward route is drawn); on a `decision`'s or a
+  `state`'s edge, or a link leaving one, it is L2008. A self edge (`to` =
+  its node) must not carry `p` (L2008). There are no mixed nodes.
+- `when C` guards an edge of a `fact` chance node (L2007 elsewhere, and on
+  an anonymous edge: the fact it derives names its edge). `C` is a
+  `Bool` over the matter's history only: `has_event(P)`, comparisons
+  (`== != < <= > >=`) of date terms (a date literal, `date_of(P)` or
+  `deadline(d)`), `true`/`false`, `!`, `&&`, `||` (L2001 otherwise). The
+  guards of one node are pairwise disjoint (L2005: some history makes
+  both hold); they need not be exhaustive, since a fact the history does
+  not decide stays the matter's to state. Replay derives the fact from
+  them (§5.6). A matter fact computable from the docket is a guard, not
+  a probability: the `p` of a guarded edge is only the prior of a matter
+  whose history does not decide it.
+- `info s` puts a `decision` in information set `s` (L2007 on any other
+  kind): decisions of one module naming `s` are ones their actor cannot
+  tell apart, so each offers the same labelled edges to the same actors
+  as the first declared (L2001). litgraph packs cannot keep a choice
+  alike across a set, so a package with one does not lower (L6001).
 - `event` binds an edge to an event pattern for case replay (§5.6). `within d`
   ties the edge to deadline declaration `d`. `deadline 30.days` is a literal
   window with no trigger semantics, kept for legacy edges.
@@ -911,8 +927,19 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
   sorts the block.
 - Replay: begin at `start` if given, else the package start. Process events
   in docket order, unordered same-day events in the order of their text.
-  Before each event, while the current node is a `fact` chance
-  node with a `facts` entry, follow that edge. An event whose type declares
+  Before each event, while the current node is a `fact` chance node the
+  matter resolves, follow the edge that resolves it, each node at most
+  once: the guarded edge whose `when` holds on the events before this one
+  (§5.1), else the node's `facts` entry. A guard atom over an event that
+  has not happened (`date_of`) or a deadline with no instance yet is
+  unknown; `&&` and `||` are Kleene (`false && ?` is false, `true || ?`
+  true), and a guard that is not true derives nothing. `deadline(d)` in a
+  guard is the earliest current due date of the matter's instances of
+  `d` (extensions and `later_of` floors applied). A `facts` entry the
+  history contradicts is L4003, and the derived edge is followed. At
+  `as_of` the guards of the replayed posture are evaluated over the whole
+  history, and a fact they derive joins the matter's `facts` (lowered to
+  `scenario.facts`, §8.3) as if stated. An event whose type declares
   an effect (§5.2) applies it and does not move. Otherwise an event that
   matches exactly one outgoing edge's `event` pattern takes it. An event
   that matches no edge is legal only if it fires the trigger of a deadline
@@ -1003,7 +1030,8 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
   removed and is L4001. Removals are derived, never asserted: checking
   replaces any `removals` in the HIR.
 - `facts { node: edge }`: the node must be a `fact` chance node and the edge
-  must be its own (L4003).
+  must be its own (L4003), and the history must not derive another edge
+  of it (L4003). A fact the history derives needs no entry.
 - `stakes`: every terminal reachable from the replayed start needs a value
   or `unvalued` (L4004). `unvalued` is an error in `strict`.
 - `beliefs { observe node: { edge: count } }`: node must be a chance node, edges
@@ -1038,7 +1066,9 @@ the variants of enum `E` with exact non-negative weights summing to 1 (L2003).
 
 The builtins (closed list) are `deadline(d) -> Due` (tests: due date from the
 `given` events; bare it is the adjusted `Date`, and `.nominal`/`.adjusted`
-project `Date`s, §5.3), `has_event(Pattern) -> Bool`, `prob`, `given`, `in`,
+project `Date`s, §5.3), `has_event(Pattern) -> Bool`, `date_of(Pattern) ->
+Date` (the date of the latest matching event; read only by fact guards,
+§5.1, §5.6), `prob`, `given`, `in`,
 `intersect`, `disjoint`, `len`, and `contains`, plus the event constructors
 from `event` declarations. There is no IO, ambient clock, mutation, float,
 implicit cast, or overloading beyond this table (L2002 otherwise). Field
@@ -1362,8 +1392,9 @@ id, `"pack::from->to#n"`, which has no `Ref` spelling). Each `instance base@orig
 payoff_transform, stake, patch_edges}`. A `patch edge { ... }` writes edge
 fields with the `EdgeFields` syntax and types of an edge declaration
 (§3.1, §6), so `within d` names a deadline declaration instead of
-repeating its length; `event` and `replaces` are not patchable (L2007),
-and patching one edge twice is L2007. Each written field replaces the base
+repeating its length; `event`, `replaces` and a fact guard's `when`
+(§5.1: replay derives facts from the base edge's guard) are not
+patchable (L2007), and patching one edge twice is L2007. Each written field replaces the base
 edge's whole field (`within`/`deadline` its whole window). It lowers to
 `patch_edges[edge]`, the JSON merge patch that does this: each written
 field as §8.1 lowers it, null for a field that lowers to nothing (a `cost`
@@ -1826,7 +1857,7 @@ mutation testing and mechanized metatheory are out of scope here
 | O5 | `precedence-acyclic` | c | Cycle detection over the authority chains (with dependencies), the relation graph, and default/exception references. |
 | O6 | `delegation-respected` | b | Per declaration (bead lg-962.4 comment: each delegating declaration carries `delegable_to`): see C36. |
 | O7 | `exceptions-ordered` | b | Family refinement on the exceptions of one target: see C37. |
-| O8 | `dist-exact` | b | `Dist<E> = {m: E → Q | ∀e. m(e) ≥ 0 ∧ Σ_e m(e) = 1}`, total over `E`; a chance node's edges are `Dist<Edges(n)>`. Holes make it an SMT query (`Σ known ≤ 1`). Ground part done (lg-962.3): any node with `p` edges, self edges excluded (§5.1). |
+| O8 | `dist-exact` | b | `Dist<E> = {m: E → Q | ∀e. m(e) ≥ 0 ∧ Σ_e m(e) = 1}`, total over `E`; a chance node's edges are `Dist<Edges(n)>`. Holes make it an SMT query (`Σ known ≤ 1`). Ground part done (lg-962.3): chance nodes, self edges excluded; no other node carries `p` (lg-flu.9, §5.1). |
 | O9 | `graph-exits` | a | Node kind index: the body of a non-terminal node is `NonEmpty<Edge>`. Checked per version of the node. |
 | O10 | `graph-reachable` | c | Graph reachability from `start` and `entry` nodes over the lowered graph. |
 | O11 | `deadline-satisfiable` | c | Needs reachability (only reachable nodes) and due-date windows computed through counting rules and holiday calendars for some trigger date. |
@@ -1874,7 +1905,7 @@ gets one row per condition when the conditions classify differently.
 | C29 | L2007 field unknown, duplicated, or wrong for the declaration kind; `outcome`/`payoff` off a terminal; `undercuts` with `=>`; `replaces` outside links (§5.1, §5.5, §8.4) | sema, lower | a | One record type per declaration kind (node kind index on fields: `Node<Terminal>` alone has `payoff`); `Exception = Rebut {…, then} \| Undercut {…}`; `replaces` exists only in the links sort. |
 | C30 | L2007 `fact` tag on a node with no `p` edge (§5.1) | sema | b | Indexed by node kind and edge set: `fact` requires `kind = chance ∨ ∃e ∈ Edges(n). has_p(e)` (finite). |
 | C31 | L2007 rule shapes: `duty` without a deadline, `power` without a decision, `liability` without a node or with a deadline (§5.5) | sema | b | Cardinality refinement on the rule body: `Duty: {items \| #deadline ≥ 1}`, `Power: {#decision ≥ 1}`, `Liability: {#node ≥ 1 ∧ #deadline = 0}`. |
-| C32 | L2008 `p` outside `[0,1]`; `p` on a chance node's self edge; `p` missing at a chance node (§5.1) | sema | a+b | Range is (b) `Probability` (C28). Self edge and missing `p` are (a): a chance node's edges are `Edge<Chance>`, whose target is `Node \ {n}` for the distribution and whose `p` field is required (a hole inhabits it in `dev`). |
+| C32 | L2008 `p` outside `[0,1]`; `p` on a self edge; `p` missing at a chance node; `p` on an edge that is not a chance node's (or a link out of one or a terminal) (§5.1) | sema | a+b | Range is (b) `Probability` (C28). Self edge and missing `p` are (a): a chance node's edges are `Edge<Chance>`, whose target is `Node \ {n}` for the distribution and whose `p` field is required (a hole inhabits it in `dev`); every other node's edges are `Edge<Choice>`, with no `p` field (lg-flu.9). |
 | C33 | L3001 versions of one declaration overlap (§5.4) | sema | b | O3. |
 | C34 | L3002 undeclared gap in version coverage (§5.4) | sema | c | O4. |
 | C35 | L3003 two claimants left unordered (§5.5) | sema | c | Claimants are every declaration naming the target in any relation, across the package and its dependencies, compared day by day over active versions after supersession; a whole-package fixpoint over activity. |
@@ -1985,7 +2016,7 @@ The (b) rows above are discharged in two tiers before any solver
 1. **Ground evaluation** of closed terms: exact rationals with products
    cancelled before widening (C25), `Probability` terms over unknowns as
    exact linear forms over boxed atoms (C28, §6), and distributions over
-   any node's `p` edges without its self edges (O8, C22).
+   a chance node's `p` edges without its self edges (O8, C22).
 2. **Gregorian-cycle enumeration** for properties of every date: every
    counting rule reaches an open day from every date (C46, §5.3). It runs
    on the lowered clock, so it reports from `litigate-verify`.
@@ -1997,3 +2028,31 @@ delegation bounds. No refinement surface syntax is added: tiers 1 and 2
 need none, and a user-written qualifier would add a grammar form whose
 only consumer today would be the solver tier. Its forms are reserved
 instead (§3.5, L0009, lg-962.7), so adding them is additive.
+
+### 13.7 Status: node kinds (lg-flu.9)
+
+Design review 2026-10-23 §6 item 11 and §5.2 L13, decided as follows:
+
+1. **No mixed nodes.** `p` belongs only to a draw: a `chance` node's
+   edges, or a link out of a `chance` node or a terminal (L2008, §5.1).
+   The corpus's mixed nodes became `chance` (the Federal Circuit's remand
+   router, the Court of Federal Claims' ADR and settlement outcomes, plea
+   negotiation) or pure decisions (the PTAB appeal window and its link,
+   whose 0.92 appeal rate was a teaching estimate, not a draw).
+2. **Fact nodes computed by guards.** A derivable matter fact is a
+   `when` guard over the history (`has_event`, `date_of`, `deadline`),
+   pairwise disjoint (L2005); replay derives it (§5.6). The § 315(b) time
+   bar (`ptab::petition-time-bar-check`) is the first: the PTAB matter no
+   longer states it. Guards are not required to be exhaustive: a fact the
+   docket does not decide (a corrected petition, whose accorded filing
+   date is not modelled) is the matter's to state.
+3. **Information sets.** `info s` on a decision (§5.1) with a per-module
+   same-choices check (L2001). The engine has no information sets, so
+   such a package does not lower (L6001) until it does; no corpus node
+   uses one.
+
+The engine still decides choice versus draw by actor role (an `either`
+edge under a perspective that maps `either` to `self` is a choice even on
+a `chance` node); typing a draw's actors as non-parties is left to the
+delegation and role work (§6 item 2).
+

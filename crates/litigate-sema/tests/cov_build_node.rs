@@ -93,3 +93,46 @@ state s11: \"S\" { a \"A\" -> t { effort 3.days, event Nope() } }",
     );
     insta::assert_debug_snapshot!(out);
 }
+
+#[test]
+fn fact_guards_are_typed_placed_and_disjoint() {
+    let many: Vec<String> = (0..17).map(|i| format!("has_event(E{i}())")).collect();
+    let events = (0..17)
+        .map(|i| format!("event E{i}()\n"))
+        .collect::<Vec<_>>()
+        .concat();
+    let body = String::from(
+        "deadline dl: 3.days from Served(complaint) counted_by c6\n\
+chance ok: \"Ok\" { tags [fact]\n  y \"Y\" -> t p 1/2 { when (date_of(Served(complaint, Mail)) <= deadline(dl)) }\n  n \"N\" -> t p 1/2 { when !(date_of(Served(complaint, Mail)) <= deadline(dl)) } }\n\
+chance plain: \"P\" { y \"Y\" -> t p 1 { when true } }\n\
+state st: \"S\" { y \"Y\" -> t { when true } }\n\
+chance anon: \"A\" { tags [fact]\n  _ \"Y\" -> t p 1 { when true } }\n\
+chance foreign: \"F\" { tags [fact]\n  y \"Y\" -> t p 1 { when (1 < 2) } }\n\
+chance typed: \"T\" { tags [fact]\n  y \"Y\" -> t p 1 { when 3 } }\n\
+chance both: \"B\" { tags [fact]\n  y \"Y\" -> t p 1/2 { when has_event(Served(complaint, Mail)) }\n  n \"N\" -> t p 1/2 { when true } }\n\
+chance odd: \"O\" { tags [fact]\n  y \"Y\" -> t p 1 { when has_event(3) } }\n\
+chance bare: \"B\" { tags [fact]\n  y \"Y\" -> t p 1 { when } }\n",
+    ) + &events
+        + "chance wide: \"W\" { tags [fact]\n  y \"Y\" -> t p 1/2 { when "
+        + &many.join(" && ")
+        + " }\n  n \"N\" -> t p 1/2 { when false } }";
+    insta::assert_debug_snapshot!(check_body(&body));
+}
+
+#[test]
+fn information_sets_offer_one_choice() {
+    let out = check_body(
+        "decision a: \"A\" by Plaintiff info filing { x \"File\" -> t, y \"Wait\" -> t }\n\
+decision b: \"B\" by Plaintiff info filing { y \"Wait\" -> t, x \"File\" -> t }\n\
+decision c: \"C\" by Plaintiff info filing { x \"File\" -> t }\n\
+decision d: \"D\" by Defendant info filing { x \"File\" -> t, y \"Wait\" -> t }\n\
+decision e: \"E\" by Plaintiff info other { x \"File\" -> t }\n\
+state f: \"F\" info filing { x \"File\" -> t }",
+    );
+    insta::assert_debug_snapshot!(out);
+    let info = nodes(
+        "decision a: \"A\" by Plaintiff info filing { x \"File\" -> t }",
+        &["a"],
+    );
+    assert!(matches!(&info[..], [Declaration::Node(n)] if n.info.as_deref() == Some("filing")));
+}

@@ -358,6 +358,43 @@ fn evaluation_follows_the_connectives_and_asks_for_atoms() {
 }
 
 #[test]
+fn unknown_atoms_follow_kleene_logic() {
+    let a = has("Ordered", &[]);
+    let b = has("Served", &["c"]);
+    let unknown = reference("unknown");
+    let cases: Vec<(Expr, Vec<&Expr>, Option<bool>)> = vec![
+        (
+            bin(BinaryOp::And, a.clone(), unknown.clone()),
+            vec![],
+            Some(false),
+        ),
+        (
+            bin(BinaryOp::And, unknown.clone(), b.clone()),
+            vec![],
+            Some(false),
+        ),
+        (
+            bin(BinaryOp::Or, a.clone(), unknown.clone()),
+            vec![&a],
+            Some(true),
+        ),
+        (
+            bin(BinaryOp::Or, unknown.clone(), b.clone()),
+            vec![&b],
+            Some(true),
+        ),
+        (bin(BinaryOp::Or, unknown.clone(), b.clone()), vec![], None),
+        (bin(BinaryOp::Eq, unknown.clone(), b.clone()), vec![], None),
+        (bin(BinaryOp::Eq, a.clone(), unknown.clone()), vec![], None),
+        (bin(BinaryOp::Ne, unknown.clone(), b.clone()), vec![], None),
+        (bin(BinaryOp::Ne, a.clone(), unknown.clone()), vec![], None),
+    ];
+    for (e, facts, want) in &cases {
+        assert_eq!(run(e, facts), *want, "{e:?} with {facts:?}");
+    }
+}
+
+#[test]
 fn atoms_are_distinct_and_stop_at_non_boolean_operands() {
     let a = has("Ordered", &[]);
     let b = has("Served", &["c"]);
@@ -397,4 +434,61 @@ fn too_many_atoms_are_not_enumerated() {
     let refs: Vec<&Expr> = many.iter().collect();
     assert_eq!(jointly_satisfiable(&refs), None);
     assert_eq!(jointly_satisfiable(&refs[1..]), Some(true));
+}
+
+fn date(d: &str) -> Expr {
+    ex(
+        Type::Date,
+        ExprKind::Literal {
+            value: Value::Date(d.into()),
+        },
+    )
+}
+
+fn call(callee: &str, arg: Expr) -> Expr {
+    ex(
+        Type::Date,
+        ExprKind::Call {
+            callee: callee.into(),
+            args: vec![arg],
+        },
+    )
+}
+
+#[test]
+fn fact_guards_read_events_and_compare_dates() {
+    let filed = call("date_of", event("Filed", &[]));
+    let due = call("deadline", reference("bar"));
+    let ops = [
+        BinaryOp::Eq,
+        BinaryOp::Ne,
+        BinaryOp::Lt,
+        BinaryOp::Le,
+        BinaryOp::Gt,
+        BinaryOp::Ge,
+    ];
+    for op in ops {
+        let g = bin(op, filed.clone(), due.clone());
+        assert!(first_foreign_guard(&g).is_none(), "{op:?}");
+        let g = bin(op, date("2020-01-01"), filed.clone());
+        assert!(first_foreign_guard(&g).is_none(), "{op:?}");
+    }
+    let guard = bin(
+        BinaryOp::And,
+        not(has("Fixed", &[])),
+        bin(BinaryOp::Le, filed.clone(), due.clone()),
+    );
+    assert!(first_foreign_guard(&guard).is_none());
+    // Anything else is foreign: another atom, a non-date operand on
+    // either side, or an operator that is not a comparison.
+    let other = bin(BinaryOp::Or, has("Fixed", &[]), reference("x"));
+    assert_eq!(first_foreign_guard(&other), Some(&reference("x")));
+    let left = bin(BinaryOp::Lt, text("x"), due.clone());
+    assert_eq!(first_foreign_guard(&left), Some(&left));
+    let right = bin(BinaryOp::Lt, due.clone(), text("x"));
+    assert_eq!(first_foreign_guard(&right), Some(&right));
+    let not_date = bin(BinaryOp::Lt, call("len", due.clone()), due.clone());
+    assert_eq!(first_foreign_guard(&not_date), Some(&not_date));
+    let sum = bin(BinaryOp::Add, filed, due);
+    assert_eq!(first_foreign_guard(&sum), Some(&sum));
 }

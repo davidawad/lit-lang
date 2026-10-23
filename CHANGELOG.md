@@ -19,6 +19,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `where` is a reserved word (L0009 anywhere, `REFINEMENT_WORDS`) and `|`
   is a new punctuation token. The tree-sitter grammar (`refined_type`,
   `where_clause`) and the Emacs, Helix and Neovim highlights follow.
+
+- **Node kinds** (design review §6 item 11, §5.2 L13; SPEC §5.1, §5.6,
+  §13.7). A node is a choice or a draw, never both: `p` on a decision's or
+  a state's edge, or on a link leaving one, is L2008 (a link out of a
+  chance node or a terminal may carry it). A `fact` chance node's named
+  edges take `when` guards over the matter's history (`has_event`, the new
+  builtin `date_of(Pattern) -> Date`, and `deadline(d)` compared as
+  dates), pairwise disjoint (L2005); replay derives the fact from the
+  guard that holds, a contradicting `facts` entry is L4003, and the fact
+  at the replayed posture lowers to `scenario.facts` as if stated. The
+  PTAB § 315(b) time bar is derived from `ComplaintServed` and the
+  petition date, so `cases/ptab-ipr-defense.case` no longer states it.
+  `info s` puts decisions in an information set (same choices, same
+  actors, L2001); litgraph has no information sets yet, so such a package
+  does not lower (L6001). New contextual keyword `info`; `when` is now
+  also an edge field. Data: the Federal Circuit remand router, the Court
+  of Federal Claims ADR and settlement outcomes and plea negotiation are
+  `chance` nodes; the PTAB Federal Circuit appeal window (and its link)
+  is a pure decision, dropping its 0.92/0.08 teaching-estimate draw.
+
 - **Order independence** (design review §6 item 4, P7, P13; SPEC §4.1,
   §5.4, §5.6). The engine visits nodes in canonical (qualified id) order
   and a node's links by id, so renaming a module file, reordering a pack's

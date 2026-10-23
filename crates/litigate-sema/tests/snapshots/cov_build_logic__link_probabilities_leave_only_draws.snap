@@ -1,0 +1,9 @@
+---
+source: crates/litigate-sema/tests/cov_build_logic.rs
+expression: "render(&db, ws)"
+---
+[
+    "pkgs/links/links.lit:4:41 L2008 `p` belongs only to the edges of a `chance` node",
+    "pkgs/links/links.lit:5:41 L2008 `p` belongs only to the edges of a `chance` node",
+    "pkgs/links/links.lit:6:41 L2007 `when` is not allowed outside the edges of a `fact` chance node [fix: \"\"]",
+]

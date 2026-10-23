@@ -1,0 +1,82 @@
+---
+source: crates/litigate-sema/tests/cov_case_guards.rs
+expression: rows
+---
+{
+    "agree: a stated fact the history derives is accepted": [
+        "ok: start omega::check",
+        "trace Triggered Served() omega::intake -> omega::intake",
+        "trace Took Filed() omega::intake -> omega::check via omega::file",
+        "fact omega::check = omega::timely",
+    ],
+    "as_of: a late filing derives the bar": [
+        "ok: start omega::check",
+        "trace Triggered Served() omega::intake -> omega::intake",
+        "trace Took Filed() omega::intake -> omega::check via omega::file",
+        "fact omega::check = omega::late",
+    ],
+    "as_of: the history derives the fact at the replayed posture": [
+        "ok: start omega::check",
+        "trace Triggered Served() omega::intake -> omega::intake",
+        "trace Took Filed() omega::intake -> omega::check via omega::file",
+        "fact omega::check = omega::timely",
+    ],
+    "before an event: the derived fact is followed": [
+        "ok: start omega::won",
+        "trace Triggered Served() omega::intake -> omega::intake",
+        "trace Took Filed() omega::intake -> omega::check via omega::file",
+        "trace Fact fact omega::check -> omega::heard via omega::timely",
+        "trace Took Noted() omega::heard -> omega::won via omega::go",
+    ],
+    "contradict before an event: L4003, and the derived fact is followed": [
+        "16:16 L4003 the matter's history resolves fact `omega::check` to `omega::timely`, not `omega::late`\n    note: a `when` guard that holds derives the fact; drop the `facts` entry or correct the history",
+        "trace Triggered Served() omega::intake -> omega::intake",
+        "trace Took Filed() omega::intake -> omega::check via omega::file",
+        "trace Fact fact omega::check -> omega::heard via omega::timely",
+        "trace Took Noted() omega::heard -> omega::won via omega::go",
+        "fact omega::check = omega::late",
+    ],
+    "contradict: a stated fact the history refutes is L4003": [
+        "15:16 L4003 the matter's history resolves fact `omega::check` to `omega::timely`, not `omega::late`\n    note: a `when` guard that holds derives the fact; drop the `facts` entry or correct the history",
+        "trace Triggered Served() omega::intake -> omega::intake",
+        "trace Took Filed() omega::intake -> omega::check via omega::file",
+        "fact omega::check = omega::timely",
+    ],
+    "every comparison: a chain of facts followed before the event": [
+        "ok: start omega::won",
+        "trace Took Noted() omega::intake -> omega::lt via omega::ops",
+        "trace Fact fact omega::lt -> omega::le via omega::y",
+        "trace Fact fact omega::le -> omega::gt via omega::y",
+        "trace Fact fact omega::gt -> omega::ge via omega::y",
+        "trace Fact fact omega::ge -> omega::ne via omega::y",
+        "trace Fact fact omega::ne -> omega::eq via omega::y",
+        "trace Fact fact omega::eq -> omega::tail via omega::y",
+        "trace Took Filed() omega::tail -> omega::won via omega::go",
+    ],
+    "not in force at as_of: nothing derived there": [
+        "ok: start omega::old",
+        "trace Took Benched() omega::intake -> omega::old via omega::old",
+    ],
+    "underivable: no deadline instance, nothing derived": [
+        "ok: start omega::check",
+        "trace Took Filed() omega::intake -> omega::check via omega::file",
+    ],
+    "underivable: no guard holds, the stated fact resolves it": [
+        "ok: start omega::check",
+        "trace Triggered Served() omega::intake -> omega::intake",
+        "trace Triggered Fixed() omega::intake -> omega::intake",
+        "trace Took Filed() omega::intake -> omega::check via omega::file",
+        "fact omega::check = omega::late",
+    ],
+    "unknown left operand: no event matches `date_of`": [
+        "ok: start omega::left",
+        "trace Took Waited() omega::intake -> omega::left via omega::unknown",
+    ],
+    "unknown right operand: no instance of the deadline": [
+        "ok: start omega::right",
+        "trace Took Waited() omega::intake -> omega::left via omega::unknown",
+        "trace Fact fact omega::left -> omega::right via omega::y",
+        "trace Triggered Fixed() omega::right -> omega::right",
+        "fact omega::left = omega::y",
+    ],
+}

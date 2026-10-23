@@ -7,6 +7,8 @@ import cafc.docketing.{ notice-of-appeal-filed }
 import cafc.{ AppealExtensionMoved, BecameFinal, Entered, Filed, Order, Paper, entry-group }
 import core.authority.{ CaseOrder }
 import core.frap26.{ frap26 }
+import mpep.deadlines.{ uspto-1-7 }
+import ttab.{ ttab-2-196 }
 
 start appeal-origin
 
@@ -193,13 +195,44 @@ rule duty district-court-notice-of-appeal cite "FRAP 4(a)(1)(A)"
   }
 }
 
+/// A request to the Director to extend the time to appeal a Board decision
+/// (37 C.F.R. § 90.3(c)(1)), dated when the Office receives it (§
+/// 90.3(c)(2)).
+event PtabAppealExtensionRequested()
+/// The Director's extension of the time to appeal a Board decision to
+/// `until` (37 C.F.R. § 90.3(c)(1)).
+event PtabAppealPeriodExtended(until: Date) extends ptab-noa-period to until
+
 /// 37 C.F.R. § 90.3(a)(1): 63 days after the final Board decision, in force
 /// since the AIA trial rules took effect on September 16, 2012 (77 FR 48677,
 /// Aug. 14, 2012; amended 89 FR 22086, Mar. 29, 2024, without changing the
-/// period). The Director may extend it under § 90.3(c).
-rule duty ptab-notice-of-appeal cite "37 C.F.R. § 90.3(a)(1)"
+/// period). It is a Patent Office period, not a FRAP one: "If the last day
+/// for filing an appeal ... falls on a Federal holiday in the District of
+/// Columbia, the time is extended pursuant to 35 U.S.C. 21(b)" (§
+/// 90.3(b)(2)), which 37 C.F.R. § 1.7(a) implements (`uspto-1-7`, the Patent
+/// Trial and Appeal Board's counting rule), so the § 1.7 text in force from
+/// December 18, 2013 counts it and an earlier decision has no counting rule.
+/// Its extender is the Director, on a written request made before the
+/// period expires (good cause) or after (excusable neglect) (§ 90.3(c)(1)),
+/// not a court; the grants are on the version in force from March 29, 2024,
+/// whose text is vendored (UNVERIFIED: the 2012 version's paragraph (c)).
+rule duty ptab-notice-of-appeal cite 37 C.F.R. § 90.3(a)(1)
 {
-  deadline ptab-noa-period: 63.days after Entered(BoardDecision) counted_by frap26 effective [2012-09-16, ..) known_at 2012-08-14 delegable_to [CaseOrder] cite "37 C.F.R. § 90.3(a)(1); 37 C.F.R. § 90.3(c)"
+  deadline ptab-noa-period: 63.days after Entered(BoardDecision) counted_by uspto-1-7 effective [2012-09-16, 2024-03-29) known_at 2012-08-14 cite 37 C.F.R. § 90.3(a)(1); 37 C.F.R. § 90.3(b)(2)
+  {
+    forum ptab
+  }
+  deadline ptab-noa-period: 63.days after Entered(BoardDecision) counted_by uspto-1-7 effective [2024-03-29, ..) known_at 2024-03-29 supersedes ptab-noa-period@2012-09-16 cite 37 C.F.R. § 90.3(a)(1); 37 C.F.R. § 90.3(b)(2)
+  {
+    forum ptab
+    extend { by director, discretion GoodCause, on PtabAppealExtensionRequested() }
+    extend {
+      by director
+      discretion ExcusableNeglect
+      after_expiry
+      on PtabAppealExtensionRequested()
+    }
+  }
 }
 
 /// 19 U.S.C. § 1337(c): 60 days after the determination becomes final. The
@@ -220,10 +253,19 @@ rule duty itc-notice-of-appeal cite "19 U.S.C. § 1337(c)"
 /// entry. § 2522 names the Court of Federal Claims since the Federal Courts
 /// Administration Act of 1992 (Pub. L. 102-572, § 902, effective October 29,
 /// 1992). FRAP 4(a)(5)(A) extensions apply through § 2522.
-rule duty cofc-notice-of-appeal cite "28 U.S.C. § 2522"
+///
+/// FRAP 26 counts it, by incorporation rather than borrowing: § 2522
+/// prescribes "the time and in the manner prescribed for appeals to United
+/// States courts of appeals from the United States district courts", and
+/// RCFC 58.1(a) "the time and in the manner prescribed for appeals in Rule
+/// 3 of the Federal Rules of Appellate Procedure". That time is FRAP 4's,
+/// a period of FRAP (`forum frap`), which FRAP 26(a) computes; RCFC 6, the
+/// Court of Federal Claims' own rule, is not applied to it.
+rule duty cofc-notice-of-appeal cite 28 U.S.C. § 2522
 {
   deadline cofc-noa-period: 60.days after Entered(Judgment) counted_by frap26 effective [1992-10-29, ..) known_at 1992-10-29 delegable_to [CaseOrder] cite "28 U.S.C. § 2522; FRAP 4(a)(1)(B); FRAP 4(a)(5)(A)"
   {
+    forum frap
     extend {
       by court
       discretion GoodCauseOrExcusableNeglect
@@ -236,12 +278,37 @@ rule duty cofc-notice-of-appeal cite "28 U.S.C. § 2522"
   }
 }
 
+/// A request to the Director to extend the time to appeal a TTAB decision
+/// (37 C.F.R. § 2.145(e)(1)), dated when the Office receives it (§
+/// 2.145(e)(2)(i)).
+event TtabAppealExtensionRequested()
+/// The Director's extension of the time to appeal a TTAB decision to
+/// `until` (37 C.F.R. § 2.145(e)(1)).
+event TtabAppealPeriodExtended(until: Date) extends ttab-noa-period to until
+
 /// 37 C.F.R. § 2.145(d)(1): 63 days from the date of the final TTAB
 /// decision, as promulgated at 81 FR 69986 (Oct. 7, 2016), effective
-/// January 14, 2017. The Director may extend it under § 2.145(e).
-rule duty ttab-notice-of-appeal cite "37 C.F.R. § 2.145(d)(1)"
+/// January 14, 2017. It is a Trademark Office period, not a FRAP one: "If
+/// the last day of time specified for an appeal ... falls on a Saturday,
+/// Sunday or Federal holiday in the District of Columbia, the time is
+/// extended to the next day which is neither ... pursuant to § 2.196" (§
+/// 2.145(d)(4)(ii)), so the Board's rule `ttab-2-196` counts it. Its
+/// extender is the Director, on a written request made before the period
+/// expires (good cause) or after (excusable neglect) (§ 2.145(e)(1)), not
+/// a court.
+rule duty ttab-notice-of-appeal cite 37 C.F.R. § 2.145(d)(1)
 {
-  deadline ttab-noa-period: 63.days after Entered(BoardDecision) counted_by frap26 effective [2017-01-14, ..) known_at 2016-10-07 delegable_to [CaseOrder] cite "37 C.F.R. § 2.145(d)(1); 37 C.F.R. § 2.145(e)"
+  deadline ttab-noa-period: 63.days after Entered(BoardDecision) counted_by ttab-2-196 effective [2017-01-14, ..) known_at 2016-10-07 cite 37 C.F.R. § 2.145(d)(1); 37 C.F.R. § 2.145(d)(4)(ii)
+  {
+    forum ttab
+    extend { by director, discretion GoodCause, on TtabAppealExtensionRequested() }
+    extend {
+      by director
+      discretion ExcusableNeglect
+      after_expiry
+      on TtabAppealExtensionRequested()
+    }
+  }
 }
 
 test "a district-court notice of appeal is due 30 days after entry" cite "FRAP 4(a)(1)(A)"
@@ -262,13 +329,19 @@ test "a PTAB notice of appeal is due 63 days after the final decision" cite "37 
   expect deadline(ptab-noa-period) == 2026-05-04
 }
 
-test "a 63rd day on Memorial Day rolls to Tuesday" cite "FRAP 26(a)(6)(A)"
+test "a 63rd day on Memorial Day rolls to Tuesday" cite 37 C.F.R. § 90.3(b)(2)
 {
   given Entered(BoardDecision) on 2026-03-23
   expect deadline(ptab-noa-period) == 2026-05-26
 }
 
-test "an ITC notice of appeal is due 60 days after the determination becomes final" cite "19 U.S.C. § 1337(c)"
+test "a 63rd day on Inauguration Day, a District of Columbia holiday, rolls to Friday" cite 37 C.F.R. § 90.3(b)(2)
+{
+  given Entered(BoardDecision) on 2032-11-18
+  expect deadline(ptab-noa-period) == 2033-01-21
+}
+
+test "an ITC notice of appeal is due 60 days after the determination becomes final" cite 19 U.S.C. § 1337(c)
 {
   given BecameFinal() on 2026-03-02
   expect deadline(itc-noa-period) == 2026-05-01
@@ -298,8 +371,14 @@ test "a TTAB notice of appeal is due 63 days after the final decision" cite "37 
   expect deadline(ttab-noa-period) == 2026-05-04
 }
 
-test "a 63rd day on Labor Day rolls to Tuesday" cite "FRAP 26(a)(6)(A)"
+test "a 63rd day on Labor Day rolls to Tuesday" cite 37 C.F.R. § 2.145(d)(4)(ii)
 {
   given Entered(BoardDecision) on 2026-07-06
   expect deadline(ttab-noa-period) == 2026-09-08
+}
+
+test "a TTAB 63rd day on Inauguration Day rolls to Friday" cite 37 C.F.R. § 2.145(d)(4)(ii)
+{
+  given Entered(BoardDecision) on 2032-11-18
+  expect deadline(ttab-noa-period) == 2033-01-21
 }

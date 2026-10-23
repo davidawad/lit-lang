@@ -29,12 +29,18 @@ counting = "frap26"
 [package.roles]
 applicant = "self"
 court = "nature"
+director = "nature"
 either = "nature"
 examiner = "opponent"
+justice = "nature"
 office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The agency counting rules of the PTAB and TTAB notice-of-appeal periods:
+# 37 C.F.R. § 1.7 (`uspto-1-7`) and § 2.196 (`ttab-2-196`).
+mpep-prosecution = { version = "^0.1.0", path = "../mpep" }
+ttab-trademark-trial-and-appeal-board = { version = "^0.1.0", path = "../ttab" }
 
 [sources.fedcir-rules]
 title = "Federal Circuit Rules of Practice (FRAP + Federal Circuit Rules + Practice Notes + Attorney Discipline Rules, combined)"

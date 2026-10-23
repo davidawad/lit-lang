@@ -129,15 +129,16 @@ pub struct UnknownCode(u16);
 /// `L0000L0001…L9999`: the text of every well-formed code, so an unknown
 /// one still has a `&'static str`.
 static CODE_TEXT: [u8; 50_000] = {
+    const DIGITS: &[u8; 10] = b"0123456789";
     let mut text = [0_u8; 50_000];
     let mut n = 0;
     while n < 10_000 {
         let at = n * 5;
         text[at] = b'L';
-        text[at + 1] = b'0' + (n / 1000) as u8;
-        text[at + 2] = b'0' + (n / 100 % 10) as u8;
-        text[at + 3] = b'0' + (n / 10 % 10) as u8;
-        text[at + 4] = b'0' + (n % 10) as u8;
+        text[at + 1] = DIGITS[n / 1000];
+        text[at + 2] = DIGITS[n / 100 % 10];
+        text[at + 3] = DIGITS[n / 10 % 10];
+        text[at + 4] = DIGITS[n % 10];
         n += 1;
     }
     text

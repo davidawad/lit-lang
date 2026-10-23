@@ -196,7 +196,7 @@ pub struct Diagnostic {
     pub fixes: Vec<Fix>,
     /// For an L3xxx error, the derivation of the defect from the claims.
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub derivation: Option<Derivation>,
+    pub derivation: Option<Box<Derivation>>,
     /// Stable identity across runs and unrelated edits (set in envelopes):
     /// a hash of the code, file, and message, and the occurrence among
     /// diagnostics equal in those, never of line numbers.
@@ -208,7 +208,7 @@ pub struct Diagnostic {
     pub profile: Option<Profile>,
     /// The world the diagnostic was found in (set in envelopes).
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub world: Option<WorldTag>,
+    pub world: Option<Box<WorldTag>>,
 }
 
 impl Diagnostic {
@@ -273,7 +273,7 @@ impl Diagnostic {
     /// Attaches the derivation of the defect.
     #[must_use]
     pub fn derived(mut self, derivation: Derivation) -> Self {
-        self.derivation = Some(derivation);
+        self.derivation = Some(Box::new(derivation));
         self
     }
 
@@ -295,7 +295,7 @@ impl Diagnostic {
                 Derivation::new("premise", label.message.clone()).at(Some(label.span.clone())),
             );
         }
-        self.derivation = Some(derivation);
+        self.derivation = Some(Box::new(derivation));
     }
 
     /// The fingerprint of this diagnostic as the `occurrence`th (from 0)
@@ -336,7 +336,7 @@ pub fn stamp(diagnostics: &mut [Diagnostic], profile: Option<Profile>, world: &W
         d.fingerprint = Some(d.fingerprint_of(*n));
         *n += 1;
         d.profile = profile;
-        d.world = Some(world.clone());
+        d.world = Some(Box::new(world.clone()));
         d.ensure_derivation();
     }
 }
@@ -433,7 +433,7 @@ mod tests {
         assert_ne!(prints[0], prints[2]);
         assert!(prints.iter().all(|p| p.len() == 16));
         assert_eq!(list[0].profile, Some(Profile::Strict));
-        assert_eq!(list[0].world.as_ref(), Some(&world));
+        assert_eq!(list[0].world.as_deref(), Some(&world));
         let value = serde_json::to_value(&list[0]).unwrap();
         assert_eq!(
             value["world"],
@@ -464,7 +464,7 @@ mod tests {
         for d in [&mut kept, &mut warning, &mut other] {
             d.ensure_derivation();
         }
-        assert_eq!(kept.derivation, Some(own));
+        assert_eq!(kept.derivation.as_deref(), Some(&own));
         assert!(warning.derivation.is_none());
         assert!(other.derivation.is_none());
         let mut list = vec![Diagnostic::error(

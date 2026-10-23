@@ -7,7 +7,7 @@
 use super::lattice::{Lattice, Order};
 use crate::hir::Relation;
 use crate::temporal::interval::Window;
-use crate::temporal::world::{error, span_of, DiagnosticExt, Key, Locate, World};
+use crate::temporal::world::{error, span_of, Decl, DiagnosticExt, Key, Locate, World};
 use litigate_base::{Applicability, Derivation, Diagnostic, DiagnosticCode as C, Span};
 
 /// Clauses after whose value a `delegable_to` clause can be inserted.
@@ -125,36 +125,7 @@ pub fn check(
                     ));
                 }
                 Relation::DelegableTo(to) => {
-                    let own = &da.meta.authority;
-                    let order = lattice.compare(to, own);
-                    if order != Order::Below {
-                        let why = match order {
-                            Order::Equal => format!(
-                                "`{to}` is `{}`'s own authority, which needs no delegation",
-                                da.meta.id
-                            ),
-                            Order::Above => format!("`{to}` outranks `{own}`"),
-                            _ => format!(
-                                "`{to}` and `{own}` are not ranked by any `authority` chain"
-                            ),
-                        };
-                        let at = span_of(loc, da, "delegable_to");
-                        let derivation = Derivation::new(
-                            "unlicensed",
-                            format!("unlicensed(`{}` delegable_to {to})", da.meta.id),
-                        )
-                        .at(Some(at.clone()))
-                        .premise(Derivation::new("rank", format!("¬below({to}, {own})")));
-                        out.push(
-                            error(
-                                C::MissingDelegation,
-                                at,
-                                format!("`{}` ({own}) delegates to `{to}`, which is not a lower authority", da.meta.id),
-                            )
-                            .with_note(None, why)
-                            .derived(derivation),
-                        );
-                    }
+                    out.extend(misdelegated(lattice, loc, da, to));
                 }
                 // `subject_to` yields: it displaces nothing.
                 Relation::SubjectTo(_) => {}
@@ -162,6 +133,47 @@ pub fn check(
         }
     }
     out
+}
+
+/// L3004 when `da` delegates to `to`, which is not below its authority.
+fn misdelegated(
+    lattice: &Lattice,
+    loc: &dyn Locate,
+    da: &Decl<'_>,
+    to: &str,
+) -> Option<Diagnostic> {
+    let own = &da.meta.authority;
+    let order = lattice.compare(to, own);
+    if order == Order::Below {
+        return None;
+    }
+    let why = match order {
+        Order::Equal => format!(
+            "`{to}` is `{}`'s own authority, which needs no delegation",
+            da.meta.id
+        ),
+        Order::Above => format!("`{to}` outranks `{own}`"),
+        _ => format!("`{to}` and `{own}` are not ranked by any `authority` chain"),
+    };
+    let at = span_of(loc, da, "delegable_to");
+    let derivation = Derivation::new(
+        "unlicensed",
+        format!("unlicensed(`{}` delegable_to {to})", da.meta.id),
+    )
+    .at(Some(at.clone()))
+    .premise(Derivation::new("rank", format!("¬below({to}, {own})")));
+    Some(
+        error(
+            C::MissingDelegation,
+            at,
+            format!(
+                "`{}` ({own}) delegates to `{to}`, which is not a lower authority",
+                da.meta.id
+            ),
+        )
+        .with_note(None, why)
+        .derived(derivation),
+    )
 }
 
 /// The versions of `target` (only its `@D` version, when given) in force

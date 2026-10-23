@@ -17,3 +17,9 @@ cognitive-complexity-threshold = 25
 # Tests may unwrap/expect: a panic there is the assertion.
 allow-unwrap-in-tests = true
 allow-expect-in-tests = true
+
+# litigate's `Diagnostic` (schema v2: labels, multi-edit fixes,
+# fingerprint, profile/world tags, derivation) is the error type of sema's
+# fallible queries; at ~200 bytes it exceeds the 128-byte default, and
+# boxing every `Err` would only move the allocation.
+large-error-threshold = 256

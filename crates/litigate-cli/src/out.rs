@@ -226,8 +226,8 @@ mod tests {
         let d = &envelope.diagnostics[0];
         assert_eq!(d.profile, None);
         assert_eq!(
-            d.world,
-            Some(WorldTag::actual(Some("2024-01-01"), Some("2024-02-01")))
+            d.world.as_deref(),
+            Some(&WorldTag::actual(Some("2024-01-01"), Some("2024-02-01")))
         );
     }
 

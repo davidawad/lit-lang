@@ -9,7 +9,7 @@
 use crate::hir::{Declaration, Exception, Expr};
 use crate::temporal::condition::{eval, jointly_satisfiable};
 use crate::temporal::interval::Window;
-use crate::temporal::world::{error, span_of, DiagnosticExt, Key, Locate, World};
+use crate::temporal::world::{error, span_of, Decl, DiagnosticExt, Key, Locate, World};
 use litigate_base::{Applicability, Derivation, Diagnostic, DiagnosticCode as C};
 
 /// How a default (or exception) came out, with the declarations that
@@ -162,6 +162,38 @@ pub fn check(world: &World<'_>, loc: &dyn Locate, pack: usize) -> Vec<Diagnostic
     out
 }
 
+/// The L3005 derivation: `da` and `db` both except `target` on `common`,
+/// unordered by priority and not proved disjoint (`overlap` says why).
+fn unordered(
+    loc: &dyn Locate,
+    (da, db): (&Decl<'_>, &Decl<'_>),
+    target: &str,
+    common: &Window,
+    overlap: String,
+) -> Derivation {
+    let exception = |d: &Decl<'_>| {
+        Derivation::new("claim", format!("exception(`{}`, `{target}`)", d.meta.id))
+            .at(d.meta.span.clone())
+    };
+    Derivation::new(
+        "conflict",
+        format!(
+            "conflict(`{target}`, `{}`, `{}`) on {}",
+            da.meta.id,
+            db.meta.id,
+            common.display()
+        ),
+    )
+    .at(Some(span_of(loc, db, "when")))
+    .premise(exception(da))
+    .premise(exception(db))
+    .premise(Derivation::new(
+        "no-priority",
+        format!("¬ordered(`{}`, `{}`)", da.meta.id, db.meta.id),
+    ))
+    .premise(Derivation::new("not-disjoint", overlap))
+}
+
 fn pair(
     world: &World<'_>,
     loc: &dyn Locate,
@@ -205,31 +237,7 @@ fn pair(
         format!("`{}` is declared here", da.meta.id),
     )
     .with_note(None, overlap.clone())
-    .derived(
-        Derivation::new(
-            "conflict",
-            format!(
-                "conflict(`{target}`, `{}`, `{}`) on {}",
-                da.meta.id,
-                db.meta.id,
-                common.display()
-            ),
-        )
-        .at(Some(span_of(loc, db, "when")))
-        .premise(
-            Derivation::new("claim", format!("exception(`{}`, `{target}`)", da.meta.id))
-                .at(da.meta.span.clone()),
-        )
-        .premise(
-            Derivation::new("claim", format!("exception(`{}`, `{target}`)", db.meta.id))
-                .at(db.meta.span.clone()),
-        )
-        .premise(Derivation::new(
-            "no-priority",
-            format!("¬ordered(`{}`, `{}`)", da.meta.id, db.meta.id),
-        ))
-        .premise(Derivation::new("not-disjoint", overlap)),
-    )
+    .derived(unordered(loc, (da, db), &target, &common, overlap))
     .with_note(
         None,
         "make the conditions exclusive, or give both distinct `priority` values (larger wins)",

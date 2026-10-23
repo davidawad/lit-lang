@@ -63,30 +63,7 @@ pub fn diagnostic(d: &Diagnostic, sources: &[(String, String)], color: bool) -> 
         report = report.with_note(tree);
     }
     for fix in &d.fixes {
-        let edits: Vec<String> = fix
-            .edits
-            .iter()
-            .map(|e| {
-                format!(
-                    "replace {}:{}:{}-{}:{} with `{}`",
-                    e.span.file.0,
-                    e.span.line,
-                    e.span.col,
-                    e.span.end_line,
-                    e.span.end_col,
-                    e.replacement
-                )
-            })
-            .collect();
-        let lead = fix
-            .message
-            .as_ref()
-            .map_or(String::new(), |m| format!("{m}: "));
-        report = report.with_help(format!(
-            "{lead}{} ({:?})",
-            edits.join("; "),
-            fix.applicability
-        ));
+        report = report.with_help(fix_help(fix));
     }
     let mut buffer = Vec::new();
     // Writing to a `Vec` cannot fail.
@@ -94,6 +71,30 @@ pub fn diagnostic(d: &Diagnostic, sources: &[(String, String)], color: bool) -> 
         .finish()
         .write((file, Source::from(text.clone())), &mut buffer);
     String::from_utf8_lossy(&buffer).into_owned()
+}
+
+/// One fix as help text: its message, then every edit it applies.
+fn fix_help(fix: &litigate_base::Fix) -> String {
+    let edits: Vec<String> = fix
+        .edits
+        .iter()
+        .map(|e| {
+            format!(
+                "replace {}:{}:{}-{}:{} with `{}`",
+                e.span.file.0,
+                e.span.line,
+                e.span.col,
+                e.span.end_line,
+                e.span.end_col,
+                e.replacement
+            )
+        })
+        .collect();
+    let lead = fix
+        .message
+        .as_ref()
+        .map_or(String::new(), |m| format!("{m}: "));
+    format!("{lead}{} ({:?})", edits.join("; "), fix.applicability)
 }
 
 /// `derivation` as an indented tree, one step per line.

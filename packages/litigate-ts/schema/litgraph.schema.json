@@ -598,12 +598,48 @@
       ],
       "description": "A window within which a transition must happen."
     },
+    "Derivation": {
+      "type": "object",
+      "properties": {
+        "rule": {
+          "type": "string",
+          "description": "The inference rule, e.g. `defeats` or `winner`."
+        },
+        "fact": {
+          "type": "string",
+          "description": "The fact concluded, e.g. `winner(frcp::answer-due, v2)`."
+        },
+        "span": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Span"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Where the fact comes from in source, when it has one location."
+        },
+        "premises": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Derivation"
+          },
+          "description": "Derivations of the premises, in order."
+        }
+      },
+      "required": [
+        "rule",
+        "fact"
+      ],
+      "description": "One step of the proof that an L3xxx error holds: the rule of the\nresolution semantics applied (SPEC §9.2 names them), the fact it\nconcludes, and the derivations of its premises."
+    },
     "Diagnostic": {
       "type": "object",
       "properties": {
         "code": {
           "$ref": "#/$defs/DiagnosticCode",
-          "description": "Closed, stable diagnostic identifier."
+          "description": "Stable diagnostic identifier; a well-formed code this compiler does\nnot know still decodes (see [`DiagnosticCode::Unknown`])."
         },
         "severity": {
           "$ref": "#/$defs/Severity",
@@ -617,6 +653,13 @@
           "type": "string",
           "description": "Concise explanation."
         },
+        "labels": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Label"
+          },
+          "description": "Labelled secondary locations."
+        },
         "notes": {
           "type": "array",
           "items": {
@@ -629,7 +672,47 @@
           "items": {
             "$ref": "#/$defs/Fix"
           },
-          "description": "Suggested edits."
+          "description": "Suggested changes."
+        },
+        "derivation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Derivation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "For an L3xxx error, the derivation of the defect from the claims."
+        },
+        "fingerprint": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Stable identity across runs and unrelated edits (set in envelopes):\na hash of the code, file, and message, and the occurrence among\ndiagnostics equal in those, never of line numbers."
+        },
+        "profile": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Profile"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "The checking profile that graded the severity (set in envelopes of\ncommands that take `--profile`)."
+        },
+        "world": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/WorldTag"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "The world the diagnostic was found in (set in envelopes)."
         }
       },
       "required": [
@@ -641,69 +724,77 @@
       "description": "One structured compiler diagnostic."
     },
     "DiagnosticCode": {
-      "description": "Stable diagnostic code (`litigate explain <code>`).",
-      "type": "string",
-      "enum": [
-        "L0001",
-        "L0002",
-        "L0003",
-        "L0004",
-        "L0005",
-        "L0006",
-        "L0007",
-        "L0008",
-        "L1001",
-        "L1002",
-        "L1003",
-        "L1004",
-        "L1005",
-        "L1006",
-        "L1007",
-        "L1008",
-        "L1009",
-        "L1010",
-        "L2001",
-        "L2002",
-        "L2003",
-        "L2004",
-        "L2005",
-        "L2006",
-        "L2007",
-        "L2008",
-        "L3001",
-        "L3002",
-        "L3003",
-        "L3004",
-        "L3005",
-        "L3006",
-        "L3007",
-        "L3008",
-        "L3009",
-        "L4001",
-        "L4002",
-        "L4003",
-        "L4004",
-        "L4005",
-        "L4006",
-        "L4007",
-        "L4008",
-        "L4009",
-        "L5001",
-        "L5002",
-        "L5003",
-        "L5004",
-        "L5005",
-        "L5006",
-        "L6001",
-        "L6002",
-        "L6003",
-        "L6004",
-        "L6005",
-        "L9001",
-        "L9002",
-        "L9003",
-        "L9004",
-        "L9005"
+      "description": "Stable diagnostic code (`litigate explain <code>`); codes outside the registry are a newer compiler's.",
+      "anyOf": [
+        {
+          "type": "string",
+          "enum": [
+            "L0001",
+            "L0002",
+            "L0003",
+            "L0004",
+            "L0005",
+            "L0006",
+            "L0007",
+            "L0008",
+            "L1001",
+            "L1002",
+            "L1003",
+            "L1004",
+            "L1005",
+            "L1006",
+            "L1007",
+            "L1008",
+            "L1009",
+            "L1010",
+            "L2001",
+            "L2002",
+            "L2003",
+            "L2004",
+            "L2005",
+            "L2006",
+            "L2007",
+            "L2008",
+            "L3001",
+            "L3002",
+            "L3003",
+            "L3004",
+            "L3005",
+            "L3006",
+            "L3007",
+            "L3008",
+            "L3009",
+            "L4001",
+            "L4002",
+            "L4003",
+            "L4004",
+            "L4005",
+            "L4006",
+            "L4007",
+            "L4008",
+            "L4009",
+            "L5001",
+            "L5002",
+            "L5003",
+            "L5004",
+            "L5005",
+            "L5006",
+            "L6001",
+            "L6002",
+            "L6003",
+            "L6004",
+            "L6005",
+            "L9001",
+            "L9002",
+            "L9003",
+            "L9004",
+            "L9005"
+          ]
+        },
+        {
+          "type": "string",
+          "pattern": "^L[0-9]{4}$"
+        }
       ]
     },
     "Duration": {
@@ -736,6 +827,24 @@
         "mode"
       ],
       "description": "Expected elapsed calendar time of a transition, in days (triangular)."
+    },
+    "Edit": {
+      "type": "object",
+      "properties": {
+        "span": {
+          "$ref": "#/$defs/Span",
+          "description": "Range replaced by this edit, in any file."
+        },
+        "replacement": {
+          "type": "string",
+          "description": "Replacement source text."
+        }
+      },
+      "required": [
+        "span",
+        "replacement"
+      ],
+      "description": "One text replacement of a [`Fix`]."
     },
     "Effective": {
       "type": "object",
@@ -857,25 +966,30 @@
     "Fix": {
       "type": "object",
       "properties": {
-        "span": {
-          "$ref": "#/$defs/Span",
-          "description": "Range replaced by this edit."
+        "message": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "What the fix does, when the edits alone do not say."
         },
-        "replacement": {
-          "type": "string",
-          "description": "Replacement source text."
+        "edits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Edit"
+          },
+          "description": "The edits, non-overlapping; at least one."
         },
         "applicability": {
           "$ref": "#/$defs/Applicability",
-          "description": "Whether the edit can be applied without review."
+          "description": "Whether the edits can be applied without review."
         }
       },
       "required": [
-        "span",
-        "replacement",
+        "edits",
         "applicability"
       ],
-      "description": "A source edit suggested by a diagnostic."
+      "description": "A suggested change: one or more edits applied together or not at all\n(a rename touches every reference, possibly across files)."
     },
     "Generated": {
       "type": "object",
@@ -1251,6 +1365,24 @@
       ],
       "description": "One citation of a `cite`/`authority` string, located in the L0 corpus."
     },
+    "Label": {
+      "type": "object",
+      "properties": {
+        "span": {
+          "$ref": "#/$defs/Span",
+          "description": "The location, in any file."
+        },
+        "message": {
+          "type": "string",
+          "description": "What is at `span` (for example \"the rule it conflicts with\")."
+        }
+      },
+      "required": [
+        "span",
+        "message"
+      ],
+      "description": "A secondary source location with a label saying what it is."
+    },
     "LinkFile": {
       "type": "object",
       "additionalProperties": false,
@@ -1305,6 +1437,12 @@
     "LitigateEnvelope": {
       "type": "object",
       "properties": {
+        "schema_version": {
+          "type": "integer",
+          "format": "uint32",
+          "minimum": 0,
+          "description": "Envelope and diagnostic schema version ([`SCHEMA_VERSION`])."
+        },
         "ok": {
           "type": "boolean",
           "description": "Whether the operation completed without errors."
@@ -1314,7 +1452,7 @@
           "description": "Operation name."
         },
         "result": {
-          "description": "Operation-specific result, absent on failure."
+          "description": "Operation-specific result: present whenever the operation produced\none, errors or not (a failed check still reports its obligations)."
         },
         "diagnostics": {
           "type": "array",
@@ -1333,6 +1471,7 @@
         }
       },
       "required": [
+        "schema_version",
         "ok",
         "op",
         "diagnostics",
@@ -1534,17 +1673,6 @@
     "Note": {
       "type": "object",
       "properties": {
-        "span": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/Span"
-            },
-            {
-              "type": "null"
-            }
-          ],
-          "description": "Optional source location for the note."
-        },
         "message": {
           "type": "string",
           "description": "Human-readable explanation."
@@ -1553,7 +1681,7 @@
       "required": [
         "message"
       ],
-      "description": "Additional explanation attached to a diagnostic."
+      "description": "Additional unlocated explanation attached to a diagnostic; a located\none is a [`Label`]."
     },
     "Objective": {
       "oneOf": [
@@ -2792,6 +2920,21 @@
         }
       ],
       "description": "How to fill missing probabilities at a draw."
+    },
+    "Profile": {
+      "oneOf": [
+        {
+          "type": "string",
+          "const": "dev",
+          "description": "Development checks permit explicit holes with warnings."
+        },
+        {
+          "type": "string",
+          "const": "strict",
+          "description": "Strict checks reject unresolved holes and incomplete verification."
+        }
+      ],
+      "description": "Compiler checking profile."
     },
     "RawEdge": {
       "type": "object",
@@ -4157,6 +4300,33 @@
         }
       ],
       "description": "A day of the week, as authored in clock data."
+    },
+    "WorldTag": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The world's name: `actual` for the packages as loaded."
+        },
+        "as_of": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The valid-time coordinate, when the command fixed one."
+        },
+        "known_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The knowledge-time coordinate, when the command fixed one."
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "description": "The world a diagnostic was found in: the layer set and the query\ncoordinates (valid time `as_of`, knowledge time `known_at`)."
     }
   }
 }

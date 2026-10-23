@@ -54,9 +54,6 @@ impl Cx<'_, '_> {
                 self.out.push(e);
             }
             Ok(date) if event.date.as_str() > date.as_str() => {
-                if deadline::excusal(&self.sorted, k, &trigger.date).is_some() {
-                    return;
-                }
                 let excusable = if self.graph.declares_excusal() {
                     "a cited `Waived`, `Extended`, or `Excused` event between the trigger and this event would excuse it"
                 } else {

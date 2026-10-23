@@ -9,7 +9,7 @@
 //! counting rule (`litigate_lower::EngineClock`), so a matter is judged by
 //! exactly the arithmetic its scenario will run under.
 use super::graph::{display, Graph};
-use crate::hir::{DayUnit, Deadline, Declaration, Direction, Event, Expr, ExprKind, Value};
+use crate::hir::{DayUnit, Deadline, Declaration, Direction, Expr, ExprKind, Value};
 use crate::temporal::condition::matches;
 use crate::temporal::MatterEvent;
 
@@ -171,20 +171,6 @@ pub(super) fn due(
         date: clock.due(&request),
         request,
     })
-}
-
-/// The earliest cited excusing event dated on or after `from` among the
-/// events (sorted by date) before index `at`, so dated on or before it.
-pub(super) fn excusal<'e>(
-    _events: &[(usize, &'e Event)],
-    _at: usize,
-    _from: &str,
-) -> Option<&'e Event> {
-    // Do not infer legal effect from an event constructor's spelling and a
-    // free-text citation. Without a deadline target, bounded extension, and
-    // issuer capability, accepting one can excuse a jurisdictional deadline
-    // (the Bowles v. Russell error).
-    None
 }
 
 /// How a due date was counted, for notes.

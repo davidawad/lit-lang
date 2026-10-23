@@ -282,3 +282,52 @@ fn values_as_json() {
     assert_eq!(V::Bool(true).json(), json!(true));
     assert_eq!(V::Other(json!({"a": 1})).json(), json!({"a": 1}));
 }
+
+/// The results of the tests of the worked example plus `extra` whose name
+/// contains `filter`: (passed, first error).
+fn outcomes(extra: &str, filter: &str) -> Vec<(bool, Option<String>)> {
+    let pkg = hir_with(extra);
+    let clocks = Clocks::new(&[&pkg]);
+    let (results, _) = run(&clocks, &[&pkg], &pkg, &[], Some(filter));
+    results
+        .iter()
+        .flat_map(|t| t.expectations.iter())
+        .map(|x| (x.passed, x.error.clone()))
+        .collect()
+}
+
+#[test]
+fn deadline_counts_under_the_claimant_that_prevails() {
+    // SPEC §5.5: `quick` displaces `answer-period`, so `deadline(..)` of
+    // the latter is 14 days, not 21.
+    let quick = "
+deadline quick: 14.days from Served(complaint) counted_by frcp6 notwithstanding answer-period
+
+test \"selected\"
+{
+  given Served(complaint, Personal) on 2025-03-03
+  expect deadline(answer-period) == 2025-03-17
+}
+";
+    assert_eq!(outcomes(quick, "selected"), [(true, None)]);
+    // The selected claimant runs from its own trigger.
+    let moved = "
+deadline moved: 7.days from MovedToDismiss(complaint) counted_by frcp6 notwithstanding answer-period
+
+test \"selected\"
+{
+  given Served(complaint, Personal) on 2025-03-03
+  expect deadline(answer-period) == 2025-03-10
+}
+";
+    assert_eq!(
+        outcomes(moved, "selected"),
+        [(
+            false,
+            Some(
+                "no `given` event matches the trigger MovedToDismiss(complaint) of `answer-period`"
+                    .to_owned()
+            )
+        )]
+    );
+}

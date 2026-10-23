@@ -592,11 +592,16 @@ winner is chosen as follows:
    wins), `A supersedes B` (B is inactive during A's interval), and
    `A revives B` (B is active again after A's superseding interval ends).
    Repeal alone does not revive.
-2. If still unresolved: higher authority, then the more specific declaration
-   (inside a `rule` beats package level, and a narrower interval beats a
-   wider one), then the later `from`. A remaining tie is L3003.
-3. `A override B` with A's authority lower than B's requires B to list A's
-   authority in `delegable_to` (L3004).
+2. If still unresolved, and only between comparable authorities: higher
+   authority, then the declaration with the narrower subject matter (its
+   trigger or condition entails the other's, not conversely), then one
+   inside a `rule` over package level, then the later `from`. The length
+   of the in-force interval is never a canon. Incomparable authorities no
+   relation orders, and any remaining tie, are L3003.
+3. Every relation that displaces its target (`override`, `notwithstanding`,
+   `supersedes`, `revives`) needs a capability: A's authority equals or
+   outranks B's, or B lists A's authority in `delegable_to` (L3004). An
+   unlicensed relation has no effect on selection.
 
 `default d when C => V` concludes V when C holds. `exception e rebuts d when C
 => V'` concludes V' instead. `exception e undercuts d when C` disables d
@@ -633,9 +638,13 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
   `subject_to T`. On each day, the active claimant that beats every other
   active claimant wins. Stage 1: `notwithstanding` and `override` win,
   `subject_to` yields; a `@D` target applies only while version D is
-  active. Stage 2, for pairs stage 1 leaves open: authority, then inside a
-  `rule` over package level, then the shorter window (open-ended is
-  longest), then the later `from`. L3003 is reported once per unordered
+  active, and a displacing claim counts only when licensed (step 3).
+  Stage 2, for pairs stage 1 leaves open and whose authorities are
+  comparable: authority, then subject matter (a deadline whose trigger
+  pattern extends the other's, e.g. `Served(complaint)` over `Served()`;
+  a default or exception whose condition entails the other's), then
+  inside a `rule` over package level, then the later `from`. L3003 is
+  reported once per unordered
   pair, at the later declaration's relation clause with a note at the
   other. A pair whose declared relations contradict each other is L3006
   only, not also L3003. A declaration is inside a `rule` when the rule's
@@ -647,11 +656,26 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
   default/exception references (an exception to its target; a default or
   exception to every default or exception its expressions name) must each
   be acyclic.
-- **Delegation.** `A override B` needs no delegation when A's authority
-  equals or outranks B's. Otherwise every version of B that overlaps A's
-  window must list A's authority, exactly, in `delegable_to` (L3004 at the
-  `override` clause, naming the missing `delegable_to [Level]`, with a
-  `maybe_incorrect` fix inserting it into B). `delegable_to X` must name a
+- **Selection.** The declaration that governs T on a date is its winning
+  claimant; when that winner is itself displaced by a claim on it, the
+  selection follows it (a cycle, L3006, stops where it closes). This one
+  query (`precedence::select`) is what lowering, case replay, inline
+  tests, the matter schedule, `explain-value` and the LSP use, so a claim
+  is executed, not only explained. Lowering emits a declaration only when
+  it governs its own name at the build dates: a displaced node, deadline,
+  counting rule or calendar is absent, and every reference to it (`within
+  d`, `counted_by c`, `holidays k`, a matter's posture) resolves to the
+  winner. A package's selection sees it, its dependencies and `core`; a
+  links package sees every loaded package; a matter sees the packages it
+  `uses`.
+- **Delegation.** A displacing relation (`override`, `notwithstanding`,
+  `supersedes`, `revives`) needs no delegation when A's authority equals
+  or outranks B's. Otherwise every version of B it acts on (for
+  `override`/`notwithstanding`, those overlapping A's window; for
+  `supersedes`/`revives`, those that took effect before A) must list A's
+  authority, exactly, in `delegable_to` (L3004 at the relation clause,
+  naming the missing `delegable_to [Level]`, with a `maybe_incorrect` fix
+  inserting it into B). `delegable_to X` must name a
   level strictly below the declaration's own (L3004). An override of a
   declaration never in force during the override's window is L3007, as is
   an exception never in force alongside its target.
@@ -871,10 +895,13 @@ Anything without a lowering is L6001.
 | `counting` / `calendar` | `Pack.counting` (the rule id) plus a clock-library fragment (§8.2) |
 | `event`, authority lattice, relations, defaults, exceptions, transitions, tests, types | not emitted (verification only) |
 
-Multiple versions: only the version selected by the build's `--as-of`/
-`--known-at` is emitted, with supersession applied (§5.4); a declaration
-with no version in force then is absent, and overlapping versions, or an
-edge or `start` naming an absent node, are L3007. The default is the package `known_at` date for both. Node order is
+Multiple versions: only the declaration the precedence selection (§5.5)
+picks at the build's `--as-of`/`--known-at` is emitted, with supersession
+and licensed displacing claims applied (§5.4-§5.5); a declaration with no
+version in force then, or displaced by a claimant, is absent, and
+overlapping versions, or an edge or `start` naming an absent node, are
+L3007. A reference resolves to the selected claimant; unordered claimants
+are L3003. The default is the package `known_at` date for both. Node order is
 module order (the module files' paths, §4.1), then source order.
 
 A cite hole `cite ?("text")` lowers to `"text"` exactly, so imported
@@ -1428,7 +1455,7 @@ gets one row per condition when the conditions classify differently.
 | C33 | L3001 versions of one declaration overlap (§5.4) | sema | b | O3. |
 | C34 | L3002 undeclared gap in version coverage (§5.4) | sema | c | O4. |
 | C35 | L3003 two claimants left unordered (§5.5) | sema | c | Claimants are every declaration naming the target in any relation, across the package and its dependencies, compared day by day over active versions after supersession; a whole-package fixpoint over activity. |
-| C36 | L3004 lower-authority `override` without delegation; `delegable_to` not strictly below own level (§5.5) | sema | b | Indexed by authority: B's signature carries `Delegable<L ⊆ Levels>` per version. `A override B` checks `auth(A) ≥ auth(B) ∨ ∀v ∈ Versions(B). overlaps(v, A) → auth(A) ∈ delegable(v)` (finite set, QF_LIA overlap). `delegable_to X` requires `X < auth(self)` in the fixed order. Per declaration, so no global search. |
+| C36 | L3004 lower-authority displacing relation (`override`, `notwithstanding`, `supersedes`, `revives`) without delegation; `delegable_to` not strictly below own level (§5.5) | sema | b | Indexed by authority: B's signature carries `Delegable<L ⊆ Levels>` per version. `A override B` (likewise each displacing relation, over the versions it acts on) checks `auth(A) ≥ auth(B) ∨ ∀v ∈ Versions(B). overlaps(v, A) → auth(A) ∈ delegable(v)` (finite set, QF_LIA overlap). `delegable_to X` requires `X < auth(self)` in the fixed order. Per declaration, so no global search. |
 | C37 | L3005 exceptions on one target neither disjoint nor prioritized (§5.5) | sema | b | Family refinement: for each pair on a target, `UNSAT(C_i ∧ C_j) ∨ priority_i ≠ priority_j` (propositional SAT over `has_event` atoms; small and finite). |
 | C38 | L3006 type alias, default or exception refers to itself (§5.2) | sema | c | Transitive self-reference is a cycle in the reference graph. (A direct `type T = T` alone is (a).) |
 | C39 | L3006 authority order, declared wins, supersession, default/exception references cyclic (§5.5) | sema | c | O5. |

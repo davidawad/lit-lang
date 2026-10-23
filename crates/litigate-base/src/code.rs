@@ -75,7 +75,7 @@ registry! { 59;
     EffectiveOverlap = "L3001" => "Two versions of the same declaration overlap in in-force time",
     EffectiveGap = "L3002" => "A declaration version gap is not explicitly declared",
     UnresolvedPrecedence = "L3003" => "Conflicting rules remain unordered after relations and canons are applied",
-    MissingDelegation = "L3004" => "An override requires an explicit delegation from the higher-authority rule",
+    MissingDelegation = "L3004" => "A displacing relation (override, notwithstanding, supersedes, revives) requires an explicit delegation from the higher-authority rule",
     ExceptionConflict = "L3005" => "Exceptions overlap without an explicit priority or disjointness proof",
     PrecedenceCycle = "L3006" => "Authority or precedence relations form a cycle",
     NoVersionInForce = "L3007" => "No version of the declaration is in force at the selected date",

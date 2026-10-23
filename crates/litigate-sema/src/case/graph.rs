@@ -226,7 +226,7 @@ impl<'a> Graph<'a> {
     pub fn unordered(&self, pairs: &[(usize, usize)]) -> String {
         format!(
             "{} (L3003 in `litigate check`)",
-            precedence::select::unordered(&self.world, pairs)
+            precedence::select::unordered(&self.world, pairs, "")
         )
     }
 

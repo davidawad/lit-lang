@@ -19,7 +19,7 @@
 //! L3003 with both spans; it is never resolved silently.
 use super::delegation::licensed;
 use super::lattice::{Lattice, Order};
-use crate::hir::{Declaration, Expr, Relation};
+use crate::hir::{Declaration, DefaultRule, Exception, Expr, Relation};
 use crate::temporal::activity::{active, boundaries, piece, suspensions};
 use crate::temporal::condition::{entails, matches};
 use crate::temporal::interval::Window;
@@ -135,8 +135,10 @@ enum Antecedent<'e> {
 fn antecedent(d: &Declaration) -> Option<Antecedent<'_>> {
     match d {
         Declaration::Deadline(x) => Some(Antecedent::Trigger(&x.trigger)),
-        Declaration::Default(x) => Some(Antecedent::Condition(&x.condition)),
-        Declaration::Exception(x) => Some(Antecedent::Condition(&x.condition)),
+        Declaration::Default(DefaultRule { condition, .. })
+        | Declaration::Exception(Exception { condition, .. }) => {
+            Some(Antecedent::Condition(condition))
+        }
         _ => None,
     }
 }
@@ -147,9 +149,11 @@ fn antecedent(d: &Declaration) -> Option<Antecedent<'_>> {
 /// A trigger pattern entails another that is its prefix (omitted trailing
 /// arguments match anything).
 fn specific(a: &Declaration, b: &Declaration) -> Option<bool> {
-    let (ab, ba) = match (antecedent(a)?, antecedent(b)?) {
-        (Antecedent::Trigger(x), Antecedent::Trigger(y)) => (matches(y, x), matches(x, y)),
-        (Antecedent::Condition(x), Antecedent::Condition(y)) => {
+    let (ab, ba) = match (antecedent(a), antecedent(b)) {
+        (Some(Antecedent::Trigger(x)), Some(Antecedent::Trigger(y))) => {
+            (matches(y, x), matches(x, y))
+        }
+        (Some(Antecedent::Condition(x)), Some(Antecedent::Condition(y))) => {
             (entails(x, y) == Some(true), entails(y, x) == Some(true))
         }
         _ => return None,

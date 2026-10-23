@@ -39,26 +39,36 @@ impl Unselected {
             Self::Inactive(_) => format!("no version of {what} is in force on {date}"),
             Self::Unresolved(pairs) => format!(
                 "no single declaration governs {what} on {date}: {}",
-                unordered(world, pairs)
+                unordered(world, pairs, "")
             ),
         }
     }
 }
 
-/// Claimant pairs no relation or canon orders, as a sentence.
+/// Claimant pairs no relation or canon orders, as a sentence, each named
+/// as seen from pack `from` (`""`: always qualified).
 #[must_use]
-pub fn unordered(world: &World<'_>, pairs: &[(usize, usize)]) -> String {
+pub fn unordered(world: &World<'_>, pairs: &[(usize, usize)], from: &str) -> String {
     let named: Vec<String> = pairs
         .iter()
         .map(|&(a, b)| {
             format!(
                 "`{}` and `{}`",
-                world.versioned(a, b),
-                world.versioned(b, b)
+                spelled(world, a, from),
+                spelled(world, b, from)
             )
         })
         .collect();
     format!("{} both apply and neither prevails", named.join("; "))
+}
+
+/// Declaration `i` as `x@from`, named as seen from pack `from`.
+fn spelled(world: &World<'_>, i: usize, from: &str) -> String {
+    format!(
+        "{}@{}",
+        world.key(i).display(from),
+        world.decls[i].meta.effective.from
+    )
 }
 
 /// The declaration (index into [`World::decls`]) governing `key` on
@@ -143,8 +153,8 @@ pub fn unresolved(
             world.decls[b].meta.span.clone(),
             format!(
                 "`{}` and `{}` both apply, and neither prevails",
-                world.versioned(a, b),
-                world.versioned(b, b)
+                spelled(world, a, &key.pack),
+                spelled(world, b, &key.pack)
             ),
         );
     }

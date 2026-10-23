@@ -192,15 +192,7 @@ impl<'a> World<'a> {
                 })
                 .collect();
             for decl in &module.declarations {
-                if let Declaration::Authority(a) = decl {
-                    if let Some(below) = a.outranks.first() {
-                        self.ranks.push(Rank {
-                            above: a.name.clone(),
-                            below: below.clone(),
-                            pack,
-                        });
-                    }
-                }
+                self.rank(pack, decl);
                 let Some(meta) = meta_of(decl) else {
                     continue;
                 };
@@ -305,18 +297,23 @@ impl<'a> World<'a> {
         self.packs.push(info);
         for module in modules {
             for decl in &module.declarations {
-                if let Declaration::Authority(a) = decl {
-                    if let Some(below) = a.outranks.first() {
-                        self.ranks.push(Rank {
-                            above: a.name.clone(),
-                            below: below.clone(),
-                            pack,
-                        });
-                    }
-                }
+                self.rank(pack, decl);
             }
         }
         self.lattice = Lattice::new(&self.ranks);
+    }
+
+    /// Records the chain link `decl` declares, if it is an `authority`.
+    fn rank(&mut self, pack: usize, decl: &Declaration) {
+        if let Declaration::Authority(a) = decl {
+            if let Some(below) = a.outranks.first() {
+                self.ranks.push(Rank {
+                    above: a.name.clone(),
+                    below: below.clone(),
+                    pack,
+                });
+            }
+        }
     }
 
     /// Relations that name `key`, in declaration order.

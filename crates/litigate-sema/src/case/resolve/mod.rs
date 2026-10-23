@@ -223,13 +223,22 @@ impl R<'_, '_> {
         let url = field(K::KwUrl)
             .and_then(|f| token_text(f, K::String))
             .map(|t| t.0);
-        let as_of = field(K::KwAsOf).and_then(|f| {
-            token_text(f, K::Date).map(|t| t.0).or_else(|| {
-                let hole = child(f, K::HoleExpr)?;
-                Some(token_text(&hole, K::String).map_or_else(String::new, |t| t.0))
-            })
-        });
-        Some(CaseSource { title, url, as_of })
+        let as_of_field = field(K::KwAsOf);
+        let date = as_of_field
+            .and_then(|f| token_text(f, K::Date))
+            .map(|t| t.0);
+        let hole = as_of_field
+            .filter(|_| date.is_none())
+            .and_then(|f| child(f, K::HoleExpr));
+        let as_of_hole = hole.is_some();
+        let as_of = date
+            .or_else(|| hole.map(|h| token_text(&h, K::String).map_or_else(String::new, |t| t.0)));
+        Some(CaseSource {
+            title,
+            url,
+            as_of,
+            as_of_hole,
+        })
     }
 
     /// `uses` pins through `Lit.lock`; builds the graph of used packages.

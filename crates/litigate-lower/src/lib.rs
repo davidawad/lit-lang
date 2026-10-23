@@ -30,6 +30,7 @@ mod diag;
 pub mod diff;
 mod edge;
 mod engine_clock;
+mod holes;
 mod links;
 pub mod num;
 mod pack;
@@ -48,6 +49,7 @@ pub use source_map::{Generated, SourceMap};
 
 use diag::Sink;
 use litgraph::cite::SourceCorpus;
+use litgraph::model::{Hole, Lowered, Pin};
 use litigate_base::{Diagnostic, DiagnosticCode};
 use litigate_sema::hir;
 use litigate_sema::temporal::World;
@@ -104,14 +106,27 @@ pub struct Lowerer<'a> {
     corpus: Option<&'a SourceCorpus>,
 }
 
-/// One build: the packages, the version selection, and the corpus.
+/// One build: the packages, the version selection, the world's pins, and
+/// the corpus.
 pub(crate) struct Build<'s, 'a> {
     pub packages: &'s [&'a hir::Package],
     pub selection: Selection<'a>,
+    /// Every package the selection sees (SPEC §8.1 `lowered.pins`).
+    pub pins: Vec<Pin>,
     pub corpus: Option<&'a SourceCorpus>,
 }
 
 impl Build<'_, '_> {
+    /// The `lowered` header of a document this build emits with `holes`.
+    pub fn lowered(&self, holes: Vec<Hole>) -> Lowered {
+        Lowered::new(
+            self.pins.clone(),
+            self.selection.as_of.clone(),
+            self.selection.known_at.clone(),
+            holes,
+        )
+    }
+
     /// The sidecar fields every package document shares.
     pub fn map_header(&self) -> SourceMap {
         SourceMap {
@@ -131,9 +146,14 @@ impl Build<'_, '_> {
         source_map::PackageRef {
             name: pkg.manifest.name.clone(),
             version: pkg.manifest.version.clone(),
-            digest: format!("sha256:{}", pkg.digest.trim_start_matches("sha256:")),
+            digest: digest(pkg),
         }
     }
+}
+
+/// `pkg`'s `sha256:<hex>` source digest.
+fn digest(pkg: &hir::Package) -> String {
+    format!("sha256:{}", pkg.digest.trim_start_matches("sha256:"))
 }
 
 impl<'a> Lowerer<'a> {
@@ -179,10 +199,19 @@ impl<'a> Lowerer<'a> {
             .copied()
             .filter(|p| roots.contains(&p.manifest.name.as_str()))
             .collect();
-        let world = World::closure(&roots, &self.packages);
+        let closure = World::closure_packages(&roots, &self.packages);
+        let pins = closure
+            .iter()
+            .map(|p| Pin {
+                name: p.manifest.name.clone(),
+                version: p.manifest.version.clone(),
+                digest: digest(p),
+            })
+            .collect();
         Build {
             packages: &self.packages,
-            selection: Selection::new(world, as_of, known),
+            selection: Selection::new(World::from_packages(&closure), as_of, known),
+            pins,
             corpus: self.corpus,
         }
     }
@@ -319,23 +348,32 @@ fn object<T: Serialize>(value: &T) -> serde_json::Map<String, serde_json::Value>
         .unwrap_or_default()
 }
 
-/// Byte-deterministic JSON (SPEC §8.6): two-space indentation and a
-/// trailing newline. Map keys come out sorted where litgraph's types use
-/// ordered maps, and in field order otherwise.
+/// Byte-deterministic JSON (SPEC §8.6): the JCS text (RFC 8785: members
+/// sorted by UTF-16 code units, ECMAScript number spelling) indented by two
+/// spaces, with a trailing newline. Removing its insignificant whitespace
+/// gives [`canonical`] byte for byte.
 ///
 /// # Errors
 /// L6005 when the value cannot be serialized.
 pub fn render<T: Serialize>(value: &T) -> Result<String, Box<Diagnostic>> {
-    serde_json::to_string_pretty(value)
-        .map(|mut text| {
-            text.push('\n');
-            text
-        })
-        .map_err(|e| {
-            Box::new(Diagnostic::error(
-                DiagnosticCode::OutputError,
-                diag::start_of(""),
-                format!("could not serialize output: {e}"),
-            ))
-        })
+    value_of(value).map(|v| litgraph::canonical::to_jcs_pretty(&v))
+}
+
+/// The exact JCS text (RFC 8785) of `value`, which digests are taken over.
+///
+/// # Errors
+/// L6005 when the value cannot be serialized.
+pub fn canonical<T: Serialize>(value: &T) -> Result<String, Box<Diagnostic>> {
+    value_of(value).map(|v| litgraph::canonical::to_jcs(&v))
+}
+
+/// `value` as a JSON tree, or L6005.
+fn value_of<T: Serialize>(value: &T) -> Result<serde_json::Value, Box<Diagnostic>> {
+    serde_json::to_value(value).map_err(|e| {
+        Box::new(Diagnostic::error(
+            DiagnosticCode::OutputError,
+            diag::start_of(""),
+            format!("could not serialize output: {e}"),
+        ))
+    })
 }

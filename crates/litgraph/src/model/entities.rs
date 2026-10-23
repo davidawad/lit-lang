@@ -188,6 +188,9 @@ pub struct PackMeta {
     pub edge_count: usize,
     /// True for `links.json` instances (entered through links, not their start).
     pub instance: bool,
+    /// The pack's explicit holes (`lowered.holes`, v4).
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub holes: Vec<super::Hole>,
 }
 
 /// Hard cap on compiled `(node, flag-set)` product states. Chosen generously

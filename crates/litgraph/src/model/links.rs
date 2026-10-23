@@ -5,8 +5,13 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, HashMap};
 
+use super::lowered::{check_header, Lowered};
 use super::schema::{NodeKind, Pack, RawEdge, Role};
 use crate::error::{Error, Result};
+
+/// The newest `links.json` `schemaVersion`: `2` adds the `lowered` header
+/// (absent is `1`).
+pub const LINKS_SCHEMA_VERSION: u32 = 2;
 
 /// A namespaced copy of a pack that remembers how it was entered — the
 /// product-graph construction for one piece of history, expressed as data.
@@ -49,12 +54,49 @@ pub struct Instance {
 #[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq, JsonSchema)]
 #[serde(deny_unknown_fields)]
 pub struct LinkFile {
+    /// `1` when absent, or `2` (`lowered`).
+    #[serde(
+        default,
+        rename = "schemaVersion",
+        skip_serializing_if = "Option::is_none"
+    )]
+    pub schema_version: Option<u32>,
     /// Instance name (`base@origin`) → definition.
     #[serde(default)]
     pub instances: BTreeMap<String, Instance>,
     /// Cross-pack edges; `from`/`to` are qualified ids.
     #[serde(default)]
     pub links: Vec<RawEdge>,
+    /// Build provenance and explicit holes of a compiled link file (v2).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub lowered: Option<Lowered>,
+}
+
+impl LinkFile {
+    /// Parse and version-check a link file.
+    ///
+    /// # Errors
+    /// `Error::Parse` on malformed JSON, unknown fields, an unsupported
+    /// `schemaVersion`, or a `lowered` header that does not match.
+    pub fn from_json(text: &str) -> Result<LinkFile> {
+        let file: LinkFile = serde_json::from_str(text).map_err(|e| Error::Parse(e.to_string()))?;
+        file.check()?;
+        Ok(file)
+    }
+
+    /// Version-check a link file already read.
+    ///
+    /// # Errors
+    /// As [`LinkFile::from_json`].
+    pub fn check(&self) -> Result<()> {
+        let version = self.schema_version.unwrap_or(1);
+        if !(1..=LINKS_SCHEMA_VERSION).contains(&version) {
+            return Err(Error::Parse(format!(
+                "links.json: unsupported schemaVersion {version}"
+            )));
+        }
+        check_header("links.json", version, 2, self.lowered.as_ref(), self)
+    }
 }
 
 /// JSON merge-patch (RFC 7386): `null` deletes, objects merge, anything else replaces.

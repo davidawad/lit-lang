@@ -2,11 +2,14 @@
 use crate::diag::Sink;
 use crate::source_map::{Citations, CiteMap, Entry, SourceMap};
 use crate::Build;
-use litgraph::model::Role;
-use litgraph::scenario::{NamedScenario, ScenarioSource};
+use litgraph::model::{pointer_token, Hole, Role};
+use litgraph::scenario::{
+    DocketEvent, EventRelation, NamedScenario, ScenarioParty, ScenarioSource,
+    SCENARIO_SCHEMA_VERSION,
+};
 use litgraph::Scenario;
 use litigate_base::DiagnosticCode as C;
-use litigate_sema::hir::{self, Perspective, Stake};
+use litigate_sema::hir::{self, EventParty, Perspective, Stake};
 use serde_json::{Map, Value};
 use std::collections::BTreeMap;
 
@@ -245,6 +248,43 @@ fn expressions(sink: &mut Sink, s: &Scenario) {
     }
 }
 
+/// A docket event as the scenario records it (SPEC §8.3).
+fn event(e: &hir::Event) -> DocketEvent {
+    DocketEvent {
+        date: e.date.clone(),
+        action: litigate_sema::case::display_event(&e.action),
+        relation: match e.relation {
+            EventParty::By => EventRelation::By,
+            EventParty::On => EventRelation::On,
+        },
+        party: e.party.clone(),
+        authority: e.authority.clone(),
+    }
+}
+
+/// The matter's explicit holes: each `unvalued` stake (its payoff is left
+/// for the engine to report as unauthored) and each source `as_of ?(..)`.
+fn holes(case: &hir::Case) -> Vec<Hole> {
+    let stakes = case
+        .stakes
+        .iter()
+        .filter(|(_, stake)| matches!(stake, Stake::Unvalued))
+        .map(|(terminal, _)| Hole {
+            pointer: format!("/scenario/payoffs/{}", pointer_token(terminal)),
+            reason: None,
+        });
+    let sources = case
+        .sources
+        .iter()
+        .enumerate()
+        .filter(|(_, s)| s.as_of_hole)
+        .map(|(i, s)| Hole {
+            pointer: format!("/sources/{i}/as_of"),
+            reason: s.as_of.clone().filter(|r| !r.is_empty()),
+        });
+    stakes.chain(sources).collect()
+}
+
 /// `case` as a named scenario and its source map.
 pub(crate) fn case(
     build: &Build<'_, '_>,
@@ -253,6 +293,7 @@ pub(crate) fn case(
 ) -> Option<(NamedScenario, SourceMap)> {
     let (scenario, at) = scenario(build, sink, case)?;
     let named = NamedScenario {
+        schema_version: Some(SCENARIO_SCHEMA_VERSION),
         id: case.id.clone(),
         summary: case.summary.clone(),
         notes: case.notes.clone().unwrap_or_default(),
@@ -267,6 +308,17 @@ pub(crate) fn case(
             })
             .collect(),
         scenario,
+        parties: case
+            .parties
+            .iter()
+            .map(|p| ScenarioParty {
+                id: p.id.clone(),
+                actor: p.actor.clone(),
+                entity_type: p.entity_type.clone(),
+            })
+            .collect(),
+        events: case.events.iter().map(event).collect(),
+        lowered: Some(build.lowered(holes(case))),
     };
     // Serializing plain data cannot fail; were it to, the empty text would
     // be rejected below like any other invalid scenario.

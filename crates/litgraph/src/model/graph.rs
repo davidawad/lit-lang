@@ -209,6 +209,12 @@ impl Graph {
             node_count: pack.nodes.len(),
             edge_count: pack.edges.len(),
             instance,
+            holes: pack
+                .lowered
+                .as_ref()
+                .filter(|_| !instance)
+                .map(|l| l.holes.clone())
+                .unwrap_or_default(),
         });
         Ok(())
     }

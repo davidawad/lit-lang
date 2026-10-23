@@ -84,6 +84,33 @@ fn fact_overrides(g: &Graph, sc: &Scenario) -> Result<(BTreeMap<String, f64>, Ha
     Ok((overrides, fact_nodes))
 }
 
+/// One `authored-hole` warning per pack whose `lowered.holes` leave a
+/// number open: a dev build lowered each such `?` to an absent field, so
+/// whatever the engine computes from it rests on a fill, not on the pack.
+fn hole_warnings(g: &Graph) -> Vec<Warning> {
+    g.packs
+        .iter()
+        .filter_map(|p| {
+            let open: Vec<&crate::model::Hole> = p.holes.iter().filter(|h| h.numeric()).collect();
+            let first = open.first()?;
+            let why = first
+                .reason
+                .as_deref()
+                .map_or_else(String::new, |r| format!(" ({r})"));
+            Some(Warning {
+                code: "authored-hole",
+                at: None,
+                message: format!(
+                    "pack {}: {} explicit hole(s) left numbers unauthored, first {}{why}; author them in the pack's source (a strict build rejects holes)",
+                    p.id,
+                    open.len(),
+                    first.pointer
+                ),
+            })
+        })
+        .collect()
+}
+
 impl<'g> View<'g> {
     /// Resolve `sc` against `g`.
     ///
@@ -147,6 +174,7 @@ impl<'g> View<'g> {
         let belief = Belief::build(g, sc, &plans.plan)?;
         let observed = belief::apply_observed(g, &belief, &mut plans.plan, &mut plans.prob);
         plans.warnings.extend(observed);
+        plans.warnings.extend(hole_warnings(g));
         let start = sc.start.as_deref().map_or(Ok(g.start), |s| g.node(s))?;
         let mut view = View {
             g,

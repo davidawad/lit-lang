@@ -26,6 +26,10 @@ pub struct Node {
     pub actor: Option<String>,
     /// Outgoing edges in source order.
     pub edges: Vec<Edge>,
+    /// Explicit holes in the node's header and fields, by dotted field
+    /// path (`cite`, `payoff`, `attrs.weight`), with their reasons.
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub holes: BTreeMap<String, Option<String>>,
 }
 
 /// Node kind. `Chance` is sugar that lowers to litgraph kind `state`.
@@ -113,6 +117,11 @@ pub struct Edge {
     pub forbids: Vec<String>,
     /// Source span.
     pub span: Option<litigate_base::Span>,
+    /// Explicit holes in the edge's clauses and fields, by dotted field
+    /// path (`p`, `effort`, `duration.min`, `authority`), with their
+    /// reasons.
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub holes: BTreeMap<String, Option<String>>,
 }
 
 /// Edge deadline (`RawEdge.deadline`).

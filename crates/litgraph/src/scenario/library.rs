@@ -8,7 +8,53 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 use crate::error::{Error, Result};
+use crate::model::{check_header, Lowered};
 use crate::scenario::Scenario;
+
+/// The newest named-scenario `schema_version`: `2` adds `lowered`,
+/// `parties` and `events` (absent is `1`).
+pub const SCENARIO_SCHEMA_VERSION: u32 = 2;
+
+/// A party to the matter (v2).
+#[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq, Eq, JsonSchema)]
+#[serde(deny_unknown_fields)]
+pub struct ScenarioParty {
+    /// The matter's id for the party.
+    pub id: String,
+    /// The pack actor key it plays.
+    pub actor: String,
+    /// Its entity type, as the matter declares it.
+    pub entity_type: String,
+}
+
+/// Whether a docket event's party acted or was acted upon.
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, JsonSchema)]
+#[serde(rename_all = "lowercase")]
+pub enum EventRelation {
+    /// `by party`: the party acted.
+    By,
+    /// `on party`: the party was acted upon.
+    On,
+}
+
+/// One docket event of the matter, in docket order (v2). The matter's
+/// compiler replayed these to derive `scenario.start` and
+/// `scenario.remove_edges`; the engine reads them as record only.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, JsonSchema)]
+#[serde(deny_unknown_fields)]
+pub struct DocketEvent {
+    /// Event date (`YYYY-MM-DD`).
+    pub date: String,
+    /// The typed event, spelled as in the source (`Served(complaint, Mail)`).
+    pub action: String,
+    /// `by` or `on`.
+    pub relation: EventRelation,
+    /// The party's id.
+    pub party: String,
+    /// The authority cited for it, if any.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub authority: Option<String>,
+}
 
 /// A primary source backing one fact or number in a named scenario (a rate,
 /// a stake, a probability, a deadline). Mirrors a pack's `sources` entry.
@@ -36,6 +82,9 @@ pub struct ScenarioSource {
 #[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq, JsonSchema)]
 #[serde(deny_unknown_fields)]
 pub struct NamedScenario {
+    /// `1` when absent, or `2` (`lowered`, `parties`, `events`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub schema_version: Option<u32>,
     /// Stable name a request references this scenario by; by convention
     /// matches the file stem (`scenarios/<id>.json`), though lookup also
     /// accepts the file stem when it differs.
@@ -58,27 +107,55 @@ pub struct NamedScenario {
     /// probabilities, policy, modeling modes.
     #[serde(default)]
     pub scenario: Scenario,
+    /// The matter's parties (v2).
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub parties: Vec<ScenarioParty>,
+    /// The matter's docket events (v2).
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub events: Vec<DocketEvent>,
+    /// Build provenance and explicit holes of a compiled matter (v2).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub lowered: Option<Lowered>,
 }
 
 impl NamedScenario {
     /// Parse and sanity-check a scenario-library file.
     ///
     /// # Errors
-    /// `Error::Parse` on malformed JSON, an unknown field, or an empty
-    /// `id`/`summary`.
+    /// `Error::Parse` on malformed JSON, an unknown field, an empty
+    /// `id`/`summary`, an unsupported `schema_version`, v2 fields in a v1
+    /// file, or a `lowered` header that does not match.
     pub fn from_json(text: &str) -> Result<NamedScenario> {
         let def: NamedScenario =
             serde_json::from_str(text).map_err(|e| Error::Parse(e.to_string()))?;
-        if def.id.trim().is_empty() {
+        def.check()?;
+        Ok(def)
+    }
+
+    /// Sanity-check a scenario-library file already read.
+    ///
+    /// # Errors
+    /// As [`NamedScenario::from_json`].
+    pub fn check(&self) -> Result<()> {
+        if self.id.trim().is_empty() {
             return Err(Error::Parse("scenario: `id` must not be empty".into()));
         }
-        if def.summary.trim().is_empty() {
+        let what = format!("scenario {}", self.id);
+        if self.summary.trim().is_empty() {
+            return Err(Error::Parse(format!("{what}: `summary` must not be empty")));
+        }
+        let version = self.schema_version.unwrap_or(1);
+        if !(1..=SCENARIO_SCHEMA_VERSION).contains(&version) {
             return Err(Error::Parse(format!(
-                "scenario {}: `summary` must not be empty",
-                def.id
+                "{what}: unsupported schema_version {version}"
             )));
         }
-        Ok(def)
+        if version < 2 && !(self.parties.is_empty() && self.events.is_empty()) {
+            return Err(Error::Parse(format!(
+                "{what}: `parties` and `events` need schema_version 2"
+            )));
+        }
+        check_header(&what, version, 2, self.lowered.as_ref(), self)
     }
 }
 

@@ -8,7 +8,8 @@
 //! belongs to (`/nodes/answer-due/label`) and a pure reordering is one
 //! `order` change (`/links/order` for links, whose whole order counts:
 //! unlike pack edges they have no node list to regroup under). Source maps and the generated marker are sidecars and
-//! never part of a document.
+//! never part of a document, and a document's format version and `lowered`
+//! header (pins, dates, world digest, holes) are provenance, not meaning.
 use litgraph::clock::ClockLibrary;
 use litgraph::model::{local_edge_ids, LinkFile, NodeKind, Pack, RawEdge};
 use litgraph::scenario::NamedScenario;
@@ -134,9 +135,21 @@ fn read<T: serde::de::DeserializeOwned>(label: &str, v: Value) -> Result<T, Stri
     serde_json::from_value(v).map_err(|e| format!("{label}: {e}"))
 }
 
+/// The document as compared: numbers as binary64, without its format
+/// version (`schemaVersion`, a scenario's `schema_version`) or `lowered`
+/// header, which say how and from what it was built, not what it means.
 fn normalized<T: Serialize>(value: &T) -> Value {
-    numbers_as_f64(serde_json::to_value(value).unwrap_or(Value::Null))
+    let mut value = serde_json::to_value(value).unwrap_or(Value::Null);
+    if let Some(map) = value.as_object_mut() {
+        for key in PROVENANCE {
+            map.remove(key);
+        }
+    }
+    numbers_as_f64(value)
 }
+
+/// Top-level keys excluded from semantic equality.
+const PROVENANCE: [&str; 3] = ["schemaVersion", "schema_version", "lowered"];
 
 /// Derived ids and default units on edges.
 fn normalize_edges(edges: &mut [RawEdge]) {

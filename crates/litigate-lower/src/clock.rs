@@ -45,6 +45,7 @@ pub(crate) fn fragment(
         schema_version: litgraph::clock::library::CLOCK_SCHEMA_VERSION,
         calendars: Vec::new(),
         counting_rules: Vec::new(),
+        lowered: Some(build.lowered(Vec::new())),
     };
     let mut entries = Vec::new();
     for c in &rules {

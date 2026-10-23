@@ -40,10 +40,11 @@ pub fn detect(doc: &Value) -> &'static str {
         // A clock-library fragment (`packs/clock/*.json`) also carries a
         // `schemaVersion`, so it must be checked before "pack".
         "clock"
+    } else if has("links") || has("instances") {
+        // A v2 link file also carries a `schemaVersion`.
+        "links"
     } else if has("schemaVersion") {
         "pack"
-    } else if has("links") || has("instances") {
-        "links"
     } else if has("summary") && has("scenario") {
         // A scenario-library file (`scenarios/*.json`) also has a `scenario`
         // (and often a `packs`) key, so it must be checked before "request"
@@ -83,6 +84,7 @@ fn scenario_against(
 fn validate_pack(doc: &Value, catalog: &Catalog, out: &mut Validation) {
     let compiled = parse::<Pack>(doc).and_then(|p| {
         p.check_cite_syntax()?;
+        p.check_lowered()?;
         Graph::compile(
             std::slice::from_ref(&p),
             &LinkFile::default(),
@@ -144,7 +146,7 @@ pub fn validate(doc: &Value, kind: Option<&str>, catalog: &Catalog) -> Validatio
     match kind {
         "pack" => validate_pack(doc, catalog, &mut out),
         "clock" => validate_clock(doc, catalog, &mut out),
-        "links" => match parse::<LinkFile>(doc) {
+        "links" => match parse::<LinkFile>(doc).and_then(|lf| lf.check().map(|()| lf)) {
             Ok(lf) => {
                 let packs: Vec<Pack> = catalog.packs.iter().map(|(_, p, _)| p.clone()).collect();
                 if let Err(e) = Graph::compile(&packs, &lf, &CompileOptions::default()) {
@@ -185,7 +187,7 @@ pub fn validate(doc: &Value, kind: Option<&str>, catalog: &Catalog) -> Validatio
             },
             Err(e) => out.errors.push(e.to_string()),
         },
-        "named-scenario" => match parse::<NamedScenario>(doc) {
+        "named-scenario" => match parse::<NamedScenario>(doc).and_then(|d| d.check().map(|()| d)) {
             Ok(def) => scenario_against(catalog, &def.packs, true, &def.scenario, &mut out),
             Err(e) => out.errors.push(e.to_string()),
         },

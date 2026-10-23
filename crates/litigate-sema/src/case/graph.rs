@@ -443,7 +443,7 @@ pub(super) fn declarations(p: &Package) -> impl Iterator<Item = &Declaration> {
 }
 
 /// Compact source-like spelling of an event call (`Served(complaint, Mail)`).
-pub(super) fn display(e: &Expr) -> String {
+pub fn display(e: &Expr) -> String {
     match &e.kind {
         ExprKind::Call { callee, args } => format!(
             "{callee}({})",

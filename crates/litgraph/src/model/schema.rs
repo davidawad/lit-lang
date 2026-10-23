@@ -9,7 +9,11 @@ use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
 use super::cite_syntax::CiteSyntax;
+use super::lowered::{check_header, Lowered};
 use crate::error::{Error, Result};
+
+/// The newest pack `schemaVersion`: v3 plus the `lowered` header.
+pub const PACK_SCHEMA_VERSION: u32 = 4;
 
 /// Structural kind of a node.
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, JsonSchema)]
@@ -248,7 +252,8 @@ pub enum Role {
 #[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq, JsonSchema)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct Pack {
-    /// `1` (civ-pro statechart format) or `2`.
+    /// `1` (civ-pro statechart format), `2`, `3` (`counting`,
+    /// `citeSyntax`), or `4` (`lowered`).
     pub schema_version: u32,
     /// Pack id; the namespace prefix of every node and edge id.
     pub id: String,
@@ -287,6 +292,9 @@ pub struct Pack {
     pub nodes: Vec<RawNode>,
     /// Edges.
     pub edges: Vec<RawEdge>,
+    /// Build provenance and explicit holes of a compiled pack (v4).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub lowered: Option<Lowered>,
 }
 
 impl Pack {
@@ -294,16 +302,18 @@ impl Pack {
     ///
     /// # Errors
     /// `Error::Parse` on malformed JSON, unknown fields, an unsupported
-    /// `schemaVersion`, or an invalid `citeSyntax`.
+    /// `schemaVersion`, an invalid `citeSyntax`, or a `lowered` header that
+    /// does not match the pack.
     pub fn from_json(text: &str) -> Result<Pack> {
         let pack: Pack = serde_json::from_str(text).map_err(|e| Error::Parse(e.to_string()))?;
-        if pack.schema_version != 1 && pack.schema_version != 2 && pack.schema_version != 3 {
+        if !(1..=PACK_SCHEMA_VERSION).contains(&pack.schema_version) {
             return Err(Error::Parse(format!(
                 "pack {}: unsupported schemaVersion {}",
                 pack.id, pack.schema_version
             )));
         }
         pack.check_cite_syntax()?;
+        pack.check_lowered()?;
         if let Some(e) = pack.edges.iter().find(|e| !e.replaces.is_empty()) {
             return Err(Error::Parse(format!(
                 "pack {}: edge {}->{} uses `replaces`, which is only valid in links.json",
@@ -311,6 +321,15 @@ impl Pack {
             )));
         }
         Ok(pack)
+    }
+
+    /// Check the `lowered` header (v4) against the pack it heads.
+    ///
+    /// # Errors
+    /// `Error::Parse` naming what does not hold.
+    pub fn check_lowered(&self) -> Result<()> {
+        let what = format!("pack {}", self.id);
+        check_header(&what, self.schema_version, 4, self.lowered.as_ref(), self)
     }
 
     /// Check `citeSyntax` against this pack's own `sources` (see

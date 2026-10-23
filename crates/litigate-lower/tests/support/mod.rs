@@ -251,6 +251,7 @@ pub fn acme() -> Case {
             title: "Federal Rules of Civil Procedure".into(),
             url: Some("https://www.law.cornell.edu/rules/frcp".into()),
             as_of: Some("2024-12-01".into()),
+            as_of_hole: false,
         }],
         uses: vec![pin("frcp-rule12-example")],
         as_of: "2025-06-01".into(),

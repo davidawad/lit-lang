@@ -18,13 +18,17 @@ mod entities;
 mod flags;
 mod graph;
 mod links;
+mod lowered;
 mod resolve;
 mod schema;
 
 pub use cite_syntax::{CiteCode, CiteRuleForm, CiteShorthand, CiteSyntax};
 pub use entities::{CompileOptions, Edge, Node, PackMeta, PayoffSource, DEFAULT_MAX_PRODUCT_NODES};
 pub use graph::{heuristic_payoff, qualify, EdgeIx, Graph, NodeIx};
-pub use links::{local_edge_ids, merge_patch, Instance, LinkFile};
+pub use links::{local_edge_ids, merge_patch, Instance, LinkFile, LINKS_SCHEMA_VERSION};
+pub(crate) use lowered::check_header;
+pub use lowered::{pointer_token, world_digest, Hole, Lowered, Pin};
 pub use schema::{
     default_roles, Deadline, Duration, Group, NodeKind, Pack, RawEdge, RawNode, Role, Source,
+    PACK_SCHEMA_VERSION,
 };

@@ -1,11 +1,12 @@
 //! A rule package to a litgraph `Pack` (SPEC §8.1).
 use crate::diag::Sink;
 use crate::edge::{self, EdgeCx};
+use crate::holes;
 use crate::source_map::{Citations, Entry, SourceMap};
 use crate::Build;
 use litgraph::model::{
     local_edge_ids, CiteCode, CiteRuleForm, CiteShorthand, CiteSyntax, Group, NodeKind, Pack,
-    RawEdge, RawNode, Role, Source,
+    RawEdge, RawNode, Role, Source, PACK_SCHEMA_VERSION,
 };
 use litigate_base::{DiagnosticCode as C, Span};
 use litigate_sema::hir::{self, ActorRole, Authored, Declaration};
@@ -164,11 +165,10 @@ fn node(sink: &mut Sink, n: &hir::Node) -> RawNode {
     }
 }
 
-/// `Pack.counting`, and whether the package has a counting rule at all
-/// (`Pack.schemaVersion` 3, SPEC §8.1). A package that declares several
+/// `Pack.counting` (SPEC §8.1). A package that declares several
 /// counting rules and names none in `Lit.toml` is a counting-rule library:
 /// its pack names no rule, and its clock fragment holds them all (§8.2).
-fn counting(sink: &mut Sink, pkg: &hir::Package, decls: &[&Declaration]) -> (Option<String>, bool) {
+fn counting(sink: &mut Sink, pkg: &hir::Package, decls: &[&Declaration]) -> Option<String> {
     let declared: Vec<&hir::Counting> = decls
         .iter()
         .filter_map(|d| match d {
@@ -176,7 +176,7 @@ fn counting(sink: &mut Sink, pkg: &hir::Package, decls: &[&Declaration]) -> (Opt
             _ => None,
         })
         .collect();
-    let named = match (&pkg.manifest.counting, declared.as_slice()) {
+    match (&pkg.manifest.counting, declared.as_slice()) {
         (Some(id), [first, ..]) if declared.iter().all(|c| c.meta.id != *id) => {
             sink.unsupported(
                 first.meta.span.as_ref(),
@@ -190,9 +190,7 @@ fn counting(sink: &mut Sink, pkg: &hir::Package, decls: &[&Declaration]) -> (Opt
         (Some(id), _) => Some(id.clone()),
         (None, [only]) => Some(only.meta.id.clone()),
         (None, _) => None,
-    };
-    let has_rule = named.is_some() || !declared.is_empty();
-    (named, has_rule)
+    }
 }
 
 /// L3007 for a local edge target or start node with no version in force
@@ -261,9 +259,18 @@ pub(crate) fn pack(
         }
     }
     dangling(build, sink, &pkg.start, &nodes, &edges);
-    let (counting, has_rule) = counting(sink, pkg, &decls);
+    let counting = counting(sink, pkg, &decls);
+    let node_holes = origins
+        .iter()
+        .enumerate()
+        .flat_map(|(i, n)| holes::at(&format!("/nodes/{i}"), &n.holes));
+    let edge_holes = edges
+        .iter()
+        .enumerate()
+        .flat_map(|(i, (_, e))| holes::at(&format!("/edges/{i}"), &e.holes));
+    let lowered = build.lowered(node_holes.chain(edge_holes).collect());
     let pack = Pack {
-        schema_version: if has_rule { 3 } else { 2 },
+        schema_version: PACK_SCHEMA_VERSION,
         id: m.pack_id.clone(),
         title: m.title.clone(),
         description: m.description.clone(),
@@ -284,6 +291,7 @@ pub(crate) fn pack(
         cite_syntax: cite_syntax(sink, m),
         nodes,
         edges: edges.iter().map(|(e, _)| e.clone()).collect(),
+        lowered: Some(lowered),
     };
     let map = pack_map(build, pkg, &pack, &origins, &edges);
     (pack, map)

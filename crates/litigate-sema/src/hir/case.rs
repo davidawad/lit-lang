@@ -63,8 +63,11 @@ pub struct CaseSource {
     pub title: String,
     /// URL.
     pub url: Option<String>,
-    /// Version date.
+    /// Version date, or a hole's reason.
     pub as_of: Option<String>,
+    /// `as_of` is a hole `?("reason")`, not a date.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub as_of_hole: bool,
 }
 
 /// Exact pinned package identity.

@@ -1,5 +1,5 @@
 //! Edges and links' edge fields (SPEC §5.1, §6 field types).
-use super::cx::{first_expr, first_ref, flag, nested, Cx};
+use super::cx::{first_expr, first_ref, flag, holes_of, nested, Cx};
 use crate::db::parse::tree::{EdgeItem, Expr, ExprKind, Field};
 use crate::db::span::Report;
 use crate::hir::{
@@ -79,6 +79,7 @@ impl Cx<'_, '_> {
             requires: self.idents(fields.get("requires")),
             forbids: self.idents(fields.get("forbids")),
             span: self.ck.span(e.range),
+            holes: holes_of(e.clauses.iter().chain(&e.fields)),
         }
     }
 

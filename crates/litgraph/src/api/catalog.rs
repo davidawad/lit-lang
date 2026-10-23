@@ -109,7 +109,7 @@ impl Catalog {
             if name.starts_with("clock/") {
                 clock_files.push((name, text));
             } else if name == "links.json" {
-                match serde_json::from_str(&text) {
+                match LinkFile::from_json(&text) {
                     Ok(lf) => links = lf,
                     Err(e) => load_errors.push(LoadError {
                         file: name,

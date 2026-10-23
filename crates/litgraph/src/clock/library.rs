@@ -19,17 +19,19 @@ use super::calendar::HolidayCalendar;
 use super::interp::Clock;
 use super::rule::CountingRule;
 use crate::error::{Error, Result};
+use crate::model::{check_header, Lowered};
 
 include!(concat!(env!("OUT_DIR"), "/embedded_clock.rs"));
 
-/// The only clock-library `schemaVersion` this build reads.
-pub const CLOCK_SCHEMA_VERSION: u32 = 3;
+/// The newest clock-library `schemaVersion`: `4` adds the `lowered`
+/// header to `3`. Both are read.
+pub const CLOCK_SCHEMA_VERSION: u32 = 4;
 
 /// A set of holiday calendars and counting rules.
 #[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq, JsonSchema)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ClockLibrary {
-    /// Always `3`.
+    /// `3`, or `4` (`lowered`).
     pub schema_version: u32,
     /// Holiday calendars.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
@@ -37,6 +39,9 @@ pub struct ClockLibrary {
     /// Counting rules.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub counting_rules: Vec<CountingRule>,
+    /// Build provenance of a compiled fragment (v4).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub lowered: Option<Lowered>,
 }
 
 impl ClockLibrary {
@@ -50,12 +55,13 @@ impl ClockLibrary {
     pub fn from_json(text: &str) -> Result<ClockLibrary> {
         let lib: ClockLibrary =
             serde_json::from_str(text).map_err(|e| Error::Parse(e.to_string()))?;
-        if lib.schema_version != CLOCK_SCHEMA_VERSION {
+        if !(3..=CLOCK_SCHEMA_VERSION).contains(&lib.schema_version) {
             return Err(Error::Parse(format!(
-                "unsupported clock schemaVersion {}; expected {CLOCK_SCHEMA_VERSION}",
+                "unsupported clock schemaVersion {}; expected 3 or {CLOCK_SCHEMA_VERSION}",
                 lib.schema_version
             )));
         }
+        check_header("clock", lib.schema_version, 4, lib.lowered.as_ref(), &lib)?;
         lib.calendars
             .iter()
             .try_for_each(HolidayCalendar::validate)?;

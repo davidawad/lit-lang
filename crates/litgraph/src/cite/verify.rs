@@ -234,6 +234,7 @@ mod tests {
             .expect("fixture syntax parses"),
             nodes,
             edges,
+            lowered: None,
         }
     }
 

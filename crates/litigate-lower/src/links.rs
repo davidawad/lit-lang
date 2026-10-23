@@ -3,7 +3,10 @@ use crate::diag::Sink;
 use crate::edge::{self, EdgeCx};
 use crate::source_map::{Citations, Entry, SourceMap};
 use crate::Build;
-use litgraph::model::{local_edge_ids, merge_patch, Instance, LinkFile, Pack, RawEdge};
+use litgraph::model::{
+    local_edge_ids, merge_patch, pointer_token, Hole, Instance, LinkFile, Pack, RawEdge,
+    LINKS_SCHEMA_VERSION,
+};
 use litigate_base::{DiagnosticCode as C, Span};
 use litigate_sema::hir::{self, Declaration};
 use std::collections::BTreeMap;
@@ -23,6 +26,7 @@ pub(crate) fn links(
     let mut instances = BTreeMap::new();
     let mut spans: BTreeMap<String, Option<Span>> = BTreeMap::new();
     let mut bases: BTreeMap<String, Option<Pack>> = BTreeMap::new();
+    let mut stake_holes: Vec<Hole> = Vec::new();
     for d in decls {
         match d {
             Declaration::Link(l) => {
@@ -36,6 +40,12 @@ pub(crate) fn links(
                     .entry(i.pack.clone())
                     .or_insert_with(|| base_pack(build, &i.pack));
                 if let Some(instance) = instance(sink, i, base.as_ref(), span.as_ref()) {
+                    if let Some(hir::Authored::Hole(reason)) = &i.stake {
+                        stake_holes.push(Hole {
+                            pointer: format!("/instances/{}/stake", pointer_token(&i.name)),
+                            reason: reason.clone(),
+                        });
+                    }
                     spans.insert(i.name.clone(), span);
                     instances.insert(i.name.clone(), instance);
                 }
@@ -48,9 +58,15 @@ pub(crate) fn links(
             _ => {}
         }
     }
+    let link_holes = links
+        .iter()
+        .enumerate()
+        .flat_map(|(i, (_, e))| crate::holes::at(&format!("/links/{i}"), &e.holes));
     let file = LinkFile {
+        schema_version: Some(LINKS_SCHEMA_VERSION),
         instances,
         links: links.iter().map(|(e, _)| e.clone()).collect(),
+        lowered: Some(build.lowered(link_holes.chain(stake_holes).collect())),
     };
     let citations = Citations::new(litgraph::model::CiteSyntax::default(), &[], build.corpus);
     let link_entries = links

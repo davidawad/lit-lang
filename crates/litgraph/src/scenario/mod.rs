@@ -16,7 +16,10 @@ mod resolve;
 mod view;
 
 pub use belief::{Belief, Group, GroupKind, PriorSource, Uncertainty, DEFAULT_CONCENTRATION};
-pub use library::{NamedScenario, ScenarioSource};
+pub use library::{
+    DocketEvent, EventRelation, NamedScenario, ScenarioParty, ScenarioSource,
+    SCENARIO_SCHEMA_VERSION,
+};
 pub use plan::fill;
 pub use view::View;
 

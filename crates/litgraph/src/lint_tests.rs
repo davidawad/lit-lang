@@ -29,6 +29,7 @@ fn pack_with_cite(sources: Vec<Source>, cite: &str) -> Pack {
             ..Default::default()
         }],
         edges: vec![],
+        lowered: None,
     }
 }
 

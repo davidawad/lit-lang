@@ -48,6 +48,50 @@ pub fn flag(f: Option<&&Field>) -> Option<bool> {
     }
 }
 
+/// Every hole written in `fields`, by dotted field path (`p`, `cost`,
+/// `duration.min`, `attrs.weight`), with its `?("reason")`: a hole as a
+/// field's value, as a record entry, or in a nested field list. Lowering
+/// marks each in the generated document (SPEC §8.1 holes).
+#[must_use]
+pub fn holes_of<'f>(
+    fields: impl IntoIterator<Item = &'f Field>,
+) -> BTreeMap<String, Option<String>> {
+    let mut out = BTreeMap::new();
+    for f in fields {
+        field_holes(f, &f.key.text, &mut out);
+    }
+    out
+}
+
+fn field_holes(f: &Field, path: &str, out: &mut BTreeMap<String, Option<String>>) {
+    for (atom, _) in &f.values {
+        match atom {
+            Atom::Expr(e) => expr_holes(e, path, out),
+            Atom::Fields(nested) => {
+                for n in nested {
+                    field_holes(n, &format!("{path}.{}", n.key.text), out);
+                }
+            }
+            Atom::Interval(..) | Atom::Json(_) => {}
+        }
+    }
+}
+
+fn expr_holes(e: &Expr, path: &str, out: &mut BTreeMap<String, Option<String>>) {
+    match &e.kind {
+        ExprKind::Hole(reason) => {
+            out.insert(path.to_owned(), reason.clone());
+        }
+        ExprKind::Paren(inner) => expr_holes(inner, path, out),
+        ExprKind::Record(entries) => {
+            for (name, value) in entries {
+                expr_holes(value, &format!("{path}.{}", name.text), out);
+            }
+        }
+        _ => {}
+    }
+}
+
 /// Nested field list of a field (deadline options, triangular duration).
 #[must_use]
 pub fn nested(f: &Field) -> &[Field] {

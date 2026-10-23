@@ -19,6 +19,8 @@
 /// paths/pareto, sweep/tornado, structure (SCCs, dominators, min-cut).
 pub mod algo;
 pub mod api;
+/// Canonical JSON (JCS, RFC 8785) and digests over it.
+pub mod canonical;
 /// Cite verification against the vendored L0 corpus (`sources/*.txt`).
 pub mod cite;
 /// Deadline computation: a generic interpreter over the data-driven

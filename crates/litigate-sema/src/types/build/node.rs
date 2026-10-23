@@ -1,5 +1,5 @@
 //! Graph nodes and their edges (SPEC §5.1, field types from §6).
-use super::cx::{first_expr, first_ref, Cx};
+use super::cx::{first_expr, first_ref, holes_of, Cx};
 use crate::db::parse::tree::{Expr, ExprKind, Field, Item, NodeItem, RefPath};
 use crate::db::span::Report;
 use crate::hir::{Authored, Edge, Money, Node, NodeKind, Rational, Type, Valence, Value};
@@ -180,6 +180,7 @@ impl Cx<'_, '_> {
             attrs: self.attrs(fields.get("attrs")),
             actor,
             edges,
+            holes: holes_of(n.clauses.iter().chain(&n.fields)),
         }
     }
 

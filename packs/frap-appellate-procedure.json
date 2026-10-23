@@ -1,12 +1,1100 @@
 {
-  "schemaVersion": 3,
-  "id": "frap-appellate-procedure",
-  "title": "Federal Rules of Appellate Procedure",
-  "description": "Federal appellate procedure from a district court disposition through direct appeal, briefing, argument, merits decision, rehearing, and certiorari to the Supreme Court — tracking FRAP jurisdictional deadlines, standards of review, and the Bowles v. Russell trap.",
-  "jurisdiction": "Federal Rules of Appellate Procedure / U.S. Courts of Appeals",
-  "forum": "frap",
+  "citeSyntax": {
+    "rules": [
+      {
+        "heading": "FRAP {}",
+        "prefixes": [
+          "FRAP",
+          "Fed. R. App. P.",
+          "Fed R App P",
+          "F.R.A.P."
+        ],
+        "source": "frap-rules"
+      },
+      {
+        "heading": "Rule {}",
+        "prefixes": [
+          "FRCP",
+          "Fed. R. Civ. P.",
+          "Fed R Civ P",
+          "F.R.C.P."
+        ],
+        "source": "frcp-rules-cite"
+      }
+    ]
+  },
   "counting": "frap26",
-  "startNodeId": "trial-court-disposition",
+  "description": "Federal appellate procedure from a district court disposition through direct appeal, briefing, argument, merits decision, rehearing, and certiorari to the Supreme Court — tracking FRAP jurisdictional deadlines, standards of review, and the Bowles v. Russell trap.",
+  "edges": [
+    {
+      "actor": "either",
+      "authority": "28 U.S.C. § 1291",
+      "from": "trial-court-disposition",
+      "label": "Assess order for finality",
+      "to": "appealability-fork"
+    },
+    {
+      "actor": "office",
+      "authority": "28 U.S.C. § 1291",
+      "from": "appealability-fork",
+      "label": "Order is a final judgment",
+      "to": "final-judgment-entered"
+    },
+    {
+      "actor": "office",
+      "authority": "28 U.S.C. § 1291",
+      "from": "appealability-fork",
+      "label": "Order is interlocutory",
+      "to": "interlocutory-order-issued"
+    },
+    {
+      "actor": "office",
+      "authority": "Fed. R. App. P. 4(a)(1)(A)",
+      "deadline": {
+        "extendable": true,
+        "extensionAuthority": "Fed. R. App. P. 4(a)(5)",
+        "length": 30,
+        "note": "Notice of appeal due within 30 days of entry of final judgment, extendable to 60 days maximum under FRAP 4(a)(5). Deadline is jurisdictional; missing it by even one day strips appellate court of jurisdiction. Post-judgment motions may alter the triggering date under FRAP 4(a)(4)."
+      },
+      "duration": {
+        "max": 30,
+        "min": 4.5,
+        "mode": 15
+      },
+      "from": "final-judgment-entered",
+      "label": "Final judgment starts appeal clock",
+      "to": "appeal-clock-open"
+    },
+    {
+      "actor": "applicant",
+      "authority": "28 U.S.C. § 1292",
+      "from": "interlocutory-order-issued",
+      "hours": 3,
+      "label": "Check interlocutory review doors",
+      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate.",
+      "to": "interlocutory-review-fork"
+    },
+    {
+      "actor": "applicant",
+      "authority": "28 U.S.C. § 1292(a)(1)",
+      "deadline": {
+        "extendable": true,
+        "extensionAuthority": "Fed. R. App. P. 4(a)(5)",
+        "length": 30,
+        "note": "Appeal of right from injunction/receivership orders. Notice of appeal due within 30 days of entry, extendable to 60 days maximum under FRAP 4(a)(5). Missing the deadline strips appellate jurisdiction regardless of merit."
+      },
+      "duration": {
+        "max": 30,
+        "min": 4.5,
+        "mode": 15
+      },
+      "from": "interlocutory-review-fork",
+      "hours": 8,
+      "id": "interlocutory-injunction-order",
+      "label": "Injunction order — appeal as of right",
+      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate.",
+      "to": "immediately-appealable-interlocutory"
+    },
+    {
+      "actor": "applicant",
+      "authority": "Cohen v. Beneficial Industrial Loan Corp., 337 U.S. 541 (1949)",
+      "deadline": {
+        "extendable": true,
+        "extensionAuthority": "Fed. R. App. P. 4(a)(5)",
+        "length": 30,
+        "note": "Collateral order doctrine requires all three Cohen factors: (1) conclusively determines a disputed question; (2) resolves an important issue separate from the merits; (3) unreviewable on appeal from final judgment. Same 30-day deadline as statutory appeals."
+      },
+      "duration": {
+        "max": 30,
+        "min": 4.5,
+        "mode": 15
+      },
+      "from": "interlocutory-review-fork",
+      "hours": 10,
+      "id": "interlocutory-collateral-order",
+      "label": "Order meets collateral order doctrine",
+      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate.",
+      "to": "immediately-appealable-interlocutory"
+    },
+    {
+      "actor": "applicant",
+      "authority": "28 U.S.C. § 1292(b); Fed. R. App. P. 5(a)-(b)",
+      "deadline": {
+        "extendable": false,
+        "extensionAuthority": "Fed. R. App. P. 5(a)(3)",
+        "length": 10,
+        "note": "Permissive appeal. District court must certify substantial ground for difference of opinion within 10 days of entry (FRAP 5(a)(1)); applicant then has 10 days to apply to the appellate court (FRAP 5(a)(3)). Neither deadline is extendable."
+      },
+      "duration": {
+        "max": 10,
+        "min": 1.5,
+        "mode": 5
+      },
+      "from": "interlocutory-review-fork",
+      "hours": 20,
+      "id": "interlocutory-1292b-certified",
+      "label": "Certify for interlocutory appeal",
+      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate.",
+      "to": "immediately-appealable-interlocutory"
+    },
+    {
+      "actor": "office",
+      "authority": "28 U.S.C. § 1291",
+      "from": "interlocutory-review-fork",
+      "label": "No interlocutory door applies",
+      "to": "interlocutory-review-unavailable"
+    },
+    {
+      "actor": "office",
+      "authority": "Fed. R. App. P. 4(a)(1)(A)",
+      "from": "immediately-appealable-interlocutory",
+      "label": "Interlocutory order ripe for appeal",
+      "to": "appeal-clock-open"
+    },
+    {
+      "actor": "applicant",
+      "authority": "FRAP 4(a)(1)(A)",
+      "cost": 605,
+      "deadline": {
+        "extendable": false,
+        "extensionAuthority": "FRAP 4(a)(5) (may extend up to 30 additional days only via motion before expiration)",
+        "length": 30,
+        "note": "If notice is not filed within 30 days, the appeal is untimely. Under Bowles, no equitable exception or late filing is permitted — appellate jurisdiction is lost permanently and cannot be restored."
+      },
+      "duration": {
+        "max": 30,
+        "min": 4.5,
+        "mode": 15
+      },
+      "from": "appeal-clock-open",
+      "hours": 4,
+      "id": "notice-of-appeal-civil",
+      "label": "File notice of appeal (civil)",
+      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate. Filing fee $605.00: $600.00 court-of-appeals docketing fee (Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2023) plus the $5.00 statutory notice-of-appeal fee (28 U.S.C. § 1917), both collected by the district clerk on filing; waivable IFP under 28 U.S.C. § 1915.",
+      "to": "notice-of-appeal-filed",
+      "valence": "good"
+    },
+    {
+      "actor": "applicant",
+      "authority": "FRAP 4(a)(1)(B)",
+      "cost": 605,
+      "deadline": {
+        "extendable": false,
+        "extensionAuthority": "FRAP 4(a)(5) (may extend up to 30 additional days only via motion before expiration)",
+        "length": 60,
+        "note": "When the U.S., a U.S. agency, or an officer acting in official capacity is a party, the deadline is 60 days. Missing this deadline forecloses appellate jurisdiction entirely under 28 U.S.C. § 2107."
+      },
+      "duration": {
+        "max": 60,
+        "min": 9,
+        "mode": 30
+      },
+      "from": "appeal-clock-open",
+      "hours": 4,
+      "id": "notice-of-appeal-us-party",
+      "label": "File notice of appeal (US party)",
+      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate. Same $605.00 filing fee as the standard notice of appeal (Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2023, plus 28 U.S.C. § 1917's $5.00 notice fee) — the longer 60-day period applies because the U.S., its agency, or officer is a party, not because the filer here is the government.",
+      "to": "notice-of-appeal-filed",
+      "valence": "good"
+    },
+    {
+      "actor": "applicant",
+      "authority": "FRAP 4(b)(1)(A)",
+      "cost": 605,
+      "deadline": {
+        "extendable": false,
+        "extensionAuthority": "FRAP 4(b)(4) (may be extended for excusable neglect or good cause, subject to Bowles jurisdictional limit)",
+        "length": 14,
+        "note": "Criminal defendants have only 14 days to file notice of appeal. A late notice — even one day late — is untimely and strips appellate jurisdiction; no exception for prosecutor's error or trial counsel's mistake."
+      },
+      "duration": {
+        "max": 14,
+        "min": 2.1,
+        "mode": 7
+      },
+      "from": "appeal-clock-open",
+      "hours": 4,
+      "id": "notice-of-appeal-criminal",
+      "label": "File notice of appeal (criminal)",
+      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate. Same $605.00 fee as a civil appeal (Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2023, plus 28 U.S.C. § 1917's $5.00 notice fee) applies in principle, but most criminal appellants proceed in forma pauperis with appointed CJA counsel (FRAP 24(a); 28 U.S.C. § 1915), waiving prepayment.",
+      "to": "notice-of-appeal-filed",
+      "valence": "good"
+    },
+    {
+      "actor": "applicant",
+      "authority": "FRAP 4(a)(4)(A); FRCP 50(b), 59(e), 60(b)(2)",
+      "deadline": {
+        "extendable": false,
+        "extensionAuthority": "FRCP 6(b) may extend the tolling-motion deadline by up to 28 days total (only for FRCP 50(b), 59(e), 60(b) motions)",
+        "length": 28,
+        "note": "Tolling motions must be filed within the FRCP deadline (e.g., 28 days for a FRCP 59(e) motion for new trial). A tolling motion filed even one day late does not restart the appeal clock."
+      },
+      "duration": {
+        "max": 28,
+        "min": 4.2,
+        "mode": 14
+      },
+      "from": "appeal-clock-open",
+      "hours": 8,
+      "label": "File Rule 4(a)(4) tolling motion",
+      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate.",
+      "to": "tolling-motion-filed"
+    },
+    {
+      "actor": "applicant",
+      "authority": "Bowles v. Russell, 551 U.S. 205 (2007); 28 U.S.C. § 2107",
+      "from": "appeal-clock-open",
+      "hours": 0,
+      "label": "Let the deadline lapse",
+      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate.",
+      "to": "notice-of-appeal-untimely",
+      "valence": "bad"
+    },
+    {
+      "actor": "applicant",
+      "authority": "FRAP 4(a)(5)(A)",
+      "deadline": {
+        "extendable": true,
+        "extensionAuthority": "FRAP 4(a)(5)(A) (court may extend if motion filed before deadline expires); FRAP 4(a)(6) (may reopen for 14 days if lack of notice of entry)",
+        "length": 30,
+        "note": "A party may file a motion to extend time to appeal before the deadline expires. The district court may grant up to 30 additional days for excusable neglect or good cause. A motion filed after the deadline expires may only invoke FRAP 4(a)(6) (reopening)."
+      },
+      "duration": {
+        "max": 30,
+        "min": 4.5,
+        "mode": 15
+      },
+      "from": "appeal-clock-open",
+      "hours": 10,
+      "label": "Move to extend or reopen deadline",
+      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate.",
+      "to": "post-deadline-relief-motion"
+    },
+    {
+      "actor": "office",
+      "authority": "FRAP 3(c); FRAP 3(e)",
+      "from": "notice-of-appeal-filed",
+      "label": "Notice omits required contents",
+      "to": "deficient-notice-of-appeal"
+    },
+    {
+      "actor": "office",
+      "authority": "FRAP 3(d); FRAP 12(a); FRAP 12(b)(3)",
+      "from": "notice-of-appeal-filed",
+      "label": "Notice complies — docketed",
+      "to": "docketed-in-court-of-appeals"
+    },
+    {
+      "actor": "examiner",
+      "authority": "FRAP 4(a)(4)(A)",
+      "from": "tolling-motion-filed",
+      "label": "District court rules on the motion",
+      "to": "tolling-motion-disposed"
+    },
+    {
+      "actor": "office",
+      "authority": "FRAP 4(a)(4)(A)",
+      "deadline": {
+        "extendable": false,
+        "extensionAuthority": "FRAP 4(a)(5) (extension may apply to the restarted deadline)",
+        "length": 30,
+        "note": "The full appeal period runs anew from the date the order disposing of the last tolling motion is entered. A new 30-day clock (or 60-day if U.S. party) begins; missing this deadline is fatal."
+      },
+      "duration": {
+        "max": 30,
+        "min": 4.5,
+        "mode": 15
+      },
+      "from": "tolling-motion-disposed",
+      "label": "Appeal clock restarts from disposition",
+      "to": "appeal-clock-open"
+    },
+    {
+      "actor": "examiner",
+      "authority": "Foman v. Davis, 371 U.S. 178 (1962); Smith v. Barry, 502 U.S. 244 (1992); FRAP 3(e)",
+      "from": "deficient-notice-of-appeal",
+      "label": "Court excuses the technical defect",
+      "probability": 0.75,
+      "to": "docketed-in-court-of-appeals",
+      "valence": "good"
+    },
+    {
+      "actor": "examiner",
+      "authority": "Torres v. Oakland Scavenger Co., 487 U.S. 312 (1988); FRAP 3(c)",
+      "from": "deficient-notice-of-appeal",
+      "label": "Defect held jurisdictional, uncurable",
+      "probability": 0.25,
+      "to": "notice-of-appeal-untimely",
+      "valence": "bad"
+    },
+    {
+      "actor": "examiner",
+      "authority": "FRAP 4(a)(5)(A); FRAP 4(a)(6)",
+      "from": "post-deadline-relief-motion",
+      "label": "Court grants extension or reopening",
+      "probability": 0.6,
+      "to": "notice-of-appeal-filed",
+      "valence": "good"
+    },
+    {
+      "actor": "examiner",
+      "authority": "Bowles v. Russell, 551 U.S. 205 (2007); FRAP 4(a)(5)-(6)",
+      "from": "post-deadline-relief-motion",
+      "label": "Court denies relief — deadline stands",
+      "probability": 0.4,
+      "to": "notice-of-appeal-untimely",
+      "valence": "bad"
+    },
+    {
+      "actor": "applicant",
+      "authority": "FRAP 4(a)(3); FRAP 4(a)(4)",
+      "from": "docketed-in-court-of-appeals",
+      "hours": 3,
+      "label": "Appellee weighs a cross-appeal",
+      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate.",
+      "to": "cross-appeal-fork"
+    },
+    {
+      "actor": "applicant",
+      "authority": "FRAP 4(a)(3)",
+      "cost": 605,
+      "deadline": {
+        "extendable": true,
+        "extensionAuthority": "FRAP 4(a)(5): on motion no later than 30 days after the period expires, for excusable neglect or good cause",
+        "length": 14,
+        "note": "14 days after the first notice of appeal, or within the original FRAP 4(a)(1) period, whichever is later. Only a FRAP 4(a)(5) extension saves a missed deadline; no equitable exception revives it."
+      },
+      "duration": {
+        "max": 14,
+        "min": 2.1,
+        "mode": 7
+      },
+      "from": "cross-appeal-fork",
+      "hours": 4,
+      "label": "File notice of cross-appeal",
+      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate. Same $605.00 filing fee as an initial notice of appeal (Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2023, plus 28 U.S.C. § 1917's $5.00 notice fee) — a separate notice, a separate fee.",
+      "to": "cross-appeal-filed"
+    },
+    {
+      "actor": "applicant",
+      "authority": "FRAP 4(a)(3)",
+      "from": "cross-appeal-fork",
+      "hours": 0,
+      "label": "Decline to cross-appeal",
+      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate.",
+      "to": "cross-appeal-not-filed"
+    },
+    {
+      "actor": "office",
+      "authority": "FRAP 3; FRAP 28.1",
+      "from": "cross-appeal-filed",
+      "label": "Cross-appeal docketed",
+      "to": "voluntary-dismissal-fork"
+    },
+    {
+      "actor": "office",
+      "authority": "FRAP 28.1",
+      "from": "cross-appeal-not-filed",
+      "label": "Proceed without cross-appeal",
+      "to": "voluntary-dismissal-fork"
+    },
+    {
+      "actor": "either",
+      "authority": "FRAP 42(b)",
+      "from": "voluntary-dismissal-fork",
+      "label": "Stipulate to or move for dismissal",
+      "to": "voluntarily-dismissed",
+      "valence": "good"
+    },
+    {
+      "actor": "applicant",
+      "authority": "FRAP 10(b)",
+      "from": "voluntary-dismissal-fork",
+      "hours": 2,
+      "label": "Appeal proceeds — order the record",
+      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate.",
+      "to": "transcript-order-fork"
+    },
+    {
+      "actor": "applicant",
+      "authority": "FRAP 10(b)(1)",
+      "deadline": {
+        "extendable": false,
+        "length": 14,
+        "note": "No extension is available for the 14-day ordering deadline; missing it leaves the appellant with only the option to seek appellate relief on an inadequate record, or risk abandonment of issues not covered by existing papers."
+      },
+      "duration": {
+        "max": 14,
+        "min": 2.1,
+        "mode": 7
+      },
+      "from": "transcript-order-fork",
+      "hours": 2,
+      "label": "Order the necessary transcript",
+      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate.",
+      "to": "transcript-ordered"
+    },
+    {
+      "actor": "applicant",
+      "authority": "FRAP 10(b)(1)(B)",
+      "deadline": {
+        "extendable": false,
+        "length": 14,
+        "note": "Same 14-day window as ordering a transcript: FRAP 10(b)(1) requires the appellant, within 14 days after filing the notice of appeal, either to order the transcript or to 'file a certificate stating that no transcript will be ordered.'"
+      },
+      "from": "transcript-order-fork",
+      "hours": 0.5,
+      "id": "no-transcript-certificate",
+      "label": "Certify that no transcript will be ordered",
+      "note": "The usual route when the appeal is from a ruling on the papers (a Rule 12(b)(6) dismissal, a summary judgment) and there is no hearing transcript to order: the record is the original papers and docket entries (FRAP 10(a)). Hours: teaching estimate, a one-page certificate.",
+      "to": "record-transmitted"
+    },
+    {
+      "actor": "applicant",
+      "authority": "FRAP 10(c)-(d)",
+      "from": "transcript-order-fork",
+      "hours": 6,
+      "label": "File agreed statement instead",
+      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate.",
+      "to": "statement-in-lieu-of-transcript"
+    },
+    {
+      "actor": "office",
+      "authority": "FRAP 11(b)",
+      "deadline": {
+        "extendable": true,
+        "extensionAuthority": "FRAP 11(b) (reporter may request extension for completion beyond 30 days; no formal party motion needed)",
+        "length": 30,
+        "note": "Reporter has 30 days from receipt of the order to file the transcript with the district clerk. Requests for additional time are filed with the circuit clerk. Failure to file timely triggers circuit-clerk notice to the trial judge and risks sanction if the record becomes unavailable."
+      },
+      "duration": {
+        "max": 30,
+        "min": 4.5,
+        "mode": 15
+      },
+      "from": "transcript-ordered",
+      "label": "Transcript completed and filed",
+      "to": "record-transmitted"
+    },
+    {
+      "actor": "examiner",
+      "authority": "FRAP 10(d); FRAP 11(a)",
+      "from": "statement-in-lieu-of-transcript",
+      "label": "Agreed statement approved",
+      "to": "record-transmitted"
+    },
+    {
+      "actor": "office",
+      "from": "record-transmitted",
+      "label": "Record complete — motions begin",
+      "to": "stay-pending-appeal-fork"
+    },
+    {
+      "actor": "applicant",
+      "authority": "FRAP 8(a)(1)",
+      "from": "stay-pending-appeal-fork",
+      "hours": 0,
+      "id": "no-stay-sought",
+      "label": "No stay sought -- proceed to briefing",
+      "note": "FRAP 8(a)(1) says a party 'must ordinarily move first in the district court' for a stay -- a stay is something a party may seek, not a required step. A party with nothing to stay (e.g. a plaintiff appealing a dismissal) goes straight to briefing. Mirrors cafc-federal-circuit.json's motions-decline edge. Hours: 0, a no-action transition.",
+      "to": "appellant-brief-window"
+    },
+    {
+      "actor": "applicant",
+      "authority": "FRAP 8(a)(1)",
+      "deadline": {
+        "extendable": true,
+        "extensionAuthority": "FRAP 26(b); court order",
+        "length": 10,
+        "note": "10-day response period (FRAP 27(a)(3)) applies to all motions, including a motion to stay. Failure to meet the deadline may result in the motion being deemed submitted without response, waiver of oral argument, or denial."
+      },
+      "duration": {
+        "max": 10,
+        "min": 1.5,
+        "mode": 5
+      },
+      "from": "stay-pending-appeal-fork",
+      "hours": 15,
+      "label": "Move for stay pending appeal — granted",
+      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate.",
+      "to": "stay-granted",
+      "valence": "good"
+    },
+    {
+      "actor": "examiner",
+      "authority": "FRAP 8(a)",
+      "deadline": {
+        "extendable": true,
+        "extensionAuthority": "FRAP 26(b); court order",
+        "length": 10,
+        "note": "Same 10-day response period applies. Missing the deadline for opposition may result in default or deemed abandonment of objections."
+      },
+      "duration": {
+        "max": 10,
+        "min": 1.5,
+        "mode": 5
+      },
+      "from": "stay-pending-appeal-fork",
+      "label": "Stay motion denied",
+      "to": "stay-denied"
+    },
+    {
+      "actor": "office",
+      "authority": "FRAP 8(a)(1)",
+      "from": "stay-granted",
+      "label": "Proceed to briefing under stay",
+      "to": "appellant-brief-window"
+    },
+    {
+      "actor": "office",
+      "authority": "FRAP 8(a)",
+      "from": "stay-denied",
+      "label": "Proceed to briefing",
+      "to": "appellant-brief-window"
+    },
+    {
+      "actor": "applicant",
+      "authority": "FRAP 31(a)(1)",
+      "deadline": {
+        "extendable": true,
+        "extensionAuthority": "FRAP 26(b); court discretion for good cause",
+        "length": 40,
+        "note": "Failure to file by day 40 (or the extended date) permits an appellee motion to dismiss for want of prosecution under FRAP 31(c), triggering a dismissal that is nearly impossible to revive."
+      },
+      "duration": {
+        "max": 40,
+        "min": 6,
+        "mode": 20
+      },
+      "from": "appellant-brief-window",
+      "hours": 100,
+      "label": "File opening brief",
+      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate.",
+      "to": "appellant-brief-filed"
+    },
+    {
+      "actor": "applicant",
+      "authority": "FRAP 31(c)",
+      "from": "appellant-brief-window",
+      "hours": 0,
+      "label": "Fail to file opening brief",
+      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate.",
+      "to": "appeal-dismissed-no-brief",
+      "valence": "bad"
+    },
+    {
+      "actor": "applicant",
+      "authority": "FRAP 31(a)(1); FRAP 28(b)",
+      "deadline": {
+        "extendable": true,
+        "extensionAuthority": "FRAP 26(b); court discretion for good cause",
+        "length": 30,
+        "note": "Appellee's failure to file within 30 days is grounds for default, but the appellee retains the right to oral argument by court permission even if the brief is late; missing this deadline is far less terminal than the appellant's miss."
+      },
+      "duration": {
+        "max": 30,
+        "min": 4.5,
+        "mode": 15
+      },
+      "from": "appellant-brief-filed",
+      "hours": 90,
+      "label": "Appellee files response brief",
+      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate.",
+      "to": "appellee-brief-filed"
+    },
+    {
+      "actor": "applicant",
+      "authority": "FRAP 31(a)(1); FRAP 28(c)",
+      "deadline": {
+        "extendable": true,
+        "extensionAuthority": "FRAP 26(b); court discretion for good cause; FRAP 31(a)(1) requires filing at least 7 days before argument",
+        "length": 21,
+        "note": "Reply brief must be filed at least 7 days before oral argument (if scheduled) or risk rejection. Late reply briefs are rarely accepted; this is a cascading deadline that depends on the argument calendar, not a pure 21-day rule."
+      },
+      "duration": {
+        "max": 21,
+        "min": 3.1,
+        "mode": 10.5
+      },
+      "from": "appellee-brief-filed",
+      "hours": 40,
+      "label": "File reply brief",
+      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate.",
+      "to": "reply-brief-filed"
+    },
+    {
+      "actor": "applicant",
+      "authority": "FRAP 28(c)",
+      "from": "appellee-brief-filed",
+      "hours": 1,
+      "label": "Waive reply brief",
+      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate.",
+      "to": "briefing-complete"
+    },
+    {
+      "actor": "office",
+      "authority": "FRAP 31",
+      "from": "reply-brief-filed",
+      "label": "Briefing closes",
+      "to": "briefing-complete"
+    },
+    {
+      "actor": "office",
+      "authority": "FRAP 34(a)",
+      "from": "briefing-complete",
+      "label": "Clerk calendars argument decision",
+      "to": "oral-argument-fork"
+    },
+    {
+      "actor": "examiner",
+      "authority": "FRAP 34(a)(1)",
+      "from": "oral-argument-fork",
+      "label": "Panel grants oral argument",
+      "probability": 0.4,
+      "to": "oral-argument-held"
+    },
+    {
+      "actor": "examiner",
+      "authority": "FRAP 34(a)(2)",
+      "from": "oral-argument-fork",
+      "label": "Panel dispenses with argument",
+      "probability": 0.6,
+      "to": "submitted-on-briefs"
+    },
+    {
+      "actor": "office",
+      "authority": "FRAP 34(d)",
+      "from": "oral-argument-held",
+      "label": "Argument concludes — panel deliberates",
+      "to": "standard-of-review-fork"
+    },
+    {
+      "actor": "office",
+      "authority": "FRAP 34(a)(2)",
+      "from": "submitted-on-briefs",
+      "label": "Panel deliberates on the papers",
+      "to": "standard-of-review-fork"
+    },
+    {
+      "actor": "examiner",
+      "authority": "Pure questions of law (statutory construction, constitutional interpretation, legal standards for admissibility)",
+      "from": "standard-of-review-fork",
+      "label": "Issue is a question of law",
+      "to": "de-novo-review"
+    },
+    {
+      "actor": "examiner",
+      "authority": "Cooter & Gell v. Hartmarx Corp., 496 U.S. 384 (1990)",
+      "from": "standard-of-review-fork",
+      "label": "Issue is a discretionary ruling",
+      "to": "abuse-of-discretion-review"
+    },
+    {
+      "actor": "examiner",
+      "authority": "FRCP 52(a)(6); Anderson v. Bessemer City",
+      "from": "standard-of-review-fork",
+      "label": "Issue is a factual finding",
+      "to": "clear-error-review"
+    },
+    {
+      "actor": "office",
+      "from": "de-novo-review",
+      "label": "Panel affirms de novo",
+      "probability": 0.45,
+      "to": "affirmed"
+    },
+    {
+      "actor": "office",
+      "from": "de-novo-review",
+      "label": "Panel reverses de novo",
+      "probability": 0.15,
+      "to": "reversed"
+    },
+    {
+      "actor": "office",
+      "from": "de-novo-review",
+      "label": "Panel reverses and remands",
+      "probability": 0.25,
+      "to": "reversed-and-remanded"
+    },
+    {
+      "actor": "office",
+      "from": "de-novo-review",
+      "label": "Panel vacates and remands",
+      "probability": 0.1,
+      "to": "vacated-and-remanded"
+    },
+    {
+      "actor": "office",
+      "from": "de-novo-review",
+      "label": "Panel splits the result",
+      "probability": 0.05,
+      "to": "affirmed-in-part-reversed-in-part"
+    },
+    {
+      "actor": "office",
+      "from": "abuse-of-discretion-review",
+      "label": "No abuse found — panel affirms",
+      "probability": 0.7,
+      "to": "affirmed"
+    },
+    {
+      "actor": "office",
+      "from": "abuse-of-discretion-review",
+      "label": "Abuse found — panel reverses",
+      "probability": 0.1,
+      "to": "reversed"
+    },
+    {
+      "actor": "office",
+      "from": "abuse-of-discretion-review",
+      "label": "Panel vacates for further findings",
+      "probability": 0.15,
+      "to": "vacated-and-remanded"
+    },
+    {
+      "actor": "office",
+      "from": "abuse-of-discretion-review",
+      "label": "Panel splits the result",
+      "probability": 0.05,
+      "to": "affirmed-in-part-reversed-in-part"
+    },
+    {
+      "actor": "office",
+      "from": "clear-error-review",
+      "label": "No clear error — panel affirms",
+      "probability": 0.75,
+      "to": "affirmed"
+    },
+    {
+      "actor": "office",
+      "from": "clear-error-review",
+      "label": "Clear error found — reverses",
+      "probability": 0.08,
+      "to": "reversed"
+    },
+    {
+      "actor": "office",
+      "from": "clear-error-review",
+      "label": "Panel vacates for further findings",
+      "probability": 0.12,
+      "to": "vacated-and-remanded"
+    },
+    {
+      "actor": "office",
+      "from": "clear-error-review",
+      "label": "Panel splits the result",
+      "probability": 0.05,
+      "to": "affirmed-in-part-reversed-in-part"
+    },
+    {
+      "actor": "applicant",
+      "authority": "FRAP 40(a)(1)",
+      "deadline": {
+        "extendable": true,
+        "extensionAuthority": "FRAP 40(a)(1); circuit local rules may allow additional extensions by panel order or stipulation",
+        "length": 14,
+        "note": "Losing party must file a petition for panel rehearing or rehearing en banc within 14 days of judgment entry. Missing this deadline forecloses appellate-level recourse (except discretionary certiorari); the appellate judgment becomes final."
+      },
+      "duration": {
+        "max": 14,
+        "min": 2.1,
+        "mode": 7
+      },
+      "from": "affirmed",
+      "hours": 3,
+      "label": "Losing party weighs rehearing",
+      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate.",
+      "to": "rehearing-window"
+    },
+    {
+      "actor": "applicant",
+      "authority": "FRAP 40(a)(1)",
+      "deadline": {
+        "extendable": true,
+        "extensionAuthority": "FRAP 40(a)(1); circuit local rules",
+        "length": 14,
+        "note": "Losing party (the party who prevailed below) must file a petition for rehearing within 14 days or lose appellate-level recourse. Extension requires a proactive panel request or stipulation — default expiration is strict."
+      },
+      "duration": {
+        "max": 14,
+        "min": 2.1,
+        "mode": 7
+      },
+      "from": "reversed",
+      "hours": 3,
+      "label": "Losing party weighs rehearing",
+      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate.",
+      "to": "rehearing-window"
+    },
+    {
+      "actor": "applicant",
+      "authority": "FRAP 40(a)(1)",
+      "deadline": {
+        "extendable": true,
+        "extensionAuthority": "FRAP 40(a)(1); circuit local rules",
+        "length": 14,
+        "note": "Either party may file a petition for rehearing (the appellee who won on appeal may seek en banc review; the appellant who still faces remand may challenge the legal standard applied). Missing the 14-day window forecloses the petition and accelerates remand."
+      },
+      "duration": {
+        "max": 14,
+        "min": 2.1,
+        "mode": 7
+      },
+      "from": "reversed-and-remanded",
+      "hours": 3,
+      "label": "Losing party weighs rehearing",
+      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate.",
+      "to": "rehearing-window"
+    },
+    {
+      "actor": "applicant",
+      "authority": "FRAP 40(a)(1)",
+      "deadline": {
+        "extendable": true,
+        "extensionAuthority": "FRAP 40(a)(1); circuit local rules",
+        "length": 14,
+        "note": "Either party may petition for rehearing if they contest the panel's reasoning for vacatur or seek clarification of the remand instructions. Missing the 14-day deadline leaves only the (weaker) remand process to raise objections."
+      },
+      "duration": {
+        "max": 14,
+        "min": 2.1,
+        "mode": 7
+      },
+      "from": "vacated-and-remanded",
+      "hours": 3,
+      "label": "Losing party weighs rehearing",
+      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate.",
+      "to": "rehearing-window"
+    },
+    {
+      "actor": "applicant",
+      "authority": "FRAP 40(a)(1)",
+      "deadline": {
+        "extendable": true,
+        "extensionAuthority": "FRAP 40(a)(1); circuit local rules",
+        "length": 14,
+        "note": "Both parties may have grounds for rehearing: the party who lost on the reversed portion may challenge the legal rule; the party who won only on the affirmed portion may seek full reversal. A single 14-day deadline applies to the entire judgment."
+      },
+      "duration": {
+        "max": 14,
+        "min": 2.1,
+        "mode": 7
+      },
+      "from": "affirmed-in-part-reversed-in-part",
+      "hours": 3,
+      "label": "Either party weighs rehearing",
+      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate.",
+      "to": "rehearing-window"
+    },
+    {
+      "actor": "applicant",
+      "authority": "FRAP 40(a)(1); FRAP 35(c)",
+      "deadline": {
+        "extendable": false,
+        "extensionAuthority": "FRAP 26(b) is silent on FRAP 40 deadlines; extension is theoretically possible for good cause but extremely rarely granted in practice",
+        "length": 14,
+        "note": "Missing the 14-day (or 45-day if the U.S. is a party) deadline forfeits the right to seek rehearing and loses the ability to toll the Supreme Court's 90-day certiorari clock under Rule 13.3."
+      },
+      "duration": {
+        "max": 14,
+        "min": 2.1,
+        "mode": 7
+      },
+      "from": "rehearing-window",
+      "hours": 60,
+      "label": "Petition for rehearing / en banc",
+      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate.",
+      "to": "rehearing-petition-filed"
+    },
+    {
+      "actor": "applicant",
+      "authority": "FRAP 41(b)(1)",
+      "deadline": {
+        "length": 14,
+        "note": "If no rehearing petition is filed within 14 days (or 45 days for the U.S.), the time to petition expires and the mandate issues automatically 7 days thereafter. The 90-day Supreme Court certiorari clock then runs from the original judgment date."
+      },
+      "duration": {
+        "max": 14,
+        "min": 2.1,
+        "mode": 7
+      },
+      "from": "rehearing-window",
+      "hours": 0,
+      "label": "No rehearing sought — time expires",
+      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate.",
+      "to": "mandate-issued"
+    },
+    {
+      "actor": "examiner",
+      "authority": "FRAP 40(a)(4)",
+      "from": "rehearing-petition-filed",
+      "label": "Panel rules on rehearing",
+      "to": "panel-rehearing-decision"
+    },
+    {
+      "actor": "examiner",
+      "authority": "FRAP 40(e)",
+      "from": "panel-rehearing-decision",
+      "label": "Panel grants rehearing",
+      "probability": 0.05,
+      "to": "rehearing-granted-amended-opinion"
+    },
+    {
+      "actor": "office",
+      "authority": "FRAP 40(a)(4); FRAP 40(c); 28 U.S.C. § 46(c)",
+      "from": "panel-rehearing-decision",
+      "label": "Panel denies — en banc poll proceeds",
+      "probability": 0.95,
+      "to": "en-banc-poll-decision"
+    },
+    {
+      "actor": "examiner",
+      "authority": "FRAP 40(c); FRAP 40(e); 28 U.S.C. § 46(c)",
+      "from": "en-banc-poll-decision",
+      "label": "Majority votes to rehear en banc",
+      "probability": 0.02,
+      "to": "rehearing-granted-amended-opinion"
+    },
+    {
+      "actor": "office",
+      "authority": "FRAP 40(c); FRAP 40(a)(4)",
+      "from": "en-banc-poll-decision",
+      "label": "En banc poll fails",
+      "probability": 0.98,
+      "to": "rehearing-en-banc-both-denied"
+    },
+    {
+      "actor": "office",
+      "authority": "FRAP 41(b)(1)",
+      "deadline": {
+        "length": 7,
+        "note": "After the amended opinion is filed (or the rehearing is disposed of), the mandate issues 7 days later. The amended opinion becomes the circuit's final judgment for purposes of the Supreme Court's 90-day certiorari deadline."
+      },
+      "duration": {
+        "max": 7,
+        "min": 1.1,
+        "mode": 3.5
+      },
+      "from": "rehearing-granted-amended-opinion",
+      "label": "Amended opinion becomes judgment",
+      "to": "mandate-issued"
+    },
+    {
+      "actor": "office",
+      "authority": "FRAP 41(b)(1); FRAP 41(b)(3)",
+      "deadline": {
+        "length": 7,
+        "note": "The mandate issues 7 days after the order denying rehearing and/or en banc rehearing, or 7 days after expiration of the petition deadline if no petition was timely filed. This triggers finality at the circuit level and starts the 90-day certiorari clock."
+      },
+      "duration": {
+        "max": 7,
+        "min": 1.1,
+        "mode": 3.5
+      },
+      "from": "rehearing-en-banc-both-denied",
+      "label": "Mandate clock resumes",
+      "to": "mandate-issued"
+    },
+    {
+      "actor": "office",
+      "authority": "Fed. R. App. P. 41(b); Sup. Ct. R. 13.3",
+      "deadline": {
+        "extendable": true,
+        "extensionAuthority": "Sup. Ct. R. 13.6",
+        "length": 90,
+        "note": "The 90-day deadline is measured from the date the appellate opinion is filed/docketed. Missing this deadline forecloses any Supreme Court review; the judgment becomes final and enforceable. Extensions require filing before the deadline expires."
+      },
+      "duration": {
+        "max": 90,
+        "min": 13.5,
+        "mode": 45
+      },
+      "from": "mandate-issued",
+      "label": "Judgment final — cert clock runs",
+      "to": "cert-petition-window"
+    },
+    {
+      "actor": "applicant",
+      "authority": "Fed. R. App. P. 41(d)(1)",
+      "from": "mandate-issued",
+      "hours": 8,
+      "label": "Move to stay mandate for cert",
+      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate.",
+      "to": "mandate-stayed-pending-cert"
+    },
+    {
+      "actor": "examiner",
+      "authority": "Fed. R. App. P. 41(d)(2)",
+      "deadline": {
+        "extendable": true,
+        "extensionAuthority": "Sup. Ct. R. 13.6",
+        "length": 90,
+        "note": "If cert is denied or the 90-day window expires (whichever is earlier), the stay terminates automatically and the mandate issues to enforce the judgment."
+      },
+      "duration": {
+        "max": 90,
+        "min": 13.5,
+        "mode": 45
+      },
+      "from": "mandate-stayed-pending-cert",
+      "label": "Stay granted — cert proceeds",
+      "to": "cert-petition-window"
+    },
+    {
+      "actor": "applicant",
+      "authority": "Sup. Ct. R. 13.1; 28 U.S.C. § 1254(1)",
+      "deadline": {
+        "extendable": false,
+        "extensionAuthority": "Sup. Ct. R. 13.3 (single application to Circuit Justice only)",
+        "length": 90,
+        "note": "Failure to file within 90 days permanently bars federal review; there is no tolling, no exceptions for attorney mistake, and no relief even if the court of appeals misled the parties about the deadline."
+      },
+      "duration": {
+        "max": 90,
+        "min": 13.5,
+        "mode": 45
+      },
+      "from": "cert-petition-window",
+      "hours": 80,
+      "label": "File petition for certiorari",
+      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate.",
+      "to": "cert-petition-filed"
+    },
+    {
+      "actor": "applicant",
+      "authority": "Sup. Ct. R. 13.1",
+      "from": "cert-petition-window",
+      "hours": 0,
+      "label": "90-day window lapses",
+      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate.",
+      "to": "cert-not-sought"
+    },
+    {
+      "actor": "examiner",
+      "authority": "Sup. Ct. R. 10",
+      "from": "cert-petition-filed",
+      "label": "Supreme Court considers petition",
+      "to": "cert-review-decision"
+    },
+    {
+      "actor": "office",
+      "authority": "Sup. Ct. R. 10",
+      "from": "cert-review-decision",
+      "label": "Certiorari denied",
+      "probability": 0.99,
+      "to": "cert-denied"
+    },
+    {
+      "actor": "office",
+      "authority": "28 U.S.C. § 1254(1); Sup. Ct. R. 10",
+      "from": "cert-review-decision",
+      "label": "Certiorari granted",
+      "probability": 0.01,
+      "to": "cert-granted"
+    }
+  ],
+  "forum": "frap",
   "groups": [
     {
       "id": "threshold-group",
@@ -53,6 +1141,668 @@
       "label": "Certiorari to the Supreme Court"
     }
   ],
+  "id": "frap-appellate-procedure",
+  "jurisdiction": "Federal Rules of Appellate Procedure / U.S. Courts of Appeals",
+  "lowered": {
+    "asOf": "2024-12-01",
+    "holes": [
+      {
+        "pointer": "/edges/13/authority",
+        "reason": "FRAP 4(a)(4)(A); FRCP 50(b), 59(e), 60(b)(2)"
+      },
+      {
+        "pointer": "/edges/14/authority",
+        "reason": "Bowles v. Russell, 551 U.S. 205 (2007); 28 U.S.C. § 2107"
+      },
+      {
+        "pointer": "/edges/20/authority",
+        "reason": "Foman v. Davis, 371 U.S. 178 (1962); Smith v. Barry, 502 U.S. 244 (1992); FRAP 3(e)"
+      },
+      {
+        "pointer": "/edges/21/authority",
+        "reason": "Torres v. Oakland Scavenger Co., 487 U.S. 312 (1988); FRAP 3(c)"
+      },
+      {
+        "pointer": "/edges/23/authority",
+        "reason": "Bowles v. Russell, 551 U.S. 205 (2007); FRAP 4(a)(5)-(6)"
+      },
+      {
+        "pointer": "/edges/53/authority",
+        "reason": "Pure questions of law (statutory construction, constitutional interpretation, legal standards for admissibility)"
+      },
+      {
+        "pointer": "/edges/54/authority",
+        "reason": "Cooter & Gell v. Hartmarx Corp., 496 U.S. 384 (1990)"
+      },
+      {
+        "pointer": "/edges/55/authority",
+        "reason": "FRCP 52(a)(6); Anderson v. Bessemer City"
+      },
+      {
+        "pointer": "/edges/6/authority",
+        "reason": "Cohen v. Beneficial Industrial Loan Corp., 337 U.S. 541 (1949)"
+      },
+      {
+        "pointer": "/nodes/11/cite",
+        "reason": "Bowles v. Russell, 551 U.S. 205 (2007); 28 U.S.C. § 2107; FRAP 4(a)"
+      },
+      {
+        "pointer": "/nodes/12/cite",
+        "reason": "FRAP 3(c)(1), (4)-(5); Foman v. Davis, 371 U.S. 178 (1962); Smith v. Barry, 502 U.S. 244 (1992); Torres v. Oakland Scavenger Co., 487 U.S. 312 (1988)"
+      },
+      {
+        "pointer": "/nodes/17/cite",
+        "reason": "FRAP 4(a)(3); United States v. American Railway Express Co., 265 U.S. 425 (1924)"
+      },
+      {
+        "pointer": "/nodes/37/cite",
+        "reason": "Pure questions of law standard; see United States v. Ionia Management S.A., 555 U.S. 99 (2012) for contract interpretation; Ornelas v. United States, 517 U.S. 690 (1996) for mixed questions"
+      },
+      {
+        "pointer": "/nodes/38/cite",
+        "reason": "Cooter & Gell v. Hartmarx Corp., 496 U.S. 384 (1990)"
+      },
+      {
+        "pointer": "/nodes/39/cite",
+        "reason": "FRCP 52(a)(6); Anderson v. City of Bessemer City, 470 U.S. 564 (1985)"
+      },
+      {
+        "pointer": "/nodes/4/cite",
+        "reason": "28 U.S.C. §§ 1292(a)-(b); Cohen v. Beneficial Industrial Loan Corp., 337 U.S. 541 (1949)"
+      },
+      {
+        "pointer": "/nodes/47/cite",
+        "reason": "FRAP 40(a)(4), 40(e)"
+      },
+      {
+        "pointer": "/nodes/48/cite",
+        "reason": "FRAP 40(c), 28 U.S.C. § 46(c)"
+      },
+      {
+        "pointer": "/nodes/5/cite",
+        "reason": "28 U.S.C. §§ 1292(a)(1), 1292(b); Fed. R. App. P. 5"
+      },
+      {
+        "pointer": "/nodes/50/cite",
+        "reason": "FRAP 40(a)(1), FRAP 41(b)(1)"
+      },
+      {
+        "pointer": "/nodes/53/cite",
+        "reason": "Sup. Ct. R. 13.1, 13.3; 28 U.S.C. § 1254(1)"
+      },
+      {
+        "pointer": "/nodes/8/cite",
+        "reason": "FRAP 3(a), (c)(1), (4)-(5)"
+      },
+      {
+        "pointer": "/nodes/9/cite",
+        "reason": "FRAP 4(a)(4)(A); FRCP 50, 59, 52(b), 60(b)"
+      }
+    ],
+    "knownAt": "2024-12-01",
+    "pins": [
+      {
+        "digest": "sha256:d1a5dfa0dcbc0ba4a0b6532147377fc086d559f6e1e11924eaf4fe69c5d8ec1b",
+        "name": "core",
+        "version": "1.0.0"
+      },
+      {
+        "digest": "sha256:699fd99f3204c6be9f37b8e9037ae13070afba66b93b1082be4643aaf149ac03",
+        "name": "frap-appellate-procedure",
+        "version": "0.1.0"
+      }
+    ],
+    "worldDigest": "sha256:08b703e5e9964112efa358acdc26a5044bab999b362efb65f05ea198e4a0d14b"
+  },
+  "nodes": [
+    {
+      "cite": "28 U.S.C. § 1291",
+      "group": "threshold-group",
+      "id": "trial-court-disposition",
+      "kind": "state",
+      "label": "District Court Order or Judgment Entered",
+      "note": "Entry of a district court judgment or order marks the gateway moment for appellate jurisdiction. Not every order triggers appeal rights — the order must fall within one of the narrow statutory categories. Miscategorizing an order (treating an interlocutory order as final, or vice versa) cascades into jurisdictional dismissal downstream, regardless of merit."
+    },
+    {
+      "cite": "28 U.S.C. § 1291",
+      "group": "threshold-group",
+      "id": "appealability-fork",
+      "kind": "decision",
+      "label": "Is the Order a Final Judgment?",
+      "note": "The finality inquiry is mechanical but requires precision: a final decision must dispose of all claims as to all parties, or be certified under Federal Rule of Civil Procedure 54(b). Many seemingly conclusive orders fail the test because they leave pending counterclaims, third-party claims, or unresolved damages issues. Appealing too early results in dismissal for lack of jurisdiction."
+    },
+    {
+      "cite": "28 U.S.C. § 1291; Fed. R. App. P. 4(a)(1)(A)",
+      "group": "threshold-group",
+      "id": "final-judgment-entered",
+      "kind": "state",
+      "label": "Final Judgment",
+      "note": "A true final judgment ends the district court's power over the case on the merits and triggers the 30-day appeal clock. The judgment must resolve the entire controversy between the parties. Partial judgments, conditional orders, and orders that reserve jurisdiction (e.g., to tax costs or award attorney fees) may fail the finality test and block immediate appeal."
+    },
+    {
+      "cite": "28 U.S.C. § 1292",
+      "group": "threshold-group",
+      "id": "interlocutory-order-issued",
+      "kind": "state",
+      "label": "Interlocutory Order",
+      "note": "An interlocutory order does not end the litigation on the merits and thus falls outside the default appeal-of-right gate under § 1291. Section 1292 creates three narrow exceptions, but the default assumption is that an interlocutory order is not appealable. Trying to appeal without qualifying through one of the three doors results in dismissal."
+    },
+    {
+      "cite": "28 U.S.C. §§ 1292(a)-(b); Cohen v. Beneficial Industrial Loan Corp., 337 U.S. 541 (1949)",
+      "group": "threshold-group",
+      "id": "interlocutory-review-fork",
+      "kind": "decision",
+      "label": "Interlocutory Review Door Available?",
+      "note": "Three doors strictly govern interlocutory review: first, § 1292(a)(1) injunction/receivership orders (as of right); second, the collateral order doctrine (Cohen test requiring three conjunctive factors); third, § 1292(b) permissive certification (requires district court consent and substantial ground for difference of opinion). Missing all three means no appeal — litigation continues until final judgment."
+    },
+    {
+      "cite": "28 U.S.C. §§ 1292(a)(1), 1292(b); Fed. R. App. P. 5",
+      "group": "threshold-group",
+      "id": "immediately-appealable-interlocutory",
+      "kind": "state",
+      "label": "Interlocutory Order Ripe for Appeal",
+      "note": "Whichever door got you here, the downstream notice-of-appeal mechanics are identical to a final-judgment appeal. The narrow jurisdictional gate is passed; the 30-day notice-of-appeal deadline and standard briefing rules now apply."
+    },
+    {
+      "cite": "28 U.S.C. § 1291",
+      "group": "threshold-group",
+      "id": "interlocutory-review-unavailable",
+      "kind": "terminal",
+      "label": "No Appellate Jurisdiction — Await Final Judgment",
+      "note": "This is the normal posture for most interlocutory orders: simply not appealable. Litigation continues below and the appellant must await a final judgment to seek review. This is not a trap — it is the designed statutory default. Attempting to appeal will be dismissed for lack of jurisdiction. PLACEHOLDER PAYOFF: $500,000 (stake midpoint), override per matter. The underlying case is not over -- appellate review is simply unavailable yet -- so this terminal is genuinely unresolved rather than a win or a loss.",
+      "outcome": [
+        "neutral"
+      ],
+      "payoff": 500000,
+      "valence": "neutral"
+    },
+    {
+      "cite": "FRAP 4(a)(1)(A)-(B); FRAP 4(b)(1)(A); 28 U.S.C. § 2107",
+      "group": "notice-group",
+      "id": "appeal-clock-open",
+      "kind": "decision",
+      "label": "Notice of Appeal Window Open",
+      "note": "The appeal deadline is jurisdictional and non-waivable under Bowles v. Russell, 551 U.S. 205 (2007). Civil cases have 30 days (60 if the U.S., a U.S. agency, or officer is a party); criminal defendants have 14 days. Missing this deadline strips appellate jurisdiction permanently."
+    },
+    {
+      "cite": "FRAP 3(a), (c)(1), (4)-(5)",
+      "group": "notice-group",
+      "id": "notice-of-appeal-filed",
+      "kind": "state",
+      "label": "Notice of Appeal Filed",
+      "note": "The notice must specify the party taking the appeal, designate the judgment/order appealed from, and identify the court to which the appeal is taken. Courts construe informal notices liberally per Foman v. Davis, 371 U.S. 178 (1962), unless the defect is fatal (wrong party or judgment)."
+    },
+    {
+      "cite": "FRAP 4(a)(4)(A); FRCP 50, 59, 52(b), 60(b)",
+      "group": "notice-group",
+      "id": "tolling-motion-filed",
+      "kind": "state",
+      "label": "Rule 4(a)(4) Tolling Motion Filed",
+      "note": "Motions for judgment as a matter of law, new trial, amended findings, altered/amended judgment, and certain Rule 60(b) motions toll the appeal clock when filed within their own FRCP deadlines (typically 28 days). A motion filed one day after the FRCP deadline does not toll."
+    },
+    {
+      "cite": "FRAP 4(a)(4)(A)",
+      "group": "notice-group",
+      "id": "tolling-motion-disposed",
+      "kind": "state",
+      "label": "Tolling Motion Disposed",
+      "note": "The full appeal period runs anew from the entry of the order disposing of the last remaining tolling motion. If multiple tolling motions are pending, the clock does not restart until the final one is decided."
+    },
+    {
+      "cite": "Bowles v. Russell, 551 U.S. 205 (2007); 28 U.S.C. § 2107; FRAP 4(a)",
+      "group": "notice-group",
+      "id": "notice-of-appeal-untimely",
+      "kind": "terminal",
+      "label": "DISMISSED — Untimely Notice of Appeal (Jurisdictional)",
+      "note": "PERMADEATH. A statutory appeal deadline is strictly jurisdictional and cannot be waived, excused, or extended by equitable principle. Even a district court order purporting to extend the deadline is void ab initio. Loss of jurisdiction is irrevocable. PLACEHOLDER PAYOFF: $0, override per matter. The judgment below stands unreviewed.",
+      "outcome": [
+        "loss",
+        "procedural-default",
+        "jurisdictional",
+        "waiver-trap"
+      ],
+      "payoff": 0,
+      "valence": "bad"
+    },
+    {
+      "cite": "FRAP 3(c)(1), (4)-(5); Foman v. Davis, 371 U.S. 178 (1962); Smith v. Barry, 502 U.S. 244 (1992); Torres v. Oakland Scavenger Co., 487 U.S. 312 (1988)",
+      "group": "notice-group",
+      "id": "deficient-notice-of-appeal",
+      "kind": "state",
+      "label": "Notice of Appeal Contents Deficient",
+      "note": "Courts apply liberal construction to informal notices where the intent to appeal is objectively clear (Foman/Smith line). However, naming the wrong party, wrong judgment, or wrong court may be jurisdictionally fatal and incurable, even if intent is clear (Torres)."
+    },
+    {
+      "cite": "FRAP 4(a)(5)(A); FRAP 4(a)(6)",
+      "group": "notice-group",
+      "id": "post-deadline-relief-motion",
+      "kind": "state",
+      "label": "Motion to Extend or Reopen Time",
+      "note": "FRAP 4(a)(5) allows the district court to extend time up to 30 additional days for excusable neglect or good cause. FRAP 4(a)(6) allows reopening for 14 days for lack of notice of entry (motion filed within 14 days of actual notice, no later than 180 days after entry). Both carry absolute outer limits."
+    },
+    {
+      "cite": "FRAP 3(d); FRAP 12(a); FRAP 12(b)(3)",
+      "group": "notice-group",
+      "id": "docketed-in-court-of-appeals",
+      "kind": "state",
+      "label": "Appeal Docketed",
+      "note": "The district clerk transmits the notice to the court of appeals clerk, who dockets the appeal and assigns a case number. Docketing is ministerial; appellate jurisdiction attaches when the notice is filed in the district court, not when docketed in the appellate court."
+    },
+    {
+      "cite": "FRAP 4(a)(3)",
+      "group": "docketing-group",
+      "id": "cross-appeal-fork",
+      "kind": "decision",
+      "label": "Appellee Considers a Cross-Appeal",
+      "note": "A party wishing to attack a judgment (not merely defend it against the appellant's arguments) must file its own notice of cross-appeal. A cross-appeal asserts a separate basis for reversal or a request that the court award a more favorable judgment to the cross-appellant than the district court gave."
+    },
+    {
+      "cite": "FRAP 4(a)(3)",
+      "group": "docketing-group",
+      "id": "cross-appeal-filed",
+      "kind": "state",
+      "label": "Notice of Cross-Appeal Filed",
+      "note": "Due within 14 days after the first notice of appeal, or the otherwise-applicable Rule 4(a)(1) period, whichever is later. The district court may extend it under FRAP 4(a)(5); otherwise missing it forecloses cross-appellate relief."
+    },
+    {
+      "cite": "FRAP 4(a)(3); United States v. American Railway Express Co., 265 U.S. 425 (1924)",
+      "group": "docketing-group",
+      "id": "cross-appeal-not-filed",
+      "kind": "state",
+      "label": "No Cross-Appeal — Judgment Defended Only",
+      "note": "Without a cross-appeal, a party cannot argue for reversal or a more favorable judgment on appeal. The party is confined to defending the judgment on existing grounds or alternative theories, but cannot affirmatively seek relief — this is the binding cross-appeal constraint."
+    },
+    {
+      "cite": "FRAP 42(b)",
+      "group": "docketing-group",
+      "id": "voluntary-dismissal-fork",
+      "kind": "decision",
+      "label": "Parties Consider Dismissing the Appeal",
+      "note": "By stipulation of all parties (with costs as agreed) or on the appellant's own motion — courts almost always grant such dismissals unless compelling institutional interests (e.g., class certification, precedential impact) require retention of the case."
+    },
+    {
+      "cite": "FRAP 42(b)",
+      "group": "docketing-group",
+      "id": "voluntarily-dismissed",
+      "kind": "terminal",
+      "label": "Appeal Voluntarily Dismissed",
+      "note": "On dismissal, the underlying district court judgment stands undisturbed unless the dismissal order provides otherwise (e.g., with prejudice, without prejudice, or conditional). Voluntary dismissal typically reflects settlement and does not resolve the merits — it is neither a win nor a loss on appeal. PLACEHOLDER PAYOFF: $400,000, override per matter, matching this project's settlement/voluntary-exit tier -- the appellant's own choice, most often after a settlement.",
+      "outcome": [
+        "voluntary",
+        "dismissal"
+      ],
+      "payoff": 400000,
+      "valence": "good"
+    },
+    {
+      "cite": "FRAP 10(b)",
+      "group": "record-group",
+      "id": "transcript-order-fork",
+      "kind": "decision",
+      "label": "Transcript Needed?",
+      "note": "Appellant must decide within 14 days of the notice of appeal whether to order the transcript. Ordering creates an enforceable duty on the court reporter to transcribe and file; failure to order by the deadline doesn't waive the opportunity to appeal, but will delay the record and potentially prejudice waiver arguments if the record remains incomplete."
+    },
+    {
+      "cite": "FRAP 10(b)(1)",
+      "group": "record-group",
+      "id": "transcript-ordered",
+      "kind": "state",
+      "label": "Transcript Ordered",
+      "note": "Written order must be filed with the district clerk; appellant arranges payment with the reporter at the time of ordering. If ordering only a partial transcript, appellant must designate issues on appeal, and appellee then has 14 days to designate additional portions — refusal to order those portions gives appellee grounds to seek a court order compelling appellant to do so, shifting cost and timeline control from appellant to appellee."
+    },
+    {
+      "cite": "FRAP 10(d)",
+      "group": "record-group",
+      "id": "statement-in-lieu-of-transcript",
+      "kind": "state",
+      "label": "Agreed Statement in Lieu of Transcript",
+      "note": "Agreed statement must be signed by both parties and contain only facts 'essential to the court's resolution of the issues' — neither party may later expand it mid-appeal to contest completeness. The statement still requires district court approval before certification, creating a procedural gate. Missing the district court's approval forecloses this pathway and forces a return to transcript ordering."
+    },
+    {
+      "cite": "FRAP 11(b)",
+      "group": "record-group",
+      "id": "record-transmitted",
+      "kind": "state",
+      "label": "Record on Appeal Complete and Transmitted",
+      "note": "The record is 'complete' when the transcript is filed (or agreed statement approved) and the district clerk has numbered and transmitted all original papers to the appellate clerk. The reporter's duty is to note receipt and file within 30 days; delays beyond 30 days require a reporter request for extension (not appellant's action), and failure to report timely triggers mandatory circuit-to-district notification, shifting the compliance burden to the trial judge."
+    },
+    {
+      "cite": "FRAP 8(a)(1); FRAP 27(a)",
+      "group": "motions-group",
+      "id": "stay-pending-appeal-fork",
+      "kind": "decision",
+      "label": "Move to Stay Judgment Pending Appeal?",
+      "note": "Mandatory exhaustion: must apply to the district court first under FRAP 8(a)(1)(A). Only if the district court denies relief or cannot act may the movant apply to the court of appeals. FRAP 27 governs the form of all appellate motions generally (10-day response, single-judge or panel action) — many appellants shortcut the district-court step, forfeiting the venue best positioned to assess likelihood of reversal and irreparable harm."
+    },
+    {
+      "cite": "FRAP 8(b)(1)",
+      "group": "motions-group",
+      "id": "stay-granted",
+      "kind": "state",
+      "label": "Stay Granted — Enforcement Suspended",
+      "note": "Stay is almost always conditioned on a supersedeas bond equal to the judgment plus interest and costs. The bond requirement is the real control gate — inability to post money kills the stay in practice, regardless of legal merit on the appeal."
+    },
+    {
+      "cite": "FRAP 8(a)",
+      "group": "motions-group",
+      "id": "stay-denied",
+      "kind": "state",
+      "label": "Stay Denied — Judgment Enforceable",
+      "note": "Judgment becomes executable while the appeal is pending. Critical trap: if the appellee executes and collects before reversal, the appellant's only remedy is replevin or an action against the judgment creditor — reversal does not automatically restore collected funds."
+    },
+    {
+      "cite": "FRAP 31(a)(1)",
+      "group": "briefing-group",
+      "id": "appellant-brief-window",
+      "kind": "decision",
+      "label": "Appellant's Opening Brief Due",
+      "note": "The 40-day deadline runs from the date the record is filed with the court, not from the notice of appeal. Appellant must track the actual record closure date to avoid confusion; missing this self-inflicted trap is a leading cause of appellate dismissal. FRAP 28(a) sets required contents; FRAP 32(a)(7) caps the brief at 13,000 words (or 30 pages if monospaced)."
+    },
+    {
+      "cite": "FRAP 28(a); FRAP 32(a)(7)",
+      "group": "briefing-group",
+      "id": "appellant-brief-filed",
+      "kind": "state",
+      "label": "Opening Brief Filed",
+      "note": "The opening brief frames the issues, selects the standard of review, and defines the factual universe for appellate review. The appellant is bound by these choices; the reply brief cannot resurrect abandoned arguments, and new theories in reply are waived. The 13,000-word cap forces ruthless economy in issue-spotting."
+    },
+    {
+      "cite": "FRAP 31(c)",
+      "group": "briefing-group",
+      "id": "appeal-dismissed-no-brief",
+      "kind": "terminal",
+      "label": "DISMISSED — Failure to Prosecute (No Opening Brief)",
+      "note": "Dismissal for 'want of prosecution' when the appellant fails to file timely is discretionary with the court but nearly automatic on appellee motion. This is a conduct-based sanction, not a jurisdictional defect, and is extremely difficult to revive post-dismissal because it reflects lack of diligence, not legal error. PLACEHOLDER PAYOFF: $0, override per matter.",
+      "outcome": [
+        "loss",
+        "procedural-default",
+        "waiver-trap"
+      ],
+      "payoff": 0,
+      "valence": "bad"
+    },
+    {
+      "cite": "FRAP 31(a)(1); FRAP 28(b)",
+      "group": "briefing-group",
+      "id": "appellee-brief-filed",
+      "kind": "state",
+      "label": "Appellee's Response Brief Filed",
+      "note": "The appellee enjoys asymmetric freedom: it may defend the judgment on any ground in the record without admitting any fact or standard the appellant proposed, and may attack the appellant's statement of the case or standard of review without conceding issue-framing. The 30-day period runs from service of the opening brief and can be extended for good cause."
+    },
+    {
+      "cite": "FRAP 31(a)(1); FRAP 28(c)",
+      "group": "briefing-group",
+      "id": "reply-brief-filed",
+      "kind": "state",
+      "label": "Appellant's Reply Brief Filed",
+      "note": "The reply brief is optional — failure to file waives no substantive right, but filing one that strays beyond the appellee's response opens waiver traps. The 6,500-word cap is non-negotiable; new arguments, new authorities, and arguments not fairly responsive to the response brief are all waived."
+    },
+    {
+      "cite": "FRAP 31",
+      "group": "briefing-group",
+      "id": "briefing-complete",
+      "kind": "state",
+      "label": "Briefing Closed",
+      "note": "Once all briefs are filed or the reply deadline expires, the written record closes and is fixed. No supplemental briefs are permitted absent extraordinary circumstances (e.g., intervening Supreme Court authority). The panel's decision is now constrained to the four corners of the briefs and the certified record on appeal."
+    },
+    {
+      "cite": "FRAP 34(a)(1)",
+      "group": "argument-group",
+      "id": "oral-argument-fork",
+      "kind": "state",
+      "label": "Oral Argument or Submission on Briefs?",
+      "note": "Panel discretion to grant or dispense with oral argument — litigant expectations often misaligned with actual practice. Argument is dispensed with only when the panel unanimously agrees the appeal is frivolous, the dispositive issues are authoritatively decided, or the briefs adequately present the facts and legal arguments."
+    },
+    {
+      "cite": "FRAP 34(c)-(d)",
+      "group": "argument-group",
+      "id": "oral-argument-held",
+      "kind": "state",
+      "label": "Oral Argument Held",
+      "note": "Typical 15-minute per-side allocation (circuit-specific variations apply). Panels use argument to test weak points in the briefs; oral argument is not a second chance to rewrite a losing brief but rather to address judicial concerns flagged during panel circulation."
+    },
+    {
+      "cite": "FRAP 34(a)(2)",
+      "group": "argument-group",
+      "id": "submitted-on-briefs",
+      "kind": "state",
+      "label": "Submitted on the Briefs",
+      "note": "Merits decided solely on written briefs without live argument — far more common in high-volume circuits than litigants anticipate. Decision occurs with no opportunity for live response to judicial questioning or hidden panel concerns revealed only in the opinion."
+    },
+    {
+      "cite": "FRAP 28(a)(10)",
+      "group": "argument-group",
+      "id": "standard-of-review-fork",
+      "kind": "decision",
+      "label": "Which Standard of Review Governs?",
+      "note": "The single most outcome-determinative procedural fork — identical facts and panel composition yield opposite affirm/reverse outcomes depending on whether the ruling implicates questions of law, discretion, or fact. Standard selection is rarely contestable once the issue category is fixed."
+    },
+    {
+      "cite": "Pure questions of law standard; see United States v. Ionia Management S.A., 555 U.S. 99 (2012) for contract interpretation; Ornelas v. United States, 517 U.S. 690 (1996) for mixed questions",
+      "group": "argument-group",
+      "id": "de-novo-review",
+      "kind": "state",
+      "label": "De Novo Review (Questions of Law)",
+      "note": "No deference to the district court's legal conclusions — decided fresh. Includes summary judgment grants, dismissals, statutory interpretation. Highest reversal rate of the three standards. (The blueprint's originally proposed cite, Salve Regina Dockery Co. v. Russell, could not be verified and has been replaced with the established de novo authorities above.)"
+    },
+    {
+      "cite": "Cooter & Gell v. Hartmarx Corp., 496 U.S. 384 (1990)",
+      "group": "argument-group",
+      "id": "abuse-of-discretion-review",
+      "kind": "state",
+      "label": "Abuse-of-Discretion Review (Discretionary Rulings)",
+      "note": "Governs evidentiary rulings, discovery orders, sanctions, case management. Reversed only for wrong legal standard, clearly erroneous facts, or a decision no reasonable judge could reach."
+    },
+    {
+      "cite": "FRCP 52(a)(6); Anderson v. City of Bessemer City, 470 U.S. 564 (1985)",
+      "group": "argument-group",
+      "id": "clear-error-review",
+      "kind": "state",
+      "label": "Clear-Error Review (Factual Findings)",
+      "note": "Most deferential standard — reversal requires a 'definite and firm conviction that a mistake has been committed,' even if the panel would have decided differently. Especially deferential to credibility findings."
+    },
+    {
+      "cite": "FRAP 36(a)",
+      "group": "merits-group",
+      "id": "affirmed",
+      "kind": "terminal",
+      "label": "AFFIRMED",
+      "note": "Judgment stands because no reversible error was found, but 'affirmed' need not mean the court agreed with the district court's reasoning — it only means the outcome was legally permissible. The real trap is assuming the panel endorsed the lower court's reasoning. PLACEHOLDER PAYOFF: $0, override per matter. Self is the appellant (the party that lost below and sought review); AFFIRMED means that loss stands. The pack's authored `valence` of 'good' tracks a clean/expected disposition, not who wins -- flagged since it runs the other way from self's payoff.",
+      "outcome": [
+        "loss",
+        "affirmed"
+      ],
+      "payoff": 0,
+      "valence": "good"
+    },
+    {
+      "cite": "FRAP 36(a)",
+      "group": "merits-group",
+      "id": "reversed",
+      "kind": "terminal",
+      "label": "REVERSED",
+      "note": "Final reversal with judgment entered — the panel disagreed on the merits and imposed its own definitive holding without remand. Relatively rare in civil practice because most reversals require factfinding or application-of-law tasks unsuited to appellate authority. PLACEHOLDER PAYOFF: $1,000,000, override per matter.",
+      "outcome": [
+        "win",
+        "reversed"
+      ],
+      "payoff": 1000000,
+      "valence": "good"
+    },
+    {
+      "cite": "FRAP 36(a)",
+      "group": "merits-group",
+      "id": "reversed-and-remanded",
+      "kind": "terminal",
+      "label": "REVERSED AND REMANDED",
+      "note": "The standard reversal posture: the panel identifies the wrong legal rule or standard applied below, vacates judgment, and returns the case for the district court to redecide under the correct rule. This is the most common reversal outcome. PLACEHOLDER PAYOFF: $600,000, override per matter. A real win on the merits, discounted because further proceedings remain before the case is actually over.",
+      "outcome": [
+        "win",
+        "remand"
+      ],
+      "payoff": 600000,
+      "valence": "good"
+    },
+    {
+      "cite": "FRAP 36(a)",
+      "group": "merits-group",
+      "id": "vacated-and-remanded",
+      "kind": "terminal",
+      "label": "VACATED AND REMANDED",
+      "note": "Doesn't necessarily hold the district court wrong on the merits — often signals a procedural defect, intervening change in law, or need for further fact-finding. The trap: this outcome looks like reversal but gives the district court wide latitude on remand. PLACEHOLDER PAYOFF: $400,000, override per matter, matching this project's remand tier -- a procedural defect requires a redo, and the outcome on remand is genuinely open.",
+      "outcome": [
+        "remand"
+      ],
+      "payoff": 400000,
+      "valence": "good"
+    },
+    {
+      "cite": "FRAP 36(a)",
+      "group": "merits-group",
+      "id": "affirmed-in-part-reversed-in-part",
+      "kind": "terminal",
+      "label": "AFFIRMED IN PART, REVERSED IN PART",
+      "note": "Common in multi-claim or multi-party appeals decided claim-by-claim under different standards of review — a genuine mixed result, not a compromise. Each part stands on its own legal footing. PLACEHOLDER PAYOFF: $250,000, override per matter, matching this project's affirmed-in-part tier (see cafc).",
+      "outcome": [
+        "mixed",
+        "affirmed-in-part"
+      ],
+      "payoff": 250000,
+      "valence": "caution"
+    },
+    {
+      "cite": "FRAP 40(a)(1)",
+      "group": "rehearing-group",
+      "id": "rehearing-window",
+      "kind": "decision",
+      "label": "Seek Rehearing?",
+      "note": "After judgment entry, parties have 14 days (or 45 if the U.S. is a party) to file a petition for panel rehearing, en banc rehearing, or both in a combined petition. Most circuits treat the deadline as firm. Filing preserves the issue and tolls the 90-day certiorari clock under Supreme Court Rule 13.3."
+    },
+    {
+      "cite": "FRAP 40(a)",
+      "group": "rehearing-group",
+      "id": "rehearing-petition-filed",
+      "kind": "state",
+      "label": "Petition for Rehearing / Rehearing En Banc Filed",
+      "note": "The petition must comply with FRAP 32 formatting and cannot exceed 3,900 words (computer-generated) or 15 pages (typewritten). For panel rehearing, it must identify specific overlooked legal or factual points; for en banc, it must show a conflict with another circuit, an intra-circuit conflict, conflict with Supreme Court precedent, or a question of exceptional importance."
+    },
+    {
+      "cite": "FRAP 40(a)(4), 40(e)",
+      "group": "rehearing-group",
+      "id": "panel-rehearing-decision",
+      "kind": "state",
+      "label": "Panel Rules on Rehearing",
+      "note": "The panel rules on the petition; no fixed FRAP deadline exists, though circuit practice generally resolves it in under 40 days. Grant rates are extremely low; panels rarely reverse their own decisions absent a substantial legal or factual error. No response is permitted unless the court requests one."
+    },
+    {
+      "cite": "FRAP 40(c), 28 U.S.C. § 46(c)",
+      "group": "rehearing-group",
+      "id": "en-banc-poll-decision",
+      "kind": "state",
+      "label": "Active Judges Vote on En Banc Rehearing",
+      "note": "All active judges of the circuit vote on whether to order en banc rehearing; a majority of active judges must vote in favor to grant. FRAP 40(c) provides that 'unless a judge calls for a vote, a vote need not be taken' — the court may dispose of the petition without a formal poll, effectively a denial. En banc rehearing is extraordinarily rare, reserved for circuit splits or truly exceptional questions."
+    },
+    {
+      "cite": "FRAP 40(e)",
+      "group": "rehearing-group",
+      "id": "rehearing-granted-amended-opinion",
+      "kind": "state",
+      "label": "Rehearing Granted — Opinion Amended or Reheard",
+      "note": "When panel rehearing is granted, the panel may dispose of the case without further briefing, order supplemental briefing or argument, or issue other appropriate orders. For en banc rehearing, the panel opinion is vacated entirely and the case is reargued before all active judges."
+    },
+    {
+      "cite": "FRAP 40(a)(1), FRAP 41(b)(1)",
+      "group": "rehearing-group",
+      "id": "rehearing-en-banc-both-denied",
+      "kind": "terminal",
+      "label": "Rehearing and Rehearing En Banc Both Denied (Final)",
+      "note": "Once both panel and en banc petitions are denied (or the deadline to file them passes without filing), the original panel decision is final at the circuit level. The mandate issues 7 days after the later of expiration of the petition period or entry of the order denying it. The 90-day certiorari deadline now runs from this denial. PLACEHOLDER PAYOFF: $400,000, override per matter. Reachable from any panel disposition (affirmed, reversed, remanded, mixed) with rehearing then exhausted, so a single payoff necessarily blends a possible win with a possible loss; override once the matter's actual panel disposition is known.",
+      "outcome": [
+        "final"
+      ],
+      "payoff": 400000,
+      "valence": "good"
+    },
+    {
+      "cite": "Fed. R. App. P. 41(a)–(b)",
+      "group": "mandate-group",
+      "id": "mandate-issued",
+      "kind": "state",
+      "label": "Mandate Issues",
+      "note": "The mandate is the formal order returning jurisdiction to the district court — distinct from the opinion and critical for enforcing the judgment. It issues automatically 7 days after either expiration of the rehearing period or denial of a timely rehearing petition. The mandate, not the opinion, is what actually binds the district court."
+    },
+    {
+      "cite": "Fed. R. App. P. 41(d)(1)–(2)",
+      "group": "mandate-group",
+      "id": "mandate-stayed-pending-cert",
+      "kind": "state",
+      "label": "Mandate Stayed Pending Certiorari",
+      "note": "On motion, the court of appeals may stay its mandate pending a cert petition — otherwise the district court could enforce the judgment while the Supreme Court is still deciding whether to take the case. The stay is discretionary and requires a showing of likelihood of cert grant plus irreparable harm."
+    },
+    {
+      "cite": "Sup. Ct. R. 13.1, 13.3; 28 U.S.C. § 1254(1)",
+      "group": "cert-group",
+      "id": "cert-petition-window",
+      "kind": "decision",
+      "label": "Certiorari Petition Window",
+      "note": "90 days from entry of judgment or from denial of a timely rehearing petition — not extendable except by a single application to a Circuit Justice for good cause, filed before the deadline expires."
+    },
+    {
+      "cite": "Sup. Ct. R. 13.1",
+      "group": "cert-group",
+      "id": "cert-not-sought",
+      "kind": "terminal",
+      "label": "FINAL — Certiorari Not Sought",
+      "note": "The vast majority of court of appeals decisions end here — no petition filed, judgment final and unreviewable by any federal court. PLACEHOLDER PAYOFF: $400,000, override per matter. Blended for the same reason as `rehearing-en-banc-both-denied`: the panel's disposition, whatever it was, simply stands.",
+      "outcome": [
+        "final"
+      ],
+      "payoff": 400000,
+      "valence": "good"
+    },
+    {
+      "cite": "Sup. Ct. R. 10; 28 U.S.C. § 1254(1)",
+      "group": "cert-group",
+      "id": "cert-petition-filed",
+      "kind": "state",
+      "label": "Petition for Certiorari Filed",
+      "note": "Governed by the 'rule of four' — cert is granted on the vote of any four Justices, not a majority. Discretionary review, not a matter of right; the petition must meet one of the Rule 10 criteria (typically a circuit split, an important federal question, or conflict with Supreme Court precedent)."
+    },
+    {
+      "cite": "Sup. Ct. R. 10",
+      "group": "cert-group",
+      "id": "cert-review-decision",
+      "kind": "state",
+      "label": "Supreme Court Grants or Denies Certiorari",
+      "note": "The Supreme Court grants certiorari to only about 1% of petitions. Most petitions receive zero substantive review; the Court's denial is typically summary and involves only a screening review by law clerks. No opinions are issued on the merits of denied petitions."
+    },
+    {
+      "cite": "Sup. Ct. R. 10",
+      "group": "cert-group",
+      "id": "cert-denied",
+      "kind": "terminal",
+      "label": "CERT DENIED (Final)",
+      "note": "A denial of certiorari is not a ruling on the merits and carries zero precedential weight — parties cannot cite a cert denial as support for any legal proposition, and the denial expresses no view on the correctness of the lower court's decision. PLACEHOLDER PAYOFF: $400,000, override per matter. Blended for the same reason as `rehearing-en-banc-both-denied`: the panel's disposition, whatever it was, simply stands.",
+      "outcome": [
+        "final"
+      ],
+      "payoff": 400000,
+      "valence": "good"
+    },
+    {
+      "cite": "28 U.S.C. § 1254(1); Sup. Ct. R. 10",
+      "group": "cert-group",
+      "id": "cert-granted",
+      "kind": "terminal",
+      "label": "CERT GRANTED — Case Transfers to the Supreme Court",
+      "note": "Once certiorari is granted, the case is removed from the court of appeals docket and briefing proceeds under the Supreme Court's own rules, not FRAP. This pack's jurisdiction over the case ends here. PLACEHOLDER PAYOFF: $500,000 (stake midpoint), override per matter. Certiorari being granted decides nothing on the merits -- the case's actual outcome is now genuinely open before the Supreme Court.",
+      "outcome": [
+        "pending"
+      ],
+      "payoff": 500000,
+      "valence": "good"
+    }
+  ],
   "roles": {
     "applicant": "self",
     "court": "nature",
@@ -60,59 +1810,60 @@
     "examiner": "nature",
     "office": "nature"
   },
+  "schemaVersion": 4,
   "sources": [
     {
+      "asOf": "2024-12-01",
       "id": "frap-rules",
-      "title": "Federal Rules of Appellate Procedure, as amended to Dec. 1, 2024",
-      "url": "https://www.uscourts.gov/sites/default/files/2025-02/federal-rules-of-appellate-procedure-dec-1-2024_0.pdf",
       "path": "sources/frap.txt",
       "sha256": "d61711eca8e1f65955d12f1b7d29d4cc453d9ee1e30c4fff6c54b23f113454f6",
-      "asOf": "2024-12-01"
+      "title": "Federal Rules of Appellate Procedure, as amended to Dec. 1, 2024",
+      "url": "https://www.uscourts.gov/sites/default/files/2025-02/federal-rules-of-appellate-procedure-dec-1-2024_0.pdf"
     },
     {
       "id": "usc28-1291",
+      "path": "sources/usc-additional.txt",
       "title": "28 U.S.C. § 1291 (Final decisions of district courts)",
-      "url": "https://www.law.cornell.edu/uscode/text/28/1291",
-      "path": "sources/usc-additional.txt"
+      "url": "https://www.law.cornell.edu/uscode/text/28/1291"
     },
     {
       "id": "usc28-1292",
+      "path": "sources/usc-cfr-prosecution-fragments.txt",
       "title": "28 U.S.C. § 1292 (Interlocutory decisions)",
-      "url": "https://www.law.cornell.edu/uscode/text/28/1292",
-      "path": "sources/usc-cfr-prosecution-fragments.txt"
+      "url": "https://www.law.cornell.edu/uscode/text/28/1292"
     },
     {
       "id": "usc28-1254",
+      "path": "sources/usc-additional.txt",
       "title": "28 U.S.C. § 1254 (Courts of appeals; certiorari)",
-      "url": "https://www.law.cornell.edu/uscode/text/28/1254",
-      "path": "sources/usc-additional.txt"
+      "url": "https://www.law.cornell.edu/uscode/text/28/1254"
     },
     {
       "id": "usc28-2107",
+      "path": "sources/usc-additional.txt",
       "title": "28 U.S.C. § 2107 (Time for appeal to courts of appeals)",
-      "url": "https://www.law.cornell.edu/uscode/text/28/2107",
-      "path": "sources/usc-additional.txt"
+      "url": "https://www.law.cornell.edu/uscode/text/28/2107"
     },
     {
+      "asOf": "2023-01-01",
       "id": "scotus-rules",
-      "title": "Rules of the Supreme Court of the United States (2023) (Rules 10, 13)",
-      "url": "https://www.supremecourt.gov/filingandrules/2023RulesoftheCourt.pdf",
       "sha256": "05f435c766fd596333828846d097828238ff89a266c24e3afca9ecd2fb9c19db",
-      "asOf": "2023-01-01"
+      "title": "Rules of the Supreme Court of the United States (2023) (Rules 10, 13)",
+      "url": "https://www.supremecourt.gov/filingandrules/2023RulesoftheCourt.pdf"
     },
     {
+      "asOf": "2024-12-01",
       "id": "frcp-rules-cite",
-      "title": "Federal Rules of Civil Procedure, as amended to Dec. 1, 2024 (FRCP 50/52/59/60 post-trial motions tolling the appeal clock)",
-      "url": "https://www.uscourts.gov/sites/default/files/2025-02/federal-rules-of-civil-procedure-dec-1-2024_0.pdf",
       "path": "sources/frcp.txt",
       "sha256": "c86b327b3bbe7dd3e68ea434a2bf0bc62aee8e85229f3456f094a1b232568317",
-      "asOf": "2024-12-01"
+      "title": "Federal Rules of Civil Procedure, as amended to Dec. 1, 2024 (FRCP 50/52/59/60 post-trial motions tolling the appeal clock)",
+      "url": "https://www.uscourts.gov/sites/default/files/2025-02/federal-rules-of-civil-procedure-dec-1-2024_0.pdf"
     },
     {
+      "asOf": "2023-12-01",
       "id": "coa-fee-schedule",
       "title": "Court of Appeals Miscellaneous Fee Schedule (docketing fee $600, effective 12/1/2023)",
-      "url": "https://www.uscourts.gov/court-programs/fees/court-appeals-miscellaneous-fee-schedule",
-      "asOf": "2023-12-01"
+      "url": "https://www.uscourts.gov/court-programs/fees/court-appeals-miscellaneous-fee-schedule"
     },
     {
       "id": "usc28-1917",
@@ -120,1646 +1871,6 @@
       "url": "https://www.law.cornell.edu/uscode/text/28/1917"
     }
   ],
-  "citeSyntax": {
-    "rules": [
-      {
-        "prefixes": [
-          "FRAP",
-          "Fed. R. App. P.",
-          "Fed R App P",
-          "F.R.A.P."
-        ],
-        "heading": "FRAP {}",
-        "source": "frap-rules"
-      },
-      {
-        "prefixes": [
-          "FRCP",
-          "Fed. R. Civ. P.",
-          "Fed R Civ P",
-          "F.R.C.P."
-        ],
-        "heading": "Rule {}",
-        "source": "frcp-rules-cite"
-      }
-    ]
-  },
-  "nodes": [
-    {
-      "id": "trial-court-disposition",
-      "kind": "state",
-      "label": "District Court Order or Judgment Entered",
-      "cite": "28 U.S.C. § 1291",
-      "note": "Entry of a district court judgment or order marks the gateway moment for appellate jurisdiction. Not every order triggers appeal rights — the order must fall within one of the narrow statutory categories. Miscategorizing an order (treating an interlocutory order as final, or vice versa) cascades into jurisdictional dismissal downstream, regardless of merit.",
-      "group": "threshold-group"
-    },
-    {
-      "id": "appealability-fork",
-      "kind": "decision",
-      "label": "Is the Order a Final Judgment?",
-      "cite": "28 U.S.C. § 1291",
-      "note": "The finality inquiry is mechanical but requires precision: a final decision must dispose of all claims as to all parties, or be certified under Federal Rule of Civil Procedure 54(b). Many seemingly conclusive orders fail the test because they leave pending counterclaims, third-party claims, or unresolved damages issues. Appealing too early results in dismissal for lack of jurisdiction.",
-      "group": "threshold-group"
-    },
-    {
-      "id": "final-judgment-entered",
-      "kind": "state",
-      "label": "Final Judgment",
-      "cite": "28 U.S.C. § 1291; Fed. R. App. P. 4(a)(1)(A)",
-      "note": "A true final judgment ends the district court's power over the case on the merits and triggers the 30-day appeal clock. The judgment must resolve the entire controversy between the parties. Partial judgments, conditional orders, and orders that reserve jurisdiction (e.g., to tax costs or award attorney fees) may fail the finality test and block immediate appeal.",
-      "group": "threshold-group"
-    },
-    {
-      "id": "interlocutory-order-issued",
-      "kind": "state",
-      "label": "Interlocutory Order",
-      "cite": "28 U.S.C. § 1292",
-      "note": "An interlocutory order does not end the litigation on the merits and thus falls outside the default appeal-of-right gate under § 1291. Section 1292 creates three narrow exceptions, but the default assumption is that an interlocutory order is not appealable. Trying to appeal without qualifying through one of the three doors results in dismissal.",
-      "group": "threshold-group"
-    },
-    {
-      "id": "interlocutory-review-fork",
-      "kind": "decision",
-      "label": "Interlocutory Review Door Available?",
-      "cite": "28 U.S.C. §§ 1292(a)-(b); Cohen v. Beneficial Industrial Loan Corp., 337 U.S. 541 (1949)",
-      "note": "Three doors strictly govern interlocutory review: first, § 1292(a)(1) injunction/receivership orders (as of right); second, the collateral order doctrine (Cohen test requiring three conjunctive factors); third, § 1292(b) permissive certification (requires district court consent and substantial ground for difference of opinion). Missing all three means no appeal — litigation continues until final judgment.",
-      "group": "threshold-group"
-    },
-    {
-      "id": "immediately-appealable-interlocutory",
-      "kind": "state",
-      "label": "Interlocutory Order Ripe for Appeal",
-      "cite": "28 U.S.C. §§ 1292(a)(1), 1292(b); Fed. R. App. P. 5",
-      "note": "Whichever door got you here, the downstream notice-of-appeal mechanics are identical to a final-judgment appeal. The narrow jurisdictional gate is passed; the 30-day notice-of-appeal deadline and standard briefing rules now apply.",
-      "group": "threshold-group"
-    },
-    {
-      "id": "interlocutory-review-unavailable",
-      "kind": "terminal",
-      "label": "No Appellate Jurisdiction — Await Final Judgment",
-      "cite": "28 U.S.C. § 1291",
-      "note": "This is the normal posture for most interlocutory orders: simply not appealable. Litigation continues below and the appellant must await a final judgment to seek review. This is not a trap — it is the designed statutory default. Attempting to appeal will be dismissed for lack of jurisdiction. PLACEHOLDER PAYOFF: $500,000 (stake midpoint), override per matter. The underlying case is not over -- appellate review is simply unavailable yet -- so this terminal is genuinely unresolved rather than a win or a loss.",
-      "group": "threshold-group",
-      "valence": "neutral",
-      "payoff": 500000.0,
-      "outcome": [
-        "neutral"
-      ]
-    },
-    {
-      "id": "appeal-clock-open",
-      "kind": "decision",
-      "label": "Notice of Appeal Window Open",
-      "cite": "FRAP 4(a)(1)(A)-(B); FRAP 4(b)(1)(A); 28 U.S.C. § 2107",
-      "note": "The appeal deadline is jurisdictional and non-waivable under Bowles v. Russell, 551 U.S. 205 (2007). Civil cases have 30 days (60 if the U.S., a U.S. agency, or officer is a party); criminal defendants have 14 days. Missing this deadline strips appellate jurisdiction permanently.",
-      "group": "notice-group"
-    },
-    {
-      "id": "notice-of-appeal-filed",
-      "kind": "state",
-      "label": "Notice of Appeal Filed",
-      "cite": "FRAP 3(a), (c)(1), (4)-(5)",
-      "note": "The notice must specify the party taking the appeal, designate the judgment/order appealed from, and identify the court to which the appeal is taken. Courts construe informal notices liberally per Foman v. Davis, 371 U.S. 178 (1962), unless the defect is fatal (wrong party or judgment).",
-      "group": "notice-group"
-    },
-    {
-      "id": "tolling-motion-filed",
-      "kind": "state",
-      "label": "Rule 4(a)(4) Tolling Motion Filed",
-      "cite": "FRAP 4(a)(4)(A); FRCP 50, 59, 52(b), 60(b)",
-      "note": "Motions for judgment as a matter of law, new trial, amended findings, altered/amended judgment, and certain Rule 60(b) motions toll the appeal clock when filed within their own FRCP deadlines (typically 28 days). A motion filed one day after the FRCP deadline does not toll.",
-      "group": "notice-group"
-    },
-    {
-      "id": "tolling-motion-disposed",
-      "kind": "state",
-      "label": "Tolling Motion Disposed",
-      "cite": "FRAP 4(a)(4)(A)",
-      "note": "The full appeal period runs anew from the entry of the order disposing of the last remaining tolling motion. If multiple tolling motions are pending, the clock does not restart until the final one is decided.",
-      "group": "notice-group"
-    },
-    {
-      "id": "notice-of-appeal-untimely",
-      "kind": "terminal",
-      "label": "DISMISSED — Untimely Notice of Appeal (Jurisdictional)",
-      "cite": "Bowles v. Russell, 551 U.S. 205 (2007); 28 U.S.C. § 2107; FRAP 4(a)",
-      "note": "PERMADEATH. A statutory appeal deadline is strictly jurisdictional and cannot be waived, excused, or extended by equitable principle. Even a district court order purporting to extend the deadline is void ab initio. Loss of jurisdiction is irrevocable. PLACEHOLDER PAYOFF: $0, override per matter. The judgment below stands unreviewed.",
-      "group": "notice-group",
-      "valence": "bad",
-      "payoff": 0.0,
-      "outcome": [
-        "loss",
-        "procedural-default",
-        "jurisdictional",
-        "waiver-trap"
-      ]
-    },
-    {
-      "id": "deficient-notice-of-appeal",
-      "kind": "state",
-      "label": "Notice of Appeal Contents Deficient",
-      "cite": "FRAP 3(c)(1), (4)-(5); Foman v. Davis, 371 U.S. 178 (1962); Smith v. Barry, 502 U.S. 244 (1992); Torres v. Oakland Scavenger Co., 487 U.S. 312 (1988)",
-      "note": "Courts apply liberal construction to informal notices where the intent to appeal is objectively clear (Foman/Smith line). However, naming the wrong party, wrong judgment, or wrong court may be jurisdictionally fatal and incurable, even if intent is clear (Torres).",
-      "group": "notice-group"
-    },
-    {
-      "id": "post-deadline-relief-motion",
-      "kind": "state",
-      "label": "Motion to Extend or Reopen Time",
-      "cite": "FRAP 4(a)(5)(A); FRAP 4(a)(6)",
-      "note": "FRAP 4(a)(5) allows the district court to extend time up to 30 additional days for excusable neglect or good cause. FRAP 4(a)(6) allows reopening for 14 days for lack of notice of entry (motion filed within 14 days of actual notice, no later than 180 days after entry). Both carry absolute outer limits.",
-      "group": "notice-group"
-    },
-    {
-      "id": "docketed-in-court-of-appeals",
-      "kind": "state",
-      "label": "Appeal Docketed",
-      "cite": "FRAP 3(d); FRAP 12(a); FRAP 12(b)(3)",
-      "note": "The district clerk transmits the notice to the court of appeals clerk, who dockets the appeal and assigns a case number. Docketing is ministerial; appellate jurisdiction attaches when the notice is filed in the district court, not when docketed in the appellate court.",
-      "group": "notice-group"
-    },
-    {
-      "id": "cross-appeal-fork",
-      "kind": "decision",
-      "label": "Appellee Considers a Cross-Appeal",
-      "cite": "FRAP 4(a)(3)",
-      "note": "A party wishing to attack a judgment (not merely defend it against the appellant's arguments) must file its own notice of cross-appeal. A cross-appeal asserts a separate basis for reversal or a request that the court award a more favorable judgment to the cross-appellant than the district court gave.",
-      "group": "docketing-group"
-    },
-    {
-      "id": "cross-appeal-filed",
-      "kind": "state",
-      "label": "Notice of Cross-Appeal Filed",
-      "cite": "FRAP 4(a)(3)",
-      "note": "Due within 14 days after the first notice of appeal, or the otherwise-applicable Rule 4(a)(1) period, whichever is later. The district court may extend it under FRAP 4(a)(5); otherwise missing it forecloses cross-appellate relief.",
-      "group": "docketing-group"
-    },
-    {
-      "id": "cross-appeal-not-filed",
-      "kind": "state",
-      "label": "No Cross-Appeal — Judgment Defended Only",
-      "cite": "FRAP 4(a)(3); United States v. American Railway Express Co., 265 U.S. 425 (1924)",
-      "note": "Without a cross-appeal, a party cannot argue for reversal or a more favorable judgment on appeal. The party is confined to defending the judgment on existing grounds or alternative theories, but cannot affirmatively seek relief — this is the binding cross-appeal constraint.",
-      "group": "docketing-group"
-    },
-    {
-      "id": "voluntary-dismissal-fork",
-      "kind": "decision",
-      "label": "Parties Consider Dismissing the Appeal",
-      "cite": "FRAP 42(b)",
-      "note": "By stipulation of all parties (with costs as agreed) or on the appellant's own motion — courts almost always grant such dismissals unless compelling institutional interests (e.g., class certification, precedential impact) require retention of the case.",
-      "group": "docketing-group"
-    },
-    {
-      "id": "voluntarily-dismissed",
-      "kind": "terminal",
-      "label": "Appeal Voluntarily Dismissed",
-      "cite": "FRAP 42(b)",
-      "note": "On dismissal, the underlying district court judgment stands undisturbed unless the dismissal order provides otherwise (e.g., with prejudice, without prejudice, or conditional). Voluntary dismissal typically reflects settlement and does not resolve the merits — it is neither a win nor a loss on appeal. PLACEHOLDER PAYOFF: $400,000, override per matter, matching this project's settlement/voluntary-exit tier -- the appellant's own choice, most often after a settlement.",
-      "group": "docketing-group",
-      "valence": "good",
-      "payoff": 400000.0,
-      "outcome": [
-        "voluntary",
-        "dismissal"
-      ]
-    },
-    {
-      "id": "transcript-order-fork",
-      "kind": "decision",
-      "label": "Transcript Needed?",
-      "cite": "FRAP 10(b)",
-      "note": "Appellant must decide within 14 days of the notice of appeal whether to order the transcript. Ordering creates an enforceable duty on the court reporter to transcribe and file; failure to order by the deadline doesn't waive the opportunity to appeal, but will delay the record and potentially prejudice waiver arguments if the record remains incomplete.",
-      "group": "record-group"
-    },
-    {
-      "id": "transcript-ordered",
-      "kind": "state",
-      "label": "Transcript Ordered",
-      "cite": "FRAP 10(b)(1)",
-      "note": "Written order must be filed with the district clerk; appellant arranges payment with the reporter at the time of ordering. If ordering only a partial transcript, appellant must designate issues on appeal, and appellee then has 14 days to designate additional portions — refusal to order those portions gives appellee grounds to seek a court order compelling appellant to do so, shifting cost and timeline control from appellant to appellee.",
-      "group": "record-group"
-    },
-    {
-      "id": "statement-in-lieu-of-transcript",
-      "kind": "state",
-      "label": "Agreed Statement in Lieu of Transcript",
-      "cite": "FRAP 10(d)",
-      "note": "Agreed statement must be signed by both parties and contain only facts 'essential to the court's resolution of the issues' — neither party may later expand it mid-appeal to contest completeness. The statement still requires district court approval before certification, creating a procedural gate. Missing the district court's approval forecloses this pathway and forces a return to transcript ordering.",
-      "group": "record-group"
-    },
-    {
-      "id": "record-transmitted",
-      "kind": "state",
-      "label": "Record on Appeal Complete and Transmitted",
-      "cite": "FRAP 11(b)",
-      "note": "The record is 'complete' when the transcript is filed (or agreed statement approved) and the district clerk has numbered and transmitted all original papers to the appellate clerk. The reporter's duty is to note receipt and file within 30 days; delays beyond 30 days require a reporter request for extension (not appellant's action), and failure to report timely triggers mandatory circuit-to-district notification, shifting the compliance burden to the trial judge.",
-      "group": "record-group"
-    },
-    {
-      "id": "stay-pending-appeal-fork",
-      "kind": "decision",
-      "label": "Move to Stay Judgment Pending Appeal?",
-      "cite": "FRAP 8(a)(1); FRAP 27(a)",
-      "note": "Mandatory exhaustion: must apply to the district court first under FRAP 8(a)(1)(A). Only if the district court denies relief or cannot act may the movant apply to the court of appeals. FRAP 27 governs the form of all appellate motions generally (10-day response, single-judge or panel action) — many appellants shortcut the district-court step, forfeiting the venue best positioned to assess likelihood of reversal and irreparable harm.",
-      "group": "motions-group"
-    },
-    {
-      "id": "stay-granted",
-      "kind": "state",
-      "label": "Stay Granted — Enforcement Suspended",
-      "cite": "FRAP 8(b)(1)",
-      "note": "Stay is almost always conditioned on a supersedeas bond equal to the judgment plus interest and costs. The bond requirement is the real control gate — inability to post money kills the stay in practice, regardless of legal merit on the appeal.",
-      "group": "motions-group"
-    },
-    {
-      "id": "stay-denied",
-      "kind": "state",
-      "label": "Stay Denied — Judgment Enforceable",
-      "cite": "FRAP 8(a)",
-      "note": "Judgment becomes executable while the appeal is pending. Critical trap: if the appellee executes and collects before reversal, the appellant's only remedy is replevin or an action against the judgment creditor — reversal does not automatically restore collected funds.",
-      "group": "motions-group"
-    },
-    {
-      "id": "appellant-brief-window",
-      "kind": "decision",
-      "label": "Appellant's Opening Brief Due",
-      "cite": "FRAP 31(a)(1)",
-      "note": "The 40-day deadline runs from the date the record is filed with the court, not from the notice of appeal. Appellant must track the actual record closure date to avoid confusion; missing this self-inflicted trap is a leading cause of appellate dismissal. FRAP 28(a) sets required contents; FRAP 32(a)(7) caps the brief at 13,000 words (or 30 pages if monospaced).",
-      "group": "briefing-group"
-    },
-    {
-      "id": "appellant-brief-filed",
-      "kind": "state",
-      "label": "Opening Brief Filed",
-      "cite": "FRAP 28(a); FRAP 32(a)(7)",
-      "note": "The opening brief frames the issues, selects the standard of review, and defines the factual universe for appellate review. The appellant is bound by these choices; the reply brief cannot resurrect abandoned arguments, and new theories in reply are waived. The 13,000-word cap forces ruthless economy in issue-spotting.",
-      "group": "briefing-group"
-    },
-    {
-      "id": "appeal-dismissed-no-brief",
-      "kind": "terminal",
-      "label": "DISMISSED — Failure to Prosecute (No Opening Brief)",
-      "cite": "FRAP 31(c)",
-      "note": "Dismissal for 'want of prosecution' when the appellant fails to file timely is discretionary with the court but nearly automatic on appellee motion. This is a conduct-based sanction, not a jurisdictional defect, and is extremely difficult to revive post-dismissal because it reflects lack of diligence, not legal error. PLACEHOLDER PAYOFF: $0, override per matter.",
-      "group": "briefing-group",
-      "valence": "bad",
-      "payoff": 0.0,
-      "outcome": [
-        "loss",
-        "procedural-default",
-        "waiver-trap"
-      ]
-    },
-    {
-      "id": "appellee-brief-filed",
-      "kind": "state",
-      "label": "Appellee's Response Brief Filed",
-      "cite": "FRAP 31(a)(1); FRAP 28(b)",
-      "note": "The appellee enjoys asymmetric freedom: it may defend the judgment on any ground in the record without admitting any fact or standard the appellant proposed, and may attack the appellant's statement of the case or standard of review without conceding issue-framing. The 30-day period runs from service of the opening brief and can be extended for good cause.",
-      "group": "briefing-group"
-    },
-    {
-      "id": "reply-brief-filed",
-      "kind": "state",
-      "label": "Appellant's Reply Brief Filed",
-      "cite": "FRAP 31(a)(1); FRAP 28(c)",
-      "note": "The reply brief is optional — failure to file waives no substantive right, but filing one that strays beyond the appellee's response opens waiver traps. The 6,500-word cap is non-negotiable; new arguments, new authorities, and arguments not fairly responsive to the response brief are all waived.",
-      "group": "briefing-group"
-    },
-    {
-      "id": "briefing-complete",
-      "kind": "state",
-      "label": "Briefing Closed",
-      "cite": "FRAP 31",
-      "note": "Once all briefs are filed or the reply deadline expires, the written record closes and is fixed. No supplemental briefs are permitted absent extraordinary circumstances (e.g., intervening Supreme Court authority). The panel's decision is now constrained to the four corners of the briefs and the certified record on appeal.",
-      "group": "briefing-group"
-    },
-    {
-      "id": "oral-argument-fork",
-      "kind": "state",
-      "label": "Oral Argument or Submission on Briefs?",
-      "cite": "FRAP 34(a)(1)",
-      "note": "Panel discretion to grant or dispense with oral argument — litigant expectations often misaligned with actual practice. Argument is dispensed with only when the panel unanimously agrees the appeal is frivolous, the dispositive issues are authoritatively decided, or the briefs adequately present the facts and legal arguments.",
-      "group": "argument-group"
-    },
-    {
-      "id": "oral-argument-held",
-      "kind": "state",
-      "label": "Oral Argument Held",
-      "cite": "FRAP 34(c)-(d)",
-      "note": "Typical 15-minute per-side allocation (circuit-specific variations apply). Panels use argument to test weak points in the briefs; oral argument is not a second chance to rewrite a losing brief but rather to address judicial concerns flagged during panel circulation.",
-      "group": "argument-group"
-    },
-    {
-      "id": "submitted-on-briefs",
-      "kind": "state",
-      "label": "Submitted on the Briefs",
-      "cite": "FRAP 34(a)(2)",
-      "note": "Merits decided solely on written briefs without live argument — far more common in high-volume circuits than litigants anticipate. Decision occurs with no opportunity for live response to judicial questioning or hidden panel concerns revealed only in the opinion.",
-      "group": "argument-group"
-    },
-    {
-      "id": "standard-of-review-fork",
-      "kind": "decision",
-      "label": "Which Standard of Review Governs?",
-      "cite": "FRAP 28(a)(10)",
-      "note": "The single most outcome-determinative procedural fork — identical facts and panel composition yield opposite affirm/reverse outcomes depending on whether the ruling implicates questions of law, discretion, or fact. Standard selection is rarely contestable once the issue category is fixed.",
-      "group": "argument-group"
-    },
-    {
-      "id": "de-novo-review",
-      "kind": "state",
-      "label": "De Novo Review (Questions of Law)",
-      "cite": "Pure questions of law standard; see United States v. Ionia Management S.A., 555 U.S. 99 (2012) for contract interpretation; Ornelas v. United States, 517 U.S. 690 (1996) for mixed questions",
-      "note": "No deference to the district court's legal conclusions — decided fresh. Includes summary judgment grants, dismissals, statutory interpretation. Highest reversal rate of the three standards. (The blueprint's originally proposed cite, Salve Regina Dockery Co. v. Russell, could not be verified and has been replaced with the established de novo authorities above.)",
-      "group": "argument-group"
-    },
-    {
-      "id": "abuse-of-discretion-review",
-      "kind": "state",
-      "label": "Abuse-of-Discretion Review (Discretionary Rulings)",
-      "cite": "Cooter & Gell v. Hartmarx Corp., 496 U.S. 384 (1990)",
-      "note": "Governs evidentiary rulings, discovery orders, sanctions, case management. Reversed only for wrong legal standard, clearly erroneous facts, or a decision no reasonable judge could reach.",
-      "group": "argument-group"
-    },
-    {
-      "id": "clear-error-review",
-      "kind": "state",
-      "label": "Clear-Error Review (Factual Findings)",
-      "cite": "FRCP 52(a)(6); Anderson v. City of Bessemer City, 470 U.S. 564 (1985)",
-      "note": "Most deferential standard — reversal requires a 'definite and firm conviction that a mistake has been committed,' even if the panel would have decided differently. Especially deferential to credibility findings.",
-      "group": "argument-group"
-    },
-    {
-      "id": "affirmed",
-      "kind": "terminal",
-      "label": "AFFIRMED",
-      "cite": "FRAP 36(a)",
-      "note": "Judgment stands because no reversible error was found, but 'affirmed' need not mean the court agreed with the district court's reasoning — it only means the outcome was legally permissible. The real trap is assuming the panel endorsed the lower court's reasoning. PLACEHOLDER PAYOFF: $0, override per matter. Self is the appellant (the party that lost below and sought review); AFFIRMED means that loss stands. The pack's authored `valence` of 'good' tracks a clean/expected disposition, not who wins -- flagged since it runs the other way from self's payoff.",
-      "group": "merits-group",
-      "valence": "good",
-      "payoff": 0.0,
-      "outcome": [
-        "loss",
-        "affirmed"
-      ]
-    },
-    {
-      "id": "reversed",
-      "kind": "terminal",
-      "label": "REVERSED",
-      "cite": "FRAP 36(a)",
-      "note": "Final reversal with judgment entered — the panel disagreed on the merits and imposed its own definitive holding without remand. Relatively rare in civil practice because most reversals require factfinding or application-of-law tasks unsuited to appellate authority. PLACEHOLDER PAYOFF: $1,000,000, override per matter.",
-      "group": "merits-group",
-      "valence": "good",
-      "payoff": 1000000.0,
-      "outcome": [
-        "win",
-        "reversed"
-      ]
-    },
-    {
-      "id": "reversed-and-remanded",
-      "kind": "terminal",
-      "label": "REVERSED AND REMANDED",
-      "cite": "FRAP 36(a)",
-      "note": "The standard reversal posture: the panel identifies the wrong legal rule or standard applied below, vacates judgment, and returns the case for the district court to redecide under the correct rule. This is the most common reversal outcome. PLACEHOLDER PAYOFF: $600,000, override per matter. A real win on the merits, discounted because further proceedings remain before the case is actually over.",
-      "group": "merits-group",
-      "valence": "good",
-      "payoff": 600000.0,
-      "outcome": [
-        "win",
-        "remand"
-      ]
-    },
-    {
-      "id": "vacated-and-remanded",
-      "kind": "terminal",
-      "label": "VACATED AND REMANDED",
-      "cite": "FRAP 36(a)",
-      "note": "Doesn't necessarily hold the district court wrong on the merits — often signals a procedural defect, intervening change in law, or need for further fact-finding. The trap: this outcome looks like reversal but gives the district court wide latitude on remand. PLACEHOLDER PAYOFF: $400,000, override per matter, matching this project's remand tier -- a procedural defect requires a redo, and the outcome on remand is genuinely open.",
-      "group": "merits-group",
-      "valence": "good",
-      "payoff": 400000.0,
-      "outcome": [
-        "remand"
-      ]
-    },
-    {
-      "id": "affirmed-in-part-reversed-in-part",
-      "kind": "terminal",
-      "label": "AFFIRMED IN PART, REVERSED IN PART",
-      "cite": "FRAP 36(a)",
-      "note": "Common in multi-claim or multi-party appeals decided claim-by-claim under different standards of review — a genuine mixed result, not a compromise. Each part stands on its own legal footing. PLACEHOLDER PAYOFF: $250,000, override per matter, matching this project's affirmed-in-part tier (see cafc).",
-      "group": "merits-group",
-      "valence": "caution",
-      "payoff": 250000.0,
-      "outcome": [
-        "mixed",
-        "affirmed-in-part"
-      ]
-    },
-    {
-      "id": "rehearing-window",
-      "kind": "decision",
-      "label": "Seek Rehearing?",
-      "cite": "FRAP 40(a)(1)",
-      "note": "After judgment entry, parties have 14 days (or 45 if the U.S. is a party) to file a petition for panel rehearing, en banc rehearing, or both in a combined petition. Most circuits treat the deadline as firm. Filing preserves the issue and tolls the 90-day certiorari clock under Supreme Court Rule 13.3.",
-      "group": "rehearing-group"
-    },
-    {
-      "id": "rehearing-petition-filed",
-      "kind": "state",
-      "label": "Petition for Rehearing / Rehearing En Banc Filed",
-      "cite": "FRAP 40(a)",
-      "note": "The petition must comply with FRAP 32 formatting and cannot exceed 3,900 words (computer-generated) or 15 pages (typewritten). For panel rehearing, it must identify specific overlooked legal or factual points; for en banc, it must show a conflict with another circuit, an intra-circuit conflict, conflict with Supreme Court precedent, or a question of exceptional importance.",
-      "group": "rehearing-group"
-    },
-    {
-      "id": "panel-rehearing-decision",
-      "kind": "state",
-      "label": "Panel Rules on Rehearing",
-      "cite": "FRAP 40(a)(4), 40(e)",
-      "note": "The panel rules on the petition; no fixed FRAP deadline exists, though circuit practice generally resolves it in under 40 days. Grant rates are extremely low; panels rarely reverse their own decisions absent a substantial legal or factual error. No response is permitted unless the court requests one.",
-      "group": "rehearing-group"
-    },
-    {
-      "id": "en-banc-poll-decision",
-      "kind": "state",
-      "label": "Active Judges Vote on En Banc Rehearing",
-      "cite": "FRAP 40(c), 28 U.S.C. § 46(c)",
-      "note": "All active judges of the circuit vote on whether to order en banc rehearing; a majority of active judges must vote in favor to grant. FRAP 40(c) provides that 'unless a judge calls for a vote, a vote need not be taken' — the court may dispose of the petition without a formal poll, effectively a denial. En banc rehearing is extraordinarily rare, reserved for circuit splits or truly exceptional questions.",
-      "group": "rehearing-group"
-    },
-    {
-      "id": "rehearing-granted-amended-opinion",
-      "kind": "state",
-      "label": "Rehearing Granted — Opinion Amended or Reheard",
-      "cite": "FRAP 40(e)",
-      "note": "When panel rehearing is granted, the panel may dispose of the case without further briefing, order supplemental briefing or argument, or issue other appropriate orders. For en banc rehearing, the panel opinion is vacated entirely and the case is reargued before all active judges.",
-      "group": "rehearing-group"
-    },
-    {
-      "id": "rehearing-en-banc-both-denied",
-      "kind": "terminal",
-      "label": "Rehearing and Rehearing En Banc Both Denied (Final)",
-      "cite": "FRAP 40(a)(1), FRAP 41(b)(1)",
-      "note": "Once both panel and en banc petitions are denied (or the deadline to file them passes without filing), the original panel decision is final at the circuit level. The mandate issues 7 days after the later of expiration of the petition period or entry of the order denying it. The 90-day certiorari deadline now runs from this denial. PLACEHOLDER PAYOFF: $400,000, override per matter. Reachable from any panel disposition (affirmed, reversed, remanded, mixed) with rehearing then exhausted, so a single payoff necessarily blends a possible win with a possible loss; override once the matter's actual panel disposition is known.",
-      "group": "rehearing-group",
-      "valence": "good",
-      "payoff": 400000.0,
-      "outcome": [
-        "final"
-      ]
-    },
-    {
-      "id": "mandate-issued",
-      "kind": "state",
-      "label": "Mandate Issues",
-      "cite": "Fed. R. App. P. 41(a)–(b)",
-      "note": "The mandate is the formal order returning jurisdiction to the district court — distinct from the opinion and critical for enforcing the judgment. It issues automatically 7 days after either expiration of the rehearing period or denial of a timely rehearing petition. The mandate, not the opinion, is what actually binds the district court.",
-      "group": "mandate-group"
-    },
-    {
-      "id": "mandate-stayed-pending-cert",
-      "kind": "state",
-      "label": "Mandate Stayed Pending Certiorari",
-      "cite": "Fed. R. App. P. 41(d)(1)–(2)",
-      "note": "On motion, the court of appeals may stay its mandate pending a cert petition — otherwise the district court could enforce the judgment while the Supreme Court is still deciding whether to take the case. The stay is discretionary and requires a showing of likelihood of cert grant plus irreparable harm.",
-      "group": "mandate-group"
-    },
-    {
-      "id": "cert-petition-window",
-      "kind": "decision",
-      "label": "Certiorari Petition Window",
-      "cite": "Sup. Ct. R. 13.1, 13.3; 28 U.S.C. § 1254(1)",
-      "note": "90 days from entry of judgment or from denial of a timely rehearing petition — not extendable except by a single application to a Circuit Justice for good cause, filed before the deadline expires.",
-      "group": "cert-group"
-    },
-    {
-      "id": "cert-not-sought",
-      "kind": "terminal",
-      "label": "FINAL — Certiorari Not Sought",
-      "cite": "Sup. Ct. R. 13.1",
-      "note": "The vast majority of court of appeals decisions end here — no petition filed, judgment final and unreviewable by any federal court. PLACEHOLDER PAYOFF: $400,000, override per matter. Blended for the same reason as `rehearing-en-banc-both-denied`: the panel's disposition, whatever it was, simply stands.",
-      "group": "cert-group",
-      "valence": "good",
-      "payoff": 400000.0,
-      "outcome": [
-        "final"
-      ]
-    },
-    {
-      "id": "cert-petition-filed",
-      "kind": "state",
-      "label": "Petition for Certiorari Filed",
-      "cite": "Sup. Ct. R. 10; 28 U.S.C. § 1254(1)",
-      "note": "Governed by the 'rule of four' — cert is granted on the vote of any four Justices, not a majority. Discretionary review, not a matter of right; the petition must meet one of the Rule 10 criteria (typically a circuit split, an important federal question, or conflict with Supreme Court precedent).",
-      "group": "cert-group"
-    },
-    {
-      "id": "cert-review-decision",
-      "kind": "state",
-      "label": "Supreme Court Grants or Denies Certiorari",
-      "cite": "Sup. Ct. R. 10",
-      "note": "The Supreme Court grants certiorari to only about 1% of petitions. Most petitions receive zero substantive review; the Court's denial is typically summary and involves only a screening review by law clerks. No opinions are issued on the merits of denied petitions.",
-      "group": "cert-group"
-    },
-    {
-      "id": "cert-denied",
-      "kind": "terminal",
-      "label": "CERT DENIED (Final)",
-      "cite": "Sup. Ct. R. 10",
-      "note": "A denial of certiorari is not a ruling on the merits and carries zero precedential weight — parties cannot cite a cert denial as support for any legal proposition, and the denial expresses no view on the correctness of the lower court's decision. PLACEHOLDER PAYOFF: $400,000, override per matter. Blended for the same reason as `rehearing-en-banc-both-denied`: the panel's disposition, whatever it was, simply stands.",
-      "group": "cert-group",
-      "valence": "good",
-      "payoff": 400000.0,
-      "outcome": [
-        "final"
-      ]
-    },
-    {
-      "id": "cert-granted",
-      "kind": "terminal",
-      "label": "CERT GRANTED — Case Transfers to the Supreme Court",
-      "cite": "28 U.S.C. § 1254(1); Sup. Ct. R. 10",
-      "note": "Once certiorari is granted, the case is removed from the court of appeals docket and briefing proceeds under the Supreme Court's own rules, not FRAP. This pack's jurisdiction over the case ends here. PLACEHOLDER PAYOFF: $500,000 (stake midpoint), override per matter. Certiorari being granted decides nothing on the merits -- the case's actual outcome is now genuinely open before the Supreme Court.",
-      "group": "cert-group",
-      "valence": "good",
-      "payoff": 500000.0,
-      "outcome": [
-        "pending"
-      ]
-    }
-  ],
-  "edges": [
-    {
-      "from": "trial-court-disposition",
-      "to": "appealability-fork",
-      "label": "Assess order for finality",
-      "actor": "either",
-      "authority": "28 U.S.C. § 1291"
-    },
-    {
-      "from": "appealability-fork",
-      "to": "final-judgment-entered",
-      "label": "Order is a final judgment",
-      "actor": "office",
-      "authority": "28 U.S.C. § 1291"
-    },
-    {
-      "from": "appealability-fork",
-      "to": "interlocutory-order-issued",
-      "label": "Order is interlocutory",
-      "actor": "office",
-      "authority": "28 U.S.C. § 1291"
-    },
-    {
-      "from": "final-judgment-entered",
-      "to": "appeal-clock-open",
-      "label": "Final judgment starts appeal clock",
-      "actor": "office",
-      "authority": "Fed. R. App. P. 4(a)(1)(A)",
-      "deadline": {
-        "length": 30.0,
-        "extendable": true,
-        "extensionAuthority": "Fed. R. App. P. 4(a)(5)",
-        "note": "Notice of appeal due within 30 days of entry of final judgment, extendable to 60 days maximum under FRAP 4(a)(5). Deadline is jurisdictional; missing it by even one day strips appellate court of jurisdiction. Post-judgment motions may alter the triggering date under FRAP 4(a)(4)."
-      },
-      "duration": {
-        "min": 4.5,
-        "mode": 15.0,
-        "max": 30.0
-      }
-    },
-    {
-      "from": "interlocutory-order-issued",
-      "to": "interlocutory-review-fork",
-      "label": "Check interlocutory review doors",
-      "actor": "applicant",
-      "authority": "28 U.S.C. § 1292",
-      "hours": 3.0,
-      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
-    },
-    {
-      "id": "interlocutory-injunction-order",
-      "from": "interlocutory-review-fork",
-      "to": "immediately-appealable-interlocutory",
-      "label": "Injunction order — appeal as of right",
-      "actor": "applicant",
-      "authority": "28 U.S.C. § 1292(a)(1)",
-      "deadline": {
-        "length": 30.0,
-        "extendable": true,
-        "extensionAuthority": "Fed. R. App. P. 4(a)(5)",
-        "note": "Appeal of right from injunction/receivership orders. Notice of appeal due within 30 days of entry, extendable to 60 days maximum under FRAP 4(a)(5). Missing the deadline strips appellate jurisdiction regardless of merit."
-      },
-      "duration": {
-        "min": 4.5,
-        "mode": 15.0,
-        "max": 30.0
-      },
-      "hours": 8.0,
-      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
-    },
-    {
-      "id": "interlocutory-collateral-order",
-      "from": "interlocutory-review-fork",
-      "to": "immediately-appealable-interlocutory",
-      "label": "Order meets collateral order doctrine",
-      "actor": "applicant",
-      "authority": "Cohen v. Beneficial Industrial Loan Corp., 337 U.S. 541 (1949)",
-      "deadline": {
-        "length": 30.0,
-        "extendable": true,
-        "extensionAuthority": "Fed. R. App. P. 4(a)(5)",
-        "note": "Collateral order doctrine requires all three Cohen factors: (1) conclusively determines a disputed question; (2) resolves an important issue separate from the merits; (3) unreviewable on appeal from final judgment. Same 30-day deadline as statutory appeals."
-      },
-      "duration": {
-        "min": 4.5,
-        "mode": 15.0,
-        "max": 30.0
-      },
-      "hours": 10.0,
-      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
-    },
-    {
-      "id": "interlocutory-1292b-certified",
-      "from": "interlocutory-review-fork",
-      "to": "immediately-appealable-interlocutory",
-      "label": "Certify for interlocutory appeal",
-      "actor": "applicant",
-      "authority": "28 U.S.C. § 1292(b); Fed. R. App. P. 5(a)-(b)",
-      "deadline": {
-        "length": 10.0,
-        "extendable": false,
-        "extensionAuthority": "Fed. R. App. P. 5(a)(3)",
-        "note": "Permissive appeal. District court must certify substantial ground for difference of opinion within 10 days of entry (FRAP 5(a)(1)); applicant then has 10 days to apply to the appellate court (FRAP 5(a)(3)). Neither deadline is extendable."
-      },
-      "duration": {
-        "min": 1.5,
-        "mode": 5.0,
-        "max": 10.0
-      },
-      "hours": 20.0,
-      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
-    },
-    {
-      "from": "interlocutory-review-fork",
-      "to": "interlocutory-review-unavailable",
-      "label": "No interlocutory door applies",
-      "actor": "office",
-      "authority": "28 U.S.C. § 1291"
-    },
-    {
-      "from": "immediately-appealable-interlocutory",
-      "to": "appeal-clock-open",
-      "label": "Interlocutory order ripe for appeal",
-      "actor": "office",
-      "authority": "Fed. R. App. P. 4(a)(1)(A)"
-    },
-    {
-      "id": "notice-of-appeal-civil",
-      "from": "appeal-clock-open",
-      "to": "notice-of-appeal-filed",
-      "label": "File notice of appeal (civil)",
-      "actor": "applicant",
-      "authority": "FRAP 4(a)(1)(A)",
-      "deadline": {
-        "length": 30.0,
-        "extendable": false,
-        "extensionAuthority": "FRAP 4(a)(5) (may extend up to 30 additional days only via motion before expiration)",
-        "note": "If notice is not filed within 30 days, the appeal is untimely. Under Bowles, no equitable exception or late filing is permitted — appellate jurisdiction is lost permanently and cannot be restored."
-      },
-      "duration": {
-        "min": 4.5,
-        "mode": 15.0,
-        "max": 30.0
-      },
-      "cost": 605.0,
-      "hours": 4.0,
-      "valence": "good",
-      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate. Filing fee $605.00: $600.00 court-of-appeals docketing fee (Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2023) plus the $5.00 statutory notice-of-appeal fee (28 U.S.C. § 1917), both collected by the district clerk on filing; waivable IFP under 28 U.S.C. § 1915."
-    },
-    {
-      "id": "notice-of-appeal-us-party",
-      "from": "appeal-clock-open",
-      "to": "notice-of-appeal-filed",
-      "label": "File notice of appeal (US party)",
-      "actor": "applicant",
-      "authority": "FRAP 4(a)(1)(B)",
-      "deadline": {
-        "length": 60.0,
-        "extendable": false,
-        "extensionAuthority": "FRAP 4(a)(5) (may extend up to 30 additional days only via motion before expiration)",
-        "note": "When the U.S., a U.S. agency, or an officer acting in official capacity is a party, the deadline is 60 days. Missing this deadline forecloses appellate jurisdiction entirely under 28 U.S.C. § 2107."
-      },
-      "duration": {
-        "min": 9.0,
-        "mode": 30.0,
-        "max": 60.0
-      },
-      "cost": 605.0,
-      "hours": 4.0,
-      "valence": "good",
-      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate. Same $605.00 filing fee as the standard notice of appeal (Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2023, plus 28 U.S.C. § 1917's $5.00 notice fee) — the longer 60-day period applies because the U.S., its agency, or officer is a party, not because the filer here is the government."
-    },
-    {
-      "id": "notice-of-appeal-criminal",
-      "from": "appeal-clock-open",
-      "to": "notice-of-appeal-filed",
-      "label": "File notice of appeal (criminal)",
-      "actor": "applicant",
-      "authority": "FRAP 4(b)(1)(A)",
-      "deadline": {
-        "length": 14.0,
-        "extendable": false,
-        "extensionAuthority": "FRAP 4(b)(4) (may be extended for excusable neglect or good cause, subject to Bowles jurisdictional limit)",
-        "note": "Criminal defendants have only 14 days to file notice of appeal. A late notice — even one day late — is untimely and strips appellate jurisdiction; no exception for prosecutor's error or trial counsel's mistake."
-      },
-      "duration": {
-        "min": 2.1,
-        "mode": 7.0,
-        "max": 14.0
-      },
-      "cost": 605.0,
-      "hours": 4.0,
-      "valence": "good",
-      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate. Same $605.00 fee as a civil appeal (Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2023, plus 28 U.S.C. § 1917's $5.00 notice fee) applies in principle, but most criminal appellants proceed in forma pauperis with appointed CJA counsel (FRAP 24(a); 28 U.S.C. § 1915), waiving prepayment."
-    },
-    {
-      "from": "appeal-clock-open",
-      "to": "tolling-motion-filed",
-      "label": "File Rule 4(a)(4) tolling motion",
-      "actor": "applicant",
-      "authority": "FRAP 4(a)(4)(A); FRCP 50(b), 59(e), 60(b)(2)",
-      "deadline": {
-        "length": 28.0,
-        "extendable": false,
-        "extensionAuthority": "FRCP 6(b) may extend the tolling-motion deadline by up to 28 days total (only for FRCP 50(b), 59(e), 60(b) motions)",
-        "note": "Tolling motions must be filed within the FRCP deadline (e.g., 28 days for a FRCP 59(e) motion for new trial). A tolling motion filed even one day late does not restart the appeal clock."
-      },
-      "duration": {
-        "min": 4.2,
-        "mode": 14.0,
-        "max": 28.0
-      },
-      "hours": 8.0,
-      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
-    },
-    {
-      "from": "appeal-clock-open",
-      "to": "notice-of-appeal-untimely",
-      "label": "Let the deadline lapse",
-      "actor": "applicant",
-      "authority": "Bowles v. Russell, 551 U.S. 205 (2007); 28 U.S.C. § 2107",
-      "hours": 0.0,
-      "valence": "bad",
-      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
-    },
-    {
-      "from": "appeal-clock-open",
-      "to": "post-deadline-relief-motion",
-      "label": "Move to extend or reopen deadline",
-      "actor": "applicant",
-      "authority": "FRAP 4(a)(5)(A)",
-      "deadline": {
-        "length": 30.0,
-        "extendable": true,
-        "extensionAuthority": "FRAP 4(a)(5)(A) (court may extend if motion filed before deadline expires); FRAP 4(a)(6) (may reopen for 14 days if lack of notice of entry)",
-        "note": "A party may file a motion to extend time to appeal before the deadline expires. The district court may grant up to 30 additional days for excusable neglect or good cause. A motion filed after the deadline expires may only invoke FRAP 4(a)(6) (reopening)."
-      },
-      "duration": {
-        "min": 4.5,
-        "mode": 15.0,
-        "max": 30.0
-      },
-      "hours": 10.0,
-      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
-    },
-    {
-      "from": "notice-of-appeal-filed",
-      "to": "deficient-notice-of-appeal",
-      "label": "Notice omits required contents",
-      "actor": "office",
-      "authority": "FRAP 3(c); FRAP 3(e)"
-    },
-    {
-      "from": "notice-of-appeal-filed",
-      "to": "docketed-in-court-of-appeals",
-      "label": "Notice complies — docketed",
-      "actor": "office",
-      "authority": "FRAP 3(d); FRAP 12(a); FRAP 12(b)(3)"
-    },
-    {
-      "from": "tolling-motion-filed",
-      "to": "tolling-motion-disposed",
-      "label": "District court rules on the motion",
-      "actor": "examiner",
-      "authority": "FRAP 4(a)(4)(A)"
-    },
-    {
-      "from": "tolling-motion-disposed",
-      "to": "appeal-clock-open",
-      "label": "Appeal clock restarts from disposition",
-      "actor": "office",
-      "authority": "FRAP 4(a)(4)(A)",
-      "deadline": {
-        "length": 30.0,
-        "extendable": false,
-        "extensionAuthority": "FRAP 4(a)(5) (extension may apply to the restarted deadline)",
-        "note": "The full appeal period runs anew from the date the order disposing of the last tolling motion is entered. A new 30-day clock (or 60-day if U.S. party) begins; missing this deadline is fatal."
-      },
-      "duration": {
-        "min": 4.5,
-        "mode": 15.0,
-        "max": 30.0
-      }
-    },
-    {
-      "from": "deficient-notice-of-appeal",
-      "to": "docketed-in-court-of-appeals",
-      "label": "Court excuses the technical defect",
-      "actor": "examiner",
-      "authority": "Foman v. Davis, 371 U.S. 178 (1962); Smith v. Barry, 502 U.S. 244 (1992); FRAP 3(e)",
-      "probability": 0.75,
-      "valence": "good"
-    },
-    {
-      "from": "deficient-notice-of-appeal",
-      "to": "notice-of-appeal-untimely",
-      "label": "Defect held jurisdictional, uncurable",
-      "actor": "examiner",
-      "authority": "Torres v. Oakland Scavenger Co., 487 U.S. 312 (1988); FRAP 3(c)",
-      "probability": 0.25,
-      "valence": "bad"
-    },
-    {
-      "from": "post-deadline-relief-motion",
-      "to": "notice-of-appeal-filed",
-      "label": "Court grants extension or reopening",
-      "actor": "examiner",
-      "authority": "FRAP 4(a)(5)(A); FRAP 4(a)(6)",
-      "probability": 0.6,
-      "valence": "good"
-    },
-    {
-      "from": "post-deadline-relief-motion",
-      "to": "notice-of-appeal-untimely",
-      "label": "Court denies relief — deadline stands",
-      "actor": "examiner",
-      "authority": "Bowles v. Russell, 551 U.S. 205 (2007); FRAP 4(a)(5)-(6)",
-      "probability": 0.4,
-      "valence": "bad"
-    },
-    {
-      "from": "docketed-in-court-of-appeals",
-      "to": "cross-appeal-fork",
-      "label": "Appellee weighs a cross-appeal",
-      "actor": "applicant",
-      "authority": "FRAP 4(a)(3); FRAP 4(a)(4)",
-      "hours": 3.0,
-      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
-    },
-    {
-      "from": "cross-appeal-fork",
-      "to": "cross-appeal-filed",
-      "label": "File notice of cross-appeal",
-      "actor": "applicant",
-      "authority": "FRAP 4(a)(3)",
-      "deadline": {
-        "length": 14.0,
-        "extendable": true,
-        "extensionAuthority": "FRAP 4(a)(5): on motion no later than 30 days after the period expires, for excusable neglect or good cause",
-        "note": "14 days after the first notice of appeal, or within the original FRAP 4(a)(1) period, whichever is later. Only a FRAP 4(a)(5) extension saves a missed deadline; no equitable exception revives it."
-      },
-      "duration": {
-        "min": 2.1,
-        "mode": 7.0,
-        "max": 14.0
-      },
-      "cost": 605.0,
-      "hours": 4.0,
-      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate. Same $605.00 filing fee as an initial notice of appeal (Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2023, plus 28 U.S.C. § 1917's $5.00 notice fee) — a separate notice, a separate fee."
-    },
-    {
-      "from": "cross-appeal-fork",
-      "to": "cross-appeal-not-filed",
-      "label": "Decline to cross-appeal",
-      "actor": "applicant",
-      "authority": "FRAP 4(a)(3)",
-      "hours": 0.0,
-      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
-    },
-    {
-      "from": "cross-appeal-filed",
-      "to": "voluntary-dismissal-fork",
-      "label": "Cross-appeal docketed",
-      "actor": "office",
-      "authority": "FRAP 3; FRAP 28.1"
-    },
-    {
-      "from": "cross-appeal-not-filed",
-      "to": "voluntary-dismissal-fork",
-      "label": "Proceed without cross-appeal",
-      "actor": "office",
-      "authority": "FRAP 28.1"
-    },
-    {
-      "from": "voluntary-dismissal-fork",
-      "to": "voluntarily-dismissed",
-      "label": "Stipulate to or move for dismissal",
-      "actor": "either",
-      "authority": "FRAP 42(b)",
-      "valence": "good"
-    },
-    {
-      "from": "voluntary-dismissal-fork",
-      "to": "transcript-order-fork",
-      "label": "Appeal proceeds — order the record",
-      "actor": "applicant",
-      "authority": "FRAP 10(b)",
-      "hours": 2.0,
-      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
-    },
-    {
-      "from": "transcript-order-fork",
-      "to": "transcript-ordered",
-      "label": "Order the necessary transcript",
-      "actor": "applicant",
-      "authority": "FRAP 10(b)(1)",
-      "deadline": {
-        "length": 14.0,
-        "extendable": false,
-        "note": "No extension is available for the 14-day ordering deadline; missing it leaves the appellant with only the option to seek appellate relief on an inadequate record, or risk abandonment of issues not covered by existing papers."
-      },
-      "duration": {
-        "min": 2.1,
-        "mode": 7.0,
-        "max": 14.0
-      },
-      "hours": 2.0,
-      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
-    },
-    {
-      "id": "no-transcript-certificate",
-      "from": "transcript-order-fork",
-      "to": "record-transmitted",
-      "label": "Certify that no transcript will be ordered",
-      "actor": "applicant",
-      "authority": "FRAP 10(b)(1)(B)",
-      "deadline": {
-        "length": 14.0,
-        "extendable": false,
-        "note": "Same 14-day window as ordering a transcript: FRAP 10(b)(1) requires the appellant, within 14 days after filing the notice of appeal, either to order the transcript or to 'file a certificate stating that no transcript will be ordered.'"
-      },
-      "hours": 0.5,
-      "note": "The usual route when the appeal is from a ruling on the papers (a Rule 12(b)(6) dismissal, a summary judgment) and there is no hearing transcript to order: the record is the original papers and docket entries (FRAP 10(a)). Hours: teaching estimate, a one-page certificate."
-    },
-    {
-      "from": "transcript-order-fork",
-      "to": "statement-in-lieu-of-transcript",
-      "label": "File agreed statement instead",
-      "actor": "applicant",
-      "authority": "FRAP 10(c)-(d)",
-      "hours": 6.0,
-      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
-    },
-    {
-      "from": "transcript-ordered",
-      "to": "record-transmitted",
-      "label": "Transcript completed and filed",
-      "actor": "office",
-      "authority": "FRAP 11(b)",
-      "deadline": {
-        "length": 30.0,
-        "extendable": true,
-        "extensionAuthority": "FRAP 11(b) (reporter may request extension for completion beyond 30 days; no formal party motion needed)",
-        "note": "Reporter has 30 days from receipt of the order to file the transcript with the district clerk. Requests for additional time are filed with the circuit clerk. Failure to file timely triggers circuit-clerk notice to the trial judge and risks sanction if the record becomes unavailable."
-      },
-      "duration": {
-        "min": 4.5,
-        "mode": 15.0,
-        "max": 30.0
-      }
-    },
-    {
-      "from": "statement-in-lieu-of-transcript",
-      "to": "record-transmitted",
-      "label": "Agreed statement approved",
-      "actor": "examiner",
-      "authority": "FRAP 10(d); FRAP 11(a)"
-    },
-    {
-      "from": "record-transmitted",
-      "to": "stay-pending-appeal-fork",
-      "label": "Record complete — motions begin",
-      "actor": "office"
-    },
-    {
-      "id": "no-stay-sought",
-      "from": "stay-pending-appeal-fork",
-      "to": "appellant-brief-window",
-      "label": "No stay sought -- proceed to briefing",
-      "actor": "applicant",
-      "authority": "FRAP 8(a)(1)",
-      "hours": 0.0,
-      "note": "FRAP 8(a)(1) says a party 'must ordinarily move first in the district court' for a stay -- a stay is something a party may seek, not a required step. A party with nothing to stay (e.g. a plaintiff appealing a dismissal) goes straight to briefing. Mirrors cafc-federal-circuit.json's motions-decline edge. Hours: 0, a no-action transition."
-    },
-    {
-      "from": "stay-pending-appeal-fork",
-      "to": "stay-granted",
-      "label": "Move for stay pending appeal — granted",
-      "actor": "applicant",
-      "authority": "FRAP 8(a)(1)",
-      "deadline": {
-        "length": 10.0,
-        "extendable": true,
-        "extensionAuthority": "FRAP 26(b); court order",
-        "note": "10-day response period (FRAP 27(a)(3)) applies to all motions, including a motion to stay. Failure to meet the deadline may result in the motion being deemed submitted without response, waiver of oral argument, or denial."
-      },
-      "duration": {
-        "min": 1.5,
-        "mode": 5.0,
-        "max": 10.0
-      },
-      "hours": 15.0,
-      "valence": "good",
-      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
-    },
-    {
-      "from": "stay-pending-appeal-fork",
-      "to": "stay-denied",
-      "label": "Stay motion denied",
-      "actor": "examiner",
-      "authority": "FRAP 8(a)",
-      "deadline": {
-        "length": 10.0,
-        "extendable": true,
-        "extensionAuthority": "FRAP 26(b); court order",
-        "note": "Same 10-day response period applies. Missing the deadline for opposition may result in default or deemed abandonment of objections."
-      },
-      "duration": {
-        "min": 1.5,
-        "mode": 5.0,
-        "max": 10.0
-      }
-    },
-    {
-      "from": "stay-granted",
-      "to": "appellant-brief-window",
-      "label": "Proceed to briefing under stay",
-      "actor": "office",
-      "authority": "FRAP 8(a)(1)"
-    },
-    {
-      "from": "stay-denied",
-      "to": "appellant-brief-window",
-      "label": "Proceed to briefing",
-      "actor": "office",
-      "authority": "FRAP 8(a)"
-    },
-    {
-      "from": "appellant-brief-window",
-      "to": "appellant-brief-filed",
-      "label": "File opening brief",
-      "actor": "applicant",
-      "authority": "FRAP 31(a)(1)",
-      "deadline": {
-        "length": 40.0,
-        "extendable": true,
-        "extensionAuthority": "FRAP 26(b); court discretion for good cause",
-        "note": "Failure to file by day 40 (or the extended date) permits an appellee motion to dismiss for want of prosecution under FRAP 31(c), triggering a dismissal that is nearly impossible to revive."
-      },
-      "duration": {
-        "min": 6.0,
-        "mode": 20.0,
-        "max": 40.0
-      },
-      "hours": 100.0,
-      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
-    },
-    {
-      "from": "appellant-brief-window",
-      "to": "appeal-dismissed-no-brief",
-      "label": "Fail to file opening brief",
-      "actor": "applicant",
-      "authority": "FRAP 31(c)",
-      "hours": 0.0,
-      "valence": "bad",
-      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
-    },
-    {
-      "from": "appellant-brief-filed",
-      "to": "appellee-brief-filed",
-      "label": "Appellee files response brief",
-      "actor": "applicant",
-      "authority": "FRAP 31(a)(1); FRAP 28(b)",
-      "deadline": {
-        "length": 30.0,
-        "extendable": true,
-        "extensionAuthority": "FRAP 26(b); court discretion for good cause",
-        "note": "Appellee's failure to file within 30 days is grounds for default, but the appellee retains the right to oral argument by court permission even if the brief is late; missing this deadline is far less terminal than the appellant's miss."
-      },
-      "duration": {
-        "min": 4.5,
-        "mode": 15.0,
-        "max": 30.0
-      },
-      "hours": 90.0,
-      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
-    },
-    {
-      "from": "appellee-brief-filed",
-      "to": "reply-brief-filed",
-      "label": "File reply brief",
-      "actor": "applicant",
-      "authority": "FRAP 31(a)(1); FRAP 28(c)",
-      "deadline": {
-        "length": 21.0,
-        "extendable": true,
-        "extensionAuthority": "FRAP 26(b); court discretion for good cause; FRAP 31(a)(1) requires filing at least 7 days before argument",
-        "note": "Reply brief must be filed at least 7 days before oral argument (if scheduled) or risk rejection. Late reply briefs are rarely accepted; this is a cascading deadline that depends on the argument calendar, not a pure 21-day rule."
-      },
-      "duration": {
-        "min": 3.1,
-        "mode": 10.5,
-        "max": 21.0
-      },
-      "hours": 40.0,
-      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
-    },
-    {
-      "from": "appellee-brief-filed",
-      "to": "briefing-complete",
-      "label": "Waive reply brief",
-      "actor": "applicant",
-      "authority": "FRAP 28(c)",
-      "hours": 1.0,
-      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
-    },
-    {
-      "from": "reply-brief-filed",
-      "to": "briefing-complete",
-      "label": "Briefing closes",
-      "actor": "office",
-      "authority": "FRAP 31"
-    },
-    {
-      "from": "briefing-complete",
-      "to": "oral-argument-fork",
-      "label": "Clerk calendars argument decision",
-      "actor": "office",
-      "authority": "FRAP 34(a)"
-    },
-    {
-      "from": "oral-argument-fork",
-      "to": "oral-argument-held",
-      "label": "Panel grants oral argument",
-      "actor": "examiner",
-      "authority": "FRAP 34(a)(1)",
-      "probability": 0.4
-    },
-    {
-      "from": "oral-argument-fork",
-      "to": "submitted-on-briefs",
-      "label": "Panel dispenses with argument",
-      "actor": "examiner",
-      "authority": "FRAP 34(a)(2)",
-      "probability": 0.6
-    },
-    {
-      "from": "oral-argument-held",
-      "to": "standard-of-review-fork",
-      "label": "Argument concludes — panel deliberates",
-      "actor": "office",
-      "authority": "FRAP 34(d)"
-    },
-    {
-      "from": "submitted-on-briefs",
-      "to": "standard-of-review-fork",
-      "label": "Panel deliberates on the papers",
-      "actor": "office",
-      "authority": "FRAP 34(a)(2)"
-    },
-    {
-      "from": "standard-of-review-fork",
-      "to": "de-novo-review",
-      "label": "Issue is a question of law",
-      "actor": "examiner",
-      "authority": "Pure questions of law (statutory construction, constitutional interpretation, legal standards for admissibility)"
-    },
-    {
-      "from": "standard-of-review-fork",
-      "to": "abuse-of-discretion-review",
-      "label": "Issue is a discretionary ruling",
-      "actor": "examiner",
-      "authority": "Cooter & Gell v. Hartmarx Corp., 496 U.S. 384 (1990)"
-    },
-    {
-      "from": "standard-of-review-fork",
-      "to": "clear-error-review",
-      "label": "Issue is a factual finding",
-      "actor": "examiner",
-      "authority": "FRCP 52(a)(6); Anderson v. Bessemer City"
-    },
-    {
-      "from": "de-novo-review",
-      "to": "affirmed",
-      "label": "Panel affirms de novo",
-      "actor": "office",
-      "probability": 0.45
-    },
-    {
-      "from": "de-novo-review",
-      "to": "reversed",
-      "label": "Panel reverses de novo",
-      "actor": "office",
-      "probability": 0.15
-    },
-    {
-      "from": "de-novo-review",
-      "to": "reversed-and-remanded",
-      "label": "Panel reverses and remands",
-      "actor": "office",
-      "probability": 0.25
-    },
-    {
-      "from": "de-novo-review",
-      "to": "vacated-and-remanded",
-      "label": "Panel vacates and remands",
-      "actor": "office",
-      "probability": 0.1
-    },
-    {
-      "from": "de-novo-review",
-      "to": "affirmed-in-part-reversed-in-part",
-      "label": "Panel splits the result",
-      "actor": "office",
-      "probability": 0.05
-    },
-    {
-      "from": "abuse-of-discretion-review",
-      "to": "affirmed",
-      "label": "No abuse found — panel affirms",
-      "actor": "office",
-      "probability": 0.7
-    },
-    {
-      "from": "abuse-of-discretion-review",
-      "to": "reversed",
-      "label": "Abuse found — panel reverses",
-      "actor": "office",
-      "probability": 0.1
-    },
-    {
-      "from": "abuse-of-discretion-review",
-      "to": "vacated-and-remanded",
-      "label": "Panel vacates for further findings",
-      "actor": "office",
-      "probability": 0.15
-    },
-    {
-      "from": "abuse-of-discretion-review",
-      "to": "affirmed-in-part-reversed-in-part",
-      "label": "Panel splits the result",
-      "actor": "office",
-      "probability": 0.05
-    },
-    {
-      "from": "clear-error-review",
-      "to": "affirmed",
-      "label": "No clear error — panel affirms",
-      "actor": "office",
-      "probability": 0.75
-    },
-    {
-      "from": "clear-error-review",
-      "to": "reversed",
-      "label": "Clear error found — reverses",
-      "actor": "office",
-      "probability": 0.08
-    },
-    {
-      "from": "clear-error-review",
-      "to": "vacated-and-remanded",
-      "label": "Panel vacates for further findings",
-      "actor": "office",
-      "probability": 0.12
-    },
-    {
-      "from": "clear-error-review",
-      "to": "affirmed-in-part-reversed-in-part",
-      "label": "Panel splits the result",
-      "actor": "office",
-      "probability": 0.05
-    },
-    {
-      "from": "affirmed",
-      "to": "rehearing-window",
-      "label": "Losing party weighs rehearing",
-      "actor": "applicant",
-      "authority": "FRAP 40(a)(1)",
-      "deadline": {
-        "length": 14.0,
-        "extendable": true,
-        "extensionAuthority": "FRAP 40(a)(1); circuit local rules may allow additional extensions by panel order or stipulation",
-        "note": "Losing party must file a petition for panel rehearing or rehearing en banc within 14 days of judgment entry. Missing this deadline forecloses appellate-level recourse (except discretionary certiorari); the appellate judgment becomes final."
-      },
-      "duration": {
-        "min": 2.1,
-        "mode": 7.0,
-        "max": 14.0
-      },
-      "hours": 3.0,
-      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
-    },
-    {
-      "from": "reversed",
-      "to": "rehearing-window",
-      "label": "Losing party weighs rehearing",
-      "actor": "applicant",
-      "authority": "FRAP 40(a)(1)",
-      "deadline": {
-        "length": 14.0,
-        "extendable": true,
-        "extensionAuthority": "FRAP 40(a)(1); circuit local rules",
-        "note": "Losing party (the party who prevailed below) must file a petition for rehearing within 14 days or lose appellate-level recourse. Extension requires a proactive panel request or stipulation — default expiration is strict."
-      },
-      "duration": {
-        "min": 2.1,
-        "mode": 7.0,
-        "max": 14.0
-      },
-      "hours": 3.0,
-      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
-    },
-    {
-      "from": "reversed-and-remanded",
-      "to": "rehearing-window",
-      "label": "Losing party weighs rehearing",
-      "actor": "applicant",
-      "authority": "FRAP 40(a)(1)",
-      "deadline": {
-        "length": 14.0,
-        "extendable": true,
-        "extensionAuthority": "FRAP 40(a)(1); circuit local rules",
-        "note": "Either party may file a petition for rehearing (the appellee who won on appeal may seek en banc review; the appellant who still faces remand may challenge the legal standard applied). Missing the 14-day window forecloses the petition and accelerates remand."
-      },
-      "duration": {
-        "min": 2.1,
-        "mode": 7.0,
-        "max": 14.0
-      },
-      "hours": 3.0,
-      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
-    },
-    {
-      "from": "vacated-and-remanded",
-      "to": "rehearing-window",
-      "label": "Losing party weighs rehearing",
-      "actor": "applicant",
-      "authority": "FRAP 40(a)(1)",
-      "deadline": {
-        "length": 14.0,
-        "extendable": true,
-        "extensionAuthority": "FRAP 40(a)(1); circuit local rules",
-        "note": "Either party may petition for rehearing if they contest the panel's reasoning for vacatur or seek clarification of the remand instructions. Missing the 14-day deadline leaves only the (weaker) remand process to raise objections."
-      },
-      "duration": {
-        "min": 2.1,
-        "mode": 7.0,
-        "max": 14.0
-      },
-      "hours": 3.0,
-      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
-    },
-    {
-      "from": "affirmed-in-part-reversed-in-part",
-      "to": "rehearing-window",
-      "label": "Either party weighs rehearing",
-      "actor": "applicant",
-      "authority": "FRAP 40(a)(1)",
-      "deadline": {
-        "length": 14.0,
-        "extendable": true,
-        "extensionAuthority": "FRAP 40(a)(1); circuit local rules",
-        "note": "Both parties may have grounds for rehearing: the party who lost on the reversed portion may challenge the legal rule; the party who won only on the affirmed portion may seek full reversal. A single 14-day deadline applies to the entire judgment."
-      },
-      "duration": {
-        "min": 2.1,
-        "mode": 7.0,
-        "max": 14.0
-      },
-      "hours": 3.0,
-      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
-    },
-    {
-      "from": "rehearing-window",
-      "to": "rehearing-petition-filed",
-      "label": "Petition for rehearing / en banc",
-      "actor": "applicant",
-      "authority": "FRAP 40(a)(1); FRAP 35(c)",
-      "deadline": {
-        "length": 14.0,
-        "extendable": false,
-        "extensionAuthority": "FRAP 26(b) is silent on FRAP 40 deadlines; extension is theoretically possible for good cause but extremely rarely granted in practice",
-        "note": "Missing the 14-day (or 45-day if the U.S. is a party) deadline forfeits the right to seek rehearing and loses the ability to toll the Supreme Court's 90-day certiorari clock under Rule 13.3."
-      },
-      "duration": {
-        "min": 2.1,
-        "mode": 7.0,
-        "max": 14.0
-      },
-      "hours": 60.0,
-      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
-    },
-    {
-      "from": "rehearing-window",
-      "to": "mandate-issued",
-      "label": "No rehearing sought — time expires",
-      "actor": "applicant",
-      "authority": "FRAP 41(b)(1)",
-      "deadline": {
-        "length": 14.0,
-        "note": "If no rehearing petition is filed within 14 days (or 45 days for the U.S.), the time to petition expires and the mandate issues automatically 7 days thereafter. The 90-day Supreme Court certiorari clock then runs from the original judgment date."
-      },
-      "duration": {
-        "min": 2.1,
-        "mode": 7.0,
-        "max": 14.0
-      },
-      "hours": 0.0,
-      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
-    },
-    {
-      "from": "rehearing-petition-filed",
-      "to": "panel-rehearing-decision",
-      "label": "Panel rules on rehearing",
-      "actor": "examiner",
-      "authority": "FRAP 40(a)(4)"
-    },
-    {
-      "from": "panel-rehearing-decision",
-      "to": "rehearing-granted-amended-opinion",
-      "label": "Panel grants rehearing",
-      "actor": "examiner",
-      "authority": "FRAP 40(e)",
-      "probability": 0.05
-    },
-    {
-      "from": "panel-rehearing-decision",
-      "to": "en-banc-poll-decision",
-      "label": "Panel denies — en banc poll proceeds",
-      "actor": "office",
-      "authority": "FRAP 40(a)(4); FRAP 40(c); 28 U.S.C. § 46(c)",
-      "probability": 0.95
-    },
-    {
-      "from": "en-banc-poll-decision",
-      "to": "rehearing-granted-amended-opinion",
-      "label": "Majority votes to rehear en banc",
-      "actor": "examiner",
-      "authority": "FRAP 40(c); FRAP 40(e); 28 U.S.C. § 46(c)",
-      "probability": 0.02
-    },
-    {
-      "from": "en-banc-poll-decision",
-      "to": "rehearing-en-banc-both-denied",
-      "label": "En banc poll fails",
-      "actor": "office",
-      "authority": "FRAP 40(c); FRAP 40(a)(4)",
-      "probability": 0.98
-    },
-    {
-      "from": "rehearing-granted-amended-opinion",
-      "to": "mandate-issued",
-      "label": "Amended opinion becomes judgment",
-      "actor": "office",
-      "authority": "FRAP 41(b)(1)",
-      "deadline": {
-        "length": 7.0,
-        "note": "After the amended opinion is filed (or the rehearing is disposed of), the mandate issues 7 days later. The amended opinion becomes the circuit's final judgment for purposes of the Supreme Court's 90-day certiorari deadline."
-      },
-      "duration": {
-        "min": 1.1,
-        "mode": 3.5,
-        "max": 7.0
-      }
-    },
-    {
-      "from": "rehearing-en-banc-both-denied",
-      "to": "mandate-issued",
-      "label": "Mandate clock resumes",
-      "actor": "office",
-      "authority": "FRAP 41(b)(1); FRAP 41(b)(3)",
-      "deadline": {
-        "length": 7.0,
-        "note": "The mandate issues 7 days after the order denying rehearing and/or en banc rehearing, or 7 days after expiration of the petition deadline if no petition was timely filed. This triggers finality at the circuit level and starts the 90-day certiorari clock."
-      },
-      "duration": {
-        "min": 1.1,
-        "mode": 3.5,
-        "max": 7.0
-      }
-    },
-    {
-      "from": "mandate-issued",
-      "to": "cert-petition-window",
-      "label": "Judgment final — cert clock runs",
-      "actor": "office",
-      "authority": "Fed. R. App. P. 41(b); Sup. Ct. R. 13.3",
-      "deadline": {
-        "length": 90.0,
-        "extendable": true,
-        "extensionAuthority": "Sup. Ct. R. 13.6",
-        "note": "The 90-day deadline is measured from the date the appellate opinion is filed/docketed. Missing this deadline forecloses any Supreme Court review; the judgment becomes final and enforceable. Extensions require filing before the deadline expires."
-      },
-      "duration": {
-        "min": 13.5,
-        "mode": 45.0,
-        "max": 90.0
-      }
-    },
-    {
-      "from": "mandate-issued",
-      "to": "mandate-stayed-pending-cert",
-      "label": "Move to stay mandate for cert",
-      "actor": "applicant",
-      "authority": "Fed. R. App. P. 41(d)(1)",
-      "hours": 8.0,
-      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
-    },
-    {
-      "from": "mandate-stayed-pending-cert",
-      "to": "cert-petition-window",
-      "label": "Stay granted — cert proceeds",
-      "actor": "examiner",
-      "authority": "Fed. R. App. P. 41(d)(2)",
-      "deadline": {
-        "length": 90.0,
-        "extendable": true,
-        "extensionAuthority": "Sup. Ct. R. 13.6",
-        "note": "If cert is denied or the 90-day window expires (whichever is earlier), the stay terminates automatically and the mandate issues to enforce the judgment."
-      },
-      "duration": {
-        "min": 13.5,
-        "mode": 45.0,
-        "max": 90.0
-      }
-    },
-    {
-      "from": "cert-petition-window",
-      "to": "cert-petition-filed",
-      "label": "File petition for certiorari",
-      "actor": "applicant",
-      "authority": "Sup. Ct. R. 13.1; 28 U.S.C. § 1254(1)",
-      "deadline": {
-        "length": 90.0,
-        "extendable": false,
-        "extensionAuthority": "Sup. Ct. R. 13.3 (single application to Circuit Justice only)",
-        "note": "Failure to file within 90 days permanently bars federal review; there is no tolling, no exceptions for attorney mistake, and no relief even if the court of appeals misled the parties about the deadline."
-      },
-      "duration": {
-        "min": 13.5,
-        "mode": 45.0,
-        "max": 90.0
-      },
-      "hours": 80.0,
-      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
-    },
-    {
-      "from": "cert-petition-window",
-      "to": "cert-not-sought",
-      "label": "90-day window lapses",
-      "actor": "applicant",
-      "authority": "Sup. Ct. R. 13.1",
-      "hours": 0.0,
-      "note": "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
-    },
-    {
-      "from": "cert-petition-filed",
-      "to": "cert-review-decision",
-      "label": "Supreme Court considers petition",
-      "actor": "examiner",
-      "authority": "Sup. Ct. R. 10"
-    },
-    {
-      "from": "cert-review-decision",
-      "to": "cert-denied",
-      "label": "Certiorari denied",
-      "actor": "office",
-      "authority": "Sup. Ct. R. 10",
-      "probability": 0.99
-    },
-    {
-      "from": "cert-review-decision",
-      "to": "cert-granted",
-      "label": "Certiorari granted",
-      "actor": "office",
-      "authority": "28 U.S.C. § 1254(1); Sup. Ct. R. 10",
-      "probability": 0.01
-    }
-  ]
+  "startNodeId": "trial-court-disposition",
+  "title": "Federal Rules of Appellate Procedure"
 }

@@ -9,7 +9,9 @@ use super::check::{checked_in, Checked};
 use crate::cli::Dates;
 use crate::out::{Failure, Outcome, Report};
 use litigate_base::{Diagnostic, Profile, Severity};
-use litigate_lower::{render, render_scenario, Document, LoweredPackage, Lowerer, Options};
+use litigate_lower::{
+    canonical, render, render_scenario, Document, LoweredPackage, Lowerer, Options,
+};
 use litigate_sema::pkg::manifest::is_kebab;
 use litigate_sema::pkg::source::{Disk, Source};
 use serde::Serialize;
@@ -102,7 +104,9 @@ fn litigatable(
         },
         "source_map": lowered.source_map,
     });
-    let hash = sha256(text(&doc).as_bytes());
+    // Over the JCS text (RFC 8785), so the hash names the content, not a
+    // layout.
+    let hash = sha256(canonical(&doc).unwrap_or_default().as_bytes());
     doc["content_hash"] = Value::String(hash.clone());
     (doc, hash)
 }

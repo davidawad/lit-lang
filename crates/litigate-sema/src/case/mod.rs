@@ -19,6 +19,7 @@ pub mod spans;
 mod validate;
 
 pub use deadline::{Clock, DueRequest, NoClock};
+pub use graph::display as display_event;
 pub use resolve::{resolve, Resolved};
 pub use spans::{CaseSpans, EventSpans};
 

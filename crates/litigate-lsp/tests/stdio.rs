@@ -29,8 +29,18 @@ fn read_message(r: &mut impl BufRead) -> serde_json::Value {
 
 #[test]
 fn serves_a_session_over_stdio() {
+    session(&["--stdio"]);
+}
+
+#[test]
+fn stdio_is_the_default() {
+    session(&[]);
+}
+
+/// Initialize, shutdown, and exit a server started with `args`.
+fn session(args: &[&str]) {
     let mut child = Command::new(env!("CARGO_BIN_EXE_litigate-lsp"))
-        .arg("--stdio")
+        .args(args)
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .spawn()

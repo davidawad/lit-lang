@@ -146,10 +146,7 @@ impl Server {
         position: tower_lsp::lsp_types::Position,
     ) -> Option<usize> {
         let text = analysis.text(file)?;
-        let offset = convert::offset(&text, position);
-        analysis
-            .index
-            .at(file, litigate_syntax::TextSize::try_from(offset).ok()?)
+        analysis.index.at(file, convert::text_size(&text, position))
     }
 
     fn location(
@@ -267,8 +264,12 @@ impl LanguageServer for Server {
         let at = params.text_document_position_params;
         Ok(self.with(&at.text_document.uri, |analysis, file| {
             let text = analysis.text(file)?;
-            let (value, range) =
-                hover::at(analysis, file, &text, convert::offset(&text, at.position))?;
+            let (value, range) = hover::at(
+                analysis,
+                file,
+                &text,
+                convert::text_size(&text, at.position),
+            )?;
             Some(Hover {
                 contents: HoverContents::Markup(MarkupContent {
                     kind: MarkupKind::Markdown,
@@ -388,3 +389,6 @@ where
 pub async fn run_stdio() {
     serve(tokio::io::stdin(), tokio::io::stdout()).await;
 }
+
+#[cfg(test)]
+mod tests;

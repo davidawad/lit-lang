@@ -1,0 +1,38 @@
+---
+source: crates/litigate-lsp/tests/diagnostics.rs
+expression: "relative(&lsp, &root)"
+---
+{
+  "range": {
+    "start": {
+      "line": 94,
+      "character": 72
+    },
+    "end": {
+      "line": 94,
+      "character": 98
+    }
+  },
+  "severity": 1,
+  "code": "L3001",
+  "source": "litigate",
+  "message": "versions of `extra-period` overlap on [2015-01-01, ..): [2009-12-01, ..) and [2015-01-01, ..)\nnote: versions of one declaration must be pairwise disjoint so `as_of` selects exactly one",
+  "relatedInformation": [
+    {
+      "location": {
+        "uri": "<root>/lit/ex/rule12.lit",
+        "range": {
+          "start": {
+            "line": 93,
+            "character": 72
+          },
+          "end": {
+            "line": 93,
+            "character": 98
+          }
+        }
+      },
+      "message": "the overlapping version is declared here"
+    }
+  ]
+}

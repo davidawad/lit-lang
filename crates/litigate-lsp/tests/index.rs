@@ -123,6 +123,23 @@ proptest! {
 }
 
 #[test]
+fn a_fact_names_its_node_and_edge_unless_its_value_is_not_a_name() {
+    let case =
+        "case m\nuses p ^0.1.0\nas_of 2025-01-01\n\nfacts { nowhere::s: go, p::s: go, s: \"x\" }\n";
+    let (index, files) = index(&[("a.lit", A), ("b.lit", B)], Some(case));
+    let text = &files["cases/m.case"];
+    let at = |needle: &str| target(&index, "cases/m.case", text, needle).cloned();
+    // An unknown qualifier names no package.
+    assert_eq!(at("s: go, p"), None);
+    let edge = at("go, p").unwrap();
+    assert_eq!(edge.space, Space::Edge("s".into()));
+    assert_eq!(at("s: go, s").unwrap().space, Space::Decl);
+    // Not a `node: edge` pair: the key resolves as a plain name.
+    let node = at("s: \"x\"").unwrap();
+    assert_eq!((node.name.as_str(), node.space), ("s", Space::Decl));
+}
+
+#[test]
 fn imports_name_their_module() {
     let (index, files) = index(&[("a.lit", A), ("b.lit", B)], None);
     let a = &files["lit/p/a.lit"];

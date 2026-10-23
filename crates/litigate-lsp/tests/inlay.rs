@@ -1,0 +1,94 @@
+//! Inlay hints over matters: the hint sits after the event that triggered
+//! the deadline (not an earlier or same-day one), names the counting
+//! rule's cite or else the rule, and only appears in the range asked for.
+#![allow(clippy::unwrap_used, clippy::expect_used)]
+
+mod support;
+
+use litigate_lsp::inlay::hints;
+use tower_lsp::lsp_types::{InlayHint, InlayHintLabel, Position, Range};
+
+const CASE: &str = "cases/acme.case";
+
+fn all() -> Range {
+    Range::new(Position::new(0, 0), Position::new(999, 0))
+}
+
+fn labels(hints: &[InlayHint]) -> Vec<(u32, String)> {
+    hints
+        .iter()
+        .map(|h| match &h.label {
+            InlayHintLabel::String(s) => (h.position.line, s.clone()),
+            InlayHintLabel::LabelParts(_) => (h.position.line, String::new()),
+        })
+        .collect()
+}
+
+/// The worked matter with its events replaced by `events`.
+fn matter(events: &str) -> String {
+    let case = support::read("cases/examples/acme.case");
+    let start = case.find("events {").unwrap();
+    let end = start + case[start..].find("}\n").unwrap() + 2;
+    format!("{}events {{\n{events}}}\n{}", &case[..start], &case[end..])
+}
+
+fn line_of(text: &str, needle: &str) -> u32 {
+    u32::try_from(text[..text.find(needle).unwrap()].matches('\n').count()).unwrap()
+}
+
+#[test]
+fn the_hint_follows_the_triggering_event() {
+    // The period runs from the latest service: not the earlier one, nor
+    // the other one on the same day.
+    let case = matter(
+        "  2025-03-01 Served(complaint, Electronic) on widget\n  2025-03-05 Served(complaint, Mail) on widget\n  2025-03-05 Served(complaint, Personal) on widget\n",
+    );
+    let root = support::worked("inlay-order", &[(CASE, &case)]);
+    let mut host = support::host(&root);
+    support::pin(&root, &mut host);
+    let a = host.analyze();
+    assert_eq!(a.diagnostics[CASE], Vec::new());
+    let found = labels(&hints(a, CASE, all()));
+    assert_eq!(
+        found,
+        [(
+            line_of(&case, "2025-03-05 Served(complaint, Personal"),
+            "// answer-period due 2025-03-26 (FRCP 6(a))".to_owned()
+        )]
+    );
+    // A range that ends before the event shows nothing.
+    let before = Range::new(Position::new(0, 0), Position::new(1, 0));
+    assert!(hints(a, CASE, before).is_empty());
+    // Nor does a file that is not a matter.
+    assert!(hints(a, "lit/ex/rule12.lit", all()).is_empty());
+}
+
+#[test]
+fn a_qualified_event_call_is_not_found_in_the_source() {
+    // The schedule renders the trigger unqualified; the source is matched
+    // as written, so a qualified call carries no hint.
+    let case = matter("  2025-03-05 frcp-rule12-example::Served(complaint, Personal) on widget\n");
+    let root = support::worked("inlay-qualified", &[(CASE, &case)]);
+    let mut host = support::host(&root);
+    support::pin(&root, &mut host);
+    let a = host.analyze();
+    let scheduled: Vec<&str> = a
+        .case_of(CASE)
+        .unwrap()
+        .schedule
+        .iter()
+        .map(|s| s.trigger.as_str())
+        .collect();
+    assert_eq!(scheduled, ["Served(complaint, Personal)"]);
+    assert!(hints(a, CASE, all()).is_empty());
+}
+
+#[test]
+fn a_counting_rule_from_another_package_is_named() {
+    // `ptab` counts with `lit/core`'s `rcfc6`, which its own declarations
+    // do not hold, so the hint names the rule rather than its cite.
+    let mut host = support::host(&support::repo());
+    let a = host.analyze();
+    let case = "cases/ptab-ipr-defense.case";
+    insta::assert_json_snapshot!("ptab_ipr_defense_hints", labels(&hints(a, case, all())));
+}

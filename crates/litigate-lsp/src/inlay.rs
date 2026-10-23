@@ -49,9 +49,11 @@ fn label(analysis: &Analysis, clocks: &Clocks, case: Option<&hir::Case>, s: &Sch
             .iter()
             .find(|e| e.date == s.trigger_date && hirx::event_text(&e.action) == s.trigger)
     });
+    // The schedule counted it this way, so this recounts what it found.
     let computed = pkg.zip(event).and_then(|(p, e)| {
-        let d = hirx::deadline_at(p, local, &s.trigger_date).ok()?;
-        clock::due(clocks, p, d, &s.trigger_date, Some(&e.action)).ok()
+        hirx::deadline_at(p, local, &s.trigger_date)
+            .and_then(|d| clock::due(clocks, p, d, &s.trigger_date, Some(&e.action)))
+            .ok()
     });
     let flags: String = computed
         .map(|due| {

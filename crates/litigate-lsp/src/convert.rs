@@ -2,7 +2,7 @@
 //! SPEC §9.2) and rowan byte ranges to LSP positions (zero-based lines,
 //! UTF-16 columns), and back.
 use litigate_base::{LineIndex, Span};
-use litigate_syntax::TextRange;
+use litigate_syntax::{TextRange, TextSize};
 use tower_lsp::lsp_types::{Position, Range};
 
 /// Byte offset of the start of zero-based `line` (the end of `text` past it).
@@ -30,6 +30,14 @@ pub fn offset(text: &str, position: Position) -> usize {
         units += width;
     }
     start + line.len()
+}
+
+/// The rowan offset of LSP `position` in `text`. Rowan cannot build a tree
+/// over 4 GiB, so for any text it parses the offset fits; past that it
+/// saturates (no token or name lies there).
+#[must_use]
+pub fn text_size(text: &str, position: Position) -> TextSize {
+    TextSize::try_from(offset(text, position)).unwrap_or(TextSize::from(u32::MAX))
 }
 
 /// LSP position of byte `offset` in `text` (clamped, snapped back to a
@@ -139,6 +147,33 @@ mod tests {
         );
         assert_eq!(edited, "αx\nnext");
         assert_eq!(full_range("a\nbc").end, Position::new(1, 2));
+    }
+
+    #[test]
+    fn an_offset_inside_a_character_snaps_back() {
+        // `λ` is two bytes: byte 2 is inside it.
+        assert_eq!(position("aλb", 2), Position::new(0, 1));
+        assert_eq!(position("aλb", 99), Position::new(0, 3));
+    }
+
+    #[test]
+    fn rowan_offsets_follow_lsp_positions() {
+        let text = "ab\nλx";
+        assert_eq!(text_size(text, Position::new(1, 1)), TextSize::from(5));
+        assert_eq!(text_size(text, Position::new(7, 0)), TextSize::of(text));
+    }
+
+    #[test]
+    fn touching_includes_both_ends_only() {
+        let range = Range::new(Position::new(1, 2), Position::new(1, 5));
+        assert!(touches(&range, Position::new(1, 2)));
+        assert!(touches(&range, Position::new(1, 5)));
+        assert!(!touches(&range, Position::new(1, 1)));
+        assert!(!touches(&range, Position::new(2, 0)));
+        let before = Range::new(Position::new(0, 0), Position::new(1, 1));
+        assert!(overlaps(&range, &range));
+        assert!(!overlaps(&range, &before));
+        assert!(!overlaps(&before, &range));
     }
 
     proptest! {

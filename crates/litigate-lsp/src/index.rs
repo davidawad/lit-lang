@@ -73,11 +73,14 @@ pub struct Index {
     packs: BTreeMap<String, String>,
 }
 
+/// A reference's name and its `pack::` qualifier.
+type RefName = (litigate_syntax::SyntaxToken, Option<String>);
+
 /// References queued until every file has declared its names.
 #[derive(Default)]
 struct Pending {
-    /// `Ref` nodes.
-    refs: Vec<(String, SyntaxNode)>,
+    /// `Ref` nodes with their names.
+    refs: Vec<(String, SyntaxNode, RefName)>,
     /// Imported module paths.
     modules: Vec<(String, String, TextRange)>,
     /// Names in `import m.{...}` lists.
@@ -184,7 +187,8 @@ fn dotted(node: &SyntaxNode) -> String {
 }
 
 /// The last identifier of a `Ref` (the name) and its `pack::` qualifier.
-fn ref_name(node: &SyntaxNode) -> Option<(litigate_syntax::SyntaxToken, Option<String>)> {
+/// The grammar opens every `Ref` with an identifier.
+fn ref_name(node: &SyntaxNode) -> Option<RefName> {
     let ids = idents(node);
     let qualified = node
         .children_with_tokens()
@@ -192,23 +196,26 @@ fn ref_name(node: &SyntaxNode) -> Option<(litigate_syntax::SyntaxToken, Option<S
     let qualifier = qualified
         .then(|| ids.first().map(|t| t.text().to_owned()))
         .flatten();
-    Some((ids.last()?.clone(), qualifier))
+    ids.last().map(|name| (name.clone(), qualifier))
 }
 
 /// The node an edge reference is fixed to by its context, if any.
 fn edge_context(r: &SyntaxNode) -> Option<String> {
     let field = r.parent().filter(|p| p.kind() == K::RecordField)?;
-    let block = field.parent()?.parent()?;
     let refs: Vec<SyntaxNode> = field.children().filter(|c| c.kind() == K::Ref).collect();
     let name = |n: &SyntaxNode| ref_name(n).map(|(t, _)| t.text().to_owned());
-    match block.kind() {
-        K::FactsBlock if refs.len() == 2 && refs[1] == *r => name(&refs[0]),
-        K::ObserveDecl => block
-            .children()
-            .find(|c| c.kind() == K::Ref)
-            .and_then(|n| name(&n)),
-        _ => None,
-    }
+    // A field sits in a record inside its block.
+    field
+        .ancestors()
+        .nth(2)
+        .and_then(|block| match block.kind() {
+            K::FactsBlock if refs.len() == 2 && refs[1] == *r => name(&refs[0]),
+            K::ObserveDecl => block
+                .children()
+                .find(|c| c.kind() == K::Ref)
+                .and_then(|n| name(&n)),
+            _ => None,
+        })
 }
 
 /// `[package.roles]` keys of a manifest, with their byte ranges.
@@ -278,10 +285,7 @@ impl Index {
                 target,
             });
         }
-        for (file, node) in refs {
-            let Some((token, qualifier)) = ref_name(&node) else {
-                continue;
-            };
+        for (file, node, (token, qualifier)) in refs {
             let scope = &scopes[&file];
             let target = match edge_context(&node) {
                 Some(owner) => index.find(token.text(), &file, scope, None, |s| {
@@ -332,7 +336,9 @@ impl Index {
                         .modules
                         .push((file.to_owned(), dotted(&node), node.text_range()));
                 }
-                (K::Ref, _) => pending.refs.push((file.to_owned(), node)),
+                (K::Ref, _) => pending
+                    .refs
+                    .extend(ref_name(&node).map(|name| (file.to_owned(), node, name))),
                 (K::ImportList, _) => pending
                     .names
                     .extend(idents(&node).into_iter().map(|t| (file.to_owned(), t))),

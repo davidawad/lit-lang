@@ -57,6 +57,18 @@ pub struct Client {
 impl Client {
     /// Starts a server rooted at `root` and completes the handshake.
     pub async fn start(root: &Path, options: Value) -> (Self, Value) {
+        let root = Url::from_file_path(root).unwrap();
+        let (mut client, init) = Self::initialize(
+            json!({"processId": null, "rootUri": root, "capabilities": {}, "initializationOptions": options}),
+        )
+        .await;
+        client.notify("initialized", json!({})).await;
+        (client, init)
+    }
+
+    /// Starts a server and sends `initialize` with `params`, but not
+    /// `initialized`.
+    pub async fn initialize(params: Value) -> (Self, Value) {
         let (near, far) = tokio::io::duplex(1 << 22);
         let (far_r, far_w) = tokio::io::split(far);
         tokio::spawn(litigate_lsp::serve(far_r, far_w));
@@ -67,14 +79,7 @@ impl Client {
             id: 0,
             notes: Vec::new(),
         };
-        let root = Url::from_file_path(root).unwrap();
-        let init = client
-            .request(
-                "initialize",
-                json!({"processId": null, "rootUri": root, "capabilities": {}, "initializationOptions": options}),
-            )
-            .await;
-        client.notify("initialized", json!({})).await;
+        let init = client.request("initialize", params).await;
         (client, init)
     }
 
@@ -224,6 +229,61 @@ pub fn place(location: &Value) -> (String, u64) {
         .to_string_lossy()
         .replace('\\', "/");
     (rel, location["range"]["start"]["line"].as_u64().unwrap())
+}
+
+/// A fresh workspace under the temp dir holding `files` (`(path, text)`,
+/// root-relative), unique to this process and `name`.
+pub fn workspace(name: &str, files: &[(&str, &str)]) -> PathBuf {
+    let root = std::env::temp_dir().join(format!("litigate-lsp-{}-{name}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&root);
+    for (path, text) in files {
+        let file = root.join(path);
+        std::fs::create_dir_all(file.parent().unwrap()).unwrap();
+        std::fs::write(file, text).unwrap();
+    }
+    root
+}
+
+/// The worked example (SPEC §12) as `lit/ex` and `cases/acme.case`, plus
+/// `extra` files.
+pub fn worked(name: &str, extra: &[(&str, &str)]) -> PathBuf {
+    let manifest = read("lit/examples/Lit.toml");
+    let module = read("lit/examples/rule12.lit");
+    let case = read("cases/examples/acme.case");
+    let mut files = vec![
+        ("lit/ex/Lit.toml", manifest.as_str()),
+        ("lit/ex/rule12.lit", module.as_str()),
+        ("cases/acme.case", case.as_str()),
+    ];
+    files.extend_from_slice(extra);
+    workspace(name, &files)
+}
+
+/// Writes `cases/Lit.lock` pinning every package `host` analysed at
+/// `root` (as `litigate lock` would), so matters there replay.
+pub fn pin(root: &Path, host: &mut litigate_lsp::host::Host) {
+    let entries: Vec<String> = host
+        .analyze()
+        .checked
+        .session
+        .packages
+        .iter()
+        .map(|p| {
+            format!(
+                "[[package]]\nname = \"{}\"\nversion = \"{}\"\ndigest = \"{}\"\ndependencies = []\nlanguage = 1\n",
+                p.name, p.version, p.digest
+            )
+        })
+        .collect();
+    let lock = format!("version = 1\n\n{}", entries.join("\n"));
+    std::fs::write(root.join("cases/Lit.lock"), lock).unwrap();
+}
+
+/// A host rooted at `root` (as a client's `rootUri`).
+pub fn host(root: &Path) -> litigate_lsp::host::Host {
+    let mut host = litigate_lsp::host::Host::default();
+    host.root = Some(root.to_path_buf());
+    host
 }
 
 /// Codes of a diagnostic list, sorted.

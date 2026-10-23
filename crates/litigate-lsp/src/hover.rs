@@ -210,10 +210,11 @@ fn declaration(out: &mut String, analysis: &Analysis, pkg: &hir::Package, name: 
             let _ = writeln!(out, "- {} · {}{at}", interval(&m.effective), m.authority);
         }
     }
-    if let Some((cite, line)) = metas
-        .iter()
-        .find_map(|m| Some((m.cite.clone()?, m.span.as_ref()?.line)))
-    {
+    // Sema spans every declaration it builds from source.
+    if let Some((cite, line)) = metas.iter().find_map(|m| {
+        let line = m.span.as_ref().map_or(0, |s| s.line);
+        m.cite.clone().map(|cite| (cite, line))
+    }) {
         cited(out, analysis, pkg, &cite, line);
     }
 }
@@ -274,35 +275,38 @@ pub fn definition(analysis: &Analysis, def: &Def) -> String {
     out
 }
 
-/// Hover markdown for the `cite` token `token` of `file`.
+/// Hover markdown for the `cite` token `token` of `file` (holding `text`).
 #[must_use]
-pub fn cite_token(analysis: &Analysis, file: &str, token: &SyntaxToken) -> Option<String> {
+pub fn cite_token(
+    analysis: &Analysis,
+    file: &str,
+    text: &str,
+    token: &SyntaxToken,
+) -> Option<String> {
     let pkg = analysis.package_of(file)?.check.package.as_ref()?;
-    let text = analysis.text(file)?;
-    let line = line_of(&text, usize::from(token.text_range().start()));
+    let line = line_of(text, usize::from(token.text_range().start()));
     let mut out = String::new();
     cited(&mut out, analysis, pkg, token.text().trim(), line);
     Some(out.trim_start().to_owned())
 }
 
-/// Hover markdown at byte `offset` of `file` (holding `text`), with the
-/// range it describes: a cite's L0 text, else the definition named there
-/// (in a `Lit.toml`, a `[package.roles]` key).
+/// Hover markdown at `offset` of `file` (holding `text`), with the range
+/// it describes: a cite's L0 text, else the definition named there (in a
+/// `Lit.toml`, a `[package.roles]` key).
 #[must_use]
 pub fn at(
     analysis: &Analysis,
     file: &str,
     text: &str,
-    offset: usize,
+    offset: TextSize,
 ) -> Option<(String, TextRange)> {
     let Some(kind) = Analysis::kind(file) else {
-        let def =
-            &analysis.index.defs[analysis.index.at(file, TextSize::try_from(offset).ok()?)?];
+        let def = &analysis.index.defs[analysis.index.at(file, offset)?];
         return Some((definition(analysis, def), def.name_range));
     };
     let token = token_at(text, kind, offset)?;
     let value = if token.kind() == K::CiteText {
-        cite_token(analysis, file, &token)?
+        cite_token(analysis, file, text, &token)?
     } else {
         let def = analysis.index.at(file, token.text_range().start())?;
         definition(analysis, &analysis.index.defs[def])
@@ -310,15 +314,22 @@ pub fn at(
     Some((value, token.text_range()))
 }
 
-/// The token at byte `offset` of `text`: the identifier or cite touching
-/// it, preferring the right side.
+/// The token at `offset` of `text` (at most its length): the identifier or
+/// cite touching it, preferring the right side.
 #[must_use]
-pub fn token_at(text: &str, kind: litigate_syntax::FileKind, offset: usize) -> Option<SyntaxToken> {
+pub fn token_at(
+    text: &str,
+    kind: litigate_syntax::FileKind,
+    offset: TextSize,
+) -> Option<SyntaxToken> {
     let root = parse(text, kind).syntax();
-    let at = root.token_at_offset(TextSize::try_from(offset).ok()?);
+    let at = root.token_at_offset(offset);
     let interesting = |t: &SyntaxToken| matches!(t.kind(), K::Ident | K::CiteText);
     let (left, right) = (at.clone().left_biased(), at.right_biased());
     right
         .filter(interesting)
         .or_else(|| left.filter(interesting))
 }
+
+#[cfg(test)]
+mod tests;

@@ -92,7 +92,8 @@ pub fn workspace(analysis: &Analysis, query: &str) -> Vec<SymbolInformation> {
         .iter()
         .filter(|d| d.name.to_lowercase().contains(&query))
         .filter_map(|d| {
-            let text = analysis.text(&d.file)?;
+            // The index reads every definition off an analysed text.
+            let text = analysis.text(&d.file).unwrap_or_default();
             #[allow(deprecated)]
             Some(SymbolInformation {
                 name: d.name.clone(),

@@ -336,6 +336,10 @@ mod tests {
         let outside = std::env::current_dir().unwrap_or_default();
         let rel = relative_to(&root, &outside);
         assert_eq!(real_path(&root, &rel), outside);
+        // A file under the root is the root's, whatever lies under `/`.
+        let manifest = real_path(&outside, "Cargo.toml");
+        assert_eq!(manifest, outside.join("Cargo.toml"));
+        assert!(manifest.is_file());
     }
 
     #[test]

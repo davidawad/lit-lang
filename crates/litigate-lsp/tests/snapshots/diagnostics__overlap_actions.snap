@@ -1,0 +1,31 @@
+---
+source: crates/litigate-lsp/tests/diagnostics.rs
+expression: fixes
+---
+[
+  {
+    "title": "L3001: write `[2009-12-01, 2015-01-01)`",
+    "kind": "quickfix",
+    "diagnostics": "<overlap_lsp>",
+    "edit": {
+      "changes": {
+        "<root>/lit/ex/rule12.lit": [
+          {
+            "range": {
+              "start": {
+                "line": 93,
+                "character": 82
+              },
+              "end": {
+                "line": 93,
+                "character": 98
+              }
+            },
+            "newText": "[2009-12-01, 2015-01-01)"
+          }
+        ]
+      }
+    },
+    "isPreferred": false
+  }
+]

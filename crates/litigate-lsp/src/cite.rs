@@ -115,28 +115,28 @@ fn is_marker(line: &str) -> bool {
 /// narrowing at the enclosing division.
 #[must_use]
 pub fn narrow(text: &str, heading: u32, pinpoint: &[String]) -> Option<(u32, u32, String)> {
-    let lines: Vec<&str> = text.lines().collect();
-    let start = usize::try_from(heading).ok()?.checked_sub(1)?;
-    lines.get(start)?;
+    // Each line with its one-based number.
+    let lines: Vec<(u32, &str)> = (1..).zip(text.lines()).collect();
+    let start = lines.iter().position(|(n, _)| *n == heading)?;
     let end = lines[start + 1..]
         .iter()
-        .position(|l| l.starts_with("## "))
+        .position(|(_, l)| l.starts_with("## "))
         .map_or(lines.len(), |i| start + 1 + i);
     let (mut first, mut last) = (start, end);
     for marker in pinpoint {
         let open = format!("({marker})");
-        let Some(at) = (first + 1..last).find(|&i| lines[i].trim_start().starts_with(&open)) else {
+        let Some(at) = (first + 1..last).find(|&i| lines[i].1.trim_start().starts_with(&open))
+        else {
             break;
         };
-        let depth = indent(lines[at]);
+        let depth = indent(lines[at].1);
         last = (at + 1..last)
-            .find(|&i| is_marker(lines[i]) && indent(lines[i]) <= depth + 1)
+            .find(|&i| is_marker(lines[i].1) && indent(lines[i].1) <= depth + 1)
             .unwrap_or(last);
         first = at;
     }
-    let body = lines[first..last].join("\n");
-    let one = |i: usize| u32::try_from(i + 1).ok();
-    Some((one(first)?, one(last - 1)?, body))
+    let body: Vec<&str> = lines[first..last].iter().map(|(_, l)| *l).collect();
+    Some((lines[first].0, lines[last - 1].0, body.join("\n")))
 }
 
 #[cfg(test)]
@@ -165,5 +165,23 @@ mod tests {
             Some((1, 9))
         );
         assert_eq!(narrow(TEXT, 99, &[]), None);
+        assert_eq!(narrow(TEXT, 0, &[]), None);
+    }
+
+    #[test]
+    fn only_short_alphanumeric_parentheses_are_markers() {
+        assert!(is_marker("   (iv) text"));
+        assert!(!is_marker("text (a)"));
+        assert!(!is_marker("() empty"));
+        assert!(!is_marker("(toolong) words"));
+        assert!(!is_marker("(a-b) punctuation"));
+        assert!(!is_marker("(unclosed"));
+    }
+
+    #[test]
+    fn continuation_lines_stay_with_their_division() {
+        let text = "## Rule 4\n  (a) FIRST\n      continued here\n      (see 12) inline\n      (overlong) also prose\n  (b) SECOND\n";
+        let pin = ["a".to_owned()];
+        assert_eq!(narrow(text, 1, &pin).map(|(a, b, _)| (a, b)), Some((2, 5)));
     }
 }

@@ -128,6 +128,21 @@ impl<'g> Grant<'g> {
     }
 }
 
+/// Why an event `action` on `date` is outside a grant's window for
+/// `deadline`, due `current`: the period has (`expired`) or has not
+/// passed.
+fn outside(deadline: &str, action: &str, current: &str, date: &str, expired: bool) -> String {
+    if expired {
+        format!(
+            "`{deadline}` expired on {current}, before `{action}` on {date}; the capability does not reach an expired period (no `after_expiry`)"
+        )
+    } else {
+        format!(
+            "`{deadline}` is due {current}, not expired when `{action}` comes on {date}; the grant reaches only an expired period, on motion"
+        )
+    }
+}
+
 /// `pack::name` of qualified `q`, an instance pack read as its base.
 pub(super) fn logical(q: &str) -> String {
     let k = Graph::key(q);
@@ -584,22 +599,11 @@ impl<'g> Cx<'_, 'g> {
         };
         let expired = event.date > current;
         if !grant.reaches(expired) {
-            let message = if expired {
-                format!(
-                    "`{}` expired on {current}, before `{}` on {}; the capability does not reach an expired period (no `after_expiry`)",
-                    o.deadline,
-                    display(&event.action),
-                    event.date
-                )
-            } else {
-                format!(
-                    "`{}` is due {current}, not expired when `{}` comes on {}; the grant reaches only an expired period, on motion",
-                    o.deadline,
-                    display(&event.action),
-                    event.date
-                )
-            };
-            return reject(false, message);
+            let action = display(&event.action);
+            return reject(
+                false,
+                outside(&o.deadline, &action, &current, &event.date, expired),
+            );
         }
         if let Some(m) = grant.motion {
             if let Some(why) = self.unmoved(

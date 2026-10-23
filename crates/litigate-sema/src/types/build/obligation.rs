@@ -160,23 +160,7 @@ impl Cx<'_, '_> {
     fn extension(&mut self, f: &Field) -> Option<Extension> {
         let fields = self.once(nested(f));
         if let Some(never) = fields.get("never") {
-            let others: Vec<&Field> = fields
-                .values()
-                .copied()
-                .filter(|o| o.key.text != "never")
-                .collect();
-            for other in &others {
-                self.not_allowed(
-                    other,
-                    "with `never`: a lock has no extender or bound of its own",
-                );
-            }
-            let authority = Self::string(Some(never));
-            return others
-                .is_empty()
-                .then_some(authority)
-                .flatten()
-                .map(|authority| Extension::NonExtendable { authority });
+            return self.lock(never, &fields);
         }
         if let (Some(m), Some(_)) = (fields.get("max"), fields.get("to")) {
             self.not_allowed(m, "with `to`: give the bound once");
@@ -197,22 +181,10 @@ impl Cx<'_, '_> {
             None => None,
         };
         let bound = match (fields.get("max"), fields.get("to")) {
-            (Some(m), _) => {
-                let e = first_expr(m)?;
-                let (n, unit) = self.days(e)?;
-                if unit != DayUnit::Calendar {
-                    self.report(Report::new(
-                        C::InvalidCounting,
-                        e.range,
-                        "an extension bound counts calendar days, such as `30.days`",
-                    ));
-                    return None;
-                }
-                Some(Bound::Offset {
-                    from: DateRef::PrescribedDue,
-                    days: n,
-                })
-            }
+            (Some(m), _) => Some(Bound::Offset {
+                from: DateRef::PrescribedDue,
+                days: self.calendar_days(first_expr(m)?)?,
+            }),
             (None, Some(t)) => Some(self.bound(first_expr(t)?)?),
             (None, None) => None,
         };
@@ -252,6 +224,41 @@ impl Cx<'_, '_> {
             window,
             motion,
         })
+    }
+
+    /// `extend { never cite X }`: a lock, which takes no other field.
+    fn lock(&mut self, never: &Field, fields: &BTreeMap<&str, &Field>) -> Option<Extension> {
+        let others: Vec<&Field> = fields
+            .values()
+            .copied()
+            .filter(|o| o.key.text != "never")
+            .collect();
+        for other in &others {
+            self.not_allowed(
+                other,
+                "with `never`: a lock has no extender or bound of its own",
+            );
+        }
+        let authority = Self::string(Some(&never));
+        others
+            .is_empty()
+            .then_some(authority)
+            .flatten()
+            .map(|authority| Extension::NonExtendable { authority })
+    }
+
+    /// The calendar days of duration `e` (L3009 for other days).
+    fn calendar_days(&mut self, e: &Expr) -> Option<u64> {
+        let (n, unit) = self.days(e)?;
+        if unit != DayUnit::Calendar {
+            self.report(Report::new(
+                C::InvalidCounting,
+                e.range,
+                "an extension bound counts calendar days, such as `30.days`",
+            ));
+            return None;
+        }
+        Some(n)
     }
 
     /// The cause standard `r`: one of the closed set (L2007 otherwise).
@@ -310,15 +317,7 @@ impl Cx<'_, '_> {
             }),
             ExprKind::Binary(BinaryOp::Add, l, n) => {
                 let from = self.date_ref(l)?;
-                let (days, unit) = self.days(n)?;
-                if unit != DayUnit::Calendar {
-                    self.report(Report::new(
-                        C::InvalidCounting,
-                        n.range,
-                        "an extension bound counts calendar days, such as `30.days`",
-                    ));
-                    return None;
-                }
+                let days = self.calendar_days(n)?;
                 Some(Bound::Offset { from, days })
             }
             _ => self.no_bound(e),

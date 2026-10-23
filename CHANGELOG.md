@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **litigate** authoring toolchain in the release. The `litigate` CLI
+  (check, build, query, diff, import, explain) and the `litigate-lsp` language
+  server now ship in every release archive and the Homebrew formula
+  (`brew install davidawad/tap/litgraph` installs `litgraph`, `litgraph-mcp`,
+  `litigate` and `litigate-lsp`). Language reference: `docs/litigate/SPEC.md`.
+
 ### Changed
 
 - **Data-driven deadline clock.** Counting rules (`CountingRule`) and holiday

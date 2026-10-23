@@ -14,6 +14,13 @@ FRE = "FRE"
 # Temporary restraining order; Chief Judge Howard T. Markey (tests/cases/).
 TRO = "TRO"
 Markey = "Markey"
+# Mapp v. Ohio (lit/frcrimp); "Thm" abbreviates Theorem; "unparseable" is a
+# standard spelling used in litigate diagnostics.
+Mapp = "Mapp"
+Thm = "Thm"
+unparseable = "unparseable"
+# Deliberate misspelling in the did-you-mean unit test (litigate-syntax).
+chanse = "chanse"
 
 [default.extend-identifiers]
 # Short graph-algorithm locals (node a/b, node n/d).
@@ -31,6 +38,9 @@ extend-exclude = [
     "sources/*.txt",  # vendored L0 primary-law text (see sources/PROVENANCE.md); PDF/HTML
                        # extraction preserves the original's line-wrap hyphenation verbatim
                        # ("Represen-\ntation"), which reads as typos but isn't ours to fix
+    # litigate tests and snapshots misspell names on purpose to exercise
+    # did-you-mean suggestions and unresolved-name diagnostics.
+    "crates/litigate-*/tests/",
     "Cargo.lock",
     "flake.lock",
     "devenv.lock",

@@ -25,6 +25,8 @@ COPY Cargo.toml Cargo.lock ./
 COPY crates crates
 COPY editors editors
 COPY packs packs
+# litigate-cli (a litgraph-mcp dependency) embeds the language reference.
+COPY docs/litigate/SPEC.md docs/litigate/SPEC.md
 COPY scenarios scenarios
 COPY calibration calibration
 COPY sources sources

@@ -46,10 +46,10 @@ pub struct Deadline {
     /// once by a discharge or a breach. Otherwise affine: it may lapse.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub linear: bool,
-    /// Who may extend an instance, and how far (`extend { ... }`); `None`:
-    /// no extension is possible.
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub extend: Option<Capability>,
+    /// Who may extend an instance, when, and how far (`extend { ... }`,
+    /// once per grant); empty: no extension power is declared.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub extend: Vec<Extension>,
     /// Who may waive an instance (`waive { ... }`); `None`: it cannot be
     /// waived.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -81,19 +81,72 @@ impl TriggerPolicy {
     }
 }
 
-/// A capability to transform an obligation instance (review §2.4): the
-/// principal that holds it and its bound.
+/// A capability to waive an obligation instance (review §2.4): the
+/// principal that holds it and whether it reaches an expired instance.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Capability {
     /// The actor that may exercise it (`by A`).
     pub by: String,
-    /// Furthest extension past the counted due date, in calendar days
-    /// (`max N.days`); always `None` for `waive`.
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub max_days: Option<u64>,
     /// May be exercised after the instance's due date (`after_expiry`).
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub after_expiry: bool,
+}
+
+/// One `extend` grant of a deadline (review §2.4): its bound is a sum, so
+/// a rule that states no numeric ceiling is not forced to invent one
+/// (FRCP 6(b)).
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "bound", rename_all = "snake_case")]
+pub enum Extension {
+    /// `extend { by A, max N.days [, after_expiry] }`: no further than `N`
+    /// calendar days past the counted due date, a cap the declaring file
+    /// imposes (a local rule allowing one stipulated extension of N days,
+    /// FRAP 4(a)(5)(C)).
+    Bounded {
+        /// The actor that may extend.
+        by: String,
+        /// Furthest extension past the counted due date, in calendar days.
+        max_days: u64,
+        /// May be exercised after the instance's due date.
+        #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+        after_expiry: bool,
+    },
+    /// `extend { by A, discretion S [, after_expiry] }`: the court's
+    /// discretion under cause standard `S`, with no numeric ceiling (FRCP
+    /// 6(b)(1)).
+    Discretionary {
+        /// The actor that may extend.
+        by: String,
+        /// The cause standard (`GoodCause`, `ExcusableNeglect`).
+        standard: String,
+        /// When the grant may be exercised.
+        window: ExtensionWindow,
+    },
+    /// `extend { never }`: the period may not be extended (FRCP 6(b)(2)).
+    NonExtendable,
+}
+
+impl Extension {
+    /// The actor holding the grant; `None` for [`Self::NonExtendable`].
+    #[must_use]
+    pub fn by(&self) -> Option<&str> {
+        match self {
+            Self::Bounded { by, .. } | Self::Discretionary { by, .. } => Some(by),
+            Self::NonExtendable => None,
+        }
+    }
+}
+
+/// When a discretionary extension may be granted, relative to the
+/// instance's due date.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ExtensionWindow {
+    /// On or before the due date, with or without motion (FRCP
+    /// 6(b)(1)(A)).
+    BeforeExpiry,
+    /// After the due date, on motion (FRCP 6(b)(1)(B)).
+    AfterExpiryOnMotion,
 }
 
 /// Deadline counting direction.

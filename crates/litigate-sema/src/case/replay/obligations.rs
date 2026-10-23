@@ -7,14 +7,17 @@
 //! past its due date at `as_of` is breached (L4009). Any other instance
 //! past due lapses: a power's, or a period no party bears, since a breach
 //! is a liability of its bearer. An extension or a waiver
-//! is a typed transform of one instance, licensed by the deadline's
-//! `extend`/`waive` capability, its principal, and its bound.
+//! is a typed transform of one instance, licensed by one of the deadline's
+//! `extend` grants or its `waive` capability: its principal, its window,
+//! and its bound (a numeric cap, the court's discretion, or `never`).
 use super::Cx;
 use crate::case::deadline::{self, Due};
 use crate::case::graph::{display, pack_of, Graph};
 use crate::case::spans::{error, Build};
 use crate::case::{Effect, Obligation, Status};
-use crate::hir::{Capability, Deadline, Expr, ExprKind, TriggerPolicy, Value};
+use crate::hir::{
+    Capability, Deadline, Expr, ExprKind, Extension, ExtensionWindow, TriggerPolicy, Value,
+};
 use crate::temporal::condition::matches;
 use crate::temporal::MatterEvent;
 use litigate_base::{Diagnostic, DiagnosticCode as C, Severity};
@@ -42,6 +45,67 @@ impl Transform<'_> {
         match self {
             Self::Extend(_) => "extended",
             Self::Waive => "waived",
+        }
+    }
+}
+
+/// What licenses a transform, read off one `extend` grant or the `waive`
+/// capability of a deadline: who holds it, whether it reaches an instance
+/// before and after its due date, and its numeric ceiling, if any.
+#[derive(Debug, Clone, Copy)]
+struct Grant<'g> {
+    by: &'g str,
+    before: bool,
+    after: bool,
+    /// Calendar days past the counted due date; `None` under the court's
+    /// discretion (and for a waiver, which has no extent).
+    ceiling: Option<u64>,
+}
+
+impl<'g> Grant<'g> {
+    /// An `extend` grant; `None` for `extend { never }`.
+    fn extend(x: &'g Extension) -> Option<Self> {
+        match x {
+            Extension::Bounded {
+                by,
+                max_days,
+                after_expiry,
+            } => Some(Self {
+                by,
+                before: true,
+                after: *after_expiry,
+                ceiling: Some(*max_days),
+            }),
+            Extension::Discretionary { by, window, .. } => {
+                let after = *window == ExtensionWindow::AfterExpiryOnMotion;
+                Some(Self {
+                    by,
+                    before: !after,
+                    after,
+                    ceiling: None,
+                })
+            }
+            Extension::NonExtendable => None,
+        }
+    }
+
+    /// The `waive` capability.
+    fn waive(c: &'g Capability) -> Self {
+        Self {
+            by: &c.by,
+            before: true,
+            after: c.after_expiry,
+            ceiling: None,
+        }
+    }
+
+    /// Whether it may be exercised on an instance that has (`expired`) or
+    /// has not passed its due date.
+    fn reaches(self, expired: bool) -> bool {
+        if expired {
+            self.after
+        } else {
+            self.before
         }
     }
 }
@@ -340,7 +404,7 @@ impl<'g> Cx<'_, 'g> {
             self.out.push(d);
             return None;
         }
-        let (w, d, capability) = self.licence(k, &q, how)?;
+        let (w, d, grants) = self.licence(k, &q, how)?;
         let pack = pack_of(&w);
         let events = self.events(pack);
         let dues: Vec<Due> = open
@@ -359,11 +423,24 @@ impl<'g> Cx<'_, 'g> {
             Transform::Extend(_) => return None,
             Transform::Waive => None,
         };
-        let problem = open
-            .iter()
-            .zip(&dues)
-            .find_map(|(&i, due)| self.problem(k, i, due, capability, new));
-        if let Some(e) = problem {
+        // Each grant licenses the transform when every open instance is
+        // within its window and bound; otherwise the most specific refusal
+        // (past the window, out of bound) is reported.
+        let mut refusals: Vec<(bool, Diagnostic)> = Vec::new();
+        for grant in grants {
+            match open
+                .iter()
+                .zip(&dues)
+                .find_map(|(&i, due)| self.problem(k, i, due, grant, new))
+            {
+                Some(refusal) => refusals.push(refusal),
+                None => {
+                    refusals.clear();
+                    break;
+                }
+            }
+        }
+        if let Some((_, e)) = refusals.into_iter().max_by_key(|(bound, _)| *bound) {
             self.out.push(e);
             return None;
         }
@@ -378,14 +455,14 @@ impl<'g> Cx<'_, 'g> {
     }
 
     /// The deadline declaration governing `q` at event `k` (with its own
-    /// logical id, as [`Self::governing`]) and the capability it grants
-    /// for `how`, when event `k`'s party holds it.
+    /// logical id, as [`Self::governing`]) and the grants for `how` that
+    /// event `k`'s party holds.
     fn licence(
         &mut self,
         k: usize,
         q: &str,
         how: Transform<'_>,
-    ) -> Option<(String, &'g Deadline, &'g Capability)> {
+    ) -> Option<(String, &'g Deadline, Vec<Grant<'g>>)> {
         let event = self.sorted[k].1;
         let action = display(&event.action);
         let verb = how.verb();
@@ -398,105 +475,137 @@ impl<'g> Cx<'_, 'g> {
             self.out.push(e);
             return None;
         };
-        let capability = match how {
-            Transform::Extend(_) => &d.extend,
-            Transform::Waive => &d.waive,
+        let grants: Vec<Grant<'g>> = match how {
+            Transform::Extend(_) => d.extend.iter().filter_map(Grant::extend).collect(),
+            Transform::Waive => d.waive.iter().map(Grant::waive).collect(),
         };
-        let Some(capability) = capability else {
-            let e = error(
-                C::InvalidCaseEvent,
-                self.at(k, |e| e.action.as_ref()),
-                format!("`{action}` cannot {verb} `{q}`: the deadline grants no `{verb}` capability"),
-            )
-            .note(format!(
-                "a limit that grants no `{verb}` capability cannot be {}: no order has power over it (Bowles v. Russell, 551 U.S. 205 (2007))",
-                how.done()
-            ));
+        if grants.is_empty() {
+            let never = d.extend.contains(&Extension::NonExtendable);
+            let e = if never && matches!(how, Transform::Extend(_)) {
+                error(
+                    C::InvalidCaseEvent,
+                    self.at(k, |e| e.action.as_ref()),
+                    format!("`{action}` cannot extend `{q}`: the deadline may not be extended (`extend {{ never }}`)"),
+                )
+                .note("no order, stipulation or consent extends a period its rule forbids extending (FRCP 6(b)(2))")
+            } else {
+                error(
+                    C::InvalidCaseEvent,
+                    self.at(k, |e| e.action.as_ref()),
+                    format!("`{action}` cannot {verb} `{q}`: the deadline grants no `{verb}` capability"),
+                )
+                .note(format!(
+                    "a limit that grants no `{verb}` capability cannot be {}: no order has power over it (Bowles v. Russell, 551 U.S. 205 (2007))",
+                    how.done()
+                ))
+            };
             self.out.push(e);
             return None;
-        };
-        self.principal(k, q, verb, capability)
-            .then_some((w, d, capability))
-    }
-
-    /// Whether event `k`'s party holds `capability` over `q`.
-    fn principal(&mut self, k: usize, q: &str, verb: &str, capability: &Capability) -> bool {
-        let event = self.sorted[k].1;
-        let actor = self.actor(event);
-        if actor == Some(capability.by.as_str()) {
-            return true;
         }
-        let e = error(
-            C::InvalidCaseEvent,
-            self.at(k, |e| e.party.as_ref()),
-            format!(
-                "only {} may {verb} `{q}`, but `{}` is {}",
-                capability.by,
-                event.party,
-                actor.map_or_else(
-                    || "not a party acting by the event".to_owned(),
-                    str::to_owned
-                )
-            ),
-        );
-        self.out.push(e);
-        false
+        let actor = self.actor(event);
+        let held: Vec<Grant<'g>> = grants
+            .iter()
+            .copied()
+            .filter(|g| Some(g.by) == actor)
+            .collect();
+        if held.is_empty() {
+            let mut by: Vec<&str> = grants.iter().map(|g| g.by).collect();
+            by.dedup();
+            let e = error(
+                C::InvalidCaseEvent,
+                self.at(k, |e| e.party.as_ref()),
+                format!(
+                    "only {} may {verb} `{q}`, but `{}` is {}",
+                    by.join(" or "),
+                    event.party,
+                    actor.map_or_else(
+                        || "not a party acting by the event".to_owned(),
+                        str::to_owned
+                    )
+                ),
+            );
+            self.out.push(e);
+            return None;
+        }
+        Some((w, d, held))
     }
 
     /// Why event `k` may not transform instance `i` (counted `due`) under
-    /// `capability`: extend it to `new`, or waive it when `new` is `None`.
+    /// `grant`: extend it to `new`, or waive it when `new` is `None`. The
+    /// flag is set when the refusal is the bound, not the window.
     fn problem(
         &self,
         k: usize,
         i: usize,
         due: &Due,
-        capability: &Capability,
+        grant: Grant<'_>,
         new: Option<&str>,
-    ) -> Option<Diagnostic> {
+    ) -> Option<(bool, Diagnostic)> {
         let event = self.sorted[k].1;
         let o = &self.obligations[i];
         let how = deadline::explain(due, &self.sorted[o.at].1.action);
-        let reject = |message: String| {
-            Some(
+        let reject = |bound: bool, message: String| {
+            Some((
+                bound,
                 error(
                     C::InvalidCaseEvent,
                     self.at(k, |e| e.action.as_ref()),
                     message,
                 )
                 .note(how.clone()),
-            )
+            ))
         };
         let (Ok(current), Ok(counted)) = (effective(o, due), floored(o, due)) else {
             let why = due.date.clone().err().unwrap_or_default();
-            return reject(format!(
-                "cannot count `{}` to judge `{}`",
-                o.deadline,
-                display(&event.action)
-            ))
-            .map(|e| e.note(why));
+            return reject(
+                true,
+                format!(
+                    "cannot count `{}` to judge `{}`",
+                    o.deadline,
+                    display(&event.action)
+                ),
+            )
+            .map(|(b, e)| (b, e.note(why)));
         };
-        if event.date > current && !capability.after_expiry {
-            return reject(format!(
-                "`{}` expired on {current}, before `{}` on {}; the capability does not reach an expired period (no `after_expiry`)",
-                o.deadline,
-                display(&event.action),
-                event.date
-            ));
+        let expired = event.date > current;
+        if !grant.reaches(expired) {
+            let message = if expired {
+                format!(
+                    "`{}` expired on {current}, before `{}` on {}; the capability does not reach an expired period (no `after_expiry`)",
+                    o.deadline,
+                    display(&event.action),
+                    event.date
+                )
+            } else {
+                format!(
+                    "`{}` is due {current}, not expired when `{}` comes on {}; the grant reaches only an expired period, on motion",
+                    o.deadline,
+                    display(&event.action),
+                    event.date
+                )
+            };
+            return reject(false, message);
         }
         let new = new?;
-        let max = capability.max_days.unwrap_or_default();
-        let bound = crate::types::date::add_days(&counted, max).unwrap_or_default();
         if new <= current.as_str() {
-            return reject(format!(
-                "an extension to {new} does not extend `{}`, already due {current}",
-                o.deadline
-            ));
+            return reject(
+                true,
+                format!(
+                    "an extension to {new} does not extend `{}`, already due {current}",
+                    o.deadline
+                ),
+            );
         }
+        let max = grant.ceiling?;
+        let bound = crate::types::date::add_days(&counted, max).unwrap_or_default();
         if new > bound.as_str() {
-            return reject(format!(
-                "an extension to {new} exceeds the bound of `{}`: due {counted} + {max} days = {bound}",
-                o.deadline
-            ));
+            return reject(
+                true,
+                format!(
+                    "an extension to {new} exceeds the bound of `{}`: due {counted} + {max} days = {bound}",
+                    o.deadline
+                ),
+            );
         }
         None
     }

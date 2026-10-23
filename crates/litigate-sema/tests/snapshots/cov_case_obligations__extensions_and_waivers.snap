@@ -3,11 +3,25 @@ source: crates/litigate-sema/tests/cov_case_obligations.rs
 expression: table(rows)
 ---
 {
+    "extend: `never` admits no extension": [
+        "14:14 L4001 `OrderedLocked(2011-01-30)` cannot extend `omega::locked`: the deadline may not be extended (`extend { never }`)\n    note: no order, stipulation or consent extends a period its rule forbids extending (FRCP 6(b)(2))",
+        "trace Triggered Entered() omega::open -> omega::open",
+        "obligation omega::locked #0 Lapsed",
+        "obligation omega::motion-only #0 Lapsed",
+        "obligation omega::post #0 Lapsed",
+    ],
     "extend: a deadline with no `extend` capability admits none": [
         "14:14 L4001 `OrderedReply(2011-01-12)` cannot extend `omega::reply`: the deadline grants no `extend` capability\n    note: a limit that grants no `extend` capability cannot be extended: no order has power over it (Bowles v. Russell, 551 U.S. 205 (2007))",
         "trace Triggered Noticed() omega::open -> omega::open",
         "obligation omega::reply #0 Lapsed",
         "obligation omega::stale #0 Open linear",
+    ],
+    "extend: a motion-only grant does not reach an unexpired period": [
+        "14:14 L4001 `omega::motion-only` is due 2011-01-14, not expired when `OrderedMotion(2011-01-30)` comes on 2011-01-10; the grant reaches only an expired period, on motion\n    note: `motion-only` runs 10 calendar days from `Entered()` on 2011-01-04 under `oc@2009-12-01`",
+        "trace Triggered Entered() omega::open -> omega::open",
+        "obligation omega::locked #0 Lapsed",
+        "obligation omega::motion-only #0 Lapsed",
+        "obligation omega::post #0 Lapsed",
     ],
     "extend: a second extension is bounded from the counted date": [
         "13:3 L4009 obligation `omega::answer` borne by `d`, created by `Served(complaint)` on 2011-01-04, was neither discharged nor transformed by its due date 2011-01-24: at as_of 2011-02-01 it is breached\n    note: `answer` runs 10 calendar days from `Served(complaint)` on 2011-01-04 under `oc@2009-12-01`\n    note: a duty is consumed exactly once: by a timely act through a `within` edge, or by a breach",
@@ -16,6 +30,15 @@ expression: table(rows)
         "trace Extended Ordered(2011-01-20) omega::open -> omega::open",
         "trace Extended Ordered(2011-01-24) omega::open -> omega::open",
         "obligation omega::answer #0 Breached bearer d extended 2011-01-24 linear",
+    ],
+    "extend: a stipulated cap binds only its own grant": [
+        "15:14 L4001 an extension to 2011-01-30 exceeds the bound of `omega::post`: due 2011-01-14 + 3 days = 2011-01-17\n    note: `post` runs 10 calendar days from `Entered()` on 2011-01-04 under `oc@2009-12-01`",
+        "16:41 L4001 only Court or Plaintiff may extend `omega::post`, but `d` is Defendant",
+        "trace Triggered Entered() omega::open -> omega::open",
+        "trace Extended OrderedPost(2011-01-17) omega::open -> omega::open",
+        "obligation omega::locked #0 Lapsed",
+        "obligation omega::motion-only #0 Lapsed",
+        "obligation omega::post #0 Lapsed extended 2011-01-17",
     ],
     "extend: after expiry with `after_expiry` is allowed": [
         "ok: start omega::open",
@@ -43,6 +66,22 @@ expression: table(rows)
         "trace Took Answered(complaint) omega::open -> omega::open via omega::answer",
         "obligation omega::answer #0 Late bearer d by #2 linear",
     ],
+    "extend: discretion after expiry, on motion": [
+        "ok: start omega::open",
+        "trace Triggered Entered() omega::open -> omega::open",
+        "trace Extended OrderedPost(2011-03-01) omega::open -> omega::open",
+        "obligation omega::locked #0 Lapsed",
+        "obligation omega::motion-only #0 Lapsed",
+        "obligation omega::post #0 Open extended 2011-03-01",
+    ],
+    "extend: discretion before expiry has no ceiling": [
+        "ok: start omega::open",
+        "trace Triggered Entered() omega::open -> omega::open",
+        "trace Extended OrderedPost(2011-06-30) omega::open -> omega::open",
+        "obligation omega::locked #0 Lapsed",
+        "obligation omega::motion-only #0 Lapsed",
+        "obligation omega::post #0 Open extended 2011-06-30",
+    ],
     "extend: no version of the deadline governs the order": [
         "14:3 L3007 deadline `omega::stale` has no version governing 2011-01-12",
         "trace Triggered Noticed() omega::open -> omega::open",
@@ -68,6 +107,13 @@ expression: table(rows)
         "trace Triggered Served(complaint) omega::open -> omega::open",
         "obligation omega::answer #0 Breached bearer d linear",
     ],
+    "extend: the refusal past the window is the one reported": [
+        "14:14 L4001 an extension to 2011-01-12 does not extend `omega::post`, already due 2011-01-14\n    note: `post` runs 10 calendar days from `Entered()` on 2011-01-04 under `oc@2009-12-01`",
+        "trace Triggered Entered() omega::open -> omega::open",
+        "obligation omega::locked #0 Lapsed",
+        "obligation omega::motion-only #0 Lapsed",
+        "obligation omega::post #0 Lapsed",
+    ],
     "extend: uncited": [
         "13:3 L4009 obligation `omega::answer` borne by `d`, created by `Served(complaint)` on 2011-01-04, was neither discharged nor transformed by its due date 2011-01-14: at as_of 2011-02-01 it is breached\n    note: `answer` runs 10 calendar days from `Served(complaint)` on 2011-01-04 under `oc@2009-12-01`\n    note: a duty is consumed exactly once: by a timely act through a `within` edge, or by a breach",
         "14:14 L4001 `Ordered(2011-01-20)` transforms an obligation only when it cites its authority\n    note: add the order or rule after the party, e.g. `cite FRCP 6(b)(1)(A)`",
@@ -80,6 +126,13 @@ expression: table(rows)
         "trace Extended Ordered(2011-01-20) omega::open -> omega::open",
         "trace Took Answered(complaint) omega::open -> omega::open via omega::answer",
         "obligation omega::answer #0 Discharged bearer d extended 2011-01-20 by #2 linear",
+    ],
+    "waive: `extend { never }` grants no waiver either": [
+        "14:14 L4001 `ReleasedLocked()` cannot waive `omega::locked`: the deadline grants no `waive` capability\n    note: a limit that grants no `waive` capability cannot be waived: no order has power over it (Bowles v. Russell, 551 U.S. 205 (2007))",
+        "trace Triggered Entered() omega::open -> omega::open",
+        "obligation omega::locked #0 Lapsed",
+        "obligation omega::motion-only #0 Lapsed",
+        "obligation omega::post #0 Lapsed",
     ],
     "waive: a deadline with no `waive` capability admits none": [
         "14:14 L4001 `ReleasedReply()` cannot waive `omega::reply`: the deadline grants no `waive` capability\n    note: a limit that grants no `waive` capability cannot be waived: no order has power over it (Bowles v. Russell, 551 U.S. 205 (2007))",

@@ -37,6 +37,8 @@ fn obligation_options_and_effects_lower() {
 deadline b: 14.days from Served(answer) counted_by c6 { trigger later_of(a) }\n\
 deadline e: 14.days from Served(answer) counted_by c6 { trigger each }\n\
 deadline f: 14.days from Served(answer) counted_by c6 { trigger first, extendable true, extend { by Court, max 1.days } }\n\
+deadline g: 14.days from Served(answer) counted_by c6 { extendable true, extend { by Court, discretion GoodCause }, extend { by Court, discretion ExcusableNeglect, after_expiry } }\n\
+deadline h: 14.days from Served(answer) counted_by c6 { extendable false, extend { never } }\n\
 event Moved(until: Date, option: String) extends a to until\n\
 event Released() waives b\n\
 event Dropped(option: String) removes option\n\
@@ -69,7 +71,15 @@ deadline o: 21.days from Served(complaint) counted_by c6 { waive { after_expiry 
 deadline p: 21.days from Served(complaint) counted_by c6 { extendable false, extend { by Court, max 3.days } }\n\
 deadline q: 21.days from Served(complaint) counted_by c6 { extendable true, extend { by Court, max 3.days }, waive { by Courtt } }\n\
 deadline r: 21.days from Served(complaint) counted_by c6 { trigger x.later_of(a) }\n\
-deadline u: 21.days from Served(complaint) counted_by c6 { trigger later_of(a.b) }",
+deadline u: 21.days from Served(complaint) counted_by c6 { trigger later_of(a.b) }\n\
+deadline v: 21.days from Served(complaint) counted_by c6 { extend { never, by Court } }\n\
+deadline w: 21.days from Served(complaint) counted_by c6 { extend { never }, extend { by Court, discretion GoodCause } }\n\
+deadline x: 21.days from Served(complaint) counted_by c6 { extend { by Court, max 3.days, discretion GoodCause } }\n\
+deadline y: 21.days from Served(complaint) counted_by c6 { extendable true, extend { never } }\n\
+deadline z: 21.days from Served(complaint) counted_by c6 { waive { by Court, discretion GoodCause, never } }\n\
+deadline aa: 21.days from Served(complaint) counted_by c6 { extend { by Court, discretion 3 } }\n\
+deadline ab: 21.days from Served(complaint) counted_by c6 { extend { discretion GoodCause } }\n\
+deadline ac: 21.days from Served(complaint) counted_by c6 { extend { by Court, max } }",
     );
     insta::assert_debug_snapshot!(out);
 }

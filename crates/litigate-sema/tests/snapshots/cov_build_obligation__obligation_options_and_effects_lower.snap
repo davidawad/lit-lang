@@ -103,19 +103,16 @@ expression: found
             ),
             policy: Latest,
             linear: true,
-            extend: Some(
-                Capability {
+            extend: [
+                Bounded {
                     by: "Court",
-                    max_days: Some(
-                        30,
-                    ),
+                    max_days: 30,
                     after_expiry: true,
                 },
-            ),
+            ],
             waive: Some(
                 Capability {
                     by: "Plaintiff",
-                    max_days: None,
                     after_expiry: false,
                 },
             ),
@@ -201,7 +198,7 @@ expression: found
                 "a",
             ),
             linear: false,
-            extend: None,
+            extend: [],
             waive: None,
         },
     ),
@@ -283,7 +280,7 @@ expression: found
             bearer: None,
             policy: Each,
             linear: false,
-            extend: None,
+            extend: [],
             waive: None,
         },
     ),
@@ -367,15 +364,194 @@ expression: found
             bearer: None,
             policy: First,
             linear: false,
-            extend: Some(
-                Capability {
+            extend: [
+                Bounded {
                     by: "Court",
-                    max_days: Some(
-                        1,
-                    ),
+                    max_days: 1,
                     after_expiry: false,
                 },
+            ],
+            waive: None,
+        },
+    ),
+    Deadline(
+        Deadline {
+            meta: Metadata {
+                id: "g",
+                label: "",
+                cite: None,
+                effective: Interval {
+                    from: "2009-12-01",
+                    to: None,
+                    known_at: "2025-01-01",
+                },
+                authority: "FederalRule",
+                relations: [],
+                span: Some(
+                    Span {
+                        file: FileId(
+                            "pkgs/demo/main.lit",
+                        ),
+                        line: 21,
+                        col: 1,
+                        end_line: 21,
+                        end_col: 181,
+                    },
+                ),
+                imported: false,
+            },
+            amount: 14,
+            unit: Calendar,
+            direction: Forward,
+            trigger: Expr {
+                ty: Named(
+                    "Served",
+                ),
+                kind: Call {
+                    callee: "Served",
+                    args: [
+                        Expr {
+                            ty: Named(
+                                "Document",
+                            ),
+                            kind: Literal {
+                                value: Variant(
+                                    "Document::answer",
+                                ),
+                            },
+                            span: Some(
+                                Span {
+                                    file: FileId(
+                                        "pkgs/demo/main.lit",
+                                    ),
+                                    line: 21,
+                                    col: 33,
+                                    end_line: 21,
+                                    end_col: 39,
+                                },
+                            ),
+                        },
+                    ],
+                },
+                span: Some(
+                    Span {
+                        file: FileId(
+                            "pkgs/demo/main.lit",
+                        ),
+                        line: 21,
+                        col: 26,
+                        end_line: 21,
+                        end_col: 40,
+                    },
+                ),
+            },
+            counting: "c6",
+            extendable: Some(
+                true,
             ),
+            extension_authority: None,
+            note: None,
+            bearer: None,
+            policy: First,
+            linear: false,
+            extend: [
+                Discretionary {
+                    by: "Court",
+                    standard: "GoodCause",
+                    window: BeforeExpiry,
+                },
+                Discretionary {
+                    by: "Court",
+                    standard: "ExcusableNeglect",
+                    window: AfterExpiryOnMotion,
+                },
+            ],
+            waive: None,
+        },
+    ),
+    Deadline(
+        Deadline {
+            meta: Metadata {
+                id: "h",
+                label: "",
+                cite: None,
+                effective: Interval {
+                    from: "2009-12-01",
+                    to: None,
+                    known_at: "2025-01-01",
+                },
+                authority: "FederalRule",
+                relations: [],
+                span: Some(
+                    Span {
+                        file: FileId(
+                            "pkgs/demo/main.lit",
+                        ),
+                        line: 22,
+                        col: 1,
+                        end_line: 22,
+                        end_col: 93,
+                    },
+                ),
+                imported: false,
+            },
+            amount: 14,
+            unit: Calendar,
+            direction: Forward,
+            trigger: Expr {
+                ty: Named(
+                    "Served",
+                ),
+                kind: Call {
+                    callee: "Served",
+                    args: [
+                        Expr {
+                            ty: Named(
+                                "Document",
+                            ),
+                            kind: Literal {
+                                value: Variant(
+                                    "Document::answer",
+                                ),
+                            },
+                            span: Some(
+                                Span {
+                                    file: FileId(
+                                        "pkgs/demo/main.lit",
+                                    ),
+                                    line: 22,
+                                    col: 33,
+                                    end_line: 22,
+                                    end_col: 39,
+                                },
+                            ),
+                        },
+                    ],
+                },
+                span: Some(
+                    Span {
+                        file: FileId(
+                            "pkgs/demo/main.lit",
+                        ),
+                        line: 22,
+                        col: 26,
+                        end_line: 22,
+                        end_col: 40,
+                    },
+                ),
+            },
+            counting: "c6",
+            extendable: Some(
+                false,
+            ),
+            extension_authority: None,
+            note: None,
+            bearer: None,
+            policy: First,
+            linear: false,
+            extend: [
+                NonExtendable,
+            ],
             waive: None,
         },
     ),

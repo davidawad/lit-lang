@@ -30,6 +30,11 @@ event OrderedStale(until: Date) extends stale to until
 event Released() waives answer
 event ReleasedReply() waives reply
 event ReleasedLate() waives late
+event Entered()
+event OrderedPost(until: Date) extends post to until
+event OrderedLocked(until: Date) extends locked to until
+event OrderedMotion(until: Date) extends motion-only to until
+event ReleasedLocked() waives locked
 event Struck(option: String) removes option
 event Elected(option: String) elects option
 
@@ -56,6 +61,16 @@ rule duty answer-duty cite FRCP 12(a)
 }
 
 deadline reply: 5.days from Noticed() counted_by oc { trigger latest }
+
+deadline post: 10.days from Entered() counted_by oc {
+  extend { by Court, discretion GoodCause }
+  extend { by Court, discretion ExcusableNeglect, after_expiry }
+  extend { by Plaintiff, max 3.days }
+}
+deadline locked: 10.days from Entered() counted_by oc { extend { never } }
+deadline motion-only: 10.days from Entered() counted_by oc {
+  extend { by Court, discretion ExcusableNeglect, after_expiry }
+}
 
 state open: \"Open\"
 {
@@ -130,6 +145,7 @@ fn table(rows: &[(&str, &str, &[&str])]) -> BTreeMap<String, Vec<String>> {
 }
 
 const SERVED_D: &str = "2011-01-04 Served(complaint) on d";
+const ENTERED: &str = "2011-01-04 Entered() by c";
 
 #[test]
 #[allow(clippy::too_many_lines)] // one table row per case
@@ -339,6 +355,61 @@ fn extensions_and_waivers() {
                 "2011-01-04 Noticed() by p",
                 "2011-01-12 OrderedStale(2011-01-20) by c cite FRCP 6(b)",
             ],
+        ),
+        (
+            "extend: discretion before expiry has no ceiling",
+            "2011-02-01",
+            &[
+                ENTERED,
+                "2011-01-10 OrderedPost(2011-06-30) by c cite FRCP 6(b)(1)(A)",
+            ],
+        ),
+        (
+            "extend: discretion after expiry, on motion",
+            "2011-02-01",
+            &[
+                ENTERED,
+                "2011-01-20 OrderedPost(2011-03-01) by c cite FRCP 6(b)(1)(B)",
+            ],
+        ),
+        (
+            "extend: a stipulated cap binds only its own grant",
+            "2011-02-01",
+            &[
+                ENTERED,
+                "2011-01-10 OrderedPost(2011-01-17) by p cite L.R. 6.1",
+                "2011-01-11 OrderedPost(2011-01-30) by p cite L.R. 6.1",
+                "2011-01-12 OrderedPost(2011-01-30) by d cite L.R. 6.1",
+            ],
+        ),
+        (
+            "extend: the refusal past the window is the one reported",
+            "2011-02-01",
+            &[
+                ENTERED,
+                "2011-01-10 OrderedPost(2011-01-12) by c cite FRCP 6(b)(1)(A)",
+            ],
+        ),
+        (
+            "extend: a motion-only grant does not reach an unexpired period",
+            "2011-02-01",
+            &[
+                ENTERED,
+                "2011-01-10 OrderedMotion(2011-01-30) by c cite FRCP 6(b)(1)(B)",
+            ],
+        ),
+        (
+            "extend: `never` admits no extension",
+            "2011-02-01",
+            &[
+                ENTERED,
+                "2011-01-10 OrderedLocked(2011-01-30) by c cite FRCP 6(b)(1)(A)",
+            ],
+        ),
+        (
+            "waive: `extend { never }` grants no waiver either",
+            "2011-02-01",
+            &[ENTERED, "2011-01-10 ReleasedLocked() by c cite FRCP 6(b)"],
         ),
         (
             "waive: releases the instance, so nothing is breached",

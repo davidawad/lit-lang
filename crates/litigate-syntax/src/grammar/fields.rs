@@ -71,7 +71,9 @@ pub(crate) const DEADLINE_DECL_OPTS: &[Spec] = &[
 pub(crate) const CAPABILITY_FIELDS: &[Spec] = &[
     (KwBy, Some(reference)),
     (KwMax, Some(duration)),
+    (KwDiscretion, Some(reference)),
     (KwAfterExpiry, None),
+    (KwNever, None),
 ];
 
 /// The effect clause of an `event` declaration (SPEC §5.2).
@@ -222,7 +224,8 @@ fn probabilities(p: &mut Parser<'_>) -> bool {
     record(p, Key::Ident, prob_value)
 }
 
-/// `{ by Actor, max Duration, after_expiry }`.
+/// `{ by Actor, max Duration | discretion Standard, after_expiry }` or
+/// `{ never }`.
 fn capability(p: &mut Parser<'_>) -> bool {
     field_list(p, CAPABILITY_FIELDS)
 }

@@ -131,8 +131,8 @@ impl Cx<'_, '_> {
             _ => Direction::Forward,
         };
         let trigger = self.pattern(trigger);
-        let o = self.once(opts);
-        let obligation = self.obligation(name, &o, rule);
+        let o = self.once_except(opts, "extend");
+        let obligation = self.obligation(name, opts, &o, rule);
         let (amount, unit) = period?;
         Some(Deadline {
             meta,

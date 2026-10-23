@@ -1,10 +1,13 @@
 //! The obligation a deadline creates and the effects an event declares
-//! (SPEC §5.2, §5.3): bearer, trigger policy, linearity, the `extend` and
-//! `waive` capabilities, and `removes`/`extends`/`waives` on an event.
-use super::cx::{first_expr, first_ref, nested, Cx};
+//! (SPEC §5.2, §5.3): bearer, trigger policy, linearity, the `extend`
+//! grants and the `waive` capability, and `removes`/`extends`/`waives` on
+//! an event.
+use super::cx::{first_expr, first_ref, flag, nested, Cx};
 use crate::db::parse::tree::{ExprKind, Field, Item, ItemKind, Name, RefPath};
 use crate::db::span::Report;
-use crate::hir::{Capability, DayUnit, EventEffect, TriggerPolicy, Type};
+use crate::hir::{
+    Capability, DayUnit, EventEffect, Extension, ExtensionWindow, TriggerPolicy, Type,
+};
 use crate::resolve::sig::ValueKind;
 use litigate_base::DiagnosticCode as C;
 use std::collections::BTreeMap;
@@ -14,7 +17,7 @@ pub(super) struct Obligation {
     pub bearer: Option<String>,
     pub policy: TriggerPolicy,
     pub linear: bool,
-    pub extend: Option<Capability>,
+    pub extend: Vec<Extension>,
     pub waive: Option<Capability>,
 }
 
@@ -23,10 +26,12 @@ const EFFECTS: [&str; 4] = ["removes", "elects", "extends", "waives"];
 
 impl Cx<'_, '_> {
     /// `bearer`, `trigger`, `extend`, and `waive` of deadline `name`
-    /// (options `o`, declared in `rule`, if any).
+    /// (options `opts`, indexed as `o` but for the repeatable `extend`;
+    /// declared in `rule`, if any).
     pub(super) fn obligation(
         &mut self,
         name: &Name,
+        opts: &[Field],
         o: &BTreeMap<&str, &Field>,
         rule: Option<&Item>,
     ) -> Obligation {
@@ -37,21 +42,35 @@ impl Cx<'_, '_> {
             .unwrap_or_default();
         let linear =
             rule.is_some_and(|r| matches!(&r.kind, ItemKind::Rule(k, ..) if k.text == "duty"));
-        let extend = o.get("extend").and_then(|f| self.capability(f, true));
-        let waive = o.get("waive").and_then(|f| self.capability(f, false));
-        if let (Some(f), Some(ExprKind::Bool(false))) = (
-            o.get("extend"),
-            o.get("extendable")
-                .and_then(|f| first_expr(f))
-                .map(|e| &e.kind),
-        ) {
+        let grants: Vec<&Field> = opts.iter().filter(|f| f.key.text == "extend").collect();
+        let extend: Vec<Extension> = grants.iter().filter_map(|f| self.extension(f)).collect();
+        let waive = o.get("waive").and_then(|f| self.waiver(f));
+        let never = extend.contains(&Extension::NonExtendable);
+        if never && grants.len() > 1 {
+            self.report(Report::new(
+                C::InvalidField,
+                name.range,
+                format!(
+                    "deadline `{}` is `extend {{ never }}` and grants an extension: a period that may not be extended has no other `extend`",
+                    name.text
+                ),
+            ));
+        }
+        let extendable = flag(o.get("extendable"));
+        let clash = grants
+            .iter()
+            .zip(&extend)
+            .find(|(_, x)| extendable.is_some_and(|b| x.by().is_some() != b));
+        if let Some((f, x)) = clash {
+            let what = if x.by().is_some() {
+                "`extendable false` but grants an `extend` capability"
+            } else {
+                "`extendable true` but `extend { never }`"
+            };
             self.report(Report::new(
                 C::InvalidField,
                 f.key.range,
-                format!(
-                    "deadline `{}` is `extendable false` but grants an `extend` capability",
-                    name.text
-                ),
+                format!("deadline `{}` is {what}", name.text),
             ));
         }
         Obligation {
@@ -111,53 +130,98 @@ impl Cx<'_, '_> {
             .map(TriggerPolicy::LaterOf)
     }
 
-    /// `{ by A, max N.days, after_expiry }`; `max` is required for an
-    /// extension (it is bounded) and not allowed on a waiver.
-    fn capability(&mut self, f: &Field, extend: bool) -> Option<Capability> {
+    /// One `extend` grant: `{ never }`, `{ by A, max N.days [,
+    /// after_expiry] }`, or `{ by A, discretion S [, after_expiry] }`. Its
+    /// bound is required: a numeric cap, a cause standard, or `never`.
+    fn extension(&mut self, f: &Field) -> Option<Extension> {
         let fields = self.once(nested(f));
-        let max_days = match (fields.get("max"), extend) {
-            (Some(m), false) => {
-                self.not_allowed(m, "on a `waive` capability: a waiver has no extent");
-                None
+        if fields.contains_key("never") {
+            let others: Vec<&Field> = fields
+                .values()
+                .copied()
+                .filter(|o| o.key.text != "never")
+                .collect();
+            for other in &others {
+                self.not_allowed(
+                    other,
+                    "with `never`: a period that may not be extended has no extender or bound",
+                );
             }
-            (Some(m), true) => first_expr(m).and_then(|e| {
-                let (n, unit) = self.days(e)?;
-                if unit != DayUnit::Calendar {
-                    self.report(Report::new(
-                        C::InvalidCounting,
-                        e.range,
-                        "an extension bound counts calendar days, such as `30.days`",
-                    ));
-                    return None;
-                }
-                Some(n)
-            }),
-            (None, true) => {
-                self.report(Report::new(
-                    C::InvalidField,
-                    f.key.range,
-                    "an `extend` capability is bounded: give `max N.days`",
-                ));
-                None
-            }
-            (None, false) => None,
+            return others.is_empty().then_some(Extension::NonExtendable);
+        }
+        if let (Some(m), true) = (fields.get("max"), fields.contains_key("discretion")) {
+            self.not_allowed(
+                m,
+                "with `discretion`: a discretionary extension has no numeric ceiling",
+            );
+            return None;
+        }
+        let by = self.by(f, &fields);
+        let after_expiry = fields.contains_key("after_expiry");
+        if let Some(d) = fields.get("discretion") {
+            let standard = first_ref(Some(d))?.display();
+            let window = if after_expiry {
+                ExtensionWindow::AfterExpiryOnMotion
+            } else {
+                ExtensionWindow::BeforeExpiry
+            };
+            return Some(Extension::Discretionary {
+                by: by?,
+                standard,
+                window,
+            });
+        }
+        let Some(m) = fields.get("max") else {
+            self.report(Report::new(
+                C::InvalidField,
+                f.key.range,
+                "an `extend` capability states its bound: `max N.days`, `discretion <Standard>`, or `never`",
+            ));
+            return None;
         };
-        let Some(by) = first_ref(fields.get("by")).map(|r| self.actor(r)) else {
+        let e = first_expr(m)?;
+        let (n, unit) = self.days(e)?;
+        if unit != DayUnit::Calendar {
+            self.report(Report::new(
+                C::InvalidCounting,
+                e.range,
+                "an extension bound counts calendar days, such as `30.days`",
+            ));
+            return None;
+        }
+        Some(Extension::Bounded {
+            by: by?,
+            max_days: n,
+            after_expiry,
+        })
+    }
+
+    /// The `waive` capability `{ by A [, after_expiry] }`: a waiver has no
+    /// extent, so no bound.
+    fn waiver(&mut self, f: &Field) -> Option<Capability> {
+        let fields = self.once(nested(f));
+        for bound in ["max", "discretion", "never"] {
+            if let Some(m) = fields.get(bound) {
+                self.not_allowed(m, "on a `waive` capability: a waiver has no extent");
+            }
+        }
+        Some(Capability {
+            by: self.by(f, &fields)?,
+            after_expiry: fields.contains_key("after_expiry"),
+        })
+    }
+
+    /// The `by A` of capability `f`, reported when missing.
+    fn by(&mut self, f: &Field, fields: &BTreeMap<&str, &Field>) -> Option<String> {
+        let by = first_ref(fields.get("by")).map(|r| self.actor(r));
+        if by.is_none() {
             self.report(Report::new(
                 C::InvalidField,
                 f.key.range,
                 format!("`{}` names the actor holding it: `by <Actor>`", f.key.text),
             ));
-            return None;
-        };
-        if extend && max_days.is_none() {
-            return None;
         }
-        Some(Capability {
-            by,
-            max_days,
-            after_expiry: fields.contains_key("after_expiry"),
-        })
+        by
     }
 
     /// The effect clause of event `name` with resolved `params`.

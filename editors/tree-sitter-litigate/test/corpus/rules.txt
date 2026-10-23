@@ -274,6 +274,8 @@ deadline answer-period: 21.days from Served(complaint) counted_by frcp6 {
   bearer Defendant
   trigger later_of(original)
   extend { by Court, max 30.days, after_expiry }
+  extend { by Court, discretion GoodCause }
+  extend { never }
   waive { by Court }
   note "n"
 }
@@ -307,6 +309,10 @@ deadline answer-period: 21.days from Served(complaint) counted_by frcp6 {
         (capability
           (identifier)
           (duration))
+        (capability
+          (identifier)
+          (identifier))
+        (capability)
         (capability
           (identifier))
         (deadline_opt

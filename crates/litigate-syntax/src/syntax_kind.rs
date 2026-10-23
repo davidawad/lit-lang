@@ -130,7 +130,7 @@ syntax_kinds! {
         KwUnless = "unless", KwOtherwise = "otherwise", KwGiven = "given",
         KwExpect = "expect", KwTrue = "true", KwFalse = "false", KwUnit = "unit",
         KwUrl = "url", KwEdition = "edition", KwBearer = "bearer", KwTrigger = "trigger",
-        KwExtend = "extend", KwWaive = "waive", KwAfterExpiry = "after_expiry",
+        KwExtend = "extend", KwWaive = "waive", KwAfterExpiry = "after_expiry", KwNever = "never",
         KwRemoves = "removes", KwElects = "elects", KwExtends = "extends",
         KwWaives = "waives", KwTo = "to",
     }

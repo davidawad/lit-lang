@@ -154,10 +154,12 @@ pub fn atoms<'e>(exprs: &[&'e Expr]) -> Vec<&'e Expr> {
 /// Most atoms a satisfiability check enumerates (2^n assignments).
 pub const MAX_ATOMS: usize = 16;
 
-/// Whether all of `exprs` can be true together for some assignment of
-/// their atoms; `None` when there are more than [`MAX_ATOMS`] atoms.
-#[must_use]
-pub fn jointly_satisfiable(exprs: &[&Expr]) -> Option<bool> {
+/// Whether some assignment of the atoms of `exprs` satisfies `holds`;
+/// `None` when there are more than [`MAX_ATOMS`] atoms.
+fn exists(
+    exprs: &[&Expr],
+    holds: impl Fn(&mut dyn FnMut(&Expr) -> Option<bool>) -> bool,
+) -> Option<bool> {
     let atoms = atoms(exprs);
     if atoms.len() > MAX_ATOMS {
         return None;
@@ -169,9 +171,28 @@ pub fn jointly_satisfiable(exprs: &[&Expr]) -> Option<bool> {
                 .position(|x| same(x, a))
                 .map(|i| bits & (1 << i) != 0)
         };
-        exprs.iter().all(|e| eval(e, &mut lookup) == Some(true))
+        holds(&mut lookup)
     });
     Some(found)
+}
+
+/// Whether all of `exprs` can be true together for some assignment of
+/// their atoms; `None` when there are more than [`MAX_ATOMS`] atoms.
+#[must_use]
+pub fn jointly_satisfiable(exprs: &[&Expr]) -> Option<bool> {
+    exists(exprs, |lookup| {
+        exprs.iter().all(|e| eval(e, lookup) == Some(true))
+    })
+}
+
+/// Whether `a` entails `b`: no assignment of their atoms makes `a` true
+/// and `b` false. `None` when there are more than [`MAX_ATOMS`] atoms.
+#[must_use]
+pub fn entails(a: &Expr, b: &Expr) -> Option<bool> {
+    exists(&[a, b], |lookup| {
+        eval(a, lookup) == Some(true) && eval(b, lookup) == Some(false)
+    })
+    .map(|counterexample| !counterexample)
 }
 
 /// The first sub-expression of `e` that is not a connective, a boolean

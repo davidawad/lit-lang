@@ -4,6 +4,7 @@
 use super::interval::Window;
 use super::version::{Version, VersionSet};
 use crate::hir::{self, Declaration, Metadata, Relation, RuleKind};
+use crate::precedence::Lattice;
 use litigate_base::{Applicability, Diagnostic, DiagnosticCode, FileId, Fix, Note, Span};
 use std::collections::BTreeMap;
 
@@ -110,6 +111,7 @@ pub struct World<'a> {
     pub decls: Vec<Decl<'a>>,
     /// Authority order links.
     pub ranks: Vec<Rank>,
+    lattice: Lattice,
     by_key: BTreeMap<Key, Vec<usize>>,
     incoming: BTreeMap<Key, Vec<Incoming<'a>>>,
     exceptions: BTreeMap<Key, Vec<(usize, &'a hir::Exception)>>,
@@ -240,6 +242,13 @@ impl<'a> World<'a> {
                 });
             }
         }
+        self.lattice = Lattice::new(&self.ranks);
+    }
+
+    /// The authority lattice of every `authority` chain added so far.
+    #[must_use]
+    pub fn lattice(&self) -> &Lattice {
+        &self.lattice
     }
 
     /// A world over compiled packages (no source locations).
@@ -250,6 +259,64 @@ impl<'a> World<'a> {
             world.add(PackInfo::of(&p.manifest), &p.modules);
         }
         world
+    }
+
+    /// A world over `roots` (distinct) and their transitive dependencies found by
+    /// name among `loaded`, plus `core`, whose authority lattice every
+    /// package shares (SPEC §4.3, §5.5): the law one package sees. A
+    /// package that depends on none of `roots` is not in it, so its claims
+    /// meet theirs only where a matter uses both.
+    #[must_use]
+    pub fn closure(roots: &[&'a hir::Package], loaded: &[&'a hir::Package]) -> Self {
+        Self::from_packages(&Self::closure_packages(roots, loaded))
+    }
+
+    /// The packages of [`World::closure`], in its pack order.
+    #[must_use]
+    pub fn closure_packages(
+        roots: &[&'a hir::Package],
+        loaded: &[&'a hir::Package],
+    ) -> Vec<&'a hir::Package> {
+        let mut out: Vec<&'a hir::Package> = roots.to_vec();
+        let mut i = 0;
+        while let Some(p) = out.get(i).copied() {
+            i += 1;
+            let deps = p.manifest.dependencies.keys().map(String::as_str);
+            for name in deps.chain(["core"]) {
+                for q in loaded.iter().filter(|q| q.manifest.name == name) {
+                    if !out.iter().any(|o| std::ptr::eq(*o, *q)) {
+                        out.push(q);
+                    }
+                }
+            }
+        }
+        out
+    }
+
+    /// Adds the `authority` chains of `modules` (package `info`) and no
+    /// declarations: a vocabulary package's lattice for a world that
+    /// replays others.
+    pub fn add_authorities(
+        &mut self,
+        info: PackInfo,
+        modules: impl IntoIterator<Item = &'a hir::Module>,
+    ) {
+        let pack = self.packs.len();
+        self.packs.push(info);
+        for module in modules {
+            for decl in &module.declarations {
+                if let Declaration::Authority(a) = decl {
+                    if let Some(below) = a.outranks.first() {
+                        self.ranks.push(Rank {
+                            above: a.name.clone(),
+                            below: below.clone(),
+                            pack,
+                        });
+                    }
+                }
+            }
+        }
+        self.lattice = Lattice::new(&self.ranks);
     }
 
     /// Relations that name `key`, in declaration order.

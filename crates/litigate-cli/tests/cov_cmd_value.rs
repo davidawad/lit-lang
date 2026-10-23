@@ -67,7 +67,16 @@ fn a_deadline_names_the_rule_declaring_it_among_others() {
     let run = in_fixture(&["explain-value", "cases/cov.case", "cov-pack::answer-period"]);
     assert_eq!(run.code, 0, "{}", run.stdout);
     let result = &run.json["result"];
-    assert_eq!(result["value"], "2025-03-26");
+    // `reply-period notwithstanding answer-period` governs it (SPEC §5.5):
+    // 14 days, not answer-period's own 21, and no version of its own is
+    // the selected one.
+    assert_eq!(result["value"], "2025-03-19");
+    assert_eq!(result["steps"][0]["rule"], "reply-period@2009-12-01");
+    assert!(result["versions"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .all(|v| v["selected"] == false));
     assert_eq!(result["steps"][1]["rule"], "answer-duty");
     assert_eq!(result["overrides"][0]["id"], "reply-period");
 }
@@ -88,7 +97,8 @@ fn an_edge_without_a_deadline_by_package_name() {
 fn an_edge_with_a_deadline_by_pack_id() {
     let run = in_fixture(&["explain-value", "cases/cov.case", "cov-pack::answer"]);
     assert_eq!(run.code, 0, "{}", run.stdout);
-    assert_eq!(run.json["result"]["value"]["due"], json!("2025-03-26"));
+    // `within answer-period` runs under the claimant that displaces it.
+    assert_eq!(run.json["result"]["value"]["due"], json!("2025-03-19"));
 }
 
 #[test]

@@ -7,7 +7,6 @@
 //! two conditions true together) or carry distinct priorities, larger
 //! winning (`exceptions-ordered`, L3005).
 use crate::hir::{Declaration, Exception, Expr};
-use crate::temporal::activity::active;
 use crate::temporal::condition::{eval, jointly_satisfiable};
 use crate::temporal::interval::Window;
 use crate::temporal::world::{error, span_of, DiagnosticExt, Key, Locate, World};
@@ -58,10 +57,9 @@ pub fn conclude<'a>(
     date: &str,
     atom: &mut dyn FnMut(&Expr) -> Option<bool>,
 ) -> Result<Conclusion<'a>, String> {
-    let set = world.versions(key);
-    let v = active(world, key, &set, date, None)
+    let w = super::select(world, key, date, None)
         .map_err(|_| format!("`{}` is not in force on {date}", key.name))?;
-    Ok(match node(world, v.decl, date, atom, &mut Vec::new())? {
+    Ok(match node(world, w, date, atom, &mut Vec::new())? {
         Res::NotApplicable => Conclusion::NotApplicable,
         Res::Undercut(by) | Res::Cut(by) => Conclusion::Undercut { by },
         Res::Value(value, by) => Conclusion::Value { value, by },

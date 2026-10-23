@@ -2,8 +2,10 @@
 //! across an amendment (SPEC §5.4, DESIGN §4.4; FRCP 86(a) is written this
 //! way in the stdlib, never in compiler code).
 //!
-//! By default every event is governed by the version in force on its date.
-//! When that version took effect after the matter's first event (the matter
+//! By default every event is governed by the declaration the precedence
+//! selection ([`crate::precedence::select`]) picks on its date: the version
+//! in force, or the claimant that displaces it. When that version took
+//! effect after the matter's first event (the matter
 //! was pending when it did) and a transition amends that version, the
 //! transition's arms decide instead: the first `unless` whose condition
 //! holds on the history up to the event selects its version, else
@@ -14,6 +16,7 @@ use super::activity::Inactive;
 use super::condition::{eval, first_foreign, has_event, matches};
 use super::world::{error, span_of, DiagnosticExt, Key, Locate, World};
 use crate::hir::{Declaration, Expr, Transition, TransitionArm};
+use crate::precedence::select::{select, Unselected};
 use litigate_base::{Diagnostic, DiagnosticCode as C};
 
 /// One dated event of a matter (a complete event constructor call).
@@ -39,6 +42,8 @@ pub struct Governing {
 pub enum Ungoverned {
     /// No active version on the event's date (L3007).
     Inactive(Inactive),
+    /// Claimants no relation or canon orders on the event's date (L3003).
+    Unresolved(Vec<(usize, usize)>),
     /// A transition arm could not be evaluated or names no version (L3008).
     Transition(String),
 }
@@ -49,11 +54,12 @@ pub fn transition_for(world: &World<'_>, key: &Key, from: &str) -> Option<usize>
     world.transition_for(key, from)
 }
 
-/// The version of `key` governing `events[at]` in a matter whose events
-/// are `events` (sorted by date).
+/// The version governing `key` for `events[at]` in a matter whose events
+/// are `events` (sorted by date): the selected declaration on the event's
+/// date, through the transition amending it if the matter was pending.
 ///
 /// # Errors
-/// [`Ungoverned`] when no version is active or a transition fails.
+/// [`Ungoverned`] when nothing is selected or a transition fails.
 pub fn governing(
     world: &World<'_>,
     key: &Key,
@@ -61,19 +67,26 @@ pub fn governing(
     at: usize,
     known_at: Option<&str>,
 ) -> Result<Governing, Ungoverned> {
-    let set = world.versions(key);
     let event = events
         .get(at)
         .ok_or_else(|| Ungoverned::Transition(format!("no event #{at}")))?;
-    let version = super::select(world, key, event.date, known_at).map_err(Ungoverned::Inactive)?;
-    let from = &world.decls[version].meta.effective.from;
+    let w = select(world, key, event.date, known_at).map_err(|e| match e {
+        Unselected::Inactive(why) => Ungoverned::Inactive(why),
+        Unselected::Unresolved(pairs) => Ungoverned::Unresolved(pairs),
+    })?;
+    let key = &world.key(w);
+    let set = world.versions(key);
+    let from = &world.decls[w].meta.effective.from;
     let pending = events
         .iter()
         .map(|e| e.date)
         .min()
         .is_some_and(|first| first < from.as_str());
     let Some((ti, t)) = pending.then(|| world.transition(key, from)).flatten() else {
-        return Ok(Governing { version, via: None });
+        return Ok(Governing {
+            version: w,
+            via: None,
+        });
     };
     let history: Vec<&Expr> = events
         .iter()

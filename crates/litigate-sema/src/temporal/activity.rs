@@ -9,10 +9,15 @@
 //! version of B or a third declaration — says `revives B`, which ends
 //! every open suspension at its start (Scalia & Garner, *Reading Law*
 //! §§ 13, 27-29, 55-57).
+//!
+//! Both relations displace law, so a declaration whose authority neither
+//! equals nor outranks the versions it acts on, and that they do not
+//! delegate to, has no effect here (it is L3004, SPEC §5.5 step 3).
 use super::interval::Window;
 use super::version::{Miss, Version};
-use super::world::{Key, World};
+use super::world::{Incoming, Key, World};
 use crate::hir::Relation;
+use crate::precedence::delegation::licensed_over;
 
 /// A window during which `by` keeps (some versions of) a declaration out of
 /// force.
@@ -59,15 +64,21 @@ fn is_revives(r: &Relation) -> bool {
     matches!(r, Relation::Revives(_))
 }
 
+/// Whether the relation `r` on `key` is recorded by `known_at` and
+/// licensed over the versions it acts on.
+fn effective(world: &World<'_>, key: &Key, r: &Incoming<'_>, known_at: Option<&str>) -> bool {
+    recorded(world, r.by, known_at) && licensed_over(world, r.by, key, r.version.as_deref())
+}
+
 /// Dates from which `key` is revived: the end of every superseding window
 /// that declares `revives`, and the start of every other `revives` of it,
-/// among declarations recorded by `known_at`.
+/// among licensed declarations recorded by `known_at`.
 #[must_use]
 pub fn revival_points(world: &World<'_>, key: &Key, known_at: Option<&str>) -> Vec<String> {
     let mut out: Vec<String> = world
         .incoming(key)
         .iter()
-        .filter(|r| is_revives(r.relation) && recorded(world, r.by, known_at))
+        .filter(|r| is_revives(r.relation) && effective(world, key, r, known_at))
         .filter_map(|r| {
             let w = Window::of(&world.decls[r.by].meta.effective);
             if says(world, key, r.by, is_supersedes) {
@@ -82,8 +93,8 @@ pub fn revival_points(world: &World<'_>, key: &Key, known_at: Option<&str>) -> V
     out
 }
 
-/// Every suspension of `key` declared by declarations recorded by
-/// `known_at`.
+/// Every suspension of `key` declared by licensed declarations recorded
+/// by `known_at`.
 #[must_use]
 pub fn suspensions(world: &World<'_>, key: &Key, known_at: Option<&str>) -> Vec<Suspension> {
     let incoming = world.incoming(key);
@@ -94,7 +105,7 @@ pub fn suspensions(world: &World<'_>, key: &Key, known_at: Option<&str>) -> Vec<
     let mut out = Vec::new();
     for r in incoming
         .iter()
-        .filter(|r| is_supersedes(r.relation) && recorded(world, r.by, known_at))
+        .filter(|r| is_supersedes(r.relation) && effective(world, key, r, known_at))
     {
         let i = r.by;
         if world.key(i) == *key && r.version.is_none() {

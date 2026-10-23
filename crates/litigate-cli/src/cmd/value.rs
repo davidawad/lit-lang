@@ -53,7 +53,7 @@ impl Trace<'_> {
             hir::Direction::Backward => "before",
         };
         let mut steps = vec![step(
-            format!("{d}@{}", v.meta.effective.from),
+            format!("{}@{}", v.meta.id, v.meta.effective.from),
             cite,
             format!(
                 "{} {} day(s) {direction} {}, counted by {}; in force [{}, {})",
@@ -122,13 +122,23 @@ impl Trace<'_> {
         let versions: Vec<&hir::Deadline> = hirx::deadlines(self.pkg, d).collect();
         let qualified = format!("{}::{d}", self.pkg.manifest.pack_id);
         let scheduled = self.schedule.iter().find(|s| s.deadline == qualified);
-        // The version that counted the scheduled due date, else the one
+        // The declaration that counted the scheduled due date (a version
+        // of `d`, or a claimant displacing it, SPEC §5.5), else the version
         // selected at the matter's dates.
         let chosen = match scheduled {
             Some(s) => versions
                 .iter()
-                .find(|v| format!("{}@{}", v.meta.id, v.meta.effective.from) == s.version)
-                .copied(),
+                .copied()
+                .chain(
+                    self.all
+                        .iter()
+                        .flat_map(|p| hirx::declarations(p))
+                        .filter_map(|x| match x {
+                            hir::Declaration::Deadline(v) => Some(v),
+                            _ => None,
+                        }),
+                )
+                .find(|v| format!("{}@{}", v.meta.id, v.meta.effective.from) == s.version),
             None => hirx::selected(self.all, self.pkg, self.as_of, self.known_at)
                 .into_iter()
                 .find_map(|x| match x {

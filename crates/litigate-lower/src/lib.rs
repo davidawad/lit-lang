@@ -50,6 +50,7 @@ use diag::Sink;
 use litgraph::cite::SourceCorpus;
 use litigate_base::{Diagnostic, DiagnosticCode};
 use litigate_sema::hir;
+use litigate_sema::temporal::World;
 use select::Selection;
 use serde::Serialize;
 
@@ -154,17 +155,34 @@ impl<'a> Lowerer<'a> {
         self
     }
 
-    /// One build at `options`' dates; `as_of` defaults to `date` and
-    /// `known_at` to `corpus` (`None`: the latest corpus).
-    fn build(&self, date: &str, corpus: Option<&str>, options: &Options) -> Build<'_, 'a> {
+    /// One build at `options`' dates (`as_of` defaulting to `date`,
+    /// `known_at` to `corpus`; `None`: the latest corpus) whose version
+    /// selection sees the packages named `roots` and their dependencies:
+    /// the law those packages see (SPEC §5.5), so a downstream package's
+    /// claims never change an upstream pack. A links package composes
+    /// every loaded pack, so it sees them all.
+    fn build(
+        &self,
+        roots: &[&str],
+        date: &str,
+        corpus: Option<&str>,
+        options: &Options,
+    ) -> Build<'_, 'a> {
         let as_of = options.as_of.clone().unwrap_or_else(|| date.to_owned());
         let known = options
             .known_at
             .clone()
             .or_else(|| corpus.map(str::to_owned));
+        let roots: Vec<&'a hir::Package> = self
+            .packages
+            .iter()
+            .copied()
+            .filter(|p| roots.contains(&p.manifest.name.as_str()))
+            .collect();
+        let world = World::closure(&roots, &self.packages);
         Build {
             packages: &self.packages,
-            selection: Selection::new(&self.packages, as_of, known),
+            selection: Selection::new(world, as_of, known),
             corpus: self.corpus,
         }
     }
@@ -181,8 +199,16 @@ impl<'a> Lowerer<'a> {
         pkg: &hir::Package,
         options: &Options,
     ) -> Result<LoweredPackage, Vec<Diagnostic>> {
+        let roots: Vec<&str> = if pkg.manifest.links {
+            self.packages
+                .iter()
+                .map(|p| p.manifest.name.as_str())
+                .collect()
+        } else {
+            vec![&pkg.manifest.name]
+        };
         let corpus = &pkg.manifest.in_force.known_at;
-        let build = self.build(corpus, Some(corpus), options);
+        let build = self.build(&roots, corpus, Some(corpus), options);
         let mut sink = Sink::new(&manifest_file(pkg));
         let lowered = if pkg.manifest.links {
             let (file, source_map) = links::links(&build, pkg, &mut sink);
@@ -221,7 +247,7 @@ impl<'a> Lowerer<'a> {
         counting: &hir::Counting,
     ) -> Result<Option<ClockLibrary>, Vec<Diagnostic>> {
         let from = &counting.meta.effective.from;
-        let build = self.build(from, None, &Options::default());
+        let build = self.build(&[&pkg.manifest.name], from, None, &Options::default());
         let mut sink = Sink::new(&manifest_file(pkg));
         let decls = pack::emitted(&build, pkg, &mut Sink::new(""));
         let id = Some(counting.meta.id.as_str());
@@ -238,7 +264,13 @@ impl<'a> Lowerer<'a> {
     /// Every diagnostic, sorted: L4007 for an invalid `analysis`, L6003 for
     /// an engine expression that does not parse.
     pub fn case(&self, case: &hir::Case, file: &str) -> Result<LoweredCase, Vec<Diagnostic>> {
-        let build = self.build(&case.as_of, case.known_at.as_deref(), &Options::default());
+        let uses: Vec<&str> = case.uses.iter().map(|u| u.name.as_str()).collect();
+        let build = self.build(
+            &uses,
+            &case.as_of,
+            case.known_at.as_deref(),
+            &Options::default(),
+        );
         let mut sink = Sink::new(file);
         match case::case(&build, case, &mut sink) {
             Some((scenario, source_map)) => sink.finish(LoweredCase {

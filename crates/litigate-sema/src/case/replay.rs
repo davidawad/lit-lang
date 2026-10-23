@@ -168,7 +168,7 @@ impl<'c, 'g> Cx<'c, 'g> {
         let known_at = self.case.known_at.as_deref();
         let got = self.graph.governing(posture, &events, k, known_at);
         match got {
-            Ok(Declaration::Node(n)) => Some(n),
+            Ok((q, Declaration::Node(n))) if Graph::key(&q) == Graph::key(posture) => Some(n),
             Ok(_) | Err(Ungoverned::Inactive(_)) => {
                 let d = error(
                     C::NoVersionInForce,
@@ -178,6 +178,19 @@ impl<'c, 'g> Cx<'c, 'g> {
                         self.sorted[k].1.date
                     ),
                 );
+                self.out.push(d);
+                None
+            }
+            Err(Ungoverned::Unresolved(pairs)) => {
+                let d = error(
+                    C::UnresolvedPrecedence,
+                    self.at(k, |e| e.date.as_ref()),
+                    format!(
+                        "no single declaration governs stage `{posture}` on {}",
+                        self.sorted[k].1.date
+                    ),
+                )
+                .note(self.graph.unordered(&pairs));
                 self.out.push(d);
                 None
             }
@@ -395,7 +408,7 @@ impl<'c, 'g> Cx<'c, 'g> {
             let events = self.events(pack);
             matches!(
                 self.graph.governing(q, &events, k, known_at),
-                Ok(Declaration::Deadline(d)) if matches(&d.trigger, self.view(pack, k))
+                Ok((w, Declaration::Deadline(d))) if matches(&d.trigger, self.view(pack_of(&w), k))
             )
         })
     }

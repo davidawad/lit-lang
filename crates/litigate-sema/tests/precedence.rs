@@ -131,7 +131,7 @@ fn overrides_need_delegation_and_conflicts_need_an_order() {
             ],
         ),
         (
-            "07 narrower window wins",
+            "07 a narrower window alone does not win",
             vec![
                 core(""),
                 frcp(delegated),

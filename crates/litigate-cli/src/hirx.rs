@@ -1,8 +1,9 @@
 //! Read-only helpers over HIR: declarations by kind, version selection
-//! (SPEC §5.4, through sema's one query), and event-pattern matching
+//! (SPEC §5.4, §5.5, through sema's one query), and event-pattern matching
 //! (SPEC §5.6).
 use litigate_sema::hir::{self, Declaration, Expr, ExprKind, Metadata, Value};
-use litigate_sema::temporal::{self, world::meta_of, World};
+use litigate_sema::precedence::select::select;
+use litigate_sema::temporal::{world::meta_of, World};
 
 /// The last `::`- or `.`-separated segment of a qualified name.
 #[must_use]
@@ -26,9 +27,11 @@ pub fn in_force(meta: &Metadata, date: &str) -> bool {
 }
 
 /// The versions of `pkg`'s declarations selected at `(as_of, known_at)`
-/// (`None`: the latest corpus) by sema's one query, `temporal::select`,
-/// over every package in `all` (a declaration of one may supersede
-/// another's), in declaration order.
+/// (`None`: the latest corpus) by sema's one query
+/// (`precedence::select` over the versions `temporal::select` finds), in
+/// the law `pkg` sees among `all` (itself, its dependencies and `core`: a
+/// declaration of one may supersede or displace another's), in
+/// declaration order. A displaced declaration is not selected.
 #[must_use]
 pub fn selected<'p>(
     all: &[&'p hir::Package],
@@ -36,10 +39,15 @@ pub fn selected<'p>(
     as_of: &str,
     known_at: Option<&str>,
 ) -> Vec<&'p Declaration> {
-    let world = World::from_packages(all);
+    let roots: Vec<&'p hir::Package> = all
+        .iter()
+        .copied()
+        .filter(|p| p.manifest.name == pkg.manifest.name)
+        .collect();
+    let world = World::closure(&roots, all);
     (0..world.decls.len())
         .filter(|&i| world.pack_of(i) == pkg.manifest.pack_id)
-        .filter(|&i| temporal::select(&world, &world.key(i), as_of, known_at) == Ok(i))
+        .filter(|&i| select(&world, &world.key(i), as_of, known_at) == Ok(i))
         .map(|i| world.decls[i].decl)
         .collect()
 }

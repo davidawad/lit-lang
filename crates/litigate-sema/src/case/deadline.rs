@@ -102,8 +102,8 @@ fn variant_args(args: &[Expr]) -> Vec<String> {
         .collect()
 }
 
-/// The deadline `id` (written in `pack`) governing `events[at]`, with its
-/// qualified id.
+/// The deadline `id` (written in `pack`) governing `events[at]`, with the
+/// qualified id of its logical declaration (a displacing claimant's own).
 pub(super) fn governing<'a>(
     graph: &Graph<'a>,
     pack: &str,
@@ -111,10 +111,10 @@ pub(super) fn governing<'a>(
     events: &[MatterEvent<'_>],
     at: usize,
     known_at: Option<&str>,
-) -> Option<&'a Deadline> {
+) -> Option<(String, &'a Deadline)> {
     let qualified = graph.qualify(pack, id);
     match graph.governing(&qualified, events, at, known_at).ok()? {
-        Declaration::Deadline(d) => Some(d),
+        (q, Declaration::Deadline(d)) => Some((q, d)),
         _ => None,
     }
 }
@@ -141,7 +141,7 @@ pub(super) fn due(
     let candidates = variant_args(args);
     let qualified = graph.qualify(pack, &d.counting);
     let counting = match graph.governing(&qualified, events, at, known_at) {
-        Ok(Declaration::Counting(c)) => Some(c),
+        Ok((_, Declaration::Counting(c))) => Some(c),
         _ => None,
     };
     let service = match counting {
@@ -153,12 +153,16 @@ pub(super) fn due(
         None => candidates.iter().map(|v| kebab(v)).collect(),
     };
     let request = DueRequest {
-        counting: d
-            .counting
-            .rsplit("::")
-            .next()
-            .unwrap_or(&d.counting)
-            .to_owned(),
+        counting: counting.map_or_else(
+            || {
+                d.counting
+                    .rsplit("::")
+                    .next()
+                    .unwrap_or(&d.counting)
+                    .to_owned()
+            },
+            |c| c.meta.id.clone(),
+        ),
         version: counting.map(|c| c.meta.effective.from.clone()),
         trigger: events[trigger].date.to_owned(),
         amount: d.amount,

@@ -11,6 +11,8 @@ use crate::hir::{
     DeadlineWindow, Declaration, Edge, EdgeDeadline, EventType, Expr, ExprKind, Node, Package,
     Type, Value,
 };
+use crate::precedence;
+use crate::temporal::world::PackInfo;
 use crate::temporal::{self, Key, MatterEvent, World};
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -40,9 +42,16 @@ impl<'a> Graph<'a> {
     /// pattern, written in the links package, is respelled into the view
     /// of that pack (an instance `base@origin` reads in `base`'s view).
     pub fn new(packages: Vec<&'a Package>, loaded: &[&'a Package]) -> Self {
+        let deps = dependencies(&packages, loaded);
+        let mut world = World::from_packages(&packages);
+        // Precedence ranks claimants by the shared authority lattice (SPEC
+        // §5.5), which the dependencies (and `core`) declare.
+        for p in &deps {
+            world.add_authorities(PackInfo::of(&p.manifest), &p.modules);
+        }
         let mut graph = Self {
-            world: World::from_packages(&packages),
-            deps: dependencies(&packages, loaded),
+            world,
+            deps,
             packages,
             links: BTreeMap::new(),
         };
@@ -179,27 +188,46 @@ impl<'a> Graph<'a> {
             .is_empty()
     }
 
-    /// The node version in force on `date` (SPEC §5.4, no transitions).
+    /// The node version in force on `date` (SPEC §5.4, no transitions),
+    /// unless a claimant displaces it (SPEC §5.5): lowering omits a
+    /// displaced node, so a matter does not find it either.
     pub fn node_at(&self, qualified: &str, date: &str, known_at: Option<&str>) -> Option<&'a Node> {
-        temporal::select(&self.world, &Self::key(qualified), date, known_at)
+        let key = Self::key(qualified);
+        precedence::select(&self.world, &key, date, known_at)
             .ok()
-            .and_then(|v| match self.world.decls[v].decl {
+            .filter(|&w| self.world.key(w) == key)
+            .and_then(|w| match self.world.decls[w].decl {
                 Declaration::Node(n) => Some(n),
                 _ => None,
             })
     }
 
-    /// The version of declaration `qualified` that governs `events[at]`
-    /// (transitions applied), as a declaration.
+    /// The declaration that governs `events[at]` for declaration
+    /// `qualified` (precedence and transitions applied), with the
+    /// qualified id of the logical declaration it is a version of: a
+    /// claimant that displaces `qualified` has its own.
     pub fn governing(
         &self,
         qualified: &str,
         events: &[MatterEvent<'_>],
         at: usize,
         known_at: Option<&str>,
-    ) -> Result<&'a Declaration, temporal::Ungoverned> {
-        temporal::governing(&self.world, &Self::key(qualified), events, at, known_at)
-            .map(|g| self.world.decls[g.version].decl)
+    ) -> Result<(String, &'a Declaration), temporal::Ungoverned> {
+        temporal::governing(&self.world, &Self::key(qualified), events, at, known_at).map(|g| {
+            let k = self.world.key(g.version);
+            (
+                format!("{}::{}", k.pack, k.name),
+                self.world.decls[g.version].decl,
+            )
+        })
+    }
+
+    /// A note naming claimant pairs no relation or canon orders.
+    pub fn unordered(&self, pairs: &[(usize, usize)]) -> String {
+        format!(
+            "{} (L3003 in `litigate check`)",
+            precedence::select::unordered(&self.world, pairs)
+        )
     }
 
     /// The outgoing edges of node version `node` at qualified id `at`: its
@@ -406,11 +434,14 @@ fn dependencies<'a>(used: &[&'a Package], loaded: &[&'a Package]) -> Vec<&'a Pac
     let mut out: Vec<&'a Package> = Vec::new();
     let mut frontier: Vec<&'a Package> = used.to_vec();
     while let Some(p) = frontier.pop() {
+        // `core` is importable undeclared (SPEC §4.3).
         let found = p
             .manifest
             .dependencies
             .keys()
-            .filter_map(|name| loaded.iter().find(|d| &d.manifest.name == name));
+            .map(String::as_str)
+            .chain(["core"])
+            .filter_map(|name| loaded.iter().find(|d| d.manifest.name == name));
         for &dep in found {
             if seen.insert(dep.manifest.name.as_str()) {
                 out.push(dep);

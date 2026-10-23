@@ -7,9 +7,11 @@
 //! the versions of `d` and of its counting rule in force on the trigger
 //! date (the rule lowered at its own `from`, as `litigate test` does), so
 //! a test can never pass here and the engine compute a different date.
-//! Both versions are selected by sema's one query (`temporal::select`)
-//! among those recorded by the build's `known_at`, as lowering selects
-//! them; a counting rule no loaded package declares is the shared
+//! Both are selected by sema's one query (`precedence::select` over the
+//! versions `temporal::select` finds: a version, or a claimant displacing
+//! it) in the law the package sees, among those recorded by the build's
+//! `known_at`, as lowering selects them; a counting rule no loaded
+//! package declares is the shared
 //! library's. `has_event(p)` is true when a `given`
 //! matches `p`. An assertion this evaluator cannot compute fails: an
 //! unevaluated test is not a passing one.
@@ -19,7 +21,8 @@ use litgraph::clock::{self, ClockConfig, ClockLibrary, DayDeadline, Unit};
 use litigate_base::{Diagnostic, DiagnosticCode as C};
 use litigate_lower::Lowerer;
 use litigate_sema::hir::{self, BinaryOp, Declaration, Expr, ExprKind, Value};
-use litigate_sema::temporal::{self, Key, World};
+use litigate_sema::precedence::select::select;
+use litigate_sema::temporal::{Key, World};
 use std::cell::RefCell;
 use std::collections::BTreeMap;
 
@@ -176,28 +179,35 @@ fn due(
     let first = versions
         .first()
         .ok_or_else(|| format!("`{target}` is not a deadline"))?;
-    let (event, date) = test
+    let (given, event, date) = test
         .givens
         .iter()
         .enumerate()
-        .filter_map(|(i, (g, d))| Some((i, arguments(&first.trigger, g)?, d.as_str())))
-        .max_by(|(i, _, a), (j, _, b)| a.cmp(b).then(i.cmp(j)))
-        .map(|(_, args, d)| (args, d))
+        .filter_map(|(i, (g, d))| Some((i, g, arguments(&first.trigger, g)?, d.as_str())))
+        .max_by(|(i, _, _, a), (j, _, _, b)| a.cmp(b).then(i.cmp(j)))
+        .map(|(_, g, args, d)| (g, args, d))
         .ok_or_else(|| format!("no `given` event matches the trigger of `{target}`"))?;
     let (pkg, id) = cx.owner(target);
     let key = Key {
         pack: pkg.manifest.pack_id.clone(),
         name: id.to_owned(),
     };
-    let Some((_, Declaration::Deadline(deadline))) = clocks.select(&key, date) else {
+    let Some((owner, Declaration::Deadline(deadline))) = clocks.select(&key, date) else {
         return Err(format!(
             "no version of `{target}` recorded by {} is in force on {date}",
             clocks.known_at
         ));
     };
+    // A displacing claimant counts from its own trigger.
+    if !matches(&deadline.trigger, given) {
+        return Err(format!(
+            "the given event does not match the trigger of `{}`",
+            deadline.meta.id
+        ));
+    }
     let counting_key = clocks
         .world
-        .target(&pkg.manifest.pack_id, &deadline.counting)
+        .target(&owner.manifest.pack_id, &deadline.counting)
         .key;
     let counting = if clocks.world.versions(&counting_key).versions.is_empty() {
         None
@@ -214,11 +224,17 @@ fn due(
         Some((pkg, c)) => clocks.get(pkg, c)?,
         None => ClockLibrary::embedded().0.clone(),
     };
-    let rule = deadline
-        .counting
-        .rsplit("::")
-        .next()
-        .unwrap_or(&deadline.counting);
+    // A displacing counting rule counts under its own name.
+    let rule = counting.map_or_else(
+        || {
+            deadline
+                .counting
+                .rsplit("::")
+                .next()
+                .unwrap_or(&deadline.counting)
+        },
+        |(_, c)| c.meta.id.as_str(),
+    );
     let trigger = clock::Date::parse_iso(date).map_err(|e| e.to_string())?;
     let request = DayDeadline {
         trigger,
@@ -284,10 +300,13 @@ struct Clocks<'a> {
 
 impl<'a> Clocks<'a> {
     fn new(cx: &Context<'a>, known_at: &'a str) -> Self {
-        let mut packages = cx.packages.to_vec();
-        if !packages.iter().any(|p| std::ptr::eq(*p, cx.package)) {
-            packages.push(cx.package);
+        let mut loaded = cx.packages.to_vec();
+        if !loaded.iter().any(|p| std::ptr::eq(*p, cx.package)) {
+            loaded.push(cx.package);
         }
+        // The law the package sees (SPEC §5.5): a downstream package's
+        // claims never change its tests.
+        let packages = World::closure_packages(&[cx.package], &loaded);
         Self {
             world: World::from_packages(&packages),
             packages,
@@ -296,17 +315,19 @@ impl<'a> Clocks<'a> {
         }
     }
 
-    /// The version of `key` in force on `date` among those recorded by
-    /// `known_at` (`temporal::select`), with its package.
+    /// The declaration governing `key` on `date` among those recorded by
+    /// `known_at` (`precedence::select` over the versions
+    /// `temporal::select` finds: a version of `key`, or a claimant
+    /// displacing it), with its package.
     fn select(&self, key: &Key, date: &str) -> Option<(&'a hir::Package, &'a Declaration)> {
-        let i = temporal::select(&self.world, key, date, Some(self.known_at)).ok()?;
+        let i = select(&self.world, key, date, Some(self.known_at)).ok()?;
         let d = &self.world.decls[i];
         Some((self.packages[d.pack], d.decl))
     }
 
     fn get(&self, pkg: &hir::Package, counting: &hir::Counting) -> Result<ClockLibrary, String> {
         let key = (
-            counting.meta.id.clone(),
+            format!("{}::{}", pkg.manifest.pack_id, counting.meta.id),
             counting.meta.effective.from.clone(),
         );
         if let Some(found) = self.lowered.borrow().get(&key) {

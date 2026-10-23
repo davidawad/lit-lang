@@ -1,8 +1,12 @@
 //! Which version of each declaration a build emits (SPEC §8.1 "Multiple
-//! versions"): the one active at the build's `(as_of, known_at)`, with
-//! supersession applied, through sema's own bitemporal index.
+//! versions"): the one sema's precedence selection picks at the build's
+//! `(as_of, known_at)` over the versions [`temporal::select`] finds, with
+//! supersession and displacing claims applied.
+//! A reference resolves to the selected claimant, and a declaration some
+//! claimant displaces is absent, exactly as replay sees them.
 use litigate_base::{Diagnostic, Span};
 use litigate_sema::hir::{self, Declaration};
+use litigate_sema::precedence::select::{self, Unselected};
 use litigate_sema::temporal::world::meta_of;
 use litigate_sema::temporal::{self, Inactive, Key, Miss, World};
 
@@ -16,10 +20,10 @@ pub(crate) struct Selection<'a> {
 }
 
 impl<'a> Selection<'a> {
-    /// A selection over `packages` at `(as_of, known_at)`.
-    pub fn new(packages: &[&'a hir::Package], as_of: String, known_at: Option<String>) -> Self {
+    /// A selection over `world` at `(as_of, known_at)`.
+    pub fn new(world: World<'a>, as_of: String, known_at: Option<String>) -> Self {
         Self {
-            world: World::from_packages(packages),
+            world,
             as_of,
             known_at,
         }
@@ -27,10 +31,12 @@ impl<'a> Selection<'a> {
 
     /// Whether `decl` of pack `pack` is the version this build emits.
     /// Declarations without versions (links, instances, types) always are;
-    /// a declaration with no version in force is simply absent.
+    /// a declaration with no version in force, or displaced by a claimant
+    /// that prevails over it, is simply absent.
     ///
     /// # Errors
-    /// L3007 when overlapping versions make the choice ambiguous.
+    /// L3007 when overlapping versions make the choice ambiguous, L3003
+    /// when its claimants are unordered.
     pub fn emits(&self, pack: &str, decl: &Declaration) -> Result<bool, Diagnostic> {
         let Some(meta) = meta_of(decl) else {
             return Ok(true);
@@ -46,32 +52,44 @@ impl<'a> Selection<'a> {
         }
     }
 
-    /// The version of `key` active at the build dates; `Ok(None)` when none
-    /// is in force (or it is superseded).
+    /// The declaration selected for `key` at the build dates when it is a
+    /// version of `key` itself; `Ok(None)` when none is in force, it is
+    /// superseded, or another claimant displaces it.
     fn active(&self, key: &Key, at: Option<Span>) -> Result<Option<usize>, Box<Diagnostic>> {
-        match temporal::select(&self.world, key, &self.as_of, self.known_at.as_deref()) {
-            Ok(v) => Ok(Some(v)),
-            // `as_of` repeats the same query, so it fails the same way and
-            // explains the ambiguity.
-            Err(Inactive::Miss(Miss::Ambiguous(_))) => temporal::as_of(
+        let at = || {
+            at.clone()
+                .unwrap_or_else(|| temporal::world::nowhere(&key.name))
+        };
+        match select::select(&self.world, key, &self.as_of, self.known_at.as_deref()) {
+            Ok(w) => Ok((self.world.key(w) == *key).then_some(w)),
+            Err(Unselected::Inactive(why @ Inactive::Miss(Miss::Ambiguous(_)))) => {
+                Err(Box::new(temporal::inactive(
+                    &self.world,
+                    key,
+                    &self.as_of,
+                    self.known_at.as_deref(),
+                    &why,
+                    at(),
+                )))
+            }
+            Err(Unselected::Inactive(_)) => Ok(None),
+            Err(Unselected::Unresolved(pairs)) => Err(Box::new(select::unresolved(
                 &self.world,
                 key,
                 &self.as_of,
-                self.known_at.as_deref(),
-                at.unwrap_or_else(|| temporal::world::nowhere(&key.name)),
-            )
-            .map(Some)
-            .map_err(Box::new),
-            Err(_) => Ok(None),
+                &pairs,
+                at(),
+            ))),
         }
     }
 
     /// The declaration a reference written in pack `pack` names at the
-    /// build dates (`x`, `q::x`, or `x@D` for one version).
+    /// build dates (`x` or `q::x`: the selected claimant; `x@D`: that
+    /// version).
     ///
     /// # Errors
-    /// L3007 at `at` when no version is in force or the `@D` version does
-    /// not exist.
+    /// L3007 at `at` when nothing is in force or the `@D` version does not
+    /// exist, L3003 when the claimants are unordered.
     pub fn resolve(&self, pack: &str, text: &str, at: Span) -> Result<&'a Declaration, Diagnostic> {
         let target = self.world.target(pack, text);
         let set = self.world.versions(&target.key);
@@ -83,7 +101,7 @@ impl<'a> Selection<'a> {
                     format!("`{text}` names no version starting on {from}"),
                 )
             })?,
-            None => temporal::as_of(
+            None => select::resolve(
                 &self.world,
                 &target.key,
                 &self.as_of,

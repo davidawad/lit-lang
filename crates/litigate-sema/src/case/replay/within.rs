@@ -20,10 +20,20 @@ impl Cx<'_, '_> {
         // The deadline's trigger and counting rule are written in the view
         // of the package that declares it.
         let qualified = self.graph.qualify(pack, id);
-        let pack = pack_of(&qualified);
         let known_at = self.case.known_at.as_deref();
-        let events = self.events(pack);
-        let Some(d) = deadline::governing(self.graph, pack, id, &events, k, known_at) else {
+        let governing = |pack: &str, id: &str| {
+            deadline::governing(self.graph, pack, id, &self.events(pack), k, known_at)
+        };
+        // A claimant of another package that displaces the deadline is
+        // judged in its own package's view, under its own transitions.
+        let found = governing(pack_of(&qualified), id).and_then(|(q, d)| {
+            if pack_of(&q) == pack_of(&qualified) {
+                Some((q, d))
+            } else {
+                governing(pack_of(&q), &q)
+            }
+        });
+        let Some((q, d)) = found else {
             let e = error(
                 C::NoVersionInForce,
                 self.at(k, |e| e.date.as_ref()),
@@ -35,6 +45,8 @@ impl Cx<'_, '_> {
             self.out.push(e);
             return;
         };
+        let pack = pack_of(&q);
+        let events = self.events(pack);
         let Some(due) = deadline::due(self.graph, self.clock, pack, d, &events, k, known_at) else {
             return;
         };

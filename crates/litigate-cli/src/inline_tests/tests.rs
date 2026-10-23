@@ -132,11 +132,13 @@ fn forms() -> Vec<Form> {
 fn every_expression_form_evaluates_or_says_why() {
     let pkg = hir_with("");
     let clocks = Clocks::new(&[&pkg]);
+    let world = clocks.scope(&[&pkg.manifest.name]);
     let results: Vec<(&str, Result<serde_json::Value, String>)> = forms()
         .into_iter()
         .map(|(name, givens, e)| {
             let mut cx = Cx {
                 clocks: &clocks,
+                world: &world,
                 pkg: &pkg,
                 known_at: &pkg.manifest.in_force.known_at,
                 givens: &givens,
@@ -165,8 +167,10 @@ fn spanned(e: Expr, line: u32) -> Expr {
 fn expectations_carry_their_source_text_or_error() {
     let pkg = hir_with("");
     let clocks = Clocks::new(&[&pkg]);
+    let world = clocks.scope(&[&pkg.manifest.name]);
     let mut cx = Cx {
         clocks: &clocks,
+        world: &world,
         pkg: &pkg,
         known_at: &pkg.manifest.in_force.known_at,
         givens: &[],

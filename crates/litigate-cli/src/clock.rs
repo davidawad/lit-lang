@@ -10,19 +10,26 @@ use litgraph::clock::{
 };
 use litigate_lower::Lowerer;
 use litigate_sema::hir::{self, DayUnit, Declaration, Expr};
-use litigate_sema::temporal::{self, Key, MatterEvent, World};
+use litigate_sema::precedence::select::unordered;
+use litigate_sema::temporal::{self, Key, MatterEvent, Ungoverned, World};
 use std::collections::BTreeMap;
 
 /// Every version of every declaration the loaded packages declare, and
-/// the clock fragment of each counting version. Versions are selected by
-/// sema's one query (`temporal::select`, through `temporal::governing`),
-/// as lowering and case replay select them.
+/// the clock fragment of each counting version. Declarations are selected
+/// by sema's one query (`temporal::governing`: precedence over the
+/// versions `temporal::select` finds), in the world of the packages asking
+/// ([`Clocks::scope`]), as lowering and case replay select them.
 #[derive(Debug, Default)]
 pub struct Clocks<'a> {
-    world: World<'a>,
-    /// Each counting version's fragment (by declaration index), or why it
-    /// does not lower.
+    packages: Vec<&'a hir::Package>,
+    /// Each counting version's fragment (by declaration address, which
+    /// every scope shares), or why it does not lower.
     fragments: BTreeMap<usize, Result<ClockLibrary, String>>,
+}
+
+/// The identity of a loaded declaration, the same in every world over it.
+fn address(decl: &Declaration) -> usize {
+    std::ptr::from_ref(decl).addr()
 }
 
 impl<'a> Clocks<'a> {
@@ -31,13 +38,11 @@ impl<'a> Clocks<'a> {
     #[must_use]
     pub fn new(packages: &[&'a hir::Package]) -> Self {
         let lowerer = Lowerer::new(packages);
-        let world = World::from_packages(packages);
-        let fragments = world
+        let fragments = World::from_packages(packages)
             .decls
             .iter()
-            .enumerate()
-            .filter_map(|(i, d)| match d.decl {
-                Declaration::Counting(c) => Some((i, packages[d.pack], c)),
+            .filter_map(|d| match d.decl {
+                Declaration::Counting(c) => Some((address(d.decl), packages[d.pack], c)),
                 _ => None,
             })
             .map(|(i, p, c)| {
@@ -51,39 +56,71 @@ impl<'a> Clocks<'a> {
                 (i, fragment)
             })
             .collect();
-        Self { world, fragments }
+        Self {
+            packages: packages.to_vec(),
+            fragments,
+        }
     }
 
-    /// The version of `key` governing `events[at]` (`at` indexes
-    /// `events`) among those recorded by `known_at`
-    /// (`temporal::governing`: the version in force on the event's date,
-    /// unless a transition decides); `None` when no loaded package
-    /// declares `key` (the shared library has it, or nothing does).
-    ///
-    /// # Errors
-    /// When packages declare `key` but no version governs the event.
-    fn governing(
-        &self,
-        what: &str,
-        key: &Key,
-        events: &[MatterEvent<'_>],
-        at: usize,
-        known_at: Option<&str>,
-    ) -> Result<Option<usize>, String> {
-        if self.world.versions(key).versions.is_empty() {
-            return Ok(None);
-        }
-        temporal::governing(&self.world, key, events, at, known_at)
-            .map(|g| Some(g.version))
-            .map_err(|_| {
+    /// The law the packages named `roots` see among those loaded: they,
+    /// their dependencies and `core` (SPEC §5.5), so a downstream
+    /// package's claims never change what an upstream one computes.
+    #[must_use]
+    pub fn scope(&self, roots: &[&str]) -> World<'a> {
+        let roots: Vec<&'a hir::Package> = self
+            .packages
+            .iter()
+            .copied()
+            .filter(|p| roots.contains(&p.manifest.name.as_str()))
+            .collect();
+        World::closure(&roots, &self.packages)
+    }
+
+    /// The clock fragment of counting declaration `decl` (of a loaded
+    /// package, as every scope's are).
+    fn fragment(&self, decl: &Declaration) -> &Result<ClockLibrary, String> {
+        &self.fragments[&address(decl)]
+    }
+}
+
+/// The declaration (index into `world`, a [`Clocks::scope`]) governing
+/// `key` for `events[at]` (`at` indexes `events`) among those recorded by
+/// `known_at` (`temporal::governing`: the version in force on the event's
+/// date or the claimant displacing it, unless a transition decides);
+/// `None` when no package of `world` declares `key` (the shared library
+/// has it, or nothing does).
+///
+/// # Errors
+/// When packages declare `key` but nothing, or no single declaration,
+/// governs the event.
+fn governing(
+    world: &World<'_>,
+    what: &str,
+    key: &Key,
+    events: &[MatterEvent<'_>],
+    at: usize,
+    known_at: Option<&str>,
+) -> Result<Option<usize>, String> {
+    if world.versions(key).versions.is_empty() {
+        return Ok(None);
+    }
+    let date = events[at].date;
+    temporal::governing(world, key, events, at, known_at)
+        .map(|g| Some(g.version))
+        .map_err(|why| match why {
+            Ungoverned::Unresolved(pairs) => format!(
+                "no single declaration governs {what} `{}` on {date}: {}",
+                key.display(""),
+                unordered(world, &pairs)
+            ),
+            _ => {
                 let recorded = known_at.map_or_else(String::new, |k| format!(" recorded by {k}"));
                 format!(
-                    "no version of {what} `{}`{recorded} governs {}",
-                    key.display(""),
-                    events[at].date
+                    "no version of {what} `{}`{recorded} governs {date}",
+                    key.display("")
                 )
-            })
-    }
+            }
+        })
 }
 
 /// The engine's service method for a `.lit` method name (`Mail`,
@@ -139,18 +176,22 @@ pub struct Due {
     pub computed: ComputedDeadline,
 }
 
-/// Computes deadline `name` of `pkg` triggered by `events[at]`, under the
-/// versions of the deadline and of its counting rule governing that event
-/// among those recorded by `known_at` (`None`: the latest corpus). A
+/// Computes deadline `name` of `pkg` for `events[at]` in `world` (a
+/// [`Clocks::scope`] of `clocks`), under the declarations of the deadline
+/// and of its counting rule governing that event among those recorded by
+/// `known_at` (`None`: the latest corpus): a version of each, or the
+/// claimant displacing it (SPEC §5.5). It counts from the latest event up
+/// to `events[at]` matching the governing deadline's own trigger. A
 /// date-only query is a one-event history; `at` indexes `events`.
 ///
 /// # Errors
-/// A message for an unknown deadline or one with no version governing the
-/// event, an invalid date, business-day units (no engine lowering), a
-/// counting rule with no version governing the event, or an engine
-/// refusal.
+/// A message for an unknown deadline, one nothing governs on the event or
+/// whose trigger no event matches, an invalid date, business-day units (no
+/// engine lowering), a counting rule nothing governs on the event, or an
+/// engine refusal.
 pub fn due(
     clocks: &Clocks<'_>,
+    world: &World<'_>,
     pkg: &hir::Package,
     name: &str,
     events: &[MatterEvent<'_>],
@@ -161,15 +202,23 @@ pub fn due(
         pack: pkg.manifest.pack_id.clone(),
         name: hirx::local(name).to_owned(),
     };
-    let d = clocks
-        .governing("deadline", &key, events, at, known_at)?
-        .and_then(|i| match clocks.world.decls[i].decl {
-            Declaration::Deadline(d) => Some(d),
+    let (owner, d) = governing(world, "deadline", &key, events, at, known_at)?
+        .and_then(|i| match world.decls[i].decl {
+            Declaration::Deadline(d) => Some((world.pack_of(i), d)),
             _ => None,
         })
         .ok_or_else(|| format!("`{name}` is not a deadline of `{}`", pkg.manifest.name))?;
-    let trigger = &events[at];
-    let rule = hirx::local(&d.counting).to_owned();
+    let trigger = events[..=at]
+        .iter()
+        .rev()
+        .find(|e| hirx::matches(&d.trigger, e.action))
+        .ok_or_else(|| {
+            format!(
+                "no event matches the trigger {} of `{}`",
+                hirx::event_text(&d.trigger),
+                d.meta.id
+            )
+        })?;
     let unit = match d.unit {
         DayUnit::Calendar => Unit::Calendar,
         DayUnit::Court => Unit::Court,
@@ -183,13 +232,19 @@ pub fn due(
             ))
         }
     };
-    let counting_key = clocks.world.target(&pkg.manifest.pack_id, &d.counting).key;
-    let version = clocks
-        .governing("counting rule", &counting_key, events, at, known_at)?
-        .and_then(|i| match clocks.world.decls[i].decl {
-            Declaration::Counting(c) => Some((i, c)),
-            _ => None,
+    let counting_key = world.target(owner, &d.counting).key;
+    let version =
+        governing(world, "counting rule", &counting_key, events, at, known_at)?.and_then(|i| {
+            match world.decls[i].decl {
+                Declaration::Counting(c) => Some((world.decls[i].decl, c)),
+                _ => None,
+            }
         });
+    // A displacing counting rule counts under its own name.
+    let rule = version.map_or_else(
+        || hirx::local(&d.counting).to_owned(),
+        |(_, c)| c.meta.id.clone(),
+    );
     let method = method_of(trigger.action, version.map(|(_, c)| c));
     let request = DayDeadline {
         trigger: Date::parse_iso(trigger.date).map_err(|e| e.to_string())?,
@@ -202,7 +257,7 @@ pub fn due(
         service_method: method.as_ref().map(|(_, m)| *m),
     };
     let library = match version {
-        Some((i, _)) => clocks.fragments[&i].as_ref().map_err(Clone::clone)?,
+        Some((decl, _)) => clocks.fragment(decl).as_ref().map_err(Clone::clone)?,
         None => &ClockLibrary::embedded().0,
     };
     let clock = library.clock(&rule).map_err(|e| e.to_string())?;
@@ -288,7 +343,9 @@ counting nourl cite XYZ 6(a)
             date,
             action: &action,
         }];
-        due(&Clocks::new(&[pkg]), pkg, name, &events, 0, known_at)
+        let clocks = Clocks::new(&[pkg]);
+        let world = clocks.scope(&[&pkg.manifest.name]);
+        due(&clocks, &world, pkg, name, &events, 0, known_at)
     }
 
     #[test]
@@ -304,19 +361,23 @@ counting nourl cite XYZ 6(a)
             .unwrap();
         pkg.modules[0].declarations.push(twice);
         let clocks = Clocks::new(&[&pkg]);
-        let found: Vec<(&str, Result<usize, &str>)> = clocks
-            .fragments
+        let world = World::from_packages(&[&pkg]);
+        let found: Vec<(&str, Result<usize, &str>)> = world
+            .decls
             .iter()
-            .map(|(i, f)| {
-                let id = clocks.world.decls[*i].meta.id.as_str();
+            .filter(|d| matches!(d.decl, Declaration::Counting(_)))
+            .map(|d| {
                 (
-                    id,
-                    f.as_ref()
+                    d.meta.id.as_str(),
+                    clocks
+                        .fragment(d.decl)
+                        .as_ref()
                         .map(|l| l.counting_rules.len())
                         .map_err(String::as_str),
                 )
             })
             .collect();
+        assert_eq!(clocks.fragments.len(), 4);
         assert_eq!(found.len(), 4, "{found:?}");
         assert_eq!(
             found[0],
@@ -374,8 +435,10 @@ counting nourl cite XYZ 6(a)
             date: "2025-03-03",
             action: &action,
         }];
+        let clocks = Clocks::new(&[&pkg]);
         let mailed = due(
-            &Clocks::new(&[&pkg]),
+            &clocks,
+            &clocks.scope(&[&pkg.manifest.name]),
             &pkg,
             "answer-period",
             &events,

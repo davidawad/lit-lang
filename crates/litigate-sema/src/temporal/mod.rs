@@ -25,9 +25,10 @@ use litigate_base::{Diagnostic, DiagnosticCode as C, Span};
 /// The one version-selection query (SPEC §5.4): the version of `key` in
 /// force on `as_of` among those recorded by `known_at` (`None`: the latest
 /// corpus), with supersession and revival applied, as an index into
-/// [`World::decls`]. Lowering, case replay (through [`governing`]),
-/// `check`, `test`, `explain-value` and the LSP all select versions here,
-/// so they cannot describe different law.
+/// [`World::decls`]. Precedence ([`crate::precedence::select`]) asks it for
+/// each claimant's own version and then picks the winner; lowering, case
+/// replay (through [`governing`]), `check`, `test`, `explain-value` and the
+/// LSP all go through that, so they cannot describe different law.
 ///
 /// # Errors
 /// [`Inactive`] when no version is in force, or the one in force is
@@ -53,57 +54,70 @@ pub fn as_of(
     known_at: Option<&str>,
     at: Span,
 ) -> Result<usize, Diagnostic> {
+    select(world, key, as_of, known_at)
+        .map_err(|why| inactive(world, key, as_of, known_at, &why, at))
+}
+
+/// L3007 at `at`: why no version of `key` is active on `as_of` (`why`, as
+/// [`active`] reported it).
+#[must_use]
+pub fn inactive(
+    world: &World<'_>,
+    key: &Key,
+    as_of: &str,
+    known_at: Option<&str>,
+    why: &Inactive,
+    at: Span,
+) -> Diagnostic {
+    use world::DiagnosticExt;
     let set = world.versions(key);
     let name = key.display(&key.pack);
-    select(world, key, as_of, known_at).map_err(|why| {
-        use world::DiagnosticExt;
-        let base = error_at(at, format!("no version of `{name}` is in force on {as_of}"));
-        match why {
-            Inactive::Miss(Miss::NotInForce { hidden }) if hidden.is_empty() => base.with_note(
-                None,
-                format!(
-                    "versions: {}",
-                    set.versions
-                        .iter()
-                        .map(|v| v.in_force.display())
-                        .collect::<Vec<_>>()
-                        .join(", ")
-                ),
+    let base = error_at(at, format!("no version of `{name}` is in force on {as_of}"));
+    match why {
+        Inactive::Miss(Miss::NotInForce { hidden }) if hidden.is_empty() => base.with_note(
+            None,
+            format!(
+                "versions: {}",
+                set.versions
+                    .iter()
+                    .map(|v| v.in_force.display())
+                    .collect::<Vec<_>>()
+                    .join(", ")
             ),
-            Inactive::Miss(Miss::NotInForce { hidden }) => base.with_note(
-                None,
-                format!(
-                    "{} in force then, but recorded after known_at {}",
-                    hidden.join(", "),
-                    known_at.unwrap_or("")
-                ),
+        ),
+        Inactive::Miss(Miss::NotInForce { hidden }) => base.with_note(
+            None,
+            format!(
+                "{} in force then, but recorded after known_at {}",
+                hidden.join(", "),
+                known_at.unwrap_or("")
             ),
-            Inactive::Miss(Miss::Ambiguous(windows)) => base.with_note(
-                None,
-                format!(
-                    "overlapping versions {} (L3001)",
-                    windows
-                        .iter()
-                        .map(Window::display)
-                        .collect::<Vec<_>>()
-                        .join(", ")
-                ),
+        ),
+        Inactive::Miss(Miss::Ambiguous(windows)) => base.with_note(
+            None,
+            format!(
+                "overlapping versions {} (L3001)",
+                windows
+                    .iter()
+                    .map(Window::display)
+                    .collect::<Vec<_>>()
+                    .join(", ")
             ),
-            Inactive::Superseded(s) => base.with_note(
-                world.decls[s.by].meta.span.clone(),
-                format!(
-                    "superseded by `{}` from {}{}",
-                    world.key(s.by).display(&key.pack),
-                    s.window.from,
-                    if s.revived {
-                        String::new()
-                    } else {
-                        format!("; repeal does not revive it (declare `revives {name}`)")
-                    }
-                ),
+        ),
+        Inactive::Superseded(s) => base.with_note(
+            world.decls[s.by].meta.span.clone(),
+            format!(
+                "superseded by `{}` from {}{}",
+                world.key(s.by).display(&key.pack),
+                s.window.from,
+                if s.revived {
+                    String::new()
+                } else {
+                    format!("; repeal does not revive it (declare `revives {name}`)")
+                }
             ),
-        }
-    })
+        ),
+    }
 }
 
 fn error_at(at: Span, message: String) -> Diagnostic {

@@ -1,6 +1,7 @@
 //! `test` blocks (SPEC §4.7, §7 `tests-pass`): each `given` event happens
 //! on its date, then every `expect` is evaluated. `deadline(d)` is the due
-//! date of `d`'s version in force on its latest matching trigger, computed
+//! date of the declaration selected for `d` (its version in force, or a
+//! claimant displacing it, SPEC §5.5) on its latest matching trigger, computed
 //! by litgraph's clock interpreter over the lowered counting rule:
 //! `deadline(d).adjusted` (or bare `deadline(d)`) after every roll and
 //! extension, `deadline(d).nominal` the last day as counted.
@@ -9,7 +10,7 @@ use crate::hirx;
 use crate::span;
 use litigate_base::{Diagnostic, DiagnosticCode, Span};
 use litigate_sema::hir::{self, BinaryOp, Declaration, Expr, ExprKind, UnaryOp, Value};
-use litigate_sema::temporal::MatterEvent;
+use litigate_sema::temporal::{MatterEvent, World};
 use litigate_sema::types::rational;
 use serde::Serialize;
 use std::cmp::Ordering;
@@ -76,6 +77,8 @@ impl V {
 
 struct Cx<'a> {
     clocks: &'a Clocks<'a>,
+    /// The law the package sees ([`Clocks::scope`]).
+    world: &'a World<'a>,
     pkg: &'a hir::Package,
     /// The corpus date versions are selected at.
     known_at: &'a str,
@@ -103,7 +106,16 @@ impl Cx<'_> {
             date,
             action: event,
         }];
-        let due = clock::due(self.clocks, self.pkg, name, &events, 0, Some(self.known_at))?;
+        let known_at = Some(self.known_at);
+        let due = clock::due(
+            self.clocks,
+            self.world,
+            self.pkg,
+            name,
+            &events,
+            0,
+            known_at,
+        )?;
         self.steps.extend(due.computed.steps.iter().cloned());
         Ok(V::Date(if nominal {
             due.computed.nominal_date
@@ -246,6 +258,7 @@ pub fn run(
     known_at: Option<&str>,
 ) -> (Vec<TestResult>, Vec<Diagnostic>) {
     let known_at = known_at.unwrap_or(&pkg.manifest.in_force.known_at);
+    let world = clocks.scope(&[&pkg.manifest.name]);
     let mut diagnostics = Vec::new();
     let results = hirx::declarations(pkg)
         .filter_map(|d| match d {
@@ -255,6 +268,7 @@ pub fn run(
         .map(|t| {
             let mut cx = Cx {
                 clocks,
+                world: &world,
                 pkg,
                 known_at,
                 givens: &t.givens,

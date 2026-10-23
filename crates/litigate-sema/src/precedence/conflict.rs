@@ -6,15 +6,22 @@
 //!
 //! 1. declared relations: `A notwithstanding B` and `A override B` (A
 //!    wins), `A subject_to B` (B wins); then
-//! 2. canons: higher authority, then the more specific declaration (inside
-//!    a `rule` beats package level, then the narrower in-force window),
-//!    then the later `from`.
+//! 2. canons, only between comparable authorities: higher authority, then
+//!    the declaration with the narrower subject matter (its trigger or
+//!    condition entails the other's), then one inside a `rule` over package
+//!    level, then the later `from`.
 //!
-//! A claimant must beat every other active claimant. A pair neither stage
-//! orders is L3003 with both spans; it is never resolved silently.
+//! A displacing claim (`override`, `notwithstanding`) counts only when it
+//! is licensed: its authority equals or outranks the target's, or the
+//! target delegates to it (SPEC §5.5 step 3; otherwise L3004). A claimant
+//! must beat every other active claimant. A pair neither stage orders,
+//! including every pair of incomparable authorities no relation orders, is
+//! L3003 with both spans; it is never resolved silently.
+use super::delegation::licensed;
 use super::lattice::{Lattice, Order};
-use crate::hir::Relation;
+use crate::hir::{Declaration, Expr, Relation};
 use crate::temporal::activity::{active, boundaries, piece, suspensions};
+use crate::temporal::condition::{entails, matches};
 use crate::temporal::interval::Window;
 use crate::temporal::world::{error, span_of, DiagnosticExt, Key, Locate, World};
 use litigate_base::{Diagnostic, DiagnosticCode as C};
@@ -28,10 +35,11 @@ pub enum Reason {
     Declared(&'static str),
     /// Higher authority.
     Authority,
+    /// Narrower subject matter: its trigger or condition entails the
+    /// other's, not conversely.
+    Specific,
     /// Declared inside a `rule`, the other at package level.
     InRule,
-    /// Narrower in-force window.
-    Narrower,
     /// Later `from`.
     Later,
 }
@@ -90,13 +98,18 @@ fn declared(world: &World<'_>, a: usize, b: usize) -> Option<(bool, &'static str
     }
 }
 
-/// Stage 2 for the ordered pair.
+/// Stage 2 for the ordered pair. Incomparable authorities stop here: no
+/// canon ranks law from two chains (`lit/core/authority.lit`).
 fn canon(world: &World<'_>, lattice: &Lattice, a: usize, b: usize) -> Option<(bool, Reason)> {
     let (da, db) = (&world.decls[a], &world.decls[b]);
     match lattice.compare(&da.meta.authority, &db.meta.authority) {
         Order::Above => return Some((true, Reason::Authority)),
         Order::Below => return Some((false, Reason::Authority)),
-        Order::Equal | Order::Incomparable => {}
+        Order::Incomparable => return None,
+        Order::Equal => {}
+    }
+    if let Some(w) = specific(da.decl, db.decl) {
+        return Some((w, Reason::Specific));
     }
     if da.rule.is_some() != db.rule.is_some() {
         return Some((da.rule.is_some(), Reason::InRule));
@@ -105,11 +118,6 @@ fn canon(world: &World<'_>, lattice: &Lattice, a: usize, b: usize) -> Option<(bo
         Window::of(&da.meta.effective),
         Window::of(&db.meta.effective),
     );
-    match width(&wa).cmp(&width(&wb)) {
-        Ordering::Less => return Some((true, Reason::Narrower)),
-        Ordering::Greater => return Some((false, Reason::Narrower)),
-        Ordering::Equal => {}
-    }
     match wa.from.cmp(&wb.from) {
         Ordering::Greater => Some((true, Reason::Later)),
         Ordering::Less => Some((false, Reason::Later)),
@@ -117,9 +125,36 @@ fn canon(world: &World<'_>, lattice: &Lattice, a: usize, b: usize) -> Option<(bo
     }
 }
 
-/// Window width for specificity: open-ended is widest.
-fn width(w: &Window) -> (bool, i64) {
-    w.days().map_or((true, 0), |d| (false, d))
+/// What a declaration applies to: a deadline's trigger pattern, or a
+/// default's or exception's condition.
+enum Antecedent<'e> {
+    Trigger(&'e Expr),
+    Condition(&'e Expr),
+}
+
+fn antecedent(d: &Declaration) -> Option<Antecedent<'_>> {
+    match d {
+        Declaration::Deadline(x) => Some(Antecedent::Trigger(&x.trigger)),
+        Declaration::Default(x) => Some(Antecedent::Condition(&x.condition)),
+        Declaration::Exception(x) => Some(Antecedent::Condition(&x.condition)),
+        _ => None,
+    }
+}
+
+/// Subject-matter specificity (lex specialis): `Some(true)` when `a`'s
+/// antecedent entails `b`'s and not conversely, `Some(false)` for the
+/// converse, `None` when neither is narrower or they are not comparable.
+/// A trigger pattern entails another that is its prefix (omitted trailing
+/// arguments match anything).
+fn specific(a: &Declaration, b: &Declaration) -> Option<bool> {
+    let (ab, ba) = match (antecedent(a)?, antecedent(b)?) {
+        (Antecedent::Trigger(x), Antecedent::Trigger(y)) => (matches(y, x), matches(x, y)),
+        (Antecedent::Condition(x), Antecedent::Condition(y)) => {
+            (entails(x, y) == Some(true), entails(y, x) == Some(true))
+        }
+        _ => return None,
+    };
+    (ab != ba).then_some(ab)
 }
 
 /// Whether `a` beats `b`, and by which stage (`None`: unordered).
@@ -156,21 +191,31 @@ fn is_claim(r: &Relation) -> bool {
 /// Claimants of `t` active on `date`.
 #[must_use]
 pub fn active_claimants(world: &World<'_>, t: &Key, date: &str) -> Vec<usize> {
+    claimants_at(world, t, date, None)
+}
+
+/// Claimants of `t` active on `date` among declarations recorded by
+/// `known_at`: `t`'s own active version, and the active version of every
+/// other claimant whose claim applies to it and is licensed (a displacing
+/// claim needs [`licensed`]; `subject_to` displaces nothing).
+#[must_use]
+pub fn claimants_at(world: &World<'_>, t: &Key, date: &str, known_at: Option<&str>) -> Vec<usize> {
     let mut keys: Vec<Key> = claimants(world, t)
         .into_iter()
         .map(|c| world.key(c))
         .collect();
     keys.sort();
     keys.dedup();
-    let live = |k: &Key| {
-        active(world, k, &world.versions(k), date, None)
-            .ok()
-            .map(|v| v.decl)
-    };
+    let live = |k: &Key| crate::temporal::select(world, k, date, known_at).ok();
     let base = live(t);
     keys.iter()
         .filter_map(&live)
-        .filter(|&c| world.key(c) == *t || claim(world, c, t, base).is_some())
+        .filter(|&c| {
+            world.key(c) == *t
+                || claim(world, c, t, base).is_some_and(|k| {
+                    k == "subject_to" || base.is_none_or(|b| licensed(world, c, b))
+                })
+        })
         .collect()
 }
 
@@ -185,7 +230,18 @@ pub fn winner(
     t: &Key,
     date: &str,
 ) -> Result<usize, Vec<(usize, usize)>> {
-    let live = active_claimants(world, t, date);
+    decide(world, lattice, &active_claimants(world, t, date))
+}
+
+/// The claimant among `live` that beats every other one.
+///
+/// # Errors
+/// The unordered pairs (empty when `live` is).
+pub(crate) fn decide(
+    world: &World<'_>,
+    lattice: &Lattice,
+    live: &[usize],
+) -> Result<usize, Vec<(usize, usize)>> {
     let wins = |a: usize| {
         live.iter()
             .all(|&b| a == b || beats(world, lattice, a, b).is_some_and(|(w, _)| w))
@@ -293,23 +349,33 @@ fn unresolved(
         Some(span_of(loc, da, clause(a))),
         format!("`{na}` is declared here"),
     );
-    let authority = match lattice.compare(&da.meta.authority, &db.meta.authority) {
-        Order::Equal => format!("both are {}", da.meta.authority),
+    let canons = match lattice.compare(&da.meta.authority, &db.meta.authority) {
+        Order::Equal => format!(
+            "the canons tie: both are {}; neither applies to a narrower subject matter; {}; both take effect on {}",
+            da.meta.authority,
+            if da.rule.is_some() { "both inside a `rule`" } else { "both at package level" },
+            da.meta.effective.from
+        ),
         _ => format!(
-            "{} and {} are not ranked by any `authority` chain",
+            "{} and {} are not ranked by any `authority` chain, so no canon orders them",
             da.meta.authority, db.meta.authority
         ),
     };
     d = d
-        .with_note(None, "no declared relation (`notwithstanding`, `override`, `subject_to`) orders them")
+        .with_note(
+            None,
+            "no declared relation (`notwithstanding`, `override`, `subject_to`) orders them",
+        )
+        .with_note(None, canons)
         .with_note(
             None,
             format!(
-                "the canons tie: {authority}; equally specific ({}, same window length); both take effect on {}",
-                if da.rule.is_some() { "both inside a `rule`" } else { "both at package level" },
-                da.meta.effective.from
+                "declare `{} notwithstanding {}` or `{} subject_to {}`",
+                db.meta.id,
+                world.name(a, b),
+                db.meta.id,
+                world.name(a, b)
             ),
-        )
-        .with_note(None, format!("declare `{} notwithstanding {}` or `{} subject_to {}`", db.meta.id, world.name(a, b), db.meta.id, world.name(a, b)));
+        );
     d
 }

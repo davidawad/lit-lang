@@ -222,11 +222,13 @@ fn history(case: &hir::Case) -> Vec<&hir::Event> {
 }
 
 /// Every deadline of `packages` with a trigger in the matter's history,
-/// counted from its latest trigger under the versions governing it, as
-/// replay selects them (`clock::due`: at the matter's `known_at`, with
-/// transitions applied).
+/// counted from its latest trigger under the declarations governing it
+/// among the used packages, as replay selects them (`clock::due`: at the
+/// matter's `known_at`, with precedence and transitions applied).
 fn schedule(packages: &[&hir::Package], clocks: &Clocks, case: &hir::Case) -> Vec<Scheduled> {
     let history = history(case);
+    let names: Vec<&str> = packages.iter().map(|p| p.manifest.name.as_str()).collect();
+    let world = clocks.scope(&names);
     let events: Vec<MatterEvent<'_>> = history
         .iter()
         .map(|e| MatterEvent {
@@ -251,7 +253,7 @@ fn schedule(packages: &[&hir::Package], clocks: &Clocks, case: &hir::Case) -> Ve
                 continue;
             };
             let known_at = case.known_at.as_deref();
-            if let Ok(due) = clock::due(clocks, pkg, &d.meta.id, &events, at, known_at) {
+            if let Ok(due) = clock::due(clocks, &world, pkg, &d.meta.id, &events, at, known_at) {
                 out.push(Scheduled {
                     deadline: id,
                     trigger: hirx::event_text(&history[at].action),

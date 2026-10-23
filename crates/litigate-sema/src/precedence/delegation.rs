@@ -1,10 +1,13 @@
 //! `delegation-respected` (SPEC §5.5 step 3, L3004): a lower authority may
 //! change a higher one's rule only where that rule delegates
-//! (`delegable_to`, "unless the court orders otherwise").
+//! (`delegable_to`, "unless the court orders otherwise"). Every relation
+//! that displaces its target needs it: `override`, `notwithstanding`,
+//! `supersedes`, and `revives`. An unlicensed relation is L3004 here and
+//! has no effect on selection ([`licensed`]).
 use super::lattice::{Lattice, Order};
 use crate::hir::Relation;
 use crate::temporal::interval::Window;
-use crate::temporal::world::{error, span_of, DiagnosticExt, Locate, World};
+use crate::temporal::world::{error, span_of, DiagnosticExt, Key, Locate, World};
 use litigate_base::{Applicability, Diagnostic, DiagnosticCode as C, Span};
 
 /// Clauses after whose value a `delegable_to` clause can be inserted.
@@ -28,9 +31,48 @@ fn end_of(s: &Span) -> Span {
     }
 }
 
-/// L3004 for every `override` of pack `pack` that its target does not
-/// delegate, L3007 for overrides of a rule never in force alongside, and
-/// L3004 for delegations that do not point downward.
+/// Whether declaration `by` may displace version `target`: its authority
+/// equals or outranks the target's, or the target delegates to it
+/// (`delegable_to` naming `by`'s authority exactly).
+#[must_use]
+pub fn licensed(world: &World<'_>, by: usize, target: usize) -> bool {
+    let mine = &world.decls[by].meta.authority;
+    let theirs = &world.decls[target].meta;
+    matches!(
+        world.lattice().compare(mine, &theirs.authority),
+        Order::Above | Order::Equal
+    ) || theirs
+        .relations
+        .iter()
+        .any(|r| matches!(r, Relation::DelegableTo(x) if x == mine))
+}
+
+/// The versions of `key` (only the one starting on `version`, when given)
+/// a `supersedes` or `revives` declared by `by` acts on: those that took
+/// effect before it did.
+fn earlier(world: &World<'_>, by: usize, key: &Key, version: Option<&str>) -> Vec<usize> {
+    let from = &world.decls[by].meta.effective.from;
+    world
+        .versions(key)
+        .versions
+        .iter()
+        .filter(|v| v.in_force.from < *from && version.is_none_or(|d| v.in_force.from == d))
+        .map(|v| v.decl)
+        .collect()
+}
+
+/// Whether `by` may supersede or revive `key` (`@version` when given):
+/// [`licensed`] over every version it acts on.
+#[must_use]
+pub fn licensed_over(world: &World<'_>, by: usize, key: &Key, version: Option<&str>) -> bool {
+    earlier(world, by, key, version)
+        .into_iter()
+        .all(|v| licensed(world, by, v))
+}
+
+/// L3004 for every displacing relation of pack `pack` that its target does
+/// not delegate, L3007 for overrides of a rule never in force alongside,
+/// and L3004 for delegations that do not point downward.
 #[must_use]
 pub fn check(
     world: &World<'_>,
@@ -50,6 +92,37 @@ pub fn check(
             match r {
                 Relation::Override(text) => {
                     out.extend(overriding(world, lattice, loc, a, text, &window));
+                }
+                Relation::Notwithstanding(text) => {
+                    let target = world.target(world.pack_of(a), text);
+                    let affected = overlapping(world, &target, &window);
+                    out.extend(unlicensed(
+                        world,
+                        lattice,
+                        loc,
+                        a,
+                        &target.key,
+                        "notwithstanding",
+                        &affected,
+                    ));
+                }
+                Relation::Supersedes(text) | Relation::Revives(text) => {
+                    let keyword = if matches!(r, Relation::Supersedes(_)) {
+                        "supersedes"
+                    } else {
+                        "revives"
+                    };
+                    let target = world.target(world.pack_of(a), text);
+                    let affected = earlier(world, a, &target.key, target.version.as_deref());
+                    out.extend(unlicensed(
+                        world,
+                        lattice,
+                        loc,
+                        a,
+                        &target.key,
+                        keyword,
+                        &affected,
+                    ));
                 }
                 Relation::DelegableTo(to) => {
                     let own = &da.meta.authority;
@@ -82,6 +155,28 @@ pub fn check(
     out
 }
 
+/// The versions of `target` (only its `@D` version, when given) in force
+/// at some point of `window`.
+fn overlapping(
+    world: &World<'_>,
+    target: &crate::temporal::world::Target,
+    window: &Window,
+) -> Vec<usize> {
+    world
+        .versions(&target.key)
+        .versions
+        .iter()
+        .filter(|v| {
+            target
+                .version
+                .as_ref()
+                .is_none_or(|d| *d == v.in_force.from)
+        })
+        .filter(|v| v.in_force.overlaps(window))
+        .map(|v| v.decl)
+        .collect()
+}
+
 fn overriding(
     world: &World<'_>,
     lattice: &Lattice,
@@ -97,23 +192,11 @@ fn overriding(
         return Vec::new();
     }
     let name = target.key.display(world.pack_of(a));
-    let affected: Vec<usize> = set
-        .versions
-        .iter()
-        .filter(|v| {
-            target
-                .version
-                .as_ref()
-                .is_none_or(|d| *d == v.in_force.from)
-        })
-        .filter(|v| v.in_force.overlaps(window))
-        .map(|v| v.decl)
-        .collect();
-    let span = span_of(loc, da, "override");
+    let affected = overlapping(world, &target, window);
     if affected.is_empty() {
         return vec![error(
             C::NoVersionInForce,
-            span,
+            span_of(loc, da, "override"),
             format!(
                 "`{}` overrides `{text}`, which is not in force during {}",
                 da.meta.id,
@@ -132,32 +215,41 @@ fn overriding(
             ),
         )];
     }
-    let mine = &da.meta.authority;
-    let missing: Vec<usize> = affected
-        .into_iter()
-        .filter(|&b| {
-            let db = &world.decls[b];
-            let order = lattice.compare(mine, &db.meta.authority);
-            let delegated = db
-                .meta
-                .relations
-                .iter()
-                .any(|r| matches!(r, Relation::DelegableTo(x) if x == mine));
-            !matches!(order, Order::Above | Order::Equal) && !delegated
-        })
-        .collect();
-    missing_delegation(world, lattice, loc, a, &name, &missing, span)
+    unlicensed(world, lattice, loc, a, &target.key, "override", &affected)
         .into_iter()
         .collect()
 }
 
-/// L3004 naming the delegation `missing` versions of the override target
-/// lack.
+/// L3004 when `a`'s `keyword` relation on `key` displaces versions in
+/// `affected` that do not license it.
+fn unlicensed(
+    world: &World<'_>,
+    lattice: &Lattice,
+    loc: &dyn Locate,
+    a: usize,
+    key: &Key,
+    keyword: &str,
+    affected: &[usize],
+) -> Option<Diagnostic> {
+    let missing: Vec<usize> = affected
+        .iter()
+        .copied()
+        .filter(|&b| !licensed(world, a, b))
+        .collect();
+    let name = key.display(world.pack_of(a));
+    let span = span_of(loc, &world.decls[a], keyword);
+    missing_delegation(world, lattice, loc, a, keyword, &name, &missing, span)
+}
+
+/// L3004 naming the delegation `missing` versions of the target of `a`'s
+/// `keyword` relation lack.
+#[allow(clippy::too_many_arguments)]
 fn missing_delegation(
     world: &World<'_>,
     lattice: &Lattice,
     loc: &dyn Locate,
     a: usize,
+    keyword: &str,
     name: &str,
     missing: &[usize],
     span: Span,
@@ -171,12 +263,13 @@ fn missing_delegation(
         C::MissingDelegation,
         span,
         format!(
-            "`{}` ({mine}) overrides `{name}` ({theirs}), but `{name}` does not delegate to {mine}: missing `delegable_to [{mine}]`",
-            da.meta.id
+            "`{}` ({mine}) {} `{name}` ({theirs}), but `{name}` does not delegate to {mine}: missing `delegable_to [{mine}]`",
+            da.meta.id,
+            verb(keyword)
         ),
     );
     if lattice.compare(mine, theirs) == Order::Incomparable {
-        d = d.with_note(None, format!("{mine} and {theirs} are not ranked by any `authority` chain, so the override needs an explicit delegation"));
+        d = d.with_note(None, format!("{mine} and {theirs} are not ranked by any `authority` chain, so `{keyword}` needs an explicit delegation"));
     }
     for &b in missing {
         let db = &world.decls[b];
@@ -201,6 +294,15 @@ fn missing_delegation(
     }
     Some(d.with_note(
         None,
-        "only a rule's own text can delegate; an override cannot grant itself the power",
+        format!("only a rule's own text can delegate; `{keyword}` cannot grant itself the power"),
     ))
+}
+
+/// How the message reads `keyword`'s effect.
+fn verb(keyword: &str) -> &str {
+    match keyword {
+        "override" => "overrides",
+        "notwithstanding" => "is declared notwithstanding",
+        other => other,
+    }
 }

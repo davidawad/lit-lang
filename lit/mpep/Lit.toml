@@ -1,18 +1,22 @@
-# Imported by `litigate import` from packs/mpep-prosecution.json.
-# in_force and authority are placeholders: legacy JSON records neither.
+# Ported from packs/mpep-prosecution.json (`litigate import`, then made
+# strict). in_force is the MPEP 9th ed. Rev. 01.2024 date every MPEP source
+# below records as `as_of`: the pack's citations were verified against that
+# edition, so it is the earliest date this package claims to be in force.
+# known_at is the vendored 37 C.F.R. corpus date (`cfr-37-patents.as_of`).
+# The rules here are agency regulations (37 C.F.R.) and their statutes, so
+# the package level is core's `Regulation`.
 [package]
 name = "mpep-prosecution"
 version = "0.1.0"
 language = 1
 pack_id = "mpep-prosecution"
 forum = "uspto"
-authority = "FederalRule"
+authority = "Regulation"
 title = "U.S. Utility Patent Prosecution"
 description = "Canonical pre-filing → prosecution → appeal → issuance flowchart for a U.S. nonprovisional utility application. MPEP and 37 CFR citations verified against live USPTO/eCFR sources (2024-07-01 edition). Walk mode teaches the RCE-vs-appeal fork economics, the unextendable 6-month ceiling, and abandonment-as-permadeath."
 jurisdiction = "USPTO / MPEP"
 in_force = "2024-01-31"
-known_at = "2026-10-22"
-counting = "uspto1"
+known_at = "2026-01-01"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
@@ -23,10 +27,16 @@ either = "nature"
 examiner = "nature"
 office = "nature"
 
+# 35 U.S.C. §§ 41, 111, 119, 132, 133, 141, 145 and 151 are vendored in
+# the prosecution-fragments file; the other 35 U.S.C. sections in
+# usc-additional.txt (bound through `usc35-154`). A cite binds to the
+# binding whose file holds its heading.
 [sources.usc35-111]
 title = "35 U.S.C. § 111 (Application)"
 url = "https://www.law.cornell.edu/uscode/text/35/111"
 path = "sources/usc-cfr-prosecution-fragments.txt"
+cite_prefixes = ["35 U.S.C."]
+section_heading = "35 U.S.C. § {n}"
 
 [sources.usc35-132]
 title = "35 U.S.C. § 132 (Notice of rejection; reexamination)"
@@ -43,10 +53,16 @@ title = "35 U.S.C. § 134 (Appeal to the Patent Trial and Appeal Board)"
 url = "https://www.law.cornell.edu/uscode/text/35/134"
 path = "sources/usc-additional.txt"
 
+# The prosecution-fragments file also vendors 37 C.F.R. §§ 90.1-90.3 (and
+# copies of §§ 1.53-1.362, 41.31-41.50). This binding locates those
+# headings; a separate [sources] entry would add a pack source the legacy
+# pack does not have.
 [sources.usc35-151]
 title = "35 U.S.C. § 151 (Issue of patent)"
 url = "https://www.law.cornell.edu/uscode/text/35/151"
 path = "sources/usc-cfr-prosecution-fragments.txt"
+cite_prefixes = ["37 CFR", "37 C.F.R."]
+section_heading = "37 C.F.R. § {n}"
 
 [sources.usc35-154]
 title = "35 U.S.C. § 154 (Contents and term of patent)"
@@ -108,6 +124,8 @@ section_heading = "37 C.F.R. § {n}"
 title = "37 C.F.R. Part 42 (PTAB trial practice, for AIA-trial cross-references from prosecution)"
 url = "https://www.ecfr.gov/current/title-37/chapter-I/subchapter-A/part-42"
 path = "sources/cfr-37-part42.txt"
+cite_prefixes = ["37 CFR", "37 C.F.R."]
+section_heading = "37 C.F.R. § {n}"
 
 [sources.usc35-312]
 title = "35 U.S.C. § 312 (Petitions for inter partes review)"
@@ -118,6 +136,8 @@ path = "sources/usc-additional.txt"
 title = "37 C.F.R. Part 41 (Board of Patent Appeals and Interferences / PTAB ex parte appeal rules)"
 url = "https://www.ecfr.gov/current/title-37/chapter-I/subchapter-A/part-41"
 path = "sources/cfr-37-part41.txt"
+cite_prefixes = ["37 CFR", "37 C.F.R."]
+section_heading = "37 C.F.R. § {n}"
 
 [sources.uspto-fee-schedule]
 title = "USPTO Fee Schedule (patent filing, search, examination, RCE, extension, appeal, issue, revival, maintenance, and reissue fees; regular/undiscounted, effective 1/19/2025)"
@@ -132,4 +152,3 @@ as_of = "2025-01-14"
 [[cite_syntax.rules]]
 prefixes = ["MPEP"]
 heading = "MPEP § {}"
-source = "mpep-0700"

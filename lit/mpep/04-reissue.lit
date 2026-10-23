@@ -1,9 +1,8 @@
-// Imported by `litigate import` from packs/mpep-prosecution.json.
+// Ported from packs/mpep-prosecution.json (`litigate import`, then made strict).
 module mpep.reissue
 
 import mpep.{ reissue-group }
 
-/// imported
 chance reissue-pending: "Reissue Application Pending" by office discretion effective [2024-01-31, ..) cite 35 U.S.C. § 251; 37 CFR 1.171; MPEP 1401
 {
   group reissue-group
@@ -18,15 +17,14 @@ chance reissue-pending: "Reissue Application Pending" by office discretion effec
   }
 }
 
-/// imported
-terminal reissue-granted: "Reissue Patent Granted" outcome [win, reissue] effective [2024-01-31, ..) cite ?("35 U.S.C. § 251; § 252; MPEP 1460") {
+terminal reissue-granted: "Reissue Patent Granted" outcome [win, reissue] effective [2024-01-31, ..) cite 35 U.S.C. § 251; § 252; MPEP 1460
+{
   group reissue-group
   note "The reissued patent issues for the unexpired term of the original patent. The original patent is surrendered as of the reissue date. Intervening rights (35 U.S.C. § 252, ¶ 2) protect persons who, before the reissue grant, made, purchased, or used subject matter patented by the reissued claims, or made substantial preparations therefor. PLACEHOLDER PAYOFF: $1,000,000, override per matter."
   valence good
   payoff 1_000_000.usd
 }
 
-/// imported
 terminal reissue-abandoned: "Reissue Abandoned — Original Patent Lost" outcome [loss, reissue-abandoned, waiver-trap] effective [2024-01-31, ..) cite 35 U.S.C. § 251; 37 CFR 1.135
 {
   group reissue-group

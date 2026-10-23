@@ -288,7 +288,7 @@ fn values_as_json() {
 fn outcomes(extra: &str, filter: &str) -> Vec<(bool, Option<String>)> {
     let pkg = hir_with(extra);
     let clocks = Clocks::new(&[&pkg]);
-    let (results, _) = run(&clocks, &[&pkg], &pkg, &[], Some(filter));
+    let (results, _) = run(&clocks, &pkg, &[], Some(filter), None);
     results
         .iter()
         .flat_map(|t| t.expectations.iter())
@@ -324,10 +324,7 @@ test \"selected\"
         outcomes(moved, "selected"),
         [(
             false,
-            Some(
-                "no `given` event matches the trigger MovedToDismiss(complaint) of `answer-period`"
-                    .to_owned()
-            )
+            Some("no event matches the trigger MovedToDismiss(complaint) of `moved`".to_owned())
         )]
     );
 }

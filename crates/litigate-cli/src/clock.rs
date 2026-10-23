@@ -111,7 +111,7 @@ fn governing(
             Ungoverned::Unresolved(pairs) => format!(
                 "no single declaration governs {what} `{}` on {date}: {}",
                 key.display(""),
-                unordered(world, &pairs)
+                unordered(world, &pairs, "")
             ),
             _ => {
                 let recorded = known_at.map_or_else(String::new, |k| format!(" recorded by {k}"));

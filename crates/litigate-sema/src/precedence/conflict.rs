@@ -20,7 +20,7 @@
 use super::delegation::licensed;
 use super::lattice::{Lattice, Order};
 use crate::hir::{Declaration, DefaultRule, Exception, Expr, Relation};
-use crate::temporal::activity::{active, boundaries, piece, suspensions};
+use crate::temporal::activity::{boundaries, piece, suspensions};
 use crate::temporal::condition::{entails, matches};
 use crate::temporal::interval::Window;
 use crate::temporal::world::{error, span_of, DiagnosticExt, Key, Locate, World};

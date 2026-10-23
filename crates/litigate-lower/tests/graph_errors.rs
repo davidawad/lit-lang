@@ -318,6 +318,7 @@ fn a_patch_replaces_whole_fields() {
             extendable: None,
             extension_authority: None,
             note: None,
+            counting: None,
         }),
         tags: Some(Vec::new()),
         attrs: Some(BTreeMap::new()),

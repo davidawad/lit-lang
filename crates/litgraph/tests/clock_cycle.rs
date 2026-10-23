@@ -63,6 +63,7 @@ impl Custom {
         Clock {
             rule: &self.rule,
             calendars: vec![&self.calendar],
+            forward_calendars: Vec::new(),
         }
     }
 }
@@ -175,4 +176,29 @@ fn the_cycle_is_a_whole_number_of_weeks() {
     assert_eq!(b.epoch_day() - a.epoch_day(), CYCLE_DAYS);
     assert_eq!(CYCLE_DAYS % 7, 0);
     assert_eq!(a.weekday(), b.weekday());
+}
+
+#[test]
+fn a_forward_only_calendar_lengthens_the_run() {
+    // A forward-only holiday on Friday 2027-01-01 (FRCP 6(a)(6)(C)) meets
+    // the weekend after it: a period counted forward can roll 3 days, so
+    // the run is decided over the forward closed set.
+    let lib = library("", r#""saturday", "sunday""#);
+    let forward: HolidayCalendar = serde_json::from_str(&format!(
+        r#"{{"id": "state", "title": "State", "holidays": [{}]}}"#,
+        fixed("new-year", 1, 1, "")
+    ))
+    .unwrap();
+    let clock = Clock {
+        forward_calendars: vec![&forward],
+        ..lib.clock()
+    };
+    assert!(matches!(
+        clock.closed_run(),
+        ClosedRun::Bounded { longest: 3, .. }
+    ));
+    assert!(matches!(
+        lib.clock().closed_run(),
+        ClosedRun::Bounded { longest: 2, .. }
+    ));
 }

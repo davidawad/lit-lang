@@ -38,8 +38,10 @@ expression: rule(&p)
       "op": "base"
     },
     {
-      "op": "service",
+      "backwardText": "FRCP 6(a): service extensions apply to forward periods only; ignored",
       "methods": [],
+      "op": "service",
+      "text": "FRCP 6(a): service by {method} adds {days} day(s) -> {date}",
       "unrecognized": [
         "personal",
         "electronic",
@@ -51,9 +53,7 @@ expression: rule(&p)
         "mail-foreign",
         "express",
         "express-foreign"
-      ],
-      "text": "FRCP 6(a): service by {method} adds {days} day(s) -> {date}",
-      "backwardText": "FRCP 6(a): service extensions apply to forward periods only; ignored"
+      ]
     }
   ]
 }

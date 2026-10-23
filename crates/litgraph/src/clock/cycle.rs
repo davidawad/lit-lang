@@ -18,6 +18,7 @@
 
 use std::collections::BTreeSet;
 
+use super::calendar::HolidayCalendar;
 use super::date::Date;
 use super::interp::Clock;
 use super::library::ClockLibrary;
@@ -65,11 +66,19 @@ const fn gcd(mut a: i64, mut b: i64) -> i64 {
 }
 
 impl Clock<'_> {
+    /// Every calendar closing a day in some counting direction: the
+    /// rule's calendars, then its forward-only ones.
+    fn every_calendar(&self) -> impl Iterator<Item = &HolidayCalendar> {
+        self.calendars
+            .iter()
+            .chain(&self.forward_calendars)
+            .copied()
+    }
+
     /// The period, in years, after which every calendar of this rule
     /// repeats, saturating past [`MAX_PERIOD_YEARS`].
     fn period_years(&self) -> i64 {
-        self.calendars
-            .iter()
+        self.every_calendar()
             .flat_map(|c| &c.holidays)
             .filter_map(|h| h.cycle.as_ref())
             .map(|c| i64::from(c.every.max(1)))
@@ -80,7 +89,8 @@ impl Clock<'_> {
 
     /// Decides the longest run of consecutive closed days over all dates
     /// (closed weekdays and the observed holidays of this rule's
-    /// calendars).
+    /// calendars), counted forward: a forward-only calendar's holidays
+    /// close a day too, so the run is the longest in either direction.
     #[must_use]
     pub fn closed_run(&self) -> ClosedRun {
         let period = self.period_years();
@@ -88,8 +98,7 @@ impl Clock<'_> {
             return ClosedRun::Undecided;
         }
         let bounds: Vec<i64> = self
-            .calendars
-            .iter()
+            .every_calendar()
             .flat_map(|c| &c.holidays)
             .filter_map(|h| h.effective.as_ref())
             .flat_map(|e| [e.from, e.until])
@@ -104,7 +113,10 @@ impl Clock<'_> {
         let (lo, hi) = (first - period - 1, last + period + 1);
         let year = |y: i64| i32::try_from(y).unwrap_or(i32::MAX);
         let holidays: BTreeSet<Date> = (lo - period - 1..=hi + period + 1)
-            .flat_map(|y| self.holidays_in(year(y)))
+            .flat_map(|y| {
+                self.every_calendar()
+                    .flat_map(move |c| c.observed_in(year(y)))
+            })
             .collect();
         let closed = |d: Date| {
             self.rule

@@ -284,6 +284,7 @@ fn instances_are_checked_against_their_base_pack() {
                     extendable: None,
                     extension_authority: None,
                     note: None,
+                    counting: None,
                 });
             }
         }

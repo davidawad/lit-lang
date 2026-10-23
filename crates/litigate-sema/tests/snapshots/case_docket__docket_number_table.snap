@@ -4,13 +4,13 @@ expression: got
 ---
 {
     "contradiction: a docket number falling with the date": [
-        "13:3 L3009 cannot count deadline `court-period` for this event\n    note @12:3: `court-period` runs 5 court days from `Served(complaint, Mail)` on 2010-01-04 under `ac@2009-12-01`\n    note: no clock library is loaded to run counting rule `ac`",
+        "13:3 L3009 cannot count deadline `court-period` for this event\n    note @12:3: `court-period` runs 5 court days from `Served(complaint, Mail)` on 2010-01-04 under `ac@2009-12-01`, service by mail\n    note: no clock library is loaded to run counting rule `ac`",
         "13:21 L4001 docket 3 on 2010-01-08 and docket 5 on 2010-01-04 contradict their dates\n    note: a docket number grows with the date it is entered on",
         "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
         "trace Took Answered(complaint) alpha::respond -> alpha::answered via alpha::answer",
     ],
     "contradiction: one docket number on two dates": [
-        "13:3 L3009 cannot count deadline `court-period` for this event\n    note @12:3: `court-period` runs 5 court days from `Served(complaint, Mail)` on 2010-01-04 under `ac@2009-12-01`\n    note: no clock library is loaded to run counting rule `ac`",
+        "13:3 L3009 cannot count deadline `court-period` for this event\n    note @12:3: `court-period` runs 5 court days from `Served(complaint, Mail)` on 2010-01-04 under `ac@2009-12-01`, service by mail\n    note: no clock library is loaded to run counting rule `ac`",
         "13:21 L4001 docket 5 on 2010-01-08 and docket 5 on 2010-01-04 contradict their dates\n    note: a docket number grows with the date it is entered on",
         "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
         "trace Took Answered(complaint) alpha::respond -> alpha::answered via alpha::answer",

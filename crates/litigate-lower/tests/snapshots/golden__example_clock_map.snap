@@ -3,50 +3,50 @@ source: crates/litigate-lower/tests/golden.rs
 expression: render_map(map)
 ---
 {
-  "generated": {
-    "by": "litigate-lower",
-    "version": "[version]",
-    "language": 1
-  },
-  "kind": "clock",
-  "id": "frcp6",
-  "package": {
-    "name": "frcp-rule12-example",
-    "version": "0.1.0",
-    "digest": "sha256:af29823dbca1ee1025250e19505db59497831cabd4fd52b83fcbaf892abaf697"
-  },
   "as_of": "2025-01-01",
-  "known_at": "2025-01-01",
   "entries": [
     {
-      "pointer": "/countingRules/0",
-      "id": "frcp6",
-      "span": {
-        "file": "lit/examples/rule12.lit",
-        "line": 21,
-        "col": 1,
-        "end_line": 41,
-        "end_col": 2
-      },
-      "decl": "frcp6@2009-12-01",
       "cite": {
         "text": "FRCP 6(a)"
+      },
+      "decl": "frcp6@2009-12-01",
+      "id": "frcp6",
+      "pointer": "/countingRules/0",
+      "span": {
+        "col": 1,
+        "end_col": 2,
+        "end_line": 41,
+        "file": "lit/examples/rule12.lit",
+        "line": 21
       }
     },
     {
-      "pointer": "/calendars/0",
-      "id": "federal-holidays",
-      "span": {
-        "file": "lit/examples/rule12.lit",
-        "line": 43,
-        "col": 1,
-        "end_line": 49,
-        "end_col": 2
-      },
-      "decl": "federal-holidays@2009-12-01",
       "cite": {
         "text": "FRCP 6(a)(6)"
+      },
+      "decl": "federal-holidays@2009-12-01",
+      "id": "federal-holidays",
+      "pointer": "/calendars/0",
+      "span": {
+        "col": 1,
+        "end_col": 2,
+        "end_line": 49,
+        "file": "lit/examples/rule12.lit",
+        "line": 43
       }
     }
-  ]
+  ],
+  "generated": {
+    "by": "litigate-lower",
+    "language": 1,
+    "version": "[version]"
+  },
+  "id": "frcp6",
+  "kind": "clock",
+  "known_at": "2025-01-01",
+  "package": {
+    "digest": "sha256:af29823dbca1ee1025250e19505db59497831cabd4fd52b83fcbaf892abaf697",
+    "name": "frcp-rule12-example",
+    "version": "0.1.0"
+  }
 }

@@ -4,7 +4,6 @@
 //! runs under.
 use crate::{LoweredPackage, Lowerer};
 use litgraph::clock::cycle::endless_roll;
-use litgraph::clock::rule::Step;
 use litgraph::clock::{
     compute_due_date, ClockConfig, ClockLibrary, ComputedDeadline, Date, DayDeadline, Direction,
     ServiceMethod, Unit,

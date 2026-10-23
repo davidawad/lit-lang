@@ -876,8 +876,9 @@ counts only inside its `effective` interval. Inconsistent counting data
 (unknown anchor/roll kind/unit, duplicate method) is L3009.
 
 Every counting rule must reach an open day from every date: its closed
-days (closed weekdays and the observed holidays of its calendar) may not
-run on forever, or rolling and business-day counting would not end
+days (closed weekdays and the observed holidays of its calendars, its
+`forward_holidays` included, since a period counted forward closes on
+them too) may not run on forever, or rolling and business-day counting would not end
 (L3009, `well-typed`). This is decided over every date, not sampled: the
 Gregorian calendar repeats every 400 years (146 097 days, a whole number
 of weeks), an `every(k, ..)` holiday every `lcm(400, k)` years, so

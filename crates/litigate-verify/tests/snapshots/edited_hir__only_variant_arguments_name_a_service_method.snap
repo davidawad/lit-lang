@@ -1,0 +1,41 @@
+---
+source: crates/litigate-verify/tests/edited_hir.rs
+expression: "outcome_of(&v, Obligation::TestsPass)"
+---
+{
+  "finding": {
+    "name": "tests-pass",
+    "status": "failed",
+    "count": 1,
+    "examples": [
+      "pkgs/demo/main.lit:52:10: L5006 expected deadline(answer-period) == 2025-03-27, but it is 2025-03-24"
+    ]
+  },
+  "accepted": false,
+  "diagnostics": [
+    {
+      "code": "L5006",
+      "severity": "error",
+      "span": {
+        "file": "pkgs/demo/main.lit",
+        "line": 52,
+        "col": 10,
+        "end_line": 52,
+        "end_col": 33
+      },
+      "message": "expected deadline(answer-period) == 2025-03-27, but it is 2025-03-24",
+      "notes": [
+        {
+          "span": {
+            "file": "pkgs/demo/main.lit",
+            "line": 49,
+            "col": 1,
+            "end_line": 53,
+            "end_col": 2
+          },
+          "message": "in test \"mail service adds three days\""
+        }
+      ]
+    }
+  ]
+}

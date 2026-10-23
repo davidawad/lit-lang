@@ -1,0 +1,41 @@
+---
+source: crates/litigate-verify/tests/edited_hir.rs
+expression: "tests_pass(&with_has_event(), |p|\n{ call_parts(&mut first_expect(p).lhs).1.clear(); })"
+---
+{
+  "finding": {
+    "name": "tests-pass",
+    "status": "failed",
+    "count": 1,
+    "examples": [
+      "pkgs/demo/main.lit:46:10: L5006 cannot evaluate the assertion: `has_event` takes an event pattern"
+    ]
+  },
+  "accepted": false,
+  "diagnostics": [
+    {
+      "code": "L5006",
+      "severity": "error",
+      "span": {
+        "file": "pkgs/demo/main.lit",
+        "line": 46,
+        "col": 10,
+        "end_line": 46,
+        "end_col": 48
+      },
+      "message": "cannot evaluate the assertion: `has_event` takes an event pattern",
+      "notes": [
+        {
+          "span": {
+            "file": "pkgs/demo/main.lit",
+            "line": 43,
+            "col": 1,
+            "end_line": 47,
+            "end_col": 2
+          },
+          "message": "in test \"answer due 21 days after personal service\""
+        }
+      ]
+    }
+  ]
+}

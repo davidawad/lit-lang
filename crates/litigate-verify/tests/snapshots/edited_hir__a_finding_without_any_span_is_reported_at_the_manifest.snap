@@ -1,0 +1,42 @@
+---
+source: crates/litigate-verify/tests/edited_hir.rs
+expression: "outcome_of(&v, Obligation::RuleWithoutTest)"
+---
+{
+  "finding": {
+    "name": "rule-without-test",
+    "status": "failed",
+    "count": 1,
+    "examples": [
+      "Lit.toml:1:1: L9001 deadline `reply-period` has no test that evaluates `deadline(reply-period)`"
+    ]
+  },
+  "accepted": false,
+  "diagnostics": [
+    {
+      "code": "L9001",
+      "severity": "error",
+      "span": {
+        "file": "Lit.toml",
+        "line": 1,
+        "col": 1,
+        "end_line": 1,
+        "end_col": 1
+      },
+      "message": "deadline `reply-period` has no test that evaluates `deadline(reply-period)`",
+      "fixes": [
+        {
+          "span": {
+            "file": "Lit.toml",
+            "line": 1,
+            "col": 1,
+            "end_line": 1,
+            "end_col": 1
+          },
+          "replacement": "\n\ntest \"reply-period is due on the expected date\" {\n  given <trigger event> on <YYYY-MM-DD>\n  expect deadline(reply-period) == <YYYY-MM-DD>\n}",
+          "applicability": "has_placeholders"
+        }
+      ]
+    }
+  ]
+}

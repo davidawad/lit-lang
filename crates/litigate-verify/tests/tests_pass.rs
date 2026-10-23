@@ -1,0 +1,169 @@
+//! `tests-pass` from source: each way an inline `test` assertion is
+//! evaluated, holds, fails, or cannot be evaluated, one program per path.
+//! Each snapshot holds the `tests-pass` finding and its diagnostics.
+mod support;
+
+use litigate_base::Profile;
+use litigate_verify::{Obligation, ObligationStatus};
+use support::{edit, outcome, verify_one, with};
+
+const PERSONAL: &str = "given Served(complaint, Personal) on 2025-03-03\n  \
+                        expect deadline(answer-period) == 2025-03-24";
+
+/// `BASE`'s first test with `PERSONAL` replaced by `body`.
+fn first_test(body: &str) -> String {
+    edit(PERSONAL, body)
+}
+
+/// Snapshots the `tests-pass` outcome of `lit` and checks its status.
+macro_rules! tests_pass {
+    ($test:ident, $status:ident, $lit:expr) => {
+        #[test]
+        fn $test() {
+            let checked = verify_one(&$lit, Profile::Strict);
+            let found = outcome(&checked, Obligation::TestsPass);
+            assert_eq!(
+                found.finding.map(|f| f.status),
+                Some(ObligationStatus::$status),
+                "{found:#?}"
+            );
+            insta::assert_json_snapshot!(found);
+        }
+    };
+}
+
+tests_pass!(
+    the_latest_matching_given_triggers_the_deadline,
+    Passed,
+    first_test(
+        "given Served(complaint, Personal) on 2025-03-03\n  \
+         given Served(complaint, Personal) on 2025-03-03\n  \
+         given Served(complaint, Personal) on 2025-02-03\n  \
+         expect deadline(answer-period) == 2025-03-24"
+    )
+);
+
+tests_pass!(
+    date_order_assertions_hold_and_fail,
+    Failed,
+    first_test(
+        "given Served(complaint, Personal) on 2025-03-03\n  \
+         expect deadline(answer-period) <= 2025-03-24\n  \
+         expect deadline(answer-period) > 2025-03-20\n  \
+         expect deadline(answer-period) != 2025-03-24"
+    )
+);
+
+tests_pass!(
+    court_days_count_on_the_engine_clock,
+    Passed,
+    edit("21.days from", "21.court_days from")
+        .replacen("== 2025-03-24", "== 2025-04-01", 1)
+        .replacen("== 2025-03-27", "== 2025-04-04", 1)
+);
+
+tests_pass!(
+    a_failed_has_event_shows_the_call,
+    Failed,
+    first_test(
+        "given Served(complaint, Personal) on 2025-03-03\n  \
+         expect has_event(Answered(complaint)) == true\n  \
+         expect deadline(answer-period) == 2025-03-24"
+    )
+);
+
+tests_pass!(
+    a_failed_literal_comparison_shows_both_values,
+    Failed,
+    first_test(
+        "given Served(complaint, Personal) on 2025-03-03\n  \
+         expect 1 == 2\n  \
+         expect deadline(answer-period) == 2025-03-24"
+    )
+);
+
+tests_pass!(
+    no_deadline_version_in_force_on_the_trigger,
+    Failed,
+    first_test(
+        "given Served(complaint, Personal) on 1980-03-03\n  \
+         expect deadline(answer-period) == 1980-03-24"
+    )
+    .replacen(
+        "counted_by frcp6\n",
+        "counted_by frcp6 effective [1990-01-01, ..)\n",
+        1
+    )
+);
+
+/// The answer period's counting rule `frcp6` split at 2000: before, an
+/// earlier version given by `old` (its items); a test of a 1995 trigger.
+fn split_counting(old: &str, version: &str) -> String {
+    with(
+        "test \"answer period in 1995\" cite FRCP 12(a)\n{\n  \
+         given Served(complaint, Personal) on 1995-03-03\n  \
+         expect deadline(answer-period) == 1995-03-24\n}",
+    )
+    .replacen(
+        "counting frcp6 cite FRCP 6(a)\n",
+        &format!(
+            "counting frcp6 effective [1990-01-01, 2000-01-01){version} cite FRCP 6(a)\n\
+             {{\n{old}\n}}\n\ncounting frcp6 effective [2000-01-01, ..) cite FRCP 6(a)\n"
+        ),
+        1,
+    )
+}
+
+const OLD_RULES: &str = "  exclude_trigger_day\n  include_last_day\n  \
+                         roll_forward_on [weekend, legal_holiday]\n  holidays federal\n  \
+                         anchor trigger_day";
+
+tests_pass!(
+    each_trigger_counts_under_the_counting_version_in_force,
+    Passed,
+    split_counting(OLD_RULES, "")
+);
+
+tests_pass!(
+    no_counting_version_in_force_on_the_trigger,
+    Failed,
+    edit(
+        "counting frcp6 cite FRCP 6(a)",
+        "counting frcp6 effective [2000-01-01, ..) cite FRCP 6(a)"
+    )
+    .replacen(
+        PERSONAL,
+        "given Served(complaint, Personal) on 1995-03-03\n  \
+         expect deadline(answer-period) == 1995-03-24",
+        1
+    )
+);
+
+tests_pass!(
+    a_counting_version_that_does_not_lower_fails_its_tests,
+    Failed,
+    split_counting(
+        "  include_last_day\n  holidays federal\n  anchor trigger_day",
+        ""
+    )
+);
+
+tests_pass!(
+    a_counting_version_not_yet_known_has_no_engine_lowering,
+    Failed,
+    split_counting(OLD_RULES, " known_at 2030-01-01")
+);
+
+tests_pass!(
+    the_engine_clock_rejects_a_period_it_cannot_count,
+    Failed,
+    with(
+        "counting nbd cite FRCP 6(a)\n{\n  anchor next_business_day\n  include_last_day\n  \
+         holidays federal\n}\n\
+         rule duty zero-duty cite FRCP 12(a)\n{\n  deadline zero-period: 0.days from \
+         Served(complaint) counted_by nbd\n}\n\
+         test \"a zero-day period\" cite FRCP 12(a)\n{\n  \
+         given Served(complaint, Personal) on 2025-03-03\n  \
+         expect deadline(zero-period) == 2025-03-03\n}"
+    )
+);

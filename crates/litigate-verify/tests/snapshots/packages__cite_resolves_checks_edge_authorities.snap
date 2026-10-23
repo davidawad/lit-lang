@@ -1,0 +1,34 @@
+---
+source: crates/litigate-verify/tests/packages.rs
+expression: "outcome(&c, Obligation::CiteResolves)"
+---
+{
+  "finding": {
+    "name": "cite-resolves",
+    "status": "failed",
+    "count": 1,
+    "examples": [
+      "pkgs/demo/main.lit:38:3: L1010 `FRCP 99(a)` binds to source `frcp`, but `sources/frcp.txt` has no `## Rule 99` heading"
+    ]
+  },
+  "accepted": false,
+  "diagnostics": [
+    {
+      "code": "L1010",
+      "severity": "error",
+      "span": {
+        "file": "pkgs/demo/main.lit",
+        "line": 38,
+        "col": 3,
+        "end_line": 38,
+        "end_col": 117
+      },
+      "message": "`FRCP 99(a)` binds to source `frcp`, but `sources/frcp.txt` has no `## Rule 99` heading",
+      "notes": [
+        {
+          "message": "cite a pinpoint that exists in the vendored text, or mark the cite `?(\"why\")` until the source is vendored"
+        }
+      ]
+    }
+  ]
+}

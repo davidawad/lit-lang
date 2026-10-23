@@ -1,0 +1,71 @@
+---
+source: crates/litigate-verify/tests/edited_hir.rs
+expression: found
+---
+{
+  "finding": {
+    "name": "deadline-satisfiable",
+    "status": "failed",
+    "count": 1,
+    "examples": [
+      "pkgs/demo/main.lit:36:1: L5005 at `served`, duties `answer-period`, `reply-period` are never in force on the same day as the node, so no trigger date opens all their windows"
+    ]
+  },
+  "accepted": false,
+  "diagnostics": [
+    {
+      "code": "L5005",
+      "severity": "error",
+      "span": {
+        "file": "pkgs/demo/main.lit",
+        "line": 36,
+        "col": 1,
+        "end_line": 40,
+        "end_col": 2
+      },
+      "message": "at `served`, duties `answer-period`, `reply-period` are never in force on the same day as the node, so no trigger date opens all their windows",
+      "notes": [
+        {
+          "span": {
+            "file": "pkgs/demo/main.lit",
+            "line": 33,
+            "col": 3,
+            "end_line": 33,
+            "end_col": 74
+          },
+          "message": "`answer-period` is in force [2000-01-01, ..)"
+        },
+        {
+          "span": {
+            "file": "pkgs/demo/main.lit",
+            "line": 33,
+            "col": 3,
+            "end_line": 33,
+            "end_col": 74
+          },
+          "message": "`answer-period` is in force [2000-01-01, ..)"
+        },
+        {
+          "span": {
+            "file": "pkgs/demo/main.lit",
+            "line": 58,
+            "col": 3,
+            "end_line": 58,
+            "end_col": 72
+          },
+          "message": "`reply-period` is in force [1990-01-01, 2000-01-01)"
+        },
+        {
+          "span": {
+            "file": "pkgs/demo/main.lit",
+            "line": 58,
+            "col": 3,
+            "end_line": 58,
+            "end_col": 72
+          },
+          "message": "`reply-period` is in force [1990-01-01, 2000-01-01)"
+        }
+      ]
+    }
+  ]
+}

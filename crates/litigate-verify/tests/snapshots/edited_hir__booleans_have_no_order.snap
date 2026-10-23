@@ -1,0 +1,41 @@
+---
+source: crates/litigate-verify/tests/edited_hir.rs
+expression: "tests_pass(&with_has_event(), |p| { first_expect(p).op = BinaryOp::Lt; })"
+---
+{
+  "finding": {
+    "name": "tests-pass",
+    "status": "failed",
+    "count": 1,
+    "examples": [
+      "pkgs/demo/main.lit:46:10: L5006 cannot compare true < true"
+    ]
+  },
+  "accepted": false,
+  "diagnostics": [
+    {
+      "code": "L5006",
+      "severity": "error",
+      "span": {
+        "file": "pkgs/demo/main.lit",
+        "line": 46,
+        "col": 10,
+        "end_line": 46,
+        "end_col": 48
+      },
+      "message": "cannot compare true < true",
+      "notes": [
+        {
+          "span": {
+            "file": "pkgs/demo/main.lit",
+            "line": 43,
+            "col": 1,
+            "end_line": 47,
+            "end_col": 2
+          },
+          "message": "in test \"answer due 21 days after personal service\""
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+---
+source: crates/litigate-verify/tests/tests_pass.rs
+expression: found
+---
+{
+  "finding": {
+    "name": "tests-pass",
+    "status": "failed",
+    "count": 1,
+    "examples": [
+      "pkgs/demo/main.lit:65:10: L5006 cannot evaluate the assertion: L6001 a `trigger_day` anchor must `exclude_trigger_day` (the engine counts from the day after the trigger)"
+    ]
+  },
+  "accepted": false,
+  "diagnostics": [
+    {
+      "code": "L5006",
+      "severity": "error",
+      "span": {
+        "file": "pkgs/demo/main.lit",
+        "line": 65,
+        "col": 10,
+        "end_line": 65,
+        "end_col": 33
+      },
+      "message": "cannot evaluate the assertion: L6001 a `trigger_day` anchor must `exclude_trigger_day` (the engine counts from the day after the trigger)",
+      "notes": [
+        {
+          "span": {
+            "file": "pkgs/demo/main.lit",
+            "line": 62,
+            "col": 1,
+            "end_line": 66,
+            "end_col": 2
+          },
+          "message": "in test \"answer period in 1995\""
+        }
+      ]
+    }
+  ]
+}

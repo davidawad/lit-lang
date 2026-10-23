@@ -1,0 +1,76 @@
+---
+source: crates/litigate-verify/tests/packages.rs
+expression: "json!({\n    \"statuses\": statuses, \"graph-exits\":\n    c.verification.report.finding(Obligation::GraphExits),\n})"
+---
+{
+  "statuses": [
+    [
+      "well-typed",
+      "passed"
+    ],
+    [
+      "cite-resolves",
+      "skipped"
+    ],
+    [
+      "effective-disjoint",
+      "passed"
+    ],
+    [
+      "effective-covered",
+      "passed"
+    ],
+    [
+      "precedence-acyclic",
+      "passed"
+    ],
+    [
+      "delegation-respected",
+      "passed"
+    ],
+    [
+      "exceptions-ordered",
+      "passed"
+    ],
+    [
+      "dist-exact",
+      "passed"
+    ],
+    [
+      "graph-exits",
+      "skipped"
+    ],
+    [
+      "graph-reachable",
+      "skipped"
+    ],
+    [
+      "deadline-satisfiable",
+      "skipped"
+    ],
+    [
+      "tests-pass",
+      "passed"
+    ],
+    [
+      "case-replay",
+      "skipped"
+    ],
+    [
+      "holes",
+      "passed"
+    ],
+    [
+      "rule-without-test",
+      "passed"
+    ]
+  ],
+  "graph-exits": {
+    "name": "graph-exits",
+    "status": "skipped",
+    "count": 0,
+    "examples": [
+      "a links package has no graph or sources of its own; checked where it composes packs"
+    ]
+  }
+}

@@ -294,6 +294,6 @@ pub fn acme() -> Case {
 pub fn render_map(map: &litigate_lower::SourceMap) -> String {
     let mut map = map.clone();
     assert_eq!(map.generated.version, env!("CARGO_PKG_VERSION"));
-    map.generated.version = "[version]".to_owned();
+    "[version]".clone_into(&mut map.generated.version);
     litigate_lower::render(&map).unwrap_or_default()
 }

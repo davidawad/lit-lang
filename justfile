@@ -56,6 +56,17 @@ cov:
 cov-html:
     cargo llvm-cov nextest -p litgraph --html --open
 
+# Pure-logic coverage lane for the authoring compiler. All code in syntax,
+# sema and lower is measured; engine, CLI and LSP crates are outside this
+# compiler-only floor.
+cov-litigate:
+    cargo llvm-cov nextest -p litigate-syntax -p litigate-sema -p litigate-lower --fail-under-lines {{cov_floor}}
+
+# Ten-minute local parser and case-input fuzz smoke (five minutes each).
+fuzz:
+    cargo +nightly fuzz run parse --fuzz-dir crates/litigate-syntax/fuzz -- -max_total_time=300
+    cargo +nightly fuzz run case_replay --fuzz-dir crates/litigate-syntax/fuzz -- -max_total_time=300
+
 # --- supply chain & static checks -----------------------------------------
 
 audit:
@@ -76,6 +87,10 @@ machete:
 # bounded: CBMC cannot tractably unwind std collections/string formatting.
 verify-kani:
     cargo kani -p litgraph
+
+# Focused mutation lane for temporal, precedence, and case semantics.
+mutants:
+    cargo mutants -p litigate-sema -f 'crates/litigate-sema/src/temporal/interval.rs' -f 'crates/litigate-sema/src/temporal/transition.rs' -f 'crates/litigate-sema/src/precedence/conflict.rs' -f 'crates/litigate-sema/src/case/event.rs' -f 'crates/litigate-sema/src/case/replay.rs' -f 'crates/litigate-sema/src/case/validate.rs' --re '.*(Window::contains|Window::overlaps|Window::within|governing|Cx.*order|Cx.*deadline|claim|declared|canon|winner|active_claimants).*' -j 4 --timeout 120
 
 # --- benchmarking (optional, not part of `ci`) -----------------------------
 

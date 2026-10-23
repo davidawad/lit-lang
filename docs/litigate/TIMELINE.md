@@ -53,16 +53,25 @@ diverges, and the `choice` that defines it: `assumed_order`, `grant`,
 `probability` when the model has one).
 
 A world's view is its parent's view up to and including its fork row
-(following the parent's edges), plus its own rows. A world re-emits an ancestor row only when the row differs there (a
-different `due` or `status`); the re-emitted row has a new `id`, the same
-`source` span (or, when `source` is `null`, the same `kind` and `label`) and
-replaces the ancestor row in that world's view. Rows that do not change are
-never copied. A UI diffing two worlds pairs rows by that same key.
+(following the parent's edges), plus its own rows. Rows are matched across
+worlds by `key` only:
+
+- A row the child world changes (a different `due` or `status`) is re-emitted
+  with a new `id` and the parent row's `key`; it replaces the parent row in
+  the child's view.
+- A row the child world drops is re-emitted the same way with
+  `status.state` `superseded` (deadlines) or `none` (events) and a `reason`.
+  A child world never drops a row by leaving it out.
+- A row that exists only in the child world has a `key` the parent lacks.
+- Rows that do not change are never copied.
+
+A UI diffing two worlds pairs rows by `key`.
 
 ## Rows
 
 | Field | Meaning |
 |---|---|
+| `key` | Stable identity across worlds and runs, `<producer>#<occurrence>`: the qualified id of the producing rule node (a deadline or obligation), `event:<EventName>` for a `.case` event, or `fork:<node id>` for a fork, then the 0-based occurrence of that producer in the matter. Never derived from a label. |
 | `kind` | `event`, `deadline` or `fork`. |
 | `date` | When an event happened; `null` for deadlines and unresolved forks. |
 | `due` | A deadline's due date; `null` when it cannot be computed. |

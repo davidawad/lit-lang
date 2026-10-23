@@ -5,140 +5,451 @@
   "description": "Timeline DAG of a .case or .lit file: rows (events, deadlines, forks) per world, with layer provenance. Frozen for lg-z2m (2026-10-23); see docs/litigate/TIMELINE.md. Later work adds data, not fields.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema", "source", "as_of", "known_at", "layers", "worlds", "rows", "edges", "diagnostics"],
+  "required": [
+    "schema",
+    "source",
+    "as_of",
+    "known_at",
+    "layers",
+    "worlds",
+    "rows",
+    "edges",
+    "diagnostics"
+  ],
   "properties": {
-    "schema": { "const": "litigate.timeline/1" },
+    "schema": {
+      "const": "litigate.timeline/1"
+    },
     "source": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["file", "kind"],
+      "required": [
+        "file",
+        "kind"
+      ],
       "properties": {
-        "file": { "type": "string" },
-        "kind": { "enum": ["case", "lit"] }
+        "file": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "case",
+            "lit"
+          ]
+        }
       }
     },
-    "as_of": { "$ref": "#/$defs/date" },
-    "known_at": { "$ref": "#/$defs/date_or_null" },
-    "layers": { "type": "array", "items": { "$ref": "#/$defs/layer" } },
-    "worlds": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/world" } },
-    "rows": { "type": "array", "items": { "$ref": "#/$defs/row" } },
-    "edges": { "type": "array", "items": { "$ref": "#/$defs/edge" } },
-    "diagnostics": { "type": "array", "items": { "$ref": "#/$defs/diagnostic" } }
+    "as_of": {
+      "$ref": "#/$defs/date"
+    },
+    "known_at": {
+      "$ref": "#/$defs/date_or_null"
+    },
+    "layers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/layer"
+      }
+    },
+    "worlds": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/world"
+      }
+    },
+    "rows": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/row"
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/edge"
+      }
+    },
+    "diagnostics": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/diagnostic"
+      }
+    }
   },
   "$defs": {
-    "date": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
-    "date_or_null": { "oneOf": [{ "$ref": "#/$defs/date" }, { "type": "null" }] },
-    "id": { "type": "string", "minLength": 1 },
+    "date": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "date_or_null": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/date"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
     "span": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["file", "start", "end", "line", "column"],
+      "required": [
+        "file",
+        "start",
+        "end",
+        "line",
+        "column"
+      ],
       "properties": {
-        "file": { "type": "string" },
-        "start": { "type": "integer", "minimum": 0 },
-        "end": { "type": "integer", "minimum": 0 },
-        "line": { "type": "integer", "minimum": 1 },
-        "column": { "type": "integer", "minimum": 1 }
+        "file": {
+          "type": "string"
+        },
+        "start": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "line": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "column": {
+          "type": "integer",
+          "minimum": 1
+        }
       }
     },
     "layer_class": {
       "description": "Closed set of authority classes a layer can belong to.",
-      "enum": ["base_rule", "local_rule", "standing_order", "general_order", "emergency_declaration", "case_order", "decision"]
+      "enum": [
+        "base_rule",
+        "local_rule",
+        "standing_order",
+        "general_order",
+        "emergency_declaration",
+        "case_order",
+        "decision"
+      ]
     },
     "layer": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "class", "authority", "label", "cite", "effective", "package", "enabled"],
+      "required": [
+        "id",
+        "class",
+        "authority",
+        "label",
+        "cite",
+        "effective",
+        "package",
+        "enabled"
+      ],
       "properties": {
-        "id": { "$ref": "#/$defs/id" },
-        "class": { "$ref": "#/$defs/layer_class" },
-        "authority": { "type": "string", "description": "Level in the package's declared authority lattice, e.g. Statute, FederalRule, LocalRule, StandingOrder, CaseOrder." },
-        "label": { "type": "string" },
-        "cite": { "type": ["string", "null"] },
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "class": {
+          "$ref": "#/$defs/layer_class"
+        },
+        "authority": {
+          "type": "string",
+          "description": "Level in the package's declared authority lattice, e.g. Statute, FederalRule, LocalRule, StandingOrder, CaseOrder."
+        },
+        "label": {
+          "type": "string"
+        },
+        "cite": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "effective": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["from", "to"],
+          "required": [
+            "from",
+            "to"
+          ],
           "properties": {
-            "from": { "$ref": "#/$defs/date_or_null" },
-            "to": { "$ref": "#/$defs/date_or_null" }
+            "from": {
+              "$ref": "#/$defs/date_or_null"
+            },
+            "to": {
+              "$ref": "#/$defs/date_or_null"
+            }
           }
         },
-        "package": { "type": "string" },
-        "enabled": { "type": "boolean" }
+        "package": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        }
       }
     },
     "choice": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["kind", "label", "cite", "probability"],
+      "required": [
+        "kind",
+        "label",
+        "cite",
+        "probability"
+      ],
       "properties": {
-        "kind": { "enum": ["assumed_order", "grant", "denial", "hypothetical_decision", "election", "chance"] },
-        "label": { "type": "string" },
-        "cite": { "type": ["string", "null"] },
-        "probability": { "type": ["number", "null"], "minimum": 0, "maximum": 1 }
+        "kind": {
+          "enum": [
+            "assumed_order",
+            "grant",
+            "denial",
+            "hypothetical_decision",
+            "election",
+            "chance"
+          ]
+        },
+        "label": {
+          "type": "string"
+        },
+        "cite": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "probability": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1
+        }
       }
     },
     "world": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "label", "parent", "fork_row", "choice"],
+      "required": [
+        "id",
+        "label",
+        "parent",
+        "fork_row",
+        "choice"
+      ],
       "properties": {
-        "id": { "$ref": "#/$defs/id" },
-        "label": { "type": "string" },
-        "parent": { "type": ["string", "null"] },
-        "fork_row": { "type": ["string", "null"] },
-        "choice": { "oneOf": [{ "$ref": "#/$defs/choice" }, { "type": "null" }] }
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "label": {
+          "type": "string"
+        },
+        "parent": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "fork_row": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "choice": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/choice"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
       }
     },
     "status": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["state", "reason"],
+      "required": [
+        "state",
+        "reason"
+      ],
       "properties": {
-        "state": { "enum": ["met", "open", "late", "lapsed", "breached", "unknown", "superseded", "none"] },
-        "reason": { "type": ["string", "null"] }
+        "state": {
+          "enum": [
+            "met",
+            "open",
+            "late",
+            "lapsed",
+            "breached",
+            "unknown",
+            "superseded",
+            "none"
+          ]
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
       }
     },
     "row": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "world", "kind", "date", "due", "label", "status", "cite", "source", "layer", "provenance", "trigger"],
+      "required": [
+        "id",
+        "key",
+        "world",
+        "kind",
+        "date",
+        "due",
+        "label",
+        "status",
+        "cite",
+        "source",
+        "layer",
+        "provenance",
+        "trigger"
+      ],
       "properties": {
-        "id": { "$ref": "#/$defs/id" },
-        "world": { "$ref": "#/$defs/id" },
-        "kind": { "enum": ["event", "deadline", "fork"] },
-        "date": { "$ref": "#/$defs/date_or_null" },
-        "due": { "$ref": "#/$defs/date_or_null" },
-        "label": { "type": "string" },
-        "status": { "$ref": "#/$defs/status" },
-        "cite": { "type": ["string", "null"] },
-        "source": { "oneOf": [{ "$ref": "#/$defs/span" }, { "type": "null" }] },
-        "layer": { "$ref": "#/$defs/layer_class" },
-        "provenance": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/id" } },
-        "trigger": { "type": ["string", "null"] }
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "key": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Stable identity of the row across worlds and runs: <producer>#<occurrence>. A child world's row with the same key replaces the parent's row."
+        },
+        "world": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "enum": [
+            "event",
+            "deadline",
+            "fork"
+          ]
+        },
+        "date": {
+          "$ref": "#/$defs/date_or_null"
+        },
+        "due": {
+          "$ref": "#/$defs/date_or_null"
+        },
+        "label": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/status"
+        },
+        "cite": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/span"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "layer": {
+          "$ref": "#/$defs/layer_class"
+        },
+        "provenance": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "trigger": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
       }
     },
     "edge": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["from", "to", "world", "kind"],
+      "required": [
+        "from",
+        "to",
+        "world",
+        "kind"
+      ],
       "properties": {
-        "from": { "$ref": "#/$defs/id" },
-        "to": { "$ref": "#/$defs/id" },
-        "world": { "$ref": "#/$defs/id" },
-        "kind": { "enum": ["sequence", "triggers", "supersedes", "forks"] }
+        "from": {
+          "$ref": "#/$defs/id"
+        },
+        "to": {
+          "$ref": "#/$defs/id"
+        },
+        "world": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "enum": [
+            "sequence",
+            "triggers",
+            "supersedes",
+            "forks"
+          ]
+        }
       }
     },
     "diagnostic": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["code", "severity", "message", "source"],
+      "required": [
+        "code",
+        "severity",
+        "message",
+        "source"
+      ],
       "properties": {
-        "code": { "type": "string" },
-        "severity": { "enum": ["error", "warning", "note"] },
-        "message": { "type": "string" },
-        "source": { "oneOf": [{ "$ref": "#/$defs/span" }, { "type": "null" }] }
+        "code": {
+          "type": "string"
+        },
+        "severity": {
+          "enum": [
+            "error",
+            "warning",
+            "note"
+          ]
+        },
+        "message": {
+          "type": "string"
+        },
+        "source": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/span"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
       }
     }
   }

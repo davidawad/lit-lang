@@ -4,7 +4,7 @@ use crate::error::SyntaxError;
 use crate::grammar::{case_file, lit_file};
 use crate::lexer::lex;
 use crate::parser::{Parser, CASE_ITEM_KEYWORDS, LIT_ITEM_KEYWORDS};
-use crate::syntax_kind::LitLanguage;
+use crate::syntax_kind::{LitLanguage, SyntaxKind};
 use litigate_base::{Diagnostic, DiagnosticCode, FileId, LineIndex};
 use rowan::GreenNode;
 use std::path::Path;
@@ -14,8 +14,10 @@ pub type SyntaxNode = rowan::SyntaxNode<LitLanguage>;
 /// A syntax token of the litigate CST.
 pub type SyntaxToken = rowan::SyntaxToken<LitLanguage>;
 
-/// Which grammar a source file uses.
+/// Which grammar a source file uses. Non-exhaustive: later file classes
+/// (`.world`) are added without breaking callers.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[non_exhaustive]
 pub enum FileKind {
     /// A `.lit` rule module.
     Lit,
@@ -32,6 +34,38 @@ impl FileKind {
             "case" => Some(Self::Case),
             _ => None,
         }
+    }
+}
+
+/// Language edition of a source file, declared by its leading `edition`
+/// marker (SPEC §2). A file without a marker is edition 2026, the first
+/// edition, permanently: a later edition is opt-in by marker, so a new
+/// edition never changes the meaning of an existing file. Non-exhaustive:
+/// editions are added without breaking callers.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Hash, PartialOrd, Ord)]
+#[non_exhaustive]
+pub enum Edition {
+    /// Edition 2026 (`edition 2026`), the default.
+    #[default]
+    E2026,
+}
+
+impl Edition {
+    /// Every edition this compiler knows, oldest first.
+    pub const ALL: &'static [Self] = &[Self::E2026];
+
+    /// The marker spelling (`2026`).
+    #[must_use]
+    pub const fn as_str(self) -> &'static str {
+        match self {
+            Self::E2026 => "2026",
+        }
+    }
+
+    /// The edition a marker spells, if known.
+    #[must_use]
+    pub fn from_marker(text: &str) -> Option<Self> {
+        Self::ALL.iter().copied().find(|e| e.as_str() == text)
     }
 }
 
@@ -61,6 +95,22 @@ impl Parse {
     #[must_use]
     pub fn kind(&self) -> FileKind {
         self.kind
+    }
+
+    /// Edition declared by the file's `edition` marker; the default when
+    /// the marker is absent, or malformed (which is an L0001/L0008 error).
+    #[must_use]
+    pub fn edition(&self) -> Edition {
+        self.syntax()
+            .children()
+            .find(|node| node.kind() == SyntaxKind::EditionDecl)
+            .and_then(|node| {
+                node.children_with_tokens()
+                    .filter_map(rowan::NodeOrToken::into_token)
+                    .find(|token| token.kind() == SyntaxKind::Number)
+            })
+            .and_then(|token| Edition::from_marker(token.text()))
+            .unwrap_or_default()
     }
 
     /// Syntax errors, sorted by position, at most one per position.

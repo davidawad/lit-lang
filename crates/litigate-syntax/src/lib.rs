@@ -37,6 +37,7 @@ mod vocab;
 
 pub use error::{span_of, SyntaxError, TextFix};
 pub use format::{check_format, format, FormatError};
-pub use parse::{parse, parse_case, parse_lit, FileKind, Parse, SyntaxNode, SyntaxToken};
+pub use lexer::RESERVED_WORDS;
+pub use parse::{parse, parse_case, parse_lit, Edition, FileKind, Parse, SyntaxNode, SyntaxToken};
 pub use rowan::{TextRange, TextSize};
 pub use syntax_kind::{LitLanguage, SyntaxKind};

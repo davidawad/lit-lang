@@ -280,3 +280,30 @@ source "S" { url "https://x", as_of ?("2026-06") }
           (hole
             (string
               (string_content))))))))
+
+================================================================================
+Edition marker on a matter
+================================================================================
+
+edition 2026
+case c
+uses p ^1.0.0
+as_of 2025-01-01
+summary "s"
+
+---
+
+(source_file
+  (edition_decl
+    (number))
+  (case_file
+    (identifier)
+    (uses_decl
+      (use_item
+        (identifier)
+        (version_req)))
+    (as_of_decl
+      (date))
+    (summary_decl
+      (string
+        (string_content)))))

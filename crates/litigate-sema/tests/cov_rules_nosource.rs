@@ -34,7 +34,7 @@ state w: \"W\" { file \"File\" -> t { within brief } }
 rule duty empty {
   state x: \"X\" { _ \"go\" -> t }
 }
-rule power grant {
+rule power allow {
   decision m: \"Move?\" by Defendant { _ \"yes\" -> t }
 }
 ";
@@ -57,7 +57,7 @@ fn rules_are_found_by_name_without_spans() {
         .iter()
         .filter_map(|d| d.rule.map(|(r, k)| format!("{} in {r} ({k:?})", d.meta.id)))
         .collect();
-    assert_eq!(inside, ["x in empty (Duty)", "m in grant (Power)"]);
+    assert_eq!(inside, ["x in empty (Duty)", "m in allow (Power)"]);
 }
 
 fn rules(name: &str, deps: &[&str], body: &str) -> litigate_sema::pkg::load::LoadedPackage {

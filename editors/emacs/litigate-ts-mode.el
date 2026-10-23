@@ -72,7 +72,7 @@ The canonical format (`litigate fmt', SPEC §10) uses two."
 ;;; Keywords (kept equal to queries/highlights.scm by the ERT suite).
 
 (defconst litigate-ts-mode--declaration-keywords
-  '("module" "import" "package" "start" "group" "type" "enum" "event"
+  '("edition" "module" "import" "package" "start" "group" "type" "enum" "event"
     "state" "decision" "chance" "terminal" "link" "instance" "rule"
     "deadline" "counting" "calendar" "transition" "authority" "default"
     "exception" "test"

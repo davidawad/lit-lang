@@ -64,3 +64,17 @@ fn case_blocks_follow_case_layout() {
         "case c\nuses p ^1.0.0\nas_of 2025-01-01\nsummary \"s\"\n\nparties {\n  a: X Y\n}\n\nfacts { n: e }\n"
     );
 }
+
+#[test]
+fn the_edition_marker_stays_first() {
+    assert_eq!(
+        fmt("edition   2026\nmodule m\n"),
+        "edition 2026\n\nmodule m\n"
+    );
+    let case =
+        "edition 2026 case c uses p ^1.0.0 as_of 2025-01-01 summary \"s\" parties { a: X Y }";
+    assert_eq!(
+        format(case, FileKind::Case).as_deref(),
+        Ok("edition 2026\ncase c\nuses p ^1.0.0\nas_of 2025-01-01\nsummary \"s\"\n\nparties {\n  a: X Y\n}\n")
+    );
+}

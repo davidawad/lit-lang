@@ -32,9 +32,10 @@ pub(crate) const BODY_ITEM_KEYWORDS: &[SyntaxKind] = &[
     KwTest,
 ];
 
-/// `LitFile = ModuleDecl {ImportDecl} [PackageDecl] {Item}`.
+/// `LitFile = [EditionDecl] ModuleDecl {ImportDecl} [PackageDecl] {Item}`.
 pub(crate) fn lit_file(p: &mut Parser<'_>) {
     p.start_root(SourceFile);
+    super::edition(p);
     if !p.at_kw(KwModule) {
         p.error_expected(&[KwModule]);
     }

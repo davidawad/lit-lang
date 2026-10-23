@@ -11,7 +11,7 @@
 
 ; Declaration keywords.
 [
-  "module" "import" "package" "start" "group" "type" "enum" "event"
+  "edition" "module" "import" "package" "start" "group" "type" "enum" "event"
   "state" "decision" "chance" "terminal" "link" "instance" "rule"
   "deadline" "counting" "calendar" "transition" "authority" "default"
   "exception" "test"

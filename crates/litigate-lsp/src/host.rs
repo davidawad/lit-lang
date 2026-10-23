@@ -183,7 +183,8 @@ impl Host {
                     cases.insert(path.clone());
                 }
                 Some(FileKind::Lit) => packages.extend(package_of(path)),
-                None => packages.extend(
+                // Any other file: the package of the directory it sits in.
+                _ => packages.extend(
                     path.parent()
                         .filter(|d| d.join("Lit.toml").is_file())
                         .map(Path::to_path_buf),

@@ -4,7 +4,8 @@
  *
  * One grammar, one root (`source_file`) with two entry rules: a file that
  * starts with `module` is a `lit_file` (SPEC §3.1), one that starts with
- * `case` is a `case_file` (SPEC §3.2). Both share the expression, reference
+ * `case` is a `case_file` (SPEC §3.2), either one optionally led by an
+ * `edition` marker (SPEC §2). Both share the expression, reference
  * and literal rules (§3.3), so editors register a single parser for both
  * extensions. The compiler's hand-written parser (`crates/litigate-syntax`)
  * is the source of truth; this grammar is an editor view of the same
@@ -35,7 +36,12 @@ module.exports = grammar({
   conflicts: $ => [[$.module_path], [$.edge_decl]],
 
   rules: {
-    source_file: $ => choice($.lit_file, $.case_file),
+    source_file: $ => seq(
+      optional($.edition_decl),
+      choice($.lit_file, $.case_file),
+    ),
+
+    edition_decl: $ => seq('edition', field('edition', $.number)),
 
     ...lit,
     ...cas,

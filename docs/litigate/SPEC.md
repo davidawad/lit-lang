@@ -101,7 +101,7 @@ Punct        = "::" | "->" | "=>" | "==" | "!=" | "<=" | ">=" | "&&" | "||" | ".
 - **Keywords are contextual.** The lexer emits `Ident` for every word. The
   parser remaps it to the keyword kind (`SyntaxKind::from_keyword`) only where
   the grammar expects that keyword. So `default`, `note`, `p` and others stay
-  usable as ids. The one reserved word is `cite`. After it the lexer switches
+  usable as ids. The one reserved keyword is `cite`. After it the lexer switches
   to citation mode: it skips spaces and tabs, then consumes `CiteText` up to,
   but not including, the first newline, `{`, `}`, `,`, or `//`. Trailing
   whitespace is trimmed and internal runs of whitespace collapse to one space.
@@ -111,6 +111,20 @@ Punct        = "::" | "->" | "=>" | "==" | "!=" | "<=" | ">=" | "&&" | "||" | ".
   `cite ?("text")`: citation text that has no `CiteText` spelling (it
   contains `,`, `{`, `}`, `//`, or runs of whitespace) or that is not yet a
   resolvable citation is kept as the hole's reason (§8.1).
+- **Reserved words.** `world`, `layer`, `precedent`, `overrule`,
+  `delegable`, `lock`, `grant` and `characterization` are reserved for
+  constructs a later edition adds (worlds and layers, precedent effects,
+  delegation grants and locks). They lex as `Ident` but are L0007 wherever
+  they appear, so no source written today collides with that syntax. Only
+  the whole word is reserved: `world-court` and `"world"` are fine. The
+  list is `litigate_syntax::RESERVED_WORDS`.
+- **Edition marker.** A file may begin with `edition 2026` (`EditionDecl`,
+  §3.1-§3.2), before `module` or `case`; anywhere else it is L0001. A year
+  the compiler does not know is L0008. A file without a marker is edition
+  2026, the first edition, permanently: a later edition is opt-in by
+  marker, so a new edition never changes the meaning of an existing file.
+  `Parse::edition` reports it; editions, like file kinds, are
+  `#[non_exhaustive]` (§11).
 - **Typed literals.** `2_000_000.usd`, `21.days`, `5.court_days`,
   `3.business_days`, `2.weeks`, `9.months`, `1.years`, and `8.hours` are
   single tokens. Period amounts must be integers (L0005), except decimal
@@ -138,7 +152,8 @@ and allow a trailing comma.
 ### 3.1 Rule modules (`.lit`)
 
 ```ebnf
-LitFile      = ModuleDecl, { ImportDecl }, [ PackageDecl ], { Item } ;
+LitFile      = [ EditionDecl ], ModuleDecl, { ImportDecl }, [ PackageDecl ], { Item } ;
+EditionDecl  = "edition", Number ;                (* known years: 2026; else L0008 *)
 ModuleDecl   = "module", ModulePath ;
 ModulePath   = Ident, { ".", Ident } ;
 ImportDecl   = "import", ModulePath, [ ".", "{", Ident, { ",", Ident }, [","], "}" ] ;
@@ -237,7 +252,7 @@ Items appear in exactly this order. Only `uses`, `as_of`, and `summary` are
 required.
 
 ```ebnf
-CaseFile     = "case", Ident, UsesDecl, "as_of", Date, [ "known_at", Date ],
+CaseFile     = [ EditionDecl ], "case", Ident, UsesDecl, "as_of", Date, [ "known_at", Date ],
                "summary", String, [ "notes", String ], { SourceDecl },
                [ "start", Ref ], [ PerspectiveDecl ], [ PartiesBlock ],
                [ EventsBlock ], [ FactsBlock ], [ StakesBlock ], [ BeliefsBlock ],
@@ -1087,6 +1102,8 @@ hoc. Codes are never reused.
 | L0004 | invalid date | L3004 | missing delegation |
 | L0005 | invalid number/suffix | L3005 | exception conflict |
 | L0006 | dangling doc comment | L3006 | precedence cycle |
+| L0007 | reserved word | | |
+| L0008 | unknown edition | | |
 | L1001 | duplicate name | L3007 | no version in force |
 | L1002 | unresolved name | L3008 | invalid transition |
 | L1003 | import cycle | L3009 | invalid counting |
@@ -1250,6 +1267,13 @@ The import bead added, with no new kinds: a `CiteExpr` may hold a
 `Literal`s (`IdList::strings`), a source `as_of` may be a `HoleExpr`, and
 the forms in §2-§3 above (digit-led identifiers, decimal `duration` days,
 optional `min`/`max`). The tree-sitter grammar matches.
+
+The edition bead (lg-flu.12) added `KwEdition` and `EditionDecl`, the
+`Edition` type and `Parse::edition`, and `RESERVED_WORDS`. `FileKind` and
+`Edition` are `#[non_exhaustive]`, so a `.world` file kind or a new
+edition is additive: `parse(text, kind)` keeps its signature because the
+edition comes from the source, not the caller. The tree-sitter grammar
+matches.
 
 HIR is plain serde data with every name resolved, every literal exact, and
 JSON shape frozen by an insta snapshot. Changing any of these is a SPEC
@@ -1434,6 +1458,8 @@ gets one row per condition when the conditions classify differently.
 | C71 | L9003 anonymous edge (§5.1) | verify, cli | a | Syntactic: an `_` edge has no id in the `Ref` namespace. |
 | C72 | L9004 non-canonical format (§10) | syntax, cli | c | Whole-file comparison with the formatter's output, not a typing property. |
 | C73 | L9005 unused declaration or import | none | c | Registered, never emitted; when added it needs whole-package use analysis. |
+| C74 | L0007 reserved word used as an identifier (§2) | syntax | a | Lexical grammar. |
+| C75 | L0008 unknown edition (§2) | syntax | a | Grammar: `Edition` is a closed set per compiler. |
 
 ### 13.4 SPEC rules with no code of their own
 
@@ -1469,8 +1495,8 @@ they are listed so the v2 type system keeps them.
 ### 13.5 Summary
 
 Counting each row once by its primary class (a mixed row counts as its
-first class): obligations O1-O15 are 3 (a), 5 (b), 7 (c); codes C1-C73
-are 27 (a), 24 (b), 21 (c), one n/a; rules R1-R23 are 14 (a), 6 (b),
+first class): obligations O1-O15 are 3 (a), 5 (b), 7 (c); codes C1-C75
+are 29 (a), 24 (b), 21 (c), one n/a; rules R1-R23 are 14 (a), 6 (b),
 3 (c).
 
 - The (c) rows share six reasons: graph reachability (O10, O11, C51,

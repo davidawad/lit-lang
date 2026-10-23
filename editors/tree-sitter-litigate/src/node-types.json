@@ -1374,6 +1374,22 @@
     }
   },
   {
+    "type": "edition_decl",
+    "named": true,
+    "fields": {
+      "edition": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "number",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "effective_clause",
     "named": true,
     "fields": {},
@@ -3396,11 +3412,15 @@
     "root": true,
     "fields": {},
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
         {
           "type": "case_file",
+          "named": true
+        },
+        {
+          "type": "edition_decl",
           "named": true
         },
         {
@@ -4113,6 +4133,10 @@
   },
   {
     "type": "duty",
+    "named": false
+  },
+  {
+    "type": "edition",
     "named": false
   },
   {

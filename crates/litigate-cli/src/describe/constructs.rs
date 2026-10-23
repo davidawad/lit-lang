@@ -26,7 +26,8 @@ beliefs { observe mtd-ruling: { granted: 3, denied: 1 } }
 analysis { params: { rate: 650, opp_rate: 550 } }
 "#;
 
-const LIT: [(&str, &str, &str, &str); 25] = [
+const LIT: [(&str, &str, &str, &str); 26] = [
+    ("edition", "Optional first line of a .lit or .case file naming its language edition; absent means 2026 (L0008 for an unknown year).", "edition 2026", "not emitted"),
     ("module", "Names the module; the first line of every .lit file.", "module demo.rules", "not emitted"),
     ("import", "Brings another module's declarations into scope.", "import demo.counting.{rule6}", "not emitted"),
     ("package", "Optional restatement of Lit.toml identity (must agree, L1005).", "package demo-rules { forum demo, authority FederalRule }", "not emitted"),
@@ -98,6 +99,8 @@ mod tests {
         for (name, _, example, _) in LIT {
             let text = if name == "module" {
                 format!("{example}\n")
+            } else if name == "edition" {
+                format!("{example}\nmodule m\n")
             } else {
                 format!("module m\n\n{example}\n")
             };

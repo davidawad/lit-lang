@@ -88,6 +88,20 @@ const UNIT_SUFFIXES: [&str; 8] = [
     "usd",
 ];
 
+/// Words reserved for constructs a later edition adds (SPEC §2): the
+/// lexer reports each as L0007 wherever it appears as an identifier, so
+/// no source written today can collide with that syntax.
+pub const RESERVED_WORDS: [&str; 8] = [
+    "world",
+    "layer",
+    "precedent",
+    "overrule",
+    "delegable",
+    "lock",
+    "grant",
+    "characterization",
+];
+
 /// Lexes `text` into a lossless token stream plus lexical errors.
 #[must_use]
 pub fn lex(text: &str) -> (Vec<Token>, Vec<SyntaxError>) {
@@ -166,7 +180,20 @@ impl Lexer<'_> {
                 self.push(SyntaxKind::KwCite, start, end);
                 return self.cite(start, end, rest);
             }
-            Raw::Ident => self.push(SyntaxKind::Ident, start, end),
+            Raw::Ident => {
+                if RESERVED_WORDS.contains(&text) {
+                    self.error(
+                        DiagnosticCode::ReservedWord,
+                        start,
+                        end,
+                        format!(
+                            "`{text}` is reserved for a future language construct and cannot be \
+                             used as an identifier"
+                        ),
+                    );
+                }
+                self.push(SyntaxKind::Ident, start, end);
+            }
             Raw::Underscore => self.push(SyntaxKind::Underscore, start, end),
             other => self.push(punct_kind(other, text), start, end),
         }

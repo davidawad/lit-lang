@@ -125,15 +125,15 @@ fn block_values_table() {
         ("facts: a block with no record", "facts nothing\nstakes { answered: 0.usd, defaulted: 0.usd }"),
         (
             "beliefs: an observation with no node",
-            "stakes { answered: 0.usd, defaulted: 0.usd }\nbeliefs { observe : { grant: 1 } }",
+            "stakes { answered: 0.usd, defaulted: 0.usd }\nbeliefs { observe : { allow: 1 } }",
         ),
         (
             "beliefs: an outcome with no count",
-            "stakes { answered: 0.usd, defaulted: 0.usd }\nbeliefs { observe bench: { grant: , deny: 1 } }",
+            "stakes { answered: 0.usd, defaulted: 0.usd }\nbeliefs { observe bench: { allow: , deny: 1 } }",
         ),
         (
             "beliefs: a count that is not a non-negative integer",
-            "stakes { answered: 0.usd, defaulted: 0.usd }\nbeliefs { observe bench: { grant: 1.5, deny: 1 } }",
+            "stakes { answered: 0.usd, defaulted: 0.usd }\nbeliefs { observe bench: { allow: 1.5, deny: 1 } }",
         ),
         (
             "beliefs: an observation with no outcomes",

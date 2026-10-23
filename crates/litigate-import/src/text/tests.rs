@@ -26,7 +26,19 @@ fn identifiers_follow_the_lexer() {
         assert!(is_ident(good), "{good}");
     }
     for bad in [
-        "", "_", "cite", "a-", "-a", "1", "1-a", "a--b", "a.b", "a b", "é",
+        "",
+        "_",
+        "cite",
+        "world",
+        "characterization",
+        "a-",
+        "-a",
+        "1",
+        "1-a",
+        "a--b",
+        "a.b",
+        "a b",
+        "é",
     ] {
         assert!(!is_ident(bad), "{bad}");
     }
@@ -97,7 +109,9 @@ proptest! {
     #[test]
     fn prop_identifier_check_agrees_with_the_lexer(text in "[a-z0-9_-]{1,12}") {
         let lexed = tokens(&text);
-        let one_ident = lexed.len() == 1 && lexed[0].0 == SyntaxKind::Ident && text != "cite";
+        // A reserved word lexes as an identifier with an L0007 error.
+        let clean = lex(&text).1.is_empty();
+        let one_ident = lexed.len() == 1 && lexed[0].0 == SyntaxKind::Ident && clean && text != "cite";
         prop_assert_eq!(is_ident(&text), one_ident, "{:?}", lexed);
     }
 

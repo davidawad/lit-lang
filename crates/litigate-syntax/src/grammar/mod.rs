@@ -11,8 +11,37 @@ mod values;
 pub(crate) use case::case_file;
 pub(crate) use items::lit_file;
 
+use crate::error::SyntaxError;
+use crate::parse::Edition;
 use crate::parser::Parser;
 use crate::syntax_kind::SyntaxKind::{self, *};
+use litigate_base::DiagnosticCode;
+
+/// `EditionDecl = "edition", Number`: the optional first item of a `.lit`
+/// or `.case` file (SPEC §2). A year this compiler does not know is L0008.
+pub(crate) fn edition(p: &mut Parser<'_>) {
+    if !p.at_kw(KwEdition) {
+        return;
+    }
+    p.start(EditionDecl);
+    p.bump_as(KwEdition);
+    let (at, year) = (p.current_range(), p.nth_text(0));
+    if p.expect(Number) && Edition::from_marker(year).is_none() {
+        let known: Vec<std::string::String> = Edition::ALL
+            .iter()
+            .map(|edition| format!("`{}`", edition.as_str()))
+            .collect();
+        p.push_error(SyntaxError::new(
+            DiagnosticCode::UnknownEdition,
+            at,
+            format!(
+                "unknown edition `{year}`; this compiler knows {}",
+                known.join(", ")
+            ),
+        ));
+    }
+    p.finish();
+}
 
 /// Separator discipline of a delimited list.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

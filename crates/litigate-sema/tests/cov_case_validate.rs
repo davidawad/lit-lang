@@ -54,17 +54,17 @@ fn observations_table() {
         (
             "ok: a decision of an actor no party plays is a draw",
             "perspective p",
-            "observe bench: { grant: 2, deny: 1 }",
+            "observe bench: { allow: 2, deny: 1 }",
         ),
         (
             "ok: an actor's role set explicitly",
             "perspective { Court: nature }",
-            "observe bench: { grant: 2, deny: 1 }",
+            "observe bench: { allow: 2, deny: 1 }",
         ),
         (
             "outcome: a link edge is not the node's own outcome",
             "perspective p",
-            "observe bench: { grant: 2, hop: 1 }",
+            "observe bench: { allow: 2, hop: 1 }",
         ),
         (
             "not a draw: a decision with one edge",
@@ -79,7 +79,7 @@ fn observations_table() {
         (
             "not a draw: a decision an actor of the perspective takes",
             "perspective { Court: opponent }",
-            "observe bench: { grant: 2, deny: 1 }",
+            "observe bench: { allow: 2, deny: 1 }",
         ),
     ];
     let table: BTreeMap<&str, Vec<String>> = rows

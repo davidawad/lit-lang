@@ -32,6 +32,7 @@ const REQUIRED: [SyntaxKind; 3] = [KwUses, KwAsOf, KwSummary];
 /// `CaseFile = "case" Ident UsesDecl "as_of" Date ...`.
 pub(crate) fn case_file(p: &mut Parser<'_>) {
     p.start_root(CaseFile);
+    super::edition(p);
     let header = p.current_range();
     if p.eat_kw(KwCase) {
         p.expect(Ident);

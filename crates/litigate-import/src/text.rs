@@ -27,8 +27,9 @@ pub fn string(value: &str) -> String {
 
 /// Whether `text` lexes as one identifier token (SPEC §2): letters, digits
 /// and `_`, hyphens only between two of those, starting with a letter or
-/// `_` (or digits then a letter). The reserved word `cite` and a lone `_`
-/// are not identifiers.
+/// `_` (or digits then a letter). The reserved word `cite`, the words
+/// reserved for later editions ([`litigate_syntax::RESERVED_WORDS`]) and a
+/// lone `_` are not identifiers.
 #[must_use]
 pub fn is_ident(text: &str) -> bool {
     let continues = |c: char| c.is_ascii_alphanumeric() || c == '_';
@@ -44,6 +45,7 @@ pub fn is_ident(text: &str) -> bool {
     leading_ok
         && text != "_"
         && text != "cite"
+        && !litigate_syntax::RESERVED_WORDS.contains(&text)
         && text
             .split('-')
             .all(|part| !part.is_empty() && part.chars().all(continues))

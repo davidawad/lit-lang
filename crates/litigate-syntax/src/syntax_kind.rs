@@ -129,7 +129,7 @@ syntax_kinds! {
         KwRebuts = "rebuts", KwUndercuts = "undercuts", KwPriority = "priority",
         KwUnless = "unless", KwOtherwise = "otherwise", KwGiven = "given",
         KwExpect = "expect", KwTrue = "true", KwFalse = "false", KwUnit = "unit",
-        KwUrl = "url",
+        KwUrl = "url", KwEdition = "edition",
     }
     nodes {
         SourceFile => "Root of a `.lit` module.",
@@ -212,6 +212,7 @@ syntax_kinds! {
         Param => "One `name: Type` event parameter (additive, W1 syntax).",
         FieldExpr => "Field projection `expr.field` after a non-ref primary (additive, W1 syntax).",
         Ratio => "Probability ratio `n/d` written without spaces (additive, W1 syntax).",
+        EditionDecl => "Leading edition marker `edition 2026` of a `.lit` or `.case` file (additive).",
     }
 }
 

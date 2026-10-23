@@ -148,7 +148,7 @@ chance f2: \"F2\" by Court
 
 decision bench: \"Bench\" by Court
 {
-  grant \"Grant\" -> answered
+  allow \"Grant\" -> answered
   deny \"Deny\" -> defaulted
 }
 

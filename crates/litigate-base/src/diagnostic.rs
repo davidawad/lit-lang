@@ -116,9 +116,11 @@ mod tests {
         let mut diagnostic =
             Diagnostic::error(DiagnosticCode::UnexpectedToken, span.clone(), "bad token");
         assert_eq!(diagnostic.severity, Severity::Error);
-        assert!(diagnostic.notes.is_empty() && diagnostic.fixes.is_empty());
+        assert!(diagnostic.notes.is_empty());
+        assert!(diagnostic.fixes.is_empty());
         let value = serde_json::to_value(&diagnostic).unwrap();
-        assert!(value.get("notes").is_none() && value.get("fixes").is_none());
+        assert!(value.get("notes").is_none());
+        assert!(value.get("fixes").is_none());
         diagnostic.notes.push(Note {
             span: None,
             message: "expected identifier".into(),
@@ -135,5 +137,78 @@ mod tests {
             decoded.fixes[0].applicability,
             Applicability::MachineApplicable
         );
+    }
+
+    fn error_of(value: serde_json::Value) -> String {
+        serde_json::from_value::<Diagnostic>(value)
+            .unwrap_err()
+            .to_string()
+    }
+
+    fn wire() -> serde_json::Value {
+        serde_json::json!({
+            "code": DiagnosticCode::UnexpectedToken.as_str(),
+            "severity": "warning",
+            "span": {"file": "a.lit", "line": 1, "col": 1, "end_line": 1, "end_col": 2},
+            "message": "m",
+        })
+    }
+
+    #[test]
+    fn wire_form_decodes_with_defaults() {
+        let decoded: Diagnostic = serde_json::from_value(wire()).unwrap();
+        assert_eq!(decoded.severity, Severity::Warning);
+        assert_eq!(decoded.span.file.0, "a.lit");
+        assert!(decoded.notes.is_empty());
+        assert!(decoded.fixes.is_empty());
+        for (text, severity) in [
+            ("error", Severity::Error),
+            ("info", Severity::Info),
+            ("hint", Severity::Hint),
+        ] {
+            assert_eq!(
+                serde_json::from_value::<Severity>(serde_json::json!(text)).unwrap(),
+                severity
+            );
+        }
+        for (text, applicability) in [
+            ("maybe_incorrect", Applicability::MaybeIncorrect),
+            ("has_placeholders", Applicability::HasPlaceholders),
+            ("unspecified", Applicability::Unspecified),
+        ] {
+            assert_eq!(
+                serde_json::from_value::<Applicability>(serde_json::json!(text)).unwrap(),
+                applicability
+            );
+        }
+    }
+
+    #[test]
+    fn malformed_wire_forms_are_rejected_with_the_field_named() {
+        let mut bad_code = wire();
+        bad_code["code"] = serde_json::json!(101);
+        assert!(error_of(bad_code).contains("expected a string"));
+        let mut unknown_code = wire();
+        unknown_code["code"] = serde_json::json!("L3999");
+        assert!(error_of(unknown_code).contains("unknown diagnostic code L3999"));
+        let mut severity = wire();
+        severity["severity"] = serde_json::json!("fatal");
+        assert!(error_of(severity).contains("unknown variant `fatal`"));
+        let mut missing = wire();
+        missing.as_object_mut().unwrap().remove("span");
+        assert!(error_of(missing).contains("missing field `span`"));
+        let mut line = wire();
+        line["span"]["line"] = serde_json::json!(-1);
+        assert!(error_of(line).contains("invalid value"));
+        let mut fix = wire();
+        fix["fixes"] = serde_json::json!([{
+            "span": wire()["span"],
+            "replacement": "x",
+            "applicability": "always",
+        }]);
+        assert!(error_of(fix).contains("unknown variant `always`"));
+        let mut note = wire();
+        note["notes"] = serde_json::json!([{"span": null}]);
+        assert!(error_of(note).contains("missing field `message`"));
     }
 }

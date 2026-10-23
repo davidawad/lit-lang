@@ -60,8 +60,9 @@ impl LineIndex {
     /// Returns the byte offset of the beginning of a one-based line.
     #[must_use]
     pub fn line_start(&self, line: u32) -> Option<usize> {
-        let index = usize::try_from(line.checked_sub(1)?).ok()?;
-        self.starts.get(index).copied()
+        line.checked_sub(1)
+            .and_then(|index| self.starts.get(index as usize))
+            .copied()
     }
 }
 
@@ -75,6 +76,9 @@ mod tests {
         assert_eq!(index.line_col(3), (2, 1));
         assert_eq!(index.line_col(99), (2, 4));
         assert_eq!(index.line_start(2), Some(3));
+        assert_eq!(index.line_start(1), Some(0));
+        assert_eq!(index.line_start(0), None);
+        assert_eq!(index.line_start(3), None);
     }
 
     #[test]

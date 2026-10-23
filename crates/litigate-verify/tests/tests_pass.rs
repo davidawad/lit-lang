@@ -125,9 +125,15 @@ fn split_counting(old: &str, version: &str) -> String {
     )
 }
 
+/// Personal delivery adds nothing; the fixtures' rules recognize no other
+/// service method.
 const OLD_RULES: &str = "  exclude_trigger_day\n  include_last_day\n  \
                          roll_forward_on [weekend, legal_holiday]\n  holidays federal\n  \
-                         anchor trigger_day";
+                         anchor trigger_day\n  service_extension { Personal: 0.days, \
+                         Electronic: unrecognized, Mail: unrecognized, Clerk: unrecognized, \
+                         OtherConsented: unrecognized, CommercialCarrier: unrecognized, \
+                         PrisonMail: unrecognized, MailForeign: unrecognized, \
+                         Express: unrecognized, ExpressForeign: unrecognized }";
 
 tests_pass!(
     each_trigger_counts_under_the_counting_version_in_force,
@@ -169,9 +175,9 @@ tests_pass!(
     the_engine_clock_rejects_a_period_it_cannot_count,
     Failed,
     with(
-        "counting nbd cite \"FRCP 6(a)\"\n{\n  anchor next_business_day\n  include_last_day\n  \
-         holidays federal\n}\n\
-         rule duty zero-duty cite \"FRCP 12(a)\"\n{\n  deadline zero-period: 0.days from \
+        "counting nbd cite FRCP 6(a)\n{\n  anchor next_business_day\n  include_last_day\n  \
+         holidays federal\n  service_extension { Personal: 0.days, Electronic: unrecognized, Mail: unrecognized, Clerk: unrecognized, OtherConsented: unrecognized, CommercialCarrier: unrecognized, PrisonMail: unrecognized, MailForeign: unrecognized, Express: unrecognized, ExpressForeign: unrecognized }\n}\n\
+         rule duty zero-duty cite FRCP 12(a)\n{\n  deadline zero-period: 0.days from \
          Served(complaint) counted_by nbd\n}\n\
          test \"a zero-day period\" cite \"FRCP 12(a)\"\n{\n  \
          given Served(complaint, Personal) on 2025-03-03\n  \
@@ -183,9 +189,9 @@ tests_pass!(
     weeks_months_and_years_count_with_nominal_and_adjusted_dates,
     Passed,
     with(
-        "counting monthly cite \"FRCP 6(a)\"\n{\n  exclude_trigger_day\n  include_last_day\n  \
-         roll_forward_on [weekend, legal_holiday]\n  holidays federal\n  end_of_month clamp\n}\n\
-         rule duty period-duty cite \"FRCP 12(a)\"\n{\n  \
+        "counting monthly cite FRCP 6(a)\n{\n  exclude_trigger_day\n  include_last_day\n  \
+         roll_forward_on [weekend, legal_holiday]\n  holidays federal\n  end_of_month clamp\n  service_extension { Personal: 0.days, Electronic: unrecognized, Mail: unrecognized, Clerk: unrecognized, OtherConsented: unrecognized, CommercialCarrier: unrecognized, PrisonMail: unrecognized, MailForeign: unrecognized, Express: unrecognized, ExpressForeign: unrecognized }\n}\n\
+         rule duty period-duty cite FRCP 12(a)\n{\n  \
          deadline week-period: 2.weeks from Served(complaint) counted_by monthly\n  \
          deadline month-period: 3.months from Served(complaint) counted_by monthly\n  \
          deadline year-period: 1.years from Served(complaint) counted_by monthly\n}\n\

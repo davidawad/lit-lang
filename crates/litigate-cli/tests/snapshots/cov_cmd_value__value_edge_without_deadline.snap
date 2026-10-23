@@ -19,9 +19,9 @@ expression: stable(&run.json)
     "id": "cov-pack::default",
     "span": {
       "file": "lit/cov/cov.lit",
-      "line": 78,
+      "line": 89,
       "col": 3,
-      "end_line": 78,
+      "end_line": 89,
       "end_col": 84
     },
     "steps": [
@@ -40,9 +40,9 @@ expression: stable(&run.json)
         "known_at": "2025-01-01",
         "span": {
           "file": "lit/cov/cov.lit",
-          "line": 64,
+          "line": 75,
           "col": 1,
-          "end_line": 79,
+          "end_line": 90,
           "end_col": 2
         }
       }
@@ -57,7 +57,7 @@ expression: stable(&run.json)
         "file": "lit/cov/cov.lit",
         "line": 22,
         "col": 1,
-        "end_line": 31,
+        "end_line": 42,
         "end_col": 2
       },
       "message": "counting rule `frcp6` counts no tested deadline",
@@ -76,9 +76,9 @@ expression: stable(&run.json)
       "severity": "warning",
       "span": {
         "file": "lit/cov/cov.lit",
-        "line": 41,
+        "line": 52,
         "col": 3,
-        "end_line": 41,
+        "end_line": 52,
         "end_col": 91
       },
       "message": "deadline `amended-answer-period` has no test that evaluates `deadline(amended-answer-period)`",
@@ -88,9 +88,9 @@ expression: stable(&run.json)
             {
               "span": {
                 "file": "lit/cov/cov.lit",
-                "line": 41,
+                "line": 52,
                 "col": 91,
-                "end_line": 41,
+                "end_line": 52,
                 "end_col": 91
               },
               "replacement": "\n\ntest \"amended-answer-period is due on the expected date\" {\n  given <trigger event> on <YYYY-MM-DD>\n  expect deadline(amended-answer-period) == <YYYY-MM-DD>\n}"
@@ -109,9 +109,9 @@ expression: stable(&run.json)
       "severity": "warning",
       "span": {
         "file": "lit/cov/cov.lit",
-        "line": 46,
+        "line": 57,
         "col": 3,
-        "end_line": 46,
+        "end_line": 57,
         "end_col": 74
       },
       "message": "deadline `answer-period` has no test that evaluates `deadline(answer-period)`",
@@ -121,9 +121,9 @@ expression: stable(&run.json)
             {
               "span": {
                 "file": "lit/cov/cov.lit",
-                "line": 46,
+                "line": 57,
                 "col": 74,
-                "end_line": 46,
+                "end_line": 57,
                 "end_col": 74
               },
               "replacement": "\n\ntest \"answer-period is due on the expected date\" {\n  given <trigger event> on <YYYY-MM-DD>\n  expect deadline(answer-period) == <YYYY-MM-DD>\n}"
@@ -142,9 +142,9 @@ expression: stable(&run.json)
       "severity": "warning",
       "span": {
         "file": "lit/cov/cov.lit",
-        "line": 49,
+        "line": 60,
         "col": 1,
-        "end_line": 49,
+        "end_line": 60,
         "end_col": 89
       },
       "message": "deadline `brief-period` has no test that evaluates `deadline(brief-period)`",
@@ -154,9 +154,9 @@ expression: stable(&run.json)
             {
               "span": {
                 "file": "lit/cov/cov.lit",
-                "line": 49,
+                "line": 60,
                 "col": 89,
-                "end_line": 49,
+                "end_line": 60,
                 "end_col": 89
               },
               "replacement": "\n\ntest \"brief-period is due on the expected date\" {\n  given <trigger event> on <YYYY-MM-DD>\n  expect deadline(brief-period) == <YYYY-MM-DD>\n}"
@@ -175,10 +175,10 @@ expression: stable(&run.json)
       "severity": "warning",
       "span": {
         "file": "lit/cov/cov.lit",
-        "line": 51,
+        "line": 62,
         "col": 1,
-        "end_line": 51,
-        "end_col": 123
+        "end_line": 62,
+        "end_col": 121
       },
       "message": "deadline `reply-period` has no test that evaluates `deadline(reply-period)`",
       "fixes": [
@@ -187,10 +187,10 @@ expression: stable(&run.json)
             {
               "span": {
                 "file": "lit/cov/cov.lit",
-                "line": 51,
-                "col": 123,
-                "end_line": 51,
-                "end_col": 123
+                "line": 62,
+                "col": 121,
+                "end_line": 62,
+                "end_col": 121
               },
               "replacement": "\n\ntest \"reply-period is due on the expected date\" {\n  given <trigger event> on <YYYY-MM-DD>\n  expect deadline(reply-period) == <YYYY-MM-DD>\n}"
             }
@@ -208,9 +208,9 @@ expression: stable(&run.json)
       "severity": "info",
       "span": {
         "file": "lit/cov/cov.lit",
-        "line": 88,
+        "line": 99,
         "col": 51,
-        "end_line": 88,
+        "end_line": 99,
         "end_col": 94
       },
       "message": "the edge `answered -> judgment-entered` has no id, so cases and links cannot name it",
@@ -224,9 +224,9 @@ expression: stable(&run.json)
       "severity": "info",
       "span": {
         "file": "lit/cov/cov.lit",
-        "line": 92,
+        "line": 103,
         "col": 3,
-        "end_line": 92,
+        "end_line": 103,
         "end_col": 42
       },
       "message": "the edge `default-risk -> judgment-entered` has no id, so cases and links cannot name it",
@@ -240,9 +240,9 @@ expression: stable(&run.json)
       "severity": "info",
       "span": {
         "file": "lit/cov/cov.lit",
-        "line": 93,
+        "line": 104,
         "col": 3,
-        "end_line": 93,
+        "end_line": 104,
         "end_col": 56
       },
       "message": "the edge `default-risk -> judgment-entered` has no id, so cases and links cannot name it",

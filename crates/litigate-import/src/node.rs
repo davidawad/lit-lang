@@ -347,6 +347,9 @@ impl Spelling<'_> {
         if let Some(note) = &deadline.note {
             opts.push(format!("note {}", text::string(note)));
         }
+        if let Some(counting) = &deadline.counting {
+            opts.push(format!("counting {}", text::string(counting)));
+        }
         if opts.is_empty() {
             out
         } else {

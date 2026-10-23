@@ -39,6 +39,7 @@ fn edge(id: Option<&str>, to: &str, p: Authored<Rational>) -> Edge {
             extendable: Some(true),
             extension_authority: None,
             note: None,
+            counting: None,
         }),
         duration: None,
         valence: Some(Valence::Bad),

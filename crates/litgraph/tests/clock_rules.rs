@@ -116,9 +116,24 @@ fn a_method_a_rule_recognizes_for_no_days_adds_none_and_says_nothing() {
         ("frap26", ServiceMethod::Electronic),
         ("frcp6", ServiceMethod::Personal),
     ] {
-        let served = run(id, "2026-07-20", 14, Direction::Forward, Unit::Calendar, Some(method))
-            .unwrap();
-        let unserved = run(id, "2026-07-20", 14, Direction::Forward, Unit::Calendar, None).unwrap();
+        let served = run(
+            id,
+            "2026-07-20",
+            14,
+            Direction::Forward,
+            Unit::Calendar,
+            Some(method),
+        )
+        .unwrap();
+        let unserved = run(
+            id,
+            "2026-07-20",
+            14,
+            Direction::Forward,
+            Unit::Calendar,
+            None,
+        )
+        .unwrap();
         assert_eq!(served.due_date, unserved.due_date, "{id} {method:?}");
         assert!(!served.service_days_added);
         assert_eq!(served.steps, unserved.steps);
@@ -518,9 +533,36 @@ fn a_forward_only_holiday_closes_forward_periods_only() {
     // Monday 2026-08-03 is the state holiday.
     assert!(clock.is_forward_holiday(d("2026-08-03")));
     assert!(!clock.is_closed(d("2026-08-03"), &[]));
-    assert_eq!(count("2026-07-27", 7, Direction::Forward, Unit::Calendar), "2026-08-04");
-    assert_eq!(count("2026-08-10", 7, Direction::Backward, Unit::Calendar), "2026-08-03");
+    assert_eq!(
+        count("2026-07-27", 7, Direction::Forward, Unit::Calendar),
+        "2026-08-04"
+    );
+    assert_eq!(
+        count("2026-08-10", 7, Direction::Backward, Unit::Calendar),
+        "2026-08-03"
+    );
     // Court days skip it forward, count it backward.
-    assert_eq!(count("2026-07-31", 1, Direction::Forward, Unit::Court), "2026-08-04");
-    assert_eq!(count("2026-08-04", 1, Direction::Backward, Unit::Court), "2026-08-03");
+    assert_eq!(
+        count("2026-07-31", 1, Direction::Forward, Unit::Court),
+        "2026-08-04"
+    );
+    assert_eq!(
+        count("2026-08-04", 1, Direction::Backward, Unit::Court),
+        "2026-08-03"
+    );
+}
+
+/// A rule recognizing no service method refuses every one, and says so.
+#[test]
+fn a_rule_recognizing_no_method_refuses_every_one() {
+    let err = run(
+        "uspto-1-7",
+        "2026-07-20",
+        14,
+        Direction::Forward,
+        Unit::Calendar,
+        Some(ServiceMethod::Mail),
+    )
+    .unwrap_err();
+    assert!(err.to_string().ends_with("it recognizes none"), "{err}");
 }

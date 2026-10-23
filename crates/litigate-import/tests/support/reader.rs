@@ -179,6 +179,7 @@ fn edge_fields(mut f: Map<String, Value>, out: &mut Map<String, Value>) {
                 &mut deadline,
             );
             take(&mut opts, "note", "note", &mut deadline);
+            take(&mut opts, "counting", "counting", &mut deadline);
         }
         out.insert("deadline".into(), Value::Object(deadline));
     }

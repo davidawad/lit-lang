@@ -101,13 +101,20 @@ fn fragments_overlay_the_library() {
 }
 
 #[test]
-fn service_methods_the_rule_recognizes_extend_the_period() {
+fn the_trigger_s_service_method_extends_the_period_or_is_refused() {
     let clock = EngineClock::new([]);
     let mut r = request("frcp6", None);
-    r.service = vec!["personal".into(), "mail".into()];
+    r.service = vec!["complaint".into(), "mail".into()];
     assert_eq!(clock.due(&r).as_deref(), Ok("2025-03-27"));
-    r.service = vec!["personal".into(), "carrier-pigeon".into()];
+    r.service = vec!["personal".into(), "mail".into()];
     assert_eq!(clock.due(&r).as_deref(), Ok("2025-03-24"));
+    r.service = vec!["carrier-pigeon".into()];
+    assert_eq!(clock.due(&r).as_deref(), Ok("2025-03-24"));
+    // FRCP 6(d) names no prison mailing system: the period is not counted.
+    r.service = vec!["prison-mail".into()];
+    assert!(clock
+        .due(&r)
+        .is_err_and(|e| e.contains("PrisonMail is not valid")));
 }
 
 #[test]

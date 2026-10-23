@@ -145,6 +145,7 @@ fn edge_values_without_a_lowering() {
         extendable: None,
         extension_authority: None,
         note: None,
+        counting: None,
     });
     only(&p, C::LoweringUnsupported, "business-day");
 

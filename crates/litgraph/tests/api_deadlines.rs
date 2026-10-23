@@ -470,5 +470,8 @@ fn a_deadline_naming_its_own_counting_rule_is_counted_by_it() {
         &c,
     );
     assert!(resp.ok, "{resp:?}");
-    assert_eq!(resp.result.unwrap()["deadlines"][0]["rule_set"], json!("frap26"));
+    assert_eq!(
+        resp.result.unwrap()["deadlines"][0]["rule_set"],
+        json!("frap26")
+    );
 }

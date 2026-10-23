@@ -3,41 +3,41 @@ source: crates/litigate-cli/tests/check.rs
 expression: text
 ---
 [L5002] Error: strict does not permit holes: no calibration yet
-    ╭─[ lit/examples/rule12.lit:72:43 ]
+    ╭─[ lit/examples/rule12.lit:83:43 ]
     │
- 72 │   granted "Motion granted" -> dismissed p ?("no calibration yet")
+ 83 │   granted "Motion granted" -> dismissed p ?("no calibration yet")
     │                                           ───────────┬───────────  
     │                                                      ╰───────────── Strict profile does not permit unresolved holes
     │ 
     │ Note: replace the `?` with a sourced value
 ────╯
 [L5002] Error: strict does not permit holes: no reason given
-    ╭─[ lit/examples/rule12.lit:73:40 ]
+    ╭─[ lit/examples/rule12.lit:84:40 ]
     │
- 73 │   denied "Motion denied" -> answered p ?
+ 84 │   denied "Motion denied" -> answered p ?
     │                                        ┬  
     │                                        ╰── Strict profile does not permit unresolved holes
     │ 
     │ Note: replace the `?` with a sourced value
 ────╯
 [L9003] Advice: the edge `answered -> judgment-entered` has no id, so cases and links cannot name it
-    ╭─[ lit/examples/rule12.lit:76:51 ]
+    ╭─[ lit/examples/rule12.lit:87:51 ]
     │
- 76 │ state answered: "Answer filed" { group pleadings, _ "Proceed to judgment" -> judgment-entered }
+ 87 │ state answered: "Answer filed" { group pleadings, _ "Proceed to judgment" -> judgment-entered }
     │                                                   ─────────────────────┬─────────────────────  
     │                                                                        ╰─────────────────────── An anonymous edge cannot be referenced by cases or links
 ────╯
 [L9003] Advice: the edge `default-risk -> judgment-entered` has no id, so cases and links cannot name it
-    ╭─[ lit/examples/rule12.lit:77:60 ]
+    ╭─[ lit/examples/rule12.lit:88:60 ]
     │
- 77 │ state default-risk: "Failure to respond" { group outcomes, _ "Default entered" -> judgment-entered }
+ 88 │ state default-risk: "Failure to respond" { group outcomes, _ "Default entered" -> judgment-entered }
     │                                                            ───────────────────┬───────────────────  
     │                                                                               ╰───────────────────── An anonymous edge cannot be referenced by cases or links
 ────╯
 [L5002] Error: strict does not permit holes: no reason given
-    ╭─[ lit/examples/rule12.lit:79:97 ]
+    ╭─[ lit/examples/rule12.lit:90:97 ]
     │
- 79 │ terminal judgment-entered: "Judgment entered" outcome [judgment, loss] { group outcomes, payoff ? }
+ 90 │ terminal judgment-entered: "Judgment entered" outcome [judgment, loss] { group outcomes, payoff ? }
     │                                                                                                 ┬  
     │                                                                                                 ╰── Strict profile does not permit unresolved holes
     │ 
@@ -184,9 +184,9 @@ litigate check: failed (3 error(s), 0 warning(s))
       "status": "failed",
       "count": 3,
       "examples": [
-        "lit/examples/rule12.lit:72:43: L5002 strict does not permit holes: no calibration yet",
-        "lit/examples/rule12.lit:73:40: L5002 strict does not permit holes: no reason given",
-        "lit/examples/rule12.lit:79:97: L5002 strict does not permit holes: no reason given"
+        "lit/examples/rule12.lit:83:43: L5002 strict does not permit holes: no calibration yet",
+        "lit/examples/rule12.lit:84:40: L5002 strict does not permit holes: no reason given",
+        "lit/examples/rule12.lit:90:97: L5002 strict does not permit holes: no reason given"
       ],
       "evidence": {
         "checked": 3,
@@ -208,7 +208,7 @@ litigate check: failed (3 error(s), 0 warning(s))
     {
       "name": "frcp-rule12-example",
       "version": "0.1.0",
-      "digest": "sha256:aa3af123e2ce08896ee693aa9d33dd5347e9e862e50e5464ede421248836d2ea",
+      "digest": "sha256:af29823dbca1ee1025250e19505db59497831cabd4fd52b83fcbaf892abaf697",
       "root": "lit/examples",
       "requested": true,
       "holes": 3,

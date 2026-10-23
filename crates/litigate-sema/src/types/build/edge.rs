@@ -277,11 +277,20 @@ impl Cx<'_, '_> {
         };
         let opts = nested(f);
         let opts = self.once(opts);
+        if within.is_some() {
+            if let Some(counting) = opts.get("counting") {
+                self.not_allowed(
+                    counting,
+                    "on a `within` window: its deadline is counted by its own `counted_by` rule",
+                );
+            }
+        }
         Some(EdgeDeadline {
             window,
             extendable: flag(opts.get("extendable")),
             extension_authority: Self::string(opts.get("extension_authority")),
             note: Self::string(opts.get("note")),
+            counting: Self::string(opts.get("counting")).filter(|_| within.is_none()),
         })
     }
 

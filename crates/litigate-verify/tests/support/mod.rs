@@ -208,7 +208,7 @@ counting frcp6 cite "FRCP 6(a)"
   exclude_trigger_day
   include_last_day
   roll_forward_on [weekend, legal_holiday]
-  service_extension { Mail: 3.days } cite "FRCP 6(d)"
+  service_extension { Personal: 0.days, Electronic: 0.days, Mail: 3.days, Clerk: 0.days, OtherConsented: 0.days, CommercialCarrier: 0.days, PrisonMail: 0.days, MailForeign: 0.days, Express: 0.days, ExpressForeign: 0.days } cite FRCP 6(d)
   holidays federal
   anchor trigger_day
 }

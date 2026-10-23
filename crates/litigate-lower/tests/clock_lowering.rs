@@ -174,8 +174,10 @@ fn a_camel_case_service_method_is_kebab_case() {
     for time in c.service_extensions.values_mut() {
         *time = ServiceTime::Unrecognized;
     }
-    c.service_extensions
-        .insert("OtherConsented".into(), ServiceTime::Adds(3, DayUnit::Calendar));
+    c.service_extensions.insert(
+        "OtherConsented".into(),
+        ServiceTime::Adds(3, DayUnit::Calendar),
+    );
     c.roll_on = vec![RollOn::Weekend, RollOn::LegalHoliday];
     insta::assert_snapshot!(rule(&p));
 }
@@ -183,9 +185,10 @@ fn a_camel_case_service_method_is_kebab_case() {
 #[test]
 fn service_days_must_fit() {
     let mut p = example();
-    counting_mut(&mut p)
-        .service_extensions
-        .insert("Mail".into(), ServiceTime::Adds(u64::MAX, DayUnit::Calendar));
+    counting_mut(&mut p).service_extensions.insert(
+        "Mail".into(),
+        ServiceTime::Adds(u64::MAX, DayUnit::Calendar),
+    );
     insta::assert_snapshot!(lowering_errors(&p));
 }
 

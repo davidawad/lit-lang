@@ -316,10 +316,14 @@ impl Run<'_, '_> {
         }
         let ext = methods.iter().find(|m| m.method == method).ok_or_else(|| {
             let valid: Vec<&str> = methods.iter().map(|m| m.method.as_str()).collect();
+            let valid = if valid.is_empty() {
+                "it recognizes none".to_owned()
+            } else {
+                format!("valid methods: {}", valid.join(", "))
+            };
             Error::Invalid(format!(
-                "service method {method:?} is not valid under {}; valid methods: {}",
-                self.clock.rule.label,
-                valid.join(", ")
+                "service method {method:?} is not valid under {}; {valid}",
+                self.clock.rule.label
             ))
         })?;
         // A method the rule recognizes but adds nothing for moves nothing,

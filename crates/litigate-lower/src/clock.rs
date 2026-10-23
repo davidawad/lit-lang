@@ -61,9 +61,14 @@ pub(crate) fn fragment(
                     &format!("/calendars/{}", library.calendars.len()),
                     &calendar.meta,
                 ));
-                library
-                    .calendars
-                    .push(calendar::holiday_calendar(sink, calendar, &pkg.manifest)?);
+                // A calendar's cite binds through its own package's sources,
+                // so every fragment carrying it carries the same calendar.
+                let owner = declaring(build, calendar).unwrap_or(pkg);
+                library.calendars.push(calendar::holiday_calendar(
+                    sink,
+                    calendar,
+                    &owner.manifest,
+                )?);
             }
         }
     }
@@ -90,6 +95,16 @@ pub(crate) fn fragment(
         ..build.map_header()
     };
     Some((library, map))
+}
+
+/// The loaded package declaring `calendar`.
+fn declaring<'p>(build: &Build<'_, 'p>, calendar: &hir::Calendar) -> Option<&'p hir::Package> {
+    build.packages.iter().copied().find(|p| {
+        p.modules
+            .iter()
+            .flat_map(|m| &m.declarations)
+            .any(|d| matches!(d, Declaration::Calendar(c) if std::ptr::eq(c, calendar)))
+    })
 }
 
 /// The source-map entry of one generated rule or calendar.
@@ -122,7 +137,10 @@ fn resolve_calendar<'p>(
     at: Span,
     sink: &mut Sink,
 ) -> Option<&'p hir::Calendar> {
-    match build.selection.resolve(&pkg.manifest.pack_id, id, at.clone()) {
+    match build
+        .selection
+        .resolve(&pkg.manifest.pack_id, id, at.clone())
+    {
         Ok(Declaration::Calendar(cal)) => Some(cal),
         Ok(_) => {
             sink.error(

@@ -52,6 +52,7 @@ pub(crate) const DEADLINE_OPTS: &[Spec] = &[
     (KwExtendable, Some(boolean)),
     (KwExtensionAuthority, Some(string)),
     (KwNote, Some(string)),
+    (KwCounting, Some(string)),
 ];
 
 /// Options of a `deadline` declaration: the [`DEADLINE_OPTS`] of a

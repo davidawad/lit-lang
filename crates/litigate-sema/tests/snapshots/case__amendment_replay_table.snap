@@ -7,7 +7,7 @@ expression: table
         "ok: start frcp::answered",
     ],
     "after: one day late": [
-        "14:3 L4002 `Answered(complaint)` on 2009-12-29 missed deadline `answer-period`, due 2009-12-28\n    note @13:3: `answer-period` runs 21 calendar days from `Served(complaint, Personal)` on 2009-12-04 under `frcp6@2009-12-01`\n    note: only a cited event of a type that `extends` this deadline, within its `extend` capability, moves the due date",
+        "14:3 L4002 `Answered(complaint)` on 2009-12-29 missed deadline `answer-period`, due 2009-12-28\n    note @13:3: `answer-period` runs 21 calendar days from `Served(complaint, Personal)` on 2009-12-04 under `frcp6@2009-12-01`, service by personal\n    note: only a cited event of a type that `extends` this deadline, within its `extend` capability, moves the due date",
     ],
     "before: 2007 counting skips weekends and Veterans Day after denial (due 2009-11-23)": [
         "ok: start frcp::answered",
@@ -23,14 +23,14 @@ expression: table
     ],
     "pending: an extension before the trigger has nothing to extend": [
         "13:14 L4001 `AnswerExtended(2009-12-14)` has no open obligation of `frcp::answer-period` to extend\n    note: an obligation opens when its deadline's trigger happens, and closes when it is discharged, breached, waived, or superseded",
-        "16:3 L4002 `MovedToDismiss(complaint)` on 2009-12-11 missed deadline `answer-period`, due 2009-12-10\n    note @14:3: `answer-period` runs 20 calendar days from `Served(complaint, Personal)` on 2009-11-20 under `frcp6@2007-12-01`\n    note: only a cited event of a type that `extends` this deadline, within its `extend` capability, moves the due date",
+        "16:3 L4002 `MovedToDismiss(complaint)` on 2009-12-11 missed deadline `answer-period`, due 2009-12-10\n    note @14:3: `answer-period` runs 20 calendar days from `Served(complaint, Personal)` on 2009-11-20 under `frcp6@2007-12-01`, service by personal\n    note: only a cited event of a type that `extends` this deadline, within its `extend` capability, moves the due date",
     ],
     "pending: an order keeps the prior 20 days (due 2009-12-10), missed": [
-        "15:3 L4002 `MovedToDismiss(complaint)` on 2009-12-11 missed deadline `answer-period`, due 2009-12-10\n    note @13:3: `answer-period` runs 20 calendar days from `Served(complaint, Personal)` on 2009-11-20 under `frcp6@2007-12-01`\n    note: only a cited event of a type that `extends` this deadline, within its `extend` capability, moves the due date",
+        "15:3 L4002 `MovedToDismiss(complaint)` on 2009-12-11 missed deadline `answer-period`, due 2009-12-10\n    note @13:3: `answer-period` runs 20 calendar days from `Served(complaint, Personal)` on 2009-11-20 under `frcp6@2007-12-01`, service by personal\n    note: only a cited event of a type that `extends` this deadline, within its `extend` capability, moves the due date",
     ],
     "pending: an uncited extension is not an order": [
-        "15:14 L4001 `AnswerExtended(2009-12-14)` transforms an obligation only when it cites its authority\n    note: add the order or rule after the party, e.g. `cite \"FRCP 6(b)(1)(A)\"`",
-        "16:3 L4002 `MovedToDismiss(complaint)` on 2009-12-11 missed deadline `answer-period`, due 2009-12-10\n    note @13:3: `answer-period` runs 20 calendar days from `Served(complaint, Personal)` on 2009-11-20 under `frcp6@2007-12-01`\n    note: only a cited event of a type that `extends` this deadline, within its `extend` capability, moves the due date",
+        "15:14 L4001 `AnswerExtended(2009-12-14)` transforms an obligation only when it cites its authority\n    note: add the order or rule after the party, e.g. `cite FRCP 6(b)(1)(A)`",
+        "16:3 L4002 `MovedToDismiss(complaint)` on 2009-12-11 missed deadline `answer-period`, due 2009-12-10\n    note @13:3: `answer-period` runs 20 calendar days from `Served(complaint, Personal)` on 2009-11-20 under `frcp6@2007-12-01`, service by personal\n    note: only a cited event of a type that `extends` this deadline, within its `extend` capability, moves the due date",
     ],
     "pending: the amended 21 days govern (due 2009-12-11)": [
         "ok: start frcp::mtd-ruling",

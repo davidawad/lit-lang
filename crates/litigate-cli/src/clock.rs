@@ -303,6 +303,18 @@ counting late known_at 2026-01-01 cite \"FRCP 6(a)\"
 {
   exclude_trigger_day
   include_last_day
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: unrecognized
+    OtherConsented: unrecognized
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  }
   holidays federal-holidays
 }
 
@@ -604,6 +616,7 @@ counting nourl cite \"XYZ 6(a)\"
             engine_method("OtherConsented"),
             Some(ServiceMethod::OtherConsented)
         );
-        assert_eq!(engine_method("Personal"), None);
+        assert_eq!(engine_method("Personal"), Some(ServiceMethod::Personal));
+        assert_eq!(engine_method("Fax"), None);
     }
 }

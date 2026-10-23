@@ -111,19 +111,10 @@ impl Clock for EngineClock {
         });
         let library = versioned.as_ref().unwrap_or(&self.library);
         let clock = library.clock(&r.counting).map_err(|e| e.to_string())?;
-        let recognized: Vec<ServiceMethod> = clock
-            .rule
-            .steps
-            .iter()
-            .flat_map(|s| match s {
-                Step::Service { methods, .. } => methods.iter().map(|m| m.method).collect(),
-                _ => Vec::new(),
-            })
-            .collect();
+        // The first argument naming a service method is the trigger's; the
+        // rule's total service step adds its days or refuses it.
         let service_method = r.service.iter().find_map(|m| {
-            serde_json::from_value::<ServiceMethod>(serde_json::Value::String(m.clone()))
-                .ok()
-                .filter(|m| recognized.contains(m))
+            serde_json::from_value::<ServiceMethod>(serde_json::Value::String(m.clone())).ok()
         });
         let deadline = DayDeadline {
             trigger: Date::parse_iso(&r.trigger).map_err(|e| e.to_string())?,

@@ -323,7 +323,9 @@ impl CountingRule {
             return bad("exactly one `base` step is required");
         }
         if count(|s| matches!(s, Step::Service { .. })) != 1 {
-            return bad("exactly one `service` step is required: it is total over the service methods");
+            return bad(
+                "exactly one `service` step is required: it is total over the service methods",
+            );
         }
         if count(|s| matches!(s, Step::ClerkInaccessible { .. })) > 1 {
             return bad("at most one `clerkInaccessible` step");
@@ -495,7 +497,10 @@ mod tests {
         let mut v = minimal();
         v[3]["unrecognized"] = serde_json::json!(["mail"]);
         let err = rule(&v).unwrap().validate().unwrap_err().to_string();
-        assert!(err.contains("not total") && err.contains("electronic"), "{err}");
+        assert!(
+            err.contains("not total") && err.contains("electronic"),
+            "{err}"
+        );
         let mut v = minimal();
         let service = v[3].clone();
         v.as_array_mut().unwrap().push(service);

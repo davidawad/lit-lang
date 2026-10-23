@@ -152,7 +152,14 @@ fn the_fragment_holds_every_rule_and_both_calendars() {
         .collect();
     assert_eq!(
         ids,
-        ["frap26", "frcp6", "frcrimp45", "itc210", "rcfc6", "sup-ct-30"]
+        [
+            "frap26",
+            "frcp6",
+            "frcrimp45",
+            "itc210",
+            "rcfc6",
+            "sup-ct-30"
+        ]
     );
     let calendars: Vec<&str> = lowered().calendars.iter().map(|c| c.id.as_str()).collect();
     assert_eq!(calendars, ["us-federal-holidays", "rcfc-legal-holidays"]);

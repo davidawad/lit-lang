@@ -69,15 +69,80 @@ fn counting_rules_lower_every_option() {
         "counting full {\n\
   exclude_trigger_day\n  include_last_day\n  allow_hours\n\
   roll_forward_on [weekend, legal_holiday, inaccessible]\n\
-  service_extension { Mail: 3.days, Personal: 1.court_days }\n\
+  service_extension { Personal: 1.court_days, Electronic: 0.days, Mail: 3.days, Clerk: unrecognized, OtherConsented: unrecognized, CommercialCarrier: unrecognized, PrisonMail: unrecognized, MailForeign: unrecognized, Express: unrecognized, ExpressForeign: unrecognized }\n\
   holidays cal\n  anchor next_business_day\n\
+  forward_holidays cal cite FRCP 6(a)(6)(C)\n\
+  declared_holidays closures cite FRCP 6(a)(6)(B)\n\
+  forums [frcp, frap]\n\
   short_period { below: 11.days, count: business_days }\n\
-}",
+}\n\
+calendar closures { eo: once(2018-12-05) effective [2018-12-05, 2018-12-06) }",
     )
     .into_iter()
     .filter(|d| matches!(d, Declaration::Counting(c) if c.meta.id == "full"))
     .collect();
     insta::assert_debug_snapshot!(countings);
+}
+
+/// A rule with no `service_extension` names no service method: all are
+/// unrecognized, and its forums default to its package's.
+#[test]
+fn a_rule_without_a_service_map_recognizes_no_method() {
+    let rules: Vec<_> = declarations("")
+        .into_iter()
+        .filter_map(|d| match d {
+            Declaration::Counting(c) if c.meta.id == "c6" => Some(c),
+            _ => None,
+        })
+        .collect();
+    assert_eq!(rules[0].forums, ["demo"]);
+    assert_eq!(rules[0].service_extensions.len(), 10);
+    assert!(rules[0]
+        .service_extensions
+        .values()
+        .all(|t| *t == litigate_sema::hir::ServiceTime::Unrecognized));
+}
+
+/// `service_extension` is total over the closed method set; each value is
+/// `N.days` or `unrecognized`.
+#[test]
+fn service_maps_are_total_over_known_methods() {
+    let out = check_body(
+        "counting s1 { holidays cal, service_extension { Personl: 3.days, Zzzzzzzz: 1.days, Mail: unrecognised, Personal: unrecognized.x, Electronic: unrecognized } }\n\
+counting s2 { holidays cal, service_extension { Personal: 0.days, Electronic: 0.days, Mail: 3.days, Clerk: 3.days, OtherConsented: 3.days, CommercialCarrier: 0.days, PrisonMail: 0.days, MailForeign: 0.days, Express: 0.days, ExpressForeign: unrecognized } }",
+    );
+    insta::assert_debug_snapshot!(out);
+}
+
+/// `forward_holidays` and `declared_holidays` need the rule closing on them;
+/// a declared calendar lists `once(date)` days only.
+#[test]
+fn closing_calendars_need_a_cite_and_declared_days() {
+    let out = check_body(
+        "calendar closures { eo: once(2018-12-05) effective [2018-12-05, 2018-12-06) }\n\
+calendar observed-closures { eo: once(2018-12-05) effective [2018-12-05, 2018-12-06) observed nearest_weekday }\n\
+counting f1 { holidays cal, forward_holidays cal }\n\
+counting f2 { holidays cal, declared_holidays cal cite FRCP 6(a)(6)(B) }\n\
+counting f3 { holidays cal, declared_holidays observed-closures cite ?(\"no order is vendored\") }\n\
+counting f4 { holidays cal, declared_holidays closures }\n\
+counting f5 { holidays cal, forward_holidays nope cite FRCP 6(a)(6)(C) }",
+    );
+    insta::assert_debug_snapshot!(out);
+}
+
+/// A deadline is a period of its package's forum (or the one it names):
+/// its counting rule must compute that forum's periods.
+#[test]
+fn a_deadline_is_counted_by_its_own_forums_rule() {
+    let out = check_body(
+        "counting appellate effective [2000-01-01, 2020-01-01) { holidays cal, forums [frap, cafc] }\n\
+counting appellate effective [2020-01-01, ..) { holidays cal, forums [scotus] }\n\
+deadline own: 3.days from Served(complaint) counted_by c6\n\
+deadline named: 3.days from Served(complaint) counted_by appellate { forum scotus }\n\
+deadline borrowed: 3.days from Served(complaint) counted_by appellate\n\
+deadline unknown: 3.days from Served(complaint) counted_by nope",
+    );
+    insta::assert_debug_snapshot!(out);
 }
 
 #[test]

@@ -123,7 +123,8 @@ pub struct DeadlineCheck {
     pub trigger: String,
     /// What the trigger date is.
     pub trigger_event: String,
-    /// Rule set the op should pick (`frcp6`, `rcfc6`, `frap26`, `itc210`).
+    /// Rule set the op should pick (`frcp6`, `rcfc6`, `frap26`, `sup-ct-30`,
+    /// `itc210`).
     pub rule_set: String,
     /// Due date computed by hand from the rule.
     pub due: String,

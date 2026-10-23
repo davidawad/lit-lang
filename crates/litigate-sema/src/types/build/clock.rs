@@ -5,8 +5,8 @@ use super::cx::{first_expr, first_ref, flag, Cx};
 use crate::db::parse::tree::{ArmItem, Atom, Expr, ExprKind, Field, Item, Name, RefPath};
 use crate::db::span::Report;
 use crate::hir::{
-    Anchor, Counting, DayUnit, Deadline, Direction, EndOfMonth, RollOn, ServiceTime,
-    ShortPeriod, Transition, TransitionArm, Type, Value, SERVICE_METHODS,
+    Anchor, Counting, DayUnit, Deadline, Direction, EndOfMonth, RollOn, ServiceTime, ShortPeriod,
+    Transition, TransitionArm, Type, Value, SERVICE_METHODS,
 };
 use crate::resolve::sig::{TypeSig, ValueKind};
 use crate::resolve::suggest;
@@ -287,7 +287,7 @@ impl Cx<'_, '_> {
                 )
             })
             .collect::<Vec<_>>();
-        let service_extensions = self.service_extensions(name, f.get("service_extension"));
+        let service_extensions = self.service_extensions(f.get("service_extension"));
         let forward_calendar = self.closing_calendar(f.get("forward_holidays"), false);
         let declared_calendar = self.closing_calendar(f.get("declared_holidays"), true);
         let forums = match f.get("forums") {
@@ -344,31 +344,17 @@ impl Cx<'_, '_> {
         })
     }
 
-    /// `service_extension { Method: N.days | unrecognized, ... }`: required,
-    /// and total over [`SERVICE_METHODS`] (L3009 otherwise).
-    fn service_extensions(
-        &mut self,
-        name: &Name,
-        f: Option<&&Field>,
-    ) -> BTreeMap<String, ServiceTime> {
+    /// `service_extension { Method: N.days | unrecognized, ... }`, total
+    /// over [`SERVICE_METHODS`] (L3009 otherwise). A rule without one names
+    /// no service method: every method is unrecognized, so a period served
+    /// by any of them is refused, never counted as if it added nothing.
+    fn service_extensions(&mut self, f: Option<&&Field>) -> BTreeMap<String, ServiceTime> {
         let mut out = BTreeMap::new();
         let Some(field) = f else {
-            self.report(
-                Report::new(
-                    C::InvalidCounting,
-                    name.range,
-                    format!(
-                        "counting rule `{}` needs `service_extension`, total over the service \
-                         methods",
-                        name.text
-                    ),
-                )
-                .note(format!(
-                    "give each of {} `N.days` (`0.days`: it adds none) or `unrecognized`",
-                    SERVICE_METHODS.join(", ")
-                )),
-            );
-            return out;
+            return SERVICE_METHODS
+                .iter()
+                .map(|m| ((*m).to_owned(), ServiceTime::Unrecognized))
+                .collect();
         };
         let Some(ExprKind::Record(methods)) = first_expr(field).map(|e| &e.kind) else {
             return out;
@@ -380,7 +366,10 @@ impl Cx<'_, '_> {
                     method.range,
                     format!("`{}` is not a service method", method.text),
                 )
-                .note(format!("the service methods are {}", SERVICE_METHODS.join(", ")));
+                .note(format!(
+                    "the service methods are {}",
+                    SERVICE_METHODS.join(", ")
+                ));
                 if let Some(best) = suggest::nearest(&method.text, SERVICE_METHODS) {
                     report = report.fix(method.range, best, Applicability::MaybeIncorrect);
                 }
@@ -435,7 +424,13 @@ impl Cx<'_, '_> {
     fn closing_calendar(&mut self, f: Option<&&Field>, declared: bool) -> Option<String> {
         let field = f?;
         let cited = field.values.iter().any(|(a, _)| {
-            matches!(a, Atom::Expr(Expr { kind: ExprKind::Cite(_) | ExprKind::Hole(_), .. }))
+            matches!(
+                a,
+                Atom::Expr(Expr {
+                    kind: ExprKind::Cite(_) | ExprKind::Hole(_),
+                    ..
+                })
+            )
         });
         if !cited {
             self.report(

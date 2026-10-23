@@ -1,0 +1,11 @@
+---
+source: crates/litigate-sema/tests/cov_build_clock.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:10:29 L3009 `service_extension` is not total: it does not say what Clerk, OtherConsented, CommercialCarrier, PrisonMail, MailForeign, Express, ExpressForeign add",
+    "pkgs/demo/main.lit:10:49 L3009 `Personl` is not a service method [fix: \"Personal\"]",
+    "pkgs/demo/main.lit:10:66 L3009 `Zzzzzzzz` is not a service method",
+    "pkgs/demo/main.lit:10:90 L3009 unknown counting keyword `unrecognised` [fix: \"unrecognized\"]",
+    "pkgs/demo/main.lit:10:114 L3009 unknown counting keyword `unrecognized.x` [fix: \"unrecognized\"]",
+]

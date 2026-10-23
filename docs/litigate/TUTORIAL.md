@@ -21,7 +21,7 @@ name = "my-court"
 version = "0.1.0"
 language = 1
 pack_id = "my-court"          # the litgraph pack id; node ids become my-court::<node>
-forum = "my-court"
+forum = "frcp"                # a district court: FRCP 6 counts its periods (SPEC §5.3)
 authority = "FederalRule"     # default rank of every declaration (SPEC §5.5)
 title = "My court: answer or default"
 in_force = "2009-12-01"       # default effective start
@@ -88,7 +88,10 @@ terminal defendant-wins: "Judgment for the defendant" outcome [judgment, loss] {
 ```
 
 `frcp6` and `ServiceMethod` come from `lit/core`, the standard library of counting rules,
-holiday calendars and shared vocabulary. Pin the dependency, put the file in canonical form,
+holiday calendars and shared vocabulary. A deadline is a period of its package's `forum`, and
+its counting rule must be one that forum's rules use: `frcp6` declares `forums [frcp]`, so this
+package's forum is `frcp`, and counting a period of another forum by it is L3009 (a period set
+by another forum's rules, such as a FRAP 4 appeal period, names that forum with `{ forum frap }`). Pin the dependency, put the file in canonical form,
 and check it:
 
 ```bash

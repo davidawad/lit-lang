@@ -49,7 +49,9 @@ pub enum Unit {
 /// is total over it: each method either adds a number of days (zero
 /// included) or is one the rule does not recognize (design review
 /// 2026-10-23, P8).
-#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord, JsonSchema)]
+#[derive(
+    Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord, JsonSchema,
+)]
 #[serde(rename_all = "kebab-case")]
 pub enum ServiceMethod {
     /// Personal delivery (handing it over, or leaving it at an office or

@@ -109,7 +109,7 @@ fn a_failing_test_is_l5006() {
         d["message"].as_str().unwrap().contains("\"2025-03-24\""),
         "{d}"
     );
-    assert_eq!(d["span"]["line"], 85);
+    assert_eq!(d["span"]["line"], 96);
 }
 
 #[test]

@@ -394,7 +394,7 @@ fn fields_view_values_by_shape() {
         extension.keyword_kind(),
         Some(SyntaxKind::KwServiceExtension)
     );
-    assert_eq!(extension.record().map(|r| r.fields().len()), Some(2));
+    assert_eq!(extension.record().map(|r| r.fields().len()), Some(10));
     assert_eq!(
         extension.cite().and_then(|c| c.text()).as_deref(),
         Some("19 CFR 210.6(b)")
@@ -427,7 +427,10 @@ fn counting_closed_sets_forums_and_unrecognized_methods_parse() {
         items[1].cite().and_then(|c| c.text()).as_deref(),
         Some("FRCP 6(a)(6)(C)")
     );
-    assert_eq!(items[2].keyword_kind(), Some(SyntaxKind::KwDeclaredHolidays));
+    assert_eq!(
+        items[2].keyword_kind(),
+        Some(SyntaxKind::KwDeclaredHolidays)
+    );
     assert_eq!(items[3].record().map(|r| r.fields().len()), Some(2));
     let deadline = lit("module m\ndeadline d: 90.days after E() counted_by c { forum scotus }\n");
     assert_eq!(deadline.items().len(), 1);

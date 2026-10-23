@@ -143,6 +143,11 @@ pub struct EdgeDeadline {
     pub extension_authority: Option<String>,
     /// `note`.
     pub note: Option<String>,
+    /// `counting "id"` on a literal window: the clock-library rule it is
+    /// counted under when not the pack's (`Deadline.counting`). A `within`
+    /// window is counted by its declaration's own rule.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub counting: Option<String>,
 }
 
 /// Deadline window source.

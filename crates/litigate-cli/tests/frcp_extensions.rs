@@ -420,7 +420,7 @@ fn ptab(name: &str, decided: &str, events: &[&str]) -> Run {
         .collect();
     matter(
         name,
-        &["ptab"],
+        &["mpep", "ptab"],
         "ptab-patent-trial-appeal-board ^0.1.0",
         "  owner: either Corporation\n  director: director Agency\n",
         &events,
@@ -500,7 +500,7 @@ fn no_court_extends_the_ptab_appeal_period() {
     // 2025-12-01).
     let run = matter(
         "ptab-90-3-court",
-        &["cafc", "ptab"],
+        &["cafc", "mpep", "ptab"],
         "cafc ^0.1.0, ptab-patent-trial-appeal-board ^0.1.0",
         "  owner: either Corporation\n  fedcir: court Tribunal\n",
         &[

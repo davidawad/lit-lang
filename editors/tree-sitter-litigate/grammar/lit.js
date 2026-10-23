@@ -223,7 +223,7 @@ module.exports = {
 
   deadline_opt: $ => choice(
     seq(field('key', 'extendable'), field('value', $.boolean)),
-    seq(field('key', choice('extension_authority', 'note')), field('value', $.string)),
+    seq(field('key', choice('extension_authority', 'note', 'counting')), field('value', $.string)),
   ),
 
   // A deadline declaration's options add the obligation it creates
@@ -234,6 +234,7 @@ module.exports = {
     seq(field('key', choice('bearer', 'designated')), field('value', $.identifier)),
     seq(field('key', 'trigger'), field('value', choice($.identifier, $.call_expression))),
     seq(field('key', choice('extend', 'waive')), field('value', $.capability)),
+    seq(field('key', 'forum'), field('value', $.identifier)),
   )),
 
   capability: $ => braced(choice(
@@ -341,6 +342,8 @@ module.exports = {
     seq(field('key', 'roll_forward_on'), field('value', $.id_list)),
     seq(field('key', 'service_extension'), field('value', $.service_map), optional($.cite)),
     seq(field('key', 'holidays'), field('value', $.ref)),
+    seq(field('key', choice('forward_holidays', 'declared_holidays')), field('value', $.ref), optional($.cite)),
+    seq(field('key', 'forums'), field('value', $.id_list)),
     seq(field('key', 'anchor'), field('value', $.identifier)),
     seq(field('key', 'end_of_month'), field('value', $.identifier)),
     seq(field('key', 'short_period'), field('value', $.short_period)),
@@ -348,7 +351,7 @@ module.exports = {
 
   service_map: $ => braced($.service_entry),
 
-  service_entry: $ => seq(field('method', $.identifier), ':', field('value', $.duration)),
+  service_entry: $ => seq(field('method', $.identifier), ':', field('value', choice($.duration, $.identifier))),
 
   short_period: $ => seq(
     '{',

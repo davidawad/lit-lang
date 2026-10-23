@@ -24,7 +24,7 @@ expression: countings
                         ),
                         line: 10,
                         col: 1,
-                        end_line: 19,
+                        end_line: 22,
                         end_col: 2,
                     },
                 ),
@@ -38,16 +38,37 @@ expression: countings
                 Inaccessible,
             ],
             service_extensions: {
-                "Mail": (
+                "Clerk": Unrecognized,
+                "CommercialCarrier": Unrecognized,
+                "Electronic": Adds(
+                    0,
+                    Calendar,
+                ),
+                "Express": Unrecognized,
+                "ExpressForeign": Unrecognized,
+                "Mail": Adds(
                     3,
                     Calendar,
                 ),
-                "Personal": (
+                "MailForeign": Unrecognized,
+                "OtherConsented": Unrecognized,
+                "Personal": Adds(
                     1,
                     Court,
                 ),
+                "PrisonMail": Unrecognized,
             },
             calendar: "cal",
+            forward_calendar: Some(
+                "cal",
+            ),
+            declared_calendar: Some(
+                "closures",
+            ),
+            forums: [
+                "frcp",
+                "frap",
+            ],
             anchor: NextBusinessDay,
             short_period: Some(
                 ShortPeriod {

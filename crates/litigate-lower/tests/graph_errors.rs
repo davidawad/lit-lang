@@ -26,6 +26,7 @@ fn inline(length: u64, unit: DayUnit) -> EdgeDeadline {
         extendable: None,
         extension_authority: None,
         note: None,
+        counting: None,
     }
 }
 
@@ -37,6 +38,7 @@ fn within(deadline: &str) -> EdgeDeadline {
         extendable: None,
         extension_authority: None,
         note: None,
+        counting: None,
     }
 }
 

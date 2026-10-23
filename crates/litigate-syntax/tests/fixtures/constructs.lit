@@ -18,7 +18,18 @@ counting itc-210-6 effective [2008-01-01, ..) cite "19 CFR 210.6"
 {
   anchor next_business_day
   short_period { below: 7.days, count: business_days }
-  service_extension { Mail: 5.days, Electronic: 0.days } cite "19 CFR 210.6(b)"
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 5.days
+    Clerk: 0.days
+    OtherConsented: 0.days
+    CommercialCarrier: 0.days
+    PrisonMail: 0.days
+    MailForeign: 0.days
+    Express: 0.days
+    ExpressForeign: 0.days
+  } cite 19 CFR 210.6(b)
 }
 
 calendar rcfc-holidays known_at 2025-01-01 cite "RCFC 6(a)(6)"

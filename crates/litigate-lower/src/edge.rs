@@ -117,7 +117,7 @@ fn deadline(
     span: Option<&Span>,
 ) -> Option<Deadline> {
     let (length, day_unit, declared, counting) = match &d.window {
-        DeadlineWindow::Inline { length, unit } => (*length, *unit, None, None),
+        DeadlineWindow::Inline { length, unit } => (*length, *unit, None, d.counting.clone()),
         DeadlineWindow::Declared { deadline } => {
             let at = span.cloned().unwrap_or_else(|| sink.fallback.clone());
             match cx.selection.resolve(cx.pack, deadline, at) {

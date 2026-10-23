@@ -151,3 +151,25 @@ fn an_unknown_dependency_variant_lists_the_real_variants() {
     );
     insta::assert_snapshot!(lines.join("\n"));
 }
+
+/// A dependency the matter also uses is replayed as a used package, not
+/// listed again as vocabulary: its variants still resolve once.
+#[test]
+fn a_used_dependency_is_not_vocabulary_twice() {
+    let lock = lock(packages());
+    let text =
+        matter("Served(Personal)").replace("uses court ^1.0.0", "uses court ^1.0.0, core ^1.0.0");
+    let checked = check_with(
+        &text,
+        packages(),
+        Some(&lock),
+        &clock(packages()),
+        Profile::Dev,
+    );
+    assert!(
+        checked.diagnostics.is_empty(),
+        "{:#?}",
+        render(&checked.diagnostics)
+    );
+    assert!(checked.case.is_some());
+}

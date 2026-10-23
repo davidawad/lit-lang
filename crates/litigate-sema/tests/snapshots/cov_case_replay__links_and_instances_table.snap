@@ -1,5 +1,6 @@
 ---
 source: crates/litigate-sema/tests/cov_case_replay.rs
+assertion_line: 300
 expression: table(&rows)
 ---
 {
@@ -36,8 +37,8 @@ expression: table(&rows)
         "trace Took Benched(complaint) alpha::intake -> alpha::bench via alpha::to-bench",
     ],
     "unused: a link into a package the matter does not use": [
-        "14:3 L3007 stage `alpha::gamma::g0` has no version in force on 2010-01-06",
+        "14:3 L3007 stage `gamma::g0` has no version in force on 2010-01-06",
         "trace Took Benched(complaint) alpha::intake -> alpha::bench via alpha::to-bench",
-        "trace Took Noted(complaint) alpha::bench -> alpha::gamma::g0 via alpha::hop",
+        "trace Took Noted(complaint) alpha::bench -> gamma::g0 via alpha::hop",
     ],
 }

@@ -237,11 +237,13 @@ impl<'a> Graph<'a> {
     /// The variants of enum `name` declared in `pack` (a used package or a
     /// dependency of one).
     pub fn variants(&self, pack: &str, name: &str) -> Option<&'a [String]> {
-        let p = self.vocabulary().find(|p| p.manifest.pack_id == pack)?;
-        declarations(p).find_map(|d| match d {
-            Declaration::Enum(e) if e.name == name => Some(e.variants.as_slice()),
-            _ => None,
-        })
+        self.vocabulary()
+            .filter(|p| p.manifest.pack_id == pack)
+            .flat_map(declarations)
+            .find_map(|d| match d {
+                Declaration::Enum(e) if e.name == name => Some(e.variants.as_slice()),
+                _ => None,
+            })
     }
 
     /// Qualified ids of every logical deadline of the used packages.
@@ -368,12 +370,15 @@ fn dependencies<'a>(used: &[&'a Package], loaded: &[&'a Package]) -> Vec<&'a Pac
     let mut out: Vec<&'a Package> = Vec::new();
     let mut frontier: Vec<&'a Package> = used.to_vec();
     while let Some(p) = frontier.pop() {
-        for name in p.manifest.dependencies.keys() {
-            if let Some(dep) = loaded.iter().find(|d| &d.manifest.name == name) {
-                if seen.insert(dep.manifest.name.as_str()) {
-                    out.push(dep);
-                    frontier.push(dep);
-                }
+        let found = p
+            .manifest
+            .dependencies
+            .keys()
+            .filter_map(|name| loaded.iter().find(|d| &d.manifest.name == name));
+        for &dep in found {
+            if seen.insert(dep.manifest.name.as_str()) {
+                out.push(dep);
+                frontier.push(dep);
             }
         }
     }

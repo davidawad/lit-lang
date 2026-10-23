@@ -46,6 +46,8 @@
 (require 'text-property-search)
 
 (declare-function litgraph-view--act-on-id "litgraph-view")
+(declare-function image-increase-size "image-mode")
+(declare-function image-decrease-size "image-mode")
 
 (defgroup litgraph-graph nil
   "Graph drawing for litgraph."
@@ -426,7 +428,11 @@ The result is a list of (LINE . NODE-ID) pairs."
   (save-excursion
     (goto-char (point-min))
     (let ((match (text-property-search-forward 'display nil
-                                               (lambda (_ value) (imagep value)))))
+                                               (lambda (_ value)
+                                                 ;; Not `imagep': Emacs
+                                                 ;; built without image
+                                                 ;; support lacks it.
+                                                 (eq (car-safe value) 'image)))))
       (and match (prop-match-beginning match)))))
 
 (defun litgraph-graph--zoom (command)

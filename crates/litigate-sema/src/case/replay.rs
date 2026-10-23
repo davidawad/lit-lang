@@ -272,9 +272,16 @@ impl<'c, 'g> Cx<'c, 'g> {
             self.out.push(d);
         }
         let (posture, node) = self.follow_facts(posture.to_owned(), k)?;
-        if let Some(arg) = removal::option(self.graph, &event.action) {
-            self.remove(k, arg);
-            return Some(posture);
+        match removal::option(self.graph, &event.action) {
+            Some((removal::OptionEffect::Remove, arg)) => {
+                self.remove(k, arg);
+                return Some(posture);
+            }
+            Some((removal::OptionEffect::Elect, arg)) => {
+                self.elect(k, arg);
+                return Some(posture);
+            }
+            None => {}
         }
         let (matching, removed) = self.matching(k, &posture, node);
         let actor = self.actor(event);

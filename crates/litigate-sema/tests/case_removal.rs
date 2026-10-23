@@ -1,6 +1,8 @@
 //! Option-removing events (SPEC §5.6): a cited `Forfeited`/`Struck` event
-//! removes the edge it names for the rest of the matter, sema records it
-//! in `Case::removals`, and lowering emits it as `scenario.remove_edges`.
+//! removes the edge it names for the rest of the matter, a cited `Elected`
+//! event removes the alternatives to the edge it names, sema records each
+//! removal in `Case::removals`, and lowering emits it as
+//! `scenario.remove_edges`.
 mod case_support;
 
 use case_support::{check_2009, frcp2009, matter_2009, render, render_map};
@@ -11,9 +13,13 @@ use std::collections::BTreeMap;
 
 const SERVED: &str = "2009-12-04 Served(complaint, Personal) on widget";
 const FORFEIT: &str = "2009-12-10 Forfeited(\"move-dismiss\") by widget cite FRCP 12(h)(1)";
+const ELECT: &str = "2009-12-11 Elected(\"answer\") by widget cite FRCP 12(a)(1)(A)(i)";
 
 fn row(events: &[&str]) -> Vec<String> {
-    let checked = check_2009(&matter_2009(events));
+    rendered(check_2009(&matter_2009(events)))
+}
+
+fn rendered(checked: litigate_sema::case::CheckedCase) -> Vec<String> {
     let mut out = render(&checked.diagnostics);
     if checked.ok() {
         let case = checked.case.unwrap_or_else(|| panic!("resolved"));
@@ -79,6 +85,34 @@ fn removal_replay_table() {
             ],
         ),
         (
+            "elected: the alternatives leave the matter",
+            vec![SERVED, ELECT, "2009-12-28 Answered(complaint) by widget"],
+        ),
+        (
+            "elected: an alternative cannot be taken",
+            vec![
+                SERVED,
+                ELECT,
+                "2009-12-14 MovedToDismiss(complaint) by widget",
+            ],
+        ),
+        (
+            "elected: an alternative forfeited earlier is removed once",
+            vec![SERVED, FORFEIT, ELECT],
+        ),
+        (
+            "elected: an option removed earlier cannot be elected",
+            vec![
+                SERVED,
+                FORFEIT,
+                "2009-12-11 Elected(\"move-dismiss\") by widget cite FRCP 12(b)(6)",
+            ],
+        ),
+        (
+            "elected: an uncited election removes nothing",
+            vec![SERVED, "2009-12-11 Elected(\"answer\") by widget"],
+        ),
+        (
             "duplicate: the same option removed twice",
             vec![
                 SERVED,
@@ -92,6 +126,29 @@ fn removal_replay_table() {
         .map(|(name, events)| (*name, row(events)))
         .collect();
     insta::assert_debug_snapshot!(table);
+}
+
+/// An election cannot remove an alternative that has no id: it is
+/// diagnosed, and the named alternatives are still removed.
+#[test]
+fn an_election_needs_named_alternatives() {
+    let fixture = include_str!("fixtures/case-2009/rule12.lit");
+    let unnamed = fixture.replace(
+        "  default \"Let the deadline pass\"",
+        "  _ \"Let the deadline pass\"",
+    );
+    assert_ne!(fixture, unnamed, "the fixture's `default` edge moved");
+    let packages = case_support::frcp2009_with(&unnamed);
+    let lock = case_support::lock(&packages);
+    let clock = case_support::clock(&packages);
+    let checked = case_support::check_with(
+        &matter_2009(&[SERVED, ELECT]),
+        &packages,
+        Some(&lock),
+        &clock,
+        litigate_base::Profile::Dev,
+    );
+    insta::assert_debug_snapshot!(rendered(checked));
 }
 
 /// Checking replaces asserted removals with the derived ones.

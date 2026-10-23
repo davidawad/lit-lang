@@ -709,8 +709,16 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
   removed). An `option` naming no edge is L1002 with a `maybe_incorrect`
   fix to the nearest id. Removing an already removed edge is L4001 with a
   note at the first removal. A later event that matches only removed edges
-  is L4001 (a note locates the removal) and replay stops. Removals are
-  derived, never asserted: checking replaces any `removals` in the HIR.
+  is L4001 (a note locates the removal) and replay stops. An event whose
+  type is named `Elected` (any case) with the same `option: String`
+  parameter is an election: `option` names the edge chosen, and replay
+  removes every other edge (link edges included) at each node, any
+  version, that offers it, as above, recording one removal per
+  alternative with the election's date, event and cite. An alternative
+  already removed stays removed once; electing an already removed edge is
+  L4001 with a note at the removal; an alternative without an id cannot be
+  removed and is L4001. Removals are derived, never asserted: checking
+  replaces any `removals` in the HIR.
 - `facts { node: edge }`: the node must be a `fact` chance node and the edge
   must be its own (L4003).
 - `stakes`: every terminal reachable from the replayed start needs a value
@@ -1482,7 +1490,7 @@ they are listed so the v2 type system keeps them.
 | R12 | Supersession and revival semantics, bitemporal (§5.4) | c | O4. |
 | R13 | Precedence stages and tie-breaks (§5.5) | c | C35. |
 | R14 | Exception evaluation: target condition must hold; highest priority wins (§5.5) | a | Semantics; the ordering it needs is C37. |
-| R15 | Option-removing event recognition: type named `Struck`/`Forfeited`/`Withdrawn` with `option: String` (§5.6) | a | Should become a declared marker on the event type (a nominal `Removal` kind) rather than a name convention; then `option` is typed `EdgeRef`, making the L1002 there (C8) a type error. |
+| R15 | Option-removing event recognition: type named `Struck`/`Forfeited`/`Withdrawn`/`Elected` with `option: String` (§5.6) | a | Should become a declared marker on the event type (a nominal `Removal` kind) rather than a name convention; then `option` is typed `EdgeRef`, making the L1002 there (C8) a type error. |
 | R16 | Posture is replayed, never asserted; HIR `removals` derived (§5.6) | a | No source syntax for posture or removals. |
 | R17 | `::` only in links packages, `.case` files and instance fields (§4.3) | a | Two `Ref` sorts per file kind. |
 | R18 | `analysis` cannot set `start`, `perspective`, `facts`, `payoffs`, `observe` (§8.3) | a | C54. |

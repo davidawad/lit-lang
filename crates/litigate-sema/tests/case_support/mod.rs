@@ -72,37 +72,37 @@ fn loaded(name: &str, deps: &str, sources: &str, files: &[(&str, &str)]) -> Load
 /// December 1, 2009 amendments, with FRCP 86(a) transitions).
 pub fn frcp2009() -> &'static [Package] {
     static P: OnceLock<Vec<Package>> = OnceLock::new();
-    P.get_or_init(|| {
-        let core = loaded(
-            "core",
-            "",
-            "",
-            &[
-                (
-                    "authority.lit",
-                    "module core.authority\nauthority Statute > FederalRule > LocalRule\n",
-                ),
-                ("start.lit", "module core.start\nstart z\nstate z: \"Z\"\n"),
-            ],
-        );
-        let frcp = loaded(
-            "frcp",
-            "\n[dependencies]\ncore = { version = \"^1.0.0\", path = \"../core\" }\n",
-            "\n[sources.frcp]\ntitle = \"Federal Rules of Civil Procedure\"\n\
-             url = \"https://www.law.cornell.edu/rules/frcp\"\nas_of = \"2024-12-01\"\n\
-             cite_prefixes = [\"FRCP\"]\n",
-            &[
-                (
-                    "rule12.lit",
-                    include_str!("../fixtures/case-2009/rule12.lit"),
-                ),
-                ("time.lit", include_str!("../fixtures/frcp-2009/time.lit")),
-            ],
-        );
-        let mut db = litigate_sema::LitDatabase::default();
-        let ws = litigate_sema::db::inputs::create_workspace(&mut db, &[core, frcp]);
-        checked(&db, ws)
-    })
+    P.get_or_init(|| frcp2009_with(include_str!("../fixtures/case-2009/rule12.lit")))
+}
+
+/// [`frcp2009`] with `rule12` as the text of its `rule12.lit`.
+pub fn frcp2009_with(rule12: &str) -> Vec<Package> {
+    let core = loaded(
+        "core",
+        "",
+        "",
+        &[
+            (
+                "authority.lit",
+                "module core.authority\nauthority Statute > FederalRule > LocalRule\n",
+            ),
+            ("start.lit", "module core.start\nstart z\nstate z: \"Z\"\n"),
+        ],
+    );
+    let frcp = loaded(
+        "frcp",
+        "\n[dependencies]\ncore = { version = \"^1.0.0\", path = \"../core\" }\n",
+        "\n[sources.frcp]\ntitle = \"Federal Rules of Civil Procedure\"\n\
+         url = \"https://www.law.cornell.edu/rules/frcp\"\nas_of = \"2024-12-01\"\n\
+         cite_prefixes = [\"FRCP\"]\n",
+        &[
+            ("rule12.lit", rule12),
+            ("time.lit", include_str!("../fixtures/frcp-2009/time.lit")),
+        ],
+    );
+    let mut db = litigate_sema::LitDatabase::default();
+    let ws = litigate_sema::db::inputs::create_workspace(&mut db, &[core, frcp]);
+    checked(&db, ws)
 }
 
 /// A `Lit.lock` pinning `packages` as loaded.

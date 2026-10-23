@@ -6,6 +6,25 @@ expression: table
     "duplicate: the same option removed twice": [
         "15:21 L4001 `frcp::move-dismiss` was already removed on 2009-12-10\n    note @14:3: removed here",
     ],
+    "elected: an alternative cannot be taken": [
+        "15:14 L4001 `MovedToDismiss(complaint)` at stage `frcp::respond` takes `frcp::move-dismiss`, which was removed on 2009-12-11\n    note @14:3: removed here, cite FRCP 12(a)(1)(A)(i)\n    note: replay stops at the first illegal event",
+    ],
+    "elected: an alternative forfeited earlier is removed once": [
+        "ok: start frcp::respond",
+        "removed frcp::move-dismiss on 2009-12-10 (event 1, cite FRCP 12(h)(1))",
+        "removed frcp::default on 2009-12-11 (event 2, cite FRCP 12(a)(1)(A)(i))",
+    ],
+    "elected: an option removed earlier cannot be elected": [
+        "15:22 L4001 `frcp::move-dismiss` was removed on 2009-12-10, so it cannot be elected\n    note @14:3: removed here",
+    ],
+    "elected: an uncited election removes nothing": [
+        "14:14 L4001 `Elected(\"answer\")` elects an option only when it cites its authority\n    note: add the order or rule after the party, e.g. `cite FRCP 12(h)(1)`",
+    ],
+    "elected: the alternatives leave the matter": [
+        "ok: start frcp::answered",
+        "removed frcp::move-dismiss on 2009-12-11 (event 1, cite FRCP 12(a)(1)(A)(i))",
+        "removed frcp::default on 2009-12-11 (event 1, cite FRCP 12(a)(1)(A)(i))",
+    ],
     "ok: a forfeited motion leaves the answer": [
         "ok: start frcp::answered",
         "removed frcp::move-dismiss on 2009-12-10 (event 1, cite FRCP 12(h)(1))",

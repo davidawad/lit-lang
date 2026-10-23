@@ -306,6 +306,35 @@ impl<'a> Graph<'a> {
         own.chain(linked).filter_map(|e| e.id.as_deref()).collect()
     }
 
+    /// The other edges, link edges included, at every node of `pack` (any
+    /// version) that offers edge `id`: the alternatives an election of `id`
+    /// forecloses.
+    pub fn alternatives(&self, pack: &str, id: &str) -> Vec<&Edge> {
+        let mut out = Vec::new();
+        let nodes = self
+            .packages
+            .iter()
+            .filter(|p| p.manifest.pack_id == pack)
+            .flat_map(|p| declarations(p))
+            .filter_map(|d| match d {
+                Declaration::Node(n) => Some(n),
+                _ => None,
+            });
+        for n in nodes {
+            let at = format!("{pack}::{}", n.meta.id);
+            let edges = self.edges(&at, n);
+            if edges.iter().any(|(_, e)| e.id.as_deref() == Some(id)) {
+                out.extend(
+                    edges
+                        .into_iter()
+                        .map(|(_, e)| e)
+                        .filter(|e| e.id.as_deref() != Some(id)),
+                );
+            }
+        }
+        out
+    }
+
     /// Whether the used packages declare an excusing event type.
     pub fn declares_excusal(&self) -> bool {
         self.event_types().any(|(_, e)| is_excusal(&e.name))

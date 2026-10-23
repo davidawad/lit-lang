@@ -392,13 +392,13 @@ state director-review-modified: "Director Modifies FWD" cite 37 CFR 42.73(d)(1)
   _ "Proceed to the appeal window" -> federal-circuit-window { authority cite 35 U.S.C. § 319 }
 }
 
-/// The appeal-or-lapse choice, which the pack models as a draw (0.92/0.08)
-/// rather than a party decision.
+/// The appeal-or-lapse choice is the party's, so it carries no `p`: a
+/// node is a choice or a draw, never both (SPEC §5.1).
 decision federal-circuit-window: "Federal Circuit Appeal Window" cite 35 U.S.C. § 319; 28 U.S.C. § 1295(a)(4)(A); 37 CFR § 90.3(a)
 {
   group appeal-group
   note "63 days to file notice of appeal, running from whichever decision is operative (original FWD, rehearing decision, or Director review decision). Only actual trial participants may appeal — no alternative civil-action route like 35 U.S.C. § 145 exists for AIA trials."
-  _ "File notice of appeal" -> federal-circuit-notice-of-appeal p 0.92 {
+  _ "File notice of appeal" -> federal-circuit-notice-of-appeal {
     event NoticeOfAppealFiled()
     authority cite 35 U.S.C. § 319; 37 CFR § 90.3(a)
     cost 600.usd
@@ -409,7 +409,7 @@ decision federal-circuit-window: "Federal Circuit Appeal Window" cite 35 U.S.C. 
     duration { min 9.4.days, mode 31.5.days, max 63.days }
     note "Filing fee $600.00: the Court of Appeals docketing fee (Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2023) alone -- no district-clerk equivalent of 28 U.S.C. § 1917's $5.00 notice fee applies to a direct agency-to-CAFC appeal (matches cafc-federal-circuit.json's ptab-file-noa edge and itc-337.json's federal-circuit-appeal-window->appeal-filed edge)."
   }
-  _ "Let the 63-day window lapse" -> appeal-forfeited-unappealed p 0.08 {
+  _ "Let the 63-day window lapse" -> appeal-forfeited-unappealed {
     authority cite 35 U.S.C. § 319; 37 CFR § 90.3(a)
     within appeal-period {
       extendable false

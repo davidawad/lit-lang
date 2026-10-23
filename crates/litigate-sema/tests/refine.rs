@@ -155,22 +155,20 @@ chance spin: \"S\" { a \"A\" -> spin }"
 }
 
 #[test]
-fn any_node_with_probability_edges_draws_a_distribution() {
-    // T4: a non-chance node's `p` edges had no sum check. All edges known:
-    // exactly 1; beside a choice (no `p`) or a hole: at most 1.
+fn only_chance_nodes_carry_probabilities() {
+    // Design review §6 item 11: a node is a choice or a draw, never both,
+    // so `p` on a state's or a decision's edge is L2008 and no mixed
+    // distribution is summed.
     assert_eq!(
         diagnostics(
             "state all: \"A\" { a \"A\" -> t p 1/2, b \"B\" -> s p 1/4 }
-decision over: \"O\" { a \"A\" -> t p 3/4, b \"B\" -> s p 1/2, c \"C\" -> t }
-state holed: \"H\" { a \"A\" -> t p ?, b \"B\" -> s p 3/2 }
-state exact: \"E\" { a \"A\" -> exact, b \"B\" -> t p 1/4, c \"C\" -> s p 3/4 }
-decision under: \"U\" { a \"A\" -> t p 1/4, c \"C\" -> s }
+decision over: \"O\" { a \"A\" -> t p 3/4, c \"C\" -> t }
 state none: \"N\" { a \"A\" -> t, b \"B\" -> none }"
         ),
         [
-            "10:7 L2003 probabilities of node `all` sum to 3/4, not exactly 1 | refinement `Dist<Edges(n)> = {m | Σ m(e) = 1}` over the edges other than self edges",
-            "11:10 L2003 known probabilities of `over` already sum to 5/4 | while a `p` is open the known ones need `Σ p <= 1`",
-            "12:49 L2008 probability 3/2 is outside [0, 1] | ",
+            "10:31 L2008 `p` belongs only to the edges of a `chance` node | a node is a choice or a draw, never both: make the node `chance`, or drop `p` and leave the choice to its actor",
+            "10:49 L2008 `p` belongs only to the edges of a `chance` node | a node is a choice or a draw, never both: make the node `chance`, or drop `p` and leave the choice to its actor",
+            "11:35 L2008 `p` belongs only to the edges of a `chance` node | a node is a choice or a draw, never both: make the node `chance`, or drop `p` and leave the choice to its actor",
         ]
     );
 }

@@ -1,5 +1,5 @@
-//! The closed builtin list (SPEC §6): `deadline`, `has_event`, `prob`,
-//! `given`, `in`, `intersect`, `disjoint`, `len`, `contains`.
+//! The closed builtin list (SPEC §6): `deadline`, `has_event`, `date_of`,
+//! `prob`, `given`, `in`, `intersect`, `disjoint`, `len`, `contains`.
 use super::expr::{Checked, Checker};
 use super::rational;
 use super::ty::display;
@@ -10,9 +10,10 @@ use crate::resolve::sig::ValueKind;
 use litigate_base::DiagnosticCode as C;
 
 /// Builtin function names.
-pub const NAMES: [&str; 9] = [
+pub const NAMES: [&str; 10] = [
     "deadline",
     "has_event",
+    "date_of",
     "prob",
     "given",
     "in",
@@ -45,7 +46,7 @@ pub fn call(c: &mut Checker<'_, '_>, name: &str, args: &[Expr], r: TextRange) ->
         return None;
     }
     let n = match name {
-        "deadline" | "has_event" | "len" => 1,
+        "deadline" | "has_event" | "date_of" | "len" => 1,
         _ => 2,
     };
     if !arity(c, name, args, n, r) {
@@ -69,18 +70,24 @@ pub fn call(c: &mut Checker<'_, '_>, name: &str, args: &[Expr], r: TextRange) ->
             let args = arg.into_iter().collect();
             mk(c, args, ty, None)
         }
-        "has_event" => {
+        "has_event" | "date_of" => {
             let arg = if let ExprKind::Call(callee, inner) = &args[0].kind {
                 c.event_call(callee, inner, false, args[0].range)
             } else {
                 c.report(Report::new(
                     C::TypeMismatch,
                     args[0].range,
-                    "`has_event` takes an event pattern such as `Served(complaint, Mail)`",
+                    format!("`{name}` takes an event pattern such as `Served(complaint, Mail)`"),
                 ));
                 c.error(args[0].range)
             };
-            let ty = arg.ty.as_ref().map(|_| Type::Boolean);
+            // `date_of(P)`: the date of the latest event matching `P`.
+            let result = if name == "has_event" {
+                Type::Boolean
+            } else {
+                Type::Date
+            };
+            let ty = arg.ty.as_ref().map(|_| result);
             mk(c, vec![arg.hir], ty, None)
         }
         "prob" | "given" => dist_call(c, name, args, r),

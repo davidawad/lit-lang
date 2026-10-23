@@ -173,15 +173,16 @@ impl Cx<'_, '_> {
     }
 
     /// `patch edge { ... }`: the edge fields written, typed as on an edge
-    /// declaration. `event` and `replaces` are not patchable: replay binds
-    /// the base edge, and only a link replaces edges.
+    /// declaration. `event`, `replaces` and `when` are not patchable: replay
+    /// binds the base edge and derives facts from the base guards, and only
+    /// a link replaces edges.
     fn patch(&mut self, p: &Field) -> (String, EdgePatch) {
         // The parser writes a patch only after its edge's identifier.
         let edge = first_ref(Some(&p))
             .map(RefPath::display)
             .unwrap_or_default();
         let fields = self.once(nested(p));
-        for key in ["event", "replaces"] {
+        for key in ["event", "replaces", "when"] {
             if let Some(f) = fields.get(key) {
                 self.not_allowed(f, "in a `patch`: it writes the base edge's other fields");
             }

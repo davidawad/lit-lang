@@ -185,7 +185,7 @@ state patent-mandatory-settlement-discussion: "Mandatory Settlement Discussion" 
   }
 }
 
-decision patent-settlement-fork: "Settlement Reached at Mandatory Discussion?" by office cite ?("RCFC Appendix J, Rule 17") {
+chance patent-settlement-fork: "Settlement Reached at Mandatory Discussion?" by office cite ?("RCFC Appendix J, Rule 17") {
   group patent-track-group
   note "Outcome distribution authored at 0.30 settled / 0.70 case-continues -- TEACHING ESTIMATE, reflecting that claim construction is a major but not usually case-ending uncertainty-resolution event; most §1498 cases still need a damages determination even after claims are construed favorably or unfavorably for one side."
   e-settlementfork-settles "Settlement reached at the mandatory discussion" -> settled-adr p 0.3 {

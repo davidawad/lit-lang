@@ -24,6 +24,10 @@ pub struct Node {
     pub attrs: BTreeMap<String, Rational>,
     /// Default actor for edges that name none (`by` on the node).
     pub actor: Option<String>,
+    /// Information set (`info`): a decision its actor cannot tell apart
+    /// from the other decisions naming the same set.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub info: Option<String>,
     /// Outgoing edges in source order.
     pub edges: Vec<Edge>,
     /// Explicit holes in the node's header and fields, by dotted field
@@ -115,6 +119,10 @@ pub struct Edge {
     pub requires: Vec<String>,
     /// Flags that must all be absent.
     pub forbids: Vec<String>,
+    /// Guard of a fact edge (`when`): a condition over the matter's
+    /// history that, when it holds, derives the fact.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub guard: Option<super::Expr>,
     /// Source span.
     pub span: Option<litigate_base::Span>,
     /// Explicit holes in the edge's clauses and fields, by dotted field

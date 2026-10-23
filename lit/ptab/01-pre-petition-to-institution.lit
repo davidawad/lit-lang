@@ -156,18 +156,25 @@ chance pgr-petition-filed: "PGR Petition Filed" by office discretion cite 35 U.S
 }
 
 /// A matter fact (`tags [fact]`): whether this IPR petition is time-barred
-/// under 35 U.S.C. § 315(b) is knowable from the service history, so a case
-/// sets it through `facts`; 0.97/0.03 is the pack's authored prior.
+/// under 35 U.S.C. § 315(b) is computed from the matter's history, not
+/// drawn. The guards compare the petition's filing date with the
+/// `ipr-time-bar` instance the complaint's service opened; 0.97/0.03 is
+/// only the prior for a matter whose history does not decide it. A
+/// corrected petition decides nothing: 37 C.F.R. § 42.106(b) accords an
+/// incomplete petition no filing date, and the date accorded on
+/// correction is not modelled, so such a matter states its `facts`.
 chance petition-time-bar-check: "Is the IPR Petition Filed Within 1 Year of Complaint Service?" by examiner cite 35 U.S.C. §315(b)
 {
   group petition-group
   note "Whether THIS petition is time-barred under 35 U.S.C. §315(b) is a matter fact knowable from the petitioner's own service-of-complaint history, not real chance -- see docs/PACK_SCHEMA.md#matter-facts-v2. IPR-only: a PGR petition cannot structurally be filed outside its own 9-month window, so PGR petitions go straight to the preliminary response. Checked after the notice of filing date accorded, as in the proceeding: the bar is raised in the preliminary response and decided at institution, and a corrected petition takes the correction date."
   tags [fact]
   e-time-bar-clear "Petition filed within 1 year of complaint service" -> popr-window p 0.97 {
+    when !has_event(PetitionCorrected()) && date_of(IprPetitionFiled()) <= deadline(ipr-time-bar)
     authority cite 35 U.S.C. §315(b)
     note "Prior for the fact-tagged node's default (unset scenario.facts) fallback: most petitions aren't §315(b) time-barred. Teaching estimate, not a sourced PTAB statistic -- basis: estimate."
   }
   e-time-bar-barred "Board finds petition time-barred" -> ipr-time-barred p 0.03 {
+    when !has_event(PetitionCorrected()) && !(date_of(IprPetitionFiled()) <= deadline(ipr-time-bar))
     authority cite 35 U.S.C. §315(b)
     within ipr-time-bar {
       extendable false

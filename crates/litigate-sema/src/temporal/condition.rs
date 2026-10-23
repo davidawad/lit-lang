@@ -1,9 +1,10 @@
-//! Boolean conditions of transitions, defaults, and exceptions: connectives
-//! over opaque atoms (SPEC §5.4-§5.5).
+//! Boolean conditions of transitions, defaults, exceptions, and fact
+//! guards: connectives over opaque atoms (SPEC §5.1, §5.4-§5.5).
 //!
 //! An atom is any boolean sub-expression that is not `!`, `&&`, `||`, a
-//! boolean `==`/`!=`, or a boolean literal; in practice `has_event(P)`.
-//! Atoms compare structurally, ignoring spans.
+//! boolean `==`/`!=`, or a boolean literal; in practice `has_event(P)`,
+//! and in a fact guard a comparison of dates. Atoms compare structurally,
+//! ignoring spans.
 use crate::hir::{BinaryOp, Expr, ExprKind, Type, UnaryOp, Value};
 
 /// Structural equality ignoring source spans.
@@ -93,7 +94,8 @@ fn is_bool(e: &Expr) -> bool {
 }
 
 /// Evaluates `e`, asking `atom` for every atom; `None` when an atom is
-/// unknown.
+/// unknown and the result depends on it (Kleene logic: `false && ?` is
+/// `false`, `true || ?` is `true`).
 pub fn eval(e: &Expr, atom: &mut dyn FnMut(&Expr) -> Option<bool>) -> Option<bool> {
     match &e.kind {
         ExprKind::Literal {
@@ -104,12 +106,13 @@ pub fn eval(e: &Expr, atom: &mut dyn FnMut(&Expr) -> Option<bool>) -> Option<boo
             operand,
         } => eval(operand, atom).map(|b| !b),
         ExprKind::Binary { op, lhs, rhs } if is_bool(lhs) && is_bool(rhs) => {
-            let (a, b) = (eval(lhs, atom)?, eval(rhs, atom)?);
+            let (a, b) = (eval(lhs, atom), eval(rhs, atom));
             match op {
-                BinaryOp::And => Some(a && b),
-                BinaryOp::Or => Some(a || b),
-                BinaryOp::Eq => Some(a == b),
-                BinaryOp::Ne => Some(a != b),
+                BinaryOp::And if a == Some(false) || b == Some(false) => Some(false),
+                BinaryOp::Or if a == Some(true) || b == Some(true) => Some(true),
+                BinaryOp::And | BinaryOp::Or => a.and(b),
+                BinaryOp::Eq => Some(a? == b?),
+                BinaryOp::Ne => Some(a? != b?),
                 _ => atom(e),
             }
         }
@@ -193,6 +196,32 @@ pub fn entails(a: &Expr, b: &Expr) -> Option<bool> {
         eval(a, lookup) == Some(true) && eval(b, lookup) == Some(false)
     })
     .map(|counterexample| !counterexample)
+}
+
+/// Whether `e` is a date a fact guard may read from the matter: a date
+/// literal, `date_of(P)`, or `deadline(d)`.
+fn date_term(e: &Expr) -> bool {
+    match &e.kind {
+        ExprKind::Literal {
+            value: Value::Date(_),
+        } => true,
+        ExprKind::Call { callee, .. } => callee == "date_of" || callee == "deadline",
+        _ => false,
+    }
+}
+
+/// The first atom of fact guard `e` that is neither `has_event(...)` nor a
+/// comparison of two date terms ([`date_term`]).
+#[must_use]
+pub fn first_foreign_guard(e: &Expr) -> Option<&Expr> {
+    atoms(&[e]).into_iter().find(|a| {
+        has_event(a).is_none()
+            && !matches!(
+                &a.kind,
+                ExprKind::Binary { op: BinaryOp::Eq | BinaryOp::Ne | BinaryOp::Lt | BinaryOp::Le | BinaryOp::Gt | BinaryOp::Ge, lhs, rhs }
+                    if date_term(lhs) && date_term(rhs)
+            )
+    })
 }
 
 /// The first sub-expression of `e` that is not a connective, a boolean

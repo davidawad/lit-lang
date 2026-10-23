@@ -212,7 +212,7 @@ pub struct Describe {
     pub envelope: EnvelopeInfo,
 }
 
-const BUILTINS: [(&str, &str); 9] = [
+const BUILTINS: [(&str, &str); 10] = [
     (
         "deadline",
         "deadline(d) -> Date: due date of deadline d from the latest matching `given` event",
@@ -220,6 +220,10 @@ const BUILTINS: [(&str, &str); 9] = [
     (
         "has_event",
         "has_event(Pattern) -> Bool: some event matches the pattern",
+    ),
+    (
+        "date_of",
+        "date_of(Pattern) -> Date: date of the latest event matching the pattern; unknown before one (fact guards)",
     ),
     ("prob", "prob(Dist<E>, E) -> Probability"),
     (

@@ -132,7 +132,7 @@ pub struct Step {
     pub from: String,
     /// The qualified stage after.
     pub to: String,
-    /// The qualified edge taken, if it has an id (or the `facts` edge).
+    /// The qualified edge taken, if it has an id (or the fact's edge).
     #[serde(skip_serializing_if = "Option::is_none")]
     pub edge: Option<String>,
 }
@@ -156,7 +156,7 @@ pub enum Effect {
     Extended,
     /// A `waives` event released an obligation.
     Waived,
-    /// A `facts` entry resolved a fact node.
+    /// A `when` guard or a `facts` entry resolved a fact node.
     Fact,
 }
 
@@ -234,6 +234,9 @@ pub fn check(mut case: hir::Case, spans: &CaseSpans, env: Env<'_>) -> CheckedCas
     out.append(&mut replayed.diagnostics);
     case.removals = std::mem::take(&mut replayed.removals);
     validate::facts_and_beliefs(&case, &graph, spans, &mut out);
+    // A fact the history derives at the replayed posture is the matter's,
+    // as if stated (SPEC §5.6).
+    case.facts.append(&mut replayed.derived);
     if let Some(posture) = replayed.posture.take() {
         validate::start(&case, &posture, spans, &mut out);
         validate::stakes(&case, &graph, &posture, env.profile, spans, &mut out);

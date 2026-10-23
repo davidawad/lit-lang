@@ -17,7 +17,7 @@
 
 ; Clause and field keywords.
 [
-  "forum" "by" "docket" "outcome" "p" "effort" "cost" "within" "duration" "min" "mode"
+  "forum" "by" "docket" "outcome" "info" "p" "effort" "cost" "within" "duration" "min" "mode"
   "max" "sets" "clears" "requires" "forbids" "replaces" "tags" "attrs" "note"
   "valence" "court_listener_url" "action_id" "extendable" "extension_authority"
   "payoff" "payoff_by_flag" "pack" "remove_edges" "probabilities" "roles"

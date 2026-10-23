@@ -98,7 +98,10 @@ terminal dismissed-jurisdictional-defect: "Dismissed — Jurisdictional/Mootness
 
 /// A structural router, not a discretion draw: the pack's equal split only
 /// stands in for the origin the playthrough entered from (see its note).
-decision remand-destination: "Vacated/Remanded — Destination Tribunal" by office cite FRAP 36(a)
+/// It is a draw, not a choice (no party picks the tribunal a case came
+/// from), so it is a `chance` node; each `cafc@origin` instance sets its
+/// own route to 1.
+chance remand-destination: "Vacated/Remanded — Destination Tribunal" by office cite FRAP 36(a)
 {
   group decision-group
   note "Structural router, not an independent statistical draw: which of the four remand terminals applies is determined entirely by which entry-* node this playthrough started from, not by chance. The 0.25/0.25/0.25/0.25 split exists only because the engine's schema requires probabilities on a chance node's out-edges to sum to 1 — see cafc-SOURCES-NOTES.md."

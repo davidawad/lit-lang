@@ -958,6 +958,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "info_clause"
+        },
+        {
+          "type": "SYMBOL",
           "name": "outcome_clause"
         },
         {
@@ -994,6 +998,23 @@
     "discretion": {
       "type": "STRING",
       "value": "discretion"
+    },
+    "info_clause": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "info"
+        },
+        {
+          "type": "FIELD",
+          "name": "set",
+          "content": {
+            "type": "SYMBOL",
+            "name": "ref"
+          }
+        }
+      ]
     },
     "outcome_clause": {
       "type": "SEQ",
@@ -1845,6 +1866,27 @@
               "content": {
                 "type": "SYMBOL",
                 "name": "num_record"
+              }
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "key",
+              "content": {
+                "type": "STRING",
+                "value": "when"
+              }
+            },
+            {
+              "type": "FIELD",
+              "name": "value",
+              "content": {
+                "type": "SYMBOL",
+                "name": "_expression"
               }
             }
           ]

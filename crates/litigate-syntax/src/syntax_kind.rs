@@ -110,7 +110,7 @@ syntax_kinds! {
         KwBy = "by", KwOn = "on", KwDocket = "docket", KwFrom = "from", KwAfter = "after",
         KwBefore = "before", KwCountedBy = "counted_by", KwCite = "cite",
         KwOutcome = "outcome", KwPayoff = "payoff", KwPayoffByFlag = "payoff_by_flag",
-        KwDiscretion = "discretion", KwP = "p", KwEffort = "effort", KwCost = "cost",
+        KwDiscretion = "discretion", KwInfo = "info", KwP = "p", KwEffort = "effort", KwCost = "cost",
         KwWithin = "within", KwDuration = "duration", KwMin = "min", KwMode = "mode",
         KwMax = "max", KwSets = "sets", KwClears = "clears", KwRequires = "requires",
         KwForbids = "forbids", KwTags = "tags", KwAttrs = "attrs", KwNote = "note",

@@ -1416,6 +1416,10 @@
             "named": false
           },
           {
+            "type": "when",
+            "named": false
+          },
+          {
             "type": "within",
             "named": false
           }
@@ -1426,23 +1430,11 @@
         "required": true,
         "types": [
           {
-            "type": "call_expression",
-            "named": true
-          },
-          {
-            "type": "cite",
-            "named": true
-          },
-          {
-            "type": "duration",
+            "type": "_expression",
             "named": true
           },
           {
             "type": "duration_range",
-            "named": true
-          },
-          {
-            "type": "hole",
             "named": true
           },
           {
@@ -1458,19 +1450,11 @@
             "named": true
           },
           {
-            "type": "ref",
-            "named": true
-          },
-          {
             "type": "replaces_list",
             "named": true
           },
           {
             "type": "signed_money",
-            "named": true
-          },
-          {
-            "type": "string",
             "named": true
           }
         ]
@@ -2031,6 +2015,22 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "info_clause",
+    "named": true,
+    "fields": {
+      "set": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "ref",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -2628,6 +2628,10 @@
         },
         {
           "type": "effective_clause",
+          "named": true
+        },
+        {
+          "type": "info_clause",
           "named": true
         },
         {
@@ -4444,6 +4448,10 @@
   },
   {
     "type": "include_last_day",
+    "named": false
+  },
+  {
+    "type": "info",
     "named": false
   },
   {

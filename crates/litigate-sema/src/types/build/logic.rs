@@ -1,6 +1,7 @@
 //! Defaults, exceptions, tests, nominal types, authority chains, and links
 //! and instances (SPEC §5.2, §5.5, §8.4).
 use super::cx::{first_expr, Cx};
+use super::edge::Draw;
 use crate::db::parse::tree::{EdgeItem, Expr, ExprKind, Field, Item, Name, TestStmt, TypeRef};
 use crate::db::span::Report;
 use crate::hir::{
@@ -296,7 +297,20 @@ impl Cx<'_, '_> {
             .as_ref()
             .and_then(|r| self.value_ref(r, "node", |k| matches!(k, ValueKind::Node { .. })));
         self.link_from = e.from.as_ref().map(|r| r.head.text.clone());
-        let edge = self.edge(e, from.as_deref().unwrap_or_default(), None, false);
+        // A link leaving a chance node or a terminal (whose onward route is
+        // drawn) may carry `p`; one leaving a choice may not (SPEC §5.1).
+        let drawn = e.from.as_ref().is_some_and(|r| {
+            matches!(
+                self.ck.scope.value(r).map(|(_, found)| &found.item.kind),
+                Ok(ValueKind::Node { chance, terminal, .. }) if *chance || *terminal
+            )
+        });
+        let draw = if drawn {
+            Draw::Allowed
+        } else {
+            Draw::Forbidden
+        };
+        let edge = self.edge(e, from.as_deref().unwrap_or_default(), None, draw, false);
         self.link_from = None;
         let fields = self.once(&e.fields);
         let mut replaces = Vec::new();

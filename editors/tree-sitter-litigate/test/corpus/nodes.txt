@@ -212,3 +212,103 @@ decision p: "P"
       (identifier)
       (string
         (string_content)))))
+
+================================================================================
+Information sets and fact guards
+================================================================================
+
+module a
+decision file: "File?" by Party info filing-choice
+chance barred: "Barred?" by Court
+{
+  tags [fact]
+  late "Late" -> out p 1/10 { when (date_of(Filed()) > deadline(bar)) }
+  timely "Timely" -> on p 9/10 { when !(date_of(Filed()) > deadline(bar)) }
+}
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (node_decl
+      (identifier)
+      (string
+        (string_content))
+      (by_clause
+        (ref
+          (identifier)))
+      (info_clause
+        (ref
+          (identifier))))
+    (node_decl
+      (identifier)
+      (string
+        (string_content))
+      (by_clause
+        (ref
+          (identifier)))
+      (node_body
+        (node_field
+          (id_list
+            (ref
+              (identifier))))
+        (edge_decl
+          (identifier)
+          (string
+            (string_content))
+          (ref
+            (identifier))
+          (probability
+            (fraction
+              (number)
+              (number)))
+          (edge_fields
+            (edge_field
+              (parenthesized_expression
+                (binary_expression
+                  (call_expression
+                    (ref
+                      (identifier))
+                    (arguments
+                      (call_expression
+                        (ref
+                          (identifier))
+                        (arguments))))
+                  (call_expression
+                    (ref
+                      (identifier))
+                    (arguments
+                      (ref
+                        (identifier)))))))))
+        (edge_decl
+          (identifier)
+          (string
+            (string_content))
+          (ref
+            (identifier))
+          (probability
+            (fraction
+              (number)
+              (number)))
+          (edge_fields
+            (edge_field
+              (unary_expression
+                (parenthesized_expression
+                  (binary_expression
+                    (call_expression
+                      (ref
+                        (identifier))
+                      (arguments
+                        (call_expression
+                          (ref
+                            (identifier))
+                          (arguments))))
+                    (call_expression
+                      (ref
+                        (identifier))
+                      (arguments
+                        (ref
+                          (identifier))))))))))))))

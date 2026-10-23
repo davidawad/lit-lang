@@ -130,6 +130,7 @@ module.exports = {
   _node_clause: $ => choice(
     $.by_clause,
     $.discretion,
+    $.info_clause,
     $.outcome_clause,
     $._version_clause,
     $.relation,
@@ -139,6 +140,9 @@ module.exports = {
   by_clause: $ => seq('by', field('actor', $.ref)),
 
   discretion: _ => 'discretion',
+
+  // An information set (SPEC §5.1): decisions its actor cannot tell apart.
+  info_clause: $ => seq('info', field('set', $.ref)),
 
   outcome_clause: $ => seq('outcome', $.id_list),
 
@@ -200,6 +204,8 @@ module.exports = {
     // A string entry names an anonymous edge by derived id (SPEC §3.1).
     seq(field('key', 'replaces'), field('value', $.replaces_list)),
     seq(field('key', 'attrs'), field('value', $.num_record)),
+    // A fact edge's guard over the matter's history (SPEC §5.1).
+    seq(field('key', 'when'), field('value', $._expression)),
   ),
 
   // `min` and `max` are optional; `mode` is required (SPEC §3.1).

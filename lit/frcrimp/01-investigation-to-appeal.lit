@@ -446,8 +446,9 @@ state discovery-sanction: "Discovery Sanction Imposed" by office effective [2023
   }
 }
 
-/// imported
-decision plea-negotiations: "Plea Negotiations" effective [2013-12-01, ..) known_at 2013-04-16 cite Fed. R. Crim. P. 11(c)(1)
+/// imported. Whether negotiation ends in an agreement is a draw, not one
+/// party's choice, so the node is `chance`.
+chance plea-negotiations: "Plea Negotiations" effective [2013-12-01, ..) known_at 2013-04-16 cite Fed. R. Crim. P. 11(c)(1)
 {
   group plea-group
   note "Prosecutors and defense counsel may discuss dispositions outside court; the court cannot participate. Three agreement types: (A) charge bargain, (B) non-binding sentencing recommendation, (C) binding specific sentence or range. Absent a written or on-the-record agreement, this is negotiation only."

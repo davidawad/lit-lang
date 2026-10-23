@@ -68,9 +68,9 @@ chance loop: \"L\" { a \"A\" -> loop, b \"B\" -> t p 1 }",
 #[test]
 fn edge_probabilities_are_constants_in_the_unit_interval() {
     let out = check_body(
-        "state s1: \"S\" { a \"A\" -> t p (prob({ Personal: 1/2, Mail: 1/2 }, Mail)) }\n\
-state s2: \"S\" { a \"A\" -> t p (1 == 1) }\n\
-state s3: \"S\" { a \"A\" -> t p (nope) }",
+        "chance s1: \"S\" { a \"A\" -> t p (prob({ Personal: 1/2, Mail: 1/2 }, Mail)) }\n\
+chance s2: \"S\" { a \"A\" -> t p (1 == 1) }\n\
+chance s3: \"S\" { a \"A\" -> t p (nope) }",
     );
     insta::assert_debug_snapshot!(out);
 }

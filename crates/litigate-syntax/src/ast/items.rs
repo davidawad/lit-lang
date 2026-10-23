@@ -241,7 +241,7 @@ impl NodeDecl {
         token(self.syntax(), SyntaxKind::String)
     }
 
-    /// Header clause fields (`by`, `discretion`, `outcome`).
+    /// Header clause fields (`by`, `discretion`, `info`, `outcome`).
     #[must_use]
     pub fn clause_fields(&self) -> Vec<Field> {
         children(self.syntax())

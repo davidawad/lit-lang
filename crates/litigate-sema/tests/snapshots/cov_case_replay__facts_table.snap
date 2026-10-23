@@ -4,11 +4,10 @@ expression: table(&rows)
 ---
 {
     "cycle: facts that lead back are followed once each": [
-        "13:14 L4001 `Benched(complaint)` is not a legal event at stage `alpha::f2` (F2)\n    note: legal events: none (no event moves this stage; it is decided by Court)\n    note: an event that takes no edge must fire the trigger of an in-force deadline, be history a transition reads, or have a type declaring `removes`, `extends`, or `waives`\n    note: `alpha::f2` is a matter fact: resolve it with `facts { f2: <edge> }`\n    note: replay stops at the first illegal event",
+        "13:14 L4001 `Benched(complaint)` is not a legal event at stage `alpha::f1` (F1)\n    note: legal events: none (no event moves this stage; it is decided by Court)\n    note: an event that takes no edge must fire the trigger of an in-force deadline, be history a transition reads, or have a type declaring `removes`, `extends`, or `waives`\n    note: `alpha::f1` is a matter fact: resolve it with `facts { f1: <edge> }`\n    note: replay stops at the first illegal event",
         "trace Took Noted(motion) alpha::intake -> alpha::f1 via alpha::probe",
         "trace Fact fact alpha::f1 -> alpha::f2 via alpha::to-f2",
         "trace Fact fact alpha::f2 -> alpha::f1 via alpha::to-f1",
-        "trace Fact fact alpha::f1 -> alpha::f2 via alpha::to-f2",
     ],
     "not a fact: the entry does not move the stage": [
         "15:9 L4003 `alpha::respond` is not a fact node in force on 2011-06-01\n    note: facts resolve nodes tagged `fact` (SPEC §5.1)",
@@ -16,11 +15,10 @@ expression: table(&rows)
         "trace Took Answered(complaint) alpha::respond -> alpha::answered via alpha::answer",
     ],
     "qualified: a `pack::edge` fact is taken as written": [
-        "13:14 L4001 `Benched(complaint)` is not a legal event at stage `alpha::f2` (F2)\n    note: legal events: none (no event moves this stage; it is decided by Court)\n    note: an event that takes no edge must fire the trigger of an in-force deadline, be history a transition reads, or have a type declaring `removes`, `extends`, or `waives`\n    note: `alpha::f2` is a matter fact: resolve it with `facts { f2: <edge> }`\n    note: replay stops at the first illegal event",
+        "13:14 L4001 `Benched(complaint)` is not a legal event at stage `alpha::f1` (F1)\n    note: legal events: none (no event moves this stage; it is decided by Court)\n    note: an event that takes no edge must fire the trigger of an in-force deadline, be history a transition reads, or have a type declaring `removes`, `extends`, or `waives`\n    note: `alpha::f1` is a matter fact: resolve it with `facts { f1: <edge> }`\n    note: replay stops at the first illegal event",
         "trace Took Noted(motion) alpha::intake -> alpha::f1 via alpha::probe",
         "trace Fact fact alpha::f1 -> alpha::f2 via alpha::to-f2",
         "trace Fact fact alpha::f2 -> alpha::f1 via alpha::to-f1",
-        "trace Fact fact alpha::f1 -> alpha::f2 via alpha::to-f2",
     ],
     "removed: a fact cannot resolve through a removed edge": [
         "14:13 L4003 `alpha::to-f2` was removed and cannot resolve fact `alpha::f1`\n    note @12:3: removed here on 2010-01-04",

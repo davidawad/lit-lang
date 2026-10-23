@@ -274,6 +274,7 @@ fn items(cx: &mut Cx<'_, '_>, tree: &ItemTree, index: &LineIndex, file: &FileId)
         })
         .collect();
     let local_counting = |name: &str, key: &str| local_counting(tree, name, key);
+    let mut infos: Vec<InfoMember> = Vec::new();
     for (item, rule) in &flat {
         let d = match &item.kind {
             ItemKind::Start(r) => {
@@ -293,7 +294,11 @@ fn items(cx: &mut Cx<'_, '_>, tree: &ItemTree, index: &LineIndex, file: &FileId)
             ItemKind::Event(n, p, effect) => cx.event(n, p, effect).map(Declaration::Event),
             ItemKind::Node(n) => {
                 out.first_node.get_or_insert_with(|| span(item.range));
-                Some(Declaration::Node(cx.node(n, item, *rule)))
+                let node = cx.node(n, item, *rule);
+                if let Some(set) = &node.info {
+                    infos.push(InfoMember::of(n.name.range, set, &node));
+                }
+                Some(Declaration::Node(node))
             }
             ItemKind::Link(e) => {
                 out.first_link.get_or_insert_with(|| span(item.range));
@@ -387,7 +392,59 @@ fn items(cx: &mut Cx<'_, '_>, tree: &ItemTree, index: &LineIndex, file: &FileId)
         };
         out.declarations.extend(d);
     }
+    info_sets(&infos, &mut cx.ck.reports);
     out
+}
+
+/// A decision in an information set: where, which node and set, and the
+/// choices it offers its actor, as sorted `(label, actor)` pairs.
+struct InfoMember {
+    at: TextRange,
+    node: String,
+    set: String,
+    choices: Vec<(String, String)>,
+}
+
+impl InfoMember {
+    fn of(at: TextRange, set: &str, node: &hir::Node) -> Self {
+        let mut choices: Vec<(String, String)> = node
+            .edges
+            .iter()
+            .map(|e| (e.label.clone(), e.actor.clone()))
+            .collect();
+        choices.sort();
+        Self {
+            at,
+            node: node.meta.id.clone(),
+            set: set.to_owned(),
+            choices,
+        }
+    }
+}
+
+/// The decisions of one information set (SPEC §5.1) are indistinguishable
+/// to their actor, so each offers the same choices to the same actor as
+/// the first member declared (L2001).
+fn info_sets(members: &[InfoMember], reports: &mut Vec<Report>) {
+    for (j, m) in members.iter().enumerate() {
+        let Some(first) = members[..j].iter().find(|f| f.set == m.set) else {
+            continue;
+        };
+        if first.choices != m.choices {
+            reports.push(
+                Report::new(
+                    C::TypeMismatch,
+                    m.at,
+                    format!(
+                        "decision `{}` is in information set `{}` with `{}` but offers different choices",
+                        m.node, m.set, first.node
+                    ),
+                )
+                .note_at(first.at, "the set's first member")
+                .note("an actor who cannot tell the decisions apart chooses among the same labelled edges, as the same actor"),
+            );
+        }
+    }
 }
 
 /// Whether counting rule `name` has the item `key`; `None` when no rule

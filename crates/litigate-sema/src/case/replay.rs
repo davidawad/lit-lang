@@ -21,6 +21,7 @@ use crate::temporal::{MatterEvent, Ungoverned};
 use litigate_base::{Applicability, Diagnostic, DiagnosticCode as C};
 use std::collections::BTreeMap;
 
+mod facts;
 mod obligations;
 mod removal;
 
@@ -40,6 +41,9 @@ pub(super) struct Replayed {
     pub trace: Vec<Step>,
     /// Obligation instances, in creation order.
     pub obligations: Vec<Obligation>,
+    /// Facts the guards of the replayed posture derive at `as_of`, by
+    /// qualified node.
+    pub derived: BTreeMap<String, String>,
 }
 
 struct Cx<'c, 'g> {
@@ -57,6 +61,8 @@ struct Cx<'c, 'g> {
     trace: Vec<Step>,
     /// Obligation instances so far.
     obligations: Vec<Obligation>,
+    /// Facts derived at the replayed posture ([`Replayed::derived`]).
+    derived: BTreeMap<String, String>,
     /// The `as_of` sentinel: a non-event dated `as_of`, read only for the
     /// versions governing that date.
     sentinel: Expr,
@@ -139,6 +145,7 @@ pub(super) fn replay(
         out: Vec::new(),
         trace: Vec::new(),
         obligations: Vec::new(),
+        derived: BTreeMap::new(),
         sentinel: Expr {
             ty: Type::Unit,
             kind: ExprKind::Literal { value: Value::Unit },
@@ -150,7 +157,8 @@ pub(super) fn replay(
     for k in 0..cx.sorted.len() {
         posture = posture.and_then(|p| cx.step(k, &p));
     }
-    if posture.is_some() {
+    if let Some(p) = &posture {
+        cx.derive_at_as_of(p);
         cx.at_as_of();
     }
     Replayed {
@@ -159,6 +167,7 @@ pub(super) fn replay(
         removals: cx.removed,
         trace: cx.trace,
         obligations: cx.obligations,
+        derived: cx.derived,
     }
 }
 
@@ -337,42 +346,6 @@ impl<'c, 'g> Cx<'c, 'g> {
                 self.out.push(d);
                 None
             }
-        }
-    }
-
-    /// Follows `facts` out of fact nodes before event `k` (SPEC §5.6), at
-    /// most once per entry and once more: the posture the event finds, with
-    /// its node version.
-    fn follow_facts(&mut self, mut posture: String, k: usize) -> Option<(String, &'g Node)> {
-        let mut followed = 0;
-        loop {
-            let node = self.node(&posture, k)?;
-            let edge = match self.case.facts.get(&posture) {
-                Some(edge)
-                    if followed <= self.case.facts.len()
-                        && node.tags.iter().any(|t| t == "fact") =>
-                {
-                    edge
-                }
-                _ => return Some((posture, node)),
-            };
-            let pack = pack_of(&posture).to_owned();
-            let local = edge.rsplit("::").next().unwrap_or(edge);
-            let next = node
-                .edges
-                .iter()
-                .find(|e| e.id.as_deref() == Some(local))
-                .map(|e| self.graph.target(&pack, e))?;
-            self.trace.push(Step {
-                date: String::new(),
-                event: "fact".to_owned(),
-                effect: Effect::Fact,
-                from: posture,
-                to: next.clone(),
-                edge: Some(edge.clone()),
-            });
-            posture = next;
-            followed += 1;
         }
     }
 

@@ -1,9 +1,11 @@
 //! Graph nodes and their edges (SPEC §5.1, field types from §6).
 use super::cx::{first_expr, first_ref, holes_of, Cx};
-use crate::db::parse::tree::{Expr, ExprKind, Field, Item, NodeItem, RefPath};
+use super::edge::Draw;
+use crate::db::parse::tree::{EdgeItem, Expr, ExprKind, Field, Item, NodeItem, RefPath};
 use crate::db::span::Report;
 use crate::hir::{Authored, Edge, Money, Node, NodeKind, Rational, Type, Valence, Value};
 use crate::resolve::suggest;
+use crate::temporal::condition;
 use crate::types::rational as q;
 use litigate_base::{Applicability, DiagnosticCode as C};
 use std::collections::{BTreeMap, BTreeSet};
@@ -81,9 +83,11 @@ impl Cx<'_, '_> {
         fields: &Fields<'_>,
         chance: bool,
         terminal: bool,
+        decision: bool,
     ) {
         for (key, ok, why) in [
             ("discretion", chance, "on non-chance nodes"),
+            ("info", decision, "on non-decision nodes"),
             ("outcome", terminal, "on non-terminal nodes"),
         ] {
             if let Some(f) = clauses.get(key).filter(|_| !ok) {
@@ -130,7 +134,7 @@ impl Cx<'_, '_> {
         let kw = n.keyword.text.as_str();
         let chance = kw == "chance";
         let terminal = kw == "terminal";
-        self.placement(&clauses, &fields, chance, terminal);
+        self.placement(&clauses, &fields, chance, terminal, kw == "decision");
         let tags = self.idents(fields.get("tags"));
         // A fact is a draw nature controls: only a `chance` node (SPEC §5.1).
         let misplaced_fact = !chance && tags.iter().any(|t| t == "fact");
@@ -166,9 +170,16 @@ impl Cx<'_, '_> {
                     ));
                 }
             }
-            edges.push(self.edge(e, &n.name.text, actor.as_deref(), chance));
+            let draw = if chance {
+                Draw::Required
+            } else {
+                Draw::Forbidden
+            };
+            let fact = chance && !misplaced_fact && tags.iter().any(|t| t == "fact");
+            edges.push(self.edge(e, &n.name.text, actor.as_deref(), draw, fact));
         }
         self.probability_sum(n, &edges, chance);
+        self.disjoint_guards(n, &edges);
         Node {
             meta,
             kind,
@@ -179,22 +190,60 @@ impl Cx<'_, '_> {
             tags,
             attrs: self.attrs(fields.get("attrs")),
             actor,
+            info: first_ref(clauses.get("info"))
+                .filter(|_| kw == "decision")
+                .map(RefPath::display),
             edges,
             holes: holes_of(n.clauses.iter().chain(&n.fields)),
         }
     }
 
-    /// `dist-exact` (SPEC §5.1, §13 O8): the `p` edges of a node are
-    /// `Dist<Edges(n)>` minus its self edges, which carry no `p` (L2008).
-    /// A chance node's known probabilities sum to exactly 1, or to at most
-    /// 1 while any is a hole. Any other node with `p` edges draws among
-    /// them: at most 1, and exactly 1 when every edge but a self edge
-    /// carries a known `p` (the engine would otherwise renormalise).
+    /// The `when` guards of a fact node's edges are pairwise disjoint
+    /// (L2005): at most one holds on any history, so the fact replay
+    /// derives never depends on the order the edges are written in.
+    fn disjoint_guards(&mut self, n: &NodeItem, edges: &[Edge]) {
+        let guarded: Vec<(&EdgeItem, &Edge, &crate::hir::Expr)> = n
+            .edges
+            .iter()
+            .zip(edges)
+            .filter_map(|(item, e)| Some((item, e, e.guard.as_ref()?)))
+            .collect();
+        for (j, &(item, b, gb)) in guarded.iter().enumerate() {
+            for &(_, a, ga) in &guarded[..j] {
+                let sat = condition::jointly_satisfiable(&[ga, gb]);
+                if sat == Some(false) {
+                    continue;
+                }
+                let why = if sat.is_none() {
+                    "their guards have too many atoms to prove disjoint"
+                } else {
+                    "some history makes both guards true"
+                };
+                self.report(
+                    Report::new(
+                        C::NonExhaustiveMatch,
+                        item.name_range.cover(item.label.range),
+                        format!(
+                            "the guards of `{}` and `{}` on fact `{}` can both hold",
+                            a.label, b.label, n.name.text
+                        ),
+                    )
+                    .note(why)
+                    .note("make the guards exclusive (`c` and `!c`): a fact has one value"),
+                );
+            }
+        }
+    }
+
+    /// `dist-exact` (SPEC §5.1, §13 O8): the `p` edges of a chance node
+    /// are `Dist<Edges(n)>` minus its self edges, which carry no `p`
+    /// (L2008). Its known probabilities sum to exactly 1, or to at most 1
+    /// while any is a hole. No other node carries `p` (L2008).
     fn probability_sum(&mut self, n: &NodeItem, edges: &[Edge], chance: bool) {
-        let drawn: Vec<&Edge> = edges.iter().filter(|e| e.to != n.name.text).collect();
-        if !chance && drawn.iter().all(|e| e.probability.is_none()) {
+        if !chance {
             return;
         }
+        let drawn: Vec<&Edge> = edges.iter().filter(|e| e.to != n.name.text).collect();
         let known: Vec<Rational> = drawn
             .iter()
             .filter_map(|e| match &e.probability {
@@ -218,8 +267,7 @@ impl Cx<'_, '_> {
                         C::InvalidDistribution,
                         n.name.range,
                         format!(
-                            "probabilities of {} `{}` sum to {}, not exactly 1",
-                            if chance { "chance node" } else { "node" },
+                            "probabilities of chance node `{}` sum to {}, not exactly 1",
                             n.name.text,
                             q::display(total)
                         ),

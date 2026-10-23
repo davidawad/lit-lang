@@ -213,10 +213,10 @@ instance cafc@ptab {
 
 /// Replaces the PTAB pack's own abstract notice-of-appeal edge, so the
 /// composed graph has one route into the Federal Circuit; either party may
-/// take it, at the pack's 0.92 appeal rate.
-link ptab-appeal-to-cafc "Appeal the final written decision to the Federal Circuit": ptab-patent-trial-appeal-board::federal-circuit-window -> cafc@ptab::entry-ptab p 0.92 {
+/// take it. The window is a choice, so the link carries no `p`.
+link ptab-appeal-to-cafc "Appeal the final written decision to the Federal Circuit": ptab-patent-trial-appeal-board::federal-circuit-window -> cafc@ptab::entry-ptab {
   authority cite ?("35 U.S.C. §§ 141(c), 319; 37 C.F.R. § 90.3")
-  note "Supersedes the PTAB pack's abstract Federal Circuit region when both packs are loaded; keeps its 0.92 appeal rate."
+  note "Supersedes the PTAB pack's abstract Federal Circuit region when both packs are loaded."
   tags [appeal]
   replaces ["ptab-patent-trial-appeal-board::federal-circuit-window->federal-circuit-notice-of-appeal#0"]
 }

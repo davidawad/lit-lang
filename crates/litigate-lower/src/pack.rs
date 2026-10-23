@@ -123,9 +123,20 @@ pub(crate) fn cite_syntax(sink: &mut Sink, m: &hir::Manifest) -> CiteSyntax {
     CiteSyntax { rules, shorthands }
 }
 
-/// A node, without its edges.
+/// A node, without its edges. An information set has no litgraph form: a
+/// solve would let the actor choose differently at decisions it cannot
+/// tell apart (L6001).
 fn node(sink: &mut Sink, n: &hir::Node) -> RawNode {
     let span = n.meta.span.as_ref();
+    if let Some(set) = &n.info {
+        sink.unsupported(
+            span,
+            format!(
+                "information set `{set}` of `{}`: litgraph packs cannot keep an actor's choice alike across decisions it cannot tell apart",
+                n.meta.id
+            ),
+        );
+    }
     let (kind, outcome, payoff, payoff_by_flag) = match &n.kind {
         hir::NodeKind::State | hir::NodeKind::Chance { .. } => {
             (NodeKind::State, Vec::new(), None, BTreeMap::new())

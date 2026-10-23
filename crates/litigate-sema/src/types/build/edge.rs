@@ -7,9 +7,22 @@ use crate::hir::{
     Type, Value,
 };
 use crate::resolve::sig::ValueKind;
+use crate::temporal::condition;
 use crate::types::rational as q;
 use litigate_base::{Applicability, DiagnosticCode as C};
 use std::collections::BTreeMap;
+
+/// Whether an edge's source is a draw (SPEC §5.1): a node is a choice or a
+/// draw, never both, so `p` belongs only to a draw's edges.
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub enum Draw {
+    /// An edge of a `chance` node: `p` required.
+    Required,
+    /// A link leaving a `chance` node or a terminal: `p` allowed.
+    Allowed,
+    /// An edge of a `decision` or `state` node, or a link leaving one.
+    Forbidden,
+}
 
 impl Cx<'_, '_> {
     /// Builds one edge from node `from` (or a link when `from` is qualified).
@@ -18,7 +31,8 @@ impl Cx<'_, '_> {
         e: &EdgeItem,
         from: &str,
         node_actor: Option<&str>,
-        chance: bool,
+        draw: Draw,
+        fact: bool,
     ) -> Edge {
         let clauses = self.once(&e.clauses);
         let fields = self.once(&e.fields);
@@ -33,7 +47,7 @@ impl Cx<'_, '_> {
             e,
             clauses.get("p").and_then(|f| first_expr(f)),
             to == from,
-            chance,
+            draw,
         );
         if let Some(f) = fields.get("replaces").filter(|_| e.from.is_none()) {
             self.not_allowed(f, "outside a links package");
@@ -65,6 +79,9 @@ impl Cx<'_, '_> {
             clears: f.clears.unwrap_or_default(),
             requires: f.requires.unwrap_or_default(),
             forbids: f.forbids.unwrap_or_default(),
+            guard: fields
+                .get("when")
+                .and_then(|f| self.guard(f, fact, e.name.is_some())),
             span: self.ck.span(e.range),
             holes: holes_of(e.clauses.iter().chain(&e.fields)),
         }
@@ -112,6 +129,38 @@ impl Cx<'_, '_> {
         }
     }
 
+    /// A fact edge's `when` guard (SPEC §5.1): a condition over the
+    /// matter's history, allowed only on the named edges of a `fact` node
+    /// (the fact it derives names its edge).
+    fn guard(&mut self, f: &Field, fact: bool, named: bool) -> Option<crate::hir::Expr> {
+        if !fact {
+            self.not_allowed(f, "outside the edges of a `fact` chance node");
+            return None;
+        }
+        if !named {
+            self.not_allowed(
+                f,
+                "on an anonymous edge: the fact it derives names its edge",
+            );
+            return None;
+        }
+        let x = first_expr(f)?;
+        let checked = self.ck.check(x, &Type::Boolean);
+        checked.ty?;
+        if condition::first_foreign_guard(&checked.hir).is_some() {
+            self.report(
+                Report::new(
+                    C::TypeMismatch,
+                    x.range,
+                    "a fact guard may test only `has_event(...)`, comparisons of dates (`date_of(...)`, `deadline(...)`, date literals), `true`/`false`, and `!`, `&&`, `||`",
+                )
+                .note("a guard derives the fact from the matter's history alone"),
+            );
+            return None;
+        }
+        Some(checked.hir)
+    }
+
     /// An event pattern (trailing arguments may be omitted).
     pub fn pattern(&mut self, x: &Expr) -> Option<crate::hir::Expr> {
         let (callee, args) = self.call(
@@ -128,10 +177,10 @@ impl Cx<'_, '_> {
         e: &EdgeItem,
         p: Option<&Expr>,
         self_edge: bool,
-        chance: bool,
+        draw: Draw,
     ) -> Option<Authored<Rational>> {
         let Some(p) = p else {
-            if chance && !self_edge {
+            if draw == Draw::Required && !self_edge {
                 self.report(
                     Report::new(
                         C::InvalidProbability,
@@ -153,6 +202,17 @@ impl Cx<'_, '_> {
                 p.range,
                 "a self edge must not carry `p`",
             ));
+            return None;
+        }
+        if draw == Draw::Forbidden {
+            self.report(
+                Report::new(
+                    C::InvalidProbability,
+                    p.range,
+                    "`p` belongs only to the edges of a `chance` node",
+                )
+                .note("a node is a choice or a draw, never both: make the node `chance`, or drop `p` and leave the choice to its actor"),
+            );
             return None;
         }
         if let ExprKind::Hole(reason) = &p.kind {

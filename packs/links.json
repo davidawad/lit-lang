@@ -1,59 +1,8 @@
 {
   "instances": {
     "cafc@cofc": {
+      "pack": "cafc",
       "note": "Federal Circuit as entered by the CoFC plaintiff appealing a loss (plaintiff = appellant = self). Remand can only return to the CoFC.",
-      "pack": "cafc",
-      "patch_edges": {
-        "rehearing-file": {
-          "deadline": {
-            "extendable": false,
-            "length": 45,
-            "note": "45 days after entry of judgment because the United States is a party to every CoFC appeal (Fed. Cir. R. 40, Federal Circuit Rules of Practice Dec. 1, 2025: 30 days, or 45 if the United States or its officer or agency is a party)."
-          }
-        },
-        "rehearing-time-expires": {
-          "deadline": {
-            "length": 45,
-            "note": "The rehearing window this edge waits out is 45 days here, not 30, because the United States is a party (FRAP 40(d)(1)(A); Fed. Cir. R. 40(f)(1)); the mandate then issues 7 days after it expires (FRAP 41(b))."
-          }
-        }
-      },
-      "probabilities": {
-        "remand-route-cofc": 1
-      },
-      "remove_edges": [
-        "origin-to-district-court",
-        "origin-to-ptab",
-        "origin-to-itc",
-        "remand-route-district-court",
-        "remand-route-ptab",
-        "remand-route-itc",
-        "origin-to-ttab",
-        "remand-route-ttab"
-      ]
-    },
-    "cafc@cofc-gov": {
-      "note": "Federal Circuit as entered by the United States appealing a CoFC plaintiff win. Perspective flipped: the government (appellant) is the opponent; payoffs are the plaintiff's (stake − appellant payoff). The stake is the matter's own judgment amount and is left unknown here, so this instance's terminal payoffs are unauthored until the matter supplies them.",
-      "pack": "cafc",
-      "patch_edges": {
-        "rehearing-file": {
-          "deadline": {
-            "extendable": false,
-            "length": 45,
-            "note": "45 days after entry of judgment because the United States is a party to every CoFC appeal (Fed. Cir. R. 40, Federal Circuit Rules of Practice Dec. 1, 2025: 30 days, or 45 if the United States or its officer or agency is a party)."
-          }
-        },
-        "rehearing-time-expires": {
-          "deadline": {
-            "length": 45,
-            "note": "The rehearing window this edge waits out is 45 days here, not 30, because the United States is a party (FRAP 40(d)(1)(A); Fed. Cir. R. 40(f)(1)); the mandate then issues 7 days after it expires (FRAP 41(b))."
-          }
-        }
-      },
-      "payoff_transform": "stake - payoff",
-      "probabilities": {
-        "remand-route-cofc": 1
-      },
       "remove_edges": [
         "origin-to-district-court",
         "origin-to-ptab",
@@ -64,17 +13,63 @@
         "origin-to-ttab",
         "remand-route-ttab"
       ],
+      "probabilities": {
+        "remand-route-cofc": 1.0
+      },
+      "patch_edges": {
+        "rehearing-file": {
+          "deadline": {
+            "length": 45,
+            "note": "45 days after entry of judgment because the United States is a party to every CoFC appeal (Fed. Cir. R. 40, Federal Circuit Rules of Practice Dec. 1, 2025: 30 days, or 45 if the United States or its officer or agency is a party)."
+          }
+        },
+        "rehearing-time-expires": {
+          "deadline": {
+            "length": 45,
+            "note": "The rehearing window this edge waits out is 45 days here, not 30, because the United States is a party (FRAP 40(d)(1)(A); Fed. Cir. R. 40(f)(1)); the mandate then issues 7 days after it expires (FRAP 41(b))."
+          }
+        }
+      }
+    },
+    "cafc@cofc-gov": {
+      "pack": "cafc",
+      "note": "Federal Circuit as entered by the United States appealing a CoFC plaintiff win. Perspective flipped: the government (appellant) is the opponent; payoffs are the plaintiff's (stake − appellant payoff). The stake is the matter's own judgment amount and is left unknown here, so this instance's terminal payoffs are unauthored until the matter supplies them.",
+      "remove_edges": [
+        "origin-to-district-court",
+        "origin-to-ptab",
+        "origin-to-itc",
+        "remand-route-district-court",
+        "remand-route-ptab",
+        "remand-route-itc",
+        "origin-to-ttab",
+        "remand-route-ttab"
+      ],
+      "probabilities": {
+        "remand-route-cofc": 1.0
+      },
       "roles": {
         "applicant": "opponent",
         "examiner": "self"
+      },
+      "payoff_transform": "stake - payoff",
+      "patch_edges": {
+        "rehearing-file": {
+          "deadline": {
+            "length": 45,
+            "note": "45 days after entry of judgment because the United States is a party to every CoFC appeal (Fed. Cir. R. 40, Federal Circuit Rules of Practice Dec. 1, 2025: 30 days, or 45 if the United States or its officer or agency is a party)."
+          }
+        },
+        "rehearing-time-expires": {
+          "deadline": {
+            "length": 45,
+            "note": "The rehearing window this edge waits out is 45 days here, not 30, because the United States is a party (FRAP 40(d)(1)(A); Fed. Cir. R. 40(f)(1)); the mandate then issues 7 days after it expires (FRAP 41(b))."
+          }
+        }
       }
     },
     "cafc@district-court": {
-      "note": "Federal Circuit as entered from a district-court patent judgment (28 U.S.C. § 1295(a)(1)): a civil action arising under the patent laws, or one with a compulsory patent counterclaim. Remand can only return to that district court.",
       "pack": "cafc",
-      "probabilities": {
-        "remand-route-district-court": 1
-      },
+      "note": "Federal Circuit as entered from a district-court patent judgment (28 U.S.C. § 1295(a)(1)): a civil action arising under the patent laws, or one with a compulsory patent counterclaim. Remand can only return to that district court.",
       "remove_edges": [
         "origin-to-cofc",
         "origin-to-ptab",
@@ -84,15 +79,30 @@
         "remand-route-itc",
         "origin-to-ttab",
         "remand-route-ttab"
-      ]
+      ],
+      "probabilities": {
+        "remand-route-district-court": 1.0
+      }
     },
     "cafc@itc": {
-      "note": "Federal Circuit as entered from an ITC § 337 final determination (19 U.S.C. § 1337(c)). Remand can only return to the Commission.",
       "pack": "cafc",
+      "note": "Federal Circuit as entered from an ITC § 337 final determination (19 U.S.C. § 1337(c)). Remand can only return to the Commission.",
+      "remove_edges": [
+        "origin-to-district-court",
+        "origin-to-ptab",
+        "origin-to-cofc",
+        "remand-route-district-court",
+        "remand-route-ptab",
+        "remand-route-cofc",
+        "origin-to-ttab",
+        "remand-route-ttab"
+      ],
+      "probabilities": {
+        "remand-route-itc": 1.0
+      },
       "patch_edges": {
         "rehearing-file": {
           "deadline": {
-            "extendable": false,
             "length": 45,
             "note": "45 days after entry of judgment because the Commission, a United States agency, is a party to every Section 337 appeal (FRAP 40(d)(1)(B); Fed. Cir. R. 40(f)(1), Federal Circuit Rules of Practice Dec. 1, 2025: 30 days, or 45 if a United States agency is a party)."
           }
@@ -103,27 +113,11 @@
             "note": "The rehearing window this edge waits out is 45 days here because the Commission, a United States agency, is a party (FRAP 40(d)(1)(B); Fed. Cir. R. 40(f)(1)); the mandate then issues 7 days after it expires (FRAP 41(b))."
           }
         }
-      },
-      "probabilities": {
-        "remand-route-itc": 1
-      },
-      "remove_edges": [
-        "origin-to-district-court",
-        "origin-to-ptab",
-        "origin-to-cofc",
-        "remand-route-district-court",
-        "remand-route-ptab",
-        "remand-route-cofc",
-        "origin-to-ttab",
-        "remand-route-ttab"
-      ]
+      }
     },
     "cafc@ptab": {
-      "note": "Federal Circuit as entered from a PTAB final written decision (35 U.S.C. §§ 141, 319). Remand can only return to the PTAB.",
       "pack": "cafc",
-      "probabilities": {
-        "remand-route-ptab": 1
-      },
+      "note": "Federal Circuit as entered from a PTAB final written decision (35 U.S.C. §§ 141, 319). Remand can only return to the PTAB.",
       "remove_edges": [
         "origin-to-district-court",
         "origin-to-itc",
@@ -133,14 +127,14 @@
         "remand-route-cofc",
         "origin-to-ttab",
         "remand-route-ttab"
-      ]
+      ],
+      "probabilities": {
+        "remand-route-ptab": 1.0
+      }
     },
     "cafc@ttab": {
-      "note": "Federal Circuit as entered from a final TTAB decision (15 U.S.C. § 1071(a); 28 U.S.C. § 1295(a)(4)(B)). Remand can only return to the TTAB.",
       "pack": "cafc",
-      "probabilities": {
-        "remand-route-ttab": 1
-      },
+      "note": "Federal Circuit as entered from a final TTAB decision (15 U.S.C. § 1071(a); 28 U.S.C. § 1295(a)(4)(B)). Remand can only return to the TTAB.",
       "remove_edges": [
         "origin-to-district-court",
         "origin-to-ptab",
@@ -150,375 +144,260 @@
         "remand-route-ptab",
         "remand-route-itc",
         "remand-route-cofc"
-      ]
+      ],
+      "probabilities": {
+        "remand-route-ttab": 1.0
+      }
     }
   },
   "links": [
     {
-      "actor": "applicant",
-      "authority": "28 U.S.C. §§ 1295(a)(3), 2522",
-      "from": "cofc::judgment-for-government",
       "id": "cofc-appeal-judgment-for-government",
+      "from": "cofc::judgment-for-government",
+      "to": "cafc@cofc::entry-cofc",
       "label": "Plaintiff appeals the judgment to the Federal Circuit",
-      "tags": [
-        "appeal"
-      ],
-      "to": "cafc@cofc::entry-cofc"
-    },
-    {
       "actor": "applicant",
       "authority": "28 U.S.C. §§ 1295(a)(3), 2522",
-      "from": "cofc::summary-judgment-for-government",
+      "tags": [
+        "appeal"
+      ]
+    },
+    {
       "id": "cofc-appeal-sj-for-government",
+      "from": "cofc::summary-judgment-for-government",
+      "to": "cafc@cofc::entry-cofc",
       "label": "Plaintiff appeals the summary judgment",
-      "tags": [
-        "appeal"
-      ],
-      "to": "cafc@cofc::entry-cofc"
-    },
-    {
       "actor": "applicant",
       "authority": "28 U.S.C. §§ 1295(a)(3), 2522",
-      "from": "cofc::dismissed-lack-of-jurisdiction",
+      "tags": [
+        "appeal"
+      ]
+    },
+    {
       "id": "cofc-appeal-dismissal-jurisdiction",
+      "from": "cofc::dismissed-lack-of-jurisdiction",
+      "to": "cafc@cofc::entry-cofc",
       "label": "Plaintiff appeals the RCFC 12(b)(1) dismissal",
-      "tags": [
-        "appeal"
-      ],
-      "to": "cafc@cofc::entry-cofc"
-    },
-    {
       "actor": "applicant",
       "authority": "28 U.S.C. §§ 1295(a)(3), 2522",
-      "from": "cofc::dismissed-failure-to-state",
+      "tags": [
+        "appeal"
+      ]
+    },
+    {
       "id": "cofc-appeal-dismissal-failure-to-state",
+      "from": "cofc::dismissed-failure-to-state",
+      "to": "cafc@cofc::entry-cofc",
       "label": "Plaintiff appeals the RCFC 12(b)(6) dismissal",
-      "tags": [
-        "appeal"
-      ],
-      "to": "cafc@cofc::entry-cofc"
-    },
-    {
       "actor": "applicant",
       "authority": "28 U.S.C. §§ 1295(a)(3), 2522",
-      "from": "cofc::dismissed-time-barred",
+      "tags": [
+        "appeal"
+      ]
+    },
+    {
       "id": "cofc-appeal-time-bar",
+      "from": "cofc::dismissed-time-barred",
+      "to": "cafc@cofc::entry-cofc",
       "label": "Plaintiff appeals the § 2501 time-bar dismissal",
-      "tags": [
-        "appeal"
-      ],
-      "to": "cafc@cofc::entry-cofc"
-    },
-    {
       "actor": "applicant",
       "authority": "28 U.S.C. §§ 1295(a)(3), 2522",
-      "from": "cofc::dismissed-1500-bar",
+      "tags": [
+        "appeal"
+      ]
+    },
+    {
       "id": "cofc-appeal-1500-bar",
+      "from": "cofc::dismissed-1500-bar",
+      "to": "cafc@cofc::entry-cofc",
       "label": "Plaintiff appeals the § 1500 dismissal",
-      "tags": [
-        "appeal"
-      ],
-      "to": "cafc@cofc::entry-cofc"
-    },
-    {
       "actor": "applicant",
       "authority": "28 U.S.C. §§ 1295(a)(3), 2522",
-      "from": "cofc::protest-denied",
-      "id": "cofc-appeal-protest-denied",
-      "label": "Protester appeals the bid-protest judgment",
       "tags": [
         "appeal"
-      ],
-      "to": "cafc@cofc::entry-cofc"
+      ]
     },
     {
+      "id": "cofc-appeal-protest-denied",
+      "from": "cofc::protest-denied",
+      "to": "cafc@cofc::entry-cofc",
+      "label": "Protester appeals the bid-protest judgment",
+      "actor": "applicant",
+      "authority": "28 U.S.C. §§ 1295(a)(3), 2522",
+      "tags": [
+        "appeal"
+      ]
+    },
+    {
+      "id": "cofc-gov-appeal-judgment-for-plaintiff",
+      "from": "cofc::judgment-for-plaintiff",
+      "to": "cafc@cofc-gov::entry-cofc",
+      "label": "United States appeals the judgment for plaintiff",
       "actor": "examiner",
       "authority": "28 U.S.C. §§ 1295(a)(3), 2522",
-      "from": "cofc::judgment-for-plaintiff",
-      "id": "cofc-gov-appeal-judgment-for-plaintiff",
-      "label": "United States appeals the judgment for plaintiff",
       "note": "The government's appeal decision (Solicitor General authorization, 28 C.F.R. § 0.20(b)) is modeled as the opponent's choice; with no probability authored it is solved adversarially (worst case for the plaintiff). Author a probability here to use an appeal rate instead.",
       "tags": [
         "appeal"
-      ],
-      "to": "cafc@cofc-gov::entry-cofc"
+      ]
     },
     {
-      "actor": "examiner",
-      "authority": "28 U.S.C. §§ 1295(a)(3), 2522",
-      "from": "cofc::judgment-entered",
       "id": "cofc-gov-appeal-sj-for-plaintiff",
+      "from": "cofc::judgment-entered",
+      "to": "cafc@cofc-gov::entry-cofc",
       "label": "United States appeals the judgment entered for plaintiff",
-      "tags": [
-        "appeal"
-      ],
-      "to": "cafc@cofc-gov::entry-cofc"
-    },
-    {
       "actor": "examiner",
       "authority": "28 U.S.C. §§ 1295(a)(3), 2522",
-      "from": "cofc::protest-sustained",
-      "id": "cofc-gov-appeal-protest-sustained",
-      "label": "United States (or intervenor) appeals the sustained protest",
       "tags": [
         "appeal"
-      ],
-      "to": "cafc@cofc-gov::entry-cofc"
+      ]
     },
     {
-      "actor": "office",
-      "authority": "28 U.S.C. § 2106",
-      "from": "cafc@cofc::remanded-to-cofc",
+      "id": "cofc-gov-appeal-protest-sustained",
+      "from": "cofc::protest-sustained",
+      "to": "cafc@cofc-gov::entry-cofc",
+      "label": "United States (or intervenor) appeals the sustained protest",
+      "actor": "examiner",
+      "authority": "28 U.S.C. §§ 1295(a)(3), 2522",
+      "tags": [
+        "appeal"
+      ]
+    },
+    {
       "id": "cafc-remand-to-cofc",
+      "from": "cafc@cofc::remanded-to-cofc",
+      "to": "cofc::trial-bench",
       "label": "Remand: further proceedings in the Court of Federal Claims",
-      "note": "Re-entry point modeled as further merits proceedings (bench trial). A remand on a narrower issue re-enters later; override with scenario.mask/start when the mandate is specific.",
-      "probability": 1,
-      "tags": [
-        "remand"
-      ],
-      "to": "cofc::trial-bench"
-    },
-    {
       "actor": "office",
       "authority": "28 U.S.C. § 2106",
-      "from": "cafc@cofc-gov::remanded-to-cofc",
-      "id": "cafc-gov-remand-to-cofc",
-      "label": "Remand: further proceedings in the Court of Federal Claims",
-      "probability": 1,
+      "probability": 1.0,
+      "note": "Re-entry point modeled as further merits proceedings (bench trial). A remand on a narrower issue re-enters later; override with scenario.mask/start when the mandate is specific.",
       "tags": [
         "remand"
-      ],
-      "to": "cofc::trial-bench"
+      ]
     },
     {
+      "id": "cafc-gov-remand-to-cofc",
+      "from": "cafc@cofc-gov::remanded-to-cofc",
+      "to": "cofc::trial-bench",
+      "label": "Remand: further proceedings in the Court of Federal Claims",
+      "actor": "office",
+      "authority": "28 U.S.C. § 2106",
+      "probability": 1.0,
+      "tags": [
+        "remand"
+      ]
+    },
+    {
+      "id": "ptab-appeal-to-cafc",
+      "from": "ptab-patent-trial-appeal-board::federal-circuit-window",
+      "to": "cafc@ptab::entry-ptab",
+      "label": "Appeal the final written decision to the Federal Circuit",
       "actor": "either",
       "authority": "35 U.S.C. §§ 141(c), 319; 37 C.F.R. § 90.3",
-      "from": "ptab-patent-trial-appeal-board::federal-circuit-window",
-      "id": "ptab-appeal-to-cafc",
-      "label": "Appeal the final written decision to the Federal Circuit",
-      "note": "Supersedes the PTAB pack's abstract Federal Circuit region when both packs are loaded; keeps its 0.92 appeal rate.",
-      "probability": 0.92,
+      "note": "Supersedes the PTAB pack's abstract Federal Circuit region when both packs are loaded.",
+      "tags": [
+        "appeal"
+      ],
       "replaces": [
         "ptab-patent-trial-appeal-board::federal-circuit-window->federal-circuit-notice-of-appeal#0"
-      ],
-      "tags": [
-        "appeal"
-      ],
-      "to": "cafc@ptab::entry-ptab"
+      ]
     },
     {
+      "id": "cafc-remand-to-ptab",
+      "from": "cafc@ptab::remanded-to-ptab",
+      "to": "ptab-patent-trial-appeal-board::fwd-issued",
+      "label": "Remand: Board issues a new final written decision",
       "actor": "office",
       "authority": "35 U.S.C. § 144; 35 U.S.C. § 319; FRAP 41(a)",
-      "from": "cafc@ptab::remanded-to-ptab",
-      "id": "cafc-remand-to-ptab",
-      "label": "Remand: Board issues a new final written decision",
-      "probability": 1,
+      "probability": 1.0,
       "tags": [
         "remand"
-      ],
-      "to": "ptab-patent-trial-appeal-board::fwd-issued"
+      ]
     },
     {
+      "id": "itc-appeal-to-cafc",
+      "from": "itc-337::federal-circuit-appeal-window",
+      "to": "cafc@itc::entry-itc",
+      "label": "Appeal the Commission's final determination to the Federal Circuit",
       "actor": "applicant",
       "authority": "19 U.S.C. § 1337(c); 28 U.S.C. § 1295(a)(6)",
-      "from": "itc-337::federal-circuit-appeal-window",
-      "id": "itc-appeal-to-cafc",
-      "label": "Appeal the Commission's final determination to the Federal Circuit",
       "note": "Supersedes the ITC pack's abstract appeal edge when both packs are loaded.",
+      "tags": [
+        "appeal"
+      ],
       "replaces": [
         "itc-337::federal-circuit-appeal-window->appeal-filed#0"
-      ],
-      "tags": [
-        "appeal"
-      ],
-      "to": "cafc@itc::entry-itc"
+      ]
     },
     {
+      "id": "cafc-remand-to-itc",
+      "from": "cafc@itc::remanded-to-itc",
+      "to": "itc-337::commission-final-determination",
+      "label": "Remand: Commission issues a new final determination",
       "actor": "office",
       "authority": "19 U.S.C. § 1337(c); 5 U.S.C. § 706(2); FRAP 41(a)",
-      "from": "cafc@itc::remanded-to-itc",
-      "id": "cafc-remand-to-itc",
-      "label": "Remand: Commission issues a new final determination",
-      "probability": 1,
+      "probability": 1.0,
       "tags": [
         "remand"
-      ],
-      "to": "itc-337::commission-final-determination"
+      ]
     },
     {
+      "id": "frcp-appeal-to-regional-circuit",
+      "from": "frcp-civil-procedure::notice-of-appeal-filed",
+      "to": "frap-appellate-procedure::notice-of-appeal-filed",
+      "label": "Proceed under FRAP in the regional circuit (detailed appellate track)",
       "actor": "applicant",
       "authority": "28 U.S.C. § 1291; Fed. R. App. P. 3, 4",
-      "from": "frcp-civil-procedure::notice-of-appeal-filed",
-      "id": "frcp-appeal-to-regional-circuit",
-      "label": "Proceed under FRAP in the regional circuit (detailed appellate track)",
       "note": "Non-patent civil appeals; the regional circuit is one of two routes out of `notice-of-appeal-filed` (see `frcp-appeal-to-cafc-district-court`). Which applies is a fact about the case (does it arise under the patent laws, or carry a compulsory patent counterclaim, 28 U.S.C. § 1295(a)(1)?), not a free choice between forums with concurrent jurisdiction — a matter scenario should `remove_edges` whichever of the two does not apply, the same way a `cafc@<origin>` instance keeps only the one true origin edge.",
-      "replaces": [
-        "frcp-civil-procedure::notice-of-appeal-filed->cross-appeal-window#0"
-      ],
       "tags": [
         "appeal"
       ],
-      "to": "frap-appellate-procedure::notice-of-appeal-filed"
-    },
-    {
-      "actor": "applicant",
-      "authority": "28 U.S.C. § 1295(a)(1)",
-      "from": "frcp-civil-procedure::notice-of-appeal-filed",
-      "id": "frcp-appeal-to-cafc-district-court",
-      "label": "Proceed to the Federal Circuit (district-court patent judgment)",
-      "note": "The Federal Circuit has exclusive jurisdiction over an appeal from a final district-court judgment in a civil action arising under an Act of Congress relating to patents (or plant variety protection), or in which a party asserted a compulsory patent counterclaim -- including a final judgment under 28 U.S.C. § 1292(c)(1)-(2). Coexists with `frcp-appeal-to-regional-circuit` as the other route out of `notice-of-appeal-filed`; a matter scenario selects the applicable one with `scenario.remove_edges` (see that link's note). Routes into the `cafc@district-court` instance, which mirrors `cafc@ptab`/`cafc@itc`/`cafc@cofc`: it keeps only `origin-to-district-court` and remands only back to the district court.",
       "replaces": [
         "frcp-civil-procedure::notice-of-appeal-filed->cross-appeal-window#0"
-      ],
+      ]
+    },
+    {
+      "id": "frcp-appeal-to-cafc-district-court",
+      "from": "frcp-civil-procedure::notice-of-appeal-filed",
+      "to": "cafc@district-court::entry-district-court",
+      "label": "Proceed to the Federal Circuit (district-court patent judgment)",
+      "actor": "applicant",
+      "authority": "28 U.S.C. § 1295(a)(1)",
+      "note": "The Federal Circuit has exclusive jurisdiction over an appeal from a final district-court judgment in a civil action arising under an Act of Congress relating to patents (or plant variety protection), or in which a party asserted a compulsory patent counterclaim -- including a final judgment under 28 U.S.C. § 1292(c)(1)-(2). Coexists with `frcp-appeal-to-regional-circuit` as the other route out of `notice-of-appeal-filed`; a matter scenario selects the applicable one with `scenario.remove_edges` (see that link's note). Routes into the `cafc@district-court` instance, which mirrors `cafc@ptab`/`cafc@itc`/`cafc@cofc`: it keeps only `origin-to-district-court` and remands only back to the district court.",
       "tags": [
         "appeal",
         "patent"
       ],
-      "to": "cafc@district-court::entry-district-court"
+      "replaces": [
+        "frcp-civil-procedure::notice-of-appeal-filed->cross-appeal-window#0"
+      ]
     },
     {
+      "id": "ttab-appeal-to-cafc",
+      "from": "ttab-trademark-trial-and-appeal-board::decision-sustained",
+      "to": "cafc@ttab::entry-ttab",
+      "label": "Appeal the TTAB decision to the Federal Circuit on the Board record",
       "actor": "applicant",
       "authority": "15 U.S.C. § 1071(a); 28 U.S.C. § 1295(a)(4)(B)",
-      "from": "ttab-trademark-trial-and-appeal-board::decision-sustained",
-      "id": "ttab-appeal-to-cafc",
-      "label": "Appeal the TTAB decision to the Federal Circuit on the Board record",
       "note": "Supersedes the TTAB pack's abstract Federal Circuit outcome node when both packs are loaded. The 15 U.S.C. § 1071(b) civil-action alternative stays abstract (district-court de novo review is not a good fit for the FRCP pack's generic civil case); a matter scenario removes whichever route it does not use.",
-      "replaces": [
-        "ttab-trademark-trial-and-appeal-board::decision-sustained->cafc-outcome#0"
-      ],
       "tags": [
         "appeal"
       ],
-      "to": "cafc@ttab::entry-ttab"
+      "replaces": [
+        "ttab-trademark-trial-and-appeal-board::decision-sustained->cafc-outcome#0"
+      ]
     },
     {
+      "id": "cafc-remand-to-ttab",
+      "from": "cafc@ttab::remanded-to-ttab",
+      "to": "ttab-trademark-trial-and-appeal-board::final-decision",
+      "label": "Remand: Board issues a new final decision",
       "actor": "office",
       "authority": "15 U.S.C. § 1071(a)(4); FRAP 41(a)",
-      "from": "cafc@ttab::remanded-to-ttab",
-      "id": "cafc-remand-to-ttab",
-      "label": "Remand: Board issues a new final decision",
-      "probability": 1,
+      "probability": 1.0,
       "tags": [
         "remand"
-      ],
-      "to": "ttab-trademark-trial-and-appeal-board::final-decision"
+      ]
     }
-  ],
-  "lowered": {
-    "asOf": "2026-10-19",
-    "holes": [
-      {
-        "pointer": "/instances/cafc@cofc-gov/stake",
-        "reason": "the plaintiff's CoFC judgment, which the United States' appeal puts at risk: a fact of the matter"
-      },
-      {
-        "pointer": "/links/0/authority",
-        "reason": "28 U.S.C. §§ 1295(a)(3), 2522"
-      },
-      {
-        "pointer": "/links/1/authority",
-        "reason": "28 U.S.C. §§ 1295(a)(3), 2522"
-      },
-      {
-        "pointer": "/links/12/authority",
-        "reason": "35 U.S.C. §§ 141(c), 319; 37 C.F.R. § 90.3"
-      },
-      {
-        "pointer": "/links/16/authority",
-        "reason": "28 U.S.C. § 1291; Fed. R. App. P. 3, 4"
-      },
-      {
-        "pointer": "/links/2/authority",
-        "reason": "28 U.S.C. §§ 1295(a)(3), 2522"
-      },
-      {
-        "pointer": "/links/3/authority",
-        "reason": "28 U.S.C. §§ 1295(a)(3), 2522"
-      },
-      {
-        "pointer": "/links/4/authority",
-        "reason": "28 U.S.C. §§ 1295(a)(3), 2522"
-      },
-      {
-        "pointer": "/links/5/authority",
-        "reason": "28 U.S.C. §§ 1295(a)(3), 2522"
-      },
-      {
-        "pointer": "/links/6/authority",
-        "reason": "28 U.S.C. §§ 1295(a)(3), 2522"
-      },
-      {
-        "pointer": "/links/7/authority",
-        "reason": "28 U.S.C. §§ 1295(a)(3), 2522"
-      },
-      {
-        "pointer": "/links/8/authority",
-        "reason": "28 U.S.C. §§ 1295(a)(3), 2522"
-      },
-      {
-        "pointer": "/links/9/authority",
-        "reason": "28 U.S.C. §§ 1295(a)(3), 2522"
-      }
-    ],
-    "knownAt": "2026-10-19",
-    "pins": [
-      {
-        "digest": "sha256:25b76857cd380dd691dd514376c20a32182130c2e6765fa0e3cd8b85d334e01c",
-        "name": "cafc",
-        "version": "0.1.0"
-      },
-      {
-        "digest": "sha256:4050c2207445867dec7b4f0a7bbc1ca48da2b00813850f56a2508f7970df4746",
-        "name": "cofc",
-        "version": "0.1.0"
-      },
-      {
-        "digest": "sha256:7cab26e955e9555cb989bbdd5a6288862f0806622eaec794819ceef14a60e755",
-        "name": "core",
-        "version": "1.0.0"
-      },
-      {
-        "digest": "sha256:8f6af7d34dbda7d81005efbb227ad32d5a9f86ca987239b1c03edf84f3ef8e5e",
-        "name": "frap-appellate-procedure",
-        "version": "0.1.0"
-      },
-      {
-        "digest": "sha256:95964d8955de263a40028d10fde65db39a8d0f14249032505a1790904851718a",
-        "name": "frcp-civil-procedure",
-        "version": "2024.12.0"
-      },
-      {
-        "digest": "sha256:a44594ef8ee7ec6a5b3a3ac055fe7c2e341e82a1c2c917b77da3d37d7bb8a785",
-        "name": "frcrimp-criminal-procedure",
-        "version": "2024.12.0"
-      },
-      {
-        "digest": "sha256:468e687ebcaa451f019c12ba1b2dde6104d1c8ca3256754736712366f7cd02e0",
-        "name": "itc-337",
-        "version": "0.1.0"
-      },
-      {
-        "digest": "sha256:144e058247e468a2069f9c3eb2560fdfc3badb8f7f9156b6d7695f96f21a0c47",
-        "name": "links",
-        "version": "0.1.0"
-      },
-      {
-        "digest": "sha256:8ef628156da0bbe44b1078469eb83c6370c3f4a23f234c9d07ca8edbf49acb30",
-        "name": "mpep-prosecution",
-        "version": "0.1.0"
-      },
-      {
-        "digest": "sha256:70d6b147fe49145e25f2573118a9cc136c8baa0f2e47cded412310f4f4ac094b",
-        "name": "ptab-patent-trial-appeal-board",
-        "version": "0.1.0"
-      },
-      {
-        "digest": "sha256:04cb6ef1fa6682470a0e087ae63f8d358ecc93033ddedcc73e2664e545397c52",
-        "name": "ttab-trademark-trial-and-appeal-board",
-        "version": "0.1.0"
-      }
-    ],
-    "worldDigest": "sha256:11cd598624cba88c09311ade673ccda5b7f14263c39a98ee5263d5c67607797b"
-  },
-  "schemaVersion": 2
+  ]
 }

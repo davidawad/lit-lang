@@ -20,7 +20,7 @@ macro_rules! items {
 /// What may follow a node declaration's header.
 macro_rules! node_clauses {
     () => {
-        "one of `by`, `discretion`, `outcome`, `effective`, `known_at`, `subject_to`, \
+        "one of `by`, `discretion`, `info`, `outcome`, `effective`, `known_at`, `subject_to`, \
          `notwithstanding`, `supersedes`, `revives`, `override`, `delegable_to`, `cite`, or `{`"
     };
 }
@@ -128,6 +128,20 @@ const NODE_HEADERS_AND_BODIES: Cases = &[
             "module m\nstate s: \"S\" by \"x\"\n",
             &[
                 concat!("L0001 2:14-2:16 expected ", node_clauses!(), ", found `by`"),
+            ],
+        ),
+        ("module m\ndecision s: \"S\" info i\n", &[]),
+        (
+            "module m\ndecision s: \"S\" info \"x\"\n",
+            &[
+                concat!("L0001 2:17-2:21 expected ", node_clauses!(), ", found `info`"),
+            ],
+        ),
+        ("module m\nchance s: \"S\" { a \"A\" -> t p 1 { when has_event(E()) } }\n", &[]),
+        (
+            "module m\nchance s: \"S\" { a \"A\" -> t p 1 { when } }\n",
+            &[
+                "L0001 2:39-2:40 expected an identifier, found `}`",
             ],
         ),
         (

@@ -45,6 +45,7 @@ pub(crate) const EDGE_FIELDS: &[Spec] = &[
     (KwRequires, Some(id_list)),
     (KwForbids, Some(id_list)),
     (KwReplaces, Some(replaces_list)),
+    (KwWhen, Some(bound)),
 ];
 
 pub(crate) const DEADLINE_OPTS: &[Spec] = &[

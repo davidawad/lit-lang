@@ -1,4 +1,4 @@
-//! Declaration clauses: `by`, `discretion`, `outcome`, version clauses,
+//! Declaration clauses: `by`, `discretion`, `info`, `outcome`, version clauses,
 //! relations, and citations, plus the missing-`cite` recovery.
 use super::values::{cite, date, id_list, interval, reference, require};
 use crate::error::{range, SyntaxError};
@@ -46,7 +46,7 @@ impl Clauses {
             out.push(KwBy);
         }
         if self.has(Self::NODE) {
-            out.extend([KwDiscretion, KwOutcome]);
+            out.extend([KwDiscretion, KwInfo, KwOutcome]);
         }
         if self.has(Self::VERSION) {
             out.extend([KwEffective, KwKnownAt]);
@@ -91,6 +91,10 @@ fn clause(p: &mut Parser<'_>, allowed: Clauses) -> bool {
     }
     if allowed.has(Clauses::NODE) && p.at_kw(KwDiscretion) {
         keyword_field(p, KwDiscretion, None);
+        return true;
+    }
+    if allowed.has(Clauses::NODE) && p.at_kw(KwInfo) && p.nth(1) == Ident {
+        keyword_field(p, KwInfo, Some(reference));
         return true;
     }
     if allowed.has(Clauses::NODE) && p.at_kw(KwOutcome) {

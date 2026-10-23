@@ -1,108 +1,11 @@
 {
-  "events": [
-    {
-      "action": "PatentGranted()",
-      "date": "2021-03-02",
-      "party": "owner",
-      "relation": "on"
-    },
-    {
-      "action": "ComplaintServed()",
-      "date": "2025-09-15",
-      "party": "petitioner",
-      "relation": "on"
-    },
-    {
-      "action": "IprPetitionFiled()",
-      "date": "2026-06-01",
-      "party": "petitioner",
-      "relation": "by"
-    },
-    {
-      "action": "FilingDateNoticed()",
-      "date": "2026-06-18",
-      "party": "owner",
-      "relation": "on"
-    }
-  ],
   "id": "ptab-ipr-defense",
-  "lowered": {
-    "asOf": "2026-08-26",
-    "pins": [
-      {
-        "digest": "sha256:25b76857cd380dd691dd514376c20a32182130c2e6765fa0e3cd8b85d334e01c",
-        "name": "cafc",
-        "version": "0.1.0"
-      },
-      {
-        "digest": "sha256:7cab26e955e9555cb989bbdd5a6288862f0806622eaec794819ceef14a60e755",
-        "name": "core",
-        "version": "1.0.0"
-      },
-      {
-        "digest": "sha256:70d6b147fe49145e25f2573118a9cc136c8baa0f2e47cded412310f4f4ac094b",
-        "name": "ptab-patent-trial-appeal-board",
-        "version": "0.1.0"
-      }
-    ],
-    "worldDigest": "sha256:8e3896a8e300f49bdabff3f5e0025d8ea6d9efcd163e26529bdcedd5ddda2e0f"
-  },
-  "notes": "Protagonist is the PATENT OWNER defending against a petitioner's inter partes review, not the petitioner. Uses `ptab-patent-trial-appeal-board` + `cafc` (links.json's `cafc@ptab` instance supplies the appeal, remanding only back to the Board). The events replay to the notice of filing date accorded (the POPR clock start), leaving the matter at the § 315(b) time-bar fact, which `facts` resolves into `popr-window`, so the graph begins where the patent owner's own defense choices begin, skipping the pre-suit/petition-filing steps that are the petitioner's decisions, not the defense's. JUDGMENT CALL (perspective mapping): this pack's actor vocabulary (schemaVersion 2 as of a later migration, but `roles` is still just the default identity mapping — applicant→self, examiner/office→nature, either→nature; the pack has no dedicated patent-owner actor) uses `applicant` for the PETITIONER's moves (files the petition, moves for joinder, replies, opposes amendment — verified against every `actor: applicant` edge in the pack) and buckets the patent owner's own moves (file/waive POPR, file/skip response, settle, move to amend, waive oral argument, request rehearing/Director review, decide whether to appeal) together with genuinely joint/neutral steps under one `either` actor — the pack has no actor distinguishing 'patent owner's own choice' from 'joint/neutral event'. `perspective` below remaps `applicant -> opponent` (the petitioner becomes the adversary we solve against) and `either -> self` (so the patent owner's actual defense choices are exposed to `explain`/`solve`), leaving `examiner`/`office` at their default `nature` (the Board and the Federal Circuit acting adjudicatively). This is the closest reading the CURRENT pack data supports without editing pack content (out of this scenario's scope); it necessarily also treats some genuinely joint/neutral `either` edges as 'our' choice — flagged here rather than silently assumed. A cleaner fix (a dedicated `patent-owner` actor in the pack) is a pack-content change for whoever owns `packs/ptab-patent-trial-appeal-board.json` next, not this scenario. SECOND JUDGMENT CALL (payoffs): several CAFC-side and post-FWD PTAB terminals (`appeal-forfeited-unappealed`, `cafc@ptab::window-blown-ptab`/`dismissed-failure-to-prosecute`/`rule36-affirmance`/`affirmed`/`dismissed-jurisdictional-defect`/`cert-not-sought`/`cert-denied`/`cert-granted`) are reachable regardless of which prior FWD outcome preceded them — a known engine/pack-content limitation (docs/CRITIQUE.md, 'Markov on the node': the graph has no memory of which FWD led here). Rather than inventing false precision, this scenario assigns those a flat mid-range illustrative value ($1,500,000, half of the $3,000,000 illustrative patent value used for a clean win) and says so per-terminal below instead of leaving it unstated. All dollar figures assume an illustrative $3,000,000 patent value (this patent's licensing/enforcement value if it survives intact) and a $700/hr blended rate; neither is sourced (no real matter identified) — override both per actual matter.",
+  "summary": "IPR defense by a patent owner at the PTAB (35 U.S.C. §§311-319), from the Patent Owner Preliminary Response through a final written decision, with appeal to the CAFC.",
+  "notes": "Protagonist is the PATENT OWNER defending against a petitioner's inter partes review, not the petitioner. Uses `ptab-patent-trial-appeal-board` + `cafc` (links.json's `cafc@ptab` instance supplies the appeal, remanding only back to the Board). The events replay to the notice of filing date accorded (the POPR clock start), leaving the matter at the § 315(b) time-bar fact, which its guards derive from the service and filing dates into `popr-window`, so the graph begins where the patent owner's own defense choices begin, skipping the pre-suit/petition-filing steps that are the petitioner's decisions, not the defense's. JUDGMENT CALL (perspective mapping): this pack's actor vocabulary (schemaVersion 2 as of a later migration, but `roles` is still just the default identity mapping — applicant→self, examiner/office→nature, either→nature; the pack has no dedicated patent-owner actor) uses `applicant` for the PETITIONER's moves (files the petition, moves for joinder, replies, opposes amendment — verified against every `actor: applicant` edge in the pack) and buckets the patent owner's own moves (file/waive POPR, file/skip response, settle, move to amend, waive oral argument, request rehearing/Director review, decide whether to appeal) together with genuinely joint/neutral steps under one `either` actor — the pack has no actor distinguishing 'patent owner's own choice' from 'joint/neutral event'. `perspective` below remaps `applicant -> opponent` (the petitioner becomes the adversary we solve against) and `either -> self` (so the patent owner's actual defense choices are exposed to `explain`/`solve`), leaving `examiner`/`office` at their default `nature` (the Board and the Federal Circuit acting adjudicatively). This is the closest reading the CURRENT pack data supports without editing pack content (out of this scenario's scope); it necessarily also treats some genuinely joint/neutral `either` edges as 'our' choice — flagged here rather than silently assumed. A cleaner fix (a dedicated `patent-owner` actor in the pack) is a pack-content change for whoever owns `packs/ptab-patent-trial-appeal-board.json` next, not this scenario. SECOND JUDGMENT CALL (payoffs): several CAFC-side and post-FWD PTAB terminals (`appeal-forfeited-unappealed`, `cafc@ptab::window-blown-ptab`/`dismissed-failure-to-prosecute`/`rule36-affirmance`/`affirmed`/`dismissed-jurisdictional-defect`/`cert-not-sought`/`cert-denied`/`cert-granted`) are reachable regardless of which prior FWD outcome preceded them — a known engine/pack-content limitation (docs/CRITIQUE.md, 'Markov on the node': the graph has no memory of which FWD led here). Rather than inventing false precision, this scenario assigns those a flat mid-range illustrative value ($1,500,000, half of the $3,000,000 illustrative patent value used for a clean win) and says so per-terminal below instead of leaving it unstated. All dollar figures assume an illustrative $3,000,000 patent value (this patent's licensing/enforcement value if it survives intact) and a $700/hr blended rate; neither is sourced (no real matter identified) — override both per actual matter.",
   "packs": [
     "ptab-patent-trial-appeal-board",
     "cafc"
   ],
-  "parties": [
-    {
-      "actor": "either",
-      "entity_type": "Corporation",
-      "id": "owner"
-    },
-    {
-      "actor": "applicant",
-      "entity_type": "Corporation",
-      "id": "petitioner"
-    }
-  ],
-  "scenario": {
-    "facts": {
-      "ptab-patent-trial-appeal-board::petition-time-bar-check": "ptab-patent-trial-appeal-board::e-time-bar-clear"
-    },
-    "params": {
-      "opp_rate": 650,
-      "rate": 700
-    },
-    "payoffs": {
-      "cafc@ptab::affirmed": 1500000,
-      "cafc@ptab::affirmed-in-part-reversed-in-part": 1500000,
-      "cafc@ptab::cert-denied": 1500000,
-      "cafc@ptab::cert-granted": 1500000,
-      "cafc@ptab::cert-not-sought": 1500000,
-      "cafc@ptab::dismissed-failure-to-prosecute": 1500000,
-      "cafc@ptab::dismissed-jurisdictional-defect": 1500000,
-      "cafc@ptab::remanded-to-ptab": 1500000,
-      "cafc@ptab::reversed": 3000000,
-      "cafc@ptab::rule36-affirmance": 1500000,
-      "cafc@ptab::settled-in-mediation": 2000000,
-      "cafc@ptab::window-blown-ptab": 1500000,
-      "ptab-patent-trial-appeal-board::adverse-judgment-terminal": 0,
-      "ptab-patent-trial-appeal-board::appeal-forfeited-unappealed": 1500000,
-      "ptab-patent-trial-appeal-board::claims-disclaimed-preinstitution": 1500000,
-      "ptab-patent-trial-appeal-board::fwd-all-confirmed": 3000000,
-      "ptab-patent-trial-appeal-board::fwd-all-unpatentable": 0,
-      "ptab-patent-trial-appeal-board::fwd-mixed": 1500000,
-      "ptab-patent-trial-appeal-board::institution-denied-fintiv": 3000000,
-      "ptab-patent-trial-appeal-board::institution-denied-merits": 3000000,
-      "ptab-patent-trial-appeal-board::ipr-terminated-settlement": 2000000,
-      "ptab-patent-trial-appeal-board::ipr-time-barred": 3000000
-    },
-    "perspective": {
-      "applicant": "opponent",
-      "either": "self"
-    },
-    "start": "ptab-patent-trial-appeal-board::petition-time-bar-check"
-  },
-  "schema_version": 2,
   "sources": [
     {
       "title": "35 U.S.C. §319 — appeal of a PTAB final written decision to the Federal Circuit",
@@ -113,5 +16,42 @@
       "url": "https://www.law.cornell.edu/uscode/text/35/315"
     }
   ],
-  "summary": "IPR defense by a patent owner at the PTAB (35 U.S.C. §§311-319), from the Patent Owner Preliminary Response through a final written decision, with appeal to the CAFC."
+  "scenario": {
+    "params": {
+      "opp_rate": 650.0,
+      "rate": 700.0
+    },
+    "perspective": {
+      "applicant": "opponent",
+      "either": "self"
+    },
+    "payoffs": {
+      "cafc@ptab::affirmed": 1500000.0,
+      "cafc@ptab::affirmed-in-part-reversed-in-part": 1500000.0,
+      "cafc@ptab::cert-denied": 1500000.0,
+      "cafc@ptab::cert-granted": 1500000.0,
+      "cafc@ptab::cert-not-sought": 1500000.0,
+      "cafc@ptab::dismissed-failure-to-prosecute": 1500000.0,
+      "cafc@ptab::dismissed-jurisdictional-defect": 1500000.0,
+      "cafc@ptab::remanded-to-ptab": 1500000.0,
+      "cafc@ptab::reversed": 3000000.0,
+      "cafc@ptab::rule36-affirmance": 1500000.0,
+      "cafc@ptab::settled-in-mediation": 2000000.0,
+      "cafc@ptab::window-blown-ptab": 1500000.0,
+      "ptab-patent-trial-appeal-board::adverse-judgment-terminal": 0.0,
+      "ptab-patent-trial-appeal-board::appeal-forfeited-unappealed": 1500000.0,
+      "ptab-patent-trial-appeal-board::claims-disclaimed-preinstitution": 1500000.0,
+      "ptab-patent-trial-appeal-board::fwd-all-confirmed": 3000000.0,
+      "ptab-patent-trial-appeal-board::fwd-all-unpatentable": 0.0,
+      "ptab-patent-trial-appeal-board::fwd-mixed": 1500000.0,
+      "ptab-patent-trial-appeal-board::institution-denied-fintiv": 3000000.0,
+      "ptab-patent-trial-appeal-board::institution-denied-merits": 3000000.0,
+      "ptab-patent-trial-appeal-board::ipr-terminated-settlement": 2000000.0,
+      "ptab-patent-trial-appeal-board::ipr-time-barred": 3000000.0
+    },
+    "facts": {
+      "ptab-patent-trial-appeal-board::petition-time-bar-check": "ptab-patent-trial-appeal-board::e-time-bar-clear"
+    },
+    "start": "ptab-patent-trial-appeal-board::petition-time-bar-check"
+  }
 }

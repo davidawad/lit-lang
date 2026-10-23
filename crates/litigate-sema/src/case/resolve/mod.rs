@@ -84,6 +84,22 @@ fn token_text(node: &SyntaxNode, kind: K) -> Option<(String, TextRange)> {
         })
 }
 
+/// The number after `docket` on an event line, with its range.
+fn docket_token(line: &SyntaxNode) -> Option<(String, TextRange)> {
+    line.children_with_tokens()
+        .filter_map(rowan::NodeOrToken::into_token)
+        .find(|t| t.kind() == K::Number)
+        .map(|t| {
+            let n = crate::db::parse::name(&t);
+            (n.text, n.range)
+        })
+}
+
+/// A docket number: a whole number from 1 (digit separators allowed).
+fn docket_number(text: &str) -> Option<u64> {
+    text.replace('_', "").parse().ok().filter(|&n| n > 0)
+}
+
 fn child(node: &SyntaxNode, kind: K) -> Option<SyntaxNode> {
     node.children().find(|c| c.kind() == kind)
 }
@@ -372,6 +388,21 @@ impl R<'_, '_> {
             let date = child(line, K::Literal).and_then(|l| token_text(&l, K::Date));
             let call = child(line, K::CallExpr).and_then(|c| self.lower.expr(&c));
             let party = child(line, K::Ref).and_then(|r| ref_path(&r));
+            let docket = docket_token(line);
+            let number = docket.as_ref().and_then(|(text, range)| {
+                let n = docket_number(text);
+                if n.is_none() {
+                    self.out.push(
+                        Report::new(
+                            C::InvalidCaseEvent,
+                            *range,
+                            format!("docket `{text}` is not a docket number"),
+                        )
+                        .note("a docket number is a whole number from 1"),
+                    );
+                }
+                n
+            });
             let relation = line
                 .children_with_tokens()
                 .filter_map(rowan::NodeOrToken::into_token)
@@ -389,6 +420,7 @@ impl R<'_, '_> {
             self.spans.events.push(EventSpans {
                 whole: Some(self.s(sig(line))),
                 date: date.as_ref().map(|d| self.s(d.1)),
+                docket: docket.as_ref().map(|d| self.s(d.1)),
                 action: call.as_ref().map(|c| self.s(c.range)),
                 party: party.as_ref().map(|p| self.s(p.range)),
             });
@@ -415,6 +447,7 @@ impl R<'_, '_> {
             };
             events.push(Event {
                 date,
+                docket: number,
                 action,
                 relation,
                 party: party.display(),
@@ -424,15 +457,22 @@ impl R<'_, '_> {
         events
     }
 
-    /// The machine-applicable fix that sorts out-of-order event lines.
+    /// The machine-applicable fix that sorts out-of-order event lines by
+    /// date, then docket number. Undocketed same-day lines keep their
+    /// places: they are unordered, so any order of them is sorted.
     fn sort_fix(&mut self, lines: &[SyntaxNode], text: &str) {
         let key = |n: &SyntaxNode| {
-            child(n, K::Literal)
+            let date = child(n, K::Literal)
                 .and_then(|l| token_text(&l, K::Date))
-                .map(|d| d.0)
+                .map(|d| d.0);
+            (date, docket_token(n).and_then(|(t, _)| docket_number(&t)))
         };
-        let keys: Vec<Option<String>> = lines.iter().map(key).collect();
-        if keys.windows(2).all(|w| w[0] <= w[1]) {
+        let keys: Vec<(Option<String>, Option<u64>)> = lines.iter().map(key).collect();
+        let after = |a: &(Option<String>, Option<u64>), b: &(Option<String>, Option<u64>)| {
+            a.0 > b.0 || (a.0 == b.0 && matches!((a.1, b.1), (Some(x), Some(y)) if x > y))
+        };
+        let sorted = (0..keys.len()).all(|j| (0..j).all(|i| !after(&keys[i], &keys[j])));
+        if sorted {
             return;
         }
         let ranges: Vec<TextRange> = lines.iter().map(sig).collect();

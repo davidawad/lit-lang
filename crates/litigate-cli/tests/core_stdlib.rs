@@ -393,7 +393,7 @@ fn pending_matters_keep_the_pre_2009_rule_only_on_an_order() {
     let governs = |history: &[(&str, &hir::Expr)], at: usize| {
         let events: Vec<MatterEvent<'_>> = history
             .iter()
-            .map(|(date, action)| MatterEvent { date, action })
+            .map(|(date, action)| MatterEvent::on(date, action))
             .collect();
         let g = governing(&world, &key, &events, at, None).unwrap();
         world.decls[g.version].meta.effective.from.clone()

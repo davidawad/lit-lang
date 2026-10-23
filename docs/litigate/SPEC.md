@@ -273,7 +273,7 @@ SourceDecl   = "source", String, [ "{", { ("url", String | "as_of", (Date | Hole
                "}" ] ;
 PerspectiveDecl = "perspective", ( Ident | "{", { Ident, ":", Ident, Sep }, "}" ) ;
 PartiesBlock = "parties", "{", { Ident, ":", Ident, Ident, Sep }, "}" ;
-EventsBlock  = "events", "{", { Date, CallExpr, ("by" | "on"), Ident, [ Cite ] }, "}" ;
+EventsBlock  = "events", "{", { Date, [ "docket", Number ], CallExpr, ("by" | "on"), Ident, [ Cite ] }, "}" ;
 FactsBlock   = "facts", "{", { Ref, ":", Ref, Sep }, "}" ;
 StakesBlock  = "stakes", "{", { Ref, ":", (SignedMoney | "unvalued"), Sep }, "}" ;
 BeliefsBlock = "beliefs", "{", { "observe", Ref, ":", "{", { Ref, ":", Number, Sep },
@@ -699,17 +699,25 @@ Refinements (temporal bead, `litigate-sema/src/temporal`):
   transition amends it; then the arms decide. Each arm must select the
   amended version `d@D` or the version it replaces (the one ending on
   `D`), and `d@D` must replace one (L3008). One transition per amended
-  version (L3008). Conditions may use only `has_event`, `true`/`false`,
-  `!`, `&&`, `||`, and boolean `==`/`!=` (L3008).
+  version across the world (L3008 on each; replay then refuses the event:
+  load order never picks one). Two `unless` arms selecting different
+  versions must be disjoint: no history makes both conditions true,
+  decided over the `has_event` atoms as for exceptions (§5.5; L3008,
+  also when there are too many atoms to prove it). Conditions may use
+  only `has_event`, `true`/`false`, `!`, `&&`, `||`, and boolean
+  `==`/`!=` (L3008).
 
 `transition t amends d@D { unless C -> v, otherwise -> w }` handles
 proceedings pending when version `d@D` takes effect. For each event on or
-after `D` in a matter whose first event precedes `D`, the arms are evaluated
-in order. The first `unless` whose condition is true selects its version,
-else `otherwise` does. Exactly one `otherwise` must come last (L3008).
-Conditions may use `has_event(Pattern)` (true when the matter has a matching
-event on or before the evaluated one; always false outside a case). FRCP
-86(a) is written this way in `lit/frcp`, never in compiler code.
+after `D` in a matter whose first event precedes `D`, the arms are evaluated.
+The `unless` whose condition is true selects its version, else `otherwise`
+does; arms are disjoint, so their order is never consulted. Exactly one
+`otherwise` must come last (L3008). Conditions may use `has_event(Pattern)`
+(true when the matter has a matching event that is the evaluated one or
+precedes it in docket order, §5.6: a later event of the same day, or a
+same-day event the docket does not order, never counts; always false
+outside a case). FRCP 86(a) is written this way in `lit/frcp`, never in
+compiler code.
 
 ### 5.5 Authority, precedence, defeasibility
 
@@ -839,9 +847,19 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
   actor `opponent`, and leaves remaining actors at the package roles.
   `perspective { actor: role }` sets roles explicitly. Unknown party or actor
   is L4005.
+- Docket order. An event may carry a docket sequence number, `date docket
+  N Event(...)` (N a whole number from 1, else L4001). Events are ordered
+  by date, then docket number; source order is never consulted. Two
+  events of one date precede one another only when both are docketed with
+  different numbers; otherwise they are unordered, which is legal only
+  when both declare an `elects` or `removes` effect (they commute), and
+  L4001 for any other pair. Docket numbers grow with the date: a pair of
+  docketed events on different dates whose numbers are equal or fall is
+  L4001. Source that contradicts docket order is L4001 with a fix that
+  sorts the block.
 - Replay: begin at `start` if given, else the package start. Process events
-  sorted by date. Ties keep source order, and out-of-order source is L4001
-  with a fix. Before each event, while the current node is a `fact` chance
+  in docket order, unordered same-day events in the order of their text.
+  Before each event, while the current node is a `fact` chance
   node with a `facts` entry, follow that edge. An event whose type declares
   an effect (§5.2) applies it and does not move. Otherwise an event that
   matches exactly one outgoing edge's `event` pattern takes it. An event
@@ -1721,7 +1739,7 @@ gets one row per condition when the conditions classify differently.
 | C44 | L3008 arm selects neither `d@D` nor the version it replaces; `d@D` replaces none; two transitions on one version (§5.4) | sema | b | Version indices: each arm's target `∈ {d@D, pred(d@D)}` and `∃ pred(d@D)`; uniqueness is a family refinement over transitions per amended version (`# = 1`). |
 | C45 | L3009 counting: anchor/exclude combination; unknown anchor, roll kind or unit; duplicate service method; `short_period` unit (§5.3) | sema, lower | a | `Anchor = TriggerDay {exclude_trigger_day} \| NextBusinessDay` makes the illegal combinations unrepresentable; roll kinds and units are enums; service extensions are a map keyed by the closed `ServiceMethod` enum. |
 | C46 | L3009 `N.hours` without `allow_hours`; backward deadline on a `next_business_day` rule; `nth` outside 1-4; unknown calendar (§5.3, §5.5) | sema | b | `Counting<hours: Bool, anchor: Anchor>` as indices: an hours deadline needs `hours = true`; `Deadline<Bwd>` needs `anchor ≠ NextBusinessDay`; `nth: {n \| 1 ≤ n ≤ 4}`; calendar is a resolved `Ref` (a). |
-| C47 | L4001 case events out of source order (§5.6) | sema | b | Events list `{es \| ∀i. date_i ≤ date_{i+1}}` (QF_LIA, ground); the fix is unchanged. |
+| C47 | L4001 case events out of docket order, docket numbers contradicting dates, unordered same-day events that do not commute (§5.6) | sema | b | Events list `{es \| ∀i<j. ¬(e_j ≺ e_i)}` with `≺` the (date, docket) order (QF_LIA, ground); the fix sorts by (date, docket). |
 | C48 | L4001 event matches no edge or several; takes no edge without a declared effect, a firing trigger or transition history, or where the matter has ended; matches only removed edges; removal or transform without `cite`; removal repeated; discharge of another party's obligation; extension or waiver with no target, no capability, the wrong principal, after expiry, or beyond its bound (§5.6) | sema | b | Typestate (DESIGN §4.5) as an indexed type: the matter is `Case<n, R, O>` (posture node `n`, removed edge set `R`, open obligation instances `O`); an event `e` types only as `Case<n, R, O> → Case<to(edge), R, O'>` for the unique edge of `n` not in `R` whose pattern it matches, or as `Case<n, R', O'>` by its declared effect or the triggers it fires (C41). The capability check is a ground comparison of the principal and of dates against the bound. Finite and ground: one step per event. |
 | C49 | L4002 act discharges an obligation instance after its due date (§5.6) | sema | c | The due date comes from counting through holiday calendars and inaccessible days from the instance's trigger: execution, not a type. |
 | C50 | L4003 `facts` node not a `fact` chance node or edge not its own (§5.6) | sema | b | `facts {n: Edges(n)}` with `n : Node<Chance, fact>` (index on the referenced node's signature). |
@@ -1769,7 +1787,7 @@ they are listed so the v2 type system keeps them.
 | R8 | Intervals are half-open `[from, to)` with `from < to` (§5.4) | b | `Interval = {(f, t) \| f < t}` (`..` is `t = +∞`). lg-962.3. |
 | R9 | A declaration's own `effective`/`known_at` beats its rule's, which beats the package's (§5.4) | a | Elaboration order of defaults; no check can fail. |
 | R10 | Selection at `(as_of, known_at)` (§5.4) | b | As C41. |
-| R11 | `has_event` in a transition is evaluated against events on or before the evaluated one; false outside a case (§5.4) | a | Semantics of the `Cond` type (C43). |
+| R11 | `has_event` in a transition is evaluated against the evaluated event and those preceding it in docket order; false outside a case (§5.4) | a | Semantics of the `Cond` type (C43). |
 | R12 | Supersession and revival semantics, bitemporal (§5.4) | c | O4. |
 | R13 | Precedence stages and tie-breaks (§5.5) | c | C35. |
 | R14 | Exception evaluation: target condition must hold; highest priority wins (§5.5) | a | Semantics; the ordering it needs is C37. |

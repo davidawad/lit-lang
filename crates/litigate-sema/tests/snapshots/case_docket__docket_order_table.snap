@@ -1,0 +1,68 @@
+---
+source: crates/litigate-sema/tests/case_docket.rs
+expression: got
+---
+{
+    "contradiction: a docket number falling with the date": [
+        "13:3 L3009 cannot count deadline `court-period` for this event\n    note @12:3: `court-period` runs 5 court days from `Served(complaint, Mail)` on 2010-01-04 under `ac@2009-12-01`\n    note: no clock library is loaded to run counting rule `ac`",
+        "13:21 L4001 docket 3 on 2010-01-08 and docket 5 on 2010-01-04 contradict their dates\n    note: a docket number grows with the date it is entered on",
+        "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
+        "trace Took Answered(complaint) alpha::respond -> alpha::answered via alpha::answer",
+    ],
+    "contradiction: one docket number on two dates": [
+        "13:3 L3009 cannot count deadline `court-period` for this event\n    note @12:3: `court-period` runs 5 court days from `Served(complaint, Mail)` on 2010-01-04 under `ac@2009-12-01`\n    note: no clock library is loaded to run counting rule `ac`",
+        "13:21 L4001 docket 5 on 2010-01-08 and docket 5 on 2010-01-04 contradict their dates\n    note: a docket number grows with the date it is entered on",
+        "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
+        "trace Took Answered(complaint) alpha::respond -> alpha::answered via alpha::answer",
+    ],
+    "invalid: a fractional docket": [
+        "12:21 L4001 docket `1.5` is not a docket number\n    note: a docket number is a whole number from 1",
+    ],
+    "invalid: docket zero": [
+        "12:21 L4001 docket `0` is not a docket number\n    note: a docket number is a whole number from 1",
+    ],
+    "ok: digit separators": [
+        "13:3 L3009 cannot count deadline `court-period` for this event\n    note @12:3: `court-period` runs 5 court days from `Served(complaint, Mail)` on 2010-01-04 under `ac@2009-12-01`\n    note: no clock library is loaded to run counting rule `ac`",
+        "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
+        "trace Took Answered(complaint) alpha::respond -> alpha::answered via alpha::answer",
+    ],
+    "ok: removals commute undocketed": [
+        "ok: start alpha::intake",
+        "trace Removed Forfeited(\"late\") alpha::intake -> alpha::intake",
+        "trace Removed Forfeited(\"reopen\") alpha::intake -> alpha::intake",
+    ],
+    "ok: same-day events in docket order": [
+        "13:3 L3009 cannot count deadline `court-period` for this event\n    note @12:3: `court-period` runs 5 court days from `Served(complaint, Mail)` on 2010-01-04 under `ac@2009-12-01`\n    note: no clock library is loaded to run counting rule `ac`",
+        "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
+        "trace Took Answered(complaint) alpha::respond -> alpha::answered via alpha::answer",
+    ],
+    "out of order: a smaller docket number written later": [
+        "12:3 L3009 cannot count deadline `court-period` for this event\n    note @13:3: `court-period` runs 5 court days from `Served(complaint, Mail)` on 2010-01-04 under `ac@2009-12-01`\n    note: no clock library is loaded to run counting rule `ac`",
+        "13:3 L4001 events must be in docket order: 2010-01-04 docket 1 comes after 2010-01-04 docket 2\n    note: replay processes events by date, then docket number\n    fix @12:3-13:51 MachineApplicable: \"2010-01-04 docket 1 Served(complaint, Mail) on d\\n  2010-01-04 docket 2 Answered(complaint) by d\"",
+        "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
+        "trace Took Answered(complaint) alpha::respond -> alpha::answered via alpha::answer",
+    ],
+    "out of order: dates first, docket numbers then": [
+        "12:3 L3009 cannot count deadline `court-period` for this event\n    note @13:3: `court-period` runs 5 court days from `Served(complaint, Mail)` on 2010-01-04 under `ac@2009-12-01`\n    note: no clock library is loaded to run counting rule `ac`",
+        "13:3 L4001 events must be in docket order: 2010-01-04 comes after 2010-01-08 docket 9\n    note: replay processes events by date, then docket number\n    fix @12:3-13:42 MachineApplicable: \"2010-01-04 Served(complaint, Mail) on d\\n  2010-01-08 docket 9 Answered(complaint) by d\"",
+        "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
+        "trace Took Answered(complaint) alpha::respond -> alpha::answered via alpha::answer",
+    ],
+    "unordered: a removal beside a move": [
+        "13:3 L4001 `Served(complaint, Mail)` and `Forfeited(\"late\")` on 2010-01-04 need distinct `docket` numbers to be ordered\n    note: events of one date are ordered by docket number, never by source order\n    note: only events that elect or remove options commute and may share a date undocketed",
+        "trace Removed Forfeited(\"late\") alpha::intake -> alpha::intake",
+        "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
+    ],
+    "unordered: one docket number shared by two events": [
+        "13:3 L4001 `Served(complaint, Mail)` and `Answered(complaint)` on 2010-01-04 need distinct `docket` numbers to be ordered\n    note: events of one date are ordered by docket number, never by source order\n    note: only events that elect or remove options commute and may share a date undocketed",
+        "13:23 L4001 `Answered(complaint)` is not a legal event at stage `alpha::intake` (Intake)\n    note: legal events: Served(complaint) [serve], Filed(complaint) [file], Ruled() [rule], Logged() [log], Twin(complaint) [twin-a], Twin(complaint) [twin-b], Noted(motion) [probe], Benched(complaint) [to-bench], Benched(motion) [to-lone], Answered(motion) [archive], Reopened(motion) [stage]\n    note: an event that takes no edge must fire the trigger of an in-force deadline, be history a transition reads, or have a type declaring `removes`, `extends`, or `waives`\n    note: replay stops at the first illegal event",
+    ],
+    "unordered: one docketed, one not": [
+        "13:3 L4001 `Served(complaint, Mail)` and `Answered(complaint)` on 2010-01-04 need distinct `docket` numbers to be ordered\n    note: events of one date are ordered by docket number, never by source order\n    note: only events that elect or remove options commute and may share a date undocketed",
+        "13:14 L4001 `Answered(complaint)` is not a legal event at stage `alpha::intake` (Intake)\n    note: legal events: Served(complaint) [serve], Filed(complaint) [file], Ruled() [rule], Logged() [log], Twin(complaint) [twin-a], Twin(complaint) [twin-b], Noted(motion) [probe], Benched(complaint) [to-bench], Benched(motion) [to-lone], Answered(motion) [archive], Reopened(motion) [stage]\n    note: an event that takes no edge must fire the trigger of an in-force deadline, be history a transition reads, or have a type declaring `removes`, `extends`, or `waives`\n    note: replay stops at the first illegal event",
+    ],
+    "unordered: same day, undocketed, not commuting": [
+        "13:3 L4001 `Served(complaint, Mail)` and `Answered(complaint)` on 2010-01-04 need distinct `docket` numbers to be ordered\n    note: events of one date are ordered by docket number, never by source order\n    note: only events that elect or remove options commute and may share a date undocketed",
+        "13:14 L4001 `Answered(complaint)` is not a legal event at stage `alpha::intake` (Intake)\n    note: legal events: Served(complaint) [serve], Filed(complaint) [file], Ruled() [rule], Logged() [log], Twin(complaint) [twin-a], Twin(complaint) [twin-b], Noted(motion) [probe], Benched(complaint) [to-bench], Benched(motion) [to-lone], Answered(motion) [archive], Reopened(motion) [stage]\n    note: an event that takes no edge must fire the trigger of an in-force deadline, be history a transition reads, or have a type declaring `removes`, `extends`, or `waives`\n    note: replay stops at the first illegal event",
+    ],
+}

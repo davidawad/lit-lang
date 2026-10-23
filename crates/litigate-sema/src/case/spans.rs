@@ -15,6 +15,8 @@ pub struct EventSpans {
     pub whole: Option<Span>,
     /// The date.
     pub date: Option<Span>,
+    /// The docket number after `docket`.
+    pub docket: Option<Span>,
     /// The event constructor call.
     pub action: Option<Span>,
     /// The party after `by`/`on`.
@@ -38,7 +40,8 @@ pub struct CaseSpans {
     pub parties: Vec<(Option<Span>, Option<Span>)>,
     /// Event lines, in source order (parallel to `Case::events`).
     pub events: Vec<EventSpans>,
-    /// A fix that sorts the events block by date, when it is out of order.
+    /// A fix that sorts the events block by date and docket number, when it
+    /// is out of order.
     pub sort_events: Option<(Span, String)>,
     /// `facts` entries by qualified node: (node reference, edge reference).
     pub facts: BTreeMap<String, (Span, Span)>,

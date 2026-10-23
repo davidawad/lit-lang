@@ -31,7 +31,7 @@ proptest! {
             kind: ExprKind::Call { callee: "Served".into(), args: Vec::new() },
             span: None,
         };
-        let events = [MatterEvent { date: &date, action: &action }];
+        let events = [MatterEvent::on(&date, &action)];
         with_world(&db, ws, |world| {
             let result = governing(world, &key, &events, 0, None);
             prop_assert!(result.is_ok(), "{result:?}");

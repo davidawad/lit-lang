@@ -20,7 +20,7 @@ expression: table
     ],
     "events: out of order, sorted by a machine-applicable fix": [
         "12:14 L4001 `Benched(complaint)` is not a legal event at stage `alpha::respond` (Respond)\n    note: legal events: Answered(complaint) [answer], Twin(motion) [late], Reopened(motion) [reopen]\n    note: an event that takes no edge must fire the trigger of an in-force deadline, be history a transition reads, or have a type declaring `removes`, `extends`, or `waives`\n    note: replay stops at the first illegal event",
-        "13:3 L4001 events must be in date order: 2010-01-04 comes after 2010-01-05\n    note: replay processes events sorted by date (ties keep source order)\n    fix @12:3-13:42 MachineApplicable: \"2010-01-04 Served(complaint, Mail) on d\\n  2010-01-05 Benched(complaint) by p\"",
+        "13:3 L4001 events must be in docket order: 2010-01-04 comes after 2010-01-05\n    note: replay processes events by date, then docket number\n    fix @12:3-13:42 MachineApplicable: \"2010-01-04 Served(complaint, Mail) on d\\n  2010-01-05 Benched(complaint) by p\"",
         "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
     ],
     "known_at: before the packages were known, nothing is in force": [

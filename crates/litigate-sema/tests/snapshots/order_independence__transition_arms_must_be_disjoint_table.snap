@@ -1,0 +1,14 @@
+---
+source: crates/litigate-sema/tests/order_independence.rs
+expression: "table(&[(\"1 overlapping arms selecting different versions\",\n&arms(\"unless has_event(Ordered()) -> p@2009-12-01, unless has_event(Hearing(motion)) -> p@2016-12-01\"),),\n(\"2 exclusive arms\",\n&arms(\"unless has_event(Ordered()) -> p@2009-12-01, unless has_event(Hearing(motion)) && !has_event(Ordered()) -> p@2016-12-01\"),),\n(\"3 overlapping arms selecting the same version\",\n&arms(\"unless has_event(Ordered()) -> p@2009-12-01, unless has_event(Hearing(motion)) -> p@2009-12-01\"),),\n(\"4 too many atoms to prove disjoint\", &wide),])"
+---
+{
+    "1 overlapping arms selecting different versions": [
+        "pkgs/demo/main.lit:15:89 L3008 arms `p@2009-12-01` and `p@2016-12-01` of `tr` can both hold\n    note @15:44: the other arm's condition\n    note: some history makes both conditions true\n    note: make the conditions exclusive (`a && !b`): arms are disjoint, never first-match",
+    ],
+    "2 exclusive arms": [],
+    "3 overlapping arms selecting the same version": [],
+    "4 too many atoms to prove disjoint": [
+        "pkgs/demo/main.lit:32:236 L3008 arms `p@2009-12-01` and `p@2016-12-01` of `tr` can both hold\n    note @32:44: the other arm's condition\n    note: their conditions have too many atoms to prove disjoint\n    note: make the conditions exclusive (`a && !b`): arms are disjoint, never first-match",
+    ],
+}

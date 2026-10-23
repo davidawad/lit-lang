@@ -334,10 +334,7 @@ counting nourl cite XYZ 6(a)
         known_at: Option<&str>,
     ) -> Result<Due, String> {
         let action = served("ServiceMethod::Personal");
-        let events = [MatterEvent {
-            date,
-            action: &action,
-        }];
+        let events = [MatterEvent::on(date, &action)];
         let clocks = Clocks::new(&[pkg]);
         let world = clocks.scope(&[&pkg.manifest.name]);
         due(&clocks, &world, pkg, name, &events, 0, known_at)
@@ -426,10 +423,7 @@ counting nourl cite XYZ 6(a)
         assert_eq!(date(&before), Ok("2025-02-10".to_owned()));
         // Mail service adds the counting rule's three days.
         let action = served("ServiceMethod::Mail");
-        let events = [MatterEvent {
-            date: "2025-03-03",
-            action: &action,
-        }];
+        let events = [MatterEvent::on("2025-03-03", &action)];
         let clocks = Clocks::new(&[&pkg]);
         let mailed = due(
             &clocks,

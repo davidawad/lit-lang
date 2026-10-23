@@ -172,10 +172,8 @@ fn pending_matters_follow_rule_86a_unless_the_court_orders_otherwise() {
     ];
     let mut rows = Vec::new();
     for (label, history) in &matters {
-        let events: Vec<MatterEvent<'_>> = history
-            .iter()
-            .map(|(d, e)| MatterEvent { date: d, action: e })
-            .collect();
+        let events: Vec<MatterEvent<'_>> =
+            history.iter().map(|(d, e)| MatterEvent::on(d, e)).collect();
         let at = events
             .iter()
             .position(|e| e.action.kind == answered.kind)

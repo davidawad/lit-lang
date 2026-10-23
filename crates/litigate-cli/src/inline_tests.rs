@@ -109,10 +109,7 @@ impl Cx<'_> {
                 hirx::event_text(&any.trigger)
             )
         })?;
-        let events = [MatterEvent {
-            date,
-            action: event,
-        }];
+        let events = [MatterEvent::on(date, event)];
         let known_at = Some(self.known_at);
         let due = clock::due(
             self.clocks,

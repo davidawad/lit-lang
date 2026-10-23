@@ -47,7 +47,7 @@ expression: table
         "ok: start frcp-rule12-example::mtd-ruling",
     ],
     "order: events out of date order": [
-        "21:3 L4001 events must be in date order: 2025-03-05 comes after 2025-03-20\n    note: replay processes events sorted by date (ties keep source order)\n    fix @20:3-21:51 MachineApplicable: \"2025-03-05 Served(complaint, Personal) on widget\\n  2025-03-20 MovedToDismiss(complaint) by widget\"",
+        "21:3 L4001 events must be in docket order: 2025-03-05 comes after 2025-03-20\n    note: replay processes events by date, then docket number\n    fix @20:3-21:51 MachineApplicable: \"2025-03-05 Served(complaint, Personal) on widget\\n  2025-03-20 MovedToDismiss(complaint) by widget\"",
     ],
     "parties: duplicate party": [
         "17:3 L4005 party `widget` is declared twice; a party holds one role per proceeding",

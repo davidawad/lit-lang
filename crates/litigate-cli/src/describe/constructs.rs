@@ -17,7 +17,7 @@ parties {
   widget: Defendant Corporation
 }
 events {
-  2025-03-05 Served(complaint, Personal) on widget
+  2025-03-05 docket 4 Served(complaint, Personal) on widget
   2025-03-20 MovedToDismiss(complaint) by widget
 }
 facts { time-barred: not-barred }
@@ -47,7 +47,7 @@ const LIT: [(&str, &str, &str, &str); 26] = [
     ("deadline", "A dated, counted period from a trigger event. Each trigger creates an obligation instance: `bearer` names the actor bearing it, `trigger first|latest|each|later_of(d)` what a repeated trigger does, `extend` grants (`max N.days` or a date bound `to max(prescribed_due + 30.days, grant_order_entered + 14.days)`, with an optional standard and motion `on M() [, within W]`; `discretion S [, after_expiry] [, on M()]` with S one of GoodCause, ExcusableNeglect, GoodCauseOrExcusableNeglect (before expiry with `on M()`, the window is the request's date, not the order's); or the lock `never cite X`) and `waive` the capabilities that transform it. Linear in a `rule duty`.", "deadline answer-period: 21.days from Served(complaint) counted_by rule6 effective [2009-12-01, ..) delegable_to [CaseOrder] { bearer Defendant, extend { by Court, discretion GoodCause }, extend { by Court, discretion GoodCause, on ExtensionMoved() }, extend { by Court, discretion ExcusableNeglect, after_expiry, on ExtensionMoved() } }", "RawEdge.deadline via `within`"),
     ("counting", "A deadline counting rule (R. 6 style).", "counting rule6 cite R. 6(a)\n{\n  exclude_trigger_day\n  include_last_day\n  roll_forward_on [weekend, legal_holiday, inaccessible]\n  service_extension { Mail: 3.days } cite R. 6(d)\n  holidays court-holidays\n  anchor trigger_day\n}", "clock library countingRules[]"),
     ("calendar", "A holiday calendar.", "calendar court-holidays cite R. 6(a)(6)\n{\n  juneteenth: fixed(6, 19) effective [2021-06-17, ..) observed nearest_weekday\n}", "clock library calendars[]"),
-    ("transition", "Which version governs a matter that straddles an amendment.", "transition time-2009 amends answer-period@2009-12-01 cite R. 86(a)(2)(B)\n{\n  unless has_event(OrderedPriorRules()) -> answer-period@2007-12-01\n  otherwise -> answer-period@2009-12-01\n}", "not emitted (verification)"),
+    ("transition", "Which version governs a matter that straddles an amendment. Arms are disjoint (never first-match) and read the history before the event in docket order; one transition per amended version.", "transition time-2009 amends answer-period@2009-12-01 cite R. 86(a)(2)(B)\n{\n  unless has_event(OrderedPriorRules()) -> answer-period@2007-12-01\n  otherwise -> answer-period@2009-12-01\n}", "not emitted (verification)"),
     ("authority", "The authority lattice, highest first.", "authority Statute > FederalRule > LocalRule > StandingOrder > CaseOrder", "not emitted (verification)"),
     ("default", "A default rule (Catala-style) with a condition.", "default standing when has_event(Served(complaint, Mail)) => 14.days", "not emitted (verification)"),
     ("exception", "A rebutting or undercutting exception to a default.", "exception local rebuts standing when has_event(Answered(complaint)) => 7.days priority 2", "not emitted (verification)"),
@@ -65,7 +65,7 @@ const CASE: [(&str, &str, &str, &str); 15] = [
     ("source", "A sourced fact behind the matter's numbers.", "source \"Demo Rules of Procedure\" { url \"https://example.org/rules\", as_of 2024-12-01 }", "NamedScenario.sources[]"),
     ("perspective", "Whose side the analysis takes (a party, or an actor-to-role map).", "perspective widget", "scenario.perspective"),
     ("parties", "Each party and its role in the primary package.", "  acme: Plaintiff Corporation", "provenance only"),
-    ("events", "Dated history, replayed to derive posture (never asserted).", "  2025-03-05 Served(complaint, Personal) on widget", "scenario.start (replayed)"),
+    ("events", "Dated history, replayed to derive posture (never asserted), in docket order: by date, then `docket N`; same-day events need docket numbers unless they elect or remove options.", "  2025-03-05 docket 4 Served(complaint, Personal) on widget", "scenario.start (replayed)"),
     ("facts", "Resolved fact nodes: node to its edge.", "facts { time-barred: not-barred }", "scenario.facts"),
     ("stakes", "Terminal values; every reachable terminal needs one (L4004).", "stakes { judgment-entered: -2_000_000.usd, dismissed: 0.usd }", "scenario.payoffs"),
     ("beliefs", "Observed outcome counts at chance nodes.", "beliefs { observe mtd-ruling: { granted: 3, denied: 1 } }", "scenario.observe"),

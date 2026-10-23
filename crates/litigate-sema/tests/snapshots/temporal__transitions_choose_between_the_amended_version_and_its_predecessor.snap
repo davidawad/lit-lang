@@ -17,6 +17,7 @@ expression: "table(&[(\"1 FRCP 86(a)-shaped transition\", &well_formed),\n(\"2 a
         "pkgs/demo/main.lit:15:47 L3008 a transition condition may test only `has_event(...)`, `true`/`false`, and `!`, `&&`, `||`\n    note: a transition chooses between versions from the matter's history alone",
     ],
     "6 two transitions for one amendment": [
-        "pkgs/demo/main.lit:20:31 L3008 `p@2016-12-01` already has transition `amend-2016`\n    note @15:1: the first transition is declared here",
+        "pkgs/demo/main.lit:15:30 L3008 `p@2016-12-01` also has transition `amend-again`\n    note @20:1: the other transition is declared here\n    note: one transition per amended version: merge their arms",
+        "pkgs/demo/main.lit:20:31 L3008 `p@2016-12-01` also has transition `amend-2016`\n    note @15:1: the other transition is declared here\n    note: one transition per amended version: merge their arms",
     ],
 }

@@ -115,7 +115,7 @@ pub struct World<'a> {
     by_key: BTreeMap<Key, Vec<usize>>,
     incoming: BTreeMap<Key, Vec<Incoming<'a>>>,
     exceptions: BTreeMap<Key, Vec<(usize, &'a hir::Exception)>>,
-    transitions: BTreeMap<(Key, String), (usize, &'a hir::Transition)>,
+    transitions: BTreeMap<(Key, String), Vec<(usize, &'a hir::Transition)>>,
 }
 
 /// A relation pointing at a declaration: who declares it, and on which
@@ -221,7 +221,7 @@ impl<'a> World<'a> {
                     Declaration::Transition(t) => {
                         let a = self.target(&own, &t.amendment);
                         if let Some(v) = a.version {
-                            self.transitions.entry((a.key, v)).or_insert((i, t));
+                            self.transitions.entry((a.key, v)).or_default().push((i, t));
                         }
                     }
                     _ => {}
@@ -339,19 +339,29 @@ impl<'a> World<'a> {
         self.exceptions.keys()
     }
 
-    /// The first transition amending `key@from`.
+    /// The one transition amending `key@from` (see [`World::transition`]).
     #[must_use]
     pub fn transition_for(&self, key: &Key, from: &str) -> Option<usize> {
         self.transition(key, from).map(|(i, _)| i)
     }
 
-    /// The first transition amending `key@from`: declaration index and
-    /// declaration.
+    /// The one transition amending `key@from`: declaration index and
+    /// declaration. `None` when there is none, or several (no load order
+    /// picks one; [`World::transitions`] lists them).
     #[must_use]
     pub fn transition(&self, key: &Key, from: &str) -> Option<(usize, &'a hir::Transition)> {
+        match self.transitions(key, from) {
+            [one] => Some(*one),
+            _ => None,
+        }
+    }
+
+    /// Every transition amending `key@from`, in declaration order.
+    #[must_use]
+    pub fn transitions(&self, key: &Key, from: &str) -> &[(usize, &'a hir::Transition)] {
         self.transitions
             .get(&(key.clone(), from.to_owned()))
-            .copied()
+            .map_or(&[], Vec::as_slice)
     }
 
     /// The key of declaration `i`.

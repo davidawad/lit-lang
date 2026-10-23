@@ -190,6 +190,14 @@ impl CaseEvent {
         literal_token(self.syntax())
     }
 
+    /// The docket sequence number after `docket`, if written.
+    #[must_use]
+    pub fn docket(&self) -> Option<Token> {
+        tokens(self.syntax())
+            .skip_while(|token| token.kind() != SyntaxKind::KwDocket)
+            .find(|token| token.kind() == SyntaxKind::Number)
+    }
+
     /// Event constructor call.
     #[must_use]
     pub fn call(&self) -> Option<CallExpr> {

@@ -7,25 +7,67 @@
 //! in force, or the claimant that displaces it. When that version took
 //! effect after the matter's first event (the matter
 //! was pending when it did) and a transition amends that version, the
-//! transition's arms decide instead: the first `unless` whose condition
-//! holds on the history up to the event selects its version, else
-//! `otherwise` does. A discretionary leg ("unless the court orders
-//! otherwise", "just and practicable") is an `unless has_event(Order...)`
-//! arm the case satisfies with an order event.
+//! transition's arms decide instead: the `unless` whose condition holds on
+//! the history up to the event selects its version, else `otherwise` does.
+//! Arms are disjoint (L3008), so their order is never consulted, and the
+//! history is the events that precede the evaluated one in docket order
+//! (SPEC §5.6), never a later event of the same day. A discretionary leg
+//! ("unless the court orders otherwise", "just and practicable") is an
+//! `unless has_event(Order...)` arm the case satisfies with an order event.
 use super::activity::Inactive;
-use super::condition::{eval, first_foreign, has_event, matches};
+use super::condition::{eval, first_foreign, has_event, jointly_satisfiable, matches};
 use super::world::{error, span_of, DiagnosticExt, Key, Locate, World};
 use crate::hir::{Declaration, Expr, Transition, TransitionArm};
 use crate::precedence::select::{select, Unselected};
 use litigate_base::{Diagnostic, DiagnosticCode as C};
+
+/// Where an event falls among the events of its date (SPEC §5.6).
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum Seq {
+    /// No docket sequence: ordered against other dates only.
+    #[default]
+    Unsequenced,
+    /// `docket N`: after each same-day event with a smaller docket number.
+    Docket(u64),
+    /// The end of the day, after every event on it (the `as_of` point).
+    EndOfDay,
+}
 
 /// One dated event of a matter (a complete event constructor call).
 #[derive(Debug, Clone, Copy)]
 pub struct MatterEvent<'e> {
     /// Event date.
     pub date: &'e str,
+    /// Its place among the events of its date.
+    pub seq: Seq,
     /// The event constructor call.
     pub action: &'e Expr,
+}
+
+impl<'e> MatterEvent<'e> {
+    /// An unsequenced event on `date`.
+    #[must_use]
+    pub fn on(date: &'e str, action: &'e Expr) -> Self {
+        Self {
+            date,
+            seq: Seq::Unsequenced,
+            action,
+        }
+    }
+
+    /// Whether `self` happened before `other`: on an earlier date, or on
+    /// the same date earlier in docket order. Same-day events that are not
+    /// both docketed are unordered, so neither precedes the other.
+    #[must_use]
+    pub fn precedes(&self, other: &Self) -> bool {
+        self.date < other.date
+            || (self.date == other.date
+                && match (self.seq, other.seq) {
+                    (Seq::Docket(a), Seq::Docket(b)) => a < b,
+                    (Seq::Docket(_) | Seq::Unsequenced, Seq::EndOfDay) => true,
+                    _ => false,
+                })
+    }
 }
 
 /// The version that governs an event, and why.
@@ -48,15 +90,18 @@ pub enum Ungoverned {
     Transition(String),
 }
 
-/// The transition (declaration index) amending `key@from`, if one exists.
+/// The one transition (declaration index) amending `key@from`, if exactly
+/// one does.
 #[must_use]
 pub fn transition_for(world: &World<'_>, key: &Key, from: &str) -> Option<usize> {
     world.transition_for(key, from)
 }
 
 /// The version governing `key` for `events[at]` in a matter whose events
-/// are `events` (sorted by date): the selected declaration on the event's
-/// date, through the transition amending it if the matter was pending.
+/// are `events`: the selected declaration on the event's date, through the
+/// transition amending it if the matter was pending. The transition reads
+/// the history of `events[at]`: itself and every event that
+/// [precedes](MatterEvent::precedes) it, whatever the slice order.
 ///
 /// # Errors
 /// [`Ungoverned`] when nothing is selected or a transition fails.
@@ -75,57 +120,95 @@ pub fn governing(
         Unselected::Unresolved(pairs) => Ungoverned::Unresolved(pairs),
     })?;
     let key = &world.key(w);
-    let set = world.versions(key);
     let from = &world.decls[w].meta.effective.from;
     let pending = events
         .iter()
         .map(|e| e.date)
         .min()
         .is_some_and(|first| first < from.as_str());
-    let Some((ti, t)) = pending.then(|| world.transition(key, from)).flatten() else {
-        return Ok(Governing {
-            version: w,
-            via: None,
-        });
+    let unamended = Governing {
+        version: w,
+        via: None,
+    };
+    let (ti, t) = match (pending, world.transitions(key, from)) {
+        (false, _) | (true, []) => return Ok(unamended),
+        (true, [one]) => *one,
+        (true, [(a, _), (b, _), ..]) => {
+            return Err(Ungoverned::Transition(format!(
+                "`{}` and `{}` both amend `{}@{from}`",
+                world.decls[*a].meta.id,
+                world.decls[*b].meta.id,
+                key.display(&key.pack)
+            )))
+        }
     };
     let history: Vec<&Expr> = events
         .iter()
-        .filter(|e| e.date <= event.date)
-        .map(|e| e.action)
+        .enumerate()
+        .filter(|&(j, e)| j == at || e.precedes(event))
+        .map(|(_, e)| e.action)
         .collect();
+    let mut chosen: Option<(usize, usize)> = None;
     for (n, arm) in t.arms.iter().enumerate() {
-        let holds = match &arm.unless {
-            None => true,
-            Some(c) => eval(c, &mut |a| {
-                has_event(a).map(|p| history.iter().any(|e| matches(p, e)))
-            })
-            .ok_or_else(|| {
-                Ungoverned::Transition(format!(
-                    "`{}`: condition is not over `has_event`",
-                    t.meta.id
-                ))
-            })?,
+        let Some(c) = &arm.unless else {
+            continue;
         };
-        if holds {
-            let sel = world.target(world.pack_of(ti), &arm.selects);
-            let chosen = sel
-                .version
-                .as_deref()
-                .and_then(|d| set.starting(d))
-                .filter(|_| sel.key == *key)
-                .ok_or_else(|| {
-                    Ungoverned::Transition(format!("arm selects unknown `{}`", arm.selects))
-                })?;
-            return Ok(Governing {
-                version: chosen.decl,
-                via: Some((ti, n)),
-            });
+        let holds = eval(c, &mut |a| {
+            has_event(a).map(|p| history.iter().any(|e| matches(p, e)))
+        })
+        .ok_or_else(|| {
+            Ungoverned::Transition(format!(
+                "`{}`: condition is not over `has_event`",
+                t.meta.id
+            ))
+        })?;
+        if !holds {
+            continue;
+        }
+        let version = selected(world, ti, key, arm)?;
+        match chosen {
+            Some((_, v)) if v != version => {
+                return Err(Ungoverned::Transition(format!(
+                    "`{}`: two arms that select different versions both hold",
+                    t.meta.id
+                )))
+            }
+            _ => chosen = Some((n, version)),
         }
     }
-    Err(Ungoverned::Transition(format!(
-        "`{}` has no `otherwise` arm",
-        t.meta.id
-    )))
+    let (n, version) = match chosen {
+        Some(c) => c,
+        None => {
+            let (n, arm) = t
+                .arms
+                .iter()
+                .enumerate()
+                .find(|(_, a)| a.unless.is_none())
+                .ok_or_else(|| {
+                    Ungoverned::Transition(format!("`{}` has no `otherwise` arm", t.meta.id))
+                })?;
+            (n, selected(world, ti, key, arm)?)
+        }
+    };
+    Ok(Governing {
+        version,
+        via: Some((ti, n)),
+    })
+}
+
+/// The version (declaration index) `arm` of transition `ti` selects.
+fn selected(
+    world: &World<'_>,
+    ti: usize,
+    key: &Key,
+    arm: &TransitionArm,
+) -> Result<usize, Ungoverned> {
+    let sel = world.target(world.pack_of(ti), &arm.selects);
+    sel.version
+        .as_deref()
+        .filter(|_| sel.key == *key)
+        .and_then(|d| world.versions(key).starting(d).map(|v| v.decl))
+        .ok_or_else(|| Ungoverned::Transition(format!("arm selects unknown `{}`", arm.selects)))
 }
 
 /// Static transition checks (L3008) for the transitions of pack `pack`.
@@ -166,24 +249,30 @@ fn one(world: &World<'_>, loc: &dyn Locate, i: usize, t: &Transition) -> Vec<Dia
             .with_note(None, "a transition amends a version that directly follows an earlier one"),
         );
     }
-    // The world keeps the first transition per amended version, so any
-    // other is a later duplicate.
-    if let Some(first) = transition_for(world, &amended.key, &at).filter(|&f| f != i) {
+    // The world holds every transition per amended version; load order
+    // picks none, so each one meets every other.
+    for &(other, _) in world
+        .transitions(&amended.key, &at)
+        .iter()
+        .filter(|(o, _)| *o != i)
+    {
         out.push(
             error(
                 C::InvalidTransition,
                 span_of(loc, d, "amends"),
                 format!(
-                    "`{name}@{at}` already has transition `{}`",
-                    world.decls[first].meta.id
+                    "`{name}@{at}` also has transition `{}`",
+                    world.decls[other].meta.id
                 ),
             )
             .with_note(
-                world.decls[first].meta.span.clone(),
-                "the first transition is declared here",
-            ),
+                world.decls[other].meta.span.clone(),
+                "the other transition is declared here",
+            )
+            .with_note(None, "one transition per amended version: merge their arms"),
         );
     }
+    out.extend(overlaps(world, loc, i, t));
     for arm in &t.arms {
         out.extend(arm_checks(
             world,
@@ -195,6 +284,50 @@ fn one(world: &World<'_>, loc: &dyn Locate, i: usize, t: &Transition) -> Vec<Dia
             &at,
             previous.as_deref(),
         ));
+    }
+    out
+}
+
+/// L3008 for two `unless` arms selecting different versions whose
+/// conditions some history makes true together: arms are disjoint, so
+/// the one that holds never depends on the order they are written in.
+fn overlaps(world: &World<'_>, loc: &dyn Locate, i: usize, t: &Transition) -> Vec<Diagnostic> {
+    let d = &world.decls[i];
+    let guarded: Vec<(&TransitionArm, &Expr)> = t
+        .arms
+        .iter()
+        .filter_map(|a| Some((a, a.unless.as_ref()?)))
+        .collect();
+    let mut out = Vec::new();
+    for (j, &(b, cb)) in guarded.iter().enumerate() {
+        for &(a, ca) in &guarded[..j] {
+            let sat = jointly_satisfiable(&[ca, cb]);
+            let target = |arm: &TransitionArm| world.target(world.pack_of(i), &arm.selects);
+            if target(a) == target(b) || sat == Some(false) {
+                continue;
+            }
+            let why = if sat.is_none() {
+                "their conditions have too many atoms to prove disjoint"
+            } else {
+                "some history makes both conditions true"
+            };
+            out.push(
+                error(
+                    C::InvalidTransition,
+                    cb.span.clone().unwrap_or_else(|| span_of(loc, d, "amends")),
+                    format!(
+                        "arms `{}` and `{}` of `{}` can both hold",
+                        a.selects, b.selects, t.meta.id
+                    ),
+                )
+                .with_note(ca.span.clone(), "the other arm's condition")
+                .with_note(None, why)
+                .with_note(
+                    None,
+                    "make the conditions exclusive (`a && !b`): arms are disjoint, never first-match",
+                ),
+            );
+        }
     }
     out
 }

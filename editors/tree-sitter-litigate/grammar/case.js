@@ -79,6 +79,7 @@ module.exports = {
 
   case_event: $ => seq(
     field('date', $.date),
+    optional(seq('docket', field('docket', $.number))),
     field('event', $.call_expression),
     field('role', choice('by', 'on')),
     field('party', $.identifier),

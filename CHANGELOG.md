@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Order independence** (design review §6 item 4, P7, P13; SPEC §4.1,
+  §5.4, §5.6). The engine visits nodes in canonical (qualified id) order
+  and a node's links by id, so renaming a module file, reordering a pack's
+  nodes or a links file, or listing packs in another order leaves every
+  analysis bit-identical. `.case` events are ordered by date, then an
+  optional docket sequence number (`2025-03-05 docket 12 Served(...)`, new
+  contextual keyword `docket`), never by source order: same-day events
+  need distinct docket numbers unless both elect or remove options
+  (L4001), and docket numbers must grow with the date. A transition's
+  `has_event` reads only the evaluated event and those before it in
+  docket order, so a later same-day order no longer changes the version
+  governing an earlier event. Transition arms selecting different
+  versions must be disjoint (L3008) instead of first-match, and the
+  transitions of a world are a set: two transitions amending one version
+  are each L3008, and replay refuses to pick one by load order.
+
 ## [0.5.0] - 2026-10-23
 
 ### Added

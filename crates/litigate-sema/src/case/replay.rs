@@ -16,6 +16,7 @@ use crate::hir::{
     Removal, Type, Value,
 };
 use crate::temporal::condition::matches;
+use crate::temporal::transition::Seq;
 use crate::temporal::{MatterEvent, Ungoverned};
 use litigate_base::{Applicability, Diagnostic, DiagnosticCode as C};
 use std::collections::BTreeMap;
@@ -46,7 +47,7 @@ struct Cx<'c, 'g> {
     case: &'c Case,
     spans: &'c CaseSpans,
     clock: &'c dyn Clock,
-    /// `(source index, event)` sorted by date, ties in source order.
+    /// `(source index, event)` in docket order ([`sorted`]).
     sorted: Vec<(usize, &'c Event)>,
     /// Sorted events in each package's view, by pack id.
     views: BTreeMap<String, Vec<Expr>>,
@@ -61,11 +62,38 @@ struct Cx<'c, 'g> {
     sentinel: Expr,
 }
 
-/// Events in date order, ties in source order.
+/// Events in docket order (SPEC §5.6): by date, then docket number. Events
+/// of one date that are not both docketed are unordered, and replay
+/// accepts them only when they commute ([`commutes`]); they are taken in
+/// the order of their text, so source order is never consulted.
 pub(super) fn sorted(events: &[Event]) -> Vec<(usize, &Event)> {
     let mut v: Vec<(usize, &Event)> = events.iter().enumerate().collect();
-    v.sort_by(|a, b| a.1.date.cmp(&b.1.date));
+    v.sort_by_cached_key(|(_, e)| {
+        (
+            e.date.clone(),
+            e.docket,
+            display(&e.action),
+            e.party.clone(),
+        )
+    });
     v
+}
+
+/// Event `e` as a point in the matter's history.
+pub(super) fn point(e: &Event) -> Seq {
+    e.docket.map_or(Seq::Unsequenced, Seq::Docket)
+}
+
+/// Whether `a` happened before `b` (see [`MatterEvent::precedes`]).
+fn before(a: &Event, b: &Event) -> bool {
+    fn at(e: &Event) -> MatterEvent<'_> {
+        MatterEvent {
+            date: &e.date,
+            seq: point(e),
+            action: &e.action,
+        }
+    }
+    at(a).precedes(&at(b))
 }
 
 /// Replays `case.events` from `start`.
@@ -153,6 +181,7 @@ impl<'c, 'g> Cx<'c, 'g> {
             .enumerate()
             .map(|(k, (_, e))| MatterEvent {
                 date: &e.date,
+                seq: point(e),
                 action: self.view(pack, k),
             })
             .collect()
@@ -163,31 +192,98 @@ impl<'c, 'g> Cx<'c, 'g> {
         let mut events = self.events(pack);
         events.push(MatterEvent {
             date: &self.case.as_of,
+            seq: Seq::EndOfDay,
             action: &self.sentinel,
         });
         events
     }
 
-    /// Out-of-order source is L4001 with a fix that sorts the block.
+    /// Docket order (SPEC §5.6), each failure L4001: source out of order
+    /// (with a fix that sorts the block), docket numbers that contradict
+    /// the dates, and unordered same-day events that do not commute.
     fn order(&mut self) {
         let events = &self.case.events;
-        let Some(i) = (1..events.len()).find(|&i| events[i].date < events[i - 1].date) else {
-            return;
-        };
-        let mut d = error(
-            C::InvalidCaseEvent,
-            self.spans.event(i, |e| e.date.as_ref(), self.id()),
-            format!(
-                "events must be in date order: {} comes after {}",
-                events[i].date,
-                events[i - 1].date
-            ),
-        )
-        .note("replay processes events sorted by date (ties keep source order)");
-        if let Some((span, text)) = &self.spans.sort_events {
-            d = d.fix(span.clone(), text.clone(), Applicability::MachineApplicable);
+        let pairs = (0..events.len()).flat_map(|j| (0..j).map(move |i| (i, j)));
+        let mut out = Vec::new();
+        if let Some((i, j)) = pairs.clone().find(|&(i, j)| before(&events[j], &events[i])) {
+            let mut d = error(
+                C::InvalidCaseEvent,
+                self.spans.event(j, |e| e.date.as_ref(), self.id()),
+                format!(
+                    "events must be in docket order: {} comes after {}",
+                    self.when(j),
+                    self.when(i)
+                ),
+            )
+            .note("replay processes events by date, then docket number");
+            if let Some((span, text)) = &self.spans.sort_events {
+                d = d.fix(span.clone(), text.clone(), Applicability::MachineApplicable);
+            }
+            out.push(d);
         }
-        self.out.push(d);
+        for (i, j) in pairs {
+            let (a, b) = (&events[i], &events[j]);
+            match (a.docket, b.docket) {
+                (Some(x), Some(y))
+                    if a.date != b.date && (x == y || (a.date < b.date) != (x < y)) =>
+                {
+                    out.push(
+                        error(
+                            C::InvalidCaseEvent,
+                            self.spans.event(j, |e| e.docket.as_ref(), self.id()),
+                            format!(
+                                "docket {y} on {} and docket {x} on {} contradict their dates",
+                                b.date, a.date
+                            ),
+                        )
+                        .note("a docket number grows with the date it is entered on"),
+                    );
+                }
+                _ if a.date == b.date && !before(a, b) && !before(b, a) => {
+                    if !(self.commutes(a) && self.commutes(b)) {
+                        out.push(
+                            error(
+                                C::InvalidCaseEvent,
+                                self.spans.event(j, |e| e.date.as_ref(), self.id()),
+                                format!(
+                                    "`{}` and `{}` on {} need distinct `docket` numbers to be ordered",
+                                    display(&a.action),
+                                    display(&b.action),
+                                    a.date
+                                ),
+                            )
+                            .note("events of one date are ordered by docket number, never by source order")
+                            .note("only events that elect or remove options commute and may share a date undocketed"),
+                        );
+                    }
+                }
+                _ => {}
+            }
+        }
+        self.out.extend(out);
+    }
+
+    /// Event `i` (source index) as `date` or `date docket N`.
+    fn when(&self, i: usize) -> String {
+        let e = &self.case.events[i];
+        match e.docket {
+            Some(n) => format!("{} docket {n}", e.date),
+            None => e.date.clone(),
+        }
+    }
+
+    /// Whether `e` commutes with every event of its date: its type
+    /// declares an `elects` or `removes` effect, which neither moves the
+    /// matter nor reads the order of the effects beside it.
+    fn commutes(&self, e: &Event) -> bool {
+        matches!(
+            self.effect_of(&e.action),
+            Some((
+                _,
+                EventEffect::Elects { .. } | EventEffect::Removes { .. },
+                _
+            ))
+        )
     }
 
     /// The node version governing event `k` at qualified `posture`.
@@ -416,7 +512,13 @@ impl<'c, 'g> Cx<'c, 'g> {
     /// The declared effect of event `k`'s type, with the pack declaring
     /// the type and the event's arguments (SPEC §5.2).
     fn effect(&self, k: usize) -> Option<(String, &'g EventEffect, &'c [Expr])> {
-        let ExprKind::Call { callee, args } = &self.sorted[k].1.action.kind else {
+        self.effect_of(&self.sorted[k].1.action)
+    }
+
+    /// The effect the type of `action` declares, with its pack and the
+    /// call's arguments.
+    fn effect_of(&self, action: &'c Expr) -> Option<(String, &'g EventEffect, &'c [Expr])> {
+        let ExprKind::Call { callee, args } = &action.kind else {
             return None;
         };
         let (pack, name) = callee

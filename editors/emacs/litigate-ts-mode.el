@@ -81,7 +81,7 @@ The canonical format (`litigate fmt', SPEC §10) uses two."
   "Keywords that open a declaration.")
 
 (defconst litigate-ts-mode--clause-keywords
-  '("forum" "by" "outcome" "p" "effort" "cost" "within" "duration" "min" "mode"
+  '("forum" "by" "docket" "outcome" "p" "effort" "cost" "within" "duration" "min" "mode"
     "max" "sets" "clears" "requires" "forbids" "replaces" "tags" "attrs" "note"
     "valence" "court_listener_url" "action_id" "extendable" "extension_authority"
     "payoff" "payoff_by_flag" "pack" "remove_edges" "probabilities" "roles"

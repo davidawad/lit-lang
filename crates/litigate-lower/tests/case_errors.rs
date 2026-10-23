@@ -78,6 +78,7 @@ fn removals_are_located_at_their_events() {
     };
     let event = Event {
         date: "2025-03-10".into(),
+        docket: None,
         action: Expr {
             ty: Type::Named("MovedToDismiss".into()),
             kind: ExprKind::Ref {

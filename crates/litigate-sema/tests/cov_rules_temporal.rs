@@ -151,7 +151,7 @@ fn governing_refuses_unknown_events_inactive_dates_and_bad_transitions() {
         span: None,
     };
     let ordered = pattern(&w, "elsewhere").expect("transition with a has_event arm");
-    let ev = |date, action| MatterEvent { date, action };
+    let ev = |date, action| MatterEvent::on(date, action);
     let pending = [ev("2016-11-20", &filed), ev("2016-12-05", ordered)];
     let early = [ev("2009-01-01", &filed)];
     insta::assert_debug_snapshot!([
@@ -179,14 +179,8 @@ fn a_transition_without_otherwise_selects_nothing_when_no_arm_holds() {
         span: None,
     };
     let events = [
-        MatterEvent {
-            date: "2016-11-20",
-            action: &filed,
-        },
-        MatterEvent {
-            date: "2016-12-05",
-            action: &filed,
-        },
+        MatterEvent::on("2016-11-20", &filed),
+        MatterEvent::on("2016-12-05", &filed),
     ];
     assert_eq!(
         outcome(&w, "r", &events, 1),

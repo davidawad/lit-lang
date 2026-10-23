@@ -200,10 +200,7 @@ fn pending_matters_follow_the_transition_and_new_matters_the_new_rule() {
         })
         .unwrap_or_default();
     let world = World::from_packages(&[package]);
-    let ev = |i: usize| MatterEvent {
-        date: &givens[i].0,
-        action: &givens[i].1,
-    };
+    let ev = |i: usize| MatterEvent::on(&givens[i].0, &givens[i].1);
     let rule = |events: &[MatterEvent<'_>], at: usize| match governing(
         &world,
         &key("p"),

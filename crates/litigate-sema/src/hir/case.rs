@@ -106,6 +106,10 @@ pub struct Party {
 pub struct Event {
     /// Event date.
     pub date: String,
+    /// Docket sequence number (`docket N`): orders the event among others
+    /// of its date (SPEC §5.6).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub docket: Option<u64>,
     /// Typed event constructor call.
     pub action: Expr,
     /// Whether the party acted (`by`) or was acted upon (`on`).

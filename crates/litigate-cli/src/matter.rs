@@ -254,10 +254,7 @@ fn schedule(
         {
             let trigger = &case.events[o.trigger];
             let local = &o.deadline[prefix.len()..];
-            let event = MatterEvent {
-                date: &trigger.date,
-                action: &trigger.action,
-            };
+            let event = MatterEvent::on(&trigger.date, &trigger.action);
             let due = clock::due(
                 clocks,
                 &world,

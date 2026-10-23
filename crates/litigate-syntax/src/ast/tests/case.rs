@@ -171,6 +171,20 @@ fn parties_and_events() {
     let event = &file.events()[0];
     assert_eq!(event.mode().map(|t| t.kind()), Some(SyntaxKind::KwBy));
     assert!(event.cite().is_none());
+    assert!(event.docket().is_none());
+
+    let file = matter("events { 2025-01-01 docket 12 Answered(x) by acme }\n");
+    let event = &file.events()[0];
+    assert_eq!(text(event.docket()).as_deref(), Some("12"));
+    assert_eq!(text(event.date()).as_deref(), Some("2025-01-01"));
+    assert_eq!(
+        event
+            .call()
+            .and_then(|c| c.callee())
+            .map(|r| r.text())
+            .as_deref(),
+        Some("Answered")
+    );
 }
 
 #[test]

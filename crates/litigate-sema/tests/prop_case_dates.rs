@@ -25,15 +25,35 @@ proptest! {
     }
 
     #[test]
-    fn prop_same_day_events_keep_source_order(day in 1_u32..=28) {
+    fn prop_same_day_events_follow_docket_order(day in 1_u32..=28, first in 1_u64..100) {
         let date = format!("2025-03-{day:02}");
-        let source = acme()
-            .replace("2025-03-05 Served", &format!("{date} Served"))
-            .replace("2025-03-20 MovedToDismiss", &format!("{date} MovedToDismiss"));
-        let checked = check_example(&source, Profile::Dev);
-        prop_assert!(!checked.diagnostics.iter().any(|diagnostic| diagnostic.code.as_str() == "L4001"));
+        let at = |served: String, moved: String| {
+            acme()
+                .replace("2025-03-05 Served", &format!("{served} Served"))
+                .replace("2025-03-20 MovedToDismiss", &format!("{moved} MovedToDismiss"))
+        };
+        let docketed = |n: u64| format!("{date} docket {n}");
+        let l4001 = |source: &str| {
+            let checked = check_example(source, Profile::Dev);
+            let hits: Vec<String> = checked
+                .diagnostics
+                .iter()
+                .filter(|d| d.code.as_str() == "L4001")
+                .map(|d| d.message.clone())
+                .collect();
+            (checked, hits)
+        };
+        let (checked, hits) = l4001(&at(docketed(first), docketed(first + 1)));
+        prop_assert!(hits.is_empty(), "{hits:?}");
         prop_assert!(checked.trace.len() >= 3, "{checked:#?}");
         prop_assert!(checked.trace[1].event.starts_with("Served"), "{checked:#?}");
         prop_assert!(checked.trace[2].event.starts_with("MovedToDismiss"), "{checked:#?}");
+        // Source order never orders a day: undocketed, the two are unordered.
+        let (_, hits) = l4001(&at(date.clone(), date.clone()));
+        prop_assert!(hits.iter().any(|m| m.contains("need distinct `docket` numbers")), "{hits:?}");
+        // A docket number below the one written before it is out of order.
+        let (checked, hits) = l4001(&at(docketed(first + 1), docketed(first)));
+        prop_assert!(hits.iter().any(|m| m.contains("must be in docket order")), "{hits:?}");
+        prop_assert!(checked.diagnostics.iter().any(|d| !d.fixes.is_empty()), "{checked:#?}");
     }
 }

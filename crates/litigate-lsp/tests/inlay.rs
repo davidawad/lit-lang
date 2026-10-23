@@ -40,9 +40,10 @@ fn line_of(text: &str, needle: &str) -> u32 {
 fn the_hint_follows_the_triggering_event() {
     // The answer period's trigger policy is `first`: the period runs from
     // the first service, and neither a later one nor another on the same
-    // day restarts it (SPEC §5.3).
+    // day restarts it (SPEC §5.3). Same-day services are docketed: events
+    // of one date are ordered by docket number (SPEC §5.6).
     let case = matter(
-        "  2025-03-01 Served(complaint, Electronic) on widget\n  2025-03-05 Served(complaint, Mail) on widget\n  2025-03-05 Served(complaint, Personal) on widget\n",
+        "  2025-03-01 Served(complaint, Electronic) on widget\n  2025-03-05 docket 4 Served(complaint, Mail) on widget\n  2025-03-05 docket 5 Served(complaint, Personal) on widget\n",
     );
     let root = support::worked("inlay-order", &[(CASE, &case)]);
     let mut host = support::host(&root);

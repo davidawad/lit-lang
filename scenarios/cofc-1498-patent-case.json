@@ -20,7 +20,7 @@
     "asOf": "2026-09-28",
     "pins": [
       {
-        "digest": "sha256:4050c2207445867dec7b4f0a7bbc1ca48da2b00813850f56a2508f7970df4746",
+        "digest": "sha256:90659f4ff7c889dbdf847b73991afce5b349b3ff30f30dcd995afb0e9d3b82ce",
         "name": "cofc",
         "version": "0.1.0"
       },
@@ -30,7 +30,7 @@
         "version": "1.0.0"
       }
     ],
-    "worldDigest": "sha256:786a8078f1fcabdcf18534313daa063a51668e2958b0e9c1eaf6e55e8d433771"
+    "worldDigest": "sha256:82021f22156e552a849fe4e1029e9bdea59b60ce04c0a17e81009a4354d29e28"
   },
   "notes": "Plaintiff is a patent owner suing the United States under 28 U.S.C. §1498(a) (the government's sole and exclusive remedy for its own use/manufacture of a patented invention is 'reasonable and entire compensation' in the CoFC — no injunction, no treble/enhanced damages, no jury; see 28 U.S.C. §1498(a), verified at law.cornell.edu, and the pack's own cite on this). Uses the `cofc` pack alone (the pack already models both the §1498 patent track and a separate §1491(b) bid-protest track from the same `filing-track-fork`/`patent-claim-fork`; this scenario removes the bid-protest and general-civil branches so the graph is a clean patent-track matter — see `remove_edges`). All procedural deadlines/fees/authorities (RCFC 3/4/12/14(b)/16/56/58/59, Appendix J patent rules, the $405 CoFC filing fee) are already sourced in the `cofc` pack itself (see packs/cofc-SOURCES-NOTES.md) and are not re-verified here. Money numbers below are THIS SCENARIO's own additions (rate, payoffs) and are illustrative unless noted: hypothetical patent claim valued at $1,000,000 (matches the pack's own PLACEHOLDER payoff baseline; override per actual matter), attorney rate $650/hr blended partner/associate BigLaw estimate (illustrative, not sourced), ADR settlement modeled at 45% of full value (the pack's own placeholder, kept as-is). `protest-sustained`/`protest-denied` and the general-civil terminals are unreachable once the two `remove_edges` below force the patent track, so they are left at the pack's own defaults rather than re-authored.",
   "packs": [

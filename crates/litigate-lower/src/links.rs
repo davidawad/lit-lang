@@ -246,6 +246,7 @@ fn patch(cx: &EdgeCx<'_, '_>, sink: &mut Sink, p: &hir::EdgePatch, base: &RawEdg
         clears: p.clears.clone().unwrap_or_default(),
         requires: p.requires.clone().unwrap_or_default(),
         forbids: p.forbids.clone().unwrap_or_default(),
+        guard: None,
         span: p.span.clone(),
         holes: BTreeMap::new(),
     };

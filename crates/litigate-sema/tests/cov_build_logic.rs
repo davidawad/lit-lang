@@ -88,7 +88,7 @@ fn instances_check_pack_probabilities_roles_and_patches() {
     let out = links(
         "module links\n\
 instance base@one { pack base, probabilities { go: 1/3, bad: 3/2 }, roles { A: self, B: opponent, C: nature, D: judge }, note \"n\", remove_edges [go], payoff_transform \"x\",\n\
-  patch go { note \"n\", event Go(), replaces [base::go], within nowhere, deadline 3.days, effort 1.usd }\n\
+  patch go { note \"n\", event Go(), replaces [base::go], when true, within nowhere, deadline 3.days, effort 1.usd }\n\
   patch go { note \"again\" }\n\
   patch go\n}\n\
 instance base@two { pack nope }\n\

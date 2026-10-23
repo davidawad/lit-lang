@@ -268,6 +268,24 @@ const DEADLINES_COUNTING_AND_CALENDARS: Cases = &[
             ],
         ),
         (
+            "module m\ndeadline d: 21.days from x counted_by c { trigger 3 }\n",
+            &[
+                "L0001 2:51-2:52 expected an identifier, found `3`",
+            ],
+        ),
+        (
+            "module m\ndeadline d: 21.days from x counted_by c { extend by c }\n",
+            &[
+                "L0001 2:50-2:52 expected an identifier, found `by`",
+            ],
+        ),
+        (
+            "module m\nevent E() removes 5\n",
+            &[
+                "L0001 2:19-2:20 expected an identifier, found `5`",
+            ],
+        ),
+        (
             "module m\ncounting c x\n",
             &[
                 "L0001 2:12-2:13 expected one of `effective`, `known_at`, `subject_to`, `notwithstanding`, `supersedes`, `revives`, `override`, `delegable_to`, `cite`, or `{`, found `x`",

@@ -32,6 +32,20 @@ calendar rcfc-holidays known_at 2025-01-01 cite RCFC 6(a)(6)
 deadline answer-period: 21.days from Served(complaint) counted_by frcp6 effective [2009-12-01, ..)
 deadline old-answer-period: 20.days after Served(complaint, Mail) counted_by frcp6 supersedes answer-period
 
+deadline amended-answer: 14.days after Served(amended) counted_by frcp6 {
+  bearer Defendant
+  trigger later_of(answer-period)
+  extend { by Court, max 30.days, after_expiry }
+  waive { by Court }
+}
+
+deadline reply: 7.days after Served(answer) counted_by frcp6 { trigger latest }
+
+/// An order extending the time to answer to a date.
+event Extended(until: Date) extends answer-period to until
+event Forfeited(option: String) removes option
+event Released() waives answer-period
+
 transition rule86 amends answer-period@2009-12-01 cite FRCP 86(a)
 {
   unless has_event(Answered(complaint)) -> answer-period@1993-12-01

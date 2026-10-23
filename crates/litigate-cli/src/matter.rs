@@ -465,6 +465,59 @@ mod tests {
         assert!(c.schedule.is_empty());
     }
 
+    /// `matter::check_at` of the worked example with matter `text` at `at`.
+    fn checked_at(text: &str, at: At) -> CaseCheck {
+        let session = testkit::example_locked("", text, None);
+        let all = session.hir();
+        let engine = EngineClock::lowered(&Lowerer::new(&all), &all).unwrap();
+        check_at(
+            &session,
+            &session.cases[0],
+            &engine,
+            &Clocks::new(&all),
+            Profile::Dev,
+            at,
+        )
+    }
+
+    #[test]
+    fn dates_replace_the_matter_s_own() {
+        let c = checked_at(
+            ACME,
+            At {
+                as_of: None,
+                known_at: Some("2025-01-01"),
+            },
+        );
+        let case = c.case.unwrap();
+        assert_eq!(
+            (case.as_of.as_str(), case.known_at.as_deref()),
+            ("2025-06-01", Some("2025-01-01"))
+        );
+        let c = checked_at(
+            ACME,
+            At {
+                as_of: Some("2025-07-01"),
+                known_at: None,
+            },
+        );
+        let case = c.case.unwrap();
+        assert_eq!(
+            (case.as_of.as_str(), case.known_at.as_deref()),
+            ("2025-07-01", None)
+        );
+        // A matter that does not resolve reports why, at any date.
+        let c = checked_at(
+            "case broken\n",
+            At {
+                as_of: Some("2025-06-01"),
+                known_at: None,
+            },
+        );
+        assert!(c.case.is_none());
+        assert!(!errors(&c).is_empty());
+    }
+
     #[test]
     fn a_deadline_the_engine_cannot_count_is_scheduled_unknown() {
         let c = checked(

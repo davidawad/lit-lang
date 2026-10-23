@@ -378,6 +378,13 @@ fn as_of_judges_statuses_at_another_date() {
             .map(|r| r["status"]["state"].clone())
     };
     assert_eq!(outer(&t), Some(json!("lapsed")));
+    let known = timeline(&[
+        "cases/ttab-opposition-applicant-defense.case",
+        "--known-at",
+        "2026-10-19",
+    ]);
+    assert_eq!(known["as_of"], "2026-10-19");
+    assert_eq!(known["known_at"], "2026-10-19");
     assert_eq!(
         outer(&timeline(&["cases/ttab-opposition-applicant-defense.case"])),
         Some(json!("open"))

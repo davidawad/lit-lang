@@ -77,12 +77,12 @@ fn of_case(
 fn of_lit(args: &Args, c: &Checked, file: &str, diagnostics: &[Diagnostic]) -> Option<Timeline> {
     let all = c.session.hir();
     let texts = c.session.sources();
-    let pkg = all.iter().copied().find(|p| {
-        c.session
-            .packages
-            .iter()
-            .any(|k| k.name == p.manifest.name && k.files.iter().any(|(f, _)| f == file))
-    })?;
+    let pkg = c
+        .session
+        .packages
+        .iter()
+        .filter(|k| k.files.iter().any(|(f, _)| f == file))
+        .find_map(|k| k.check.package.as_ref())?;
     let as_of = args
         .dates
         .as_of

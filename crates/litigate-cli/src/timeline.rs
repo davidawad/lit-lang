@@ -1009,12 +1009,19 @@ mod tests {
             ["r1", "r2", "r3", "r4", "r5", "r7", "r9", "r10"]
         );
         assert_eq!(t.rows[5].trigger, None);
-        assert!(!t.layers[1].enabled && t.layers[0].enabled);
-        assert!(t.edges.iter().all(|e| e.from != "r6" && e.to != "r6"));
+        assert!(!t.layers[1].enabled);
+        assert!(t.layers[0].enabled);
+        let ends: Vec<&str> = t
+            .edges
+            .iter()
+            .flat_map(|e| [e.from.as_str(), e.to.as_str()])
+            .collect();
+        assert!(!ends.contains(&"r6"));
         let mut t = nested();
         apply_layers(&mut t, &["ttab".to_owned()]);
         assert_eq!(world_ids(&t), ["w0"]);
-        assert!(t.rows.is_empty() && t.edges.is_empty());
+        assert!(t.rows.is_empty());
+        assert!(t.edges.is_empty());
     }
 
     #[test]

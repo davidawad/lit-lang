@@ -14,7 +14,7 @@ counting c6 { exclude_trigger_day, include_last_day, roll_forward_on [weekend], 
 calendar cal { new-year: fixed(1, 1) effective [1870-06-28, ..) observed nearest_weekday }
 deadline answer: 20.days from Served(complaint) counted_by c6 effective [2009-12-01, 2024-12-01)
 deadline answer: 21.days from Served(complaint) counted_by c6 effective [2024-12-01, ..)
-transition t amends answer@2024-12-01 cite FRCP 86(a)
+transition t amends answer@2024-12-01 cite "FRCP 86(a)"
 {
   unless has_event(Answered(complaint)) -> answer@2009-12-01
   otherwise -> answer@2024-12-01

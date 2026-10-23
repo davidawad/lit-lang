@@ -95,8 +95,9 @@ pub enum ExprKind {
     Unit,
     /// `?` / `?("reason")`.
     Hole(Option<String>),
-    /// `cite ...`.
-    Cite(String),
+    /// `cite "..." [historical]`: the citation string and whether it is
+    /// marked `historical`.
+    Cite(String, bool),
     /// Name reference.
     Ref(RefPath),
     /// Call.

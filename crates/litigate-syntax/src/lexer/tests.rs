@@ -92,33 +92,25 @@ fn unknown_suffix_suggests_the_nearest_unit() {
 }
 
 #[test]
-fn cite_switches_to_citation_mode() {
+fn cite_has_no_lexical_mode() {
     assert_eq!(
-        kinds("cite  FRCP 12(a)(1)  {"),
+        kinds("cite \"28 U.S.C. §§ 1491, 1498\" {"),
         [
             (KwCite, "cite".into()),
-            (CiteText, "FRCP 12(a)(1)".into()),
+            (String, "\"28 U.S.C. §§ 1491, 1498\"".into()),
             (LBrace, "{".into())
-        ]
-    );
-    assert_eq!(
-        kinds("cite 28 U.S.C. § 1498, x"),
-        [
-            (KwCite, "cite".into()),
-            (CiteText, "28 U.S.C. § 1498".into()),
-            (Comma, ",".into()),
-            (Ident, "x".into())
         ]
     );
     assert_eq!(
         kinds("cite R 4 // note\n"),
         [
             (KwCite, "cite".into()),
-            (CiteText, "R 4".into()),
+            (Ident, "R".into()),
+            (Number, "4".into()),
             (Comment, "// note".into())
         ]
     );
-    assert_eq!(codes("cite\n"), [DiagnosticCode::UnexpectedToken]);
+    assert_eq!(codes("cite\n"), []);
 }
 
 #[test]

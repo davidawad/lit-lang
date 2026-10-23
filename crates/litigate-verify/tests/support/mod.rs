@@ -15,6 +15,7 @@ use std::fmt::Write as _;
 /// The `[sources.frcp]` binding to the vendored FRCP text.
 pub const FRCP: &str = "[sources.frcp]\ntitle = \"Federal Rules of Civil Procedure\"\n\
      url = \"https://www.law.cornell.edu/rules/frcp\"\npath = \"sources/frcp.txt\"\n\
+     path_sha256 = \"cb9a19a0ad99acdbd04f46acd3893bb96fbd34c9a8f66de57f5d171dbd268b44\"\n\
      cite_prefixes = [\"FRCP\"]\nsection_heading = \"Rule {n}\"\n";
 
 /// A package `name` at `pkgs/<name>` with one module file `main.lit`,
@@ -202,41 +203,41 @@ enum ServiceMethod { Personal, Mail }
 event Served(document: Document, method: ServiceMethod)
 event Answered(document: Document)
 
-counting frcp6 cite FRCP 6(a)
+counting frcp6 cite "FRCP 6(a)"
 {
   exclude_trigger_day
   include_last_day
   roll_forward_on [weekend, legal_holiday]
-  service_extension { Mail: 3.days } cite FRCP 6(d)
+  service_extension { Mail: 3.days } cite "FRCP 6(d)"
   holidays federal
   anchor trigger_day
 }
 
-calendar federal cite FRCP 6(a)(6)
+calendar federal cite "FRCP 6(a)(6)"
 {
   new-year: fixed(1, 1) effective [1870-06-28, ..) observed nearest_weekday
   juneteenth: fixed(6, 19) effective [2021-06-17, ..) observed nearest_weekday
 }
 
-rule duty answer-duty cite FRCP 12(a)
+rule duty answer-duty cite "FRCP 12(a)"
 {
   deadline answer-period: 21.days from Served(complaint) counted_by frcp6
 }
 
-state served: "Complaint served" by Defendant cite FRCP 12(a)
+state served: "Complaint served" by Defendant cite "FRCP 12(a)"
 {
   answer "File an answer" -> answered { event Answered(complaint), within answer-period }
 }
 
 terminal answered: "Answer filed" outcome [answered] { payoff 0.usd }
 
-test "answer due 21 days after personal service" cite FRCP 12(a)
+test "answer due 21 days after personal service" cite "FRCP 12(a)"
 {
   given Served(complaint, Personal) on 2025-03-03
   expect deadline(answer-period) == 2025-03-24
 }
 
-test "mail service adds three days" cite FRCP 6(d)
+test "mail service adds three days" cite "FRCP 6(d)"
 {
   given Served(complaint, Mail) on 2025-03-03
   expect deadline(answer-period) == 2025-03-27

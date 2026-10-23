@@ -65,7 +65,7 @@ fn worked_example_lowers_cleanly() {
         ("duty", "answer-duty")
     );
     assert!(
-        matches!(&clauses[0].values[0].0, Atom::Expr(e) if e.kind == ExprKind::Cite("FRCP 12(a)(1)(A)(i)".into()))
+        matches!(&clauses[0].values[0].0, Atom::Expr(e) if e.kind == ExprKind::Cite("FRCP 12(a)(1)(A)(i)".into(), false))
     );
     assert!(
         matches!(&inner[0].kind, ItemKind::Deadline { direction, .. } if direction.text == "from")

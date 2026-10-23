@@ -58,7 +58,7 @@ const DROPPED: &[&str] = &[
     "transition t amends x { unless -> y }",
     "transition t amends x { unless (1 +) -> y }",
     "default",
-    "default cite FRCP 1 when true => 1",
+    "default cite \"FRCP 1 when true => 1\"",
     "default d",
     "default d when (1 +) => 1",
     "default d when true",
@@ -68,7 +68,7 @@ const DROPPED: &[&str] = &[
     "exception e rebuts t when x => (1 +)",
     "exception e rebuts t when x => 1 priority",
     "exception rebuts t when x",
-    "exception e rebuts cite FRCP 1 when x",
+    "exception e rebuts cite \"FRCP 1 when x\"",
     "exception e rebuts t",
     "exception e rebuts t when (1 +)",
     "test { expect true }",
@@ -195,7 +195,7 @@ fn shape(e: &Expr) -> String {
         ExprKind::Bool(b) => b.to_string(),
         ExprKind::Unit => "unit".to_owned(),
         ExprKind::Hole(reason) => format!("?{reason:?}"),
-        ExprKind::Cite(c) => format!("(cite {c})"),
+        ExprKind::Cite(c, h) => format!("(cite {c}{})", if *h { " historical" } else { "" }),
         ExprKind::Ref(r) => path(r),
         ExprKind::Call(f, args) => format!("({} {})", path(f), list(args)),
         ExprKind::Unary(op, x) => format!("({op:?} {})", shape(x)),
@@ -263,7 +263,7 @@ fn every_expression_form_lowers() {
         })
         .collect();
     insta::assert_debug_snapshot!(out);
-    let ItemKind::Rule(_, _, clauses, _) = only_item("rule duty r cite FRCP 1(a) { }") else {
+    let ItemKind::Rule(_, _, clauses, _) = only_item("rule duty r cite \"FRCP 1(a)\" { }") else {
         panic!("rule");
     };
     assert_eq!(keys(&clauses), ["cite"]);

@@ -100,10 +100,10 @@ fn court_ordered_extensions_are_recorded() {
         "frcp-extended",
         &[
             "2025-01-06 ComplaintFiled() by plaintiff",
-            "2025-03-20 ServicePeriodExtended(2025-06-30) by judge cite FRCP 6(b)(1)(A)",
+            "2025-03-20 ServicePeriodExtended(2025-06-30) by judge cite \"FRCP 6(b)(1)(A)\"",
             "2025-06-02 JudgmentEntered() by judge",
             "2025-07-05 ExtensionMoved(NoticeOfAppealPeriod) by plaintiff",
-            "2025-07-10 NoticeOfAppealPeriodExtended(2025-08-01) by judge cite FRAP 4(a)(5)",
+            "2025-07-10 NoticeOfAppealPeriodExtended(2025-08-01) by judge cite \"FRAP 4(a)(5)\"",
         ],
     );
     assert_eq!(run.code, 0, "{}", run.stdout);
@@ -129,7 +129,7 @@ fn rule_6b1_has_no_ceiling_and_reaches_an_expired_period_on_motion() {
         &[
             "2025-01-06 ComplaintFiled() by plaintiff",
             "2025-04-20 ExtensionMoved(ServicePeriod) by plaintiff",
-            "2025-05-01 ServicePeriodExtended(2026-05-01) by judge cite FRCP 6(b)(1)(B)",
+            "2025-05-01 ServicePeriodExtended(2026-05-01) by judge cite \"FRCP 6(b)(1)(B)\"",
         ],
     );
     assert_eq!(run.code, 0, "{}", run.stdout);
@@ -156,7 +156,7 @@ fn rule_6b1a_turns_on_when_the_request_was_made() {
         &[
             "2025-03-06 ProcessServed() by plaintiff",
             "2025-03-26 ExtensionMoved(AnswerPeriod) by plaintiff",
-            "2025-03-31 AnswerPeriodExtended(2025-04-30) by judge cite FRCP 6(b)(1)(A)",
+            "2025-03-31 AnswerPeriodExtended(2025-04-30) by judge cite \"FRCP 6(b)(1)(A)\"",
         ],
     );
     assert_eq!(run.code, 0, "{}", run.stdout);
@@ -191,7 +191,7 @@ fn rule_6b1_after_expiry_without_a_request_before_or_a_motion_after_is_rejected(
         &[
             "2025-01-06 ComplaintFiled() by plaintiff",
             "2025-04-01 ExtensionMoved(ServicePeriod) by plaintiff",
-            "2025-05-01 ServicePeriodExtended(2026-05-01) by judge cite FRCP 6(b)(1)(A)",
+            "2025-05-01 ServicePeriodExtended(2026-05-01) by judge cite \"FRCP 6(b)(1)(A)\"",
         ],
     );
     assert_eq!(run.code, 0, "{}", run.stdout);
@@ -200,7 +200,7 @@ fn rule_6b1_after_expiry_without_a_request_before_or_a_motion_after_is_rejected(
         "frcp-6b1-nomotion",
         &[
             "2025-01-06 ComplaintFiled() by plaintiff",
-            "2025-05-01 ServicePeriodExtended(2026-05-01) by judge cite FRCP 6(b)(1)(B)",
+            "2025-05-01 ServicePeriodExtended(2026-05-01) by judge cite \"FRCP 6(b)(1)(B)\"",
         ],
     );
     assert_eq!(run.code, 2, "{}", run.stdout);
@@ -217,7 +217,7 @@ fn a_request_after_the_order_does_not_license_it() {
         "frcp-6b1a-late-request",
         &[
             "2025-03-06 ProcessServed() by plaintiff",
-            "2025-03-31 AnswerPeriodExtended(2025-04-30) by judge cite FRCP 6(b)(1)(A)",
+            "2025-03-31 AnswerPeriodExtended(2025-04-30) by judge cite \"FRCP 6(b)(1)(A)\"",
             "2025-04-01 ExtensionMoved(AnswerPeriod) by plaintiff",
         ],
     );
@@ -231,9 +231,9 @@ fn the_waiver_answer_and_rule_15a1_periods_are_extendable() {
         "frcp-waiver-15a1",
         &[
             "2025-03-10 WaiverRequestSent() by plaintiff",
-            "2025-04-01 WaiverAnswerPeriodExtended(2025-06-30) by judge cite FRCP 6(b)(1)(A)",
+            "2025-04-01 WaiverAnswerPeriodExtended(2025-06-30) by judge cite \"FRCP 6(b)(1)(A)\"",
             "2025-04-07 ResponsivePleadingServed(Electronic) by plaintiff",
-            "2025-04-20 AmendmentAsOfCoursePeriodExtended(2025-05-30) by judge cite FRCP 6(b)(1)(A)",
+            "2025-04-20 AmendmentAsOfCoursePeriodExtended(2025-05-30) by judge cite \"FRCP 6(b)(1)(A)\"",
         ],
     );
     assert_eq!(run.code, 0, "{}", run.stdout);
@@ -249,7 +249,9 @@ fn frap_4a5_order_on_day_40_allows_filing_through_day_54() {
         [
             "2025-06-02 JudgmentEntered() by judge".to_owned(),
             "2025-07-20 ExtensionMoved(NoticeOfAppealPeriod) by plaintiff".to_owned(),
-            format!("2025-08-11 NoticeOfAppealPeriodExtended({until}) by judge cite FRAP 4(a)(5)"),
+            format!(
+                "2025-08-11 NoticeOfAppealPeriodExtended({until}) by judge cite \"FRAP 4(a)(5)\""
+            ),
         ]
     };
     let ok = events("2025-08-25");
@@ -280,7 +282,7 @@ fn frap_4a5_motion_must_come_within_30_days_of_the_prescribed_time() {
         &[
             "2025-06-02 JudgmentEntered() by judge",
             "2025-08-04 ExtensionMoved(NoticeOfAppealPeriod) by plaintiff",
-            "2025-08-05 NoticeOfAppealPeriodExtended(2025-08-15) by judge cite FRAP 4(a)(5)",
+            "2025-08-05 NoticeOfAppealPeriodExtended(2025-08-15) by judge cite \"FRAP 4(a)(5)\"",
         ],
     );
     assert_eq!(run.code, 2, "{}", run.stdout);
@@ -299,7 +301,7 @@ fn frap_4a5_extends_the_cross_appeal_period() {
         &[
             "2025-07-01 NoticeOfAppealFiled() by judge",
             "2025-07-20 ExtensionMoved(CrossAppealPeriod) by plaintiff",
-            "2025-07-25 CrossAppealPeriodExtended(2025-08-10) by judge cite FRAP 4(a)(5)",
+            "2025-07-25 CrossAppealPeriodExtended(2025-08-10) by judge cite \"FRAP 4(a)(5)\"",
         ],
     );
     assert_eq!(run.code, 0, "{}", run.stdout);
@@ -357,7 +359,7 @@ fn frap_4a5_counts_the_cross_appeal_motion_window_from_the_later_date() {
             "2025-06-02 JudgmentEntered() by judge",
             "2025-06-05 NoticeOfAppealFiled() by judge",
             "2025-07-25 ExtensionMoved(CrossAppealPeriod) by plaintiff",
-            "2025-07-28 CrossAppealPeriodExtended(2025-08-05) by judge cite FRAP 4(a)(5)",
+            "2025-07-28 CrossAppealPeriodExtended(2025-08-05) by judge cite \"FRAP 4(a)(5)\"",
         ],
     );
     assert_eq!(run.code, 0, "{}", run.stdout);
@@ -380,7 +382,7 @@ fn frap_4a5_caps_the_notice_of_appeal_extension() {
         &[
             "2025-06-02 JudgmentEntered() by judge",
             "2025-07-05 ExtensionMoved(NoticeOfAppealPeriod) by plaintiff",
-            "2025-07-10 NoticeOfAppealPeriodExtended(2025-08-05) by judge cite FRAP 4(a)(5)",
+            "2025-07-10 NoticeOfAppealPeriodExtended(2025-08-05) by judge cite \"FRAP 4(a)(5)\"",
         ],
     );
     assert_eq!(run.code, 2, "{}", run.stdout);
@@ -399,7 +401,7 @@ fn only_the_court_extends() {
         "frcp-party",
         &[
             "2025-01-06 ComplaintFiled() by plaintiff",
-            "2025-03-20 ServicePeriodExtended(2025-06-30) by plaintiff cite FRCP 6(b)(1)(A)",
+            "2025-03-20 ServicePeriodExtended(2025-06-30) by plaintiff cite \"FRCP 6(b)(1)(A)\"",
         ],
     );
     assert_eq!(run.code, 2, "{}", run.stdout);
@@ -438,7 +440,7 @@ fn the_director_extends_the_ptab_appeal_period_on_a_request_made_before_expiry()
         "2025-03-01",
         &[
             "2025-05-04 AppealExtensionRequested() by owner",
-            "2025-05-07 AppealPeriodExtended(2025-06-06) by director cite 37 C.F.R. § 90.3(c)(1)(i)",
+            "2025-05-07 AppealPeriodExtended(2025-06-06) by director cite \"37 C.F.R. § 90.3(c)(1)(i)\"",
         ],
     );
     assert_eq!(run.code, 0, "{}", run.stdout);
@@ -460,7 +462,7 @@ fn a_ptab_request_received_after_expiry_is_excusable_neglect() {
         "2025-03-01",
         &[
             "2025-05-06 AppealExtensionRequested() by owner",
-            "2025-05-07 AppealPeriodExtended(2025-06-06) by director cite 37 C.F.R. § 90.3(c)(1)(ii)",
+            "2025-05-07 AppealPeriodExtended(2025-06-06) by director cite \"37 C.F.R. § 90.3(c)(1)(ii)\"",
         ],
     );
     assert_eq!(run.code, 0, "{}", run.stdout);
@@ -481,7 +483,7 @@ fn the_director_extends_only_on_written_request() {
     let run = ptab(
         "ptab-90-3-no-request",
         "2025-03-01",
-        &["2025-04-01 AppealPeriodExtended(2025-06-06) by director cite 37 C.F.R. § 90.3(c)(1)"],
+        &["2025-04-01 AppealPeriodExtended(2025-06-06) by director cite \"37 C.F.R. § 90.3(c)(1)\""],
     );
     assert_eq!(run.code, 2, "{}", run.stdout);
     assert_eq!(
@@ -504,7 +506,7 @@ fn no_court_extends_the_ptab_appeal_period() {
         &[
             "2025-12-02 ptab-patent-trial-appeal-board::DecisionEntered(FinalWritten) on owner",
             "2026-01-05 ptab-patent-trial-appeal-board::AppealExtensionRequested() by owner",
-            "2026-01-06 ptab-patent-trial-appeal-board::AppealPeriodExtended(2026-03-06) by fedcir cite 37 C.F.R. § 90.3(c)(1)",
+            "2026-01-06 ptab-patent-trial-appeal-board::AppealPeriodExtended(2026-03-06) by fedcir cite \"37 C.F.R. § 90.3(c)(1)\"",
         ],
         "ptab-patent-trial-appeal-board::appeal-forfeited-unappealed",
     );
@@ -532,7 +534,7 @@ fn the_director_extends_the_ttab_civil_action_period() {
             format!("2025-09-02 {q}FinalDecision() on applicant"),
             format!("2025-11-03 {q}CivilActionExtensionRequested() by applicant"),
             format!(
-                "2025-11-10 {q}CivilActionPeriodExtended(2025-12-10) by {by} cite 37 CFR 2.145(e)(1)(i)"
+                "2025-11-10 {q}CivilActionPeriodExtended(2025-12-10) by {by} cite \"37 CFR 2.145(e)(1)(i)\""
             ),
         ];
         matter(

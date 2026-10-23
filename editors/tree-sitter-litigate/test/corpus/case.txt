@@ -38,7 +38,7 @@ start cofc::complaint-filed
 perspective { Plaintiff: self, Defendant: opponent }
 parties { a: Plaintiff Corporation, b: Defendant Government }
 events {
-  2025-03-05 Served(complaint, Personal) on b cite RCFC 4
+  2025-03-05 Served(complaint, Personal) on b cite "RCFC 4"
   2025-03-20 docket 7 Moved() by a
 }
 facts { cofc::time-barred: cofc::not-barred, x: y }
@@ -129,7 +129,8 @@ analysis {
               (identifier))))
         (identifier)
         (cite
-          (cite_text)))
+          (string
+            (string_content))))
       (case_event
         (date)
         (number)

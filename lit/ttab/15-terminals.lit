@@ -3,7 +3,7 @@ module ttab.terminals
 
 import ttab.{ terminals }
 
-terminal registered: "Registration issues (opposition lapsed or defeated)" outcome [win, registered] cite 15 USC 1051(d); 15 USC 1057
+terminal registered: "Registration issues (opposition lapsed or defeated)" outcome [win, registered] cite "15 USC 1051(d); 15 USC 1057"
 {
   group terminals
   note "Baseline: keeps the name with a registration; payoff 0 by construction (all payoffs are relative to this). [applicant payoff at defaults = 0; judgment inputs rb=0, fx=0, sh=0] Applicant payoff at placeholder inputs = 0 (rb=0, fx=0, sh=0); scenarios recompute it from params."
@@ -60,7 +60,7 @@ terminal abandoned-keeps-using: "Abandoned application; the opposer drops C&D; c
   payoff -12_000.usd
 }
 
-terminal cancelled-rebrand: "Registration cancelled after registering: rebrand" outcome [loss, cancelled] cite 15 USC 1064(1)
+terminal cancelled-rebrand: "Registration cancelled after registering: rebrand" outcome [loss, cancelled] cite "15 USC 1064(1)"
 {
   group terminals
   note "Teaching estimate. As for sustained. [applicant payoff at defaults = -115,000; judgment inputs rb=1, fx=-15000, sh=0] Applicant payoff at placeholder inputs = -115,000 (rb=1, fx=-15000, sh=0); scenarios recompute it from params."
@@ -68,7 +68,7 @@ terminal cancelled-rebrand: "Registration cancelled after registering: rebrand" 
   payoff -115_000.usd
 }
 
-terminal suit-lost: "Infringement suit lost: injunction and rebrand" outcome [loss, suit] cite 15 USC 1116; 15 USC 1117(a)
+terminal suit-lost: "Infringement suit lost: injunction and rebrand" outcome [loss, suit] cite "15 USC 1116; 15 USC 1117(a)"
 {
   group terminals
   note "Teaching estimate. Rebrand + $40K for monetary relief/compressed timeline (small business, 3 months of sales). [applicant payoff at defaults = -140,000; judgment inputs rb=1, fx=-40000, sh=0] Applicant payoff at placeholder inputs = -140,000 (rb=1, fx=-40000, sh=0); scenarios recompute it from params."
@@ -76,7 +76,7 @@ terminal suit-lost: "Infringement suit lost: injunction and rebrand" outcome [lo
   payoff -140_000.usd
 }
 
-terminal suit-lost-fees: "Infringement suit lost with exceptional-case fee award to the opposer" outcome [loss, suit, fees] cite 15 USC 1117(a)
+terminal suit-lost-fees: "Infringement suit lost with exceptional-case fee award to the opposer" outcome [loss, suit, fees] cite "15 USC 1117(a)"
 {
   group terminals
   note "Applicant payoff at placeholder inputs = -350,000 (rb=1, fx=-250000, sh=0); scenarios recompute it from params."
@@ -91,7 +91,7 @@ terminal suit-won: "Infringement suit won" outcome [win, suit] {
   payoff -5_000.usd
 }
 
-terminal suit-won-fees: "Infringement suit won with exceptional-case fee award to applicant" outcome [win, suit, fees] cite 15 USC 1117(a)
+terminal suit-won-fees: "Infringement suit won with exceptional-case fee award to applicant" outcome [win, suit, fees] cite "15 USC 1117(a)"
 {
   group terminals
   note "Teaching estimate. Fees recovered approximate own cost (~160 h x $500 = $80K); low probability. [applicant payoff at defaults = 80,000; judgment inputs rb=0, fx=80000, sh=0] Applicant payoff at placeholder inputs = 80,000 (rb=0, fx=80000, sh=0); scenarios recompute it from params."

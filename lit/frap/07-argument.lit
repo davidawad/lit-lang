@@ -10,31 +10,31 @@ import frap.merits.{
 
 import frap.{ argument-group }
 
-chance oral-argument-fork: "Oral Argument or Submission on Briefs?" by examiner discretion cite FRAP 34(a)(1)
+chance oral-argument-fork: "Oral Argument or Submission on Briefs?" by examiner discretion cite "FRAP 34(a)(1)"
 {
   group argument-group
   note "Panel discretion to grant or dispense with oral argument — litigant expectations often misaligned with actual practice. Argument is dispensed with only when the panel unanimously agrees the appeal is frivolous, the dispositive issues are authoritatively decided, or the briefs adequately present the facts and legal arguments."
-  _ "Panel grants oral argument" -> oral-argument-held p 0.4 { authority cite FRAP 34(a)(1) }
-  _ "Panel dispenses with argument" -> submitted-on-briefs p 0.6 { authority cite FRAP 34(a)(2) }
+  _ "Panel grants oral argument" -> oral-argument-held p 0.4 { authority cite "FRAP 34(a)(1)" }
+  _ "Panel dispenses with argument" -> submitted-on-briefs p 0.6 { authority cite "FRAP 34(a)(2)" }
 }
 
-state oral-argument-held: "Oral Argument Held" by office cite FRAP 34(c)-(d)
+state oral-argument-held: "Oral Argument Held" by office cite "FRAP 34(c)-(d)"
 {
   group argument-group
   note "Typical 15-minute per-side allocation (circuit-specific variations apply). Panels use argument to test weak points in the briefs; oral argument is not a second chance to rewrite a losing brief but rather to address judicial concerns flagged during panel circulation."
   _ "Argument concludes — panel deliberates" -> standard-of-review-fork {
-    authority cite FRAP 34(d)
+    authority cite "FRAP 34(d)"
   }
 }
 
-state submitted-on-briefs: "Submitted on the Briefs" by office cite FRAP 34(a)(2)
+state submitted-on-briefs: "Submitted on the Briefs" by office cite "FRAP 34(a)(2)"
 {
   group argument-group
   note "Merits decided solely on written briefs without live argument — far more common in high-volume circuits than litigants anticipate. Decision occurs with no opportunity for live response to judicial questioning or hidden panel concerns revealed only in the opinion."
-  _ "Panel deliberates on the papers" -> standard-of-review-fork { authority cite FRAP 34(a)(2) }
+  _ "Panel deliberates on the papers" -> standard-of-review-fork { authority cite "FRAP 34(a)(2)" }
 }
 
-decision standard-of-review-fork: "Which Standard of Review Governs?" by examiner cite FRAP 28(a)(10)
+decision standard-of-review-fork: "Which Standard of Review Governs?" by examiner cite "FRAP 28(a)(10)"
 {
   group argument-group
   note "The single most outcome-determinative procedural fork — identical facts and panel composition yield opposite affirm/reverse outcomes depending on whether the ruling implicates questions of law, discretion, or fact. Standard selection is rarely contestable once the issue category is fixed."

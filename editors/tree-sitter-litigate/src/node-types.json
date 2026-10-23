@@ -773,16 +773,26 @@
     "type": "cite",
     "named": true,
     "fields": {
+      "historical": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "historical",
+            "named": false
+          }
+        ]
+      },
       "text": {
         "multiple": false,
         "required": true,
         "types": [
           {
-            "type": "cite_text",
+            "type": "hole",
             "named": true
           },
           {
-            "type": "hole",
+            "type": "string",
             "named": true
           }
         ]
@@ -4345,10 +4355,6 @@
     "named": false
   },
   {
-    "type": "cite_text",
-    "named": true
-  },
-  {
     "type": "clears",
     "named": false
   },
@@ -4507,6 +4513,10 @@
   },
   {
     "type": "group",
+    "named": false
+  },
+  {
+    "type": "historical",
     "named": false
   },
   {

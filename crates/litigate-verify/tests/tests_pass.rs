@@ -111,15 +111,15 @@ tests_pass!(
 /// earlier version given by `old` (its items); a test of a 1995 trigger.
 fn split_counting(old: &str, version: &str) -> String {
     with(
-        "test \"answer period in 1995\" cite FRCP 12(a)\n{\n  \
+        "test \"answer period in 1995\" cite \"FRCP 12(a)\"\n{\n  \
          given Served(complaint, Personal) on 1995-03-03\n  \
          expect deadline(answer-period) == 1995-03-24\n}",
     )
     .replacen(
-        "counting frcp6 cite FRCP 6(a)\n",
+        "counting frcp6 cite \"FRCP 6(a)\"\n",
         &format!(
-            "counting frcp6 effective [1990-01-01, 2000-01-01){version} cite FRCP 6(a)\n\
-             {{\n{old}\n}}\n\ncounting frcp6 effective [2000-01-01, ..) cite FRCP 6(a)\n"
+            "counting frcp6 effective [1990-01-01, 2000-01-01){version} cite \"FRCP 6(a)\"\n\
+             {{\n{old}\n}}\n\ncounting frcp6 effective [2000-01-01, ..) cite \"FRCP 6(a)\"\n"
         ),
         1,
     )
@@ -139,8 +139,8 @@ tests_pass!(
     no_counting_version_in_force_on_the_trigger,
     Failed,
     edit(
-        "counting frcp6 cite FRCP 6(a)",
-        "counting frcp6 effective [2000-01-01, ..) cite FRCP 6(a)"
+        "counting frcp6 cite \"FRCP 6(a)\"",
+        "counting frcp6 effective [2000-01-01, ..) cite \"FRCP 6(a)\""
     )
     .replacen(
         PERSONAL,
@@ -169,11 +169,11 @@ tests_pass!(
     the_engine_clock_rejects_a_period_it_cannot_count,
     Failed,
     with(
-        "counting nbd cite FRCP 6(a)\n{\n  anchor next_business_day\n  include_last_day\n  \
+        "counting nbd cite \"FRCP 6(a)\"\n{\n  anchor next_business_day\n  include_last_day\n  \
          holidays federal\n}\n\
-         rule duty zero-duty cite FRCP 12(a)\n{\n  deadline zero-period: 0.days from \
+         rule duty zero-duty cite \"FRCP 12(a)\"\n{\n  deadline zero-period: 0.days from \
          Served(complaint) counted_by nbd\n}\n\
-         test \"a zero-day period\" cite FRCP 12(a)\n{\n  \
+         test \"a zero-day period\" cite \"FRCP 12(a)\"\n{\n  \
          given Served(complaint, Personal) on 2025-03-03\n  \
          expect deadline(zero-period) == 2025-03-03\n}"
     )
@@ -183,13 +183,13 @@ tests_pass!(
     weeks_months_and_years_count_with_nominal_and_adjusted_dates,
     Passed,
     with(
-        "counting monthly cite FRCP 6(a)\n{\n  exclude_trigger_day\n  include_last_day\n  \
+        "counting monthly cite \"FRCP 6(a)\"\n{\n  exclude_trigger_day\n  include_last_day\n  \
          roll_forward_on [weekend, legal_holiday]\n  holidays federal\n  end_of_month clamp\n}\n\
-         rule duty period-duty cite FRCP 12(a)\n{\n  \
+         rule duty period-duty cite \"FRCP 12(a)\"\n{\n  \
          deadline week-period: 2.weeks from Served(complaint) counted_by monthly\n  \
          deadline month-period: 3.months from Served(complaint) counted_by monthly\n  \
          deadline year-period: 1.years from Served(complaint) counted_by monthly\n}\n\
-         test \"calendar periods\" cite FRCP 12(a)\n{\n  \
+         test \"calendar periods\" cite \"FRCP 12(a)\"\n{\n  \
          given Served(complaint, Personal) on 2024-11-30\n  \
          expect deadline(week-period) == 2024-12-16\n  \
          expect deadline(month-period).nominal == 2025-02-28\n  \
@@ -207,7 +207,7 @@ tests_pass!(
     with(
         "deadline quick: 14.days from Served(complaint) counted_by frcp6 \
          notwithstanding answer-period\n\
-         test \"the claimant counts\" cite FRCP 12(a)\n{\n  \
+         test \"the claimant counts\" cite \"FRCP 12(a)\"\n{\n  \
          given Served(complaint, Personal) on 2025-03-03\n  \
          expect deadline(answer-period) == 2025-03-17\n}"
     )
@@ -219,7 +219,7 @@ tests_pass!(
     with(
         "deadline moved: 7.days from Answered(complaint) counted_by frcp6 \
          notwithstanding answer-period\n\
-         test \"the claimant's trigger\" cite FRCP 12(a)\n{\n  \
+         test \"the claimant's trigger\" cite \"FRCP 12(a)\"\n{\n  \
          given Served(complaint, Personal) on 2025-03-03\n  \
          expect deadline(answer-period) == 2025-03-10\n}"
     )

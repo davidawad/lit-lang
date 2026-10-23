@@ -40,7 +40,7 @@ fn diagnostics(files: &[(&str, &str)]) -> Vec<String> {
 #[test]
 fn literals_infer_their_types() {
     let out = check(
-        "default a when true => 99999999999999999999\ndefault b when cite FRCP 6\n => 1\ndefault c when true => ?\ndefault d when (true) => (1)\ndefault e when true => unit\ndefault f when true => \"text\"\ndefault g when true => 2025-01-01\ndefault h when true => 8.hours",
+        "default a when true => 99999999999999999999\ndefault b when cite \"FRCP 6\"\n => 1\ndefault c when true => ?\ndefault d when (true) => (1)\ndefault e when true => unit\ndefault f when true => \"text\"\ndefault g when true => 2025-01-01\ndefault h when true => 8.hours",
     );
     insta::assert_debug_snapshot!(out);
 }

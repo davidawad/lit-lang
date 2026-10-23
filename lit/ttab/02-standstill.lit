@@ -5,12 +5,12 @@ import ttab.standstill-2.{ opposer-d180 }
 import ttab.terminals.{ registration-restricted, settle-coexistence, settle-rebrand-transition }
 import ttab.{ standstill }
 
-state standstill-period: "Standstill: final 60-day extension by consent" by board cite 37 CFR 2.102(c)(3)
+state standstill-period: "Standstill: final 60-day extension by consent" by board cite "37 CFR 2.102(c)(3)"
 {
   group standstill
   note "Applicant consents to the final extension in exchange for a standstill (no suit, no opposition, talks). Cost of consent: the potential opposer keeps the option to oppose until day 180."
   _ "Standstill begins" -> neg-posture {
-    authority cite 37 CFR 2.102(c)(3)
+    authority cite "37 CFR 2.102(c)(3)"
     duration { min 1.days, mode 1.days, max 1.days }
   }
 }
@@ -52,7 +52,7 @@ chance neg-rebrand: "Talks led by rebrand-with-transition and cost share" by boa
     tags [deal]
   }
   _ "No deal by day 180" -> opposer-d180 p 0.45 {
-    authority cite 37 CFR 2.102(c)(3)
+    authority cite "37 CFR 2.102(c)(3)"
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
     tags [no-deal]
     sets [sfail]
@@ -78,7 +78,7 @@ chance neg-coexist: "Talks led by coexistence / consent agreement" by board cite
     tags [deal]
   }
   _ "No deal by day 180" -> opposer-d180 p 0.5 {
-    authority cite 37 CFR 2.102(c)(3)
+    authority cite "37 CFR 2.102(c)(3)"
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
     tags [no-deal]
     sets [sfail]

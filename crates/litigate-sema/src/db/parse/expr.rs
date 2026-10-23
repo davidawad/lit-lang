@@ -121,22 +121,14 @@ pub(crate) fn expr_children(node: &SyntaxNode) -> impl Iterator<Item = SyntaxNod
     node.children().filter(|n| is_expr(n.kind()))
 }
 
-/// Normalized citation text (whitespace runs collapsed, SPEC §2).
-pub(crate) fn cite_text(token: &litigate_syntax::SyntaxToken) -> String {
-    token
-        .text()
-        .split_whitespace()
-        .collect::<Vec<_>>()
-        .join(" ")
-}
-
 impl Lower {
     /// A `cite` expression. A cite hole `cite ?("text")` is a hole whose
     /// reason is the citation text (SPEC §2, §8.1).
     fn cite(&mut self, node: &SyntaxNode) -> Option<Expr> {
-        match token_of(node, K::CiteText) {
+        let historical = token_of(node, K::KwHistorical).is_some();
+        match token_of(node, K::String) {
             Some(text) => Some(Expr {
-                kind: ExprKind::Cite(cite_text(&text)),
+                kind: ExprKind::Cite(name(&text).text, historical),
                 range: range(text.text_range()),
             }),
             None => self.expr(&node_of(node, K::HoleExpr)?),

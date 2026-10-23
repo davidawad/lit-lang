@@ -2,7 +2,7 @@
 source: crates/litigate-syntax/tests/snapshots.rs
 expression: parsed.debug_tree()
 ---
-CaseFile@0..738
+CaseFile@0..740
   KwCase@0..4 "case"
   Whitespace@4..5 " "
   Ident@5..16 "acme-appeal"
@@ -130,12 +130,12 @@ CaseFile@0..738
     Whitespace@398..399 "\n"
     RBrace@399..400 "}"
   Whitespace@400..402 "\n\n"
-  EventsBlock@402..526
+  EventsBlock@402..528
     KwEvents@402..408 "events"
     Whitespace@408..409 " "
     LBrace@409..410 "{"
     Whitespace@410..413 "\n  "
-    CaseEvent@413..474
+    CaseEvent@413..476
       Literal@413..423
         Date@413..423 "2025-03-05"
       Whitespace@423..424 " "
@@ -159,127 +159,127 @@ CaseFile@0..738
       Ref@455..459
         Ident@455..459 "acme"
       Whitespace@459..460 " "
-      CiteExpr@460..474
+      CiteExpr@460..476
         KwCite@460..464 "cite"
         Whitespace@464..465 " "
-        CiteText@465..474 "FRCP 4(h)"
-    Whitespace@474..477 "\n  "
-    CaseEvent@477..524
-      Literal@477..487
-        Date@477..487 "2025-03-05"
-      Whitespace@487..488 " "
-      KwDocket@488..494 "docket"
-      Whitespace@494..495 " "
-      Number@495..496 "7"
+        String@465..476 "\"FRCP 4(h)\""
+    Whitespace@476..479 "\n  "
+    CaseEvent@479..526
+      Literal@479..489
+        Date@479..489 "2025-03-05"
+      Whitespace@489..490 " "
+      KwDocket@490..496 "docket"
       Whitespace@496..497 " "
-      CallExpr@497..516
-        Ref@497..505
-          Ident@497..505 "Answered"
-        ArgList@505..516
-          LParen@505..506 "("
-          RefExpr@506..515
-            Ref@506..515
-              Ident@506..515 "complaint"
-          RParen@515..516 ")"
-      Whitespace@516..517 " "
-      KwBy@517..519 "by"
-      Whitespace@519..520 " "
-      Ref@520..524
-        Ident@520..524 "acme"
-    Whitespace@524..525 "\n"
-    RBrace@525..526 "}"
-  Whitespace@526..528 "\n\n"
-  FactsBlock@528..603
-    KwFacts@528..533 "facts"
-    Whitespace@533..534 " "
-    RecordExpr@534..603
-      LBrace@534..535 "{"
-      Whitespace@535..536 " "
-      RecordField@536..601
-        Ref@536..568
-          Ident@536..555 "frcp-rule12-example"
-          ColonColon@555..557 "::"
-          Ident@557..568 "time-barred"
-        Colon@568..569 ":"
-        Whitespace@569..570 " "
-        Ref@570..601
-          Ident@570..589 "frcp-rule12-example"
-          ColonColon@589..591 "::"
-          Ident@591..601 "not-barred"
-      Whitespace@601..602 " "
-      RBrace@602..603 "}"
-  Whitespace@603..604 "\n"
-  StakesBlock@604..641
-    KwStakes@604..610 "stakes"
-    Whitespace@610..611 " "
-    RecordExpr@611..641
-      LBrace@611..612 "{"
-      Whitespace@612..613 " "
-      RecordField@613..639
-        Ref@613..629
-          Ident@613..629 "judgment-entered"
-        Colon@629..630 ":"
-        Whitespace@630..631 " "
-        Literal@631..639
-          KwUnvalued@631..639 "unvalued"
-      Whitespace@639..640 " "
-      RBrace@640..641 "}"
-  Whitespace@641..642 "\n"
-  AnalysisBlock@642..737
-    KwAnalysis@642..650 "analysis"
-    Whitespace@650..651 " "
-    RecordExpr@651..737
-      LBrace@651..652 "{"
-      Whitespace@652..653 " "
-      RecordField@653..682
-        Ident@653..662 "objective"
-        Colon@662..663 ":"
-        Whitespace@663..664 " "
-        RecordExpr@664..682
-          LBrace@664..665 "{"
-          Whitespace@665..666 " "
-          RecordField@666..680
-            Ident@666..670 "type"
-            Colon@670..671 ":"
-            Whitespace@671..672 " "
-            Literal@672..680
-              String@672..680 "\"robust\""
-          Whitespace@680..681 " "
-          RBrace@681..682 "}"
-      Comma@682..683 ","
-      Whitespace@683..684 " "
-      RecordField@684..694
-        Ident@684..691 "horizon"
-        Colon@691..692 ":"
-        Whitespace@692..693 " "
-        Literal@693..694
-          Number@693..694 "3"
-      Comma@694..695 ","
-      Whitespace@695..696 " "
-      RecordField@696..715
-        Ident@696..701 "mixed"
-        Colon@701..702 ":"
-        Whitespace@702..703 " "
-        Literal@703..715
-          String@703..715 "\"optimistic\""
-      Comma@715..716 ","
-      Whitespace@716..717 " "
-      RecordField@717..725
-        Ident@717..721 "seed"
-        Colon@721..722 ":"
-        Whitespace@722..723 " "
-        UnaryExpr@723..725
-          Minus@723..724 "-"
-          Literal@724..725
-            Number@724..725 "1"
-      Comma@725..726 ","
-      Whitespace@726..727 " "
-      RecordField@727..735
-        Ident@727..728 "x"
-        Colon@728..729 ":"
-        Whitespace@729..730 " "
-        Literal@730..735
-          KwFalse@730..735 "false"
-      Whitespace@735..736 " "
-      RBrace@736..737 "}"
-  Whitespace@737..738 "\n"
+      Number@497..498 "7"
+      Whitespace@498..499 " "
+      CallExpr@499..518
+        Ref@499..507
+          Ident@499..507 "Answered"
+        ArgList@507..518
+          LParen@507..508 "("
+          RefExpr@508..517
+            Ref@508..517
+              Ident@508..517 "complaint"
+          RParen@517..518 ")"
+      Whitespace@518..519 " "
+      KwBy@519..521 "by"
+      Whitespace@521..522 " "
+      Ref@522..526
+        Ident@522..526 "acme"
+    Whitespace@526..527 "\n"
+    RBrace@527..528 "}"
+  Whitespace@528..530 "\n\n"
+  FactsBlock@530..605
+    KwFacts@530..535 "facts"
+    Whitespace@535..536 " "
+    RecordExpr@536..605
+      LBrace@536..537 "{"
+      Whitespace@537..538 " "
+      RecordField@538..603
+        Ref@538..570
+          Ident@538..557 "frcp-rule12-example"
+          ColonColon@557..559 "::"
+          Ident@559..570 "time-barred"
+        Colon@570..571 ":"
+        Whitespace@571..572 " "
+        Ref@572..603
+          Ident@572..591 "frcp-rule12-example"
+          ColonColon@591..593 "::"
+          Ident@593..603 "not-barred"
+      Whitespace@603..604 " "
+      RBrace@604..605 "}"
+  Whitespace@605..606 "\n"
+  StakesBlock@606..643
+    KwStakes@606..612 "stakes"
+    Whitespace@612..613 " "
+    RecordExpr@613..643
+      LBrace@613..614 "{"
+      Whitespace@614..615 " "
+      RecordField@615..641
+        Ref@615..631
+          Ident@615..631 "judgment-entered"
+        Colon@631..632 ":"
+        Whitespace@632..633 " "
+        Literal@633..641
+          KwUnvalued@633..641 "unvalued"
+      Whitespace@641..642 " "
+      RBrace@642..643 "}"
+  Whitespace@643..644 "\n"
+  AnalysisBlock@644..739
+    KwAnalysis@644..652 "analysis"
+    Whitespace@652..653 " "
+    RecordExpr@653..739
+      LBrace@653..654 "{"
+      Whitespace@654..655 " "
+      RecordField@655..684
+        Ident@655..664 "objective"
+        Colon@664..665 ":"
+        Whitespace@665..666 " "
+        RecordExpr@666..684
+          LBrace@666..667 "{"
+          Whitespace@667..668 " "
+          RecordField@668..682
+            Ident@668..672 "type"
+            Colon@672..673 ":"
+            Whitespace@673..674 " "
+            Literal@674..682
+              String@674..682 "\"robust\""
+          Whitespace@682..683 " "
+          RBrace@683..684 "}"
+      Comma@684..685 ","
+      Whitespace@685..686 " "
+      RecordField@686..696
+        Ident@686..693 "horizon"
+        Colon@693..694 ":"
+        Whitespace@694..695 " "
+        Literal@695..696
+          Number@695..696 "3"
+      Comma@696..697 ","
+      Whitespace@697..698 " "
+      RecordField@698..717
+        Ident@698..703 "mixed"
+        Colon@703..704 ":"
+        Whitespace@704..705 " "
+        Literal@705..717
+          String@705..717 "\"optimistic\""
+      Comma@717..718 ","
+      Whitespace@718..719 " "
+      RecordField@719..727
+        Ident@719..723 "seed"
+        Colon@723..724 ":"
+        Whitespace@724..725 " "
+        UnaryExpr@725..727
+          Minus@725..726 "-"
+          Literal@726..727
+            Number@726..727 "1"
+      Comma@727..728 ","
+      Whitespace@728..729 " "
+      RecordField@729..737
+        Ident@729..730 "x"
+        Colon@730..731 ":"
+        Whitespace@731..732 " "
+        Literal@732..737
+          KwFalse@732..737 "false"
+      Whitespace@737..738 " "
+      RBrace@738..739 "}"
+  Whitespace@739..740 "\n"

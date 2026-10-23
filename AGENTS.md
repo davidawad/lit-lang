@@ -127,6 +127,9 @@ rather than silently ignoring a typo.
    `sources[].path` points at a file under `sources/`, `lint` verifies the
    cite mechanically (`unverifiable-cite` warning with the exact reason if
    it can't) — see `docs/PACK_SCHEMA.md`'s authoring rule 1.
+   In `Lit.toml`, a binding with a vendored `path` pins that file with
+   `path_sha256`; `litigate check` resolves cites only against the pinned
+   text, and a cite is a string: `cite "FRCP 12(b)(6)"`.
 5. **Probabilities**: only on non-self edges, with basis + vintage in
    `note`. Unauthored beats invented.
 6. **Pin modes when comparing to v1** (`mixed: optimistic`,

@@ -92,6 +92,11 @@ impl<'t> Parser<'t> {
         self.range_of(0)
     }
 
+    /// The source text from byte `start` to the end.
+    pub(crate) fn text_from(&self, start: usize) -> &'t str {
+        &self.text[start..]
+    }
+
     pub(crate) fn text_between(&self, start: rowan::TextSize, end: rowan::TextSize) -> &'t str {
         &self.text[TextRange::new(start, end.max(start))]
     }

@@ -73,7 +73,7 @@ fn events(h: &History) -> Vec<String> {
     if let Some(e) = h.extended {
         out.push((
             h.served + e,
-            "Extended(complaint) by court cite FRCP 6(b)(1)(A)".to_owned(),
+            "Extended(complaint) by court cite \"FRCP 6(b)(1)(A)\"".to_owned(),
         ));
     }
     let respond = h.served + h.respond;

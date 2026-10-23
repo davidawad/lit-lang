@@ -48,18 +48,18 @@ state bid-protest-merits-briefing: "Administrative-Record Briefing (Cross-Motion
   group bid-protest-group
   note "Protests are ordinarily decided on the administrative record via cross-motions for judgment on the AR under RCFC 52.1 rather than a full RCFC 56 summary-judgment/trial sequence -- the record is what the agency actually considered, supplemented only on a showing of necessity."
   e-protest-briefing-to-ruling "Complete cross-motions for judgment on the administrative record" -> bid-protest-merits-ruling {
-    authority cite RCFC 52.1
+    authority cite "RCFC 52.1"
     effort 140.hours
     cost 0.usd
   }
 }
 
-chance bid-protest-merits-ruling: "Court Rules on the Protest" by office discretion cite RCFC 52.1; 28 U.S.C. §1491(b)(4) (arbitrary-and-capricious/APA-derived standard)
+chance bid-protest-merits-ruling: "Court Rules on the Protest" by office discretion cite "RCFC 52.1; 28 U.S.C. §1491(b)(4) (arbitrary-and-capricious/APA-derived standard)"
 {
   group bid-protest-group
   note "Outcome distribution authored at 0.20 sustained / 0.80 denied -- TEACHING ESTIMATE only, not a cited empirical GAO/CoFC bid-protest sustain-rate figure (publicly reported CoFC-specific sustain rates were not verified against a primary source in this pass; flag as UNVERIFIED if precision matters). The arbitrary-and-capricious standard is highly deferential to the procuring agency."
   e-protest-sustained "Court sustains the protest" -> protest-sustained p 0.2 {
-    authority cite 28 U.S.C. §1491(b)(4)
+    authority cite "28 U.S.C. §1491(b)(4)"
     note "TEACHING ESTIMATE -- not a cited empirical CoFC sustain-rate figure; UNVERIFIED against a primary statistical source in this pass."
   }
   e-protest-denied "Court denies the protest" -> protest-denied p 0.8 {
@@ -67,7 +67,7 @@ chance bid-protest-merits-ruling: "Court Rules on the Protest" by office discret
   }
 }
 
-terminal protest-sustained: "PROTEST SUSTAINED" outcome [win, injunctive-relief] cite 28 U.S.C. §1491(b)(2)
+terminal protest-sustained: "PROTEST SUSTAINED" outcome [win, injunctive-relief] cite "28 U.S.C. §1491(b)(2)"
 {
   group bid-protest-group
   note "PLACEHOLDER PAYOFF: $200,000, override per matter. Relief in a sustained protest is typically injunctive/equitable (enjoining award, directing re-evaluation or re-procurement) plus bid-and-proposal-preparation costs -- rarely a damages award on the scale of a §1498 or breach claim, so the payoff here approximates recovered B&P costs and re-compete value rather than the full parameterized $1M claim baseline used elsewhere in this pack."
@@ -75,7 +75,7 @@ terminal protest-sustained: "PROTEST SUSTAINED" outcome [win, injunctive-relief]
   payoff 200_000.usd
 }
 
-terminal protest-denied: "PROTEST DENIED" outcome [loss] cite 28 U.S.C. §1491(b)
+terminal protest-denied: "PROTEST DENIED" outcome [loss] cite "28 U.S.C. §1491(b)"
 {
   group bid-protest-group
   note "PLACEHOLDER PAYOFF: $0, override per matter."

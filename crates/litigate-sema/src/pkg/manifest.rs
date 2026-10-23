@@ -86,6 +86,7 @@ struct RawSource {
     url: Option<String>,
     path: Option<Spanned<String>>,
     sha256: Option<Spanned<String>>,
+    path_sha256: Option<Spanned<String>>,
     as_of: Option<Spanned<String>>,
     #[serde(default)]
     cite_prefixes: Vec<String>,
@@ -382,14 +383,21 @@ fn source(c: &mut Checker, id: &str, s: &Spanned<RawSource>) -> SourceBinding {
             format!("source path `{p}` must be repository-relative")
         });
     }
-    if let Some(sha) = &raw.sha256 {
-        let ok = sha.get_ref().len() == 64
-            && sha
-                .get_ref()
-                .bytes()
-                .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b));
-        c.check(ok, range(sha), || {
-            "`sha256` must be 64 lowercase hex digits".to_owned()
+    for (key, sha) in [("sha256", &raw.sha256), ("path_sha256", &raw.path_sha256)] {
+        if let Some(sha) = sha {
+            let ok = sha.get_ref().len() == 64
+                && sha
+                    .get_ref()
+                    .bytes()
+                    .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b));
+            c.check(ok, range(sha), || {
+                format!("`{key}` must be 64 lowercase hex digits")
+            });
+        }
+    }
+    if let Some(sha) = &raw.path_sha256 {
+        c.check(raw.path.is_some(), range(sha), || {
+            format!("source `{id}` has `path_sha256` but no `path` to pin")
         });
     }
     if let Some(as_of) = &raw.as_of {
@@ -411,6 +419,7 @@ fn source(c: &mut Checker, id: &str, s: &Spanned<RawSource>) -> SourceBinding {
         url: raw.url.clone(),
         path: raw.path.as_ref().map(|p| p.get_ref().clone()),
         sha256: raw.sha256.as_ref().map(|p| p.get_ref().clone()),
+        path_sha256: raw.path_sha256.as_ref().map(|p| p.get_ref().clone()),
         as_of: raw.as_of.as_ref().map(|p| p.get_ref().clone()),
         cite_prefixes: raw.cite_prefixes.clone(),
         section_heading: raw.section_heading.as_ref().map(|p| p.get_ref().clone()),

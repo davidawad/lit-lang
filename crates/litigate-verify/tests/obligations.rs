@@ -57,8 +57,8 @@ obligation!(
     Obligation::CiteResolves,
     one(BASE),
     one(&edit(
-        "by Defendant cite FRCP 12(a)",
-        "by Defendant cite FRCP 99(a)"
+        "by Defendant cite \"FRCP 12(a)\"",
+        "by Defendant cite \"FRCP 99(a)\""
     ))
 );
 
@@ -67,8 +67,8 @@ obligation!(
     Obligation::CiteResolves,
     one(BASE),
     one(&edit(
-        "by Defendant cite FRCP 12(a)",
-        "by Defendant cite 35 U.S.C. § 101"
+        "by Defendant cite \"FRCP 12(a)\"",
+        "by Defendant cite \"35 U.S.C. § 101\""
     ))
 );
 
@@ -201,7 +201,7 @@ obligation!(
 /// before 2000 bounding another edge of `served`.
 fn two_duties(from: &str) -> String {
     let old = "\nrule duty old-duty effective [1990-01-01, 2000-01-01) subject_to answer-duty \
-        cite FRCP 12(a)\n{\n  deadline old-period: 20.days from Served(complaint) counted_by \
+        cite \"FRCP 12(a)\"\n{\n  deadline old-period: 20.days from Served(complaint) counted_by \
         frcp6 effective [1990-01-01, 2000-01-01) subject_to answer-period\n}\n\
         test \"old answer period\" {\n  given Served(complaint, Personal) on 1995-03-03\n  \
         expect deadline(old-period) == 1995-03-23\n}";
@@ -259,7 +259,7 @@ obligation!(
     Obligation::RuleWithoutTest,
     one(BASE),
     one(&with(
-        "rule duty reply-duty cite FRCP 12(a)\n{\n  deadline reply-period: 14.days from \
+        "rule duty reply-duty cite \"FRCP 12(a)\"\n{\n  deadline reply-period: 14.days from \
          Answered(complaint) counted_by frcp6\n}"
     ))
 );

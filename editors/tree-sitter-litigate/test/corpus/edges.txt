@@ -139,7 +139,7 @@ decision d: "D" {
   answer "Answer" -> answered {
     event Answered(complaint)
     authority "28 U.S.C. 1491"
-    authority cite FRCP 4(m)
+    authority cite "FRCP 4(m)"
     effort 8.hours
     cost -2_000.50.usd
     within answer-period { extendable true, extension_authority "FRCP 6(b)", note "x" }
@@ -185,7 +185,8 @@ decision d: "D" {
                 (string_content)))
             (edge_field
               (cite
-                (cite_text)))
+                (string
+                  (string_content))))
             (edge_field
               (duration))
             (edge_field

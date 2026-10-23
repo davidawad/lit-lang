@@ -41,7 +41,6 @@
 ; Literals.
 (string) @string
 (escape_sequence) @string.escape
-(cite_text) @string.special
 (number) @number
 (money) @number
 (duration) @number

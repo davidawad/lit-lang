@@ -11,34 +11,34 @@ import frap.{ motions-group }
 /// time", so the period delegates to `CaseOrder`. It runs from service, so
 /// FRAP 26(c) adds 3 days after mail, commercial-carrier or prison-mail
 /// service (`frap26`'s `service_extension`).
-rule duty respond-to-motion effective [2009-12-01, ..) known_at 2009-03-26 cite FRAP 27(a)(3)(A)
+rule duty respond-to-motion effective [2009-12-01, ..) known_at 2009-03-26 cite "FRAP 27(a)(3)(A)"
 {
-  deadline motion-response-period: 10.days after ServedPaper(Motion) counted_by frap26 delegable_to [CaseOrder] cite FRAP 27(a)(3)(A)
+  deadline motion-response-period: 10.days after ServedPaper(Motion) counted_by frap26 delegable_to [CaseOrder] cite "FRAP 27(a)(3)(A)"
 }
 
-test "a response is due 10 days after electronic service of the motion" cite FRAP 27(a)(3)(A)
+test "a response is due 10 days after electronic service of the motion" cite "FRAP 27(a)(3)(A)"
 {
   given ServedPaper(Motion, Electronic) on 2025-06-23
   expect deadline(motion-response-period) == 2025-07-03
 }
 
-test "a 10th day on Martin Luther King Jr. Day rolls to Tuesday" cite FRAP 26(a)(6)(A)
+test "a 10th day on Martin Luther King Jr. Day rolls to Tuesday" cite "FRAP 26(a)(6)(A)"
 {
   given ServedPaper(Motion, Electronic) on 2025-01-10
   expect deadline(motion-response-period) == 2025-01-21
 }
 
-decision stay-pending-appeal-fork: "Move to Stay Judgment Pending Appeal?" by applicant cite FRAP 8(a)(1); FRAP 27(a)
+decision stay-pending-appeal-fork: "Move to Stay Judgment Pending Appeal?" by applicant cite "FRAP 8(a)(1); FRAP 27(a)"
 {
   group motions-group
   note "Mandatory exhaustion: must apply to the district court first under FRAP 8(a)(1)(A). Only if the district court denies relief or cannot act may the movant apply to the court of appeals. FRAP 27 governs the form of all appellate motions generally (10-day response, single-judge or panel action) — many appellants shortcut the district-court step, forfeiting the venue best positioned to assess likelihood of reversal and irreparable harm."
   no-stay-sought "No stay sought -- proceed to briefing" -> appellant-brief-window {
-    authority cite FRAP 8(a)(1)
+    authority cite "FRAP 8(a)(1)"
     effort 0.hours
     note "FRAP 8(a)(1) says a party 'must ordinarily move first in the district court' for a stay -- a stay is something a party may seek, not a required step. A party with nothing to stay (e.g. a plaintiff appealing a dismissal) goes straight to briefing. Mirrors cafc-federal-circuit.json's motions-decline edge. Hours: 0, a no-action transition."
   }
   _ "Move for stay pending appeal — granted" -> stay-granted {
-    authority cite FRAP 8(a)(1)
+    authority cite "FRAP 8(a)(1)"
     effort 15.hours
     within motion-response-period {
       extendable true
@@ -50,7 +50,7 @@ decision stay-pending-appeal-fork: "Move to Stay Judgment Pending Appeal?" by ap
     note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
   }
   _ "Stay motion denied" -> stay-denied by examiner {
-    authority cite FRAP 8(a)
+    authority cite "FRAP 8(a)"
     within motion-response-period {
       extendable true
       extension_authority "FRAP 26(b); court order"
@@ -60,16 +60,16 @@ decision stay-pending-appeal-fork: "Move to Stay Judgment Pending Appeal?" by ap
   }
 }
 
-state stay-granted: "Stay Granted — Enforcement Suspended" by office cite FRAP 8(b)(1)
+state stay-granted: "Stay Granted — Enforcement Suspended" by office cite "FRAP 8(b)(1)"
 {
   group motions-group
   note "Stay is almost always conditioned on a supersedeas bond equal to the judgment plus interest and costs. The bond requirement is the real control gate — inability to post money kills the stay in practice, regardless of legal merit on the appeal."
-  _ "Proceed to briefing under stay" -> appellant-brief-window { authority cite FRAP 8(a)(1) }
+  _ "Proceed to briefing under stay" -> appellant-brief-window { authority cite "FRAP 8(a)(1)" }
 }
 
-state stay-denied: "Stay Denied — Judgment Enforceable" by office cite FRAP 8(a)
+state stay-denied: "Stay Denied — Judgment Enforceable" by office cite "FRAP 8(a)"
 {
   group motions-group
   note "Judgment becomes executable while the appeal is pending. Critical trap: if the appellee executes and collects before reversal, the appellant's only remedy is replevin or an action against the judgment creditor — reversal does not automatically restore collected funds."
-  _ "Proceed to briefing" -> appellant-brief-window { authority cite FRAP 8(a) }
+  _ "Proceed to briefing" -> appellant-brief-window { authority cite "FRAP 8(a)" }
 }

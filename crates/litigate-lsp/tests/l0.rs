@@ -18,7 +18,9 @@ fn bound(name: &str) -> PathBuf {
     std::fs::create_dir_all(&pkg).unwrap();
     let manifest = read("lit/examples/Lit.toml").replace(
         "cite_prefixes = [\"FRCP\"]",
-        "path = \"sources/frcp.txt\"\ncite_prefixes = [\"FRCP\"]\nsection_heading = \"Rule {n}\"",
+        "path = \"sources/frcp.txt\"\n\
+         path_sha256 = \"cb9a19a0ad99acdbd04f46acd3893bb96fbd34c9a8f66de57f5d171dbd268b44\"\n\
+         cite_prefixes = [\"FRCP\"]\nsection_heading = \"Rule {n}\"",
     );
     std::fs::write(pkg.join("Lit.toml"), manifest).unwrap();
     std::fs::write(pkg.join("rule12.lit"), read("lit/examples/rule12.lit")).unwrap();
@@ -44,7 +46,13 @@ async fn hover(c: &mut Client, root: &std::path::Path, needle: &str, shift: u32)
 async fn cite_hover_shows_the_pinpointed_l0_text() {
     let root = bound("pinpoint");
     let (mut c, _) = Client::start(&root, json!({})).await;
-    let value = hover(&mut c, &root, "cite FRCP 12(a)(1)(A)(i)\n{\n  deadline", 6).await;
+    let value = hover(
+        &mut c,
+        &root,
+        "cite \"FRCP 12(a)(1)(A)(i)\"\n{\n  deadline",
+        6,
+    )
+    .await;
     assert!(
         value.contains("**L0** Rule 12(a)(1)(A)(i) — `sources/frcp.txt:980-981`"),
         "{value}"
@@ -54,7 +62,7 @@ async fn cite_hover_shows_the_pinpointed_l0_text() {
         "{value}"
     );
     // A cite on a lowered node is the sidecar's entry for it.
-    let ruling = hover(&mut c, &root, "cite FRCP 12(b)(6)", 6).await;
+    let ruling = hover(&mut c, &root, "cite \"FRCP 12(b)(6)\"", 6).await;
     assert!(
         ruling.contains("**L0** Rule 12(b)(6) — `sources/frcp.txt:"),
         "{ruling}"

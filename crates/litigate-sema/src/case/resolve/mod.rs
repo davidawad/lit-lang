@@ -421,12 +421,8 @@ impl R<'_, '_> {
                     K::KwOn => Some(EventParty::On),
                     _ => None,
                 });
-            let authority = child(line, K::CiteExpr).map(|c| {
-                token_text(&c, K::CiteText).map_or_else(
-                    || token_text(&c, K::String).map_or_else(String::new, |t| t.0),
-                    |t| t.0.split_whitespace().collect::<Vec<_>>().join(" "),
-                )
-            });
+            let authority = child(line, K::CiteExpr)
+                .map(|c| token_text(&c, K::String).map_or_else(String::new, |t| t.0));
             self.spans.events.push(EventSpans {
                 whole: Some(self.s(sig(line))),
                 date: date.as_ref().map(|d| self.s(d.1)),

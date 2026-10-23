@@ -34,14 +34,14 @@ import demo.{ pleading-group }
 start filed
 
 /// imported
-decision filed: "Complaint \"filed\"" by applicant cite DR 3
+decision filed: "Complaint \"filed\"" by applicant cite "DR 3"
 {
   group pleading-group
   note "Line one.\nLine two."
   tags [entry]
   attrs { weight: -1.5 }
   12b-move "Move to dismiss" -> ruling {
-    authority cite DR 12(b)(6)
+    authority cite "DR 12(b)(6)"
     effort 30.hours
     cost 405.usd
     deadline 21.court_days {
@@ -69,7 +69,8 @@ import demo.pleading-2.{ lost }
 import demo.{ ruling-group }
 
 /// imported
-chance ruling: "Ruling" by office cite ?("DR 12, 56") {
+chance ruling: "Ruling" by office cite "DR 12, 56"
+{
   group ruling-group
   valence caution
   court_listener_url "https://example.org/op"
@@ -174,7 +175,7 @@ instance demo-court@appeal {
 
 /// imported
 link to-appeal "Appeal": demo-court::lost -> demo-court@appeal::filed by applicant p 0.5 {
-  authority cite 28 U.S.C. § 1291
+  authority cite "28 U.S.C. § 1291"
   tags [appeal]
   replaces [demo-court::denied, "demo-court::ruling->won#0"]
 }

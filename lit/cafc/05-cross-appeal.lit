@@ -6,12 +6,12 @@ import cafc.briefing.{ appellant-brief-window }
 import cafc.{ AppealExtensionMoved, Filed, Paper, cross-appeal-group }
 import core.frap26.{ frap26 }
 
-decision cross-appeal-fork: "Appellee Considers a Cross-Appeal" by applicant cite FRAP 4(a)(3); Fed. Cir. R. 28.1
+decision cross-appeal-fork: "Appellee Considers a Cross-Appeal" by applicant cite "FRAP 4(a)(3); Fed. Cir. R. 28.1"
 {
   group cross-appeal-group
   note "A cross-appeal is proper only where the appellee seeks to modify or overturn the judgment, not merely to defend it on alternative grounds — Bailey v. Dart Container Corp., 292 F.3d 1360 (Fed. Cir. 2002). Fed. Cir. R. 28.1 sets Federal-Circuit-specific page/word/color-cover limits and the four-brief sequence for cross-appeals; the 14-day filing deadline itself is the general FRAP 4(a)(3) deadline, not separately shortened by a Federal Circuit rule."
   cross-appeal-file "File notice of cross-appeal" -> cross-appeal-filed {
-    authority cite FRAP 4(a)(3); Fed. Cir. R. 28.1
+    authority cite "FRAP 4(a)(3); Fed. Cir. R. 28.1"
     effort 10.hours
     cost 605.usd
     event Filed(CrossAppealNotice)
@@ -22,22 +22,24 @@ decision cross-appeal-fork: "Appellee Considers a Cross-Appeal" by applicant cit
     }
     tags [appeal]
   }
-  cross-appeal-decline "Decline to cross-appeal" -> no-cross-appeal { authority cite FRAP 4(a)(3) }
-}
-
-state cross-appeal-filed: "Notice of Cross-Appeal Filed" by office cite FRAP 4(a)(3); Fed. Cir. R. 28.1
-{
-  group cross-appeal-group
-  cross-appeal-filed-to-briefing "Cross-appeal docketed — briefing under Fed. Cir. R. 31(a)(1)(C)-(D)/28.1" -> appellant-brief-window {
-    authority cite Fed. Cir. R. 28.1; Fed. Cir. R. 31(a)(1)(D)
+  cross-appeal-decline "Decline to cross-appeal" -> no-cross-appeal {
+    authority cite "FRAP 4(a)(3)"
   }
 }
 
-state no-cross-appeal: "No Cross-Appeal — Judgment Defended Only" by office cite FRAP 4(a)(3)
+state cross-appeal-filed: "Notice of Cross-Appeal Filed" by office cite "FRAP 4(a)(3); Fed. Cir. R. 28.1"
+{
+  group cross-appeal-group
+  cross-appeal-filed-to-briefing "Cross-appeal docketed — briefing under Fed. Cir. R. 31(a)(1)(C)-(D)/28.1" -> appellant-brief-window {
+    authority cite "Fed. Cir. R. 28.1; Fed. Cir. R. 31(a)(1)(D)"
+  }
+}
+
+state no-cross-appeal: "No Cross-Appeal — Judgment Defended Only" by office cite "FRAP 4(a)(3)"
 {
   group cross-appeal-group
   no-cross-appeal-to-briefing "Proceed to ordinary briefing" -> appellant-brief-window {
-    authority cite Fed. Cir. R. 31(a)(1)
+    authority cite "Fed. Cir. R. 31(a)(1)"
   }
 }
 
@@ -48,9 +50,9 @@ state no-cross-appeal: "No Cross-Appeal — Judgment Defended Only" by office ci
 /// notice of appeal" and 4(a)(5)(B) names 4(a)(3), so the period carries
 /// the trial court's 4(a)(5) grant and FRAP 26(b)(1)'s lock; no delegation
 /// to a case order is declared.
-rule duty cross-appeal-notice cite FRAP 4(a)(3)
+rule duty cross-appeal-notice cite "FRAP 4(a)(3)"
 {
-  deadline cross-appeal-period: 14.days after Filed(NoticeOfAppeal) counted_by frap26 effective [1968-07-01, ..) known_at 1967-12-04 cite FRAP 4(a)(3)
+  deadline cross-appeal-period: 14.days after Filed(NoticeOfAppeal) counted_by frap26 effective [1968-07-01, ..) known_at 1967-12-04 cite "FRAP 4(a)(3)"
   {
     extend {
       by court
@@ -60,17 +62,17 @@ rule duty cross-appeal-notice cite FRAP 4(a)(3)
       on AppealExtensionMoved()
       within prescribed_due + 30.days
     }
-    extend { never cite FRAP 26(b)(1) }
+    extend { never cite "FRAP 26(b)(1)" }
   }
 }
 
-test "a notice of cross-appeal is due 14 days after the first notice" cite FRAP 4(a)(3)
+test "a notice of cross-appeal is due 14 days after the first notice" cite "FRAP 4(a)(3)"
 {
   given Filed(NoticeOfAppeal) on 2026-03-02
   expect deadline(cross-appeal-period) == 2026-03-16
 }
 
-test "a Saturday 14th day rolls the cross-appeal notice to Monday" cite FRAP 26(a)(1)(C)
+test "a Saturday 14th day rolls the cross-appeal notice to Monday" cite "FRAP 26(a)(1)(C)"
 {
   given Filed(NoticeOfAppeal) on 2026-03-21
   expect deadline(cross-appeal-period) == 2026-04-06

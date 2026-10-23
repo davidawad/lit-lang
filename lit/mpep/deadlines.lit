@@ -18,7 +18,7 @@ import core.authority.{ CaseOrder }
 /// effective December 18, 2013. UNVERIFIED: the effective date is from that
 /// Federal Register document, which is not vendored. Earlier text (65 FR
 /// 14871, 2000) is outside this package's lifetime and not modeled.
-counting uspto-1-7 effective [2013-12-18, ..) known_at 2026-01-01 cite 37 CFR 1.7(a)
+counting uspto-1-7 effective [2013-12-18, ..) known_at 2026-01-01 cite "37 CFR 1.7(a)"
 {
   exclude_trigger_day
   include_last_day
@@ -35,7 +35,7 @@ counting uspto-1-7 effective [2013-12-18, ..) known_at 2026-01-01 cite 37 CFR 1.
 /// Saturday one is not observed on Friday (unlike core's
 /// `rcfc-legal-holidays`, which observes it then). Effective dates are those
 /// of core's `us-federal-holidays`.
-calendar dc-federal-holidays effective [2013-12-18, ..) known_at 2026-01-01 cite 37 CFR 1.7(a)
+calendar dc-federal-holidays effective [2013-12-18, ..) known_at 2026-01-01 cite "37 CFR 1.7(a)"
 {
   new-years-day: fixed(1, 1) effective [1894-06-28, ..) observed nearest_weekday
   inauguration-day: every(4, 1965, 1, 20) effective [1966-09-06, ..)
@@ -92,15 +92,15 @@ event ReexamOrdered()
 /// only if filed "not later than 12 months after the date on which the
 /// provisional application was filed"; 37 C.F.R. § 1.7(b) extends a
 /// pendency ending on a Saturday, Sunday or DC federal holiday.
-deadline provisional-pendency: 12.months from ProvisionalFiled() counted_by uspto-1-7 effective [2024-01-31, ..) cite 35 U.S.C. 119(e)(1)
+deadline provisional-pendency: 12.months from ProvisionalFiled() counted_by uspto-1-7 effective [2024-01-31, ..) cite "35 U.S.C. 119(e)(1)"
 
-test "provisional-pendency: 12 months from Monday, 2025-03-03" cite 37 CFR 1.7(a)
+test "provisional-pendency: 12 months from Monday, 2025-03-03" cite "37 CFR 1.7(a)"
 {
   given ProvisionalFiled() on 2025-03-03
   expect deadline(provisional-pendency) == 2026-03-03
 }
 
-test "provisional-pendency: the last day, 2026-07-03, is a holiday; due Monday" cite 37 CFR 1.7(a)
+test "provisional-pendency: the last day, 2026-07-03, is a holiday; due Monday" cite "37 CFR 1.7(a)"
 {
   given ProvisionalFiled() on 2025-07-03
   expect deadline(provisional-pendency) == 2026-07-06
@@ -112,15 +112,15 @@ test "provisional-pendency: the last day, 2026-07-03, is a holiday; due Monday" 
 /// Delegated to the order setting it: 37 C.F.R. § 1.53(f)(1): the applicant
 /// "will be notified and given a period of time" to complete the application,
 /// so the notice sets the period.
-deadline missing-parts-reply: 2.months from MissingPartsNoticeMailed() counted_by uspto-1-7 effective [2024-01-31, ..) delegable_to [CaseOrder] cite 37 CFR 1.53(f)
+deadline missing-parts-reply: 2.months from MissingPartsNoticeMailed() counted_by uspto-1-7 effective [2024-01-31, ..) delegable_to [CaseOrder] cite "37 CFR 1.53(f)"
 
-test "missing-parts-reply: 2 months from Thursday, 2025-03-06" cite 37 CFR 1.7(a)
+test "missing-parts-reply: 2 months from Thursday, 2025-03-06" cite "37 CFR 1.7(a)"
 {
   given MissingPartsNoticeMailed() on 2025-03-06
   expect deadline(missing-parts-reply) == 2025-05-06
 }
 
-test "missing-parts-reply: the last day, 2025-05-26, is a holiday; due Tuesday" cite 37 CFR 1.7(a)
+test "missing-parts-reply: the last day, 2025-05-26, is a holiday; due Tuesday" cite "37 CFR 1.7(a)"
 {
   given MissingPartsNoticeMailed() on 2025-03-26
   expect deadline(missing-parts-reply) == 2025-05-27
@@ -131,15 +131,15 @@ test "missing-parts-reply: the last day, 2025-05-26, is a holiday; due Tuesday" 
 ///
 /// Delegated to the order setting it: 37 C.F.R. § 1.134: the Office action
 /// itself sets any shortened period for reply.
-deadline election-reply: 2.months from RestrictionRequirementMailed() counted_by uspto-1-7 effective [2024-01-31, ..) delegable_to [CaseOrder] cite 37 CFR 1.142(a)
+deadline election-reply: 2.months from RestrictionRequirementMailed() counted_by uspto-1-7 effective [2024-01-31, ..) delegable_to [CaseOrder] cite "37 CFR 1.142(a)"
 
-test "election-reply: 2 months from Thursday, 2025-04-03" cite 37 CFR 1.7(a)
+test "election-reply: 2 months from Thursday, 2025-04-03" cite "37 CFR 1.7(a)"
 {
   given RestrictionRequirementMailed() on 2025-04-03
   expect deadline(election-reply) == 2025-06-03
 }
 
-test "election-reply: the last day, 2025-11-11, is a holiday; due Wednesday" cite 37 CFR 1.7(a)
+test "election-reply: the last day, 2025-11-11, is a holiday; due Wednesday" cite "37 CFR 1.7(a)"
 {
   given RestrictionRequirementMailed() on 2025-09-11
   expect deadline(election-reply) == 2025-11-12
@@ -150,33 +150,33 @@ test "election-reply: the last day, 2025-11-11, is a holiday; due Wednesday" cit
 ///
 /// Delegated to the order setting it: 37 C.F.R. § 1.134: the Office action
 /// sets the shortened statutory period.
-deadline ssp-reply: 3.months from OfficeActionMailed() counted_by uspto-1-7 effective [2024-01-31, ..) delegable_to [CaseOrder] cite 37 CFR 1.134
+deadline ssp-reply: 3.months from OfficeActionMailed() counted_by uspto-1-7 effective [2024-01-31, ..) delegable_to [CaseOrder] cite "37 CFR 1.134"
 
-test "ssp-reply: 3 months from Tuesday, 2025-03-04" cite 37 CFR 1.7(a)
+test "ssp-reply: 3 months from Tuesday, 2025-03-04" cite "37 CFR 1.7(a)"
 {
   given OfficeActionMailed() on 2025-03-04
   expect deadline(ssp-reply) == 2025-06-04
 }
 
-test "ssp-reply: the last day, 2025-06-19, is a holiday; due Friday" cite 37 CFR 1.7(a)
+test "ssp-reply: the last day, 2025-06-19, is a holiday; due Friday" cite "37 CFR 1.7(a)"
 {
   given OfficeActionMailed() on 2025-03-19
   expect deadline(ssp-reply) == 2025-06-20
 }
 
-test "ssp-reply: from November 30, three months end on February 28 (MPEP 710.01(a))" cite MPEP 710.01(a)
+test "ssp-reply: from November 30, three months end on February 28 (MPEP 710.01(a))" cite "MPEP 710.01(a)"
 {
   given OfficeActionMailed() on 2024-11-30
   expect deadline(ssp-reply) == 2025-02-28
 }
 
-test "ssp-reply: from November 30, three months end on February 29 in a leap year" cite MPEP 710.01(a)
+test "ssp-reply: from November 30, three months end on February 29 in a leap year" cite "MPEP 710.01(a)"
 {
   given OfficeActionMailed() on 2027-11-30
   expect deadline(ssp-reply) == 2028-02-29
 }
 
-test "ssp-reply: from February 28, three months end on May 28, not May 31 (MPEP 710.01(a))" cite MPEP 710.01(a)
+test "ssp-reply: from February 28, three months end on May 28, not May 31 (MPEP 710.01(a))" cite "MPEP 710.01(a)"
 {
   given OfficeActionMailed() on 2025-02-28
   expect deadline(ssp-reply) == 2025-05-28
@@ -190,15 +190,15 @@ test "ssp-reply: from February 28, three months end on May 28, not May 31 (MPEP 
 /// the period's nominal end, not a rolled one; so trigger on the nominal
 /// end, and where that end was cut to a short month's last day this month
 /// can end a day or more early.
-deadline extension-month: 1.months from ReplyPeriodEnded() counted_by uspto-1-7 effective [2024-01-31, ..) cite 37 CFR 1.136(a)
+deadline extension-month: 1.months from ReplyPeriodEnded() counted_by uspto-1-7 effective [2024-01-31, ..) cite "37 CFR 1.136(a)"
 
-test "extension-month: 1 month from Monday, 2025-03-03" cite 37 CFR 1.7(a)
+test "extension-month: 1 month from Monday, 2025-03-03" cite "37 CFR 1.7(a)"
 {
   given ReplyPeriodEnded() on 2025-03-03
   expect deadline(extension-month) == 2025-04-03
 }
 
-test "extension-month: the last day, 2025-06-19, is a holiday; due Friday" cite 37 CFR 1.7(a)
+test "extension-month: the last day, 2025-06-19, is a holiday; due Friday" cite "37 CFR 1.7(a)"
 {
   given ReplyPeriodEnded() on 2025-05-19
   expect deadline(extension-month) == 2025-06-20
@@ -210,15 +210,15 @@ test "extension-month: the last day, 2025-06-19, is a holiday; due Friday" cite 
 ///
 /// Delegated to the order setting it: 37 C.F.R. § 1.134: the final Office
 /// action sets the shortened statutory period.
-deadline final-reply: 3.months from FinalRejectionMailed() counted_by uspto-1-7 effective [2024-01-31, ..) delegable_to [CaseOrder] cite 37 CFR 1.134
+deadline final-reply: 3.months from FinalRejectionMailed() counted_by uspto-1-7 effective [2024-01-31, ..) delegable_to [CaseOrder] cite "37 CFR 1.134"
 
-test "final-reply: 3 months from Wednesday, 2025-06-04" cite 37 CFR 1.7(a)
+test "final-reply: 3 months from Wednesday, 2025-06-04" cite "37 CFR 1.7(a)"
 {
   given FinalRejectionMailed() on 2025-06-04
   expect deadline(final-reply) == 2025-09-04
 }
 
-test "final-reply: the last day, 2025-11-27, is a holiday; due Friday" cite 37 CFR 1.7(a)
+test "final-reply: the last day, 2025-11-27, is a holiday; due Friday" cite "37 CFR 1.7(a)"
 {
   given FinalRejectionMailed() on 2025-08-27
   expect deadline(final-reply) == 2025-11-28
@@ -226,15 +226,15 @@ test "final-reply: the last day, 2025-11-27, is a holiday; due Friday" cite 37 C
 
 /// 37 C.F.R. § 41.37(a): the appeal brief is due "within two months from the
 /// date of filing the notice of appeal", extendable under § 1.136 (§ 41.37(e)).
-deadline appeal-brief: 2.months from NoticeOfAppealFiled() counted_by uspto-1-7 effective [2024-01-31, ..) cite 37 CFR 41.37(a)
+deadline appeal-brief: 2.months from NoticeOfAppealFiled() counted_by uspto-1-7 effective [2024-01-31, ..) cite "37 CFR 41.37(a)"
 
-test "appeal-brief: 2 months from Wednesday, 2025-03-05" cite 37 CFR 1.7(a)
+test "appeal-brief: 2 months from Wednesday, 2025-03-05" cite "37 CFR 1.7(a)"
 {
   given NoticeOfAppealFiled() on 2025-03-05
   expect deadline(appeal-brief) == 2025-05-05
 }
 
-test "appeal-brief: the last day, 2025-05-26, is a holiday; due Tuesday" cite 37 CFR 1.7(a)
+test "appeal-brief: the last day, 2025-05-26, is a holiday; due Tuesday" cite "37 CFR 1.7(a)"
 {
   given NoticeOfAppealFiled() on 2025-03-26
   expect deadline(appeal-brief) == 2025-05-27
@@ -244,15 +244,15 @@ test "appeal-brief: the last day, 2025-05-26, is a holiday; due Tuesday" cite 37
 /// "within the later of two months from the date of either the examiner's
 /// answer" or a petition decision; unpaid, the appeal stands dismissed
 /// (§ 41.45(b)).
-deadline appeal-forwarding-fee: 2.months from ExaminersAnswerMailed() counted_by uspto-1-7 effective [2024-01-31, ..) cite 37 CFR 41.45(a)
+deadline appeal-forwarding-fee: 2.months from ExaminersAnswerMailed() counted_by uspto-1-7 effective [2024-01-31, ..) cite "37 CFR 41.45(a)"
 
-test "appeal-forwarding-fee: 2 months from Thursday, 2025-03-06" cite 37 CFR 1.7(a)
+test "appeal-forwarding-fee: 2 months from Thursday, 2025-03-06" cite "37 CFR 1.7(a)"
 {
   given ExaminersAnswerMailed() on 2025-03-06
   expect deadline(appeal-forwarding-fee) == 2025-05-06
 }
 
-test "appeal-forwarding-fee: the last day, 2025-11-11, is a holiday; due Wednesday" cite 37 CFR 1.7(a)
+test "appeal-forwarding-fee: the last day, 2025-11-11, is a holiday; due Wednesday" cite "37 CFR 1.7(a)"
 {
   given ExaminersAnswerMailed() on 2025-09-11
   expect deadline(appeal-forwarding-fee) == 2025-11-12
@@ -261,15 +261,15 @@ test "appeal-forwarding-fee: the last day, 2025-11-11, is a holiday; due Wednesd
 /// 37 C.F.R. § 90.3(a): a notice of appeal to the Federal Circuit (35 U.S.C.
 /// § 141) or a civil action under 35 U.S.C. § 145 is due 63 days after the
 /// Board's decision.
-deadline court-review: 63.days from BoardDecisionMailed() counted_by uspto-1-7 effective [2024-01-31, ..) cite 37 CFR 90.3(a)
+deadline court-review: 63.days from BoardDecisionMailed() counted_by uspto-1-7 effective [2024-01-31, ..) cite "37 CFR 90.3(a)"
 
-test "court-review: 63 days from Monday, 2025-03-03" cite 37 CFR 1.7(a)
+test "court-review: 63 days from Monday, 2025-03-03" cite "37 CFR 1.7(a)"
 {
   given BoardDecisionMailed() on 2025-03-03
   expect deadline(court-review) == 2025-05-05
 }
 
-test "court-review: day 63 falls on 2025-05-26, a holiday; due Tuesday" cite 37 CFR 1.7(a)
+test "court-review: day 63 falls on 2025-05-26, a holiday; due Tuesday" cite "37 CFR 1.7(a)"
 {
   given BoardDecisionMailed() on 2025-03-24
   expect deadline(court-review) == 2025-05-27
@@ -278,15 +278,15 @@ test "court-review: day 63 falls on 2025-05-26, a holiday; due Tuesday" cite 37 
 /// 37 C.F.R. § 1.311(a): the issue fee is due "within three months from the
 /// date of mailing of the notice of allowance"; "This three-month period is
 /// not extendable."
-deadline issue-fee: 3.months from NoticeOfAllowanceMailed() counted_by uspto-1-7 effective [2024-01-31, ..) cite 37 CFR 1.311(a)
+deadline issue-fee: 3.months from NoticeOfAllowanceMailed() counted_by uspto-1-7 effective [2024-01-31, ..) cite "37 CFR 1.311(a)"
 
-test "issue-fee: 3 months from Tuesday, 2025-03-04" cite 37 CFR 1.7(a)
+test "issue-fee: 3 months from Tuesday, 2025-03-04" cite "37 CFR 1.7(a)"
 {
   given NoticeOfAllowanceMailed() on 2025-03-04
   expect deadline(issue-fee) == 2025-06-04
 }
 
-test "issue-fee: the last day, 2025-12-25, is a holiday; due Friday" cite 37 CFR 1.7(a)
+test "issue-fee: the last day, 2025-12-25, is a holiday; due Friday" cite "37 CFR 1.7(a)"
 {
   given NoticeOfAllowanceMailed() on 2025-09-25
   expect deadline(issue-fee) == 2025-12-26
@@ -295,15 +295,15 @@ test "issue-fee: the last day, 2025-12-25, is a holiday; due Friday" cite 37 CFR
 /// 35 U.S.C. § 315(b): no inter partes review may be instituted on a petition
 /// filed more than 1 year after the petitioner is served with a complaint
 /// alleging infringement.
-deadline ipr-time-bar: 1.years from InfringementComplaintServed() counted_by uspto-1-7 effective [2024-01-31, ..) cite 35 U.S.C. 315(b)
+deadline ipr-time-bar: 1.years from InfringementComplaintServed() counted_by uspto-1-7 effective [2024-01-31, ..) cite "35 U.S.C. 315(b)"
 
-test "ipr-time-bar: 1 year from Monday, 2025-03-03" cite 37 CFR 1.7(a)
+test "ipr-time-bar: 1 year from Monday, 2025-03-03" cite "37 CFR 1.7(a)"
 {
   given InfringementComplaintServed() on 2025-03-03
   expect deadline(ipr-time-bar) == 2026-03-03
 }
 
-test "ipr-time-bar: the last day, 2026-07-03, is a holiday; due Monday" cite 37 CFR 1.7(a)
+test "ipr-time-bar: the last day, 2026-07-03, is a holiday; due Monday" cite "37 CFR 1.7(a)"
 {
   given InfringementComplaintServed() on 2025-07-03
   expect deadline(ipr-time-bar) == 2026-07-06
@@ -311,15 +311,15 @@ test "ipr-time-bar: the last day, 2026-07-03, is a holiday; due Monday" cite 37 
 
 /// 35 U.S.C. § 321(c): a post-grant review petition may be filed only within
 /// 9 months after the grant of the patent.
-deadline pgr-window: 9.months from PatentGranted() counted_by uspto-1-7 effective [2024-01-31, ..) cite 35 U.S.C. 321(c)
+deadline pgr-window: 9.months from PatentGranted() counted_by uspto-1-7 effective [2024-01-31, ..) cite "35 U.S.C. 321(c)"
 
-test "pgr-window: 9 months from Tuesday, 2025-03-04" cite 37 CFR 1.7(a)
+test "pgr-window: 9 months from Tuesday, 2025-03-04" cite "37 CFR 1.7(a)"
 {
   given PatentGranted() on 2025-03-04
   expect deadline(pgr-window) == 2025-12-04
 }
 
-test "pgr-window: the last day, 2026-01-19, is a holiday; due Tuesday" cite 37 CFR 1.7(a)
+test "pgr-window: the last day, 2026-01-19, is a holiday; due Tuesday" cite "37 CFR 1.7(a)"
 {
   given PatentGranted() on 2025-04-19
   expect deadline(pgr-window) == 2026-01-20
@@ -332,15 +332,15 @@ test "pgr-window: the last day, 2026-01-19, is a holiday; due Tuesday" cite 37 C
 ///
 /// Delegated to the order setting it: 37 C.F.R. § 42.5(c)(1): "Times set by
 /// rule are default and may be modified by order".
-deadline ipr-preliminary-response: 3.months from PetitionFilingDateNoticed() counted_by uspto-1-7 effective [2024-01-31, ..) delegable_to [CaseOrder] cite 37 CFR 42.107(b)
+deadline ipr-preliminary-response: 3.months from PetitionFilingDateNoticed() counted_by uspto-1-7 effective [2024-01-31, ..) delegable_to [CaseOrder] cite "37 CFR 42.107(b)"
 
-test "ipr-preliminary-response: 3 months from Tuesday, 2025-03-04" cite 37 CFR 1.7(a)
+test "ipr-preliminary-response: 3 months from Tuesday, 2025-03-04" cite "37 CFR 1.7(a)"
 {
   given PetitionFilingDateNoticed() on 2025-03-04
   expect deadline(ipr-preliminary-response) == 2025-06-04
 }
 
-test "ipr-preliminary-response: the last day, 2025-06-19, is a holiday; due Friday" cite 37 CFR 1.7(a)
+test "ipr-preliminary-response: the last day, 2025-06-19, is a holiday; due Friday" cite "37 CFR 1.7(a)"
 {
   given PetitionFilingDateNoticed() on 2025-03-19
   expect deadline(ipr-preliminary-response) == 2025-06-20
@@ -351,15 +351,15 @@ test "ipr-preliminary-response: the last day, 2025-06-19, is a holiday; due Frid
 ///
 /// Delegated to the order setting it: 37 C.F.R. § 42.5(c)(1): "Times set by
 /// rule are default and may be modified by order".
-deadline pgr-preliminary-response: 3.months from PetitionFilingDateNoticed() counted_by uspto-1-7 effective [2024-01-31, ..) delegable_to [CaseOrder] cite 37 CFR 42.207(b)
+deadline pgr-preliminary-response: 3.months from PetitionFilingDateNoticed() counted_by uspto-1-7 effective [2024-01-31, ..) delegable_to [CaseOrder] cite "37 CFR 42.207(b)"
 
-test "pgr-preliminary-response: 3 months from Tuesday, 2025-05-06" cite 37 CFR 1.7(a)
+test "pgr-preliminary-response: 3 months from Tuesday, 2025-05-06" cite "37 CFR 1.7(a)"
 {
   given PetitionFilingDateNoticed() on 2025-05-06
   expect deadline(pgr-preliminary-response) == 2025-08-06
 }
 
-test "pgr-preliminary-response: the last day, 2025-11-11, is a holiday; due Wednesday" cite 37 CFR 1.7(a)
+test "pgr-preliminary-response: the last day, 2025-11-11, is a holiday; due Wednesday" cite "37 CFR 1.7(a)"
 {
   given PetitionFilingDateNoticed() on 2025-08-11
   expect deadline(pgr-preliminary-response) == 2025-11-12
@@ -371,15 +371,15 @@ test "pgr-preliminary-response: the last day, 2025-11-11, is a holiday; due Wedn
 ///
 /// Delegated to the order setting it: 37 C.F.R. § 1.530(b): "The order for ex
 /// parte reexamination will set a period of not less than two months".
-deadline reexam-owner-statement: 2.months from ReexamOrdered() counted_by uspto-1-7 effective [2024-01-31, ..) delegable_to [CaseOrder] cite 37 CFR 1.530(b)
+deadline reexam-owner-statement: 2.months from ReexamOrdered() counted_by uspto-1-7 effective [2024-01-31, ..) delegable_to [CaseOrder] cite "37 CFR 1.530(b)"
 
-test "reexam-owner-statement: 2 months from Wednesday, 2025-03-05" cite 37 CFR 1.7(a)
+test "reexam-owner-statement: 2 months from Wednesday, 2025-03-05" cite "37 CFR 1.7(a)"
 {
   given ReexamOrdered() on 2025-03-05
   expect deadline(reexam-owner-statement) == 2025-05-05
 }
 
-test "reexam-owner-statement: the last day, 2025-11-11, is a holiday; due Wednesday" cite 37 CFR 1.7(a)
+test "reexam-owner-statement: the last day, 2025-11-11, is a holiday; due Wednesday" cite "37 CFR 1.7(a)"
 {
   given ReexamOrdered() on 2025-09-11
   expect deadline(reexam-owner-statement) == 2025-11-12
@@ -388,39 +388,39 @@ test "reexam-owner-statement: the last day, 2025-11-11, is a holiday; due Wednes
 /// 35 U.S.C. § 251(d): no reissue enlarging the scope of the original claims
 /// unless "applied for within two years from the grant of the original
 /// patent".
-deadline broadening-reissue: 2.years from PatentGranted() counted_by uspto-1-7 effective [2024-01-31, ..) cite 35 U.S.C. 251(d)
+deadline broadening-reissue: 2.years from PatentGranted() counted_by uspto-1-7 effective [2024-01-31, ..) cite "35 U.S.C. 251(d)"
 
-test "broadening-reissue: 2 years from Monday, 2025-03-03" cite 37 CFR 1.7(a)
+test "broadening-reissue: 2 years from Monday, 2025-03-03" cite "37 CFR 1.7(a)"
 {
   given PatentGranted() on 2025-03-03
   expect deadline(broadening-reissue) == 2027-03-03
 }
 
-test "broadening-reissue: the last day, 2027-06-18, is a holiday; due Monday" cite 37 CFR 1.7(a)
+test "broadening-reissue: the last day, 2027-06-18, is a holiday; due Monday" cite "37 CFR 1.7(a)"
 {
   given PatentGranted() on 2025-06-18
   expect deadline(broadening-reissue) == 2027-06-21
 }
 
-test "a Sunday Inauguration Day is observed on Monday" cite 37 CFR 1.7(a)
+test "a Sunday Inauguration Day is observed on Monday" cite "37 CFR 1.7(a)"
 {
   given ReplyPeriodEnded() on 2040-12-21
   expect deadline(extension-month) == 2041-01-22
 }
 
-test "Inauguration Day 2033 (a Thursday) closes the Office" cite 37 CFR 1.7(a)
+test "Inauguration Day 2033 (a Thursday) closes the Office" cite "37 CFR 1.7(a)"
 {
   given ReplyPeriodEnded() on 2032-12-20
   expect deadline(extension-month) == 2033-01-21
 }
 
-test "a Saturday Inauguration Day is not observed on Friday" cite 37 CFR 1.7(a)
+test "a Saturday Inauguration Day is not observed on Friday" cite "37 CFR 1.7(a)"
 {
   given ReplyPeriodEnded() on 2028-12-19
   expect deadline(extension-month) == 2029-01-19
 }
 
-test "a period ending on a weekend runs to Monday" cite 37 CFR 1.7(a)
+test "a period ending on a weekend runs to Monday" cite "37 CFR 1.7(a)"
 {
   given OfficeActionMailed() on 2025-03-07
   expect deadline(ssp-reply) == 2025-06-09

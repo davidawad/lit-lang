@@ -125,29 +125,16 @@ pub fn duration(value: f64, unit: &str, whole: bool) -> Option<String> {
     (plain && !(whole && text.contains('.'))).then(|| format!("{text}.{unit}"))
 }
 
-/// The `cite` clause spelling of a free-text citation: the text itself
-/// when the lexer's citation mode gives it back unchanged, else a cite hole
-/// carrying the original text as its reason (SPEC §2, §8.1).
+/// The `cite` clause spelling of a free-text citation: the text as a
+/// string when litgraph's citation parser `recognized` it, else a cite
+/// hole carrying the original text as its reason (SPEC §2, §8.1).
 #[must_use]
 pub fn cite(text: &str, recognized: bool) -> String {
-    if recognized && is_cite_text(text) {
-        format!("cite {text}")
+    if recognized {
+        format!("cite {}", string(text))
     } else {
         format!("cite ?({})", string(text))
     }
-}
-
-/// Whether citation mode reads `text` back verbatim: one line, no `{ } ,`
-/// or `//`, no leading `?`, and no whitespace that the lexer would trim or
-/// collapse.
-#[must_use]
-pub fn is_cite_text(text: &str) -> bool {
-    let collapsed = text.split_whitespace().collect::<Vec<_>>().join(" ");
-    !text.is_empty()
-        && collapsed == text
-        && !text.starts_with('?')
-        && !text.contains("//")
-        && !text.contains(['{', '}', ',', '\n'])
 }
 
 #[cfg(test)]

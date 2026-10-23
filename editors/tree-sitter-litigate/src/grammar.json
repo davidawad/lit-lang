@@ -4402,7 +4402,7 @@
             "members": [
               {
                 "type": "SYMBOL",
-                "name": "cite_text"
+                "name": "string"
               },
               {
                 "type": "SYMBOL",
@@ -4410,6 +4410,22 @@
               }
             ]
           }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "historical",
+              "content": {
+                "type": "STRING",
+                "value": "historical"
+              }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         }
       ]
     },
@@ -6680,16 +6696,7 @@
     ]
   ],
   "precedences": [],
-  "externals": [
-    {
-      "type": "SYMBOL",
-      "name": "cite_text"
-    },
-    {
-      "type": "SYMBOL",
-      "name": "_error_sentinel"
-    }
-  ],
+  "externals": [],
   "inline": [],
   "supertypes": [
     "_item",

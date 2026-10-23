@@ -5,7 +5,7 @@ import ttab.lapse.{ period-lapsed }
 import ttab.opposition-to-trial.{ opposition-filed }
 import ttab.{ extended-period-120, pre }
 
-decision opposer-d120: "No consent: the opposer must oppose by end of day 120 or lose the right to oppose" by opposer cite 37 CFR 2.101(c); 2.102(c)(3)
+decision opposer-d120: "No consent: the opposer must oppose by end of day 120 or lose the right to oppose" by opposer cite "37 CFR 2.101(c); 2.102(c)(3)"
 {
   group pre
   tags [opponent-decision]
@@ -19,7 +19,7 @@ decision opposer-d120: "No consent: the opposer must oppose by end of day 120 or
     attrs { opp_fees: 600, opp_hours: 14 }
   }
   _ "Opposer lets the opposition period lapse" -> period-lapsed {
-    authority cite 37 CFR 2.101(c); 15 USC 1063(b)
+    authority cite "37 CFR 2.101(c); 15 USC 1063(b)"
     tags [lapse]
   }
 }

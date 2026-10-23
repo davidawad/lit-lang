@@ -13,22 +13,22 @@ event FinalJudgment()
 /// a motion to alter or amend, must be filed no later than the period after
 /// entry of judgment. RCFC 6(b)(2) forbids any extension, so nothing here
 /// is delegable.
-rule duty post-judgment-motion cite RCFC 59(b)(1)
+rule duty post-judgment-motion cite "RCFC 59(b)(1)"
 {
   /// As revised and reissued May 1, 2002: ten days (the 2010 Amendment note
   /// records the change "from 10 to 30 days"). Under the RCFC 6 of the day a
   /// period under 11 days skips weekends and legal holidays, so judgment
   /// entered Friday 2009-11-20 made the motion due 2009-12-07 (Thanksgiving
   /// skipped), as the test below checks under the RCFC 6 then in force.
-  deadline post-judgment-motion-period: 10.days after JudgmentEntered() counted_by rcfc6 effective [2002-05-01, 2010-01-11) cite RCFC 59 (2010 Amendment note)
+  deadline post-judgment-motion-period: 10.days after JudgmentEntered() counted_by rcfc6 effective [2002-05-01, 2010-01-11) cite "RCFC 59 (2010 Amendment note)" historical
 
   /// Amended January 11, 2010 to thirty days, conforming to the FRCP 59
   /// amendments effective December 1, 2009.
-  deadline post-judgment-motion-period: 30.days after JudgmentEntered() counted_by rcfc6 effective [2010-01-11, 2011-07-15) supersedes post-judgment-motion-period@2002-05-01 cite RCFC 59 (2010 Amendment note)
+  deadline post-judgment-motion-period: 30.days after JudgmentEntered() counted_by rcfc6 effective [2010-01-11, 2011-07-15) supersedes post-judgment-motion-period@2002-05-01 cite "RCFC 59 (2010 Amendment note)" historical
 
   /// Corrected July 15, 2011 to 28 days, "in accordance with the final
   /// version of FRCP 59" (2011 Amendment note); unchanged since.
-  deadline post-judgment-motion-period: 28.days after JudgmentEntered() counted_by rcfc6 effective [2011-07-15, ..) supersedes post-judgment-motion-period@2010-01-11 cite RCFC 59(b)(1)
+  deadline post-judgment-motion-period: 28.days after JudgmentEntered() counted_by rcfc6 effective [2011-07-15, ..) supersedes post-judgment-motion-period@2010-01-11 cite "RCFC 59(b)(1)"
 }
 
 /// RCFC 54(d)(1)(B)(i): a Bill of Costs must be filed within 30 days after
@@ -36,48 +36,48 @@ rule duty post-judgment-motion cite RCFC 59(b)(1)
 /// EAJA application of § 2412(d)(1)(B) shares the window. The current
 /// subdivision dates from the January 11, 2010 amendment, which also struck
 /// 54(d)(1)(C)(v) ("Time Extensions"), so no delegation is declared.
-rule duty costs-and-fees cite RCFC 54(d)(1)(B)
+rule duty costs-and-fees cite "RCFC 54(d)(1)(B)"
 {
-  deadline costs-period: 30.days after FinalJudgment() counted_by rcfc6 effective [2010-01-11, ..) cite RCFC 54 (2010 Amendment note)
+  deadline costs-period: 30.days after FinalJudgment() counted_by rcfc6 effective [2010-01-11, ..) cite "RCFC 54 (2010 Amendment note)"
 }
 
-test "a RCFC 59 motion is due 28 days after entry of judgment" cite RCFC 59(b)(1)
+test "a RCFC 59 motion is due 28 days after entry of judgment" cite "RCFC 59(b)(1)"
 {
   given JudgmentEntered() on 2026-03-02
   expect deadline(post-judgment-motion-period) == 2026-03-30
 }
 
-test "a 28-day RCFC 59 period ending on Thanksgiving rolls to Friday" cite RCFC 6(a)(1)(C)
+test "a 28-day RCFC 59 period ending on Thanksgiving rolls to Friday" cite "RCFC 6(a)(1)(C)"
 {
   given JudgmentEntered() on 2026-10-29
   expect deadline(post-judgment-motion-period) == 2026-11-27
 }
 
-test "a 28-day RCFC 59 period ending on a Saturday rolls to Monday" cite RCFC 6(a)(1)(C)
+test "a 28-day RCFC 59 period ending on a Saturday rolls to Monday" cite "RCFC 6(a)(1)(C)"
 {
   given JudgmentEntered() on 2026-05-02
   expect deadline(post-judgment-motion-period) == 2026-06-01
 }
 
-test "between January 11, 2010 and July 15, 2011 the period was 30 days" cite RCFC 59 (2010 Amendment note)
+test "between January 11, 2010 and July 15, 2011 the period was 30 days" cite "RCFC 59 (2010 Amendment note)"
 {
   given JudgmentEntered() on 2010-06-01
   expect deadline(post-judgment-motion-period) == 2010-07-01
 }
 
-test "before January 11, 2010 the ten-day period skipped weekends and Thanksgiving" cite RCFC 59 (2010 Amendment note)
+test "before January 11, 2010 the ten-day period skipped weekends and Thanksgiving" cite "RCFC 59 (2010 Amendment note)"
 {
   given JudgmentEntered() on 2009-11-20
   expect deadline(post-judgment-motion-period) == 2009-12-07
 }
 
-test "a Bill of Costs is due 30 days after final judgment" cite RCFC 54(d)(1)(B)
+test "a Bill of Costs is due 30 days after final judgment" cite "RCFC 54(d)(1)(B)"
 {
   given FinalJudgment() on 2026-04-01
   expect deadline(costs-period) == 2026-05-01
 }
 
-test "a costs period ending on Independence Day observed rolls to Monday" cite RCFC 6(a)(6)(A)
+test "a costs period ending on Independence Day observed rolls to Monday" cite "RCFC 6(a)(6)(A)"
 {
   given FinalJudgment() on 2026-06-03
   expect deadline(costs-period) == 2026-07-06

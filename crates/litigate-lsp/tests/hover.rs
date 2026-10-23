@@ -19,7 +19,7 @@ type Dates = List<Date>
 deadline reply-period: 14.court_days before Served(complaint) counted_by frcp6
 deadline brief-period: 3.business_days after Answered(complaint) counted_by frcp6
 
-state appeal: \"Appeal\" { group pleadings, onward \"On\" -> answered { authority cite FRCP 55(a) } }
+state appeal: \"Appeal\" { group pleadings, onward \"On\" -> answered { authority cite \"FRCP 55(a)\" } }
 ";
 
 fn extended() -> String {
@@ -117,14 +117,14 @@ fn a_package_sema_rejects_has_no_cite_hover() {
     assert_eq!(value(a, MODULE, &broken, "FRCP 8(c)(1)", 1), None);
     // Names still hover, from the source alone.
     let node = value(a, MODULE, &broken, "chance time-barred", 8).unwrap();
-    assert_eq!(node, "```litigate\nchance time-barred: \"Is the claim time-barred?\" by Court cite FRCP 8(c)(1)\n```\n");
+    assert_eq!(node, "```litigate\nchance time-barred: \"Is the claim time-barred?\" by Court cite \"FRCP 8(c)(1)\"\n```\n");
 }
 
 #[test]
 fn a_loose_module_has_no_cite_hover() {
     let root = support::workspace("hover-loose", &[]);
     let file = root.join("loose.lit");
-    let text = "module loose\n\ncounting c cite FRCP 6(a)\n{\n  exclude_trigger_day\n}\n";
+    let text = "module loose\n\ncounting c cite \"FRCP 6(a)\"\n{\n  exclude_trigger_day\n}\n";
     let mut host = support::host(&root);
     host.open.insert(
         file,
@@ -136,7 +136,10 @@ fn a_loose_module_has_no_cite_hover() {
     let a = host.analyze();
     assert_eq!(value(a, "loose.lit", text, "FRCP", 1), None);
     let counting = value(a, "loose.lit", text, "counting c", 9).unwrap();
-    assert_eq!(counting, "```litigate\ncounting c cite FRCP 6(a)\n```\n");
+    assert_eq!(
+        counting,
+        "```litigate\ncounting c cite \"FRCP 6(a)\"\n```\n"
+    );
 }
 
 #[test]
@@ -145,7 +148,7 @@ fn a_links_package_cite_resolves_through_its_composition() {
     let a = host.analyze();
     let file = "lit/links/links.lit";
     let text = support::read(file);
-    let cite = value(a, file, &text, "Fed. Cir. R. 40(f)(1)\n{", 1).unwrap();
+    let cite = value(a, file, &text, "\"Fed. Cir. R. 40(f)(1)\"\n{", 1).unwrap();
     assert!(cite.starts_with("**cite** Fed. Cir. R. 40(f)(1)"), "{cite}");
 }
 

@@ -8,12 +8,12 @@ import cafc.{ Brief, BriefServed, Docketed, Filed, Paper, briefing-group }
 import core.authority.{ CaseOrder }
 import core.frap26.{ frap26 }
 
-decision appellant-brief-window: "Appellant's Principal Brief Due" by applicant cite Fed. Cir. R. 31(a)(1)(A)-(B)
+decision appellant-brief-window: "Appellant's Principal Brief Due" by applicant cite "Fed. Cir. R. 31(a)(1)(A)-(B)"
 {
   group briefing-group
   note "60 days after docketing (appeal from a court) or after the certified list/index is served (appeal from an agency, e.g. PTAB/ITC) — this court's local extension of the FRAP 31(a)(1) default 40-day period. Word limit 14,000 words (Fed. Cir. R. 32(b)(1)), or the Fed. Cir. R. 28.1(b)/(e) cross-appeal limits (14,000/16,500/7,000 across the four briefs) if a cross-appeal is pending."
   appellant-brief-file "File opening brief" -> appellant-brief-filed {
-    authority cite Fed. Cir. R. 31(a)(1)(A)-(B)
+    authority cite "Fed. Cir. R. 31(a)(1)(A)-(B)"
     effort 220.hours
     cost 0.usd
     event BriefServed(Principal)
@@ -25,15 +25,15 @@ decision appellant-brief-window: "Appellant's Principal Brief Due" by applicant 
     tags [appeal, dispositive]
   }
   appellant-brief-fail "Fail to file the opening brief" -> dismissed-failure-to-prosecute {
-    authority cite Fed. Cir. R. 31(d)
+    authority cite "Fed. Cir. R. 31(d)"
   }
 }
 
-state appellant-brief-filed: "Opening Brief Filed" by examiner cite Fed. Cir. R. 31(a)(1); Fed. Cir. R. 32(b)(1)
+state appellant-brief-filed: "Opening Brief Filed" by examiner cite "Fed. Cir. R. 31(a)(1); Fed. Cir. R. 32(b)(1)"
 {
   group briefing-group
   appellee-brief-file "File response brief" -> appellee-brief-filed {
-    authority cite Fed. Cir. R. 31(a)(2)
+    authority cite "Fed. Cir. R. 31(a)(2)"
     effort 200.hours
     event BriefServed(Response)
     within appellee-brief-period {
@@ -44,7 +44,7 @@ state appellant-brief-filed: "Opening Brief Filed" by examiner cite Fed. Cir. R.
   }
 }
 
-terminal dismissed-failure-to-prosecute: "DISMISSED — Failure to Prosecute (No Opening Brief)" outcome [loss, procedural-default] cite Fed. Cir. R. 31(d)
+terminal dismissed-failure-to-prosecute: "DISMISSED — Failure to Prosecute (No Opening Brief)" outcome [loss, procedural-default] cite "Fed. Cir. R. 31(d)"
 {
   group briefing-group
   note "'If the appellant or petitioner fails to file a principal brief, the clerk of court is authorized to dismiss the case.' Fed. Cir. R. 31(d). A timely extension motion filed at least 7 days before the due date generally forestalls dismissal even if unruled-on by the due date (Practice Notes to Fed. Cir. R. 26)."
@@ -53,11 +53,11 @@ terminal dismissed-failure-to-prosecute: "DISMISSED — Failure to Prosecute (No
   payoff 0.usd
 }
 
-state appellee-brief-filed: "Appellee's Principal/Response Brief Filed" by applicant cite Fed. Cir. R. 31(a)(2)
+state appellee-brief-filed: "Appellee's Principal/Response Brief Filed" by applicant cite "Fed. Cir. R. 31(a)(2)"
 {
   group briefing-group
   reply-brief-file "File reply brief" -> reply-brief-filed {
-    authority cite FRAP 31(a)(1)
+    authority cite "FRAP 31(a)(1)"
     effort 90.hours
     cost 0.usd
     event Filed(ReplyBrief)
@@ -68,23 +68,23 @@ state appellee-brief-filed: "Appellee's Principal/Response Brief Filed" by appli
     }
   }
   reply-brief-waive "Waive reply brief" -> briefing-complete {
-    authority cite Fed. Cir. R. 34(a)
+    authority cite "Fed. Cir. R. 34(a)"
     note "Fed. Cir. R. 34(a) lets an appellant who declined to reply in writing file a reply brief within 14 days of notice the appeal is submitted on the briefs, in lieu of oral reply."
   }
 }
 
-state reply-brief-filed: "Appellant's Reply Brief Filed" by office cite FRAP 31(a)(1)
+state reply-brief-filed: "Appellant's Reply Brief Filed" by office cite "FRAP 31(a)(1)"
 {
   group briefing-group
   note "Reply brief deadline is the unmodified FRAP default (Fed. Cir. R. 31 does not extend it): 21 days after the appellee's brief is served, but must be filed at least 7 days before argument. Word limit 7,000 words (Fed. Cir. R. 32(b)(1))."
-  reply-brief-closes "Briefing closes" -> briefing-complete { authority cite Fed. Cir. R. 31 }
+  reply-brief-closes "Briefing closes" -> briefing-complete { authority cite "Fed. Cir. R. 31" }
 }
 
-state briefing-complete: "Briefing Closed" by applicant cite Fed. Cir. R. 31
+state briefing-complete: "Briefing Closed" by applicant cite "Fed. Cir. R. 31"
 {
   group briefing-group
   briefing-to-appendix "Serve and file the joint appendix" -> joint-appendix-filed {
-    authority cite Fed. Cir. R. 30(a)(2)
+    authority cite "Fed. Cir. R. 30(a)(2)"
     effort 60.hours
     cost 6_000.usd
     event Filed(JointAppendix)
@@ -100,17 +100,17 @@ state briefing-complete: "Briefing Closed" by applicant cite Fed. Cir. R. 31
 /// Fed. Cir. R. 31(a)(1)(A): in an appeal from a court, the principal brief
 /// is due 60 days after docketing ((a)(1)(B): 60 days after the certified
 /// list in an agency appeal). Fed. Cir. R. 26(b) lets the court extend it.
-rule duty appellant-principal-brief cite Fed. Cir. R. 31(a)(1)
+rule duty appellant-principal-brief cite "Fed. Cir. R. 31(a)(1)"
 {
-  deadline appellant-brief-period: 60.days after Docketed() counted_by frap26 effective [2025-12-01, ..) known_at 2025-12-01 delegable_to [CaseOrder] cite Fed. Cir. R. 31(a)(1); Fed. Cir. R. 26(b)(1)
+  deadline appellant-brief-period: 60.days after Docketed() counted_by frap26 effective [2025-12-01, ..) known_at 2025-12-01 delegable_to [CaseOrder] cite "Fed. Cir. R. 31(a)(1); Fed. Cir. R. 26(b)(1)"
 }
 
 /// Fed. Cir. R. 31(a)(2): the appellee's principal brief is due 40 days
 /// after the appellant's brief is served. FRAP 26(c) adds 3 days when that
 /// brief was not served electronically.
-rule duty appellee-principal-brief cite Fed. Cir. R. 31(a)(2)
+rule duty appellee-principal-brief cite "Fed. Cir. R. 31(a)(2)"
 {
-  deadline appellee-brief-period: 40.days after BriefServed(Principal) counted_by frap26 effective [2025-12-01, ..) known_at 2025-12-01 delegable_to [CaseOrder] cite Fed. Cir. R. 31(a)(2); Fed. Cir. R. 26(b)(1)
+  deadline appellee-brief-period: 40.days after BriefServed(Principal) counted_by frap26 effective [2025-12-01, ..) known_at 2025-12-01 delegable_to [CaseOrder] cite "Fed. Cir. R. 31(a)(2); Fed. Cir. R. 26(b)(1)"
 }
 
 /// FRAP 31(a)(1): the reply brief is due 21 days after service of the
@@ -118,78 +118,78 @@ rule duty appellee-principal-brief cite Fed. Cir. R. 31(a)(2)
 /// filing". The 2018 amendment (Supreme Court order of April 26, 2018,
 /// effective December 1, 2018) extended the period from 14 days; its
 /// Committee Note says so.
-rule duty reply-brief cite FRAP 31(a)(1)
+rule duty reply-brief cite "FRAP 31(a)(1)"
 {
   /// The 14-day reply period of the 2009 text (the 2009 amendment set the
   /// 7-days-before-argument limit and kept 14 days).
   deadline reply-brief-period: 14.days after BriefServed(Response) counted_by frap26 effective [2009-12-01, 2018-12-01) known_at 2009-03-26 delegable_to [CaseOrder] cite ?("the 2009 reply-brief text (14 days); not vendored, the corpus holds only the current rule")
 
-  deadline reply-brief-period: 21.days after BriefServed(Response) counted_by frap26 effective [2018-12-01, ..) known_at 2018-04-26 supersedes reply-brief-period@2009-12-01 delegable_to [CaseOrder] cite FRAP 31(a)(1); Fed. Cir. R. 26(b)(1)
+  deadline reply-brief-period: 21.days after BriefServed(Response) counted_by frap26 effective [2018-12-01, ..) known_at 2018-04-26 supersedes reply-brief-period@2009-12-01 delegable_to [CaseOrder] cite "FRAP 31(a)(1); Fed. Cir. R. 26(b)(1)"
 }
 
 /// Fed. Cir. R. 30(a)(2): the joint appendix is due 7 days after the last
 /// reply brief is served and filed. Fed. Cir. R. 26(b) lets the court
 /// extend it.
-rule duty joint-appendix cite Fed. Cir. R. 30(a)(2)
+rule duty joint-appendix cite "Fed. Cir. R. 30(a)(2)"
 {
-  deadline appendix-period: 7.days after Filed(ReplyBrief) counted_by frap26 effective [2025-12-01, ..) known_at 2025-12-01 delegable_to [CaseOrder] cite Fed. Cir. R. 30(a)(2); Fed. Cir. R. 26(b)(1)
+  deadline appendix-period: 7.days after Filed(ReplyBrief) counted_by frap26 effective [2025-12-01, ..) known_at 2025-12-01 delegable_to [CaseOrder] cite "Fed. Cir. R. 30(a)(2); Fed. Cir. R. 26(b)(1)"
 }
 
-test "the opening brief is due 60 days after docketing" cite Fed. Cir. R. 31(a)(1)
+test "the opening brief is due 60 days after docketing" cite "Fed. Cir. R. 31(a)(1)"
 {
   given Docketed() on 2026-03-02
   expect deadline(appellant-brief-period) == 2026-05-01
 }
 
-test "a Sunday 60th day before Labor Day rolls the opening brief to Tuesday" cite FRAP 26(a)(6)(A)
+test "a Sunday 60th day before Labor Day rolls the opening brief to Tuesday" cite "FRAP 26(a)(6)(A)"
 {
   given Docketed() on 2026-07-08
   expect deadline(appellant-brief-period) == 2026-09-08
 }
 
-test "the appellee's brief is due 40 days after electronic service" cite Fed. Cir. R. 31(a)(2)
+test "the appellee's brief is due 40 days after electronic service" cite "Fed. Cir. R. 31(a)(2)"
 {
   given BriefServed(Principal, Electronic) on 2026-08-28
   expect deadline(appellee-brief-period) == 2026-10-07
 }
 
-test "a Saturday 40th day rolls the appellee's brief to Monday" cite FRAP 26(a)(1)(C)
+test "a Saturday 40th day rolls the appellee's brief to Monday" cite "FRAP 26(a)(1)(C)"
 {
   given BriefServed(Principal, Electronic) on 2026-03-02
   expect deadline(appellee-brief-period) == 2026-04-13
 }
 
-test "mail service adds 3 days after the rolled 40th day" cite FRAP 26(c)
+test "mail service adds 3 days after the rolled 40th day" cite "FRAP 26(c)"
 {
   given BriefServed(Principal, Mail) on 2026-03-02
   expect deadline(appellee-brief-period) == 2026-04-16
 }
 
-test "the reply brief is due 21 days after the appellee's brief" cite FRAP 31(a)(1)
+test "the reply brief is due 21 days after the appellee's brief" cite "FRAP 31(a)(1)"
 {
   given BriefServed(Response, Electronic) on 2026-03-02
   expect deadline(reply-brief-period) == 2026-03-23
 }
 
-test "a 21st day on Memorial Day rolls the reply brief to Tuesday" cite FRAP 26(a)(6)(A)
+test "a 21st day on Memorial Day rolls the reply brief to Tuesday" cite "FRAP 26(a)(6)(A)"
 {
   given BriefServed(Response, Electronic) on 2026-05-04
   expect deadline(reply-brief-period) == 2026-05-26
 }
 
-test "before December 1, 2018 the reply brief was due in 14 days" cite FRAP 31(a)(1)
+test "before December 1, 2018 the reply brief was due in 14 days" cite "FRAP 31(a)(1)"
 {
   given BriefServed(Response, Electronic) on 2017-03-01
   expect deadline(reply-brief-period) == 2017-03-15
 }
 
-test "the joint appendix is due 7 days after the last reply brief" cite Fed. Cir. R. 30(a)(2)
+test "the joint appendix is due 7 days after the last reply brief" cite "Fed. Cir. R. 30(a)(2)"
 {
   given Filed(ReplyBrief) on 2026-03-02
   expect deadline(appendix-period) == 2026-03-09
 }
 
-test "a 7th day on Columbus Day rolls the joint appendix to Tuesday" cite FRAP 26(a)(6)(A)
+test "a 7th day on Columbus Day rolls the joint appendix to Tuesday" cite "FRAP 26(a)(6)(A)"
 {
   given Filed(ReplyBrief) on 2026-10-05
   expect deadline(appendix-period) == 2026-10-13

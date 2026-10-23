@@ -18,7 +18,7 @@ event Denied(document: Document)
 event OrderedPriorRules()
 
 /// Rule 12(a)(1)(A)(i): answer after service of the summons and complaint.
-rule duty answer-duty cite FRCP 12(a)(1)(A)(i)
+rule duty answer-duty cite "FRCP 12(a)(1)(A)(i)"
 {
   deadline answer-period: 20.days from Served(complaint) counted_by frcp6
     effective [2007-12-01, 2009-12-01) known_at 2007-04-30
@@ -27,7 +27,7 @@ rule duty answer-duty cite FRCP 12(a)(1)(A)(i)
 }
 
 /// Rule 12(a)(4)(A): answer after the court denies a Rule 12 motion.
-rule duty answer-after-denial-duty cite FRCP 12(a)(4)(A)
+rule duty answer-after-denial-duty cite "FRCP 12(a)(4)(A)"
 {
   deadline after-denial: 10.days from Denied(motion) counted_by frcp6
     effective [2007-12-01, 2009-12-01) known_at 2007-04-30
@@ -37,31 +37,31 @@ rule duty answer-after-denial-duty cite FRCP 12(a)(4)(A)
 
 /// FRCP 86(a)(2): the 2009 amendments govern proceedings after December 1,
 /// 2009 in actions then pending unless the court orders otherwise.
-transition time-2009-answer amends answer-period@2009-12-01 cite FRCP 86(a)(2)(B)
+transition time-2009-answer amends answer-period@2009-12-01 cite "FRCP 86(a)(2)(B)"
 {
   unless has_event(OrderedPriorRules()) -> answer-period@2007-12-01
   otherwise -> answer-period@2009-12-01
 }
 
-transition time-2009-denial amends after-denial@2009-12-01 cite FRCP 86(a)(2)(B)
+transition time-2009-denial amends after-denial@2009-12-01 cite "FRCP 86(a)(2)(B)"
 {
   unless has_event(OrderedPriorRules()) -> after-denial@2007-12-01
   otherwise -> after-denial@2009-12-01
 }
 
-transition time-2009-counting amends frcp6@2009-12-01 cite FRCP 86(a)(2)(B)
+transition time-2009-counting amends frcp6@2009-12-01 cite "FRCP 86(a)(2)(B)"
 {
   unless has_event(OrderedPriorRules()) -> frcp6@2007-12-01
   otherwise -> frcp6@2009-12-01
 }
 
-state served: "Complaint served" by Defendant cite FRCP 4
+state served: "Complaint served" by Defendant cite "FRCP 4"
 {
   _ "The 2009 amendments take effect while the action is pending" -> prior-rules
   _ "Proceed under the rules in force" -> respond
 }
 
-chance prior-rules: "Does the court keep the pre-2009 time rules?" by Court discretion cite FRCP 86(a)(2)(B)
+chance prior-rules: "Does the court keep the pre-2009 time rules?" by Court discretion cite "FRCP 86(a)(2)(B)"
 {
   keep-prior "Applying the amendments would be infeasible or work an injustice" -> respond p ?("uncalibrated") {
     event OrderedPriorRules()
@@ -69,7 +69,7 @@ chance prior-rules: "Does the court keep the pre-2009 time rules?" by Court disc
   apply-new "The amendments govern the pending action" -> respond p ?("uncalibrated")
 }
 
-decision respond: "Answer or move under Rule 12" by Defendant cite FRCP 12(a)(1)(A)(i)
+decision respond: "Answer or move under Rule 12" by Defendant cite "FRCP 12(a)(1)(A)(i)"
 {
   answer "File an answer" -> answered { event Answered(complaint), within answer-period }
   move-dismiss "Move to dismiss under Rule 12(b)(6)" -> mtd-ruling {
@@ -78,13 +78,13 @@ decision respond: "Answer or move under Rule 12" by Defendant cite FRCP 12(a)(1)
   }
 }
 
-chance mtd-ruling: "Ruling on the motion to dismiss" by Court discretion cite FRCP 12(b)(6)
+chance mtd-ruling: "Ruling on the motion to dismiss" by Court discretion cite "FRCP 12(b)(6)"
 {
   granted "Motion granted" -> dismissed p ?("uncalibrated")
   denied "Motion denied" -> answer-after-denial p ?("uncalibrated") { event Denied(motion) }
 }
 
-decision answer-after-denial: "Answer after denial" by Defendant cite FRCP 12(a)(4)(A)
+decision answer-after-denial: "Answer after denial" by Defendant cite "FRCP 12(a)(4)(A)"
 {
   answer "File an answer" -> answered { event Answered(complaint), within after-denial }
 }
@@ -92,31 +92,31 @@ decision answer-after-denial: "Answer after denial" by Defendant cite FRCP 12(a)
 terminal answered: "Answer filed" outcome [judgment]
 terminal dismissed: "Action dismissed" outcome [judgment, win]
 
-test "pre-2009: answer due 20 days after personal service" cite FRCP 12(a)(1)(A)(i)
+test "pre-2009: answer due 20 days after personal service" cite "FRCP 12(a)(1)(A)(i)"
 {
   given Served(complaint, Personal) on 2009-10-01
   expect deadline(answer-period) == 2009-10-21
 }
 
-test "pre-2009: mail adds 3 days, and a Sunday rolls to Monday" cite FRCP 6(d)
+test "pre-2009: mail adds 3 days, and a Sunday rolls to Monday" cite "FRCP 6(d)"
 {
   given Served(complaint, Mail) on 2009-10-02
   expect deadline(answer-period) == 2009-10-26
 }
 
-test "pre-2009: 10 days after denial skip weekends and Veterans Day" cite FRCP 6(a)(2)
+test "pre-2009: 10 days after denial skip weekends and Veterans Day" cite "FRCP 6(a)(2)"
 {
   given Denied(motion) on 2009-11-06
   expect deadline(after-denial) == 2009-11-23
 }
 
-test "2009: answer due 21 days after service; Christmas rolls to Monday" cite FRCP 6(a)(1)(C)
+test "2009: answer due 21 days after service; Christmas rolls to Monday" cite "FRCP 6(a)(1)(C)"
 {
   given Served(complaint, Personal) on 2009-12-04
   expect deadline(answer-period) == 2009-12-28
 }
 
-test "2009: 14 days after denial count every day" cite FRCP 6(a)(1)(B)
+test "2009: 14 days after denial count every day" cite "FRCP 6(a)(1)(B)"
 {
   given Denied(motion) on 2009-12-04
   expect deadline(after-denial) == 2009-12-18

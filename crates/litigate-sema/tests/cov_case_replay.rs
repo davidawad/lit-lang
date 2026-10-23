@@ -38,7 +38,7 @@ fn deadline_table() {
             "waived: a cited `waives` event between trigger and act releases it",
             alpha(&[
                 SERVED,
-                "2010-01-06 Excused(complaint) by c cite FRCP 6(b)",
+                "2010-01-06 Excused(complaint) by c cite \"FRCP 6(b)\"",
                 "2010-01-12 Answered(complaint) by d",
             ]),
             &At("2010-01-11"),
@@ -46,7 +46,7 @@ fn deadline_table() {
         (
             "missed: a `waives` event before the trigger has nothing to release",
             alpha(&[
-                "2010-01-02 Excused(complaint) by c cite FRCP 6(b)",
+                "2010-01-02 Excused(complaint) by c cite \"FRCP 6(b)\"",
                 SERVED,
                 "2010-01-12 Answered(complaint) by d",
             ]),
@@ -56,7 +56,7 @@ fn deadline_table() {
             "missed: a `removes` event does not excuse",
             alpha(&[
                 SERVED,
-                "2010-01-06 Forfeited(late) by d cite FRCP 12(h)",
+                "2010-01-06 Forfeited(late) by d cite \"FRCP 12(h)\"",
                 "2010-01-12 Answered(complaint) by d",
             ]),
             &At("2010-01-11"),
@@ -157,7 +157,7 @@ fn typestate_table() {
         ),
         (
             "cited: a cited event that is not an excusal is still illegal",
-            alpha(&[SERVED, "2010-01-05 Benched(complaint) by p cite FRCP 1"]),
+            alpha(&[SERVED, "2010-01-05 Benched(complaint) by p cite \"FRCP 1\""]),
             &NoClock,
         ),
         (
@@ -242,7 +242,7 @@ fn facts_table() {
             matter(
                 ALPHA_ONLY,
                 "",
-                &["2010-01-04 Forfeited(to-f2) by d cite FRCP 12(h)"],
+                &["2010-01-04 Forfeited(to-f2) by d cite \"FRCP 12(h)\""],
                 &format!("facts {{ f1: to-f2 }}\n{STAKES}"),
             ),
             &NoClock,
@@ -325,7 +325,7 @@ fn links_and_instances_table() {
                 "",
                 &[
                     benched,
-                    "2010-01-05 Forfeited(hop) by d cite FRCP 12(h)",
+                    "2010-01-05 Forfeited(hop) by d cite \"FRCP 12(h)\"",
                     "2010-01-06 Noted(complaint) by c",
                 ],
                 gamma_stakes,
@@ -339,7 +339,7 @@ fn links_and_instances_table() {
                 "",
                 &[
                     benched,
-                    "2010-01-05 Forfeited(zzzzzzzzzzzzzzzz) by d cite FRCP 12(h)",
+                    "2010-01-05 Forfeited(zzzzzzzzzzzzzzzz) by d cite \"FRCP 12(h)\"",
                 ],
                 gamma_stakes,
             ),

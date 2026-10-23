@@ -38,7 +38,7 @@ expression: table(rows)
         "obligation omega::requested #0 Lapsed",
     ],
     "extend: `never` admits no extension": [
-        "14:14 L4001 `OrderedLocked(2011-01-30)` cannot extend `omega::locked`: the deadline may not be extended (`extend { never cite FRCP 6(b)(2) }`)\n    note: no order, stipulation or consent extends a period its rule forbids extending (FRCP 6(b)(2))",
+        "14:14 L4001 `OrderedLocked(2011-01-30)` cannot extend `omega::locked`: the deadline may not be extended (`extend { never cite \"FRCP 6(b)(2)\" }`)\n    note: no order, stipulation or consent extends a period its rule forbids extending (FRCP 6(b)(2))",
         "trace Triggered Entered() omega::open -> omega::open",
         "obligation omega::appeal #0 Lapsed",
         "obligation omega::capped #0 Lapsed",
@@ -226,7 +226,7 @@ expression: table(rows)
     ],
     "extend: uncited": [
         "13:3 L4009 obligation `omega::answer` borne by `d`, created by `Served(complaint)` on 2011-01-04, was neither discharged nor transformed by its due date 2011-01-14: at as_of 2011-02-01 it is breached\n    note: `answer` runs 10 calendar days from `Served(complaint)` on 2011-01-04 under `oc@2009-12-01`\n    note: a duty is consumed exactly once: by a timely act through a `within` edge, or by a breach",
-        "14:14 L4001 `Ordered(2011-01-20)` transforms an obligation only when it cites its authority\n    note: add the order or rule after the party, e.g. `cite FRCP 6(b)(1)(A)`",
+        "14:14 L4001 `Ordered(2011-01-20)` transforms an obligation only when it cites its authority\n    note: add the order or rule after the party, e.g. `cite \"FRCP 6(b)(1)(A)\"`",
         "trace Triggered Served(complaint) omega::open -> omega::open",
         "obligation omega::answer #0 Breached bearer d linear",
     ],
@@ -237,7 +237,7 @@ expression: table(rows)
         "trace Took Answered(complaint) omega::open -> omega::open via omega::answer",
         "obligation omega::answer #0 Discharged bearer d extended 2011-01-20 by #2 linear",
     ],
-    "waive: `extend { never cite ... }` grants no waiver either": [
+    "waive: `extend { never cite \"...\" }` grants no waiver either": [
         "14:14 L4001 `ReleasedLocked()` cannot waive `omega::locked`: the deadline grants no `waive` capability\n    note: a limit that grants no `waive` capability cannot be waived: no order has power over it (Bowles v. Russell, 551 U.S. 205 (2007))",
         "trace Triggered Entered() omega::open -> omega::open",
         "obligation omega::appeal #0 Lapsed",

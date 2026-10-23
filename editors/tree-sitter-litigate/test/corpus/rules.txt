@@ -3,7 +3,7 @@ Rules
 ================================================================================
 
 module a
-rule duty answer-duty effective [2009-12-01, 2030-01-01) cite FRCP 12(a)
+rule duty answer-duty effective [2009-12-01, 2030-01-01) cite "FRCP 12(a)"
 {
   state inner: "Inner"
 }
@@ -24,7 +24,8 @@ rule liability missed subject_to answer-duty { }
           (date)
           (date)))
       (cite
-        (cite_text))
+        (string
+          (string_content)))
       (rule_body
         (node_decl
           (identifier)
@@ -51,7 +52,7 @@ Deadlines
 module a
 deadline answer-period: 21.days from Served(complaint) counted_by frcp6
 deadline reply: 3.business_days before Hearing() counted_by core.frcp6@2009-12-01
-  effective [2009-12-01, ..) cite FRCP 6 { note "x" }
+  effective [2009-12-01, ..) cite "FRCP 6" { note "x" }
 deadline later: 8.hours after Filed counted_by frcp6 { extendable true }
 
 ---
@@ -88,7 +89,8 @@ deadline later: 8.hours after Filed counted_by frcp6 { extendable true }
           (date)
           (open_end)))
       (cite
-        (cite_text))
+        (string
+          (string_content)))
       (deadline_decl_opts
         (deadline_opt
           (string
@@ -109,12 +111,12 @@ Counting rules
 ================================================================================
 
 module a
-counting frcp6 cite FRCP 6(a)
+counting frcp6 cite "FRCP 6(a)"
 {
   exclude_trigger_day
   include_last_day
   roll_forward_on [weekend, legal_holiday, inaccessible]
-  service_extension { Mail: 3.days } cite FRCP 6(d)
+  service_extension { Mail: 3.days } cite "FRCP 6(d)"
   holidays federal-holidays
   anchor trigger_day
   short_period { below: 7.days, count: business_days }
@@ -132,7 +134,8 @@ counting compact { exclude_trigger_day, include_last_day, anchor next_business_d
     (counting_decl
       (identifier)
       (cite
-        (cite_text))
+        (string
+          (string_content)))
       (counting_body
         (counting_item)
         (counting_item)
@@ -150,7 +153,8 @@ counting compact { exclude_trigger_day, include_last_day, anchor next_business_d
               (identifier)
               (duration)))
           (cite
-            (cite_text)))
+            (string
+              (string_content))))
         (counting_item
           (ref
             (identifier)))
@@ -174,7 +178,7 @@ Calendars
 ================================================================================
 
 module a
-calendar federal-holidays cite FRCP 6(a)(6)
+calendar federal-holidays cite "FRCP 6(a)(6)"
 {
   new-year: fixed(1, 1) effective [1870-06-28, ..) observed nearest_weekday
   mlk-day: nth(3, monday, 1) effective [1986-01-20, ..)
@@ -194,7 +198,8 @@ calendar empty effective [1990-01-01, ..) { }
     (calendar_decl
       (identifier)
       (cite
-        (cite_text))
+        (string
+          (string_content)))
       (calendar_body
         (holiday_decl
           (identifier)
@@ -275,7 +280,7 @@ deadline answer-period: 21.days from Served(complaint) counted_by frcp6 {
   trigger later_of(original)
   extend { by Court, max 30.days, after_expiry }
   extend { by Court, discretion GoodCause }
-  extend { never cite FRCP 6(b)(2) }
+  extend { never cite "FRCP 6(b)(2)" }
   waive { by Court }
   note "n"
 }
@@ -314,7 +319,8 @@ deadline answer-period: 21.days from Served(complaint) counted_by frcp6 {
           (identifier))
         (capability
           (cite
-            (cite_text)))
+            (string
+              (string_content))))
         (capability
           (identifier))
         (deadline_opt

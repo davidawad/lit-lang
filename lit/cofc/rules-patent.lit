@@ -76,7 +76,7 @@ test "patent-jpsr-period: 49 days after AnswerFiled" cite ?("RCFC Appendix J, Ru
   expect deadline(patent-jpsr-period) == 2026-09-21
 }
 
-test "patent-jpsr-period: Thanksgiving rolls to Friday" cite RCFC 6(a)(1)(C)
+test "patent-jpsr-period: Thanksgiving rolls to Friday" cite "RCFC 6(a)(1)(C)"
 {
   given AnswerFiled() on 2026-10-08
   expect deadline(patent-jpsr-period) == 2026-11-27
@@ -87,7 +87,7 @@ test "patent-jpsr-noticed-period: 98 days after AnswerFiled" cite ?("RCFC Append
   expect deadline(patent-jpsr-noticed-period) == 2026-11-09
 }
 
-test "patent-jpsr-noticed-period: Thanksgiving rolls to Friday" cite RCFC 6(a)(1)(C)
+test "patent-jpsr-noticed-period: Thanksgiving rolls to Friday" cite "RCFC 6(a)(1)(C)"
 {
   given AnswerFiled() on 2026-08-20
   expect deadline(patent-jpsr-noticed-period) == 2026-11-27
@@ -98,7 +98,7 @@ test "infringement-contentions-period: 56 days after AnswerFiled" cite ?("RCFC A
   expect deadline(infringement-contentions-period) == 2026-09-28
 }
 
-test "infringement-contentions-period: Columbus Day rolls to Tuesday" cite RCFC 6(a)(1)(C)
+test "infringement-contentions-period: Columbus Day rolls to Tuesday" cite "RCFC 6(a)(1)(C)"
 {
   given AnswerFiled() on 2026-08-17
   expect deadline(infringement-contentions-period) == 2026-10-13
@@ -109,7 +109,7 @@ test "invalidity-contentions-period: 56 days after InfringementContentionsServed
   expect deadline(invalidity-contentions-period) == 2026-09-28
 }
 
-test "invalidity-contentions-period: Christmas Day rolls to Monday" cite RCFC 6(a)(1)(C)
+test "invalidity-contentions-period: Christmas Day rolls to Monday" cite "RCFC 6(a)(1)(C)"
 {
   given InfringementContentionsServed() on 2026-10-30
   expect deadline(invalidity-contentions-period) == 2026-12-28
@@ -120,7 +120,7 @@ test "claim-terms-period: 42 days after InvalidityContentionsServed" cite ?("RCF
   expect deadline(claim-terms-period) == 2026-09-14
 }
 
-test "claim-terms-period: Labor Day rolls to Tuesday" cite RCFC 6(a)(1)(C)
+test "claim-terms-period: Labor Day rolls to Tuesday" cite "RCFC 6(a)(1)(C)"
 {
   given InvalidityContentionsServed() on 2026-07-27
   expect deadline(claim-terms-period) == 2026-09-08
@@ -131,7 +131,7 @@ test "joint-chart-period: 35 days after ClaimTermsExchanged" cite ?("RCFC Append
   expect deadline(joint-chart-period) == 2026-09-14
 }
 
-test "joint-chart-period: Veterans Day rolls to Thursday" cite RCFC 6(a)(1)(C)
+test "joint-chart-period: Veterans Day rolls to Thursday" cite "RCFC 6(a)(1)(C)"
 {
   given ClaimTermsExchanged() on 2026-10-07
   expect deadline(joint-chart-period) == 2026-11-12
@@ -142,7 +142,7 @@ test "cc-discovery-period: 28 days after ClaimConstructionAppendixFiled" cite ?(
   expect deadline(cc-discovery-period) == 2026-08-31
 }
 
-test "cc-discovery-period: Saturday rolls to Monday" cite RCFC 6(a)(1)(C)
+test "cc-discovery-period: Saturday rolls to Monday" cite "RCFC 6(a)(1)(C)"
 {
   given ClaimConstructionAppendixFiled() on 2026-08-01
   expect deadline(cc-discovery-period) == 2026-08-31
@@ -153,7 +153,7 @@ test "cc-status-conference-period: 7 days after ClaimConstructionAppendixFiled" 
   expect deadline(cc-status-conference-period) == 2026-08-10
 }
 
-test "cc-status-conference-period: Labor Day rolls to Tuesday" cite RCFC 6(a)(1)(C)
+test "cc-status-conference-period: Labor Day rolls to Tuesday" cite "RCFC 6(a)(1)(C)"
 {
   given ClaimConstructionAppendixFiled() on 2026-08-31
   expect deadline(cc-status-conference-period) == 2026-09-08
@@ -164,7 +164,7 @@ test "settlement-discussion-period: 14 days after ClaimConstructionOrderEntered"
   expect deadline(settlement-discussion-period) == 2026-08-17
 }
 
-test "settlement-discussion-period: Juneteenth observed rolls to Monday" cite RCFC 6(a)(1)(C)
+test "settlement-discussion-period: Juneteenth observed rolls to Monday" cite "RCFC 6(a)(1)(C)"
 {
   given ClaimConstructionOrderEntered() on 2027-06-04
   expect deadline(settlement-discussion-period) == 2027-06-21
@@ -175,7 +175,7 @@ test "settlement-statement-period: 7 days after SettlementDiscussionHeld" cite ?
   expect deadline(settlement-statement-period) == 2026-08-10
 }
 
-test "settlement-statement-period: New Year's Day rolls to Monday" cite RCFC 6(a)(1)(C)
+test "settlement-statement-period: New Year's Day rolls to Monday" cite "RCFC 6(a)(1)(C)"
 {
   given SettlementDiscussionHeld() on 2026-12-25
   expect deadline(settlement-statement-period) == 2027-01-04

@@ -64,7 +64,7 @@ fn name_is_first_identifier() {
     assert_eq!(decl, Some(Some("answer-due".to_string())));
 }
 
-const NODE: &str = "module m\n/// Is it barred?\n/// Second line.\nchance c: \"C\" by Court discretion cite FRCP 8(c)(1)\n{\n  tags [fact]\n  barred \"Barred\" -> done p 1/10\n  _ \"Timely\" -> next p ?(\"unknown\") { within d { extendable true }, cost -5.usd }\n}\n";
+const NODE: &str = "module m\n/// Is it barred?\n/// Second line.\nchance c: \"C\" by Court discretion cite \"FRCP 8(c)(1)\"\n{\n  tags [fact]\n  barred \"Barred\" -> done p 1/10\n  _ \"Timely\" -> next p ?(\"unknown\") { within d { extendable true }, cost -5.usd }\n}\n";
 
 #[test]
 fn node_accessors_expose_every_part() {
@@ -121,7 +121,7 @@ fn ref_parts_split_instances_paths_and_versions() {
 
 #[test]
 fn rule_bodies_and_deadlines_are_typed() {
-    let text = "module m\nrule duty r effective [2020-01-01, ..) cite X 1\n{\n  deadline d: 21.days from Served(c) counted_by frcp6 { extendable false }\n}\n";
+    let text = "module m\nrule duty r effective [2020-01-01, ..) cite \"X 1\"\n{\n  deadline d: 21.days from Served(c) counted_by frcp6 { extendable false }\n}\n";
     let parsed = parse_lit(text);
     assert!(parsed.is_ok(), "{:?}", parsed.errors());
     let file = parsed.lit_file().expect("root");
@@ -155,7 +155,7 @@ fn rule_bodies_and_deadlines_are_typed() {
 
 #[test]
 fn case_accessors_expose_blocks() {
-    let text = "case c\nuses p ^1.2.3-rc.1\nas_of 2025-01-01\nsummary \"S\"\n\nevents {\n  2025-01-02 Served(x) on b cite R 4\n}\n\nstakes { j: -1.usd, k: unvalued }\nbeliefs { observe n: { e: 3 } }\n";
+    let text = "case c\nuses p ^1.2.3-rc.1\nas_of 2025-01-01\nsummary \"S\"\n\nevents {\n  2025-01-02 Served(x) on b cite \"R 4\"\n}\n\nstakes { j: -1.usd, k: unvalued }\nbeliefs { observe n: { e: 3 } }\n";
     let parsed = parse_case(text);
     assert!(parsed.is_ok(), "{:?}", parsed.errors());
     let file = parsed.case_file().expect("case root");

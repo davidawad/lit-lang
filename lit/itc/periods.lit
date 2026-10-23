@@ -26,9 +26,9 @@ import itc.events.{
 /// 19 C.F.R. § 210.13(a): 20 days from service of the complaint and notice
 /// of investigation to respond. Delegation: "unless otherwise ordered in the
 /// notice of investigation or by the administrative law judge".
-rule duty respond-to-complaint cite cfr210.13.a
+rule duty respond-to-complaint cite "cfr210.13.a"
 {
-  deadline response-period: 20.days after ServedPaper(ComplaintAndNotice) counted_by itc210 effective [2025-02-03, ..) delegable_to [CaseOrder] cite cfr210.13.a
+  deadline response-period: 20.days after ServedPaper(ComplaintAndNotice) counted_by itc210 effective [2025-02-03, ..) delegable_to [CaseOrder] cite "cfr210.13.a"
   {
     extendable true
     extension_authority "ALJ good-cause order (Rule 210.6(a))"
@@ -38,9 +38,9 @@ rule duty respond-to-complaint cite cfr210.13.a
 /// 19 C.F.R. § 210.29(b)(2): answers and objections within ten days of
 /// service of the interrogatories. Delegation: "or within the time
 /// specified by the administrative law judge".
-rule duty answer-interrogatories cite cfr210.29.b.2
+rule duty answer-interrogatories cite "cfr210.29.b.2"
 {
-  deadline interrogatory-answer-period: 10.days after ServedPaper(Interrogatories) counted_by itc210 effective [2013-05-20, ..) delegable_to [CaseOrder] cite cfr210.29.b.2
+  deadline interrogatory-answer-period: 10.days after ServedPaper(Interrogatories) counted_by itc210 effective [2013-05-20, ..) delegable_to [CaseOrder] cite "cfr210.29.b.2"
   {
     extendable true
     extension_authority "ALJ-specified period"
@@ -50,9 +50,9 @@ rule duty answer-interrogatories cite cfr210.29.b.2
 /// 19 C.F.R. § 210.30(b)(2): a written response to a request for
 /// production within 10 days. Delegation: "or the time specified by the
 /// administrative law judge".
-rule duty respond-to-production-requests cite cfr210.30.b.2
+rule duty respond-to-production-requests cite "cfr210.30.b.2"
 {
-  deadline production-response-period: 10.days after ServedPaper(ProductionRequests) counted_by itc210 effective [2025-02-03, ..) delegable_to [CaseOrder] cite cfr210.30.b.2
+  deadline production-response-period: 10.days after ServedPaper(ProductionRequests) counted_by itc210 effective [2025-02-03, ..) delegable_to [CaseOrder] cite "cfr210.30.b.2"
   {
     extendable true
     extension_authority "ALJ-specified period"
@@ -62,9 +62,9 @@ rule duty respond-to-production-requests cite cfr210.30.b.2
 /// 19 C.F.R. § 210.31(b): a matter may be deemed admitted unless answered
 /// or objected to within 10 days. Delegation: "or the period specified by
 /// the administrative law judge".
-rule duty answer-admission-requests cite cfr210.31.b
+rule duty answer-admission-requests cite "cfr210.31.b"
 {
-  deadline admission-answer-period: 10.days after ServedPaper(AdmissionRequests) counted_by itc210 effective [2025-02-03, ..) delegable_to [CaseOrder] cite cfr210.31.b
+  deadline admission-answer-period: 10.days after ServedPaper(AdmissionRequests) counted_by itc210 effective [2025-02-03, ..) delegable_to [CaseOrder] cite "cfr210.31.b"
   {
     extendable true
     extension_authority "ALJ-specified period"
@@ -74,9 +74,9 @@ rule duty answer-admission-requests cite cfr210.31.b
 /// 19 C.F.R. § 210.32(d)(2): a motion to quash within the later of 10 days
 /// after receipt of the subpoena. Delegation: "or within such time as the
 /// administrative law judge may allow".
-rule duty move-to-quash cite cfr210.32.d.2
+rule duty move-to-quash cite "cfr210.32.d.2"
 {
-  deadline quash-period: 10.days after SubpoenaReceived() counted_by itc210 effective [2025-02-03, ..) delegable_to [CaseOrder] cite cfr210.32.d.2
+  deadline quash-period: 10.days after SubpoenaReceived() counted_by itc210 effective [2025-02-03, ..) delegable_to [CaseOrder] cite "cfr210.32.d.2"
   {
     extendable true
     extension_authority "ALJ-extended period"
@@ -86,9 +86,9 @@ rule duty move-to-quash cite cfr210.32.d.2
 /// 19 C.F.R. § 210.27(e)(1)(ii): a privilege log within 10 days of making
 /// the claim. Delegation: § 210.6(a) and § 201.14(b)(2) (the section itself
 /// states none).
-rule duty log-privilege cite cfr210.27.e.1
+rule duty log-privilege cite "cfr210.27.e.1"
 {
-  deadline privilege-log-period: 10.days after PrivilegeClaimed() counted_by itc210 effective [2025-02-03, ..) delegable_to [CaseOrder] cite cfr210.27.e.1
+  deadline privilege-log-period: 10.days after PrivilegeClaimed() counted_by itc210 effective [2025-02-03, ..) delegable_to [CaseOrder] cite "cfr210.27.e.1"
   {
     extendable true
     extension_authority "good cause"
@@ -102,9 +102,9 @@ rule duty log-privilege cite cfr210.27.e.1
 /// administrative law judge issuing a confidential document; the pack
 /// applies its 30 days to a party's own public version, which the
 /// administrative law judge's ground rules (§ 210.5(e)(1)) set in practice.
-rule duty file-public-version cite cfr210.5.f
+rule duty file-public-version cite "cfr210.5.f"
 {
-  deadline public-version-period: 30.days after ConfidentialVersionFiled() counted_by itc210 effective [2013-05-20, ..) delegable_to [CaseOrder] cite cfr210.5.f
+  deadline public-version-period: 30.days after ConfidentialVersionFiled() counted_by itc210 effective [2013-05-20, ..) delegable_to [CaseOrder] cite "cfr210.5.f"
   {
     extendable true
     extension_authority "good cause"
@@ -114,9 +114,9 @@ rule duty file-public-version cite cfr210.5.f
 /// 19 C.F.R. § 210.18(b): opposing affidavits within ten (10) days after
 /// service of the motion for summary determination. Delegation: § 210.6(a)
 /// and § 201.14(b)(2).
-rule duty oppose-summary-determination cite cfr210.18.b
+rule duty oppose-summary-determination cite "cfr210.18.b"
 {
-  deadline summary-determination-opposition-period: 10.days after ServedPaper(SummaryDeterminationMotion) counted_by itc210 effective [2025-02-03, ..) delegable_to [CaseOrder] cite cfr210.18.b
+  deadline summary-determination-opposition-period: 10.days after ServedPaper(SummaryDeterminationMotion) counted_by itc210 effective [2025-02-03, ..) delegable_to [CaseOrder] cite "cfr210.18.b"
   {
     extendable true
     extension_authority "ALJ discretion"
@@ -127,9 +127,9 @@ rule duty oppose-summary-determination cite cfr210.18.b
 /// determination on violation within 12 days after service. Delegation:
 /// § 210.6(a) and § 201.14(b)(2). The 10-day and 5-business-day petitions
 /// of other initial determinations are not separate edges in the pack.
-rule duty petition-for-review cite cfr210.43.a.1
+rule duty petition-for-review cite "cfr210.43.a.1"
 {
-  deadline petition-for-review-period: 12.days after ServedPaper(InitialDetermination) counted_by itc210 effective [2025-02-03, ..) delegable_to [CaseOrder] cite cfr210.43.a.1
+  deadline petition-for-review-period: 12.days after ServedPaper(InitialDetermination) counted_by itc210 effective [2025-02-03, ..) delegable_to [CaseOrder] cite "cfr210.43.a.1"
   {
     extendable true
     extension_authority "good cause"
@@ -139,9 +139,9 @@ rule duty petition-for-review cite cfr210.43.a.1
 /// 19 C.F.R. § 210.43(c): a response within eight (8) days after service of
 /// a petition for review of a final initial determination under
 /// § 210.42(a)(1). Delegation: § 210.6(a) and § 201.14(b)(2).
-rule duty respond-to-petition cite cfr210.43.c
+rule duty respond-to-petition cite "cfr210.43.c"
 {
-  deadline petition-response-period: 8.days after ServedPaper(PetitionForReview) counted_by itc210 effective [2025-02-03, ..) delegable_to [CaseOrder] cite cfr210.43.c
+  deadline petition-response-period: 8.days after ServedPaper(PetitionForReview) counted_by itc210 effective [2025-02-03, ..) delegable_to [CaseOrder] cite "cfr210.43.c"
   {
     extendable true
     extension_authority "good cause"
@@ -155,11 +155,11 @@ rule duty respond-to-petition cite cfr210.43.c
 /// counts it (`frap26`), and FRAP 26(b)(2) forbids extending the time to
 /// petition for review of an agency order: not delegable. The pack's own
 /// `counting` is `itc210`, which a per-edge window cannot override.
-rule duty appeal-to-federal-circuit cite usc1337.c
+rule duty appeal-to-federal-circuit cite "usc1337.c"
 {
-  deadline federal-circuit-appeal-period: 60.days after DeterminationFinal() counted_by frap26 effective [1995-01-01, ..) cite usc1337.c
+  deadline federal-circuit-appeal-period: 60.days after DeterminationFinal() counted_by frap26 effective [1995-01-01, ..) cite "usc1337.c"
   {
     extendable false
-    extend { never cite FRAP 26(b)(2) }
+    extend { never cite "FRAP 26(b)(2)" }
   }
 }

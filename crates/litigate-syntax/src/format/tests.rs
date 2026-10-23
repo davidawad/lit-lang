@@ -22,10 +22,10 @@ fn sorts_imports_and_separates_items() {
 
 #[test]
 fn cite_before_body_breaks_the_body() {
-    let out = fmt("module m\nrule duty r cite FRCP 1 { start s }\n");
+    let out = fmt("module m\nrule duty r cite \"FRCP 1\" { start s }\n");
     assert_eq!(
         out,
-        "module m\n\nrule duty r cite FRCP 1\n{\n  start s\n}\n"
+        "module m\n\nrule duty r cite \"FRCP 1\"\n{\n  start s\n}\n"
     );
 }
 

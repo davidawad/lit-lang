@@ -153,7 +153,7 @@ impl Cx<'_, '_> {
         None
     }
 
-    /// One `extend` grant: `{ never cite X }`, `{ by A, max N.days | to
+    /// One `extend` grant: `{ never cite "X" }`, `{ by A, max N.days | to
     /// B [, discretion S] [, after_expiry] [, on M() [, within W]] }`, or
     /// `{ by A, discretion S [, after_expiry, on M()] }`. Its bound is
     /// required: a date bound, a cause standard, or `never`.
@@ -201,7 +201,7 @@ impl Cx<'_, '_> {
             self.report(Report::new(
                 C::InvalidField,
                 f.key.range,
-                "an `extend` capability states its bound: `max N.days`, `to <bound>`, `discretion <Standard>`, or `never cite <rule>`",
+                "an `extend` capability states its bound: `max N.days`, `to <bound>`, `discretion <Standard>`, or `never cite \"<rule>\"`",
             ));
             return None;
         };
@@ -226,7 +226,7 @@ impl Cx<'_, '_> {
         })
     }
 
-    /// `extend { never cite X }`: a lock, which takes no other field.
+    /// `extend { never cite "X" }`: a lock, which takes no other field.
     fn lock(&mut self, never: &Field, fields: &BTreeMap<&str, &Field>) -> Option<Extension> {
         let others: Vec<&Field> = fields
             .values()

@@ -5,7 +5,7 @@ import ttab.lapse.{ period-lapsed }
 import ttab.opposition-to-trial.{ opposition-filed }
 import ttab.{ outer-limit-180, standstill }
 
-decision opposer-d180: "Standstill expired without a deal: the opposer must oppose by day 180 or lose the right to oppose" by opposer cite 37 CFR 2.102(c)(3)
+decision opposer-d180: "Standstill expired without a deal: the opposer must oppose by day 180 or lose the right to oppose" by opposer cite "37 CFR 2.102(c)(3)"
 {
   group standstill
   tags [opponent-decision]
@@ -16,7 +16,7 @@ decision opposer-d180: "Standstill expired without a deal: the opposer must oppo
     attrs { opp_fees: 600, opp_hours: 14 }
   }
   _ "Opposer lets the opposition period lapse" -> period-lapsed {
-    authority cite 37 CFR 2.101(c); 15 USC 1063(b)
+    authority cite "37 CFR 2.101(c); 15 USC 1063(b)"
     tags [lapse]
   }
 }

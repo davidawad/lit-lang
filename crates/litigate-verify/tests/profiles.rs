@@ -40,7 +40,7 @@ fn a_hole_warns_in_dev_and_fails_in_strict() {
 #[test]
 fn an_untested_rule_warns_in_dev_and_fails_in_strict() {
     let lit = with(
-        "rule duty reply-duty cite FRCP 12(a)\n{\n  deadline reply-period: 14.days from \
+        "rule duty reply-duty cite \"FRCP 12(a)\"\n{\n  deadline reply-period: 14.days from \
          Answered(complaint) counted_by frcp6\n}",
     );
     let dev = verify_one(&lit, Profile::Dev);
@@ -117,8 +117,8 @@ fn a_clean_program_is_accepted_in_both_profiles() {
 /// and an unmarked declaration fails in both.
 #[test]
 fn an_imported_cite_warns_in_dev_and_fails_in_strict() {
-    let from = "state served: \"Complaint served\" by Defendant cite FRCP 12(a)";
-    let bad = "state served: \"Complaint served\" by Defendant cite FRCP 99(a)";
+    let from = "state served: \"Complaint served\" by Defendant cite \"FRCP 12(a)\"";
+    let bad = "state served: \"Complaint served\" by Defendant cite \"FRCP 99(a)\"";
     let imported = edit(from, &format!("/// imported\n{bad}"));
     let plain = edit(from, bad);
     let dev = verify_one(&imported, Profile::Dev);

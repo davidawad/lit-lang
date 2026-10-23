@@ -457,6 +457,10 @@ module.exports = {
     seq(field('kind', 'delegable_to'), field('target', $.id_list)),
   ),
 
-  // `cite ?("text")` is a cite hole: text with no citation-mode spelling.
-  cite: $ => seq('cite', field('text', choice($.cite_text, $.hole))),
+  // `cite "text" [historical]`; `cite ?("text")` is a cite hole.
+  cite: $ => seq(
+    'cite',
+    field('text', choice($.string, $.hole)),
+    optional(field('historical', 'historical')),
+  ),
 };

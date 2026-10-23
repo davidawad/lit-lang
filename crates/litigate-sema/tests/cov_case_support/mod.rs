@@ -61,7 +61,7 @@ pub fn compile(loaded: &[LoadedPackage]) -> Vec<Package> {
 
 pub const BETA: &str = "module beta
 start b0
-counting bc cite FRCP 6(a) { exclude_trigger_day, include_last_day, holidays bcal }
+counting bc cite \"FRCP 6(a)\" { exclude_trigger_day, include_last_day, holidays bcal }
 calendar bcal { new-year: fixed(1, 1) effective [1870-06-28, ..) observed nearest_weekday }
 terminal b0: \"B0\" { payoff 0.usd }
 ";
@@ -85,7 +85,7 @@ event Forfeited(option: EdgeRef) removes option
 event Excused(document: Document) waives court-period
 event Benched(document: Document)
 
-counting ac cite FRCP 6(a) { exclude_trigger_day, include_last_day, holidays acal }
+counting ac cite \"FRCP 6(a)\" { exclude_trigger_day, include_last_day, holidays acal }
 calendar acal { new-year: fixed(1, 1) effective [1870-06-28, ..) observed nearest_weekday }
 
 deadline court-period: 5.court_days from Served(complaint) counted_by ac { waive { by Court } }
@@ -95,7 +95,7 @@ deadline one-day: 1.days from Filed(complaint) counted_by ac
 deadline future-period: 10.days from Served(complaint) counted_by ac effective [2030-01-01, ..)
 deadline grace: 10.days from Reopened(complaint) counted_by ac effective [2009-12-01, 2015-01-01)
 deadline grace: 20.days from Reopened(complaint) counted_by ac effective [2015-01-01, ..)
-transition keep-grace amends grace@2015-01-01 cite FRCP 1
+transition keep-grace amends grace@2015-01-01 cite \"FRCP 1\"
 {
   unless !has_event(Noted(complaint)) && (has_event(Noted(motion)) || false) -> grace@2009-12-01
   otherwise -> grace@2015-01-01
@@ -170,7 +170,7 @@ state staged: \"Staged\" by Plaintiff effective [2010-06-01, ..) supersedes stag
 {
   go \"Go\" -> answered { event Answered(motion) }
 }
-transition keep-staged amends staged@2010-06-01 cite FRCP 1
+transition keep-staged amends staged@2010-06-01 cite \"FRCP 1\"
 {
   unless has_event(Noted(complaint)) -> staged@2009-12-01
   otherwise -> staged@2010-06-01

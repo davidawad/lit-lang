@@ -13,50 +13,50 @@ import frap.{ record-group }
 /// 26, 2009 Committee Note). The court of appeals may extend any time
 /// these rules prescribe for good cause (FRAP 26(b)), so the period
 /// delegates to `CaseOrder`.
-rule duty order-transcript effective [2009-12-01, ..) known_at 2009-03-26 cite FRAP 10(b)(1)
+rule duty order-transcript effective [2009-12-01, ..) known_at 2009-03-26 cite "FRAP 10(b)(1)"
 {
-  deadline transcript-order-period: 14.days after NoticeOfAppealFiled() counted_by frap26 delegable_to [CaseOrder] cite FRAP 10(b)(1)
+  deadline transcript-order-period: 14.days after NoticeOfAppealFiled() counted_by frap26 delegable_to [CaseOrder] cite "FRAP 10(b)(1)"
 }
 
 /// FRAP 11(b)(1)(B): the reporter is to complete the transcript within 30
 /// days of receiving the order, and may ask the circuit clerk to grant
 /// more time; the clerk's grant is an order in the case, so the period
 /// delegates to `CaseOrder`.
-rule duty file-transcript effective [2009-12-01, ..) known_at 2009-03-26 cite FRAP 11(b)(1)(B)
+rule duty file-transcript effective [2009-12-01, ..) known_at 2009-03-26 cite "FRAP 11(b)(1)(B)"
 {
-  deadline transcript-filing-period: 30.days after TranscriptOrderReceived() counted_by frap26 delegable_to [CaseOrder] cite FRAP 11(b)(1)(B)
+  deadline transcript-filing-period: 30.days after TranscriptOrderReceived() counted_by frap26 delegable_to [CaseOrder] cite "FRAP 11(b)(1)(B)"
 }
 
-test "the transcript order is due 14 days after the notice" cite FRAP 10(b)(1)
+test "the transcript order is due 14 days after the notice" cite "FRAP 10(b)(1)"
 {
   given NoticeOfAppealFiled() on 2025-03-03
   expect deadline(transcript-order-period) == 2025-03-17
 }
 
-test "a 14th day on Martin Luther King Jr. Day rolls to Tuesday" cite FRAP 26(a)(6)(A)
+test "a 14th day on Martin Luther King Jr. Day rolls to Tuesday" cite "FRAP 26(a)(6)(A)"
 {
   given NoticeOfAppealFiled() on 2025-01-06
   expect deadline(transcript-order-period) == 2025-01-21
 }
 
-test "the reporter has 30 days from receiving the order" cite FRAP 11(b)(1)(B)
+test "the reporter has 30 days from receiving the order" cite "FRAP 11(b)(1)(B)"
 {
   given TranscriptOrderReceived() on 2025-03-12
   expect deadline(transcript-filing-period) == 2025-04-11
 }
 
-test "a 30th day on the Saturday after Independence Day rolls to Monday" cite FRAP 26(a)(1)(C)
+test "a 30th day on the Saturday after Independence Day rolls to Monday" cite "FRAP 26(a)(1)(C)"
 {
   given TranscriptOrderReceived() on 2025-06-05
   expect deadline(transcript-filing-period) == 2025-07-07
 }
 
-decision transcript-order-fork: "Transcript Needed?" by applicant cite FRAP 10(b)
+decision transcript-order-fork: "Transcript Needed?" by applicant cite "FRAP 10(b)"
 {
   group record-group
   note "Appellant must decide within 14 days of the notice of appeal whether to order the transcript. Ordering creates an enforceable duty on the court reporter to transcribe and file; failure to order by the deadline doesn't waive the opportunity to appeal, but will delay the record and potentially prejudice waiver arguments if the record remains incomplete."
   _ "Order the necessary transcript" -> transcript-ordered {
-    authority cite FRAP 10(b)(1)
+    authority cite "FRAP 10(b)(1)"
     effort 2.hours
     within transcript-order-period {
       extendable false
@@ -66,7 +66,7 @@ decision transcript-order-fork: "Transcript Needed?" by applicant cite FRAP 10(b
     note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
   }
   no-transcript-certificate "Certify that no transcript will be ordered" -> record-transmitted {
-    authority cite FRAP 10(b)(1)(B)
+    authority cite "FRAP 10(b)(1)(B)"
     effort 0.5.hours
     within transcript-order-period {
       extendable false
@@ -75,18 +75,18 @@ decision transcript-order-fork: "Transcript Needed?" by applicant cite FRAP 10(b
     note "The usual route when the appeal is from a ruling on the papers (a Rule 12(b)(6) dismissal, a summary judgment) and there is no hearing transcript to order: the record is the original papers and docket entries (FRAP 10(a)). Hours: teaching estimate, a one-page certificate."
   }
   _ "File agreed statement instead" -> statement-in-lieu-of-transcript {
-    authority cite FRAP 10(c)-(d)
+    authority cite "FRAP 10(c)-(d)"
     effort 6.hours
     note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
   }
 }
 
-state transcript-ordered: "Transcript Ordered" by office cite FRAP 10(b)(1)
+state transcript-ordered: "Transcript Ordered" by office cite "FRAP 10(b)(1)"
 {
   group record-group
   note "Written order must be filed with the district clerk; appellant arranges payment with the reporter at the time of ordering. If ordering only a partial transcript, appellant must designate issues on appeal, and appellee then has 14 days to designate additional portions — refusal to order those portions gives appellee grounds to seek a court order compelling appellant to do so, shifting cost and timeline control from appellant to appellee."
   _ "Transcript completed and filed" -> record-transmitted {
-    authority cite FRAP 11(b)
+    authority cite "FRAP 11(b)"
     within transcript-filing-period {
       extendable true
       extension_authority "FRAP 11(b) (reporter may request extension for completion beyond 30 days; no formal party motion needed)"
@@ -96,14 +96,14 @@ state transcript-ordered: "Transcript Ordered" by office cite FRAP 10(b)(1)
   }
 }
 
-state statement-in-lieu-of-transcript: "Agreed Statement in Lieu of Transcript" by examiner cite FRAP 10(d)
+state statement-in-lieu-of-transcript: "Agreed Statement in Lieu of Transcript" by examiner cite "FRAP 10(d)"
 {
   group record-group
   note "Agreed statement must be signed by both parties and contain only facts 'essential to the court's resolution of the issues' — neither party may later expand it mid-appeal to contest completeness. The statement still requires district court approval before certification, creating a procedural gate. Missing the district court's approval forecloses this pathway and forces a return to transcript ordering."
-  _ "Agreed statement approved" -> record-transmitted { authority cite FRAP 10(d); FRAP 11(a) }
+  _ "Agreed statement approved" -> record-transmitted { authority cite "FRAP 10(d); FRAP 11(a)" }
 }
 
-state record-transmitted: "Record on Appeal Complete and Transmitted" by office cite FRAP 11(b)
+state record-transmitted: "Record on Appeal Complete and Transmitted" by office cite "FRAP 11(b)"
 {
   group record-group
   note "The record is 'complete' when the transcript is filed (or agreed statement approved) and the district clerk has numbered and transmitted all original papers to the appellate clerk. The reporter's duty is to note receipt and file within 30 days; delays beyond 30 days require a reporter request for extension (not appellant's action), and failure to report timely triggers mandatory circuit-to-district notification, shifting the compliance burden to the trial judge."

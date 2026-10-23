@@ -12,7 +12,6 @@ fn describe_names_every_textless_token_kind() {
         (SyntaxKind::Duration, "a duration like `21.days`"),
         (SyntaxKind::String, "a string"),
         (SyntaxKind::Date, "a date `YYYY-MM-DD`"),
-        (SyntaxKind::CiteText, "citation text"),
         (SyntaxKind::Eof, "end of file"),
         (SyntaxKind::RecordExpr, "RecordExpr"),
     ];

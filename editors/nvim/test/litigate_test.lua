@@ -138,7 +138,7 @@ test('nvim-treesitter registration (master and main APIs)', function()
   package.loaded['nvim-treesitter.parsers'] = main
   vim.api.nvim_exec_autocmds('User', { pattern = 'TSUpdate' })
   assert(main.litigate and main.litigate.install_info.queries == 'editors/tree-sitter-litigate/queries')
-  for _, path in ipairs({ 'src/parser.c', 'src/scanner.c', 'queries/highlights.scm' }) do
+  for _, path in ipairs({ 'src/parser.c', 'queries/highlights.scm' }) do
     assert(vim.uv.fs_stat(repo .. '/' .. main.litigate.install_info.location .. '/' .. path), path)
   end
   package.loaded['nvim-treesitter.parsers'] = nil

@@ -12,8 +12,8 @@ use proptest::prelude::*;
 use std::collections::BTreeMap;
 
 const SERVED: &str = "2009-12-04 Served(complaint, Personal) on widget";
-const FORFEIT: &str = "2009-12-10 Forfeited(move-dismiss) by widget cite FRCP 12(h)(1)";
-const ELECT: &str = "2009-12-11 Elected(answer) by widget cite FRCP 12(a)(1)(A)(i)";
+const FORFEIT: &str = "2009-12-10 Forfeited(move-dismiss) by widget cite \"FRCP 12(h)(1)\"";
+const ELECT: &str = "2009-12-11 Elected(answer) by widget cite \"FRCP 12(a)(1)(A)(i)\"";
 
 fn row(events: &[&str]) -> Vec<String> {
     rendered(check_2009(&matter_2009(events)))
@@ -44,7 +44,7 @@ fn removal_replay_table() {
         (
             "ok: a package-qualified option, removed before service",
             vec![
-                "2009-12-01 Forfeited(frcp::move-dismiss) by widget cite FRCP 12(h)(1)",
+                "2009-12-01 Forfeited(frcp::move-dismiss) by widget cite \"FRCP 12(h)(1)\"",
                 SERVED,
             ],
         ),
@@ -52,7 +52,7 @@ fn removal_replay_table() {
             "ok: the court strikes an outcome of a later stage",
             vec![
                 SERVED,
-                "2009-12-07 Struck(granted) by court cite FRCP 12(f)",
+                "2009-12-07 Struck(granted) by court cite \"FRCP 12(f)\"",
                 "2009-12-10 MovedToDismiss(complaint) by widget",
             ],
         ),
@@ -68,7 +68,7 @@ fn removal_replay_table() {
             "removed: an outcome struck before the ruling",
             vec![
                 SERVED,
-                "2009-12-07 Struck(denied) by court cite FRCP 12(f)",
+                "2009-12-07 Struck(denied) by court cite \"FRCP 12(f)\"",
                 "2009-12-10 MovedToDismiss(complaint) by widget",
                 "2010-01-04 Denied(motion) by court",
             ],
@@ -81,7 +81,7 @@ fn removal_replay_table() {
             "unresolved: no such edge, nearest suggested",
             vec![
                 SERVED,
-                "2009-12-10 Forfeited(move-dismis) by widget cite FRCP 12(h)(1)",
+                "2009-12-10 Forfeited(move-dismis) by widget cite \"FRCP 12(h)(1)\"",
             ],
         ),
         (
@@ -89,7 +89,7 @@ fn removal_replay_table() {
             vec![
                 SERVED,
                 FORFEIT,
-                "2009-12-11 Struck(move-dismiss) by court cite FRCP 12(f)",
+                "2009-12-11 Struck(move-dismiss) by court cite \"FRCP 12(f)\"",
             ],
         ),
     ];
@@ -108,21 +108,21 @@ fn edge_ref_argument_table() {
             "typed: a quoted edge is a String, not an EdgeRef (fix unquotes it)",
             vec![
                 SERVED,
-                "2009-12-10 Forfeited(\"move-dismiss\") by widget cite FRCP 12(h)(1)",
+                "2009-12-10 Forfeited(\"move-dismiss\") by widget cite \"FRCP 12(h)(1)\"",
             ],
         ),
         (
             "typed: a quoted string naming no edge has no fix",
             vec![
                 SERVED,
-                "2009-12-10 Forfeited(\"nowhere\") by widget cite FRCP 12(h)(1)",
+                "2009-12-10 Forfeited(\"nowhere\") by widget cite \"FRCP 12(h)(1)\"",
             ],
         ),
         (
             "typed: a number is no edge",
             vec![
                 SERVED,
-                "2009-12-10 Forfeited(12) by widget cite FRCP 12(h)(1)",
+                "2009-12-10 Forfeited(12) by widget cite \"FRCP 12(h)(1)\"",
             ],
         ),
     ];
@@ -158,7 +158,7 @@ fn election_replay_table() {
             vec![
                 SERVED,
                 FORFEIT,
-                "2009-12-11 Elected(move-dismiss) by widget cite FRCP 12(b)(6)",
+                "2009-12-11 Elected(move-dismiss) by widget cite \"FRCP 12(b)(6)\"",
             ],
         ),
         (
@@ -229,7 +229,7 @@ fn removals_are_derived_never_asserted() {
 fn removals_lower_to_remove_edges() {
     let checked = check_2009(&matter_2009(&[
         SERVED,
-        "2009-12-07 Struck(granted) by court cite FRCP 12(f)",
+        "2009-12-07 Struck(granted) by court cite \"FRCP 12(f)\"",
         FORFEIT,
     ]));
     assert!(checked.ok(), "{:#?}", render(&checked.diagnostics));
@@ -286,7 +286,7 @@ proptest! {
         if removal_mode == 1 {
             text = text.replace(
                 "events {\n",
-                "events {\n  2009-12-05 Forfeited(move-dismiss) by widget cite FRCP 12(h)(1)\n",
+                "events {\n  2009-12-05 Forfeited(move-dismiss) by widget cite \"FRCP 12(h)(1)\"\n",
             );
         } else if removal_mode == 2 {
             text.push_str("\nanalysis { remove_edges: [frcp::move-dismiss] }\n");

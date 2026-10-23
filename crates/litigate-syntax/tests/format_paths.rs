@@ -40,7 +40,7 @@ fn check_format_points_past_a_canonical_prefix() {
 
 #[test]
 fn a_comma_after_citation_text_stays_on_its_line() {
-    let src = "module m\n\ntest \"t\" { expect f(cite FRCP 1, 2) }\n";
+    let src = "module m\n\ntest \"t\" { expect f(cite \"FRCP 1\", 2) }\n";
     assert_eq!(fmt(src), src);
 }
 

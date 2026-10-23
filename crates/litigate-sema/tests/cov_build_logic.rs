@@ -23,7 +23,7 @@ exception e6 rebuts nope when true => 1",
 #[test]
 fn test_blocks_take_events_and_comparisons() {
     let out = check_body(
-        "test \"t\" cite FRCP 6 {\n\
+        "test \"t\" cite \"FRCP 6\" {\n\
   given 3 on 2025-01-01\n\
   expect true\n\
   expect nope\n\

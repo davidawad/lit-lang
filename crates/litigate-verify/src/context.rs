@@ -94,32 +94,37 @@ impl<'a> Context<'a> {
         })
     }
 
-    /// Every cite of the package with its declaring span and whether its
-    /// declaration is `/// imported`: declaration `cite`s, edge
-    /// `authority`s (imported with their node), and test `cite`s.
+    /// Every cite of the package with its declaring span, the in-force
+    /// window of its declaration version, and whether that declaration is
+    /// `/// imported`: declaration `cite`s (and whether each is marked
+    /// `historical`), edge `authority`s (imported with their node, in its
+    /// window), and test `cite`s (no window).
     pub fn cites(&self) -> impl Iterator<Item = Cite<'a>> {
         self.declarations().flat_map(|d| {
             let meta = meta_of(d);
             let imported = meta.is_some_and(|m| m.imported);
-            let own = meta.and_then(|m| Some((m.cite.as_deref()?, m.span.as_ref())));
+            let window = meta.map(|m| &m.effective);
+            let own = meta.and_then(|m| Some((m.cite.as_deref()?, m.span.as_ref(), m.historical)));
             let test = match d {
-                Declaration::Test(t) => t.cite.as_deref().map(|c| (c, t.span.as_ref())),
+                Declaration::Test(t) => t.cite.as_deref().map(|c| (c, t.span.as_ref(), false)),
                 _ => None,
             };
-            let edges: Vec<(&str, Option<&Span>)> = match d {
+            let edges: Vec<(&str, Option<&Span>, bool)> = match d {
                 Declaration::Node(n) => n
                     .edges
                     .iter()
-                    .filter_map(|e| Some((e.authority.as_deref()?, e.span.as_ref())))
+                    .filter_map(|e| Some((e.authority.as_deref()?, e.span.as_ref(), false)))
                     .collect(),
                 _ => Vec::new(),
             };
             own.into_iter()
                 .chain(test)
                 .chain(edges)
-                .map(move |(text, span)| Cite {
+                .map(move |(text, span, historical)| Cite {
                     text,
                     span,
+                    window,
+                    historical,
                     imported,
                 })
         })
@@ -133,6 +138,10 @@ pub(crate) struct Cite<'a> {
     pub text: &'a str,
     /// Where it is declared.
     pub span: Option<&'a Span>,
+    /// In-force window of the citing declaration version, if it has one.
+    pub window: Option<&'a hir::Interval>,
+    /// The cite is marked `historical`.
+    pub historical: bool,
     /// Its declaration carries the `/// imported` marker.
     pub imported: bool,
 }

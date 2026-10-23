@@ -14,13 +14,13 @@ import ttab.terminals.{
 
 import ttab.{ answer-period, disclosure-period, discovery, discovery-period, opposition, trial }
 
-state opposition-filed: "Notice of opposition filed (commenced)" by board cite 37 CFR 2.101(a); 37 CFR 2.105
+state opposition-filed: "Notice of opposition filed (commenced)" by board cite "37 CFR 2.101(a); 37 CFR 2.105"
 {
   group opposition
   note "From here, abandonment without the opposer's written consent = judgment against the applicant (37 CFR 2.135). Opposers can add grounds (e.g. void ab initio for wrong applicant / no bona fide intent) after discovery."
   tags [commenced]
   _ "Board issues notice of institution (answer clock starts)" -> instituted {
-    authority cite 37 CFR 2.105(a)
+    authority cite "37 CFR 2.105(a)"
     effort 4.hours
     duration { min 7.days, mode 21.days, max 45.days }
     note "Teaching estimate. 4 h review of the complaint and institution order."
@@ -30,7 +30,7 @@ state opposition-filed: "Notice of opposition filed (commenced)" by board cite 3
 decision instituted: "Board institutes; answer due 60 days from institution order (historically 40)" by applicant cite ?("37 CFR 2.105(a); 2.106(a); TBMP 310.03(a)") {
   group opposition
   answer-plain "File answer (denials, crowded-field amplification), no counterclaim" -> answered {
-    authority cite 37 CFR 2.106(b)(1)-(2)
+    authority cite "37 CFR 2.106(b)(1)-(2)"
     effort 8.hours
     within answer-period {
       extendable true
@@ -50,7 +50,7 @@ decision instituted: "Board institutes; answer due 60 days from institution orde
     sets [s18]
   }
   _ "File no answer (waiver trap)" -> notice-of-default {
-    authority cite 37 CFR 2.106(a)
+    authority cite "37 CFR 2.106(a)"
     within answer-period { extendable false }
     valence bad
     tags [waiver-trap]
@@ -73,7 +73,7 @@ decision instituted: "Board institutes; answer due 60 days from institution orde
   }
 }
 
-chance notice-of-default: "Notice of default for no answer: applicant must show good cause" discretion by board cite 37 CFR 2.106(a); FRCP 55(c) via 37 CFR 2.116(a)
+chance notice-of-default: "Notice of default for no answer: applicant must show good cause" discretion by board cite "37 CFR 2.106(a); FRCP 55(c) via 37 CFR 2.116(a)"
 {
   group opposition
   _ "Default set aside for good cause; answer filed" -> answered p 0.7 {
@@ -82,7 +82,7 @@ chance notice-of-default: "Notice of default for no answer: applicant must show 
     note "Teaching estimate. Board applies liberal good-cause standard for setting aside default; first-time pro-se-adjacent applicant, short delay. No data point in the KB; treat as an assumption."
   }
   _ "Judgment by default" -> opposition-sustained p 0.3 {
-    authority cite 37 CFR 2.106(a)
+    authority cite "37 CFR 2.106(a)"
     note "Teaching estimate. Complement."
   }
 }
@@ -134,7 +134,7 @@ chance talks-instituted: "Suspended for settlement after institution" by board c
     tags [deal, inproc]
   }
   _ "Settlement: consent with narrowed ID (2.133(a) approval)" -> registration-restricted p 0.1 {
-    authority cite 37 CFR 2.133(a)
+    authority cite "37 CFR 2.133(a)"
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
     tags [deal, inproc]
   }
@@ -145,17 +145,17 @@ chance talks-instituted: "Suspended for settlement after institution" by board c
   }
 }
 
-decision opposer-consent-decision: "Opposer decides whether to consent to abandonment" by opposer cite 37 CFR 2.135
+decision opposer-consent-decision: "Opposer decides whether to consent to abandonment" by opposer cite "37 CFR 2.135"
 {
   group opposition
   note "Consent is the opposer's to give. Refusing yields a judgment against the applicant (issue-preclusion value for a later infringement suit, B&B Hardware v. Hargis, 575 U.S. 138 (2015)), so the opposer will not consent for free."
   tags [opponent-decision]
   _ "Opposer consents (no judgment)" -> rebrand-orderly {
-    authority cite 37 CFR 2.135
+    authority cite "37 CFR 2.135"
     tags [consent]
   }
   _ "Opposer withholds consent; judgment entered" -> judgment-2135 {
-    authority cite 37 CFR 2.135
+    authority cite "37 CFR 2.135"
     tags [no-consent]
   }
 }
@@ -174,7 +174,7 @@ chance talks-answered: "Suspended for settlement after answer" by board cite ?("
     tags [deal, inproc]
   }
   _ "Settlement: consent with narrowed ID (2.133(a) approval)" -> registration-restricted p 0.1 {
-    authority cite 37 CFR 2.133(a)
+    authority cite "37 CFR 2.133(a)"
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
     tags [deal, inproc]
   }
@@ -185,11 +185,11 @@ chance talks-answered: "Suspended for settlement after answer" by board cite ?("
   }
 }
 
-state discovery-conference: "Discovery conference held (Board attorney on request)" by applicant cite 37 CFR 2.120(a)(2)(i); FRCP 26(f)
+state discovery-conference: "Discovery conference held (Board attorney on request)" by applicant cite "37 CFR 2.120(a)(2)(i); FRCP 26(f)"
 {
   group discovery
   _ "Serve initial disclosures" -> initial-disclosures {
-    authority cite 37 CFR 2.120(a)(2)(ii)
+    authority cite "37 CFR 2.120(a)(2)(ii)"
     effort 8.hours
     within disclosure-period { extendable true, extension_authority "37 CFR 2.120(a)(2)(iv)" }
     duration { min 30.days, mode 30.days, max 45.days }
@@ -200,12 +200,12 @@ state discovery-conference: "Discovery conference held (Board attorney on reques
 state initial-disclosures: "Initial disclosures served (30 days after discovery opens)" by board cite ?("37 CFR 2.120(a)(2)(ii); TBMP 401.02") {
   group discovery
   _ "Discovery period opens" -> discovery-open {
-    authority cite 37 CFR 2.120(a)(2)(i)
+    authority cite "37 CFR 2.120(a)(2)(i)"
     duration { min 0.days, mode 0.days, max 1.days }
   }
 }
 
-decision discovery-open: "Discovery open (180 days)" by applicant cite 37 CFR 2.120(a)(2)(i)
+decision discovery-open: "Discovery open (180 days)" by applicant cite "37 CFR 2.120(a)(2)(i)"
 {
   group discovery
   _ "Abandon application without opposer's consent (judgment, 37 CFR 2.135)" -> judgment-2135 {
@@ -231,7 +231,7 @@ decision discovery-open: "Discovery open (180 days)" by applicant cite 37 CFR 2.
     forbids [talked]
   }
   _ "Conduct discovery (written discovery, depositions, protective order)" -> discovery-closed {
-    authority cite 37 CFR 2.120(a)(2)(i); 2.120(a)(3)
+    authority cite "37 CFR 2.120(a)(2)(i); 2.120(a)(3)"
     effort 35.hours
     within discovery-period { extendable true, extension_authority "37 CFR 2.120(a)(2)(iv)" }
     duration { min 180.days, mode 180.days, max 270.days }
@@ -273,7 +273,7 @@ decision discovery-closed: "Discovery closed; ACR/trial/settlement decision" by 
     attrs { opp_hours: 45 }
   }
   _ "Proceed to trial" -> trial-periods {
-    authority cite 37 CFR 2.121
+    authority cite "37 CFR 2.121"
     duration { min 45.days, mode 45.days, max 60.days }
     tags [continue]
   }
@@ -293,7 +293,7 @@ chance talks-discovery: "Suspended for settlement during discovery" by board cit
     tags [deal, inproc]
   }
   _ "Settlement: consent with narrowed ID (2.133(a) approval)" -> registration-restricted p 0.1 {
-    authority cite 37 CFR 2.133(a)
+    authority cite "37 CFR 2.133(a)"
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
     tags [deal, inproc]
   }
@@ -318,7 +318,7 @@ chance talks-trial: "Suspended for settlement after discovery" by board cite ?("
     tags [deal, inproc]
   }
   _ "Settlement: consent with narrowed ID (2.133(a) approval)" -> registration-restricted p 0.1 {
-    authority cite 37 CFR 2.133(a)
+    authority cite "37 CFR 2.133(a)"
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
     tags [deal, inproc]
   }
@@ -341,14 +341,14 @@ state acr-record: "ACR: stipulated record, Board decides on summary-judgment-sty
 state trial-periods: "Trial periods: pretrial disclosures, plaintiff 30d, defendant 30d, rebuttal 15d" by applicant cite ?("37 CFR 2.121(a)-(c); TBMP 702.01") {
   group trial
   _ "Take trial testimony / notices of reliance" -> trial-closed {
-    authority cite 37 CFR 2.121; 2.123; 2.125
+    authority cite "37 CFR 2.121; 2.123; 2.125"
     effort 30.hours
     duration { min 120.days, mode 150.days, max 240.days }
     attrs { opp_hours: 35 }
   }
 }
 
-decision trial-closed: "Trial closed; briefing decision" by applicant cite 37 CFR 2.128(a)
+decision trial-closed: "Trial closed; briefing decision" by applicant cite "37 CFR 2.128(a)"
 {
   group trial
   _ "Abandon application without opposer's consent (judgment, 37 CFR 2.135)" -> judgment-2135 {
@@ -396,7 +396,7 @@ chance talks-briefs: "Suspended for settlement before briefs" by board cite ?("3
     tags [deal, inproc]
   }
   _ "Settlement: consent with narrowed ID (2.133(a) approval)" -> registration-restricted p 0.1 {
-    authority cite 37 CFR 2.133(a)
+    authority cite "37 CFR 2.133(a)"
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
     tags [deal, inproc]
   }
@@ -407,7 +407,7 @@ chance talks-briefs: "Suspended for settlement before briefs" by board cite ?("3
   }
 }
 
-state briefs-filed: "Final briefs filed (plaintiff 60d, defendant +30d, reply +15d)" by board cite 37 CFR 2.128(a)(1)
+state briefs-filed: "Final briefs filed (plaintiff 60d, defendant +30d, reply +15d)" by board cite "37 CFR 2.128(a)(1)"
 {
   group trial
   _ "Board panel decides" -> final-decision {

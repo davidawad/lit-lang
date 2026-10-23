@@ -297,7 +297,7 @@ fn bowles_order_cannot_extend_the_statutory_appeal_limit() {
     // its capability's bound and is rejected, so the filing stays missed.
     let checked = check_2009(&matter_2009(&[
         "2010-04-01 Served(complaint, Personal) on widget",
-        "2010-04-20 AnswerExtended(2010-05-25) by court cite FRCP 6(b)(1)(A)",
+        "2010-04-20 AnswerExtended(2010-05-25) by court cite \"FRCP 6(b)(1)(A)\"",
         "2010-05-24 MovedToDismiss(complaint) by widget",
     ]));
     let rendered = render(&checked.diagnostics);
@@ -314,7 +314,7 @@ fn bowles_order_cannot_extend_the_statutory_appeal_limit() {
     // The same order within the bound makes the filing timely.
     let lawful = check_2009(&matter_2009(&[
         "2010-04-01 Served(complaint, Personal) on widget",
-        "2010-04-20 AnswerExtended(2010-05-21) by court cite FRCP 6(b)(1)(A)",
+        "2010-04-20 AnswerExtended(2010-05-21) by court cite \"FRCP 6(b)(1)(A)\"",
         "2010-05-21 MovedToDismiss(complaint) by widget",
     ]));
     assert!(lawful.ok(), "{:#?}", render(&lawful.diagnostics));
@@ -370,7 +370,7 @@ fn amendment_replay_table() {
             vec![
                 served,
                 "2009-11-25 OrderedPriorRules() by court",
-                "2009-12-09 AnswerExtended(2009-12-14) by court cite FRCP 6(b)(1)(A)",
+                "2009-12-09 AnswerExtended(2009-12-14) by court cite \"FRCP 6(b)(1)(A)\"",
                 "2009-12-11 MovedToDismiss(complaint) by widget",
             ],
         ),
@@ -386,7 +386,7 @@ fn amendment_replay_table() {
         (
             "pending: an extension before the trigger has nothing to extend",
             vec![
-                "2009-11-18 AnswerExtended(2009-12-14) by court cite FRCP 6(b)(1)(A)",
+                "2009-11-18 AnswerExtended(2009-12-14) by court cite \"FRCP 6(b)(1)(A)\"",
                 served,
                 "2009-11-25 OrderedPriorRules() by court",
                 "2009-12-11 MovedToDismiss(complaint) by widget",
@@ -396,7 +396,7 @@ fn amendment_replay_table() {
             "pending: an event named Extended declares no effect and is illegal",
             vec![
                 served,
-                "2009-12-09 Extended(complaint) by court cite FRCP 6(b)(1)(A)",
+                "2009-12-09 Extended(complaint) by court cite \"FRCP 6(b)(1)(A)\"",
             ],
         ),
         (

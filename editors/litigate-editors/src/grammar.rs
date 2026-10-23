@@ -108,7 +108,6 @@ pub fn build(out: &Path, abi: u32) -> Result<PathBuf> {
         .args(["-shared", "-fPIC", "-O2"])
         .arg(format!("-I{}", src.display()))
         .arg(src.join("parser.c"))
-        .arg(src.join("scanner.c"))
         .arg("-o")
         .arg(&library));
     if scratch.exists() {
@@ -127,12 +126,7 @@ fn regenerate(scratch: &Path, abi: u32) -> Result<PathBuf> {
     }
     std::fs::create_dir_all(scratch.join("src"))?;
     std::fs::create_dir_all(scratch.join("grammar"))?;
-    for file in [
-        "grammar.js",
-        "tree-sitter.json",
-        "package.json",
-        "src/scanner.c",
-    ] {
+    for file in ["grammar.js", "tree-sitter.json", "package.json"] {
         std::fs::copy(grammar.join(file), scratch.join(file))
             .with_context(|| format!("copying {file}"))?;
     }

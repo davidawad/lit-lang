@@ -13,7 +13,8 @@
  *
  * Keywords are contextual (SPEC §2): every keyword is extracted from the
  * `identifier` word token, so a keyword is only a keyword where the grammar
- * expects one. `cite` text is lexed by the external scanner (src/scanner.c).
+ * expects one. Citation text is an ordinary string, so the grammar needs no
+ * external scanner.
  */
 
 /* eslint-disable no-undef */
@@ -26,8 +27,6 @@ module.exports = grammar({
   name: 'litigate',
 
   word: $ => $.identifier,
-
-  externals: $ => [$.cite_text, $._error_sentinel],
 
   extras: $ => [/\s/, $.line_comment, $.doc_comment, $.block_comment],
 

@@ -2,11 +2,19 @@
 //! to its `.lit` span, declaration version, and the L0 source sections its
 //! citation resolves to, plus the `generated` marker. Sidecars are excluded
 //! from semantic equality.
+//!
+//! A resolved citation is structured (SPEC §4.3): the work (the source
+//! binding), its expression (the binding's `as_of`, whose text the
+//! binding's `path_sha256` pins) and the pinpoint, with the SHA-256 of the
+//! cited section's text once that text is verified against the pin.
 use litgraph::cite::{parse_cite_string, CiteGrammar, Family, SourceCorpus};
 use litgraph::model::{CiteCode, CiteRuleForm, CiteSyntax};
 use litigate_base::Span;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use sha2::{Digest, Sha256};
+use std::collections::BTreeMap;
+use std::fmt::Write as _;
 
 /// Marks a file as compiler output: who generated it, from which language
 /// version. Deterministic (no timestamps, no absolute paths).
@@ -55,6 +63,51 @@ pub struct L0Section {
     /// One-based line of its `## <heading>` line in `path`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub line: Option<u32>,
+    /// Date of the cited expression: the binding's `as_of`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub as_of: Option<String>,
+    /// The pinpoint below the section (`["b", "6"]` for `12(b)(6)`).
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub pinpoint: Vec<String>,
+    /// SHA-256 (lowercase hex) of the section's text, the lines after its
+    /// `## <heading>` line up to the next `## ` line, trimmed. Present
+    /// only when `path`'s text is the one the binding's `path_sha256` pins.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub sha256: Option<String>,
+}
+
+/// How a binding's vendored file checks against its `path_sha256` pin.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Pin {
+    /// The binding has no `path`: nothing to verify.
+    NoPath,
+    /// `path` is not in the corpus.
+    Absent,
+    /// The binding pins no `path_sha256`; `actual` is the file's hash.
+    Unpinned {
+        /// SHA-256 of the corpus file.
+        actual: String,
+    },
+    /// The corpus file is not the pinned text.
+    Mismatch {
+        /// The binding's `path_sha256`.
+        pinned: String,
+        /// SHA-256 of the corpus file.
+        actual: String,
+    },
+    /// The corpus file is the pinned text.
+    Verified,
+}
+
+/// Lowercase hex SHA-256 of `text`.
+#[must_use]
+pub fn sha256_hex(text: &str) -> String {
+    Sha256::digest(text.as_bytes())
+        .iter()
+        .fold(String::with_capacity(64), |mut s, b| {
+            let _ = write!(s, "{b:02x}");
+            s
+        })
 }
 
 /// A cite string and where each of its citations is in L0.
@@ -115,6 +168,9 @@ pub struct Citations<'c> {
     /// C.F.R. parts 201 and 210 in separate files); the one whose file
     /// holds the heading wins.
     bound: Vec<(Family, String, Option<String>)>,
+    /// Source id to its binding's expression date, vendored path, and how
+    /// that file checks against its pin.
+    pins: BTreeMap<String, Bound>,
     corpus: Option<&'c SourceCorpus>,
 }
 
@@ -166,11 +222,41 @@ impl<'c> Citations<'c> {
             Some((family, id, p))
         });
         let bound = rules.chain(shorthands).chain(shared).collect();
+        let mut hashes = BTreeMap::new();
+        let mut hash = |path: &String| -> Option<String> {
+            let text = corpus?.files.get(path)?;
+            Some(
+                hashes
+                    .entry(path.clone())
+                    .or_insert_with(|| sha256_hex(text))
+                    .clone(),
+            )
+        };
+        let pins = sources
+            .iter()
+            .map(|s| {
+                let actual = s.path.as_ref().and_then(&mut hash);
+                let bound = Bound {
+                    as_of: s.as_of.clone(),
+                    path: s.path.clone(),
+                    pin: pin(s.path.is_some(), s.path_sha256.as_ref(), actual),
+                };
+                (s.id.clone(), bound)
+            })
+            .collect();
         Self {
             syntax,
             bound,
+            pins,
             corpus,
         }
+    }
+
+    /// How source `id`'s vendored file checks against its pin (an
+    /// undeclared id has no path).
+    #[must_use]
+    pub fn pin(&self, id: &str) -> &Pin {
+        self.pins.get(id).map_or(&Pin::NoPath, |b| &b.pin)
     }
 
     /// The citation syntax in effect: the pack's own plus one rule per
@@ -208,7 +294,7 @@ impl<'c> Citations<'c> {
                     .find(|(_, _, p)| holds(p))
                     .or_else(|| candidates.first())
                     .map(|(_, s, _)| s.clone());
-                Some(self.locate(heading, source))
+                Some(self.locate(heading, c.subsections.clone(), source))
             })
             .collect();
         Some(CiteMap {
@@ -217,24 +303,53 @@ impl<'c> Citations<'c> {
         })
     }
 
-    fn locate(&self, heading: String, source: Option<String>) -> L0Section {
-        let found = self
-            .corpus
-            .and_then(|c| Some((c, c.lookup_all(&heading).first()?)));
-        let (path, line) = found.map_or((None, None), |(corpus, (path, _))| {
-            let marker = format!("## {heading}");
-            let line = corpus.files.get(path).and_then(|text| {
-                text.lines()
-                    .position(|l| l.trim_end() == marker)
-                    .and_then(|i| u32::try_from(i + 1).ok())
-            });
-            (Some(path.clone()), line)
+    /// `heading` in the file of the binding `source` resolves through.
+    fn locate(&self, heading: String, pinpoint: Vec<String>, source: Option<String>) -> L0Section {
+        let bound = source.as_ref().and_then(|id| self.pins.get(id));
+        let path = bound.and_then(|b| b.path.as_ref());
+        let section = self.corpus.zip(path).and_then(|(c, p)| {
+            let (_, section) = c.lookup_all(&heading).iter().find(|(f, _)| f == p)?;
+            // The corpus indexed the heading from this file, so its line is there.
+            let text = c.files.get(p).map_or("", String::as_str);
+            let line = text
+                .lines()
+                .position(|l| l.strip_prefix("## ").is_some_and(|h| h.trim() == heading))
+                .map_or(0, |i| i + 1);
+            Some((u32::try_from(line).unwrap_or(u32::MAX), section))
         });
+        let verified = bound.is_some_and(|b| b.pin == Pin::Verified);
         L0Section {
+            path: section.and(path.cloned()),
+            line: section.map(|(line, _)| line),
+            as_of: bound.and_then(|b| b.as_of.clone()),
+            sha256: section
+                .filter(|_| verified)
+                .map(|(_, s)| sha256_hex(&s.body)),
             heading,
             source,
-            path,
-            line,
+            pinpoint,
         }
+    }
+}
+
+/// A source binding as citations see it.
+struct Bound {
+    as_of: Option<String>,
+    path: Option<String>,
+    pin: Pin,
+}
+
+/// A binding's file (`actual` its hash, when in the corpus) against its
+/// `path_sha256`.
+fn pin(has_path: bool, pinned: Option<&String>, actual: Option<String>) -> Pin {
+    match (has_path, actual, pinned) {
+        (false, _, _) => Pin::NoPath,
+        (true, None, _) => Pin::Absent,
+        (true, Some(actual), None) => Pin::Unpinned { actual },
+        (true, Some(actual), Some(pinned)) if *pinned != actual => Pin::Mismatch {
+            pinned: pinned.clone(),
+            actual,
+        },
+        (true, Some(_), Some(_)) => Pin::Verified,
     }
 }

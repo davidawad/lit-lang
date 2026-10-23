@@ -91,7 +91,9 @@ fn node() -> impl Strategy<Value = Node> {
         ident(),
         label(),
         prop::option::of(ident()),
-        prop::option::of("[A-Z]{2,4} [0-9]{1,2}\\([a-z]\\)"),
+        // Citation text needs no escape hatch: commas, `§§`, braces and
+        // `//` are plain string content.
+        prop::option::of("[A-Z]{2,4} [0-9]{1,2}\\([a-z]\\)(, §§ [0-9]{1,2} [{}/]{0,2})?"),
         prop::collection::vec(ident(), 0..3),
         prop::collection::vec(edge(), 0..4),
     )
@@ -264,8 +266,9 @@ fn print_node(p: &mut Printer<'_>, node: &Node) {
     }
     if let Some(cite) = &node.cite {
         p.tok("cite");
-        p.out.push(' ');
+        p.out.push_str(" \"");
         p.out.push_str(cite);
+        p.out.push('"');
         p.out.push('\n');
     }
     p.tok("{");

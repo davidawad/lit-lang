@@ -5,41 +5,41 @@ import cofc.patent-track.{ patent-early-meeting }
 import cofc.rules-pleading.{ answer-after-ruling, answer-period }
 import cofc.{ pleading-group }
 
-state complaint-filed: "Complaint Filed" by office cite RCFC 3; RCFC 5.5
+state complaint-filed: "Complaint Filed" by office cite "RCFC 3; RCFC 5.5"
 {
   group pleading-group
   note "A civil action is commenced by filing a complaint with the court (RCFC 3 -- textually identical to FRCP 3). Filing fee $405.00 (includes a $55.00 general administrative fee; waivable in forma pauperis for non-prisoner plaintiffs under 28 U.S.C. §1915) per the court's Schedule of Fees effective 7/28/2025. This is the moment that stops the §2501 limitations clock."
   e-complaint-to-service "Clerk delivers the complaint to the Attorney General" -> service-on-united-states {
-    authority cite RCFC 4(a)
+    authority cite "RCFC 4(a)"
   }
 }
 
-state service-on-united-states: "Clerk Serves the Complaint on the United States" by applicant cite RCFC 4(a)-(c)
+state service-on-united-states: "Clerk Serves the Complaint on the United States" by applicant cite "RCFC 4(a)-(c)"
 {
   group pleading-group
   note "Unlike FRCP 4, the PLAINTIFF does not serve the defendant here -- the CLERK delivers one copy of the complaint to the Attorney General (or an agent designated by the AG) by hand delivery or a designated electronic address. The clerk enters the fact of service on the docket (prima facie proof), and the date of service is the date the clerk enters the complaint in CM/ECF. There is no RCFC 4(m)-style plaintiff service-deadline trap because service is the clerk's job, not counsel's."
   e-service-to-voldismissal "Plaintiff dismisses by notice or stipulation before an answer, SJ motion, or motion for judgment on the administrative record is served" -> voluntary-dismissal-early {
-    authority cite RCFC 41(a)(1)(A)
+    authority cite "RCFC 41(a)(1)(A)"
     effort 2.hours
     tags [voluntary]
   }
   e-service-to-responsefork "Case proceeds; government's responsive-pleading clock begins" -> government-response-fork by either {
-    authority cite RCFC 12(a)(1)(A)
+    authority cite "RCFC 12(a)(1)(A)"
   }
 }
 
-decision government-response-fork: "United States Answers or Moves Under RCFC 12(b)?" by examiner cite RCFC 12(a)(1)(A); 12(b)
+decision government-response-fork: "United States Answers or Moves Under RCFC 12(b)?" by examiner cite "RCFC 12(a)(1)(A); 12(b)"
 {
   group pleading-group
   note "The United States must file an answer within 60 days after being served with the complaint (RCFC 12(a)(1)(A) -- three times the FRCP's default 21 days, reflecting DOJ's centralized litigation-assignment process) UNLESS it instead files a RCFC 12(b) motion, which resets the responsive-pleading clock to 14 days after the court rules (RCFC 12(a)(4))."
   e-responsefork-answer "United States answers" -> answer-filed {
-    authority cite RCFC 12(a)(1)(A)
+    authority cite "RCFC 12(a)(1)(A)"
     effort 25.hours
     within answer-period { note "60 days after service of the complaint." }
     duration { min 30.days, mode 60.days, max 60.days }
   }
   e-responsefork-motion "United States moves under RCFC 12(b) instead of answering" -> motion-12b-filed {
-    authority cite RCFC 12(b)
+    authority cite "RCFC 12(b)"
     effort 60.hours
     within answer-period {
       note "Must be filed within the same 60-day window that would otherwise produce an answer."
@@ -47,19 +47,19 @@ decision government-response-fork: "United States Answers or Moves Under RCFC 12
   }
 }
 
-state motion-12b-filed: "RCFC 12(b) Motion Filed" cite RCFC 12(b)
+state motion-12b-filed: "RCFC 12(b) Motion Filed" cite "RCFC 12(b)"
 {
   group pleading-group
   note "Seven enumerated defenses, most commonly (1) lack of subject-matter jurisdiction and (6) failure to state a claim upon which relief can be granted. RCFC 12(b)(3) improper venue and 12(b)(2) personal jurisdiction are functionally inapplicable (CoFC has nationwide, non-territorial jurisdiction over money claims against the United States). RCFC 12(h)(3): if the court determines at ANY time it lacks subject-matter jurisdiction, it MUST dismiss -- this defense is never waived, unlike (2)-(5)."
   e-motion12b-to-ruling "Briefing completes; court rules on the RCFC 12(b) motion" -> ruling-12b
 }
 
-chance ruling-12b: "Court Rules on RCFC 12(b) Motion" by office discretion cite RCFC 12(b); 12(d)
+chance ruling-12b: "Court Rules on RCFC 12(b) Motion" by office discretion cite "RCFC 12(b); 12(d)"
 {
   group pleading-group
   note "Outcome distribution authored at 0.55 denied / 0.20 granted-with-leave-to-amend / 0.15 granted-12(b)(1)-no-leave / 0.10 granted-12(b)(6)-no-leave -- TEACHING ESTIMATE, not a cited empirical CoFC motion-grant-rate figure. If matters outside the pleadings are presented and not excluded on a 12(b)(6)/12(c) motion, RCFC 12(d) converts it to a RCFC 56 summary-judgment motion (not separately modeled here)."
   e-ruling12b-denied "Motion denied" -> answer-filed p 0.55 {
-    authority cite RCFC 12(a)(4)
+    authority cite "RCFC 12(a)(4)"
     within answer-after-ruling {
       extendable false
       note "Answer due 14 days after notice of the court's action."
@@ -70,30 +70,30 @@ chance ruling-12b: "Court Rules on RCFC 12(b) Motion" by office discretion cite 
     note "TEACHING ESTIMATE, see sibling edge note."
   }
   e-ruling12b-jurisdiction "Granted, no leave -- lack of subject-matter jurisdiction" -> dismissed-lack-of-jurisdiction p 0.15 {
-    authority cite RCFC 12(b)(1); 12(h)(3)
+    authority cite "RCFC 12(b)(1); 12(h)(3)"
     valence bad
     note "TEACHING ESTIMATE, see sibling edge note."
     tags [dispositive, jurisdictional]
   }
   e-ruling12b-failstate "Granted, no leave -- failure to state a claim" -> dismissed-failure-to-state p 0.1 {
-    authority cite RCFC 12(b)(6)
+    authority cite "RCFC 12(b)(6)"
     valence bad
     note "TEACHING ESTIMATE, see sibling edge note."
     tags [dispositive, merits]
   }
 }
 
-state amended-complaint-refiled: "Amended Complaint Filed" by applicant cite RCFC 15(a)
+state amended-complaint-refiled: "Amended Complaint Filed" by applicant cite "RCFC 15(a)"
 {
   group pleading-group
   note "Curing the deficiency identified in the 12(b) ruling; re-enters the government-response cycle (a fresh 60-day-equivalent response window typically set by the court's order rather than a bare re-run of RCFC 12(a)(1), not separately modeled)."
   e-amended-to-responsefork "Government's responsive-pleading clock re-runs against the amended complaint" -> government-response-fork {
-    authority cite RCFC 15(a)
+    authority cite "RCFC 15(a)"
     effort 10.hours
   }
 }
 
-terminal dismissed-lack-of-jurisdiction: "DISMISSED -- Lack of Subject-Matter Jurisdiction" outcome [loss, dismissal, jurisdictional] cite RCFC 12(b)(1); 12(h)(3)
+terminal dismissed-lack-of-jurisdiction: "DISMISSED -- Lack of Subject-Matter Jurisdiction" outcome [loss, dismissal, jurisdictional] cite "RCFC 12(b)(1); 12(h)(3)"
 {
   group pleading-group
   note "PLACEHOLDER PAYOFF: $0, override per matter."
@@ -101,7 +101,7 @@ terminal dismissed-lack-of-jurisdiction: "DISMISSED -- Lack of Subject-Matter Ju
   payoff 0.usd
 }
 
-terminal dismissed-failure-to-state: "DISMISSED -- Failure to State a Claim" outcome [loss, dismissal, merits] cite RCFC 12(b)(6)
+terminal dismissed-failure-to-state: "DISMISSED -- Failure to State a Claim" outcome [loss, dismissal, merits] cite "RCFC 12(b)(6)"
 {
   group pleading-group
   note "PLACEHOLDER PAYOFF: $0, override per matter. Unlike (1), this defense is waivable if never raised (RCFC 12(h)(2)) and, if granted without leave, generally operates as an adjudication on the merits (RCFC 41(b))."
@@ -109,7 +109,7 @@ terminal dismissed-failure-to-state: "DISMISSED -- Failure to State a Claim" out
   payoff 0.usd
 }
 
-state answer-filed: "Answer Filed" cite RCFC 8; 12(a)
+state answer-filed: "Answer Filed" cite "RCFC 8; 12(a)"
 {
   group pleading-group
   note "The United States admits, denies, or professes lack of knowledge as to each allegation, and pleads any affirmative defenses (including a §1500 or §2501 defense not resolved earlier, or a §1498(a) government-contractor-authorization defense). Filing the answer is the trigger event for BOTH the general Appendix A Joint Preliminary Status Report clock and, on the patent track, the Appendix J deadline cascade."
@@ -118,7 +118,7 @@ state answer-filed: "Answer Filed" cite RCFC 8; 12(a)
   }
 }
 
-terminal voluntary-dismissal-early: "VOLUNTARY DISMISSAL (Before Answer/SJ/MJAR)" outcome [voluntary, no-prejudice-unless-second-dismissal] cite RCFC 41(a)(1)(A)
+terminal voluntary-dismissal-early: "VOLUNTARY DISMISSAL (Before Answer/SJ/MJAR)" outcome [voluntary, no-prejudice-unless-second-dismissal] cite "RCFC 41(a)(1)(A)"
 {
   group pleading-group
   note "PLACEHOLDER PAYOFF: $0 minus sunk cost, override per matter. Plaintiff may dismiss without a court order by notice (before an answer, SJ motion, or motion for judgment on the administrative record is served) or by stipulation signed by all appearing parties. Without-prejudice by default UNLESS the plaintiff previously dismissed the same claim in another federal/state action, in which case a second notice of dismissal operates AS AN ADJUDICATION ON THE MERITS (RCFC 41(a)(1)(B), the 'two-dismissal rule') -- a trap for a plaintiff who tried and abandoned the same claim once before."

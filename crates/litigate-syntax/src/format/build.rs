@@ -64,7 +64,7 @@ impl Builder {
                 let parent = token.parent().map_or(SourceFile, |p| p.kind());
                 self.before_token(kind, parent);
                 self.out.push(Doc::text(token.text()));
-                self.after_cite = kind == CiteText;
+                self.after_cite = parent == CiteExpr && kind != KwCite && ends_node(token);
                 self.prev = Some(Prev { kind, parent });
                 self.newlines = 0;
             }
@@ -163,6 +163,17 @@ impl Builder {
         self.after_cite = false;
         open + 1 + close + 1
     }
+}
+
+/// True when nothing but trivia follows `token` in its parent node: the
+/// citation text (or `historical`) that ends a `cite` clause, which ends
+/// its line (SPEC §10).
+fn ends_node(token: &SyntaxToken) -> bool {
+    std::iter::successors(
+        token.next_sibling_or_token(),
+        Element::next_sibling_or_token,
+    )
+    .all(|e| matches!(e.kind(), Whitespace | Comment | DocComment))
 }
 
 #[derive(Debug, Default)]

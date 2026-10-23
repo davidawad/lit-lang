@@ -38,8 +38,9 @@ core = { version = "^1.0.0", path = "../core" }
 [sources.frcp]                # every cite must resolve to a span of this text
 title = "Federal Rules of Civil Procedure"
 url = "https://www.law.cornell.edu/rules/frcp"
-path = "sources/frcp.txt"
-as_of = "2024-12-01"
+path = "sources/frcp.txt"     # the vendored text cites resolve against,
+path_sha256 = "cb9a19a0ad99acdbd04f46acd3893bb96fbd34c9a8f66de57f5d171dbd268b44"
+as_of = "2024-12-01"          # pinned by its SHA-256; the expression's date
 cite_prefixes = ["FRCP"]
 section_heading = "Rule {n}"
 ```
@@ -60,24 +61,24 @@ event Served(method: ServiceMethod)
 
 /// A defendant must serve an answer within 21 days after being served
 /// with the summons and complaint.
-rule duty answer-duty cite FRCP 12(a)(1)(A)(i)
+rule duty answer-duty cite "FRCP 12(a)(1)(A)(i)"
 {
   deadline answer-period: 21.days from Served() counted_by frcp6
 }
 
-decision served: "Answer or let the deadline pass" by Defendant cite FRCP 12(a)(1)(A)(i)
+decision served: "Answer or let the deadline pass" by Defendant cite "FRCP 12(a)(1)(A)(i)"
 {
   answer "File an answer" -> answered { effort 8.hours, within answer-period }
   default "Let the deadline pass" -> defaulted { valence bad }
 }
 
-chance answered: "Merits" by Court cite FRCP 56(a)
+chance answered: "Merits" by Court cite "FRCP 56(a)"
 {
   win "Judgment for the plaintiff" -> plaintiff-wins p 2/5
   lose "Judgment for the defendant" -> defendant-wins p 3/5
 }
 
-terminal defaulted: "Default judgment" outcome [judgment, win] cite FRCP 55(b)
+terminal defaulted: "Default judgment" outcome [judgment, win] cite "FRCP 55(b)"
 {
   payoff 100_000.usd
 }
@@ -109,19 +110,19 @@ are cites that resolve to no source.
 Inline tests pin what a rule computes. Add them to `answer.lit`:
 
 ```lit
-test "answer due 21 days after personal service" cite FRCP 12(a)(1)(A)(i)
+test "answer due 21 days after personal service" cite "FRCP 12(a)(1)(A)(i)"
 {
   given Served(Personal) on 2025-03-03
   expect deadline(answer-period) == 2025-03-24
 }
 
-test "a period ending on a Saturday rolls to Monday" cite FRCP 6(a)(1)(C)
+test "a period ending on a Saturday rolls to Monday" cite "FRCP 6(a)(1)(C)"
 {
   given Served(Personal) on 2025-03-08
   expect deadline(answer-period) == 2025-03-31
 }
 
-test "mail service adds three days" cite FRCP 6(d)
+test "mail service adds three days" cite "FRCP 6(d)"
 {
   given Served(Mail) on 2025-03-03
   expect deadline(answer-period) == 2025-03-27

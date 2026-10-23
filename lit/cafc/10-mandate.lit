@@ -7,12 +7,12 @@ import cafc.{ Entered, Filed, Order, Paper, mandate-group }
 import core.authority.{ CaseOrder }
 import core.frap26.{ frap26 }
 
-state mandate-issued: "Mandate Issues" cite FRAP 41; Fed. Cir. R. 41
+state mandate-issued: "Mandate Issues" cite "FRAP 41; Fed. Cir. R. 41"
 {
   group mandate-group
   note "Formal order returning jurisdiction to the origin tribunal; distinct from the opinion. 'An order granting an unopposed motion to dismiss or remand a case will constitute the mandate.' Fed. Cir. R. 41. Interest on an affirmed money judgment runs under FRAP 37(a) (and, against the United States, 28 U.S.C. § 1961's post-judgment-interest rate) from the date the judgment below was entered; on reversal, the mandate must instruct on interest (FRAP 37(b))."
   mandate-to-costs "File itemized, verified bill of costs" -> costs-bill-filed {
-    authority cite FRAP 39(e)(3)(A); Fed. Cir. R. 39(b)
+    authority cite "FRAP 39(e)(3)(A); Fed. Cir. R. 39(b)"
     effort 3.hours
     cost 800.usd
     event Filed(BillOfCosts)
@@ -24,7 +24,7 @@ state mandate-issued: "Mandate Issues" cite FRAP 41; Fed. Cir. R. 41
   }
 }
 
-state costs-bill-filed: "Bill of Costs Filed and Taxed" by office cite FRAP 39; Fed. Cir. R. 39
+state costs-bill-filed: "Bill of Costs Filed and Taxed" by office cite "FRAP 39; Fed. Cir. R. 39"
 {
   group mandate-group
   note "Costs generally follow the result (FRAP 39(a)): against the appellant on dismissal or affirmance, against the appellee on reversal, each side bears its own on a mixed disposition. Taxable court-of-appeals costs are limited to brief/appendix copying, the docketing fee, and any CAFC filing fee (FRAP 39(e)(1)). Filing does not delay the mandate (FRAP 39(e)(3)(C))."
@@ -38,18 +38,18 @@ state costs-bill-filed: "Bill of Costs Filed and Taxed" by office cite FRAP 39; 
 /// 2025 amendment (Supreme Court order of April 23, 2025, effective
 /// December 1, 2025) moved the requirement to (e)(3)(A). Fed. Cir. R. 26(b)
 /// lets the court extend it.
-rule duty bill-of-costs cite FRAP 39(e)(3)(A)
+rule duty bill-of-costs cite "FRAP 39(e)(3)(A)"
 {
-  deadline costs-period: 14.days after Entered(PanelJudgment) counted_by frap26 effective [2025-12-01, ..) known_at 2025-04-23 delegable_to [CaseOrder] cite FRAP 39(e)(3)(A); Fed. Cir. R. 39; Fed. Cir. R. 26(b)(1)
+  deadline costs-period: 14.days after Entered(PanelJudgment) counted_by frap26 effective [2025-12-01, ..) known_at 2025-04-23 delegable_to [CaseOrder] cite "FRAP 39(e)(3)(A); Fed. Cir. R. 39; Fed. Cir. R. 26(b)(1)"
 }
 
-test "the bill of costs is due 14 days after entry of judgment" cite FRAP 39(e)(3)(A)
+test "the bill of costs is due 14 days after entry of judgment" cite "FRAP 39(e)(3)(A)"
 {
   given Entered(PanelJudgment) on 2026-03-02
   expect deadline(costs-period) == 2026-03-16
 }
 
-test "a 14th day on Juneteenth rolls the bill of costs to Monday" cite FRAP 26(a)(6)(A)
+test "a 14th day on Juneteenth rolls the bill of costs to Monday" cite "FRAP 26(a)(6)(A)"
 {
   given Entered(PanelJudgment) on 2026-06-05
   expect deadline(costs-period) == 2026-06-22

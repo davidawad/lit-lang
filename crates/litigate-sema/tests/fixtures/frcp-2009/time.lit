@@ -2,7 +2,7 @@ module frcp.time
 
 /// FRCP 6(a)(6) legal holidays (abbreviated to the holidays of 2007-2010;
 /// mirrors packs/clock/us-federal-holidays.json).
-calendar federal-holidays cite FRCP 6(a)(6)
+calendar federal-holidays cite "FRCP 6(a)(6)"
 {
   new-year: fixed(1, 1) effective [1870-06-28, ..) observed nearest_weekday
   mlk-day: nth(3, monday, 1) effective [1986-01-01, ..)
@@ -20,7 +20,7 @@ calendar federal-holidays cite FRCP 6(a)(6)
 /// and legal holidays when the period is less than 11 days (6(a)(2)).
 counting frcp6
   effective [2007-12-01, 2009-12-01) known_at 2007-04-30
-  cite FRCP 6(a)
+  cite "FRCP 6(a)"
 {
   exclude_trigger_day
   include_last_day
@@ -33,7 +33,7 @@ counting frcp6
 /// FRCP 6(a) as amended in 2009: count every day (6(a)(1)(B)).
 counting frcp6
   effective [2009-12-01, ..) known_at 2009-03-26 supersedes frcp6@2007-12-01
-  cite FRCP 6(a)(1)
+  cite "FRCP 6(a)(1)"
 {
   exclude_trigger_day
   include_last_day

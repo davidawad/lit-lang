@@ -9,8 +9,12 @@ pub struct Metadata {
     pub id: String,
     /// Human label (string after `:`), else the joined `///` doc comment.
     pub label: String,
-    /// Normalized citation text (`cite ...`).
+    /// Citation text of the first `cite` clause (`cite "..."`).
     pub cite: Option<String>,
+    /// That cite is marked `historical`: it cites an expression of the work
+    /// dated outside `effective` on purpose (SPEC §4.3).
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub historical: bool,
     /// Resolved in-force interval and corpus date (never absent after sema).
     pub effective: Interval,
     /// Authority level (declared, else enclosing rule's, else package's).

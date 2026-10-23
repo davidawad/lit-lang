@@ -51,9 +51,9 @@ fn a_dependent_package_counts_with_an_imported_rule() {
         start l\n\
         state l: \"L\" { _ \"Go\" -> t }\n\
         terminal t: \"T\" { payoff 0.usd }\n\
-        rule duty local-duty cite FRCP 12(a)\n{\n  deadline local-period: 14.days from \
+        rule duty local-duty cite \"FRCP 12(a)\"\n{\n  deadline local-period: 14.days from \
         Served(complaint) counted_by frcp6\n}\n\
-        test \"local period by mail\" cite FRCP 6(d)\n{\n  \
+        test \"local period by mail\" cite \"FRCP 6(d)\"\n{\n  \
         given Served(complaint, Mail) on 2025-03-03\n  \
         expect deadline(local-period) == 2025-03-20\n}\n";
     let c = verify(
@@ -86,8 +86,8 @@ const UNVENDORED: &str = "[sources.local]\ntitle = \"Local Rules\"\n\
 /// `BASE` with `served` cited as `cite`, under `sources` plus the FRCP.
 fn cited(sources: &str, cite: &str) -> litigate_verify::Checked {
     let lit = edit(
-        "by Defendant cite FRCP 12(a)",
-        &format!("by Defendant cite {cite}"),
+        "by Defendant cite \"FRCP 12(a)\"",
+        &format!("by Defendant cite \"{cite}\""),
     );
     verify(
         &[pkg_with_sources(
@@ -122,8 +122,8 @@ fn cite_resolves_rejects_each_cite_with_no_heading() {
     // message orders them.
     let c = verify_one(
         &edit(
-            "by Defendant cite FRCP 12(a)",
-            "by Defendant cite 0 U.S.C. § 102; 0 U.S.C. § 101",
+            "by Defendant cite \"FRCP 12(a)\"",
+            "by Defendant cite \"0 U.S.C. § 102; 0 U.S.C. § 101\"",
         ),
         Profile::Strict,
     );
@@ -134,8 +134,8 @@ fn cite_resolves_rejects_each_cite_with_no_heading() {
 fn text_with_no_rule_shape_is_not_a_rule_cite() {
     let c = verify_one(
         &edit(
-            "by Defendant cite FRCP 12(a)",
-            "by Defendant cite FRCP 12(a); Standing Order 12",
+            "by Defendant cite \"FRCP 12(a)\"",
+            "by Defendant cite \"FRCP 12(a); Standing Order 12\"",
         ),
         Profile::Strict,
     );
@@ -156,7 +156,7 @@ fn a_package_sema_rejects_has_no_lowering_or_litigatable() {
 fn cite_resolves_checks_edge_authorities() {
     let lit = edit(
         "{ event Answered(complaint), within answer-period }",
-        "{ event Answered(complaint), within answer-period, authority cite FRCP 99(a) }",
+        "{ event Answered(complaint), within answer-period, authority cite \"FRCP 99(a)\" }",
     );
     let c = verify_one(&lit, Profile::Strict);
     insta::assert_json_snapshot!(outcome(&c, Obligation::CiteResolves));
@@ -168,9 +168,9 @@ fn only_duty_deadlines_constrain_a_node() {
     // neither is a duty, so neither is checked for satisfiability.
     let lit = with(
         "deadline free-period: 30.days from Served(complaint) counted_by frcp6\n\
-         test \"free period\" cite FRCP 6(a)\n{\n  given Served(complaint, Personal) on 2025-03-03\n  \
+         test \"free period\" cite \"FRCP 6(a)\"\n{\n  given Served(complaint, Personal) on 2025-03-03\n  \
          expect deadline(free-period) == 2025-04-02\n}\n\
-         rule power move-duty cite FRCP 12(a)\n{\n  decision m: \"Move?\" by Defendant \
+         rule power move-duty cite \"FRCP 12(a)\"\n{\n  decision m: \"Move?\" by Defendant \
          { tags [entry], _ \"Yes\" -> answered }\n}",
     )
     .replacen(

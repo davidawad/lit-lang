@@ -5,15 +5,15 @@ import ttab.decision-3.{ noa-post-decision }
 import ttab.terminals.{ opposition-sustained }
 import ttab.{ appeal }
 
-chance opposer-appeal-outcome: "Opposer appeal decided" by board discretion cite 15 USC 1071
+chance opposer-appeal-outcome: "Opposer appeal decided" by board discretion cite "15 USC 1071"
 {
   group appeal
   _ "Dismissal affirmed" -> noa-post-decision p 0.85 {
-    authority cite 15 USC 1071
+    authority cite "15 USC 1071"
     note "Teaching estimate. Assumption."
   }
   _ "Reversed: opposition sustained" -> opposition-sustained p 0.15 {
-    authority cite 15 USC 1071
+    authority cite "15 USC 1071"
     note "Teaching estimate. Complement."
   }
 }

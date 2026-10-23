@@ -194,7 +194,7 @@ fn declarations() {
                 "module m\nstate s: \"S\" FRCP 8",
                 &[
                     "L0001 2:14-2:18 expected a clause, found `FRCP`; citations start with \
-                   `cite` | fix 2:14-2:14 \"cite \"",
+                   `cite` | fix 2:14-2:20 \"cite \\\"FRCP 8\\\"\"",
                 ],
             ),
             (

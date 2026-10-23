@@ -123,7 +123,7 @@ impl Cx<'_, '_> {
                     display(&event.action)
                 ),
             )
-            .note("add the order or rule after the party, e.g. `cite FRCP 12(h)(1)`");
+            .note("add the order or rule after the party, e.g. `cite \"FRCP 12(h)(1)\"`");
             self.out.push(d);
             return None;
         };

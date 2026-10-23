@@ -164,7 +164,7 @@ mod tests {
     #[test]
     fn a_lowering_failure_is_a_package_diagnostic() {
         let session = example_with(
-            "counting nourl cite XYZ 6(a)\n{\n  exclude_trigger_day\n  include_last_day\n  holidays federal-holidays\n}",
+            "counting nourl cite \"XYZ 6(a)\"\n{\n  exclude_trigger_day\n  include_last_day\n  holidays federal-holidays\n}",
         );
         let clocks = Clocks::new(&session.hir());
         let verdict = package(

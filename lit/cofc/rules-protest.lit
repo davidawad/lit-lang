@@ -6,7 +6,6 @@ import core.rcfc6.{ rcfc6 }
 /// Department of Justice, the clerk, the contracting officer and the
 /// apparently successful offeror.
 event ProtestNoticeGiven()
-
 /// The protest complaint is filed.
 event ProtestFiled()
 
@@ -45,43 +44,43 @@ rule duty protest-prefiling-notice effective [2021-08-02, ..) known_at 2021-08-0
   }
 }
 
-test "the earliest notice for a Monday filing is the Monday before" cite RCFC 6(a)(5)
+test "the earliest notice for a Monday filing is the Monday before" cite "RCFC 6(a)(5)"
 {
   given ProtestFiled() on 2026-08-10
   expect deadline(protest-notice-earliest) == 2026-08-03
 }
 
-test "the latest notice for a Monday filing is the Friday before" cite RCFC 6(a)(5)
+test "the latest notice for a Monday filing is the Friday before" cite "RCFC 6(a)(5)"
 {
   given ProtestFiled() on 2026-08-10
   expect deadline(protest-notice-latest) == 2026-08-07
 }
 
-test "Labor Day is not a day of notice before a Tuesday filing" cite RCFC 6(a)(6)(A)
+test "Labor Day is not a day of notice before a Tuesday filing" cite "RCFC 6(a)(6)(A)"
 {
   given ProtestFiled() on 2026-09-08
   expect deadline(protest-notice-latest) == 2026-09-04
 }
 
-test "five court days before the Tuesday after Labor Day is the Monday a week before" cite RCFC 6(a)(6)(A)
+test "five court days before the Tuesday after Labor Day is the Monday a week before" cite "RCFC 6(a)(6)(A)"
 {
   given ProtestFiled() on 2026-09-08
   expect deadline(protest-notice-earliest) == 2026-08-31
 }
 
-test "Thanksgiving and a weekend push the earliest notice back eight calendar days" cite RCFC 6(a)(6)(A)
+test "Thanksgiving and a weekend push the earliest notice back eight calendar days" cite "RCFC 6(a)(6)(A)"
 {
   given ProtestFiled() on 2026-11-30
   expect deadline(protest-notice-earliest) == 2026-11-20
 }
 
-test "a Wednesday notice allows filing through the next Wednesday" cite RCFC 6(a)(1)(A)
+test "a Wednesday notice allows filing through the next Wednesday" cite "RCFC 6(a)(1)(A)"
 {
   given ProtestNoticeGiven() on 2026-08-05
   expect deadline(protest-notice-window) == 2026-08-12
 }
 
-test "a notice on the Monday before Labor Day allows filing through the Tuesday after" cite RCFC 6(a)(6)(A)
+test "a notice on the Monday before Labor Day allows filing through the Tuesday after" cite "RCFC 6(a)(6)(A)"
 {
   given ProtestNoticeGiven() on 2026-08-31
   expect deadline(protest-notice-window) == 2026-09-08

@@ -7,22 +7,22 @@ import ttab.decision-3.{ decision-restricted }
 import ttab.terminals.{ opposition-sustained }
 import ttab.{ civil-action-period, decision }
 
-chance final-decision: "Board final decision" by board discretion cite 37 CFR 2.129; 2.133(b); 2.136
+chance final-decision: "Board final decision" by board discretion cite "37 CFR 2.129; 2.133(b); 2.136"
 {
   group decision
   note "Merits probability is the key judgment input and is matter-specific; the authored 0.60/0.34/0.06 split is a teaching placeholder. With the Section 18 counterclaim pleaded (state flag s18) a scenario probability_fn shifts mass; see ttab-opposition-applicant-defense."
   fd-sustained "Opposition sustained" -> decision-sustained p 0.6 {
-    authority cite 15 USC 1052(d); 37 CFR 2.136
+    authority cite "15 USC 1052(d); 37 CFR 2.136"
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
     tags [merits-opposer]
   }
   fd-dismissed "Opposition dismissed (with s18: opposer's registration restricted to exclude mobile roadside charging)" -> decision-dismissed p 0.34 {
-    authority cite 37 CFR 2.136; 15 USC 1068; 37 CFR 2.133(d)
+    authority cite "37 CFR 2.136; 15 USC 1068; 37 CFR 2.133(d)"
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
     tags [merits-applicant]
   }
   fd-restricted "Board: registrable only with ID restriction (applicant must move to amend)" -> decision-restricted p 0.06 {
-    authority cite 37 CFR 2.133(b)
+    authority cite "37 CFR 2.133(b)"
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
     tags [restrict]
   }
@@ -31,11 +31,11 @@ chance final-decision: "Board final decision" by board discretion cite 37 CFR 2.
 decision decision-sustained: "Opposition sustained: appeal choice (63 days, 37 CFR 2.145(d))" by applicant cite ?("15 USC 1071; 37 CFR 2.145(d)(1),(3); TBMP 901.01, 902.02") {
   group decision
   _ "Accept the decision; application refused" -> opposition-sustained {
-    authority cite 37 CFR 2.136
+    authority cite "37 CFR 2.136"
     tags [accept]
   }
   _ "Appeal to the Federal Circuit (on the Board record)" -> cafc-outcome {
-    authority cite 15 USC 1071(a); 37 CFR 2.145(d)(1)
+    authority cite "15 USC 1071(a); 37 CFR 2.145(d)(1)"
     effort 120.hours
     cost 1_200.usd
     duration { min 450.days, mode 540.days, max 720.days }
@@ -44,7 +44,7 @@ decision decision-sustained: "Opposition sustained: appeal choice (63 days, 37 C
     attrs { opp_hours: 150 }
   }
   _ "Civil action in district court (15 USC 1071(b); new evidence)" -> district-outcome {
-    authority cite 15 USC 1071(b); 37 CFR 2.145(d)(3)
+    authority cite "15 USC 1071(b); 37 CFR 2.145(d)(3)"
     effort 260.hours
     cost 5_000.usd
     within civil-action-period { extendable false }

@@ -185,7 +185,7 @@ fn clause_accessors_cover_every_clause_bearing_declaration() {
     assert!(test.relations().is_empty());
 
     let rule_file =
-        lit("module m\nrule power r known_at 2024-01-01 notwithstanding o cite X 2 { }\n");
+        lit("module m\nrule power r known_at 2024-01-01 notwithstanding o cite \"X 2\" { }\n");
     let rule: RuleDecl = decl(&rule_file, "r");
     assert_eq!(rule.cites()[0].text().as_deref(), Some("X 2"));
     assert_eq!(rule.version_clauses().len(), 1);

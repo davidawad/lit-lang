@@ -23,7 +23,7 @@ Node clauses
 
 module a
 chance mtd-ruling: "Ruling" by Court discretion effective [2009-12-01, ..) known_at 2024-01-01
-  cite FRCP 12(b)(6)
+  cite "FRCP 12(b)(6)"
 terminal t: "T" outcome [judgment, loss]
 
 ---
@@ -48,7 +48,8 @@ terminal t: "T" outcome [judgment, loss]
       (known_at_clause
         (date))
       (cite
-        (cite_text)))
+        (string
+          (string_content))))
     (node_decl
       (identifier)
       (string

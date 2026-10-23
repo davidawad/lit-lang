@@ -1,4 +1,4 @@
-use super::{cite, duration, is_cite_text, is_ident, is_ref, money, number, string};
+use super::{cite, duration, is_ident, is_ref, money, number, string};
 use litigate_syntax::lexer::lex;
 use litigate_syntax::SyntaxKind;
 use proptest::prelude::*;
@@ -81,17 +81,12 @@ fn numbers_money_and_durations_spell_exactly() {
 
 #[test]
 fn cites_fall_back_to_holes() {
-    assert_eq!(cite("FRCP 12(b)(6)", true), "cite FRCP 12(b)(6)");
+    assert_eq!(cite("FRCP 12(b)(6)", true), "cite \"FRCP 12(b)(6)\"");
     assert_eq!(cite("FRCP 12(b)(6)", false), "cite ?(\"FRCP 12(b)(6)\")");
     assert_eq!(
-        cite("RCFC App. J, Rule 3", true),
-        "cite ?(\"RCFC App. J, Rule 3\")"
+        cite("RCFC App. J, Rule 3 // {x}", true),
+        "cite \"RCFC App. J, Rule 3 // {x}\""
     );
-    for bad in [
-        "a, b", "a {b}", "a // b", "a  b", " a", "a ", "?a", "a\nb", "",
-    ] {
-        assert!(!is_cite_text(bad), "{bad:?}");
-    }
 }
 
 #[test]
@@ -140,11 +135,9 @@ proptest! {
     }
 
     #[test]
-    fn prop_cite_text_survives_citation_mode(text in "[A-Za-z0-9.§()\\- ;]{1,30}") {
-        if is_cite_text(&text) {
-            let lexed = tokens(&format!("cite {text}"));
-            prop_assert_eq!(lexed.len(), 2);
-            prop_assert_eq!(&lexed[1].1, &text);
-        }
+    fn prop_cite_text_survives_as_a_string(text in "[A-Za-z0-9.§()\\- ;,{}/\"\\\\]{1,30}") {
+        let lexed = tokens(&cite(&text, true));
+        prop_assert_eq!(lexed.len(), 2);
+        prop_assert_eq!(litigate_syntax::ast::unescape(&lexed[1].1), text);
     }
 }

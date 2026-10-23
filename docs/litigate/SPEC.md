@@ -86,7 +86,6 @@ Escape       = "\\", ( "\\" | '"' | "n" | "r" | "t" ) ;
 Ident        = IdStart, { IdContinue | "-", IdContinue } ;
 IdStart      = XID_Start | "_" | { digit }-, XID_Start ;   IdContinue = XID_Continue ;
 Underscore   = "_" ;                            (* a lone underscore *)
-CiteText     = (* see below *) ;
 Punct        = "::" | "->" | "=>" | "==" | "!=" | "<=" | ">=" | "&&" | "||" | ".."
              | "{" | "}" | "(" | ")" | "[" | "]" | ":" | "," | "." | "=" | "<" | ">"
              | "+" | "-" | "*" | "/" | "%" | "!" | "?" | "@" | "^" | "~" | "|" ;
@@ -101,16 +100,19 @@ Punct        = "::" | "->" | "=>" | "==" | "!=" | "<=" | ">=" | "&&" | "||" | ".
 - **Keywords are contextual.** The lexer emits `Ident` for every word. The
   parser remaps it to the keyword kind (`SyntaxKind::from_keyword`) only where
   the grammar expects that keyword. So `default`, `note`, `p` and others stay
-  usable as ids. The one reserved keyword is `cite`. After it the lexer switches
-  to citation mode: it skips spaces and tabs, then consumes `CiteText` up to,
-  but not including, the first newline, `{`, `}`, `,`, or `//`. Trailing
-  whitespace is trimmed and internal runs of whitespace collapse to one space.
-  Empty citation text is L0001. A `cite` clause therefore ends its line or
-  comes just before `{`. When the first character after the spaces is `?`,
-  citation mode ends at once and the clause is a **cite hole**
-  `cite ?("text")`: citation text that has no `CiteText` spelling (it
-  contains `,`, `{`, `}`, `//`, or runs of whitespace) or that is not yet a
-  resolvable citation is kept as the hole's reason (§8.1).
+  usable as ids. The one reserved keyword is `cite`. It has no lexing mode:
+  the citation text after it is an ordinary `String` (`cite "28 U.S.C.
+  §§ 1491, 1498"`), so commas, braces, `//`, section signs, case names and
+  URLs need no escape hatch. The text is kept exactly as the string spells
+  it. A `cite` not followed by a string or a hole is L0001; when text
+  follows on the same line, the error carries a machine-applicable fix
+  quoting that text up to the first `{`, `}`, `,`, or `//`, whitespace runs
+  collapsed, which is how the retired citation mode read it, so `litigate
+  fix` ports a pre-freeze source unchanged. A **cite hole** `cite ?("text")`
+  keeps text that is not yet a resolvable citation as the hole's reason
+  (§8.1). After the citation, the contextual keyword `historical` on the
+  same line marks a cite of an expression dated outside the declaration's
+  window on purpose (§4.3).
 - **Reserved words.** `world`, `layer`, `precedent`, `overrule`,
   `delegable`, `lock`, `grant` and `characterization` are reserved for
   constructs a later edition adds (worlds and layers, precedent effects,
@@ -247,7 +249,7 @@ VersionClause= "effective", Interval | "known_at", Date ;
 Interval     = "[", Date, ",", (Date | ".."), ")" ;
 Relation     = ("subject_to" | "notwithstanding" | "supersedes" | "revives"
              | "override"), Ref | "delegable_to", IdList ;
-Cite         = "cite", ( CiteText | Hole ) ;
+Cite         = "cite", ( String | Hole ), [ "historical" ] ;
 Ref          = Ident, [ "@", Ident ], { ("::" | "."), Ident }, [ "@", Date ] ;
 IdList       = "[", [ Ref, { ",", Ref }, [","] ], "]" ;
 NumRecord    = "{", { Ident, ":", SignedNumber, Sep }, "}" ;
@@ -462,8 +464,9 @@ core = { version = "^1.0.0", path = "../core" }
 [sources.frcp]                  # Pack.sources[] in key order of declaration
 title = "Federal Rules of Civil Procedure"
 url = "https://..."             # and/or path = "sources/frcp.txt" (repo-relative)
-sha256 = "..."
-as_of = "2024-12-01"
+sha256 = "..."                  # optional; the document at `url`, as retrieved
+path_sha256 = "..."             # the vendored file at `path` (needs `path`)
+as_of = "2024-12-01"            # the expression's date: the text as amended to it
 cite_prefixes = ["FRCP", "Fed. R. Civ. P."]
 section_heading = "Rule {n}."   # optional; locates pinpoints in `path`
 
@@ -558,6 +561,27 @@ admits a wrong digest. An unparseable side exits 1, leaving git's conflict.
   and no match is L1010. The pinpoint's first number (`12` in
   `12(a)(1)(A)(i)`) is located in the binding's `path` file with
   `section_heading`.
+- A resolved citation is structured, after Akoma Ntoso's FRBR levels: the
+  **work** is the binding it resolves through, the **expression** is that
+  binding's `as_of` (the text as amended to that date), and the
+  **pinpoint** is the section and its subdivisions (`12`, then `a`, `1`,
+  `A`, `i`). The expression's text is the vendored file at `path`, pinned
+  by `path_sha256`: a file that is not in the corpus, a binding with
+  `path` but no `path_sha256`, and a corpus file whose SHA-256 differs from
+  the pin are L1010, so a cite never resolves against whatever text a
+  build happens to embed. `sha256` records the document at `url` as
+  retrieved and is never checked (the compiler does not fetch). Each
+  resolved, verified citation carries the SHA-256 of the cited section's
+  text (§8.6).
+- A declaration version's cite must not cite an expression dated on or
+  after the end of the version's window (its `as_of` on or after
+  `effective`'s end): that text was not yet the law while the version
+  was. That is L1010 unless the cite is marked `historical` (a later
+  edition or committee note reporting the earlier text, cited on purpose)
+  or is a cite hole. An expression dated before the window opens is the
+  text as amended to that date and is taken as still current when the
+  window opens; a binding without `as_of` has no date to compare. Edge
+  `authority` cites are held to their node's window, test cites to none.
 
 ## 5. Construct semantics
 
@@ -1220,7 +1244,7 @@ other code (syntax, names, types, L3009, L5001, lowering) counts against
 | Obligation | Definition | Code |
 |---|---|---|
 | `well-typed` | every expression and field typechecks, matches are exhaustive, no forbidden operation | L2xxx |
-| `cite-resolves` | every cite resolves to a binding and, when the binding has `path`, to the pinpoint's heading span | L1010 |
+| `cite-resolves` | every cite resolves to a binding and, when the binding has `path`, to the pinpoint's heading span in the text its `path_sha256` pins; no cite's expression postdates its version's window unless `historical` (§4.3) | L1010 |
 | `effective-disjoint` | versions of each declaration are pairwise disjoint | L3001 |
 | `effective-covered` | versions cover the package lifetime except declared gaps | L3002 |
 | `precedence-acyclic` | authority order, relations, and default/exception references are acyclic | L3006 |
@@ -1271,7 +1295,7 @@ Anything without a lowering is L6001.
 | `start` | `Pack.startNodeId` |
 | `group` decls (module order, then source order) | `Pack.groups[]` |
 | `[package.roles]` | `Pack.roles` |
-| `[sources.*]` (declared order) | `Pack.sources[]` `{id, title, url, path, sha256, asOf}`; `cite_prefixes` and `section_heading` aren't emitted |
+| `[sources.*]` (declared order) | `Pack.sources[]` `{id, title, url, path, sha256, asOf}`; `path_sha256`, `cite_prefixes` and `section_heading` aren't emitted |
 | node declarations (module order, then source order) | `Pack.nodes[]` |
 | node id, label, cite | `RawNode.id` (kebab-case, no module prefix), `label`, `cite` (a cite hole lowers to its reason, below) |
 | `state`/`chance` / `decision` / `terminal` | `RawNode.kind` `state` / `decision` / `terminal`, always written |
@@ -1555,8 +1579,13 @@ one generated node, edge, link, instance, counting rule or calendar:
 `span` its declaration, `decl` the emitted version `id@in-force-from`, and
 `cite` the `cite`/`authority` text with each citation litgraph's citation
 parser recognizes (under the pack's `citeSyntax` and the sources'
-`cite_prefixes`/`section_heading`) as `{heading, source, path, line}`: the
-`## <heading>` line in the vendored L0 file. The `generated` object is the
+`cite_prefixes`/`section_heading`) as the structured citation `{heading,
+source, path, line, as_of, pinpoint, sha256}`: the work (`source`), the
+expression (`as_of`, the binding's), the pinpoint (`heading` and the
+subdivisions `pinpoint`, `["a", "1"]` for `12(a)(1)`), the `## <heading>`
+line in the binding's vendored L0 file, and `sha256`, the SHA-256 of that
+section's text (the lines after its `## ` line up to the next, trimmed),
+present only when the file is the text `path_sha256` pins. The `generated` object is the
 generated-file marker; JSON documents carry none, since litgraph's types
 reject unknown fields.
 
@@ -1586,10 +1615,9 @@ parses with no diagnostics, and it follows these conventions:
   their source node in pack order. A node's `by` is its edges' most common
   actor; an edge repeats `by` only when it differs. A `state` whose every
   out-edge carries `p` and none loops back is written `chance`.
-- A `cite`/`authority` string is citation syntax when it has a `CiteText`
-  spelling and litgraph's citation parser recognizes every citation in it
-  under the pack's `citeSyntax`; otherwise it is a cite hole carrying the
-  original text. Notes stay `note` fields (they lower to `note`).
+- A `cite`/`authority` string is a `cite` string when litgraph's citation
+  parser recognizes every citation in it under the pack's `citeSyntax`;
+  otherwise it is a cite hole carrying the original text. Notes stay `note` fields (they lower to `note`).
 - `links.json` becomes the links package `lit/links/` (one module `links`).
 - A named scenario becomes `cases/<id>.case`: `uses` every pack at
   `^0.1.0`, `as_of` the primary package's `known_at`, an explicit `start`
@@ -1802,13 +1830,14 @@ predecessor; `litigate diff` is the equality that matters.
   and after each multi-line block.
 - Braced bodies: on one line `{ a, b }` when the whole item fits in 100
   columns. Otherwise one item per line, no commas, with the closing brace on
-  its own line. A `cite` clause followed by a body puts `{` on the next line.
+  its own line. A `cite` clause whose citation (or `historical`) ends it
+  puts a following body's `{` on the next line.
 - One space around binary operators, `->`, `=>`, and after `:` and `,`. None
   inside brackets or parentheses.
 - `parties` and `events` blocks always put one entry per line, even when
   they would fit on one.
-- A `cite` clause runs to the end of its line, so any clause after it
-  continues on the next line indented two more columns.
+- A `cite` clause ends its line, so any clause after it continues on the
+  next line indented two more columns. (A cite hole does not.)
 - Numbers keep their source digit grouping. Comments and doc comments are
   preserved verbatim. A comment on its own line attaches to the next item or
   entry. A comment after a token on the same line stays there, and a line
@@ -1839,6 +1868,12 @@ The import bead added, with no new kinds: a `CiteExpr` may hold a
 `Literal`s (`IdList::strings`), a source `as_of` may be a `HoleExpr`, and
 the forms in §2-§3 above (digit-led identifiers, decimal `duration` days,
 optional `min`/`max`). The tree-sitter grammar matches.
+
+The structured-cite bead (lg-flu.6) removed citation mode and the
+`CiteText` token: a `CiteExpr` holds the `cite` keyword, then a `String`
+token or a `HoleExpr`, then an optional `KwHistorical` (`Cite::text`
+decodes the string, `Cite::historical`). The tree-sitter grammar matches
+and has no external scanner.
 
 The edition bead (lg-flu.12) added `KwEdition` and `EditionDecl`, the
 `Edition` type and `Parse::edition`, and `RESERVED_WORDS`. `FileKind` and

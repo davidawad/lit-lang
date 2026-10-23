@@ -45,7 +45,7 @@ rule duty r effective [2005-01-01, ..) known_at 2021-01-01 {\n\
 #[test]
 fn metadata_reports_bad_cites_intervals_and_relations() {
     let out = check_body(
-        "default c2\n  cite FRCP 6\n  cite FRCP 7\n  when true => 1\n\
+        "default c2\n  cite \"FRCP 6\"\n  cite \"FRCP 7\"\n  when true => 1\n\
 default e1 effective [2001-01-01, 2000-01-01) when true => 1\n\
 default r1 subject_to nope delegable_to [Nope] when true => 1",
     );

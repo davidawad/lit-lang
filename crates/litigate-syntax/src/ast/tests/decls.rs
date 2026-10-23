@@ -238,15 +238,20 @@ fn instances_expose_origin_fields_and_patches() {
 }
 
 #[test]
-fn cites_collapse_whitespace_or_hold_a_hole() {
-    let file = lit("module m\ndefault d cite FRCP   12(b)\t (6)\n  when true => 1\ndefault h cite ?(\"find it\") when true => 1\n");
+fn cites_are_strings_or_hold_a_hole() {
+    let file = lit("module m\ndefault d cite \"28 U.S.C. §§ 1491, 1498 \\\"x\\\"\" historical\n  when true => 1\ndefault h cite ?(\"find it\") when true => 1\n");
     let spaced: DefaultDecl = decl(&file, "d");
     let cite = &spaced.cites()[0];
-    assert_eq!(cite.text().as_deref(), Some("FRCP 12(b) (6)"));
+    assert_eq!(
+        cite.text().as_deref(),
+        Some("28 U.S.C. §§ 1491, 1498 \"x\"")
+    );
+    assert!(cite.historical());
     assert!(cite.hole().is_none());
     let holed: DefaultDecl = decl(&file, "h");
     let cite = &holed.cites()[0];
     assert!(cite.text().is_none());
+    assert!(!cite.historical());
     assert_eq!(
         cite.hole().and_then(|h| h.reason()).as_deref(),
         Some("find it")

@@ -225,7 +225,7 @@ const ITEMS: [&str; 12] = [
     "enum E { a, b }",
     "event Ev(x: E)",
     "authority A > B",
-    "state s: \"S\" by Court cite FRCP 1\n{ note \"n\", go \"Go\" -> t p 1/2 }",
+    "state s: \"S\" by Court cite \"FRCP 1\"\n{ note \"n\", go \"Go\" -> t p 1/2 }",
     "decision d: \"D\" { p \"P\" -> t by X\n by \"B\" -> t { cost ? } }",
     "terminal t: \"T\" outcome [win] { payoff -1.usd }",
     "deadline dl: 21.days from Ev(a) counted_by c",
@@ -249,17 +249,18 @@ proptest! {
     }
 
     #[test]
-    fn prop_cite_text_is_the_trimmed_line(
-        text in "[A-Za-z0-9.()§ ]{0,20}[A-Za-z0-9.()§]",
-        trailing in "[ \t]{0,3}",
-        comment in prop::bool::ANY,
+    fn prop_cite_text_is_a_string(
+        text in "[A-Za-z0-9.()§ ,{}/;]{0,20}[A-Za-z0-9.()§]",
+        historical in prop::bool::ANY,
     ) {
-        let tail = if comment { " // note" } else { "" };
-        let source = format!("module m\nstate s: \"S\" cite {text}{trailing}{tail}\n");
+        let mark = if historical { " historical" } else { "" };
+        let source = format!("module m\nstate s: \"S\" cite \"{text}\"{mark} // note\n");
         let tree = parse(&source);
         prop_assert!(syntax_errors(&tree).is_empty());
-        let cite = find(tree.root_node(), "cite_text").expect("a cite_text node");
-        prop_assert_eq!(&source[cite.byte_range()], text.trim_start());
+        let cite = find(tree.root_node(), "cite").expect("a cite node");
+        let string = cite.child_by_field_name("text").expect("its text");
+        prop_assert_eq!(&source[string.byte_range()], format!("\"{text}\""));
+        prop_assert_eq!(cite.child_by_field_name("historical").is_some(), historical);
     }
 
     #[test]

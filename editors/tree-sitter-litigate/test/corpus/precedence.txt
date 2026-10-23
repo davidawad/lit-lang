@@ -3,7 +3,7 @@ Transitions
 ================================================================================
 
 module a
-transition rule86 amends answer-period@2025-12-01 cite FRCP 86(a)
+transition rule86 amends answer-period@2025-12-01 cite "FRCP 86(a)"
 {
   unless has_event(Answered()) && !has_event(Served(complaint, Mail)) -> answer-period@2009-12-01
   otherwise -> answer-period@2025-12-01
@@ -22,7 +22,8 @@ transition rule86 amends answer-period@2025-12-01 cite FRCP 86(a)
         (identifier)
         (date))
       (cite
-        (cite_text))
+        (string
+          (string_content)))
       (transition_body
         (transition_arm
           (binary_expression
@@ -111,7 +112,7 @@ Exceptions
 ================================================================================
 
 module a
-exception e1 rebuts tolled cite FRCP 1
+exception e1 rebuts tolled cite "FRCP 1"
   when has_event(Filed()) => false priority 2
 exception e2 undercuts tolled when has_event(Waived())
 
@@ -127,7 +128,8 @@ exception e2 undercuts tolled when has_event(Waived())
       (ref
         (identifier))
       (cite
-        (cite_text))
+        (string
+          (string_content)))
       (call_expression
         (ref
           (identifier))
@@ -157,7 +159,7 @@ Tests
 
 module a
 /// Answer timing.
-test "answer due 21 days after personal service" cite FRCP 12(a)(1)(A)(i)
+test "answer due 21 days after personal service" cite "FRCP 12(a)(1)(A)(i)"
 {
   given Served(complaint, Personal) on 2025-03-03
   expect deadline(answer-period) == 2025-03-24
@@ -176,7 +178,8 @@ test "no cite" { expect true }
       (string
         (string_content))
       (cite
-        (cite_text))
+        (string
+          (string_content)))
       (test_body
         (given_stmt
           (call_expression

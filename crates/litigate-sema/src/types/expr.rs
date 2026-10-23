@@ -125,7 +125,7 @@ impl<'s, 'a> Checker<'s, 'a> {
             ExprKind::Date(d) => self.literal(Value::Date(d.clone()), Type::Date, r),
             ExprKind::Bool(b) => self.literal(Value::Boolean(*b), Type::Boolean, r),
             ExprKind::Unit => self.literal(Value::Unit, Type::Unit, r),
-            ExprKind::Cite(c) => self.literal(Value::Cite(c.clone()), Type::Cite, r),
+            ExprKind::Cite(c, _) => self.literal(Value::Cite(c.clone()), Type::Cite, r),
             ExprKind::Hole(reason) => {
                 self.holes.push((r, reason.clone()));
                 self.report(

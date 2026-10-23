@@ -115,7 +115,7 @@ fn diagnostics_of_broken_inputs() {
     }
 }
 
-const MESSY: &str = "// leading file comment\nmodule   frcp.x\nimport b.c\nimport a.{ y,z }\npackage p{forum f authority A}\nstart s   // trailing start\n/// doc for group\ngroup g :\"G\"\ntype T=List<Map<A,B>>\nstate s:\"S\" by Court cite FRCP 1\n  effective [2020-01-01,..)\n{\n  // leading comment on edge\n  a \"A\"->t p 1 / 3 { cost -5.usd,duration {min 1.days mode 2.days max 3.days} } // trailing\n  b \"B\" -> t {within d {extendable true}}\n\n  tags [x,y]\n}\nterminal t:\"T\"{payoff ?( \"why\" )}\ndefault dd when has_event(X(a)) && !(a.b == 1) || c<d => match x { A => 1, _ => -2 }\n/* block comment at end */\n";
+const MESSY: &str = "// leading file comment\nmodule   frcp.x\nimport b.c\nimport a.{ y,z }\npackage p{forum f authority A}\nstart s   // trailing start\n/// doc for group\ngroup g :\"G\"\ntype T=List<Map<A,B>>\nstate s:\"S\" by Court cite \"FRCP 1\"\n  effective [2020-01-01,..)\n{\n  // leading comment on edge\n  a \"A\"->t p 1 / 3 { cost -5.usd,duration {min 1.days mode 2.days max 3.days} } // trailing\n  b \"B\" -> t {within d {extendable true}}\n\n  tags [x,y]\n}\nterminal t:\"T\"{payoff ?( \"why\" )}\ndefault dd when has_event(X(a)) && !(a.b == 1) || c<d => match x { A => 1, _ => -2 }\n/* block comment at end */\n";
 
 #[test]
 fn formatter_output_for_messy_input() {

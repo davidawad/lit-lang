@@ -14,14 +14,14 @@ enum Outcome { granted, denied }
 /// A filing became due on an inaccessible day.
 event Inaccessible(date: Date)
 
-counting itc-210-6 effective [2008-01-01, ..) cite 19 CFR 210.6
+counting itc-210-6 effective [2008-01-01, ..) cite "19 CFR 210.6"
 {
   anchor next_business_day
   short_period { below: 7.days, count: business_days }
-  service_extension { Mail: 5.days, Electronic: 0.days } cite 19 CFR 210.6(b)
+  service_extension { Mail: 5.days, Electronic: 0.days } cite "19 CFR 210.6(b)"
 }
 
-calendar rcfc-holidays known_at 2025-01-01 cite RCFC 6(a)(6)
+calendar rcfc-holidays known_at 2025-01-01 cite "RCFC 6(a)(6)"
 {
   inauguration-day: every(4, 1965, 1, 20) effective [1965-01-20, ..) observed next_day
   thanksgiving: nth(4, thursday, 11) effective [1942-01-01, ..)
@@ -54,11 +54,11 @@ deadline notice: 30.days after Served(answer) counted_by frcp6 {
     on Served(answer)
     within prescribed_due + 30.days
   }
-  extend { never cite FRAP 26(b)(1) }
+  extend { never cite "FRAP 26(b)(1)" }
 }
 
 deadline renewal: 28.days after Served(answer) counted_by frcp6 {
-  extend { never cite FRCP 6(b)(2) }
+  extend { never cite "FRCP 6(b)(2)" }
 }
 
 /// An order extending the time to answer to a date.
@@ -66,7 +66,7 @@ event Extended(until: Date) extends answer-period to until
 event Forfeited(option: String) removes option
 event Released() waives answer-period
 
-transition rule86 amends answer-period@2009-12-01 cite FRCP 86(a)
+transition rule86 amends answer-period@2009-12-01 cite "FRCP 86(a)"
 {
   unless has_event(Answered(complaint)) -> answer-period@1993-12-01
   otherwise -> answer-period@2009-12-01
@@ -76,7 +76,7 @@ authority Statute > FederalRule > LocalRule
 
 default standing-order when has_event(Served(complaint)) => 14.days
 
-exception local-rule rebuts standing-order cite LR 7.1
+exception local-rule rebuts standing-order cite "LR 7.1"
   when !has_event(Inaccessible(2025-01-01)) => 7.days priority 2
 
 exception moot undercuts standing-order when len([1, 2]) > 1 && 3 % 2 == 1

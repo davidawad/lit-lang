@@ -25,7 +25,7 @@ local function register()
         url = url,
         branch = 'main',
         location = location,
-        files = { 'src/parser.c', 'src/scanner.c' },
+        files = { 'src/parser.c' },
         requires_generate_from_grammar = generate,
       },
       filetype = 'litigate',

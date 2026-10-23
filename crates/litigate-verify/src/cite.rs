@@ -1,6 +1,8 @@
 //! `cite-resolves` (SPEC §7): every cite resolves to a source binding and,
 //! when the binding has a vendored `path`, to its pinpoint's `## heading`
-//! span in that file.
+//! span in that file, whose text is the one the binding's `path_sha256`
+//! pins. The cited expression (the binding's `as_of`) must not postdate the
+//! citing version's window unless the cite is marked `historical`.
 //!
 //! Citations are parsed exactly as the lowering's source maps parse them
 //! (`litigate_lower::source_map::Citations`, litgraph's own parser under
@@ -12,15 +14,24 @@
 //! A cite of a declaration `litigate import` marked `/// imported` is
 //! exempt in `dev`: its failures are warnings, so a freshly imported pack
 //! checks while its citations are ported. `strict` exempts nothing.
+use crate::context::Cite;
 use crate::diag::{emit, note};
 use crate::Context;
 use litgraph::cite::{parse_cite_string, CiteGrammar, SourceCorpus};
 use litgraph::model::Pack;
 use litigate_base::{Diagnostic, DiagnosticCode as C, Profile, Severity, Span};
-use litigate_lower::source_map::{Citations, L0Section};
+use litigate_lower::source_map::{Citations, L0Section, Pin};
+use litigate_sema::Hole;
 
-/// L1010 for every citation that does not resolve.
-pub(crate) fn unresolved(cx: &Context<'_>, pack: &Pack, corpus: &SourceCorpus) -> Vec<Diagnostic> {
+/// L1010 for every citation that does not resolve. `holes` are the
+/// package's: a cite hole's reason is resolved like a cite, but a hole
+/// cites no expression, so it is never held to its version's window.
+pub(crate) fn unresolved(
+    cx: &Context<'_>,
+    pack: &Pack,
+    corpus: &SourceCorpus,
+    holes: &[Hole],
+) -> Vec<Diagnostic> {
     let sources = &cx.package.manifest.sources;
     let citations = Citations::new(pack.cite_syntax.clone(), sources, Some(corpus));
     cx.cites()
@@ -32,9 +43,15 @@ pub(crate) fn unresolved(cx: &Context<'_>, pack: &Pack, corpus: &SourceCorpus) -
                 .map(|m| m.sections)
                 .unwrap_or_default();
             let unkeyed = unkeyed(&citations, text, &span, cx);
+            let hole = holes
+                .iter()
+                .any(|h| h.reason.as_deref() == Some(text) && within(&h.span, &span));
             sections
                 .iter()
-                .filter_map(|s| section(cx, corpus, text, s, &span))
+                .filter_map(|s| {
+                    section(cx, &citations, corpus, text, s, &span)
+                        .or_else(|| expression(cx, &cite, s, &span).filter(|_| !hole))
+                })
                 .chain(unkeyed)
                 .map(|d| exempt(d, cite.imported, cx.profile))
                 .collect::<Vec<_>>()
@@ -56,6 +73,13 @@ fn exempt(d: Diagnostic, imported: bool, profile: Profile) -> Diagnostic {
         None,
         "a warning because the declaration is `/// imported`; `strict` rejects it",
     )
+}
+
+/// `inner` lies inside `outer`.
+fn within(inner: &Span, outer: &Span) -> bool {
+    inner.file == outer.file
+        && (inner.line, inner.col) >= (outer.line, outer.col)
+        && (inner.end_line, inner.end_col) <= (outer.end_line, outer.end_col)
 }
 
 /// Rule or statute citations that do not normalize to a heading at all.
@@ -84,6 +108,7 @@ fn unkeyed(
 
 fn section(
     cx: &Context<'_>,
+    citations: &Citations<'_>,
     corpus: &SourceCorpus,
     text: &str,
     s: &L0Section,
@@ -112,28 +137,76 @@ fn section(
         ));
     };
     let path = binding.path.as_deref()?;
+    let id = &binding.id;
+    let unverified = match citations.pin(id) {
+        Pin::Unpinned { actual } => Some((
+            format!("source `{id}` pins no `path_sha256`, so the text of `{path}` is unverified"),
+            format!(
+                "check `{path}` against `{}` and pin it: `path_sha256 = \"{actual}\"`",
+                binding.url.as_deref().unwrap_or("its source"),
+            ),
+        )),
+        Pin::Mismatch { pinned, actual } => Some((
+            format!(
+                "`{path}` is not the text source `{id}` pins (`path_sha256` {pinned}, the \
+                 corpus file hashes to {actual})"
+            ),
+            "cite the expression the corpus holds, or vendor the pinned text".to_owned(),
+        )),
+        Pin::NoPath | Pin::Absent | Pin::Verified => None,
+    };
     let found = corpus
         .lookup_all(&s.heading)
         .iter()
         .any(|(file, _)| file == path);
-    if found {
+    if found && unverified.is_none() {
         return None;
     }
-    let why = if corpus.has_file(path) {
-        format!("`{path}` has no `## {}` heading", s.heading)
-    } else {
-        format!("`{path}` is not in the vendored source corpus")
-    };
+    let (why, fix) = unverified.unwrap_or_else(|| {
+        let why = if corpus.has_file(path) {
+            format!("`{path}` has no `## {}` heading", s.heading)
+        } else {
+            format!("`{path}` is not in the vendored source corpus")
+        };
+        let fix = "cite a pinpoint that exists in the vendored text, or mark the cite \
+                   `?(\"why\")` until the source is vendored";
+        (why, fix.to_owned())
+    });
     let d = emit(
         C::UnboundCite,
         cx.profile,
         span.clone(),
-        format!("`{text}` binds to source `{}`, but {why}", binding.id),
+        format!("`{text}` binds to source `{id}`, but {why}"),
+    );
+    Some(note(d, None, fix))
+}
+
+/// L1010 when the cited expression (the binding's `as_of`) is dated on or
+/// after the end of the citing version's window: the text cited was not
+/// yet the law while that version was. `historical` cites (a later edition
+/// reporting the earlier text, say) and expressions without a date are
+/// exempt; an expression older than the window is the text as amended to
+/// that date, presumed still current when the window opens.
+fn expression(cx: &Context<'_>, cite: &Cite<'_>, s: &L0Section, span: &Span) -> Option<Diagnostic> {
+    let as_of = s.as_of.as_deref()?;
+    let until = cite.window?.to.as_deref()?;
+    if cite.historical || as_of < until {
+        return None;
+    }
+    let d = emit(
+        C::UnboundCite,
+        cx.profile,
+        span.clone(),
+        format!(
+            "`{}` cites source `{}` as of {as_of}, but this version left force on {until}",
+            cite.text,
+            s.source.as_deref().unwrap_or_default(),
+        ),
     );
     Some(note(
         d,
         None,
-        "cite a pinpoint that exists in the vendored text, or mark the cite `?(\"why\")` \
-         until the source is vendored",
+        "cite an expression in force during the version's window, or mark the cite \
+         `historical` when a later text is cited on purpose",
     ))
 }

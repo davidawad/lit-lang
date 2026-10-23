@@ -35,7 +35,7 @@ fn end_of(s: &Span) -> Span {
 /// equals or outranks the target's, or the target delegates to it
 /// (`delegable_to` naming `by`'s authority exactly).
 /// A delegation never reaches past a lock: a lower authority may not
-/// displace a deadline locked by `extend { never cite X }` with one
+/// displace a deadline locked by `extend { never cite "X" }` with one
 /// granting an extension the target does not ([`lock_widened`]).
 #[must_use]
 pub fn licensed(world: &World<'_>, by: usize, target: usize) -> bool {
@@ -51,7 +51,7 @@ pub fn licensed(world: &World<'_>, by: usize, target: usize) -> bool {
         && lock_widened(world, by, target).is_none())
 }
 
-/// The authority of deadline `target`'s lock (`extend { never cite X }`)
+/// The authority of deadline `target`'s lock (`extend { never cite "X" }`)
 /// when deadline `by` grants an extension `target` does not state (FRAP
 /// 26(b): a local rule or order cannot grant there).
 #[must_use]
@@ -289,7 +289,7 @@ fn unlicensed(
             C::MissingDelegation,
             span.clone(),
             format!(
-                "`{}` ({}) {} `{name}` ({}) with an extension it does not grant, but `{name}` is locked: `extend {{ never cite {authority} }}`",
+                "`{}` ({}) {} `{name}` ({}) with an extension it does not grant, but `{name}` is locked: `extend {{ never cite \"{authority}\" }}`",
                 da.meta.id,
                 da.meta.authority,
                 verb(keyword),

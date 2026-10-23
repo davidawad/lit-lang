@@ -22,13 +22,13 @@ import core.time.{ Served, ServiceMethod }
 /// added to the period before or after the last-day roll; the pipeline adds
 /// them after (SPEC §5.3 step 5), as § 210.6 ("adding to the end of the
 /// prescribed period") reads from 1994.
-counting itc210 effective [1976-05-27, 2007-03-23) known_at 1976-04-27 cite 41 FR 17710
+counting itc210 effective [1976-05-27, 2007-03-23) known_at 1976-04-27 cite "41 FR 17710"
 {
   anchor next_business_day
   include_last_day
   roll_forward_on [weekend, legal_holiday]
   short_period { below: 7.days, count: business_days }
-  service_extension { Mail: 3.days, MailForeign: 10.days } cite 41 FR 17711
+  service_extension { Mail: 3.days, MailForeign: 10.days } cite "41 FR 17711"
   holidays us-federal-holidays
 }
 
@@ -43,13 +43,13 @@ counting itc210 effective [1976-05-27, 2007-03-23) known_at 1976-04-27 cite 41 F
 /// delivery' is not overnight when it is international"). The 2007 text
 /// prints §§ "210.14 and 210.16(d)" in (a) and (b); the 1994 text and the
 /// 2013 revision both read §§ 201.14 and 201.16(d).
-counting itc210 effective [2007-03-23, 2013-05-20) known_at 2007-03-23 supersedes itc210@1976-05-27 cite 72 FR 13689
+counting itc210 effective [2007-03-23, 2013-05-20) known_at 2007-03-23 supersedes itc210@1976-05-27 cite "72 FR 13689"
 {
   anchor next_business_day
   include_last_day
   roll_forward_on [weekend, legal_holiday]
   short_period { below: 7.days, count: business_days }
-  service_extension { Mail: 3.days, MailForeign: 10.days, Express: 1.days } cite 72 FR 13689
+  service_extension { Mail: 3.days, MailForeign: 10.days, Express: 1.days } cite "72 FR 13689"
   holidays us-federal-holidays
 }
 
@@ -61,7 +61,7 @@ counting itc210 effective [2007-03-23, 2013-05-20) known_at 2007-03-23 supersede
 /// 2018 amendment (83 FR 21159) keeps (f)'s "no additional time". A
 /// backward period cannot use this rule: its anchor is the next business
 /// day (SPEC §5.5, L3009), and § 201.14 defines no backward count.
-counting itc210 effective [2013-05-20, ..) known_at 2013-04-19 supersedes itc210@2007-03-23 cite 19 C.F.R. § 201.14(a)
+counting itc210 effective [2013-05-20, ..) known_at 2013-04-19 supersedes itc210@2007-03-23 cite "19 C.F.R. § 201.14(a)"
 {
   anchor next_business_day
   include_last_day
@@ -72,101 +72,101 @@ counting itc210 effective [2013-05-20, ..) known_at 2013-04-19 supersedes itc210
     MailForeign: 10.days
     Express: 1.days
     ExpressForeign: 5.days
-  } cite 19 C.F.R. § 201.16(d)
+  } cite "19 C.F.R. § 201.16(d)"
   holidays us-federal-holidays
 }
 
-deadline itc210-1-day: 1.days after Served() counted_by itc210 cite 19 C.F.R. § 201.14(a)
-deadline itc210-3-days: 3.days after Served() counted_by itc210 cite 19 C.F.R. § 201.14(a)
-deadline itc210-5-days: 5.days after Served() counted_by itc210 cite 19 C.F.R. § 201.14(a)
-deadline itc210-12-days: 12.days after Served() counted_by itc210 cite 19 C.F.R. § 210.43(a)(1)
-deadline itc210-20-days: 20.days after Served() counted_by itc210 cite 19 C.F.R. § 210.13(a)
+deadline itc210-1-day: 1.days after Served() counted_by itc210 cite "19 C.F.R. § 201.14(a)"
+deadline itc210-3-days: 3.days after Served() counted_by itc210 cite "19 C.F.R. § 201.14(a)"
+deadline itc210-5-days: 5.days after Served() counted_by itc210 cite "19 C.F.R. § 201.14(a)"
+deadline itc210-12-days: 12.days after Served() counted_by itc210 cite "19 C.F.R. § 210.43(a)(1)"
+deadline itc210-20-days: 20.days after Served() counted_by itc210 cite "19 C.F.R. § 210.13(a)"
 
-test "twenty days from a Monday" cite 19 C.F.R. § 201.14(a)
+test "twenty days from a Monday" cite "19 C.F.R. § 201.14(a)"
 {
   given Served(Personal) on 2026-06-01
   expect deadline(itc210-20-days) == 2026-06-22
 }
 
-test "three days after a Friday run Monday through Wednesday" cite 19 C.F.R. § 201.14(a)
+test "three days after a Friday run Monday through Wednesday" cite "19 C.F.R. § 201.14(a)"
 {
   given Served(Personal) on 2026-01-02
   expect deadline(itc210-3-days) == 2026-01-07
 }
 
-test "a short period skips an intermediate holiday" cite 19 C.F.R. § 201.14(a)
+test "a short period skips an intermediate holiday" cite "19 C.F.R. § 201.14(a)"
 {
   given Served(Personal) on 2026-11-20
   expect deadline(itc210-5-days) == 2026-11-30
 }
 
-test "mail adds three calendar days" cite 19 C.F.R. § 201.16(d)
+test "mail adds three calendar days" cite "19 C.F.R. § 201.16(d)"
 {
   given Served(Mail) on 2026-06-01
   expect deadline(itc210-20-days) == 2026-06-25
 }
 
-test "mail to a foreign country adds ten calendar days" cite 19 C.F.R. § 201.16(d)
+test "mail to a foreign country adds ten calendar days" cite "19 C.F.R. § 201.16(d)"
 {
   given Served(MailForeign) on 2026-06-01
   expect deadline(itc210-20-days) == 2026-07-02
 }
 
-test "express delivery adds one day" cite 19 C.F.R. § 201.16(e)
+test "express delivery adds one day" cite "19 C.F.R. § 201.16(e)"
 {
   given Served(Express) on 2026-06-01
   expect deadline(itc210-20-days) == 2026-06-23
 }
 
-test "express delivery abroad adds five days; a Saturday rolls to Monday" cite 19 C.F.R. § 201.16(e)
+test "express delivery abroad adds five days; a Saturday rolls to Monday" cite "19 C.F.R. § 201.16(e)"
 {
   given Served(ExpressForeign) on 2026-06-01
   expect deadline(itc210-20-days) == 2026-06-29
 }
 
-test "electronic service adds nothing" cite 19 C.F.R. § 201.16(f)
+test "electronic service adds nothing" cite "19 C.F.R. § 201.16(f)"
 {
   given Served(Electronic) on 2026-06-01
   expect deadline(itc210-20-days) == 2026-06-22
 }
 
-test "Suprema: 12 days from Friday June 17, 2011 begin Monday June 20 and end Friday July 1" cite 19 C.F.R. § 210.43(a)(1)
+test "Suprema: 12 days from Friday June 17, 2011 begin Monday June 20 and end Friday July 1" cite "19 C.F.R. § 210.43(a)(1)"
 {
   given Served(Personal) on 2011-06-17
   expect deadline(itc210-12-days) == 2011-07-01
 }
 
-test "June 20, 2011 was a business day: Juneteenth dates from 2021" cite 19 C.F.R. § 201.14(a)
+test "June 20, 2011 was a business day: Juneteenth dates from 2021" cite "19 C.F.R. § 201.14(a)"
 {
   given Served(Personal) on 2011-06-17
   expect deadline(itc210-1-day) == 2011-06-20
 }
 
-test "the 1976 rules: twenty days from a Wednesday in 1990, mail adds three" cite 41 FR 17711
+test "the 1976 rules: twenty days from a Wednesday in 1990, mail adds three" cite "41 FR 17711"
 {
   given Served(Mail) on 1990-06-06
   expect deadline(itc210-20-days) == 1990-06-29
 }
 
-test "the 1976 rules: ten days for foreign mail end on July 4, 1980 and roll to Monday" cite 49 FR 32571
+test "the 1976 rules: ten days for foreign mail end on July 4, 1980 and roll to Monday" cite "49 FR 32571"
 {
   given Served(MailForeign) on 1980-06-04
   expect deadline(itc210-20-days) == 1980-07-07
 }
 
-test "before March 23, 2007 express delivery adds nothing" cite 41 FR 17711
+test "before March 23, 2007 express delivery adds nothing" cite "41 FR 17711"
 {
   given Served(Express) on 2005-06-01
   expect deadline(itc210-20-days) == 2005-06-21
 }
 
-test "from March 23, 2007 overnight delivery adds one day" cite 72 FR 13689
+test "from March 23, 2007 overnight delivery adds one day" cite "72 FR 13689"
 {
   given Served(Express) on 2010-06-02
   expect deadline(itc210-20-days) == 2010-06-23
 }
 
-test "before May 20, 2013 express delivery abroad adds nothing" cite 78 FR 23475
+test "before May 20, 2013 express delivery abroad adds nothing" cite "78 FR 23475"
 {
   given Served(ExpressForeign) on 2010-06-02
   expect deadline(itc210-20-days) == 2010-06-22

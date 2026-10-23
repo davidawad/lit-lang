@@ -139,7 +139,7 @@ pub enum Extension {
         #[serde(default, skip_serializing_if = "Option::is_none")]
         motion: Option<Motion>,
     },
-    /// `extend { never cite X }`: the rule `X` forbids extending the
+    /// `extend { never cite "X" }`: the rule `X` forbids extending the
     /// period beyond the deadline's own other grants, so no order, local
     /// rule or stipulation adds one (FRCP 6(b)(2); FRAP 26(b), "except as
     /// authorized in Rule 4").

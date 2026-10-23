@@ -270,16 +270,17 @@ impl PatchDecl {
 }
 
 impl Cite {
-    /// Citation text with internal whitespace runs collapsed (SPEC §2).
+    /// The citation string's value, escapes decoded (SPEC §2).
     #[must_use]
     pub fn text(&self) -> Option<String> {
-        token(self.syntax(), SyntaxKind::CiteText).map(|token| {
-            token
-                .text()
-                .split_whitespace()
-                .collect::<Vec<_>>()
-                .join(" ")
-        })
+        token(self.syntax(), SyntaxKind::String).map(|token| crate::ast::unescape(token.text()))
+    }
+
+    /// True for `cite "..." historical`: a deliberate cite of an
+    /// expression of the work dated outside the declaration's window.
+    #[must_use]
+    pub fn historical(&self) -> bool {
+        token(self.syntax(), SyntaxKind::KwHistorical).is_some()
     }
 
     /// The hole of a `cite ?("reason")` clause, if this is one.

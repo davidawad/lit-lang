@@ -290,7 +290,8 @@ pub fn cite_token(
     let pkg = analysis.package_of(file)?.check.package.as_ref()?;
     let line = line_of(text, usize::from(token.text_range().start()));
     let mut out = String::new();
-    cited(&mut out, analysis, pkg, token.text().trim(), line);
+    let cite = litigate_syntax::ast::unescape(token.text());
+    cited(&mut out, analysis, pkg, &cite, line);
     Some(out.trim_start().to_owned())
 }
 
@@ -309,7 +310,7 @@ pub fn at(
         return Some((definition(analysis, def), def.name_range));
     };
     let token = token_at(text, kind, offset)?;
-    let value = if token.kind() == K::CiteText {
+    let value = if is_cite(&token) {
         cite_token(analysis, file, text, &token)?
     } else {
         let def = analysis.index.at(file, token.text_range().start())?;
@@ -328,11 +329,16 @@ pub fn token_at(
 ) -> Option<SyntaxToken> {
     let root = parse(text, kind).syntax();
     let at = root.token_at_offset(offset);
-    let interesting = |t: &SyntaxToken| matches!(t.kind(), K::Ident | K::CiteText);
+    let interesting = |t: &SyntaxToken| t.kind() == K::Ident || is_cite(t);
     let (left, right) = (at.clone().left_biased(), at.right_biased());
     right
         .filter(interesting)
         .or_else(|| left.filter(interesting))
+}
+
+/// The citation string of a `cite` clause.
+fn is_cite(token: &SyntaxToken) -> bool {
+    token.kind() == K::String && token.parent().is_some_and(|p| p.kind() == K::CiteExpr)
 }
 
 #[cfg(test)]

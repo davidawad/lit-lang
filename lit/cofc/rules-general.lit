@@ -29,7 +29,7 @@ rule duty joint-preliminary-status-report cite ?("RCFC 16(b)(1)(A); RCFC Appendi
 /// all discovery." A power, not a duty: the motion is optional. The text
 /// dates from the July 15, 2011 rewrite conforming to FRCP 56 as revised
 /// December 1, 2010 (2011 Amendment note).
-deadline sj-motion-period: 30.days after DiscoveryClosed() counted_by rcfc6 effective [2011-07-15, ..) delegable_to [CaseOrder] cite RCFC 56(b)
+deadline sj-motion-period: 30.days after DiscoveryClosed() counted_by rcfc6 effective [2011-07-15, ..) delegable_to [CaseOrder] cite "RCFC 56(b)"
 {
   extendable true
   extension_authority "court order / local practice"
@@ -40,25 +40,25 @@ test "the JPSR is due 49 days after the answer" cite ?("RCFC Appendix A ¶4") {
   expect deadline(jpsr-period) == 2026-09-21
 }
 
-test "a JPSR due on Thanksgiving rolls to Friday" cite RCFC 6(a)(6)(A)
+test "a JPSR due on Thanksgiving rolls to Friday" cite "RCFC 6(a)(6)(A)"
 {
   given AnswerFiled() on 2026-10-08
   expect deadline(jpsr-period) == 2026-11-27
 }
 
-test "a JPSR due on Veterans Day rolls to Thursday" cite RCFC 6(a)(6)(A)
+test "a JPSR due on Veterans Day rolls to Thursday" cite "RCFC 6(a)(6)(A)"
 {
   given AnswerFiled() on 2026-09-23
   expect deadline(jpsr-period) == 2026-11-12
 }
 
-test "summary judgment may be sought until 30 days after discovery closes" cite RCFC 56(b)
+test "summary judgment may be sought until 30 days after discovery closes" cite "RCFC 56(b)"
 {
   given DiscoveryClosed() on 2026-08-03
   expect deadline(sj-motion-period) == 2026-09-02
 }
 
-test "a summary-judgment window ending on Sunday before Labor Day runs to Tuesday" cite RCFC 6(a)(1)(C)
+test "a summary-judgment window ending on Sunday before Labor Day runs to Tuesday" cite "RCFC 6(a)(1)(C)"
 {
   given DiscoveryClosed() on 2026-08-07
   expect deadline(sj-motion-period) == 2026-09-08

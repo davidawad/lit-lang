@@ -11,28 +11,28 @@ import frcp.periods.{
 
 import frcp.{ post-trial-motions-group }
 
-decision final-judgment-entered: "Final Judgment Entered" by applicant cite FRCP 58; 28 U.S.C. 1291
+decision final-judgment-entered: "Final Judgment Entered" by applicant cite "FRCP 58; 28 U.S.C. 1291"
 {
   group post-trial-motions-group
   note "28 U.S.C. 1291 gives the courts of appeals jurisdiction over 'final decisions' of the district courts -- the bedrock final-judgment rule. Narrow exceptions exist: 28 U.S.C. 1292(a)(1) permits immediate appeal of orders granting, denying, or modifying injunctions; 1292(b) lets a district court certify an otherwise-interlocutory order for immediate appeal on a controlling question of law with substantial ground for difference of opinion, if an immediate appeal may materially advance the litigation (the court of appeals must still accept the certified appeal). Neither exception is separately modeled here -- this chart follows the ordinary post-final-judgment path."
   _ "28-day post-trial motion window opens" -> post-trial-motion-window {
-    authority cite FRCP 50(b); 59(b); 59(e)
+    authority cite "FRCP 50(b); 59(b); 59(e)"
     effort 0.hours
     note "Hours: 0, a default/no-action transition with no billable work of its own."
   }
   _ "No post-trial motion -- proceed directly toward appeal" -> notice-of-appeal-window {
-    authority cite FRAP 4(a)(1)(A)
+    authority cite "FRAP 4(a)(1)(A)"
     effort 0.hours
     note "Hours: 0, a default/no-action transition with no billable work of its own."
   }
 }
 
-decision post-trial-motion-window: "Post-Trial Motion Window" by applicant cite FRCP 50(b); 52(b); 59(b); 59(e); 60(b)
+decision post-trial-motion-window: "Post-Trial Motion Window" by applicant cite "FRCP 50(b); 52(b); 59(b); 59(e); 60(b)"
 {
   group post-trial-motions-group
   note "Several distinct post-judgment motions are available, most on a strict 28-day clock that Rule 6(b)(2) forbids the court from extending under any circumstance: renewed JMOL (50(b)), amended findings (52(b)), new trial (59(b)), and to alter/amend the judgment (59(e)). Rule 60(b) relief runs on a longer, more flexible 'reasonable time' standard (capped at one year for mistake/newly-discovered-evidence/fraud grounds, Rule 60(c)(1)). FRAP 4(a)(4) TOLLS the notice-of-appeal clock entirely while a timely 50(b), 52(b), 59, or (in-time) 60 motion is pending -- the appeal clock does not even start running until the last such motion is resolved."
   _ "Renew motion for JMOL (requires a preceding Rule 50(a) motion)" -> rule50b-jmol-filed {
-    authority cite FRCP 50(b)
+    authority cite "FRCP 50(b)"
     effort 30.hours
     cost 8_000.usd
     within jmol-renewal-period {
@@ -42,7 +42,7 @@ decision post-trial-motion-window: "Post-Trial Motion Window" by applicant cite 
     duration { min 4.2.days, mode 14.days, max 28.days }
   }
   _ "Move for a new trial" -> rule59-new-trial-filed {
-    authority cite FRCP 59(b)
+    authority cite "FRCP 59(b)"
     effort 25.hours
     cost 8_000.usd
     within new-trial-period {
@@ -52,7 +52,7 @@ decision post-trial-motion-window: "Post-Trial Motion Window" by applicant cite 
     duration { min 4.2.days, mode 14.days, max 28.days }
   }
   _ "Move to alter or amend the judgment" -> rule59e-amend-filed {
-    authority cite FRCP 59(e)
+    authority cite "FRCP 59(e)"
     effort 20.hours
     cost 6_000.usd
     within alter-amend-period {
@@ -62,7 +62,7 @@ decision post-trial-motion-window: "Post-Trial Motion Window" by applicant cite 
     duration { min 4.2.days, mode 14.days, max 28.days }
   }
   _ "Move for relief from judgment" -> rule60-relief-filed {
-    authority cite FRCP 60(b)
+    authority cite "FRCP 60(b)"
     effort 25.hours
     cost 7_000.usd
     within relief-from-judgment-period {
@@ -72,60 +72,63 @@ decision post-trial-motion-window: "Post-Trial Motion Window" by applicant cite 
     duration { min 54.8.days, mode 182.5.days, max 365.days }
   }
   _ "No post-trial motion -- proceed to appeal" -> notice-of-appeal-window {
-    authority cite FRAP 4(a)(1)(A)
+    authority cite "FRAP 4(a)(1)(A)"
     effort 0.hours
     note "Hours: 0, a default/no-action transition with no billable work of its own."
   }
 }
 
-state rule50b-jmol-filed: "Renewed Motion for JMOL Filed" by applicant cite FRCP 50(b)
+state rule50b-jmol-filed: "Renewed Motion for JMOL Filed" by applicant cite "FRCP 50(b)"
 {
   group post-trial-motions-group
   note "Available only to a party who moved for JMOL under Rule 50(a) before the case was submitted to the jury -- the renewed motion cannot raise grounds not raised in the original Rule 50(a) motion. The court may allow judgment on the verdict, order a new trial, or direct entry of judgment as a matter of law."
   _ "Complete Rule 50(b) briefing" -> post-trial-ruling {
-    authority cite FRCP 50(b)
+    authority cite "FRCP 50(b)"
     effort 10.hours
   }
 }
 
-state rule59-new-trial-filed: "Motion for New Trial Filed" by applicant cite FRCP 59(a); 59(b)
+state rule59-new-trial-filed: "Motion for New Trial Filed" by applicant cite "FRCP 59(a); 59(b)"
 {
   group post-trial-motions-group
   note "Grounds include a verdict against the clear weight of the evidence, newly discovered evidence, misconduct, or a legal error affecting substantial rights -- broader and more discretionary than JMOL, and (unlike JMOL) does not require a prior Rule 50(a) motion."
-  _ "Complete Rule 59 briefing" -> post-trial-ruling { authority cite FRCP 59(b), effort 10.hours }
+  _ "Complete Rule 59 briefing" -> post-trial-ruling {
+    authority cite "FRCP 59(b)"
+    effort 10.hours
+  }
 }
 
-state rule59e-amend-filed: "Motion to Alter/Amend Judgment Filed" by applicant cite FRCP 59(e)
+state rule59e-amend-filed: "Motion to Alter/Amend Judgment Filed" by applicant cite "FRCP 59(e)"
 {
   group post-trial-motions-group
   note "Recognized grounds include an intervening change in CONTROLLING law, newly discovered evidence, clear error, or manifest injustice. Exxon Shipping Co. v. Baker, 554 U.S. 471, 485 n.5 (2008): an intervening change in controlling law is a legitimate 59(e) ground -- but 'controlling' means binding on this court, not merely persuasive authority from another circuit. Miss the 28 days and Rule 60(b) is not a safe fallback: Gonzalez v. Crosby, 545 U.S. 524 (2005), holds a mere change in decisional law is not, by itself, the kind of extraordinary circumstance Rule 60(b)(6) requires."
   court_listener_url "https://www.courtlistener.com/opinion/145779/exxon-shipping-co-v-baker/"
   _ "Complete Rule 59(e) briefing" -> post-trial-ruling {
-    authority cite FRCP 59(e)
+    authority cite "FRCP 59(e)"
     effort 8.hours
   }
 }
 
-state rule60-relief-filed: "Motion for Relief from Judgment Filed" by applicant cite FRCP 60(b); 60(c)(1)
+state rule60-relief-filed: "Motion for Relief from Judgment Filed" by applicant cite "FRCP 60(b); 60(c)(1)"
 {
   group post-trial-motions-group
   note "Six grounds: (1) mistake, inadvertence, surprise, or excusable neglect; (2) newly discovered evidence that could not have been discovered in time for a 59(b) motion; (3) fraud, misrepresentation, or misconduct by an opposing party; (4) the judgment is void; (5) the judgment has been satisfied, released, or discharged; (6) any other reason justifying relief. Grounds (1)-(3) must be raised within a reasonable time and no more than a year after entry of judgment; grounds (4)-(6) require only a reasonable time, with no fixed outer limit."
   court_listener_url "https://www.courtlistener.com/opinion/799985/gonzalez-v-crosby/"
   _ "Complete Rule 60(b) briefing" -> post-trial-ruling {
-    authority cite FRCP 60(b)
+    authority cite "FRCP 60(b)"
     effort 10.hours
   }
 }
 
 // The rule text commits this ruling to the court's discretion.
-chance post-trial-ruling: "Court Rules on Post-Trial Motion" by examiner discretion cite FRCP 50(b); 59; 60(b)
+chance post-trial-ruling: "Court Rules on Post-Trial Motion" by examiner discretion cite "FRCP 50(b); 59; 60(b)"
 {
   group post-trial-motions-group
   note "Outcome distribution authored at 0.7 denied / 0.3 granted -- APPROXIMATE; post-trial motions asking a judge to overturn a jury's own verdict or the court's own prior ruling face real institutional headwind, though far from a rubber stamp given the wide range of triggering grounds pooled into this single fork."
   _ "Post-trial motion denied -- FRAP 4(a)(4) tolling ends, appeal clock now runs" -> notice-of-appeal-window p 0.7 {
-    authority cite FRAP 4(a)(4)
+    authority cite "FRAP 4(a)(4)"
   }
   _ "Post-trial motion granted -- amended or new judgment entered" -> final-judgment-entered p 0.3 {
-    authority cite FRCP 50(b); 59(a); 59(e)
+    authority cite "FRCP 50(b); 59(a); 59(e)"
   }
 }

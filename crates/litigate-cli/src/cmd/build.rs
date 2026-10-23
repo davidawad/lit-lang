@@ -369,7 +369,7 @@ mod tests {
     #[test]
     fn a_package_that_does_not_lower_still_lets_its_matters_build() {
         let built = lowered(
-            "counting nourl cite XYZ 6(a)\n{\n  exclude_trigger_day\n  include_last_day\n  holidays federal-holidays\n}",
+            "counting nourl cite \"XYZ 6(a)\"\n{\n  exclude_trigger_day\n  include_last_day\n  holidays federal-holidays\n}",
             ACME,
         );
         let codes: Vec<&str> = built.diagnostics.iter().map(|d| d.code.as_str()).collect();

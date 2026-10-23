@@ -75,6 +75,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `chance` nodes; the PTAB Federal Circuit appeal window (and its link)
   is a pure decision, dropping its 0.92/0.08 teaching-estimate draw.
 
+- **Structured citations; pinned source text** (design review §6 item 8,
+  S1, K1; SPEC §2, §4.1, §4.3, §7, §8.6; lg-flu.6). **Breaking:** the lexer
+  has no citation mode. Citation text is a string, `cite "28 U.S.C. §§
+  1491, 1498"`, so commas, braces, `//`, section signs, case names and URLs
+  are plain text; an unquoted legacy cite is L0001 with a machine-applicable
+  fix that quotes it exactly as citation mode read it, so `litigate fix`
+  ports old sources (every `.lit`/`.case` here is migrated and lowers to
+  byte-identical packs). A resolved cite is a structured value: work (the
+  source binding), expression (the binding's `as_of`), pinpoint, and the
+  SHA-256 of the cited section's text, all in the `*.map.json` sidecar.
+  A new `[sources.*]` key `path_sha256` pins the vendored file at `path`;
+  `cite-resolves` (L1010) rejects an unpinned binding and a corpus file
+  that is not the pinned text, instead of resolving against whatever the
+  binary embeds. `sha256` now means the document at `url`; the `lit/core`,
+  `cafc` and `ttab` bindings that recorded the vendored file's hash there
+  move it to `path_sha256`, so their packs no longer emit it. A version's
+  cite whose expression is dated on or after the version's end is L1010
+  unless marked `historical` (new contextual keyword) or a hole: the pre-2009
+  FRCP 6 / FRAP 26 / RCFC versions citing later editions' notes are marked
+  `historical`, and the FRCP appeal-window and TTAB answer-period versions
+  that cited post-dating text are now holes. The tree-sitter grammar drops
+  its external scanner.
+
 - **Order independence** (design review §6 item 4, P7, P13; SPEC §4.1,
   §5.4, §5.6). The engine visits nodes in canonical (qualified id) order
   and a node's links by id, so renaming a module file, reordering a pack's

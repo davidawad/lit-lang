@@ -1,10 +1,10 @@
 //! Atoms shared by declarations, fields, and case blocks: refs, id lists,
 //! literals, holes, citations, intervals, records, JSON values, and types.
 use super::{delimited_node, expr, Sep};
-use crate::error::SyntaxError;
+use crate::error::{range, SyntaxError};
 use crate::parser::Parser;
 use crate::syntax_kind::SyntaxKind::{self, *};
-use litigate_base::DiagnosticCode;
+use litigate_base::{Applicability, DiagnosticCode};
 
 /// A value parser: parses one construct or returns false untouched.
 pub(crate) type Value = fn(&mut Parser<'_>) -> bool;
@@ -169,20 +169,72 @@ pub(crate) fn hole(p: &mut Parser<'_>) -> bool {
     true
 }
 
-/// `Cite = "cite" (CiteText | Hole)`. The hole form keeps citation text
-/// that has no `CiteText` spelling (a `,`, `{`, `}`, or `//` inside it) as
-/// the hole's reason.
+/// `Cite = "cite" (String | Hole) ["historical"]`. The citation text is an
+/// ordinary string, so commas, braces, `§§`, case names and URLs need no
+/// escape hatch; a cite hole keeps text that is not yet a resolvable
+/// citation as its reason. `historical` marks a cite of a later or earlier
+/// expression of the work than the declaration's own window (SPEC §4.3).
 pub(crate) fn cite(p: &mut Parser<'_>) -> bool {
     if !p.at(KwCite) {
         return false;
     }
     p.start(CiteExpr);
     p.bump();
-    if !p.eat(CiteText) {
-        hole(p);
+    if !p.eat(String) && !hole(p) {
+        unquoted_cite(p);
+    }
+    if p.at_kw(KwHistorical) && !p.newline_before() {
+        p.bump_as(KwHistorical);
     }
     p.finish();
     true
+}
+
+/// L0001 for citation text after `cite` that is not a string. Text on the
+/// same line, up to the first `{`, `}`, `,`, or `//` (where the retired
+/// citation mode ended it), gets a machine-applicable fix quoting it with
+/// whitespace runs collapsed, so `litigate fix` ports a legacy cite
+/// unchanged; it is wrapped in an `Error` node.
+fn unquoted_cite(p: &mut Parser<'_>) {
+    let start = usize::from(p.current_range().start());
+    let (end, quoted) = quote_rest(p, start);
+    if p.at_end() || p.newline_before() || end == start {
+        p.error_expected(&[String, Question]);
+        return;
+    }
+    p.push_error(
+        SyntaxError::new(
+            DiagnosticCode::UnexpectedToken,
+            range(start, end),
+            format!("citation text must be a string: `cite {quoted}`"),
+        )
+        .with_fix(range(start, end), quoted, Applicability::MachineApplicable),
+    );
+    skip_until(p, end);
+}
+
+/// The legacy citation text at `start`: its end offset and its spelling
+/// as a string literal. It runs to the first newline, `{`, `}`, `,`, or
+/// `//`, trailing whitespace excluded and whitespace runs collapsed.
+pub(crate) fn quote_rest(p: &Parser<'_>, start: usize) -> (usize, std::string::String) {
+    let body = p.text_from(start);
+    let stop = body
+        .char_indices()
+        .find(|(i, c)| matches!(c, '\n' | '{' | '}' | ',') || body[*i..].starts_with("//"))
+        .map_or(body.len(), |(i, _)| i);
+    let raw = body[..stop].trim_end();
+    let text = raw.split_whitespace().collect::<Vec<_>>().join(" ");
+    let escaped = text.replace('\\', "\\\\").replace('"', "\\\"");
+    (start + raw.len(), format!("\"{escaped}\""))
+}
+
+/// Wraps every token starting before `end` in an `Error` node.
+pub(crate) fn skip_until(p: &mut Parser<'_>, end: usize) {
+    p.start(Error);
+    while !p.at_end() && usize::from(p.current_range().start()) < end {
+        p.bump();
+    }
+    p.finish();
 }
 
 /// `["-"] literal(kind)`: a `UnaryExpr` when negated.
@@ -346,7 +398,7 @@ fn refined_type(p: &mut Parser<'_>) {
     let end = p.last_end().max(usize::from(opener.end()));
     p.push_error(SyntaxError::new(
         DiagnosticCode::ReservedRefinement,
-        crate::error::range(usize::from(opener.start()), end),
+        range(usize::from(opener.start()), end),
         format!(
             "{}: a refinement type `{{x: T | p}}` is not yet part of the language; \
              write the base type",

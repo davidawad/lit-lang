@@ -10,7 +10,7 @@ use support::{acme, example, litigate_in, located};
 
 /// A counting rule whose cite binds no source URL: it checks, but its
 /// package does not lower (L6001).
-const UNLOWERABLE: &str = "counting nourl cite XYZ 6(a)
+const UNLOWERABLE: &str = "counting nourl cite \"XYZ 6(a)\"
 {
   exclude_trigger_day
   include_last_day

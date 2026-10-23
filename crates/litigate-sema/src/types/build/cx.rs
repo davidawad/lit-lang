@@ -168,7 +168,7 @@ impl Cx<'_, '_> {
     #[must_use]
     pub fn string(f: Option<&&Field>) -> Option<String> {
         match f.and_then(|f| first_expr(f)).map(|e| &e.kind) {
-            Some(ExprKind::Str(s) | ExprKind::Cite(s)) => Some(s.clone()),
+            Some(ExprKind::Str(s) | ExprKind::Cite(s, _)) => Some(s.clone()),
             _ => None,
         }
     }
@@ -417,6 +417,10 @@ impl Cx<'_, '_> {
                 .or_else(|| unmarked_doc(item.doc.as_deref()))
                 .unwrap_or_default(),
             cite: cites.first().and_then(|f| self.cite_text(Some(f))),
+            historical: cites
+                .first()
+                .and_then(|f| first_expr(f))
+                .is_some_and(|e| matches!(e.kind, ExprKind::Cite(_, true))),
             effective: self.effective(item, rule),
             authority: self
                 .manifest

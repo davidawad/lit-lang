@@ -18,7 +18,7 @@ pin its commit (`GRAMMAR_REV` in litigate.vim, `rev` in helix-litigate and in
 
 | Editor | Repository | Install |
 |---|---|---|
-| grammar (any tree-sitter editor) | [davidawad/tree-sitter-litigate](https://github.com/davidawad/tree-sitter-litigate) | compile `src/parser.c` + `src/scanner.c` |
+| grammar (any tree-sitter editor) | [davidawad/tree-sitter-litigate](https://github.com/davidawad/tree-sitter-litigate) | compile `src/parser.c` |
 | Vim, Neovim | [davidawad/litigate.vim](https://github.com/davidawad/litigate.vim) | `Plug 'davidawad/litigate.vim', { 'branch': 'main', 'do': 'bash scripts/build-parser.sh' }` |
 | Emacs 29+ | [davidawad/litigate-mode.el](https://github.com/davidawad/litigate-mode.el) | add `src/` to `load-path`, then `M-x litigate-mode-install-grammar` |
 | Helix | [davidawad/helix-litigate](https://github.com/davidawad/helix-litigate) | `./install.sh`, then merge its `languages.toml` |

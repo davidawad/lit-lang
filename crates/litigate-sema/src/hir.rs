@@ -160,8 +160,12 @@ pub struct SourceBinding {
     pub url: Option<String>,
     /// Repository-relative vendored path.
     pub path: Option<String>,
-    /// SHA-256 of the retrieved document.
+    /// SHA-256 of the document retrieved from `url`: recorded provenance,
+    /// never fetched or checked (the compiler is offline).
     pub sha256: Option<String>,
+    /// SHA-256 of the vendored file at `path`: pins the expression its
+    /// cites resolve against, verified by `cite-resolves` (SPEC §4.3).
+    pub path_sha256: Option<String>,
     /// Version date of the document.
     pub as_of: Option<String>,
     /// Citation prefixes this binding resolves (`FRCP`, `35 U.S.C.`).

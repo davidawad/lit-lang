@@ -57,7 +57,7 @@ fn version_sets_are_disjoint_and_cover_their_lifetime() {
     ]));
 }
 
-const TRANSITION_OK: &str = "transition amend-2016 amends p@2016-12-01 cite FRCP 86(a)(2)(B)
+const TRANSITION_OK: &str = "transition amend-2016 amends p@2016-12-01 cite \"FRCP 86(a)(2)(B)\"
 {
   unless has_event(Ordered()) -> p@2009-12-01
   otherwise -> p@2016-12-01

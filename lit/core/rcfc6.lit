@@ -8,7 +8,7 @@ import core.time.{ Served, Scheduled, ServiceMethod }
 /// weekends and legal holidays; mail, leaving with the clerk, and other
 /// consented means add 3 days (conformed to FRCP 6(e) in 2006). The 2008
 /// amendment restyled it.
-counting rcfc6 effective [2002-05-01, 2010-01-11) known_at 2002-05-01 cite RCFC 6 (2002 Revision note)
+counting rcfc6 effective [2002-05-01, 2010-01-11) known_at 2002-05-01 cite "RCFC 6 (2002 Revision note)" historical
 {
   exclude_trigger_day
   include_last_day
@@ -18,7 +18,7 @@ counting rcfc6 effective [2002-05-01, 2010-01-11) known_at 2002-05-01 cite RCFC 
     Mail: 3.days
     Clerk: 3.days
     OtherConsented: 3.days
-  } cite RCFC 6 (2006 Amendment note)
+  } cite "RCFC 6 (2006 Amendment note)"
   holidays rcfc-legal-holidays
 }
 
@@ -31,78 +31,78 @@ counting rcfc6 effective [2002-05-01, 2010-01-11) known_at 2002-05-01 cite RCFC 
 /// months of 35 U.S.C. §§ 314(b), 315(b), 321(c) and 37 C.F.R. Part 42, so
 /// it counts them as the Patent Office does (MPEP 710.01(a)): to the
 /// corresponding day of the later month, else that month's last day.
-counting rcfc6 effective [2010-01-11, ..) known_at 2010-01-11 supersedes rcfc6@2002-05-01 cite RCFC 6(a)
+counting rcfc6 effective [2010-01-11, ..) known_at 2010-01-11 supersedes rcfc6@2002-05-01 cite "RCFC 6(a)"
 {
   exclude_trigger_day
   include_last_day
   roll_forward_on [weekend, legal_holiday, inaccessible]
-  service_extension { Mail: 3.days, Clerk: 3.days, OtherConsented: 3.days } cite RCFC 6(d)
+  service_extension { Mail: 3.days, Clerk: 3.days, OtherConsented: 3.days } cite "RCFC 6(d)"
   holidays rcfc-legal-holidays
   allow_hours
   end_of_month clamp
 }
 
-deadline rcfc6-1-day: 1.days after Served() counted_by rcfc6 cite RCFC 6(a)(1)
-deadline rcfc6-10-days: 10.days after Served() counted_by rcfc6 cite RCFC 6(a)(1)
-deadline rcfc6-14-days: 14.days after Served() counted_by rcfc6 cite RCFC 6(a)(1)
-deadline rcfc6-26-days: 26.days after Served() counted_by rcfc6 cite RCFC 6(a)(1)
-deadline rcfc6-2-days-before: 2.days before Scheduled() counted_by rcfc6 cite RCFC 6(a)(5)
+deadline rcfc6-1-day: 1.days after Served() counted_by rcfc6 cite "RCFC 6(a)(1)"
+deadline rcfc6-10-days: 10.days after Served() counted_by rcfc6 cite "RCFC 6(a)(1)"
+deadline rcfc6-14-days: 14.days after Served() counted_by rcfc6 cite "RCFC 6(a)(1)"
+deadline rcfc6-26-days: 26.days after Served() counted_by rcfc6 cite "RCFC 6(a)(1)"
+deadline rcfc6-2-days-before: 2.days before Scheduled() counted_by rcfc6 cite "RCFC 6(a)(5)"
 
-test "an ordinary fourteen-day period matches FRCP 6" cite RCFC 6(a)(1)
+test "an ordinary fourteen-day period matches FRCP 6" cite "RCFC 6(a)(1)"
 {
   given Served(Personal) on 2026-07-01
   expect deadline(rcfc6-14-days) == 2026-07-15
 }
 
-test "mail adds three days, as under FRCP 6(d)" cite RCFC 6(d)
+test "mail adds three days, as under FRCP 6(d)" cite "RCFC 6(d)"
 {
   given Served(Mail) on 2026-07-20
   expect deadline(rcfc6-14-days) == 2026-08-06
 }
 
-test "a Saturday last day rolls to Monday, then three days end Thursday" cite RCFC 6(d)
+test "a Saturday last day rolls to Monday, then three days end Thursday" cite "RCFC 6(d)"
 {
   given Served(Mail) on 2026-01-05
   expect deadline(rcfc6-26-days) == 2026-02-05
 }
 
-test "backward onto Saturday rolls to Friday" cite RCFC 6(a)(5)
+test "backward onto Saturday rolls to Friday" cite "RCFC 6(a)(5)"
 {
   given Scheduled() on 2026-07-27
   expect deadline(rcfc6-2-days-before) == 2026-07-24
 }
 
-test "Inauguration Day 2029 falls on Saturday and is observed Friday" cite RCFC 6(a)(6)(A)
+test "Inauguration Day 2029 falls on Saturday and is observed Friday" cite "RCFC 6(a)(6)(A)"
 {
   given Served(Personal) on 2029-01-18
   expect deadline(rcfc6-1-day) == 2029-01-22
 }
 
-test "Inauguration Day 2021 was a Wednesday holiday" cite RCFC 6(a)(6)(A)
+test "Inauguration Day 2021 was a Wednesday holiday" cite "RCFC 6(a)(6)(A)"
 {
   given Served(Personal) on 2021-01-19
   expect deadline(rcfc6-1-day) == 2021-01-21
 }
 
-test "January 20, 2026 is not an inauguration year" cite RCFC 6(a)(6)(A)
+test "January 20, 2026 is not an inauguration year" cite "RCFC 6(a)(6)(A)"
 {
   given Served(Personal) on 2026-01-19
   expect deadline(rcfc6-1-day) == 2026-01-20
 }
 
-test "January 20, 2027 is not an inauguration year" cite RCFC 6(a)(6)(A)
+test "January 20, 2027 is not an inauguration year" cite "RCFC 6(a)(6)(A)"
 {
   given Served(Personal) on 2027-01-19
   expect deadline(rcfc6-1-day) == 2027-01-20
 }
 
-test "the Court of Federal Claims kept the 11-day rule until January 11, 2010" cite RCFC 6 (2010 Amendment note)
+test "the Court of Federal Claims kept the 11-day rule until January 11, 2010" cite "RCFC 6 (2010 Amendment note)"
 {
   given Served(Personal) on 2009-12-04
   expect deadline(rcfc6-10-days) == 2009-12-18
 }
 
-test "from January 11, 2010, ten days count every day" cite RCFC 6(a)(1)(B)
+test "from January 11, 2010, ten days count every day" cite "RCFC 6(a)(1)(B)"
 {
   given Served(Personal) on 2010-01-15
   expect deadline(rcfc6-10-days) == 2010-01-25

@@ -63,9 +63,9 @@ Cite stops at brace, comma and comment
 ================================================================================
 
 module a
-state x: "X" cite FRCP 6(a)/1 // comment
+state x: "X" cite "FRCP 6(a)/1" // comment
 { tags [a], note "n" }
-terminal t: "T" { authority_free "x" -> y { authority cite 28 U.S.C. 1491, note "n" } }
+terminal t: "T" { authority_free "x" -> y { authority cite "28 U.S.C. 1491", note "n" } }
 
 ---
 
@@ -79,7 +79,8 @@ terminal t: "T" { authority_free "x" -> y { authority cite 28 U.S.C. 1491, note 
       (string
         (string_content))
       (cite
-        (cite_text))
+        (string
+          (string_content)))
       (line_comment)
       (node_body
         (node_field
@@ -103,7 +104,8 @@ terminal t: "T" { authority_free "x" -> y { authority cite 28 U.S.C. 1491, note 
           (edge_fields
             (edge_field
               (cite
-                (cite_text)))
+                (string
+                  (string_content))))
             (edge_field
               (string
                 (string_content)))))))))
@@ -126,3 +128,32 @@ state café-öffnung: "Unicode"
       (identifier)
       (string
         (string_content)))))
+
+================================================================================
+Citation text is a string: commas, braces, section signs and historical
+================================================================================
+
+module m
+counting c effective [1963-07-01, 1985-08-01) cite "28 U.S.C. §§ 1491, 1498 {x} // y" historical
+{
+  exclude_trigger_day
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (counting_decl
+      (identifier)
+      (effective_clause
+        (interval
+          (date)
+          (date)))
+      (cite
+        (string
+          (string_content)))
+      (counting_body
+        (counting_item)))))

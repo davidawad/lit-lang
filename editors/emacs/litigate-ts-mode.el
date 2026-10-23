@@ -150,7 +150,6 @@ The canonical format (`litigate fmt', SPEC §10) uses two."
    :feature 'string
    '((escape_sequence) @font-lock-escape-face
      (string) @font-lock-string-face
-     (cite_text) @font-lock-doc-markup-face
      (version_req) @font-lock-constant-face)
 
    :language 'litigate

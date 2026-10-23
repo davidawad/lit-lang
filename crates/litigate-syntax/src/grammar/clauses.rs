@@ -1,6 +1,6 @@
 //! Declaration clauses: `by`, `discretion`, `info`, `outcome`, version clauses,
 //! relations, and citations, plus the missing-`cite` recovery.
-use super::values::{cite, date, id_list, interval, reference, require};
+use super::values::{cite, date, id_list, interval, quote_rest, reference, require, skip_until};
 use crate::error::{range, SyntaxError};
 use crate::parser::Parser;
 use crate::syntax_kind::SyntaxKind::{self, *};
@@ -161,9 +161,9 @@ fn relation(p: &mut Parser<'_>) -> bool {
 
 /// Recognizes citation text written without `cite` (an identifier on the
 /// same line, followed later on that line by a digit-bearing token) and
-/// offers a machine-applicable `cite ` insertion. The rest of the line is
-/// wrapped in an `Error` node. (Item keywords are keywords, so this never
-/// starts at a recovery anchor.)
+/// offers a machine-applicable fix quoting it after `cite` (up to the
+/// first `{`, `}`, `,`, or `//`). That text is wrapped in an `Error` node.
+/// (Item keywords are keywords, so this never starts at a recovery anchor.)
 fn missing_cite(p: &mut Parser<'_>) {
     let keyword = SyntaxKind::from_keyword(p.nth_text(0)).is_some();
     if !p.at(Ident) || keyword || p.newline_before() {
@@ -177,6 +177,7 @@ fn missing_cite(p: &mut Parser<'_>) {
     }
     let at = p.current_range();
     let start = usize::from(at.start());
+    let (end, quoted) = quote_rest(p, start);
     p.push_error(
         SyntaxError::new(
             DiagnosticCode::UnexpectedToken,
@@ -187,16 +188,12 @@ fn missing_cite(p: &mut Parser<'_>) {
             ),
         )
         .with_fix(
-            range(start, start),
-            "cite ",
+            range(start, end),
+            format!("cite {quoted}"),
             Applicability::MachineApplicable,
         ),
     );
-    p.start(Error);
-    while !p.at_end() && !p.at(LBrace) && !p.newline_before() {
-        p.bump();
-    }
-    p.finish();
+    skip_until(p, end);
 }
 
 fn newline_between(p: &Parser<'_>, n: usize) -> bool {

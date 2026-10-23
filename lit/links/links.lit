@@ -22,24 +22,24 @@ import core.frap26.{ frap26 }
 /// shorten or extend either period; lit/cafc's `rehearing-period` records
 /// that as `delegable_to [CaseOrder]`, but a links package has no authority
 /// level of its own to delegate from (L3004), so this declaration does not.
-rule duty rehearing-united-states-party cite Fed. Cir. R. 40(f)(1)
+rule duty rehearing-united-states-party cite "Fed. Cir. R. 40(f)(1)"
 {
-  deadline rehearing-period-united-states-party: 45.days after Entered(PanelJudgment) counted_by frap26 effective [2025-12-01, ..) known_at 2025-12-01 cite Fed. Cir. R. 40(f)(1); FRAP 40(d)(1)(A); FRAP 40(d)(1)(B)
+  deadline rehearing-period-united-states-party: 45.days after Entered(PanelJudgment) counted_by frap26 effective [2025-12-01, ..) known_at 2025-12-01 cite "Fed. Cir. R. 40(f)(1); FRAP 40(d)(1)(A); FRAP 40(d)(1)(B)"
 }
 
-test "a rehearing petition is due 45 days after judgment when the United States is a party" cite Fed. Cir. R. 40(f)(1)
+test "a rehearing petition is due 45 days after judgment when the United States is a party" cite "Fed. Cir. R. 40(f)(1)"
 {
   given Entered(PanelJudgment) on 2026-03-02
   expect deadline(rehearing-period-united-states-party) == 2026-04-16
 }
 
-test "a 45th day on a Saturday rolls the rehearing petition to Monday" cite FRAP 26(a)(1)(C)
+test "a 45th day on a Saturday rolls the rehearing petition to Monday" cite "FRAP 26(a)(1)(C)"
 {
   given Entered(PanelJudgment) on 2026-01-21
   expect deadline(rehearing-period-united-states-party) == 2026-03-09
 }
 
-test "a 45th day on Labor Day rolls the rehearing petition to Tuesday" cite FRAP 26(a)(6)(A)
+test "a 45th day on Labor Day rolls the rehearing petition to Tuesday" cite "FRAP 26(a)(6)(A)"
 {
   given Entered(PanelJudgment) on 2026-07-24
   expect deadline(rehearing-period-united-states-party) == 2026-09-08
@@ -179,14 +179,14 @@ link cofc-gov-appeal-protest-sustained "United States (or intervenor) appeals th
 /// "require such further proceedings to be had as may be just under the
 /// circumstances".
 link cafc-remand-to-cofc "Remand: further proceedings in the Court of Federal Claims": cafc@cofc::remanded-to-cofc -> cofc::trial-bench by office p 1 {
-  authority cite 28 U.S.C. § 2106
+  authority cite "28 U.S.C. § 2106"
   note "Re-entry point modeled as further merits proceedings (bench trial). A remand on a narrower issue re-enters later; override with scenario.mask/start when the mandate is specific."
   tags [remand]
 }
 
 /// The same remand from the government's appeal.
 link cafc-gov-remand-to-cofc "Remand: further proceedings in the Court of Federal Claims": cafc@cofc-gov::remanded-to-cofc -> cofc::trial-bench by office p 1 {
-  authority cite 28 U.S.C. § 2106
+  authority cite "28 U.S.C. § 2106"
   tags [remand]
 }
 
@@ -230,7 +230,7 @@ link ptab-appeal-to-cafc "Appeal the final written decision to the Federal Circu
 /// (35 U.S.C. § 144). The mandate is FRAP 41(a)'s certified judgment,
 /// opinion and costs direction.
 link cafc-remand-to-ptab "Remand: Board issues a new final written decision": cafc@ptab::remanded-to-ptab -> ptab-patent-trial-appeal-board::fwd-issued by office p 1 {
-  authority cite 35 U.S.C. § 144; 35 U.S.C. § 319; FRAP 41(a)
+  authority cite "35 U.S.C. § 144; 35 U.S.C. § 319; FRAP 41(a)"
   tags [remand]
 }
 
@@ -264,7 +264,7 @@ instance cafc@itc {
 
 /// Replaces the ITC pack's abstract appeal edge when both packs are loaded.
 link itc-appeal-to-cafc "Appeal the Commission's final determination to the Federal Circuit": itc-337::federal-circuit-appeal-window -> cafc@itc::entry-itc by applicant {
-  authority cite 19 U.S.C. § 1337(c); 28 U.S.C. § 1295(a)(6)
+  authority cite "19 U.S.C. § 1337(c); 28 U.S.C. § 1295(a)(6)"
   note "Supersedes the ITC pack's abstract appeal edge when both packs are loaded."
   tags [appeal]
   replaces ["itc-337::federal-circuit-appeal-window->appeal-filed#0"]
@@ -278,7 +278,7 @@ link itc-appeal-to-cafc "Appeal the Commission's final determination to the Fede
 /// the ordinary course (Florida Power & Light Co. v. Lorion, 470 U.S. 729,
 /// 744 (1985)). The mandate is FRAP 41(a)'s.
 link cafc-remand-to-itc "Remand: Commission issues a new final determination": cafc@itc::remanded-to-itc -> itc-337::commission-final-determination by office p 1 {
-  authority cite 19 U.S.C. § 1337(c); 5 U.S.C. § 706(2); FRAP 41(a)
+  authority cite "19 U.S.C. § 1337(c); 5 U.S.C. § 706(2); FRAP 41(a)"
   tags [remand]
 }
 
@@ -314,7 +314,7 @@ link frcp-appeal-to-regional-circuit "Proceed under FRAP in the regional circuit
 
 /// The Federal Circuit for a district-court patent judgment.
 link frcp-appeal-to-cafc-district-court "Proceed to the Federal Circuit (district-court patent judgment)": frcp-civil-procedure::notice-of-appeal-filed -> cafc@district-court::entry-district-court by applicant {
-  authority cite 28 U.S.C. § 1295(a)(1)
+  authority cite "28 U.S.C. § 1295(a)(1)"
   note "The Federal Circuit has exclusive jurisdiction over an appeal from a final district-court judgment in a civil action arising under an Act of Congress relating to patents (or plant variety protection), or in which a party asserted a compulsory patent counterclaim -- including a final judgment under 28 U.S.C. § 1292(c)(1)-(2). Coexists with `frcp-appeal-to-regional-circuit` as the other route out of `notice-of-appeal-filed`; a matter scenario selects the applicable one with `scenario.remove_edges` (see that link's note). Routes into the `cafc@district-court` instance, which mirrors `cafc@ptab`/`cafc@itc`/`cafc@cofc`: it keeps only `origin-to-district-court` and remands only back to the district court."
   tags [appeal, patent]
   replaces ["frcp-civil-procedure::notice-of-appeal-filed->cross-appeal-window#0"]
@@ -340,7 +340,7 @@ instance cafc@ttab {
 /// Replaces the TTAB pack's abstract Federal Circuit outcome edge when both
 /// packs are loaded.
 link ttab-appeal-to-cafc "Appeal the TTAB decision to the Federal Circuit on the Board record": ttab-trademark-trial-and-appeal-board::decision-sustained -> cafc@ttab::entry-ttab by applicant {
-  authority cite 15 U.S.C. § 1071(a); 28 U.S.C. § 1295(a)(4)(B)
+  authority cite "15 U.S.C. § 1071(a); 28 U.S.C. § 1295(a)(4)(B)"
   note "Supersedes the TTAB pack's abstract Federal Circuit outcome node when both packs are loaded. The 15 U.S.C. § 1071(b) civil-action alternative stays abstract (district-court de novo review is not a good fit for the FRCP pack's generic civil case); a matter scenario removes whichever route it does not use."
   tags [appeal]
   replaces ["ttab-trademark-trial-and-appeal-board::decision-sustained->cafc-outcome#0"]
@@ -352,6 +352,6 @@ link ttab-appeal-to-cafc "Appeal the TTAB decision to the Federal Circuit on the
 /// proceedings in the case" (15 U.S.C. § 1071(a)(4)). The mandate is FRAP
 /// 41(a)'s.
 link cafc-remand-to-ttab "Remand: Board issues a new final decision": cafc@ttab::remanded-to-ttab -> ttab-trademark-trial-and-appeal-board::final-decision by office p 1 {
-  authority cite 15 U.S.C. § 1071(a)(4); FRAP 41(a)
+  authority cite "15 U.S.C. § 1071(a)(4); FRAP 41(a)"
   tags [remand]
 }

@@ -712,7 +712,7 @@ fn ambiguous_and_absent_targets_explain_themselves() {
 fn a_lock_bars_a_delegated_override_from_granting_an_extension() {
     // FRAP 26(b)(1): the period delegates to a local rule, but its lock
     // forbids any extension beyond its own grant.
-    let locked = " delegable_to [LocalRule] { extend { by Court, max 30.days }, extend { never cite FRAP 26(b)(1) } }";
+    let locked = " delegable_to [LocalRule] { extend { by Court, max 30.days }, extend { never cite \"FRAP 26(b)(1)\" } }";
     let local = |clauses: &str| {
         over(
             "local",
@@ -730,7 +730,7 @@ fn a_lock_bars_a_delegated_override_from_granting_an_extension() {
     assert_eq!(found.len(), 1, "{found:#?}");
     assert!(
         found[0].contains("L3004")
-            && found[0].contains("is locked: `extend { never cite FRAP 26(b)(1) }`")
+            && found[0].contains("is locked: `extend { never cite \"FRAP 26(b)(1)\" }`")
             && found[0].contains("a delegation does not reach past its lock"),
         "{found:#?}"
     );
@@ -757,7 +757,7 @@ fn a_lock_bars_a_delegated_override_from_granting_an_extension() {
     // The locked version's own grant, or none, is no widening.
     for clauses in [
         "{ extend { by Court, max 30.days } }",
-        "{ extend { never cite L.R. 6.1 } }",
+        "{ extend { never cite \"L.R. 6.1\" } }",
         "",
     ] {
         let narrowing = local(clauses);

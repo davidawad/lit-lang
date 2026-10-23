@@ -8,20 +8,20 @@ import cafc.{ Docketed, Filed, Paper, docketing-group }
 import core.authority.{ CaseOrder }
 import core.frap26.{ frap26 }
 
-state notice-of-appeal-filed: "Notice of Appeal Filed (Convergence)" by office cite FRAP 3; FRAP 4
+state notice-of-appeal-filed: "Notice of Appeal Filed (Convergence)" by office cite "FRAP 3; FRAP 4"
 {
   group docketing-group
   note "All four origins converge here once their own deadline is met; downstream docketing, certificate-of-interest, briefing, and decision mechanics are uniform across origins except where a specific rule/edge below says otherwise."
   noa-to-docketed "Clerk dockets the appeal, assigns case number" -> docketed {
-    authority cite FRAP 12(a)
+    authority cite "FRAP 12(a)"
   }
 }
 
-state docketed: "Appeal Docketed at the Federal Circuit" by applicant cite FRAP 12(a)
+state docketed: "Appeal Docketed at the Federal Circuit" by applicant cite "FRAP 12(a)"
 {
   group docketing-group
   docketed-to-appearance "File entry of appearance and certificate of interest" -> appearance-and-coi-filed {
-    authority cite Fed. Cir. R. 47.3(b)(1); Fed. Cir. R. 47.4(b)
+    authority cite "Fed. Cir. R. 47.3(b)(1); Fed. Cir. R. 47.4(b)"
     effort 2.hours
     cost 0.usd
     event Filed(EntryOfAppearance)
@@ -33,12 +33,12 @@ state docketed: "Appeal Docketed at the Federal Circuit" by applicant cite FRAP 
   }
 }
 
-state appearance-and-coi-filed: "Entry of Appearance & Certificate of Interest Filed" by applicant cite Fed. Cir. R. 47.3(b)(1); Fed. Cir. R. 47.4(a)-(b)
+state appearance-and-coi-filed: "Entry of Appearance & Certificate of Interest Filed" by applicant cite "Fed. Cir. R. 47.3(b)(1); Fed. Cir. R. 47.4(a)-(b)"
 {
   group docketing-group
   note "Certificate of interest must be filed contemporaneously with the first-filed entry of appearance (Fed. Cir. R. 47.4(b)) and satisfies the FRAP 26.1 disclosure-statement requirement (Fed. Cir. R. 26.1). United States and unrepresented individuals are exempt absent Rule 47.4(a)(6) organizational-victim/bankruptcy disclosures. An amended certificate is due within 7 days of any change (Fed. Cir. R. 47.4(c))."
   appearance-to-docketing-statement "File docketing statement (Form 26)" -> docketing-statement-filed {
-    authority cite Fed. Cir. R. 47.6
+    authority cite "Fed. Cir. R. 47.6"
     effort 3.hours
     cost 0.usd
     event Filed(DocketingStatement)
@@ -50,7 +50,7 @@ state appearance-and-coi-filed: "Entry of Appearance & Certificate of Interest F
   }
 }
 
-state docketing-statement-filed: "Docketing Statement Filed" by office cite Fed. Cir. R. 47.6
+state docketing-statement-filed: "Docketing Statement Filed" by office cite "Fed. Cir. R. 47.6"
 {
   group docketing-group
   note "Except for unrepresented parties, each appellant/cross-appellant/petitioner files a docketing statement on Form 26 within 14 days of docketing; it satisfies the FRAP 10(b)(3)(A) statement-of-issues requirement. Also the document the Office of General Counsel screens (together with the briefs, once filed) to select cases for mediation."
@@ -64,38 +64,38 @@ state docketing-statement-filed: "Docketing Statement Filed" by office cite Fed.
 /// certificate of interest is filed with it (Fed. Cir. R. 47.4(b)). The
 /// rule names no exception, and the pack records the period as not
 /// extendable, so no delegation is declared.
-rule duty entry-of-appearance cite Fed. Cir. R. 47.3(b)(1)
+rule duty entry-of-appearance cite "Fed. Cir. R. 47.3(b)(1)"
 {
-  deadline appearance-period: 14.days after Docketed() counted_by frap26 effective [2025-12-01, ..) known_at 2025-12-01 cite Fed. Cir. R. 47.3(b)(1); Fed. Cir. R. 47.4(b)
+  deadline appearance-period: 14.days after Docketed() counted_by frap26 effective [2025-12-01, ..) known_at 2025-12-01 cite "Fed. Cir. R. 47.3(b)(1); Fed. Cir. R. 47.4(b)"
 }
 
 /// Fed. Cir. R. 47.6: the docketing statement is due 14 days after the case
 /// is docketed. Fed. Cir. R. 26(b) lets the court extend any time the rules
 /// prescribe on a motion made at least 7 days before the due date.
-rule duty docketing-statement cite Fed. Cir. R. 47.6
+rule duty docketing-statement cite "Fed. Cir. R. 47.6"
 {
-  deadline docketing-statement-period: 14.days after Docketed() counted_by frap26 effective [2025-12-01, ..) known_at 2025-12-01 delegable_to [CaseOrder] cite Fed. Cir. R. 47.6; Fed. Cir. R. 26(b)(1)
+  deadline docketing-statement-period: 14.days after Docketed() counted_by frap26 effective [2025-12-01, ..) known_at 2025-12-01 delegable_to [CaseOrder] cite "Fed. Cir. R. 47.6; Fed. Cir. R. 26(b)(1)"
 }
 
-test "an entry of appearance is due 14 days after docketing" cite Fed. Cir. R. 47.3(b)(1)
+test "an entry of appearance is due 14 days after docketing" cite "Fed. Cir. R. 47.3(b)(1)"
 {
   given Docketed() on 2026-03-02
   expect deadline(appearance-period) == 2026-03-16
 }
 
-test "a Saturday 14th day rolls the appearance to Monday" cite FRAP 26(a)(1)(C)
+test "a Saturday 14th day rolls the appearance to Monday" cite "FRAP 26(a)(1)(C)"
 {
   given Docketed() on 2026-03-07
   expect deadline(appearance-period) == 2026-03-23
 }
 
-test "a docketing statement is due 14 days after docketing" cite Fed. Cir. R. 47.6
+test "a docketing statement is due 14 days after docketing" cite "Fed. Cir. R. 47.6"
 {
   given Docketed() on 2026-06-01
   expect deadline(docketing-statement-period) == 2026-06-15
 }
 
-test "a 14th day on Memorial Day rolls the docketing statement to Tuesday" cite FRAP 26(a)(6)(A)
+test "a 14th day on Memorial Day rolls the docketing statement to Tuesday" cite "FRAP 26(a)(6)(A)"
 {
   given Docketed() on 2026-05-11
   expect deadline(docketing-statement-period) == 2026-05-26

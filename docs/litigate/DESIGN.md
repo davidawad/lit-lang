@@ -124,7 +124,7 @@ Built-in domain types, each closing off a class of mistakes:
 | `Money<USD>` | stored as integer cents, so no floats for money and no mixed currencies |
 | `Probability` | a literal outside [0, 1]; stored as an exact rational |
 | `Dist<E>` over enum `E` | distributions that do not sum to exactly 1 or miss a variant (checked exactly) |
-| `Cite` | free-text cites; parsed and resolved against L0 at compile time |
+| `Cite` | a string parsed by the cite grammar into work (source binding), expression (its `as_of`, the text pinned by `path_sha256`) and pinpoint, resolved against L0 at compile time (SPEC §4.3) |
 | `Interval<Date>` | half-open `[from, to)` effective windows |
 | `Role` | actors that are not declared parties or roles of the forum |
 
@@ -133,13 +133,13 @@ Built-in domain types, each closing off a class of mistakes:
 ```lit
 state answer_due: "Answer or Rule 12 motion due" { group pleadings }
 
-decision respond by Defendant cite FRCP 12(a)(1)(A)(i) {
+decision respond by Defendant cite "FRCP 12(a)(1)(A)(i)" {
   answer       -> answered     { hours 8, within answer_period }
   move_dismiss -> mtd_pending  { hours 30, within answer_period, tags [dispositive] }
   default      -> default_risk { sets [defaulted] }
 }
 
-chance mtd_ruling by Court discretion cite FRCP 12(b)(6) {
+chance mtd_ruling by Court discretion cite "FRCP 12(b)(6)" {
   granted -> dismissed  p ?("no calibration yet")
   denied  -> answer_due p ?
 }
@@ -158,7 +158,7 @@ explicit probabilities or holes, never logic.
 
 ```lit
 deadline answer_period: Days<CalendarDays>
-  cite FRCP 12(a)(1)(A)(i)
+  cite "FRCP 12(a)(1)(A)(i)"
   effective [2009-12-01, ..)
   supersedes answer_period@[1993-12-01, 2009-12-01)
   = 21.days from Served(complaint) counted_by frcp6
@@ -257,10 +257,10 @@ Refinements from the library research (`research/library-ideas.md`):
 Counting rules and holiday calendars are `.lit` declarations, not engine code:
 
 ```lit
-counting frcp6 cite FRCP 6(a) {
+counting frcp6 cite "FRCP 6(a)" {
   exclude_trigger_day, include_last_day,
   roll_forward_on [weekend, legal_holiday, inaccessible],
-  service_extension { mail: 3.days, ... } cite FRCP 6(d),
+  service_extension { mail: 3.days, ... } cite "FRCP 6(d)",
   holidays federal_holidays
 }
 calendar federal_holidays {
@@ -276,7 +276,7 @@ ITC business-day anchor and its short-period rule.
 ### 4.7 Inline tests
 
 ```lit
-test "answer due 21 days after personal service" cite FRCP 12(a)(1)(A)(i) {
+test "answer due 21 days after personal service" cite "FRCP 12(a)(1)(A)(i)" {
   given Served(complaint, Personal) on 2025-03-03
   expect deadline(answer_period) == 2025-03-24
 }

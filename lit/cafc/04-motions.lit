@@ -5,39 +5,39 @@ module cafc.motions
 import cafc.cross-appeal.{ cross-appeal-fork }
 import cafc.{ motions-group }
 
-decision motions-fork: "Move to Stay Judgment Pending Appeal?" by applicant cite FRAP 8(a); Fed. Cir. R. 8
+decision motions-fork: "Move to Stay Judgment Pending Appeal?" by applicant cite "FRAP 8(a); Fed. Cir. R. 8"
 {
   group motions-group
   note "FRAP 8(a)(1) requires moving in the trial tribunal first unless that would be impracticable or relief was denied/not afforded; only then may the movant apply to this court (Fed. Cir. R. 8(c) requires a statement explaining why). A Fed. Cir. R. 8(a) motion must attach the notice of appeal, the judgment below, any trial-court stay order, and a certificate of interest."
   motions-grant "Move for a stay — granted" -> stay-granted {
-    authority cite FRAP 8(a)(1); Fed. Cir. R. 8
+    authority cite "FRAP 8(a)(1); Fed. Cir. R. 8"
     effort 25.hours
     cost 8_000.usd
     tags [appeal]
   }
   motions-deny "Move for a stay — denied" -> stay-denied {
-    authority cite FRAP 8(a)
+    authority cite "FRAP 8(a)"
     effort 25.hours
     cost 8_000.usd
   }
   motions-decline "Decline to seek a stay — proceed" -> cross-appeal-fork {
-    authority cite FRAP 8(a)
+    authority cite "FRAP 8(a)"
   }
 }
 
-state stay-granted: "Stay Granted — Judgment/Remedy Suspended" by office cite FRAP 8(a)(1); Fed. Cir. R. 8
+state stay-granted: "Stay Granted — Judgment/Remedy Suspended" by office cite "FRAP 8(a)(1); Fed. Cir. R. 8"
 {
   group motions-group
   note "Typically conditioned on a bond or other security (FRAP 8(a)(1)(E))."
   stay-granted-to-cross-appeal "Proceed to cross-appeal consideration" -> cross-appeal-fork {
-    authority cite FRAP 8(a)(1)
+    authority cite "FRAP 8(a)(1)"
   }
 }
 
-state stay-denied: "Stay Denied — Judgment/Remedy Enforceable" by office cite FRAP 8(a)
+state stay-denied: "Stay Denied — Judgment/Remedy Enforceable" by office cite "FRAP 8(a)"
 {
   group motions-group
   stay-denied-to-cross-appeal "Proceed to cross-appeal consideration" -> cross-appeal-fork {
-    authority cite FRAP 8(a)
+    authority cite "FRAP 8(a)"
   }
 }

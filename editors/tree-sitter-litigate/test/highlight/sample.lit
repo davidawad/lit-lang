@@ -12,14 +12,14 @@ event Served(document: Document)
 //           ^ variable.parameter
 //                     ^ type
 
-chance ruling: "Ruling" by Court cite FRCP 12(b)(6)
+chance ruling: "Ruling" by Court cite "FRCP 12(b)(6)"
 // <- keyword
 //     ^ label
 //              ^ string
 //                      ^ keyword
 //                         ^ type
 //                               ^ keyword.directive
-//                                    ^ string.special
+//                                    ^ string
 {
   granted "Granted" -> dismissed p 1/10
   // <- property

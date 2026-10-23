@@ -68,18 +68,18 @@ event CivilActionPeriodExtended(until: Date) extends civil-action-period to unti
 /// 37 C.F.R. § 2.101(c): an opposition is due within thirty days after
 /// publication, and a request to extend must be filed before those thirty
 /// days expire (§ 2.102(c)).
-rule duty opposition-time effective [2017-01-14, ..) known_at 2016-10-07 cite 37 CFR 2.101(c)
+rule duty opposition-time effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CFR 2.101(c)"
 {
   deadline opposition-period: 30.days from Published() counted_by frcp6
 }
 
-test "the opposition period runs 30 days from publication" cite 37 CFR 2.101(c)
+test "the opposition period runs 30 days from publication" cite "37 CFR 2.101(c)"
 {
   given Published() on 2025-03-03
   expect deadline(opposition-period) == 2025-04-02
 }
 
-test "an opposition period ending on Thanksgiving rolls to Friday" cite 37 CFR 2.101(c)
+test "an opposition period ending on Thanksgiving rolls to Friday" cite "37 CFR 2.101(c)"
 {
   given Published() on 2025-10-28
   expect deadline(opposition-period) == 2025-11-28
@@ -90,63 +90,63 @@ test "an opposition period ending on Thanksgiving rolls to Friday" cite 37 CFR 2
 /// for good cause after the 30, then one final 60 days on the applicant's
 /// consent or extraordinary circumstances, never beyond 180 days from
 /// publication.
-rule duty extensions-of-time effective [2017-01-14, ..) known_at 2016-10-07 cite 37 CFR 2.102(c)
+rule duty extensions-of-time effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CFR 2.102(c)"
 {
-  deadline first-extension-90: 90.days from OppositionPeriodExpired() counted_by frcp6 cite 37 CFR 2.102(c)(1)(ii)
-  deadline second-extension-60: 60.days from FirstExtensionExpired() counted_by frcp6 cite 37 CFR 2.102(c)(2)
-  deadline extended-period-120: 120.days from Published() counted_by frcp6 cite 37 CFR 2.102(c)(3)
-  deadline outer-limit-180: 180.days from Published() counted_by frcp6 cite 37 CFR 2.102(c)
+  deadline first-extension-90: 90.days from OppositionPeriodExpired() counted_by frcp6 cite "37 CFR 2.102(c)(1)(ii)"
+  deadline second-extension-60: 60.days from FirstExtensionExpired() counted_by frcp6 cite "37 CFR 2.102(c)(2)"
+  deadline extended-period-120: 120.days from Published() counted_by frcp6 cite "37 CFR 2.102(c)(3)"
+  deadline outer-limit-180: 180.days from Published() counted_by frcp6 cite "37 CFR 2.102(c)"
 }
 
-test "a 90-day first extension runs from the end of the original period" cite 37 CFR 2.102(c)(1)(ii)
+test "a 90-day first extension runs from the end of the original period" cite "37 CFR 2.102(c)(1)(ii)"
 {
   given OppositionPeriodExpired() on 2025-01-02
   expect deadline(first-extension-90) == 2025-04-02
 }
 
-test "a 90-day extension ending on Memorial Day rolls to Tuesday" cite 37 CFR 2.102(c)(1)(ii)
+test "a 90-day extension ending on Memorial Day rolls to Tuesday" cite "37 CFR 2.102(c)(1)(ii)"
 {
   given OppositionPeriodExpired() on 2025-02-25
   expect deadline(first-extension-90) == 2025-05-27
 }
 
-test "a 90-day extension ending on a Saturday rolls to Monday" cite 37 CFR 2.102(c)(1)(ii)
+test "a 90-day extension ending on a Saturday rolls to Monday" cite "37 CFR 2.102(c)(1)(ii)"
 {
   given OppositionPeriodExpired() on 2025-04-13
   expect deadline(first-extension-90) == 2025-07-14
 }
 
-test "the additional 60 days run from the end of the 30-day extension" cite 37 CFR 2.102(c)(2)
+test "the additional 60 days run from the end of the 30-day extension" cite "37 CFR 2.102(c)(2)"
 {
   given FirstExtensionExpired() on 2025-03-03
   expect deadline(second-extension-60) == 2025-05-02
 }
 
-test "an additional 60 days ending on a Saturday roll to Monday" cite 37 CFR 2.102(c)(2)
+test "an additional 60 days ending on a Saturday roll to Monday" cite "37 CFR 2.102(c)(2)"
 {
   given FirstExtensionExpired() on 2025-04-08
   expect deadline(second-extension-60) == 2025-06-09
 }
 
-test "extensions totaling 90 days end on day 120 from publication" cite 37 CFR 2.102(c)(3)
+test "extensions totaling 90 days end on day 120 from publication" cite "37 CFR 2.102(c)(3)"
 {
   given Published() on 2025-01-06
   expect deadline(extended-period-120) == 2025-05-06
 }
 
-test "a day 120 on a Sunday rolls to Monday" cite 37 CFR 2.102(c)(3)
+test "a day 120 on a Sunday rolls to Monday" cite "37 CFR 2.102(c)(3)"
 {
   given Published() on 2025-01-11
   expect deadline(extended-period-120) == 2025-05-12
 }
 
-test "no extension reaches beyond 180 days from publication" cite 37 CFR 2.102(c)
+test "no extension reaches beyond 180 days from publication" cite "37 CFR 2.102(c)"
 {
   given Published() on 2025-05-10
   expect deadline(outer-limit-180) == 2025-11-06
 }
 
-test "a day 180 on the Saturday before Labor Day rolls to Tuesday" cite 37 CFR 2.102(c)
+test "a day 180 on the Saturday before Labor Day rolls to Tuesday" cite "37 CFR 2.102(c)"
 {
   given Published() on 2025-03-03
   expect deadline(outer-limit-180) == 2025-09-02
@@ -167,31 +167,33 @@ test "a day 180 on the Saturday before Labor Day rolls to Tuesday" cite 37 CFR 2
 /// period is the regulation's own floor, thirty days, from the rules
 /// revision that states it (81 FR 69950, effective January 14, 2017): no
 /// later than any date the notice may lawfully designate.
-rule duty answer-time effective [2017-01-14, ..) known_at 2016-10-07 cite 37 CFR 2.105(a)
+rule duty answer-time effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CFR 2.105(a)"
 {
-  deadline answer-period: 30.days from InstitutionNoticed() counted_by frcp6 effective [2017-01-14, 2026-06-01) delegable_to [CaseOrder] cite 37 CFR 2.105(a)
-  deadline answer-period: 60.days from InstitutionNoticed() counted_by frcp6 effective [2026-06-01, ..) known_at 2026-06-01 supersedes answer-period@2017-01-14 delegable_to [CaseOrder] cite 37 CFR 2.106(a)
+  /// The cite is a hole: `cfr2` holds the 2026 text, which postdates this
+  /// version; the 2017 text of 2.105(a) is not vendored.
+  deadline answer-period: 30.days from InstitutionNoticed() counted_by frcp6 effective [2017-01-14, 2026-06-01) delegable_to [CaseOrder] cite ?("37 CFR 2.105(a)")
+  deadline answer-period: 60.days from InstitutionNoticed() counted_by frcp6 effective [2026-06-01, ..) known_at 2026-06-01 supersedes answer-period@2017-01-14 delegable_to [CaseOrder] cite "37 CFR 2.106(a)"
 }
 
-test "before June 2026 the answer is due no earlier than 30 days from the notice" cite 37 CFR 2.105(a)
+test "before June 2026 the answer is due no earlier than 30 days from the notice" cite "37 CFR 2.105(a)"
 {
   given InstitutionNoticed() on 2025-03-03
   expect deadline(answer-period) == 2025-04-02
 }
 
-test "the answer is due 60 days from the notice of institution" cite 37 CFR 2.105(a)
+test "the answer is due 60 days from the notice of institution" cite "37 CFR 2.105(a)"
 {
   given InstitutionNoticed() on 2026-07-06
   expect deadline(answer-period) == 2026-09-04
 }
 
-test "an answer day on a Saturday rolls to Monday" cite 37 CFR 2.105(a)
+test "an answer day on a Saturday rolls to Monday" cite "37 CFR 2.105(a)"
 {
   given InstitutionNoticed() on 2026-06-09
   expect deadline(answer-period) == 2026-08-10
 }
 
-test "an answer day on Labor Day rolls to Tuesday" cite 37 CFR 2.105(a)
+test "an answer day on Labor Day rolls to Tuesday" cite "37 CFR 2.105(a)"
 {
   given InstitutionNoticed() on 2026-07-09
   expect deadline(answer-period) == 2026-09-08
@@ -200,31 +202,31 @@ test "an answer day on Labor Day rolls to Tuesday" cite 37 CFR 2.105(a)
 /// 37 C.F.R. § 2.120(a)(2): a 180-day discovery period, initial
 /// disclosures within its first thirty days. Both may be extended or
 /// modified "by order of the Board" (§ 2.120(a)(2)(iv)).
-rule duty discovery-schedule effective [2017-01-14, ..) known_at 2016-10-07 cite 37 CFR 2.120(a)(2)
+rule duty discovery-schedule effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CFR 2.120(a)(2)"
 {
-  deadline disclosure-period: 30.days from DiscoveryOpened() counted_by frcp6 delegable_to [CaseOrder] cite 37 CFR 2.120(a)(2)(ii)
-  deadline discovery-period: 180.days from DiscoveryOpened() counted_by frcp6 delegable_to [CaseOrder] cite 37 CFR 2.120(a)(2)(i)
+  deadline disclosure-period: 30.days from DiscoveryOpened() counted_by frcp6 delegable_to [CaseOrder] cite "37 CFR 2.120(a)(2)(ii)"
+  deadline discovery-period: 180.days from DiscoveryOpened() counted_by frcp6 delegable_to [CaseOrder] cite "37 CFR 2.120(a)(2)(i)"
 }
 
-test "initial disclosures are due 30 days after discovery opens" cite 37 CFR 2.120(a)(2)(ii)
+test "initial disclosures are due 30 days after discovery opens" cite "37 CFR 2.120(a)(2)(ii)"
 {
   given DiscoveryOpened() on 2025-03-03
   expect deadline(disclosure-period) == 2025-04-02
 }
 
-test "initial disclosures due on a Saturday roll to Monday" cite 37 CFR 2.120(a)(2)(ii)
+test "initial disclosures due on a Saturday roll to Monday" cite "37 CFR 2.120(a)(2)(ii)"
 {
   given DiscoveryOpened() on 2026-03-05
   expect deadline(disclosure-period) == 2026-04-06
 }
 
-test "discovery closes 180 days after it opens" cite 37 CFR 2.120(a)(2)(i)
+test "discovery closes 180 days after it opens" cite "37 CFR 2.120(a)(2)(i)"
 {
   given DiscoveryOpened() on 2025-05-10
   expect deadline(discovery-period) == 2025-11-06
 }
 
-test "a discovery close on a Saturday rolls to Monday" cite 37 CFR 2.120(a)(2)(i)
+test "a discovery close on a Saturday rolls to Monday" cite "37 CFR 2.120(a)(2)(i)"
 {
   given DiscoveryOpened() on 2026-01-12
   expect deadline(discovery-period) == 2026-07-13
@@ -238,9 +240,9 @@ test "a discovery close on a Saturday rolls to Monday" cite 37 CFR 2.120(a)(2)(i
 /// the period ..., and upon a showing that the failure to act was the
 /// result of excusable neglect" (§ 2.145(e)(1)): both turn on when the
 /// request was made, and neither has a numeric ceiling.
-rule duty review-time effective [2017-01-14, ..) known_at 2016-10-07 cite 37 CFR 2.145(d)
+rule duty review-time effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CFR 2.145(d)"
 {
-  deadline civil-action-period: 63.days from FinalDecision() counted_by frcp6 cite 37 CFR 2.145(d)(3)
+  deadline civil-action-period: 63.days from FinalDecision() counted_by frcp6 cite "37 CFR 2.145(d)(3)"
   {
     extend { by director, discretion GoodCause, on CivilActionExtensionRequested() }
     extend {
@@ -252,19 +254,19 @@ rule duty review-time effective [2017-01-14, ..) known_at 2016-10-07 cite 37 CFR
   }
 }
 
-test "a civil action is due 63 days after the final decision" cite 37 CFR 2.145(d)(3)
+test "a civil action is due 63 days after the final decision" cite "37 CFR 2.145(d)(3)"
 {
   given FinalDecision() on 2025-09-02
   expect deadline(civil-action-period) == 2025-11-04
 }
 
-test "a day 63 on a Saturday rolls to Monday" cite 37 CFR 2.145(d)(3)
+test "a day 63 on a Saturday rolls to Monday" cite "37 CFR 2.145(d)(3)"
 {
   given FinalDecision() on 2025-05-03
   expect deadline(civil-action-period) == 2025-07-07
 }
 
-test "a day 63 on Veterans Day rolls to Wednesday" cite 37 CFR 2.145(d)(3)
+test "a day 63 on Veterans Day rolls to Wednesday" cite "37 CFR 2.145(d)(3)"
 {
   given FinalDecision() on 2025-09-09
   expect deadline(civil-action-period) == 2025-11-12

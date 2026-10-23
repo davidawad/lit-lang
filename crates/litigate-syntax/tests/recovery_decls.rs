@@ -115,7 +115,7 @@ const NODE_HEADERS_AND_BODIES: Cases = &[
         (
             "module m\nstate s: \"S\" FRCP 8\nstart x\n",
             &[
-                "L0001 2:14-2:18 expected a clause, found `FRCP`; citations start with `cite` | fix 2:14-2:14 \"cite \"",
+                "L0001 2:14-2:18 expected a clause, found `FRCP`; citations start with `cite` | fix 2:14-2:20 \"cite \\\"FRCP 8\\\"\"",
             ],
         ),
         (
@@ -159,14 +159,36 @@ const NODE_HEADERS_AND_BODIES: Cases = &[
         (
             "module m\nstate s: \"S\" FRCP 8 { }\n",
             &[
-                "L0001 2:14-2:18 expected a clause, found `FRCP`; citations start with `cite` | fix 2:14-2:14 \"cite \"",
+                "L0001 2:14-2:18 expected a clause, found `FRCP`; citations start with `cite` | fix 2:14-2:20 \"cite \\\"FRCP 8\\\"\"",
             ],
         ),
         (
             "module m\nstate s: \"S\" FRCP 8(a)\n",
             &[
-                "L0001 2:14-2:18 expected a clause, found `FRCP`; citations start with `cite` | fix 2:14-2:14 \"cite \"",
+                "L0001 2:14-2:18 expected a clause, found `FRCP`; citations start with `cite` | fix 2:14-2:23 \"cite \\\"FRCP 8(a)\\\"\"",
             ],
+        ),
+        (
+            "module m\nstate s: \"S\" cite FRCP  8(a) \"x\"\n",
+            &[
+                "L0001 2:19-2:33 citation text must be a string: `cite \"FRCP 8(a) \\\"x\\\"\"` | fix 2:19-2:33 \"\\\"FRCP 8(a) \\\\\\\"x\\\\\\\"\\\"\"",
+            ],
+        ),
+        (
+            "module m\nstate s: \"S\" cite \"X 1\"\nhistorical\n",
+            &[concat!("L0001 3:1-3:11 expected ", items!(), ", found `historical`")],
+        ),
+        (
+            "module m\nstate s: \"S\" cite { }\n",
+            &["L0001 2:19-2:20 expected a string or `?`, found `{`"],
+        ),
+        (
+            "module m\nstate s: \"S\" cite",
+            &["L0001 2:18-2:18 expected a string or `?`, found end of file"],
+        ),
+        (
+            "module m\nstate s: \"S\" cite\n{ }\n",
+            &["L0001 3:1-3:2 expected a string or `?`, found `{`"],
         ),
         (
             "module m\nstate s: \"S\" { 5 }\n",

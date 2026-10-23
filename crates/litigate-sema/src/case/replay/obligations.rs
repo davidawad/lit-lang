@@ -476,7 +476,7 @@ impl<'g> Cx<'_, 'g> {
                 self.at(k, |e| e.action.as_ref()),
                 format!("`{action}` transforms an obligation only when it cites its authority"),
             )
-            .note("add the order or rule after the party, e.g. `cite FRCP 6(b)(1)(A)`");
+            .note("add the order or rule after the party, e.g. `cite \"FRCP 6(b)(1)(A)\"`");
             self.out.push(d);
             return None;
         }
@@ -581,7 +581,7 @@ impl<'g> Cx<'_, 'g> {
                 error(
                     C::InvalidCaseEvent,
                     self.at(k, |e| e.action.as_ref()),
-                    format!("`{action}` cannot extend `{q}`: the deadline may not be extended (`extend {{ never cite {lock} }}`)"),
+                    format!("`{action}` cannot extend `{q}`: the deadline may not be extended (`extend {{ never cite \"{lock}\" }}`)"),
                 )
                 .note(format!("no order, stipulation or consent extends a period its rule forbids extending ({lock})"))
             } else {

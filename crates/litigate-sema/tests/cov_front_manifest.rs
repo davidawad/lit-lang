@@ -115,6 +115,14 @@ fn source_tables_are_checked() {
             "cite_prefixes = [\"A\"]",
             &format!("sha256 = \"{}\"", "AB".repeat(32)),
         ),
+        edit("cite_prefixes = [\"A\"]", "path_sha256 = \"abc\""),
+        edit(
+            "path = \"sources/a.txt\"\n",
+            &format!(
+                "url = \"https://a\"\npath_sha256 = \"{}\"\n",
+                "ab".repeat(32)
+            ),
+        ),
         edit("cite_prefixes = [\"A\"]", "section_heading = \"Section\""),
         edit("cite_prefixes = [\"A\"]", "as_of = \"2025-13\""),
         edit("cite_prefixes = [\"A\"]", "as_of = \"June 2025\""),
@@ -151,7 +159,7 @@ fn optional_values_reach_the_manifest() {
     .replacen(
         "[\"A\"]",
         &format!(
-            "[\"A\"]\nsha256 = \"{sha}\"\nsection_heading = \"Section {{n}}\"\nas_of = \"2025-06-30\""
+            "[\"A\"]\nsha256 = \"{sha}\"\npath_sha256 = \"{sha}\"\nsection_heading = \"Section {{n}}\"\nas_of = \"2025-06-30\""
         ),
         1,
     )
@@ -161,13 +169,14 @@ fn optional_values_reach_the_manifest() {
     let m = &parsed.manifest;
     assert_eq!(m.in_force.to.as_deref(), Some("2030-01-01"));
     assert_eq!(m.sources[0].sha256.as_deref(), Some(sha.as_str()));
+    assert_eq!(m.sources[0].path_sha256.as_deref(), Some(sha.as_str()));
     assert_eq!(m.sources[0].section_heading.as_deref(), Some("Section {n}"));
     assert_eq!(m.sources[0].as_of.as_deref(), Some("2025-06-30"));
     // A month-only date is not a date (SPEC §4.1).
     let month = text.replacen("as_of = \"2025-06-30\"", "as_of = \"2025-06\"", 1);
     assert_eq!(
         errors(&month),
-        ["25:9 L1004 `as_of` must be a YYYY-MM-DD date, found `2025-06`"]
+        ["26:9 L1004 `as_of` must be a YYYY-MM-DD date, found `2025-06`"]
     );
     assert!(m.roles.contains_key("_applicant"));
     assert_eq!(

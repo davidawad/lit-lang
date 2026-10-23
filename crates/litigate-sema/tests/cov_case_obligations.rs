@@ -45,10 +45,10 @@ event OrderedRequested(until: Date) extends requested to until
 event Struck(option: EdgeRef) removes option
 event Elected(option: EdgeRef) elects option
 
-counting oc cite FRCP 6(a) { exclude_trigger_day, include_last_day, holidays ocal }
+counting oc cite \"FRCP 6(a)\" { exclude_trigger_day, include_last_day, holidays ocal }
 calendar ocal { new-year: fixed(1, 1) effective [1870-06-28, ..) observed nearest_weekday }
 
-rule duty answer-duty cite FRCP 12(a)
+rule duty answer-duty cite \"FRCP 12(a)\"
 {
   deadline answer: 10.days from Served(complaint) counted_by oc {
     bearer Defendant
@@ -74,13 +74,13 @@ deadline post: 10.days from Entered() counted_by oc {
   extend { by Court, discretion ExcusableNeglect, after_expiry, on MovedPost() }
   extend { by Plaintiff, max 3.days }
 }
-deadline locked: 10.days from Entered() counted_by oc { extend { never cite FRCP 6(b)(2) } }
+deadline locked: 10.days from Entered() counted_by oc { extend { never cite \"FRCP 6(b)(2)\" } }
 deadline motion-only: 10.days from Entered() counted_by oc {
   extend { by Court, discretion ExcusableNeglect, after_expiry, on MovedMotion() }
 }
 deadline appeal: 10.days from Entered() counted_by oc {
   extend { by Court, discretion GoodCauseOrExcusableNeglect, to max(prescribed_due + 30.days, grant_order_entered + 14.days), after_expiry, on MovedAppeal(), within prescribed_due + 30.days }
-  extend { never cite FRAP 26(b)(1) }
+  extend { never cite \"FRAP 26(b)(1)\" }
 }
 deadline requested: 10.days from Entered() counted_by oc {
   extend { by Court, discretion GoodCause, on MovedRequest() }
@@ -272,7 +272,7 @@ fn bearers_and_trigger_policies() {
             "2011-02-01",
             &[
                 "2011-01-04 Closed() by c",
-                "2011-01-05 Struck(answer) by c cite FRCP 12(f)",
+                "2011-01-05 Struck(answer) by c cite \"FRCP 12(f)\"",
             ],
         ),
     ];
@@ -288,7 +288,7 @@ fn extensions_and_waivers() {
             "2011-02-01",
             &[
                 SERVED_D,
-                "2011-01-12 Ordered(2011-01-20) by c cite FRCP 6(b)(1)(A)",
+                "2011-01-12 Ordered(2011-01-20) by c cite \"FRCP 6(b)(1)(A)\"",
                 "2011-01-19 Answered(complaint) by d",
             ],
         ),
@@ -297,7 +297,7 @@ fn extensions_and_waivers() {
             "2011-02-01",
             &[
                 "2011-01-04 Served(complaint) by c",
-                "2011-01-12 Ordered(2011-01-20) by c cite FRCP 6(b)(1)(A)",
+                "2011-01-12 Ordered(2011-01-20) by c cite \"FRCP 6(b)(1)(A)\"",
             ],
         ),
         (
@@ -305,7 +305,7 @@ fn extensions_and_waivers() {
             "2011-02-01",
             &[
                 SERVED_D,
-                "2011-01-12 Ordered(2011-01-30) by c cite FRCP 6(b)(1)(A)",
+                "2011-01-12 Ordered(2011-01-30) by c cite \"FRCP 6(b)(1)(A)\"",
                 "2011-01-19 Answered(complaint) by d",
             ],
         ),
@@ -314,7 +314,7 @@ fn extensions_and_waivers() {
             "2011-02-01",
             &[
                 SERVED_D,
-                "2011-01-12 Ordered(2011-01-10) by c cite FRCP 6(b)(1)(A)",
+                "2011-01-12 Ordered(2011-01-10) by c cite \"FRCP 6(b)(1)(A)\"",
             ],
         ),
         (
@@ -322,7 +322,7 @@ fn extensions_and_waivers() {
             "2011-02-01",
             &[
                 SERVED_D,
-                "2011-01-16 Ordered(2011-01-20) by c cite FRCP 6(b)(1)(A)",
+                "2011-01-16 Ordered(2011-01-20) by c cite \"FRCP 6(b)(1)(A)\"",
             ],
         ),
         (
@@ -330,7 +330,7 @@ fn extensions_and_waivers() {
             "2011-02-01",
             &[
                 "2011-01-04 Served(motion) on d",
-                "2011-01-16 OrderedLate(2011-01-20) by c cite FRCP 6(b)(1)(B)",
+                "2011-01-16 OrderedLate(2011-01-20) by c cite \"FRCP 6(b)(1)(B)\"",
                 "2011-01-19 Answered(motion) by d",
             ],
         ),
@@ -339,9 +339,9 @@ fn extensions_and_waivers() {
             "2011-02-01",
             &[
                 SERVED_D,
-                "2011-01-12 Ordered(2011-01-20) by c cite FRCP 6(b)(1)(A)",
-                "2011-01-18 Ordered(2011-01-24) by c cite FRCP 6(b)(1)(A)",
-                "2011-01-19 Ordered(2011-01-25) by c cite FRCP 6(b)(1)(A)",
+                "2011-01-12 Ordered(2011-01-20) by c cite \"FRCP 6(b)(1)(A)\"",
+                "2011-01-18 Ordered(2011-01-24) by c cite \"FRCP 6(b)(1)(A)\"",
+                "2011-01-19 Ordered(2011-01-25) by c cite \"FRCP 6(b)(1)(A)\"",
             ],
         ),
         (
@@ -349,7 +349,7 @@ fn extensions_and_waivers() {
             "2011-02-01",
             &[
                 "2011-01-04 Noticed() by p",
-                "2011-01-05 OrderedReply(2011-01-12) by c cite FRCP 6(b)",
+                "2011-01-05 OrderedReply(2011-01-12) by c cite \"FRCP 6(b)\"",
             ],
         ),
         (
@@ -357,14 +357,14 @@ fn extensions_and_waivers() {
             "2011-02-01",
             &[
                 SERVED_D,
-                "2011-01-05 Ordered(2011-01-20) by p cite FRCP 6(b)",
-                "2011-01-06 Ordered(2011-01-20) on d cite FRCP 6(b)",
+                "2011-01-05 Ordered(2011-01-20) by p cite \"FRCP 6(b)\"",
+                "2011-01-06 Ordered(2011-01-20) on d cite \"FRCP 6(b)\"",
             ],
         ),
         (
             "extend: nothing open to extend",
             "2011-02-01",
-            &["2011-01-05 Ordered(2011-01-20) by c cite FRCP 6(b)"],
+            &["2011-01-05 Ordered(2011-01-20) by c cite \"FRCP 6(b)\""],
         ),
         (
             "extend: uncited",
@@ -376,7 +376,7 @@ fn extensions_and_waivers() {
             "2011-02-01",
             &[
                 "2011-01-04 Noticed() by p",
-                "2011-01-12 OrderedStale(2011-01-20) by c cite FRCP 6(b)",
+                "2011-01-12 OrderedStale(2011-01-20) by c cite \"FRCP 6(b)\"",
             ],
         ),
         (
@@ -384,7 +384,7 @@ fn extensions_and_waivers() {
             "2011-02-01",
             &[
                 ENTERED,
-                "2011-01-10 OrderedPost(2011-06-30) by c cite FRCP 6(b)(1)(A)",
+                "2011-01-10 OrderedPost(2011-06-30) by c cite \"FRCP 6(b)(1)(A)\"",
             ],
         ),
         (
@@ -393,7 +393,7 @@ fn extensions_and_waivers() {
             &[
                 ENTERED,
                 "2011-01-18 MovedPost() by p",
-                "2011-01-20 OrderedPost(2011-03-01) by c cite FRCP 6(b)(1)(B)",
+                "2011-01-20 OrderedPost(2011-03-01) by c cite \"FRCP 6(b)(1)(B)\"",
             ],
         ),
         (
@@ -402,7 +402,7 @@ fn extensions_and_waivers() {
             &[
                 ENTERED,
                 "2011-01-12 MovedPost() by p",
-                "2011-01-20 OrderedPost(2011-03-01) by c cite FRCP 6(b)(1)(B)",
+                "2011-01-20 OrderedPost(2011-03-01) by c cite \"FRCP 6(b)(1)(B)\"",
             ],
         ),
         (
@@ -411,7 +411,7 @@ fn extensions_and_waivers() {
             &[
                 ENTERED,
                 "2011-01-20 MovedAppeal() by p",
-                "2011-02-23 OrderedAppeal(2011-03-09) by c cite FRAP 4(a)(5)",
+                "2011-02-23 OrderedAppeal(2011-03-09) by c cite \"FRAP 4(a)(5)\"",
             ],
         ),
         (
@@ -420,7 +420,7 @@ fn extensions_and_waivers() {
             &[
                 ENTERED,
                 "2011-01-20 MovedAppeal() by p",
-                "2011-02-23 OrderedAppeal(2011-03-10) by c cite FRAP 4(a)(5)",
+                "2011-02-23 OrderedAppeal(2011-03-10) by c cite \"FRAP 4(a)(5)\"",
             ],
         ),
         (
@@ -429,7 +429,7 @@ fn extensions_and_waivers() {
             &[
                 ENTERED,
                 "2011-02-14 MovedAppeal() by p",
-                "2011-02-15 OrderedAppeal(2011-02-20) by c cite FRAP 4(a)(5)",
+                "2011-02-15 OrderedAppeal(2011-02-20) by c cite \"FRAP 4(a)(5)\"",
             ],
         ),
         (
@@ -438,7 +438,7 @@ fn extensions_and_waivers() {
             &[
                 "2011-01-03 MovedAppeal() by p",
                 ENTERED,
-                "2011-01-20 OrderedAppeal(2011-02-01) by c cite FRAP 4(a)(5)",
+                "2011-01-20 OrderedAppeal(2011-02-01) by c cite \"FRAP 4(a)(5)\"",
                 "2011-01-25 MovedAppeal() by p",
             ],
         ),
@@ -447,8 +447,8 @@ fn extensions_and_waivers() {
             "2011-02-01",
             &[
                 ENTERED,
-                "2011-01-14 OrderedCapped(2011-01-16) by c cite L.R. 6.1",
-                "2011-01-15 OrderedCapped(2011-01-18) by c cite L.R. 6.1",
+                "2011-01-14 OrderedCapped(2011-01-16) by c cite \"L.R. 6.1\"",
+                "2011-01-15 OrderedCapped(2011-01-18) by c cite \"L.R. 6.1\"",
             ],
         ),
         (
@@ -456,9 +456,9 @@ fn extensions_and_waivers() {
             "2011-02-01",
             &[
                 ENTERED,
-                "2011-01-10 OrderedPost(2011-01-17) by p cite L.R. 6.1",
-                "2011-01-11 OrderedPost(2011-01-30) by p cite L.R. 6.1",
-                "2011-01-12 OrderedPost(2011-01-30) by d cite L.R. 6.1",
+                "2011-01-10 OrderedPost(2011-01-17) by p cite \"L.R. 6.1\"",
+                "2011-01-11 OrderedPost(2011-01-30) by p cite \"L.R. 6.1\"",
+                "2011-01-12 OrderedPost(2011-01-30) by d cite \"L.R. 6.1\"",
             ],
         ),
         (
@@ -466,7 +466,7 @@ fn extensions_and_waivers() {
             "2011-02-01",
             &[
                 ENTERED,
-                "2011-01-10 OrderedPost(2011-01-12) by c cite FRCP 6(b)(1)(A)",
+                "2011-01-10 OrderedPost(2011-01-12) by c cite \"FRCP 6(b)(1)(A)\"",
             ],
         ),
         (
@@ -474,7 +474,7 @@ fn extensions_and_waivers() {
             "2011-02-01",
             &[
                 ENTERED,
-                "2011-01-10 OrderedMotion(2011-01-30) by c cite FRCP 6(b)(1)(B)",
+                "2011-01-10 OrderedMotion(2011-01-30) by c cite \"FRCP 6(b)(1)(B)\"",
             ],
         ),
         (
@@ -483,7 +483,7 @@ fn extensions_and_waivers() {
             &[
                 ENTERED,
                 "2011-01-13 MovedRequest() by p",
-                "2011-01-20 OrderedRequested(2011-02-10) by c cite FRCP 6(b)(1)(A)",
+                "2011-01-20 OrderedRequested(2011-02-10) by c cite \"FRCP 6(b)(1)(A)\"",
             ],
         ),
         (
@@ -492,7 +492,7 @@ fn extensions_and_waivers() {
             &[
                 ENTERED,
                 "2011-01-15 MovedRequest() by p",
-                "2011-01-20 OrderedRequested(2011-02-10) by c cite FRCP 6(b)(1)(A)",
+                "2011-01-20 OrderedRequested(2011-02-10) by c cite \"FRCP 6(b)(1)(A)\"",
             ],
         ),
         (
@@ -500,30 +500,33 @@ fn extensions_and_waivers() {
             "2011-02-01",
             &[
                 ENTERED,
-                "2011-01-10 OrderedLocked(2011-01-30) by c cite FRCP 6(b)(1)(A)",
+                "2011-01-10 OrderedLocked(2011-01-30) by c cite \"FRCP 6(b)(1)(A)\"",
             ],
         ),
         (
-            "waive: `extend { never cite ... }` grants no waiver either",
+            "waive: `extend { never cite \"...\" }` grants no waiver either",
             "2011-02-01",
-            &[ENTERED, "2011-01-10 ReleasedLocked() by c cite FRCP 6(b)"],
+            &[
+                ENTERED,
+                "2011-01-10 ReleasedLocked() by c cite \"FRCP 6(b)\"",
+            ],
         ),
         (
             "waive: releases the instance, so nothing is breached",
             "2011-02-01",
-            &[SERVED_D, "2011-01-05 Released() by c cite FRCP 6(b)"],
+            &[SERVED_D, "2011-01-05 Released() by c cite \"FRCP 6(b)\""],
         ),
         (
             "waive: after expiry without `after_expiry` is rejected",
             "2011-02-01",
-            &[SERVED_D, "2011-01-20 Released() by c cite FRCP 6(b)"],
+            &[SERVED_D, "2011-01-20 Released() by c cite \"FRCP 6(b)\""],
         ),
         (
             "waive: after expiry with `after_expiry` is allowed",
             "2011-02-01",
             &[
                 "2011-01-04 Served(motion) on d",
-                "2011-01-20 ReleasedLate() by c cite FRCP 6(b)",
+                "2011-01-20 ReleasedLate() by c cite \"FRCP 6(b)\"",
             ],
         ),
         (
@@ -531,7 +534,7 @@ fn extensions_and_waivers() {
             "2011-02-01",
             &[
                 "2011-01-04 Noticed() by p",
-                "2011-01-05 ReleasedReply() by c cite FRCP 6(b)",
+                "2011-01-05 ReleasedReply() by c cite \"FRCP 6(b)\"",
             ],
         ),
     ];
@@ -546,7 +549,7 @@ fn uncountable_instances_are_neither_breached_nor_extended() {
             "extension",
             vec![
                 SERVED_D,
-                "2011-01-12 Ordered(2011-01-20) by c cite FRCP 6(b)(1)(A)",
+                "2011-01-12 Ordered(2011-01-20) by c cite \"FRCP 6(b)(1)(A)\"",
             ],
         ),
         (
@@ -589,7 +592,7 @@ fn bearers_no_party_plays_and_late_floors() {
                     "2011-02-01",
                     &[
                         SERVED_D,
-                        "2011-01-12 Ordered(2011-01-20) by c cite FRCP 6(b)(1)(A)",
+                        "2011-01-12 Ordered(2011-01-20) by c cite \"FRCP 6(b)(1)(A)\"",
                         "2011-01-22 Answered(complaint) by d",
                     ],
                 ),
@@ -666,7 +669,7 @@ fn malformed_effect_arguments_do_nothing() {
             with_args(
                 &[
                     SERVED_D,
-                    "2011-01-05 Ordered(2011-01-20) by c cite FRCP 6(b)",
+                    "2011-01-05 Ordered(2011-01-20) by c cite \"FRCP 6(b)\"",
                 ],
                 1,
                 vec![number],
@@ -675,7 +678,7 @@ fn malformed_effect_arguments_do_nothing() {
         (
             "a removal with no argument",
             with_args(
-                &["2011-01-05 Struck(answer) by c cite FRCP 12(f)"],
+                &["2011-01-05 Struck(answer) by c cite \"FRCP 12(f)\""],
                 0,
                 Vec::new(),
             ),
@@ -683,7 +686,7 @@ fn malformed_effect_arguments_do_nothing() {
         (
             "an election with no argument",
             with_args(
-                &["2011-01-05 Elected(answer) by c cite FRCP 12(f)"],
+                &["2011-01-05 Elected(answer) by c cite \"FRCP 12(f)\""],
                 0,
                 Vec::new(),
             ),

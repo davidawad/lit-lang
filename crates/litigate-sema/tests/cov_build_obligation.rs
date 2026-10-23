@@ -38,8 +38,8 @@ deadline b: 14.days from Served(answer) counted_by c6 { trigger later_of(a) }\n\
 deadline e: 14.days from Served(answer) counted_by c6 { trigger each }\n\
 deadline f: 14.days from Served(answer) counted_by c6 { trigger first, extendable true, extend { by Court, max 1.days } }\n\
 deadline g: 14.days from Served(answer) counted_by c6 { extendable true, extend { by Court, discretion GoodCause }, extend { by Court, discretion ExcusableNeglect, after_expiry, on Served(complaint) } }\n\
-deadline h: 14.days from Served(answer) counted_by c6 { extendable false, extend { never cite FRCP 6(b)(2) } }\n\
-deadline i: 14.days from Served(answer) counted_by c6 { extendable true, extend { by Court, discretion GoodCauseOrExcusableNeglect, to max(prescribed_due + 30.days, grant_order_entered + 14.days), after_expiry, on Served(complaint), within prescribed_due + 30.days }, extend { never cite FRAP 26(b)(1) } }\n\
+deadline h: 14.days from Served(answer) counted_by c6 { extendable false, extend { never cite \"FRCP 6(b)(2)\" } }\n\
+deadline i: 14.days from Served(answer) counted_by c6 { extendable true, extend { by Court, discretion GoodCauseOrExcusableNeglect, to max(prescribed_due + 30.days, grant_order_entered + 14.days), after_expiry, on Served(complaint), within prescribed_due + 30.days }, extend { never cite \"FRAP 26(b)(1)\" } }\n\
 deadline j: 14.days from Served(answer) counted_by c6 { extend { by Court, to min(prescribed_due, (grant_order_entered + 1.days)) } }\n\
 event Moved(until: Date, option: String) extends a to until\n\
 event Released() waives b\n\
@@ -74,11 +74,11 @@ deadline p: 21.days from Served(complaint) counted_by c6 { extendable false, ext
 deadline q: 21.days from Served(complaint) counted_by c6 { extendable true, extend { by Court, max 3.days }, waive { by Courtt } }\n\
 deadline r: 21.days from Served(complaint) counted_by c6 { trigger x.later_of(a) }\n\
 deadline u: 21.days from Served(complaint) counted_by c6 { trigger later_of(a.b) }\n\
-deadline v: 21.days from Served(complaint) counted_by c6 { extend { never cite FRCP 6(b)(2), by Court } }\n\
-deadline w: 21.days from Served(complaint) counted_by c6 { extend { never cite FRCP 6(b)(2) }, extend { by Court, discretion GoodCause } }\n\
+deadline v: 21.days from Served(complaint) counted_by c6 { extend { never cite \"FRCP 6(b)(2)\", by Court } }\n\
+deadline w: 21.days from Served(complaint) counted_by c6 { extend { never cite \"FRCP 6(b)(2)\" }, extend { by Court, discretion GoodCause } }\n\
 deadline x: 21.days from Served(complaint) counted_by c6 { extend { by Court, max 3.days, discretion GoodCause } }\n\
-deadline y: 21.days from Served(complaint) counted_by c6 { extendable true, extend { never cite FRCP 6(b)(2) } }\n\
-deadline z: 21.days from Served(complaint) counted_by c6 { waive { by Court, discretion GoodCause, never cite X } }\n\
+deadline y: 21.days from Served(complaint) counted_by c6 { extendable true, extend { never cite \"FRCP 6(b)(2)\" } }\n\
+deadline z: 21.days from Served(complaint) counted_by c6 { waive { by Court, discretion GoodCause, never cite \"X\" } }\n\
 deadline aa: 21.days from Served(complaint) counted_by c6 { extend { by Court, discretion 3 } }\n\
 deadline ab: 21.days from Served(complaint) counted_by c6 { extend { discretion GoodCause } }\n\
 deadline ac: 21.days from Served(complaint) counted_by c6 { extend { by Court, max } }\n\

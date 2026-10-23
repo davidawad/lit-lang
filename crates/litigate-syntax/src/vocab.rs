@@ -98,7 +98,6 @@ pub fn describe(kind: SyntaxKind) -> std::string::String {
             Duration => "a duration like `21.days`".into(),
             String => "a string".into(),
             Date => "a date `YYYY-MM-DD`".into(),
-            CiteText => "citation text".into(),
             Eof => "end of file".into(),
             other => format!("{other:?}"),
         },

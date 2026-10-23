@@ -150,11 +150,11 @@ fn values_source_rules_out_table() {
             currency: "usd".into(),
         }),
     );
-    let mut unspanned = case(&["2010-01-04 Forfeited(twin-a) by d cite FRCP 12(h)"]);
+    let mut unspanned = case(&["2010-01-04 Forfeited(twin-a) by d cite \"FRCP 12(h)\""]);
     if let ExprKind::Call { args, .. } = &mut unspanned.events[0].action.kind {
         args[0] = literal(Value::Edge("zzzz".into()));
     }
-    let mut not_string = case(&["2010-01-04 Forfeited(twin-a) by d cite FRCP 12(h)"]);
+    let mut not_string = case(&["2010-01-04 Forfeited(twin-a) by d cite \"FRCP 12(h)\""]);
     if let ExprKind::Call { args, .. } = &mut not_string.events[0].action.kind {
         args[0] = literal(Value::Boolean(true));
     }
@@ -266,12 +266,12 @@ fn source_spans_locate_hir_findings_table() {
     let (mut bad_date, date_spans) = resolved("", &[SERVED]);
     bad_date.events[0].date = "2010-02-30".into();
     let (mut unspanned, removal_spans) =
-        resolved("", &["2010-01-04 Forfeited(twin-a) by d cite FRCP 12(h)"]);
+        resolved("", &["2010-01-04 Forfeited(twin-a) by d cite \"FRCP 12(h)\""]);
     if let ExprKind::Call { args, .. } = &mut unspanned.events[0].action.kind {
         args[0] = literal(Value::Edge("zzzz".into()));
     }
     let (mut undeclared, undeclared_spans) =
-        resolved("", &["2010-01-04 Forfeited(twin-a) by d cite FRCP 12(h)"]);
+        resolved("", &["2010-01-04 Forfeited(twin-a) by d cite \"FRCP 12(h)\""]);
     if let ExprKind::Call { callee, .. } = &mut undeclared.events[0].action.kind {
         "Withdrawn".clone_into(callee);
     }

@@ -155,7 +155,7 @@ deadline service-period: 120.days after ComplaintFiled() counted_by frcp6 effect
 /// service be made within a specified time". The 90 days date from the
 /// amendment effective December 1, 2015; the 2016 and 2017 amendments only
 /// clarify which foreign service it excludes.
-deadline service-period: 90.days after ComplaintFiled() counted_by frcp6 effective [2015-12-01, ..) supersedes service-period@2007-12-01 delegable_to [CaseOrder] cite FRCP 4(m)
+deadline service-period: 90.days after ComplaintFiled() counted_by frcp6 effective [2015-12-01, ..) supersedes service-period@2007-12-01 delegable_to [CaseOrder] cite "FRCP 4(m)"
 {
   extend { by court, discretion GoodCause }
   extend { by court, discretion GoodCause, on ExtensionMoved(ServicePeriod) }
@@ -167,7 +167,7 @@ deadline service-period: 90.days after ComplaintFiled() counted_by frcp6 effecti
 /// district, which the pack does not branch on). In force from the 2009
 /// text, which states the same 60 days (U.S. Reports vol. 556); the 2024
 /// amendment left the period unchanged.
-deadline waiver-answer-period: 60.days after WaiverRequestSent() counted_by frcp6 effective [2009-12-01, ..) cite FRCP 12(a)(1)(A)(ii)
+deadline waiver-answer-period: 60.days after WaiverRequestSent() counted_by frcp6 effective [2009-12-01, ..) cite "FRCP 12(a)(1)(A)(ii)"
 {
   extend { by court, discretion GoodCause }
   extend { by court, discretion GoodCause, on ExtensionMoved(WaiverAnswerPeriod) }
@@ -184,7 +184,7 @@ deadline waiver-answer-period: 60.days after WaiverRequestSent() counted_by frcp
 /// before pleading", so it runs on the same clock. Extendable under FRCP
 /// 6(b)(1). In force from the 2009 text, which replaced 20 days with 21
 /// (U.S. Reports vol. 556); the 2024 amendment left the period unchanged.
-deadline answer-period: 21.days after ProcessServed() counted_by frcp6 effective [2009-12-01, ..) delegable_to [CaseOrder] cite FRCP 12(a)(1)(A)(i)
+deadline answer-period: 21.days after ProcessServed() counted_by frcp6 effective [2009-12-01, ..) delegable_to [CaseOrder] cite "FRCP 12(a)(1)(A)(i)"
 {
   extend { by court, discretion GoodCause }
   extend { by court, discretion GoodCause, on ExtensionMoved(AnswerPeriod) }
@@ -195,18 +195,18 @@ deadline answer-period: 21.days after ProcessServed() counted_by frcp6 effective
 /// defendant receives the initial pleading. A statute: no court may extend
 /// it. The vendored section carries no history, so it is dated from the
 /// package default.
-deadline removal-period: 30.days after InitialPleadingReceived() counted_by frcp6 effective [2024-12-01, ..) cite 28 U.S.C. 1446(b)(1)
+deadline removal-period: 30.days after InitialPleadingReceived() counted_by frcp6 effective [2024-12-01, ..) cite "28 U.S.C. 1446(b)(1)"
 /// 28 U.S.C. § 1447(c): a motion to remand for any defect other than lack
 /// of subject-matter jurisdiction is due 30 days after the notice of
 /// removal is filed. Section 1447 last amended by Pub. L. 112-51, § 2(d),
 /// November 9, 2011 (vendored history).
-deadline remand-motion-period: 30.days after NoticeOfRemovalFiled() counted_by frcp6 effective [2011-11-09, ..) cite 28 U.S.C. 1447(c)
+deadline remand-motion-period: 30.days after NoticeOfRemovalFiled() counted_by frcp6 effective [2011-11-09, ..) cite "28 U.S.C. 1447(c)"
 
 /// Rule 81(c)(2)(A): after removal, a defendant who has not answered
 /// answers 21 days after receiving the initial pleading (the longest of
 /// three periods; the pack models this one). Extendable under FRCP 6(b)(1).
 /// Rule 81 last amended eff. December 1, 2009.
-deadline removed-answer-period: 21.days after InitialPleadingReceived() counted_by frcp6 effective [2009-12-01, ..) delegable_to [CaseOrder] cite FRCP 81(c)(2)(A)
+deadline removed-answer-period: 21.days after InitialPleadingReceived() counted_by frcp6 effective [2009-12-01, ..) delegable_to [CaseOrder] cite "FRCP 81(c)(2)(A)"
 {
   extend { by court, discretion GoodCause }
   extend { by court, discretion GoodCause, on ExtensionMoved(RemovedAnswerPeriod) }
@@ -222,7 +222,7 @@ deadline removed-answer-period: 21.days after InitialPleadingReceived() counted_
 /// responsive pleading is due 14 days after notice that the court denied
 /// the Rule 12 motion. In force from the 2009 text, which states the same
 /// 14 days (U.S. Reports vol. 556); the 2024 amendment left it unchanged.
-deadline denial-answer-period: 14.days after Rule12MotionDenied() counted_by frcp6 effective [2009-12-01, ..) delegable_to [CaseOrder] cite FRCP 12(a)(4)(A)
+deadline denial-answer-period: 14.days after Rule12MotionDenied() counted_by frcp6 effective [2009-12-01, ..) delegable_to [CaseOrder] cite "FRCP 12(a)(4)(A)"
 {
   extend { by court, discretion GoodCause }
   extend { by court, discretion GoodCause, on ExtensionMoved(DenialAnswerPeriod) }
@@ -241,7 +241,7 @@ deadline denial-answer-period: 14.days after Rule12MotionDenied() counted_by frc
 /// than" for "within", which changes nothing for a period run from the
 /// responsive pleading (the 2022 package quotes the earlier text: "21 days
 /// after service of a responsive pleading").
-deadline amendment-as-of-course-period: 21.days after ResponsivePleadingServed() counted_by frcp6 effective [2009-12-01, ..) cite FRCP 15(a)(1)(B)
+deadline amendment-as-of-course-period: 21.days after ResponsivePleadingServed() counted_by frcp6 effective [2009-12-01, ..) cite "FRCP 15(a)(1)(B)"
 {
   extend { by court, discretion GoodCause }
   extend { by court, discretion GoodCause, on ExtensionMoved(AmendmentAsOfCoursePeriod) }
@@ -258,7 +258,7 @@ deadline amendment-as-of-course-period: 21.days after ResponsivePleadingServed()
 /// after service of the amendment, whichever is later; the pack models the
 /// 14 days. In force from the 2009 amendment, the last before 2023's
 /// (vendored history); 2023's amended only Rule 15(a)(1) (2022 package).
-deadline amended-response-period: 14.days after AmendedPleadingServed() counted_by frcp6 effective [2009-12-01, ..) delegable_to [CaseOrder] cite FRCP 15(a)(3)
+deadline amended-response-period: 14.days after AmendedPleadingServed() counted_by frcp6 effective [2009-12-01, ..) delegable_to [CaseOrder] cite "FRCP 15(a)(3)"
 {
   extend { by court, discretion GoodCause }
   extend { by court, discretion GoodCause, on ExtensionMoved(AmendedResponsePeriod) }
@@ -273,7 +273,7 @@ deadline amended-response-period: 14.days after AmendedPleadingServed() counted_
 /// Rule 26(a)(1)(C): initial disclosures are due 14 days after the Rule
 /// 26(f) conference "unless a different time is set by stipulation or court
 /// order". Rule 26 last amended eff. December 1, 2015.
-deadline initial-disclosure-period: 14.days after Rule26fConferenceHeld() counted_by frcp6 effective [2015-12-01, ..) delegable_to [CaseOrder] cite FRCP 26(a)(1)(C)
+deadline initial-disclosure-period: 14.days after Rule26fConferenceHeld() counted_by frcp6 effective [2015-12-01, ..) delegable_to [CaseOrder] cite "FRCP 26(a)(1)(C)"
 {
   extend { by court, discretion GoodCause }
   extend { by court, discretion GoodCause, on ExtensionMoved(InitialDisclosurePeriod) }
@@ -288,7 +288,7 @@ deadline initial-disclosure-period: 14.days after Rule26fConferenceHeld() counte
 /// Rule 38(b)(1): a jury demand is due 14 days after the last pleading
 /// directed to the issue is served. Extendable under FRCP 6(b)(1). Rule 38
 /// last amended eff. December 1, 2009.
-deadline jury-demand-period: 14.days after LastPleadingServed() counted_by frcp6 effective [2009-12-01, ..) delegable_to [CaseOrder] cite FRCP 38(b)(1)
+deadline jury-demand-period: 14.days after LastPleadingServed() counted_by frcp6 effective [2009-12-01, ..) delegable_to [CaseOrder] cite "FRCP 38(b)(1)"
 {
   extend { by court, discretion GoodCause }
   extend { by court, discretion GoodCause, on ExtensionMoved(JuryDemandPeriod) }
@@ -303,34 +303,34 @@ deadline jury-demand-period: 14.days after LastPleadingServed() counted_by frcp6
 /// Rule 50(b): a renewed motion for judgment as a matter of law is due 28
 /// days after entry of judgment; FRCP 6(b)(2) forbids extending it. Rule 50
 /// last amended eff. December 1, 2009.
-deadline jmol-renewal-period: 28.days after JudgmentEntered() counted_by frcp6 effective [2009-12-01, ..) cite FRCP 50(b)
+deadline jmol-renewal-period: 28.days after JudgmentEntered() counted_by frcp6 effective [2009-12-01, ..) cite "FRCP 50(b)"
 {
-  extend { never cite FRCP 6(b)(2) }
+  extend { never cite "FRCP 6(b)(2)" }
 }
 
 /// Rule 59(b): a new-trial motion is due 28 days after entry of judgment;
 /// FRCP 6(b)(2) forbids extending it. Rule 59 last amended eff. December 1,
 /// 2009.
-deadline new-trial-period: 28.days after JudgmentEntered() counted_by frcp6 effective [2009-12-01, ..) cite FRCP 59(b)
+deadline new-trial-period: 28.days after JudgmentEntered() counted_by frcp6 effective [2009-12-01, ..) cite "FRCP 59(b)"
 {
-  extend { never cite FRCP 6(b)(2) }
+  extend { never cite "FRCP 6(b)(2)" }
 }
 
 /// Rule 59(e): a motion to alter or amend the judgment is due 28 days after
 /// its entry; FRCP 6(b)(2) forbids extending it. Rule 59 last amended eff.
 /// December 1, 2009.
-deadline alter-amend-period: 28.days after JudgmentEntered() counted_by frcp6 effective [2009-12-01, ..) cite FRCP 59(e)
+deadline alter-amend-period: 28.days after JudgmentEntered() counted_by frcp6 effective [2009-12-01, ..) cite "FRCP 59(e)"
 {
-  extend { never cite FRCP 6(b)(2) }
+  extend { never cite "FRCP 6(b)(2)" }
 }
 
 /// Rule 60(c)(1): a Rule 60(b)(1)-(3) motion is due "no more than a year
 /// after the entry of the judgment", a calendar year (`frcp6`'s
 /// `end_of_month clamp` ends one from February 29 on February 28); FRCP
 /// 6(b)(2) forbids extending it. Rule 60 last amended eff. December 1, 2007.
-deadline relief-from-judgment-period: 1.years after JudgmentEntered() counted_by frcp6 effective [2007-12-01, ..) cite FRCP 60(c)(1)
+deadline relief-from-judgment-period: 1.years after JudgmentEntered() counted_by frcp6 effective [2007-12-01, ..) cite "FRCP 60(c)(1)"
 {
-  extend { never cite FRCP 6(b)(2) }
+  extend { never cite "FRCP 6(b)(2)" }
 }
 
 /// 28 U.S.C. § 2107(a): "no appeal shall bring any judgment ... before a
@@ -344,7 +344,7 @@ deadline relief-from-judgment-period: 1.years after JudgmentEntered() counted_by
 /// is later (FRAP 4(a)(5)(C)), for excusable neglect or good cause whether
 /// the motion comes before or after expiry (4(a)(5)(A)(ii)). FRAP 26(b)(1)
 /// forbids any other extension ("except as authorized in Rule 4").
-deadline notice-of-appeal-period: 30.days after JudgmentEntered() counted_by frap26 effective [2009-12-01, ..) known_at 2009-03-26 cite 28 U.S.C. § 2107(a)
+deadline notice-of-appeal-period: 30.days after JudgmentEntered() counted_by frap26 effective [2009-12-01, ..) known_at 2009-03-26 cite "28 U.S.C. § 2107(a)"
 {
   extend {
     by court
@@ -354,7 +354,7 @@ deadline notice-of-appeal-period: 30.days after JudgmentEntered() counted_by fra
     on ExtensionMoved(NoticeOfAppealPeriod)
     within prescribed_due + 30.days
   }
-  extend { never cite FRAP 26(b)(1) }
+  extend { never cite "FRAP 26(b)(1)" }
 }
 
 /// FRAP 4(a)(3): a cross-appeal is due "within 14 days after the date when
@@ -366,7 +366,7 @@ deadline notice-of-appeal-period: 30.days after JudgmentEntered() counted_by fra
 /// notice of appeal" and 4(a)(5)(B) names 4(a)(3), so the cross-appeal
 /// period carries the same grant and FRAP 26(b)(1) lock as the notice of
 /// appeal, its bound counted from the later date.
-deadline cross-appeal-period: 14.days after NoticeOfAppealFiled() counted_by frap26 effective [2009-12-01, ..) known_at 2009-03-26 cite FRAP 4(a)(3)
+deadline cross-appeal-period: 14.days after NoticeOfAppealFiled() counted_by frap26 effective [2009-12-01, ..) known_at 2009-03-26 cite "FRAP 4(a)(3)"
 {
   trigger later_of(notice-of-appeal-period)
   extend {
@@ -377,5 +377,5 @@ deadline cross-appeal-period: 14.days after NoticeOfAppealFiled() counted_by fra
     on ExtensionMoved(CrossAppealPeriod)
     within prescribed_due + 30.days
   }
-  extend { never cite FRAP 26(b)(1) }
+  extend { never cite "FRAP 26(b)(1)" }
 }

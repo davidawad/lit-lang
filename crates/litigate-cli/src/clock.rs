@@ -277,14 +277,14 @@ mod tests {
     /// A version recorded after the package's corpus date and one whose
     /// cite binds no source URL (L6001).
     const EXTRA: &str = "
-counting late known_at 2026-01-01 cite FRCP 6(a)
+counting late known_at 2026-01-01 cite \"FRCP 6(a)\"
 {
   exclude_trigger_day
   include_last_day
   holidays federal-holidays
 }
 
-counting nourl cite XYZ 6(a)
+counting nourl cite \"XYZ 6(a)\"
 {
   exclude_trigger_day
   include_last_day

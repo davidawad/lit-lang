@@ -330,7 +330,7 @@
         "key": {
           "type": "string",
           "minLength": 1,
-          "description": "Stable identity of the row across worlds and runs: <producer>#<occurrence>. A child world's row with the same key replaces the parent's row."
+          "description": "Stable identity of the row across worlds and runs, derived from its cause, never its position: <rule node id>@<trigger key> for deadlines, event:<Name>@<declaration> for events, fork:<node id> for forks. A child world's row with the same key replaces the parent's row."
         },
         "world": {
           "$ref": "#/$defs/id"

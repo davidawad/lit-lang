@@ -71,7 +71,7 @@ A UI diffing two worlds pairs rows by `key`.
 
 | Field | Meaning |
 |---|---|
-| `key` | Stable identity across worlds and runs, `<producer>#<occurrence>`: the qualified id of the producing rule node (a deadline or obligation), `event:<EventName>` for a `.case` event, or `fork:<node id>` for a fork, then the 0-based occurrence of that producer in the matter. Never derived from a label. |
+| `key` | Stable identity across worlds and runs, derived from what caused the row and never from its position, so inserting a row never renumbers others: a deadline or obligation is `<rule node id>@<key of its trigger row>`; a `.case` event is `event:<Name>@<declaration>`, where the declaration is the event's declared id, else its `<date>/<docket>` (date alone when it has no docket number), and an event a world assumes is `event:<Name>@<key of the fork row>`; a fork is `fork:<node id>`. Never derived from a label. |
 | `kind` | `event`, `deadline` or `fork`. |
 | `date` | When an event happened; `null` for deadlines and unresolved forks. |
 | `due` | A deadline's due date; `null` when it cannot be computed. |

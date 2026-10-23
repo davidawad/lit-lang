@@ -293,12 +293,9 @@ fn a_generated_file_that_does_not_parse_is_reported_with_the_parser_errors() {
         .map(|d| {
             assert_eq!(d.code, DiagnosticCode::SemanticDiff);
             let notes = d
-                .notes
+                .labels
                 .into_iter()
-                .map(|n| {
-                    let span = n.span.unwrap_or_else(|| panic!("a parser note has a span"));
-                    (span.file.0, span.line, n.message)
-                })
+                .map(|l| (l.span.file.0, l.span.line, l.message))
                 .collect();
             (d.span.file.0, d.message, notes)
         })

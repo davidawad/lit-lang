@@ -74,19 +74,21 @@ pub fn render(db: &LitDatabase, ws: Workspace) -> Vec<String> {
                 d.code.as_str(),
                 d.message
             );
-            for n in &d.notes {
-                let at = n
-                    .span
-                    .as_ref()
-                    .map(|s| format!(" @{}:{}", s.line, s.col))
-                    .unwrap_or_default();
-                let _ = write!(s, "\n    note{at}: {}", n.message);
+            for l in &d.labels {
+                let _ = write!(
+                    s,
+                    "\n    note @{}:{}: {}",
+                    l.span.line, l.span.col, l.message
+                );
             }
-            for f in &d.fixes {
+            for n in &d.notes {
+                let _ = write!(s, "\n    note: {}", n.message);
+            }
+            for e in d.fixes.iter().flat_map(|f| &f.edits) {
                 let _ = write!(
                     s,
                     "\n    fix @{}:{}-{}:{}: {:?}",
-                    f.span.line, f.span.col, f.span.end_line, f.span.end_col, f.replacement
+                    e.span.line, e.span.col, e.span.end_line, e.span.end_col, e.replacement
                 );
             }
             s

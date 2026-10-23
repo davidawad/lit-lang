@@ -4,6 +4,11 @@ use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
+/// Version of the envelope and diagnostic schema (SPEC §9.2). Version 2
+/// keeps `result` alongside errors and adds labels, multi-edit fixes,
+/// fingerprints, profile and world tags, derivations, and tolerant codes.
+pub const SCHEMA_VERSION: u32 = 2;
+
 /// Compiler checking profile.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "lowercase")]
@@ -17,12 +22,15 @@ pub enum Profile {
 /// JSON response shape shared by all `litigate` operations.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct Envelope<T> {
+    /// Envelope and diagnostic schema version ([`SCHEMA_VERSION`]).
+    pub schema_version: u32,
     /// Whether the operation completed without errors.
     pub ok: bool,
     /// Operation name.
     pub op: String,
-    /// Operation-specific result, absent on failure.
-    #[serde(skip_serializing_if = "Option::is_none")]
+    /// Operation-specific result: present whenever the operation produced
+    /// one, errors or not (a failed check still reports its obligations).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub result: Option<T>,
     /// Structured compiler diagnostics.
     pub diagnostics: Vec<Diagnostic>,
@@ -50,6 +58,7 @@ impl<T> Envelope<T> {
     /// Creates a successful envelope.
     pub fn success(op: impl Into<String>, result: T) -> Self {
         Self {
+            schema_version: SCHEMA_VERSION,
             ok: true,
             op: op.into(),
             result: Some(result),
@@ -62,12 +71,13 @@ impl<T> Envelope<T> {
 
 #[cfg(test)]
 mod tests {
-    use super::{Envelope, Profile};
+    use super::{Envelope, Profile, SCHEMA_VERSION};
 
     #[test]
     fn success_envelope_serializes_stable_shape_and_profiles() {
         let envelope = Envelope::success("check", 7_u8);
         assert!(envelope.ok);
+        assert_eq!(envelope.schema_version, 2);
         assert_eq!(envelope.op, "check");
         assert_eq!(envelope.result, Some(7));
         assert!(envelope.diagnostics.is_empty());
@@ -90,6 +100,7 @@ mod tests {
     #[test]
     fn absent_result_is_omitted() {
         let envelope: Envelope<()> = Envelope {
+            schema_version: SCHEMA_VERSION,
             ok: false,
             op: "check".into(),
             result: None,
@@ -97,9 +108,9 @@ mod tests {
             provenance: serde_json::Value::Null,
             elapsed_ms: 1.0,
         };
-        assert!(serde_json::to_value(envelope)
-            .unwrap()
-            .get("result")
-            .is_none());
+        let value = serde_json::to_value(envelope).unwrap();
+        assert!(value.get("result").is_none());
+        let decoded: Envelope<()> = serde_json::from_value(value).unwrap();
+        assert!(decoded.result.is_none());
     }
 }

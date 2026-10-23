@@ -1,5 +1,5 @@
 //! Diagnostic construction for verification findings.
-use litigate_base::{Diagnostic, DiagnosticCode, FileId, Note, Profile, Span};
+use litigate_base::{Diagnostic, DiagnosticCode, FileId, Profile, Span};
 use std::cmp::Ordering;
 
 /// SPEC §9.1 order: `(file, line, col, code)`.
@@ -22,17 +22,9 @@ pub(crate) fn emit(
     }
 }
 
-/// Adds a note, optionally located.
-pub(crate) fn note(
-    mut d: Diagnostic,
-    span: Option<&Span>,
-    message: impl Into<String>,
-) -> Diagnostic {
-    d.notes.push(Note {
-        span: span.cloned(),
-        message: message.into(),
-    });
-    d
+/// Adds a note, optionally located (a label when located).
+pub(crate) fn note(d: Diagnostic, span: Option<&Span>, message: impl Into<String>) -> Diagnostic {
+    d.note_at(span.cloned(), message)
 }
 
 /// Where a finding without its own span is reported: line 1 of `file`.
@@ -108,7 +100,7 @@ mod tests {
         let d = emit(C::RuleWithoutTest, Profile::Dev, span.clone(), "untested");
         assert_eq!(d.severity, litigate_base::Severity::Warning);
         let d = note(d, Some(&span), "here");
-        assert_eq!(d.notes.first().and_then(|n| n.span.clone()), Some(span));
+        assert_eq!(d.labels.first().map(|l| l.span.clone()), Some(span));
         let end = end_of(&at("a.lit", 3, C::NoExit, "z").span);
         assert_eq!((end.line, end.col, end.end_line, end.end_col), (4, 4, 4, 4));
     }

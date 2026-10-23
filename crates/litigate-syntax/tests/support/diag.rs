@@ -29,13 +29,15 @@ pub fn render(text: &str, kind: FileKind) -> Vec<String> {
                 .notes
                 .iter()
                 .map(|note| format!("note: {}", note.message));
-            let fixes = diagnostic.fixes.iter().map(|fix| {
+            let fixes = diagnostic.fixes.iter().flat_map(|fix| {
                 let review = if fix.applicability == Applicability::MachineApplicable {
                     ""
                 } else {
                     " (review)"
                 };
-                format!("fix {} {:?}{review}", span(&fix.span), fix.replacement)
+                fix.edits
+                    .iter()
+                    .map(move |e| format!("fix {} {:?}{review}", span(&e.span), e.replacement))
             });
             std::iter::once(head)
                 .chain(notes)

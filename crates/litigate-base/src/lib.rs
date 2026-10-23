@@ -4,7 +4,9 @@ mod diagnostic;
 mod envelope;
 mod line_index;
 
-pub use code::DiagnosticCode;
-pub use diagnostic::{Applicability, Diagnostic, Fix, Note, Severity, Span};
-pub use envelope::{Envelope, LitigateRun, Profile};
+pub use code::{DiagnosticCode, UnknownCode};
+pub use diagnostic::{
+    stamp, Applicability, Derivation, Diagnostic, Edit, Fix, Label, Note, Severity, Span, WorldTag,
+};
+pub use envelope::{Envelope, LitigateRun, Profile, SCHEMA_VERSION};
 pub use line_index::{FileId, LineIndex};

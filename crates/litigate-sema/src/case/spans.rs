@@ -5,7 +5,7 @@
 //! the resolver records them here beside it. A matter built directly as HIR
 //! (no source) uses [`CaseSpans::default`], and every diagnostic falls back
 //! to a file-level placeholder.
-use litigate_base::{Applicability, Diagnostic, DiagnosticCode, FileId, Fix, Note, Span};
+use litigate_base::{Diagnostic, DiagnosticCode, FileId, Span};
 use std::collections::BTreeMap;
 
 /// Spans of one event line.
@@ -80,36 +80,6 @@ pub fn nowhere(id: &str) -> Span {
         col: 1,
         end_line: 1,
         end_col: 1,
-    }
-}
-
-/// Builder helpers on [`Diagnostic`] for case checks.
-pub(super) trait Build: Sized {
-    fn note(self, message: impl Into<String>) -> Self;
-    fn note_at(self, span: Option<Span>, message: impl Into<String>) -> Self;
-    fn fix(self, span: Span, replacement: impl Into<String>, a: Applicability) -> Self;
-}
-
-impl Build for Diagnostic {
-    fn note(self, message: impl Into<String>) -> Self {
-        self.note_at(None, message)
-    }
-
-    fn note_at(mut self, span: Option<Span>, message: impl Into<String>) -> Self {
-        self.notes.push(Note {
-            span,
-            message: message.into(),
-        });
-        self
-    }
-
-    fn fix(mut self, span: Span, replacement: impl Into<String>, a: Applicability) -> Self {
-        self.fixes.push(Fix {
-            span,
-            replacement: replacement.into(),
-            applicability: a,
-        });
-        self
     }
 }
 

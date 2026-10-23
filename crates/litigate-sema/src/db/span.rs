@@ -1,8 +1,6 @@
 //! Byte ranges inside one file and file-local diagnostic reports that become
 //! [`litigate_base::Diagnostic`]s once a [`LineIndex`] is at hand.
-use litigate_base::{
-    Applicability, Diagnostic, DiagnosticCode, FileId, Fix, LineIndex, Note, Severity, Span,
-};
+use litigate_base::{Applicability, Diagnostic, DiagnosticCode, FileId, LineIndex, Severity, Span};
 
 /// Half-open byte range `[start, end)` in one source file.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Default, PartialOrd, Ord)]
@@ -86,38 +84,23 @@ impl Report {
         self
     }
 
-    /// Converts to a located diagnostic. Sema codes are all errors except
-    /// the lint range, which callers grade by profile.
+    /// Converts to a located diagnostic: located notes become labels.
+    /// Sema codes are all errors except the lint range, which callers
+    /// grade by profile.
     #[must_use]
     pub fn to_diagnostic(&self, file: &FileId, index: &LineIndex) -> Diagnostic {
         let span = |range: TextRange| to_span(file, index, range);
-        Diagnostic {
-            code: self.code,
-            severity: if self.code.is_lint() {
-                Severity::Warning
-            } else {
-                Severity::Error
-            },
-            span: span(self.range),
-            message: self.message.clone(),
-            notes: self
-                .notes
-                .iter()
-                .map(|(range, message)| Note {
-                    span: range.map(span),
-                    message: message.clone(),
-                })
-                .collect(),
-            fixes: self
-                .fixes
-                .iter()
-                .map(|(range, replacement, applicability)| Fix {
-                    span: span(*range),
-                    replacement: replacement.clone(),
-                    applicability: *applicability,
-                })
-                .collect(),
+        let mut d = Diagnostic::error(self.code, span(self.range), self.message.clone());
+        if self.code.is_lint() {
+            d.severity = Severity::Warning;
         }
+        for (range, message) in &self.notes {
+            d = d.note_at(range.map(span), message.clone());
+        }
+        for (range, replacement, applicability) in &self.fixes {
+            d = d.fix(span(*range), replacement.clone(), *applicability);
+        }
+        d
     }
 }
 

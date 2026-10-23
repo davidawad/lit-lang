@@ -101,14 +101,18 @@ expression: json
     "message": "unterminated string literal",
     "fixes": [
       {
-        "span": {
-          "file": "unclosed_everything.lit",
-          "line": 2,
-          "col": 36,
-          "end_line": 2,
-          "end_col": 36
-        },
-        "replacement": "\"}]))}",
+        "edits": [
+          {
+            "span": {
+              "file": "unclosed_everything.lit",
+              "line": 2,
+              "col": 36,
+              "end_line": 2,
+              "end_col": 36
+            },
+            "replacement": "\"}]))}"
+          }
+        ],
         "applicability": "machine_applicable"
       }
     ]

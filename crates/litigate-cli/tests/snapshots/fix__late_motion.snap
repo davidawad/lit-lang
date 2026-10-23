@@ -14,7 +14,7 @@ expression: "run.json[\"diagnostics\"].as_array().unwrap().iter().filter(|d| d[\
       "end_col": 13
     },
     "message": "`MovedToDismiss(complaint)` on 2025-04-20 missed deadline `answer-period`, due 2025-03-26",
-    "notes": [
+    "labels": [
       {
         "span": {
           "file": "cases/m.case",
@@ -24,10 +24,17 @@ expression: "run.json[\"diagnostics\"].as_array().unwrap().iter().filter(|d| d[\
           "end_col": 51
         },
         "message": "`answer-period` runs 21 calendar days from `Served(complaint, Personal)` on 2025-03-05 under `frcp6@2009-12-01`"
-      },
+      }
+    ],
+    "notes": [
       {
         "message": "only a cited event of a type that `extends` this deadline, within its `extend` capability, moves the due date"
       }
-    ]
+    ],
+    "fingerprint": "62e7bbff18b2df4d",
+    "profile": "dev",
+    "world": {
+      "name": "actual"
+    }
   }
 ]

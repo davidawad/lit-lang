@@ -1,6 +1,6 @@
 //! Lowering diagnostics (SPEC §9.1 L6xxx) located at HIR spans.
 use crate::num;
-use litigate_base::{Diagnostic, DiagnosticCode as C, FileId, Note, Span};
+use litigate_base::{Diagnostic, DiagnosticCode as C, FileId, Span};
 use litigate_sema::hir::{Money, Rational};
 
 /// Collects diagnostics, locating span-less HIR at a fallback span (the
@@ -41,11 +41,7 @@ impl Sink {
         message: impl Into<String>,
         note: impl Into<String>,
     ) {
-        let mut diagnostic = self.located(code, span, message);
-        diagnostic.notes.push(Note {
-            span: None,
-            message: note.into(),
-        });
+        let diagnostic = self.located(code, span, message).note(note);
         self.out.push(diagnostic);
     }
 

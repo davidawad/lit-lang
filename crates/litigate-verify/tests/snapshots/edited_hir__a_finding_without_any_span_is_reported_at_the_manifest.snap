@@ -26,14 +26,18 @@ expression: "outcome_of(&v, Obligation::RuleWithoutTest)"
       "message": "deadline `reply-period` has no test that evaluates `deadline(reply-period)`",
       "fixes": [
         {
-          "span": {
-            "file": "Lit.toml",
-            "line": 1,
-            "col": 1,
-            "end_line": 1,
-            "end_col": 1
-          },
-          "replacement": "\n\ntest \"reply-period is due on the expected date\" {\n  given <trigger event> on <YYYY-MM-DD>\n  expect deadline(reply-period) == <YYYY-MM-DD>\n}",
+          "edits": [
+            {
+              "span": {
+                "file": "Lit.toml",
+                "line": 1,
+                "col": 1,
+                "end_line": 1,
+                "end_col": 1
+              },
+              "replacement": "\n\ntest \"reply-period is due on the expected date\" {\n  given <trigger event> on <YYYY-MM-DD>\n  expect deadline(reply-period) == <YYYY-MM-DD>\n}"
+            }
+          ],
           "applicability": "has_placeholders"
         }
       ]

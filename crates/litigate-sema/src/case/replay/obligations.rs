@@ -13,7 +13,7 @@
 use super::Cx;
 use crate::case::deadline::{self, Due};
 use crate::case::graph::{display, pack_of, Graph};
-use crate::case::spans::{error, Build};
+use crate::case::spans::error;
 use crate::case::{Effect, Obligation, Status};
 use crate::hir::{
     Capability, Deadline, Expr, ExprKind, Extension, ExtensionWindow, TriggerPolicy, Value,

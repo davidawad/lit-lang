@@ -41,17 +41,50 @@ pub fn diagnostic(d: &Diagnostic, sources: &[(String, String)], color: bool) -> 
                 .with_message(d.code.explain())
                 .with_color(tint),
         );
+    for label in &d.labels {
+        if label.span.file.0 == file {
+            report = report.with_label(
+                Label::new((file.clone(), byte_range(text, &label.span)))
+                    .with_message(&label.message),
+            );
+        } else {
+            report = report.with_note(format!(
+                "{}:{}:{}: {}",
+                label.span.file.0, label.span.line, label.span.col, label.message
+            ));
+        }
+    }
     for note in &d.notes {
         report = report.with_note(&note.message);
     }
+    if let Some(derivation) = &d.derivation {
+        let mut tree = String::from("derivation:");
+        derivation_lines(derivation, 1, &mut tree);
+        report = report.with_note(tree);
+    }
     for fix in &d.fixes {
+        let edits: Vec<String> = fix
+            .edits
+            .iter()
+            .map(|e| {
+                format!(
+                    "replace {}:{}:{}-{}:{} with `{}`",
+                    e.span.file.0,
+                    e.span.line,
+                    e.span.col,
+                    e.span.end_line,
+                    e.span.end_col,
+                    e.replacement
+                )
+            })
+            .collect();
+        let lead = fix
+            .message
+            .as_ref()
+            .map_or(String::new(), |m| format!("{m}: "));
         report = report.with_help(format!(
-            "replace {}:{}-{}:{} with `{}` ({:?})",
-            fix.span.line,
-            fix.span.col,
-            fix.span.end_line,
-            fix.span.end_col,
-            fix.replacement,
+            "{lead}{} ({:?})",
+            edits.join("; "),
             fix.applicability
         ));
     }
@@ -61,6 +94,20 @@ pub fn diagnostic(d: &Diagnostic, sources: &[(String, String)], color: bool) -> 
         .finish()
         .write((file, Source::from(text.clone())), &mut buffer);
     String::from_utf8_lossy(&buffer).into_owned()
+}
+
+/// `derivation` as an indented tree, one step per line.
+fn derivation_lines(derivation: &litigate_base::Derivation, depth: usize, out: &mut String) {
+    let _ = write!(
+        out,
+        "\n{}{}: {}",
+        "  ".repeat(depth),
+        derivation.rule,
+        derivation.fact
+    );
+    for premise in &derivation.premises {
+        derivation_lines(premise, depth + 1, out);
+    }
 }
 
 /// The lowercase severity name (`error`, `warning`, `info`, `hint`).
@@ -142,19 +189,36 @@ mod tests {
             (Severity::Hint, "hint"),
         ] {
             assert_eq!(severity_word(severity), word);
-            let d = Diagnostic {
+            let mut d = Diagnostic {
                 severity,
-                notes: vec![litigate_base::Note {
-                    span: None,
-                    message: "a note".into(),
-                }],
-                fixes: vec![litigate_base::Fix {
-                    span: span.clone(),
-                    replacement: "n".into(),
-                    applicability: litigate_base::Applicability::MachineApplicable,
-                }],
                 ..Diagnostic::error(DiagnosticCode::UnresolvedName, span.clone(), "no `m`")
-            };
+            }
+            .note("a note")
+            .label(
+                Span {
+                    col: 1,
+                    end_col: 7,
+                    ..span.clone()
+                },
+                "in this module",
+            )
+            .label(
+                Span {
+                    file: "b.lit".into(),
+                    ..span.clone()
+                },
+                "used here",
+            )
+            .fix(
+                span.clone(),
+                "n",
+                litigate_base::Applicability::MachineApplicable,
+            )
+            .derived(
+                litigate_base::Derivation::new("conflict", "conflict(m, a, b)")
+                    .premise(litigate_base::Derivation::new("winner", "winner(m, a)")),
+            );
+            d.fixes[0].message = Some("rename it".into());
             insta::assert_snapshot!(
                 format!("diagnostic_{word}"),
                 diagnostic(&d, &sources, false)
@@ -172,7 +236,7 @@ mod tests {
     }
 
     #[test]
-    fn a_failed_envelope_prints_no_result() {
+    fn a_failed_envelope_prints_its_result_too() {
         let span = Span {
             file: "a.lit".into(),
             line: 1,
@@ -189,10 +253,13 @@ mod tests {
             ..crate::out::Report::of(serde_json::json!({"answer": 42}))
         };
         let envelope = crate::out::envelope("check", &report, 0.0);
-        insta::assert_snapshot!(human(&envelope, &[], false), @r"
+        insta::assert_snapshot!(human(&envelope, &[], false), @r#"
         error[L1002]: no `m`
           --> a.lit:1:1
         litigate check: failed (1 error(s), 0 warning(s))
-        ");
+        {
+          "answer": 42
+        }
+        "#);
     }
 }

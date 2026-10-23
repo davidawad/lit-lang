@@ -119,11 +119,11 @@ fn deadline(cx: &Context<'_>, x: &hir::Deadline) -> (String, Diagnostic) {
         span.clone(),
         format!("deadline `{id}` has no test that evaluates `deadline({id})`"),
     );
-    d.fixes.push(Fix {
-        span: end_of(&span),
-        replacement: skeleton,
-        applicability: Applicability::HasPlaceholders,
-    });
+    d.fixes.push(Fix::single(
+        end_of(&span),
+        skeleton,
+        Applicability::HasPlaceholders,
+    ));
     (id.clone(), d)
 }
 

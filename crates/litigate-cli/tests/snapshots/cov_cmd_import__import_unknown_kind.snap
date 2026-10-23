@@ -3,6 +3,7 @@ source: crates/litigate-cli/tests/cov_cmd_import.rs
 expression: stable(&run.json)
 ---
 {
+  "schema_version": 2,
   "ok": false,
   "op": "import",
   "diagnostics": [
@@ -16,7 +17,11 @@ expression: stable(&run.json)
         "end_line": 1,
         "end_col": 1
       },
-      "message": "not a pack, links file, or named scenario"
+      "message": "not a pack, links file, or named scenario",
+      "fingerprint": "43de680562609b1b",
+      "world": {
+        "name": "actual"
+      }
     }
   ],
   "elapsed_ms": 0

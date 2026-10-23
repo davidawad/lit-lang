@@ -5,7 +5,7 @@ use super::interval::Window;
 use super::version::{Version, VersionSet};
 use crate::hir::{self, Declaration, Metadata, Relation, RuleKind};
 use crate::precedence::Lattice;
-use litigate_base::{Applicability, Diagnostic, DiagnosticCode, FileId, Fix, Note, Span};
+use litigate_base::{Applicability, Diagnostic, DiagnosticCode, FileId, Span};
 use std::collections::BTreeMap;
 
 /// Package-independent identity of a logical declaration.
@@ -486,20 +486,11 @@ pub trait DiagnosticExt {
 }
 
 impl DiagnosticExt for Diagnostic {
-    fn with_note(mut self, span: Option<Span>, message: impl Into<String>) -> Self {
-        self.notes.push(Note {
-            span,
-            message: message.into(),
-        });
-        self
+    fn with_note(self, span: Option<Span>, message: impl Into<String>) -> Self {
+        self.note_at(span, message)
     }
 
-    fn with_fix(mut self, span: Span, replacement: impl Into<String>, a: Applicability) -> Self {
-        self.fixes.push(Fix {
-            span,
-            replacement: replacement.into(),
-            applicability: a,
-        });
-        self
+    fn with_fix(self, span: Span, replacement: impl Into<String>, a: Applicability) -> Self {
+        self.fix(span, replacement, a)
     }
 }

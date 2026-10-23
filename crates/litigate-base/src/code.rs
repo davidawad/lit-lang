@@ -1,4 +1,9 @@
 //! Closed diagnostic-code registry and short explanations (SPEC §9.1).
+//!
+//! Decoding is tolerant: a well-formed code (`L` and four digits) this
+//! compiler does not know decodes to [`DiagnosticCode::Unknown`] and
+//! re-encodes unchanged, so an older reader can carry a newer compiler's
+//! output (SPEC §9.2).
 use crate::{Profile, Severity};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
@@ -11,6 +16,9 @@ macro_rules! registry {
                 #[doc = concat!($explain, " (", $code, ").")]
                 $variant,
             )+
+            /// A well-formed code this compiler does not know: emitted by a
+            /// newer compiler, or retired. Never emitted by this one.
+            Unknown(UnknownCode),
         }
 
         impl DiagnosticCode {
@@ -19,9 +27,10 @@ macro_rules! registry {
 
             /// Returns the stable five-character code.
             #[must_use]
-            pub const fn as_str(self) -> &'static str {
+            pub fn as_str(self) -> &'static str {
                 match self {
                     $(Self::$variant => $code,)+
+                    Self::Unknown(code) => code.as_str(),
                 }
             }
 
@@ -30,10 +39,11 @@ macro_rules! registry {
             pub const fn explain(self) -> &'static str {
                 match self {
                     $(Self::$variant => $explain,)+
+                    Self::Unknown(_) => UNKNOWN_EXPLANATION,
                 }
             }
 
-            /// Parses a stable diagnostic code string.
+            /// Parses a code this compiler knows (never [`Self::Unknown`]).
             #[must_use]
             pub fn parse(value: &str) -> Option<Self> {
                 match value {
@@ -108,7 +118,59 @@ registry! { 60;
     UnusedDeclaration = "L9005" => "The declaration or import is never used",
 }
 
+/// What `explain` says of an [`DiagnosticCode::Unknown`] code.
+const UNKNOWN_EXPLANATION: &str =
+    "A code this compiler does not know: emitted by a newer compiler, or retired";
+
+/// A well-formed diagnostic code outside this compiler's registry.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub struct UnknownCode(u16);
+
+/// `L0000L0001…L9999`: the text of every well-formed code, so an unknown
+/// one still has a `&'static str`.
+static CODE_TEXT: [u8; 50_000] = {
+    let mut text = [0_u8; 50_000];
+    let mut n = 0;
+    while n < 10_000 {
+        let at = n * 5;
+        text[at] = b'L';
+        text[at + 1] = b'0' + (n / 1000) as u8;
+        text[at + 2] = b'0' + (n / 100 % 10) as u8;
+        text[at + 3] = b'0' + (n / 10 % 10) as u8;
+        text[at + 4] = b'0' + (n % 10) as u8;
+        n += 1;
+    }
+    text
+};
+
+impl UnknownCode {
+    /// The code's five-character text.
+    #[must_use]
+    pub fn as_str(self) -> &'static str {
+        let at = usize::from(self.0) * 5;
+        std::str::from_utf8(&CODE_TEXT[at..at + 5]).unwrap_or("L????")
+    }
+}
+
 impl DiagnosticCode {
+    /// Decodes `value`: a known code, else [`Self::Unknown`] when it is
+    /// well-formed (`L` and four ASCII digits), else `None`.
+    #[must_use]
+    pub fn decode(value: &str) -> Option<Self> {
+        Self::parse(value).or_else(|| {
+            let digits = value
+                .strip_prefix('L')
+                .filter(|d| d.len() == 4 && d.bytes().all(|b| b.is_ascii_digit()))?;
+            digits.parse().ok().map(|n| Self::Unknown(UnknownCode(n)))
+        })
+    }
+
+    /// Whether this compiler knows the code.
+    #[must_use]
+    pub const fn is_known(self) -> bool {
+        !matches!(self, Self::Unknown(_))
+    }
+
     /// Severity of this code under `profile` (SPEC §9.1 severity table).
     /// Every non-lint code is an error in both profiles.
     #[must_use]
@@ -137,7 +199,8 @@ impl Serialize for DiagnosticCode {
     }
 }
 
-/// A string enum of every stable code, so generated bindings see the closed set.
+/// Every known code, or any other well-formed code, so generated bindings
+/// see the registry and still accept a newer compiler's codes.
 impl schemars::JsonSchema for DiagnosticCode {
     fn schema_name() -> std::borrow::Cow<'static, str> {
         "DiagnosticCode".into()
@@ -146,9 +209,11 @@ impl schemars::JsonSchema for DiagnosticCode {
     fn json_schema(_: &mut schemars::SchemaGenerator) -> schemars::Schema {
         let codes: Vec<&str> = Self::ALL.iter().map(|c| c.as_str()).collect();
         schemars::json_schema!({
-            "description": "Stable diagnostic code (`litigate explain <code>`).",
-            "type": "string",
-            "enum": codes,
+            "description": "Stable diagnostic code (`litigate explain <code>`); codes outside the registry are a newer compiler's.",
+            "anyOf": [
+                {"type": "string", "enum": codes},
+                {"type": "string", "pattern": "^L[0-9]{4}$"},
+            ],
         })
     }
 }
@@ -156,8 +221,8 @@ impl schemars::JsonSchema for DiagnosticCode {
 impl<'de> Deserialize<'de> for DiagnosticCode {
     fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         let value = String::deserialize(deserializer)?;
-        Self::parse(&value)
-            .ok_or_else(|| serde::de::Error::custom(format!("unknown diagnostic code {value}")))
+        Self::decode(&value)
+            .ok_or_else(|| serde::de::Error::custom(format!("malformed diagnostic code {value}")))
     }
 }
 

@@ -42,7 +42,7 @@ fn out_of_order_events_are_fixed() {
     assert_eq!(before.code, 2);
     assert!(codes(&before.json).contains(&("L4001".to_owned(), "error".to_owned())));
     let dry = litigate_in(&dir, &["fix", "cases/m.case", "--dry-run"]);
-    assert_eq!(dry.json["result"]["edits"].as_array().unwrap().len(), 1);
+    assert_eq!(dry.json["result"]["fixes"].as_array().unwrap().len(), 1);
     assert_eq!(
         std::fs::read_to_string(dir.join("cases/m.case")).unwrap(),
         OUT_OF_ORDER

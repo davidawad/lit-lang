@@ -71,27 +71,20 @@ impl SyntaxError {
     pub fn to_diagnostic(&self, file: &litigate_base::FileId, index: &LineIndex) -> Diagnostic {
         let span = |range: TextRange| span_of(file, index, range);
         Diagnostic {
-            code: self.code,
             severity: self.code.severity(Profile::Dev),
-            span: span(self.range),
-            message: self.message.clone(),
             notes: self
                 .notes
                 .iter()
                 .map(|message| Note {
-                    span: None,
                     message: message.clone(),
                 })
                 .collect(),
             fixes: self
                 .fixes
                 .iter()
-                .map(|fix| Fix {
-                    span: span(fix.range),
-                    replacement: fix.replacement.clone(),
-                    applicability: fix.applicability,
-                })
+                .map(|fix| Fix::single(span(fix.range), fix.replacement.clone(), fix.applicability))
                 .collect(),
+            ..Diagnostic::error(self.code, span(self.range), self.message.clone())
         }
     }
 }

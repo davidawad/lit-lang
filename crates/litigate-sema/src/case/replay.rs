@@ -9,7 +9,7 @@
 //! ended. Event names mean nothing.
 use super::deadline::Clock;
 use super::graph::{base, display, pack_of, Graph};
-use super::spans::{error, Build, CaseSpans, EventSpans};
+use super::spans::{error, CaseSpans, EventSpans};
 use super::{Effect, Obligation, Step};
 use crate::hir::{
     Case, Declaration, Edge, Event, EventEffect, EventParty, Expr, ExprKind, Node, NodeKind,

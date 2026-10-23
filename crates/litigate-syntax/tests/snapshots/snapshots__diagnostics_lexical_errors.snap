@@ -16,14 +16,18 @@ expression: json
     "message": "unterminated string literal",
     "fixes": [
       {
-        "span": {
-          "file": "lexical_errors.lit",
-          "line": 2,
-          "col": 15,
-          "end_line": 2,
-          "end_col": 15
-        },
-        "replacement": "\"",
+        "edits": [
+          {
+            "span": {
+              "file": "lexical_errors.lit",
+              "line": 2,
+              "col": 15,
+              "end_line": 2,
+              "end_col": 15
+            },
+            "replacement": "\""
+          }
+        ],
         "applicability": "machine_applicable"
       }
     ]
@@ -46,14 +50,18 @@ expression: json
     ],
     "fixes": [
       {
-        "span": {
-          "file": "lexical_errors.lit",
-          "line": 3,
-          "col": 16,
-          "end_line": 3,
-          "end_col": 20
-        },
-        "replacement": "days",
+        "edits": [
+          {
+            "span": {
+              "file": "lexical_errors.lit",
+              "line": 3,
+              "col": 16,
+              "end_line": 3,
+              "end_col": 20
+            },
+            "replacement": "days"
+          }
+        ],
         "applicability": "machine_applicable"
       }
     ]

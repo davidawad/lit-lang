@@ -2,7 +2,7 @@
 //! and the loaded packages, typed parties and perspective, facts, stakes
 //! exhaustiveness, and observations.
 use super::graph::Graph;
-use super::spans::{error, Build, CaseSpans};
+use super::spans::{error, CaseSpans};
 use crate::hir::{Authored, Case, Node, NodeKind, Package, Perspective, Stake};
 use crate::pkg::lock::LockFile;
 use crate::resolve::suggest::nearest;

@@ -91,7 +91,7 @@ fn check_errors_are_attributed_to_the_input_generating_them() {
         .collect();
     assert_eq!(files, ["bad.json", "s.json"]);
     let notes = |i: usize| -> Vec<String> {
-        diagnostics[i]["notes"]
+        diagnostics[i]["labels"]
             .as_array()
             .unwrap()
             .iter()

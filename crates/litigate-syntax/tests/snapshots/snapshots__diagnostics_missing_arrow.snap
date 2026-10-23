@@ -21,14 +21,18 @@ expression: json
     ],
     "fixes": [
       {
-        "span": {
-          "file": "missing_arrow.lit",
-          "line": 3,
-          "col": 11,
-          "end_line": 3,
-          "end_col": 11
-        },
-        "replacement": "-> ",
+        "edits": [
+          {
+            "span": {
+              "file": "missing_arrow.lit",
+              "line": 3,
+              "col": 11,
+              "end_line": 3,
+              "end_col": 11
+            },
+            "replacement": "-> "
+          }
+        ],
         "applicability": "machine_applicable"
       }
     ]

@@ -43,7 +43,14 @@ fn strict_check_fails_on_every_hole() {
     ]);
     assert_eq!(run.code, 2);
     assert_eq!(run.json["ok"], false);
-    assert!(run.json.get("result").is_none());
+    // Schema v2 keeps the result alongside errors: the failing obligations.
+    let holes = run.json["result"]["obligations"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|f| f["name"] == "holes")
+        .unwrap();
+    assert_eq!(holes["status"], "failed");
     let found = codes(&run.json);
     assert_eq!(
         found

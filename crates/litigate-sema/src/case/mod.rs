@@ -28,7 +28,7 @@ use crate::pkg::lock::LockFile;
 use graph::Graph;
 use litigate_base::{Diagnostic, DiagnosticCode as C, Profile, Severity};
 use replay::Replayed;
-use spans::{error, Build};
+use spans::error;
 
 /// A checked matter.
 #[derive(Debug, Clone, PartialEq)]

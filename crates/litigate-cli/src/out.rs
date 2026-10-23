@@ -1,14 +1,14 @@
 //! Envelopes, exit codes, and human rendering (SPEC §9.2-§9.3).
 use crate::cli::Format;
 use crate::render;
-use litigate_base::{Diagnostic, Envelope, Severity};
+use litigate_base::{Diagnostic, Envelope, Profile, Severity, WorldTag, SCHEMA_VERSION};
 use serde_json::Value;
 
 /// What a command produced: an envelope's parts plus the sources its
 /// diagnostics point into (for human rendering).
 #[derive(Debug, Clone, Default)]
 pub struct Report {
-    /// Operation-specific result (dropped when an error diagnostic exists).
+    /// Operation-specific result, kept alongside errors (`null`: none).
     pub result: Value,
     /// Every diagnostic, in any order (sorted on output).
     pub diagnostics: Vec<Diagnostic>,
@@ -16,6 +16,8 @@ pub struct Report {
     pub provenance: Value,
     /// `(repository-relative path, text)` of files diagnostics may cite.
     pub sources: Vec<(String, String)>,
+    /// The profile that graded the diagnostics, for commands taking one.
+    pub profile: Option<Profile>,
     /// The command ran but its subject failed without a litigate
     /// diagnostic (a litgraph `ok: false` response): exit 2, `ok` stays
     /// true because compilation itself succeeded.
@@ -98,15 +100,21 @@ pub fn sorted(mut diagnostics: Vec<Diagnostic>) -> Vec<Diagnostic> {
     diagnostics
 }
 
-/// The envelope for `op`.
+/// The envelope for `op` (schema v2, SPEC §9.2): the result even when an
+/// error exists, and every diagnostic fingerprinted and tagged with the
+/// profile and the world (`actual` at the provenance's dates).
 #[must_use]
 pub fn envelope(op: &str, report: &Report, elapsed_ms: f64) -> Envelope<Value> {
-    let ok = !report.has_errors();
+    let date = |key: &str| report.provenance.get(key).and_then(Value::as_str);
+    let world = WorldTag::actual(date("as_of"), date("known_at"));
+    let mut diagnostics = sorted(report.diagnostics.clone());
+    litigate_base::stamp(&mut diagnostics, report.profile, &world);
     Envelope {
-        ok,
+        schema_version: SCHEMA_VERSION,
+        ok: !report.has_errors(),
         op: op.to_owned(),
-        result: ok.then(|| report.result.clone()),
-        diagnostics: sorted(report.diagnostics.clone()),
+        result: (!report.result.is_null()).then(|| report.result.clone()),
+        diagnostics,
         provenance: report.provenance.clone(),
         elapsed_ms,
     }
@@ -168,8 +176,9 @@ mod tests {
     }
 
     proptest! {
-        /// SPEC §9.2: `ok` is false iff an error exists, `result` is then
-        /// absent, the exit code follows, and diagnostics come out sorted.
+        /// SPEC §9.2: `ok` is false iff an error exists, `result` is kept
+        /// either way, the exit code follows, and diagnostics come out
+        /// sorted, fingerprinted, and tagged.
         #[test]
         fn envelope_invariants(items in proptest::collection::vec((0usize..57, 0u8..3, 1u32..50), 0..12), failed: bool) {
             let severities = [Severity::Error, Severity::Warning, Severity::Info];
@@ -178,11 +187,17 @@ mod tests {
                 .map(|(c, s, l)| diagnostic(DiagnosticCode::ALL[*c], severities[usize::from(*s)], *l))
                 .collect();
             let errors = diagnostics.iter().any(|d| d.severity == Severity::Error);
-            let report = Report { result: serde_json::json!({"x": 1}), diagnostics, failed, ..Report::default() };
+            let report = Report { result: serde_json::json!({"x": 1}), diagnostics, failed, profile: Some(Profile::Strict), ..Report::default() };
             let printed = print("check", Ok(report), Format::Json, false, 0.0);
             let envelope: serde_json::Value = serde_json::from_str(&printed.stdout).unwrap();
             prop_assert_eq!(envelope["ok"].as_bool(), Some(!errors));
-            prop_assert_eq!(envelope.get("result").is_some(), !errors);
+            prop_assert_eq!(&envelope["result"], &serde_json::json!({"x": 1}));
+            prop_assert_eq!(envelope["schema_version"].as_u64(), Some(2));
+            for d in envelope["diagnostics"].as_array().unwrap() {
+                prop_assert_eq!(d["fingerprint"].as_str().map(str::len), Some(16));
+                prop_assert_eq!(&d["profile"], "strict");
+                prop_assert_eq!(&d["world"]["name"], "actual");
+            }
             let expected = if errors || failed { 2 } else { 0 };
             prop_assert_eq!(printed.code, expected);
             let keys: Vec<(u64, String)> = envelope["diagnostics"]
@@ -195,6 +210,24 @@ mod tests {
             sorted.sort();
             prop_assert_eq!(keys, sorted);
         }
+    }
+
+    #[test]
+    fn a_null_result_is_absent_and_the_world_takes_the_provenance_dates() {
+        let report = Report {
+            result: Value::Null,
+            diagnostics: vec![diagnostic(DiagnosticCode::TypeMismatch, Severity::Error, 1)],
+            provenance: crate::prov::of(Vec::new(), Some("2024-01-01"), Some("2024-02-01")),
+            ..Report::default()
+        };
+        let envelope = envelope("check", &report, 0.0);
+        assert!(envelope.result.is_none() && !envelope.ok);
+        let d = &envelope.diagnostics[0];
+        assert_eq!(d.profile, None);
+        assert_eq!(
+            d.world,
+            Some(WorldTag::actual(Some("2024-01-01"), Some("2024-02-01")))
+        );
     }
 
     #[test]

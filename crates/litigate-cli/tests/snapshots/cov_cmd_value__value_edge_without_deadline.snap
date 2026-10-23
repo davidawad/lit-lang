@@ -3,6 +3,7 @@ source: crates/litigate-cli/tests/cov_cmd_value.rs
 expression: stable(&run.json)
 ---
 {
+  "schema_version": 2,
   "ok": true,
   "op": "explain-value",
   "result": {
@@ -64,7 +65,11 @@ expression: stable(&run.json)
         {
           "message": "add a test that evaluates `deadline(d)` for a deadline `counted_by frcp6`"
         }
-      ]
+      ],
+      "fingerprint": "94a46b8fabb24071",
+      "world": {
+        "name": "actual"
+      }
     },
     {
       "code": "L9001",
@@ -79,17 +84,25 @@ expression: stable(&run.json)
       "message": "deadline `amended-answer-period` has no test that evaluates `deadline(amended-answer-period)`",
       "fixes": [
         {
-          "span": {
-            "file": "lit/cov/cov.lit",
-            "line": 41,
-            "col": 91,
-            "end_line": 41,
-            "end_col": 91
-          },
-          "replacement": "\n\ntest \"amended-answer-period is due on the expected date\" {\n  given <trigger event> on <YYYY-MM-DD>\n  expect deadline(amended-answer-period) == <YYYY-MM-DD>\n}",
+          "edits": [
+            {
+              "span": {
+                "file": "lit/cov/cov.lit",
+                "line": 41,
+                "col": 91,
+                "end_line": 41,
+                "end_col": 91
+              },
+              "replacement": "\n\ntest \"amended-answer-period is due on the expected date\" {\n  given <trigger event> on <YYYY-MM-DD>\n  expect deadline(amended-answer-period) == <YYYY-MM-DD>\n}"
+            }
+          ],
           "applicability": "has_placeholders"
         }
-      ]
+      ],
+      "fingerprint": "1b79760a8f864070",
+      "world": {
+        "name": "actual"
+      }
     },
     {
       "code": "L9001",
@@ -104,17 +117,25 @@ expression: stable(&run.json)
       "message": "deadline `answer-period` has no test that evaluates `deadline(answer-period)`",
       "fixes": [
         {
-          "span": {
-            "file": "lit/cov/cov.lit",
-            "line": 46,
-            "col": 74,
-            "end_line": 46,
-            "end_col": 74
-          },
-          "replacement": "\n\ntest \"answer-period is due on the expected date\" {\n  given <trigger event> on <YYYY-MM-DD>\n  expect deadline(answer-period) == <YYYY-MM-DD>\n}",
+          "edits": [
+            {
+              "span": {
+                "file": "lit/cov/cov.lit",
+                "line": 46,
+                "col": 74,
+                "end_line": 46,
+                "end_col": 74
+              },
+              "replacement": "\n\ntest \"answer-period is due on the expected date\" {\n  given <trigger event> on <YYYY-MM-DD>\n  expect deadline(answer-period) == <YYYY-MM-DD>\n}"
+            }
+          ],
           "applicability": "has_placeholders"
         }
-      ]
+      ],
+      "fingerprint": "758b6ad7e8b8a088",
+      "world": {
+        "name": "actual"
+      }
     },
     {
       "code": "L9001",
@@ -129,17 +150,25 @@ expression: stable(&run.json)
       "message": "deadline `brief-period` has no test that evaluates `deadline(brief-period)`",
       "fixes": [
         {
-          "span": {
-            "file": "lit/cov/cov.lit",
-            "line": 49,
-            "col": 89,
-            "end_line": 49,
-            "end_col": 89
-          },
-          "replacement": "\n\ntest \"brief-period is due on the expected date\" {\n  given <trigger event> on <YYYY-MM-DD>\n  expect deadline(brief-period) == <YYYY-MM-DD>\n}",
+          "edits": [
+            {
+              "span": {
+                "file": "lit/cov/cov.lit",
+                "line": 49,
+                "col": 89,
+                "end_line": 49,
+                "end_col": 89
+              },
+              "replacement": "\n\ntest \"brief-period is due on the expected date\" {\n  given <trigger event> on <YYYY-MM-DD>\n  expect deadline(brief-period) == <YYYY-MM-DD>\n}"
+            }
+          ],
           "applicability": "has_placeholders"
         }
-      ]
+      ],
+      "fingerprint": "aaf1e5c26a7fcd58",
+      "world": {
+        "name": "actual"
+      }
     },
     {
       "code": "L9001",
@@ -154,17 +183,25 @@ expression: stable(&run.json)
       "message": "deadline `reply-period` has no test that evaluates `deadline(reply-period)`",
       "fixes": [
         {
-          "span": {
-            "file": "lit/cov/cov.lit",
-            "line": 51,
-            "col": 121,
-            "end_line": 51,
-            "end_col": 121
-          },
-          "replacement": "\n\ntest \"reply-period is due on the expected date\" {\n  given <trigger event> on <YYYY-MM-DD>\n  expect deadline(reply-period) == <YYYY-MM-DD>\n}",
+          "edits": [
+            {
+              "span": {
+                "file": "lit/cov/cov.lit",
+                "line": 51,
+                "col": 121,
+                "end_line": 51,
+                "end_col": 121
+              },
+              "replacement": "\n\ntest \"reply-period is due on the expected date\" {\n  given <trigger event> on <YYYY-MM-DD>\n  expect deadline(reply-period) == <YYYY-MM-DD>\n}"
+            }
+          ],
           "applicability": "has_placeholders"
         }
-      ]
+      ],
+      "fingerprint": "e920d2ec369ca5b0",
+      "world": {
+        "name": "actual"
+      }
     },
     {
       "code": "L9003",
@@ -176,7 +213,11 @@ expression: stable(&run.json)
         "end_line": 88,
         "end_col": 94
       },
-      "message": "the edge `answered -> judgment-entered` has no id, so cases and links cannot name it"
+      "message": "the edge `answered -> judgment-entered` has no id, so cases and links cannot name it",
+      "fingerprint": "e5c1adf9e8679fff",
+      "world": {
+        "name": "actual"
+      }
     },
     {
       "code": "L9003",
@@ -188,7 +229,11 @@ expression: stable(&run.json)
         "end_line": 92,
         "end_col": 42
       },
-      "message": "the edge `default-risk -> judgment-entered` has no id, so cases and links cannot name it"
+      "message": "the edge `default-risk -> judgment-entered` has no id, so cases and links cannot name it",
+      "fingerprint": "db655265617c4dcf",
+      "world": {
+        "name": "actual"
+      }
     },
     {
       "code": "L9003",
@@ -200,7 +245,11 @@ expression: stable(&run.json)
         "end_line": 93,
         "end_col": 56
       },
-      "message": "the edge `default-risk -> judgment-entered` has no id, so cases and links cannot name it"
+      "message": "the edge `default-risk -> judgment-entered` has no id, so cases and links cannot name it",
+      "fingerprint": "db61ec6561796aa6",
+      "world": {
+        "name": "actual"
+      }
     }
   ],
   "elapsed_ms": 0

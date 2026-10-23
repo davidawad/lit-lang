@@ -8,7 +8,7 @@ use super::obligations::{effective, logical};
 use super::Cx;
 use crate::case::deadline;
 use crate::case::graph::{display, pack_of};
-use crate::case::spans::{error, Build};
+use crate::case::spans::error;
 use crate::case::Status;
 use crate::hir::{DeadlineWindow, Edge};
 use litigate_base::DiagnosticCode as C;

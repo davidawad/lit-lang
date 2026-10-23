@@ -9,7 +9,7 @@
 //! any later event that would take a removed edge.
 use super::Cx;
 use crate::case::graph::display;
-use crate::case::spans::{error, Build};
+use crate::case::spans::error;
 use crate::case::Effect;
 use crate::hir::{Edge, Expr, ExprKind, Removal, Value};
 use crate::resolve::suggest::nearest;

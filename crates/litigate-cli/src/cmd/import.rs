@@ -5,7 +5,7 @@ use super::build::{lower_all, write_atomic};
 use super::check::check_session;
 use crate::out::{Failure, Outcome, Report};
 use crate::ws::{self, CaseText, Session};
-use litigate_base::{Diagnostic, DiagnosticCode as C, Note, Profile, Severity, Span};
+use litigate_base::{Diagnostic, DiagnosticCode as C, Label, Note, Profile, Severity, Span};
 use litigate_import::{Imported, Input};
 use litigate_lower::Options;
 use litigate_sema::pkg::load::{LoadedFile, LoadedPackage};
@@ -116,16 +116,16 @@ fn unchecked(
                 .filter(|f| f.from == input.path)
                 .map(|f| f.path.as_str())
                 .collect();
-            let own: Vec<Note> = errors
+            let own: Vec<Label> = errors
                 .iter()
                 .filter(|d| generated.iter().any(|g| owns(g, &d.span.file.0)))
-                .map(|d| Note {
-                    span: Some(d.span.clone()),
+                .map(|d| Label {
+                    span: d.span.clone(),
                     message: format!("{}: {}", d.code.as_str(), d.message),
                 })
                 .collect();
             (!own.is_empty()).then(|| Diagnostic {
-                notes: own,
+                labels: own,
                 ..Diagnostic::error(
                     C::SemanticDiff,
                     start(&input.path),
@@ -176,7 +176,6 @@ fn round_trip(imported: &Imported, inputs: &[Input]) -> Vec<Diagnostic> {
                 notes: changes
                     .iter()
                     .map(|c| Note {
-                        span: None,
                         message: format!("{}: {:?} -> {:?}", c.pointer, c.before, c.after),
                     })
                     .collect(),

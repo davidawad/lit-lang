@@ -11,7 +11,7 @@ expression: "table(&[(\"01 consecutive versions\", &succession),\n(\"02 overlap:
         "pkgs/demo/main.lit:14:58 L3001 versions of `p` overlap on [2012-01-01, 2013-01-01): [2009-12-01, ..) and [2012-01-01, 2013-01-01)\n    note @13:58: the overlapping version is declared here\n    note: versions of one declaration must be pairwise disjoint so `as_of` selects exactly one\n    fix @13:68-13:84: \"[2009-12-01, 2012-01-01)\"",
     ],
     "04 undeclared gap": [
-        "pkgs/demo/main.lit:13:58 L3002 `p` has no version in force on [2012-01-01, 2013-01-01)\n    note: a gap is legal only when declared: a version starting 2013-01-01 that `revives p`, or a declaration that `supersedes p` over the gap\n    note @14:1: the next version starts here\n    fix @13:68-13:92: \"[2009-12-01, 2013-01-01)\"",
+        "pkgs/demo/main.lit:13:58 L3002 `p` has no version in force on [2012-01-01, 2013-01-01)\n    note @14:1: the next version starts here\n    note: a gap is legal only when declared: a version starting 2013-01-01 that `revives p`, or a declaration that `supersedes p` over the gap\n    fix @13:68-13:92: \"[2009-12-01, 2013-01-01)\"",
     ],
     "05 gap declared by revives": [],
     "06 repeal with nothing after it": [

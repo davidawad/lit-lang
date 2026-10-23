@@ -6,10 +6,18 @@ expression: "diagnostic(&d, &sources, false)"
    ╭─[ a.lit:1:8 ]
    │
  1 │ module m
-   │        ┬  
+   │ ───┬── ┬  
+   │    ╰────── in this module
+   │        │  
    │        ╰── A referenced declaration or imported module could not be resolved
    │ 
-   │ Help: replace 1:8-1:9 with `n` (MachineApplicable)
+   │ Help: rename it: replace a.lit:1:8-1:9 with `n` (MachineApplicable)
    │ 
-   │ Note: a note
+   │ Note 1: b.lit:1:8: used here
+   │ 
+   │ Note 2: a note
+   │ 
+   │ Note 3: derivation:
+   │           conflict: conflict(m, a, b)
+   │             winner: winner(m, a)
 ───╯

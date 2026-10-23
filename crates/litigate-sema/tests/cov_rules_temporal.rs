@@ -65,7 +65,12 @@ fn amount_as_of(world: &World<'_>, name: &str, date: &str) -> String {
             other => format!("not a deadline: {other:?}"),
         },
         Err(e) => {
-            let notes: Vec<&str> = e.notes.iter().map(|n| n.message.as_str()).collect();
+            let notes: Vec<&str> = e
+                .labels
+                .iter()
+                .map(|l| l.message.as_str())
+                .chain(e.notes.iter().map(|n| n.message.as_str()))
+                .collect();
             format!("{} {} [{}]", e.code.as_str(), e.message, notes.join("; "))
         }
     }

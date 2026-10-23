@@ -16,7 +16,7 @@ fn maybe_incorrect_fixes_need_include_maybe() {
     let before = std::fs::read_to_string(&module).unwrap();
     let plain = litigate_in(&dir, &["fix", "lit/examples"]);
     assert_eq!(plain.code, 0, "{}", plain.stderr);
-    assert_eq!(plain.json["result"]["edits"], serde_json::json!([]));
+    assert_eq!(plain.json["result"]["fixes"], serde_json::json!([]));
     assert_eq!(std::fs::read_to_string(&module).unwrap(), before);
     let maybe = litigate_in(&dir, &["fix", "--include-maybe", "lit/examples"]);
     assert_eq!(maybe.code, 0, "{}", maybe.stderr);

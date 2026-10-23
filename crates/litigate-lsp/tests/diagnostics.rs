@@ -7,7 +7,7 @@
 mod support;
 
 use litigate_base::{
-    Applicability, Diagnostic, DiagnosticCode, Fix, Note, Profile, Severity, Span,
+    Applicability, Diagnostic, DiagnosticCode, Edit, Fix, Label, Note, Profile, Severity, Span,
 };
 use litigate_cli::ws::Session;
 use litigate_lsp::analysis::Analysis;
@@ -91,25 +91,32 @@ fn loose(root: &Path, diagnostics: Vec<Diagnostic>) -> Analysis {
 fn hint() -> Diagnostic {
     Diagnostic {
         severity: Severity::Hint,
-        notes: vec![
-            Note {
-                span: Some(span("missing.lit", 1)),
-                message: "placed in a file that is gone".into(),
-            },
-            Note {
-                span: None,
-                message: "unplaced".into(),
-            },
-        ],
+        labels: vec![Label {
+            span: span("missing.lit", 1),
+            message: "placed in a file that is gone".into(),
+        }],
+        notes: vec![Note {
+            message: "unplaced".into(),
+        }],
         fixes: vec![
+            Fix::single(span("loose.lit", 2), "", Applicability::MachineApplicable),
+            Fix::single(
+                span("missing.lit", 1),
+                "x",
+                Applicability::MachineApplicable,
+            ),
             Fix {
-                span: span("loose.lit", 2),
-                replacement: String::new(),
-                applicability: Applicability::MachineApplicable,
-            },
-            Fix {
-                span: span("missing.lit", 1),
-                replacement: "x".into(),
+                message: None,
+                edits: vec![
+                    Edit {
+                        span: span("loose.lit", 1),
+                        replacement: "a".into(),
+                    },
+                    Edit {
+                        span: span("missing.lit", 1),
+                        replacement: "b".into(),
+                    },
+                ],
                 applicability: Applicability::MachineApplicable,
             },
         ],
@@ -134,13 +141,50 @@ fn hints_removals_and_vanished_files() {
 }
 
 #[test]
+fn a_multi_edit_fix_is_one_action_titled_by_its_message_or_count() {
+    let root = support::workspace("diagnostics-multi", &[]);
+    let edit = |line, replacement: &str| Edit {
+        span: span("loose.lit", line),
+        replacement: replacement.into(),
+    };
+    let mut d = hint();
+    d.fixes = vec![
+        Fix {
+            message: None,
+            edits: vec![edit(1, "a"), edit(2, "b")],
+            applicability: Applicability::MaybeIncorrect,
+        },
+        Fix {
+            message: Some("rename it".into()),
+            edits: vec![edit(1, "c")],
+            applicability: Applicability::MachineApplicable,
+        },
+    ];
+    let a = loose(&root, vec![d]);
+    let actions = actions(&a, "loose.lit", all());
+    let titles: Vec<(&str, Option<bool>)> = actions
+        .iter()
+        .map(|c| (c.title.as_str(), c.is_preferred))
+        .collect();
+    assert_eq!(
+        titles,
+        [
+            ("L0001: apply 2 edits", Some(false)),
+            ("L0001: rename it", Some(true))
+        ]
+    );
+    let changes = actions[0].edit.as_ref().unwrap().changes.as_ref().unwrap();
+    assert_eq!(changes.values().next().unwrap().len(), 2);
+}
+
+#[test]
 fn without_an_absolute_root_nothing_is_placed() {
     // URIs need absolute paths: a relative root places nothing.
     let a = loose(Path::new(""), vec![hint()]);
     assert_eq!(publishable(&a), Vec::new());
     assert!(actions(&a, "loose.lit", all()).is_empty());
     let mut placed = hint();
-    placed.notes[0].span = Some(span("loose.lit", 1));
+    placed.labels[0].span = span("loose.lit", 1);
     assert_eq!(
         to_lsp(&a, &placed, "module loose\n").related_information,
         None

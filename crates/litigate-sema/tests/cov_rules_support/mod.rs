@@ -109,19 +109,18 @@ pub fn lines(diagnostics: &[Diagnostic]) -> Vec<String> {
                 d.code.as_str(),
                 d.message
             );
-            for n in &d.notes {
-                let at = n
-                    .span
-                    .as_ref()
-                    .map(|s| format!(" @{}:{}:{}", s.file.0, s.line, s.col))
-                    .unwrap_or_default();
-                let _ = write!(s, "\n    note{at}: {}", n.message);
+            for l in &d.labels {
+                let at = format!(" @{}:{}:{}", l.span.file.0, l.span.line, l.span.col);
+                let _ = write!(s, "\n    note{at}: {}", l.message);
             }
-            for f in &d.fixes {
+            for n in &d.notes {
+                let _ = write!(s, "\n    note: {}", n.message);
+            }
+            for e in d.fixes.iter().flat_map(|f| &f.edits) {
                 let _ = write!(
                     s,
                     "\n    fix @{}:{}: {:?}",
-                    f.span.line, f.span.col, f.replacement
+                    e.span.line, e.span.col, e.replacement
                 );
             }
             s

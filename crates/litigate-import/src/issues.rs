@@ -1,7 +1,7 @@
 //! Import diagnostics: every value that has no lossless `.lit`/`.case`
 //! spelling is an L6002 error at the input file, naming its JSON pointer
 //! (SPEC §9.3: import output must round-trip under §8.6).
-use litigate_base::{Diagnostic, DiagnosticCode, FileId, Note, Span};
+use litigate_base::{Diagnostic, DiagnosticCode, FileId, Span};
 
 /// Collects the diagnostics of one input file.
 #[derive(Debug)]
@@ -35,13 +35,10 @@ impl Issues {
 
     /// Reports that the value at JSON `pointer` cannot be imported.
     pub(crate) fn report(&mut self, pointer: &str, message: impl Into<String>) {
-        let mut diagnostic =
-            Diagnostic::error(DiagnosticCode::SemanticDiff, self.span(1, 1), message);
-        diagnostic.notes.push(Note {
-            span: None,
-            message: format!("at JSON pointer `{pointer}`"),
-        });
-        self.list.push(diagnostic);
+        self.list.push(
+            Diagnostic::error(DiagnosticCode::SemanticDiff, self.span(1, 1), message)
+                .note(format!("at JSON pointer `{pointer}`")),
+        );
     }
 
     /// Reports an input that is not a valid document of its kind.

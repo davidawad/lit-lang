@@ -29,8 +29,8 @@ fn diagnostics(files: &[(&str, &str)]) -> Vec<String> {
             for n in &d.notes {
                 let _ = write!(line, " [note: {}]", n.message);
             }
-            for f in &d.fixes {
-                let _ = write!(line, " [fix: {:?}]", f.replacement);
+            for e in d.fixes.iter().flat_map(|f| &f.edits) {
+                let _ = write!(line, " [fix: {:?}]", e.replacement);
             }
             line
         })

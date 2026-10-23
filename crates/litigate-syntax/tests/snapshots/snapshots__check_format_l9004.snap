@@ -15,14 +15,18 @@ expression: json
   "message": "file is not in canonical format; run `litigate fmt`",
   "fixes": [
     {
-      "span": {
-        "file": "x.lit",
-        "line": 1,
-        "col": 1,
-        "end_line": 2,
-        "end_col": 1
-      },
-      "replacement": "module m\n",
+      "edits": [
+        {
+          "span": {
+            "file": "x.lit",
+            "line": 1,
+            "col": 1,
+            "end_line": 2,
+            "end_col": 1
+          },
+          "replacement": "module m\n"
+        }
+      ],
       "applicability": "machine_applicable"
     }
   ]

@@ -37,14 +37,18 @@ expression: "pair(Obligation::RuleWithoutTest, & one(BASE), &\none(&with(\"rule 
         "message": "deadline `reply-period` has no test that evaluates `deadline(reply-period)`",
         "fixes": [
           {
-            "span": {
-              "file": "pkgs/demo/main.lit",
-              "line": 57,
-              "col": 75,
-              "end_line": 57,
-              "end_col": 75
-            },
-            "replacement": "\n\ntest \"reply-period is due on the expected date\" {\n  given <trigger event> on <YYYY-MM-DD>\n  expect deadline(reply-period) == <YYYY-MM-DD>\n}",
+            "edits": [
+              {
+                "span": {
+                  "file": "pkgs/demo/main.lit",
+                  "line": 57,
+                  "col": 75,
+                  "end_line": 57,
+                  "end_col": 75
+                },
+                "replacement": "\n\ntest \"reply-period is due on the expected date\" {\n  given <trigger event> on <YYYY-MM-DD>\n  expect deadline(reply-period) == <YYYY-MM-DD>\n}"
+              }
+            ],
             "applicability": "has_placeholders"
           }
         ]

@@ -14,26 +14,20 @@ use tower_lsp::lsp_types::{
 #[must_use]
 pub fn to_lsp(analysis: &Analysis, d: &Diagnostic, text: &str) -> LspDiagnostic {
     let related: Vec<DiagnosticRelatedInformation> = d
-        .notes
+        .labels
         .iter()
-        .filter_map(|n| {
-            let span = n.span.as_ref()?;
-            let note_text = analysis.text(&span.file.0)?;
+        .filter_map(|l| {
+            let label_text = analysis.text(&l.span.file.0)?;
             Some(DiagnosticRelatedInformation {
                 location: Location {
-                    uri: analysis.uri_of(&span.file.0)?,
-                    range: convert::span_range(&note_text, span),
+                    uri: analysis.uri_of(&l.span.file.0)?,
+                    range: convert::span_range(&label_text, &l.span),
                 },
-                message: n.message.clone(),
+                message: l.message.clone(),
             })
         })
         .collect();
-    let unplaced: Vec<&str> = d
-        .notes
-        .iter()
-        .filter(|n| n.span.is_none())
-        .map(|n| n.message.as_str())
-        .collect();
+    let unplaced: Vec<&str> = d.notes.iter().map(|n| n.message.as_str()).collect();
     let message = std::iter::once(d.message.as_str())
         .chain(unplaced)
         .collect::<Vec<_>>()
@@ -83,17 +77,24 @@ pub fn actions(analysis: &Analysis, file: &str, range: Range) -> Vec<CodeAction>
         .flat_map(|d| {
             let lsp = to_lsp(analysis, d, &text);
             d.fixes.iter().filter_map(move |fix| {
-                let fix_text = analysis.text(&fix.span.file.0)?;
-                let edit = TextEdit {
-                    range: convert::span_range(&fix_text, &fix.span),
-                    new_text: fix.replacement.clone(),
-                };
-                let changes: HashMap<Url, Vec<TextEdit>> =
-                    std::iter::once((analysis.uri_of(&fix.span.file.0)?, vec![edit])).collect();
-                let title = if fix.replacement.is_empty() {
-                    format!("{}: remove", d.code.as_str())
-                } else {
-                    format!("{}: write `{}`", d.code.as_str(), fix.replacement.trim())
+                // A fix is all its edits: one into a file not at hand is dropped.
+                let mut changes: HashMap<Url, Vec<TextEdit>> = HashMap::new();
+                for e in &fix.edits {
+                    let edit_text = analysis.text(&e.span.file.0)?;
+                    changes
+                        .entry(analysis.uri_of(&e.span.file.0)?)
+                        .or_default()
+                        .push(TextEdit {
+                            range: convert::span_range(&edit_text, &e.span),
+                            new_text: e.replacement.clone(),
+                        });
+                }
+                let code = d.code.as_str();
+                let title = match (&fix.message, fix.edits.as_slice()) {
+                    (Some(message), _) => format!("{code}: {message}"),
+                    (None, [only]) if only.replacement.is_empty() => format!("{code}: remove"),
+                    (None, [only]) => format!("{code}: write `{}`", only.replacement.trim()),
+                    (None, edits) => format!("{code}: apply {} edits", edits.len()),
                 };
                 Some(CodeAction {
                     title,

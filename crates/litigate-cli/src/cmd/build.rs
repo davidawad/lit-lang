@@ -266,10 +266,12 @@ pub fn build(src: &dyn Source, args: &Args) -> Outcome {
     let options = dates.options();
     let c = checked_in(src, paths, profile, &options, lib)?;
     let mut report = Report {
-        result: Value::Null,
+        // A failed build still reports its obligations (SPEC §9.2).
+        result: serde_json::json!({"obligations": c.findings}),
         provenance: c.provenance(dates.as_of.as_deref(), dates.known_at.as_deref()),
         sources: c.session.sources(),
         diagnostics: c.diagnostics.clone(),
+        profile: Some(profile),
         failed: false,
     };
     if report.has_errors() {

@@ -16,14 +16,18 @@ expression: json
     "message": "expected a clause, found `FRCP`; citations start with `cite`",
     "fixes": [
       {
-        "span": {
-          "file": "missing_cite.lit",
-          "line": 2,
-          "col": 24,
-          "end_line": 2,
-          "end_col": 24
-        },
-        "replacement": "cite ",
+        "edits": [
+          {
+            "span": {
+              "file": "missing_cite.lit",
+              "line": 2,
+              "col": 24,
+              "end_line": 2,
+              "end_col": 24
+            },
+            "replacement": "cite "
+          }
+        ],
         "applicability": "machine_applicable"
       }
     ]

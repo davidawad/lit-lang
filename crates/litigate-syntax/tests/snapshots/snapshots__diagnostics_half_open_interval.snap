@@ -16,14 +16,18 @@ expression: json
     "message": "intervals are half-open: close with `)`, not `]`",
     "fixes": [
       {
-        "span": {
-          "file": "half_open_interval.lit",
-          "line": 2,
-          "col": 37,
-          "end_line": 2,
-          "end_col": 38
-        },
-        "replacement": ")",
+        "edits": [
+          {
+            "span": {
+              "file": "half_open_interval.lit",
+              "line": 2,
+              "col": 37,
+              "end_line": 2,
+              "end_col": 38
+            },
+            "replacement": ")"
+          }
+        ],
         "applicability": "machine_applicable"
       }
     ]

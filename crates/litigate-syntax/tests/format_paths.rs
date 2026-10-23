@@ -34,7 +34,8 @@ fn check_format_points_past_a_canonical_prefix() {
     let at = diagnostic.as_ref().map(|d| (d.span.line, d.span.col));
     assert_eq!(at, Some((1, 9)));
     let fix = diagnostic.and_then(|d| d.fixes.into_iter().next());
-    assert_eq!(fix.map(|f| f.replacement).as_deref(), Some("module x\n"));
+    let replacement = fix.map(|mut f| f.edits.remove(0).replacement);
+    assert_eq!(replacement.as_deref(), Some("module x\n"));
 }
 
 #[test]

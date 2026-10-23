@@ -49,10 +49,14 @@ pub fn render(db: &LitDatabase, ws: Workspace) -> Vec<String> {
         .into_iter()
         .flat_map(|c| c.diagnostics.iter())
         .map(|d| {
-            let fixes = d.fixes.iter().fold(String::new(), |mut s, f| {
-                let _ = write!(s, " [fix: {:?}]", f.replacement);
-                s
-            });
+            let fixes = d
+                .fixes
+                .iter()
+                .flat_map(|f| &f.edits)
+                .fold(String::new(), |mut s, e| {
+                    let _ = write!(s, " [fix: {:?}]", e.replacement);
+                    s
+                });
             format!(
                 "{}:{}:{} {} {}{fixes}",
                 d.span.file.0,

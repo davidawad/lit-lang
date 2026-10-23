@@ -1,6 +1,6 @@
 ---
 source: crates/litigate-verify/tests/edited_hir.rs
-expression: "tests_pass(BASE, |p|\n{\n    let e = first_expect(p); let base = Box::new(e.rhs.clone()); e.lhs.kind =\n    ExprKind::Field { base, field: \"nominal\".to_owned(), };\n})"
+expression: "tests_pass(BASE, |p|\n{\n    let e = first_expect(p); let mut base = Box::new(e.rhs.clone()); if let\n    Some(callee) = callee\n    {\n        base = Box::new(e.lhs.clone()); *call_parts(&mut base).0 =\n        callee.to_owned();\n    } e.lhs.kind = ExprKind::Field { base, field: \"nominal\".to_owned(), };\n})"
 ---
 {
   "finding": {
@@ -24,7 +24,7 @@ expression: "tests_pass(BASE, |p|\n{\n    let e = first_expect(p); let base = Bo
         "end_col": 33
       },
       "message": "cannot evaluate the assertion: only a due date's fields are evaluated",
-      "notes": [
+      "labels": [
         {
           "span": {
             "file": "pkgs/demo/main.lit",

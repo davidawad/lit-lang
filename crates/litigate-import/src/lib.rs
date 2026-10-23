@@ -42,7 +42,7 @@ pub mod text;
 use issues::Issues;
 use litgraph::model::{LinkFile, Pack};
 use litgraph::scenario::NamedScenario;
-use litigate_base::{Diagnostic, DiagnosticCode, FileId, LineIndex, Note};
+use litigate_base::{Diagnostic, DiagnosticCode, FileId, Label, LineIndex};
 use litigate_syntax::FileKind;
 use serde::de::DeserializeOwned;
 use serde_json::{Map, Value};
@@ -385,13 +385,13 @@ fn finish(from: &str, file: Emitted) -> Result<ImportedFile, Diagnostic> {
         issues.span(1, 1),
         format!("generated `{}` does not parse", file.path),
     );
-    diagnostic.notes = parsed
+    diagnostic.labels = parsed
         .errors()
         .iter()
         .map(|e| {
             let d = e.to_diagnostic(&id, &index);
-            Note {
-                span: Some(d.span),
+            Label {
+                span: d.span,
                 message: d.message,
             }
         })

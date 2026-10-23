@@ -48,6 +48,7 @@ pub fn run(case: &str, op: &str, links: bool, lib: &[String]) -> Outcome {
         provenance: c.provenance(None, None),
         sources: c.session.sources(),
         diagnostics: c.diagnostics.clone(),
+        profile: Some(Profile::Dev),
         failed: false,
     };
     let matter = c

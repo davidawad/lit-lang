@@ -5,7 +5,7 @@
 use super::build::lower_all;
 use super::check::checked;
 use crate::out::{Failure, Outcome, Report};
-use litigate_base::{Diagnostic, DiagnosticCode as C, LineIndex, Note, Profile, Span};
+use litigate_base::{Diagnostic, DiagnosticCode as C, LineIndex, Profile, Span};
 use litigate_lower::{Change, Options};
 use serde_json::{json, Value};
 use std::collections::BTreeMap;
@@ -174,10 +174,7 @@ fn change_diagnostic(file: &str, text: &str, change: &Change) -> Diagnostic {
         ),
     );
     if let Some(id) = &change.id {
-        d.notes.push(Note {
-            span: None,
-            message: format!("belongs to `{id}`"),
-        });
+        d = d.note(format!("belongs to `{id}`"));
     }
     d
 }

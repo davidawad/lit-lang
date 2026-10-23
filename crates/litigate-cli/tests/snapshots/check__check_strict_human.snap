@@ -44,3 +44,123 @@ expression: text
     │ Note: replace the `?` with a sourced value
 ────╯
 litigate check: failed (3 error(s), 0 warning(s))
+{
+  "profile": "strict",
+  "files": [
+    "lit/examples/Lit.toml",
+    "lit/examples/rule12.lit"
+  ],
+  "obligations": [
+    {
+      "name": "well-typed",
+      "status": "passed",
+      "count": 0,
+      "examples": []
+    },
+    {
+      "name": "cite-resolves",
+      "status": "passed",
+      "count": 0,
+      "examples": []
+    },
+    {
+      "name": "effective-disjoint",
+      "status": "passed",
+      "count": 0,
+      "examples": []
+    },
+    {
+      "name": "effective-covered",
+      "status": "passed",
+      "count": 0,
+      "examples": []
+    },
+    {
+      "name": "precedence-acyclic",
+      "status": "passed",
+      "count": 0,
+      "examples": []
+    },
+    {
+      "name": "delegation-respected",
+      "status": "passed",
+      "count": 0,
+      "examples": []
+    },
+    {
+      "name": "exceptions-ordered",
+      "status": "passed",
+      "count": 0,
+      "examples": []
+    },
+    {
+      "name": "dist-exact",
+      "status": "passed",
+      "count": 0,
+      "examples": []
+    },
+    {
+      "name": "graph-exits",
+      "status": "passed",
+      "count": 0,
+      "examples": []
+    },
+    {
+      "name": "graph-reachable",
+      "status": "passed",
+      "count": 0,
+      "examples": []
+    },
+    {
+      "name": "deadline-satisfiable",
+      "status": "passed",
+      "count": 0,
+      "examples": []
+    },
+    {
+      "name": "tests-pass",
+      "status": "passed",
+      "count": 0,
+      "examples": []
+    },
+    {
+      "name": "case-replay",
+      "status": "skipped",
+      "count": 0,
+      "examples": [
+        "a rule package has no events; replay is checked per case"
+      ]
+    },
+    {
+      "name": "holes",
+      "status": "failed",
+      "count": 3,
+      "examples": [
+        "lit/examples/rule12.lit:72:43: L5002 strict does not permit holes: no calibration yet",
+        "lit/examples/rule12.lit:73:40: L5002 strict does not permit holes: no reason given",
+        "lit/examples/rule12.lit:79:97: L5002 strict does not permit holes: no reason given"
+      ]
+    },
+    {
+      "name": "rule-without-test",
+      "status": "passed",
+      "count": 0,
+      "examples": []
+    }
+  ],
+  "packages": [
+    {
+      "name": "frcp-rule12-example",
+      "version": "0.1.0",
+      "digest": "sha256:a9625dfeb2e385fc2f54e5e46999ce1f2f056196506b0c744ea24a5d8c187ed0",
+      "root": "lit/examples",
+      "requested": true,
+      "holes": 3,
+      "tests": {
+        "passed": 2,
+        "failed": 0
+      }
+    }
+  ],
+  "cases": []
+}

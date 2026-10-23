@@ -16,13 +16,15 @@ fn lint_reports_are_warnings_and_keep_notes_and_fixes() {
         .to_diagnostic(&file, &index);
     assert_eq!(lint.severity, Severity::Warning);
     assert_eq!((lint.span.line, lint.span.col), (2, 7));
-    let notes: Vec<_> = lint
-        .notes
+    let notes: Vec<_> = lint.notes.iter().map(|n| n.message.as_str()).collect();
+    assert_eq!(notes, ["fill it in"]);
+    let labels: Vec<_> = lint
+        .labels
         .iter()
-        .map(|n| (n.span.as_ref().map(|s| (s.line, s.col)), n.message.as_str()))
+        .map(|l| ((l.span.line, l.span.col), l.message.as_str()))
         .collect();
-    assert_eq!(notes, [(None, "fill it in"), (Some((2, 7)), "here")]);
-    assert_eq!(lint.fixes[0].replacement, "s");
+    assert_eq!(labels, [((2, 7), "here")]);
+    assert_eq!(lint.fixes[0].edits[0].replacement, "s");
     let error = Report::new(C::UnresolvedName, hole, "no such name").to_diagnostic(&file, &index);
     assert_eq!(error.severity, Severity::Error);
 }

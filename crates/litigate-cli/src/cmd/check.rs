@@ -193,6 +193,7 @@ pub fn check(
         provenance: c.provenance(dates.as_of.as_deref(), dates.known_at.as_deref()),
         sources: c.session.sources(),
         diagnostics: c.diagnostics,
+        profile: Some(profile),
         failed: false,
     })
 }

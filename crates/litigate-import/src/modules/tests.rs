@@ -104,3 +104,23 @@ fn module_imports_are_acyclic_after_merging() {
         assert_eq!(at(from), at(to), "{from}->{to} crosses modules on a cycle");
     }
 }
+
+#[test]
+fn edges_naming_unknown_nodes_do_not_affect_sections() {
+    let p = pack(
+        &[("a", Some("x")), ("b", Some("y"))],
+        &[("a", "b"), ("b", "missing"), ("missing", "a")],
+    );
+    assert_eq!(names(&sections(&p)), [("x", 0..1), ("y", 1..2)]);
+}
+
+#[test]
+fn an_empty_pack_has_no_sections() {
+    assert_eq!(sections(&pack(&[], &[])), []);
+}
+
+#[test]
+fn a_bare_suffix_group_keeps_its_name() {
+    let p = pack(&[("a", Some("-group"))], &[]);
+    assert_eq!(names(&sections(&p)), [("-group", 0..1)]);
+}

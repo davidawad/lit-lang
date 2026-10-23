@@ -87,14 +87,16 @@ fn expected_schema(pack: &Pack) -> u32 {
     }
 }
 
-/// Node id to the index of its section.
+/// Node id to the index of its section (`parts` partition the nodes in
+/// order, so every node has exactly one).
 fn section_index<'a>(pack: &'a Pack, parts: &[Section]) -> BTreeMap<&'a str, usize> {
-    pack.nodes
+    parts
         .iter()
         .enumerate()
-        .filter_map(|(index, node)| {
-            let part = parts.iter().position(|s| s.nodes.contains(&index))?;
-            Some((node.id.as_str(), part))
+        .flat_map(|(part, section)| {
+            pack.nodes[section.nodes.clone()]
+                .iter()
+                .map(move |node| (node.id.as_str(), part))
         })
         .collect()
 }

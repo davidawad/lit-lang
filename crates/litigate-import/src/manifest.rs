@@ -175,16 +175,4 @@ pub(crate) fn links_manifest(
 }
 
 #[cfg(test)]
-mod tests {
-    use super::{toml_key, toml_string};
-
-    #[test]
-    fn strings_and_keys_escape_exactly() {
-        assert_eq!(
-            toml_string("a \"b\" \\ \n\u{1}"),
-            "\"a \\\"b\\\" \\\\ \\n\\u0001\""
-        );
-        assert_eq!(toml_key("frcp-rules"), "frcp-rules");
-        assert_eq!(toml_key("a.b"), "\"a.b\"");
-    }
-}
+mod tests;

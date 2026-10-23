@@ -44,6 +44,17 @@ fn numbers_money_and_durations_spell_exactly() {
     assert_eq!(money(12.5).as_deref(), Some("12.5.usd"));
     assert_eq!(money(405.0).as_deref(), Some("405.usd"));
     assert_eq!(money(0.125), None);
+    // Display never uses an exponent, so huge and tiny amounts stay digits.
+    assert_eq!(
+        money(1e21).as_deref(),
+        Some("1_000_000_000_000_000_000_000.usd")
+    );
+    assert_eq!(money(1e-7), None);
+    assert_eq!(money(f64::NAN), None);
+    assert_eq!(money(f64::INFINITY), None);
+    assert_eq!(duration(f64::NAN, "days", false), None);
+    assert_eq!(duration(f64::NEG_INFINITY, "hours", false), None);
+    assert_eq!(duration(0.5, "hours", false).as_deref(), Some("0.5.hours"));
     assert_eq!(duration(4.5, "days", false).as_deref(), Some("4.5.days"));
     assert_eq!(duration(4.5, "days", true), None);
     assert_eq!(duration(-1.0, "days", false), None);

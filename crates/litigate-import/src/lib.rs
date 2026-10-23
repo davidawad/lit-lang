@@ -185,16 +185,19 @@ fn read<'a>(inputs: &'a [Input], diagnostics: &mut Vec<Diagnostic>) -> Docs<'a> 
     let mut docs = Docs::default();
     for input in inputs {
         let mut issues = Issues::new(&input.path);
-        if let Err(error) = serde_json::from_str::<Value>(&input.text) {
-            issues.invalid(
-                error.line(),
-                error.column(),
-                format!("invalid JSON: {error}"),
-            );
-            diagnostics.extend(issues.into_vec());
-            continue;
-        }
-        match detect(&input.text) {
+        let value = match serde_json::from_str::<Value>(&input.text) {
+            Ok(value) => value,
+            Err(error) => {
+                issues.invalid(
+                    error.line(),
+                    error.column(),
+                    format!("invalid JSON: {error}"),
+                );
+                diagnostics.extend(issues.into_vec());
+                continue;
+            }
+        };
+        match detect(&value) {
             Some(Doc::Pack) => {
                 let validate = |text: &str| Pack::from_json(text).map(|_| ());
                 if let Some(pack) = parse::<Pack>(input, &mut issues, validate) {
@@ -209,9 +212,7 @@ fn read<'a>(inputs: &'a [Input], diagnostics: &mut Vec<Diagnostic>) -> Docs<'a> 
             Some(Doc::Scenario) => {
                 let validate = |text: &str| NamedScenario::from_json(text).map(|_| ());
                 if let Some(named) = parse::<NamedScenario>(input, &mut issues, validate) {
-                    let raw = serde_json::from_str::<Value>(&input.text).ok();
-                    let raw =
-                        raw.and_then(|v| v.get("scenario").and_then(Value::as_object).cloned());
+                    let raw = value.get("scenario").and_then(Value::as_object).cloned();
                     docs.scenarios.push((input, named, raw.unwrap_or_default()));
                 }
             }
@@ -285,8 +286,8 @@ enum Doc {
     Scenario,
 }
 
-fn detect(text: &str) -> Option<Doc> {
-    let value: Value = serde_json::from_str(text).ok()?;
+/// The kind of a parsed JSON document, from its keys.
+fn detect(value: &Value) -> Option<Doc> {
     let object = value.as_object()?;
     if object.contains_key("nodes") {
         Some(Doc::Pack)

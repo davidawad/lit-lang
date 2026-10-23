@@ -95,9 +95,10 @@ pub fn money(value: f64) -> Option<String> {
     let (sign, magnitude) = text
         .strip_prefix('-')
         .map_or(("", text.as_str()), |rest| ("-", rest));
+    // `Display` of a finite `f64` is plain digits with at most one `.`
+    // (never an exponent), so only the cent count needs checking.
     let (whole, fraction) = magnitude.split_once('.').unwrap_or((magnitude, ""));
-    let digits_only = |s: &str| s.chars().all(|c| c.is_ascii_digit());
-    if fraction.len() > 2 || !digits_only(whole) || !digits_only(fraction) {
+    if fraction.len() > 2 {
         return None;
     }
     let fraction = if fraction.is_empty() {

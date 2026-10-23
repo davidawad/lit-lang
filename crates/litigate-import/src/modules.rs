@@ -54,15 +54,17 @@ pub(crate) fn sections(pack: &Pack) -> Vec<Section> {
 }
 
 /// The closest pair of runs `(i, j)`, `i < j`, that reach each other (the
-/// smallest span, then the earliest), if any.
+/// smallest span, then the earliest), if any. `runs` partition the pack's
+/// nodes in order, so every arc endpoint lies in exactly one run.
 fn cycle_span(runs: &[Range<usize>], arcs: &[(usize, usize)]) -> Option<(usize, usize)> {
     let count = runs.len();
-    let run_of = |node: usize| runs.iter().position(|run| run.contains(&node));
+    let mut run_of = Vec::new();
+    for (index, run) in runs.iter().enumerate() {
+        run_of.resize(run.end, index);
+    }
     let mut reach = vec![vec![false; count]; count];
     for &(from, to) in arcs {
-        if let (Some(a), Some(b)) = (run_of(from), run_of(to)) {
-            reach[a][b] = true;
-        }
+        reach[run_of[from]][run_of[to]] = true;
     }
     // Warshall's transitive closure.
     for k in 0..count {

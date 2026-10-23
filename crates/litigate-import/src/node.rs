@@ -177,7 +177,7 @@ impl Spelling<'_> {
         };
         let to = self.issues.ident(&edge.to, &format!("{pointer}/to"), false);
         let head = format!("{id} {} -> {to}", text::string(&edge.label));
-        self.edge_rest(head, edge, node_actor, &pointer, false)
+        self.edge_rest(head, edge, node_actor, &pointer)
     }
 
     /// A `link` declaration of a links file.
@@ -195,7 +195,7 @@ impl Spelling<'_> {
             "/// imported\nlink {id} {}: {from} -> {to}",
             text::string(&edge.label)
         );
-        self.edge_rest(head, edge, "either", &pointer, true)
+        self.edge_rest(head, edge, "either", &pointer)
     }
 
     fn edge_rest(
@@ -204,7 +204,6 @@ impl Spelling<'_> {
         edge: &RawEdge,
         node_actor: &str,
         pointer: &str,
-        link: bool,
     ) -> String {
         let mut head = vec![head];
         if edge.actor != node_actor {
@@ -221,7 +220,7 @@ impl Spelling<'_> {
             ));
         }
         let head = head.join(" ");
-        let fields = self.edge_fields(edge, pointer, link);
+        let fields = self.edge_fields(edge, pointer);
         if fields.is_empty() {
             head
         } else {
@@ -229,7 +228,9 @@ impl Spelling<'_> {
         }
     }
 
-    fn edge_fields(&mut self, edge: &RawEdge, pointer: &str, link: bool) -> Vec<String> {
+    /// The `EdgeFields` block. `replaces` is non-empty only on links:
+    /// `Pack::from_json` rejects it on a pack edge before import.
+    fn edge_fields(&mut self, edge: &RawEdge, pointer: &str) -> Vec<String> {
         let mut fields = Vec::new();
         if let Some(authority) = &edge.authority {
             fields.push(format!("authority {}", self.cite(authority)));
@@ -291,10 +292,6 @@ impl Spelling<'_> {
             }
         }
         if !edge.replaces.is_empty() {
-            if !link {
-                self.issues
-                    .report(pointer, "`replaces` is valid only in links (SPEC §8.4)");
-            }
             // An anonymous edge has only its derived id (`pack::a->b#0`),
             // which is written as a string (SPEC §3.1).
             let items: Vec<String> = edge

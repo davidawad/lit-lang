@@ -1,0 +1,9 @@
+---
+source: crates/litigate-sema/tests/types.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:11:30 L2005 non-exhaustive match: missing `Mail` [fix: \", Mail => ?\"]",
+    "pkgs/demo/main.lit:12:55 L2005 unreachable match arm",
+    "pkgs/demo/main.lit:13:59 L2005 unreachable match arm",
+]

@@ -1,0 +1,11 @@
+---
+source: crates/litigate-sema/tests/types.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:11:35 L2001 expected a `Document` variant, found `Mail`",
+    "pkgs/demo/main.lit:12:17 L3009 an hours deadline needs a counting rule with `allow_hours`",
+    "pkgs/demo/main.lit:14:9 L2001 `Served` takes 2 arguments, found 1",
+    "pkgs/demo/main.lit:16:19 L2001 `s` is a node, not a deadline",
+    "pkgs/demo/main.lit:17:10 L2001 expected `Bool`, found `Date`",
+]

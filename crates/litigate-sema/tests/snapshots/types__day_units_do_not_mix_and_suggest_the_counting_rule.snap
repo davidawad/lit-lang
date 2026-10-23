@@ -1,0 +1,7 @@
+---
+source: crates/litigate-sema/tests/types.rs
+expression: "check_body(\"default d when true => 21.days + 5.court_days\")"
+---
+[
+    "pkgs/demo/main.lit:10:24 L2004 cannot combine `Days<CalendarDays>` with `Days<CourtDays>` [fix: \"deadline(<name>)\"]",
+]

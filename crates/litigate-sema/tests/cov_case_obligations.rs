@@ -40,6 +40,8 @@ event MovedMotion()
 event MovedAppeal()
 event OrderedAppeal(until: Date) extends appeal to until
 event OrderedCapped(until: Date) extends capped to until
+event MovedRequest()
+event OrderedRequested(until: Date) extends requested to until
 event Struck(option: String) removes option
 event Elected(option: String) elects option
 
@@ -79,6 +81,9 @@ deadline motion-only: 10.days from Entered() counted_by oc {
 deadline appeal: 10.days from Entered() counted_by oc {
   extend { by Court, discretion GoodCauseOrExcusableNeglect, to max(prescribed_due + 30.days, grant_order_entered + 14.days), after_expiry, on MovedAppeal(), within prescribed_due + 30.days }
   extend { never cite FRAP 26(b)(1) }
+}
+deadline requested: 10.days from Entered() counted_by oc {
+  extend { by Court, discretion GoodCause, on MovedRequest() }
 }
 deadline capped: 10.days from Entered() counted_by oc {
   extend { by Court, to min(prescribed_due + 5.days, (grant_order_entered + 2.days)) }
@@ -133,6 +138,12 @@ fn instance(o: &Obligation) -> String {
     }
     if let Some(x) = &o.extended_to {
         let _ = write!(s, " extended {x}");
+    }
+    if let Some(x) = &o.extended_under {
+        let _ = write!(s, " under {}", x.name());
+    }
+    if let Some(x) = &o.request_made {
+        let _ = write!(s, " requested {x}");
     }
     if let Some(c) = o.closed_by {
         let _ = write!(s, " by #{c}");
@@ -464,6 +475,24 @@ fn extensions_and_waivers() {
             &[
                 ENTERED,
                 "2011-01-10 OrderedMotion(2011-01-30) by c cite FRCP 6(b)(1)(B)",
+            ],
+        ),
+        (
+            "extend: a request before expiry licenses an order after it",
+            "2011-02-01",
+            &[
+                ENTERED,
+                "2011-01-13 MovedRequest() by p",
+                "2011-01-20 OrderedRequested(2011-02-10) by c cite FRCP 6(b)(1)(A)",
+            ],
+        ),
+        (
+            "extend: a request after expiry is not one before it",
+            "2011-02-01",
+            &[
+                ENTERED,
+                "2011-01-15 MovedRequest() by p",
+                "2011-01-20 OrderedRequested(2011-02-10) by c cite FRCP 6(b)(1)(A)",
             ],
         ),
         (

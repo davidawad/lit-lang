@@ -533,9 +533,8 @@ impl<'g> Cx<'_, 'g> {
             }
         }
         let Some((grant, requests)) = licensed else {
-            if let Some((_, e)) = refusals.into_iter().max_by_key(|(rank, _)| *rank) {
-                self.out.push(e);
-            }
+            let refusal = refusals.into_iter().max_by_key(|(rank, _)| *rank);
+            self.out.extend(refusal.map(|(_, e)| e));
             return None;
         };
         let Some(new) = new else {

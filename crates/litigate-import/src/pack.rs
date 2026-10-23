@@ -7,17 +7,17 @@ use crate::node::Spelling;
 use crate::text;
 use crate::Emitted;
 use litgraph::cite::normalize::CiteGrammar;
-use litgraph::model::{Pack, RawEdge};
+use litgraph::model::{Pack, RawEdge, PACK_SCHEMA_VERSION};
 use std::collections::{BTreeMap, BTreeSet};
 
 /// Imports `pack` into the package directory `dir` (also the root module
 /// name). `from` is the input path recorded in the header comments.
 pub(crate) fn import_pack(pack: &Pack, from: &str, dir: &str, issues: &mut Issues) -> Vec<Emitted> {
-    if pack.schema_version != expected_schema(pack) {
+    if ![expected_schema(pack), PACK_SCHEMA_VERSION].contains(&pack.schema_version) {
         issues.report(
             "/schemaVersion",
             format!(
-                "schemaVersion {} is not derivable: lowering emits 3 exactly when the pack names a counting rule, else 2 (SPEC §8.1)",
+                "schemaVersion {} is not derivable: lowering emits 4; a legacy pack is 3 exactly when it names a counting rule, else 2 (SPEC §8.1)",
                 pack.schema_version
             ),
         );
@@ -79,6 +79,7 @@ pub(crate) fn import_pack(pack: &Pack, from: &str, dir: &str, issues: &mut Issue
     files
 }
 
+/// The schemaVersion a legacy (pre-v4) pack must carry.
 fn expected_schema(pack: &Pack) -> u32 {
     if pack.counting.is_some() {
         3

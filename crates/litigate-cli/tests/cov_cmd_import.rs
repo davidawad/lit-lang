@@ -147,11 +147,12 @@ fn a_number_without_a_lossless_spelling_is_a_difference() {
         &std::fs::read_to_string(repo().join("scenarios/frcp-civil-case.json")).unwrap(),
     )
     .unwrap();
-    // Written as text: as binary64 the integer would already be rounded.
-    scenario["scenario"]["params"]["huge"] = Value::from("HUGE");
+    // Negative zero: an exact rational has no sign of zero, and JCS writes
+    // `-0` as `0` (RFC 8785 §3.2.2.3).
+    scenario["scenario"]["params"]["zero"] = Value::from("ZERO");
     let text = serde_json::to_string_pretty(&scenario)
         .unwrap()
-        .replace("\"HUGE\"", "123456789012345678901");
+        .replace("\"ZERO\"", "-0.0");
     std::fs::write(dir.join("s.json"), text).unwrap();
     let run = litigate_in(&dir, &["import", "p.json", "s.json", "--out", "o"]);
     assert_eq!(run.code, 2, "{}", run.stdout);

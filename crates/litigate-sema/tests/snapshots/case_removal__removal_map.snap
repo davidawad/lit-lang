@@ -3,65 +3,65 @@ source: crates/litigate-sema/tests/case_removal.rs
 expression: render_map(&lowered.source_map)
 ---
 {
-  "generated": {
-    "by": "litigate-lower",
-    "version": "[version]",
-    "language": 1
-  },
-  "kind": "scenario",
-  "id": "pending-2009",
   "as_of": "2010-06-01",
   "entries": [
     {
-      "pointer": "",
       "id": "pending-2009",
+      "pointer": "",
       "span": {
-        "file": "cases/t.case",
-        "line": 1,
         "col": 1,
+        "end_col": 1,
         "end_line": 1,
-        "end_col": 1
+        "file": "cases/t.case",
+        "line": 1
       }
     },
     {
-      "pointer": "/scenario/remove_edges/0",
+      "cite": {
+        "sections": [
+          {
+            "heading": "12",
+            "source": "frcp"
+          }
+        ],
+        "text": "FRCP 12(f)"
+      },
       "id": "frcp::granted",
+      "pointer": "/scenario/remove_edges/0",
       "span": {
-        "file": "cases/t.case",
-        "line": 14,
         "col": 14,
+        "end_col": 31,
         "end_line": 14,
-        "end_col": 31
-      },
-      "cite": {
-        "text": "FRCP 12(f)",
-        "sections": [
-          {
-            "heading": "12",
-            "source": "frcp"
-          }
-        ]
+        "file": "cases/t.case",
+        "line": 14
       }
     },
     {
-      "pointer": "/scenario/remove_edges/1",
-      "id": "frcp::move-dismiss",
-      "span": {
-        "file": "cases/t.case",
-        "line": 15,
-        "col": 14,
-        "end_line": 15,
-        "end_col": 39
-      },
       "cite": {
-        "text": "FRCP 12(h)(1)",
         "sections": [
           {
             "heading": "12",
             "source": "frcp"
           }
-        ]
+        ],
+        "text": "FRCP 12(h)(1)"
+      },
+      "id": "frcp::move-dismiss",
+      "pointer": "/scenario/remove_edges/1",
+      "span": {
+        "col": 14,
+        "end_col": 39,
+        "end_line": 15,
+        "file": "cases/t.case",
+        "line": 15
       }
     }
-  ]
+  ],
+  "generated": {
+    "by": "litigate-lower",
+    "language": 1,
+    "version": "[version]"
+  },
+  "id": "pending-2009",
+  "kind": "scenario"
 }

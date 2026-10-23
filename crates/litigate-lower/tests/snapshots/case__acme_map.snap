@@ -3,25 +3,25 @@ source: crates/litigate-lower/tests/case.rs
 expression: render_map(&lowered.source_map)
 ---
 {
-  "generated": {
-    "by": "litigate-lower",
-    "version": "[version]",
-    "language": 1
-  },
-  "kind": "scenario",
-  "id": "acme-v-widget",
   "as_of": "2025-06-01",
   "entries": [
     {
-      "pointer": "",
       "id": "acme-v-widget",
+      "pointer": "",
       "span": {
-        "file": "cases/examples/acme.case",
-        "line": 1,
         "col": 1,
+        "end_col": 1,
         "end_line": 1,
-        "end_col": 1
+        "file": "cases/examples/acme.case",
+        "line": 1
       }
     }
-  ]
+  ],
+  "generated": {
+    "by": "litigate-lower",
+    "language": 1,
+    "version": "[version]"
+  },
+  "id": "acme-v-widget",
+  "kind": "scenario"
 }

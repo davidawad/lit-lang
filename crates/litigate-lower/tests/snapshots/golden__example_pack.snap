@@ -3,14 +3,89 @@ source: crates/litigate-lower/tests/golden.rs
 expression: text
 ---
 {
-  "schemaVersion": 3,
-  "id": "frcp-rule12-example",
-  "title": "FRCP Rule 12 response (worked example)",
-  "description": "Answer-or-move decision under FRCP 12(a); the shared W1 fixture.",
-  "jurisdiction": "United States district courts",
-  "forum": "frcp",
   "counting": "frcp6",
-  "startNodeId": "time-barred",
+  "description": "Answer-or-move decision under FRCP 12(a); the shared W1 fixture.",
+  "edges": [
+    {
+      "actor": "Court",
+      "from": "time-barred",
+      "id": "barred",
+      "label": "Barred",
+      "probability": 0.1,
+      "to": "dismissed"
+    },
+    {
+      "actor": "Court",
+      "from": "time-barred",
+      "id": "not-barred",
+      "label": "Timely",
+      "probability": 0.9,
+      "to": "respond"
+    },
+    {
+      "actor": "Defendant",
+      "deadline": {
+        "length": 21
+      },
+      "from": "respond",
+      "hours": 8,
+      "id": "answer",
+      "label": "File an answer",
+      "to": "answered"
+    },
+    {
+      "actor": "Defendant",
+      "deadline": {
+        "length": 21
+      },
+      "from": "respond",
+      "hours": 30,
+      "id": "move-dismiss",
+      "label": "Move to dismiss under Rule 12(b)(6)",
+      "tags": [
+        "dispositive"
+      ],
+      "to": "mtd-ruling"
+    },
+    {
+      "actor": "Defendant",
+      "from": "respond",
+      "id": "default",
+      "label": "Let the deadline pass",
+      "sets": [
+        "defaulted"
+      ],
+      "to": "default-risk",
+      "valence": "bad"
+    },
+    {
+      "actor": "Court",
+      "from": "mtd-ruling",
+      "id": "granted",
+      "label": "Motion granted",
+      "to": "dismissed"
+    },
+    {
+      "actor": "Court",
+      "from": "mtd-ruling",
+      "id": "denied",
+      "label": "Motion denied",
+      "to": "answered"
+    },
+    {
+      "actor": "either",
+      "from": "answered",
+      "label": "Proceed to judgment",
+      "to": "judgment-entered"
+    },
+    {
+      "actor": "either",
+      "from": "default-risk",
+      "label": "Default entered",
+      "to": "judgment-entered"
+    }
+  ],
+  "forum": "frcp",
   "groups": [
     {
       "id": "pleadings",
@@ -25,155 +100,104 @@ expression: text
       "label": "Outcomes"
     }
   ],
-  "roles": {
-    "Court": "nature",
-    "Defendant": "opponent",
-    "Plaintiff": "self"
+  "id": "frcp-rule12-example",
+  "jurisdiction": "United States district courts",
+  "lowered": {
+    "asOf": "2025-01-01",
+    "holes": [
+      {
+        "pointer": "/edges/5/probability",
+        "reason": "no calibration yet"
+      },
+      {
+        "pointer": "/edges/6/probability"
+      },
+      {
+        "pointer": "/nodes/5/payoff"
+      }
+    ],
+    "knownAt": "2025-01-01",
+    "pins": [
+      {
+        "digest": "sha256:a9625dfeb2e385fc2f54e5e46999ce1f2f056196506b0c744ea24a5d8c187ed0",
+        "name": "frcp-rule12-example",
+        "version": "0.1.0"
+      }
+    ],
+    "worldDigest": "sha256:75b5ac5b3494a705d0f2415583e75bfc4e6fc079dfc331c1df7fa3db63635e8a"
   },
-  "sources": [
-    {
-      "id": "frcp",
-      "title": "Federal Rules of Civil Procedure",
-      "url": "https://www.law.cornell.edu/rules/frcp",
-      "asOf": "2024-12-01"
-    }
-  ],
   "nodes": [
     {
+      "cite": "FRCP 8(c)(1)",
       "id": "time-barred",
       "kind": "state",
       "label": "Is the claim time-barred?",
-      "cite": "FRCP 8(c)(1)",
       "tags": [
         "fact"
       ]
     },
     {
+      "cite": "FRCP 12(a)(1)(A)(i)",
+      "group": "pleadings",
       "id": "respond",
       "kind": "decision",
-      "label": "Answer or move under Rule 12",
-      "cite": "FRCP 12(a)(1)(A)(i)",
-      "group": "pleadings"
+      "label": "Answer or move under Rule 12"
     },
     {
+      "cite": "FRCP 12(b)(6)",
+      "group": "motions",
       "id": "mtd-ruling",
       "kind": "state",
-      "label": "Ruling on the motion to dismiss",
-      "cite": "FRCP 12(b)(6)",
-      "group": "motions"
+      "label": "Ruling on the motion to dismiss"
     },
     {
+      "group": "pleadings",
       "id": "answered",
       "kind": "state",
-      "label": "Answer filed",
-      "group": "pleadings"
+      "label": "Answer filed"
     },
     {
+      "group": "outcomes",
       "id": "default-risk",
       "kind": "state",
-      "label": "Failure to respond",
-      "group": "outcomes"
+      "label": "Failure to respond"
     },
     {
+      "group": "outcomes",
       "id": "judgment-entered",
       "kind": "terminal",
       "label": "Judgment entered",
-      "group": "outcomes",
       "outcome": [
         "judgment",
         "loss"
       ]
     },
     {
+      "group": "outcomes",
       "id": "dismissed",
       "kind": "terminal",
       "label": "Action dismissed",
-      "group": "outcomes",
-      "payoff": 0.0,
       "outcome": [
         "judgment",
         "win"
-      ]
+      ],
+      "payoff": 0
     }
   ],
-  "edges": [
+  "roles": {
+    "Court": "nature",
+    "Defendant": "opponent",
+    "Plaintiff": "self"
+  },
+  "schemaVersion": 4,
+  "sources": [
     {
-      "id": "barred",
-      "from": "time-barred",
-      "to": "dismissed",
-      "label": "Barred",
-      "actor": "Court",
-      "probability": 0.1
-    },
-    {
-      "id": "not-barred",
-      "from": "time-barred",
-      "to": "respond",
-      "label": "Timely",
-      "actor": "Court",
-      "probability": 0.9
-    },
-    {
-      "id": "answer",
-      "from": "respond",
-      "to": "answered",
-      "label": "File an answer",
-      "actor": "Defendant",
-      "deadline": {
-        "length": 21.0
-      },
-      "hours": 8.0
-    },
-    {
-      "id": "move-dismiss",
-      "from": "respond",
-      "to": "mtd-ruling",
-      "label": "Move to dismiss under Rule 12(b)(6)",
-      "actor": "Defendant",
-      "deadline": {
-        "length": 21.0
-      },
-      "hours": 30.0,
-      "tags": [
-        "dispositive"
-      ]
-    },
-    {
-      "id": "default",
-      "from": "respond",
-      "to": "default-risk",
-      "label": "Let the deadline pass",
-      "actor": "Defendant",
-      "valence": "bad",
-      "sets": [
-        "defaulted"
-      ]
-    },
-    {
-      "id": "granted",
-      "from": "mtd-ruling",
-      "to": "dismissed",
-      "label": "Motion granted",
-      "actor": "Court"
-    },
-    {
-      "id": "denied",
-      "from": "mtd-ruling",
-      "to": "answered",
-      "label": "Motion denied",
-      "actor": "Court"
-    },
-    {
-      "from": "answered",
-      "to": "judgment-entered",
-      "label": "Proceed to judgment",
-      "actor": "either"
-    },
-    {
-      "from": "default-risk",
-      "to": "judgment-entered",
-      "label": "Default entered",
-      "actor": "either"
+      "asOf": "2024-12-01",
+      "id": "frcp",
+      "title": "Federal Rules of Civil Procedure",
+      "url": "https://www.law.cornell.edu/rules/frcp"
     }
-  ]
+  ],
+  "startNodeId": "time-barred",
+  "title": "FRCP Rule 12 response (worked example)"
 }

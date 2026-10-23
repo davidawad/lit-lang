@@ -24,30 +24,9 @@ expression: "run.json[\"diagnostics\"]"
     "severity": "error",
     "span": {
       "file": "b/packs/frcp-rule12-example.json",
-      "line": 62,
+      "line": 11,
       "col": 13,
-      "end_line": 62,
-      "end_col": 13
-    },
-    "message": "changed at /nodes/answered/label: \"Answer filed\" -> \"Answer lodged\"",
-    "notes": [
-      {
-        "message": "belongs to `answered`"
-      }
-    ],
-    "fingerprint": "bdd603b52c7d845b",
-    "world": {
-      "name": "actual"
-    }
-  },
-  {
-    "code": "L6002",
-    "severity": "error",
-    "span": {
-      "file": "b/packs/frcp-rule12-example.json",
-      "line": 88,
-      "col": 13,
-      "end_line": 88,
+      "end_line": 11,
       "end_col": 13
     },
     "message": "removed at /nodes/dismissed: {\"id\":\"dismissed\",\"kind\":\"terminal\",\"label\":\"Action dismissed\",\"group\":\"outcomes\",\"payoff\":0.0,\"outcome\":[\"judgment\",\"win\"]} -> (absent)",
@@ -57,6 +36,27 @@ expression: "run.json[\"diagnostics\"]"
       }
     ],
     "fingerprint": "c46ff59ba8414ccf",
+    "world": {
+      "name": "actual"
+    }
+  },
+  {
+    "code": "L6002",
+    "severity": "error",
+    "span": {
+      "file": "b/packs/frcp-rule12-example.json",
+      "line": 30,
+      "col": 13,
+      "end_line": 30,
+      "end_col": 13
+    },
+    "message": "changed at /nodes/answered/label: \"Answer filed\" -> \"Answer lodged\"",
+    "notes": [
+      {
+        "message": "belongs to `answered`"
+      }
+    ],
+    "fingerprint": "bdd603b52c7d845b",
     "world": {
       "name": "actual"
     }

@@ -199,8 +199,7 @@ impl<'a> Lowerer<'a> {
             .copied()
             .filter(|p| roots.contains(&p.manifest.name.as_str()))
             .collect();
-        let closure = World::closure_packages(&roots, &self.packages);
-        let pins = closure
+        let pins = World::closure_packages(&roots, &self.packages)
             .iter()
             .map(|p| Pin {
                 name: p.manifest.name.clone(),
@@ -210,7 +209,7 @@ impl<'a> Lowerer<'a> {
             .collect();
         Build {
             packages: &self.packages,
-            selection: Selection::new(World::from_packages(&closure), as_of, known),
+            selection: Selection::new(World::closure(&roots, &self.packages), as_of, known),
             pins,
             corpus: self.corpus,
         }

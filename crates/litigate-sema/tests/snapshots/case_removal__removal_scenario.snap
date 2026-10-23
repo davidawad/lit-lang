@@ -3,23 +3,79 @@ source: crates/litigate-sema/tests/case_removal.rs
 expression: render_scenario(&lowered.scenario).unwrap_or_default()
 ---
 {
+  "events": [
+    {
+      "action": "Served(complaint, Personal)",
+      "date": "2009-12-04",
+      "party": "widget",
+      "relation": "on"
+    },
+    {
+      "action": "Struck(\"granted\")",
+      "authority": "FRCP 12(f)",
+      "date": "2009-12-07",
+      "party": "court",
+      "relation": "by"
+    },
+    {
+      "action": "Forfeited(\"move-dismiss\")",
+      "authority": "FRCP 12(h)(1)",
+      "date": "2009-12-10",
+      "party": "widget",
+      "relation": "by"
+    }
+  ],
   "id": "pending-2009",
-  "summary": "A matter pending across the 2009 amendments.",
+  "lowered": {
+    "asOf": "2010-06-01",
+    "pins": [
+      {
+        "digest": "sha256:16c7642004cff876b45f11280de7db21509acb3ca83efad234f6a64979c2af62",
+        "name": "core",
+        "version": "1.0.0"
+      },
+      {
+        "digest": "sha256:d6cd975d09d14eb011d6e0b7ff00fc61a720cc538cdcf0c6c85e2b54edd64ec6",
+        "name": "frcp",
+        "version": "1.0.0"
+      }
+    ],
+    "worldDigest": "sha256:a7329a14bf70a6087e2bdd6d57a26231f0efbcd1423635e72ad10187d3f644aa"
+  },
   "notes": "",
   "packs": [
     "frcp"
   ],
-  "sources": [],
+  "parties": [
+    {
+      "actor": "Plaintiff",
+      "entity_type": "Corporation",
+      "id": "acme"
+    },
+    {
+      "actor": "Defendant",
+      "entity_type": "Corporation",
+      "id": "widget"
+    },
+    {
+      "actor": "Court",
+      "entity_type": "Tribunal",
+      "id": "court"
+    }
+  ],
   "scenario": {
+    "payoffs": {
+      "frcp::answered": 0,
+      "frcp::defaulted": -1000,
+      "frcp::dismissed": 0
+    },
     "remove_edges": [
       "frcp::granted",
       "frcp::move-dismiss"
     ],
-    "payoffs": {
-      "frcp::answered": 0.0,
-      "frcp::defaulted": -1000.0,
-      "frcp::dismissed": 0.0
-    },
     "start": "frcp::respond"
-  }
+  },
+  "schema_version": 2,
+  "sources": [],
+  "summary": "A matter pending across the 2009 amendments."
 }

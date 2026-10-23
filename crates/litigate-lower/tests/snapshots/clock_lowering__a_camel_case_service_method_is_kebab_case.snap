@@ -3,9 +3,6 @@ source: crates/litigate-lower/tests/clock_lowering.rs
 expression: rule(&p)
 ---
 {
-  "id": "frcp6",
-  "label": "FRCP 6(a)",
-  "sourceUrl": "https://www.law.cornell.edu/rules/frcp",
   "closedWeekdays": [
     "saturday",
     "sunday"
@@ -13,66 +10,69 @@ expression: rule(&p)
   "holidays": [
     "federal-holidays"
   ],
+  "hours": {
+    "rollText": "FRCP 6(a): the period ends on a weekend or legal holiday; continue to the same time on {date}",
+    "text": "FRCP 6(a): count every hour from the trigger; +{n} hour(s)"
+  },
+  "id": "frcp6",
+  "label": "FRCP 6(a)",
+  "sourceUrl": "https://www.law.cornell.edu/rules/frcp",
   "steps": [
     {
-      "op": "anchor",
       "kind": "trigger",
+      "op": "anchor",
       "text": "FRCP 6(a): exclude the trigger date {trigger}"
     },
     {
       "op": "count",
       "periods": [
         {
-          "unit": "calendar",
           "count": "calendar",
-          "text": "FRCP 6(a): count {n} calendar day(s) {after} the anchor -> {date}"
+          "text": "FRCP 6(a): count {n} calendar day(s) {after} the anchor -> {date}",
+          "unit": "calendar"
         },
         {
-          "unit": "court",
           "count": "business",
-          "text": "FRCP 6(a): count {n} court day(s) {forward}, skipping weekends and holidays -> {date}"
+          "text": "FRCP 6(a): count {n} court day(s) {forward}, skipping weekends and holidays -> {date}",
+          "unit": "court"
         }
       ]
     },
     {
-      "op": "roll",
-      "forward": {
-        "toward": "later",
-        "text": "FRCP 6(a): the last day is a weekend or legal holiday; roll forward -> {date}"
-      },
       "backward": {
-        "toward": "earlier",
-        "text": "FRCP 6(a): the last day is a weekend or legal holiday; roll backward -> {date}"
-      }
+        "text": "FRCP 6(a): the last day is a weekend or legal holiday; roll backward -> {date}",
+        "toward": "earlier"
+      },
+      "forward": {
+        "text": "FRCP 6(a): the last day is a weekend or legal holiday; roll forward -> {date}",
+        "toward": "later"
+      },
+      "op": "roll"
     },
     {
       "op": "base"
     },
     {
-      "op": "service",
+      "backwardText": "FRCP 6(a): service extensions apply to forward periods only; ignored",
       "methods": [
         {
-          "method": "other-consented",
-          "days": 3
+          "days": 3,
+          "method": "other-consented"
         }
       ],
-      "text": "FRCP 6(a): service by {method} adds {days} day(s) -> {date}",
-      "backwardText": "FRCP 6(a): service extensions apply to forward periods only; ignored"
+      "op": "service",
+      "text": "FRCP 6(a): service by {method} adds {days} day(s) -> {date}"
     },
     {
-      "op": "roll",
-      "forward": {
-        "toward": "later",
-        "text": "FRCP 6(a): the last day is a weekend or legal holiday; roll forward -> {date}"
-      },
       "backward": {
-        "toward": "earlier",
-        "text": "FRCP 6(a): the last day is a weekend or legal holiday; roll backward -> {date}"
-      }
+        "text": "FRCP 6(a): the last day is a weekend or legal holiday; roll backward -> {date}",
+        "toward": "earlier"
+      },
+      "forward": {
+        "text": "FRCP 6(a): the last day is a weekend or legal holiday; roll forward -> {date}",
+        "toward": "later"
+      },
+      "op": "roll"
     }
-  ],
-  "hours": {
-    "text": "FRCP 6(a): count every hour from the trigger; +{n} hour(s)",
-    "rollText": "FRCP 6(a): the period ends on a weekend or legal holiday; continue to the same time on {date}"
-  }
+  ]
 }

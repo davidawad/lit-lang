@@ -309,8 +309,11 @@ pub fn read_case(file: &ImportedFile) -> NamedScenario {
 /// SPEC §8.6: absent kind is `state`, absent deadline unit is `calendar`,
 /// absent edge id is the derived `from->to#n`, empty equals absent (serde
 /// defaults already), and edges are ordered by their source node's position
-/// (order within one source node is significant).
+/// (order within one source node is significant). The format version and
+/// the `lowered` header are provenance, not meaning.
 pub fn normalize_pack(mut pack: Pack) -> Value {
+    pack.schema_version = 0;
+    pack.lowered = None;
     let ids = local_edge_ids(&pack.edges);
     for (edge, id) in pack.edges.iter_mut().zip(ids) {
         edge.id = Some(id);
@@ -337,8 +340,11 @@ pub fn normalize_pack(mut pack: Pack) -> Value {
     numbers_as_f64(serde_json::to_value(&pack).unwrap_or(Value::Null))
 }
 
-/// SPEC §8.6 for a links file: link ids derived when absent.
+/// SPEC §8.6 for a links file: link ids derived when absent; no format
+/// version or `lowered` header.
 pub fn normalize_links(mut file: LinkFile) -> Value {
+    file.schema_version = None;
+    file.lowered = None;
     let ids = local_edge_ids(&file.links);
     for (edge, id) in file.links.iter_mut().zip(ids) {
         edge.id = Some(id);

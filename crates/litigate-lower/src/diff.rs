@@ -81,7 +81,18 @@ pub fn semantic_diff_links(a: &LinkFile, b: &LinkFile) -> Vec<Change> {
 /// Differences between two named scenarios.
 #[must_use]
 pub fn semantic_diff_scenarios(a: &NamedScenario, b: &NamedScenario) -> Vec<Change> {
-    compare(&normalized(a), &normalized(b))
+    compare(&normalize_scenario(a), &normalize_scenario(b))
+}
+
+/// A scenario as compared: also without its docket record (`parties`,
+/// `events`), which replay already turned into the `scenario.start` and
+/// `scenario.remove_edges` that are compared, and which an imported
+/// legacy scenario cannot have.
+fn normalize_scenario(s: &NamedScenario) -> Value {
+    let mut s = s.clone();
+    s.parties.clear();
+    s.events.clear();
+    normalized(&s)
 }
 
 /// Differences between two clock-library fragments.
@@ -140,10 +151,8 @@ fn read<T: serde::de::DeserializeOwned>(label: &str, v: Value) -> Result<T, Stri
 /// header, which say how and from what it was built, not what it means.
 fn normalized<T: Serialize>(value: &T) -> Value {
     let mut value = serde_json::to_value(value).unwrap_or(Value::Null);
-    if let Some(map) = value.as_object_mut() {
-        for key in PROVENANCE {
-            map.remove(key);
-        }
+    for key in PROVENANCE {
+        value.as_object_mut().and_then(|map| map.remove(key));
     }
     numbers_as_f64(value)
 }

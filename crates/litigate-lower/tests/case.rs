@@ -5,10 +5,14 @@
 //! `Case::removals`.
 mod support;
 
-use litgraph::scenario::NamedScenario;
+use litgraph::model::world_digest;
+use litgraph::scenario::{EventRelation, NamedScenario};
 use litigate_base::DiagnosticCode;
 use litigate_lower::{render_scenario, semantic_diff_scenarios, Lowerer};
-use litigate_sema::hir::{Analysis, Case, Observation, Perspective, Removal, Stake};
+use litigate_sema::hir::{
+    Analysis, Case, CaseSource, Event, EventParty, Expr, ExprKind, Observation, Perspective,
+    Removal, Stake, Type,
+};
 use serde_json::{json, Map, Value};
 use std::collections::BTreeMap;
 use support::{acme, load_hir, pin, render_map, repo_root, usd};
@@ -325,4 +329,100 @@ proptest::proptest! {
         }
         proptest::prop_assert_eq!(&lowered.scenario.scenario.remove_edges, &expected);
     }
+}
+
+/// A docket event `callee(args)` with `relation` to `party`.
+fn event(date: &str, callee: &str, relation: EventParty, party: &str) -> Event {
+    Event {
+        date: date.into(),
+        action: Expr {
+            ty: Type::Unit,
+            kind: ExprKind::Call {
+                callee: callee.into(),
+                args: vec![Expr {
+                    ty: Type::Unit,
+                    kind: ExprKind::Ref {
+                        target: "complaint".into(),
+                    },
+                    span: None,
+                }],
+            },
+            span: None,
+        },
+        relation,
+        party: party.into(),
+        authority: Some("FRCP 4(c)".into()),
+    }
+}
+
+/// SPEC §8.3: a v2 scenario records the world it was built in (pins,
+/// dates, world digest), the docket, and every hole the matter left.
+#[test]
+fn a_matter_records_its_world_docket_and_holes() {
+    let packages = load_hir(&["lit/examples"]);
+    let refs: Vec<_> = packages.iter().collect();
+    let mut case = acme();
+    case.known_at = Some("2025-01-01".into());
+    case.events = vec![
+        event("2025-01-02", "Served", EventParty::On, "widget"),
+        event("2025-01-20", "Answered", EventParty::By, "widget"),
+    ];
+    case.stakes
+        .insert("frcp-rule12-example::settled".into(), Stake::Unvalued);
+    case.sources.push(CaseSource {
+        title: "Local practice".into(),
+        url: None,
+        as_of: Some("2026-06".into()),
+        as_of_hole: true,
+    });
+    case.sources.push(CaseSource {
+        title: "Undated".into(),
+        url: None,
+        as_of: Some(String::new()),
+        as_of_hole: true,
+    });
+    let named = Lowerer::new(&refs)
+        .case(&case, "cases/examples/acme.case")
+        .unwrap_or_else(|d| panic!("{d:#?}"))
+        .scenario;
+    assert_eq!(named.schema_version, Some(2));
+    let lowered = named.lowered.clone().unwrap_or_else(|| panic!("no header"));
+    let pins: Vec<&str> = lowered.pins.iter().map(|p| p.name.as_str()).collect();
+    assert_eq!(pins, ["frcp-rule12-example"]);
+    assert_eq!(
+        (lowered.as_of.as_str(), lowered.known_at.as_deref()),
+        ("2025-06-01", Some("2025-01-01"))
+    );
+    assert_eq!(
+        lowered.world_digest,
+        world_digest(&lowered.pins, "2025-06-01", Some("2025-01-01"))
+    );
+    let holes: Vec<(&str, Option<&str>)> = lowered
+        .holes
+        .iter()
+        .map(|h| (h.pointer.as_str(), h.reason.as_deref()))
+        .collect();
+    assert_eq!(
+        holes,
+        [
+            ("/scenario/payoffs/frcp-rule12-example::settled", None),
+            ("/sources/1/as_of", Some("2026-06")),
+            ("/sources/2/as_of", None),
+        ]
+    );
+    let docket: Vec<(&str, EventRelation, &str)> = named
+        .events
+        .iter()
+        .map(|e| (e.action.as_str(), e.relation, e.party.as_str()))
+        .collect();
+    assert_eq!(
+        docket,
+        [
+            ("Served(complaint)", EventRelation::On, "widget"),
+            ("Answered(complaint)", EventRelation::By, "widget"),
+        ]
+    );
+    assert_eq!(named.parties.len(), 2);
+    let text = render_scenario(&named).unwrap_or_default();
+    assert_eq!(NamedScenario::from_json(&text).ok(), Some(named));
 }

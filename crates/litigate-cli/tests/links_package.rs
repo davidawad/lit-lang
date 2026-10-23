@@ -86,7 +86,12 @@ fn the_links_package_checks_and_its_tests_pass() {
 fn the_generated_links_compose_every_forum_as_the_shipped_ones_do() {
     let ours = catalog(&generated());
     let theirs = catalog(&std::fs::read_to_string(repo().join("packs/links.json")).unwrap());
-    assert_eq!(ours.links, theirs.links);
+    // The `lowered` header names the world each was built in: `lit/links`
+    // alone here, every lit-sync input there.
+    assert_eq!(
+        (&ours.links.instances, &ours.links.links),
+        (&theirs.links.instances, &theirs.links.links)
+    );
 
     let compositions: [(&[&str], &str); 5] = [
         (&["cofc", "cafc"], "cofc::claim-accrues"),

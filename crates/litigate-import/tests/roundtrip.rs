@@ -104,8 +104,16 @@ fn every_scenario_round_trips() {
             .find(|f| f.from == input.path)
             .unwrap_or_else(|| panic!("{}: no case", input.path));
         let back = read_case(file);
+        // Import writes the replayed posture, not the docket (SPEC §8.7),
+        // so a v2 file's parties, events and `lowered` header do not come
+        // back.
         let as_json = |s: &NamedScenario| {
-            support::numbers_as_f64(serde_json::to_value(s).unwrap_or_default())
+            let mut s = s.clone();
+            s.schema_version = None;
+            s.parties.clear();
+            s.events.clear();
+            s.lowered = None;
+            support::numbers_as_f64(serde_json::to_value(&s).unwrap_or_default())
         };
         let (expected, actual) = (as_json(&original), as_json(&back));
         assert!(

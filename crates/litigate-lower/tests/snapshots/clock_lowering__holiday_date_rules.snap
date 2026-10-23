@@ -3,74 +3,74 @@ source: crates/litigate-lower/tests/clock_lowering.rs
 expression: "render(&clock_of(&lowered).calendars[0]).unwrap_or_default()"
 ---
 {
-  "id": "federal-holidays",
-  "title": "federal-holidays",
   "cite": "FRCP 6(a)(6)",
-  "sourceUrl": "https://www.law.cornell.edu/rules/frcp",
   "holidays": [
     {
-      "id": "memorial-day",
-      "name": "memorial-day",
       "date": {
         "nthWeekday": {
           "month": 5,
-          "weekday": "monday",
-          "nth": -1
+          "nth": -1,
+          "weekday": "monday"
         }
       },
-      "observed": "actual",
       "effective": {
         "from": "1870-06-28",
         "until": "2100-01-01"
-      }
+      },
+      "id": "memorial-day",
+      "name": "memorial-day",
+      "observed": "actual"
     },
     {
-      "id": "inauguration-day",
-      "name": "inauguration-day",
+      "cycle": {
+        "anchorYear": 1937,
+        "every": 4
+      },
       "date": {
         "fixed": {
-          "month": 1,
-          "day": 20
+          "day": 20,
+          "month": 1
         }
       },
-      "cycle": {
-        "every": 4,
-        "anchorYear": 1937
-      },
-      "observed": "actual",
       "effective": {
         "from": "1937-01-01"
-      }
+      },
+      "id": "inauguration-day",
+      "name": "inauguration-day",
+      "observed": "actual"
     },
     {
-      "id": "day-of-mourning",
-      "name": "day-of-mourning",
       "date": {
         "fixed": {
-          "month": 12,
-          "day": 5
+          "day": 5,
+          "month": 12
         }
       },
-      "observed": "actual",
       "effective": {
         "from": "2018-12-05",
         "until": "2018-12-06"
-      }
+      },
+      "id": "day-of-mourning",
+      "name": "day-of-mourning",
+      "observed": "actual"
     },
     {
-      "id": "observed-once",
-      "name": "observed-once",
       "date": {
         "fixed": {
-          "month": 12,
-          "day": 24
+          "day": 24,
+          "month": 12
         }
       },
-      "observed": "nearest-weekday",
       "effective": {
         "from": "2019-12-23",
         "until": "2019-12-25"
-      }
+      },
+      "id": "observed-once",
+      "name": "observed-once",
+      "observed": "nearest-weekday"
     }
-  ]
+  ],
+  "id": "federal-holidays",
+  "sourceUrl": "https://www.law.cornell.edu/rules/frcp",
+  "title": "federal-holidays"
 }

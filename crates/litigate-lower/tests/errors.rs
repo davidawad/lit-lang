@@ -130,7 +130,7 @@ fn a_shared_library_rule_needs_no_fragment() {
     };
     assert_eq!(
         (pack.schema_version, pack.counting.as_deref()),
-        (3, Some("frcp6"))
+        (4, Some("frcp6"))
     );
 }
 
@@ -364,7 +364,7 @@ fn a_counting_rule_library_lowers_every_rule() {
     let Document::Pack(pack) = &lowered.document else {
         panic!("expected a pack")
     };
-    assert_eq!((pack.schema_version, pack.counting.as_deref()), (3, None));
+    assert_eq!((pack.schema_version, pack.counting.as_deref()), (4, None));
     let (clock, map) = lowered.clock.unwrap_or_else(|| panic!("no fragment"));
     let rules: Vec<&str> = clock.counting_rules.iter().map(|r| r.id.as_str()).collect();
     assert_eq!(rules, ["frcp6", "frcp6-copy"]);

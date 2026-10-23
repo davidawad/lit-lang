@@ -11,8 +11,9 @@ use std::collections::BTreeMap;
 /// carries (an `event` pattern, a flag list): its hole is checked, never
 /// emitted.
 fn field(path: &str) -> Option<String> {
+    // `split` yields at least one part.
     let mut parts = path.split('.');
-    let head = match parts.next()? {
+    let head = match parts.next().unwrap_or_default() {
         "p" => "probability",
         "effort" => "hours",
         "within" | "deadline" => "deadline",

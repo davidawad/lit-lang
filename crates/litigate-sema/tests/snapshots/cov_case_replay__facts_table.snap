@@ -1,0 +1,21 @@
+---
+source: crates/litigate-sema/tests/cov_case_replay.rs
+expression: table(&rows)
+---
+{
+    "cycle: facts that lead back are followed once each": [
+        "13:14 L4001 `Benched(complaint)` is not a legal event at stage `alpha::f2` (F2)\n    note: legal events: none (no event moves this stage; it is decided by Court)\n    note: `alpha::f2` is a matter fact: resolve it with `facts { f2: <edge> }`\n    note: replay stops at the first illegal event",
+        "trace Took Noted(motion) alpha::intake -> alpha::f1 via alpha::probe",
+        "trace Fact fact alpha::f1 -> alpha::f2 via alpha::to-f2",
+        "trace Fact fact alpha::f2 -> alpha::f1 via alpha::to-f1",
+        "trace Fact fact alpha::f1 -> alpha::f2 via alpha::to-f2",
+    ],
+    "not a fact: the entry does not move the stage": [
+        "15:9 L4003 `alpha::respond` is not a fact node in force on 2011-06-01\n    note: facts resolve nodes tagged `fact` (SPEC §5.1)",
+        "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
+        "trace Took Answered(complaint) alpha::respond -> alpha::answered via alpha::answer",
+    ],
+    "removed: a fact cannot resolve through a removed edge": [
+        "14:13 L4003 `alpha::to-f2` was removed and cannot resolve fact `alpha::f1`\n    note @12:3: removed here on 2010-01-04",
+    ],
+}

@@ -1,0 +1,43 @@
+---
+source: crates/litigate-sema/tests/cov_case_replay.rs
+expression: table(&rows)
+---
+{
+    "missed: a link's deadline, declared and triggered in the links package's view": [
+        "13:3 L4002 `Noted(motion)` on 2010-01-09 missed deadline `delta::link-period`, due 2010-01-07\n    note @12:3: `link-period` runs 3 calendar days from `Benched(motion)` on 2010-01-04 under `ac@2009-12-01`\n    note: a cited `Waived`, `Extended`, or `Excused` event between the trigger and this event would excuse it",
+        "trace Took Benched(motion) alpha::intake -> alpha::lone via alpha::to-lone",
+        "trace Took Noted(motion) alpha::lone -> alpha::defaulted via alpha::wait",
+    ],
+    "ok: a link edge's event, written in the links package, takes it": [
+        "ok: start gamma::g1",
+        "trace Took Benched(complaint) alpha::intake -> alpha::bench via alpha::to-bench",
+        "trace Took Noted(complaint) alpha::bench -> gamma::g0 via alpha::hop",
+        "trace Took gamma::Pinged(a) gamma::g0 -> gamma::g1 via gamma::ping",
+    ],
+    "ok: an option-removing name without an option parameter is an event": [
+        "ok: start gamma::g1",
+        "trace Took Benched(complaint) alpha::intake -> alpha::bench via alpha::to-bench",
+        "trace Took Noted(complaint) alpha::bench -> gamma::g0 via alpha::hop",
+        "trace Took gamma::Struck(a) gamma::g0 -> gamma::g1 via gamma::strike",
+    ],
+    "ok: through a link into an instance, whose events read as its base's": [
+        "ok: start alpha@copy::answered",
+        "trace Took Benched(motion) alpha::intake -> alpha::lone via alpha::to-lone",
+        "trace Took Noted(complaint) alpha::lone -> alpha@copy::intake via alpha::copy",
+        "trace Took Served(complaint, Mail) alpha@copy::intake -> alpha@copy::respond via alpha@copy::serve",
+        "trace Took Answered(complaint) alpha@copy::respond -> alpha@copy::answered via alpha@copy::answer",
+    ],
+    "removed: a link edge removed by id in its from node's package": [
+        "14:14 L4001 `Noted(complaint)` at stage `alpha::bench` takes `alpha::hop`, which was removed on 2010-01-05\n    note @13:3: removed here, cite FRCP 12(h)\n    note: replay stops at the first illegal event",
+        "trace Took Benched(complaint) alpha::intake -> alpha::bench via alpha::to-bench",
+    ],
+    "removed: an option far from every edge id": [
+        "13:24 L1002 `alpha` has no edge `zzzzzzzzzzzzzzzz` for `Forfeited(\"zzzzzzzzzzzzzzzz\")` to remove\n    note: `option` names an edge by its id: `edge`, or `pack::edge` in another package",
+        "trace Took Benched(complaint) alpha::intake -> alpha::bench via alpha::to-bench",
+    ],
+    "unused: a link into a package the matter does not use": [
+        "14:3 L3007 stage `alpha::gamma::g0` has no version in force on 2010-01-06",
+        "trace Took Benched(complaint) alpha::intake -> alpha::bench via alpha::to-bench",
+        "trace Took Noted(complaint) alpha::bench -> alpha::gamma::g0 via alpha::hop",
+    ],
+}

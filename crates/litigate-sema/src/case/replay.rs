@@ -1,19 +1,18 @@
 //! Event replay (SPEC §5.6): events in date order, each a legal transition
 //! from the posture it finds, judged under the versions governing its date
 //! (transitions applied, SPEC §5.4). The posture is derived, never asserted.
-use super::deadline::{self, Clock};
-use super::graph::{display, is_excusal, Graph};
+use super::deadline::Clock;
+use super::graph::{base, display, is_excusal, pack_of, Graph};
 use super::spans::{error, Build, CaseSpans, EventSpans};
 use super::{Effect, Step};
-use crate::hir::{
-    Case, DeadlineWindow, Declaration, Edge, Event, EventParty, Expr, Node, NodeKind, Removal,
-};
+use crate::hir::{Case, Declaration, Edge, Event, EventParty, Expr, Node, NodeKind, Removal};
 use crate::temporal::condition::matches;
 use crate::temporal::{MatterEvent, Ungoverned};
 use litigate_base::{Applicability, Diagnostic, DiagnosticCode as C};
 use std::collections::BTreeMap;
 
 mod removal;
+mod within;
 
 /// Replay outcome.
 #[derive(Debug, Clone, PartialEq)]
@@ -105,11 +104,7 @@ pub(super) fn replay(
     }
 }
 
-fn pack_of(qualified: &str) -> &str {
-    qualified.split_once("::").map_or("", |(p, _)| p)
-}
-
-impl<'g> Cx<'_, 'g> {
+impl<'c, 'g> Cx<'c, 'g> {
     fn id(&self) -> &str {
         &self.case.id
     }
@@ -122,15 +117,24 @@ impl<'g> Cx<'_, 'g> {
         self.spans.event(self.sorted[k].0, part, self.id())
     }
 
+    /// Sorted event `k` in `pack`'s view; an instance `base@origin` reads
+    /// in `base`'s view. Replay only asks for used packs and their
+    /// instances (postures are qualified in one); any other reads as written.
+    fn view(&self, pack: &str, k: usize) -> &Expr {
+        self.views
+            .get(base(pack))
+            .and_then(|v| v.get(k))
+            .unwrap_or(&self.sorted[k].1.action)
+    }
+
     /// Sorted events in `pack`'s view.
     fn events(&self, pack: &str) -> Vec<MatterEvent<'_>> {
-        let view = self.views.get(pack);
         self.sorted
             .iter()
             .enumerate()
             .map(|(k, (_, e))| MatterEvent {
                 date: &e.date,
-                action: view.and_then(|v| v.get(k)).unwrap_or(&e.action),
+                action: self.view(pack, k),
             })
             .collect()
     }
@@ -189,16 +193,22 @@ impl<'g> Cx<'_, 'g> {
         }
     }
 
-    /// Follows `facts` out of fact nodes before event `k` (SPEC §5.6).
-    fn follow_facts(&mut self, mut posture: String, k: usize) -> Option<String> {
-        for _ in 0..=self.case.facts.len() {
+    /// Follows `facts` out of fact nodes before event `k` (SPEC §5.6), at
+    /// most once per entry and once more: the posture the event finds, with
+    /// its node version.
+    fn follow_facts(&mut self, mut posture: String, k: usize) -> Option<(String, &'g Node)> {
+        let mut followed = 0;
+        loop {
             let node = self.node(&posture, k)?;
-            let Some(edge) = self.case.facts.get(&posture) else {
-                return Some(posture);
+            let edge = match self.case.facts.get(&posture) {
+                Some(edge)
+                    if followed <= self.case.facts.len()
+                        && node.tags.iter().any(|t| t == "fact") =>
+                {
+                    edge
+                }
+                _ => return Some((posture, node)),
             };
-            if !node.tags.iter().any(|t| t == "fact") {
-                return Some(posture);
-            }
             let pack = pack_of(&posture).to_owned();
             let local = edge.rsplit("::").next().unwrap_or(edge);
             let next = node
@@ -215,8 +225,38 @@ impl<'g> Cx<'_, 'g> {
                 edge: Some(edge.clone()),
             });
             posture = next;
+            followed += 1;
         }
-        Some(posture)
+    }
+
+    /// The edges leaving `posture` (version `node`) whose event pattern
+    /// matches event `k`, less those an earlier event removed, with the
+    /// first such removal.
+    fn matching(
+        &self,
+        k: usize,
+        posture: &str,
+        node: &'g Node,
+    ) -> (Vec<(String, &'c Edge)>, Option<Removal>) {
+        let graph: &'c Graph<'g> = self.graph;
+        let mut removed: Option<Removal> = None;
+        let matching = graph
+            .edges(posture, node)
+            .into_iter()
+            .filter(|(pack, e)| {
+                e.event
+                    .as_ref()
+                    .is_some_and(|p| matches(p, self.view(pack, k)))
+            })
+            .filter(|(pack, e)| match self.removal(pack, e) {
+                Some(r) => {
+                    removed.get_or_insert_with(|| r.clone());
+                    false
+                }
+                None => true,
+            })
+            .collect();
+        (matching, removed)
     }
 
     /// One event; the next posture, or `None` when replay must stop.
@@ -231,37 +271,31 @@ impl<'g> Cx<'_, 'g> {
             .note("as_of selects the law the matter is analysed under; later events are not yet history");
             self.out.push(d);
         }
-        let posture = self.follow_facts(posture.to_owned(), k)?;
+        let (posture, node) = self.follow_facts(posture.to_owned(), k)?;
         if let Some(arg) = removal::option(self.graph, &event.action) {
             self.remove(k, arg);
             return Some(posture);
         }
-        let node = self.node(&posture, k)?;
-        let edges = self.graph.edges(&posture, node);
-        let (matching, removed): (Vec<(String, &Edge)>, Vec<_>) = edges
-            .into_iter()
-            .filter(|(pack, e)| {
-                e.event
-                    .as_ref()
-                    .is_some_and(|p| matches(p, &self.view(pack, k)))
-            })
-            .partition(|(pack, e)| self.removal(pack, e).is_none());
+        let (matching, removed) = self.matching(k, &posture, node);
         let actor = self.actor(event);
         let (fits, misfits): (Vec<_>, Vec<_>) = matching
             .into_iter()
             .partition(|(_, e)| e.actor == "either" || actor.is_none_or(|a| a == e.actor));
-        match (fits.as_slice(), misfits.as_slice()) {
-            ([(pack, edge)], _) => Some(self.take(k, &posture, pack, edge)),
-            ([], []) if !removed.is_empty() => self.takes_removed(k, &posture, &removed[0]),
-            ([], []) if self.timing_only(k) => {
+        match (fits.as_slice(), misfits.as_slice(), removed) {
+            ([(pack, edge)], _, _) => Some(self.take(k, &posture, pack, edge)),
+            ([], [], Some(r)) => {
+                self.takes_removed(k, &posture, &r);
+                None
+            }
+            ([], [], None) if self.timing_only(k) => {
                 self.record(k, Effect::Timing, &posture, &posture, None);
                 Some(posture)
             }
-            ([], []) => {
+            ([], [], None) => {
                 self.illegal(k, &posture, node);
                 None
             }
-            ([], [(_, edge), ..]) => {
+            ([], [(_, edge), ..], _) => {
                 let d = error(
                     C::InvalidCaseEvent,
                     self.at(k, |e| e.party.as_ref()),
@@ -276,7 +310,7 @@ impl<'g> Cx<'_, 'g> {
                 self.out.push(d);
                 None
             }
-            (many, _) => {
+            (many, _, _) => {
                 let ids: Vec<String> = many
                     .iter()
                     .map(|(_, e)| format!("`{}`", e.id.as_deref().unwrap_or(&e.to)))
@@ -323,14 +357,6 @@ impl<'g> Cx<'_, 'g> {
         });
     }
 
-    fn view(&self, pack: &str, k: usize) -> Expr {
-        self.views
-            .get(pack)
-            .and_then(|v| v.get(k))
-            .cloned()
-            .unwrap_or_else(|| self.graph.view(pack, &self.sorted[k].1.action))
-    }
-
     /// The actor of a `by` party (`on` events are done to the party).
     fn actor(&self, event: &Event) -> Option<&str> {
         (event.relation == EventParty::By)
@@ -352,7 +378,7 @@ impl<'g> Cx<'_, 'g> {
             .graph
             .transition_patterns()
             .iter()
-            .any(|(pack, p)| matches(p, &self.view(pack, k)))
+            .any(|(pack, p)| matches(p, self.view(pack, k)))
         {
             return true;
         }
@@ -362,7 +388,7 @@ impl<'g> Cx<'_, 'g> {
             let events = self.events(pack);
             matches!(
                 self.graph.governing(q, &events, k, known_at),
-                Ok(Declaration::Deadline(d)) if matches(&d.trigger, &self.view(pack, k))
+                Ok(Declaration::Deadline(d)) if matches(&d.trigger, self.view(pack, k))
             )
         })
     }
@@ -419,70 +445,5 @@ impl<'g> Cx<'_, 'g> {
         }
         self.out
             .push(d.note("replay stops at the first illegal event"));
-    }
-
-    /// The `within` deadline of the edge taken by event `k` (L4002).
-    fn deadline(&mut self, k: usize, pack: &str, edge: &Edge) {
-        let Some(DeadlineWindow::Declared { deadline: id }) =
-            edge.deadline.as_ref().map(|d| &d.window)
-        else {
-            return;
-        };
-        let known_at = self.case.known_at.as_deref();
-        let events = self.events(pack);
-        let Some(d) = deadline::governing(self.graph, pack, id, &events, k, known_at) else {
-            let e = error(
-                C::NoVersionInForce,
-                self.at(k, |e| e.date.as_ref()),
-                format!(
-                    "deadline `{id}` has no version governing {}",
-                    self.sorted[k].1.date
-                ),
-            );
-            self.out.push(e);
-            return;
-        };
-        let Some(due) = deadline::due(self.graph, self.clock, pack, d, &events, k, known_at) else {
-            return;
-        };
-        let event = self.sorted[k].1;
-        let trigger = self.sorted[due.trigger].1;
-        let how = deadline::explain(&due, &trigger.action);
-        let trigger_at = self.at(due.trigger, |e| e.whole.as_ref());
-        match &due.date {
-            Err(why) => {
-                let e = error(
-                    C::InvalidCounting,
-                    self.at(k, |e| e.date.as_ref()),
-                    format!("cannot count deadline `{id}` for this event"),
-                )
-                .note(why.clone())
-                .note_at(Some(trigger_at), how);
-                self.out.push(e);
-            }
-            Ok(date) if event.date.as_str() > date.as_str() => {
-                if deadline::excusal(&self.sorted, k, &trigger.date, &event.date).is_some() {
-                    return;
-                }
-                let excusable = if self.graph.declares_excusal() {
-                    "a cited `Waived`, `Extended`, or `Excused` event between the trigger and this event would excuse it"
-                } else {
-                    "no used package declares a `Waived`, `Extended`, or `Excused` event type to excuse it"
-                };
-                let e = error(
-                    C::DeadlineMissed,
-                    self.at(k, |e| e.date.as_ref()),
-                    format!(
-                        "`{}` on {} missed deadline `{id}`, due {date}",
-                        display(&event.action),
-                        event.date
-                    ),
-                )
-                .note_at(Some(trigger_at), how)
-                .note(excusable);
-                self.out.push(e);
-            }
-            Ok(_) => {}
-        }
     }
 }

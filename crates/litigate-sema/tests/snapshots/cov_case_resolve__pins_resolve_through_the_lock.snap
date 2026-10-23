@@ -1,0 +1,12 @@
+---
+source: crates/litigate-sema/tests/cov_case_resolve.rs
+expression: table
+---
+{
+    "a lock without the package": [
+        "2:6 L1007 `alpha` is not pinned in Lit.lock\n    note: run `litigate lock` to pin the packages this matter uses",
+    ],
+    "no lock": [
+        "2:6 L1007 `alpha` is not pinned: the matter has no Lit.lock\n    note: run `litigate lock` to pin the packages this matter uses",
+    ],
+}

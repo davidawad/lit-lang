@@ -7,7 +7,10 @@
 //! written in the primary package's view; [`Graph::view`] respells an
 //! expression into another package's view before it is compared with that
 //! package's patterns.
-use crate::hir::{Declaration, Edge, EventType, Expr, ExprKind, Node, Package, Type, Value};
+use crate::hir::{
+    DeadlineWindow, Declaration, Edge, EdgeDeadline, EventType, Expr, ExprKind, Node, Package,
+    Type, Value,
+};
 use crate::temporal::{self, Key, MatterEvent, World};
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -20,7 +23,9 @@ pub(super) struct Graph<'a> {
     pub packages: Vec<&'a Package>,
     /// Versioned declarations of every used package.
     pub world: World<'a>,
-    links: BTreeMap<String, Vec<(String, &'a Edge)>>,
+    /// Link edges by qualified `from` node, each with the from node's pack
+    /// and respelled into its view (see [`Graph::new`]).
+    links: BTreeMap<String, Vec<(String, Edge)>>,
     /// Loaded transitive dependencies of the used packages that are not
     /// themselves used: vocabulary only (their enums), never replayed.
     deps: Vec<&'a Package>,
@@ -29,27 +34,41 @@ pub(super) struct Graph<'a> {
 impl<'a> Graph<'a> {
     /// The graph over `packages` (non-empty, `uses` order), with their
     /// dependencies found by name among `loaded`.
+    ///
+    /// A link edge belongs to the pack of its `from` node (its actors are
+    /// that pack's, and `pack::edge` names it for removal), so its `event`
+    /// pattern, written in the links package, is respelled into the view
+    /// of that pack (an instance `base@origin` reads in `base`'s view).
     pub fn new(packages: Vec<&'a Package>, loaded: &[&'a Package]) -> Self {
-        let deps = dependencies(&packages, loaded);
-        let world = World::from_packages(&packages);
-        let mut links: BTreeMap<String, Vec<(String, &'a Edge)>> = BTreeMap::new();
-        for p in &packages {
+        let mut graph = Self {
+            world: World::from_packages(&packages),
+            deps: dependencies(&packages, loaded),
+            packages,
+            links: BTreeMap::new(),
+        };
+        let mut links: BTreeMap<String, Vec<(String, Edge)>> = BTreeMap::new();
+        for p in &graph.packages {
             for d in declarations(p) {
                 if let Declaration::Link(l) = d {
-                    let pack = l.from.split_once("::").map_or("", |(p, _)| p).to_owned();
+                    let (from, pack) = (p.manifest.pack_id.as_str(), pack_of(&l.from));
+                    let mut edge = l.edge.clone();
+                    edge.event = edge.event.map(|e| graph.respelled(from, base(pack), &e));
+                    if let Some(EdgeDeadline {
+                        window: DeadlineWindow::Declared { deadline },
+                        ..
+                    }) = &mut edge.deadline
+                    {
+                        *deadline = graph.respell_from(from, base(pack), deadline);
+                    }
                     links
                         .entry(l.from.clone())
                         .or_default()
-                        .push((pack, &l.edge));
+                        .push((pack.to_owned(), edge));
                 }
             }
         }
-        Self {
-            packages,
-            world,
-            links,
-            deps,
-        }
+        graph.links = links;
+        graph
     }
 
     /// The primary package's pack id.
@@ -63,8 +82,7 @@ impl<'a> Graph<'a> {
     /// instance `base@origin` of one (a links package composes it; its
     /// nodes are `base`'s).
     fn is_pack(&self, id: &str) -> bool {
-        let base = id.split_once('@').map_or(id, |(b, _)| b);
-        self.vocabulary().any(|p| p.manifest.pack_id == base)
+        self.vocabulary().any(|p| p.manifest.pack_id == base(id))
     }
 
     /// The used packages, then their dependencies.
@@ -80,27 +98,40 @@ impl<'a> Graph<'a> {
         }
     }
 
-    /// `name` (in the primary view) respelled for `pack`'s view.
-    pub fn respell(&self, pack: &str, name: &str) -> String {
-        let qualified = self.qualify(self.primary(), name);
+    /// `name` (written in `from`'s view) respelled for `pack`'s view.
+    fn respell_from(&self, from: &str, pack: &str, name: &str) -> String {
+        let qualified = self.qualify(from, name);
         match qualified.split_once("::") {
             Some((p, local)) if p == pack => local.to_owned(),
             _ => qualified,
         }
     }
 
+    /// `name` (in the primary view) respelled for `pack`'s view.
+    pub fn respell(&self, pack: &str, name: &str) -> String {
+        self.respell_from(self.primary(), pack, name)
+    }
+
     /// `e` (in the primary view) respelled for `pack`'s view.
     pub fn view(&self, pack: &str, e: &Expr) -> Expr {
-        let ty = self.view_type(pack, &e.ty);
+        self.respelled(self.primary(), pack, e)
+    }
+
+    /// `e` (written in `from`'s view) respelled for `pack`'s view.
+    fn respelled(&self, from: &str, pack: &str, e: &Expr) -> Expr {
+        let ty = match &e.ty {
+            Type::Named(n) => Type::Named(self.respell_from(from, pack, n)),
+            other => other.clone(),
+        };
         let kind = match &e.kind {
             ExprKind::Call { callee, args } => ExprKind::Call {
-                callee: self.respell(pack, callee),
-                args: args.iter().map(|a| self.view(pack, a)).collect(),
+                callee: self.respell_from(from, pack, callee),
+                args: args.iter().map(|a| self.respelled(from, pack, a)).collect(),
             },
             ExprKind::Literal {
                 value: Value::Variant(v),
             } => ExprKind::Literal {
-                value: Value::Variant(self.respell(pack, v)),
+                value: Value::Variant(self.respell_from(from, pack, v)),
             },
             other => other.clone(),
         };
@@ -111,20 +142,12 @@ impl<'a> Graph<'a> {
         }
     }
 
-    fn view_type(&self, pack: &str, t: &Type) -> Type {
-        match t {
-            Type::Named(n) => Type::Named(self.respell(pack, n)),
-            other => other.clone(),
-        }
-    }
-
     /// The temporal key of qualified `pack::id`; an instance
     /// `base@origin::id` keys to `base`'s declaration.
     pub fn key(qualified: &str) -> Key {
         let (pack, name) = qualified.split_once("::").unwrap_or(("", qualified));
-        let pack = pack.split_once('@').map_or(pack, |(base, _)| base);
         Key {
-            pack: pack.to_owned(),
+            pack: base(pack).to_owned(),
             name: name.to_owned(),
         }
     }
@@ -174,12 +197,18 @@ impl<'a> Graph<'a> {
 
     /// The outgoing edges of node version `node` at qualified id `at`: its
     /// own edges (in its pack), then link edges, with each edge's pack.
-    pub fn edges(&self, at: &str, node: &'a Node) -> Vec<(String, &'a Edge)> {
-        let pack = at.split_once("::").map_or("", |(p, _)| p).to_owned();
+    pub fn edges<'s>(&'s self, at: &str, node: &'s Node) -> Vec<(String, &'s Edge)> {
+        let pack = pack_of(at);
         node.edges
             .iter()
-            .map(|e| (pack.clone(), e))
-            .chain(self.links.get(at).into_iter().flatten().cloned())
+            .map(|e| (pack.to_owned(), e))
+            .chain(
+                self.links
+                    .get(at)
+                    .into_iter()
+                    .flatten()
+                    .map(|(p, e)| (p.clone(), e)),
+            )
             .collect()
     }
 
@@ -249,7 +278,7 @@ impl<'a> Graph<'a> {
 
     /// Ids of every named edge declared at a node of `pack` (any version),
     /// including link edges leaving it.
-    pub fn edge_ids(&self, pack: &str) -> BTreeSet<&'a str> {
+    pub fn edge_ids(&self, pack: &str) -> BTreeSet<&str> {
         let own = self
             .packages
             .iter()
@@ -264,7 +293,7 @@ impl<'a> Graph<'a> {
             .links
             .iter()
             .filter(|(from, _)| from.split_once("::").is_some_and(|(p, _)| p == pack))
-            .flat_map(|(_, edges)| edges.iter().map(|(_, e)| *e));
+            .flat_map(|(_, edges)| edges.iter().map(|(_, e)| e));
         own.chain(linked).filter_map(|e| e.id.as_deref()).collect()
     }
 
@@ -272,6 +301,16 @@ impl<'a> Graph<'a> {
     pub fn declares_excusal(&self) -> bool {
         self.event_types().any(|(_, e)| is_excusal(&e.name))
     }
+}
+
+/// The pack of qualified `pack::name` (empty when unqualified).
+pub(super) fn pack_of(qualified: &str) -> &str {
+    qualified.split_once("::").map_or("", |(p, _)| p)
+}
+
+/// The base pack of an instance `base@origin` (a pack is its own base).
+pub(super) fn base(pack: &str) -> &str {
+    pack.split_once('@').map_or(pack, |(b, _)| b)
 }
 
 /// Whether event type `name` (any spelling) is `Waived`/`Extended`/`Excused`.

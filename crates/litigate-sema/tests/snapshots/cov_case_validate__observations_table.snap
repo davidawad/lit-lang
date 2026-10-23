@@ -1,0 +1,24 @@
+---
+source: crates/litigate-sema/tests/cov_case_validate.rs
+expression: table
+---
+{
+    "not a draw: a decision an actor of the perspective takes": [
+        "8:19 L4006 `alpha::bench` is not a chance node in force on 2011-06-01\n    note: only world draws can be observed: a `chance` node, or a `decision` whose every edge is taken by an actor playing nature",
+    ],
+    "not a draw: a decision with one edge": [
+        "8:19 L4006 `alpha::lone` is not a chance node in force on 2011-06-01\n    note: only world draws can be observed: a `chance` node, or a `decision` whose every edge is taken by an actor playing nature",
+    ],
+    "not a draw: a state": [
+        "8:19 L4006 `alpha::intake` is not a chance node in force on 2011-06-01\n    note: only world draws can be observed: a `chance` node, or a `decision` whose every edge is taken by an actor playing nature",
+    ],
+    "ok: a decision of an actor no party plays is a draw": [
+        "ok: start alpha::intake",
+    ],
+    "ok: an actor's role set explicitly": [
+        "ok: start alpha::intake",
+    ],
+    "outcome: a link edge is not the node's own outcome": [
+        "8:38 L4006 `alpha::hop` is not an outcome of `alpha::bench`\n    note: edges: grant, deny",
+    ],
+}

@@ -34,8 +34,13 @@ impl R<'_, '_> {
         };
         children(&record, K::RecordField)
             .filter_map(|f| {
-                let key = child(&f, K::Ref).and_then(|r| ref_path(&r))?;
-                let value = field_value(&f)?;
+                // A field starts at its key; only its value can be missing.
+                let (Some(key), Some(value)) = (
+                    child(&f, K::Ref).and_then(|r| ref_path(&r)),
+                    field_value(&f),
+                ) else {
+                    return None;
+                };
                 Some((self.node(&key)?, key.range, value))
             })
             .collect()

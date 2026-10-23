@@ -1,0 +1,40 @@
+---
+source: crates/litigate-sema/tests/cov_case_resolve.rs
+expression: table
+---
+{
+    "events: a cite hole is the authority as written": [
+        "ok: start alpha::intake",
+    ],
+    "events: a line missing its party keeps the rest resolving": [
+        "13:3 L0001 expected `by` or `on`, found `2010-01-05`",
+        "13:14 L1002 `alpha` declares no event `Nope`\n    note: events: Served, Filed, Answered, Ruled, Logged, Twin, Noted, Reopened, Forfeited, Excused, Benched",
+    ],
+    "events: an empty cite hole": [
+        "ok: start alpha::intake",
+    ],
+    "events: an event dated on no calendar day": [
+        "12:3 L0004 `2010-02-30` is not a valid proleptic Gregorian date",
+    ],
+    "events: out of order, sorted by a machine-applicable fix": [
+        "12:14 L4001 `Benched(complaint)` is not a legal event at stage `alpha::respond` (Respond)\n    note: legal events: Answered(complaint) [answer], Twin(motion) [late], Reopened(motion) [reopen]\n    note: replay stops at the first illegal event",
+        "13:3 L4001 events must be in date order: 2010-01-04 comes after 2010-01-05\n    note: replay processes events sorted by date (ties keep source order)\n    fix @12:3-13:42 MachineApplicable: \"2010-01-04 Served(complaint, Mail) on d\\n  2010-01-05 Benched(complaint) by p\"",
+        "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
+    ],
+    "known_at: before the packages were known, nothing is in force": [
+        "13:3 L3007 stage `alpha::intake` has no version in force on 2010-01-04",
+    ],
+    "known_at: not a valid date": [
+        "4:10 L0004 `2010-02-30` is not a valid proleptic Gregorian date",
+    ],
+    "ok: known_at, notes, and sources with a date, a hole, and nothing": [
+        "ok: start alpha::respond",
+        "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
+    ],
+    "perspective: a role that is not self, opponent, or nature": [
+        "5:39 L2001 expected a role: `self`, `opponent`, or `nature`",
+    ],
+    "uses: a package that is not loaded": [
+        "2:20 L1006 package `omega` is not loaded",
+    ],
+}

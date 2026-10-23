@@ -1,0 +1,27 @@
+---
+source: crates/litigate-sema/tests/cov_case_hir.rs
+expression: table
+---
+{
+    "a lock without the package": [
+        "1:1 L1007 `uses alpha` does not match its pin\n    note: Lit.lock has no entry for `alpha`\n    note: run `litigate lock` to pin the packages this matter uses",
+    ],
+    "a pin of a package that is not loaded": [
+        "1:1 L1006 package `omega` is not loaded",
+    ],
+    "a pin the lock agrees with but the loaded package's digest does not": [
+        "1:1 L1007 `uses alpha` does not match its pin\n    note: Lit.lock pins alpha 1.0.0 sha256:0000000000000000000000000000000000000000000000000000000000000000, but the loaded package is 1.0.0 sha256:0c6a498a753d5f8a654fed425ea34df652f6f302f62193ec8f877c8c06761bc8\n    note: run `litigate lock` to pin the packages this matter uses",
+    ],
+    "a pin the lock agrees with but the loaded package's version does not": [
+        "1:1 L1007 `uses alpha` does not match its pin\n    note: Lit.lock pins alpha 9.9.9 sha256:0c6a498a753d5f8a654fed425ea34df652f6f302f62193ec8f877c8c06761bc8, but the loaded package is 1.0.0 sha256:0c6a498a753d5f8a654fed425ea34df652f6f302f62193ec8f877c8c06761bc8\n    note: run `litigate lock` to pin the packages this matter uses",
+    ],
+    "a pin whose digest the lock disagrees with": [
+        "1:1 L1007 `uses alpha` does not match its pin\n    note: Lit.lock pins alpha 1.0.0 sha256:0c6a498a753d5f8a654fed425ea34df652f6f302f62193ec8f877c8c06761bc8\n    note: run `litigate lock` to pin the packages this matter uses",
+    ],
+    "a pin whose version the lock disagrees with": [
+        "1:1 L1007 `uses alpha` does not match its pin\n    note: Lit.lock pins alpha 1.0.0 sha256:0c6a498a753d5f8a654fed425ea34df652f6f302f62193ec8f877c8c06761bc8\n    note: run `litigate lock` to pin the packages this matter uses",
+    ],
+    "no lock": [
+        "1:1 L1007 `uses alpha` does not match its pin\n    note: there is no Lit.lock\n    note: run `litigate lock` to pin the packages this matter uses",
+    ],
+}

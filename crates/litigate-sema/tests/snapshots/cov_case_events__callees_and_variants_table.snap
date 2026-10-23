@@ -1,0 +1,45 @@
+---
+source: crates/litigate-sema/tests/cov_case_events.rs
+expression: table
+---
+{
+    "another package: no such event, nearest suggested in its spelling": [
+        "12:14 L1002 `gamma` declares no event `Pinge`\n    note: events: Pinged, Struck\n    fix @12:14-12:26 MaybeIncorrect: \"gamma::Pinged\"",
+    ],
+    "another package: typed in its spelling, not legal at the primary start": [
+        "12:14 L4001 `gamma::Pinged(a)` is not a legal event at stage `alpha::intake` (Intake)\n    note: legal events: Served(complaint) [serve], Filed(complaint) [file], Ruled() [rule], Logged() [log], Twin(complaint) [twin-a], Twin(complaint) [twin-b], Noted(motion) [probe], Benched(complaint) [to-bench], Benched(motion) [to-lone], Answered(motion) [archive], Reopened(motion) [stage]\n    note: replay stops at the first illegal event",
+    ],
+    "arity: one argument missing": [
+        "12:14 L2001 `Benched` takes 1 argument, found 0\n    note: `Benched(document: Document)`; case events must be complete",
+    ],
+    "arity: three arguments missing": [
+        "12:14 L2001 `Ruled` takes 4 arguments, found 1\n    note: `Ruled(on: Date, granted: Bool, votes: Number, fee: Money<usd>)`; case events must be complete",
+    ],
+    "callee: no such event and nothing near it": [
+        "12:14 L1002 `alpha` declares no event `Zzzzzzzzzzzz`\n    note: events: Served, Filed, Answered, Ruled, Logged, Twin, Noted, Reopened, Forfeited, Excused, Benched",
+    ],
+    "callee: qualified by a pack the matter does not use": [
+        "12:14 L1002 `alpha` declares no event `omega::Benched`\n    note: events: Served, Filed, Answered, Ruled, Logged, Twin, Noted, Reopened, Forfeited, Excused, Benched",
+    ],
+    "ok: a variant qualified by its enum": [
+        "ok: start alpha::bench",
+        "trace Took Benched(complaint) alpha::intake -> alpha::bench via alpha::to-bench",
+    ],
+    "ok: a variant qualified by its package and enum": [
+        "ok: start alpha::bench",
+        "trace Took Benched(complaint) alpha::intake -> alpha::bench via alpha::to-bench",
+    ],
+    "ok: the primary package's event, qualified": [
+        "ok: start alpha::bench",
+        "trace Took Benched(complaint) alpha::intake -> alpha::bench via alpha::to-bench",
+    ],
+    "variant: misspelled, nearest suggested": [
+        "12:22 L2001 expected a `Document` variant, found `complant`\n    note: variants: complaint, motion\n    fix @12:22-12:30 MaybeIncorrect: \"complaint\"",
+    ],
+    "variant: nothing near it": [
+        "12:22 L2001 expected a `Document` variant, found `zzzzzzzzzzzz`\n    note: variants: complaint, motion",
+    ],
+    "variant: qualified by another enum": [
+        "12:22 L2001 expected a `Document` variant, found `Method::complaint`\n    note: variants: complaint, motion",
+    ],
+}

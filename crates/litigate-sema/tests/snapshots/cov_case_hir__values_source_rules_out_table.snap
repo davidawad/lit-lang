@@ -1,0 +1,42 @@
+---
+source: crates/litigate-sema/tests/cov_case_hir.rs
+expression: table
+---
+{
+    "events: a date on no calendar day": [
+        "1:1 L0004 `2010-02-30` is not a valid date",
+    ],
+    "events: a list action takes no edge": [
+        "1:1 L4001 `_` is not a legal event at stage `alpha::intake` (Intake)\n    note: legal events: Served(complaint) [serve], Filed(complaint) [file], Ruled() [rule], Logged() [log], Twin(complaint) [twin-a], Twin(complaint) [twin-b], Noted(motion) [probe], Benched(complaint) [to-bench], Benched(motion) [to-lone], Answered(motion) [archive], Reopened(motion) [stage]\n    note: replay stops at the first illegal event",
+    ],
+    "events: a reference action takes no edge": [
+        "1:1 L4001 `alpha::intake` is not a legal event at stage `alpha::intake` (Intake)\n    note: legal events: Served(complaint) [serve], Filed(complaint) [file], Ruled() [rule], Logged() [log], Twin(complaint) [twin-a], Twin(complaint) [twin-b], Noted(motion) [probe], Benched(complaint) [to-bench], Benched(motion) [to-lone], Answered(motion) [archive], Reopened(motion) [stage]\n    note: replay stops at the first illegal event",
+    ],
+    "events: a unit action takes no edge": [
+        "1:1 L4001 `_` is not a legal event at stage `alpha::intake` (Intake)\n    note: legal events: Served(complaint) [serve], Filed(complaint) [file], Ruled() [rule], Logged() [log], Twin(complaint) [twin-a], Twin(complaint) [twin-b], Noted(motion) [probe], Benched(complaint) [to-bench], Benched(motion) [to-lone], Answered(motion) [archive], Reopened(motion) [stage]\n    note: replay stops at the first illegal event",
+    ],
+    "events: out of order, with no source to sort": [
+        "1:1 L4001 `Benched(complaint)` is not a legal event at stage `alpha::respond` (Respond)\n    note: legal events: Answered(complaint) [answer], Twin(motion) [late], Reopened(motion) [reopen]\n    note: replay stops at the first illegal event",
+        "1:1 L4001 events must be in date order: 2010-01-04 comes after 2010-01-05\n    note: replay processes events sorted by date (ties keep source order)",
+        "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
+    ],
+    "known_at: not a valid date": [
+        "1:1 L0004 known_at is not a valid date\n    note: dates are proleptic Gregorian YYYY-MM-DD",
+    ],
+    "removal: an option that is not a string removes nothing": [
+        "ok: start alpha::intake",
+    ],
+    "removal: an option with no span of its own": [
+        "1:1 L1002 `alpha` has no edge `zzzz` for `Forfeited(\"zzzz\")` to remove\n    note: `option` names an edge by its id: `edge`, or `pack::edge` in another package",
+    ],
+    "stakes: a deadline is not a terminal": [
+        "1:1 L4004 `alpha::court-period` is not a terminal in force on 2011-06-01; only terminals take stakes",
+    ],
+    "start: disagrees, with no source to remove": [
+        "1:1 L4008 `start alpha::intake` disagrees with the replayed posture `alpha::respond`\n    note: posture is replayed from the events, never asserted",
+        "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
+    ],
+    "start: no such node": [
+        "1:1 L1008 replay cannot begin at `alpha::nowhere`: no such node",
+    ],
+}

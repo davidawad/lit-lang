@@ -113,15 +113,9 @@ impl Cx<'_, '_> {
         self.removed.iter().find(|r| r.edge == qualified)
     }
 
-    /// Event `k` would take an option an earlier event removed (L4001);
-    /// replay stops (`None`).
-    pub(super) fn takes_removed(
-        &mut self,
-        k: usize,
-        posture: &str,
-        (pack, edge): &(String, &Edge),
-    ) -> Option<String> {
-        let r = self.removal(pack, edge)?;
+    /// Event `k` would take only options earlier events removed, the first
+    /// by `r` (L4001); replay stops.
+    pub(super) fn takes_removed(&mut self, k: usize, posture: &str, r: &Removal) {
         let event = self.sorted[k].1;
         let removed_at = self.spans.event(r.event, |e| e.whole.as_ref(), self.id());
         let d = error(
@@ -140,6 +134,5 @@ impl Cx<'_, '_> {
         )
         .note("replay stops at the first illegal event");
         self.out.push(d);
-        None
     }
 }

@@ -1,0 +1,15 @@
+---
+source: crates/litigate-sema/tests/cov_case_hir.rs
+expression: table
+---
+{
+    "transition: no arm holds and there is no otherwise": [
+        "13:3 L3008 no version of stage `alpha::staged` governs this event: `keep-staged` has no `otherwise` arm",
+        "trace Took Reopened(motion) alpha::intake -> alpha::staged via alpha::stage",
+    ],
+    "within: names a node, not a deadline": [
+        "1:1 L3007 deadline `intake` has no version governing 2010-01-05",
+        "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
+        "trace Took Answered(complaint) alpha::respond -> alpha::answered via alpha::answer",
+    ],
+}

@@ -89,20 +89,16 @@ fn kebab(name: &str) -> String {
     out
 }
 
-/// The local names of the enum variants among `trigger`'s arguments.
-fn variant_args(trigger: &Expr) -> Vec<String> {
-    match &trigger.kind {
-        ExprKind::Call { args, .. } => args
-            .iter()
-            .filter_map(|a| match &a.kind {
-                ExprKind::Literal {
-                    value: Value::Variant(v),
-                } => Some(v.rsplit("::").next().unwrap_or(v).to_owned()),
-                _ => None,
-            })
-            .collect(),
-        _ => Vec::new(),
-    }
+/// The local names of the enum variants among a trigger's arguments.
+fn variant_args(args: &[Expr]) -> Vec<String> {
+    args.iter()
+        .filter_map(|a| match &a.kind {
+            ExprKind::Literal {
+                value: Value::Variant(v),
+            } => Some(v.rsplit("::").next().unwrap_or(v).to_owned()),
+            _ => None,
+        })
+        .collect()
 }
 
 /// The deadline `id` (written in `pack`) governing `events[at]`, with its
@@ -136,10 +132,12 @@ pub(super) fn due(
     at: usize,
     known_at: Option<&str>,
 ) -> Option<Due> {
-    let trigger = (0..at)
-        .rev()
-        .find(|&j| matches(&d.trigger, events[j].action))?;
-    let candidates = variant_args(events[trigger].action);
+    // Only a call matches a trigger pattern.
+    let (trigger, args) = (0..at).rev().find_map(|j| match &events[j].action.kind {
+        ExprKind::Call { args, .. } if matches(&d.trigger, events[j].action) => Some((j, args)),
+        _ => None,
+    })?;
+    let candidates = variant_args(args);
     let counting = match graph.governing(&graph.qualify(pack, &d.counting), events, at, known_at) {
         Ok(Declaration::Counting(c)) => Some(c),
         _ => None,
@@ -174,18 +172,17 @@ pub(super) fn due(
     })
 }
 
-/// The earliest cited excusing event dated within `[from, to]` among the
-/// events before sorted index `at`.
+/// The earliest cited excusing event dated on or after `from` among the
+/// events (sorted by date) before index `at`, so dated on or before it.
 pub(super) fn excusal<'e>(
     events: &[(usize, &'e Event)],
     at: usize,
     from: &str,
-    to: &str,
 ) -> Option<&'e Event> {
     events[..at]
         .iter()
         .map(|(_, e)| *e)
-        .filter(|e| e.authority.is_some() && from <= e.date.as_str() && e.date.as_str() <= to)
+        .filter(|e| e.authority.is_some() && from <= e.date.as_str())
         .find(|e| matches!(&e.action.kind, ExprKind::Call { callee, .. } if is_excusal(callee)))
 }
 

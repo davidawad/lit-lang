@@ -1,0 +1,62 @@
+---
+source: crates/litigate-sema/tests/cov_case_replay.rs
+expression: table(&rows)
+---
+{
+    "excused: a cited excusal between trigger and event": [
+        "ok: start alpha::answered",
+        "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
+        "trace Timing Excused(complaint) alpha::respond -> alpha::respond",
+        "trace Took Answered(complaint) alpha::respond -> alpha::answered via alpha::answer",
+    ],
+    "missed: a cited event that is not an excusal does not cover it": [
+        "14:3 L4002 `Answered(complaint)` on 2010-01-12 missed deadline `court-period`, due 2010-01-11\n    note @12:3: `court-period` runs 5 court days from `Served(complaint, Mail)` on 2010-01-04 under `ac@2009-12-01`\n    note: a cited `Waived`, `Extended`, or `Excused` event between the trigger and this event would excuse it",
+        "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
+        "trace Took Answered(complaint) alpha::respond -> alpha::answered via alpha::answer",
+    ],
+    "missed: a cited excusal before the trigger does not cover it": [
+        "14:3 L4002 `Answered(complaint)` on 2010-01-12 missed deadline `court-period`, due 2010-01-11\n    note @13:3: `court-period` runs 5 court days from `Served(complaint, Mail)` on 2010-01-04 under `ac@2009-12-01`\n    note: a cited `Waived`, `Extended`, or `Excused` event between the trigger and this event would excuse it",
+        "trace Timing Excused(complaint) alpha::intake -> alpha::intake",
+        "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
+        "trace Took Answered(complaint) alpha::respond -> alpha::answered via alpha::answer",
+    ],
+    "missed: court days": [
+        "13:3 L4002 `Answered(complaint)` on 2010-01-12 missed deadline `court-period`, due 2010-01-11\n    note @12:3: `court-period` runs 5 court days from `Served(complaint, Mail)` on 2010-01-04 under `ac@2009-12-01`\n    note: a cited `Waived`, `Extended`, or `Excused` event between the trigger and this event would excuse it",
+        "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
+        "trace Took Answered(complaint) alpha::respond -> alpha::answered via alpha::answer",
+    ],
+    "ok: court days, met": [
+        "ok: start alpha::answered",
+        "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
+        "trace Took Answered(complaint) alpha::respond -> alpha::answered via alpha::answer",
+    ],
+    "uncountable: a rule of a package the matter does not use": [
+        "13:3 L3009 cannot count deadline `remote-period` for this event\n    note: no clock library is loaded to run counting rule `bc`\n    note @12:3: `remote-period` runs 10 calendar days from `Filed(complaint, \"by mail\")` on 2010-01-04 under `bc`, service by complaint",
+        "trace Took Filed(complaint, \"by mail\") alpha::intake -> alpha::filed via alpha::file",
+        "trace Took Twin(complaint) alpha::filed -> alpha::defaulted via alpha::remote",
+    ],
+    "uncountable: business days, a trigger with a string argument": [
+        "13:3 L3009 cannot count deadline `business-period` for this event\n    note: no clock library is loaded to run counting rule `ac`\n    note @12:3: `business-period` runs 3 business days from `Filed(complaint, \"by mail\")` on 2010-01-04 under `ac@2009-12-01`",
+        "trace Took Filed(complaint, \"by mail\") alpha::intake -> alpha::filed via alpha::file",
+        "trace Took Answered(complaint) alpha::filed -> alpha::answered via alpha::reply",
+    ],
+    "uncountable: court days without a clock": [
+        "13:3 L3009 cannot count deadline `court-period` for this event\n    note: no clock library is loaded to run counting rule `ac`\n    note @12:3: `court-period` runs 5 court days from `Served(complaint, Mail)` on 2010-01-04 under `ac@2009-12-01`",
+        "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
+        "trace Took Answered(complaint) alpha::respond -> alpha::answered via alpha::answer",
+    ],
+    "uncountable: one day under a rule of the matter's package": [
+        "13:3 L3009 cannot count deadline `one-day` for this event\n    note: no clock library is loaded to run counting rule `ac`\n    note @12:3: `one-day` runs 1 calendar day from `Filed(complaint, \"by mail\")` on 2010-01-04 under `ac@2009-12-01`",
+        "trace Took Filed(complaint, \"by mail\") alpha::intake -> alpha::filed via alpha::file",
+        "trace Took Reopened(complaint) alpha::filed -> alpha::answered via alpha::quick",
+    ],
+    "ungoverned: the deadline is not yet in force": [
+        "13:3 L3007 deadline `future-period` has no version governing 2010-01-08",
+        "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
+        "trace Took Twin(motion) alpha::respond -> alpha::defaulted via alpha::late",
+    ],
+    "untriggered: no period runs without a trigger": [
+        "5:7 L4008 `start alpha::respond` disagrees with the replayed posture `alpha::answered`\n    note: posture is replayed from the events, never asserted\n    fix @5:1-5:14 MaybeIncorrect: \"\"",
+        "trace Took Answered(complaint) alpha::respond -> alpha::answered via alpha::answer",
+    ],
+}

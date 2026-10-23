@@ -5,7 +5,7 @@
 //! then `perspective`). That is litgraph's own rule for what `observe` can
 //! name, and it covers tribunal rulings the stdlib keeps as `decision ...
 //! by office` so their packs lower unchanged.
-use super::graph::Graph;
+use super::graph::{base, pack_of, Graph};
 use crate::hir::{ActorRole, Case, Node, NodeKind, Perspective};
 
 /// Whether `node` (qualified `at`) is a draw the matter can observe.
@@ -40,8 +40,7 @@ fn role(case: &Case, graph: &Graph<'_>, at: &str, actor: &str) -> Option<ActorRo
         }
         _ => {}
     }
-    let pack = at.split_once("::").map_or("", |(p, _)| p);
-    let base = pack.split_once('@').map_or(pack, |(b, _)| b);
+    let base = base(pack_of(at));
     graph
         .packages
         .iter()

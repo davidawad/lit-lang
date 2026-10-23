@@ -1,0 +1,25 @@
+---
+source: crates/litigate-sema/tests/cov_case_validate.rs
+expression: table
+---
+{
+    "analysis: a removed edge prunes what is reachable": [
+        "ok: start alpha::bench",
+        "trace Took Benched(complaint) alpha::intake -> alpha::bench via alpha::to-bench",
+    ],
+    "analysis: entries that are not edge names are skipped, a repeat is not": [
+        "1:6 L4001 option `alpha::deny` is removed more than once",
+        "trace Took Benched(complaint) alpha::intake -> alpha::bench via alpha::to-bench",
+    ],
+    "analysis: removing an edge an event already removed": [
+        "1:6 L4001 option `alpha::twin-a` is removed more than once",
+    ],
+    "stakes: no block, so no fix to insert the missing ones": [
+        "1:6 L4004 terminal `alpha::defaulted` is reachable from `alpha::bench` but has no stake\n    note: give it a value, or `unvalued` while drafting (an error in strict)",
+        "trace Took Benched(complaint) alpha::intake -> alpha::bench via alpha::to-bench",
+    ],
+    "stakes: unvalued in strict": [
+        "14:38 L4004 terminal `alpha::defaulted` is `unvalued`, which `strict` does not accept",
+        "trace Took Benched(complaint) alpha::intake -> alpha::bench via alpha::to-bench",
+    ],
+}

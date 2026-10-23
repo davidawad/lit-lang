@@ -1,0 +1,21 @@
+---
+source: crates/litigate-sema/tests/cov_case_validate.rs
+expression: table
+---
+{
+    "ok: perspective sets every actor it names": [
+        "ok: start alpha::intake",
+    ],
+    "parties: an actor nothing like the package's": [
+        "6:14 L4005 `Zzzzzzzzzzzz` is not an actor of `alpha`\n    note: actors: Court, Defendant, Plaintiff, either",
+    ],
+    "perspective: names no party": [
+        "5:1 L4005 perspective names `nobody`, which is not a party",
+    ],
+    "perspective: sets an actor the package does not declare": [
+        "5:1 L4005 perspective sets `Judge`, which is not an actor of the primary package",
+    ],
+    "uses: the same package twice": [
+        "2:20 L1001 `alpha` is used twice",
+    ],
+}

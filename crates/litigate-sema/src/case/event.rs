@@ -7,7 +7,7 @@ use crate::db::parse::tree::{Expr as Src, ExprKind as S, RefPath};
 use crate::db::span::{Report, TextRange};
 use crate::hir::{Expr, ExprKind, Type, Value};
 use crate::resolve::suggest::nearest;
-use crate::types::{date, rational};
+use crate::types::rational;
 use litigate_base::{Applicability, DiagnosticCode as C, Span};
 
 /// Converts a range to a span.
@@ -33,21 +33,14 @@ fn spelled(graph: &Graph<'_>, pack: &str, name: &str) -> String {
     }
 }
 
-/// Types `e` as a complete event call; `None` after reporting.
+/// Types the call `callee(args)` written at `range` as a complete event
+/// call; `None` after reporting.
 pub(super) fn call(
     graph: &Graph<'_>,
-    e: &Src,
+    (callee, args, range): (&RefPath, &[Src], TextRange),
     span: ToSpan<'_>,
     out: &mut Vec<Report>,
 ) -> Option<Expr> {
-    let S::Call(callee, args) = &e.kind else {
-        out.push(Report::new(
-            C::InvalidCaseEvent,
-            e.range,
-            "a case event is an event constructor call, like `Served(complaint, Mail)`",
-        ));
-        return None;
-    };
     let (pack, name) = split(graph, callee);
     let Some(ty) = graph.event_type(&pack, &name) else {
         let names: Vec<&str> = graph
@@ -79,7 +72,7 @@ pub(super) fn call(
         out.push(
             Report::new(
                 C::TypeMismatch,
-                e.range,
+                range,
                 format!(
                     "`{name}` takes {} argument{}, found {}",
                     ty.params.len(),
@@ -106,7 +99,7 @@ pub(super) fn call(
             callee,
             args: typed?,
         },
-        span: Some(span(e.range)),
+        span: Some(span(range)),
     })
 }
 
@@ -138,7 +131,8 @@ fn argument(
     match (t, &a.kind) {
         (Type::Named(n), S::Ref(path)) => variant(graph, pack, n, path, span, out),
         (Type::Named(n), _) => mismatch(out, &format!("a `{n}` variant")),
-        (Type::Date, S::Date(d)) if date::is_valid(d) => {
+        // The lexer rejects a date literal on no calendar day.
+        (Type::Date, S::Date(d)) => {
             Some(literal(Value::Date(d.clone()), Type::Date, a.range, span))
         }
         (Type::Date, _) => mismatch(out, "a valid date"),
@@ -158,15 +152,23 @@ fn argument(
             Err(_) => mismatch(out, "an exact number"),
         },
         (Type::Number, _) => mismatch(out, "a number"),
-        (Type::Money(cur), S::Money(text)) => match super::resolve::money(text) {
-            Some(m) if m.currency == *cur => Some(literal(
-                Value::Money(m),
-                Type::Money(cur.clone()),
-                a.range,
-                span,
-            )),
-            _ => mismatch(out, &format!("a `{cur}` amount")),
-        },
+        // A money literal's suffix and a `Money<_>` type are both `usd`, the
+        // only currency (the lexer and type resolution reject any other).
+        (Type::Money(cur), arg) => match arg {
+            S::Money(text) => super::resolve::money(text),
+            _ => None,
+        }
+        .map_or_else(
+            || mismatch(out, &format!("a `{cur}` amount")),
+            |m| {
+                Some(literal(
+                    Value::Money(m),
+                    Type::Money(cur.clone()),
+                    a.range,
+                    span,
+                ))
+            },
+        ),
         (other, _) => {
             out.push(Report::new(
                 C::TypeMismatch,

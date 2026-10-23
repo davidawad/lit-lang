@@ -10,7 +10,7 @@ mod blocks;
 use super::event::{self, ToSpan};
 use super::graph::Graph;
 use super::spans::{CaseSpans, EventSpans};
-use crate::db::parse::tree::RefPath;
+use crate::db::parse::tree::{Expr as Src, ExprKind as S, RefPath};
 use crate::db::parse::{ref_path, Lower};
 use crate::db::span::{to_span, Report, TextRange};
 use crate::hir::{
@@ -39,7 +39,9 @@ pub struct Resolved {
 /// Money literal text (`-2_000.50.usd`) in minor units.
 pub(super) fn money(text: &str) -> Option<Money> {
     let (neg, text) = text.strip_prefix('-').map_or((false, text), |t| (true, t));
-    let (amount, currency) = text.rsplit_once('.')?;
+    // A money literal always has a suffix; with none, the empty amount
+    // does not parse.
+    let (amount, currency) = text.rsplit_once('.').unwrap_or(("", text));
     if amount.split_once('.').is_some_and(|(_, f)| f.len() > 2) {
         return None;
     }
@@ -224,9 +226,12 @@ impl R<'_, '_> {
         for item in &items {
             let range = sig(item);
             self.spans.uses.push(Some(self.s(range)));
-            let (name, _) = token_text(item, K::Ident)?;
-            let req_text = child(item, K::VersionReq)
-                .map(|v| v.text().to_string().split_whitespace().collect::<String>())?;
+            // The parser starts a `UseItem` at its name and always gives it
+            // a `VersionReq` (empty after a syntax error).
+            let name = token_text(item, K::Ident).map_or_else(String::new, |t| t.0);
+            let req_text = child(item, K::VersionReq).map_or_else(String::new, |v| {
+                v.text().to_string().split_whitespace().collect::<String>()
+            });
             let Some(pkg) = self.packages.iter().find(|p| p.manifest.name == name) else {
                 self.out.push(Report::new(
                     C::UndeclaredDependency,
@@ -317,8 +322,11 @@ impl R<'_, '_> {
         let record = child(n, K::RecordExpr)?;
         let mut map = BTreeMap::new();
         for f in children(&record, K::RecordField) {
-            let (actor, _) = token_text(&f, K::Ident)?;
-            let value = field_value(&f)?;
+            // A field starts at its actor; only its role can be missing.
+            let (Some((actor, _)), Some(value)) = (token_text(&f, K::Ident), field_value(&f))
+            else {
+                return None;
+            };
             let role: Option<ActorRole> = serde_json::from_value(serde_json::Value::String(
                 value.text().to_string().trim().to_owned(),
             ))
@@ -340,7 +348,8 @@ impl R<'_, '_> {
     fn parties(&mut self, block: &SyntaxNode) -> Vec<Party> {
         children(block, K::PartyDecl)
             .filter_map(|p| {
-                let (id, _) = token_text(&p, K::Ident)?;
+                // The parser starts a `PartyDecl` at its id.
+                let id = token_text(&p, K::Ident).map_or_else(String::new, |t| t.0);
                 let refs: Vec<RefPath> =
                     children(&p, K::Ref).filter_map(|r| ref_path(&r)).collect();
                 let (actor, entity) = (refs.first()?, refs.get(1)?);
@@ -384,23 +393,25 @@ impl R<'_, '_> {
                 action: call.as_ref().map(|c| self.s(c.range)),
                 party: party.as_ref().map(|p| self.s(p.range)),
             });
-            let (Some((date, date_range)), Some(call), Some(party), Some(relation)) =
-                (date, call, party, relation)
+            // A `CallExpr` lowers to a call, so the pattern only skips lines
+            // with a syntax error.
+            let (
+                Some((date, _)),
+                Some(Src {
+                    kind: S::Call(callee, args),
+                    range,
+                }),
+                Some(party),
+                Some(relation),
+            ) = (date, call, party, relation)
             else {
                 continue;
             };
-            if !crate::types::date::is_valid(&date) {
-                self.out.push(Report::new(
-                    C::InvalidDate,
-                    date_range,
-                    format!("`{date}` is not a valid date"),
-                ));
-                continue;
-            }
             let Some(graph) = self.graph.as_ref() else {
                 continue;
             };
-            let Some(action) = event::call(graph, &call, self.span, &mut self.out) else {
+            let written = (&callee, args.as_slice(), range);
+            let Some(action) = event::call(graph, written, self.span, &mut self.out) else {
                 continue;
             };
             events.push(Event {
@@ -439,9 +450,9 @@ impl R<'_, '_> {
                 replacement.push_str(slice(TextRange::new(ranges[slot].end, next.start)));
             }
         }
-        if let (Some(first), Some(last)) = (ranges.first(), ranges.last()) {
-            self.spans.sort_events = Some((self.s(first.cover(*last)), replacement));
-        }
+        // Out of order means at least two lines.
+        let block = ranges[0].cover(ranges[ranges.len() - 1]);
+        self.spans.sort_events = Some((self.s(block), replacement));
     }
 }
 

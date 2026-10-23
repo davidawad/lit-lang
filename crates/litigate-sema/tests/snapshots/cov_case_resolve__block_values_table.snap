@@ -1,0 +1,54 @@
+---
+source: crates/litigate-sema/tests/cov_case_resolve.rs
+expression: table
+---
+{
+    "analysis: a field with no value": [
+        "15:18 L0001 expected an identifier, found `}`",
+    ],
+    "analysis: a number JSON cannot read, alone, nested, and listed": [
+        "15:15 L4007 `n` is not a JSON value",
+        "15:28 L4007 `nested` is not a JSON value",
+        "15:46 L4007 `list` is not a JSON value",
+    ],
+    "analysis: booleans, unset, nested records and lists are JSON": [
+        "ok: start alpha::bench",
+        "trace Took Benched(complaint) alpha::intake -> alpha::bench via alpha::to-bench",
+    ],
+    "beliefs: a count that is not a non-negative integer": [
+        "15:35 L2001 an observation count is a non-negative integer",
+    ],
+    "beliefs: an observation with no node": [
+        "15:19 L0001 expected an identifier, found `:`",
+        "15:34 L0001 expected one of `case`, `uses`, `as_of`, `known_at`, `summary`, `notes`, `source`, `start`, `perspective`, `parties`, `events`, `facts`, `stakes`, `beliefs`, or `analysis`, found `}`",
+    ],
+    "beliefs: an observation with no outcomes": [
+        "15:25 L0001 expected `:`, found `}`",
+    ],
+    "beliefs: an outcome with no count": [
+        "15:35 L0001 expected an identifier, found `,`",
+    ],
+    "facts: a block with no record": [
+        "14:7 L0001 expected `{`, found `nothing`",
+    ],
+    "stakes: a multi-line block takes the missing stake on its own line": [
+        "16:1 L4004 terminal `alpha::defaulted` is reachable from `alpha::bench` but has no stake\n    note: give it a value, or `unvalued` while drafting (an error in strict)\n    fix @16:1-16:1 HasPlaceholders: \"  defaulted: unvalued\\n\"",
+        "trace Took Benched(complaint) alpha::intake -> alpha::bench via alpha::to-bench",
+    ],
+    "stakes: an amount beyond an exact rational": [
+        "14:20 L2001 expected a money amount like `-2_000.usd`, or `unvalued`",
+    ],
+    "stakes: an amount whose minor units overflow": [
+        "14:20 L2001 expected a money amount like `-2_000.usd`, or `unvalued`",
+    ],
+    "stakes: an empty block takes the missing stake after the brace": [
+        "14:9 L4004 terminal `alpha::defaulted` is reachable from `alpha::bench` but has no stake\n    note: give it a value, or `unvalued` while drafting (an error in strict)\n    fix @14:9-14:9 HasPlaceholders: \" defaulted: unvalued\"",
+        "trace Took Benched(complaint) alpha::intake -> alpha::bench via alpha::to-bench",
+    ],
+    "stakes: an unterminated block still resolves its entries": [
+        "14:8 L0002 unclosed `{`: expected `}`\n    fix @14:43-14:43 MachineApplicable: \"}\"",
+    ],
+    "stakes: more than two decimals is not money": [
+        "14:20 L2001 expected a money amount like `-2_000.usd`, or `unvalued`",
+    ],
+}

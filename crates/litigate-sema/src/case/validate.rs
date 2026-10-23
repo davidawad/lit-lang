@@ -299,7 +299,7 @@ pub(super) fn reachable_terminals(case: &Case, graph: &Graph<'_>, start: &str) -
             .any(|t| t == "fact")
             .then(|| case.facts.get(&id))
             .flatten();
-        let pack = id.split_once("::").map_or("", |(p, _)| p);
+        // Every edge leaving `id`, link edges included, is in its pack.
         for (edge_pack, e) in graph.edges(&id, node) {
             if e.id
                 .as_deref()
@@ -307,7 +307,7 @@ pub(super) fn reachable_terminals(case: &Case, graph: &Graph<'_>, start: &str) -
             {
                 continue;
             }
-            if fact.is_some_and(|f| edge_pack != pack || !own_edge_is(e, f)) {
+            if fact.is_some_and(|f| !own_edge_is(e, f)) {
                 continue;
             }
             todo.push(graph.target(&edge_pack, e));

@@ -113,3 +113,29 @@ fn actor_role_uses_litgraph_spelling() -> Result<(), serde_json::Error> {
     assert_eq!(date, HolidayDate::Fixed { month: 6, day: 19 });
     Ok(())
 }
+
+/// Cite syntax is empty only with neither rules nor shorthands.
+#[test]
+fn cite_syntax_is_empty_without_rules_or_shorthands() {
+    let rules = CiteSyntax {
+        rules: vec![CiteRule {
+            prefixes: vec!["FRCP".into()],
+            heading: "Rule {}".into(),
+            source: None,
+        }],
+        shorthands: Vec::new(),
+    };
+    let shorthands = CiteSyntax {
+        rules: Vec::new(),
+        shorthands: vec![CiteShorthand {
+            prefix: "cfr".into(),
+            code: "cfr".into(),
+            title: 37,
+            section_parts: 2,
+            source: None,
+        }],
+    };
+    assert!(CiteSyntax::default().is_empty());
+    assert!(!rules.is_empty());
+    assert!(!shorthands.is_empty());
+}

@@ -1,0 +1,40 @@
+case cofc-1498-named-scenario
+uses cofc ^0.1.0
+as_of 2026-09-28
+summary "The cofc-1498-patent-case matter at a $950/hr rate."
+notes "Ported from examples/cofc-1498-named-scenario.json, which extends the named scenario cofc-1498-patent-case (cases/cofc-1498-patent-case.case: the same parties, events, and stakes) with a $950/hr rate."
+
+source "28 U.S.C. §1498(a) — patent/copyright use, exclusive remedy, no injunction" {
+  url "https://www.law.cornell.edu/uscode/text/28/1498"
+}
+
+source "28 U.S.C. §1491 (Tucker Act) — CoFC jurisdiction" {
+  url "https://www.law.cornell.edu/uscode/text/28/1491"
+}
+
+perspective owner
+
+parties {
+  owner: applicant Corporation
+  united-states: examiner Government
+}
+
+events {
+  2026-09-14 Forfeited("e-filingfork-protest") by owner cite 28 U.S.C. § 1498(a)
+  2026-09-14 Forfeited("e-casetype-general") by owner cite 28 U.S.C. § 1498(a)
+}
+
+stakes {
+  cofc::judgment-entered: 1_000_000.usd
+  cofc::judgment-for-plaintiff: 1_000_000.usd
+  cofc::judgment-for-government: 0.usd
+  cofc::summary-judgment-for-government: 0.usd
+  cofc::settled-adr: 450_000.usd
+  cofc::dismissed-time-barred: 0.usd
+  cofc::dismissed-1500-bar: 0.usd
+  cofc::dismissed-lack-of-jurisdiction: 0.usd
+  cofc::dismissed-failure-to-state: 0.usd
+  cofc::voluntary-dismissal-early: 0.usd
+}
+
+analysis { params: { rate: 950, opp_rate: 550 } }

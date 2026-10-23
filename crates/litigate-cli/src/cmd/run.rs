@@ -33,13 +33,14 @@ fn merged(mut lib: ClockLibrary, fragment: &ClockLibrary) -> ClockLibrary {
     lib
 }
 
-/// `litigate run`.
-pub fn run(case: &str, op: &str, lib: &[String]) -> Outcome {
+/// `litigate run`; `links` composes the links packages between the used ones.
+pub fn run(case: &str, op: &str, links: bool, lib: &[String]) -> Outcome {
     let op = op_value(op)?;
     let mut targets = crate::ws::discover(&[case.to_owned()])?;
     // Links compose between whichever packs are loaded, as `links.json` does.
-    let links = crate::ws::links_packages(lib, &targets.cases);
-    targets.packages.extend(links);
+    targets
+        .packages
+        .extend(crate::ws::links_packages(lib, &targets.cases));
     let c = checked_targets(&targets, Profile::Dev, None, lib)?;
     let mut report = Report {
         result: Value::Null,
@@ -96,9 +97,10 @@ pub fn run(case: &str, op: &str, lib: &[String]) -> Outcome {
         lowered.scenario.clone(),
         fingerprint,
     ));
-    let request: Request =
-        serde_json::from_value(json!({ "scenario": lowered.scenario.id, "op": op }))
-            .map_err(|e| Failure::new(format!("invalid litgraph op: {e}")))?;
+    let request: Request = serde_json::from_value(
+        json!({ "scenario": lowered.scenario.id, "op": op, "links": links }),
+    )
+    .map_err(|e| Failure::new(format!("invalid litgraph op: {e}")))?;
     let response = handle(&request, &catalog);
     report.failed = !response.ok;
     report.result = serde_json::to_value(&response).unwrap_or_default();

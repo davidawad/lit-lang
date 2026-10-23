@@ -1,0 +1,13 @@
+case cofc-limitations-fact-known
+uses cofc ^0.1.0
+as_of 2026-09-28
+summary "A CoFC claim at accrual whose limitations and §1500 facts are not yet known: what knowing them is worth."
+notes "Ported from examples/cofc-limitations-fact-known.json. Nothing is known yet about timeliness under 28 U.S.C. § 2501 or a parallel suit (§ 1500), so the case sets no facts and the authored priors apply; the op's compare variant supplies the known facts. The rate is illustrative."
+perspective owner
+
+parties {
+  owner: applicant Corporation
+  united-states: examiner Government
+}
+
+analysis { params: { rate: 850, stakes: 12 } }

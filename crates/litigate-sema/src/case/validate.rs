@@ -154,7 +154,7 @@ fn own_edge(node: &Node, edge: &str) -> bool {
 }
 
 /// `facts` name fact nodes and their own edges (L4003); `beliefs` name
-/// chance nodes and their own edges (L4006). Judged at `as_of`.
+/// world draws and their own edges (L4006). Judged at `as_of`.
 pub(super) fn facts_and_beliefs(
     case: &Case,
     graph: &Graph<'_>,
@@ -182,7 +182,7 @@ pub(super) fn facts_and_beliefs(
     for (i, obs) in case.observations.iter().enumerate() {
         let (node_span, outcome_spans) = spans.observations.get(i).cloned().unwrap_or_default();
         match graph.node_at(&obs.node, &case.as_of, known_at) {
-            Some(n) if matches!(n.kind, NodeKind::Chance { .. }) => {
+            Some(n) if super::drawn::is_drawn(case, graph, &obs.node, n) => {
                 for (j, (edge, _)) in obs.outcomes.iter().enumerate() {
                     if !own_edge(n, edge) {
                         out.push(
@@ -203,7 +203,8 @@ pub(super) fn facts_and_beliefs(
                     "`{}` is not a chance node in force on {}",
                     obs.node, case.as_of
                 ),
-            )),
+            )
+            .note("only world draws can be observed: a `chance` node, or a `decision` whose every edge is taken by an actor playing nature")),
         }
     }
 }

@@ -169,12 +169,15 @@ fn a_number_without_a_lossless_spelling_is_a_difference() {
 fn a_number_the_typed_source_cannot_hold_fails_the_check() {
     let dir = scratch("import-unchecked-number");
     std::fs::copy(
-        repo().join("packs/frcp-civil-procedure.json"),
+        std::path::Path::new(litgraph_packs::PACKS_DIR).join("frcp-civil-procedure.json"),
         dir.join("p.json"),
     )
     .unwrap();
     let mut scenario: Value = serde_json::from_str(
-        &std::fs::read_to_string(repo().join("scenarios/frcp-civil-case.json")).unwrap(),
+        &std::fs::read_to_string(
+            std::path::Path::new(litgraph_packs::SCENARIOS_DIR).join("frcp-civil-case.json"),
+        )
+        .unwrap(),
     )
     .unwrap();
     // Written as text: as binary64 the integer would already be rounded.

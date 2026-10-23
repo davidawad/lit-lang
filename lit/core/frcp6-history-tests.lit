@@ -24,8 +24,20 @@ event NoticeOfRemovalFiled()
 /// within 14 days after serving its original answer.
 event AnswerServed()
 
+/// Both periods are extendable under FRCP 6(b)(1): for good cause before
+/// they expire, and on motion for excusable neglect after; the rule sets
+/// no numeric ceiling.
 deadline removal-answer: 7.days after NoticeOfRemovalFiled() counted_by frcp6 cite FRCP 81(c)(2)(C)
+{
+  extend { by Court, discretion GoodCause }
+  extend { by Court, discretion ExcusableNeglect, after_expiry }
+}
+
 deadline third-party-complaint: 14.days after AnswerServed() counted_by frcp6 cite FRCP 14(a)(1)
+{
+  extend { by Court, discretion GoodCause }
+  extend { by Court, discretion ExcusableNeglect, after_expiry }
+}
 
 test "Glannon: removal on Wednesday December 28, 2016; answer due Wednesday January 4, 2017" cite FRCP 81(c)(2)(C)
 {

@@ -26,6 +26,17 @@ import core.time.{ ServiceMethod }
 // FRCP 6(b)(2) forbids extending the Rule 50(b), 59(b), 59(e) and 60(b)
 // periods, and the pack marks the removal, remand-motion, waiver, Rule
 // 15(a)(1) and cross-appeal periods unextendable, so they delegate nothing.
+//
+// Extension. A period the pack marks extendable grants FRCP 6(b)(1)'s two
+// powers, neither with a numeric ceiling: "(A) with or without motion or
+// notice if the court acts, or if a request is made, before the original
+// time or its extension expires" (`discretion GoodCause`), and "(B) on
+// motion made after the time has expired if the party failed to act
+// because of excusable neglect" (`discretion ExcusableNeglect,
+// after_expiry`). The four 6(b)(2) periods are `extend { never }`. The
+// notice-of-appeal period is FRAP 4(a)(5)'s, not Rule 6(b)'s; see its
+// declaration. An order extending one of them is the `...Extended` event
+// that names it, done by the court and cited (SPEC §5.6).
 /// The complaint is filed (FRCP 3): the Rule 4(m) service clock starts.
 event ComplaintFiled()
 /// The summons and complaint are served under Rule 4. Service of process is
@@ -55,22 +66,57 @@ event Rule26fConferenceHeld()
 event JudgmentEntered()
 /// The first notice of appeal is filed (FRAP 4(a)(3)).
 event NoticeOfAppealFiled()
+/// The court extends the Rule 4(m) service period to `until` (FRCP 4(m),
+/// 6(b)(1)).
+event ServicePeriodExtended(until: Date) extends service-period to until
+/// The court extends the time to answer the complaint to `until` (FRCP
+/// 6(b)(1)).
+event AnswerPeriodExtended(until: Date) extends answer-period to until
+/// The court extends the time to answer after removal to `until` (FRCP
+/// 6(b)(1)).
+event RemovedAnswerPeriodExtended(until: Date) extends removed-answer-period to until
+/// The court extends the time to answer after denial of a Rule 12 motion
+/// to `until` (FRCP 12(a)(4), 6(b)(1)).
+event DenialAnswerPeriodExtended(until: Date) extends denial-answer-period to until
+/// The court extends the time to respond to an amended pleading to `until`
+/// (FRCP 15(a)(3), 6(b)(1)).
+event AmendedResponsePeriodExtended(until: Date) extends amended-response-period to until
+/// The court extends the time for initial disclosures to `until` (FRCP
+/// 26(a)(1)(C), 6(b)(1)).
+event InitialDisclosurePeriodExtended(until: Date) extends initial-disclosure-period to until
+/// The court extends the time to demand a jury to `until` (FRCP 38(b),
+/// 6(b)(1)).
+event JuryDemandPeriodExtended(until: Date) extends jury-demand-period to until
+/// The district court extends the time to file a notice of appeal to
+/// `until` (FRAP 4(a)(5)).
+event NoticeOfAppealPeriodExtended(until: Date) extends notice-of-appeal-period to until
 
 /// Rule 4(m): 90 days after the complaint is filed; on good cause the court
 /// "must extend the time for service", and absent it may "order that
 /// service be made within a specified time". Rule 4 last amended eff.
 /// December 1, 2017.
 deadline service-period: 90.days after ComplaintFiled() counted_by frcp6 effective [2017-12-01, ..) delegable_to [CaseOrder] cite FRCP 4(m)
+{
+  extend { by court, discretion GoodCause }
+  extend { by court, discretion ExcusableNeglect, after_expiry }
+}
+
 /// Rule 12(a)(1)(A)(ii): an answer is due 60 days after a timely returned
 /// waiver's request was sent (90 days for a defendant outside every judicial
 /// district, which the pack does not branch on). Rule 12 last amended eff.
 /// December 1, 2024.
 deadline waiver-answer-period: 60.days after WaiverRequestSent() counted_by frcp6 effective [2024-12-01, ..) cite FRCP 12(a)(1)(A)(ii)
+
 /// Rule 12(a)(1)(A)(i): an answer is due 21 days after service of the
 /// summons and complaint; a pre-answer Rule 12(b) motion "must be made
 /// before pleading", so it runs on the same clock. Extendable under FRCP
 /// 6(b)(1). Rule 12 last amended eff. December 1, 2024.
 deadline answer-period: 21.days after ProcessServed() counted_by frcp6 effective [2024-12-01, ..) delegable_to [CaseOrder] cite FRCP 12(a)(1)(A)(i)
+{
+  extend { by court, discretion GoodCause }
+  extend { by court, discretion ExcusableNeglect, after_expiry }
+}
+
 /// 28 U.S.C. § 1446(b)(1): a notice of removal is due 30 days after the
 /// defendant receives the initial pleading. A statute: no court may extend
 /// it. The vendored section carries no history, so it is dated from the
@@ -81,54 +127,106 @@ deadline removal-period: 30.days after InitialPleadingReceived() counted_by frcp
 /// removal is filed. Section 1447 last amended by Pub. L. 112-51, § 2(d),
 /// November 9, 2011 (vendored history).
 deadline remand-motion-period: 30.days after NoticeOfRemovalFiled() counted_by frcp6 effective [2011-11-09, ..) cite 28 U.S.C. 1447(c)
+
 /// Rule 81(c)(2)(A): after removal, a defendant who has not answered
 /// answers 21 days after receiving the initial pleading (the longest of
 /// three periods; the pack models this one). Extendable under FRCP 6(b)(1).
 /// Rule 81 last amended eff. December 1, 2009.
 deadline removed-answer-period: 21.days after InitialPleadingReceived() counted_by frcp6 effective [2009-12-01, ..) delegable_to [CaseOrder] cite FRCP 81(c)(2)(A)
+{
+  extend { by court, discretion GoodCause }
+  extend { by court, discretion ExcusableNeglect, after_expiry }
+}
+
 /// Rule 12(a)(4)(A): "Unless the court sets a different time", the
 /// responsive pleading is due 14 days after notice that the court denied
 /// the Rule 12 motion. Rule 12 last amended eff. December 1, 2024.
 deadline denial-answer-period: 14.days after Rule12MotionDenied() counted_by frcp6 effective [2024-12-01, ..) delegable_to [CaseOrder] cite FRCP 12(a)(4)(A)
+{
+  extend { by court, discretion GoodCause }
+  extend { by court, discretion ExcusableNeglect, after_expiry }
+}
+
 /// Rule 15(a)(1)(B): amendment once as a matter of course no later than 21
 /// days after service of a responsive pleading (or of a Rule 12(b), (e) or
 /// (f) motion, whichever is earlier). Rule 15 last amended eff. December 1,
 /// 2023.
 deadline amendment-as-of-course-period: 21.days after ResponsivePleadingServed() counted_by frcp6 effective [2023-12-01, ..) cite FRCP 15(a)(1)(B)
+
 /// Rule 15(a)(3): "Unless the court orders otherwise", a response to an
 /// amended pleading is due within the time left on the original or 14 days
 /// after service of the amendment, whichever is later; the pack models the
 /// 14 days. Rule 15 last amended eff. December 1, 2023.
 deadline amended-response-period: 14.days after AmendedPleadingServed() counted_by frcp6 effective [2023-12-01, ..) delegable_to [CaseOrder] cite FRCP 15(a)(3)
+{
+  extend { by court, discretion GoodCause }
+  extend { by court, discretion ExcusableNeglect, after_expiry }
+}
+
 /// Rule 26(a)(1)(C): initial disclosures are due 14 days after the Rule
 /// 26(f) conference "unless a different time is set by stipulation or court
 /// order". Rule 26 last amended eff. December 1, 2015.
 deadline initial-disclosure-period: 14.days after Rule26fConferenceHeld() counted_by frcp6 effective [2015-12-01, ..) delegable_to [CaseOrder] cite FRCP 26(a)(1)(C)
+{
+  extend { by court, discretion GoodCause }
+  extend { by court, discretion ExcusableNeglect, after_expiry }
+}
+
 /// Rule 38(b)(1): a jury demand is due 14 days after the last pleading
 /// directed to the issue is served. Extendable under FRCP 6(b)(1). Rule 38
 /// last amended eff. December 1, 2009.
 deadline jury-demand-period: 14.days after LastPleadingServed() counted_by frcp6 effective [2009-12-01, ..) delegable_to [CaseOrder] cite FRCP 38(b)(1)
+{
+  extend { by court, discretion GoodCause }
+  extend { by court, discretion ExcusableNeglect, after_expiry }
+}
+
 /// Rule 50(b): a renewed motion for judgment as a matter of law is due 28
 /// days after entry of judgment; FRCP 6(b)(2) forbids extending it. Rule 50
 /// last amended eff. December 1, 2009.
 deadline jmol-renewal-period: 28.days after JudgmentEntered() counted_by frcp6 effective [2009-12-01, ..) cite FRCP 50(b)
+{
+  extend { never }
+}
+
 /// Rule 59(b): a new-trial motion is due 28 days after entry of judgment;
 /// FRCP 6(b)(2) forbids extending it. Rule 59 last amended eff. December 1,
 /// 2009.
 deadline new-trial-period: 28.days after JudgmentEntered() counted_by frcp6 effective [2009-12-01, ..) cite FRCP 59(b)
+{
+  extend { never }
+}
+
 /// Rule 59(e): a motion to alter or amend the judgment is due 28 days after
 /// its entry; FRCP 6(b)(2) forbids extending it. Rule 59 last amended eff.
 /// December 1, 2009.
 deadline alter-amend-period: 28.days after JudgmentEntered() counted_by frcp6 effective [2009-12-01, ..) cite FRCP 59(e)
+{
+  extend { never }
+}
+
 /// Rule 60(c)(1): a Rule 60(b)(1)-(3) motion is due "no more than a year
 /// after the entry of the judgment", a calendar year (`frcp6`'s
 /// `end_of_month clamp` ends one from February 29 on February 28); FRCP
 /// 6(b)(2) forbids extending it. Rule 60 last amended eff. December 1, 2007.
 deadline relief-from-judgment-period: 1.years after JudgmentEntered() counted_by frcp6 effective [2007-12-01, ..) cite FRCP 60(c)(1)
+{
+  extend { never }
+}
+
 /// FRAP 4(a)(1)(A): the notice of appeal is due 30 days after entry of
 /// judgment (28 U.S.C. § 2107(a)); the district court may extend it under
-/// FRAP 4(a)(5) and 28 U.S.C. § 2107(c).
+/// FRAP 4(a)(5) and 28 U.S.C. § 2107(c), on a motion filed no later than 30
+/// days after the time expires, to no later than 30 days after the
+/// prescribed time or 14 days after the order, whichever is later (FRAP
+/// 4(a)(5)(C)). The grant models the first of the two caps: an order
+/// entered more than 16 days after the prescribed time, whose 14 days run
+/// past it, is rejected though lawful (UNMODELLED: the order-relative cap).
 deadline notice-of-appeal-period: 30.days after JudgmentEntered() counted_by frap26 effective [2024-12-01, ..) delegable_to [CaseOrder] cite FRAP 4(a)(1)(A)
+{
+  extend { by court, max 30.days, after_expiry }
+}
+
 /// FRAP 4(a)(3): a cross-appeal is due 14 days after the first notice of
 /// appeal is filed (or within the FRAP 4(a)(1) time, whichever ends later;
 /// the pack models the 14 days).

@@ -142,30 +142,71 @@ nix-check:
 
 # The single CI entry point: fast, deterministic gates only. Coverage,
 # audit, and deny hit the network/build cache so they're last.
-ci: fmt-check lint test doctest cov audit deny
+ci: fmt-check lint lit-sync-check test doctest cov audit deny
     @echo "ci: all gates passed"
 
 clean:
     cargo clean
     rm -r -f dist result
 
-# --- litigate authoring language (recipes become enforcing with the flip) ---
+# --- litigate authoring language -------------------------------------------
 # Strict check of the stdlib and matters (SPEC §9.3); the epic gate once
 # lit/core lands. `just lit-check --profile dev lit/examples` for one package.
 lit-check *ARGS='--profile strict lit cases':
     cargo run -q -p litigate-cli -- --format human check {{ARGS}}
 
-# Build lit/ and cases/ into a temp dir, then semantic-diff (SPEC §8.6) the
-# output against packs/ and scenarios/: any difference is L6002 and fails.
-# Documents pair by identity (pack id, links, scenario id); ones with no
-# counterpart are listed as unmatched, which is not an error until the flip.
+# The generated repository files (DESIGN §11.4, SPEC §9.4): every
+# packs/*.json (and packs/links.json) is built from these lit/ packages,
+# every scenarios/*.json from these cases/ matters. lit/core and
+# lit/examples are library/teaching packages and emit no pack; the
+# hand-authored clock library (packs/clock/*.json other than a generated
+# pack's own fragment) and packs/*-SOURCES-NOTES.md are not generated.
+# `--pack-file ID=STEM` keeps a legacy file name where it is not the id.
+lit_sync_inputs := "lit/cafc lit/cofc lit/frap lit/frcp lit/frcrimp lit/itc lit/mpep lit/ptab lit/ttab lit/links cases/cofc-1498-patent-case.case cases/cofc-bid-protest.case cases/frcp-civil-case.case cases/ptab-ipr-defense.case cases/ttab-opposition-applicant-defense.case"
+lit_sync_names := "--pack-file cafc=cafc-federal-circuit --pack-file cofc=cofc-court-of-federal-claims"
+
+# Regenerate packs/*.json, packs/links.json, generated packs/clock/
+# fragments and scenarios/*.json from lit/ and cases/. Never hand-edit
+# those files; edit the source and run this.
 lit-sync:
     #!/usr/bin/env bash
     set -euo pipefail
     out="$(mktemp -d)"
     trap 'rm -rf "$out"' EXIT
     lit=(cargo run -q -p litigate-cli -- --format human)
-    "${lit[@]}" build lit cases --out "$out" > /dev/null || "${lit[@]}" build lit cases --out "$out"
+    "${lit[@]}" build {{lit_sync_inputs}} {{lit_sync_names}} --out "$out" > /dev/null \
+      || "${lit[@]}" build {{lit_sync_inputs}} {{lit_sync_names}} --out "$out"
+    rm -f packs/*.json scenarios/*.json
+    for f in "$out"/packs/*.json "$out"/packs/clock/*.json "$out"/scenarios/*.json; do
+      case "$f" in *.map.json) continue ;; esac
+      cp "$f" "${f#"$out"/}"
+    done
+    echo "lit-sync: regenerated packs/ and scenarios/ from lit/ and cases/"
+
+# CI gate: regenerate, then fail if any generated file differs from (or is
+# missing from) what is committed.
+lit-sync-check: lit-sync
+    #!/usr/bin/env bash
+    set -euo pipefail
+    stale="$(git status --porcelain --untracked-files=all -- packs scenarios)"
+    if [ -n "$stale" ]; then
+      echo "$stale" >&2
+      git --no-pager diff --stat -- packs scenarios >&2
+      echo "lit-sync-check: packs/ or scenarios/ is stale; run \`just lit-sync\` and commit the result" >&2
+      exit 1
+    fi
+    echo "lit-sync-check: generated files are up to date"
+
+# Semantic diff (SPEC §8.6) of a fresh build against the committed files,
+# without writing: what `lit-sync` would change, by JSON pointer.
+lit-diff:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    out="$(mktemp -d)"
+    trap 'rm -rf "$out"' EXIT
+    lit=(cargo run -q -p litigate-cli -- --format human)
+    "${lit[@]}" build {{lit_sync_inputs}} {{lit_sync_names}} --out "$out" > /dev/null \
+      || "${lit[@]}" build {{lit_sync_inputs}} {{lit_sync_names}} --out "$out"
     "${lit[@]}" diff "$out" packs --check
     "${lit[@]}" diff "$out" scenarios --check
 

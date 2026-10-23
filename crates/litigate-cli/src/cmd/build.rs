@@ -3,13 +3,17 @@
 //! lowered JSON, plus each matter's scenario. The layout mirrors the
 //! repository (`packs/<id>.json`, `packs/links.json`, `packs/clock/<id>.json`,
 //! `scenarios/<id>.json`), so `diff OUT/packs packs` is the migration check.
+//! `--pack-file ID=STEM` renames a pack's files to `packs/STEM.json`, which
+//! `just lit-sync` uses to keep the repository's legacy file names.
 use super::check::{checked, Checked};
 use crate::cli::Dates;
 use crate::out::{Failure, Outcome, Report};
 use litigate_base::{Diagnostic, Profile, Severity};
 use litigate_lower::{render, render_scenario, Document, LoweredPackage, Lowerer, Options};
+use litigate_sema::pkg::manifest::is_kebab;
 use serde_json::{json, Value};
 use sha2::{Digest, Sha256};
+use std::collections::BTreeMap;
 use std::fmt::Write as _;
 use std::path::Path;
 
@@ -168,14 +172,101 @@ pub fn lower_all(c: &Checked, options: &Options) -> Built {
     built
 }
 
+/// `litigate build` arguments.
+pub struct Args {
+    /// Package directories or `.case` files.
+    pub paths: Vec<String>,
+    /// Output directory.
+    pub out: String,
+    /// `ID=STEM` pack file names (`--pack-file`).
+    pub pack_files: Vec<String>,
+    /// Checking profile.
+    pub profile: Profile,
+    /// Build dates.
+    pub dates: Dates,
+    /// Library directories.
+    pub lib: Vec<String>,
+}
+
+/// Parses `--pack-file ID=STEM` mappings: both sides kebab-case, each id
+/// at most once, and no stem `links` (that file is the links package's).
+///
+/// # Errors
+/// A malformed, repeated, or reserved mapping.
+pub fn pack_file_map(specs: &[String]) -> Result<BTreeMap<String, String>, Failure> {
+    specs.iter().try_fold(BTreeMap::new(), |mut map, spec| {
+        let (id, stem) = spec
+            .split_once('=')
+            .filter(|(id, stem)| is_kebab(id) && is_kebab(stem))
+            .ok_or_else(|| {
+                Failure::new(format!(
+                    "--pack-file `{spec}`: expected ID=STEM, both kebab-case (e.g. `my-pack=my-pack-file`)"
+                ))
+            })?;
+        if stem == "links" {
+            return Err(Failure::new(format!(
+                "--pack-file `{spec}`: `packs/links.json` is the links package's file"
+            )));
+        }
+        match map.insert(id.to_owned(), stem.to_owned()) {
+            Some(_) => Err(Failure::new(format!("--pack-file: pack `{id}` mapped twice"))),
+            None => Ok(map),
+        }
+    })
+}
+
+/// Renames each mapped pack's outputs (`packs/ID.json`, its source map, and
+/// its `packs/clock/` fragment) to `STEM`.
+///
+/// # Errors
+/// A mapped id that no built pack has, or two outputs landing on one path.
+pub fn rename_packs(
+    files: Vec<Output>,
+    map: &BTreeMap<String, String>,
+) -> Result<Vec<Output>, Failure> {
+    if let Some(id) = map
+        .keys()
+        .find(|id| !files.iter().any(|(p, _)| *p == format!("packs/{id}.json")))
+    {
+        return Err(Failure::new(format!(
+            "--pack-file: no built package lowers to pack `{id}`"
+        )));
+    }
+    let renamed = |path: String| {
+        map.iter()
+            .flat_map(|(id, stem)| {
+                ["packs/", "packs/clock/"].into_iter().flat_map(move |dir| {
+                    [".json", ".map.json"]
+                        .into_iter()
+                        .map(move |ext| (format!("{dir}{id}{ext}"), format!("{dir}{stem}{ext}")))
+                })
+            })
+            .find(|(from, _)| *from == path)
+            .map_or(path, |(_, to)| to)
+    };
+    let mut out: Vec<Output> = files.into_iter().map(|(p, t)| (renamed(p), t)).collect();
+    out.sort();
+    match out.windows(2).find(|w| w[0].0 == w[1].0) {
+        Some(w) => Err(Failure::new(format!(
+            "--pack-file: two outputs would be written to `{}`",
+            w[0].0
+        ))),
+        None => Ok(out),
+    }
+}
+
 /// `litigate build`.
-pub fn build(
-    paths: &[String],
-    out: &str,
-    profile: Profile,
-    dates: &Dates,
-    lib: &[String],
-) -> Outcome {
+pub fn build(args: &Args) -> Outcome {
+    let Args {
+        paths,
+        out,
+        pack_files,
+        profile,
+        dates,
+        lib,
+    } = args;
+    let (out, profile) = (out.as_str(), *profile);
+    let stems = pack_file_map(pack_files)?;
     let c = checked(paths, profile, dates.as_of.as_deref(), lib)?;
     let options = Options {
         as_of: dates.as_of.clone(),
@@ -191,11 +282,14 @@ pub fn build(
     if report.has_errors() {
         return Ok(report);
     }
-    let built = lower_all(&c, &options);
-    report.diagnostics.extend(built.diagnostics);
+    let mut built = lower_all(&c, &options);
+    report
+        .diagnostics
+        .extend(std::mem::take(&mut built.diagnostics));
     if report.has_errors() {
         return Ok(report);
     }
+    built.files = rename_packs(built.files, &stems)?;
     for (path, text) in &built.files {
         write_atomic(&Path::new(out).join(path), text)?;
     }
@@ -234,4 +328,82 @@ pub fn build(
         "obligations": c.findings,
     });
     Ok(report)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{pack_file_map, rename_packs, Output};
+
+    fn specs(list: &[&str]) -> Vec<String> {
+        list.iter().map(|s| (*s).to_owned()).collect()
+    }
+
+    fn files(paths: &[&str]) -> Vec<Output> {
+        paths
+            .iter()
+            .map(|p| ((*p).to_owned(), String::new()))
+            .collect()
+    }
+
+    #[test]
+    fn mappings_parse_and_reject_bad_specs() {
+        let map = pack_file_map(&specs(&["cafc=cafc-federal-circuit"])).map_err(|f| f.0);
+        assert_eq!(
+            map.map(|m| m.into_iter().collect::<Vec<_>>()),
+            Ok(vec![("cafc".into(), "cafc-federal-circuit".into())])
+        );
+        for bad in [
+            &["cafc"][..],
+            &["cafc="],
+            &["=x"],
+            &["cafc=a/b"],
+            &["cafc=x.json"],
+            &["cafc=links"],
+            &["cafc=a", "cafc=b"],
+        ] {
+            assert!(pack_file_map(&specs(bad)).is_err(), "{bad:?}");
+        }
+    }
+
+    #[test]
+    fn renames_pack_map_and_clock_files_only() {
+        let map = pack_file_map(&specs(&["cofc=cofc-court"])).map_err(|f| f.0);
+        let out = map.and_then(|m| {
+            rename_packs(
+                files(&[
+                    "packs/cofc.json",
+                    "packs/cofc.map.json",
+                    "packs/clock/cofc.json",
+                    "packs/cofc-x.json",
+                    "litigatables/cofc.litigatable.json",
+                    "scenarios/cofc.json",
+                ]),
+                &m,
+            )
+            .map_err(|f| f.0)
+        });
+        let paths: Result<Vec<String>, String> =
+            out.map(|o| o.into_iter().map(|(p, _)| p).collect());
+        assert_eq!(
+            paths,
+            Ok(specs(&[
+                "litigatables/cofc.litigatable.json",
+                "packs/clock/cofc-court.json",
+                "packs/cofc-court.json",
+                "packs/cofc-court.map.json",
+                "packs/cofc-x.json",
+                "scenarios/cofc.json",
+            ]))
+        );
+    }
+
+    #[test]
+    fn unknown_ids_and_collisions_fail() {
+        let unknown = pack_file_map(&specs(&["nope=x"]))
+            .and_then(|m| rename_packs(files(&["packs/cofc.json"]), &m));
+        assert!(unknown.is_err_and(|f| f.0.contains("`nope`")));
+        let clash = pack_file_map(&specs(&["a=b"]))
+            .and_then(|m| rename_packs(files(&["packs/a.json", "packs/b.json"]), &m));
+        assert!(clash.is_err_and(|f| f.0.contains("packs/b.json")));
+    }
 }

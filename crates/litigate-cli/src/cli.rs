@@ -123,6 +123,10 @@ pub enum Command {
         /// Output directory.
         #[arg(long, value_name = "DIR", default_value = "build")]
         out: String,
+        /// Write pack `ID` as `packs/STEM.json` (and its clock fragment as
+        /// `packs/clock/STEM.json`) instead of `packs/ID.json` (repeatable).
+        #[arg(long = "pack-file", value_name = "ID=STEM")]
+        pack_files: Vec<String>,
         /// Checking profile.
         #[arg(long, value_enum, default_value_t)]
         profile: ProfileArg,

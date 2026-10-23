@@ -14,9 +14,7 @@ use crate::case::deadline::{self, Due};
 use crate::case::graph::{display, pack_of, Graph};
 use crate::case::spans::{error, Build};
 use crate::case::{Effect, Obligation, Status};
-use crate::hir::{
-    Capability, Deadline, EventParty, Expr, ExprKind, TriggerPolicy, Value,
-};
+use crate::hir::{Capability, Deadline, EventParty, Expr, ExprKind, TriggerPolicy, Value};
 use crate::temporal::condition::matches;
 use crate::temporal::MatterEvent;
 use litigate_base::{DiagnosticCode as C, Severity};

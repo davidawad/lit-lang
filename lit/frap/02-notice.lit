@@ -23,6 +23,9 @@ import frap.{ notice-group }
 rule duty civil-notice-of-appeal effective [2009-12-01, ..) known_at 2009-03-26 cite FRAP 4(a)(1)
 {
   deadline notice-civil-period: 30.days after EnteredBelow() counted_by frap26 delegable_to [CaseOrder] cite FRAP 4(a)(1)(A)
+  {
+    trigger latest
+  }
   deadline notice-us-party-period: 60.days after EnteredBelow() counted_by frap26 delegable_to [CaseOrder] cite FRAP 4(a)(1)(B)
 }
 

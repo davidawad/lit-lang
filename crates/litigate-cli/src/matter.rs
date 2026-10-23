@@ -234,7 +234,10 @@ fn schedule(
     let mut out: Vec<Scheduled> = Vec::new();
     for pkg in packages {
         let prefix = format!("{}::", pkg.manifest.pack_id);
-        for o in obligations.iter().filter(|o| o.deadline.starts_with(&prefix)) {
+        for o in obligations
+            .iter()
+            .filter(|o| o.deadline.starts_with(&prefix))
+        {
             let trigger = &case.events[o.trigger];
             let local = &o.deadline[prefix.len()..];
             let event = MatterEvent {

@@ -168,7 +168,8 @@ fn due_field(
 }
 
 /// The nominal and adjusted due dates of deadline `target` from the
-/// test's latest matching `given`.
+/// matching `given` selected by its trigger policy, using the shared
+/// version-selection query and the build's `known_at` date.
 fn due(
     cx: &Context<'_>,
     clocks: &Clocks,
@@ -179,12 +180,20 @@ fn due(
     let first = versions
         .first()
         .ok_or_else(|| format!("`{target}` is not a deadline"))?;
-    let (given, event, date) = test
+    let matching = test
         .givens
         .iter()
         .enumerate()
-        .filter_map(|(i, (g, d))| Some((i, g, arguments(&first.trigger, g)?, d.as_str())))
-        .max_by(|(i, _, _, a), (j, _, _, b)| a.cmp(b).then(i.cmp(j)))
+        .filter_map(|(i, (g, d))| Some((i, g, arguments(&first.trigger, g)?, d.as_str())));
+    type Given<'g> = (usize, &'g hir::Expr, &'g [hir::Expr], &'g str);
+    let order = |(i, _, _, a): &Given<'_>, (j, _, _, b): &Given<'_>| a.cmp(b).then(i.cmp(j));
+    // The trigger policy picks the event that runs the period (SPEC §5.3).
+    let picked = if first.policy.is_first() {
+        matching.min_by(order)
+    } else {
+        matching.max_by(order)
+    };
+    let (given, event, date) = picked
         .map(|(_, g, args, d)| (g, args, d))
         .ok_or_else(|| format!("no `given` event matches the trigger of `{target}`"))?;
     let (pkg, id) = cx.owner(target);

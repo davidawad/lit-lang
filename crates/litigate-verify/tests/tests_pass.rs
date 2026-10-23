@@ -32,14 +32,25 @@ macro_rules! tests_pass {
     };
 }
 
+/// Three services, two on one day; the earliest is 2025-02-03.
+const SERVICES: &str = "given Served(complaint, Personal) on 2025-03-03\n  \
+                        given Served(complaint, Personal) on 2025-03-03\n  \
+                        given Served(complaint, Personal) on 2025-02-03\n  \
+                        expect deadline(answer-period) == ";
+
 tests_pass!(
-    the_latest_matching_given_triggers_the_deadline,
+    the_first_matching_given_triggers_a_first_policy_deadline,
     Passed,
-    first_test(
-        "given Served(complaint, Personal) on 2025-03-03\n  \
-         given Served(complaint, Personal) on 2025-03-03\n  \
-         given Served(complaint, Personal) on 2025-02-03\n  \
-         expect deadline(answer-period) == 2025-03-24"
+    first_test(&format!("{SERVICES}2025-02-24"))
+);
+
+tests_pass!(
+    the_latest_matching_given_triggers_a_latest_policy_deadline,
+    Passed,
+    first_test(&format!("{SERVICES}2025-03-24")).replacen(
+        "counted_by frcp6\n",
+        "counted_by frcp6 { trigger latest }\n",
+        1
     )
 );
 

@@ -65,9 +65,15 @@ deadline indictment-period: 30.days after Arrested() counted_by frcp6 effective 
 /// 70 days to trial from the later of the charge's filing and the
 /// appearance; § 3161(h)(7) continuances exclude time.
 deadline speedy-trial: 70.days after TrialClockEvent() counted_by frcp6 effective [2024-12-01, ..) delegable_to [CaseOrder] cite 18 U.S.C. § 3161(c)(1); 18 U.S.C. § 3161(h)
+{
+  trigger latest
+}
 /// 14 days from the later of verdict and discharge (2009 amendments, Rule 29
 /// history note). Rule 45(b)(1) lets the court extend it.
 deadline rule29-period: 14.days after VerdictOrDischarge() counted_by frcp6 effective [2009-12-01, ..) known_at 2009-03-26 delegable_to [CaseOrder] cite FRCrimP 29(c)(1); FRCrimP 45(b)(1)
+{
+  trigger latest
+}
 /// 14 days from the verdict for grounds other than newly discovered
 /// evidence (2009 amendments, Rule 33 history note); extendable under Rule
 /// 45(b)(1). Rule 33(b)(1)'s three years for newly discovered evidence has
@@ -86,6 +92,9 @@ deadline rule35-period: 14.days after SentenceImposed() counted_by frcp6 effecti
 /// FRAP's vendored text carries no amendment history, so this is the
 /// vintage of the vendored rules.
 deadline criminal-appeal: 14.days after AppealClockEvent() counted_by frap26 effective [2024-12-01, ..) delegable_to [CaseOrder] cite FRAP 4(b)(1)(A); FRAP 4(b)(4)
+{
+  trigger latest
+}
 
 test "Rule 5 appearance window from arrest" cite FRCrimP 5(a)(1)(A)
 {

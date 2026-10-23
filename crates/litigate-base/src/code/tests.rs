@@ -47,14 +47,13 @@ fn every_registered_code_exercises_its_stable_views() {
             } else if matches!(
                 code,
                 DiagnosticCode::UnusedDeclaration | DiagnosticCode::ObligationBreached
-            )
-                || (profile == Profile::Dev
-                    && matches!(
-                        code,
-                        DiagnosticCode::RuleWithoutTest
-                            | DiagnosticCode::HolePresent
-                            | DiagnosticCode::NonCanonicalFormat
-                    ))
+            ) || (profile == Profile::Dev
+                && matches!(
+                    code,
+                    DiagnosticCode::RuleWithoutTest
+                        | DiagnosticCode::HolePresent
+                        | DiagnosticCode::NonCanonicalFormat
+                ))
             {
                 assert_eq!(severity, Severity::Warning);
             } else {

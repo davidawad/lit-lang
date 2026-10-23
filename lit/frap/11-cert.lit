@@ -18,6 +18,9 @@ import frap.{ cert-group }
 rule duty petition-for-certiorari effective [2009-12-01, ..) known_at 2009-03-26 cite 28 U.S.C. § 2101(c)
 {
   deadline cert-period: 90.days after EnteredOnAppeal() counted_by frap26 delegable_to [CaseOrder] cite 28 U.S.C. § 2101(c)
+  {
+    trigger latest
+  }
 }
 
 test "a cert petition is due 90 days after entry of judgment" cite 28 U.S.C. § 2101(c)

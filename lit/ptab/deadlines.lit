@@ -380,7 +380,13 @@ test "Director review after rehearing: a Sunday last day before MLK Day rolls to
 rule duty appeal-deadline cite 37 C.F.R. § 90.3(a)(1)
 {
   deadline appeal-period: 63.days after DecisionEntered() counted_by rcfc6 effective [2012-09-16, 2024-03-29) known_at 2012-08-14 cite 37 C.F.R. § 90.3(a)(1); 37 C.F.R. § 90.3(b)(1)
+  {
+    trigger latest
+  }
   deadline appeal-period: 63.days after DecisionEntered() counted_by rcfc6 effective [2024-03-29, ..) known_at 2024-03-29 supersedes appeal-period@2012-09-16 cite 37 C.F.R. § 90.3(a)(1); 37 C.F.R. § 90.3(b)(1)
+  {
+    trigger latest
+  }
 }
 
 test "appeal: 63 days from the final written decision" cite 37 C.F.R. § 90.3(a)(1)

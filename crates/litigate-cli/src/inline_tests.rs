@@ -1,8 +1,9 @@
 //! `test` blocks (SPEC §4.7, §7 `tests-pass`): each `given` event happens
 //! on its date, then every `expect` is evaluated. `deadline(d)` is the due
 //! date of the declaration selected for `d` (its version in force, or a
-//! claimant displacing it, SPEC §5.5) on its latest matching trigger, computed
-//! by litgraph's clock interpreter over the lowered counting rule:
+//! claimant displacing it, SPEC §5.5) on the matching trigger its trigger
+//! policy picks (the first under `first`, else the latest), computed by
+//! litgraph's clock interpreter over the lowered counting rule:
 //! `deadline(d).adjusted` (or bare `deadline(d)`) after every roll and
 //! extension, `deadline(d).nominal` the last day as counted.
 use crate::clock::{self, Clocks};
@@ -91,17 +92,23 @@ impl Cx<'_> {
         let any = hirx::deadlines(self.pkg, name)
             .next()
             .ok_or_else(|| format!("`{name}` is not a deadline of this package"))?;
-        let (event, date) = self
+        let matching = self
             .givens
             .iter()
-            .filter(|(e, _)| hirx::matches(&any.trigger, e))
-            .max_by(|a, b| a.1.cmp(&b.1))
-            .ok_or_else(|| {
-                format!(
-                    "no `given` event matches the trigger {} of `{name}`",
-                    hirx::event_text(&any.trigger)
-                )
-            })?;
+            .filter(|(e, _)| hirx::matches(&any.trigger, e));
+        // The trigger policy picks the event that runs the period: the
+        // first under `first` (the default), else the latest (SPEC §5.3).
+        let picked = if any.policy.is_first() {
+            matching.min_by(|a, b| a.1.cmp(&b.1))
+        } else {
+            matching.max_by(|a, b| a.1.cmp(&b.1))
+        };
+        let (event, date) = picked.ok_or_else(|| {
+            format!(
+                "no `given` event matches the trigger {} of `{name}`",
+                hirx::event_text(&any.trigger)
+            )
+        })?;
         let events = [MatterEvent {
             date,
             action: event,

@@ -107,7 +107,7 @@ fn patch_guard_operations_are_reserved() {
 instance base@one { pack base,\n\
 patch go {\n\
 note \"narrowed by order\"\n\
-when and has_event(Go()) effective [2026-11-01, ..) cite Fed. Cir. R. 1\n\
+when and has_event(Go()) effective [2026-11-01, ..) cite \"Fed. Cir. R. 1\"\n\
 when or true\n\
 supersedes when false known_at 2026-10-01 cite ?(\"Order, Dkt. 12\")\n\
 within nowhere\n\

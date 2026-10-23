@@ -201,7 +201,7 @@ fn reserved_guard_operations_parse_here_and_are_l0010_in_the_compiler() {
     for op in [
         "when and has_event(Served())",
         "when or date_of(Served()) < 2026-01-01 effective [2026-11-01, ..)",
-        "supersedes when true known_at 2026-10-01 cite Fed. Cir. R. 1",
+        "supersedes when true known_at 2026-10-01 cite \"Fed. Cir. R. 1\"",
         "supersedes when false cite ?(\"Order, Dkt. 12\")",
     ] {
         let source = format!("module links\ninstance a@b {{\n  patch go {{\n    {op}\n  }}\n}}\n");

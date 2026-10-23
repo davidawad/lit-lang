@@ -16,11 +16,13 @@ use crate::case::graph::{display, pack_of, Graph};
 use crate::case::spans::error;
 use crate::case::{Effect, Obligation, Status};
 use crate::hir::{
-    Capability, Deadline, Expr, ExprKind, Extension, ExtensionWindow, TriggerPolicy, Value,
+    Bound, Capability, Deadline, Expr, ExprKind, Extension, ExtensionWindow, Motion, TriggerPolicy,
+    Value,
 };
 use crate::temporal::condition::matches;
 use crate::temporal::MatterEvent;
 use litigate_base::{Diagnostic, DiagnosticCode as C, Severity};
+use std::fmt::Write as _;
 
 /// How an `extends`/`waives` event transforms an obligation.
 #[derive(Debug, Clone, Copy)]
@@ -51,41 +53,55 @@ impl Transform<'_> {
 
 /// What licenses a transform, read off one `extend` grant or the `waive`
 /// capability of a deadline: who holds it, whether it reaches an instance
-/// before and after its due date, and its numeric ceiling, if any.
+/// before and after its due date, its date bound, if any, and the motion
+/// it requires, if any.
 #[derive(Debug, Clone, Copy)]
 struct Grant<'g> {
     by: &'g str,
     before: bool,
     after: bool,
-    /// Calendar days past the counted due date; `None` under the court's
+    /// The latest date an extension may reach; `None` under the court's
     /// discretion (and for a waiver, which has no extent).
-    ceiling: Option<u64>,
+    ceiling: Option<&'g Bound>,
+    /// The motion the grant requires.
+    motion: Option<&'g Motion>,
+    /// The motion must be made after the period expired (FRCP
+    /// 6(b)(1)(B)).
+    moved_after: bool,
 }
 
 impl<'g> Grant<'g> {
-    /// An `extend` grant; `None` for `extend { never }`.
+    /// An `extend` grant; `None` for an `extend { never ... }` lock.
     fn extend(x: &'g Extension) -> Option<Self> {
         match x {
             Extension::Bounded {
                 by,
-                max_days,
+                until,
                 after_expiry,
+                motion,
+                ..
             } => Some(Self {
                 by,
                 before: true,
                 after: *after_expiry,
-                ceiling: Some(*max_days),
+                ceiling: Some(until),
+                motion: motion.as_ref(),
+                moved_after: false,
             }),
-            Extension::Discretionary { by, window, .. } => {
+            Extension::Discretionary {
+                by, window, motion, ..
+            } => {
                 let after = *window == ExtensionWindow::AfterExpiryOnMotion;
                 Some(Self {
                     by,
                     before: !after,
                     after,
                     ceiling: None,
+                    motion: motion.as_ref(),
+                    moved_after: after,
                 })
             }
-            Extension::NonExtendable => None,
+            Extension::NonExtendable { .. } => None,
         }
     }
 
@@ -96,6 +112,8 @@ impl<'g> Grant<'g> {
             before: true,
             after: c.after_expiry,
             ceiling: None,
+            motion: None,
+            moved_after: false,
         }
     }
 
@@ -431,7 +449,7 @@ impl<'g> Cx<'_, 'g> {
             .map(|&grant| {
                 open.iter()
                     .zip(&dues)
-                    .find_map(|(&i, due)| self.problem(k, i, due, grant, new))
+                    .find_map(|(&i, due)| self.problem(pack, k, i, due, grant, new))
             })
             .collect();
         if let Some((_, e)) = refusals.and_then(|r| r.into_iter().max_by_key(|(bound, _)| *bound)) {
@@ -474,14 +492,14 @@ impl<'g> Cx<'_, 'g> {
             Transform::Waive => d.waive.iter().map(Grant::waive).collect(),
         };
         if grants.is_empty() {
-            let never = d.extend.contains(&Extension::NonExtendable);
-            let e = if never && matches!(how, Transform::Extend(_)) {
+            let lock = d.extend.iter().find_map(Extension::lock);
+            let e = if let (Some(lock), Transform::Extend(_)) = (lock, how) {
                 error(
                     C::InvalidCaseEvent,
                     self.at(k, |e| e.action.as_ref()),
-                    format!("`{action}` cannot extend `{q}`: the deadline may not be extended (`extend {{ never }}`)"),
+                    format!("`{action}` cannot extend `{q}`: the deadline may not be extended (`extend {{ never cite {lock} }}`)"),
                 )
-                .note("no order, stipulation or consent extends a period its rule forbids extending (FRCP 6(b)(2))")
+                .note(format!("no order, stipulation or consent extends a period its rule forbids extending ({lock})"))
             } else {
                 error(
                     C::InvalidCaseEvent,
@@ -528,8 +546,10 @@ impl<'g> Cx<'_, 'g> {
     /// Why event `k` may not transform instance `i` (counted `due`) under
     /// `grant`: extend it to `new`, or waive it when `new` is `None`. The
     /// flag is set when the refusal is the bound, not the window.
+    #[allow(clippy::too_many_arguments)]
     fn problem(
         &self,
+        pack: &str,
         k: usize,
         i: usize,
         due: &Due,
@@ -581,6 +601,18 @@ impl<'g> Cx<'_, 'g> {
             };
             return reject(false, message);
         }
+        if let Some(m) = grant.motion {
+            if let Some(why) = self.unmoved(
+                pack,
+                k,
+                o.at,
+                m,
+                grant.moved_after.then_some(&current),
+                &counted,
+            ) {
+                return reject(false, why);
+            }
+        }
         let new = new?;
         if new <= current.as_str() {
             return reject(
@@ -591,17 +623,67 @@ impl<'g> Cx<'_, 'g> {
                 ),
             );
         }
-        let max = grant.ceiling?;
-        let bound = crate::types::date::add_days(&counted, max).unwrap_or_default();
+        let ceiling = grant.ceiling?;
+        let bound = ceiling.date(&counted, &event.date).unwrap_or_default();
         if new > bound.as_str() {
             return reject(
                 true,
                 format!(
-                    "an extension to {new} exceeds the bound of `{}`: due {counted} + {max} days = {bound}",
-                    o.deadline
+                    "an extension to {new} exceeds the bound of `{}`: {} = {bound} (prescribed_due {counted}, grant_order_entered {})",
+                    o.deadline,
+                    ceiling.display(),
+                    event.date
                 ),
             );
         }
         None
+    }
+
+    /// Why order `k` lacks the motion `m` its grant requires for the
+    /// instance opened at event `opened` (counted `prescribed` due date;
+    /// `after`: the due date it expired on, when the motion must follow it,
+    /// FRCP 6(b)(1)(B)): no event of `m`'s pattern (in `pack`'s view) on or
+    /// after the trigger, no later than the order and no later than `m`'s
+    /// bound. `None` when there is one.
+    fn unmoved(
+        &self,
+        pack: &str,
+        k: usize,
+        opened: usize,
+        m: &Motion,
+        after: Option<&String>,
+        prescribed: &str,
+    ) -> Option<String> {
+        let order = self.sorted[k].1;
+        let from = self.sorted[opened].1.date.as_str();
+        let latest = m
+            .within
+            .as_ref()
+            .and_then(|w| w.date(prescribed, &order.date));
+        let moved = (0..self.sorted.len()).any(|j| {
+            let date = self.sorted[j].1.date.as_str();
+            j != k
+                && date >= from
+                && date <= order.date.as_str()
+                && after.is_none_or(|a| date > a.as_str())
+                && latest.as_deref().is_none_or(|l| date <= l)
+                && matches(&m.event, self.view(pack, j))
+        });
+        if moved {
+            return None;
+        }
+        let mut why = format!(
+            "`{}` requires a motion `{}`",
+            display(&order.action),
+            display(&m.event)
+        );
+        if let Some(a) = after {
+            let _ = write!(why, " made after the period expired on {a}");
+        }
+        if let (Some(w), Some(l)) = (&m.within, &latest) {
+            let _ = write!(why, " no later than {} = {l}", w.display());
+        }
+        let _ = write!(why, ", and none precedes the order on {}", order.date);
+        Some(why)
     }
 }

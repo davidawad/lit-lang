@@ -3,10 +3,11 @@
 //! grants and the `waive` capability, and `removes`/`extends`/`waives` on
 //! an event.
 use super::cx::{first_expr, first_ref, flag, nested, Cx};
-use crate::db::parse::tree::{ExprKind, Field, Item, ItemKind, Name, RefPath};
+use crate::db::parse::tree::{Expr, ExprKind, Field, Item, ItemKind, Name, RefPath};
 use crate::db::span::Report;
 use crate::hir::{
-    Capability, DayUnit, EventEffect, Extension, ExtensionWindow, TriggerPolicy, Type,
+    BinaryOp, Bound, Capability, CauseStandard, DateRef, DayUnit, EventEffect, Extension,
+    ExtensionWindow, Motion, TriggerPolicy, Type,
 };
 use crate::resolve::sig::ValueKind;
 use litigate_base::DiagnosticCode as C;
@@ -43,36 +44,35 @@ impl Cx<'_, '_> {
         let linear =
             rule.is_some_and(|r| matches!(&r.kind, ItemKind::Rule(k, ..) if k.text == "duty"));
         let grants: Vec<&Field> = opts.iter().filter(|f| f.key.text == "extend").collect();
-        let extend: Vec<Extension> = grants.iter().filter_map(|f| self.extension(f)).collect();
+        let built: Vec<Option<Extension>> = grants.iter().map(|f| self.extension(f)).collect();
         let waive = o.get("waive").and_then(|f| self.waiver(f));
-        let never = extend.contains(&Extension::NonExtendable);
-        if never && grants.len() > 1 {
-            self.report(Report::new(
-                C::InvalidField,
-                name.range,
-                format!(
-                    "deadline `{}` is `extend {{ never }}` and grants an extension: a period that may not be extended has no other `extend`",
-                    name.text
-                ),
-            ));
-        }
-        let extendable = flag(o.get("extendable"));
-        let clash = grants
-            .iter()
-            .zip(&extend)
-            .find(|(_, x)| extendable.is_some_and(|b| x.by().is_some() != b));
-        if let Some((f, x)) = clash {
-            let what = if x.by().is_some() {
-                "`extendable false` but grants an `extend` capability"
+        // A lock (`never`) admits the declaration's own grants, so the
+        // deadline is extendable exactly when it states one.
+        let granted = built.iter().flatten().any(|x| x.by().is_some());
+        let locked = built.iter().flatten().any(|x| x.lock().is_some());
+        let clash = |b: bool| if b { locked && !granted } else { granted };
+        if let Some(b) = flag(o.get("extendable")).filter(|&b| clash(b)) {
+            let at = if b {
+                grants.first().map_or(name.range, |f| f.key.range)
             } else {
-                "`extendable true` but `extend { never }`"
+                grants
+                    .iter()
+                    .zip(&built)
+                    .find(|(_, x)| x.as_ref().is_some_and(|x| x.by().is_some()))
+                    .map_or(name.range, |(f, _)| f.key.range)
+            };
+            let what = if b {
+                "`extendable true` but grants no extension (`extend { never ... }` alone)"
+            } else {
+                "`extendable false` but grants an `extend` capability"
             };
             self.report(Report::new(
                 C::InvalidField,
-                f.key.range,
+                at,
                 format!("deadline `{}` is {what}", name.text),
             ));
         }
+        let extend = built.into_iter().flatten().collect();
         Obligation {
             bearer,
             policy,
@@ -130,12 +130,13 @@ impl Cx<'_, '_> {
             .map(TriggerPolicy::LaterOf)
     }
 
-    /// One `extend` grant: `{ never }`, `{ by A, max N.days [,
-    /// after_expiry] }`, or `{ by A, discretion S [, after_expiry] }`. Its
-    /// bound is required: a numeric cap, a cause standard, or `never`.
+    /// One `extend` grant: `{ never cite X }`, `{ by A, max N.days | to
+    /// B [, discretion S] [, after_expiry] [, on M() [, within W]] }`, or
+    /// `{ by A, discretion S [, after_expiry, on M()] }`. Its bound is
+    /// required: a date bound, a cause standard, or `never`.
     fn extension(&mut self, f: &Field) -> Option<Extension> {
         let fields = self.once(nested(f));
-        if fields.contains_key("never") {
+        if let Some(never) = fields.get("never") {
             let others: Vec<&Field> = fields
                 .values()
                 .copied()
@@ -144,63 +145,187 @@ impl Cx<'_, '_> {
             for other in &others {
                 self.not_allowed(
                     other,
-                    "with `never`: a period that may not be extended has no extender or bound",
+                    "with `never`: a lock has no extender or bound of its own",
                 );
             }
-            return others.is_empty().then_some(Extension::NonExtendable);
+            let authority = Self::string(Some(never));
+            return others
+                .is_empty()
+                .then_some(authority)
+                .flatten()
+                .map(|authority| Extension::NonExtendable { authority });
         }
-        if let (Some(m), true) = (fields.get("max"), fields.contains_key("discretion")) {
-            self.not_allowed(
-                m,
-                "with `discretion`: a discretionary extension has no numeric ceiling",
-            );
+        if let (Some(m), Some(_)) = (fields.get("max"), fields.get("to")) {
+            self.not_allowed(m, "with `to`: give the bound once");
+            return None;
+        }
+        if let (Some(w), None) = (fields.get("within"), fields.get("on")) {
+            self.not_allowed(w, "without `on`: `within` bounds the motion");
             return None;
         }
         let by = self.by(f, &fields);
         let after_expiry = fields.contains_key("after_expiry");
-        if let Some(d) = fields.get("discretion") {
-            let standard = first_ref(Some(d))?.display();
-            let window = if after_expiry {
-                ExtensionWindow::AfterExpiryOnMotion
-            } else {
-                ExtensionWindow::BeforeExpiry
-            };
-            return Some(Extension::Discretionary {
+        let standard = match fields.get("discretion") {
+            Some(d) => Some(self.standard(first_ref(Some(d))?)?),
+            None => None,
+        };
+        let motion = match fields.get("on") {
+            Some(m) => Some(self.motion(m, fields.get("within").copied())?),
+            None => None,
+        };
+        let bound = match (fields.get("max"), fields.get("to")) {
+            (Some(m), _) => {
+                let e = first_expr(m)?;
+                let (n, unit) = self.days(e)?;
+                if unit != DayUnit::Calendar {
+                    self.report(Report::new(
+                        C::InvalidCounting,
+                        e.range,
+                        "an extension bound counts calendar days, such as `30.days`",
+                    ));
+                    return None;
+                }
+                Some(Bound::Offset {
+                    from: DateRef::PrescribedDue,
+                    days: n,
+                })
+            }
+            (None, Some(t)) => Some(self.bound(first_expr(t)?)?),
+            (None, None) => None,
+        };
+        if let Some(bound) = bound {
+            return Some(Extension::Bounded {
                 by: by?,
+                until: bound,
+                after_expiry,
                 standard,
-                window,
+                motion,
             });
         }
-        let Some(m) = fields.get("max") else {
+        let Some(standard) = standard else {
             self.report(Report::new(
                 C::InvalidField,
                 f.key.range,
-                "an `extend` capability states its bound: `max N.days`, `discretion <Standard>`, or `never`",
+                "an `extend` capability states its bound: `max N.days`, `to <bound>`, `discretion <Standard>`, or `never cite <rule>`",
             ));
             return None;
         };
-        let e = first_expr(m)?;
-        let (n, unit) = self.days(e)?;
-        if unit != DayUnit::Calendar {
+        let window = if after_expiry {
+            ExtensionWindow::AfterExpiryOnMotion
+        } else {
+            ExtensionWindow::BeforeExpiry
+        };
+        if window == ExtensionWindow::AfterExpiryOnMotion && motion.is_none() {
             self.report(Report::new(
-                C::InvalidCounting,
-                e.range,
-                "an extension bound counts calendar days, such as `30.days`",
+                C::InvalidField,
+                f.key.range,
+                "a discretionary `after_expiry` grant is on motion (FRCP 6(b)(1)(B)): name the motion, `on <Motion>()`",
             ));
             return None;
         }
-        Some(Extension::Bounded {
+        Some(Extension::Discretionary {
             by: by?,
-            max_days: n,
-            after_expiry,
+            standard,
+            window,
+            motion,
         })
+    }
+
+    /// The cause standard `r`: one of the closed set (L2007 otherwise).
+    fn standard(&mut self, r: &RefPath) -> Option<CauseStandard> {
+        let text = r.display();
+        let found = CauseStandard::ALL.into_iter().find(|s| s.name() == text);
+        if found.is_none() {
+            self.report(Report::new(
+                C::InvalidField,
+                r.range,
+                format!(
+                    "`{text}` is not a cause standard: expected {}",
+                    CauseStandard::ALL
+                        .iter()
+                        .map(|s| format!("`{}`", s.name()))
+                        .collect::<Vec<_>>()
+                        .join(", ")
+                ),
+            ));
+        }
+        found
+    }
+
+    /// The motion `on M()` of a grant, bounded by `within W` when given.
+    fn motion(&mut self, on: &Field, within: Option<&Field>) -> Option<Motion> {
+        let event = self.pattern(first_expr(on)?)?;
+        let within = match within {
+            Some(w) => Some(self.bound(first_expr(w)?)?),
+            None => None,
+        };
+        Some(Motion { event, within })
+    }
+
+    /// A date bound: `max(b, ...)`, `min(b, ...)`, or `r + N.days` with
+    /// `r` one of `prescribed_due`, `grant_order_entered` (L2007
+    /// otherwise).
+    fn bound(&mut self, e: &Expr) -> Option<Bound> {
+        const EXPECTED: &str = "a date bound is `max(...)`, `min(...)`, or `prescribed_due` / `grant_order_entered` `+ N.days`";
+        let refers = |r: &RefPath| {
+            [DateRef::PrescribedDue, DateRef::GrantOrderEntered]
+                .into_iter()
+                .find(|d| r.is_simple() && d.name() == r.head.text)
+        };
+        match &e.kind {
+            ExprKind::Paren(inner) => self.bound(inner),
+            ExprKind::Call(f, args) if f.is_simple() && !args.is_empty() => {
+                let ops = args
+                    .iter()
+                    .map(|a| self.bound(a))
+                    .collect::<Vec<_>>()
+                    .into_iter()
+                    .collect::<Option<Vec<_>>>();
+                match f.head.text.as_str() {
+                    "max" => Some(Bound::Max(ops?)),
+                    "min" => Some(Bound::Min(ops?)),
+                    _ => {
+                        self.report(Report::new(C::InvalidField, e.range, EXPECTED));
+                        None
+                    }
+                }
+            }
+            ExprKind::Ref(r) if refers(r).is_some() => Some(Bound::Offset {
+                from: refers(r)?,
+                days: 0,
+            }),
+            ExprKind::Binary(BinaryOp::Add, l, n) => {
+                let from = match &l.kind {
+                    ExprKind::Ref(r) => refers(r),
+                    _ => None,
+                };
+                let Some(from) = from else {
+                    self.report(Report::new(C::InvalidField, l.range, EXPECTED));
+                    return None;
+                };
+                let (days, unit) = self.days(n)?;
+                if unit != DayUnit::Calendar {
+                    self.report(Report::new(
+                        C::InvalidCounting,
+                        n.range,
+                        "an extension bound counts calendar days, such as `30.days`",
+                    ));
+                    return None;
+                }
+                Some(Bound::Offset { from, days })
+            }
+            _ => {
+                self.report(Report::new(C::InvalidField, e.range, EXPECTED));
+                None
+            }
+        }
     }
 
     /// The `waive` capability `{ by A [, after_expiry] }`: a waiver has no
     /// extent, so no bound.
     fn waiver(&mut self, f: &Field) -> Option<Capability> {
         let fields = self.once(nested(f));
-        for bound in ["max", "discretion", "never"] {
+        for bound in ["max", "to", "discretion", "on", "within", "never"] {
             if let Some(m) = fields.get(bound) {
                 self.not_allowed(m, "on a `waive` capability: a waiver has no extent");
             }

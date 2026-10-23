@@ -23,6 +23,11 @@ event NoticeOfRemovalFiled()
 /// FRCP 14(a)(1): a defending party may implead without the court's leave
 /// within 14 days after serving its original answer.
 event AnswerServed()
+/// A party moves, after the removal answer period expired, to extend it.
+event RemovalAnswerExtensionMoved()
+/// A party moves, after the third-party complaint period expired, to
+/// extend it.
+event ThirdPartyComplaintExtensionMoved()
 
 /// Both periods are extendable under FRCP 6(b)(1): for good cause before
 /// they expire, and on motion for excusable neglect after; the rule sets
@@ -30,13 +35,18 @@ event AnswerServed()
 deadline removal-answer: 7.days after NoticeOfRemovalFiled() counted_by frcp6 cite FRCP 81(c)(2)(C)
 {
   extend { by Court, discretion GoodCause }
-  extend { by Court, discretion ExcusableNeglect, after_expiry }
+  extend { by Court, discretion ExcusableNeglect, after_expiry, on RemovalAnswerExtensionMoved() }
 }
 
 deadline third-party-complaint: 14.days after AnswerServed() counted_by frcp6 cite FRCP 14(a)(1)
 {
   extend { by Court, discretion GoodCause }
-  extend { by Court, discretion ExcusableNeglect, after_expiry }
+  extend {
+    by Court
+    discretion ExcusableNeglect
+    after_expiry
+    on ThirdPartyComplaintExtensionMoved()
+  }
 }
 
 test "Glannon: removal on Wednesday December 28, 2016; answer due Wednesday January 4, 2017" cite FRCP 81(c)(2)(C)

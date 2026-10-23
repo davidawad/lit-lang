@@ -24,19 +24,41 @@ import core.time.{ ServiceMethod }
 // time is set by stipulation or court order"), and where the pack records an
 // FRCP 6(b)(1) extension ("the court may, for good cause, extend the time").
 // FRCP 6(b)(2) forbids extending the Rule 50(b), 59(b), 59(e) and 60(b)
-// periods, and the pack marks the removal, remand-motion, waiver, Rule
-// 15(a)(1) and cross-appeal periods unextendable, so they delegate nothing.
+// periods, and 28 U.S.C. §§ 1446(b) and 1447(c) state no extension, so
+// those periods delegate nothing.
 //
-// Extension. A period the pack marks extendable grants FRCP 6(b)(1)'s two
-// powers, neither with a numeric ceiling: "(A) with or without motion or
-// notice if the court acts, or if a request is made, before the original
-// time or its extension expires" (`discretion GoodCause`), and "(B) on
-// motion made after the time has expired if the party failed to act
-// because of excusable neglect" (`discretion ExcusableNeglect,
-// after_expiry`). The four 6(b)(2) periods are `extend { never }`. The
-// notice-of-appeal period is FRAP 4(a)(5)'s, not Rule 6(b)'s; see its
-// declaration. An order extending one of them is the `...Extended` event
+// Extension. FRCP 6(b)(1) reaches any act that "may or must be done within
+// a specified time", so every civil-rule period not on the 6(b)(2) list
+// grants its two powers, neither with a numeric ceiling: "(A) with or
+// without motion or notice if the court acts, or if a request is made,
+// before the original time or its extension expires" (`discretion
+// GoodCause`), and "(B) on motion made after the time has expired if the
+// party failed to act because of excusable neglect" (`discretion
+// ExcusableNeglect, after_expiry, on ExtensionMoved(...)`: the motion,
+// made after expiry, is a matter fact). This includes the Rule
+// 12(a)(1)(A)(ii) waiver period and the Rule 15(a)(1) period. The four
+// 6(b)(2) periods are `extend { never cite FRCP 6(b)(2) }`. The FRAP
+// 4(a)(1) and 4(a)(3) periods are FRAP 4(a)(5)'s, not Rule 6(b)'s, and
+// FRAP 26(b)(1) locks them against any other extension; see their
+// declarations. An order extending one of them is the `...Extended` event
 // that names it, done by the court and cited (SPEC §5.6).
+/// The periods a party may move to extend.
+enum ExtendedPeriod {
+  ServicePeriod,
+  AnswerPeriod,
+  WaiverAnswerPeriod,
+  RemovedAnswerPeriod,
+  DenialAnswerPeriod,
+  AmendmentAsOfCoursePeriod,
+  AmendedResponsePeriod,
+  InitialDisclosurePeriod,
+  JuryDemandPeriod,
+  NoticeOfAppealPeriod,
+  CrossAppealPeriod,
+}
+
+/// A party moves to extend `period` (FRCP 6(b)(1)(B); FRAP 4(a)(5)(A)(i)).
+event ExtensionMoved(period: ExtendedPeriod)
 /// The complaint is filed (FRCP 3): the Rule 4(m) service clock starts.
 event ComplaintFiled()
 /// The summons and complaint are served under Rule 4. Service of process is
@@ -72,6 +94,12 @@ event ServicePeriodExtended(until: Date) extends service-period to until
 /// The court extends the time to answer the complaint to `until` (FRCP
 /// 6(b)(1)).
 event AnswerPeriodExtended(until: Date) extends answer-period to until
+/// The court extends the time to answer after a waiver of service to
+/// `until` (FRCP 12(a)(1)(A)(ii), 6(b)(1)).
+event WaiverAnswerPeriodExtended(until: Date) extends waiver-answer-period to until
+/// The court extends the time to amend once as a matter of course to
+/// `until` (FRCP 15(a)(1), 6(b)(1)).
+event AmendmentAsOfCoursePeriodExtended(until: Date) extends amendment-as-of-course-period to until
 /// The court extends the time to answer after removal to `until` (FRCP
 /// 6(b)(1)).
 event RemovedAnswerPeriodExtended(until: Date) extends removed-answer-period to until
@@ -90,6 +118,9 @@ event JuryDemandPeriodExtended(until: Date) extends jury-demand-period to until
 /// The district court extends the time to file a notice of appeal to
 /// `until` (FRAP 4(a)(5)).
 event NoticeOfAppealPeriodExtended(until: Date) extends notice-of-appeal-period to until
+/// The district court extends the time to file a notice of cross-appeal to
+/// `until` (FRAP 4(a)(5)).
+event CrossAppealPeriodExtended(until: Date) extends cross-appeal-period to until
 
 /// Rule 4(m): 90 days after the complaint is filed; on good cause the court
 /// "must extend the time for service", and absent it may "order that
@@ -98,7 +129,7 @@ event NoticeOfAppealPeriodExtended(until: Date) extends notice-of-appeal-period 
 deadline service-period: 90.days after ComplaintFiled() counted_by frcp6 effective [2017-12-01, ..) delegable_to [CaseOrder] cite FRCP 4(m)
 {
   extend { by court, discretion GoodCause }
-  extend { by court, discretion ExcusableNeglect, after_expiry }
+  extend { by court, discretion ExcusableNeglect, after_expiry, on ExtensionMoved(ServicePeriod) }
 }
 
 /// Rule 12(a)(1)(A)(ii): an answer is due 60 days after a timely returned
@@ -106,6 +137,15 @@ deadline service-period: 90.days after ComplaintFiled() counted_by frcp6 effecti
 /// district, which the pack does not branch on). Rule 12 last amended eff.
 /// December 1, 2024.
 deadline waiver-answer-period: 60.days after WaiverRequestSent() counted_by frcp6 effective [2024-12-01, ..) cite FRCP 12(a)(1)(A)(ii)
+{
+  extend { by court, discretion GoodCause }
+  extend {
+    by court
+    discretion ExcusableNeglect
+    after_expiry
+    on ExtensionMoved(WaiverAnswerPeriod)
+  }
+}
 
 /// Rule 12(a)(1)(A)(i): an answer is due 21 days after service of the
 /// summons and complaint; a pre-answer Rule 12(b) motion "must be made
@@ -114,7 +154,7 @@ deadline waiver-answer-period: 60.days after WaiverRequestSent() counted_by frcp
 deadline answer-period: 21.days after ProcessServed() counted_by frcp6 effective [2024-12-01, ..) delegable_to [CaseOrder] cite FRCP 12(a)(1)(A)(i)
 {
   extend { by court, discretion GoodCause }
-  extend { by court, discretion ExcusableNeglect, after_expiry }
+  extend { by court, discretion ExcusableNeglect, after_expiry, on ExtensionMoved(AnswerPeriod) }
 }
 
 /// 28 U.S.C. § 1446(b)(1): a notice of removal is due 30 days after the
@@ -135,7 +175,12 @@ deadline remand-motion-period: 30.days after NoticeOfRemovalFiled() counted_by f
 deadline removed-answer-period: 21.days after InitialPleadingReceived() counted_by frcp6 effective [2009-12-01, ..) delegable_to [CaseOrder] cite FRCP 81(c)(2)(A)
 {
   extend { by court, discretion GoodCause }
-  extend { by court, discretion ExcusableNeglect, after_expiry }
+  extend {
+    by court
+    discretion ExcusableNeglect
+    after_expiry
+    on ExtensionMoved(RemovedAnswerPeriod)
+  }
 }
 
 /// Rule 12(a)(4)(A): "Unless the court sets a different time", the
@@ -144,7 +189,12 @@ deadline removed-answer-period: 21.days after InitialPleadingReceived() counted_
 deadline denial-answer-period: 14.days after Rule12MotionDenied() counted_by frcp6 effective [2024-12-01, ..) delegable_to [CaseOrder] cite FRCP 12(a)(4)(A)
 {
   extend { by court, discretion GoodCause }
-  extend { by court, discretion ExcusableNeglect, after_expiry }
+  extend {
+    by court
+    discretion ExcusableNeglect
+    after_expiry
+    on ExtensionMoved(DenialAnswerPeriod)
+  }
 }
 
 /// Rule 15(a)(1)(B): amendment once as a matter of course no later than 21
@@ -152,6 +202,15 @@ deadline denial-answer-period: 14.days after Rule12MotionDenied() counted_by frc
 /// (f) motion, whichever is earlier). Rule 15 last amended eff. December 1,
 /// 2023.
 deadline amendment-as-of-course-period: 21.days after ResponsivePleadingServed() counted_by frcp6 effective [2023-12-01, ..) cite FRCP 15(a)(1)(B)
+{
+  extend { by court, discretion GoodCause }
+  extend {
+    by court
+    discretion ExcusableNeglect
+    after_expiry
+    on ExtensionMoved(AmendmentAsOfCoursePeriod)
+  }
+}
 
 /// Rule 15(a)(3): "Unless the court orders otherwise", a response to an
 /// amended pleading is due within the time left on the original or 14 days
@@ -160,7 +219,12 @@ deadline amendment-as-of-course-period: 21.days after ResponsivePleadingServed()
 deadline amended-response-period: 14.days after AmendedPleadingServed() counted_by frcp6 effective [2023-12-01, ..) delegable_to [CaseOrder] cite FRCP 15(a)(3)
 {
   extend { by court, discretion GoodCause }
-  extend { by court, discretion ExcusableNeglect, after_expiry }
+  extend {
+    by court
+    discretion ExcusableNeglect
+    after_expiry
+    on ExtensionMoved(AmendedResponsePeriod)
+  }
 }
 
 /// Rule 26(a)(1)(C): initial disclosures are due 14 days after the Rule
@@ -169,7 +233,12 @@ deadline amended-response-period: 14.days after AmendedPleadingServed() counted_
 deadline initial-disclosure-period: 14.days after Rule26fConferenceHeld() counted_by frcp6 effective [2015-12-01, ..) delegable_to [CaseOrder] cite FRCP 26(a)(1)(C)
 {
   extend { by court, discretion GoodCause }
-  extend { by court, discretion ExcusableNeglect, after_expiry }
+  extend {
+    by court
+    discretion ExcusableNeglect
+    after_expiry
+    on ExtensionMoved(InitialDisclosurePeriod)
+  }
 }
 
 /// Rule 38(b)(1): a jury demand is due 14 days after the last pleading
@@ -178,7 +247,12 @@ deadline initial-disclosure-period: 14.days after Rule26fConferenceHeld() counte
 deadline jury-demand-period: 14.days after LastPleadingServed() counted_by frcp6 effective [2009-12-01, ..) delegable_to [CaseOrder] cite FRCP 38(b)(1)
 {
   extend { by court, discretion GoodCause }
-  extend { by court, discretion ExcusableNeglect, after_expiry }
+  extend {
+    by court
+    discretion ExcusableNeglect
+    after_expiry
+    on ExtensionMoved(JuryDemandPeriod)
+  }
 }
 
 /// Rule 50(b): a renewed motion for judgment as a matter of law is due 28
@@ -186,7 +260,7 @@ deadline jury-demand-period: 14.days after LastPleadingServed() counted_by frcp6
 /// last amended eff. December 1, 2009.
 deadline jmol-renewal-period: 28.days after JudgmentEntered() counted_by frcp6 effective [2009-12-01, ..) cite FRCP 50(b)
 {
-  extend { never }
+  extend { never cite FRCP 6(b)(2) }
 }
 
 /// Rule 59(b): a new-trial motion is due 28 days after entry of judgment;
@@ -194,7 +268,7 @@ deadline jmol-renewal-period: 28.days after JudgmentEntered() counted_by frcp6 e
 /// 2009.
 deadline new-trial-period: 28.days after JudgmentEntered() counted_by frcp6 effective [2009-12-01, ..) cite FRCP 59(b)
 {
-  extend { never }
+  extend { never cite FRCP 6(b)(2) }
 }
 
 /// Rule 59(e): a motion to alter or amend the judgment is due 28 days after
@@ -202,7 +276,7 @@ deadline new-trial-period: 28.days after JudgmentEntered() counted_by frcp6 effe
 /// December 1, 2009.
 deadline alter-amend-period: 28.days after JudgmentEntered() counted_by frcp6 effective [2009-12-01, ..) cite FRCP 59(e)
 {
-  extend { never }
+  extend { never cite FRCP 6(b)(2) }
 }
 
 /// Rule 60(c)(1): a Rule 60(b)(1)-(3) motion is due "no more than a year
@@ -211,7 +285,7 @@ deadline alter-amend-period: 28.days after JudgmentEntered() counted_by frcp6 ef
 /// 6(b)(2) forbids extending it. Rule 60 last amended eff. December 1, 2007.
 deadline relief-from-judgment-period: 1.years after JudgmentEntered() counted_by frcp6 effective [2007-12-01, ..) cite FRCP 60(c)(1)
 {
-  extend { never }
+  extend { never cite FRCP 6(b)(2) }
 }
 
 /// FRAP 4(a)(1)(A): the notice of appeal is due 30 days after entry of
@@ -219,15 +293,37 @@ deadline relief-from-judgment-period: 1.years after JudgmentEntered() counted_by
 /// FRAP 4(a)(5) and 28 U.S.C. § 2107(c), on a motion filed no later than 30
 /// days after the time expires, to no later than 30 days after the
 /// prescribed time or 14 days after the order, whichever is later (FRAP
-/// 4(a)(5)(C)). The grant models the first of the two caps: an order
-/// entered more than 16 days after the prescribed time, whose 14 days run
-/// past it, is rejected though lawful (UNMODELLED: the order-relative cap).
+/// 4(a)(5)(C)), for excusable neglect or good cause whether the motion
+/// comes before or after expiry (4(a)(5)(A)(ii)). FRAP 26(b)(1) forbids any
+/// other extension ("except as authorized in Rule 4").
 deadline notice-of-appeal-period: 30.days after JudgmentEntered() counted_by frap26 effective [2024-12-01, ..) delegable_to [CaseOrder] cite FRAP 4(a)(1)(A)
 {
-  extend { by court, max 30.days, after_expiry }
+  extend {
+    by court
+    discretion GoodCauseOrExcusableNeglect
+    to max(prescribed_due + 30.days, grant_order_entered + 14.days)
+    after_expiry
+    on ExtensionMoved(NoticeOfAppealPeriod)
+    within prescribed_due + 30.days
+  }
+  extend { never cite FRAP 26(b)(1) }
 }
 
 /// FRAP 4(a)(3): a cross-appeal is due 14 days after the first notice of
 /// appeal is filed (or within the FRAP 4(a)(1) time, whichever ends later;
-/// the pack models the 14 days).
+/// the pack models the 14 days). FRAP 4(a)(5)(A) extends "the time to file
+/// a notice of appeal" and 4(a)(5)(B) names 4(a)(3), so the cross-appeal
+/// period carries the same grant and FRAP 26(b)(1) lock as the notice of
+/// appeal.
 deadline cross-appeal-period: 14.days after NoticeOfAppealFiled() counted_by frap26 effective [2024-12-01, ..) cite FRAP 4(a)(3)
+{
+  extend {
+    by court
+    discretion GoodCauseOrExcusableNeglect
+    to max(prescribed_due + 30.days, grant_order_entered + 14.days)
+    after_expiry
+    on ExtensionMoved(CrossAppealPeriod)
+    within prescribed_due + 30.days
+  }
+  extend { never cite FRAP 26(b)(1) }
+}

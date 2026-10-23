@@ -98,32 +98,50 @@ pub struct Capability {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "bound", rename_all = "snake_case")]
 pub enum Extension {
-    /// `extend { by A, max N.days [, after_expiry] }`: no further than `N`
-    /// calendar days past the counted due date, a cap the declaring file
+    /// `extend { by A, max N.days | to B [, discretion S] [, after_expiry]
+    /// [, on M() [, within W]] }`: no later than the date bound `B` (`max
+    /// N.days` is `to prescribed_due + N.days`), a cap the declaring file
     /// imposes (a local rule allowing one stipulated extension of N days,
     /// FRAP 4(a)(5)(C)).
     Bounded {
         /// The actor that may extend.
         by: String,
-        /// Furthest extension past the counted due date, in calendar days.
-        max_days: u64,
-        /// May be exercised after the instance's due date.
+        /// The latest date an extension may reach.
+        until: Bound,
+        /// May be exercised after the instance's due date as well as before.
         #[serde(default, skip_serializing_if = "std::ops::Not::not")]
         after_expiry: bool,
+        /// The cause standard the extender applies, if the rule states one
+        /// (FRAP 4(a)(5)(A)(ii)).
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        standard: Option<CauseStandard>,
+        /// The motion the grant requires, if any (FRAP 4(a)(5)(A)(i)).
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        motion: Option<Motion>,
     },
-    /// `extend { by A, discretion S [, after_expiry] }`: the court's
-    /// discretion under cause standard `S`, with no numeric ceiling (FRCP
-    /// 6(b)(1)).
+    /// `extend { by A, discretion S [, after_expiry, on M()] }`: the
+    /// court's discretion under cause standard `S`, with no numeric ceiling
+    /// (FRCP 6(b)(1)); after expiry only on motion `M` (FRCP 6(b)(1)(B)).
     Discretionary {
         /// The actor that may extend.
         by: String,
-        /// The cause standard (`GoodCause`, `ExcusableNeglect`).
-        standard: String,
+        /// The cause standard.
+        standard: CauseStandard,
         /// When the grant may be exercised.
         window: ExtensionWindow,
+        /// The motion the grant requires: always present for
+        /// [`ExtensionWindow::AfterExpiryOnMotion`].
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        motion: Option<Motion>,
     },
-    /// `extend { never }`: the period may not be extended (FRCP 6(b)(2)).
-    NonExtendable,
+    /// `extend { never cite X }`: the rule `X` forbids extending the
+    /// period beyond the deadline's own other grants, so no order, local
+    /// rule or stipulation adds one (FRCP 6(b)(2); FRAP 26(b), "except as
+    /// authorized in Rule 4").
+    NonExtendable {
+        /// The rule that forbids the extension.
+        authority: String,
+    },
 }
 
 impl Extension {
@@ -132,7 +150,16 @@ impl Extension {
     pub fn by(&self) -> Option<&str> {
         match self {
             Self::Bounded { by, .. } | Self::Discretionary { by, .. } => Some(by),
-            Self::NonExtendable => None,
+            Self::NonExtendable { .. } => None,
+        }
+    }
+
+    /// The authority of a [`Self::NonExtendable`] lock.
+    #[must_use]
+    pub fn lock(&self) -> Option<&str> {
+        match self {
+            Self::NonExtendable { authority } => Some(authority),
+            Self::Bounded { .. } | Self::Discretionary { .. } => None,
         }
     }
 }
@@ -147,6 +174,140 @@ pub enum ExtensionWindow {
     BeforeExpiry,
     /// After the due date, on motion (FRCP 6(b)(1)(B)).
     AfterExpiryOnMotion,
+}
+
+/// The cause standard an extension grant applies: a closed set, so a
+/// misspelled standard is a compile error (L2007).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum CauseStandard {
+    /// Good cause (FRCP 6(b)(1)(A)).
+    GoodCause,
+    /// Excusable neglect (FRCP 6(b)(1)(B)).
+    ExcusableNeglect,
+    /// Either excusable neglect or good cause (FRAP 4(a)(5)(A)(ii)).
+    GoodCauseOrExcusableNeglect,
+}
+
+impl CauseStandard {
+    /// Every standard, in declaration order.
+    pub const ALL: [Self; 3] = [
+        Self::GoodCause,
+        Self::ExcusableNeglect,
+        Self::GoodCauseOrExcusableNeglect,
+    ];
+
+    /// Its identifier in source.
+    #[must_use]
+    pub fn name(self) -> &'static str {
+        match self {
+            Self::GoodCause => "GoodCause",
+            Self::ExcusableNeglect => "ExcusableNeglect",
+            Self::GoodCauseOrExcusableNeglect => "GoodCauseOrExcusableNeglect",
+        }
+    }
+}
+
+/// A date an extension bound is counted from.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum DateRef {
+    /// The instance's counted due date, raised to any `later_of` floor
+    /// (`prescribed_due`): "the time prescribed by this Rule 4(a)".
+    PrescribedDue,
+    /// The date of the order granting the extension
+    /// (`grant_order_entered`).
+    GrantOrderEntered,
+}
+
+impl DateRef {
+    /// Its identifier in source.
+    #[must_use]
+    pub fn name(self) -> &'static str {
+        match self {
+            Self::PrescribedDue => "prescribed_due",
+            Self::GrantOrderEntered => "grant_order_entered",
+        }
+    }
+}
+
+/// A date bound: a closed expression language of `max`/`min` over
+/// `DateRef + N.days` (FRAP 4(a)(5)(C): "30 days after the prescribed time
+/// or 14 days after the date when the order granting the motion is
+/// entered, whichever is later").
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum Bound {
+    /// `r + N.days`, calendar days.
+    Offset {
+        /// The date counted from.
+        from: DateRef,
+        /// Calendar days after it.
+        days: u64,
+    },
+    /// The latest of the operands.
+    Max(Vec<Bound>),
+    /// The earliest of the operands.
+    Min(Vec<Bound>),
+}
+
+impl Bound {
+    /// The bound's date, given the dates of `prescribed_due` and
+    /// `grant_order_entered`; `None` if a date cannot be counted.
+    #[must_use]
+    pub fn date(&self, due: &str, order: &str) -> Option<String> {
+        match self {
+            Self::Offset { from, days } => {
+                let at = match from {
+                    DateRef::PrescribedDue => due,
+                    DateRef::GrantOrderEntered => order,
+                };
+                crate::types::date::add_days(at, *days)
+            }
+            Self::Max(xs) | Self::Min(xs) => {
+                let dates = xs
+                    .iter()
+                    .map(|x| x.date(due, order))
+                    .collect::<Option<Vec<_>>>()?
+                    .into_iter();
+                if matches!(self, Self::Max(_)) {
+                    dates.max()
+                } else {
+                    dates.min()
+                }
+            }
+        }
+    }
+
+    /// Its source form.
+    #[must_use]
+    pub fn display(&self) -> String {
+        match self {
+            Self::Offset { from, days } => format!("{} + {days}.days", from.name()),
+            Self::Max(xs) | Self::Min(xs) => format!(
+                "{}({})",
+                if matches!(self, Self::Max(_)) {
+                    "max"
+                } else {
+                    "min"
+                },
+                xs.iter().map(Self::display).collect::<Vec<_>>().join(", ")
+            ),
+        }
+    }
+}
+
+/// The motion an extension grant requires (`on M() [, within W]`): an
+/// event of pattern `M` after the instance opens and no later than the
+/// order, and no later than bound `W` when given (FRAP 4(a)(5)(A)(i): "no
+/// later than 30 days after the time prescribed by this Rule 4(a)
+/// expires").
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Motion {
+    /// The motion's event pattern.
+    pub event: Expr,
+    /// The latest date the motion may be made.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub within: Option<Bound>,
 }
 
 /// Deadline counting direction.

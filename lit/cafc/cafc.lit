@@ -40,6 +40,9 @@ enum Brief { Principal, Response }
 
 /// Entry of `order` by the tribunal that issued it.
 event Entered(order: Order)
+/// A party moves the trial court to extend the time to file a notice of
+/// appeal (FRAP 4(a)(5)(A)(i)).
+event AppealExtensionMoved()
 /// An ITC final determination becomes final: the 60-day Presidential review
 /// period of 19 U.S.C. § 1337(j) has run without disapproval.
 event BecameFinal()

@@ -55,6 +55,7 @@
   ],
   "roles": {
     "applicant": "self",
+    "court": "nature",
     "either": "nature",
     "examiner": "nature",
     "office": "nature"
@@ -290,7 +291,7 @@
       "kind": "state",
       "label": "Notice of Cross-Appeal Filed",
       "cite": "FRAP 4(a)(3)",
-      "note": "Due within 14 days after the first notice of appeal, or the otherwise-applicable Rule 4(a)(1) period, whichever is later. The deadline is non-extendable under the plain text of the rule — missing it forecloses cross-appellate relief.",
+      "note": "Due within 14 days after the first notice of appeal, or the otherwise-applicable Rule 4(a)(1) period, whichever is later. The district court may extend it under FRAP 4(a)(5); otherwise missing it forecloses cross-appellate relief.",
       "group": "docketing-group"
     },
     {
@@ -1029,8 +1030,9 @@
       "authority": "FRAP 4(a)(3)",
       "deadline": {
         "length": 14.0,
-        "extendable": false,
-        "note": "14 days after the first notice of appeal, or within the original FRAP 4(a)(1) period, whichever is later. Missing this deadline forecloses the cross-appeal entirely — no equitable exceptions or late filing allowed."
+        "extendable": true,
+        "extensionAuthority": "FRAP 4(a)(5): on motion no later than 30 days after the period expires, for excusable neglect or good cause",
+        "note": "14 days after the first notice of appeal, or within the original FRAP 4(a)(1) period, whichever is later. Only a FRAP 4(a)(5) extension saves a missed deadline; no equitable exception revives it."
       },
       "duration": {
         "min": 2.1,

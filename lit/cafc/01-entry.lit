@@ -4,7 +4,7 @@
 module cafc.entry
 
 import cafc.docketing.{ notice-of-appeal-filed }
-import cafc.{ BecameFinal, Entered, Filed, Order, Paper, entry-group }
+import cafc.{ AppealExtensionMoved, BecameFinal, Entered, Filed, Order, Paper, entry-group }
 import core.authority.{ CaseOrder }
 import core.frap26.{ frap26 }
 
@@ -180,6 +180,17 @@ state entry-ttab: "TTAB Final Decision (Opposition, Cancellation or Ex Parte App
 rule duty district-court-notice-of-appeal cite FRAP 4(a)(1)(A)
 {
   deadline district-court-noa-period: 30.days after Entered(Judgment) counted_by frap26 effective [1968-07-01, ..) known_at 1967-12-04 delegable_to [CaseOrder] cite FRAP 4(a)(1)(A); FRAP 4(a)(5)(A)
+  {
+    extend {
+      by court
+      discretion GoodCauseOrExcusableNeglect
+      to max(prescribed_due + 30.days, grant_order_entered + 14.days)
+      after_expiry
+      on AppealExtensionMoved()
+      within prescribed_due + 30.days
+    }
+    extend { never cite FRAP 26(b)(1) }
+  }
 }
 
 /// 37 C.F.R. § 90.3(a)(1): 63 days after the final Board decision, in force
@@ -192,12 +203,16 @@ rule duty ptab-notice-of-appeal cite 37 C.F.R. § 90.3(a)(1)
 }
 
 /// 19 U.S.C. § 1337(c): 60 days after the determination becomes final. The
-/// statute names no extension, so nothing below it may change the period.
+/// statute names no extension, so nothing below it may change the period,
+/// and FRAP 26(b)(2) forbids the court extending it.
 /// Its appeal to this court dates from the court's creation (Federal Courts
 /// Improvement Act of 1982, effective October 1, 1982).
 rule duty itc-notice-of-appeal cite 19 U.S.C. § 1337(c)
 {
   deadline itc-noa-period: 60.days after BecameFinal() counted_by frap26 effective [1982-10-01, ..) known_at 1982-04-02 cite 19 U.S.C. § 1337(c)
+  {
+    extend { never cite FRAP 26(b)(2) }
+  }
 }
 
 /// 28 U.S.C. § 2522 adopts the district-court time: the United States is a
@@ -208,6 +223,17 @@ rule duty itc-notice-of-appeal cite 19 U.S.C. § 1337(c)
 rule duty cofc-notice-of-appeal cite 28 U.S.C. § 2522
 {
   deadline cofc-noa-period: 60.days after Entered(Judgment) counted_by frap26 effective [1992-10-29, ..) known_at 1992-10-29 delegable_to [CaseOrder] cite 28 U.S.C. § 2522; FRAP 4(a)(1)(B); FRAP 4(a)(5)(A)
+  {
+    extend {
+      by court
+      discretion GoodCauseOrExcusableNeglect
+      to max(prescribed_due + 30.days, grant_order_entered + 14.days)
+      after_expiry
+      on AppealExtensionMoved()
+      within prescribed_due + 30.days
+    }
+    extend { never cite FRAP 26(b)(1) }
+  }
 }
 
 /// 37 C.F.R. § 2.145(d)(1): 63 days from the date of the final TTAB

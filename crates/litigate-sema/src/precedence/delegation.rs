@@ -5,7 +5,7 @@
 //! `supersedes`, and `revives`. An unlicensed relation is L3004 here and
 //! has no effect on selection ([`licensed`]).
 use super::lattice::{Lattice, Order};
-use crate::hir::Relation;
+use crate::hir::{Declaration, Extension, Relation};
 use crate::temporal::interval::Window;
 use crate::temporal::world::{error, span_of, Decl, DiagnosticExt, Key, Locate, World};
 use litigate_base::{Applicability, Derivation, Diagnostic, DiagnosticCode as C, Span};
@@ -34,6 +34,9 @@ fn end_of(s: &Span) -> Span {
 /// Whether declaration `by` may displace version `target`: its authority
 /// equals or outranks the target's, or the target delegates to it
 /// (`delegable_to` naming `by`'s authority exactly).
+/// A delegation never reaches past a lock: a lower authority may not
+/// displace a deadline locked by `extend { never cite X }` with one
+/// granting an extension the target does not ([`lock_widened`]).
 #[must_use]
 pub fn licensed(world: &World<'_>, by: usize, target: usize) -> bool {
     let mine = &world.decls[by].meta.authority;
@@ -41,10 +44,28 @@ pub fn licensed(world: &World<'_>, by: usize, target: usize) -> bool {
     matches!(
         world.lattice().compare(mine, &theirs.authority),
         Order::Above | Order::Equal
-    ) || theirs
+    ) || (theirs
         .relations
         .iter()
         .any(|r| matches!(r, Relation::DelegableTo(x) if x == mine))
+        && lock_widened(world, by, target).is_none())
+}
+
+/// The authority of deadline `target`'s lock (`extend { never cite X }`)
+/// when deadline `by` grants an extension `target` does not state (FRAP
+/// 26(b): a local rule or order cannot grant there).
+#[must_use]
+pub fn lock_widened<'w>(world: &'w World<'_>, by: usize, target: usize) -> Option<&'w str> {
+    let (Declaration::Deadline(mine), Declaration::Deadline(theirs)) =
+        (world.decls[by].decl, world.decls[target].decl)
+    else {
+        return None;
+    };
+    let lock = theirs.extend.iter().find_map(Extension::lock)?;
+    mine.extend
+        .iter()
+        .any(|x| x.by().is_some() && !theirs.extend.contains(x))
+        .then_some(lock)
 }
 
 /// The versions of `key` (only the one starting on `version`, when given)
@@ -242,7 +263,8 @@ fn overriding(
 }
 
 /// L3004 when `a`'s `keyword` relation on `key` displaces versions in
-/// `affected` that do not license it.
+/// `affected` that do not license it: a missing delegation, or a lock the
+/// relation would widen.
 fn unlicensed(
     world: &World<'_>,
     lattice: &Lattice,
@@ -251,15 +273,43 @@ fn unlicensed(
     key: &Key,
     keyword: &str,
     affected: &[usize],
-) -> Option<Diagnostic> {
-    let missing: Vec<usize> = affected
+) -> Vec<Diagnostic> {
+    let (locked, missing): (Vec<usize>, Vec<usize>) = affected
         .iter()
         .copied()
         .filter(|&b| !licensed(world, a, b))
-        .collect();
+        .partition(|&b| lock_widened(world, a, b).is_some());
     let name = key.display(world.pack_of(a));
     let span = span_of(loc, &world.decls[a], keyword);
-    missing_delegation(world, lattice, loc, a, keyword, &name, &missing, span)
+    let da = &world.decls[a];
+    let lock = locked.first().map(|&b| {
+        let db = &world.decls[b];
+        let authority = lock_widened(world, a, b).unwrap_or_default();
+        error(
+            C::MissingDelegation,
+            span.clone(),
+            format!(
+                "`{}` ({}) {} `{name}` ({}) with an extension it does not grant, but `{name}` is locked: `extend {{ never cite {authority} }}`",
+                da.meta.id,
+                da.meta.authority,
+                verb(keyword),
+                db.meta.authority
+            ),
+        )
+        .with_note(
+            db.meta.span.clone(),
+            format!(
+                "`{}` delegates to {}, but a delegation does not reach past its lock: no local rule or order grants an extension there ({authority})",
+                world.versioned(b, a),
+                da.meta.authority
+            ),
+        )
+    });
+    lock.into_iter()
+        .chain(missing_delegation(
+            world, lattice, loc, a, keyword, &name, &missing, span,
+        ))
+        .collect()
 }
 
 /// L3004 naming the delegation `missing` versions of the target of `a`'s

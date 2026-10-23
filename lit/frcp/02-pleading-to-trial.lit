@@ -62,7 +62,8 @@ decision waiver-requested: "Waiver of Service Requested" by applicant cite FRCP 
     authority cite FRCP 4(d)(3)
     effort 1.hours
     within waiver-answer-period {
-      extendable false
+      extendable true
+      extension_authority "FRCP 6(b)(1): for good cause before the period expires, or on motion after it for excusable neglect"
       note "60 days after the waiver request was sent (90 days if sent to a defendant outside any U.S. judicial district) -- longer than the bare 21-day Rule 12(a)(1)(A)(i) clock, the incentive for waiving."
     }
     duration { min 9.days, mode 30.days, max 60.days }
@@ -324,8 +325,9 @@ decision amendment-as-of-right-window: "Rule 15(a)(1) Amendment-as-of-Right Wind
     effort 8.hours
     cost 2_500.usd
     within amendment-as-of-course-period {
-      extendable false
-      note "21 days after service of the responsive pleading, or 21 days after service of a Rule 12(b)/(e)/(f) motion, whichever is earlier. Not extendable -- missing it forfeits the matter-of-course right; only consent or leave under Rule 15(a)(2) remains."
+      extendable true
+      extension_authority "FRCP 6(b)(1): for good cause before the period expires, or on motion after it for excusable neglect"
+      note "21 days after service of the responsive pleading, or 21 days after service of a Rule 12(b)/(e)/(f) motion, whichever is earlier. The court may extend it under FRCP 6(b)(1) (Rule 15(a)(1) is not on the 6(b)(2) list); missing it unextended forfeits the matter-of-course right, leaving consent or leave under Rule 15(a)(2)."
     }
     duration { min 3.1.days, mode 10.5.days, max 21.days }
   }

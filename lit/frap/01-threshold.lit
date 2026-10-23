@@ -114,6 +114,9 @@ terminal interlocutory-review-unavailable: "No Appellate Jurisdiction — Await 
 rule duty permission-to-appeal effective [2009-12-01, ..) known_at 2009-03-26 cite FRAP 5(a)(2)
 {
   deadline permission-petition-period: 10.days after EnteredBelow(CertifiedOrder) counted_by frap26 cite FRAP 5(a)(2)
+  {
+    extend { never cite FRAP 26(b)(1) }
+  }
 }
 
 test "a 1292(b) petition is due 10 days after the certified order" cite FRAP 5(a)(2)

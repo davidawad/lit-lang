@@ -2,7 +2,7 @@ module frap.docketing
 
 import core.authority.{ CaseOrder }
 import core.frap26.{ frap26 }
-import frap.events.{ NoticeOfAppealFiled }
+import frap.events.{ AppealExtensionMoved, NoticeOfAppealFiled }
 import frap.record.{ transcript-order-fork }
 import frap.{ docketing-group }
 
@@ -11,10 +11,23 @@ import frap.{ docketing-group }
 /// filed (or within the Rule 4(a)(1) period, whichever ends later; that
 /// alternative is `notice-civil-period`). The district court's power to
 /// extend "the time to file a notice of appeal" (FRAP 4(a)(5)(A)) reaches a
-/// cross-appeal notice, so the period delegates to `CaseOrder`.
+/// cross-appeal notice (and 4(a)(5)(B) names 4(a)(3)), so the period
+/// delegates to `CaseOrder` and carries the notice of appeal's FRAP 4(a)(5)
+/// grant and FRAP 26(b)(1) lock.
 rule duty cross-appeal effective [2009-12-01, ..) known_at 2009-03-26 cite FRAP 4(a)(3)
 {
   deadline cross-appeal-period: 14.days after NoticeOfAppealFiled() counted_by frap26 delegable_to [CaseOrder] cite FRAP 4(a)(3)
+  {
+    extend {
+      by court
+      discretion GoodCauseOrExcusableNeglect
+      to max(prescribed_due + 30.days, grant_order_entered + 14.days)
+      after_expiry
+      on AppealExtensionMoved()
+      within prescribed_due + 30.days
+    }
+    extend { never cite FRAP 26(b)(1) }
+  }
 }
 
 test "a cross-appeal is due 14 days after the first notice" cite FRAP 4(a)(3)
@@ -38,8 +51,9 @@ decision cross-appeal-fork: "Appellee Considers a Cross-Appeal" by applicant cit
     effort 4.hours
     cost 605.usd
     within cross-appeal-period {
-      extendable false
-      note "14 days after the first notice of appeal, or within the original FRAP 4(a)(1) period, whichever is later. Missing this deadline forecloses the cross-appeal entirely — no equitable exceptions or late filing allowed."
+      extendable true
+      extension_authority "FRAP 4(a)(5): on motion no later than 30 days after the period expires, for excusable neglect or good cause"
+      note "14 days after the first notice of appeal, or within the original FRAP 4(a)(1) period, whichever is later. Only a FRAP 4(a)(5) extension saves a missed deadline; no equitable exception revives it."
     }
     duration { min 2.1.days, mode 7.days, max 14.days }
     note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate. Same $605.00 filing fee as an initial notice of appeal (Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2023, plus 28 U.S.C. § 1917's $5.00 notice fee) — a separate notice, a separate fee."
@@ -54,7 +68,7 @@ decision cross-appeal-fork: "Appellee Considers a Cross-Appeal" by applicant cit
 state cross-appeal-filed: "Notice of Cross-Appeal Filed" by office cite FRAP 4(a)(3)
 {
   group docketing-group
-  note "Due within 14 days after the first notice of appeal, or the otherwise-applicable Rule 4(a)(1) period, whichever is later. The deadline is non-extendable under the plain text of the rule — missing it forecloses cross-appellate relief."
+  note "Due within 14 days after the first notice of appeal, or the otherwise-applicable Rule 4(a)(1) period, whichever is later. The district court may extend it under FRAP 4(a)(5); otherwise missing it forecloses cross-appellate relief."
   _ "Cross-appeal docketed" -> voluntary-dismissal-fork { authority cite FRAP 3; FRAP 28.1 }
 }
 

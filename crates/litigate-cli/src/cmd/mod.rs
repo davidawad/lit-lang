@@ -34,10 +34,18 @@ pub fn dispatch(command: Command) -> Outcome {
         Command::Build {
             paths,
             out,
+            pack_files,
             profile,
             dates,
             library,
-        } => build::build(&paths, &out, profile.into(), &dates, &library.lib),
+        } => build::build(&build::Args {
+            paths,
+            out,
+            pack_files,
+            profile: profile.into(),
+            dates,
+            lib: library.lib,
+        }),
         Command::Test {
             paths,
             filter,

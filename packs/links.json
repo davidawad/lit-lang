@@ -67,21 +67,21 @@
         }
       }
     },
-    "cafc@ptab": {
+    "cafc@district-court": {
       "pack": "cafc",
-      "note": "Federal Circuit as entered from a PTAB final written decision (35 U.S.C. §§ 141, 319). Remand can only return to the PTAB.",
+      "note": "Federal Circuit as entered from a district-court patent judgment (28 U.S.C. § 1295(a)(1)): a civil action arising under the patent laws, or one with a compulsory patent counterclaim. Remand can only return to that district court.",
       "remove_edges": [
-        "origin-to-district-court",
-        "origin-to-itc",
         "origin-to-cofc",
-        "remand-route-district-court",
-        "remand-route-itc",
+        "origin-to-ptab",
+        "origin-to-itc",
         "remand-route-cofc",
+        "remand-route-ptab",
+        "remand-route-itc",
         "origin-to-ttab",
         "remand-route-ttab"
       ],
       "probabilities": {
-        "remand-route-ptab": 1.0
+        "remand-route-district-court": 1.0
       }
     },
     "cafc@itc": {
@@ -115,21 +115,21 @@
         }
       }
     },
-    "cafc@district-court": {
+    "cafc@ptab": {
       "pack": "cafc",
-      "note": "Federal Circuit as entered from a district-court patent judgment (28 U.S.C. § 1295(a)(1)): a civil action arising under the patent laws, or one with a compulsory patent counterclaim. Remand can only return to that district court.",
+      "note": "Federal Circuit as entered from a PTAB final written decision (35 U.S.C. §§ 141, 319). Remand can only return to the PTAB.",
       "remove_edges": [
-        "origin-to-cofc",
-        "origin-to-ptab",
+        "origin-to-district-court",
         "origin-to-itc",
-        "remand-route-cofc",
-        "remand-route-ptab",
+        "origin-to-cofc",
+        "remand-route-district-court",
         "remand-route-itc",
+        "remand-route-cofc",
         "origin-to-ttab",
         "remand-route-ttab"
       ],
       "probabilities": {
-        "remand-route-district-court": 1.0
+        "remand-route-ptab": 1.0
       }
     },
     "cafc@ttab": {
@@ -235,10 +235,10 @@
       "label": "United States appeals the judgment for plaintiff",
       "actor": "examiner",
       "authority": "28 U.S.C. §§ 1295(a)(3), 2522",
+      "note": "The government's appeal decision (Solicitor General authorization, 28 C.F.R. § 0.20(b)) is modeled as the opponent's choice; with no probability authored it is solved adversarially (worst case for the plaintiff). Author a probability here to use an appeal rate instead.",
       "tags": [
         "appeal"
-      ],
-      "note": "The government's appeal decision (Solicitor General authorization, 28 C.F.R. § 0.20(b)) is modeled as the opponent's choice; with no probability authored it is solved adversarially (worst case for the plaintiff). Author a probability here to use an appeal rate instead."
+      ]
     },
     {
       "id": "cofc-gov-appeal-sj-for-plaintiff",
@@ -268,12 +268,12 @@
       "to": "cofc::trial-bench",
       "label": "Remand: further proceedings in the Court of Federal Claims",
       "actor": "office",
-      "probability": 1.0,
       "authority": "28 U.S.C. § 2106",
+      "probability": 1.0,
+      "note": "Re-entry point modeled as further merits proceedings (bench trial). A remand on a narrower issue re-enters later; override with scenario.mask/start when the mandate is specific.",
       "tags": [
         "remand"
-      ],
-      "note": "Re-entry point modeled as further merits proceedings (bench trial). A remand on a narrower issue re-enters later; override with scenario.mask/start when the mandate is specific."
+      ]
     },
     {
       "id": "cafc-gov-remand-to-cofc",
@@ -281,8 +281,8 @@
       "to": "cofc::trial-bench",
       "label": "Remand: further proceedings in the Court of Federal Claims",
       "actor": "office",
-      "probability": 1.0,
       "authority": "28 U.S.C. § 2106",
+      "probability": 1.0,
       "tags": [
         "remand"
       ]
@@ -293,15 +293,15 @@
       "to": "cafc@ptab::entry-ptab",
       "label": "Appeal the final written decision to the Federal Circuit",
       "actor": "either",
-      "probability": 0.92,
       "authority": "35 U.S.C. §§ 141(c), 319; 37 C.F.R. § 90.3",
+      "probability": 0.92,
+      "note": "Supersedes the PTAB pack's abstract Federal Circuit region when both packs are loaded; keeps its 0.92 appeal rate.",
       "tags": [
         "appeal"
       ],
       "replaces": [
         "ptab-patent-trial-appeal-board::federal-circuit-window->federal-circuit-notice-of-appeal#0"
-      ],
-      "note": "Supersedes the PTAB pack's abstract Federal Circuit region when both packs are loaded; keeps its 0.92 appeal rate."
+      ]
     },
     {
       "id": "cafc-remand-to-ptab",
@@ -309,8 +309,8 @@
       "to": "ptab-patent-trial-appeal-board::fwd-issued",
       "label": "Remand: Board issues a new final written decision",
       "actor": "office",
-      "probability": 1.0,
       "authority": "28 U.S.C. § 2106",
+      "probability": 1.0,
       "tags": [
         "remand"
       ]
@@ -322,13 +322,13 @@
       "label": "Appeal the Commission's final determination to the Federal Circuit",
       "actor": "applicant",
       "authority": "19 U.S.C. § 1337(c); 28 U.S.C. § 1295(a)(6)",
+      "note": "Supersedes the ITC pack's abstract appeal edge when both packs are loaded.",
       "tags": [
         "appeal"
       ],
       "replaces": [
         "itc-337::federal-circuit-appeal-window->appeal-filed#0"
-      ],
-      "note": "Supersedes the ITC pack's abstract appeal edge when both packs are loaded."
+      ]
     },
     {
       "id": "cafc-remand-to-itc",
@@ -336,8 +336,8 @@
       "to": "itc-337::commission-final-determination",
       "label": "Remand: Commission issues a new final determination",
       "actor": "office",
-      "probability": 1.0,
       "authority": "28 U.S.C. § 2106",
+      "probability": 1.0,
       "tags": [
         "remand"
       ]
@@ -349,13 +349,13 @@
       "label": "Proceed under FRAP in the regional circuit (detailed appellate track)",
       "actor": "applicant",
       "authority": "28 U.S.C. § 1291; Fed. R. App. P. 3, 4",
+      "note": "Non-patent civil appeals; the regional circuit is one of two routes out of `notice-of-appeal-filed` (see `frcp-appeal-to-cafc-district-court`). Which applies is a fact about the case (does it arise under the patent laws, or carry a compulsory patent counterclaim, 28 U.S.C. § 1295(a)(1)?), not a free choice between forums with concurrent jurisdiction — a matter scenario should `remove_edges` whichever of the two does not apply, the same way a `cafc@<origin>` instance keeps only the one true origin edge.",
       "tags": [
         "appeal"
       ],
       "replaces": [
         "frcp-civil-procedure::notice-of-appeal-filed->cross-appeal-window#0"
-      ],
-      "note": "Non-patent civil appeals; the regional circuit is one of two routes out of `notice-of-appeal-filed` (see `frcp-appeal-to-cafc-district-court`). Which applies is a fact about the case (does it arise under the patent laws, or carry a compulsory patent counterclaim, 28 U.S.C. § 1295(a)(1)?), not a free choice between forums with concurrent jurisdiction — a matter scenario should `remove_edges` whichever of the two does not apply, the same way a `cafc@<origin>` instance keeps only the one true origin edge."
+      ]
     },
     {
       "id": "frcp-appeal-to-cafc-district-court",
@@ -364,14 +364,14 @@
       "label": "Proceed to the Federal Circuit (district-court patent judgment)",
       "actor": "applicant",
       "authority": "28 U.S.C. § 1295(a)(1)",
+      "note": "The Federal Circuit has exclusive jurisdiction over an appeal from a final district-court judgment in a civil action arising under an Act of Congress relating to patents (or plant variety protection), or in which a party asserted a compulsory patent counterclaim -- including a final judgment under 28 U.S.C. § 1292(c)(1)-(2). Coexists with `frcp-appeal-to-regional-circuit` as the other route out of `notice-of-appeal-filed`; a matter scenario selects the applicable one with `scenario.remove_edges` (see that link's note). Routes into the `cafc@district-court` instance, which mirrors `cafc@ptab`/`cafc@itc`/`cafc@cofc`: it keeps only `origin-to-district-court` and remands only back to the district court.",
       "tags": [
         "appeal",
         "patent"
       ],
       "replaces": [
         "frcp-civil-procedure::notice-of-appeal-filed->cross-appeal-window#0"
-      ],
-      "note": "The Federal Circuit has exclusive jurisdiction over an appeal from a final district-court judgment in a civil action arising under an Act of Congress relating to patents (or plant variety protection), or in which a party asserted a compulsory patent counterclaim -- including a final judgment under 28 U.S.C. § 1292(c)(1)-(2). Coexists with `frcp-appeal-to-regional-circuit` as the other route out of `notice-of-appeal-filed`; a matter scenario selects the applicable one with `scenario.remove_edges` (see that link's note). Routes into the `cafc@district-court` instance, which mirrors `cafc@ptab`/`cafc@itc`/`cafc@cofc`: it keeps only `origin-to-district-court` and remands only back to the district court."
+      ]
     },
     {
       "id": "ttab-appeal-to-cafc",
@@ -380,13 +380,13 @@
       "label": "Appeal the TTAB decision to the Federal Circuit on the Board record",
       "actor": "applicant",
       "authority": "15 U.S.C. § 1071(a); 28 U.S.C. § 1295(a)(4)(B)",
+      "note": "Supersedes the TTAB pack's abstract Federal Circuit outcome node when both packs are loaded. The 15 U.S.C. § 1071(b) civil-action alternative stays abstract (district-court de novo review is not a good fit for the FRCP pack's generic civil case); a matter scenario removes whichever route it does not use.",
       "tags": [
         "appeal"
       ],
       "replaces": [
         "ttab-trademark-trial-and-appeal-board::decision-sustained->cafc-outcome#0"
-      ],
-      "note": "Supersedes the TTAB pack's abstract Federal Circuit outcome node when both packs are loaded. The 15 U.S.C. § 1071(b) civil-action alternative stays abstract (district-court de novo review is not a good fit for the FRCP pack's generic civil case); a matter scenario removes whichever route it does not use."
+      ]
     },
     {
       "id": "cafc-remand-to-ttab",
@@ -394,8 +394,8 @@
       "to": "ttab-trademark-trial-and-appeal-board::final-decision",
       "label": "Remand: Board issues a new final decision",
       "actor": "office",
-      "probability": 1.0,
       "authority": "28 U.S.C. § 2106",
+      "probability": 1.0,
       "tags": [
         "remand"
       ]

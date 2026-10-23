@@ -1,18 +1,12 @@
 {
   "schemaVersion": 3,
   "id": "cofc",
-  "forum": "cofc",
-  "counting": "rcfc6",
   "title": "United States Court of Federal Claims",
   "description": "Civil litigation against the United States in the CoFC: claim accrual and the §2501 six-year limitations bar (with 35 U.S.C. §286 administrative-claim tolling on the §1498(a) patent track), the §1500 same-claim-pending trap, an optional §1491(b) bid-protest branch (Appendix C), complaint/service/RCFC 12 pleading, the general civil track (RCFC 16 scheduling, RCFC 26-37 discovery, RCFC 56 summary judgment), an Appendix H ADR off-ramp, the §1498(a) patent track's full Appendix J deadline cascade (early meeting through claim construction, mandatory settlement discussion, and the 'reasonable and entire compensation' damages remedy), bench trial (no jury), RCFC 58 judgment, RCFC 59 post-trial motions, RCFC 54(d) costs, and EAJA fee applications. Sourced from the court's own RCFC, Appendix H, and Appendix J PDFs (as amended through 7/27/2026), the court's current fee schedule (effective 7/28/2025), and verified statutory text; see cofc-SOURCES-NOTES.md.",
   "jurisdiction": "United States Court of Federal Claims",
+  "forum": "cofc",
+  "counting": "rcfc6",
   "startNodeId": "claim-accrues",
-  "roles": {
-    "applicant": "self",
-    "examiner": "opponent",
-    "office": "nature",
-    "either": "nature"
-  },
   "groups": [
     {
       "id": "threshold-group",
@@ -43,25 +37,20 @@
       "label": "Trial & Post-Trial (RCFC 52, 58, 59, 54, EAJA)"
     }
   ],
-  "citeSyntax": {
-    "rules": [
-      {
-        "prefixes": [
-          "RCFC"
-        ],
-        "heading": "RCFC {}",
-        "source": "rcfc-rules"
-      }
-    ]
+  "roles": {
+    "applicant": "self",
+    "either": "nature",
+    "examiner": "opponent",
+    "office": "nature"
   },
   "sources": [
     {
       "id": "rcfc-rules",
       "title": "Rules of the United States Court of Federal Claims (RCFC), as amended through July 27, 2026",
       "url": "https://www.uscfc.uscourts.gov/sites/cfc/files/Rules%207.27.2026.pdf",
+      "path": "sources/rcfc.txt",
       "sha256": "ff02c342f055be5e5f51df4de1dcec3c1264bb9907895d379d5baa796ec30a97",
-      "asOf": "2026-07-27",
-      "path": "sources/rcfc.txt"
+      "asOf": "2026-07-27"
     },
     {
       "id": "rcfc-app-j",
@@ -165,6 +154,17 @@
       "path": "sources/usc-additional.txt"
     }
   ],
+  "citeSyntax": {
+    "rules": [
+      {
+        "prefixes": [
+          "RCFC"
+        ],
+        "heading": "RCFC {}",
+        "source": "rcfc-rules"
+      }
+    ]
+  },
   "nodes": [
     {
       "id": "claim-accrues",
@@ -217,7 +217,7 @@
       "note": "PLACEHOLDER PAYOFF: $0, override per matter (real cost is whatever was sunk in pre-filing investigation). Jurisdictional dismissal; not curable by amendment, waiver, or equitable tolling per John R. Sand & Gravel Co. v. United States, 552 U.S. 130 (2008).",
       "group": "threshold-group",
       "valence": "bad",
-      "payoff": 0,
+      "payoff": 0.0,
       "outcome": [
         "loss",
         "dismissal",
@@ -243,7 +243,7 @@
       "note": "PLACEHOLDER PAYOFF: $0, override per matter. Jurisdictional; can be cured only by dismissing the other pending suit and REFILING in the CoFC (a fresh §2501 filing, not a revival of this one) -- not separately modeled here as a loop to avoid an artificial cycle.",
       "group": "threshold-group",
       "valence": "bad",
-      "payoff": 0,
+      "payoff": 0.0,
       "outcome": [
         "loss",
         "dismissal",
@@ -315,7 +315,7 @@
       "note": "PLACEHOLDER PAYOFF: $200,000, override per matter. Relief in a sustained protest is typically injunctive/equitable (enjoining award, directing re-evaluation or re-procurement) plus bid-and-proposal-preparation costs -- rarely a damages award on the scale of a §1498 or breach claim, so the payoff here approximates recovered B&P costs and re-compete value rather than the full parameterized $1M claim baseline used elsewhere in this pack.",
       "group": "bid-protest-group",
       "valence": "good",
-      "payoff": 200000,
+      "payoff": 200000.0,
       "outcome": [
         "win",
         "injunctive-relief"
@@ -329,7 +329,7 @@
       "note": "PLACEHOLDER PAYOFF: $0, override per matter.",
       "group": "bid-protest-group",
       "valence": "bad",
-      "payoff": 0,
+      "payoff": 0.0,
       "outcome": [
         "loss"
       ]
@@ -390,7 +390,7 @@
       "note": "PLACEHOLDER PAYOFF: $0, override per matter.",
       "group": "pleading-group",
       "valence": "bad",
-      "payoff": 0,
+      "payoff": 0.0,
       "outcome": [
         "loss",
         "dismissal",
@@ -405,7 +405,7 @@
       "note": "PLACEHOLDER PAYOFF: $0, override per matter. Unlike (1), this defense is waivable if never raised (RCFC 12(h)(2)) and, if granted without leave, generally operates as an adjudication on the merits (RCFC 41(b)).",
       "group": "pleading-group",
       "valence": "bad",
-      "payoff": 0,
+      "payoff": 0.0,
       "outcome": [
         "loss",
         "dismissal",
@@ -428,7 +428,7 @@
       "note": "PLACEHOLDER PAYOFF: $0 minus sunk cost, override per matter. Plaintiff may dismiss without a court order by notice (before an answer, SJ motion, or motion for judgment on the administrative record is served) or by stipulation signed by all appearing parties. Without-prejudice by default UNLESS the plaintiff previously dismissed the same claim in another federal/state action, in which case a second notice of dismissal operates AS AN ADJUDICATION ON THE MERITS (RCFC 41(a)(1)(B), the 'two-dismissal rule') -- a trap for a plaintiff who tried and abandoned the same claim once before.",
       "group": "pleading-group",
       "valence": "caution",
-      "payoff": 0,
+      "payoff": 0.0,
       "outcome": [
         "voluntary",
         "no-prejudice-unless-second-dismissal"
@@ -498,7 +498,7 @@
       "note": "A party may move for summary judgment (in whole or in part) at any time until 30 days after the close of all discovery, absent a different court-ordered deadline.",
       "group": "general-track-group",
       "attrs": {
-        "sj_deadline_days_after_discovery_close": 30
+        "sj_deadline_days_after_discovery_close": 30.0
       }
     },
     {
@@ -517,7 +517,7 @@
       "note": "PLACEHOLDER PAYOFF: $0, override per matter. Case-dispositive; reviewable on appeal de novo.",
       "group": "general-track-group",
       "valence": "bad",
-      "payoff": 0,
+      "payoff": 0.0,
       "outcome": [
         "loss",
         "judgment",
@@ -532,7 +532,7 @@
       "note": "PLACEHOLDER PAYOFF: $1,000,000 (full parameterized claim value), override per matter. This is the pack's designated Federal Circuit composition anchor -- kept at id 'judgment-entered' per the litgraph pack-authoring convention so packs/links.json can attach 'cofc::judgment-entered -> cafc::notice-of-appeal-filed' (28 U.S.C. §1295(a)(3); §2522) without this pack needing to know about the CAFC pack's internals. It models the clean case where the court grants summary judgment for plaintiff on the ENTIRE claim (liability and a liquidated/undisputed damages amount) with no trial needed. A judgment reached instead via bench trial is modeled separately below as 'judgment-for-plaintiff' / 'judgment-for-government' (variable-amount trial verdicts) -- a future links.json revision could add analogous appeal-anchor links from those ids too; this pack does not create packs/links.json itself.",
       "group": "general-track-group",
       "valence": "good",
-      "payoff": 1000000,
+      "payoff": 1000000.0,
       "outcome": [
         "win",
         "judgment",
@@ -572,7 +572,7 @@
       "note": "PLACEHOLDER PAYOFF: $450,000 (45% of the parameterized $1,000,000 claim), override per matter -- illustrative discount reflecting litigation-risk-adjusted settlement value, not a rule-derived figure.",
       "group": "adr-group",
       "valence": "good",
-      "payoff": 450000,
+      "payoff": 450000.0,
       "outcome": [
         "settlement"
       ]
@@ -665,7 +665,7 @@
       "note": "Within 7 days after the Joint Claim Construction Appendix/Prehearing Statement, the court schedules a status conference and sets the Claim Construction Hearing within 90 days thereafter. Claim Construction Briefs are OPTIONAL (a party may instead rest on the Joint Chart): if filed, plaintiff's opening brief is due 56 days after the Joint Chart, responsive briefs 28 days later, and any reply 14 days after that.",
       "group": "patent-track-group",
       "attrs": {
-        "hearing_scheduled_within_days_of_conference": 90
+        "hearing_scheduled_within_days_of_conference": 90.0
       }
     },
     {
@@ -780,7 +780,7 @@
       "note": "PLACEHOLDER PAYOFF: $1,000,000 (full parameterized claim value), override per matter -- a real bench-trial damages award can land anywhere between $0 and (for a §1498 claim) 'reasonable and entire compensation,' which is inherently case-specific; this pack uses the full claim value as the illustrative ceiling. EAJA-eligible (28 U.S.C. §2412(d)) if the government's position was not substantially justified.",
       "group": "trial-post-trial-group",
       "valence": "good",
-      "payoff": 1000000,
+      "payoff": 1000000.0,
       "outcome": [
         "win",
         "judgment",
@@ -795,7 +795,7 @@
       "note": "PLACEHOLDER PAYOFF: $0, override per matter.",
       "group": "trial-post-trial-group",
       "valence": "bad",
-      "payoff": 0,
+      "payoff": 0.0,
       "outcome": [
         "loss",
         "judgment"
@@ -825,8 +825,8 @@
       "label": "§1498(a) claim; plaintiff elects to file a §286 administrative claim for compensation",
       "actor": "applicant",
       "authority": "35 U.S.C. § 286, last paragraph",
-      "cost": 0,
-      "hours": 8,
+      "cost": 0.0,
+      "hours": 8.0,
       "note": "Optional -- tolls §2501 while the agency considers the claim, but is not a jurisdictional prerequisite to suit."
     },
     {
@@ -835,7 +835,7 @@
       "to": "limitations-check",
       "label": "§1498(a) claim; plaintiff skips the optional administrative claim",
       "actor": "applicant",
-      "hours": 1
+      "hours": 1.0
     },
     {
       "id": "e-adminclaim-resolved",
@@ -845,9 +845,9 @@
       "actor": "office",
       "authority": "35 U.S.C. § 286, last paragraph",
       "duration": {
-        "min": 30,
-        "mode": 365,
-        "max": 2190
+        "min": 30.0,
+        "mode": 365.0,
+        "max": 2190.0
       },
       "note": "Tolling caps at 6 years; the agency may also simply never respond, in which case the cap controls."
     },
@@ -875,13 +875,13 @@
       "label": "Petition filed more than 6 years after accrual",
       "actor": "office",
       "authority": "28 U.S.C. § 2501",
+      "probability": 0.05,
       "valence": "bad",
+      "note": "Prior (labeled estimate, not a measured statistic): competent counsel screens for this jurisdictional trap before filing, so most FILED claims clear it; override with scenario.facts once this matter's actual filing history is known (accrual date vs. filing date; any parallel suit).",
       "tags": [
         "dispositive",
         "jurisdictional"
-      ],
-      "probability": 0.05,
-      "note": "Prior (labeled estimate, not a measured statistic): competent counsel screens for this jurisdictional trap before filing, so most FILED claims clear it; override with scenario.facts once this matter's actual filing history is known (accrual date vs. filing date; any parallel suit)."
+      ]
     },
     {
       "id": "e-1500-clear",
@@ -900,14 +900,14 @@
       "label": "Same claim (substantially the same operative facts) currently pending elsewhere against the United States or its agent",
       "actor": "office",
       "authority": "28 U.S.C. § 1500; United States v. Tohono O'odham Nation, 563 U.S. 307 (2011)",
+      "probability": 0.05,
       "valence": "bad",
+      "note": "Prior (labeled estimate, not a measured statistic): competent counsel screens for this jurisdictional trap before filing, so most FILED claims clear it; override with scenario.facts once this matter's actual filing history is known (accrual date vs. filing date; any parallel suit).",
       "tags": [
         "dispositive",
         "jurisdictional",
         "waiver-trap"
-      ],
-      "probability": 0.05,
-      "note": "Prior (labeled estimate, not a measured statistic): competent counsel screens for this jurisdictional trap before filing, so most FILED claims clear it; override with scenario.facts once this matter's actual filing history is known (accrual date vs. filing date; any parallel suit)."
+      ]
     },
     {
       "id": "e-filingfork-standard",
@@ -916,8 +916,8 @@
       "label": "File a standard RCFC 3 complaint",
       "actor": "applicant",
       "authority": "RCFC 3; RCFC 5.5",
-      "cost": 405,
-      "hours": 12,
+      "cost": 405.0,
+      "hours": 12.0,
       "note": "Filing fee $405.00 (includes $55.00 general administrative fee) per the court's Schedule of Fees effective 7/28/2025; waivable IFP for non-prisoner plaintiffs under 28 U.S.C. §1915."
     },
     {
@@ -927,7 +927,7 @@
       "label": "Elect the §1491(b) bid-protest track",
       "actor": "applicant",
       "authority": "28 U.S.C. §1491(b); RCFC Appendix C ¶2",
-      "hours": 6
+      "hours": 6.0
     },
     {
       "id": "e-protest-notice-to-complaint",
@@ -937,12 +937,12 @@
       "actor": "applicant",
       "authority": "RCFC Appendix C ¶2; RCFC 3",
       "deadline": {
-        "length": 5,
+        "length": 5.0,
         "extendable": false,
         "note": "Notice must precede filing by at least 1 but no more than 5 days (excluding weekends/legal holidays); filing follows once that window is satisfied."
       },
-      "cost": 405,
-      "hours": 20
+      "cost": 405.0,
+      "hours": 20.0
     },
     {
       "id": "e-protest-complaint-to-conference",
@@ -965,7 +965,7 @@
       "to": "bid-protest-merits-briefing",
       "label": "No TRO/PI sought -- proceed directly to administrative-record briefing",
       "actor": "applicant",
-      "hours": 5
+      "hours": 5.0
     },
     {
       "id": "e-protest-pi-sought",
@@ -974,8 +974,8 @@
       "label": "TRO/PI sought and resolved (granted or denied); case proceeds to AR briefing either way",
       "actor": "applicant",
       "authority": "RCFC Appendix C ¶9-15; RCFC 65",
-      "cost": 5000,
-      "hours": 45,
+      "cost": 5000.0,
+      "hours": 45.0,
       "note": "PI outcome (withhold award / suspend performance or not) shapes leverage but is not itself case-dispositive; cost reflects an illustrative surety-bond/expedited-motion estimate, not a rule-set figure."
     },
     {
@@ -985,8 +985,8 @@
       "label": "Complete cross-motions for judgment on the administrative record",
       "actor": "applicant",
       "authority": "RCFC 52.1",
-      "cost": 0,
-      "hours": 140
+      "cost": 0.0,
+      "hours": 140.0
     },
     {
       "id": "e-protest-sustained",
@@ -1022,7 +1022,7 @@
       "label": "Plaintiff dismisses by notice or stipulation before an answer, SJ motion, or motion for judgment on the administrative record is served",
       "actor": "applicant",
       "authority": "RCFC 41(a)(1)(A)",
-      "hours": 2,
+      "hours": 2.0,
       "tags": [
         "voluntary"
       ]
@@ -1043,17 +1043,17 @@
       "actor": "examiner",
       "authority": "RCFC 12(a)(1)(A)",
       "deadline": {
-        "length": 60,
+        "length": 60.0,
         "extendable": true,
         "extensionAuthority": "RCFC 6(b) stipulation or court order",
         "note": "60 days after service of the complaint."
       },
       "duration": {
-        "min": 30,
-        "mode": 60,
-        "max": 60
+        "min": 30.0,
+        "mode": 60.0,
+        "max": 60.0
       },
-      "hours": 25
+      "hours": 25.0
     },
     {
       "id": "e-responsefork-motion",
@@ -1063,12 +1063,12 @@
       "actor": "examiner",
       "authority": "RCFC 12(b)",
       "deadline": {
-        "length": 60,
+        "length": 60.0,
         "extendable": true,
         "extensionAuthority": "RCFC 6(b) stipulation or court order",
         "note": "Must be filed within the same 60-day window that would otherwise produce an answer."
       },
-      "hours": 60
+      "hours": 60.0
     },
     {
       "id": "e-motion12b-to-ruling",
@@ -1085,7 +1085,7 @@
       "actor": "office",
       "authority": "RCFC 12(a)(4)",
       "deadline": {
-        "length": 14,
+        "length": 14.0,
         "extendable": false,
         "note": "Answer due 14 days after notice of the court's action."
       },
@@ -1110,11 +1110,11 @@
       "authority": "RCFC 12(b)(1); 12(h)(3)",
       "probability": 0.15,
       "valence": "bad",
+      "note": "TEACHING ESTIMATE, see sibling edge note.",
       "tags": [
         "dispositive",
         "jurisdictional"
-      ],
-      "note": "TEACHING ESTIMATE, see sibling edge note."
+      ]
     },
     {
       "id": "e-ruling12b-failstate",
@@ -1125,11 +1125,11 @@
       "authority": "RCFC 12(b)(6)",
       "probability": 0.1,
       "valence": "bad",
+      "note": "TEACHING ESTIMATE, see sibling edge note.",
       "tags": [
         "dispositive",
         "merits"
-      ],
-      "note": "TEACHING ESTIMATE, see sibling edge note."
+      ]
     },
     {
       "id": "e-amended-to-responsefork",
@@ -1138,7 +1138,7 @@
       "label": "Government's responsive-pleading clock re-runs against the amended complaint",
       "actor": "applicant",
       "authority": "RCFC 15(a)",
-      "hours": 10
+      "hours": 10.0
     },
     {
       "id": "e-answer-to-casetype",
@@ -1171,12 +1171,12 @@
       "actor": "either",
       "authority": "RCFC 16(b)(1)(A); RCFC Appendix A ¶4",
       "deadline": {
-        "length": 49,
+        "length": 49.0,
         "extendable": true,
         "extensionAuthority": "court order",
         "note": "49 days after the answer or reply to a counterclaim is served; deferred indefinitely if a case-dispositive motion is pending on the due date."
       },
-      "hours": 35
+      "hours": 35.0
     },
     {
       "id": "e-scheduling-to-adrfork",
@@ -1187,57 +1187,14 @@
       "authority": "RCFC 16(a)(5)"
     },
     {
-      "id": "e-adrfork-decline",
-      "from": "adr-referral-decision",
-      "to": "discovery-open",
-      "label": "Decline ADR for now; proceed to discovery",
-      "actor": "applicant"
-    },
-    {
-      "id": "e-adrfork-pursue",
-      "from": "adr-referral-decision",
-      "to": "adr-mediation-session",
-      "label": "Elect ADR (mediation, early neutral evaluation, mini-trial, outcome-prediction, or non-binding arbitration)",
-      "actor": "applicant",
-      "authority": "RCFC Appendix H ¶2-3",
-      "cost": 0,
-      "hours": 15
-    },
-    {
-      "id": "e-adr-session-to-outcome",
-      "from": "adr-mediation-session",
-      "to": "adr-outcome-ruling",
-      "label": "ADR session(s) conclude",
-      "actor": "either",
-      "authority": "RCFC Appendix H ¶2(h)"
-    },
-    {
-      "id": "e-adr-settles",
-      "from": "adr-outcome-ruling",
-      "to": "settled-adr",
-      "label": "Settlement reached",
-      "actor": "office",
-      "probability": 0.4,
-      "note": "TEACHING ESTIMATE -- not a cited empirical CoFC ADR settlement-rate figure."
-    },
-    {
-      "id": "e-adr-impasse",
-      "from": "adr-outcome-ruling",
-      "to": "discovery-open",
-      "label": "Impasse; parties return to litigation",
-      "actor": "office",
-      "probability": 0.6,
-      "note": "TEACHING ESTIMATE, see sibling edge note."
-    },
-    {
       "id": "e-discovery-dispute-path",
       "from": "discovery-open",
       "to": "discovery-dispute-motion",
       "label": "Party files a motion to compel or for a protective order",
       "actor": "applicant",
       "authority": "RCFC 37(a); RCFC 26(c)",
-      "cost": 0,
-      "hours": 30,
+      "cost": 0.0,
+      "hours": 30.0,
       "note": "Motion to compel must certify a good-faith conferral effort (RCFC Appendix A ¶10)."
     },
     {
@@ -1281,13 +1238,13 @@
       "actor": "applicant",
       "authority": "RCFC 56(a)-(b)",
       "deadline": {
-        "length": 30,
+        "length": 30.0,
         "extendable": true,
         "extensionAuthority": "court order / local practice",
         "note": "Any time until 30 days after the close of all discovery, absent a different court-set deadline."
       },
-      "cost": 0,
-      "hours": 150
+      "cost": 0.0,
+      "hours": 150.0
     },
     {
       "id": "e-discclosed-to-trial",
@@ -1295,7 +1252,7 @@
       "to": "trial-bench",
       "label": "No dispositive motion filed; proceed directly to trial",
       "actor": "applicant",
-      "hours": 20
+      "hours": 20.0
     },
     {
       "id": "e-sj-to-ruling",
@@ -1323,10 +1280,10 @@
       "authority": "RCFC 56(a)",
       "probability": 0.2,
       "valence": "bad",
+      "note": "TEACHING ESTIMATE, see sibling edge note.",
       "tags": [
         "dispositive"
-      ],
-      "note": "TEACHING ESTIMATE, see sibling edge note."
+      ]
     },
     {
       "id": "e-sj-plaintiff",
@@ -1337,11 +1294,11 @@
       "authority": "RCFC 56(a); RCFC 58",
       "probability": 0.15,
       "valence": "good",
+      "note": "TEACHING ESTIMATE, see sibling edge note.",
       "tags": [
         "dispositive",
         "appeal"
-      ],
-      "note": "TEACHING ESTIMATE, see sibling edge note."
+      ]
     },
     {
       "id": "e-sj-partial",
@@ -1353,12 +1310,55 @@
       "note": "TEACHING ESTIMATE, see sibling edge note."
     },
     {
-      "id": "e-earlymeeting-to-14bfork",
-      "from": "patent-early-meeting",
-      "to": "patent-14b-notice-fork",
-      "label": "Early-meeting agenda includes whether to notice a government contractor",
+      "id": "e-adrfork-decline",
+      "from": "adr-referral-decision",
+      "to": "discovery-open",
+      "label": "Decline ADR for now; proceed to discovery",
+      "actor": "applicant"
+    },
+    {
+      "id": "e-adrfork-pursue",
+      "from": "adr-referral-decision",
+      "to": "adr-mediation-session",
+      "label": "Elect ADR (mediation, early neutral evaluation, mini-trial, outcome-prediction, or non-binding arbitration)",
+      "actor": "applicant",
+      "authority": "RCFC Appendix H ¶2-3",
+      "cost": 0.0,
+      "hours": 15.0
+    },
+    {
+      "id": "e-adr-session-to-outcome",
+      "from": "adr-mediation-session",
+      "to": "adr-outcome-ruling",
+      "label": "ADR session(s) conclude",
       "actor": "either",
-      "authority": "RCFC Appendix J Rule 2; RCFC 14(b)"
+      "authority": "RCFC Appendix H ¶2(h)"
+    },
+    {
+      "id": "e-adr-settles",
+      "from": "adr-outcome-ruling",
+      "to": "settled-adr",
+      "label": "Settlement reached",
+      "actor": "office",
+      "probability": 0.4,
+      "note": "TEACHING ESTIMATE -- not a cited empirical CoFC ADR settlement-rate figure."
+    },
+    {
+      "id": "e-adr-impasse",
+      "from": "adr-outcome-ruling",
+      "to": "discovery-open",
+      "label": "Impasse; parties return to litigation",
+      "actor": "office",
+      "probability": 0.6,
+      "note": "TEACHING ESTIMATE, see sibling edge note."
+    },
+    {
+      "id": "e-patentjpsr-to-po",
+      "from": "patent-jpsr-filed",
+      "to": "patent-protective-order-entered",
+      "label": "Parties negotiate and the court enters a patent protective order before technical discovery exchanges",
+      "actor": "either",
+      "authority": "RCFC 26(c)(1); PRCFC Rule 19(b); Appendix of Forms Form 8A"
     },
     {
       "id": "e-14bfork-none",
@@ -1368,7 +1368,7 @@
       "actor": "either",
       "authority": "RCFC Appendix J Rule 3",
       "deadline": {
-        "length": 49,
+        "length": 49.0,
         "extendable": true,
         "extensionAuthority": "court order (complexity/good cause, PRCFC Rule 1(b))",
         "note": "49 days after the answer."
@@ -1381,7 +1381,7 @@
       "label": "United States moves to notice the contractor who performed the accused use/manufacture",
       "actor": "examiner",
       "authority": "RCFC 14(b)(2)",
-      "hours": 15,
+      "hours": 15.0,
       "note": "VERY IMPORTANT IN §1498 CASES: brings the actual manufacturer/user before the court even though §1498(a) channels the patentee's whole remedy into the suit against the United States alone."
     },
     {
@@ -1392,19 +1392,19 @@
       "actor": "either",
       "authority": "RCFC 14(c)(2); RCFC Appendix J Rule 3",
       "deadline": {
-        "length": 98,
+        "length": 98.0,
         "extendable": true,
         "extensionAuthority": "court order (complexity/good cause, PRCFC Rule 1(b))",
         "note": "98 days after the answer when a RCFC 14 notice motion was filed and granted (the noticed third party itself has 42 days after service of the notice to plead, RCFC 14(c)(2))."
       }
     },
     {
-      "id": "e-patentjpsr-to-po",
-      "from": "patent-jpsr-filed",
-      "to": "patent-protective-order-entered",
-      "label": "Parties negotiate and the court enters a patent protective order before technical discovery exchanges",
+      "id": "e-earlymeeting-to-14bfork",
+      "from": "patent-early-meeting",
+      "to": "patent-14b-notice-fork",
+      "label": "Early-meeting agenda includes whether to notice a government contractor",
       "actor": "either",
-      "authority": "RCFC 26(c)(1); PRCFC Rule 19(b); Appendix of Forms Form 8A"
+      "authority": "RCFC Appendix J Rule 2; RCFC 14(b)"
     },
     {
       "id": "e-po-to-infringement",
@@ -1414,13 +1414,13 @@
       "actor": "applicant",
       "authority": "RCFC Appendix J Rule 4-5",
       "deadline": {
-        "length": 56,
+        "length": 56.0,
         "extendable": true,
         "extensionAuthority": "PRCFC Rule 1(b) / Rule 24 good cause",
         "note": "56 days after the answer."
       },
-      "cost": 0,
-      "hours": 90
+      "cost": 0.0,
+      "hours": 90.0
     },
     {
       "id": "e-infringement-to-invalidity",
@@ -1430,12 +1430,12 @@
       "actor": "examiner",
       "authority": "RCFC Appendix J Rule 6-7",
       "deadline": {
-        "length": 56,
+        "length": 56.0,
         "extendable": true,
         "extensionAuthority": "PRCFC Rule 1(b) / Rule 24 good cause",
         "note": "56 days after service of the infringement contentions."
       },
-      "hours": 90
+      "hours": 90.0
     },
     {
       "id": "e-invalidity-to-ccexchange",
@@ -1445,13 +1445,13 @@
       "actor": "applicant",
       "authority": "RCFC Appendix J Rule 9-10",
       "deadline": {
-        "length": 42,
+        "length": 42.0,
         "extendable": true,
         "extensionAuthority": "PRCFC Rule 1(b) good cause",
         "note": "List of proposed claim terms due 42 days after any response to the invalidity contentions (Rule 9); proposed constructions exchanged 28 days after that list (Rule 10), followed by a 7-day meet-and-confer to narrow terms."
       },
-      "cost": 0,
-      "hours": 100
+      "cost": 0.0,
+      "hours": 100.0
     },
     {
       "id": "e-ccexchange-to-jcc",
@@ -1461,7 +1461,7 @@
       "actor": "either",
       "authority": "RCFC Appendix J Rule 11-12",
       "deadline": {
-        "length": 35,
+        "length": 35.0,
         "extendable": true,
         "extensionAuthority": "PRCFC Rule 1(b) good cause",
         "note": "35 days after the claim-term exchange."
@@ -1475,13 +1475,13 @@
       "actor": "applicant",
       "authority": "RCFC Appendix J Rule 13",
       "deadline": {
-        "length": 28,
+        "length": 28.0,
         "extendable": true,
         "extensionAuthority": "PRCFC Rule 1(b) good cause",
         "note": "28 days after the Joint Claim Construction Appendix and Prehearing Statement is filed."
       },
-      "cost": 0,
-      "hours": 60
+      "cost": 0.0,
+      "hours": 60.0
     },
     {
       "id": "e-ccdiscoveryclosed-to-hearing",
@@ -1491,7 +1491,7 @@
       "actor": "office",
       "authority": "RCFC Appendix J Rule 14-15",
       "deadline": {
-        "length": 7,
+        "length": 7.0,
         "extendable": true,
         "extensionAuthority": "court order",
         "note": "Status conference within 7 days after the Joint Claim Construction Appendix filing; hearing set within 90 days after the conference. Claim construction briefs are optional (Rule 15)."
@@ -1513,7 +1513,7 @@
       "actor": "either",
       "authority": "RCFC Appendix J Rule 16(a)",
       "deadline": {
-        "length": 14,
+        "length": 14.0,
         "extendable": false,
         "note": "Within 14 days after entry of the Claim Construction Opinion and Order."
       }
@@ -1526,7 +1526,7 @@
       "actor": "either",
       "authority": "RCFC Appendix J Rule 17",
       "deadline": {
-        "length": 7,
+        "length": 7.0,
         "extendable": false,
         "note": "Joint statement of compliance (or a motion to dismiss on settlement) due within 7 days after the discussion."
       }
@@ -1556,8 +1556,8 @@
       "label": "Supplement final contentions, complete expert discovery on infringement/invalidity/damages",
       "actor": "applicant",
       "authority": "RCFC Appendix J Rule 23; RCFC 26(a)(2)",
-      "cost": 0,
-      "hours": 180
+      "cost": 0.0,
+      "hours": 180.0
     },
     {
       "id": "e-dispositivefork-sj",
@@ -1566,7 +1566,7 @@
       "label": "Move for summary judgment on infringement, invalidity, or (if liability is undisputed) damages",
       "actor": "applicant",
       "authority": "RCFC 56",
-      "hours": 30,
+      "hours": 30.0,
       "note": "Feeds back into the same RCFC 56/58/59/54/EAJA machinery already modeled on the general track."
     },
     {
@@ -1576,7 +1576,7 @@
       "label": "No dispositive motion; proceed to a bench trial on damages ('reasonable and entire compensation') and any remaining liability issues",
       "actor": "applicant",
       "authority": "28 U.S.C. §1498(a)",
-      "hours": 20,
+      "hours": 20.0,
       "note": "§1498(a) constrains the REMEDY (no injunction, no enhanced/treble damages, no jury) but not the procedural mechanics of reaching judgment."
     },
     {
@@ -1612,13 +1612,13 @@
       "actor": "applicant",
       "authority": "RCFC 59(a)-(b); 59(e)",
       "deadline": {
-        "length": 28,
+        "length": 28.0,
         "extendable": false,
         "extensionAuthority": "none -- RCFC 6(b) forbids extension",
         "note": "No later than 28 days after entry of judgment."
       },
-      "cost": 0,
-      "hours": 50
+      "cost": 0.0,
+      "hours": 50.0
     },
     {
       "id": "e-posttrialwindow-lapse",
@@ -1636,10 +1636,10 @@
       "actor": "office",
       "authority": "RCFC 59(a)",
       "probability": 0.15,
+      "note": "TEACHING ESTIMATE, reflecting that post-trial motions asking the court to overturn its own recent findings face real institutional headwind.",
       "tags": [
         "loop"
-      ],
-      "note": "TEACHING ESTIMATE, reflecting that post-trial motions asking the court to overturn its own recent findings face real institutional headwind."
+      ]
     },
     {
       "id": "e-rule59-amend",
@@ -1649,10 +1649,10 @@
       "actor": "office",
       "authority": "RCFC 59(e)",
       "probability": 0.1,
+      "note": "TEACHING ESTIMATE, see sibling edge note.",
       "tags": [
         "loop"
-      ],
-      "note": "TEACHING ESTIMATE, see sibling edge note."
+      ]
     },
     {
       "id": "e-rule59-denied",
@@ -1678,7 +1678,7 @@
       "actor": "either",
       "authority": "RCFC 54(d); 28 U.S.C. §2412(d)(1)(B)",
       "deadline": {
-        "length": 30,
+        "length": 30.0,
         "extendable": false,
         "note": "30 days after final judgment (28 U.S.C. §2412(d)(2)(G))."
       },

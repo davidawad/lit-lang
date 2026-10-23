@@ -1,9 +1,11 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "mpep-prosecution",
   "title": "U.S. Utility Patent Prosecution",
   "description": "Canonical pre-filing → prosecution → appeal → issuance flowchart for a U.S. nonprovisional utility application. MPEP and 37 CFR citations verified against live USPTO/eCFR sources (2024-07-01 edition). Walk mode teaches the RCE-vs-appeal fork economics, the unextendable 6-month ceiling, and abandonment-as-permadeath.",
   "jurisdiction": "USPTO / MPEP",
+  "forum": "uspto",
+  "counting": "uspto-1-7",
   "startNodeId": "pre-filing",
   "groups": [
     {
@@ -39,1677 +41,11 @@
       "label": "Reissue (§ 251)"
     }
   ],
-  "nodes": [
-    {
-      "id": "pre-filing",
-      "label": "Pre-Filing",
-      "kind": "state",
-      "cite": "35 U.S.C. 111(b); 37 CFR 1.53(c)",
-      "note": "Provisional application option: file under 35 U.S.C. 111(b) to secure a priority date for 12 months. No claims required. The 12-month window is unextendable — missing it forfeits domestic priority.",
-      "group": "pre-filing-group"
-    },
-    {
-      "id": "provisional-filed",
-      "label": "Provisional Filed",
-      "kind": "state",
-      "cite": "35 U.S.C. 111(b); 37 CFR 1.53(c)",
-      "note": "Provisional secures a U.S. priority date. Must be converted or claimed as priority within 12 months. Provisional does not start the 20-year patent term clock.",
-      "group": "pre-filing-group"
-    },
-    {
-      "id": "nonprovisional-filed",
-      "label": "Nonprovisional Filed",
-      "kind": "state",
-      "cite": "35 U.S.C. 111(a); 37 CFR 1.53(b)",
-      "note": "Specification (with or without claims), drawings (if necessary), filing fee, search fee, examination fee, and oath/declaration required. Filing date = date specification received at USPTO (37 CFR 1.53(b)). The 20-year term begins here.",
-      "group": "filing-group"
-    },
-    {
-      "id": "missing-parts",
-      "label": "Notice: Missing Parts",
-      "kind": "state",
-      "cite": "37 CFR 1.53(f); MPEP 601",
-      "note": "USPTO issues a Notice to File Missing Parts if oath/declaration, basic fee, or specification is deficient. Applicant has a surcharge deadline to supply missing parts. Failure to respond = abandonment.",
-      "group": "filing-group"
-    },
-    {
-      "id": "pre-examination",
-      "label": "Pre-Examination Processing",
-      "kind": "state",
-      "cite": "MPEP 704; 37 CFR 1.104",
-      "note": "Application assigned to a Technology Center and art unit. Examiner assigned. Awaiting first Office Action. Applicant may file a Request for Prioritized Examination (Track One) under 37 CFR 1.102(e) to accelerate.",
-      "group": "filing-group"
-    },
-    {
-      "id": "non-final-oa",
-      "label": "Non-Final Office Action",
-      "kind": "state",
-      "cite": "35 U.S.C. 132; 37 CFR 1.104; MPEP 706",
-      "note": "Examiner's first rejection or objection. SSP (shortened statutory period) is typically 3 months. Extendable month-by-month up to the 6-month statutory ceiling under 37 CFR 1.136(a). Extensions require fees per 37 CFR 1.17(a).",
-      "group": "examination-group"
-    },
-    {
-      "id": "applicant-response-window",
-      "label": "Response Window Open",
-      "kind": "decision",
-      "cite": "37 CFR 1.111; 35 U.S.C. 133",
-      "note": "Applicant must reply within the SSP (3 months) or extend. The 6-month statutory ceiling under 35 U.S.C. 133 cannot be extended for any reason — missing it triggers immediate abandonment. Three extension slots available (1, 2, and 3 additional months) under 37 CFR 1.136(a).",
-      "group": "examination-group"
-    },
-    {
-      "id": "extension-taken",
-      "label": "Extension of Time Taken",
-      "kind": "state",
-      "cite": "37 CFR 1.136(a); 37 CFR 1.17(a)",
-      "note": "Extension granted per 37 CFR 1.136(a). Each extension costs fees under 37 CFR 1.17(a). Maximum 3 extensions (months 4, 5, 6). Month 6 is the absolute ceiling — 35 U.S.C. 133 permits no further extension.",
-      "group": "examination-group"
-    },
-    {
-      "id": "amendment-filed",
-      "label": "Amendment / Response Filed",
-      "kind": "state",
-      "cite": "37 CFR 1.111; MPEP 714",
-      "note": "Applicant files amendment with or without arguments. Examiner must act on a complete reply. Traversal of rejections, claim amendments, and/or declaration/affidavit under 37 CFR 1.131 or 1.132 are common tools.",
-      "group": "examination-group"
-    },
-    {
-      "id": "interview-conducted",
-      "label": "Examiner Interview",
-      "kind": "state",
-      "cite": "37 CFR 1.133; MPEP 713",
-      "note": "Applicant may request an interview at any stage. Interviews are not a substitute for a written reply but can clarify the examiner's position and narrow disputed issues efficiently.",
-      "group": "examination-group"
-    },
-    {
-      "id": "allowance",
-      "label": "Application Allowed",
-      "kind": "state",
-      "cite": "37 CFR 1.311; MPEP 1303",
-      "note": "Examiner concludes all claims are patentable. Notice of Allowance (NOA) mailed. Issue fee due within 3 months from NOA date. This deadline is NOT extendable under any authority — 37 CFR 1.311(a); MPEP 1306 [R-01.2024] ('The period for payment of the issue fee and any required publication fee is not extendable, see 37 CFR 1.311(a).'). The only relief for a missed issue fee is revival under 37 CFR 1.137, not an extension of time.",
-      "group": "allowance-group"
-    },
-    {
-      "id": "final-rejection",
-      "label": "Final Rejection",
-      "kind": "state",
-      "cite": "37 CFR 1.113; MPEP 706.07",
-      "note": "Second or subsequent rejection is 'final.' After final, reply is limited to appeal (37 CFR 41.31), after-final amendment (37 CFR 1.116), AFCP 2.0 (MPEP 706.07(h)), or RCE (37 CFR 1.114). The 3-month SSP still runs; extensions still available under 37 CFR 1.136(a).",
-      "group": "examination-group"
-    },
-    {
-      "id": "after-final-decision",
-      "label": "After-Final Choice",
-      "kind": "decision",
-      "cite": "37 CFR 1.113; 37 CFR 1.116; 37 CFR 1.114; 37 CFR 41.31",
-      "note": "Four paths from final rejection: (1) after-final amendment (37 CFR 1.116 — limited scope); (2) AFCP 2.0 (no-fee examiner review of after-final amendment); (3) RCE (restart prosecution, costs filing/search/exam fees); (4) Notice of Appeal (37 CFR 41.31). The RCE-vs-appeal fork is the key economic decision point of prosecution.",
-      "group": "after-final-group"
-    },
-    {
-      "id": "after-final-amendment",
-      "label": "After-Final Amendment Filed",
-      "kind": "state",
-      "cite": "37 CFR 1.116; MPEP 714.12",
-      "note": "After-final amendment is limited: may cancel claims or comply with examiner requirements; substantive amendments only entered if they place application in condition for allowance or do not require additional search/examination.",
-      "group": "after-final-group"
-    },
-    {
-      "id": "rce-filed",
-      "label": "RCE Filed",
-      "kind": "state",
-      "cite": "37 CFR 1.114; MPEP 706.07(h)",
-      "note": "Request for Continued Examination reopens prosecution. Requires a submission (amendment, affidavit, or other reply) + the RCE fee under 37 CFR 1.17(e). Patent term adjustment (PTA) is affected by RCE filing — can reduce or eliminate PTA. This is the key economic trap: RCE costs money and time, appeal costs less up front but risks all claims.",
-      "group": "after-final-group"
-    },
-    {
-      "id": "notice-of-appeal",
-      "label": "Notice of Appeal Filed",
-      "kind": "state",
-      "cite": "37 CFR 41.31; MPEP 1204",
-      "note": "Notice of Appeal filed with the Patent Trial and Appeal Board (PTAB). Appeal fee required. Appellant has 2 months from filing the notice to file the appeal brief (37 CFR 41.37), extendable.",
-      "group": "appeal-group"
-    },
-    {
-      "id": "appeal-brief-filed",
-      "label": "Appeal Brief Filed",
-      "kind": "state",
-      "cite": "37 CFR 41.37(a); MPEP 1205",
-      "note": "Appeal brief must be filed within 2 months of the notice of appeal (37 CFR 41.37(a)), extendable up to 5 months under 37 CFR 1.136(a) (this period is NOT a 35 U.S.C. 133 statutory period — MPEP 710.02(e)). Failure to file the brief within the time prescribed by 37 CFR 41.37 results in DISMISSAL of the appeal by operation of the rule (MPEP 1215.04), not automatic abandonment. Dismissal ripens into abandonment only if no allowed claims remain.",
-      "group": "appeal-group"
-    },
-    {
-      "id": "examiners-answer",
-      "label": "Examiner's Answer",
-      "kind": "state",
-      "cite": "37 CFR 41.39; MPEP 1207",
-      "note": "Examiner may respond with an Examiner's Answer, which may include new grounds of rejection. If new grounds raised, applicant may reopen prosecution (via RCE) or submit reply brief within 2 months.",
-      "group": "appeal-group"
-    },
-    {
-      "id": "ptab-decision",
-      "label": "PTAB Decision",
-      "kind": "decision",
-      "cite": "37 CFR 41.50; MPEP 1213",
-      "note": "PTAB issues its decision: affirmance (examiner sustained), reversal (examiner overruled), or new ground of rejection (applicant must respond). PTAB may affirm in part, reverse in part.",
-      "group": "appeal-group"
-    },
-    {
-      "id": "ptab-reversal",
-      "label": "PTAB Reversed (Allowable)",
-      "kind": "state",
-      "cite": "37 CFR 41.50(b); MPEP 1214",
-      "note": "PTAB reversed the examiner's rejection. Application returns to examiner for allowance processing unless examiner reopens prosecution on different grounds. Strong applicant win — proceed to Notice of Allowance.",
-      "group": "appeal-group"
-    },
-    {
-      "id": "ptab-affirmed",
-      "label": "PTAB Affirmed",
-      "kind": "decision",
-      "cite": "37 CFR 41.50; 35 U.S.C. 141; 35 U.S.C. 145",
-      "note": "PTAB affirmed the examiner. Applicant may: (1) file Request for Rehearing (37 CFR 41.52); (2) appeal to Federal Circuit under 35 U.S.C. 141; or (3) file civil action in EDVA under 35 U.S.C. 145. All further paths have cost and strategic implications.",
-      "group": "appeal-group"
-    },
-    {
-      "id": "federal-circuit-appeal",
-      "label": "Federal Circuit Appeal",
-      "kind": "state",
-      "cite": "35 U.S.C. 141; 37 CFR 90.1",
-      "note": "Appeal to the U.S. Court of Appeals for the Federal Circuit. Must be filed within 63 days of PTAB decision. Standard of review: substantial evidence for factual findings; de novo for claim construction and legal determinations.",
-      "group": "appeal-group",
-      "courtListenerUrl": "https://www.courtlistener.com/opinion/209543/in-re-bilski/"
-    },
-    {
-      "id": "sec145-action",
-      "label": "Civil Action (35 U.S.C. 145)",
-      "kind": "state",
-      "cite": "35 U.S.C. 145; 37 CFR 90.3",
-      "note": "De novo civil action in E.D. Va. against the USPTO Director. Allows introduction of new evidence not in the record. Must be filed within 63 days of PTAB decision. If applicant loses, USPTO may recover its attorney fees.",
-      "group": "appeal-group"
-    },
-    {
-      "id": "appeal-dismissed",
-      "label": "Appeal Dismissed (No Brief)",
-      "kind": "state",
-      "cite": "37 CFR 41.37; MPEP 1215.04",
-      "note": "No appeal brief filed within the 37 CFR 41.37 period — appeal stands DISMISSED by operation of the rule (MPEP 1215.04 [R-01.2024]). Consequence splits on the record: applications having NO allowed claims are abandoned; where an allowed claim exists, the examiner cancels the rejected/withdrawn claims and issues the application on the allowed claim(s) (MPEP 1215.04, ¶ 12.209).",
-      "group": "appeal-group"
-    },
-    {
-      "id": "restriction-requirement",
-      "label": "Restriction / Election Requirement",
-      "kind": "decision",
-      "cite": "37 CFR 1.142; 35 U.S.C. 121; MPEP 803",
-      "note": "Examiner finds two or more independent and distinct inventions claimed in one application and requires restriction to one (37 CFR 1.142; 35 U.S.C. 121). Applicant must elect one invention for prosecution — with or without traverse (37 CFR 1.143). Non-elected claims are withdrawn from consideration; they may be pursued in a divisional application.",
-      "group": "examination-group"
-    },
-    {
-      "id": "election-made",
-      "label": "Election Filed",
-      "kind": "state",
-      "cite": "37 CFR 1.143; 37 CFR 1.144; MPEP 818",
-      "note": "Applicant elects one invention. Election WITH traverse (37 CFR 1.143) preserves the right to petition the restriction requirement under 37 CFR 1.144 (petition to the Director, within the reply period); election WITHOUT traverse concedes it. Withdrawn (non-elected) claims may be prosecuted in a divisional under 35 U.S.C. 121.",
-      "group": "examination-group"
-    },
-    {
-      "id": "divisional-filed",
-      "label": "Divisional Application Filed",
-      "kind": "state",
-      "cite": "37 CFR 1.53(b); 35 U.S.C. 121; MPEP 201.06",
-      "note": "Divisional filed for the non-elected invention. 35 U.S.C. 121 SHIELD: a patent issuing on a divisional filed as a result of a restriction requirement (and complying with 35 U.S.C. 120) shall NOT be used as a double-patenting reference against the other application/patent (35 U.S.C. 121, 3rd sentence; MPEP 804.01). Divisional gets its own examination.",
-      "group": "filing-group"
-    },
-    {
-      "id": "continuation-filed",
-      "label": "Continuation Application Filed",
-      "kind": "state",
-      "cite": "37 CFR 1.53(b); 35 U.S.C. 120; MPEP 201.07",
-      "note": "Continuation filed under 37 CFR 1.53(b) to pursue further claims to the same disclosure (MPEP 201.07). Must be co-pending — filed before the parent issues or goes abandoned. Claims the benefit of the parent's filing date under 35 U.S.C. 120. A common alternative to RCE/appeal that keeps the parent's prosecution posture alive in a fresh child.",
-      "group": "filing-group"
-    },
-    {
-      "id": "advisory-action",
-      "label": "Advisory Action",
-      "kind": "state",
-      "cite": "37 CFR 1.116; MPEP 714.13; MPEP 706.07(f)",
-      "note": "Examiner issues an Advisory Action responding to an after-final amendment (typically not entering it, or entering it for appeal purposes only). CRITICAL: filing the after-final amendment does NOT toll the running of the statutory period for reply to the final rejection — 'The filing of an amendment after final rejection, whether or not it is entered, does not stop the running of the statutory period for reply' (MPEP 714.13). The 35 U.S.C. 133 six-month clock keeps running from the final rejection date; extensions may still be needed to preserve the appeal/RCE window.",
-      "group": "after-final-group"
-    },
-    {
-      "id": "noa-received",
-      "label": "Notice of Allowance Received",
-      "kind": "state",
-      "cite": "37 CFR 1.311(a); MPEP 1306",
-      "note": "Notice of Allowance specifies the issue fee and any required publication fee. Both are due 3 months from the NOA mailing date. This period is NOT extendable — 37 CFR 1.311(a); MPEP 1306 [R-01.2024]: 'The period for payment of the issue fee and any required publication fee is not extendable, see 37 CFR 1.311(a).' No extension of time under 37 CFR 1.136(a) or (b) is available. Trap: unlike a shortened statutory period for reply, there is NO safety-valve extension here — miss the 3 months and the application is abandoned; only a 37 CFR 1.137 revival petition (unintentional delay) can restore it.",
-      "group": "allowance-group"
-    },
-    {
-      "id": "issue-fee-paid",
-      "label": "Issue Fee Paid",
-      "kind": "state",
-      "cite": "37 CFR 1.311; 37 CFR 1.18; MPEP 1306",
-      "note": "Issue fee and publication fee (if required) paid. Application forwarded for patent printing. Applicant may file a continuation, divisional, or CIP before the patent issues to pursue additional claims.",
-      "group": "allowance-group"
-    },
-    {
-      "id": "patent-issued",
-      "label": "Patent Issued",
-      "kind": "terminal",
-      "valence": "good",
-      "cite": "35 U.S.C. 151; MPEP 1309",
-      "note": "Patent granted. 20-year term from nonprovisional filing date (35 U.S.C. 154(a)(2)), subject to patent term adjustment (PTA) for USPTO delays and patent term extension (PTE) for regulatory review under 35 U.S.C. 156. PLACEHOLDER PAYOFF: $1,000,000, override per matter, matching this project's full-win stake convention.",
-      "group": "allowance-group",
-      "payoff": 1000000,
-      "outcome": [
-        "win",
-        "issued"
-      ]
-    },
-    {
-      "id": "maintenance-due",
-      "label": "Maintenance Fees Required",
-      "kind": "state",
-      "cite": "37 CFR 1.362; 35 U.S.C. 41(b)",
-      "note": "Maintenance fees required at 3.5, 7.5, and 11.5 years after grant (37 CFR 1.362). A 6-month grace period with surcharge is available. Failure to pay within the grace period = expiration. Small and micro entities pay reduced fees.",
-      "group": "allowance-group"
-    },
-    {
-      "id": "abandoned-no-reply",
-      "label": "ABANDONED — Failure to Reply",
-      "kind": "terminal",
-      "valence": "bad",
-      "cite": "35 U.S.C. 133; 37 CFR 1.135",
-      "note": "PERMADEATH. Application abandoned for failure to reply within the 6-month statutory ceiling. The 6-month period under 35 U.S.C. 133 cannot be extended for any reason. Revival requires a petition under 37 CFR 1.137 (unintentional delay standard). Revival is not guaranteed. PLACEHOLDER PAYOFF: $0, override per matter.",
-      "group": "examination-group",
-      "payoff": 0,
-      "outcome": [
-        "loss",
-        "abandoned",
-        "waiver-trap"
-      ]
-    },
-    {
-      "id": "abandoned-issue-fee",
-      "label": "ABANDONED — Issue Fee Not Paid",
-      "kind": "terminal",
-      "valence": "bad",
-      "cite": "37 CFR 1.311; 37 CFR 1.135",
-      "note": "PERMADEATH. Application abandoned for failure to pay the issue fee within the extended period. Revival available under 37 CFR 1.137 for unintentional delay. Competitor may have relied on abandonment — revival does not undo intervening rights. PLACEHOLDER PAYOFF: $0, override per matter.",
-      "group": "allowance-group",
-      "payoff": 0,
-      "outcome": [
-        "loss",
-        "abandoned",
-        "waiver-trap"
-      ]
-    },
-    {
-      "id": "patent-expired",
-      "label": "Patent Expired",
-      "kind": "terminal",
-      "valence": "bad",
-      "cite": "37 CFR 1.362; 35 U.S.C. 41(b)",
-      "note": "Patent expired for failure to pay maintenance fees after the 6-month grace period. Reinstatement is not available for expired patents (unlike abandoned applications). The invention enters the public domain. PLACEHOLDER PAYOFF: $0, override per matter. Premature expiration for a missed maintenance-fee payment, not the natural end of a full term.",
-      "group": "allowance-group",
-      "payoff": 0,
-      "outcome": [
-        "loss",
-        "expired",
-        "waiver-trap"
-      ]
-    },
-    {
-      "id": "patent-challenged",
-      "label": "Patent Challenged (Post-Grant)",
-      "kind": "decision",
-      "cite": "35 U.S.C. 311; 321; 302",
-      "note": "A third party (or, for reexam, anyone including the owner) attacks the issued patent. Three doors, decided by the CHALLENGER: inter partes review (IPR, 102/103 on patents/publications, subject to the 315(b) one-year bar), post-grant review (PGR, broad grounds incl. 101/112 but only within 9 months of grant), or ex parte reexamination (EPR, SNQ standard, no petitioner estoppel). This is the first genuinely ADVERSARIAL region of the chart — the outcomes are opposing-party draws, not examiner draws.",
-      "group": "post-grant-group"
-    },
-    {
-      "id": "ipr-petition-filed",
-      "label": "IPR Petition Filed",
-      "kind": "state",
-      "cite": "35 U.S.C. 311–314; 37 CFR 42.107",
-      "note": "Petitioner filed an IPR petition. The patent owner may file a Patent Owner Preliminary Response (POPR) within 3 months — arguing discretionary denial (Fintiv/325(d)) and/or the merits — or waive it and reserve arguments for trial. Then the Board decides institution.",
-      "group": "post-grant-group"
-    },
-    {
-      "id": "ipr-institution-decision",
-      "label": "IPR Institution Decision",
-      "kind": "decision",
-      "cite": "35 U.S.C. 314(a); 37 CFR 42.108",
-      "note": "The Board institutes only on a reasonable likelihood the petitioner prevails on ≥1 claim (35 U.S.C. 314(a)); it may deny on discretionary grounds. Institution rate authored at 0.65 — APPROXIMATE, a mid-2010s–2020s historical order of magnitude (institution rates have varied ~0.55–0.68 across vintages/PTAB policy); flagged, not a live figure.",
-      "group": "post-grant-group",
-      "courtListenerUrl": "https://www.courtlistener.com/opinion/3214886/cuozzo-speed-technologies-llc-v-lee/"
-    },
-    {
-      "id": "ipr-trial-instituted",
-      "label": "IPR Trial Instituted",
-      "kind": "decision",
-      "cite": "35 U.S.C. 316; 37 CFR 42.120–42.121",
-      "note": "Trial instituted. Patent owner options: file the Patent Owner Response, move to amend (substitute claims, intervening rights under 318(c)), or settle before the final written decision to avoid 315(e) estoppel (35 U.S.C. 317).",
-      "group": "post-grant-group"
-    },
-    {
-      "id": "ipr-final-written-decision",
-      "label": "IPR Final Written Decision",
-      "kind": "decision",
-      "cite": "35 U.S.C. 318(a); 37 CFR 42.73",
-      "note": "The Board's final written decision on the instituted claims. Distribution authored at 0.65 all-cancelled / 0.20 all-upheld / 0.15 mixed-with-substitute — APPROXIMATE; of instituted IPRs reaching a FWD, a majority historically find all instituted claims unpatentable. Estoppel (315(e)) attaches here.",
-      "group": "post-grant-group"
-    },
-    {
-      "id": "pgr-petition-filed",
-      "label": "PGR Petition Filed",
-      "kind": "state",
-      "cite": "35 U.S.C. 321–324; 37 CFR 42.207",
-      "note": "Petitioner filed a PGR within the 9-month window on broad grounds (incl. 101/112). Patent owner may file a POPR or waive, then the Board rules on institution under the more-likely-than-not standard (35 U.S.C. 324(a)).",
-      "group": "post-grant-group"
-    },
-    {
-      "id": "pgr-institution-decision",
-      "label": "PGR Institution Decision",
-      "kind": "decision",
-      "cite": "35 U.S.C. 324(a); 37 CFR 42.208",
-      "note": "Institution on a showing that it is more likely than not at least one claim is unpatentable. Authored at 0.55 — APPROXIMATE (PGR volume is thin; treated as broadly comparable to IPR institution); flagged.",
-      "group": "post-grant-group"
-    },
-    {
-      "id": "pgr-trial-instituted",
-      "label": "PGR Trial Instituted",
-      "kind": "decision",
-      "cite": "35 U.S.C. 326; 37 CFR 42.220–42.221",
-      "note": "Trial instituted on the broad PGR grounds. Patent owner may respond, move to amend, or settle (35 U.S.C. 327) before the final written decision to escape 325(e) estoppel.",
-      "group": "post-grant-group"
-    },
-    {
-      "id": "pgr-final-written-decision",
-      "label": "PGR Final Written Decision",
-      "kind": "decision",
-      "cite": "35 U.S.C. 328(a); 37 CFR 42.73",
-      "note": "Final written decision on the instituted claims. Distribution authored 0.60 cancelled / 0.25 upheld / 0.15 mixed — APPROXIMATE; PGR's broader grounds make cancellation modestly likelier than IPR. 325(e) estoppel attaches here.",
-      "group": "post-grant-group"
-    },
-    {
-      "id": "epr-requested",
-      "label": "Ex Parte Reexam Requested",
-      "kind": "decision",
-      "cite": "35 U.S.C. 302–303; 37 CFR 1.510; MPEP 2209–2214",
-      "note": "A reexam request is filed (by anyone, even anonymously or the owner). The Office decides within 3 months whether it raises a substantial new question of patentability (SNQ, 35 U.S.C. 303(a)). Grant rate authored at 0.92 — APPROXIMATE; SNQ grants historically run high (~90%+); flagged.",
-      "group": "post-grant-group",
-      "courtListenerUrl": "https://www.courtlistener.com/opinion/209660/in-re-swanson/"
-    },
-    {
-      "id": "epr-ordered",
-      "label": "Reexam Ordered",
-      "kind": "decision",
-      "cite": "35 U.S.C. 304; 37 CFR 1.530(b); MPEP 2249",
-      "note": "Reexamination ordered. The order sets a period of not less than two months for the patent owner's OPTIONAL statement. THE TRAP: filing the statement entitles the third-party requester to a reply (35 U.S.C. 304; 37 CFR 1.535) — usually the owner should decline and wait for the first Office action.",
-      "group": "post-grant-group"
-    },
-    {
-      "id": "epr-examination",
-      "label": "Reexam Examination → Certificate",
-      "kind": "decision",
-      "cite": "35 U.S.C. 305–307; 37 CFR 1.550; MPEP 2254",
-      "note": "Ex parte examination proceeds with special dispatch and concludes in a reexamination certificate (35 U.S.C. 307). Distribution authored 0.66 amended/narrowed / 0.22 confirmed / 0.12 all-cancelled — APPROXIMATE; most reexam certificates change or narrow at least some claims. New/amended claims carry intervening rights (35 U.S.C. 307(b)).",
-      "group": "post-grant-group"
-    },
-    {
-      "id": "claims-confirmed",
-      "label": "Claims Confirmed (Patent Survives)",
-      "kind": "terminal",
-      "valence": "good",
-      "cite": "35 U.S.C. 318(b) / 328(b) / 307",
-      "note": "The challenge failed (denied institution, upheld on the merits, or settled before a final written decision): the claims stand as granted. The patent asset is preserved at (roughly) its issued value. Best terminal in this region for the owner. PLACEHOLDER PAYOFF: $1,000,000, override per matter. Per this terminal's own note, the patent asset is preserved at roughly its issued value.",
-      "group": "post-grant-group",
-      "payoff": 1000000,
-      "outcome": [
-        "win",
-        "confirmed"
-      ]
-    },
-    {
-      "id": "claims-amended",
-      "label": "Claims Amended / Narrowed",
-      "kind": "terminal",
-      "valence": "caution",
-      "cite": "35 U.S.C. 318(c) / 307(b)",
-      "note": "Substitute or amended claims survive (via a motion to amend or a reexam certificate). The patent lives on but narrower, and amended claims are subject to INTERVENING RIGHTS (35 U.S.C. 318(c) for AIA trials; 307(b) for reexam) — pre-amendment infringers may be shielded. A partial, discounted win. PLACEHOLDER PAYOFF: $400,000, override per matter, matching this project's partial/mixed-result tier -- per this terminal's own note, 'a partial, discounted win.'",
-      "group": "post-grant-group",
-      "payoff": 400000,
-      "outcome": [
-        "mixed",
-        "amended"
-      ]
-    },
-    {
-      "id": "claims-cancelled",
-      "label": "Claims Cancelled (Patent Lost)",
-      "kind": "terminal",
-      "valence": "bad",
-      "cite": "35 U.S.C. 318(b) / 328(b) / 307",
-      "note": "A final written decision or reexam certificate CANCELS the challenged claims — the patent's asserted claims are gone, the asset largely destroyed after the litigation spend. The worst terminal in this region; the adversarial mirror image of issuance. PLACEHOLDER PAYOFF: $0, override per matter.",
-      "group": "post-grant-group",
-      "courtListenerUrl": "https://www.courtlistener.com/opinion/4492196/oil-states-energy-services-llc-v-greenes-energy-group-llc/",
-      "payoff": 0,
-      "outcome": [
-        "loss",
-        "cancelled"
-      ]
-    },
-    {
-      "id": "reissue-pending",
-      "label": "Reissue Application Pending",
-      "kind": "state",
-      "cite": "35 U.S.C. § 251; 37 CFR 1.171; MPEP 1401",
-      "note": "A reissue application has been filed, surrendering the original patent. The original patent remains in force during reissue prosecution (35 U.S.C. § 252). The reissue application is examined like an original application: no new matter may be introduced (35 U.S.C. § 251, ¶ 3); broadening claims must have been filed within the 2-year window (35 U.S.C. § 251, ¶ 4). Recapture rule (MPEP 1412.02): scope surrendered by amendment or argument during original prosecution to overcome prior art cannot be reclaimed in reissue.",
-      "group": "reissue-group",
-      "courtListenerUrl": "https://www.courtlistener.com/opinion/214772/in-re-tanaka/"
-    },
-    {
-      "id": "reissue-granted",
-      "label": "Reissue Patent Granted",
-      "kind": "terminal",
-      "valence": "good",
-      "cite": "35 U.S.C. § 251; § 252; MPEP 1460",
-      "note": "The reissued patent issues for the unexpired term of the original patent. The original patent is surrendered as of the reissue date. Intervening rights (35 U.S.C. § 252, ¶ 2) protect persons who, before the reissue grant, made, purchased, or used subject matter patented by the reissued claims, or made substantial preparations therefor. PLACEHOLDER PAYOFF: $1,000,000, override per matter.",
-      "group": "reissue-group",
-      "payoff": 1000000,
-      "outcome": [
-        "win",
-        "reissue"
-      ]
-    },
-    {
-      "id": "reissue-abandoned",
-      "label": "Reissue Abandoned — Original Patent Lost",
-      "kind": "terminal",
-      "valence": "bad",
-      "cite": "35 U.S.C. § 251; 37 CFR 1.135",
-      "note": "Reissue application abandoned for failure to reply or sustained rejection of the corrected claims. CRITICAL: the original patent was surrendered upon filing the reissue application and does NOT revive upon abandonment of the reissue. The patentee loses both the reissue and the original patent. PLACEHOLDER PAYOFF: $0, override per matter. Per this terminal's own note, the patentee loses both the reissue and the original (surrendered) patent -- worse than a typical loss, though the payoff floor here is the same $0 used for every other full loss in this project.",
-      "group": "reissue-group",
-      "payoff": 0,
-      "outcome": [
-        "loss",
-        "reissue-abandoned",
-        "waiver-trap"
-      ]
-    }
-  ],
-  "edges": [
-    {
-      "from": "pre-filing",
-      "to": "provisional-filed",
-      "label": "File provisional application",
-      "actor": "applicant",
-      "authority": "35 U.S.C. 111(b); 37 CFR 1.53(c)",
-      "cost": 325,
-      "note": "Provisional filing fee $325.00, undiscounted/large-entity, effective 1/19/2025 (USPTO fee schedule; 37 CFR 1.16(d)); halve for small entity, one-fifth for micro entity -- not modeled here since this pack doesn't track entity size.",
-      "deadline": {
-        "length": 365,
-        "extendable": false,
-        "note": "12-month period to file a nonprovisional claiming domestic benefit of the provisional is unextendable under 35 U.S.C. 119(e). Missing it forfeits the provisional's priority benefit."
-      },
-      "hours": 8,
-      "duration": {
-        "min": 54.8,
-        "mode": 182.5,
-        "max": 365.0
-      }
-    },
-    {
-      "from": "provisional-filed",
-      "to": "nonprovisional-filed",
-      "label": "File nonprovisional within 12-month window",
-      "actor": "applicant",
-      "authority": "35 U.S.C. 111(a); 35 U.S.C. 119(e); 37 CFR 1.53(b)",
-      "cost": 2000,
-      "note": "Nonprovisional utility filing fee $2,000.00, undiscounted/large-entity, effective 1/19/2025: $350.00 basic filing fee (37 CFR 1.16(a)) + $770.00 search fee (1.16(k)) + $880.00 examination fee (1.16(o)).",
-      "deadline": {
-        "length": 365,
-        "extendable": false,
-        "note": "12-month priority window. No extension available under any authority. After expiration, provisional's priority benefit is lost."
-      },
-      "hours": 40,
-      "duration": {
-        "min": 54.8,
-        "mode": 182.5,
-        "max": 365.0
-      }
-    },
-    {
-      "from": "pre-filing",
-      "to": "nonprovisional-filed",
-      "label": "File nonprovisional directly (no provisional)",
-      "actor": "applicant",
-      "authority": "35 U.S.C. 111(a); 37 CFR 1.53(b)",
-      "cost": 2000,
-      "note": "Nonprovisional utility filing fee $2,000.00, undiscounted/large-entity, effective 1/19/2025: $350.00 basic filing fee (37 CFR 1.16(a)) + $770.00 search fee (1.16(k)) + $880.00 examination fee (1.16(o)).",
-      "hours": 40
-    },
-    {
-      "from": "nonprovisional-filed",
-      "to": "missing-parts",
-      "label": "USPTO issues Notice to File Missing Parts",
-      "actor": "office",
-      "authority": "37 CFR 1.53(f); MPEP 601",
-      "probability": 0.15
-    },
-    {
-      "from": "nonprovisional-filed",
-      "to": "pre-examination",
-      "label": "Application complete — assigned to examiner",
-      "actor": "office",
-      "authority": "37 CFR 1.104; MPEP 704",
-      "probability": 0.85
-    },
-    {
-      "from": "missing-parts",
-      "to": "pre-examination",
-      "label": "File missing parts + surcharge",
-      "actor": "applicant",
-      "authority": "37 CFR 1.53(f); 37 CFR 1.16(f)",
-      "cost": 170,
-      "note": "Surcharge $170.00, undiscounted/large-entity, effective 1/19/2025 (37 CFR 1.16(f): late filing fee, oath/declaration, or an application filed without at least one claim).",
-      "deadline": {
-        "length": 60,
-        "extendable": true,
-        "extensionAuthority": "37 CFR 1.136(a)",
-        "note": "Missing parts surcharge required. Filing date not accorded until specification present."
-      },
-      "hours": 2,
-      "valence": "good",
-      "duration": {
-        "min": 9.0,
-        "mode": 30.0,
-        "max": 60.0
-      }
-    },
-    {
-      "from": "missing-parts",
-      "to": "abandoned-no-reply",
-      "label": "Fail to supply missing parts",
-      "actor": "applicant",
-      "authority": "37 CFR 1.135; 35 U.S.C. 133",
-      "hours": 0,
-      "valence": "bad"
-    },
-    {
-      "from": "pre-examination",
-      "to": "non-final-oa",
-      "label": "Examiner issues Non-Final Office Action",
-      "actor": "examiner",
-      "authority": "35 U.S.C. 132; 37 CFR 1.104; MPEP 706",
-      "probability": 0.7
-    },
-    {
-      "from": "pre-examination",
-      "to": "allowance",
-      "label": "Examiner allows on first action (FAOM)",
-      "actor": "examiner",
-      "authority": "37 CFR 1.311; MPEP 1303",
-      "note": "First Action Allowance (FAOM) — rare but occurs on well-drafted claims with strong prior art searches.",
-      "probability": 0.1
-    },
-    {
-      "from": "pre-examination",
-      "to": "restriction-requirement",
-      "label": "Examiner issues Restriction / Election Requirement",
-      "actor": "examiner",
-      "authority": "37 CFR 1.142; 35 U.S.C. 121; MPEP 803",
-      "note": "Restriction rate modeled at 0.20 (defensible 0.15–0.25 band; multi-invention applications draw restriction before/at first action). Rebalanced the pre-examination stochastic node: non-final-oa 0.90→0.70, allowance 0.10 held, restriction 0.20 — sum 1.0.",
-      "probability": 0.2
-    },
-    {
-      "from": "restriction-requirement",
-      "to": "election-made",
-      "label": "Elect invention WITHOUT traverse",
-      "actor": "applicant",
-      "authority": "37 CFR 1.142; 37 CFR 1.143; MPEP 818.01",
-      "deadline": {
-        "length": 60,
-        "extendable": true,
-        "extensionAuthority": "37 CFR 1.136(a)",
-        "note": "Election without traverse concedes the restriction; non-elected claims withdrawn. No petition right preserved."
-      },
-      "hours": 3,
-      "id": "elect-without-traverse",
-      "duration": {
-        "min": 9.0,
-        "mode": 30.0,
-        "max": 60.0
-      }
-    },
-    {
-      "from": "restriction-requirement",
-      "to": "election-made",
-      "label": "Elect invention WITH traverse (preserve 37 CFR 1.144 petition)",
-      "actor": "applicant",
-      "authority": "37 CFR 1.143; 37 CFR 1.144; MPEP 818.01(d)",
-      "deadline": {
-        "length": 60,
-        "extendable": true,
-        "extensionAuthority": "37 CFR 1.136(a)",
-        "note": "Traverse preserves the right to petition the restriction requirement to the Director under 37 CFR 1.144 after a final requirement. Applicant must still elect and prosecute one invention."
-      },
-      "hours": 5,
-      "id": "elect-with-traverse",
-      "duration": {
-        "min": 9.0,
-        "mode": 30.0,
-        "max": 60.0
-      }
-    },
-    {
-      "from": "election-made",
-      "to": "non-final-oa",
-      "label": "Examiner examines elected claims — issues Office Action",
-      "actor": "examiner",
-      "authority": "35 U.S.C. 132; 37 CFR 1.104; MPEP 821.04"
-    },
-    {
-      "from": "election-made",
-      "to": "divisional-filed",
-      "label": "File divisional for non-elected invention (35 U.S.C. 121 shield)",
-      "actor": "applicant",
-      "authority": "37 CFR 1.53(b); 35 U.S.C. 121; MPEP 201.06",
-      "cost": 2000,
-      "note": "Same filing/search/examination fees as an original nonprovisional: $2,000.00 undiscounted/large-entity, effective 1/19/2025 ($350.00 + $770.00 + $880.00, 37 CFR 1.16(a)/(k)/(o)).",
-      "hours": 30
-    },
-    {
-      "from": "divisional-filed",
-      "to": "pre-examination",
-      "label": "Divisional docketed — enters examination",
-      "actor": "office",
-      "authority": "37 CFR 1.104; MPEP 704"
-    },
-    {
-      "from": "non-final-oa",
-      "to": "applicant-response-window",
-      "label": "Receive and docket Office Action",
-      "actor": "applicant",
-      "authority": "37 CFR 1.134; 35 U.S.C. 133",
-      "hours": 0.5
-    },
-    {
-      "from": "applicant-response-window",
-      "to": "amendment-filed",
-      "label": "File amendment/response within SSP (3 months)",
-      "actor": "applicant",
-      "authority": "37 CFR 1.111; MPEP 714",
-      "deadline": {
-        "length": 90,
-        "extendable": true,
-        "extensionAuthority": "37 CFR 1.136(a)",
-        "note": "SSP is 3 months. Extendable month-by-month to the 6-month statutory ceiling under 35 U.S.C. 133. No extension beyond 6 months is possible."
-      },
-      "hours": 15,
-      "valence": "good",
-      "duration": {
-        "min": 13.5,
-        "mode": 45.0,
-        "max": 90.0
-      }
-    },
-    {
-      "from": "applicant-response-window",
-      "to": "extension-taken",
-      "label": "File extension of time (1-month)",
-      "actor": "applicant",
-      "authority": "37 CFR 1.136(a); 37 CFR 1.17(a)",
-      "cost": 235,
-      "note": "1-month extension fee $235.00, undiscounted/large-entity, effective 1/19/2025 (37 CFR 1.17(a)(1)).",
-      "deadline": {
-        "length": 30,
-        "extendable": true,
-        "extensionAuthority": "37 CFR 1.136(a)",
-        "note": "Month 4 extension. Two more available (months 5 and 6). The 6-month absolute ceiling under 35 U.S.C. 133 cannot be exceeded."
-      },
-      "hours": 0.5,
-      "duration": {
-        "min": 4.5,
-        "mode": 15.0,
-        "max": 30.0
-      }
-    },
-    {
-      "from": "extension-taken",
-      "to": "amendment-filed",
-      "label": "File amendment within extended period",
-      "actor": "applicant",
-      "authority": "37 CFR 1.111; MPEP 714",
-      "deadline": {
-        "length": 30,
-        "extendable": true,
-        "extensionAuthority": "37 CFR 1.136(a)",
-        "note": "Further extensions available up to the 6-month ceiling."
-      },
-      "hours": 15,
-      "duration": {
-        "min": 4.5,
-        "mode": 15.0,
-        "max": 30.0
-      }
-    },
-    {
-      "from": "extension-taken",
-      "to": "extension-taken",
-      "label": "Take additional extension of time",
-      "actor": "applicant",
-      "authority": "37 CFR 1.136(a); 37 CFR 1.17(a)",
-      "cost": 690,
-      "note": "37 CFR 1.17(a) extension fees are non-linear tiers on cumulative months late, not a per-month multiple: 1 mo $235.00, 2 mo $690.00, 3 mo $1,590.00, 4 mo $2,495.00, 5 mo $3,395.00 (undiscounted/large-entity, effective 1/19/2025). This edge's $690.00 is the month-5 (2-month-cumulative) tier; a second traversal (month 6) would be the 3-month tier ($1,590.00), not modeled separately here.",
-      "deadline": {
-        "length": 30,
-        "extendable": false,
-        "note": "Month 5 or 6 extension. After month 6, 35 U.S.C. 133 prohibits any further extension — abandonment is automatic."
-      },
-      "hours": 0.5,
-      "duration": {
-        "min": 4.5,
-        "mode": 15.0,
-        "max": 30.0
-      }
-    },
-    {
-      "from": "applicant-response-window",
-      "to": "abandoned-no-reply",
-      "label": "Fail to reply within 6-month statutory ceiling",
-      "actor": "applicant",
-      "authority": "35 U.S.C. 133; 37 CFR 1.135",
-      "hours": 0,
-      "valence": "bad"
-    },
-    {
-      "from": "applicant-response-window",
-      "to": "interview-conducted",
-      "label": "Request examiner interview",
-      "actor": "applicant",
-      "authority": "37 CFR 1.133; MPEP 713",
-      "hours": 2
-    },
-    {
-      "from": "interview-conducted",
-      "to": "amendment-filed",
-      "label": "Follow up interview with amendment",
-      "actor": "applicant",
-      "authority": "37 CFR 1.111; MPEP 713.04",
-      "hours": 12
-    },
-    {
-      "from": "amendment-filed",
-      "to": "allowance",
-      "label": "Examiner allows all claims",
-      "actor": "examiner",
-      "authority": "37 CFR 1.311; MPEP 1303",
-      "probability": 0.35
-    },
-    {
-      "from": "amendment-filed",
-      "to": "non-final-oa",
-      "label": "Examiner issues new Non-Final OA",
-      "actor": "examiner",
-      "authority": "35 U.S.C. 132; 37 CFR 1.104",
-      "probability": 0.15
-    },
-    {
-      "from": "amendment-filed",
-      "to": "final-rejection",
-      "label": "Examiner issues Final Rejection",
-      "actor": "examiner",
-      "authority": "37 CFR 1.113; MPEP 706.07",
-      "probability": 0.5
-    },
-    {
-      "from": "final-rejection",
-      "to": "after-final-decision",
-      "label": "Receive and docket Final Rejection",
-      "actor": "applicant",
-      "authority": "37 CFR 1.113; 35 U.S.C. 133",
-      "hours": 0.5
-    },
-    {
-      "from": "after-final-decision",
-      "to": "after-final-amendment",
-      "label": "File after-final amendment (37 CFR 1.116)",
-      "actor": "applicant",
-      "authority": "37 CFR 1.116; MPEP 714.12",
-      "deadline": {
-        "length": 90,
-        "extendable": true,
-        "extensionAuthority": "37 CFR 1.136(a)",
-        "note": "After-final amendment limited in scope. Examiner has discretion to enter or not."
-      },
-      "hours": 10,
-      "duration": {
-        "min": 13.5,
-        "mode": 45.0,
-        "max": 90.0
-      }
-    },
-    {
-      "from": "after-final-decision",
-      "to": "rce-filed",
-      "label": "File RCE — restart prosecution",
-      "actor": "applicant",
-      "authority": "37 CFR 1.114; MPEP 706.07(h)",
-      "cost": 1500,
-      "deadline": {
-        "length": 90,
-        "extendable": true,
-        "extensionAuthority": "37 CFR 1.136(a)",
-        "note": "RCE requires a submission + fee. Must be filed before payment of issue fee or abandonment. Reduces or eliminates patent term adjustment (PTA). Key trap: repeated RCEs compound PTA harm."
-      },
-      "hours": 12,
-      "duration": {
-        "min": 13.5,
-        "mode": 45.0,
-        "max": 90.0
-      },
-      "sets": ["rce-filed-before"],
-      "note": "1st RCE fee $1,500.00, undiscounted/large-entity, effective 1/19/2025 (37 CFR 1.17(e)(1)); a 2nd or subsequent RCE is $2,860.00 (1.17(e)(2)). Marks the application as having used at least one RCE (37 CFR 1.114): a scenario can price a second/subsequent RCE differently with a cost expression that reads flag('rce-filed-before'). See docs/PACK_SCHEMA.md#state-flags."
-    },
-    {
-      "from": "after-final-decision",
-      "to": "notice-of-appeal",
-      "label": "File Notice of Appeal to PTAB",
-      "actor": "applicant",
-      "authority": "37 CFR 41.31(a)(1); 37 CFR 1.134; MPEP 1204",
-      "cost": 905,
-      "deadline": {
-        "length": 90,
-        "extendable": true,
-        "extensionAuthority": "37 CFR 41.31(d); 37 CFR 1.136(a)",
-        "note": "Notice of Appeal timing is governed by 37 CFR 41.31(a)(1) (any twice-rejected claim) and runs within the period under 37 CFR 1.134/1.136 (the SSP for reply to the final rejection). Extensions of that period are authorized by 37 CFR 41.31(d). Cheaper up front than RCE but risks all rejected claims; the appeal brief must follow within 2 months (37 CFR 41.37(a))."
-      },
-      "note": "Notice of Appeal fee $905.00, undiscounted/large-entity, effective 1/19/2025 (37 CFR 41.20(b)(1)); a separate appeal-forwarding fee is due later, when the appeal brief is filed.",
-      "hours": 6,
-      "duration": {
-        "min": 13.5,
-        "mode": 45.0,
-        "max": 90.0
-      }
-    },
-    {
-      "from": "after-final-decision",
-      "to": "abandoned-no-reply",
-      "label": "Fail to reply after final — abandonment",
-      "actor": "applicant",
-      "authority": "35 U.S.C. 133; 37 CFR 1.135",
-      "hours": 0,
-      "valence": "bad"
-    },
-    {
-      "from": "after-final-decision",
-      "to": "continuation-filed",
-      "label": "File continuation to pursue additional claims (37 CFR 1.53(b))",
-      "actor": "applicant",
-      "authority": "37 CFR 1.53(b); 35 U.S.C. 120; MPEP 201.07",
-      "cost": 2000,
-      "deadline": {
-        "length": 90,
-        "extendable": true,
-        "extensionAuthority": "37 CFR 1.136(a)",
-        "note": "Continuation must be filed while the parent is still pending (before issue-fee payment or abandonment) to claim the parent's priority under 35 U.S.C. 120. Alternative to RCE/appeal that opens a fresh child on the same disclosure."
-      },
-      "note": "Same filing/search/examination fees as an original nonprovisional: $2,000.00 undiscounted/large-entity, effective 1/19/2025 ($350.00 + $770.00 + $880.00, 37 CFR 1.16(a)/(k)/(o)).",
-      "hours": 25,
-      "duration": {
-        "min": 13.5,
-        "mode": 45.0,
-        "max": 90.0
-      }
-    },
-    {
-      "from": "continuation-filed",
-      "to": "pre-examination",
-      "label": "Continuation docketed — enters examination",
-      "actor": "office",
-      "authority": "37 CFR 1.104; MPEP 704"
-    },
-    {
-      "from": "after-final-amendment",
-      "to": "allowance",
-      "label": "Examiner enters amendment and allows",
-      "actor": "examiner",
-      "authority": "37 CFR 1.116; MPEP 714.12"
-    },
-    {
-      "from": "after-final-amendment",
-      "to": "rce-filed",
-      "label": "Amendment not entered — file RCE",
-      "actor": "applicant",
-      "authority": "37 CFR 1.114",
-      "cost": 1500,
-      "hours": 12,
-      "sets": ["rce-filed-before"],
-      "note": "1st RCE fee $1,500.00, undiscounted/large-entity, effective 1/19/2025 (37 CFR 1.17(e)(1)); a 2nd or subsequent RCE is $2,860.00 (1.17(e)(2)) -- see sets:rce-filed-before."
-    },
-    {
-      "from": "after-final-amendment",
-      "to": "notice-of-appeal",
-      "label": "Amendment not entered — appeal",
-      "actor": "applicant",
-      "authority": "37 CFR 41.31",
-      "cost": 905,
-      "hours": 6,
-      "note": "Notice of Appeal fee $905.00, undiscounted/large-entity, effective 1/19/2025 (37 CFR 41.20(b)(1))."
-    },
-    {
-      "from": "after-final-amendment",
-      "to": "advisory-action",
-      "label": "Examiner issues Advisory Action (amendment not entered)",
-      "actor": "examiner",
-      "authority": "37 CFR 1.116; MPEP 714.13; MPEP 706.07(f)",
-      "note": "Advisory Action does NOT reset or toll the 35 U.S.C. 133 clock — the period for reply keeps running from the final rejection (MPEP 714.13)."
-    },
-    {
-      "from": "advisory-action",
-      "to": "after-final-decision",
-      "label": "Advisory Action received — reassess (clock still running, MPEP 714.13)",
-      "actor": "applicant",
-      "authority": "37 CFR 1.116; MPEP 714.13",
-      "note": "The 1.116 filing bought no time — applicant must still appeal, file an RCE/continuation, or otherwise reply before the 6-month 35 U.S.C. 133 ceiling, taking 37 CFR 1.136(a) extensions as needed.",
-      "hours": 1
-    },
-    {
-      "from": "rce-filed",
-      "to": "non-final-oa",
-      "label": "Examiner issues new Non-Final OA after RCE",
-      "actor": "examiner",
-      "authority": "37 CFR 1.104; MPEP 706",
-      "probability": 0.7
-    },
-    {
-      "from": "rce-filed",
-      "to": "allowance",
-      "label": "Examiner allows after RCE submission",
-      "actor": "examiner",
-      "authority": "37 CFR 1.311",
-      "probability": 0.3
-    },
-    {
-      "from": "notice-of-appeal",
-      "to": "appeal-brief-filed",
-      "label": "File Appeal Brief (within 2 months)",
-      "actor": "applicant",
-      "authority": "37 CFR 41.37; MPEP 1205",
-      "deadline": {
-        "length": 60,
-        "extendable": true,
-        "extensionAuthority": "37 CFR 1.136(a)",
-        "note": "Brief must be filed within 2 months of Notice of Appeal. Failure to file brief = abandonment of appeal. The brief is the applicant's primary substantive document before PTAB."
-      },
-      "hours": 40,
-      "valence": "good",
-      "duration": {
-        "min": 9.0,
-        "mode": 30.0,
-        "max": 60.0
-      }
-    },
-    {
-      "from": "notice-of-appeal",
-      "to": "appeal-dismissed",
-      "label": "Fail to file appeal brief — appeal dismissed",
-      "actor": "applicant",
-      "authority": "37 CFR 41.37(a); MPEP 1215.04; MPEP 710.02(e)",
-      "deadline": {
-        "length": 60,
-        "extendable": true,
-        "extensionAuthority": "37 CFR 1.136(a)",
-        "note": "Brief due 2 months from notice of appeal, extendable up to 5 months under 37 CFR 1.136(a). If no brief is filed within that period, the appeal stands DISMISSED by operation of the rule (37 CFR 41.37; MPEP 1215.04) — the appeal is not 'denied' (Rev-01.2024 replaced 'denied' with 'dismissed' throughout ch. 1200)."
-      },
-      "hours": 0,
-      "valence": "bad",
-      "duration": {
-        "min": 9.0,
-        "mode": 30.0,
-        "max": 60.0
-      }
-    },
-    {
-      "from": "appeal-dismissed",
-      "to": "abandoned-no-reply",
-      "label": "No allowed claims — application abandoned",
-      "actor": "office",
-      "authority": "MPEP 1215.04; 37 CFR 1.135",
-      "note": "Per MPEP 1215.04: 'Applications having no allowed claims will be abandoned.' Claims allowable only for their dependency from rejected claims are treated as rejected. Modeled at 0.8 (most appealed applications reach the Board with all claims under rejection).",
-      "probability": 0.8
-    },
-    {
-      "from": "appeal-dismissed",
-      "to": "patent-issued",
-      "label": "Allowed claim(s) exist — examiner cancels rejected claims and issues",
-      "actor": "office",
-      "authority": "MPEP 1215.04 (¶ 12.209); 37 CFR 1.311",
-      "note": "Per MPEP 1215.04: where an allowed claim exists, the examiner cancels the nonallowed claims and allows the application on the allowed claim(s) — a salvaged (narrowed) patent rather than abandonment. Modeled at 0.2. Sum with the abandonment branch = 1.0.",
-      "probability": 0.2
-    },
-    {
-      "from": "appeal-brief-filed",
-      "to": "examiners-answer",
-      "label": "Examiner files Answer",
-      "actor": "examiner",
-      "authority": "37 CFR 41.39; MPEP 1207"
-    },
-    {
-      "from": "examiners-answer",
-      "to": "ptab-decision",
-      "label": "Pay appeal forwarding fee — appeal forwarded to PTAB",
-      "actor": "applicant",
-      "authority": "37 CFR 41.20(b)(4); 37 CFR 41.45; MPEP 1208.01",
-      "cost": 2535,
-      "deadline": {
-        "length": 60,
-        "extendable": false,
-        "note": "The APPEAL FORWARDING FEE (37 CFR 41.20(b)(4)) — not a brief fee — is due within 2 months of the Examiner's Answer to forward the appeal to the Board (35 U.S.C. 41 note; MPEP 1208.01). 37 CFR 41.37 itself carries NO brief fee. Non-payment means the appeal is dismissed."
-      },
-      "note": "Appeal forwarding fee $2,535.00, undiscounted/large-entity, effective 1/19/2025 (37 CFR 41.20(b)(4)).",
-      "hours": 1,
-      "duration": {
-        "min": 9.0,
-        "mode": 30.0,
-        "max": 60.0
-      }
-    },
-    {
-      "from": "examiners-answer",
-      "to": "rce-filed",
-      "label": "Reopen prosecution via RCE (new grounds in Answer)",
-      "actor": "applicant",
-      "authority": "37 CFR 1.114; MPEP 1207.03",
-      "cost": 1500,
-      "hours": 12,
-      "sets": ["rce-filed-before"],
-      "note": "1st RCE fee $1,500.00, undiscounted/large-entity, effective 1/19/2025 (37 CFR 1.17(e)(1)); a 2nd or subsequent RCE is $2,860.00 (1.17(e)(2)) -- see sets:rce-filed-before."
-    },
-    {
-      "from": "ptab-decision",
-      "to": "ptab-reversal",
-      "label": "PTAB reverses examiner",
-      "actor": "office",
-      "authority": "37 CFR 41.50(b); MPEP 1214",
-      "probability": 0.3
-    },
-    {
-      "from": "ptab-decision",
-      "to": "ptab-affirmed",
-      "label": "PTAB affirms examiner",
-      "actor": "office",
-      "authority": "37 CFR 41.50; MPEP 1214",
-      "probability": 0.7
-    },
-    {
-      "from": "ptab-reversal",
-      "to": "allowance",
-      "label": "Examiner processes allowance after reversal",
-      "actor": "examiner",
-      "authority": "MPEP 1214.04"
-    },
-    {
-      "from": "ptab-affirmed",
-      "to": "federal-circuit-appeal",
-      "label": "Appeal to Federal Circuit (35 U.S.C. 141)",
-      "actor": "applicant",
-      "authority": "35 U.S.C. 141; 37 CFR 90.1",
-      "deadline": {
-        "length": 63,
-        "extendable": false,
-        "note": "63-day deadline from PTAB decision. No extensions available for Federal Circuit appeals."
-      },
-      "hours": 80,
-      "duration": {
-        "min": 9.4,
-        "mode": 31.5,
-        "max": 63.0
-      }
-    },
-    {
-      "from": "ptab-affirmed",
-      "to": "sec145-action",
-      "label": "File civil action in E.D. Va. (35 U.S.C. 145)",
-      "actor": "applicant",
-      "authority": "35 U.S.C. 145; 37 CFR 90.3",
-      "deadline": {
-        "length": 63,
-        "extendable": false,
-        "note": "63-day deadline. De novo review with new evidence. Expensive — USPTO may recover attorney fees if applicant loses."
-      },
-      "hours": 120,
-      "duration": {
-        "min": 9.4,
-        "mode": 31.5,
-        "max": 63.0
-      }
-    },
-    {
-      "from": "ptab-affirmed",
-      "to": "abandoned-no-reply",
-      "label": "Take no further action — application abandoned",
-      "actor": "applicant",
-      "authority": "37 CFR 1.135",
-      "hours": 0
-    },
-    {
-      "from": "federal-circuit-appeal",
-      "to": "allowance",
-      "label": "Federal Circuit reverses — allowance ordered",
-      "actor": "office",
-      "authority": "35 U.S.C. 141; MPEP 1216"
-    },
-    {
-      "from": "federal-circuit-appeal",
-      "to": "abandoned-no-reply",
-      "label": "Federal Circuit affirms — no further appeal",
-      "actor": "applicant",
-      "authority": "37 CFR 1.135",
-      "hours": 0
-    },
-    {
-      "from": "sec145-action",
-      "to": "allowance",
-      "label": "District court orders allowance",
-      "actor": "office",
-      "authority": "35 U.S.C. 145; MPEP 1216"
-    },
-    {
-      "from": "sec145-action",
-      "to": "abandoned-no-reply",
-      "label": "District court affirms — abandoned",
-      "actor": "applicant",
-      "authority": "37 CFR 1.135",
-      "hours": 0
-    },
-    {
-      "from": "allowance",
-      "to": "noa-received",
-      "label": "Notice of Allowance mailed",
-      "actor": "office",
-      "authority": "37 CFR 1.311; MPEP 1303"
-    },
-    {
-      "from": "noa-received",
-      "to": "issue-fee-paid",
-      "label": "Pay issue fee within 3 months",
-      "actor": "applicant",
-      "authority": "37 CFR 1.311(a); 37 CFR 1.18(a); MPEP 1306",
-      "cost": 1290,
-      "deadline": {
-        "length": 90,
-        "extendable": false,
-        "note": "Issue fee due 3 months from NOA. NOT extendable under any authority — 37 CFR 1.311(a); MPEP 1306 [R-01.2024]. No 37 CFR 1.136(a)/(b) extension is available. Late payment = abandonment; only a 37 CFR 1.137 revival petition (unintentional delay) can restore the application."
-      },
-      "note": "Utility issue fee $1,290.00, undiscounted/large-entity, effective 1/19/2025 (37 CFR 1.18(a)(1)).",
-      "hours": 1,
-      "valence": "good",
-      "duration": {
-        "min": 13.5,
-        "mode": 45.0,
-        "max": 90.0
-      }
-    },
-    {
-      "from": "noa-received",
-      "to": "abandoned-issue-fee",
-      "label": "Fail to pay issue fee — abandonment",
-      "actor": "applicant",
-      "authority": "37 CFR 1.311; 37 CFR 1.135",
-      "hours": 0,
-      "valence": "bad"
-    },
-    {
-      "from": "abandoned-no-reply",
-      "to": "applicant-response-window",
-      "label": "Petition to revive — unintentional delay (37 CFR 1.137)",
-      "actor": "applicant",
-      "authority": "37 CFR 1.137; 37 CFR 1.17(m); MPEP 711.03(c)",
-      "cost": 2260,
-      "note": "Revival requires (1) the required reply, (2) the petition fee under 37 CFR 1.17(m), and (3) a statement that the ENTIRE delay from the due date until the reply was UNINTENTIONAL (37 CFR 1.137(a)). Revival is not guaranteed and does not undo intervening rights. Reinstates the open reply window. Petition fee $2,260.00, undiscounted/large-entity, effective 1/19/2025, for delay of 1 year or less (37 CFR 1.17(m)(2)); a delay exceeding 1 year is $3,000.00 (1.17(m)(1)).",
-      "hours": 4
-    },
-    {
-      "from": "abandoned-issue-fee",
-      "to": "noa-received",
-      "label": "Petition to revive — pay issue fee late (37 CFR 1.137)",
-      "actor": "applicant",
-      "authority": "37 CFR 1.137; 37 CFR 1.17(m); MPEP 711.03(c)",
-      "cost": 2260,
-      "note": "Same 37 CFR 1.137 unintentional-delay standard + 37 CFR 1.17(m) petition fee. Because the issue-fee period is itself unextendable (MPEP 1306), revival is the ONLY route back after a missed issue fee. Reinstates the allowance posture so the issue fee can be paid. Petition fee $2,260.00, undiscounted/large-entity, effective 1/19/2025, for delay of 1 year or less (37 CFR 1.17(m)(2)); a delay exceeding 1 year is $3,000.00 (1.17(m)(1)).",
-      "hours": 4
-    },
-    {
-      "from": "issue-fee-paid",
-      "to": "patent-issued",
-      "label": "Patent issues",
-      "actor": "office",
-      "authority": "35 U.S.C. 151; MPEP 1309"
-    },
-    {
-      "from": "patent-issued",
-      "to": "maintenance-due",
-      "label": "Maintenance fees become due (3.5 / 7.5 / 11.5 years)",
-      "actor": "applicant",
-      "authority": "37 CFR 1.362; 35 U.S.C. 41(b)",
-      "hours": 0.2
-    },
-    {
-      "from": "maintenance-due",
-      "to": "maintenance-due",
-      "label": "Pay maintenance fee on time",
-      "actor": "applicant",
-      "authority": "37 CFR 1.362; 37 CFR 1.20(e)-(g)",
-      "cost": 2150,
-      "hours": 0.5,
-      "valence": "good",
-      "note": "3.5-year maintenance fee $2,150.00, undiscounted/large-entity, effective 1/19/2025 (37 CFR 1.20(e)); the 7.5-year fee is $4,040.00 (1.20(f)) and the 11.5-year fee is $8,280.00 (1.20(g)) -- this edge's self-loop models only the recurring 3.5-year-tier default since the pack has no windowed-maintenance-cycle state."
-    },
-    {
-      "from": "maintenance-due",
-      "to": "patent-expired",
-      "label": "Fail to pay maintenance fee — patent expires",
-      "actor": "applicant",
-      "authority": "37 CFR 1.362(f); 35 U.S.C. 41(b)",
-      "hours": 0,
-      "valence": "bad"
-    },
-    {
-      "from": "patent-issued",
-      "to": "patent-challenged",
-      "label": "Third party challenges the issued patent (post-grant)",
-      "actor": "office",
-      "authority": "35 U.S.C. 311; 321; 302",
-      "note": "The post-grant afterlife. Modeled as a world event off the (terminal) issuance node — like the existing patent-issued→maintenance-due edge, this out-edge is walked by the simulator but treated as absorbing by the from-start EV/absorbing-chain analysis (issuance is a terminal). The adversarial sub-chain rooted here is analyzed on its own — see design/graph-algorithms.md §8.5."
-    },
-    {
-      "from": "patent-challenged",
-      "to": "ipr-petition-filed",
-      "label": "Challenger files IPR petition (35 U.S.C. 311)",
-      "actor": "either",
-      "authority": "35 U.S.C. 311–314; 37 CFR 42.100",
-      "cost": 23750,
-      "deadline": {
-        "length": 365,
-        "extendable": false,
-        "note": "If the petitioner was served with an infringement complaint, 35 U.S.C. 315(b) bars a petition filed more than one year later — unextendable."
-      },
-      "note": "IPR request fee $23,750.00, verified, effective/last-amended 1/14/2025 (37 CFR 42.15(a)(1)): covers up to 20 claims; $470.00 per claim over 20 at request (42.15(a)(3)). A post-institution fee of $28,125.00 (42.15(a)(2)), plus $940.00 per claim over 20 instituted (42.15(a)(4)), falls due only if the Board institutes -- not modeled on this edge.",
-      "duration": {
-        "min": 54.8,
-        "mode": 182.5,
-        "max": 365.0
-      }
-    },
-    {
-      "from": "patent-challenged",
-      "to": "pgr-petition-filed",
-      "label": "Challenger files PGR petition within 9 months (35 U.S.C. 321)",
-      "actor": "either",
-      "authority": "35 U.S.C. 321–324; 37 CFR 42.200",
-      "cost": 25000,
-      "deadline": {
-        "length": 270,
-        "extendable": false,
-        "note": "PGR must be filed within 9 months of grant (35 U.S.C. 321(c)); AIA patents only. Unextendable, jurisdictional."
-      },
-      "note": "PGR request fee $25,000.00, verified, effective/last-amended 1/14/2025 (37 CFR 42.15(b)(1)): covers up to 20 claims; $595.00 per claim over 20 at request (42.15(b)(3)). A post-institution fee of $34,375.00 (42.15(b)(2)), plus $1,315.00 per claim over 20 instituted (42.15(b)(4)), falls due only if the Board institutes -- not modeled on this edge. (This edge previously and incorrectly reused the IPR request fee of $23,750.00; corrected to the PGR-specific fee.)",
-      "duration": {
-        "min": 40.5,
-        "mode": 135.0,
-        "max": 270.0
-      }
-    },
-    {
-      "from": "patent-challenged",
-      "to": "epr-requested",
-      "label": "Requester files ex parte reexam request (35 U.S.C. 302)",
-      "actor": "either",
-      "authority": "35 U.S.C. 302; 37 CFR 1.510; MPEP 2209",
-      "cost": 13545,
-      "note": "Any person, any time during enforceability, even anonymously. Non-streamlined ex parte reexam request fee $13,545.00, undiscounted/large-entity, effective 1/19/2025 (37 CFR 1.20(c)(2)); a streamlined ex parte reexam (a newer, faster USPTO option, narrower eligibility) costs $6,775.00 instead (37 CFR 1.20(c)(1)(i)) -- this edge models the non-streamlined default since streamlined-track eligibility isn't tracked by this pack."
-    },
-    {
-      "from": "ipr-petition-filed",
-      "to": "ipr-institution-decision",
-      "label": "File Patent Owner Preliminary Response (POPR)",
-      "actor": "applicant",
-      "authority": "37 CFR 42.107; 35 U.S.C. 313",
-      "deadline": {
-        "length": 90,
-        "extendable": false,
-        "note": "POPR due within 3 months of the notice according the petition a filing date. Optional; argue discretionary denial and/or the merits."
-      },
-      "hours": 60,
-      "id": "ipr-popr-filed",
-      "duration": {
-        "min": 13.5,
-        "mode": 45.0,
-        "max": 90.0
-      }
-    },
-    {
-      "from": "ipr-petition-filed",
-      "to": "ipr-institution-decision",
-      "label": "Waive POPR — reserve arguments for trial",
-      "actor": "applicant",
-      "authority": "37 CFR 42.107(b)",
-      "hours": 0.5,
-      "id": "ipr-popr-waived"
-    },
-    {
-      "from": "ipr-institution-decision",
-      "to": "ipr-trial-instituted",
-      "label": "PTAB institutes trial (35 U.S.C. 314(a))",
-      "actor": "office",
-      "authority": "35 U.S.C. 314(a); 37 CFR 42.108",
-      "probability": 0.65
-    },
-    {
-      "from": "ipr-institution-decision",
-      "to": "claims-confirmed",
-      "label": "PTAB denies institution (Fintiv / 325(d) / merits)",
-      "actor": "office",
-      "authority": "35 U.S.C. 314(a); 37 CFR 42.108",
-      "note": "Denial ends the challenge; claims stand. Institution modeled 0.65 / denial 0.35 (APPROXIMATE, flagged on the node).",
-      "probability": 0.35
-    },
-    {
-      "from": "ipr-trial-instituted",
-      "to": "ipr-final-written-decision",
-      "label": "File Patent Owner Response",
-      "actor": "applicant",
-      "authority": "35 U.S.C. 316; 37 CFR 42.120",
-      "hours": 90,
-      "id": "ipr-por-filed"
-    },
-    {
-      "from": "ipr-trial-instituted",
-      "to": "ipr-final-written-decision",
-      "label": "File Motion to Amend (substitute claims, 35 U.S.C. 316(d))",
-      "actor": "applicant",
-      "authority": "35 U.S.C. 316(d); 37 CFR 42.121",
-      "hours": 80,
-      "id": "ipr-mta-filed"
-    },
-    {
-      "from": "ipr-trial-instituted",
-      "to": "claims-confirmed",
-      "label": "Settle before final written decision (35 U.S.C. 317) — avoid estoppel",
-      "actor": "applicant",
-      "authority": "35 U.S.C. 317; 37 CFR 42.72–42.74",
-      "note": "Pre-FWD settlement terminates as to the petitioner and avoids 315(e) estoppel; the Board may terminate rather than proceed. Claims stand.",
-      "hours": 20,
-      "valence": "good"
-    },
-    {
-      "from": "ipr-final-written-decision",
-      "to": "claims-cancelled",
-      "label": "FWD: all instituted claims held unpatentable",
-      "actor": "office",
-      "authority": "35 U.S.C. 318(a); 318(b)",
-      "probability": 0.65
-    },
-    {
-      "from": "ipr-final-written-decision",
-      "to": "claims-confirmed",
-      "label": "FWD: claims upheld (patentability confirmed)",
-      "actor": "office",
-      "authority": "35 U.S.C. 318(a); 318(b)",
-      "probability": 0.2
-    },
-    {
-      "from": "ipr-final-written-decision",
-      "to": "claims-amended",
-      "label": "FWD: mixed — substitute claims entered (intervening rights)",
-      "actor": "office",
-      "authority": "35 U.S.C. 318(a); 318(c)",
-      "probability": 0.15
-    },
-    {
-      "from": "pgr-petition-filed",
-      "to": "pgr-institution-decision",
-      "label": "File Patent Owner Preliminary Response (POPR)",
-      "actor": "applicant",
-      "authority": "37 CFR 42.207; 35 U.S.C. 323",
-      "deadline": {
-        "length": 90,
-        "extendable": false,
-        "note": "POPR due within 3 months of the filing-date notice."
-      },
-      "hours": 60,
-      "id": "pgr-popr-filed",
-      "duration": {
-        "min": 13.5,
-        "mode": 45.0,
-        "max": 90.0
-      }
-    },
-    {
-      "from": "pgr-petition-filed",
-      "to": "pgr-institution-decision",
-      "label": "Waive POPR — reserve arguments for trial",
-      "actor": "applicant",
-      "authority": "37 CFR 42.207(b)",
-      "hours": 0.5,
-      "id": "pgr-popr-waived"
-    },
-    {
-      "from": "pgr-institution-decision",
-      "to": "pgr-trial-instituted",
-      "label": "PTAB institutes PGR (35 U.S.C. 324(a))",
-      "actor": "office",
-      "authority": "35 U.S.C. 324(a); 37 CFR 42.208",
-      "probability": 0.55
-    },
-    {
-      "from": "pgr-institution-decision",
-      "to": "claims-confirmed",
-      "label": "PTAB denies institution",
-      "actor": "office",
-      "authority": "35 U.S.C. 324(a); 37 CFR 42.208",
-      "probability": 0.45
-    },
-    {
-      "from": "pgr-trial-instituted",
-      "to": "pgr-final-written-decision",
-      "label": "File Patent Owner Response",
-      "actor": "applicant",
-      "authority": "35 U.S.C. 326; 37 CFR 42.220",
-      "hours": 90,
-      "id": "pgr-por-filed"
-    },
-    {
-      "from": "pgr-trial-instituted",
-      "to": "pgr-final-written-decision",
-      "label": "File Motion to Amend (substitute claims, 35 U.S.C. 326(d))",
-      "actor": "applicant",
-      "authority": "35 U.S.C. 326(d); 37 CFR 42.221",
-      "hours": 80,
-      "id": "pgr-mta-filed"
-    },
-    {
-      "from": "pgr-trial-instituted",
-      "to": "claims-confirmed",
-      "label": "Settle before final written decision (35 U.S.C. 327) — avoid estoppel",
-      "actor": "applicant",
-      "authority": "35 U.S.C. 327; 37 CFR 42.72–42.74",
-      "hours": 20,
-      "valence": "good"
-    },
-    {
-      "from": "pgr-final-written-decision",
-      "to": "claims-cancelled",
-      "label": "FWD: claims held unpatentable (incl. 101/112 grounds)",
-      "actor": "office",
-      "authority": "35 U.S.C. 328(a); 328(b)",
-      "probability": 0.6
-    },
-    {
-      "from": "pgr-final-written-decision",
-      "to": "claims-confirmed",
-      "label": "FWD: claims upheld",
-      "actor": "office",
-      "authority": "35 U.S.C. 328(a); 328(b)",
-      "probability": 0.25
-    },
-    {
-      "from": "pgr-final-written-decision",
-      "to": "claims-amended",
-      "label": "FWD: mixed — substitute claims entered (intervening rights)",
-      "actor": "office",
-      "authority": "35 U.S.C. 328(a); 328(c)",
-      "probability": 0.15
-    },
-    {
-      "from": "epr-requested",
-      "to": "epr-ordered",
-      "label": "Director grants reexam — SNQ found (35 U.S.C. 303)",
-      "actor": "office",
-      "authority": "35 U.S.C. 303(a); 304; 37 CFR 1.515",
-      "probability": 0.92
-    },
-    {
-      "from": "epr-requested",
-      "to": "claims-confirmed",
-      "label": "Request denied — no substantial new question",
-      "actor": "office",
-      "authority": "35 U.S.C. 303(a); 37 CFR 1.515(a)",
-      "note": "Denial (no SNQ) leaves the claims untouched. Grant modeled 0.92 / denial 0.08 (APPROXIMATE, flagged on the node).",
-      "probability": 0.08
-    },
-    {
-      "from": "epr-ordered",
-      "to": "epr-examination",
-      "label": "File Patent Owner Statement (35 U.S.C. 304) — opens requester reply [TRAP]",
-      "actor": "applicant",
-      "authority": "35 U.S.C. 304; 37 CFR 1.530(b); MPEP 2249",
-      "deadline": {
-        "length": 60,
-        "extendable": true,
-        "extensionAuthority": "37 CFR 1.550(c)",
-        "note": "Optional statement due within a period of not less than two months from the order. Filing it entitles the third-party requester to a reply (37 CFR 1.535) — usually a strategic mistake."
-      },
-      "hours": 40,
-      "valence": "bad",
-      "id": "epr-owner-statement-filed",
-      "duration": {
-        "min": 9.0,
-        "mode": 30.0,
-        "max": 60.0
-      }
-    },
-    {
-      "from": "epr-ordered",
-      "to": "epr-examination",
-      "label": "Decline owner statement — reserve for first Office action (recommended)",
-      "actor": "applicant",
-      "authority": "37 CFR 1.530(b); MPEP 2249",
-      "hours": 0.5,
-      "valence": "good",
-      "id": "epr-owner-statement-declined"
-    },
-    {
-      "from": "epr-examination",
-      "to": "claims-amended",
-      "label": "Reexam certificate: claims amended / narrowed",
-      "actor": "office",
-      "authority": "35 U.S.C. 307; 307(b); 37 CFR 1.570",
-      "probability": 0.66
-    },
-    {
-      "from": "epr-examination",
-      "to": "claims-confirmed",
-      "label": "Reexam certificate: claims confirmed as patentable",
-      "actor": "office",
-      "authority": "35 U.S.C. 307; 37 CFR 1.570",
-      "probability": 0.22
-    },
-    {
-      "from": "epr-examination",
-      "to": "claims-cancelled",
-      "label": "Reexam certificate: claims cancelled",
-      "actor": "office",
-      "authority": "35 U.S.C. 307; 37 CFR 1.570",
-      "probability": 0.12
-    },
-    {
-      "from": "patent-issued",
-      "to": "reissue-pending",
-      "label": "File narrowing reissue application (§ 251; any time during enforceable term)",
-      "actor": "applicant",
-      "authority": "35 U.S.C. § 251; 37 CFR 1.171; MPEP 1401",
-      "cost": 3670,
-      "note": "Narrowing reissue may be filed at any time during the enforceable term. Only spec/claims/drawings needed for filing date; oath may follow (37 CFR 1.53(f); MPEP 1403). Original patent surrendered on filing, remains in force during prosecution (§ 252). Reissue filing fees $3,670.00 total, undiscounted/large-entity, effective 1/19/2025: $350.00 basic filing (37 CFR 1.16(e)) + $770.00 search (1.16(n)) + $2,550.00 examination (1.16(r)) -- the reissue examination fee is well above the $880.00 utility examination fee.",
-      "hours": 20,
-      "id": "reissue-narrowing-filed"
-    },
-    {
-      "from": "patent-issued",
-      "to": "reissue-pending",
-      "label": "File broadening reissue application — MUST be within 2 years of grant (§ 251)",
-      "actor": "applicant",
-      "authority": "35 U.S.C. § 251, ¶ 4; MPEP 1412",
-      "cost": 3670,
-      "deadline": {
-        "length": 730,
-        "extendable": false,
-        "note": "Two-year broadening window from the date of patent grant. Filing on the anniversary date is timely (MPEP 1403). After it closes, broadening reissue is gone FOREVER — an unextendable, irreversible forfeiture (flag mpep/broadening-window-closed)."
-      },
-      "note": "Reissue filing fees $3,670.00 total, undiscounted/large-entity, effective 1/19/2025: $350.00 basic filing (37 CFR 1.16(e)) + $770.00 search (1.16(n)) + $2,550.00 examination (1.16(r)) -- the reissue examination fee is well above the $880.00 utility examination fee.",
-      "hours": 25,
-      "valence": "good",
-      "id": "reissue-broadening-filed",
-      "duration": {
-        "min": 109.5,
-        "mode": 365.0,
-        "max": 730.0
-      }
-    },
-    {
-      "from": "patent-issued",
-      "to": "patent-issued",
-      "label": "Miss 2-year broadening reissue window — broadening permanently barred",
-      "actor": "applicant",
-      "authority": "35 U.S.C. § 251, ¶ 4; MPEP 1412",
-      "note": "The 2-year broadening window closes. Flag mpep/broadening-window-closed raised. Narrowing reissue remains available; broadening does not.",
-      "hours": 0,
-      "valence": "bad"
-    },
-    {
-      "from": "reissue-pending",
-      "to": "reissue-granted",
-      "label": "Reissue examination completes — reissue patent granted",
-      "actor": "office",
-      "authority": "35 U.S.C. § 251; MPEP 1460",
-      "probability": 0.7
-    },
-    {
-      "from": "reissue-pending",
-      "to": "reissue-abandoned",
-      "label": "Reissue abandoned (failure to reply or rejection sustained)",
-      "actor": "office",
-      "authority": "35 U.S.C. § 251; 37 CFR 1.135",
-      "note": "TRAP: abandonment of the reissue does NOT revive the original patent — both are lost.",
-      "probability": 0.3
-    }
-  ],
-  "forum": "uspto",
   "roles": {
     "applicant": "self",
+    "either": "nature",
     "examiner": "nature",
-    "office": "nature",
-    "either": "nature"
-  },
-  "citeSyntax": {
-    "rules": [
-      {
-        "prefixes": [
-          "MPEP"
-        ],
-        "heading": "MPEP § {}"
-      }
-    ]
+    "office": "nature"
   },
   "sources": [
     {
@@ -1764,41 +100,41 @@
       "id": "mpep-0700",
       "title": "MPEP Chapter 700 -- Examination of Applications (9th ed., Rev. 01.2024)",
       "url": "https://www.uspto.gov/web/offices/pac/mpep/mpep-0700.pdf",
+      "path": "sources/mpep.txt",
       "sha256": "bb3e9e43f169ae0fc5c84126c4fad8614b064187743d74ff404c3088ef643047",
-      "asOf": "2024-01-31",
-      "path": "sources/mpep.txt"
+      "asOf": "2024-01-31"
     },
     {
       "id": "mpep-1200",
       "title": "MPEP Chapter 1200 -- Appeal (9th ed., Rev. 01.2024)",
       "url": "https://www.uspto.gov/web/offices/pac/mpep/mpep-1200.pdf",
+      "path": "sources/mpep.txt",
       "sha256": "1cd10af8745143604b548231887b6ed90c2f734b0b109f6cacfe212c50d7fa8a",
-      "asOf": "2024-01-31",
-      "path": "sources/mpep.txt"
+      "asOf": "2024-01-31"
     },
     {
       "id": "mpep-1300",
       "title": "MPEP Chapter 1300 -- Allowance and Issue (9th ed., Rev. 01.2024)",
       "url": "https://www.uspto.gov/web/offices/pac/mpep/mpep-1300.pdf",
+      "path": "sources/mpep.txt",
       "sha256": "4b16e0071ed2d41cf7e35691902b2b3a4409af994bb223f098d03ac96c4b4787",
-      "asOf": "2024-01-31",
-      "path": "sources/mpep.txt"
+      "asOf": "2024-01-31"
     },
     {
       "id": "mpep-1400",
       "title": "MPEP Chapter 1400 -- Correction of Patents (9th ed., Rev. 01.2024)",
       "url": "https://www.uspto.gov/web/offices/pac/mpep/mpep-1400.pdf",
+      "path": "sources/mpep.txt",
       "sha256": "41252e1ccdec27ce787dc8242a4f9026b8080bb7756c5a6e0c5bde2b50271420",
-      "asOf": "2024-01-31",
-      "path": "sources/mpep.txt"
+      "asOf": "2024-01-31"
     },
     {
       "id": "cfr-37-patents",
       "title": "37 C.F.R. Part 1 (Rules of Practice in Patent Cases) et al. -- USPTO Consolidated Patent Rules",
       "url": "https://www.uspto.gov/web/offices/pac/mpep/consolidated_rules.pdf",
+      "path": "sources/cfr-37-part1.txt",
       "sha256": "54c190418121ba3ede5240a1b1466522e48b08a95129caf2d7825e5acd5a6f89",
-      "asOf": "2026-01-01",
-      "path": "sources/cfr-37-part1.txt"
+      "asOf": "2026-01-01"
     },
     {
       "id": "cfr-42-cite",
@@ -1829,6 +165,1677 @@
       "title": "37 C.F.R. § 42.15 (PTAB IPR/PGR request, post-institution, and per-excess-claim fees, effective/last-amended 1/14/2025)",
       "url": "https://www.law.cornell.edu/cfr/text/37/42.15",
       "asOf": "2025-01-14"
+    }
+  ],
+  "citeSyntax": {
+    "rules": [
+      {
+        "prefixes": [
+          "MPEP"
+        ],
+        "heading": "MPEP § {}"
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "id": "pre-filing",
+      "kind": "state",
+      "label": "Pre-Filing",
+      "cite": "35 U.S.C. 111(b); 37 CFR 1.53(c)",
+      "note": "Provisional application option: file under 35 U.S.C. 111(b) to secure a priority date for 12 months. No claims required. The 12-month window is unextendable — missing it forfeits domestic priority.",
+      "group": "pre-filing-group"
+    },
+    {
+      "id": "provisional-filed",
+      "kind": "state",
+      "label": "Provisional Filed",
+      "cite": "35 U.S.C. 111(b); 37 CFR 1.53(c)",
+      "note": "Provisional secures a U.S. priority date. Must be converted or claimed as priority within 12 months. Provisional does not start the 20-year patent term clock.",
+      "group": "pre-filing-group"
+    },
+    {
+      "id": "nonprovisional-filed",
+      "kind": "state",
+      "label": "Nonprovisional Filed",
+      "cite": "35 U.S.C. 111(a); 37 CFR 1.53(b)",
+      "note": "Specification (with or without claims), drawings (if necessary), filing fee, search fee, examination fee, and oath/declaration required. Filing date = date specification received at USPTO (37 CFR 1.53(b)). The 20-year term begins here.",
+      "group": "filing-group"
+    },
+    {
+      "id": "missing-parts",
+      "kind": "state",
+      "label": "Notice: Missing Parts",
+      "cite": "37 CFR 1.53(f); MPEP 601",
+      "note": "USPTO issues a Notice to File Missing Parts if oath/declaration, basic fee, or specification is deficient. Applicant has a surcharge deadline to supply missing parts. Failure to respond = abandonment.",
+      "group": "filing-group"
+    },
+    {
+      "id": "pre-examination",
+      "kind": "state",
+      "label": "Pre-Examination Processing",
+      "cite": "MPEP 704; 37 CFR 1.104",
+      "note": "Application assigned to a Technology Center and art unit. Examiner assigned. Awaiting first Office Action. Applicant may file a Request for Prioritized Examination (Track One) under 37 CFR 1.102(e) to accelerate.",
+      "group": "filing-group"
+    },
+    {
+      "id": "non-final-oa",
+      "kind": "state",
+      "label": "Non-Final Office Action",
+      "cite": "35 U.S.C. 132; 37 CFR 1.104; MPEP 706",
+      "note": "Examiner's first rejection or objection. SSP (shortened statutory period) is typically 3 months. Extendable month-by-month up to the 6-month statutory ceiling under 37 CFR 1.136(a). Extensions require fees per 37 CFR 1.17(a).",
+      "group": "examination-group"
+    },
+    {
+      "id": "applicant-response-window",
+      "kind": "decision",
+      "label": "Response Window Open",
+      "cite": "37 CFR 1.111; 35 U.S.C. 133",
+      "note": "Applicant must reply within the SSP (3 months) or extend. The 6-month statutory ceiling under 35 U.S.C. 133 cannot be extended for any reason — missing it triggers immediate abandonment. Three extension slots available (1, 2, and 3 additional months) under 37 CFR 1.136(a).",
+      "group": "examination-group"
+    },
+    {
+      "id": "extension-taken",
+      "kind": "state",
+      "label": "Extension of Time Taken",
+      "cite": "37 CFR 1.136(a); 37 CFR 1.17(a)",
+      "note": "Extension granted per 37 CFR 1.136(a). Each extension costs fees under 37 CFR 1.17(a). Maximum 3 extensions (months 4, 5, 6). Month 6 is the absolute ceiling — 35 U.S.C. 133 permits no further extension.",
+      "group": "examination-group"
+    },
+    {
+      "id": "amendment-filed",
+      "kind": "state",
+      "label": "Amendment / Response Filed",
+      "cite": "37 CFR 1.111; MPEP 714",
+      "note": "Applicant files amendment with or without arguments. Examiner must act on a complete reply. Traversal of rejections, claim amendments, and/or declaration/affidavit under 37 CFR 1.131 or 1.132 are common tools.",
+      "group": "examination-group"
+    },
+    {
+      "id": "interview-conducted",
+      "kind": "state",
+      "label": "Examiner Interview",
+      "cite": "37 CFR 1.133; MPEP 713",
+      "note": "Applicant may request an interview at any stage. Interviews are not a substitute for a written reply but can clarify the examiner's position and narrow disputed issues efficiently.",
+      "group": "examination-group"
+    },
+    {
+      "id": "allowance",
+      "kind": "state",
+      "label": "Application Allowed",
+      "cite": "37 CFR 1.311; MPEP 1303",
+      "note": "Examiner concludes all claims are patentable. Notice of Allowance (NOA) mailed. Issue fee due within 3 months from NOA date. This deadline is NOT extendable under any authority — 37 CFR 1.311(a); MPEP 1306 [R-01.2024] ('The period for payment of the issue fee and any required publication fee is not extendable, see 37 CFR 1.311(a).'). The only relief for a missed issue fee is revival under 37 CFR 1.137, not an extension of time.",
+      "group": "allowance-group"
+    },
+    {
+      "id": "final-rejection",
+      "kind": "state",
+      "label": "Final Rejection",
+      "cite": "37 CFR 1.113; MPEP 706.07",
+      "note": "Second or subsequent rejection is 'final.' After final, reply is limited to appeal (37 CFR 41.31), after-final amendment (37 CFR 1.116), AFCP 2.0 (MPEP 706.07(h)), or RCE (37 CFR 1.114). The 3-month SSP still runs; extensions still available under 37 CFR 1.136(a).",
+      "group": "examination-group"
+    },
+    {
+      "id": "after-final-decision",
+      "kind": "decision",
+      "label": "After-Final Choice",
+      "cite": "37 CFR 1.113; 37 CFR 1.116; 37 CFR 1.114; 37 CFR 41.31",
+      "note": "Four paths from final rejection: (1) after-final amendment (37 CFR 1.116 — limited scope); (2) AFCP 2.0 (no-fee examiner review of after-final amendment); (3) RCE (restart prosecution, costs filing/search/exam fees); (4) Notice of Appeal (37 CFR 41.31). The RCE-vs-appeal fork is the key economic decision point of prosecution.",
+      "group": "after-final-group"
+    },
+    {
+      "id": "after-final-amendment",
+      "kind": "state",
+      "label": "After-Final Amendment Filed",
+      "cite": "37 CFR 1.116; MPEP 714.12",
+      "note": "After-final amendment is limited: may cancel claims or comply with examiner requirements; substantive amendments only entered if they place application in condition for allowance or do not require additional search/examination.",
+      "group": "after-final-group"
+    },
+    {
+      "id": "rce-filed",
+      "kind": "state",
+      "label": "RCE Filed",
+      "cite": "37 CFR 1.114; MPEP 706.07(h)",
+      "note": "Request for Continued Examination reopens prosecution. Requires a submission (amendment, affidavit, or other reply) + the RCE fee under 37 CFR 1.17(e). Patent term adjustment (PTA) is affected by RCE filing — can reduce or eliminate PTA. This is the key economic trap: RCE costs money and time, appeal costs less up front but risks all claims.",
+      "group": "after-final-group"
+    },
+    {
+      "id": "notice-of-appeal",
+      "kind": "state",
+      "label": "Notice of Appeal Filed",
+      "cite": "37 CFR 41.31; MPEP 1204",
+      "note": "Notice of Appeal filed with the Patent Trial and Appeal Board (PTAB). Appeal fee required. Appellant has 2 months from filing the notice to file the appeal brief (37 CFR 41.37), extendable.",
+      "group": "appeal-group"
+    },
+    {
+      "id": "appeal-brief-filed",
+      "kind": "state",
+      "label": "Appeal Brief Filed",
+      "cite": "37 CFR 41.37(a); MPEP 1205",
+      "note": "Appeal brief must be filed within 2 months of the notice of appeal (37 CFR 41.37(a)), extendable up to 5 months under 37 CFR 1.136(a) (this period is NOT a 35 U.S.C. 133 statutory period — MPEP 710.02(e)). Failure to file the brief within the time prescribed by 37 CFR 41.37 results in DISMISSAL of the appeal by operation of the rule (MPEP 1215.04), not automatic abandonment. Dismissal ripens into abandonment only if no allowed claims remain.",
+      "group": "appeal-group"
+    },
+    {
+      "id": "examiners-answer",
+      "kind": "state",
+      "label": "Examiner's Answer",
+      "cite": "37 CFR 41.39; MPEP 1207",
+      "note": "Examiner may respond with an Examiner's Answer, which may include new grounds of rejection. If new grounds raised, applicant may reopen prosecution (via RCE) or submit reply brief within 2 months.",
+      "group": "appeal-group"
+    },
+    {
+      "id": "ptab-decision",
+      "kind": "decision",
+      "label": "PTAB Decision",
+      "cite": "37 CFR 41.50; MPEP 1213",
+      "note": "PTAB issues its decision: affirmance (examiner sustained), reversal (examiner overruled), or new ground of rejection (applicant must respond). PTAB may affirm in part, reverse in part.",
+      "group": "appeal-group"
+    },
+    {
+      "id": "ptab-reversal",
+      "kind": "state",
+      "label": "PTAB Reversed (Allowable)",
+      "cite": "37 CFR 41.50(b); MPEP 1214",
+      "note": "PTAB reversed the examiner's rejection. Application returns to examiner for allowance processing unless examiner reopens prosecution on different grounds. Strong applicant win — proceed to Notice of Allowance.",
+      "group": "appeal-group"
+    },
+    {
+      "id": "ptab-affirmed",
+      "kind": "decision",
+      "label": "PTAB Affirmed",
+      "cite": "37 CFR 41.50; 35 U.S.C. 141; 35 U.S.C. 145",
+      "note": "PTAB affirmed the examiner. Applicant may: (1) file Request for Rehearing (37 CFR 41.52); (2) appeal to Federal Circuit under 35 U.S.C. 141; or (3) file civil action in EDVA under 35 U.S.C. 145. All further paths have cost and strategic implications.",
+      "group": "appeal-group"
+    },
+    {
+      "id": "federal-circuit-appeal",
+      "kind": "state",
+      "label": "Federal Circuit Appeal",
+      "cite": "35 U.S.C. 141; 37 CFR 90.1",
+      "note": "Appeal to the U.S. Court of Appeals for the Federal Circuit. Must be filed within 63 days of PTAB decision. Standard of review: substantial evidence for factual findings; de novo for claim construction and legal determinations.",
+      "group": "appeal-group",
+      "courtListenerUrl": "https://www.courtlistener.com/opinion/209543/in-re-bilski/"
+    },
+    {
+      "id": "sec145-action",
+      "kind": "state",
+      "label": "Civil Action (35 U.S.C. 145)",
+      "cite": "35 U.S.C. 145; 37 CFR 90.3",
+      "note": "De novo civil action in E.D. Va. against the USPTO Director. Allows introduction of new evidence not in the record. Must be filed within 63 days of PTAB decision. If applicant loses, USPTO may recover its attorney fees.",
+      "group": "appeal-group"
+    },
+    {
+      "id": "appeal-dismissed",
+      "kind": "state",
+      "label": "Appeal Dismissed (No Brief)",
+      "cite": "37 CFR 41.37; MPEP 1215.04",
+      "note": "No appeal brief filed within the 37 CFR 41.37 period — appeal stands DISMISSED by operation of the rule (MPEP 1215.04 [R-01.2024]). Consequence splits on the record: applications having NO allowed claims are abandoned; where an allowed claim exists, the examiner cancels the rejected/withdrawn claims and issues the application on the allowed claim(s) (MPEP 1215.04, ¶ 12.209).",
+      "group": "appeal-group"
+    },
+    {
+      "id": "restriction-requirement",
+      "kind": "decision",
+      "label": "Restriction / Election Requirement",
+      "cite": "37 CFR 1.142; 35 U.S.C. 121; MPEP 803",
+      "note": "Examiner finds two or more independent and distinct inventions claimed in one application and requires restriction to one (37 CFR 1.142; 35 U.S.C. 121). Applicant must elect one invention for prosecution — with or without traverse (37 CFR 1.143). Non-elected claims are withdrawn from consideration; they may be pursued in a divisional application.",
+      "group": "examination-group"
+    },
+    {
+      "id": "election-made",
+      "kind": "state",
+      "label": "Election Filed",
+      "cite": "37 CFR 1.143; 37 CFR 1.144; MPEP 818",
+      "note": "Applicant elects one invention. Election WITH traverse (37 CFR 1.143) preserves the right to petition the restriction requirement under 37 CFR 1.144 (petition to the Director, within the reply period); election WITHOUT traverse concedes it. Withdrawn (non-elected) claims may be prosecuted in a divisional under 35 U.S.C. 121.",
+      "group": "examination-group"
+    },
+    {
+      "id": "divisional-filed",
+      "kind": "state",
+      "label": "Divisional Application Filed",
+      "cite": "37 CFR 1.53(b); 35 U.S.C. 121; MPEP 201.06",
+      "note": "Divisional filed for the non-elected invention. 35 U.S.C. 121 SHIELD: a patent issuing on a divisional filed as a result of a restriction requirement (and complying with 35 U.S.C. 120) shall NOT be used as a double-patenting reference against the other application/patent (35 U.S.C. 121, 3rd sentence; MPEP 804.01). Divisional gets its own examination.",
+      "group": "filing-group"
+    },
+    {
+      "id": "continuation-filed",
+      "kind": "state",
+      "label": "Continuation Application Filed",
+      "cite": "37 CFR 1.53(b); 35 U.S.C. 120; MPEP 201.07",
+      "note": "Continuation filed under 37 CFR 1.53(b) to pursue further claims to the same disclosure (MPEP 201.07). Must be co-pending — filed before the parent issues or goes abandoned. Claims the benefit of the parent's filing date under 35 U.S.C. 120. A common alternative to RCE/appeal that keeps the parent's prosecution posture alive in a fresh child.",
+      "group": "filing-group"
+    },
+    {
+      "id": "advisory-action",
+      "kind": "state",
+      "label": "Advisory Action",
+      "cite": "37 CFR 1.116; MPEP 714.13; MPEP 706.07(f)",
+      "note": "Examiner issues an Advisory Action responding to an after-final amendment (typically not entering it, or entering it for appeal purposes only). CRITICAL: filing the after-final amendment does NOT toll the running of the statutory period for reply to the final rejection — 'The filing of an amendment after final rejection, whether or not it is entered, does not stop the running of the statutory period for reply' (MPEP 714.13). The 35 U.S.C. 133 six-month clock keeps running from the final rejection date; extensions may still be needed to preserve the appeal/RCE window.",
+      "group": "after-final-group"
+    },
+    {
+      "id": "noa-received",
+      "kind": "state",
+      "label": "Notice of Allowance Received",
+      "cite": "37 CFR 1.311(a); MPEP 1306",
+      "note": "Notice of Allowance specifies the issue fee and any required publication fee. Both are due 3 months from the NOA mailing date. This period is NOT extendable — 37 CFR 1.311(a); MPEP 1306 [R-01.2024]: 'The period for payment of the issue fee and any required publication fee is not extendable, see 37 CFR 1.311(a).' No extension of time under 37 CFR 1.136(a) or (b) is available. Trap: unlike a shortened statutory period for reply, there is NO safety-valve extension here — miss the 3 months and the application is abandoned; only a 37 CFR 1.137 revival petition (unintentional delay) can restore it.",
+      "group": "allowance-group"
+    },
+    {
+      "id": "issue-fee-paid",
+      "kind": "state",
+      "label": "Issue Fee Paid",
+      "cite": "37 CFR 1.311; 37 CFR 1.18; MPEP 1306",
+      "note": "Issue fee and publication fee (if required) paid. Application forwarded for patent printing. Applicant may file a continuation, divisional, or CIP before the patent issues to pursue additional claims.",
+      "group": "allowance-group"
+    },
+    {
+      "id": "patent-issued",
+      "kind": "terminal",
+      "label": "Patent Issued",
+      "cite": "35 U.S.C. 151; MPEP 1309",
+      "note": "Patent granted. 20-year term from nonprovisional filing date (35 U.S.C. 154(a)(2)), subject to patent term adjustment (PTA) for USPTO delays and patent term extension (PTE) for regulatory review under 35 U.S.C. 156. PLACEHOLDER PAYOFF: $1,000,000, override per matter, matching this project's full-win stake convention.",
+      "group": "allowance-group",
+      "valence": "good",
+      "payoff": 1000000.0,
+      "outcome": [
+        "win",
+        "issued"
+      ]
+    },
+    {
+      "id": "maintenance-due",
+      "kind": "state",
+      "label": "Maintenance Fees Required",
+      "cite": "37 CFR 1.362; 35 U.S.C. 41(b)",
+      "note": "Maintenance fees required at 3.5, 7.5, and 11.5 years after grant (37 CFR 1.362). A 6-month grace period with surcharge is available. Failure to pay within the grace period = expiration. Small and micro entities pay reduced fees.",
+      "group": "allowance-group"
+    },
+    {
+      "id": "abandoned-no-reply",
+      "kind": "terminal",
+      "label": "ABANDONED — Failure to Reply",
+      "cite": "35 U.S.C. 133; 37 CFR 1.135",
+      "note": "PERMADEATH. Application abandoned for failure to reply within the 6-month statutory ceiling. The 6-month period under 35 U.S.C. 133 cannot be extended for any reason. Revival requires a petition under 37 CFR 1.137 (unintentional delay standard). Revival is not guaranteed. PLACEHOLDER PAYOFF: $0, override per matter.",
+      "group": "examination-group",
+      "valence": "bad",
+      "payoff": 0.0,
+      "outcome": [
+        "loss",
+        "abandoned",
+        "waiver-trap"
+      ]
+    },
+    {
+      "id": "abandoned-issue-fee",
+      "kind": "terminal",
+      "label": "ABANDONED — Issue Fee Not Paid",
+      "cite": "37 CFR 1.311; 37 CFR 1.135",
+      "note": "PERMADEATH. Application abandoned for failure to pay the issue fee within the extended period. Revival available under 37 CFR 1.137 for unintentional delay. Competitor may have relied on abandonment — revival does not undo intervening rights. PLACEHOLDER PAYOFF: $0, override per matter.",
+      "group": "allowance-group",
+      "valence": "bad",
+      "payoff": 0.0,
+      "outcome": [
+        "loss",
+        "abandoned",
+        "waiver-trap"
+      ]
+    },
+    {
+      "id": "patent-expired",
+      "kind": "terminal",
+      "label": "Patent Expired",
+      "cite": "37 CFR 1.362; 35 U.S.C. 41(b)",
+      "note": "Patent expired for failure to pay maintenance fees after the 6-month grace period. Reinstatement is not available for expired patents (unlike abandoned applications). The invention enters the public domain. PLACEHOLDER PAYOFF: $0, override per matter. Premature expiration for a missed maintenance-fee payment, not the natural end of a full term.",
+      "group": "allowance-group",
+      "valence": "bad",
+      "payoff": 0.0,
+      "outcome": [
+        "loss",
+        "expired",
+        "waiver-trap"
+      ]
+    },
+    {
+      "id": "patent-challenged",
+      "kind": "decision",
+      "label": "Patent Challenged (Post-Grant)",
+      "cite": "35 U.S.C. 311; 321; 302",
+      "note": "A third party (or, for reexam, anyone including the owner) attacks the issued patent. Three doors, decided by the CHALLENGER: inter partes review (IPR, 102/103 on patents/publications, subject to the 315(b) one-year bar), post-grant review (PGR, broad grounds incl. 101/112 but only within 9 months of grant), or ex parte reexamination (EPR, SNQ standard, no petitioner estoppel). This is the first genuinely ADVERSARIAL region of the chart — the outcomes are opposing-party draws, not examiner draws.",
+      "group": "post-grant-group"
+    },
+    {
+      "id": "ipr-petition-filed",
+      "kind": "state",
+      "label": "IPR Petition Filed",
+      "cite": "35 U.S.C. 311–314; 37 CFR 42.107",
+      "note": "Petitioner filed an IPR petition. The patent owner may file a Patent Owner Preliminary Response (POPR) within 3 months — arguing discretionary denial (Fintiv/325(d)) and/or the merits — or waive it and reserve arguments for trial. Then the Board decides institution.",
+      "group": "post-grant-group"
+    },
+    {
+      "id": "ipr-institution-decision",
+      "kind": "decision",
+      "label": "IPR Institution Decision",
+      "cite": "35 U.S.C. 314(a); 37 CFR 42.108",
+      "note": "The Board institutes only on a reasonable likelihood the petitioner prevails on ≥1 claim (35 U.S.C. 314(a)); it may deny on discretionary grounds. Institution rate authored at 0.65 — APPROXIMATE, a mid-2010s–2020s historical order of magnitude (institution rates have varied ~0.55–0.68 across vintages/PTAB policy); flagged, not a live figure.",
+      "group": "post-grant-group",
+      "courtListenerUrl": "https://www.courtlistener.com/opinion/3214886/cuozzo-speed-technologies-llc-v-lee/"
+    },
+    {
+      "id": "ipr-trial-instituted",
+      "kind": "decision",
+      "label": "IPR Trial Instituted",
+      "cite": "35 U.S.C. 316; 37 CFR 42.120–42.121",
+      "note": "Trial instituted. Patent owner options: file the Patent Owner Response, move to amend (substitute claims, intervening rights under 318(c)), or settle before the final written decision to avoid 315(e) estoppel (35 U.S.C. 317).",
+      "group": "post-grant-group"
+    },
+    {
+      "id": "ipr-final-written-decision",
+      "kind": "decision",
+      "label": "IPR Final Written Decision",
+      "cite": "35 U.S.C. 318(a); 37 CFR 42.73",
+      "note": "The Board's final written decision on the instituted claims. Distribution authored at 0.65 all-cancelled / 0.20 all-upheld / 0.15 mixed-with-substitute — APPROXIMATE; of instituted IPRs reaching a FWD, a majority historically find all instituted claims unpatentable. Estoppel (315(e)) attaches here.",
+      "group": "post-grant-group"
+    },
+    {
+      "id": "pgr-petition-filed",
+      "kind": "state",
+      "label": "PGR Petition Filed",
+      "cite": "35 U.S.C. 321–324; 37 CFR 42.207",
+      "note": "Petitioner filed a PGR within the 9-month window on broad grounds (incl. 101/112). Patent owner may file a POPR or waive, then the Board rules on institution under the more-likely-than-not standard (35 U.S.C. 324(a)).",
+      "group": "post-grant-group"
+    },
+    {
+      "id": "pgr-institution-decision",
+      "kind": "decision",
+      "label": "PGR Institution Decision",
+      "cite": "35 U.S.C. 324(a); 37 CFR 42.208",
+      "note": "Institution on a showing that it is more likely than not at least one claim is unpatentable. Authored at 0.55 — APPROXIMATE (PGR volume is thin; treated as broadly comparable to IPR institution); flagged.",
+      "group": "post-grant-group"
+    },
+    {
+      "id": "pgr-trial-instituted",
+      "kind": "decision",
+      "label": "PGR Trial Instituted",
+      "cite": "35 U.S.C. 326; 37 CFR 42.220–42.221",
+      "note": "Trial instituted on the broad PGR grounds. Patent owner may respond, move to amend, or settle (35 U.S.C. 327) before the final written decision to escape 325(e) estoppel.",
+      "group": "post-grant-group"
+    },
+    {
+      "id": "pgr-final-written-decision",
+      "kind": "decision",
+      "label": "PGR Final Written Decision",
+      "cite": "35 U.S.C. 328(a); 37 CFR 42.73",
+      "note": "Final written decision on the instituted claims. Distribution authored 0.60 cancelled / 0.25 upheld / 0.15 mixed — APPROXIMATE; PGR's broader grounds make cancellation modestly likelier than IPR. 325(e) estoppel attaches here.",
+      "group": "post-grant-group"
+    },
+    {
+      "id": "epr-requested",
+      "kind": "decision",
+      "label": "Ex Parte Reexam Requested",
+      "cite": "35 U.S.C. 302–303; 37 CFR 1.510; MPEP 2209–2214",
+      "note": "A reexam request is filed (by anyone, even anonymously or the owner). The Office decides within 3 months whether it raises a substantial new question of patentability (SNQ, 35 U.S.C. 303(a)). Grant rate authored at 0.92 — APPROXIMATE; SNQ grants historically run high (~90%+); flagged.",
+      "group": "post-grant-group",
+      "courtListenerUrl": "https://www.courtlistener.com/opinion/209660/in-re-swanson/"
+    },
+    {
+      "id": "epr-ordered",
+      "kind": "decision",
+      "label": "Reexam Ordered",
+      "cite": "35 U.S.C. 304; 37 CFR 1.530(b); MPEP 2249",
+      "note": "Reexamination ordered. The order sets a period of not less than two months for the patent owner's OPTIONAL statement. THE TRAP: filing the statement entitles the third-party requester to a reply (35 U.S.C. 304; 37 CFR 1.535) — usually the owner should decline and wait for the first Office action.",
+      "group": "post-grant-group"
+    },
+    {
+      "id": "epr-examination",
+      "kind": "decision",
+      "label": "Reexam Examination → Certificate",
+      "cite": "35 U.S.C. 305–307; 37 CFR 1.550; MPEP 2254",
+      "note": "Ex parte examination proceeds with special dispatch and concludes in a reexamination certificate (35 U.S.C. 307). Distribution authored 0.66 amended/narrowed / 0.22 confirmed / 0.12 all-cancelled — APPROXIMATE; most reexam certificates change or narrow at least some claims. New/amended claims carry intervening rights (35 U.S.C. 307(b)).",
+      "group": "post-grant-group"
+    },
+    {
+      "id": "claims-confirmed",
+      "kind": "terminal",
+      "label": "Claims Confirmed (Patent Survives)",
+      "cite": "35 U.S.C. 318(b) / 328(b) / 307",
+      "note": "The challenge failed (denied institution, upheld on the merits, or settled before a final written decision): the claims stand as granted. The patent asset is preserved at (roughly) its issued value. Best terminal in this region for the owner. PLACEHOLDER PAYOFF: $1,000,000, override per matter. Per this terminal's own note, the patent asset is preserved at roughly its issued value.",
+      "group": "post-grant-group",
+      "valence": "good",
+      "payoff": 1000000.0,
+      "outcome": [
+        "win",
+        "confirmed"
+      ]
+    },
+    {
+      "id": "claims-amended",
+      "kind": "terminal",
+      "label": "Claims Amended / Narrowed",
+      "cite": "35 U.S.C. 318(c) / 307(b)",
+      "note": "Substitute or amended claims survive (via a motion to amend or a reexam certificate). The patent lives on but narrower, and amended claims are subject to INTERVENING RIGHTS (35 U.S.C. 318(c) for AIA trials; 307(b) for reexam) — pre-amendment infringers may be shielded. A partial, discounted win. PLACEHOLDER PAYOFF: $400,000, override per matter, matching this project's partial/mixed-result tier -- per this terminal's own note, 'a partial, discounted win.'",
+      "group": "post-grant-group",
+      "valence": "caution",
+      "payoff": 400000.0,
+      "outcome": [
+        "mixed",
+        "amended"
+      ]
+    },
+    {
+      "id": "claims-cancelled",
+      "kind": "terminal",
+      "label": "Claims Cancelled (Patent Lost)",
+      "cite": "35 U.S.C. 318(b) / 328(b) / 307",
+      "note": "A final written decision or reexam certificate CANCELS the challenged claims — the patent's asserted claims are gone, the asset largely destroyed after the litigation spend. The worst terminal in this region; the adversarial mirror image of issuance. PLACEHOLDER PAYOFF: $0, override per matter.",
+      "group": "post-grant-group",
+      "valence": "bad",
+      "courtListenerUrl": "https://www.courtlistener.com/opinion/4492196/oil-states-energy-services-llc-v-greenes-energy-group-llc/",
+      "payoff": 0.0,
+      "outcome": [
+        "loss",
+        "cancelled"
+      ]
+    },
+    {
+      "id": "reissue-pending",
+      "kind": "state",
+      "label": "Reissue Application Pending",
+      "cite": "35 U.S.C. § 251; 37 CFR 1.171; MPEP 1401",
+      "note": "A reissue application has been filed, surrendering the original patent. The original patent remains in force during reissue prosecution (35 U.S.C. § 252). The reissue application is examined like an original application: no new matter may be introduced (35 U.S.C. § 251, ¶ 3); broadening claims must have been filed within the 2-year window (35 U.S.C. § 251, ¶ 4). Recapture rule (MPEP 1412.02): scope surrendered by amendment or argument during original prosecution to overcome prior art cannot be reclaimed in reissue.",
+      "group": "reissue-group",
+      "courtListenerUrl": "https://www.courtlistener.com/opinion/214772/in-re-tanaka/"
+    },
+    {
+      "id": "reissue-granted",
+      "kind": "terminal",
+      "label": "Reissue Patent Granted",
+      "cite": "35 U.S.C. § 251; § 252; MPEP 1460",
+      "note": "The reissued patent issues for the unexpired term of the original patent. The original patent is surrendered as of the reissue date. Intervening rights (35 U.S.C. § 252, ¶ 2) protect persons who, before the reissue grant, made, purchased, or used subject matter patented by the reissued claims, or made substantial preparations therefor. PLACEHOLDER PAYOFF: $1,000,000, override per matter.",
+      "group": "reissue-group",
+      "valence": "good",
+      "payoff": 1000000.0,
+      "outcome": [
+        "win",
+        "reissue"
+      ]
+    },
+    {
+      "id": "reissue-abandoned",
+      "kind": "terminal",
+      "label": "Reissue Abandoned — Original Patent Lost",
+      "cite": "35 U.S.C. § 251; 37 CFR 1.135",
+      "note": "Reissue application abandoned for failure to reply or sustained rejection of the corrected claims. CRITICAL: the original patent was surrendered upon filing the reissue application and does NOT revive upon abandonment of the reissue. The patentee loses both the reissue and the original patent. PLACEHOLDER PAYOFF: $0, override per matter. Per this terminal's own note, the patentee loses both the reissue and the original (surrendered) patent -- worse than a typical loss, though the payoff floor here is the same $0 used for every other full loss in this project.",
+      "group": "reissue-group",
+      "valence": "bad",
+      "payoff": 0.0,
+      "outcome": [
+        "loss",
+        "reissue-abandoned",
+        "waiver-trap"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "from": "pre-filing",
+      "to": "provisional-filed",
+      "label": "File provisional application",
+      "actor": "applicant",
+      "authority": "35 U.S.C. 111(b); 37 CFR 1.53(c)",
+      "deadline": {
+        "length": 365.0,
+        "extendable": false,
+        "note": "12-month period to file a nonprovisional claiming domestic benefit of the provisional is unextendable under 35 U.S.C. 119(e). Missing it forfeits the provisional's priority benefit."
+      },
+      "duration": {
+        "min": 54.8,
+        "mode": 182.5,
+        "max": 365.0
+      },
+      "cost": 325.0,
+      "hours": 8.0,
+      "note": "Provisional filing fee $325.00, undiscounted/large-entity, effective 1/19/2025 (USPTO fee schedule; 37 CFR 1.16(d)); halve for small entity, one-fifth for micro entity -- not modeled here since this pack doesn't track entity size."
+    },
+    {
+      "from": "pre-filing",
+      "to": "nonprovisional-filed",
+      "label": "File nonprovisional directly (no provisional)",
+      "actor": "applicant",
+      "authority": "35 U.S.C. 111(a); 37 CFR 1.53(b)",
+      "cost": 2000.0,
+      "hours": 40.0,
+      "note": "Nonprovisional utility filing fee $2,000.00, undiscounted/large-entity, effective 1/19/2025: $350.00 basic filing fee (37 CFR 1.16(a)) + $770.00 search fee (1.16(k)) + $880.00 examination fee (1.16(o))."
+    },
+    {
+      "from": "provisional-filed",
+      "to": "nonprovisional-filed",
+      "label": "File nonprovisional within 12-month window",
+      "actor": "applicant",
+      "authority": "35 U.S.C. 111(a); 35 U.S.C. 119(e); 37 CFR 1.53(b)",
+      "deadline": {
+        "length": 365.0,
+        "extendable": false,
+        "note": "12-month priority window. No extension available under any authority. After expiration, provisional's priority benefit is lost."
+      },
+      "duration": {
+        "min": 54.8,
+        "mode": 182.5,
+        "max": 365.0
+      },
+      "cost": 2000.0,
+      "hours": 40.0,
+      "note": "Nonprovisional utility filing fee $2,000.00, undiscounted/large-entity, effective 1/19/2025: $350.00 basic filing fee (37 CFR 1.16(a)) + $770.00 search fee (1.16(k)) + $880.00 examination fee (1.16(o))."
+    },
+    {
+      "from": "nonprovisional-filed",
+      "to": "missing-parts",
+      "label": "USPTO issues Notice to File Missing Parts",
+      "actor": "office",
+      "authority": "37 CFR 1.53(f); MPEP 601",
+      "probability": 0.15
+    },
+    {
+      "from": "nonprovisional-filed",
+      "to": "pre-examination",
+      "label": "Application complete — assigned to examiner",
+      "actor": "office",
+      "authority": "37 CFR 1.104; MPEP 704",
+      "probability": 0.85
+    },
+    {
+      "from": "missing-parts",
+      "to": "pre-examination",
+      "label": "File missing parts + surcharge",
+      "actor": "applicant",
+      "authority": "37 CFR 1.53(f); 37 CFR 1.16(f)",
+      "deadline": {
+        "length": 60.0,
+        "extendable": true,
+        "extensionAuthority": "37 CFR 1.136(a)",
+        "note": "Missing parts surcharge required. Filing date not accorded until specification present."
+      },
+      "duration": {
+        "min": 9.0,
+        "mode": 30.0,
+        "max": 60.0
+      },
+      "cost": 170.0,
+      "hours": 2.0,
+      "valence": "good",
+      "note": "Surcharge $170.00, undiscounted/large-entity, effective 1/19/2025 (37 CFR 1.16(f): late filing fee, oath/declaration, or an application filed without at least one claim)."
+    },
+    {
+      "from": "missing-parts",
+      "to": "abandoned-no-reply",
+      "label": "Fail to supply missing parts",
+      "actor": "applicant",
+      "authority": "37 CFR 1.135; 35 U.S.C. 133",
+      "hours": 0.0,
+      "valence": "bad"
+    },
+    {
+      "from": "pre-examination",
+      "to": "non-final-oa",
+      "label": "Examiner issues Non-Final Office Action",
+      "actor": "examiner",
+      "authority": "35 U.S.C. 132; 37 CFR 1.104; MPEP 706",
+      "probability": 0.7
+    },
+    {
+      "from": "pre-examination",
+      "to": "allowance",
+      "label": "Examiner allows on first action (FAOM)",
+      "actor": "examiner",
+      "authority": "37 CFR 1.311; MPEP 1303",
+      "probability": 0.1,
+      "note": "First Action Allowance (FAOM) — rare but occurs on well-drafted claims with strong prior art searches."
+    },
+    {
+      "from": "pre-examination",
+      "to": "restriction-requirement",
+      "label": "Examiner issues Restriction / Election Requirement",
+      "actor": "examiner",
+      "authority": "37 CFR 1.142; 35 U.S.C. 121; MPEP 803",
+      "probability": 0.2,
+      "note": "Restriction rate modeled at 0.20 (defensible 0.15–0.25 band; multi-invention applications draw restriction before/at first action). Rebalanced the pre-examination stochastic node: non-final-oa 0.90→0.70, allowance 0.10 held, restriction 0.20 — sum 1.0."
+    },
+    {
+      "from": "non-final-oa",
+      "to": "applicant-response-window",
+      "label": "Receive and docket Office Action",
+      "actor": "applicant",
+      "authority": "37 CFR 1.134; 35 U.S.C. 133",
+      "hours": 0.5
+    },
+    {
+      "from": "applicant-response-window",
+      "to": "amendment-filed",
+      "label": "File amendment/response within SSP (3 months)",
+      "actor": "applicant",
+      "authority": "37 CFR 1.111; MPEP 714",
+      "deadline": {
+        "length": 90.0,
+        "extendable": true,
+        "extensionAuthority": "37 CFR 1.136(a)",
+        "note": "SSP is 3 months. Extendable month-by-month to the 6-month statutory ceiling under 35 U.S.C. 133. No extension beyond 6 months is possible."
+      },
+      "duration": {
+        "min": 13.5,
+        "mode": 45.0,
+        "max": 90.0
+      },
+      "hours": 15.0,
+      "valence": "good"
+    },
+    {
+      "from": "applicant-response-window",
+      "to": "extension-taken",
+      "label": "File extension of time (1-month)",
+      "actor": "applicant",
+      "authority": "37 CFR 1.136(a); 37 CFR 1.17(a)",
+      "deadline": {
+        "length": 30.0,
+        "extendable": true,
+        "extensionAuthority": "37 CFR 1.136(a)",
+        "note": "Month 4 extension. Two more available (months 5 and 6). The 6-month absolute ceiling under 35 U.S.C. 133 cannot be exceeded."
+      },
+      "duration": {
+        "min": 4.5,
+        "mode": 15.0,
+        "max": 30.0
+      },
+      "cost": 235.0,
+      "hours": 0.5,
+      "note": "1-month extension fee $235.00, undiscounted/large-entity, effective 1/19/2025 (37 CFR 1.17(a)(1))."
+    },
+    {
+      "from": "applicant-response-window",
+      "to": "abandoned-no-reply",
+      "label": "Fail to reply within 6-month statutory ceiling",
+      "actor": "applicant",
+      "authority": "35 U.S.C. 133; 37 CFR 1.135",
+      "hours": 0.0,
+      "valence": "bad"
+    },
+    {
+      "from": "applicant-response-window",
+      "to": "interview-conducted",
+      "label": "Request examiner interview",
+      "actor": "applicant",
+      "authority": "37 CFR 1.133; MPEP 713",
+      "hours": 2.0
+    },
+    {
+      "from": "extension-taken",
+      "to": "amendment-filed",
+      "label": "File amendment within extended period",
+      "actor": "applicant",
+      "authority": "37 CFR 1.111; MPEP 714",
+      "deadline": {
+        "length": 30.0,
+        "extendable": true,
+        "extensionAuthority": "37 CFR 1.136(a)",
+        "note": "Further extensions available up to the 6-month ceiling."
+      },
+      "duration": {
+        "min": 4.5,
+        "mode": 15.0,
+        "max": 30.0
+      },
+      "hours": 15.0
+    },
+    {
+      "from": "extension-taken",
+      "to": "extension-taken",
+      "label": "Take additional extension of time",
+      "actor": "applicant",
+      "authority": "37 CFR 1.136(a); 37 CFR 1.17(a)",
+      "deadline": {
+        "length": 30.0,
+        "extendable": false,
+        "note": "Month 5 or 6 extension. After month 6, 35 U.S.C. 133 prohibits any further extension — abandonment is automatic."
+      },
+      "duration": {
+        "min": 4.5,
+        "mode": 15.0,
+        "max": 30.0
+      },
+      "cost": 690.0,
+      "hours": 0.5,
+      "note": "37 CFR 1.17(a) extension fees are non-linear tiers on cumulative months late, not a per-month multiple: 1 mo $235.00, 2 mo $690.00, 3 mo $1,590.00, 4 mo $2,495.00, 5 mo $3,395.00 (undiscounted/large-entity, effective 1/19/2025). This edge's $690.00 is the month-5 (2-month-cumulative) tier; a second traversal (month 6) would be the 3-month tier ($1,590.00), not modeled separately here."
+    },
+    {
+      "from": "amendment-filed",
+      "to": "allowance",
+      "label": "Examiner allows all claims",
+      "actor": "examiner",
+      "authority": "37 CFR 1.311; MPEP 1303",
+      "probability": 0.35
+    },
+    {
+      "from": "amendment-filed",
+      "to": "non-final-oa",
+      "label": "Examiner issues new Non-Final OA",
+      "actor": "examiner",
+      "authority": "35 U.S.C. 132; 37 CFR 1.104",
+      "probability": 0.15
+    },
+    {
+      "from": "amendment-filed",
+      "to": "final-rejection",
+      "label": "Examiner issues Final Rejection",
+      "actor": "examiner",
+      "authority": "37 CFR 1.113; MPEP 706.07",
+      "probability": 0.5
+    },
+    {
+      "from": "interview-conducted",
+      "to": "amendment-filed",
+      "label": "Follow up interview with amendment",
+      "actor": "applicant",
+      "authority": "37 CFR 1.111; MPEP 713.04",
+      "hours": 12.0
+    },
+    {
+      "from": "allowance",
+      "to": "noa-received",
+      "label": "Notice of Allowance mailed",
+      "actor": "office",
+      "authority": "37 CFR 1.311; MPEP 1303"
+    },
+    {
+      "from": "final-rejection",
+      "to": "after-final-decision",
+      "label": "Receive and docket Final Rejection",
+      "actor": "applicant",
+      "authority": "37 CFR 1.113; 35 U.S.C. 133",
+      "hours": 0.5
+    },
+    {
+      "from": "after-final-decision",
+      "to": "after-final-amendment",
+      "label": "File after-final amendment (37 CFR 1.116)",
+      "actor": "applicant",
+      "authority": "37 CFR 1.116; MPEP 714.12",
+      "deadline": {
+        "length": 90.0,
+        "extendable": true,
+        "extensionAuthority": "37 CFR 1.136(a)",
+        "note": "After-final amendment limited in scope. Examiner has discretion to enter or not."
+      },
+      "duration": {
+        "min": 13.5,
+        "mode": 45.0,
+        "max": 90.0
+      },
+      "hours": 10.0
+    },
+    {
+      "from": "after-final-decision",
+      "to": "rce-filed",
+      "label": "File RCE — restart prosecution",
+      "actor": "applicant",
+      "authority": "37 CFR 1.114; MPEP 706.07(h)",
+      "deadline": {
+        "length": 90.0,
+        "extendable": true,
+        "extensionAuthority": "37 CFR 1.136(a)",
+        "note": "RCE requires a submission + fee. Must be filed before payment of issue fee or abandonment. Reduces or eliminates patent term adjustment (PTA). Key trap: repeated RCEs compound PTA harm."
+      },
+      "duration": {
+        "min": 13.5,
+        "mode": 45.0,
+        "max": 90.0
+      },
+      "cost": 1500.0,
+      "hours": 12.0,
+      "note": "1st RCE fee $1,500.00, undiscounted/large-entity, effective 1/19/2025 (37 CFR 1.17(e)(1)); a 2nd or subsequent RCE is $2,860.00 (1.17(e)(2)). Marks the application as having used at least one RCE (37 CFR 1.114): a scenario can price a second/subsequent RCE differently with a cost expression that reads flag('rce-filed-before'). See docs/PACK_SCHEMA.md#state-flags.",
+      "sets": [
+        "rce-filed-before"
+      ]
+    },
+    {
+      "from": "after-final-decision",
+      "to": "notice-of-appeal",
+      "label": "File Notice of Appeal to PTAB",
+      "actor": "applicant",
+      "authority": "37 CFR 41.31(a)(1); 37 CFR 1.134; MPEP 1204",
+      "deadline": {
+        "length": 90.0,
+        "extendable": true,
+        "extensionAuthority": "37 CFR 41.31(d); 37 CFR 1.136(a)",
+        "note": "Notice of Appeal timing is governed by 37 CFR 41.31(a)(1) (any twice-rejected claim) and runs within the period under 37 CFR 1.134/1.136 (the SSP for reply to the final rejection). Extensions of that period are authorized by 37 CFR 41.31(d). Cheaper up front than RCE but risks all rejected claims; the appeal brief must follow within 2 months (37 CFR 41.37(a))."
+      },
+      "duration": {
+        "min": 13.5,
+        "mode": 45.0,
+        "max": 90.0
+      },
+      "cost": 905.0,
+      "hours": 6.0,
+      "note": "Notice of Appeal fee $905.00, undiscounted/large-entity, effective 1/19/2025 (37 CFR 41.20(b)(1)); a separate appeal-forwarding fee is due later, when the appeal brief is filed."
+    },
+    {
+      "from": "after-final-decision",
+      "to": "abandoned-no-reply",
+      "label": "Fail to reply after final — abandonment",
+      "actor": "applicant",
+      "authority": "35 U.S.C. 133; 37 CFR 1.135",
+      "hours": 0.0,
+      "valence": "bad"
+    },
+    {
+      "from": "after-final-decision",
+      "to": "continuation-filed",
+      "label": "File continuation to pursue additional claims (37 CFR 1.53(b))",
+      "actor": "applicant",
+      "authority": "37 CFR 1.53(b); 35 U.S.C. 120; MPEP 201.07",
+      "deadline": {
+        "length": 90.0,
+        "extendable": true,
+        "extensionAuthority": "37 CFR 1.136(a)",
+        "note": "Continuation must be filed while the parent is still pending (before issue-fee payment or abandonment) to claim the parent's priority under 35 U.S.C. 120. Alternative to RCE/appeal that opens a fresh child on the same disclosure."
+      },
+      "duration": {
+        "min": 13.5,
+        "mode": 45.0,
+        "max": 90.0
+      },
+      "cost": 2000.0,
+      "hours": 25.0,
+      "note": "Same filing/search/examination fees as an original nonprovisional: $2,000.00 undiscounted/large-entity, effective 1/19/2025 ($350.00 + $770.00 + $880.00, 37 CFR 1.16(a)/(k)/(o))."
+    },
+    {
+      "from": "after-final-amendment",
+      "to": "allowance",
+      "label": "Examiner enters amendment and allows",
+      "actor": "examiner",
+      "authority": "37 CFR 1.116; MPEP 714.12"
+    },
+    {
+      "from": "after-final-amendment",
+      "to": "rce-filed",
+      "label": "Amendment not entered — file RCE",
+      "actor": "applicant",
+      "authority": "37 CFR 1.114",
+      "cost": 1500.0,
+      "hours": 12.0,
+      "note": "1st RCE fee $1,500.00, undiscounted/large-entity, effective 1/19/2025 (37 CFR 1.17(e)(1)); a 2nd or subsequent RCE is $2,860.00 (1.17(e)(2)) -- see sets:rce-filed-before.",
+      "sets": [
+        "rce-filed-before"
+      ]
+    },
+    {
+      "from": "after-final-amendment",
+      "to": "notice-of-appeal",
+      "label": "Amendment not entered — appeal",
+      "actor": "applicant",
+      "authority": "37 CFR 41.31",
+      "cost": 905.0,
+      "hours": 6.0,
+      "note": "Notice of Appeal fee $905.00, undiscounted/large-entity, effective 1/19/2025 (37 CFR 41.20(b)(1))."
+    },
+    {
+      "from": "after-final-amendment",
+      "to": "advisory-action",
+      "label": "Examiner issues Advisory Action (amendment not entered)",
+      "actor": "examiner",
+      "authority": "37 CFR 1.116; MPEP 714.13; MPEP 706.07(f)",
+      "note": "Advisory Action does NOT reset or toll the 35 U.S.C. 133 clock — the period for reply keeps running from the final rejection (MPEP 714.13)."
+    },
+    {
+      "from": "rce-filed",
+      "to": "non-final-oa",
+      "label": "Examiner issues new Non-Final OA after RCE",
+      "actor": "examiner",
+      "authority": "37 CFR 1.104; MPEP 706",
+      "probability": 0.7
+    },
+    {
+      "from": "rce-filed",
+      "to": "allowance",
+      "label": "Examiner allows after RCE submission",
+      "actor": "examiner",
+      "authority": "37 CFR 1.311",
+      "probability": 0.3
+    },
+    {
+      "from": "notice-of-appeal",
+      "to": "appeal-brief-filed",
+      "label": "File Appeal Brief (within 2 months)",
+      "actor": "applicant",
+      "authority": "37 CFR 41.37; MPEP 1205",
+      "deadline": {
+        "length": 60.0,
+        "extendable": true,
+        "extensionAuthority": "37 CFR 1.136(a)",
+        "note": "Brief must be filed within 2 months of Notice of Appeal. Failure to file brief = abandonment of appeal. The brief is the applicant's primary substantive document before PTAB."
+      },
+      "duration": {
+        "min": 9.0,
+        "mode": 30.0,
+        "max": 60.0
+      },
+      "hours": 40.0,
+      "valence": "good"
+    },
+    {
+      "from": "notice-of-appeal",
+      "to": "appeal-dismissed",
+      "label": "Fail to file appeal brief — appeal dismissed",
+      "actor": "applicant",
+      "authority": "37 CFR 41.37(a); MPEP 1215.04; MPEP 710.02(e)",
+      "deadline": {
+        "length": 60.0,
+        "extendable": true,
+        "extensionAuthority": "37 CFR 1.136(a)",
+        "note": "Brief due 2 months from notice of appeal, extendable up to 5 months under 37 CFR 1.136(a). If no brief is filed within that period, the appeal stands DISMISSED by operation of the rule (37 CFR 41.37; MPEP 1215.04) — the appeal is not 'denied' (Rev-01.2024 replaced 'denied' with 'dismissed' throughout ch. 1200)."
+      },
+      "duration": {
+        "min": 9.0,
+        "mode": 30.0,
+        "max": 60.0
+      },
+      "hours": 0.0,
+      "valence": "bad"
+    },
+    {
+      "from": "appeal-brief-filed",
+      "to": "examiners-answer",
+      "label": "Examiner files Answer",
+      "actor": "examiner",
+      "authority": "37 CFR 41.39; MPEP 1207"
+    },
+    {
+      "from": "examiners-answer",
+      "to": "ptab-decision",
+      "label": "Pay appeal forwarding fee — appeal forwarded to PTAB",
+      "actor": "applicant",
+      "authority": "37 CFR 41.20(b)(4); 37 CFR 41.45; MPEP 1208.01",
+      "deadline": {
+        "length": 60.0,
+        "extendable": false,
+        "note": "The APPEAL FORWARDING FEE (37 CFR 41.20(b)(4)) — not a brief fee — is due within 2 months of the Examiner's Answer to forward the appeal to the Board (35 U.S.C. 41 note; MPEP 1208.01). 37 CFR 41.37 itself carries NO brief fee. Non-payment means the appeal is dismissed."
+      },
+      "duration": {
+        "min": 9.0,
+        "mode": 30.0,
+        "max": 60.0
+      },
+      "cost": 2535.0,
+      "hours": 1.0,
+      "note": "Appeal forwarding fee $2,535.00, undiscounted/large-entity, effective 1/19/2025 (37 CFR 41.20(b)(4))."
+    },
+    {
+      "from": "examiners-answer",
+      "to": "rce-filed",
+      "label": "Reopen prosecution via RCE (new grounds in Answer)",
+      "actor": "applicant",
+      "authority": "37 CFR 1.114; MPEP 1207.03",
+      "cost": 1500.0,
+      "hours": 12.0,
+      "note": "1st RCE fee $1,500.00, undiscounted/large-entity, effective 1/19/2025 (37 CFR 1.17(e)(1)); a 2nd or subsequent RCE is $2,860.00 (1.17(e)(2)) -- see sets:rce-filed-before.",
+      "sets": [
+        "rce-filed-before"
+      ]
+    },
+    {
+      "from": "ptab-decision",
+      "to": "ptab-reversal",
+      "label": "PTAB reverses examiner",
+      "actor": "office",
+      "authority": "37 CFR 41.50(b); MPEP 1214",
+      "probability": 0.3
+    },
+    {
+      "from": "ptab-decision",
+      "to": "ptab-affirmed",
+      "label": "PTAB affirms examiner",
+      "actor": "office",
+      "authority": "37 CFR 41.50; MPEP 1214",
+      "probability": 0.7
+    },
+    {
+      "from": "ptab-reversal",
+      "to": "allowance",
+      "label": "Examiner processes allowance after reversal",
+      "actor": "examiner",
+      "authority": "MPEP 1214.04"
+    },
+    {
+      "from": "ptab-affirmed",
+      "to": "federal-circuit-appeal",
+      "label": "Appeal to Federal Circuit (35 U.S.C. 141)",
+      "actor": "applicant",
+      "authority": "35 U.S.C. 141; 37 CFR 90.1",
+      "deadline": {
+        "length": 63.0,
+        "extendable": false,
+        "note": "63-day deadline from PTAB decision. No extensions available for Federal Circuit appeals."
+      },
+      "duration": {
+        "min": 9.4,
+        "mode": 31.5,
+        "max": 63.0
+      },
+      "hours": 80.0
+    },
+    {
+      "from": "ptab-affirmed",
+      "to": "sec145-action",
+      "label": "File civil action in E.D. Va. (35 U.S.C. 145)",
+      "actor": "applicant",
+      "authority": "35 U.S.C. 145; 37 CFR 90.3",
+      "deadline": {
+        "length": 63.0,
+        "extendable": false,
+        "note": "63-day deadline. De novo review with new evidence. Expensive — USPTO may recover attorney fees if applicant loses."
+      },
+      "duration": {
+        "min": 9.4,
+        "mode": 31.5,
+        "max": 63.0
+      },
+      "hours": 120.0
+    },
+    {
+      "from": "ptab-affirmed",
+      "to": "abandoned-no-reply",
+      "label": "Take no further action — application abandoned",
+      "actor": "applicant",
+      "authority": "37 CFR 1.135",
+      "hours": 0.0
+    },
+    {
+      "from": "federal-circuit-appeal",
+      "to": "allowance",
+      "label": "Federal Circuit reverses — allowance ordered",
+      "actor": "office",
+      "authority": "35 U.S.C. 141; MPEP 1216"
+    },
+    {
+      "from": "federal-circuit-appeal",
+      "to": "abandoned-no-reply",
+      "label": "Federal Circuit affirms — no further appeal",
+      "actor": "applicant",
+      "authority": "37 CFR 1.135",
+      "hours": 0.0
+    },
+    {
+      "from": "sec145-action",
+      "to": "allowance",
+      "label": "District court orders allowance",
+      "actor": "office",
+      "authority": "35 U.S.C. 145; MPEP 1216"
+    },
+    {
+      "from": "sec145-action",
+      "to": "abandoned-no-reply",
+      "label": "District court affirms — abandoned",
+      "actor": "applicant",
+      "authority": "37 CFR 1.135",
+      "hours": 0.0
+    },
+    {
+      "from": "appeal-dismissed",
+      "to": "abandoned-no-reply",
+      "label": "No allowed claims — application abandoned",
+      "actor": "office",
+      "authority": "MPEP 1215.04; 37 CFR 1.135",
+      "probability": 0.8,
+      "note": "Per MPEP 1215.04: 'Applications having no allowed claims will be abandoned.' Claims allowable only for their dependency from rejected claims are treated as rejected. Modeled at 0.8 (most appealed applications reach the Board with all claims under rejection)."
+    },
+    {
+      "from": "appeal-dismissed",
+      "to": "patent-issued",
+      "label": "Allowed claim(s) exist — examiner cancels rejected claims and issues",
+      "actor": "office",
+      "authority": "MPEP 1215.04 (¶ 12.209); 37 CFR 1.311",
+      "probability": 0.2,
+      "note": "Per MPEP 1215.04: where an allowed claim exists, the examiner cancels the nonallowed claims and allows the application on the allowed claim(s) — a salvaged (narrowed) patent rather than abandonment. Modeled at 0.2. Sum with the abandonment branch = 1.0."
+    },
+    {
+      "id": "elect-without-traverse",
+      "from": "restriction-requirement",
+      "to": "election-made",
+      "label": "Elect invention WITHOUT traverse",
+      "actor": "applicant",
+      "authority": "37 CFR 1.142; 37 CFR 1.143; MPEP 818.01",
+      "deadline": {
+        "length": 60.0,
+        "extendable": true,
+        "extensionAuthority": "37 CFR 1.136(a)",
+        "note": "Election without traverse concedes the restriction; non-elected claims withdrawn. No petition right preserved."
+      },
+      "duration": {
+        "min": 9.0,
+        "mode": 30.0,
+        "max": 60.0
+      },
+      "hours": 3.0
+    },
+    {
+      "id": "elect-with-traverse",
+      "from": "restriction-requirement",
+      "to": "election-made",
+      "label": "Elect invention WITH traverse (preserve 37 CFR 1.144 petition)",
+      "actor": "applicant",
+      "authority": "37 CFR 1.143; 37 CFR 1.144; MPEP 818.01(d)",
+      "deadline": {
+        "length": 60.0,
+        "extendable": true,
+        "extensionAuthority": "37 CFR 1.136(a)",
+        "note": "Traverse preserves the right to petition the restriction requirement to the Director under 37 CFR 1.144 after a final requirement. Applicant must still elect and prosecute one invention."
+      },
+      "duration": {
+        "min": 9.0,
+        "mode": 30.0,
+        "max": 60.0
+      },
+      "hours": 5.0
+    },
+    {
+      "from": "election-made",
+      "to": "non-final-oa",
+      "label": "Examiner examines elected claims — issues Office Action",
+      "actor": "examiner",
+      "authority": "35 U.S.C. 132; 37 CFR 1.104; MPEP 821.04"
+    },
+    {
+      "from": "election-made",
+      "to": "divisional-filed",
+      "label": "File divisional for non-elected invention (35 U.S.C. 121 shield)",
+      "actor": "applicant",
+      "authority": "37 CFR 1.53(b); 35 U.S.C. 121; MPEP 201.06",
+      "cost": 2000.0,
+      "hours": 30.0,
+      "note": "Same filing/search/examination fees as an original nonprovisional: $2,000.00 undiscounted/large-entity, effective 1/19/2025 ($350.00 + $770.00 + $880.00, 37 CFR 1.16(a)/(k)/(o))."
+    },
+    {
+      "from": "divisional-filed",
+      "to": "pre-examination",
+      "label": "Divisional docketed — enters examination",
+      "actor": "office",
+      "authority": "37 CFR 1.104; MPEP 704"
+    },
+    {
+      "from": "continuation-filed",
+      "to": "pre-examination",
+      "label": "Continuation docketed — enters examination",
+      "actor": "office",
+      "authority": "37 CFR 1.104; MPEP 704"
+    },
+    {
+      "from": "advisory-action",
+      "to": "after-final-decision",
+      "label": "Advisory Action received — reassess (clock still running, MPEP 714.13)",
+      "actor": "applicant",
+      "authority": "37 CFR 1.116; MPEP 714.13",
+      "hours": 1.0,
+      "note": "The 1.116 filing bought no time — applicant must still appeal, file an RCE/continuation, or otherwise reply before the 6-month 35 U.S.C. 133 ceiling, taking 37 CFR 1.136(a) extensions as needed."
+    },
+    {
+      "from": "noa-received",
+      "to": "issue-fee-paid",
+      "label": "Pay issue fee within 3 months",
+      "actor": "applicant",
+      "authority": "37 CFR 1.311(a); 37 CFR 1.18(a); MPEP 1306",
+      "deadline": {
+        "length": 90.0,
+        "extendable": false,
+        "note": "Issue fee due 3 months from NOA. NOT extendable under any authority — 37 CFR 1.311(a); MPEP 1306 [R-01.2024]. No 37 CFR 1.136(a)/(b) extension is available. Late payment = abandonment; only a 37 CFR 1.137 revival petition (unintentional delay) can restore the application."
+      },
+      "duration": {
+        "min": 13.5,
+        "mode": 45.0,
+        "max": 90.0
+      },
+      "cost": 1290.0,
+      "hours": 1.0,
+      "valence": "good",
+      "note": "Utility issue fee $1,290.00, undiscounted/large-entity, effective 1/19/2025 (37 CFR 1.18(a)(1))."
+    },
+    {
+      "from": "noa-received",
+      "to": "abandoned-issue-fee",
+      "label": "Fail to pay issue fee — abandonment",
+      "actor": "applicant",
+      "authority": "37 CFR 1.311; 37 CFR 1.135",
+      "hours": 0.0,
+      "valence": "bad"
+    },
+    {
+      "from": "issue-fee-paid",
+      "to": "patent-issued",
+      "label": "Patent issues",
+      "actor": "office",
+      "authority": "35 U.S.C. 151; MPEP 1309"
+    },
+    {
+      "from": "patent-issued",
+      "to": "maintenance-due",
+      "label": "Maintenance fees become due (3.5 / 7.5 / 11.5 years)",
+      "actor": "applicant",
+      "authority": "37 CFR 1.362; 35 U.S.C. 41(b)",
+      "hours": 0.2
+    },
+    {
+      "from": "patent-issued",
+      "to": "patent-challenged",
+      "label": "Third party challenges the issued patent (post-grant)",
+      "actor": "office",
+      "authority": "35 U.S.C. 311; 321; 302",
+      "note": "The post-grant afterlife. Modeled as a world event off the (terminal) issuance node — like the existing patent-issued→maintenance-due edge, this out-edge is walked by the simulator but treated as absorbing by the from-start EV/absorbing-chain analysis (issuance is a terminal). The adversarial sub-chain rooted here is analyzed on its own — see design/graph-algorithms.md §8.5."
+    },
+    {
+      "id": "reissue-narrowing-filed",
+      "from": "patent-issued",
+      "to": "reissue-pending",
+      "label": "File narrowing reissue application (§ 251; any time during enforceable term)",
+      "actor": "applicant",
+      "authority": "35 U.S.C. § 251; 37 CFR 1.171; MPEP 1401",
+      "cost": 3670.0,
+      "hours": 20.0,
+      "note": "Narrowing reissue may be filed at any time during the enforceable term. Only spec/claims/drawings needed for filing date; oath may follow (37 CFR 1.53(f); MPEP 1403). Original patent surrendered on filing, remains in force during prosecution (§ 252). Reissue filing fees $3,670.00 total, undiscounted/large-entity, effective 1/19/2025: $350.00 basic filing (37 CFR 1.16(e)) + $770.00 search (1.16(n)) + $2,550.00 examination (1.16(r)) -- the reissue examination fee is well above the $880.00 utility examination fee."
+    },
+    {
+      "id": "reissue-broadening-filed",
+      "from": "patent-issued",
+      "to": "reissue-pending",
+      "label": "File broadening reissue application — MUST be within 2 years of grant (§ 251)",
+      "actor": "applicant",
+      "authority": "35 U.S.C. § 251, ¶ 4; MPEP 1412",
+      "deadline": {
+        "length": 730.0,
+        "extendable": false,
+        "note": "Two-year broadening window from the date of patent grant. Filing on the anniversary date is timely (MPEP 1403). After it closes, broadening reissue is gone FOREVER — an unextendable, irreversible forfeiture (flag mpep/broadening-window-closed)."
+      },
+      "duration": {
+        "min": 109.5,
+        "mode": 365.0,
+        "max": 730.0
+      },
+      "cost": 3670.0,
+      "hours": 25.0,
+      "valence": "good",
+      "note": "Reissue filing fees $3,670.00 total, undiscounted/large-entity, effective 1/19/2025: $350.00 basic filing (37 CFR 1.16(e)) + $770.00 search (1.16(n)) + $2,550.00 examination (1.16(r)) -- the reissue examination fee is well above the $880.00 utility examination fee."
+    },
+    {
+      "from": "patent-issued",
+      "to": "patent-issued",
+      "label": "Miss 2-year broadening reissue window — broadening permanently barred",
+      "actor": "applicant",
+      "authority": "35 U.S.C. § 251, ¶ 4; MPEP 1412",
+      "hours": 0.0,
+      "valence": "bad",
+      "note": "The 2-year broadening window closes. Flag mpep/broadening-window-closed raised. Narrowing reissue remains available; broadening does not."
+    },
+    {
+      "from": "maintenance-due",
+      "to": "maintenance-due",
+      "label": "Pay maintenance fee on time",
+      "actor": "applicant",
+      "authority": "37 CFR 1.362; 37 CFR 1.20(e)-(g)",
+      "cost": 2150.0,
+      "hours": 0.5,
+      "valence": "good",
+      "note": "3.5-year maintenance fee $2,150.00, undiscounted/large-entity, effective 1/19/2025 (37 CFR 1.20(e)); the 7.5-year fee is $4,040.00 (1.20(f)) and the 11.5-year fee is $8,280.00 (1.20(g)) -- this edge's self-loop models only the recurring 3.5-year-tier default since the pack has no windowed-maintenance-cycle state."
+    },
+    {
+      "from": "maintenance-due",
+      "to": "patent-expired",
+      "label": "Fail to pay maintenance fee — patent expires",
+      "actor": "applicant",
+      "authority": "37 CFR 1.362(f); 35 U.S.C. 41(b)",
+      "hours": 0.0,
+      "valence": "bad"
+    },
+    {
+      "from": "abandoned-no-reply",
+      "to": "applicant-response-window",
+      "label": "Petition to revive — unintentional delay (37 CFR 1.137)",
+      "actor": "applicant",
+      "authority": "37 CFR 1.137; 37 CFR 1.17(m); MPEP 711.03(c)",
+      "cost": 2260.0,
+      "hours": 4.0,
+      "note": "Revival requires (1) the required reply, (2) the petition fee under 37 CFR 1.17(m), and (3) a statement that the ENTIRE delay from the due date until the reply was UNINTENTIONAL (37 CFR 1.137(a)). Revival is not guaranteed and does not undo intervening rights. Reinstates the open reply window. Petition fee $2,260.00, undiscounted/large-entity, effective 1/19/2025, for delay of 1 year or less (37 CFR 1.17(m)(2)); a delay exceeding 1 year is $3,000.00 (1.17(m)(1))."
+    },
+    {
+      "from": "abandoned-issue-fee",
+      "to": "noa-received",
+      "label": "Petition to revive — pay issue fee late (37 CFR 1.137)",
+      "actor": "applicant",
+      "authority": "37 CFR 1.137; 37 CFR 1.17(m); MPEP 711.03(c)",
+      "cost": 2260.0,
+      "hours": 4.0,
+      "note": "Same 37 CFR 1.137 unintentional-delay standard + 37 CFR 1.17(m) petition fee. Because the issue-fee period is itself unextendable (MPEP 1306), revival is the ONLY route back after a missed issue fee. Reinstates the allowance posture so the issue fee can be paid. Petition fee $2,260.00, undiscounted/large-entity, effective 1/19/2025, for delay of 1 year or less (37 CFR 1.17(m)(2)); a delay exceeding 1 year is $3,000.00 (1.17(m)(1))."
+    },
+    {
+      "from": "patent-challenged",
+      "to": "ipr-petition-filed",
+      "label": "Challenger files IPR petition (35 U.S.C. 311)",
+      "actor": "either",
+      "authority": "35 U.S.C. 311–314; 37 CFR 42.100",
+      "deadline": {
+        "length": 365.0,
+        "extendable": false,
+        "note": "If the petitioner was served with an infringement complaint, 35 U.S.C. 315(b) bars a petition filed more than one year later — unextendable."
+      },
+      "duration": {
+        "min": 54.8,
+        "mode": 182.5,
+        "max": 365.0
+      },
+      "cost": 23750.0,
+      "note": "IPR request fee $23,750.00, verified, effective/last-amended 1/14/2025 (37 CFR 42.15(a)(1)): covers up to 20 claims; $470.00 per claim over 20 at request (42.15(a)(3)). A post-institution fee of $28,125.00 (42.15(a)(2)), plus $940.00 per claim over 20 instituted (42.15(a)(4)), falls due only if the Board institutes -- not modeled on this edge."
+    },
+    {
+      "from": "patent-challenged",
+      "to": "pgr-petition-filed",
+      "label": "Challenger files PGR petition within 9 months (35 U.S.C. 321)",
+      "actor": "either",
+      "authority": "35 U.S.C. 321–324; 37 CFR 42.200",
+      "deadline": {
+        "length": 270.0,
+        "extendable": false,
+        "note": "PGR must be filed within 9 months of grant (35 U.S.C. 321(c)); AIA patents only. Unextendable, jurisdictional."
+      },
+      "duration": {
+        "min": 40.5,
+        "mode": 135.0,
+        "max": 270.0
+      },
+      "cost": 25000.0,
+      "note": "PGR request fee $25,000.00, verified, effective/last-amended 1/14/2025 (37 CFR 42.15(b)(1)): covers up to 20 claims; $595.00 per claim over 20 at request (42.15(b)(3)). A post-institution fee of $34,375.00 (42.15(b)(2)), plus $1,315.00 per claim over 20 instituted (42.15(b)(4)), falls due only if the Board institutes -- not modeled on this edge. (This edge previously and incorrectly reused the IPR request fee of $23,750.00; corrected to the PGR-specific fee.)"
+    },
+    {
+      "from": "patent-challenged",
+      "to": "epr-requested",
+      "label": "Requester files ex parte reexam request (35 U.S.C. 302)",
+      "actor": "either",
+      "authority": "35 U.S.C. 302; 37 CFR 1.510; MPEP 2209",
+      "cost": 13545.0,
+      "note": "Any person, any time during enforceability, even anonymously. Non-streamlined ex parte reexam request fee $13,545.00, undiscounted/large-entity, effective 1/19/2025 (37 CFR 1.20(c)(2)); a streamlined ex parte reexam (a newer, faster USPTO option, narrower eligibility) costs $6,775.00 instead (37 CFR 1.20(c)(1)(i)) -- this edge models the non-streamlined default since streamlined-track eligibility isn't tracked by this pack."
+    },
+    {
+      "id": "ipr-popr-filed",
+      "from": "ipr-petition-filed",
+      "to": "ipr-institution-decision",
+      "label": "File Patent Owner Preliminary Response (POPR)",
+      "actor": "applicant",
+      "authority": "37 CFR 42.107; 35 U.S.C. 313",
+      "deadline": {
+        "length": 90.0,
+        "extendable": false,
+        "note": "POPR due within 3 months of the notice according the petition a filing date. Optional; argue discretionary denial and/or the merits."
+      },
+      "duration": {
+        "min": 13.5,
+        "mode": 45.0,
+        "max": 90.0
+      },
+      "hours": 60.0
+    },
+    {
+      "id": "ipr-popr-waived",
+      "from": "ipr-petition-filed",
+      "to": "ipr-institution-decision",
+      "label": "Waive POPR — reserve arguments for trial",
+      "actor": "applicant",
+      "authority": "37 CFR 42.107(b)",
+      "hours": 0.5
+    },
+    {
+      "from": "ipr-institution-decision",
+      "to": "ipr-trial-instituted",
+      "label": "PTAB institutes trial (35 U.S.C. 314(a))",
+      "actor": "office",
+      "authority": "35 U.S.C. 314(a); 37 CFR 42.108",
+      "probability": 0.65
+    },
+    {
+      "from": "ipr-institution-decision",
+      "to": "claims-confirmed",
+      "label": "PTAB denies institution (Fintiv / 325(d) / merits)",
+      "actor": "office",
+      "authority": "35 U.S.C. 314(a); 37 CFR 42.108",
+      "probability": 0.35,
+      "note": "Denial ends the challenge; claims stand. Institution modeled 0.65 / denial 0.35 (APPROXIMATE, flagged on the node)."
+    },
+    {
+      "id": "ipr-por-filed",
+      "from": "ipr-trial-instituted",
+      "to": "ipr-final-written-decision",
+      "label": "File Patent Owner Response",
+      "actor": "applicant",
+      "authority": "35 U.S.C. 316; 37 CFR 42.120",
+      "hours": 90.0
+    },
+    {
+      "id": "ipr-mta-filed",
+      "from": "ipr-trial-instituted",
+      "to": "ipr-final-written-decision",
+      "label": "File Motion to Amend (substitute claims, 35 U.S.C. 316(d))",
+      "actor": "applicant",
+      "authority": "35 U.S.C. 316(d); 37 CFR 42.121",
+      "hours": 80.0
+    },
+    {
+      "from": "ipr-trial-instituted",
+      "to": "claims-confirmed",
+      "label": "Settle before final written decision (35 U.S.C. 317) — avoid estoppel",
+      "actor": "applicant",
+      "authority": "35 U.S.C. 317; 37 CFR 42.72–42.74",
+      "hours": 20.0,
+      "valence": "good",
+      "note": "Pre-FWD settlement terminates as to the petitioner and avoids 315(e) estoppel; the Board may terminate rather than proceed. Claims stand."
+    },
+    {
+      "from": "ipr-final-written-decision",
+      "to": "claims-cancelled",
+      "label": "FWD: all instituted claims held unpatentable",
+      "actor": "office",
+      "authority": "35 U.S.C. 318(a); 318(b)",
+      "probability": 0.65
+    },
+    {
+      "from": "ipr-final-written-decision",
+      "to": "claims-confirmed",
+      "label": "FWD: claims upheld (patentability confirmed)",
+      "actor": "office",
+      "authority": "35 U.S.C. 318(a); 318(b)",
+      "probability": 0.2
+    },
+    {
+      "from": "ipr-final-written-decision",
+      "to": "claims-amended",
+      "label": "FWD: mixed — substitute claims entered (intervening rights)",
+      "actor": "office",
+      "authority": "35 U.S.C. 318(a); 318(c)",
+      "probability": 0.15
+    },
+    {
+      "id": "pgr-popr-filed",
+      "from": "pgr-petition-filed",
+      "to": "pgr-institution-decision",
+      "label": "File Patent Owner Preliminary Response (POPR)",
+      "actor": "applicant",
+      "authority": "37 CFR 42.207; 35 U.S.C. 323",
+      "deadline": {
+        "length": 90.0,
+        "extendable": false,
+        "note": "POPR due within 3 months of the filing-date notice."
+      },
+      "duration": {
+        "min": 13.5,
+        "mode": 45.0,
+        "max": 90.0
+      },
+      "hours": 60.0
+    },
+    {
+      "id": "pgr-popr-waived",
+      "from": "pgr-petition-filed",
+      "to": "pgr-institution-decision",
+      "label": "Waive POPR — reserve arguments for trial",
+      "actor": "applicant",
+      "authority": "37 CFR 42.207(b)",
+      "hours": 0.5
+    },
+    {
+      "from": "pgr-institution-decision",
+      "to": "pgr-trial-instituted",
+      "label": "PTAB institutes PGR (35 U.S.C. 324(a))",
+      "actor": "office",
+      "authority": "35 U.S.C. 324(a); 37 CFR 42.208",
+      "probability": 0.55
+    },
+    {
+      "from": "pgr-institution-decision",
+      "to": "claims-confirmed",
+      "label": "PTAB denies institution",
+      "actor": "office",
+      "authority": "35 U.S.C. 324(a); 37 CFR 42.208",
+      "probability": 0.45
+    },
+    {
+      "id": "pgr-por-filed",
+      "from": "pgr-trial-instituted",
+      "to": "pgr-final-written-decision",
+      "label": "File Patent Owner Response",
+      "actor": "applicant",
+      "authority": "35 U.S.C. 326; 37 CFR 42.220",
+      "hours": 90.0
+    },
+    {
+      "id": "pgr-mta-filed",
+      "from": "pgr-trial-instituted",
+      "to": "pgr-final-written-decision",
+      "label": "File Motion to Amend (substitute claims, 35 U.S.C. 326(d))",
+      "actor": "applicant",
+      "authority": "35 U.S.C. 326(d); 37 CFR 42.221",
+      "hours": 80.0
+    },
+    {
+      "from": "pgr-trial-instituted",
+      "to": "claims-confirmed",
+      "label": "Settle before final written decision (35 U.S.C. 327) — avoid estoppel",
+      "actor": "applicant",
+      "authority": "35 U.S.C. 327; 37 CFR 42.72–42.74",
+      "hours": 20.0,
+      "valence": "good"
+    },
+    {
+      "from": "pgr-final-written-decision",
+      "to": "claims-cancelled",
+      "label": "FWD: claims held unpatentable (incl. 101/112 grounds)",
+      "actor": "office",
+      "authority": "35 U.S.C. 328(a); 328(b)",
+      "probability": 0.6
+    },
+    {
+      "from": "pgr-final-written-decision",
+      "to": "claims-confirmed",
+      "label": "FWD: claims upheld",
+      "actor": "office",
+      "authority": "35 U.S.C. 328(a); 328(b)",
+      "probability": 0.25
+    },
+    {
+      "from": "pgr-final-written-decision",
+      "to": "claims-amended",
+      "label": "FWD: mixed — substitute claims entered (intervening rights)",
+      "actor": "office",
+      "authority": "35 U.S.C. 328(a); 328(c)",
+      "probability": 0.15
+    },
+    {
+      "from": "epr-requested",
+      "to": "epr-ordered",
+      "label": "Director grants reexam — SNQ found (35 U.S.C. 303)",
+      "actor": "office",
+      "authority": "35 U.S.C. 303(a); 304; 37 CFR 1.515",
+      "probability": 0.92
+    },
+    {
+      "from": "epr-requested",
+      "to": "claims-confirmed",
+      "label": "Request denied — no substantial new question",
+      "actor": "office",
+      "authority": "35 U.S.C. 303(a); 37 CFR 1.515(a)",
+      "probability": 0.08,
+      "note": "Denial (no SNQ) leaves the claims untouched. Grant modeled 0.92 / denial 0.08 (APPROXIMATE, flagged on the node)."
+    },
+    {
+      "id": "epr-owner-statement-filed",
+      "from": "epr-ordered",
+      "to": "epr-examination",
+      "label": "File Patent Owner Statement (35 U.S.C. 304) — opens requester reply [TRAP]",
+      "actor": "applicant",
+      "authority": "35 U.S.C. 304; 37 CFR 1.530(b); MPEP 2249",
+      "deadline": {
+        "length": 60.0,
+        "extendable": true,
+        "extensionAuthority": "37 CFR 1.550(c)",
+        "note": "Optional statement due within a period of not less than two months from the order. Filing it entitles the third-party requester to a reply (37 CFR 1.535) — usually a strategic mistake."
+      },
+      "duration": {
+        "min": 9.0,
+        "mode": 30.0,
+        "max": 60.0
+      },
+      "hours": 40.0,
+      "valence": "bad"
+    },
+    {
+      "id": "epr-owner-statement-declined",
+      "from": "epr-ordered",
+      "to": "epr-examination",
+      "label": "Decline owner statement — reserve for first Office action (recommended)",
+      "actor": "applicant",
+      "authority": "37 CFR 1.530(b); MPEP 2249",
+      "hours": 0.5,
+      "valence": "good"
+    },
+    {
+      "from": "epr-examination",
+      "to": "claims-amended",
+      "label": "Reexam certificate: claims amended / narrowed",
+      "actor": "office",
+      "authority": "35 U.S.C. 307; 307(b); 37 CFR 1.570",
+      "probability": 0.66
+    },
+    {
+      "from": "epr-examination",
+      "to": "claims-confirmed",
+      "label": "Reexam certificate: claims confirmed as patentable",
+      "actor": "office",
+      "authority": "35 U.S.C. 307; 37 CFR 1.570",
+      "probability": 0.22
+    },
+    {
+      "from": "epr-examination",
+      "to": "claims-cancelled",
+      "label": "Reexam certificate: claims cancelled",
+      "actor": "office",
+      "authority": "35 U.S.C. 307; 37 CFR 1.570",
+      "probability": 0.12
+    },
+    {
+      "from": "reissue-pending",
+      "to": "reissue-granted",
+      "label": "Reissue examination completes — reissue patent granted",
+      "actor": "office",
+      "authority": "35 U.S.C. § 251; MPEP 1460",
+      "probability": 0.7
+    },
+    {
+      "from": "reissue-pending",
+      "to": "reissue-abandoned",
+      "label": "Reissue abandoned (failure to reply or rejection sustained)",
+      "actor": "office",
+      "authority": "35 U.S.C. § 251; 37 CFR 1.135",
+      "probability": 0.3,
+      "note": "TRAP: abandonment of the reissue does NOT revive the original patent — both are lost."
     }
   ]
 }

@@ -19,15 +19,15 @@
   ],
   "scenario": {
     "params": {
-      "rate": 500,
-      "opp_rate": 500,
-      "rebrand_cost": 100000,
-      "opposer_stake": 50000,
-      "cost_share": 30000,
-      "p_merits": 0.6,
-      "s18_shift": 0.1,
-      "opp_hours_mult": 1.0,
+      "cost_share": 30000.0,
       "deal_mult": 1.0,
+      "opp_hours_mult": 1.0,
+      "opp_rate": 500.0,
+      "opposer_stake": 50000.0,
+      "p_merits": 0.6,
+      "rate": 500.0,
+      "rebrand_cost": 100000.0,
+      "s18_shift": 0.1,
       "sfail_mult": 0.5
     },
     "metrics": {
@@ -36,10 +36,10 @@
     "utilities": {
       "applicant_value": "0 - rebrand_cost * default(node.rb, 0) + default(node.fx, 0) + cost_share * default(node.sh, 0)"
     },
-    "utility": "applicant_value",
     "cost": "dollars",
-    "opponent_objective": "opposer_stake * default(node.sw, 0) + default(node.sfx, 0) - cost_share * default(node.sh, 0)",
+    "utility": "applicant_value",
     "probability_fn": "tag(\"deal\") ? p * (deal_mult * (tag(\"inproc\") * flag(\"sfail\") * (sfail_mult - 1) + 1)) : (tag(\"no-deal\") ? 1 - (1 - p) * (deal_mult * (tag(\"inproc\") * flag(\"sfail\") * (sfail_mult - 1) + 1)) : (tag(\"cancel\") ? (tag(\"merits-opposer\") ? p_merits : 1 - p_merits) : (tag(\"merits-opposer\") ? p_merits - flag(\"s18\") * s18_shift : (tag(\"merits-applicant\") ? (1 - p_merits) * 0.85 + flag(\"s18\") * s18_shift * 0.8 : (tag(\"restrict\") ? (1 - p_merits) * 0.15 + flag(\"s18\") * s18_shift * 0.2 : p)))))",
+    "opponent_objective": "opposer_stake * default(node.sw, 0) + default(node.sfx, 0) - cost_share * default(node.sh, 0)",
     "start": "ttab-trademark-trial-and-appeal-board::period-ends-day120"
   }
 }

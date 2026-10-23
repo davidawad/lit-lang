@@ -1,0 +1,286 @@
+{
+  "schemaVersion": 3,
+  "calendars": [
+    {
+      "id": "dc-federal-holidays",
+      "title": "The federal holidays \"within the District of Columbia\" of 37 C.F.R.\n§ 1.7(a): the legal public holidays of 5 U.S.C. § 6103(a), observed under\n§ 6103(b)(1), plus Inauguration Day, which § 6103(c) makes a holiday for\nfederal employees in the District of Columbia area. Unlike the other\nholidays, § 6103(c) moves only a Sunday Inauguration Day (to Monday); a\nSaturday one is not observed on Friday (unlike core's\n`rcfc-legal-holidays`, which observes it then). Effective dates are those\nof core's `us-federal-holidays`.",
+      "cite": "37 CFR 1.7(a)",
+      "sourceUrl": "https://www.ecfr.gov/current/title-37/chapter-I/subchapter-A/part-41",
+      "holidays": [
+        {
+          "id": "new-years-day",
+          "name": "new-years-day",
+          "date": {
+            "fixed": {
+              "month": 1,
+              "day": 1
+            }
+          },
+          "observed": "nearest-weekday",
+          "effective": {
+            "from": "1894-06-28"
+          }
+        },
+        {
+          "id": "inauguration-day",
+          "name": "inauguration-day",
+          "date": {
+            "fixed": {
+              "month": 1,
+              "day": 20
+            }
+          },
+          "cycle": {
+            "every": 4,
+            "anchorYear": 1965
+          },
+          "observed": "actual",
+          "effective": {
+            "from": "1966-09-06"
+          }
+        },
+        {
+          "id": "inauguration-day-observed-2041",
+          "name": "inauguration-day-observed-2041",
+          "date": {
+            "fixed": {
+              "month": 1,
+              "day": 21
+            }
+          },
+          "observed": "actual",
+          "effective": {
+            "from": "2041-01-21",
+            "until": "2041-01-22"
+          }
+        },
+        {
+          "id": "inauguration-day-observed-2069",
+          "name": "inauguration-day-observed-2069",
+          "date": {
+            "fixed": {
+              "month": 1,
+              "day": 21
+            }
+          },
+          "observed": "actual",
+          "effective": {
+            "from": "2069-01-21",
+            "until": "2069-01-22"
+          }
+        },
+        {
+          "id": "inauguration-day-observed-2097",
+          "name": "inauguration-day-observed-2097",
+          "date": {
+            "fixed": {
+              "month": 1,
+              "day": 21
+            }
+          },
+          "observed": "actual",
+          "effective": {
+            "from": "2097-01-21",
+            "until": "2097-01-22"
+          }
+        },
+        {
+          "id": "mlk-day",
+          "name": "mlk-day",
+          "date": {
+            "nthWeekday": {
+              "month": 1,
+              "weekday": "monday",
+              "nth": 3
+            }
+          },
+          "observed": "actual",
+          "effective": {
+            "from": "1986-01-01"
+          }
+        },
+        {
+          "id": "washingtons-birthday",
+          "name": "washingtons-birthday",
+          "date": {
+            "nthWeekday": {
+              "month": 2,
+              "weekday": "monday",
+              "nth": 3
+            }
+          },
+          "observed": "actual",
+          "effective": {
+            "from": "1971-01-01"
+          }
+        },
+        {
+          "id": "memorial-day",
+          "name": "memorial-day",
+          "date": {
+            "nthWeekday": {
+              "month": 5,
+              "weekday": "monday",
+              "nth": -1
+            }
+          },
+          "observed": "actual",
+          "effective": {
+            "from": "1971-01-01"
+          }
+        },
+        {
+          "id": "juneteenth",
+          "name": "juneteenth",
+          "date": {
+            "fixed": {
+              "month": 6,
+              "day": 19
+            }
+          },
+          "observed": "nearest-weekday",
+          "effective": {
+            "from": "2021-06-17"
+          }
+        },
+        {
+          "id": "independence-day",
+          "name": "independence-day",
+          "date": {
+            "fixed": {
+              "month": 7,
+              "day": 4
+            }
+          },
+          "observed": "nearest-weekday",
+          "effective": {
+            "from": "1894-06-28"
+          }
+        },
+        {
+          "id": "labor-day",
+          "name": "labor-day",
+          "date": {
+            "nthWeekday": {
+              "month": 9,
+              "weekday": "monday",
+              "nth": 1
+            }
+          },
+          "observed": "actual",
+          "effective": {
+            "from": "1894-06-28"
+          }
+        },
+        {
+          "id": "columbus-day",
+          "name": "columbus-day",
+          "date": {
+            "nthWeekday": {
+              "month": 10,
+              "weekday": "monday",
+              "nth": 2
+            }
+          },
+          "observed": "actual",
+          "effective": {
+            "from": "1971-01-01"
+          }
+        },
+        {
+          "id": "veterans-day",
+          "name": "veterans-day",
+          "date": {
+            "fixed": {
+              "month": 11,
+              "day": 11
+            }
+          },
+          "observed": "nearest-weekday",
+          "effective": {
+            "from": "1978-01-01"
+          }
+        },
+        {
+          "id": "thanksgiving-day",
+          "name": "thanksgiving-day",
+          "date": {
+            "nthWeekday": {
+              "month": 11,
+              "weekday": "thursday",
+              "nth": 4
+            }
+          },
+          "observed": "actual",
+          "effective": {
+            "from": "1941-12-26"
+          }
+        },
+        {
+          "id": "christmas-day",
+          "name": "christmas-day",
+          "date": {
+            "fixed": {
+              "month": 12,
+              "day": 25
+            }
+          },
+          "observed": "nearest-weekday",
+          "effective": {
+            "from": "1894-06-28"
+          }
+        }
+      ]
+    }
+  ],
+  "countingRules": [
+    {
+      "id": "uspto-1-7",
+      "label": "37 CFR 1.7(a)",
+      "sourceUrl": "https://www.ecfr.gov/current/title-37/chapter-I/subchapter-A/part-41",
+      "closedWeekdays": [
+        "saturday",
+        "sunday"
+      ],
+      "holidays": [
+        "dc-federal-holidays"
+      ],
+      "steps": [
+        {
+          "op": "anchor",
+          "kind": "trigger",
+          "text": "37 CFR 1.7(a): exclude the trigger date {trigger}"
+        },
+        {
+          "op": "count",
+          "periods": [
+            {
+              "unit": "calendar",
+              "count": "calendar",
+              "text": "37 CFR 1.7(a): count {n} calendar day(s) {after} the anchor -> {date}"
+            },
+            {
+              "unit": "court",
+              "count": "business",
+              "text": "37 CFR 1.7(a): count {n} court day(s) {forward}, skipping weekends and holidays -> {date}"
+            }
+          ]
+        },
+        {
+          "op": "roll",
+          "forward": {
+            "toward": "later",
+            "text": "37 CFR 1.7(a): the last day is a weekend or legal holiday; roll forward -> {date}"
+          },
+          "backward": {
+            "toward": "earlier",
+            "text": "37 CFR 1.7(a): the last day is a weekend or legal holiday; roll backward -> {date}"
+          }
+        },
+        {
+          "op": "base"
+        }
+      ]
+    }
+  ]
+}

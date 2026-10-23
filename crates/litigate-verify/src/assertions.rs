@@ -167,6 +167,9 @@ fn due_field(
     }
 }
 
+/// A matching `given`: its index, event, trigger arguments and date.
+type Given<'g> = (usize, &'g hir::Expr, &'g [hir::Expr], &'g str);
+
 /// The nominal and adjusted due dates of deadline `target` from the
 /// matching `given` selected by its trigger policy, using the shared
 /// version-selection query and the build's `known_at` date.
@@ -185,7 +188,6 @@ fn due(
         .iter()
         .enumerate()
         .filter_map(|(i, (g, d))| Some((i, g, arguments(&first.trigger, g)?, d.as_str())));
-    type Given<'g> = (usize, &'g hir::Expr, &'g [hir::Expr], &'g str);
     let order = |(i, _, _, a): &Given<'_>, (j, _, _, b): &Given<'_>| a.cmp(b).then(i.cmp(j));
     // The trigger policy picks the event that runs the period (SPEC §5.3).
     let picked = if first.policy.is_first() {

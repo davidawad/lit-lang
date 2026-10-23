@@ -24,6 +24,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   versions must be disjoint (L3008) instead of first-match, and the
   transitions of a world are a set: two transitions amending one version
   are each L3008, and replay refuses to pick one by load order.
+- **Ground refinements** (lg-962.3; SPEC §6, §13.6). A `Probability`
+  term that does not fold (a reference to a `Probability` default, a
+  `prob` or `match` over unknowns) is decided exactly: `+ - *` and `/` by
+  a constant keep it an exact linear form over atoms in `[0, 1]`, whose
+  range is read off its coefficients, so `a + b` over two such defaults
+  is L2006 ("fails when a = 1, b = 1: `a + b` = 2 > 1") and `(1 - a) + a`
+  is accepted. A product or quotient of two unknowns is boxed by interval
+  arithmetic; a divisor that may be 0 is L2006. No solver is involved.
+- **Counting rules reach an open day from every date** (SPEC §5.3). A
+  counting rule whose closed days never end is L3009, decided by
+  enumerating one 400-year Gregorian cycle (146 097 days, a whole number
+  of weeks) on either side of every holiday's `effective` boundary
+  (`litgraph::clock::cycle`). Tests and case replay refuse such a rule
+  with that reason instead of counting forever.
+
+### Fixed
+
+- **Probability arithmetic over unknowns was unchecked** (T1): `a + b`
+  over two `Probability` defaults was accepted whatever they held.
+- **Exact rational products could wrap** (T2): `ad * bd` of two `u64`
+  denominators overflowed `i128` (a panic in debug, a silent wrap in
+  release). Products now cancel across first and are exact, or L2006 when
+  the reduced value does not fit.
+- **`dist-exact` skipped nodes** (T4): a chance node with a self edge
+  read the self edge's missing `p` as a hole and skipped the exact-sum
+  check, and a non-chance node's `p` edges had no sum check. A node's
+  `p` edges other than self edges now sum to at most 1, and to exactly 1
+  when all carry a known `p` (always for a chance node).
 
 ## [0.5.0] - 2026-10-23
 

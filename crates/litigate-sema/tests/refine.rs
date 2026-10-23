@@ -174,3 +174,18 @@ state none: \"N\" { a \"A\" -> t, b \"B\" -> none }"
         ]
     );
 }
+
+#[test]
+fn a_bound_that_overflows_exact_arithmetic_is_an_error() {
+    // The upper bound 1/p + 1/q + 1/3 over two primes near 2^32 has a
+    // denominator past u64: exact arithmetic overflows, and says so.
+    assert_eq!(
+        check("default c when true => a * (1/4294967291) + b * (1/4294967279) + (a * b) * (1/3)"),
+        ["12:24 L2006 exact arithmetic overflowed | "]
+    );
+    // A leading negative term renders with its sign.
+    assert_eq!(
+        check("default c when true => 0 - a"),
+        ["12:24 L2006 probability `-a` is not provably in [0, 1]: it ranges over [-1, 0] | refinement `Probability = {q | 0 <= q <= 1}` fails when a = 1: `-a` = -1 < 0"]
+    );
+}

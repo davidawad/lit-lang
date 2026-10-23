@@ -22,19 +22,42 @@ use crate::hir::{BinaryOp, Expr, ExprKind, Rational, Value};
 use std::collections::BTreeMap;
 use std::fmt::Write as _;
 
+/// An exact rational, or `None` once exact arithmetic overflowed: the
+/// overflow travels to the end of the decision (`probability`), which
+/// reports it once.
+type X = Option<Rational>;
+
+fn add(a: X, b: X) -> X {
+    a.zip(b).and_then(|(a, b)| q::add(a, b).ok())
+}
+
+fn mul(a: X, b: X) -> X {
+    a.zip(b).and_then(|(a, b)| q::mul(a, b).ok())
+}
+
+fn div(a: X, b: X) -> X {
+    a.zip(b).and_then(|(a, b)| q::div(a, b).ok())
+}
+
+/// Renders a value; every rendered term was decided first, so none has
+/// overflowed.
+fn show(x: X) -> String {
+    x.map(q::display).unwrap_or_default()
+}
+
 /// One unknown of a linear form: its rendering, coefficient and box.
 #[derive(Debug, Clone, PartialEq, Eq)]
 struct Term {
     label: String,
-    coeff: Rational,
-    lo: Rational,
-    hi: Rational,
+    coeff: X,
+    lo: X,
+    hi: X,
 }
 
 /// An exact linear form `constant + Σ coeff * atom` over boxed atoms.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Linear {
-    constant: Rational,
+    constant: X,
     /// Atoms keyed by a span-free identity, so a name used twice is one
     /// unknown.
     terms: BTreeMap<String, Term>,
@@ -121,81 +144,82 @@ impl Violation {
 impl Linear {
     fn constant(c: Rational) -> Self {
         Self {
-            constant: c,
+            constant: Some(c),
             terms: BTreeMap::new(),
         }
     }
 
-    fn atom(key: String, label: String, lo: Rational, hi: Rational) -> Self {
+    fn atom(key: String, label: String, lo: X, hi: X) -> Self {
         let term = Term {
             label,
-            coeff: Rational::integer(1),
+            coeff: Some(Rational::integer(1)),
             lo,
             hi,
         };
         Self {
-            constant: Rational::integer(0),
+            constant: Some(Rational::integer(0)),
             terms: BTreeMap::from([(key, term)]),
         }
     }
 
-    fn as_constant(&self) -> Option<Rational> {
-        self.terms.is_empty().then_some(self.constant)
+    fn is_constant(&self) -> bool {
+        self.terms.is_empty()
     }
 
-    fn add(mut self, other: Self) -> Result<Self, ArithError> {
-        self.constant = q::add(self.constant, other.constant)?;
+    fn add(mut self, other: Self) -> Self {
+        self.constant = add(self.constant, other.constant);
         for (key, t) in other.terms {
-            match self.terms.get_mut(&key) {
-                Some(mine) => mine.coeff = q::add(mine.coeff, t.coeff)?,
-                None => {
-                    self.terms.insert(key, t);
-                }
-            }
+            let mine = self.terms.entry(key).or_insert(Term {
+                coeff: Some(Rational::integer(0)),
+                ..t.clone()
+            });
+            mine.coeff = add(mine.coeff, t.coeff);
         }
-        self.terms.retain(|_, t| t.coeff.numerator != 0);
-        Ok(self)
+        self.terms
+            .retain(|_, t| t.coeff != Some(Rational::integer(0)));
+        self
     }
 
-    fn scale(mut self, k: Rational) -> Result<Self, ArithError> {
-        self.constant = q::mul(self.constant, k)?;
+    fn scale(mut self, k: X) -> Self {
+        self.constant = mul(self.constant, k);
         for t in self.terms.values_mut() {
-            t.coeff = q::mul(t.coeff, k)?;
+            t.coeff = mul(t.coeff, k);
         }
-        self.terms.retain(|_, t| t.coeff.numerator != 0);
-        Ok(self)
+        self.terms
+            .retain(|_, t| t.coeff != Some(Rational::integer(0)));
+        self
     }
 
     /// The bound of the form with each atom at the vertex that minimises
     /// (`upper = false`) or maximises it, and that vertex.
-    fn extreme(&self, upper: bool) -> Result<(Rational, Vec<(String, Rational)>), ArithError> {
+    fn extreme(&self, upper: bool) -> (X, Vec<(String, X)>) {
         let mut value = self.constant;
         let mut at = Vec::new();
         for t in self.terms.values() {
-            let positive = t.coeff.numerator > 0;
+            let positive = t.coeff.is_some_and(|c| c.numerator > 0);
             let x = if positive == upper { t.hi } else { t.lo };
-            value = q::add(value, q::mul(t.coeff, x)?)?;
+            value = add(value, mul(t.coeff, x));
             at.push((t.label.clone(), x));
         }
-        Ok((value, at))
+        (value, at)
     }
 
     /// Exact range `[lo, hi]` over the atoms' boxes.
-    fn range(&self) -> Result<(Rational, Rational), ArithError> {
-        Ok((self.extreme(false)?.0, self.extreme(true)?.0))
+    fn range(&self) -> (X, X) {
+        (self.extreme(false).0, self.extreme(true).0)
     }
 
-    /// Source-like rendering: `1 - p`, `a + b`, `1/2 * prob(d, A)`.
+    /// Source-like rendering: `1 - p`, `a + b`, `1/2 * prob(d, A)`. Only
+    /// a term over unknowns is rendered: a constant is decided directly.
     fn render(&self) -> String {
         let mut out = String::new();
-        let zero = Rational::integer(0);
-        if self.constant != zero || self.terms.is_empty() {
-            out.push_str(&q::display(self.constant));
+        if self.constant != Some(Rational::integer(0)) {
+            out.push_str(&show(self.constant));
         }
         for t in self.terms.values() {
-            let negative = t.coeff.numerator < 0;
+            let negative = t.coeff.is_some_and(|c| c.numerator < 0);
             let magnitude = if negative {
-                q::neg(t.coeff).unwrap_or(t.coeff)
+                mul(t.coeff, Some(Rational::integer(-1)))
             } else {
                 t.coeff
             };
@@ -204,8 +228,8 @@ impl Linear {
             } else if negative {
                 out.push('-');
             }
-            if magnitude != Rational::integer(1) {
-                let _ = write!(out, "{} * ", q::display(magnitude));
+            if magnitude != Some(Rational::integer(1)) {
+                let _ = write!(out, "{} * ", show(magnitude));
             }
             out.push_str(&t.label);
         }
@@ -251,8 +275,8 @@ pub fn operand(c: &Checked) -> Linear {
         _ => Linear::atom(
             key(&c.hir),
             label(&c.hir),
-            Rational::integer(0),
-            Rational::integer(1),
+            Some(Rational::integer(0)),
+            Some(Rational::integer(1)),
         ),
     }
 }
@@ -261,8 +285,7 @@ pub fn operand(c: &Checked) -> Linear {
 /// violation found on the way.
 ///
 /// # Errors
-/// Exact arithmetic overflowed while normalising, or a constant divisor
-/// is 0.
+/// A constant divisor is 0.
 pub fn combine(
     op: BinaryOp,
     l: Linear,
@@ -270,53 +293,60 @@ pub fn combine(
     e: &Expr,
 ) -> Result<Result<Linear, Violation>, ArithError> {
     Ok(Ok(match op {
-        BinaryOp::Add => l.add(r)?,
-        BinaryOp::Sub => l.add(r.scale(Rational::integer(-1))?)?,
-        BinaryOp::Mul => match (l.as_constant(), r.as_constant()) {
-            (Some(k), _) => r.scale(k)?,
-            (_, Some(k)) => l.scale(k)?,
-            _ => {
-                let ((a, b), (c, d)) = (l.range()?, r.range()?);
-                let corners = [q::mul(a, c)?, q::mul(a, d)?, q::mul(b, c)?, q::mul(b, d)?];
-                hull(e, format!("({}) * ({})", l.render(), r.render()), corners)
-            }
-        },
+        BinaryOp::Add => l.add(r),
+        BinaryOp::Sub => l.add(r.scale(Some(Rational::integer(-1)))),
+        BinaryOp::Mul if l.is_constant() => {
+            let k = l.constant;
+            r.scale(k)
+        }
+        BinaryOp::Mul if r.is_constant() => {
+            let k = r.constant;
+            l.scale(k)
+        }
+        BinaryOp::Mul => {
+            let ((a, b), (c, d)) = (l.range(), r.range());
+            let label = format!("({}) * ({})", l.render(), r.render());
+            hull(e, label, [mul(a, c), mul(a, d), mul(b, c), mul(b, d)])
+        }
         _ => return quotient(l, &r, e),
     }))
 }
 
 /// The form of `e = l / r`.
 fn quotient(l: Linear, r: &Linear, e: &Expr) -> Result<Result<Linear, Violation>, ArithError> {
-    if let Some(k) = r.as_constant() {
-        return Ok(Ok(l.scale(q::div(Rational::integer(1), k)?)?));
+    if r.is_constant() {
+        if r.constant == Some(Rational::integer(0)) {
+            return Err(ArithError::DivisionByZero);
+        }
+        return Ok(Ok(l.scale(div(Some(Rational::integer(1)), r.constant))));
     }
-    let ((a, b), (c, d)) = (l.range()?, r.range()?);
-    // A `Probability` divisor was itself checked into [0, 1], so its range
-    // holds 0 exactly when its lower bound is 0.
-    if c.numerator == 0 {
+    let ((a, b), (c, d)) = (l.range(), r.range());
+    // A `Probability` divisor was itself decided into [0, 1] (so its range
+    // is known), and holds 0 exactly when its lower bound is 0.
+    let zero = Rational::integer(0);
+    if c == Some(zero) {
         return Ok(Err(Violation::Divisor {
             form: r.render(),
-            lo: c,
-            hi: d,
+            lo: zero,
+            hi: d.unwrap_or(zero),
         }));
     }
-    let corners = [q::div(a, c)?, q::div(a, d)?, q::div(b, c)?, q::div(b, d)?];
+    let label = format!("({}) / ({})", l.render(), r.render());
     Ok(Ok(hull(
         e,
-        format!("({}) / ({})", l.render(), r.render()),
-        corners,
+        label,
+        [div(a, c), div(a, d), div(b, c), div(b, d)],
     )))
 }
 
-/// A fresh atom for `e`, shown as `label`, boxed by the hull of `corners`.
-fn hull(e: &Expr, label: String, corners: [Rational; 4]) -> Linear {
-    let [first, rest @ ..] = corners;
-    let (lo, hi) = rest.into_iter().fold((first, first), |(lo, hi), x| {
-        (
-            if q::cmp(x, lo).is_lt() { x } else { lo },
-            if q::cmp(x, hi).is_gt() { x } else { hi },
-        )
-    });
+/// A fresh atom for `e`, shown as `label`, boxed by the hull of `corners`
+/// (unknown when any corner overflowed).
+fn hull(e: &Expr, label: String, corners: [X; 4]) -> Linear {
+    let all: Option<Vec<Rational>> = corners.into_iter().collect();
+    let lo = all
+        .as_ref()
+        .and_then(|v| v.iter().copied().min_by(|x, y| q::cmp(*x, *y)));
+    let hi = all.and_then(|v| v.into_iter().max_by(|x, y| q::cmp(*x, *y)));
     Linear::atom(key(e), label, lo, hi)
 }
 
@@ -324,10 +354,18 @@ fn hull(e: &Expr, label: String, corners: [Rational; 4]) -> Linear {
 /// atoms keeps it in `[0, 1]`.
 ///
 /// # Errors
-/// Exact arithmetic overflowed while evaluating a bound.
+/// Exact arithmetic overflowed while normalising or evaluating a bound.
 pub fn probability(form: &Linear) -> Result<Option<Violation>, ArithError> {
-    let (lo, at_lo) = form.extreme(false)?;
-    let (hi, at_hi) = form.extreme(true)?;
+    let known = |(v, at): (X, Vec<(String, X)>)| {
+        let at: Option<Vec<(String, Rational)>> =
+            at.into_iter().map(|(l, x)| x.map(|x| (l, x))).collect();
+        v.zip(at)
+    };
+    let (Some((lo, at_lo)), Some((hi, at_hi))) =
+        (known(form.extreme(false)), known(form.extreme(true)))
+    else {
+        return Err(ArithError::Overflow);
+    };
     let below = q::cmp(lo, Rational::integer(0)).is_lt();
     let above = q::cmp(hi, Rational::integer(1)).is_gt();
     Ok((below || above).then(|| {

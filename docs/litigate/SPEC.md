@@ -460,13 +460,19 @@ admits a wrong digest. An unparseable side exits 1, leaving git's conflict.
   needs a label, and every kind may have outgoing edges (legacy terminals
   route onward through links). `chance` is sugar: litgraph kind `state`, but
   every edge must carry `p` (L2008) and the known probabilities must sum to
-  exactly 1 (`dist-exact`). Holes are allowed only in `dev`. `discretion`
+  exactly 1 (`dist-exact`, L2003), or to at most 1 while one is a hole. A
+  self edge carries no `p` and is not part of the distribution, so a
+  chance node whose only edges are self edges sums to 0. Holes are allowed
+  only in `dev`. `discretion`
   marks a tribunal-discretion draw. It is verification metadata only.
 - `outcome`, `payoff`, and `payoff_by_flag` are valid only on `terminal`
   (L2007).
 - An edge's actor is its own `by`, else the node's `by`, else `either`.
   `p` is allowed on any edge, with any actor. A self edge (`to` = its node)
-  must not carry `p` (L2008).
+  must not carry `p` (L2008). Any other node with a `p` edge draws among
+  its `p` edges: their known probabilities sum to at most 1, and to
+  exactly 1 when every edge but a self edge carries a known `p` (L2003);
+  the engine would otherwise renormalise them.
 - `event` binds an edge to an event pattern for case replay (§5.6). `within d`
   ties the edge to deadline declaration `d`. `deadline 30.days` is a literal
   window with no trigger semantics, kept for legacy edges.
@@ -642,6 +648,18 @@ lowercase English. `observed nearest_weekday` moves Saturday to Friday and
 Sunday to Monday. `observed next_day` moves Sunday to Monday only. A holiday
 counts only inside its `effective` interval. Inconsistent counting data
 (unknown anchor/roll kind/unit, duplicate method) is L3009.
+
+Every counting rule must reach an open day from every date: its closed
+days (closed weekdays and the observed holidays of its calendar) may not
+run on forever, or rolling and business-day counting would not end
+(L3009, `well-typed`). This is decided over every date, not sampled: the
+Gregorian calendar repeats every 400 years (146 097 days, a whole number
+of weeks), an `every(k, ..)` holiday every `lcm(400, k)` years, so
+enumerating every year from one such period before the first `effective`
+boundary to one after the last covers all dates
+(`litgraph::clock::cycle`). A combined period longer than 40 000 years is
+not decided and is L3009 too. A test or a matter that counts under a rule
+that never reaches an open day fails with that reason; it is never run.
 
 ### 5.4 Versions and transitions
 
@@ -971,7 +989,7 @@ the variants of enum `E` with exact non-negative weights summing to 1 (L2003).
 | `Days<U>` (`U` = `CalendarDays`, `CourtDays`, `BusinessDays`, `Weeks`, `Months`, `Years`) | `21.days`, `5.court_days`, `3.business_days`, `2.weeks`, `9.months`, `1.years` | comparisons; `+ -` with the same `U`; `* /` by `Number` with integral result; no unit conversion (L2004) |
 | `Hours` | `8.hours` | comparisons; `+ -` with `Hours`; `* /` by `Number` |
 | `Money<Cur>` | `2_000.usd` | comparisons; `+ -` same currency (L2004); `* /` by `Number` (exact, else L2006); `Money / Money` gives `Number` |
-| `Probability` | `p` values, `Number` in `[0,1]` | comparisons; `+ - * /` checked to stay in `[0,1]`; `1 - p` |
+| `Probability` | `p` values, `Number` in `[0,1]` | comparisons; `+ - * /` checked to stay in `[0,1]` (below); `1 - p` |
 | `Number` | `21`, `0.35`, `1/3` | comparisons; `+ - * / %` (`%` integers only) |
 | `Dist<E>` | record `{ variant: p, ... }` | `prob(d, Variant)`; `given(d, [Variants])` conditions on a nonzero-mass subset |
 | `Cite` | `cite ...` | `==` only |
@@ -991,6 +1009,22 @@ types: `p` is `Probability`, `effort` is `Hours`, `cost`/`payoff` are
 `Money<usd>`, `duration` is `Days<CalendarDays>` (`min <= mode <= max`, decimal amounts allowed;
 weeks, months and years are estimates in mean Gregorian days: 7, 146097/4800 and 365.2425),
 `deadline` is `Days<CalendarDays|CourtDays|Weeks|Months|Years>`, and attrs are `Number`.
+
+`Probability` is the refinement `{q: Q | 0 <= q <= 1}`, and every
+`Probability` subterm has it. A constant term is evaluated exactly. A term
+that does not fold is checked over its unknowns: a reference to a
+`Probability` default, a `prob` or `match` that does not fold, each an
+atom in `[0, 1]` (an exception may rebut a default with any probability).
+`+`, `-` and scaling by a constant keep the term an exact linear form
+`c + k1*x1 + ... + kn*xn` over its atoms, one per distinct term, so
+`(1 - p) + p` is exactly 1. Over the atoms' boxes such a form reaches its
+bounds at a vertex, so its exact range, and an assignment reaching a
+violated bound, follow from the coefficients: no solver is involved. A
+product or quotient of two such terms is a new atom boxed by exact
+interval arithmetic (sound, not complete), and a divisor whose range holds
+0 is rejected. A violation is L2006 with a note naming the refinement and
+the counterexample: ``probability `a + b` is not provably in [0, 1]: it
+ranges over [0, 2]``, ``fails when a = 1, b = 1: `a + b` = 2 > 1``.
 
 ## 7. Verification obligations and profiles
 
@@ -1676,7 +1710,7 @@ mutation testing and mechanized metatheory are out of scope here
 | O5 | `precedence-acyclic` | c | Cycle detection over the authority chains (with dependencies), the relation graph, and default/exception references. |
 | O6 | `delegation-respected` | b | Per declaration (bead lg-962.4 comment: each delegating declaration carries `delegable_to`): see C36. |
 | O7 | `exceptions-ordered` | b | Family refinement on the exceptions of one target: see C37. |
-| O8 | `dist-exact` | b | `Dist<E> = {m: E → Q | ∀e. m(e) ≥ 0 ∧ Σ_e m(e) = 1}`, total over `E`; a chance node's edges are `Dist<Edges(n)>`. Holes make it an SMT query (`Σ known ≤ 1`). lg-962.3. |
+| O8 | `dist-exact` | b | `Dist<E> = {m: E → Q | ∀e. m(e) ≥ 0 ∧ Σ_e m(e) = 1}`, total over `E`; a chance node's edges are `Dist<Edges(n)>`. Holes make it an SMT query (`Σ known ≤ 1`). Ground part done (lg-962.3): any node with `p` edges, self edges excluded (§5.1). |
 | O9 | `graph-exits` | a | Node kind index: the body of a non-terminal node is `NonEmpty<Edge>`. Checked per version of the node. |
 | O10 | `graph-reachable` | c | Graph reachability from `start` and `entry` nodes over the lowered graph. |
 | O11 | `deadline-satisfiable` | c | Needs reachability (only reachable nodes) and due-date windows computed through counting rules and holiday calendars for some trigger date. |
@@ -1714,13 +1748,13 @@ gets one row per condition when the conditions classify differently.
 | C19 | L2001 deadline direction: versions disagree; `within d` with backward `d` (§5.5) | sema | a | Phantom direction index `Deadline<Fwd\|Bwd>`; a declaration family has one signature; `within : Deadline<Fwd>`. |
 | C20 | L2002 operation not in the §6 table, IO, float, cast, overloading | sema | a | Closed operator signatures. |
 | C21 | L2003 `Dist` value not total or not summing to 1; `given` on a zero-mass subset (§6) | sema, verify | b | `Dist<E>` as O8; `given(d, S)` requires `Σ_{v∈S} d(v) > 0` (QF_LRA, ground). |
-| C22 | L2003 chance node probabilities do not sum to 1 (§5.1) | sema, verify | b | O8 with `E = Edges(n)`, excluding the self edge (C32). |
+| C22 | L2003 a node's probabilities do not sum to 1: a chance node, or any node with `p` edges (§5.1) | sema, verify | b | O8 with `E = Edges(n)`, excluding the self edge (C32). Done (lg-962.3). |
 | C23 | L2004 mixed day units or currencies (§6) | sema | a | Phantom indices `Days<U>`, `Money<Cur>`; no conversion operator. |
 | C24 | L2005 non-exhaustive match or unreachable arm (§5.2) | sema | a | Exhaustiveness over closed sums. |
-| C25 | L2006 i64/u64 overflow (§6) | sema | b | `{v: Q \| -2^63 ≤ num(v) < 2^63 ∧ 0 < den(v) < 2^64}`; ground for constants. |
+| C25 | L2006 i64/u64 overflow (§6) | sema | b | `{v: Q \| -2^63 ≤ num(v) < 2^63 ∧ 0 < den(v) < 2^64}`; ground for constants. Products cancel across before widening, so none wraps (lg-962.3). |
 | C26 | L2006 division by zero; `%` on non-integers; `Days`/`Money` scaled to a non-integral result (§6) | sema | b | Divisor `{n \| n ≠ 0}`; `%` operands `Int = {n: Number \| n ∈ Z}`; `Days<U> * n : {r \| r ∈ Z}`; `Money * n : {r \| r·100 ∈ Z}`. Linear because one operand is a literal; two holes multiplied leave the fragment (13.1). |
 | C27 | L2006 invalid date from arithmetic; money with more than 2 minor digits (§2, §6) | sema | b | `Date` arithmetic result `{d \| valid(d)}` over day numbers; money literal `{v \| v·100 ∈ Z}`. |
-| C28 | L2006 probability arithmetic leaves `[0,1]` (§6) | sema | b | `Probability = {q: Q \| 0 ≤ q ≤ 1}`; `+ - * /` results checked against it. lg-962.3. |
+| C28 | L2006 probability arithmetic leaves `[0,1]` (§6) | sema | b | `Probability = {q: Q \| 0 ≤ q ≤ 1}`; `+ - * /` results checked against it. Done (lg-962.3): ground evaluation for constants, exact linear forms over boxed atoms otherwise (§6). |
 | C29 | L2007 field unknown, duplicated, or wrong for the declaration kind; `outcome`/`payoff` off a terminal; `undercuts` with `=>`; `replaces` outside links (§5.1, §5.5, §8.4) | sema, lower | a | One record type per declaration kind (node kind index on fields: `Node<Terminal>` alone has `payoff`); `Exception = Rebut {…, then} \| Undercut {…}`; `replaces` exists only in the links sort. |
 | C30 | L2007 `fact` tag on a node with no `p` edge (§5.1) | sema | b | Indexed by node kind and edge set: `fact` requires `kind = chance ∨ ∃e ∈ Edges(n). has_p(e)` (finite). |
 | C31 | L2007 rule shapes: `duty` without a deadline, `power` without a decision, `liability` without a node or with a deadline (§5.5) | sema | b | Cardinality refinement on the rule body: `Duty: {items \| #deadline ≥ 1}`, `Power: {#decision ≥ 1}`, `Liability: {#node ≥ 1 ∧ #deadline = 0}`. |
@@ -1738,7 +1772,7 @@ gets one row per condition when the conditions classify differently.
 | C43 | L3008 transition arms: not exactly one trailing `otherwise`; condition outside the allowed fragment (§5.4) | sema | a | `Arms = [Unless] ++ Otherwise`; conditions have their own type `Cond` with only `has_event`, booleans, `! && \|\| == !=`. |
 | C44 | L3008 arm selects neither `d@D` nor the version it replaces; `d@D` replaces none; two transitions on one version (§5.4) | sema | b | Version indices: each arm's target `∈ {d@D, pred(d@D)}` and `∃ pred(d@D)`; uniqueness is a family refinement over transitions per amended version (`# = 1`). |
 | C45 | L3009 counting: anchor/exclude combination; unknown anchor, roll kind or unit; duplicate service method; `short_period` unit (§5.3) | sema, lower | a | `Anchor = TriggerDay {exclude_trigger_day} \| NextBusinessDay` makes the illegal combinations unrepresentable; roll kinds and units are enums; service extensions are a map keyed by the closed `ServiceMethod` enum. |
-| C46 | L3009 `N.hours` without `allow_hours`; backward deadline on a `next_business_day` rule; `nth` outside 1-4; unknown calendar (§5.3, §5.5) | sema | b | `Counting<hours: Bool, anchor: Anchor>` as indices: an hours deadline needs `hours = true`; `Deadline<Bwd>` needs `anchor ≠ NextBusinessDay`; `nth: {n \| 1 ≤ n ≤ 4}`; calendar is a resolved `Ref` (a). |
+| C46 | L3009 `N.hours` without `allow_hours`; backward deadline on a `next_business_day` rule; `nth` outside 1-4; unknown calendar; closed days that never end (§5.3, §5.5) | sema, verify | b | `Counting<hours: Bool, anchor: Anchor>` as indices: an hours deadline needs `hours = true`; `Deadline<Bwd>` needs `anchor ≠ NextBusinessDay`; `nth: {n \| 1 ≤ n ≤ 4}`; calendar is a resolved `Ref` (a). Closed-day runs: `Counting = {c \| ∀d. ∃k. open_c(d + k)}`, decided by Gregorian-cycle enumeration (lg-962.3). |
 | C47 | L4001 case events out of docket order, docket numbers contradicting dates, unordered same-day events that do not commute (§5.6) | sema | b | Events list `{es \| ∀i<j. ¬(e_j ≺ e_i)}` with `≺` the (date, docket) order (QF_LIA, ground); the fix sorts by (date, docket). |
 | C48 | L4001 event matches no edge or several; takes no edge without a declared effect, a firing trigger or transition history, or where the matter has ended; matches only removed edges; removal or transform without `cite`; removal repeated; discharge of another party's obligation; extension or waiver with no target, no capability, the wrong principal, after expiry, or beyond its bound (§5.6) | sema | b | Typestate (DESIGN §4.5) as an indexed type: the matter is `Case<n, R, O>` (posture node `n`, removed edge set `R`, open obligation instances `O`); an event `e` types only as `Case<n, R, O> → Case<to(edge), R, O'>` for the unique edge of `n` not in `R` whose pattern it matches, or as `Case<n, R', O'>` by its declared effect or the triggers it fires (C41). The capability check is a ground comparison of the principal and of dates against the bound. Finite and ground: one step per event. |
 | C49 | L4002 act discharges an obligation instance after its due date (§5.6) | sema | c | The due date comes from counting through holiday calendars and inaccessible days from the instance's trigger: execution, not a type. |
@@ -1825,3 +1859,23 @@ are 29 (a), 24 (b), 22 (c), one n/a; rules R1-R23 are 14 (a), 6 (b),
 - Two (c) rows can become (a) only through a syntax change, recorded for
   review rather than proposed: C15 (`start` into the package header) and
   C66 (type the engine expression language in litigate).
+
+### 13.6 Status: ground refinements (lg-962.3)
+
+The (b) rows above are discharged in two tiers before any solver
+(design review 2026-10-23 §2.2):
+
+1. **Ground evaluation** of closed terms: exact rationals with products
+   cancelled before widening (C25), `Probability` terms over unknowns as
+   exact linear forms over boxed atoms (C28, §6), and distributions over
+   any node's `p` edges without its self edges (O8, C22).
+2. **Gregorian-cycle enumeration** for properties of every date: every
+   counting rule reaches an open day from every date (C46, §5.3). It runs
+   on the lowered clock, so it reports from `litigate-verify`.
+
+Version disjointness (O3, C33), intervals (R8) and day amounts (R7) were
+already ground checks with their own codes; they are unchanged. The SMT
+tier (lg-962.2) remains for open terms only: parameterised values and
+delegation bounds. No refinement surface syntax is added: tiers 1 and 2
+need none, and a user-written qualifier would add a grammar form whose
+only consumer today would be the solver tier.

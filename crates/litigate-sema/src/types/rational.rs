@@ -234,6 +234,7 @@ mod tests {
         assert_eq!(parse_decimal("0.35"), Ok(r(7, 20)));
         assert_eq!(parse_decimal("2_000"), Ok(Rational::integer(2000)));
         assert_eq!(div(r(1, 1), r(0, 1)), Err(ArithError::DivisionByZero));
+        assert_eq!(make(1, 0), Err(ArithError::DivisionByZero));
         assert_eq!(rem(r(1, 2), r(1, 1)), Err(ArithError::NonInteger));
         assert_eq!(
             mul(Rational::integer(i64::MAX), r(2, 1)),

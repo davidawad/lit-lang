@@ -325,8 +325,12 @@ pub(crate) fn json_value(p: &mut Parser<'_>) -> bool {
         || json_record(p)
 }
 
-/// `Type = Ident ["<" Type {"," Type} ">"]`.
+/// `Type = Ident ["<" Type {"," Type} ">"] | RefinedType`.
 pub(crate) fn type_expr(p: &mut Parser<'_>) -> bool {
+    if p.at(LBrace) {
+        refined_type(p);
+        return true;
+    }
     if !p.at(Ident) {
         return false;
     }
@@ -346,6 +350,53 @@ pub(crate) fn type_expr(p: &mut Parser<'_>) -> bool {
     }
     p.finish();
     true
+}
+
+/// `RefinedType = "{" Ident ":" Type "|" Expr "}"` (SPEC §3.5): parsed in
+/// full so the rest of the file parses, then rejected as L0009 because
+/// refinements belong to the SMT tier.
+fn refined_type(p: &mut Parser<'_>) {
+    let opener = p.current_range();
+    p.start(RefinedType);
+    p.bump();
+    p.nested(|p| {
+        let complete = p.expect(Ident)
+            && p.expect(Colon)
+            && require(p, type_expr, &[Ident, LBrace])
+            && p.expect(Pipe)
+            && expr::require_expr(p);
+        if complete && !p.at(RBrace) && !p.at_end() && !p.at_item_anchor() {
+            p.error_expected(&[RBrace]);
+        }
+        p.skip_to(&[RBrace]);
+        if !p.eat(RBrace) {
+            p.unclosed(opener, "}");
+        }
+    });
+    p.finish();
+    let end = p.last_end().max(usize::from(opener.end()));
+    p.push_error(SyntaxError::new(
+        DiagnosticCode::ReservedRefinement,
+        crate::error::range(usize::from(opener.start()), end),
+        format!(
+            "{}: a refinement type `{{x: T | p}}` is not yet part of the language; \
+             write the base type",
+            crate::lexer::RESERVED_REFINEMENT
+        ),
+    ));
+}
+
+/// `WhereClause = "where" Expr` (SPEC §3.5) after a parameter's or a type
+/// declaration's type. The lexer already reports `where` as L0009; the
+/// slot parses the predicate so the rest of the file parses.
+pub(crate) fn where_clause(p: &mut Parser<'_>) {
+    if !p.at_kw(KwWhere) {
+        return;
+    }
+    p.start(WhereClause);
+    p.bump_as(KwWhere);
+    expr::require_expr(p);
+    p.finish();
 }
 
 /// `CallExpr = Ref "(" args ")"` where the parenthesis is required.

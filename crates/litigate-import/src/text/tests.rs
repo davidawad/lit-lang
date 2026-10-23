@@ -31,6 +31,7 @@ fn identifiers_follow_the_lexer() {
         "cite",
         "world",
         "characterization",
+        "where",
         "a-",
         "-a",
         "1",

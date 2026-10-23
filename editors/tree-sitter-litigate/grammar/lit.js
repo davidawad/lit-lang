@@ -61,7 +61,13 @@ module.exports = {
 
   group_decl: $ => seq('group', field('name', $.identifier), ':', field('label', $.string)),
 
-  type_decl: $ => seq('type', field('name', $.identifier), '=', field('type', $.type)),
+  type_decl: $ => seq(
+    'type',
+    field('name', $.identifier),
+    '=',
+    field('type', $._type),
+    optional(field('refinement', $.where_clause)),
+  ),
 
   enum_decl: $ => seq('enum', field('name', $.identifier), $.variant_list),
 
@@ -83,11 +89,32 @@ module.exports = {
 
   param_list: $ => commaList('(', $.param, ')'),
 
-  param: $ => seq(field('name', $.identifier), ':', field('type', $.type)),
+  param: $ => seq(
+    field('name', $.identifier),
+    ':',
+    field('type', $._type),
+    optional(field('refinement', $.where_clause)),
+  ),
+
+  _type: $ => choice($.type, $.refined_type),
 
   type: $ => seq(field('name', $.identifier), optional($.type_args)),
 
-  type_args: $ => seq('<', $.type, repeat(seq(',', $.type)), '>'),
+  type_args: $ => seq('<', $._type, repeat(seq(',', $._type)), '>'),
+
+  // SPEC §3.5: refinement syntax is reserved for the SMT tier. Both forms
+  // parse here so editors highlight them; the compiler rejects them (L0009).
+  refined_type: $ => seq(
+    '{',
+    field('binder', $.identifier),
+    ':',
+    field('base', $._type),
+    '|',
+    field('predicate', $._expression),
+    '}',
+  ),
+
+  where_clause: $ => seq('where', field('predicate', $._expression)),
 
   // Nodes and edges.
 

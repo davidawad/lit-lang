@@ -91,7 +91,7 @@ The canonical format (`litigate fmt', SPEC §10) uses two."
     "allow_hours" "end_of_month" "effective" "observed" "amends" "subject_to" "notwithstanding"
     "supersedes" "revives" "override" "delegable_to" "rebuts" "undercuts"
     "priority" "url" "bearer" "trigger" "extend" "waive" "after_expiry" "never"
-    "removes" "elects" "extends" "waives" "to"
+    "removes" "elects" "extends" "waives" "to" "where"
     "given" "expect" "on")
   "Clause, field and test keywords.")
 
@@ -211,7 +211,7 @@ The canonical format (`litigate fmt', SPEC §10) uses two."
 
    :language 'litigate
    :feature 'delimiter
-   '(["," ":" "::" "." "@"] @font-lock-delimiter-face)
+   '(["," ":" "::" "." "@" "|"] @font-lock-delimiter-face)
 
    :language 'litigate
    :feature 'variable

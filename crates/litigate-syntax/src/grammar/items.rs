@@ -1,7 +1,7 @@
 //! `.lit` files (SPEC §3.1): header, item dispatch, and graph declarations.
 use super::clauses::{clauses, expect_header_end, keyword_field, Clauses};
 use super::fields::{field, field_list, fixed_fields, keywords, Spec, EDGE_FIELDS, NODE_FIELDS};
-use super::values::{prob_value, reference, require, type_expr};
+use super::values::{prob_value, reference, require, type_expr, where_clause};
 use super::{decls, delimited_node, Sep};
 use crate::error::SyntaxError;
 use crate::parser::{Parser, LIT_ITEM_KEYWORDS};
@@ -158,12 +158,12 @@ fn group(p: &mut Parser<'_>) {
     p.finish();
 }
 
-/// `type Name = Type`.
+/// `type Name = Type [where Expr]`.
 fn type_decl(p: &mut Parser<'_>) {
     p.start(TypeDecl);
     p.bump_as(KwType);
-    if p.expect(Ident) && p.expect(Eq) {
-        require(p, type_expr, &[Ident]);
+    if p.expect(Ident) && p.expect(Eq) && require(p, type_expr, &[Ident]) {
+        where_clause(p);
     }
     p.finish();
 }
@@ -203,8 +203,8 @@ fn param(p: &mut Parser<'_>) -> bool {
     }
     p.start(Param);
     p.bump();
-    if p.expect(Colon) {
-        require(p, type_expr, &[Ident]);
+    if p.expect(Colon) && require(p, type_expr, &[Ident]) {
+        where_clause(p);
     }
     p.finish();
     true

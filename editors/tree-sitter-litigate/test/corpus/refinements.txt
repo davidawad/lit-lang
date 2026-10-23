@@ -1,0 +1,119 @@
+================================================================================
+Reserved refinement type
+================================================================================
+
+module a
+type Short = {d: Days | d <= 60.days && d > 0.days}
+type Window = Interval<{t: Date | t >= 2026-01-01}>
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (type_decl
+      (identifier)
+      (refined_type
+        (identifier)
+        (type
+          (identifier))
+        (binary_expression
+          (binary_expression
+            (ref
+              (identifier))
+            (duration))
+          (binary_expression
+            (ref
+              (identifier))
+            (duration)))))
+    (type_decl
+      (identifier)
+      (type
+        (identifier)
+        (type_args
+          (refined_type
+            (identifier)
+            (type
+              (identifier))
+            (binary_expression
+              (ref
+                (identifier))
+              (date))))))))
+
+================================================================================
+Reserved refinement on an event parameter
+================================================================================
+
+module a
+event Served(on: {t: Date | t >= 2026-01-01}, how: String)
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (event_decl
+      (identifier)
+      (param_list
+        (param
+          (identifier)
+          (refined_type
+            (identifier)
+            (type
+              (identifier))
+            (binary_expression
+              (ref
+                (identifier))
+              (date))))
+        (param
+          (identifier)
+          (type
+            (identifier)))))))
+
+================================================================================
+Reserved where clauses
+================================================================================
+
+module a
+type Short = Days where Short <= 60.days
+event Served(on: Date where on >= 2026-01-01, how: String)
+start s
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (type_decl
+      (identifier)
+      (type
+        (identifier))
+      (where_clause
+        (binary_expression
+          (ref
+            (identifier))
+          (duration))))
+    (event_decl
+      (identifier)
+      (param_list
+        (param
+          (identifier)
+          (type
+            (identifier))
+          (where_clause
+            (binary_expression
+              (ref
+                (identifier))
+              (date))))
+        (param
+          (identifier)
+          (type
+            (identifier)))))
+    (start_decl
+      (identifier))))

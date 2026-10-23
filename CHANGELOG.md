@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Reserved refinement syntax** (lg-962.7; SPEC §3.5, design review
+  2026-10-23 §2.2). The SMT tier's surface forms are reserved so adding
+  them later cannot break a `.lit` file: a refinement type
+  `{x: T | pred}` wherever a type stands, and a `where pred` clause after
+  a parameter's or a type declaration's type. Both parse into their own
+  CST nodes (`RefinedType`, `WhereClause`) and are rejected with the new
+  code L0009, whose message begins `reserved: refinements (SMT tier)`.
+  `where` is a reserved word (L0009 anywhere, `REFINEMENT_WORDS`) and `|`
+  is a new punctuation token. The tree-sitter grammar (`refined_type`,
+  `where_clause`) and the Emacs, Helix and Neovim highlights follow.
 - **Order independence** (design review §6 item 4, P7, P13; SPEC §4.1,
   §5.4, §5.6). The engine visits nodes in canonical (qualified id) order
   and a node's links by id, so renaming a module file, reordering a pack's

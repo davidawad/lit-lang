@@ -48,7 +48,7 @@ pub fn format(text: &str, kind: FileKind) -> Result<String, FormatError> {
     Ok(format_tree(&parsed.syntax()))
 }
 
-/// L0009-style check used by `litigate fmt --check` and the strict profile:
+/// L9004 check used by `litigate fmt --check` and the strict profile:
 /// `None` when `text` is canonical (or unparsable: syntax errors are
 /// reported elsewhere), else an L9004 diagnostic at the first difference.
 #[must_use]

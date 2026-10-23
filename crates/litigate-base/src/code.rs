@@ -55,7 +55,7 @@ macro_rules! registry {
     };
 }
 
-registry! { 60;
+registry! { 61;
     UnexpectedToken = "L0001" => "The token is not valid at this position in the grammar",
     UnterminatedLiteral = "L0002" => "A string, block comment, or other delimited literal was not closed",
     InvalidToken = "L0003" => "The source contains a character sequence that is not a token",
@@ -64,6 +64,7 @@ registry! { 60;
     DanglingDocComment = "L0006" => "A documentation comment is not followed by a declaration",
     ReservedWord = "L0007" => "A word reserved for a future language construct is used as an identifier",
     UnknownEdition = "L0008" => "The edition marker names an edition this compiler does not know",
+    ReservedRefinement = "L0009" => "Refinement syntax (`{x: T | p}` or a `where` clause) is reserved for the SMT tier and not yet accepted",
     DuplicateName = "L1001" => "A declaration name is duplicated in the same namespace",
     UnresolvedName = "L1002" => "A referenced declaration or imported module could not be resolved",
     ImportCycle = "L1003" => "Module imports must form an acyclic dependency graph",

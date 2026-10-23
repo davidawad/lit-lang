@@ -65,7 +65,7 @@ enum Raw {
     OrOr,
     #[token("..")]
     DotDot,
-    #[regex(r"[{}()\[\]:,.=<>+\-*/%!?@^~]")]
+    #[regex(r"[{}()\[\]:,.=<>+\-*/%!?@^~|]")]
     Punct,
 }
 
@@ -101,6 +101,14 @@ pub const RESERVED_WORDS: [&str; 8] = [
     "grant",
     "characterization",
 ];
+
+/// Words reserved for the refinement surface syntax of the SMT tier
+/// (SPEC §2.1): L0009 wherever they appear, in the grammar's `where`
+/// clause slot as well as anywhere an identifier could stand.
+pub const REFINEMENT_WORDS: [&str; 1] = ["where"];
+
+/// Message prefix of every L0009 diagnostic (SPEC §2.1).
+pub const RESERVED_REFINEMENT: &str = "reserved: refinements (SMT tier)";
 
 /// Lexes `text` into a lossless token stream plus lexical errors.
 #[must_use]
@@ -181,7 +189,17 @@ impl Lexer<'_> {
                 return self.cite(start, end, rest);
             }
             Raw::Ident => {
-                if RESERVED_WORDS.contains(&text) {
+                if REFINEMENT_WORDS.contains(&text) {
+                    self.error(
+                        DiagnosticCode::ReservedRefinement,
+                        start,
+                        end,
+                        format!(
+                            "{RESERVED_REFINEMENT}: `{text}` introduces a refinement clause, which \
+                             a later edition adds; it cannot be written or used as an identifier"
+                        ),
+                    );
+                } else if RESERVED_WORDS.contains(&text) {
                     self.error(
                         DiagnosticCode::ReservedWord,
                         start,

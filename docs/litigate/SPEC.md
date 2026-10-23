@@ -89,7 +89,7 @@ Underscore   = "_" ;                            (* a lone underscore *)
 CiteText     = (* see below *) ;
 Punct        = "::" | "->" | "=>" | "==" | "!=" | "<=" | ">=" | "&&" | "||" | ".."
              | "{" | "}" | "(" | ")" | "[" | "]" | ":" | "," | "." | "=" | "<" | ">"
-             | "+" | "-" | "*" | "/" | "%" | "!" | "?" | "@" | "^" | "~" ;
+             | "+" | "-" | "*" | "/" | "%" | "!" | "?" | "@" | "^" | "~" | "|" ;
 ```
 
 - **Identifiers** may contain `-` only between two continue characters
@@ -117,7 +117,9 @@ Punct        = "::" | "->" | "=>" | "==" | "!=" | "<=" | ">=" | "&&" | "||" | ".
   delegation grants and locks). They lex as `Ident` but are L0007 wherever
   they appear, so no source written today collides with that syntax. Only
   the whole word is reserved: `world-court` and `"world"` are fine. The
-  list is `litigate_syntax::RESERVED_WORDS`.
+  list is `litigate_syntax::RESERVED_WORDS`. `where` is reserved the same
+  way for refinements, but is L0009 rather than L0007 (§3.5); its list is
+  `litigate_syntax::REFINEMENT_WORDS`.
 - **Edition marker.** A file may begin with `edition 2026` (`EditionDecl`,
   §3.1-§3.2), before `module` or `case`; anywhere else it is L0001. A year
   the compiler does not know is L0008. A file without a marker is edition
@@ -164,12 +166,12 @@ Item         = StartDecl | GroupDecl | TypeDecl | EnumDecl | EventDecl | NodeDec
              | ExceptionDecl | TestDecl ;
 StartDecl    = "start", Ident ;
 GroupDecl    = "group", Ident, ":", String ;
-TypeDecl     = "type", Ident, "=", Type ;
+TypeDecl     = "type", Ident, "=", Type, [ WhereClause ] ;   (* WhereClause: §3.5 *)
 EnumDecl     = "enum", Ident, "{", Ident, { ",", Ident }, [","], "}" ;
 EventDecl    = "event", Ident, "(", [ Param, { ",", Param }, [","] ], ")",
                [ EventEffect ] ;
 EventEffect  = ( "removes" | "elects" ), Ident | "extends", Ref, "to", Ident | "waives", Ref ;
-Param        = Ident, ":", Type ;
+Param        = Ident, ":", Type, [ WhereClause ] ;
 
 NodeDecl     = NodeKw, Ident, ":", String, { NodeClause }, [ NodeBody ] ;
 NodeKw       = "state" | "decision" | "chance" | "terminal" ;
@@ -252,7 +254,7 @@ JsonValue    = SignedNumber | String | Bool | "unset" | JsonRecord
 SignedNumber = [ "-" ], Number ;   SignedMoney = [ "-" ], Money ;
 Bool         = "true" | "false" ;
 Hole         = "?", [ "(", String, ")" ] ;
-Type         = Ident, [ "<", Type, { ",", Type }, ">" ] ;
+Type         = Ident, [ "<", Type, { ",", Type }, ">" ] | RefinedType ;   (* RefinedType: §3.5 *)
 ```
 
 ### 3.2 Matters (`.case`)
@@ -325,6 +327,41 @@ are left-associative.
   machine-applicable fix inserting the closer at end of line.
 - Lowering never runs on a file with L0xxx errors. Sema runs on the
   recovered tree so the LSP still works.
+
+### 3.5 Reserved: refinement syntax
+
+Refinement types `{x: B | φ}` (§13.6) are discharged today by ground
+evaluation and Gregorian-cycle enumeration, which need no surface syntax.
+A user-written qualifier belongs to the SMT tier (lg-962.2, design review
+2026-10-23 §2.2), which has none yet. Its two forms are reserved now so
+that adding them later is additive: no file accepted today can change
+meaning or stop parsing when they land.
+
+```ebnf
+RefinedType  = "{", Ident, ":", Type, "|", Expr, "}" ;   (* reserved: L0009 *)
+WhereClause  = "where", Expr ;                          (* reserved: L0009 *)
+```
+
+- `RefinedType` is an alternative of `Type`, so it may stand wherever a
+  type does: `type Short = {d: Days | d <= 60.days}`,
+  `event Served(on: {t: Date | t >= 2026-01-01})`, or as a type argument.
+- `WhereClause` follows the type of a `Param` or of a `TypeDecl`:
+  `event Served(on: Date where on >= 2026-01-01)`. What its predicate may
+  name, and the qualifier grammar of `φ` in either form, are fixed by the
+  edition that adds refinements (lg-962.8); the reserved slot accepts any
+  `Expr`.
+- `where` is a reserved word (§2): L0009 wherever it appears, in the slot
+  or as an identifier. Only the whole word is reserved (`where-filed` and
+  `"where"` are fine). `|` is a punctuation token; outside a
+  `RefinedType` it is L0001.
+- Both forms are parsed in full, into `RefinedType` and `WhereClause`
+  nodes, so the rest of the file still parses and the LSP keeps working;
+  each is then rejected with L0009, whose message begins
+  `reserved: refinements (SMT tier)`. Like any L0xxx error it stops
+  formatting and lowering. A malformed form reports L0001/L0002 as usual,
+  at most one error per position (§3.4).
+- The tree-sitter grammar parses both forms (`refined_type`,
+  `where_clause`) so editors highlight them; the compiler rejects them.
 
 ## 4. Packages, modules, names
 
@@ -1448,6 +1485,7 @@ unchanged, and is graded `error`; anything else is rejected.
 | L0006 | dangling doc comment | L3006 | precedence cycle |
 | L0007 | reserved word | | |
 | L0008 | unknown edition | | |
+| L0009 | reserved refinement | | |
 | L1001 | duplicate name | L3007 | no version in force |
 | L1002 | unresolved name | L3008 | invalid transition |
 | L1003 | import cycle | L3009 | invalid counting |
@@ -1852,6 +1890,7 @@ gets one row per condition when the conditions classify differently.
 | C74 | L0007 reserved word used as an identifier (§2) | syntax | a | Lexical grammar. |
 | C75 | L0008 unknown edition (§2) | syntax | a | Grammar: `Edition` is a closed set per compiler. |
 | C76 | L4009 a duty's instance borne by a party is open past its due date at `as_of` (§5.6) | sema | c | Linearity of the instance is by construction (each ends once); whether it is past due needs the clock at `as_of`, as C49. |
+| C77 | L0009 refinement syntax (`{x: T \| p}` or `where`) used before the SMT tier adds it (§3.5) | syntax | a | Grammar: a reserved slot that always rejects. |
 
 ### 13.4 SPEC rules with no code of their own
 
@@ -1887,8 +1926,8 @@ they are listed so the v2 type system keeps them.
 ### 13.5 Summary
 
 Counting each row once by its primary class (a mixed row counts as its
-first class): obligations O1-O15 are 3 (a), 5 (b), 7 (c); codes C1-C76
-are 29 (a), 24 (b), 22 (c), one n/a; rules R1-R23 are 14 (a), 6 (b),
+first class): obligations O1-O15 are 3 (a), 5 (b), 7 (c); codes C1-C77
+are 30 (a), 24 (b), 22 (c), one n/a; rules R1-R23 are 14 (a), 6 (b),
 3 (c).
 
 - The (c) rows share six reasons: graph reachability (O10, O11, C51,
@@ -1927,4 +1966,5 @@ already ground checks with their own codes; they are unchanged. The SMT
 tier (lg-962.2) remains for open terms only: parameterised values and
 delegation bounds. No refinement surface syntax is added: tiers 1 and 2
 need none, and a user-written qualifier would add a grammar form whose
-only consumer today would be the solver tier.
+only consumer today would be the solver tier. Its forms are reserved
+instead (§3.5, L0009, lg-962.7), so adding them is additive.

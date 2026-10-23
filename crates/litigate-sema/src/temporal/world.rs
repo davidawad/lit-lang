@@ -285,24 +285,6 @@ impl<'a> World<'a> {
         out
     }
 
-    /// Adds the `authority` chains of `modules` (package `info`) and no
-    /// declarations: a vocabulary package's lattice for a world that
-    /// replays others.
-    pub fn add_authorities(
-        &mut self,
-        info: PackInfo,
-        modules: impl IntoIterator<Item = &'a hir::Module>,
-    ) {
-        let pack = self.packs.len();
-        self.packs.push(info);
-        for module in modules {
-            for decl in &module.declarations {
-                self.rank(pack, decl);
-            }
-        }
-        self.lattice = Lattice::new(&self.ranks);
-    }
-
     /// Records the chain link `decl` declares, if it is an `authority`.
     fn rank(&mut self, pack: usize, decl: &Declaration) {
         if let Declaration::Authority(a) = decl {

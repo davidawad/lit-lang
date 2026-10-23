@@ -296,6 +296,11 @@ fn links_and_instances_table() {
             &NoClock,
         ),
         (
+            "unused: a link into a package the matter does not use reaches none of its terminals",
+            matter(linked, "", &[benched], STAKES),
+            &NoClock,
+        ),
+        (
             "ok: an option-removing name without an option parameter is an event",
             matter(
                 all,

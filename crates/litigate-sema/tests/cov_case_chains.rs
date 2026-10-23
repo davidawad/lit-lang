@@ -121,6 +121,7 @@ counting oc cite FRCP 6(a) { exclude_trigger_day, include_last_day, holidays oca
 calendar ocal { new-year: fixed(1, 1) effective [1870-06-28, ..) observed nearest_weekday }
 
 deadline dep-base: 10.days from Served(complaint) counted_by oc
+deadline gap-base: 10.days from Served(complaint) counted_by oc effective [2020-01-01, ..)
 
 terminal idle: \"Idle\" { payoff 0.usd }
 ";
@@ -128,35 +129,58 @@ terminal idle: \"Idle\" { payoff 0.usd }
 /// A chain on `BASE`'s period.
 const FOLLOWER: &str = "module follower
 
-import base-pkg.{ dep-base, oc }
+import base-pkg.{ dep-base, gap-base, oc }
 
 start open
 
+enum Way { OtherConsented }
+
 event Opened()
+event Delivered(way: Way)
+event Acted()
 
 deadline after-dep: 5.days from deadline(dep-base).nominal counted_by oc
+deadline after-gap: 5.days from deadline(gap-base).nominal counted_by oc
+deadline own: 3.days from Delivered(OtherConsented) counted_by oc
 
-state open: \"Open\" { stay \"Stay\" -> open { event Opened(), within after-dep } }
+state open: \"Open\"
+{
+  stay \"Stay\" -> open { event Opened(), within after-dep }
+  act \"Act\" -> open { event Acted(), within own }
+}
 ";
 
-/// The matter with `events`, using `follower` only (`base-pkg` is its
-/// dependency).
-fn follow(events: &str) -> litigate_sema::case::CheckedCase {
-    let packages = compile(&[
-        package("base-pkg", &[], "", BASE),
-        package("follower", &["base-pkg"], "", FOLLOWER),
-    ]);
+/// `base-pkg` and `follower`, checked.
+fn followed() -> &'static [Package] {
+    static P: OnceLock<Vec<Package>> = OnceLock::new();
+    P.get_or_init(|| {
+        compile(&[
+            package("base-pkg", &[], "", BASE),
+            package("follower", &["base-pkg"], "", FOLLOWER),
+        ])
+    })
+}
+
+/// The matter with `header` lines (after `summary`) and `events`, using
+/// `follower` only
+/// (`base-pkg` is its dependency), over the `loaded` packages.
+fn follow_in(loaded: &[Package], header: &str, events: &str) -> litigate_sema::case::CheckedCase {
     let text = format!(
-        "case t\nuses follower ^1.0.0\nas_of 2011-06-01\nsummary \"s\"\n\n\
+        "case t\nuses follower ^1.0.0\nas_of 2011-06-01\nsummary \"s\"\n{header}\n\
          parties {{\n  d: Defendant Corporation\n}}\n\
          events {{\n{events}}}\n"
     );
-    let used: Vec<Package> = packages
+    let used: Vec<Package> = followed()
         .iter()
         .filter(|p| p.manifest.name == "follower")
         .cloned()
         .collect();
-    check(&text, &packages, Some(&lock(&used)), &Plus, Profile::Dev)
+    check(&text, loaded, Some(&lock(&used)), &Plus, Profile::Dev)
+}
+
+/// The matter with `events` over both packages.
+fn follow(events: &str) -> litigate_sema::case::CheckedCase {
+    follow_in(followed(), "", events)
 }
 
 /// `after-dep` follows a period of a package the matter only depends on.
@@ -193,4 +217,38 @@ fn a_chain_on_a_dependency_period_opens_nothing_without_its_event() {
         .diagnostics
         .iter()
         .all(|d| d.code.as_str() != "L1002"));
+}
+
+/// A dependency's counting rule counts under the version it declares (and
+/// its transitions), recognizing a service method its map names; `own` is
+/// due Jan 7. Without the dependency loaded, the shared library's rule of
+/// that name stands in, under no version.
+#[test]
+fn a_dependency_counting_rule_counts_under_its_own_version() {
+    let events = "  2011-01-04 Delivered(OtherConsented) by d\n  2011-01-10 Acted() by d\n";
+    let declared = outcome(&follow(events)).join("\n");
+    assert!(declared.contains("due 2011-01-07"), "{declared}");
+    assert!(
+        declared.contains("service by other-consented"),
+        "{declared}"
+    );
+    let follower: Vec<Package> = followed()
+        .iter()
+        .filter(|p| p.manifest.name == "follower")
+        .cloned()
+        .collect();
+    let library = outcome(&follow_in(&follower, "", events)).join("\n");
+    assert!(library.contains("due 2011-01-07"), "{library}");
+    assert_ne!(declared, library);
+}
+
+/// A dependency's nodes are law the used packages read, never a stage of
+/// the matter.
+#[test]
+fn a_dependency_node_is_never_a_stage() {
+    let start = outcome(&follow_in(followed(), "start base-pkg::idle\n", "")).join("\n");
+    assert!(
+        start.contains("no node `base-pkg::idle` in `follower`"),
+        "{start}"
+    );
 }

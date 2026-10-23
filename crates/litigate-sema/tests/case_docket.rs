@@ -84,6 +84,21 @@ fn docket_order_table() {
                 "2010-01-04 docket 5 Served(complaint, Mail) on d",
             ],
         ),
+    ];
+    snapshot("docket_order_table", &rows);
+}
+
+fn snapshot(name: &str, rows: &[(&str, Vec<&str>)]) {
+    let got: BTreeMap<&str, Vec<String>> = rows
+        .iter()
+        .map(|(name, events)| (*name, run(&alpha(events), &NoClock, Profile::Dev)))
+        .collect();
+    insta::assert_debug_snapshot!(name, got);
+}
+
+#[test]
+fn docket_number_table() {
+    let rows: Vec<(&str, Vec<&str>)> = vec![
         (
             "contradiction: a docket number falling with the date",
             vec![
@@ -107,11 +122,7 @@ fn docket_order_table() {
             vec!["2010-01-04 docket 1.5 Served(complaint, Mail) on d"],
         ),
     ];
-    let got: BTreeMap<&str, Vec<String>> = rows
-        .iter()
-        .map(|(name, events)| (*name, run(&alpha(events), &NoClock, Profile::Dev)))
-        .collect();
-    insta::assert_debug_snapshot!(got);
+    snapshot("docket_number_table", &rows);
 }
 
 /// Unordered events that commute replay the same whichever is written

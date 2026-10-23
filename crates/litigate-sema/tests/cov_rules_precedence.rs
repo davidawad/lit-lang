@@ -166,6 +166,53 @@ fn a_lower_authority_listed_first_loses_on_authority() {
     assert_eq!(got, Ok("local::a".to_owned()));
 }
 
+/// The world is a set of packages (design review §3.4): every order of
+/// loading the same packages selects the same governing declaration.
+#[test]
+fn every_load_order_of_one_world_selects_alike() {
+    let delegated = format!(
+        "{C6}{}",
+        d(
+            "tg",
+            1,
+            "effective [2009-12-01, ..) delegable_to [LocalRule]"
+        )
+    );
+    let packages = [
+        core(),
+        rules("frcp", "FederalRule", &["core"], "", &delegated),
+        rules(
+            "local",
+            "LocalRule",
+            &["core", "frcp"],
+            "tg, c6",
+            &d("a", 4, "override tg"),
+        ),
+    ];
+    let (db, ws) = workspace(&packages);
+    let checks = litigate_sema::check_workspace(&db, ws);
+    let compiled: Vec<&litigate_sema::hir::Package> =
+        checks.iter().filter_map(|c| c.package.as_ref()).collect();
+    assert_eq!(compiled.len(), 3, "{:?}", render(&db, ws));
+    let t = Key {
+        pack: "frcp".into(),
+        name: "tg".into(),
+    };
+    for order in [
+        [0, 1, 2],
+        [0, 2, 1],
+        [1, 0, 2],
+        [1, 2, 0],
+        [2, 0, 1],
+        [2, 1, 0],
+    ] {
+        let world = litigate_sema::temporal::World::from_packages(&order.map(|i| compiled[i]));
+        let got = litigate_sema::precedence::select::select(&world, &t, "2013-01-01", None)
+            .map(|w| format!("{}::{}", world.pack_of(w), world.decls[w].meta.id));
+        assert_eq!(got, Ok("local::a".to_owned()), "{order:?}");
+    }
+}
+
 #[test]
 fn claimant_ties_and_cycles_table() {
     let tg = d("tg", 1, "");

@@ -275,13 +275,9 @@ pub fn build(src: &dyn Source, args: &Args) -> Outcome {
     if report.has_errors() {
         return Ok(report);
     }
+    // `check` lowered every package at these same dates, so a build that
+    // checks lowers without errors.
     let mut built = lower_all(&c, &options);
-    report
-        .diagnostics
-        .extend(std::mem::take(&mut built.diagnostics));
-    if report.has_errors() {
-        return Ok(report);
-    }
     built.files = rename_packs(built.files, &stems)?;
     for (path, text) in &built.files {
         write_atomic_in(src, &Path::new(out).join(path), text)?;

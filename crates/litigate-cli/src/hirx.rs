@@ -244,6 +244,10 @@ mod tests {
         let meta = &deadlines(&pkg, "answer-period").next().unwrap().meta;
         assert!(in_force(meta, "2025-03-03"));
         assert!(!in_force(meta, "1900-01-01"));
+        let mut ended = meta.clone();
+        ended.effective.to = Some("2025-01-01".into());
+        assert!(in_force(&ended, "2024-12-31"));
+        assert!(!in_force(&ended, "2025-01-01"));
         let all = [&pkg];
         assert!(nodes_at(&all, &pkg, "2000-01-01", None).is_empty());
         assert_eq!(

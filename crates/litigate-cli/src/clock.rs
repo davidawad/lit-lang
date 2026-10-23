@@ -291,12 +291,12 @@ counting nourl cite XYZ 6(a)
     #[test]
     fn every_declared_version_lowers_or_says_why() {
         let mut pkg = hir_with(EXTRA);
-        // Two versions of `frcp6` in one window: neither is selected at
-        // its start, so neither lowers.
+        // Two versions of `frcp6`, the first counting rule, in one window:
+        // neither is selected at its start, so neither lowers.
         let twice = pkg.modules[0]
             .declarations
             .iter()
-            .find(|d| matches!(d, Declaration::Counting(c) if c.meta.id == "frcp6"))
+            .find(|d| matches!(d, Declaration::Counting(_)))
             .cloned()
             .unwrap();
         pkg.modules[0].declarations.push(twice);

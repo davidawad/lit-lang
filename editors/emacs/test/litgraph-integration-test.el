@@ -178,8 +178,13 @@
 (defun litgraph-it--timeline-op-p (binary)
   "Non-nil if BINARY runs the timeline op, as `litgraph-timeline-command' says."
   (let ((command (plist-get litgraph-timeline-command :args)))
-    (eq 0 (ignore-errors
-            (call-process binary nil nil nil (car command) "--help")))))
+    ;; Exit status alone is not enough: a binary without the op can still
+    ;; print its generic usage and exit 0, so look for the op's own flag.
+    (with-temp-buffer
+      (and (eq 0 (ignore-errors
+                   (call-process binary nil t nil (car command) "--help")))
+           (progn (goto-char (point-min))
+                  (search-forward "--as-of" nil t))))))
 
 (ert-deftest litgraph-it-timeline-renders-real-op ()
   ;; The example project (Lit.toml, rule12.lit, acme.case) comes from

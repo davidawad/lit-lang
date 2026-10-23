@@ -108,8 +108,12 @@ pub enum Command {
         /// Package directory, or a directory of matters (default `.`).
         dir: Option<String>,
         /// Fail with L1007 instead of writing when the lock is stale.
-        #[arg(long)]
+        #[arg(long, conflicts_with = "merge")]
         locked: bool,
+        /// Git merge driver: three-way merge `BASE` and `THEIRS` into
+        /// `OURS` (`.gitattributes` `merge=litlock`, SPEC §4.2).
+        #[arg(long, num_args = 3, value_names = ["BASE", "OURS", "THEIRS"], conflicts_with = "dir")]
+        merge: Option<Vec<String>>,
     },
     /// Check packages and matters, discharging the verification obligations.
     Check {

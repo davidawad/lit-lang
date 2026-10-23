@@ -176,6 +176,58 @@ pub fn verify(existing: Option<&str>, expected: &LockFile) -> Result<(), Report>
     Err(report)
 }
 
+/// The digest a three-way merge writes for a package both sides changed
+/// differently. It is never a real digest, so the merged lock is stale
+/// (L1007) until `litigate lock` regenerates it from the merged sources.
+pub const UNMERGED: &str = "unmerged: run `litigate lock`";
+
+/// A three-way merge of `Lit.lock` texts (the git merge driver).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Merged {
+    /// The merged lock, sorted as [`LockFile::new`] sorts.
+    pub lock: LockFile,
+    /// Packages both sides changed differently, written with [`UNMERGED`].
+    pub unresolved: Vec<String>,
+}
+
+/// Merges `ours` and `theirs` against `base` package by package. A row
+/// only one side changed takes that side; a row both sides changed the
+/// same way is kept. A row both sides changed differently (or one changed
+/// and the other removed) keeps the changed row with an [`UNMERGED`]
+/// digest: no lock text holds the digest of the merged sources, so the
+/// result fails closed with L1007 instead of conflicting.
+#[must_use]
+pub fn merge(base: &LockFile, ours: &LockFile, theirs: &LockFile) -> Merged {
+    let row = |lock: &LockFile, name: &str| lock.packages.iter().find(|p| p.name == name).cloned();
+    let mut names: Vec<&str> = [base, ours, theirs]
+        .iter()
+        .flat_map(|l| l.packages.iter().map(|p| p.name.as_str()))
+        .collect();
+    names.sort_unstable();
+    names.dedup();
+    let mut packages = Vec::new();
+    let mut unresolved = Vec::new();
+    for name in names {
+        let (o, a, b) = (row(base, name), row(ours, name), row(theirs, name));
+        let merged = if a == o || a == b {
+            b
+        } else if b == o {
+            a
+        } else {
+            unresolved.push(name.to_owned());
+            a.or(b).map(|p| LockedPackage {
+                digest: UNMERGED.to_owned(),
+                ..p
+            })
+        };
+        packages.extend(merged);
+    }
+    Merged {
+        lock: LockFile::new(packages),
+        unresolved,
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -289,6 +341,70 @@ mod tests {
         assert!(text.contains(r#"name = "a\u0001b\u007F\"\\""#), "{text}");
         assert!(text.contains(r#"version = "tab\u0009here""#), "{text}");
         assert_eq!(LockFile::parse(&text), Ok(lock));
+    }
+
+    #[test]
+    fn merge_takes_each_sides_changes_and_marks_both_changed_rows() {
+        let digested = |name: &str, d: &str| LockedPackage {
+            digest: d.to_owned(),
+            ..pkg(name, &[])
+        };
+        let base = LockFile::new(vec![
+            pkg("core", &[]),
+            pkg("frcp", &["core 1.0.0"]),
+            pkg("gone", &[]),
+            pkg("ptab", &["core 1.0.0"]),
+            pkg("same", &[]),
+        ]);
+        let ours = LockFile::new(vec![
+            digested("core", "a"),
+            pkg("frcp", &["core 1.0.0"]),
+            digested("ptab", "a"),
+            digested("same", "x"),
+        ]);
+        let theirs = LockFile::new(vec![
+            digested("core", "b"),
+            digested("frcp", "b"),
+            pkg("gone", &[]),
+            digested("ptab", "b"),
+            digested("same", "x"),
+            digested("added", "b"),
+        ]);
+        let merged = merge(&base, &ours, &theirs);
+        let unmerged = |name: &str| digested(name, UNMERGED);
+        assert_eq!(
+            merged,
+            Merged {
+                lock: LockFile::new(vec![
+                    digested("added", "b"),
+                    unmerged("core"),
+                    digested("frcp", "b"),
+                    unmerged("ptab"),
+                    digested("same", "x"),
+                ]),
+                unresolved: vec!["core".to_owned(), "ptab".to_owned()],
+            }
+        );
+        let stale = verify(Some(&merged.lock.render()), &base).err();
+        assert_eq!(stale.map(|r| r.code), Some(C::StaleLock));
+    }
+
+    #[test]
+    fn merge_marks_a_row_one_side_changed_and_the_other_removed() {
+        let base = LockFile::new(vec![pkg("frcp", &[])]);
+        let mut changed = pkg("frcp", &[]);
+        changed.version = "2.0.0".into();
+        let ours = LockFile::new(vec![]);
+        let theirs = LockFile::new(vec![changed.clone()]);
+        let marked = LockFile::new(vec![LockedPackage {
+            digest: UNMERGED.to_owned(),
+            ..changed
+        }]);
+        for (a, b) in [(&ours, &theirs), (&theirs, &ours)] {
+            let merged = merge(&base, a, b);
+            assert_eq!(merged.lock, marked);
+            assert_eq!(merged.unresolved, ["frcp"]);
+        }
     }
 
     proptest! {

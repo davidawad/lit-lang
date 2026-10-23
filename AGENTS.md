@@ -50,9 +50,14 @@ litigate where frcp-civil-procedure::service-window  # id → declaration span, 
 litigate explain L3004                      # what a diagnostic code means
 litigate run cases/frcp-civil-case.case --op solve  # compile a matter and run an engine op
 litigate diff lit/frcp --against packs/frcp-civil-procedure.json   # semantic diff (SPEC §8.6)
-just lit-sync                               # regenerate packs/, packs/links.json, scenarios/
+just lit-sync                               # regenerate every Lit.lock, packs/, packs/links.json, scenarios/
 just lit-sync-check                         # CI gate: regenerate + fail if the committed files differ
 ```
+
+`Lit.lock` files merge package by package through the `litlock` git merge
+driver (`.gitattributes`; `just lit-sync` registers it). After a merge or
+rebase touching `lit/`, run `just lit-sync`: a package both sides changed
+is left with an unmerged digest (L1007) until it does.
 
 `docs/litigate/TUTORIAL.md` is the four-step walkthrough (write a rule,
 test it, write a case, run solve); `docs/litigate/SPEC.md` is normative.

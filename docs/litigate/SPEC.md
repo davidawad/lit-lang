@@ -410,6 +410,16 @@ sorted by package-relative POSIX path. Each component is framed as u64 BE
 path length, path bytes, u64 BE content length, content bytes. `Lit.lock`
 itself is excluded and line endings are not normalized.
 
+`Lit.lock` merges package by package. `.gitattributes` names the `litlock`
+driver, `litigate lock --merge BASE OURS THEIRS`, which writes into `OURS`:
+a `[[package]]` row (keyed by `name`) that only one side changed takes that
+side, and one both sides changed the same way is kept. A row both sides
+changed differently, or one side changed and the other removed, keeps the
+changed row with digest ``"unmerged: run `litigate lock`"``. No lock text
+holds the digest of the merged sources, so that lock is stale (L1007)
+until `litigate lock` regenerates it; the merge never conflicts and never
+admits a wrong digest. An unparseable side exits 1, leaving git's conflict.
+
 ### 4.3 Names and resolution
 
 - Namespaces per package: **types** (enums, type aliases, event types),
@@ -1439,7 +1449,7 @@ All commands accept `--format json|human` (default `human` on a TTY, else
 | Command | Arguments | `result` |
 |---|---|---|
 | `describe` | | `{language_version, grammar, types, builtins, diagnostic_codes:[{code, explain}], commands}` |
-| `lock` | `[PKG_DIR]`, `--locked` | `{lockfile, changed, packages:[{name,version,digest}]}`; `--locked` fails (L1007) instead of writing |
+| `lock` | `[PKG_DIR]`, `--locked`, `--merge BASE OURS THEIRS` | `{lockfile, changed, packages:[{name,version,digest}]}`; `--locked` fails (L1007) instead of writing; `--merge` (§4.2) gives `{lockfile, changed, unresolved:[name]}` |
 | `check` | `PATHS...`, `--profile dev\|strict` (default `dev`), `--as-of`, `--known-at` | `{profile, files, obligations:[Finding], packages}` |
 | `build` | `PKG_OR_CASE...`, `--as-of`, `--known-at`, `--out DIR`, `--pack-file ID=STEM` (repeatable) | `{outputs:{packs:[path], links:[path], clock:[path], scenarios:[path], source_maps:[path], litigatables:[path]}, litigatable_hash, litigatables, obligations}` |
 | `fmt` | `PATHS...`, `--check` | `{files:[{path, changed}]}`; `--check` reports L9004 instead of writing |

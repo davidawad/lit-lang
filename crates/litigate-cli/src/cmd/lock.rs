@@ -1,9 +1,11 @@
 //! `litigate lock [DIR] [--locked]`: write or verify `Lit.lock` (SPEC §4.2)
 //! for a package, or for each directory of matters under `DIR` (the lock
-//! beside a `.case` pins the packages it `uses`, SPEC §5.6).
+//! beside a `.case` pins the packages it `uses`, SPEC §5.6); `--merge` is
+//! the git merge driver for `Lit.lock`.
 use crate::out::{Failure, Outcome, Report};
 use crate::ws::{self, CaseText, Session};
 use litigate_base::{Diagnostic, FileId, LineIndex};
+use litigate_sema::pkg::lock::LockFile;
 use serde_json::{json, Value};
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
@@ -38,6 +40,29 @@ pub fn lock(dir: Option<&str>, locked: bool) -> Outcome {
         crate::cmd::build::write_atomic(&file, &text)?;
     }
     Ok(report)
+}
+
+/// `litigate lock --merge BASE OURS THEIRS`: writes the three-way merge
+/// into `OURS`. Packages both sides changed get an unmerged digest, so the
+/// lock stays stale (L1007) until `litigate lock` regenerates it.
+pub fn merge(paths: &[String]) -> Outcome {
+    let read = |path: &String| {
+        let text =
+            std::fs::read_to_string(path).map_err(|e| Failure::new(format!("{path}: {e}")))?;
+        let lock =
+            LockFile::parse(&text).map_err(|r| Failure::new(format!("{path}: {}", r.message)))?;
+        Ok::<_, Failure>((text, lock))
+    };
+    let [base, ours, theirs] = [&paths[0], &paths[1], &paths[2]].map(read);
+    let (ours_text, ours) = ours?;
+    let merged = litigate_sema::pkg::lock::merge(&base?.1, &ours, &theirs?.1);
+    let text = merged.lock.render();
+    crate::cmd::build::write_atomic(Path::new(&paths[1]), &text)?;
+    Ok(Report::of(json!({
+        "lockfile": ws::shown(Path::new(&paths[1])),
+        "changed": text != ours_text,
+        "unresolved": merged.unresolved,
+    })))
 }
 
 fn pinned(session: &Session) -> Vec<Value> {
@@ -87,11 +112,7 @@ fn matters(session: &Session, paths: &[PathBuf], locked: bool) -> Outcome {
 }
 
 /// L1007 when the lock at `file` is missing or differs from `expected`.
-fn stale(
-    file: &str,
-    existing: Option<&str>,
-    expected: &litigate_sema::pkg::lock::LockFile,
-) -> Option<Diagnostic> {
+fn stale(file: &str, existing: Option<&str>, expected: &LockFile) -> Option<Diagnostic> {
     litigate_sema::pkg::lock::verify(existing, expected)
         .err()
         .map(|r| {

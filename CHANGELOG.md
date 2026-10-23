@@ -11,6 +11,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **`Lit.lock` merges package by package** (SPEC §4.2, lg-flu.22).
+  `.gitattributes` routes every `Lit.lock` through the `litlock` merge
+  driver, `litigate lock --merge BASE OURS THEIRS`: a package row only one
+  side changed takes that side, so parallel `lit/` changes no longer
+  conflict in the locks of every dependent package and matter directory. A
+  row both sides changed differently gets an unmerged digest, so the lock
+  stays stale (L1007) until `just lit-sync`, which now regenerates every
+  committed `Lit.lock` (and registers the driver; so does `just install`).
+  `just lit-sync-check` fails on a stale `Lit.lock` as well.
 - **Obligation instances in `.case` replay** (SPEC §5.3, §5.6). Each
   deadline trigger creates an obligation instance with a bearer (`bearer
   Actor`) under a declared trigger policy (`trigger first | latest | each |

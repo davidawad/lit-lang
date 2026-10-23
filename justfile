@@ -20,6 +20,16 @@ install:
     command -v cargo-audit >/dev/null 2>&1 || cargo install cargo-audit --locked
     command -v cargo-deny >/dev/null 2>&1 || cargo install cargo-deny --locked
     command -v cargo-machete >/dev/null 2>&1 || cargo install cargo-machete --locked
+    just lit-merge-driver
+
+# Register the `litlock` git merge driver `.gitattributes` names for every
+# `Lit.lock` (SPEC §4.2) in this clone. Idempotent; a no-op outside git.
+lit-merge-driver:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    git rev-parse --git-dir > /dev/null 2>&1 || exit 0
+    git config merge.litlock.name "Lit.lock package-by-package merge (litigate lock --merge)"
+    git config merge.litlock.driver 'cargo run -q --manifest-path "$(git rev-parse --show-toplevel)/Cargo.toml" -p litigate-cli -- lock --merge %O %A %B > /dev/null'
 
 # Run the CLI (release build) with any extra args, e.g. `just run describe`.
 run *ARGS:
@@ -230,15 +240,21 @@ lit-check *ARGS='--profile strict lit cases':
 lit_sync_inputs := "lit/cafc lit/cofc lit/frap lit/frcp lit/frcrimp lit/itc lit/mpep lit/ptab lit/ttab lit/links cases/cofc-1498-patent-case.case cases/cofc-bid-protest.case cases/frcp-civil-case.case cases/ptab-ipr-defense.case cases/ttab-opposition-applicant-defense.case"
 lit_sync_names := "--pack-file cafc=cafc-federal-circuit --pack-file cofc=cofc-court-of-federal-claims"
 
-# Regenerate packs/*.json, packs/links.json, generated packs/clock/
-# fragments and scenarios/*.json from lit/ and cases/. Never hand-edit
-# those files; edit the source and run this.
-lit-sync:
+# Regenerate every committed Lit.lock, then packs/*.json, packs/links.json,
+# generated packs/clock/ fragments and scenarios/*.json from lit/ and
+# cases/. Never hand-edit those files; edit the source and run this. Run
+# it after a merge or rebase touching lit/: the Lit.lock merge driver
+# leaves a package both sides changed unmerged (L1007) until it does.
+lit-sync: lit-merge-driver
     #!/usr/bin/env bash
     set -euo pipefail
     out="$(mktemp -d)"
     trap 'rm -rf "$out"' EXIT
     lit=(cargo run -q -p litigate-cli -- --format human)
+    for lockfile in lit/*/Lit.lock; do
+      "${lit[@]}" lock "${lockfile%/Lit.lock}" > /dev/null
+    done
+    "${lit[@]}" lock cases > /dev/null
     "${lit[@]}" build {{lit_sync_inputs}} {{lit_sync_names}} --out "$out" > /dev/null \
       || "${lit[@]}" build {{lit_sync_inputs}} {{lit_sync_names}} --out "$out"
     rm -f packs/*.json scenarios/*.json
@@ -246,18 +262,18 @@ lit-sync:
       case "$f" in *.map.json) continue ;; esac
       cp "$f" "${f#"$out"/}"
     done
-    echo "lit-sync: regenerated packs/ and scenarios/ from lit/ and cases/"
+    echo "lit-sync: regenerated Lit.lock files, packs/ and scenarios/ from lit/ and cases/"
 
-# CI gate: regenerate, then fail if any generated file differs from (or is
-# missing from) what is committed.
+# CI gate: regenerate, then fail if any generated file (a Lit.lock
+# included) differs from (or is missing from) what is committed.
 lit-sync-check: lit-sync
     #!/usr/bin/env bash
     set -euo pipefail
-    stale="$(git status --porcelain --untracked-files=all -- packs scenarios)"
+    stale="$(git status --porcelain --untracked-files=all -- packs scenarios '*Lit.lock')"
     if [ -n "$stale" ]; then
       echo "$stale" >&2
-      git --no-pager diff --stat -- packs scenarios >&2
-      echo "lit-sync-check: packs/ or scenarios/ is stale; run \`just lit-sync\` and commit the result" >&2
+      git --no-pager diff --stat -- packs scenarios '*Lit.lock' >&2
+      echo "lit-sync-check: packs/, scenarios/ or a Lit.lock is stale; run \`just lit-sync\` and commit the result" >&2
       exit 1
     fi
     echo "lit-sync-check: generated files are up to date"

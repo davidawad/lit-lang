@@ -26,7 +26,10 @@ use litigate_sema::pkg::source::Source;
 pub fn dispatch(command: Command, src: &dyn Source) -> Outcome {
     match command {
         Command::Describe => Ok(crate::out::Report::of(crate::describe::describe())),
-        Command::Lock { dir, locked } => lock::lock(dir.as_deref(), locked),
+        Command::Lock { dir, locked, merge } => match merge {
+            Some(paths) => lock::merge(&paths),
+            None => lock::lock(dir.as_deref(), locked),
+        },
         Command::Check {
             paths,
             profile,

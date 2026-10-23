@@ -241,7 +241,10 @@ const BUILTINS: [(&str, &str); 9] = [
 
 const RESULTS: [(&str, &str); 14] = [
     ("describe", "this document"),
-    ("lock", "{lockfile, changed, packages:[{name, version, digest}]}"),
+    (
+        "lock",
+        "{lockfile, changed, packages:[{name, version, digest}]}; --merge: {lockfile, changed, unresolved:[name]}",
+    ),
     ("check", "{profile, files, obligations:[{obligation, passed, detail}], packages, cases:[{path, id, start, replay, deadlines}]}"),
     ("build", "{outputs:{packs, links, clock, scenarios, source_maps, litigatables}, litigatable_hash, litigatables:[{package, path, content_hash}], obligations}"),
     ("test", "{passed, failed, tests:[{package, name, cite, span, passed, expectations:[{text, passed, actual, expected, steps}]}]}"),

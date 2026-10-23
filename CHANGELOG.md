@@ -9,6 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Reserved typed guard operations in patches** (lg-flu.35; SPEC §3.6,
+  PM ruling 2026-10-23 on L2007). A later decision or order that narrows,
+  widens or replaces an edge's guard will be written explicitly, with its
+  authority (`cite` and `effective`), inside a `patch`: `when and pred`
+  (narrow), `when or pred` (widen), `supersedes when pred` (replace). The
+  forms parse into a new `GuardOp` CST node and are rejected with the new
+  code L0010, whose message begins `reserved: typed guard operations`,
+  until lg-flu.36 implements them. `and` and `or` are reserved words
+  (L0010 anywhere, `GUARD_OP_WORDS`). A plain `when` in a patch stays
+  L2007 (an implicit overwrite) and now points at the explicit forms. The
+  tree-sitter grammar (`patch_fields`, `guard_op`) and the Emacs, Helix
+  and Neovim highlights, indents and folds follow.
+
 - **Generated files are build outputs, not committed** (lg-flu.31). Two
   beads changing different `lit/` packages used to conflict on
   `packs/*.json`, `packs/links.json`, `packs/clock/mpep-prosecution.json`,

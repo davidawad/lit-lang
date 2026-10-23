@@ -119,7 +119,10 @@ Punct        = "::" | "->" | "=>" | "==" | "!=" | "<=" | ">=" | "&&" | "||" | ".
   the whole word is reserved: `world-court` and `"world"` are fine. The
   list is `litigate_syntax::RESERVED_WORDS`. `where` is reserved the same
   way for refinements, but is L0009 rather than L0007 (§3.5); its list is
-  `litigate_syntax::REFINEMENT_WORDS`.
+  `litigate_syntax::REFINEMENT_WORDS`. `and` and `or` are reserved the
+  same way for the typed guard operations of a patch, as L0010 (§3.6);
+  their list is `litigate_syntax::GUARD_OP_WORDS`. Boolean operators stay
+  `&&` and `||` (§3.3).
 - **Edition marker.** A file may begin with `edition 2026` (`EditionDecl`,
   §3.1-§3.2), before `module` or `case`; anywhere else it is L0001. A year
   the compiler does not know is L0008. A file without a marker is edition
@@ -205,7 +208,8 @@ InstanceField= "pack", Ident | "note", String | "remove_edges", IdList
              | "probabilities", "{", { Ident, ":", ProbValue, Sep }, "}"
              | "roles", "{", { Ident, ":", Ident, Sep }, "}"
              | "payoff_transform", "(", Expr, ")" | "stake", (SignedMoney | Hole)
-             | "patch", Ident, EdgeFields ;
+             | "patch", Ident, PatchFields ;
+PatchFields  = "{", { (EdgeField | GuardOp), Sep }, "}" ;  (* GuardOp: §3.6 *)
 
 RuleDecl     = "rule", ("duty" | "power" | "liability"), Ident, { VersionClause
              | Relation | Cite }, "{", { Item, Sep }, "}" ;
@@ -359,6 +363,75 @@ WhereClause  = "where", Expr ;                          (* reserved: L0009 *)
   at most one error per position (§3.4).
 - The tree-sitter grammar parses both forms (`refined_type`,
   `where_clause`) so editors highlight them; the compiler rejects them.
+
+### 3.6 Reserved: typed guard operations in patches
+
+A new appellate decision or court order is a file that modifies a rule:
+it may narrow the condition under which an edge applies, widen it, or
+replace it. A `patch` that wrote `when C` would overwrite the base edge's
+guard (§5.1) with nothing to say whether that narrows, widens or
+replaces it, or on whose authority, so a plain `when` in a patch is
+L2007 (§8.4). The explicit forms are reserved now (PM ruling 2026-10-23
+on lg-flu.35) so that adding them is additive: no file accepted today
+can change meaning or stop parsing when they land (lg-flu.36).
+
+```ebnf
+GuardOp      = ( "when", ( "and" | "or" ) | "supersedes", "when" ), Expr,
+               { VersionClause | Cite } ;               (* reserved: L0010 *)
+```
+
+Semantics, fixed now for the implementation to follow. Let `g` be the
+base edge's guard, read as `true` when it has none, and `C` the
+operation's `Bool` expression, typed as a `when` guard is (§5.1):
+
+| Form | Name | Guard while the operation is in force |
+|---|---|---|
+| `when and C` | narrow | `g && C` |
+| `when or C` | widen | `g \|\| C` |
+| `supersedes when C` | replace | `C` |
+
+- **Authority is required.** Each operation is a modification by a later
+  instrument and carries that instrument's authority: a `cite` naming it
+  and an `effective` interval giving the date it takes effect (§5.4). An
+  operation missing either is rejected, never defaulted (fail-closed):
+  rule text, a date or an authority that cannot be verified against a
+  vendored source stays a hole (§8.1), and the operation then does not
+  apply. `known_at` records when the instrument became known, as on any
+  version (§5.4).
+- **In force only on its interval.** Outside the operation's `effective`
+  interval the base guard `g` holds unchanged; the guard is bitemporal
+  like every other versioned fact. Replay (§5.6) evaluates the guard in
+  force on the date it reads.
+- **Capability.** A guard operation displaces part of its target's
+  effect, so like `supersedes` (§5.5 item 3) it needs a capability: its
+  authority equals or outranks the base edge's, or the base lists it in
+  `delegable_to` (L3004).
+- **Composition.** Several operations on one edge apply in the order
+  their authorities and effective dates fix (§5.5), not in source or file
+  order, so the result does not depend on which file a manifest lists
+  first. A `supersedes when` resets the guard for its interval; `and`
+  and `or` operations apply to the guard in force.
+- **Placement.** A guard operation is written only inside a `patch`
+  block, and only on an edge that may carry a `when` (§5.1). A widened
+  guard is still checked for disjointness against its node's other
+  guards (L2005).
+
+Today:
+
+- `GuardOp` is an alternative of a patch's fields only (`PatchFields`,
+  §3.1); an edge or link declaration has no such slot.
+- `and` and `or` are reserved words (§2): L0010 wherever they appear, in
+  the slot or as an identifier. Only the whole word is reserved
+  (`reversed-and-remanded` and `"and"` are fine). `supersedes when` is
+  reported by the parser as one L0010 over the whole operation.
+- Every form is parsed in full, into a `GuardOp` node, so the rest of
+  the file still parses and the LSP keeps working; each is then rejected
+  with L0010, whose message begins `reserved: typed guard operations`.
+  Like any L0xxx error it stops formatting and lowering. The reserved
+  slot accepts any `Expr` and any sequence of version clauses and cites;
+  which are required is enforced when the operations land.
+- The tree-sitter grammar parses the slot (`guard_op` inside
+  `patch_fields`) so editors highlight it; the compiler rejects it.
 
 ## 4. Packages, modules, names
 
@@ -1394,7 +1467,9 @@ fields with the `EdgeFields` syntax and types of an edge declaration
 (§3.1, §6), so `within d` names a deadline declaration instead of
 repeating its length; `event`, `replaces` and a fact guard's `when`
 (§5.1: replay derives facts from the base edge's guard) are not
-patchable (L2007), and patching one edge twice is L2007. Each written field replaces the base
+patchable (L2007: a plain `when` would overwrite the guard implicitly;
+the explicit operations of §3.6 are reserved, L0010), and patching one
+edge twice is L2007. Each written field replaces the base
 edge's whole field (`within`/`deadline` its whole window). It lowers to
 `patch_edges[edge]`, the JSON merge patch that does this: each written
 field as §8.1 lowers it, null for a field that lowers to nothing (a `cost`
@@ -1546,6 +1621,7 @@ unchanged, and is graded `error`; anything else is rejected.
 | L0007 | reserved word | | |
 | L0008 | unknown edition | | |
 | L0009 | reserved refinement | | |
+| L0010 | reserved guard operation | | |
 | L1001 | duplicate name | L3007 | no version in force |
 | L1002 | unresolved name | L3008 | invalid transition |
 | L1003 | import cycle | L3009 | invalid counting |
@@ -1959,6 +2035,7 @@ gets one row per condition when the conditions classify differently.
 | C75 | L0008 unknown edition (§2) | syntax | a | Grammar: `Edition` is a closed set per compiler. |
 | C76 | L4009 a duty's instance borne by a party is open past its due date at `as_of` (§5.6) | sema | c | Linearity of the instance is by construction (each ends once); whether it is past due needs the clock at `as_of`, as C49. |
 | C77 | L0009 refinement syntax (`{x: T \| p}` or `where`) used before the SMT tier adds it (§3.5) | syntax | a | Grammar: a reserved slot that always rejects. |
+| C78 | L0010 typed guard operation (`when and p`, `when or p`, `supersedes when p`) in a patch before lg-flu.36 adds it (§3.6) | syntax | a | Grammar: a reserved slot that always rejects. |
 
 ### 13.4 SPEC rules with no code of their own
 
@@ -1994,8 +2071,8 @@ they are listed so the v2 type system keeps them.
 ### 13.5 Summary
 
 Counting each row once by its primary class (a mixed row counts as its
-first class): obligations O1-O15 are 3 (a), 5 (b), 7 (c); codes C1-C77
-are 30 (a), 24 (b), 22 (c), one n/a; rules R1-R23 are 14 (a), 6 (b),
+first class): obligations O1-O15 are 3 (a), 5 (b), 7 (c); codes C1-C78
+are 31 (a), 24 (b), 22 (c), one n/a; rules R1-R23 are 14 (a), 6 (b),
 3 (c).
 
 - The (c) rows share six reasons: graph reachability (O10, O11, C51,

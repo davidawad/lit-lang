@@ -31,6 +31,9 @@ pub mod library;
 pub mod rule;
 mod types;
 
+#[cfg(kani)]
+mod kani;
+
 pub use calendar::HolidayCalendar;
 pub use date::Date;
 pub use interp::{compute_due_date, compute_hour_deadline, Clock};

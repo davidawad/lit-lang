@@ -18,6 +18,9 @@ use super::types::{
 };
 use crate::error::{Error, Result};
 
+#[cfg(kani)]
+mod kani_proofs;
+
 /// A counting rule resolved against its holiday calendars: everything the
 /// interpreter needs.
 #[derive(Debug, Clone)]

@@ -46,7 +46,7 @@ it.
 
 | Crate | Owns |
 |---|---|
-| `litigate-base` | `FileId`, `Span`, `LineIndex`, `Diagnostic`, `Severity`, `Fix`, `Applicability`, `Note`, `DiagnosticCode`, `Envelope`, `Profile` |
+| `litigate-base` | `FileId`, `Span`, `LineIndex`, `Diagnostic`, `Severity`, `Fix`, `Edit`, `Label`, `Note`, `Derivation`, `WorldTag`, `Applicability`, `DiagnosticCode`, `Envelope`, `Profile` |
 | `litigate-syntax` | logos lexer, hand-written recursive-descent parser producing a rowan CST, `SyntaxKind`, typed AST wrappers, formatter |
 | `litigate-sema` | salsa database, `Lit.toml`/`Lit.lock`, name resolution, type checking, version selection, HIR (`hir`) |
 | `litigate-verify` | the obligations in §7 over HIR; `Obligation`, `Finding` |
@@ -909,13 +909,14 @@ weeks, months and years are estimates in mean Gregorian days: 7, 146097/4800 and
 ## 7. Verification obligations and profiles
 
 `litigate check` reports every obligation as a `Finding`
-`{name, status, count, examples}`, collected in a `VerificationReport`
+`{name, status, count, examples, evidence}`, collected in a `VerificationReport`
 `{obligations, profile}` that is embedded in every litigatable
 (`litigate_verify::{Finding, VerificationReport}`; abridged):
 
 ```json
 {"obligations":[
-   {"name":"well-typed","status":"passed","count":0,"examples":[]},
+   {"name":"well-typed","status":"passed","count":0,"examples":[],
+    "evidence":{"checked":28,"subjects":"declarations"}},
    {"name":"holes","status":"warning","count":1,
     "examples":["lit/x/main.lit:12:3: L9002 hole: no calibration yet"]},
    {"name":"case-replay","status":"skipped","count":0,
@@ -925,9 +926,20 @@ weeks, months and years are estimates in mean Gregorian days: 7, 146097/4800 and
 
 - `obligations` lists every obligation of the table below, once, in table
   order. `name` is the obligation's kebab-case name.
-- `status` is `passed` (no finding), `warning` (only warning-severity
-  findings: the profile accepts it), `failed` (at least one error-severity
-  finding), or `skipped` (not checked for this artifact).
+- `status` is `passed` (checked, no finding), `warning` (only
+  warning-severity findings: the profile accepts it), `failed` (at least one
+  error-severity finding), or `skipped` (not checked for this artifact).
+- `evidence` `{checked, subjects}` is the positive evidence a result rests
+  on: how many subjects the check covered and what they are (`declarations`,
+  `version sets`, `relations and authority chains`, `displacing relations
+  and delegations`, `exceptions and precedence claims`, `chance nodes`,
+  `non-terminal nodes`, `nodes`, `cites`, `inline tests`, `events`, `case
+  entries`, `holes`, `deadline and counting rules`). Every `passed` finding
+  carries it (`checked: 0` says the check ran over nothing). An obligation
+  is never passed by the absence of diagnostics: one with no evidence and no
+  finding is `skipped` (a package sema rejected has no HIR to count; a
+  matter's report passes only its own `well-typed` and `case-replay`).
+  Absent on skipped findings and on failures with no evidence.
 - `count` is the number of findings (violations, holes, warnings); `0`
   when skipped.
 - `examples` holds at most eight findings, sorted like diagnostics (§9.1),
@@ -1250,8 +1262,11 @@ Ranges: L0xxx syntax, L1xxx names/modules/packages, L2xxx types, L3xxx
 temporal/authority/precedence, L4xxx case, L5xxx verification, L6xxx
 lowering/build, L9xxx lints. The closed registry is
 `litigate_base::DiagnosticCode` (`ALL`, `as_str`, `explain`, `parse`,
-`severity`). A new code is a SPEC change plus a registry change, never ad
-hoc. Codes are never reused.
+`decode`, `severity`, `derivation_rule`). A new code is a SPEC change plus a
+registry change, never ad hoc. Codes are never reused. Decoding is
+tolerant: a well-formed code (`L` and four digits) outside the registry, from
+a newer compiler or retired, decodes to `DiagnosticCode::Unknown`, re-encodes
+unchanged, and is graded `error`; anything else is rejected.
 
 | Code | Name | Code | Name |
 |---|---|---|---|
@@ -1294,13 +1309,29 @@ L4009 is `error`. L9003 is `info`. L4009 and L9005 are `warning`. L9001, L9002, 
 
 ### 9.2 Shapes
 
+Envelope and diagnostic schema version 2 (`litigate_base::SCHEMA_VERSION`):
+
 ```json
-{"code":"L0001","severity":"error",
- "span":{"file":"cases/x.case","line":8,"col":3,"end_line":8,"end_col":9},
- "message":"expected `->`, found `{`",
- "notes":[{"message":"edges are written `id \"label\" -> target`","span":null}],
- "fixes":[{"span":{"file":"cases/x.case","line":8,"col":3,"end_line":8,"end_col":3},
-           "replacement":"-> ","applicability":"machine_applicable"}]}
+{"code":"L3003","severity":"error",
+ "span":{"file":"lit/x/main.lit","line":15,"col":67,"end_line":15,"end_col":82},
+ "message":"`b@2009-12-01` and `a@2009-12-01` both apply to `tg` on [2009-12-01, ..), and neither prevails",
+ "labels":[{"span":{"file":"lit/x/main.lit","line":14,"col":67,"end_line":14,"end_col":82},
+            "message":"`a@2009-12-01` is declared here"}],
+ "notes":[{"message":"no declared relation (`notwithstanding`, `override`, `subject_to`) orders them"}],
+ "fixes":[{"message":"rename `old` to `new`",
+           "edits":[{"span":{"file":"lit/x/main.lit","line":3,"col":10,"end_line":3,"end_col":13},
+                     "replacement":"new"},
+                    {"span":{"file":"lit/y/main.lit","line":8,"col":4,"end_line":8,"end_col":7},
+                     "replacement":"new"}],
+           "applicability":"maybe_incorrect"}],
+ "derivation":{"rule":"conflict","fact":"conflict(`tg`, `a@2009-12-01`, `b@2009-12-01`) on [2009-12-01, ..)",
+   "span":{"file":"lit/x/main.lit","line":15,"col":67,"end_line":15,"end_col":82},
+   "premises":[{"rule":"undefeated","fact":"undefeated(`a@2009-12-01`, `tg`) on [2009-12-01, ..)",
+                "premises":[{"rule":"claim","fact":"claim(`a@2009-12-01`, `tg`)"},
+                            {"rule":"no-declared-win","fact":"¬declared_win(`b@2009-12-01`, `a@2009-12-01`)"},
+                            {"rule":"no-canon","fact":"the canons tie: …"}]}]},
+ "fingerprint":"6b222b9a9158b43f","profile":"dev",
+ "world":{"name":"actual","as_of":"2025-06-01"}}
 ```
 
 `file` is the repository-relative `/` path. Lines and columns are one-based.
@@ -1309,9 +1340,38 @@ UTF-16 through `LineIndex`. `severity` is `error|warning|info|hint`.
 `applicability` is `machine_applicable|maybe_incorrect|has_placeholders|
 unspecified`. Diagnostics are sorted by `(file, line, col, code)`.
 
+- `labels` are secondary locations, in any file, each saying what is there.
+  `notes` are unlocated explanation. Both are omitted when empty.
+- A fix is one or more non-overlapping `edits`, possibly across files,
+  applied together or not at all (`litigate fix`, LSP code actions); its
+  optional `message` says what it does.
+- `derivation` is present on every L3xxx error: the proof of the defect in
+  the resolution semantics (§0; review §3.3 strata S0-S5). Each step is
+  `{rule, fact, span?, premises}`. The precedence checks give full trees:
+  L3003 and L3005 `conflict` over two `undefeated` claimants (each a
+  `claim` with `no-declared-win`/`no-defeat` and `no-canon`, or an
+  `exception` with `no-priority` and `not-disjoint`), L3004 `unlicensed`
+  over the displacing `claim`, the authority `rank`, and each
+  `no-capability` (missing delegation), L3006 `cycle` over each `declared`
+  `prevails` edge. Every other L3xxx error carries the one-step derivation
+  of its code's rule (`DiagnosticCode::derivation_rule`: `overlap`, `gap`,
+  `no-winner`, `transition`, `counting`) whose premises are its labels
+  (`premise` steps).
+- `fingerprint` (set in envelopes) identifies a diagnostic across runs and
+  across edits that only move lines: 16 hex digits of FNV-1a-64 over the
+  code, the file, the message, and its occurrence among diagnostics equal in
+  those three.
+- `profile` is the checking profile that graded the severity (`check`,
+  `build`, `run`); `world` is the world it was found in: `name` `actual`
+  (the packages as loaded; named worlds arrive with `.world` files) at the
+  command's `as_of`/`known_at` coordinates.
+
 Every JSON response is an envelope
-`{ok, op, result, diagnostics, provenance, elapsed_ms}`. `ok` is false iff any
-error-severity diagnostic was produced, and `result` is then absent.
+`{schema_version, ok, op, result, diagnostics, provenance, elapsed_ms}`.
+`schema_version` is `2`. `ok` is false iff any error-severity diagnostic was
+produced. `result` is kept alongside errors whenever the command produced
+one: a failing `check` still reports its obligations, and a failing `build`
+reports `{obligations}`; it is absent only when there is none.
 `provenance` is `{compiler_version, language_version, packages:[{name,
 version, digest}], as_of, known_at}`, with no timestamps or absolute paths.
 Exit codes: `0` ok, `2` source/check failure (`ok: false`), `1` usage or I/O
@@ -1330,7 +1390,7 @@ All commands accept `--format json|human` (default `human` on a TTY, else
 | `build` | `PKG_OR_CASE...`, `--as-of`, `--known-at`, `--out DIR`, `--pack-file ID=STEM` (repeatable) | `{outputs:{packs:[path], links:[path], clock:[path], scenarios:[path], source_maps:[path], litigatables:[path]}, litigatable_hash, litigatables, obligations}` |
 | `fmt` | `PATHS...`, `--check` | `{files:[{path, changed}]}`; `--check` reports L9004 instead of writing |
 | `explain` | `CODE` | `{code, explanation, severity:{dev, strict}}` |
-| `fix` | `PATHS...`, `--code CODE`, `--dry-run`, `--include-maybe` | `{edits:[{span, replacement}], changed_files}`; only machine-applicable fixes without `--include-maybe` |
+| `fix` | `PATHS...`, `--code CODE`, `--dry-run`, `--include-maybe` | `{fixes:[{code, message?, edits:[{span, replacement}], applicability}], changed_files, skipped_overlapping, dry_run}`; only machine-applicable fixes without `--include-maybe`; a fix applies whole or not at all |
 | `where` | `ID` (qualified node/edge/declaration, code, or cite) | `{id, kind, declaration_span, versions:[{in_force, known_at, span}], lowered:[json_pointer]}` |
 | `explain-value` | `--case FILE`, `--value EXPR` | `{value, type, steps:[{rule, cite, detail}], versions, overrides}` |
 | `diff` | `A B` (generated or expected JSON files or package dirs), `--as-of` | `{equal, changes:[{pointer, before, after}]}` per §8.6 |

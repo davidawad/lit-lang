@@ -253,7 +253,7 @@ const RESULTS: [(&str, &str); 14] = [
     ("diff", "{equal, files:[{a, b, kind, equal, changes}], changes:[{kind, pointer, id, before, after, document}], unmatched}"),
     ("query", "{matches:[{id, kind, label, span, cite, in_force, detail}], total, next_cursor}"),
     ("import", "{files:[{path, from}], warnings}"),
-    ("fix", "{edits:[{code, span, replacement, applicability}], changed_files, skipped_overlapping, dry_run}"),
+    ("fix", "{fixes:[{code, message?, edits:[{span, replacement}], applicability}], changed_files, skipped_overlapping, dry_run}; a fix's edits apply together or not at all"),
 ];
 
 fn commands() -> Vec<CommandInfo> {
@@ -393,8 +393,8 @@ pub fn document() -> Describe {
         stdlib: stdlib(),
         commands: commands(),
         envelope: EnvelopeInfo {
-            fields: ["ok", "op", "result", "diagnostics", "provenance", "elapsed_ms"].map(str::to_owned).to_vec(),
-            diagnostic: "{code, severity, span:{file, line, col, end_line, end_col}, message, notes:[{span?, message}], fixes:[{span, replacement, applicability}]}; sorted by (file, line, col, code); ok is false iff an error diagnostic exists, and result is then absent".to_owned(),
+            fields: ["schema_version", "ok", "op", "result", "diagnostics", "provenance", "elapsed_ms"].map(str::to_owned).to_vec(),
+            diagnostic: "schema_version 2: {code, severity, span:{file, line, col, end_line, end_col}, message, labels:[{span, message}], notes:[{message}], fixes:[{message?, edits:[{span, replacement}], applicability}], derivation?:{rule, fact, span?, premises}, fingerprint, profile?, world:{name, as_of?, known_at?}}; sorted by (file, line, col, code); a well-formed code (L and four digits) outside the registry decodes; every L3xxx error carries a derivation; ok is false iff an error diagnostic exists, and result is kept alongside errors".to_owned(),
             exit_codes: ["0: ok", "2: the input ran and failed (error diagnostics, or a litgraph ok:false from run)", "1: usage or I/O failure (message on stderr, no envelope)"].map(str::to_owned).to_vec(),
             formats: "--format json|human; default human on a terminal, json otherwise".to_owned(),
         },

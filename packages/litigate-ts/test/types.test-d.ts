@@ -73,10 +73,11 @@ describe("generated types", () => {
     expectTypeOf<ErrorResponse["error"]["code"]>().toEqualTypeOf<string>();
   });
 
-  it("types litigate diagnostics with the closed code set", () => {
+  it("types litigate diagnostics with tolerant codes", () => {
     expectTypeOf<Diagnostic["code"]>().toEqualTypeOf<DiagnosticCode>();
     expectTypeOf<"L3004">().toExtend<DiagnosticCode>();
-    expectTypeOf<"L9999">().not.toExtend<DiagnosticCode>();
+    // A newer compiler's code still types (schema v2, SPEC §9.1).
+    expectTypeOf<"L9999">().toExtend<DiagnosticCode>();
     expectTypeOf<Diagnostic["severity"]>().toEqualTypeOf<"error" | "warning" | "info" | "hint">();
   });
 });

@@ -402,11 +402,12 @@ This contract is designed for an agent that knows nothing at the start.
   index (packages, modules, declarations, effective ranges), every diagnostic
   code with its explanation, and the CLI contract. One call orients an agent.
 - **Envelope.** Every subcommand with `--format json` returns
-  `{ok, op, result, diagnostics, provenance, elapsed_ms}`, the same shape as
-  litgraph.
-- **Diagnostics** have this shape:
+  `{schema_version, ok, op, result, diagnostics, provenance, elapsed_ms}`,
+  the same shape as litgraph; `result` is kept alongside errors.
+- **Diagnostics** have this shape (schema v2, SPEC §9.2):
   `{code: "L0412", severity, span: {file, line, col, end_line, end_col},
-  message, notes, fixes: [{span, replacement, applicability}]}`. Codes are
+  message, labels, notes, fixes: [{edits: [{span, replacement}],
+  applicability}], derivation, fingerprint, profile, world}`. Codes are
   stable. `litigate explain L0412` gives the long form. `litigate fix`
   applies machine-applicable fixes. An agent edits by fixes, not by guessing.
 - **`litigate where <id>`** resolves any id at any layer: a litgraph node or

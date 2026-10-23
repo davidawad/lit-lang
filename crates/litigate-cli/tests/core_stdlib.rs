@@ -354,17 +354,18 @@ proptest! {
     }
 }
 
-/// The event pattern the FRCP 86(a)(2)(B) transition's `unless` arm tests.
-fn order_pattern(pkg: &hir::Package) -> hir::Expr {
+/// The event pattern FRCP 86(a)(2)(B) transition `id`'s `unless` arm
+/// tests.
+fn order_pattern(pkg: &hir::Package, id: &str) -> hir::Expr {
     let transition = pkg
         .modules
         .iter()
         .flat_map(|m| &m.declarations)
         .find_map(|d| match d {
-            Declaration::Transition(t) if t.meta.id == "frcp6-2009" => Some(t),
+            Declaration::Transition(t) if t.meta.id == id => Some(t),
             _ => None,
         })
-        .expect("the 2009 transition");
+        .expect("the transition");
     match &transition.arms[0]
         .unless
         .as_ref()
@@ -388,24 +389,27 @@ fn served(pkg: &hir::Package) -> hir::Expr {
         .expect("a given")
 }
 
-#[test]
-fn pending_matters_keep_the_pre_2009_rule_only_on_an_order() {
+/// The `effective.from` of the FRCP 6 version governing event `at` of a
+/// matter's `history` (dated events), under `lit/core`'s transitions.
+fn governs(history: &[(&str, &hir::Expr)], at: usize) -> String {
     let pkg = core();
     let world = World::from_packages(&[pkg]);
     let key = Key {
         pack: pkg.manifest.pack_id.clone(),
         name: "frcp6".into(),
     };
-    let (event, order) = (served(pkg), order_pattern(pkg));
-    // The version governing event `at` of a matter's history.
-    let governs = |history: &[(&str, &hir::Expr)], at: usize| {
-        let events: Vec<MatterEvent<'_>> = history
-            .iter()
-            .map(|(date, action)| MatterEvent::on(date, action))
-            .collect();
-        let g = governing(&world, &key, &events, at, None).unwrap();
-        world.decls[g.version].meta.effective.from.clone()
-    };
+    let events: Vec<MatterEvent<'_>> = history
+        .iter()
+        .map(|(date, action)| MatterEvent::on(date, action))
+        .collect();
+    let g = governing(&world, &key, &events, at, None).unwrap();
+    world.decls[g.version].meta.effective.from.clone()
+}
+
+#[test]
+fn pending_matters_keep_the_pre_2009_rule_only_on_an_order() {
+    let pkg = core();
+    let (event, order) = (served(pkg), order_pattern(pkg, "frcp6-2009"));
     // Commenced before December 1, 2009 and pending after it: the 2009 rule
     // governs, unless the court ordered the prior rules kept.
     let pending = [("2009-11-20", &event), ("2009-12-11", &event)];
@@ -428,6 +432,33 @@ fn pending_matters_keep_the_pre_2009_rule_only_on_an_order() {
     assert_eq!(governs(&after, 1), "2009-12-01");
     let before = [("2009-10-01", &event), ("2009-10-21", &event)];
     assert_eq!(governs(&before, 1), "2005-12-01");
+}
+
+#[test]
+fn pending_matters_keep_electronic_service_days_only_on_an_order() {
+    let pkg = core();
+    let (event, order) = (served(pkg), order_pattern(pkg, "frcp6-2016"));
+    let prior = order_pattern(pkg, "frcp6-2009");
+    // Commenced before December 1, 2016 and pending after it: the 2016
+    // rule governs, unless the court kept the 2009 text.
+    let pending = [("2016-11-21", &event), ("2016-12-12", &event)];
+    assert_eq!(governs(&pending, 1), "2016-12-01");
+    let ordered = [
+        ("2016-11-21", &event),
+        ("2016-12-02", &order),
+        ("2016-12-12", &event),
+    ];
+    assert_eq!(governs(&ordered, 2), "2009-12-01");
+    // The 2009 transition's order keeps the pre-2009 rules, not the 2009
+    // text through the 2016 amendment.
+    let other = [
+        ("2016-11-21", &event),
+        ("2016-12-02", &prior),
+        ("2016-12-12", &event),
+    ];
+    assert_eq!(governs(&other, 2), "2016-12-01");
+    let after = [("2016-12-05", &event), ("2016-12-28", &event)];
+    assert_eq!(governs(&after, 1), "2016-12-01");
 }
 
 #[test]

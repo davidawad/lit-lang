@@ -10,6 +10,7 @@
 //! exactly the arithmetic its scenario will run under.
 use super::graph::{display, Graph};
 use crate::hir::{DayUnit, Deadline, Declaration, Direction, Expr, ExprKind, Value};
+use crate::temporal::condition::matches;
 use crate::temporal::MatterEvent;
 
 /// One day-counted deadline computation: the engine clock's inputs.
@@ -181,6 +182,13 @@ pub(super) fn due(
     } else {
         let event = &events[trigger];
         match d.designation(event.date, event.action) {
+            // A displacing claimant counted for another deadline's
+            // instance: its trigger designates nothing for it.
+            Some(_) if !matches(&d.trigger, event.action) => Err(format!(
+                "`{}` is not the trigger of `{}`, so it designates no due date for it",
+                display(event.action),
+                d.meta.id
+            )),
             None => clock.due(&request),
             // The notice's date, rolled under the counting rule like any
             // last day (37 C.F.R. § 2.196): counted zero days from it.

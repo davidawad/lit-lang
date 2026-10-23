@@ -5,8 +5,8 @@ use super::cx::{first_expr, first_ref, flag, Cx};
 use crate::db::parse::tree::{ArmItem, Expr, ExprKind, Field, Item, Name, RefPath};
 use crate::db::span::Report;
 use crate::hir::{
-    Anchor, Counting, DayUnit, Deadline, Designated, Direction, EndOfMonth, RollOn, ShortPeriod, Transition,
-    TransitionArm, Type, Value,
+    Anchor, Counting, DayUnit, Deadline, Designated, Direction, EndOfMonth, RollOn, ShortPeriod,
+    Transition, TransitionArm, Type, Value,
 };
 use crate::resolve::sig::{TypeSig, ValueKind};
 use crate::resolve::suggest;
@@ -131,10 +131,8 @@ impl Cx<'_, '_> {
             _ => Direction::Forward,
         };
         let o = self.once_except(opts, "extend");
-        let designated =
-            first_ref(o.get("designated")).and_then(|r| {
-            self.designated(name, trigger, r, (direction, period.map(|p| p.1)))
-        });
+        let designated = first_ref(o.get("designated"))
+            .and_then(|r| self.designated(name, trigger, r, (direction, period.map(|p| p.1))));
         let trigger = self.pattern(trigger);
         let obligation = self.obligation(name, opts, &o, rule);
         let (amount, unit) = period?;

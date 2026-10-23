@@ -416,7 +416,11 @@ mod tests {
         assert_eq!(
             scheduled,
             [
-                ("frcp-rule12-example::answer-period", Some("2025-03-26"), false),
+                (
+                    "frcp-rule12-example::answer-period",
+                    Some("2025-03-26"),
+                    false
+                ),
                 ("frcp-rule12-example::in-business-days", None, true),
             ]
         );

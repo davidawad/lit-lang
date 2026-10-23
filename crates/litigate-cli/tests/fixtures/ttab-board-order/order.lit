@@ -1,0 +1,21 @@
+module ttab-board-order
+
+import core.frcp6.{ frcp6 }
+import ttab.{ answer-period }
+
+start reset
+
+/// The Board's order resetting the time to answer (37 C.F.R. § 2.106(a)).
+/// Its date is the order's; `due` is the date it sets.
+event AnswerTimeReset(due: Date)
+
+/// The answer is due on the date the order sets: it replaces the date the
+/// notice of institution designated (`trigger latest`). The rule states no
+/// least time for a reset, so the order may set any date from its own.
+deadline answer-reset: 0.days from AnswerTimeReset() counted_by frcp6 override answer-period cite 37 CFR 2.106(a)
+{
+  designated due
+  trigger latest
+}
+
+terminal reset: "Answer time reset by the Board" cite 37 CFR 2.106(a) { payoff 0.usd }

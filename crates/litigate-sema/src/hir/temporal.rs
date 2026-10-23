@@ -86,7 +86,8 @@ impl Undesignated {
 
 impl Deadline {
     /// The due date that trigger event `action` on `date` designates, before
-    /// any roll (`designated p`); `None` when the period is counted. A date
+    /// any roll (`designated p`); `None` when the period is counted. The
+    /// caller has matched `action` against the trigger. A date
     /// earlier than `amount` calendar days from `date` is refused: "a time,
     /// not less than thirty days from the mailing date of the notice" (37
     /// C.F.R. § 2.105(a)).
@@ -100,12 +101,6 @@ impl Deadline {
             super::ExprKind::Call { callee, args } => (callee.as_str(), args.as_slice()),
             _ => ("the trigger", &[][..]),
         };
-        if !crate::temporal::condition::matches(&self.trigger, action) {
-            return Some(Err(Undesignated::Unknown(format!(
-                "`{event}` is not the trigger of `{}`, so it designates no due date for it",
-                self.meta.id
-            ))));
-        }
         let designated = match args.get(d.param).map(|a| &a.kind) {
             Some(super::ExprKind::Literal {
                 value: super::Value::Date(v),

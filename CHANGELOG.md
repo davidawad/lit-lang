@@ -69,6 +69,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   parsing (`serde_json` `float_roundtrip`), so emitted numbers read back
   bit for bit.
 
+### Changed
+
+- **Typed boundaries** (design review §6 item 12; SPEC §5.2, §5.6, §6).
+  Breaking for `.lit` and `.case` source. A `removes p` or `elects p`
+  event parameter has the new type `EdgeRef`, and a case writes the edge
+  unquoted: `Elected(e-filingfork-standard)`, `Forfeited(frcp::move-dismiss)`.
+  The edge is resolved when the event is typed (L1002 with the nearest id
+  as a fix); a quoted string is L2001 with a machine-applicable fix
+  unquoting it.
+
 ### Fixed
 
 - **Probability arithmetic over unknowns was unchecked** (T1): `a + b`

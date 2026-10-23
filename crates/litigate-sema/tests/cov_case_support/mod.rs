@@ -81,7 +81,7 @@ event Logged(hours: Hours)
 event Twin(document: Document)
 event Noted(document: Document)
 event Reopened(document: Document)
-event Forfeited(option: String) removes option
+event Forfeited(option: EdgeRef) removes option
 event Excused(document: Document) waives court-period
 event Benched(document: Document)
 

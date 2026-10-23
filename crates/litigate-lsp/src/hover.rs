@@ -29,6 +29,7 @@ pub fn show_type(t: &Type) -> String {
         Type::Boolean => "Bool".into(),
         Type::Number => "Number".into(),
         Type::String => "String".into(),
+        Type::Edge => "EdgeRef".into(),
         Type::List(t) => format!("[{}]", show_type(t)),
         Type::Record(fields) => {
             let f: Vec<String> = fields

@@ -29,6 +29,10 @@ pub enum Type {
     Number,
     /// String value.
     String,
+    /// Reference to a declared edge (`EdgeRef`): written as the edge's id
+    /// (`edge`, or `pack::edge` outside the primary package), never as a
+    /// string.
+    Edge,
     /// Homogeneous finite list.
     List(Box<Type>),
     /// Record with fields sorted by name.
@@ -153,6 +157,9 @@ pub enum Value {
     Number(Rational),
     /// String literal.
     String(String),
+    /// A resolved edge: `edge` when declared in the primary package (or the
+    /// view's package), else `pack::edge`.
+    Edge(String),
     /// Enum variant `Enum::Variant` (fully qualified).
     Variant(String),
     /// The unit value.

@@ -1,0 +1,15 @@
+---
+source: crates/litigate-sema/tests/case_removal.rs
+expression: table
+---
+{
+    "typed: a number is no edge": [
+        "14:24 L2001 expected an edge id (`edge` or `pack::edge`) here",
+    ],
+    "typed: a quoted edge is a String, not an EdgeRef (fix unquotes it)": [
+        "14:24 L2001 expected an `EdgeRef` here, found the string \"move-dismiss\"\n    note: an edge is named by its id, unquoted: `edge`, or `pack::edge` in another package\n    fix @14:24-14:38 MachineApplicable: \"move-dismiss\"",
+    ],
+    "typed: a quoted string naming no edge has no fix": [
+        "14:24 L2001 expected an `EdgeRef` here, found the string \"nowhere\"\n    note: an edge is named by its id, unquoted: `edge`, or `pack::edge` in another package",
+    ],
+}

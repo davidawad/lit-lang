@@ -375,10 +375,10 @@ impl Cx<'_, '_> {
         let target = first_ref(Some(&first))?;
         match first.key.text.as_str() {
             "removes" => self
-                .param(name, params, target, &Type::String)
+                .param(name, params, target, &Type::Edge)
                 .map(|param| EventEffect::Removes { param }),
             "elects" => self
-                .param(name, params, target, &Type::String)
+                .param(name, params, target, &Type::Edge)
                 .map(|param| EventEffect::Elects { param }),
             "extends" => {
                 let deadline = self.effect_deadline(target);
@@ -433,7 +433,7 @@ impl Cx<'_, '_> {
                     "parameter `{}` of `{}` must have type `{}`",
                     params[i].0,
                     name.text,
-                    if *ty == Type::Date { "Date" } else { "String" }
+                    crate::types::ty::display(ty)
                 ),
             ));
             return None;

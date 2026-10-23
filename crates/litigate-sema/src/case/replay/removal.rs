@@ -1,8 +1,9 @@
 //! Option-removing events (SPEC §5.6). A waiver or an order striking a
 //! defense does not move the matter; it takes an option away for the rest
 //! of it. Such an event's type declares `removes p` for a parameter
-//! `p: String`; the string names the removed edge (`edge`, or `pack::edge`
-//! outside the primary package) and the event must cite its authority. An
+//! `p: EdgeRef` naming the removed edge (`edge`, or `pack::edge` outside
+//! the primary package, resolved when the event is typed) and the event
+//! must cite its authority. An
 //! election declares `elects p` instead: `p` names the option chosen, and
 //! every alternative at each fork offering that edge is removed. Replay
 //! records each removal in [`Case::removals`](crate::hir::Case) and refuses
@@ -12,8 +13,7 @@ use crate::case::graph::display;
 use crate::case::spans::error;
 use crate::case::Effect;
 use crate::hir::{Edge, Expr, ExprKind, Removal, Value};
-use crate::resolve::suggest::nearest;
-use litigate_base::{Applicability, DiagnosticCode as C};
+use litigate_base::DiagnosticCode as C;
 
 impl Cx<'_, '_> {
     /// Event `k` removes the edge its `removes` argument `arg` names.
@@ -109,7 +109,7 @@ impl Cx<'_, '_> {
             .clone()
             .unwrap_or_else(|| self.at(k, |e| e.action.as_ref()));
         let ExprKind::Literal {
-            value: Value::String(text),
+            value: Value::Edge(written),
         } = &arg.kind
         else {
             return None;
@@ -127,26 +127,19 @@ impl Cx<'_, '_> {
             self.out.push(d);
             return None;
         };
-        let qualified = self.graph.qualify(self.graph.primary(), text);
-        let (pack, local) = qualified.split_once("::").unwrap_or(("", text));
-        let ids = self.graph.edge_ids(pack);
-        if !ids.contains(local) {
-            let mut d = error(
+        // Typing resolved a source argument; HIR handed to the checker
+        // directly may still name no edge.
+        let qualified = self.graph.qualify(self.graph.primary(), written);
+        let (pack, local) = qualified.split_once("::").unwrap_or(("", written));
+        if !self.graph.edge_ids(pack).contains(local) {
+            self.out.push(error(
                 C::UnresolvedName,
-                at.clone(),
+                at,
                 format!(
                     "`{pack}` has no edge `{local}` for `{}` to {verb}",
                     display(&event.action)
                 ),
-            )
-            .note("`option` names an edge by its id: `edge`, or `pack::edge` in another package");
-            if let Some(best) = nearest(local, ids.iter().copied()) {
-                let spelled = self
-                    .graph
-                    .respell(self.graph.primary(), &format!("{pack}::{best}"));
-                d = d.fix(at, format!("{spelled:?}"), Applicability::MaybeIncorrect);
-            }
-            self.out.push(d);
+            ));
             return None;
         }
         Some((qualified, at, authority))

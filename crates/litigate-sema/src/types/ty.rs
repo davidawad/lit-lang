@@ -7,7 +7,7 @@ use crate::resolve::{scope::Scope, sig::TypeSig};
 use litigate_base::{Applicability, DiagnosticCode as C};
 
 /// Built-in type constructor names.
-pub const BUILTINS: [&str; 14] = [
+pub const BUILTINS: [&str; 15] = [
     "Date",
     "Days",
     "Hours",
@@ -20,6 +20,7 @@ pub const BUILTINS: [&str; 14] = [
     "Bool",
     "Number",
     "String",
+    "EdgeRef",
     "List",
     "Unit",
 ];
@@ -53,6 +54,7 @@ pub fn display(ty: &Type) -> String {
         Type::Boolean => "Bool".into(),
         Type::Number => "Number".into(),
         Type::String => "String".into(),
+        Type::Edge => "EdgeRef".into(),
         Type::List(t) => format!("List<{}>", display(t)),
         Type::Record(fields) => {
             let f: Vec<String> = fields
@@ -96,6 +98,7 @@ pub fn resolve(scope: &Scope<'_>, t: &TypeRef, reports: &mut Vec<Report>) -> Opt
         "Bool" => simple(Type::Boolean, reports),
         "Number" => simple(Type::Number, reports),
         "String" => simple(Type::String, reports),
+        "EdgeRef" => simple(Type::Edge, reports),
         "Unit" => simple(Type::Unit, reports),
         "Days" => {
             let arg = arity(t, 1, reports).then(|| &t.args[0])?;

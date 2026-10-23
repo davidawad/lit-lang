@@ -139,6 +139,11 @@ impl<'a> Graph<'a> {
             } => ExprKind::Literal {
                 value: Value::Variant(self.respell_from(from, pack, v)),
             },
+            ExprKind::Literal {
+                value: Value::Edge(e),
+            } => ExprKind::Literal {
+                value: Value::Edge(self.respell_from(from, pack, e)),
+            },
             other => other.clone(),
         };
         Expr {
@@ -453,6 +458,7 @@ pub fn display(e: &Expr) -> String {
             Value::Variant(v) => v.rsplit("::").next().unwrap_or(v).to_owned(),
             Value::Date(d) => d.clone(),
             Value::String(s) => format!("{s:?}"),
+            Value::Edge(e) => e.clone(),
             Value::Boolean(b) => b.to_string(),
             Value::Number(r) => crate::types::rational::display(*r),
             Value::Money(m) => format!("{} {} minor units", m.minor_units, m.currency),

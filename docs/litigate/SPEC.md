@@ -528,8 +528,8 @@ gives it meaning: an event called `Extended` with no effect clause extends
 nothing.
 
 - `removes p`: an option-removing event. `p` is a parameter of type
-  `String` naming the removed edge.
-- `elects p`: an election. `p` is a parameter of type `String` naming the
+  `EdgeRef` naming the removed edge.
+- `elects p`: an election. `p` is a parameter of type `EdgeRef` naming the
   edge chosen; the alternatives to it are removed.
 - `extends d to p`: an extension. `d` is a deadline and `p` a parameter of
   type `Date`, the new due date. It is licensed by `d`'s `extend`
@@ -985,13 +985,15 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
 - Option-removing events. A waiver or an order striking a defense does not
   move the matter; it takes an option away for the rest of it. An event
   whose type declares `removes p` is option-removing: its `p` argument
-  names an edge by id, `edge` in the primary package or `pack::edge`
-  otherwise (any version, link edges included). Replay handles it at the
+  is an `EdgeRef`, an edge named by id, unquoted: `edge` in the primary
+  package or `pack::edge` otherwise (any version, link edges included). Replay handles it at the
   posture it finds, after following `facts`, and does not move: it records
   a removal `{edge, date, event, authority}` in `Case.removals`, in replay
   order. The event must carry a `cite` (otherwise L4001 and nothing is
-  removed). A `p` argument naming no edge is L1002 with a `maybe_incorrect`
-  fix to the nearest id. Removing an already removed edge is L4001 with a
+  removed). A `p` argument naming no edge is L1002 when the event is
+  typed, with a `maybe_incorrect` fix to the nearest id; a quoted string
+  is L2001, with a `machine_applicable` fix unquoting it when it names an
+  edge. Removing an already removed edge is L4001 with a
   note at the first removal. A later event that matches only removed edges
   is L4001 (a note locates the removal) and replay stops. An event whose
   type declares `elects p` (§5.2) is an election: its `p` argument names
@@ -1034,6 +1036,7 @@ the variants of enum `E` with exact non-negative weights summing to 1 (L2003).
 | `Role` | actor names | `==` only |
 | `Bool` | `true`, `false` | `! && \|\| == !=` |
 | `String`, enums, records | | `==`, `!=`; record field projection `r.f` |
+| `EdgeRef` | an edge id in a `.case` event argument: `edge`, `pack::edge` | `==`, `!=`; the type of a `removes`/`elects` parameter (§5.2) |
 | `List<T>` | `[a, b]` | `len(l)`, `contains(l, x)` |
 
 The builtins (closed list) are `deadline(d) -> Due` (tests: due date from the
@@ -1913,7 +1916,7 @@ they are listed so the v2 type system keeps them.
 | R12 | Supersession and revival semantics, bitemporal (§5.4) | c | O4. |
 | R13 | Precedence stages and tie-breaks (§5.5) | c | C35. |
 | R14 | Exception evaluation: target condition must hold; highest priority wins (§5.5) | a | Semantics; the ordering it needs is C37. |
-| R15 | Option-removing event recognition: an event type declaring `removes p` or `elects p` with `p: String` (§5.2, §5.6) | a | A declared effect on the event type, checked when the type is built; `p` should become `EdgeRef`, making the L1002 there (C8) a type error. |
+| R15 | Option-removing event recognition: an event type declaring `removes p` or `elects p` with `p: EdgeRef` (§5.2, §5.6) | a | A declared effect on the event type, checked when the type is built; the argument is resolved as an `EdgeRef` when the case event is typed (C8). |
 | R16 | Posture is replayed, never asserted; HIR `removals` derived (§5.6) | a | No source syntax for posture or removals. |
 | R17 | `::` only in links packages, `.case` files and instance fields (§4.3) | a | Two `Ref` sorts per file kind. |
 | R18 | `analysis` cannot set `start`, `perspective`, `facts`, `payoffs`, `observe` (§8.3) | a | C54. |

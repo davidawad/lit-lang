@@ -143,6 +143,23 @@ fn argument(
             span,
         )),
         (Type::String, _) => mismatch(out, "a string"),
+        (Type::Edge, S::Ref(path)) => edge(graph, &path.display(), a.range, span, out),
+        (Type::Edge, S::Str(s)) => {
+            let mut r = Report::new(
+                C::TypeMismatch,
+                a.range,
+                format!("expected an `EdgeRef` here, found the string {s:?}"),
+            )
+            .note(
+                "an edge is named by its id, unquoted: `edge`, or `pack::edge` in another package",
+            );
+            if edge(graph, s, a.range, span, &mut Vec::new()).is_some() {
+                r = r.fix(a.range, s.clone(), Applicability::MachineApplicable);
+            }
+            out.push(r);
+            None
+        }
+        (Type::Edge, _) => mismatch(out, "an edge id (`edge` or `pack::edge`)"),
         (Type::Boolean, S::Bool(b)) => {
             Some(literal(Value::Boolean(*b), Type::Boolean, a.range, span))
         }
@@ -181,6 +198,40 @@ fn argument(
             None
         }
     }
+}
+
+/// The edge `written` names (`edge` in the primary package, else
+/// `pack::edge`; any version, link edges included), as an `EdgeRef`
+/// literal spelled in the primary view.
+fn edge(
+    graph: &Graph<'_>,
+    written: &str,
+    range: TextRange,
+    span: ToSpan<'_>,
+    out: &mut Vec<Report>,
+) -> Option<Expr> {
+    let qualified = graph.qualify(graph.primary(), written);
+    let (pack, local) = qualified.split_once("::").unwrap_or(("", written));
+    let ids = graph.edge_ids(pack);
+    if ids.contains(local) {
+        let spelled = graph.respell(graph.primary(), &qualified);
+        return Some(literal(Value::Edge(spelled), Type::Edge, range, span));
+    }
+    let mut r = Report::new(
+        C::UnresolvedName,
+        range,
+        format!("`{pack}` has no edge `{local}`"),
+    )
+    .note("an `EdgeRef` names an edge by its id: `edge`, or `pack::edge` in another package");
+    if let Some(best) = nearest(local, ids.iter().copied()) {
+        r = r.fix(
+            range,
+            graph.respell(graph.primary(), &format!("{pack}::{best}")),
+            Applicability::MaybeIncorrect,
+        );
+    }
+    out.push(r);
+    None
 }
 
 /// A variant of enum `n` (written in `pack`'s view): `v`, `Enum::v`, or

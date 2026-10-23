@@ -68,7 +68,7 @@ fn header_items_table() {
             matter(
                 ALPHA_ONLY,
                 "",
-                &["2010-01-04 Forfeited(\"twin-a\") by d cite ?(\"standing order\")"],
+                &["2010-01-04 Forfeited(twin-a) by d cite ?(\"standing order\")"],
                 STAKES,
             ),
         ),
@@ -77,7 +77,7 @@ fn header_items_table() {
             matter(
                 ALPHA_ONLY,
                 "",
-                &["2010-01-04 Forfeited(\"twin-a\") by d cite ?"],
+                &["2010-01-04 Forfeited(twin-a) by d cite ?"],
                 STAKES,
             ),
         ),

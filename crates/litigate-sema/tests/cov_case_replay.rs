@@ -56,7 +56,7 @@ fn deadline_table() {
             "missed: a `removes` event does not excuse",
             alpha(&[
                 SERVED,
-                "2010-01-06 Forfeited(\"late\") by d cite FRCP 12(h)",
+                "2010-01-06 Forfeited(late) by d cite FRCP 12(h)",
                 "2010-01-12 Answered(complaint) by d",
             ]),
             &At("2010-01-11"),
@@ -242,7 +242,7 @@ fn facts_table() {
             matter(
                 ALPHA_ONLY,
                 "",
-                &["2010-01-04 Forfeited(\"to-f2\") by d cite FRCP 12(h)"],
+                &["2010-01-04 Forfeited(to-f2) by d cite FRCP 12(h)"],
                 &format!("facts {{ f1: to-f2 }}\n{STAKES}"),
             ),
             &NoClock,
@@ -325,7 +325,7 @@ fn links_and_instances_table() {
                 "",
                 &[
                     benched,
-                    "2010-01-05 Forfeited(\"hop\") by d cite FRCP 12(h)",
+                    "2010-01-05 Forfeited(hop) by d cite FRCP 12(h)",
                     "2010-01-06 Noted(complaint) by c",
                 ],
                 gamma_stakes,
@@ -339,7 +339,7 @@ fn links_and_instances_table() {
                 "",
                 &[
                     benched,
-                    "2010-01-05 Forfeited(\"zzzzzzzzzzzzzzzz\") by d cite FRCP 12(h)",
+                    "2010-01-05 Forfeited(zzzzzzzzzzzzzzzz) by d cite FRCP 12(h)",
                 ],
                 gamma_stakes,
             ),

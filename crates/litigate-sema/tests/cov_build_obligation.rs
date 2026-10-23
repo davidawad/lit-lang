@@ -43,7 +43,7 @@ deadline i: 14.days from Served(answer) counted_by c6 { extendable true, extend 
 deadline j: 14.days from Served(answer) counted_by c6 { extend { by Court, to min(prescribed_due, (grant_order_entered + 1.days)) } }\n\
 event Moved(until: Date, option: String) extends a to until\n\
 event Released() waives b\n\
-event Dropped(option: String) removes option\n\
+event Dropped(option: EdgeRef) removes option\n\
 event Plain()",
     )
     .into_iter()
@@ -111,19 +111,20 @@ deadline ax: 21.days from Served(complaint) counted_by c6 { extend { by Court, m
 fn event_effects_report_each_bad_clause() {
     let out = check_body(
         "deadline a: 21.days from Served(complaint) counted_by c6\n\
-event E1(option: String) removes nothing\n\
+event E1(option: EdgeRef) removes nothing\n\
 event E2(option: Date) removes option\n\
 event E3(until: Date) extends a\n\
 event E4(until: Date) to until\n\
 event E5(until: Date) extends nowhere to until\n\
 event E6(until: String) extends a to until\n\
 event E7(until: Date) extends c6 to until\n\
-event E8(option: String) removes option waives a\n\
+event E8(option: EdgeRef) removes option waives a\n\
 event E9() waives zzz\n\
 event E10(until: Date) removes until.x\n\
 event E11(until: Date) extends a to until.x\n\
 event E12(option: String) waives a to option\n\
-event E13(option: String) removes option removes option\n\
+event E13(option: EdgeRef) removes option removes option\n\
+event E15(option: String) elects option\n\
 event E14() waives",
     );
     insta::assert_debug_snapshot!(out);

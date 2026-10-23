@@ -30,11 +30,10 @@ expression: table(&rows)
     "removed: a link edge removed by id in its from node's package": [
         "14:14 L4001 `Noted(complaint)` at stage `alpha::bench` takes `alpha::hop`, which was removed on 2010-01-05\n    note @13:3: removed here, cite FRCP 12(h)\n    note: replay stops at the first illegal event",
         "trace Took Benched(complaint) alpha::intake -> alpha::bench via alpha::to-bench",
-        "trace Removed Forfeited(\"hop\") alpha::bench -> alpha::bench",
+        "trace Removed Forfeited(hop) alpha::bench -> alpha::bench",
     ],
     "removed: an option far from every edge id": [
-        "13:24 L1002 `alpha` has no edge `zzzzzzzzzzzzzzzz` for `Forfeited(\"zzzzzzzzzzzzzzzz\")` to remove\n    note: `option` names an edge by its id: `edge`, or `pack::edge` in another package",
-        "trace Took Benched(complaint) alpha::intake -> alpha::bench via alpha::to-bench",
+        "13:24 L1002 `alpha` has no edge `zzzzzzzzzzzzzzzz`\n    note: an `EdgeRef` names an edge by its id: `edge`, or `pack::edge` in another package",
     ],
     "unused: a link into a package the matter does not use": [
         "14:3 L3007 stage `gamma::g0` has no version in force on 2010-01-06",

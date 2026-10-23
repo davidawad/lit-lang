@@ -124,7 +124,7 @@ fn stakes_and_removals_table() {
             matter(
                 ALPHA_ONLY,
                 "",
-                &["2010-01-04 Forfeited(\"twin-a\") by d cite FRCP 12(h)"],
+                &["2010-01-04 Forfeited(twin-a) by d cite FRCP 12(h)"],
                 &format!("{STAKES}\nanalysis {{ remove_edges: [\"twin-a\"] }}"),
             ),
         ),

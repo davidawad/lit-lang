@@ -15,8 +15,8 @@ fn alpha(events: &[&str]) -> String {
 
 const SERVED: &str = "2010-01-04 docket 1 Served(complaint, Mail) on d";
 const ANSWERED: &str = "2010-01-04 docket 2 Answered(complaint) by d";
-const FORFEIT_LATE: &str = "2010-01-04 Forfeited(\"late\") by d cite FRCP 12(h)";
-const FORFEIT_REOPEN: &str = "2010-01-04 Forfeited(\"reopen\") by d cite FRCP 12(h)";
+const FORFEIT_LATE: &str = "2010-01-04 Forfeited(late) by d cite FRCP 12(h)";
+const FORFEIT_REOPEN: &str = "2010-01-04 Forfeited(reopen) by d cite FRCP 12(h)";
 
 #[test]
 fn docket_order_table() {

@@ -6,7 +6,7 @@ expression: table(&rows)
     "missed: a `removes` event does not excuse": [
         "14:3 L4002 `Answered(complaint)` on 2010-01-12 missed deadline `court-period`, due 2010-01-11\n    note @12:3: `court-period` runs 5 court days from `Served(complaint, Mail)` on 2010-01-04 under `ac@2009-12-01`\n    note: only a cited event of a type that `extends` this deadline, within its `extend` capability, moves the due date",
         "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
-        "trace Removed Forfeited(\"late\") alpha::respond -> alpha::respond",
+        "trace Removed Forfeited(late) alpha::respond -> alpha::respond",
         "trace Took Answered(complaint) alpha::respond -> alpha::answered via alpha::answer",
     ],
     "missed: a `waives` event before the trigger has nothing to release": [

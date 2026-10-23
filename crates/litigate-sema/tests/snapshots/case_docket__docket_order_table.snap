@@ -15,8 +15,8 @@ expression: got
     ],
     "ok: removals commute undocketed": [
         "ok: start alpha::intake",
-        "trace Removed Forfeited(\"late\") alpha::intake -> alpha::intake",
-        "trace Removed Forfeited(\"reopen\") alpha::intake -> alpha::intake",
+        "trace Removed Forfeited(late) alpha::intake -> alpha::intake",
+        "trace Removed Forfeited(reopen) alpha::intake -> alpha::intake",
     ],
     "ok: same-day events in docket order": [
         "13:3 L3009 cannot count deadline `court-period` for this event\n    note @12:3: `court-period` runs 5 court days from `Served(complaint, Mail)` on 2010-01-04 under `ac@2009-12-01`\n    note: no clock library is loaded to run counting rule `ac`",
@@ -42,13 +42,13 @@ expression: got
         "trace Took Answered(complaint) alpha::respond -> alpha::answered via alpha::answer",
     ],
     "unordered: a move beside a removal": [
-        "13:3 L4001 `Forfeited(\"late\")` and `Served(complaint, Mail)` on 2010-01-04 need distinct `docket` numbers to be ordered\n    note: events of one date are ordered by docket number, never by source order\n    note: only events that elect or remove options commute and may share a date undocketed",
-        "trace Removed Forfeited(\"late\") alpha::intake -> alpha::intake",
+        "13:3 L4001 `Forfeited(late)` and `Served(complaint, Mail)` on 2010-01-04 need distinct `docket` numbers to be ordered\n    note: events of one date are ordered by docket number, never by source order\n    note: only events that elect or remove options commute and may share a date undocketed",
+        "trace Removed Forfeited(late) alpha::intake -> alpha::intake",
         "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
     ],
     "unordered: a removal beside a move": [
-        "13:3 L4001 `Served(complaint, Mail)` and `Forfeited(\"late\")` on 2010-01-04 need distinct `docket` numbers to be ordered\n    note: events of one date are ordered by docket number, never by source order\n    note: only events that elect or remove options commute and may share a date undocketed",
-        "trace Removed Forfeited(\"late\") alpha::intake -> alpha::intake",
+        "13:3 L4001 `Served(complaint, Mail)` and `Forfeited(late)` on 2010-01-04 need distinct `docket` numbers to be ordered\n    note: events of one date are ordered by docket number, never by source order\n    note: only events that elect or remove options commute and may share a date undocketed",
+        "trace Removed Forfeited(late) alpha::intake -> alpha::intake",
         "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
     ],
     "unordered: one docket number shared by two events": [

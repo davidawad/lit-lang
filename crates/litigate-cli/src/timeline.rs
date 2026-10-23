@@ -639,6 +639,29 @@ fn target(pkg: &hir::Package, to: &str) -> String {
     }
 }
 
+/// The choice of taking `edge` of `node` (of `pkg`): a draw at a chance
+/// node, else a party's election or a tribunal's decision.
+fn choice(pkg: &hir::Package, node: &hir::Node, edge: &hir::Edge) -> TimelineChoice {
+    let kind = match node.kind {
+        NodeKind::Chance { .. } => ChoiceKind::Chance,
+        NodeKind::Decision => ChoiceKind::Election,
+        _ => match pkg.manifest.roles.get(&edge.actor) {
+            Some(hir::ActorRole::Nature) => ChoiceKind::HypotheticalDecision,
+            _ => ChoiceKind::Election,
+        },
+    };
+    let probability = match &edge.probability {
+        Some(hir::Authored::Known(p)) => litigate_lower::num::rational(*p),
+        _ => None,
+    };
+    TimelineChoice {
+        kind,
+        label: edge.label.clone(),
+        cite: edge.authority.clone(),
+        probability,
+    }
+}
+
 /// The fork at the matter's posture `node` (of `pkg`): a fork row in the
 /// docket, and one world per option still open to the matter.
 fn fork(
@@ -685,30 +708,13 @@ fn fork(
     };
     let fork_at = b.push(fork_row);
     for edge in options {
-        let kind = match node.kind {
-            NodeKind::Chance { .. } => ChoiceKind::Chance,
-            NodeKind::Decision => ChoiceKind::Election,
-            _ => match pkg.manifest.roles.get(&edge.actor) {
-                Some(hir::ActorRole::Nature) => ChoiceKind::HypotheticalDecision,
-                _ => ChoiceKind::Election,
-            },
-        };
-        let probability = match &edge.probability {
-            Some(hir::Authored::Known(p)) => litigate_lower::num::rational(*p),
-            _ => None,
-        };
         let world = b.worlds.len();
         b.worlds.push(TimelineWorld {
             id: format!("w{world}"),
             label: edge.label.clone(),
             parent: Some("w0".to_owned()),
             fork_row: None,
-            choice: Some(TimelineChoice {
-                kind,
-                label: edge.label.clone(),
-                cite: edge.authority.clone(),
-                probability,
-            }),
+            choice: Some(choice(pkg, node, edge)),
         });
         b.forks.push(Some(fork_at));
         // The assumed event: the edge's event, else the edge, else where

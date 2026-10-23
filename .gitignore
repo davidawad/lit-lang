@@ -18,6 +18,10 @@ result-*
 # wasm build output (justfile `wasm` / `wasm-smoke`)
 dist/
 
+# insta pending snapshots: review with `cargo insta review`, never commit
+*.snap.new
+*.pending-snap
+
 # Owner-local agent tooling (swe-project-plugin-pack-rust materialized by
 # swe-repo). Kept out of the public tree: it is personal workflow, not a
 # contributor requirement. CI and .pre-commit-config.yaml carry the real gates.

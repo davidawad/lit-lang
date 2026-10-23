@@ -130,7 +130,11 @@ fn lowered<'p>(
             return None;
         }
     };
-    let Some(source_url) = source_url(&pkg.manifest, c.meta.cite.as_deref()) else {
+    let cited = c.meta.cite.as_deref().and_then(|cite| {
+        let url = source_url(&pkg.manifest, Some(cite))?;
+        Some((cite, url))
+    });
+    let Some((cite, source_url)) = cited else {
         sink.unsupported(
             span,
             format!(
@@ -141,7 +145,10 @@ fn lowered<'p>(
         );
         return None;
     };
-    Some((rule(sink, c, &calendar.meta.id, source_url)?, calendar))
+    Some((
+        rule(sink, c, cite, &calendar.meta.id, source_url)?,
+        calendar,
+    ))
 }
 
 /// The `url` of the source a cite resolves to: the longest matching
@@ -337,19 +344,20 @@ fn service(
     }))
 }
 
-/// `c` as an engine counting rule closing on calendar `calendar`.
+/// `c`, cited as `cite`, as an engine counting rule closing on calendar
+/// `calendar`.
 fn rule(
     sink: &mut Sink,
     c: &hir::Counting,
+    cite: &str,
     calendar: &str,
     source_url: String,
 ) -> Option<CountingRule> {
     let span = c.meta.span.as_ref();
-    let cite = c.meta.cite.clone().unwrap_or_else(|| c.meta.id.clone());
-    let anchor = anchor(sink, c, &cite, span);
-    let periods = periods(sink, c, &cite, span);
-    let roll = roll(sink, c, &cite, span);
-    let service = service(sink, c, &cite, span);
+    let anchor = anchor(sink, c, cite, span);
+    let periods = periods(sink, c, cite, span);
+    let roll = roll(sink, c, cite, span);
+    let service = service(sink, c, cite, span);
     let (anchor, roll, service) = (anchor?, roll.ok()?, service.ok()?);
     let min_length = matches!(
         anchor,
@@ -386,7 +394,7 @@ fn rule(
     .collect();
     Some(CountingRule {
         id: c.meta.id.clone(),
-        label: cite.clone(),
+        label: cite.to_owned(),
         source_url,
         closed_weekdays: vec![Weekday::Saturday, Weekday::Sunday],
         holidays: vec![calendar.to_owned()],

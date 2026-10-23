@@ -27,7 +27,7 @@ const SCENARIOS: [(&str, Option<&str>); 5] = [
     ),
 ];
 
-/// Examples whose matter resolves the CoFC limitations and § 1500 fact
+/// Examples whose matter resolves the Court of Federal Claims limitations and § 1500 fact
 /// nodes through `facts` where the example removed the barred edges: the
 /// answer is the same, and litgraph's `fact-unset` warning is gone.
 const FACTS_FIXED: [&str; 9] = [

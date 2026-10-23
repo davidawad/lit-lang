@@ -92,7 +92,17 @@ deadline aj: 21.days from Served(complaint) counted_by c6 { extend { by Court, t
 deadline ak: 21.days from Served(complaint) counted_by c6 { extend { by Court, to 3 } }\n\
 deadline al: 21.days from Served(complaint) counted_by c6 { extend { by Court, max 3.days, on Nothing() } }\n\
 deadline am: 21.days from Served(complaint) counted_by c6 { extend { by Court, max 3.days, on Served(complaint), within 3 } }\n\
-deadline an: 21.days from Served(complaint) counted_by c6 { extend { by Court, to max(prescribed_due, 3) } }",
+deadline an: 21.days from Served(complaint) counted_by c6 { extend { by Court, to max(prescribed_due, 3) } }\n\
+deadline ao: 21.days from Served(complaint) counted_by c6 { extend { by Court, to 3 + 1.days } }\n\
+deadline ap: 21.days from Served(complaint) counted_by c6 { extend { by Court, to a.prescribed_due } }\n\
+deadline aq: 21.days from Served(complaint) counted_by c6 { extend { by Court, to a.max(prescribed_due) } }\n\
+deadline ar: 21.days from Served(complaint) counted_by c6 { extend { by Court, to max() } }\n\
+deadline as: 21.days from Served(complaint) counted_by c6 { extend { by Court, to max(prescribed_due + 1.days, filed) } }\n\
+deadline at: 21.days from Served(complaint) counted_by c6 { extend { by Court, to min(3) } }\n\
+deadline au: 21.days from Served(complaint) counted_by c6 { extend { by Court, to prescribed_due + 3 } }\n\
+deadline av: 21.days from Served(complaint) counted_by c6 { extend { by Court, to } }\n\
+deadline aw: 21.days from Served(complaint) counted_by c6 { extend { by Court, max 3.days, on } }\n\
+deadline ax: 21.days from Served(complaint) counted_by c6 { extend { by Court, max 3.days, on Served(complaint), within } }",
     );
     insta::assert_debug_snapshot!(out);
 }

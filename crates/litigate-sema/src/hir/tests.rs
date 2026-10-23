@@ -139,3 +139,23 @@ fn cite_syntax_is_empty_without_rules_or_shorthands() {
     assert!(!rules.is_empty());
     assert!(!shorthands.is_empty());
 }
+
+#[test]
+fn a_bound_past_the_calendar_has_no_date() {
+    let far = Bound::Offset {
+        from: DateRef::GrantOrderEntered,
+        days: u64::MAX,
+    };
+    let near = Bound::Offset {
+        from: DateRef::PrescribedDue,
+        days: 1,
+    };
+    assert_eq!(
+        Bound::Min(vec![near.clone()]).date("2025-01-01", "2025-02-01"),
+        Some("2025-01-02".to_owned())
+    );
+    assert_eq!(
+        Bound::Max(vec![near, far]).date("2025-01-01", "2025-02-01"),
+        None
+    );
+}

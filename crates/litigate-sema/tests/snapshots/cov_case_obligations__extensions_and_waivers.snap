@@ -59,6 +59,17 @@ expression: table(rows)
         "obligation omega::reply #0 Lapsed",
         "obligation omega::stale #0 Open linear",
     ],
+    "extend: a motion before the trigger or after the order is no motion": [
+        "15:14 L4001 `OrderedAppeal(2011-02-01)` requires a motion `MovedAppeal()` no later than prescribed_due + 30.days = 2011-02-13, and none precedes the order on 2011-01-20\n    note: `appeal` runs 10 calendar days from `Entered()` on 2011-01-04 under `oc@2009-12-01`",
+        "trace History MovedAppeal() omega::open -> omega::open",
+        "trace Triggered Entered() omega::open -> omega::open",
+        "trace History MovedAppeal() omega::open -> omega::open",
+        "obligation omega::appeal #1 Lapsed",
+        "obligation omega::capped #1 Lapsed",
+        "obligation omega::locked #1 Lapsed",
+        "obligation omega::motion-only #1 Lapsed",
+        "obligation omega::post #1 Lapsed",
+    ],
     "extend: a motion-only grant does not reach an unexpired period": [
         "14:14 L4001 `omega::motion-only` is due 2011-01-14, not expired when `OrderedMotion(2011-01-30)` comes on 2011-01-10; the grant reaches only an expired period, on motion\n    note: `motion-only` runs 10 calendar days from `Entered()` on 2011-01-04 under `oc@2009-12-01`",
         "trace Triggered Entered() omega::open -> omega::open",

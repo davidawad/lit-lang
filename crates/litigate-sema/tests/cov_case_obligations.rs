@@ -422,6 +422,16 @@ fn extensions_and_waivers() {
             ],
         ),
         (
+            "extend: a motion before the trigger or after the order is no motion",
+            "2011-04-01",
+            &[
+                "2011-01-03 MovedAppeal() by p",
+                ENTERED,
+                "2011-01-20 OrderedAppeal(2011-02-01) by c cite FRAP 4(a)(5)",
+                "2011-01-25 MovedAppeal() by p",
+            ],
+        ),
+        (
             "extend: a `min` bound takes the earlier date",
             "2011-02-01",
             &[

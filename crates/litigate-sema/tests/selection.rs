@@ -755,7 +755,11 @@ fn a_lock_bars_a_delegated_override_from_granting_an_extension() {
     }
     assert_eq!(who(&hir), "fed::answer-period");
     // The locked version's own grant, or none, is no widening.
-    for clauses in ["{ extend { by Court, max 30.days } }", ""] {
+    for clauses in [
+        "{ extend { by Court, max 30.days } }",
+        "{ extend { never cite L.R. 6.1 } }",
+        "",
+    ] {
         let narrowing = local(clauses);
         assert_eq!(
             diagnostics(&[core(), fed(locked), narrowing.clone()]),

@@ -264,16 +264,15 @@ impl Bound {
                 crate::types::date::add_days(at, *days)
             }
             Self::Max(xs) | Self::Min(xs) => {
-                let dates = xs
-                    .iter()
-                    .map(|x| x.date(due, order))
-                    .collect::<Option<Vec<_>>>()?
-                    .into_iter();
-                if matches!(self, Self::Max(_)) {
-                    dates.max()
-                } else {
-                    dates.min()
-                }
+                let dates: Option<Vec<String>> = xs.iter().map(|x| x.date(due, order)).collect();
+                let latest = matches!(self, Self::Max(_));
+                dates.and_then(|d| {
+                    if latest {
+                        d.into_iter().max()
+                    } else {
+                        d.into_iter().min()
+                    }
+                })
             }
         }
     }

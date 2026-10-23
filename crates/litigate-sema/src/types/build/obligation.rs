@@ -130,6 +130,29 @@ impl Cx<'_, '_> {
             .map(TriggerPolicy::LaterOf)
     }
 
+    /// `prescribed_due` or `grant_order_entered` (L2007 otherwise).
+    fn date_ref(&mut self, e: &Expr) -> Option<DateRef> {
+        let found = match &e.kind {
+            ExprKind::Ref(r) if r.is_simple() => {
+                [DateRef::PrescribedDue, DateRef::GrantOrderEntered]
+                    .into_iter()
+                    .find(|d| d.name() == r.head.text)
+            }
+            _ => None,
+        };
+        found.or_else(|| self.no_bound(e))
+    }
+
+    /// L2007 for `e`, which is not a date bound.
+    fn no_bound<T>(&mut self, e: &Expr) -> Option<T> {
+        self.report(Report::new(
+            C::InvalidField,
+            e.range,
+            "a date bound is `max(...)`, `min(...)`, or `prescribed_due` / `grant_order_entered` `+ N.days`",
+        ));
+        None
+    }
+
     /// One `extend` grant: `{ never cite X }`, `{ by A, max N.days | to
     /// B [, discretion S] [, after_expiry] [, on M() [, within W]] }`, or
     /// `{ by A, discretion S [, after_expiry, on M()] }`. Its bound is
@@ -266,12 +289,6 @@ impl Cx<'_, '_> {
     /// `r` one of `prescribed_due`, `grant_order_entered` (L2007
     /// otherwise).
     fn bound(&mut self, e: &Expr) -> Option<Bound> {
-        const EXPECTED: &str = "a date bound is `max(...)`, `min(...)`, or `prescribed_due` / `grant_order_entered` `+ N.days`";
-        let refers = |r: &RefPath| {
-            [DateRef::PrescribedDue, DateRef::GrantOrderEntered]
-                .into_iter()
-                .find(|d| r.is_simple() && d.name() == r.head.text)
-        };
         match &e.kind {
             ExprKind::Paren(inner) => self.bound(inner),
             ExprKind::Call(f, args) if f.is_simple() && !args.is_empty() => {
@@ -284,25 +301,15 @@ impl Cx<'_, '_> {
                 match f.head.text.as_str() {
                     "max" => Some(Bound::Max(ops?)),
                     "min" => Some(Bound::Min(ops?)),
-                    _ => {
-                        self.report(Report::new(C::InvalidField, e.range, EXPECTED));
-                        None
-                    }
+                    _ => self.no_bound(e),
                 }
             }
-            ExprKind::Ref(r) if refers(r).is_some() => Some(Bound::Offset {
-                from: refers(r)?,
+            ExprKind::Ref(_) => Some(Bound::Offset {
+                from: self.date_ref(e)?,
                 days: 0,
             }),
             ExprKind::Binary(BinaryOp::Add, l, n) => {
-                let from = match &l.kind {
-                    ExprKind::Ref(r) => refers(r),
-                    _ => None,
-                };
-                let Some(from) = from else {
-                    self.report(Report::new(C::InvalidField, l.range, EXPECTED));
-                    return None;
-                };
+                let from = self.date_ref(l)?;
                 let (days, unit) = self.days(n)?;
                 if unit != DayUnit::Calendar {
                     self.report(Report::new(
@@ -314,10 +321,7 @@ impl Cx<'_, '_> {
                 }
                 Some(Bound::Offset { from, days })
             }
-            _ => {
-                self.report(Report::new(C::InvalidField, e.range, EXPECTED));
-                None
-            }
+            _ => self.no_bound(e),
         }
     }
 

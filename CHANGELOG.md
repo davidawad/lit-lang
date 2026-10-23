@@ -26,6 +26,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `tests-pass` obligation and `explain-value`; a bare `deadline(d)` is
   L2001. A pack edge's `deadline.counting` names the window's own rule
   when it is not the pack's.
+- **lg-flu.8 follow-ups** (lg-flu.29). `lit/core` declares the FRCP
+  86(a)(2)(B) transition for the 2016 amendment of Rule 6(d): an action
+  pending on December 1, 2016 keeps electronic service's 3 days only on a
+  `PriorServiceRuleOrdered()` order. The certiorari period (`lit/frap`,
+  `lit/cafc`) is no longer `delegable_to [CaseOrder]`: a `justice` (a new
+  role) extends it, for good cause and up to 60 days, on a
+  `CertExtensionApplied()` application within the period (28 U.S.C. §
+  2101(c); Sup. Ct. R. 13.5, 30.2), recorded by `CertPeriodExtended(until)`.
+  The Federal Circuit's PTAB and TTAB notice-of-appeal windows count under
+  the agencies' own rules, `uspto-1-7` (37 C.F.R. § 90.3(b)(2), 35 U.S.C.
+  § 21(b)) and `ttab-2-196` (§ 2.145(d)(4)(ii)), not FRAP 26, and only the
+  Director extends them (§§ 90.3(c), 2.145(e); `cafc` now depends on
+  `mpep-prosecution` and `ttab-trademark-trial-and-appeal-board`); the
+  CoFC window stays FRAP 26's, as FRAP 4's period through § 2522 and RCFC
+  58.1 (`forum frap`). Chains in real rule data: the TTAB's defendant and
+  reply briefs (37 C.F.R. § 2.128(a)(1)) run from the nominal end of the
+  brief before (TBMP § 112, newly vendored `sources/tbmp.txt`; § 2.128
+  dated in `sources/cfr-37-part2-history.txt`); MPEP 710.01(a)'s extended
+  reply periods (`ssp-reply-extended-1..3`) count 4-6 months from the
+  action, since a month chained on a period cut to a short month's last day
+  would end early.
 - **Rule history and per-forum rules.** `lit/core`'s FRCP 6 and FRAP 26
   gain the 2016 versions (electronic service adds nothing from December 1,
   2016) and their earlier versions recognize electronic service where it
@@ -207,6 +228,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **A chain on a dependency's period opens in case replay** (lg-flu.29).
+  Replay's world holds the used packages' dependencies, as `check` and
+  lowering do: a chain on a dependency's deadline opens from the event
+  starting it (a dependency event a matter may now write as
+  `pack::Event(...)`), and a dependency's counting rule counts under its
+  own versions and transitions rather than the shared library's. A
+  dependency's nodes are never stages and its deadlines open no
+  instances.
 - **Probability arithmetic over unknowns was unchecked** (T1): `a + b`
   over two `Probability` defaults was accepted whatever they held.
 - **Exact rational products could wrap** (T2): `ad * bd` of two `u64`

@@ -165,9 +165,8 @@ test "a day 180 on the Saturday before Labor Day rolls to Tuesday" cite 37 CFR 2
 /// earliest sourced date for the 60-day practice. Before it, the date the
 /// Board adopted the 40-day designation is not in `sources/`, so the
 /// period is the regulation's own floor, thirty days, from the rules
-/// revision that states it (81 FR 69950, effective January 14, 2017): the
-/// earliest date the regulation allows, never a later one than the notice
-/// designates.
+/// revision that states it (81 FR 69950, effective January 14, 2017): no
+/// later than any date the notice may lawfully designate.
 rule duty answer-time effective [2017-01-14, ..) known_at 2016-10-07 cite 37 CFR 2.105(a)
 {
   deadline answer-period: 30.days from InstitutionNoticed() counted_by frcp6 effective [2017-01-14, 2026-06-01) delegable_to [CaseOrder] cite 37 CFR 2.105(a)

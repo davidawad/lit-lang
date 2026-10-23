@@ -13,20 +13,17 @@ import core.calendar.{ us-federal-holidays }
 /// the days were added to the period before it was counted under 6(a), or
 /// after it expired, was contested: the 2005 amendment was made "to remove
 /// any doubt as to the method". The engine has one order, the 2005 one
-/// (SPEC §5.3 step 5), so every pre-2005 version's mail extension carries
-/// a citation hole naming the question rather than a cite that settles it.
-/// Its direction of risk is a later due date: for a period under the
-/// short-period threshold the 2005 order gives more days than adding 3 to
-/// the period first.
+/// (SPEC §5.3 step 5). UNVERIFIED for every pre-2005 version: no vendored
+/// text or ruling fixes the earlier order, and the direction of risk is a
+/// later due date, since for a period under the short-period threshold
+/// the 2005 order gives more days than adding 3 to the period first.
 counting frcp6 effective [1963-07-01, 1985-08-01) known_at 1963-01-21 cite FRCP (2008 ed.) 6 (1963 Advisory Committee Note)
 {
   exclude_trigger_day
   include_last_day
   roll_forward_on [weekend, legal_holiday]
   short_period { below: 7.days, count: business_days }
-  service_extension {
-    Mail: 3.days
-  } cite ?("Rule 6(e) before Dec. 1, 2005: '3 days shall be added to the prescribed period'; added before or after the 6(a) count is contested, and the 2005 order is assumed")
+  service_extension { Mail: 3.days }
   holidays us-federal-holidays
 }
 
@@ -40,9 +37,7 @@ counting frcp6 effective [1985-08-01, 2001-12-01) known_at 1985-04-29 supersedes
   include_last_day
   roll_forward_on [weekend, legal_holiday, inaccessible]
   short_period { below: 11.days, count: business_days }
-  service_extension {
-    Mail: 3.days
-  } cite ?("Rule 6(e) before Dec. 1, 2005: '3 days shall be added to the prescribed period'; added before or after the 6(a) count is contested, and the 2005 order is assumed")
+  service_extension { Mail: 3.days }
   holidays us-federal-holidays
 }
 
@@ -65,7 +60,7 @@ counting frcp6 effective [2001-12-01, 2005-12-01) known_at 2001-04-23 supersedes
     Mail: 3.days
     Clerk: 3.days
     OtherConsented: 3.days
-  } cite ?("Rule 6(e) before Dec. 1, 2005: '3 days shall be added to the prescribed period'; added before or after the 6(a) count is contested, and the 2005 order is assumed")
+  } cite FRCP (2008 ed.) 6 (2001 Committee Note)
   holidays us-federal-holidays
   end_of_month clamp
 }

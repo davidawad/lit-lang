@@ -523,8 +523,9 @@ creates (design review 2026-10-23 §2.4, §2.7):
   motion, a rehearing, a later appearance). `each` creates another
   instance. `later_of(e)` is `latest` and also absorbs the open instance of
   deadline `e` for the same bearer: the new instance is due no earlier
-  than `e`'s (FRCP 15(a)(3), FRAP 4(a)(3)). `later_of` naming the deadline
-  itself, or anything but one deadline, is L2007.
+  than `e`'s (FRCP 15(a)(3), FRAP 4(a)(3)), and `litigate check` reports
+  that date as its `floor` beside the counted `due`. `later_of` naming the
+  deadline itself, or anything but one deadline, is L2007.
 - `extend { ... }` declares one extension grant; a deadline may declare
   several (FRCP 6(b)(1)'s (A) and (B) are two). Its bound is a sum, and
   a grant states exactly one (otherwise L2007):

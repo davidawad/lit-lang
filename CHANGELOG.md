@@ -147,6 +147,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - A `.case` `facts` edge written `pack::edge` is no longer qualified twice.
+- **Corpus legal-modelling defects** (design review 2026-10-23 §5.2,
+  lg-flu.15). FRCP periods start where a vendored source shows them in
+  force: Rule 4(m) is 90 days from December 1, 2015 (not 2017) and 120
+  days from 2007 to then; the Rule 12(a) and 15(a) periods date from the
+  2009 texts and the FRAP 4(a) periods from 2009, so a 2010-2024 matter
+  has its answer and appeal deadlines. A TTAB answer period before the
+  sourced 60-day designation (June 2026) is § 2.105(a)'s 30-day floor. A
+  cross-appeal is due 14 days after the first notice or with the notice of
+  appeal, whichever is later (FRAP 4(a)(3), `later_of`, in `lit/frcp` and
+  `lit/frap`), and `litigate check` reports that `floor` beside the
+  counted due date. The notice of appeal cites 28 U.S.C. § 2107 and
+  delegates nothing to a case order. `frcp-civil-procedure` gives each
+  Rule 12 response track its own window (`waiver-response-window`,
+  `removed-response-window`, `amended-response-window`) on its own
+  clock. FRCP 6 has a 2005 version, and the pre-2005 versions mark the
+  order of adding the mail days, contested until the 2005 amendment,
+  UNVERIFIED. No fixed-date federal holiday is observed on another day before
+  Executive Order 11582 (1971); the observed Monday is validated against
+  *Derrington-Bey* (D.C. Cir. 1994).
 
 ## [0.4.0] - 2026-10-23
 

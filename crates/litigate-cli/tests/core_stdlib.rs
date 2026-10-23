@@ -407,7 +407,7 @@ fn pending_matters_keep_the_pre_2009_rule_only_on_an_order() {
         ("2009-12-03", &order),
         ("2009-12-11", &event),
     ];
-    assert_eq!(governs(&ordered, 2), "2001-12-01");
+    assert_eq!(governs(&ordered, 2), "2005-12-01");
     // An order after the event it would govern comes too late for it.
     let late = [
         ("2009-11-20", &event),
@@ -419,7 +419,7 @@ fn pending_matters_keep_the_pre_2009_rule_only_on_an_order() {
     let after = [("2009-12-04", &event), ("2009-12-28", &event)];
     assert_eq!(governs(&after, 1), "2009-12-01");
     let before = [("2009-10-01", &event), ("2009-10-21", &event)];
-    assert_eq!(governs(&before, 1), "2001-12-01");
+    assert_eq!(governs(&before, 1), "2005-12-01");
 }
 
 #[test]

@@ -251,13 +251,7 @@ fn due(
             hir::Direction::Forward => clock::Direction::Forward,
             hir::Direction::Backward => clock::Direction::Backward,
         },
-        unit: match deadline.unit {
-            hir::DayUnit::Calendar => Unit::Calendar,
-            hir::DayUnit::Court | hir::DayUnit::Business => Unit::Court,
-            hir::DayUnit::Week => Unit::Week,
-            hir::DayUnit::Month => Unit::Month,
-            hir::DayUnit::Year => Unit::Year,
-        },
+        unit: engine_unit(deadline.unit),
         service_method: service_method(counting.map(|(_, c)| c), event)
             .filter(|_| designated.is_none()),
     };
@@ -266,6 +260,17 @@ fn due(
         .and_then(|clock| clock::compute_due_date(&request, &clock, &ClockConfig::default()))
         .map(|c| (c.nominal_date, c.due_date))
         .map_err(|e| e.to_string())
+}
+
+/// The engine's unit for `unit` (business days count as court days).
+fn engine_unit(unit: hir::DayUnit) -> Unit {
+    match unit {
+        hir::DayUnit::Calendar => Unit::Calendar,
+        hir::DayUnit::Court | hir::DayUnit::Business => Unit::Court,
+        hir::DayUnit::Week => Unit::Week,
+        hir::DayUnit::Month => Unit::Month,
+        hir::DayUnit::Year => Unit::Year,
+    }
 }
 
 /// The counting rule `deadline` (of `owner`) counts under on `date`, with

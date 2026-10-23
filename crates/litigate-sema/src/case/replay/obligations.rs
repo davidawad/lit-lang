@@ -511,26 +511,7 @@ impl<'g> Cx<'_, 'g> {
             .map(|&i| self.count(i, pack, d, &events, k))
             .collect();
         drop(events);
-        let new = match how {
-            Transform::Extend(Some(Expr {
-                kind:
-                    ExprKind::Literal {
-                        value: Value::Date(new),
-                    },
-                ..
-            })) => Some(new.as_str()),
-            Transform::Extend(_) => {
-                let d = error(
-                    C::InvalidCaseEvent,
-                    self.at(k, |e| e.action.as_ref()),
-                    format!("`{action}` extends `{q}` to no known date, which moves nothing"),
-                )
-                .note("an extension's new due date is the order's; record it, or omit the event until it is known");
-                self.out.push(d);
-                return None;
-            }
-            Transform::Waive => None,
-        };
+        let new = self.new_due(k, &q, how).ok()?;
         // Each grant licenses the transform when every open instance is
         // within its window and bound; the first that does is recorded,
         // with the request each instance's grant read. Otherwise the most
@@ -568,6 +549,37 @@ impl<'g> Cx<'_, 'g> {
             o.request_made = request;
         }
         Some(Effect::Extended)
+    }
+
+    /// The date event `k` moves `q`'s instances to, `None` for a waiver;
+    /// `Err` after reporting an extension to no known date.
+    fn new_due<'e>(
+        &mut self,
+        k: usize,
+        q: &str,
+        how: Transform<'e>,
+    ) -> Result<Option<&'e str>, ()> {
+        match how {
+            Transform::Extend(Some(Expr {
+                kind:
+                    ExprKind::Literal {
+                        value: Value::Date(new),
+                    },
+                ..
+            })) => Ok(Some(new.as_str())),
+            Transform::Extend(_) => {
+                let action = display(&self.sorted[k].1.action);
+                let d = error(
+                    C::InvalidCaseEvent,
+                    self.at(k, |e| e.action.as_ref()),
+                    format!("`{action}` extends `{q}` to no known date, which moves nothing"),
+                )
+                .note("an extension's new due date is the order's; record it, or omit the event until it is known");
+                self.out.push(d);
+                Err(())
+            }
+            Transform::Waive => Ok(None),
+        }
     }
 
     /// The deadline declaration governing `q` at event `k` (with its own

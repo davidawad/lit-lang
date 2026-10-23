@@ -30,6 +30,32 @@ fn rule_of<'p>(pkg: &'p hir::Package, d: &str) -> Option<&'p hir::Rule> {
     })
 }
 
+/// How version `v` of a deadline sets its due date: counted, or
+/// designated by its trigger.
+fn period(v: &hir::Deadline) -> String {
+    let direction = match v.direction {
+        hir::Direction::Forward => "after",
+        hir::Direction::Backward => "before",
+    };
+    match &v.designated {
+        Some(p) => format!(
+            "due on the date {} designates (its `{}`), no earlier than {} {} day(s) {direction} it, rolled by {}",
+            hirx::event_text(&v.trigger),
+            p.name,
+            v.amount,
+            name_of(v.unit),
+            v.counting,
+        ),
+        None => format!(
+            "{} {} day(s) {direction} {}, counted by {}",
+            v.amount,
+            name_of(v.unit),
+            hirx::event_text(&v.trigger),
+            v.counting,
+        ),
+    }
+}
+
 /// What one build of a trace needs.
 struct Trace<'a> {
     all: &'a [&'a hir::Package],
@@ -48,32 +74,12 @@ impl Trace<'_> {
             .cite
             .as_ref()
             .or(rule.and_then(|r| r.meta.cite.as_ref()));
-        let direction = match v.direction {
-            hir::Direction::Forward => "after",
-            hir::Direction::Backward => "before",
-        };
-        let period = match &v.designated {
-            Some(p) => format!(
-                "due on the date {} designates (its `{}`), no earlier than {} {} day(s) {direction} it, rolled by {}",
-                hirx::event_text(&v.trigger),
-                p.name,
-                v.amount,
-                name_of(v.unit),
-                v.counting,
-            ),
-            None => format!(
-                "{} {} day(s) {direction} {}, counted by {}",
-                v.amount,
-                name_of(v.unit),
-                hirx::event_text(&v.trigger),
-                v.counting,
-            ),
-        };
         let mut steps = vec![step(
             format!("{}@{}", v.meta.id, v.meta.effective.from),
             cite,
             format!(
-                "{period}; in force [{}, {})",
+                "{}; in force [{}, {})",
+                period(v),
                 v.meta.effective.from,
                 v.meta.effective.to.as_deref().unwrap_or("..")
             ),

@@ -153,6 +153,26 @@ pub fn method_of(
     })
 }
 
+/// The engine's unit for `d`'s period.
+///
+/// # Errors
+/// Business days, which have no engine lowering.
+fn engine_unit(d: &hir::Deadline) -> Result<Unit, String> {
+    Ok(match d.unit {
+        DayUnit::Calendar => Unit::Calendar,
+        DayUnit::Court => Unit::Court,
+        DayUnit::Week => Unit::Week,
+        DayUnit::Month => Unit::Month,
+        DayUnit::Year => Unit::Year,
+        DayUnit::Business => {
+            return Err(format!(
+                "`{}` counts business days, which have no engine lowering",
+                d.meta.id
+            ))
+        }
+    })
+}
+
 /// A computed due date with its trace.
 #[derive(Debug, Clone)]
 pub struct Due {
@@ -217,19 +237,7 @@ pub fn due(
                 d.meta.id
             )
         })?;
-    let unit = match d.unit {
-        DayUnit::Calendar => Unit::Calendar,
-        DayUnit::Court => Unit::Court,
-        DayUnit::Week => Unit::Week,
-        DayUnit::Month => Unit::Month,
-        DayUnit::Year => Unit::Year,
-        DayUnit::Business => {
-            return Err(format!(
-                "`{}` counts business days, which have no engine lowering",
-                d.meta.id
-            ))
-        }
-    };
+    let unit = engine_unit(d)?;
     let counting_key = world.target(owner, &d.counting).key;
     let version =
         governing(world, "counting rule", &counting_key, events, at, known_at)?.and_then(|i| {

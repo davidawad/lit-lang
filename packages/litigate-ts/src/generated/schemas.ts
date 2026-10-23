@@ -2202,7 +2202,7 @@ export interface Derivation {
    */
   rule: string;
   /**
-   * The fact concluded, e.g. `winner(frcp::answer-due, v2)`.
+   * The fact concluded, e.g. `winner(pkg::period, v2)`.
    */
   fact: string;
   /**

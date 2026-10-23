@@ -697,6 +697,7 @@ export type DiagnosticCode =
   | "L4006"
   | "L4007"
   | "L4008"
+  | "L4009"
   | "L5001"
   | "L5002"
   | "L5003"

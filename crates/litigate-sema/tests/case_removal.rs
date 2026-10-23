@@ -85,6 +85,26 @@ fn removal_replay_table() {
             ],
         ),
         (
+            "duplicate: the same option removed twice",
+            vec![
+                SERVED,
+                FORFEIT,
+                "2009-12-11 Struck(\"move-dismiss\") by court cite FRCP 12(f)",
+            ],
+        ),
+    ];
+    let table: BTreeMap<&str, Vec<String>> = rows
+        .iter()
+        .map(|(name, events)| (*name, row(events)))
+        .collect();
+    insta::assert_debug_snapshot!(table);
+}
+
+/// A cited `Elected` event removes the alternatives to the edge it names.
+#[test]
+fn election_replay_table() {
+    let rows: Vec<(&str, Vec<&str>)> = vec![
+        (
             "elected: the alternatives leave the matter",
             vec![SERVED, ELECT, "2009-12-28 Answered(complaint) by widget"],
         ),
@@ -111,14 +131,6 @@ fn removal_replay_table() {
         (
             "elected: an uncited election removes nothing",
             vec![SERVED, "2009-12-11 Elected(\"answer\") by widget"],
-        ),
-        (
-            "duplicate: the same option removed twice",
-            vec![
-                SERVED,
-                FORFEIT,
-                "2009-12-11 Struck(\"move-dismiss\") by court cite FRCP 12(f)",
-            ],
         ),
     ];
     let table: BTreeMap<&str, Vec<String>> = rows

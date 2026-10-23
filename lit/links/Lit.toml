@@ -1,0 +1,27 @@
+# Ported from packs/links.json (`litigate import`, then dated, documented
+# and tested by hand). A links package (SPEC §8.4) has no pack identity and
+# no sources of its own: it composes the forum packages below, and its cites
+# are checked where it composes them.
+#
+# in_force: the instances' rehearing patches transcribe the 45-day period of
+# Fed. Cir. R. 40(f)(1) in the Federal Circuit Rules of Practice effective
+# December 1, 2025 (lit/cafc's `fedcir-rules` source, the same date lit/cafc
+# is in force from). Every jurisdictional statute the links cite is older
+# (28 U.S.C. §§ 1291, 1295, 2106, 2522; 19 U.S.C. § 1337(c); 35 U.S.C.
+# §§ 141(c), 319; 15 U.S.C. § 1071(a)). known_at: the newest vendored
+# source date among the composed packages (lit/ttab's 37 C.F.R. Part 2).
+[package]
+name = "links"
+version = "0.1.0"
+language = 1
+in_force = "2025-12-01"
+known_at = "2026-10-19"
+
+[dependencies]
+cafc = { version = "^0.1.0", path = "../cafc" }
+cofc = { version = "^0.1.0", path = "../cofc" }
+frap-appellate-procedure = { version = "^0.1.0", path = "../frap" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+itc-337 = { version = "^0.1.0", path = "../itc" }
+ptab-patent-trial-appeal-board = { version = "^0.1.0", path = "../ptab" }
+ttab-trademark-trial-and-appeal-board = { version = "^0.1.0", path = "../ttab" }

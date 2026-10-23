@@ -1,0 +1,47 @@
+// Cross-forum composition (SPEC §8.4): the links that carry a matter from a
+// trial forum into the Federal Circuit or a regional circuit and back on
+// remand, and the `cafc@<origin>` instances they route through. Each origin
+// has its own module, in packs/links.json's order (module order is link
+// order). This root module holds the one period the instances author
+// themselves.
+module links
+
+import cafc.{ Entered, Order }
+import core.frap26.{ frap26 }
+
+/// FRAP 40(d)(1) gives 14 days to petition for rehearing, but 45 days in a
+/// civil case when the United States, a United States agency, or a federal
+/// officer is a party; Fed. Cir. R. 40(f)(1) lengthens the general period
+/// to 30 days and keeps 45 for those cases. lit/cafc's `rehearing-period`
+/// is the 30-day branch. This is the 45-day branch, which the `cafc@cofc`,
+/// `cafc@cofc-gov` and `cafc@itc` instances set on `rehearing-file` and
+/// `rehearing-time-expires` by patch: the United States is a party to every
+/// Court of Federal Claims appeal, and the Commission, an agency, to every
+/// Section 337 appeal. A patch is a JSON merge patch, so it repeats the
+/// length (45) instead of naming this declaration; the tests below pin the
+/// due dates it produces under FRAP 26(a). FRAP 40(d)(1) lets an order
+/// shorten or extend either period; lit/cafc's `rehearing-period` records
+/// that as `delegable_to [CaseOrder]`, but a links package has no authority
+/// level of its own to delegate from (L3004), so this declaration does not.
+rule duty rehearing-united-states-party cite Fed. Cir. R. 40(f)(1)
+{
+  deadline rehearing-period-united-states-party: 45.days after Entered(PanelJudgment) counted_by frap26 effective [2025-12-01, ..) known_at 2025-12-01 cite Fed. Cir. R. 40(f)(1); FRAP 40(d)(1)(A); FRAP 40(d)(1)(B)
+}
+
+test "a rehearing petition is due 45 days after judgment when the United States is a party" cite Fed. Cir. R. 40(f)(1)
+{
+  given Entered(PanelJudgment) on 2026-03-02
+  expect deadline(rehearing-period-united-states-party) == 2026-04-16
+}
+
+test "a 45th day on a Saturday rolls the rehearing petition to Monday" cite FRAP 26(a)(1)(C)
+{
+  given Entered(PanelJudgment) on 2026-01-21
+  expect deadline(rehearing-period-united-states-party) == 2026-03-09
+}
+
+test "a 45th day on Labor Day rolls the rehearing petition to Tuesday" cite FRAP 26(a)(6)(A)
+{
+  given Entered(PanelJudgment) on 2026-07-24
+  expect deadline(rehearing-period-united-states-party) == 2026-09-08
+}

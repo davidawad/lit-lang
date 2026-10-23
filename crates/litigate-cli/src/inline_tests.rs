@@ -92,10 +92,13 @@ impl Cx<'_> {
         let any = hirx::deadlines(self.pkg, name)
             .next()
             .ok_or_else(|| format!("`{name}` is not a deadline of this package"))?;
+        // A chained period starts with the event starting the one it follows.
+        let trigger = clock::root_trigger(self.world, &self.pkg.manifest.pack_id, any)
+            .unwrap_or(&any.trigger);
         let matching = self
             .givens
             .iter()
-            .filter(|(e, _)| hirx::matches(&any.trigger, e));
+            .filter(|(e, _)| hirx::matches(trigger, e));
         // The trigger policy picks the event that runs the period: the
         // first under `first` (the default), else the latest (SPEC §5.3).
         let picked = if any.policy.is_first() {
@@ -106,7 +109,7 @@ impl Cx<'_> {
         let (event, date) = picked.ok_or_else(|| {
             format!(
                 "no `given` event matches the trigger {} of `{name}`",
-                hirx::event_text(&any.trigger)
+                hirx::event_text(trigger)
             )
         })?;
         let events = [MatterEvent::on(date, event)];

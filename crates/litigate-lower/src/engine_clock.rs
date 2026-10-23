@@ -6,7 +6,8 @@ use crate::{LoweredPackage, Lowerer};
 use litgraph::clock::cycle::endless_roll;
 use litgraph::clock::rule::Step;
 use litgraph::clock::{
-    compute_due_date, ClockConfig, ClockLibrary, Date, DayDeadline, Direction, ServiceMethod, Unit,
+    compute_due_date, ClockConfig, ClockLibrary, ComputedDeadline, Date, DayDeadline, Direction,
+    ServiceMethod, Unit,
 };
 use litigate_base::Diagnostic;
 use litigate_sema::case::{Clock, DueRequest};
@@ -99,6 +100,17 @@ impl EngineClock {
 
 impl Clock for EngineClock {
     fn due(&self, r: &DueRequest) -> Result<String, String> {
+        self.count(r).map(|c| c.due_date)
+    }
+
+    fn nominal(&self, r: &DueRequest) -> Result<String, String> {
+        self.count(r).map(|c| c.nominal_date)
+    }
+}
+
+impl EngineClock {
+    /// `r` counted by the engine's interpreter.
+    fn count(&self, r: &DueRequest) -> Result<ComputedDeadline, String> {
         let key = r.version.clone().map(|from| (r.counting.clone(), from));
         if let Some(why) = key.and_then(|k| self.endless.get(&k)) {
             return Err(why.clone());
@@ -132,8 +144,6 @@ impl Clock for EngineClock {
             },
             service_method,
         };
-        compute_due_date(&deadline, &clock, &ClockConfig::default())
-            .map(|c| c.due_date)
-            .map_err(|e| e.to_string())
+        compute_due_date(&deadline, &clock, &ClockConfig::default()).map_err(|e| e.to_string())
     }
 }

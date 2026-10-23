@@ -1,0 +1,23 @@
+---
+source: crates/litigate-sema/tests/cov_case_chains.rs
+expression: "(run(&[\"2011-01-04 Served(complaint) on d\", \"2011-02-02 Opposed() by d\",]),\nrun(&[\"2011-01-04 Served(complaint) on d\", \"2011-02-03 Opposed() by d\",]),)"
+---
+(
+    [
+        "14:16 L4004 `chain::open` is not a terminal in force on 2011-06-01; only terminals take stakes",
+        "trace Triggered Served(complaint) chain::open -> chain::open",
+        "trace Took Opposed() chain::open -> chain::open via chain::oppose",
+        "obligation chain::after-adjusted #0 Lapsed",
+        "obligation chain::after-nominal #0 Discharged",
+        "obligation chain::base #0 Lapsed",
+    ],
+    [
+        "12:3 L4002 `Opposed()` on 2011-02-03 missed deadline `after-nominal`, due 2011-02-02\n    note @11:3: `after-nominal` runs 20 calendar days from the nominal end of `base` on 2011-01-13 under `oc@2009-12-01`\n    note: only a cited event of a type that `extends` this deadline, within its `extend` capability, moves the due date",
+        "14:16 L4004 `chain::open` is not a terminal in force on 2011-06-01; only terminals take stakes",
+        "trace Triggered Served(complaint) chain::open -> chain::open",
+        "trace Took Opposed() chain::open -> chain::open via chain::oppose",
+        "obligation chain::after-adjusted #0 Lapsed",
+        "obligation chain::after-nominal #0 Late",
+        "obligation chain::base #0 Lapsed",
+    ],
+)

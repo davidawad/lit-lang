@@ -1,0 +1,15 @@
+---
+source: crates/litigate-sema/tests/cov_case_chains.rs
+expression: "run(&[\"2011-01-04 Served(motion) on d\", \"2011-03-01 Replied() by p\",\n\"2011-03-02 Rejoined() by d\",])"
+---
+[
+    "12:3 L3009 cannot count deadline `orphan` for this event\n    note @11:3: `orphan` runs 3 calendar days from the adjusted end of `huge` on 275801-09-16 under `oc@2009-12-01`\n    note: bad",
+    "13:3 L3009 cannot count deadline `orphan2` for this event\n    note @11:3: `orphan2` runs 1 calendar day from the nominal end of `orphan` on 2011-01-04 under `oc@2009-12-01`\n    note: `orphan2` runs from the nominal end of `orphan`, which is not counted: bad",
+    "15:16 L4004 `chain::open` is not a terminal in force on 2011-06-01; only terminals take stakes",
+    "trace Triggered Served(motion) chain::open -> chain::open",
+    "trace Took Replied() chain::open -> chain::open via chain::reply",
+    "trace Took Rejoined() chain::open -> chain::open via chain::rejoin",
+    "obligation chain::huge #0 Open",
+    "obligation chain::orphan #0 Discharged",
+    "obligation chain::orphan2 #0 Discharged",
+]

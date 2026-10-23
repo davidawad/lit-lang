@@ -5,8 +5,8 @@ use super::cx::{first_expr, first_ref, flag, Cx};
 use crate::db::parse::tree::{ArmItem, Atom, Expr, ExprKind, Field, Item, Name, RefPath};
 use crate::db::span::Report;
 use crate::hir::{
-    Anchor, Counting, DayUnit, Deadline, Direction, EndOfMonth, RollOn, ServiceTime, ShortPeriod,
-    Transition, TransitionArm, Type, Value, SERVICE_METHODS,
+    Anchor, Chain, Counting, DayUnit, Deadline, Direction, DueEnd, EndOfMonth, RollOn, ServiceTime,
+    ShortPeriod, Transition, TransitionArm, Type, Value, SERVICE_METHODS,
 };
 use crate::resolve::sig::{TypeSig, ValueKind};
 use crate::resolve::suggest;
@@ -130,6 +130,7 @@ impl Cx<'_, '_> {
             "before" => Direction::Backward,
             _ => Direction::Forward,
         };
+        let (trigger, chain) = self.trigger(name, trigger);
         let o = self.once_except(opts, "extend");
         let forum = first_ref(o.get("forum")).map_or_else(
             || self.manifest.map(|m| m.forum.clone()).unwrap_or_default(),
@@ -146,6 +147,7 @@ impl Cx<'_, '_> {
             unit,
             direction,
             trigger: trigger?,
+            chain,
             counting: counting?,
             forum,
             extendable: flag(o.get("extendable")),
@@ -230,6 +232,101 @@ impl Cx<'_, '_> {
             param,
             name: params[param].0.clone(),
         })
+    }
+
+    /// A deadline's trigger: an event pattern, or the end of another
+    /// deadline's period, `deadline(d).nominal` or `deadline(d).adjusted`.
+    /// A chain must say which end (design review 2026-10-23, §2.1): a bare
+    /// `deadline(d)` is L2001 with both readings as fixes, and a period
+    /// cannot run from its own end.
+    fn trigger(&mut self, name: &Name, x: &Expr) -> (Option<crate::hir::Expr>, Option<Chain>) {
+        if let Some(args) = deadline_call(x) {
+            let text = |end: &str| format!("deadline({}).{end}", args_text(args));
+            self.report(
+                Report::new(
+                    C::TypeMismatch,
+                    x.range,
+                    "a chained period says which end it runs from: `.nominal` (the last day as \
+                     counted) or `.adjusted` (after every roll and extension)",
+                )
+                .fix(x.range, text("nominal"), Applicability::MaybeIncorrect)
+                .fix(x.range, text("adjusted"), Applicability::MaybeIncorrect),
+            );
+            return (None, None);
+        }
+        let ExprKind::Field(base, end) = &x.kind else {
+            return (self.pattern(x), None);
+        };
+        let Some(args) = deadline_call(base) else {
+            return (self.pattern(x), None);
+        };
+        let end = match end.text.as_str() {
+            "nominal" => Some(DueEnd::Nominal),
+            "adjusted" => Some(DueEnd::Adjusted),
+            other => {
+                let mut report = Report::new(
+                    C::TypeMismatch,
+                    end.range,
+                    format!("a period ends `nominal` or `adjusted`, not `{other}`"),
+                );
+                if let Some(best) = suggest::nearest(other, ["nominal", "adjusted"]) {
+                    report = report.fix(end.range, best, Applicability::MaybeIncorrect);
+                }
+                self.report(report);
+                None
+            }
+        };
+        let target = match args.as_slice() {
+            [Expr {
+                kind: ExprKind::Ref(r),
+                ..
+            }] => {
+                if r.is_simple() && r.head.text == name.text {
+                    self.report(Report::new(
+                        C::TypeMismatch,
+                        r.range,
+                        format!("`{}` cannot run from the end of its own period", name.text),
+                    ));
+                    None
+                } else {
+                    self.value_ref(r, "deadline", |k| matches!(k, ValueKind::Deadline))
+                }
+            }
+            _ => {
+                self.report(Report::new(
+                    C::TypeMismatch,
+                    base.range,
+                    "`deadline(d)` names exactly one deadline",
+                ));
+                None
+            }
+        };
+        let (Some(end), Some(deadline)) = (end, target) else {
+            return (None, None);
+        };
+        let call = crate::hir::Expr {
+            ty: Type::Unit,
+            kind: crate::hir::ExprKind::Call {
+                callee: "deadline".to_owned(),
+                args: vec![crate::hir::Expr {
+                    ty: Type::Unit,
+                    kind: crate::hir::ExprKind::Ref {
+                        target: deadline.clone(),
+                    },
+                    span: None,
+                }],
+            },
+            span: None,
+        };
+        let trigger = crate::hir::Expr {
+            ty: Type::Date,
+            kind: crate::hir::ExprKind::Field {
+                base: Box::new(call),
+                field: end.field().to_owned(),
+            },
+            span: None,
+        };
+        (Some(trigger), Some(Chain { deadline, end }))
     }
 
     /// L3009 when deadline `name`, a period of `forum`'s rules, is counted
@@ -566,4 +663,23 @@ impl Cx<'_, '_> {
             arms: out,
         })
     }
+}
+
+/// The arguments of `e` when it is a `deadline(...)` call.
+fn deadline_call(e: &Expr) -> Option<&Vec<Expr>> {
+    match &e.kind {
+        ExprKind::Call(f, args) if f.display() == "deadline" => Some(args),
+        _ => None,
+    }
+}
+
+/// The source text of `deadline(...)`'s arguments, for a fix.
+fn args_text(args: &[Expr]) -> String {
+    args.iter()
+        .map(|a| match &a.kind {
+            ExprKind::Ref(r) => r.display(),
+            _ => "d".to_owned(),
+        })
+        .collect::<Vec<_>>()
+        .join(", ")
 }

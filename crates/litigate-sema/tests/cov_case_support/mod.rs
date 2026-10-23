@@ -243,6 +243,10 @@ impl Clock for At {
     fn due(&self, _: &litigate_sema::case::DueRequest) -> Result<String, String> {
         Ok(self.0.to_owned())
     }
+
+    fn nominal(&self, r: &litigate_sema::case::DueRequest) -> Result<String, String> {
+        self.due(r)
+    }
 }
 
 /// A matter over the fixture: `uses`, then `head` (items between `summary`

@@ -1,0 +1,15 @@
+---
+source: crates/litigate-sema/tests/cov_build_clock.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:11:29 L2001 a chained period says which end it runs from: `.nominal` (the last day as counted) or `.adjusted` (after every roll and extension) [fix: \"deadline(base).nominal\"] [fix: \"deadline(base).adjusted\"]",
+    "pkgs/demo/main.lit:12:48 L2001 a period ends `nominal` or `adjusted`, not `nominl` [fix: \"nominal\"]",
+    "pkgs/demo/main.lit:13:51 L2001 a period ends `nominal` or `adjusted`, not `zzzzzzzz`",
+    "pkgs/demo/main.lit:14:40 L2001 `itself` cannot run from the end of its own period",
+    "pkgs/demo/main.lit:15:28 L2001 `deadline(d)` names exactly one deadline",
+    "pkgs/demo/main.lit:16:32 L2001 a chained period says which end it runs from: `.nominal` (the last day as counted) or `.adjusted` (after every roll and extension) [fix: \"deadline(d).nominal\"] [fix: \"deadline(d).adjusted\"]",
+    "pkgs/demo/main.lit:17:41 L1002 cannot find name `nope`",
+    "pkgs/demo/main.lit:18:48 L2001 `c6` is a counting rule, expected a deadline",
+    "pkgs/demo/main.lit:19:36 L2001 expected an event pattern such as `Served(complaint)`",
+]

@@ -9,7 +9,7 @@ use litgraph::clock::{
     ServiceMethod, Unit,
 };
 use litigate_lower::Lowerer;
-use litigate_sema::hir::{self, DayUnit, Declaration, Expr};
+use litigate_sema::hir::{self, DayUnit, Declaration, DueEnd, Expr};
 use litigate_sema::precedence::select::unordered;
 use litigate_sema::temporal::{self, Key, MatterEvent, Ungoverned, World};
 use std::collections::BTreeMap;
@@ -221,73 +221,168 @@ pub fn due(
         name: hirx::local(name).to_owned(),
     };
     let (owner, d) = governing(world, "deadline", &key, events, at, known_at)?
-        .and_then(|i| match world.decls[i].decl {
-            Declaration::Deadline(d) => Some((world.pack_of(i), d)),
-            _ => None,
-        })
+        .and_then(|i| deadline_at(world, i))
         .ok_or_else(|| format!("`{name}` is not a deadline of `{}`", pkg.manifest.name))?;
-    let trigger = events[..=at]
-        .iter()
-        .rev()
-        .find(|e| hirx::matches(&d.trigger, e.action))
-        .ok_or_else(|| {
-            format!(
-                "no event matches the trigger {} of `{}`",
-                hirx::event_text(&d.trigger),
-                d.meta.id
-            )
-        })?;
-    let unit = engine_unit(d)?;
-    let counting_key = world.target(owner, &d.counting).key;
-    let version =
-        governing(world, "counting rule", &counting_key, events, at, known_at)?.and_then(|i| {
-            match world.decls[i].decl {
+    let judged = Judged {
+        clocks,
+        world,
+        events,
+        at,
+        known_at,
+    };
+    judged.due(owner, d, CHAIN_LIMIT)
+}
+
+/// How many chained periods a chain may follow before it is a cycle.
+const CHAIN_LIMIT: usize = 16;
+
+/// Declaration `i` of `world` with its pack, when it is a deadline.
+fn deadline_at<'r, 'w>(world: &'r World<'w>, i: usize) -> Option<(&'r str, &'w hir::Deadline)> {
+    match world.decls[i].decl {
+        Declaration::Deadline(d) => Some((world.pack_of(i), d)),
+        _ => None,
+    }
+}
+
+/// What a due date is judged against.
+struct Judged<'j, 'w> {
+    clocks: &'j Clocks<'w>,
+    world: &'j World<'w>,
+    events: &'j [MatterEvent<'j>],
+    at: usize,
+    known_at: Option<&'j str>,
+}
+
+impl Judged<'_, '_> {
+    /// The due date of deadline `d` (of pack `owner`): from the latest
+    /// event up to `events[at]` matching its trigger, or, chained, from
+    /// the end of the period it follows (at most `depth` links deep).
+    fn due(&self, owner: &str, d: &hir::Deadline, depth: usize) -> Result<Due, String> {
+        let (events, at, known_at) = (self.events, self.at, self.known_at);
+        let (trigger, action) = match &d.chain {
+            None => {
+                let trigger = events[..=at]
+                    .iter()
+                    .rev()
+                    .find(|e| hirx::matches(&d.trigger, e.action))
+                    .ok_or_else(|| {
+                        format!(
+                            "no event matches the trigger {} of `{}`",
+                            hirx::event_text(&d.trigger),
+                            d.meta.id
+                        )
+                    })?;
+                (trigger.date.to_owned(), Some(trigger.action))
+            }
+            Some(chain) => {
+                // A cycle's root trigger matches no event, so a count never
+                // follows one this deep; this refusal guards that.
+                let depth = depth
+                    .checked_sub(1)
+                    .ok_or(format!("the chain through `{}` is a cycle", d.meta.id))?;
+                let key = self.world.target(owner, &chain.deadline).key;
+                // Sema resolved the chain to a deadline the world declares.
+                let base = governing(self.world, "deadline", &key, events, at, known_at)?
+                    .and_then(|i| deadline_at(self.world, i))
+                    .ok_or(format!("`{}` is not a deadline", chain.deadline))?;
+                let base = self.due(base.0, base.1, depth)?;
+                let date = match chain.end {
+                    DueEnd::Nominal => base.computed.nominal_date,
+                    DueEnd::Adjusted => base.computed.due_date,
+                };
+                (date, None)
+            }
+        };
+        self.count(owner, d, &trigger, action)
+    }
+
+    /// `d` counted from `trigger` (a date), served as event `action`
+    /// says (a chained period has none).
+    fn count(
+        &self,
+        owner: &str,
+        d: &hir::Deadline,
+        trigger: &str,
+        action: Option<&Expr>,
+    ) -> Result<Due, String> {
+        let (world, events, at, known_at) = (self.world, self.events, self.at, self.known_at);
+        let unit = match d.unit {
+            DayUnit::Calendar => Unit::Calendar,
+            DayUnit::Court => Unit::Court,
+            DayUnit::Week => Unit::Week,
+            DayUnit::Month => Unit::Month,
+            DayUnit::Year => Unit::Year,
+            DayUnit::Business => {
+                return Err(format!(
+                    "`{}` counts business days, which have no engine lowering",
+                    d.meta.id
+                ))
+            }
+        };
+        let counting_key = world.target(owner, &d.counting).key;
+        let version = governing(world, "counting rule", &counting_key, events, at, known_at)?
+            .and_then(|i| match world.decls[i].decl {
                 Declaration::Counting(c) => Some((world.decls[i].decl, c)),
                 _ => None,
-            }
-        });
-    // A displacing counting rule counts under its own name.
-    let rule = version.map_or_else(
-        || hirx::local(&d.counting).to_owned(),
-        |(_, c)| c.meta.id.clone(),
-    );
-    let method = method_of(trigger.action, version.map(|(_, c)| c));
-    // A designated due date is the notice's, rolled under the counting
-    // rule like any last day: counted zero days from it, no service days.
-    let designated = d
-        .designation(trigger.date, trigger.action)
-        .transpose()
-        .map_err(|why| why.message().to_owned())?;
-    let (start, days, method) = match &designated {
-        Some(date) => (date.as_str(), 0, None),
-        None => (trigger.date, d.amount, method),
-    };
-    let request = DayDeadline {
-        trigger: Date::parse_iso(start).map_err(|e| e.to_string())?,
-        days: i64::try_from(days).map_err(|e| e.to_string())?,
-        direction: match d.direction {
-            hir::Direction::Forward => Direction::Forward,
-            hir::Direction::Backward => Direction::Backward,
-        },
-        unit,
-        service_method: method.as_ref().map(|(_, m)| *m),
-    };
-    let library = match version {
-        Some((decl, _)) => clocks.fragment(decl).as_ref().map_err(Clone::clone)?,
-        None => &ClockLibrary::embedded().0,
-    };
-    let clock = library.clock(&rule).map_err(|e| e.to_string())?;
-    let computed =
-        compute_due_date(&request, &clock, &ClockConfig::default()).map_err(|e| e.to_string())?;
-    Ok(Due {
-        version: format!("{}@{}", d.meta.id, d.meta.effective.from),
-        rule,
-        cite: version.and_then(|(_, c)| c.meta.cite.clone()),
-        trigger: trigger.date.to_owned(),
-        method: method.map(|(name, _)| name),
-        designated,
-        computed,
-    })
+            });
+        // A displacing counting rule counts under its own name.
+        let rule = version.map_or_else(
+            || hirx::local(&d.counting).to_owned(),
+            |(_, c)| c.meta.id.clone(),
+        );
+        let method = action.and_then(|a| method_of(a, version.map(|(_, c)| c)));
+        let request = DayDeadline {
+            trigger: Date::parse_iso(trigger).map_err(|e| e.to_string())?,
+            days: i64::try_from(d.amount).map_err(|e| e.to_string())?,
+            direction: match d.direction {
+                hir::Direction::Forward => Direction::Forward,
+                hir::Direction::Backward => Direction::Backward,
+            },
+            unit,
+            service_method: method.as_ref().map(|(_, m)| *m),
+        };
+        let library = match version {
+            Some((decl, _)) => self.clocks.fragment(decl).as_ref().map_err(Clone::clone)?,
+            None => &ClockLibrary::embedded().0,
+        };
+        let clock = library.clock(&rule).map_err(|e| e.to_string())?;
+        let computed = compute_due_date(&request, &clock, &ClockConfig::default())
+            .map_err(|e| e.to_string())?;
+        Ok(Due {
+            version: format!("{}@{}", d.meta.id, d.meta.effective.from),
+            rule,
+            cite: version.and_then(|(_, c)| c.meta.cite.clone()),
+            trigger: trigger.to_owned(),
+            method: method.map(|(name, _)| name),
+            computed,
+        })
+    }
+}
+
+/// The event pattern that starts deadline `d` (of pack `owner`) in
+/// `world`: its own trigger, or for a chained period the one starting the
+/// period it follows (its first version's); `None` for a chain that does
+/// not resolve or is a cycle.
+#[must_use]
+pub fn root_trigger<'w>(world: &World<'w>, owner: &str, d: &'w hir::Deadline) -> Option<&'w Expr> {
+    let mut d = (owner.to_owned(), d);
+    for _ in 0..=CHAIN_LIMIT {
+        let Some(chain) = &d.1.chain else {
+            return Some(&d.1.trigger);
+        };
+        let key = world.target(&d.0, &chain.deadline).key;
+        d = world
+            .decls
+            .iter()
+            .enumerate()
+            .find_map(|(i, x)| match x.decl {
+                Declaration::Deadline(b) if world.key(i) == key => {
+                    Some((world.pack_of(i).to_owned(), b))
+                }
+                _ => None,
+            })?;
+    }
+    None
 }
 
 #[cfg(test)]
@@ -324,6 +419,11 @@ counting nourl cite \"XYZ 6(a)\"
   include_last_day
   holidays federal-holidays
 }
+
+deadline chained: 10.days from deadline(answer-period).nominal counted_by frcp6
+deadline chained-adjusted: 10.days from deadline(chained).adjusted counted_by frcp6
+deadline loop-a: 1.days from deadline(loop-b).nominal counted_by frcp6
+deadline loop-b: 1.days from deadline(loop-a).nominal counted_by frcp6
 ";
 
     fn expr(kind: ExprKind) -> Expr {
@@ -607,6 +707,27 @@ counting nourl cite \"XYZ 6(a)\"
             refusal(&too_short, "answer-period", "2025-03-03"),
             "invalid: 19 CFR 201.14(a) periods must be at least 1 day"
         );
+    }
+
+    /// Served 2025-03-03: `answer-period` ends 2025-03-24 (a Monday);
+    /// `chained` runs 10 days from that nominal end, and `chained-adjusted`
+    /// 10 days from `chained`'s adjusted end, Sunday April 13, to Monday.
+    #[test]
+    fn a_chained_period_counts_from_the_end_it_names() {
+        let pkg = package(&|_| ());
+        let date = |name: &str| due_on(&pkg, name, "2025-03-03", None).map(|d| d.computed.due_date);
+        assert_eq!(date("chained"), Ok("2025-04-03".to_owned()));
+        assert_eq!(date("chained-adjusted"), Ok("2025-04-14".to_owned()));
+        let world = World::from_packages(&[&pkg]);
+        let pack = &pkg.manifest.pack_id;
+        let decl = |name: &str| {
+            hirx::deadlines(&pkg, name)
+                .next()
+                .unwrap_or_else(|| panic!("{name}"))
+        };
+        let root = root_trigger(&world, pack, decl("chained-adjusted"));
+        assert_eq!(root, Some(&decl("answer-period").trigger));
+        assert_eq!(root_trigger(&world, pack, decl("loop-a")), None);
     }
 
     #[test]

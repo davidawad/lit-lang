@@ -202,6 +202,9 @@ pub(super) fn logical(q: &str) -> String {
     format!("{}::{}", k.pack, k.name)
 }
 
+/// How many chained periods a trigger is followed through.
+const CHAIN_DEPTH: usize = 16;
+
 /// The due date of `o` given its counted `due`: an extension replaces it;
 /// otherwise a `later_of` floor can only make it later.
 pub(super) fn effective(o: &Obligation, due: &Due) -> Result<String, String> {
@@ -239,8 +242,11 @@ impl<'g> Cx<'_, 'g> {
             .collect();
         for (q, w, d) in &found {
             let view = self.view(pack_of(w), k);
+            let Some(pattern) = self.root(w, d, k, CHAIN_DEPTH) else {
+                continue;
+            };
             let candidates = match &view.kind {
-                ExprKind::Call { args, .. } if matches(&d.trigger, view) => {
+                ExprKind::Call { args, .. } if matches(pattern, view) => {
                     deadline::variant_args(args)
                 }
                 _ => continue,
@@ -268,6 +274,19 @@ impl<'g> Cx<'_, 'g> {
             self.create(q, pack_of(w), d, k, &candidates);
         }
         fired
+    }
+
+    /// The event pattern that starts deadline `d` (logical `q`) at event
+    /// `k`: its own trigger, or for a chained period the one starting the
+    /// period it follows (at most `depth` links deep; a longer chain is a
+    /// cycle, which no event starts).
+    fn root(&self, q: &str, d: &'g Deadline, k: usize, depth: usize) -> Option<&'g Expr> {
+        let Some(chain) = &d.chain else {
+            return Some(&d.trigger);
+        };
+        let base = self.graph.qualify(pack_of(q), &chain.deadline);
+        let (w, base) = self.governing(&base, k, false)?;
+        self.root(&w, base, k, depth.checked_sub(1)?)
     }
 
     /// The deadline declaration governing logical deadline `q` at event

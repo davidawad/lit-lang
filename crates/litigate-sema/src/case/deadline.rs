@@ -9,8 +9,7 @@
 //! counting rule (`litigate_lower::EngineClock`), so a matter is judged by
 //! exactly the arithmetic its scenario will run under.
 use super::graph::{display, Graph};
-use crate::hir::{DayUnit, Deadline, Declaration, Direction, Expr, ExprKind, Undesignated, Value};
-use crate::temporal::condition::matches;
+use crate::hir::{DayUnit, Deadline, Declaration, Direction, DueEnd, Expr, ExprKind, Value};
 use crate::temporal::MatterEvent;
 
 /// One day-counted deadline computation: the engine clock's inputs.
@@ -39,11 +38,19 @@ pub struct DueRequest {
 
 /// Computes due dates (SPEC §8.2: the generic interpreter over clock IR).
 pub trait Clock {
-    /// The due date (ISO 8601) of `request`.
+    /// The due date (ISO 8601) of `request`: the adjusted end, after every
+    /// roll and extension.
     ///
     /// # Errors
     /// Why the clock cannot count it (unknown rule, invalid period).
     fn due(&self, request: &DueRequest) -> Result<String, String>;
+
+    /// The nominal end (ISO 8601) of `request`: the last day as counted,
+    /// before any roll or extension (a chained period's `.nominal`).
+    ///
+    /// # Errors
+    /// As [`Clock::due`].
+    fn nominal(&self, request: &DueRequest) -> Result<String, String>;
 }
 
 /// A clock that counts nothing: every request is an error. Replay with it
@@ -59,6 +66,10 @@ impl Clock for NoClock {
             request.counting
         ))
     }
+
+    fn nominal(&self, request: &DueRequest) -> Result<String, String> {
+        self.due(request)
+    }
 }
 
 /// A computed deadline that an event is judged against.
@@ -72,12 +83,9 @@ pub(super) struct Due {
     pub request: DueRequest,
     /// The computed due date, or why it could not be computed.
     pub date: Result<String, String>,
-    /// The trigger parameter designating the due date (`designated p`);
-    /// `None` when the period is counted.
-    pub designated: Option<String>,
-    /// The trigger leaves the designated due date unknown (`?`): an act
-    /// against it is neither timely nor late.
-    pub unknown: bool,
+    /// For a chained period, the end it runs from (`the nominal end of
+    /// \`d\``); `None` when it runs from its trigger event.
+    pub from: Option<String>,
 }
 
 /// `CamelCase` to `kebab-case`.
@@ -137,89 +145,167 @@ pub(super) fn due(
     pack: &str,
     d: &Deadline,
     events: &[MatterEvent<'_>],
-    (trigger, candidates): (usize, &[String]),
+    trigger: (usize, &[String]),
     at: usize,
     known_at: Option<&str>,
 ) -> Due {
-    let qualified = graph.qualify(pack, &d.counting);
-    // Use the shared temporal query so replay observes the same version,
-    // including known_at filtering, as test, lower, check, and the LSP.
-    let counting = match graph.governing(&qualified, events, at, known_at) {
-        Ok((_, Declaration::Counting(c))) => Some(c),
-        _ => None,
+    let judged = Judged {
+        graph,
+        clock,
+        events,
+        at,
+        known_at,
     };
-    let service = match counting {
-        Some(c) => candidates
-            .iter()
-            .filter(|v| c.service_extensions.contains_key(*v))
-            .map(|v| kebab(v))
-            .collect(),
-        None => candidates.iter().map(|v| kebab(v)).collect(),
-    };
-    let request = DueRequest {
-        counting: counting.map_or_else(
-            || {
-                d.counting
-                    .rsplit("::")
-                    .next()
-                    .unwrap_or(&d.counting)
-                    .to_owned()
-            },
-            |c| c.meta.id.clone(),
-        ),
-        version: counting.map(|c| c.meta.effective.from.clone()),
-        trigger: events[trigger].date.to_owned(),
-        amount: d.amount,
-        unit: d.unit,
-        direction: d.direction,
-        service,
-    };
-    // A rule a loaded package declares counts only under a version that
-    // governs the event; the shared library's stands in only for a rule
-    // no package declares.
-    let mut unknown = false;
-    let date = if counting.is_none() && graph.declares(&qualified) {
-        Err(format!(
-            "no version of counting rule `{qualified}` governs {}",
-            events[at].date
-        ))
-    } else {
-        let event = &events[trigger];
-        match d.designation(event.date, event.action) {
-            // A displacing claimant counted for another deadline's
-            // instance: its trigger designates nothing for it.
-            Some(_) if !matches(&d.trigger, event.action) => Err(format!(
-                "`{}` is not the trigger of `{}`, so it designates no due date for it",
-                display(event.action),
-                d.meta.id
-            )),
-            None => clock.due(&request),
-            // The notice's date, rolled under the counting rule like any
-            // last day (37 C.F.R. § 2.196): counted zero days from it.
-            Some(Ok(designated)) => clock.due(&DueRequest {
-                trigger: designated,
-                amount: 0,
-                service: Vec::new(),
-                ..request.clone()
-            }),
-            Some(Err(why)) => {
-                unknown = matches!(why, Undesignated::Unknown(_));
-                Err(why.message().to_owned())
-            }
-        }
-    };
-    Due {
-        deadline: d.meta.id.clone(),
-        trigger,
-        date,
-        request,
-        designated: d.designated.as_ref().map(|p| p.name.clone()),
-        unknown,
+    judged.due(pack, d, trigger, CHAIN_LIMIT)
+}
+
+/// How many chained periods a chain may follow before it is a cycle.
+const CHAIN_LIMIT: usize = 16;
+
+/// What a due date is judged against: the graph and clock, and the events
+/// (judged at `events[at]`) under `known_at`.
+struct Judged<'j, 'g> {
+    graph: &'j Graph<'g>,
+    clock: &'j dyn Clock,
+    events: &'j [MatterEvent<'j>],
+    at: usize,
+    known_at: Option<&'j str>,
+}
+
+impl Judged<'_, '_> {
+    /// The due date of `d` (declared in `pack`); a chained period counts
+    /// from the end of the period it follows, at most `depth` links deep.
+    fn due(&self, pack: &str, d: &Deadline, trigger: (usize, &[String]), depth: usize) -> Due {
+        let Some(chain) = &d.chain else {
+            return self.count(pack, d, trigger, None);
+        };
+        let base = governing(
+            self.graph,
+            pack,
+            &chain.deadline,
+            self.events,
+            self.at,
+            self.known_at,
+        );
+        // Replay opens a chained instance only once its whole chain
+        // resolves (`root`), so this refusal guards a broken invariant.
+        let unresolved = format!(
+            "the chain through `{}` does not resolve on {}",
+            d.meta.id, self.events[self.at].date
+        );
+        let date = base
+            .filter(|_| depth > 0)
+            .ok_or(unresolved)
+            .and_then(|(q, base)| {
+                let b = self.due(pack_of(&q), base, trigger, depth - 1);
+                match chain.end {
+                    DueEnd::Adjusted => b.date,
+                    DueEnd::Nominal => b.date.and_then(|_| self.clock.nominal(&b.request)),
+                }
+            });
+        let start = Start {
+            from: format!("the {} end of `{}`", chain.end.field(), chain.deadline),
+            date,
+        };
+        // A chained period runs from a date, not from service.
+        self.count(pack, d, (trigger.0, &[]), Some(start))
     }
+
+    /// `d` counted from its trigger event, or from a chain's `start`.
+    fn count(
+        &self,
+        pack: &str,
+        d: &Deadline,
+        (trigger, candidates): (usize, &[String]),
+        start: Option<Start>,
+    ) -> Due {
+        let (graph, events, at, known_at) = (self.graph, self.events, self.at, self.known_at);
+        let clock = self.clock;
+        let qualified = graph.qualify(pack, &d.counting);
+        // Use the shared temporal query so replay observes the same version,
+        // including known_at filtering, as test, lower, check, and the LSP.
+        let counting = match graph.governing(&qualified, events, at, known_at) {
+            Ok((_, Declaration::Counting(c))) => Some(c),
+            _ => None,
+        };
+        let service = match counting {
+            Some(c) => candidates
+                .iter()
+                .filter(|v| c.service_extensions.contains_key(*v))
+                .map(|v| kebab(v))
+                .collect(),
+            None => candidates.iter().map(|v| kebab(v)).collect(),
+        };
+        let request = DueRequest {
+            counting: counting.map_or_else(
+                || {
+                    d.counting
+                        .rsplit("::")
+                        .next()
+                        .unwrap_or(&d.counting)
+                        .to_owned()
+                },
+                |c| c.meta.id.clone(),
+            ),
+            version: counting.map(|c| c.meta.effective.from.clone()),
+            trigger: match &start {
+                Some(Start { date: Ok(date), .. }) => date.clone(),
+                _ => events[trigger].date.to_owned(),
+            },
+            amount: d.amount,
+            unit: d.unit,
+            direction: d.direction,
+            service,
+        };
+        // A rule a loaded package declares counts only under a version that
+        // governs the event; the shared library's stands in only for a rule
+        // no package declares.
+        let from = start.as_ref().map(|s| s.from.clone());
+        let date = if let Some(Start {
+            date: Err(why),
+            from,
+        }) = start
+        {
+            Err(format!(
+                "`{}` runs from {from}, which is not counted: {why}",
+                d.meta.id
+            ))
+        } else if counting.is_none() && graph.declares(&qualified) {
+            Err(format!(
+                "no version of counting rule `{qualified}` governs {}",
+                events[at].date
+            ))
+        } else {
+            clock.due(&request)
+        };
+        Due {
+            deadline: d.meta.id.clone(),
+            trigger,
+            date,
+            request,
+            from,
+        }
+    }
+}
+
+/// Where a chained period starts: the end it runs from, and its date (or
+/// why that end is not counted).
+struct Start {
+    from: String,
+    date: Result<String, String>,
+}
+
+/// The pack of a qualified id (`pack::name`).
+fn pack_of(q: &str) -> &str {
+    q.split("::").next().unwrap_or(q)
 }
 
 /// How a due date was counted, for notes.
 pub(super) fn explain(d: &Due, trigger: &Expr) -> String {
+    let start = d
+        .from
+        .clone()
+        .unwrap_or_else(|| format!("`{}`", display(trigger)));
     let service = if d.request.service.is_empty() {
         String::new()
     } else {
@@ -236,10 +322,9 @@ pub(super) fn explain(d: &Due, trigger: &Expr) -> String {
         );
     }
     format!(
-        "`{}` runs {} from `{}` on {} under `{}{}`{service}",
+        "`{}` runs {} from {start} on {} under `{}{}`{service}",
         d.deadline,
         d.request.unit.prose(d.request.amount),
-        display(trigger),
         d.request.trigger,
         d.request.counting,
         d.request

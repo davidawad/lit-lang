@@ -1,0 +1,70 @@
+---
+source: crates/litigate-sema/tests/cov_build_clock.rs
+expression: chains
+---
+[
+    (
+        "from-nominal",
+        Some(
+            Chain {
+                deadline: "base",
+                end: Nominal,
+            },
+        ),
+        Expr {
+            ty: Date,
+            kind: Field {
+                base: Expr {
+                    ty: Unit,
+                    kind: Call {
+                        callee: "deadline",
+                        args: [
+                            Expr {
+                                ty: Unit,
+                                kind: Ref {
+                                    target: "base",
+                                },
+                                span: None,
+                            },
+                        ],
+                    },
+                    span: None,
+                },
+                field: "nominal",
+            },
+            span: None,
+        },
+    ),
+    (
+        "from-adjusted",
+        Some(
+            Chain {
+                deadline: "from-nominal",
+                end: Adjusted,
+            },
+        ),
+        Expr {
+            ty: Date,
+            kind: Field {
+                base: Expr {
+                    ty: Unit,
+                    kind: Call {
+                        callee: "deadline",
+                        args: [
+                            Expr {
+                                ty: Unit,
+                                kind: Ref {
+                                    target: "from-nominal",
+                                },
+                                span: None,
+                            },
+                        ],
+                    },
+                    span: None,
+                },
+                field: "adjusted",
+            },
+            span: None,
+        },
+    ),
+]

@@ -231,27 +231,29 @@ tests_pass!(
     )
 );
 
-/// A deadline whose due date the trigger designates (`designated due`).
-const DESIGNATED: &str = "event Noticed(due: Date)\n\
-deadline noticed-answer: 30.days from Noticed() counted_by frcp6 { designated due }\n";
-
 tests_pass!(
-    a_designated_due_date_is_the_given_date_rolled,
+    a_chained_period_counts_from_the_end_it_names,
     Passed,
-    with(&format!(
-        "{DESIGNATED}test \"the notice sets the date\" cite \"FRCP 12(a)\"\n{{\n  \
-         given Noticed(2025-04-05) on 2025-03-03\n  \
-         expect deadline(noticed-answer).nominal == 2025-04-05\n  \
-         expect deadline(noticed-answer) == 2025-04-07\n}}"
-    ))
+    with(
+        "rule duty chain-duty cite FRCP 12(a)\n{\n  \
+         deadline after-answer: 10.days from deadline(answer-period).nominal counted_by frcp6\n  \
+         deadline after-after: 10.days from deadline(after-answer).adjusted counted_by frcp6\n}\n\
+         test \"chained periods\" cite FRCP 12(a)\n{\n  \
+         given Served(complaint, Personal) on 2025-03-03\n  \
+         expect deadline(after-answer) == 2025-04-03\n  \
+         expect deadline(after-after) == 2025-04-14\n}"
+    )
 );
 
 tests_pass!(
-    a_designated_due_date_below_the_period_is_refused,
+    a_cycle_of_chained_periods_is_not_counted,
     Failed,
-    with(&format!(
-        "{DESIGNATED}test \"too short a notice\" cite \"FRCP 12(a)\"\n{{\n  \
-         given Noticed(2025-03-20) on 2025-03-03\n  \
-         expect deadline(noticed-answer) == 2025-03-20\n}}"
-    ))
+    with(
+        "rule duty loop-duty cite FRCP 12(a)\n{\n  \
+         deadline loop-a: 1.days from deadline(loop-b).nominal counted_by frcp6\n  \
+         deadline loop-b: 1.days from deadline(loop-a).nominal counted_by frcp6\n}\n\
+         test \"a cycle\" cite FRCP 12(a)\n{\n  \
+         given Served(complaint, Personal) on 2025-03-03\n  \
+         expect deadline(loop-a) == 2025-03-04\n}"
+    )
 );

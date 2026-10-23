@@ -113,6 +113,12 @@ impl Clock for Plus {
     fn due(&self, r: &DueRequest) -> Result<String, String> {
         litigate_sema::types::date::add_days(&r.trigger, r.amount).ok_or_else(|| "bad".into())
     }
+
+    /// One day before the due date, so a chain's two ends differ.
+    fn nominal(&self, r: &DueRequest) -> Result<String, String> {
+        litigate_sema::types::date::add_days(&r.trigger, r.amount.saturating_sub(1))
+            .ok_or_else(|| "bad".into())
+    }
 }
 
 /// A matter over `omega` with two defendants, `d` and `e`.

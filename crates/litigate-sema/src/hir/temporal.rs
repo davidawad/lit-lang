@@ -25,8 +25,13 @@ pub struct Deadline {
     pub unit: DayUnit,
     /// Counting direction (`from`/`after` forward, `before` backward).
     pub direction: Direction,
-    /// Trigger event expression.
+    /// Trigger event expression; for a chained period, the end it runs
+    /// from (`deadline(d).nominal`), which no event matches.
     pub trigger: Expr,
+    /// The period this one runs from the end of (`from
+    /// deadline(d).nominal`), instead of from an event.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub chain: Option<Chain>,
     /// Qualified counting-rule id.
     pub counting: String,
     /// The forum whose rules set the period (`forum F`, else the declaring
@@ -138,6 +143,38 @@ pub struct Designated {
     pub param: usize,
     /// Its name.
     pub name: String,
+}
+
+/// A chained period's trigger: the end of another deadline's period
+/// (TBMP 112: an extension "from the actual due date ..., not the adjusted
+/// date"). A chain always says which end.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Chain {
+    /// Qualified id of the deadline whose period this one follows.
+    pub deadline: String,
+    /// Which end of that period it runs from.
+    pub end: DueEnd,
+}
+
+/// One end of a counted period (`Due {nominal, adjusted}`, SPEC §5.3).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum DueEnd {
+    /// The last day as counted, before any roll or extension.
+    Nominal,
+    /// The date after every roll and service extension.
+    Adjusted,
+}
+
+impl DueEnd {
+    /// The `Due` field naming this end.
+    #[must_use]
+    pub fn field(self) -> &'static str {
+        match self {
+            Self::Nominal => "nominal",
+            Self::Adjusted => "adjusted",
+        }
+    }
 }
 
 /// How a matching trigger creates obligation instances (SPEC §5.3).

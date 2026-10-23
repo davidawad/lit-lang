@@ -172,7 +172,8 @@ type Given<'g> = (usize, &'g hir::Expr, &'g [hir::Expr], &'g str);
 
 /// The nominal and adjusted due dates of deadline `target` from the
 /// matching `given` selected by its trigger policy, using the shared
-/// version-selection query and the build's `known_at` date.
+/// version-selection query and the build's `known_at` date. A chained
+/// period's `given` is the one starting the period it follows.
 fn due(
     cx: &Context<'_>,
     clocks: &Clocks,
@@ -183,11 +184,13 @@ fn due(
     let first = versions
         .first()
         .ok_or_else(|| format!("`{target}` is not a deadline"))?;
+    let (owner, _) = cx.owner(target);
+    let root = root_trigger(cx, clocks, owner, first).unwrap_or(&first.trigger);
     let matching = test
         .givens
         .iter()
         .enumerate()
-        .filter_map(|(i, (g, d))| Some((i, g, arguments(&first.trigger, g)?, d.as_str())));
+        .filter_map(|(i, (g, d))| Some((i, g, arguments(root, g)?, d.as_str())));
     let order = |(i, _, _, a): &Given<'_>, (j, _, _, b): &Given<'_>| a.cmp(b).then(i.cmp(j));
     // The trigger policy picks the event that runs the period (SPEC §5.3).
     let picked = if first.policy.is_first() {
@@ -203,19 +206,82 @@ fn due(
         pack: pkg.manifest.pack_id.clone(),
         name: id.to_owned(),
     };
-    let Some((owner, Declaration::Deadline(deadline))) = clocks.select(&key, date) else {
+    count(clocks, (&key, target), (given, event, date), CHAIN_LIMIT)
+}
+
+/// How many chained periods a chain may follow before it is a cycle.
+const CHAIN_LIMIT: usize = 16;
+
+/// The event pattern starting deadline `d` (of `owner`): its trigger, or
+/// for a chained period the one starting the period it follows (its first
+/// version's); `None` for a cycle.
+fn root_trigger<'a>(
+    cx: &Context<'a>,
+    clocks: &Clocks<'a>,
+    owner: &'a hir::Package,
+    d: &'a hir::Deadline,
+) -> Option<&'a Expr> {
+    let mut d = (owner, d);
+    for _ in 0..=CHAIN_LIMIT {
+        let Some(chain) = &d.1.chain else {
+            return Some(&d.1.trigger);
+        };
+        let key = clocks
+            .world
+            .target(&d.0.manifest.pack_id, &chain.deadline)
+            .key;
+        let target = format!("{}::{}", key.pack, key.name);
+        let (pkg, _) = cx.owner(&target);
+        d = (pkg, *cx.deadline_versions(&target).first()?);
+    }
+    None
+}
+
+/// The nominal and adjusted due dates of deadline `key`'s version in force
+/// on `date`, from `given` (whose trigger arguments are `event`) on
+/// `date`; a chained period counts from the end of the one it follows, at
+/// most `depth` links deep.
+fn count(
+    clocks: &Clocks,
+    (key, target): (&Key, &str),
+    (given, event, date): (&Expr, &[Expr], &str),
+    depth: usize,
+) -> Result<(String, String), String> {
+    let Some((owner, Declaration::Deadline(deadline))) = clocks.select(key, date) else {
         return Err(format!(
             "no version of `{target}` recorded by {} is in force on {date}",
             clocks.known_at
         ));
     };
-    // A displacing claimant counts from its own trigger.
-    if !matches(&deadline.trigger, given) {
-        return Err(format!(
-            "the given event does not match the trigger of `{}`",
-            deadline.meta.id
-        ));
-    }
+    let (start, event) = match &deadline.chain {
+        Some(chain) => {
+            // A cycle's root trigger matches no `given`, so a count never
+            // follows one this deep; this refusal guards that.
+            let depth = depth
+                .checked_sub(1)
+                .ok_or(format!("the chain through `{target}` is a cycle"))?;
+            let base = clocks
+                .world
+                .target(&owner.manifest.pack_id, &chain.deadline)
+                .key;
+            let name = base.display("");
+            let (nominal, adjusted) = count(clocks, (&base, &name), (given, event, date), depth)?;
+            let start = match chain.end {
+                hir::DueEnd::Nominal => nominal,
+                hir::DueEnd::Adjusted => adjusted,
+            };
+            // A chained period runs from a date, not from service.
+            (start, &[][..])
+        }
+        // A displacing claimant counts from its own trigger.
+        None if !matches(&deadline.trigger, given) => {
+            return Err(format!(
+                "the given event does not match the trigger of `{}`",
+                deadline.meta.id
+            ));
+        }
+        None => (date.to_owned(), event),
+    };
     let counting = counting_of(clocks, owner, deadline, date)?;
     let library = match counting {
         Some((pkg, c)) => clocks.get(pkg, c)?,
@@ -232,17 +298,7 @@ fn due(
         },
         |(_, c)| c.meta.id.as_str(),
     );
-    // A designated due date is the given event's, rolled under the
-    // counting rule like any last day: counted zero days from it.
-    let designated = deadline
-        .designation(date, given)
-        .transpose()
-        .map_err(|why| why.message().to_owned())?;
-    let (start, days) = match &designated {
-        Some(d) => (d.as_str(), 0),
-        None => (date, deadline.amount),
-    };
-    let trigger = clock::Date::parse_iso(start).map_err(|e| e.to_string())?;
+    let trigger = clock::Date::parse_iso(&start).map_err(|e| e.to_string())?;
     let request = DayDeadline {
         trigger,
         days: i64::try_from(days)

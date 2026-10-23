@@ -477,6 +477,10 @@ impl Clock for Encoded {
         self.0.borrow_mut().push(r.clone());
         Ok(format!("2012-02-{:02}", r.amount))
     }
+
+    fn nominal(&self, r: &DueRequest) -> Result<String, String> {
+        self.due(r)
+    }
 }
 
 fn matter(uses: &str, events: &[&str]) -> String {

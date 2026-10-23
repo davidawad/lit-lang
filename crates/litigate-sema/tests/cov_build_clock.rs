@@ -231,3 +231,38 @@ transition t4 amends p@2001-01-01 { otherwise -> p }",
     );
     insta::assert_debug_snapshot!(out);
 }
+
+/// A chained period runs from one end of another deadline's period,
+/// `deadline(d).nominal` or `.adjusted`; it never says neither.
+#[test]
+fn a_chained_period_names_which_end_it_runs_from() {
+    let chains: Vec<_> = declarations(
+        "deadline base: 30.days from Served(complaint) counted_by c6\n\
+deadline from-nominal: 90.days from deadline(base).nominal counted_by c6\n\
+deadline from-adjusted: 10.days after deadline(from-nominal).adjusted counted_by c6",
+    )
+    .into_iter()
+    .filter_map(|d| match d {
+        Declaration::Deadline(d) if d.chain.is_some() => Some((d.meta.id, d.chain, d.trigger)),
+        _ => None,
+    })
+    .collect();
+    insta::assert_debug_snapshot!(chains);
+}
+
+#[test]
+fn a_chain_must_name_one_deadline_and_one_end() {
+    let out = check_body(
+        "deadline base: 30.days from Served(complaint) counted_by c6\n\
+deadline bare: 90.days from deadline(base) counted_by c6\n\
+deadline misspelt: 90.days from deadline(base).nominl counted_by c6\n\
+deadline unknown-end: 90.days from deadline(base).zzzzzzzz counted_by c6\n\
+deadline itself: 90.days from deadline(itself).nominal counted_by c6\n\
+deadline two: 90.days from deadline(base, base).nominal counted_by c6\n\
+deadline literal: 90.days from deadline(3) counted_by c6\n\
+deadline nowhere: 90.days from deadline(nope).nominal counted_by c6\n\
+deadline not-a-deadline: 90.days from deadline(c6).nominal counted_by c6\n\
+deadline event-field: 90.days from Served(complaint).nominal counted_by c6",
+    );
+    insta::assert_debug_snapshot!(out);
+}

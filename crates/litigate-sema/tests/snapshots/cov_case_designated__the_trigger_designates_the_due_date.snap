@@ -32,11 +32,12 @@ expression: rows
         "trace Took Answered() sigma::open -> sigma::done via sigma::answer",
         "obligation sigma::answer #0 Discharged",
     ],
-    "an answer to an unknown date cannot be judged": [
-        "11:3 L3009 cannot count deadline `answer` for this event\n    note @10:3: `answer` is due on the date `Noticed(?)` on 2011-01-04 designates (its `due`), no earlier than 30 calendar days from it, rolled under `oc`\n    note: `Noticed` designates no due date for `answer` (its `due` is unknown), so the due date is unknown: it is the notice's to set, never counted in its place",
+    "an answer to an unknown date is neither timely nor late": [
+        "11:3 L4010 `Answered()` on 2011-02-10 took deadline `answer`, but `Noticed(?)` left its due date (`due`) unknown: whether it is timely or late is unknown\n    note @10:3: `Noticed` designates no due date for `answer` (its `due` is unknown), so the due date is unknown: it is the notice's to set, never counted in its place\n    note: `answer` is due on the date `Noticed(?)` on 2011-01-04 designates (its `due`), no earlier than 30 calendar days from it, rolled under `oc`\n    note: record the due date the notice designates in place of `?` to judge it",
+        "ok: start sigma::done",
         "trace Triggered Noticed(?) sigma::open -> sigma::open",
         "trace Took Answered() sigma::open -> sigma::done via sigma::answer",
-        "obligation sigma::answer #0 Discharged",
+        "obligation sigma::answer #0 Unjudged",
     ],
     "an unknown designated date leaves the deadline open, never counted": [
         "ok: start sigma::open",

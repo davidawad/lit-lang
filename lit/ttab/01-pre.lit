@@ -10,6 +10,7 @@ import ttab.{
   ExtendedPeriodExpired,
   ExtensionRequested,
   ExtensionTerm,
+  OppositionFiled,
   first-extension-90,
   opposition-period,
   pre,
@@ -37,6 +38,7 @@ state published: "Application published for opposition" by opposer cite "15 USC 
   }
   _ "Opposer opposes within the original 30 days" -> opposition-filed {
     authority cite "37 CFR 2.101(c)"
+    event OppositionFiled()
     within opposition-period { extendable true, extension_authority "37 CFR 2.102(c)" }
     note "Notice of opposition via ESTTA with $600 per class fee (37 CFR 2.6(a)(17)(ii)); application is Class 37 only (one class)."
     attrs { opp_fees: 600, opp_hours: 14 }

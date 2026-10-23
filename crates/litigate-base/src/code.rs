@@ -55,7 +55,7 @@ macro_rules! registry {
     };
 }
 
-registry! { 62;
+registry! { 63;
     UnexpectedToken = "L0001" => "The token is not valid at this position in the grammar",
     UnterminatedLiteral = "L0002" => "A string, block comment, or other delimited literal was not closed",
     InvalidToken = "L0003" => "The source contains a character sequence that is not a token",
@@ -102,6 +102,7 @@ registry! { 62;
     InvalidAnalysis = "L4007" => "An analysis field is unknown, has a dedicated block, or has the wrong shape",
     StartConflict = "L4008" => "An explicit start disagrees with the posture derived from the events",
     ObligationBreached = "L4009" => "A duty's obligation was neither discharged nor transformed by its due date: at as_of it is breached",
+    TimelinessUnknown = "L4010" => "An act discharged an obligation whose designated due date is unknown: it is judged neither timely nor late",
     VerificationFailed = "L5001" => "A required static verification obligation was not discharged",
     HoleInStrict = "L5002" => "Strict profile does not permit unresolved holes",
     UnreachableNode = "L5003" => "A node is not reachable from start and is not tagged entry",
@@ -180,7 +181,7 @@ impl DiagnosticCode {
     pub const fn severity(self, profile: Profile) -> Severity {
         match (self, profile) {
             (Self::AnonymousEdge, _) => Severity::Info,
-            (Self::UnusedDeclaration | Self::ObligationBreached, _)
+            (Self::UnusedDeclaration | Self::ObligationBreached | Self::TimelinessUnknown, _)
             | (
                 Self::RuleWithoutTest | Self::HolePresent | Self::NonCanonicalFormat,
                 Profile::Dev,

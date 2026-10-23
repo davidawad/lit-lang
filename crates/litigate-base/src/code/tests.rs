@@ -48,7 +48,9 @@ fn every_registered_code_exercises_its_stable_views() {
                 assert_eq!(severity, Severity::Info);
             } else if matches!(
                 code,
-                DiagnosticCode::UnusedDeclaration | DiagnosticCode::ObligationBreached
+                DiagnosticCode::UnusedDeclaration
+                    | DiagnosticCode::ObligationBreached
+                    | DiagnosticCode::TimelinessUnknown
             ) || (profile == Profile::Dev
                 && matches!(
                     code,

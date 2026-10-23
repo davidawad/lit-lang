@@ -129,7 +129,7 @@ fn the_trigger_designates_the_due_date() {
             run("2011-12-01", &["2011-01-04 Noticed(?) on d"]),
         ),
         (
-            "an answer to an unknown date cannot be judged",
+            "an answer to an unknown date is neither timely nor late",
             run(
                 "2011-12-01",
                 &["2011-01-04 Noticed(?) on d", "2011-02-10 Answered() by d"],

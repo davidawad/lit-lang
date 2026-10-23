@@ -159,7 +159,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (`litigate check`, `explain-value`, the LSP's inlay hint). Any deadline
   the engine cannot count is now on the schedule that way instead of
   dropped. New contextual keyword `designated` (tree-sitter and editor
-  highlights updated).
+  highlights updated). An act through the `within` edge of such an
+  instance fails closed: it is judged neither timely nor late, the
+  instance ends `unjudged`, and `litigate check` passes with a warning
+  naming the trigger that left the due date unknown (new code L4010,
+  a warning in both profiles) instead of failing with L3009.
 
 ### Changed
 
@@ -202,7 +206,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   The counterclaim answer (§ 2.106(b)(3)(iii)) and the cancellation answer
   (§ 2.113(a)) are declared the same way, in force from January 14, 2017
   (`sources/cfr-37-part2-answer-time-history.txt`, the eCFR version
-  history). The pack's answer edges carry no window.
+  history). The pack's answer edges carry no window. A matter can now
+  record the path to an answer: `OppositionFiled()` takes the notice of
+  opposition edges, `InstitutionNoticed(due)` the institution edge, and
+  `AnswerFiled(Plain | WithCounterclaim)` the two answer edges.
 
 ### Fixed
 

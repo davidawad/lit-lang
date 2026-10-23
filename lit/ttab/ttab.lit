@@ -48,12 +48,22 @@ event ExtensionRequested(term: ExtensionTerm)
 /// (37 C.F.R. § 2.102(c)(3)): the point an opposer must oppose, or seek the
 /// final extension, by.
 event ExtendedPeriodExpired()
+/// A notice of opposition filed through ESTTA (37 C.F.R. § 2.101).
+event OppositionFiled()
 /// The Board's notice of institution, which designates the answer time
 /// and sets the trial schedule (37 C.F.R. §§ 2.105(a), 2.120(a)(1)). Its
 /// date is the notice's mailing date; `due` is the date it designates for
 /// the answer, as the notice states it (`?` when the matter does not have
 /// it: the answer deadline is then unknown).
 event InstitutionNoticed(due: Date)
+
+/// Whether an answer also pleads a counterclaim (37 C.F.R. § 2.106(b)(3)).
+enum AnswerForm { Plain, WithCounterclaim }
+
+/// The applicant's answer to the notice of opposition, filed within the
+/// time the notice of institution designates (37 C.F.R. §§ 2.105(a),
+/// 2.106(a)).
+event AnswerFiled(form: AnswerForm)
 /// The Board's designation of the time to answer a counterclaim (37
 /// C.F.R. § 2.106(b)(3)(iii)). Its date is the designation's mailing date;
 /// `due` is the date it designates.

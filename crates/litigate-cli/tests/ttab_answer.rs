@@ -2,7 +2,8 @@
 //! notice of institution (lg-flu.27): the notice designates it, no less than
 //! thirty days from its mailing date (37 C.F.R. § 2.105(a)); a notice
 //! designating less is rejected; a notice whose date the matter does not
-//! have leaves the deadline unknown, never counted in its place; and a
+//! have leaves the deadline unknown, never counted in its place, and an
+//! answer to it neither timely nor late (a warning, L4010); and a
 //! Board order resetting it (§ 2.106(a)) is a `CaseOrder` layer that
 //! replaces it.
 // Test helpers below may unwrap: a panic is the failed assertion.
@@ -40,7 +41,7 @@ fn check(name: &str, events: &[&str], order: bool) -> Run {
         dir.join("cases/answer.case"),
         format!(
             "case answer\n{uses}\nas_of 2026-08-20\nsummary \"s\"\n\n\
-             parties {{\n  applicant: applicant Corporation\n  board: board Tribunal\n}}\n\n\
+             parties {{\n  applicant: applicant Corporation\n  opposer: opposer Corporation\n  board: board Tribunal\n}}\n\n\
              events {{\n{events}}}\n\nstakes {{ {TTAB}::judgment-2135: 0.usd }}\n"
         ),
     )
@@ -91,13 +92,31 @@ fn schedule(run: &Run) -> Vec<[String; 5]> {
         .collect()
 }
 
+/// The [`schedule`] rows of the answer period alone.
+fn answer_rows(run: &Run) -> Vec<[String; 5]> {
+    let id = format!("{TTAB}::answer-period");
+    schedule(run).into_iter().filter(|r| r[0] == id).collect()
+}
+
 /// Every error message.
 fn errors(run: &Run) -> Vec<String> {
+    messages(run, |d| d["severity"] == "error")
+}
+
+/// Every replay (L4xxx) warning message; the package's own holes aside.
+fn replay_warnings(run: &Run) -> Vec<String> {
+    messages(run, |d| {
+        d["severity"] == "warning" && d["code"].as_str().unwrap().starts_with("L4")
+    })
+}
+
+/// The message of every diagnostic `keep` selects.
+fn messages(run: &Run, keep: impl Fn(&serde_json::Value) -> bool) -> Vec<String> {
     run.json["diagnostics"]
         .as_array()
         .unwrap()
         .iter()
-        .filter(|d| d["severity"] == "error")
+        .filter(|d| keep(d))
         .map(|d| d["message"].as_str().unwrap().to_owned())
         .collect()
 }
@@ -223,5 +242,71 @@ fn a_board_order_resets_the_answer_date() {
                 "-"
             ),
         ]
+    );
+}
+
+#[test]
+fn an_answer_to_a_notice_without_its_due_date_is_neither_timely_nor_late() {
+    let run = check(
+        "ttab-unknown-answered",
+        &[
+            "2026-06-02 Published() on applicant",
+            "2026-06-30 OppositionFiled() by opposer",
+            "2026-07-06 InstitutionNoticed(?) on applicant",
+            "2026-08-10 AnswerFiled(Plain) by applicant",
+        ],
+        false,
+    );
+    assert_eq!(run.code, 0, "{}", run.stdout);
+    assert_eq!(errors(&run), Vec::<String>::new());
+    assert_eq!(
+        replay_warnings(&run),
+        ["`AnswerFiled(Plain)` on 2026-08-10 took deadline `answer-period`, but `InstitutionNoticed(?)` left its due date (`due`) unknown: whether it is timely or late is unknown"]
+    );
+    assert_eq!(
+        answer_rows(&run),
+        [row(
+            &format!("{TTAB}::answer-period"),
+            "-",
+            "unjudged",
+            "-",
+            "`InstitutionNoticed` designates no due date for `answer-period` (its `due` is unknown), so the due date is unknown: it is the notice's to set, never counted in its place"
+        )]
+    );
+}
+
+#[test]
+fn an_answer_by_the_designated_date_is_timely_and_after_it_late() {
+    // Designated Saturday 2026-08-15, rolled to Monday 2026-08-17.
+    let answered = |date: &str| {
+        check(
+            "ttab-answered",
+            &[
+                "2026-06-02 Published() on applicant",
+                "2026-06-30 OppositionFiled() by opposer",
+                "2026-07-06 InstitutionNoticed(2026-08-15) on applicant",
+                &format!("{date} AnswerFiled(WithCounterclaim) by applicant"),
+            ],
+            false,
+        )
+    };
+    let timely = answered("2026-08-17");
+    assert_eq!(timely.code, 0, "{}", timely.stdout);
+    assert_eq!(replay_warnings(&timely), Vec::<String>::new());
+    assert_eq!(
+        answer_rows(&timely),
+        [row(
+            &format!("{TTAB}::answer-period"),
+            "2026-08-17",
+            "discharged",
+            "2026-08-15",
+            "-"
+        )]
+    );
+    let late = answered("2026-08-18");
+    assert_eq!(late.code, 2, "{}", late.stdout);
+    assert_eq!(
+        errors(&late),
+        ["`AnswerFiled(WithCounterclaim)` on 2026-08-18 missed deadline `answer-period`, due 2026-08-17"]
     );
 }

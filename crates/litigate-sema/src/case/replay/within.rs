@@ -6,12 +6,12 @@
 //! discharged by this act (L4001).
 use super::obligations::{effective, logical};
 use super::Cx;
-use crate::case::deadline;
+use crate::case::deadline::{self, Due};
 use crate::case::graph::{display, pack_of};
 use crate::case::spans::error;
 use crate::case::Status;
 use crate::hir::{DeadlineWindow, Edge};
-use litigate_base::DiagnosticCode as C;
+use litigate_base::{DiagnosticCode as C, Severity};
 
 impl Cx<'_, '_> {
     /// The `within` deadline of `edge` (declared in `pack`), taken by
@@ -51,16 +51,20 @@ impl Cx<'_, '_> {
         let trigger_at = self.at(due.trigger, |e| e.whole.as_ref());
         let date = effective(&self.obligations[i], &due);
         let late = matches!(&date, Ok(d) if event.date.as_str() > d.as_str());
+        let unjudged = date.is_err() && due.unknown;
         self.close(
             &[i],
             if late {
                 Status::Late
+            } else if unjudged {
+                Status::Unjudged
             } else {
                 Status::Discharged
             },
             source,
         );
         match date {
+            Err(why) if unjudged => self.unjudged(k, id, &due, why, how),
             Err(why) => {
                 let e = error(
                     C::InvalidCounting,
@@ -87,6 +91,32 @@ impl Cx<'_, '_> {
             }
             Ok(_) => {}
         }
+    }
+
+    /// Event `k` took deadline `id` whose instance's trigger left the
+    /// designated due date unknown (L4010, a warning). Fail closed: the
+    /// notice's date is the only measure, so the act is neither timely nor
+    /// late until the matter records it.
+    fn unjudged(&mut self, k: usize, id: &str, due: &Due, why: String, how: String) {
+        let event = self.sorted[k].1;
+        let trigger = self.sorted[due.trigger].1;
+        let trigger_at = self.at(due.trigger, |e| e.whole.as_ref());
+        let mut e = error(
+            C::TimelinessUnknown,
+            self.at(k, |e| e.date.as_ref()),
+            format!(
+                "`{}` on {} took deadline `{id}`, but `{}` left its due date (`{}`) unknown: whether it is timely or late is unknown",
+                display(&event.action),
+                event.date,
+                display(&trigger.action),
+                due.designated.as_deref().unwrap_or_default(),
+            ),
+        )
+        .note_at(Some(trigger_at), why)
+        .note(how)
+        .note("record the due date the notice designates in place of `?` to judge it");
+        e.severity = Severity::Warning;
+        self.out.push(e);
     }
 
     /// Event `k` takes a `within q` edge while only other parties'

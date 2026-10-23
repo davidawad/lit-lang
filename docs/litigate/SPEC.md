@@ -758,7 +758,8 @@ creates (design review 2026-10-23 §2.4, §2.7):
   day (37 C.F.R. § 2.196), counted zero days from it, with no service
   days. A trigger whose `p` is `?` leaves the due date unknown: the
   instance stays open, never lapses or breaches, an act through its
-  `within` edge cannot be judged (L3009), and the schedule reports it with
+  `within` edge is judged neither timely nor late (L4010, a warning
+  naming the trigger; the instance ends `unjudged`), and the schedule reports it with
   no `due` and the reason in `unknown`. `p` must name a `Date` parameter
   of the trigger's event (L1002, L2001), and the deadline must count
   forward (L2007) in calendar days (L2007). An edge `within` a designated
@@ -1090,7 +1091,7 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
   borne by a party and past its due date is breached (L4009, a warning: a
   breach is a fact of the matter, a liability of the bearer). Any other
   instance past due lapses. Each instance ends exactly once: discharged,
-  late, breached, lapsed, waived, superseded (`latest`), or merged
+  late, unjudged (§5.3, a designated date left unknown), breached, lapsed, waived, superseded (`latest`), or merged
   (`later_of`). `CheckedCase.obligations` reports them.
 - Extension and waiver. An event whose type declares `extends d to p` or
   `waives d` must carry a `cite`. It transforms every open instance of `d`
@@ -1281,7 +1282,7 @@ other code (syntax, names, types, L3009, L5001, lowering) counts against
 | `graph-reachable` | every node is reachable from `start` or an `entry`-tagged node | L5003 |
 | `deadline-satisfiable` | for each reachable node, the due-date windows of mandatory (`duty`) deadlines on its outgoing edges intersect for some trigger date | L5005 |
 | `tests-pass` | every `test` assertion holds | L5006 |
-| `case-replay` | sema's case checker accepts the matter: it resolves, its pins, parties, facts, stakes, and beliefs are valid, and its events order, match, and meet deadlines on the engine clock (§5.6) | L4001-L4009 |
+| `case-replay` | sema's case checker accepts the matter: it resolves, its pins, parties, facts, stakes, and beliefs are valid, and its events order, match, and meet deadlines on the engine clock (§5.6) | L4001-L4010 |
 | `holes` | lists every hole with reason and span | L9002 / L5002 |
 | `rule-without-test` | every deadline and counting rule is exercised by a `test` | L9001 |
 
@@ -1688,6 +1689,7 @@ unchanged, and is graded `error`; anything else is rejected.
 | L1010 | unbound cite | L4007 | invalid analysis |
 | L2001 | type mismatch | L4008 | start conflict |
 | | | L4009 | obligation breached |
+| | | L4010 | timeliness unknown |
 | L2002 | invalid operation | L5001 | verification failed (generic) |
 | L2003 | invalid distribution | L5002 | hole in strict |
 | L2004 | unit mismatch | L5003 | unreachable node |
@@ -1702,7 +1704,7 @@ unchanged, and is graded `error`; anything else is rejected.
 | L9005 | unused declaration | | |
 
 Severity (`DiagnosticCode::severity(profile)`): every non-L9 code except
-L4009 is `error`. L9003 is `info`. L4009 and L9005 are `warning`. L9001, L9002, and L9004 are
+L4009 and L4010 is `error`. L9003 is `info`. L4009, L4010 and L9005 are `warning`. L9001, L9002, and L9004 are
 `warning` in `dev` and `error` in `strict`.
 
 ### 9.2 Shapes

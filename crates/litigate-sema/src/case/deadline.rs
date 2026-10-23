@@ -9,7 +9,7 @@
 //! counting rule (`litigate_lower::EngineClock`), so a matter is judged by
 //! exactly the arithmetic its scenario will run under.
 use super::graph::{display, Graph};
-use crate::hir::{DayUnit, Deadline, Declaration, Direction, Expr, ExprKind, Value};
+use crate::hir::{DayUnit, Deadline, Declaration, Direction, Expr, ExprKind, Undesignated, Value};
 use crate::temporal::condition::matches;
 use crate::temporal::MatterEvent;
 
@@ -75,6 +75,9 @@ pub(super) struct Due {
     /// The trigger parameter designating the due date (`designated p`);
     /// `None` when the period is counted.
     pub designated: Option<String>,
+    /// The trigger leaves the designated due date unknown (`?`): an act
+    /// against it is neither timely nor late.
+    pub unknown: bool,
 }
 
 /// `CamelCase` to `kebab-case`.
@@ -174,6 +177,7 @@ pub(super) fn due(
     // A rule a loaded package declares counts only under a version that
     // governs the event; the shared library's stands in only for a rule
     // no package declares.
+    let mut unknown = false;
     let date = if counting.is_none() && graph.declares(&qualified) {
         Err(format!(
             "no version of counting rule `{qualified}` governs {}",
@@ -198,7 +202,10 @@ pub(super) fn due(
                 service: Vec::new(),
                 ..request.clone()
             }),
-            Some(Err(why)) => Err(why.message().to_owned()),
+            Some(Err(why)) => {
+                unknown = matches!(why, Undesignated::Unknown(_));
+                Err(why.message().to_owned())
+            }
         }
     };
     Due {
@@ -207,6 +214,7 @@ pub(super) fn due(
         date,
         request,
         designated: d.designated.as_ref().map(|p| p.name.clone()),
+        unknown,
     }
 }
 

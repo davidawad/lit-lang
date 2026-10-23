@@ -105,6 +105,9 @@ pub enum Status {
     Discharged,
     /// An act took the `within` edge after the due date (L4002).
     Late,
+    /// An act took the `within` edge, but the trigger left the designated
+    /// due date unknown (`?`): neither timely nor late (L4010).
+    Unjudged,
     /// A duty borne by a party, past due at `as_of` with no act:
     /// breached, a liability of its bearer (L4009).
     Breached,

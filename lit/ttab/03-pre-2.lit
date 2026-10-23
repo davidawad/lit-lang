@@ -3,7 +3,7 @@ module ttab.pre-2
 
 import ttab.lapse.{ period-lapsed }
 import ttab.opposition-to-trial.{ opposition-filed }
-import ttab.{ extended-period-120, pre }
+import ttab.{ OppositionFiled, extended-period-120, pre }
 
 decision opposer-d120: "No consent: the opposer must oppose by end of day 120 or lose the right to oppose" by opposer cite "37 CFR 2.101(c); 2.102(c)(3)"
 {
@@ -11,6 +11,7 @@ decision opposer-d120: "No consent: the opposer must oppose by end of day 120 or
   tags [opponent-decision]
   _ "Opposer files notice of opposition (ESTTA, $600/class)" -> opposition-filed {
     authority cite ?("37 CFR 2.101(a)-(c), 2.6(a)(17)(ii)")
+    event OppositionFiled()
     within extended-period-120 {
       extendable true
       extension_authority "37 CFR 2.102(c)(3) (applicant consent only)"

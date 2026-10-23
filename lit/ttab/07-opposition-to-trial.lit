@@ -12,7 +12,16 @@ import ttab.terminals.{
   settle-rebrand-transition,
 }
 
-import ttab.{ answer-period, disclosure-period, discovery, discovery-period, opposition, trial }
+import ttab.{
+  AnswerFiled,
+  InstitutionNoticed,
+  answer-period,
+  disclosure-period,
+  discovery,
+  discovery-period,
+  opposition,
+  trial,
+}
 
 state opposition-filed: "Notice of opposition filed (commenced)" by board cite "37 CFR 2.101(a); 37 CFR 2.105"
 {
@@ -21,6 +30,7 @@ state opposition-filed: "Notice of opposition filed (commenced)" by board cite "
   tags [commenced]
   _ "Board issues notice of institution (answer clock starts)" -> instituted {
     authority cite "37 CFR 2.105(a)"
+    event InstitutionNoticed()
     effort 4.hours
     duration { min 7.days, mode 21.days, max 45.days }
     note "Teaching estimate. 4 h review of the complaint and institution order."
@@ -32,6 +42,7 @@ decision instituted: "Board institutes; answer due on the date the notice of ins
   answer-plain "File answer (denials, crowded-field amplification), no counterclaim" -> answered {
     authority cite "37 CFR 2.106(b)(1)-(2)"
     effort 8.hours
+    event AnswerFiled(Plain)
     within answer-period {
       extendable true
       extension_authority "37 CFR 2.127(a); consented motion TBMP 509"
@@ -43,6 +54,7 @@ decision instituted: "Board institutes; answer due on the date the notice of ins
     authority cite ?("37 CFR 2.106(b)(3); 2.133(d); 15 USC 1068; 37 CFR 2.6(a)(16)(ii); TBMP 313.02, 309.03(d)")
     effort 33.hours
     cost 600.usd
+    event AnswerFiled(WithCounterclaim)
     within answer-period { extendable true, extension_authority "37 CFR 2.127(a)" }
     note "Counterclaim to restrict the opposer's pleaded registration (Section 18, 15 USC 1068; 37 CFR 2.133(d)); compulsory if grounds are known at answer (2.106(b)(3)(i)). $600 per class (2.6(a)(16)(ii)). Hours: 8 answer + 25 counterclaim (teaching estimate)."
     tags [answer-s18]

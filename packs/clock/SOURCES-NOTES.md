@@ -63,17 +63,38 @@ days: exclude the trigger day, then advance `n` business days.
 
 ## `frap26.json`
 
-Source: <https://www.law.cornell.edu/rules/frap/rule_26>. 26(a)(1) day
-mechanics match FRCP 6(a)(1). 26(c)'s 3-day extension is keyed to mail,
-third-party commercial carrier and prison mailing system (not leaving with
-the clerk or other consented means, which are FRCP/RCFC Rule 5(b)(2)(D)/(F)
-methods that FRAP 25 does not define). FRAP has no hours provision and no
-clerk-inaccessibility extension in the fetched text, so the rule has no
-`hours` and its `clerkInaccessible` step has only `ignoredText`. The 26(c) extension follows the ordering stated in the 2009 Advisory
-Committee Note to Rule 26: first calculate the prescribed period using Rule
-26(a), including its last-day roll, then add three calendar days and roll
-the extension end day if necessary (¶¶ 135–137). Governs the Federal Circuit
-via Fed. Cir. R. 47.1.
+Source: <https://www.law.cornell.edu/rules/frap/rule_26>, vendored as the
+`## FRAP 26` section of `sources/frap.txt`. 26(a)(1) day mechanics match
+FRCP 6(a)(1). 26(c)'s 3-day extension is keyed to mail, third-party
+commercial carrier and prison mailing system (not leaving with the clerk or
+other consented means, which are FRCP/RCFC Rule 5(b)(2)(D)/(F) methods that
+FRAP 25 does not define). The 26(c) extension follows the ordering stated in
+the 2009 Advisory Committee Note to Rule 26: first calculate the prescribed
+period using Rule 26(a), including its last-day roll, then add three
+calendar days and roll the extension end day if necessary (¶¶ 135–137).
+Governs the Federal Circuit via Fed. Cir. R. 47.1.
+
+- **Hours (26(a)(2)).** `hours`: begin counting immediately on the
+  triggering event and count every hour (26(a)(2)(A)-(B)); an end on a
+  Saturday, Sunday or legal holiday continues to the same time on the next
+  day that is not one (26(a)(2)(C)).
+- **Inaccessible clerk's office (26(a)(3)).** On the last day of a
+  26(a)(1) period the `clerkInaccessible` step extends to the first
+  accessible day that is not a Saturday, Sunday or legal holiday
+  (26(a)(3)(A)); during the last hour of a 26(a)(2) period,
+  `hours.inaccessibleText` extends to the same time on that day
+  (26(a)(3)(B)). The engine's `clerk_inaccessible` input says the office is
+  inaccessible on the last day (or hour) only, so the extension is the next
+  open day; an office closed for several days needs those days as
+  `additional_holidays`. **Interpretive choice:** as for FRCP 6(a)(3), the
+  extension is not applied to a backward-counted period (the engine's
+  `clerkInaccessible` step is forward-only); 26(a)(3) itself does not
+  distinguish direction.
+
+An earlier version of this file said FRAP has no hours provision and no
+clerk-inaccessibility extension "in the fetched text"; the vendored rule has
+both (since the 2009 amendment; inaccessibility since 1989), and `lit/core`'s
+`frap26` already followed it.
 
 ## `itc210.json`
 

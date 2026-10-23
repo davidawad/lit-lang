@@ -212,7 +212,7 @@ cross Dec 31/Jan 1), or one of the request's `additional_holidays`.
 | `holidays` | `[calendar id]` | calendars the forum closes on (unioned) |
 | `minLength` | `{days, message}`? | shorter periods fail with `message` |
 | `steps` | `[Step]` | the pipeline below |
-| `hours` | `{text, rollText}`? | hours provision: count every hour from the trigger instant, then continue to the same time on the next open day. Absent: hours-based periods are rejected |
+| `hours` | `{text, rollText, inaccessibleText?}`? | hours provision: count every hour from the trigger instant, then continue to the same time on the next open day. With `inaccessibleText`, a request setting `clerk_inaccessible` (office inaccessible during the last hour) continues to the same time on the next open day after that, reported as `clerk_inaccessibility_applied`; without it the request is ignored. Absent: hours-based periods are rejected |
 
 `steps` run in order over a working date. `anchor` must come first and
 `count` second; `base` occurs exactly once; `service` and

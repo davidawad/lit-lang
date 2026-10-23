@@ -358,8 +358,8 @@ pub enum Op {
         #[serde(default)]
         additional_holidays: Vec<String>,
         /// Clerk's office inaccessible on the last day (`FRCP`/`RCFC
-        /// 6(a)(3)`; ignored with a step note under rule sets that don't
-        /// define it).
+        /// 6(a)(3)`, `FRAP 26(a)(3)`; ignored with a step note under rule
+        /// sets that don't define it).
         #[serde(default)]
         clerk_inaccessible: bool,
     },

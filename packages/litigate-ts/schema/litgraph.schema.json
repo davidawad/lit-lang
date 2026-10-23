@@ -1108,6 +1108,13 @@
         "rollText": {
           "type": "string",
           "description": "Cited trace text when the end lands on a closed day."
+        },
+        "inaccessibleText": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Cited trace text for the clerk's-office-inaccessible extension of\nan hours period (to the same time on the next accessible day);\nabsent when the rule has no such extension, and the request is\nthen ignored."
         }
       },
       "required": [
@@ -2380,7 +2387,7 @@
             },
             "clerk_inaccessible": {
               "type": "boolean",
-              "description": "Clerk's office inaccessible on the last day (`FRCP`/`RCFC\n6(a)(3)`; ignored with a step note under rule sets that don't\ndefine it).",
+              "description": "Clerk's office inaccessible on the last day (`FRCP`/`RCFC\n6(a)(3)`, `FRAP 26(a)(3)`; ignored with a step note under rule\nsets that don't define it).",
               "default": false
             },
             "op": {

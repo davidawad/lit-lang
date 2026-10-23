@@ -353,11 +353,21 @@ pub fn compute_hour_deadline(
     let due_day = Date::from_epoch_day(due_instant.div_euclid(86400));
     let n = dl.hours.to_string();
     let mut steps = vec![fill(&h.text, &[("n", &n)])];
-    let final_day = clock.roll(due_day, Toward::Later, &cfg.additional_holidays);
+    let add = &cfg.additional_holidays;
+    let mut final_day = clock.roll(due_day, Toward::Later, add);
     let last_day_rolled = final_day != due_day;
     if last_day_rolled {
         let date = final_day.to_iso();
         steps.push(fill(&h.roll_text, &[("n", &n), ("date", &date)]));
+    }
+    let inaccessible = h
+        .inaccessible_text
+        .as_deref()
+        .filter(|_| cfg.clerk_inaccessible);
+    if let Some(t) = inaccessible {
+        final_day = clock.roll(final_day.add_days(1), Toward::Later, add);
+        let date = final_day.to_iso();
+        steps.push(fill(t, &[("n", &n), ("date", &date)]));
     }
     let seconds_in_day = due_instant.rem_euclid(86400);
     let (hh, mm, ss) = (
@@ -369,6 +379,7 @@ pub fn compute_hour_deadline(
         due_date: final_day.to_iso(),
         due_datetime: format!("{final_day}T{hh:02}:{mm:02}:{ss:02}"),
         last_day_rolled,
+        clerk_inaccessibility_applied: inaccessible.is_some(),
         steps,
     })
 }

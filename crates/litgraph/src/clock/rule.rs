@@ -174,6 +174,12 @@ pub struct Hours {
     pub text: String,
     /// Cited trace text when the end lands on a closed day.
     pub roll_text: String,
+    /// Cited trace text for the clerk's-office-inaccessible extension of
+    /// an hours period (to the same time on the next accessible day);
+    /// absent when the rule has no such extension, and the request is
+    /// then ignored.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub inaccessible_text: Option<String>,
 }
 
 /// A deadline-counting rule (`CountingRule` IR).
@@ -252,6 +258,7 @@ impl CountingRule {
         }
         if let Some(h) = &self.hours {
             out.extend([h.text.as_str(), h.roll_text.as_str()]);
+            out.extend(h.inaccessible_text.as_deref());
         }
         out
     }

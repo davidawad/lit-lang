@@ -415,8 +415,8 @@ export type Op =
       additional_holidays?: string[];
       /**
        * Clerk's office inaccessible on the last day (`FRCP`/`RCFC
-       * 6(a)(3)`; ignored with a step note under rule sets that don't
-       * define it).
+       * 6(a)(3)`, `FRAP 26(a)(3)`; ignored with a step note under rule
+       * sets that don't define it).
        */
       clerk_inaccessible?: boolean;
       op: "deadlines";
@@ -1910,6 +1910,13 @@ export interface Hours {
    * Cited trace text when the end lands on a closed day.
    */
   rollText: string;
+  /**
+   * Cited trace text for the clerk's-office-inaccessible extension of
+   * an hours period (to the same time on the next accessible day);
+   * absent when the rule has no such extension, and the request is
+   * then ignored.
+   */
+  inaccessibleText?: string | null;
 }
 /**
  * Outcome of validating one document.

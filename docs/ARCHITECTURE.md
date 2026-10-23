@@ -259,8 +259,8 @@ at build time like the packs; see `docs/PACK_SCHEMA.md`, "Clock library"):
   its own cited trace text.
 
 The shipped rules are `frcp6`, `rcfc6` (FRCP 6 plus the Inauguration Day
-calendar), `frap26` (a different service-method table, no hours or
-clerk-inaccessibility provision) and `itc210` (`19 CFR 210.6(a)`: a
+calendar), `frap26` (FRCP 6's pipeline with FRAP 26(c)'s service-method
+table) and `itc210` (`19 CFR 210.6(a)`: a
 business-day anchor, business-day counting under 7 days, a forward roll in
 both directions, and a re-roll after service). Their sources and the
 interpretive choices they encode are in `packs/clock/SOURCES-NOTES.md`.

@@ -79,9 +79,15 @@
         },
         {
           "op": "clerkInaccessible",
-          "ignoredText": "clerk_inaccessible requested but Fed. R. App. P. 26 has no applicable clerk-inaccessibility extension for this direction; ignored"
+          "text": "Fed. R. App. P. 26(a)(3)(A): clerk's office inaccessible on the last day; extend to the first accessible day that is not a Saturday, Sunday, or legal holiday -> {date}",
+          "ignoredText": "clerk_inaccessible requested but Fed. R. App. P. 26(a)(3) is not applied to backward-counted periods (see packs/clock/SOURCES-NOTES.md); ignored"
         }
-      ]
+      ],
+      "hours": {
+        "text": "Fed. R. App. P. 26(a)(2)(A)-(B): begin counting immediately on the triggering event and count every hour, including intermediate Saturdays, Sundays, and legal holidays; +{n} hour(s)",
+        "rollText": "Fed. R. App. P. 26(a)(2)(C): period would end on a Saturday, Sunday, or legal holiday; continue to the same time on {date}",
+        "inaccessibleText": "Fed. R. App. P. 26(a)(3)(B): clerk's office inaccessible during the last hour; extend to the same time on the first accessible day that is not a Saturday, Sunday, or legal holiday -> {date}"
+      }
     }
   ]
 }

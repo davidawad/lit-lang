@@ -131,10 +131,10 @@ fn hours_are_rejected_where_the_rule_has_no_hours_provision() {
         trigger_epoch_seconds: 0,
         hours: 24,
     };
-    for id in ["frap26", "itc210"] {
-        assert!(compute_hour_deadline(&h, &rule(id), &ClockConfig::default()).is_err());
+    assert!(compute_hour_deadline(&h, &rule("itc210"), &ClockConfig::default()).is_err());
+    for id in ["frcp6", "rcfc6", "frap26"] {
+        assert!(compute_hour_deadline(&h, &rule(id), &ClockConfig::default()).is_ok());
     }
-    assert!(compute_hour_deadline(&h, &rule("frcp6"), &ClockConfig::default()).is_ok());
 }
 
 #[test]
@@ -408,10 +408,10 @@ fn trace_snapshots() {
 
     let frap = compute_due_date(&dl(30, None), &rule("frap26"), &clerk);
     expect![[r#"
-        frap26 anchor=2026-01-05 base=2026-02-04 due=2026-02-04 rolled=false service=false clerk=false
+        frap26 anchor=2026-01-05 base=2026-02-04 due=2026-02-05 rolled=false service=false clerk=true
         Fed. R. App. P. 26(a)(1)(A): exclude the trigger date 2026-01-05
         Fed. R. App. P. 26(a)(1)(B): count 30 calendar day(s) after the trigger, including weekends/holidays -> 2026-02-04
-        clerk_inaccessible requested but Fed. R. App. P. 26 has no applicable clerk-inaccessibility extension for this direction; ignored"#]]
+        Fed. R. App. P. 26(a)(3)(A): clerk's office inaccessible on the last day; extend to the first accessible day that is not a Saturday, Sunday, or legal holiday -> 2026-02-05"#]]
     .assert_eq(&trace(&frap.unwrap()));
 
     let itc = compute_due_date(

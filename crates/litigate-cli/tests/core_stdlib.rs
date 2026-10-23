@@ -3,9 +3,7 @@
 //! engine's hand-authored `packs/clock` declarations. Every in-force rule
 //! must reproduce the shipped rule's outputs (due, base and anchor dates,
 //! roll and service flags, refusals) on every trigger date of its window,
-//! and its calendars the shipped holidays in every year from 1978. The one
-//! deliberate difference is FRAP 26(a)(2)-(3), which `lit/core` takes from
-//! the vendored rule text.
+//! and its calendars the shipped holidays in every year from 1978.
 // Test code: a panic is the failed assertion.
 #![allow(clippy::unwrap_used, clippy::expect_used)]
 mod support;
@@ -220,7 +218,13 @@ fn before_1978_the_calendar_follows_the_statute() {
 }
 
 #[test]
-fn frap26_takes_the_vendored_inaccessibility_and_hours_rules() {
+fn inaccessibility_and_hours_agree_with_the_shipped_rules() {
+    let closed = ClockConfig {
+        clerk_inaccessible: true,
+        ..ClockConfig::default()
+    };
+    // FRCP 6(a)(3)(A) / FRAP 26(a)(3)(A): extended to the next accessible
+    // day (Mon Aug 3 -> Tue Aug 4).
     let dl = DayDeadline {
         trigger: d("2026-07-20"),
         days: 14,
@@ -228,37 +232,35 @@ fn frap26_takes_the_vendored_inaccessibility_and_hours_rules() {
         unit: Unit::Calendar,
         service_method: None,
     };
-    let closed = ClockConfig {
-        clerk_inaccessible: true,
-        ..ClockConfig::default()
-    };
-    for id in ["frcp6", "rcfc6"] {
+    for id in ["frcp6", "rcfc6", "frap26"] {
         let (a, b) = both(id, &dl, &closed);
         assert_eq!(a, b, "{id}");
+        assert_eq!(a.unwrap()[2], "2026-08-04", "{id}");
     }
-    // FRAP 26(a)(3)(A): extended to the next accessible day; the shipped
-    // rule ignores the closure.
-    let (a, b) = both("frap26", &dl, &closed);
-    assert_eq!(a.unwrap()[2], "2026-08-04");
-    assert_eq!(b.unwrap()[2], "2026-08-03");
-    // FRAP 26(a)(2): hours periods.
+    // FRCP 6(a)(2) / FRAP 26(a)(2): 24 hours from Friday noon end Saturday,
+    // continue to Monday noon; 26(a)(3)(B) inaccessibility during the last
+    // hour, to Tuesday noon.
     let h = HourDeadline {
         trigger_epoch_seconds: d("2026-07-24").epoch_day() * 86_400 + 12 * 3_600,
         hours: 24,
     };
-    let cfg = ClockConfig::default();
-    assert!(compute_hour_deadline(&h, &ours("frap26"), &cfg).is_ok());
-    assert!(compute_hour_deadline(&h, &shipped("frap26"), &cfg).is_err());
-    for id in ["frcp6", "rcfc6"] {
-        let a = compute_hour_deadline(&h, &ours(id), &cfg).unwrap();
-        let b = compute_hour_deadline(&h, &shipped(id), &cfg).unwrap();
-        assert_eq!(
-            (a.due_datetime, a.last_day_rolled),
-            (b.due_datetime, b.last_day_rolled),
-            "{id}"
-        );
+    let open = ClockConfig::default();
+    for id in ["frcp6", "rcfc6", "frap26"] {
+        for (cfg, due) in [
+            (&open, "2026-07-27T12:00:00"),
+            (&closed, "2026-07-28T12:00:00"),
+        ] {
+            let a = compute_hour_deadline(&h, &ours(id), cfg).unwrap();
+            assert_eq!(a.due_datetime, due, "{id}");
+            // The shipped FRCP/RCFC hours provisions have no 6(a)(3)(B).
+            if id == "frap26" {
+                let b = compute_hour_deadline(&h, &shipped(id), cfg).unwrap();
+                assert_eq!(b.due_datetime, due, "{id}");
+                assert_eq!(b.clerk_inaccessibility_applied, cfg.clerk_inaccessible);
+            }
+        }
     }
-    assert!(compute_hour_deadline(&h, &ours("itc210"), &cfg).is_err());
+    assert!(compute_hour_deadline(&h, &ours("itc210"), &open).is_err());
 }
 
 #[test]

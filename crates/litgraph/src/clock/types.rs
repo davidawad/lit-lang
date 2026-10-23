@@ -98,8 +98,10 @@ pub struct ClockConfig {
     /// Declared holidays beyond the rule's calendars (e.g. a state or
     /// presidential declaration).
     pub additional_holidays: Vec<Date>,
-    /// Clerk's office inaccessible on the last day. Applied by a rule's
-    /// `clerkInaccessible` step; a rule without one ignores it.
+    /// Clerk's office inaccessible on the last day (or, for an hours
+    /// period, during its last hour). Applied by a rule's
+    /// `clerkInaccessible` step or `hours.inaccessibleText`; a rule without
+    /// one ignores it.
     pub clerk_inaccessible: bool,
 }
 
@@ -145,6 +147,8 @@ pub struct ComputedHourDeadline {
     pub due_datetime: String,
     /// Whether the period rolled past a weekend/holiday.
     pub last_day_rolled: bool,
+    /// Whether the rule's hours inaccessibility extension was applied.
+    pub clerk_inaccessibility_applied: bool,
     /// Ordered, human-readable computation steps.
     pub steps: Vec<String>,
 }

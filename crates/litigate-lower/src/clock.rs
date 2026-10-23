@@ -406,6 +406,12 @@ fn rule(
                 "{cite}: the period ends on a weekend or legal holiday; continue to the same \
                  time on {{date}}"
             ),
+            inaccessible_text: c.roll_on.contains(&RollOn::Inaccessible).then(|| {
+                format!(
+                    "{cite}: the clerk's office is inaccessible during the last hour; extend to \
+                     the same time on {{date}}"
+                )
+            }),
         }),
     })
 }

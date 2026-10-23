@@ -864,7 +864,7 @@ L6001:
 | (always) | `count` periods `{unit: "calendar", count: "calendar"}`, `{unit: "court", count: "business"}` |
 | `include_last_day`, `roll_forward_on [weekend, legal_holiday]` | `roll` before `base`: forward `toward: later`, backward `toward: earlier` |
 | `service_extension { M: K.days }` | `service` `{method, days: K}`, then a second `roll`; `M` in kebab case must be an engine method (`mail`, `clerk`, `other-consented`, `commercial-carrier`, `prison-mail`, `mail-foreign`, `express`, `express-foreign`); non-calendar days are L6001 |
-| `inaccessible` in `roll_forward_on` | `clerkInaccessible` step |
+| `inaccessible` in `roll_forward_on` | `clerkInaccessible` step (and, with `allow_hours`, `hours.inaccessibleText`: FRCP 6(a)(3)(B), FRAP 26(a)(3)(B)) |
 | `allow_hours` | `hours` provision |
 
 The pipeline is therefore `anchor, count, roll, base, service, roll,

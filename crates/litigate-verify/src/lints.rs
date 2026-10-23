@@ -142,3 +142,95 @@ fn counting(cx: &Context<'_>, c: &hir::Counting) -> (String, Diagnostic) {
     );
     (format!("counting:{id}"), d)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use hir::{BinaryOp, Expr, Pattern, Type, UnaryOp, Value};
+
+    fn expr(kind: ExprKind) -> Expr {
+        Expr {
+            ty: Type::Unit,
+            kind,
+            span: None,
+        }
+    }
+
+    fn leaf(name: &str) -> Expr {
+        expr(ExprKind::Ref {
+            target: name.to_owned(),
+        })
+    }
+
+    fn operands(e: &Expr) -> Vec<Expr> {
+        children(e).into_iter().cloned().collect()
+    }
+
+    #[test]
+    fn every_compound_expression_yields_its_operands() {
+        let cases = [
+            (
+                ExprKind::Call {
+                    callee: "f".into(),
+                    args: vec![leaf("a"), leaf("b")],
+                },
+                vec!["a", "b"],
+            ),
+            (
+                ExprKind::Unary {
+                    op: UnaryOp::Not,
+                    operand: Box::new(leaf("a")),
+                },
+                vec!["a"],
+            ),
+            (
+                ExprKind::Binary {
+                    op: BinaryOp::Add,
+                    lhs: Box::new(leaf("a")),
+                    rhs: Box::new(leaf("b")),
+                },
+                vec!["a", "b"],
+            ),
+            (
+                ExprKind::Record {
+                    fields: vec![("x".into(), leaf("a")), ("y".into(), leaf("b"))],
+                },
+                vec!["a", "b"],
+            ),
+            (
+                ExprKind::List {
+                    items: vec![leaf("a")],
+                },
+                vec!["a"],
+            ),
+            (
+                ExprKind::Field {
+                    base: Box::new(leaf("a")),
+                    field: "x".into(),
+                },
+                vec!["a"],
+            ),
+            (
+                ExprKind::Match {
+                    scrutinee: Box::new(leaf("s")),
+                    arms: vec![
+                        (Pattern::Variant("E::x".into()), leaf("a")),
+                        (Pattern::Wildcard, leaf("b")),
+                    ],
+                },
+                vec!["s", "a", "b"],
+            ),
+            (
+                ExprKind::Literal {
+                    value: Value::Boolean(true),
+                },
+                vec![],
+            ),
+            (ExprKind::Ref { target: "a".into() }, vec![]),
+        ];
+        for (kind, want) in cases {
+            let want: Vec<Expr> = want.into_iter().map(leaf).collect();
+            assert_eq!(operands(&expr(kind.clone())), want, "{kind:?}");
+        }
+    }
+}

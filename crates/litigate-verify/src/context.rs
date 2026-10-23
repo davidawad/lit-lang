@@ -198,3 +198,56 @@ fn strip_spans(v: &mut serde_json::Value) {
 pub(crate) fn in_force(i: &hir::Interval, date: &str) -> bool {
     i.from.as_str() <= date && i.to.as_deref().is_none_or(|to| date < to)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use hir::{Expr, ExprKind, Type, Value};
+
+    fn at(line: u32) -> Span {
+        Span {
+            line,
+            ..start_of("pkgs/demo/main.lit")
+        }
+    }
+
+    fn served(document: &str, line: u32) -> Expr {
+        let arg = Expr {
+            ty: Type::Named("Document".into()),
+            kind: ExprKind::Literal {
+                value: Value::Variant(document.into()),
+            },
+            span: Some(at(line)),
+        };
+        Expr {
+            ty: Type::Unit,
+            kind: ExprKind::Call {
+                callee: "Served".into(),
+                args: vec![arg],
+            },
+            span: Some(at(line)),
+        }
+    }
+
+    #[test]
+    fn expressions_compare_without_their_spans() {
+        let here = served("Document::complaint", 3);
+        assert!(same_expr(&here, &served("Document::complaint", 9)));
+        assert!(!same_expr(&here, &served("Document::reply", 3)));
+    }
+
+    #[test]
+    fn intervals_hold_from_inclusive_to_exclusive() {
+        let closed = hir::Interval {
+            from: "2000-01-01".into(),
+            to: Some("2010-01-01".into()),
+            known_at: "2025-01-01".into(),
+        };
+        assert!(!in_force(&closed, "1999-12-31"));
+        assert!(in_force(&closed, "2000-01-01"));
+        assert!(in_force(&closed, "2009-12-31"));
+        assert!(!in_force(&closed, "2010-01-01"));
+        let open = hir::Interval { to: None, ..closed };
+        assert!(in_force(&open, "2999-01-01"));
+    }
+}

@@ -215,5 +215,22 @@ mod tests {
         assert_eq!(intersect(early, open), Some(early));
         assert_eq!(intersect(late, open), Some(late));
         assert_eq!(intersect(open, open), Some(open));
+        let middle = ("2005-01-01", Some("2015-01-01"));
+        assert_eq!(
+            intersect(early, middle),
+            Some(("2005-01-01", Some("2010-01-01")))
+        );
+        assert_eq!(intersect(middle, early), intersect(early, middle));
+    }
+
+    #[test]
+    fn units_are_named_in_prose() {
+        let names = [
+            hir::DayUnit::Calendar,
+            hir::DayUnit::Court,
+            hir::DayUnit::Business,
+        ]
+        .map(unit);
+        assert_eq!(names, ["days", "court days", "business days"]);
     }
 }

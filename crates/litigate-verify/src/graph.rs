@@ -88,23 +88,25 @@ fn compiled_reach(pack: &Pack, roots: &[&str]) -> Option<BTreeSet<String>> {
         ..CompileOptions::default()
     };
     let graph = Graph::compile(std::slice::from_ref(pack), &LinkFile::default(), &options).ok()?;
-    let view = View::new(&graph, &Scenario::default()).ok()?;
-    let qualify = |id: &str| format!("{}::{id}", pack.id);
-    let mut seen = vec![false; graph.nodes.len()];
-    for root in roots {
-        let ix = graph.node(&qualify(root)).ok()?;
-        for (s, r) in seen.iter_mut().zip(structure::reachable(&view, ix)) {
-            *s |= r;
-        }
-    }
-    let mut out = BTreeSet::new();
-    for n in &pack.nodes {
-        let ix = graph.node(&qualify(&n.id)).ok()?;
-        if seen.get(ix).copied().unwrap_or(false) {
-            out.insert(n.id.clone());
-        }
-    }
-    Some(out)
+    // A pack that compiled has every one of its nodes (the start included)
+    // in the graph, qualified by the pack id.
+    let index = |id: &str| graph.node(&format!("{}::{id}", pack.id)).ok();
+    View::new(&graph, &Scenario::default()).ok().map(|view| {
+        let seen = roots.iter().filter_map(|root| index(root)).fold(
+            vec![false; graph.nodes.len()],
+            |seen, ix| {
+                seen.into_iter()
+                    .zip(structure::reachable(&view, ix))
+                    .map(|(s, r)| s | r)
+                    .collect()
+            },
+        );
+        pack.nodes
+            .iter()
+            .filter(|n| index(&n.id).and_then(|ix| seen.get(ix).copied()) == Some(true))
+            .map(|n| n.id.clone())
+            .collect()
+    })
 }
 
 fn raw_reach(pack: &Pack, roots: &[&str]) -> BTreeSet<String> {
@@ -146,4 +148,76 @@ pub(crate) fn empty_distributions(cx: &Context<'_>) -> Vec<Diagnostic> {
             )
         })
         .collect()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// A pack `demo` starting at `start` with `nodes` (id, kind, tags) and
+    /// `edges` (from, to).
+    fn pack(start: &str, nodes: &[(&str, &str, &[&str])], edges: &[(&str, &str)]) -> Pack {
+        let nodes: Vec<serde_json::Value> = nodes
+            .iter()
+            .map(|(id, kind, tags)| {
+                serde_json::json!({"id": id, "label": id, "kind": kind, "tags": tags, "payoff": 0.0})
+            })
+            .collect();
+        let edges: Vec<serde_json::Value> = edges
+            .iter()
+            .map(|(from, to)| serde_json::json!({"from": from, "to": to, "label": "go"}))
+            .collect();
+        let json = serde_json::json!({
+            "schemaVersion": 2, "id": "demo", "title": "Demo", "startNodeId": start,
+            "nodes": nodes, "edges": edges,
+        });
+        Pack::from_json(&json.to_string()).expect("a valid pack")
+    }
+
+    fn ids(set: &BTreeSet<String>) -> Vec<&str> {
+        set.iter().map(String::as_str).collect()
+    }
+
+    const STATE: &[&str] = &[];
+    const ENTRY_TAG: &[&str] = &["entry"];
+
+    #[test]
+    fn a_compiled_pack_is_reached_from_its_start_and_entries() {
+        let p = pack(
+            "a",
+            &[
+                ("a", "state", STATE),
+                ("b", "terminal", STATE),
+                ("island", "state", ENTRY_TAG),
+                ("c", "terminal", STATE),
+                ("lone", "terminal", STATE),
+            ],
+            &[("a", "b"), ("island", "c")],
+        );
+        assert_eq!(ids(&reached(&p)), ["a", "b", "c", "island"]);
+    }
+
+    #[test]
+    fn a_pack_that_does_not_compile_alone_is_walked_over_its_raw_edges() {
+        // `a -> elsewhere::x` leaves the pack, so it does not compile alone;
+        // the walk ignores that edge, revisits `b` once, and never reaches
+        // `lone`.
+        let p = pack(
+            "a",
+            &[
+                ("a", "state", STATE),
+                ("b", "state", STATE),
+                ("c", "terminal", STATE),
+                ("lone", "terminal", STATE),
+            ],
+            &[("a", "elsewhere::x"), ("a", "b"), ("b", "c"), ("b", "a")],
+        );
+        assert_eq!(ids(&reached(&p)), ["a", "b", "c"]);
+    }
+
+    #[test]
+    fn the_raw_walk_ignores_roots_that_are_not_nodes() {
+        let p = pack("ghost", &[("a", "terminal", STATE)], &[("ghost", "a")]);
+        assert!(reached(&p).is_empty());
+    }
 }

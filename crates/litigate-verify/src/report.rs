@@ -118,44 +118,42 @@ impl VerificationReport {
     }
 }
 
-/// What one check found for its obligation.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub(crate) enum Outcome {
-    /// Ran; these diagnostics are its findings (none means passed).
-    Checked(Vec<Diagnostic>),
-    /// Did not run, for this reason.
-    Skipped(String),
-}
+/// Why an obligation nothing recorded is skipped.
+const NOT_APPLICABLE: &str = "not applicable to this artifact";
 
-/// Accumulates outcomes into a report. Obligations never recorded are
-/// skipped as not applicable; checked outcomes of one obligation merge.
+/// Accumulates outcomes into a report. A checked obligation's findings
+/// merge across checks and override any skip, whichever came first; an
+/// obligation only skipped keeps its first reason; one never recorded is
+/// skipped as not applicable.
 #[derive(Debug, Default)]
 pub(crate) struct Builder {
-    outcomes: BTreeMap<Obligation, Outcome>,
+    checked: BTreeMap<Obligation, Vec<Diagnostic>>,
+    skipped: BTreeMap<Obligation, String>,
 }
 
 impl Builder {
     pub fn check(&mut self, name: Obligation, diagnostics: Vec<Diagnostic>) {
-        match self
-            .outcomes
-            .entry(name)
-            .or_insert(Outcome::Checked(Vec::new()))
-        {
-            Outcome::Checked(found) => found.extend(diagnostics),
-            skipped @ Outcome::Skipped(_) => *skipped = Outcome::Checked(diagnostics),
-        }
+        self.checked.entry(name).or_default().extend(diagnostics);
     }
 
     pub fn skip(&mut self, name: Obligation, reason: &str) {
-        self.outcomes
+        self.skipped
             .entry(name)
-            .or_insert_with(|| Outcome::Skipped(reason.to_owned()));
+            .or_insert_with(|| reason.to_owned());
     }
 
-    pub fn finish(self, profile: Profile) -> VerificationReport {
+    pub fn finish(mut self, profile: Profile) -> VerificationReport {
         let obligations = Obligation::ALL
             .iter()
-            .map(|&name| finding(name, self.outcomes.get(&name)))
+            .map(|&name| {
+                let reason = self
+                    .skipped
+                    .remove(&name)
+                    .unwrap_or(NOT_APPLICABLE.to_owned());
+                self.checked
+                    .remove(&name)
+                    .map_or_else(|| skipped(name, reason), |found| checked(name, &found))
+            })
             .collect();
         VerificationReport {
             obligations,
@@ -164,36 +162,31 @@ impl Builder {
     }
 }
 
-fn finding(name: Obligation, outcome: Option<&Outcome>) -> Finding {
-    match outcome {
-        Some(Outcome::Checked(found)) => {
-            let mut sorted: Vec<&Diagnostic> = found.iter().collect();
-            sorted.sort_by(|a, b| crate::diag::order(a, b));
-            let status = if found.iter().any(|d| d.severity == Severity::Error) {
-                ObligationStatus::Failed
-            } else if found.iter().any(|d| d.severity == Severity::Warning) {
-                ObligationStatus::Warning
-            } else {
-                ObligationStatus::Passed
-            };
-            Finding {
-                name,
-                status,
-                count: found.len(),
-                examples: sorted.into_iter().take(MAX_EXAMPLES).map(example).collect(),
-            }
-        }
-        Some(Outcome::Skipped(reason)) => skipped(name, reason),
-        None => skipped(name, "not applicable to this artifact"),
+/// The finding of an obligation that ran and found `found`.
+fn checked(name: Obligation, found: &[Diagnostic]) -> Finding {
+    let mut sorted: Vec<&Diagnostic> = found.iter().collect();
+    sorted.sort_by(|a, b| crate::diag::order(a, b));
+    let status = if found.iter().any(|d| d.severity == Severity::Error) {
+        ObligationStatus::Failed
+    } else if found.iter().any(|d| d.severity == Severity::Warning) {
+        ObligationStatus::Warning
+    } else {
+        ObligationStatus::Passed
+    };
+    Finding {
+        name,
+        status,
+        count: found.len(),
+        examples: sorted.into_iter().take(MAX_EXAMPLES).map(example).collect(),
     }
 }
 
-fn skipped(name: Obligation, reason: &str) -> Finding {
+fn skipped(name: Obligation, reason: String) -> Finding {
     Finding {
         name,
         status: ObligationStatus::Skipped,
         count: 0,
-        examples: vec![reason.to_owned()],
+        examples: vec![reason],
     }
 }
 
@@ -206,4 +199,113 @@ fn example(d: &Diagnostic) -> String {
         d.code.as_str(),
         d.message
     )
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use litigate_base::DiagnosticCode as C;
+
+    fn diagnostic(code: C, severity: Severity, line: u32) -> Diagnostic {
+        let span = litigate_base::Span {
+            line,
+            ..crate::diag::start_of("pkgs/demo/main.lit")
+        };
+        Diagnostic {
+            severity,
+            ..Diagnostic::error(code, span, format!("finding on line {line}"))
+        }
+    }
+
+    fn status(b: Builder, name: Obligation) -> Option<ObligationStatus> {
+        b.finish(Profile::Dev).finding(name).map(|f| f.status)
+    }
+
+    #[test]
+    fn an_unrecorded_obligation_is_not_applicable() {
+        let report = Builder::default().finish(Profile::Strict);
+        assert_eq!(report.obligations.len(), Obligation::ALL.len());
+        let f = report.finding(Obligation::GraphExits);
+        assert_eq!(f.map(|f| f.status), Some(ObligationStatus::Skipped));
+        assert_eq!(
+            f.map(|f| f.examples.clone()),
+            Some(vec!["not applicable to this artifact".to_owned()])
+        );
+        assert!(report.is_accepted());
+    }
+
+    #[test]
+    fn a_check_replaces_an_earlier_skip_and_a_later_skip_is_ignored() {
+        let mut b = Builder::default();
+        b.skip(Obligation::Holes, "first");
+        b.check(Obligation::Holes, Vec::new());
+        b.skip(Obligation::Holes, "second");
+        assert_eq!(status(b, Obligation::Holes), Some(ObligationStatus::Passed));
+        let mut b = Builder::default();
+        b.check(Obligation::Holes, Vec::new());
+        b.skip(Obligation::Holes, "after");
+        assert_eq!(status(b, Obligation::Holes), Some(ObligationStatus::Passed));
+    }
+
+    #[test]
+    fn a_skipped_obligation_keeps_its_first_reason() {
+        let mut b = Builder::default();
+        b.skip(Obligation::CaseReplay, "first");
+        b.skip(Obligation::CaseReplay, "second");
+        let report = b.finish(Profile::Dev);
+        let f = report.finding(Obligation::CaseReplay);
+        assert_eq!(
+            f.map(|f| (f.status, f.examples.clone())),
+            Some((ObligationStatus::Skipped, vec!["first".to_owned()]))
+        );
+    }
+
+    #[test]
+    fn checks_merge_and_the_worst_severity_decides() {
+        let mut b = Builder::default();
+        b.check(
+            Obligation::TestsPass,
+            vec![diagnostic(C::TestFailed, Severity::Warning, 3)],
+        );
+        assert_eq!(
+            status(b, Obligation::TestsPass),
+            Some(ObligationStatus::Warning)
+        );
+        let mut b = Builder::default();
+        b.check(
+            Obligation::TestsPass,
+            vec![diagnostic(C::TestFailed, Severity::Warning, 3)],
+        );
+        b.check(
+            Obligation::TestsPass,
+            vec![diagnostic(C::TestFailed, Severity::Error, 2)],
+        );
+        let report = b.finish(Profile::Strict);
+        let f = report.finding(Obligation::TestsPass);
+        assert_eq!(f.map(|f| f.status), Some(ObligationStatus::Failed));
+        assert_eq!(f.map(|f| f.count), Some(2));
+        assert_eq!(
+            f.map(|f| f.examples.clone()),
+            Some(vec![
+                "pkgs/demo/main.lit:2:1: L5006 finding on line 2".to_owned(),
+                "pkgs/demo/main.lit:3:1: L5006 finding on line 3".to_owned(),
+            ])
+        );
+        assert!(!report.is_accepted());
+    }
+
+    #[test]
+    fn examples_are_capped() {
+        let mut b = Builder::default();
+        let found = (1..=10)
+            .map(|line| diagnostic(C::NoExit, Severity::Error, line))
+            .collect();
+        b.check(Obligation::GraphExits, found);
+        let report = b.finish(Profile::Strict);
+        let f = report.finding(Obligation::GraphExits);
+        assert_eq!(
+            f.map(|f| (f.count, f.examples.len())),
+            Some((10, MAX_EXAMPLES))
+        );
+    }
 }

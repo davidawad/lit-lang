@@ -63,14 +63,34 @@ mod tests {
 
     #[test]
     fn every_non_lint_code_has_an_obligation() {
-        for code in C::ALL {
-            let lint = code.as_str().starts_with("L9");
-            assert!(
-                lint || obligation_of(code).is_some(),
-                "{} has no obligation",
-                code.as_str()
-            );
-        }
+        let orphans: Vec<&str> = C::ALL
+            .into_iter()
+            .filter(|code| obligation_of(*code).is_none())
+            .map(C::as_str)
+            .filter(|code| !code.starts_with("L9"))
+            .collect();
+        assert_eq!(orphans, Vec::<&str>::new());
+    }
+
+    #[test]
+    fn lints_without_an_obligation_are_not_aggregated() {
+        let span = crate::diag::start_of("Lit.toml");
+        let mut b = Builder::default();
+        aggregate(
+            &mut b,
+            &[
+                Diagnostic::error(C::AnonymousEdge, span.clone(), "anonymous"),
+                Diagnostic::error(C::TypeMismatch, span, "mismatch"),
+            ],
+        );
+        let report = b.finish(litigate_base::Profile::Strict);
+        let counts: Vec<(Obligation, usize)> = report
+            .obligations
+            .iter()
+            .filter(|f| f.count > 0)
+            .map(|f| (f.name, f.count))
+            .collect();
+        assert_eq!(counts, [(Obligation::WellTyped, 1)]);
     }
 
     #[test]

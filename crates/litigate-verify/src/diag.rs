@@ -54,3 +54,62 @@ pub(crate) fn end_of(span: &Span) -> Span {
         ..span.clone()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use litigate_base::DiagnosticCode as C;
+
+    fn at(file: &str, line: u32, code: C, message: &str) -> Diagnostic {
+        let span = Span {
+            line,
+            end_line: line + 1,
+            end_col: 4,
+            ..start_of(file)
+        };
+        Diagnostic::error(code, span, message)
+    }
+
+    #[test]
+    fn diagnostics_order_by_file_line_column_code_then_message() {
+        let mut all = [
+            at("b.lit", 1, C::NoExit, "z"),
+            at("a.lit", 2, C::NoExit, "z"),
+            at("a.lit", 1, C::UnreachableNode, "z"),
+            at("a.lit", 1, C::NoExit, "y"),
+            at("a.lit", 1, C::NoExit, "x"),
+        ];
+        all.sort_by(order);
+        let keys: Vec<(String, u32, &str, String)> = all
+            .iter()
+            .map(|d| {
+                (
+                    d.span.file.0.clone(),
+                    d.span.line,
+                    d.code.as_str(),
+                    d.message.clone(),
+                )
+            })
+            .collect();
+        let want = [
+            ("a.lit", 1, "L5003", "z"),
+            ("a.lit", 1, "L5004", "x"),
+            ("a.lit", 1, "L5004", "y"),
+            ("a.lit", 2, "L5004", "z"),
+            ("b.lit", 1, "L5004", "z"),
+        ]
+        .map(|(f, l, c, m)| (f.to_owned(), l, c, m.to_owned()));
+        assert_eq!(keys, want);
+    }
+
+    #[test]
+    fn findings_take_the_profile_severity_and_located_notes() {
+        let span = start_of("Lit.toml");
+        let d = emit(C::RuleWithoutTest, Profile::Dev, span.clone(), "untested");
+        assert_eq!(d.severity, litigate_base::Severity::Warning);
+        let d = note(d, Some(&span), "here");
+        assert_eq!(d.notes.first().and_then(|n| n.span.clone()), Some(span));
+        let end = end_of(&at("a.lit", 3, C::NoExit, "z").span);
+        assert_eq!((end.line, end.col, end.end_line, end.end_col), (4, 4, 4, 4));
+    }
+}

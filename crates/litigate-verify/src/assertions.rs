@@ -113,7 +113,12 @@ fn compare(l: &Value, o: BinaryOp, r: &Value) -> Option<bool> {
 /// `pattern` matches `event`: same constructor, and each argument the
 /// pattern gives equals the event's (omitted trailing arguments match
 /// anything).
-pub(crate) fn matches(pattern: &Expr, event: &Expr) -> bool {
+fn matches(pattern: &Expr, event: &Expr) -> bool {
+    arguments(pattern, event).is_some()
+}
+
+/// The arguments of `event` when `pattern` matches it.
+fn arguments<'e>(pattern: &Expr, event: &'e Expr) -> Option<&'e [Expr]> {
     match (&pattern.kind, &event.kind) {
         (
             ExprKind::Call {
@@ -124,8 +129,9 @@ pub(crate) fn matches(pattern: &Expr, event: &Expr) -> bool {
                 callee: e,
                 args: ea,
             },
-        ) => p == e && pa.len() <= ea.len() && pa.iter().zip(ea).all(|(a, b)| same_expr(a, b)),
-        _ => false,
+        ) => (p == e && pa.len() <= ea.len() && pa.iter().zip(ea).all(|(a, b)| same_expr(a, b)))
+            .then_some(ea.as_slice()),
+        _ => None,
     }
 }
 
@@ -145,9 +151,9 @@ fn due(
         .givens
         .iter()
         .enumerate()
-        .filter(|(_, (g, _))| matches(&first.trigger, g))
-        .max_by(|(i, (_, a)), (j, (_, b))| a.cmp(b).then(i.cmp(j)))
-        .map(|(_, (g, d))| (g, d.as_str()))
+        .filter_map(|(i, (g, d))| Some((i, arguments(&first.trigger, g)?, d.as_str())))
+        .max_by(|(i, _, a), (j, _, b)| a.cmp(b).then(i.cmp(j)))
+        .map(|(_, args, d)| (args, d))
         .ok_or_else(|| format!("no `given` event matches the trigger of `{target}`"))?;
     let deadline = versions
         .iter()
@@ -160,13 +166,11 @@ fn due(
         )
     })?;
     let library = clocks.get(cx, pkg, counting)?;
-    let clock = library
-        .clock(&counting.meta.id)
-        .map_err(|e| e.to_string())?;
     let trigger = clock::Date::parse_iso(date).map_err(|e| e.to_string())?;
     let request = DayDeadline {
         trigger,
-        days: i64::try_from(deadline.amount).map_err(|e| e.to_string())?,
+        days: i64::try_from(deadline.amount)
+            .map_err(|_| format!("`{target}` is too long for the clock to count"))?,
         direction: match deadline.direction {
             hir::Direction::Forward => clock::Direction::Forward,
             hir::Direction::Backward => clock::Direction::Backward,
@@ -177,17 +181,16 @@ fn due(
         },
         service_method: service_method(counting, event),
     };
-    clock::compute_due_date(&request, &clock, &ClockConfig::default())
+    library
+        .clock(&counting.meta.id)
+        .and_then(|clock| clock::compute_due_date(&request, &clock, &ClockConfig::default()))
         .map(|c| c.due_date)
         .map_err(|e| e.to_string())
 }
 
-/// The engine service method of the first `event` argument naming one of
+/// The engine service method of the first event argument naming one of
 /// the counting rule's `service_extension` methods.
-fn service_method(c: &hir::Counting, event: &Expr) -> Option<clock::ServiceMethod> {
-    let ExprKind::Call { args, .. } = &event.kind else {
-        return None;
-    };
+fn service_method(c: &hir::Counting, args: &[Expr]) -> Option<clock::ServiceMethod> {
     args.iter().find_map(|a| match &a.kind {
         ExprKind::Literal {
             value: Value::Variant(v),
@@ -311,8 +314,99 @@ mod tests {
         let a = Value::Date("2025-03-24".into());
         let b = Value::Date("2025-03-27".into());
         assert_eq!(compare(&a, BinaryOp::Lt, &b), Some(true));
+        assert_eq!(compare(&a, BinaryOp::Le, &a), Some(true));
+        assert_eq!(compare(&a, BinaryOp::Gt, &b), Some(false));
         assert_eq!(compare(&a, BinaryOp::Ge, &b), Some(false));
+        assert_eq!(compare(&a, BinaryOp::Eq, &a), Some(true));
         assert_eq!(compare(&a, BinaryOp::Ne, &b), Some(true));
         assert_eq!(compare(&Value::Boolean(true), BinaryOp::Lt, &a), None);
+    }
+
+    #[test]
+    fn only_comparisons_compare_dates() {
+        let a = Value::Date("2025-03-24".into());
+        for o in [BinaryOp::Add, BinaryOp::Sub, BinaryOp::And, BinaryOp::Or] {
+            assert_eq!(compare(&a, o, &a), None, "{o:?}");
+        }
+    }
+
+    #[test]
+    fn operators_render_as_written() {
+        let all = [
+            BinaryOp::Eq,
+            BinaryOp::Ne,
+            BinaryOp::Lt,
+            BinaryOp::Le,
+            BinaryOp::Gt,
+            BinaryOp::Ge,
+            BinaryOp::Mul,
+        ];
+        let shown: Vec<&str> = all.into_iter().map(op).collect();
+        assert_eq!(shown, ["==", "!=", "<", "<=", ">", ">=", "?"]);
+    }
+
+    fn expr(kind: ExprKind) -> Expr {
+        Expr {
+            ty: hir::Type::Unit,
+            kind,
+            span: None,
+        }
+    }
+
+    fn variant(v: &str) -> Expr {
+        expr(ExprKind::Literal {
+            value: Value::Variant(v.to_owned()),
+        })
+    }
+
+    fn call(callee: &str, args: &[&str]) -> Expr {
+        expr(ExprKind::Call {
+            callee: callee.to_owned(),
+            args: args.iter().map(|a| variant(a)).collect(),
+        })
+    }
+
+    #[test]
+    fn a_pattern_matches_its_constructor_and_leading_arguments() {
+        let event = call("Served", &["Document::complaint", "Method::Mail"]);
+        assert!(matches(&call("Served", &[]), &event));
+        assert!(matches(&call("Served", &["Document::complaint"]), &event));
+        assert!(matches(&event, &event));
+        assert!(!matches(
+            &call("Answered", &["Document::complaint"]),
+            &event
+        ));
+        assert!(!matches(&call("Served", &["Document::reply"]), &event));
+        let longer = call("Served", &["Document::complaint", "Method::Mail", "X::y"]);
+        assert!(!matches(&longer, &event));
+        let literal = variant("Document::complaint");
+        assert!(!matches(&literal, &event));
+        assert!(!matches(&event, &literal));
+    }
+
+    #[test]
+    fn values_render_plainly_and_others_as_json() {
+        assert_eq!(render(&Value::Date("2025-03-24".into())), "2025-03-24");
+        assert_eq!(render(&Value::Boolean(false)), "false");
+        assert_eq!(
+            render(&Value::Variant("Document::complaint".into())),
+            r#"{"kind":"variant","value":"Document::complaint"}"#
+        );
+    }
+
+    #[test]
+    fn a_call_shows_its_reference_or_its_callee() {
+        let v = Value::Boolean(true);
+        let target = expr(ExprKind::Ref {
+            target: "answer-period".into(),
+        });
+        let deadline = expr(ExprKind::Call {
+            callee: "deadline".into(),
+            args: vec![target],
+        });
+        assert_eq!(show(&deadline, &v), "deadline(answer-period)");
+        assert_eq!(show(&call("has_event", &["E::x"]), &v), "has_event");
+        assert_eq!(show(&call("has_event", &[]), &v), "has_event");
+        assert_eq!(show(&variant("E::x"), &v), "true");
     }
 }

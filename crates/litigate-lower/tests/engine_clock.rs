@@ -239,3 +239,16 @@ fn a_version_that_never_rolls_is_refused_not_counted() {
         Ok("2025-03-24")
     );
 }
+
+/// The nominal end is the last day as counted, before the roll: 23 days
+/// from Thursday 2025-03-06 is Saturday 2025-03-29, rolled to Monday
+/// 2025-03-31.
+#[test]
+fn the_nominal_end_is_before_the_roll() {
+    let clock = EngineClock::new([]);
+    let mut r = request("frcp6", None);
+    r.trigger = "2025-03-06".into();
+    r.amount = 23;
+    assert_eq!(clock.nominal(&r).as_deref(), Ok("2025-03-29"));
+    assert_eq!(clock.due(&r).as_deref(), Ok("2025-03-31"));
+}

@@ -12,6 +12,12 @@ Status: design accepted 2026-10-22, epic in this repo's bead store
 cites a section here, and an agent should be able to work from this doc and
 the bead alone.
 
+Pre-freeze design review (2026-10-23):
+[`research/design-review-2026-10-23.md`](research/design-review-2026-10-23.md).
+It lists defects on main and the items that must be decided before the
+language is frozen. Its paradigm recommendation is recorded as PROPOSED in
+[`SPEC.md`](SPEC.md) §0 and is not yet adopted.
+
 ## 1. Why
 
 The packs are hand-written, unversioned JSON snapshots of procedural rules.

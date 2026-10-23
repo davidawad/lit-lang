@@ -9,6 +9,32 @@ contracts in §11 are the code form of this document. W1 beads implement
 against both and need no further design decisions; a gap found later is a
 SPEC bug and gets fixed here first.
 
+## 0. PROPOSED: paradigm (not adopted)
+
+Status: PROPOSED by the pre-freeze design review
+([`research/design-review-2026-10-23.md`](research/design-review-2026-10-23.md)
+§0, §1.2). Awaiting David's decision. Nothing below is normative until this
+status changes; §1 onward still describe the language as built.
+
+1. **Core:** a typed, stratified Datalog with priorities over bitemporal facts.
+   Each declaration denotes a set of claims (declaration id, version, valid
+   interval, transaction interval, applicability, authority, scope, value,
+   relations, cite). Resolution is one fixed query over the union of claims.
+   Layers merge as a set, and precedence comes from the instruments
+   themselves; an incomparable conflict is an error, or a chance fork where
+   the law is unsettled.
+2. **Values:** a first-order, non-recursive expression language. Counting is
+   a closed algebra of total combinators (anchor, count, roll, add, chain,
+   clerk), not user code.
+3. **Procedure:** a typed, bounded Petri net with discrete clocks. A posture
+   is a marking plus open obligations; a `.case` is a firing sequence.
+4. **Types:** ground-indexed and capability-typed first. SMT (QF_LIA/LRA)
+   only for parameterised values and delegation bounds.
+
+Not chosen: ASP as the core (it allows zero or several answer sets; clingo
+stays an optional oracle for world enumeration), a general functional
+language, or a dependent type theory.
+
 "Error" below means a diagnostic of error severity with the named code (§9.1).
 Strictness is the product: when a rule here doesn't permit something, reject
 it.

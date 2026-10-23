@@ -10,6 +10,7 @@
   (param_list)
   (node_body)
   (edge_fields)
+  (patch_fields)
   (duration_range)
   (deadline_opts)
   (deadline_decl_opts)

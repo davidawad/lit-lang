@@ -1,0 +1,67 @@
+================================================================================
+Reserved guard operations in a patch
+================================================================================
+
+module links
+instance ptab@cafc {
+  pack ptab
+  patch time-barred {
+    note "narrowed on appeal"
+    when and has_event(ComplaintServed()) effective [2026-11-01, ..) cite Fed. Cir. R. 1
+    when or date_of(Petition()) < 2026-01-01
+    supersedes when true known_at 2026-10-01 cite ?("Order, Dkt. 12")
+  }
+}
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (instance_decl
+      (identifier)
+      (identifier)
+      (instance_field
+        (identifier))
+      (instance_field
+        (identifier)
+        (patch_fields
+          (edge_field
+            (string
+              (string_content)))
+          (guard_op
+            (call_expression
+              (ref
+                (identifier))
+              (arguments
+                (call_expression
+                  (ref
+                    (identifier))
+                  (arguments))))
+            (effective_clause
+              (interval
+                (date)
+                (open_end)))
+            (cite
+              (cite_text)))
+          (guard_op
+            (binary_expression
+              (call_expression
+                (ref
+                  (identifier))
+                (arguments
+                  (call_expression
+                    (ref
+                      (identifier))
+                    (arguments))))
+              (date)))
+          (guard_op
+            (boolean)
+            (known_at_clause
+              (date))
+            (cite
+              (hole
+                (string
+                  (string_content))))))))))

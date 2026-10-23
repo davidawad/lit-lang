@@ -3,6 +3,7 @@
   (package_decl)
   (node_body)
   (edge_fields)
+  (patch_fields)
   (deadline_opts)
   (deadline_decl_opts)
   (capability)

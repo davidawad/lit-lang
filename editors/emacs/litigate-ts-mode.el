@@ -91,7 +91,7 @@ The canonical format (`litigate fmt', SPEC §10) uses two."
     "allow_hours" "end_of_month" "effective" "observed" "amends" "subject_to" "notwithstanding"
     "supersedes" "revives" "override" "delegable_to" "rebuts" "undercuts"
     "priority" "url" "bearer" "trigger" "extend" "waive" "after_expiry" "never"
-    "removes" "elects" "extends" "waives" "to" "where"
+    "removes" "elects" "extends" "waives" "to" "where" "and" "or"
     "given" "expect" "on")
   "Clause, field and test keywords.")
 
@@ -232,7 +232,7 @@ The canonical format (`litigate fmt', SPEC §10) uses two."
 ;;; Indentation (kept equal to queries/indents.scm by the ERT suite).
 
 (defconst litigate-ts-mode--indent-body-types
-  '("package_decl" "variant_list" "param_list" "node_body" "edge_fields"
+  '("package_decl" "variant_list" "param_list" "node_body" "edge_fields" "patch_fields"
     "duration_range" "deadline_opts" "deadline_decl_opts" "capability"
     "instance_decl" "probability_map"
     "role_map" "rule_body" "counting_body" "service_map" "short_period"

@@ -1900,6 +1900,58 @@
     }
   },
   {
+    "type": "guard_op",
+    "named": true,
+    "fields": {
+      "operator": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "and",
+            "named": false
+          },
+          {
+            "type": "or",
+            "named": false
+          },
+          {
+            "type": "supersedes",
+            "named": false
+          }
+        ]
+      },
+      "predicate": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "_expression",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "cite",
+          "named": true
+        },
+        {
+          "type": "effective_clause",
+          "named": true
+        },
+        {
+          "type": "known_at_clause",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "hole",
     "named": true,
     "fields": {
@@ -2126,10 +2178,6 @@
         "required": true,
         "types": [
           {
-            "type": "edge_fields",
-            "named": true
-          },
-          {
             "type": "hole",
             "named": true
           },
@@ -2143,6 +2191,10 @@
           },
           {
             "type": "parenthesized_expression",
+            "named": true
+          },
+          {
+            "type": "patch_fields",
             "named": true
           },
           {
@@ -2980,6 +3032,25 @@
           }
         ]
       }
+    }
+  },
+  {
+    "type": "patch_fields",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "edge_field",
+          "named": true
+        },
+        {
+          "type": "guard_op",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -4213,6 +4284,10 @@
     "named": false
   },
   {
+    "type": "and",
+    "named": false
+  },
+  {
     "type": "anonymous",
     "named": true
   },
@@ -4534,6 +4609,10 @@
   {
     "type": "open_end",
     "named": true
+  },
+  {
+    "type": "or",
+    "named": false
   },
   {
     "type": "otherwise",

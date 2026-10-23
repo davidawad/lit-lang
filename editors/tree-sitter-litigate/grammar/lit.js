@@ -276,7 +276,21 @@ module.exports = {
     seq(field('key', 'probabilities'), field('value', $.probability_map)),
     seq(field('key', 'roles'), field('value', $.role_map)),
     seq(field('key', 'stake'), field('value', choice($.signed_money, $.hole))),
-    seq(field('key', 'patch'), field('edge', $.identifier), field('value', $.edge_fields)),
+    seq(field('key', 'patch'), field('edge', $.identifier), field('value', $.patch_fields)),
+  ),
+
+  patch_fields: $ => braced(choice($.edge_field, $.guard_op)),
+
+  // SPEC §3.6: typed operations on a patched edge's guard, with their
+  // authority, are reserved. They parse here so editors highlight them;
+  // the compiler rejects them (L0010).
+  guard_op: $ => seq(
+    choice(
+      seq('when', field('operator', choice('and', 'or'))),
+      seq(field('operator', 'supersedes'), 'when'),
+    ),
+    field('predicate', $._expression),
+    repeat(choice($._version_clause, $.cite)),
   ),
 
   probability_map: $ => braced($.probability_entry),

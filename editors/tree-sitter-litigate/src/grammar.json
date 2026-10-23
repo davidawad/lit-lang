@@ -2812,10 +2812,133 @@
               "name": "value",
               "content": {
                 "type": "SYMBOL",
-                "name": "edge_fields"
+                "name": "patch_fields"
               }
             }
           ]
+        }
+      ]
+    },
+    "patch_fields": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "{"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "edge_field"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "guard_op"
+                  }
+                ]
+              },
+              {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "STRING",
+                    "value": ","
+                  },
+                  {
+                    "type": "BLANK"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "}"
+        }
+      ]
+    },
+    "guard_op": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "when"
+                },
+                {
+                  "type": "FIELD",
+                  "name": "operator",
+                  "content": {
+                    "type": "CHOICE",
+                    "members": [
+                      {
+                        "type": "STRING",
+                        "value": "and"
+                      },
+                      {
+                        "type": "STRING",
+                        "value": "or"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "FIELD",
+                  "name": "operator",
+                  "content": {
+                    "type": "STRING",
+                    "value": "supersedes"
+                  }
+                },
+                {
+                  "type": "STRING",
+                  "value": "when"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "FIELD",
+          "name": "predicate",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_expression"
+          }
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "_version_clause"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "cite"
+              }
+            ]
+          }
         }
       ]
     },

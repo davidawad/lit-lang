@@ -220,9 +220,8 @@ pub fn due(
         pack: pkg.manifest.pack_id.clone(),
         name: hirx::local(name).to_owned(),
     };
-    let (owner, d) = governing(world, "deadline", &key, events, at, known_at)?
-        .and_then(|i| deadline_at(world, i))
-        .ok_or_else(|| format!("`{name}` is not a deadline of `{}`", pkg.manifest.name))?;
+    let missing = format!("`{name}` is not a deadline of `{}`", pkg.manifest.name);
+    let (owner, d) = deadline_of(world, &key, (events, at, known_at), missing)?;
     let judged = Judged {
         clocks,
         world,
@@ -236,12 +235,21 @@ pub fn due(
 /// How many chained periods a chain may follow before it is a cycle.
 const CHAIN_LIMIT: usize = 16;
 
-/// Declaration `i` of `world` with its pack, when it is a deadline.
-fn deadline_at<'r, 'w>(world: &'r World<'w>, i: usize) -> Option<(&'r str, &'w hir::Deadline)> {
-    match world.decls[i].decl {
-        Declaration::Deadline(d) => Some((world.pack_of(i), d)),
-        _ => None,
-    }
+/// The deadline declaration (with its pack) governing `key` for
+/// `events[at]` among those recorded by `known_at`; `missing` when `key`
+/// names no deadline.
+fn deadline_of<'r, 'w>(
+    world: &'r World<'w>,
+    key: &Key,
+    (events, at, known_at): (&[MatterEvent<'_>], usize, Option<&str>),
+    missing: String,
+) -> Result<(&'r str, &'w hir::Deadline), String> {
+    governing(world, "deadline", key, events, at, known_at)?
+        .and_then(|i| match world.decls[i].decl {
+            Declaration::Deadline(d) => Some((world.pack_of(i), d)),
+            _ => None,
+        })
+        .ok_or(missing)
 }
 
 /// What a due date is judged against.
@@ -281,11 +289,9 @@ impl Judged<'_, '_> {
                     .checked_sub(1)
                     .ok_or(format!("the chain through `{}` is a cycle", d.meta.id))?;
                 let key = self.world.target(owner, &chain.deadline).key;
-                // Sema resolved the chain to a deadline the world declares.
-                let base = governing(self.world, "deadline", &key, events, at, known_at)?
-                    .and_then(|i| deadline_at(self.world, i))
-                    .ok_or(format!("`{}` is not a deadline", chain.deadline))?;
-                let base = self.due(base.0, base.1, depth)?;
+                let missing = format!("`{}` is not a deadline", chain.deadline);
+                let (pack, base) = deadline_of(self.world, &key, (events, at, known_at), missing)?;
+                let base = self.due(pack, base, depth)?;
                 let date = match chain.end {
                     DueEnd::Nominal => base.computed.nominal_date,
                     DueEnd::Adjusted => base.computed.due_date,
@@ -424,6 +430,9 @@ deadline chained: 10.days from deadline(answer-period).nominal counted_by frcp6
 deadline chained-adjusted: 10.days from deadline(chained).adjusted counted_by frcp6
 deadline loop-a: 1.days from deadline(loop-b).nominal counted_by frcp6
 deadline loop-b: 1.days from deadline(loop-a).nominal counted_by frcp6
+deadline chained-early: 1.days from deadline(answer-period).nominal counted_by frcp6 known_at 2000-01-01
+deadline nourl-base: 1.days from Served() counted_by nourl
+deadline chained-nourl: 1.days from deadline(nourl-base).nominal counted_by frcp6
 ";
 
     fn expr(kind: ExprKind) -> Expr {
@@ -720,14 +729,24 @@ deadline loop-b: 1.days from deadline(loop-a).nominal counted_by frcp6
         assert_eq!(date("chained-adjusted"), Ok("2025-04-14".to_owned()));
         let world = World::from_packages(&[&pkg]);
         let pack = &pkg.manifest.pack_id;
-        let decl = |name: &str| {
-            hirx::deadlines(&pkg, name)
-                .next()
-                .unwrap_or_else(|| panic!("{name}"))
-        };
+        let decl = |name: &str| hirx::deadlines(&pkg, name).next().unwrap();
         let root = root_trigger(&world, pack, decl("chained-adjusted"));
         assert_eq!(root, Some(&decl("answer-period").trigger));
         assert_eq!(root_trigger(&world, pack, decl("loop-a")), None);
+        // A world without the base resolves no root.
+        let empty = World::from_packages(&[]);
+        assert_eq!(root_trigger(&empty, pack, decl("chained")), None);
+    }
+
+    /// A cycle, a base not recorded by `known_at`, and a base its clock
+    /// cannot count: each refuses the chained period with the reason.
+    #[test]
+    fn a_chain_that_does_not_count_says_why() {
+        let pkg = package(&|_| ());
+        let why = |name: &str, known_at| due_on(&pkg, name, "2025-03-03", known_at).unwrap_err();
+        assert!(why("loop-a", None).contains("is a cycle"));
+        assert!(why("chained-early", Some("2001-01-01")).contains("answer-period"));
+        assert!(why("chained-nourl", None).starts_with("L6001"));
     }
 
     #[test]

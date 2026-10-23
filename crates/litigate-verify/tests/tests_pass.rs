@@ -257,3 +257,32 @@ tests_pass!(
          expect deadline(loop-a) == 2025-03-04\n}"
     )
 );
+
+tests_pass!(
+    a_cycle_through_the_version_in_force_is_not_counted,
+    Failed,
+    with(
+        "rule duty loop-duty cite FRCP 12(a)\n{\n  \
+         deadline loop-a: 1.days from Served(complaint) counted_by frcp6 effective [2009-12-01, 2020-01-01)\n  \
+         deadline loop-a: 1.days from deadline(loop-b).nominal counted_by frcp6 effective [2020-01-01, ..)\n  \
+         deadline loop-b: 1.days from deadline(loop-a).nominal counted_by frcp6\n}\n\
+         test \"a cycle in force\" cite FRCP 12(a)\n{\n  \
+         given Served(complaint, Personal) on 2025-03-03\n  \
+         expect deadline(loop-a) == 2025-03-04\n}"
+    )
+);
+
+tests_pass!(
+    a_chain_on_a_period_the_clock_cannot_count_is_not_counted,
+    Failed,
+    with(
+        "counting nbd cite FRCP 6(a)\n{\n  anchor next_business_day\n  include_last_day\n  \
+         holidays federal\n}\n\
+         rule duty zero-duty cite FRCP 12(a)\n{\n  deadline zero-period: 0.days from \
+         Served(complaint) counted_by nbd\n  \
+         deadline after-zero: 1.days from deadline(zero-period).adjusted counted_by frcp6\n}\n\
+         test \"after a zero-day period\" cite FRCP 12(a)\n{\n  \
+         given Served(complaint, Personal) on 2025-03-03\n  \
+         expect deadline(after-zero) == 2025-03-04\n}"
+    )
+);

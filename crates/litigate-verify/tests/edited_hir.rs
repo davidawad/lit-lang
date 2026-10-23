@@ -361,3 +361,22 @@ fn tests_select_over_an_unlisted_package() {
         outcome_of(&v, Obligation::TestsPass)
     );
 }
+
+/// A chain to a deadline no loaded package declares has no root trigger,
+/// so no `given` starts it.
+#[test]
+fn a_chain_to_an_undeclared_deadline_is_not_counted() {
+    let lit = with(
+        "deadline chained: 1.days from deadline(answer-period).nominal counted_by frcp6\n\
+         test \"chained\" cite FRCP 12(a)\n{\n  \
+         given Served(complaint, Personal) on 2025-03-03\n  \
+         expect deadline(chained) == 2025-03-25\n}",
+    );
+    insta::assert_json_snapshot!(tests_pass(&lit, |p| {
+        for d in deadlines(p) {
+            if let Some(chain) = &mut d.chain {
+                chain.deadline = "nowhere".into();
+            }
+        }
+    }));
+}

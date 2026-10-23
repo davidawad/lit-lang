@@ -1,0 +1,45 @@
+---
+source: crates/litigate-verify/tests/edited_hir.rs
+expression: "tests_pass(&lit, |p|\n{\n    for d in deadlines(p)\n    {\n        if let Some(chain) = &mut d.chain\n        { chain.deadline = \"nowhere\".into(); }\n    }\n})"
+---
+{
+  "finding": {
+    "name": "tests-pass",
+    "status": "failed",
+    "count": 1,
+    "examples": [
+      "pkgs/demo/main.lit:59:10: L5006 cannot evaluate the assertion: no `given` event matches the trigger of `chained`"
+    ],
+    "evidence": {
+      "checked": 3,
+      "subjects": "inline tests"
+    }
+  },
+  "accepted": false,
+  "diagnostics": [
+    {
+      "code": "L5006",
+      "severity": "error",
+      "span": {
+        "file": "pkgs/demo/main.lit",
+        "line": 59,
+        "col": 10,
+        "end_line": 59,
+        "end_col": 27
+      },
+      "message": "cannot evaluate the assertion: no `given` event matches the trigger of `chained`",
+      "labels": [
+        {
+          "span": {
+            "file": "pkgs/demo/main.lit",
+            "line": 56,
+            "col": 1,
+            "end_line": 60,
+            "end_col": 2
+          },
+          "message": "in test \"chained\""
+        }
+      ]
+    }
+  ]
+}

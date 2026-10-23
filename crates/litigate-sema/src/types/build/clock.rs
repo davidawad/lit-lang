@@ -281,7 +281,7 @@ impl Cx<'_, '_> {
                 kind: ExprKind::Ref(r),
                 ..
             }] => {
-                if r.is_simple() && r.head.text == name.text {
+                if r.display() == name.text {
                     self.report(Report::new(
                         C::TypeMismatch,
                         r.range,

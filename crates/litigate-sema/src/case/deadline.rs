@@ -357,5 +357,6 @@ mod tests {
             service: Vec::new(),
         };
         assert!(NoClock.due(&r).is_err_and(|e| e.contains("frcp6")));
+        assert_eq!(NoClock.nominal(&r), NoClock.due(&r));
     }
 }

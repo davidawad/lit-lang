@@ -108,3 +108,58 @@ fn a_chain_whose_base_is_not_counted_is_not_counted() {
         "2011-03-02 Rejoined() by d",
     ]));
 }
+
+/// A period in a dependency, which a matter does not replay.
+const BASE: &str = "module base-pkg
+start idle
+
+enum Doc { complaint }
+
+event Served(doc: Doc)
+
+counting oc cite FRCP 6(a) { exclude_trigger_day, include_last_day, holidays ocal }
+calendar ocal { new-year: fixed(1, 1) effective [1870-06-28, ..) observed nearest_weekday }
+
+deadline dep-base: 10.days from Served(complaint) counted_by oc
+
+terminal idle: \"Idle\" { payoff 0.usd }
+";
+
+/// A chain on `BASE`'s period.
+const FOLLOWER: &str = "module follower
+
+import base-pkg.{ dep-base, oc }
+
+start open
+
+event Opened()
+
+deadline after-dep: 5.days from deadline(dep-base).nominal counted_by oc
+
+state open: \"Open\" { stay \"Stay\" -> open { event Opened() } }
+";
+
+/// `after-dep` follows a period of a package the matter only depends on,
+/// which replay does not count (a matter's events are its used packages'):
+/// nothing starts it, so it opens nothing.
+#[test]
+fn a_chain_on_an_unreplayed_package_opens_nothing() {
+    let packages = compile(&[
+        package("base-pkg", &[], "", BASE),
+        package("follower", &["base-pkg"], "", FOLLOWER),
+    ]);
+    let text = "case t\nuses follower ^1.0.0\nas_of 2011-06-01\nsummary \"s\"\n\n\
+                parties {\n  d: Defendant Corporation\n}\n\
+                events {\n  2011-01-04 Opened() by d\n}\n";
+    let used: Vec<Package> = packages
+        .iter()
+        .filter(|p| p.manifest.name == "follower")
+        .cloned()
+        .collect();
+    let checked = check(text, &packages, Some(&lock(&used)), &Plus, Profile::Dev);
+    assert!(checked.obligations.is_empty(), "{:?}", outcome(&checked));
+    assert!(checked
+        .diagnostics
+        .iter()
+        .all(|d| d.code.as_str() != "L1002"));
+}

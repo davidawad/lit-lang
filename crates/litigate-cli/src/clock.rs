@@ -456,6 +456,47 @@ counting nourl cite \"XYZ 6(a)\"
     }
 
     #[test]
+    fn a_designated_due_date_is_the_trigger_argument_rolled() {
+        let pkg = package(&|d| {
+            d.designated = Some(hir::Designated {
+                param: 1,
+                name: "due".into(),
+            });
+        });
+        let on = |designated: &str| {
+            let action = expr(ExprKind::Call {
+                callee: "Served".into(),
+                args: vec![
+                    expr(ExprKind::Literal {
+                        value: Value::Variant("Document::complaint".into()),
+                    }),
+                    expr(ExprKind::Literal {
+                        value: Value::Date(designated.into()),
+                    }),
+                ],
+            });
+            let events = [MatterEvent::on("2025-03-03", &action)];
+            let clocks = Clocks::new(&[&pkg]);
+            due(
+                &clocks,
+                &clocks.scope(&[&pkg.manifest.name]),
+                &pkg,
+                "answer-period",
+                &events,
+                0,
+                None,
+            )
+            .map(|d| (d.designated, d.computed.due_date))
+        };
+        // A Saturday rolls to Monday; no service days are added.
+        assert_eq!(
+            on("2025-04-05"),
+            Ok((Some("2025-04-05".to_owned()), "2025-04-07".to_owned()))
+        );
+        assert!(on("2025-03-10").is_err_and(|e| e.contains("earlier than the least time")));
+    }
+
+    #[test]
     fn known_at_hides_versions_recorded_later() {
         let pkg = package(&|d| d.counting = "late".into());
         assert!(due_on(&pkg, "answer-period", "2025-03-03", None).is_ok());

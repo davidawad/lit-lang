@@ -212,3 +212,13 @@ fn nesting_limit_is_reported_at_every_depth() {
         }
     }
 }
+
+#[test]
+fn docket_needs_a_number_to_be_a_keyword() {
+    // Without a number, `docket` is read as the event call's callee.
+    let bare = case("^1.0.0", "events { 2025-01-01 docket Answered(x) by a }\n");
+    let call = case("^1.0.0", "events { 2025-01-01 docket(x) by a }\n");
+    let parsed = parse(&call, FileKind::Case);
+    assert!(parsed.is_ok(), "{:?}", parsed.errors());
+    assert!(!parse(&bare, FileKind::Case).is_ok());
+}

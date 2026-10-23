@@ -148,6 +148,22 @@ pub fn governing(
         .filter(|&(j, e)| j == at || e.precedes(event))
         .map(|(_, e)| e.action)
         .collect();
+    let (n, version) = decide(world, (ti, t), key, &history)?;
+    Ok(Governing {
+        version,
+        via: Some((ti, n)),
+    })
+}
+
+/// The arm of transition `ti` that holds on `history`, and the version it
+/// selects: the `unless` arm that holds (arms holding together must agree),
+/// else `otherwise`.
+fn decide(
+    world: &World<'_>,
+    (ti, t): (usize, &Transition),
+    key: &Key,
+    history: &[&Expr],
+) -> Result<(usize, usize), Ungoverned> {
     let mut chosen: Option<(usize, usize)> = None;
     for (n, arm) in t.arms.iter().enumerate() {
         let Some(c) = &arm.unless else {
@@ -176,24 +192,16 @@ pub fn governing(
             _ => chosen = Some((n, version)),
         }
     }
-    let (n, version) = match chosen {
-        Some(c) => c,
-        None => {
-            let (n, arm) = t
-                .arms
-                .iter()
-                .enumerate()
-                .find(|(_, a)| a.unless.is_none())
-                .ok_or_else(|| {
-                    Ungoverned::Transition(format!("`{}` has no `otherwise` arm", t.meta.id))
-                })?;
-            (n, selected(world, ti, key, arm)?)
-        }
-    };
-    Ok(Governing {
-        version,
-        via: Some((ti, n)),
-    })
+    if let Some(c) = chosen {
+        return Ok(c);
+    }
+    let (n, arm) = t
+        .arms
+        .iter()
+        .enumerate()
+        .find(|(_, a)| a.unless.is_none())
+        .ok_or_else(|| Ungoverned::Transition(format!("`{}` has no `otherwise` arm", t.meta.id)))?;
+    Ok((n, selected(world, ti, key, arm)?))
 }
 
 /// The version (declaration index) `arm` of transition `ti` selects.

@@ -67,6 +67,24 @@ fn docket_order_table() {
             vec![FORFEIT_REOPEN, FORFEIT_LATE],
         ),
         (
+            "unordered: a move beside a removal",
+            vec![FORFEIT_LATE, "2010-01-04 Served(complaint, Mail) on d"],
+        ),
+        (
+            "ok: docket numbers growing with the dates",
+            vec![
+                "2010-01-04 docket 5 Served(complaint, Mail) on d",
+                "2010-01-08 docket 9 Answered(complaint) by d",
+            ],
+        ),
+        (
+            "out of order: consistent docket numbers written backwards",
+            vec![
+                "2010-01-08 docket 9 Answered(complaint) by d",
+                "2010-01-04 docket 5 Served(complaint, Mail) on d",
+            ],
+        ),
+        (
             "contradiction: a docket number falling with the date",
             vec![
                 "2010-01-04 docket 5 Served(complaint, Mail) on d",
@@ -137,6 +155,6 @@ fn the_docket_number_is_matter_hir() {
         &NoClock,
         Profile::Dev,
     );
-    let json = serde_json::to_value(&undocketed.case.map(|c| c.events)).unwrap_or_default();
+    let json = serde_json::to_value(undocketed.case.map(|c| c.events)).unwrap_or_default();
     assert!(json[0].get("docket").is_none(), "{json}");
 }

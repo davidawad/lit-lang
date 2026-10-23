@@ -5,7 +5,7 @@
 //! transitions of a world are a set, so load order picks none.
 mod cov_rules_support;
 mod legal;
-use cov_rules_support::{demo, edit, world};
+use cov_rules_support::{demo, edit, strip, world};
 use legal::table;
 use litigate_sema::hir::{Declaration, Expr, ExprKind, Type, Value};
 use litigate_sema::temporal::transition::Seq;
@@ -219,6 +219,39 @@ fn arms_that_both_hold_with_different_versions_govern_nothing() {
         outcome(&w, &events, 1),
         "Transition(\"arm selects unknown `p@2001-01-01`\")"
     );
+    // So is an `otherwise` naming none, when no `unless` arm holds.
+    let mut otherwise = demo(&(VERSIONS.to_owned() + both));
+    edit(&mut otherwise, |d| {
+        if let Declaration::Transition(t) = d {
+            t.arms[2].selects = "p@2001-01-01".into();
+        }
+    });
+    let w = world(&otherwise);
+    let events = [
+        MatterEvent::on("2016-11-20", &filed),
+        MatterEvent::on("2016-12-01", &filed),
+    ];
+    assert_eq!(
+        outcome(&w, &events, 1),
+        "Transition(\"arm selects unknown `p@2001-01-01`\")"
+    );
+}
+
+/// Without source spans, an overlap is reported at the `amends` clause's
+/// fallback, the declaration.
+#[test]
+fn an_overlap_without_spans_is_still_reported() {
+    let packs = strip(&demo(
+        &(VERSIONS.to_owned()
+            + "transition tr amends p@2016-12-01 { unless has_event(Ordered()) -> p@2009-12-01, unless has_event(Hearing(motion)) -> p@2016-12-01, otherwise -> p@2016-12-01 }\n"),
+    ));
+    let w = world(&packs);
+    let found = litigate_sema::precedence::check(&w, &litigate_sema::temporal::world::NoSource, 0);
+    let messages: Vec<&str> = found.iter().map(|d| d.message.as_str()).collect();
+    assert_eq!(
+        messages,
+        ["arms `p@2009-12-01` and `p@2016-12-01` of `tr` can both hold"]
+    );
 }
 
 #[test]
@@ -228,14 +261,17 @@ fn transition_arms_must_be_disjoint_table() {
             "{VERSIONS}transition tr amends p@2016-12-01 {{ {body}, otherwise -> p@2016-12-01 }}\n"
         )
     };
-    let events: String = (0..17).map(|i| format!("event E{i}()\n")).collect();
+    let events: String = (0..17)
+        .map(|i| format!("event E{i}()"))
+        .collect::<Vec<_>>()
+        .join("\n");
     let any = |r: std::ops::Range<usize>| {
         r.map(|i| format!("has_event(E{i}())"))
             .collect::<Vec<_>>()
             .join(" || ")
     };
     let wide = format!(
-        "{events}{}",
+        "{events}\n{}",
         arms(&format!(
             "unless {} -> p@2009-12-01, unless {} -> p@2016-12-01",
             any(0..9),

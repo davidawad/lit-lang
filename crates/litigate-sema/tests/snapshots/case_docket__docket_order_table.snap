@@ -26,6 +26,11 @@ expression: got
         "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
         "trace Took Answered(complaint) alpha::respond -> alpha::answered via alpha::answer",
     ],
+    "ok: docket numbers growing with the dates": [
+        "13:3 L3009 cannot count deadline `court-period` for this event\n    note @12:3: `court-period` runs 5 court days from `Served(complaint, Mail)` on 2010-01-04 under `ac@2009-12-01`\n    note: no clock library is loaded to run counting rule `ac`",
+        "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
+        "trace Took Answered(complaint) alpha::respond -> alpha::answered via alpha::answer",
+    ],
     "ok: removals commute undocketed": [
         "ok: start alpha::intake",
         "trace Removed Forfeited(\"late\") alpha::intake -> alpha::intake",
@@ -42,11 +47,22 @@ expression: got
         "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
         "trace Took Answered(complaint) alpha::respond -> alpha::answered via alpha::answer",
     ],
+    "out of order: consistent docket numbers written backwards": [
+        "12:3 L3009 cannot count deadline `court-period` for this event\n    note @13:3: `court-period` runs 5 court days from `Served(complaint, Mail)` on 2010-01-04 under `ac@2009-12-01`\n    note: no clock library is loaded to run counting rule `ac`",
+        "13:3 L4001 events must be in docket order: 2010-01-04 docket 5 comes after 2010-01-08 docket 9\n    note: replay processes events by date, then docket number\n    fix @12:3-13:51 MachineApplicable: \"2010-01-04 docket 5 Served(complaint, Mail) on d\\n  2010-01-08 docket 9 Answered(complaint) by d\"",
+        "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
+        "trace Took Answered(complaint) alpha::respond -> alpha::answered via alpha::answer",
+    ],
     "out of order: dates first, docket numbers then": [
         "12:3 L3009 cannot count deadline `court-period` for this event\n    note @13:3: `court-period` runs 5 court days from `Served(complaint, Mail)` on 2010-01-04 under `ac@2009-12-01`\n    note: no clock library is loaded to run counting rule `ac`",
         "13:3 L4001 events must be in docket order: 2010-01-04 comes after 2010-01-08 docket 9\n    note: replay processes events by date, then docket number\n    fix @12:3-13:42 MachineApplicable: \"2010-01-04 Served(complaint, Mail) on d\\n  2010-01-08 docket 9 Answered(complaint) by d\"",
         "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
         "trace Took Answered(complaint) alpha::respond -> alpha::answered via alpha::answer",
+    ],
+    "unordered: a move beside a removal": [
+        "13:3 L4001 `Forfeited(\"late\")` and `Served(complaint, Mail)` on 2010-01-04 need distinct `docket` numbers to be ordered\n    note: events of one date are ordered by docket number, never by source order\n    note: only events that elect or remove options commute and may share a date undocketed",
+        "trace Removed Forfeited(\"late\") alpha::intake -> alpha::intake",
+        "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
     ],
     "unordered: a removal beside a move": [
         "13:3 L4001 `Served(complaint, Mail)` and `Forfeited(\"late\")` on 2010-01-04 need distinct `docket` numbers to be ordered\n    note: events of one date are ordered by docket number, never by source order\n    note: only events that elect or remove options commute and may share a date undocketed",

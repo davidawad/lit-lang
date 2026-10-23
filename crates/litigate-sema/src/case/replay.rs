@@ -84,6 +84,11 @@ pub(super) fn point(e: &Event) -> Seq {
     e.docket.map_or(Seq::Unsequenced, Seq::Docket)
 }
 
+/// Whether `a` and `b` share a date that the docket does not order.
+fn unordered(a: &Event, b: &Event) -> bool {
+    a.date == b.date && !before(a, b) && !before(b, a)
+}
+
 /// Whether `a` happened before `b` (see [`MatterEvent::precedes`]).
 fn before(a: &Event, b: &Event) -> bool {
     fn at(e: &Event) -> MatterEvent<'_> {
@@ -239,23 +244,21 @@ impl<'c, 'g> Cx<'c, 'g> {
                         .note("a docket number grows with the date it is entered on"),
                     );
                 }
-                _ if a.date == b.date && !before(a, b) && !before(b, a) => {
-                    if !(self.commutes(a) && self.commutes(b)) {
-                        out.push(
-                            error(
-                                C::InvalidCaseEvent,
-                                self.spans.event(j, |e| e.date.as_ref(), self.id()),
-                                format!(
-                                    "`{}` and `{}` on {} need distinct `docket` numbers to be ordered",
-                                    display(&a.action),
-                                    display(&b.action),
-                                    a.date
-                                ),
-                            )
-                            .note("events of one date are ordered by docket number, never by source order")
-                            .note("only events that elect or remove options commute and may share a date undocketed"),
-                        );
-                    }
+                _ if unordered(a, b) && (!self.commutes(a) || !self.commutes(b)) => {
+                    out.push(
+                        error(
+                            C::InvalidCaseEvent,
+                            self.spans.event(j, |e| e.date.as_ref(), self.id()),
+                            format!(
+                                "`{}` and `{}` on {} need distinct `docket` numbers to be ordered",
+                                display(&a.action),
+                                display(&b.action),
+                                a.date
+                            ),
+                        )
+                        .note("events of one date are ordered by docket number, never by source order")
+                        .note("only events that elect or remove options commute and may share a date undocketed"),
+                    );
                 }
                 _ => {}
             }

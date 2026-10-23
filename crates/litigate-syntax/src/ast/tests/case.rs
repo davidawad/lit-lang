@@ -224,3 +224,20 @@ fn blocks_expose_keywords_records_and_observations() {
     assert_eq!(observation.node().map(|r| r.text()).as_deref(), Some("n"));
     assert_eq!(observation.counts().map(|r| r.fields().len()), Some(2));
 }
+
+#[test]
+fn docket_is_a_keyword_only_before_a_number() {
+    // `docket` not followed by a number is the event call's callee.
+    let file = matter("events { 2025-01-01 docket(x) by acme }\n");
+    let event = &file.events()[0];
+    assert!(event.docket().is_none());
+    let callee = event.call().and_then(|c| c.callee()).map(|r| r.text());
+    assert_eq!(callee.as_deref(), Some("docket"));
+    // A number missing after `docket` leaves no docket and no call.
+    let parsed = parse_case(&format!(
+        "{HEAD}events {{ 2025-01-01 docket Answered(x) by acme }}\n"
+    ));
+    assert!(!parsed.is_ok());
+    let file = parsed.case_file().expect("case root");
+    assert!(file.events()[0].docket().is_none());
+}

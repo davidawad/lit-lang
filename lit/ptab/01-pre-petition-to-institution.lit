@@ -15,9 +15,11 @@ import ptab.trial-to-appeal.{ settlement-decision }
 
 import ptab.{
   ComplaintServed,
+  FilingDateAccorded,
   FilingDateNoticed,
   IprPetitionFiled,
   PetitionCorrected,
+  PetitionDocketed,
   PgrPetitionFiled,
   PreliminaryResponseFiled,
   PreliminaryResponseWaived,
@@ -114,6 +116,7 @@ state ipr-petition-filed: "IPR Petition Filed" by office cite 35 U.S.C. §311(a)
   group petition-group
   note "IPR petition must identify each claim, ground(s), and provide claim charts with specific limitations mapped to prior art. Word limit of 14,000 (37 CFR 42.24(a)(1)(i)) is strict — failure to comply is grounds for rejecting the filing date. Grounds limited to §§102/103 (patents and printed publications only)."
   _ "Office reviews petition compliance" -> petition-threshold-review {
+    event PetitionDocketed()
     authority cite 37 CFR §42.104(c); 37 CFR §42.106(a)
     duration { min 3.days, mode 10.days, max 21.days }
     note "Duration: estimate, the Office's own administrative compliance check before according a filing date."
@@ -130,6 +133,7 @@ state pgr-petition-filed: "PGR Petition Filed" by office cite 35 U.S.C. §321(a)
   group petition-group
   note "PGR is available only within 9 months of patent grant (35 U.S.C. §321(e)) and only for AIA patents. Word limit of 18,700 (37 CFR 42.24(a)(1)(ii)). Broader grounds available than IPR (101, 102, 103, 112) but only one PGR window exists per patent."
   _ "Office reviews petition compliance" -> petition-threshold-review {
+    event PetitionDocketed()
     authority cite 37 CFR §42.204(c); 37 CFR §42.206(a)
     duration { min 3.days, mode 10.days, max 21.days }
     note "Duration: estimate, the Office's own administrative compliance check before according a filing date."
@@ -145,6 +149,7 @@ decision petition-threshold-review: "Office Reviews Petition Compliance" by offi
   note "Office examines fee payment, form/word-count compliance, and threshold sufficiency (e.g., whether claim charts actually chart the claims) before according a filing date. 42.106(b) allows minor-defect correction; material defects result in filing-date rejection. Modeled as one shared node — the time-bar branch is realistically IPR-specific, since a PGR petition cannot structurally be filed outside its own 9-month window. Tagged `fact`: whether THIS petition is time-barred under 35 U.S.C. §315(b) is a matter fact knowable from the petitioner's own service-of-complaint history, not real chance — see docs/PACK_SCHEMA.md#matter-facts-v2 and the mixed-node extension it documents (this node also has an applicant choice edge, correct-and-refile)."
   tags [fact]
   _ "Petition meets fee/word-count/form" -> petition-filing-date-accorded p 0.97 {
+    event FilingDateAccorded()
     authority cite 37 CFR §42.106(a); 37 CFR §42.206(a)
     note "Prior for the fact-tagged node's default (unset scenario.facts) fallback: most petitions aren't §315(b) time-barred. Teaching estimate, not a sourced PTAB statistic -- basis: estimate."
   }

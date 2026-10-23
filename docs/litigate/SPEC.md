@@ -1218,3 +1218,223 @@ starts at `time-barred`, follows the `not-barred` fact to `respond`, treats
 2025-03-20, so the scenario `start` is `frcp-rule12-example::mtd-ruling`.
 The two tests in `rule12.lit` pass (2025-03-24; 2025-03-27 with mail
 service).
+
+## 13. Type-system classification of checks (type system v2 audit)
+
+Status: analysis for epic lg-962 (bead lg-962.1). Nothing here changes
+compiler behaviour; §§1-12 stay normative for the current compiler. This
+section classifies every §7 obligation, every registered diagnostic code
+(§9.1) and every SPEC rule that has no code of its own, so the v2 beads
+(lg-962.3 onwards) can move each one into the type checker or keep it a
+whole-program check on purpose.
+
+### 13.1 Classes and the decidability budget
+
+- **(a) Types.** Rejected by ordinary syntax-directed typing: closed
+  nominal ADTs (§5.2), exhaustive `match`, phantom indices drawn from a
+  closed finite set (`Days<U>`, `Money<Cur>`, a deadline's direction),
+  sorts that make an illegal combination unrepresentable (a sum type in
+  place of two independent flags), and the grammar itself. No arithmetic
+  reasoning. Includes checks done today by the lexer or parser (L0xxx):
+  the grammar is the term language, so these are not type obligations
+  but are listed for completeness.
+- **(b) Decidable refinement or indexed type.** A judgement
+  `Γ ⊢ e : {v: B | φ}`, or a type indexed by a compile-time value, where
+  `φ` and the index live in this fixed fragment and nowhere else:
+  - quantifier-free linear arithmetic over exact rationals and integers
+    (QF_LRA / QF_LIA), with dates as integer day numbers and money as
+    integer minor units;
+  - propositional logic over `has_event` atoms and boolean constants
+    (the §5.4 transition and §5.5 exception condition language);
+  - finite-set membership, equality and cardinality over enum variants,
+    declared names, authority levels and service methods;
+  - the authority order as a fixed partial order on type-level
+    constants (DESIGN §4.2: the one admitted subtyping).
+
+  Γ holds only the declaration's own signature and the signatures (never
+  the bodies) of the declarations it names, plus the *family* the
+  resolver already groups by name: the versions of one declaration, or
+  the exceptions on one target. No transitive closure, fixpoint or
+  execution. Because litigate values are compile-time constants, most
+  (b) predicates are ground and are discharged by the exact evaluator
+  (§6) with no solver; only predicates over holes (`?`) and `has_event`
+  atoms go to the SMT backend of lg-962.3. Every query is finite and
+  quantifier-free, so every type check terminates. Products of two
+  non-constant terms (`p * q` with both holes) are outside the fragment
+  and stay an L2006 check at evaluation.
+- **(c) Global whole-program check.** Needs one of: reachability, cycle
+  detection or another fixpoint over a graph; day-by-day activity over a
+  whole package (supersession, revival, claimants); execution (tests,
+  replay, counting through holiday calendars); an artefact outside the
+  source (L0 text, `Lit.lock` digests, the engine's loader or expression
+  parser, an expected JSON file, the filesystem); or the profile. The
+  reason column names which.
+
+Every row keeps its code. A check moved into types still reports the
+same `DiagnosticCode`, against the same §7 obligation, with the same span
+and fixes (DESIGN §8), so `litigate explain`, `litigate fix` and the
+VerificationReport contract do not change; only the phase that finds it
+does. A refinement failure names the violated predicate and the ground
+values (or, under SMT, a counter-model) in a note. Each (a) or (b) row
+that a v2 bead moves gets negative tests showing the type checker rejects
+it, and `just cov-litigate` stays at 100% (bead lg-962). Kani, Verus,
+mutation testing and mechanized metatheory are out of scope here
+(lg-litigate-epic-tuq.38).
+
+### 13.2 Obligations (§7)
+
+| # | Obligation | Class | Target type form (b) / reason (c) / mechanism (a) |
+|---|---|---|---|
+| O1 | `well-typed` | a+b | Union of the L2xxx rows (C18-C32) and the codes §7 counts here (L0xxx, L1xxx, L3009, L6xxx): mostly (a); arithmetic domain (L2006), distributions (L2003), probability range (L2008), `fact` placement and rule shapes (L2007) are (b). |
+| O2 | `cite-resolves` | c | Needs the vendored L0 text and the manifest's source bindings: resolving a pinpoint to a heading span reads a file. |
+| O3 | `effective-disjoint` | b | Family refinement on the versions of one declaration: `Versions<d> = [Interval]` with `∀ i<j. to_i ≤ from_j ∨ to_j ≤ from_i` (QF_LIA, pairwise, finite). lg-962.3. |
+| O4 | `effective-covered` | c | Coverage minus declared gaps depends on which other declarations `supersedes`/`revives` this one, transitively and bitemporally (§5.4): activity over the whole package. |
+| O5 | `precedence-acyclic` | c | Cycle detection over the authority chains (with dependencies), the relation graph, and default/exception references. |
+| O6 | `delegation-respected` | b | Per declaration (bead lg-962.4 comment: each delegating declaration carries `delegable_to`): see C36. |
+| O7 | `exceptions-ordered` | b | Family refinement on the exceptions of one target: see C37. |
+| O8 | `dist-exact` | b | `Dist<E> = {m: E → Q | ∀e. m(e) ≥ 0 ∧ Σ_e m(e) = 1}`, total over `E`; a chance node's edges are `Dist<Edges(n)>`. Holes make it an SMT query (`Σ known ≤ 1`). lg-962.3. |
+| O9 | `graph-exits` | a | Node kind index: the body of a non-terminal node is `NonEmpty<Edge>`. Checked per version of the node. |
+| O10 | `graph-reachable` | c | Graph reachability from `start` and `entry` nodes over the lowered graph. |
+| O11 | `deadline-satisfiable` | c | Needs reachability (only reachable nodes) and due-date windows computed through counting rules and holiday calendars for some trigger date. |
+| O12 | `tests-pass` | c | Execution of `test` blocks (counting through calendars). |
+| O13 | `case-replay` | b+c | Event order and posture typestate are (b) (C47, C48); deadline timing, stakes and start agreement are (c) (C49, C51, C55). |
+| O14 | `holes` | a | A hole is a distinct inhabitant `Hole<T>` of each field type; listing them is a traversal of the typed tree. |
+| O15 | `rule-without-test` | c | Which deadlines and counting rules a test exercises is a whole-package relation between `test` bodies and declarations. |
+
+### 13.3 Diagnostic codes (§9.1)
+
+"Today" names the crate (`sema`, `verify`, `lower`, `syntax`, `cli`,
+`import`) that emits the code. A code with several distinct conditions
+gets one row per condition when the conditions classify differently.
+
+| # | Code: condition (SPEC §) | Today | Class | Target type form (b) / reason (c) / mechanism (a) |
+|---|---|---|---|---|
+| C1 | L0001 unexpected token (§3) | syntax | a | Grammar. |
+| C2 | L0002 unterminated literal (§2) | syntax | a | Grammar. |
+| C3 | L0003 invalid token, BOM, invalid UTF-8 (§2) | syntax, sema | a | Lexical grammar. |
+| C4 | L0004 invalid date (§2) | syntax, sema, lower | a | `Date` has only valid proleptic Gregorian inhabitants; the literal is a smart constructor. |
+| C5 | L0005 `_` placement, unknown suffix, non-integral day amount (§2) | syntax, sema | a | Lexical grammar; `Days<U>` carries an integer (decimal only in `duration`, an elapsed-time estimate). |
+| C6 | L0006 dangling doc comment (§2) | syntax | a | Grammar. |
+| C7 | L1001 duplicate name in a namespace; local shadows import (§4.3) | sema | a | Scope formation: a namespace is a finite map; versions share a name by construction (§5.4). |
+| C8 | L1002 unresolved name, enum variant, option edge, patch edge (§4.3, §5.6, §8.4) | sema, lower | a | Name resolution is part of typing: every `Ref` has a declaration type. The cross-package forms (`pack::edge`, a patch's base edge) read only the referenced package's signature. |
+| C9 | L1003 import cycle (§4.3) | sema | c | Cycle detection over the module import graph. |
+| C10 | L1004 manifest: unknown/missing/ill-typed key (§4.1) | sema | a | Manifest is a closed record (`deny_unknown_fields`). |
+| C11 | L1004 manifest: some but not all pack-identity keys; links manifest with nodes (§4.1) | sema | a | `Manifest = Pack {pack_id, forum, authority, title, roles} \| Links {}`; a links package's items are a sort without `NodeDecl`. |
+| C12 | L1005 `package` declaration disagrees with `Lit.toml` (§4.1) | sema | b | Singleton index: the module is typed `Module<name, forum, authority>` and must equal the manifest's constants. |
+| C13 | L1006 import or `uses` names an undeclared dependency (§4.3) | sema | b | Finite-set membership: `import m` requires `pkg(m) ∈ Deps ∪ {self, core}`. |
+| C14 | L1007 missing or stale `Lit.lock` (§4.2) | sema, cli | c | Compares SHA-256 digests of files on disk. |
+| C15 | L1008 not exactly one `start` per package; case start invalid (§4.3) | sema | c | A count over every module of the package; no single declaration owns it. Becomes (a) only if `start` moves into `Lit.toml` or the `package` declaration (a syntax change, out of scope). |
+| C16 | L1009 actor not in `[package.roles]` (§4.3) | sema | a | `Role` is a closed enum generated from `[package.roles]` (plus `either`). |
+| C17 | L1010 cite unbound (§4.3, §7) | verify | c | Needs the L0 file to locate the pinpoint heading (O2). The prefix-binding half alone is (b) finite-set membership over `cite_prefixes`. |
+| C18 | L2001 type mismatch (§6) | sema, lower, verify | a | Nominal typing. |
+| C19 | L2001 deadline direction: versions disagree; `within d` with backward `d` (§5.5) | sema | a | Phantom direction index `Deadline<Fwd\|Bwd>`; a declaration family has one signature; `within : Deadline<Fwd>`. |
+| C20 | L2002 operation not in the §6 table, IO, float, cast, overloading | sema | a | Closed operator signatures. |
+| C21 | L2003 `Dist` value not total or not summing to 1; `given` on a zero-mass subset (§6) | sema, verify | b | `Dist<E>` as O8; `given(d, S)` requires `Σ_{v∈S} d(v) > 0` (QF_LRA, ground). |
+| C22 | L2003 chance node probabilities do not sum to 1 (§5.1) | sema, verify | b | O8 with `E = Edges(n)`, excluding the self edge (C32). |
+| C23 | L2004 mixed day units or currencies (§6) | sema | a | Phantom indices `Days<U>`, `Money<Cur>`; no conversion operator. |
+| C24 | L2005 non-exhaustive match or unreachable arm (§5.2) | sema | a | Exhaustiveness over closed sums. |
+| C25 | L2006 i64/u64 overflow (§6) | sema | b | `{v: Q \| -2^63 ≤ num(v) < 2^63 ∧ 0 < den(v) < 2^64}`; ground for constants. |
+| C26 | L2006 division by zero; `%` on non-integers; `Days`/`Money` scaled to a non-integral result (§6) | sema | b | Divisor `{n \| n ≠ 0}`; `%` operands `Int = {n: Number \| n ∈ Z}`; `Days<U> * n : {r \| r ∈ Z}`; `Money * n : {r \| r·100 ∈ Z}`. Linear because one operand is a literal; two holes multiplied leave the fragment (13.1). |
+| C27 | L2006 invalid date from arithmetic; money with more than 2 minor digits (§2, §6) | sema | b | `Date` arithmetic result `{d \| valid(d)}` over day numbers; money literal `{v \| v·100 ∈ Z}`. |
+| C28 | L2006 probability arithmetic leaves `[0,1]` (§6) | sema | b | `Probability = {q: Q \| 0 ≤ q ≤ 1}`; `+ - * /` results checked against it. lg-962.3. |
+| C29 | L2007 field unknown, duplicated, or wrong for the declaration kind; `outcome`/`payoff` off a terminal; `undercuts` with `=>`; `replaces` outside links (§5.1, §5.5, §8.4) | sema, lower | a | One record type per declaration kind (node kind index on fields: `Node<Terminal>` alone has `payoff`); `Exception = Rebut {…, then} \| Undercut {…}`; `replaces` exists only in the links sort. |
+| C30 | L2007 `fact` tag on a node with no `p` edge (§5.1) | sema | b | Indexed by node kind and edge set: `fact` requires `kind = chance ∨ ∃e ∈ Edges(n). has_p(e)` (finite). |
+| C31 | L2007 rule shapes: `duty` without a deadline, `power` without a decision, `liability` without a node or with a deadline (§5.5) | sema | b | Cardinality refinement on the rule body: `Duty: {items \| #deadline ≥ 1}`, `Power: {#decision ≥ 1}`, `Liability: {#node ≥ 1 ∧ #deadline = 0}`. |
+| C32 | L2008 `p` outside `[0,1]`; `p` on a chance node's self edge; `p` missing at a chance node (§5.1) | sema | a+b | Range is (b) `Probability` (C28). Self edge and missing `p` are (a): a chance node's edges are `Edge<Chance>`, whose target is `Node \ {n}` for the distribution and whose `p` field is required (a hole inhabits it in `dev`). |
+| C33 | L3001 versions of one declaration overlap (§5.4) | sema | b | O3. |
+| C34 | L3002 undeclared gap in version coverage (§5.4) | sema | c | O4. |
+| C35 | L3003 two claimants left unordered (§5.5) | sema | c | Claimants are every declaration naming the target in any relation, across the package and its dependencies, compared day by day over active versions after supersession; a whole-package fixpoint over activity. |
+| C36 | L3004 lower-authority `override` without delegation; `delegable_to` not strictly below own level (§5.5) | sema | b | Indexed by authority: B's signature carries `Delegable<L ⊆ Levels>` per version. `A override B` checks `auth(A) ≥ auth(B) ∨ ∀v ∈ Versions(B). overlaps(v, A) → auth(A) ∈ delegable(v)` (finite set, QF_LIA overlap). `delegable_to X` requires `X < auth(self)` in the fixed order. Per declaration, so no global search. |
+| C37 | L3005 exceptions on one target neither disjoint nor prioritized (§5.5) | sema | b | Family refinement: for each pair on a target, `UNSAT(C_i ∧ C_j) ∨ priority_i ≠ priority_j` (propositional SAT over `has_event` atoms; small and finite). |
+| C38 | L3006 type alias, default or exception refers to itself (§5.2) | sema | c | Transitive self-reference is a cycle in the reference graph. (A direct `type T = T` alone is (a).) |
+| C39 | L3006 authority order, declared wins, supersession, default/exception references cyclic (§5.5) | sema | c | O5. |
+| C40 | L3006 `B@E supersedes B@D` with `D ≥ E` (§5.4) | sema | b | Version index order: `supersedes : Version<d, E> → Version<d, D> → {D < E}`. |
+| C41 | L3007 no version in force at the build or event date; `@date` names no version (§4.3, §5.4) | sema, lower | b+c | Plain selection is (b): `d@t` requires `∃v. from_v ≤ t < to_v ∧ known_v ≤ K` (finite disjunction, QF_LIA). The supersession-aware form (a superseded version is not in force) is (c), as C34. |
+| C42 | L3007 override or exception never in force alongside its target (§5.5) | sema | b | Interval refinement: `window(A) ∩ ∪ window(Versions(B)) ≠ ∅` (QF_LIA). |
+| C43 | L3008 transition arms: not exactly one trailing `otherwise`; condition outside the allowed fragment (§5.4) | sema | a | `Arms = [Unless] ++ Otherwise`; conditions have their own type `Cond` with only `has_event`, booleans, `! && \|\| == !=`. |
+| C44 | L3008 arm selects neither `d@D` nor the version it replaces; `d@D` replaces none; two transitions on one version (§5.4) | sema | b | Version indices: each arm's target `∈ {d@D, pred(d@D)}` and `∃ pred(d@D)`; uniqueness is a family refinement over transitions per amended version (`# = 1`). |
+| C45 | L3009 counting: anchor/exclude combination; unknown anchor, roll kind or unit; duplicate service method; `short_period` unit (§5.3) | sema, lower | a | `Anchor = TriggerDay {exclude_trigger_day} \| NextBusinessDay` makes the illegal combinations unrepresentable; roll kinds and units are enums; service extensions are a map keyed by the closed `ServiceMethod` enum. |
+| C46 | L3009 `N.hours` without `allow_hours`; backward deadline on a `next_business_day` rule; `nth` outside 1-4; unknown calendar (§5.3, §5.5) | sema | b | `Counting<hours: Bool, anchor: Anchor>` as indices: an hours deadline needs `hours = true`; `Deadline<Bwd>` needs `anchor ≠ NextBusinessDay`; `nth: {n \| 1 ≤ n ≤ 4}`; calendar is a resolved `Ref` (a). |
+| C47 | L4001 case events out of source order (§5.6) | sema | b | Events list `{es \| ∀i. date_i ≤ date_{i+1}}` (QF_LIA, ground); the fix is unchanged. |
+| C48 | L4001 event matches no edge or several; matches only removed edges; removal without `cite`; removal repeated (§5.6) | sema | b | Typestate (DESIGN §4.5) as an indexed type: the matter is `Case<n, R>` (posture node `n`, removed edge set `R`); an event `e` types only as `Case<n, R> → Case<to(edge), R>` for the unique edge of `n` not in `R` whose pattern it matches, or as timing-only when it is the trigger of a deadline in force on its date (C41). Finite and ground: one step per event. A removing event without `cite` is (a) (the removal constructor requires it). |
+| C49 | L4002 event misses its deadline without an excusing event (§5.6) | sema | c | The due date comes from counting through holiday calendars and inaccessible days from the latest matching trigger: execution, not a type. |
+| C50 | L4003 `facts` node not a `fact` chance node or edge not its own (§5.6) | sema | b | `facts {n: Edges(n)}` with `n : Node<Chance, fact>` (index on the referenced node's signature). |
+| C51 | L4004 reachable terminal without a stake or `unvalued` (§5.6) | sema, verify | c | Reachability from the replayed start. `unvalued` being an error in `strict` is a profile rule (§7), not a type. |
+| C52 | L4005 unknown party actor, duplicate party id, unknown perspective party or actor (§5.6) | sema, lower | a | `Actor` is the closed enum of the primary package's actors; `parties` is a map; `perspective` takes a party id or a map over `Actor`. |
+| C53 | L4006 belief not on a chance node or edge not its own (§5.6) | sema | b | As C50 with `n : Node<Chance>`. |
+| C54 | L4007 analysis field unknown, duplicated by a dedicated block, or ill-shaped (§8.3) | sema, lower | a | Type the `analysis` record against litgraph `Scenario` minus the dedicated fields (today serde at lowering does it). |
+| C55 | L4008 explicit `start` disagrees with the replayed node (§5.6) | sema | c | Depends on the replay result (C48, C49). |
+| C56 | L5001 verification failed (generic) | none | n/a | Registered, never emitted. Kept so codes are never reused (§9.1). |
+| C57 | L5002 hole under `strict` (§7) | verify | a | `strict` types fields without the `Hole<T>` inhabitant (O14). |
+| C58 | L5003 unreachable node | verify | c | O10. |
+| C59 | L5004 non-terminal without an exit | verify | a | O9. |
+| C60 | L5005 mandatory deadlines unsatisfiable | verify | c | O11. |
+| C61 | L5006 test failed | verify | c | O12. |
+| C62 | L6001 business days in an edge deadline; `observed next_day`; non-calendar service days; service method not an engine method; rule without `include_last_day` or both roll kinds (§8.1, §8.2) | lower, sema | a | Target-capability sorts: the edge `deadline` field is `Days<CalendarDays\|CourtDays>`; the lowering-target counting type requires `include_last_day` and `{weekend, legal_holiday} ⊆ roll`; `ServiceMethod` is the engine's closed enum; `Observance` without `next_day` in the engine sort. |
+| C63 | L6001 manifest `counting` names an undeclared rule while some are declared; cite with no bound `url` (§8.2) | lower | b | Finite-set membership over the package's counting declarations and its bound sources. |
+| C64 | L6001 clock fragment rejected by `ClockLibrary::from_json`; patching instance without its base pack loaded; patch fails `RawEdge` (§8.2, §8.4) | lower | c | Runs the engine's own loader or depends on the set of packs in the build. |
+| C65 | L6002 import has no exact spelling; generated output differs from the expected document (§8.6, §8.7) | import, cli | c | Compares against an external JSON document. |
+| C66 | L6003 embedded litgraph expression does not parse (§8.3, §8.4) | lower | c | A foreign language checked by litgraph's parser. Becomes (a) only if litigate types the engine expression language itself. |
+| C67 | L6004 value has no finite binary64 (§8.5) | lower | b | `{v \| \|v\| ≤ f64::MAX}`; implied by C25 for i64/u64 rationals, so it guards future wider numerals. |
+| C68 | L6005 output not written (§8.6) | lower | c | Filesystem effect, not a property of the source. |
+| C69 | L9001 deadline or counting rule without a test (§7) | verify | c | O15. |
+| C70 | L9002 hole present (§7) | verify | a | O14. |
+| C71 | L9003 anonymous edge (§5.1) | verify, cli | a | Syntactic: an `_` edge has no id in the `Ref` namespace. |
+| C72 | L9004 non-canonical format (§10) | syntax, cli | c | Whole-file comparison with the formatter's output, not a typing property. |
+| C73 | L9005 unused declaration or import | none | c | Registered, never emitted; when added it needs whole-package use analysis. |
+
+### 13.4 SPEC rules with no code of their own
+
+These rules hold today by construction or are folded into a code above;
+they are listed so the v2 type system keeps them.
+
+| # | Rule (SPEC §) | Class | Target type form (b) / reason (c) / mechanism (a) |
+|---|---|---|---|
+| R1 | No null, implicit conversion, subtyping or recursion (§5.2) | a | No `Null` type; no coercion rules; authority order is the only subtyping (DESIGN §4.2). |
+| R2 | Event patterns in triggers and edge `event` may omit trailing arguments; `given`, case events and `has_event` arguments are complete (§5.2) | a | Two types per event: `Pattern<E>` (prefix) and `Event<E>` (complete). |
+| R3 | `Money<Cur>` is integral minor units; `Money / Money` is `Number` (§6) | a | Representation plus the operator table. |
+| R4 | `Probability` is a reduced rational (§6) | a | Canonical representation; `Probability` refinement is C28. |
+| R5 | Field types: `p`, `effort`, `cost`/`payoff`, `duration`, `deadline`, attrs (§6) | a | Field signatures per declaration kind. |
+| R6 | `duration` satisfies `min ≤ mode ≤ max` (§6) | b | `{(a, m, b) \| a ≤ m ≤ b}` (QF_LRA, ground). |
+| R7 | Deadline amounts are non-negative day counts (§5.3) | b | `Days<U> = {n: Int \| n ≥ 0}` for deadline windows. lg-962.3. |
+| R8 | Intervals are half-open `[from, to)` with `from < to` (§5.4) | b | `Interval = {(f, t) \| f < t}` (`..` is `t = +∞`). lg-962.3. |
+| R9 | A declaration's own `effective`/`known_at` beats its rule's, which beats the package's (§5.4) | a | Elaboration order of defaults; no check can fail. |
+| R10 | Selection at `(as_of, known_at)` (§5.4) | b | As C41. |
+| R11 | `has_event` in a transition is evaluated against events on or before the evaluated one; false outside a case (§5.4) | a | Semantics of the `Cond` type (C43). |
+| R12 | Supersession and revival semantics, bitemporal (§5.4) | c | O4. |
+| R13 | Precedence stages and tie-breaks (§5.5) | c | C35. |
+| R14 | Exception evaluation: target condition must hold; highest priority wins (§5.5) | a | Semantics; the ordering it needs is C37. |
+| R15 | Option-removing event recognition: type named `Struck`/`Forfeited`/`Withdrawn` with `option: String` (§5.6) | a | Should become a declared marker on the event type (a nominal `Removal` kind) rather than a name convention; then `option` is typed `EdgeRef`, making the L1002 there (C8) a type error. |
+| R16 | Posture is replayed, never asserted; HIR `removals` derived (§5.6) | a | No source syntax for posture or removals. |
+| R17 | `::` only in links packages, `.case` files and instance fields (§4.3) | a | Two `Ref` sorts per file kind. |
+| R18 | `analysis` cannot set `start`, `perspective`, `facts`, `payoffs`, `observe` (§8.3) | a | C54. |
+| R19 | `stakes` values are money or `unvalued` (§3.2) | a | Grammar. |
+| R20 | A `power` rule contains the decisions it grants; a `liability` the consequence edges (§5.5) | b | C31. |
+| R21 | `service_extension` applies only to forward counting (§5.3) | a | The service step exists only for `Deadline<Fwd>`; a backward deadline ignores it by type. |
+| R22 | Typestate: a submission cannot be filed against a matter in a later stage (DESIGN §4.5) | b | C48. |
+| R23 | Each package lowers deterministically; node order is source order (§4.1, §8.6) | c | Whole-package property of the lowering, tested by `lit-sync-check`. |
+
+### 13.5 Summary
+
+Counting each row once by its primary class (a mixed row counts as its
+first class): obligations O1-O15 are 3 (a), 5 (b), 7 (c); codes C1-C73
+are 27 (a), 24 (b), 21 (c), one n/a; rules R1-R23 are 14 (a), 6 (b),
+3 (c).
+
+- The (c) rows share six reasons: graph reachability (O10, O11, C51,
+  C58, C60), cycle detection (O5, C9, C38, C39), whole-package activity
+  under supersession and precedence (O4, C34, C35, C41's second half),
+  execution through calendars (O11, O12, C49, C55, C61), aggregation over
+  every module of a package (C15, O15, C69, C73, R23), and external
+  artefacts or the profile (O2, C14, C17, C64-C66, C68, C72). None of
+  these fits the 13.1 fragment without a fixpoint or an IO step, so they
+  stay obligations.
+- The (b) rows lg-962.3 discharges first are the ones named in that
+  bead: `Probability` (C28, C32), `Interval` (R8), deadline amounts (R7),
+  `Dist<E>` (O8, C21, C22) and version disjointness (O3, C33). The rest
+  (C36 delegation, C37 exceptions, C44 transitions, C46 counting indices,
+  C47/C48 typestate) are ground or propositional and need no new solver
+  theory.
+- Two (c) rows can become (a) only through a syntax change, recorded for
+  review rather than proposed: C15 (`start` into the package header) and
+  C66 (type the engine expression language in litigate).

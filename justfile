@@ -129,6 +129,54 @@ wasm:
 wasm-smoke: wasm
     node -e "const m=require('./dist/wasm/node/litgraph_wasm.js'); const r=JSON.parse(m.handle(JSON.stringify({packs:['cofc'],op:{op:'solve'}}))); if(!r.ok){console.error(r);process.exit(1)} console.log('wasm smoke ok')"
 
+# --- typescript (packages/litigate-ts) ---------------------------------------
+# @litgraph/litigate-ts: types generated from the Rust schemas plus a typed
+# client over litgraph-wasm. Needs node >= 20 and npm (and, for ts-build /
+# ts-test, the wasm toolchain `just wasm` needs).
+
+ts_pkg := "packages/litigate-ts"
+# Generated, committed files; `ts-gen-check` fails when they are stale.
+ts_generated := ts_pkg + "/schema/litgraph.schema.json " + ts_pkg + "/src/generated/schemas.ts"
+
+# Install the package's pinned dev dependencies (package-lock.json).
+ts-install:
+    cd {{ts_pkg}} && npm ci --no-audit --no-fund
+
+# Regenerate the JSON Schema bundle from the Rust types, then the
+# TypeScript types from it.
+ts-gen: ts-install
+    cargo run -q -p litgraph-schema-bundle > {{ts_pkg}}/schema/litgraph.schema.json
+    cd {{ts_pkg}} && npm run --silent gen
+
+# CI gate: regenerate, then fail if the committed generated files differ.
+ts-gen-check: ts-gen
+    #!/usr/bin/env bash
+    set -euo pipefail
+    stale="$(git status --porcelain --untracked-files=all -- {{ts_generated}})"
+    if [ -n "$stale" ]; then
+      echo "$stale" >&2
+      git --no-pager diff --stat -- {{ts_generated}} >&2
+      echo "ts-gen-check: generated TypeScript types are stale; run \`just ts-gen\` and commit the result" >&2
+      exit 1
+    fi
+    echo "ts-gen-check: generated types are up to date"
+
+# Build litgraph-wasm into the package (wasm/node, wasm/web), then compile
+# the TypeScript to dist/. The package is ESM and wasm-bindgen's nodejs
+# target is CommonJS, so wasm/node gets its own package.json.
+ts-build: wasm ts-install
+    rm -rf {{ts_pkg}}/wasm
+    mkdir -p {{ts_pkg}}/wasm
+    cp -r dist/wasm/node dist/wasm/web {{ts_pkg}}/wasm/
+    echo '{"type": "commonjs"}' > {{ts_pkg}}/wasm/node/package.json
+    cd {{ts_pkg}} && npm run --silent build
+
+# Unit, type-level, and golden tests (every scenarios/*.json through wasm
+# against the native `litgraph` CLI built here).
+ts-test: ts-build
+    cargo build -q -p litgraph-cli
+    cd {{ts_pkg}} && LITGRAPH_BIN="$(cd ../.. && pwd)/target/debug/litgraph" npm test
+
 # --- nix ---------------------------------------------------------------
 
 nix-build:
@@ -142,7 +190,7 @@ nix-check:
 
 # The single CI entry point: fast, deterministic gates only. Coverage,
 # audit, and deny hit the network/build cache so they're last.
-ci: fmt-check lint lit-sync-check test doctest cov audit deny
+ci: fmt-check lint lit-sync-check ts-gen-check test ts-test doctest cov audit deny
     @echo "ci: all gates passed"
 
 clean:
@@ -218,15 +266,16 @@ lit-test:
 # from grammar.js must reproduce the committed src/ byte for byte, then the
 # corpus (test/corpus) and highlight (test/highlight) tests must pass. Uses a
 # `tree-sitter` on PATH when it is the pinned version, else npx (needs node).
+# (Named tree-sitter-test: the ts-* recipes belong to packages/litigate-ts.)
 ts_cli_version := "0.27.1"
-ts-test:
+tree-sitter-test:
     #!/usr/bin/env bash
     set -euo pipefail
     cd editors/tree-sitter-litigate
     if tree-sitter --version 2>/dev/null | grep -q " {{ts_cli_version}}"; then ts=(tree-sitter); \
     else ts=(npx --yes "tree-sitter-cli@{{ts_cli_version}}"); fi
     "${ts[@]}" generate
-    git diff --exit-code --stat -- src || { echo "ts-test: src/ is stale; commit the regenerated parser" >&2; exit 1; }
+    git diff --exit-code --stat -- src || { echo "tree-sitter-test: src/ is stale; commit the regenerated parser" >&2; exit 1; }
     "${ts[@]}" test
 
 # Editor modes (editors/{emacs,helix,nvim}): Emacs ERT batch suite, Helix

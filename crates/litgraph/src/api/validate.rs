@@ -18,7 +18,7 @@ use crate::model::{CompileOptions, Graph, LinkFile, Pack};
 use crate::scenario::{NamedScenario, Scenario, View};
 
 /// Outcome of validating one document.
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Validation {
     /// Detected (or requested) kind.
     pub kind: &'static str,

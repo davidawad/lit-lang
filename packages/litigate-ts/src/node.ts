@@ -1,0 +1,23 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Node entry: loads the wasm-bindgen `nodejs` build synchronously.
+import { createRequire } from "node:module";
+import { isLitgraphWasm, Litgraph, type LitgraphWasm, type PackSet } from "./client.js";
+
+export * from "./index.js";
+
+let bindings: LitgraphWasm | undefined;
+
+/** The litgraph-wasm module (wasm/node), loaded once. */
+export function nodeBindings(): LitgraphWasm {
+  if (bindings === undefined) {
+    const module: unknown = createRequire(import.meta.url)("../wasm/node/litgraph_wasm.js");
+    if (!isLitgraphWasm(module)) throw new Error("wasm/node/litgraph_wasm.js is not a litgraph-wasm build");
+    bindings = module;
+  }
+  return bindings;
+}
+
+/** A client over the embedded packs, or over `packs`. */
+export function loadNode(packs?: PackSet): Litgraph {
+  return new Litgraph(nodeBindings(), packs);
+}

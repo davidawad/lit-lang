@@ -79,7 +79,8 @@ pub fn validate(doc_json: &str, kind: Option<String>) -> String {
     }
 }
 
-/// JSON Schema for `request`, `response`, `scenario`, `pack` or `links`.
+/// JSON Schema for a `litgraph::api::SCHEMA_KINDS` kind: `request`, `response`,
+/// `scenario`, `named-scenario`, `pack`, `links`, `calibration` or `clock`.
 #[wasm_bindgen]
 #[must_use]
 pub fn schema(kind: &str) -> String {

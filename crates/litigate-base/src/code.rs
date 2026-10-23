@@ -134,6 +134,22 @@ impl Serialize for DiagnosticCode {
     }
 }
 
+/// A string enum of every stable code, so generated bindings see the closed set.
+impl schemars::JsonSchema for DiagnosticCode {
+    fn schema_name() -> std::borrow::Cow<'static, str> {
+        "DiagnosticCode".into()
+    }
+
+    fn json_schema(_: &mut schemars::SchemaGenerator) -> schemars::Schema {
+        let codes: Vec<&str> = Self::ALL.iter().map(|c| c.as_str()).collect();
+        schemars::json_schema!({
+            "description": "Stable diagnostic code (`litigate explain <code>`).",
+            "type": "string",
+            "enum": codes,
+        })
+    }
+}
+
 impl<'de> Deserialize<'de> for DiagnosticCode {
     fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         let value = String::deserialize(deserializer)?;

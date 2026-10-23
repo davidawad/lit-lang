@@ -108,10 +108,31 @@ pub struct Request {
     /// (RFC 7386) on top. See `litgraph schema request` and
     /// `docs/PACK_SCHEMA.md`.
     #[serde(default)]
+    #[schemars(schema_with = "scenario_ref_schema")]
     pub scenario: Value,
     /// The operation (default `describe`).
     #[serde(default)]
     pub op: Op,
+}
+
+/// `Request::scenario`'s accepted shapes; the field stays a `Value` so
+/// `extends` can be resolved against the library before strict parsing.
+fn scenario_ref_schema(generator: &mut schemars::SchemaGenerator) -> schemars::Schema {
+    let scenario = generator.subschema_for::<Scenario>();
+    schemars::json_schema!({
+        "anyOf": [
+            { "type": "null" },
+            { "type": "string", "description": "A scenario-library name." },
+            scenario,
+            {
+                "type": "object",
+                "description": "A library scenario with inline scenario overrides deep-merged (RFC 7386) on top.",
+                "properties": { "extends": { "type": "string", "description": "The library scenario's name." } },
+                "required": ["extends"],
+                "additionalProperties": true,
+            },
+        ],
+    })
 }
 
 // A hand-written `Default` (instead of `#[derive(Default)]`) so it matches

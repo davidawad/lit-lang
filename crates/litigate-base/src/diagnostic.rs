@@ -1,9 +1,10 @@
 //! Stable diagnostic structures shared by parser, checker, and CLI.
 use crate::{DiagnosticCode, FileId};
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 /// A half-open source range with one-based line and column coordinates.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 pub struct Span {
     /// Repository-relative source file identifier.
     pub file: FileId,
@@ -18,7 +19,7 @@ pub struct Span {
 }
 
 /// Diagnostic severity.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "lowercase")]
 pub enum Severity {
     /// An error prevents a successful check.
@@ -32,7 +33,7 @@ pub enum Severity {
 }
 
 /// Applicability of an automated edit.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum Applicability {
     /// Safe to apply automatically.
@@ -46,7 +47,7 @@ pub enum Applicability {
 }
 
 /// A source edit suggested by a diagnostic.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 pub struct Fix {
     /// Range replaced by this edit.
     pub span: Span,
@@ -57,7 +58,7 @@ pub struct Fix {
 }
 
 /// Additional explanation attached to a diagnostic.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 pub struct Note {
     /// Optional source location for the note.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -67,7 +68,7 @@ pub struct Note {
 }
 
 /// One structured compiler diagnostic.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 pub struct Diagnostic {
     /// Closed, stable diagnostic identifier.
     pub code: DiagnosticCode,

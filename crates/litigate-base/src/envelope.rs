@@ -1,9 +1,10 @@
 //! Operation response envelope and checking profiles.
 use crate::Diagnostic;
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 /// Compiler checking profile.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "lowercase")]
 pub enum Profile {
     /// Development checks permit explicit holes with warnings.
@@ -13,7 +14,7 @@ pub enum Profile {
 }
 
 /// JSON response shape shared by all `litigate` operations.
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, JsonSchema)]
 pub struct Envelope<T> {
     /// Whether the operation completed without errors.
     pub ok: bool,

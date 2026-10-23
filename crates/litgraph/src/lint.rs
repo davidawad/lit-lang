@@ -10,7 +10,8 @@ use crate::model::{Graph, NodeKind, Pack, RawEdge};
 
 /// One content-quality finding: a warning about authored data, not a
 /// structural error (those fail compilation instead).
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
+#[schemars(rename = "LintDiagnostic")]
 pub struct Diagnostic {
     /// `"error"`, `"warn"`, or `"info"`, in descending severity.
     pub severity: &'static str,

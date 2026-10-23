@@ -2,7 +2,9 @@
 use serde::{Deserialize, Serialize};
 
 /// Stable identifier for a source file, normally a repository-relative path.
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
+#[derive(
+    Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize, schemars::JsonSchema,
+)]
 #[serde(transparent)]
 pub struct FileId(pub String);
 

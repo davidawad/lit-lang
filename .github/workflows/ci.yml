@@ -69,6 +69,25 @@ jobs:
           tool: just
       - run: just lit-sync-check
 
+  # packages/litigate-ts: generated types must match the Rust schemas, and
+  # the client's unit, type-level and golden (wasm vs native CLI) tests pass.
+  litigate-ts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: just,wasm-bindgen-cli@0.2.127
+      - run: just ts-gen-check
+      - run: just ts-test
+
   tree-sitter:
     runs-on: ubuntu-latest
     steps:
@@ -79,7 +98,7 @@ jobs:
       - uses: taiki-e/install-action@v2
         with:
           tool: just
-      - run: just ts-test
+      - run: just tree-sitter-test
 
   doctest:
     runs-on: ubuntu-latest

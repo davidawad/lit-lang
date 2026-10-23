@@ -261,7 +261,7 @@ pub enum Control {
 }
 
 /// A fallback or modeling choice the engine had to make.
-#[derive(Debug, Clone, Serialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema, PartialEq)]
 pub struct Warning {
     /// Stable machine code.
     pub code: &'static str,

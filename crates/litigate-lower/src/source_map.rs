@@ -5,11 +5,12 @@
 use litgraph::cite::{parse_cite_string, CiteGrammar, Family, SourceCorpus};
 use litgraph::model::{CiteCode, CiteRuleForm, CiteSyntax};
 use litigate_base::Span;
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
 /// Marks a file as compiler output: who generated it, from which language
 /// version. Deterministic (no timestamps, no absolute paths).
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 pub struct Generated {
     /// Always `litigate-lower`.
     pub by: String,
@@ -30,7 +31,7 @@ impl Default for Generated {
 }
 
 /// The package a document was lowered from.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 pub struct PackageRef {
     /// Package name.
     pub name: String,
@@ -41,7 +42,7 @@ pub struct PackageRef {
 }
 
 /// One citation of a `cite`/`authority` string, located in the L0 corpus.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 pub struct L0Section {
     /// Canonical corpus heading (`Rule 12`, `28 U.S.C. § 1291`).
     pub heading: String,
@@ -57,7 +58,7 @@ pub struct L0Section {
 }
 
 /// A cite string and where each of its citations is in L0.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 pub struct CiteMap {
     /// The emitted text.
     pub text: String,
@@ -67,7 +68,7 @@ pub struct CiteMap {
 }
 
 /// One generated value and its origin.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 pub struct Entry {
     /// JSON pointer into the generated document (`/nodes/3`).
     pub pointer: String,
@@ -85,7 +86,7 @@ pub struct Entry {
 }
 
 /// A generated document's sidecar.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 pub struct SourceMap {
     /// The generated-file marker.
     pub generated: Generated,

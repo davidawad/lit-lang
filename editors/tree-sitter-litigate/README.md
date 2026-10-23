@@ -61,11 +61,11 @@ registers the `lit` and `case` file types.
 ## Commands
 
 ```bash
-just ts-test        # regenerate (must match committed src/), tree-sitter test
+just tree-sitter-test  # regenerate (must match committed src/), tree-sitter test
 cargo nextest run -p tree-sitter-litigate   # bindings + conformance (part of the workspace gate)
 ```
 
-`just ts-test` uses `tree-sitter` from `PATH` when it is the pinned version
+`just tree-sitter-test` uses `tree-sitter` from `PATH` when it is the pinned version
 (0.27.1, also in `package.json`). Otherwise it uses `npx`. After editing
 `grammar.js` or `grammar/*.js`, run `tree-sitter generate` here and commit
 `src/` with the change. CI fails when the committed parser is stale.

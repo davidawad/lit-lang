@@ -1,0 +1,24 @@
+[package]
+name = "litgraph-schema-bundle"
+description = "Every litgraph/litigate JSON document schema in one JSON Schema bundle, the single source non-Rust bindings (packages/litigate-ts) are generated from."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+publish.workspace = true
+
+[[bin]]
+name = "litgraph-schema-bundle"
+path = "src/main.rs"
+
+[dependencies]
+litgraph = { path = "../litgraph", default-features = false }
+litigate-base = { path = "../litigate-base" }
+litigate-lower = { path = "../litigate-lower" }
+schemars.workspace = true
+serde_json.workspace = true
+
+[lints]
+workspace = true

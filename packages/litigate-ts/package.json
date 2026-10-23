@@ -1,0 +1,49 @@
+{
+  "name": "@litgraph/litigate-ts",
+  "version": "0.3.0",
+  "description": "Typed TypeScript client over litgraph-wasm: the litgraph JSON contract with types generated from the Rust schemas.",
+  "license": "GPL-3.0-or-later",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/davidawad/litgraph",
+    "directory": "packages/litigate-ts"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./node": {
+      "types": "./dist/node.d.ts",
+      "default": "./dist/node.js"
+    },
+    "./web": {
+      "types": "./dist/web.d.ts",
+      "default": "./dist/web.js"
+    },
+    "./schema.json": "./schema/litgraph.schema.json"
+  },
+  "files": [
+    "dist",
+    "wasm",
+    "schema"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "gen": "node scripts/gen.mjs",
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "tsc -p tsconfig.json && vitest run --typecheck"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.5",
+    "expect-type": "1.4.0",
+    "json-schema-to-typescript": "16.0.0",
+    "typescript": "7.0.2",
+    "vitest": "5.0.5"
+  }
+}

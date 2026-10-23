@@ -82,3 +82,13 @@ proptest! {
         prop_assert_eq!(DiagnosticCode::parse(&s).is_some(), known);
     }
 }
+
+#[test]
+fn json_schema_is_the_closed_code_set() {
+    let schema = schemars::schema_for!(DiagnosticCode);
+    let value = serde_json::to_value(schema).unwrap();
+    assert_eq!(value["title"], "DiagnosticCode");
+    let codes = value["enum"].as_array().unwrap();
+    assert_eq!(codes.len(), DiagnosticCode::ALL.len());
+    assert_eq!(codes[0], DiagnosticCode::ALL[0].as_str());
+}

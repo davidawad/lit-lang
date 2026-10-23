@@ -316,9 +316,12 @@ The checker enforces:
    the role must be declared by the forum.
 2. **Replay, never assert.** Events must be in date order, and each must be a
    legal transition from the posture at that date, under the rules in effect
-   that day. The current posture is derived. A missed deadline is a
-   `deadline-missed` error unless the case records a
-   `waived`/`extended`/`excused` event that cites its order.
+   that day. The current posture is derived. Each trigger creates an
+   obligation instance with a bearer; a missed deadline is a
+   `deadline-missed` error unless a cited event of a type that `extends` or
+   `waives` that deadline, within the capability the deadline grants,
+   transformed the instance first (SPEC §5.3, §5.6). Event names carry no
+   meaning.
 3. **Facts are typed.** They are checked against the forum's fact nodes, and
    each value must be a variant of that node's outcome enum.
 4. **Stakes are exhaustive.** Every terminal reachable from the derived

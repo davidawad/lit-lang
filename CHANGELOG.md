@@ -7,7 +7,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Obligation instances in `.case` replay** (SPEC §5.3, §5.6). Each
+  deadline trigger creates an obligation instance with a bearer (`bearer
+  Actor`) under a declared trigger policy (`trigger first | latest | each |
+  later_of(d)`; `first` is the default, so a second service no longer
+  restarts a period). A `within` act discharges one instance borne by the
+  acting party; another party's act cannot. A duty's instance borne by a
+  party and open past due at `as_of` is reported as breached (new code
+  L4009, a warning). `litigate check` reports every instance with its bearer
+  and status in the deadline schedule, and the LSP's hints follow it.
+- **Typed, bounded extension and waiver.** A deadline grants `extend { by
+  Actor, max N.days [, after_expiry] }` and `waive { by Actor }`
+  capabilities; an event type declares `extends d to p` or `waives d`. A
+  cited event of such a type, by the capability's actor and within its
+  bound, moves or releases one instance. This restores court-ordered
+  extensions, which v0.4 scored as missed deadlines after excusal was made
+  fail-closed, without the *Bowles* defect: a limit with no `extend`
+  capability admits no extension, and an order beyond the bound is rejected.
+
 ### Changed
+
+- **Event names carry no meaning.** `Struck`/`Forfeited`/`Withdrawn` remove
+  an option only when their type declares `removes option`; `Waived`,
+  `Extended` and `Excused` mean nothing by name. An event that takes no edge
+  must fire an in-force deadline's trigger, be transition history, or
+  declare an effect, and no such event is accepted where the matter has
+  ended (the timing-only hatch is gone). The replay trace's `timing` effect
+  is now `triggered`, `history`, `removed`, `extended` or `waived`.
+- Six periods a later event restarts declare `trigger latest`: FRAP
+  4(a)(1)(A) after a tolling motion, the 28 U.S.C. § 2101(c) cert period,
+  the Speedy Trial Act clock, FRCrimP 29(c)(1), FRAP 4(b)(1)(A) and the
+  PTAB appeal period. Inline `test` blocks pick the trigger by the same
+  policy.
 
 - **Tribunal rulings are chance nodes.** Every ruling a court, board,
   Director, agency or grand jury makes in the `lit/` forum packages is now a

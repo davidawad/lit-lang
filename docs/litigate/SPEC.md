@@ -166,7 +166,9 @@ StartDecl    = "start", Ident ;
 GroupDecl    = "group", Ident, ":", String ;
 TypeDecl     = "type", Ident, "=", Type ;
 EnumDecl     = "enum", Ident, "{", Ident, { ",", Ident }, [","], "}" ;
-EventDecl    = "event", Ident, "(", [ Param, { ",", Param }, [","] ], ")" ;
+EventDecl    = "event", Ident, "(", [ Param, { ",", Param }, [","] ], ")",
+               [ EventEffect ] ;
+EventEffect  = ( "removes" | "elects" ), Ident | "extends", Ref, "to", Ident | "waives", Ref ;
 Param        = Ident, ":", Type ;
 
 NodeDecl     = NodeKw, Ident, ":", String, { NodeClause }, [ NodeBody ] ;
@@ -206,7 +208,11 @@ RuleDecl     = "rule", ("duty" | "power" | "liability"), Ident, { VersionClause
              | Relation | Cite }, "{", { Item, Sep }, "}" ;
 DeadlineDecl = "deadline", Ident, ":", Duration, ("from" | "after" | "before"),
                Expr, "counted_by", Ref, { VersionClause | Relation | Cite },
-               [ DeadlineOpts ] ;
+               [ DeclOpts ] ;
+DeclOpts     = "{", { ( "extendable", Bool | "extension_authority", String
+             | "note", String | "bearer", Ref | "trigger", ( Ref | CallExpr )
+             | ("extend" | "waive"), Capability ), Sep }, "}" ;
+Capability   = "{", { ( "by", Ref | "max", Duration | "after_expiry" ), Sep }, "}" ;
 CountingDecl = "counting", Ident, { VersionClause | Relation | Cite },
                "{", { CountingItem, Sep }, "}" ;
 CountingItem = "exclude_trigger_day" | "include_last_day" | "allow_hours"
@@ -456,7 +462,26 @@ itself is excluded and line endings are not normalized.
 
 ### 5.2 Types, enums, events, match
 
-`type`, `enum`, and `event` declare closed nominal types. `match` must be
+`type`, `enum`, and `event` declare closed nominal types. An event type
+may declare one effect, which is the only way an event acts on a matter
+besides taking an edge or firing a trigger (§5.6). An event's name never
+gives it meaning: an event called `Extended` with no effect clause extends
+nothing.
+
+- `removes p`: an option-removing event. `p` is a parameter of type
+  `String` naming the removed edge.
+- `elects p`: an election. `p` is a parameter of type `String` naming the
+  edge chosen; the alternatives to it are removed.
+- `extends d to p`: an extension. `d` is a deadline and `p` a parameter of
+  type `Date`, the new due date. It is licensed by `d`'s `extend`
+  capability (§5.3).
+- `waives d`: a waiver, licensed by `d`'s `waive` capability.
+
+An unknown parameter is L1002, a parameter of the wrong type L2001, a
+second effect or a `to` without `extends` L2007, and `extends` without
+`to` L2007.
+
+`match` must be
 exhaustive with no unreachable arms (L2005). There is no null, implicit
 conversion, subtyping, or recursion: a type alias may not refer to itself, and
 neither may a default or exception, directly or transitively (L3006). An event
@@ -466,10 +491,43 @@ must be complete.
 
 ### 5.3 Deadlines, counting, calendars
 
-`deadline d: N.unit from|after T counted_by c` counts forward from the most
-recent event matching trigger pattern `T`. `before` counts backward. Units are
-the `Days<U>` unit of the literal. Counting rule `c` defines (FRCP 6(a)
-vocabulary):
+`deadline d: N.unit from|after T counted_by c` counts forward from the event
+matching trigger pattern `T` that created the obligation instance being
+judged (§5.6). `before` counts backward. Units are the `Days<U>` unit of the
+literal.
+
+A deadline declaration's options describe the obligation each trigger
+creates (design review 2026-10-23 §2.4, §2.7):
+
+- `bearer A`: the actor bearing each instance. A trigger done to (or by)
+  a party playing `A` binds the instance to that party; otherwise one
+  instance is created for each party playing `A`. With no `bearer`, or no
+  party playing it, the instance is unbound.
+- `trigger first | latest | each | later_of(e)`: what a matching trigger
+  does while an instance for the same bearer is open. `first` (the
+  default) ignores it, so a second service does not restart the period.
+  `latest` supersedes the open instance and restarts the period (a tolling
+  motion, a rehearing, a later appearance). `each` creates another
+  instance. `later_of(e)` is `latest` and also absorbs the open instance of
+  deadline `e` for the same bearer: the new instance is due no earlier
+  than `e`'s (FRCP 15(a)(3), FRAP 4(a)(3)). `later_of` naming the deadline
+  itself, or anything but one deadline, is L2007.
+- `extend { by A, max N.days [, after_expiry] }`: actor `A` may extend an
+  instance to a date at most `N` calendar days after its counted due date
+  (raised to any `later_of` floor). Without `after_expiry` the extension
+  must come on or before the current due date. `max` is required and
+  counts calendar days (L2007, L3009). `extend` with `extendable false`
+  is L2007.
+- `waive { by A [, after_expiry] }`: actor `A` may release an instance.
+  `max` is not allowed (L2007).
+
+A deadline with no `extend` capability cannot be extended by any order: a
+jurisdictional limit such as the notice of appeal (*Bowles v. Russell*, 551
+U.S. 205 (2007)) simply declares none. A deadline declared inside a `rule
+duty` is linear: each instance must be consumed exactly once. Elsewhere it is
+affine and may lapse.
+
+Counting rule `c` defines (FRCP 6(a) vocabulary):
 
 1. Anchor: `trigger_day`, or `next_business_day` (the first day after the
    trigger that isn't a weekend or calendar holiday).
@@ -609,8 +667,9 @@ winner is chosen as follows:
 without concluding anything; it must have no `=>` (L2007). Exceptions on the
 same target must be provably disjoint (their conditions can't both be true
 for any assignment of the `has_event` atoms they mention) or carry distinct
-`priority` (larger wins) (L3005). Rule kinds: `duty` requires each contained
-deadline to be met (a case event missing it is L4002 unless excused). `power`
+`priority` (larger wins) (L3005). Rule kinds: `duty` makes each contained
+deadline's obligations linear (§5.3): a late act is L4002, and an instance
+borne by a party and still open past due at `as_of` is breached (L4009). `power`
 contains the decisions it grants. `liability` contains the consequence edges
 taken when a duty is missed.
 
@@ -712,37 +771,59 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
 - Replay: begin at `start` if given, else the package start. Process events
   sorted by date. Ties keep source order, and out-of-order source is L4001
   with a fix. Before each event, while the current node is a `fact` chance
-  node with a `facts` entry, follow that edge. An event that matches exactly
-  one outgoing edge's `event` pattern takes it. An event that matches none
-  but is the trigger pattern of an in-force deadline is timing-only. Anything
-  else, or an ambiguous match, is L4001. An event taken through an edge with
-  `within d` must fall on or before d's due date, computed from the latest
-  matching trigger. Otherwise L4002. A cited event named `Waived`,
-  `Extended`, or `Excused` does not change the deadline: this language
-  version has no typed deadline target, extension amount, or issuer
-  capability, so replay cannot establish that the issuing authority may
-  extend it or that the filing is within the granted extent. Such an event
-  cannot excuse a jurisdictional or otherwise non-extendable limit (as in
-  *Bowles v. Russell*, 551 U.S. 205 (2007)). The replayed node becomes the
-  scenario `start`. An explicit
-  `start` that disagrees with the replayed node is L4008.
+  node with a `facts` entry, follow that edge. An event whose type declares
+  an effect (§5.2) applies it and does not move. Otherwise an event that
+  matches exactly one outgoing edge's `event` pattern takes it. An event
+  that matches no edge is legal only if it fires the trigger of a deadline
+  in force on its date, or is matter history a transition arm's
+  `has_event` reads. Anything else, or an ambiguous match, is L4001. Where
+  the matter has ended (a terminal with no outgoing edge, links included),
+  every event that takes no edge is L4001. The replayed node becomes the
+  scenario `start`. An explicit `start` that disagrees with the replayed
+  node is L4008.
+- Obligation instances. After an event is handled, every in-force deadline
+  whose trigger it matches creates instances under its `bearer` and
+  `trigger` policy (§5.3). An event taking an edge with `within d`
+  discharges the oldest open instance of `d` borne by the event's party
+  (or unbound). It must fall on or before that instance's due date: the
+  date counted from the instance's own trigger under the deadline and
+  counting versions governing the event (transitions applied, §5.4), or
+  the date an extension moved it to. Otherwise L4002, and the instance is
+  closed as late. When only other parties' instances are open, the act
+  discharges nothing and is L4001. With no instance open, no period is
+  running and nothing is checked. At `as_of`, an open linear instance
+  borne by a party and past its due date is breached (L4009, a warning: a
+  breach is a fact of the matter, a liability of the bearer). Any other
+  instance past due lapses. Each instance ends exactly once: discharged,
+  late, breached, lapsed, waived, superseded (`latest`), or merged
+  (`later_of`). `CheckedCase.obligations` reports them.
+- Extension and waiver. An event whose type declares `extends d to p` or
+  `waives d` must carry a `cite`. It targets the one open instance of `d`
+  borne by its `on` party (or unbound), or the only open instance; none or
+  several is L4001. `d`'s governing version must grant the capability
+  (`extend`/`waive`), the event's `by` party must play its actor, an
+  extension without `after_expiry` must come on or before the current due
+  date, and the new date must be later than it and no later than the
+  bound. Each failure is L4001, and the instance is unchanged. A cited
+  event that is not of such a type transforms nothing, so no order can
+  enlarge a limit that grants no capability (as in *Bowles v. Russell*,
+  551 U.S. 205 (2007)).
 - Option-removing events. A waiver or an order striking a defense does not
   move the matter; it takes an option away for the rest of it. An event
-  whose type is named `Struck`, `Forfeited`, or `Withdrawn` (any case) and
-  declares a parameter `option: String` is option-removing: its `option`
+  whose type declares `removes p` is option-removing: its `p` argument
   names an edge by id, `edge` in the primary package or `pack::edge`
   otherwise (any version, link edges included). Replay handles it at the
   posture it finds, after following `facts`, and does not move: it records
   a removal `{edge, date, event, authority}` in `Case.removals`, in replay
   order. The event must carry a `cite` (otherwise L4001 and nothing is
-  removed). An `option` naming no edge is L1002 with a `maybe_incorrect`
+  removed). A `p` argument naming no edge is L1002 with a `maybe_incorrect`
   fix to the nearest id. Removing an already removed edge is L4001 with a
   note at the first removal. A later event that matches only removed edges
   is L4001 (a note locates the removal) and replay stops. An event whose
-  type is named `Elected` (any case) with the same `option: String`
-  parameter is an election: `option` names the edge chosen, and replay
-  removes every other edge (link edges included) at each node, any
-  version, that offers it, as above, recording one removal per
+  type declares `elects p` (§5.2) is an election: its `p` argument names
+  the edge chosen, and replay removes every other edge (link edges
+  included) at each node, any version, that offers it, as above, recording
+  one removal per
   alternative with the election's date, event and cite. An alternative
   already removed stays removed once; electing an already removed edge is
   L4001 with a note at the removal; an alternative without an id cannot be
@@ -845,7 +926,7 @@ other code (syntax, names, types, L3009, L5001, lowering) counts against
 | `graph-reachable` | every node is reachable from `start` or an `entry`-tagged node | L5003 |
 | `deadline-satisfiable` | for each reachable node, the due-date windows of mandatory (`duty`) deadlines on its outgoing edges intersect for some trigger date | L5005 |
 | `tests-pass` | every `test` assertion holds | L5006 |
-| `case-replay` | sema's case checker accepts the matter: it resolves, its pins, parties, facts, stakes, and beliefs are valid, and its events order, match, and meet deadlines on the engine clock (§5.6) | L4001-L4008 |
+| `case-replay` | sema's case checker accepts the matter: it resolves, its pins, parties, facts, stakes, and beliefs are valid, and its events order, match, and meet deadlines on the engine clock (§5.6) | L4001-L4009 |
 | `holes` | lists every hole with reason and span | L9002 / L5002 |
 | `rule-without-test` | every deadline and counting rule is exercised by a `test` | L9001 |
 
@@ -1155,6 +1236,7 @@ hoc. Codes are never reused.
 | L1009 | undeclared actor | L4006 | invalid belief |
 | L1010 | unbound cite | L4007 | invalid analysis |
 | L2001 | type mismatch | L4008 | start conflict |
+| | | L4009 | obligation breached |
 | L2002 | invalid operation | L5001 | verification failed (generic) |
 | L2003 | invalid distribution | L5002 | hole in strict |
 | L2004 | unit mismatch | L5003 | unreachable node |
@@ -1168,8 +1250,8 @@ hoc. Codes are never reused.
 | L9004 | non-canonical format | L6005 | output error |
 | L9005 | unused declaration | | |
 
-Severity (`DiagnosticCode::severity(profile)`): every non-L9 code is
-`error`. L9003 is `info`. L9005 is `warning`. L9001, L9002, and L9004 are
+Severity (`DiagnosticCode::severity(profile)`): every non-L9 code except
+L4009 is `error`. L9003 is `info`. L4009 and L9005 are `warning`. L9001, L9002, and L9004 are
 `warning` in `dev` and `error` in `strict`.
 
 ### 9.2 Shapes
@@ -1330,7 +1412,8 @@ shared W1 fixtures. Expected results: both parse with no diagnostics. Under
 `dev`, check reports L9002 for the three holes and L9003 for the two `_` edges.
 Under `strict`, check fails with L5002 for each hole. Replaying `acme.case`
 starts at `time-barred`, follows the `not-barred` fact to `respond`, treats
-`Served` as timing-only (due 2025-03-26), and takes `move-dismiss` on
+`Served` as a trigger that creates the `answer-period` obligation (due
+2025-03-26), and takes `move-dismiss`, which discharges it, on
 2025-03-20, so the scenario `start` is `frcp-rule12-example::mtd-ruling`.
 The two tests in `rule12.lit` pass (2025-03-24; 2025-03-27 with mail
 service).
@@ -1472,8 +1555,8 @@ gets one row per condition when the conditions classify differently.
 | C45 | L3009 counting: anchor/exclude combination; unknown anchor, roll kind or unit; duplicate service method; `short_period` unit (§5.3) | sema, lower | a | `Anchor = TriggerDay {exclude_trigger_day} \| NextBusinessDay` makes the illegal combinations unrepresentable; roll kinds and units are enums; service extensions are a map keyed by the closed `ServiceMethod` enum. |
 | C46 | L3009 `N.hours` without `allow_hours`; backward deadline on a `next_business_day` rule; `nth` outside 1-4; unknown calendar (§5.3, §5.5) | sema | b | `Counting<hours: Bool, anchor: Anchor>` as indices: an hours deadline needs `hours = true`; `Deadline<Bwd>` needs `anchor ≠ NextBusinessDay`; `nth: {n \| 1 ≤ n ≤ 4}`; calendar is a resolved `Ref` (a). |
 | C47 | L4001 case events out of source order (§5.6) | sema | b | Events list `{es \| ∀i. date_i ≤ date_{i+1}}` (QF_LIA, ground); the fix is unchanged. |
-| C48 | L4001 event matches no edge or several; matches only removed edges; removal without `cite`; removal repeated (§5.6) | sema | b | Typestate (DESIGN §4.5) as an indexed type: the matter is `Case<n, R>` (posture node `n`, removed edge set `R`); an event `e` types only as `Case<n, R> → Case<to(edge), R>` for the unique edge of `n` not in `R` whose pattern it matches, or as timing-only when it is the trigger of a deadline in force on its date (C41). Finite and ground: one step per event. A removing event without `cite` is (a) (the removal constructor requires it). |
-| C49 | L4002 event misses its deadline without an excusing event (§5.6) | sema | c | The due date comes from counting through holiday calendars and inaccessible days from the latest matching trigger: execution, not a type. |
+| C48 | L4001 event matches no edge or several; takes no edge without a declared effect, a firing trigger or transition history, or where the matter has ended; matches only removed edges; removal or transform without `cite`; removal repeated; discharge of another party's obligation; extension or waiver with no target, no capability, the wrong principal, after expiry, or beyond its bound (§5.6) | sema | b | Typestate (DESIGN §4.5) as an indexed type: the matter is `Case<n, R, O>` (posture node `n`, removed edge set `R`, open obligation instances `O`); an event `e` types only as `Case<n, R, O> → Case<to(edge), R, O'>` for the unique edge of `n` not in `R` whose pattern it matches, or as `Case<n, R', O'>` by its declared effect or the triggers it fires (C41). The capability check is a ground comparison of the principal and of dates against the bound. Finite and ground: one step per event. |
+| C49 | L4002 act discharges an obligation instance after its due date (§5.6) | sema | c | The due date comes from counting through holiday calendars and inaccessible days from the instance's trigger: execution, not a type. |
 | C50 | L4003 `facts` node not a `fact` chance node or edge not its own (§5.6) | sema | b | `facts {n: Edges(n)}` with `n : Node<Chance, fact>` (index on the referenced node's signature). |
 | C51 | L4004 reachable terminal without a stake or `unvalued` (§5.6) | sema, verify | c | Reachability from the replayed start. `unvalued` being an error in `strict` is a profile rule (§7), not a type. |
 | C52 | L4005 unknown party actor, duplicate party id, unknown perspective party or actor (§5.6) | sema, lower | a | `Actor` is the closed enum of the primary package's actors; `parties` is a map; `perspective` takes a party id or a map over `Actor`. |
@@ -1500,6 +1583,7 @@ gets one row per condition when the conditions classify differently.
 | C73 | L9005 unused declaration or import | none | c | Registered, never emitted; when added it needs whole-package use analysis. |
 | C74 | L0007 reserved word used as an identifier (§2) | syntax | a | Lexical grammar. |
 | C75 | L0008 unknown edition (§2) | syntax | a | Grammar: `Edition` is a closed set per compiler. |
+| C76 | L4009 a duty's instance borne by a party is open past its due date at `as_of` (§5.6) | sema | c | Linearity of the instance is by construction (each ends once); whether it is past due needs the clock at `as_of`, as C49. |
 
 ### 13.4 SPEC rules with no code of their own
 
@@ -1522,7 +1606,7 @@ they are listed so the v2 type system keeps them.
 | R12 | Supersession and revival semantics, bitemporal (§5.4) | c | O4. |
 | R13 | Precedence stages and tie-breaks (§5.5) | c | C35. |
 | R14 | Exception evaluation: target condition must hold; highest priority wins (§5.5) | a | Semantics; the ordering it needs is C37. |
-| R15 | Option-removing event recognition: type named `Struck`/`Forfeited`/`Withdrawn`/`Elected` with `option: String` (§5.6) | a | Should become a declared marker on the event type (a nominal `Removal` kind) rather than a name convention; then `option` is typed `EdgeRef`, making the L1002 there (C8) a type error. |
+| R15 | Option-removing event recognition: an event type declaring `removes p` or `elects p` with `p: String` (§5.2, §5.6) | a | A declared effect on the event type, checked when the type is built; `p` should become `EdgeRef`, making the L1002 there (C8) a type error. |
 | R16 | Posture is replayed, never asserted; HIR `removals` derived (§5.6) | a | No source syntax for posture or removals. |
 | R17 | `::` only in links packages, `.case` files and instance fields (§4.3) | a | Two `Ref` sorts per file kind. |
 | R18 | `analysis` cannot set `start`, `perspective`, `facts`, `payoffs`, `observe` (§8.3) | a | C54. |
@@ -1535,8 +1619,8 @@ they are listed so the v2 type system keeps them.
 ### 13.5 Summary
 
 Counting each row once by its primary class (a mixed row counts as its
-first class): obligations O1-O15 are 3 (a), 5 (b), 7 (c); codes C1-C75
-are 29 (a), 24 (b), 21 (c), one n/a; rules R1-R23 are 14 (a), 6 (b),
+first class): obligations O1-O15 are 3 (a), 5 (b), 7 (c); codes C1-C76
+are 29 (a), 24 (b), 22 (c), one n/a; rules R1-R23 are 14 (a), 6 (b),
 3 (c).
 
 - The (c) rows share six reasons: graph reachability (O10, O11, C51,

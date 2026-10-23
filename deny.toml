@@ -40,6 +40,14 @@ allow = [
     "GPL-3.0-or-later",
 ]
 
+# webpki-roots is Mozilla's CA root bundle (data, CDLA-Permissive-2.0). It
+# is only a build-dependency of litigate-smt's build.rs (HTTPS download of
+# the pinned Z3 release) and is never linked into a shipped binary, so it
+# gets a per-crate exception rather than a global allowance.
+[[licenses.exceptions]]
+crate = "webpki-roots"
+allow = ["CDLA-Permissive-2.0"]
+
 # The workspace crates (litgraph, litgraph-cli) declare `publish = false`
 # unconditionally (see Cargo.toml `[workspace.package]`); `private.ignore`
 # excludes unpublished crates from license checks entirely, so this file

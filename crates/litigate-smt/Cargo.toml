@@ -1,0 +1,23 @@
+[package]
+name = "litigate-smt"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+description = "SMT backend for litigate refinement types: linear integer/rational queries on a pinned, statically linked Z3"
+
+[dependencies]
+sha2.workspace = true
+# Exact pins. z3-sys's default features link `-lz3`; build.rs supplies the
+# static libz3.a of the pinned Z3 release (README "Build"). Bump the z3
+# crates, build.rs's Z3_VERSION/ASSETS and PINNED_Z3_VERSION together.
+z3 = { version = "=0.21.1", default-features = false }
+z3-sys = { version = "=0.13.1", default-features = false }
+
+[build-dependencies]
+sha2.workspace = true
+ureq = { version = "3", default-features = false, features = ["rustls"] }
+zip = { version = "9", default-features = false, features = ["deflate-flate2-zlib-rs"] }
+
+[lints]
+workspace = true

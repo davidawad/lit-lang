@@ -38,6 +38,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   of weeks) on either side of every holiday's `effective` boundary
   (`litgraph::clock::cycle`). Tests and case replay refuse such a rule
   with that reason instead of counting forever.
+- **Lowered artifacts carry their world and their holes** (SPEC §8.1,
+  §8.3, §8.6; design review 2026-10-23 LW1, LW2). Every generated document
+  has a `lowered` header: `pins` (name, version, source digest of every
+  package the build saw), `asOf`/`knownAt`, a `worldDigest` (SHA-256 over
+  the RFC 8785 text of those), and `holes`, one JSON pointer per explicit
+  `?` in an emitted field, so a `dev` build no longer passes its gaps off as
+  absent fields. Schema bump: packs are `schemaVersion` 4, `links.json` and
+  named scenarios schema 2, generated clock fragments 4; older versions are
+  still read. A v2 scenario also records the matter's `parties` and docket
+  `events`. The engine checks the header on read (sorted pins, recomputed
+  digest, holes inside the document) and warns `authored-hole` for a pack
+  whose holes leave a number open.
+- **Canonical JSON output.** Generated packs, links, clock fragments,
+  scenarios, source maps and litigatables are written as RFC 8785 (JCS)
+  text indented by two spaces (members in UTF-16 order, ECMAScript number
+  spelling: `1500`, not `1500.0`); litigatable content hashes are over the
+  exact JCS text (`litigate_lower::canonical`). `litgraph::canonical`
+  provides the serializer. JSON is now read with correctly rounded number
+  parsing (`serde_json` `float_roundtrip`), so emitted numbers read back
+  bit for bit.
 
 ### Fixed
 

@@ -98,9 +98,10 @@ rather than silently ignoring a typo.
 ## Rules
 
 1. **Report warnings with numbers.** `payoff-not-authored`,
-   `probability-fill`, `mixed-node`, `sink` mean the number rests on a
-   fallback. Say so, or fix the input (scenario `payoffs`/`probabilities`)
-   before answering.
+   `probability-fill`, `mixed-node`, `sink`, `authored-hole` mean the number
+   rests on a fallback (`authored-hole`: a pack's `lowered.holes` left that
+   number as an explicit `?`). Say so, or fix the input (scenario
+   `payoffs`/`probabilities`) before answering.
 2. **Matter facts go in the scenario, not the pack.** Packs describe a
    forum's procedure for everyone; stakes, rates, waivers, the judge's
    tendencies belong to one matter. A chance node whose outcome is actually

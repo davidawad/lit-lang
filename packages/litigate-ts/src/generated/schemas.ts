@@ -509,6 +509,10 @@ export type ServiceMethod =
  */
 export type Side = "plaintiff" | "defendant";
 /**
+ * Whether a docket event's party acted or was acted upon.
+ */
+export type EventRelation = "by" | "on";
+/**
  * Which code a shorthand's implied title belongs to.
  */
 export type CiteCode = "usc" | "cfr";
@@ -1138,6 +1142,10 @@ export interface ApiError {
  */
 export interface NamedScenario {
   /**
+   * `1` when absent, or `2` (`lowered`, `parties`, `events`).
+   */
+  schema_version?: number | null;
+  /**
    * Stable name a request references this scenario by; by convention
    * matches the file stem (`scenarios/<id>.json`), though lookup also
    * accepts the file stem when it differs.
@@ -1167,6 +1175,18 @@ export interface NamedScenario {
    * probabilities, policy, modeling modes.
    */
   scenario?: Scenario;
+  /**
+   * The matter's parties (v2).
+   */
+  parties?: ScenarioParty[];
+  /**
+   * The matter's docket events (v2).
+   */
+  events?: DocketEvent[];
+  /**
+   * Build provenance and explicit holes of a compiled matter (v2).
+   */
+  lowered?: Lowered | null;
 }
 /**
  * A primary source backing one fact or number in a named scenario (a rate,
@@ -1187,11 +1207,113 @@ export interface ScenarioSource {
   as_of?: string | null;
 }
 /**
+ * A party to the matter (v2).
+ */
+export interface ScenarioParty {
+  /**
+   * The matter's id for the party.
+   */
+  id: string;
+  /**
+   * The pack actor key it plays.
+   */
+  actor: string;
+  /**
+   * Its entity type, as the matter declares it.
+   */
+  entity_type: string;
+}
+/**
+ * One docket event of the matter, in docket order (v2). The matter's
+ * compiler replayed these to derive `scenario.start` and
+ * `scenario.remove_edges`; the engine reads them as record only.
+ */
+export interface DocketEvent {
+  /**
+   * Event date (`YYYY-MM-DD`).
+   */
+  date: string;
+  /**
+   * The typed event, spelled as in the source (`Served(complaint, Mail)`).
+   */
+  action: string;
+  /**
+   * `by` or `on`.
+   */
+  relation: EventRelation;
+  /**
+   * The party's id.
+   */
+  party: string;
+  /**
+   * The authority cited for it, if any.
+   */
+  authority?: string | null;
+}
+/**
+ * Provenance of a lowered document.
+ */
+export interface Lowered {
+  /**
+   * Every package of the world the document was built in, by name.
+   */
+  pins: Pin[];
+  /**
+   * Law-in-force date versions were selected at.
+   */
+  asOf: string;
+  /**
+   * Corpus date versions were selected among (absent: the latest).
+   */
+  knownAt?: string | null;
+  /**
+   * `sha256:<hex>` over the JCS text (RFC 8785) of
+   * `{"asOf", "knownAt", "pins"}`: the world's identity.
+   */
+  worldDigest: string;
+  /**
+   * Explicit holes, by pointer.
+   */
+  holes?: Hole[];
+}
+/**
+ * One package the document was built from.
+ */
+export interface Pin {
+  /**
+   * Package name.
+   */
+  name: string;
+  /**
+   * Exact version.
+   */
+  version: string;
+  /**
+   * `sha256:<hex>` source digest of the package.
+   */
+  digest: string;
+}
+/**
+ * An explicit hole: the source wrote `?` where this document has no
+ * authored value.
+ */
+export interface Hole {
+  /**
+   * JSON pointer (RFC 6901) of the field in this document.
+   */
+  pointer: string;
+  /**
+   * The `?("reason")` text, when given.
+   */
+  reason?: string | null;
+}
+/**
  * One forum's procedure graph.
  */
 export interface Pack {
   /**
-   * `1` (civ-pro statechart format) or `2`.
+   * `1` (civ-pro statechart format), `2`, `3` (`counting`,
+   * `citeSyntax`), or `4` (`lowered`).
    */
   schemaVersion: number;
   /**
@@ -1251,6 +1373,10 @@ export interface Pack {
    * Edges.
    */
   edges: RawEdge[];
+  /**
+   * Build provenance and explicit holes of a compiled pack (v4).
+   */
+  lowered?: Lowered | null;
 }
 /**
  * A group (visual/hierarchical cluster) of nodes.
@@ -1571,6 +1697,10 @@ export interface Duration {
  */
 export interface LinkFile {
   /**
+   * `1` when absent, or `2` (`lowered`).
+   */
+  schemaVersion?: number | null;
+  /**
    * Instance name (`base@origin`) → definition.
    */
   instances?: {
@@ -1580,6 +1710,10 @@ export interface LinkFile {
    * Cross-pack edges; `from`/`to` are qualified ids.
    */
   links?: RawEdge[];
+  /**
+   * Build provenance and explicit holes of a compiled link file (v2).
+   */
+  lowered?: Lowered | null;
 }
 /**
  * A namespaced copy of a pack that remembers how it was entered — the
@@ -1726,7 +1860,7 @@ export interface CalibrationSource {
  */
 export interface ClockLibrary {
   /**
-   * Always `3`.
+   * `3`, or `4` (`lowered`).
    */
   schemaVersion: number;
   /**
@@ -1737,6 +1871,10 @@ export interface ClockLibrary {
    * Counting rules.
    */
   countingRules?: CountingRule[];
+  /**
+   * Build provenance of a compiled fragment (v4).
+   */
+  lowered?: Lowered | null;
 }
 /**
  * A named set of holidays (`HolidayCalendar` IR).

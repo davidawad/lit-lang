@@ -411,7 +411,7 @@
           "type": "integer",
           "format": "uint32",
           "minimum": 0,
-          "description": "Always `3`."
+          "description": "`3`, or `4` (`lowered`)."
         },
         "calendars": {
           "type": "array",
@@ -426,6 +426,17 @@
             "$ref": "#/$defs/CountingRule"
           },
           "description": "Counting rules."
+        },
+        "lowered": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Lowered"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Build provenance of a compiled fragment (v4)."
         }
       },
       "required": [
@@ -797,6 +808,42 @@
         }
       ]
     },
+    "DocketEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "date": {
+          "type": "string",
+          "description": "Event date (`YYYY-MM-DD`)."
+        },
+        "action": {
+          "type": "string",
+          "description": "The typed event, spelled as in the source (`Served(complaint, Mail)`)."
+        },
+        "relation": {
+          "$ref": "#/$defs/EventRelation",
+          "description": "`by` or `on`."
+        },
+        "party": {
+          "type": "string",
+          "description": "The party's id."
+        },
+        "authority": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The authority cited for it, if any."
+        }
+      },
+      "required": [
+        "date",
+        "action",
+        "relation",
+        "party"
+      ],
+      "description": "One docket event of the matter, in docket order (v2). The matter's\ncompiler replayed these to derive `scenario.start` and\n`scenario.remove_edges`; the engine reads them as record only."
+    },
     "Duration": {
       "type": "object",
       "additionalProperties": false,
@@ -937,6 +984,21 @@
       ],
       "description": "One generated value and its origin."
     },
+    "EventRelation": {
+      "oneOf": [
+        {
+          "type": "string",
+          "const": "by",
+          "description": "`by party`: the party acted."
+        },
+        {
+          "type": "string",
+          "const": "on",
+          "description": "`on party`: the party was acted upon."
+        }
+      ],
+      "description": "Whether a docket event's party acted or was acted upon."
+    },
     "FeeShift": {
       "type": "object",
       "additionalProperties": false,
@@ -1067,6 +1129,27 @@
         "at"
       ],
       "description": "All warnings with one code, collapsed."
+    },
+    "Hole": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "pointer": {
+          "type": "string",
+          "description": "JSON pointer (RFC 6901) of the field in this document."
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The `?(\"reason\")` text, when given."
+        }
+      },
+      "required": [
+        "pointer"
+      ],
+      "description": "An explicit hole: the source wrote `?` where this document has no\nauthored value."
     },
     "Holiday": {
       "type": "object",
@@ -1387,6 +1470,15 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "schemaVersion": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint32",
+          "minimum": 0,
+          "description": "`1` when absent, or `2` (`lowered`)."
+        },
         "instances": {
           "type": "object",
           "additionalProperties": {
@@ -1402,6 +1494,17 @@
           },
           "description": "Cross-pack edges; `from`/`to` are qualified ids.",
           "default": []
+        },
+        "lowered": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Lowered"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Build provenance and explicit holes of a compiled link file (v2)."
         }
       },
       "description": "Contents of `packs/links.json`."
@@ -1514,6 +1617,47 @@
       ],
       "description": "One `litigate` invocation over an in-memory file tree (litgraph-wasm's\n`litigate`): what the CLI prints and exits with, and the files it wrote."
     },
+    "Lowered": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "pins": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Pin"
+          },
+          "description": "Every package of the world the document was built in, by name."
+        },
+        "asOf": {
+          "type": "string",
+          "description": "Law-in-force date versions were selected at."
+        },
+        "knownAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Corpus date versions were selected among (absent: the latest)."
+        },
+        "worldDigest": {
+          "type": "string",
+          "description": "`sha256:<hex>` over the JCS text (RFC 8785) of\n`{\"asOf\", \"knownAt\", \"pins\"}`: the world's identity."
+        },
+        "holes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Hole"
+          },
+          "description": "Explicit holes, by pointer."
+        }
+      },
+      "required": [
+        "pins",
+        "asOf",
+        "worldDigest"
+      ],
+      "description": "Provenance of a lowered document."
+    },
     "MinLength": {
       "type": "object",
       "additionalProperties": false,
@@ -1582,6 +1726,15 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "schema_version": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint32",
+          "minimum": 0,
+          "description": "`1` when absent, or `2` (`lowered`, `parties`, `events`)."
+        },
         "id": {
           "type": "string",
           "description": "Stable name a request references this scenario by; by convention\nmatches the file stem (`scenarios/<id>.json`), though lookup also\naccepts the file stem when it differs."
@@ -1642,6 +1795,31 @@
             "observe": {},
             "start": null
           }
+        },
+        "parties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ScenarioParty"
+          },
+          "description": "The matter's parties (v2)."
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/DocketEvent"
+          },
+          "description": "The matter's docket events (v2)."
+        },
+        "lowered": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Lowered"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Build provenance and explicit holes of a compiled matter (v2)."
         }
       },
       "required": [
@@ -2753,7 +2931,7 @@
           "type": "integer",
           "format": "uint32",
           "minimum": 0,
-          "description": "`1` (civ-pro statechart format) or `2`."
+          "description": "`1` (civ-pro statechart format), `2`, `3` (`counting`,\n`citeSyntax`), or `4` (`lowered`)."
         },
         "id": {
           "type": "string",
@@ -2833,6 +3011,17 @@
             "$ref": "#/$defs/RawEdge"
           },
           "description": "Edges."
+        },
+        "lowered": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Lowered"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Build provenance and explicit holes of a compiled pack (v4)."
         }
       },
       "required": [
@@ -2905,6 +3094,30 @@
         "text"
       ],
       "description": "One way of counting a period. The first [`Period`] whose conditions\nhold for a deadline is used."
+    },
+    "Pin": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Package name."
+        },
+        "version": {
+          "type": "string",
+          "description": "Exact version."
+        },
+        "digest": {
+          "type": "string",
+          "description": "`sha256:<hex>` source digest of the package."
+        }
+      },
+      "required": [
+        "name",
+        "version",
+        "digest"
+      ],
+      "description": "One package the document was built from."
     },
     "ProbFill": {
       "oneOf": [
@@ -3600,6 +3813,30 @@
         }
       },
       "description": "A what-if: everything about one matter that is not in the packs."
+    },
+    "ScenarioParty": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The matter's id for the party."
+        },
+        "actor": {
+          "type": "string",
+          "description": "The pack actor key it plays."
+        },
+        "entity_type": {
+          "type": "string",
+          "description": "Its entity type, as the matter declares it."
+        }
+      },
+      "required": [
+        "id",
+        "actor",
+        "entity_type"
+      ],
+      "description": "A party to the matter (v2)."
     },
     "ScenarioSource": {
       "type": "object",

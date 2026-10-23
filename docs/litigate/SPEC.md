@@ -1124,7 +1124,8 @@ Anything without a lowering is L6001.
 | Source | Target |
 |---|---|
 | `Lit.toml` `pack_id`, `title`, `description`, `jurisdiction`, `forum` | `Pack.id`, `title`, `description`, `jurisdiction`, `forum` |
-| (derived) | `Pack.schemaVersion` = 3 if the package has a counting rule (manifest `counting`, or counting/calendar declarations), else 2 |
+| (derived) | `Pack.schemaVersion` = 4 (v3 plus `lowered`) |
+| (the build) | `Pack.lowered` `{pins, asOf, knownAt, worldDigest, holes}` (below) |
 | manifest `counting` | `Pack.counting` (the counting-rule id, verbatim) |
 | manifest `[[cite_syntax.*]]` | `Pack.citeSyntax.rules[]`/`shorthands[]` in order (`section_parts` is `sectionParts`) |
 | `start` | `Pack.startNodeId` |
@@ -1161,14 +1162,44 @@ citations stay lossless; a cite hole without a reason lowers to an absent
 field. Like every hole it is a warning in `dev` and an error in `strict`
 (§7), so the porter replaces it with a resolvable citation.
 
-### 8.2 Clock IR (pack schema v3)
+**The `lowered` header.** Every generated document (pack, link file, clock
+fragment, scenario) carries `lowered` (`docs/PACK_SCHEMA.md` "The `lowered`
+header"):
+
+- `pins`: `{name, version, digest}` of every package the build's selection
+  sees (the package and its dependency closure, `core` included when
+  loaded; for a links package every loaded package; for a case its `uses`
+  and their closure), sorted by name, `digest` the `sha256:` source digest;
+- `asOf`, `knownAt`: the build dates (§8.1 above; a case's own);
+- `worldDigest`: SHA-256 over the JCS text (RFC 8785) of `{"asOf",
+  "knownAt", "pins"}`, `knownAt` omitted when absent;
+- `holes`: one `{pointer, reason}` per explicit `?` in an emitted field,
+  `pointer` the JSON pointer of the field it stands for. The field is
+  absent (or, for a cite or a source `as_of`, holds the reason text), and
+  the hole is still a hole: dev output names its gaps instead of passing
+  for a model nobody authored. The `.lit` field path maps to litgraph's
+  name: `p` is `probability`, `effort` is `hours`, `within`/`deadline` is
+  `deadline` (options camelCased: `deadline/extensionAuthority`),
+  `duration.min` is `duration/min`, `attrs.k` is `attrs/k`,
+  `payoff_by_flag.f` is `payoffByFlag/f`; a hole in a field no document
+  carries (an `event` pattern) is checked, never emitted. A links
+  package's instance `stake ?` is `/instances/<name>/stake`; a case's
+  `unvalued` stake is `/scenario/payoffs/<terminal>` and a source
+  `as_of ?(..)` is `/sources/<i>/as_of`.
+
+The engine checks the header on read (version, sorted pins, recomputed
+digest, holes inside the document) and warns `authored-hole` for a pack
+whose holes leave a number open.
+
+### 8.2 Clock IR (pack schema v3, clock schema 4)
 
 The engine's landed clock (DESIGN §9.1, `crates/litgraph/src/clock`) is the
 target. `Pack.counting` is a string: the id of a `CountingRule` in
 litgraph's shared *clock library* (`packs/clock/*.json`,
 `docs/PACK_SCHEMA.md` "Clock library"), a set of fragments
 `{schemaVersion: 3, calendars: [HolidayCalendar], countingRules:
-[CountingRule]}` merged by id. Rules are step pipelines; every step carries
+[CountingRule]}` merged by id; a generated fragment is `schemaVersion: 4`
+with a `lowered` header (§8.1). Rules are step pipelines; every step carries
 its cited trace `text`.
 
 - A package that declares no `counting` lowers the manifest's `counting`
@@ -1251,7 +1282,11 @@ loader (`ClockLibrary::from_json`), so an invalid one is L6001.
 | `beliefs` | `scenario.observe` qualified node to `{qualified edge: count}` |
 | `Case.removals` (§5.6) | `scenario.remove_edges`: any `analysis.remove_edges` entries in order, then each removed edge not already listed; the source map has one entry per removed edge (`/scenario/remove_edges/i`) with the removing event's span and its cite located in L0 under the edge's package. A non-list `analysis.remove_edges` is left for litgraph to reject (L4007) |
 | `analysis { f: v }` | `scenario.f` = JSON of `v` (numbers exact to binary64; `unset` = JSON null) |
-| `as_of`, `known_at`, parties, events | not emitted; recorded in the provenance sidecar |
+| (derived) | `NamedScenario.schema_version` = 2 |
+| `as_of`, `known_at`, the `uses` closure | `lowered` (§8.1): `asOf`, `knownAt`, `pins`, `worldDigest` |
+| parties | `parties[] {id, actor, entity_type}` in declared order |
+| events | `events[] {date, action, relation, party, authority}` in source (docket) order; `action` is the typed call spelled compactly (`Served(complaint, Mail)`), `relation` `by`/`on`. Record only: replay already derived `scenario.start` and `scenario.remove_edges` from them |
+| `unvalued` stakes, source `as_of ?(..)` | `lowered.holes` (`/scenario/payoffs/<terminal>`, `/sources/<i>/as_of`) |
 
 `analysis` may contain any `Scenario` field except `start`, `perspective`,
 `facts`, `payoffs`, and `observe`, which have dedicated blocks (L4007). The
@@ -1280,9 +1315,12 @@ edge the base lacks is L1002. `payoff_transform` must parse as a litgraph
 expression whose only variables are `payoff` and, when the instance
 declares one, `stake` (L6003). A `stake` the transform does not use is
 L2007. A known `stake` lowers to `stake` in USD; a `stake` hole lowers to
-an absent `stake`, and the engine then leaves every terminal payoff of the
-instance unauthored (`payoff-not-authored`) instead of guessing one: the
-amount at stake is a fact of the matter. `replaces` outside a links
+an absent `stake` (and a `lowered.holes` entry
+`/instances/<name>/stake`), and the engine then leaves every terminal
+payoff of the instance unauthored (`payoff-not-authored`) instead of
+guessing one: the amount at stake is a fact of the matter. The link file
+is `schemaVersion: 2` with a `lowered` header (§8.1); link holes are
+`/links/<i>/<field>`. `replaces` outside a links
 package is L2007.
 
 ### 8.5 Numbers
@@ -1308,13 +1346,24 @@ defaults) and normalizing:
   within one source node is significant (it fixes derived ids and the
   engine's per-node action order; the whole test suite is unchanged under
   this regrouping)
+- the top-level format version (`schemaVersion`, a scenario's
+  `schema_version`) and `lowered` header are dropped: they say how and from
+  what the document was built, not what it means (a legacy v2 pack equals
+  its v4 lowering)
+- a scenario's `parties` and `events` are dropped: replay already turned
+  them into the `scenario.start` and `scenario.remove_edges` compared
 
 Arrays are then compared in order, objects by key, and numbers by binary64
 bit equality. Clock fragments compare the same way. Output is
-byte-deterministic: two-space-indented JSON with a trailing newline,
-written atomically; a scenario omits `Scenario` fields equal to litgraph's
-defaults (serde restores them). Source maps and provenance are sidecars
-excluded from equality.
+byte-deterministic: the JCS text (RFC 8785: members sorted by UTF-16 code
+units, strings minimally escaped, numbers in ECMAScript `Number.toString`
+spelling) indented by two spaces, with a trailing newline, written
+atomically; removing the indentation gives the exact JCS text
+(`litigate_lower::canonical`), which litigatable content hashes and
+`lowered.worldDigest` are taken over. JSON is read with correctly rounded
+number parsing, so every emitted number reads back bit for bit. A scenario
+omits `Scenario` fields equal to litgraph's defaults (serde restores them).
+Source maps and provenance are sidecars excluded from equality.
 
 `semantic_diff` (crate `litigate-lower`, the `litigate diff` oracle)
 reports `{kind, pointer, id, before, after}` with `kind` one of `added`,

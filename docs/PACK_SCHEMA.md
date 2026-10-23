@@ -28,7 +28,7 @@ construct lowers to each field below.
 
 | field | type | notes |
 |---|---|---|
-| `schemaVersion` | `1`, `2`, or `3` | |
+| `schemaVersion` | `1`, `2`, `3` or `4` | `4` is v3 plus `lowered`; the compiler always emits `4` |
 | `id` | string | pack id, also the namespace prefix when composing (`cofc::complaint-filed`) |
 | `title`, `description`, `jurisdiction` | string | |
 | `forum` | string | **v2** short forum key: `frcp`, `frap`, `cafc`, `cofc`, `ptab`, `itc`, `uspto`, ... |
@@ -39,6 +39,36 @@ construct lowers to each field below.
 | `sources` | `[{id,title,url?,path?,sha256?,asOf?}]` | **v2** primary sources the pack was authored from. `cite`/`authority` strings should be traceable to one of these. `path` is **repo-relative only** (e.g. a sibling pack file) — never a local/absolute filesystem path; cite the official `url` for everything else. `litgraph lint` errors (`local-source-path`) on an absolute `path` |
 | `citeSyntax` | object | **v3** the citation syntax this pack's `cite`/`authority` strings use: rule-body prefixes and pack-private shorthands, see [Citation syntax](#citation-syntax-v3). The engine itself recognizes only U.S.C., C.F.R. and case citations |
 | `nodes`, `edges` | arrays | Array order of `nodes` is not observable: the engine visits nodes in canonical (qualified id) order, whatever order packs are listed in, and a node's out-edges in this pack's `edges` order, then its `links.json` links by id |
+| `lowered` | object | **v4** build provenance of a compiled pack, see [The `lowered` header](#the-lowered-header) |
+
+## The `lowered` header
+
+Every document the compiler generates (pack `schemaVersion` 4, `links.json`
+and named scenario schema 2, clock fragment `schemaVersion` 4) carries a
+`lowered` object; a hand-authored document has none. It is provenance,
+not meaning: `litigate diff` ignores it (SPEC §8.6).
+
+| field | type | notes |
+|---|---|---|
+| `pins` | `[{name,version,digest}]` | every package of the world the document was built in (the package and its dependencies; for a matter, the packages it `uses` and theirs), sorted by name; `digest` is the package's `sha256:<hex>` source digest |
+| `asOf` | date | law-in-force date versions were selected at |
+| `knownAt` | date | corpus date versions were selected among (absent: the latest) |
+| `worldDigest` | `sha256:<hex>` | SHA-256 of the JCS text (RFC 8785) of `{"asOf", "knownAt", "pins"}` (`knownAt` omitted when absent): the identity of the world |
+| `holes` | `[{pointer,reason?}]` | every explicit `?` the source left in an emitted field: `pointer` is the JSON pointer of that field in this document (`/edges/3/probability`, `/nodes/0/cite`, `/instances/cafc@cofc-gov/stake`, `/scenario/payoffs/<terminal>`), `reason` the `?("reason")` text. The field itself is absent, or for a cite or source date holds the reason text |
+
+Reading a document checks the header: `lowered` needs the schema version
+above, `pins` must be sorted and unique, `worldDigest` must match its pins
+and dates, and every hole must point into the document (array indices in
+bounds; the field itself may be absent). A pack whose holes leave a number
+open (`probability`, `cost`, `hours`, `payoff`, `payoffByFlag`, `duration`,
+`attrs`, or an instance `stake`) adds one `authored-hole` warning per pack
+to every response that compiles it: the number rests on a fill, not on the
+pack. A `strict` build rejects holes, so only `dev` output carries them.
+
+Generated files are written as RFC 8785 (JCS) canonical JSON, indented by
+two spaces: members sorted by UTF-16 code units and numbers in ECMAScript
+spelling (`1500`, not `1500.0`; `1e+21`). Removing the indentation gives
+the exact JCS text that digests and litigatable hashes are taken over.
 
 ## Nodes
 
@@ -154,7 +184,7 @@ resolves `node_ref` to one node, then forces the same edge on every node
 sharing its `base_id` (`Graph::node_family`/`Graph::edge_family`) — the
 same reasoning as calibration's `Edge.base_id` handling above.
 
-## Clock library (v3, `packs/clock/*.json`)
+## Clock library (v3/v4, `packs/clock/*.json`)
 
 Deadline counting is data. `packs/clock/` holds the **clock library**:
 holiday calendars and counting rules, shared by every pack. A forum
@@ -168,6 +198,9 @@ fragment:
 ```json
 { "schemaVersion": 3, "calendars": [ ... ], "countingRules": [ ... ] }
 ```
+
+A generated fragment is `schemaVersion` 4 and carries a
+[`lowered` header](#the-lowered-header); both versions are read.
 
 Fragments are embedded at build time (key `clock/<file>`) and read from
 `<packs dir>/clock/` by `--packs-dir`/`LITGRAPH_PACKS`; in-memory catalogs
@@ -284,7 +317,9 @@ fails if any pack id or forum key from `packs/*.json` appears in
 ## Links (composition)
 
 `packs/links.json` joins packs into one multi-forum graph. Its top-level
-shape is `{"links": [...], "instances": {...}}`.
+shape is `{"links": [...], "instances": {...}}`; the generated file adds
+`"schemaVersion": 2` and a [`lowered` header](#the-lowered-header) (absent,
+the version is `1`).
 
 ```json
 { "links": [
@@ -466,6 +501,10 @@ override it at runtime, independently of `$LITGRAPH_PACKS`/`--packs-dir`.
 | `packs` | string[] | pack refs this scenario needs. A request naming this scenario with no `packs` of its own uses these; an explicit request `packs` always wins |
 | `sources` | `[{title,url?,as_of?}]` | sourced facts backing this scenario's numbers |
 | `scenario` | object | the engine scenario (`litgraph schema scenario`) |
+| `schema_version` | `1` or `2` | absent is `1`; `2` adds the three fields below, and is what the compiler emits |
+| `parties` | `[{id,actor,entity_type}]` | **v2** the matter's parties and the pack actor each plays |
+| `events` | `[{date,action,relation,party,authority?}]` | **v2** the docket in order: `action` is the typed event as written (`Served(complaint, Mail)`), `relation` `by` or `on` the `party`. Replay already turned them into `scenario.start` and `scenario.remove_edges`; the engine reads them as record only |
+| `lowered` | object | **v2** [`lowered` header](#the-lowered-header): the world the matter was replayed in (`asOf`/`knownAt` are the case's) and its holes (an `unvalued` stake, a source `as_of ?(..)`) |
 
 `litgraph schema named-scenario` gives the full JSON Schema; `litgraph
 validate scenarios/your-scenario.json` (or `--kind named-scenario`) resolves

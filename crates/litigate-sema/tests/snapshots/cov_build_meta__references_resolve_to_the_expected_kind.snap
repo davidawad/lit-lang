@@ -1,0 +1,12 @@
+---
+source: crates/litigate-sema/tests/cov_build_meta.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:10:1 L1008 a package has exactly one `start`",
+    "pkgs/demo/main.lit:10:7 L1002 `a.b::c`: `::` qualification is only valid in links packages, cases, and instance fields",
+    "pkgs/demo/main.lit:11:1 L1008 a package has exactly one `start`",
+    "pkgs/demo/main.lit:11:7 L2001 `c6` is a counting rule, expected a node",
+    "pkgs/demo/main.lit:12:1 L1008 a package has exactly one `start`",
+    "pkgs/demo/main.lit:12:7 L1002 cannot find name `nope`",
+]

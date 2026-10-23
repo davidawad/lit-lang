@@ -1,0 +1,19 @@
+---
+source: crates/litigate-sema/tests/cov_build_node.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:11:30 L2007 `replaces` is not allowed outside a links package [fix: \"\"]",
+    "pkgs/demo/main.lit:12:41 L2007 an edge has either `within` or `deadline`, not both",
+    "pkgs/demo/main.lit:13:37 L0001 expected an identifier, found `3`",
+    "pkgs/demo/main.lit:14:39 L0001 expected an identifier, found `3`",
+    "pkgs/demo/main.lit:15:37 L2001 `c6` is a counting rule, expected a deadline",
+    "pkgs/demo/main.lit:16:39 L2006 `99999999999999999999.5.days` is not an exact day amount",
+    "pkgs/demo/main.lit:17:39 L2001 expected `Days<CalendarDays>`, found `Hours`",
+    "pkgs/demo/main.lit:18:45 L2001 expected `Days<CalendarDays>`, found `Hours`",
+    "pkgs/demo/main.lit:19:30 L2007 triangular `duration` needs `mode`",
+    "pkgs/demo/main.lit:19:52 L0001 expected `mode` before the closing `}`",
+    "pkgs/demo/main.lit:20:31 L2007 `duration` needs min <= mode <= max",
+    "pkgs/demo/main.lit:21:38 L2001 expected `Hours`, found `Days<CalendarDays>`",
+    "pkgs/demo/main.lit:21:52 L1002 cannot find function or event `Nope`",
+]

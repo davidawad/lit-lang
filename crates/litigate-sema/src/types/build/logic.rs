@@ -1,6 +1,6 @@
 //! Defaults, exceptions, tests, nominal types, authority chains, and links
 //! and instances (SPEC §5.2, §5.5, §8.4).
-use super::cx::{first_expr, Cx};
+use super::cx::{first_expr, first_ref, Cx};
 use crate::db::parse::tree::{
     EdgeItem, Expr, ExprKind, Field, Item, Json, Name, TestStmt, TypeRef,
 };
@@ -10,7 +10,7 @@ use crate::hir::{
     Expectation, Instance, Link, Test, Type, TypeAlias, Value,
 };
 use crate::resolve::sig::ValueKind;
-use crate::types::{rational as q, ty};
+use crate::types::ty;
 use litigate_base::DiagnosticCode as C;
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -128,17 +128,16 @@ impl Cx<'_, '_> {
         let mut expects = Vec::new();
         for s in stmts {
             match s {
-                TestStmt::Given(e, date) => match &e.kind {
-                    ExprKind::Call(callee, args) => {
+                TestStmt::Given(e, date) => {
+                    if let Some((callee, args)) = self.call(
+                        e,
+                        C::TypeMismatch,
+                        "`given` takes a complete event such as `Served(complaint, Mail)`",
+                    ) {
                         let ch = self.ck.event_call(callee, args, false, e.range);
                         givens.push((ch.hir, date.text.clone()));
                     }
-                    _ => self.report(Report::new(
-                        C::TypeMismatch,
-                        e.range,
-                        "`given` takes a complete event such as `Served(complaint, Mail)`",
-                    )),
-                },
+                }
                 TestStmt::Expect(e) => {
                     let ch = self.ck.check(e, &Type::Boolean);
                     match ch.hir.kind {
@@ -286,9 +285,12 @@ impl Cx<'_, '_> {
 
     /// `link id "label": A -> B ...`.
     pub fn link(&mut self, e: &EdgeItem) -> Option<Link> {
-        let from_ref = e.from.as_ref()?;
-        let from = self.value_ref(from_ref, "node", |k| matches!(k, ValueKind::Node { .. }));
-        self.link_from = Some(from_ref.head.text.clone());
+        // A link's edge always has a `from` (the grammar requires it).
+        let from = e
+            .from
+            .as_ref()
+            .and_then(|r| self.value_ref(r, "node", |k| matches!(k, ValueKind::Node { .. })));
+        self.link_from = e.from.as_ref().map(|r| r.head.text.clone());
         let edge = self.edge(e, from.as_deref().unwrap_or_default(), None, false);
         self.link_from = None;
         let fields = self.once(&e.fields);
@@ -363,7 +365,8 @@ impl Cx<'_, '_> {
         if let Some(ExprKind::Record(ps)) = f.and_then(|x| first_expr(x)).map(|e| &e.kind) {
             for (edge, e) in ps {
                 match self.ck.check(e, &Type::Probability).value {
-                    Some(Value::Probability(p)) if q::is_probability(p) => {
+                    // The checker keeps every `Probability` value in [0, 1].
+                    Some(Value::Probability(p)) => {
                         probabilities.insert(edge.text.clone(), p);
                     }
                     _ => self.report(Report::new(
@@ -405,28 +408,17 @@ impl Cx<'_, '_> {
     /// `instance base@origin { ... }`.
     pub fn instance(&mut self, base: &Name, origin: &Name, fields: &[Field]) -> Option<Instance> {
         let f = self.once_except(fields, "patch");
-        let pack = f
-            .get("pack")
-            .and_then(|x| first_expr(x))
-            .and_then(|e| match &e.kind {
-                ExprKind::Ref(r)
-                    if self.ck.scope.packs.iter().any(|s| s.pack_id == r.display()) =>
-                {
-                    Some(r.display())
-                }
-                ExprKind::Ref(r) => {
-                    self.report(
-                        Report::new(
-                            C::UnresolvedName,
-                            r.range,
-                            format!("unknown pack `{}`", r.display()),
-                        )
-                        .note("the pack must be a declared dependency"),
-                    );
-                    None
-                }
-                _ => None,
-            });
+        let pack = first_ref(f.get("pack")).and_then(|r| {
+            let id = r.display();
+            if self.ck.scope.packs.iter().any(|s| s.pack_id == id) {
+                return Some(id);
+            }
+            self.report(
+                Report::new(C::UnresolvedName, r.range, format!("unknown pack `{id}`"))
+                    .note("the pack must be a declared dependency"),
+            );
+            None
+        });
         if !f.contains_key("pack") {
             self.report(Report::new(
                 C::InvalidField,

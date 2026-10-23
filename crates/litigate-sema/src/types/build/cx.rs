@@ -4,7 +4,6 @@ use crate::db::parse::tree::{Atom, Expr, ExprKind, Field, Item, Name, RefPath};
 use crate::db::span::Report;
 use crate::hir::{Interval, Manifest, Metadata, Relation};
 use crate::resolve::sig::{clause, clauses_of, ValueKind};
-use crate::types::date;
 use crate::types::expr::Checker;
 use litigate_base::{Applicability, DiagnosticCode as C};
 use std::collections::BTreeMap;
@@ -26,6 +25,25 @@ pub struct Cx<'s, 'a> {
 pub fn first_expr(f: &Field) -> Option<&Expr> {
     match f.values.first() {
         Some((Atom::Expr(e), _)) => Some(e),
+        _ => None,
+    }
+}
+
+/// The first value of an optional field as a reference (`None` when the
+/// field is absent or its value is missing).
+#[must_use]
+pub fn first_ref<'f>(f: Option<&&'f Field>) -> Option<&'f RefPath> {
+    match f.and_then(|f| first_expr(f)).map(|e| &e.kind) {
+        Some(ExprKind::Ref(r)) => Some(r),
+        _ => None,
+    }
+}
+
+/// The first value of an optional field as a boolean (`extendable`).
+#[must_use]
+pub fn flag(f: Option<&&Field>) -> Option<bool> {
+    match f.and_then(|f| first_expr(f)).map(|e| &e.kind) {
+        Some(ExprKind::Bool(b)) => Some(*b),
         _ => None,
     }
 }
@@ -88,13 +106,27 @@ impl Cx<'_, '_> {
         );
     }
 
+    /// `e` as a call `f(args)`; anything else is reported as `code`.
+    pub fn call<'e>(
+        &mut self,
+        e: &'e Expr,
+        code: C,
+        message: &str,
+    ) -> Option<(&'e RefPath, &'e [Expr])> {
+        if let ExprKind::Call(callee, args) = &e.kind {
+            return Some((callee, args));
+        }
+        self.report(Report::new(code, e.range, message));
+        None
+    }
+
     /// String value of a field.
     #[must_use]
     pub fn string(f: Option<&&Field>) -> Option<String> {
-        f.and_then(|f| first_expr(f)).and_then(|e| match &e.kind {
-            ExprKind::Str(s) | ExprKind::Cite(s) => Some(s.clone()),
+        match f.and_then(|f| first_expr(f)).map(|e| &e.kind) {
+            Some(ExprKind::Str(s) | ExprKind::Cite(s)) => Some(s.clone()),
             _ => None,
-        })
+        }
     }
 
     /// Text of a `cite` clause or `authority` field. A cite hole
@@ -115,22 +147,18 @@ impl Cx<'_, '_> {
 
     /// Simple identifiers of an `IdList` field (opaque tags and flags).
     pub fn idents(&mut self, f: Option<&&Field>) -> Vec<String> {
-        let Some(ExprKind::List(items)) = f.and_then(|f| first_expr(f)).map(|e| &e.kind) else {
-            return Vec::new();
-        };
-        items
-            .iter()
-            .filter_map(|i| match &i.kind {
-                ExprKind::Ref(r) if r.is_simple() => Some(r.head.text.clone()),
-                ExprKind::Ref(r) => {
-                    self.report(Report::new(
-                        C::InvalidField,
-                        r.range,
-                        format!("expected a plain identifier, found `{}`", r.display()),
-                    ));
-                    None
+        Self::refs(f)
+            .into_iter()
+            .filter_map(|r| {
+                if r.is_simple() {
+                    return Some(r.head.text.clone());
                 }
-                _ => None,
+                self.report(Report::new(
+                    C::InvalidField,
+                    r.range,
+                    format!("expected a plain identifier, found `{}`", r.display()),
+                ));
+                None
             })
             .collect()
     }
@@ -210,7 +238,7 @@ impl Cx<'_, '_> {
         &mut self,
         r: &RefPath,
         what: &str,
-        want: impl Fn(&ValueKind) -> bool,
+        want: fn(&ValueKind) -> bool,
     ) -> Option<String> {
         if !self.links
             && r.rest
@@ -243,16 +271,17 @@ impl Cx<'_, '_> {
 
     fn interval_of(item: &Item) -> (Option<(&Name, Option<&Name>)>, Option<String>) {
         let clauses = clauses_of(item);
-        let eff = clause(clauses, "effective").and_then(|f| match f.values.first() {
+        let eff = match clause(clauses, "effective").and_then(|f| f.values.first()) {
             Some((Atom::Interval(a, b), _)) => Some((a, b.as_ref())),
             _ => None,
-        });
-        let known = clause(clauses, "known_at")
+        };
+        let known = match clause(clauses, "known_at")
             .and_then(first_expr)
-            .and_then(|e| match &e.kind {
-                ExprKind::Date(d) => Some(d.clone()),
-                _ => None,
-            });
+            .map(|e| &e.kind)
+        {
+            Some(ExprKind::Date(d)) => Some(d.clone()),
+            _ => None,
+        };
         (eff, known)
     }
 
@@ -283,7 +312,6 @@ impl Cx<'_, '_> {
             .or(rule_known)
             .or_else(|| pkg.map(|p| p.known_at))
             .unwrap_or_default();
-        debug_assert!(from.is_empty() || date::is_valid(&from));
         Interval { from, to, known_at }
     }
 

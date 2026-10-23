@@ -1,0 +1,111 @@
+---
+source: crates/litigate-sema/tests/cov_build_clock.rs
+expression: calendars
+---
+[
+    Calendar(
+        Calendar {
+            meta: Metadata {
+                id: "all",
+                label: "",
+                cite: None,
+                effective: Interval {
+                    from: "2009-12-01",
+                    to: None,
+                    known_at: "2025-01-01",
+                },
+                authority: "FederalRule",
+                relations: [],
+                span: Some(
+                    Span {
+                        file: FileId(
+                            "pkgs/demo/main.lit",
+                        ),
+                        line: 10,
+                        col: 1,
+                        end_line: 16,
+                        end_col: 2,
+                    },
+                ),
+                imported: false,
+            },
+            holidays: [
+                Holiday {
+                    id: "a",
+                    date: Fixed {
+                        month: 2,
+                        day: 29,
+                    },
+                    in_force: Interval {
+                        from: "2000-01-01",
+                        to: None,
+                        known_at: "2025-01-01",
+                    },
+                    observed: Some(
+                        NearestWeekday,
+                    ),
+                },
+                Holiday {
+                    id: "b",
+                    date: Nth {
+                        n: 4,
+                        weekday: "thursday",
+                        month: 11,
+                    },
+                    in_force: Interval {
+                        from: "2000-01-01",
+                        to: Some(
+                            "2030-01-01",
+                        ),
+                        known_at: "2025-01-01",
+                    },
+                    observed: Some(
+                        NextDay,
+                    ),
+                },
+                Holiday {
+                    id: "c",
+                    date: Last {
+                        weekday: "monday",
+                        month: 5,
+                    },
+                    in_force: Interval {
+                        from: "2000-01-01",
+                        to: None,
+                        known_at: "2025-01-01",
+                    },
+                    observed: None,
+                },
+                Holiday {
+                    id: "d",
+                    date: Every {
+                        years: 4,
+                        from_year: 2001,
+                        month: 1,
+                        day: 20,
+                    },
+                    in_force: Interval {
+                        from: "2000-01-01",
+                        to: None,
+                        known_at: "2025-01-01",
+                    },
+                    observed: None,
+                },
+                Holiday {
+                    id: "e",
+                    date: Once {
+                        date: "2001-09-11",
+                    },
+                    in_force: Interval {
+                        from: "2001-09-11",
+                        to: Some(
+                            "2001-09-12",
+                        ),
+                        known_at: "2025-01-01",
+                    },
+                    observed: None,
+                },
+            ],
+        },
+    ),
+]

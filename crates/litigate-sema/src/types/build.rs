@@ -4,6 +4,7 @@ mod calendar;
 mod clock;
 mod cx;
 mod edge;
+mod imports;
 mod logic;
 mod node;
 mod package;
@@ -12,14 +13,14 @@ pub use package::{check_package, expected_lock, PackageCheck};
 
 use crate::db::inputs::SourceFile;
 use crate::db::parse::tree::{dotted, Item, ItemKind, ItemTree, Name};
-use crate::db::queries::{item_tree, manifest, module_graph, module_header, signature};
+use crate::db::queries::{item_tree, manifest, signature};
 use crate::db::span::{sort_diagnostics, Report, TextRange};
 use crate::hir::{self, Declaration, Rule, RuleKind};
-use crate::resolve::graph::ImportTarget;
 use crate::resolve::scope::Scope;
-use crate::resolve::sig::{clause, clauses_of, flatten, value_of, Signature, ValueKind};
+use crate::resolve::sig::{clause, clauses_of, flatten, value_of, ValueKind};
 use crate::types::expr::Checker;
 use cx::Cx;
+use imports::{import_signatures, imports, pack_signatures};
 use litigate_base::{Applicability, Diagnostic, DiagnosticCode as C, FileId, LineIndex, Span};
 use serde::Serialize;
 use std::collections::BTreeMap;
@@ -84,32 +85,30 @@ type Seen = (Option<std::mem::Discriminant<ValueKind>>, bool, TextRange);
 fn duplicates(tree: &ItemTree, reports: &mut Vec<Report>) {
     let mut seen: BTreeMap<(u8, String), Seen> = BTreeMap::new();
     for (item, rule) in flatten(tree) {
+        if let ItemKind::Test(name, ..) = &item.kind {
+            let key = (3, name.text.clone());
+            if let Some((_, _, first)) = seen.get(&key) {
+                reports.push(
+                    Report::new(
+                        C::DuplicateName,
+                        name.range,
+                        format!("test \"{}\" is declared twice", name.text),
+                    )
+                    .note_at(*first, "first declared here"),
+                );
+            } else {
+                seen.insert(key, (None, false, name.range));
+            }
+            continue;
+        }
+        let Some(name) = item_name(item) else {
+            continue;
+        };
+        // Every other named item is a value (SPEC §4.3 namespaces).
         let (ns, kind) = match &item.kind {
             ItemKind::TypeAlias(..) | ItemKind::Enum(..) | ItemKind::Event(..) => (1, None),
             ItemKind::Group(..) => (2, None),
-            ItemKind::Test(name, ..) => {
-                let key = (3, name.text.clone());
-                if let Some((_, _, first)) = seen.get(&key) {
-                    reports.push(
-                        Report::new(
-                            C::DuplicateName,
-                            name.range,
-                            format!("test \"{}\" is declared twice", name.text),
-                        )
-                        .note_at(*first, "first declared here"),
-                    );
-                } else {
-                    seen.insert(key, (None, false, name.range));
-                }
-                continue;
-            }
-            _ => match value_of(item) {
-                Some((_, kind)) => (0, Some(std::mem::discriminant(&kind))),
-                None => continue,
-            },
-        };
-        let Some(name) = item_name(item) else {
-            continue;
+            _ => (0, value_of(item).map(|(_, k)| std::mem::discriminant(&k))),
         };
         let versioned = has_effective(item, rule);
         let key = (ns, name.text.clone());
@@ -129,75 +128,6 @@ fn duplicates(tree: &ItemTree, reports: &mut Vec<Report>) {
             }
         }
     }
-}
-
-/// Import-level diagnostics for `file`.
-fn imports(
-    db: &dyn salsa::Database,
-    file: SourceFile,
-    tree: &ItemTree,
-    own: &Signature,
-    reports: &mut Vec<Report>,
-) -> Vec<String> {
-    let graph = module_graph(db, file.workspace(db));
-    let Some(node) = graph.node(file) else {
-        return Vec::new();
-    };
-    if node.duplicate {
-        if let (Some(first), Some(last)) = (tree.module.first(), tree.module.last()) {
-            reports.push(Report::new(
-                C::DuplicateName,
-                first.range.cover(last.range),
-                format!(
-                    "module `{}` is declared by another file of this package",
-                    node.module
-                ),
-            ));
-        }
-    }
-    let mut resolved = Vec::new();
-    let mut named: BTreeMap<String, String> = BTreeMap::new();
-    for (import, target) in tree.imports.iter().zip(&node.imports) {
-        let path = dotted(&import.path);
-        let range = import.path.first().map_or(import.range, |f| {
-            f.range
-                .cover(import.path.last().map_or(f.range, |l| l.range))
-        });
-        match target {
-            ImportTarget::Module(f) => {
-                resolved.push(module_header(db, *f).module.clone());
-                let sig = signature(db, *f);
-                for n in import.names.iter().flatten() {
-                    let exists = sig.values.contains_key(&n.text) || sig.types.contains_key(&n.text) || sig.groups.contains(&n.text) || sig.authorities.contains(&n.text);
-                    if !exists {
-                        let keys = sig.values.keys().chain(sig.types.keys()).chain(sig.groups.iter()).map(String::as_str);
-                        let mut report = Report::new(C::UnresolvedName, n.range, format!("module `{path}` declares no `{}`", n.text));
-                        if let Some(best) = crate::resolve::suggest::nearest(&n.text, keys) {
-                            report = report.fix(n.range, best, Applicability::MaybeIncorrect);
-                        }
-                        reports.push(report);
-                    } else if own.values.contains_key(&n.text) || own.types.contains_key(&n.text) || own.groups.contains(&n.text) {
-                        reports.push(Report::new(C::DuplicateName, n.range, format!("`{}` is imported from `{path}` but also declared in this module", n.text)).note("shadowing is not allowed"));
-                    } else if let Some(other) = named.insert(n.text.clone(), path.clone()).filter(|o| *o != path) {
-                        reports.push(Report::new(C::DuplicateName, n.range, format!("`{}` is already imported from `{other}`", n.text)));
-                    }
-                }
-            }
-            ImportTarget::Unknown(best) => {
-                let mut report = Report::new(C::UnresolvedName, range, format!("cannot find module `{path}`"));
-                if let Some(best) = best {
-                    report = report.fix(range, best.clone(), Applicability::MaybeIncorrect);
-                }
-                reports.push(report);
-            }
-            ImportTarget::Undeclared(pkg) => reports.push(
-                Report::new(C::UndeclaredDependency, range, format!("module `{path}` belongs to package `{pkg}`, which is not a dependency"))
-                    .note(format!("add `{pkg} = {{ version = \"^x.y.z\", path = \"...\" }}` to `[dependencies]` in Lit.toml")),
-            ),
-            ImportTarget::Cycle(cycle) => reports.push(Report::new(C::ImportCycle, range, format!("importing `{path}` creates a cycle")).note(format!("cycle: {}", cycle.join(" -> ")))),
-        }
-    }
-    resolved
 }
 
 /// A `.lit` `package` header must agree with `Lit.toml` (L1005).
@@ -240,62 +170,6 @@ fn package_header(
             );
         }
     }
-}
-
-/// Signatures reachable through `::`: every module of this package and of
-/// its declared dependencies.
-fn pack_signatures(db: &dyn salsa::Database, file: SourceFile) -> Vec<&Signature> {
-    let pkg = file.package(db);
-    let deps: Vec<String> = manifest(db, pkg)
-        .as_ref()
-        .map(|m| m.manifest.dependencies.keys().cloned().collect())
-        .unwrap_or_default();
-    file.workspace(db)
-        .packages(db)
-        .iter()
-        .filter(|p| {
-            **p == pkg
-                || manifest(db, **p)
-                    .as_ref()
-                    .is_ok_and(|m| deps.contains(&m.manifest.name))
-        })
-        .flat_map(|p| p.files(db).iter().map(|f| signature(db, *f)))
-        .collect()
-}
-
-/// Signatures of `file`'s direct imports and of [`transitive_imports`].
-fn import_signatures(
-    db: &dyn salsa::Database,
-    file: SourceFile,
-) -> (Vec<&Signature>, Vec<&Signature>) {
-    let graph = module_graph(db, file.workspace(db));
-    let sigs = |files: Vec<SourceFile>| files.into_iter().map(|f| signature(db, f)).collect();
-    (
-        sigs(graph.imports(file)),
-        sigs(transitive_imports(graph, file)),
-    )
-}
-
-/// Modules imported by `file`'s imports, transitively (not `file`'s own
-/// direct imports), in discovery order.
-fn transitive_imports(
-    graph: &crate::resolve::graph::ModuleGraph,
-    file: SourceFile,
-) -> Vec<SourceFile> {
-    let direct = graph.imports(file);
-    let mut seen: Vec<SourceFile> = direct.clone();
-    let mut out = Vec::new();
-    let mut queue: Vec<SourceFile> = direct;
-    while let Some(next) = queue.pop() {
-        for f in graph.imports(next) {
-            if f != file && !seen.contains(&f) {
-                seen.push(f);
-                out.push(f);
-                queue.push(f);
-            }
-        }
-    }
-    out
 }
 
 /// Checks one module and builds its HIR.

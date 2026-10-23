@@ -1,0 +1,69 @@
+---
+source: crates/litigate-sema/tests/cov_build_meta.rs
+expression: out
+---
+[
+    Metadata {
+        id: "rel",
+        label: "Documented default",
+        cite: Some(
+            "FRCP 6(a), (b)",
+        ),
+        effective: Interval {
+            from: "2000-01-01",
+            to: None,
+            known_at: "2020-01-01",
+        },
+        authority: "FederalRule",
+        relations: [
+            SubjectTo(
+                "b1",
+            ),
+            Notwithstanding(
+                "b2",
+            ),
+            Supersedes(
+                "b3",
+            ),
+            Revives(
+                "b4",
+            ),
+            Override(
+                "b5",
+            ),
+            DelegableTo(
+                "Clerk",
+            ),
+        ],
+        span: None,
+        imported: true,
+    },
+    Metadata {
+        id: "marker",
+        label: "",
+        cite: None,
+        effective: Interval {
+            from: "2009-12-01",
+            to: None,
+            known_at: "2025-01-01",
+        },
+        authority: "FederalRule",
+        relations: [],
+        span: None,
+        imported: true,
+    },
+    Metadata {
+        id: "inner",
+        label: "",
+        cite: None,
+        effective: Interval {
+            from: "2005-01-01",
+            to: None,
+            known_at: "2021-01-01",
+        },
+        authority: "FederalRule",
+        relations: [],
+        span: None,
+        imported: false,
+    },
+]

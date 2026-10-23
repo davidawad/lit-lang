@@ -1,0 +1,18 @@
+---
+source: crates/litigate-sema/tests/cov_build_node.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:10:25 L1002 unknown valence `zzzzzz`",
+    "pkgs/demo/main.lit:11:25 L1002 unknown valence `good.x` [fix: \"good\"]",
+    "pkgs/demo/main.lit:12:31 L2007 attribute `a` is given twice",
+    "pkgs/demo/main.lit:12:40 L2006 exact arithmetic overflowed",
+    "pkgs/demo/main.lit:13:15 L2007 `discretion` is not allowed on non-chance nodes [fix: \"\"]",
+    "pkgs/demo/main.lit:13:26 L2007 `outcome` is not allowed on non-terminal nodes [fix: \"\"]",
+    "pkgs/demo/main.lit:13:40 L2007 `payoff` is not allowed on non-terminal nodes [fix: \"\"]",
+    "pkgs/demo/main.lit:13:54 L2007 `payoff_by_flag` is not allowed on non-terminal nodes [fix: \"\"]",
+    "pkgs/demo/main.lit:14:40 L2006 `usd` has 2 minor-unit digits; `1.005` has 3",
+    "pkgs/demo/main.lit:15:17 L2007 the `fact` tag is allowed only on `chance` nodes and nodes with `p` edges",
+    "pkgs/demo/main.lit:21:23 L1002 cannot find group `nope`",
+    "pkgs/demo/main.lit:22:29 L1001 node `e1` already has an edge `a`",
+]

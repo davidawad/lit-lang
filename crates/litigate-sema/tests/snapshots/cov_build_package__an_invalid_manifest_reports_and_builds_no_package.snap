@@ -1,0 +1,8 @@
+---
+source: crates/litigate-sema/tests/cov_build_package.rs
+expression: "render(&db, ws)"
+---
+[
+    "pkgs/bad/Lit.toml:1:1 L1008 the package declares no `start` node",
+    "pkgs/bad/Lit.toml:2:8 L1004 invalid Lit.toml: invalid type: integer `3`, expected a string",
+]

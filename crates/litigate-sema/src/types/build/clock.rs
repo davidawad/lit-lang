@@ -1,7 +1,7 @@
 //! Deadlines, counting rules, holiday calendars, and transitions lowered to
 //! HIR (SPEC §5.3-§5.4). Structural checks only; overlap, coverage, and
 //! counting semantics are verified downstream.
-use super::cx::{first_expr, Cx};
+use super::cx::{first_expr, first_ref, flag, Cx};
 use crate::db::parse::tree::{ArmItem, Expr, ExprKind, Field, Item, Name, RefPath};
 use crate::db::span::Report;
 use crate::hir::{
@@ -14,47 +14,37 @@ use litigate_base::{Applicability, DiagnosticCode as C};
 use std::collections::BTreeMap;
 
 impl Cx<'_, '_> {
-    pub(super) fn bad_counting(&mut self, name: &Name, expected: &[&str]) {
+    /// Reports `r` as none of the `expected` keywords.
+    pub(super) fn bad_counting(&mut self, r: &RefPath, expected: &[&str]) {
+        let shown = r.display();
         let mut report = Report::new(
             C::InvalidCounting,
-            name.range,
-            format!("unknown counting keyword `{}`", name.text),
+            r.range,
+            format!("unknown counting keyword `{shown}`"),
         )
         .note(format!("expected one of {}", expected.join(", ")));
-        if let Some(best) = suggest::nearest(&name.text, expected.iter().copied()) {
-            report = report.fix(name.range, best, Applicability::MaybeIncorrect);
+        if let Some(best) = suggest::nearest(&shown, expected.iter().copied()) {
+            report = report.fix(r.range, best, Applicability::MaybeIncorrect);
         }
         self.report(report);
     }
 
-    pub(super) fn keyword<T: Copy>(&mut self, e: Option<&Expr>, table: &[(&str, T)]) -> Option<T> {
-        let ExprKind::Ref(r) = &e?.kind else {
-            return None;
-        };
+    pub(super) fn keyword<T: Copy>(&mut self, r: &RefPath, table: &[(&str, T)]) -> Option<T> {
         let hit = table
             .iter()
             .find(|(k, _)| r.is_simple() && *k == r.head.text)
             .map(|(_, v)| *v);
         if hit.is_none() {
-            self.bad_counting(&r.head, &table.iter().map(|(k, _)| *k).collect::<Vec<_>>());
+            self.bad_counting(r, &table.iter().map(|(k, _)| *k).collect::<Vec<_>>());
         }
         hit
     }
 
     fn days(&mut self, e: &Expr) -> Option<(u64, DayUnit)> {
         match self.ck.infer(e).value {
-            Some(Value::Days { amount, unit }) => {
-                if let Ok(n) = u64::try_from(amount) {
-                    Some((n, unit))
-                } else {
-                    self.report(Report::new(
-                        C::ArithmeticError,
-                        e.range,
-                        "a period cannot be negative",
-                    ));
-                    None
-                }
-            }
+            // Day amounts here are unsigned duration literals (SPEC §3.1),
+            // so the conversion cannot fail.
+            Some(Value::Days { amount, unit }) => u64::try_from(amount).ok().map(|n| (n, unit)),
             Some(Value::Hours(_)) => {
                 self.report(Report::new(
                     C::InvalidCounting,
@@ -133,13 +123,7 @@ impl Cx<'_, '_> {
             direction,
             trigger: trigger?,
             counting: counting?,
-            extendable: o
-                .get("extendable")
-                .and_then(|f| first_expr(f))
-                .and_then(|x| match x.kind {
-                    ExprKind::Bool(b) => Some(b),
-                    _ => None,
-                }),
+            extendable: flag(o.get("extendable")),
             extension_authority: Self::string(o.get("extension_authority")),
             note: Self::string(o.get("note")),
         })
@@ -158,12 +142,8 @@ impl Cx<'_, '_> {
         let roll_on = Self::refs(f.get("roll_forward_on"))
             .into_iter()
             .filter_map(|r| {
-                let e = Expr {
-                    kind: ExprKind::Ref(r.clone()),
-                    range: r.range,
-                };
                 self.keyword(
-                    Some(&e),
+                    r,
                     &[
                         ("weekend", RollOn::Weekend),
                         ("legal_holiday", RollOn::LegalHoliday),
@@ -173,11 +153,7 @@ impl Cx<'_, '_> {
             })
             .collect::<Vec<_>>();
         let service_extensions = self.service_extensions(f.get("service_extension"));
-        let calendar = if let Some(ExprKind::Ref(r)) = f
-            .get("holidays")
-            .and_then(|x| first_expr(x))
-            .map(|e| &e.kind)
-        {
+        let calendar = if let Some(r) = first_ref(f.get("holidays")) {
             self.value_ref(r, "calendar", |k| matches!(k, ValueKind::Calendar))
         } else {
             self.report(Report::new(
@@ -187,15 +163,18 @@ impl Cx<'_, '_> {
             ));
             None
         };
-        let anchor = match f.get("anchor") {
-            Some(a) => self.keyword(
-                first_expr(a),
-                &[
-                    ("trigger_day", Anchor::TriggerDay),
-                    ("next_business_day", Anchor::NextBusinessDay),
-                ],
-            ),
-            None => Some(Anchor::TriggerDay),
+        let anchor = if f.contains_key("anchor") {
+            first_ref(f.get("anchor")).and_then(|r| {
+                self.keyword(
+                    r,
+                    &[
+                        ("trigger_day", Anchor::TriggerDay),
+                        ("next_business_day", Anchor::NextBusinessDay),
+                    ],
+                )
+            })
+        } else {
+            Some(Anchor::TriggerDay)
         };
         let short_period = self.short_period(f.get("short_period"));
         Some(Counting {
@@ -236,19 +215,23 @@ impl Cx<'_, '_> {
                     .iter()
                     .find(|(k, _)| k.text == "below")
                     .and_then(|(_, e)| self.days(e));
-                let count = parts
-                    .iter()
-                    .find(|(k, _)| k.text == "count")
-                    .and_then(|(_, e)| {
-                        self.keyword(
-                            Some(e),
-                            &[
-                                ("calendar_days", DayUnit::Calendar),
-                                ("court_days", DayUnit::Court),
-                                ("business_days", DayUnit::Business),
-                            ],
-                        )
-                    });
+                let count = match parts.iter().find(|(k, _)| k.text == "count") {
+                    Some((
+                        _,
+                        Expr {
+                            kind: ExprKind::Ref(r),
+                            ..
+                        },
+                    )) => self.keyword(
+                        r,
+                        &[
+                            ("calendar_days", DayUnit::Calendar),
+                            ("court_days", DayUnit::Court),
+                            ("business_days", DayUnit::Business),
+                        ],
+                    ),
+                    _ => None,
+                };
                 if parts.len() != 2 || below.is_none() || count.is_none() {
                     self.report(Report::new(
                         C::InvalidCounting,

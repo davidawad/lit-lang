@@ -1,0 +1,13 @@
+---
+source: crates/litigate-sema/tests/cov_build_module.rs
+expression: out
+---
+[
+    "pkgs/demo/lib.lit:2:7 L1001 `g` is also declared in module `main`",
+    "pkgs/demo/lib.lit:4:6 L1001 `Amount` is also declared in module `main`",
+    "pkgs/demo/lib.lit:5:9 L1001 `x` is also declared in module `main`",
+    "pkgs/demo/main.lit:2:13 L1001 `x` is imported from `lib` but also declared in this module",
+    "pkgs/demo/main.lit:2:16 L1001 `g` is imported from `lib` but also declared in this module",
+    "pkgs/demo/main.lit:2:19 L1001 `Amount` is imported from `lib` but also declared in this module",
+    "pkgs/demo/main.lit:4:13 L1001 `y` is already imported from `other`",
+]

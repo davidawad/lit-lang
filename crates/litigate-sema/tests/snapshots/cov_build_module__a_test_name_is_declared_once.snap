@@ -1,0 +1,7 @@
+---
+source: crates/litigate-sema/tests/cov_build_module.rs
+expression: "check_body(\"test \\\"t\\\" {}\\ntest \\\"t\\\" {}\\ntest \\\"u\\\" {}\")"
+---
+[
+    "pkgs/demo/main.lit:11:6 L1001 test \"t\" is declared twice",
+]

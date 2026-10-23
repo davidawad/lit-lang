@@ -1,0 +1,13 @@
+---
+source: crates/litigate-sema/tests/cov_build_logic.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:12:10 L3006 type alias `C` refers to itself",
+    "pkgs/demo/main.lit:13:10 L3006 type alias `D` refers to itself",
+    "pkgs/demo/main.lit:15:10 L1002 cannot find type `Nope`",
+    "pkgs/demo/main.lit:16:17 L1001 variant `a` is declared twice",
+    "pkgs/demo/main.lit:17:6 L2007 enum `Empty` needs at least one variant",
+    "pkgs/demo/main.lit:18:22 L1001 parameter `x` is declared twice",
+    "pkgs/demo/main.lit:19:14 L1002 cannot find type `Nope`",
+]

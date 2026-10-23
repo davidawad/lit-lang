@@ -1,0 +1,8 @@
+---
+source: crates/litigate-sema/tests/cov_build_module.rs
+expression: "render(&db, ws)"
+---
+[
+    "pkgs/demo/a.lit:1:1 L0001 expected `module`, found `start`",
+    "pkgs/demo/b.lit:1:1 L0001 expected `module`, found `default`",
+]

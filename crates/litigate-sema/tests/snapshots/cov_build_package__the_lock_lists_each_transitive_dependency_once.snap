@@ -1,0 +1,14 @@
+---
+source: crates/litigate-sema/tests/cov_build_package.rs
+expression: names
+---
+[
+    "name = \"left\"",
+    "dependencies = [\"shared 1.0.0\"]",
+    "name = \"right\"",
+    "dependencies = [\"shared 1.0.0\"]",
+    "name = \"root\"",
+    "dependencies = [\"left 1.0.0\", \"right 1.0.0\"]",
+    "name = \"shared\"",
+    "dependencies = []",
+]

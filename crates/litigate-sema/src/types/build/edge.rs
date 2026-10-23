@@ -1,5 +1,5 @@
 //! Edges and links' edge fields (SPEC §5.1, §6 field types).
-use super::cx::{first_expr, nested, Cx};
+use super::cx::{first_expr, first_ref, flag, nested, Cx};
 use crate::db::parse::tree::{EdgeItem, Expr, ExprKind, Field};
 use crate::db::span::Report;
 use crate::hir::{
@@ -24,15 +24,8 @@ impl Cx<'_, '_> {
         let to = self
             .value_ref(&e.to, "node", |k| matches!(k, ValueKind::Node { .. }))
             .unwrap_or_else(|| e.to.display());
-        let actor = clauses
-            .get("by")
-            .and_then(|f| first_expr(f))
-            .and_then(|x| match &x.kind {
-                ExprKind::Ref(r) => Some(r),
-                _ => None,
-            })
-            .map(|r| self.actor(r));
-        let actor = actor
+        let actor = first_ref(clauses.get("by"))
+            .map(|r| self.actor(r))
             .or_else(|| node_actor.map(str::to_owned))
             .unwrap_or_else(|| "either".to_owned());
         let probability = self.probability(
@@ -91,17 +84,13 @@ impl Cx<'_, '_> {
 
     /// An event pattern (trailing arguments may be omitted).
     pub fn pattern(&mut self, x: &Expr) -> Option<crate::hir::Expr> {
-        if let ExprKind::Call(callee, args) = &x.kind {
-            let ch = self.ck.event_call(callee, args, true, x.range);
-            ch.ty.map(|_| ch.hir)
-        } else {
-            self.report(Report::new(
-                C::TypeMismatch,
-                x.range,
-                "expected an event pattern such as `Served(complaint)`",
-            ));
-            None
-        }
+        let (callee, args) = self.call(
+            x,
+            C::TypeMismatch,
+            "expected an event pattern such as `Served(complaint)`",
+        )?;
+        let ch = self.ck.event_call(callee, args, true, x.range);
+        ch.ty.map(|_| ch.hir)
     }
 
     fn probability(
@@ -141,11 +130,11 @@ impl Cx<'_, '_> {
             return Some(Authored::Hole(reason.clone()));
         }
         let num = self.ck.infer(p);
-        match (&p.kind, num.value) {
-            (_, Some(Value::Number(v) | Value::Probability(v))) if q::is_probability(v) => {
-                Some(Authored::Known(v))
-            }
-            (_, Some(Value::Number(v) | Value::Probability(v))) => {
+        match num.value {
+            // The checker keeps every `Probability` value in [0, 1].
+            Some(Value::Probability(v)) => Some(Authored::Known(v)),
+            Some(Value::Number(v)) if q::is_probability(v) => Some(Authored::Known(v)),
+            Some(Value::Number(v)) => {
                 self.report(Report::new(
                     C::InvalidProbability,
                     p.range,
@@ -173,28 +162,23 @@ impl Cx<'_, '_> {
     ) -> Option<EdgeDeadline> {
         let f = within.or(inline)?;
         let window = if within.is_some() {
-            let ExprKind::Ref(r) = &first_expr(f)?.kind else {
-                return None;
-            };
             DeadlineWindow::Declared {
-                deadline: self.value_ref(r, "deadline", |k| matches!(k, ValueKind::Deadline))?,
+                deadline: self.value_ref(first_ref(within)?, "deadline", |k| {
+                    matches!(k, ValueKind::Deadline)
+                })?,
             }
         } else {
             let x = first_expr(f)?;
+            // An inline deadline is an unsigned duration literal (SPEC
+            // §3.1), so its amount is never negative.
             if let Some(Value::Days {
                 amount,
                 unit: unit @ (DayUnit::Calendar | DayUnit::Court | DayUnit::Business),
             }) = self.ck.infer(x).value
             {
-                if let Ok(length) = u64::try_from(amount) {
-                    DeadlineWindow::Inline { length, unit }
-                } else {
-                    self.report(Report::new(
-                        C::ArithmeticError,
-                        x.range,
-                        "a deadline cannot be negative",
-                    ));
-                    return None;
+                DeadlineWindow::Inline {
+                    length: amount.unsigned_abs(),
+                    unit,
                 }
             } else {
                 self.report(Report::new(
@@ -209,13 +193,7 @@ impl Cx<'_, '_> {
         let opts = self.once(opts);
         Some(EdgeDeadline {
             window,
-            extendable: opts
-                .get("extendable")
-                .and_then(|o| first_expr(o))
-                .and_then(|x| match x.kind {
-                    ExprKind::Bool(b) => Some(b),
-                    _ => None,
-                }),
+            extendable: flag(opts.get("extendable")),
             extension_authority: Self::string(opts.get("extension_authority")),
             note: Self::string(opts.get("note")),
         })
@@ -225,27 +203,22 @@ impl Cx<'_, '_> {
         let days = Type::Days(DayUnit::Calendar);
         // Estimates may use decimal calendar days (`13.5.days`, SPEC §6);
         // every other spelling goes through the integral-days checker.
-        let get = |cx: &mut Self, x: &Expr| {
-            if let ExprKind::Duration(text) = &x.kind {
-                let decimal = text
-                    .strip_suffix(".days")
-                    .filter(|amount| amount.contains('.'));
-                if let Some(amount) = decimal {
-                    return q::parse_decimal(amount)
-                        .map_err(|_| {
-                            cx.report(Report::new(
-                                C::ArithmeticError,
-                                x.range,
-                                format!("`{text}` is not an exact day amount"),
-                            ));
-                        })
-                        .ok();
-                }
+        let get = |cx: &mut Self, x: &Expr| match &x.kind {
+            ExprKind::Duration(text) if decimal_days(text).is_some() => {
+                q::parse_decimal(decimal_days(text).unwrap_or_default())
+                    .map_err(|_| {
+                        cx.report(Report::new(
+                            C::ArithmeticError,
+                            x.range,
+                            format!("`{text}` is not an exact day amount"),
+                        ));
+                    })
+                    .ok()
             }
-            match cx.constant(x, &days) {
+            _ => match cx.constant(x, &days) {
                 Some(Value::Days { amount, .. }) => Some(Rational::integer(amount)),
                 _ => None,
-            }
+            },
         };
         if let Some(x) = first_expr(f) {
             return get(self, x).map(|mode| TriangularDuration {
@@ -286,4 +259,10 @@ impl Cx<'_, '_> {
         }
         Some(TriangularDuration { min, mode, max })
     }
+}
+
+/// The amount of a decimal calendar-day duration (`13.5` of `13.5.days`).
+fn decimal_days(text: &str) -> Option<&str> {
+    text.strip_suffix(".days")
+        .filter(|amount| amount.contains('.'))
 }

@@ -48,10 +48,16 @@ pub(crate) fn resolve_dependency(
                 .map(|m| (*p, m.manifest.version.clone()))
         })
         .collect();
-    let req = Requirement::parse(req).ok_or_else(|| format!("invalid requirement `{req}`"))?;
+    // Only valid manifests reach here, and they have valid requirements
+    // (L1004), so `req` always parses.
+    let req = Requirement::parse(req);
     candidates
         .iter()
-        .find(|(_, v)| Version::parse(v).is_some_and(|v| req.matches(&v)))
+        .find(|(_, v)| {
+            Version::parse(v)
+                .zip(req.as_ref())
+                .is_some_and(|(v, req)| req.matches(&v))
+        })
         .map(|(p, _)| *p)
         .ok_or_else(|| match candidates.first() {
             Some((_, v)) => format!(
@@ -114,30 +120,30 @@ pub fn check_package(db: &dyn salsa::Database, pkg: PackageInput) -> PackageChec
     let error = diagnostics
         .iter()
         .any(|d| d.severity == litigate_base::Severity::Error);
-    let package = (!error)
-        .then(|| {
-            let mut order: Vec<&ModuleCheck> = checks.clone();
-            order.sort_by(|a, b| {
-                a.module
-                    .as_ref()
-                    .map(|m| &m.name)
-                    .cmp(&b.module.as_ref().map(|m| &m.name))
-            });
-            Some(hir::Package {
-                manifest: m?.clone(),
-                digest: package_digest(db, pkg),
-                modules: order.iter().filter_map(|c| c.module.clone()).collect(),
-                start: starts
-                    .first()
-                    .and_then(|(s, _)| s.clone())
-                    .unwrap_or_default(),
-                groups: order
-                    .iter()
-                    .flat_map(|c| c.groups.iter().cloned())
-                    .collect(),
-            })
-        })
-        .flatten();
+    // An invalid manifest is itself an error, so `m` is present whenever
+    // the package is error-free.
+    let package = m.filter(|_| !error).map(|m| {
+        let mut order: Vec<&ModuleCheck> = checks.clone();
+        order.sort_by(|a, b| {
+            a.module
+                .as_ref()
+                .map(|m| &m.name)
+                .cmp(&b.module.as_ref().map(|m| &m.name))
+        });
+        hir::Package {
+            manifest: m.clone(),
+            digest: package_digest(db, pkg),
+            modules: order.iter().filter_map(|c| c.module.clone()).collect(),
+            start: starts
+                .first()
+                .and_then(|(s, _)| s.clone())
+                .unwrap_or_default(),
+            groups: order
+                .iter()
+                .flat_map(|c| c.groups.iter().cloned())
+                .collect(),
+        }
+    });
     PackageCheck {
         package,
         diagnostics,

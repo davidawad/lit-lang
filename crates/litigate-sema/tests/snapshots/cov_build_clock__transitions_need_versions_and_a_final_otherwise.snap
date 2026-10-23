@@ -1,0 +1,11 @@
+---
+source: crates/litigate-sema/tests/cov_build_clock.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:12:22 L3008 `p` must name a version (`p@YYYY-MM-DD`)",
+    "pkgs/demo/main.lit:13:37 L3008 `otherwise` must be the last arm",
+    "pkgs/demo/main.lit:13:64 L3008 the last arm must be `otherwise -> <version>`",
+    "pkgs/demo/main.lit:14:12 L3008 a transition needs at least an `otherwise` arm",
+    "pkgs/demo/main.lit:15:50 L3008 `p` must name a version (`p@YYYY-MM-DD`)",
+]

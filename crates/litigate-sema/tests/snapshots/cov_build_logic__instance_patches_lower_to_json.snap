@@ -1,0 +1,35 @@
+---
+source: crates/litigate-sema/tests/cov_build_logic.rs
+expression: instances
+---
+[
+    Instance(
+        Instance {
+            name: "base@one",
+            pack: "base",
+            note: None,
+            remove_edges: [],
+            probabilities: {},
+            roles: {
+                "A": Protagonist,
+                "B": Opponent,
+                "C": Nature,
+            },
+            payoff_transform: None,
+            patch_edges: {
+                "go": Object {
+                    "a": Number(1.5),
+                    "b": String("s"),
+                    "c": Bool(true),
+                    "d": Array [
+                        Number(1),
+                        Bool(false),
+                    ],
+                    "e": Object {
+                        "f": Null,
+                    },
+                },
+            },
+        },
+    ),
+]

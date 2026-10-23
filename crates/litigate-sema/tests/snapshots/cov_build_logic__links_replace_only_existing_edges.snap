@@ -1,0 +1,16 @@
+---
+source: crates/litigate-sema/tests/cov_build_logic.rs
+expression: out
+---
+[
+    "pkgs/links/links.lit:2:61 L1002 no edge `base` to replace",
+    "pkgs/links/links.lit:2:67 L1002 no edge `nope::go` to replace",
+    "pkgs/links/links.lit:2:77 L1002 no edge `base::gone` to replace",
+    "pkgs/links/links.lit:2:89 L1002 no edge `base::fact.x` to replace",
+    "pkgs/links/links.lit:2:126 L1002 no edge `nope` to replace",
+    "pkgs/links/links.lit:2:134 L1002 no edge `base::entry` to replace",
+    "pkgs/links/links.lit:2:149 L1002 no edge `base::nowhere->done#1` to replace",
+    "pkgs/links/links.lit:2:174 L1002 no edge `base::fact->done#1` to replace",
+    "pkgs/links/links.lit:2:196 L1002 no edge `zz::entry->done#1` to replace",
+    "pkgs/links/links.lit:3:13 L1002 cannot find pack `nope`",
+]

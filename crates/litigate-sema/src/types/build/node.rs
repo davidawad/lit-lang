@@ -1,6 +1,6 @@
 //! Graph nodes and their edges (SPEC §5.1, field types from §6).
-use super::cx::{first_expr, Cx};
-use crate::db::parse::tree::{Expr, ExprKind, Field, Item, NodeItem};
+use super::cx::{first_expr, first_ref, Cx};
+use crate::db::parse::tree::{Expr, ExprKind, Field, Item, NodeItem, RefPath};
 use crate::db::span::Report;
 use crate::hir::{Authored, Edge, Money, Node, NodeKind, Rational, Type, Valence, Value};
 use crate::resolve::suggest;
@@ -14,56 +14,45 @@ const VALENCES: [&str; 4] = ["good", "caution", "bad", "neutral"];
 
 impl Cx<'_, '_> {
     pub(super) fn valence(&mut self, f: Option<&&Field>) -> Option<Valence> {
-        let Some(ExprKind::Ref(r)) = first_expr(f?).map(|e| &e.kind) else {
-            return None;
-        };
+        let r = first_ref(f)?;
         let v = match r.head.text.as_str() {
-            "good" => Valence::Good,
-            "caution" => Valence::Caution,
-            "bad" => Valence::Bad,
-            "neutral" => Valence::Neutral,
-            other => {
-                let mut report = Report::new(
-                    C::UnresolvedName,
-                    r.range,
-                    format!("unknown valence `{other}`"),
-                )
-                .note("expected `good`, `caution`, `bad`, or `neutral`");
-                if let Some(best) = suggest::nearest(other, VALENCES) {
-                    report = report.fix(r.range, best, Applicability::MaybeIncorrect);
-                }
-                self.report(report);
-                return None;
+            "good" => Some(Valence::Good),
+            "caution" => Some(Valence::Caution),
+            "bad" => Some(Valence::Bad),
+            "neutral" => Some(Valence::Neutral),
+            _ => None,
+        }
+        .filter(|_| r.is_simple());
+        if v.is_none() {
+            let shown = r.display();
+            let mut report = Report::new(
+                C::UnresolvedName,
+                r.range,
+                format!("unknown valence `{shown}`"),
+            )
+            .note("expected `good`, `caution`, `bad`, or `neutral`");
+            if let Some(best) = suggest::nearest(&shown, VALENCES) {
+                report = report.fix(r.range, best, Applicability::MaybeIncorrect);
             }
-        };
-        r.is_simple().then_some(v)
+            self.report(report);
+        }
+        v
     }
 
-    /// Money<usd> or a hole.
+    /// Money<usd> or a hole. The grammar admits only (signed) money
+    /// literals and holes here, so a well-typed value is always constant.
     pub fn money(&mut self, e: &Expr) -> Option<Authored<Money>> {
-        let ch = self.ck.check(e, &Type::Money("usd".into()));
-        match ch.value {
+        match self.ck.check(e, &Type::Money("usd".into())).value {
             Some(Value::Money(m)) => Some(Authored::Known(m)),
             Some(Value::Hole(reason)) => Some(Authored::Hole(reason)),
-            _ if ch.ty.is_some() => {
-                self.report(Report::new(
-                    C::TypeMismatch,
-                    e.range,
-                    "expected a constant amount",
-                ));
-                None
-            }
             _ => None,
         }
     }
 
-    /// A constant of type `ty` (attrs, hours, days).
+    /// A constant of type `ty` (attrs, hours, days): the grammar admits
+    /// only literals here, so a well-typed value is always constant.
     pub fn constant(&mut self, e: &Expr, ty: &Type) -> Option<Value> {
-        let ch = self.ck.check(e, ty);
-        if ch.ty.is_some() && ch.value.is_none() {
-            self.report(Report::new(C::TypeMismatch, e.range, "expected a constant"));
-        }
-        ch.value
+        self.ck.check(e, ty).value
     }
 
     pub(super) fn attrs(&mut self, f: Option<&&Field>) -> BTreeMap<String, Rational> {
@@ -119,17 +108,10 @@ impl Cx<'_, '_> {
             .and_then(|f| first_expr(f))
             .map(|e| &e.kind)
         {
+            // Values are signed money literals (no holes, SPEC §3.1).
             for (flag, e) in rs {
-                match self.money(e) {
-                    Some(Authored::Known(m)) => {
-                        by_flag.insert(flag.text.clone(), m);
-                    }
-                    Some(Authored::Hole(_)) => self.report(Report::new(
-                        C::TypeMismatch,
-                        e.range,
-                        "`payoff_by_flag` values cannot be holes",
-                    )),
-                    None => {}
+                if let Some(Authored::Known(m)) = self.money(e) {
+                    by_flag.insert(flag.text.clone(), m);
                 }
             }
         }
@@ -156,30 +138,19 @@ impl Cx<'_, '_> {
             .edges
             .iter()
             .any(|e| e.clauses.iter().any(|c| c.key.text == "p"));
-        if !chance && !drawn && tags.iter().any(|t| t == "fact") {
-            if let Some(f) = fields.get("tags") {
-                self.report(Report::new(
-                    C::InvalidField,
-                    f.range,
-                    "the `fact` tag is allowed only on `chance` nodes and nodes with `p` edges",
-                ));
-            }
+        let misplaced_fact = !chance && !drawn && tags.iter().any(|t| t == "fact");
+        if let Some(f) = fields.get("tags").filter(|_| misplaced_fact) {
+            self.report(Report::new(
+                C::InvalidField,
+                f.range,
+                "the `fact` tag is allowed only on `chance` nodes and nodes with `p` edges",
+            ));
         }
-        if let Some(g) = fields.get("group").and_then(|f| first_expr(f)) {
-            if let ExprKind::Ref(r) = &g.kind {
-                if let Err(report) = self.ck.scope.group(&r.head) {
-                    self.report(report);
-                }
-            }
+        let group = first_ref(fields.get("group"));
+        if let Some(Err(report)) = group.map(|r| self.ck.scope.group(&r.head)) {
+            self.report(report);
         }
-        let actor = clauses
-            .get("by")
-            .and_then(|f| first_expr(f))
-            .and_then(|e| match &e.kind {
-                ExprKind::Ref(r) => Some(r),
-                _ => None,
-            })
-            .map(|r| self.actor(r));
+        let actor = first_ref(clauses.get("by")).map(|r| self.actor(r));
         let kind = match kw {
             "decision" => NodeKind::Decision,
             "chance" => NodeKind::Chance {
@@ -208,13 +179,7 @@ impl Cx<'_, '_> {
         Node {
             meta,
             kind,
-            group: fields
-                .get("group")
-                .and_then(|f| first_expr(f))
-                .and_then(|e| match &e.kind {
-                    ExprKind::Ref(r) => Some(r.display()),
-                    _ => None,
-                }),
+            group: group.map(RefPath::display),
             note: Self::string(fields.get("note")),
             valence: self.valence(fields.get("valence")),
             court_listener_url: Self::string(fields.get("court_listener_url")),

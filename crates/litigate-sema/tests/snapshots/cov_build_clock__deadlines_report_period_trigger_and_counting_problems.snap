@@ -1,0 +1,13 @@
+---
+source: crates/litigate-sema/tests/cov_build_clock.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:11:14 L6001 hour deadlines have no HIR/litgraph representation in language version 1",
+    "pkgs/demo/main.lit:12:14 L0005 day amounts must be integers",
+    "pkgs/demo/main.lit:12:14 L0005 day amounts must be integers, found `1.5`",
+    "pkgs/demo/main.lit:12:14 L2001 a deadline period is a duration such as `21.days`",
+    "pkgs/demo/main.lit:13:26 L2001 expected an event pattern such as `Served(complaint)`",
+    "pkgs/demo/main.lit:14:55 L1002 cannot find name `nope`",
+    "pkgs/demo/main.lit:15:26 L1002 cannot find function or event `Nope`",
+]

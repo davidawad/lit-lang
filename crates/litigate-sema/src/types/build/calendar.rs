@@ -1,7 +1,7 @@
 //! Holiday calendars (SPEC §5.3): date rules, weekdays, observance.
 use super::cx::Cx;
 use crate::db::parse::tree::{Expr, ExprKind, HolidayItem, Item, Name, RefPath};
-use crate::db::span::Report;
+use crate::db::span::{Report, TextRange};
 use crate::hir::{Calendar, Holiday, HolidayDate, Interval, Observance, Type, Value};
 use crate::types::date;
 use litigate_base::DiagnosticCode as C;
@@ -16,21 +16,25 @@ const WEEKDAYS: [&str; 7] = [
     "sunday",
 ];
 
+const RULES: [&str; 5] = ["fixed", "nth", "last", "every", "once"];
+
 impl Cx<'_, '_> {
-    fn small(&mut self, e: &Expr, lo: i64, hi: i64, what: &str) -> Option<i64> {
-        match self.ck.check(e, &Type::Number).value {
+    /// An integer constant in `lo..=hi`, as `T` (which holds that range).
+    fn small<T: TryFrom<i64>>(&mut self, e: &Expr, lo: i64, hi: i64, what: &str) -> Option<T> {
+        let n = match self.ck.check(e, &Type::Number).value {
             Some(Value::Number(v)) if v.denominator == 1 && (lo..=hi).contains(&v.numerator) => {
-                Some(v.numerator)
+                T::try_from(v.numerator).ok()
             }
-            _ => {
-                self.report(Report::new(
-                    C::InvalidCounting,
-                    e.range,
-                    format!("{what} must be an integer from {lo} to {hi}"),
-                ));
-                None
-            }
+            _ => None,
+        };
+        if n.is_none() {
+            self.report(Report::new(
+                C::InvalidCounting,
+                e.range,
+                format!("{what} must be an integer from {lo} to {hi}"),
+            ));
         }
+        n
     }
 
     fn weekday(&mut self, e: &Expr) -> Option<String> {
@@ -39,22 +43,27 @@ impl Cx<'_, '_> {
                 Some(r.head.text.clone())
             }
             ExprKind::Ref(r) => {
-                self.bad_counting(&r.head, &WEEKDAYS);
+                self.bad_counting(r, &WEEKDAYS);
                 None
             }
-            _ => None,
+            _ => {
+                self.report(Report::new(
+                    C::InvalidCounting,
+                    e.range,
+                    "expected a weekday such as `monday`",
+                ));
+                None
+            }
         }
     }
 
-    fn holiday_date(&mut self, rule: &Expr) -> Option<HolidayDate> {
-        let ExprKind::Call(callee, args) = &rule.kind else {
-            self.report(Report::new(
-                C::InvalidCounting,
-                rule.range,
-                "expected `fixed`, `nth`, `last`, `every`, or `once`",
-            ));
-            return None;
-        };
+    /// The date rule `callee(args)` of a holiday spanning `range`.
+    fn holiday_date(
+        &mut self,
+        callee: &RefPath,
+        args: &[Expr],
+        range: TextRange,
+    ) -> Option<HolidayDate> {
         let shape: &[&str] = match callee.head.text.as_str() {
             "fixed" => &["month", "day"],
             "nth" => &["n", "weekday", "month"],
@@ -62,52 +71,46 @@ impl Cx<'_, '_> {
             "every" => &["years", "from_year", "month", "day"],
             "once" => &["date"],
             _ => {
-                self.bad_counting(&callee.head, &["fixed", "nth", "last", "every", "once"]);
+                self.bad_counting(callee, &RULES);
                 return None;
             }
         };
         if args.len() != shape.len() {
             self.report(Report::new(
                 C::InvalidCounting,
-                rule.range,
+                range,
                 format!("`{}` takes ({})", callee.head.text, shape.join(", ")),
             ));
             return None;
         }
-        let to8 = |v: i64| u8::try_from(v).ok();
         let date = match callee.head.text.as_str() {
             "fixed" => {
-                let (m, d) = (
-                    self.small(&args[0], 1, 12, "month")?,
-                    self.small(&args[1], 1, 31, "day")?,
-                );
-                if i64::from(date::days_in_month(2000, u32::try_from(m).ok()?)) < d {
+                let month: u8 = self.small(&args[0], 1, 12, "month")?;
+                let day: u8 = self.small(&args[1], 1, 31, "day")?;
+                if date::days_in_month(2000, u32::from(month)) < u32::from(day) {
                     self.report(Report::new(
                         C::InvalidCounting,
-                        rule.range,
-                        format!("month {m} has no day {d}"),
+                        range,
+                        format!("month {month} has no day {day}"),
                     ));
                     return None;
                 }
-                HolidayDate::Fixed {
-                    month: to8(m)?,
-                    day: to8(d)?,
-                }
+                HolidayDate::Fixed { month, day }
             }
             "nth" => HolidayDate::Nth {
-                n: to8(self.small(&args[0], 1, 4, "n")?)?,
+                n: self.small(&args[0], 1, 4, "n")?,
                 weekday: self.weekday(&args[1])?,
-                month: to8(self.small(&args[2], 1, 12, "month")?)?,
+                month: self.small(&args[2], 1, 12, "month")?,
             },
             "last" => HolidayDate::Last {
                 weekday: self.weekday(&args[0])?,
-                month: to8(self.small(&args[1], 1, 12, "month")?)?,
+                month: self.small(&args[1], 1, 12, "month")?,
             },
             "every" => HolidayDate::Every {
-                years: u16::try_from(self.small(&args[0], 1, 100, "years")?).ok()?,
-                from_year: u16::try_from(self.small(&args[1], 1, 9999, "from_year")?).ok()?,
-                month: to8(self.small(&args[2], 1, 12, "month")?)?,
-                day: to8(self.small(&args[3], 1, 31, "day")?)?,
+                years: self.small(&args[0], 1, 100, "years")?,
+                from_year: self.small(&args[1], 1, 9999, "from_year")?,
+                month: self.small(&args[2], 1, 12, "month")?,
+                day: self.small(&args[3], 1, 31, "day")?,
             },
             _ => {
                 if let ExprKind::Date(d) = &args[0].kind {
@@ -145,20 +148,23 @@ impl Cx<'_, '_> {
                     format!("calendar `{}` already defines `{}`", name.text, h.name.text),
                 ));
             }
-            let date = self.holiday_date(&h.rule);
+            let date = self
+                .call(
+                    &h.rule,
+                    C::InvalidCounting,
+                    "expected `fixed`, `nth`, `last`, `every`, or `once`",
+                )
+                .and_then(|(callee, args)| self.holiday_date(callee, args, h.rule.range));
             let observed = h.observed.as_ref().and_then(|o| {
-                let e = Expr {
-                    kind: ExprKind::Ref(RefPath {
-                        head: o.clone(),
-                        instance: None,
-                        rest: vec![],
-                        version: None,
-                        range: o.range,
-                    }),
+                let r = RefPath {
+                    head: o.clone(),
+                    instance: None,
+                    rest: vec![],
+                    version: None,
                     range: o.range,
                 };
                 self.keyword(
-                    Some(&e),
+                    &r,
                     &[
                         ("nearest_weekday", Observance::NearestWeekday),
                         ("next_day", Observance::NextDay),

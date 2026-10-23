@@ -1,0 +1,27 @@
+---
+source: crates/litigate-sema/tests/cov_build_clock.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:11:4 L3009 month 2 has no day 30",
+    "pkgs/demo/main.lit:12:1 L1001 calendar `k` already defines `a`",
+    "pkgs/demo/main.lit:13:10 L3009 month must be an integer from 1 to 12",
+    "pkgs/demo/main.lit:14:10 L3009 month must be an integer from 1 to 12",
+    "pkgs/demo/main.lit:15:13 L2001 expected `Number`, found `Bool`",
+    "pkgs/demo/main.lit:15:13 L3009 day must be an integer from 1 to 31",
+    "pkgs/demo/main.lit:16:8 L3009 n must be an integer from 1 to 4",
+    "pkgs/demo/main.lit:17:11 L3009 unknown counting keyword `funday` [fix: \"sunday\"]",
+    "pkgs/demo/main.lit:18:11 L3009 expected a weekday such as `monday`",
+    "pkgs/demo/main.lit:19:19 L3009 month must be an integer from 1 to 12",
+    "pkgs/demo/main.lit:20:9 L3009 unknown counting keyword `monday.x` [fix: \"monday\"]",
+    "pkgs/demo/main.lit:21:17 L3009 month must be an integer from 1 to 12",
+    "pkgs/demo/main.lit:22:10 L3009 years must be an integer from 1 to 100",
+    "pkgs/demo/main.lit:23:13 L3009 from_year must be an integer from 1 to 9999",
+    "pkgs/demo/main.lit:24:19 L3009 month must be an integer from 1 to 12",
+    "pkgs/demo/main.lit:25:22 L3009 day must be an integer from 1 to 31",
+    "pkgs/demo/main.lit:26:9 L3009 `once` takes a date",
+    "pkgs/demo/main.lit:27:4 L3009 unknown counting keyword `fixd` [fix: \"fixed\"]",
+    "pkgs/demo/main.lit:28:4 L3009 unknown counting keyword `zzzzzz`",
+    "pkgs/demo/main.lit:29:4 L3009 `fixed` takes (month, day)",
+    "pkgs/demo/main.lit:30:52 L3009 unknown counting keyword `zzzzzz`",
+]

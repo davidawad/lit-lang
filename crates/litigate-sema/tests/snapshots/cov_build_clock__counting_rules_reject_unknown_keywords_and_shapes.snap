@@ -1,0 +1,24 @@
+---
+source: crates/litigate-sema/tests/cov_build_clock.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:11:27 L3009 unknown counting keyword `weekend.x` [fix: \"weekend\"]",
+    "pkgs/demo/main.lit:11:38 L3009 unknown counting keyword `zzzzzz`",
+    "pkgs/demo/main.lit:12:45 L3009 this period must be counted in days",
+    "pkgs/demo/main.lit:12:54 L3009 service method `Mail` is listed twice",
+    "pkgs/demo/main.lit:14:10 L3009 unknown counting keyword `trigger_dya` [fix: \"trigger_day\"]",
+    "pkgs/demo/main.lit:15:14 L3009 `short_period` is `{ below: N.days, count: <unit> }`",
+    "pkgs/demo/main.lit:15:23 L3009 this period must be counted in days",
+    "pkgs/demo/main.lit:17:10 L3009 counting rule `k2` needs `holidays <calendar>`",
+    "pkgs/demo/main.lit:17:22 L0001 expected an identifier, found `3`",
+    "pkgs/demo/main.lit:18:24 L1002 cannot find name `nope`",
+    "pkgs/demo/main.lit:18:43 L3009 `short_period` is `{ below: N.days, count: <unit> }`",
+    "pkgs/demo/main.lit:18:67 L3009 unknown counting keyword `zzzzzz`",
+    "pkgs/demo/main.lit:19:24 L2001 `c6` is a counting rule, expected a calendar",
+    "pkgs/demo/main.lit:19:41 L3009 `short_period` is `{ below: N.days, count: <unit> }`",
+    "pkgs/demo/main.lit:19:57 L0001 expected `count` before the closing `}`",
+    "pkgs/demo/main.lit:20:55 L0005 day amounts must be integers",
+    "pkgs/demo/main.lit:20:55 L0005 day amounts must be integers, found `1.5`",
+    "pkgs/demo/main.lit:20:55 L2001 expected a day count such as `3.days`",
+]

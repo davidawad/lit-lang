@@ -1,0 +1,60 @@
+---
+source: crates/litigate-sema/tests/cov_build_clock.rs
+expression: countings
+---
+[
+    Counting(
+        Counting {
+            meta: Metadata {
+                id: "full",
+                label: "",
+                cite: None,
+                effective: Interval {
+                    from: "2009-12-01",
+                    to: None,
+                    known_at: "2025-01-01",
+                },
+                authority: "FederalRule",
+                relations: [],
+                span: Some(
+                    Span {
+                        file: FileId(
+                            "pkgs/demo/main.lit",
+                        ),
+                        line: 10,
+                        col: 1,
+                        end_line: 19,
+                        end_col: 2,
+                    },
+                ),
+                imported: false,
+            },
+            exclude_trigger_day: true,
+            include_last_day: true,
+            roll_on: [
+                Weekend,
+                LegalHoliday,
+                Inaccessible,
+            ],
+            service_extensions: {
+                "Mail": (
+                    3,
+                    Calendar,
+                ),
+                "Personal": (
+                    1,
+                    Court,
+                ),
+            },
+            calendar: "cal",
+            anchor: NextBusinessDay,
+            short_period: Some(
+                ShortPeriod {
+                    threshold: 11,
+                    unit: Business,
+                },
+            ),
+            hours: true,
+        },
+    ),
+]

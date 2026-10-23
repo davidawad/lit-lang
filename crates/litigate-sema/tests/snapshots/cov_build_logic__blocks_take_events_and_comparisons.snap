@@ -1,0 +1,9 @@
+---
+source: crates/litigate-sema/tests/cov_build_logic.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:11:7 L2001 `given` takes a complete event such as `Served(complaint, Mail)`",
+    "pkgs/demo/main.lit:12:8 L2001 `expect` takes a comparison such as `deadline(d) == 2025-03-24`",
+    "pkgs/demo/main.lit:13:8 L1002 cannot find name `nope`",
+]

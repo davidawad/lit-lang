@@ -1,0 +1,10 @@
+---
+source: crates/litigate-sema/tests/cov_build_meta.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:12:3 L2007 a declaration has at most one `cite`",
+    "pkgs/demo/main.lit:14:23 L2007 empty interval [2001-01-01, 2000-01-01)",
+    "pkgs/demo/main.lit:15:23 L1002 cannot find name `nope`",
+    "pkgs/demo/main.lit:15:42 L1002 cannot find authority `Nope`",
+]

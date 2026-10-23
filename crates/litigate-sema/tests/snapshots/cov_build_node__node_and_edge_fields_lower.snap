@@ -1,0 +1,351 @@
+---
+source: crates/litigate-sema/tests/cov_build_node.rs
+expression: out
+---
+[
+    Node(
+        Node {
+            meta: Metadata {
+                id: "rich",
+                label: "Rich",
+                cite: None,
+                effective: Interval {
+                    from: "2009-12-01",
+                    to: None,
+                    known_at: "2025-01-01",
+                },
+                authority: "FederalRule",
+                relations: [],
+                span: Some(
+                    Span {
+                        file: FileId(
+                            "pkgs/demo/main.lit",
+                        ),
+                        line: 12,
+                        col: 1,
+                        end_line: 20,
+                        end_col: 2,
+                    },
+                ),
+                imported: false,
+            },
+            kind: State,
+            group: Some(
+                "g",
+            ),
+            note: Some(
+                "n",
+            ),
+            valence: Some(
+                Caution,
+            ),
+            court_listener_url: Some(
+                "u",
+            ),
+            tags: [],
+            attrs: {
+                "weight": Rational {
+                    numerator: -3,
+                    denominator: 2,
+                },
+            },
+            actor: Some(
+                "Plaintiff",
+            ),
+            edges: [
+                Edge {
+                    id: Some(
+                        "a",
+                    ),
+                    to: "done",
+                    label: "A",
+                    actor: "Plaintiff",
+                    authority: None,
+                    probability: None,
+                    hours: Some(
+                        Rational {
+                            numerator: 2,
+                            denominator: 1,
+                        },
+                    ),
+                    cost: Some(
+                        Known(
+                            Money {
+                                minor_units: 300,
+                                currency: "usd",
+                            },
+                        ),
+                    ),
+                    event: Some(
+                        Expr {
+                            ty: Named(
+                                "Served",
+                            ),
+                            kind: Call {
+                                callee: "Served",
+                                args: [
+                                    Expr {
+                                        ty: Named(
+                                            "Document",
+                                        ),
+                                        kind: Literal {
+                                            value: Variant(
+                                                "Document::complaint",
+                                            ),
+                                        },
+                                        span: Some(
+                                            Span {
+                                                file: FileId(
+                                                    "pkgs/demo/main.lit",
+                                                ),
+                                                line: 18,
+                                                col: 90,
+                                                end_line: 18,
+                                                end_col: 99,
+                                            },
+                                        ),
+                                    },
+                                ],
+                            },
+                            span: Some(
+                                Span {
+                                    file: FileId(
+                                        "pkgs/demo/main.lit",
+                                    ),
+                                    line: 18,
+                                    col: 83,
+                                    end_line: 18,
+                                    end_col: 100,
+                                },
+                            ),
+                        },
+                    ),
+                    deadline: Some(
+                        EdgeDeadline {
+                            window: Declared {
+                                deadline: "dl",
+                            },
+                            extendable: Some(
+                                false,
+                            ),
+                            extension_authority: None,
+                            note: None,
+                        },
+                    ),
+                    duration: Some(
+                        TriangularDuration {
+                            min: None,
+                            mode: Rational {
+                                numerator: 27,
+                                denominator: 2,
+                            },
+                            max: None,
+                        },
+                    ),
+                    valence: Some(
+                        Bad,
+                    ),
+                    court_listener_url: None,
+                    action_id: None,
+                    note: None,
+                    tags: [],
+                    attrs: {},
+                    sets: [],
+                    clears: [],
+                    requires: [],
+                    forbids: [],
+                    span: Some(
+                        Span {
+                            file: FileId(
+                                "pkgs/demo/main.lit",
+                            ),
+                            line: 18,
+                            col: 1,
+                            end_line: 18,
+                            end_col: 135,
+                        },
+                    ),
+                },
+                Edge {
+                    id: Some(
+                        "b",
+                    ),
+                    to: "done",
+                    label: "B",
+                    actor: "either",
+                    authority: Some(
+                        "FRCP 6(a)",
+                    ),
+                    probability: None,
+                    hours: None,
+                    cost: None,
+                    event: None,
+                    deadline: Some(
+                        EdgeDeadline {
+                            window: Inline {
+                                length: 5,
+                                unit: Court,
+                            },
+                            extendable: Some(
+                                true,
+                            ),
+                            extension_authority: Some(
+                                "Court",
+                            ),
+                            note: None,
+                        },
+                    ),
+                    duration: Some(
+                        TriangularDuration {
+                            min: Some(
+                                Rational {
+                                    numerator: 1,
+                                    denominator: 1,
+                                },
+                            ),
+                            mode: Rational {
+                                numerator: 5,
+                                denominator: 2,
+                            },
+                            max: None,
+                        },
+                    ),
+                    valence: None,
+                    court_listener_url: None,
+                    action_id: Some(
+                        "x",
+                    ),
+                    note: Some(
+                        "m",
+                    ),
+                    tags: [
+                        "t",
+                    ],
+                    attrs: {},
+                    sets: [
+                        "s",
+                    ],
+                    clears: [
+                        "c",
+                    ],
+                    requires: [
+                        "r",
+                    ],
+                    forbids: [
+                        "f",
+                    ],
+                    span: Some(
+                        Span {
+                            file: FileId(
+                                "pkgs/demo/main.lit",
+                            ),
+                            line: 19,
+                            col: 1,
+                            end_line: 19,
+                            end_col: 249,
+                        },
+                    ),
+                },
+            ],
+        },
+    ),
+    Node(
+        Node {
+            meta: Metadata {
+                id: "done",
+                label: "Done",
+                cite: None,
+                effective: Interval {
+                    from: "2009-12-01",
+                    to: None,
+                    known_at: "2025-01-01",
+                },
+                authority: "FederalRule",
+                relations: [],
+                span: Some(
+                    Span {
+                        file: FileId(
+                            "pkgs/demo/main.lit",
+                        ),
+                        line: 21,
+                        col: 1,
+                        end_line: 21,
+                        end_col: 118,
+                    },
+                ),
+                imported: false,
+            },
+            kind: Terminal {
+                outcomes: [
+                    "won",
+                ],
+                payoff: Some(
+                    Hole(
+                        Some(
+                            "tbd",
+                        ),
+                    ),
+                ),
+                payoff_by_flag: {
+                    "lost": Money {
+                        minor_units: -200,
+                        currency: "usd",
+                    },
+                    "won": Money {
+                        minor_units: 500,
+                        currency: "usd",
+                    },
+                },
+            },
+            group: None,
+            note: None,
+            valence: Some(
+                Neutral,
+            ),
+            court_listener_url: None,
+            tags: [],
+            attrs: {},
+            actor: None,
+            edges: [],
+        },
+    ),
+    Node(
+        Node {
+            meta: Metadata {
+                id: "good",
+                label: "Good",
+                cite: None,
+                effective: Interval {
+                    from: "2009-12-01",
+                    to: None,
+                    known_at: "2025-01-01",
+                },
+                authority: "FederalRule",
+                relations: [],
+                span: Some(
+                    Span {
+                        file: FileId(
+                            "pkgs/demo/main.lit",
+                        ),
+                        line: 22,
+                        col: 1,
+                        end_line: 22,
+                        end_col: 36,
+                    },
+                ),
+                imported: false,
+            },
+            kind: State,
+            group: None,
+            note: None,
+            valence: Some(
+                Good,
+            ),
+            court_listener_url: None,
+            tags: [],
+            attrs: {},
+            actor: None,
+            edges: [],
+        },
+    ),
+]

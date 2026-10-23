@@ -1,0 +1,12 @@
+---
+source: crates/litigate-sema/tests/cov_build_logic.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:13:21 L2001 `c6` is a counting rule, expected a default or exception",
+    "pkgs/demo/main.lit:14:42 L2007 an undercutting exception concludes nothing; remove `=> ...`",
+    "pkgs/demo/main.lit:15:11 L2007 a rebutting exception needs `=> <value>`",
+    "pkgs/demo/main.lit:16:50 L2001 `priority` is a non-negative integer",
+    "pkgs/demo/main.lit:17:50 L2001 `priority` is a non-negative integer",
+    "pkgs/demo/main.lit:18:21 L1002 cannot find name `nope`",
+]

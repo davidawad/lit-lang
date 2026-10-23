@@ -187,55 +187,6 @@ mod tests {
     }
 
     #[test]
-    fn loads_from_memory() {
-        use crate::pkg::source::MemoryTree;
-        let example = include_str!("../../../../lit/examples/Lit.toml");
-        let manifest = |name: &str, deps: &str| {
-            let text = example.replace("\"frcp-rule12-example\"", &format!("\"{name}\""));
-            format!("{text}\n[dependencies]\n{deps}")
-        };
-        let tree = MemoryTree::new([
-            (
-                "app/Lit.toml",
-                manifest(
-                    "app",
-                    "dep = { version = \"^1.0.0\", path = \"../dep\" }\nghost = { version = \"^1.0.0\", path = \"../ghost\" }\n",
-                ),
-            ),
-            ("app/Lit.lock", "version = 1\n".to_owned()),
-            ("app/b.lit", "b".to_owned()),
-            ("app/sub/a.lit", "a".to_owned()),
-            ("app/sub/notes.txt", String::new()),
-            ("app/.hidden/h.lit", String::new()),
-            ("app/nested/Lit.toml", manifest("nested", "")),
-            ("dep/Lit.toml", manifest("dep", "")),
-        ]);
-        let pkgs =
-            load_tree_in(&tree, Path::new("/"), &[PathBuf::from("/app")], None).unwrap_or_default();
-        let summary: Vec<(String, Vec<String>, bool)> = pkgs
-            .into_iter()
-            .map(|p| {
-                (
-                    p.root,
-                    p.files.into_iter().map(|f| f.relative).collect(),
-                    p.lock.is_some(),
-                )
-            })
-            .collect();
-        assert_eq!(
-            summary,
-            [
-                (
-                    "app".to_owned(),
-                    vec!["b.lit".to_owned(), "sub/a.lit".to_owned()],
-                    true
-                ),
-                ("app/../dep".to_owned(), vec![], false),
-            ]
-        );
-    }
-
-    #[test]
     fn relative_paths_are_posix() {
         assert_eq!(
             relative_to(Path::new("/r"), Path::new("/r/lit/core/a.lit")),

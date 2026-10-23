@@ -66,7 +66,8 @@ where
     I: IntoIterator<Item = T>,
     T: Into<OsString> + Clone,
 {
-    execute_with(args, false, src, true)
+    let args = args.into_iter().map(Into::into).collect();
+    execute_with(args, Format::Json, false, src, true)
 }
 
 /// [`execute_in`] over a [`MemoryTree`] of `(path, text)` files; `args`
@@ -95,16 +96,21 @@ where
     I: IntoIterator<Item = T>,
     T: Into<OsString> + Clone,
 {
-    execute_with(args, tty, &Disk, false)
+    let args = args.into_iter().map(Into::into).collect();
+    let format = if tty { Format::Human } else { Format::Json };
+    execute_with(args, format, tty, &Disk, false)
 }
 
-/// Parses and runs `args` over `src`; `in_memory` limits the commands to
+/// Parses and runs `args` over `src`, in `format` unless `--format` says
+/// otherwise and in color when `color`; `in_memory` limits the commands to
 /// [`IN_MEMORY_COMMANDS`].
-fn execute_with<I, T>(args: I, tty: bool, src: &dyn Source, in_memory: bool) -> Printed
-where
-    I: IntoIterator<Item = T>,
-    T: Into<OsString> + Clone,
-{
+fn execute_with(
+    args: Vec<OsString>,
+    format: Format,
+    color: bool,
+    src: &dyn Source,
+    in_memory: bool,
+) -> Printed {
     let cli = match Cli::try_parse_from(args) {
         Ok(cli) => cli,
         Err(error) => {
@@ -128,20 +134,18 @@ where
             };
         }
     };
-    let format = cli
-        .format
-        .unwrap_or(if tty { Format::Human } else { Format::Json });
+    let format = cli.format.unwrap_or(format);
     let op = cli.command.name();
     if in_memory && !IN_MEMORY_COMMANDS.contains(&op) {
         let message = format!(
             "only {} run over an in-memory source",
             IN_MEMORY_COMMANDS.join(" and ")
         );
-        return out::print(op, Err(Failure::new(message)), format, tty, 0.0);
+        return out::print(op, Err(Failure::new(message)), format, color, 0.0);
     }
     let started = Stopwatch::start();
     let outcome = cmd::dispatch(cli.command, src);
-    out::print(op, outcome, format, tty, started.elapsed_ms())
+    out::print(op, outcome, format, color, started.elapsed_ms())
 }
 
 /// Wall-clock timing. `std::time::Instant` panics on

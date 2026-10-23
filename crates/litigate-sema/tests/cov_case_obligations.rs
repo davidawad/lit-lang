@@ -131,6 +131,7 @@ fn table(rows: &[(&str, &str, &[&str])]) -> BTreeMap<String, Vec<String>> {
 const SERVED_D: &str = "2011-01-04 Served(complaint) on d";
 
 #[test]
+#[allow(clippy::too_many_lines)] // one table row per case
 fn bearers_and_trigger_policies() {
     let rows: &[(&str, &str, &[&str])] = &[
         (
@@ -239,6 +240,7 @@ fn bearers_and_trigger_policies() {
 }
 
 #[test]
+#[allow(clippy::too_many_lines)] // one table row per case
 fn extensions_and_waivers() {
     let rows: &[(&str, &str, &[&str])] = &[
         (
@@ -458,7 +460,9 @@ fn with_args(events: &[&str], index: usize, args: Vec<litigate_sema::hir::Expr>)
         &refs,
         Some(&lock),
     );
-    let mut case = resolved.case.expect("the matter resolves");
+    let mut case = resolved
+        .case
+        .unwrap_or_else(|| panic!("{:#?}", resolved.diagnostics));
     if let ExprKind::Call { args: a, .. } = &mut case.events[index].action.kind {
         *a = args;
     }

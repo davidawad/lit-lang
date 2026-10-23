@@ -1,0 +1,52 @@
+---
+source: crates/litigate-sema/tests/cov_case_designated.rs
+expression: rows
+---
+{
+    "a designated January 1 rolls to January 2": [
+        "ok: start sigma::done",
+        "trace Triggered Noticed(2011-01-01) sigma::open -> sigma::open",
+        "trace Took Answered() sigma::open -> sigma::done via sigma::answer",
+        "obligation sigma::answer #0 Discharged",
+    ],
+    "a later version's trigger designates nothing for the notice's instance": [
+        "11:3 L3009 cannot count deadline `answer` for this event\n    note @10:3: `answer` is due on the date `Noticed(2012-01-05)` on 2011-12-01 designates (its `due`), no earlier than 0 calendar days from it, rolled under `oc`\n    note: `Noticed(2012-01-05)` is not the trigger of `answer`, so it designates no due date for it",
+        "trace Triggered Noticed(2012-01-05) sigma::open -> sigma::open",
+        "trace Took Answered() sigma::open -> sigma::done via sigma::answer",
+        "obligation sigma::answer #0 Discharged",
+    ],
+    "a notice designating less than 30 days is rejected": [
+        "10:14 L4001 `Noticed` on 2011-01-04 designates `answer` due 2011-02-02, earlier than the least time the rule allows, 30 calendar days from 2011-01-04 (2011-02-03) (FRCP 12(a))\n    note: a designated due date must allow at least the deadline's own period; correct the date as the notice gives it",
+        "trace Triggered Noticed(2011-02-02) sigma::open -> sigma::open",
+        "obligation sigma::answer #0 Open",
+    ],
+    "an answer after the designated date is late": [
+        "11:3 L4002 `Answered()` on 2011-02-11 missed deadline `answer`, due 2011-02-10\n    note @10:3: `answer` is due on the date `Noticed(2011-02-10)` on 2011-01-04 designates (its `due`), no earlier than 30 calendar days from it, rolled under `oc`\n    note: only a cited event of a type that `extends` this deadline, within its `extend` capability, moves the due date",
+        "trace Triggered Noticed(2011-02-10) sigma::open -> sigma::open",
+        "trace Took Answered() sigma::open -> sigma::done via sigma::answer",
+        "obligation sigma::answer #0 Late",
+    ],
+    "an answer by the designated date is timely": [
+        "ok: start sigma::done",
+        "trace Triggered Noticed(2011-02-10) sigma::open -> sigma::open",
+        "trace Took Answered() sigma::open -> sigma::done via sigma::answer",
+        "obligation sigma::answer #0 Discharged",
+    ],
+    "an answer to an unknown date cannot be judged": [
+        "11:3 L3009 cannot count deadline `answer` for this event\n    note @10:3: `answer` is due on the date `Noticed(?)` on 2011-01-04 designates (its `due`), no earlier than 30 calendar days from it, rolled under `oc`\n    note: `Noticed` designates no due date for `answer` (its `due` is unknown), so the due date is unknown: it is the notice's to set, never counted in its place",
+        "trace Triggered Noticed(?) sigma::open -> sigma::open",
+        "trace Took Answered() sigma::open -> sigma::done via sigma::answer",
+        "obligation sigma::answer #0 Discharged",
+    ],
+    "an unknown designated date leaves the deadline open, never counted": [
+        "ok: start sigma::open",
+        "trace Triggered Noticed(?) sigma::open -> sigma::open",
+        "obligation sigma::answer #0 Open",
+    ],
+    "past the designated date with no answer the duty is breached": [
+        "10:3 L4009 obligation `sigma::answer` borne by `d`, created by `Noticed(2011-02-10)` on 2011-01-04, was neither discharged nor transformed by its due date 2011-02-10: at as_of 2011-03-01 it is breached\n    note: `answer` is due on the date `Noticed(2011-02-10)` on 2011-01-04 designates (its `due`), no earlier than 30 calendar days from it, rolled under `oc`\n    note: a duty is consumed exactly once: by a timely act through a `within` edge, or by a breach",
+        "ok: start sigma::open",
+        "trace Triggered Noticed(2011-02-10) sigma::open -> sigma::open",
+        "obligation sigma::answer #0 Breached",
+    ],
+}

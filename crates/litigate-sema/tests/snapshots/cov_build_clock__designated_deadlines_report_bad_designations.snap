@@ -1,0 +1,14 @@
+---
+source: crates/litigate-sema/tests/cov_build_clock.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:11:66 L2007 deadline `d1` counts backward: only a forward period's due date is designated",
+    "pkgs/demo/main.lit:12:70 L2007 the least time a designated due date of `d2` allows is counted in calendar days",
+    "pkgs/demo/main.lit:13:64 L1002 the trigger `Noticed` of deadline `d3` has no parameter `nope`",
+    "pkgs/demo/main.lit:14:64 L2001 parameter `document` of `Noticed` designates a due date, so it must have type `Date`",
+    "pkgs/demo/main.lit:15:27 L2001 expected an event pattern such as `Served(complaint)`",
+    "pkgs/demo/main.lit:16:27 L1002 cannot find function or event `Nope`",
+    "pkgs/demo/main.lit:17:27 L2002 `Document` is not an event constructor or builtin",
+    "pkgs/demo/main.lit:18:64 L1002 the trigger `Noticed` of deadline `d8` has no parameter `due.x`",
+]

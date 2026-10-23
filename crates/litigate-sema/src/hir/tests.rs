@@ -164,3 +164,63 @@ fn a_bound_past_the_calendar_has_no_date() {
         None
     );
 }
+
+#[test]
+fn a_designation_reads_the_trigger_argument_or_nothing() {
+    let date = |d: &str| Expr {
+        ty: Type::Date,
+        kind: ExprKind::Literal {
+            value: Value::Date(d.into()),
+        },
+        span: None,
+    };
+    let noticed = |args: Vec<Expr>| Expr {
+        ty: Type::Named("Noticed".into()),
+        kind: ExprKind::Call {
+            callee: "Noticed".into(),
+            args,
+        },
+        span: None,
+    };
+    let mut d = Deadline {
+        meta: Metadata {
+            cite: None,
+            ..meta("answer")
+        },
+        amount: 30,
+        unit: DayUnit::Calendar,
+        direction: Direction::Forward,
+        trigger: noticed(Vec::new()),
+        counting: "c".into(),
+        extendable: None,
+        extension_authority: None,
+        note: None,
+        bearer: None,
+        policy: TriggerPolicy::First,
+        linear: false,
+        extend: Vec::new(),
+        waive: None,
+        designated: None,
+    };
+    let on = noticed(vec![date("2025-02-03")]);
+    assert_eq!(d.designation("2025-01-02", &on), None);
+    d.designated = Some(Designated {
+        param: 0,
+        name: "due".into(),
+    });
+    assert_eq!(
+        d.designation("2025-01-02", &on),
+        Some(Ok("2025-02-03".to_owned()))
+    );
+    let message = |r: Option<Result<String, Undesignated>>| {
+        r.and_then(Result::err).map(|e| e.message().to_owned())
+    };
+    assert_eq!(
+        message(d.designation("2025-01-10", &on)).as_deref(),
+        Some("`Noticed` on 2025-01-10 designates `answer` due 2025-02-03, earlier than the least time the rule allows, 30 calendar days from 2025-01-10 (2025-02-09)")
+    );
+    assert_eq!(
+        message(d.designation("2025-01-02", &date("2025-02-03"))).as_deref(),
+        Some("`the trigger` designates no due date for `answer` (its `due` is unknown), so the due date is unknown: it is the notice's to set, never counted in its place")
+    );
+}

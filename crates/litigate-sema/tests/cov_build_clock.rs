@@ -122,6 +122,37 @@ deadline n4: 3.days from Nope(complaint) counted_by c6",
 }
 
 #[test]
+fn designated_deadlines_lower_the_designating_parameter() {
+    let deadlines: Vec<_> = declarations(
+        "event Noticed(document: Document, due: Date)\n\
+deadline answer: 30.days from Noticed() counted_by c6 { designated due }",
+    )
+    .into_iter()
+    .filter_map(|d| match d {
+        Declaration::Deadline(d) => d.designated,
+        _ => None,
+    })
+    .collect();
+    insta::assert_debug_snapshot!(deadlines);
+}
+
+#[test]
+fn designated_deadlines_report_bad_designations() {
+    let out = check_body(
+        "event Noticed(document: Document, due: Date)\n\
+deadline d1: 30.days before Noticed() counted_by c6 { designated due }\n\
+deadline d2: 30.court_days from Noticed() counted_by c6 { designated due }\n\
+deadline d3: 30.days from Noticed() counted_by c6 { designated nope }\n\
+deadline d4: 30.days from Noticed() counted_by c6 { designated document }\n\
+deadline d5: 30.days from 3 counted_by c6 { designated due }\n\
+deadline d6: 30.days from Nope() counted_by c6 { designated due }\n\
+deadline d7: 30.days from Document() counted_by c6 { designated due }\n\
+deadline d8: 30.days from Noticed() counted_by c6 { designated due.x }",
+    );
+    insta::assert_debug_snapshot!(out);
+}
+
+#[test]
 fn transitions_need_versions_and_a_final_otherwise() {
     let out = check_body(
         "deadline p: 1.days from Served(complaint) counted_by c6 effective [2000-01-01, 2001-01-01)\n\

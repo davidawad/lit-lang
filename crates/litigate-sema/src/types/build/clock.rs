@@ -190,12 +190,8 @@ impl Cx<'_, '_> {
         let ExprKind::Call(callee, _) = &trigger.kind else {
             return None;
         };
-        let (event, found) = self
-            .ck
-            .scope
-            .user_type(&callee.head, &[])
-            .ok()
-            .filter(|_| callee.is_simple())?;
+        // The trigger pattern itself reports a callee that is no event.
+        let (event, found) = self.ck.scope.user_type(&callee.head, &[]).ok()?;
         let TypeSig::Event(params) = found.item else {
             return None;
         };

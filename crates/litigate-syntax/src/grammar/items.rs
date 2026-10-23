@@ -39,8 +39,9 @@ pub(crate) fn lit_file(p: &mut Parser<'_>) {
         p.error_expected(&[KwModule]);
     }
     let mut rank = 0u8;
+    // Every pass consumes a token: an item consumes its keyword, and
+    // recovery stops only at an item keyword (the anchors of a `.lit` file).
     while !p.at_end() {
-        let before = p.current_range();
         match p.at_any_kw(LIT_ITEM_KEYWORDS) {
             Some(kw) => {
                 rank = check_order(p, kw, rank);
@@ -48,9 +49,6 @@ pub(crate) fn lit_file(p: &mut Parser<'_>) {
                 item_end(p, &[]);
             }
             None => p.recover(LIT_ITEM_KEYWORDS, &[]),
-        }
-        if p.current_range() == before {
-            p.bump_error();
         }
     }
 }

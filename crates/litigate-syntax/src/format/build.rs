@@ -54,12 +54,12 @@ impl Builder {
         }
     }
 
-    /// Emits a trivia or significant token.
+    /// Emits a trivia or significant token. (Separator commas never get
+    /// here: [`Self::block`] drops them.)
     pub(crate) fn token(&mut self, token: &SyntaxToken) {
         match token.kind() {
             Whitespace => self.newlines += token.text().matches('\n').count(),
             Comment | DocComment => self.comment(token),
-            Comma if is_separator(token) => {}
             kind => {
                 let parent = token.parent().map_or(SourceFile, |p| p.kind());
                 self.before_token(kind, parent);
@@ -115,19 +115,21 @@ impl Builder {
     }
 
     /// Emits the braced block opened at `children[open]`; returns the index
-    /// after its closing brace.
+    /// after its closing brace (formatted files are well nested).
     fn block(&mut self, owner: &SyntaxNode, children: &[Element], open: usize) -> usize {
         let force = matches!(owner.kind(), EventsBlock | PartiesBlock) || self.after_cite;
         self.before_token(LBrace, owner.kind());
         let sep = separator_of(owner.kind());
         let mut entries: Vec<Entry> = Vec::new();
         let mut pending = Entry::default();
-        let mut index = open + 1;
+        let body = &children[open + 1..];
+        let close = body
+            .iter()
+            .position(|child| child.kind() == RBrace)
+            .unwrap_or(body.len());
         let mut newlines = 0usize;
-        let mut saw_entry = false;
-        while let Some(child) = children.get(index) {
+        for child in &body[..close] {
             match child {
-                NodeOrToken::Token(token) if token.kind() == RBrace => break,
                 NodeOrToken::Token(token) if token.kind() == Whitespace => {
                     newlines += token.text().matches('\n').count();
                 }
@@ -135,7 +137,7 @@ impl Builder {
                 NodeOrToken::Token(token) if matches!(token.kind(), Comment | DocComment) => {
                     let text = Doc::text(token.text().trim_end());
                     match entries.last_mut() {
-                        Some(last) if newlines == 0 && saw_entry => last.trailing.push(text),
+                        Some(last) if newlines == 0 => last.trailing.push(text),
                         _ => {
                             pending.blank |= newlines > 1 && !entries.is_empty();
                             pending.leading.push(text);
@@ -147,11 +149,9 @@ impl Builder {
                     pending.blank |= newlines > 1 && !entries.is_empty();
                     pending.doc = Some(entry_doc(element));
                     entries.push(std::mem::take(&mut pending));
-                    saw_entry = true;
                     newlines = 0;
                 }
             }
-            index += 1;
         }
         self.out
             .push(block_doc(&entries, &pending.leading, sep, force));
@@ -161,7 +161,7 @@ impl Builder {
         });
         self.newlines = 0;
         self.after_cite = false;
-        index + 1
+        open + 1 + close + 1
     }
 }
 
@@ -230,15 +230,6 @@ fn separator_of(owner: SyntaxKind) -> Sep {
         TestDecl | EventsBlock => Sep::Forbidden,
         _ => Sep::Optional,
     }
-}
-
-/// Commas directly inside a braced block are layout, not content.
-fn is_separator(token: &SyntaxToken) -> bool {
-    token.parent().is_some_and(|parent| {
-        parent
-            .children_with_tokens()
-            .any(|element| element.kind() == LBrace)
-    })
 }
 
 /// Whether one space separates `prev` from the next token (SPEC §10).

@@ -299,9 +299,10 @@ impl<'t> Parser<'t> {
     }
 
     /// Wraps tokens up to the follow set in an `Error` node, always
-    /// consuming at least one token unless already at a stop.
+    /// consuming at least one token unless already at a stop. Callers only
+    /// recover before end of file.
     pub(crate) fn skip_to(&mut self, follow: &[SyntaxKind]) {
-        if self.at_end() || follow.contains(&self.nth(0)) || self.at_item_anchor() {
+        if follow.contains(&self.nth(0)) || self.at_item_anchor() {
             return;
         }
         self.start(Error);

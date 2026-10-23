@@ -126,22 +126,26 @@ fn format_tree(root: &SyntaxNode) -> String {
         }
         out.push_str(&item.render());
     }
+    // A clean parse has at least one item (`module` or the `case` header),
+    // so the tail always follows one.
     if !tail.is_empty() {
-        out.push_str(if out.is_empty() { "" } else { "\n\n" });
+        out.push_str("\n\n");
         out.push_str(&tail.join("\n"));
     }
-    let mut lines: Vec<&str> = out.lines().map(str::trim_end).collect();
-    while lines.last().is_some_and(|line| line.is_empty()) {
-        lines.pop();
-    }
-    let mut text = lines.join("\n");
+    // Item bodies and comments end in text, so no blank lines trail.
+    let mut text = out
+        .lines()
+        .map(str::trim_end)
+        .collect::<Vec<_>>()
+        .join("\n");
     text.push('\n');
     text
 }
 
 /// Splits the root into items. Root-level comments attach to the next
 /// item (or trail the previous one when on its line); the rest form the
-/// tail. A `.case` header (`case id`) is its own item.
+/// tail. A `.case` header (`case id`) is its own item; a clean `.case` file
+/// always has item nodes after it, and the first one flushes it.
 fn collect_items(root: &SyntaxNode) -> (Vec<Item>, Vec<String>) {
     let mut items: Vec<Item> = Vec::new();
     let mut leading: Vec<String> = Vec::new();
@@ -187,9 +191,6 @@ fn collect_items(root: &SyntaxNode) -> (Vec<Item>, Vec<String>) {
                 newlines = 0;
             }
         }
-    }
-    if let Some(builder) = header.take() {
-        items.push(item(CaseFile, None, std::mem::take(&mut leading), builder));
     }
     (items, leading)
 }

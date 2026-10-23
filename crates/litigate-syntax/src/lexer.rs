@@ -157,19 +157,17 @@ impl Lexer<'_> {
         0
     }
 
+    /// Tokens tile the input, so an `ErrorToken` last token ends at `start`
+    /// and the last error is the one reported for it.
     fn unrecognized(&mut self, start: usize, end: usize) {
-        if let Some(last) = self.tokens.last_mut() {
-            if last.kind == SyntaxKind::ErrorToken && usize::from(last.range.end()) == start {
-                last.range = range(usize::from(last.range.start()), end);
-                if let Some(error) = self.errors.last_mut() {
-                    if error.code == DiagnosticCode::InvalidToken
-                        && usize::from(error.range.end()) == start
-                    {
-                        error.range = last.range;
-                    }
-                }
-                return;
+        let last = self.tokens.last_mut();
+        if let Some(last) = last.filter(|last| last.kind == SyntaxKind::ErrorToken) {
+            last.range = range(usize::from(last.range.start()), end);
+            let invalid = self.errors.last_mut();
+            if let Some(error) = invalid.filter(|e| e.code == DiagnosticCode::InvalidToken) {
+                error.range = last.range;
             }
+            return;
         }
         self.push(SyntaxKind::ErrorToken, start, end);
         let shown = &self.text[start..end];
@@ -364,11 +362,13 @@ fn punct_kind(token: Raw, text: &str) -> SyntaxKind {
     }
 }
 
+/// The punctuation kind spelled `text` (keyword spellings are words, so
+/// they never match a punctuation character).
 fn single_punct(text: &str) -> SyntaxKind {
     SyntaxKind::ALL
         .iter()
         .copied()
-        .find(|kind| !kind.is_keyword() && kind.text() == Some(text))
+        .find(|kind| kind.text() == Some(text))
         .unwrap_or(SyntaxKind::ErrorToken)
 }
 

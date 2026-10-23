@@ -16,7 +16,8 @@ pub(crate) fn expect_header_end(p: &mut Parser<'_>, keywords: &[SyntaxKind]) {
     }
 }
 
-/// Which clauses a declaration accepts (a set of flags).
+/// Which clauses a declaration accepts besides `cite`, which every
+/// declaration with clauses accepts (a set of flags).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub(crate) struct Clauses(u8);
 
@@ -25,16 +26,15 @@ impl Clauses {
     const NODE: u8 = 2;
     const VERSION: u8 = 4;
     const RELATION: u8 = 8;
-    const CITATION: u8 = 16;
 
     /// Node declarations: every clause.
-    pub(crate) const NODE_DECL: Self = Self(31);
+    pub(crate) const NODE_DECL: Self = Self(15);
     /// Rules, deadlines, counting rules, defaults: version, relation, cite.
-    pub(crate) const RULE: Self = Self(Self::VERSION | Self::RELATION | Self::CITATION);
+    pub(crate) const RULE: Self = Self(Self::VERSION | Self::RELATION);
     /// Calendars: version and cite.
-    pub(crate) const CALENDAR: Self = Self(Self::VERSION | Self::CITATION);
+    pub(crate) const CALENDAR: Self = Self(Self::VERSION);
     /// Transitions and exceptions: cite only.
-    pub(crate) const CITE: Self = Self(Self::CITATION);
+    pub(crate) const CITE: Self = Self(0);
 
     const fn has(self, flag: u8) -> bool {
         self.0 & flag != 0
@@ -55,9 +55,7 @@ impl Clauses {
             out.extend(RELATIONS);
             out.push(KwDelegableTo);
         }
-        if self.has(Self::CITATION) {
-            out.push(KwCite);
-        }
+        out.push(KwCite);
         out
     }
 }
@@ -77,14 +75,14 @@ pub(crate) fn clauses(p: &mut Parser<'_>, allowed: Clauses) -> Vec<SyntaxKind> {
     let keywords = allowed.keywords();
     let words: Vec<&str> = keywords.iter().filter_map(|kw| kw.text()).collect();
     let near_miss = crate::suggest::nearest(p.nth_text(0), &words).is_some();
-    if allowed.has(Clauses::CITATION) && !near_miss {
+    if !near_miss {
         missing_cite(p);
     }
     keywords
 }
 
 fn clause(p: &mut Parser<'_>, allowed: Clauses) -> bool {
-    if allowed.has(Clauses::CITATION) && cite(p) {
+    if cite(p) {
         return true;
     }
     if allowed.has(Clauses::BY) && p.at_kw(KwBy) && p.nth(1) == Ident {
@@ -160,10 +158,11 @@ fn relation(p: &mut Parser<'_>) -> bool {
 /// Recognizes citation text written without `cite` (an identifier on the
 /// same line, followed later on that line by a digit-bearing token) and
 /// offers a machine-applicable `cite ` insertion. The rest of the line is
-/// wrapped in an `Error` node.
+/// wrapped in an `Error` node. (Item keywords are keywords, so this never
+/// starts at a recovery anchor.)
 fn missing_cite(p: &mut Parser<'_>) {
     let keyword = SyntaxKind::from_keyword(p.nth_text(0)).is_some();
-    if !p.at(Ident) || keyword || p.newline_before() || p.at_item_anchor() {
+    if !p.at(Ident) || keyword || p.newline_before() {
         return;
     }
     let looks_cited = (0..16)

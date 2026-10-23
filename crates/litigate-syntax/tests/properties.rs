@@ -36,6 +36,8 @@ fn check_format(text: &str, kind: FileKind) -> Result<(), TestCaseError> {
     let once = format(text, kind).map_err(|e| TestCaseError::fail(format!("{e}: {text:?}")))?;
     let twice = format(&once, kind).map_err(|e| TestCaseError::fail(format!("{e}: {once:?}")))?;
     prop_assert_eq!(&once, &twice, "not idempotent for {:?}", text);
+    prop_assert!(!once.ends_with("\n\n"), "blank line at the end: {:?}", once);
+    prop_assert!(once.ends_with('\n'), "no final newline: {:?}", once);
     prop_assert_eq!(
         shape(&parse(text, kind).syntax()),
         shape(&parse(&once, kind).syntax())

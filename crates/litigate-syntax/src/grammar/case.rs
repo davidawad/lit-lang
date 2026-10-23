@@ -211,11 +211,12 @@ fn adjacent_bump(p: &mut Parser<'_>, kind: SyntaxKind) -> bool {
     ok
 }
 
+/// `text` is a `Number` token (`[0-9][0-9_]*(.[0-9][0-9_]*)?`), so its
+/// parts are never empty: `MAJOR.MINOR` when both are plain digits.
 fn is_major_minor(text: &str) -> bool {
     let mut parts = text.split('.');
-    let digits = |part: Option<&str>| {
-        part.is_some_and(|part| !part.is_empty() && part.bytes().all(|b| b.is_ascii_digit()))
-    };
+    let digits =
+        |part: Option<&str>| part.is_some_and(|part| part.bytes().all(|b| b.is_ascii_digit()));
     digits(parts.next()) && digits(parts.next()) && parts.next().is_none()
 }
 

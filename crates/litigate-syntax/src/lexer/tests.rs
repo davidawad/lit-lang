@@ -190,3 +190,89 @@ fn a_question_mark_after_cite_is_a_hole_not_citation_text() {
     );
     assert_eq!(codes("cite ?"), []);
 }
+
+#[test]
+fn two_character_operators_are_single_tokens() {
+    assert_eq!(
+        kinds("a != b == c <= d >= e && f || g :: h .. i => j -> k"),
+        [
+            (Ident, "a".into()),
+            (NotEq, "!=".into()),
+            (Ident, "b".into()),
+            (EqEq, "==".into()),
+            (Ident, "c".into()),
+            (LessEq, "<=".into()),
+            (Ident, "d".into()),
+            (GreaterEq, ">=".into()),
+            (Ident, "e".into()),
+            (AndAnd, "&&".into()),
+            (Ident, "f".into()),
+            (OrOr, "||".into()),
+            (Ident, "g".into()),
+            (ColonColon, "::".into()),
+            (Ident, "h".into()),
+            (DotDot, "..".into()),
+            (Ident, "i".into()),
+            (FatArrow, "=>".into()),
+            (Ident, "j".into()),
+            (Arrow, "->".into()),
+            (Ident, "k".into()),
+        ]
+    );
+}
+
+#[test]
+fn runs_of_invalid_input_merge_into_one_token_and_error() {
+    let ranges = |text: &str| {
+        let (tokens, errors) = lex(text);
+        let tokens: Vec<_> = tokens
+            .iter()
+            .map(|token| (token.kind, text[token.range].to_owned()))
+            .collect();
+        let errors: Vec<_> = errors
+            .iter()
+            .map(|error| (error.code, text[error.range].to_owned()))
+            .collect();
+        (tokens, errors)
+    };
+    let invalid = DiagnosticCode::InvalidToken;
+    assert_eq!(
+        ranges("$§$"),
+        (
+            vec![(ErrorToken, "$§$".into())],
+            vec![(invalid, "$§$".into())]
+        )
+    );
+    // A byte order mark and the invalid input after it are one error.
+    assert_eq!(
+        ranges("\u{feff}$x"),
+        (
+            vec![(ErrorToken, "\u{feff}$".into()), (Ident, "x".into())],
+            vec![(invalid, "\u{feff}$".into())]
+        )
+    );
+    // Invalid input glued to a bad unit literal joins its token; the unit
+    // error already covers the run.
+    assert_eq!(
+        ranges("1.dayz$"),
+        (
+            vec![(ErrorToken, "1.dayz$".into())],
+            vec![(DiagnosticCode::InvalidNumber, "dayz".into())]
+        )
+    );
+}
+
+#[test]
+fn malformed_date_text_is_not_a_date() {
+    for text in [
+        "",
+        "2025",
+        "2025-01",
+        "2025-01-01-01",
+        "y-01-01",
+        "2025-x-01",
+        "2025-01-x",
+    ] {
+        assert!(!valid_date(text), "{text}");
+    }
+}

@@ -1,5 +1,7 @@
 //! Helpers shared by the integration tests.
 #![allow(dead_code)]
+pub mod diag;
+
 use litigate_syntax::{FileKind, SyntaxKind, SyntaxNode};
 use std::fmt::Write as _;
 use std::path::{Path, PathBuf};

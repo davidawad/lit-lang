@@ -162,7 +162,9 @@ fn holiday(p: &mut Parser<'_>) -> bool {
     p.start(HolidayDecl);
     p.bump();
     if p.expect(Colon) && require(p, call, &[Ident]) {
-        if !(p.at_kw(KwEffective) && version_clause(p)) {
+        if p.at_kw(KwEffective) {
+            version_clause(p);
+        } else {
             p.error_expected(&[KwEffective]);
         }
         if p.at_kw(KwObserved) {

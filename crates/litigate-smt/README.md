@@ -108,8 +108,10 @@ has open advisories (RUSTSEC-2026-0367/0368/0369).
 
 **Offline builds** (Nix sandbox, air-gapped CI): set
 `LITIGATE_SMT_Z3_ARCHIVE=/path/to/z3-5.1.0-….zip`. The file is checked
-against the same SHA-256. In Nix, `pkgs.fetchurl { url = …; sha256 = …; }`
-with the URL and digest from `build.rs` provides it.
+against the same SHA-256. `flake.nix` does this for the Nix packages and
+checks: it fetches the zip for the system with `pkgs.fetchurl` (URL and
+digest copied from `build.rs`'s `ASSETS`, so bump both together) and sets
+`LITIGATE_SMT_Z3_ARCHIVE` in `commonArgs`.
 
 **Docker.** The image builds `litgraph-cli` and `litgraph-mcp` only, and
 neither depends on this crate. `cargo chef cook` swaps every build script
@@ -154,6 +156,7 @@ test), a persistent store can be added later without changing keys.
 ```bash
 cargo nextest run -p litigate-smt
 cargo +nightly llvm-cov nextest --branch -p litigate-smt   # 100% lines, regions, branches
+just cov-litigate litigate-smt                             # the same gate, as CI runs it
 ```
 
 `build.rs` is not measured by llvm-cov. It was exercised by hand: download,

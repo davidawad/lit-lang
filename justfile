@@ -59,7 +59,7 @@ cov-html:
 # Every litigate-* crate, each measured by its own tests, must stay at 100%
 # lines, regions and branches -- no exclusions. Branch coverage needs a
 # nightly toolchain (`rustup toolchain install nightly -c llvm-tools-preview`).
-litigate_crates := "litigate-base litigate-syntax litigate-sema litigate-lower litigate-verify litigate-import litigate-cli litigate-lsp"
+litigate_crates := "litigate-base litigate-syntax litigate-sema litigate-lower litigate-verify litigate-import litigate-cli litigate-lsp litigate-smt"
 
 cov-litigate *CRATES=litigate_crates:
     #!/usr/bin/env bash

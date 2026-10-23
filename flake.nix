@@ -58,9 +58,40 @@
             filter = path: _type: !(builtins.elem (baseNameOf path) excluded);
           };
 
+          # litigate-smt's build.rs links the pinned Z3 release's static
+          # libz3.a. The Nix sandbox has no network, so fetch the same zip
+          # here and hand it over offline; build.rs re-checks the SHA-256.
+          # Keep in step with ASSETS in crates/litigate-smt/build.rs.
+          z3Version = "5.1.0";
+          z3Asset =
+            {
+              x86_64-linux = {
+                name = "z3-5.1.0-x64-glibc-2.39.zip";
+                sha256 = "f47be8d27d3230e823bf1eeede2fe0abaca55bb78d0b59974370e6689a92284a";
+              };
+              aarch64-linux = {
+                name = "z3-5.1.0-arm64-glibc-2.38.zip";
+                sha256 = "2832cfd43c6862fbaf78834b5f1e35d031b4a87e85456b696c1c6f609cd5609e";
+              };
+              x86_64-darwin = {
+                name = "z3-5.1.0-x64-osx-13.3.zip";
+                sha256 = "f25cabdb01a32942a42227c36902c0846c759dcaabef4aca3b2e86331447f6ff";
+              };
+              aarch64-darwin = {
+                name = "z3-5.1.0-arm64-osx-13.3.zip";
+                sha256 = "81d29e934fd863079a74af35eecaeaef8047e0e12414d33ca322b358d68383db";
+              };
+            }
+            .${system};
+          z3Archive = pkgs.fetchurl {
+            url = "https://github.com/Z3Prover/z3/releases/download/z3-${z3Version}/${z3Asset.name}";
+            inherit (z3Asset) sha256;
+          };
+
           commonArgs = {
             src = unfilteredSrc;
             strictDeps = true;
+            LITIGATE_SMT_Z3_ARCHIVE = "${z3Archive}";
             nativeBuildInputs = pkgs.lib.optionals pkgs.stdenv.isDarwin [
               pkgs.libiconv
             ];

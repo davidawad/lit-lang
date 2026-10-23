@@ -36,13 +36,12 @@ pub fn parse(src: &str) -> Parsed {
 /// Lowers a parsed `.lit` file: its syntax errors plus the item tree.
 #[must_use]
 pub fn lower(parse: &litigate_syntax::Parse) -> Parsed {
-    let mut reports: Vec<Report> = parse.errors().iter().map(syntax_report).collect();
-    let mut cx = Lower::default();
+    let reports: Vec<Report> = parse.errors().iter().map(syntax_report).collect();
+    let mut cx = Lower;
     let tree = parse
         .lit_file()
         .map(|file| cx.file(file.syntax()))
         .unwrap_or_default();
-    reports.append(&mut cx.reports);
     Parsed { tree, reports }
 }
 
@@ -62,13 +61,10 @@ pub(crate) fn range(r: litigate_syntax::TextRange) -> TextRange {
     TextRange::new(u32::from(r.start()), u32::from(r.end()))
 }
 
-/// Lowering state: reports for shapes the grammar accepts but the item tree
-/// cannot represent. The grammar builds `patch` and analysis values only
-/// from JSON shapes, so no lowering rule reports today.
-#[derive(Default)]
-pub(crate) struct Lower {
-    pub(crate) reports: Vec<Report>,
-}
+/// Lowering from the syntax tree to the item tree. It is total: every shape
+/// the grammar accepts has an item-tree form (`patch` and analysis values
+/// are built only from JSON shapes), so lowering reports nothing.
+pub(crate) struct Lower;
 
 pub(crate) fn is_trivia(kind: K) -> bool {
     matches!(kind, K::Whitespace | K::Comment | K::DocComment)

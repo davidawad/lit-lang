@@ -110,7 +110,7 @@ pub fn resolve(file: &str, text: &str, packages: &[&Package], lock: Option<&Lock
         packages,
         lock,
         span: &span,
-        lower: Lower::default(),
+        lower: Lower,
         out: parse
             .errors()
             .iter()
@@ -120,8 +120,7 @@ pub fn resolve(file: &str, text: &str, packages: &[&Package], lock: Option<&Lock
     };
     let syntax_ok = r.out.is_empty();
     let case = parse.case_file().and_then(|f| r.file(f.syntax(), text));
-    let mut out = std::mem::take(&mut r.out);
-    out.append(&mut r.lower.reports);
+    let out = std::mem::take(&mut r.out);
     let diagnostics: Vec<Diagnostic> = out.iter().map(|x| x.to_diagnostic(&file, &index)).collect();
     Resolved {
         case: case.filter(|_| syntax_ok && diagnostics.is_empty()),

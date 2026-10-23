@@ -232,7 +232,6 @@ fn shape(e: &Expr) -> String {
                 .collect();
             format!("(match {} {})", shape(x), arms.join(", "))
         }
-        ExprKind::Error => "error".to_owned(),
     }
 }
 

@@ -319,9 +319,9 @@ The checker enforces:
    that day. The current posture is derived. Each trigger creates an
    obligation instance with a bearer; a missed deadline is a
    `deadline-missed` error unless a cited event of a type that `extends` or
-   `waives` that deadline, within the capability the deadline grants,
-   transformed the instance first (SPEC §5.3, §5.6). Event names carry no
-   meaning.
+   `waives` that deadline, within a grant the deadline declares (a
+   numeric cap, the court's discretion, or `never`), transformed the
+   instance first (SPEC §5.3, §5.6). Event names carry no meaning.
 3. **Facts are typed.** They are checked against the forum's fact nodes, and
    each value must be a variant of that node's outcome enum.
 4. **Stakes are exhaustive.** Every terminal reachable from the derived

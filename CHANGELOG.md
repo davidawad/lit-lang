@@ -18,14 +18,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   party and open past due at `as_of` is reported as breached (new code
   L4009, a warning). `litigate check` reports every instance with its bearer
   and status in the deadline schedule, and the LSP's hints follow it.
-- **Typed, bounded extension and waiver.** A deadline grants `extend { by
-  Actor, max N.days [, after_expiry] }` and `waive { by Actor }`
-  capabilities; an event type declares `extends d to p` or `waives d`. A
-  cited event of such a type, by the capability's actor and within its
-  bound, moves or releases every open instance of the deadline. This restores court-ordered
+- **Typed extension and waiver.** A deadline declares `extend` grants and
+  a `waive { by Actor [, after_expiry] }` capability; an event type
+  declares `extends d to p` or `waives d`. A cited event of such a type,
+  by a grant's actor and within its window and bound, moves or releases
+  every open instance of the deadline. This restores court-ordered
   extensions, which v0.4 scored as missed deadlines after excusal was made
-  fail-closed, without the *Bowles* defect: a limit with no `extend`
-  capability admits no extension, and an order beyond the bound is rejected.
+  fail-closed, without the *Bowles* defect: a limit with no `extend` grant
+  admits no extension, and an order beyond a bound is rejected.
+- **An extension's bound is a sum** (FRCP 6(b)). A grant is bounded
+  (`extend { by A, max N.days [, after_expiry] }`, a cap only where the
+  declaring file imposes one), discretionary (`extend { by A, discretion
+  S [, after_expiry] }`: no numeric ceiling, before expiry, or after it
+  on motion), or non-extendable (`extend { never }`, FRCP 6(b)(2)). A
+  deadline may declare several grants. New contextual keyword `never`.
+- **FRCP extension capabilities.** `lit/frcp`'s extendable periods grant
+  FRCP 6(b)(1)(A) and (B) (`discretion GoodCause`; `discretion
+  ExcusableNeglect, after_expiry`), the Rule 50(b), 59(b), 59(e) and 60(b)
+  periods are `extend { never }`, and the notice-of-appeal period grants
+  FRAP 4(a)(5)(C)'s 30 days; `lit/core`'s Rule 81(c)(2)(C) and 14(a)(1)
+  periods grant 6(b)(1). Each extendable frcp period has an
+  `...Extended(until: Date)` event, done by the new `court` role, so a
+  matter records a court-ordered extension.
 - **Elections in `.case` replay.** A cited event whose type declares
   `elects p` (`p: String`) elects the edge `p` names: replay removes every
   alternative at each fork offering it (SPEC §5.6). cofc's `Elected`
@@ -42,6 +56,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   ended (the timing-only hatch is gone). The replay trace's `timing` effect
   is now `triggered`, `history`, `removed`, `elected`, `extended` or
   `waived`.
+- **Obligation-instance semantics.** The default trigger policy is
+  `first`: a repeated trigger while an instance is open restarts nothing
+  unless the deadline declares `trigger latest` (or `each`,
+  `later_of(d)`). A breach (L4009) needs a bearing party: an open duty
+  instance no party bears lapses at `as_of` instead. An extension or a
+  waiver applies to every open instance of the deadline (each
+  defendant's), all or none.
 - Six periods a later event restarts declare `trigger latest`: FRAP
   4(a)(1)(A) after a tolling motion, the 28 U.S.C. § 2101(c) cert period,
   the Speedy Trial Act clock, FRCrimP 29(c)(1), FRAP 4(b)(1)(A) and the

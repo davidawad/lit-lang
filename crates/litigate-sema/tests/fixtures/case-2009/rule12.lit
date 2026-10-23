@@ -16,7 +16,9 @@ event Denied(document: Document)
 /// action.
 event OrderedPriorRules()
 
-/// FRCP 6(b)(1)(A): an order extending the time to answer to a date.
+/// An order extending the time to answer to a date. FRCP 6(b)(1) sets no
+/// ceiling; the fixture's `max 30.days` stands for a local rule's cap, so
+/// the *Bowles* pattern has a bound to exceed.
 event AnswerExtended(until: Date) extends answer-period to until
 
 /// An order purporting to extend the time to answer after denial, which

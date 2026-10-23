@@ -212,7 +212,8 @@ DeadlineDecl = "deadline", Ident, ":", Duration, ("from" | "after" | "before"),
 DeclOpts     = "{", { ( "extendable", Bool | "extension_authority", String
              | "note", String | "bearer", Ref | "trigger", ( Ref | CallExpr )
              | ("extend" | "waive"), Capability ), Sep }, "}" ;
-Capability   = "{", { ( "by", Ref | "max", Duration | "after_expiry" ), Sep }, "}" ;
+Capability   = "{", { ( "by", Ref | "max", Duration | "discretion", Ident
+             | "after_expiry" | "never" ), Sep }, "}" ;
 CountingDecl = "counting", Ident, { VersionClause | Relation | Cite },
                "{", { CountingItem, Sep }, "}" ;
 CountingItem = "exclude_trigger_day" | "include_last_day" | "allow_hours"
@@ -512,15 +513,33 @@ creates (design review 2026-10-23 §2.4, §2.7):
   deadline `e` for the same bearer: the new instance is due no earlier
   than `e`'s (FRCP 15(a)(3), FRAP 4(a)(3)). `later_of` naming the deadline
   itself, or anything but one deadline, is L2007.
-- `extend { by A, max N.days [, after_expiry] }`: actor `A` may extend an
-  instance to a date at most `N` calendar days after its counted due date
-  (raised to any `later_of` floor). Without `after_expiry` the extension
-  must come on or before the current due date. `max` is required and
-  counts calendar days (L2007, L3009). `extend` with `extendable false`
-  is L2007.
+- `extend { ... }` declares one extension grant; a deadline may declare
+  several (FRCP 6(b)(1)'s (A) and (B) are two). Its bound is a sum, and
+  a grant states exactly one (otherwise L2007):
+  - `extend { by A, max N.days [, after_expiry] }` (bounded): actor `A`
+    may extend an instance to a date at most `N` calendar days after its
+    counted due date (raised to any `later_of` floor). Without
+    `after_expiry` the extension must come on or before the current due
+    date. `max` counts calendar days (L3009). A numeric cap belongs only
+    in the file that imposes one, such as a local rule allowing one
+    stipulated extension of N days, or FRAP 4(a)(5)(C).
+  - `extend { by A, discretion S [, after_expiry] }` (discretionary):
+    actor `A` may extend an instance to any later date, under cause
+    standard `S` (an identifier, such as `GoodCause` or
+    `ExcusableNeglect`). Its window is before expiry, on or before the
+    current due date (FRCP 6(b)(1)(A)); with `after_expiry` it is after
+    expiry, on motion (FRCP 6(b)(1)(B)), and then only after the due
+    date. `max` with `discretion` is L2007: a rule with no numeric ceiling
+    is not given one.
+  - `extend { never }` (non-extendable): no order extends the period
+    (FRCP 6(b)(2)). `never` takes no other field and allows no other
+    `extend` on the deadline (L2007).
+
+  A grant with an actor under `extendable false`, or `never` under
+  `extendable true`, is L2007.
 - `waive { by A [, after_expiry] }`: actor `A` may release an instance,
-  after its due date only with `after_expiry`. `max` is not allowed
-  (L2007).
+  after its due date only with `after_expiry`. `max`, `discretion` and
+  `never` are not allowed (L2007).
 
 A deadline with no `extend` capability cannot be extended by any order: a
 jurisdictional limit such as the notice of appeal (*Bowles v. Russell*, 551
@@ -806,11 +825,18 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
   `waives d` must carry a `cite`. It transforms every open instance of `d`
   (an order extending the time to answer reaches each defendant's), all or
   none; with none open it is L4001. `d`'s version governing the event must
-  grant the capability (`extend`/`waive`), and the event's `by` party must
-  play its actor. Without `after_expiry` the event must come on or before
-  each instance's current due date. An extension's new date must be later
-  than that date and no later than the bound. Each failure is L4001, and
-  no instance changes. A cited
+  grant the capability (an `extend` grant other than `never`, or `waive`),
+  and the event's `by` party must play the actor of at least one grant.
+  One such grant must admit every open instance: its window holds the
+  event's date (on or before each instance's current due date, or after
+  it for `after_expiry`; a discretionary `after_expiry` grant only after
+  it), and an extension's new date is later than that due date and, for a
+  bounded grant, no later than its bound. A discretionary grant has no
+  ceiling. Replay does not check that an after-expiry order was made on
+  motion: the cited order is the record that it was. When no grant admits
+  the event, the refusal reported is the bound's in preference to the
+  window's. Each failure is L4001, and no instance changes; `extend {
+  never }` is L4001 for any extension. A cited
   event that is not of such a type transforms nothing, so no order can
   enlarge a limit that grants no capability (as in *Bowles v. Russell*,
   551 U.S. 205 (2007)).

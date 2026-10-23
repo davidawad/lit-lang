@@ -96,7 +96,7 @@
       "id": "patentlyo-2024-datapack",
       "title": "Federal Circuit Decisions - 2024 Stats and Datapack (Patently-O / Jason Rantanen)",
       "url": "https://patentlyo.com/patent/2025/06/federal-circuit-decisions-datapack.html",
-      "asOf": "2025-06"
+      "asOf": "2025-06-02"
     },
     {
       "id": "frap-pack",
@@ -381,7 +381,7 @@
     },
     {
       "id": "mediation-screening",
-      "kind": "decision",
+      "kind": "state",
       "label": "OGC Screens for the Mediation Program",
       "cite": "Appellate Mediation Program Guidelines §§ 2-3 (2013-12-06); Fed. Cir. R. 33(b)",
       "note": "Participation is mandatory for cases the Office of General Counsel selects; OGC contacts principal counsel, reviews the docketing statement and briefs, and determines whether a case is a good mediation candidate. If counsel represents to OGC that mediation would not be fruitful, efforts cease. No published selection rate exists — probability deliberately left unauthored on both outgoing edges (see cafc-SOURCES-NOTES.md) rather than invented; the engine's uniform-draw fallback applies if this node is queried numerically.",
@@ -534,7 +534,7 @@
     },
     {
       "id": "oral-argument-fork",
-      "kind": "decision",
+      "kind": "state",
       "label": "Oral Argument or Submission Without Argument?",
       "cite": "FRAP 34(a); Fed. Cir. IOP #7",
       "note": "Argument is allowed unless a three-judge panel unanimously finds the appeal frivolous, the dispositive issue authoritatively decided, or the briefs/record adequately present the case (FRAP 34(a)(2); IOP #7 ¶ 2). No CAFC-specific published argument/no-argument split was located (general cross-circuit AO data puts ~19-25% of all federal appeals at oral argument, not Federal-Circuit-specific) — probability intentionally left unauthored on both edges.",
@@ -557,7 +557,7 @@
     },
     {
       "id": "panel-decision",
-      "kind": "decision",
+      "kind": "state",
       "label": "Panel Decides the Appeal",
       "cite": "Fed. Cir. IOP #8-#9; FRAP 36",
       "note": "Straw vote in reverse seniority order on outcome and disposition vehicle (precedential opinion, nonprecedential opinion, or Rule 36 judgment) — IOP #8 ¶ 1; IOP #9 ¶ 1. Probability basis: the Federal Circuit issued Rule 36 summary affirmances in ~20% of merits terminations in 2024 (Jason Rantanen, 'Federal Circuit Decisions - 2024 Stats and Datapack,' Patently-O, June 2025) — the only figure on this node's edges independently sourced to a cited statistic; note the same source finds the Rule 36 rate is far higher in PTAB-origin appeals specifically (43% of PTAB appeals 2011-2024, and 67% vs 18% depending on whether the patent owner or the petitioner is the appellant) — not separately modeled here since this pack does not branch panel-decision by origin. The remaining five splits (opinion-affirmed, reversed outright, vacated/remanded, mixed, dismissed) apportion the balance as teaching estimates and are NOT independently sourced — flagged APPROXIMATE, consistent with ptab-patent-trial-appeal-board.json's and itc-337.json's own convention for unsourced splits.",
@@ -715,7 +715,7 @@
     },
     {
       "id": "panel-en-banc-rehearing-decision",
-      "kind": "decision",
+      "kind": "state",
       "label": "Panel (and, if Combined, the Full Court) Rules on the Petition",
       "cite": "Fed. Cir. R. 40(a)(1)-(4), (c)",
       "group": "rehearing-group"
@@ -785,7 +785,7 @@
     },
     {
       "id": "cert-review-decision",
-      "kind": "decision",
+      "kind": "state",
       "label": "Supreme Court Grants or Denies Certiorari",
       "cite": "Sup. Ct. R. 10",
       "group": "cert-group"

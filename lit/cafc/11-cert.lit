@@ -43,7 +43,7 @@ state cert-petition-filed: "Petition for Certiorari Filed" by office cite ?("Sup
 /// A tribunal-discretion draw. It stays a `decision` by `office`, as in the
 /// pack, because a `chance` node lowers to kind `state`; its probabilities
 /// are the pack's, with their bases in each edge's note.
-decision cert-review-decision: "Supreme Court Grants or Denies Certiorari" by office cite ?("Sup. Ct. R. 10") {
+chance cert-review-decision: "Supreme Court Grants or Denies Certiorari" by office discretion cite ?("Sup. Ct. R. 10") {
   group cert-group
   cert-review-deny "Certiorari denied" -> cert-denied p 0.99 {
     authority cite ?("Sup. Ct. R. 10")

@@ -131,16 +131,15 @@ fn a_fact_set_on_the_base_node_also_forces_its_flagged_copies() {
 }
 
 /// Real-pack version of the synthetic test above: ptab's own
-/// `petition-threshold-review` (35 U.S.C. §315(b) time-bar, tagged `fact`)
-/// is a *mixed* node (an applicant refile choice plus the office's
-/// fact-driven interrupts), not a pure chance node, and it grows a real
-/// flagged copy (`{prior-petition-denied}`) once a prior petition on the
-/// same patent was denied institution (General Plastic, 35 U.S.C. §314(a) —
-/// see the sourced `sets` on institution-denied-merits/-fintiv's follow-on
-/// edges). Setting the fact on the base node must also force the flagged
-/// copy's edge, and neither copy should warn `fact-unset`.
+/// `petition-time-bar-check` (35 U.S.C. §315(b) time-bar, tagged `fact`)
+/// grows a real flagged copy (`{prior-petition-denied}`) once a prior
+/// petition on the same patent was denied institution (General Plastic, 35
+/// U.S.C. §314(a) — see the sourced `sets` on
+/// institution-denied-merits/-fintiv's follow-on edges). Setting the fact on
+/// the base node must also force the flagged copy's edge, and neither copy
+/// should warn `fact-unset`.
 #[test]
-fn a_real_pack_mixed_fact_node_forces_its_flagged_copy_too() {
+fn a_real_pack_fact_node_forces_its_flagged_copy_too() {
     let root = concat!(env!("CARGO_MANIFEST_DIR"), "/../..");
     let pack = Pack::from_json(
         &std::fs::read_to_string(format!("{root}/packs/ptab-patent-trial-appeal-board.json"))
@@ -151,54 +150,48 @@ fn a_real_pack_mixed_fact_node_forces_its_flagged_copy_too() {
         .expect("ptab pack compiles");
 
     let base = g
-        .node("ptab-patent-trial-appeal-board::petition-threshold-review")
+        .node("ptab-patent-trial-appeal-board::petition-time-bar-check")
         .unwrap();
     assert!(g.nodes[base].has_tag("fact"));
     let flagged = g
-        .node("ptab-patent-trial-appeal-board::petition-threshold-review{prior-petition-denied}")
+        .node("ptab-patent-trial-appeal-board::petition-time-bar-check{prior-petition-denied}")
         .expect(
             "the flagged copy should exist: institution-denied-merits/-fintiv's follow-on edges \
-             set prior-petition-denied before re-entering petition-threshold-review",
+             set prior-petition-denied before a refiled petition re-enters the time-bar check",
         );
     assert!(g.nodes[flagged].has_tag("fact"));
 
     let sc = Scenario {
         facts: BTreeMap::from([(
-            "ptab-patent-trial-appeal-board::petition-threshold-review".into(),
-            "ptab-patent-trial-appeal-board::petition-threshold-review->ipr-time-barred#0".into(),
+            "ptab-patent-trial-appeal-board::petition-time-bar-check".into(),
+            "ptab-patent-trial-appeal-board::e-time-bar-barred".into(),
         )]),
         ..Scenario::default()
     };
     let v = View::new(&g, &sc).unwrap();
 
     let barred = g
-        .edge("ptab-patent-trial-appeal-board::petition-threshold-review->ipr-time-barred#0")
+        .edge("ptab-patent-trial-appeal-board::e-time-bar-barred")
         .unwrap();
-    let accorded = g
-        .edge("ptab-patent-trial-appeal-board::petition-threshold-review->petition-filing-date-accorded#0")
+    let clear = g
+        .edge("ptab-patent-trial-appeal-board::e-time-bar-clear")
         .unwrap();
     assert_eq!(v.prob[barred], Some(1.0));
-    assert_eq!(v.prob[accorded], Some(0.0));
+    assert_eq!(v.prob[clear], Some(0.0));
 
     let barred_flagged = g
-        .edge("ptab-patent-trial-appeal-board::petition-threshold-review->ipr-time-barred#0{prior-petition-denied}")
+        .edge("ptab-patent-trial-appeal-board::e-time-bar-barred{prior-petition-denied}")
         .unwrap();
-    let accorded_flagged = g
-        .edge("ptab-patent-trial-appeal-board::petition-threshold-review->petition-filing-date-accorded#0{prior-petition-denied}")
+    let clear_flagged = g
+        .edge("ptab-patent-trial-appeal-board::e-time-bar-clear{prior-petition-denied}")
         .unwrap();
     assert_eq!(
         v.prob[barred_flagged],
         Some(1.0),
-        "the flagged copy's interrupt edge must be forced too"
+        "the flagged copy's edge must be forced too"
     );
-    assert_eq!(v.prob[accorded_flagged], Some(0.0));
+    assert_eq!(v.prob[clear_flagged], Some(0.0));
 
-    // Neither copy should still be treated as an unset matter fact, and the
-    // mixed node's usual generic hedge shouldn't fire either once the fact
-    // is known.
+    // Neither copy should still be treated as an unset matter fact.
     assert!(!v.warnings.iter().any(|w| w.code == "fact-unset"));
-    assert!(!v.warnings.iter().any(|w| w.code == "mixed-node"
-        && w.at
-            .as_deref()
-            .is_some_and(|at| at.contains("petition-threshold-review"))));
 }

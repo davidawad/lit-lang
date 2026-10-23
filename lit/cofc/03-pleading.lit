@@ -54,7 +54,7 @@ state motion-12b-filed: "RCFC 12(b) Motion Filed" cite RCFC 12(b)
   e-motion12b-to-ruling "Briefing completes; court rules on the RCFC 12(b) motion" -> ruling-12b
 }
 
-decision ruling-12b: "Court Rules on RCFC 12(b) Motion" by office cite RCFC 12(b); 12(d)
+chance ruling-12b: "Court Rules on RCFC 12(b) Motion" by office discretion cite RCFC 12(b); 12(d)
 {
   group pleading-group
   note "Outcome distribution authored at 0.55 denied / 0.20 granted-with-leave-to-amend / 0.15 granted-12(b)(1)-no-leave / 0.10 granted-12(b)(6)-no-leave -- TEACHING ESTIMATE, not a cited empirical CoFC motion-grant-rate figure. If matters outside the pleadings are presented and not excluded on a 12(b)(6)/12(c) motion, RCFC 12(d) converts it to a RCFC 56 summary-judgment motion (not separately modeled here)."

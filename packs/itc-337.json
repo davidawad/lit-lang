@@ -125,7 +125,7 @@
     },
     {
       "id": "institution-decision",
-      "kind": "decision",
+      "kind": "state",
       "label": "Institution Decision",
       "cite": "cfr210.10.a",
       "note": "Institution rate authored at 0.85 / declination at 0.15 — APPROXIMATE, not a live USITC figure; a properly pleaded, properly noticed complaint is instituted in the great majority of cases, but declination for pleading defects or excessive confidentiality designations is real and recurring.",
@@ -211,7 +211,7 @@
     },
     {
       "id": "order-compelling-discovery",
-      "kind": "decision",
+      "kind": "state",
       "label": "ALJ Rules on Motion to Compel",
       "cite": "cfr210.33.a",
       "note": "Grant rate authored at 0.7 / noncompliance-continues at 0.3 — APPROXIMATE.",
@@ -219,7 +219,7 @@
     },
     {
       "id": "discovery-sanctions",
-      "kind": "decision",
+      "kind": "state",
       "label": "ALJ Rules on Discovery Sanctions",
       "cite": "cfr210.33.b",
       "note": "Non-monetary sanctions include an adverse inference, treating disputed matters as resolved against the non-compliant party, evidence preclusion, striking filings, and 'other sanctions under Federal Rule of Civil Procedure 37(b)' — one of the few places Part 210 explicitly imports an FRCP provision by name. Monetary sanctions (attorney's fees) run under 210.33(c), except never against the United States, the Commission, or Commission investigative attorneys. Case-dispositive default authored at 0.15 — APPROXIMATE but grounded: Certain Opaque Polymers (337-TA-883) is the teaching case for this exact branch (Chief ALJ Pender: 'spoliation on a staggering scale'; Federal Circuit affirmed both the default sanction and the resulting 25-year exclusion order).",
@@ -235,7 +235,7 @@
     },
     {
       "id": "protective-order-ruling",
-      "kind": "decision",
+      "kind": "state",
       "label": "ALJ Rules on Protective-Order Motion",
       "cite": "cfr210.34.a",
       "note": "Grant rate authored at 0.9 / denial at 0.1 — APPROXIMATE; ALJs routinely issue CBI protective orders on the good-cause showing this fact pattern almost always makes. A denial leaves discovery to proceed under 210.5's default confidentiality treatment rather than a case-specific order.",
@@ -251,7 +251,7 @@
     },
     {
       "id": "public-version-filed",
-      "kind": "decision",
+      "kind": "state",
       "label": "Public (Redacted) Version Filed",
       "cite": "cfr210.5.public-version",
       "note": "Properly-redacted acceptance authored at 0.92 / still-unredacted-CBI at 0.08 — APPROXIMATE, modeling the authoring-error case the pack's own flagRules target (file.public-version with params.unredactedCbiIncluded=true raises the violation flag below).",
@@ -305,7 +305,7 @@
     },
     {
       "id": "summary-determination-ruling",
-      "kind": "decision",
+      "kind": "state",
       "label": "ALJ Rules on Summary Determination",
       "cite": "cfr210.18.b",
       "note": "Full or partial grant authored at 0.25 / denial (or partial-only, remaining issues proceed) at 0.75 — APPROXIMATE.",
@@ -337,7 +337,7 @@
     },
     {
       "id": "initial-determination",
-      "kind": "decision",
+      "kind": "state",
       "label": "ALJ Issues Initial Determination on Violation",
       "cite": "cfr210.42.a.1",
       "note": "Must be filed no later than 4 months before the target date. Violation-found authored at 0.55 / no-violation at 0.45 — APPROXIMATE. This is the single dominator gateway every non-default path to a Commission Final Determination must pass through — the ITC analog of mpep-prosecution.json's noa-received dominating patent-issued.",
@@ -393,7 +393,7 @@
     },
     {
       "id": "commission-review-decision",
-      "kind": "decision",
+      "kind": "state",
       "label": "Commission Decides Whether to Grant Review",
       "cite": "cfr210.43.d",
       "note": "Grant rate authored at 0.35 / denial at 0.65 — APPROXIMATE. Granted 'if it appears that an error or abuse... is present or if the petition raises a policy matter... which the Commission thinks it necessary or appropriate to address' — decided 'based upon the petition and response thereto, without oral argument or further written submissions unless the Commission shall order otherwise.'",
@@ -425,7 +425,7 @@
     },
     {
       "id": "commission-final-determination",
-      "kind": "decision",
+      "kind": "state",
       "label": "Commission Final Determination",
       "cite": "usc1337.b.1",
       "note": "The § 1337(b)(1) 'earliest practicable time' mandate resolves here, whether the determination arrived by non-reviewed ID maturation, Commission opinion, or (see cafc-remanded below) a Federal Circuit remand. No-violation authored at 0.35 / violation-with-remedy at 0.65 — APPROXIMATE.",
@@ -449,7 +449,7 @@
     },
     {
       "id": "presidential-review-window",
-      "kind": "decision",
+      "kind": "state",
       "label": "Presidential (USTR) Review Window",
       "cite": "usc1337.j",
       "note": "A 60-day window, delegated in practice to the U.S. Trade Representative (Presidential Memorandum of July 21, 2005, 70 Fed. Reg. 43,251), during which a Commission remedy is not yet enforceable as a final matter. Approval-by-silence authored at 0.9 / disapproval at 0.1 — APPROXIMATE and deliberately skewed toward approval: the veto is rare enough that its two confirmed modern instances (Certain Electronic Devices..., 337-TA-794 — the Samsung/Apple FRAND-SEP veto, August 2013, the first since 1987; and the 1987 DRAM veto candidate flagged in design/itc-classic-cases.md §2.10) are each individually notable. Contrast Certain Baseband Processor Chips, 337-TA-543, and Certain Tobacco Heating Articles, 337-TA-1199, where the same 60-day window ran and the remedy simply took effect — the ordinary case this node models most of the time.",
@@ -508,7 +508,7 @@
     },
     {
       "id": "federal-circuit-review",
-      "kind": "decision",
+      "kind": "state",
       "label": "Federal Circuit Reviews the Determination",
       "cite": "usc1337.c",
       "note": "Affirmance authored at 0.7 / reversal-or-remand at 0.3 — APPROXIMATE. Standard of review tracks APA § 706 (substantial evidence for Commission fact-finding, de novo for legal conclusions) — see e.g. TianRui Group Co. v. ITC (337-TA-655, extraterritorial trade-secret jurisdiction affirmed) and ClearCorrect Operating v. ITC (337-TA-833, 'articles' jurisdiction REVERSED as to purely digital transmissions).",

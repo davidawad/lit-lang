@@ -73,7 +73,7 @@ state rehearing-petition-filed: "Petition for Rehearing / Rehearing En Banc File
   _ "Panel rules on rehearing" -> panel-rehearing-decision { authority cite FRAP 40(a)(4) }
 }
 
-decision panel-rehearing-decision: "Panel Rules on Rehearing" by examiner cite ?("FRAP 40(a)(4), 40(e)") {
+chance panel-rehearing-decision: "Panel Rules on Rehearing" by examiner discretion cite ?("FRAP 40(a)(4), 40(e)") {
   group rehearing-group
   note "The panel rules on the petition; no fixed FRAP deadline exists, though circuit practice generally resolves it in under 40 days. Grant rates are extremely low; panels rarely reverse their own decisions absent a substantial legal or factual error. No response is permitted unless the court requests one."
   _ "Panel grants rehearing" -> rehearing-granted-amended-opinion p 0.05 {
@@ -84,7 +84,7 @@ decision panel-rehearing-decision: "Panel Rules on Rehearing" by examiner cite ?
   }
 }
 
-decision en-banc-poll-decision: "Active Judges Vote on En Banc Rehearing" by examiner cite ?("FRAP 40(c), 28 U.S.C. § 46(c)") {
+chance en-banc-poll-decision: "Active Judges Vote on En Banc Rehearing" by examiner discretion cite ?("FRAP 40(c), 28 U.S.C. § 46(c)") {
   group rehearing-group
   note "All active judges of the circuit vote on whether to order en banc rehearing; a majority of active judges must vote in favor to grant. FRAP 40(c) provides that 'unless a judge calls for a vote, a vote need not be taken' — the court may dispose of the petition without a formal poll, effectively a denial. En banc rehearing is extraordinarily rare, reserved for circuit splits or truly exceptional questions."
   _ "Majority votes to rehear en banc" -> rehearing-granted-amended-opinion p 0.02 {

@@ -18,7 +18,7 @@ import mpep.post-grant.{ patent-challenged }
 import mpep.reissue.{ reissue-pending }
 import mpep.{ after-final-group, allowance-group, appeal-group, examination-group, filing-group }
 
-chance nonprovisional-filed: "Nonprovisional Filed" by office effective [2024-01-31, ..) cite 35 U.S.C. 111(a); 37 CFR 1.53(b)
+chance nonprovisional-filed: "Nonprovisional Filed" by office discretion effective [2024-01-31, ..) cite 35 U.S.C. 111(a); 37 CFR 1.53(b)
 {
   group filing-group
   note "Specification (with or without claims), drawings (if necessary), filing fee, search fee, examination fee, and oath/declaration required. Filing date = date specification received at USPTO (37 CFR 1.53(b)). The 20-year term begins here."
@@ -342,7 +342,7 @@ state examiners-answer: "Examiner's Answer" by applicant effective [2024-01-31, 
   }
 }
 
-decision ptab-decision: "PTAB Decision" by office effective [2024-01-31, ..) cite 37 CFR 41.50; MPEP 1213
+chance ptab-decision: "PTAB Decision" by office discretion effective [2024-01-31, ..) cite 37 CFR 41.50; MPEP 1213
 {
   group appeal-group
   note "PTAB issues its decision: affirmance (examiner sustained), reversal (examiner overruled), or new ground of rejection (applicant must respond). PTAB may affirm in part, reverse in part."

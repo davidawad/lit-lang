@@ -38,7 +38,9 @@ state mandatory-disclosures: "Mandatory Initial Disclosures Exchanged" cite 37 C
 /// Tribunal discretion: additional discovery is granted only "in the
 /// interests of justice" (37 C.F.R. § 42.51(b)(2)). The pack authors the
 /// grant/deny draw (0.3/0.7); its renew and settle moves carry none.
-decision additional-discovery-motion: "Motion for Additional Discovery" by examiner cite ?("37 CFR 42.51(b)(2); Garmin Ltd. v. Cuozzo Speed Tech. LLC, IPR2012-00001, Paper 26") {
+/// The Board's ruling on the motion, not a party's choice. Either way the
+/// case reaches `patent-owner-response-window`, where settlement stays open.
+chance additional-discovery-motion: "Motion for Additional Discovery" by examiner discretion cite ?("37 CFR 42.51(b)(2); Garmin Ltd. v. Cuozzo Speed Tech. LLC, IPR2012-00001, Paper 26") {
   group post-institution-group
   note "Beyond routine categories, discovery in IPR requires a showing that it serves 'the interests of justice,' applying the five-factor Garmin test (claim complexity, evidence availability, delay, burden/cost, non-moving party's position); PGR uses the more permissive 'good cause' standard. Each motion is fact-intensive and case-specific."
   _ "Board grants additional discovery" -> protective-order-ipr p 0.3 {
@@ -52,12 +54,6 @@ decision additional-discovery-motion: "Motion for Additional Discovery" by exami
       note "The Patent Owner Response deadline (90 days from institution) remains unaffected by a discovery motion denial. Failure to extend if needed results in waiver of the response and preclusion at trial."
     }
     duration { min 13.5.days, mode 45.days, max 90.days }
-  }
-  _ "Renew motion for further discovery" -> additional-discovery-motion by either {
-    authority cite 37 CFR 42.51(b)(2)
-  }
-  _ "Settle rather than fight discovery" -> settlement-decision by either {
-    authority cite 35 U.S.C. 317
   }
 }
 

@@ -26,7 +26,7 @@ decision infringement-suit-filed: "Opposer files federal infringement suit" by a
   }
 }
 
-chance suit-merits: "Suit tried to judgment" by board cite ?("15 USC 1114(1); Frisch's Restaurants v. Elby's Big Boy, 670 F.2d 642 (6th Cir. 1982)") {
+chance suit-merits: "Suit tried to judgment" by board discretion cite ?("15 USC 1114(1); Frisch's Restaurants v. Elby's Big Boy, 670 F.2d 642 (6th Cir. 1982)") {
   group threat
   _ "Opposer wins: injunction, rebrand" -> suit-lost-fees-chance p 0.45 {
     authority cite 15 USC 1116; 1114(1)

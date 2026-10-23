@@ -3,10 +3,10 @@ module itc.initial-determination
 import itc.commission-review-to-federal-circuit-appeal.{ petition-for-review-window }
 import itc.{ initial-determination-group }
 
-/// Kept `decision`, the legacy pack's kind. Proposed fix (not applied): a
-/// `chance` draw without `discretion`, a ruling under a legal standard: 19
-/// C.F.R. § 210.42(a)(1): the merits initial determination on violation.
-decision initial-determination: "ALJ Issues Initial Determination on Violation" by examiner effective [2025-02-03, ..) cite cfr210.42.a.1
+/// A ruling the tribunal makes under a legal standard, not a party's
+/// choice: 19 C.F.R. § 210.42(a)(1): the merits initial determination on
+/// violation.
+chance initial-determination: "ALJ Issues Initial Determination on Violation" by examiner discretion effective [2025-02-03, ..) cite cfr210.42.a.1
 {
   group initial-determination-group
   note "Must be filed no later than 4 months before the target date. Violation-found authored at 0.55 / no-violation at 0.45 — APPROXIMATE. This is the single dominator gateway every non-default path to a Commission Final Determination must pass through — the ITC analog of mpep-prosecution.json's noa-received dominating patent-issued."

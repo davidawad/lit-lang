@@ -200,11 +200,10 @@ decision discovery-open: "Discovery Open" by applicant effective [2025-02-03, ..
   }
 }
 
-/// Kept `decision`, the legacy pack's kind. Proposed fix (not applied): a
-/// `chance ... discretion` draw, tribunal discretion: 19 C.F.R. §
-/// 210.33(a): the administrative law judge rules on a motion to compel; the
-/// rule states no standard, so the ruling is discretionary.
-decision order-compelling-discovery: "ALJ Rules on Motion to Compel" by examiner effective [2025-02-03, ..) cite cfr210.33.a
+/// A ruling committed to the tribunal's discretion, not a party's choice:
+/// 19 C.F.R. § 210.33(a): the administrative law judge rules on a motion to
+/// compel; the rule states no standard, so the ruling is discretionary.
+chance order-compelling-discovery: "ALJ Rules on Motion to Compel" by examiner discretion effective [2025-02-03, ..) cite cfr210.33.a
 {
   group discovery-group
   note "Grant rate authored at 0.7 / noncompliance-continues at 0.3 — APPROXIMATE."
@@ -216,11 +215,10 @@ decision order-compelling-discovery: "ALJ Rules on Motion to Compel" by examiner
   }
 }
 
-/// Kept `decision`, the legacy pack's kind. Proposed fix (not applied): a
-/// `chance ... discretion` draw, tribunal discretion: 19 C.F.R. §
-/// 210.33(b): the administrative law judge "may take such action ... as is
-/// just".
-decision discovery-sanctions: "ALJ Rules on Discovery Sanctions" by examiner effective [2025-02-03, ..) cite cfr210.33.b
+/// A ruling committed to the tribunal's discretion, not a party's choice:
+/// 19 C.F.R. § 210.33(b): the administrative law judge "may take such
+/// action ... as is just".
+chance discovery-sanctions: "ALJ Rules on Discovery Sanctions" by examiner discretion effective [2025-02-03, ..) cite cfr210.33.b
 {
   group discovery-group
   note "Non-monetary sanctions include an adverse inference, treating disputed matters as resolved against the non-compliant party, evidence preclusion, striking filings, and 'other sanctions under Federal Rule of Civil Procedure 37(b)' — one of the few places Part 210 explicitly imports an FRCP provision by name. Monetary sanctions (attorney's fees) run under 210.33(c), except never against the United States, the Commission, or Commission investigative attorneys. Case-dispositive default authored at 0.15 — APPROXIMATE but grounded: Certain Opaque Polymers (337-TA-883) is the teaching case for this exact branch (Chief ALJ Pender: 'spoliation on a staggering scale'; Federal Circuit affirmed both the default sanction and the resulting 25-year exclusion order)."
@@ -247,11 +245,10 @@ state cbi-designated: "Material Designated CBI" by applicant effective [2013-05-
   }
 }
 
-/// Kept `decision`, the legacy pack's kind. Proposed fix (not applied): a
-/// `chance ... discretion` draw, tribunal discretion: 19 C.F.R. §
-/// 210.34(a): "for good cause shown, the administrative law judge may make
-/// any order".
-decision protective-order-ruling: "ALJ Rules on Protective-Order Motion" by examiner effective [2025-02-03, ..) cite cfr210.34.a
+/// A ruling committed to the tribunal's discretion, not a party's choice:
+/// 19 C.F.R. § 210.34(a): "for good cause shown, the administrative law
+/// judge may make any order".
+chance protective-order-ruling: "ALJ Rules on Protective-Order Motion" by examiner discretion effective [2025-02-03, ..) cite cfr210.34.a
 {
   group discovery-group
   note "Grant rate authored at 0.9 / denial at 0.1 — APPROXIMATE; ALJs routinely issue CBI protective orders on the good-cause showing this fact pattern almost always makes. A denial leaves discovery to proceed under 210.5's default confidentiality treatment rather than a case-specific order."
@@ -272,10 +269,9 @@ state protective-order-issued: "Protective Order Issued" by examiner effective [
   }
 }
 
-/// Kept `decision`, the legacy pack's kind. Proposed fix (not applied): a
-/// `chance` draw, not a ruling: whether the filer redacted all confidential
-/// business information.
-decision public-version-filed: "Public (Redacted) Version Filed" by examiner effective [2013-05-20, ..) cite cfr210.5.public-version
+/// A draw, not a ruling or a party's choice: whether the filer redacted all
+/// confidential business information.
+chance public-version-filed: "Public (Redacted) Version Filed" by examiner effective [2013-05-20, ..) cite cfr210.5.public-version
 {
   group discovery-group
   note "Properly-redacted acceptance authored at 0.92 / still-unredacted-CBI at 0.08 — APPROXIMATE, modeling the authoring-error case the pack's own flagRules target (file.public-version with params.unredactedCbiIncluded=true raises the violation flag below)."

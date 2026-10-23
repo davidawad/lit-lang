@@ -165,7 +165,7 @@ decision removed-to-federal: "Case Removed to Federal Court" by applicant cite 2
   }
 }
 
-decision remand-ruling: "Court Rules on Motion to Remand" by examiner cite 28 U.S.C. 1447(c)
+chance remand-ruling: "Court Rules on Motion to Remand" by examiner discretion cite 28 U.S.C. 1447(c)
 {
   group pleading-group
   note "A motion to remand for a procedural defect in removal must be made within 30 days after the notice of removal; a motion to remand for lack of subject-matter jurisdiction may be made at any time before final judgment, and the court must remand sua sponte if it discovers the jurisdictional defect itself. Remand probability authored at 0.3 grant / 0.7 deny -- APPROXIMATE, not a live empirical figure; removal is upheld more often than not when the removing defendant has correctly diagnosed diversity or federal-question jurisdiction, but improvidently removed cases (missing an in-state defendant's forum-defendant bar, incomplete diversity) are a recurring plaintiff win."
@@ -249,7 +249,7 @@ state motion-to-dismiss-filed: "Rule 12(b) Motion Filed" by applicant cite FRCP 
   }
 }
 
-decision mtd-ruling: "Court Rules on Motion to Dismiss" by examiner cite FRCP 12(b)(6); 12(d)
+chance mtd-ruling: "Court Rules on Motion to Dismiss" by examiner discretion cite FRCP 12(b)(6); 12(d)
 {
   group pleading-group
   note "Outcome distribution authored at 0.45 deny / 0.35 grant-with-leave / 0.20 grant-without-leave -- APPROXIMATE, not a live empirical figure; district courts deny more 12(b)(6) motions than they grant outright, and leave to amend is the norm rather than the exception on a first dismissal (Foman v. Davis, 371 U.S. 178 (1962): leave should be 'freely given'). If matters outside the pleadings are presented and not excluded, the motion converts to one for summary judgment under Rule 56 (Rule 12(d)) -- not separately modeled here."
@@ -367,9 +367,8 @@ state leave-to-amend-motion: "Motion for Leave to Amend Filed" by applicant cite
   }
 }
 
-// Kept `decision` as the legacy pack has it. The rule text commits this
-// ruling to the court's discretion (proposed fix: `chance ... discretion`).
-decision leave-to-amend-ruling: "Court Rules on Leave to Amend" by examiner cite FRCP 15(a)(2)
+// The rule text commits this ruling to the court's discretion.
+chance leave-to-amend-ruling: "Court Rules on Leave to Amend" by examiner discretion cite FRCP 15(a)(2)
 {
   group amendment-joinder-group
   note "Outcome distribution authored at 0.75 granted / 0.25 denied -- APPROXIMATE; leave is granted in the substantial majority of contested motions given the 'freely give' standard, but is meaningfully more often denied late in the case (near a scheduling-order cutoff) or after repeated prior amendments."
@@ -513,7 +512,7 @@ decision meet-and-confer: "Meet-and-Confer on Discovery Dispute" by applicant ci
   }
 }
 
-decision motion-to-compel-ruling: "Court Rules on Motion to Compel" by examiner cite FRCP 37(a)(3); 37(a)(5)
+chance motion-to-compel-ruling: "Court Rules on Motion to Compel" by examiner discretion cite FRCP 37(a)(3); 37(a)(5)
 {
   group discovery-group
   note "Outcome distribution authored at 0.65 granted / 0.20 granted-but-still-noncompliant / 0.15 denied -- APPROXIMATE. Fee-shifting is close to automatic on the two-way street Rule 37(a)(5) creates: if the motion is granted (or discovery is produced only after the motion was filed), the court MUST require the losing party to pay the movant's reasonable expenses including attorney's fees, unless the opposition was substantially justified; if denied, the same mandatory fee-shifting runs the other way against the movant."
@@ -538,9 +537,8 @@ state protective-order-motion: "Motion for Protective Order" by applicant cite F
   }
 }
 
-// Kept `decision` as the legacy pack has it. The rule text commits this
-// ruling to the court's discretion (proposed fix: `chance ... discretion`).
-decision protective-order-ruling: "Court Rules on Protective-Order Motion" by examiner cite FRCP 26(c)
+// The rule text commits this ruling to the court's discretion.
+chance protective-order-ruling: "Court Rules on Protective-Order Motion" by examiner discretion cite FRCP 26(c)
 {
   group discovery-group
   note "Outcome distribution authored at 0.8 granted / 0.2 denied -- APPROXIMATE; courts routinely issue confidentiality protective orders on the good-cause showing a discovery dispute over sensitive business or personal information almost always makes, mirroring the near-automatic grant rate modeled for the analogous CBI protective-order fork in itc-337.json."
@@ -552,9 +550,8 @@ decision protective-order-ruling: "Court Rules on Protective-Order Motion" by ex
   }
 }
 
-// Kept `decision` as the legacy pack has it. The rule text commits this
-// ruling to the court's discretion (proposed fix: `chance ... discretion`).
-decision rule37-sanctions-ruling: "Court Rules on Rule 37 Sanctions" by examiner cite FRCP 37(b)(2); 37(e)
+// The rule text commits this ruling to the court's discretion.
+chance rule37-sanctions-ruling: "Court Rules on Rule 37 Sanctions" by examiner discretion cite FRCP 37(b)(2); 37(e)
 {
   group discovery-group
   note "If a party disobeys a discovery order, the court may issue further just orders, including: directing that facts be taken as established, prohibiting the disobedient party from supporting or opposing designated claims/defenses, striking pleadings, staying proceedings, dismissing the action, or rendering a default judgment (37(b)(2)(A)). For lost electronically stored information, Rule 37(e)(2)'s severe measures (adverse-inference instruction, dismissal, default) require a finding of INTENT to deprive -- mere negligence supports only 37(e)(1)'s narrower 'no greater than necessary' curative measures. Case-dispositive sanction authored at 0.15 dismissal / 0.15 default -- APPROXIMATE but grounded: Certain Opaque Polymers (ITC Inv. No. 337-TA-883) is the paradigm case for this exact branch, where the Federal Circuit affirmed a case-dispositive default sanction for 'spoliation on a staggering scale.'"
@@ -628,7 +625,7 @@ state sj-briefing-complete: "Summary Judgment Briefing Complete" by office cite 
   _ "Motion taken under submission" -> sj-ruling { authority cite FRCP 56(a) }
 }
 
-decision sj-ruling: "Court Rules on Summary Judgment" by examiner cite FRCP 56(a)
+chance sj-ruling: "Court Rules on Summary Judgment" by examiner discretion cite FRCP 56(a)
 {
   group pretrial-motions-group
   note "Outcome distribution authored at 0.25 granted-in-full / 0.20 granted-in-part / 0.55 denied -- APPROXIMATE; wholesale grants are the minority outcome because the standard requires viewing evidence and drawing all reasonable inferences in the nonmovant's favor (Anderson v. Liberty Lobby, Inc., 477 U.S. 242 (1986); Matsushita Elec. Indus. Co. v. Zenith Radio Corp., 475 U.S. 574 (1986)) -- a genuine factual dispute on any material element sends that claim to trial regardless of the movant's confidence."
@@ -678,9 +675,8 @@ state daubert-motion-filed: "Daubert / Rule 702 Motion Filed" by applicant cite 
   }
 }
 
-// Kept `decision` as the legacy pack has it. The rule text commits this
-// ruling to the court's discretion (proposed fix: `chance ... discretion`).
-decision daubert-ruling: "Court Rules on Daubert Motion" by examiner cite ?("FRE 702") {
+// The rule text commits this ruling to the court's discretion.
+chance daubert-ruling: "Court Rules on Daubert Motion" by examiner discretion cite ?("FRE 702") {
   group pretrial-motions-group
   note "Outcome distribution authored at 0.6 admitted / 0.4 excluded-in-whole-or-part -- APPROXIMATE. Missing the scheduling-order's expert-motion cutoff forfeits a pretrial Daubert challenge entirely -- a mid-trial objection to qualified expert testimony is ordinarily too late and the jury has already heard the opinion, the trap this pack's frcp-fragment rulepack flags as fre/daubert-not-moved."
   daubert-admitted "Expert testimony admitted -- reliability and fit satisfied" -> motions-in-limine-filed p 0.6 {
@@ -742,7 +738,7 @@ state trial-commences: "Trial Commences" by office cite FRCP 43; 50(a)
   }
 }
 
-decision verdict-rendered: "Verdict / Findings Rendered" by examiner cite FRCP 52(a); 58
+chance verdict-rendered: "Verdict / Findings Rendered" by examiner discretion cite FRCP 52(a); 58
 {
   group trial-group
   note "For a bench trial, the court must find the facts specially and state its conclusions of law separately (Rule 52(a)(1)). For a jury trial, the jury returns its verdict. Either way, judgment must be set out in a separate document (Rule 58(a)) -- the FRAP 4 appeal clock and the Rule 50(b)/59 clocks both run from ENTRY of that judgment, with a 150-day backstop under FRAP 4(a)(7)(A)(ii) if no separate document is ever entered."

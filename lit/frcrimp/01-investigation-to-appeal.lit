@@ -62,7 +62,7 @@ state grand-jury-convened: "Grand Jury Convened" by office cite ?("Fed. R. Crim.
 }
 
 /// imported
-decision grand-jury-vote: "Grand Jury Votes" by office effective [2023-01-05, ..) known_at 2023-01-05 cite Fed. R. Crim. P. 6(f)
+chance grand-jury-vote: "Grand Jury Votes" by office discretion effective [2023-01-05, ..) known_at 2023-01-05 cite Fed. R. Crim. P. 6(f)
 {
   group investigation-group
   note "At least 12 of the 16-23 jurors must concur to return a true bill. If fewer than 12 concur, the foreperson must report the lack of concurrence to the magistrate judge in writing — the indictment is not effective."
@@ -146,7 +146,7 @@ state initial-appearance: "Initial Appearance" by examiner effective [2020-10-21
 }
 
 /// imported
-decision preliminary-hearing: "Preliminary Hearing" by examiner delegable_to [CaseOrder] effective [2009-12-01, ..) known_at 2009-03-26 cite Fed. R. Crim. P. 5.1
+chance preliminary-hearing: "Preliminary Hearing" by examiner discretion delegable_to [CaseOrder] effective [2009-12-01, ..) known_at 2009-03-26 cite Fed. R. Crim. P. 5.1
 {
   group charging-group
   note "Only available if not yet indicted; the magistrate applies a probable-cause standard and hearsay is permitted. Automatically moot if the grand jury indicts before the hearing concludes (Rule 5.1(f)) — the government can bypass an unfavorable PC ruling by indicting first."
@@ -185,7 +185,7 @@ terminal complaint-dismissed-no-pc: "Complaint Dismissed — No Probable Cause" 
 }
 
 /// imported
-decision detention-hearing: "Detention Hearing (Bail Determination)" by examiner effective [2024-12-01, ..) cite 18 U.S.C. § 3142(e); Fed. R. Crim. P. 46
+chance detention-hearing: "Detention Hearing (Bail Determination)" by examiner discretion effective [2024-12-01, ..) cite 18 U.S.C. § 3142(e); Fed. R. Crim. P. 46
 {
   group arraignment-group
   note "Bail Reform Act factors: flight risk, danger to the community, and the nature/severity of the charges. A rebuttable presumption of detention applies to certain violent-felony and serious drug offenses under § 3142(e)(3), shifting the burden to the defendant; the court must state its reasons in writing."
@@ -251,10 +251,23 @@ state rule12-deadline-set: "Rule 12(c) Motions Deadline Set" by office delegable
 {
   group pretrial-motions-group
   note "Court sets the Rule 12(b)(3) motion deadline at arraignment or as soon thereafter as practicable; if no deadline is set, all pretrial motions are due at trial's start. This deadline triggers the Rule 12(c)(3) waiver trap below."
+  _ "Motions deadline approaches" -> rule12-continuance-ruling {
+    authority cite Fed. R. Crim. P. 12(c)(1)
+  }
+}
+
+/// The court, not a party, decides whether to continue the motions deadline:
+/// an ends-of-justice continuance under 18 U.S.C. § 3161(h)(7) is
+/// discretionary. A grant returns to `rule12-deadline-set` with a reset
+/// deadline.
+chance rule12-continuance-ruling: "Court Rules on Continuing the Motions Deadline" by examiner discretion effective [2014-12-01, ..) known_at 2014-04-25 cite 18 U.S.C. § 3161(h)(7); Fed. R. Crim. P. 12(c)(1)
+{
+  group pretrial-motions-group
+  note "Outcome distribution authored at 0.75 deadline holds / 0.25 continuance granted -- the pack's existing teaching estimate, APPROXIMATE, not a sourced rate."
   _ "Motions deadline arrives" -> pretrial-motions-window p 0.75 {
     authority cite Fed. R. Crim. P. 12(c)(1)
   }
-  _ "Grant continuance" -> rule12-deadline-set by examiner p 0.25 {
+  _ "Grant continuance" -> rule12-deadline-set p 0.25 {
     authority cite 18 U.S.C. § 3161(h)(7); Fed. R. Crim. P. 12(c)(1)
   }
 }
@@ -416,11 +429,11 @@ chance brady-giglio-disclosure: "Brady/Giglio Disclosure" discretion cite ?("Bra
 }
 
 /// imported
-decision discovery-dispute: "Discovery Dispute / Motion to Compel" by examiner effective [2023-12-01, ..) known_at 2023-04-24 cite Fed. R. Crim. P. 16(d)(1)
+chance discovery-dispute: "Discovery Dispute / Motion to Compel" by examiner discretion effective [2023-12-01, ..) known_at 2023-04-24 cite Fed. R. Crim. P. 16(d)(1)
 {
   group discovery-group
   note "Defendant may move to compel when the government fails to produce Rule 16 discovery. The court has broad discretion under 16(d) to order compliance, grant a continuance, or fashion any other just remedy; Brady disputes follow the same framework."
-  _ "Impose discovery sanction" -> discovery-sanction { authority cite Fed. R. Crim. P. 16(d)(2) }
+  _ "Impose discovery sanction" -> discovery-sanction p 1 { authority cite Fed. R. Crim. P. 16(d)(2) }
 }
 
 /// imported
@@ -459,7 +472,7 @@ state plea-agreement-reached: "Plea Agreement Reached" by office cite ?("Fed. R.
 }
 
 /// imported
-decision change-of-plea-hearing: "Change-of-Plea Hearing (Rule 11 Colloquy)" by examiner effective [2013-12-01, ..) known_at 2013-04-16 cite Fed. R. Crim. P. 11(b)
+chance change-of-plea-hearing: "Change-of-Plea Hearing (Rule 11 Colloquy)" by examiner discretion effective [2013-12-01, ..) known_at 2013-04-16 cite Fed. R. Crim. P. 11(b)
 {
   group plea-group
   note "Court must address the defendant personally, ensure the plea is knowing and voluntary, confirm understanding of the rights waived and the penalties (including any mandatory minimum), and establish a factual basis. A defective colloquy is a frequent ground for appellate reversal."
@@ -526,12 +539,12 @@ state trial-in-progress: "Trial in Progress" by applicant cite ?("Fed. R. Crim. 
 }
 
 /// imported
-decision rule29-motion: "Rule 29 Motion for Judgment of Acquittal" by examiner cite ?("Fed. R. Crim. P. 29(a), (c); Jackson v. Virginia, 443 U.S. 307 (1979)") effective [2009-12-01, ..) known_at 2009-03-26 {
+chance rule29-motion: "Rule 29 Motion for Judgment of Acquittal" by examiner discretion cite ?("Fed. R. Crim. P. 29(a), (c); Jackson v. Virginia, 443 U.S. 307 (1979)") effective [2009-12-01, ..) known_at 2009-03-26 {
   group trial-group
   note "Standard is whether any rational trier of fact could find guilt beyond a reasonable doubt, viewing the evidence most favorably to the government. May be made mid-trial (29(a)) or renewed after verdict within 14 days (29(c)); double jeopardy consequences differ sharply by timing."
-  _ "Grant judgment of acquittal" -> rule29-granted { authority cite Fed. R. Crim. P. 29(a) }
-  _ "Deny motion, proceed to jury" -> rule29-denied { authority cite Fed. R. Crim. P. 29(a) }
-  _ "Deny post-verdict acquittal motion" -> rule33-motion
+  _ "Grant judgment of acquittal" -> rule29-granted p ?("no sourced Rule 29 grant rate") { authority cite Fed. R. Crim. P. 29(a) }
+  _ "Deny motion, proceed to jury" -> rule29-denied p ?("no sourced Rule 29 grant rate") { authority cite Fed. R. Crim. P. 29(a) }
+  _ "Deny post-verdict acquittal motion" -> rule33-motion p ?("no sourced Rule 29 grant rate")
 }
 
 /// imported
@@ -577,7 +590,7 @@ terminal case-dismissed-after-hung-jury: "Case Dismissed After Hung Jury" outcom
 }
 
 /// imported
-decision verdict-returned: "Verdict Returned" by office effective [2002-12-01, ..) known_at 2002-04-29 cite Fed. R. Crim. P. 31
+chance verdict-returned: "Verdict Returned" by office discretion effective [2002-12-01, ..) known_at 2002-04-29 cite Fed. R. Crim. P. 31
 {
   group trial-group
   note "Verdict must be unanimous in federal court (Rule 31(a)); either party may request that the jury be polled (Rule 31(d)), and the court may declare a mistrial if the poll reveals a lack of unanimity."
@@ -623,7 +636,7 @@ state guilty-verdict: "Guilty Verdict" by applicant delegable_to [CaseOrder] eff
 }
 
 /// imported
-decision rule33-motion: "Rule 33 Motion for New Trial" by examiner effective [2009-12-01, ..) known_at 2009-03-26 cite Fed. R. Crim. P. 33
+chance rule33-motion: "Rule 33 Motion for New Trial" by examiner discretion effective [2009-12-01, ..) known_at 2009-03-26 cite Fed. R. Crim. P. 33
 {
   group verdict-sentencing-group
   note "General grounds carry a strict 14-day post-verdict deadline, but a newly-discovered-evidence claim gets up to 3 years — a trap because the evidence must have been genuinely unavailable at trial, not merely overlooked or reconsidered."
@@ -648,11 +661,11 @@ state presentence-report: "Presentence Investigation Report (PSR)" by office del
 }
 
 /// imported
-decision sentencing-hearing: "Sentencing Hearing" by examiner effective [2024-12-01, ..) cite Fed. R. Crim. P. 32(i)(4); 18 U.S.C. § 3553(a)
+chance sentencing-hearing: "Sentencing Hearing" by examiner discretion effective [2024-12-01, ..) cite Fed. R. Crim. P. 32(i)(4); 18 U.S.C. § 3553(a)
 {
   group verdict-sentencing-group
   note "Defendant has an absolute right of allocution. The court must correctly calculate the Guidelines range as a starting point (Gall/Booker framework) even though the range is now advisory and the court may vary from it for policy reasons."
-  _ "Calculate Guidelines range" -> guidelines-calculation {
+  _ "Calculate Guidelines range" -> guidelines-calculation p 1 {
     authority cite ?("U.S.S.G. §§ 1.1-1.4; 18 U.S.C. § 3553(a)")
   }
 }
@@ -667,10 +680,10 @@ state guidelines-calculation: "Guidelines Range Calculated" by examiner cite ?("
 }
 
 /// imported
-decision departure-variance: "Departure/Variance Considered" by examiner cite ?("U.S.S.G. § 5K1.1; 18 U.S.C. § 3553(a); United States v. Booker, 543 U.S. 220 (2005)") effective [2024-12-01, ..) {
+chance departure-variance: "Departure/Variance Considered" by examiner discretion cite ?("U.S.S.G. § 5K1.1; 18 U.S.C. § 3553(a); United States v. Booker, 543 U.S. 220 (2005)") effective [2024-12-01, ..) {
   group verdict-sentencing-group
   note "A 'departure' is Guidelines-authorized (e.g., a government-only § 5K1.1 substantial-assistance motion); a 'variance' is a discretionary deviation under the § 3553(a) factors post-Booker. Both must be explained on the record."
-  _ "Impose sentence, enter judgment" -> judgment-entered { authority cite Fed. R. Crim. P. 32(k) }
+  _ "Impose sentence, enter judgment" -> judgment-entered p 1 { authority cite Fed. R. Crim. P. 32(k) }
 }
 
 /// imported
@@ -700,7 +713,7 @@ terminal judgment-entered: "Judgment and Commitment Entered" outcome [loss, conv
 }
 
 /// imported
-decision rule35-motion: "Rule 35 Motion to Correct/Reduce Sentence" by examiner cite ?("Fed. R. Crim. P. 35(a), (b)") effective [2009-12-01, ..) known_at 2009-03-26 {
+chance rule35-motion: "Rule 35 Motion to Correct/Reduce Sentence" by examiner discretion cite ?("Fed. R. Crim. P. 35(a), (b)") effective [2009-12-01, ..) known_at 2009-03-26 {
   group appeal-group
   note "Rule 35(a) lets the court correct clear error (arithmetic, technical, procedural) within 14 days of sentencing — not a substantive do-over. Rule 35(b) lets the government move to reduce a sentence for post-sentencing substantial assistance within one year, with no effect on this 14-day window."
   _ "Correct or reduce sentence" -> judgment-entered p 0.1 { authority cite Fed. R. Crim. P. 35(a) }
@@ -779,7 +792,7 @@ state appellate-briefing: "Appellate Briefing" by office effective [2024-12-01, 
 }
 
 /// imported
-decision appellate-decision: "Court of Appeals Decision" by examiner effective [2024-12-01, ..) cite 28 U.S.C. § 1291; Fed. R. App. P. 34
+chance appellate-decision: "Court of Appeals Decision" by examiner discretion effective [2024-12-01, ..) cite 28 U.S.C. § 1291; Fed. R. App. P. 34
 {
   group appeal-group
   note "Panel may affirm, reverse and render, reverse and remand for a new trial, or vacate and remand for resentencing only — a common partial win limited to the sentencing package."

@@ -2,7 +2,7 @@
 //! the `dev` profile (holes are warnings) and lower to HIR: the importer
 //! emits SPEC-conforming source, and sema accepts every legacy shape SPEC
 //! admits (pack-schema v3 manifest keys, links manifests, decimal duration
-//! estimates, mixed fact nodes, retry loops carrying `p`).
+//! estimates).
 mod support;
 
 use litigate_base::Severity;

@@ -46,9 +46,15 @@ impl R<'_, '_> {
             .collect()
     }
 
+    /// A fact's edge, qualified by its node's pack unless written `pack::edge`.
     fn edge_of(node: &str, value: &SyntaxNode) -> String {
+        let edge = value.text().to_string();
+        let edge = edge.trim();
+        if edge.contains("::") {
+            return edge.to_owned();
+        }
         let pack = node.split_once("::").map_or("", |(p, _)| p);
-        format!("{pack}::{}", value.text().to_string().trim())
+        format!("{pack}::{edge}")
     }
 
     pub(super) fn facts(&mut self, block: &SyntaxNode) -> BTreeMap<String, String> {

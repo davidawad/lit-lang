@@ -61,11 +61,11 @@ state summary-determination-opposition: "Opposing Affidavits Filed" by examiner 
   }
 }
 
-/// Kept `decision`, the legacy pack's kind. Proposed fix (not applied): a
-/// `chance` draw without `discretion`, a ruling under a legal standard: 19
-/// C.F.R. § 210.18(b): the determination "shall be rendered if" no genuine
-/// issue of material fact remains, a legal standard rather than discretion.
-decision summary-determination-ruling: "ALJ Rules on Summary Determination" by examiner effective [2025-02-03, ..) cite cfr210.18.b
+/// A ruling the tribunal makes under a legal standard, not a party's
+/// choice: 19 C.F.R. § 210.18(b): the determination "shall be rendered if"
+/// no genuine issue of material fact remains, a legal standard rather than
+/// discretion.
+chance summary-determination-ruling: "ALJ Rules on Summary Determination" by examiner discretion effective [2025-02-03, ..) cite cfr210.18.b
 {
   group prehearing-group
   note "Full or partial grant authored at 0.25 / denial (or partial-only, remaining issues proceed) at 0.75 — APPROXIMATE."

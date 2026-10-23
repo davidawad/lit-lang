@@ -10,124 +10,127 @@ leg 1: Arthrex owns U.S. Patent No. 9,179,907 (knotless suture anchor).
     2. [-] Smith & Nephew and ArthroCare petition for IPR2017-00275 (petition date not verified)
        via ptab-patent-trial-appeal-board::infringement-complaint-served->ipr-petition-filed#0 (self, 35 U.S.C. § 311; 35 U.S.C. § 315(b), within 365 calendar days)
        at  ptab-patent-trial-appeal-board::ipr-petition-filed "IPR Petition Filed"
-    3. [-] Office reviews the petition
-       via ptab-patent-trial-appeal-board::ipr-petition-filed->petition-threshold-review#0 (nature, 37 CFR §42.104(c); 37 CFR §42.106(a))
+    3. [-] Board checks the 35 U.S.C. § 315(b) one-year bar
+       via ptab-patent-trial-appeal-board::ipr-petition-filed->petition-time-bar-check#0 (nature, 37 CFR §42.104(c); 37 CFR §42.106(a))
+       at  ptab-patent-trial-appeal-board::petition-time-bar-check "Is the IPR Petition Filed Within 1 Year of Complaint Service?"
+    4. [-] Office reviews the petition
+       via ptab-patent-trial-appeal-board::e-time-bar-clear (nature, 35 U.S.C. §315(b))
        at  ptab-patent-trial-appeal-board::petition-threshold-review "Office Reviews Petition Compliance"
-    4. [-] Filing date accorded
+    5. [-] Filing date accorded
        via ptab-patent-trial-appeal-board::petition-threshold-review->petition-filing-date-accorded#0 (nature, 37 CFR §42.106(a); 37 CFR §42.206(a))
        at  ptab-patent-trial-appeal-board::petition-filing-date-accorded "Filing Date Accorded"
-    5. [-] Preliminary-response window
+    6. [-] Preliminary-response window
        via ptab-patent-trial-appeal-board::petition-filing-date-accorded->popr-window#0 (nature, 37 CFR §42.107(b); 37 CFR §42.207(b))
        at  ptab-patent-trial-appeal-board::popr-window "POPR Window Open"
-    6. [-] Preliminary response (not in the sources read; route assumed)
+    7. [-] Preliminary response (not in the sources read; route assumed)
        via ptab-patent-trial-appeal-board::popr-window->popr-filed#0 (nature, 37 CFR 42.107(a), (b), within 90 calendar days)
        at  ptab-patent-trial-appeal-board::popr-filed "POPR Filed"
-    7. [-] The Board decides institution (date not found)
+    8. [-] The Board decides institution (date not found)
        via ptab-patent-trial-appeal-board::popr-filed->institution-decision#0 (nature, 35 U.S.C. 314(b), 37 CFR 42.108, within 90 calendar days)
        at  ptab-patent-trial-appeal-board::institution-decision "Institution Decision"
-    8. [-] Review instituted
+    9. [-] Review instituted
        via ptab-patent-trial-appeal-board::institution-decision->institution-granted#0 (nature, 35 U.S.C. 314(a); SAS Institute Inc. v. Iancu, 138 S. Ct. 1386 (2018); 37 CFR 42.120)
        at  ptab-patent-trial-appeal-board::institution-granted "Trial Instituted"
-    9. [-] Scheduling order
+   10. [-] Scheduling order
        via ptab-patent-trial-appeal-board::institution-granted->scheduling-order-issued#0 (nature, 37 CFR 42.5(a); PTAB Standing Order on Motions, within 30 calendar days)
        at  ptab-patent-trial-appeal-board::scheduling-order-issued "Scheduling Order Issued"
-   10. [-] Mandatory disclosures
+   11. [-] Mandatory disclosures
        via ptab-patent-trial-appeal-board::scheduling-order-issued->mandatory-disclosures#0 (nature, 37 CFR 42.51(a))
        at  ptab-patent-trial-appeal-board::mandatory-disclosures "Mandatory Initial Disclosures Exchanged"
-   11. [-] Patent owner response window opens
+   12. [-] Patent owner response window opens
        via ptab-patent-trial-appeal-board::mandatory-disclosures->patent-owner-response-window#0 (nature, 37 CFR 42.120(b), within 90 calendar days)
        at  ptab-patent-trial-appeal-board::patent-owner-response-window "Patent Owner Response Window"
-   12. [-] Patent owner response (route assumed)
+   13. [-] Patent owner response (route assumed)
        via ptab-patent-trial-appeal-board::patent-owner-response-window->patent-owner-response-filed#0 (nature, 37 CFR 42.120, within 90 calendar days)
        at  ptab-patent-trial-appeal-board::patent-owner-response-filed "Patent Owner Response Filed"
-   13. [-] Petitioner reply (route assumed)
+   14. [-] Petitioner reply (route assumed)
        via ptab-patent-trial-appeal-board::patent-owner-response-filed->petitioner-reply-brief#0 (self, 37 CFR 42.23(a), within 60 calendar days)
        at  ptab-patent-trial-appeal-board::petitioner-reply-brief "Petitioner Reply Filed"
-   14. [-] Sur-reply: forced by the pack (route assumed)
+   15. [-] Sur-reply: forced by the pack (route assumed)
        via ptab-patent-trial-appeal-board::petitioner-reply-brief->patent-owner-sur-reply#0 (nature, 37 CFR 42.23(b), within 30 calendar days)
        at  ptab-patent-trial-appeal-board::patent-owner-sur-reply "Patent Owner Sur-Reply Filed"
-   15. [-] Arthrex weighs amending
+   16. [-] Arthrex weighs amending
        via ptab-patent-trial-appeal-board::patent-owner-sur-reply->motion-to-amend-decision#0 (nature, 35 U.S.C. 316(d); 37 CFR 42.121)
        at  ptab-patent-trial-appeal-board::motion-to-amend-decision "Motion to Amend Decision Point"
-   16. [-] No motion to amend in the sources read (route assumed)
+   17. [-] No motion to amend in the sources read (route assumed)
        via ptab-patent-trial-appeal-board::motion-to-amend-decision->settlement-decision#0 (nature, 35 U.S.C. 317)
        at  ptab-patent-trial-appeal-board::settlement-decision "Settlement Considered"
-   17. [-] No settlement
+   18. [-] No settlement
        via ptab-patent-trial-appeal-board::settlement-decision->oral-hearing-request#0 (nature, 37 CFR 42.70)
        at  ptab-patent-trial-appeal-board::oral-hearing-request "Oral Hearing Requested"
-   18. [-] Oral hearing (not in the sources read; route assumed)
+   19. [-] Oral hearing (not in the sources read; route assumed)
        via ptab-patent-trial-appeal-board::oral-hearing-request->oral-hearing-held#0 (nature, 37 CFR 42.70(a), (b))
        at  ptab-patent-trial-appeal-board::oral-hearing-held "Oral Hearing Held"
-   19. [-] Case submitted
+   20. [-] Case submitted
        via ptab-patent-trial-appeal-board::oral-hearing-held->fwd-issued#0 (nature, 37 CFR 42.70(b))
        at  ptab-patent-trial-appeal-board::fwd-issued "Board Issues Final Written Decision"
-   20. [2018-05-02] Final written decision: claims 1, 4, 8, 10-12, 16, 18 and 25-28 unpatentable as anticipated
+   21. [2018-05-02] Final written decision: claims 1, 4, 8, 10-12, 16, 18 and 25-28 unpatentable as anticipated
        via ptab-patent-trial-appeal-board::fwd-issued->fwd-all-unpatentable#0 (nature, 35 U.S.C. § 318(a))
        at  ptab-patent-trial-appeal-board::fwd-all-unpatentable "FWD: All Claims Unpatentable" {ipr-estopped}
-   21. [-] Arthrex weighs post-decision relief
+   22. [-] Arthrex weighs post-decision relief
        via ptab-patent-trial-appeal-board::fwd-all-unpatentable->post-fwd-options#0 (nature, 37 CFR § 42.71(d))
        at  ptab-patent-trial-appeal-board::post-fwd-options "Post-FWD Options" {ipr-estopped}
-   22. [-] Straight to appeal (route assumed)
+   23. [-] Straight to appeal (route assumed)
        via ptab-patent-trial-appeal-board::post-fwd-options->federal-circuit-window#0 (nature, 35 U.S.C. § 319)
        at  ptab-patent-trial-appeal-board::federal-circuit-window "Federal Circuit Appeal Window" {ipr-estopped}
-   23. [-] Arthrex appeals to the Federal Circuit
+   24. [-] Arthrex appeals to the Federal Circuit
        via links::ptab-appeal-to-cafc (nature, cross-forum link, 35 U.S.C. §§ 141(c), 319; 37 C.F.R. § 90.3)
        at  cafc@ptab::entry-ptab "PTAB Final Written Decision (or Operative Post-FWD Decision)" {ipr-estopped}
-   24. [-] Notice of appeal (No. 2018-2140)
+   25. [-] Notice of appeal (No. 2018-2140)
        via cafc@ptab::ptab-file-noa (self, 37 C.F.R. § 90.3(a); 35 U.S.C. § 142, within 63 calendar days)
        at  cafc@ptab::notice-of-appeal-filed "Notice of Appeal Filed (Convergence)" {ipr-estopped}
-   25. [-] Appeal docketed
+   26. [-] Appeal docketed
        via cafc@ptab::noa-to-docketed (nature, FRAP 12(a))
        at  cafc@ptab::docketed "Appeal Docketed at the Federal Circuit" {ipr-estopped}
-   26. [-] Entries of appearance and certificates of interest
+   27. [-] Entries of appearance and certificates of interest
        via cafc@ptab::docketed-to-appearance (self, Fed. Cir. R. 47.3(b)(1); Fed. Cir. R. 47.4(b), within 14 calendar days)
        at  cafc@ptab::appearance-and-coi-filed "Entry of Appearance & Certificate of Interest Filed" {ipr-estopped}
-   27. [-] Docketing statements
+   28. [-] Docketing statements
        via cafc@ptab::appearance-to-docketing-statement (self, Fed. Cir. R. 47.6, within 14 calendar days)
        at  cafc@ptab::docketing-statement-filed "Docketing Statement Filed" {ipr-estopped}
-   28. [-] Screening for mediation
+   29. [-] Screening for mediation
        via cafc@ptab::docketing-statement-to-screening (nature, Appellate Mediation Program Guidelines §§ 2-3)
        at  cafc@ptab::mediation-screening "OGC Screens for the Mediation Program" {ipr-estopped}
-   29. [-] Not mediated (route assumed)
+   30. [-] Not mediated (route assumed)
        via cafc@ptab::screening-to-motions (nature, Appellate Mediation Program Guidelines §§ 2, 7)
        at  cafc@ptab::motions-fork "Move to Stay Judgment Pending Appeal?" {ipr-estopped}
-   30. [-] No stay motion (route assumed)
+   31. [-] No stay motion (route assumed)
        via cafc@ptab::motions-decline (self, FRAP 8(a))
        at  cafc@ptab::cross-appeal-fork "Appellee Considers a Cross-Appeal" {ipr-estopped}
-   31. [-] No cross-appeal
+   32. [-] No cross-appeal
        via cafc@ptab::cross-appeal-decline (self, FRAP 4(a)(3))
        at  cafc@ptab::no-cross-appeal "No Cross-Appeal — Judgment Defended Only" {ipr-estopped}
-   32. [-] Briefing opens
+   33. [-] Briefing opens
        via cafc@ptab::no-cross-appeal-to-briefing (nature, Fed. Cir. R. 31(a)(1))
        at  cafc@ptab::appellant-brief-window "Appellant's Principal Brief Due" {ipr-estopped}
-   33. [-] Arthrex's opening brief, raising the Appointments Clause
+   34. [-] Arthrex's opening brief, raising the Appointments Clause
        via cafc@ptab::appellant-brief-file (self, Fed. Cir. R. 31(a)(1)(A)-(B), within 60 calendar days)
        at  cafc@ptab::appellant-brief-filed "Opening Brief Filed" {ipr-estopped}
-   34. [-] Response briefs
+   35. [-] Response briefs
        via cafc@ptab::appellee-brief-file (opponent, Fed. Cir. R. 31(a)(2), within 40 calendar days)
        at  cafc@ptab::appellee-brief-filed "Appellee's Principal/Response Brief Filed" {ipr-estopped}
-   35. [-] Reply (route assumed)
+   36. [-] Reply (route assumed)
        via cafc@ptab::reply-brief-file (self, FRAP 31(a)(1), within 21 calendar days)
        at  cafc@ptab::reply-brief-filed "Appellant's Reply Brief Filed" {ipr-estopped}
-   36. [-] Briefing closes
+   37. [-] Briefing closes
        via cafc@ptab::reply-brief-closes (nature, Fed. Cir. R. 31)
        at  cafc@ptab::briefing-complete "Briefing Closed" {ipr-estopped}
-   37. [-] Joint appendix filed
+   38. [-] Joint appendix filed
        via cafc@ptab::briefing-to-appendix (self, Fed. Cir. R. 30(a)(2), within 7 calendar days)
        at  cafc@ptab::joint-appendix-filed "Joint Appendix Served and Filed" {ipr-estopped}
-   38. [-] Calendared
+   39. [-] Calendared
        via cafc@ptab::appendix-to-argument-fork (nature, FRAP 34(a); Fed. Cir. IOP #7)
        at  cafc@ptab::oral-argument-fork "Oral Argument or Submission Without Argument?" {ipr-estopped}
-   39. [-] Argued (date not found; route assumed)
+   40. [-] Argued (date not found; route assumed)
        via cafc@ptab::argument-granted (nature, FRAP 34(a)(1); Fed. Cir. IOP #7)
        at  cafc@ptab::oral-argument-held "Oral Argument Held" {ipr-estopped}
-   40. [-] Panel confers
+   41. [-] Panel confers
        via cafc@ptab::argument-held-to-decision (nature, Fed. Cir. IOP #8)
        at  cafc@ptab::panel-decision "Panel Decides the Appeal" {ipr-estopped}
-   41. [2019-10-31] APJs are principal officers; the court severs their removal protections, vacates, and remands for a new panel, 941 F.3d 1320
+   42. [2019-10-31] APJs are principal officers; the court severs their removal protections, vacates, and remands for a new panel, 941 F.3d 1320
        via cafc@ptab::panel-to-remand (nature, FRAP 36(a))
        at  cafc@ptab::remand-destination "Vacated/Remanded — Destination Tribunal" {ipr-estopped}
-   42. [-] Vacated and remanded to the Board
+   43. [-] Vacated and remanded to the Board
        via cafc@ptab::remand-route-ptab (nature, FRAP 36(a))
        at  cafc@ptab::remanded-to-ptab "Remanded to the PTAB" {ipr-estopped}
   GAP: All parties seek rehearing of the 2019 vacatur (en banc rehearing denied 2020-03-23); certiorari granted 2020-10-13; the Supreme Court vacates and remands to the Acting Director (2021-06-21)

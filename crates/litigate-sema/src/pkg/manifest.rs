@@ -393,13 +393,7 @@ fn source(c: &mut Checker, id: &str, s: &Spanned<RawSource>) -> SourceBinding {
         });
     }
     if let Some(as_of) = &raw.as_of {
-        // A document version date may be known only to the month (legacy
-        // `sources[].asOf` "2025-06"); it is metadata, never computed with.
-        let v = as_of.get_ref();
-        let month = v.len() == 7 && date::is_valid(&format!("{v}-01"));
-        c.check(month || date::is_valid(v), range(as_of), || {
-            format!("`as_of` must be a YYYY-MM-DD or YYYY-MM date, found `{v}`")
-        });
+        c.date("as_of", as_of);
     }
     c.check(
         raw.cite_prefixes.iter().all(|p| !p.trim().is_empty()),

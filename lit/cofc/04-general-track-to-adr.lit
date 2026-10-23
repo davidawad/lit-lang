@@ -46,7 +46,7 @@ state discovery-dispute-motion: "Motion to Compel / Motion for Protective Order"
   e-discdispute-to-ruling "Court rules on the discovery motion" -> discovery-dispute-ruling
 }
 
-decision discovery-dispute-ruling: "Court Rules on Discovery Motion" by office cite RCFC 37(a); RCFC 26(c)
+chance discovery-dispute-ruling: "Court Rules on Discovery Motion" by office discretion cite RCFC 37(a); RCFC 26(c)
 {
   group general-track-group
   note "Outcome distribution authored at 0.6 granted / 0.4 denied -- TEACHING ESTIMATE, loosely tracking the general federal-practice pattern that a certified good-faith motion to compel succeeds more often than not once actually filed."
@@ -82,7 +82,7 @@ state summary-judgment-motion-filed: "RCFC 56 Motion for Summary Judgment Filed"
   e-sj-to-ruling "Briefing completes; court rules on summary judgment" -> sj-ruling
 }
 
-decision sj-ruling: "Court Rules on Summary Judgment" by office cite RCFC 56(a)
+chance sj-ruling: "Court Rules on Summary Judgment" by office discretion cite RCFC 56(a)
 {
   group general-track-group
   note "Outcome distribution authored at 0.50 denied-proceeds-to-trial / 0.15 granted-in-part / 0.20 granted-for-government-in-full / 0.15 granted-for-plaintiff-in-full -- TEACHING ESTIMATE, not a cited empirical CoFC grant-rate figure. A full grant for the government disposes of the case; a full grant for plaintiff on liability AND damages produces a final judgment without trial (the 'judgment-entered' route this pack uses as its Federal Circuit composition anchor)."

@@ -200,7 +200,7 @@
     },
     {
       "id": "limitations-check",
-      "kind": "decision",
+      "kind": "state",
       "label": "Is the Petition Filed Within 6 Years of Accrual?",
       "cite": "28 U.S.C. § 2501",
       "note": "Every claim within CoFC jurisdiction is barred unless the petition is filed within six years after the claim first accrues (tolled for any §286 administrative-claim interval on the patent track). Narrow tolling exists for legal disability or being 'beyond the seas' at accrual (petition within 3 years after the disability ceases) -- not separately modeled here. This bar is jurisdictional; the court must dismiss sua sponte if it is missed, regardless of the merits.",
@@ -226,7 +226,7 @@
     },
     {
       "id": "section-1500-check",
-      "kind": "decision",
+      "kind": "state",
       "label": "Is the Same Claim Currently Pending in Any Other Court?",
       "cite": "28 U.S.C. § 1500",
       "note": "THE CLASSIC TRAP: §1500 strips CoFC jurisdiction over any claim for which the plaintiff has a suit pending in any other court against the United States (or anyone acting under its authority) arising from substantially the same operative facts -- even if the other suit seeks different relief. United States v. Tohono O'odham Nation, 563 U.S. 307 (2011). Filing (or failing to dismiss) a parallel district-court/agency suit before or simultaneously with the CoFC complaint is a routine, entirely avoidable way to lose CoFC jurisdiction; the fix is to dismiss the other suit BEFORE filing here, not after.",
@@ -301,7 +301,7 @@
     },
     {
       "id": "bid-protest-merits-ruling",
-      "kind": "decision",
+      "kind": "state",
       "label": "Court Rules on the Protest",
       "cite": "RCFC 52.1; 28 U.S.C. §1491(b)(4) (arbitrary-and-capricious/APA-derived standard)",
       "note": "Outcome distribution authored at 0.20 sustained / 0.80 denied -- TEACHING ESTIMATE only, not a cited empirical GAO/CoFC bid-protest sustain-rate figure (publicly reported CoFC-specific sustain rates were not verified against a primary source in this pass; flag as UNVERIFIED if precision matters). The arbitrary-and-capricious standard is highly deferential to the procuring agency.",
@@ -368,7 +368,7 @@
     },
     {
       "id": "ruling-12b",
-      "kind": "decision",
+      "kind": "state",
       "label": "Court Rules on RCFC 12(b) Motion",
       "cite": "RCFC 12(b); 12(d)",
       "note": "Outcome distribution authored at 0.55 denied / 0.20 granted-with-leave-to-amend / 0.15 granted-12(b)(1)-no-leave / 0.10 granted-12(b)(6)-no-leave -- TEACHING ESTIMATE, not a cited empirical CoFC motion-grant-rate figure. If matters outside the pleadings are presented and not excluded on a 12(b)(6)/12(c) motion, RCFC 12(d) converts it to a RCFC 56 summary-judgment motion (not separately modeled here).",
@@ -476,7 +476,7 @@
     },
     {
       "id": "discovery-dispute-ruling",
-      "kind": "decision",
+      "kind": "state",
       "label": "Court Rules on Discovery Motion",
       "cite": "RCFC 37(a); RCFC 26(c)",
       "note": "Outcome distribution authored at 0.6 granted / 0.4 denied -- TEACHING ESTIMATE, loosely tracking the general federal-practice pattern that a certified good-faith motion to compel succeeds more often than not once actually filed.",
@@ -503,7 +503,7 @@
     },
     {
       "id": "sj-ruling",
-      "kind": "decision",
+      "kind": "state",
       "label": "Court Rules on Summary Judgment",
       "cite": "RCFC 56(a)",
       "note": "Outcome distribution authored at 0.50 denied-proceeds-to-trial / 0.15 granted-in-part / 0.20 granted-for-government-in-full / 0.15 granted-for-plaintiff-in-full -- TEACHING ESTIMATE, not a cited empirical CoFC grant-rate figure. A full grant for the government disposes of the case; a full grant for plaintiff on liability AND damages produces a final judgment without trial (the 'judgment-entered' route this pack uses as its Federal Circuit composition anchor).",
@@ -742,7 +742,7 @@
     },
     {
       "id": "rule59-motion-ruling",
-      "kind": "decision",
+      "kind": "state",
       "label": "Court Rules on RCFC 59 Motion",
       "cite": "RCFC 59(a); 59(d)",
       "note": "Outcome distribution authored at 0.15 new-trial-granted / 0.10 judgment-amended / 0.75 denied -- TEACHING ESTIMATE, reflecting that post-trial motions to overturn the court's own recent findings face real institutional headwind. The court may also order a new trial ON ITS OWN within 28 days of judgment for any reason that would justify granting one on a party's motion (RCFC 59(d)).",
@@ -766,7 +766,7 @@
     },
     {
       "id": "prevailing-party-fork",
-      "kind": "decision",
+      "kind": "state",
       "label": "Who Prevailed?",
       "cite": "RCFC 52(a); RCFC 54(d)",
       "note": "Resolves the win/loss determination first modeled probabilistically at 'verdict-rendered,' carried through post-trial-motion practice. Outcome distribution authored at 0.50 plaintiff-prevails / 0.50 government-prevails -- TEACHING ESTIMATE, matching 'verdict-rendered' since this pack does not separately model RCFC 59 flipping the ultimate winner (a RCFC59-granted new trial or amended judgment loops back upstream instead, see the loop edges into 'trial-bench' and 'judgment-rcfc58-entered').",

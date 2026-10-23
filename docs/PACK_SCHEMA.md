@@ -133,17 +133,19 @@ is structurally an ordinary chance node — same edges, same probabilities,
 same `fill` semantics — only its *epistemic status* differs, and every
 existing algorithm, lint check and scenario field keeps working unchanged.
 
-A fact node can also be a **mixed** node (an applicant choice alongside the
-fact-driven edges) — e.g. `ptab-patent-trial-appeal-board.json`'s
-`petition-threshold-review`: the office's finding that the petition is
-time-barred (35 U.S.C. §315(b)) is a fact, but the applicant also has a
-"correct the defect and refile" choice at the same node. `scenario.facts`
-forces the right edge exactly as for a pure-chance fact node (it's the same
+The pack schema also admits a **mixed** fact node (an applicant choice
+alongside the fact-driven edges): `scenario.facts` forces the right edge
+exactly as for a pure-chance fact node (it's the same
 `scenario.probabilities` override underneath), and `litgraph lint`'s
 `fact-no-prior` check and the `fact-unset` response warning both look at
 just the non-applicant (interrupt) edges, so a mixed fact node needs the
 same full authored prior on those and gets the same `fact-unset`
-(not the generic `mixed-node`) warning when unset.
+(not the generic `mixed-node`) warning when unset. No shipped pack has
+one: the litigate language allows `fact` only on `chance` nodes (SPEC
+§5.1), so a fact and the choice that follows it are two nodes, e.g.
+`ptab-patent-trial-appeal-board.json`'s `petition-time-bar-check` (is the
+petition time-barred under 35 U.S.C. §315(b)?) ahead of the Office's
+compliance review and the petitioner's correct-and-refile choice.
 
 A matter fact is true regardless of procedural history, so it applies to
 every [state-flag](#state-flags) product-graph copy of the node, not just

@@ -233,7 +233,7 @@ state oral-hearing-held: "Oral Hearing Held" by office cite 37 CFR 42.70(b)-(c)
 
 /// The Board's merits determination (35 U.S.C. § 318(a)), a nature draw with
 /// the pack's probabilities.
-decision fwd-issued: "Board Issues Final Written Decision" by examiner cite 35 U.S.C. § 318(a); 37 CFR § 42.73
+chance fwd-issued: "Board Issues Final Written Decision" by examiner discretion cite 35 U.S.C. § 318(a); 37 CFR § 42.73
 {
   group fwd-group
   note "The Board decides the patentability of every instituted claim (SAS all-or-nothing), whether or not a hearing was held. Due within 1 year of institution, extendable to 18 months (316(a)(11))."
@@ -317,7 +317,9 @@ state rehearing-request-filed: "Rehearing Request Filed" by examiner cite 37 CFR
 
 /// Tribunal discretion on rehearing (37 C.F.R. § 42.71(d)). The pack authors
 /// the deny/grant draw (0.9/0.1); escalation to the Director carries none.
-decision rehearing-decision: "Panel Decides Rehearing Request" by examiner cite 37 CFR 42.71(d)
+/// The panel's ruling, not a party's choice. A party's escalation to the
+/// Director after a denial leaves `rehearing-denied-affirmed`.
+chance rehearing-decision: "Panel Decides Rehearing Request" by examiner discretion cite 37 CFR 42.71(d)
 {
   group rehearing-director-group
   note "Rehearing grant rate is exceptionally low (panels affirm their own prior reasoning in the large majority of requests). If granted, the panel may modify claim construction or validity findings, but this remains intra-panel review without external accountability."
@@ -327,7 +329,14 @@ decision rehearing-decision: "Panel Decides Rehearing Request" by examiner cite 
   _ "Grant rehearing — modify decision" -> rehearing-granted-modified p 0.1 {
     authority cite 37 CFR 42.71(d)
   }
-  _ "Escalate denied rehearing to Director" -> director-review-request-filed by either {
+}
+
+state rehearing-denied-affirmed: "Rehearing Denied — FWD Stands" cite 37 CFR 42.71(d); 35 U.S.C. § 319
+{
+  group rehearing-director-group
+  note "Original FWD stands unchanged; the 63-day Federal Circuit clock runs from the rehearing decision, not the original FWD, when a timely rehearing request was filed."
+  _ "Proceed to the appeal window" -> federal-circuit-window { authority cite 35 U.S.C. § 319 }
+  _ "Escalate denied rehearing to Director" -> director-review-request-filed {
     event DirectorReviewRequested()
     authority cite 37 CFR 42.73(d)(1)
     within director-review-after-rehearing-period {
@@ -336,13 +345,6 @@ decision rehearing-decision: "Panel Decides Rehearing Request" by examiner cite 
     }
     duration { min 4.5.days, mode 15.days, max 30.days }
   }
-}
-
-state rehearing-denied-affirmed: "Rehearing Denied — FWD Stands" cite 37 CFR 42.71(d); 35 U.S.C. § 319
-{
-  group rehearing-director-group
-  note "Original FWD stands unchanged; the 63-day Federal Circuit clock runs from the rehearing decision, not the original FWD, when a timely rehearing request was filed."
-  _ "Proceed to the appeal window" -> federal-circuit-window { authority cite 35 U.S.C. § 319 }
 }
 
 state rehearing-granted-modified: "Rehearing Granted — Decision Modified" cite 37 CFR 42.71(d)
@@ -362,7 +364,7 @@ state director-review-request-filed: "Director Review Requested" by examiner cit
 
 /// Director review is discretionary; the pack authors the affirm, modify and
 /// remand draw (0.75/0.15/0.1).
-decision director-review-decision: "Director Decides Review Request" by examiner cite ?("37 CFR 42.73(d)(1); USPTO Interim Director Review Process (June 29, 2021)") {
+chance director-review-decision: "Director Decides Review Request" by examiner discretion cite ?("37 CFR 42.73(d)(1); USPTO Interim Director Review Process (June 29, 2021)") {
   group rehearing-director-group
   note "Director's review is truly de novo — not bound by panel reasoning. The Director may affirm, reverse, modify (e.g., reinstate claims the panel invalidated), or remand any aspect of the panel's decision — genuine hierarchical review, unlike a panel reviewing its own work."
   _ "Director affirms the panel" -> director-review-affirmed p 0.75 {
@@ -439,7 +441,7 @@ state federal-circuit-notice-of-appeal: "Notice of Appeal Filed" by office cite 
 
 /// Federal Circuit review of the Board (35 U.S.C. § 319; 5 U.S.C. § 706), a
 /// nature draw with the pack's probabilities.
-decision federal-circuit-review: "Federal Circuit Reviews the Decision" by office cite 35 U.S.C. § 319; 5 U.S.C. § 706
+chance federal-circuit-review: "Federal Circuit Reviews the Decision" by office discretion cite 35 U.S.C. § 319; 5 U.S.C. § 706
 {
   group appeal-group
   note "Substantial-evidence review for factual findings; de novo review for legal conclusions, including claim-construction subsidiary facts post-Teva v. Sandoz. The Board's discretionary decisions (e.g., Fintiv stays) receive abuse-of-discretion review. Claim-construction and §101-based PGR outcomes are reversed at higher rates than the overall average."

@@ -5,7 +5,7 @@ import ttab.decision-3.{ noa-post-decision }
 import ttab.terminals.{ opposition-sustained }
 import ttab.{ appeal }
 
-chance cafc-outcome: "Federal Circuit decides" by board cite 15 USC 1071(a); 28 USC 1295(a)(4)(B)
+chance cafc-outcome: "Federal Circuit decides" by board discretion cite 15 USC 1071(a); 28 USC 1295(a)(4)(B)
 {
   group appeal
   _ "Affirmed" -> opposition-sustained p 0.88 {
@@ -18,7 +18,7 @@ chance cafc-outcome: "Federal Circuit decides" by board cite 15 USC 1071(a); 28 
   }
 }
 
-chance district-outcome: "District court decides (de novo on new evidence)" by board cite 15 USC 1071(b)
+chance district-outcome: "District court decides (de novo on new evidence)" by board discretion cite 15 USC 1071(b)
 {
   group appeal
   _ "Court upholds refusal" -> opposition-sustained p 0.72 {

@@ -47,7 +47,7 @@ state patent-admin-claim-resolved: "Agency Mails Notice of Claim Denial (or 6-Ye
   e-adminclaim-to-limitations "§2501 clock resumes running (net of the tolled interval)" -> limitations-check
 }
 
-decision limitations-check: "Is the Petition Filed Within 6 Years of Accrual?" cite 28 U.S.C. § 2501
+chance limitations-check: "Is the Petition Filed Within 6 Years of Accrual?" cite 28 U.S.C. § 2501
 {
   group threshold-group
   note "Every claim within CoFC jurisdiction is barred unless the petition is filed within six years after the claim first accrues (tolled for any §286 administrative-claim interval on the patent track). Narrow tolling exists for legal disability or being 'beyond the seas' at accrual (petition within 3 years after the disability ceases) -- not separately modeled here. This bar is jurisdictional; the court must dismiss sua sponte if it is missed, regardless of the merits."
@@ -72,7 +72,7 @@ terminal dismissed-time-barred: "DISMISSED -- Time-Barred Under §2501" outcome 
   payoff 0.usd
 }
 
-decision section-1500-check: "Is the Same Claim Currently Pending in Any Other Court?" by office cite 28 U.S.C. § 1500
+chance section-1500-check: "Is the Same Claim Currently Pending in Any Other Court?" by office cite 28 U.S.C. § 1500
 {
   group threshold-group
   note "THE CLASSIC TRAP: §1500 strips CoFC jurisdiction over any claim for which the plaintiff has a suit pending in any other court against the United States (or anyone acting under its authority) arising from substantially the same operative facts -- even if the other suit seeks different relief. United States v. Tohono O'odham Nation, 563 U.S. 307 (2011). Filing (or failing to dismiss) a parallel district-court/agency suit before or simultaneously with the CoFC complaint is a routine, entirely avoidable way to lose CoFC jurisdiction; the fix is to dismiss the other suit BEFORE filing here, not after."

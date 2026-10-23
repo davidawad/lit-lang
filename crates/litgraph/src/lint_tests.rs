@@ -202,9 +202,9 @@ fn fact_node_with_a_full_prior_is_not_flagged() {
 
 /// The `fact-no-prior` check is gated on "every out-edge is non-applicant"
 /// for a pure chance node -- a *mixed* fact node (an applicant choice plus
-/// fact-driven interrupts, e.g. ptab's petition-threshold-review) never hit
-/// that gate at all before this test, so an unauthored interrupt prior went
-/// unflagged.
+/// fact-driven interrupts, which the pack schema admits though litigate
+/// authors every fact as a `chance` node) never hit that gate at all before
+/// this test, so an unauthored interrupt prior went unflagged.
 #[test]
 fn mixed_fact_node_without_a_full_interrupt_prior_is_flagged() {
     let p = pack(

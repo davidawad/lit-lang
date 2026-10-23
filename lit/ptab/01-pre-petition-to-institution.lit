@@ -115,7 +115,7 @@ state ipr-petition-filed: "IPR Petition Filed" by office cite 35 U.S.C. §311(a)
 {
   group petition-group
   note "IPR petition must identify each claim, ground(s), and provide claim charts with specific limitations mapped to prior art. Word limit of 14,000 (37 CFR 42.24(a)(1)(i)) is strict — failure to comply is grounds for rejecting the filing date. Grounds limited to §§102/103 (patents and printed publications only)."
-  _ "Office reviews petition compliance" -> petition-threshold-review {
+  _ "Petition docketed; the § 315(b) time bar is checked first" -> petition-time-bar-check {
     event PetitionDocketed()
     authority cite 37 CFR §42.104(c); 37 CFR §42.106(a)
     duration { min 3.days, mode 10.days, max 21.days }
@@ -140,20 +140,50 @@ state pgr-petition-filed: "PGR Petition Filed" by office cite 35 U.S.C. §321(a)
   }
 }
 
-/// A matter fact (`tags [fact]`): whether this petition is time-barred under
-/// 35 U.S.C. § 315(b) is knowable from the service history, so a case sets it
-/// through `facts`; 0.97/0.03 is the pack's authored prior.
-decision petition-threshold-review: "Office Reviews Petition Compliance" by office cite 37 CFR §42.106(a)-(c); 37 CFR §42.206(a)-(c)
+/// A matter fact (`tags [fact]`): whether this IPR petition is time-barred
+/// under 35 U.S.C. § 315(b) is knowable from the service history, so a case
+/// sets it through `facts`; 0.97/0.03 is the pack's authored prior.
+chance petition-time-bar-check: "Is the IPR Petition Filed Within 1 Year of Complaint Service?" by examiner cite 35 U.S.C. §315(b)
 {
   group petition-group
-  note "Office examines fee payment, form/word-count compliance, and threshold sufficiency (e.g., whether claim charts actually chart the claims) before according a filing date. 42.106(b) allows minor-defect correction; material defects result in filing-date rejection. Modeled as one shared node — the time-bar branch is realistically IPR-specific, since a PGR petition cannot structurally be filed outside its own 9-month window. Tagged `fact`: whether THIS petition is time-barred under 35 U.S.C. §315(b) is a matter fact knowable from the petitioner's own service-of-complaint history, not real chance — see docs/PACK_SCHEMA.md#matter-facts-v2 and the mixed-node extension it documents (this node also has an applicant choice edge, correct-and-refile)."
+  note "Whether THIS petition is time-barred under 35 U.S.C. §315(b) is a matter fact knowable from the petitioner's own service-of-complaint history, not real chance -- see docs/PACK_SCHEMA.md#matter-facts-v2. IPR-only: a PGR petition cannot structurally be filed outside its own 9-month window, so PGR petitions go straight to the compliance review."
   tags [fact]
-  _ "Petition meets fee/word-count/form" -> petition-filing-date-accorded p 0.97 {
-    event FilingDateAccorded()
-    authority cite 37 CFR §42.106(a); 37 CFR §42.206(a)
+  e-time-bar-clear "Petition filed within 1 year of complaint service" -> petition-threshold-review p 0.97 {
+    authority cite 35 U.S.C. §315(b)
     note "Prior for the fact-tagged node's default (unset scenario.facts) fallback: most petitions aren't §315(b) time-barred. Teaching estimate, not a sourced PTAB statistic -- basis: estimate."
   }
-  _ "Correct petition defect and refile" -> ipr-petition-filed by applicant {
+  e-time-bar-barred "Board finds petition time-barred" -> ipr-time-barred p 0.03 {
+    authority cite 35 U.S.C. §315(b)
+    within ipr-time-bar {
+      extendable false
+      note "If the petition was filed more than 1 year after service of the complaint, it is jurisdictionally barred. The Board must deny institution or vacate trial if the bar is discovered post-institution. Trap: the count runs from the earliest service of a complaint on any real party in interest, not just the named petitioner."
+    }
+    duration { min 54.8.days, mode 182.5.days, max 365.days }
+    valence bad
+    note "Prior for the fact-tagged node's default (unset scenario.facts) fallback, the complement of the timely edge. Teaching estimate -- basis: estimate."
+  }
+}
+
+/// The Office's compliance review is its ruling, not a party's choice; a
+/// correctable defect is the petitioner's to cure (`petition-defect-noticed`).
+chance petition-threshold-review: "Office Reviews Petition Compliance" by office discretion cite 37 CFR §42.106(a)-(c); 37 CFR §42.206(a)-(c)
+{
+  group petition-group
+  note "Office examines fee payment, form/word-count compliance, and threshold sufficiency (e.g., whether claim charts actually chart the claims) before according a filing date. 42.106(b) allows minor-defect correction; material defects result in filing-date rejection. Modeled as one shared node for IPR and PGR petitions. No published rate of defect notices, so the split is left unauthored."
+  _ "Petition meets fee/word-count/form" -> petition-filing-date-accorded p ?("no published defect-notice rate") {
+    event FilingDateAccorded()
+    authority cite 37 CFR §42.106(a); 37 CFR §42.206(a)
+  }
+  _ "Office notices a correctable defect" -> petition-defect-noticed p ?("no published defect-notice rate") {
+    authority cite 37 CFR §42.106(b)
+  }
+}
+
+decision petition-defect-noticed: "Petition Defect Noticed" by applicant cite 37 CFR §42.106(b)
+{
+  group petition-group
+  note "The Office has rejected the filing date for a correctable defect. The petitioner may correct and refile; the corrected petition takes the date of the correction, not the original filing."
+  _ "Correct petition defect and refile" -> ipr-petition-filed {
     event PetitionCorrected()
     authority cite 37 CFR §42.106(b)
     effort 5.hours
@@ -163,15 +193,6 @@ decision petition-threshold-review: "Office Reviews Petition Compliance" by offi
     }
     duration { min 2.1.days, mode 7.days, max 14.days }
     note "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move; basis: estimate."
-  }
-  _ "Board finds petition time-barred" -> ipr-time-barred by examiner p 0.03 {
-    authority cite 35 U.S.C. §315(b)
-    within ipr-time-bar {
-      extendable false
-      note "If the petition was filed more than 1 year after service of the complaint, it is jurisdictionally barred. The Board must deny institution or vacate trial if the bar is discovered post-institution. Trap: the count runs from the earliest service of a complaint on any real party in interest, not just the named petitioner."
-    }
-    duration { min 54.8.days, mode 182.5.days, max 365.days }
-    valence bad
   }
 }
 
@@ -257,7 +278,7 @@ terminal claims-disclaimed-preinstitution: "Claims Disclaimed Pre-Institution" o
 /// Tribunal discretion: the Director "may not authorize" review without a
 /// reasonable likelihood of prevailing (35 U.S.C. § 314(a)) and may deny
 /// even then. Probabilities are the pack's; see `ptab` on the node kind.
-decision institution-decision: "Institution Decision" by examiner cite 35 U.S.C. 314(a); 37 CFR 42.108
+chance institution-decision: "Institution Decision" by examiner discretion cite 35 U.S.C. 314(a); 37 CFR 42.108
 {
   group institution-group
   note "Board institutes if petitioner shows a reasonable likelihood of prevailing on at least one claim — a lower bar than PGR's more-likely-than-not standard (35 U.S.C. 324(a)). Discretionary denial under the Fintiv factors and §325(d) can block institution even where the merits showing is met."
@@ -284,7 +305,7 @@ terminal institution-denied-merits: "Institution Denied — No Reasonable Likeli
     effort 100.hours
     within ipr-time-bar {
       extendable false
-      note "Petitioner may file a follow-on IPR on different grounds/claims (subject to the §315(c) joinder bar), but the unextendable one-year bar from service of the infringement complaint under §315(b) still applies to any follow-on petition. Sets prior-petition-denied: General Plastic's multi-factor test for discretionary denial of a follow-on petition (35 U.S.C. §314(a)) turns in part on whether petitioner already had a full opportunity to present its case in an earlier petition on this patent -- a fact that persists into the refiled petition's own petition-threshold-review, downstream of the same §315(b) time-bar fact node."
+      note "Petitioner may file a follow-on IPR on different grounds/claims (subject to the §315(c) joinder bar), but the unextendable one-year bar from service of the infringement complaint under §315(b) still applies to any follow-on petition. Sets prior-petition-denied: General Plastic's multi-factor test for discretionary denial of a follow-on petition (35 U.S.C. §314(a)) turns in part on whether petitioner already had a full opportunity to present its case in an earlier petition on this patent -- a fact that persists into the refiled petition's own petition-time-bar-check (the same §315(b) fact node) and petition-threshold-review."
     }
     duration { min 54.8.days, mode 182.5.days, max 365.days }
     note "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move; basis: estimate."

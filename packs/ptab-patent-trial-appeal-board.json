@@ -190,15 +190,31 @@
       "group": "petition-group"
     },
     {
-      "id": "petition-threshold-review",
-      "kind": "decision",
-      "label": "Office Reviews Petition Compliance",
-      "cite": "37 CFR §42.106(a)-(c); 37 CFR §42.206(a)-(c)",
-      "note": "Office examines fee payment, form/word-count compliance, and threshold sufficiency (e.g., whether claim charts actually chart the claims) before according a filing date. 42.106(b) allows minor-defect correction; material defects result in filing-date rejection. Modeled as one shared node — the time-bar branch is realistically IPR-specific, since a PGR petition cannot structurally be filed outside its own 9-month window. Tagged `fact`: whether THIS petition is time-barred under 35 U.S.C. §315(b) is a matter fact knowable from the petitioner's own service-of-complaint history, not real chance — see docs/PACK_SCHEMA.md#matter-facts-v2 and the mixed-node extension it documents (this node also has an applicant choice edge, correct-and-refile).",
+      "id": "petition-time-bar-check",
+      "kind": "state",
+      "label": "Is the IPR Petition Filed Within 1 Year of Complaint Service?",
+      "cite": "35 U.S.C. §315(b)",
+      "note": "Whether THIS petition is time-barred under 35 U.S.C. §315(b) is a matter fact knowable from the petitioner's own service-of-complaint history, not real chance -- see docs/PACK_SCHEMA.md#matter-facts-v2. IPR-only: a PGR petition cannot structurally be filed outside its own 9-month window, so PGR petitions go straight to the compliance review.",
       "group": "petition-group",
       "tags": [
         "fact"
       ]
+    },
+    {
+      "id": "petition-threshold-review",
+      "kind": "state",
+      "label": "Office Reviews Petition Compliance",
+      "cite": "37 CFR §42.106(a)-(c); 37 CFR §42.206(a)-(c)",
+      "note": "Office examines fee payment, form/word-count compliance, and threshold sufficiency (e.g., whether claim charts actually chart the claims) before according a filing date. 42.106(b) allows minor-defect correction; material defects result in filing-date rejection. Modeled as one shared node for IPR and PGR petitions. No published rate of defect notices, so the split is left unauthored.",
+      "group": "petition-group"
+    },
+    {
+      "id": "petition-defect-noticed",
+      "kind": "decision",
+      "label": "Petition Defect Noticed",
+      "cite": "37 CFR §42.106(b)",
+      "note": "The Office has rejected the filing date for a correctable defect. The petitioner may correct and refile; the corrected petition takes the date of the correction, not the original filing.",
+      "group": "petition-group"
     },
     {
       "id": "petition-filing-date-accorded",
@@ -264,7 +280,7 @@
     },
     {
       "id": "institution-decision",
-      "kind": "decision",
+      "kind": "state",
       "label": "Institution Decision",
       "cite": "35 U.S.C. 314(a); 37 CFR 42.108",
       "note": "Board institutes if petitioner shows a reasonable likelihood of prevailing on at least one claim — a lower bar than PGR's more-likely-than-not standard (35 U.S.C. 324(a)). Discretionary denial under the Fintiv factors and §325(d) can block institution even where the merits showing is met.",
@@ -325,7 +341,7 @@
     },
     {
       "id": "additional-discovery-motion",
-      "kind": "decision",
+      "kind": "state",
       "label": "Motion for Additional Discovery",
       "cite": "37 CFR 42.51(b)(2); Garmin Ltd. v. Cuozzo Speed Tech. LLC, IPR2012-00001, Paper 26",
       "note": "Beyond routine categories, discovery in IPR requires a showing that it serves 'the interests of justice,' applying the five-factor Garmin test (claim complexity, evidence availability, delay, burden/cost, non-moving party's position); PGR uses the more permissive 'good cause' standard. Each motion is fact-intensive and case-specific.",
@@ -480,7 +496,7 @@
     },
     {
       "id": "fwd-issued",
-      "kind": "decision",
+      "kind": "state",
       "label": "Board Issues Final Written Decision",
       "cite": "35 U.S.C. § 318(a); 37 CFR § 42.73",
       "note": "The Board decides the patentability of every instituted claim (SAS all-or-nothing), whether or not a hearing was held. Due within 1 year of institution, extendable to 18 months (316(a)(11)).",
@@ -547,7 +563,7 @@
     },
     {
       "id": "rehearing-decision",
-      "kind": "decision",
+      "kind": "state",
       "label": "Panel Decides Rehearing Request",
       "cite": "37 CFR 42.71(d)",
       "note": "Rehearing grant rate is exceptionally low (panels affirm their own prior reasoning in the large majority of requests). If granted, the panel may modify claim construction or validity findings, but this remains intra-panel review without external accountability.",
@@ -579,7 +595,7 @@
     },
     {
       "id": "director-review-decision",
-      "kind": "decision",
+      "kind": "state",
       "label": "Director Decides Review Request",
       "cite": "37 CFR 42.73(d)(1); USPTO Interim Director Review Process (June 29, 2021)",
       "note": "Director's review is truly de novo — not bound by panel reasoning. The Director may affirm, reverse, modify (e.g., reinstate claims the panel invalidated), or remand any aspect of the panel's decision — genuine hierarchical review, unlike a panel reviewing its own work.",
@@ -633,7 +649,7 @@
     },
     {
       "id": "federal-circuit-review",
-      "kind": "decision",
+      "kind": "state",
       "label": "Federal Circuit Reviews the Decision",
       "cite": "35 U.S.C. § 319; 5 U.S.C. § 706",
       "note": "Substantial-evidence review for factual findings; de novo review for legal conclusions, including claim-construction subsidiary facts post-Teva v. Sandoz. The Board's discretionary decisions (e.g., Fintiv stays) receive abuse-of-discretion review. Claim-construction and §101-based PGR outcomes are reversed at higher rates than the overall average.",
@@ -768,8 +784,8 @@
     },
     {
       "from": "ipr-petition-filed",
-      "to": "petition-threshold-review",
-      "label": "Office reviews petition compliance",
+      "to": "petition-time-bar-check",
+      "label": "Petition docketed; the § 315(b) time bar is checked first",
       "actor": "office",
       "authority": "37 CFR §42.104(c); 37 CFR §42.106(a)",
       "duration": {
@@ -802,16 +818,52 @@
       "note": "Duration: estimate, the Office's own administrative compliance check before according a filing date."
     },
     {
-      "from": "petition-threshold-review",
-      "to": "petition-filing-date-accorded",
-      "label": "Petition meets fee/word-count/form",
-      "actor": "office",
-      "authority": "37 CFR §42.106(a); 37 CFR §42.206(a)",
+      "id": "e-time-bar-clear",
+      "from": "petition-time-bar-check",
+      "to": "petition-threshold-review",
+      "label": "Petition filed within 1 year of complaint service",
+      "actor": "examiner",
+      "authority": "35 U.S.C. §315(b)",
       "probability": 0.97,
       "note": "Prior for the fact-tagged node's default (unset scenario.facts) fallback: most petitions aren't §315(b) time-barred. Teaching estimate, not a sourced PTAB statistic -- basis: estimate."
     },
     {
+      "id": "e-time-bar-barred",
+      "from": "petition-time-bar-check",
+      "to": "ipr-time-barred",
+      "label": "Board finds petition time-barred",
+      "actor": "examiner",
+      "authority": "35 U.S.C. §315(b)",
+      "deadline": {
+        "length": 365.0,
+        "extendable": false,
+        "note": "If the petition was filed more than 1 year after service of the complaint, it is jurisdictionally barred. The Board must deny institution or vacate trial if the bar is discovered post-institution. Trap: the count runs from the earliest service of a complaint on any real party in interest, not just the named petitioner."
+      },
+      "duration": {
+        "min": 54.8,
+        "mode": 182.5,
+        "max": 365.0
+      },
+      "probability": 0.03,
+      "valence": "bad",
+      "note": "Prior for the fact-tagged node's default (unset scenario.facts) fallback, the complement of the timely edge. Teaching estimate -- basis: estimate."
+    },
+    {
       "from": "petition-threshold-review",
+      "to": "petition-filing-date-accorded",
+      "label": "Petition meets fee/word-count/form",
+      "actor": "office",
+      "authority": "37 CFR §42.106(a); 37 CFR §42.206(a)"
+    },
+    {
+      "from": "petition-threshold-review",
+      "to": "petition-defect-noticed",
+      "label": "Office notices a correctable defect",
+      "actor": "office",
+      "authority": "37 CFR §42.106(b)"
+    },
+    {
+      "from": "petition-defect-noticed",
       "to": "ipr-petition-filed",
       "label": "Correct petition defect and refile",
       "actor": "applicant",
@@ -828,25 +880,6 @@
       },
       "hours": 5.0,
       "note": "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move; basis: estimate."
-    },
-    {
-      "from": "petition-threshold-review",
-      "to": "ipr-time-barred",
-      "label": "Board finds petition time-barred",
-      "actor": "examiner",
-      "authority": "35 U.S.C. §315(b)",
-      "deadline": {
-        "length": 365.0,
-        "extendable": false,
-        "note": "If the petition was filed more than 1 year after service of the complaint, it is jurisdictionally barred. The Board must deny institution or vacate trial if the bar is discovered post-institution. Trap: the count runs from the earliest service of a complaint on any real party in interest, not just the named petitioner."
-      },
-      "duration": {
-        "min": 54.8,
-        "mode": 182.5,
-        "max": 365.0
-      },
-      "probability": 0.03,
-      "valence": "bad"
     },
     {
       "from": "petition-filing-date-accorded",
@@ -957,7 +990,7 @@
       "deadline": {
         "length": 365.0,
         "extendable": false,
-        "note": "Petitioner may file a follow-on IPR on different grounds/claims (subject to the §315(c) joinder bar), but the unextendable one-year bar from service of the infringement complaint under §315(b) still applies to any follow-on petition. Sets prior-petition-denied: General Plastic's multi-factor test for discretionary denial of a follow-on petition (35 U.S.C. §314(a)) turns in part on whether petitioner already had a full opportunity to present its case in an earlier petition on this patent -- a fact that persists into the refiled petition's own petition-threshold-review, downstream of the same §315(b) time-bar fact node."
+        "note": "Petitioner may file a follow-on IPR on different grounds/claims (subject to the §315(c) joinder bar), but the unextendable one-year bar from service of the infringement complaint under §315(b) still applies to any follow-on petition. Sets prior-petition-denied: General Plastic's multi-factor test for discretionary denial of a follow-on petition (35 U.S.C. §314(a)) turns in part on whether petitioner already had a full opportunity to present its case in an earlier petition on this patent -- a fact that persists into the refiled petition's own petition-time-bar-check (the same §315(b) fact node) and petition-threshold-review."
       },
       "duration": {
         "min": 54.8,
@@ -1088,20 +1121,6 @@
         "max": 90.0
       },
       "probability": 0.7
-    },
-    {
-      "from": "additional-discovery-motion",
-      "to": "additional-discovery-motion",
-      "label": "Renew motion for further discovery",
-      "actor": "either",
-      "authority": "37 CFR 42.51(b)(2)"
-    },
-    {
-      "from": "additional-discovery-motion",
-      "to": "settlement-decision",
-      "label": "Settle rather than fight discovery",
-      "actor": "either",
-      "authority": "35 U.S.C. 317"
     },
     {
       "from": "protective-order-ipr",
@@ -1499,7 +1518,14 @@
       "probability": 0.1
     },
     {
-      "from": "rehearing-decision",
+      "from": "rehearing-denied-affirmed",
+      "to": "federal-circuit-window",
+      "label": "Proceed to the appeal window",
+      "actor": "either",
+      "authority": "35 U.S.C. § 319"
+    },
+    {
+      "from": "rehearing-denied-affirmed",
       "to": "director-review-request-filed",
       "label": "Escalate denied rehearing to Director",
       "actor": "either",
@@ -1514,13 +1540,6 @@
         "mode": 15.0,
         "max": 30.0
       }
-    },
-    {
-      "from": "rehearing-denied-affirmed",
-      "to": "federal-circuit-window",
-      "label": "Proceed to the appeal window",
-      "actor": "either",
-      "authority": "35 U.S.C. § 319"
     },
     {
       "from": "rehearing-granted-modified",

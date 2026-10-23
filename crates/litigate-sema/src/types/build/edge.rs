@@ -117,11 +117,11 @@ impl Cx<'_, '_> {
             }
             return None;
         };
-        if self_edge && chance {
+        if self_edge {
             self.report(Report::new(
                 C::InvalidProbability,
                 p.range,
-                "a self edge of a `chance` node must not carry `p`",
+                "a self edge must not carry `p`",
             ));
             return None;
         }

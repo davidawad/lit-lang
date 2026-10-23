@@ -179,6 +179,16 @@ fn facts_table() {
             &NoClock,
         ),
         (
+            "qualified: a `pack::edge` fact is taken as written",
+            matter(
+                ALPHA_ONLY,
+                "",
+                &probe,
+                &format!("facts {{ f1: alpha::to-f2, f2: alpha::to-f1 }}\n{STAKES}"),
+            ),
+            &NoClock,
+        ),
+        (
             "not a fact: the entry does not move the stage",
             matter(
                 ALPHA_ONLY,

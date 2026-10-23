@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **Tribunal rulings are chance nodes.** Every ruling a court, board,
+  Director, agency or grand jury makes in the `lit/` forum packages is now a
+  `chance ... discretion` node, not a `decision`: the party does not choose
+  it. Generated packs carry `kind: "state"` for these nodes (the engine
+  already drew their edges as nature's). Uncertain probabilities stay the
+  pack's existing values or holes.
+- **SPEC relaxations reverted.** `fact` is allowed only on `chance` nodes,
+  a self edge never carries `p` (L2008), and a source `as_of` is a
+  `YYYY-MM-DD` date. The data that relied on the relaxations is refactored:
+  cofc's `limitations-check`/`section-1500-check` are chance fact nodes;
+  ptab's mixed `petition-threshold-review` splits into the
+  `petition-time-bar-check` fact node, the Office's compliance ruling and the
+  petitioner's `petition-defect-noticed` choice; frcrimp's continuance
+  self-loop is the `rule12-continuance-ruling` chance node; the cafc and ttab
+  month-only source dates are their sourced days.
+
+### Fixed
+
+- A `.case` `facts` edge written `pack::edge` is no longer qualified twice.
+
 ## [0.4.0] - 2026-10-23
 
 ### Added

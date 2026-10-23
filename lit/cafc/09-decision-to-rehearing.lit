@@ -11,7 +11,7 @@ import core.frap26.{ frap26 }
 /// A tribunal-discretion draw. It stays a `decision` by `office`, as in the
 /// pack, because a `chance` node lowers to kind `state`; its probabilities
 /// are the pack's, with their bases in each edge's note.
-decision panel-decision: "Panel Decides the Appeal" by office cite ?("Fed. Cir. IOP #8-#9; FRAP 36") {
+chance panel-decision: "Panel Decides the Appeal" by office discretion cite ?("Fed. Cir. IOP #8-#9; FRAP 36") {
   group decision-group
   note "Straw vote in reverse seniority order on outcome and disposition vehicle (precedential opinion, nonprecedential opinion, or Rule 36 judgment) — IOP #8 ¶ 1; IOP #9 ¶ 1. Probability basis: the Federal Circuit issued Rule 36 summary affirmances in ~20% of merits terminations in 2024 (Jason Rantanen, 'Federal Circuit Decisions - 2024 Stats and Datapack,' Patently-O, June 2025) — the only figure on this node's edges independently sourced to a cited statistic; note the same source finds the Rule 36 rate is far higher in PTAB-origin appeals specifically (43% of PTAB appeals 2011-2024, and 67% vs 18% depending on whether the patent owner or the petitioner is the appellant) — not separately modeled here since this pack does not branch panel-decision by origin. The remaining five splits (opinion-affirmed, reversed outright, vacated/remanded, mixed, dismissed) apportion the balance as teaching estimates and are NOT independently sourced — flagged APPROXIMATE, consistent with ptab-patent-trial-appeal-board.json's and itc-337.json's own convention for unsourced splits."
   panel-to-rule36 "Panel enters a Rule 36 judgment of affirmance without opinion" -> rule36-affirmance p 0.2 {
@@ -191,7 +191,7 @@ state rehearing-petition-filed: "Petition for Panel Rehearing / Rehearing En Ban
 /// A tribunal-discretion draw. It stays a `decision` by `office`, as in the
 /// pack, because a `chance` node lowers to kind `state`; its probabilities
 /// are the pack's, with their bases in each edge's note.
-decision panel-en-banc-rehearing-decision: "Panel (and, if Combined, the Full Court) Rules on the Petition" by office cite ?("Fed. Cir. R. 40(a)(1)-(4), (c)") {
+chance panel-en-banc-rehearing-decision: "Panel (and, if Combined, the Full Court) Rules on the Petition" by office discretion cite ?("Fed. Cir. R. 40(a)(1)-(4), (c)") {
   group rehearing-group
   rehearing-denied-edge "Deny rehearing and rehearing en banc" -> rehearing-denied p 0.93 {
     authority cite Fed. Cir. R. 40(a)(1)

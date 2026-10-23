@@ -12,7 +12,7 @@ import cafc.{ mediation-group }
 /// case is a good mediation candidate"). It stays a `decision` by `office`,
 /// as in the pack: a `chance` node lowers to kind `state`, which would break
 /// semantic equality with the pack.
-decision mediation-screening: "OGC Screens for the Mediation Program" by office cite ?("Appellate Mediation Program Guidelines §§ 2-3 (2013-12-06); Fed. Cir. R. 33(b)") {
+chance mediation-screening: "OGC Screens for the Mediation Program" by office discretion cite ?("Appellate Mediation Program Guidelines §§ 2-3 (2013-12-06); Fed. Cir. R. 33(b)") {
   group mediation-group
   note "Participation is mandatory for cases the Office of General Counsel selects; OGC contacts principal counsel, reviews the docketing statement and briefs, and determines whether a case is a good mediation candidate. If counsel represents to OGC that mediation would not be fruitful, efforts cease. No published selection rate exists — probability deliberately left unauthored on both outgoing edges (see cafc-SOURCES-NOTES.md) rather than invented; the engine's uniform-draw fallback applies if this node is queried numerically."
   screening-to-conference "Case selected — mediation is mandatory for the parties" -> mediation-conference p ?("no published selection rate") {

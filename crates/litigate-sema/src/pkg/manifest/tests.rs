@@ -113,13 +113,13 @@ fn accepts_pack_schema_v3_keys() {
             "known_at = \"2025-01-01\"\ncounting = \"frcp6\"\n",
         )
         .replace("office = \"nature\"", "office = \"nature\"\neither = \"nature\"")
-        .replace("cite_prefixes = [\"A\"]", "as_of = \"2025-06\"")
+        .replace("cite_prefixes = [\"A\"]", "as_of = \"2025-06-02\"")
         + "\n[[cite_syntax.rules]]\nprefixes = [\"FRCP\"]\nheading = \"Rule {}\"\nsource = \"a\"\n\n[[cite_syntax.shorthands]]\nprefix = \"cfr\"\ncode = \"cfr\"\ntitle = 19\nsection_parts = 2\n";
     let m = parse_manifest(&text).map(|p| p.manifest);
     let m = m.expect("the manifest is valid");
     assert_eq!(m.counting.as_deref(), Some("frcp6"));
     assert_eq!(m.roles.get("either"), Some(&ActorRole::Nature));
-    assert_eq!(m.sources[1].as_of.as_deref(), Some("2025-06"));
+    assert_eq!(m.sources[1].as_of.as_deref(), Some("2025-06-02"));
     assert_eq!(m.cite_syntax.rules[0].source.as_deref(), Some("a"));
     assert_eq!(m.cite_syntax.shorthands[0].section_parts, 2);
     assert!(!m.links);
@@ -134,10 +134,12 @@ fn accepts_pack_schema_v3_keys() {
             "`source = \"z\"` names no `[sources.z]` table",
         ]
     );
-    assert!(
-        errors(&text.replace("as_of = \"2025-06\"", "as_of = \"2025-13\""))[0]
-            .contains("YYYY-MM-DD or YYYY-MM")
-    );
+    for bad in ["2025-06", "2025-13-01"] {
+        assert_eq!(
+            errors(&text.replace("as_of = \"2025-06-02\"", &format!("as_of = \"{bad}\""))),
+            [format!("`as_of` must be a YYYY-MM-DD date, found `{bad}`")]
+        );
+    }
 }
 
 #[test]

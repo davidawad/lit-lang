@@ -60,12 +60,8 @@ test "a 45th day on Labor Day rolls the rehearing petition to Tuesday" cite FRAP
 // the generated `authority` string.
 /// The plaintiff's appeal. Only `origin-to-cofc` and `remand-route-cofc`
 /// survive. The rehearing patches set the 45-day United States-party
-/// period (`rehearing-period-united-states-party`).
-///
-/// Proposed fix, not applied (it would change the generated note): the
-/// `rehearing-time-expires` note pins the 45 days on Fed. Cir. R. 40(a)(1);
-/// in the vendored Dec. 1, 2025 rules the time is Fed. Cir. R. 40(f)(1),
-/// and 40(a)(1) is the general rehearing provision.
+/// period (`rehearing-period-united-states-party`): FRAP 40(d)(1)(A), with
+/// the court's own time rule in Fed. Cir. R. 40(f)(1) (Dec. 1, 2025 rules).
 instance cafc@cofc {
   pack cafc
   note "Federal Circuit as entered by the CoFC plaintiff appealing a loss (plaintiff = appellant = self). Remand can only return to the CoFC."
@@ -80,7 +76,7 @@ instance cafc@cofc {
   patch rehearing-time-expires {
     deadline: {
       length: 45
-      note: "The rehearing window this edge waits out is 45 days here, not 30, because the United States is a party (Fed. Cir. R. 40(a)(1)); the mandate then issues 7 days after it expires (FRAP 41(b))."
+      note: "The rehearing window this edge waits out is 45 days here, not 30, because the United States is a party (FRAP 40(d)(1)(A); Fed. Cir. R. 40(f)(1)); the mandate then issues 7 days after it expires (FRAP 41(b))."
     }
   }
 }
@@ -88,8 +84,8 @@ instance cafc@cofc {
 /// The government's appeal. Roles flip so the United States (`examiner`,
 /// the appellant) is the opponent, and payoffs become the plaintiff's under
 /// `1000000 - payoff`: the $1M stake is the legacy placeholder, which a
-/// matter overrides with its own stakes. Same rehearing patches and same
-/// proposed note fix as `cafc@cofc`.
+/// matter overrides with its own stakes. Same rehearing patches as
+/// `cafc@cofc`.
 instance cafc@cofc-gov {
   pack cafc
   note "Federal Circuit as entered by the United States appealing a CoFC plaintiff win. Perspective flipped: the government (appellant) is the opponent; payoffs are the plaintiff's (stake − appellant payoff, stake = $1M placeholder)."
@@ -106,7 +102,7 @@ instance cafc@cofc-gov {
   patch rehearing-time-expires {
     deadline: {
       length: 45
-      note: "The rehearing window this edge waits out is 45 days here, not 30, because the United States is a party (Fed. Cir. R. 40(a)(1)); the mandate then issues 7 days after it expires (FRAP 41(b))."
+      note: "The rehearing window this edge waits out is 45 days here, not 30, because the United States is a party (FRAP 40(d)(1)(A); Fed. Cir. R. 40(f)(1)); the mandate then issues 7 days after it expires (FRAP 41(b))."
     }
   }
 }
@@ -239,12 +235,7 @@ link cafc-remand-to-ptab "Remand: Board issues a new final written decision": ca
 /// `origin-to-itc` and `remand-route-itc` survive. The Commission defends
 /// its determination as a party, so the rehearing patches set the 45-day
 /// agency-party period (`rehearing-period-united-states-party`, FRAP
-/// 40(d)(1)(B)).
-///
-/// Proposed fix, not applied (it would change the generated notes): both
-/// patch notes pin the 45 days on "Fed. Cir. R. 40(a)(1)(B)", which the
-/// vendored Dec. 1, 2025 rules do not have; the time is Fed. Cir. R.
-/// 40(f)(1), and the agency-party branch FRAP 40(d)(1)(B).
+/// 40(d)(1)(B); Fed. Cir. R. 40(f)(1)).
 instance cafc@itc {
   pack cafc
   note "Federal Circuit as entered from an ITC § 337 final determination (19 U.S.C. § 1337(c)). Remand can only return to the Commission."
@@ -253,13 +244,13 @@ instance cafc@itc {
   patch rehearing-file {
     deadline: {
       length: 45
-      note: "45 days after entry of judgment because the Commission, a United States agency, is a party to every Section 337 appeal (Fed. Cir. R. 40(a)(1)(B): 30 days, or 45 if a United States agency is a party)."
+      note: "45 days after entry of judgment because the Commission, a United States agency, is a party to every Section 337 appeal (FRAP 40(d)(1)(B); Fed. Cir. R. 40(f)(1), Federal Circuit Rules of Practice Dec. 1, 2025: 30 days, or 45 if a United States agency is a party)."
     }
   }
   patch rehearing-time-expires {
     deadline: {
       length: 45
-      note: "The rehearing window this edge waits out is 45 days here because the Commission, a United States agency, is a party (Fed. Cir. R. 40(a)(1)(B)); the mandate then issues 7 days after it expires (FRAP 41(b))."
+      note: "The rehearing window this edge waits out is 45 days here because the Commission, a United States agency, is a party (FRAP 40(d)(1)(B); Fed. Cir. R. 40(f)(1)); the mandate then issues 7 days after it expires (FRAP 41(b))."
     }
   }
 }

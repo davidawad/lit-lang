@@ -77,6 +77,7 @@ fn a_pack_without_roles_lists_no_actors() {
     let text =
         "module main\nstart s\nstate s: \"S\" by Anyone { _ \"go\" -> t }\nterminal t: \"T\"\n";
     let pkg = litigate_sema::pkg::load::LoadedPackage {
+        texts: std::collections::BTreeMap::new(),
         manifest,
         ..package("demo", &[], &[("main.lit", text)])
     };

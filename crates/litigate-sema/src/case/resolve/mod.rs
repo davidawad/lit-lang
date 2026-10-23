@@ -19,7 +19,7 @@ use crate::hir::{
     ActorRole, Analysis, Case, CaseSource, Event, EventParty, Money, Package, PackagePin, Party,
     Perspective,
 };
-use crate::pkg::lock::LockFile;
+use crate::pkg::lock::{LockFile, LockedPackage};
 use crate::pkg::semver::{Requirement, Version};
 use crate::resolve::suggest::nearest;
 use crate::types::rational;
@@ -175,7 +175,7 @@ pub fn resolve(file: &str, text: &str, packages: &[&Package], lock: Option<&Lock
     }
 }
 
-impl R<'_, '_> {
+impl<'g> R<'_, 'g> {
     fn s(&self, r: TextRange) -> litigate_base::Span {
         (self.span)(r)
     }
@@ -288,57 +288,91 @@ impl R<'_, '_> {
             let req_text = child(item, K::VersionReq).map_or_else(String::new, |v| {
                 v.text().to_string().split_whitespace().collect::<String>()
             });
-            let Some(pkg) = self.packages.iter().find(|p| p.manifest.name == name) else {
-                self.out.push(Report::new(
-                    C::UndeclaredDependency,
-                    range,
-                    format!("package `{name}` is not loaded"),
-                ));
-                continue;
-            };
-            let req = Requirement::parse(&req_text);
-            let locked = self
-                .lock
-                .and_then(|l| l.packages.iter().find(|p| p.name == name));
-            match (locked, req) {
-                (Some(l), Some(req))
-                    if Version::parse(&l.version).is_some_and(|v| req.matches(&v)) =>
-                {
-                    pins.push(PackagePin {
-                        name: name.clone(),
-                        pack_id: pkg.manifest.pack_id.clone(),
-                        version: l.version.clone(),
-                        content_hash: l.digest.trim_start_matches("sha256:").to_owned(),
-                    });
-                    used.push(*pkg);
-                }
-                (Some(l), _) => self.out.push(
-                    Report::new(
-                        C::StaleLock,
-                        range,
-                        format!(
-                            "Lit.lock pins `{name}` {}, which does not satisfy `{req_text}`",
-                            l.version
-                        ),
-                    )
-                    .note("run `litigate lock`"),
-                ),
-                (None, _) => self.out.push(
-                    Report::new(
-                        C::StaleLock,
-                        range,
-                        if self.lock.is_some() {
-                            format!("`{name}` is not pinned in Lit.lock")
-                        } else {
-                            format!("`{name}` is not pinned: the matter has no Lit.lock")
-                        },
-                    )
-                    .note("run `litigate lock` to pin the packages this matter uses"),
-                ),
+            if let Some((pin, pkg)) = self.pin(&name, &req_text, range) {
+                pins.push(pin);
+                used.push(pkg);
             }
         }
         (!used.is_empty()).then(|| self.graph = Some(Graph::new(used, self.packages)));
         Some(pins)
+    }
+
+    /// One `uses` item pinned through `Lit.lock`: the pin and the loaded
+    /// package it names, or `None` after reporting why not.
+    fn pin(
+        &mut self,
+        name: &str,
+        req_text: &str,
+        range: TextRange,
+    ) -> Option<(crate::hir::PackagePin, &'g Package)> {
+        if !self.packages.iter().any(|p| p.manifest.name == name) {
+            self.out.push(Report::new(
+                C::UndeclaredDependency,
+                range,
+                format!("package `{name}` is not loaded"),
+            ));
+            return None;
+        }
+        let req = Requirement::parse(req_text);
+        let locked = self
+            .lock
+            .and_then(|l| l.packages.iter().find(|p| p.name == name));
+        // The loaded package the lock pins: its version, not the first
+        // loaded package of that name.
+        let pinned = |l: &LockedPackage| {
+            self.packages
+                .iter()
+                .copied()
+                .find(|p| p.manifest.name == name && p.manifest.version == l.version)
+        };
+        match (locked, req) {
+            (Some(l), Some(req)) if Version::parse(&l.version).is_some_and(|v| req.matches(&v)) => {
+                let Some(pkg) = pinned(l) else {
+                    self.out.push(
+                        Report::new(
+                            C::StaleLock,
+                            range,
+                            format!("Lit.lock pins `{name}` {}, which is not loaded", l.version),
+                        )
+                        .note("run `litigate lock`"),
+                    );
+                    return None;
+                };
+                return Some((
+                    PackagePin {
+                        name: name.to_owned(),
+                        pack_id: pkg.manifest.pack_id.clone(),
+                        version: l.version.clone(),
+                        content_hash: l.source.trim_start_matches("sha256:").to_owned(),
+                    },
+                    pkg,
+                ));
+            }
+            (Some(l), _) => self.out.push(
+                Report::new(
+                    C::StaleLock,
+                    range,
+                    format!(
+                        "Lit.lock pins `{name}` {}, which does not satisfy `{req_text}`",
+                        l.version
+                    ),
+                )
+                .note("run `litigate lock`"),
+            ),
+            (None, _) => self.out.push(
+                Report::new(
+                    C::StaleLock,
+                    range,
+                    if self.lock.is_some() {
+                        format!("`{name}` is not pinned in Lit.lock")
+                    } else {
+                        format!("`{name}` is not pinned: the matter has no Lit.lock")
+                    },
+                )
+                .note("run `litigate lock` to pin the packages this matter uses"),
+            ),
+        }
+        None
     }
 
     /// A node reference, qualified.
@@ -347,6 +381,22 @@ impl R<'_, '_> {
         let q = graph.qualify(graph.primary(), &r.display());
         if graph.has_node(&q) {
             return Some(q);
+        }
+        if let Some(current) = graph.renamed(&q) {
+            let written = r.display();
+            let local = current.split_once("::").map_or("", |(_, l)| l);
+            let fix = written
+                .rsplit_once("::")
+                .map_or_else(|| local.to_owned(), |(p, _)| format!("{p}::{local}"));
+            self.out.push(
+                Report::new(
+                    C::FormerName,
+                    r.range,
+                    format!("`{written}` was renamed `{local}`"),
+                )
+                .fix(r.range, fix, Applicability::MachineApplicable),
+            );
+            return Some(current);
         }
         let primary = graph.primary().to_owned();
         let names: Vec<String> = graph

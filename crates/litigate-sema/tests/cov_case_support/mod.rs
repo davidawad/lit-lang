@@ -31,6 +31,7 @@ fn manifest(name: &str, deps: &[&str], roles: &str) -> String {
 
 pub fn package(name: &str, deps: &[&str], roles: &str, text: &str) -> LoadedPackage {
     LoadedPackage {
+        texts: std::collections::BTreeMap::new(),
         root: format!("pkgs/{name}"),
         manifest: manifest(name, deps, roles),
         lock: None,
@@ -314,9 +315,10 @@ pub fn lock(packages: &[Package]) -> LockFile {
             .map(|p| litigate_sema::pkg::lock::LockedPackage {
                 name: p.manifest.name.clone(),
                 version: p.manifest.version.clone(),
-                digest: format!("sha256:{}", p.digest),
+                source: format!("sha256:{}", p.digest),
                 dependencies: Vec::new(),
                 language: 1,
+                ..Default::default()
             })
             .collect(),
     )

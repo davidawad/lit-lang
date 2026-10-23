@@ -74,11 +74,18 @@ where
 }
 
 /// [`execute_in`] over a [`MemoryTree`] of `(path, text)` files; `args`
-/// leave out the program name. The run carries what `build` wrote.
+/// leave out the program name. The run carries what `build` wrote. The
+/// vendored L0 texts the binary embeds (`sources/*.txt`) are in the tree
+/// unless `files` gives its own, so a lock pins the same texts it pins
+/// over the repository (SPEC §4.2).
 pub fn execute_in_memory(
     files: impl IntoIterator<Item = (String, String)>,
     args: &[String],
 ) -> LitigateRun {
+    let mut files: std::collections::BTreeMap<String, String> = files.into_iter().collect();
+    for (path, text) in &litgraph::cite::SourceCorpus::embedded_ref().files {
+        files.entry(path.clone()).or_insert_with(|| text.clone());
+    }
     let tree = MemoryTree::new(files);
     let printed = execute_in(
         &tree,

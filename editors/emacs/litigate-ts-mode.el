@@ -83,7 +83,7 @@ The canonical format (`litigate fmt', SPEC §10) uses two."
 (defconst litigate-ts-mode--clause-keywords
   '("forum" "by" "docket" "outcome" "info" "p" "effort" "cost" "within" "duration" "min" "mode"
     "max" "sets" "clears" "requires" "forbids" "replaces" "tags" "attrs" "note"
-    "valence" "court_listener_url" "action_id" "extendable" "extension_authority"
+    "valence" "court_listener_url" "action_id" "formerly" "extendable" "extension_authority"
     "payoff" "payoff_by_flag" "pack" "remove_edges" "probabilities" "roles"
     "payoff_transform" "stake" "patch" "duty" "power" "liability" "from" "after" "before"
     "counted_by" "exclude_trigger_day" "include_last_day" "roll_forward_on"

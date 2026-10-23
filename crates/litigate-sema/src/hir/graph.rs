@@ -33,6 +33,11 @@ pub struct Node {
     pub basis: Option<Basis>,
     /// Outgoing edges in source order.
     pub edges: Vec<Edge>,
+    /// Ids this node had in earlier releases (`formerly`, SPEC §4.3): the
+    /// node's identity is its id together with these, so a matter or a
+    /// link written against an old id still resolves to it.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub formerly: Vec<String>,
     /// Explicit holes in the node's header and fields, by dotted field
     /// path (`cite`, `payoff`, `attrs.weight`), with their reasons.
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
@@ -156,6 +161,9 @@ pub struct Edge {
     /// from (`basis`).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub basis: Option<Basis>,
+    /// Ids this edge had in earlier releases (`formerly`, SPEC §4.3).
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub formerly: Vec<String>,
     /// Source span.
     pub span: Option<litigate_base::Span>,
     /// Explicit holes in the edge's clauses and fields, by dotted field

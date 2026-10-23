@@ -12,6 +12,7 @@ pub const RULE12: &str = include_str!("../../../lit/examples/rule12.lit");
 /// One in-memory package at `root`.
 pub fn package(root: &str, manifest: &str, files: &[(&str, &str)]) -> LoadedPackage {
     LoadedPackage {
+        texts: std::collections::BTreeMap::new(),
         root: root.to_owned(),
         manifest: manifest.to_owned(),
         lock: None,

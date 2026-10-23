@@ -2,6 +2,7 @@
 mod build;
 mod calendar;
 pub(crate) mod check;
+mod compat;
 mod diff;
 mod explain;
 mod filing;
@@ -133,6 +134,7 @@ pub fn dispatch(command: Command, src: &dyn Source) -> Outcome {
             check,
             lib: library.lib,
         }),
+        Command::Compat { old, new } => compat::compat(&old, &new),
         Command::Query {
             kind,
             text,

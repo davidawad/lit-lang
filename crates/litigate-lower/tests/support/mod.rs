@@ -97,6 +97,7 @@ pub fn packages(files: &[ImportedFile]) -> Vec<LoadedPackage> {
         let pkg = by_dir
             .entry(dir.to_owned())
             .or_insert_with(|| LoadedPackage {
+                texts: std::collections::BTreeMap::new(),
                 root: format!("lit/{dir}"),
                 manifest: String::new(),
                 lock: None,

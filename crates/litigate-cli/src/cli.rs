@@ -280,6 +280,15 @@ pub enum Command {
         #[command(flatten)]
         library: Library,
     },
+    /// The computed compatibility class (`interface`, `value`, `none`) of
+    /// package release `NEW` against earlier release `OLD`, and whether its
+    /// version bump is enough (L1012 otherwise).
+    Compat {
+        /// The earlier release's package directory.
+        old: String,
+        /// The new release's package directory.
+        new: String,
+    },
     /// Structured queries over the library.
     Query {
         /// What to list.
@@ -388,6 +397,7 @@ impl Command {
             Self::Explain { .. } => "explain",
             Self::ExplainValue { .. } => "explain-value",
             Self::Diff { .. } => "diff",
+            Self::Compat { .. } => "compat",
             Self::Query { .. } => "query",
             Self::Timeline { .. } => "timeline",
             Self::Import { .. } => "import",

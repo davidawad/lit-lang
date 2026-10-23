@@ -215,6 +215,37 @@ impl<'a> Graph<'a> {
             .collect()
     }
 
+    /// The current qualified id of the node whose `formerly` lists
+    /// `qualified`'s local id in the same pack (SPEC §4.3).
+    pub fn renamed(&self, qualified: &str) -> Option<String> {
+        let key = Self::key(qualified);
+        self.vocabulary()
+            .filter(|p| p.manifest.pack_id == key.pack)
+            .flat_map(declarations)
+            .find_map(|d| match d {
+                Declaration::Node(n) if n.formerly.contains(&key.name) => {
+                    Some(format!("{}::{}", key.pack, n.meta.id))
+                }
+                _ => None,
+            })
+    }
+
+    /// The current id of the edge of node `qualified` whose `formerly`
+    /// lists `edge`, unless some version of the node has an edge `edge`.
+    pub fn renamed_edge(&self, qualified: &str, edge: &str) -> Option<String> {
+        let edges = || {
+            self.node_versions(qualified)
+                .into_iter()
+                .flat_map(|n| &n.edges)
+        };
+        if edges().any(|e| e.id.as_deref() == Some(edge)) {
+            return None;
+        }
+        edges()
+            .find(|e| e.formerly.iter().any(|f| f == edge))
+            .and_then(|e| e.id.clone())
+    }
+
     /// Whether some version of node `qualified` exists.
     pub fn has_node(&self, qualified: &str) -> bool {
         !self.node_versions(qualified).is_empty()

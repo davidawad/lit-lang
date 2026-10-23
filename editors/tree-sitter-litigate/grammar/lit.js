@@ -159,6 +159,7 @@ module.exports = {
     seq(field('key', 'payoff_by_flag'), field('value', $.money_record)),
     // Where the node's numbers come from (design review §2.10).
     seq(field('key', 'basis'), field('value', $._expression)),
+    seq(field('key', 'formerly'), field('value', $.id_list)),
   ),
 
   // SPEC §3.4: `Ident|_ String ->` is an edge; the field keywords are also
@@ -200,7 +201,7 @@ module.exports = {
       field('value', $.string),
     ),
     seq(
-      field('key', choice('tags', 'sets', 'clears', 'requires', 'forbids')),
+      field('key', choice('tags', 'sets', 'clears', 'requires', 'forbids', 'formerly')),
       field('value', $.id_list),
     ),
     // A string entry names an anonymous edge by derived id (SPEC §3.1).

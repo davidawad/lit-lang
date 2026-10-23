@@ -1,0 +1,50 @@
+---
+source: crates/litigate-sema/tests/compat.rs
+expression: table
+---
+[
+    (
+        Interface,
+        Major,
+        Some(
+            Major,
+        ),
+        [
+            "Interface renamed edge intake.serve -> served",
+            "Value changed node intake",
+            "Interface renamed node responded -> answered",
+        ],
+    ),
+    (
+        Interface,
+        Major,
+        Some(
+            Minor,
+        ),
+        [
+            "Interface removed edge intake.wait",
+            "Value changed node intake",
+        ],
+    ),
+    (
+        Interface,
+        Major,
+        Some(
+            Major,
+        ),
+        [
+            "Interface retyped enum Document",
+        ],
+    ),
+    (
+        Interface,
+        Major,
+        Some(
+            Major,
+        ),
+        [
+            "Interface removed deadline answer-period",
+            "Value changed node intake",
+        ],
+    ),
+]

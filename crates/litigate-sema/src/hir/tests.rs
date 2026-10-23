@@ -54,6 +54,7 @@ fn edge(id: Option<&str>, to: &str, p: Authored<Rational>) -> Edge {
         forbids: vec!["defaulted".into()],
         guard: None,
         basis: None,
+        formerly: vec![],
         span: None,
         holes: BTreeMap::new(),
     }
@@ -87,6 +88,7 @@ fn chance_node() -> Node {
                 Authored::Hole(Some("no calibration yet".into())),
             ),
         ],
+        formerly: vec![],
         holes: BTreeMap::new(),
     }
 }

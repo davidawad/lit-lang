@@ -51,6 +51,10 @@ pub struct Package {
     pub start: String,
     /// Group declarations in source order (module order, then position).
     pub groups: Vec<Group>,
+    /// The exact version of each package the dependency resolution
+    /// selected (transitively, without the package itself; SPEC §4.2).
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub resolved: BTreeMap<String, String>,
 }
 
 /// Resolved `Lit.toml` contents.

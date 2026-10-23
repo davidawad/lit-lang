@@ -3,10 +3,10 @@
 use super::{item_name, Hole, ModuleCheck};
 use crate::db::inputs::{PackageInput, Workspace};
 use crate::db::queries::{check_module, item_tree, manifest, signature};
+use crate::db::resolution::{resolution, Selected};
 use crate::db::span::{sort_diagnostics, to_span, Report, TextRange};
 use crate::hir;
-use crate::pkg::lock::{digest, LockFile, LockedPackage};
-use crate::pkg::semver::{Requirement, Version};
+use crate::pkg::lock::{digest, merkle, semantic_digest, LockFile, LockedPackage, UNCHECKED};
 use crate::resolve::sig::flatten;
 use litigate_base::{Diagnostic, DiagnosticCode as C, FileId, LineIndex};
 use std::collections::BTreeMap;
@@ -30,41 +30,77 @@ fn find(text: &str, needle: &str) -> TextRange {
     })
 }
 
-/// The package satisfying dependency `name` with requirement `req`.
-pub(crate) fn resolve_dependency(
+/// L1006 for each direct dependency no loaded package is named; L1011
+/// when no choice of versions satisfies every requirement, or when a
+/// selected dependency was itself checked against other versions than the
+/// ones this package's resolution selects.
+fn dependency_reports(
     db: &dyn salsa::Database,
     ws: Workspace,
-    name: &str,
-    req: &str,
-) -> Result<PackageInput, String> {
-    let candidates: Vec<(PackageInput, String)> = ws
-        .packages(db)
+    pkg: PackageInput,
+    text: &str,
+) -> Vec<Report> {
+    let resolved = resolution(db, ws, pkg);
+    let at = find(text, "[dependencies]");
+    if let Some(failure) = &resolved.failure {
+        let missing = failure.missing.iter().map(|name| {
+            Report::new(
+                C::UndeclaredDependency,
+                find(text, &format!("{name} =")),
+                format!("dependency `{name}` was not found (check its `path`)"),
+            )
+        });
+        let conflict = failure.conflict.iter().map(|why| {
+            Report::new(
+                C::UnresolvedDependencies,
+                at,
+                "the dependencies do not resolve",
+            )
+            .note(why.clone())
+        });
+        return missing.chain(conflict).collect();
+    }
+    // A selected dependency whose own resolution selects this package
+    // closes a cycle: no lock row can hold the digest of both.
+    let cycle = resolved.selected.iter().find(|(_, d)| {
+        d.input != pkg
+            && resolution(db, ws, d.input)
+                .selected
+                .values()
+                .any(|s| s.input == pkg)
+    });
+    if let Some((dep, _)) = cycle {
+        return vec![Report::new(
+            C::UnresolvedDependencies,
+            at,
+            format!("the package depends on itself through `{dep}`"),
+        )
+        .note("package dependencies form no cycle: move what both share into a third package")];
+    }
+    resolved
+        .selected
         .iter()
-        .filter_map(|p| {
-            manifest(db, *p)
-                .as_ref()
-                .ok()
-                .filter(|m| m.manifest.name == name)
-                .map(|m| (*p, m.manifest.version.clone()))
+        .filter(|(_, d)| d.input != pkg)
+        .flat_map(|(dep, d)| {
+            resolution(db, ws, d.input)
+                .selected
+                .iter()
+                .filter_map(move |(name, own)| {
+                    let mine = resolved.selected.get(name).filter(|mine| *mine != own)?;
+                    Some(
+                        Report::new(
+                            C::UnresolvedDependencies,
+                            at,
+                            format!(
+                                "`{dep}` was checked against `{name}` {}, but this package's resolution selects {}",
+                                own.version, mine.version
+                            ),
+                        )
+                        .note("one version of each package serves the whole dependency graph: align the requirements"),
+                    )
+                })
         })
-        .collect();
-    // Only valid manifests reach here, and they have valid requirements
-    // (L1004), so `req` always parses.
-    let req = Requirement::parse(req);
-    candidates
-        .iter()
-        .find(|(_, v)| {
-            Version::parse(v)
-                .zip(req.as_ref())
-                .is_some_and(|(v, req)| req.matches(&v))
-        })
-        .map(|(p, _)| *p)
-        .ok_or_else(|| match candidates.first() {
-            Some((_, v)) => format!(
-                "dependency `{name}` is version {v}, which does not satisfy the requirement"
-            ),
-            None => format!("dependency `{name}` was not found (check its `path`)"),
-        })
+        .collect()
 }
 
 /// Checks a package and assembles its HIR.
@@ -82,16 +118,8 @@ pub fn check_package(db: &dyn salsa::Database, pkg: PackageInput) -> PackageChec
         }
     };
     let ws = pkg.files(db).first().map(|f| f.workspace(db));
-    if let (Some(m), Some(ws)) = (m, ws) {
-        for (name, req) in &m.dependencies {
-            if let Err(message) = resolve_dependency(db, ws, name, req) {
-                reports.push(Report::new(
-                    C::UndeclaredDependency,
-                    find(text, &format!("{name} =")),
-                    message,
-                ));
-            }
-        }
+    if let (Some(_), Some(ws)) = (m, ws) {
+        reports.extend(dependency_reports(db, ws, pkg, text));
     }
     let checks: Vec<&ModuleCheck> = pkg.files(db).iter().map(|f| check_module(db, *f)).collect();
     let mut diagnostics: Vec<Diagnostic> = reports
@@ -100,6 +128,7 @@ pub fn check_package(db: &dyn salsa::Database, pkg: PackageInput) -> PackageChec
         .collect();
     diagnostics.extend(checks.iter().flat_map(|c| c.diagnostics.iter().cloned()));
     diagnostics.extend(namespace_duplicates(db, pkg));
+    diagnostics.extend(former_ids(checks.iter().filter_map(|c| c.module.as_ref())));
     diagnostics.extend(
         crate::precedence::query::legal_checks(db, pkg)
             .iter()
@@ -141,6 +170,13 @@ pub fn check_package(db: &dyn salsa::Database, pkg: PackageInput) -> PackageChec
             groups: order
                 .iter()
                 .flat_map(|c| c.groups.iter().cloned())
+                .collect(),
+            resolved: ws
+                .map(|ws| resolution(db, ws, pkg))
+                .into_iter()
+                .flat_map(|r| &r.selected)
+                .filter(|(_, s)| s.input != pkg)
+                .map(|(name, s)| (name.clone(), s.version.clone()))
                 .collect(),
         }
     });
@@ -193,6 +229,77 @@ fn shape(
     diagnostics
 }
 
+/// A `formerly` id that is some node's current id, or that two nodes both
+/// claim (L1001); the same for the edges of one node. Two versions of one
+/// node may repeat its `formerly`.
+fn former_ids<'m>(modules: impl Iterator<Item = &'m hir::Module>) -> Vec<Diagnostic> {
+    let nodes: Vec<&hir::Node> = modules
+        .flat_map(|m| &m.declarations)
+        .filter_map(|d| match d {
+            hir::Declaration::Node(n) => Some(n),
+            _ => None,
+        })
+        .collect();
+    let mut out = Vec::new();
+    let mut check = |owner: &str,
+                     kind: &str,
+                     live: &[&str],
+                     claims: Vec<(&str, &str, Option<&litigate_base::Span>)>| {
+        let mut seen: BTreeMap<&str, &str> = BTreeMap::new();
+        for (old, current, span) in claims {
+            let clash = if live.contains(&old) {
+                Some(format!("{kind} `{old}`{owner} is a current id, so it cannot also be a former id of `{current}`"))
+            } else {
+                seen.insert(old, current)
+                    .filter(|other| *other != current)
+                    .map(|other| format!("{kind} `{old}`{owner} is a former id of both `{other}` and `{current}`"))
+            };
+            // Sema gives every declaration a span.
+            out.extend(
+                clash
+                    .zip(span.cloned())
+                    .map(|(message, span)| Diagnostic::error(C::DuplicateName, span, message)),
+            );
+        }
+    };
+    let live: Vec<&str> = nodes.iter().map(|n| n.meta.id.as_str()).collect();
+    check(
+        "",
+        "node",
+        &live,
+        nodes
+            .iter()
+            .flat_map(|n| {
+                n.formerly
+                    .iter()
+                    .map(|f| (f.as_str(), n.meta.id.as_str(), n.meta.span.as_ref()))
+            })
+            .collect(),
+    );
+    let mut by_id: BTreeMap<&str, Vec<&hir::Edge>> = BTreeMap::new();
+    for n in &nodes {
+        by_id.entry(&n.meta.id).or_default().extend(&n.edges);
+    }
+    for (node, edges) in by_id {
+        let live: Vec<&str> = edges.iter().filter_map(|e| e.id.as_deref()).collect();
+        check(
+            &format!(" of node `{node}`"),
+            "edge",
+            &live,
+            edges
+                .iter()
+                .flat_map(|e| {
+                    let current = e.id.as_deref().unwrap_or_default();
+                    e.formerly
+                        .iter()
+                        .map(move |f| (f.as_str(), current, e.span.as_ref()))
+                })
+                .collect(),
+        );
+    }
+    out
+}
+
 /// Names declared by more than one module of the package (L1001).
 fn namespace_duplicates(db: &dyn salsa::Database, pkg: PackageInput) -> Vec<Diagnostic> {
     let mut owners: BTreeMap<(u8, String), String> = BTreeMap::new();
@@ -242,43 +349,84 @@ pub fn package_digest(db: &dyn salsa::Database, pkg: PackageInput) -> String {
     )
 }
 
-/// The `Lit.lock` that `root` and its transitive dependencies resolve to.
+/// The `Lit.lock` that `root` and its transitive dependencies resolve to:
+/// one row per package of `root`'s resolution.
 #[must_use]
 pub fn expected_lock(db: &dyn salsa::Database, ws: Workspace, root: PackageInput) -> LockFile {
-    let mut queue = vec![root];
-    let mut done: Vec<PackageInput> = Vec::new();
-    let mut packages = Vec::new();
-    while let Some(p) = queue.pop() {
-        if done.contains(&p) {
-            continue;
-        }
-        done.push(p);
-        let Ok(parsed) = manifest(db, p) else {
-            continue;
-        };
-        let m = &parsed.manifest;
-        let deps: Vec<PackageInput> = m
-            .dependencies
-            .iter()
-            .filter_map(|(n, r)| resolve_dependency(db, ws, n, r).ok())
-            .collect();
-        let dependencies = deps
-            .iter()
-            .filter_map(|d| {
-                manifest(db, *d)
-                    .as_ref()
-                    .ok()
-                    .map(|dm| format!("{} {}", dm.manifest.name, dm.manifest.version))
-            })
-            .collect();
-        packages.push(LockedPackage {
-            name: m.name.clone(),
-            version: m.version.clone(),
-            digest: format!("sha256:{}", package_digest(db, p)),
-            dependencies,
-            language: m.language,
-        });
-        queue.extend(deps);
+    let solution = &resolution(db, ws, root).selected;
+    LockFile::new(
+        solution
+            .values()
+            .map(|s| locked(db, solution, s.input, &mut Vec::new()))
+            .collect(),
+    )
+}
+
+/// `pkg`'s lock row under `solution`. `path` holds the packages whose rows
+/// are being computed: a dependency on one of them closes a cycle and is
+/// entered without a digest.
+fn locked(
+    db: &dyn salsa::Database,
+    solution: &BTreeMap<String, Selected>,
+    pkg: PackageInput,
+    path: &mut Vec<PackageInput>,
+) -> LockedPackage {
+    path.push(pkg);
+    let m = manifest(db, pkg).as_ref().ok().map(|p| &p.manifest);
+    let name = m.map(|m| m.name.clone()).unwrap_or_default();
+    let version = m.map(|m| m.version.clone()).unwrap_or_default();
+    let language = m.map_or(1, |m| m.language);
+    let source = format!("sha256:{}", package_digest(db, pkg));
+    let semantic = crate::db::queries::check_package(db, pkg)
+        .package
+        .as_ref()
+        .map_or_else(
+            || UNCHECKED.to_owned(),
+            |p| format!("sha256:{}", semantic_digest(p)),
+        );
+    let texts: Vec<String> = m
+        .into_iter()
+        .flat_map(|m| &m.sources)
+        .filter_map(|s| {
+            let at = s.path.as_ref().filter(|p| crate::pkg::load::is_l0(p))?;
+            let digest = pkg.texts(db).get(at).cloned().flatten();
+            Some(format!(
+                "{} {at} {}",
+                s.id,
+                digest.map_or_else(|| "missing".to_owned(), |d| format!("sha256:{d}"))
+            ))
+        })
+        .collect();
+    let dependencies: Vec<String> = m
+        .into_iter()
+        .flat_map(|m| m.dependencies.keys())
+        .filter_map(|dep| solution.get(dep).map(|d| (dep, d)))
+        .map(|(dep, d)| {
+            let head = format!("{dep} {}", d.version);
+            if path.contains(&d.input) {
+                head
+            } else {
+                format!("{head} {}", locked(db, solution, d.input, path).digest)
+            }
+        })
+        .collect();
+    path.pop();
+    let content = if semantic == UNCHECKED {
+        &source
+    } else {
+        &semantic
+    };
+    let mut sorted = (texts, dependencies);
+    sorted.0.sort();
+    sorted.1.sort();
+    LockedPackage {
+        digest: merkle(&name, &version, language, content, &sorted.0, &sorted.1),
+        name,
+        version,
+        language,
+        source,
+        semantic,
+        texts: sorted.0,
+        dependencies: sorted.1,
     }
-    LockFile::new(packages)
 }

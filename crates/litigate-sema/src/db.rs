@@ -5,6 +5,7 @@
 pub mod inputs;
 pub mod parse;
 pub mod queries;
+pub mod resolution;
 pub mod span;
 
 use std::sync::{Arc, Mutex, PoisonError};

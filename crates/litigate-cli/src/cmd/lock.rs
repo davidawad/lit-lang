@@ -5,7 +5,7 @@
 use crate::out::{Failure, Outcome, Report};
 use crate::ws::{self, CaseText, Session};
 use litigate_base::{Diagnostic, FileId, LineIndex};
-use litigate_sema::pkg::lock::LockFile;
+use litigate_sema::pkg::lock::{LockFile, FORMAT};
 use serde_json::{json, Value};
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
@@ -44,24 +44,39 @@ pub fn lock(dir: Option<&str>, locked: bool) -> Outcome {
 
 /// `litigate lock --merge BASE OURS THEIRS`: writes the three-way merge
 /// into `OURS`. Packages both sides changed get an unmerged digest, so the
-/// lock stays stale (L1007) until `litigate lock` regenerates it.
+/// lock stays stale (L1007) until `litigate lock` regenerates it. A side
+/// in another format has no rows to merge: the result is an empty lock,
+/// stale the same way (`stale_format`).
 pub fn merge(paths: &[String]) -> Outcome {
     let read = |path: &String| {
         let text =
             std::fs::read_to_string(path).map_err(|e| Failure::new(format!("{path}: {e}")))?;
-        let lock =
-            LockFile::parse(&text).map_err(|r| Failure::new(format!("{path}: {}", r.message)))?;
+        let failed =
+            |r: litigate_sema::db::span::Report| Failure::new(format!("{path}: {}", r.message));
+        let lock = (LockFile::format(&text).map_err(failed)? == FORMAT)
+            .then(|| LockFile::parse(&text).map_err(failed))
+            .transpose()?;
         Ok::<_, Failure>((text, lock))
     };
     let [base, ours, theirs] = [&paths[0], &paths[1], &paths[2]].map(read);
     let (ours_text, ours) = ours?;
-    let merged = litigate_sema::pkg::lock::merge(&base?.1, &ours, &theirs?.1);
+    let (base, theirs) = (base?.1, theirs?.1);
+    let sides = base.zip(ours).zip(theirs);
+    let stale_format = sides.is_none();
+    let merged = sides.map_or_else(
+        || litigate_sema::pkg::lock::Merged {
+            lock: LockFile::new(Vec::new()),
+            unresolved: Vec::new(),
+        },
+        |((base, ours), theirs)| litigate_sema::pkg::lock::merge(&base, &ours, &theirs),
+    );
     let text = merged.lock.render();
     crate::cmd::build::write_atomic(Path::new(&paths[1]), &text)?;
     Ok(Report::of(json!({
         "lockfile": ws::shown(Path::new(&paths[1])),
         "changed": text != ours_text,
         "unresolved": merged.unresolved,
+        "stale_format": stale_format,
     })))
 }
 

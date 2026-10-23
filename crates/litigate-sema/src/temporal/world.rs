@@ -289,7 +289,14 @@ impl<'a> World<'a> {
             i += 1;
             let deps = p.manifest.dependencies.keys().map(String::as_str);
             for name in deps.chain(["core"]) {
-                for q in loaded.iter().filter(|q| q.manifest.name == name) {
+                // The version the resolution selected; every loaded
+                // version only for a package built without one (`core`
+                // when undeclared, or HIR assembled by hand).
+                let version = p.resolved.get(name);
+                let selected = loaded.iter().filter(|q| {
+                    q.manifest.name == name && version.is_none_or(|v| q.manifest.version == *v)
+                });
+                for q in selected {
                     if !out.iter().any(|o| std::ptr::eq(*o, *q)) {
                         out.push(q);
                     }

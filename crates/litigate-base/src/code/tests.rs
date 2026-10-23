@@ -56,6 +56,7 @@ fn every_registered_code_exercises_its_stable_views() {
                     | DiagnosticCode::TimelinessUnknown
                     | DiagnosticCode::DesignationShortOfInterpretation
                     | DiagnosticCode::ExtensionByInterpretation
+                    | DiagnosticCode::FormerName
             ) || (profile == Profile::Dev
                 && matches!(
                     code,

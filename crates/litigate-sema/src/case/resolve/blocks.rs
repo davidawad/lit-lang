@@ -4,7 +4,7 @@ use crate::db::parse::ref_path;
 use crate::db::span::{Report, TextRange};
 use crate::hir::{Observation, Prior, Rational, Stake};
 use crate::types::rational;
-use litigate_base::DiagnosticCode as C;
+use litigate_base::{Applicability, DiagnosticCode as C};
 use litigate_syntax::{SyntaxKind as K, SyntaxNode};
 use std::collections::BTreeMap;
 
@@ -28,14 +28,29 @@ impl R<'_, '_> {
             .collect()
     }
 
-    /// A fact's edge, qualified by its node's pack unless written `pack::edge`.
-    fn edge_of(node: &str, value: &SyntaxNode) -> String {
+    /// A fact's edge, qualified by its node's pack unless written
+    /// `pack::edge`; an edge's former id (`formerly`) resolves to its
+    /// current one (L9007).
+    fn edge_of(&mut self, node: &str, value: &SyntaxNode) -> String {
         let edge = value.text().to_string();
         let edge = edge.trim();
         if edge.contains("::") {
             return edge.to_owned();
         }
         let pack = node.split_once("::").map_or("", |(p, _)| p);
+        let current = self.graph.as_ref().and_then(|g| g.renamed_edge(node, edge));
+        if let Some(current) = current {
+            let range = sig(value);
+            self.out.push(
+                Report::new(
+                    C::FormerName,
+                    range,
+                    format!("edge `{edge}` was renamed `{current}`"),
+                )
+                .fix(range, current.clone(), Applicability::MachineApplicable),
+            );
+            return format!("{pack}::{current}");
+        }
         format!("{pack}::{edge}")
     }
 
@@ -45,7 +60,8 @@ impl R<'_, '_> {
             self.spans
                 .facts
                 .insert(node.clone(), (self.s(key), self.s(sig(&value))));
-            facts.insert(node.clone(), Self::edge_of(&node, &value));
+            let edge = self.edge_of(&node, &value);
+            facts.insert(node.clone(), edge);
         }
         facts
     }
@@ -138,7 +154,10 @@ impl R<'_, '_> {
                         .map(Rational::integer)
                 };
                 match count {
-                    Some(n) => counts.push((Self::edge_of(&node, &edge), n)),
+                    Some(n) => {
+                        let edge = self.edge_of(&node, &edge);
+                        counts.push((edge, n));
+                    }
                     None => self.out.push(Report::new(
                         C::TypeMismatch,
                         sig(&value),

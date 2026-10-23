@@ -39,9 +39,10 @@ fn lock() -> LockFile {
             .map(|p| LockedPackage {
                 name: p.manifest.name.clone(),
                 version: p.manifest.version.clone(),
-                digest: format!("sha256:{}", p.digest),
+                source: format!("sha256:{}", p.digest),
                 dependencies: Vec::new(),
                 language: 1,
+                ..Default::default()
             })
             .collect(),
     )

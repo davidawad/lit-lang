@@ -312,6 +312,7 @@ fn patch(cx: &EdgeCx<'_, '_>, sink: &mut Sink, p: &hir::EdgePatch, base: &RawEdg
         forbids: p.forbids.clone().unwrap_or_default(),
         guard: None,
         basis: None,
+        formerly: Vec::new(),
         span: p.span.clone(),
         holes: BTreeMap::new(),
     };

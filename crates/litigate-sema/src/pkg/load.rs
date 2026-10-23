@@ -3,7 +3,8 @@
 //! stdlib when configured.
 use super::manifest::parse_manifest;
 use super::source::{Disk, Source};
-use std::collections::BTreeSet;
+use sha2::{Digest, Sha256};
+use std::collections::{BTreeMap, BTreeSet};
 use std::io;
 use std::path::{Component, Path, PathBuf};
 
@@ -27,6 +28,10 @@ pub struct LoadedPackage {
     pub lock: Option<String>,
     /// `.lit` files sorted by relative path.
     pub files: Vec<LoadedFile>,
+    /// The vendored L0 texts ([`is_l0`]) its `[sources.*]` bindings name: repo-relative
+    /// path to the SHA-256 (lowercase hex) of the file's bytes, `None` when
+    /// the file cannot be read (SPEC §4.2: the lock pins them).
+    pub texts: BTreeMap<String, Option<String>>,
 }
 
 /// Repository-relative POSIX rendering of `path` (as given when outside).
@@ -77,6 +82,14 @@ fn collect(src: &dyn Source, dir: &Path, base: &Path, out: &mut Vec<LoadedFile>)
     Ok(())
 }
 
+/// Whether a `[sources.*]` path names a vendored L0 text: a file of the
+/// repository's `sources/` corpus (SPEC §4.2). Other paths (a generated
+/// pack cited as a source) are not pinned by the lock.
+#[must_use]
+pub fn is_l0(path: &str) -> bool {
+    path.starts_with("sources/")
+}
+
 /// Loads one package directory from disk.
 ///
 /// # Errors
@@ -104,11 +117,25 @@ pub fn load_package_in(
     let mut files = Vec::new();
     collect(src, dir, dir, &mut files)?;
     files.sort_by(|a, b| a.relative.cmp(&b.relative));
+    let texts = parse_manifest(&manifest)
+        .map(|p| p.manifest.sources)
+        .unwrap_or_default()
+        .into_iter()
+        .filter_map(|s| s.path.filter(|p| is_l0(p)))
+        .map(|path| {
+            let digest = src
+                .read(&repo_root.join(&path))
+                .ok()
+                .map(|bytes| super::lock::hex(&Sha256::digest(bytes)));
+            (path, digest)
+        })
+        .collect();
     Ok(LoadedPackage {
         root: relative_to(repo_root, dir),
         manifest,
         lock,
         files,
+        texts,
     })
 }
 

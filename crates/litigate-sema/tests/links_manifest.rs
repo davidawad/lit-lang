@@ -9,6 +9,7 @@ const LINKS_TOML: &str = "[package]\nname = \"links\"\nversion = \"0.1.0\"\nlang
 
 fn links(text: &str) -> LoadedPackage {
     LoadedPackage {
+        texts: std::collections::BTreeMap::new(),
         root: "pkgs/links".to_owned(),
         manifest: LINKS_TOML.to_owned(),
         lock: None,

@@ -35,6 +35,7 @@ fn loaded(imported: &Imported) -> (Vec<LoadedPackage>, Vec<CaseText>) {
         let pkg = packages
             .entry(dir.to_owned())
             .or_insert_with(|| LoadedPackage {
+                texts: std::collections::BTreeMap::new(),
                 root: format!("lit/{dir}"),
                 manifest: String::new(),
                 lock: None,
@@ -249,7 +250,8 @@ pub fn import(paths: &[String], out: &str) -> Outcome {
 
 #[cfg(test)]
 mod tests {
-    use super::{compared, counterpart, is_case, owns};
+    use super::{compared, counterpart, is_case, owns, round_trip};
+    use litigate_base::DiagnosticCode as C;
     use litigate_import::Input;
 
     #[test]
@@ -295,5 +297,84 @@ mod tests {
         assert!(!owns("cases/x.case", "cases/y.case"));
         assert!(is_case("cases/X.CASE"));
         assert!(!is_case("lit/x/x.lit"));
+    }
+
+    fn codes(found: &[litigate_base::Diagnostic]) -> Vec<(C, String)> {
+        found.iter().map(|d| (d.code, d.message.clone())).collect()
+    }
+
+    /// Every outcome of the round trip in one binary: a pack whose id is
+    /// `links` lowers to `packs/links.json`, where the links document
+    /// lowers too. The importer names both packages `links` (one
+    /// resolution package, L1011); renamed apart, the pack's output is
+    /// compared with the links document and is no document of its kind.
+    #[test]
+    fn every_round_trip_outcome() {
+        let repo = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../..");
+        let read = |path: &str| std::fs::read_to_string(repo.join(path)).unwrap_or_default();
+        let text = read("packs/frcrimp-criminal-procedure.json");
+        let mut pack: serde_json::Value = serde_json::from_str(&text).unwrap_or_default();
+        let plain = [
+            Input::new("pack.json".to_owned(), pack.to_string()),
+            Input::new(
+                "frcp.json".to_owned(),
+                read("packs/frcp-civil-procedure.json"),
+            ),
+            Input::new(
+                "matter.json".to_owned(),
+                read("scenarios/frcp-civil-case.json"),
+            ),
+        ];
+        let imported = litigate_import::import(&plain).unwrap_or_default();
+        assert_eq!(codes(&round_trip(&imported, &plain)), []);
+        let mut relabelled = pack.clone();
+        relabelled["title"] = "Another title".into();
+        let extra = [
+            Input::new("pack.json".to_owned(), relabelled.to_string()),
+            Input::new(
+                "extra.json".to_owned(),
+                r#"{"id": "nope", "nodes": []}"#.to_owned(),
+            ),
+        ];
+        assert_eq!(
+            codes(&round_trip(&imported, &extra)),
+            [
+                (
+                    C::SemanticDiff,
+                    "the imported source lowers to JSON with 1 difference(s)".to_owned()
+                ),
+                (
+                    C::SemanticDiff,
+                    "the imported source does not lower to `packs/nope.json`".to_owned()
+                ),
+            ]
+        );
+        pack["id"] = "links".into();
+        let inputs = [
+            Input::new("pack.json".to_owned(), pack.to_string()),
+            Input::new(
+                "links.json".to_owned(),
+                r#"{"instances": {"links@copy": {"pack": "links"}}}"#.to_owned(),
+            ),
+        ];
+        let mut imported = litigate_import::import(&inputs).unwrap_or_default();
+        assert_eq!(
+            codes(&round_trip(&imported, &inputs)),
+            [(
+                C::SemanticDiff,
+                "the imported source does not check".to_owned()
+            )]
+        );
+        for f in &mut imported.files {
+            f.text = if f.path == "lit/links/Lit.toml" {
+                f.text.replace("\nlinks = {", "\nlinks-pack = {")
+            } else {
+                f.text.replace("name = \"links\"", "name = \"links-pack\"")
+            };
+        }
+        assert_eq!(
+            codes(&round_trip(&imported, &inputs)),
+            [(C::SemanticDiff, "second: not a links document".to_owned())]
+        );
     }
 }

@@ -61,6 +61,7 @@ fn loaded(name: &str, body: &str, deps: &[&str], lit: &str) -> LoadedPackage {
         }
     }
     LoadedPackage {
+        texts: std::collections::BTreeMap::new(),
         root: format!("pkgs/{name}"),
         manifest,
         lock: None,

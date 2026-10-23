@@ -348,7 +348,7 @@ fn bowles_order_cannot_extend_the_statutory_appeal_limit() {
 #[test]
 fn pins_must_match_the_lock() {
     let mut stale = lock(examples());
-    stale.packages[0].digest = format!("sha256:{}", "0".repeat(64));
+    stale.packages[0].source = format!("sha256:{}", "0".repeat(64));
     let table: BTreeMap<&str, Vec<String>> = [("no lock", None), ("stale digest", Some(&stale))]
         .into_iter()
         .map(|(name, lock)| {

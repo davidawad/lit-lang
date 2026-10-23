@@ -262,20 +262,8 @@ pub fn worked(name: &str, extra: &[(&str, &str)]) -> PathBuf {
 /// Writes `cases/Lit.lock` pinning every package `host` analysed at
 /// `root` (as `litigate lock` would), so matters there replay.
 pub fn pin(root: &Path, host: &mut litigate_lsp::host::Host) {
-    let entries: Vec<String> = host
-        .analyze()
-        .checked
-        .session
-        .packages
-        .iter()
-        .map(|p| {
-            format!(
-                "[[package]]\nname = \"{}\"\nversion = \"{}\"\ndigest = \"{}\"\ndependencies = []\nlanguage = 1\n",
-                p.name, p.version, p.digest
-            )
-        })
-        .collect();
-    let lock = format!("version = 1\n\n{}", entries.join("\n"));
+    let session = &host.analyze().checked.session;
+    let lock = session.matter_lock(&session.cases).render();
     std::fs::write(root.join("cases/Lit.lock"), lock).unwrap();
 }
 

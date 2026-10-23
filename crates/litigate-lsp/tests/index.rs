@@ -15,6 +15,7 @@ const MANIFEST: &str = "[package]\nname = \"p\"\nversion = \"0.1.0\"\nlanguage =
 
 fn index(modules: &[(&str, &str)], case: Option<&str>) -> (Index, BTreeMap<String, String>) {
     let loaded = LoadedPackage {
+        texts: std::collections::BTreeMap::new(),
         root: "lit/p".into(),
         manifest: MANIFEST.into(),
         lock: None,

@@ -24,6 +24,10 @@ pub struct PackageInput {
     /// Source files.
     #[returns(ref)]
     pub files: Vec<SourceFile>,
+    /// Vendored L0 text digests by repo-relative path
+    /// ([`LoadedPackage::texts`]).
+    #[returns(ref)]
+    pub texts: std::collections::BTreeMap<String, Option<String>>,
 }
 
 /// One `.lit` source file.
@@ -78,6 +82,7 @@ pub fn create_workspace(db: &mut dyn salsa::Database, packages: &[LoadedPackage]
                 p.manifest.clone(),
                 p.lock.clone(),
                 Vec::new(),
+                p.texts.clone(),
             );
             let files = p
                 .files

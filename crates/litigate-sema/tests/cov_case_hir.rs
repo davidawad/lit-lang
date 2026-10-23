@@ -68,7 +68,7 @@ fn pins_table() {
     let mut stale = full.clone();
     let zero = "0".repeat(64);
     for p in &mut stale.packages {
-        p.digest = format!("sha256:{zero}");
+        p.source = format!("sha256:{zero}");
     }
     let mut unloaded = case(&[SERVED]);
     let mut extra = unloaded.uses[0].clone();

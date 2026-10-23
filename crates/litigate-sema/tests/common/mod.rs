@@ -22,6 +22,7 @@ pub fn manifest(name: &str, deps: &[&str]) -> String {
 /// One package `name` at `pkgs/<name>` with files `(relative, text)`.
 pub fn package(name: &str, deps: &[&str], files: &[(&str, &str)]) -> LoadedPackage {
     LoadedPackage {
+        texts: std::collections::BTreeMap::new(),
         root: format!("pkgs/{name}"),
         manifest: manifest(name, deps),
         lock: None,

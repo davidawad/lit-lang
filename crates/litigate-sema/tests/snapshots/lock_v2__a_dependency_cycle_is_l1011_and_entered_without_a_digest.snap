@@ -1,0 +1,8 @@
+---
+source: crates/litigate-sema/tests/lock_v2.rs
+expression: "render(&db, ws)"
+---
+[
+    "pkgs/a/Lit.toml:17:1 L1011 the package depends on itself through `b`",
+    "pkgs/b/Lit.toml:17:1 L1011 the package depends on itself through `a`",
+]

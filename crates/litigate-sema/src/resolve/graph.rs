@@ -2,8 +2,10 @@
 //! packages (SPEC §4.3), and import-cycle breaking (L1003). It depends only
 //! on module headers and manifests, so editing a module body never
 //! invalidates it.
+use crate::db::inputs::PackageInput;
 use crate::db::inputs::{SourceFile, Workspace};
 use crate::db::queries::{manifest, module_header};
+use crate::db::resolution::{core, resolution};
 use crate::resolve::suggest;
 use std::collections::{BTreeSet, HashMap};
 
@@ -61,20 +63,37 @@ impl ModuleGraph {
     }
 }
 
-/// Builds the graph.
+/// Each package's name and the packages (by index) whose modules it sees
+/// besides its own: the dependency versions its resolution selected, and
+/// `core` (the selected one when it is a dependency, else the highest
+/// loaded version).
+fn visibility(db: &dyn salsa::Database, ws: Workspace) -> Vec<(Option<String>, BTreeSet<usize>)> {
+    let packages = ws.packages(db);
+    let index = |d: PackageInput| packages.iter().position(|q| *q == d);
+    packages
+        .iter()
+        .map(|p| {
+            let m = manifest(db, *p).as_ref().ok();
+            let resolved = resolution(db, ws, *p);
+            let visible: BTreeSet<usize> = m
+                .into_iter()
+                .flat_map(|m| m.manifest.dependencies.keys())
+                .filter_map(|dep| resolved.get(dep))
+                .chain(core(db, ws, *p))
+                .filter_map(index)
+                .collect();
+            (m.map(|m| m.manifest.name.clone()), visible)
+        })
+        .collect()
+}
+
+/// Builds the graph over [`visibility`].
 pub fn build(db: &dyn salsa::Database, ws: Workspace) -> ModuleGraph {
     let packages = ws.packages(db);
     let info: Vec<_> = packages
         .iter()
-        .map(|p| {
-            let m = manifest(db, *p).as_ref().ok();
-            let name = m.map(|m| m.manifest.name.clone());
-            let mut visible: BTreeSet<String> = m
-                .map(|m| m.manifest.dependencies.keys().cloned().collect())
-                .unwrap_or_default();
-            visible.insert("core".to_owned());
-            (*p, name, visible)
-        })
+        .zip(visibility(db, ws))
+        .map(|(p, (name, visible))| (*p, name, visible))
         .collect();
     let mut nodes = HashMap::new();
     let mut index: HashMap<(usize, String), SourceFile> = HashMap::new();
@@ -101,28 +120,25 @@ pub fn build(db: &dyn salsa::Database, ws: Workspace) -> ModuleGraph {
                 .imports
                 .iter()
                 .map(|path| {
-                    if let Some(f) = index.get(&(i, path.clone())) {
+                    let seen = std::iter::once(&i)
+                        .chain(visible)
+                        .find_map(|j| index.get(&(*j, path.clone())));
+                    if let Some(f) = seen {
                         return ImportTarget::Module(*f);
                     }
                     let found = info.iter().enumerate().find_map(|(j, (_, name, _))| {
                         index
                             .get(&(j, path.clone()))
-                            .map(|f| (name.clone().unwrap_or_default(), *f))
+                            .map(|_| name.clone().unwrap_or_default())
                     });
-                    match found {
-                        Some((name, f)) if visible.contains(&name) => ImportTarget::Module(f),
-                        Some((name, _)) => ImportTarget::Undeclared(name),
-                        None => {
-                            let names = index
-                                .keys()
-                                .filter(|(j, _)| {
-                                    *j == i
-                                        || info[*j].1.as_ref().is_some_and(|n| visible.contains(n))
-                                })
-                                .map(|(_, m)| m.as_str());
-                            ImportTarget::Unknown(suggest::nearest(path, names).map(str::to_owned))
-                        }
+                    if let Some(name) = found {
+                        return ImportTarget::Undeclared(name);
                     }
+                    let names = index
+                        .keys()
+                        .filter(|(j, _)| *j == i || visible.contains(j))
+                        .map(|(_, m)| m.as_str());
+                    ImportTarget::Unknown(suggest::nearest(path, names).map(str::to_owned))
                 })
                 .collect();
             nodes

@@ -52,6 +52,9 @@ impl Cx<'_, '_> {
         if let Some(f) = fields.get("replaces").filter(|_| e.from.is_none()) {
             self.not_allowed(f, "outside a links package");
         }
+        if let Some(f) = fields.get("formerly").filter(|_| e.name.is_none()) {
+            self.not_allowed(f, "on an anonymous edge: it has no id to carry forward");
+        }
         let event = fields
             .get("event")
             .and_then(|f| first_expr(f))
@@ -83,6 +86,7 @@ impl Cx<'_, '_> {
                 .get("when")
                 .and_then(|f| self.guard(f, fact, e.name.is_some())),
             basis: self.basis(fields.get("basis")),
+            formerly: self.idents(fields.get("formerly")),
             span: self.ck.span(e.range),
             holes: holes_of(e.clauses.iter().chain(&e.fields)),
         }

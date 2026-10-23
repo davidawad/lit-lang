@@ -38,6 +38,11 @@ allow = [
     "Unicode-DFS-2016",
     "Zlib",
     "GPL-3.0-or-later",
+    # pubgrub and version-ranges (litigate-sema's dependency resolution,
+    # SPEC §4.2) and priority-queue (theirs, dual LGPL-3.0-or-later OR
+    # MPL-2.0). MPL-2.0 is file-level copyleft and GPL-compatible
+    # (section 3.3 permits distribution under the GPL).
+    "MPL-2.0",
 ]
 
 # webpki-roots is Mozilla's CA root bundle (data, CDLA-Permissive-2.0). It

@@ -31,7 +31,13 @@ pub(super) fn pins<'a>(
             ));
             continue;
         }
-        let Some(pkg) = packages.iter().find(|p| p.manifest.name == pin.name) else {
+        let named = |p: &&&Package| p.manifest.name == pin.name;
+        let Some(pkg) = packages
+            .iter()
+            .filter(named)
+            .find(|p| p.manifest.version == pin.version)
+            .or_else(|| packages.iter().find(named))
+        else {
             out.push(error(
                 C::UndeclaredDependency,
                 at(i),
@@ -45,11 +51,11 @@ pub(super) fn pins<'a>(
             None => Some(format!("Lit.lock has no entry for `{}`", pin.name)),
             Some(l)
                 if l.version != pin.version
-                    || l.digest != format!("sha256:{}", pin.content_hash) =>
+                    || l.source != format!("sha256:{}", pin.content_hash) =>
             {
                 Some(format!(
                     "Lit.lock pins {} {} {}",
-                    l.name, l.version, l.digest
+                    l.name, l.version, l.source
                 ))
             }
             Some(_) if pkg.manifest.version != pin.version || pkg.digest != pin.content_hash => {

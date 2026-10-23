@@ -1,54 +1,161 @@
-//! Package digests and the deterministic `Lit.lock` (SPEC §4.2).
+//! Package digests and the deterministic, Merkle `Lit.lock` (SPEC §4.2).
 use crate::db::span::{Report, TextRange};
+use crate::hir;
 use litigate_base::DiagnosticCode as C;
 use serde::Deserialize;
+use serde_json::Value;
 use sha2::{Digest, Sha256};
 use std::fmt::Write as _;
 
-/// SHA-256 over `Lit.toml` then every source file sorted by
-/// package-relative POSIX path, each framed as `u64 BE path length, path,
-/// u64 BE content length, content`. Returns lowercase hex.
+/// The `Lit.lock` format this compiler reads and writes.
+pub const FORMAT: u32 = 2;
+
+/// SHA-256 over `parts`, each framed as `u64 BE length, bytes`; lowercase
+/// hex.
+fn framed<'a>(parts: impl IntoIterator<Item = &'a [u8]>) -> String {
+    let mut hasher = Sha256::new();
+    for part in parts {
+        hasher.update((part.len() as u64).to_be_bytes());
+        hasher.update(part);
+    }
+    hex(&hasher.finalize())
+}
+
+/// Lowercase hex of `bytes`.
+#[must_use]
+pub fn hex(bytes: &[u8]) -> String {
+    bytes.iter().fold(String::with_capacity(64), |mut s, b| {
+        let _ = write!(s, "{b:02x}");
+        s
+    })
+}
+
+/// The source digest: SHA-256 over `Lit.toml` then every source file
+/// sorted by package-relative POSIX path, each framed as `u64 BE path
+/// length, path, u64 BE content length, content`. Returns lowercase hex.
 #[must_use]
 pub fn digest<'a>(manifest: &str, files: impl IntoIterator<Item = (&'a str, &'a str)>) -> String {
     let mut files: Vec<(&str, &str)> = files.into_iter().collect();
     files.sort_by(|a, b| a.0.cmp(b.0));
-    let mut hasher = Sha256::new();
-    for (path, content) in std::iter::once(("Lit.toml", manifest)).chain(files) {
-        for part in [path.as_bytes(), content.as_bytes()] {
-            hasher.update((part.len() as u64).to_be_bytes());
-            hasher.update(part);
-        }
-    }
-    hasher
-        .finalize()
-        .iter()
-        .fold(String::with_capacity(64), |mut s, b| {
-            let _ = write!(s, "{b:02x}");
-            s
-        })
+    framed(
+        std::iter::once(("Lit.toml", manifest))
+            .chain(files)
+            .flat_map(|(path, content)| [path.as_bytes(), content.as_bytes()]),
+    )
 }
 
+/// The semantic digest: SHA-256 of the package HIR as canonical JSON
+/// (object keys sorted, no whitespace) with its source digest nulled and
+/// without any `span`. Reformatting, comments, and moving declarations
+/// between files leave it unchanged; any change to what the package
+/// means changes it. Returns lowercase hex.
+#[must_use]
+pub fn semantic_digest(package: &hir::Package) -> String {
+    let mut value = serde_json::to_value(package).unwrap_or(Value::Null);
+    value["digest"] = Value::Null;
+    let mut text = String::new();
+    canonical(&value, &["span"], &mut text);
+    hex(&Sha256::digest(text.as_bytes()))
+}
+
+/// Canonical JSON of `value` (object keys sorted, no whitespace) with every
+/// object key in `skip` dropped, at any depth.
+pub(crate) fn canonical(value: &Value, skip: &[&str], out: &mut String) {
+    match value {
+        Value::Object(map) => {
+            let mut keys: Vec<&String> =
+                map.keys().filter(|k| !skip.contains(&k.as_str())).collect();
+            keys.sort();
+            out.push('{');
+            for (i, key) in keys.into_iter().enumerate() {
+                out.push_str(if i == 0 { "" } else { "," });
+                out.push_str(&Value::String(key.clone()).to_string());
+                out.push(':');
+                canonical(&map[key], skip, out);
+            }
+            out.push('}');
+        }
+        Value::Array(items) => {
+            out.push('[');
+            for (i, item) in items.iter().enumerate() {
+                out.push_str(if i == 0 { "" } else { "," });
+                canonical(item, skip, out);
+            }
+            out.push(']');
+        }
+        scalar => out.push_str(&scalar.to_string()),
+    }
+}
+
+/// The Merkle digest of a lock row: SHA-256 over the format tag, `name`,
+/// `version`, `language`, `content` (the semantic digest, or the source
+/// digest of a package that does not check), the number of `texts` and
+/// each entry, then the number of `dependencies` and each entry (which
+/// carries the dependency's own Merkle digest). Returns `sha256:<hex>`.
+#[must_use]
+pub fn merkle(
+    name: &str,
+    version: &str,
+    language: u32,
+    content: &str,
+    texts: &[String],
+    dependencies: &[String],
+) -> String {
+    let (language, t, d) = (
+        language.to_string(),
+        texts.len().to_string(),
+        dependencies.len().to_string(),
+    );
+    let head = ["litlock 2", name, version, &language, content];
+    format!(
+        "sha256:{}",
+        framed(
+            head.iter()
+                .map(|p| p.as_bytes())
+                .chain([t.as_bytes()])
+                .chain(texts.iter().map(String::as_bytes))
+                .chain([d.as_bytes()])
+                .chain(dependencies.iter().map(String::as_bytes))
+        )
+    )
+}
+
+/// The `semantic` value of a package that does not check: it has no HIR,
+/// so its Merkle digest covers its source digest instead.
+pub const UNCHECKED: &str = "unchecked";
+
 /// One resolved package in `Lit.lock`.
-#[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
+#[derive(Debug, Clone, Default, PartialEq, Eq, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct LockedPackage {
     /// Package name.
     pub name: String,
     /// Exact version.
     pub version: String,
-    /// `sha256:<hex>`.
-    pub digest: String,
-    /// Sorted `"name version"` strings.
-    pub dependencies: Vec<String>,
     /// Language version.
     pub language: u32,
+    /// Merkle digest ([`merkle`]), `sha256:<hex>`.
+    pub digest: String,
+    /// Source digest ([`digest`]), `sha256:<hex>`.
+    pub source: String,
+    /// Semantic digest ([`semantic_digest`]), `sha256:<hex>`, or
+    /// [`UNCHECKED`].
+    pub semantic: String,
+    /// Sorted `"<source id> <path> sha256:<hex>"` entries, one per
+    /// `[sources.*]` binding with a `path`: the vendored L0 text's bytes
+    /// (`missing` in place of the digest when the file is absent).
+    #[serde(default)]
+    pub texts: Vec<String>,
+    /// Sorted `"name version sha256:<merkle>"` entries (`"name version"`
+    /// where the dependency closes a cycle).
+    pub dependencies: Vec<String>,
 }
 
 /// Parsed `Lit.lock`.
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct LockFile {
-    /// Format version; must be 1.
+    /// Format version; must be [`FORMAT`].
     pub version: u32,
     /// Packages sorted by name.
     #[serde(default, rename = "package")]
@@ -61,10 +168,11 @@ impl LockFile {
     pub fn new(mut packages: Vec<LockedPackage>) -> Self {
         for p in &mut packages {
             p.dependencies.sort();
+            p.texts.sort();
         }
         packages.sort_by(|a, b| (&a.name, &a.version).cmp(&(&b.name, &b.version)));
         Self {
-            version: 1,
+            version: FORMAT,
             packages,
         }
     }
@@ -72,17 +180,28 @@ impl LockFile {
     /// Deterministic TOML text: no timestamps, no absolute paths.
     #[must_use]
     pub fn render(&self) -> String {
-        let mut out = String::from("version = 1\n");
+        // One entry per line, so a changed text or dependency is a one-line
+        // diff.
+        let list = |items: &[String]| {
+            items
+                .iter()
+                .map(|d| format!("\n    {},", quote(d)))
+                .chain((!items.is_empty()).then(|| "\n".to_owned()))
+                .collect::<String>()
+        };
+        let mut out = format!("version = {FORMAT}\n");
         for p in &self.packages {
-            let deps: Vec<String> = p.dependencies.iter().map(|d| quote(d)).collect();
             let _ = write!(
                 out,
-                "\n[[package]]\nname = {}\nversion = {}\ndigest = {}\ndependencies = [{}]\nlanguage = {}\n",
+                "\n[[package]]\nname = {}\nversion = {}\nlanguage = {}\ndigest = {}\nsource = {}\nsemantic = {}\ntexts = [{}]\ndependencies = [{}]\n",
                 quote(&p.name),
                 quote(&p.version),
+                p.language,
                 quote(&p.digest),
-                deps.join(", "),
-                p.language
+                quote(&p.source),
+                quote(&p.semantic),
+                list(&p.texts),
+                list(&p.dependencies),
             );
         }
         out
@@ -93,26 +212,42 @@ impl LockFile {
     /// # Errors
     /// L1007 for unparseable text or an unknown format version.
     pub fn parse(text: &str) -> Result<Self, Report> {
-        let lock: Self = toml::from_str(text).map_err(|e| {
-            Report::new(
-                C::StaleLock,
-                TextRange::default(),
-                format!("Lit.lock is invalid: {}", e.message().trim()),
-            )
-            .note("regenerate it with `litigate lock`")
-        })?;
-        if lock.version != 1 {
+        let version = Self::format(text)?;
+        if version != FORMAT {
             return Err(Report::new(
                 C::StaleLock,
                 TextRange::default(),
-                format!(
-                    "Lit.lock format {} is not supported (expected 1)",
-                    lock.version
-                ),
-            ));
+                format!("Lit.lock format {version} is not supported (expected {FORMAT})"),
+            )
+            .note("regenerate it with `litigate lock`"));
         }
-        Ok(lock)
+        toml::from_str(text).map_err(|e| invalid(&e))
     }
+
+    /// The format version of `Lit.lock` text, read before its rows so an
+    /// older lock is named as such rather than as malformed.
+    ///
+    /// # Errors
+    /// L1007 for text with no readable `version`.
+    pub fn format(text: &str) -> Result<u32, Report> {
+        #[derive(Deserialize)]
+        struct Head {
+            version: u32,
+        }
+        toml::from_str::<Head>(text)
+            .map(|h| h.version)
+            .map_err(|e| invalid(&e))
+    }
+}
+
+/// L1007 for unparseable lock text.
+fn invalid(e: &toml::de::Error) -> Report {
+    Report::new(
+        C::StaleLock,
+        TextRange::default(),
+        format!("Lit.lock is invalid: {}", e.message().trim()),
+    )
+    .note("regenerate it with `litigate lock`")
 }
 
 /// TOML basic string.
@@ -237,9 +372,12 @@ mod tests {
         LockedPackage {
             name: name.into(),
             version: "1.0.0".into(),
-            digest: format!("sha256:{}", digest("m", [])),
-            dependencies: deps.iter().map(|d| (*d).to_owned()).collect(),
             language: 1,
+            digest: merkle(name, "1.0.0", 1, "sha256:0", &[], &[]),
+            source: format!("sha256:{}", digest("m", [])),
+            semantic: UNCHECKED.to_owned(),
+            texts: vec!["rules sources/rules.txt missing".to_owned()],
+            dependencies: deps.iter().map(|d| (*d).to_owned()).collect(),
         }
     }
 
@@ -283,7 +421,7 @@ mod tests {
                 "`other` is locked but no longer used".to_owned()
             ]
         );
-        assert!(LockFile::parse("version = 2").is_err());
+        assert!(LockFile::parse("version = 1").is_err());
     }
 
     #[test]
@@ -295,12 +433,12 @@ mod tests {
                 "Lit.lock is invalid: string values must be quoted, expected literal string",
             ),
             (
-                "version = 1\ncolour = 2",
+                "version = 2\ncolour = 2",
                 "Lit.lock is invalid: unknown field `colour`, expected `version` or `package`",
             ),
             (
-                "version = 2",
-                "Lit.lock format 2 is not supported (expected 1)",
+                "version = 1",
+                "Lit.lock format 1 is not supported (expected 2)",
             ),
         ] {
             let report = verify(Some(text), &lock).err();
@@ -310,6 +448,73 @@ mod tests {
                 "{text}"
             );
         }
+    }
+
+    #[test]
+    fn merkle_digests_frame_every_part() {
+        let base = merkle(
+            "a",
+            "1.0.0",
+            1,
+            "sha256:x",
+            &["t p d".into()],
+            &["b 1.0.0 d".into()],
+        );
+        assert!(base.starts_with("sha256:"), "{base}");
+        assert_eq!(base.len(), 71);
+        for other in [
+            merkle(
+                "a",
+                "1.0.1",
+                1,
+                "sha256:x",
+                &["t p d".into()],
+                &["b 1.0.0 d".into()],
+            ),
+            merkle(
+                "a",
+                "1.0.0",
+                1,
+                "sha256:y",
+                &["t p d".into()],
+                &["b 1.0.0 d".into()],
+            ),
+            merkle(
+                "a",
+                "1.0.0",
+                1,
+                "sha256:x",
+                &["t p e".into()],
+                &["b 1.0.0 d".into()],
+            ),
+            merkle(
+                "a",
+                "1.0.0",
+                1,
+                "sha256:x",
+                &["t p d".into()],
+                &["b 1.0.0 e".into()],
+            ),
+            merkle(
+                "a",
+                "1.0.0",
+                1,
+                "sha256:x",
+                &[],
+                &["t p d".into(), "b 1.0.0 d".into()],
+            ),
+        ] {
+            assert_ne!(base, other);
+        }
+    }
+
+    #[test]
+    fn canonical_json_sorts_keys_and_drops_spans() {
+        let value =
+            serde_json::json!({"b": [1, {"span": 3, "z": null, "a": "x"}], "a": true, "span": {}});
+        let mut out = String::new();
+        canonical(&value, &["span"], &mut out);
+        assert_eq!(out, r#"{"a":true,"b":[1,{"a":"x","z":null}]}"#);
     }
 
     #[test]
@@ -410,7 +615,7 @@ mod tests {
     proptest! {
         #[test]
         fn prop_quoted_strings_parse_back(s in "\\PC{0,24}") {
-            let lock = LockFile::new(vec![LockedPackage { name: s.clone(), version: s.clone(), digest: s, dependencies: vec![], language: 1 }]);
+            let lock = LockFile::new(vec![LockedPackage { name: s.clone(), version: s.clone(), digest: s.clone(), source: s.clone(), semantic: s.clone(), texts: vec![s.clone()], dependencies: vec![s], language: 1 }]);
             prop_assert_eq!(LockFile::parse(&lock.render()).ok(), Some(lock));
         }
     }

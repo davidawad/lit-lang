@@ -258,7 +258,7 @@ const RESULTS: [(&str, &str); 17] = [
     ("describe", "this document"),
     (
         "lock",
-        "{lockfile, changed, packages:[{name, version, digest}]}; --merge: {lockfile, changed, unresolved:[name]}",
+        "{lockfile, changed, packages:[{name, version, digest}]}; --merge: {lockfile, changed, unresolved:[name], stale_format}",
     ),
     ("check", "{profile, files, obligations:[{obligation, passed, detail}], packages, cases:[{path, id, start, replay, deadlines}]}"),
     ("build", "{outputs:{packs, links, clock, scenarios, source_maps, litigatables}, litigatable_hash, litigatables:[{package, path, content_hash}], obligations}"),
@@ -271,6 +271,7 @@ const RESULTS: [(&str, &str); 17] = [
     ("explain", "{code, explanation, phase, severity:{dev, strict}}"),
     ("explain-value", "{value, type, id, status, reason, steps:[{rule, cite, detail}], versions, overrides}; a deadline's status is its instance's (`unknown` with the reason when its due date is), null when nothing triggers it"),
     ("diff", "{equal, files:[{a, b, kind, equal, changes}], changes:[{kind, pointer, id, before, after, document}], unmatched}"),
+    ("compat", "{package, old:{version, semantic}, new:{version, semantic}, class, required, declared, ok, changes:[{class, kind, what, now?}]}; L1012 when the bump is too small"),
     ("query", "{matches:[{id, kind, label, span, cite, in_force, detail}], total, next_cursor}"),
     ("timeline", "a litigate.timeline/1 document (docs/litigate/timeline.v1.schema.json): {schema, source, as_of, known_at, layers, worlds, rows, edges, diagnostics}"),
     ("import", "{files:[{path, from}], warnings}"),

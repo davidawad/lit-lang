@@ -172,6 +172,18 @@ impl Requirement {
     }
 }
 
+impl fmt::Display for Requirement {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let op = match self.op {
+            Op::Caret => "^",
+            Op::Tilde => "~",
+            Op::AtLeast => ">=",
+            Op::Exact => "=",
+        };
+        write!(f, "{op}{}", self.version)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -262,6 +274,12 @@ mod tests {
             let text = match &pre { Some(p) => format!("{a}.{b}.{c}-{p}"), None => format!("{a}.{b}.{c}") };
             let v = Version::parse(&text);
             prop_assert_eq!(v.map(|v| v.to_string()), Some(text));
+        }
+
+        #[test]
+        fn prop_requirements_display_as_written(a in 0_u64..100, b in 0_u64..100, c in 0_u64..100, op in proptest::sample::select(vec!["^", "~", ">=", "="])) {
+            let text = format!("{op}{a}.{b}.{c}");
+            prop_assert_eq!(Requirement::parse(&text).map(|r| r.to_string()), Some(text));
         }
 
         #[test]

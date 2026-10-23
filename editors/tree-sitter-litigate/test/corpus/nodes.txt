@@ -313,3 +313,50 @@ chance barred: "Barred?" by Court
                       (arguments
                         (ref
                           (identifier))))))))))))))
+
+================================================================================
+Former ids of a node and an edge
+================================================================================
+
+module a
+state s: "S" {
+  formerly [old-s, older-s]
+  go "Go" -> s { formerly [went] }
+  formerly "Named formerly" -> s
+}
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (node_decl
+      (identifier)
+      (string
+        (string_content))
+      (node_body
+        (node_field
+          (id_list
+            (ref
+              (identifier))
+            (ref
+              (identifier))))
+        (edge_decl
+          (identifier)
+          (string
+            (string_content))
+          (ref
+            (identifier))
+          (edge_fields
+            (edge_field
+              (id_list
+                (ref
+                  (identifier))))))
+        (edge_decl
+          (identifier)
+          (string
+            (string_content))
+          (ref
+            (identifier)))))))

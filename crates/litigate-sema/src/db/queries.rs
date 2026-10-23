@@ -48,6 +48,12 @@ pub fn manifest(
     parse_manifest(pkg.manifest_text(db))
 }
 
+/// Every package's dependency resolution, in load order (SPEC §4.2).
+#[salsa::tracked(returns(ref))]
+pub fn resolutions(db: &dyn salsa::Database, ws: Workspace) -> Vec<super::resolution::Resolution> {
+    super::resolution::build(db, ws)
+}
+
 /// The workspace module graph.
 #[salsa::tracked(returns(ref))]
 pub fn module_graph(db: &dyn salsa::Database, ws: Workspace) -> ModuleGraph {

@@ -55,7 +55,7 @@ macro_rules! registry {
     };
 }
 
-registry! { 71;
+registry! { 74;
     UnexpectedToken = "L0001" => "The token is not valid at this position in the grammar",
     UnterminatedLiteral = "L0002" => "A string, block comment, or other delimited literal was not closed",
     InvalidToken = "L0003" => "The source contains a character sequence that is not a token",
@@ -78,6 +78,8 @@ registry! { 71;
     InvalidStart = "L1008" => "A package must declare exactly one start node",
     UndeclaredActor = "L1009" => "An actor is not declared in the package's roles table",
     UnboundCite = "L1010" => "A citation does not resolve through a declared source binding",
+    UnresolvedDependencies = "L1011" => "No choice of loaded package versions satisfies every dependency requirement",
+    IncompatibleRelease = "L1012" => "A release's version bump is smaller than its computed compatibility class requires",
     TypeMismatch = "L2001" => "The expression type does not match the required type",
     InvalidOperation = "L2002" => "This operation is not permitted for the operand domain types",
     InvalidDistribution = "L2003" => "A distribution must cover every enum variant exactly once and sum to one",
@@ -127,6 +129,7 @@ registry! { 71;
     NonCanonicalFormat = "L9004" => "The file is not in litigate fmt canonical form",
     UnusedDeclaration = "L9005" => "The declaration or import is never used",
     UndeclaredEventId = "L9006" => "A case event declares no id, so its timeline key changes when its date or docket number is corrected",
+    FormerName = "L9007" => "A reference uses an id the declaration had before it was renamed (`formerly`)",
 }
 
 /// What `explain` says of an [`DiagnosticCode::Unknown`] code.
@@ -194,7 +197,8 @@ impl DiagnosticCode {
                 | Self::ObligationBreached
                 | Self::TimelinessUnknown
                 | Self::DesignationShortOfInterpretation
-                | Self::ExtensionByInterpretation,
+                | Self::ExtensionByInterpretation
+                | Self::FormerName,
                 _,
             )
             | (

@@ -60,6 +60,7 @@ litigate lint-filing cases/ptab-ipr-defense.case 'PreliminaryResponseFiled()' --
                                             # replay the matter with a proposed filing: L4001 not a legal move,
                                             # L4002 late; else what it discharges and the deadlines it triggers
 litigate diff lit/frcp --against target/lit-build/packs/frcp-civil-procedure.json   # semantic diff (SPEC §8.6)
+litigate compat old/lit/frcp lit/frcp      # compatibility class of a release + the bump it needs (SPEC §4.4)
 just lit-sync                               # regenerate every Lit.lock; build packs/, scenarios/ into target/lit-build/
 just lit-sync-check                         # CI gate: fail on a stale Lit.lock or a committed generated file
 ```

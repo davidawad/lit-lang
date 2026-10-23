@@ -134,7 +134,7 @@ syntax_kinds! {
         KwExtend = "extend", KwWaive = "waive", KwAfterExpiry = "after_expiry", KwNever = "never",
         KwRemoves = "removes", KwElects = "elects", KwExtends = "extends",
         KwWaives = "waives", KwTo = "to", KwWhere = "where", KwAnd = "and", KwOr = "or",
-        KwDesignated = "designated", KwInterpretation = "interpretation",
+        KwDesignated = "designated", KwInterpretation = "interpretation", KwFormerly = "formerly",
         KwForums = "forums", KwForwardHolidays = "forward_holidays",
         KwDeclaredHolidays = "declared_holidays", KwQuote = "quote",
         KwLimit = "limit", KwWords = "words", KwPages = "pages", KwLines = "lines",

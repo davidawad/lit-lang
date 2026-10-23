@@ -1,0 +1,11 @@
+---
+source: crates/litigate-sema/tests/formerly.rs
+expression: render(&checked.diagnostics)
+---
+[
+    "13:9 L9007 `old-ruling` was renamed `ruling`\n    fix @13:9-13:19 MachineApplicable: \"ruling\"",
+    "13:21 L9007 edge `granted` was renamed `won`\n    fix @13:21-13:28 MachineApplicable: \"won\"",
+    "14:10 L9007 `alpha::answered` was renamed `responded`\n    fix @14:10-14:25 MachineApplicable: \"alpha::responded\"",
+    "15:19 L9007 `older-ruling` was renamed `ruling`\n    fix @15:19-15:31 MachineApplicable: \"ruling\"",
+    "15:35 L9007 edge `granted` was renamed `won`\n    fix @15:35-15:42 MachineApplicable: \"won\"",
+]

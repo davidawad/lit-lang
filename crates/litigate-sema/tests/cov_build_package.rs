@@ -9,6 +9,7 @@ const PACK: &str = "module m\nstart s\nterminal s: \"S\"\n";
 /// Package `name` at version `version` with path dependencies `deps`.
 fn versioned(name: &str, version: &str, deps: &[&str], text: &str) -> LoadedPackage {
     LoadedPackage {
+        texts: std::collections::BTreeMap::new(),
         manifest: manifest(name, deps)
             .replace("version = \"1.0.0\"", &format!("version = \"{version}\"")),
         ..package(name, deps, &[(&format!("{name}.lit"), text)])
@@ -95,9 +96,34 @@ fn the_lock_lists_each_transitive_dependency_once() {
         ),
     ]);
     let lock = litigate_sema::render_lock(&db, ws, ws.packages(&db)[0]);
-    let names: Vec<&str> = lock
-        .lines()
-        .filter(|l| l.starts_with("name = ") || l.starts_with("dependencies"))
+    let parsed = litigate_sema::pkg::lock::LockFile::parse(&lock).expect("a lock");
+    let names: Vec<String> = parsed
+        .packages
+        .iter()
+        .map(|p| {
+            let deps: Vec<&str> = p
+                .dependencies
+                .iter()
+                .map(|d| d.rsplit_once(' ').map_or(d.as_str(), |(head, _)| head))
+                .collect();
+            format!("{} <- {}", p.name, deps.join(", "))
+        })
         .collect();
     insta::assert_debug_snapshot!(names);
+    // Each dependency entry carries that dependency's own Merkle digest.
+    let digest = |name: &str| {
+        parsed
+            .packages
+            .iter()
+            .find(|p| p.name == name)
+            .map(|p| p.digest.clone())
+    };
+    let root = parsed.packages.iter().find(|p| p.name == "root");
+    assert_eq!(
+        root.map(|r| r.dependencies.clone()),
+        Some(vec![
+            format!("left 1.0.0 {}", digest("left").unwrap_or_default()),
+            format!("right 1.0.0 {}", digest("right").unwrap_or_default()),
+        ])
+    );
 }

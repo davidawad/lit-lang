@@ -29,6 +29,7 @@ pub fn pkg(
         }
     }
     LoadedPackage {
+        texts: std::collections::BTreeMap::new(),
         root: format!("pkgs/{name}"),
         manifest,
         lock: None,

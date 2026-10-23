@@ -650,6 +650,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   check, and a non-chance node's `p` edges had no sum check. A node's
   `p` edges other than self edges now sum to at most 1, and to exactly 1
   when all carry a known `p` (always for a chance node).
+- **Dependency resolution with PubGrub** (SPEC §4.2, lg-flu.7). Every
+  loaded package is a candidate, several versions of one name included;
+  one resolution per package picks the highest version satisfying every
+  requirement, and imports, `::` qualification, worlds, the lock and a
+  matter's pins all read it, so load order no longer decides. No
+  satisfying choice is the new L1011 with PubGrub's explanation (it was a
+  misleading L1006).
+- **Merkle `Lit.lock` v2** (SPEC §4.2). Each row records the source
+  digest, a semantic digest of the span-free HIR (reformatting does not
+  change it), the SHA-256 of every vendored L0 text under `sources/` its
+  `[sources.*]` bindings name, and each dependency's own digest; the row's
+  `digest` is the Merkle hash over them. Format 1 locks are stale (L1007):
+  run `just lit-sync`.
+- **Stable identity with `formerly`** (SPEC §4.3). A node or named edge
+  lists the ids it had before a rename (`formerly [old-id]`); a `.case`
+  written against an old id still resolves, with the new L9007 warning
+  and a machine-applicable fix (`litigate fix --code L9007`).
+- **Computed compatibility classes: `litigate compat OLD NEW`** (SPEC
+  §4.4). A release is classified against an earlier one as `interface`
+  (an id or type removed, renamed or retyped), `value` (anything it
+  computes may differ) or `none`; a version bump smaller than the class
+  needs is the new L1012 with the least sufficient version as a fix. This
+  is what `^` and `~` requirements now mean for a legal package.
 
 ## [0.5.0] - 2026-10-23
 

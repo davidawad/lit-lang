@@ -195,7 +195,8 @@ NodeBody     = "{", { (NodeField | EdgeDecl), Sep }, "}" ;
 NodeField    = "group", Ident | "note", String | "valence", Ident
              | "court_listener_url", String | "tags", IdList | "attrs", NumRecord
              | "payoff", (SignedMoney | Hole) | "payoff_by_flag", MoneyRecord
-             | "basis", Expr ;                         (* §5.1 "Basis" *)
+             | "basis", Expr                         (* §5.1 "Basis" *)
+             | "formerly", IdList ;
 EdgeDecl     = (Ident | "_"), String, "->", Ref, { EdgeClause }, [ EdgeFields ] ;
 EdgeClause   = "by", Ref | "p", ProbValue ;
 ProbValue    = Number, [ "/", Number ] | Hole | "(", Expr, ")" ;
@@ -209,7 +210,7 @@ EdgeField    = "event", CallExpr | "authority", (String | Cite) | "effort", Dura
              | "note", String | "tags", IdList | "attrs", NumRecord
              | "sets", IdList | "clears", IdList | "requires", IdList
              | "forbids", IdList | "replaces", ReplaceList | "when", Expr
-             | "basis", Expr ;
+             | "basis", Expr | "formerly", IdList ;
 ReplaceList  = "[", [ (Ref | String), { ",", (Ref | String) }, [","] ], "]" ;
 DeadlineOpts = "{", { ("extendable", Bool | "extension_authority", (String | Hole)
              | "note", String | "counting", String), Sep }, "}" ;
@@ -636,6 +637,13 @@ section_parts = 2
 source = "cfr-210"              # optional
 ```
 
+A `[dependencies]` requirement is `^`, `~`, `>=` or `=` plus a version,
+matched over versions as Cargo matches them (a pre-release matches only a
+requirement naming its own `MAJOR.MINOR.PATCH`). What a version bump may
+change is not declared by the author but computed (§4.4), so `^1.2.0`
+admits exactly the releases with no interface change since 1.2.0 and
+`~1.2.0` those that also compute the same values.
+
 `counting` and `cite_syntax` mirror the pack-level fields litgraph added in
 schema v3 (`docs/PACK_SCHEMA.md`, "Citation syntax (v3)"). A
 `cite_syntax.rules` entry with a `source` also binds its prefixes to that
@@ -664,17 +672,54 @@ edges in declaration order and its links by id, so renaming or reordering
 module files, or listing packs in another order, leaves every analysis
 bit-identical.
 
-### 4.2 `Lit.lock` and digests
+### 4.2 Resolution, `Lit.lock` and digests
 
-`Lit.lock` is deterministic TOML: `version = 1`, then one `[[package]]` table
-per resolved package, sorted by name, with `name`, `version`, `digest`
-(`sha256:<hex>`), sorted `dependencies` (`"name version"` strings), and
-`language`. It has no timestamps or absolute paths. Only `litigate lock`
-writes it. Any other command finds a missing or stale lock and reports L1007.
-The digest is SHA-256 over `Lit.toml` followed by every package source file,
-sorted by package-relative POSIX path. Each component is framed as u64 BE
-path length, path bytes, u64 BE content length, content bytes. `Lit.lock`
-itself is excluded and line endings are not normalized.
+**Resolution.** Every package loaded (a root, a `path` dependency, the
+library) is a candidate. A package's dependencies resolve with PubGrub
+(https://pubgrub-rs.github.io/pubgrub/pubgrub/) over the candidates: one
+version per package name, for the package and its transitive
+dependencies, the highest that satisfies every requirement; load order
+never decides. A requirement denotes exactly the loaded versions it
+matches. This one selection is what imports, `::` qualification, a world's
+packages, the lock and a matter's pins all use. A direct dependency no
+loaded package is named is L1006. No satisfying choice is L1011 with the
+PubGrub explanation as a note; so is a dependency on the package's own
+name, two loaded packages with one name and version where one is selected,
+a selected dependency that was itself checked against other versions than
+this package's resolution selects (one version of each package serves the
+whole graph), and a dependency cycle between packages. `core`, when not a declared dependency, is the highest
+loaded version. HIR records the selection as `resolved` (name to version).
+
+**Digests.** The *source digest* is SHA-256 over `Lit.toml` followed by
+every package source file, sorted by package-relative POSIX path, each
+component framed as u64 BE path length, path bytes, u64 BE content
+length, content bytes (`Lit.lock` excluded, line endings not normalized).
+The *semantic digest* is SHA-256 of the package HIR as canonical JSON
+(object keys sorted, no whitespace) with its source digest nulled and
+without any `span`: reformatting, comments and moving a declaration between files
+leave it unchanged, and any change to what the package means changes it.
+
+**`Lit.lock`** is deterministic TOML, format `version = 2`, then one
+`[[package]]` table per package of the root's resolution, sorted by name
+then version, with `name`, `version`, `language`, `digest`, `source` (the
+source digest, `sha256:<hex>`), `semantic` (the semantic digest, or
+`"unchecked"` for a package with errors), `texts` and `dependencies`, the
+last two sorted arrays of one entry per line. `texts` pins the vendored L0
+texts: `"<source id> <path> sha256:<hex>"` for each `[sources.*]` binding
+whose `path` is under `sources/`, the digest of the file's bytes
+(`missing` in its place when the file is absent; a `path` elsewhere, a
+generated pack, is not pinned). `dependencies` holds `"name version
+sha256:<digest>"`, the dependency's own `digest` (`"name version"` where it
+closes a cycle, in a package graph L1011 already rejects). `digest` is the row's Merkle digest: SHA-256, framed as
+above, over `litlock 2`, the name, version and language, the semantic
+digest (the source digest for an `unchecked` package), the number of
+`texts` and each entry, then the number of `dependencies` and each entry.
+A change to a package, to an L0 text it pins, or to anything it depends
+on therefore changes every digest above it, while reformatting changes
+only `source`. The lock has no timestamps or absolute paths. Only
+`litigate lock` writes it. Any other command finds a missing or stale lock
+(including format 1) and reports L1007. A matter's pin records the locked
+`source` digest and selects the loaded package of the locked version.
 
 `Lit.lock` merges package by package. `.gitattributes` names the `litlock`
 driver, `litigate lock --merge BASE OURS THEIRS`, which writes into `OURS`:
@@ -684,7 +729,10 @@ changed differently, or one side changed and the other removed, keeps the
 changed row with digest ``"unmerged: run `litigate lock`"``. No lock text
 holds the digest of the merged sources, so that lock is stale (L1007)
 until `litigate lock` regenerates it; the merge never conflicts and never
-admits a wrong digest. An unparseable side exits 1, leaving git's conflict.
+admits a wrong digest. A side in another format (a format 1 lock) has no
+rows to merge: the result is an empty format 2 lock, stale the same way,
+and `stale_format` is true. An unparseable side exits 1, leaving git's
+conflict.
 
 ### 4.3 Names and resolution
 
@@ -708,6 +756,18 @@ admits a wrong digest. An unparseable side exits 1, leaving git's conflict.
   (`answer-period@2009-12-01`).
 - Imports may name only modules of the same package, declared dependencies
   (L1006 otherwise), or stdlib package `core`. Import cycles are L1003.
+- **Identity.** A node is identified by its id together with the ids it
+  lists in `formerly [old-id, ...]`; an edge likewise within its node
+  (an anonymous edge has no id to carry, L2007). Renaming a declaration
+  and listing the old id keeps its identity: a `.case` reference to a
+  former node id (a fact, stake or observation key) or to a former edge
+  id (a fact or observation value) resolves to the current declaration
+  with an L9007 warning whose machine-applicable fix writes the current
+  id, and `litigate compat` (§4.4) reports a rename rather than a removal
+  and an addition. A former id that is a current id of the package (for
+  edges, of the node), or that two declarations both claim, is L1001;
+  versions of one node may repeat its `formerly`. Links packages and
+  `::` references name current ids.
 - Each package has exactly one `start` (L1008). Every actor used by `by`, and
   the implicit `either`, must be a key of `[package.roles]` (L1009).
 - Cites resolve through `cite_prefixes`: the longest matching prefix wins,
@@ -740,6 +800,38 @@ admits a wrong digest. An unparseable side exits 1, leaving git's conflict.
 - A cite given with `quote "..."` (a deadline's adopting rule, §5.3) is
   cited for those words: one vendored section it resolves to must hold
   them, compared with whitespace runs collapsed, else L1010.
+
+### 4.4 Compatibility classes
+
+A release's compatibility with an earlier release of the same package is
+computed from the two packages' HIR, never declared (as Elm's package
+manager and cargo-semver-checks enforce semver for code).
+`litigate compat OLD NEW` classifies every difference:
+
+- **`interface`**: an id or type a matter, a links package or a dependent
+  names is removed, renamed (with or without `formerly`), or retyped. Ids
+  are those of every declaration but tests, each node's named edges, the
+  `pack_id`, `forum` and `[package.roles]` entries; types are enums,
+  event types (parameters and effect) and type aliases, where any change
+  is a retyping.
+- **`value`**: every such id and type remains, but what the package
+  computes may differ: any other change to a declaration, the manifest,
+  `start`, groups or the resolved dependency versions, or an added
+  declaration. Labels, notes, titles, descriptions, `court_listener_url`,
+  `valence` and spans are display only. This over-approximates "a
+  computed due date or probability differs": it never classifies too low.
+- **`none`**: no difference beyond display text, formatting, comments and
+  tests.
+
+The release's class is its most breaking difference. The least bump it
+needs from `OLD`: for an `interface` change the leftmost non-zero version
+component (the one `^` holds fixed); for a `value` change the component
+after it (`MINOR` when that is `MAJOR`, else `PATCH`); for `none` any
+later version. A `NEW` whose version bump is smaller, or that is not
+later than `OLD` while anything changed, is L1012, with the least
+sufficient version as a fix. So a matter that `uses x ^2024.12.0` sees no
+id or type disappear, and from 1.0.0 on `~` admits only releases that
+compute the same values (before 1.0.0, `^` and `~` coincide).
 
 ## 5. Construct semantics
 
@@ -2116,6 +2208,8 @@ unchanged, and is graded `error`; anything else is rejected.
 | L1008 | invalid start | L4005 | invalid party/perspective |
 | L1009 | undeclared actor | L4006 | invalid belief |
 | L1010 | unbound cite | L4007 | invalid analysis |
+| L1011 | unresolved dependencies | | |
+| L1012 | incompatible release | | |
 | L2001 | type mismatch | L4008 | start conflict |
 | | | L4009 | obligation breached |
 | | | L4010 | timeliness unknown |
@@ -2137,9 +2231,10 @@ unchanged, and is graded `error`; anything else is rejected.
 | L9004 | non-canonical format | L6005 | output error |
 | L9005 | unused declaration | | |
 | L9006 | undeclared event id | | |
+| L9007 | former name | | |
 
 Severity (`DiagnosticCode::severity(profile)`): every non-L9 code except
-L4009, L4010, L4011 and L4012 is `error`. L9003 and L9006 are `info`. L4009, L4010, L4011, L4012 and L9005 are `warning`. L9001, L9002, and L9004 are
+L4009, L4010, L4011 and L4012 is `error`. L9003 and L9006 are `info`. L4009, L4010, L4011, L4012, L9005 and L9007 are `warning`. L9001, L9002, and L9004 are
 `warning` in `dev` and `error` in `strict`.
 
 ### 9.2 Shapes
@@ -2220,7 +2315,8 @@ All commands accept `--format json|human` (default `human` on a TTY, else
 | Command | Arguments | `result` |
 |---|---|---|
 | `describe` | | `{language_version, grammar, types, builtins, diagnostic_codes:[{code, explain}], commands}` |
-| `lock` | `[PKG_DIR]`, `--locked`, `--merge BASE OURS THEIRS` | `{lockfile, changed, packages:[{name,version,digest}]}`; `--locked` fails (L1007) instead of writing; `--merge` (§4.2) gives `{lockfile, changed, unresolved:[name]}` |
+| `lock` | `[PKG_DIR]`, `--locked`, `--merge BASE OURS THEIRS` | `{lockfile, changed, packages:[{name,version,digest}]}`; `--locked` fails (L1007) instead of writing; `--merge` (§4.2) gives `{lockfile, changed, unresolved:[name], stale_format}` |
+| `compat` | `OLD NEW` (two package directories) | `{package, old:{version, semantic}, new:{version, semantic}, class, required, declared, ok, changes:[{class, kind, what, now?}]}` per §4.4; L1012 when the bump is too small |
 | `check` | `PATHS...`, `--profile dev\|strict` (default `dev`), `--as-of`, `--known-at` | `{profile, files, obligations:[Finding], packages}` |
 | `build` | `PKG_OR_CASE...`, `--profile dev\|strict` (default `dev`), `--as-of`, `--known-at`, `--out DIR`, `--pack-file ID=STEM` (repeatable) | `{outputs:{packs:[path], links:[path], clock:[path], scenarios:[path], source_maps:[path], litigatables:[path]}, litigatable_hash, litigatables, obligations}` |
 | `fmt` | `PATHS...`, `--check` | `{files:[{path, changed}]}`; `--check` reports L9004 instead of writing |
@@ -2571,6 +2667,9 @@ gets one row per condition when the conditions classify differently.
 | C82 | L9006 a `.case` event declares no id (§5.6) | sema | a | Syntactic: the event line has no `Ident ":"` before its date. |
 | C83 | L0011 filing requirement (`limit`, `requires certificate`, `excludes`) before lg-962.10 adds it (§3.7) | syntax | a | Grammar: a reserved slot that always rejects. |
 | C84 | L0012 `not` in expression position (§3.3) | syntax | a | The expression grammar accepts symbolic `!` only; a machine-applicable fix makes the intended unary form explicit. |
+| C85 | L1011 no choice of loaded versions satisfies the requirements (§4.2) | sema | c | Version solving (PubGrub) over the set of loaded packages, an external artefact. |
+| C86 | L1012 a release's bump is smaller than its computed class needs (§4.4) | cli | c | Compares two releases of a package. |
+| C87 | L9007 a matter names a former id (§4.3) | sema | a | Name resolution: `formerly` adds the old id to the declaration's identity. |
 
 ### 13.4 SPEC rules with no code of their own
 
@@ -2606,8 +2705,8 @@ they are listed so the v2 type system keeps them.
 ### 13.5 Summary
 
 Counting each row once by its primary class (a mixed row counts as its
-first class): obligations O1-O16 are 3 (a), 5 (b), 8 (c); codes C1-C83
-are 33 (a), 24 (b), 25 (c), one n/a; rules R1-R23 are 14 (a), 6 (b),
+first class): obligations O1-O16 are 3 (a), 5 (b), 8 (c); codes C1-C86
+are 34 (a), 24 (b), 27 (c), one n/a; rules R1-R23 are 14 (a), 6 (b),
 3 (c).
 
 - The (c) rows share six reasons: graph reachability (O10, O11, O16,
@@ -2615,7 +2714,7 @@ are 33 (a), 24 (b), 25 (c), one n/a; rules R1-R23 are 14 (a), 6 (b),
   under supersession and precedence (O4, C34, C35, C41's second half),
   execution through calendars (O11, O12, C49, C55, C61), aggregation over
   every module of a package (C15, O15, C69, C73, R23), and external
-  artefacts or the profile (O2, C14, C17, C64-C66, C68, C72). None of
+  artefacts or the profile (O2, C14, C17, C64-C66, C68, C72, C84, C85). None of
   these fits the 13.1 fragment without a fixpoint or an IO step, so they
   stay obligations.
 - The (b) rows lg-962.3 discharges first are the ones named in that

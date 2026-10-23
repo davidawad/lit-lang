@@ -2,18 +2,31 @@
 source: crates/litigate-sema/src/pkg/lock.rs
 expression: text
 ---
-version = 1
+version = 2
 
 [[package]]
 name = "core"
 version = "1.0.0"
-digest = "sha256:c45635273cc737fd4188bd990b54d32f55ecdb03bf7da4723bc9731c51db4f74"
-dependencies = []
 language = 1
+digest = "sha256:c9ed47f5d3f9c11b70f760d62f7ac5d932f72378fc88af74df4077a7b1041db6"
+source = "sha256:c45635273cc737fd4188bd990b54d32f55ecdb03bf7da4723bc9731c51db4f74"
+semantic = "unchecked"
+texts = [
+    "rules sources/rules.txt missing",
+]
+dependencies = []
 
 [[package]]
 name = "zeta"
 version = "1.0.0"
-digest = "sha256:c45635273cc737fd4188bd990b54d32f55ecdb03bf7da4723bc9731c51db4f74"
-dependencies = ["alpha 1.0.0", "core 1.0.0"]
 language = 1
+digest = "sha256:ddc5bd186096a0ff4ba8cb69822a94fbe0f547f7cce70c6faca42a00e1f9e9ae"
+source = "sha256:c45635273cc737fd4188bd990b54d32f55ecdb03bf7da4723bc9731c51db4f74"
+semantic = "unchecked"
+texts = [
+    "rules sources/rules.txt missing",
+]
+dependencies = [
+    "alpha 1.0.0",
+    "core 1.0.0",
+]

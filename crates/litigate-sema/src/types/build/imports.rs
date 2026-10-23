@@ -1,8 +1,9 @@
 //! Imports of one module: import diagnostics (L1001-L1003, L1006) and the
 //! signatures its scope sees (direct, transitive, and `::`-qualified).
-use crate::db::inputs::SourceFile;
+use crate::db::inputs::{PackageInput, SourceFile};
 use crate::db::parse::tree::{dotted, ItemTree};
 use crate::db::queries::{manifest, module_graph, module_header, signature};
+use crate::db::resolution::resolution;
 use crate::db::span::Report;
 use crate::resolve::graph::ImportTarget;
 use crate::resolve::sig::Signature;
@@ -78,22 +79,20 @@ pub(super) fn imports(
 }
 
 /// Signatures reachable through `::`: every module of this package and of
-/// its declared dependencies.
+/// the dependency versions its resolution selected.
 pub(super) fn pack_signatures(db: &dyn salsa::Database, file: SourceFile) -> Vec<&Signature> {
     let pkg = file.package(db);
-    let deps: Vec<String> = manifest(db, pkg)
+    let resolved = resolution(db, file.workspace(db), pkg);
+    let deps: Vec<PackageInput> = manifest(db, pkg)
         .as_ref()
-        .map(|m| m.manifest.dependencies.keys().cloned().collect())
-        .unwrap_or_default();
+        .into_iter()
+        .flat_map(|m| m.manifest.dependencies.keys())
+        .filter_map(|name| resolved.get(name))
+        .collect();
     file.workspace(db)
         .packages(db)
         .iter()
-        .filter(|p| {
-            **p == pkg
-                || manifest(db, **p)
-                    .as_ref()
-                    .is_ok_and(|m| deps.contains(&m.manifest.name))
-        })
+        .filter(|p| **p == pkg || deps.contains(p))
         .flat_map(|p| p.files(db).iter().map(|f| signature(db, *f)))
         .collect()
 }

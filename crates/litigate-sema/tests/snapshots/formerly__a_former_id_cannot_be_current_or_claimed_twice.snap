@@ -1,0 +1,11 @@
+---
+source: crates/litigate-sema/tests/formerly.rs
+expression: messages
+---
+[
+    "L1001 node `a` is a current id, so it cannot also be a former id of `a`",
+    "L1001 node `b` is a current id, so it cannot also be a former id of `a`",
+    "L1001 edge `stay` of node `a` is a current id, so it cannot also be a former id of `go`",
+    "L1001 node `gone` is a former id of both `a` and `c`",
+    "L1001 edge `y` of node `c` is a former id of both `x` and `y2`",
+]

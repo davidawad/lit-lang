@@ -50,6 +50,7 @@ pub fn acme() -> String {
 
 fn loaded(name: &str, deps: &str, sources: &str, files: &[(&str, &str)]) -> LoadedPackage {
     LoadedPackage {
+ texts: std::collections::BTreeMap::new(),
         root: format!("pkgs/{name}"),
         manifest: format!(
             "[package]\nname = \"{name}\"\nversion = \"1.0.0\"\nlanguage = 1\npack_id = \"{name}\"\n\
@@ -113,9 +114,10 @@ pub fn lock(packages: &[Package]) -> LockFile {
             .map(|p| LockedPackage {
                 name: p.manifest.name.clone(),
                 version: p.manifest.version.clone(),
-                digest: format!("sha256:{}", p.digest),
+                source: format!("sha256:{}", p.digest),
                 dependencies: Vec::new(),
                 language: 1,
+                ..Default::default()
             })
             .collect(),
     )

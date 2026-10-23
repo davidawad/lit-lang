@@ -3,6 +3,7 @@
 use crate::db::inputs::{PackageInput, SourceFile};
 use crate::db::parse::tree::{Item, ItemKind};
 use crate::db::queries::{check_module, item_tree, manifest};
+use crate::db::resolution::{core, resolution};
 use crate::db::span::{to_span, TextRange};
 use crate::hir::Manifest;
 use crate::resolve::sig::{clauses_of, flatten};
@@ -14,7 +15,8 @@ use std::collections::BTreeMap;
 /// `pkg` (whose manifest is `own`) followed by its transitive
 /// dependencies, each once with its manifest, and the stdlib package
 /// `core`, which every package may import undeclared (SPEC §4.3) and whose
-/// authority lattice every package shares (§5.5).
+/// authority lattice every package shares (§5.5). Each is the version
+/// `pkg`'s resolution selects (SPEC §4.2).
 fn closure<'db>(
     db: &'db dyn salsa::Database,
     pkg: PackageInput,
@@ -24,25 +26,22 @@ fn closure<'db>(
     let Some(ws) = pkg.files(db).first().map(|f| f.workspace(db)) else {
         return out;
     };
-    let by_name: BTreeMap<&str, (PackageInput, &Manifest)> = ws
-        .packages(db)
-        .iter()
-        .filter_map(|p| {
-            manifest(db, *p)
-                .as_ref()
-                .ok()
-                .map(|m| (m.manifest.name.as_str(), (*p, &m.manifest)))
-        })
-        .collect();
+    let resolved = resolution(db, ws, pkg);
+    let pick = |dep: &str| {
+        if dep == "core" {
+            core(db, ws, pkg)
+        } else {
+            resolved.get(dep)
+        }
+    };
     let mut i = 0;
     while let Some(&(_, m)) = out.get(i) {
         i += 1;
         let deps = m.dependencies.keys().map(String::as_str);
-        for dep in deps.chain(["core"]) {
-            if let Some(&(d, dm)) = by_name.get(dep) {
-                if !out.iter().any(|&(p, _)| p == d) {
-                    out.push((d, dm));
-                }
+        for d in deps.chain(["core"]).filter_map(pick) {
+            // Selected packages have valid manifests.
+            if let (false, Ok(dm)) = (out.iter().any(|&(p, _)| p == d), manifest(db, d)) {
+                out.push((d, &dm.manifest));
             }
         }
     }

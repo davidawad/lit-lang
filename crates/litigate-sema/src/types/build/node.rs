@@ -195,6 +195,7 @@ impl Cx<'_, '_> {
                 .map(RefPath::display),
             basis: self.basis(fields.get("basis")),
             edges,
+            formerly: self.idents(fields.get("formerly")),
             holes: holes_of(n.clauses.iter().chain(&n.fields)),
         }
     }

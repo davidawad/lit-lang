@@ -193,14 +193,14 @@ fn the_merge_driver_lets_two_edits_to_one_package_merge_then_fail_closed() {
 #[test]
 fn merge_reports_what_it_wrote_and_fails_on_bad_inputs() {
     let dir = scratch("lock-merge");
-    let lock = "version = 1\n";
-    let other = "version = 1\n\n[[package]]\nname = \"a\"\nversion = \"1.0.0\"\ndigest = \"d\"\ndependencies = []\nlanguage = 1\n";
+    let lock = "version = 2\n";
+    let other = "version = 2\n\n[[package]]\nname = \"a\"\nversion = \"1.0.0\"\nlanguage = 1\ndigest = \"d\"\nsource = \"s\"\nsemantic = \"unchecked\"\ntexts = []\ndependencies = []\n";
     for (name, text) in [("o", lock), ("a", lock), ("b", other), ("bad", "x")] {
         std::fs::write(dir.join(name), text).unwrap();
     }
     let run = litigate_in(&dir, &["lock", "--merge", "o", "a", "b"]);
     assert_eq!(run.code, 0, "{}", run.stderr);
-    insta::assert_snapshot!(run.json["result"], @r#"{"lockfile":"a","changed":true,"unresolved":[]}"#);
+    insta::assert_snapshot!(run.json["result"], @r#"{"lockfile":"a","changed":true,"unresolved":[],"stale_format":false}"#);
     assert_eq!(std::fs::read_to_string(dir.join("a")).unwrap(), other);
     let again = litigate_in(&dir, &["lock", "--merge", "o", "a", "b"]);
     assert_eq!(again.json["result"]["changed"], false);
@@ -215,6 +215,20 @@ fn merge_reports_what_it_wrote_and_fails_on_bad_inputs() {
     let bad = litigate_in(&dir, &["lock", "--merge", "o", "bad", "b"]);
     assert_eq!(bad.code, 1);
     insta::assert_snapshot!(bad.stderr, @"litigate lock: bad: Lit.lock is invalid: key with no value, expected `=`");
+    std::fs::write(dir.join("row"), "version = 2\ncolour = 1\n").unwrap();
+    let row = litigate_in(&dir, &["lock", "--merge", "o", "a", "row"]);
+    assert_eq!(row.code, 1);
+    insta::assert_snapshot!(row.stderr, @"litigate lock: row: Lit.lock is invalid: unknown field `colour`, expected `version` or `package`");
+    // A side in another format (a lock from before format 2) merges to an
+    // empty lock: stale (L1007) until `litigate lock`, never a conflict.
+    std::fs::write(dir.join("v1"), "version = 1\n\n[[package]]\nname = \"a\"\n").unwrap();
+    let older = litigate_in(&dir, &["lock", "--merge", "o", "a", "v1"]);
+    assert_eq!(older.code, 0, "{}", older.stderr);
+    insta::assert_snapshot!(older.json["result"], @r#"{"lockfile":"a","changed":true,"unresolved":[],"stale_format":true}"#);
+    assert_eq!(
+        std::fs::read_to_string(dir.join("a")).unwrap(),
+        "version = 2\n"
+    );
 }
 
 #[cfg(unix)]
@@ -222,7 +236,7 @@ fn merge_reports_what_it_wrote_and_fails_on_bad_inputs() {
 fn merge_into_an_unwritable_directory_fails() {
     let dir = scratch("lock-merge-unwritable");
     for name in ["o", "a", "b"] {
-        std::fs::write(dir.join(name), "version = 1\n").unwrap();
+        std::fs::write(dir.join(name), "version = 2\n").unwrap();
     }
     support::chmod(&dir, 0o555);
     let run = litigate_in(&dir, &["lock", "--merge", "o", "a", "b"]);

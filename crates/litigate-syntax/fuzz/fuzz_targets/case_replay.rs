@@ -51,9 +51,10 @@ fuzz_target!(|data: &[u8]| {
                         .map(|package| LockedPackage {
                             name: package.manifest.name.clone(),
                             version: package.manifest.version.clone(),
-                            digest: format!("sha256:{}", package.digest),
+                            source: format!("sha256:{}", package.digest),
                             dependencies: Vec::new(),
                             language: 1,
+                            ..Default::default()
                         })
                         .collect(),
                 );

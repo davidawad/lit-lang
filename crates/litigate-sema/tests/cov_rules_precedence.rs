@@ -344,6 +344,7 @@ fn packages_without_files_or_manifests_and_chains_in_later_files() {
     broken.manifest = "[package]\nname = 1\n".into();
     let auth = "module auth\nenum K { k }\nauthority A > B\nauthority B > A\n";
     let two_files = LoadedPackage {
+        texts: std::collections::BTreeMap::new(),
         files: vec![
             LoadedFile {
                 relative: "main.lit".into(),

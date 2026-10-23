@@ -138,6 +138,17 @@ What fills the document today:
   declares it.
 - **Rows of a module.** Each deadline the `.lit` file declares that is in
   force at `as_of`, `unknown` (a rule module records no events).
+- **Keys.** A rule or node id is module-qualified (`ttab.opposition-period`,
+  `frcp.pleading-to-trial.service-window`). `.case` events have no
+  declared ids yet, so an event's key is `event:<Name>@<date>` (with
+  `/<docket>` when it has a docket number), and the lint that would insert
+  ids does not exist yet; two events of one name on one date with no
+  docket numbers share a key. Where the cause has no row, the key names
+  it anyway: a deadline nothing has triggered is `<rule id>@event:<Name>`
+  of its trigger pattern (`frcp.periods.answer-period@event:ProcessServed`),
+  and a fork with no event before it is `fork:<node id>@start`. An event a
+  world assumes is named by its edge's event pattern, else the edge's id,
+  else the node the edge leads to.
 
 The Rust types are `litigate_base::timeline`; the schema bundle publishes
 them as kind `timeline` (TypeScript `Timeline` in `packages/litigate-ts`).

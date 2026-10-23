@@ -193,6 +193,17 @@ fn check_references(t: &Value) {
             assert!(r["status"]["reason"].is_string(), "{r}");
         }
     }
+    // Keys pair rows across worlds, so none repeats within a world.
+    let mut keys: Vec<(String, String)> = t["rows"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|r| (r["world"].to_string(), r["key"].to_string()))
+        .collect();
+    let count = keys.len();
+    keys.sort();
+    keys.dedup();
+    assert_eq!(keys.len(), count, "{t:#}");
     for w in t["worlds"].as_array().unwrap() {
         assert!(named(&w["parent"], &worlds), "{w}");
         assert!(named(&w["fork_row"], &rows), "{w}");

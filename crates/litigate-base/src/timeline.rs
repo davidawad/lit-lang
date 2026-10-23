@@ -221,6 +221,11 @@ pub enum RowKind {
 pub struct TimelineRow {
     /// Row id.
     pub id: String,
+    /// Stable identity across worlds and runs, derived from the row's
+    /// cause: `<rule id>@<trigger key>`, `event:<Name>@<declaration>`,
+    /// `fork:<node id>@<trigger key>`. A child world's row with its
+    /// parent's key replaces the parent's row.
+    pub key: String,
     /// Its world.
     pub world: String,
     /// What it is.

@@ -64,6 +64,7 @@ fn status(state: RowState, reason: Option<String>) -> TimelineStatus {
 /// A row before ids are assigned: `trigger` indexes the draft rows.
 #[derive(Debug, Clone)]
 struct Draft {
+    key: String,
     world: usize,
     kind: RowKind,
     date: Option<String>,
@@ -74,6 +75,33 @@ struct Draft {
     source: Option<TimelineSpan>,
     layer: String,
     trigger: Option<usize>,
+}
+
+/// The constructor name of event pattern `e` (`Served` of
+/// `Served(complaint)`).
+fn event_name(e: &hir::Expr) -> String {
+    hirx::event_parts(e).map(|(c, _)| c).unwrap_or_default()
+}
+
+/// The module-qualified id (`ttab.opposition-to-trial.instituted`) of
+/// declaration `id` of `pkg`: the rule or node id a row's `key` names.
+fn decl_key(pkg: &hir::Package, id: &str) -> String {
+    let module = pkg
+        .modules
+        .iter()
+        .find(|m| {
+            m.declarations
+                .iter()
+                .any(|d| hirx::decl_id(d).as_deref() == Some(id))
+        })
+        .map_or(pkg.manifest.name.as_str(), |m| m.name.as_str());
+    format!("{module}.{id}")
+}
+
+/// The `key` of matter event `e`: `event:<Name>@<date>[/<docket>]`.
+fn event_key(e: &hir::Event) -> String {
+    let docket = e.docket.map(|n| format!("/{n}")).unwrap_or_default();
+    format!("event:{}@{}{docket}", event_name(&e.action), e.date)
 }
 
 /// A deadline declaration's display label (`answer-period: 30 days after
@@ -231,8 +259,15 @@ impl<'a> Builder<'a> {
         trigger: Option<usize>,
     ) -> usize {
         let layer = self.layer(pkg);
+        // An instance is keyed by its trigger row; a deadline nothing has
+        // triggered, by the event that would.
+        let cause = trigger.map_or_else(
+            || format!("event:{}", event_name(&decl.trigger)),
+            |t| self.rows[t].key.clone(),
+        );
         let row =
             Draft {
+                key: format!("{}@{cause}", decl_key(pkg, &decl.meta.id)),
                 world,
                 kind: RowKind::Deadline,
                 date: None,
@@ -337,6 +372,7 @@ impl<'a> Builder<'a> {
             last.insert(r.world, i);
             rows.push(TimelineRow {
                 id: ids[i].clone(),
+                key: r.key.clone(),
                 world: world_id(r.world),
                 kind: r.kind,
                 date: r.date.clone(),
@@ -524,6 +560,7 @@ fn events(b: &mut Builder, m: &CaseCheck, case: &hir::Case, primary: &str) -> Ve
             hir::EventParty::On => "on",
         };
         let row = Draft {
+            key: event_key(e),
             world: 0,
             kind: RowKind::Event,
             date: Some(e.date.clone()),
@@ -628,7 +665,10 @@ fn fork(
         return;
     }
     let layer = b.layer(pkg);
+    let cause = trigger.map_or_else(|| "start".to_owned(), |t| b.rows[t].key.clone());
+    let fork_key = format!("fork:{}@{cause}", decl_key(pkg, &node.meta.id));
     let fork_row = Draft {
+        key: fork_key.clone(),
         world: 0,
         kind: RowKind::Fork,
         date: None,
@@ -671,7 +711,16 @@ fn fork(
             }),
         });
         b.forks.push(Some(fork_at));
+        // The assumed event: the edge's event, else the edge, else where
+        // it leads.
+        let name = edge
+            .event
+            .as_ref()
+            .map(event_name)
+            .or_else(|| edge.id.clone())
+            .unwrap_or_else(|| local(&edge.to).to_owned());
         let taken = Draft {
+            key: format!("event:{name}@{fork_key}"),
             world,
             kind: RowKind::Event,
             date: None,
@@ -1188,6 +1237,22 @@ mod tests {
             let mut case = m.case.clone().unwrap();
             assert_eq!(case.start.as_deref(), Some("frcp-rule12-example::respond"));
             let t = build(session, &m, &case);
+            let keys: Vec<&str> = t["rows"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|r| r["key"].as_str().unwrap())
+                .collect();
+            assert_eq!(
+                keys,
+                [
+                    "frcp.rule12.answer-period@event:Served",
+                    "fork:frcp.rule12.respond@start",
+                    "event:Answered@fork:frcp.rule12.respond@start",
+                    "event:MovedToDismiss@fork:frcp.rule12.respond@start",
+                    "event:default@fork:frcp.rule12.respond@start",
+                ]
+            );
             assert_eq!(
                 rows(&t),
                 [
@@ -1265,6 +1330,45 @@ mod tests {
                 None,
             );
             assert_eq!(b.rows.len(), before);
+        });
+    }
+
+    #[test]
+    fn keys_derive_from_causes() {
+        with_matter("", ACME, |session, m| {
+            let case = m.case.clone().unwrap();
+            let t = build(session, &m, &case);
+            let keys: Vec<&str> = t["rows"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|r| r["key"].as_str().unwrap())
+                .collect();
+            assert_eq!(
+                keys,
+                [
+                    "event:Served@2025-03-05",
+                    "event:MovedToDismiss@2025-03-20",
+                    "frcp.rule12.answer-period@event:Served@2025-03-05",
+                    "fork:frcp.rule12.mtd-ruling@event:MovedToDismiss@2025-03-20",
+                    "event:granted@fork:frcp.rule12.mtd-ruling@event:MovedToDismiss@2025-03-20",
+                    "event:denied@fork:frcp.rule12.mtd-ruling@event:MovedToDismiss@2025-03-20",
+                ]
+            );
+            // An anonymous option with no event is keyed by where it leads.
+            let all = session.hir();
+            let texts = session.sources();
+            let mut b = Builder::new(&all, &texts, "2025-06-01".to_owned(), None);
+            let (pkg, answered) = b.node(&format!("{PACK}::answered")).unwrap();
+            fork(&mut b, &case, pkg, answered, &[], None);
+            assert_eq!(
+                b.rows[1].key,
+                "event:judgment-entered@fork:frcp.rule12.answered@start"
+            );
+            let mut served = case.events[0].clone();
+            served.docket = Some(2);
+            assert_eq!(event_key(&served), "event:Served@2025-03-05/2");
+            assert_eq!(decl_key(all[0], "nope"), "frcp-rule12-example.nope");
         });
     }
 

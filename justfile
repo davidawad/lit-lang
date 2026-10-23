@@ -171,7 +171,7 @@ ts-install:
 # committed, so parallel schema changes cannot conflict on them; ts-build
 # and ts-test run this first.
 ts-gen: ts-install
-    mkdir -p {{ts_pkg}}/schema
+    mkdir -p {{ts_pkg}}/schema {{ts_pkg}}/src/generated
     cargo run -q -p litgraph-schema-bundle > {{ts_pkg}}/schema/litgraph.schema.json
     cd {{ts_pkg}} && npm run --silent gen
 

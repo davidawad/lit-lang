@@ -152,15 +152,32 @@ test "a day 180 on the Saturday before Labor Day rolls to Tuesday" cite 37 CFR 2
   expect deadline(outer-limit-180) == 2025-09-02
 }
 
-/// 37 C.F.R. § 2.105(a): the notice of institution designates the answer
-/// time, not less than thirty days; § 2.106(a) lets the Board reset it.
-/// The Board designates 60 days (TBMP 310.03(a), June 2026 edition,
-/// recording the change from 40). That edition is the earliest sourced
-/// date for the 60-day practice; the date the Board switched is not in
-/// `sources/`, so the 40-day practice is not modeled as an earlier version.
-rule duty answer-time effective [2026-06-01, ..) known_at 2026-06-01 cite 37 CFR 2.105(a)
+/// 37 C.F.R. § 2.105(a): the notice of institution "shall designate a
+/// time, not less than thirty days from the mailing date of the notice,
+/// within which an answer must be filed"; § 2.106(a) lets the Board reset
+/// it ("the time initially set, or as may later be reset by the Board").
+/// The answer time is therefore the notice's, an order in the proceeding:
+/// a matter whose notice designates a longer time records it in a
+/// `CaseOrder` layer, which the period delegates to.
+///
+/// From June 1, 2026 the Board designates 60 days (TBMP 310.03(a), June
+/// 2026 edition, recording the change from 40). That edition is the
+/// earliest sourced date for the 60-day practice. Before it, the date the
+/// Board adopted the 40-day designation is not in `sources/`, so the
+/// period is the regulation's own floor, thirty days, from the rules
+/// revision that states it (81 FR 69950, effective January 14, 2017): the
+/// earliest date the regulation allows, never a later one than the notice
+/// designates.
+rule duty answer-time effective [2017-01-14, ..) known_at 2016-10-07 cite 37 CFR 2.105(a)
 {
-  deadline answer-period: 60.days from InstitutionNoticed() counted_by frcp6 delegable_to [CaseOrder] cite 37 CFR 2.106(a)
+  deadline answer-period: 30.days from InstitutionNoticed() counted_by frcp6 effective [2017-01-14, 2026-06-01) delegable_to [CaseOrder] cite 37 CFR 2.105(a)
+  deadline answer-period: 60.days from InstitutionNoticed() counted_by frcp6 effective [2026-06-01, ..) known_at 2026-06-01 supersedes answer-period@2017-01-14 delegable_to [CaseOrder] cite 37 CFR 2.106(a)
+}
+
+test "before June 2026 the answer is due no earlier than 30 days from the notice" cite 37 CFR 2.105(a)
+{
+  given InstitutionNoticed() on 2025-03-03
+  expect deadline(answer-period) == 2025-04-02
 }
 
 test "the answer is due 60 days from the notice of institution" cite 37 CFR 2.105(a)

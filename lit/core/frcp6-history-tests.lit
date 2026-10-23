@@ -181,3 +181,27 @@ test "fourteen days under the 2001 rule count every day" cite FRCP (2008 ed.) 6(
   given Served(Personal) on 2005-06-03
   expect deadline(frcp6-14-days) == 2005-06-17
 }
+
+test "Derrington-Bey: ten days from Thursday July 1, 1993 skip the observed Monday July 5 and end Friday July 16" cite FRCP (2008 ed.) 6(a)(2)
+{
+  given Served(Personal) on 1993-07-01
+  expect deadline(frcp6-10-days) == 1993-07-16
+}
+
+test "a Saturday July 4, 2020 is observed Friday July 3, so a 14th day there rolls to Monday" cite 5 U.S.C. § 6103(b)(1)
+{
+  given Served(Personal) on 2020-06-19
+  expect deadline(frcp6-14-days) == 2020-07-06
+}
+
+test "before 1971 a Sunday July 4 has no observed Monday" cite 5 U.S.C. § 6103(b)
+{
+  given Served(Personal) on 1965-07-04
+  expect deadline(frcp6-1-day) == 1965-07-05
+}
+
+test "a ten-day period mailed on a Friday in 2004 adds the three days after it expires" cite FRCP (2008 ed.) 6 (2001 Committee Note)
+{
+  given Served(Mail) on 2004-03-05
+  expect deadline(frcp6-10-days) == 2004-03-22
+}

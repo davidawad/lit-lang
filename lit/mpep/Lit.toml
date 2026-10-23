@@ -4,7 +4,13 @@
 # edition, so it is the earliest date this package claims to be in force.
 # known_at is the vendored 37 C.F.R. corpus date (`cfr-37-patents.as_of`).
 # The rules here are agency regulations (37 C.F.R.) and their statutes, so
-# the package level is core's `Regulation`.
+# the package level is core's `Regulation`. The MPEP itself is guidance,
+# not regulation, and no declaration rests on it: every counting rule,
+# calendar and deadline cites 37 C.F.R. or 35 U.S.C., and MPEP sections
+# appear only as node and edge cites and notes, which take no part in
+# precedence. The 35 U.S.C. deadlines (§§ 119(e), 251(d), 315(b),
+# 321(c)) sit at the package level too, below their statutes' rank; none
+# delegates, so no lower authority can displace them.
 [package]
 name = "mpep-prosecution"
 version = "0.1.0"

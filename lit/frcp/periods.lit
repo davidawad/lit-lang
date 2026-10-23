@@ -10,13 +10,24 @@ import core.time.{ ServiceMethod }
 // method of their own (FRCP 6(a) reaches "any statute that does not specify a
 // method of computing time"), FRAP 26(a) for the FRAP 4 appeal clocks.
 //
-// Effective dates. A period's current version is in force from the latest
-// amendment of its rule that the vendored text's history line records
-// (`sources/frcp.txt` "(As amended ...)" notes; `sources/usc-cfr-prosecution-
-// fragments.txt` for 28 U.S.C. § 1447). Where the vendored text carries no
-// history (FRAP 4, 28 U.S.C. § 1446) the period is in force from the package
-// default, December 1, 2024, the date the pack's sources state the text as
-// of; it is a lower bound, never an invented enactment date.
+// Effective dates. A period is in force from the earliest date a vendored
+// primary source shows the same period (length and trigger) in force, and
+// never earlier. By default that is the latest amendment of its rule the
+// vendored history line records (`sources/frcp.txt` "(As amended ...)"
+// notes; `sources/usc-cfr-prosecution-fragments.txt` for 28 U.S.C.
+// § 1447): an earlier text, not vendored, may have said otherwise. A period
+// reaches back past that amendment only where `sources/change-corpus/`
+// holds the earlier text: the 2009 Rule 12(a) (U.S. Reports vol. 556,
+// `rules/us-reports/ur556-civ-2009-text.txt`) and the pre-2023 Rule
+// 15(a)(1) (`rules/congress-packages/2022_scotus_package_0.txt`), which
+// state the same periods, and the 2015 Rule 4(m) change from 120 days to
+// 90 (`rules/congress-packages/2015-10-09-supreme_court_package_final_0.txt`).
+// The FRAP 4(a) periods date from the 2009 amendments, which kept 30-day
+// and longer periods (FRAP 26, 2009 Committee Note), the start `lit/frap`
+// uses. 28 U.S.C. § 1446 carries no vendored history, so the removal
+// period is in force from the package default, December 1, 2024: a lower
+// bound, never an invented enactment date. Before a period's start no
+// version is in force (L3007 for a query on that date).
 //
 // Delegation. `delegable_to [CaseOrder]` marks a period the court may change
 // in one case: where the rule's own text says so ("unless the court sets a
@@ -126,11 +137,25 @@ event NoticeOfAppealPeriodExtended(until: Date) extends notice-of-appeal-period 
 /// `until` (FRAP 4(a)(5)).
 event CrossAppealPeriodExtended(until: Date) extends cross-appeal-period to until
 
+/// Rule 4(m) from December 1, 2007 (the restyling; Rule 4's next amendment
+/// was 2015's) to December 1, 2015: 120 days after the complaint is filed.
+/// The amendment adopted April 29, 2015 "shortens the time for service
+/// from 120 days to 90 days", and its successor's Committee Note recalls
+/// "the 120 days originally set by Rule 4(m)" (2016 package,
+/// sources/change-corpus/rules/congress-packages). FRCP 6(b)(1) read the
+/// same then (FRCP (2008 ed.) 6(b)(1)).
+deadline service-period: 120.days after ComplaintFiled() counted_by frcp6 effective [2007-12-01, 2015-12-01) known_at 2015-04-29 delegable_to [CaseOrder] cite ?("Rule 4(m) before the December 1, 2015 amendment: 120 days (text not vendored; the change is recorded in the 2016 Supreme Court package)") {
+  extend { by court, discretion GoodCause }
+  extend { by court, discretion GoodCause, on ExtensionMoved(ServicePeriod) }
+  extend { by court, discretion ExcusableNeglect, after_expiry, on ExtensionMoved(ServicePeriod) }
+}
+
 /// Rule 4(m): 90 days after the complaint is filed; on good cause the court
 /// "must extend the time for service", and absent it may "order that
-/// service be made within a specified time". Rule 4 last amended eff.
-/// December 1, 2017.
-deadline service-period: 90.days after ComplaintFiled() counted_by frcp6 effective [2017-12-01, ..) delegable_to [CaseOrder] cite FRCP 4(m)
+/// service be made within a specified time". The 90 days date from the
+/// amendment effective December 1, 2015; the 2016 and 2017 amendments only
+/// clarify which foreign service it excludes.
+deadline service-period: 90.days after ComplaintFiled() counted_by frcp6 effective [2015-12-01, ..) supersedes service-period@2007-12-01 delegable_to [CaseOrder] cite FRCP 4(m)
 {
   extend { by court, discretion GoodCause }
   extend { by court, discretion GoodCause, on ExtensionMoved(ServicePeriod) }
@@ -139,9 +164,10 @@ deadline service-period: 90.days after ComplaintFiled() counted_by frcp6 effecti
 
 /// Rule 12(a)(1)(A)(ii): an answer is due 60 days after a timely returned
 /// waiver's request was sent (90 days for a defendant outside every judicial
-/// district, which the pack does not branch on). Rule 12 last amended eff.
-/// December 1, 2024.
-deadline waiver-answer-period: 60.days after WaiverRequestSent() counted_by frcp6 effective [2024-12-01, ..) cite FRCP 12(a)(1)(A)(ii)
+/// district, which the pack does not branch on). In force from the 2009
+/// text, which states the same 60 days (U.S. Reports vol. 556); the 2024
+/// amendment left the period unchanged.
+deadline waiver-answer-period: 60.days after WaiverRequestSent() counted_by frcp6 effective [2009-12-01, ..) cite FRCP 12(a)(1)(A)(ii)
 {
   extend { by court, discretion GoodCause }
   extend { by court, discretion GoodCause, on ExtensionMoved(WaiverAnswerPeriod) }
@@ -156,8 +182,9 @@ deadline waiver-answer-period: 60.days after WaiverRequestSent() counted_by frcp
 /// Rule 12(a)(1)(A)(i): an answer is due 21 days after service of the
 /// summons and complaint; a pre-answer Rule 12(b) motion "must be made
 /// before pleading", so it runs on the same clock. Extendable under FRCP
-/// 6(b)(1). Rule 12 last amended eff. December 1, 2024.
-deadline answer-period: 21.days after ProcessServed() counted_by frcp6 effective [2024-12-01, ..) delegable_to [CaseOrder] cite FRCP 12(a)(1)(A)(i)
+/// 6(b)(1). In force from the 2009 text, which replaced 20 days with 21
+/// (U.S. Reports vol. 556); the 2024 amendment left the period unchanged.
+deadline answer-period: 21.days after ProcessServed() counted_by frcp6 effective [2009-12-01, ..) delegable_to [CaseOrder] cite FRCP 12(a)(1)(A)(i)
 {
   extend { by court, discretion GoodCause }
   extend { by court, discretion GoodCause, on ExtensionMoved(AnswerPeriod) }
@@ -193,8 +220,9 @@ deadline removed-answer-period: 21.days after InitialPleadingReceived() counted_
 
 /// Rule 12(a)(4)(A): "Unless the court sets a different time", the
 /// responsive pleading is due 14 days after notice that the court denied
-/// the Rule 12 motion. Rule 12 last amended eff. December 1, 2024.
-deadline denial-answer-period: 14.days after Rule12MotionDenied() counted_by frcp6 effective [2024-12-01, ..) delegable_to [CaseOrder] cite FRCP 12(a)(4)(A)
+/// the Rule 12 motion. In force from the 2009 text, which states the same
+/// 14 days (U.S. Reports vol. 556); the 2024 amendment left it unchanged.
+deadline denial-answer-period: 14.days after Rule12MotionDenied() counted_by frcp6 effective [2009-12-01, ..) delegable_to [CaseOrder] cite FRCP 12(a)(4)(A)
 {
   extend { by court, discretion GoodCause }
   extend { by court, discretion GoodCause, on ExtensionMoved(DenialAnswerPeriod) }
@@ -208,9 +236,12 @@ deadline denial-answer-period: 14.days after Rule12MotionDenied() counted_by frc
 
 /// Rule 15(a)(1)(B): amendment once as a matter of course no later than 21
 /// days after service of a responsive pleading (or of a Rule 12(b), (e) or
-/// (f) motion, whichever is earlier). Rule 15 last amended eff. December 1,
-/// 2023.
-deadline amendment-as-of-course-period: 21.days after ResponsivePleadingServed() counted_by frcp6 effective [2023-12-01, ..) cite FRCP 15(a)(1)(B)
+/// (f) motion, whichever is earlier). In force from the 2009 amendment, the
+/// last before 2023's (vendored history); 2023's substituted "no later
+/// than" for "within", which changes nothing for a period run from the
+/// responsive pleading (the 2022 package quotes the earlier text: "21 days
+/// after service of a responsive pleading").
+deadline amendment-as-of-course-period: 21.days after ResponsivePleadingServed() counted_by frcp6 effective [2009-12-01, ..) cite FRCP 15(a)(1)(B)
 {
   extend { by court, discretion GoodCause }
   extend { by court, discretion GoodCause, on ExtensionMoved(AmendmentAsOfCoursePeriod) }
@@ -225,8 +256,9 @@ deadline amendment-as-of-course-period: 21.days after ResponsivePleadingServed()
 /// Rule 15(a)(3): "Unless the court orders otherwise", a response to an
 /// amended pleading is due within the time left on the original or 14 days
 /// after service of the amendment, whichever is later; the pack models the
-/// 14 days. Rule 15 last amended eff. December 1, 2023.
-deadline amended-response-period: 14.days after AmendedPleadingServed() counted_by frcp6 effective [2023-12-01, ..) delegable_to [CaseOrder] cite FRCP 15(a)(3)
+/// 14 days. In force from the 2009 amendment, the last before 2023's
+/// (vendored history); 2023's amended only Rule 15(a)(1) (2022 package).
+deadline amended-response-period: 14.days after AmendedPleadingServed() counted_by frcp6 effective [2009-12-01, ..) delegable_to [CaseOrder] cite FRCP 15(a)(3)
 {
   extend { by court, discretion GoodCause }
   extend { by court, discretion GoodCause, on ExtensionMoved(AmendedResponsePeriod) }
@@ -301,15 +333,18 @@ deadline relief-from-judgment-period: 1.years after JudgmentEntered() counted_by
   extend { never cite FRCP 6(b)(2) }
 }
 
-/// FRAP 4(a)(1)(A): the notice of appeal is due 30 days after entry of
-/// judgment (28 U.S.C. § 2107(a)); the district court may extend it under
-/// FRAP 4(a)(5) and 28 U.S.C. § 2107(c), on a motion filed no later than 30
-/// days after the time expires, to no later than 30 days after the
-/// prescribed time or 14 days after the order, whichever is later (FRAP
-/// 4(a)(5)(C)), for excusable neglect or good cause whether the motion
-/// comes before or after expiry (4(a)(5)(A)(ii)). FRAP 26(b)(1) forbids any
-/// other extension ("except as authorized in Rule 4").
-deadline notice-of-appeal-period: 30.days after JudgmentEntered() counted_by frap26 effective [2024-12-01, ..) delegable_to [CaseOrder] cite FRAP 4(a)(1)(A)
+/// 28 U.S.C. § 2107(a): "no appeal shall bring any judgment ... before a
+/// court of appeals for review unless notice of appeal is filed, within
+/// thirty days after the entry" (restated in FRAP 4(a)(1)(A)). A statutory
+/// limit is jurisdictional (Bowles v. Russell, 551 U.S. 205 (2007)), so no
+/// order displaces it: the period delegates nothing, and its one
+/// extension is the statute's own, § 2107(c) and FRAP 4(a)(5): on a motion
+/// filed no later than 30 days after the time expires, to no later than
+/// 30 days after the prescribed time or 14 days after the order, whichever
+/// is later (FRAP 4(a)(5)(C)), for excusable neglect or good cause whether
+/// the motion comes before or after expiry (4(a)(5)(A)(ii)). FRAP 26(b)(1)
+/// forbids any other extension ("except as authorized in Rule 4").
+deadline notice-of-appeal-period: 30.days after JudgmentEntered() counted_by frap26 effective [2009-12-01, ..) known_at 2009-03-26 cite 28 U.S.C. § 2107(a)
 {
   extend {
     by court
@@ -322,14 +357,18 @@ deadline notice-of-appeal-period: 30.days after JudgmentEntered() counted_by fra
   extend { never cite FRAP 26(b)(1) }
 }
 
-/// FRAP 4(a)(3): a cross-appeal is due 14 days after the first notice of
-/// appeal is filed (or within the FRAP 4(a)(1) time, whichever ends later;
-/// the pack models the 14 days). FRAP 4(a)(5)(A) extends "the time to file
-/// a notice of appeal" and 4(a)(5)(B) names 4(a)(3), so the cross-appeal
+/// FRAP 4(a)(3): a cross-appeal is due "within 14 days after the date when
+/// the first notice was filed, or within the time otherwise prescribed by
+/// this Rule 4(a), whichever period ends later": `later_of` absorbs the
+/// open notice-of-appeal instance, so the due date is never before it
+/// (SPEC §5.3). A matter records only the first notice as
+/// `NoticeOfAppealFiled`. FRAP 4(a)(5)(A) extends "the time to file a
+/// notice of appeal" and 4(a)(5)(B) names 4(a)(3), so the cross-appeal
 /// period carries the same grant and FRAP 26(b)(1) lock as the notice of
-/// appeal.
-deadline cross-appeal-period: 14.days after NoticeOfAppealFiled() counted_by frap26 effective [2024-12-01, ..) cite FRAP 4(a)(3)
+/// appeal, its bound counted from the later date.
+deadline cross-appeal-period: 14.days after NoticeOfAppealFiled() counted_by frap26 effective [2009-12-01, ..) known_at 2009-03-26 cite FRAP 4(a)(3)
 {
+  trigger later_of(notice-of-appeal-period)
   extend {
     by court
     discretion GoodCauseOrExcusableNeglect

@@ -306,6 +306,72 @@ fn frap_4a5_extends_the_cross_appeal_period() {
     assert_eq!(effects(&run).1, Vec::<String>::new());
 }
 
+/// `(due, floor, status)` of each instance of `deadline`.
+fn scheduled(run: &Run, deadline: &str) -> Vec<(String, String, String)> {
+    let field = |o: &serde_json::Value, k: &str| o[k].as_str().unwrap_or("-").to_owned();
+    run.json["result"]["cases"][0]["deadlines"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .filter(|o| o["deadline"] == deadline)
+        .map(|o| (field(o, "due"), field(o, "floor"), field(o, "status")))
+        .collect()
+}
+
+#[test]
+fn frap_4a3_cross_appeal_runs_to_the_later_of_14_days_and_the_notice_period() {
+    // Judgment 2025-06-02: notice of appeal due 2025-07-02. A first notice
+    // on 2025-06-05 counts 14 days to 2025-06-19, a Juneteenth that rolls
+    // to 2025-06-20; "whichever period ends later" is 2025-07-02, so the
+    // cross-appeal instance absorbs the notice-of-appeal one.
+    let run = check(
+        "frap-4a3-later",
+        &[
+            "2025-06-02 JudgmentEntered() by judge",
+            "2025-06-05 NoticeOfAppealFiled() by judge",
+        ],
+    );
+    assert_eq!(run.code, 0, "{}", run.stdout);
+    assert_eq!(effects(&run).1, Vec::<String>::new());
+    assert_eq!(
+        scheduled(&run, "frcp-civil-procedure::notice-of-appeal-period"),
+        [("2025-07-02".to_owned(), "-".to_owned(), "merged".to_owned())]
+    );
+    assert_eq!(
+        scheduled(&run, "frcp-civil-procedure::cross-appeal-period"),
+        [(
+            "2025-06-20".to_owned(),
+            "2025-07-02".to_owned(),
+            "lapsed".to_owned()
+        )]
+    );
+}
+
+#[test]
+fn frap_4a5_counts_the_cross_appeal_motion_window_from_the_later_date() {
+    // The cross-appeal period above ends 2025-07-02, not 2025-06-20, so a
+    // motion on 2025-07-25 is within 4(a)(5)(A)(i)'s 30 days (2025-08-01).
+    let run = check(
+        "frap-4a5-cross-later",
+        &[
+            "2025-06-02 JudgmentEntered() by judge",
+            "2025-06-05 NoticeOfAppealFiled() by judge",
+            "2025-07-25 ExtensionMoved(CrossAppealPeriod) by plaintiff",
+            "2025-07-28 CrossAppealPeriodExtended(2025-08-05) by judge cite FRAP 4(a)(5)",
+        ],
+    );
+    assert_eq!(run.code, 0, "{}", run.stdout);
+    assert_eq!(effects(&run).1, Vec::<String>::new());
+    assert_eq!(
+        extended(&run, "frcp-civil-procedure::cross-appeal-period"),
+        [(
+            "2025-08-05".to_owned(),
+            "GoodCauseOrExcusableNeglect".to_owned(),
+            "2025-07-25".to_owned()
+        )]
+    );
+}
+
 #[test]
 fn frap_4a5_caps_the_notice_of_appeal_extension() {
     // Due 2025-07-02; FRAP 4(a)(5)(C) allows at most 30 days past it.

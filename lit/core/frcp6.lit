@@ -6,13 +6,27 @@ import core.calendar.{ us-federal-holidays }
 /// Saturdays join Sundays and legal holidays as days a period cannot end
 /// on, and inside a period of less than 7 days none of them is counted
 /// (1963 Advisory Committee Note); service by mail adds 3 days.
+///
+/// Until December 1, 2005, Rule 6(e) said only that "3 days shall be
+/// added to the prescribed period" (2005 Committee Note, text as amended:
+/// sources/change-corpus/rules/committee-notes/note-civ-2005.txt). Whether
+/// the days were added to the period before it was counted under 6(a), or
+/// after it expired, was contested: the 2005 amendment was made "to remove
+/// any doubt as to the method". The engine has one order, the 2005 one
+/// (SPEC §5.3 step 5), so every pre-2005 version's mail extension carries
+/// a citation hole naming the question rather than a cite that settles it.
+/// Its direction of risk is a later due date: for a period under the
+/// short-period threshold the 2005 order gives more days than adding 3 to
+/// the period first.
 counting frcp6 effective [1963-07-01, 1985-08-01) known_at 1963-01-21 cite FRCP (2008 ed.) 6 (1963 Advisory Committee Note)
 {
   exclude_trigger_day
   include_last_day
   roll_forward_on [weekend, legal_holiday]
   short_period { below: 7.days, count: business_days }
-  service_extension { Mail: 3.days }
+  service_extension {
+    Mail: 3.days
+  } cite ?("Rule 6(e) before Dec. 1, 2005: '3 days shall be added to the prescribed period'; added before or after the 6(a) count is contested, and the 2005 order is assumed")
   holidays us-federal-holidays
 }
 
@@ -26,21 +40,41 @@ counting frcp6 effective [1985-08-01, 2001-12-01) known_at 1985-04-29 supersedes
   include_last_day
   roll_forward_on [weekend, legal_holiday, inaccessible]
   short_period { below: 11.days, count: business_days }
-  service_extension { Mail: 3.days }
+  service_extension {
+    Mail: 3.days
+  } cite ?("Rule 6(e) before Dec. 1, 2005: '3 days shall be added to the prescribed period'; added before or after the 6(a) count is contested, and the 2005 order is assumed")
   holidays us-federal-holidays
 }
 
 /// The 2001 amendments (effective December 1, 2001): the 3 added days reach
 /// service by leaving a copy with the clerk and by other consented means,
-/// electronic service included (2001 Committee Note); restyled in 2007 as
-/// 6(a)(2) and 6(d). The 2005 amendment confirmed the order the pipeline
-/// uses: the days are added after the period expires under 6(a).
+/// electronic service included (2001 Committee Note). The order of adding
+/// them is the contested pre-2005 one (see the 1963 version).
 /// Rule 6 is silent on periods stated in months or years (Rule 60(c)(1)'s
 /// "a year"): they run to the corresponding day of the later month, and a
 /// month without that day (a February 29 anniversary) ends on its last day.
 /// `end_of_month clamp` is the earlier of the two readings; UNVERIFIED: no
 /// rule text or vendored decision fixes it.
-counting frcp6 effective [2001-12-01, 2009-12-01) known_at 2001-04-23 supersedes frcp6@1985-08-01 cite FRCP (2008 ed.) 6(a)(2)
+counting frcp6 effective [2001-12-01, 2005-12-01) known_at 2001-04-23 supersedes frcp6@1985-08-01 cite FRCP (2008 ed.) 6 (2001 Committee Note)
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  short_period { below: 11.days, count: business_days }
+  service_extension {
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+  } cite ?("Rule 6(e) before Dec. 1, 2005: '3 days shall be added to the prescribed period'; added before or after the 6(a) count is contested, and the 2005 order is assumed")
+  holidays us-federal-holidays
+  end_of_month clamp
+}
+
+/// The 2005 amendment (adopted April 25, 2005, effective December 1, 2005):
+/// the 3 days "are added after the prescribed period would otherwise expire
+/// under subdivision (a)", the order the pipeline uses (2005 Committee
+/// Note); restyled in 2007 as 6(a)(2) and 6(d).
+counting frcp6 effective [2005-12-01, 2009-12-01) known_at 2005-04-25 supersedes frcp6@2001-12-01 cite FRCP (2008 ed.) 6(a)(2)
 {
   exclude_trigger_day
   include_last_day
@@ -66,7 +100,7 @@ counting frcp6 effective [2001-12-01, 2009-12-01) known_at 2001-04-23 supersedes
 /// month without that day (a February 29 anniversary) ends on its last day.
 /// `end_of_month clamp` is the earlier of the two readings; UNVERIFIED: no
 /// rule text or vendored decision fixes it.
-counting frcp6 effective [2009-12-01, ..) known_at 2009-03-26 supersedes frcp6@2001-12-01 cite FRCP 6(a)
+counting frcp6 effective [2009-12-01, ..) known_at 2009-03-26 supersedes frcp6@2005-12-01 cite FRCP 6(a)
 {
   exclude_trigger_day
   include_last_day
@@ -87,6 +121,6 @@ event PriorTimeRulesOrdered()
 /// (the adopting order's "insofar as just and practicable").
 transition frcp6-2009 amends frcp6@2009-12-01 cite FRCP 86(a)(2)(B)
 {
-  unless has_event(PriorTimeRulesOrdered()) -> frcp6@2001-12-01
+  unless has_event(PriorTimeRulesOrdered()) -> frcp6@2005-12-01
   otherwise -> frcp6@2009-12-01
 }

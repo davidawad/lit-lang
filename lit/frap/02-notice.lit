@@ -3,56 +3,10 @@ module frap.notice
 import core.authority.{ CaseOrder }
 import core.frap26.{ frap26 }
 import core.frcp6.{ frcp6 }
+import frap.appeal-periods.{ notice-civil-period, notice-us-party-period }
 import frap.docketing.{ cross-appeal-fork }
 import frap.events.{ AppealExtensionMoved, EnteredBelow }
 import frap.{ notice-group }
-
-/// FRAP 4(a)(1): a civil appeal as of right is taken by a notice filed
-/// within 30 days after entry of the judgment or order appealed from (60
-/// when the United States, its agency, or its officer or employee is a
-/// party). Both mirror 28 U.S.C. § 2107(a)-(b) and are jurisdictional
-/// (Bowles v. Russell, 551 U.S. 205 (2007)). The periods are counted from
-/// the latest entry, so the order disposing of the last FRAP 4(a)(4)(A)
-/// motion restarts them. FRAP 26(b)(1) forbids extending them except as
-/// Rule 4 authorizes, and Rule 4 does: the district court may extend
-/// (FRAP 4(a)(5)(A); 28 U.S.C. § 2107(c)) or reopen (FRAP 4(a)(6)) by
-/// order, hence `delegable_to [CaseOrder]`. The FRAP 4(a)(5) grant is
-/// exact: on motion filed no later than 30 days after the prescribed time
-/// expires (4(a)(5)(A)(i)), for excusable neglect or good cause either
-/// side of expiry (4(a)(5)(A)(ii)), to no later than 30 days after the
-/// prescribed time or 14 days after the order, whichever is later
-/// (4(a)(5)(C)); FRAP 26(b)(1) locks out any other.
-///
-/// In force from the package's start: the 2009 time-computation amendments
-/// kept 30-day and longer periods unchanged (FRAP 26, 2009 Committee Note).
-rule duty civil-notice-of-appeal effective [2009-12-01, ..) known_at 2009-03-26 cite FRAP 4(a)(1)
-{
-  deadline notice-civil-period: 30.days after EnteredBelow() counted_by frap26 delegable_to [CaseOrder] cite FRAP 4(a)(1)(A)
-  {
-    trigger latest
-    extend {
-      by court
-      discretion GoodCauseOrExcusableNeglect
-      to max(prescribed_due + 30.days, grant_order_entered + 14.days)
-      after_expiry
-      on AppealExtensionMoved()
-      within prescribed_due + 30.days
-    }
-    extend { never cite FRAP 26(b)(1) }
-  }
-  deadline notice-us-party-period: 60.days after EnteredBelow() counted_by frap26 delegable_to [CaseOrder] cite FRAP 4(a)(1)(B)
-  {
-    extend {
-      by court
-      discretion GoodCauseOrExcusableNeglect
-      to max(prescribed_due + 30.days, grant_order_entered + 14.days)
-      after_expiry
-      on AppealExtensionMoved()
-      within prescribed_due + 30.days
-    }
-    extend { never cite FRAP 26(b)(1) }
-  }
-}
 
 /// FRAP 4(b)(1)(A): a criminal defendant's notice of appeal is due 14 days
 /// after entry of the judgment or order appealed from (the later of that
@@ -80,37 +34,6 @@ rule duty criminal-notice-of-appeal effective [2009-12-01, ..) known_at 2009-03-
 rule duty tolling-motion effective [2009-12-01, ..) known_at 2009-03-26 cite FRCP 59(b)
 {
   deadline tolling-motion-period: 28.days after EnteredBelow(FinalJudgment) counted_by frcp6 cite FRCP 59(e)
-}
-
-test "a civil notice of appeal is due 30 days after entry" cite FRAP 4(a)(1)(A)
-{
-  given EnteredBelow(FinalJudgment) on 2025-03-03
-  expect deadline(notice-civil-period) == 2025-04-02
-}
-
-test "a 30th day on Independence Day rolls to Monday" cite FRAP 26(a)(1)(C)
-{
-  given EnteredBelow(FinalJudgment) on 2025-06-04
-  expect deadline(notice-civil-period) == 2025-07-07
-}
-
-test "the order disposing of a tolling motion restarts the period" cite FRAP 4(a)(4)(A)
-{
-  given EnteredBelow(FinalJudgment) on 2025-03-03
-  given EnteredBelow(TollingDisposition) on 2025-04-14
-  expect deadline(notice-civil-period) == 2025-05-14
-}
-
-test "a United States party has 60 days" cite FRAP 4(a)(1)(B)
-{
-  given EnteredBelow(FinalJudgment) on 2025-03-03
-  expect deadline(notice-us-party-period) == 2025-05-02
-}
-
-test "a 60th day on a Saturday rolls to Monday" cite FRAP 26(a)(1)(C)
-{
-  given EnteredBelow(FinalJudgment) on 2025-09-02
-  expect deadline(notice-us-party-period) == 2025-11-03
 }
 
 test "a criminal notice of appeal is due 14 days after entry" cite FRAP 4(b)(1)(A)

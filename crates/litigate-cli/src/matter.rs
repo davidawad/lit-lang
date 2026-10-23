@@ -50,6 +50,10 @@ pub struct Scheduled {
     /// The party bearing it, when the deadline names a bearer.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub bearer: Option<String>,
+    /// The due date it may not end before: the `later_of` instance it
+    /// absorbed (FRCP 15(a)(3), FRAP 4(a)(3)); `due` is the counted date.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub floor: Option<String>,
     /// The due date a cited `extends` event moved it to.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub extended_to: Option<String>,
@@ -276,6 +280,7 @@ fn schedule(
                     rolled: due.computed.last_day_rolled,
                     method: due.method,
                     bearer: o.bearer.clone(),
+                    floor: o.floor.clone(),
                     extended_to: o.extended_to.clone(),
                     extended_under: o.extended_under,
                     request_made: o.request_made.clone(),

@@ -1,46 +1,9 @@
 module frap.docketing
 
-import core.authority.{ CaseOrder }
 import core.frap26.{ frap26 }
-import frap.events.{ AppealExtensionMoved, NoticeOfAppealFiled }
+import frap.appeal-periods.{ cross-appeal-period }
 import frap.record.{ transcript-order-fork }
 import frap.{ docketing-group }
-
-/// FRAP 4(a)(3): once one party files a timely notice of appeal, any
-/// other party may file one within 14 days after the first notice was
-/// filed (or within the Rule 4(a)(1) period, whichever ends later; that
-/// alternative is `notice-civil-period`). The district court's power to
-/// extend "the time to file a notice of appeal" (FRAP 4(a)(5)(A)) reaches a
-/// cross-appeal notice (and 4(a)(5)(B) names 4(a)(3)), so the period
-/// delegates to `CaseOrder` and carries the notice of appeal's FRAP 4(a)(5)
-/// grant and FRAP 26(b)(1) lock.
-rule duty cross-appeal effective [2009-12-01, ..) known_at 2009-03-26 cite FRAP 4(a)(3)
-{
-  deadline cross-appeal-period: 14.days after NoticeOfAppealFiled() counted_by frap26 delegable_to [CaseOrder] cite FRAP 4(a)(3)
-  {
-    extend {
-      by court
-      discretion GoodCauseOrExcusableNeglect
-      to max(prescribed_due + 30.days, grant_order_entered + 14.days)
-      after_expiry
-      on AppealExtensionMoved()
-      within prescribed_due + 30.days
-    }
-    extend { never cite FRAP 26(b)(1) }
-  }
-}
-
-test "a cross-appeal is due 14 days after the first notice" cite FRAP 4(a)(3)
-{
-  given NoticeOfAppealFiled() on 2025-03-12
-  expect deadline(cross-appeal-period) == 2025-03-26
-}
-
-test "a 14th day on Christmas rolls to the 26th" cite FRAP 26(a)(6)(A)
-{
-  given NoticeOfAppealFiled() on 2025-12-11
-  expect deadline(cross-appeal-period) == 2025-12-26
-}
 
 decision cross-appeal-fork: "Appellee Considers a Cross-Appeal" by applicant cite FRAP 4(a)(3)
 {

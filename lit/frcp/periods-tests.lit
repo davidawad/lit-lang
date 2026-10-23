@@ -272,3 +272,27 @@ test "cross-appeal-period: a last day on a legal holiday (2025-10-13) rolls forw
   given NoticeOfAppealFiled() on 2025-09-29
   expect deadline(cross-appeal-period) == 2025-10-14
 }
+
+test "service-period: before December 1, 2015, 120 days after the complaint is filed" cite FRCP 4(m)
+{
+  given ComplaintFiled() on 2014-03-03
+  expect deadline(service-period) == 2014-07-01
+}
+
+test "service-period: a complaint filed the day before the 2015 amendment keeps 120 days" cite FRCP 4(m)
+{
+  given ComplaintFiled() on 2015-11-30
+  expect deadline(service-period) == 2016-03-29
+}
+
+test "service-period: a complaint filed on December 1, 2015 has 90 days" cite FRCP 4(m)
+{
+  given ComplaintFiled() on 2015-12-01
+  expect deadline(service-period) == 2016-02-29
+}
+
+test "answer-period: 21 days under the 2009 text" cite FRCP 12(a)(1)(A)(i)
+{
+  given ProcessServed() on 2010-03-01
+  expect deadline(answer-period) == 2010-03-22
+}

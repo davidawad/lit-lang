@@ -13,30 +13,56 @@ module core.calendar
 /// December 26, 1941), per the section's Historical and Revision Notes.
 /// Earlier history is out of scope: no counting rule here is in force
 /// before 1963.
+///
+/// Observed days. FRCP 6(a)(6)(A) (and before 2009, 6(a)'s "legal
+/// holiday") names "the day set aside by statute for observing" each
+/// holiday. The Sunday-to-Monday shift is validated by a ruling: July 4,
+/// 1993 was a Sunday, and the D.C. Circuit counted "Monday, July 5, 1993"
+/// as a legal holiday (Derrington-Bey v. D.C. Dep't of Corrections, 39
+/// F.3d 1224, 1225 (D.C. Cir. 1994); sources/change-corpus/rulings, tested
+/// in frcp6-history-tests.lit). No ruling in that corpus decides a Friday
+/// before a Saturday holiday; it rests on § 6103(b)(1)'s text alone, and
+/// its direction of risk is a later due date. The vendored section dates
+/// the Saturday rule to former § 87c (Pub. L. 86-362, 1959) and the Sunday
+/// rule to Executive Order 11582 § 3(a) (February 11, 1971), which revoked
+/// Executive Order 10358 (1952), whose text is not vendored. Before 1971
+/// no fixed-date holiday here is observed on another day: a counting rule
+/// in force 1963-1971 sees only the holiday itself.
+///
+/// Not modeled (FRCP 6(a)(6)(B), (C); FRAP 26(a)(6)(B), (C)): days the
+/// President or Congress declares a holiday, which no vendored source
+/// lists, and the holidays of the state where the district court sits,
+/// which belong to a district's own calendar and, from 2009, extend only
+/// forward-counted periods. Where a last day falls on such a day, the date
+/// computed here is the earlier one, never a later one.
 calendar us-federal-holidays cite 5 U.S.C. § 6103(a)
 {
-  new-years-day: fixed(1, 1) effective [1894-06-28, ..) observed nearest_weekday
+  // Executive Order 11582 § 3(a), February 11, 1971; § 6103(b)(1).
+  new-years-day-before-1971: fixed(1, 1) effective [1894-06-28, 1971-02-11)
+  new-years-day: fixed(1, 1) effective [1971-02-11, ..) observed nearest_weekday
   // Pub. L. 98-144 § 2: effective "the first January 1 that occurs after the
   // two-year period following" November 2, 1983.
   mlk-day: nth(3, monday, 1) effective [1986-01-01, ..)
   // Pub. L. 90-363 § 2: from January 1, 1971 Washington's Birthday, Memorial
   // Day and Veterans Day move from February 22, May 30 and November 11 to
   // Mondays, and Columbus Day joins the list.
-  washingtons-birthday-february-22: fixed(2, 22) effective [1894-06-28, 1971-01-01) observed nearest_weekday
+  washingtons-birthday-february-22: fixed(2, 22) effective [1894-06-28, 1971-01-01)
   washingtons-birthday: nth(3, monday, 2) effective [1971-01-01, ..)
-  memorial-day-may-30: fixed(5, 30) effective [1894-06-28, 1971-01-01) observed nearest_weekday
+  memorial-day-may-30: fixed(5, 30) effective [1894-06-28, 1971-01-01)
   memorial-day: last(monday, 5) effective [1971-01-01, ..)
   // Pub. L. 117-17 § 2, enacted and in force June 17, 2021.
   juneteenth: fixed(6, 19) effective [2021-06-17, ..) observed nearest_weekday
-  independence-day: fixed(7, 4) effective [1894-06-28, ..) observed nearest_weekday
+  independence-day-before-1971: fixed(7, 4) effective [1894-06-28, 1971-02-11)
+  independence-day: fixed(7, 4) effective [1971-02-11, ..) observed nearest_weekday
   labor-day: nth(1, monday, 9) effective [1894-06-28, ..)
   columbus-day: nth(2, monday, 10) effective [1971-01-01, ..)
-  veterans-day-november-11: fixed(11, 11) effective [1938-05-13, 1971-01-01) observed nearest_weekday
+  veterans-day-november-11: fixed(11, 11) effective [1938-05-13, 1971-01-01)
   veterans-day-october: nth(4, monday, 10) effective [1971-01-01, 1978-01-01)
   // Pub. L. 94-97: back to November 11, effective January 1, 1978.
   veterans-day: fixed(11, 11) effective [1978-01-01, ..) observed nearest_weekday
   thanksgiving-day: nth(4, thursday, 11) effective [1941-12-26, ..)
-  christmas-day: fixed(12, 25) effective [1894-06-28, ..) observed nearest_weekday
+  christmas-day-before-1971: fixed(12, 25) effective [1894-06-28, 1971-02-11)
+  christmas-day: fixed(12, 25) effective [1971-02-11, ..) observed nearest_weekday
 }
 
 /// RCFC 6(a)(6)(A)'s legal holidays: the § 6103(a) days in force when the

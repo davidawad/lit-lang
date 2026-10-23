@@ -40,17 +40,7 @@ pub(crate) fn links(
                     .entry(i.pack.clone())
                     .or_insert_with(|| base_pack(build, &i.pack));
                 if let Some(instance) = instance(&cx, sink, i, base.as_ref(), span.as_ref()) {
-                    let at = format!("/instances/{}", pointer_token(&i.name));
-                    if let Some(hir::Authored::Hole(reason)) = &i.stake {
-                        instance_holes.push(Hole {
-                            pointer: format!("{at}/stake"),
-                            reason: reason.clone(),
-                        });
-                    }
-                    for (edge, p) in &i.patch_edges {
-                        let base = format!("{at}/patch_edges/{}", pointer_token(edge));
-                        instance_holes.extend(crate::holes::at(&base, &p.holes));
-                    }
+                    instance_holes.extend(holes_of(i));
                     spans.insert(i.name.clone(), span);
                     instances.insert(i.name.clone(), instance);
                 }
@@ -100,6 +90,23 @@ pub(crate) fn links(
         ..build.map_header()
     };
     (file, map)
+}
+
+/// The holes of instance `i`: a `stake` hole and each patch's.
+fn holes_of(i: &hir::Instance) -> Vec<Hole> {
+    let at = format!("/instances/{}", pointer_token(&i.name));
+    let stake = match &i.stake {
+        Some(hir::Authored::Hole(reason)) => Some(Hole {
+            pointer: format!("{at}/stake"),
+            reason: reason.clone(),
+        }),
+        _ => None,
+    };
+    let patches = i.patch_edges.iter().flat_map(|(edge, p)| {
+        let base = format!("{at}/patch_edges/{}", pointer_token(edge));
+        crate::holes::at(&base, &p.holes)
+    });
+    stake.into_iter().chain(patches).collect()
 }
 
 /// HIR instances carry no span; the links module's first link or the

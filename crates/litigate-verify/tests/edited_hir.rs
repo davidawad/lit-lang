@@ -298,3 +298,21 @@ fn strip_spans(v: &mut serde_json::Value) {
         _ => {}
     }
 }
+
+/// A counting rule no loaded package declares is the shared library's,
+/// as replay and `litigate test` count it, offering any engine service
+/// method.
+#[test]
+fn an_undeclared_counting_rule_is_the_shared_librarys() {
+    let v = verify_edited(BASE, |p| {
+        for d in deadlines(p) {
+            d.counting = "core::frcp6".to_owned();
+        }
+    });
+    assert_eq!(
+        status(&v, Obligation::TestsPass),
+        Some(ObligationStatus::Passed),
+        "{:#?}",
+        outcome_of(&v, Obligation::TestsPass)
+    );
+}

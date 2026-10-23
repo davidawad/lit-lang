@@ -34,7 +34,7 @@ pub struct Verdict {
 #[must_use]
 pub fn anonymous_edges(pkg: &hir::Package) -> Vec<Diagnostic> {
     let fallback = inline_tests::nowhere(pkg);
-    hirx::nodes_at(pkg, None)
+    hirx::nodes(pkg)
         .into_iter()
         .flat_map(|n| n.edges.iter().map(move |e| (n, e)))
         .filter(|(_, e)| e.id.is_none())
@@ -117,7 +117,8 @@ pub fn package(
                 options,
             };
             let verification = litigate_verify::verify_package(&input, corpus, profile);
-            let (tests, _) = inline_tests::run(clocks, hir, &pkg.files, None);
+            let (tests, _) =
+                inline_tests::run(clocks, hir, &pkg.files, None, options.known_at.as_deref());
             (verification, lowering.ok(), tests)
         }
     };

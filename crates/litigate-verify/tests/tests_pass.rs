@@ -149,7 +149,7 @@ tests_pass!(
 );
 
 tests_pass!(
-    a_counting_version_not_yet_known_has_no_engine_lowering,
+    a_counting_version_not_yet_known_is_not_selected,
     Failed,
     split_counting(OLD_RULES, " known_at 2030-01-01")
 );

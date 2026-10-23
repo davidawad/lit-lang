@@ -34,10 +34,10 @@ pub struct Checked {
 pub fn checked(
     paths: &[String],
     profile: Profile,
-    as_of: Option<&str>,
+    options: &Options,
     lib: &[String],
 ) -> Result<Checked, Failure> {
-    checked_in(&Disk, paths, profile, as_of, lib)
+    checked_in(&Disk, paths, profile, options, lib)
 }
 
 /// [`checked`] from `src`.
@@ -48,14 +48,14 @@ pub fn checked_in(
     src: &dyn Source,
     paths: &[String],
     profile: Profile,
-    as_of: Option<&str>,
+    options: &Options,
     lib: &[String],
 ) -> Result<Checked, Failure> {
     let targets = ws::discover_in(src, paths)?;
     Ok(check_session(
         Session::load_in(src, &targets, lib)?,
         profile,
-        as_of,
+        options,
     ))
 }
 
@@ -66,32 +66,34 @@ pub fn checked_in(
 pub fn checked_targets(
     targets: &ws::Targets,
     profile: Profile,
-    as_of: Option<&str>,
+    options: &Options,
     lib: &[String],
 ) -> Result<Checked, Failure> {
-    Ok(check_session(Session::load(targets, lib)?, profile, as_of))
+    Ok(check_session(
+        Session::load(targets, lib)?,
+        profile,
+        options,
+    ))
 }
 
-/// Checks everything loaded in `session`.
+/// Checks everything loaded in `session` at the build dates `options`
+/// (each defaults to the package's `known_at`; a matter selects at its own
+/// `as_of` and `known_at`).
 #[must_use]
-pub fn check_session(session: Session, profile: Profile, as_of: Option<&str>) -> Checked {
+pub fn check_session(session: Session, profile: Profile, options: &Options) -> Checked {
     let all = session.hir();
     let clocks = Clocks::new(&all);
     // A counting rule that does not lower is reported by its package's
     // verification; replay then counts with the shared library alone.
     let engine =
         EngineClock::lowered(&Lowerer::new(&all), &all).unwrap_or_else(|_| EngineClock::new([]));
-    let options = Options {
-        as_of: as_of.map(str::to_owned),
-        known_at: None,
-    };
     let verdicts: Vec<(String, Verdict)> = session
         .packages
         .iter()
         .map(|p| {
             (
                 p.name.clone(),
-                verdict::package(&session, p, &clocks, profile, &options),
+                verdict::package(&session, p, &clocks, profile, options),
             )
         })
         .collect();
@@ -175,7 +177,7 @@ pub fn check(
     dates: &Dates,
     lib: &[String],
 ) -> Outcome {
-    let c = checked_in(src, paths, profile, dates.as_of.as_deref(), lib)?;
+    let c = checked_in(src, paths, profile, &dates.options(), lib)?;
     let profile_name = match profile {
         Profile::Dev => "dev",
         Profile::Strict => "strict",

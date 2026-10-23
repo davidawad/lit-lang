@@ -5,6 +5,7 @@ use crate::cli::QueryKind;
 use crate::hirx::{self, local};
 use crate::out::{Failure, Outcome, Report};
 use litigate_base::{Profile, Span};
+use litigate_lower::Options;
 use litigate_sema::hir::{self, Declaration, Relation};
 use litigate_sema::temporal::world::{meta_of, relation_target};
 use serde::Serialize;
@@ -113,7 +114,7 @@ fn overrides(pkg: &hir::Package) -> Vec<Candidate<'_>> {
 
 /// Every edge, with litgraph's derived id (`from->to#n`) when anonymous.
 fn edges(pkg: &hir::Package) -> Vec<Candidate<'_>> {
-    hirx::nodes_at(pkg, None)
+    hirx::nodes(pkg)
         .into_iter()
         .flat_map(|n| n.edges.iter().enumerate().map(move |(i, e)| (n, i, e)))
         .map(|(n, i, e)| {
@@ -209,7 +210,7 @@ fn candidates<'p>(
 /// `litigate query`.
 pub fn query(args: &Args) -> Outcome {
     let roots = super::where_::roots(&args.paths, &args.lib)?;
-    let c = checked(&roots, Profile::Dev, None, &args.lib)?;
+    let c = checked(&roots, Profile::Dev, &Options::default(), &args.lib)?;
     let skip = args
         .cursor
         .as_deref()
@@ -250,7 +251,7 @@ pub fn query(args: &Args) -> Outcome {
         .filter(|(_, meta)| {
             args.effective_on
                 .as_ref()
-                .is_none_or(|d| meta.is_some_and(|m| hirx::in_force(m, d, None)))
+                .is_none_or(|d| meta.is_some_and(|m| hirx::in_force(m, d)))
         })
         .filter(|(_, meta)| {
             args.overrides.as_ref().is_none_or(|target| {

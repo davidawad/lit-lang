@@ -238,7 +238,7 @@ pub fn definition(analysis: &Analysis, def: &Def) -> String {
     match &def.space {
         Space::Decl => declaration(&mut out, analysis, pkg, &def.name),
         Space::Edge(owner) => {
-            let edge = hirx::nodes_at(pkg, None)
+            let edge = hirx::nodes(pkg)
                 .into_iter()
                 .filter(|n| n.meta.id == *owner)
                 .flat_map(|n| n.edges.iter())

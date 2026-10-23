@@ -119,7 +119,7 @@ impl Build<'_, '_> {
             id: String::new(),
             package: None,
             as_of: self.selection.as_of.clone(),
-            known_at: Some(self.selection.known_at.clone()),
+            known_at: self.selection.known_at.clone(),
             entries: Vec::new(),
         }
     }
@@ -154,12 +154,14 @@ impl<'a> Lowerer<'a> {
         self
     }
 
-    fn build(&self, known_at: &str, options: &Options) -> Build<'_, 'a> {
+    /// One build at `options`' dates; `as_of` defaults to `date` and
+    /// `known_at` to `corpus` (`None`: the latest corpus).
+    fn build(&self, date: &str, corpus: Option<&str>, options: &Options) -> Build<'_, 'a> {
+        let as_of = options.as_of.clone().unwrap_or_else(|| date.to_owned());
         let known = options
             .known_at
             .clone()
-            .unwrap_or_else(|| known_at.to_owned());
-        let as_of = options.as_of.clone().unwrap_or_else(|| known_at.to_owned());
+            .or_else(|| corpus.map(str::to_owned));
         Build {
             packages: &self.packages,
             selection: Selection::new(&self.packages, as_of, known),
@@ -179,7 +181,8 @@ impl<'a> Lowerer<'a> {
         pkg: &hir::Package,
         options: &Options,
     ) -> Result<LoweredPackage, Vec<Diagnostic>> {
-        let build = self.build(&pkg.manifest.in_force.known_at, options);
+        let corpus = &pkg.manifest.in_force.known_at;
+        let build = self.build(corpus, Some(corpus), options);
         let mut sink = Sink::new(&manifest_file(pkg));
         let lowered = if pkg.manifest.links {
             let (file, source_map) = links::links(&build, pkg, &mut sink);
@@ -201,33 +204,41 @@ impl<'a> Lowerer<'a> {
         sink.finish(lowered)
     }
 
-    /// The clock fragment of `pkg`'s counting rule `id` as in force at
-    /// `options` (SPEC §8.2). Case replay judges each deadline under its
-    /// governing counting version, which need not be the build date's.
+    /// The clock fragment of version `counting` of `pkg` (SPEC §8.2),
+    /// lowered at its own `from` over the latest corpus. Which version
+    /// applies on a date is [`litigate_sema::temporal::select`]'s answer at
+    /// the caller's `(as_of, known_at)`; disjoint versions (L3001) make the
+    /// one in force on `from` this one, whatever the corpus date, so the
+    /// fragment does not depend on `known_at`. Case replay judges each
+    /// deadline under its governing version, which need not be the build
+    /// date's.
     ///
     /// # Errors
     /// The fragment's lowering diagnostics.
-    pub fn clock_at(
+    pub fn clock_version(
         &self,
         pkg: &hir::Package,
-        id: &str,
-        options: &Options,
+        counting: &hir::Counting,
     ) -> Result<Option<ClockLibrary>, Vec<Diagnostic>> {
-        let build = self.build(&pkg.manifest.in_force.known_at, options);
+        let from = &counting.meta.effective.from;
+        let build = self.build(from, None, &Options::default());
         let mut sink = Sink::new(&manifest_file(pkg));
         let decls = pack::emitted(&build, pkg, &mut Sink::new(""));
-        let fragment = clock::fragment(&build, pkg, &decls, Some(id), &mut sink);
+        let id = Some(counting.meta.id.as_str());
+        let fragment = clock::fragment(&build, pkg, &decls, id, &mut sink);
         sink.finish(fragment.map(|(library, _)| library))
     }
 
-    /// Lowers a checked matter. `file` is its repository-relative path,
-    /// where span-less findings are reported.
+    /// Lowers a checked matter at its `as_of`, among the versions recorded
+    /// by its `known_at` (the latest corpus when it has none), as replay
+    /// selects them. `file` is its repository-relative path, where
+    /// span-less findings are reported.
     ///
     /// # Errors
     /// Every diagnostic, sorted: L4007 for an invalid `analysis`, L6003 for
     /// an engine expression that does not parse.
     pub fn case(&self, case: &hir::Case, file: &str) -> Result<LoweredCase, Vec<Diagnostic>> {
-        let build = self.build(&case.as_of, &Options::default());
+        let build = self.build(&case.as_of, case.known_at.as_deref(), &Options::default());
         let mut sink = Sink::new(file);
         match case::case(&build, case, &mut sink) {
             Some((scenario, source_map)) => sink.finish(LoweredCase {

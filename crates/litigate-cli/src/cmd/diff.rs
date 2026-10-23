@@ -98,19 +98,12 @@ fn side(path: &str, as_of: Option<&String>, lib: &[String]) -> Result<Side, Fail
         json_files(p, p, &mut docs)?;
         return Ok((docs, Vec::new(), Vec::new()));
     }
-    let c = checked(
-        &[path.to_owned()],
-        Profile::Dev,
-        as_of.map(String::as_str),
-        lib,
-    )?;
-    let built = lower_all(
-        &c,
-        &Options {
-            as_of: as_of.cloned(),
-            known_at: None,
-        },
-    );
+    let options = Options {
+        as_of: as_of.cloned(),
+        known_at: None,
+    };
+    let c = checked(&[path.to_owned()], Profile::Dev, &options, lib)?;
+    let built = lower_all(&c, &options);
     let mut diagnostics = c.diagnostics.clone();
     diagnostics.extend(built.diagnostics);
     for (name, text) in built.files {

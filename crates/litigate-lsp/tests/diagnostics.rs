@@ -76,8 +76,11 @@ fn span(file: &str, line: u32) -> Span {
 
 /// An analysis of one loose document at `root`, with `diagnostics` on it.
 fn loose(root: &Path, diagnostics: Vec<Diagnostic>) -> Analysis {
-    let checked =
-        litigate_cli::check_session(Session::from_loaded(&[], Vec::new()), Profile::Dev, None);
+    let checked = litigate_cli::check_session(
+        Session::from_loaded(&[], Vec::new()),
+        Profile::Dev,
+        &litigate_lower::Options::default(),
+    );
     let open: BTreeMap<PathBuf, String> =
         std::iter::once((root.join("loose.lit"), "module loose\nstart s\n".to_owned())).collect();
     let mut analysis = Analysis::new(root.to_path_buf(), checked, open);

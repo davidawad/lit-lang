@@ -4,7 +4,7 @@
 //! Each case mutates the checked HIR of `lit/examples`.
 mod support;
 
-use litigate_lower::{render, Lowerer, Options};
+use litigate_lower::{render, Lowerer};
 use litigate_sema::hir::{Anchor, CiteRule, DayUnit, HolidayDate, Observance, RollOn, ShortPeriod};
 use support::{
     calendar_mut, clock_of, counting_mut, example, lowered, lowering_errors, render_diagnostics,
@@ -257,23 +257,33 @@ fn holiday_weekdays_must_be_weekdays() {
     insta::assert_snapshot!(lowering_errors(&p));
 }
 
-/// `clock_at` lowers one named rule at the given dates: `None` for a rule
-/// the package does not declare, its diagnostics for one that fails.
+/// `clock_version` lowers one counting version at its own `from`: `None`
+/// for a version the package does not declare, its diagnostics for one
+/// that fails, and a version recorded after the package's corpus date
+/// still lowers (selection, not lowering, honours `known_at`).
 #[test]
-fn clock_at_lowers_one_rule() {
+fn clock_version_lowers_one_version() {
     let mut p = example();
-    let options = Options::default();
-    let one = Lowerer::new(&[&p]).clock_at(&p, "frcp6", &options);
+    let c = counting_mut(&mut p).clone();
+    let one = Lowerer::new(&[&p]).clock_version(&p, &c);
     let rules = one.map(|c| c.map(|c| c.counting_rules.len()));
     assert_eq!(rules, Ok(Some(1)));
+    let mut other = c.clone();
+    other.meta.id = "rcfc6".into();
+    assert_eq!(Lowerer::new(&[&p]).clock_version(&p, &other), Ok(None));
+
+    counting_mut(&mut p).meta.effective.known_at = "2099-01-01".into();
+    let late = counting_mut(&mut p).clone();
+    let rules = Lowerer::new(&[&p]).clock_version(&p, &late);
     assert_eq!(
-        Lowerer::new(&[&p]).clock_at(&p, "rcfc6", &options),
-        Ok(None)
+        rules.map(|c| c.map(|c| c.counting_rules.len())),
+        Ok(Some(1))
     );
 
     counting_mut(&mut p).include_last_day = false;
+    let failing = counting_mut(&mut p).clone();
     let found = Lowerer::new(&[&p])
-        .clock_at(&p, "frcp6", &options)
+        .clock_version(&p, &failing)
         .err()
         .unwrap_or_default();
     insta::assert_snapshot!(render_diagnostics(&found));

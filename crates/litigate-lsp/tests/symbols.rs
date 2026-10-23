@@ -41,8 +41,11 @@ fn variants_are_contained_by_their_enum() {
 
 #[test]
 fn without_an_absolute_root_no_symbol_has_a_location() {
-    let checked =
-        litigate_cli::check_session(Session::from_loaded(&[], Vec::new()), Profile::Dev, None);
+    let checked = litigate_cli::check_session(
+        Session::from_loaded(&[], Vec::new()),
+        Profile::Dev,
+        &litigate_lower::Options::default(),
+    );
     let open: BTreeMap<PathBuf, String> = std::iter::once((
         PathBuf::from("loose.lit"),
         "module loose\nstart s\nstate s: \"S\"\n".to_owned(),

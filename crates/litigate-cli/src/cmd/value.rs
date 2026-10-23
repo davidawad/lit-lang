@@ -7,6 +7,7 @@ use crate::hirx::{self, local};
 use crate::matter::Scheduled;
 use crate::out::{Failure, Outcome, Report};
 use litigate_base::Profile;
+use litigate_lower::Options;
 use litigate_sema::hir::{self, DeadlineWindow, Relation};
 use serde_json::{json, Value};
 
@@ -35,6 +36,7 @@ struct Trace<'a> {
     pkg: &'a hir::Package,
     schedule: &'a [Scheduled],
     as_of: &'a str,
+    known_at: Option<&'a str>,
 }
 
 impl Trace<'_> {
@@ -87,10 +89,9 @@ impl Trace<'_> {
                     _ => None,
                 }),
         );
-        let counting_cite =
-            hirx::counting(self.pkg, &v.counting).and_then(|c| c.meta.cite.as_ref());
         match scheduled {
             Some(s) => {
+                let counting_cite = s.cite.as_ref();
                 steps.push(step(
                     s.rule.clone(),
                     counting_cite,
@@ -121,11 +122,20 @@ impl Trace<'_> {
         let versions: Vec<&hir::Deadline> = hirx::deadlines(self.pkg, d).collect();
         let qualified = format!("{}::{d}", self.pkg.manifest.pack_id);
         let scheduled = self.schedule.iter().find(|s| s.deadline == qualified);
-        let date = scheduled.map_or(self.as_of, |s| s.trigger_date.as_str());
-        let chosen = versions
-            .iter()
-            .find(|v| hirx::in_force(&v.meta, date, None))
-            .copied();
+        // The version that counted the scheduled due date, else the one
+        // selected at the matter's dates.
+        let chosen = match scheduled {
+            Some(s) => versions
+                .iter()
+                .find(|v| format!("{}@{}", v.meta.id, v.meta.effective.from) == s.version)
+                .copied(),
+            None => hirx::selected(self.all, self.pkg, self.as_of, self.known_at)
+                .into_iter()
+                .find_map(|x| match x {
+                    hir::Declaration::Deadline(v) if v.meta.id == d => Some(v),
+                    _ => None,
+                }),
+        };
         let steps = chosen
             .map(|v| self.steps(d, v, scheduled))
             .unwrap_or_default();
@@ -187,7 +197,7 @@ pub fn explain_value(case: Option<&str>, value: Option<&str>, lib: &[String]) ->
     let (Some(case), Some(id)) = (case, value) else {
         return Err(Failure::new("give a .case file and a deadline or edge id"));
     };
-    let c = checked(&[case.to_owned()], Profile::Dev, None, lib)?;
+    let c = checked(&[case.to_owned()], Profile::Dev, &Options::default(), lib)?;
     let matter = c
         .cases
         .first()
@@ -216,6 +226,7 @@ pub fn explain_value(case: Option<&str>, value: Option<&str>, lib: &[String]) ->
         pkg,
         schedule: &matter.schedule,
         as_of: &hcase.as_of,
+        known_at: hcase.known_at.as_deref(),
     };
     if let Some(pkg) = used
         .iter()
@@ -230,7 +241,7 @@ pub fn explain_value(case: Option<&str>, value: Option<&str>, lib: &[String]) ->
         return Ok(report);
     }
     let edge = used.iter().copied().find_map(|p| {
-        hirx::nodes_at(p, Some(&hcase.as_of))
+        hirx::nodes_at(&all, p, &hcase.as_of, hcase.known_at.as_deref())
             .into_iter()
             .find_map(|n| {
                 n.edges

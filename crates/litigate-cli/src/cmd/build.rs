@@ -263,11 +263,8 @@ pub fn build(src: &dyn Source, args: &Args) -> Outcome {
     } = args;
     let (out, profile) = (out.as_str(), *profile);
     let stems = pack_file_map(pack_files)?;
-    let c = checked_in(src, paths, profile, dates.as_of.as_deref(), lib)?;
-    let options = Options {
-        as_of: dates.as_of.clone(),
-        known_at: dates.known_at.clone(),
-    };
+    let options = dates.options();
+    let c = checked_in(src, paths, profile, &options, lib)?;
     let mut report = Report {
         result: Value::Null,
         provenance: c.provenance(dates.as_of.as_deref(), dates.known_at.as_deref()),
@@ -362,7 +359,7 @@ mod tests {
     fn lowered(extra: &str, text: &str) -> Built {
         let session = testkit::example_locked(extra, text, None);
         lower_all(
-            &super::super::check::check_session(session, Profile::Dev, None),
+            &super::super::check::check_session(session, Profile::Dev, &Options::default()),
             &Options::default(),
         )
     }
@@ -390,7 +387,7 @@ mod tests {
     fn a_clean_package_writes_its_documents_and_litigatable() {
         for (profile, name) in [(Profile::Dev, "dev"), (Profile::Strict, "strict")] {
             let session = testkit::example_locked("", ACME, None);
-            let checked = super::super::check::check_session(session, profile, None);
+            let checked = super::super::check::check_session(session, profile, &Options::default());
             let built = lower_all(&checked, &Options::default());
             let files: Vec<&str> = built.files.iter().map(|(p, _)| p.as_str()).collect();
             insta::assert_debug_snapshot!("clean_build_files", files);

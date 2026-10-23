@@ -148,7 +148,7 @@ fn round_trip(imported: &Imported, inputs: &[Input]) -> Vec<Diagnostic> {
     for case in &mut session.cases {
         case.lock = Some(lock.clone());
     }
-    let checked = check_session(session, Profile::Dev, None);
+    let checked = check_session(session, Profile::Dev, &Options::default());
     let mut out = unchecked(imported, inputs, &checked);
     if !out.is_empty() {
         return out;

@@ -10,7 +10,7 @@
 //! `otherwise` does. A discretionary leg ("unless the court orders
 //! otherwise", "just and practicable") is an `unless has_event(Order...)`
 //! arm the case satisfies with an order event.
-use super::activity::{active, Inactive};
+use super::activity::Inactive;
 use super::condition::{eval, first_foreign, has_event, matches};
 use super::world::{error, span_of, DiagnosticExt, Key, Locate, World};
 use crate::hir::{Declaration, Expr, Transition, TransitionArm};
@@ -65,20 +65,15 @@ pub fn governing(
     let event = events
         .get(at)
         .ok_or_else(|| Ungoverned::Transition(format!("no event #{at}")))?;
-    let v = active(world, key, &set, event.date, known_at).map_err(Ungoverned::Inactive)?;
+    let version = super::select(world, key, event.date, known_at).map_err(Ungoverned::Inactive)?;
+    let from = &world.decls[version].meta.effective.from;
     let pending = events
         .iter()
         .map(|e| e.date)
         .min()
-        .is_some_and(|first| first < v.in_force.from.as_str());
-    let Some((ti, t)) = pending
-        .then(|| world.transition(key, &v.in_force.from))
-        .flatten()
-    else {
-        return Ok(Governing {
-            version: v.decl,
-            via: None,
-        });
+        .is_some_and(|first| first < from.as_str());
+    let Some((ti, t)) = pending.then(|| world.transition(key, from)).flatten() else {
+        return Ok(Governing { version, via: None });
     };
     let history: Vec<&Expr> = events
         .iter()

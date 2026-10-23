@@ -65,16 +65,17 @@ fn a_counting_version_that_does_not_lower_is_an_error() {
     insta::assert_snapshot!(render_diagnostics(&found));
 }
 
-/// A version recorded after the package's corpus date is not visible at
-/// its start, so it contributes no fragment.
+/// A version recorded after the package's corpus date still has its
+/// fragment: whether a request names it is the selection's `known_at`
+/// answer (`temporal::select`), never the clock's.
 #[test]
-fn a_version_not_yet_known_is_skipped() {
+fn a_version_recorded_late_still_lowers() {
     let mut p = example();
     counting_mut(&mut p).meta.effective.known_at = "2099-01-01".into();
     let from = from_of(&mut p);
     let clock = EngineClock::lowered(&Lowerer::new(&[&p]), &[&p])
         .unwrap_or_else(|d| panic!("{}", render_diagnostics(&d)));
-    assert_eq!(clock, EngineClock::new([]));
+    assert_ne!(clock, EngineClock::new([]));
     assert_eq!(
         clock.due(&request("frcp6", Some(&from))).as_deref(),
         Ok("2025-03-24")

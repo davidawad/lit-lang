@@ -5,10 +5,7 @@
 //! `litigate check`'s deadline schedule.
 use crate::analysis::Analysis;
 use crate::convert;
-use litigate_cli::clock::{self, Clocks};
-use litigate_cli::hirx;
 use litigate_cli::matter::Scheduled;
-use litigate_sema::hir;
 use litigate_syntax::{parse, FileKind, SyntaxKind as K, SyntaxNode, TextSize};
 use std::fmt::Write as _;
 use tower_lsp::lsp_types::{
@@ -36,37 +33,18 @@ fn event_end(root: &SyntaxNode, date: &str, call: &str) -> Option<TextSize> {
         .map(|n| n.text_range().end())
 }
 
-/// The label of one scheduled deadline, with what the clock did.
-fn label(analysis: &Analysis, clocks: &Clocks, case: Option<&hir::Case>, s: &Scheduled) -> String {
-    let (pack, local) = s.deadline.split_once("::").unwrap_or(("", &s.deadline));
-    let pkg = analysis.hir_by_key(pack);
-    let cite = pkg
-        .and_then(|p| hirx::counting(p, &s.rule))
-        .and_then(|c| c.meta.cite.clone())
-        .unwrap_or_else(|| s.rule.clone());
-    let event = case.and_then(|c| {
-        c.events
-            .iter()
-            .find(|e| e.date == s.trigger_date && hirx::event_text(&e.action) == s.trigger)
-    });
-    // The schedule counted it this way, so this recounts what it found.
-    let computed = pkg.zip(event).and_then(|(p, e)| {
-        hirx::deadline_at(p, local, &s.trigger_date)
-            .and_then(|d| clock::due(clocks, p, d, &s.trigger_date, Some(&e.action)))
-            .ok()
-    });
-    let flags: String = computed
-        .map(|due| {
-            let mut f = String::new();
-            if due.computed.last_day_rolled {
-                f.push_str(" rolled");
-            }
-            if let Some(m) = due.method {
-                let _ = write!(f, " +{m} service");
-            }
-            f
-        })
-        .unwrap_or_default();
+/// The label of one scheduled deadline, with what the clock did: the
+/// schedule's own versions and count, never a recount.
+fn label(s: &Scheduled) -> String {
+    let (_, local) = s.deadline.split_once("::").unwrap_or(("", &s.deadline));
+    let cite = s.cite.as_deref().unwrap_or(&s.rule);
+    let mut flags = String::new();
+    if s.rolled {
+        flags.push_str(" rolled");
+    }
+    if let Some(m) = &s.method {
+        let _ = write!(flags, " +{m} service");
+    }
     format!("// {local} due {} ({cite}{flags})", s.due)
 }
 
@@ -77,7 +55,6 @@ pub fn hints(analysis: &Analysis, file: &str, range: Range) -> Vec<InlayHint> {
         return Vec::new();
     };
     let root = parse(&text, FileKind::Case).syntax();
-    let clocks = Clocks::new(&analysis.checked.session.hir());
     case.schedule
         .iter()
         .filter_map(|s| {
@@ -85,7 +62,7 @@ pub fn hints(analysis: &Analysis, file: &str, range: Range) -> Vec<InlayHint> {
             let position = convert::position(&text, usize::from(at));
             convert::touches(&range, position).then(|| InlayHint {
                 position,
-                label: InlayHintLabel::String(label(analysis, &clocks, case.case.as_ref(), s)),
+                label: InlayHintLabel::String(label(s)),
                 kind: None::<InlayHintKind>,
                 text_edits: None,
                 tooltip: Some(InlayHintTooltip::MarkupContent(MarkupContent {

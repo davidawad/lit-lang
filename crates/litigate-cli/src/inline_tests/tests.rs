@@ -138,6 +138,7 @@ fn every_expression_form_evaluates_or_says_why() {
             let mut cx = Cx {
                 clocks: &clocks,
                 pkg: &pkg,
+                known_at: &pkg.manifest.in_force.known_at,
                 givens: &givens,
                 steps: Vec::new(),
             };
@@ -167,6 +168,7 @@ fn expectations_carry_their_source_text_or_error() {
     let mut cx = Cx {
         clocks: &clocks,
         pkg: &pkg,
+        known_at: &pkg.manifest.in_force.known_at,
         givens: &[],
         steps: Vec::new(),
     };
@@ -224,8 +226,7 @@ fn expectations_carry_their_source_text_or_error() {
 #[test]
 fn run_filters_by_name_and_reports_spanless_failures_at_the_manifest() {
     let mut pkg = hir_with("");
-    let clocks = Clocks::new(&[&pkg]);
-    let (results, failures) = run(&clocks, &pkg, &[], Some("mail"));
+    let (results, failures) = run(&Clocks::new(&[&pkg]), &pkg, &[], Some("mail"), None);
     let names: Vec<&str> = results.iter().map(|t| t.name.as_str()).collect();
     assert_eq!(
         (names, failures.len()),
@@ -246,7 +247,7 @@ fn run_filters_by_name_and_reports_spanless_failures_at_the_manifest() {
             });
         }
     }
-    let (_, failures) = run(&clocks, &pkg, &[], Some("mail"));
+    let (_, failures) = run(&Clocks::new(&[&pkg]), &pkg, &[], Some("mail"), None);
     let found: Vec<(&str, &str)> = failures
         .iter()
         .map(|d| (d.span.file.0.as_str(), d.message.as_str()))

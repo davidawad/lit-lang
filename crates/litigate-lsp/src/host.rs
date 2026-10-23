@@ -11,6 +11,7 @@ use crate::analysis::Analysis;
 use litigate_base::Profile;
 use litigate_cli::check_session;
 use litigate_cli::ws::{self, CaseText, Session};
+use litigate_lower::Options;
 use litigate_sema::pkg::load::{load_tree, relative_to, LoadedFile, LoadedPackage};
 use litigate_syntax::FileKind;
 use salsa::Setter;
@@ -24,6 +25,8 @@ pub struct Settings {
     pub profile: Profile,
     /// Law-in-force date for package checks (`"asOf"`), as `--as-of`.
     pub as_of: Option<String>,
+    /// Corpus date for package checks (`"knownAt"`), as `--known-at`.
+    pub known_at: Option<String>,
 }
 
 impl Default for Settings {
@@ -31,13 +34,14 @@ impl Default for Settings {
         Self {
             profile: Profile::Dev,
             as_of: None,
+            known_at: None,
         }
     }
 }
 
 impl Settings {
-    /// Reads `{"profile": "strict", "asOf": "2025-01-01"}`; anything else
-    /// keeps the default.
+    /// Reads `{"profile": "strict", "asOf": "2025-01-01", "knownAt":
+    /// "2025-01-01"}`; anything else keeps the default.
     #[must_use]
     pub fn from_options(options: Option<&serde_json::Value>) -> Self {
         let get = |key: &str| options.and_then(|o| o.get(key)).and_then(|v| v.as_str());
@@ -47,6 +51,7 @@ impl Settings {
                 _ => Profile::Dev,
             },
             as_of: get("asOf").map(str::to_owned),
+            known_at: get("knownAt").map(str::to_owned),
         }
     }
 }
@@ -249,11 +254,11 @@ impl Host {
                 Session::from_loaded(&loaded, cases)
             }
         };
-        let checked = check_session(
-            session,
-            self.settings.profile,
-            self.settings.as_of.as_deref(),
-        );
+        let options = Options {
+            as_of: self.settings.as_of.clone(),
+            known_at: self.settings.known_at.clone(),
+        };
+        let checked = check_session(session, self.settings.profile, &options);
         let loose = self
             .open
             .iter()
@@ -311,10 +316,12 @@ mod tests {
 
     #[test]
     fn settings_read_the_initialization_options() {
-        let strict =
-            Settings::from_options(Some(&json!({"profile": "strict", "asOf": "2025-01-01"})));
+        let strict = Settings::from_options(Some(
+            &json!({"profile": "strict", "asOf": "2025-01-01", "knownAt": "2024-06-01"}),
+        ));
         assert_eq!(strict.profile, Profile::Strict);
         assert_eq!(strict.as_of.as_deref(), Some("2025-01-01"));
+        assert_eq!(strict.known_at.as_deref(), Some("2024-06-01"));
         assert_eq!(
             Settings::from_options(Some(&json!({"profile": 7}))),
             Settings::default()

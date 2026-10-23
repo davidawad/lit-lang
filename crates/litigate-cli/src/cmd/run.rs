@@ -7,7 +7,7 @@ use crate::out::{Failure, Outcome, Report};
 use litgraph::api::{handle, Catalog, Request};
 use litgraph::clock::ClockLibrary;
 use litigate_base::Profile;
-use litigate_lower::Document;
+use litigate_lower::{Document, Options};
 use serde_json::{json, Value};
 
 /// The op object for `--op`: a JSON object, or an op name.
@@ -42,7 +42,7 @@ pub fn run(case: &str, op: &str, links: bool, lib: &[String]) -> Outcome {
     targets
         .packages
         .extend(crate::ws::links_packages(lib, &targets.cases));
-    let c = checked_targets(&targets, Profile::Dev, None, lib)?;
+    let c = checked_targets(&targets, Profile::Dev, &Options::default(), lib)?;
     let mut report = Report {
         result: Value::Null,
         provenance: c.provenance(None, None),

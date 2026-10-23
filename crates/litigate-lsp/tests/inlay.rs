@@ -84,9 +84,9 @@ fn a_qualified_event_call_is_not_found_in_the_source() {
 }
 
 #[test]
-fn a_counting_rule_from_another_package_is_named() {
-    // `ptab` counts with `lit/core`'s `rcfc6`, which its own declarations
-    // do not hold, so the hint names the rule rather than its cite.
+fn a_counting_rule_from_another_package_is_cited() {
+    // `ptab` counts with `lit/core`'s `rcfc6`: the hint cites the version
+    // the schedule selected there, not the bare rule id.
     let mut host = support::host(&support::repo());
     let a = host.analyze();
     let case = "cases/ptab-ipr-defense.case";

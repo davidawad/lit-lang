@@ -3,7 +3,7 @@
 //! edges, instances, and option removal.
 mod cov_case_support;
 
-use cov_case_support::{matter, run, At, ALPHA_ONLY, STAKES};
+use cov_case_support::{check, fixture, lock, matter, outcome, run, At, ALPHA_ONLY, STAKES};
 use litigate_base::Profile;
 use litigate_sema::case::{Clock, NoClock};
 use std::collections::BTreeMap;
@@ -98,6 +98,45 @@ fn deadline_table() {
         ),
     ];
     insta::assert_debug_snapshot!(table(&rows));
+}
+
+/// A counting rule the package declares counts only under a version
+/// recorded by the matter's `known_at`: the shared library never stands
+/// in for it.
+#[test]
+fn counting_versions_honour_known_at() {
+    let mut packages = fixture().to_vec();
+    for d in packages
+        .iter_mut()
+        .filter(|p| p.manifest.name == "alpha")
+        .flat_map(|p| p.modules.iter_mut())
+        .flat_map(|m| m.declarations.iter_mut())
+    {
+        if let litigate_sema::hir::Declaration::Counting(c) = d {
+            c.meta.effective.known_at = "2026-01-01".into();
+        }
+    }
+    let lock = lock(&packages);
+    let events = [SERVED, "2010-01-08 Answered(complaint) by d"];
+    let at = |dates: &str| {
+        let text = matter(ALPHA_ONLY, "", &events, STAKES).replace("as_of 2011-06-01\n", dates);
+        outcome(&check(
+            &text,
+            &packages,
+            Some(&lock),
+            &At("2010-01-11"),
+            Profile::Dev,
+        ))
+    };
+    let latest = at("as_of 2011-06-01\n");
+    assert!(latest.iter().any(|l| l.starts_with("ok: ")), "{latest:?}");
+    let earlier = at("as_of 2011-06-01\nknown_at 2025-06-01\n");
+    assert!(
+        earlier
+            .iter()
+            .any(|l| l.contains("no version of counting rule `alpha::ac` governs 2010-01-08")),
+        "{earlier:?}"
+    );
 }
 
 #[test]

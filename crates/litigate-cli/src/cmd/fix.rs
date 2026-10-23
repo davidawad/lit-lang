@@ -7,6 +7,7 @@ use super::check::checked;
 use crate::out::{Failure, Outcome, Report};
 use crate::span::byte_range;
 use litigate_base::{Applicability, DiagnosticCode, Fix, Profile};
+use litigate_lower::Options;
 use serde_json::json;
 use std::collections::BTreeMap;
 
@@ -68,7 +69,7 @@ pub fn fix(args: &Args) -> Outcome {
         ),
         None => None,
     };
-    let c = checked(&args.paths, args.profile, None, &args.lib)?;
+    let c = checked(&args.paths, args.profile, &Options::default(), &args.lib)?;
     let allowed = |a: Applicability| {
         a == Applicability::MachineApplicable
             || (args.include_maybe && a == Applicability::MaybeIncorrect)

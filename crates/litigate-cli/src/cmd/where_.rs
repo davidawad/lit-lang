@@ -115,7 +115,8 @@ fn lowered(all: &[&hir::Package], pkg: &hir::Package, id: &str) -> (Vec<String>,
         }
     }
     if let Document::Pack(pack) = &out.document {
-        let uses: Vec<String> = hirx::nodes_at(pkg, Some(&pkg.manifest.in_force.known_at))
+        let corpus = &pkg.manifest.in_force.known_at;
+        let uses: Vec<String> = hirx::nodes_at(all, pkg, corpus, Some(corpus))
             .iter()
             .flat_map(|n| n.edges.iter())
             .filter(|e| matches!(e.deadline.as_ref().map(|d| &d.window), Some(DeadlineWindow::Declared { deadline }) if local(deadline) == id))
@@ -138,7 +139,7 @@ pub fn where_(id: &str, paths: &[String], lib: &[String]) -> Outcome {
         entry["kind"] = Value::String("diagnostic".into());
         return Ok(Report::of(entry));
     }
-    let c = checked(&roots(paths, lib)?, Profile::Dev, None, lib)?;
+    let c = checked(&roots(paths, lib)?, Profile::Dev, &Options::default(), lib)?;
     let all = c.session.hir();
     let (pack, name, version) = split(id);
     let in_pack =
@@ -148,7 +149,7 @@ pub fn where_(id: &str, paths: &[String], lib: &[String]) -> Outcome {
         let decls: Vec<&Declaration> = hirx::declarations(pkg)
             .filter(|d| hirx::decl_id(d).as_deref() == Some(name))
             .collect();
-        let edges: Vec<(&hir::Node, &hir::Edge)> = hirx::nodes_at(pkg, None)
+        let edges: Vec<(&hir::Node, &hir::Edge)> = hirx::nodes(pkg)
             .into_iter()
             .flat_map(|n| n.edges.iter().map(move |e| (n, e)))
             .filter(|(_, e)| e.id.as_deref() == Some(name))
@@ -159,7 +160,7 @@ pub fn where_(id: &str, paths: &[String], lib: &[String]) -> Outcome {
         let versions: Vec<&hir::Metadata> = decls
             .iter()
             .filter_map(|d| meta_of(d))
-            .filter(|m| version.is_none_or(|v| hirx::in_force(m, v, None)))
+            .filter(|m| version.is_none_or(|v| hirx::in_force(m, v)))
             .collect();
         let kind = decls.first().map_or("edge", |d| hirx::decl_kind(d));
         let span = versions

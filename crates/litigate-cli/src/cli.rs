@@ -65,6 +65,17 @@ pub struct Dates {
     pub known_at: Option<String>,
 }
 
+impl Dates {
+    /// The lowering options these dates select at.
+    #[must_use]
+    pub fn options(&self) -> litigate_lower::Options {
+        litigate_lower::Options {
+            as_of: self.as_of.clone(),
+            known_at: self.known_at.clone(),
+        }
+    }
+}
+
 /// Structured query kinds.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, ValueEnum)]
 pub enum QueryKind {

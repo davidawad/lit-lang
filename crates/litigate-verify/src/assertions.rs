@@ -6,22 +6,27 @@
 //! event matching `d`'s trigger, with that event's service method, under
 //! the versions of `d` and of its counting rule in force on the trigger
 //! date (the rule lowered at its own `from`, as `litigate test` does), so
-//! a test can never pass here and the engine compute a different date. `has_event(p)` is true when a `given`
+//! a test can never pass here and the engine compute a different date.
+//! Both versions are selected by sema's one query (`temporal::select`)
+//! among those recorded by the build's `known_at`, as lowering selects
+//! them; a counting rule no loaded package declares is the shared
+//! library's. `has_event(p)` is true when a `given`
 //! matches `p`. An assertion this evaluator cannot compute fails: an
 //! unevaluated test is not a passing one.
-use crate::context::in_force;
 use crate::diag::{emit, note};
 use crate::{same_expr, Context};
 use litgraph::clock::{self, ClockConfig, ClockLibrary, DayDeadline, Unit};
 use litigate_base::{Diagnostic, DiagnosticCode as C};
-use litigate_lower::{Lowerer, Options};
+use litigate_lower::Lowerer;
 use litigate_sema::hir::{self, BinaryOp, Declaration, Expr, ExprKind, Value};
+use litigate_sema::temporal::{self, Key, World};
 use std::cell::RefCell;
 use std::collections::BTreeMap;
 
-/// L5006 for every assertion that does not hold or cannot be evaluated.
-pub(crate) fn failures(cx: &Context<'_>) -> Vec<Diagnostic> {
-    let clocks = Clocks::default();
+/// L5006 for every assertion that does not hold or cannot be evaluated,
+/// with versions selected among those recorded by `known_at`.
+pub(crate) fn failures(cx: &Context<'_>, known_at: &str) -> Vec<Diagnostic> {
+    let clocks = Clocks::new(cx, known_at);
     cx.declarations()
         .filter_map(|d| match d {
             Declaration::Test(t) => Some(t),
@@ -155,17 +160,41 @@ fn due(
         .max_by(|(i, _, a), (j, _, b)| a.cmp(b).then(i.cmp(j)))
         .map(|(_, args, d)| (args, d))
         .ok_or_else(|| format!("no `given` event matches the trigger of `{target}`"))?;
-    let deadline = versions
-        .iter()
-        .find(|v| in_force(&v.meta.effective, date))
-        .ok_or_else(|| format!("no version of `{target}` is in force on {date}"))?;
-    let (pkg, counting) = cx.counting_at(&deadline.counting, date).ok_or_else(|| {
-        format!(
-            "no version of counting rule `{}` is in force on {date}",
-            deadline.counting
-        )
-    })?;
-    let library = clocks.get(cx, pkg, counting)?;
+    let (pkg, id) = cx.owner(target);
+    let key = Key {
+        pack: pkg.manifest.pack_id.clone(),
+        name: id.to_owned(),
+    };
+    let Some((_, Declaration::Deadline(deadline))) = clocks.select(&key, date) else {
+        return Err(format!(
+            "no version of `{target}` recorded by {} is in force on {date}",
+            clocks.known_at
+        ));
+    };
+    let counting_key = clocks
+        .world
+        .target(&pkg.manifest.pack_id, &deadline.counting)
+        .key;
+    let counting = if clocks.world.versions(&counting_key).versions.is_empty() {
+        None
+    } else {
+        let Some((pkg, Declaration::Counting(c))) = clocks.select(&counting_key, date) else {
+            return Err(format!(
+                "no version of counting rule `{}` recorded by {} is in force on {date}",
+                deadline.counting, clocks.known_at
+            ));
+        };
+        Some((pkg, c))
+    };
+    let library = match counting {
+        Some((pkg, c)) => clocks.get(cx, pkg, c)?,
+        None => ClockLibrary::embedded().0.clone(),
+    };
+    let rule = deadline
+        .counting
+        .rsplit("::")
+        .next()
+        .unwrap_or(&deadline.counting);
     let trigger = clock::Date::parse_iso(date).map_err(|e| e.to_string())?;
     let request = DayDeadline {
         trigger,
@@ -179,25 +208,25 @@ fn due(
             hir::DayUnit::Calendar => Unit::Calendar,
             hir::DayUnit::Court | hir::DayUnit::Business => Unit::Court,
         },
-        service_method: service_method(counting, event),
+        service_method: service_method(counting.map(|(_, c)| c), event),
     };
     library
-        .clock(&counting.meta.id)
+        .clock(rule)
         .and_then(|clock| clock::compute_due_date(&request, &clock, &ClockConfig::default()))
         .map(|c| c.due_date)
         .map_err(|e| e.to_string())
 }
 
 /// The engine service method of the first event argument naming one of
-/// the counting rule's `service_extension` methods.
-fn service_method(c: &hir::Counting, args: &[Expr]) -> Option<clock::ServiceMethod> {
+/// the counting rule's `service_extension` methods (any engine method for
+/// a shared-library rule).
+fn service_method(c: Option<&hir::Counting>, args: &[Expr]) -> Option<clock::ServiceMethod> {
     args.iter().find_map(|a| match &a.kind {
         ExprKind::Literal {
             value: Value::Variant(v),
         } => {
             let name = v.rsplit("::").next().unwrap_or(v);
-            c.service_extensions
-                .contains_key(name)
+            c.is_none_or(|c| c.service_extensions.contains_key(name))
                 .then(|| kebab(name))
                 .and_then(|k| serde_json::from_value(serde_json::Value::String(k)).ok())
         }
@@ -216,13 +245,38 @@ fn kebab(name: &str) -> String {
         .collect()
 }
 
-/// Engine clock libraries per counting-rule version, lowered once each.
-#[derive(Default)]
-struct Clocks {
+/// The loaded declarations, and engine clock libraries per counting-rule
+/// version, lowered once each.
+struct Clocks<'a> {
+    world: World<'a>,
+    packages: Vec<&'a hir::Package>,
+    /// The corpus date versions are selected at.
+    known_at: &'a str,
     lowered: RefCell<BTreeMap<(String, String), Result<ClockLibrary, String>>>,
 }
 
-impl Clocks {
+impl<'a> Clocks<'a> {
+    fn new(cx: &Context<'a>, known_at: &'a str) -> Self {
+        let mut packages = cx.packages.to_vec();
+        if !packages.iter().any(|p| std::ptr::eq(*p, cx.package)) {
+            packages.push(cx.package);
+        }
+        Self {
+            world: World::from_packages(&packages),
+            packages,
+            known_at,
+            lowered: RefCell::default(),
+        }
+    }
+
+    /// The version of `key` in force on `date` among those recorded by
+    /// `known_at` (`temporal::select`), with its package.
+    fn select(&self, key: &Key, date: &str) -> Option<(&'a hir::Package, &'a Declaration)> {
+        let i = temporal::select(&self.world, key, date, Some(self.known_at)).ok()?;
+        let d = &self.world.decls[i];
+        Some((self.packages[d.pack], d.decl))
+    }
+
     fn get(
         &self,
         cx: &Context<'_>,
@@ -249,12 +303,8 @@ fn lower_clock(
     pkg: &hir::Package,
     counting: &hir::Counting,
 ) -> Result<ClockLibrary, String> {
-    let options = Options {
-        as_of: Some(counting.meta.effective.from.clone()),
-        known_at: None,
-    };
     Lowerer::new(cx.packages)
-        .clock_at(pkg, &counting.meta.id, &options)
+        .clock_version(pkg, counting)
         .map_err(|ds| {
             ds.iter()
                 .map(|d| format!("{} {}", d.code.as_str(), d.message))

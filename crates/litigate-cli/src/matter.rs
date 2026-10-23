@@ -16,6 +16,7 @@ use litigate_lower::{EngineClock, LoweredCase, Lowerer};
 use litigate_sema::case::{Env, Step};
 use litigate_sema::hir;
 use litigate_sema::pkg::lock::LockFile;
+use litigate_sema::temporal::MatterEvent;
 use litigate_verify::Finding;
 use serde::Serialize;
 
@@ -34,6 +35,18 @@ pub struct Scheduled {
     pub rule: String,
     /// Counting steps.
     pub steps: Vec<String>,
+    /// The deadline version that counted it (`id@from`).
+    #[serde(skip)]
+    pub version: String,
+    /// The `cite` of the counting version that counted it.
+    #[serde(skip)]
+    pub cite: Option<String>,
+    /// Whether the last day rolled forward.
+    #[serde(skip)]
+    pub rolled: bool,
+    /// The service method that added days, if any.
+    #[serde(skip)]
+    pub method: Option<String>,
 }
 
 /// A checked matter.
@@ -209,9 +222,18 @@ fn history(case: &hir::Case) -> Vec<&hir::Event> {
 }
 
 /// Every deadline of `packages` with a trigger in the matter's history,
-/// counted from its latest trigger under the version in force then.
+/// counted from its latest trigger under the versions governing it, as
+/// replay selects them (`clock::due`: at the matter's `known_at`, with
+/// transitions applied).
 fn schedule(packages: &[&hir::Package], clocks: &Clocks, case: &hir::Case) -> Vec<Scheduled> {
     let history = history(case);
+    let events: Vec<MatterEvent<'_>> = history
+        .iter()
+        .map(|e| MatterEvent {
+            date: &e.date,
+            action: &e.action,
+        })
+        .collect();
     let mut out: Vec<Scheduled> = Vec::new();
     for pkg in packages {
         for d in hirx::declarations(pkg) {
@@ -222,23 +244,25 @@ fn schedule(packages: &[&hir::Package], clocks: &Clocks, case: &hir::Case) -> Ve
             if out.iter().any(|s| s.deadline == id) {
                 continue;
             }
-            let Some(trigger) = history
+            let Some(at) = history
                 .iter()
-                .rev()
-                .find(|e| hirx::matches(&d.trigger, &e.action))
+                .rposition(|e| hirx::matches(&d.trigger, &e.action))
             else {
                 continue;
             };
-            let due = hirx::deadline_at(pkg, &d.meta.id, &trigger.date)
-                .and_then(|v| clock::due(clocks, pkg, v, &trigger.date, Some(&trigger.action)));
-            if let Ok(due) = due {
+            let known_at = case.known_at.as_deref();
+            if let Ok(due) = clock::due(clocks, pkg, &d.meta.id, &events, at, known_at) {
                 out.push(Scheduled {
                     deadline: id,
-                    trigger: hirx::event_text(&trigger.action),
+                    trigger: hirx::event_text(&history[at].action),
                     trigger_date: due.trigger,
                     due: due.computed.due_date,
                     rule: due.rule,
                     steps: due.computed.steps,
+                    version: due.version,
+                    cite: due.cite,
+                    rolled: due.computed.last_day_rolled,
+                    method: due.method,
                 });
             }
         }

@@ -6,8 +6,11 @@ use std::path::Path;
 
 /// An analysis of one loose document `loose.lit` at `root`.
 fn loose(root: &Path) -> Analysis {
-    let checked =
-        litigate_cli::check_session(Session::from_loaded(&[], Vec::new()), Profile::Dev, None);
+    let checked = litigate_cli::check_session(
+        Session::from_loaded(&[], Vec::new()),
+        Profile::Dev,
+        &litigate_lower::Options::default(),
+    );
     let open = std::iter::once((root.join("loose.lit"), "module loose\n".to_owned())).collect();
     Analysis::new(root.to_path_buf(), checked, open)
 }

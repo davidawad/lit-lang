@@ -1,7 +1,8 @@
-//! Read-only helpers over HIR: declarations by kind, version selection by
-//! date (SPEC §5.4), and event-pattern matching (SPEC §5.6).
+//! Read-only helpers over HIR: declarations by kind, version selection
+//! (SPEC §5.4, through sema's one query), and event-pattern matching
+//! (SPEC §5.6).
 use litigate_sema::hir::{self, Declaration, Expr, ExprKind, Metadata, Value};
-use litigate_sema::temporal::world::meta_of;
+use litigate_sema::temporal::{self, world::meta_of, World};
 
 /// The last `::`- or `.`-separated segment of a qualified name.
 #[must_use]
@@ -15,13 +16,32 @@ pub fn declarations(pkg: &hir::Package) -> impl Iterator<Item = &Declaration> {
     pkg.modules.iter().flat_map(|m| m.declarations.iter())
 }
 
-/// True when `meta`'s version is in force on `date` and recorded by `known_at`.
+/// True when `date` falls in `meta`'s in-force window: a lookup filter
+/// (`where id@D`, `query --effective-on`). Which version applies is
+/// [`selected`]'s answer, which also weighs `known_at` and supersession.
 #[must_use]
-pub fn in_force(meta: &Metadata, date: &str, known_at: Option<&str>) -> bool {
+pub fn in_force(meta: &Metadata, date: &str) -> bool {
     let e = &meta.effective;
-    e.from.as_str() <= date
-        && e.to.as_deref().is_none_or(|to| date < to)
-        && known_at.is_none_or(|k| e.known_at.as_str() <= k)
+    e.from.as_str() <= date && e.to.as_deref().is_none_or(|to| date < to)
+}
+
+/// The versions of `pkg`'s declarations selected at `(as_of, known_at)`
+/// (`None`: the latest corpus) by sema's one query, `temporal::select`,
+/// over every package in `all` (a declaration of one may supersede
+/// another's), in declaration order.
+#[must_use]
+pub fn selected<'p>(
+    all: &[&'p hir::Package],
+    pkg: &hir::Package,
+    as_of: &str,
+    known_at: Option<&str>,
+) -> Vec<&'p Declaration> {
+    let world = World::from_packages(all);
+    (0..world.decls.len())
+        .filter(|&i| world.pack_of(i) == pkg.manifest.pack_id)
+        .filter(|&i| temporal::select(&world, &world.key(i), as_of, known_at) == Ok(i))
+        .map(|i| world.decls[i].decl)
+        .collect()
 }
 
 /// The declaration's id (`meta.id`, or a test/type name).
@@ -74,52 +94,29 @@ pub fn deadlines<'p>(pkg: &'p hir::Package, name: &str) -> impl Iterator<Item = 
     })
 }
 
-/// The one version of deadline `name` in force on `date`.
-///
-/// # Errors
-/// A message when no version, or more than one, is in force (L3007).
-pub fn deadline_at<'p>(
-    pkg: &'p hir::Package,
-    name: &str,
-    date: &str,
-) -> Result<&'p hir::Deadline, String> {
-    let all: Vec<&hir::Deadline> = deadlines(pkg, name).collect();
-    if all.is_empty() {
-        return Err(format!(
-            "`{name}` is not a deadline of `{}`",
-            pkg.manifest.name
-        ));
-    }
-    let live: Vec<&hir::Deadline> = all
-        .into_iter()
-        .filter(|d| in_force(&d.meta, date, None))
-        .collect();
-    match live.as_slice() {
-        [one] => Ok(one),
-        [] => Err(format!("no version of `{name}` is in force on {date}")),
-        _ => Err(format!(
-            "{} versions of `{name}` are in force on {date}",
-            live.len()
-        )),
-    }
-}
-
-/// The counting rule `id` declared in `pkg`, if any.
+/// Every version of every node of `pkg`.
 #[must_use]
-pub fn counting<'p>(pkg: &'p hir::Package, id: &str) -> Option<&'p hir::Counting> {
-    let id = local(id);
-    declarations(pkg).find_map(|d| match d {
-        Declaration::Counting(c) if c.meta.id == id => Some(c),
-        _ => None,
-    })
-}
-
-/// Nodes of `pkg` in force on `date` (every version when `date` is `None`).
-#[must_use]
-pub fn nodes_at<'p>(pkg: &'p hir::Package, date: Option<&str>) -> Vec<&'p hir::Node> {
+pub fn nodes(pkg: &hir::Package) -> Vec<&hir::Node> {
     declarations(pkg)
         .filter_map(|d| match d {
-            Declaration::Node(n) if date.is_none_or(|day| in_force(&n.meta, day, None)) => Some(n),
+            Declaration::Node(n) => Some(n),
+            _ => None,
+        })
+        .collect()
+}
+
+/// The node versions of `pkg` selected at `(as_of, known_at)` ([`selected`]).
+#[must_use]
+pub fn nodes_at<'p>(
+    all: &[&'p hir::Package],
+    pkg: &hir::Package,
+    as_of: &str,
+    known_at: Option<&str>,
+) -> Vec<&'p hir::Node> {
+    selected(all, pkg, as_of, known_at)
+        .into_iter()
+        .filter_map(|d| match d {
+            Declaration::Node(n) => Some(n),
             _ => None,
         })
         .collect()
@@ -242,53 +239,23 @@ mod tests {
     }
 
     #[test]
-    fn versions_are_recorded_by_their_known_at() {
+    fn selection_honours_dates_and_known_at() {
         let pkg = crate::testkit::hir_with("");
         let meta = &deadlines(&pkg, "answer-period").next().unwrap().meta;
-        assert!(in_force(meta, "2025-03-03", None));
-        assert!(in_force(meta, "2025-03-03", Some(&meta.effective.known_at)));
-        assert!(!in_force(meta, "2025-03-03", Some("1900-01-01")));
-        assert!(nodes_at(&pkg, Some("2000-01-01")).is_empty());
+        assert!(in_force(meta, "2025-03-03"));
+        assert!(!in_force(meta, "1900-01-01"));
+        let all = [&pkg];
+        assert!(nodes_at(&all, &pkg, "2000-01-01", None).is_empty());
         assert_eq!(
-            nodes_at(&pkg, None).len(),
-            nodes_at(&pkg, Some("2025-03-03")).len()
+            nodes(&pkg).len(),
+            nodes_at(&all, &pkg, "2025-03-03", None).len()
         );
-    }
-
-    #[test]
-    fn the_deadline_in_force_is_unique() {
-        let mut pkg = crate::testkit::hir_with("");
-        let name = "frcp-rule12-example";
+        let known = meta.effective.known_at.clone();
         assert_eq!(
-            deadline_at(&pkg, "nope", "2025-03-03").map(|_| ()),
-            Err(format!("`nope` is not a deadline of `{name}`"))
+            selected(&all, &pkg, "2025-03-03", Some(&known)).len(),
+            selected(&all, &pkg, "2025-03-03", None).len()
         );
-        assert_eq!(
-            deadline_at(&pkg, "answer-period", "2000-01-01").map(|_| ()),
-            Err("no version of `answer-period` is in force on 2000-01-01".to_owned())
-        );
-        let twice = Declaration::Deadline(deadlines(&pkg, "answer-period").next().unwrap().clone());
-        pkg.modules[0].declarations.push(twice);
-        assert_eq!(
-            deadline_at(&pkg, "answer-period", "2025-03-03").map(|_| ()),
-            Err("2 versions of `answer-period` are in force on 2025-03-03".to_owned())
-        );
-    }
-
-    #[test]
-    fn counting_rules_by_local_name() {
-        let pkg = crate::testkit::hir_with(
-            "counting later cite FRCP 6(a)\n{\n  exclude_trigger_day\n  include_last_day\n  holidays federal-holidays\n}",
-        );
-        assert_eq!(
-            counting(&pkg, "m.later").map(|c| c.meta.id.as_str()),
-            Some("later")
-        );
-        assert_eq!(
-            counting(&pkg, "frcp6").map(|c| c.meta.id.as_str()),
-            Some("frcp6")
-        );
-        assert!(counting(&pkg, "none").is_none());
+        assert!(selected(&all, &pkg, "2025-03-03", Some("1900-01-01")).is_empty());
     }
 
     #[test]

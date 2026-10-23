@@ -116,6 +116,13 @@ pub fn verify_package(
     profile: Profile,
 ) -> Verification {
     let cx = Context::new(input.package, input.packages, profile);
+    // Tests select versions as the build does: at `--known-at`, else the
+    // package's corpus date.
+    let known_at = input
+        .options
+        .known_at
+        .as_deref()
+        .unwrap_or(&input.package.manifest.in_force.known_at);
     let mut b = Builder::default();
     sema::aggregate(&mut b, &input.check.diagnostics);
     let mut out = Vec::new();
@@ -138,7 +145,7 @@ pub fn verify_package(
                 deadline::unsatisfiable(&cx, &reached),
             );
             record(&mut b, O::CiteResolves, cite::unresolved(&cx, pack, corpus));
-            record(&mut b, O::TestsPass, assertions::failures(&cx));
+            record(&mut b, O::TestsPass, assertions::failures(&cx, known_at));
         }
         Ok(Document::Links(_)) => {
             for name in [
@@ -149,7 +156,7 @@ pub fn verify_package(
             ] {
                 b.skip(name, "a links package has no graph or sources of its own; checked where it composes packs");
             }
-            record(&mut b, O::TestsPass, assertions::failures(&cx));
+            record(&mut b, O::TestsPass, assertions::failures(&cx, known_at));
         }
         Err(lowering) => {
             sema::aggregate(&mut b, lowering);

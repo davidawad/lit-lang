@@ -7,6 +7,7 @@ use crate::hirx;
 use crate::span;
 use litigate_base::{Diagnostic, DiagnosticCode, Span};
 use litigate_sema::hir::{self, BinaryOp, Declaration, Expr, ExprKind, UnaryOp, Value};
+use litigate_sema::temporal::MatterEvent;
 use litigate_sema::types::rational;
 use serde::Serialize;
 use std::cmp::Ordering;
@@ -72,8 +73,10 @@ impl V {
 }
 
 struct Cx<'a> {
-    clocks: &'a Clocks,
+    clocks: &'a Clocks<'a>,
     pkg: &'a hir::Package,
+    /// The corpus date versions are selected at.
+    known_at: &'a str,
     givens: &'a [(Expr, String)],
     steps: Vec<String>,
 }
@@ -94,8 +97,11 @@ impl Cx<'_> {
                     hirx::event_text(&any.trigger)
                 )
             })?;
-        let d = hirx::deadline_at(self.pkg, name, date)?;
-        let due = clock::due(self.clocks, self.pkg, d, date, Some(event))?;
+        let events = [MatterEvent {
+            date,
+            action: event,
+        }];
+        let due = clock::due(self.clocks, self.pkg, name, &events, 0, Some(self.known_at))?;
         self.steps.extend(due.computed.steps.iter().cloned());
         Ok(V::Date(due.computed.due_date))
     }
@@ -208,14 +214,18 @@ fn expectation(
     (result, at)
 }
 
-/// Runs every test of `pkg` whose name contains `filter`.
+/// Runs every test of `pkg` whose name contains `filter`, selecting
+/// versions among those recorded by `known_at` (default: the package's
+/// `known_at`, as its build does).
 #[must_use]
 pub fn run(
     clocks: &Clocks,
     pkg: &hir::Package,
     sources: &[(String, String)],
     filter: Option<&str>,
+    known_at: Option<&str>,
 ) -> (Vec<TestResult>, Vec<Diagnostic>) {
+    let known_at = known_at.unwrap_or(&pkg.manifest.in_force.known_at);
     let mut diagnostics = Vec::new();
     let results = hirx::declarations(pkg)
         .filter_map(|d| match d {
@@ -226,6 +236,7 @@ pub fn run(
             let mut cx = Cx {
                 clocks,
                 pkg,
+                known_at,
                 givens: &t.givens,
                 steps: Vec::new(),
             };

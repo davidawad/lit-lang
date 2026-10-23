@@ -170,13 +170,20 @@ impl<'a> Graph<'a> {
         !self.node_versions(qualified).is_empty()
     }
 
+    /// Whether some loaded package declares `qualified` (any version).
+    pub fn declares(&self, qualified: &str) -> bool {
+        !self
+            .world
+            .versions(&Self::key(qualified))
+            .versions
+            .is_empty()
+    }
+
     /// The node version in force on `date` (SPEC §5.4, no transitions).
     pub fn node_at(&self, qualified: &str, date: &str, known_at: Option<&str>) -> Option<&'a Node> {
-        let key = Self::key(qualified);
-        let set = self.world.versions(&key);
-        temporal::active(&self.world, &key, &set, date, known_at)
+        temporal::select(&self.world, &Self::key(qualified), date, known_at)
             .ok()
-            .and_then(|v| match self.world.decls[v.decl].decl {
+            .and_then(|v| match self.world.decls[v].decl {
                 Declaration::Node(n) => Some(n),
                 _ => None,
             })

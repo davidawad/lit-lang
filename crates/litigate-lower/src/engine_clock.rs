@@ -2,7 +2,7 @@
 //! deadlines with litgraph's own interpreter over the lowered counting
 //! rules (SPEC §8.2), so a matter is judged by the arithmetic its scenario
 //! runs under.
-use crate::{LoweredPackage, Lowerer, Options};
+use crate::{LoweredPackage, Lowerer};
 use litgraph::clock::rule::Step;
 use litgraph::clock::{
     compute_due_date, ClockConfig, ClockLibrary, Date, DayDeadline, Direction, ServiceMethod, Unit,
@@ -48,7 +48,9 @@ impl EngineClock {
     }
 
     /// The embedded library plus every version of every counting rule the
-    /// `packages` declare, each lowered at its own `from` date.
+    /// `packages` declare, each lowered at its own `from` date
+    /// ([`Lowerer::clock_version`]); the caller's selection decides which
+    /// one a request names.
     ///
     /// # Errors
     /// The diagnostics of a counting version that does not lower.
@@ -63,18 +65,13 @@ impl EngineClock {
                     .iter()
                     .flat_map(|m| &m.declarations)
                     .filter_map(|d| match d {
-                        hir::Declaration::Counting(c) => {
-                            Some((c.meta.id.clone(), c.meta.effective.from.clone()))
-                        }
+                        hir::Declaration::Counting(c) => Some(c),
                         _ => None,
                     });
-            for (id, from) in versions {
-                let options = Options {
-                    as_of: Some(from.clone()),
-                    known_at: None,
-                };
-                if let Some(fragment) = lowerer.clock_at(pkg, &id, &options)? {
-                    clock.versions.insert((id, from), fragment);
+            for c in versions {
+                if let Some(fragment) = lowerer.clock_version(pkg, c)? {
+                    let key = (c.meta.id.clone(), c.meta.effective.from.clone());
+                    clock.versions.insert(key, fragment);
                 }
             }
         }

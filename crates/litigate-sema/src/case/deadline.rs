@@ -139,7 +139,8 @@ pub(super) fn due(
         _ => None,
     })?;
     let candidates = variant_args(args);
-    let counting = match graph.governing(&graph.qualify(pack, &d.counting), events, at, known_at) {
+    let qualified = graph.qualify(pack, &d.counting);
+    let counting = match graph.governing(&qualified, events, at, known_at) {
         Ok(Declaration::Counting(c)) => Some(c),
         _ => None,
     };
@@ -165,10 +166,21 @@ pub(super) fn due(
         direction: d.direction,
         service,
     };
+    // A rule a loaded package declares counts only under a version that
+    // governs the event; the shared library's stands in only for a rule
+    // no package declares.
+    let date = if counting.is_none() && graph.declares(&qualified) {
+        Err(format!(
+            "no version of counting rule `{qualified}` governs {}",
+            events[at].date
+        ))
+    } else {
+        clock.due(&request)
+    };
     Some(Due {
         deadline: d.meta.id.clone(),
         trigger,
-        date: clock.due(&request),
+        date,
         request,
     })
 }

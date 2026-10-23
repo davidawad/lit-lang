@@ -15,7 +15,7 @@ pub fn test(paths: &[String], filter: Option<&str>, lib: &[String]) -> Outcome {
     for pkg in session.requested() {
         match &pkg.check.package {
             Some(hir) => {
-                let (tests, failures) = inline_tests::run(&clocks, hir, &pkg.files, filter);
+                let (tests, failures) = inline_tests::run(&clocks, hir, &pkg.files, filter, None);
                 results.extend(tests);
                 report.diagnostics.extend(failures);
             }

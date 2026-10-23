@@ -85,26 +85,6 @@ impl<'a> Context<'a> {
             .collect()
     }
 
-    /// The version of counting rule `target` in force on `date`, with its
-    /// declaring package.
-    pub fn counting_at(
-        &self,
-        target: &str,
-        date: &str,
-    ) -> Option<(&'a hir::Package, &'a hir::Counting)> {
-        let (pkg, id) = self.owner(target);
-        declarations(pkg)
-            .find_map(|d| match d {
-                Declaration::Counting(c)
-                    if c.meta.id == id && in_force(&c.meta.effective, date) =>
-                {
-                    Some(c)
-                }
-                _ => None,
-            })
-            .map(|c| (pkg, c))
-    }
-
     /// Whether deadline `target` is declared inside a `rule duty`.
     pub fn is_duty(&self, target: &str) -> bool {
         let (pkg, id) = self.owner(target);
@@ -194,11 +174,6 @@ fn strip_spans(v: &mut serde_json::Value) {
     }
 }
 
-/// `date` falls in `i` (`from` inclusive, `to` exclusive).
-pub(crate) fn in_force(i: &hir::Interval, date: &str) -> bool {
-    i.from.as_str() <= date && i.to.as_deref().is_none_or(|to| date < to)
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -234,20 +209,5 @@ mod tests {
         let here = served("Document::complaint", 3);
         assert!(same_expr(&here, &served("Document::complaint", 9)));
         assert!(!same_expr(&here, &served("Document::reply", 3)));
-    }
-
-    #[test]
-    fn intervals_hold_from_inclusive_to_exclusive() {
-        let closed = hir::Interval {
-            from: "2000-01-01".into(),
-            to: Some("2010-01-01".into()),
-            known_at: "2025-01-01".into(),
-        };
-        assert!(!in_force(&closed, "1999-12-31"));
-        assert!(in_force(&closed, "2000-01-01"));
-        assert!(in_force(&closed, "2009-12-31"));
-        assert!(!in_force(&closed, "2010-01-01"));
-        let open = hir::Interval { to: None, ..closed };
-        assert!(in_force(&open, "2999-01-01"));
     }
 }

@@ -34,8 +34,11 @@ fn index(modules: &[(&str, &str)], case: Option<&str>) -> (Index, BTreeMap<Strin
         })
         .into_iter()
         .collect();
-    let checked =
-        litigate_cli::check_session(Session::from_loaded(&[loaded], cases), Profile::Dev, None);
+    let checked = litigate_cli::check_session(
+        Session::from_loaded(&[loaded], cases),
+        Profile::Dev,
+        &litigate_lower::Options::default(),
+    );
     let files: BTreeMap<String, String> = checked.session.sources().into_iter().collect();
     (Index::build(&files, &checked), files)
 }

@@ -21,7 +21,7 @@ event Noted()
 event Benched()
 event Waited()
 
-counting oc cite FRCP 6(a) { exclude_trigger_day, include_last_day, holidays ocal }
+counting oc cite \"FRCP 6(a)\" { exclude_trigger_day, include_last_day, holidays ocal }
 calendar ocal { new-year: fixed(1, 1) effective [1870-06-28, ..) observed nearest_weekday }
 
 deadline bar: 30.days from Served() counted_by oc

@@ -717,7 +717,7 @@ creates (design review 2026-10-23 §2.4, §2.7):
     cause"). FRCP 6(b)(1)(A) is therefore two grants, `discretion
     GoodCause` (the court acts) and `discretion GoodCause, on M()` (a
     request is made); a USPTO Director extension is only the second.
-  - `extend { never cite X }` (lock): rule `X` forbids extending the
+  - `extend { never cite "X" }` (lock): rule `X` forbids extending the
     period beyond the declaration's own other grants (FRCP 6(b)(2) with
     none; FRAP 26(b)(1) beside FRAP 4(a)(5)'s grant, "except as
     authorized in Rule 4"). `never` takes no other field (L2007). A

@@ -236,7 +236,7 @@ fn bound(p: &mut Parser<'_>) -> bool {
 }
 
 /// `{ by Actor, max Duration | to Bound, discretion Standard,
-/// after_expiry, on Motion(), within Bound }` or `{ never cite X }`.
+/// after_expiry, on Motion(), within Bound }` or `{ never cite "X" }`.
 fn capability(p: &mut Parser<'_>) -> bool {
     field_list(p, CAPABILITY_FIELDS)
 }

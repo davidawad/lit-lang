@@ -31,8 +31,8 @@
   "allow_hours" "end_of_month" "effective" "observed" "amends" "subject_to" "notwithstanding"
   "supersedes" "revives" "override" "delegable_to" "rebuts" "undercuts"
   "priority" "url" "bearer" "trigger" "extend" "waive" "after_expiry" "never"
-  "removes" "elects" "extends" "waives" "to" "where" "forums" "forward_holidays"
-  "declared_holidays"
+  "removes" "elects" "extends" "waives" "to" "where" "and" "or" "forums"
+  "forward_holidays" "declared_holidays"
 ] @keyword
 
 (discretion) @keyword

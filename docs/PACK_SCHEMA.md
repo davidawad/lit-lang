@@ -194,12 +194,12 @@ same reasoning as calibration's `Edge.base_id` handling above.
 
 Deadline counting is data. `packs/clock/` holds the **clock library**:
 holiday calendars and counting rules, shared by every pack. A forum
-package's own counting rules and calendars are generated into
-`packs/clock/<pack file>.json` by `just lit-sync` (today
-`mpep-prosecution.json`, 37 C.F.R. § 1.7, and
-`ttab-trademark-trial-and-appeal-board.json`, 37 C.F.R. § 2.196); the
-shared fragments (`frap26`, `frcp6`, `frcrimp45`, `itc210`, `rcfc6`,
-`sup-ct-30`, `us-federal-holidays`) are still hand-authored (SPEC §9.4). Each file is a
+package's own counting rules and calendars are generated into the built
+`packs/clock/<pack file>.json` (today `mpep-prosecution.json`, 37 C.F.R.
+§ 1.7, and `ttab-trademark-trial-and-appeal-board.json`, 37 C.F.R. §
+2.196; a build output, not a file in the repository); the shared
+fragments (`frap26`, `frcp6`, `frcrimp45`, `itc210`, `rcfc6`, `sup-ct-30`,
+`us-federal-holidays`) are still hand-authored (SPEC §9.4). Each file is a
 fragment:
 
 ```json

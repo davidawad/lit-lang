@@ -9,6 +9,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Reserved typed guard operations in patches** (lg-flu.35; SPEC §3.6,
+  PM ruling 2026-10-23 on L2007). A later decision or order that narrows,
+  widens or replaces an edge's guard will be written explicitly, with its
+  authority (`cite` and `effective`), inside a `patch`: `when and pred`
+  (narrow), `when or pred` (widen), `supersedes when pred` (replace). The
+  forms parse into a new `GuardOp` CST node and are rejected with the new
+  code L0010, whose message begins `reserved: typed guard operations`,
+  until lg-flu.36 implements them. `and` and `or` are reserved words
+  (L0010 anywhere, `GUARD_OP_WORDS`). A plain `when` in a patch stays
+  L2007 (an implicit overwrite) and now points at the explicit forms. The
+  tree-sitter grammar (`patch_fields`, `guard_op`) and the Emacs, Helix
+  and Neovim highlights, indents and folds follow.
+
+- **Generated files are build outputs, not committed** (lg-flu.31). Two
+  beads changing different `lit/` packages used to conflict on
+  `packs/*.json`, `packs/links.json`, `packs/clock/mpep-prosecution.json`,
+  `scenarios/*.json` and the TypeScript bindings, which cost an
+  integration job per parallel change. The new `litgraph-packs` crate runs
+  `litigate build` (the arguments in `crates/litgraph-packs/build.args`,
+  formerly the justfile's `lit_sync_inputs`/`lit_sync_names`) over an
+  in-memory `lit/` and `cases/` in its build script and embeds the result
+  (`PACKS`, `SCENARIOS`, `PACKS_DIR`, `SCENARIOS_DIR`, `catalog()`). The
+  files are gitignored. `just lit-sync` regenerates the `Lit.lock` files and
+  writes the build to `target/lit-build/`. `just lit-sync-check` fails on a
+  stale `Lit.lock` or a committed generated file. `just ts-gen` output is
+  gitignored, `ts-build` regenerates it, and `ts-gen-check` is gone.
+  Docker, nix and release archives copy the built packs. A test rebases
+  two branches that edit different packages, with no merge driver, and
+  expects no conflicts; its control commits the generated files and
+  expects the old conflict. API: `litgraph` no longer embeds packs or
+  scenarios, because the compiler depends on it.
+  `Catalog::embedded`, `with_embedded_scenarios` and `default_source` now
+  take the embedded files (`EmbeddedFiles`), and `litgraph_packs::catalog()`
+  replaces `Catalog::embedded()`. `ClockLibrary::embedded()` is now the
+  hand-authored library only: a catalog built from `litgraph-packs` carries
+  the generated fragments too.
+
 - **Counting per forum** (lg-flu.8; design review 2026-10-23 §6 item 10,
   P8, L2-L4, L11). A counting rule's `service_extension` is total over the
   service methods, `Electronic` and `Personal` included: each adds `N.days`

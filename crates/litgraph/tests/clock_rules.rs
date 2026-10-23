@@ -16,8 +16,17 @@ use litgraph::clock::{
 };
 use proptest::prelude::*;
 
+/// Rule `id` of the hand-authored library, else of the generated
+/// fragments `litgraph-packs` builds from `lit/` (`uspto-1-7`).
 fn rule(id: &str) -> Clock<'static> {
-    ClockLibrary::embedded().0.clock(id).unwrap()
+    static BUILT: std::sync::OnceLock<litgraph::api::Catalog> = std::sync::OnceLock::new();
+    ClockLibrary::embedded().0.clock(id).unwrap_or_else(|_| {
+        BUILT
+            .get_or_init(|| litgraph_packs::catalog().unwrap())
+            .clock
+            .clock(id)
+            .unwrap()
+    })
 }
 
 fn d(s: &str) -> Date {

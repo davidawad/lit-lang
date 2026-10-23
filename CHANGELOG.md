@@ -148,6 +148,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   parsing (`serde_json` `float_roundtrip`), so emitted numbers read back
   bit for bit.
 
+- **Designated deadlines** (lg-flu.27; SPEC §5.2, §5.3, §8.1). A
+  deadline option `designated p` takes each instance's due date from the
+  trigger's `Date` argument `p`, as the notice or order states it; the
+  period is only the least time the rule allows, and a trigger designating
+  less is rejected (L4001; L5006 in a test). The date rolls under the
+  counting rule like any last day. A case event may write `?` for a
+  `Date` argument: the deadline it designates is unknown, stays open, and
+  the schedule reports it with `due: null` and the reason in `unknown`
+  (`litigate check`, `explain-value`, the LSP's inlay hint). Any deadline
+  the engine cannot count is now on the schedule that way instead of
+  dropped. New contextual keyword `designated` (tree-sitter and editor
+  highlights updated).
+
 ### Changed
 
 - **Typed boundaries** (design review §6 item 12; SPEC §5.2, §5.6, §6).
@@ -179,6 +192,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   schema at their own span. `probabilities` and `policy` are no longer
   accepted, quoted keys and `unset` are gone with the `JsonRecord` syntax,
   and `unset` is no longer a keyword.
+- **The TTAB answer period is the notice's** (lg-flu.27). `lit/ttab`
+  no longer declares a flat 30- or 60-day answer period: the answer is due
+  on the date the notice of institution designates
+  (`InstitutionNoticed(due: Date)`, its date the mailing date), no less
+  than thirty days from mailing (37 C.F.R. § 2.105(a)), and a Board order
+  resetting it (§ 2.106(a)) is a `CaseOrder` package overriding
+  `answer-period` (example: `crates/litigate-cli/tests/fixtures/ttab-board-order`).
+  The counterclaim answer (§ 2.106(b)(3)(iii)) and the cancellation answer
+  (§ 2.113(a)) are declared the same way, in force from January 14, 2017
+  (`sources/cfr-37-part2-answer-time-history.txt`, the eCFR version
+  history). The pack's answer edges carry no window.
 
 ### Fixed
 

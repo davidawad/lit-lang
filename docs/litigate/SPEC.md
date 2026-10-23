@@ -656,7 +656,10 @@ conversion, subtyping, or recursion: a type alias may not refer to itself, and
 neither may a default or exception, directly or transitively (L3006). An event
 pattern in a deadline trigger or edge `event` may omit trailing arguments,
 which then match anything. `given`, case events, and `has_event` arguments
-must be complete.
+must be complete. A case event may write `?` for a `Date` argument the
+matter does not have (a notice whose designated due date is not in the
+file): a deadline that argument designates is then unknown (§5.3), and an
+`extends` event with `?` for its date is L4001.
 
 ### 5.3 Deadlines, counting, calendars
 
@@ -741,6 +744,29 @@ creates (design review 2026-10-23 §2.4, §2.7):
 
   A grant with an actor under `extendable false`, or a lock with no grant
   beside it under `extendable true`, is L2007.
+- `designated p`: the due date of each instance is the trigger's `Date`
+  parameter `p`, as the notice or order that is the trigger states it,
+  never a period counted in its place (37 C.F.R. § 2.105(a): the notice of
+  institution "shall designate a time, not less than thirty days from the
+  mailing date of the notice, within which an answer must be filed"). The
+  trigger's date is the notice's mailing date. `N.days` is then the least
+  time the rule allows: a trigger whose `p` is earlier than its own date
+  plus `N` calendar days is rejected (L4001 in a matter; a test's
+  `deadline(d)` cannot be evaluated, L5006), and `0.days` allows any date
+  from the trigger's own. The designated date is the nominal last day
+  (`deadline(d).nominal`); it rolls under the counting rule like any last
+  day (37 C.F.R. § 2.196), counted zero days from it, with no service
+  days. A trigger whose `p` is `?` leaves the due date unknown: the
+  instance stays open, never lapses or breaches, an act through its
+  `within` edge cannot be judged (L3009), and the schedule reports it with
+  no `due` and the reason in `unknown`. `p` must name a `Date` parameter
+  of the trigger's event (L1002, L2001), and the deadline must count
+  forward (L2007) in calendar days (L2007). An edge `within` a designated
+  deadline lowers with no `RawEdge.deadline` window (§8.1): the date is
+  each matter's. A later order replacing the date (37 C.F.R. § 2.106(a),
+  "as may later be reset by the Board") is a lower-authority package
+  (`CaseOrder`) whose own designated deadline, `trigger latest`,
+  overrides the delegating one, triggered by the order's event (§5.5).
 - `waive { by A [, after_expiry] }`: actor `A` may release an instance,
   after its due date only with `after_expiry`. `max`, `to`, `discretion`,
   `on`, `within` and `never` are not allowed (L2007).
@@ -1304,7 +1330,7 @@ Anything without a lowering is L6001.
 | edge, in node order then edge order | `Pack.edges[]`: `from` = enclosing node, `id` (omitted for `_`), `to`, `label`, `actor` |
 | `p`, `effort`, `cost` | `RawEdge.probability`, `hours`, `cost` |
 | `authority` | `RawEdge.authority` (string, cite text, or cite-hole reason) |
-| `within d` | `RawEdge.deadline` `{length: N, unit, extendable, extensionAuthority, note}` from d's version in force, edge options winning |
+| `within d` | `RawEdge.deadline` `{length: N, unit, extendable, extensionAuthority, note}` from d's version in force, edge options winning; absent when that version is `designated` (§5.3) |
 | `deadline N.unit {…}` | same, from the literal; `unit` omitted for calendar days, `"court"` for court days; business days are L6001 |
 | `duration` | `RawEdge.duration {min, mode, max}` (a single duration is `{mode}`) |
 | `valence`, `court_listener_url`, `action_id`, `note`, `tags`, `attrs`, `sets`, `clears`, `requires`, `forbids` | same-named `RawEdge` fields |

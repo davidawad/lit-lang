@@ -55,6 +55,15 @@ event InstitutionNoticed()
 event DiscoveryOpened()
 /// The Board's final decision in the opposition.
 event FinalDecision()
+/// A written request to the Director to extend the time for commencing a
+/// civil action (37 C.F.R. § 2.145(e)(1)). Its date is its receipt date:
+/// the Eastern Time date the Office receives the email, "regardless of
+/// whether that date is a Saturday, Sunday, or Federal holiday within the
+/// District of Columbia" (§ 2.145(e)(2)(i)). That date is `request_made`.
+event CivilActionExtensionRequested()
+/// The Director, or the Director's designee, extends the time for
+/// commencing a civil action to `until` (37 C.F.R. § 2.145(e)(1)).
+event CivilActionPeriodExtended(until: Date) extends civil-action-period to until
 
 /// 37 C.F.R. § 2.101(c): an opposition is due within thirty days after
 /// publication, and a request to extend must be filed before those thirty
@@ -207,10 +216,24 @@ test "a discovery close on a Saturday rolls to Monday" cite 37 CFR 2.120(a)(2)(i
 
 /// 37 C.F.R. § 2.145(d)(3): a civil action under 15 U.S.C. § 1071(b) must
 /// be commenced no later than 63 days after the final decision. The
-/// Director, not the Board, may extend it (§ 2.145(e)).
+/// Director, not the Board and not a court, may extend it "upon written
+/// request if: (i) Requested before the expiration of the period ..., and
+/// upon a showing of good cause; or (ii) Requested after the expiration of
+/// the period ..., and upon a showing that the failure to act was the
+/// result of excusable neglect" (§ 2.145(e)(1)): both turn on when the
+/// request was made, and neither has a numeric ceiling.
 rule duty review-time effective [2017-01-14, ..) known_at 2016-10-07 cite 37 CFR 2.145(d)
 {
   deadline civil-action-period: 63.days from FinalDecision() counted_by frcp6 cite 37 CFR 2.145(d)(3)
+  {
+    extend { by director, discretion GoodCause, on CivilActionExtensionRequested() }
+    extend {
+      by director
+      discretion ExcusableNeglect
+      after_expiry
+      on CivilActionExtensionRequested()
+    }
+  }
 }
 
 test "a civil action is due 63 days after the final decision" cite 37 CFR 2.145(d)(3)

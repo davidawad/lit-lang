@@ -368,6 +368,16 @@ test "Director review after rehearing: a Sunday last day before MLK Day rolls to
   expect deadline(director-review-after-rehearing-period) == 2026-01-20
 }
 
+/// A written request to the Director to extend the time for appeal (37
+/// C.F.R. § 90.3(c)(1)). Its date is its receipt date: the Eastern Time
+/// date the Office of the General Counsel receives the email, "regardless
+/// of whether that date is a Saturday, Sunday, or Federal holiday within
+/// the District of Columbia" (§ 90.3(c)(2)). That date is `request_made`.
+event AppealExtensionRequested()
+/// The Director, or the Director's designee, extends the time for appeal
+/// to `until` (37 C.F.R. § 90.3(c)(1)).
+event AppealPeriodExtended(until: Date) extends appeal-period to until
+
 /// The notice of appeal is due "no later than sixty-three (63) days after
 /// the date of the final Board decision" (37 C.F.R. § 90.3(a)(1)); a timely
 /// rehearing request resets that to 63 days "after action on the request"
@@ -375,8 +385,17 @@ test "Director review after rehearing: a Sunday last day before MLK Day rolls to
 /// vendored history: "Added, 77 FR 48612, Aug. 14, 2012, effective Sept. 16,
 /// 2012; paras. (c)(1) introductory text and (c)(2) revised, 89 FR 22084,
 /// Mar. 29, 2024, effective Mar. 29, 2024"; paragraph (a) is unchanged.
-/// Not delegated: § 90.3(c) lets the Director extend it on request, which
-/// the pack's `extendable false` does not model.
+/// Extension: "The Director, or the Director's designee, may extend the
+/// time for filing an appeal ... upon written request if: (i) Requested
+/// before the expiration of the period ..., and upon a showing of good
+/// cause; or (ii) Requested after the expiration of the period ..., and
+/// upon a showing that the failure to act was the result of excusable
+/// neglect" (§ 90.3(c)(1)). Both turn on when the request was made, not
+/// when the Director acts, and neither has a numeric ceiling. The
+/// extender is the Director: no court, district or Federal Circuit, holds
+/// the power. The grants are on the version in force from Mar. 29, 2024,
+/// whose text is vendored; the 2012 version's paragraph (c) is not
+/// vendored, so it grants nothing here (UNVERIFIED: its pre-2024 text).
 rule duty appeal-deadline cite 37 C.F.R. § 90.3(a)(1)
 {
   deadline appeal-period: 63.days after DecisionEntered() counted_by rcfc6 effective [2012-09-16, 2024-03-29) known_at 2012-08-14 cite 37 C.F.R. § 90.3(a)(1); 37 C.F.R. § 90.3(b)(1)
@@ -386,6 +405,8 @@ rule duty appeal-deadline cite 37 C.F.R. § 90.3(a)(1)
   deadline appeal-period: 63.days after DecisionEntered() counted_by rcfc6 effective [2024-03-29, ..) known_at 2024-03-29 supersedes appeal-period@2012-09-16 cite 37 C.F.R. § 90.3(a)(1); 37 C.F.R. § 90.3(b)(1)
   {
     trigger latest
+    extend { by director, discretion GoodCause, on AppealExtensionRequested() }
+    extend { by director, discretion ExcusableNeglect, after_expiry, on AppealExtensionRequested() }
   }
 }
 

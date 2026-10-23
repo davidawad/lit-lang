@@ -50,6 +50,16 @@ pub struct Scheduled {
     /// The party bearing it, when the deadline names a bearer.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub bearer: Option<String>,
+    /// The due date a cited `extends` event moved it to.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub extended_to: Option<String>,
+    /// The cause standard of the grant that licensed the extension.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub extended_under: Option<hir::CauseStandard>,
+    /// When the request the licensing grant read was made, distinct from
+    /// the order's date.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub request_made: Option<String>,
     /// How replay ended it, or `open` at `as_of`.
     pub status: Status,
 }
@@ -266,6 +276,9 @@ fn schedule(
                     rolled: due.computed.last_day_rolled,
                     method: due.method,
                     bearer: o.bearer.clone(),
+                    extended_to: o.extended_to.clone(),
+                    extended_under: o.extended_under,
+                    request_made: o.request_made.clone(),
                     status: o.status,
                 });
             }

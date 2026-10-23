@@ -69,6 +69,16 @@ pub struct Obligation {
     /// The due date a cited `extends` event moved it to.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub extended_to: Option<String>,
+    /// The cause standard of the grant that licensed the extension, when
+    /// it states one.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub extended_under: Option<hir::CauseStandard>,
+    /// When the request (motion) the licensing grant read was made: the
+    /// date of its event, distinct from the order's. It, not the order
+    /// date, chooses the window (FRCP 6(b)(1)(A) or (B); 37 C.F.R. §§
+    /// 90.3(c)(1), 2.145(e)(1)).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub request_made: Option<String>,
     /// How it ended, or `open`.
     pub status: Status,
     /// Source index of the event that ended it; `None` while open and for

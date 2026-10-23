@@ -13,8 +13,28 @@ use support::{copy_dir, litigate_in, repo, scratch, Run};
 
 /// `litigate check` of one matter over copies of `lit/core` and `lit/frcp`.
 fn check(name: &str, events: &[&str]) -> Run {
+    matter(
+        name,
+        &["frcp"],
+        "frcp-civil-procedure ^2024.12.0",
+        "  plaintiff: applicant Corporation\n  judge: court Tribunal\n",
+        events,
+        "frcp-civil-procedure::appeal-window-blown",
+    )
+}
+
+/// `litigate check` of one matter over copies of `lit/core` and `pkgs`,
+/// using `uses`, with `parties` and `events`, staking `stake`.
+fn matter(
+    name: &str,
+    pkgs: &[&str],
+    uses: &str,
+    parties: &str,
+    events: &[&str],
+    stake: &str,
+) -> Run {
     let dir = scratch(name);
-    for pkg in ["core", "frcp"] {
+    for pkg in std::iter::once(&"core").chain(pkgs) {
         copy_dir(&repo().join("lit").join(pkg), &dir.join("lit").join(pkg));
     }
     std::fs::create_dir_all(dir.join("cases")).unwrap();
@@ -25,9 +45,9 @@ fn check(name: &str, events: &[&str]) -> Run {
     std::fs::write(
         dir.join("cases/ext.case"),
         format!(
-            "case ext\nuses frcp-civil-procedure ^2024.12.0\nas_of 2025-12-01\nsummary \"s\"\n\n\
-             parties {{\n  plaintiff: applicant Corporation\n  judge: court Tribunal\n}}\n\n\
-             events {{\n{events}}}\n\nstakes {{ frcp-civil-procedure::appeal-window-blown: 0.usd }}\n"
+            "case ext\nuses {uses}\nas_of 2026-06-01\nsummary \"s\"\n\n\
+             parties {{\n{parties}}}\n\n\
+             events {{\n{events}}}\n\nstakes {{ {stake}: 0.usd }}\n"
         ),
     )
     .unwrap();
@@ -53,6 +73,25 @@ fn effects(run: &Run) -> (Vec<String>, Vec<String>) {
         .map(|d| d["message"].as_str().unwrap().to_owned())
         .collect();
     (replay, errors)
+}
+
+/// `(extended_to, extended_under, request_made)` of each extended
+/// obligation of `deadline`.
+fn extended(run: &Run, deadline: &str) -> Vec<(String, String, String)> {
+    let field = |o: &serde_json::Value, k: &str| o[k].as_str().unwrap_or("-").to_owned();
+    run.json["result"]["cases"][0]["deadlines"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .filter(|o| o["deadline"] == deadline && !o["extended_to"].is_null())
+        .map(|o| {
+            (
+                field(o, "extended_to"),
+                field(o, "extended_under"),
+                field(o, "request_made"),
+            )
+        })
+        .collect()
 }
 
 #[test]
@@ -95,17 +134,72 @@ fn rule_6b1_has_no_ceiling_and_reaches_an_expired_period_on_motion() {
     );
     assert_eq!(run.code, 0, "{}", run.stdout);
     assert_eq!(effects(&run).1, Vec::<String>::new());
+    assert_eq!(
+        extended(&run, "frcp-civil-procedure::service-period"),
+        [(
+            "2026-05-01".to_owned(),
+            "ExcusableNeglect".to_owned(),
+            "2025-04-20".to_owned()
+        )]
+    );
 }
 
 #[test]
-fn rule_6b1b_without_a_motion_is_rejected() {
-    // Due 2025-04-07; the only motion came before expiry, so it is not
-    // the 6(b)(1)(B) "motion made after the time has expired".
+fn rule_6b1a_turns_on_when_the_request_was_made() {
+    // lg-flu.24 acceptance. Served day 0 (2025-03-06), so the 21-day
+    // answer period is due day 21 (2025-03-27). The request on day 20 is
+    // made before the original time expires; the order on day 25 comes
+    // after it, and is good cause under 6(b)(1)(A): no motion after
+    // expiry, so no excusable neglect, is demanded.
     let run = check(
-        "frcp-6b1b-nomotion",
+        "frcp-6b1a-request",
+        &[
+            "2025-03-06 ProcessServed() by plaintiff",
+            "2025-03-26 ExtensionMoved(AnswerPeriod) by plaintiff",
+            "2025-03-31 AnswerPeriodExtended(2025-04-30) by judge cite FRCP 6(b)(1)(A)",
+        ],
+    );
+    assert_eq!(run.code, 0, "{}", run.stdout);
+    let (replay, errors) = effects(&run);
+    assert_eq!(errors, Vec::<String>::new());
+    assert_eq!(
+        replay,
+        [
+            "triggered \"ProcessServed()\"",
+            "history \"ExtensionMoved(AnswerPeriod)\"",
+            "extended \"AnswerPeriodExtended(2025-04-30)\"",
+        ]
+    );
+    assert_eq!(
+        extended(&run, "frcp-civil-procedure::answer-period"),
+        [(
+            "2025-04-30".to_owned(),
+            "GoodCause".to_owned(),
+            "2025-03-26".to_owned()
+        )]
+    );
+}
+
+#[test]
+fn rule_6b1_after_expiry_without_a_request_before_or_a_motion_after_is_rejected() {
+    // Due 2025-04-07. The motion of 2025-04-01 is a 6(b)(1)(A) request
+    // made before expiry, so the order after it is good cause; with no
+    // request at all, the order after expiry has neither (A)'s request
+    // nor (B)'s motion.
+    let run = check(
+        "frcp-6b1-request-before",
         &[
             "2025-01-06 ComplaintFiled() by plaintiff",
             "2025-04-01 ExtensionMoved(ServicePeriod) by plaintiff",
+            "2025-05-01 ServicePeriodExtended(2026-05-01) by judge cite FRCP 6(b)(1)(A)",
+        ],
+    );
+    assert_eq!(run.code, 0, "{}", run.stdout);
+    assert_eq!(effects(&run).1, Vec::<String>::new());
+    let run = check(
+        "frcp-6b1-nomotion",
+        &[
+            "2025-01-06 ComplaintFiled() by plaintiff",
             "2025-05-01 ServicePeriodExtended(2026-05-01) by judge cite FRCP 6(b)(1)(B)",
         ],
     );
@@ -114,6 +208,21 @@ fn rule_6b1b_without_a_motion_is_rejected() {
         effects(&run).1,
         ["`ServicePeriodExtended(2026-05-01)` requires a motion `ExtensionMoved(ServicePeriod)` made after the period expired on 2025-04-07, and none precedes the order on 2025-05-01"]
     );
+}
+
+#[test]
+fn a_request_after_the_order_does_not_license_it() {
+    // Due 2025-03-27; the order on 2025-03-31 precedes the only request.
+    let run = check(
+        "frcp-6b1a-late-request",
+        &[
+            "2025-03-06 ProcessServed() by plaintiff",
+            "2025-03-31 AnswerPeriodExtended(2025-04-30) by judge cite FRCP 6(b)(1)(A)",
+            "2025-04-01 ExtensionMoved(AnswerPeriod) by plaintiff",
+        ],
+    );
+    assert_eq!(run.code, 2, "{}", run.stdout);
+    assert_eq!(effects(&run).1.len(), 1, "{}", run.stdout);
 }
 
 #[test]
@@ -231,5 +340,173 @@ fn only_the_court_extends() {
     assert_eq!(
         effects(&run).1,
         ["only court may extend `frcp-civil-procedure::service-period`, but `plaintiff` is applicant"]
+    );
+}
+
+/// `litigate check` of a PTAB matter: a final written decision on
+/// `decided`, then `events`.
+fn ptab(name: &str, decided: &str, events: &[&str]) -> Run {
+    let decision = format!("{decided} DecisionEntered(FinalWritten) on owner");
+    let events: Vec<&str> = std::iter::once(decision.as_str())
+        .chain(events.iter().copied())
+        .collect();
+    matter(
+        name,
+        &["ptab"],
+        "ptab-patent-trial-appeal-board ^0.1.0",
+        "  owner: either Corporation\n  director: director Agency\n",
+        &events,
+        "ptab-patent-trial-appeal-board::appeal-forfeited-unappealed",
+    )
+}
+
+#[test]
+fn the_director_extends_the_ptab_appeal_period_on_a_request_made_before_expiry() {
+    // Decided 2025-03-01: day 63 is Saturday 2025-05-03, so the appeal is
+    // due Monday 2025-05-05 (35 U.S.C. § 21(b)). A request received on
+    // Sunday 2025-05-04 is filed that day (37 C.F.R. § 90.3(c)(2)), before
+    // expiry: good cause under § 90.3(c)(1)(i), though the Director acts
+    // after the period expired.
+    let run = ptab(
+        "ptab-90-3-c-1-i",
+        "2025-03-01",
+        &[
+            "2025-05-04 AppealExtensionRequested() by owner",
+            "2025-05-07 AppealPeriodExtended(2025-06-06) by director cite 37 C.F.R. § 90.3(c)(1)(i)",
+        ],
+    );
+    assert_eq!(run.code, 0, "{}", run.stdout);
+    assert_eq!(effects(&run).1, Vec::<String>::new());
+    assert_eq!(
+        extended(&run, "ptab-patent-trial-appeal-board::appeal-period"),
+        [(
+            "2025-06-06".to_owned(),
+            "GoodCause".to_owned(),
+            "2025-05-04".to_owned()
+        )]
+    );
+}
+
+#[test]
+fn a_ptab_request_received_after_expiry_is_excusable_neglect() {
+    let run = ptab(
+        "ptab-90-3-c-1-ii",
+        "2025-03-01",
+        &[
+            "2025-05-06 AppealExtensionRequested() by owner",
+            "2025-05-07 AppealPeriodExtended(2025-06-06) by director cite 37 C.F.R. § 90.3(c)(1)(ii)",
+        ],
+    );
+    assert_eq!(run.code, 0, "{}", run.stdout);
+    assert_eq!(
+        extended(&run, "ptab-patent-trial-appeal-board::appeal-period"),
+        [(
+            "2025-06-06".to_owned(),
+            "ExcusableNeglect".to_owned(),
+            "2025-05-06".to_owned()
+        )]
+    );
+}
+
+#[test]
+fn the_director_extends_only_on_written_request() {
+    // § 90.3(c)(1) acts "upon written request": no request, no extension,
+    // even before expiry.
+    let run = ptab(
+        "ptab-90-3-no-request",
+        "2025-03-01",
+        &["2025-04-01 AppealPeriodExtended(2025-06-06) by director cite 37 C.F.R. § 90.3(c)(1)"],
+    );
+    assert_eq!(run.code, 2, "{}", run.stdout);
+    assert_eq!(
+        effects(&run).1,
+        ["`AppealPeriodExtended(2025-06-06)` requires a motion `AppealExtensionRequested()` made before the period expired on 2025-05-05, and none precedes the order on 2025-04-01"]
+    );
+}
+
+#[test]
+fn no_court_extends_the_ptab_appeal_period() {
+    // The Director, not the Federal Circuit or a district court, holds the
+    // § 90.3(c) power. A matter's parties play its primary package's
+    // actors, so the Federal Circuit's package leads (in force from
+    // 2025-12-01).
+    let run = matter(
+        "ptab-90-3-court",
+        &["cafc", "ptab"],
+        "cafc ^0.1.0, ptab-patent-trial-appeal-board ^0.1.0",
+        "  owner: either Corporation\n  fedcir: court Tribunal\n",
+        &[
+            "2025-12-02 ptab-patent-trial-appeal-board::DecisionEntered(FinalWritten) on owner",
+            "2026-01-05 ptab-patent-trial-appeal-board::AppealExtensionRequested() by owner",
+            "2026-01-06 ptab-patent-trial-appeal-board::AppealPeriodExtended(2026-03-06) by fedcir cite 37 C.F.R. § 90.3(c)(1)",
+        ],
+        "ptab-patent-trial-appeal-board::appeal-forfeited-unappealed",
+    );
+    assert_eq!(run.code, 2, "{}", run.stdout);
+    assert_eq!(
+        effects(&run).1,
+        ["only director may extend `ptab-patent-trial-appeal-board::appeal-period`, but `fedcir` is court"]
+    );
+}
+
+#[test]
+fn the_director_extends_the_ttab_civil_action_period() {
+    // Decided 2025-09-02: the civil action is due 2025-11-04 (37 C.F.R. §
+    // 2.145(d)(3)). Requested before, granted after: good cause (§
+    // 2.145(e)(1)(i)); the district court (`lit/frcp`) may not grant it.
+    let run = |name: &str, pkgs: &[&str], uses: &str, parties: &str, by: &str| {
+        // Unqualified in the TTAB's own matter, `pack::` qualified where
+        // it is not the primary package.
+        let q = if pkgs[0] == "ttab" {
+            ""
+        } else {
+            "ttab-trademark-trial-and-appeal-board::"
+        };
+        let events = [
+            format!("2025-09-02 {q}FinalDecision() on applicant"),
+            format!("2025-11-03 {q}CivilActionExtensionRequested() by applicant"),
+            format!(
+                "2025-11-10 {q}CivilActionPeriodExtended(2025-12-10) by {by} cite 37 CFR 2.145(e)(1)(i)"
+            ),
+        ];
+        matter(
+            name,
+            pkgs,
+            uses,
+            parties,
+            &events.iter().map(String::as_str).collect::<Vec<_>>(),
+            "ttab-trademark-trial-and-appeal-board::registered",
+        )
+    };
+    let ok = run(
+        "ttab-2-145-e",
+        &["ttab"],
+        "ttab-trademark-trial-and-appeal-board ^0.1.0",
+        "  applicant: applicant Corporation\n  director: director Agency\n",
+        "director",
+    );
+    assert_eq!(ok.code, 0, "{}", ok.stdout);
+    assert_eq!(
+        extended(
+            &ok,
+            "ttab-trademark-trial-and-appeal-board::civil-action-period"
+        ),
+        [(
+            "2025-12-10".to_owned(),
+            "GoodCause".to_owned(),
+            "2025-11-03".to_owned()
+        )]
+    );
+    let court = run(
+        "ttab-2-145-e-court",
+        &["frcp", "ttab"],
+        "frcp-civil-procedure ^2024.12.0, ttab-trademark-trial-and-appeal-board ^0.1.0",
+        "  applicant: applicant Corporation\n  district: court Tribunal\n",
+        "district",
+    );
+    assert_eq!(court.code, 2, "{}", court.stdout);
+    assert_eq!(
+        effects(&court).1,
+        ["only director may extend `ttab-trademark-trial-and-appeal-board::civil-action-period`, but `district` is court"]
     );
 }

@@ -32,10 +32,14 @@ import core.time.{ ServiceMethod }
 // grants its two powers, neither with a numeric ceiling: "(A) with or
 // without motion or notice if the court acts, or if a request is made,
 // before the original time or its extension expires" (`discretion
-// GoodCause`), and "(B) on motion made after the time has expired if the
-// party failed to act because of excusable neglect" (`discretion
-// ExcusableNeglect, after_expiry, on ExtensionMoved(...)`: the motion,
-// made after expiry, is a matter fact). This includes the Rule
+// GoodCause` when the court acts before expiry; `discretion GoodCause, on
+// ExtensionMoved(...)` when the request is: (A) turns on when the request
+// was made, so an order entered after expiry on a request made before it
+// is good cause, not excusable neglect), and "(B) on motion made after
+// the time has expired if the party failed to act because of excusable
+// neglect" (`discretion ExcusableNeglect, after_expiry, on
+// ExtensionMoved(...)`). The motion is a matter fact, and its date is
+// `request_made`, distinct from the order's. This includes the Rule
 // 12(a)(1)(A)(ii) waiver period and the Rule 15(a)(1) period. The four
 // 6(b)(2) periods are `extend { never cite FRCP 6(b)(2) }`. The FRAP
 // 4(a)(1) and 4(a)(3) periods are FRAP 4(a)(5)'s, not Rule 6(b)'s, and
@@ -129,6 +133,7 @@ event CrossAppealPeriodExtended(until: Date) extends cross-appeal-period to unti
 deadline service-period: 90.days after ComplaintFiled() counted_by frcp6 effective [2017-12-01, ..) delegable_to [CaseOrder] cite FRCP 4(m)
 {
   extend { by court, discretion GoodCause }
+  extend { by court, discretion GoodCause, on ExtensionMoved(ServicePeriod) }
   extend { by court, discretion ExcusableNeglect, after_expiry, on ExtensionMoved(ServicePeriod) }
 }
 
@@ -139,6 +144,7 @@ deadline service-period: 90.days after ComplaintFiled() counted_by frcp6 effecti
 deadline waiver-answer-period: 60.days after WaiverRequestSent() counted_by frcp6 effective [2024-12-01, ..) cite FRCP 12(a)(1)(A)(ii)
 {
   extend { by court, discretion GoodCause }
+  extend { by court, discretion GoodCause, on ExtensionMoved(WaiverAnswerPeriod) }
   extend {
     by court
     discretion ExcusableNeglect
@@ -154,6 +160,7 @@ deadline waiver-answer-period: 60.days after WaiverRequestSent() counted_by frcp
 deadline answer-period: 21.days after ProcessServed() counted_by frcp6 effective [2024-12-01, ..) delegable_to [CaseOrder] cite FRCP 12(a)(1)(A)(i)
 {
   extend { by court, discretion GoodCause }
+  extend { by court, discretion GoodCause, on ExtensionMoved(AnswerPeriod) }
   extend { by court, discretion ExcusableNeglect, after_expiry, on ExtensionMoved(AnswerPeriod) }
 }
 
@@ -175,6 +182,7 @@ deadline remand-motion-period: 30.days after NoticeOfRemovalFiled() counted_by f
 deadline removed-answer-period: 21.days after InitialPleadingReceived() counted_by frcp6 effective [2009-12-01, ..) delegable_to [CaseOrder] cite FRCP 81(c)(2)(A)
 {
   extend { by court, discretion GoodCause }
+  extend { by court, discretion GoodCause, on ExtensionMoved(RemovedAnswerPeriod) }
   extend {
     by court
     discretion ExcusableNeglect
@@ -189,6 +197,7 @@ deadline removed-answer-period: 21.days after InitialPleadingReceived() counted_
 deadline denial-answer-period: 14.days after Rule12MotionDenied() counted_by frcp6 effective [2024-12-01, ..) delegable_to [CaseOrder] cite FRCP 12(a)(4)(A)
 {
   extend { by court, discretion GoodCause }
+  extend { by court, discretion GoodCause, on ExtensionMoved(DenialAnswerPeriod) }
   extend {
     by court
     discretion ExcusableNeglect
@@ -204,6 +213,7 @@ deadline denial-answer-period: 14.days after Rule12MotionDenied() counted_by frc
 deadline amendment-as-of-course-period: 21.days after ResponsivePleadingServed() counted_by frcp6 effective [2023-12-01, ..) cite FRCP 15(a)(1)(B)
 {
   extend { by court, discretion GoodCause }
+  extend { by court, discretion GoodCause, on ExtensionMoved(AmendmentAsOfCoursePeriod) }
   extend {
     by court
     discretion ExcusableNeglect
@@ -219,6 +229,7 @@ deadline amendment-as-of-course-period: 21.days after ResponsivePleadingServed()
 deadline amended-response-period: 14.days after AmendedPleadingServed() counted_by frcp6 effective [2023-12-01, ..) delegable_to [CaseOrder] cite FRCP 15(a)(3)
 {
   extend { by court, discretion GoodCause }
+  extend { by court, discretion GoodCause, on ExtensionMoved(AmendedResponsePeriod) }
   extend {
     by court
     discretion ExcusableNeglect
@@ -233,6 +244,7 @@ deadline amended-response-period: 14.days after AmendedPleadingServed() counted_
 deadline initial-disclosure-period: 14.days after Rule26fConferenceHeld() counted_by frcp6 effective [2015-12-01, ..) delegable_to [CaseOrder] cite FRCP 26(a)(1)(C)
 {
   extend { by court, discretion GoodCause }
+  extend { by court, discretion GoodCause, on ExtensionMoved(InitialDisclosurePeriod) }
   extend {
     by court
     discretion ExcusableNeglect
@@ -247,6 +259,7 @@ deadline initial-disclosure-period: 14.days after Rule26fConferenceHeld() counte
 deadline jury-demand-period: 14.days after LastPleadingServed() counted_by frcp6 effective [2009-12-01, ..) delegable_to [CaseOrder] cite FRCP 38(b)(1)
 {
   extend { by court, discretion GoodCause }
+  extend { by court, discretion GoodCause, on ExtensionMoved(JuryDemandPeriod) }
   extend {
     by court
     discretion ExcusableNeglect

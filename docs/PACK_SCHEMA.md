@@ -514,7 +514,7 @@ override it at runtime, independently of `$LITGRAPH_PACKS`/`--packs-dir`.
 | `lowered` | object | **v2** [`lowered` header](#the-lowered-header): the world the matter was replayed in (`asOf`/`knownAt` are the case's) and its holes (an `unvalued` stake, a source `as_of ?(..)`) |
 
 `litgraph schema named-scenario` gives the full JSON Schema; `litgraph
-validate scenarios/your-scenario.json` (or `--kind named-scenario`) resolves
+validate target/lit-build/scenarios/your-scenario.json` (or `--kind named-scenario`) resolves
 it against the current packs the same way a request is validated, reporting
 unresolved node/edge refs and expression errors.
 

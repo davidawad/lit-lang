@@ -76,6 +76,15 @@ pub fn checked_targets(
     ))
 }
 
+/// The engine clock matters replay under: every counting rule of `all`
+/// lowered. A counting rule that does not lower is reported by its
+/// package's verification; replay then counts with the shared library
+/// alone.
+#[must_use]
+pub fn engine(all: &[&litigate_sema::hir::Package]) -> EngineClock {
+    EngineClock::lowered(&Lowerer::new(all), all).unwrap_or_else(|_| EngineClock::new([]))
+}
+
 /// Checks everything loaded in `session` at the build dates `options`
 /// (each defaults to the package's `known_at`; a matter selects at its own
 /// `as_of` and `known_at`).
@@ -83,10 +92,7 @@ pub fn checked_targets(
 pub fn check_session(session: Session, profile: Profile, options: &Options) -> Checked {
     let all = session.hir();
     let clocks = Clocks::new(&all);
-    // A counting rule that does not lower is reported by its package's
-    // verification; replay then counts with the shared library alone.
-    let engine =
-        EngineClock::lowered(&Lowerer::new(&all), &all).unwrap_or_else(|_| EngineClock::new([]));
+    let engine = engine(&all);
     let verdicts: Vec<(String, Verdict)> = session
         .packages
         .iter()

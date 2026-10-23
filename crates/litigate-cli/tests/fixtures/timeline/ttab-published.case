@@ -1,0 +1,15 @@
+case timeline-ttab-published
+uses ttab-trademark-trial-and-appeal-board ^0.1.0
+as_of 2026-07-01
+summary "Timeline fixture: an application published for opposition, two weeks into the 30-day opposition period."
+notes "Test fixture for `litigate timeline` (lg-z2m.1). The publication date is illustrative, not a real matter's."
+perspective applicant
+
+parties {
+  applicant: applicant Corporation
+  opposer: opposer Corporation
+}
+
+events {
+  2026-06-16 Published() on applicant
+}

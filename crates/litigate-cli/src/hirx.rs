@@ -102,6 +102,15 @@ pub fn deadlines<'p>(pkg: &'p hir::Package, name: &str) -> impl Iterator<Item = 
     })
 }
 
+/// The rule (`rule duty x { deadline d ... }`) declaring deadline `d`.
+#[must_use]
+pub fn rule_of<'p>(pkg: &'p hir::Package, d: &str) -> Option<&'p hir::Rule> {
+    declarations(pkg).find_map(|x| match x {
+        Declaration::Rule(r) if r.declarations.iter().any(|n| local(n) == d) => Some(r),
+        _ => None,
+    })
+}
+
 /// Every version of every node of `pkg`.
 #[must_use]
 pub fn nodes(pkg: &hir::Package) -> Vec<&hir::Node> {

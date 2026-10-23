@@ -10,6 +10,7 @@ mod lock;
 mod query;
 mod run;
 mod test;
+mod timeline;
 mod value;
 mod where_;
 
@@ -117,6 +118,19 @@ pub fn dispatch(command: Command, src: &dyn Source) -> Outcome {
             limit,
             cursor,
             paths,
+            lib: library.lib,
+        }),
+        Command::Timeline {
+            file,
+            dates,
+            layers,
+            world,
+            library,
+        } => timeline::timeline(&timeline::Args {
+            file,
+            dates,
+            layers,
+            world,
             lib: library.lib,
         }),
         Command::Import { inputs, out } => import::import(&inputs, &out),

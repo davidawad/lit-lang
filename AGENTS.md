@@ -73,7 +73,10 @@ stale.
 `docs/litigate/TUTORIAL.md` is the four-step walkthrough (write a rule,
 test it, write a case, run solve); `docs/litigate/SPEC.md` is normative.
 Over MCP the same toolchain is the `litigate_describe`, `litigate_check`,
-`litigate_build`, `litigate_where` and `litigate_explain` tools.
+`litigate_build`, `litigate_where`, `litigate_timeline` and
+`litigate_explain` tools. `litigate timeline FILE` prints a `.case` or
+`.lit` file's timeline (rows, worlds, layers) as the frozen
+`litigate.timeline/1` JSON (docs/litigate/TIMELINE.md).
 
 Packs are embedded in the binary at build time — no `packs/` directory is
 needed after install. Point at a different set with `LITGRAPH_PACKS=<dir>`

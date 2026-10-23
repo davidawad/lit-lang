@@ -275,6 +275,31 @@ pub enum Command {
         #[command(flatten)]
         library: Library,
     },
+    /// The timeline of a `.case` or `.lit` file as JSON (`litigate.timeline/1`):
+    /// rows, worlds, layer provenance, status with reason.
+    Timeline {
+        /// The `.case` or `.lit` file.
+        file: String,
+        /// Judge statuses at `--as-of` (a matter's own `as_of` by default)
+        /// and select the versions recorded by `--known-at`.
+        #[command(flatten)]
+        dates: Dates,
+        /// Layers to enable (`ID`, `+ID`: only those named) or disable
+        /// (`-ID`), comma-separated or repeated.
+        #[arg(
+            long,
+            value_name = "ID",
+            value_delimiter = ',',
+            allow_hyphen_values = true
+        )]
+        layers: Vec<String>,
+        /// Only this world (e.g. `w1`) and its ancestors up to its fork.
+        #[arg(long, value_name = "ID")]
+        world: Option<String>,
+        /// Shared options.
+        #[command(flatten)]
+        library: Library,
+    },
     /// Turn legacy pack / links / scenario JSON into `.lit` / `.case` source.
     Import {
         /// JSON files.
@@ -324,6 +349,7 @@ impl Command {
             Self::ExplainValue { .. } => "explain-value",
             Self::Diff { .. } => "diff",
             Self::Query { .. } => "query",
+            Self::Timeline { .. } => "timeline",
             Self::Import { .. } => "import",
             Self::Fix { .. } => "fix",
         }

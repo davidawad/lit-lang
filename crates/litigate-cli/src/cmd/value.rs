@@ -22,14 +22,6 @@ fn name_of<T: serde::Serialize>(value: T) -> String {
         .unwrap_or_default()
 }
 
-/// The rule (`rule duty x { deadline d ... }`) declaring deadline `d`.
-fn rule_of<'p>(pkg: &'p hir::Package, d: &str) -> Option<&'p hir::Rule> {
-    hirx::declarations(pkg).find_map(|x| match x {
-        hir::Declaration::Rule(r) if r.declarations.iter().any(|n| local(n) == d) => Some(r),
-        _ => None,
-    })
-}
-
 /// How version `v` of a deadline sets its due date: counted, or
 /// designated by its trigger.
 fn period(v: &hir::Deadline) -> String {
@@ -68,7 +60,7 @@ struct Trace<'a> {
 impl Trace<'_> {
     /// The steps behind version `v` of deadline `d`.
     fn steps(&self, d: &str, v: &hir::Deadline, scheduled: Option<&Scheduled>) -> Vec<Value> {
-        let rule = rule_of(self.pkg, d);
+        let rule = hirx::rule_of(self.pkg, d);
         let cite = v
             .meta
             .cite

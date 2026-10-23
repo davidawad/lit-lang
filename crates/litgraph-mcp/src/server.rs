@@ -66,7 +66,7 @@ impl ServerHandler for LitgraphServer {
                  engine error (`ok: false`) comes back as a tool error carrying that same \
                  envelope as structured content. The `litigate_*` tools (`litigate_describe` \
                  first, then `litigate_check`, `litigate_build`, `litigate_where`, \
-                 `litigate_explain`) drive the authoring language the packs and named \
+                 `litigate_timeline`, `litigate_explain`) drive the authoring language the packs and named \
                  scenarios are generated from (`lit/*.lit` rules, `cases/*.case` matters); \
                  each returns the `litigate` CLI's own envelope ({ok, op, result, \
                  diagnostics, provenance, elapsed_ms}), paths resolving against the server's \

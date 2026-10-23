@@ -3,6 +3,7 @@ mod code;
 mod diagnostic;
 mod envelope;
 mod line_index;
+pub mod timeline;
 
 pub use code::{DiagnosticCode, UnknownCode};
 pub use diagnostic::{

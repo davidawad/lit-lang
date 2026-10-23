@@ -75,6 +75,21 @@ pub struct Scheduled {
     pub request_made: Option<String>,
     /// How replay ended it, or `open` at `as_of`.
     pub status: Status,
+    /// Source index of the trigger event in the matter's `events`.
+    #[serde(skip)]
+    pub trigger_event: usize,
+    /// Source index of the event that ended it, if one did.
+    #[serde(skip)]
+    pub closed_by: Option<usize>,
+}
+
+/// Dates a matter is checked at instead of its own `as_of` / `known_at`.
+#[derive(Debug, Clone, Copy, Default)]
+pub struct At<'a> {
+    /// Replaces the matter's `as_of`.
+    pub as_of: Option<&'a str>,
+    /// Replaces the matter's `known_at`.
+    pub known_at: Option<&'a str>,
 }
 
 /// A checked matter.
@@ -173,22 +188,51 @@ pub fn check(
     clocks: &Clocks,
     profile: Profile,
 ) -> CaseCheck {
+    check_at(session, case, engine, clocks, profile, At::default())
+}
+
+/// [`check`] with the matter's dates replaced by `at`'s.
+#[must_use]
+pub fn check_at(
+    session: &Session,
+    case: &CaseText,
+    engine: &EngineClock,
+    clocks: &Clocks,
+    profile: Profile,
+    at: At,
+) -> CaseCheck {
     let all = session.hir();
     // CLI-side findings: an unreadable lock, and lowering errors.
     let (lock, mut own) = match lock(case) {
         Ok(lock) => (lock, Vec::new()),
         Err(d) => (None, vec![d]),
     };
-    let verified = litigate_verify::verify_case_source(
-        &case.path,
-        &case.text,
-        Env {
-            packages: &all,
-            lock: lock.as_ref(),
-            clock: engine,
-            profile,
-        },
-    );
+    let env = Env {
+        packages: &all,
+        lock: lock.as_ref(),
+        clock: engine,
+        profile,
+    };
+    let verified = if at.as_of.is_none() && at.known_at.is_none() {
+        litigate_verify::verify_case_source(&case.path, &case.text, env)
+    } else {
+        let resolved = litigate_sema::case::resolve(&case.path, &case.text, &all, lock.as_ref());
+        match resolved.case {
+            Some(mut hcase) => {
+                if let Some(as_of) = at.as_of {
+                    as_of.clone_into(&mut hcase.as_of);
+                }
+                if let Some(known_at) = at.known_at {
+                    hcase.known_at = Some(known_at.to_owned());
+                }
+                let mut verified = litigate_verify::verify_case(hcase, &resolved.spans, env);
+                verified.checked.diagnostics.extend(resolved.diagnostics);
+                verified
+            }
+            // It does not resolve: the source path reports why.
+            None => litigate_verify::verify_case_source(&case.path, &case.text, env),
+        }
+    };
     let mut diagnostics = verified.diagnostics();
     let mut checked_case = verified.checked.case;
     if let Some(c) = checked_case
@@ -292,6 +336,8 @@ fn schedule(
                 extended_under: o.extended_under,
                 request_made: o.request_made.clone(),
                 status: o.status,
+                trigger_event: o.trigger,
+                closed_by: o.closed_by,
             };
             match due {
                 Ok(due) => {

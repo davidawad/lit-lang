@@ -28,6 +28,7 @@ pub mod report;
 pub mod span;
 #[cfg(test)]
 mod testkit;
+pub mod timeline;
 pub mod verdict;
 pub mod ws;
 

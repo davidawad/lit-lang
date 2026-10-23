@@ -172,6 +172,43 @@ const TOOLS: &[Spec] = &[
         ],
     },
     Spec {
+        name: "litigate_timeline",
+        command: "timeline",
+        doc: "The timeline of a `.case` or `.lit` file as a `litigate.timeline/1` document (docs/litigate/TIMELINE.md, schema docs/litigate/timeline.v1.schema.json), the envelope's `result`: rows (events, deadlines with due date and status+reason, fork points) per world, alternate worlds branching at the matter's current posture, edges, and each row's layer provenance. A deadline the engine cannot compute is a row with `due: null` and status `unknown` with the reason.",
+        args: &[
+            arg(
+                "file",
+                Kind::Text,
+                Spell::Positional,
+                true,
+                "The `.case` or `.lit` file.",
+            ),
+            arg(
+                "as_of",
+                Kind::Text,
+                Spell::Flag("--as-of"),
+                false,
+                "YYYY-MM-DD: judge statuses at this date (default: the matter's own `as_of`; for a `.lit` file, its package's `known_at`).",
+            ),
+            KNOWN_AT,
+            arg(
+                "layers",
+                Kind::List,
+                Spell::Flag("--layers"),
+                false,
+                "Layer ids to enable (`ID` or `+ID`: only those named) or disable (`-ID`).",
+            ),
+            arg(
+                "world",
+                Kind::Text,
+                Spell::Flag("--world"),
+                false,
+                "Only this world (e.g. `w1`) and its ancestors up to its fork row.",
+            ),
+            LIB,
+        ],
+    },
+    Spec {
         name: "litigate_explain",
         command: "explain",
         doc: "The long explanation of a litigate diagnostic code (e.g. `L3004`), with its severity under each profile.",
@@ -358,6 +395,7 @@ mod tests {
                 "litigate_check",
                 "litigate_build",
                 "litigate_where",
+                "litigate_timeline",
                 "litigate_explain"
             ]
         );
@@ -451,6 +489,29 @@ mod tests {
         assert_eq!(envelope["ok"], json!(true));
         assert_eq!(envelope["op"], json!("explain"));
         assert_eq!(envelope["result"]["code"], json!("L3004"));
+    }
+
+    #[test]
+    fn timeline_returns_the_timeline_document() {
+        assert_eq!(
+            line(
+                "litigate_timeline",
+                json!({"file": "a.case", "layers": ["-x"], "world": "w1"})
+            ),
+            Ok([
+                "litigate", "--format", "json", "timeline", "--layers", "-x", "--world", "w1",
+                "--", "a.case"
+            ]
+            .map(str::to_owned)
+            .to_vec())
+        );
+        let (envelope, is_error) = call(
+            "litigate_timeline",
+            Some(obj(json!({"file": "/no/such/matter.case"}))),
+        )
+        .unwrap_or_default();
+        assert!(is_error, "{envelope}");
+        assert_eq!(envelope["ok"], json!(false));
     }
 
     #[test]

@@ -254,7 +254,7 @@ const BUILTINS: [(&str, &str); 15] = [
     ),
 ];
 
-const RESULTS: [(&str, &str); 14] = [
+const RESULTS: [(&str, &str); 15] = [
     ("describe", "this document"),
     (
         "lock",
@@ -270,6 +270,7 @@ const RESULTS: [(&str, &str); 14] = [
     ("explain-value", "{value, type, id, steps:[{rule, cite, detail}], versions, overrides}"),
     ("diff", "{equal, files:[{a, b, kind, equal, changes}], changes:[{kind, pointer, id, before, after, document}], unmatched}"),
     ("query", "{matches:[{id, kind, label, span, cite, in_force, detail}], total, next_cursor}"),
+    ("timeline", "a litigate.timeline/1 document (docs/litigate/timeline.v1.schema.json): {schema, source, as_of, known_at, layers, worlds, rows, edges, diagnostics}"),
     ("import", "{files:[{path, from}], warnings}"),
     ("fix", "{fixes:[{code, message?, edits:[{span, replacement}], applicability}], changed_files, skipped_overlapping, dry_run}; a fix's edits apply together or not at all"),
 ];

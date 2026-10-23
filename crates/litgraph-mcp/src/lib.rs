@@ -11,7 +11,7 @@
 //! - A generic `litgraph` tool takes a raw [`litgraph::api::Request`]
 //!   verbatim, for anything not (yet) exposed as its own tool.
 //! - `litigate_check`, `litigate_build`, `litigate_where`,
-//!   `litigate_explain` and `litigate_describe` run the litigate authoring
+//!   `litigate_timeline`, `litigate_explain` and `litigate_describe` run the litigate authoring
 //!   toolchain (the `.lit`/`.case` source `packs/` and `scenarios/` are
 //!   generated from) through `litigate_cli::execute` (see [`litigate`]).
 //! - Packs, `links.json`, the named scenario library, and the manual are

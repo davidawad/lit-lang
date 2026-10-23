@@ -64,6 +64,9 @@ cov-litigate:
 
 # Ten-minute local parser and case-input fuzz smoke (five minutes each).
 fuzz:
+    mkdir -p crates/litigate-syntax/fuzz/corpus/parse crates/litigate-syntax/fuzz/corpus/case_replay
+    cp -n crates/litigate-syntax/fuzz/seeds/* crates/litigate-syntax/fuzz/corpus/parse/
+    cp -n crates/litigate-syntax/fuzz/seeds/* crates/litigate-syntax/fuzz/corpus/case_replay/
     cargo +nightly fuzz run parse --fuzz-dir crates/litigate-syntax/fuzz -- -max_total_time=300
     cargo +nightly fuzz run case_replay --fuzz-dir crates/litigate-syntax/fuzz -- -max_total_time=300
 

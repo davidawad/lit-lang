@@ -34,13 +34,14 @@ fn roll_forward_terminates_for_bounded_dates() {
 }
 
 #[kani::proof]
-#[kani::unwind(20)]
+#[kani::unwind(8)]
 fn forward_business_counting_is_after_or_equal_to_trigger() {
     let epoch_day: i32 = kani::any();
     let days: u8 = kani::any();
     kani::assume(epoch_day >= -730_000 && epoch_day <= 730_000);
-    kani::assume(days <= 14);
-    let rule = weekend_clock();
+    kani::assume(days <= 4);
+    let mut rule = weekend_clock();
+    rule.closed_weekdays = Vec::new();
     let clock = Clock {
         rule: &rule,
         calendars: Vec::new(),

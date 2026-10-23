@@ -204,7 +204,7 @@ InstanceDecl = "instance", Ident, "@", Ident, "{", { InstanceField, Sep }, "}" ;
 InstanceField= "pack", Ident | "note", String | "remove_edges", IdList
              | "probabilities", "{", { Ident, ":", ProbValue, Sep }, "}"
              | "roles", "{", { Ident, ":", Ident, Sep }, "}"
-             | "payoff_transform", String | "stake", (SignedMoney | Hole)
+             | "payoff_transform", "(", Expr, ")" | "stake", (SignedMoney | Hole)
              | "patch", Ident, EdgeFields ;
 
 RuleDecl     = "rule", ("duty" | "power" | "liability"), Ident, { VersionClause
@@ -1358,15 +1358,21 @@ hole), and null for each member of a base object field (`deadline`,
 `duration`, `attrs`) that the written field lacks. A patch cannot unset a
 field. The base pack must be loaded with the links package, else a
 patching instance is L6001, and a patch naming an edge the base lacks is
-L1002. `payoff_transform` must parse as a litgraph
-expression whose only variables are `payoff` and, when the instance
-declares one, `stake` (L6003). A `stake` the transform does not use is
-L2007. A known `stake` lowers to `stake` in USD; a `stake` hole lowers to
-an absent `stake` (and a `lowered.holes` entry
-`/instances/<name>/stake`), and the engine then leaves every terminal
-payoff of the instance unauthored (`payoff-not-authored`) instead of
-guessing one: the amount at stake is a fact of the matter. The link file
-is `schemaVersion: 2` with a `lowered` header (§8.1); link holes are
+L1002. `payoff_transform (e)` is a typed expression of type `Money<usd>`
+over two locals of that type: `payoff` and, when the instance declares
+one, `stake` (L1002 otherwise). It may use money and number literals,
+`+ - * /` and unary `-` (L2002 for anything else), typed as in §6:
+`1_000_000.usd - payoff`, not `1000000 - payoff`. It lowers to the
+litgraph expression text the engine evaluates, money in major units and
+parentheses only where precedence needs them (`stake - payoff`). A
+`stake` the transform does not read is L2007. A known `stake` lowers to
+`stake` in USD; a `stake` hole lowers to an absent `stake` (and a
+`lowered.holes` entry `/instances/<name>/stake`), and the engine then
+leaves every terminal payoff of the instance unauthored
+(`payoff-not-authored`) instead of guessing one: the amount at stake is a
+fact of the matter. A hole in a patch is a `lowered.holes` entry under
+`/instances/<name>/patch_edges/<edge>/<field>`. The link file is
+`schemaVersion: 2` with a `lowered` header (§8.1); link holes are
 `/links/<i>/<field>`. `replaces` outside a links
 package is L2007.
 

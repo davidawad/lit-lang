@@ -2618,17 +2618,8 @@
               "type": "FIELD",
               "name": "key",
               "content": {
-                "type": "CHOICE",
-                "members": [
-                  {
-                    "type": "STRING",
-                    "value": "note"
-                  },
-                  {
-                    "type": "STRING",
-                    "value": "payoff_transform"
-                  }
-                ]
+                "type": "STRING",
+                "value": "note"
               }
             },
             {
@@ -2637,6 +2628,27 @@
               "content": {
                 "type": "SYMBOL",
                 "name": "string"
+              }
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "key",
+              "content": {
+                "type": "STRING",
+                "value": "payoff_transform"
+              }
+            },
+            {
+              "type": "FIELD",
+              "name": "value",
+              "content": {
+                "type": "SYMBOL",
+                "name": "parenthesized_expression"
               }
             }
           ]

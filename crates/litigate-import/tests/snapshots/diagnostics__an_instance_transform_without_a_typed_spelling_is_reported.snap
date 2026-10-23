@@ -1,0 +1,24 @@
+---
+source: crates/litigate-import/tests/diagnostics.rs
+expression: messages
+---
+[
+    (
+        "`payoff_transform` does not parse: expression: expression: unexpected token None in `stake *`",
+        Some(
+            "/instances/base@broken/payoff_transform",
+        ),
+    ),
+    (
+        "a `payoff_transform` reads `payoff` and `stake`, with number literals, `+ - * /` and unary `-`; this one has no `.lit` spelling",
+        Some(
+            "/instances/base@rate/payoff_transform",
+        ),
+    ),
+    (
+        "a `payoff_transform` reads `payoff` and `stake`, with number literals, `+ - * /` and unary `-`; this one has no `.lit` spelling",
+        Some(
+            "/instances/base@ternary/payoff_transform",
+        ),
+    ),
+]

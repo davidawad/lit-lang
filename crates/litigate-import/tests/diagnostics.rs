@@ -335,3 +335,17 @@ fn a_generated_file_that_does_not_parse_is_reported_with_the_parser_errors() {
         [rejected("lit/p/p.lit"), rejected("lit/p/01-ungrouped.lit")]
     );
 }
+
+/// A transform with no typed spelling is reported, not written.
+#[test]
+fn an_instance_transform_without_a_typed_spelling_is_reported() {
+    let links = json!({"instances": {
+        "base@broken": {"pack": "base", "payoff_transform": "stake *"},
+        "base@ternary": {"pack": "base", "payoff_transform": "payoff > 0 ? payoff : 0"},
+        "base@rate": {"pack": "base", "payoff_transform": "payoff * rate"}
+    }});
+    let inputs = [Input::new("packs/links.json", links.to_string())];
+    let messages: Vec<(String, Option<String>)> =
+        reported(&inputs).into_iter().map(|r| (r.3, r.4)).collect();
+    insta::assert_debug_snapshot!(messages);
+}

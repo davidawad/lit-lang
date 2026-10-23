@@ -264,7 +264,8 @@ module.exports = {
 
   instance_field: $ => choice(
     seq(field('key', 'pack'), field('value', $.identifier)),
-    seq(field('key', choice('note', 'payoff_transform')), field('value', $.string)),
+    seq(field('key', 'note'), field('value', $.string)),
+    seq(field('key', 'payoff_transform'), field('value', $.parenthesized_expression)),
     seq(field('key', 'remove_edges'), field('value', $.id_list)),
     seq(field('key', 'probabilities'), field('value', $.probability_map)),
     seq(field('key', 'roles'), field('value', $.role_map)),

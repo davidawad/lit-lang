@@ -38,6 +38,9 @@ pub struct Checker<'s, 'a> {
     pub actors: BTreeSet<String>,
     /// File for HIR spans.
     pub file: Option<(&'s FileId, &'s LineIndex)>,
+    /// Names bound by the context being checked (`payoff` and `stake` in
+    /// a `payoff_transform`), shadowing declarations.
+    pub locals: Vec<(String, Type)>,
 }
 
 impl<'s, 'a> Checker<'s, 'a> {
@@ -50,6 +53,7 @@ impl<'s, 'a> Checker<'s, 'a> {
             holes: Vec::new(),
             actors: BTreeSet::new(),
             file: None,
+            locals: Vec::new(),
         }
     }
 
@@ -280,6 +284,11 @@ impl<'s, 'a> Checker<'s, 'a> {
     /// Resolves a name in expression position.
     pub fn reference(&mut self, path: &RefPath, expected: Option<&Type>) -> Checked {
         let r = path.range;
+        let local = self.locals.iter().find(|(name, _)| *name == path.display());
+        if let Some((name, ty)) = local {
+            let (target, ty) = (name.clone(), ty.clone());
+            return self.node(hir::ExprKind::Ref { target }, Some(ty), None, r);
+        }
         if let Some(checked) = self.literal_name(path, expected) {
             return checked;
         }

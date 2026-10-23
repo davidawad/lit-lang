@@ -134,6 +134,11 @@ pub(crate) fn primary(p: &mut Parser<'_>) -> bool {
     }
 }
 
+/// `"(" Expr ")"` as a field value (`payoff_transform (stake - payoff)`).
+pub(crate) fn paren_expr(p: &mut Parser<'_>) -> bool {
+    p.at(LParen) && paren(p)
+}
+
 fn paren(p: &mut Parser<'_>) -> bool {
     p.start(ParenExpr);
     let opener = p.current_range();

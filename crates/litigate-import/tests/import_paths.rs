@@ -293,18 +293,21 @@ fn an_instance_stake_imports_as_money_or_as_a_hole_its_transform_needs() {
     let links = json!({"instances": {
         "base@known": {"pack": "base", "payoff_transform": "stake - payoff", "stake": 1_500_000.5},
         "base@unknown": {"pack": "base", "payoff_transform": "stake - payoff"},
-        "base@plain": {"pack": "base", "payoff_transform": "payoff * 2"},
-        "base@broken": {"pack": "base", "payoff_transform": "stake *"}
+        "base@plain": {"pack": "base", "payoff_transform": "payoff * 2"}
     }});
     let input = Input::new("packs/links.json", links.to_string());
     let files = import_ok(std::slice::from_ref(&input));
     let module = text(&files, "lit/links/links.lit");
     assert!(
-        module.contains("payoff_transform \"stake - payoff\", stake 1_500_000.5.usd }"),
+        module.contains("payoff_transform (stake - payoff), stake 1_500_000.5.usd }"),
         "{module}"
     );
     assert!(
-        module.contains("payoff_transform \"stake - payoff\", stake ? }"),
+        module.contains("payoff_transform (stake - payoff), stake ? }"),
+        "{module}"
+    );
+    assert!(
+        module.contains("payoff_transform (payoff * 2) }"),
         "{module}"
     );
     assert_eq!(module.matches(", stake ").count(), 2, "{module}");

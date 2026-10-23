@@ -2,7 +2,7 @@
 source: crates/litigate-syntax/tests/snapshots.rs
 expression: parsed.debug_tree()
 ---
-SourceFile@0..550
+SourceFile@0..555
   ModuleDecl@0..22
     KwModule@0..6 "module"
     Whitespace@6..7 " "
@@ -91,14 +91,14 @@ SourceFile@0..550
       ColonColon@220..222 "::"
       Ident@222..229 "pending"
   Whitespace@229..231 "\n\n"
-  InstanceDecl@231..549
+  InstanceDecl@231..554
     KwInstance@231..239 "instance"
     Whitespace@239..240 " "
     Ident@240..244 "cafc"
     At@244..245 "@"
     Ident@245..249 "cofc"
     Whitespace@249..250 " "
-    FieldList@250..549
+    FieldList@250..554
       LBrace@250..251 "{"
       Whitespace@251..254 "\n  "
       Field@254..263
@@ -166,66 +166,76 @@ SourceFile@0..550
           Whitespace@417..418 " "
           RBrace@418..419 "}"
       Whitespace@419..422 "\n  "
-      Field@422..446
+      Field@422..451
         KwPayoffTransform@422..438 "payoff_transform"
         Whitespace@438..439 " "
-        Literal@439..446
-          String@439..446 "\"x * 2\""
-      Whitespace@446..449 "\n  "
-      PatchDecl@449..547
-        KwPatch@449..454 "patch"
-        Whitespace@454..455 " "
-        Ident@455..461 "affirm"
-        Whitespace@461..462 " "
-        FieldList@462..547
-          LBrace@462..463 "{"
-          Whitespace@463..464 " "
-          Field@464..479
-            KwNote@464..468 "note"
-            Whitespace@468..469 " "
-            Literal@469..479
-              String@469..479 "\"Affirmed\""
-          Comma@479..480 ","
-          Whitespace@480..481 " "
-          Field@481..495
-            KwEffort@481..487 "effort"
-            Whitespace@487..488 " "
-            Literal@488..495
-              Duration@488..495 "3.hours"
-          Comma@495..496 ","
-          Whitespace@496..497 " "
-          Field@497..508
-            KwTags@497..501 "tags"
-            Whitespace@501..502 " "
-            IdList@502..508
-              LBracket@502..503 "["
-              Ref@503..504
-                Ident@503..504 "a"
-              Comma@504..505 ","
-              Whitespace@505..506 " "
-              Ref@506..507
-                Ident@506..507 "b"
-              RBracket@507..508 "]"
-          Comma@508..509 ","
-          Whitespace@509..510 " "
-          Field@510..545
-            KwDeadline@510..518 "deadline"
-            Whitespace@518..519 " "
-            Literal@519..526
-              Duration@519..526 "45.days"
-            Whitespace@526..527 " "
-            FieldList@527..545
-              LBrace@527..528 "{"
-              Whitespace@528..529 " "
-              Field@529..543
-                KwNote@529..533 "note"
-                Whitespace@533..534 " "
-                Literal@534..543
-                  String@534..543 "\"45 days\""
-              Whitespace@543..544 " "
-              RBrace@544..545 "}"
-          Whitespace@545..546 " "
-          RBrace@546..547 "}"
-      Whitespace@547..548 "\n"
-      RBrace@548..549 "}"
-  Whitespace@549..550 "\n"
+        ParenExpr@439..451
+          LParen@439..440 "("
+          BinaryExpr@440..450
+            RefExpr@440..446
+              Ref@440..446
+                Ident@440..446 "payoff"
+            Whitespace@446..447 " "
+            Star@447..448 "*"
+            Whitespace@448..449 " "
+            Literal@449..450
+              Number@449..450 "2"
+          RParen@450..451 ")"
+      Whitespace@451..454 "\n  "
+      PatchDecl@454..552
+        KwPatch@454..459 "patch"
+        Whitespace@459..460 " "
+        Ident@460..466 "affirm"
+        Whitespace@466..467 " "
+        FieldList@467..552
+          LBrace@467..468 "{"
+          Whitespace@468..469 " "
+          Field@469..484
+            KwNote@469..473 "note"
+            Whitespace@473..474 " "
+            Literal@474..484
+              String@474..484 "\"Affirmed\""
+          Comma@484..485 ","
+          Whitespace@485..486 " "
+          Field@486..500
+            KwEffort@486..492 "effort"
+            Whitespace@492..493 " "
+            Literal@493..500
+              Duration@493..500 "3.hours"
+          Comma@500..501 ","
+          Whitespace@501..502 " "
+          Field@502..513
+            KwTags@502..506 "tags"
+            Whitespace@506..507 " "
+            IdList@507..513
+              LBracket@507..508 "["
+              Ref@508..509
+                Ident@508..509 "a"
+              Comma@509..510 ","
+              Whitespace@510..511 " "
+              Ref@511..512
+                Ident@511..512 "b"
+              RBracket@512..513 "]"
+          Comma@513..514 ","
+          Whitespace@514..515 " "
+          Field@515..550
+            KwDeadline@515..523 "deadline"
+            Whitespace@523..524 " "
+            Literal@524..531
+              Duration@524..531 "45.days"
+            Whitespace@531..532 " "
+            FieldList@532..550
+              LBrace@532..533 "{"
+              Whitespace@533..534 " "
+              Field@534..548
+                KwNote@534..538 "note"
+                Whitespace@538..539 " "
+                Literal@539..548
+                  String@539..548 "\"45 days\""
+              Whitespace@548..549 " "
+              RBrace@549..550 "}"
+          Whitespace@550..551 " "
+          RBrace@551..552 "}"
+      Whitespace@552..553 "\n"
+      RBrace@553..554 "}"
+  Whitespace@554..555 "\n"

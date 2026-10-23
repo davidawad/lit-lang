@@ -1,0 +1,50 @@
+---
+source: crates/litigate-lower/tests/errors.rs
+expression: table
+---
+[
+    (
+        "sum",
+        "1000000 + payoff",
+    ),
+    (
+        "right-nested difference",
+        "payoff - (stake - payoff)",
+    ),
+    (
+        "product of a sum",
+        "(payoff + stake) * 0.5",
+    ),
+    (
+        "quotient of a product",
+        "payoff * 0.5 / 0.5",
+    ),
+    (
+        "negated sum",
+        "-(stake - payoff)",
+    ),
+    (
+        "negative literal",
+        "payoff - -1.5",
+    ),
+    (
+        "negated negative",
+        "--1.5",
+    ),
+    (
+        "comparison",
+        "L6003 a `payoff_transform` lowers only `payoff`, `stake`, money and number literals, `+ - * /` and unary `-`",
+    ),
+    (
+        "not a value",
+        "L6003 a `payoff_transform` lowers only `payoff`, `stake`, money and number literals, `+ - * /` and unary `-`",
+    ),
+    (
+        "other currency",
+        "L6001 currency `eur` has no lowering (only `usd`)",
+    ),
+    (
+        "no binary64",
+        "L6004 1/0 has no finite binary64 value",
+    ),
+]

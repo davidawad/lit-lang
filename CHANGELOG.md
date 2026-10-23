@@ -86,6 +86,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `replaces` and a second patch of one edge are L2007, and a patch can no
   longer unset a field. `litigate import` spells a legacy merge patch as
   typed fields and reports what has no spelling.
+  An instance's `payoff_transform` is a typed `Money<usd>` expression over
+  `payoff` and a declared `stake`, not a string:
+  `payoff_transform (stake - payoff)`; a number is not money
+  (`1_000_000.usd - payoff`). Sema checks it (L1002, L2001, L2002, and
+  L2007 for an unread `stake`), and lowering writes the engine's
+  expression text.
 
 ### Fixed
 

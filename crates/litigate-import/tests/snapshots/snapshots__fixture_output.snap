@@ -168,7 +168,7 @@ instance demo-court@appeal {
   remove_edges [denied]
   probabilities { 12b-move: 1 }
   roles { applicant: opponent, examiner: self }
-  payoff_transform "1000000 - payoff"
+  payoff_transform (1_000_000.usd - payoff)
   patch denied { deadline 45.days { note "U.S. party" }, tags [patched] }
 }
 

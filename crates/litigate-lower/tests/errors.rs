@@ -247,7 +247,7 @@ fn instances_are_checked_against_their_base_pack() {
     let mut bad = all.remove(links);
     for d in decls(&mut bad) {
         if let Declaration::Instance(i) = d {
-            i.payoff_transform = Some("payoff *".into());
+            i.payoff_transform = Some(literal(hir::Value::Boolean(true)));
             if let Some(patch) = i.patch_edges.values_mut().next() {
                 // A patch lowers as an edge does: business days have no
                 // litgraph unit.
@@ -281,7 +281,7 @@ fn instances_are_checked_against_their_base_pack() {
 /// The links package with every instance given `transform` and `stake`,
 /// lowered against its base packs.
 fn lower_instances(
-    transform: &str,
+    transform: &hir::Expr,
     stake: Option<&Authored<Money>>,
 ) -> Result<litigate_lower::LoweredPackage, Vec<litigate_base::Diagnostic>> {
     let inputs = support::corpus();
@@ -294,7 +294,7 @@ fn lower_instances(
     let mut pkg = all.remove(links);
     for d in decls(&mut pkg) {
         if let Declaration::Instance(i) = d {
-            i.payoff_transform = Some(transform.into());
+            i.payoff_transform = Some(transform.clone());
             i.stake = stake.cloned();
         }
     }
@@ -309,16 +309,64 @@ fn usd(dollars: i64) -> Authored<Money> {
     })
 }
 
+fn expr(kind: hir::ExprKind) -> hir::Expr {
+    hir::Expr {
+        ty: hir::Type::Unit,
+        kind,
+        span: None,
+    }
+}
+
+fn literal(value: hir::Value) -> hir::Expr {
+    expr(hir::ExprKind::Literal { value })
+}
+
+fn local(name: &str) -> hir::Expr {
+    expr(hir::ExprKind::Ref {
+        target: name.into(),
+    })
+}
+
+fn binary(op: hir::BinaryOp, lhs: hir::Expr, rhs: hir::Expr) -> hir::Expr {
+    expr(hir::ExprKind::Binary {
+        op,
+        lhs: Box::new(lhs),
+        rhs: Box::new(rhs),
+    })
+}
+
+fn negated(operand: hir::Expr) -> hir::Expr {
+    expr(hir::ExprKind::Unary {
+        op: hir::UnaryOp::Neg,
+        operand: Box::new(operand),
+    })
+}
+
+fn dollars(amount: i64, currency: &str) -> hir::Expr {
+    literal(hir::Value::Money(Money {
+        minor_units: amount,
+        currency: currency.into(),
+    }))
+}
+
+fn stake_minus_payoff() -> hir::Expr {
+    binary(hir::BinaryOp::Sub, local("stake"), local("payoff"))
+}
+
 #[test]
 fn an_instance_stake_lowers_to_the_value_its_transform_binds() {
-    let Ok(lowered) = lower_instances("stake - payoff", Some(&usd(2_000_000))) else {
+    let Ok(lowered) = lower_instances(&stake_minus_payoff(), Some(&usd(2_000_000))) else {
         panic!("a known stake lowers");
     };
     let Document::Links(links) = lowered.document else {
         panic!("a links package lowers to a link file");
     };
     assert!(links.instances.values().all(|i| i.stake == Some(2e6)));
-    let Ok(lowered) = lower_instances("stake - payoff", Some(&Authored::Hole(None))) else {
+    assert!(links
+        .instances
+        .values()
+        .all(|i| i.payoff_transform.as_deref() == Some("stake - payoff")));
+    let Ok(lowered) = lower_instances(&stake_minus_payoff(), Some(&Authored::Hole(None))) else {
         panic!("a stake hole lowers");
     };
     let Document::Links(links) = lowered.document else {
@@ -327,37 +375,83 @@ fn an_instance_stake_lowers_to_the_value_its_transform_binds() {
     assert!(links.instances.values().all(|i| i.stake.is_none()));
 }
 
+/// A typed transform lowers to litgraph syntax, parenthesized by
+/// precedence; what has no engine spelling is reported.
 #[test]
-fn an_instance_transform_binds_only_payoff_and_a_declared_stake() {
-    let messages = |transform: &str, stake: Option<&Authored<Money>>| -> Vec<(C, String)> {
-        lower_instances(transform, stake)
-            .err()
-            .unwrap_or_default()
-            .into_iter()
-            .map(|d| (d.code, d.message))
-            .collect()
+fn an_instance_transform_lowers_to_engine_syntax() {
+    use hir::BinaryOp::{Add, Div, Lt, Mul, Sub};
+    let lowered = |e: &hir::Expr| match lower_instances(e, None) {
+        Ok(p) => match p.document {
+            Document::Links(l) => l
+                .instances
+                .values()
+                .next()
+                .and_then(|i| i.payoff_transform.clone())
+                .inspect(|t| assert!(litgraph::expr::parse(t).is_ok(), "{t}"))
+                .unwrap_or_default(),
+            other @ Document::Pack(_) => panic!("{other:?}"),
+        },
+        // Every instance reports alike; the first says it.
+        Err(d) => d
+            .first()
+            .map(|d| format!("{} {}", d.code.as_str(), d.message))
+            .unwrap_or_default(),
     };
-    let undeclared = messages("stake - payoff", None);
-    assert!(
-        undeclared
-            .iter()
-            .any(|(c, m)| *c == C::InvalidEngineExpression && m.contains("uses `stake`")),
-        "{undeclared:?}"
-    );
-    let unknown = messages("rate * payoff", Some(&usd(1)));
-    assert!(
-        unknown
-            .iter()
-            .any(|(c, m)| *c == C::InvalidEngineExpression && m.contains("uses `rate`")),
-        "{unknown:?}"
-    );
-    let unused = messages("payoff", Some(&usd(1)));
-    assert!(
-        unused
-            .iter()
-            .any(|(c, m)| *c == C::InvalidField && m.contains("does not use")),
-        "{unused:?}"
-    );
+    let half = literal(hir::Value::Number(hir::Rational {
+        numerator: 1,
+        denominator: 2,
+    }));
+    let rows = [
+        (
+            "sum",
+            binary(Add, dollars(100_000_000, "usd"), local("payoff")),
+        ),
+        (
+            "right-nested difference",
+            binary(
+                Sub,
+                local("payoff"),
+                binary(Sub, local("stake"), local("payoff")),
+            ),
+        ),
+        (
+            "product of a sum",
+            binary(
+                Mul,
+                binary(Add, local("payoff"), local("stake")),
+                half.clone(),
+            ),
+        ),
+        (
+            "quotient of a product",
+            binary(Div, binary(Mul, local("payoff"), half.clone()), half),
+        ),
+        ("negated sum", negated(stake_minus_payoff())),
+        (
+            "negative literal",
+            binary(Sub, local("payoff"), dollars(-150, "usd")),
+        ),
+        ("negated negative", negated(dollars(-150, "usd"))),
+        ("comparison", binary(Lt, local("payoff"), local("stake"))),
+        ("not a value", literal(hir::Value::Boolean(true))),
+        (
+            "other currency",
+            binary(Add, local("payoff"), dollars(1, "eur")),
+        ),
+        (
+            "no binary64",
+            binary(
+                Mul,
+                local("payoff"),
+                literal(hir::Value::Number(hir::Rational {
+                    numerator: 1,
+                    denominator: 0,
+                })),
+            ),
+        ),
+    ];
+    let table: Vec<(&str, String)> = rows.iter().map(|(n, e)| (*n, lowered(e))).collect();
+    insta::assert_debug_snapshot!(table);
 }
 
 /// A package that declares several counting rules and names none in

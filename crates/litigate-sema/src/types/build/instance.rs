@@ -1,9 +1,9 @@
 //! Instances of a links package (SPEC §8.4): `instance base@origin`, its
 //! probabilities, roles, and typed `patch`es.
 use super::cx::{first_expr, first_ref, holes_of, nested, Cx};
-use crate::db::parse::tree::{ExprKind, Field, Name};
+use crate::db::parse::tree::{Expr, ExprKind, Field, Name};
 use crate::db::span::Report;
-use crate::hir::{ActorRole, EdgePatch, Instance, Type, Value};
+use crate::hir::{self, ActorRole, BinaryOp, EdgePatch, Instance, Type, UnaryOp, Value};
 use litigate_base::DiagnosticCode as C;
 use std::collections::BTreeMap;
 
@@ -91,6 +91,8 @@ impl Cx<'_, '_> {
                 }
             }
         }
+        let stake = f.get("stake");
+        let payoff_transform = self.payoff_transform(f.get("payoff_transform"), stake);
         Some(Instance {
             name: format!("{}@{}", base.text, origin.text),
             pack: pack?,
@@ -98,13 +100,77 @@ impl Cx<'_, '_> {
             remove_edges: self.idents(f.get("remove_edges")),
             probabilities,
             roles,
-            payoff_transform: Self::string(f.get("payoff_transform")),
-            stake: f
-                .get("stake")
+            payoff_transform,
+            stake: stake
                 .and_then(|x| first_expr(x))
                 .and_then(|e| self.money(e)),
             patch_edges,
         })
+    }
+
+    /// `payoff_transform (e)` (SPEC §8.4): a `Money<usd>` expression over
+    /// `payoff` and, when the instance declares `stake`, `stake` (both
+    /// `Money<usd>`), built from money and number literals, `+ - * /` and
+    /// unary `-`. A declared `stake` the transform does not read is L2007.
+    fn payoff_transform(
+        &mut self,
+        f: Option<&&Field>,
+        stake: Option<&&Field>,
+    ) -> Option<hir::Expr> {
+        let x = f.and_then(|f| first_expr(f));
+        let reads_stake = x.is_some_and(|x| reads(x, "stake"));
+        if let (Some(s), false) = (stake, reads_stake) {
+            self.report(Report::new(
+                C::InvalidField,
+                s.key.range,
+                "the `payoff_transform` does not read this `stake`",
+            ));
+        }
+        let x = x?;
+        if !self.transform_shape(x, stake.is_some()) {
+            return None;
+        }
+        let usd = Type::Money("usd".to_owned());
+        let mut locals = vec![("payoff".to_owned(), usd.clone())];
+        locals.extend(stake.map(|_| ("stake".to_owned(), usd.clone())));
+        let outer = std::mem::replace(&mut self.ck.locals, locals);
+        let checked = self.ck.check(x, &usd);
+        self.ck.locals = outer;
+        checked.ty.map(|_| checked.hir)
+    }
+
+    /// Whether `x` uses only what a `payoff_transform` may (reporting the
+    /// first thing it may not).
+    fn transform_shape(&mut self, x: &Expr, stake: bool) -> bool {
+        let why = match &x.kind {
+            ExprKind::Number(_) | ExprKind::Money(_) => return true,
+            ExprKind::Paren(inner) | ExprKind::Unary(UnaryOp::Neg, inner) => {
+                return self.transform_shape(inner, stake);
+            }
+            ExprKind::Binary(
+                BinaryOp::Add | BinaryOp::Sub | BinaryOp::Mul | BinaryOp::Div,
+                l,
+                r,
+            ) => {
+                return self.transform_shape(l, stake) && self.transform_shape(r, stake);
+            }
+            ExprKind::Ref(r) if r.is_simple() && r.head.text == "payoff" => return true,
+            ExprKind::Ref(r) if r.is_simple() && r.head.text == "stake" && stake => return true,
+            ExprKind::Ref(r) if r.is_simple() && r.head.text == "stake" => Report::new(
+                C::UnresolvedName,
+                x.range,
+                "`stake` is bound only when the instance declares a `stake`",
+            )
+            .note("write `stake ?(\"why\")` when only the matter knows it"),
+            _ => Report::new(
+                C::InvalidOperation,
+                x.range,
+                "a `payoff_transform` reads `payoff` and a declared `stake`, with money and \
+                 number literals, `+ - * /` and unary `-`",
+            ),
+        };
+        self.report(why);
+        false
     }
 
     /// `patch edge { ... }`: the edge fields written, typed as on an edge
@@ -126,5 +192,15 @@ impl Cx<'_, '_> {
             ..self.edge_fields(&fields)
         };
         Some((edge.display(), patch))
+    }
+}
+
+/// Whether `x` names `name` anywhere.
+fn reads(x: &Expr, name: &str) -> bool {
+    match &x.kind {
+        ExprKind::Ref(r) => r.is_simple() && r.head.text == name,
+        ExprKind::Paren(inner) | ExprKind::Unary(_, inner) => reads(inner, name),
+        ExprKind::Binary(_, l, r) => reads(l, name) || reads(r, name),
+        _ => false,
     }
 }

@@ -97,9 +97,41 @@ instance base@three { note \"no pack\" }\n",
     insta::assert_debug_snapshot!(out);
 }
 
+/// A `payoff_transform` is a `Money<usd>` expression over `payoff` and a
+/// declared `stake`, from literals, `+ - * /` and unary `-`.
+#[test]
+fn payoff_transforms_are_typed_money_expressions() {
+    let rows = [
+        (
+            "affine",
+            "(-(stake - payoff) * 2 / 4 + 1_000.usd)",
+            "stake 5.usd",
+        ),
+        ("undeclared stake", "(stake - payoff)", ""),
+        ("unread stake", "(payoff)", "stake 5.usd"),
+        ("another name", "(payoff * rate)", ""),
+        ("qualified name", "(base::payoff)", ""),
+        ("a call", "(max(payoff, 0.usd))", ""),
+        ("a comparison", "(payoff > 0.usd)", ""),
+        ("negation", "(!payoff)", ""),
+        ("number, not money", "(1000 - payoff)", ""),
+        ("a ratio, not money", "(payoff / payoff)", ""),
+    ];
+    let table: Vec<(&str, Vec<String>)> = rows
+        .iter()
+        .map(|(name, transform, stake)| {
+            let text = format!(
+                "module links\ninstance base@one {{ pack base, payoff_transform {transform} {stake} }}\n"
+            );
+            (*name, links(&text))
+        })
+        .collect();
+    insta::assert_debug_snapshot!(table);
+}
+
 #[test]
 fn instance_patches_lower_to_edge_fields() {
-    let text = "module links\ninstance base@one { pack base, roles { A: self, B: opponent, C: nature }, payoff_transform \"stake - payoff\", stake 5.usd, patch go { effort 2.hours, cost ?, deadline 3.days { note \"n\" }, valence good, tags [], attrs { w: 1 }, sets [f] } }\ninstance base@two { pack base, payoff_transform \"stake - payoff\", stake ?(\"the matter's\") }\n";
+    let text = "module links\ninstance base@one { pack base, roles { A: self, B: opponent, C: nature }, payoff_transform (stake - payoff), stake 5.usd, patch go { effort 2.hours, cost ?, deadline 3.days { note \"n\" }, valence good, tags [], attrs { w: 1 }, sets [f] } }\ninstance base@two { pack base, payoff_transform (stake - payoff), stake ?(\"the matter's\") }\n";
     let (db, ws) = workspace(&[
         package("base", &[], &[("base.lit", BASE)]),
         package("links", &["base"], &[("links.lit", text)]),

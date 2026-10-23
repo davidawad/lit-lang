@@ -57,7 +57,7 @@ instance cafc@cofc {
   remove_edges [a, b]
   probabilities { a: 1/2, b: ?, c: (1 / 3) }
   roles { Plaintiff: Appellant }
-  payoff_transform "negate"
+  payoff_transform (stake - payoff)
   stake ?
   patch e1 { effort 3.hours, note "x", tags [a, b], within d { extendable false }, }
 }
@@ -105,8 +105,12 @@ instance cafc@cofc {
             (identifier)
             (identifier))))
       (instance_field
-        (string
-          (string_content)))
+        (parenthesized_expression
+          (binary_expression
+            (ref
+              (identifier))
+            (ref
+              (identifier)))))
       (instance_field
         (hole))
       (instance_field

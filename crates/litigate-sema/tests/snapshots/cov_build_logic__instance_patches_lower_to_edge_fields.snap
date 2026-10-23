@@ -16,7 +16,63 @@ expression: instances
                 "C": Nature,
             },
             payoff_transform: Some(
-                "stake - payoff",
+                Expr {
+                    ty: Money(
+                        "usd",
+                    ),
+                    kind: Binary {
+                        op: Sub,
+                        lhs: Expr {
+                            ty: Money(
+                                "usd",
+                            ),
+                            kind: Ref {
+                                target: "stake",
+                            },
+                            span: Some(
+                                Span {
+                                    file: FileId(
+                                        "pkgs/links/links.lit",
+                                    ),
+                                    line: 2,
+                                    col: 93,
+                                    end_line: 2,
+                                    end_col: 98,
+                                },
+                            ),
+                        },
+                        rhs: Expr {
+                            ty: Money(
+                                "usd",
+                            ),
+                            kind: Ref {
+                                target: "payoff",
+                            },
+                            span: Some(
+                                Span {
+                                    file: FileId(
+                                        "pkgs/links/links.lit",
+                                    ),
+                                    line: 2,
+                                    col: 101,
+                                    end_line: 2,
+                                    end_col: 107,
+                                },
+                            ),
+                        },
+                    },
+                    span: Some(
+                        Span {
+                            file: FileId(
+                                "pkgs/links/links.lit",
+                            ),
+                            line: 2,
+                            col: 93,
+                            end_line: 2,
+                            end_col: 107,
+                        },
+                    ),
+                },
             ),
             stake: Some(
                 Known(
@@ -103,7 +159,63 @@ expression: instances
             probabilities: {},
             roles: {},
             payoff_transform: Some(
-                "stake - payoff",
+                Expr {
+                    ty: Money(
+                        "usd",
+                    ),
+                    kind: Binary {
+                        op: Sub,
+                        lhs: Expr {
+                            ty: Money(
+                                "usd",
+                            ),
+                            kind: Ref {
+                                target: "stake",
+                            },
+                            span: Some(
+                                Span {
+                                    file: FileId(
+                                        "pkgs/links/links.lit",
+                                    ),
+                                    line: 3,
+                                    col: 50,
+                                    end_line: 3,
+                                    end_col: 55,
+                                },
+                            ),
+                        },
+                        rhs: Expr {
+                            ty: Money(
+                                "usd",
+                            ),
+                            kind: Ref {
+                                target: "payoff",
+                            },
+                            span: Some(
+                                Span {
+                                    file: FileId(
+                                        "pkgs/links/links.lit",
+                                    ),
+                                    line: 3,
+                                    col: 58,
+                                    end_line: 3,
+                                    end_col: 64,
+                                },
+                            ),
+                        },
+                    },
+                    span: Some(
+                        Span {
+                            file: FileId(
+                                "pkgs/links/links.lit",
+                            ),
+                            line: 3,
+                            col: 50,
+                            end_line: 3,
+                            end_col: 64,
+                        },
+                    ),
+                },
             ),
             stake: Some(
                 Hole(

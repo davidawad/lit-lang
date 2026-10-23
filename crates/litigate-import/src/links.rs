@@ -129,8 +129,11 @@ fn instance_text(name: &str, instance: &Instance, spelling: &mut Spelling<'_>) -
             .collect();
         fields.push(format!("roles {{ {} }}", entries.join(", ")));
     }
-    if let Some(transform) = &instance.payoff_transform {
-        fields.push(format!("payoff_transform {}", text::string(transform)));
+    if let Some(source) = &instance.payoff_transform {
+        let at = format!("{pointer}/payoff_transform");
+        if let Some(spelled) = crate::transform::transform(source, &at, issues) {
+            fields.push(format!("payoff_transform {spelled}"));
+        }
     }
     let uses_stake = instance
         .payoff_transform

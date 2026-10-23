@@ -192,8 +192,9 @@ pub struct Instance {
     pub probabilities: BTreeMap<String, Rational>,
     /// Actor role overrides.
     pub roles: BTreeMap<String, ActorRole>,
-    /// litgraph expression over `payoff` and `stake`, validated at lowering.
-    pub payoff_transform: Option<String>,
+    /// `payoff_transform (e)`: a typed `Money<usd>` expression over the
+    /// locals `payoff` and `stake` (SPEC §8.4).
+    pub payoff_transform: Option<super::Expr>,
     /// The value of `stake` in `payoff_transform`, or a hole when only the
     /// matter can know it.
     pub stake: Option<Authored<Money>>,

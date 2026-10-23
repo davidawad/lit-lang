@@ -95,7 +95,7 @@ instance cafc@cofc-gov {
   remove_edges [origin-to-district-court, origin-to-ptab, origin-to-itc, remand-route-district-court, remand-route-ptab, remand-route-itc, origin-to-ttab, remand-route-ttab]
   probabilities { remand-route-cofc: 1 }
   roles { applicant: opponent, examiner: self }
-  payoff_transform "stake - payoff"
+  payoff_transform (stake - payoff)
   stake ?("the plaintiff's CoFC judgment, which the United States' appeal puts at risk: a fact of the matter")
   patch rehearing-file {
     within rehearing-period-united-states-party {

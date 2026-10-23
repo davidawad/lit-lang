@@ -36,6 +36,7 @@ pub mod num;
 mod pack;
 mod select;
 pub mod source_map;
+mod transform;
 
 pub use diff::{
     semantic_diff, semantic_diff_clock, semantic_diff_json, semantic_diff_links,

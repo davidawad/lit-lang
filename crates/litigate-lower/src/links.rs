@@ -124,50 +124,8 @@ fn base_pack(build: &Build<'_, '_>, pack_id: &str) -> Option<Pack> {
     Some(crate::pack::pack(build, pkg, &mut scratch).0)
 }
 
-/// `payoff_transform` must parse as a litgraph expression over `payoff`
-/// and a declared `stake` (L6003), and a `stake` must be used by it
-/// (L2007).
-fn transform(sink: &mut Sink, i: &hir::Instance, span: Option<&Span>) {
-    let vars = match i.payoff_transform.as_deref().map(litgraph::expr::parse) {
-        Some(Ok(expr)) => expr.vars(),
-        Some(Err(e)) => {
-            sink.error_with(
-                C::InvalidEngineExpression,
-                span,
-                format!("instance `{}`: `payoff_transform` does not parse", i.name),
-                e.to_string(),
-            );
-            Vec::new()
-        }
-        None => Vec::new(),
-    };
-    let bound = |v: &str| v == "payoff" || (v == "stake" && i.stake.is_some());
-    for v in vars.iter().filter(|v| !bound(v)) {
-        sink.error(
-            C::InvalidEngineExpression,
-            span,
-            format!(
-                "instance `{}`: `payoff_transform` uses `{v}`, which is neither `payoff` nor \
-                 a declared `stake` (write `stake ?(\"why\")` when only the matter knows it)",
-                i.name
-            ),
-        );
-    }
-    if i.stake.is_some() && !vars.iter().any(|v| v == "stake") {
-        sink.error(
-            C::InvalidField,
-            span,
-            format!(
-                "instance `{}` declares a `stake` its `payoff_transform` does not use",
-                i.name
-            ),
-        );
-    }
-}
-
 /// One instance. Each `patch` names an edge of the loaded base pack and
-/// lowers to the merge patch [`patch`] builds (SPEC §8.4); see
-/// [`transform`] for the payoffs.
+/// lowers to the merge patch [`patch`] builds (SPEC §8.4).
 fn instance(
     cx: &EdgeCx<'_, '_>,
     sink: &mut Sink,
@@ -175,7 +133,6 @@ fn instance(
     base: Option<&Pack>,
     span: Option<&Span>,
 ) -> Option<Instance> {
-    transform(sink, i, span);
     let mut patch_edges = BTreeMap::new();
     if !i.patch_edges.is_empty() {
         let Some(base) = base else {
@@ -224,7 +181,10 @@ fn instance(
             .iter()
             .map(|(a, r)| (a.clone(), crate::pack::role(*r)))
             .collect(),
-        payoff_transform: i.payoff_transform.clone(),
+        payoff_transform: i
+            .payoff_transform
+            .as_ref()
+            .and_then(|e| crate::transform::engine_text(sink, e)),
         stake: match &i.stake {
             Some(hir::Authored::Known(m)) => sink.money(m, span),
             Some(hir::Authored::Hole(_)) | None => None,

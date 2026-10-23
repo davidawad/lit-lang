@@ -1,0 +1,64 @@
+---
+source: crates/litigate-sema/tests/cov_build_logic.rs
+expression: table
+---
+[
+    (
+        "affine",
+        [],
+    ),
+    (
+        "undeclared stake",
+        [
+            "pkgs/links/links.lit:2:50 L1002 `stake` is bound only when the instance declares a `stake`",
+        ],
+    ),
+    (
+        "unread stake",
+        [
+            "pkgs/links/links.lit:2:58 L2007 the `payoff_transform` does not read this `stake`",
+        ],
+    ),
+    (
+        "another name",
+        [
+            "pkgs/links/links.lit:2:59 L2002 a `payoff_transform` reads `payoff` and a declared `stake`, with money and number literals, `+ - * /` and unary `-`",
+        ],
+    ),
+    (
+        "qualified name",
+        [
+            "pkgs/links/links.lit:2:50 L2002 a `payoff_transform` reads `payoff` and a declared `stake`, with money and number literals, `+ - * /` and unary `-`",
+        ],
+    ),
+    (
+        "a call",
+        [
+            "pkgs/links/links.lit:2:50 L2002 a `payoff_transform` reads `payoff` and a declared `stake`, with money and number literals, `+ - * /` and unary `-`",
+        ],
+    ),
+    (
+        "a comparison",
+        [
+            "pkgs/links/links.lit:2:50 L2002 a `payoff_transform` reads `payoff` and a declared `stake`, with money and number literals, `+ - * /` and unary `-`",
+        ],
+    ),
+    (
+        "negation",
+        [
+            "pkgs/links/links.lit:2:50 L2002 a `payoff_transform` reads `payoff` and a declared `stake`, with money and number literals, `+ - * /` and unary `-`",
+        ],
+    ),
+    (
+        "number, not money",
+        [
+            "pkgs/links/links.lit:2:50 L2002 operator `-` is not defined for `Number` and `Money<usd>`",
+        ],
+    ),
+    (
+        "a ratio, not money",
+        [
+            "pkgs/links/links.lit:2:50 L2001 expected `Money<usd>`, found `Number`",
+        ],
+    ),
+]

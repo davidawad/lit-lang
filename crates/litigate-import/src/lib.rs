@@ -38,6 +38,7 @@ mod modules;
 mod node;
 mod pack;
 pub mod text;
+mod transform;
 
 use issues::Issues;
 use litgraph::model::{LinkFile, Pack};

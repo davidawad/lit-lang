@@ -106,7 +106,7 @@ pub(crate) const INSTANCE_FIELDS: &[Spec] = &[
     (KwRemoveEdges, Some(id_list)),
     (KwProbabilities, Some(probabilities)),
     (KwRoles, Some(name_record)),
-    (KwPayoffTransform, Some(string)),
+    (KwPayoffTransform, Some(super::expr::paren_expr)),
     (KwStake, Some(money_or_hole)),
 ];
 

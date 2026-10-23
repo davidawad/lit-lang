@@ -13,6 +13,6 @@ instance cafc@cofc {
   remove_edges [entry-district]
   probabilities { affirm: 7/10, reverse: ?("no data") }
   roles { appellant: self }
-  payoff_transform "x * 2"
+  payoff_transform (payoff * 2)
   patch affirm { note "Affirmed", effort 3.hours, tags [a, b], deadline 45.days { note "45 days" } }
 }

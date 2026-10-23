@@ -86,6 +86,42 @@ pub fn value(node: &SyntaxNode) -> Value {
     }
 }
 
+/// A `payoff_transform` expression as the litgraph text SPEC §8.4 lowers
+/// it to, with its precedence level: money in major units, operators
+/// spaced, parentheses only where precedence needs them.
+fn engine(node: &SyntaxNode) -> (String, u8) {
+    let wrap = |(text, level): (String, u8), least: u8| {
+        if level < least {
+            format!("({text})")
+        } else {
+            text
+        }
+    };
+    let operands: Vec<SyntaxNode> = node.children().collect();
+    match node.kind() {
+        SyntaxKind::ParenExpr => engine(&operands[0]),
+        SyntaxKind::UnaryExpr => (format!("-{}", wrap(engine(&operands[0]), 3)), 3),
+        SyntaxKind::BinaryExpr => {
+            let op = node
+                .children_with_tokens()
+                .filter_map(rowan::NodeOrToken::into_token)
+                .find(|t| !matches!(t.kind(), SyntaxKind::Whitespace | SyntaxKind::Comment))
+                .map(|t| t.text().to_owned())
+                .unwrap_or_default();
+            let level = if op == "+" || op == "-" { 1 } else { 2 };
+            let (l, r) = (engine(&operands[0]), engine(&operands[1]));
+            (
+                format!("{} {op} {}", wrap(l, level), wrap(r, level + 1)),
+                level,
+            )
+        }
+        _ => match value(node) {
+            Value::Number(n) => (n.as_f64().unwrap_or(f64::NAN).to_string(), 4),
+            other => (other.as_str().unwrap_or_default().to_owned(), 4),
+        },
+    }
+}
+
 /// `keyword value` fields as an object keyed by keyword text. A field with
 /// options (a deadline) keeps them under `"{keyword}:opts"`.
 pub fn fields(list: impl Iterator<Item = ast::Field>) -> Value {
@@ -97,7 +133,12 @@ pub fn fields(list: impl Iterator<Item = ast::Field>) -> Value {
             .unwrap_or_default();
         let nodes: Vec<SyntaxNode> = field.syntax().children().collect();
         if let Some(first) = nodes.first() {
-            map.insert(key.clone(), value(first));
+            let v = if key == "payoff_transform" {
+                json!(engine(first).0)
+            } else {
+                value(first)
+            };
+            map.insert(key.clone(), v);
             let unit = first
                 .first_token()
                 .filter(|t| key == "deadline" && t.kind() == SyntaxKind::Duration);

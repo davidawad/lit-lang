@@ -10,6 +10,10 @@
 //!   cannot drift from what the engine actually accepts.
 //! - A generic `litgraph` tool takes a raw [`litgraph::api::Request`]
 //!   verbatim, for anything not (yet) exposed as its own tool.
+//! - `litigate_check`, `litigate_build`, `litigate_where`,
+//!   `litigate_explain` and `litigate_describe` run the litigate authoring
+//!   toolchain (the `.lit`/`.case` source `packs/` and `scenarios/` are
+//!   generated from) through `litigate_cli::execute` (see [`litigate`]).
 //! - Packs, `links.json`, the named scenario library, and the manual are
 //!   MCP resources under `litgraph://…` URIs (see [`resources`]).
 //! - Responses are always the same JSON envelope
@@ -19,6 +23,7 @@
 //!   failures become `ok: false` responses, exactly as `litgraph::api::handle_json`
 //!   already guarantees for the CLI.
 
+pub mod litigate;
 mod ops;
 mod resources;
 mod server;

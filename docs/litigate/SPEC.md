@@ -933,8 +933,10 @@ reports `{kind, pointer, id, before, after}` with `kind` one of `added`,
 `removed`, `changed`, `order`. Nodes, edges, links, groups, sources,
 calendars and counting rules are matched by id, so pointers name ids
 (`/nodes/answer-due/label`, `/edges/respond->answered#0/cost`) and a pure
-permutation is one `order` change (`/nodes/order`, or `/edges/order/<from>`
-for edges within one source node). Other arrays are compared by index.
+permutation is one `order` change (`/nodes/order`, `/edges/order/<from>`
+for edges within one source node, or `/links/order` for links, whose whole
+order counts since they have no node list to regroup under). Other arrays
+are compared by index.
 
 The sidecar `<file>.map.json` is `{generated: {by: "litigate-lower",
 version, language}, kind, id, package: {name, version, digest}, as_of,
@@ -1067,7 +1069,7 @@ All commands accept `--format json|human` (default `human` on a TTY, else
 | `describe` | | `{language_version, grammar, types, builtins, diagnostic_codes:[{code, explain}], commands}` |
 | `lock` | `[PKG_DIR]`, `--locked` | `{lockfile, changed, packages:[{name,version,digest}]}`; `--locked` fails (L1007) instead of writing |
 | `check` | `PATHS...`, `--profile dev\|strict` (default `dev`), `--as-of`, `--known-at` | `{profile, files, obligations:[Finding], packages}` |
-| `build` | `PKG_OR_CASE...`, `--as-of`, `--known-at`, `--out DIR` | `{outputs:{packs:[path], links:[path], scenarios:[path], source_maps:[path]}, litigatable_hash, obligations}` |
+| `build` | `PKG_OR_CASE...`, `--as-of`, `--known-at`, `--out DIR`, `--pack-file ID=STEM` (repeatable) | `{outputs:{packs:[path], links:[path], clock:[path], scenarios:[path], source_maps:[path], litigatables:[path]}, litigatable_hash, litigatables, obligations}` |
 | `fmt` | `PATHS...`, `--check` | `{files:[{path, changed}]}`; `--check` reports L9004 instead of writing |
 | `explain` | `CODE` | `{code, explanation, severity:{dev, strict}}` |
 | `fix` | `PATHS...`, `--code CODE`, `--dry-run`, `--include-maybe` | `{edits:[{span, replacement}], changed_files}`; only machine-applicable fixes without `--include-maybe` |
@@ -1078,10 +1080,45 @@ All commands accept `--format json|human` (default `human` on a TTY, else
 | `import` | `JSON...`, `--out DIR` | `{files:[{path, from}], warnings}`; output must round-trip under §8.6 (L6002 otherwise) |
 | `lsp` | `--stdio` | LSP session (no envelope) |
 
+`build` writes pack `ID` to `packs/ID.json` (its source map to
+`packs/ID.map.json`, its clock fragment to `packs/clock/ID.json`); `--pack-file
+ID=STEM` writes those as `STEM` instead. Both sides are kebab-case, an id is
+mapped once, `links` is reserved, and a mapping naming no built pack, or two
+outputs landing on one path, is a usage failure (exit 1).
+
 `justfile` recipes: `lit-check` runs `litigate check --profile strict lit cases`.
-`lit-sync` runs `litigate build` into a temp dir then `litigate diff` against
-`packs/` and `scenarios/`. `lit-test` runs the litigate crates' tests. `just
-ci` gains `lit-sync` at the flip (W3).
+`lit-sync` regenerates the repository's generated files (§9.4); `lit-sync-check`
+runs it and fails when `git status` shows any change under `packs/` or
+`scenarios/`, and is part of `just ci`. `lit-diff` builds into a temp dir and
+runs `litigate diff --check` against `packs/` and `scenarios/` without
+writing. `lit-test` runs the litigate crates' tests.
+
+### 9.4 Generated repository files
+
+Since the flip (DESIGN §11.3) these files are build outputs; edit `lit/` or
+`cases/` and run `just lit-sync`, never the JSON:
+
+| Generated file | From |
+|---|---|
+| `packs/<file>.json` | each forum package `lit/<forum>/` (not `lit/core`, a library, nor `lit/examples`) |
+| `packs/links.json` | `lit/links/` |
+| `packs/clock/<file>.json` | a forum package's own counting rules and calendars (today only `mpep-prosecution`) |
+| `scenarios/<id>.json` | each top-level `cases/<id>.case` (not `cases/requests/` nor `cases/examples/`) |
+
+`<file>` is the pack id, except where `lit-sync` maps it with `--pack-file`
+to the legacy file name the engine, its tests and external users already
+load: `cafc` → `cafc-federal-circuit`, `cofc` → `cofc-court-of-federal-claims`.
+The input list and the mappings are the justfile's `lit_sync_inputs` and
+`lit_sync_names`; a new forum package is added there. `lit-sync` deletes
+`packs/*.json` and `scenarios/*.json` before copying, so a removed package's
+file disappears; source maps and litigatables are not copied. Not generated:
+`lit/core`'s counting rules and calendars are not yet the engine's clock
+library, so `packs/clock/{frap26,frcp6,itc210,rcfc6,us-federal-holidays}.json`
+stay hand-authored (with `packs/clock/SOURCES-NOTES.md` and
+`packs/*-SOURCES-NOTES.md`), as do `examples/*.json` requests, which the
+`cases/requests/` matters reproduce through `litigate run`. Generated JSON is
+the canonical rendering of §8.6, so its bytes need not match a hand-written
+predecessor; `litigate diff` is the equality that matters.
 
 ## 10. Canonical formatting (`litigate fmt`)
 

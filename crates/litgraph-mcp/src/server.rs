@@ -16,7 +16,7 @@ use rmcp::service::RequestContext;
 use rmcp::{ErrorData as McpError, RoleServer, ServerHandler};
 use serde_json::json;
 
-use crate::{ops, resources};
+use crate::{litigate, ops, resources};
 
 /// The MCP server: a loaded [`Catalog`] plus the tool/resource surface in
 /// [`crate::ops`] and [`crate::resources`]. A thin wrapper over
@@ -48,7 +48,8 @@ impl ServerHandler for LitgraphServer {
         .with_server_info(
             Implementation::new("litgraph-mcp", env!("CARGO_PKG_VERSION")).with_description(
                 "Litigation procedure graphs as stochastic games, over MCP: one tool per \
-                     engine op, packs/links.json/named scenarios/the manual as resources.",
+                     engine op, litigate_* tools for the authoring language, \
+                     packs/links.json/named scenarios/the manual as resources.",
             ),
         )
         .with_instructions(
@@ -63,7 +64,13 @@ impl ServerHandler for LitgraphServer {
                  tool. Every response is the same JSON envelope the CLI and library use \
                  ({ok, api_version, op, result|error, warnings, provenance, elapsed_ms}); an \
                  engine error (`ok: false`) comes back as a tool error carrying that same \
-                 envelope as structured content.",
+                 envelope as structured content. The `litigate_*` tools (`litigate_describe` \
+                 first, then `litigate_check`, `litigate_build`, `litigate_where`, \
+                 `litigate_explain`) drive the authoring language the packs and named \
+                 scenarios are generated from (`lit/*.lit` rules, `cases/*.case` matters); \
+                 each returns the `litigate` CLI's own envelope ({ok, op, result, \
+                 diagnostics, provenance, elapsed_ms}), paths resolving against the server's \
+                 working directory.",
         )
     }
 
@@ -72,7 +79,9 @@ impl ServerHandler for LitgraphServer {
         _request: Option<PaginatedRequestParams>,
         _context: RequestContext<RoleServer>,
     ) -> Result<ListToolsResult, McpError> {
-        Ok(ListToolsResult::with_all_items(ops::tools(&self.catalog)))
+        let mut tools = ops::tools(&self.catalog);
+        tools.extend(litigate::tools());
+        Ok(ListToolsResult::with_all_items(tools))
     }
 
     async fn call_tool(
@@ -81,6 +90,14 @@ impl ServerHandler for LitgraphServer {
         _context: RequestContext<RoleServer>,
     ) -> Result<CallToolResponse, McpError> {
         let name = request.name.as_ref();
+        if let Some((envelope, is_error)) = litigate::call(name, request.arguments.clone()) {
+            let result = if is_error {
+                CallToolResult::structured_error(envelope)
+            } else {
+                CallToolResult::structured(envelope)
+            };
+            return Ok(result.into());
+        }
         let response = if name == ops::GENERIC_TOOL {
             ops::call_raw(&self.catalog, request.arguments)
         } else if ops::op_names().iter().any(|n| n == name) {

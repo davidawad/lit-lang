@@ -223,20 +223,22 @@ impl<'a> Graph<'a> {
     /// displaces by an `override` or `notwithstanding` claim (SPEC §5.5),
     /// qualified.
     pub fn claims(&self, qualified: &str, date: &str, known_at: Option<&str>) -> Vec<String> {
-        let Ok(v) = temporal::select(&self.world, &Self::key(qualified), date, known_at) else {
-            return Vec::new();
-        };
-        let pack = self.world.pack_of(v).to_owned();
-        self.world.decls[v]
-            .meta
-            .relations
-            .iter()
-            .filter_map(|r| match r {
-                Relation::Override(x) | Relation::Notwithstanding(x) => {
-                    let k = self.world.target(&pack, x).key;
-                    Some(format!("{}::{}", k.pack, k.name))
-                }
-                _ => None,
+        let version = temporal::select(&self.world, &Self::key(qualified), date, known_at).ok();
+        version
+            .into_iter()
+            .flat_map(|v| {
+                let pack = self.world.pack_of(v);
+                self.world.decls[v]
+                    .meta
+                    .relations
+                    .iter()
+                    .filter_map(move |r| match r {
+                        Relation::Override(x) | Relation::Notwithstanding(x) => {
+                            let k = self.world.target(pack, x).key;
+                            Some(format!("{}::{}", k.pack, k.name))
+                        }
+                        _ => None,
+                    })
             })
             .collect()
     }

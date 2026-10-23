@@ -784,13 +784,17 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
   node is L4008.
 - Obligation instances. After an event is handled, every in-force deadline
   whose trigger it matches creates instances under its `bearer` and
-  `trigger` policy (§5.3). An event taking an edge with `within d`
+  `trigger` policy (§5.3). The declaration governing a deadline may be a
+  claimant displacing it (§5.5): its trigger, policy, capabilities and
+  counting then apply to the displaced deadline's instances, and a
+  claimant displacing a deadline that the same event triggers creates no
+  instance of its own. An event taking an edge with `within d`
   discharges the oldest open instance of `d` borne by the event's party
   (or unbound). It must fall on or before that instance's due date: the
   date counted from the instance's own trigger under the deadline and
-  counting versions governing the event (transitions applied, §5.4), or
-  the date an extension moved it to. Otherwise L4002, and the instance is
-  closed as late. When only other parties' instances are open, the act
+  counting declarations governing the event (precedence and transitions
+  applied, §5.4, §5.5), or the date an extension moved it to. Otherwise
+  L4002, and the instance is closed as late. When only other parties' instances are open, the act
   discharges nothing and is L4001. With no instance open, no period is
   running and nothing is checked. At `as_of`, an open linear instance
   borne by a party and past its due date is breached (L4009, a warning: a

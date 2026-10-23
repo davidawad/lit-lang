@@ -544,6 +544,52 @@ fn p1_replay_judges_by_the_selected_claimant() {
     assert!(!out.iter().any(|l| l.contains("L4002")), "{out:#?}");
 }
 
+/// The deadlines of the obligation instances replay opens over `hir`.
+fn instances(hir: &[Package]) -> Vec<String> {
+    let lock = lock(hir);
+    let checked = check(
+        &matter(BOTH, &[SERVED, ANSWERED]),
+        hir,
+        Some(&lock),
+        &Encoded::default(),
+        Profile::Dev,
+    );
+    checked
+        .obligations
+        .iter()
+        .map(|o| format!("{} {:?}", o.deadline, o.status))
+        .collect()
+}
+
+#[test]
+fn a_displacing_claimant_opens_no_instance_of_its_own() {
+    let local = over(
+        "local",
+        "LocalRule",
+        &format!(
+            "{}{}",
+            deadline("local-answer", 14, "Served()", "override answer-period"),
+            deadline("local-reply", 3, "Served()", "")
+        ),
+    );
+    let hir = compile(&[core(), fed(DELEGATED), local]);
+    // `local-answer` displaces `answer-period`: the one instance, counted
+    // under it, is the one `answer` discharges (late: 14 days, not 21).
+    assert_eq!(
+        instances(&hir),
+        ["fed::answer-period Late", "local::local-reply Lapsed"]
+    );
+    // An unlicensed override displaces nothing: each runs on its own.
+    assert_eq!(
+        instances(&undelegated(hir, "LocalRule")),
+        [
+            "fed::answer-period Discharged",
+            "local::local-answer Lapsed",
+            "local::local-reply Lapsed"
+        ]
+    );
+}
+
 #[test]
 fn p1_replay_counts_under_the_selected_counting_rule() {
     let local = over(

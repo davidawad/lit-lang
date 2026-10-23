@@ -121,7 +121,17 @@ impl Trace<'_> {
     fn deadline(&self, d: &str) -> (Value, Vec<Value>, Vec<Value>) {
         let versions: Vec<&hir::Deadline> = hirx::deadlines(self.pkg, d).collect();
         let qualified = format!("{}::{d}", self.pkg.manifest.pack_id);
-        let scheduled = self.schedule.iter().find(|s| s.deadline == qualified);
+        // A claimant displacing a deadline that also fired has no instance
+        // of its own: it counts the displaced deadline's.
+        let scheduled = self
+            .schedule
+            .iter()
+            .find(|s| s.deadline == qualified)
+            .or_else(|| {
+                self.schedule
+                    .iter()
+                    .find(|s| s.version.rsplit_once('@').is_some_and(|(id, _)| id == d))
+            });
         // The declaration that counted the scheduled due date (a version
         // of `d`, or a claimant displacing it, SPEC §5.5), else the version
         // selected at the matter's dates.

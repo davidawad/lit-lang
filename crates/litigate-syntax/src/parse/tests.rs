@@ -135,6 +135,19 @@ fn a_malformed_refinement_type_reports_where_it_breaks() {
     assert_eq!(codes(&no_pipe), ["L0009", "L0001"]);
     let no_type = parse_lit("module m\ntype T = {d: | d}\nstart s\n");
     assert_eq!(codes(&no_type), ["L0009", "L0001"]);
+    let no_binder = parse_lit("module m\ntype T = {: Days | d}\nstart s\n");
+    assert_eq!(codes(&no_binder), ["L0009", "L0001"]);
+    let no_colon = parse_lit("module m\ntype T = {d Days | d}\nstart s\n");
+    assert_eq!(codes(&no_colon), ["L0009", "L0001"]);
+    // Unclosed before the next item: the brace's L0002, then that item.
+    let anchored = parse_lit("module m\ntype T = {d: Days | d > 0.days\nstart s\n");
+    assert_eq!(codes(&anchored), ["L0002"]);
+    assert!(anchored
+        .syntax()
+        .descendants()
+        .any(|n| n.kind() == SyntaxKind::StartDecl));
+    let no_param_type = parse_lit("module m\nevent E(x: 1)\n");
+    assert_eq!(codes(&no_param_type), ["L0001"]);
     let trailing = parse_lit("module m\ntype T = {d: Days | d e}\nstart s\n");
     assert_eq!(codes(&trailing), ["L0009", "L0001"]);
 }

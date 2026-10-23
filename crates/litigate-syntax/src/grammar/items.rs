@@ -162,7 +162,8 @@ fn group(p: &mut Parser<'_>) {
 fn type_decl(p: &mut Parser<'_>) {
     p.start(TypeDecl);
     p.bump_as(KwType);
-    if p.expect(Ident) && p.expect(Eq) && require(p, type_expr, &[Ident]) {
+    if p.expect(Ident) && p.expect(Eq) {
+        require(p, type_expr, &[Ident]);
         where_clause(p);
     }
     p.finish();
@@ -203,7 +204,8 @@ fn param(p: &mut Parser<'_>) -> bool {
     }
     p.start(Param);
     p.bump();
-    if p.expect(Colon) && require(p, type_expr, &[Ident]) {
+    if p.expect(Colon) {
+        require(p, type_expr, &[Ident]);
         where_clause(p);
     }
     p.finish();

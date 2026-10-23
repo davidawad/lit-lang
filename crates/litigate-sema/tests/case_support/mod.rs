@@ -228,3 +228,12 @@ pub fn matter_2009(events: &[&str]) -> String {
         })
     )
 }
+
+/// `map` rendered with its compiler version redacted, so a release bump
+/// cannot stale a snapshot.
+pub fn render_map(map: &litigate_lower::SourceMap) -> String {
+    let mut map = map.clone();
+    assert_eq!(map.generated.version, env!("CARGO_PKG_VERSION"));
+    map.generated.version = "[version]".to_owned();
+    litigate_lower::render(&map).unwrap_or_default()
+}

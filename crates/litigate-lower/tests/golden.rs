@@ -9,7 +9,7 @@ use litgraph::clock::{
     compute_due_date, ClockConfig, Date, DayDeadline, Direction, ServiceMethod, Unit,
 };
 use litigate_lower::{render, Document, LoweredPackage, Lowerer, Options};
-use support::load_hir;
+use support::{load_hir, render_map};
 
 fn lowered() -> LoweredPackage {
     let packages = load_hir(&["lit/examples"]);
@@ -30,10 +30,7 @@ fn example_pack_snapshot() {
     insta::assert_snapshot!("example_pack", text);
     let reread = litgraph::Pack::from_json(&text).unwrap_or_else(|e| panic!("{e}"));
     assert_eq!(&reread, pack.as_ref());
-    insta::assert_snapshot!(
-        "example_pack_map",
-        render(&lowered.source_map).unwrap_or_default()
-    );
+    insta::assert_snapshot!("example_pack_map", render_map(&lowered.source_map));
 }
 
 #[test]
@@ -41,7 +38,7 @@ fn example_clock_snapshot() {
     let lowered = lowered();
     let (clock, map) = lowered.clock.as_ref().unwrap_or_else(|| panic!("no clock"));
     insta::assert_snapshot!("example_clock", render(clock).unwrap_or_default());
-    insta::assert_snapshot!("example_clock_map", render(map).unwrap_or_default());
+    insta::assert_snapshot!("example_clock_map", render_map(map));
 }
 
 #[test]

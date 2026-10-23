@@ -7,11 +7,11 @@ mod support;
 
 use litgraph::scenario::NamedScenario;
 use litigate_base::DiagnosticCode;
-use litigate_lower::{render, render_scenario, semantic_diff_scenarios, Lowerer};
+use litigate_lower::{render_scenario, semantic_diff_scenarios, Lowerer};
 use litigate_sema::hir::{Analysis, Case, Observation, Perspective, Removal, Stake};
 use serde_json::{json, Map, Value};
 use std::collections::BTreeMap;
-use support::{acme, load_hir, pin, repo_root, usd};
+use support::{acme, load_hir, pin, render_map, repo_root, usd};
 
 #[test]
 fn acme_golden() {
@@ -24,7 +24,7 @@ fn acme_golden() {
     insta::assert_snapshot!("acme_scenario", text);
     let reread = NamedScenario::from_json(&text).unwrap_or_else(|e| panic!("{e}"));
     assert_eq!(reread, lowered.scenario);
-    insta::assert_snapshot!("acme_map", render(&lowered.source_map).unwrap_or_default());
+    insta::assert_snapshot!("acme_map", render_map(&lowered.source_map));
     // Widget is the Defendant: `perspective widget` makes Defendant `self`
     // and Plaintiff `opponent`, both differing from the package roles.
     let perspective = &lowered.scenario.scenario.perspective;

@@ -1,5 +1,6 @@
 //! Shared helpers: run the `litigate` binary in a directory and read its
-//! JSON envelope with the wall-clock field zeroed.
+//! JSON envelope with the wall-clock field zeroed and the compiler version
+//! redacted.
 // Test helpers: a panic here is the failed assertion.
 #![allow(dead_code, clippy::unwrap_used)]
 use serde_json::Value;
@@ -46,6 +47,11 @@ pub fn litigate_in(dir: &Path, args: &[&str]) -> Run {
     let mut json: Value = serde_json::from_str(&stdout).unwrap_or(Value::Null);
     if json.get("elapsed_ms").is_some() {
         json["elapsed_ms"] = Value::from(0);
+    }
+    // Redact the compiler version so a release bump cannot stale snapshots.
+    if let Some(version) = json.pointer_mut("/provenance/compiler_version") {
+        assert_eq!(*version, env!("CARGO_PKG_VERSION"));
+        *version = Value::from("[version]");
     }
     Run {
         json,

@@ -3,8 +3,8 @@
 //! in `Case::removals`, and lowering emits it as `scenario.remove_edges`.
 mod case_support;
 
-use case_support::{check_2009, frcp2009, matter_2009, render};
-use litigate_lower::{render as render_json, render_scenario, Lowerer};
+use case_support::{check_2009, frcp2009, matter_2009, render, render_map};
+use litigate_lower::{render_scenario, Lowerer};
 use litigate_sema::hir::Package;
 use proptest::prelude::*;
 use std::collections::BTreeMap;
@@ -144,10 +144,7 @@ fn removals_lower_to_remove_edges() {
         "removal_scenario",
         render_scenario(&lowered.scenario).unwrap_or_default()
     );
-    insta::assert_snapshot!(
-        "removal_map",
-        render_json(&lowered.source_map).unwrap_or_default()
-    );
+    insta::assert_snapshot!("removal_map", render_map(&lowered.source_map));
 }
 
 #[test]

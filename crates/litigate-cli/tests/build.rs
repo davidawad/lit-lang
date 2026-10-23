@@ -84,6 +84,18 @@ fn build_result_lists_outputs_and_hash() {
         .unwrap()
         .replace(out.to_str().unwrap(), "OUT");
     result = serde_json::from_str(&text).unwrap();
+    // The litigatable embeds the compiler version, so its hash moves on
+    // every release: check it against the written file, then redact it.
+    let written: serde_json::Value = serde_json::from_slice(
+        &std::fs::read(out.join("litigatables/frcp-rule12-example.litigatable.json")).unwrap(),
+    )
+    .unwrap();
+    let hash = &written["content_hash"];
+    assert!(hash.as_str().unwrap().starts_with("sha256:"));
+    assert_eq!(&result["litigatable_hash"], hash);
+    assert_eq!(&result["litigatables"][0]["content_hash"], hash);
+    result["litigatable_hash"] = "[hash]".into();
+    result["litigatables"][0]["content_hash"] = "[hash]".into();
     insta::assert_json_snapshot!("build_result", result);
 }
 

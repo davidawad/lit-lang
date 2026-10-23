@@ -202,7 +202,8 @@ InstanceDecl = "instance", Ident, "@", Ident, "{", { InstanceField, Sep }, "}" ;
 InstanceField= "pack", Ident | "note", String | "remove_edges", IdList
              | "probabilities", "{", { Ident, ":", ProbValue, Sep }, "}"
              | "roles", "{", { Ident, ":", Ident, Sep }, "}"
-             | "payoff_transform", String | "patch", Ident, JsonRecord ;
+             | "payoff_transform", String | "stake", (SignedMoney | Hole)
+             | "patch", Ident, JsonRecord ;
 
 RuleDecl     = "rule", ("duty" | "power" | "liability"), Ident, { VersionClause
              | Relation | Cite }, "{", { Item, Sep }, "}" ;
@@ -1137,14 +1138,19 @@ B` becomes a `links[]` `RawEdge` with qualified `from`/`to` and every
 and a `String` item verbatim (it names an anonymous edge by its derived
 id, `"pack::from->to#n"`, which has no `Ref` spelling). Each `instance base@origin` becomes
 `instances["base@origin"]` `{pack, note, remove_edges, probabilities, roles,
-payoff_transform, patch_edges}`. `patch` records become `patch_edges[edge]`
+payoff_transform, stake, patch_edges}`. `patch` records become `patch_edges[edge]`
 verbatim as JSON merge patches (keys are `RawEdge` JSON names, `unset` is
 null). The lowerer applies each patch to the base edge and deserializes the
 result as `RawEdge` (L6001 on failure); the base pack must be loaded with
 the links package, else a patching instance is L6001, and a patch naming an
 edge the base lacks is L1002. `payoff_transform` must parse as a litgraph
-expression (L6003). `replaces` outside a links package is
-L2007.
+expression whose only variables are `payoff` and, when the instance
+declares one, `stake` (L6003). A `stake` the transform does not use is
+L2007. A known `stake` lowers to `stake` in USD; a `stake` hole lowers to
+an absent `stake`, and the engine then leaves every terminal payoff of the
+instance unauthored (`payoff-not-authored`) instead of guessing one: the
+amount at stake is a fact of the matter. `replaces` outside a links
+package is L2007.
 
 ### 8.5 Numbers
 

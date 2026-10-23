@@ -83,16 +83,21 @@ instance cafc@cofc {
 
 /// The government's appeal. Roles flip so the United States (`examiner`,
 /// the appellant) is the opponent, and payoffs become the plaintiff's under
-/// `1000000 - payoff`: the $1M stake is the legacy placeholder, which a
-/// matter overrides with its own stakes. Same rehearing patches as
+/// `stake - payoff`. The stake is the plaintiff's CoFC judgment, which the
+/// government's appeal puts at risk: a fact of the matter that no forum
+/// package can know, so it is a hole. The legacy pack wrote a $1M
+/// placeholder in its place. With the stake unknown, every terminal of the
+/// instance lowers unpriced, and the engine reports `payoff-not-authored`
+/// until the matter authors those payoffs. Same rehearing patches as
 /// `cafc@cofc`.
 instance cafc@cofc-gov {
   pack cafc
-  note "Federal Circuit as entered by the United States appealing a CoFC plaintiff win. Perspective flipped: the government (appellant) is the opponent; payoffs are the plaintiff's (stake − appellant payoff, stake = $1M placeholder)."
+  note "Federal Circuit as entered by the United States appealing a CoFC plaintiff win. Perspective flipped: the government (appellant) is the opponent; payoffs are the plaintiff's (stake − appellant payoff). The stake is the matter's own judgment amount and is left unknown here, so this instance's terminal payoffs are unauthored until the matter supplies them."
   remove_edges [origin-to-district-court, origin-to-ptab, origin-to-itc, remand-route-district-court, remand-route-ptab, remand-route-itc, origin-to-ttab, remand-route-ttab]
   probabilities { remand-route-cofc: 1 }
   roles { applicant: opponent, examiner: self }
-  payoff_transform "1000000 - payoff"
+  payoff_transform "stake - payoff"
+  stake ?("the plaintiff's CoFC judgment, which the United States' appeal puts at risk: a fact of the matter")
   patch rehearing-file {
     deadline: {
       length: 45

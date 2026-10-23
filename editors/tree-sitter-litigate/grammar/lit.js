@@ -238,6 +238,7 @@ module.exports = {
     seq(field('key', 'remove_edges'), field('value', $.id_list)),
     seq(field('key', 'probabilities'), field('value', $.probability_map)),
     seq(field('key', 'roles'), field('value', $.role_map)),
+    seq(field('key', 'stake'), field('value', choice($.signed_money, $.hole))),
     seq(field('key', 'patch'), field('edge', $.identifier), field('value', $.json_record)),
   ),
 

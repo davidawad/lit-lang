@@ -58,6 +58,7 @@ instance cafc@cofc {
   probabilities { a: 1/2, b: ?, c: (1 / 3) }
   roles { Plaintiff: Appellant }
   payoff_transform "negate"
+  stake ?
   patch e1 { hours: 3, "note": "x", deadline: unset, tags: ["a", 1, true, false, { k: -2 }], }
 }
 
@@ -106,6 +107,8 @@ instance cafc@cofc {
       (instance_field
         (string
           (string_content)))
+      (instance_field
+        (hole))
       (instance_field
         (identifier)
         (json_record

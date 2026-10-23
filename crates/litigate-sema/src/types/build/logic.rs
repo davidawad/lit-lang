@@ -451,6 +451,10 @@ impl Cx<'_, '_> {
             probabilities,
             roles,
             payoff_transform: Self::string(f.get("payoff_transform")),
+            stake: f
+                .get("stake")
+                .and_then(|x| first_expr(x))
+                .and_then(|e| self.money(e)),
             patch_edges,
         })
     }

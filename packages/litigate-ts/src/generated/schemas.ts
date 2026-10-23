@@ -1607,10 +1607,17 @@ export interface Instance {
     [k: string]: Role | undefined;
   };
   /**
-   * Expression over `payoff` mapping base terminal payoffs into this
-   * instance's perspective, e.g. `1000000 - payoff`.
+   * Expression over `payoff` (and `stake`) mapping base terminal payoffs
+   * into this instance's perspective, e.g. `stake - payoff`.
    */
   payoff_transform?: string | null;
+  /**
+   * What the matter puts at stake in this instance, in USD: the value of
+   * `stake` in `payoff_transform`. Absent, a transform that uses `stake`
+   * leaves every terminal payoff of the instance unauthored, for the
+   * matter to author (`payoff-not-authored`).
+   */
+  stake?: number | null;
   /**
    * Local edge id → JSON merge-patch (RFC 7386) applied to that edge.
    */

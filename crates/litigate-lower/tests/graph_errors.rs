@@ -216,6 +216,7 @@ fn instance(patch_edges: BTreeMap<String, serde_json::Value>) -> hir::Instance {
         probabilities: BTreeMap::from([("answer".into(), UNDEFINED)]),
         roles: BTreeMap::new(),
         payoff_transform: None,
+        stake: None,
         patch_edges,
     }
 }

@@ -25,7 +25,7 @@
   "max" "sets" "clears" "requires" "forbids" "replaces" "tags" "attrs" "note"
   "valence" "court_listener_url" "action_id" "extendable" "extension_authority"
   "payoff" "payoff_by_flag" "pack" "remove_edges" "probabilities" "roles"
-  "payoff_transform" "patch" "duty" "power" "liability" "from" "after" "before"
+  "payoff_transform" "stake" "patch" "duty" "power" "liability" "from" "after" "before"
   "counted_by" "exclude_trigger_day" "include_last_day" "roll_forward_on"
   "service_extension" "holidays" "anchor" "short_period" "below" "count"
   "allow_hours" "end_of_month" "effective" "observed" "amends" "subject_to" "notwithstanding"

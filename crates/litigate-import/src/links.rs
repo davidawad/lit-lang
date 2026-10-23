@@ -123,6 +123,20 @@ fn instance_text(name: &str, instance: &Instance, issues: &mut Issues) -> String
     if let Some(transform) = &instance.payoff_transform {
         fields.push(format!("payoff_transform {}", text::string(transform)));
     }
+    let uses_stake = instance
+        .payoff_transform
+        .as_deref()
+        .and_then(|t| litgraph::expr::parse(t).ok())
+        .is_some_and(|e| e.vars().iter().any(|v| v == "stake"));
+    if let Some(stake) = instance.stake {
+        let at = format!("{pointer}/stake");
+        fields.push(format!(
+            "stake {}",
+            issues.spell(text::money(stake), &at, "stake")
+        ));
+    } else if uses_stake {
+        fields.push("stake ?".to_owned());
+    }
     for (edge, patch) in &instance.patch_edges {
         let at = format!("{pointer}/patch_edges/{edge}");
         let edge = issues.ident(edge, &at, false);

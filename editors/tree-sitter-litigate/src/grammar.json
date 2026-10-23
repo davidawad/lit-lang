@@ -2529,6 +2529,36 @@
               "name": "key",
               "content": {
                 "type": "STRING",
+                "value": "stake"
+              }
+            },
+            {
+              "type": "FIELD",
+              "name": "value",
+              "content": {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "signed_money"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "hole"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "key",
+              "content": {
+                "type": "STRING",
                 "value": "patch"
               }
             },

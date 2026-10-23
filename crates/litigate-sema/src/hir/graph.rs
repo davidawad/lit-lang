@@ -183,8 +183,11 @@ pub struct Instance {
     pub probabilities: BTreeMap<String, Rational>,
     /// Actor role overrides.
     pub roles: BTreeMap<String, ActorRole>,
-    /// litgraph expression over `payoff`, validated at lowering.
+    /// litgraph expression over `payoff` and `stake`, validated at lowering.
     pub payoff_transform: Option<String>,
+    /// The value of `stake` in `payoff_transform`, or a hole when only the
+    /// matter can know it.
+    pub stake: Option<Authored<Money>>,
     /// Local edge id to RFC 7386 merge patch over `RawEdge` JSON.
     pub patch_edges: BTreeMap<String, serde_json::Value>,
 }

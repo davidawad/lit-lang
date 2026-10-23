@@ -15,7 +15,17 @@ expression: instances
                 "B": Opponent,
                 "C": Nature,
             },
-            payoff_transform: None,
+            payoff_transform: Some(
+                "stake - payoff",
+            ),
+            stake: Some(
+                Known(
+                    Money {
+                        minor_units: 500,
+                        currency: "usd",
+                    },
+                ),
+            ),
             patch_edges: {
                 "go": Object {
                     "a": Number(1.5),
@@ -30,6 +40,27 @@ expression: instances
                     },
                 },
             },
+        },
+    ),
+    Instance(
+        Instance {
+            name: "base@two",
+            pack: "base",
+            note: None,
+            remove_edges: [],
+            probabilities: {},
+            roles: {},
+            payoff_transform: Some(
+                "stake - payoff",
+            ),
+            stake: Some(
+                Hole(
+                    Some(
+                        "the matter's",
+                    ),
+                ),
+            ),
+            patch_edges: {},
         },
     ),
 ]

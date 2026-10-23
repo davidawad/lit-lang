@@ -33,7 +33,7 @@
     },
     "cafc@cofc-gov": {
       "pack": "cafc",
-      "note": "Federal Circuit as entered by the United States appealing a CoFC plaintiff win. Perspective flipped: the government (appellant) is the opponent; payoffs are the plaintiff's (stake − appellant payoff, stake = $1M placeholder).",
+      "note": "Federal Circuit as entered by the United States appealing a CoFC plaintiff win. Perspective flipped: the government (appellant) is the opponent; payoffs are the plaintiff's (stake − appellant payoff). The stake is the matter's own judgment amount and is left unknown here, so this instance's terminal payoffs are unauthored until the matter supplies them.",
       "remove_edges": [
         "origin-to-district-court",
         "origin-to-ptab",
@@ -51,7 +51,7 @@
         "applicant": "opponent",
         "examiner": "self"
       },
-      "payoff_transform": "1000000 - payoff",
+      "payoff_transform": "stake - payoff",
       "patch_edges": {
         "rehearing-file": {
           "deadline": {

@@ -420,12 +420,12 @@ forum, which the shared `cafc` pack alone can't express.
 { "instances": {
   "cafc@cofc-gov": {
     "pack": "cafc",
-    "note": "Federal Circuit as entered by the United States appealing a CoFC plaintiff win. Perspective flipped: the government (appellant) is the opponent; payoffs are the plaintiff's (stake − appellant payoff, stake = $1M placeholder).",
+    "note": "Federal Circuit as entered by the United States appealing a CoFC plaintiff win. Perspective flipped: the government (appellant) is the opponent; payoffs are the plaintiff's (stake − appellant payoff).",
     "remove_edges": ["origin-to-district-court", "origin-to-ptab", "origin-to-itc",
                       "remand-route-district-court", "remand-route-ptab", "remand-route-itc"],
     "probabilities": { "remand-route-cofc": 1.0 },
     "roles": { "applicant": "opponent", "examiner": "self" },
-    "payoff_transform": "1000000 - payoff",
+    "payoff_transform": "stake - payoff",
     "patch_edges": {
       "rehearing-file": { "deadline": { "length": 45, "note": "45 days when the United States is a party (Fed. Cir. R. 40)." } }
     }
@@ -440,7 +440,8 @@ forum, which the shared `cafc` pack alone can't express.
 | `remove_edges` | string[] | local edge ids (as the compiler derives them: authored `id`, else `from->to#n`) to drop from this instance |
 | `probabilities` | `{edge id: p}` | override/author a probability on a local edge in this instance only |
 | `roles` | `{actor: role}` | override the base pack's `roles` for this instance (a perspective flip) |
-| `payoff_transform` | expression over `payoff` | rewrites every terminal payoff, e.g. `"1000000 - payoff"` to convert an appellant's payoff into the original plaintiff's stake-relative payoff |
+| `payoff_transform` | expression over `payoff` and `stake` | rewrites every terminal payoff (and `payoffByFlag` value), e.g. `"stake - payoff"` to convert an appellant's payoff into the original plaintiff's stake-relative payoff |
+| `stake` | number (USD) | the value of `stake` in `payoff_transform`. Absent while the transform uses `stake`, every terminal payoff of the instance is left unauthored (the engine warns `payoff-not-authored`): what an appeal puts at stake is a fact of the matter, so `cafc@cofc-gov` leaves it to the matter's `scenario.payoffs` |
 | `patch_edges` | `{edge id: JSON merge-patch}` | RFC 7386 merge-patch applied to one local edge's fields (deadline, cost, hours, tags, ...) — `null` deletes a field, an object merges, anything else replaces |
 
 Referencing an edge id `remove_edges`/`probabilities`/`patch_edges` doesn't

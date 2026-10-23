@@ -268,6 +268,88 @@ fn instances_are_checked_against_their_base_pack() {
     assert!(alone.is_err());
 }
 
+/// The links package with every instance given `transform` and `stake`,
+/// lowered against its base packs.
+fn lower_instances(
+    transform: &str,
+    stake: Option<&Authored<Money>>,
+) -> Result<litigate_lower::LoweredPackage, Vec<litigate_base::Diagnostic>> {
+    let inputs = support::corpus();
+    let packages = support::imported_hir(&inputs);
+    let mut all: Vec<hir::Package> = packages.into_iter().map(|(_, p)| p).collect();
+    let links = all
+        .iter()
+        .position(|p| p.manifest.links)
+        .unwrap_or_else(|| panic!("no links"));
+    let mut pkg = all.remove(links);
+    for d in decls(&mut pkg) {
+        if let Declaration::Instance(i) = d {
+            i.payoff_transform = Some(transform.into());
+            i.stake = stake.cloned();
+        }
+    }
+    let refs: Vec<&hir::Package> = all.iter().collect();
+    Lowerer::new(&refs).package(&pkg, &Options::default())
+}
+
+fn usd(dollars: i64) -> Authored<Money> {
+    Authored::Known(Money {
+        minor_units: dollars * 100,
+        currency: "usd".into(),
+    })
+}
+
+#[test]
+fn an_instance_stake_lowers_to_the_value_its_transform_binds() {
+    let Ok(lowered) = lower_instances("stake - payoff", Some(&usd(2_000_000))) else {
+        panic!("a known stake lowers");
+    };
+    let Document::Links(links) = lowered.document else {
+        panic!("a links package lowers to a link file");
+    };
+    assert!(links.instances.values().all(|i| i.stake == Some(2e6)));
+    let Ok(lowered) = lower_instances("stake - payoff", Some(&Authored::Hole(None))) else {
+        panic!("a stake hole lowers");
+    };
+    let Document::Links(links) = lowered.document else {
+        panic!("a links package lowers to a link file");
+    };
+    assert!(links.instances.values().all(|i| i.stake.is_none()));
+}
+
+#[test]
+fn an_instance_transform_binds_only_payoff_and_a_declared_stake() {
+    let messages = |transform: &str, stake: Option<&Authored<Money>>| -> Vec<(C, String)> {
+        lower_instances(transform, stake)
+            .err()
+            .unwrap_or_default()
+            .into_iter()
+            .map(|d| (d.code, d.message))
+            .collect()
+    };
+    let undeclared = messages("stake - payoff", None);
+    assert!(
+        undeclared
+            .iter()
+            .any(|(c, m)| *c == C::InvalidEngineExpression && m.contains("uses `stake`")),
+        "{undeclared:?}"
+    );
+    let unknown = messages("rate * payoff", Some(&usd(1)));
+    assert!(
+        unknown
+            .iter()
+            .any(|(c, m)| *c == C::InvalidEngineExpression && m.contains("uses `rate`")),
+        "{unknown:?}"
+    );
+    let unused = messages("payoff", Some(&usd(1)));
+    assert!(
+        unused
+            .iter()
+            .any(|(c, m)| *c == C::InvalidField && m.contains("does not use")),
+        "{unused:?}"
+    );
+}
+
 /// A package that declares several counting rules and names none in
 /// `Lit.toml` is a counting-rule library (`lit/core`): its pack names no
 /// rule, and its one clock fragment holds every rule and, once, each

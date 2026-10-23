@@ -104,6 +104,7 @@ pub(crate) const INSTANCE_FIELDS: &[Spec] = &[
     (KwProbabilities, Some(probabilities)),
     (KwRoles, Some(name_record)),
     (KwPayoffTransform, Some(string)),
+    (KwStake, Some(money_or_hole)),
 ];
 
 pub(crate) const SOURCE_FIELDS: &[Spec] = &[(KwUrl, Some(string)), (KwAsOf, Some(date_or_hole))];

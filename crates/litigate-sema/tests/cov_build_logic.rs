@@ -98,7 +98,7 @@ instance base@three { note \"no pack\" }\n",
 
 #[test]
 fn instance_patches_lower_to_json() {
-    let text = "module links\ninstance base@one { pack base, roles { A: self, B: opponent, C: nature }, patch go { \"a\": 1.5, \"b\": \"s\", \"c\": true, \"d\": [1, false], \"e\": { \"f\": unset } } }\n";
+    let text = "module links\ninstance base@one { pack base, roles { A: self, B: opponent, C: nature }, payoff_transform \"stake - payoff\", stake 5.usd, patch go { \"a\": 1.5, \"b\": \"s\", \"c\": true, \"d\": [1, false], \"e\": { \"f\": unset } } }\ninstance base@two { pack base, payoff_transform \"stake - payoff\", stake ?(\"the matter's\") }\n";
     let (db, ws) = workspace(&[
         package("base", &[], &[("base.lit", BASE)]),
         package("links", &["base"], &[("links.lit", text)]),

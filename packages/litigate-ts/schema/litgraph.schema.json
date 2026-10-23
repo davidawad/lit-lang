@@ -1194,7 +1194,15 @@
             "string",
             "null"
           ],
-          "description": "Expression over `payoff` mapping base terminal payoffs into this\ninstance's perspective, e.g. `1000000 - payoff`."
+          "description": "Expression over `payoff` (and `stake`) mapping base terminal payoffs\ninto this instance's perspective, e.g. `stake - payoff`."
+        },
+        "stake": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "format": "double",
+          "description": "What the matter puts at stake in this instance, in USD: the value of\n`stake` in `payoff_transform`. Absent, a transform that uses `stake`\nleaves every terminal payoff of the instance unauthored, for the\nmatter to author (`payoff-not-authored`)."
         },
         "patch_edges": {
           "type": "object",

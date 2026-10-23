@@ -30,10 +30,16 @@ pub struct Instance {
     /// actor → role override (e.g. flip appellant/appellee perspective).
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub roles: BTreeMap<String, Role>,
-    /// Expression over `payoff` mapping base terminal payoffs into this
-    /// instance's perspective, e.g. `1000000 - payoff`.
+    /// Expression over `payoff` (and `stake`) mapping base terminal payoffs
+    /// into this instance's perspective, e.g. `stake - payoff`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub payoff_transform: Option<String>,
+    /// What the matter puts at stake in this instance, in USD: the value of
+    /// `stake` in `payoff_transform`. Absent, a transform that uses `stake`
+    /// leaves every terminal payoff of the instance unauthored, for the
+    /// matter to author (`payoff-not-authored`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub stake: Option<f64>,
     /// Local edge id → JSON merge-patch (RFC 7386) applied to that edge.
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub patch_edges: BTreeMap<String, serde_json::Value>,
@@ -86,11 +92,18 @@ pub fn local_edge_ids(edges: &[RawEdge]) -> Vec<String> {
         .collect()
 }
 
-struct PayoffEnv(f64);
+struct PayoffEnv {
+    payoff: f64,
+    stake: Option<f64>,
+}
 
 impl crate::expr::Env for PayoffEnv {
     fn var(&self, name: &str) -> Option<f64> {
-        (name == "payoff").then_some(self.0)
+        match name {
+            "payoff" => Some(self.payoff),
+            "stake" => self.stake,
+            _ => None,
+        }
     }
     fn func(&self, _: &str, _: &[crate::expr::Arg]) -> Option<Result<f64>> {
         None
@@ -139,13 +152,24 @@ impl Instance {
         p.roles.extend(self.roles.clone());
         if let Some(src) = &self.payoff_transform {
             let ex = crate::expr::parse(src)?;
+            let unknown = self.stake.is_none() && ex.vars().iter().any(|v| v == "stake");
+            let stake = self.stake;
+            let apply = |payoff: f64| ex.eval(&PayoffEnv { payoff, stake });
             for n in p
                 .nodes
                 .iter_mut()
                 .filter(|n| n.kind == Some(NodeKind::Terminal))
             {
+                if unknown {
+                    n.payoff = None;
+                    n.payoff_by_flag.clear();
+                    continue;
+                }
                 if let Some(x) = n.payoff {
-                    n.payoff = Some(ex.eval(&PayoffEnv(x))?);
+                    n.payoff = Some(apply(x)?);
+                }
+                for v in n.payoff_by_flag.values_mut() {
+                    *v = apply(*v)?;
                 }
             }
         }
@@ -213,6 +237,54 @@ mod tests {
         assert_eq!(p.nodes[1].payoff, Some(100_000.0));
         // A terminal with no authored payoff is left alone (no crash on `None`).
         assert_eq!(p.nodes[2].payoff, None);
+    }
+
+    #[test]
+    fn materialize_binds_stake_and_transforms_payoffs_by_flag() {
+        let mut base = base_pack();
+        base.nodes[1]
+            .payoff_by_flag
+            .insert("won-below".into(), 100_000.0);
+        let inst = Instance {
+            pack: "base".into(),
+            payoff_transform: Some("stake - payoff".into()),
+            stake: Some(2_000_000.0),
+            ..Instance::default()
+        };
+        let p = inst.materialize("base@x", &base).unwrap();
+        assert_eq!(p.nodes[1].payoff, Some(1_500_000.0));
+        assert_eq!(p.nodes[1].payoff_by_flag["won-below"], 1_900_000.0);
+    }
+
+    #[test]
+    fn materialize_leaves_payoffs_unauthored_when_the_stake_is_unknown() {
+        let mut base = base_pack();
+        base.nodes[1]
+            .payoff_by_flag
+            .insert("won-below".into(), 100_000.0);
+        let inst = Instance {
+            pack: "base".into(),
+            payoff_transform: Some("stake - payoff".into()),
+            ..Instance::default()
+        };
+        let p = inst.materialize("base@x", &base).unwrap();
+        assert_eq!(p.nodes[1].payoff, None);
+        assert!(p.nodes[1].payoff_by_flag.is_empty());
+        // A non-terminal keeps whatever it had.
+        assert_eq!(p.nodes[0].payoff, None);
+    }
+
+    #[test]
+    fn materialize_rejects_a_transform_that_fails_on_a_flag_payoff() {
+        let mut base = base_pack();
+        base.nodes[2].payoff_by_flag.insert("f".into(), 1.0);
+        base.nodes[1].payoff = None;
+        let inst = Instance {
+            pack: "base".into(),
+            payoff_transform: Some("nope + payoff".into()),
+            ..Instance::default()
+        };
+        assert!(inst.materialize("base@x", &base).is_err());
     }
 
     #[test]

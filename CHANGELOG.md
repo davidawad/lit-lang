@@ -9,53 +9,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **The tree-sitter parser merges without conflicts** (lg-flu.37). The
-  generated `editors/tree-sitter-litigate/src/{parser.c,grammar.json,node-types.json}`
-  stay committed (the crate's `build.rs` and editor packages compile
-  them) and get the `tsgenerate` git merge driver, which keeps ours when
-  both sides changed them, so two branches changing different grammar
-  rules rebase cleanly. `just tree-sitter-generate` regenerates them from
-  the merged grammar; `just tree-sitter-merge-driver` (and `just
-  merge-drivers`, run by `just install` and `just lit-sync`) registers the
-  driver. `just ci` now runs `just tree-sitter-test`, which fails on a
-  stale parser and runs `script/merge-test`.
+- **Counting per forum** (lg-flu.8; design review 2026-10-23 §6 item 10,
+  P8, L2-L4, L11). A counting rule's `service_extension` is total over the
+  service methods, `Electronic` and `Personal` included: each adds `N.days`
+  (`0.days`: none) or is `unrecognized`, and the engine refuses a period
+  served by an unrecognized method instead of counting it as if nothing
+  were added (a rule with no map recognizes none). `forward_holidays C
+  cite X` closes only periods counted forward (FRCP 6(a)(6)(C)),
+  `declared_holidays C cite X` names a declared-closure calendar of
+  `once(date)` days (6(a)(6)(B)); the engine's `CountingRule` gains
+  `forwardHolidays`. A counting rule names the `forums` whose periods it
+  computes and a deadline is its package's forum's period unless `forum F`
+  says otherwise: counting one forum's period by another's rule is L3009.
+  A chained period runs from an explicit end of another's, `from
+  deadline(d).nominal` or `.adjusted`, in replay, `litigate test`, the
+  `tests-pass` obligation and `explain-value`; a bare `deadline(d)` is
+  L2001. A pack edge's `deadline.counting` names the window's own rule
+  when it is not the pack's.
+- **Rule history and per-forum rules.** `lit/core`'s FRCP 6 and FRAP 26
+  gain the 2016 versions (electronic service adds nothing from December 1,
+  2016) and their earlier versions recognize electronic service where it
+  added 3 days (FRCP 2001-2016, FRAP 2002-2016); RCFC 6 splits at its
+  August 1, 2017 amendment. New rules: `frcrimp45` (FRCrimP 45, from the
+  vendored 2023 text) for the criminal pack, `sup-ct-30` (Sup. Ct. R. 30.1,
+  newly vendored `sources/scotus-rules.txt`) for the FRAP and Federal
+  Circuit certiorari periods, and `lit/ttab`'s `ttab-2-196` (37 C.F.R. §
+  2.196 and § 2.119(c), dated by the newly vendored
+  `sources/cfr-37-part2-history.txt`). PTAB counts under `uspto-1-7`
+  (37 C.F.R. § 1.7 via § 42.1(a)) instead of `rcfc6`, and TTAB no longer
+  under `frcp6`.
 
-- **Reserved typed guard operations in patches** (lg-flu.35; SPEC §3.6,
-  PM ruling 2026-10-23 on L2007). A later decision or order that narrows,
-  widens or replaces an edge's guard will be written explicitly, with its
-  authority (`cite` and `effective`), inside a `patch`: `when and pred`
-  (narrow), `when or pred` (widen), `supersedes when pred` (replace). The
-  forms parse into a new `GuardOp` CST node and are rejected with the new
-  code L0010, whose message begins `reserved: typed guard operations`,
-  until lg-flu.36 implements them. `and` and `or` are reserved words
-  (L0010 anywhere, `GUARD_OP_WORDS`). A plain `when` in a patch stays
-  L2007 (an implicit overwrite) and now points at the explicit forms. The
-  tree-sitter grammar (`patch_fields`, `guard_op`) and the Emacs, Helix
-  and Neovim highlights, indents and folds follow.
-
-- **Generated files are build outputs, not committed** (lg-flu.31). Two
-  beads changing different `lit/` packages used to conflict on
-  `packs/*.json`, `packs/links.json`, `packs/clock/mpep-prosecution.json`,
-  `scenarios/*.json` and the TypeScript bindings, which cost an
-  integration job per parallel change. The new `litgraph-packs` crate runs
-  `litigate build` (the arguments in `crates/litgraph-packs/build.args`,
-  formerly the justfile's `lit_sync_inputs`/`lit_sync_names`) over an
-  in-memory `lit/` and `cases/` in its build script and embeds the result
-  (`PACKS`, `SCENARIOS`, `PACKS_DIR`, `SCENARIOS_DIR`, `catalog()`). The
-  files are gitignored. `just lit-sync` regenerates the `Lit.lock` files and
-  writes the build to `target/lit-build/`. `just lit-sync-check` fails on a
-  stale `Lit.lock` or a committed generated file. `just ts-gen` output is
-  gitignored, `ts-build` regenerates it, and `ts-gen-check` is gone.
-  Docker, nix and release archives copy the built packs. A test rebases
-  two branches that edit different packages, with no merge driver, and
-  expects no conflicts; its control commits the generated files and
-  expects the old conflict. API: `litgraph` no longer embeds packs or
-  scenarios, because the compiler depends on it.
-  `Catalog::embedded`, `with_embedded_scenarios` and `default_source` now
-  take the embedded files (`EmbeddedFiles`), and `litgraph_packs::catalog()`
-  replaces `Catalog::embedded()`. `ClockLibrary::embedded()` is now the
-  hand-authored library only: a catalog built from `litgraph-packs` carries
-  the generated fragments too.
 - **Reserved refinement syntax** (lg-962.7; SPEC §3.5, design review
   2026-10-23 §2.2). The SMT tier's surface forms are reserved so adding
   them later cannot break a `.lit` file: a refinement type
@@ -322,6 +305,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Breaking (lg-flu.8):** every engine counting rule's `service` step is
+  required and total (`unrecognized` lists the methods it does not
+  recognize); a method a rule recognizes for no days adds no trace step.
+  `ServiceMethod` gains `personal` and `electronic`. The `ptab`, `ttab`,
+  `frcrimp` and certiorari deadlines change counting rule (above); the
+  PTAB and FRCrimP packs now name a `counting` rule, so the `deadlines` op
+  computes their windows instead of warning `deadline-uncomputable`.
+  `dc-federal-holidays` moves from `lit/mpep` to `lit/core`.
 - **Event names carry no meaning.** `Struck`/`Forfeited`/`Withdrawn` remove
   an option only when their type declares `removes option`, and `Elected`
   elects one only when it declares `elects option`; `Waived`,

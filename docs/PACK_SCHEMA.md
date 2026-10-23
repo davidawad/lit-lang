@@ -94,7 +94,7 @@ the exact JCS text that digests and litigatable hashes are taken over.
 | `from`, `to`, `label` | string | |
 | `actor` | `applicant` \| `examiner` \| `office` \| `either` | v1 vocabulary kept for compatibility. Interpreted through `roles` |
 | `authority` | string | the rule/statute that authorizes or compels this transition |
-| `deadline` | `{length, unit?, extendable?, extensionAuthority?, note?}` | `length` in `unit`s. **v2** `unit`: `calendar` (default) or `court` (court days); `week`, `month` or `year` (calendar months, counted by the rule's `months` provision; metrics read a month as 146097/4800 days and a year as 365.2425). The `deadlines` API op turns this into a concrete due date from a trigger date using the pack's v3 `counting` reference (see `docs/ARCHITECTURE.md`'s "Deadline clock") |
+| `deadline` | `{length, unit?, extendable?, extensionAuthority?, note?, counting?}` | `length` in `unit`s. **v3** `counting`: the clock-library rule this window is counted by when it is not the pack's `counting` (a FRAP 4 period in a district-court pack, a certiorari period counted by `sup-ct-30`); a period is counted by the rule of the forum whose rules set it. **v2** `unit`: `calendar` (default) or `court` (court days); `week`, `month` or `year` (calendar months, counted by the rule's `months` provision; metrics read a month as 146097/4800 days and a year as 365.2425). The `deadlines` API op turns this into a concrete due date from a trigger date using the pack's v3 `counting` reference (see `docs/ARCHITECTURE.md`'s "Deadline clock") |
 | `duration` | `{min?, mode, max?}` days | **v2** expected elapsed calendar time for this transition. Distinct from `deadline` (a window you must act inside). If absent the engine falls back to `deadline.length` and says so |
 | `cost` | USD | out-of-pocket fees (filing fees, USPTO fees, bonds) |
 | `hours` | number | attorney hours to execute (self/opponent moves only) |
@@ -194,11 +194,12 @@ same reasoning as calibration's `Edge.base_id` handling above.
 
 Deadline counting is data. `packs/clock/` holds the **clock library**:
 holiday calendars and counting rules, shared by every pack. A forum
-package's own counting rules and calendars are generated into the built
-`packs/clock/<pack file>.json` (today `mpep-prosecution.json`, 37 C.F.R.
-§ 1.7; a build output, not a file in the repository); the shared fragments
-(`frap26`, `frcp6`, `itc210`, `rcfc6`, `us-federal-holidays`) are still
-hand-authored (SPEC §9.4). Each file is a
+package's own counting rules and calendars are generated into
+`packs/clock/<pack file>.json` by `just lit-sync` (today
+`mpep-prosecution.json`, 37 C.F.R. § 1.7, and
+`ttab-trademark-trial-and-appeal-board.json`, 37 C.F.R. § 2.196); the
+shared fragments (`frap26`, `frcp6`, `frcrimp45`, `itc210`, `rcfc6`,
+`sup-ct-30`, `us-federal-holidays`) are still hand-authored (SPEC §9.4). Each file is a
 fragment:
 
 ```json
@@ -215,7 +216,9 @@ catalogs (`Catalog::from_files`, `litgraph-wasm`'s `handle_with_packs`)
 take them as files named `clock/<file>.json`. A source with no `clock/`
 files gets the embedded hand-authored library (no generated fragment). Fragments merge in file-name order; a fragment that fails
 to parse or validate, or redefines an id already loaded, is skipped and
-listed in `load_errors`, as is a rule naming an unknown calendar. Every
+listed in `load_errors`, as is a rule naming an unknown calendar. A
+calendar a fragment restates unchanged is no redefinition: each fragment
+whose rules close on a shared calendar carries it. Every
 object is strict (`deny_unknown_fields`). `litgraph validate` detects the
 kind `clock`; `litgraph schema clock` prints its JSON Schema.
 
@@ -239,8 +242,10 @@ kind `clock`; `litgraph schema clock` prints its JSON Schema.
 | `cite` | string? | authority for the holiday or its effective date |
 
 A date is a legal holiday under a rule if it is an observed holiday of any
-of the rule's calendars in that year or a neighboring one (an observance can
-cross Dec 31/Jan 1), or one of the request's `additional_holidays`.
+of the rule's `holidays` calendars in that year or a neighboring one (an
+observance can cross Dec 31/Jan 1), or one of the request's
+`additional_holidays`; for a period counted forward, also of its
+`forwardHolidays` calendars.
 
 ### `CountingRule`
 
@@ -249,21 +254,23 @@ cross Dec 31/Jan 1), or one of the request's `additional_holidays`.
 | `id` | string | what a pack's `counting` names; reported as `rule_set` |
 | `label`, `sourceUrl` | string | reported as `rule_set_label` / `source_url` |
 | `closedWeekdays` | `[weekday]` | days the forum is closed (a last day on one rolls) |
-| `holidays` | `[calendar id]` | calendars the forum closes on (unioned) |
+| `holidays` | `[calendar id]` | calendars the forum closes on (unioned), in either counting direction |
+| `forwardHolidays` | `[calendar id]`? | calendars that close it only for a period counted forward (FRCP 6(a)(6)(C), FRAP 26(a)(6)(C): "for periods that are measured after an event") |
 | `minLength` | `{days, message}`? | shorter periods fail with `message` |
 | `steps` | `[Step]` | the pipeline below |
 | `hours` | `{text, rollText, inaccessibleText?}`? | hours provision: count every hour from the trigger instant, then continue to the same time on the next open day. With `inaccessibleText`, a request setting `clerk_inaccessible` (office inaccessible during the last hour) continues to the same time on the next open day after that, reported as `clerk_inaccessibility_applied`; without it the request is ignored. Absent: hours-based periods are rejected |
 | `months` | `{endOfMonth, text}`? | calendar-month provision: a `month` or `year` (twelve months) period runs from a `trigger` anchor to the corresponding day of the later month; when that month has no such day, `endOfMonth` `clamp` ends it on the month's last day and `roll` on the next month's first. The `count` step's periods are skipped; later steps apply. Absent: month and year periods are rejected. A `week` is seven calendar days under the `count` step's `calendar` period |
 
 `steps` run in order over a working date. `anchor` must come first and
-`count` second; `base` occurs exactly once; `service` and
-`clerkInaccessible` at most once; `roll` any number of times.
+`count` second; `base` and `service` occur exactly once;
+`clerkInaccessible` at most once; `roll` any number of times. Some weekday
+must be open, or a roll would never end.
 
 | `op` | fields | effect |
 |---|---|---|
 | `anchor` | `kind`, `text` | `trigger`: the trigger day is excluded (day 1 is the next day). `adjacent-business-day`: the first business day after (forward) or before (backward) the trigger is day 1; requires `minLength.days >= 1` |
 | `count` | `periods: [{unit?, below?, count, text}]` | the first period whose `unit` (`calendar`/`court`, the deadline's authored unit; a week is 7 calendar days) and `below` (period shorter than this) match counts `n` days in `count` units: `calendar` (every day) or `business` (open days only). No match is an error |
-| `service` | `methods: [{method, days}]`, `text`, `backwardText` | a forward period's service method adds `days`; a method not listed is an error naming the listed ones; a backward period ignores it with `backwardText` |
+| `service` | `methods: [{method, days}]`, `unrecognized?: [method]`, `text`, `backwardText` | total over the service methods (`personal`, `electronic`, `mail`, `clerk`, `other-consented`, `commercial-carrier`, `prison-mail`, `mail-foreign`, `express`, `express-foreign`): each is in exactly one list. A forward period's service method in `methods` adds `days` (with `days: 0` it moves nothing and emits nothing); one in `unrecognized` is an error naming the recognized ones; a backward period ignores it with `backwardText` |
 | `base` | | records the working date as `base_date` |
 | `roll` | `forward`, `backward`: `{toward, text}` | moves a closed day `later` or `earlier` (chosen by counting direction); `text` is emitted, and `last_day_rolled` set, only if the date moved |
 | `clerkInaccessible` | `text?`, `ignoredText` | when the request sets `clerk_inaccessible`, a period moves to the next open day after the last day (`text`), regardless of counting direction; without `text`, `ignoredText` is emitted |

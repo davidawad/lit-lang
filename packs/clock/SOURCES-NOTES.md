@@ -139,12 +139,37 @@ foreign.
   `later`. 201.14(a) does not define a backward start point; the anchor for
   a backward count is the last business day before the trigger, by analogy.
 
-## `ttab` and packs without a rule
+## Service methods are total
 
-The TTAB pack names `frcp6`: TTAB periods are counted in calendar days with a
-weekend/holiday roll (37 C.F.R. § 2.196), the same arithmetic. The PTAB,
-MPEP and FRCrimP packs name no rule yet, so their deadlines are reported as
-`deadline-uncomputable` warnings rather than computed under a guessed rule.
+Every rule's `service` step lists each engine service method once: in
+`methods` with the days it adds (`0` when the rule recognizes it and adds
+nothing), or in `unrecognized` (the rule does not name it, so a period
+served that way is refused). Personal delivery adds nothing under every
+rule. Electronic service adds nothing under `frcp6` and `frap26` (FRCP 6(d)
+and FRAP 26(c) as amended December 1, 2016), `rcfc6` (RCFC 6(d) as amended
+August 1, 2017) and `itc210` (19 C.F.R. § 201.16(f)); `lit/core` declares the
+earlier versions that added 3 days for it. The other methods each rule
+recognizes are the ones it listed before.
+
+## `frcrimp45.json`, `sup-ct-30.json`
+
+Generated once from `lit/core`'s `frcrimp45` and `sup-ct-30` (the versions in
+force today) and kept beside the other shared rules, as `core_stdlib`
+checks: `FRCrimP 45` (`sources/frcrimp.txt`, as amended to December 1,
+2023: mail, leaving with the clerk and other consented nonelectronic means
+add 3 days, 45(c) with Rule 49(a)(4)(C)-(E)) and `Sup. Ct. R. 30.1`
+(`sources/scotus-rules.txt`, the Rules effective January 1, 2023: no time is
+added for any manner of service, Rule 29.3).
+
+## Packs counted by their own forums' rules
+
+The TTAB pack counts under its own `ttab-2-196` (37 C.F.R. § 2.196 with §
+2.119(c), which adds no time for mail since January 14, 2017), generated
+into `ttab-trademark-trial-and-appeal-board.json`; the PTAB pack under
+`uspto-1-7` (37 C.F.R. § 1.7, which § 42.1(a) applies to the Board); the
+FRCrimP pack under `frcrimp45`; and each certiorari window under
+`sup-ct-30` (the window's own `deadline.counting`). No pack borrows another
+forum's computation rule.
 
 ## Changes from the hard-coded clock
 

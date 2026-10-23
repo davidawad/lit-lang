@@ -201,7 +201,7 @@ EdgeField    = "event", CallExpr | "authority", (String | Cite) | "effort", Dura
              | "forbids", IdList | "replaces", ReplaceList | "when", Expr ;
 ReplaceList  = "[", [ (Ref | String), { ",", (Ref | String) }, [","] ], "]" ;
 DeadlineOpts = "{", { ("extendable", Bool | "extension_authority", String
-             | "note", String), Sep }, "}" ;
+             | "note", String | "counting", String), Sep }, "}" ;
 
 LinkDecl     = "link", (Ident | "_"), String, ":", Ref, "->", Ref, { EdgeClause },
                [ EdgeFields ] ;
@@ -220,7 +220,7 @@ DeadlineDecl = "deadline", Ident, ":", Duration, ("from" | "after" | "before"),
                [ DeclOpts ] ;
 DeclOpts     = "{", { ( "extendable", Bool | "extension_authority", String
              | "note", String | "bearer", Ref | "trigger", ( Ref | CallExpr )
-             | ("extend" | "waive"), Capability ), Sep }, "}" ;
+             | ("extend" | "waive"), Capability | "forum", Ref ), Sep }, "}" ;
 Capability   = "{", { ( "by", Ref | "max", Duration | "to", Expr
              | "discretion", Ident | "after_expiry" | "on", CallExpr
              | "within", Expr | "never", Cite ), Sep }, "}" ;
@@ -229,8 +229,9 @@ CountingDecl = "counting", Ident, { VersionClause | Relation | Cite },
 CountingItem = "exclude_trigger_day" | "include_last_day" | "allow_hours"
              | "end_of_month", Ident
              | "roll_forward_on", IdList
-             | "service_extension", "{", { Ident, ":", Duration, Sep }, "}", [ Cite ]
-             | "holidays", Ref | "anchor", Ident
+             | "service_extension", "{", { Ident, ":", (Duration | Ref), Sep }, "}", [ Cite ]
+             | "holidays", Ref | ("forward_holidays" | "declared_holidays"), Ref, [ Cite ]
+             | "forums", IdList | "anchor", Ident
              | "short_period", "{", "below", ":", Duration, Sep, "count", ":", Ident, "}" ;
 CalendarDecl = "calendar", Ident, { VersionClause | Cite }, "{", { HolidayDecl, Sep }, "}" ;
 HolidayDecl  = Ident, ":", CallExpr, "effective", Interval, [ "observed", Ident ] ;
@@ -668,6 +669,30 @@ matching trigger pattern `T` that created the obligation instance being
 judged (§5.6). `before` counts backward. Units are the `Days<U>` unit of the
 literal.
 
+A **chained period** runs from one end of another deadline's period instead
+of from an event: `T` is `deadline(e).nominal` (the last day as counted,
+before any roll or extension) or `deadline(e).adjusted` (after every roll
+and service extension). A chain always says which end (TBMP 112's
+extension "from the actual due date ..., not the adjusted date" is
+`.nominal`); a bare `deadline(e)`, any other field, `deadline(e)` naming
+anything but one deadline, or a period naming itself is L2001 (the bare
+form with both readings as fixes). Its instance opens with the event
+starting `e`'s period (following `e`'s own chain, at most 16 links; a
+longer chain is a cycle, which nothing starts), and is counted from that
+end of `e`'s period under the versions governing the event it is judged
+at, with no service method (a chain runs from a date, not from service).
+A chain whose base is not counted is not counted either, and says why. A
+period of a package a matter only depends on is never replayed (§5.6), so
+neither is a chain on one. Lowering emits a chained period's window like
+any other: the engine counts it from the date the request gives.
+
+A deadline is a period of a **forum**: its package's (`Lit.toml` `forum`),
+or the one its `forum F` option names when another forum's rules set the
+period (a FRAP 4 appeal period in a district-court package is `forum
+frap`; a certiorari petition's 90 days `forum scotus`). Its counting rule
+must compute that forum's periods (`forums` below); otherwise L3009, so no
+forum borrows another's computation rule (design review 2026-10-23, L2-L4).
+
 A deadline declaration's options describe the obligation each trigger
 creates (design review 2026-10-23 §2.4, §2.7):
 
@@ -795,9 +820,18 @@ Counting rule `c` defines (FRCP 6(a) vocabulary):
    in the counting direction until it doesn't (FRCP 6(a)(1)(C), 6(a)(5)).
    `inaccessible` days come from case events. In a pure `.lit` test they are
    none.
-5. `service_extension { Method: K.days }` adds `K` calendar days after step 4
-   for a trigger whose service-method argument is `Method`, then repeats step
-   4. It applies only to forward counting (FRCP 6(d)).
+5. `service_extension { Method: K.days | unrecognized, ... }` is total over
+   the closed set of service methods (`core.time`'s `ServiceMethod`):
+   `Personal`, `Electronic`, `Mail`, `Clerk`, `OtherConsented`,
+   `CommercialCarrier`, `PrisonMail`, `MailForeign`, `Express`,
+   `ExpressForeign`. Each is listed once (L3009 for a missing, unknown or
+   repeated method). `K.days` adds `K` calendar days after step 4 for a
+   trigger whose service-method argument is `Method`, then repeats step 4;
+   `0.days` says the rule recognizes the method and adds nothing (FRCP
+   6(d) since 2016 for electronic service). `unrecognized` says the rule
+   does not name the method: a period served that way is refused, never
+   counted as if it added nothing. A rule with no `service_extension`
+   recognizes no method. It applies only to forward counting (FRCP 6(d)).
 6. `allow_hours` permits `N.hours` deadlines (FRCP 6(a)(2)). Without it, an
    hours deadline is L3009.
 7. A week is seven calendar days (step 3). Months and years (twelve months)
@@ -809,6 +843,24 @@ Counting rule `c` defines (FRCP 6(a) vocabulary):
    rule of the same module without `end_of_month` is L3009; the engine
    rejects one whose rule has no `months` provision. The design review of
    2026-10-23 (§2.1) gives the units: they never convert into one another.
+
+8. The closed days depend on the counting direction. `holidays C` closes
+   the forum in either direction; `forward_holidays C cite X` only for a
+   period counted forward ("for periods that are measured after an
+   event", FRCP 6(a)(6)(C), FRAP 26(a)(6)(C): a state's holidays); and
+   `declared_holidays C cite X` names a **declared-closure calendar**, the
+   days declared closed (by the President or Congress, FRCP 6(a)(6)(B);
+   or by the Court, Sup. Ct. R. 30.1), closing either direction. Whether a
+   declaration closes a forum is a legal question its rule answers, so
+   both need the `cite` (L3009 without), and a declared calendar lists
+   only `once(date)` days with no observance (L3009 otherwise). `lit/core`
+   declares neither: no state calendar or closure order is vendored, so
+   none is asserted.
+9. `forums [f, ...]` names the forums whose periods the rule computes
+   (default: its package's forum); a forum's own rules decide it (FRAP 26
+   counts the courts of appeals', `frap` and `cafc`; 37 C.F.R. § 42.1(a)
+   makes § 1.7 the Patent Trial and Appeal Board's, so `uspto-1-7` is
+   `forums [uspto, ptab]`).
 
 `deadline(d)` in a test is the due date `Due {nominal, adjusted}`: bare, or
 as `deadline(d).adjusted`, it is the date after every roll and extension;
@@ -1416,19 +1468,23 @@ L6001:
 | id, `cite` | `id`, `label` (the cite, else the id); each step's `text` is generated as `"<cite>: ..."` |
 | the `url` of the source its cite binds to (§4.3) | `sourceUrl` (required: no bound url is L6001) |
 | (always) | `closedWeekdays: ["saturday", "sunday"]` |
-| `holidays k` | `holidays: ["k"]`, and calendar `k` in the fragment |
+| `holidays k`, `declared_holidays j` | `holidays: ["k", "j"]`, and each calendar in the fragment (with its own package's source url, so every fragment carrying a calendar carries the same one) |
+| `forward_holidays f` | `forwardHolidays: ["f"]`, and calendar `f` in the fragment |
 | `anchor trigger_day` + `exclude_trigger_day` | `{"op": "anchor", "kind": "trigger"}` |
 | `anchor next_business_day` (no `exclude_trigger_day`) | `{"op": "anchor", "kind": "adjacent-business-day"}`, `minLength: {days: 1}` |
 | `short_period { below: K.days, count: U }` | first `count` period `{unit: "calendar", below: K, count}` (`calendar` for calendar days, else `business`) |
 | (always) | `count` periods `{unit: "calendar", count: "calendar"}`, `{unit: "court", count: "business"}` |
 | `include_last_day`, `roll_forward_on [weekend, legal_holiday]` | `roll` before `base`: forward `toward: later`, backward `toward: earlier` |
-| `service_extension { M: K.days }` | `service` `{method, days: K}`, then a second `roll`; `M` in kebab case must be an engine method (`mail`, `clerk`, `other-consented`, `commercial-carrier`, `prison-mail`, `mail-foreign`, `express`, `express-foreign`); non-calendar days are L6001 |
+| `service_extension { M: K.days \| unrecognized }` (always: absent, every method is `unrecognized`) | `service` `{methods: [{method, days: K}], unrecognized: [method]}`, total over the engine's methods (`personal`, `electronic`, `mail`, `clerk`, `other-consented`, `commercial-carrier`, `prison-mail`, `mail-foreign`, `express`, `express-foreign`: `M` in kebab case), then a second `roll`; non-calendar days are L6001 |
 | `inaccessible` in `roll_forward_on` | `clerkInaccessible` step (and, with `allow_hours`, `hours.inaccessibleText`: FRCP 6(a)(3)(B), FRAP 26(a)(3)(B)) |
 | `allow_hours` | `hours` provision |
 | `end_of_month clamp` / `roll` | `months` provision `{endOfMonth: "clamp"/"roll", text}` |
 
 The pipeline is therefore `anchor, count, roll, base, service, roll,
 clerkInaccessible` (absent steps dropped): §5.3 steps 1-6 in order. The
+engine's `service` step is total over its methods: a method with `days: 0`
+moves nothing and says nothing, and one in `unrecognized` refuses the
+period ("service method X is not valid under ..."). The
 engine always includes the last day and rolls off any closed day, so a
 rule without `include_last_day`, or whose `roll_forward_on` lists only one
 of `weekend`/`legal_holiday`, is L6001. Service days are added after the
@@ -1449,6 +1505,13 @@ lowered rule reproduces their `due_date`, `base_date` and
 | `once(date)` | `fixed` on that month and day, effective `[date, date + 1)` (widened by a day each side under `nearest_weekday`) |
 | `observed nearest_weekday` / none | `observed: "nearest-weekday"` / `"actual"` |
 | `observed next_day` | L6001: the engine has no Sunday-only observance |
+
+A `within d` window lowers `Deadline.counting` when `d`'s counting rule
+is not the pack's `counting` (a FRAP 4 period in a district-court pack, a
+certiorari period counted by `sup-ct-30`), so the engine counts each
+window by the rule of the forum whose rules set it; a literal `deadline
+N.unit { counting "id" }` window (an imported pack's) names it verbatim,
+and `counting` on a `within` window is L2007.
 
 The generic interpreter consumes only this IR plus `(trigger date, amount,
 unit, direction, service method, inaccessible dates)` and never branches on

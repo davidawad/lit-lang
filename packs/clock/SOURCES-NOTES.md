@@ -81,15 +81,13 @@ Governs the Federal Circuit via Fed. Cir. R. 47.1.
 - **Inaccessible clerk's office (26(a)(3)).** On the last day of a
   26(a)(1) period the `clerkInaccessible` step extends to the first
   accessible day that is not a Saturday, Sunday or legal holiday
-  (26(a)(3)(A)); during the last hour of a 26(a)(2) period,
+  (26(a)(3)(A)), including a period measured backward; during the last hour
+  of a 26(a)(2) period,
   `hours.inaccessibleText` extends to the same time on that day
   (26(a)(3)(B)). The engine's `clerk_inaccessible` input says the office is
   inaccessible on the last day (or hour) only, so the extension is the next
   open day; an office closed for several days needs those days as
-  `additional_holidays`. **Interpretive choice:** as for FRCP 6(a)(3), the
-  extension is not applied to a backward-counted period (the engine's
-  `clerkInaccessible` step is forward-only); 26(a)(3) itself does not
-  distinguish direction.
+  `additional_holidays`.
 
 An earlier version of this file said FRAP has no hours provision and no
 clerk-inaccessibility extension "in the fetched text"; the vendored rule has

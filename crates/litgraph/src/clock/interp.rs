@@ -262,7 +262,7 @@ impl Run<'_, '_> {
             return;
         }
         match text {
-            Some(t) if self.forward => {
+            Some(t) => {
                 let next = self.clock.roll(
                     self.current.add_days(1),
                     Toward::Later,

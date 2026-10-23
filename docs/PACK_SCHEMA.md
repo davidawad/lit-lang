@@ -225,7 +225,7 @@ cross Dec 31/Jan 1), or one of the request's `additional_holidays`.
 | `service` | `methods: [{method, days}]`, `text`, `backwardText` | a forward period's service method adds `days`; a method not listed is an error naming the listed ones; a backward period ignores it with `backwardText` |
 | `base` | | records the working date as `base_date` |
 | `roll` | `forward`, `backward`: `{toward, text}` | moves a closed day `later` or `earlier` (chosen by counting direction); `text` is emitted, and `last_day_rolled` set, only if the date moved |
-| `clerkInaccessible` | `text?`, `ignoredText` | when the request sets `clerk_inaccessible`: a forward period moves to the next open day after the last day (`text`); otherwise, or with no `text`, `ignoredText` is emitted |
+| `clerkInaccessible` | `text?`, `ignoredText` | when the request sets `clerk_inaccessible`, a period moves to the next open day after the last day (`text`), regardless of counting direction; without `text`, `ignoredText` is emitted |
 
 Step `text` templates may use `{trigger}`, `{anchor}`, `{date}` (this
 step's result), `{n}` (period length), `{after}` (`after`/`before`),

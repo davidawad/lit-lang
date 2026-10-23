@@ -137,11 +137,13 @@ fn inaccessibility_follows_the_26c_extension_onto_the_true_last_day() {
 }
 
 #[test]
-fn inaccessibility_is_not_applied_to_a_backward_period() {
+fn inaccessibility_extends_a_backward_period_to_the_first_accessible_day() {
     let r = days("2026-07-27", 2, Direction::Backward, None, &closed());
-    assert_eq!(r.due_date, "2026-07-24");
-    assert!(!r.clerk_inaccessibility_applied);
-    assert!(r.steps.last().unwrap().contains("ignored"));
+    // 26(a)(3)(A) says the first accessible day, without limiting the
+    // extension to periods measured after an event.
+    assert_eq!(r.due_date, "2026-07-27");
+    assert!(r.clerk_inaccessibility_applied);
+    assert!(r.steps.last().unwrap().contains("26(a)(3)(A)"));
 }
 
 #[test]

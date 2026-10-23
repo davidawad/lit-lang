@@ -236,15 +236,19 @@ impl Cx<'_, '_> {
     /// by `counted_by`, a rule computing other forums' periods (design
     /// review 2026-10-23, L2-L4: no cross-forum borrowing).
     fn borrowing(&mut self, name: &Name, counted_by: &RefPath, forum: &str) {
-        let Ok((_, found)) = self.ck.scope.value(counted_by) else {
+        // `counted_by` resolved to a counting rule before this is asked.
+        let borrowed =
+            self.ck
+                .scope
+                .value(counted_by)
+                .ok()
+                .and_then(|(_, found)| match &found.item.kind {
+                    ValueKind::Counting(forums) if !forums.contains(forum) => Some(forums.clone()),
+                    _ => None,
+                });
+        let Some(forums) = borrowed else {
             return;
         };
-        let ValueKind::Counting(forums) = &found.item.kind else {
-            return;
-        };
-        if forums.contains(forum) {
-            return;
-        }
         let list = forums.iter().cloned().collect::<Vec<_>>().join(", ");
         self.report(
             Report::new(

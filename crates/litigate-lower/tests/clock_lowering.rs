@@ -6,8 +6,8 @@ mod support;
 
 use litigate_lower::{render, Lowerer};
 use litigate_sema::hir::{
-    Anchor, CiteRule, DayUnit, EndOfMonth, HolidayDate, Observance, RollOn, ServiceTime,
-    ShortPeriod,
+    Anchor, CiteRule, DayUnit, Declaration, EndOfMonth, HolidayDate, Observance, RollOn,
+    ServiceTime, ShortPeriod,
 };
 use support::{
     calendar_mut, clock_of, counting_mut, example, lowered, lowering_errors, render_diagnostics,
@@ -309,4 +309,47 @@ fn clock_version_lowers_one_version() {
         .err()
         .unwrap_or_default();
     insta::assert_snapshot!(render_diagnostics(&found));
+}
+
+/// `declared_holidays` closes either direction and `forward_holidays` only
+/// forward: the rule's `holidays` and `forwardHolidays`, each calendar in
+/// the fragment once.
+#[test]
+fn declared_and_forward_calendars_lower() {
+    let mut p = example();
+    let mut closures = calendar_mut(&mut p).clone();
+    closures.meta.id = "closures".into();
+    let module = p
+        .modules
+        .iter_mut()
+        .find(|m| {
+            m.declarations
+                .iter()
+                .any(|d| matches!(d, Declaration::Calendar(_)))
+        })
+        .unwrap();
+    module.declarations.push(Declaration::Calendar(closures));
+    let c = counting_mut(&mut p);
+    c.declared_calendar = Some("closures".into());
+    c.forward_calendar = Some("federal-holidays".into());
+    let lowered = lowered(&p);
+    let lib = clock_of(&lowered);
+    assert_eq!(
+        lib.counting_rules[0].holidays,
+        ["federal-holidays", "closures"]
+    );
+    assert_eq!(lib.counting_rules[0].forward_holidays, ["federal-holidays"]);
+    let ids: Vec<&str> = lib.calendars.iter().map(|k| k.id.as_str()).collect();
+    assert_eq!(ids, ["federal-holidays", "closures"]);
+}
+
+#[test]
+fn closing_calendars_must_resolve() {
+    let mut p = example();
+    counting_mut(&mut p).declared_calendar = Some("nowhere".into());
+    let declared = lowering_errors(&p);
+    let mut p = example();
+    counting_mut(&mut p).forward_calendar = Some("nowhere".into());
+    assert_eq!(lowering_errors(&p), declared);
+    assert!(declared.contains("nowhere"), "{declared}");
 }

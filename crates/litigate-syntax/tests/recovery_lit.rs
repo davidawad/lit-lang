@@ -238,6 +238,14 @@ const DECLARATION_PARTS: &[(&str, &[&str])] = &[
         &["L0001 2:32-2:33 expected an identifier, found `x`"],
     ),
     (
+        "module m\ncounting c { forward_holidays 3 }\n",
+        &["L0001 2:31-2:32 expected an identifier, found `3`"],
+    ),
+    (
+        "module m\ncounting c { declared_holidays closures, forums 3 }\n",
+        &["L0001 2:49-2:50 expected an identifier, found `3`"],
+    ),
+    (
         "module m\ncounting c effective [2020-01-01, .. { allow_hours }\n",
         &["L0002 2:22-2:23 unclosed `[`: expected `)` | fix 2:53-2:53 \")\""],
     ),

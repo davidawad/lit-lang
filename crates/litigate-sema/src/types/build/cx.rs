@@ -92,6 +92,21 @@ fn expr_holes(e: &Expr, path: &str, out: &mut BTreeMap<String, Option<String>>) 
     }
 }
 
+/// Refs of an optional `IdList` field (none when absent or not a list).
+#[must_use]
+pub fn refs<'f>(f: Option<&&'f Field>) -> Vec<&'f RefPath> {
+    match f.and_then(|f| first_expr(f)).map(|e| &e.kind) {
+        Some(ExprKind::List(items)) => items
+            .iter()
+            .filter_map(|i| match &i.kind {
+                ExprKind::Ref(r) => Some(r),
+                _ => None,
+            })
+            .collect(),
+        _ => Vec::new(),
+    }
+}
+
 /// Nested field list of a field (deadline options, triangular duration).
 #[must_use]
 pub fn nested(f: &Field) -> &[Field] {
@@ -210,16 +225,7 @@ impl Cx<'_, '_> {
     /// Refs of an `IdList` field.
     #[must_use]
     pub fn refs<'f>(f: Option<&&'f Field>) -> Vec<&'f RefPath> {
-        match f.and_then(|f| first_expr(f)).map(|e| &e.kind) {
-            Some(ExprKind::List(items)) => items
-                .iter()
-                .filter_map(|i| match &i.kind {
-                    ExprKind::Ref(r) => Some(r),
-                    _ => None,
-                })
-                .collect(),
-            _ => Vec::new(),
-        }
+        refs(f)
     }
 
     /// Checks that `actor` is declared in `[package.roles]` (or `either`);

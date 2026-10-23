@@ -109,6 +109,7 @@ fn a_rule_without_a_service_map_recognizes_no_method() {
 fn service_maps_are_total_over_known_methods() {
     let out = check_body(
         "counting s1 { holidays cal, service_extension { Personl: 3.days, Zzzzzzzz: 1.days, Mail: unrecognised, Personal: unrecognized.x, Electronic: unrecognized } }\n\
+counting s3 { holidays cal, service_extension }\n\
 counting s2 { holidays cal, service_extension { Personal: 0.days, Electronic: 0.days, Mail: 3.days, Clerk: 3.days, OtherConsented: 3.days, CommercialCarrier: 0.days, PrisonMail: 0.days, MailForeign: 0.days, Express: 0.days, ExpressForeign: unrecognized } }",
     );
     insta::assert_debug_snapshot!(out);
@@ -125,7 +126,8 @@ counting f1 { holidays cal, forward_holidays cal }\n\
 counting f2 { holidays cal, declared_holidays cal cite FRCP 6(a)(6)(B) }\n\
 counting f3 { holidays cal, declared_holidays observed-closures cite ?(\"no order is vendored\") }\n\
 counting f4 { holidays cal, declared_holidays closures }\n\
-counting f5 { holidays cal, forward_holidays nope cite FRCP 6(a)(6)(C) }",
+counting f5 { holidays cal, forward_holidays nope cite FRCP 6(a)(6)(C) }\n\
+counting f6 { holidays cal, forward_holidays }",
     );
     insta::assert_debug_snapshot!(out);
 }

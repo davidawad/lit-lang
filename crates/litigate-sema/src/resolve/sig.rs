@@ -3,7 +3,7 @@
 //! ranges, so an edit that keeps a module's interface intact is backdated
 //! and its importers are not re-checked.
 use crate::db::inputs::SourceFile;
-use crate::db::parse::tree::{Atom, Expr, ExprKind, Field, Item, ItemKind, ItemTree};
+use crate::db::parse::tree::{Atom, Expr, ExprKind, Field, Item, ItemKind, ItemTree, RefPath};
 use crate::db::queries::{item_tree, manifest, module_graph, signature};
 use crate::hir::{Manifest, Type};
 use crate::resolve::scope::Scope;
@@ -182,20 +182,9 @@ pub fn value_of(item: &Item) -> Option<(&str, ValueKind)> {
         ItemKind::Counting(name, _, fields) => (
             name.text.as_str(),
             ValueKind::Counting(
-                clause(fields, "forums")
+                crate::types::build::refs(clause(fields, "forums").as_ref())
                     .into_iter()
-                    .flat_map(|f| &f.values)
-                    .flat_map(|(a, _)| match a {
-                        Atom::Expr(Expr {
-                            kind: ExprKind::List(l),
-                            ..
-                        }) => l.as_slice(),
-                        _ => &[],
-                    })
-                    .filter_map(|e| match &e.kind {
-                        ExprKind::Ref(r) => Some(r.display()),
-                        _ => None,
-                    })
+                    .map(RefPath::display)
                     .collect(),
             ),
         ),
@@ -203,7 +192,7 @@ pub fn value_of(item: &Item) -> Option<(&str, ValueKind)> {
             name.text.as_str(),
             ValueKind::Calendar(holidays.iter().all(|h| {
                 h.observed.is_none()
-                    && matches!(&h.rule.kind, ExprKind::Call(f, _) if f.is_simple() && f.head.text == "once")
+                    && matches!(&h.rule.kind, ExprKind::Call(f, _) if f.display() == "once")
             })),
         ),
         ItemKind::Default(name, ..) => (name.text.as_str(), ValueKind::Default(None)),

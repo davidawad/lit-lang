@@ -166,3 +166,17 @@ fn merge_reports_what_it_wrote_and_fails_on_bad_inputs() {
     assert_eq!(bad.code, 1);
     insta::assert_snapshot!(bad.stderr, @"litigate lock: bad: Lit.lock is invalid: key with no value, expected `=`");
 }
+
+#[cfg(unix)]
+#[test]
+fn merge_into_an_unwritable_directory_fails() {
+    let dir = scratch("lock-merge-unwritable");
+    for name in ["o", "a", "b"] {
+        std::fs::write(dir.join(name), "version = 1\n").unwrap();
+    }
+    support::chmod(&dir, 0o555);
+    let run = litigate_in(&dir, &["lock", "--merge", "o", "a", "b"]);
+    support::chmod(&dir, 0o755);
+    assert_eq!(run.code, 1);
+    insta::assert_snapshot!(run.stderr, @"litigate lock: a.litigate-tmp: Permission denied (os error 13)");
+}

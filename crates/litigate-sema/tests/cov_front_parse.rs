@@ -2,7 +2,7 @@
 //! the parser already reported is dropped, a clause or value missing one is
 //! dropped from its declaration, and every complete expression lowers.
 use litigate_sema::db::parse::tree::{
-    Atom, Expr, ExprKind, Field, Item, ItemKind, Json, PathSep, Pattern, RefPath,
+    Atom, Expr, ExprKind, Field, Item, ItemKind, PathSep, Pattern, RefPath,
 };
 use litigate_sema::db::parse::{parse, Parsed};
 
@@ -162,38 +162,26 @@ fn incomplete_parts_are_dropped_from_their_declaration() {
 }
 
 #[test]
-fn patch_records_lower_to_json() {
+fn patches_lower_to_edge_fields() {
     let patches = |body: &str| match only_item(&format!("instance a @ b {{ {body} }}")) {
         ItemKind::Instance(_, _, fields) => fields,
         other => panic!("{other:?}"),
     };
-    for dropped in [
-        "patch { \"x\": 1 }",
-        "patch e1 { a: }",
-        "patch e2 { a: { b: } }",
-        "patch e3 { a: [1, { b: }] }",
-    ] {
-        assert_eq!(patches(dropped), Vec::<Field>::new(), "{dropped}");
-    }
-    let fields = patches(
-        "patch ok { n: -1, s: \"s\\\"\", t: true, f: false, u: unset, l: [1, [2]], r: { \"k\": 0 } }",
-    );
+    assert_eq!(patches("patch { note \"x\" }"), Vec::<Field>::new());
+    let fields = patches("patch ok { note \"n\", tags [a], within d { extendable true } }");
     let [(
         Atom::Expr(Expr {
             kind: ExprKind::Ref(edge),
             ..
         }),
         _,
-    ), (Atom::Json(Json::Object(entries)), _)] = &fields[0].values[..]
+    ), (Atom::Fields(written), _)] = &fields[0].values[..]
     else {
         panic!("{fields:#?}");
     };
     assert_eq!(edge.head.text, "ok");
-    let rendered: Vec<String> = entries
-        .iter()
-        .map(|(k, v)| format!("{}={v:?}", k.text))
-        .collect();
-    insta::assert_debug_snapshot!(rendered);
+    let keys: Vec<&str> = written.iter().map(|f| f.key.text.as_str()).collect();
+    assert_eq!(keys, ["note", "tags", "within"]);
 }
 
 /// S-expression rendering of a lowered expression.

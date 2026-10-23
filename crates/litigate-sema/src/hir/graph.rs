@@ -197,6 +197,51 @@ pub struct Instance {
     /// The value of `stake` in `payoff_transform`, or a hole when only the
     /// matter can know it.
     pub stake: Option<Authored<Money>>,
-    /// Local edge id to RFC 7386 merge patch over `RawEdge` JSON.
-    pub patch_edges: BTreeMap<String, serde_json::Value>,
+    /// Local edge id to its `patch`: typed edge fields replacing the base
+    /// edge's.
+    pub patch_edges: BTreeMap<String, EdgePatch>,
+}
+
+/// `patch edge { ... }` (SPEC §8.4): the edge fields a patch writes, typed
+/// as on an edge declaration. Each written field replaces the base edge's
+/// whole field (`within`/`deadline` its whole window); a field the patch
+/// does not write is `None` and the base edge keeps it.
+#[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
+pub struct EdgePatch {
+    /// `authority`.
+    pub authority: Option<String>,
+    /// `effort`, exact hours.
+    pub hours: Option<Rational>,
+    /// `cost`.
+    pub cost: Option<Authored<Money>>,
+    /// `within` or `deadline`.
+    pub deadline: Option<EdgeDeadline>,
+    /// `duration`.
+    pub duration: Option<TriangularDuration>,
+    /// `valence`.
+    pub valence: Option<Valence>,
+    /// `court_listener_url`.
+    pub court_listener_url: Option<String>,
+    /// `action_id`.
+    pub action_id: Option<String>,
+    /// `note`.
+    pub note: Option<String>,
+    /// `tags`.
+    pub tags: Option<Vec<String>>,
+    /// `attrs`, exact.
+    pub attrs: Option<BTreeMap<String, Rational>>,
+    /// `sets`.
+    pub sets: Option<Vec<String>>,
+    /// `clears`.
+    pub clears: Option<Vec<String>>,
+    /// `requires`.
+    pub requires: Option<Vec<String>>,
+    /// `forbids`.
+    pub forbids: Option<Vec<String>>,
+    /// Source span of the `patch`.
+    pub span: Option<litigate_base::Span>,
+    /// Explicit holes in the written fields, by dotted field path, with
+    /// their reasons.
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub holes: BTreeMap<String, Option<String>>,
 }

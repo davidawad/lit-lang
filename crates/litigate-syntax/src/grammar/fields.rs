@@ -2,9 +2,9 @@
 //! options, counting rules, instances, packages, and sources.
 use super::clauses::keyword_field;
 use super::values::{
-    boolean, call, cite, date_or_hole, duration, duration_estimate, id_list, json_record,
-    money_or_hole, number, prob_value, record, reference, replaces_list, require, signed_money,
-    signed_number, string, Key, Value,
+    boolean, call, cite, date_or_hole, duration, duration_estimate, id_list, money_or_hole, number,
+    prob_value, record, reference, replaces_list, require, signed_money, signed_number, string,
+    Key, Value,
 };
 use super::{brace_list, delimited_node, Sep};
 use crate::error::{range, SyntaxError};
@@ -310,15 +310,16 @@ pub(crate) fn stake_value(p: &mut Parser<'_>) -> bool {
     signed_money(p) || super::values::keyword_literal(p, &[KwUnvalued])
 }
 
-/// `patch Ident JsonRecord` inside an instance.
+/// `patch Ident EdgeFields` inside an instance: typed edge fields, each
+/// replacing the base edge's.
 pub(crate) fn patch(p: &mut Parser<'_>) -> bool {
     if !p.at_kw(KwPatch) {
         return false;
     }
     p.start(PatchDecl);
     p.bump_as(KwPatch);
-    if p.expect(Ident) {
-        require(p, json_record, &[LBrace]);
+    if p.expect(Ident) && !field_list(p, EDGE_FIELDS) {
+        p.error_expected(&[LBrace]);
     }
     p.finish();
     true

@@ -105,7 +105,11 @@ fn replaces_on_a_pack_edge_is_rejected_by_pack_validation() {
 fn links_structure_errors_name_their_json_pointer() {
     let links = json!({"instances": {
         "nobase": {"pack": "p"},
-        "p@q": {"pack": "p", "patch_edges": {"go": [1], "ok": {"hours": 2}}}
+        "p@q": {"pack": "p", "patch_edges": {
+            "go": [1],
+            "ok": {"hours": 2},
+            "typed": {"label": "L", "note": null, "deadline": {"note": "part"}}
+        }}
     }, "links": []});
     let inputs = [Input::new("packs/links.json", links.to_string())];
     assert_eq!(
@@ -120,6 +124,21 @@ fn links_structure_errors_name_their_json_pointer() {
                 "packs/links.json",
                 "an edge patch must be a JSON object (SPEC §8.4)",
                 "/instances/p@q/patch_edges/go"
+            ),
+            at(
+                "packs/links.json",
+                "a `patch` writes edge fields only; `label` has no `.lit` spelling",
+                "/instances/p@q/patch_edges/typed/label"
+            ),
+            at(
+                "packs/links.json",
+                "a `patch` cannot unset `note`; it replaces a field with a value",
+                "/instances/p@q/patch_edges/typed/note"
+            ),
+            at(
+                "packs/links.json",
+                "a `patch` replaces whole edge fields; this one is not: missing field `length`",
+                "/instances/p@q/patch_edges/typed"
             ),
         ]
     );

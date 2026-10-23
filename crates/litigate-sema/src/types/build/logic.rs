@@ -1,13 +1,11 @@
 //! Defaults, exceptions, tests, nominal types, authority chains, and links
 //! and instances (SPEC §5.2, §5.5, §8.4).
-use super::cx::{first_expr, first_ref, Cx};
-use crate::db::parse::tree::{
-    EdgeItem, Expr, ExprKind, Field, Item, Json, Name, TestStmt, TypeRef,
-};
+use super::cx::{first_expr, Cx};
+use crate::db::parse::tree::{EdgeItem, Expr, ExprKind, Field, Item, Name, TestStmt, TypeRef};
 use crate::db::span::Report;
 use crate::hir::{
-    ActorRole, Authority, BinaryOp, DefaultRule, EnumDecl, EventType, Exception, ExceptionKind,
-    Expectation, Instance, Link, Test, Type, TypeAlias, Value,
+    Authority, BinaryOp, DefaultRule, EnumDecl, EventType, Exception, ExceptionKind, Expectation,
+    Link, Test, Type, TypeAlias, Value,
 };
 use crate::resolve::sig::ValueKind;
 use crate::types::ty;
@@ -362,121 +360,5 @@ impl Cx<'_, '_> {
             }
         }
         out
-    }
-
-    fn instance_probabilities(
-        &mut self,
-        f: Option<&&Field>,
-    ) -> BTreeMap<String, crate::hir::Rational> {
-        let mut probabilities = BTreeMap::new();
-        if let Some(ExprKind::Record(ps)) = f.and_then(|x| first_expr(x)).map(|e| &e.kind) {
-            for (edge, e) in ps {
-                match self.ck.check(e, &Type::Probability).value {
-                    // The checker keeps every `Probability` value in [0, 1].
-                    Some(Value::Probability(p)) => {
-                        probabilities.insert(edge.text.clone(), p);
-                    }
-                    _ => self.report(Report::new(
-                        C::InvalidProbability,
-                        e.range,
-                        "instance probabilities must be constants in [0, 1]",
-                    )),
-                }
-            }
-        }
-        probabilities
-    }
-
-    fn instance_roles(&mut self, f: Option<&&Field>) -> BTreeMap<String, ActorRole> {
-        let mut roles = BTreeMap::new();
-        if let Some(ExprKind::Record(rs)) = f.and_then(|x| first_expr(x)).map(|e| &e.kind) {
-            for (actor, e) in rs {
-                let role = match &e.kind {
-                    ExprKind::Ref(r) if r.head.text == "self" => Some(ActorRole::Protagonist),
-                    ExprKind::Ref(r) if r.head.text == "opponent" => Some(ActorRole::Opponent),
-                    ExprKind::Ref(r) if r.head.text == "nature" => Some(ActorRole::Nature),
-                    _ => None,
-                };
-                match role {
-                    Some(role) => {
-                        roles.insert(actor.text.clone(), role);
-                    }
-                    None => self.report(Report::new(
-                        C::TypeMismatch,
-                        e.range,
-                        "a role is `self`, `opponent`, or `nature`",
-                    )),
-                }
-            }
-        }
-        roles
-    }
-
-    /// `instance base@origin { ... }`.
-    pub fn instance(&mut self, base: &Name, origin: &Name, fields: &[Field]) -> Option<Instance> {
-        let f = self.once_except(fields, "patch");
-        let pack = first_ref(f.get("pack")).and_then(|r| {
-            let id = r.display();
-            if self.ck.scope.packs.iter().any(|s| s.pack_id == id) {
-                return Some(id);
-            }
-            self.report(
-                Report::new(C::UnresolvedName, r.range, format!("unknown pack `{id}`"))
-                    .note("the pack must be a declared dependency"),
-            );
-            None
-        });
-        if !f.contains_key("pack") {
-            self.report(Report::new(
-                C::InvalidField,
-                base.range,
-                "an instance needs `pack <pack-id>`",
-            ));
-        }
-        let probabilities = self.instance_probabilities(f.get("probabilities"));
-        let roles = self.instance_roles(f.get("roles"));
-        let mut patch_edges = BTreeMap::new();
-        for p in fields.iter().filter(|x| x.key.text == "patch") {
-            if let (Some(ExprKind::Ref(edge)), Some((crate::db::parse::tree::Atom::Json(j), _))) =
-                (first_expr(p).map(|e| &e.kind), p.values.get(1))
-            {
-                patch_edges.insert(edge.display(), json(j));
-            }
-        }
-        Some(Instance {
-            name: format!("{}@{}", base.text, origin.text),
-            pack: pack?,
-            note: Self::string(f.get("note")),
-            remove_edges: self.idents(f.get("remove_edges")),
-            probabilities,
-            roles,
-            payoff_transform: Self::string(f.get("payoff_transform")),
-            stake: f
-                .get("stake")
-                .and_then(|x| first_expr(x))
-                .and_then(|e| self.money(e)),
-            patch_edges,
-        })
-    }
-}
-
-/// JSON record to `serde_json::Value` (`unset` is null; numbers keep their
-/// decimal text, rounded to binary64 by serde).
-#[must_use]
-pub fn json(j: &Json) -> serde_json::Value {
-    match j {
-        Json::Number(n) => {
-            serde_json::from_str(&n.replace('_', "")).unwrap_or(serde_json::Value::Null)
-        }
-        Json::Str(s) => serde_json::Value::String(s.clone()),
-        Json::Bool(b) => serde_json::Value::Bool(*b),
-        Json::Unset => serde_json::Value::Null,
-        Json::Object(fields) => serde_json::Value::Object(
-            fields
-                .iter()
-                .map(|(k, v)| (k.text.clone(), json(v)))
-                .collect(),
-        ),
-        Json::Array(items) => serde_json::Value::Array(items.iter().map(json).collect()),
     }
 }

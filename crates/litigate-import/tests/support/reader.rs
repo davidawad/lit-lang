@@ -300,8 +300,13 @@ pub fn links(text: &str) -> Value {
                         .edge()
                         .map(|t| t.text().to_owned())
                         .unwrap_or_default();
-                    let record = patch.record().map_or(Value::Null, |r| value(r.syntax()));
-                    patches.insert(edge, record);
+                    let written = fields(patch.fields().into_iter());
+                    let mut record = Map::new();
+                    edge_fields(
+                        written.as_object().cloned().unwrap_or_default(),
+                        &mut record,
+                    );
+                    patches.insert(edge, Value::Object(record));
                 }
                 if !patches.is_empty() {
                     instance.insert("patch_edges".into(), Value::Object(patches));

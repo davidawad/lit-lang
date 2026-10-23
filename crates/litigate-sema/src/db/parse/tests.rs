@@ -1,5 +1,5 @@
 use super::parse;
-use super::tree::{Atom, ExprKind, Item, ItemKind, Json, TestStmt};
+use super::tree::{Atom, ExprKind, Item, ItemKind, TestStmt};
 use litigate_base::DiagnosticCode as C;
 use proptest::prelude::*;
 
@@ -139,7 +139,7 @@ fn every_construct_lowers_without_reports() {
     let patch = fields.iter().find(|f| f.key.text == "patch");
     assert!(matches!(
         patch.map(|f| &f.values[1].0),
-        Some(Atom::Json(Json::Object(entries))) if entries.len() == 4 && entries[3].1 == Json::Unset
+        Some(Atom::Fields(fields)) if fields.len() == 4 && fields[3].key.text == "deadline"
     ));
 }
 

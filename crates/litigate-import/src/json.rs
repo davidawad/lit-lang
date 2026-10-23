@@ -1,5 +1,5 @@
-//! JSON values as `JsonRecord`/`JsonValue` source (SPEC §3.1): instance
-//! `patch` records and the `.case` `analysis` block.
+//! JSON values as `JsonRecord`/`JsonValue` source (SPEC §3.1): the `.case`
+//! `analysis` block.
 use crate::issues::Issues;
 use crate::text;
 use serde_json::Value;

@@ -230,7 +230,7 @@ impl Spelling<'_> {
 
     /// The `EdgeFields` block. `replaces` is non-empty only on links:
     /// `Pack::from_json` rejects it on a pack edge before import.
-    fn edge_fields(&mut self, edge: &RawEdge, pointer: &str) -> Vec<String> {
+    pub(crate) fn edge_fields(&mut self, edge: &RawEdge, pointer: &str) -> Vec<String> {
         let mut fields = Vec::new();
         if let Some(authority) = &edge.authority {
             fields.push(format!("authority {}", self.cite(authority)));

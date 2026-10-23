@@ -59,7 +59,7 @@ instance cafc@cofc {
   roles { Plaintiff: Appellant }
   payoff_transform "negate"
   stake ?
-  patch e1 { hours: 3, "note": "x", deadline: unset, tags: ["a", 1, true, false, { k: -2 }], }
+  patch e1 { effort 3.hours, note "x", tags [a, b], within d { extendable false }, }
 }
 
 ---
@@ -111,33 +111,24 @@ instance cafc@cofc {
         (hole))
       (instance_field
         (identifier)
-        (json_record
-          (json_entry
-            (identifier)
-            (signed_number
-              (number)))
-          (json_entry
-            (string
-              (string_content))
+        (edge_fields
+          (edge_field
+            (duration))
+          (edge_field
             (string
               (string_content)))
-          (json_entry
-            (identifier)
-            (unset))
-          (json_entry
-            (identifier)
-            (json_list
-              (string
-                (string_content))
-              (signed_number
-                (number))
-              (boolean)
-              (boolean)
-              (json_record
-                (json_entry
-                  (identifier)
-                  (signed_number
-                    (number)))))))))))
+          (edge_field
+            (id_list
+              (ref
+                (identifier))
+              (ref
+                (identifier))))
+          (edge_field
+            (ref
+              (identifier))
+            (deadline_opts
+              (deadline_opt
+                (boolean)))))))))
 
 ================================================================================
 Replaces may name an anonymous edge by its derived id

@@ -34,7 +34,7 @@ test "answer due" {
 
 const LINKS: &str = r#"module links
 link appeal "Appeal": rules::done -> rules@copy::pending by Plaintiff p 1/2 { note "x" }
-instance rules@copy { pack rules, probabilities { respond: 1/3 }, patch respond { "hours": unset } }
+instance rules@copy { pack rules, probabilities { respond: 1/3 }, patch respond { note "n" } }
 "#;
 
 #[test]

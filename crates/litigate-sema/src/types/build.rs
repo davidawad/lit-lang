@@ -5,6 +5,7 @@ mod clock;
 mod cx;
 mod edge;
 mod imports;
+mod instance;
 mod logic;
 mod node;
 mod obligation;

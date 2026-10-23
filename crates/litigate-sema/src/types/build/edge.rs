@@ -3,12 +3,13 @@ use super::cx::{first_expr, first_ref, flag, holes_of, nested, Cx};
 use crate::db::parse::tree::{EdgeItem, Expr, ExprKind, Field};
 use crate::db::span::Report;
 use crate::hir::{
-    Authored, DayUnit, DeadlineWindow, Edge, EdgeDeadline, Rational, TriangularDuration, Type,
-    Value,
+    Authored, DayUnit, DeadlineWindow, Edge, EdgeDeadline, EdgePatch, Rational, TriangularDuration,
+    Type, Value,
 };
 use crate::resolve::sig::ValueKind;
 use crate::types::rational as q;
 use litigate_base::{Applicability, DiagnosticCode as C};
+use std::collections::BTreeMap;
 
 impl Cx<'_, '_> {
     /// Builds one edge from node `from` (or a link when `from` is qualified).
@@ -37,6 +38,42 @@ impl Cx<'_, '_> {
         if let Some(f) = fields.get("replaces").filter(|_| e.from.is_none()) {
             self.not_allowed(f, "outside a links package");
         }
+        let event = fields
+            .get("event")
+            .and_then(|f| first_expr(f))
+            .and_then(|x| self.pattern(x));
+        let f = self.edge_fields(&fields);
+        Edge {
+            id: e.name.as_ref().map(|n| n.text.clone()),
+            to,
+            label: e.label.text.clone(),
+            actor,
+            authority: f.authority,
+            probability,
+            hours: f.hours,
+            cost: f.cost,
+            event,
+            deadline: f.deadline,
+            duration: f.duration,
+            valence: f.valence,
+            court_listener_url: f.court_listener_url,
+            action_id: f.action_id,
+            note: f.note,
+            tags: f.tags.unwrap_or_default(),
+            attrs: f.attrs.unwrap_or_default(),
+            sets: f.sets.unwrap_or_default(),
+            clears: f.clears.unwrap_or_default(),
+            requires: f.requires.unwrap_or_default(),
+            forbids: f.forbids.unwrap_or_default(),
+            span: self.ck.span(e.range),
+            holes: holes_of(e.clauses.iter().chain(&e.fields)),
+        }
+    }
+
+    /// The typed values of the edge fields in `fields` that a `patch` may
+    /// also write (all but `event` and `replaces`); a list field is `Some`
+    /// exactly when written.
+    pub(super) fn edge_fields(&mut self, fields: &BTreeMap<&str, &Field>) -> EdgePatch {
         if let (Some(_), Some(f)) = (fields.get("within"), fields.get("deadline")) {
             self.report(Report::new(
                 C::InvalidField,
@@ -44,13 +81,9 @@ impl Cx<'_, '_> {
                 "an edge has either `within` or `deadline`, not both",
             ));
         }
-        Edge {
-            id: e.name.as_ref().map(|n| n.text.clone()),
-            to,
-            label: e.label.text.clone(),
-            actor,
+        let list = |cx: &mut Self, key: &str| fields.get(key).map(|f| cx.idents(Some(f)));
+        EdgePatch {
             authority: self.cite_text(fields.get("authority")),
-            probability,
             hours: fields
                 .get("effort")
                 .and_then(|f| first_expr(f))
@@ -62,24 +95,20 @@ impl Cx<'_, '_> {
                 .get("cost")
                 .and_then(|f| first_expr(f))
                 .and_then(|x| self.money(x)),
-            event: fields
-                .get("event")
-                .and_then(|f| first_expr(f))
-                .and_then(|x| self.pattern(x)),
             deadline: self.edge_deadline(fields.get("within"), fields.get("deadline")),
             duration: fields.get("duration").and_then(|f| self.duration(f)),
             valence: self.valence(fields.get("valence")),
             court_listener_url: Self::string(fields.get("court_listener_url")),
             action_id: Self::string(fields.get("action_id")),
             note: Self::string(fields.get("note")),
-            tags: self.idents(fields.get("tags")),
-            attrs: self.attrs(fields.get("attrs")),
-            sets: self.idents(fields.get("sets")),
-            clears: self.idents(fields.get("clears")),
-            requires: self.idents(fields.get("requires")),
-            forbids: self.idents(fields.get("forbids")),
-            span: self.ck.span(e.range),
-            holes: holes_of(e.clauses.iter().chain(&e.fields)),
+            tags: list(self, "tags"),
+            attrs: fields.get("attrs").map(|f| self.attrs(Some(f))),
+            sets: list(self, "sets"),
+            clears: list(self, "clears"),
+            requires: list(self, "requires"),
+            forbids: list(self, "forbids"),
+            span: None,
+            holes: BTreeMap::new(),
         }
     }
 

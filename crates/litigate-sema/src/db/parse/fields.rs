@@ -1,7 +1,6 @@
 //! Keyed fields and header clauses as [`Field`]s: `key value...`, where each
 //! value is an [`Atom`]. The parser has already restricted keys to each
 //! context's closed table (SPEC §3.1, §3.4); lowering only reshapes.
-use super::expr::json;
 use super::tree::{Atom, Expr, ExprKind, Field, Name};
 use super::{elements, head, name, significant_range, Lower, SyntaxElement};
 use crate::db::span::TextRange;
@@ -49,7 +48,6 @@ impl Lower {
             let atom = match child.kind() {
                 K::FieldList => Some(Atom::Fields(self.field_list(&child))),
                 K::Interval => interval(&child).map(|(from, to)| Atom::Interval(from, to)),
-                K::RecordExpr if node.kind() == K::PatchDecl => json(&child).map(Atom::Json),
                 _ => self.expr(&child).map(Atom::Expr),
             };
             values.push((atom?, r));

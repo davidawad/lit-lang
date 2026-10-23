@@ -156,7 +156,7 @@ fn an_instance_lowers_into_the_links_file() {
 
 #[test]
 fn a_package_that_does_not_lower_has_no_pointers() {
-    let root = links_root("where-bad-links", ", patch answer { to: 7 }");
+    let root = links_root("where-bad-links", ", patch nowhere { note \"x\" }");
     let run = litigate_in(&root, &["where", "frcp-rule12-example@copy", "--path", "."]);
     assert_eq!(run.code, 0, "{}", run.stdout);
     let result = &run.json["result"];

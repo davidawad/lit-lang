@@ -169,7 +169,7 @@ instance demo-court@appeal {
   probabilities { 12b-move: 1 }
   roles { applicant: opponent, examiner: self }
   payoff_transform "1000000 - payoff"
-  patch denied { deadline: { length: 45, note: "U.S. party" }, tags: ["patched"], hours: unset }
+  patch denied { deadline 45.days { note "U.S. party" }, tags [patched] }
 }
 
 /// imported

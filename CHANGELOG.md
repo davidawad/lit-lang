@@ -78,6 +78,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   The edge is resolved when the event is typed (L1002 with the nearest id
   as a fix); a quoted string is L2001 with a machine-applicable fix
   unquoting it.
+  An instance `patch` writes typed edge fields instead of a JSON merge
+  patch: `patch rehearing-file { within rehearing-period-united-states-party
+  { extendable false, note "..." } }` names the deadline declaration
+  instead of repeating its length, and each field is checked as on an
+  edge. A written field replaces the base edge's whole field; `event`,
+  `replaces` and a second patch of one edge are L2007, and a patch can no
+  longer unset a field. `litigate import` spells a legacy merge patch as
+  typed fields and reports what has no spelling.
 
 ### Fixed
 

@@ -2,8 +2,8 @@
 use super::{
     child, child_after, children, fields_of, keyword, token, AstNode, CalendarDecl, CallExpr, Cite,
     CountingDecl, DeadlineDecl, DefaultDecl, ExceptionDecl, ExpectStmt, Expr, Field, GivenStmt,
-    Hole, HolidayDecl, InstanceDecl, Literal, PatchDecl, RecordExpr, Ref, RuleDecl, TestDecl,
-    Token, TransitionArm, TransitionDecl, VersionClause,
+    Hole, HolidayDecl, InstanceDecl, Literal, PatchDecl, Ref, RuleDecl, TestDecl, Token,
+    TransitionArm, TransitionDecl, VersionClause,
 };
 use crate::ast::items::Item;
 use crate::syntax_kind::SyntaxKind;
@@ -262,10 +262,10 @@ impl PatchDecl {
         self.name()
     }
 
-    /// The JSON merge patch.
+    /// The typed edge fields, each replacing the base edge's.
     #[must_use]
-    pub fn record(&self) -> Option<RecordExpr> {
-        child(self.syntax())
+    pub fn fields(&self) -> Vec<Field> {
+        fields_of(self.syntax())
     }
 }
 

@@ -205,7 +205,7 @@ InstanceField= "pack", Ident | "note", String | "remove_edges", IdList
              | "probabilities", "{", { Ident, ":", ProbValue, Sep }, "}"
              | "roles", "{", { Ident, ":", Ident, Sep }, "}"
              | "payoff_transform", String | "stake", (SignedMoney | Hole)
-             | "patch", Ident, JsonRecord ;
+             | "patch", Ident, EdgeFields ;
 
 RuleDecl     = "rule", ("duty" | "power" | "liability"), Ident, { VersionClause
              | Relation | Cite }, "{", { Item, Sep }, "}" ;
@@ -1346,12 +1346,19 @@ B` becomes a `links[]` `RawEdge` with qualified `from`/`to` and every
 and a `String` item verbatim (it names an anonymous edge by its derived
 id, `"pack::from->to#n"`, which has no `Ref` spelling). Each `instance base@origin` becomes
 `instances["base@origin"]` `{pack, note, remove_edges, probabilities, roles,
-payoff_transform, stake, patch_edges}`. `patch` records become `patch_edges[edge]`
-verbatim as JSON merge patches (keys are `RawEdge` JSON names, `unset` is
-null). The lowerer applies each patch to the base edge and deserializes the
-result as `RawEdge` (L6001 on failure); the base pack must be loaded with
-the links package, else a patching instance is L6001, and a patch naming an
-edge the base lacks is L1002. `payoff_transform` must parse as a litgraph
+payoff_transform, stake, patch_edges}`. A `patch edge { ... }` writes edge
+fields with the `EdgeFields` syntax and types of an edge declaration
+(§3.1, §6), so `within d` names a deadline declaration instead of
+repeating its length; `event` and `replaces` are not patchable (L2007),
+and patching one edge twice is L2007. Each written field replaces the base
+edge's whole field (`within`/`deadline` its whole window). It lowers to
+`patch_edges[edge]`, the JSON merge patch that does this: each written
+field as §8.1 lowers it, null for a field that lowers to nothing (a `cost`
+hole), and null for each member of a base object field (`deadline`,
+`duration`, `attrs`) that the written field lacks. A patch cannot unset a
+field. The base pack must be loaded with the links package, else a
+patching instance is L6001, and a patch naming an edge the base lacks is
+L1002. `payoff_transform` must parse as a litgraph
 expression whose only variables are `payoff` and, when the instance
 declares one, `stake` (L6003). A `stake` the transform does not use is
 L2007. A known `stake` lowers to `stake` in USD; a `stake` hole lowers to
@@ -1880,7 +1887,7 @@ gets one row per condition when the conditions classify differently.
 | C61 | L5006 test failed | verify | c | O12. |
 | C62 | L6001 business days in an edge deadline; `observed next_day`; non-calendar service days; service method not an engine method; rule without `include_last_day` or both roll kinds (§8.1, §8.2) | lower, sema | a | Target-capability sorts: the edge `deadline` field is `Days<CalendarDays\|CourtDays>`; the lowering-target counting type requires `include_last_day` and `{weekend, legal_holiday} ⊆ roll`; `ServiceMethod` is the engine's closed enum; `Observance` without `next_day` in the engine sort. |
 | C63 | L6001 manifest `counting` names an undeclared rule while some are declared; cite with no bound `url` (§8.2) | lower | b | Finite-set membership over the package's counting declarations and its bound sources. |
-| C64 | L6001 clock fragment rejected by `ClockLibrary::from_json`; patching instance without its base pack loaded; patch fails `RawEdge` (§8.2, §8.4) | lower | c | Runs the engine's own loader or depends on the set of packs in the build. |
+| C64 | L6001 clock fragment rejected by `ClockLibrary::from_json`; patching instance without its base pack loaded (§8.2, §8.4) | lower | c | Runs the engine's own loader or depends on the set of packs in the build. |
 | C65 | L6002 import has no exact spelling; generated output differs from the expected document (§8.6, §8.7) | import, cli | c | Compares against an external JSON document. |
 | C66 | L6003 embedded litgraph expression does not parse (§8.3, §8.4) | lower | c | A foreign language checked by litgraph's parser. Becomes (a) only if litigate types the engine expression language itself. |
 | C67 | L6004 value has no finite binary64 (§8.5) | lower | b | `{v \| \|v\| ≤ f64::MAX}`; implied by C25 for i64/u64 rationals, so it guards future wider numerals. |

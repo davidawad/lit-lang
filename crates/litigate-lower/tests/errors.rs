@@ -249,7 +249,17 @@ fn instances_are_checked_against_their_base_pack() {
         if let Declaration::Instance(i) = d {
             i.payoff_transform = Some("payoff *".into());
             if let Some(patch) = i.patch_edges.values_mut().next() {
-                *patch = serde_json::json!({"deadline": {"length": "45"}});
+                // A patch lowers as an edge does: business days have no
+                // litgraph unit.
+                patch.deadline = Some(hir::EdgeDeadline {
+                    window: hir::DeadlineWindow::Inline {
+                        length: 45,
+                        unit: hir::DayUnit::Business,
+                    },
+                    extendable: None,
+                    extension_authority: None,
+                    note: None,
+                });
             }
         }
     }

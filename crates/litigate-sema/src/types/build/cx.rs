@@ -72,7 +72,7 @@ fn field_holes(f: &Field, path: &str, out: &mut BTreeMap<String, Option<String>>
                     field_holes(n, &format!("{path}.{}", n.key.text), out);
                 }
             }
-            Atom::Interval(..) | Atom::Json(_) => {}
+            Atom::Interval(..) => {}
         }
     }
 }

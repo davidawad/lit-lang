@@ -105,7 +105,7 @@ type T = Mony<usd>\ntype U = Money<USD>\ntype V = V\n";
 fn links_packages_resolve_qualified_names() {
     let base = "module base\nstart entry\nstate entry: \"E\" { go \"Go\" -> done }\nterminal done: \"D\"\n";
     let links = "module links\nlink appeal \"Appeal\": base::done -> base@copy::entry p 1/2 { replaces [base::go] }\n\
-instance base @ copy { pack base, probabilities { go: 1/3 }, roles { Court: nature }, patch go { \"hours\": unset } }\n\
+instance base @ copy { pack base, probabilities { go: 1/3 }, roles { Court: nature }, patch go { note \"n\" } }\n\
 link bad \"Bad\": base::nowhere -> nope::entry { replaces [base::gone] }\n";
     let (db, ws) = workspace(&[
         package("base", &[], &[("base.lit", base)]),

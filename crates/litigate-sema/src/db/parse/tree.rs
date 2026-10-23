@@ -163,8 +163,6 @@ pub enum Atom {
     Fields(Vec<Field>),
     /// `[from, to)` interval; `to` is `None` for `..`.
     Interval(Name, Option<Name>),
-    /// JSON record.
-    Json(Json),
 }
 
 /// `key value...` (also used for clauses such as `by X`, `cite ...`).

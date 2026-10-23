@@ -1,0 +1,118 @@
+---
+source: crates/litigate-sema/tests/cov_build_logic.rs
+expression: instances
+---
+[
+    Instance(
+        Instance {
+            name: "base@one",
+            pack: "base",
+            note: None,
+            remove_edges: [],
+            probabilities: {},
+            roles: {
+                "A": Protagonist,
+                "B": Opponent,
+                "C": Nature,
+            },
+            payoff_transform: Some(
+                "stake - payoff",
+            ),
+            stake: Some(
+                Known(
+                    Money {
+                        minor_units: 500,
+                        currency: "usd",
+                    },
+                ),
+            ),
+            patch_edges: {
+                "go": EdgePatch {
+                    authority: None,
+                    hours: Some(
+                        Rational {
+                            numerator: 2,
+                            denominator: 1,
+                        },
+                    ),
+                    cost: Some(
+                        Hole(
+                            None,
+                        ),
+                    ),
+                    deadline: Some(
+                        EdgeDeadline {
+                            window: Inline {
+                                length: 3,
+                                unit: Calendar,
+                            },
+                            extendable: None,
+                            extension_authority: None,
+                            note: Some(
+                                "n",
+                            ),
+                        },
+                    ),
+                    duration: None,
+                    valence: Some(
+                        Good,
+                    ),
+                    court_listener_url: None,
+                    action_id: None,
+                    note: None,
+                    tags: Some(
+                        [],
+                    ),
+                    attrs: Some(
+                        {
+                            "w": Rational {
+                                numerator: 1,
+                                denominator: 1,
+                            },
+                        },
+                    ),
+                    sets: Some(
+                        [
+                            "f",
+                        ],
+                    ),
+                    clears: None,
+                    requires: None,
+                    forbids: None,
+                    span: Some(
+                        Span {
+                            file: FileId(
+                                "pkgs/links/links.lit",
+                            ),
+                            line: 2,
+                            col: 123,
+                            end_line: 2,
+                            end_col: 237,
+                        },
+                    ),
+                },
+            },
+        },
+    ),
+    Instance(
+        Instance {
+            name: "base@two",
+            pack: "base",
+            note: None,
+            remove_edges: [],
+            probabilities: {},
+            roles: {},
+            payoff_transform: Some(
+                "stake - payoff",
+            ),
+            stake: Some(
+                Hole(
+                    Some(
+                        "the matter's",
+                    ),
+                ),
+            ),
+            patch_edges: {},
+        },
+    ),
+]

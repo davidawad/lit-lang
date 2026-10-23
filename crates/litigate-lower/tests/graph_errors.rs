@@ -207,7 +207,7 @@ fn cite_syntax_shorthands_must_lower() {
     insta::assert_snapshot!(lowering_errors(&p));
 }
 
-fn instance(patch_edges: BTreeMap<String, serde_json::Value>) -> hir::Instance {
+fn instance(patch_edges: BTreeMap<String, hir::EdgePatch>) -> hir::Instance {
     hir::Instance {
         name: "copy".into(),
         pack: "frcp-rule12-example".into(),
@@ -244,6 +244,14 @@ fn a_links_package_declares_no_nodes() {
     insta::assert_snapshot!(lowering_errors(&p));
 }
 
+/// A patch writing only `note`.
+fn note(text: &str) -> hir::EdgePatch {
+    hir::EdgePatch {
+        note: Some(text.into()),
+        ..hir::EdgePatch::default()
+    }
+}
+
 /// An instance's patches are checked against its base pack, found among
 /// the loaded rule packages (never a links package); a patch must name a
 /// base edge and an instance probability must have a binary64 value.
@@ -255,8 +263,8 @@ fn instance_patches_name_base_edges() {
     links.manifest.pack_id = "links".into();
     links.modules.truncate(1);
     links.modules[0].declarations = vec![Declaration::Instance(instance(BTreeMap::from([
-        ("answer".into(), serde_json::json!({"label": "Answer it"})),
-        ("nope".into(), serde_json::json!({"label": "Nothing"})),
+        ("answer".into(), note("Answer it")),
+        ("nope".into(), note("Nothing")),
     ])))];
     let found = Lowerer::new(&[&links, &base])
         .package(&links, &Options::default())
@@ -266,10 +274,7 @@ fn instance_patches_name_base_edges() {
 
     links.modules[0].declarations = vec![Declaration::Instance(hir::Instance {
         probabilities: BTreeMap::new(),
-        ..instance(BTreeMap::from([(
-            "answer".into(),
-            serde_json::json!({"label": "Answer it"}),
-        )]))
+        ..instance(BTreeMap::from([("answer".into(), note("Answer it"))]))
     })];
     let lowered = Lowerer::new(&[&links, &base])
         .package(&links, &Options::default())
@@ -278,6 +283,61 @@ fn instance_patches_name_base_edges() {
         panic!("a link file")
     };
     assert_eq!(file.instances.len(), 1);
+}
+
+/// A patch replaces each field it writes whole: the members of a base
+/// object field it lacks are null, a written empty list or record is
+/// empty, and a `cost` hole is null.
+#[test]
+fn a_patch_replaces_whole_fields() {
+    let mut base = example();
+    for e in &mut node_mut(&mut base, "respond").edges {
+        if let Some(d) = e
+            .deadline
+            .as_mut()
+            .filter(|_| e.id.as_deref() == Some("answer"))
+        {
+            d.extendable = Some(true);
+            d.note = Some("base".into());
+        }
+    }
+    let mut links = example();
+    links.manifest.links = true;
+    links.manifest.pack_id = "links".into();
+    links.modules.truncate(1);
+    let patch = hir::EdgePatch {
+        hours: Some(hir::Rational::integer(2)),
+        cost: Some(hir::Authored::Hole(None)),
+        deadline: Some(hir::EdgeDeadline {
+            window: hir::DeadlineWindow::Inline {
+                length: 30,
+                unit: hir::DayUnit::Calendar,
+            },
+            extendable: None,
+            extension_authority: None,
+            note: None,
+        }),
+        tags: Some(Vec::new()),
+        attrs: Some(BTreeMap::new()),
+        ..note("Answer it")
+    };
+    links.modules[0].declarations = vec![Declaration::Instance(hir::Instance {
+        probabilities: BTreeMap::new(),
+        ..instance(BTreeMap::from([("answer".into(), patch)]))
+    })];
+    let lowered = Lowerer::new(&[&links, &base])
+        .package(&links, &Options::default())
+        .unwrap_or_else(|d| panic!("{}", render_diagnostics(&d)));
+    let Document::Links(file) = lowered.document else {
+        panic!("a link file")
+    };
+    let patched = file
+        .instances
+        .values()
+        .flat_map(|i| i.patch_edges.values())
+        .next()
+        .cloned();
+    insta::assert_json_snapshot!(patched);
 }
 
 /// Overlapping span-less versions are ambiguous at the declaration's

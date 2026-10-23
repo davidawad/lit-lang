@@ -230,7 +230,7 @@ fn instances_expose_origin_fields_and_patches() {
     let patches = instance.patches();
     assert_eq!(patches.len(), 1);
     assert_eq!(text(patches[0].edge()).as_deref(), Some("affirm"));
-    assert_eq!(patches[0].record().map(|r| r.fields().len()), Some(4));
+    assert_eq!(patches[0].fields().len(), 4);
 
     let empty: InstanceDecl = decl(&lit("module m\ninstance a@b { }\n"), "a");
     assert!(empty.fields().is_empty());

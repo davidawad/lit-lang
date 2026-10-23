@@ -16,9 +16,9 @@ import core.frap26.{ frap26 }
 /// `cafc@cofc-gov` and `cafc@itc` instances set on `rehearing-file` and
 /// `rehearing-time-expires` by patch: the United States is a party to every
 /// Court of Federal Claims appeal, and the Commission, an agency, to every
-/// Section 337 appeal. A patch is a JSON merge patch, so it repeats the
-/// length (45) instead of naming this declaration; the tests below pin the
-/// due dates it produces under FRAP 26(a). FRAP 40(d)(1) lets an order
+/// Section 337 appeal. A patch writes typed edge fields, so each names this
+/// declaration with `within`; the tests below pin the due dates it
+/// produces under FRAP 26(a). FRAP 40(d)(1) lets an order
 /// shorten or extend either period; lit/cafc's `rehearing-period` records
 /// that as `delegable_to [CaseOrder]`, but a links package has no authority
 /// level of its own to delegate from (L3004), so this declaration does not.
@@ -68,15 +68,14 @@ instance cafc@cofc {
   remove_edges [origin-to-district-court, origin-to-ptab, origin-to-itc, remand-route-district-court, remand-route-ptab, remand-route-itc, origin-to-ttab, remand-route-ttab]
   probabilities { remand-route-cofc: 1 }
   patch rehearing-file {
-    deadline: {
-      length: 45
-      note: "45 days after entry of judgment because the United States is a party to every CoFC appeal (Fed. Cir. R. 40, Federal Circuit Rules of Practice Dec. 1, 2025: 30 days, or 45 if the United States or its officer or agency is a party)."
+    within rehearing-period-united-states-party {
+      extendable false
+      note "45 days after entry of judgment because the United States is a party to every CoFC appeal (Fed. Cir. R. 40, Federal Circuit Rules of Practice Dec. 1, 2025: 30 days, or 45 if the United States or its officer or agency is a party)."
     }
   }
   patch rehearing-time-expires {
-    deadline: {
-      length: 45
-      note: "The rehearing window this edge waits out is 45 days here, not 30, because the United States is a party (FRAP 40(d)(1)(A); Fed. Cir. R. 40(f)(1)); the mandate then issues 7 days after it expires (FRAP 41(b))."
+    within rehearing-period-united-states-party {
+      note "The rehearing window this edge waits out is 45 days here, not 30, because the United States is a party (FRAP 40(d)(1)(A); Fed. Cir. R. 40(f)(1)); the mandate then issues 7 days after it expires (FRAP 41(b))."
     }
   }
 }
@@ -99,15 +98,14 @@ instance cafc@cofc-gov {
   payoff_transform "stake - payoff"
   stake ?("the plaintiff's CoFC judgment, which the United States' appeal puts at risk: a fact of the matter")
   patch rehearing-file {
-    deadline: {
-      length: 45
-      note: "45 days after entry of judgment because the United States is a party to every CoFC appeal (Fed. Cir. R. 40, Federal Circuit Rules of Practice Dec. 1, 2025: 30 days, or 45 if the United States or its officer or agency is a party)."
+    within rehearing-period-united-states-party {
+      extendable false
+      note "45 days after entry of judgment because the United States is a party to every CoFC appeal (Fed. Cir. R. 40, Federal Circuit Rules of Practice Dec. 1, 2025: 30 days, or 45 if the United States or its officer or agency is a party)."
     }
   }
   patch rehearing-time-expires {
-    deadline: {
-      length: 45
-      note: "The rehearing window this edge waits out is 45 days here, not 30, because the United States is a party (FRAP 40(d)(1)(A); Fed. Cir. R. 40(f)(1)); the mandate then issues 7 days after it expires (FRAP 41(b))."
+    within rehearing-period-united-states-party {
+      note "The rehearing window this edge waits out is 45 days here, not 30, because the United States is a party (FRAP 40(d)(1)(A); Fed. Cir. R. 40(f)(1)); the mandate then issues 7 days after it expires (FRAP 41(b))."
     }
   }
 }
@@ -252,15 +250,14 @@ instance cafc@itc {
   remove_edges [origin-to-district-court, origin-to-ptab, origin-to-cofc, remand-route-district-court, remand-route-ptab, remand-route-cofc, origin-to-ttab, remand-route-ttab]
   probabilities { remand-route-itc: 1 }
   patch rehearing-file {
-    deadline: {
-      length: 45
-      note: "45 days after entry of judgment because the Commission, a United States agency, is a party to every Section 337 appeal (FRAP 40(d)(1)(B); Fed. Cir. R. 40(f)(1), Federal Circuit Rules of Practice Dec. 1, 2025: 30 days, or 45 if a United States agency is a party)."
+    within rehearing-period-united-states-party {
+      extendable false
+      note "45 days after entry of judgment because the Commission, a United States agency, is a party to every Section 337 appeal (FRAP 40(d)(1)(B); Fed. Cir. R. 40(f)(1), Federal Circuit Rules of Practice Dec. 1, 2025: 30 days, or 45 if a United States agency is a party)."
     }
   }
   patch rehearing-time-expires {
-    deadline: {
-      length: 45
-      note: "The rehearing window this edge waits out is 45 days here because the Commission, a United States agency, is a party (FRAP 40(d)(1)(B); Fed. Cir. R. 40(f)(1)); the mandate then issues 7 days after it expires (FRAP 41(b))."
+    within rehearing-period-united-states-party {
+      note "The rehearing window this edge waits out is 45 days here because the Commission, a United States agency, is a party (FRAP 40(d)(1)(B); Fed. Cir. R. 40(f)(1)); the mandate then issues 7 days after it expires (FRAP 41(b))."
     }
   }
 }

@@ -2,7 +2,7 @@
 source: crates/litigate-syntax/tests/snapshots.rs
 expression: parsed.debug_tree()
 ---
-SourceFile@0..539
+SourceFile@0..550
   ModuleDecl@0..22
     KwModule@0..6 "module"
     Whitespace@6..7 " "
@@ -91,14 +91,14 @@ SourceFile@0..539
       ColonColon@220..222 "::"
       Ident@222..229 "pending"
   Whitespace@229..231 "\n\n"
-  InstanceDecl@231..538
+  InstanceDecl@231..549
     KwInstance@231..239 "instance"
     Whitespace@239..240 " "
     Ident@240..244 "cafc"
     At@244..245 "@"
     Ident@245..249 "cofc"
     Whitespace@249..250 " "
-    FieldList@250..538
+    FieldList@250..549
       LBrace@250..251 "{"
       Whitespace@251..254 "\n  "
       Field@254..263
@@ -172,53 +172,60 @@ SourceFile@0..539
         Literal@439..446
           String@439..446 "\"x * 2\""
       Whitespace@446..449 "\n  "
-      PatchDecl@449..536
+      PatchDecl@449..547
         KwPatch@449..454 "patch"
         Whitespace@454..455 " "
         Ident@455..461 "affirm"
         Whitespace@461..462 " "
-        RecordExpr@462..536
+        FieldList@462..547
           LBrace@462..463 "{"
           Whitespace@463..464 " "
-          RecordField@464..481
-            Ident@464..469 "label"
-            Colon@469..470 ":"
-            Whitespace@470..471 " "
-            Literal@471..481
-              String@471..481 "\"Affirmed\""
-          Comma@481..482 ","
-          Whitespace@482..483 " "
-          RecordField@483..499
-            Ident@483..494 "probability"
-            Colon@494..495 ":"
-            Whitespace@495..496 " "
-            Literal@496..499
-              Number@496..499 "0.7"
-          Comma@499..500 ","
-          Whitespace@500..501 " "
-          RecordField@501..517
-            Ident@501..505 "tags"
-            Colon@505..506 ":"
-            Whitespace@506..507 " "
-            ListExpr@507..517
-              LBracket@507..508 "["
-              Literal@508..511
-                String@508..511 "\"a\""
-              Comma@511..512 ","
-              Whitespace@512..513 " "
-              Literal@513..516
-                String@513..516 "\"b\""
-              RBracket@516..517 "]"
-          Comma@517..518 ","
-          Whitespace@518..519 " "
-          RecordField@519..534
-            Ident@519..527 "deadline"
-            Colon@527..528 ":"
-            Whitespace@528..529 " "
-            Literal@529..534
-              KwUnset@529..534 "unset"
-          Whitespace@534..535 " "
-          RBrace@535..536 "}"
-      Whitespace@536..537 "\n"
-      RBrace@537..538 "}"
-  Whitespace@538..539 "\n"
+          Field@464..479
+            KwNote@464..468 "note"
+            Whitespace@468..469 " "
+            Literal@469..479
+              String@469..479 "\"Affirmed\""
+          Comma@479..480 ","
+          Whitespace@480..481 " "
+          Field@481..495
+            KwEffort@481..487 "effort"
+            Whitespace@487..488 " "
+            Literal@488..495
+              Duration@488..495 "3.hours"
+          Comma@495..496 ","
+          Whitespace@496..497 " "
+          Field@497..508
+            KwTags@497..501 "tags"
+            Whitespace@501..502 " "
+            IdList@502..508
+              LBracket@502..503 "["
+              Ref@503..504
+                Ident@503..504 "a"
+              Comma@504..505 ","
+              Whitespace@505..506 " "
+              Ref@506..507
+                Ident@506..507 "b"
+              RBracket@507..508 "]"
+          Comma@508..509 ","
+          Whitespace@509..510 " "
+          Field@510..545
+            KwDeadline@510..518 "deadline"
+            Whitespace@518..519 " "
+            Literal@519..526
+              Duration@519..526 "45.days"
+            Whitespace@526..527 " "
+            FieldList@527..545
+              LBrace@527..528 "{"
+              Whitespace@528..529 " "
+              Field@529..543
+                KwNote@529..533 "note"
+                Whitespace@533..534 " "
+                Literal@534..543
+                  String@534..543 "\"45 days\""
+              Whitespace@543..544 " "
+              RBrace@544..545 "}"
+          Whitespace@545..546 " "
+          RBrace@546..547 "}"
+      Whitespace@547..548 "\n"
+      RBrace@548..549 "}"
+  Whitespace@549..550 "\n"

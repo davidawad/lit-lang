@@ -132,7 +132,13 @@ fn a_links_file_imported_without_its_packs_depends_on_them_by_id() {
     let links = json!({"instances": {
         "base@copy": {"pack": "base"},
         "base@patched": {"pack": "base", "patch_edges": {
-            "go": {"flag": true, "off": false, "empty": {}, "big": 18_446_744_073_709_551_615_u64}
+            "go": {
+                "note": "x",
+                "tags": [],
+                "attrs": {},
+                "cost": null,
+                "deadline": {"length": 45, "extendable": null, "note": "n"}
+            }
         }}
     }});
     let input = Input::new("packs/links.json", links.to_string());
@@ -151,11 +157,21 @@ fn a_links_file_imported_without_its_packs_depends_on_them_by_id() {
         "{module}"
     );
     assert!(
-        module
-            .contains("patch go { flag: true, off: false, empty: {}, big: 18446744073709551615 }"),
+        module.contains(
+            "patch go { deadline 45.days { note \"n\" }, note \"x\", tags [], attrs {}, cost ? }"
+        ),
         "{module}"
     );
-    let original: LinkFile = serde_json::from_str(&input.text).unwrap_or_default();
+    // A patch replaces whole fields: the null `extendable` only cleared
+    // the base deadline's, which no longer exists after the import.
+    let mut original: LinkFile = serde_json::from_str(&input.text).unwrap_or_default();
+    for instance in original.instances.values_mut() {
+        for patch in instance.patch_edges.values_mut() {
+            if let Some(deadline) = patch.get_mut("deadline").and_then(Value::as_object_mut) {
+                deadline.remove("extendable");
+            }
+        }
+    }
     let (expected, actual) = (
         normalize_links(original),
         normalize_links(read_links(&package(&files, "lit/links"))),

@@ -88,7 +88,8 @@ fn instances_check_pack_probabilities_roles_and_patches() {
     let out = links(
         "module links\n\
 instance base@one { pack base, probabilities { go: 1/3, bad: 3/2 }, roles { A: self, B: opponent, C: nature, D: judge }, note \"n\", remove_edges [go], payoff_transform \"x\",\n\
-  patch go { \"a\": 1.5, \"b\": \"s\", \"c\": true, \"d\": [1, false], \"e\": { \"f\": unset }, \"g\": 1_000 }\n\
+  patch go { note \"n\", event Go(), replaces [base::go], within nowhere, deadline 3.days, effort 1.usd }\n\
+  patch go { note \"again\" }\n\
   patch go\n}\n\
 instance base@two { pack nope }\n\
 instance base@three { note \"no pack\" }\n",
@@ -97,8 +98,8 @@ instance base@three { note \"no pack\" }\n",
 }
 
 #[test]
-fn instance_patches_lower_to_json() {
-    let text = "module links\ninstance base@one { pack base, roles { A: self, B: opponent, C: nature }, payoff_transform \"stake - payoff\", stake 5.usd, patch go { \"a\": 1.5, \"b\": \"s\", \"c\": true, \"d\": [1, false], \"e\": { \"f\": unset } } }\ninstance base@two { pack base, payoff_transform \"stake - payoff\", stake ?(\"the matter's\") }\n";
+fn instance_patches_lower_to_edge_fields() {
+    let text = "module links\ninstance base@one { pack base, roles { A: self, B: opponent, C: nature }, payoff_transform \"stake - payoff\", stake 5.usd, patch go { effort 2.hours, cost ?, deadline 3.days { note \"n\" }, valence good, tags [], attrs { w: 1 }, sets [f] } }\ninstance base@two { pack base, payoff_transform \"stake - payoff\", stake ?(\"the matter's\") }\n";
     let (db, ws) = workspace(&[
         package("base", &[], &[("base.lit", BASE)]),
         package("links", &["base"], &[("links.lit", text)]),

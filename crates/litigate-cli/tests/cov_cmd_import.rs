@@ -183,7 +183,7 @@ fn links_that_do_not_lower_have_no_counterpart() {
     std::fs::write(
         dir.join("links.json"),
         "{\"instances\": {\"frcp-rule12-example@copy\": {\"pack\": \"frcp-rule12-example\", \
-         \"patch_edges\": {\"answer\": {\"to\": 7}}}}}",
+         \"payoff_transform\": \"payoff *\"}}}",
     )
     .unwrap();
     let run = litigate_in(&dir, &["import", "p.json", "links.json", "--out", "o"]);

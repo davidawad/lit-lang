@@ -563,8 +563,23 @@ taken when a duty is missed.
 Refinements (precedence bead, `litigate-sema/src/precedence`):
 
 - **Lattice.** The order is the transitive closure of every `authority`
-  chain in the package and its dependencies (`lit/core` declares the
-  shared one). A level no chain names is incomparable to every other.
+  chain in the package and its dependencies. A level no chain names is
+  incomparable to every other. `lit/core` declares the shared order, and
+  every package sees it:
+
+  ```lit
+  authority Statute > FederalRule > LocalRule > StandingOrder > CaseOrder
+  authority Statute > Regulation > CaseOrder
+  ```
+
+  `Regulation` (an agency's rules of practice, e.g. 19 C.F.R. Part 210, 37
+  C.F.R. Parts 1, 2, 41, 42) is below `Statute` and above `CaseOrder`. It
+  is incomparable with `FederalRule`, `LocalRule` and `StandingOrder`, so
+  a claimant pair across the two chains is never decided by authority. A
+  package's manifest `authority` (§4.1) names one of these levels. A
+  package must not declare a chain that orders `Regulation` against a
+  court level: such a conflict is fixed in the package's data. No
+  diagnostic enforces this in language 1.
 - **Claimants.** The declarations that "apply to the same target" T are T
   itself and every declaration with `override T`, `notwithstanding T`, or
   `subject_to T`. On each day, the active claimant that beats every other

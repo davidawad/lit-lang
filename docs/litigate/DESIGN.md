@@ -188,11 +188,31 @@ applicability. The core library and the spec name each one.
 
 ### 4.5 Precedence, delegation and exceptions
 
-The core library declares the authority lattice:
+The core library declares the authority lattice as two chains that share
+their ends (`lit/core/authority.lit`):
 
 ```lit
 authority Statute > FederalRule > LocalRule > StandingOrder > CaseOrder
+authority Statute > Regulation > CaseOrder
 ```
+
+The first chain is the courts' rules:
+- A statute outranks the rules of procedure (28 U.S.C. § 2072(b)).
+- The rules of procedure outrank a court's local rules (FRCP 83(a)(1)).
+- Local rules outrank a judge's standing orders.
+- Standing orders outrank an order in one case.
+
+The second chain is an agency's rules of practice, such as 19 C.F.R.
+Part 210 (the ITC) or 37 C.F.R. Parts 1, 2, 41 and 42 (the USPTO and its
+boards). Those rules answer to their enabling statute and bind the agency's
+orders in one proceeding.
+
+`Regulation` is deliberately incomparable with `FederalRule`, `LocalRule`
+and `StandingOrder`. Agency rules and court rules never govern the same
+deadline, so no canon may rank one over the other. A conflict between them
+is a modelling error to fix in the data, not something to settle by an
+order the law does not give. The lattice records the law's hierarchy; it is
+never reshaped to make a package's data check.
 
 A lower authority may change a higher one's rule only where the higher rule
 delegates:

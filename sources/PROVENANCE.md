@@ -279,6 +279,63 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   its end.
 - sha256 (this file): `a55dd4c3b28e99491083474806c9e8bb621e4fd43b2fddf5c4359d1202f03f20`
 
+### `fr-usitc-time-history.txt` — Federal Register excerpts dating 19 C.F.R. §§ 201.14(a), 201.16(d)-(f) and 210.6 (USITC computation of time and service), 1976-2018
+
+- Excerpts, one `## <vol> FR <page>` section per printed page, of every
+  USITC rulemaking that made or touched the counting and service-time text
+  `lit/core`'s `itc210` versions cite: the 1976 rules of practice (41 FR
+  17710-17711, effective May 27, 1976), the 1984 calendar-days
+  clarification (49 FR 32569-32571), 1991 (56 FR 11923, § 201.14(b) only),
+  2002 (67 FR 68036-68037), 2003 (68 FR 32971, 32975), 2007 (72 FR
+  13689), 2008 (73 FR 38316, 38320), 2011 (76 FR 61937, 61941-61942), 2013
+  (78 FR 23474-23475, 23480) and 2018 (83 FR 21140, 21159). Each section
+  opens with a bracketed line naming the issue, page and FR Doc. number;
+  everything after it is the printed text, verbatim except for line
+  joining. `* * * * *` marks omitted text, as the FR prints it.
+- Fetched 2026-10-23. 1976 and 1984: `www.govinfo.gov`'s Federal Register
+  archive issue PDFs `FR-1976-04-27.pdf` (sha256
+  `b63c1a7cb2d9e068e0352b9b38c969f58cd7e1cfd4edbd20d237576b26048449`) and
+  `FR-1984-08-15.pdf`
+  (`247ce904f99b2a6740f796f376aa6e5c87a39d0623541177d0343ea4d155d32d`).
+  The text layer was extracted with `pdftotext` and checked against the
+  rendered page images (pp. 17710-17711); OCR soft hyphens are joined. 1991:
+  `FR-1991-03-21.pdf`
+  (`e7777501669824e7c3aaa67f710621a89f02df689fe2d03e78647b1377fbb03f`),
+  same method. 2002-2018: `www.federalregister.gov`'s GPO full-text
+  rendering of each document (`/documents/full_text/text/<yyyy>/<mm>/<dd>/<doc>.txt`),
+  with `[[Page N]]` markers giving the page. Documents and sha256 of the
+  fetched text: 02-28404 (`0b8c20459501fe9e99b1524d879e7812dd89b31af9e003ad859c69857b5b4ddb`),
+  03-13688 (`fc5a7e481787c56ec6f1f5bdb9db7f28e2b2fbff291bef78e4a1729f1a7819dc`),
+  E7-5177 (`d4b23cf9a173f4e2a673b370ed983ca943ece185807302ef2cb6a33a7c90be50`),
+  E8-14872 (`bb9fa1cc9ae113b6215df1abdbdddff3e5bf22f6abd8e71ef9aa636a614d3dbb`),
+  2011-25646 (`bbe5fa864d2d43c64cdc139cdcec254bbd4874997bee55f4033435eaa10dc4ca`),
+  2013-08931 (`314e668faaaee24a62d71f1a90c21a0a1580d3996a8b73499052b0b8efd44a76`),
+  2018-09268 (`8dd83746d9334792271a5108aa5b1151a0a7efd836ce79abbb163e09b4d3fd0f`).
+  Each document's govinfo PDF is `https://www.govinfo.gov/content/pkg/FR-<date>/pdf/<doc>.pdf`.
+- How the list was found: every amendment credit in the 2024 CFR source
+  notes of § 201.14 (41 FR 17710; 56 FR 11923; 68 FR 32975; 76 FR 61941)
+  and § 201.16 (41 FR 17711; 47 FR 6190; 47 FR 33682; 49 FR 32571; 67 FR
+  68037; 73 FR 38320; 76 FR 61942; 78 FR 23480; 83 FR 21159), plus the
+  federalregister.gov API's list of USITC rules for 1994-2018, which found
+  the 2007 § 210.6 revision (72 FR 13689) that the 2024 § 210.6 note
+  ([78 FR 23480]) no longer credits. The two 1982 documents (47 FR 6190,
+  `FR-1982-02-10.pdf` sha256
+  `ae7d608310f86df4858e1158ce8062f5e8d56596f356ab8abe89d7eeb9394b28`; 47 FR
+  33682, `FR-1982-08-04.pdf`
+  `b8936bd30d219c5c22b6b99fedb3b0c71eb40f99b1a37c09b0b9ddd99d5898cd`) were
+  read and are not vendored: their amendatory instructions touch § 201.16(b)
+  and (c) only. The 1994 Part 210 rewrite (59 FR 39020, August 1, 1994)
+  is not vendored either (its issue PDF did not download within the
+  fetch limit); its § 210.6, which only incorporates §§ 201.14 and 201.16(d),
+  was read in the 1997 annual CFR edition
+  (`CFR-1997-title19-vol3-sec210-6.xml`, sha256
+  `683ebeb277b3b3efd4f177597d599d0991970bec4e90cd755c7d4ecdef972ac1`), and
+  the 2007 and 2012 editions (sha256
+  `ca9978f33fc1185ec296fd6fa40bd15324dc2fdde1fd08aaadc6c239fb27aa05`,
+  `e8953336a7c43e311b2fdcfe21b1a75d3b8f97a1c5b1694190a127d99bd7bf24`)
+  confirm the 2007 text stood until 2013.
+- sha256 (this file): `02ce787e06ce9d46aa341d0aab319a23cda0eaf6c631077a7bd64c4a6a0faa86`
+
 ## Deliberately not vendored yet (follow-up)
 
 - **RCFC Appendices A/C/H/J** (case management, bid-protest, ADR, patent

@@ -61,7 +61,10 @@ fn d(s: &str) -> Date {
 
 /// Each rule and the first trigger date its in-force version and the
 /// shipped one agree on: the current version's start, and for the ITC rule
-/// (one version since 1976) the day Veterans Day returned to November 11.
+/// the day Veterans Day returned to November 11. The lowering emits only the
+/// version in force at the build date (`itc210@2013-05-20`, whose service
+/// days the shipped rule matches) and so does the shipped rule, so this
+/// compares that version over every date.
 const RULES: [(&str, &str); 4] = [
     ("frcp6", "2009-12-01"),
     ("rcfc6", "2010-01-11"),

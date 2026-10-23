@@ -3,22 +3,65 @@ module core.itc210
 import core.calendar.{ us-federal-holidays }
 import core.time.{ Served, ServiceMethod }
 
+/// 19 C.F.R. § 201.14(a) as adopted by the USITC's 1976 rules of practice
+/// (41 FR 17710, published April 27, 1976, "to be effective May 27, 1976"):
+/// a period "shall begin with the first business day following" the
+/// triggering event (day 1); a last day on a Saturday, Sunday, or Federal
+/// legal holiday runs to the end of the next business day; under 7 days,
+/// intermediate weekends and holidays are excluded. § 201.16(d) (41 FR
+/// 17711): mail adds 3 days, 10 to a foreign country; 49 FR 32570 (1984)
+/// made "clear" these are calendar, not working, days. Nothing is added
+/// for any other method: electronic service (from 2002's § 201.16(e), 67 FR
+/// 68037) displaces paragraph (d). The same Part 210 that § 201.14(a) names
+/// was added by this notice; the 1994 rewrite's § 210.6 (19 C.F.R. § 210.6,
+/// 1997 ed.) only incorporates §§ 201.14 and 201.16(d). The 1991 (56 FR
+/// 11923) and 2011 (76 FR 61941) amendments revise § 201.14(b) only; 2003's
+/// (68 FR 32975) restates (a) with the counting sentences unchanged and adds
+/// the Secretary's authority to accept filings after an early or all-day
+/// closing, which no version models. UNVERIFIED: whether the mail days were
+/// added to the period before or after the last-day roll; the pipeline adds
+/// them after (SPEC §5.3 step 5), as § 210.6 ("adding to the end of the
+/// prescribed period") reads from 1994.
+counting itc210 effective [1976-05-27, 2007-03-23) known_at 1976-04-27 cite 41 FR 17710
+{
+  anchor next_business_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday]
+  short_period { below: 7.days, count: business_days }
+  service_extension { Mail: 3.days, MailForeign: 10.days } cite 41 FR 17711
+  holidays us-federal-holidays
+}
+
+/// 72 FR 13689 (March 23, 2007, effective that day; implementing procedures
+/// from April 2, 2007) revised § 210.6: (c) adds one day after "a Commission
+/// document" served by overnight delivery, (d) "delivery by the next
+/// business day". From August 6, 2008, § 201.16(e) (73 FR 38320) adds the
+/// same day after any document served that way; the engine does not tell a
+/// Commission document from a party's, so this version adds it to both.
+/// UNVERIFIED: whether express delivery abroad was "overnight delivery"; no
+/// day is added for it, the reading 78 FR 23475 gives ("so-called 'overnight
+/// delivery' is not overnight when it is international"). The 2007 text
+/// prints §§ "210.14 and 210.16(d)" in (a) and (b); the 1994 text and the
+/// 2013 revision both read §§ 201.14 and 201.16(d).
+counting itc210 effective [2007-03-23, 2013-05-20) known_at 2007-03-23 supersedes itc210@1976-05-27 cite 72 FR 13689
+{
+  anchor next_business_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday]
+  short_period { below: 7.days, count: business_days }
+  service_extension { Mail: 3.days, MailForeign: 10.days, Express: 1.days } cite 72 FR 13689
+  holidays us-federal-holidays
+}
+
 /// 19 C.F.R. § 210.6(a): Part 210 periods are computed under §§ 201.14 and
-/// 201.16(d)-(e). § 201.14(a): computation "shall begin with the first
-/// business day following" the triggering event (day 1); a last day on a
-/// Saturday, Sunday, or Federal legal holiday runs to the end of the next
-/// business day; under 7 days, intermediate weekends and holidays are
-/// excluded. § 201.16(d): mail adds 3 calendar days (10 to a foreign
+/// 201.16(d)-(e). § 201.16(d): mail adds 3 calendar days (10 to a foreign
 /// country); § 201.16(e): express delivery adds 1 day (5 abroad); § 201.16(f):
-/// electronic service adds none.
-///
-/// The section dates from 41 FR 17710 (April 27, 1976), amended in 1991,
-/// 2003 and 2011 (its source note); the vendored 2024 text is the only one
-/// here, so this version stands for the whole window. UNVERIFIED: that the
-/// computation sentences of (a) are unchanged since 1976. A backward
-/// period cannot use this rule: its anchor is the next business day
-/// (SPEC §5.5, L3009), and § 201.14 defines no backward count.
-counting itc210 effective [1976-04-27, ..) known_at 2024-04-01 cite 19 C.F.R. § 201.14(a)
+/// electronic service adds none. All three as revised by 78 FR 23480
+/// (published April 19, 2013, effective May 20, 2013, 78 FR 23474); the
+/// 2018 amendment (83 FR 21159) keeps (f)'s "no additional time". A
+/// backward period cannot use this rule: its anchor is the next business
+/// day (SPEC §5.5, L3009), and § 201.14 defines no backward count.
+counting itc210 effective [2013-05-20, ..) known_at 2013-04-19 supersedes itc210@2007-03-23 cite 19 C.F.R. § 201.14(a)
 {
   anchor next_business_day
   include_last_day
@@ -97,4 +140,34 @@ test "June 20, 2011 was a business day: Juneteenth dates from 2021" cite 19 C.F.
 {
   given Served(Personal) on 2011-06-17
   expect deadline(itc210-1-day) == 2011-06-20
+}
+
+test "the 1976 rules: twenty days from a Wednesday in 1990, mail adds three" cite 41 FR 17711
+{
+  given Served(Mail) on 1990-06-06
+  expect deadline(itc210-20-days) == 1990-06-29
+}
+
+test "the 1976 rules: ten days for foreign mail end on July 4, 1980 and roll to Monday" cite 49 FR 32571
+{
+  given Served(MailForeign) on 1980-06-04
+  expect deadline(itc210-20-days) == 1980-07-07
+}
+
+test "before March 23, 2007 express delivery adds nothing" cite 41 FR 17711
+{
+  given Served(Express) on 2005-06-01
+  expect deadline(itc210-20-days) == 2005-06-21
+}
+
+test "from March 23, 2007 overnight delivery adds one day" cite 72 FR 13689
+{
+  given Served(Express) on 2010-06-02
+  expect deadline(itc210-20-days) == 2010-06-23
+}
+
+test "before May 20, 2013 express delivery abroad adds nothing" cite 78 FR 23475
+{
+  given Served(ExpressForeign) on 2010-06-02
+  expect deadline(itc210-20-days) == 2010-06-22
 }

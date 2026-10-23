@@ -236,14 +236,14 @@ mod tests {
         // A clash on one edit drops the whole fix, edits in other files too.
         let clash = (
             DiagnosticCode::UnexpectedToken,
-            Fix::single(at("b", 1, 7, 8), "l", Applicability::MachineApplicable),
+            Fix::single(at("b", 1, 7, 8), "e", Applicability::MachineApplicable),
         );
         let applied = apply(
             &sources,
             vec![rename(vec![("a", 5, 8), ("b", 5, 8)]), clash],
         );
         assert_eq!(applied.texts.get("a"), None);
-        assert_eq!(applied.texts["b"], "use oll");
+        assert_eq!(applied.texts["b"], "use ole");
         assert_eq!((applied.fixes.len(), applied.skipped), (1, 1));
         // Self-overlapping edits are skipped; a file without source drops it.
         let applied = apply(

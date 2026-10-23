@@ -21,11 +21,16 @@ pub(super) struct Graph<'a> {
     /// Versioned declarations of every used package.
     pub world: World<'a>,
     links: BTreeMap<String, Vec<(String, &'a Edge)>>,
+    /// Loaded transitive dependencies of the used packages that are not
+    /// themselves used: vocabulary only (their enums), never replayed.
+    deps: Vec<&'a Package>,
 }
 
 impl<'a> Graph<'a> {
-    /// The graph over `packages` (non-empty, `uses` order).
-    pub fn new(packages: Vec<&'a Package>) -> Self {
+    /// The graph over `packages` (non-empty, `uses` order), with their
+    /// dependencies found by name among `loaded`.
+    pub fn new(packages: Vec<&'a Package>, loaded: &[&'a Package]) -> Self {
+        let deps = dependencies(&packages, loaded);
         let world = World::from_packages(&packages);
         let mut links: BTreeMap<String, Vec<(String, &'a Edge)>> = BTreeMap::new();
         for p in &packages {
@@ -43,6 +48,7 @@ impl<'a> Graph<'a> {
             packages,
             world,
             links,
+            deps,
         }
     }
 
@@ -53,11 +59,17 @@ impl<'a> Graph<'a> {
             .map_or("", |p| p.manifest.pack_id.as_str())
     }
 
-    /// Whether `id` names a used pack, or an instance `base@origin` of one
-    /// (a links package composes it; its nodes are `base`'s).
+    /// Whether `id` names a used pack or a dependency of one, or an
+    /// instance `base@origin` of one (a links package composes it; its
+    /// nodes are `base`'s).
     fn is_pack(&self, id: &str) -> bool {
         let base = id.split_once('@').map_or(id, |(b, _)| b);
-        self.packages.iter().any(|p| p.manifest.pack_id == base)
+        self.vocabulary().any(|p| p.manifest.pack_id == base)
+    }
+
+    /// The used packages, then their dependencies.
+    fn vocabulary(&self) -> impl Iterator<Item = &'a Package> + '_ {
+        self.packages.iter().chain(&self.deps).copied()
     }
 
     /// `name` written in `pack`'s view, fully qualified (`pack::name`).
@@ -193,9 +205,10 @@ impl<'a> Graph<'a> {
             .map(|(_, e)| e)
     }
 
-    /// The variants of enum `name` declared in `pack`.
+    /// The variants of enum `name` declared in `pack` (a used package or a
+    /// dependency of one).
     pub fn variants(&self, pack: &str, name: &str) -> Option<&'a [String]> {
-        let p = self.packages.iter().find(|p| p.manifest.pack_id == pack)?;
+        let p = self.vocabulary().find(|p| p.manifest.pack_id == pack)?;
         declarations(p).find_map(|d| match d {
             Declaration::Enum(e) if e.name == name => Some(e.variants.as_slice()),
             _ => None,
@@ -307,4 +320,23 @@ pub(super) fn display(e: &Expr) -> String {
         ExprKind::Ref { target } => target.clone(),
         _ => "_".to_owned(),
     }
+}
+
+/// The transitive dependencies of `used` among `loaded`, by package name,
+/// excluding `used` itself; each once, in discovery order.
+fn dependencies<'a>(used: &[&'a Package], loaded: &[&'a Package]) -> Vec<&'a Package> {
+    let mut seen: BTreeSet<&str> = used.iter().map(|p| p.manifest.name.as_str()).collect();
+    let mut out: Vec<&'a Package> = Vec::new();
+    let mut frontier: Vec<&'a Package> = used.to_vec();
+    while let Some(p) = frontier.pop() {
+        for name in p.manifest.dependencies.keys() {
+            if let Some(dep) = loaded.iter().find(|d| &d.manifest.name == name) {
+                if seen.insert(dep.manifest.name.as_str()) {
+                    out.push(dep);
+                    frontier.push(dep);
+                }
+            }
+        }
+    }
+    out
 }

@@ -126,7 +126,7 @@ pub fn check(mut case: hir::Case, spans: &CaseSpans, env: Env<'_>) -> CheckedCas
     let Some(used) = validate::pins(&case, env.packages, env.lock, spans, &mut out) else {
         return done(case, out, Vec::new());
     };
-    let graph = Graph::new(used);
+    let graph = Graph::new(used, env.packages);
     validate::parties(&case, &graph, spans, &mut out);
     let start = case
         .start

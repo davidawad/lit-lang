@@ -1,0 +1,7 @@
+---
+source: crates/litigate-sema/tests/case_dep_enum.rs
+expression: "lines.join(\"\\n\")"
+---
+12:21 L2001 expected a `ServiceMethod` variant, found `Persnal`
+    note: variants: Personal, Mail
+    fix @12:21-12:28 MaybeIncorrect: "Personal"

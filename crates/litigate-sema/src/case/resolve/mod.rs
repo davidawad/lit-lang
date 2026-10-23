@@ -276,7 +276,7 @@ impl R<'_, '_> {
                 ),
             }
         }
-        (!used.is_empty()).then(|| self.graph = Some(Graph::new(used)));
+        (!used.is_empty()).then(|| self.graph = Some(Graph::new(used, self.packages)));
         Some(pins)
     }
 

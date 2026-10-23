@@ -51,11 +51,9 @@ procedure graph it drives, and the terminals with their payoffs:
 module my-court.answer
 
 import core.frcp6.{ frcp6 }
+import core.time.{ ServiceMethod }
 
 start served
-
-/// How the summons and complaint were served (FRCP 4, 5(b)).
-enum ServiceMethod { Personal, Mail }
 
 /// Service of the summons and complaint on the defendant.
 event Served(method: ServiceMethod)
@@ -88,8 +86,8 @@ terminal plaintiff-wins: "Judgment for the plaintiff" outcome [judgment, win] { 
 terminal defendant-wins: "Judgment for the defendant" outcome [judgment, loss] { payoff 0.usd }
 ```
 
-`frcp6` comes from `lit/core`, the standard library of counting rules
-and holiday calendars. Pin the dependency, put the file in canonical form,
+`frcp6` and `ServiceMethod` come from `lit/core`, the standard library of counting rules,
+holiday calendars and shared vocabulary. Pin the dependency, put the file in canonical form,
 and check it:
 
 ```bash

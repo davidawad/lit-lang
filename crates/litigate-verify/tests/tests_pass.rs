@@ -187,3 +187,29 @@ tests_pass!(
          expect deadline(year-period) == 2025-12-01\n}"
     )
 );
+
+// `quick` displaces `answer-period` (SPEC §5.5): its own test holds, and
+// the base tests expecting 21 days fail.
+tests_pass!(
+    a_displacing_claimant_counts_the_deadline,
+    Failed,
+    with(
+        "deadline quick: 14.days from Served(complaint) counted_by frcp6 \
+         notwithstanding answer-period\n\
+         test \"the claimant counts\" cite FRCP 12(a)\n{\n  \
+         given Served(complaint, Personal) on 2025-03-03\n  \
+         expect deadline(answer-period) == 2025-03-17\n}"
+    )
+);
+
+tests_pass!(
+    a_displacing_claimant_counts_from_its_own_trigger,
+    Failed,
+    with(
+        "deadline moved: 7.days from Answered(complaint) counted_by frcp6 \
+         notwithstanding answer-period\n\
+         test \"the claimant's trigger\" cite FRCP 12(a)\n{\n  \
+         given Served(complaint, Personal) on 2025-03-03\n  \
+         expect deadline(answer-period) == 2025-03-10\n}"
+    )
+);

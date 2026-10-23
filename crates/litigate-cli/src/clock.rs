@@ -468,6 +468,28 @@ counting nourl cite XYZ 6(a)
     }
 
     #[test]
+    fn unordered_claimants_govern_nothing() {
+        // Two claimants displace `answer-period` and nothing orders them
+        // (SPEC §5.5): no single declaration counts it.
+        let mut pkg = hir_with(
+            "deadline quick: 14.days from Served(complaint) counted_by frcp6 \
+             notwithstanding answer-period",
+        );
+        let mut quicker = hirx::deadlines(&pkg, "quick").next().unwrap().clone();
+        quicker.meta.id = "quicker".into();
+        pkg.modules[0]
+            .declarations
+            .push(Declaration::Deadline(quicker));
+        let why = due_on(&pkg, "answer-period", "2025-03-03", None).unwrap_err();
+        assert!(
+            why.starts_with(
+                "no single declaration governs deadline `frcp-rule12-example::answer-period` on 2025-03-03: "
+            ),
+            "{why}"
+        );
+    }
+
+    #[test]
     fn due_explains_every_refusal() {
         let refusal = |f: &dyn Fn(&mut hir::Deadline), name: &str, trigger: &str| {
             due_on(&package(f), name, trigger, None).unwrap_err()

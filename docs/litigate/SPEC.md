@@ -526,11 +526,12 @@ must cover the package lifetime. A gap is legal only when declared with
 version with `from <= as_of < to`, among versions whose `known_at <=` the
 query's `known_at` (latest when omitted). No version is L3007.
 
-This is one query (`temporal::select`, supersession applied; for a matter's
-event, `temporal::governing` adds transitions). Lowering, `check`, inline
-`test`s and `tests-pass`, case replay, the deadline schedule,
-`explain-value` and the LSP select deadline, counting, calendar and node
-versions through it, so none can describe different law. Package queries
+This is one query (`temporal::select`, supersession applied; precedence,
+§5.5, picks among the claimants it finds with `precedence::select`, and
+for a matter's event `temporal::governing` adds transitions). Lowering,
+`check`, inline `test`s and `tests-pass`, case replay, the deadline
+schedule, `explain-value` and the LSP select deadline, counting, calendar
+and node versions through it, so none can describe different law. Package queries
 (build, `check`, `test`, `tests-pass`) select among the versions recorded
 by the package `known_at` unless `check`/`build --known-at` (the LSP's
 `knownAt` initialization option) overrides it; a test counts each
@@ -659,15 +660,19 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
 - **Selection.** The declaration that governs T on a date is its winning
   claimant; when that winner is itself displaced by a claim on it, the
   selection follows it (a cycle, L3006, stops where it closes). This one
-  query (`precedence::select`) is what lowering, case replay, inline
-  tests, the matter schedule, `explain-value` and the LSP use, so a claim
+  query (`precedence::select`, over the versions §5.4's `temporal::select`
+  finds) is what lowering, case replay, inline tests and `tests-pass`, the
+  matter schedule, `explain-value` and the LSP use, so a claim
   is executed, not only explained. Lowering emits a declaration only when
   it governs its own name at the build dates: a displaced node, deadline,
   counting rule or calendar is absent, and every reference to it (`within
   d`, `counted_by c`, `holidays k`, a matter's posture) resolves to the
   winner. A package's selection sees it, its dependencies and `core`; a
   links package sees every loaded package; a matter sees the packages it
-  `uses`.
+  `uses`. A displacing deadline counts from its own trigger and under its
+  own counting rule: replay and the schedule take the latest event matching
+  it, and a test's `deadline(d)` fails unless the `given` that triggers `d`
+  also matches the claimant's trigger.
 - **Delegation.** A displacing relation (`override`, `notwithstanding`,
   `supersedes`, `revives`) needs no delegation when A's authority equals
   or outranks B's. Otherwise every version of B it acts on (for

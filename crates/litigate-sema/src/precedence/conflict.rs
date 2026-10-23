@@ -143,7 +143,7 @@ fn antecedent(d: &Declaration) -> Option<Antecedent<'_>> {
     }
 }
 
-/// Subject-matter specificity (lex specialis): `Some(true)` when `a`'s
+/// Subject-matter specificity (the specific provision governs the general): `Some(true)` when `a`'s
 /// antecedent entails `b`'s and not conversely, `Some(false)` for the
 /// converse, `None` when neither is narrower or they are not comparable.
 /// A trigger pattern entails another that is its prefix (omitted trailing

@@ -1,7 +1,7 @@
 //! Declared `subject_to` relations keep every effective claimant in play.
 mod legal;
 
-use legal::{pkg, with_world, workspace};
+use legal::{pkg, render, with_world, workspace};
 use litigate_sema::precedence::{beats, conflict::active_claimants, Lattice, Reason};
 use litigate_sema::temporal::Key;
 use proptest::prelude::*;
@@ -15,6 +15,32 @@ calendar cal { new-year: fixed(1, 1) effective [1870-06-28, ..) }
 state s: \"S\" { _ \"go\" -> t }
 terminal t: \"T\"
 deadline target: 21.days from Served(complaint) counted_by c6 effective [2009-12-01, ..)
+deadline a: 14.days from Served(complaint) counted_by c6 effective [2009-12-01, ..) subject_to target
+deadline b: 7.days from Served(complaint) counted_by c6 effective [2009-12-01, ..) subject_to target
+";
+
+const VERSIONED_PACKAGE: &str = "module demo.rules
+start s
+enum Document { complaint }
+event Served(document: Document)
+counting c6 { holidays cal }
+calendar cal { new-year: fixed(1, 1) effective [1870-06-28, ..) }
+state s: \"S\" { _ \"go\" -> t }
+terminal t: \"T\"
+deadline target: 21.days from Served(complaint) counted_by c6 effective [2009-12-01, 2015-01-01)
+deadline target: 22.days from Served(complaint) counted_by c6 effective [2015-01-01, ..)
+deadline a: 14.days from Served(complaint) counted_by c6 effective [2009-12-01, ..) subject_to target@2015-01-01
+";
+
+const UNRESOLVED_PACKAGE: &str = "module demo.rules
+start s
+enum Document { complaint }
+event Served(document: Document)
+counting c6 { holidays cal }
+calendar cal { new-year: fixed(1, 1) effective [1870-06-28, ..) }
+state s: \"S\" { _ \"go\" -> t }
+terminal t: \"T\"
+deadline target: 21.days from Served(complaint) counted_by c6 effective [2009-12-01, 2015-01-01)
 deadline a: 14.days from Served(complaint) counted_by c6 effective [2009-12-01, ..) subject_to target
 deadline b: 7.days from Served(complaint) counted_by c6 effective [2009-12-01, ..) subject_to target
 ";
@@ -56,6 +82,38 @@ proptest! {
         let date = format!("{year}-06-01");
         let count = with_world(&db, ws, |world| active_claimants(world, &target, &date).len());
         prop_assert_eq!(count, 3);
+    }
+
+    #[test]
+    fn prop_versioned_claims_apply_only_to_the_named_target_version(after_amendment in any::<bool>()) {
+        let package = pkg("demo", "FederalRule", "2009-12-01", &[], &[("rules.lit", VERSIONED_PACKAGE)]);
+        let (db, ws) = workspace(&[package]);
+        let target = Key { pack: "demo".into(), name: "target".into() };
+        let date = if after_amendment { "2016-06-01" } else { "2014-06-01" };
+        let count = with_world(&db, ws, |world| active_claimants(world, &target, date).len());
+        prop_assert_eq!(count, if after_amendment { 2 } else { 1 });
+    }
+
+    #[test]
+    fn prop_unresolved_precedence_points_to_the_relation_clause(_seed in 0_u8..1) {
+        let package = pkg("demo", "FederalRule", "2009-12-01", &[], &[("rules.lit", UNRESOLVED_PACKAGE)]);
+        let (db, ws) = workspace(&[package]);
+        let diagnostics = render(&db, ws);
+        let relation_span = diagnostics.iter().any(|diagnostic| {
+            let mut pieces = diagnostic.split(':');
+            let file = pieces.next().unwrap_or_default();
+            let line = pieces.next().unwrap_or_default();
+            let column = pieces
+                .next()
+                .unwrap_or_default()
+                .split_whitespace()
+                .next()
+                .unwrap_or_default()
+                .parse::<usize>()
+                .unwrap_or_default();
+            file.ends_with("rules.lit") && line == "11" && column > 1 && diagnostic.contains("L3003")
+        });
+        prop_assert!(relation_span, "{diagnostics:#?}");
     }
 
     #[test]

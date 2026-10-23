@@ -41,6 +41,20 @@
         (package-install 'package-lint)
         (litgraph-lint--installed package-user-dir))))
 
+(defconst litgraph-lint-allowed
+  '(("litgraph-timeline\\.el\\'" . "`with-eval-after-load' is for use in configurations"))
+  "Package-lint findings to accept: (FILE-REGEXP . MESSAGE-PREFIX).
+litgraph-timeline.el binds its key in `litigate-mode-map', a mode from
+another package that may load before or after it, hence
+`with-eval-after-load'.")
+
+(defun litgraph-lint--allowed-p (file message)
+  "Non-nil if the package-lint MESSAGE about FILE is accepted."
+  (seq-some (lambda (allowed)
+              (and (string-match-p (car allowed) file)
+                   (string-prefix-p (cdr allowed) message)))
+            litgraph-lint-allowed))
+
 (defun litgraph-lint-package-lint (&optional dir)
   "Run package-lint over the files on the command line; exit 1 on findings.
 DIR may name an ELPA directory that already contains package-lint."
@@ -54,7 +68,10 @@ DIR may name an ELPA directory that already contains package-lint."
       (dolist (file command-line-args-left)
         (with-current-buffer (find-file-noselect file)
           (emacs-lisp-mode)
-          (dolist (issue (package-lint-buffer))
+          (dolist (issue (seq-remove
+                          (lambda (issue)
+                            (litgraph-lint--allowed-p file (nth 3 issue)))
+                          (package-lint-buffer)))
             (setq failed t)
             (princ (format "%s:%d:%d: %s: %s\n" file (nth 0 issue) (nth 1 issue)
                            (nth 2 issue) (nth 3 issue))))))

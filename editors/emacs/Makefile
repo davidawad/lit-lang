@@ -12,7 +12,8 @@
 EMACS ?= emacs
 BATCH  = $(EMACS) -Q --batch -L .
 SRC    = litgraph.el litgraph-view.el litgraph-graph.el litgraph-org.el \
-         litgraph-scenario.el litgraph-menu.el ob-litgraph.el
+         litgraph-scenario.el litgraph-menu.el litgraph-timeline.el \
+         ob-litgraph.el
 TESTS  = $(wildcard test/*-test.el)
 PACKAGE_LINT_DIR ?=
 

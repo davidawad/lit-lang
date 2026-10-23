@@ -38,6 +38,7 @@
 
 (declare-function litgraph-graph "litgraph-graph")
 (declare-function litgraph-scenario-run "litgraph-scenario")
+(declare-function litgraph-timeline "litgraph-timeline" (file))
 
 ;; Ops that only newer litgraph builds have get their own commands, so the
 ;; menu can offer them (greyed out where the binary lacks them).
@@ -102,7 +103,8 @@
   [["See"
     ("g" "Graph (Graphviz)" litgraph-graph)
     ("G" "Graph around a node" litgraph-menu--graph-neighborhood)
-    ("d" "Deadlines to Org agenda" litgraph-deadlines-to-org)]
+    ("d" "Deadlines to Org agenda" litgraph-deadlines-to-org)
+    ("T" "Timeline of a .case/.lit file" litgraph-timeline)]
    ["Scenario files"
     ("o" "Open…" litgraph-open-scenario)
     ("n" "New…" litgraph-new-scenario)

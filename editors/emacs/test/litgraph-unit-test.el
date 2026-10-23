@@ -813,7 +813,8 @@
             (dolist (name '("litgraph-menu" "litgraph-run-op" "litgraph-solve"
                             "litgraph-deadlines-to-org" "litgraph-graph"
                             "litgraph-open-scenario" "litgraph-new-scenario"
-                            "litgraph-scenario-mode" "litgraph-command-map"))
+                            "litgraph-scenario-mode" "litgraph-command-map"
+                            "litgraph-timeline"))
               (should (string-match-p (format "\\(?:autoload\\|defun\\).?'?%s\\b" name)
                                       text)))
             (should (string-match-p "auto-mode-alist" text))))

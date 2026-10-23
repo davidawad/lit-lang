@@ -66,6 +66,7 @@
 (declare-function litgraph-open-scenario "litgraph-scenario")
 (declare-function litgraph-new-scenario "litgraph-scenario")
 (declare-function litgraph-validate-buffer "litgraph-scenario")
+(declare-function litgraph-timeline "litgraph-timeline" (file))
 (declare-function org-read-date "org")
 
 
@@ -1019,6 +1020,7 @@ A nil VALUE removes the override."
     (define-key map "w" #'litgraph-sweep)
     (define-key map "g" #'litgraph-graph)
     (define-key map "d" #'litgraph-deadlines-to-org)
+    (define-key map "T" #'litgraph-timeline)
     (define-key map "o" #'litgraph-open-scenario)
     (define-key map "n" #'litgraph-new-scenario)
     (define-key map "v" #'litgraph-validate-buffer)

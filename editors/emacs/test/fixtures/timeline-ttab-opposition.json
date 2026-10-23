@@ -1,0 +1,121 @@
+{
+  "schema": "litigate.timeline/1",
+  "source": { "file": "cases/example-ttab-opposition.case", "kind": "case" },
+  "as_of": "2026-04-08",
+  "known_at": null,
+  "layers": [
+    {
+      "id": "ttab",
+      "class": "base_rule",
+      "authority": "Regulation",
+      "label": "37 CFR Part 2 (TTAB)",
+      "cite": "37 C.F.R. § 2.105(a)",
+      "effective": { "from": "2017-01-14", "to": null },
+      "package": "ttab",
+      "enabled": true
+    },
+    {
+      "id": "order-reset-1",
+      "class": "case_order",
+      "authority": "CaseOrder",
+      "label": "Board order resetting the answer date (hypothetical)",
+      "cite": "37 C.F.R. § 2.106(a)",
+      "effective": { "from": "2026-04-10", "to": null },
+      "package": "example-ttab-opposition.orders",
+      "enabled": true
+    }
+  ],
+  "worlds": [
+    { "id": "w0", "label": "docket", "parent": null, "fork_row": null, "choice": null },
+    {
+      "id": "w1",
+      "label": "reset granted",
+      "parent": "w0",
+      "fork_row": "r5",
+      "choice": { "kind": "grant", "label": "Board resets the answer date", "cite": "37 C.F.R. § 2.106(a)", "probability": null }
+    },
+    {
+      "id": "w2",
+      "label": "reset denied",
+      "parent": "w0",
+      "fork_row": "r5",
+      "choice": { "kind": "denial", "label": "Board denies the motion", "cite": null, "probability": null }
+    }
+  ],
+  "rows": [
+    {
+      "id": "r1", "world": "w0", "kind": "event", "date": "2026-02-20", "due": null,
+      "label": "Notice of opposition filed",
+      "status": { "state": "none", "reason": null },
+      "cite": "37 C.F.R. § 2.101", "source": { "file": "cases/example-ttab-opposition.case", "start": 210, "end": 248, "line": 9, "column": 1 },
+      "layer": "base_rule", "provenance": ["ttab"], "trigger": null
+    },
+    {
+      "id": "r2", "world": "w0", "kind": "event", "date": "2026-03-02", "due": null,
+      "label": "Notice of institution mailed (answer designated 2026-04-11)",
+      "status": { "state": "none", "reason": null },
+      "cite": "37 C.F.R. § 2.105(a)", "source": { "file": "cases/example-ttab-opposition.case", "start": 249, "end": 301, "line": 10, "column": 1 },
+      "layer": "base_rule", "provenance": ["ttab"], "trigger": "r1"
+    },
+    {
+      "id": "r3", "world": "w0", "kind": "deadline", "date": null, "due": "2026-04-13",
+      "label": "Answer due (designated 2026-04-11, a Saturday; rolls to Monday)",
+      "status": { "state": "open", "reason": null },
+      "cite": "37 C.F.R. §§ 2.105(a), 2.196", "source": { "file": "lit/ttab/answer.lit", "start": 1024, "end": 1180, "line": 41, "column": 1 },
+      "layer": "base_rule", "provenance": ["ttab"], "trigger": "r2"
+    },
+    {
+      "id": "r4", "world": "w0", "kind": "event", "date": "2026-04-06", "due": null,
+      "label": "Motion to reset the answer date filed",
+      "status": { "state": "none", "reason": null },
+      "cite": "37 C.F.R. § 2.106(a)", "source": { "file": "cases/example-ttab-opposition.case", "start": 302, "end": 350, "line": 11, "column": 1 },
+      "layer": "base_rule", "provenance": ["ttab"], "trigger": null
+    },
+    {
+      "id": "r5", "world": "w0", "kind": "fork", "date": null, "due": null,
+      "label": "Ruling on the motion",
+      "status": { "state": "unknown", "reason": "no ruling recorded as of 2026-04-08" },
+      "cite": null, "source": null,
+      "layer": "base_rule", "provenance": ["ttab"], "trigger": "r4"
+    },
+    {
+      "id": "r6", "world": "w1", "kind": "event", "date": "2026-04-10", "due": null,
+      "label": "Board order resets the answer date to 2026-05-13",
+      "status": { "state": "none", "reason": null },
+      "cite": "37 C.F.R. § 2.106(a)", "source": null,
+      "layer": "case_order", "provenance": ["ttab", "order-reset-1"], "trigger": "r5"
+    },
+    {
+      "id": "r7", "world": "w1", "kind": "deadline", "date": null, "due": "2026-04-13",
+      "label": "Answer due (original designation)",
+      "status": { "state": "superseded", "reason": "reset by order-reset-1" },
+      "cite": "37 C.F.R. § 2.105(a)", "source": { "file": "lit/ttab/answer.lit", "start": 1024, "end": 1180, "line": 41, "column": 1 },
+      "layer": "base_rule", "provenance": ["ttab"], "trigger": "r2"
+    },
+    {
+      "id": "r8", "world": "w1", "kind": "deadline", "date": null, "due": "2026-05-13",
+      "label": "Answer due (as reset)",
+      "status": { "state": "open", "reason": null },
+      "cite": "37 C.F.R. § 2.106(a)", "source": null,
+      "layer": "case_order", "provenance": ["ttab", "order-reset-1"], "trigger": "r6"
+    },
+    {
+      "id": "r9", "world": "w2", "kind": "deadline", "date": null, "due": "2026-04-13",
+      "label": "Answer due",
+      "status": { "state": "open", "reason": null },
+      "cite": "37 C.F.R. §§ 2.105(a), 2.196", "source": { "file": "lit/ttab/answer.lit", "start": 1024, "end": 1180, "line": 41, "column": 1 },
+      "layer": "base_rule", "provenance": ["ttab"], "trigger": "r2"
+    }
+  ],
+  "edges": [
+    { "from": "r1", "to": "r2", "world": "w0", "kind": "sequence" },
+    { "from": "r2", "to": "r3", "world": "w0", "kind": "triggers" },
+    { "from": "r3", "to": "r4", "world": "w0", "kind": "sequence" },
+    { "from": "r4", "to": "r5", "world": "w0", "kind": "sequence" },
+    { "from": "r5", "to": "r6", "world": "w1", "kind": "forks" },
+    { "from": "r6", "to": "r7", "world": "w1", "kind": "supersedes" },
+    { "from": "r6", "to": "r8", "world": "w1", "kind": "triggers" },
+    { "from": "r5", "to": "r9", "world": "w2", "kind": "forks" }
+  ],
+  "diagnostics": []
+}

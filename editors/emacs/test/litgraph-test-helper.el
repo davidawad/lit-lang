@@ -51,6 +51,9 @@
 (defvar litgraph-test-validate-fixture "validate-unknown-field"
   "Fixture returned to `litgraph validate' calls.")
 
+(defvar litgraph-test-timeline-fixture "timeline-ttab-opposition"
+  "Fixture returned to `litgraph timeline' calls.")
+
 (defun litgraph-test-stub (args input callback)
   "Stand-in for `litgraph--spawn': answer ARGS/INPUT from fixtures via CALLBACK."
   (push (cons args input) litgraph-test-calls)
@@ -64,6 +67,8 @@
        (if fixture
            (funcall callback 0 (litgraph-test-fixture fixture) "")
          (funcall callback 2 (litgraph-test-fixture "error") ""))))
+    (`("timeline" . ,_)
+     (funcall callback 0 (litgraph-test-fixture litgraph-test-timeline-fixture) ""))
     ((and `("validate" . ,_) (guard t))
      (funcall callback 2 (litgraph-test-fixture litgraph-test-validate-fixture) ""))
     (_ (funcall callback 1 "" "unexpected call")))

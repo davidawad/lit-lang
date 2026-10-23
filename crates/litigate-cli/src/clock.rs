@@ -107,19 +107,14 @@ fn governing(
     let date = events[at].date;
     temporal::governing(world, key, events, at, known_at)
         .map(|g| Some(g.version))
-        .map_err(|why| match why {
-            Ungoverned::Unresolved(pairs) => format!(
-                "no single declaration governs {what} `{}` on {date}: {}",
-                key.display(""),
-                unordered(world, &pairs, "")
-            ),
-            _ => {
-                let recorded = known_at.map_or_else(String::new, |k| format!(" recorded by {k}"));
-                format!(
-                    "no version of {what} `{}`{recorded} governs {date}",
-                    key.display("")
-                )
+        .map_err(|why| {
+            let name = key.display("");
+            if let Ungoverned::Unresolved(pairs) = why {
+                let pairs = unordered(world, &pairs, "");
+                return format!("no single declaration governs {what} `{name}` on {date}: {pairs}");
             }
+            let recorded = known_at.map_or_else(String::new, |k| format!(" recorded by {k}"));
+            format!("no version of {what} `{name}`{recorded} governs {date}")
         })
 }
 

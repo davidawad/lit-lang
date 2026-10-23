@@ -205,21 +205,7 @@ fn due(
             deadline.meta.id
         ));
     }
-    let counting_key = clocks
-        .world
-        .target(&owner.manifest.pack_id, &deadline.counting)
-        .key;
-    let counting = if clocks.world.versions(&counting_key).versions.is_empty() {
-        None
-    } else {
-        let Some((pkg, Declaration::Counting(c))) = clocks.select(&counting_key, date) else {
-            return Err(format!(
-                "no version of counting rule `{}` recorded by {} is in force on {date}",
-                deadline.counting, clocks.known_at
-            ));
-        };
-        Some((pkg, c))
-    };
+    let counting = counting_of(clocks, owner, deadline, date)?;
     let library = match counting {
         Some((pkg, c)) => clocks.get(pkg, c)?,
         None => ClockLibrary::embedded().0.clone(),
@@ -258,6 +244,31 @@ fn due(
         .and_then(|clock| clock::compute_due_date(&request, &clock, &ClockConfig::default()))
         .map(|c| (c.nominal_date, c.due_date))
         .map_err(|e| e.to_string())
+}
+
+/// The counting rule `deadline` (of `owner`) counts under on `date`, with
+/// its package; `None` for one no loaded package declares (the shared
+/// library's).
+fn counting_of<'a>(
+    clocks: &Clocks<'a>,
+    owner: &hir::Package,
+    deadline: &hir::Deadline,
+    date: &str,
+) -> Result<Option<(&'a hir::Package, &'a hir::Counting)>, String> {
+    let key = clocks
+        .world
+        .target(&owner.manifest.pack_id, &deadline.counting)
+        .key;
+    if clocks.world.versions(&key).versions.is_empty() {
+        return Ok(None);
+    }
+    match clocks.select(&key, date) {
+        Some((pkg, Declaration::Counting(c))) => Ok(Some((pkg, c))),
+        _ => Err(format!(
+            "no version of counting rule `{}` recorded by {} is in force on {date}",
+            deadline.counting, clocks.known_at
+        )),
+    }
 }
 
 /// The engine service method of the first event argument naming one of

@@ -123,6 +123,9 @@ impl Clock for EngineClock {
             unit: match r.unit {
                 hir::DayUnit::Calendar => Unit::Calendar,
                 hir::DayUnit::Court | hir::DayUnit::Business => Unit::Court,
+                hir::DayUnit::Week => Unit::Week,
+                hir::DayUnit::Month => Unit::Month,
+                hir::DayUnit::Year => Unit::Year,
             },
             service_method,
         };

@@ -10,7 +10,7 @@ use serde::Serialize;
 
 use crate::algo::{chain, mdp};
 use crate::error::Result;
-use crate::model::{Duration, Graph, NodeIx};
+use crate::model::{Deadline, Duration, Graph, NodeIx};
 use crate::scenario::{Control, Scenario, View};
 
 /// One row: what was perturbed and how much the answer swung. Reuses
@@ -119,7 +119,7 @@ fn duration_gaps(
             truncated = true;
             break;
         }
-        let dl = g.edges[e].deadline.as_ref().map_or(0.0, |d| d.length);
+        let dl = g.edges[e].deadline.as_ref().map_or(0.0, Deadline::days);
         let (lo, hi) = if dl > 0.0 {
             ((dl * (1.0 - rel)).max(0.0), dl * (1.0 + rel))
         } else {

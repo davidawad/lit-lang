@@ -22,6 +22,7 @@
 //! | `{forward}` | `forward` / `backward`, by counting direction |
 //! | `{method}` | the service method's name (e.g. `Mail`, `CommercialCarrier`) |
 //! | `{days}` | days added by the service method |
+//! | `{unit}` | `month(s)` / `year(s)`, for the months provision |
 
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -31,8 +32,8 @@ use super::types::{ServiceMethod, Unit};
 use crate::error::{Error, Result};
 
 /// The placeholders a step `text` template may use.
-pub const PLACEHOLDERS: [&str; 8] = [
-    "trigger", "anchor", "date", "n", "after", "forward", "method", "days",
+pub const PLACEHOLDERS: [&str; 9] = [
+    "trigger", "anchor", "date", "n", "after", "forward", "method", "days", "unit",
 ];
 
 /// Where day 1 of a period is anchored.
@@ -182,6 +183,29 @@ pub struct Hours {
     pub inaccessible_text: Option<String>,
 }
 
+/// Where a month or year period ends when its last month has no day
+/// corresponding to the anchor's (January 31 plus one month).
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, JsonSchema)]
+#[serde(rename_all = "kebab-case")]
+pub enum EndOfMonth {
+    /// On the last day of that month (MPEP 710.01(a): a 3-month period
+    /// from November 30 ends February 28, or 29).
+    Clamp,
+    /// On the first day of the following month.
+    Roll,
+}
+
+/// A calendar-month period provision: months and years (twelve months)
+/// count from the anchor to the corresponding day of the later month.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct Months {
+    /// Where a period ends when its last month is too short.
+    pub end_of_month: EndOfMonth,
+    /// Cited trace text for the count.
+    pub text: String,
+}
+
 /// A deadline-counting rule (`CountingRule` IR).
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, JsonSchema)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -204,6 +228,10 @@ pub struct CountingRule {
     /// Hours provision; absent means hours-based periods are rejected.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub hours: Option<Hours>,
+    /// Calendar-month provision; absent means month and year periods are
+    /// rejected.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub months: Option<Months>,
 }
 
 fn check_template(rule: &str, t: &str) -> Result<()> {
@@ -260,6 +288,7 @@ impl CountingRule {
             out.extend([h.text.as_str(), h.roll_text.as_str()]);
             out.extend(h.inaccessible_text.as_deref());
         }
+        out.extend(self.months.as_ref().map(|m| m.text.as_str()));
         out
     }
 

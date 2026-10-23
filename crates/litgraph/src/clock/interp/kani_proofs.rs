@@ -14,6 +14,7 @@ fn weekend_clock() -> CountingRule {
         min_length: None,
         steps: Vec::new(),
         hours: None,
+        months: None,
     }
 }
 

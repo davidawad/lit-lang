@@ -69,8 +69,24 @@ enum Raw {
     Punct,
 }
 
-const DAY_SUFFIXES: [&str; 3] = ["days", "court_days", "business_days"];
-const UNIT_SUFFIXES: [&str; 5] = ["days", "court_days", "business_days", "hours", "usd"];
+const DAY_SUFFIXES: [&str; 6] = [
+    "days",
+    "court_days",
+    "business_days",
+    "weeks",
+    "months",
+    "years",
+];
+const UNIT_SUFFIXES: [&str; 8] = [
+    "days",
+    "court_days",
+    "business_days",
+    "weeks",
+    "months",
+    "years",
+    "hours",
+    "usd",
+];
 
 /// Lexes `text` into a lossless token stream plus lexical errors.
 #[must_use]
@@ -251,7 +267,10 @@ impl Lexer<'_> {
                     at,
                     format!("unknown unit suffix `{suffix}`"),
                 )
-                .with_note("valid suffixes: usd, days, court_days, business_days, hours");
+                .with_note(
+                    "valid suffixes: usd, days, court_days, business_days, weeks, months, \
+                     years, hours",
+                );
                 if let Some(best) = nearest(suffix, &UNIT_SUFFIXES) {
                     error = error.with_fix(at, best, Applicability::MachineApplicable);
                 }

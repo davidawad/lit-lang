@@ -88,7 +88,7 @@ The canonical format (`litigate fmt', SPEC §10) uses two."
     "payoff_transform" "patch" "duty" "power" "liability" "from" "after" "before"
     "counted_by" "exclude_trigger_day" "include_last_day" "roll_forward_on"
     "service_extension" "holidays" "anchor" "short_period" "below" "count"
-    "allow_hours" "effective" "observed" "amends" "subject_to" "notwithstanding"
+    "allow_hours" "end_of_month" "effective" "observed" "amends" "subject_to" "notwithstanding"
     "supersedes" "revives" "override" "delegable_to" "rebuts" "undercuts"
     "priority" "url"
     "given" "expect" "on")

@@ -2712,6 +2712,27 @@
               "name": "key",
               "content": {
                 "type": "STRING",
+                "value": "end_of_month"
+              }
+            },
+            {
+              "type": "FIELD",
+              "name": "value",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              }
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "key",
+              "content": {
+                "type": "STRING",
                 "value": "short_period"
               }
             },
@@ -5871,7 +5892,7 @@
     },
     "duration": {
       "type": "PATTERN",
-      "value": "\\d[\\d_]*(\\.\\d[\\d_]*)?\\.(days|court_days|business_days|hours)"
+      "value": "\\d[\\d_]*(\\.\\d[\\d_]*)?\\.(days|court_days|business_days|weeks|months|years|hours)"
     },
     "date": {
       "type": "PATTERN",

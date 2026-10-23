@@ -171,11 +171,7 @@ impl Cx<'_, '_> {
             let x = first_expr(f)?;
             // An inline deadline is an unsigned duration literal (SPEC
             // §3.1), so its amount is never negative.
-            if let Some(Value::Days {
-                amount,
-                unit: unit @ (DayUnit::Calendar | DayUnit::Court | DayUnit::Business),
-            }) = self.ck.infer(x).value
-            {
+            if let Some(Value::Days { amount, unit }) = self.ck.infer(x).value {
                 DeadlineWindow::Inline {
                     length: amount.unsigned_abs(),
                     unit,
@@ -184,7 +180,7 @@ impl Cx<'_, '_> {
                 self.report(Report::new(
                     C::UnitMismatch,
                     x.range,
-                    "an edge `deadline` is a day count such as `30.days` or `5.court_days`",
+                    "an edge `deadline` is a period such as `30.days`, `5.court_days` or `3.months`",
                 ));
                 return None;
             }
@@ -203,9 +199,13 @@ impl Cx<'_, '_> {
         let days = Type::Days(DayUnit::Calendar);
         // Estimates may use decimal calendar days (`13.5.days`, SPEC §6);
         // every other spelling goes through the integral-days checker.
-        let get = |cx: &mut Self, x: &Expr| match &x.kind {
-            ExprKind::Duration(text) if decimal_days(text).is_some() => {
-                q::parse_decimal(decimal_days(text).unwrap_or_default())
+        let get = |cx: &mut Self, x: &Expr| {
+            let text = match &x.kind {
+                ExprKind::Duration(text) => text.as_str(),
+                _ => "",
+            };
+            if let Some(amount) = decimal_days(text) {
+                return q::parse_decimal(amount)
                     .map_err(|_| {
                         cx.report(Report::new(
                             C::ArithmeticError,
@@ -213,12 +213,26 @@ impl Cx<'_, '_> {
                             format!("`{text}` is not an exact day amount"),
                         ));
                     })
-                    .ok()
+                    .ok();
             }
-            _ => match cx.constant(x, &days) {
+            if let Some((unit, numerator, denominator)) = calendar_span(text) {
+                let Some(Value::Days { amount, .. }) = cx.constant(x, &Type::Days(unit)) else {
+                    return None;
+                };
+                return q::make(i128::from(amount) * numerator, denominator)
+                    .map_err(|_| {
+                        cx.report(Report::new(
+                            C::ArithmeticError,
+                            x.range,
+                            format!("`{text}` is out of range"),
+                        ));
+                    })
+                    .ok();
+            }
+            match cx.constant(x, &days) {
                 Some(Value::Days { amount, .. }) => Some(Rational::integer(amount)),
                 _ => None,
-            },
+            }
         };
         if let Some(x) = first_expr(f) {
             return get(self, x).map(|mode| TriangularDuration {
@@ -258,6 +272,19 @@ impl Cx<'_, '_> {
             ));
         }
         Some(TriangularDuration { min, mode, max })
+    }
+}
+
+/// The unit of a week, month or year estimate (`6.years`) and its mean
+/// length in days as a fraction: an estimate has no trigger date to count
+/// from, so a month is the mean Gregorian month (146097/4800 days) and a
+/// year the mean Gregorian year (365.2425 days).
+fn calendar_span(text: &str) -> Option<(DayUnit, i128, i128)> {
+    match text.rsplit_once('.').map_or("", |(_, unit)| unit) {
+        "weeks" => Some((DayUnit::Week, 7, 1)),
+        "months" => Some((DayUnit::Month, 146_097, 4800)),
+        "years" => Some((DayUnit::Year, 146_097, 400)),
+        _ => None,
     }
 }
 

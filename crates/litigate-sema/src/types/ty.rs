@@ -31,6 +31,9 @@ pub const fn unit_name(unit: DayUnit) -> &'static str {
         DayUnit::Calendar => "CalendarDays",
         DayUnit::Court => "CourtDays",
         DayUnit::Business => "BusinessDays",
+        DayUnit::Week => "Weeks",
+        DayUnit::Month => "Months",
+        DayUnit::Year => "Years",
     }
 }
 
@@ -100,6 +103,9 @@ pub fn resolve(scope: &Scope<'_>, t: &TypeRef, reports: &mut Vec<Report>) -> Opt
                 "CalendarDays" => DayUnit::Calendar,
                 "CourtDays" => DayUnit::Court,
                 "BusinessDays" => DayUnit::Business,
+                "Weeks" => DayUnit::Week,
+                "Months" => DayUnit::Month,
+                "Years" => DayUnit::Year,
                 other => {
                     reports.push(
                         Report::new(
@@ -107,7 +113,10 @@ pub fn resolve(scope: &Scope<'_>, t: &TypeRef, reports: &mut Vec<Report>) -> Opt
                             arg.range,
                             format!("`{other}` is not a day unit"),
                         )
-                        .note("expected `CalendarDays`, `CourtDays`, or `BusinessDays`"),
+                        .note(
+                            "expected `CalendarDays`, `CourtDays`, `BusinessDays`, `Weeks`, \
+                             `Months`, or `Years`",
+                        ),
                     );
                     return None;
                 }

@@ -11,6 +11,9 @@ use litigate_base::{Applicability, DiagnosticCode as C};
 use std::collections::BTreeSet;
 use std::fmt::Write as _;
 
+/// The fields of `deadline(d)` (design review 2026-10-23 §2.1, `Due`).
+pub const DUE_FIELDS: [&str; 2] = ["nominal", "adjusted"];
+
 /// `{ f: e, ... }` as a record value.
 pub fn record(c: &mut Checker<'_, '_>, fields: &[(Name, Expr)], r: TextRange) -> Checked {
     let mut seen = BTreeSet::new();
@@ -75,7 +78,27 @@ pub fn list(
 /// `base.field` on a record.
 pub fn field(c: &mut Checker<'_, '_>, base: &Expr, name: &Name, r: TextRange) -> Checked {
     let b = c.infer(base);
+    let due = matches!(&b.hir.kind, hir::ExprKind::Call { callee, .. } if callee == "deadline");
     let ty = match &b.ty {
+        // `deadline(d)` is a `Due`: bare, its adjusted date; `.nominal` is
+        // the last day as counted, before any roll or extension.
+        Some(Type::Date) if due => {
+            if DUE_FIELDS.contains(&name.text.as_str()) {
+                Some(Type::Date)
+            } else {
+                let mut report = Report::new(
+                    C::UnresolvedName,
+                    name.range,
+                    format!("a due date has no field `{}`", name.text),
+                )
+                .note("`deadline(d)` has the fields `nominal` and `adjusted`");
+                if let Some(best) = suggest::nearest(&name.text, DUE_FIELDS) {
+                    report = report.fix(name.range, best, Applicability::MaybeIncorrect);
+                }
+                c.report(report);
+                None
+            }
+        }
         Some(Type::Record(fields)) => {
             if let Some((_, t)) = fields.iter().find(|(n, _)| *n == name.text) {
                 Some(t.clone())

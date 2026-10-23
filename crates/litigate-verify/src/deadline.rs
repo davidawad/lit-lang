@@ -198,6 +198,9 @@ fn unit(u: hir::DayUnit) -> &'static str {
         hir::DayUnit::Calendar => "days",
         hir::DayUnit::Court => "court days",
         hir::DayUnit::Business => "business days",
+        hir::DayUnit::Week => "weeks",
+        hir::DayUnit::Month => "months",
+        hir::DayUnit::Year => "years",
     }
 }
 
@@ -229,8 +232,21 @@ mod tests {
             hir::DayUnit::Calendar,
             hir::DayUnit::Court,
             hir::DayUnit::Business,
+            hir::DayUnit::Week,
+            hir::DayUnit::Month,
+            hir::DayUnit::Year,
         ]
         .map(unit);
-        assert_eq!(names, ["days", "court days", "business days"]);
+        assert_eq!(
+            names,
+            [
+                "days",
+                "court days",
+                "business days",
+                "weeks",
+                "months",
+                "years"
+            ]
+        );
     }
 }

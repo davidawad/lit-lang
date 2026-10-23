@@ -68,6 +68,20 @@ pub struct Counting {
     pub short_period: Option<ShortPeriod>,
     /// Whether hour periods (FRCP 6(a)(2)) are permitted.
     pub hours: bool,
+    /// End-of-month policy; month and year periods need one.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub end_of_month: Option<EndOfMonth>,
+}
+
+/// Where a month or year period ends when its last month has no day
+/// corresponding to the trigger's (January 31 plus one month).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum EndOfMonth {
+    /// The last day of that month (MPEP 710.01(a)).
+    Clamp,
+    /// The first day of the following month.
+    Roll,
 }
 
 /// Day kinds that cannot be a last day.

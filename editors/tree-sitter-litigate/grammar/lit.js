@@ -260,6 +260,7 @@ module.exports = {
     seq(field('key', 'service_extension'), field('value', $.service_map), optional($.cite)),
     seq(field('key', 'holidays'), field('value', $.ref)),
     seq(field('key', 'anchor'), field('value', $.identifier)),
+    seq(field('key', 'end_of_month'), field('value', $.identifier)),
     seq(field('key', 'short_period'), field('value', $.short_period)),
   ),
 

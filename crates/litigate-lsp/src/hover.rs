@@ -47,6 +47,9 @@ fn unit(u: DayUnit) -> &'static str {
         DayUnit::Calendar => "CalendarDays",
         DayUnit::Court => "CourtDays",
         DayUnit::Business => "BusinessDays",
+        DayUnit::Week => "Weeks",
+        DayUnit::Month => "Months",
+        DayUnit::Year => "Years",
     }
 }
 

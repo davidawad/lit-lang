@@ -45,6 +45,9 @@ impl Checker<'_, '_> {
             "hours" => return self.literal(Value::Hours(value), Type::Hours, r),
             "court_days" => DayUnit::Court,
             "business_days" => DayUnit::Business,
+            "weeks" => DayUnit::Week,
+            "months" => DayUnit::Month,
+            "years" => DayUnit::Year,
             _ => DayUnit::Calendar,
         };
         if value.denominator != 1 {

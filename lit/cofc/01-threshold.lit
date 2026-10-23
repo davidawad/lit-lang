@@ -36,7 +36,7 @@ state patent-admin-claim-filed: "Written Administrative Claim for Compensation F
   note "The patentee may (but need not) file a written claim for compensation with the department/agency having authority to settle it. Filing this claim tolls the running of §2501's 6-year period, for up to 6 years, between the date the agency receives the written claim and the date the agency mails notice that the claim is denied. This is the patent-specific analog to an administrative exhaustion step -- purely optional, and skipping it does not forfeit the CoFC suit, it just forgoes the tolling."
   e-adminclaim-resolved "Agency considers the claim (tolling runs up to 6 years)" -> patent-admin-claim-resolved {
     authority cite ?("35 U.S.C. § 286, last paragraph")
-    duration { min 30.days, mode 365.days, max 2190.days }
+    duration { min 30.days, mode 365.days, max 6.years }
     note "Tolling caps at 6 years; the agency may also simply never respond, in which case the cap controls."
   }
 }

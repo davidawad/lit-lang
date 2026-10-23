@@ -85,11 +85,14 @@ fn eval(cx: &Context<'_>, clocks: &Clocks, test: &hir::Test, e: &Expr) -> Result
     match &e.kind {
         ExprKind::Literal { value } => Ok(value.clone()),
         ExprKind::Call { callee, args } if callee == "deadline" => {
-            match args.first().map(|a| &a.kind) {
-                Some(ExprKind::Ref { target }) => due(cx, clocks, test, target).map(Value::Date),
-                _ => Err("`deadline` takes a deadline name".to_owned()),
-            }
+            due_field(cx, clocks, test, args, "adjusted")
         }
+        ExprKind::Field { base, field } => match &base.kind {
+            ExprKind::Call { callee, args } if callee == "deadline" => {
+                due_field(cx, clocks, test, args, field)
+            }
+            _ => Err("only a due date's fields are evaluated".to_owned()),
+        },
         ExprKind::Call { callee, args } if callee == "has_event" => match args.first() {
             Some(p) => Ok(Value::Boolean(
                 test.givens.iter().any(|(g, _)| matches(p, g)),
@@ -140,14 +143,35 @@ fn arguments<'e>(pattern: &Expr, event: &'e Expr) -> Option<&'e [Expr]> {
     }
 }
 
-/// The due date of deadline `target` from the test's latest matching
-/// `given`.
+/// `deadline(d).field`: the `nominal` or (otherwise) `adjusted` date.
+fn due_field(
+    cx: &Context<'_>,
+    clocks: &Clocks,
+    test: &hir::Test,
+    args: &[Expr],
+    field: &str,
+) -> Result<Value, String> {
+    match args.first().map(|a| &a.kind) {
+        Some(ExprKind::Ref { target }) => {
+            let (nominal, adjusted) = due(cx, clocks, test, target)?;
+            Ok(Value::Date(if field == "nominal" {
+                nominal
+            } else {
+                adjusted
+            }))
+        }
+        _ => Err("`deadline` takes a deadline name".to_owned()),
+    }
+}
+
+/// The nominal and adjusted due dates of deadline `target` from the
+/// test's latest matching `given`.
 fn due(
     cx: &Context<'_>,
     clocks: &Clocks,
     test: &hir::Test,
     target: &str,
-) -> Result<String, String> {
+) -> Result<(String, String), String> {
     let versions = cx.deadline_versions(target);
     let first = versions
         .first()
@@ -207,13 +231,16 @@ fn due(
         unit: match deadline.unit {
             hir::DayUnit::Calendar => Unit::Calendar,
             hir::DayUnit::Court | hir::DayUnit::Business => Unit::Court,
+            hir::DayUnit::Week => Unit::Week,
+            hir::DayUnit::Month => Unit::Month,
+            hir::DayUnit::Year => Unit::Year,
         },
         service_method: service_method(counting.map(|(_, c)| c), event),
     };
     library
         .clock(rule)
         .and_then(|clock| clock::compute_due_date(&request, &clock, &ClockConfig::default()))
-        .map(|c| c.due_date)
+        .map(|c| (c.nominal_date, c.due_date))
         .map_err(|e| e.to_string())
 }
 

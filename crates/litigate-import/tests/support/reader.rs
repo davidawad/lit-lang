@@ -126,8 +126,15 @@ fn edge_fields(mut f: Map<String, Value>, out: &mut Map<String, Value>) {
     if let Some(length) = f.remove("deadline") {
         let mut deadline = Map::new();
         deadline.insert("length".into(), length);
-        if f.remove("deadline:unit") == Some(json!("court_days")) {
-            deadline.insert("unit".into(), json!("court"));
+        let unit = match f.remove("deadline:unit") {
+            Some(Value::String(u)) if u == "court_days" => Some("court"),
+            Some(Value::String(u)) if u == "weeks" => Some("week"),
+            Some(Value::String(u)) if u == "months" => Some("month"),
+            Some(Value::String(u)) if u == "years" => Some("year"),
+            _ => None,
+        };
+        if let Some(unit) = unit {
+            deadline.insert("unit".into(), json!(unit));
         }
         if let Some(Value::Object(mut opts)) = f.remove("deadline:opts") {
             take(&mut opts, "extendable", "extendable", &mut deadline);

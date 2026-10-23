@@ -187,21 +187,15 @@ pub(super) fn due(
 
 /// How a due date was counted, for notes.
 pub(super) fn explain(d: &Due, trigger: &Expr) -> String {
-    let unit = match d.request.unit {
-        DayUnit::Calendar => "calendar",
-        DayUnit::Court => "court",
-        DayUnit::Business => "business",
-    };
     let service = if d.request.service.is_empty() {
         String::new()
     } else {
         format!(", service by {}", d.request.service.join("/"))
     };
     format!(
-        "`{}` runs {} {unit} day{} from `{}` on {} under `{}{}`{service}",
+        "`{}` runs {} from `{}` on {} under `{}{}`{service}",
         d.deadline,
-        d.request.amount,
-        if d.request.amount == 1 { "" } else { "s" },
+        d.request.unit.prose(d.request.amount),
         display(trigger),
         d.request.trigger,
         d.request.counting,

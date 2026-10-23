@@ -271,7 +271,7 @@ fn items(cx: &mut Cx<'_, '_>, tree: &ItemTree, index: &LineIndex, file: &FileId)
             _ => None,
         })
         .collect();
-    let allow_hours = |name: &str| cx_allow_hours(tree, name);
+    let local_counting = |name: &str, key: &str| local_counting(tree, name, key);
     for (item, rule) in &flat {
         let d = match &item.kind {
             ItemKind::Start(r) => {
@@ -336,7 +336,7 @@ fn items(cx: &mut Cx<'_, '_>, tree: &ItemTree, index: &LineIndex, file: &FileId)
                     trigger,
                     counted_by,
                     opts,
-                    allow_hours,
+                    local_counting,
                 )
                 .map(Declaration::Deadline),
             ItemKind::Counting(n, _, fields) => cx
@@ -388,7 +388,11 @@ fn items(cx: &mut Cx<'_, '_>, tree: &ItemTree, index: &LineIndex, file: &FileId)
     out
 }
 
-/// Whether counting rule `name` (declared in this module) has `allow_hours`.
-fn cx_allow_hours(tree: &ItemTree, name: &str) -> bool {
-    flatten(tree).iter().any(|(i, _)| matches!(&i.kind, ItemKind::Counting(n, _, f) if n.text == name && f.iter().any(|x| x.key.text == "allow_hours")))
+/// Whether counting rule `name` has the item `key`; `None` when no rule
+/// of that name is declared in this module.
+fn local_counting(tree: &ItemTree, name: &str, key: &str) -> Option<bool> {
+    flatten(tree).iter().find_map(|(i, _)| match &i.kind {
+        ItemKind::Counting(n, _, f) if n.text == name => Some(f.iter().any(|x| x.key.text == key)),
+        _ => None,
+    })
 }

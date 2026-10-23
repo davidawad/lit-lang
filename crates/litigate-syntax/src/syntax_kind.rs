@@ -99,6 +99,7 @@ syntax_kinds! {
         KwAuthority = "authority", KwDefault = "default", KwException = "exception",
         KwTest = "test", KwLink = "link", KwInstance = "instance",
         KwEvent = "event", KwAmends = "amends", KwAllowHours = "allow_hours",
+        KwEndOfMonth = "end_of_month",
         KwBelow = "below", KwCount = "count",
         KwCase = "case", KwUses = "uses", KwAsOf = "as_of", KwKnownAt = "known_at",
         KwSummary = "summary", KwNotes = "notes", KwSource = "source",

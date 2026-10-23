@@ -45,7 +45,7 @@ pub(super) fn edge_ref(v: &View, e: usize) -> Value {
         m.insert("authority".into(), json!(a));
     }
     if let Some(d) = &ed.deadline {
-        m.insert("deadline_days".into(), json!(d.length));
+        m.insert("deadline_days".into(), json!(d.days()));
     }
     if let Some(p) = v.prob[e] {
         m.insert("p".into(), r(p));

@@ -5,8 +5,8 @@ use super::cx::{first_expr, first_ref, flag, Cx};
 use crate::db::parse::tree::{ArmItem, Expr, ExprKind, Field, Item, Name, RefPath};
 use crate::db::span::Report;
 use crate::hir::{
-    Anchor, Counting, DayUnit, Deadline, Direction, RollOn, ShortPeriod, Transition, TransitionArm,
-    Type, Value,
+    Anchor, Counting, DayUnit, Deadline, Direction, EndOfMonth, RollOn, ShortPeriod, Transition,
+    TransitionArm, Type, Value,
 };
 use crate::resolve::sig::ValueKind;
 use crate::resolve::suggest;
@@ -44,8 +44,11 @@ impl Cx<'_, '_> {
         match self.ck.infer(e).value {
             // Day amounts here are unsigned duration literals (SPEC §3.1),
             // so the conversion cannot fail.
-            Some(Value::Days { amount, unit }) => u64::try_from(amount).ok().map(|n| (n, unit)),
-            Some(Value::Hours(_)) => {
+            Some(Value::Days {
+                amount,
+                unit: unit @ (DayUnit::Calendar | DayUnit::Court | DayUnit::Business),
+            }) => u64::try_from(amount).ok().map(|n| (n, unit)),
+            Some(Value::Hours(_) | Value::Days { .. }) => {
                 self.report(Report::new(
                     C::InvalidCounting,
                     e.range,
@@ -76,16 +79,30 @@ impl Cx<'_, '_> {
         trigger: &Expr,
         counted_by: &RefPath,
         opts: &[Field],
-        allow_hours: impl Fn(&str) -> bool,
+        local_counting: impl Fn(&str, &str) -> Option<bool>,
     ) -> Option<Deadline> {
         let meta = self.meta(name, None, item, rule);
         let counting = self.value_ref(counted_by, "counting rule", |k| {
             matches!(k, ValueKind::Counting)
         });
         let period = match self.ck.infer(amount).value {
-            Some(Value::Days { amount: n, unit }) => u64::try_from(n).ok().map(|n| (n, unit)),
+            Some(Value::Days { amount: n, unit }) => {
+                let counted = counting
+                    .as_deref()
+                    .map(|c| local_counting(c, "end_of_month"));
+                if unit.is_monthly() && counted == Some(Some(false)) {
+                    self.report(Report::new(
+                        C::InvalidCounting,
+                        amount.range,
+                        "a month or year deadline needs a counting rule with `end_of_month`",
+                    ));
+                }
+                u64::try_from(n).ok().map(|n| (n, unit))
+            }
             Some(Value::Hours(_)) => {
-                let allowed = counting.as_deref().is_some_and(&allow_hours);
+                let allowed = counting
+                    .as_deref()
+                    .is_some_and(|c| local_counting(c, "allow_hours") == Some(true));
                 let (code, message) = if allowed {
                     (
                         C::LoweringUnsupported,
@@ -177,6 +194,12 @@ impl Cx<'_, '_> {
             Some(Anchor::TriggerDay)
         };
         let short_period = self.short_period(f.get("short_period"));
+        let end_of_month = first_ref(f.get("end_of_month")).and_then(|r| {
+            self.keyword(
+                r,
+                &[("clamp", EndOfMonth::Clamp), ("roll", EndOfMonth::Roll)],
+            )
+        });
         Some(Counting {
             meta,
             exclude_trigger_day: f.contains_key("exclude_trigger_day"),
@@ -187,6 +210,7 @@ impl Cx<'_, '_> {
             anchor: anchor?,
             short_period,
             hours: f.contains_key("allow_hours"),
+            end_of_month,
         })
     }
 

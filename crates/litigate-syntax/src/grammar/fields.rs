@@ -57,6 +57,7 @@ pub(crate) const COUNTING_ITEMS: &[Spec] = &[
     (KwExcludeTriggerDay, None),
     (KwIncludeLastDay, None),
     (KwAllowHours, None),
+    (KwEndOfMonth, Some(reference)),
     (KwRollForwardOn, Some(id_list)),
     (KwServiceExtension, Some(service_extension)),
     (KwHolidays, Some(reference)),

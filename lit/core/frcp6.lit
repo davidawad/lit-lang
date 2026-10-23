@@ -35,6 +35,11 @@ counting frcp6 effective [1985-08-01, 2001-12-01) known_at 1985-04-29 supersedes
 /// electronic service included (2001 Committee Note); restyled in 2007 as
 /// 6(a)(2) and 6(d). The 2005 amendment confirmed the order the pipeline
 /// uses: the days are added after the period expires under 6(a).
+/// Rule 6 is silent on periods stated in months or years (Rule 60(c)(1)'s
+/// "a year"): they run to the corresponding day of the later month, and a
+/// month without that day (a February 29 anniversary) ends on its last day.
+/// `end_of_month clamp` is the earlier of the two readings; UNVERIFIED: no
+/// rule text or vendored decision fixes it.
 counting frcp6 effective [2001-12-01, 2009-12-01) known_at 2001-04-23 supersedes frcp6@1985-08-01 cite FRCP (2008 ed.) 6(a)(2)
 {
   exclude_trigger_day
@@ -47,6 +52,7 @@ counting frcp6 effective [2001-12-01, 2009-12-01) known_at 2001-04-23 supersedes
     OtherConsented: 3.days
   } cite FRCP (2008 ed.) 6(d)
   holidays us-federal-holidays
+  end_of_month clamp
 }
 
 /// The 2009 time-computation amendments (adopted March 26, 2009, effective
@@ -55,6 +61,11 @@ counting frcp6 effective [2001-12-01, 2009-12-01) known_at 2001-04-23 supersedes
 /// 6(a)(3). The 2016 amendment removed electronic service from 6(d); the
 /// engine has no electronic service method to extend, so this version
 /// already lists only mail, the clerk, and other consented means.
+/// Rule 6 is silent on periods stated in months or years (Rule 60(c)(1)'s
+/// "a year"): they run to the corresponding day of the later month, and a
+/// month without that day (a February 29 anniversary) ends on its last day.
+/// `end_of_month clamp` is the earlier of the two readings; UNVERIFIED: no
+/// rule text or vendored decision fixes it.
 counting frcp6 effective [2009-12-01, ..) known_at 2009-03-26 supersedes frcp6@2001-12-01 cite FRCP 6(a)
 {
   exclude_trigger_day
@@ -63,6 +74,7 @@ counting frcp6 effective [2009-12-01, ..) known_at 2009-03-26 supersedes frcp6@2
   service_extension { Mail: 3.days, Clerk: 3.days, OtherConsented: 3.days } cite FRCP 6(d)
   holidays us-federal-holidays
   allow_hours
+  end_of_month clamp
 }
 
 /// The court's determination under FRCP 86(a)(2)(B) that applying an

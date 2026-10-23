@@ -15,7 +15,8 @@ use crate::source_map::{Entry, SourceMap};
 use crate::Build;
 use litgraph::clock::calendar::Weekday;
 use litgraph::clock::rule::{
-    AnchorKind, CountUnit, Hours, MinLength, Period, Roll, ServiceExtension, Step, Toward,
+    AnchorKind, CountUnit, EndOfMonth, Hours, MinLength, Months, Period, Roll, ServiceExtension,
+    Step, Toward,
 };
 use litgraph::clock::{ClockLibrary, CountingRule, ServiceMethod, Unit};
 use litigate_base::{DiagnosticCode as C, Span};
@@ -197,9 +198,11 @@ fn periods(sink: &mut Sink, c: &hir::Counting, cite: &str, span: Option<&Span>) 
             sink.unsupported(span, "the short-period threshold is out of range");
             return out;
         };
-        let count = match short.unit {
-            DayUnit::Calendar => CountUnit::Calendar,
-            DayUnit::Court | DayUnit::Business => CountUnit::Business,
+        // Sema admits only day units here.
+        let count = if short.unit == DayUnit::Calendar {
+            CountUnit::Calendar
+        } else {
+            CountUnit::Business
         };
         out.push(Period {
             unit: Some(Unit::Calendar),
@@ -412,6 +415,20 @@ fn rule(
                      the same time on {{date}}"
                 )
             }),
+        }),
+        months: c.end_of_month.map(|policy| Months {
+            end_of_month: match policy {
+                hir::EndOfMonth::Clamp => EndOfMonth::Clamp,
+                hir::EndOfMonth::Roll => EndOfMonth::Roll,
+            },
+            text: format!(
+                "{cite}: count {{n}} {{unit}} {{after}} the anchor to the corresponding day{} -> \
+                 {{date}}",
+                match policy {
+                    hir::EndOfMonth::Clamp => ", else the last day of that month",
+                    hir::EndOfMonth::Roll => ", else the first day of the next month",
+                }
+            ),
         }),
     })
 }

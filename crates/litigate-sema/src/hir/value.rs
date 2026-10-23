@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 pub enum Type {
     /// Gregorian calendar date.
     Date,
-    /// Day count with a fixed counting unit.
+    /// Period with a fixed unit (days of a kind, weeks, months, years).
     Days(DayUnit),
     /// Attorney or elapsed hours.
     Hours,
@@ -39,7 +39,10 @@ pub enum Type {
     Unit,
 }
 
-/// Calendar unit carried by a typed day count.
+/// Unit carried by a typed period. The units do not convert into one
+/// another (design review 2026-10-23 §2.1): a week is seven calendar days
+/// only once a counting rule counts it, and months and years are calendar
+/// months counted under the rule's end-of-month policy.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum DayUnit {
@@ -49,6 +52,35 @@ pub enum DayUnit {
     Court,
     /// Business days after exclusions.
     Business,
+    /// Weeks of seven calendar days.
+    Week,
+    /// Calendar months.
+    Month,
+    /// Calendar years.
+    Year,
+}
+
+impl DayUnit {
+    /// `n` of this unit in prose: `21 calendar days`, `1 month`.
+    #[must_use]
+    pub fn prose(self, n: u64) -> String {
+        let noun = match self {
+            Self::Calendar => "calendar day",
+            Self::Court => "court day",
+            Self::Business => "business day",
+            Self::Week => "week",
+            Self::Month => "month",
+            Self::Year => "year",
+        };
+        format!("{n} {noun}{}", if n == 1 { "" } else { "s" })
+    }
+
+    /// Whether the unit is a calendar month or year, counted under an
+    /// end-of-month policy.
+    #[must_use]
+    pub const fn is_monthly(self) -> bool {
+        matches!(self, Self::Month | Self::Year)
+    }
 }
 
 /// Exact rational number; always reduced with a positive denominator.
@@ -96,9 +128,9 @@ pub enum Authored<T> {
 pub enum Value {
     /// ISO-8601 Gregorian date.
     Date(String),
-    /// Typed day count.
+    /// Typed period.
     Days {
-        /// Signed number of days.
+        /// Signed number of units.
         amount: i64,
         /// Counting unit for the amount.
         unit: DayUnit,

@@ -225,7 +225,7 @@ test "alter-amend-period: a last day on a Saturday (2025-06-07) rolls forward" c
   expect deadline(alter-amend-period) == 2025-06-09
 }
 
-test "relief-from-judgment-period: 365 days after entry of judgment" cite FRCP 60(c)(1)
+test "relief-from-judgment-period: a year after entry of judgment" cite FRCP 60(c)(1)
 {
   given JudgmentEntered() on 2025-06-09
   expect deadline(relief-from-judgment-period) == 2026-06-09
@@ -235,6 +235,18 @@ test "relief-from-judgment-period: a last day on a legal holiday (2026-09-07) ro
 {
   given JudgmentEntered() on 2025-09-07
   expect deadline(relief-from-judgment-period) == 2026-09-08
+}
+
+test "relief-from-judgment-period: a year across February 29 is 366 days" cite FRCP 60(c)(1)
+{
+  given JudgmentEntered() on 2027-03-01
+  expect deadline(relief-from-judgment-period) == 2028-03-01
+}
+
+test "relief-from-judgment-period: a year from February 29 ends on February 28" cite FRCP 60(c)(1)
+{
+  given JudgmentEntered() on 2028-02-29
+  expect deadline(relief-from-judgment-period) == 2029-02-28
 }
 
 test "notice-of-appeal-period: 30 days after entry of judgment" cite FRAP 4(a)(1)(A)

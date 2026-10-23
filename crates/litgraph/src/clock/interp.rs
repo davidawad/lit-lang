@@ -11,10 +11,10 @@ use std::collections::BTreeSet;
 use super::calendar::HolidayCalendar;
 use super::date::Date;
 use super::rule::{
-    AnchorKind, CountUnit, CountingRule, Period, Roll, ServiceExtension, Step, Toward,
+    AnchorKind, CountUnit, CountingRule, EndOfMonth, Period, Roll, ServiceExtension, Step, Toward,
 };
 use super::types::{
-    ClockConfig, ComputedDeadline, ComputedHourDeadline, DayDeadline, Direction, HourDeadline,
+    ClockConfig, ComputedDeadline, ComputedHourDeadline, DayDeadline, Direction, HourDeadline, Unit,
 };
 use crate::error::{Error, Result};
 
@@ -127,6 +127,7 @@ struct Run<'c, 'a> {
     forward: bool,
     anchor: Date,
     current: Date,
+    nominal: Date,
     base: Date,
     applied: Applied,
     steps: Vec<String>,
@@ -190,6 +191,9 @@ impl Run<'_, '_> {
     }
 
     fn count(&mut self, periods: &[Period]) -> Result<()> {
+        if matches!(self.dl.unit, Unit::Month | Unit::Year) {
+            return self.count_months();
+        }
         let n = self.dl.days;
         let p = periods
             .iter()
@@ -214,7 +218,47 @@ impl Run<'_, '_> {
                 &self.cfg.additional_holidays,
             ),
         };
+        self.nominal = self.current;
         self.say(&p.text, self.current, &[]);
+        Ok(())
+    }
+
+    /// Calendar months (a year is twelve) from the anchor to the
+    /// corresponding day, under the rule's `months` provision.
+    fn count_months(&mut self) -> Result<()> {
+        let rule = self.clock.rule;
+        let m = rule.months.as_ref().ok_or_else(|| {
+            Error::Invalid(format!(
+                "{} has no calendar-month provision: month and year periods are not counted",
+                rule.label
+            ))
+        })?;
+        if rule.anchor_kind() != Some(AnchorKind::Trigger) {
+            return Err(Error::Invalid(format!(
+                "{}: a month or year period counts from the trigger date, not an adjacent \
+                 business day",
+                rule.label
+            )));
+        }
+        let (n, year) = (self.dl.days, self.dl.unit == Unit::Year);
+        let months = n
+            .checked_mul(if year { 12 } else { 1 })
+            .ok_or_else(|| Error::Invalid(format!("a {n}-year period is out of range")))?;
+        let (date, short) = self
+            .anchor
+            .add_months(if self.forward { months } else { -months })?;
+        self.current = match (short, m.end_of_month) {
+            (true, EndOfMonth::Roll) => date.last_of_month().add_days(1),
+            _ => date,
+        };
+        self.nominal = self.current;
+        let unit = match (year, n == 1) {
+            (true, true) => "year",
+            (true, false) => "years",
+            (false, true) => "month",
+            (false, false) => "months",
+        };
+        self.say(&m.text, self.current, &[("unit", unit)]);
         Ok(())
     }
 
@@ -299,6 +343,13 @@ pub fn compute_due_date(
             dl.days
         )));
     }
+    // A week is seven calendar days.
+    let weeks = (dl.unit == Unit::Week).then(|| DayDeadline {
+        days: dl.days.saturating_mul(7),
+        unit: Unit::Calendar,
+        ..dl.clone()
+    });
+    let dl = weeks.as_ref().unwrap_or(dl);
     let mut run = Run {
         clock,
         dl,
@@ -306,6 +357,7 @@ pub fn compute_due_date(
         forward: matches!(dl.direction, Direction::Forward),
         anchor: dl.trigger,
         current: dl.trigger,
+        nominal: dl.trigger,
         base: dl.trigger,
         applied: Applied::default(),
         steps: vec![],
@@ -316,6 +368,7 @@ pub fn compute_due_date(
     Ok(ComputedDeadline {
         rule_set: clock.rule.id.clone(),
         anchor_date: run.anchor.to_iso(),
+        nominal_date: run.nominal.to_iso(),
         base_date: run.base.to_iso(),
         due_date: run.current.to_iso(),
         last_day_rolled: run.applied.rolled,

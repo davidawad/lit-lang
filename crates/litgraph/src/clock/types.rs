@@ -22,9 +22,11 @@ pub enum Direction {
     Backward,
 }
 
-/// Calendar days versus business ("court") days, per `Deadline.unit` in
-/// `model::schema` (`docs/PACK_SCHEMA.md`). A counting rule's `count`
-/// step decides what each unit means (`clock::rule::Period`).
+/// The unit a period is stated in, per `Deadline.unit` in `model::schema`
+/// (`docs/PACK_SCHEMA.md`). A counting rule's `count` step decides what
+/// calendar and court days mean (`clock::rule::Period`); a week is seven
+/// calendar days; months and years are calendar months, counted by the
+/// rule's `months` provision (`clock::rule::Months`).
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Default, PartialEq, Eq, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum Unit {
@@ -34,6 +36,12 @@ pub enum Unit {
     /// Court ("business") days: a pack-authored choice for a forum whose
     /// own rule counts business days.
     Court,
+    /// Weeks of seven calendar days.
+    Week,
+    /// Calendar months.
+    Month,
+    /// Calendar years (twelve calendar months).
+    Year,
 }
 
 /// Service methods that may add days to a period. The vocabulary is the
@@ -82,7 +90,7 @@ impl ServiceMethod {
 pub struct DayDeadline {
     /// The triggering event date.
     pub trigger: Date,
-    /// Length of the period in days (non-negative integer).
+    /// Length of the period in `unit`s (non-negative integer).
     pub days: i64,
     /// Forward ("after") or backward ("before") counting.
     pub direction: Direction,
@@ -113,10 +121,13 @@ pub struct ComputedDeadline {
     /// The anchor date (the trigger itself, or an adjacent business day,
     /// per the rule's `anchor` step).
     pub anchor_date: String,
+    /// The period's last day as counted, before any roll or extension
+    /// (the "nominal" due date).
+    pub nominal_date: String,
     /// The working date where the rule's `base` step sits in its
     /// pipeline.
     pub base_date: String,
-    /// The final due date, after every step.
+    /// The final ("adjusted") due date, after every step.
     pub due_date: String,
     /// Whether any `roll` step moved the date.
     pub last_day_rolled: bool,

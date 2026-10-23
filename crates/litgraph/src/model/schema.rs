@@ -27,9 +27,9 @@ pub enum NodeKind {
 #[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq, JsonSchema)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct Deadline {
-    /// Length of the window in days.
+    /// Length of the window in `unit`s.
     pub length: f64,
-    /// `calendar` (default) or `court` days.
+    /// `calendar` (default) or `court` days, or `week`, `month`, `year`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub unit: Option<String>,
     /// Whether extensions are available.
@@ -41,6 +41,23 @@ pub struct Deadline {
     /// Free-text note (traps, US-party variants, ...).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub note: Option<String>,
+}
+
+impl Deadline {
+    /// The window's length in days, for metrics and estimates: the length
+    /// itself for calendar and court days, seven per week, and the mean
+    /// Gregorian month (146097/4800 days) and year (365.2425 days) for
+    /// months and years, whose exact length depends on the trigger date.
+    #[must_use]
+    pub fn days(&self) -> f64 {
+        self.length
+            * match self.unit.as_deref() {
+                Some("week") => 7.0,
+                Some("month") => 146_097.0 / 4800.0,
+                Some("year") => 365.2425,
+                _ => 1.0,
+            }
+    }
 }
 
 /// Expected elapsed calendar time of a transition, in days (triangular).

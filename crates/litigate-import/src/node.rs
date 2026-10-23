@@ -314,10 +314,16 @@ impl Spelling<'_> {
         let unit = match deadline.unit.as_deref() {
             None | Some("calendar") => "days",
             Some("court") => "court_days",
+            Some("week") => "weeks",
+            Some("month") => "months",
+            Some("year") => "years",
             Some(other) => {
                 self.issues.report(
                     &format!("{pointer}/unit"),
-                    format!("deadline unit `{other}` has no .lit spelling (calendar or court)"),
+                    format!(
+                        "deadline unit `{other}` has no .lit spelling (calendar, court, week, \
+                         month or year)"
+                    ),
                 );
                 "days"
             }

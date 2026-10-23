@@ -213,6 +213,27 @@ impl Date {
         Date::from_ymd(ny, nm, 1).unwrap_or(self).add_days(-1)
     }
 
+    /// The date `n` calendar months away (earlier for negative `n`) on the
+    /// same day of the month, and whether the target month is too short to
+    /// have that day; then the date is the target month's last day (January
+    /// 31 plus one month is February 28 or 29, `true`).
+    ///
+    /// # Errors
+    /// `Error::Invalid` when the target year is out of range.
+    pub fn add_months(self, n: i64) -> Result<(Date, bool)> {
+        let (y, m, d) = self.ymd();
+        let total = n
+            .checked_add(i64::from(y) * 12 + i64::from(m) - 1)
+            .ok_or_else(|| Error::Invalid(format!("{n} months is out of range")))?;
+        let year = i32::try_from(total.div_euclid(12))
+            .map_err(|_| Error::Invalid(format!("{n} months from {self} is out of range")))?;
+        // `rem_euclid(12)` is in 0..12.
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let month = total.rem_euclid(12) as u32 + 1;
+        let last = days_in_month(year, month);
+        Ok((Date(days_from_civil(year, month, d.min(last))), d > last))
+    }
+
     /// The `n`th occurrence of `dow` in `(year, month)`. `n` is 1-indexed;
     /// use `n = -1` for "last".
     ///
@@ -339,6 +360,26 @@ mod tests {
         let d: Date = serde_json::from_str("\"2021-06-17\"").unwrap();
         assert_eq!(serde_json::to_string(&d).unwrap(), "\"2021-06-17\"");
         assert!(serde_json::from_str::<Date>("\"2021-02-30\"").is_err());
+    }
+
+    #[test]
+    fn add_months_keeps_the_day_or_reports_a_short_month() {
+        let d = |s: &str| Date::parse_iso(s).unwrap();
+        let shift = |s: &str, n: i64| {
+            let (date, short) = d(s).add_months(n).unwrap();
+            (date.to_iso(), short)
+        };
+        assert_eq!(shift("2025-03-04", 9), ("2025-12-04".into(), false));
+        assert_eq!(shift("2024-11-30", 3), ("2025-02-28".into(), true));
+        assert_eq!(shift("2023-11-30", 3), ("2024-02-29".into(), true));
+        assert_eq!(shift("2025-02-28", 3), ("2025-05-28".into(), false));
+        assert_eq!(shift("2024-02-29", 12), ("2025-02-28".into(), true));
+        assert_eq!(shift("2025-01-15", -1), ("2024-12-15".into(), false));
+        assert_eq!(shift("2025-03-31", -1), ("2025-02-28".into(), true));
+        assert!(d("2025-01-01").add_months(i64::MAX).is_err());
+        assert!(d("2025-01-01")
+            .add_months(i64::from(i32::MAX) * 12)
+            .is_err());
     }
 
     #[test]

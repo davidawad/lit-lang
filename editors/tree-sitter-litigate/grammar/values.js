@@ -169,7 +169,7 @@ module.exports = {
 
   money: _ => /\d[\d_]*(\.\d[\d_]*)?\.usd/,
 
-  duration: _ => /\d[\d_]*(\.\d[\d_]*)?\.(days|court_days|business_days|hours)/,
+  duration: _ => /\d[\d_]*(\.\d[\d_]*)?\.(days|court_days|business_days|weeks|months|years|hours)/,
 
   date: _ => /\d{4}-\d{2}-\d{2}/,
 

@@ -173,6 +173,9 @@ pub fn due(
     let unit = match d.unit {
         DayUnit::Calendar => Unit::Calendar,
         DayUnit::Court => Unit::Court,
+        DayUnit::Week => Unit::Week,
+        DayUnit::Month => Unit::Month,
+        DayUnit::Year => Unit::Year,
         DayUnit::Business => {
             return Err(format!(
                 "`{}` counts business days, which have no engine lowering",

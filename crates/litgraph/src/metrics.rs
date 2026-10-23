@@ -9,7 +9,7 @@
 
 use crate::error::{Error, Result};
 use crate::expr::{Arg, Env};
-use crate::model::{Graph, Role};
+use crate::model::{Deadline, Graph, Role};
 use std::collections::BTreeMap;
 
 /// A built-in metric, utility, or parameter, expressed as source: an
@@ -237,7 +237,7 @@ pub struct EdgeEnv<'a> {
 impl Env for EdgeEnv<'_> {
     fn var(&self, name: &str) -> Option<f64> {
         let e = &self.g.edges[self.e];
-        let dl = e.deadline.as_ref().map(|d| d.length);
+        let dl = e.deadline.as_ref().map(Deadline::days);
         let elapsed = e.duration.as_ref().map(|d| d.mode).or(dl).unwrap_or(0.0);
         Some(match name {
             "hours" => e.hours,

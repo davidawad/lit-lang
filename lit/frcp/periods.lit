@@ -120,10 +120,11 @@ deadline new-trial-period: 28.days after JudgmentEntered() counted_by frcp6 effe
 /// its entry; FRCP 6(b)(2) forbids extending it. Rule 59 last amended eff.
 /// December 1, 2009.
 deadline alter-amend-period: 28.days after JudgmentEntered() counted_by frcp6 effective [2009-12-01, ..) cite FRCP 59(e)
-/// Rule 60(c)(1): a Rule 60(b)(1)-(3) motion is due no more than a year
-/// after entry of the judgment, which the pack counts as 365 days; FRCP
+/// Rule 60(c)(1): a Rule 60(b)(1)-(3) motion is due "no more than a year
+/// after the entry of the judgment", a calendar year (`frcp6`'s
+/// `end_of_month clamp` ends one from February 29 on February 28); FRCP
 /// 6(b)(2) forbids extending it. Rule 60 last amended eff. December 1, 2007.
-deadline relief-from-judgment-period: 365.days after JudgmentEntered() counted_by frcp6 effective [2007-12-01, ..) cite FRCP 60(c)(1)
+deadline relief-from-judgment-period: 1.years after JudgmentEntered() counted_by frcp6 effective [2007-12-01, ..) cite FRCP 60(c)(1)
 /// FRAP 4(a)(1)(A): the notice of appeal is due 30 days after entry of
 /// judgment (28 U.S.C. § 2107(a)); the district court may extend it under
 /// FRAP 4(a)(5) and 28 U.S.C. § 2107(c).

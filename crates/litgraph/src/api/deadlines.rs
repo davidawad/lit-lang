@@ -62,8 +62,12 @@ fn unit_of(d: &PackDeadline) -> Result<Unit> {
     match d.unit.as_deref() {
         None | Some("calendar") => Ok(Unit::Calendar),
         Some("court") => Ok(Unit::Court),
+        Some("week") => Ok(Unit::Week),
+        Some("month") => Ok(Unit::Month),
+        Some("year") => Ok(Unit::Year),
         Some(other) => Err(Error::Invalid(format!(
-            "deadline.unit {other:?}; expected \"calendar\" or \"court\""
+            "deadline.unit {other:?}; expected \"calendar\", \"court\", \"week\", \"month\" \
+             or \"year\""
         ))),
     }
 }
@@ -101,6 +105,7 @@ fn edge_result(
         "deadline_length": d.length,
         "unit": d.unit.clone().unwrap_or_else(|| "calendar".into()),
         "trigger": computed.anchor_date,
+        "nominal_date": computed.nominal_date,
         "base_date": computed.base_date,
         "due_date": computed.due_date,
         "last_day_rolled": computed.last_day_rolled,

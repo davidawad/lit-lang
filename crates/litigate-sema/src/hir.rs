@@ -29,8 +29,8 @@ pub use logic::{
     Relation, Rule, RuleKind, Test, TypeAlias,
 };
 pub use temporal::{
-    Anchor, Calendar, Counting, Deadline, Direction, Holiday, HolidayDate, Interval, Observance,
-    RollOn, ShortPeriod, Transition, TransitionArm,
+    Anchor, Calendar, Counting, Deadline, Direction, EndOfMonth, Holiday, HolidayDate, Interval,
+    Observance, RollOn, ShortPeriod, Transition, TransitionArm,
 };
 pub use value::{Authored, DayUnit, Money, Rational, Type, Value};
 

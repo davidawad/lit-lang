@@ -1,7 +1,9 @@
 //! `test` blocks (SPEC §4.7, §7 `tests-pass`): each `given` event happens
 //! on its date, then every `expect` is evaluated. `deadline(d)` is the due
 //! date of `d`'s version in force on its latest matching trigger, computed
-//! by litgraph's clock interpreter over the lowered counting rule.
+//! by litgraph's clock interpreter over the lowered counting rule:
+//! `deadline(d).adjusted` (or bare `deadline(d)`) after every roll and
+//! extension, `deadline(d).nominal` the last day as counted.
 use crate::clock::{self, Clocks};
 use crate::hirx;
 use crate::span;
@@ -82,7 +84,7 @@ struct Cx<'a> {
 }
 
 impl Cx<'_> {
-    fn deadline(&mut self, name: &str) -> Result<V, String> {
+    fn deadline(&mut self, name: &str, nominal: bool) -> Result<V, String> {
         let any = hirx::deadlines(self.pkg, name)
             .next()
             .ok_or_else(|| format!("`{name}` is not a deadline of this package"))?;
@@ -103,7 +105,19 @@ impl Cx<'_> {
         }];
         let due = clock::due(self.clocks, self.pkg, name, &events, 0, Some(self.known_at))?;
         self.steps.extend(due.computed.steps.iter().cloned());
-        Ok(V::Date(due.computed.due_date))
+        Ok(V::Date(if nominal {
+            due.computed.nominal_date
+        } else {
+            due.computed.due_date
+        }))
+    }
+
+    /// `deadline(d)` (adjusted) or its `field`.
+    fn due(&mut self, arg: &Expr, field: &str) -> Result<V, String> {
+        match &arg.kind {
+            ExprKind::Ref { target } => self.deadline(target, field == "nominal"),
+            _ => Err("`deadline` takes a deadline name".to_owned()),
+        }
     }
 
     fn eval(&mut self, e: &Expr) -> Result<V, String> {
@@ -115,14 +129,20 @@ impl Cx<'_> {
                 other => V::Other(serde_json::to_value(other).unwrap_or_default()),
             }),
             ExprKind::Call { callee, args } => match (hirx::local(callee), args.as_slice()) {
-                ("deadline", [arg]) => match &arg.kind {
-                    ExprKind::Ref { target } => self.deadline(target),
-                    _ => Err("`deadline` takes a deadline name".to_owned()),
-                },
+                ("deadline", [arg]) => self.due(arg, "adjusted"),
                 ("has_event", [pattern]) => Ok(V::Bool(
                     self.givens.iter().any(|(g, _)| hirx::matches(pattern, g)),
                 )),
                 (other, _) => Err(format!("`{other}(..)` cannot be evaluated in a test")),
+            },
+            ExprKind::Field { base, field } => match &base.kind {
+                ExprKind::Call { callee, args } if hirx::local(callee) == "deadline" => {
+                    match args.as_slice() {
+                        [arg] => self.due(arg, field),
+                        _ => Err("`deadline` takes a deadline name".to_owned()),
+                    }
+                }
+                _ => Err("only a due date's fields can be evaluated in a test".to_owned()),
             },
             ExprKind::Unary {
                 op: UnaryOp::Not,

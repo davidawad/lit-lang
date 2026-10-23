@@ -44,8 +44,11 @@ pub fn story(g: &Graph, case: &Case, walked: &[Walked], deadlines: &[String]) ->
                 let _ = write!(via, ", {a}");
             }
             if let Some(d) = &e.deadline {
-                let unit = d.unit.as_deref().unwrap_or("calendar");
-                let _ = write!(via, ", within {} {unit} days", d.length);
+                let unit = match d.unit.as_deref() {
+                    Some(u @ ("week" | "month" | "year")) => format!("{u}(s)"),
+                    u => format!("{} days", u.unwrap_or("calendar")),
+                };
+                let _ = write!(via, ", within {} {unit}", d.length);
             }
             let _ = writeln!(out, "       via {} ({via})", e.base_id);
             let _ = writeln!(out, "       at  {}", node_line(g, t.to));

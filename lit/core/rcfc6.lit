@@ -26,7 +26,11 @@ counting rcfc6 effective [2002-05-01, 2010-01-11) known_at 2002-05-01 cite RCFC 
 /// changes to FRCP 6 that became effective December 1, 2009" (2010
 /// Amendment note): every day counts, hours periods, and the clerk's
 /// office inaccessibility rule (6(a)(3)). Its legal holidays add
-/// Inauguration Day (6(a)(6)(A)).
+/// Inauguration Day (6(a)(6)(A)). RCFC 6, like FRCP 6, is silent on
+/// periods stated in months or years; PTAB borrows this rule for the
+/// months of 35 U.S.C. §§ 314(b), 315(b), 321(c) and 37 C.F.R. Part 42, so
+/// it counts them as the Patent Office does (MPEP 710.01(a)): to the
+/// corresponding day of the later month, else that month's last day.
 counting rcfc6 effective [2010-01-11, ..) known_at 2010-01-11 supersedes rcfc6@2002-05-01 cite RCFC 6(a)
 {
   exclude_trigger_day
@@ -35,6 +39,7 @@ counting rcfc6 effective [2010-01-11, ..) known_at 2010-01-11 supersedes rcfc6@2
   service_extension { Mail: 3.days, Clerk: 3.days, OtherConsented: 3.days } cite RCFC 6(d)
   holidays rcfc-legal-holidays
   allow_hours
+  end_of_month clamp
 }
 
 deadline rcfc6-1-day: 1.days after Served() counted_by rcfc6 cite RCFC 6(a)(1)

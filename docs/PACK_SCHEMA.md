@@ -503,7 +503,7 @@ override it at runtime, independently of `$LITGRAPH_PACKS`/`--packs-dir`.
 | `scenario` | object | the engine scenario (`litgraph schema scenario`) |
 | `schema_version` | `1` or `2` | absent is `1`; `2` adds the three fields below, and is what the compiler emits |
 | `parties` | `[{id,actor,entity_type}]` | **v2** the matter's parties and the pack actor each plays |
-| `events` | `[{date,action,relation,party,authority?}]` | **v2** the docket in order: `action` is the typed event as written (`Served(complaint, Mail)`), `relation` `by` or `on` the `party`. Replay already turned them into `scenario.start` and `scenario.remove_edges`; the engine reads them as record only |
+| `events` | `[{date,docket?,action,relation,party,authority?}]` | **v2** the docket in docket order (by date, then `docket` number, never source order): `action` is the typed event as written (`Served(complaint, Mail)`), `relation` `by` or `on` the `party`. Replay already turned them into `scenario.start` and `scenario.remove_edges`; the engine reads them as record only |
 | `lowered` | object | **v2** [`lowered` header](#the-lowered-header): the world the matter was replayed in (`asOf`/`knownAt` are the case's) and its holes (an `unvalued` stake, a source `as_of ?(..)`) |
 
 `litgraph schema named-scenario` gives the full JSON Schema; `litgraph

@@ -816,6 +816,15 @@
           "type": "string",
           "description": "Event date (`YYYY-MM-DD`)."
         },
+        "docket": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "format": "uint64",
+          "minimum": 0,
+          "description": "Docket sequence number (`docket N`), ordering the event among\nothers of its date."
+        },
         "action": {
           "type": "string",
           "description": "The typed event, spelled as in the source (`Served(complaint, Mail)`)."

@@ -1234,6 +1234,11 @@ export interface DocketEvent {
    */
   date: string;
   /**
+   * Docket sequence number (`docket N`), ordering the event among
+   * others of its date.
+   */
+  docket?: number | null;
+  /**
    * The typed event, spelled as in the source (`Served(complaint, Mail)`).
    */
   action: string;

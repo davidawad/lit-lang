@@ -1,14 +1,14 @@
 {
   "events": [
     {
-      "action": "Elected(\"e-patentfork-nonpatent\")",
+      "action": "Elected(\"e-filingfork-protest\")",
       "authority": "28 U.S.C. § 1491(b)(1)",
       "date": "2026-09-08",
       "party": "offeror",
       "relation": "by"
     },
     {
-      "action": "Elected(\"e-filingfork-protest\")",
+      "action": "Elected(\"e-patentfork-nonpatent\")",
       "authority": "28 U.S.C. § 1491(b)(1)",
       "date": "2026-09-08",
       "party": "offeror",
@@ -25,12 +25,12 @@
         "version": "0.1.0"
       },
       {
-        "digest": "sha256:d1a5dfa0dcbc0ba4a0b6532147377fc086d559f6e1e11924eaf4fe69c5d8ec1b",
+        "digest": "sha256:7cab26e955e9555cb989bbdd5a6288862f0806622eaec794819ceef14a60e755",
         "name": "core",
         "version": "1.0.0"
       }
     ],
-    "worldDigest": "sha256:3153dfd410115da85929ec1447717ef40b7a294ad6069e9d0d47d0821afb8c0a"
+    "worldDigest": "sha256:aad85e857601584343e72f2de94ef6d92dda92344b9f876c89073a30b94180c9"
   },
   "notes": "Plaintiff is a disappointed offeror protesting a post-award procurement decision under the CoFC's concurrent bid-protest jurisdiction, 28 U.S.C. §1491(b)(1) (verified law.cornell.edu). Uses the `cofc` pack alone via its dedicated (8-node) bid-protest branch (`filing-track-fork` -> `bid-protest-*` -> `protest-sustained`/`protest-denied`); the matter elects a non-§1498(a) claim and the protest track (cited Elected events), which removes the §1498(a) branch and the standard complaint so the graph runs a clean protest matter (the pack's bid-protest branch does not merge back into the patent/general-civil answer-and-discovery machinery, so no further pruning is needed). RCFC Appendix C procedure (pre-filing notice, sealed complaint, initial status conference, TRO/PI practice, administrative-record cross-motions) is already sourced in the `cofc` pack (packs/cofc-SOURCES-NOTES.md); not re-verified here. Money numbers are illustrative: `protest-sustained`'s value is modeled as bid-and-proposal-cost recovery plus re-compete opportunity, NOT a share of the patent scenario's $1,000,000 stake — bid-protest relief is injunctive/declaratory (resolicitation, corrective action), not usually a damages award (the pack's own note on `protest-sustained` flags this explicitly; kept at the pack's own $200,000 placeholder here as well, since no more specific procurement value is known for an illustrative matter). Attorney rate $600/hr (illustrative bid-protest-specialist estimate, lower than the patent-track rate since Appendix C practice is record-review, not full discovery/trial). The pack's own probability estimates on the protest-sustained/denied fork are flagged 'TEACHING ESTIMATE' (not a cited GAO/CoFC sustain-rate statistic); this scenario does not override them.",
   "packs": [
@@ -60,8 +60,8 @@
       "cofc::protest-sustained": 200000
     },
     "remove_edges": [
-      "cofc::e-patentfork-patent",
-      "cofc::e-filingfork-standard"
+      "cofc::e-filingfork-standard",
+      "cofc::e-patentfork-patent"
     ]
   },
   "schema_version": 2,

@@ -47,7 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   absent fields. Schema bump: packs are `schemaVersion` 4, `links.json` and
   named scenarios schema 2, generated clock fragments 4; older versions are
   still read. A v2 scenario also records the matter's `parties` and docket
-  `events`. The engine checks the header on read (sorted pins, recomputed
+  `events` (in docket order, with their `docket` numbers). The engine checks the header on read (sorted pins, recomputed
   digest, holes inside the document) and warns `authored-hole` for a pack
   whose holes leave a number open.
 - **Canonical JSON output.** Generated packs, links, clock fragments,

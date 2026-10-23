@@ -107,7 +107,7 @@
       "from": "waiver-requested",
       "hours": 1,
       "label": "Defendant returns executed waiver",
-      "to": "rule12-response-window"
+      "to": "waiver-response-window"
     },
     {
       "actor": "applicant",
@@ -232,7 +232,7 @@
       "hours": 0,
       "label": "No remand motion -- case proceeds in federal court",
       "note": "Hours: 0, a default/no-action transition with no billable work of its own.",
-      "to": "rule12-response-window"
+      "to": "removed-response-window"
     },
     {
       "actor": "examiner",
@@ -258,7 +258,7 @@
       "from": "remand-ruling",
       "label": "Court denies remand -- federal forum retained",
       "probability": 0.7,
-      "to": "rule12-response-window"
+      "to": "removed-response-window"
     },
     {
       "actor": "applicant",
@@ -310,6 +310,171 @@
       "actor": "applicant",
       "authority": "FRCP 55(a)",
       "from": "rule12-response-window",
+      "hours": 0,
+      "label": "Fail to answer or move -- default exposure",
+      "to": "default-entered",
+      "valence": "bad"
+    },
+    {
+      "actor": "applicant",
+      "authority": "FRCP 12(a)(1)(A)(ii)",
+      "cost": 4000,
+      "deadline": {
+        "extendable": true,
+        "extensionAuthority": "FRCP 6(b)(1): for good cause before the period expires, or on motion after it for excusable neglect",
+        "length": 60,
+        "note": "60 days after the waiver request was sent (Rule 12(a)(1)(A)(ii))."
+      },
+      "duration": {
+        "max": 60,
+        "min": 9,
+        "mode": 30
+      },
+      "from": "waiver-response-window",
+      "hours": 15,
+      "label": "File answer within 60 days of the waiver request",
+      "to": "answer-filed",
+      "valence": "good"
+    },
+    {
+      "actor": "applicant",
+      "authority": "FRCP 12(b)",
+      "cost": 8000,
+      "deadline": {
+        "extendable": true,
+        "extensionAuthority": "FRCP 6(b)(1): for good cause before the period expires, or on motion after it for excusable neglect",
+        "length": 60,
+        "note": "Filing the motion extends the responsive-pleading deadline to 14 days after the court denies or postpones disposition (Rule 12(a)(4)(A))."
+      },
+      "duration": {
+        "max": 60,
+        "min": 9,
+        "mode": 30
+      },
+      "from": "waiver-response-window",
+      "hours": 30,
+      "id": "waiver-12b-motion-filed",
+      "label": "File pre-answer Rule 12(b) motion instead of answering",
+      "note": "This pack doesn't separately model which Rule 12(b) defenses a motion raises, so sets waived-12h-defenses on every 12(b) motion as the conservative default: FRCP 12(h)(1)(A) waives lack of personal jurisdiction, improper venue, insufficient process, and insufficient service of process by omitting any of them from a motion made under the circumstances described in Rule 12(g)(2) (a motion raising some, but not all, available Rule 12 defenses). A pack that modeled motion content in more detail could instead set this flag only on the omitting variant.",
+      "sets": [
+        "waived-12h-defenses"
+      ],
+      "to": "motion-to-dismiss-filed"
+    },
+    {
+      "actor": "applicant",
+      "authority": "FRCP 55(a)",
+      "from": "waiver-response-window",
+      "hours": 0,
+      "label": "Fail to answer or move -- default exposure",
+      "to": "default-entered",
+      "valence": "bad"
+    },
+    {
+      "actor": "applicant",
+      "authority": "FRCP 81(c)(2)(A)",
+      "cost": 4000,
+      "deadline": {
+        "extendable": true,
+        "extensionAuthority": "FRCP 6(b) stipulation or court order",
+        "length": 21,
+        "note": "21 days after the defendant received the initial pleading (Rule 81(c)(2)(A))."
+      },
+      "duration": {
+        "max": 21,
+        "min": 3.1,
+        "mode": 10.5
+      },
+      "from": "removed-response-window",
+      "hours": 15,
+      "label": "File answer within the Rule 81(c)(2) period",
+      "to": "answer-filed",
+      "valence": "good"
+    },
+    {
+      "actor": "applicant",
+      "authority": "FRCP 12(b)",
+      "cost": 8000,
+      "deadline": {
+        "extendable": true,
+        "extensionAuthority": "FRCP 6(b) stipulation or court order",
+        "length": 21,
+        "note": "Filing the motion extends the responsive-pleading deadline to 14 days after the court denies or postpones disposition (Rule 12(a)(4)(A))."
+      },
+      "duration": {
+        "max": 21,
+        "min": 3.1,
+        "mode": 10.5
+      },
+      "from": "removed-response-window",
+      "hours": 30,
+      "id": "removed-12b-motion-filed",
+      "label": "File pre-answer Rule 12(b) motion instead of answering",
+      "note": "This pack doesn't separately model which Rule 12(b) defenses a motion raises, so sets waived-12h-defenses on every 12(b) motion as the conservative default: FRCP 12(h)(1)(A) waives lack of personal jurisdiction, improper venue, insufficient process, and insufficient service of process by omitting any of them from a motion made under the circumstances described in Rule 12(g)(2) (a motion raising some, but not all, available Rule 12 defenses). A pack that modeled motion content in more detail could instead set this flag only on the omitting variant.",
+      "sets": [
+        "waived-12h-defenses"
+      ],
+      "to": "motion-to-dismiss-filed"
+    },
+    {
+      "actor": "applicant",
+      "authority": "FRCP 55(a)",
+      "from": "removed-response-window",
+      "hours": 0,
+      "label": "Fail to answer or move -- default exposure",
+      "to": "default-entered",
+      "valence": "bad"
+    },
+    {
+      "actor": "applicant",
+      "authority": "FRCP 15(a)(3)",
+      "cost": 4000,
+      "deadline": {
+        "extendable": true,
+        "extensionAuthority": "FRCP 6(b) stipulation or court order",
+        "length": 14,
+        "note": "14 days after service of the amended pleading, or the time left on the original if later (Rule 15(a)(3))."
+      },
+      "duration": {
+        "max": 14,
+        "min": 2.1,
+        "mode": 7
+      },
+      "from": "amended-response-window",
+      "hours": 15,
+      "label": "File answer to the amended pleading within 14 days",
+      "to": "answer-filed",
+      "valence": "good"
+    },
+    {
+      "actor": "applicant",
+      "authority": "FRCP 12(b)",
+      "cost": 8000,
+      "deadline": {
+        "extendable": true,
+        "extensionAuthority": "FRCP 6(b) stipulation or court order",
+        "length": 14,
+        "note": "Filing the motion extends the responsive-pleading deadline to 14 days after the court denies or postpones disposition (Rule 12(a)(4)(A))."
+      },
+      "duration": {
+        "max": 14,
+        "min": 2.1,
+        "mode": 7
+      },
+      "from": "amended-response-window",
+      "hours": 30,
+      "id": "amended-12b-motion-filed",
+      "label": "File pre-answer Rule 12(b) motion instead of answering",
+      "note": "This pack doesn't separately model which Rule 12(b) defenses a motion raises, so sets waived-12h-defenses on every 12(b) motion as the conservative default: FRCP 12(h)(1)(A) waives lack of personal jurisdiction, improper venue, insufficient process, and insufficient service of process by omitting any of them from a motion made under the circumstances described in Rule 12(g)(2) (a motion raising some, but not all, available Rule 12 defenses). A pack that modeled motion content in more detail could instead set this flag only on the omitting variant.",
+      "sets": [
+        "waived-12h-defenses"
+      ],
+      "to": "motion-to-dismiss-filed"
+    },
+    {
+      "actor": "applicant",
+      "authority": "FRCP 55(a)",
+      "from": "amended-response-window",
       "hours": 0,
       "label": "Fail to answer or move -- default exposure",
       "to": "default-entered",
@@ -448,7 +613,7 @@
       },
       "from": "amended-complaint-filed",
       "label": "Responsive-pleading window reopens for the amended pleading",
-      "to": "rule12-response-window"
+      "to": "amended-response-window"
     },
     {
       "actor": "applicant",
@@ -1229,64 +1394,64 @@
     "asOf": "2024-12-01",
     "holes": [
       {
-        "pointer": "/edges/64/authority",
-        "reason": "FRE 702"
-      },
-      {
-        "pointer": "/edges/72/authority",
-        "reason": "FRE 702"
-      },
-      {
-        "pointer": "/edges/73/authority",
-        "reason": "FRE 702; FRE 104(a)"
-      },
-      {
-        "pointer": "/edges/74/authority",
-        "reason": "FRE 702"
-      },
-      {
-        "pointer": "/edges/75/authority",
-        "reason": "FRE 702"
-      },
-      {
-        "pointer": "/edges/76/authority",
-        "reason": "FRE 103(d)"
-      },
-      {
-        "pointer": "/edges/97/authority",
+        "pointer": "/edges/106/authority",
         "reason": "FRAP 4(a)(1)(A); Bowles v. Russell, 551 U.S. 205 (2007)"
       },
       {
-        "pointer": "/nodes/42/cite",
-        "reason": "FRE 702; FRE 104(a)"
-      },
-      {
-        "pointer": "/nodes/43/cite",
+        "pointer": "/edges/73/authority",
         "reason": "FRE 702"
       },
       {
-        "pointer": "/nodes/44/cite",
+        "pointer": "/edges/81/authority",
+        "reason": "FRE 702"
+      },
+      {
+        "pointer": "/edges/82/authority",
+        "reason": "FRE 702; FRE 104(a)"
+      },
+      {
+        "pointer": "/edges/83/authority",
+        "reason": "FRE 702"
+      },
+      {
+        "pointer": "/edges/84/authority",
+        "reason": "FRE 702"
+      },
+      {
+        "pointer": "/edges/85/authority",
         "reason": "FRE 103(d)"
       },
       {
-        "pointer": "/nodes/58/cite",
+        "pointer": "/nodes/45/cite",
+        "reason": "FRE 702; FRE 104(a)"
+      },
+      {
+        "pointer": "/nodes/46/cite",
+        "reason": "FRE 702"
+      },
+      {
+        "pointer": "/nodes/47/cite",
+        "reason": "FRE 103(d)"
+      },
+      {
+        "pointer": "/nodes/61/cite",
         "reason": "FRAP 4(a)(1)(A); Bowles v. Russell, 551 U.S. 205 (2007)"
       }
     ],
     "knownAt": "2024-12-01",
     "pins": [
       {
-        "digest": "sha256:d1a5dfa0dcbc0ba4a0b6532147377fc086d559f6e1e11924eaf4fe69c5d8ec1b",
+        "digest": "sha256:7cab26e955e9555cb989bbdd5a6288862f0806622eaec794819ceef14a60e755",
         "name": "core",
         "version": "1.0.0"
       },
       {
-        "digest": "sha256:aa2bb5b880c20517dc39bb37373479cdb950d1a37dcb306b5b48040dcc1b4e57",
+        "digest": "sha256:95964d8955de263a40028d10fde65db39a8d0f14249032505a1790904851718a",
         "name": "frcp-civil-procedure",
         "version": "2024.12.0"
       }
     ],
-    "worldDigest": "sha256:c34e9d9c9db2481179442fb8d4396f867dfa986ebef25f8bae17dad4183a8793"
+    "worldDigest": "sha256:1707b777dce41317ea87cfa344a6f1818984f29585ac8feb997424027522e5e6"
   },
   "nodes": [
     {
@@ -1396,7 +1561,31 @@
       "id": "rule12-response-window",
       "kind": "decision",
       "label": "Rule 12 Response Window",
-      "note": "Baseline: defendant must serve an answer within 21 days after being served with the summons and complaint. This node is reached from several different tracks with different actual clock lengths -- 60/90 days after a returned waiver (Rule 4(d)(3)), Rule 81(c)(2)'s removal-specific clock, or 14 days after a court denies/postpones a Rule 12(b)/(e)/(f) motion (Rule 12(a)(4)(A)) -- the 21-day edges below model the default case; the deadline note on each entry edge carries the actual applicable period. Filing ANY Rule 12(b) motion before answering extends the responsive-pleading deadline to 14 days after the court rules."
+      "note": "Defendant must serve an answer within 21 days after being served with the summons and complaint (Rule 12(a)(1)(A)(i)), the clock of the tracks that reach this node: formal service with no removal, or a defendant who declines to remove. A waiver of service, a removal and an amended pleading each run on their own clock and have their own response window (`waiver-response-window`, `removed-response-window`, `amended-response-window`); a denied Rule 12 motion reaches `answer-filed` directly on Rule 12(a)(4)(A)'s 14 days. Filing ANY Rule 12(b) motion before answering extends the responsive-pleading deadline to 14 days after the court rules."
+    },
+    {
+      "cite": "FRCP 12(a)(1)(A)(ii)",
+      "group": "pleading-group",
+      "id": "waiver-response-window",
+      "kind": "decision",
+      "label": "Rule 12 Response Window (Service Waived)",
+      "note": "A defendant who timely returned a Rule 4(d) waiver answers within 60 days after the request was sent (90 if it was sent outside every judicial district of the United States, which the pack does not branch on), Rule 12(a)(1)(A)(ii) -- longer than the 21-day clock after formal service, the incentive for waiving. A pre-answer Rule 12(b) motion runs on the same clock."
+    },
+    {
+      "cite": "FRCP 81(c)(2)(A)",
+      "group": "pleading-group",
+      "id": "removed-response-window",
+      "kind": "decision",
+      "label": "Rule 12 Response Window (After Removal)",
+      "note": "After removal, a defendant who has not answered answers within the longest of: 21 days after receiving the initial pleading, 21 days after service of the summons on an initial pleading on file, or 7 days after the notice of removal is filed (Rule 81(c)(2)); the pack models the first. A pre-answer Rule 12(b) motion runs on the same clock."
+    },
+    {
+      "cite": "FRCP 15(a)(3)",
+      "group": "pleading-group",
+      "id": "amended-response-window",
+      "kind": "decision",
+      "label": "Rule 12 Response Window (Amended Pleading)",
+      "note": "Unless the court orders otherwise, a response to an amended pleading is due within the time remaining to respond to the original pleading or within 14 days after service of the amended pleading, whichever is later (Rule 15(a)(3)); the pack models the 14 days. A Rule 12(b) motion against the amended pleading runs on the same clock."
     },
     {
       "cite": "FRCP 8(b); 8(c); 12(a)(4)(A); 13",

@@ -335,6 +335,7 @@ proptest::proptest! {
 fn event(date: &str, callee: &str, relation: EventParty, party: &str) -> Event {
     Event {
         date: date.into(),
+        docket: None,
         action: Expr {
             ty: Type::Unit,
             kind: ExprKind::Call {
@@ -363,9 +364,16 @@ fn a_matter_records_its_world_docket_and_holes() {
     let refs: Vec<_> = packages.iter().collect();
     let mut case = acme();
     case.known_at = Some("2025-01-01".into());
+    // Out of source order: the docket is recorded in docket order.
     case.events = vec![
-        event("2025-01-02", "Served", EventParty::On, "widget"),
-        event("2025-01-20", "Answered", EventParty::By, "widget"),
+        Event {
+            docket: Some(2),
+            ..event("2025-01-20", "Answered", EventParty::By, "widget")
+        },
+        Event {
+            docket: Some(1),
+            ..event("2025-01-02", "Served", EventParty::On, "widget")
+        },
     ];
     case.stakes
         .insert("frcp-rule12-example::settled".into(), Stake::Unvalued);
@@ -410,16 +418,16 @@ fn a_matter_records_its_world_docket_and_holes() {
             ("/sources/2/as_of", None),
         ]
     );
-    let docket: Vec<(&str, EventRelation, &str)> = named
+    let docket: Vec<(Option<u64>, &str, EventRelation, &str)> = named
         .events
         .iter()
-        .map(|e| (e.action.as_str(), e.relation, e.party.as_str()))
+        .map(|e| (e.docket, e.action.as_str(), e.relation, e.party.as_str()))
         .collect();
     assert_eq!(
         docket,
         [
-            ("Served(complaint)", EventRelation::On, "widget"),
-            ("Answered(complaint)", EventRelation::By, "widget"),
+            (Some(1), "Served(complaint)", EventRelation::On, "widget"),
+            (Some(2), "Answered(complaint)", EventRelation::By, "widget"),
         ]
     );
     assert_eq!(named.parties.len(), 2);

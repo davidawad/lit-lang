@@ -79,6 +79,12 @@ pub(super) fn sorted(events: &[Event]) -> Vec<(usize, &Event)> {
     v
 }
 
+/// The matter's events in docket order (SPEC §5.6), as [`sorted`] takes
+/// them: the order a lowered scenario records its docket in.
+pub fn docket_order(events: &[Event]) -> impl Iterator<Item = &Event> {
+    sorted(events).into_iter().map(|(_, e)| e)
+}
+
 /// Event `e` as a point in the matter's history.
 pub(super) fn point(e: &Event) -> Seq {
     e.docket.map_or(Seq::Unsequenced, Seq::Docket)

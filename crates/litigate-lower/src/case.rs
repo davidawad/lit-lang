@@ -252,6 +252,7 @@ fn expressions(sink: &mut Sink, s: &Scenario) {
 fn event(e: &hir::Event) -> DocketEvent {
     DocketEvent {
         date: e.date.clone(),
+        docket: e.docket,
         action: litigate_sema::case::display_event(&e.action),
         relation: match e.relation {
             EventParty::By => EventRelation::By,
@@ -317,7 +318,9 @@ pub(crate) fn case(
                 entity_type: p.entity_type.clone(),
             })
             .collect(),
-        events: case.events.iter().map(event).collect(),
+        events: litigate_sema::case::docket_order(&case.events)
+            .map(event)
+            .collect(),
         lowered: Some(build.lowered(holes(case))),
     };
     // Serializing plain data cannot fail; were it to, the empty text would

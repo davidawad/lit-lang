@@ -1285,7 +1285,7 @@ loader (`ClockLibrary::from_json`), so an invalid one is L6001.
 | (derived) | `NamedScenario.schema_version` = 2 |
 | `as_of`, `known_at`, the `uses` closure | `lowered` (§8.1): `asOf`, `knownAt`, `pins`, `worldDigest` |
 | parties | `parties[] {id, actor, entity_type}` in declared order |
-| events | `events[] {date, action, relation, party, authority}` in source (docket) order; `action` is the typed call spelled compactly (`Served(complaint, Mail)`), `relation` `by`/`on`. Record only: replay already derived `scenario.start` and `scenario.remove_edges` from them |
+| events | `events[] {date, docket, action, relation, party, authority}` in docket order (§5.6: by date, then docket number, never source order), `docket` the `docket N` number when written; `action` is the typed call spelled compactly (`Served(complaint, Mail)`), `relation` `by`/`on`. Record only: replay already derived `scenario.start` and `scenario.remove_edges` from them |
 | `unvalued` stakes, source `as_of ?(..)` | `lowered.holes` (`/scenario/payoffs/<terminal>`, `/sources/<i>/as_of`) |
 
 `analysis` may contain any `Scenario` field except `start`, `perspective`,

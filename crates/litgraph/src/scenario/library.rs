@@ -45,6 +45,10 @@ pub enum EventRelation {
 pub struct DocketEvent {
     /// Event date (`YYYY-MM-DD`).
     pub date: String,
+    /// Docket sequence number (`docket N`), ordering the event among
+    /// others of its date.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub docket: Option<u64>,
     /// The typed event, spelled as in the source (`Served(complaint, Mail)`).
     pub action: String,
     /// `by` or `on`.

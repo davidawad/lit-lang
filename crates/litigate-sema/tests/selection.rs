@@ -17,6 +17,7 @@ use litigate_sema::precedence::{conclude, select, Conclusion, Unselected};
 use litigate_sema::temporal::world::nowhere;
 use litigate_sema::temporal::{Inactive, Key, World};
 use std::cell::RefCell;
+use std::fmt::Write as _;
 
 const START: &str = "module core.start\nstart z\nstate z: \"Z\"\n";
 
@@ -479,7 +480,10 @@ impl Clock for Encoded {
 }
 
 fn matter(uses: &str, events: &[&str]) -> String {
-    let events: String = events.iter().map(|e| format!("  {e}\n")).collect();
+    let events = events.iter().fold(String::new(), |mut s, e| {
+        let _ = writeln!(s, "  {e}");
+        s
+    });
     format!(
         "case t\nuses {uses}\nas_of 2012-06-01\nsummary \"s\"\n\
          parties {{\n  p: Plaintiff Corporation\n  d: Defendant Corporation\n}}\n\

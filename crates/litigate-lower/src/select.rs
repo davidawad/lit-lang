@@ -56,10 +56,7 @@ impl<'a> Selection<'a> {
     /// version of `key` itself; `Ok(None)` when none is in force, it is
     /// superseded, or another claimant displaces it.
     fn active(&self, key: &Key, at: Option<Span>) -> Result<Option<usize>, Box<Diagnostic>> {
-        let at = || {
-            at.clone()
-                .unwrap_or_else(|| temporal::world::nowhere(&key.name))
-        };
+        let at = at.unwrap_or_else(|| temporal::world::nowhere(&key.name));
         match select::select(&self.world, key, &self.as_of, self.known_at.as_deref()) {
             Ok(w) => Ok((self.world.key(w) == *key).then_some(w)),
             Err(Unselected::Inactive(why @ Inactive::Miss(Miss::Ambiguous(_)))) => {
@@ -69,7 +66,7 @@ impl<'a> Selection<'a> {
                     &self.as_of,
                     self.known_at.as_deref(),
                     &why,
-                    at(),
+                    at,
                 )))
             }
             Err(Unselected::Inactive(_)) => Ok(None),
@@ -78,7 +75,7 @@ impl<'a> Selection<'a> {
                 key,
                 &self.as_of,
                 &pairs,
-                at(),
+                at,
             ))),
         }
     }

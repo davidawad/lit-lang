@@ -148,7 +148,8 @@ pub fn check(
                         );
                     }
                 }
-                _ => {}
+                // `subject_to` yields: it displaces nothing.
+                Relation::SubjectTo(_) => {}
             }
         }
     }

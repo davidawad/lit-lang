@@ -2,7 +2,7 @@
 // `litigate check` and `litigate build` over an in-memory file tree, through
 // litgraph-wasm's `litigate` binding: the CLI's arguments and envelope, with
 // files passed in (and `build`'s outputs handed back) instead of a disk.
-import type { LitigateEnvelope, LitigateRun } from "./generated/schemas.js";
+import type { LitigateEnvelope, LitigateRun, Profile } from "./generated/schemas.js";
 
 /** The litgraph-wasm functions this module calls. */
 export interface LitigateWasm {
@@ -13,8 +13,8 @@ export interface LitigateWasm {
 /** Files by repository-relative POSIX path (`lit/frcp/Lit.toml`, `cases/x.case`, ...) to text. */
 export type Files = Readonly<Record<string, string>>;
 
-/** The `litigate check` checking profile (`--profile`). */
-export type Profile = "dev" | "strict";
+/** The `litigate check` checking profile (`--profile`), as diagnostics carry it. */
+export type { Profile };
 
 /** Options shared by {@link Litigate.check} and {@link Litigate.build}. */
 export interface CheckOptions {

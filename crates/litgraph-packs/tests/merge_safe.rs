@@ -146,7 +146,7 @@ fn lit_sync(root: &Path, into_tree: bool) {
             for entry in std::fs::read_dir(out_dir.join(dir)).unwrap() {
                 let path = entry.unwrap().path();
                 let name = path.file_name().unwrap().to_string_lossy().into_owned();
-                if path.is_file() && name.ends_with(".json") && !name.ends_with(".map.json") {
+                if path.extension().is_some_and(|e| e == "json") && !name.ends_with(".map.json") {
                     std::fs::copy(&path, root.join(dir).join(&name)).unwrap();
                 }
             }

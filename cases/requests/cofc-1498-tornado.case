@@ -2,7 +2,7 @@ case cofc-1498-tornado
 uses cofc ^0.1.0, cafc ^0.1.0
 as_of 2026-09-28
 summary "§1498(a) patent case in the CoFC with a Federal Circuit appeal: which inputs move the value most."
-notes "Ported from examples/cofc-1498-tornado.json. A 28 U.S.C. § 1498(a) patent claim in the CoFC with a Federal Circuit appeal (links' cafc@cofc instance), at accrual: the claim is timely under § 2501 and nothing is pending elsewhere (§ 1500), so both are matter facts; being a § 1498(a) claim, it has no bid-protest track, no general-civil case type, and no non-patent branch (cited Forfeited events). The example's remove_edges listed the two barred fact edges; resolving those nodes through facts instead is what the engine's fact-unset warning asks for. Stakes scale the pack's own payoffs by `stakes`; the rate is illustrative."
+notes "Ported from examples/cofc-1498-tornado.json. A 28 U.S.C. § 1498(a) patent claim in the CoFC with a Federal Circuit appeal (links' cafc@cofc instance), at accrual: the claim is timely under § 2501 and nothing is pending elsewhere (§ 1500), so both are matter facts; being a § 1498(a) claim, it elects the §1498(a) claim, the standard complaint and the Appendix J patent track (cited Elected events, which remove the non-patent branch, the bid-protest track and the general-civil case type). The example's remove_edges listed the two barred fact edges; resolving those nodes through facts instead is what the engine's fact-unset warning asks for. Stakes scale the pack's own payoffs by `stakes`; the rate is illustrative."
 perspective owner
 
 parties {
@@ -11,9 +11,9 @@ parties {
 }
 
 events {
-  2026-09-14 Forfeited("e-filingfork-protest") by owner cite 28 U.S.C. § 1498(a)
-  2026-09-14 Forfeited("e-casetype-general") by owner cite 28 U.S.C. § 1498(a)
-  2026-09-14 Forfeited("e-patentfork-nonpatent") by owner cite 28 U.S.C. § 1498(a)
+  2026-09-14 Elected("e-patentfork-patent") by owner cite 28 U.S.C. § 1498(a)
+  2026-09-14 Elected("e-filingfork-standard") by owner cite 28 U.S.C. § 1498(a)
+  2026-09-14 Elected("e-casetype-patent") by owner cite 28 U.S.C. § 1498(a)
 }
 
 facts { limitations-check: e-limitations-timely, section-1500-check: e-1500-clear }

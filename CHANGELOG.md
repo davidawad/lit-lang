@@ -25,6 +25,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   self-loop is the `rule12-continuance-ruling` chance node; the cafc and ttab
   month-only source dates are their sourced days.
 
+- **Real case events in ptab and cofc.** ptab's notice of filing date
+  accorded is one event (`FilingDateNoticed`) on one edge out of the
+  Office's compliance review, as in the proceeding: the invented
+  `PetitionDocketed` and `FilingDateAccorded` events and the
+  `petition-threshold-review`/`petition-filing-date-accorded` nodes are
+  gone; `ipr-petition-filed` and `pgr-petition-filed` are the review
+  (`IncompletePetitionNoticed` on the defect edge), the § 315(b) time-bar
+  fact follows the notice, and joinder is a petitioner filing choice
+  (`JoinderMotionFiled`). cofc matters elect their track with a cited
+  `Elected` event instead of `Forfeited`; `patent-claim-fork` splits so a
+  § 1498(a) claim is one option (`e-patentfork-patent`) ahead of the
+  optional § 286 administrative claim (`patent-admin-claim-fork`).
+
+### Added
+
+- **Elections in `.case` replay.** A cited event of a type named `Elected`
+  with `option: String` elects that edge: replay removes every alternative
+  at each fork offering it (SPEC §5.6).
+
 ### Fixed
 
 - A `.case` `facts` edge written `pack::edge` is no longer qualified twice.

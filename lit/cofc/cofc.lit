@@ -14,9 +14,11 @@ group adr-group: "ADR Off-Ramp (Appendix H)"
 group patent-track-group: "§1498 Patent Track (Appendix J)"
 group trial-post-trial-group: "Trial & Post-Trial (RCFC 52, 58, 59, 54, EAJA)"
 
-/// An option the matter no longer has (SPEC §5.6): the claim's own
-/// character forecloses it, or a party gave it up. `option` names the edge
-/// (`e-filingfork-protest`), the event cites the authority that forecloses
-/// it, and replay removes the edge for the rest of the matter without
-/// moving it. A matter-level fact, not procedure, so no edge takes it.
-event Forfeited(option: String)
+/// A track election (SPEC §5.6): the plaintiff elects one option at a
+/// fork -- a §1498(a) claim, a standard RCFC 3 complaint or a §1491(b)
+/// protest, the Appendix J patent track -- and the alternatives leave the
+/// matter. `option` names the elected edge (`e-filingfork-standard`), the
+/// event cites the authority that governs the election, and replay removes
+/// the fork's other edges for the rest of the matter without moving it. A
+/// matter-level election, not procedure, so no edge takes it.
+event Elected(option: String)

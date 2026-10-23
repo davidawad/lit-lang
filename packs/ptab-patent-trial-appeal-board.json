@@ -177,16 +177,16 @@
       "id": "ipr-petition-filed",
       "kind": "state",
       "label": "IPR Petition Filed",
-      "cite": "35 U.S.C. §311(a)-(b); 37 CFR §42.104(a)-(b)",
-      "note": "IPR petition must identify each claim, ground(s), and provide claim charts with specific limitations mapped to prior art. Word limit of 14,000 (37 CFR 42.24(a)(1)(i)) is strict — failure to comply is grounds for rejecting the filing date. Grounds limited to §§102/103 (patents and printed publications only).",
+      "cite": "35 U.S.C. §311(a)-(b); 37 CFR §42.104(a)-(b); 37 CFR §42.106(a)-(c)",
+      "note": "IPR petition must identify each claim, ground(s), and provide claim charts with specific limitations mapped to prior art. Word limit of 14,000 (37 CFR 42.24(a)(1)(i)) is strict — failure to comply is grounds for rejecting the filing date. Grounds limited to §§102/103 (patents and printed publications only). The Office then reviews fee payment, form/word-count compliance and threshold sufficiency (e.g., whether claim charts actually chart the claims) and mails one paper: a notice of filing date accorded, or a notice of an incomplete petition the petitioner may correct. No published rate of incomplete-petition notices, so the split is left unauthored. The § 315(b) time bar is not a filing-date requirement: the patent owner raises it in the preliminary response and the Board decides it at institution, so it is checked after the notice.",
       "group": "petition-group"
     },
     {
       "id": "pgr-petition-filed",
       "kind": "state",
       "label": "PGR Petition Filed",
-      "cite": "35 U.S.C. §321(a)-(b); 37 CFR §42.204(a)-(b)",
-      "note": "PGR is available only within 9 months of patent grant (35 U.S.C. §321(e)) and only for AIA patents. Word limit of 18,700 (37 CFR 42.24(a)(1)(ii)). Broader grounds available than IPR (101, 102, 103, 112) but only one PGR window exists per patent.",
+      "cite": "35 U.S.C. §321(a)-(b); 37 CFR §42.204(a)-(b); 37 CFR §42.206(a)-(c)",
+      "note": "PGR is available only within 9 months of patent grant (35 U.S.C. §321(e)) and only for AIA patents. Word limit of 18,700 (37 CFR 42.24(a)(1)(ii)). Broader grounds available than IPR (101, 102, 103, 112) but only one PGR window exists per patent. The Office then reviews fee payment, form/word-count compliance and threshold sufficiency (e.g., whether claim charts actually chart the claims) and mails one paper: a notice of filing date accorded, or a notice of an incomplete petition the petitioner may correct. No published rate of incomplete-petition notices, so the split is left unauthored.",
       "group": "petition-group"
     },
     {
@@ -194,19 +194,11 @@
       "kind": "state",
       "label": "Is the IPR Petition Filed Within 1 Year of Complaint Service?",
       "cite": "35 U.S.C. §315(b)",
-      "note": "Whether THIS petition is time-barred under 35 U.S.C. §315(b) is a matter fact knowable from the petitioner's own service-of-complaint history, not real chance -- see docs/PACK_SCHEMA.md#matter-facts-v2. IPR-only: a PGR petition cannot structurally be filed outside its own 9-month window, so PGR petitions go straight to the compliance review.",
+      "note": "Whether THIS petition is time-barred under 35 U.S.C. §315(b) is a matter fact knowable from the petitioner's own service-of-complaint history, not real chance -- see docs/PACK_SCHEMA.md#matter-facts-v2. IPR-only: a PGR petition cannot structurally be filed outside its own 9-month window, so PGR petitions go straight to the preliminary response. Checked after the notice of filing date accorded, as in the proceeding: the bar is raised in the preliminary response and decided at institution, and a corrected petition takes the correction date.",
       "group": "petition-group",
       "tags": [
         "fact"
       ]
-    },
-    {
-      "id": "petition-threshold-review",
-      "kind": "state",
-      "label": "Office Reviews Petition Compliance",
-      "cite": "37 CFR §42.106(a)-(c); 37 CFR §42.206(a)-(c)",
-      "note": "Office examines fee payment, form/word-count compliance, and threshold sufficiency (e.g., whether claim charts actually chart the claims) before according a filing date. 42.106(b) allows minor-defect correction; material defects result in filing-date rejection. Modeled as one shared node for IPR and PGR petitions. No published rate of defect notices, so the split is left unauthored.",
-      "group": "petition-group"
     },
     {
       "id": "petition-defect-noticed",
@@ -214,14 +206,6 @@
       "label": "Petition Defect Noticed",
       "cite": "37 CFR §42.106(b)",
       "note": "The Office has rejected the filing date for a correctable defect. The petitioner may correct and refile; the corrected petition takes the date of the correction, not the original filing.",
-      "group": "petition-group"
-    },
-    {
-      "id": "petition-filing-date-accorded",
-      "kind": "state",
-      "label": "Filing Date Accorded",
-      "cite": "37 CFR §42.106(a); 37 CFR §42.206(a)",
-      "note": "Petition satisfies threshold requirements; notice of filing date accorded mailed, starting the patent owner's POPR clock. Accorded filing date is treated as the filing date for all PTAB purposes.",
       "group": "petition-group"
     },
     {
@@ -765,6 +749,16 @@
     },
     {
       "from": "challenge-vehicle-decision",
+      "to": "institution-granted",
+      "label": "File IPR petition with a motion for joinder to an instituted IPR",
+      "actor": "applicant",
+      "authority": "35 U.S.C. § 315(c); 37 CFR 42.122",
+      "cost": 23750.0,
+      "hours": 135.0,
+      "note": "Hours: the IPR petition's 120 plus 15 for the joinder motion, BigLaw-honest estimates; basis: estimate. Fee: the IPR request fee, as on `File IPR petition`. The § 315(b) time bar does not apply to a request for joinder (35 U.S.C. § 315(b), last sentence), so this petition skips the time-bar check; modeled as joined into the instituted trial."
+    },
+    {
+      "from": "challenge-vehicle-decision",
       "to": "pgr-petition-filed",
       "label": "File PGR petition within 9 months",
       "actor": "applicant",
@@ -788,9 +782,9 @@
     {
       "from": "ipr-petition-filed",
       "to": "petition-time-bar-check",
-      "label": "Petition docketed; the § 315(b) time bar is checked first",
+      "label": "Notice of filing date accorded -- POPR clock starts",
       "actor": "office",
-      "authority": "37 CFR §42.104(c); 37 CFR §42.106(a)",
+      "authority": "37 CFR §42.106(a); 37 CFR §42.107(b)",
       "duration": {
         "min": 3.0,
         "mode": 10.0,
@@ -800,19 +794,17 @@
     },
     {
       "from": "ipr-petition-filed",
-      "to": "institution-granted",
-      "label": "Move for joinder to pending IPR",
-      "actor": "applicant",
-      "authority": "35 U.S.C. § 315(c); 37 CFR 42.122",
-      "hours": 15.0,
-      "note": "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move; basis: estimate."
+      "to": "petition-defect-noticed",
+      "label": "Notice of an incomplete petition",
+      "actor": "office",
+      "authority": "37 CFR §42.106(b)"
     },
     {
       "from": "pgr-petition-filed",
-      "to": "petition-threshold-review",
-      "label": "Office reviews petition compliance",
+      "to": "popr-window",
+      "label": "Notice of filing date accorded -- POPR clock starts",
       "actor": "office",
-      "authority": "37 CFR §42.204(c); 37 CFR §42.206(a)",
+      "authority": "37 CFR §42.206(a); 37 CFR §42.207(b)",
       "duration": {
         "min": 3.0,
         "mode": 10.0,
@@ -821,9 +813,16 @@
       "note": "Duration: estimate, the Office's own administrative compliance check before according a filing date."
     },
     {
+      "from": "pgr-petition-filed",
+      "to": "petition-defect-noticed",
+      "label": "Notice of an incomplete petition",
+      "actor": "office",
+      "authority": "37 CFR §42.206(b)"
+    },
+    {
       "id": "e-time-bar-clear",
       "from": "petition-time-bar-check",
-      "to": "petition-threshold-review",
+      "to": "popr-window",
       "label": "Petition filed within 1 year of complaint service",
       "actor": "examiner",
       "authority": "35 U.S.C. §315(b)",
@@ -853,20 +852,6 @@
       "note": "Prior for the fact-tagged node's default (unset scenario.facts) fallback, the complement of the timely edge. Teaching estimate -- basis: estimate."
     },
     {
-      "from": "petition-threshold-review",
-      "to": "petition-filing-date-accorded",
-      "label": "Petition meets fee/word-count/form",
-      "actor": "office",
-      "authority": "37 CFR §42.106(a); 37 CFR §42.206(a)"
-    },
-    {
-      "from": "petition-threshold-review",
-      "to": "petition-defect-noticed",
-      "label": "Office notices a correctable defect",
-      "actor": "office",
-      "authority": "37 CFR §42.106(b)"
-    },
-    {
       "from": "petition-defect-noticed",
       "to": "ipr-petition-filed",
       "label": "Correct petition defect and refile",
@@ -885,13 +870,6 @@
       },
       "hours": 5.0,
       "note": "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move; basis: estimate."
-    },
-    {
-      "from": "petition-filing-date-accorded",
-      "to": "popr-window",
-      "label": "Filing date accorded — POPR clock starts",
-      "actor": "office",
-      "authority": "37 CFR §42.107(b); 37 CFR §42.207(b)"
     },
     {
       "from": "popr-window",
@@ -999,7 +977,7 @@
         "length": 1.0,
         "unit": "year",
         "extendable": false,
-        "note": "Petitioner may file a follow-on IPR on different grounds/claims (subject to the §315(c) joinder bar), but the unextendable one-year bar from service of the infringement complaint under §315(b) still applies to any follow-on petition. Sets prior-petition-denied: General Plastic's multi-factor test for discretionary denial of a follow-on petition (35 U.S.C. §314(a)) turns in part on whether petitioner already had a full opportunity to present its case in an earlier petition on this patent -- a fact that persists into the refiled petition's own petition-time-bar-check (the same §315(b) fact node) and petition-threshold-review."
+        "note": "Petitioner may file a follow-on IPR on different grounds/claims (subject to the §315(c) joinder bar), but the unextendable one-year bar from service of the infringement complaint under §315(b) still applies to any follow-on petition. Sets prior-petition-denied: General Plastic's multi-factor test for discretionary denial of a follow-on petition (35 U.S.C. §314(a)) turns in part on whether petitioner already had a full opportunity to present its case in an earlier petition on this patent -- a fact that persists into the refiled petition's own petition-time-bar-check (the same §315(b) fact node) and the Office's compliance review."
       },
       "duration": {
         "min": 54.8,

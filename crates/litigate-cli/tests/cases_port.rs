@@ -19,7 +19,7 @@ const SCENARIOS: [(&str, Option<&str>); 5] = [
     ("frcp-civil-case", None),
     (
         "ptab-ipr-defense",
-        Some("ptab-patent-trial-appeal-board::popr-window"),
+        Some("ptab-patent-trial-appeal-board::petition-time-bar-check"),
     ),
     (
         "ttab-opposition-applicant-defense",

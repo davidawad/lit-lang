@@ -31,17 +31,16 @@ event PatentGranted()
 event ComplaintServed()
 event PgrPetitionFiled()
 event IprPetitionFiled()
+/// A petition for inter partes review accompanied by a motion for joinder
+/// to an instituted IPR (35 U.S.C. § 315(c); 37 C.F.R. § 42.122(b)).
+event JoinderMotionFiled()
 /// The Office's notice that a petition is incomplete (37 C.F.R. § 42.106(b)).
 event IncompletePetitionNoticed()
 event PetitionCorrected()
-/// A filed petition enters the Office's compliance review (37 C.F.R.
-/// §§ 42.106(a), 42.206(a)). No paper marks it; a matter dates it on the
-/// filing day.
-event PetitionDocketed()
-/// The Office finds the petition complete and accords it a filing date
-/// (37 C.F.R. §§ 42.106(a), 42.206(a)).
-event FilingDateAccorded()
-/// The notice according the petition a filing date (37 C.F.R. § 42.107(b)).
+/// The notice of filing date accorded to the petition (37 C.F.R.
+/// §§ 42.106(a), 42.206(a)): the Office's one paper finding the petition
+/// complete, according its filing date and starting the preliminary
+/// response period (37 C.F.R. § 42.107(b)).
 event FilingDateNoticed()
 event PreliminaryResponseFiled()
 /// The patent owner's election to waive the preliminary response (37 C.F.R.

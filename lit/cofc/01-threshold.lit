@@ -18,8 +18,16 @@ state claim-accrues: "Claim Against the United States Accrues" cite 28 U.S.C. §
 decision patent-claim-fork: "Is This a §1498(a) Patent/Copyright Use Claim?" by applicant cite 28 U.S.C. § 1498(a)
 {
   group threshold-group
-  note "§1498(a) is the exclusive Tucker Act-adjacent remedy when the United States (or a contractor acting with its authorization and consent) uses or manufactures a patented invention without a license: the patent owner's sole remedy is an action against the United States in the CoFC for 'reasonable and entire compensation' -- no injunction, no treble/enhanced damages, no jury. A patent claim gets the 35 U.S.C. §286 administrative-claim tolling option before the §2501 clock is checked; other claims (contract, takings, pay, bid protest) go straight to the limitations check."
+  note "§1498(a) is the exclusive Tucker Act-adjacent remedy when the United States (or a contractor acting with its authorization and consent) uses or manufactures a patented invention without a license: the patent owner's sole remedy is an action against the United States in the CoFC for 'reasonable and entire compensation' -- no injunction, no treble/enhanced damages, no jury. A patent claim gets the 35 U.S.C. §286 administrative-claim tolling option before the §2501 clock is checked; other claims (contract, takings, pay, bid protest) go straight to the limitations check. A matter elects its claim's track here with a cited `Elected` event."
   e-patentfork-nonpatent "Not a §1498(a) claim -- proceed directly to the limitations check" -> limitations-check by either
+  e-patentfork-patent "§1498(a) claim -- the optional §286 administrative claim is open" -> patent-admin-claim-fork {
+    authority cite 28 U.S.C. § 1498(a)
+  }
+}
+
+decision patent-admin-claim-fork: "File the Optional §286 Administrative Claim?" by applicant cite ?("35 U.S.C. § 286, last paragraph") {
+  group threshold-group
+  note "A §1498(a) plaintiff may first file a written claim for compensation with the agency, tolling §2501 while the agency considers it, or sue without one: the administrative claim is not a jurisdictional prerequisite."
   e-patentfork-adminclaim "§1498(a) claim; plaintiff elects to file a §286 administrative claim for compensation" -> patent-admin-claim-filed {
     authority cite ?("35 U.S.C. § 286, last paragraph")
     effort 8.hours

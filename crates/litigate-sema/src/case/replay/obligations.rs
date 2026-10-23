@@ -504,6 +504,7 @@ impl<'g> Cx<'_, 'g> {
             .collect();
         if held.is_empty() {
             let mut by: Vec<&str> = grants.iter().map(|g| g.by).collect();
+            by.sort_unstable();
             by.dedup();
             let e = error(
                 C::InvalidCaseEvent,

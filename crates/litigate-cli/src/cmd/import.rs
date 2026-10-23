@@ -162,40 +162,45 @@ fn round_trip(imported: &Imported, inputs: &[Input]) -> Vec<Diagnostic> {
         .collect();
     for input in inputs {
         let name = counterpart(&input.text);
-        let Some(text) = by_name.get(name.as_str()) else {
-            out.push(Diagnostic::error(
-                C::SemanticDiff,
-                start(&input.path),
-                format!("the imported source does not lower to `{name}`"),
-            ));
-            continue;
-        };
-        match litigate_lower::semantic_diff_json(text, &input.text) {
-            Ok((_, changes)) if changes.is_empty() => {}
-            Ok((_, changes)) => out.push(Diagnostic {
-                notes: changes
-                    .iter()
-                    .map(|c| Note {
-                        message: format!("{}: {:?} -> {:?}", c.pointer, c.before, c.after),
-                    })
-                    .collect(),
-                ..Diagnostic::error(
-                    C::SemanticDiff,
-                    start(&input.path),
-                    format!(
-                        "the imported source lowers to JSON with {} difference(s)",
-                        changes.len()
-                    ),
-                )
-            }),
-            Err(message) => out.push(Diagnostic::error(
-                C::SemanticDiff,
-                start(&input.path),
-                message,
-            )),
-        }
+        out.extend(compared(input, &name, by_name.get(name.as_str()).copied()));
     }
     out
+}
+
+/// The round-trip diagnostic for `input` against `lowered`, the text its
+/// generated source lowered to as `name` (`None` when it lowered to
+/// nothing): none when they are semantically equal. The importer writes
+/// every value losslessly and the typed source rejects what it cannot
+/// read, so this is the guard that keeps both honest.
+fn compared(input: &Input, name: &str, lowered: Option<&str>) -> Option<Diagnostic> {
+    let at = start(&input.path);
+    let Some(text) = lowered else {
+        return Some(Diagnostic::error(
+            C::SemanticDiff,
+            at,
+            format!("the imported source does not lower to `{name}`"),
+        ));
+    };
+    match litigate_lower::semantic_diff_json(text, &input.text) {
+        Ok((_, changes)) if changes.is_empty() => None,
+        Ok((_, changes)) => Some(Diagnostic {
+            notes: changes
+                .iter()
+                .map(|c| Note {
+                    message: format!("{}: {:?} -> {:?}", c.pointer, c.before, c.after),
+                })
+                .collect(),
+            ..Diagnostic::error(
+                C::SemanticDiff,
+                at,
+                format!(
+                    "the imported source lowers to JSON with {} difference(s)",
+                    changes.len()
+                ),
+            )
+        }),
+        Err(message) => Some(Diagnostic::error(C::SemanticDiff, at, message)),
+    }
 }
 
 /// `litigate import`.
@@ -244,7 +249,31 @@ pub fn import(paths: &[String], out: &str) -> Outcome {
 
 #[cfg(test)]
 mod tests {
-    use super::{counterpart, is_case, owns};
+    use super::{compared, counterpart, is_case, owns};
+    use litigate_import::Input;
+
+    #[test]
+    fn a_round_trip_that_loses_or_changes_its_input_is_reported() {
+        let input = Input::new(
+            "s.json".to_owned(),
+            r#"{"id": "s", "summary": "S", "packs": [], "scenario": {"params": {"rate": 1}}}"#
+                .to_owned(),
+        );
+        let lost = compared(&input, "scenarios/s.json", None).map(|d| d.message);
+        assert_eq!(
+            lost.as_deref(),
+            Some("the imported source does not lower to `scenarios/s.json`")
+        );
+        let changed =
+            r#"{"id": "s", "summary": "S", "packs": [], "scenario": {"params": {"rate": 2}}}"#;
+        let diff = compared(&input, "scenarios/s.json", Some(changed));
+        assert_eq!(
+            diff.as_ref().map(|d| (d.message.as_str(), d.notes.len())),
+            Some(("the imported source lowers to JSON with 1 difference(s)", 1))
+        );
+        assert!(compared(&input, "scenarios/s.json", Some(&input.text)).is_none());
+        assert!(compared(&input, "scenarios/s.json", Some("not json")).is_some());
+    }
 
     #[test]
     fn inputs_pair_with_the_document_they_lower_to() {

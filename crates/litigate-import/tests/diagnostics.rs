@@ -342,9 +342,26 @@ fn an_instance_transform_without_a_typed_spelling_is_reported() {
     let links = json!({"instances": {
         "base@broken": {"pack": "base", "payoff_transform": "stake *"},
         "base@ternary": {"pack": "base", "payoff_transform": "payoff > 0 ? payoff : 0"},
-        "base@rate": {"pack": "base", "payoff_transform": "payoff * rate"}
+        "base@rate": {"pack": "base", "payoff_transform": "payoff * rate"},
+        "base@lhs": {"pack": "base", "payoff_transform": "rate + payoff"},
+        "base@cents": {"pack": "base", "payoff_transform": "payoff + 0.001"},
+        "base@huge": {"pack": "base", "payoff_transform": "payoff * 1e400"},
+        "base@negated": {"pack": "base", "payoff_transform": "-rate"}
     }});
     let inputs = [Input::new("packs/links.json", links.to_string())];
+    let messages: Vec<(String, Option<String>)> =
+        reported(&inputs).into_iter().map(|r| (r.3, r.4)).collect();
+    insta::assert_debug_snapshot!(messages);
+}
+
+/// A scenario field `analysis` does not type, or a `null`, has no
+/// `.case` spelling.
+#[test]
+fn untyped_analysis_fields_are_reported() {
+    let named = json!({"id": "s", "summary": "S", "packs": ["p"],
+                       "scenario": {"probabilities": {"p::e": 0.5}, "policy": {"p::n": "p::e"},
+                                    "discount_annual": null}});
+    let inputs = [Input::new("scenarios/s.json", named.to_string())];
     let messages: Vec<(String, Option<String>)> =
         reported(&inputs).into_iter().map(|r| (r.3, r.4)).collect();
     insta::assert_debug_snapshot!(messages);

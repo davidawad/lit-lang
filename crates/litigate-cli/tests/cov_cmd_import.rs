@@ -135,8 +135,10 @@ fn output_that_cannot_be_written_is_a_failure() {
     assert!(run.stderr.contains("o/lit/frcp"), "{}", run.stderr);
 }
 
+/// A number too large for an exact `params` value is caught by the check
+/// of the generated source, at its span.
 #[test]
-fn a_number_without_a_lossless_spelling_is_a_difference() {
+fn a_number_the_typed_source_cannot_hold_fails_the_check() {
     let dir = scratch("import-difference");
     std::fs::copy(
         repo().join("packs/frcp-civil-procedure.json"),
@@ -157,7 +159,7 @@ fn a_number_without_a_lossless_spelling_is_a_difference() {
     let run = litigate_in(&dir, &["import", "p.json", "s.json", "--out", "o"]);
     assert_eq!(run.code, 2, "{}", run.stdout);
     assert!(!dir.join("o").exists());
-    insta::assert_json_snapshot!("import_difference", run.json["diagnostics"]);
+    insta::assert_json_snapshot!("import_unchecked_number", run.json["diagnostics"]);
 }
 
 #[test]
@@ -177,8 +179,9 @@ fn a_pack_named_links_collides_with_the_links_document() {
     insta::assert_json_snapshot!("import_kind_collision", errors(&run.json));
 }
 
+/// A legacy transform with no typed spelling fails the import itself.
 #[test]
-fn links_that_do_not_lower_have_no_counterpart() {
+fn a_transform_with_no_typed_spelling_fails_the_import() {
     let dir = with_pack("import-no-lowering");
     std::fs::write(
         dir.join("links.json"),
@@ -188,5 +191,5 @@ fn links_that_do_not_lower_have_no_counterpart() {
     .unwrap();
     let run = litigate_in(&dir, &["import", "p.json", "links.json", "--out", "o"]);
     assert_eq!(run.code, 2, "{}", run.stdout);
-    insta::assert_json_snapshot!("import_no_lowering", errors(&run.json));
+    insta::assert_json_snapshot!("import_untyped_transform", errors(&run.json));
 }

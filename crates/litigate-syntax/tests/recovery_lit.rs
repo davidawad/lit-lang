@@ -103,6 +103,14 @@ fn edges_and_links() {
                 "module m\ninstance a @ b { patch 5 }\n",
                 &["L0001 2:24-2:25 expected an identifier, found `5`"],
             ),
+            (
+                "module m\ninstance a @ b { payoff_transform \"stake - payoff\" }\n",
+                &["L0001 2:35-2:51 expected an identifier, found `\"stake - payoff\"`"],
+            ),
+            (
+                "module m\ninstance a @ b { patch e }\n",
+                &["L0001 2:26-2:27 expected `{`, found `}`"],
+            ),
         ],
     );
 }

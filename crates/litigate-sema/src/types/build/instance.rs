@@ -1,7 +1,7 @@
 //! Instances of a links package (SPEC §8.4): `instance base@origin`, its
 //! probabilities, roles, and typed `patch`es.
 use super::cx::{first_expr, first_ref, holes_of, nested, Cx};
-use crate::db::parse::tree::{Expr, ExprKind, Field, Name};
+use crate::db::parse::tree::{Expr, ExprKind, Field, Name, RefPath};
 use crate::db::span::Report;
 use crate::hir::{self, ActorRole, BinaryOp, EdgePatch, Instance, Type, UnaryOp, Value};
 use litigate_base::DiagnosticCode as C;
@@ -81,14 +81,13 @@ impl Cx<'_, '_> {
         let roles = self.instance_roles(f.get("roles"));
         let mut patch_edges = BTreeMap::new();
         for p in fields.iter().filter(|x| x.key.text == "patch") {
-            if let Some((edge, patch)) = self.patch(p) {
-                if patch_edges.insert(edge.clone(), patch).is_some() {
-                    self.report(Report::new(
-                        C::InvalidField,
-                        p.key.range,
-                        format!("`{edge}` is patched more than once"),
-                    ));
-                }
+            let (edge, patch) = self.patch(p);
+            if patch_edges.insert(edge.clone(), patch).is_some() {
+                self.report(Report::new(
+                    C::InvalidField,
+                    p.key.range,
+                    format!("`{edge}` is patched more than once"),
+                ));
             }
         }
         let stake = f.get("stake");
@@ -176,10 +175,11 @@ impl Cx<'_, '_> {
     /// `patch edge { ... }`: the edge fields written, typed as on an edge
     /// declaration. `event` and `replaces` are not patchable: replay binds
     /// the base edge, and only a link replaces edges.
-    fn patch(&mut self, p: &Field) -> Option<(String, EdgePatch)> {
-        let ExprKind::Ref(edge) = &first_expr(p)?.kind else {
-            return None;
-        };
+    fn patch(&mut self, p: &Field) -> (String, EdgePatch) {
+        // The parser writes a patch only after its edge's identifier.
+        let edge = first_ref(Some(&p))
+            .map(RefPath::display)
+            .unwrap_or_default();
         let fields = self.once(nested(p));
         for key in ["event", "replaces"] {
             if let Some(f) = fields.get(key) {
@@ -191,7 +191,7 @@ impl Cx<'_, '_> {
             holes: holes_of(nested(p)),
             ..self.edge_fields(&fields)
         };
-        Some((edge.display(), patch))
+        (edge, patch)
     }
 }
 

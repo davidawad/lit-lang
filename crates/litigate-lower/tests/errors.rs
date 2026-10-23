@@ -433,6 +433,14 @@ fn an_instance_transform_lowers_to_engine_syntax() {
         ),
         ("negated negative", negated(dollars(-150, "usd"))),
         ("comparison", binary(Lt, local("payoff"), local("stake"))),
+        (
+            "negated comparison",
+            negated(binary(Lt, local("payoff"), local("stake"))),
+        ),
+        (
+            "a sum of a non-value",
+            binary(Add, literal(hir::Value::Boolean(true)), local("payoff")),
+        ),
         ("not a value", literal(hir::Value::Boolean(true))),
         (
             "other currency",

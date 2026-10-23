@@ -136,9 +136,11 @@ fn a_links_file_imported_without_its_packs_depends_on_them_by_id() {
                 "note": "x",
                 "tags": [],
                 "attrs": {},
+                "sets": ["f"],
                 "cost": null,
                 "deadline": {"length": 45, "extendable": null, "note": "n"}
-            }
+            },
+            "stay": {"attrs": {"w": 1}}
         }}
     }});
     let input = Input::new("packs/links.json", links.to_string());
@@ -158,7 +160,7 @@ fn a_links_file_imported_without_its_packs_depends_on_them_by_id() {
     );
     assert!(
         module.contains(
-            "patch go { deadline 45.days { note \"n\" }, note \"x\", tags [], attrs {}, cost ? }"
+            "patch go { deadline 45.days { note \"n\" }, note \"x\", sets [f], tags [], attrs {}, cost ? }\n  patch stay { attrs { w: 1 } }"
         ),
         "{module}"
     );
@@ -311,4 +313,50 @@ fn an_instance_stake_imports_as_money_or_as_a_hole_its_transform_needs() {
         "{module}"
     );
     assert_eq!(module.matches(", stake ").count(), 2, "{module}");
+}
+
+/// A legacy transform keeps its meaning as a typed expression: numbers
+/// beside money are money, a factor stays a number, and parentheses
+/// appear only where precedence needs them.
+#[test]
+fn a_transform_imports_as_a_typed_expression() {
+    let links = json!({"instances": {
+        "base@neg": {"pack": "base", "payoff_transform": "-(payoff - 1000000)"},
+        "base@left": {"pack": "base", "payoff_transform": "2 * payoff / 4"},
+        "base@sum": {"pack": "base", "payoff_transform": "(payoff + 1.5) * 2"},
+        "base@nested": {"pack": "base", "payoff_transform": "payoff - (payoff - 1)"},
+        "base@factor": {"pack": "base", "payoff_transform": "payoff * (2 * 3)"}
+    }});
+    let input = Input::new("packs/links.json", links.to_string());
+    let files = import_ok(std::slice::from_ref(&input));
+    let module = text(&files, "lit/links/links.lit");
+    for spelled in [
+        "payoff_transform (-(payoff - 1_000_000.usd))",
+        "payoff_transform (2 * payoff / 4)",
+        "payoff_transform ((payoff + 1.5.usd) * 2)",
+        "payoff_transform (payoff - (payoff - 1.usd))",
+        "payoff_transform (payoff * (2 * 3))",
+    ] {
+        assert!(module.contains(spelled), "{spelled}\n{module}");
+    }
+}
+
+/// `analysis` is written as expressions: lists and records, an empty
+/// record, and edges as unquoted refs.
+#[test]
+fn analysis_imports_as_expressions() {
+    let named = json!({"id": "typed", "summary": "Typed.", "packs": ["elsewhere"],
+                       "scenario": {"calibration": ["a"], "uncertainty": {},
+                                    "objective": {"type": "cvar", "alpha": 0.1},
+                                    "remove_edges": ["elsewhere::e1"]}});
+    let input = Input::new("scenarios/typed.json", named.to_string());
+    let files = import_ok(std::slice::from_ref(&input));
+    let case = text(&files, "cases/typed.case");
+    assert!(
+        case.contains(
+            "analysis {\n  calibration: [\"a\"]\n  uncertainty: {}\n  \
+             objective: { type: \"cvar\", alpha: 0.1 }\n  remove_edges: [elsewhere::e1]\n}"
+        ),
+        "{case}"
+    );
 }

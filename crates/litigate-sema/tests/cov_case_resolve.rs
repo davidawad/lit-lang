@@ -308,6 +308,10 @@ fn analysis_fields_table() {
              fee_shift: { fraction: 1.usd }, opponent: [chance, 1] }",
         ),
         ("a field with no value", "analysis { rate: }"),
+        (
+            "engine option numbers JSON cannot read",
+            "analysis { mixed: 007, opponent: -007 }",
+        ),
     ];
     let table: BTreeMap<&str, Vec<String>> = rows
         .iter()
@@ -322,4 +326,12 @@ fn analysis_fields_table() {
         })
         .collect();
     insta::assert_debug_snapshot!(table);
+}
+
+/// With no package to resolve against, `remove_edges` resolves nothing;
+/// the failed `uses` is the diagnostic.
+#[test]
+fn analysis_edges_need_the_used_packages() {
+    let text = matter("omega ^1.0.0", "", &[], "analysis { remove_edges: [deny] }");
+    insta::assert_debug_snapshot!(run(&text, &NoClock, Profile::Dev));
 }

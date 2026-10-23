@@ -76,6 +76,16 @@ fn analysis_is_judged_by_litgraph() {
         },
     );
     assert_eq!(codes(&case), [DiagnosticCode::InvalidEngineExpression]);
+    let mut case = acme();
+    case.perspective = None;
+    case.analysis.params.insert(
+        "x".into(),
+        litigate_sema::hir::Rational {
+            numerator: 1,
+            denominator: 0,
+        },
+    );
+    assert_eq!(codes(&case), [DiagnosticCode::NonFiniteNumber]);
     // `perspective <party>` needs the primary package's roles.
     assert_eq!(codes(&acme()), [DiagnosticCode::LoweringUnsupported]);
 }
@@ -458,4 +468,25 @@ fn analysis_fields_are_the_engine_scenario_fields() {
         .collect();
     ours.sort_unstable();
     assert_eq!(ours, engine);
+}
+
+/// Each typed `analysis` field lowers to its `Scenario` field: numbers to
+/// binary64, set names in order, no `params` when none are written.
+#[test]
+fn typed_analysis_lowers_field_by_field() {
+    let mut case = acme();
+    case.perspective = None;
+    case.analysis = analysis_of(
+        json!({"calibration": ["a", "b"], "discount_annual": 0.08})
+            .as_object()
+            .cloned()
+            .unwrap_or_default(),
+    );
+    let lowered = Lowerer::new(&[])
+        .case(&case, "cases/x.case")
+        .unwrap_or_else(|d| panic!("{d:#?}"));
+    let s = &lowered.scenario.scenario;
+    assert_eq!(s.calibration, ["a", "b"]);
+    assert_eq!(s.discount_annual, Some(0.08));
+    assert_eq!(s.params, BTreeMap::new());
 }

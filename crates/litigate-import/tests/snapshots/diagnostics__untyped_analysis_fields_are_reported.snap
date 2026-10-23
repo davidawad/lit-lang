@@ -1,0 +1,24 @@
+---
+source: crates/litigate-import/tests/diagnostics.rs
+expression: messages
+---
+[
+    (
+        "`probabilities` names engine nodes or edges by string; `analysis` has no `probabilities`",
+        Some(
+            "/scenario/probabilities",
+        ),
+    ),
+    (
+        "`policy` names engine nodes or edges by string; `analysis` has no `policy`",
+        Some(
+            "/scenario/policy",
+        ),
+    ),
+    (
+        "`null` has no `.case` spelling",
+        Some(
+            "/scenario/discount_annual",
+        ),
+    ),
+]

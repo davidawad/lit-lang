@@ -48,7 +48,8 @@ fn edges(items: &[Value], pointer: &str, issues: &mut Issues) -> String {
 }
 
 /// One value as an expression: numbers exact (integers verbatim, floats as
-/// their shortest round-tripping decimal), records keyed by identifiers.
+/// their shortest round-tripping decimal), records keyed by identifiers,
+/// booleans as written.
 /// `null` has no spelling.
 fn value_text(value: &Value, pointer: &str, issues: &mut Issues) -> String {
     match value {
@@ -56,10 +57,10 @@ fn value_text(value: &Value, pointer: &str, issues: &mut Issues) -> String {
             issues.report(pointer, "`null` has no `.case` spelling");
             "?".to_owned()
         }
-        Value::Bool(b) => b.to_string(),
         Value::String(s) => text::string(s),
-        Value::Number(n) if n.is_i64() || n.is_u64() => n.to_string(),
-        Value::Number(n) => issues.spell(n.as_f64().and_then(text::number), pointer, "number"),
+        Value::Number(n) if n.is_f64() => {
+            issues.spell(n.as_f64().and_then(text::number), pointer, "number")
+        }
         Value::Array(items) => {
             let items: Vec<String> = items
                 .iter()
@@ -83,5 +84,7 @@ fn value_text(value: &Value, pointer: &str, issues: &mut Issues) -> String {
                 format!("{{ {} }}", entries.join(", "))
             }
         }
+        // Booleans and integers, verbatim.
+        other => other.to_string(),
     }
 }

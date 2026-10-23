@@ -4,6 +4,8 @@
   (node_body)
   (edge_fields)
   (deadline_opts)
+  (deadline_decl_opts)
+  (capability)
   (instance_decl)
   (json_record)
   (rule_body)

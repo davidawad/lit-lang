@@ -67,7 +67,19 @@ module.exports = {
 
   variant_list: $ => seq('{', $.identifier, repeat(seq(',', $.identifier)), optional(','), '}'),
 
-  event_decl: $ => seq('event', field('name', $.identifier), $.param_list),
+  event_decl: $ => seq(
+    'event',
+    field('name', $.identifier),
+    $.param_list,
+    optional(field('effect', $.event_effect)),
+  ),
+
+  // SPEC §5.2: the one effect an event type may declare.
+  event_effect: $ => choice(
+    seq(field('key', choice('removes', 'elects')), field('param', $.identifier)),
+    seq(field('key', 'extends'), field('deadline', $.ref), 'to', field('param', $.identifier)),
+    seq(field('key', 'waives'), field('deadline', $.ref)),
+  ),
 
   param_list: $ => commaList('(', $.param, ')'),
 
@@ -181,6 +193,21 @@ module.exports = {
     seq(field('key', choice('extension_authority', 'note')), field('value', $.string)),
   ),
 
+  // A deadline declaration's options add the obligation it creates
+  // (SPEC §5.3): bearer, trigger policy, and capabilities.
+  deadline_decl_opts: $ => braced(choice(
+    $.deadline_opt,
+    seq(field('key', 'bearer'), field('value', $.identifier)),
+    seq(field('key', 'trigger'), field('value', choice($.identifier, $.call_expression))),
+    seq(field('key', choice('extend', 'waive')), field('value', $.capability)),
+  )),
+
+  capability: $ => braced(choice(
+    seq(field('key', 'by'), field('value', $.identifier)),
+    seq(field('key', 'max'), field('value', $.duration)),
+    field('key', 'after_expiry'),
+  )),
+
   // Links and instances.
 
   link_decl: $ => seq(
@@ -242,7 +269,7 @@ module.exports = {
     'counted_by',
     field('counting', $.ref),
     repeat(choice($._version_clause, $.relation, $.cite)),
-    optional($.deadline_opts),
+    optional($.deadline_decl_opts),
   ),
 
   counting_decl: $ => seq(

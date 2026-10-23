@@ -548,6 +548,44 @@
     }
   },
   {
+    "type": "capability",
+    "named": true,
+    "fields": {
+      "key": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "after_expiry",
+            "named": false
+          },
+          {
+            "type": "by",
+            "named": false
+          },
+          {
+            "type": "max",
+            "named": false
+          }
+        ]
+      },
+      "value": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "duration",
+            "named": true
+          },
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "case_event",
     "named": true,
     "fields": {
@@ -981,7 +1019,7 @@
           "named": true
         },
         {
-          "type": "deadline_opts",
+          "type": "deadline_decl_opts",
           "named": true
         },
         {
@@ -994,6 +1032,62 @@
         },
         {
           "type": "relation",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "deadline_decl_opts",
+    "named": true,
+    "fields": {
+      "key": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "bearer",
+            "named": false
+          },
+          {
+            "type": "extend",
+            "named": false
+          },
+          {
+            "type": "trigger",
+            "named": false
+          },
+          {
+            "type": "waive",
+            "named": false
+          }
+        ]
+      },
+      "value": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "call_expression",
+            "named": true
+          },
+          {
+            "type": "capability",
+            "named": true
+          },
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "deadline_opt",
           "named": true
         }
       ]
@@ -1434,6 +1528,16 @@
     "type": "event_decl",
     "named": true,
     "fields": {
+      "effect": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "event_effect",
+            "named": true
+          }
+        ]
+      },
       "name": {
         "multiple": false,
         "required": true,
@@ -1454,6 +1558,54 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "event_effect",
+    "named": true,
+    "fields": {
+      "deadline": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "ref",
+            "named": true
+          }
+        ]
+      },
+      "key": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "elects",
+            "named": false
+          },
+          {
+            "type": "extends",
+            "named": false
+          },
+          {
+            "type": "removes",
+            "named": false
+          },
+          {
+            "type": "waives",
+            "named": false
+          }
+        ]
+      },
+      "param": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -3998,6 +4150,10 @@
     "named": false
   },
   {
+    "type": "after_expiry",
+    "named": false
+  },
+  {
     "type": "allow_hours",
     "named": false
   },
@@ -4027,6 +4183,10 @@
   },
   {
     "type": "authority",
+    "named": false
+  },
+  {
+    "type": "bearer",
     "named": false
   },
   {
@@ -4148,6 +4308,10 @@
     "named": false
   },
   {
+    "type": "elects",
+    "named": false
+  },
+  {
     "type": "end_of_month",
     "named": false
   },
@@ -4180,7 +4344,15 @@
     "named": false
   },
   {
+    "type": "extend",
+    "named": false
+  },
+  {
     "type": "extendable",
+    "named": false
+  },
+  {
+    "type": "extends",
     "named": false
   },
   {
@@ -4377,6 +4549,10 @@
     "named": false
   },
   {
+    "type": "removes",
+    "named": false
+  },
+  {
     "type": "replaces",
     "named": false
   },
@@ -4457,7 +4633,15 @@
     "named": false
   },
   {
+    "type": "to",
+    "named": false
+  },
+  {
     "type": "transition",
+    "named": false
+  },
+  {
+    "type": "trigger",
     "named": false
   },
   {
@@ -4503,6 +4687,14 @@
   {
     "type": "version_req",
     "named": true
+  },
+  {
+    "type": "waive",
+    "named": false
+  },
+  {
+    "type": "waives",
+    "named": false
   },
   {
     "type": "when",

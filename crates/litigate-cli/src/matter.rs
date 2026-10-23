@@ -5,27 +5,27 @@
 //! lowered to a litgraph `NamedScenario`.
 //!
 //! The deadline schedule is a report over the replayed history: every
-//! deadline of the used packages whose trigger has occurred, counted by
-//! litgraph's clock with its steps (what `explain-value` traces).
+//! obligation instance replay created, counted by litgraph's clock with
+//! its steps (what `explain-value` traces), with how it ended.
 use crate::clock::{self, Clocks};
 use crate::hirx;
 use crate::report;
 use crate::ws::{CaseText, Session};
 use litigate_base::{Diagnostic, FileId, LineIndex, Profile, Severity};
 use litigate_lower::{EngineClock, LoweredCase, Lowerer};
-use litigate_sema::case::{Env, Step};
+use litigate_sema::case::{Env, Obligation, Status, Step};
 use litigate_sema::hir;
 use litigate_sema::pkg::lock::LockFile;
 use litigate_sema::temporal::MatterEvent;
 use litigate_verify::Finding;
 use serde::Serialize;
 
-/// A deadline the events triggered.
+/// An obligation instance the events created (SPEC §5.6).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 pub struct Scheduled {
     /// Qualified deadline id.
     pub deadline: String,
-    /// The latest triggering event.
+    /// The triggering event.
     pub trigger: String,
     /// Its date.
     pub trigger_date: String,
@@ -47,6 +47,11 @@ pub struct Scheduled {
     /// The service method that added days, if any.
     #[serde(skip)]
     pub method: Option<String>,
+    /// The party bearing it, when the deadline names a bearer.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub bearer: Option<String>,
+    /// How replay ended it, or `open` at `as_of`.
+    pub status: Status,
 }
 
 /// A checked matter.
@@ -189,7 +194,7 @@ pub fn check(
             .collect()
     });
     let schedule = match clean {
-        Some(c) if lowered.is_some() => schedule(&used, clocks, c),
+        Some(c) if lowered.is_some() => schedule(&used, clocks, c, &verified.checked.obligations),
         _ => Vec::new(),
     };
     let extra = report::findings_of(&own);
@@ -214,49 +219,41 @@ pub fn check(
     }
 }
 
-/// Events in date order, ties in source order (SPEC §5.6).
-fn history(case: &hir::Case) -> Vec<&hir::Event> {
-    let mut events: Vec<&hir::Event> = case.events.iter().collect();
-    events.sort_by(|a, b| a.date.cmp(&b.date));
-    events
-}
-
-/// Every deadline of `packages` with a trigger in the matter's history,
-/// counted from its latest trigger under the declarations governing it
-/// among the used packages, as replay selects them (`clock::due`: at the
-/// matter's `known_at`, with precedence and transitions applied).
-fn schedule(packages: &[&hir::Package], clocks: &Clocks, case: &hir::Case) -> Vec<Scheduled> {
-    let history = history(case);
+/// Every obligation instance replay created (SPEC §5.6), in creation
+/// order, counted from its own trigger under the declaration governing it
+/// then among the used packages (`clock::due`: precedence and transitions
+/// applied).
+fn schedule(
+    packages: &[&hir::Package],
+    clocks: &Clocks,
+    case: &hir::Case,
+    obligations: &[Obligation],
+) -> Vec<Scheduled> {
     let names: Vec<&str> = packages.iter().map(|p| p.manifest.name.as_str()).collect();
     let world = clocks.scope(&names);
-    let events: Vec<MatterEvent<'_>> = history
-        .iter()
-        .map(|e| MatterEvent {
-            date: &e.date,
-            action: &e.action,
-        })
-        .collect();
     let mut out: Vec<Scheduled> = Vec::new();
     for pkg in packages {
-        for d in hirx::declarations(pkg) {
-            let hir::Declaration::Deadline(d) = d else {
-                continue;
+        let prefix = format!("{}::", pkg.manifest.pack_id);
+        for o in obligations.iter().filter(|o| o.deadline.starts_with(&prefix)) {
+            let trigger = &case.events[o.trigger];
+            let local = &o.deadline[prefix.len()..];
+            let event = MatterEvent {
+                date: &trigger.date,
+                action: &trigger.action,
             };
-            let id = format!("{}::{}", pkg.manifest.pack_id, d.meta.id);
-            if out.iter().any(|s| s.deadline == id) {
-                continue;
-            }
-            let Some(at) = history
-                .iter()
-                .rposition(|e| hirx::matches(&d.trigger, &e.action))
-            else {
-                continue;
-            };
-            let known_at = case.known_at.as_deref();
-            if let Ok(due) = clock::due(clocks, &world, pkg, &d.meta.id, &events, at, known_at) {
+            let due = clock::due(
+                clocks,
+                &world,
+                pkg,
+                local,
+                std::slice::from_ref(&event),
+                0,
+                case.known_at.as_deref(),
+            );
+            if let Ok(due) = due {
                 out.push(Scheduled {
-                    deadline: id,
-                    trigger: hirx::event_text(&history[at].action),
+                    deadline: o.deadline.clone(),
+                    trigger: hirx::event_text(&trigger.action),
                     trigger_date: due.trigger,
                     due: due.computed.due_date,
                     rule: due.rule,
@@ -265,6 +262,8 @@ fn schedule(packages: &[&hir::Package], clocks: &Clocks, case: &hir::Case) -> Ve
                     cite: due.cite,
                     rolled: due.computed.last_day_rolled,
                     method: due.method,
+                    bearer: o.bearer.clone(),
+                    status: o.status,
                 });
             }
         }

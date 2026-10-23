@@ -140,7 +140,7 @@ expression: run.json
           {
             "date": "2025-03-05",
             "event": "Served(complaint, Personal)",
-            "effect": "timing",
+            "effect": "triggered",
             "from": "frcp-rule12-example::respond",
             "to": "frcp-rule12-example::respond"
           },
@@ -163,7 +163,8 @@ expression: run.json
             "steps": [
               "FRCP 6(a): exclude the trigger date 2025-03-05",
               "FRCP 6(a): count 21 calendar day(s) after the anchor -> 2025-03-26"
-            ]
+            ],
+            "status": "discharged"
           }
         ]
       }

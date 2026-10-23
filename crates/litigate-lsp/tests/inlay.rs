@@ -38,8 +38,9 @@ fn line_of(text: &str, needle: &str) -> u32 {
 
 #[test]
 fn the_hint_follows_the_triggering_event() {
-    // The period runs from the latest service: not the earlier one, nor
-    // the other one on the same day.
+    // The answer period's trigger policy is `first`: the period runs from
+    // the first service, and neither a later one nor another on the same
+    // day restarts it (SPEC §5.3).
     let case = matter(
         "  2025-03-01 Served(complaint, Electronic) on widget\n  2025-03-05 Served(complaint, Mail) on widget\n  2025-03-05 Served(complaint, Personal) on widget\n",
     );
@@ -52,8 +53,8 @@ fn the_hint_follows_the_triggering_event() {
     assert_eq!(
         found,
         [(
-            line_of(&case, "2025-03-05 Served(complaint, Personal"),
-            "// answer-period due 2025-03-26 (FRCP 6(a))".to_owned()
+            line_of(&case, "2025-03-01 Served(complaint, Electronic"),
+            "// answer-period due 2025-03-24 (FRCP 6(a) rolled)".to_owned()
         )]
     );
     // A range that ends before the event shows nothing.

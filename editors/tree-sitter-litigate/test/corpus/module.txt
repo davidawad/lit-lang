@@ -269,3 +269,56 @@ module m
     (module_decl
       (module_path
         (identifier)))))
+
+================================================================================
+Event effects
+================================================================================
+
+module a
+event Forfeited(option: String) removes option
+event Elected(option: String) elects option
+event Extended(until: Date) extends answer-period to until
+event Released() waives answer-period
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (event_decl
+      (identifier)
+      (param_list
+        (param
+          (identifier)
+          (type
+            (identifier))))
+      (event_effect
+        (identifier)))
+    (event_decl
+      (identifier)
+      (param_list
+        (param
+          (identifier)
+          (type
+            (identifier))))
+      (event_effect
+        (identifier)))
+    (event_decl
+      (identifier)
+      (param_list
+        (param
+          (identifier)
+          (type
+            (identifier))))
+      (event_effect
+        (ref
+          (identifier))
+        (identifier)))
+    (event_decl
+      (identifier)
+      (param_list)
+      (event_effect
+        (ref
+          (identifier))))))

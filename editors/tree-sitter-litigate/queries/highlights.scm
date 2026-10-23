@@ -26,7 +26,8 @@
   "service_extension" "holidays" "anchor" "short_period" "below" "count"
   "allow_hours" "end_of_month" "effective" "observed" "amends" "subject_to" "notwithstanding"
   "supersedes" "revives" "override" "delegable_to" "rebuts" "undercuts"
-  "priority" "url"
+  "priority" "url" "bearer" "trigger" "extend" "waive" "after_expiry"
+  "removes" "elects" "extends" "waives" "to"
 ] @keyword
 
 (discretion) @keyword

@@ -93,9 +93,11 @@ pub enum Status {
     Discharged,
     /// An act took the `within` edge after the due date (L4002).
     Late,
-    /// A duty past due at `as_of` with no act: breached (L4009).
+    /// A duty borne by a party, past due at `as_of` with no act:
+    /// breached, a liability of its bearer (L4009).
     Breached,
-    /// A power past due at `as_of` with no act: it lapsed.
+    /// Past due at `as_of` with no act, and not a breach: a power, or a
+    /// period no party bears.
     Lapsed,
     /// A cited `waives` event released it.
     Waived,

@@ -12,6 +12,8 @@
   (edge_fields)
   (duration_range)
   (deadline_opts)
+  (deadline_decl_opts)
+  (capability)
   (instance_decl)
   (probability_map)
   (role_map)

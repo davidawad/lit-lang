@@ -89,7 +89,7 @@ deadline later: 8.hours after Filed counted_by frcp6 { extendable true }
           (open_end)))
       (cite
         (cite_text))
-      (deadline_opts
+      (deadline_decl_opts
         (deadline_opt
           (string
             (string_content)))))
@@ -100,7 +100,7 @@ deadline later: 8.hours after Filed counted_by frcp6 { extendable true }
         (identifier))
       (ref
         (identifier))
-      (deadline_opts
+      (deadline_decl_opts
         (deadline_opt
           (boolean))))))
 
@@ -264,3 +264,51 @@ calendar empty effective [1990-01-01, ..) { }
           (date)
           (open_end)))
       (calendar_body))))
+
+================================================================================
+Deadline obligation options
+================================================================================
+
+module a
+deadline answer-period: 21.days from Served(complaint) counted_by frcp6 {
+  bearer Defendant
+  trigger later_of(original)
+  extend { by Court, max 30.days, after_expiry }
+  waive { by Court }
+  note "n"
+}
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (deadline_decl
+      (identifier)
+      (duration)
+      (call_expression
+        (ref
+          (identifier))
+        (arguments
+          (ref
+            (identifier))))
+      (ref
+        (identifier))
+      (deadline_decl_opts
+        (identifier)
+        (call_expression
+          (ref
+            (identifier))
+          (arguments
+            (ref
+              (identifier))))
+        (capability
+          (identifier)
+          (duration))
+        (capability
+          (identifier))
+        (deadline_opt
+          (string
+            (string_content)))))))

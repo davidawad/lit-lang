@@ -44,11 +44,17 @@ event Elected(option: String)
 rule duty answer-duty cite FRCP 12(a)(1)(A)(i)
 {
   deadline answer-period: 20.days from Served(complaint) counted_by frcp6
-    effective [2007-12-01, 2009-12-01) known_at 2007-04-30
-    { bearer Defendant, extend { by Court, max 30.days }, waive { by Court } }
+    effective [2007-12-01, 2009-12-01) known_at 2007-04-30 {
+      bearer Defendant
+      extend { by Court, max 30.days }
+      waive { by Court }
+    }
   deadline answer-period: 21.days from Served(complaint) counted_by frcp6
-    effective [2009-12-01, ..) known_at 2009-03-26 supersedes answer-period@2007-12-01
-    { bearer Defendant, extend { by Court, max 30.days }, waive { by Court } }
+    effective [2009-12-01, ..) known_at 2009-03-26 supersedes answer-period@2007-12-01 {
+      bearer Defendant
+      extend { by Court, max 30.days }
+      waive { by Court }
+    }
 }
 
 /// Rule 12(a)(4)(A): answer after the court denies a Rule 12 motion.

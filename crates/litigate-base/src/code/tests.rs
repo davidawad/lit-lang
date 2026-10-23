@@ -44,7 +44,10 @@ fn every_registered_code_exercises_its_stable_views() {
             let severity = code.severity(profile);
             if code == DiagnosticCode::AnonymousEdge {
                 assert_eq!(severity, Severity::Info);
-            } else if matches!(code, DiagnosticCode::UnusedDeclaration)
+            } else if matches!(
+                code,
+                DiagnosticCode::UnusedDeclaration | DiagnosticCode::ObligationBreached
+            )
                 || (profile == Profile::Dev
                     && matches!(
                         code,

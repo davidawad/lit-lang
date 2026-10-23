@@ -3,8 +3,10 @@
 //! trigger policy. An instance is consumed exactly once: discharged by a
 //! timely act through a `within` edge (`within.rs`), breached by a late
 //! one, waived, superseded by a later trigger, or absorbed by a
-//! `later_of` deadline. A duty's instance still open past its due date at
-//! `as_of` is breached (L4009); a power's lapses. An extension or a waiver
+//! `later_of` deadline. A duty's instance borne by a party and still open
+//! past its due date at `as_of` is breached (L4009). Any other instance
+//! past due lapses: a power's, or a period no party bears, since a breach
+//! is a liability of its bearer. An extension or a waiver
 //! is a typed transform of one instance, licensed by the deadline's
 //! `extend`/`waive` capability, its principal, and its bound.
 use super::Cx;
@@ -266,17 +268,13 @@ impl<'g> Cx<'_, 'g> {
             let how = deadline::explain(&due, &self.sorted[due.trigger].1.action);
             let span = self.at(self.obligations[i].at, |e| e.whole.as_ref());
             let o = &mut self.obligations[i];
-            if !o.linear {
+            let Some(bearer) = o.bearer.as_ref().filter(|_| o.linear) else {
                 o.status = Status::Lapsed;
                 continue;
-            }
+            };
             o.status = Status::Breached;
-            let bearer = o
-                .bearer
-                .as_ref()
-                .map_or_else(String::new, |b| format!(" borne by `{b}`"));
             let message = format!(
-                "obligation `{}`{bearer}, created by `{}` on {}, was neither discharged nor transformed by its due date {date}: at as_of {} it is breached",
+                "obligation `{}` borne by `{bearer}`, created by `{}` on {}, was neither discharged nor transformed by its due date {date}: at as_of {} it is breached",
                 o.deadline,
                 display(&self.sorted[o.at].1.action),
                 o.date,

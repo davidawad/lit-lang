@@ -35,10 +35,12 @@ event Published()
 event OppositionPeriodExpired()
 /// Day 60 from publication, the end of a first 30-day extension.
 event FirstExtensionExpired()
+
 /// The extension of time to oppose an opposer requests (37 C.F.R.
 /// § 2.102(c)): a first 30 days on request or 90 days for good cause, then
 /// 60 more days for good cause after the 30.
 enum ExtensionTerm { Thirty, Ninety, Sixty }
+
 /// A request for an extension of time to oppose, filed before the period
 /// it extends expires (37 C.F.R. § 2.102(a), (c)).
 event ExtensionRequested(term: ExtensionTerm)

@@ -7,7 +7,7 @@
 #![allow(clippy::unwrap_used)]
 mod support;
 
-use litgraph::api::{handle, Catalog, Request};
+use litgraph::api::{handle, Request};
 use serde_json::{json, Value};
 use support::{litigate, repo};
 
@@ -67,7 +67,7 @@ fn comparable(mut v: Value) -> Value {
 
 /// litgraph's response to `request` over the embedded packs and scenarios.
 fn engine(request: &Value) -> Value {
-    let catalog = Catalog::embedded().unwrap();
+    let catalog = litgraph_packs::catalog().unwrap();
     let request: Request = serde_json::from_value(request.clone()).unwrap();
     // Through the same JSON text the `litigate` binary prints, so both
     // sides parse numbers the same way.
@@ -121,7 +121,7 @@ fn has_fact_unset(v: &Value) -> bool {
 fn every_named_scenario_lowers_equal_to_its_legacy_json() {
     for (id, _) in SCENARIOS {
         let case = format!("cases/{id}.case");
-        let against = format!("scenarios/{id}.json");
+        let against = format!("{}/{id}.json", litgraph_packs::SCENARIOS_DIR);
         let out = litigate(&["diff", &case, "--against", &against, "--check"]);
         assert_eq!(out.code, 0, "{id}: {}", out.stdout);
         assert_eq!(out.json["result"]["equal"], true, "{id}");

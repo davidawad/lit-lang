@@ -162,7 +162,7 @@ mod tests {
     use super::*;
 
     fn server() -> LitgraphServer {
-        LitgraphServer::new(Catalog::embedded().expect("embedded packs must load in tests"))
+        LitgraphServer::new(litgraph_packs::catalog().expect("embedded packs must load in tests"))
     }
 
     #[test]

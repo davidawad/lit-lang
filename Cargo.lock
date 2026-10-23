@@ -913,6 +913,7 @@ name = "litgraph"
 version = "0.5.0"
 dependencies = [
  "expect-test",
+ "litgraph-packs",
  "proptest",
  "rand 0.8.8",
  "rand_chacha 0.3.1",
@@ -930,6 +931,7 @@ dependencies = [
  "anyhow",
  "clap",
  "litgraph",
+ "litgraph-packs",
  "serde",
  "serde_json",
 ]
@@ -941,11 +943,20 @@ dependencies = [
  "anyhow",
  "clap",
  "litgraph",
+ "litgraph-packs",
  "litigate-cli",
  "rmcp",
  "schemars",
  "serde_json",
  "tokio",
+]
+
+[[package]]
+name = "litgraph-packs"
+version = "0.5.0"
+dependencies = [
+ "litgraph",
+ "litigate-cli",
 ]
 
 [[package]]
@@ -965,6 +976,7 @@ version = "0.5.0"
 dependencies = [
  "getrandom 0.2.17",
  "litgraph",
+ "litgraph-packs",
  "litigate-cli",
  "litigate-sema",
  "serde",
@@ -991,6 +1003,7 @@ dependencies = [
  "clap",
  "insta",
  "litgraph",
+ "litgraph-packs",
  "litigate-base",
  "litigate-import",
  "litigate-lower",
@@ -1020,6 +1033,7 @@ version = "0.5.0"
 dependencies = [
  "insta",
  "litgraph",
+ "litgraph-packs",
  "litigate-base",
  "litigate-sema",
  "litigate-syntax",
@@ -1038,6 +1052,7 @@ version = "0.5.0"
 dependencies = [
  "insta",
  "litgraph",
+ "litgraph-packs",
  "litigate-base",
  "litigate-import",
  "litigate-sema",

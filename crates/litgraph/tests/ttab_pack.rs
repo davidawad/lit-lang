@@ -5,14 +5,13 @@
 
 #![allow(clippy::unwrap_used, clippy::expect_used)]
 
-use litgraph::api::Catalog;
 use litgraph::model::{CompileOptions, NodeKind};
 
 const TTAB: &str = "ttab-trademark-trial-and-appeal-board";
 
 #[test]
 fn ttab_pack_compiles_alone_and_with_cafc() {
-    let catalog = Catalog::embedded().expect("embedded catalog compiles");
+    let catalog = litgraph_packs::catalog().expect("embedded catalog compiles");
     for packs in [
         vec![TTAB.to_string()],
         vec![TTAB.to_string(), "cafc".to_string()],

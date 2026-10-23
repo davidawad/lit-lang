@@ -16,11 +16,25 @@ pub fn repo_root() -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR")).join("../..")
 }
 
+/// `packs/<file>` or `scenarios/<file>` in the `litgraph-packs` build.
+pub fn built_path(path: &str) -> PathBuf {
+    match path.strip_prefix("packs/") {
+        Some(file) => Path::new(litgraph_packs::PACKS_DIR).join(file),
+        None => {
+            Path::new(litgraph_packs::SCENARIOS_DIR).join(path.trim_start_matches("scenarios/"))
+        }
+    }
+}
+
 /// Every legacy pack, `links.json`, and named scenario in the repository.
 pub fn corpus() -> Vec<Input> {
     let mut paths = Vec::new();
-    for dir in ["packs", "scenarios"] {
-        let entries = std::fs::read_dir(repo_root().join(dir))
+    let built = [
+        ("packs", litgraph_packs::PACKS_DIR),
+        ("scenarios", litgraph_packs::SCENARIOS_DIR),
+    ];
+    for (dir, path) in built {
+        let entries = std::fs::read_dir(path)
             .map(|r| r.filter_map(Result::ok).collect::<Vec<_>>())
             .unwrap_or_default();
         for entry in entries {
@@ -34,7 +48,7 @@ pub fn corpus() -> Vec<Input> {
     paths
         .into_iter()
         .map(|path| {
-            let text = std::fs::read_to_string(repo_root().join(&path)).unwrap_or_default();
+            let text = std::fs::read_to_string(built_path(&path)).unwrap_or_default();
             Input::new(path, text)
         })
         .collect()

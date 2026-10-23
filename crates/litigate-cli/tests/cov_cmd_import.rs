@@ -139,12 +139,15 @@ fn output_that_cannot_be_written_is_a_failure() {
 fn a_number_without_a_lossless_spelling_is_a_difference() {
     let dir = scratch("import-difference");
     std::fs::copy(
-        repo().join("packs/frcp-civil-procedure.json"),
+        std::path::Path::new(litgraph_packs::PACKS_DIR).join("frcp-civil-procedure.json"),
         dir.join("p.json"),
     )
     .unwrap();
     let mut scenario: Value = serde_json::from_str(
-        &std::fs::read_to_string(repo().join("scenarios/frcp-civil-case.json")).unwrap(),
+        &std::fs::read_to_string(
+            std::path::Path::new(litgraph_packs::SCENARIOS_DIR).join("frcp-civil-case.json"),
+        )
+        .unwrap(),
     )
     .unwrap();
     // Negative zero: an exact rational has no sign of zero, and JCS writes

@@ -113,9 +113,11 @@ fn dirichlet_update_with_the_default_concentration_is_warned() {
 
 #[test]
 fn a_calibrated_sample_size_is_the_prior_strength() {
-    let root = concat!(env!("CARGO_MANIFEST_DIR"), "/../..");
-    let text = std::fs::read_to_string(format!("{root}/packs/ptab-patent-trial-appeal-board.json"))
-        .unwrap();
+    let text = std::fs::read_to_string(format!(
+        "{}/ptab-patent-trial-appeal-board.json",
+        litgraph_packs::PACKS_DIR
+    ))
+    .unwrap();
     let mut g = graph(&text);
     litgraph::api::apply_calibration_named(&mut g, "ptab-fy2024").unwrap();
     let edge = "ptab-patent-trial-appeal-board::institution-decision->institution-granted#0";

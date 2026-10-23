@@ -5,9 +5,14 @@
 use super::*;
 use crate::clock::ClockLibrary;
 
+/// The repository's packs and scenarios, as `litgraph-packs` builds them.
+fn repo_catalog() -> Result<Catalog> {
+    Catalog::embedded(litgraph_packs::PACKS, litgraph_packs::SCENARIOS)
+}
+
 #[test]
 fn embedded_catalog_loads_and_compiles_everything() -> Result<()> {
-    let c = Catalog::embedded()?;
+    let c = repo_catalog()?;
     assert!(c.packs.len() >= 8, "embedded packs: {}", c.packs.len());
     assert!(!c.links.links.is_empty());
     assert!(
@@ -96,8 +101,8 @@ fn a_malformed_pack_or_links_file_is_skipped_and_recorded_not_a_hard_failure() -
 #[test]
 fn every_embedded_pack_file_parses_individually_against_the_strict_pack_struct() {
     let mut checked = 0;
-    for (name, text) in EMBEDDED {
-        if *name == "links.json" {
+    for (name, text) in litgraph_packs::PACKS {
+        if *name == "links.json" || name.starts_with("clock/") {
             continue;
         }
         if let Err(e) = Pack::from_json(text) {
@@ -113,7 +118,7 @@ fn every_embedded_pack_file_parses_individually_against_the_strict_pack_struct()
 
 #[test]
 fn embedded_catalog_loads_the_scenario_library() -> Result<()> {
-    let c = Catalog::embedded()?;
+    let c = repo_catalog()?;
     assert_eq!(c.scenarios_origin, "embedded");
     assert!(
         c.scenarios().count() >= 4,
@@ -128,13 +133,13 @@ fn embedded_catalog_loads_the_scenario_library() -> Result<()> {
 /// clear error naming the unknown id, matching pack selection.
 #[test]
 fn with_scenarios_dir_reads_a_directory_and_reports_unknown_names() -> Result<()> {
-    let dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../scenarios");
+    let dir = std::path::Path::new(litgraph_packs::SCENARIOS_DIR);
     assert!(
         dir.is_dir(),
         "expected a scenarios/ dir at {}",
         dir.display()
     );
-    let c = Catalog::embedded()?.with_scenarios_dir(&dir)?;
+    let c = repo_catalog()?.with_scenarios_dir(dir)?;
     assert_eq!(c.scenarios_origin, dir.display().to_string());
     assert!(!c.scenarios().collect::<Vec<_>>().is_empty());
     let err = c.scenario("definitely-not-a-scenario").unwrap_err();
@@ -146,9 +151,9 @@ fn with_scenarios_dir_reads_a_directory_and_reports_unknown_names() -> Result<()
 /// `$LITGRAPH_PACKS` (nextest gives every test its own process).
 #[test]
 fn default_source_honors_litgraph_scenarios_env_var() -> Result<()> {
-    let dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../scenarios");
-    std::env::set_var("LITGRAPH_SCENARIOS", &dir);
-    let c = Catalog::default_source()?;
+    let dir = std::path::Path::new(litgraph_packs::SCENARIOS_DIR);
+    std::env::set_var("LITGRAPH_SCENARIOS", dir);
+    let c = Catalog::default_source(litgraph_packs::PACKS, litgraph_packs::SCENARIOS)?;
     std::env::remove_var("LITGRAPH_SCENARIOS");
     assert_eq!(c.scenarios_origin, dir.display().to_string());
     assert_eq!(c.origin, "embedded");
@@ -165,10 +170,10 @@ fn fingerprint_is_stable() {
 /// test its own process, so mutating the env var here is isolated).
 #[test]
 fn default_source_honors_litgraph_packs_env_var() -> Result<()> {
-    let dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../packs");
+    let dir = std::path::Path::new(litgraph_packs::PACKS_DIR);
     assert!(dir.is_dir(), "expected a packs/ dir at {}", dir.display());
-    std::env::set_var("LITGRAPH_PACKS", &dir);
-    let c = Catalog::default_source()?;
+    std::env::set_var("LITGRAPH_PACKS", dir);
+    let c = Catalog::default_source(litgraph_packs::PACKS, litgraph_packs::SCENARIOS)?;
     std::env::remove_var("LITGRAPH_PACKS");
     assert_eq!(c.origin, dir.display().to_string());
     assert!(!c.packs.is_empty());
@@ -180,7 +185,7 @@ fn default_source_honors_litgraph_packs_env_var() -> Result<()> {
 /// compiled with them, since cross-forum link edges add `#end` twins.
 #[test]
 fn compile_without_links_uses_an_empty_link_file() -> Result<()> {
-    let c = Catalog::embedded()?;
+    let c = repo_catalog()?;
     let with_links = c.compile(&[], true, &CompileOptions::default())?;
     let without_links = c.compile(&[], false, &CompileOptions::default())?;
     assert!(without_links.nodes.len() <= with_links.nodes.len());
@@ -189,13 +194,20 @@ fn compile_without_links_uses_an_empty_link_file() -> Result<()> {
 }
 
 /// Every shipped pack that names a counting rule resolves it against the
-/// clock library, whether loaded embedded or from `packs/` + `packs/clock/`.
+/// clock library, whether loaded embedded or from `packs/` + `packs/clock/`;
+/// that library is the hand-authored one plus the generated fragments.
 #[test]
 fn every_pack_counting_reference_resolves_embedded_and_from_disk() -> Result<()> {
-    let dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../packs");
-    for c in [Catalog::embedded()?, Catalog::load(&dir)?] {
+    let dir = std::path::Path::new(litgraph_packs::PACKS_DIR);
+    let hand = &ClockLibrary::embedded().0;
+    let embedded = repo_catalog()?;
+    assert!(hand
+        .counting_rules
+        .iter()
+        .all(|r| embedded.clock.counting_rules.contains(r)));
+    for c in [embedded.clone(), Catalog::load(dir)?] {
         assert!(c.load_errors.is_empty(), "{:?}", c.load_errors);
-        assert_eq!(c.clock, ClockLibrary::embedded().0);
+        assert_eq!(c.clock, embedded.clock);
         let mut named = 0;
         for (file, p, _) in &c.packs {
             if let Some(id) = &p.counting {

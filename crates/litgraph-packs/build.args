@@ -1,0 +1,26 @@
+# The `litigate build` arguments the repository's generated packs,
+# packs/links.json, generated clock fragments and named scenarios are built
+# from (DESIGN §11.4, SPEC §9.4): one argument per line, `#` comments.
+# build.rs builds them into this crate at compile time; `just lit-sync`
+# writes the same build to target/lit-build/ for inspection. lit/core and
+# lit/examples are library/teaching packages and emit no pack.
+lit/cafc
+lit/cofc
+lit/frap
+lit/frcp
+lit/frcrimp
+lit/itc
+lit/mpep
+lit/ptab
+lit/ttab
+lit/links
+cases/cofc-1498-patent-case.case
+cases/cofc-bid-protest.case
+cases/frcp-civil-case.case
+cases/ptab-ipr-defense.case
+cases/ttab-opposition-applicant-defense.case
+# `--pack-file ID=STEM` keeps a legacy file name where it is not the id.
+--pack-file
+cafc=cafc-federal-circuit
+--pack-file
+cofc=cofc-court-of-federal-claims

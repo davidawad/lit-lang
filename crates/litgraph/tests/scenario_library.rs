@@ -11,13 +11,12 @@
 
 #![allow(clippy::unwrap_used, clippy::expect_used)]
 
-use litgraph::api::Catalog;
 use litgraph::model::CompileOptions;
 use litgraph::scenario::View;
 
 #[test]
 fn every_shipped_scenario_has_a_summary_and_at_least_one_pack() {
-    let catalog = Catalog::embedded().expect("embedded catalog compiles");
+    let catalog = litgraph_packs::catalog().expect("embedded catalog compiles");
     for def in catalog.scenarios() {
         assert!(!def.summary.trim().is_empty(), "{}: empty summary", def.id);
         assert!(!def.packs.is_empty(), "{}: names no packs", def.id);
@@ -26,7 +25,7 @@ fn every_shipped_scenario_has_a_summary_and_at_least_one_pack() {
 
 #[test]
 fn every_shipped_scenario_resolves_against_the_current_packs() {
-    let catalog = Catalog::embedded().expect("embedded catalog compiles");
+    let catalog = litgraph_packs::catalog().expect("embedded catalog compiles");
     let mut checked = 0;
     for def in catalog.scenarios() {
         let g = catalog
@@ -55,7 +54,7 @@ fn every_shipped_scenario_resolves_against_the_current_packs() {
 /// the public `Catalog::scenario` lookup lg-mcp is expected to build on.
 #[test]
 fn every_shipped_scenario_is_individually_loadable_by_id() {
-    let catalog = Catalog::embedded().expect("embedded catalog compiles");
+    let catalog = litgraph_packs::catalog().expect("embedded catalog compiles");
     let ids: Vec<String> = catalog.scenarios().map(|s| s.id.clone()).collect();
     for id in ids {
         let def = catalog.scenario(&id).expect("loadable by its own id");
@@ -67,13 +66,11 @@ fn every_shipped_scenario_is_individually_loadable_by_id() {
 /// resolving it against the embedded packs it names.
 #[test]
 fn validate_accepts_a_scenario_library_file() {
-    let catalog = Catalog::embedded().expect("embedded catalog compiles");
+    let catalog = litgraph_packs::catalog().expect("embedded catalog compiles");
     for (name, def, _) in &catalog.scenarios {
         let doc: serde_json::Value = serde_json::from_str(
             &std::fs::read_to_string(
-                std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-                    .join("../../scenarios")
-                    .join(name),
+                std::path::Path::new(litgraph_packs::SCENARIOS_DIR).join(name),
             )
             .unwrap_or_else(|e| panic!("reading scenarios/{name}: {e}")),
         )

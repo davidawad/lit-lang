@@ -20,6 +20,7 @@ workspace = true
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
+litgraph-packs = { path = "../litgraph-packs" }
 litgraph = { path = "../litgraph", default-features = false }
 # `litigate check`/`build` over an in-memory file tree. It enables
 # litgraph's `embed-sources`: cite verification needs the source corpus to

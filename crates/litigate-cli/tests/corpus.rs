@@ -5,12 +5,12 @@
 #![allow(clippy::unwrap_used)]
 mod support;
 
-use support::{litigate, litigate_in, repo, scratch};
+use support::{litigate, litigate_in, scratch};
 
 fn corpus() -> Vec<String> {
     let mut paths = Vec::new();
-    for dir in ["packs", "scenarios"] {
-        for entry in std::fs::read_dir(repo().join(dir)).unwrap() {
+    for dir in [litgraph_packs::PACKS_DIR, litgraph_packs::SCENARIOS_DIR] {
+        for entry in std::fs::read_dir(dir).unwrap() {
             let path = entry.unwrap().path();
             if path.extension().is_some_and(|e| e == "json") {
                 paths.push(path.to_string_lossy().into_owned());
@@ -53,7 +53,7 @@ fn import_check_run_matches_litgraph() {
         &["run", "cases/cofc-1498-patent-case.case", "--op", "solve"],
     );
     assert_eq!(ours.code, 0, "{}", ours.stdout);
-    let catalog = litgraph::api::Catalog::embedded().unwrap();
+    let catalog = litgraph_packs::catalog().unwrap();
     let request: litgraph::api::Request = serde_json::from_value(
         serde_json::json!({"scenario": "cofc-1498-patent-case", "op": {"op": "solve"}}),
     )

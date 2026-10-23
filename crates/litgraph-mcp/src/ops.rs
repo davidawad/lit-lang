@@ -209,7 +209,7 @@ mod tests {
     use super::*;
 
     fn catalog() -> Catalog {
-        Catalog::embedded().expect("embedded packs must load in tests")
+        litgraph_packs::catalog().expect("embedded packs must load in tests")
     }
 
     #[test]

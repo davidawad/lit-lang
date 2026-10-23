@@ -87,7 +87,8 @@ mod tests {
     use serde_json::json;
 
     fn catalog() -> Catalog {
-        Catalog::embedded().expect("embedded catalog compiles")
+        Catalog::embedded(litgraph_packs::PACKS, litgraph_packs::SCENARIOS)
+            .expect("embedded catalog compiles")
     }
 
     #[test]

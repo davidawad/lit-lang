@@ -1,0 +1,30 @@
+[package]
+name = "litgraph-packs"
+description = "The packs, links file, clock fragments and named scenarios built from the repository's lit/ and cases/ at build time, embedded."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme.workspace = true
+keywords.workspace = true
+categories.workspace = true
+publish.workspace = true
+build = "build.rs"
+
+[lints]
+workspace = true
+
+[dependencies]
+litgraph = { path = "../litgraph", default-features = false }
+
+[build-dependencies]
+# `litigate build` over an in-memory copy of lit/ and cases/: the same code
+# path as the CLI, so the embedded files are byte for byte what
+# `litigate build` writes.
+litigate-cli = { path = "../litigate-cli" }
+
+[dev-dependencies]
+litigate-cli = { path = "../litigate-cli" }

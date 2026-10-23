@@ -9,13 +9,14 @@
 use litgraph::api::{handle_json, Catalog};
 use serde_json::{json, Value};
 
-const ROOT: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../..");
 const COFC: &str = "cofc";
 const CAFC: &str = "cafc";
 
 fn read(name: &str) -> Value {
-    serde_json::from_str(&std::fs::read_to_string(format!("{ROOT}/packs/{name}.json")).unwrap())
-        .unwrap()
+    serde_json::from_str(
+        &std::fs::read_to_string(format!("{}/{name}.json", litgraph_packs::PACKS_DIR)).unwrap(),
+    )
+    .unwrap()
 }
 
 /// `pack` with its nodes reversed, and its edges regrouped so each node's

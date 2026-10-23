@@ -123,7 +123,7 @@ fn link_files_read_v1_and_v2() {
         .to_string()
         .contains("unsupported schemaVersion 3"));
     assert!(LinkFile::from_json("{").is_err());
-    let catalog = Catalog::embedded().unwrap();
+    let catalog = litgraph_packs::catalog().unwrap();
     let checked = validate(&v2, None, &catalog);
     assert_eq!((checked.kind, checked.valid), ("links", true));
     assert!(!validate(&future, None, &catalog).valid);
@@ -188,7 +188,7 @@ fn named_scenarios_read_v1_and_v2() {
             .to_string();
         assert!(err.contains(why), "{err}");
     }
-    let catalog = Catalog::embedded().unwrap();
+    let catalog = litgraph_packs::catalog().unwrap();
     let bad = scenario(&json!({"schema_version": 3}));
     let checked = validate(&bad, None, &catalog);
     assert_eq!((checked.kind, checked.valid), ("named-scenario", false));
@@ -208,7 +208,7 @@ fn clock_fragments_read_v3_and_v4() {
 
 #[test]
 fn validating_a_pack_checks_its_header() {
-    let catalog = Catalog::embedded().unwrap();
+    let catalog = litgraph_packs::catalog().unwrap();
     let mut stale = pack(4, Some(header(&[])));
     stale["lowered"]["worldDigest"] = json!("sha256:00");
     let checked = validate(&stale, None, &catalog);

@@ -50,7 +50,12 @@ fn structured(result: &CallToolResult) -> Result<Value> {
 }
 
 fn repo_dir(name: &str) -> std::path::PathBuf {
-    let dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join(format!("../../{name}"));
+    // packs/ and scenarios/ are build outputs (`litgraph-packs`), not files.
+    let dir = match name {
+        "packs" => std::path::PathBuf::from(litgraph_packs::PACKS_DIR),
+        "scenarios" => std::path::PathBuf::from(litgraph_packs::SCENARIOS_DIR),
+        _ => std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join(format!("../../{name}")),
+    };
     assert!(dir.is_dir(), "expected a {name}/ dir at {}", dir.display());
     dir
 }
@@ -226,7 +231,7 @@ async fn resources_list_and_read_scenarios() -> Result<()> {
 
 #[tokio::test]
 async fn packs_dir_flag_overrides_the_embedded_packs() -> Result<()> {
-    let packs_dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../packs");
+    let packs_dir = std::path::PathBuf::from(litgraph_packs::PACKS_DIR);
     assert!(
         packs_dir.is_dir(),
         "expected a packs/ dir at {}",
@@ -251,7 +256,7 @@ async fn packs_dir_flag_overrides_the_embedded_packs() -> Result<()> {
 
 #[tokio::test]
 async fn litgraph_packs_env_var_overrides_the_embedded_packs() -> Result<()> {
-    let packs_dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../packs");
+    let packs_dir = std::path::PathBuf::from(litgraph_packs::PACKS_DIR);
     assert!(
         packs_dir.is_dir(),
         "expected a packs/ dir at {}",

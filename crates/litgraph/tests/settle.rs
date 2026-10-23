@@ -342,7 +342,7 @@ fn bad_arguments_are_rejected_by_name() {
 
 #[test]
 fn settle_is_discoverable() {
-    let catalog = Catalog::embedded().unwrap();
+    let catalog = litgraph_packs::catalog().unwrap();
     let d = handle_json(r#"{"op":{"op":"describe"}}"#, &catalog);
     assert!(d.result.unwrap()["ops"]["settle"].is_string());
     let s = litgraph::api::schema("request").unwrap().to_string();
@@ -351,9 +351,9 @@ fn settle_is_discoverable() {
 
 #[test]
 fn the_cofc_1498_example_runs() {
-    let catalog = Catalog::embedded()
+    let catalog = litgraph_packs::catalog()
         .unwrap()
-        .with_embedded_scenarios()
+        .with_embedded_scenarios(litgraph_packs::SCENARIOS)
         .unwrap();
     let text = include_str!("../../../examples/cofc-1498-settle.json");
     let r = handle_json(text, &catalog);

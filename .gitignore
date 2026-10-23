@@ -34,3 +34,9 @@ scripts/git-hooks/check-branch-worktree.sh
 scripts/git-hooks/push-after-commit.sh
 scripts/git-hooks/agent-context.sh
 dist/
+
+# Generated from lit/ and cases/ at build time (crates/litgraph-packs), never
+# committed: `just lit-sync` writes the same build to target/lit-build/. The
+# hand-authored packs/clock/*.json and packs/*-SOURCES-NOTES.md stay tracked.
+/packs/*.json
+/scenarios/

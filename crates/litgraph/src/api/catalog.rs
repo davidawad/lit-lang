@@ -1,5 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-//! Where packs come from: the set embedded at build time, or a directory.
+//! Where packs come from: a set embedded at build time, or a directory.
+//! The repository's own packs and scenarios are built from `lit/` and
+//! `cases/` by the `litgraph-packs` crate, which hands them to
+//! [`Catalog::embedded`]; this crate embeds none.
 
 use std::path::{Path, PathBuf};
 
@@ -11,8 +14,16 @@ use crate::error::{Error, Result};
 use crate::model::{CompileOptions, Graph, LinkFile, Pack};
 use crate::scenario::NamedScenario;
 
-include!(concat!(env!("OUT_DIR"), "/embedded_packs.rs"));
-include!(concat!(env!("OUT_DIR"), "/embedded_scenarios.rs"));
+/// `(file name, contents)` of files compiled into a binary: packs (with
+/// `links.json` and `clock/<fragment>.json`) or named scenarios, as
+/// `litgraph-packs` embeds them.
+pub type EmbeddedFiles = &'static [(&'static str, &'static str)];
+
+fn owned(files: EmbeddedFiles) -> impl Iterator<Item = (String, String)> {
+    files
+        .iter()
+        .map(|(n, t)| ((*n).to_string(), (*t).to_string()))
+}
 
 /// A pack or `links.json` file that failed to parse. Recorded, not fatal: a
 /// single malformed file must not take every op down for every user of the
@@ -148,35 +159,25 @@ impl Catalog {
         })
     }
 
-    /// The packs compiled into this build, with the embedded scenario
-    /// library attached. A malformed embedded pack is skipped and recorded
-    /// in `load_errors`, not fatal -- see [`Catalog::from_files`].
+    /// The embedded `packs` (`litgraph-packs`' `PACKS`), with the embedded
+    /// scenario library `scenarios` attached. A malformed embedded pack is
+    /// skipped and recorded in `load_errors`, not fatal -- see
+    /// [`Catalog::from_files`].
     ///
     /// # Errors
     /// Only if an embedded scenario is malformed (caught by the test suite;
     /// packs themselves never fail this call, see `from_files`).
-    pub fn embedded() -> Result<Catalog> {
-        Catalog::from_files(
-            "embedded".into(),
-            EMBEDDED
-                .iter()
-                .map(|(n, t)| ((*n).to_string(), (*t).to_string())),
-        )?
-        .with_embedded_scenarios()
+    pub fn embedded(packs: EmbeddedFiles, scenarios: EmbeddedFiles) -> Result<Catalog> {
+        Catalog::from_files("embedded".into(), owned(packs))?.with_embedded_scenarios(scenarios)
     }
 
-    /// Attach the scenario library embedded in this binary, replacing
+    /// Attach the embedded scenario library `scenarios`, replacing
     /// whatever scenarios (if any) this catalog already had.
     ///
     /// # Errors
     /// Only if an embedded scenario is malformed (caught by the test suite).
-    pub fn with_embedded_scenarios(self) -> Result<Catalog> {
-        self.with_scenario_files(
-            "embedded".into(),
-            EMBEDDED_SCENARIOS
-                .iter()
-                .map(|(n, t)| ((*n).to_string(), (*t).to_string())),
-        )
+    pub fn with_embedded_scenarios(self, scenarios: EmbeddedFiles) -> Result<Catalog> {
+        self.with_scenario_files("embedded".into(), owned(scenarios))
     }
 
     /// Attach every `*.json` scenario file in `dir`, replacing whatever
@@ -253,24 +254,19 @@ impl Catalog {
         Catalog::from_files(dir.display().to_string(), files)
     }
 
-    /// `$LITGRAPH_PACKS` if set, else the embedded packs; independently,
-    /// `$LITGRAPH_SCENARIOS` if set, else the embedded scenario library.
+    /// `$LITGRAPH_PACKS` if set, else the embedded `packs`; independently,
+    /// `$LITGRAPH_SCENARIOS` if set, else the embedded `scenarios`.
     ///
     /// # Errors
     /// As [`Catalog::load`] / [`Catalog::embedded`] / [`Catalog::with_scenarios_dir`].
-    pub fn default_source() -> Result<Catalog> {
+    pub fn default_source(packs: EmbeddedFiles, scenarios: EmbeddedFiles) -> Result<Catalog> {
         let catalog = match std::env::var_os("LITGRAPH_PACKS") {
             Some(d) => Catalog::load(&PathBuf::from(d))?,
-            None => Catalog::from_files(
-                "embedded".into(),
-                EMBEDDED
-                    .iter()
-                    .map(|(n, t)| ((*n).to_string(), (*t).to_string())),
-            )?,
+            None => Catalog::from_files("embedded".into(), owned(packs))?,
         };
         match std::env::var_os("LITGRAPH_SCENARIOS") {
             Some(d) => catalog.with_scenarios_dir(&PathBuf::from(d)),
-            None => catalog.with_embedded_scenarios(),
+            None => catalog.with_embedded_scenarios(scenarios),
         }
     }
 

@@ -8,7 +8,7 @@ mod support;
 use litgraph::api::{handle, Catalog, Request};
 use serde_json::{json, Value};
 use std::path::Path;
-use support::{litigate, repo, scratch};
+use support::{litigate, scratch};
 
 /// `(file name, contents)` of every `*.json` in `dir`, names prefixed.
 fn json_files(dir: &Path, prefix: &str) -> Vec<(String, String)> {
@@ -30,8 +30,8 @@ fn json_files(dir: &Path, prefix: &str) -> Vec<(String, String)> {
 
 /// The shipped packs and clock library, with `links.json` taken from `links`.
 fn catalog(links: &str) -> Catalog {
-    let packs = repo().join("packs");
-    let files = json_files(&packs, "")
+    let packs = std::path::Path::new(litgraph_packs::PACKS_DIR);
+    let files = json_files(packs, "")
         .into_iter()
         .map(|(n, t)| {
             if n == "links.json" {
@@ -43,7 +43,7 @@ fn catalog(links: &str) -> Catalog {
         .chain(json_files(&packs.join("clock"), "clock/"));
     let catalog = Catalog::from_files("test".into(), files)
         .unwrap()
-        .with_embedded_scenarios()
+        .with_embedded_scenarios(litgraph_packs::SCENARIOS)
         .unwrap();
     assert!(catalog.load_errors.is_empty(), "{:?}", catalog.load_errors);
     catalog
@@ -63,7 +63,7 @@ fn the_links_package_is_semantically_equal_to_packs_links_json() {
         "diff",
         "lit/links",
         "--against",
-        "packs/links.json",
+        &format!("{}/links.json", litgraph_packs::PACKS_DIR),
         "--check",
     ]);
     assert_eq!(diff.code, 0, "{}", diff.stdout);
@@ -85,7 +85,12 @@ fn the_links_package_checks_and_its_tests_pass() {
 #[test]
 fn the_generated_links_compose_every_forum_as_the_shipped_ones_do() {
     let ours = catalog(&generated());
-    let theirs = catalog(&std::fs::read_to_string(repo().join("packs/links.json")).unwrap());
+    let theirs = catalog(
+        &std::fs::read_to_string(
+            std::path::Path::new(litgraph_packs::PACKS_DIR).join("links.json"),
+        )
+        .unwrap(),
+    );
     // The `lowered` header names the world each was built in: `lit/links`
     // alone here, every lit-sync input there.
     assert_eq!(

@@ -264,7 +264,7 @@ fn robust_solve_through_the_api_and_its_limits() {
 
 #[test]
 fn the_new_surface_is_discoverable() {
-    let d = describe(&Catalog::embedded().unwrap());
+    let d = describe(&litgraph_packs::catalog().unwrap());
     for op in ["posterior", "voi"] {
         assert!(d["ops"][op].is_string(), "describe lists {op}");
     }
@@ -296,7 +296,7 @@ fn a_node_on_a_cycle_gets_evppi_not_outcome_evpi() {
         "op": {"op": "voi", "samples": 40, "top": 2}
     }))
     .unwrap();
-    let resp = handle(&req, &Catalog::embedded().unwrap());
+    let resp = handle(&req, &litgraph_packs::catalog().unwrap());
     let res = result(&resp);
     let row = res["nodes"]
         .as_array()

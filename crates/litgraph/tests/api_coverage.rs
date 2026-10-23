@@ -13,7 +13,7 @@ use litgraph::scenario::Scenario;
 use serde_json::json;
 
 fn catalog() -> Catalog {
-    Catalog::embedded().expect("embedded packs always compile")
+    litgraph_packs::catalog().expect("embedded packs always compile")
 }
 
 fn req(op: Op) -> Request {

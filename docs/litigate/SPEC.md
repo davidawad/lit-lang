@@ -213,8 +213,9 @@ DeadlineDecl = "deadline", Ident, ":", Duration, ("from" | "after" | "before"),
 DeclOpts     = "{", { ( "extendable", Bool | "extension_authority", String
              | "note", String | "bearer", Ref | "trigger", ( Ref | CallExpr )
              | ("extend" | "waive"), Capability ), Sep }, "}" ;
-Capability   = "{", { ( "by", Ref | "max", Duration | "discretion", Ident
-             | "after_expiry" | "never" ), Sep }, "}" ;
+Capability   = "{", { ( "by", Ref | "max", Duration | "to", Expr
+             | "discretion", Ident | "after_expiry" | "on", CallExpr
+             | "within", Expr | "never", Cite ), Sep }, "}" ;
 CountingDecl = "counting", Ident, { VersionClause | Relation | Cite },
                "{", { CountingItem, Sep }, "}" ;
 CountingItem = "exclude_trigger_day" | "include_last_day" | "allow_hours"
@@ -517,30 +518,54 @@ creates (design review 2026-10-23 §2.4, §2.7):
 - `extend { ... }` declares one extension grant; a deadline may declare
   several (FRCP 6(b)(1)'s (A) and (B) are two). Its bound is a sum, and
   a grant states exactly one (otherwise L2007):
-  - `extend { by A, max N.days [, after_expiry] }` (bounded): actor `A`
-    may extend an instance to a date at most `N` calendar days after its
-    counted due date (raised to any `later_of` floor). Without
+  - `extend { by A, max N.days | to B [, discretion S] [, after_expiry]
+    [, on M() [, within W]] }` (bounded): actor `A` may extend an
+    instance to a date no later than date bound `B`. Without
     `after_expiry` the extension must come on or before the current due
-    date. `max` counts calendar days (L3009). A numeric cap belongs only
-    in the file that imposes one, such as a local rule allowing one
-    stipulated extension of N days, or FRAP 4(a)(5)(C).
-  - `extend { by A, discretion S [, after_expiry] }` (discretionary):
-    actor `A` may extend an instance to any later date, under cause
-    standard `S` (an identifier, such as `GoodCause` or
-    `ExcusableNeglect`). Its window is before expiry, on or before the
-    current due date (FRCP 6(b)(1)(A)); with `after_expiry` it is after
-    expiry, on motion (FRCP 6(b)(1)(B)), and then only after the due
-    date. `max` with `discretion` is L2007: a rule with no numeric ceiling
-    is not given one.
-  - `extend { never }` (non-extendable): no order extends the period
-    (FRCP 6(b)(2)). `never` takes no other field and allows no other
-    `extend` on the deadline (L2007).
+    date; with it, before or after. `max N.days` is `to prescribed_due +
+    N.days`; giving both is L2007. A numeric cap belongs only in the file
+    that imposes one, such as a local rule allowing one stipulated
+    extension of N days, or FRAP 4(a)(5)(C), which a bounded grant states
+    exactly with a standard and a motion:
 
-  A grant with an actor under `extendable false`, or `never` under
-  `extendable true`, is L2007.
+    ```
+    extend { by court, discretion GoodCauseOrExcusableNeglect,
+             to max(prescribed_due + 30.days, grant_order_entered + 14.days),
+             after_expiry, on AppealExtensionMoved(), within prescribed_due + 30.days }
+    ```
+  - `extend { by A, discretion S [, after_expiry, on M()] }`
+    (discretionary): actor `A` may extend an instance to any later date.
+    Its window is before expiry, on or before the current due date (FRCP
+    6(b)(1)(A)); with `after_expiry` it is after expiry, on motion (FRCP
+    6(b)(1)(B)), and then only after the due date. An `after_expiry`
+    discretionary grant must name its motion `on M()` (L2007).
+  - `extend { never cite X }` (lock): rule `X` forbids extending the
+    period beyond the declaration's own other grants (FRCP 6(b)(2) with
+    none; FRAP 26(b)(1) beside FRAP 4(a)(5)'s grant, "except as
+    authorized in Rule 4"). `never` takes no other field (L2007). A
+    lower authority's `override`, `notwithstanding`, `supersedes` or
+    `revives` of a locked deadline, licensed only by `delegable_to`, may
+    not declare an `extend` grant the locked version does not: L3004, and
+    the relation has no effect on selection, so no local rule or order
+    grants an extension there.
+
+  The cause standard `S` is a closed set: `GoodCause`, `ExcusableNeglect`,
+  or `GoodCauseOrExcusableNeglect` (FRAP 4(a)(5)(A)(ii)); any other
+  identifier is L2007. A date bound (`to`, `within`) is a closed
+  expression: `max(b, ...)`, `min(b, ...)`, or `r + N.days` (or `r`) with
+  `r` one of `prescribed_due` (the instance's counted due date, raised to
+  any `later_of` floor) and `grant_order_entered` (the date of the order
+  exercising the grant); anything else is L2007, and days other than
+  calendar days L3009. `on M()` names the motion the grant requires, an
+  event pattern; `within W` bounds the motion's date (FRAP
+  4(a)(5)(A)(i): no later than 30 days after the prescribed time expires,
+  whenever the order comes) and needs `on` (L2007).
+
+  A grant with an actor under `extendable false`, or a lock with no grant
+  beside it under `extendable true`, is L2007.
 - `waive { by A [, after_expiry] }`: actor `A` may release an instance,
-  after its due date only with `after_expiry`. `max`, `discretion` and
-  `never` are not allowed (L2007).
+  after its due date only with `after_expiry`. `max`, `to`, `discretion`,
+  `on`, `within` and `never` are not allowed (L2007).
 
 A deadline with no `extend` capability cannot be extended by any order: a
 jurisdictional limit such as the notice of appeal (*Bowles v. Russell*, 551
@@ -826,18 +851,25 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
   `waives d` must carry a `cite`. It transforms every open instance of `d`
   (an order extending the time to answer reaches each defendant's), all or
   none; with none open it is L4001. `d`'s version governing the event must
-  grant the capability (an `extend` grant other than `never`, or `waive`),
-  and the event's `by` party must play the actor of at least one grant.
-  One such grant must admit every open instance: its window holds the
-  event's date (on or before each instance's current due date, or after
-  it for `after_expiry`; a discretionary `after_expiry` grant only after
-  it), and an extension's new date is later than that due date and, for a
-  bounded grant, no later than its bound. A discretionary grant has no
-  ceiling. Replay does not check that an after-expiry order was made on
-  motion: the cited order is the record that it was. When no grant admits
-  the event, the refusal reported is the bound's in preference to the
-  window's. Each failure is L4001, and no instance changes; `extend {
-  never }` is L4001 for any extension. A cited
+  grant the capability (an `extend` grant other than a `never` lock, or
+  `waive`), and the event's `by` party must play the actor of at least one
+  grant. One such grant must admit every open instance: its window holds
+  the event's date (on or before each instance's current due date, or
+  after it for `after_expiry`; a discretionary `after_expiry` grant only
+  after it); the motion it names (`on M()`) is in the matter, an event
+  matching `M` dated no earlier than the instance's trigger, no later
+  than the order, no later than its `within` bound, and, for a
+  discretionary `after_expiry` grant, after the current due date (FRCP
+  6(b)(1)(B): "on motion made after the time has expired"); and an
+  extension's new date is later than that due date and, for a bounded
+  grant, no later than its bound, evaluated with `prescribed_due` the
+  instance's counted due date and `grant_order_entered` the event's date.
+  A discretionary grant has no ceiling. An event matching a grant's
+  motion pattern is matter history: legal at any stage, moving nothing.
+  When no grant admits the event, the refusal reported is the bound's in
+  preference to the window's or the motion's. Each failure is L4001, and
+  no instance changes; a lock with no grant beside it is L4001 for any
+  extension. A cited
   event that is not of such a type transforms nothing, so no order can
   enlarge a limit that grants no capability (as in *Bowles v. Russell*,
   551 U.S. 205 (2007)).

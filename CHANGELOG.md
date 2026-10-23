@@ -40,6 +40,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   periods grant 6(b)(1). Each extendable frcp period has an
   `...Extended(until: Date)` event, done by the new `court` role, so a
   matter records a court-ordered extension.
+- **Extension grants model the rule text exactly** (lg-flu.23). A
+  bounded grant's bound is a closed date expression, `to max(...)`,
+  `min(...)` over `prescribed_due` / `grant_order_entered` `+ N.days`
+  (`max N.days` remains `to prescribed_due + N.days`), and may state a
+  standard; FRAP 4(a)(5)(C) is exact: the later of 30 days after the
+  prescribed time and 14 days after the order. A grant may require a
+  motion (`on M() [, within W]`): an after-expiry discretionary grant must
+  (FRCP 6(b)(1)(B), a motion made after expiry), and FRAP 4(a)(5)'s motion
+  must come no later than 30 days after the prescribed time. The cause
+  standard is a closed set (`GoodCause`, `ExcusableNeglect`,
+  `GoodCauseOrExcusableNeglect`); any other identifier is L2007. `extend {
+  never cite X }` names the rule forbidding extension and locks the period
+  to its declaration's own grants; a lower authority's override that adds
+  a grant is L3004. Data: FRCP 6(b)(1) now covers the Rule
+  12(a)(1)(A)(ii) waiver and Rule 15(a)(1) periods; every FRAP 4(a)(1) and
+  4(a)(3) period in frcp, frap and cafc grants FRAP 4(a)(5) under a FRAP
+  26(b)(1) lock; FRAP 4(b)(4) on the criminal notice periods; FRAP
+  26(b)(1) on the FRAP 5 petition period and 26(b)(2) on the ITC appeal
+  periods. frap, cafc and frcrimp gain a `court` role.
 - **Elections in `.case` replay.** A cited event whose type declares
   `elects p` (`p: String`) elects the edge `p` names: replay removes every
   alternative at each fork offering it (SPEC §5.6). cofc's `Elected`

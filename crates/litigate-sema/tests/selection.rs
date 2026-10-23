@@ -10,7 +10,7 @@ use cov_case_support::{check, compile, lock, outcome};
 use legal::{pkg, render, workspace, CORE};
 use litigate_base::Profile;
 use litigate_sema::case::{Clock, DueRequest};
-use litigate_sema::hir::{Declaration, Package, Relation};
+use litigate_sema::hir::{Bound, DateRef, Declaration, Extension, Package, Relation};
 use litigate_sema::pkg::load::LoadedPackage;
 use litigate_sema::precedence::select::{resolve, unresolved};
 use litigate_sema::precedence::{conclude, select, Conclusion, Unselected};
@@ -706,4 +706,88 @@ fn ambiguous_and_absent_targets_explain_themselves() {
     // In force, `x` prevails over both.
     let got = select(&world, &key("fed", "x"), "2016-06-01", None);
     assert_eq!(got.map(|w| world.decls[w].meta.id.as_str()), Ok("x"));
+}
+
+#[test]
+fn a_lock_bars_a_delegated_override_from_granting_an_extension() {
+    // FRAP 26(b)(1): the period delegates to a local rule, but its lock
+    // forbids any extension beyond its own grant.
+    let locked = " delegable_to [LocalRule] { extend { by Court, max 30.days }, extend { never cite FRAP 26(b)(1) } }";
+    let local = |clauses: &str| {
+        over(
+            "local",
+            "LocalRule",
+            &deadline(
+                "local-answer",
+                14,
+                "Served()",
+                &format!("override answer-period {clauses}"),
+            ),
+        )
+    };
+    let widening = local("{ extend { by Court, max 60.days } }");
+    let found = diagnostics(&[core(), fed(locked), widening.clone()]);
+    assert_eq!(found.len(), 1, "{found:#?}");
+    assert!(
+        found[0].contains("L3004")
+            && found[0].contains("is locked: `extend { never cite FRAP 26(b)(1) }`")
+            && found[0].contains("a delegation does not reach past its lock"),
+        "{found:#?}"
+    );
+    // Selection ignores the widening claim (the source is rejected, so
+    // only HIR built directly can carry one).
+    let mut hir = compile(&[core(), fed(locked), local("")]);
+    for p in hir.iter_mut().filter(|p| p.manifest.name == "local") {
+        for d in p.modules.iter_mut().flat_map(|m| m.declarations.iter_mut()) {
+            if let Declaration::Deadline(x) = d {
+                x.extend = vec![Extension::Bounded {
+                    by: "Court".into(),
+                    until: Bound::Offset {
+                        from: DateRef::PrescribedDue,
+                        days: 60,
+                    },
+                    after_expiry: false,
+                    standard: None,
+                    motion: None,
+                }];
+            }
+        }
+    }
+    assert_eq!(who(&hir), "fed::answer-period");
+    // The locked version's own grant, or none, is no widening.
+    for clauses in ["{ extend { by Court, max 30.days } }", ""] {
+        let narrowing = local(clauses);
+        assert_eq!(
+            diagnostics(&[core(), fed(locked), narrowing.clone()]),
+            Vec::<String>::new(),
+            "{clauses}"
+        );
+        assert_eq!(
+            who(&compile(&[core(), fed(locked), narrowing])),
+            "local::local-answer",
+            "{clauses}"
+        );
+    }
+    // Without a lock the same delegation may grant one.
+    let open = " delegable_to [LocalRule] { extend { by Court, max 30.days } }";
+    let widening = local("{ extend { by Court, max 60.days } }");
+    assert_eq!(
+        who(&compile(&[core(), fed(open), widening])),
+        "local::local-answer"
+    );
+    // An authority at or above the period's own may grant past the lock.
+    let amended = over(
+        "fed2",
+        "FederalRule",
+        &deadline(
+            "amended",
+            14,
+            "Served()",
+            "override answer-period { extend { by Court, max 60.days } }",
+        ),
+    );
+    assert_eq!(
+        diagnostics(&[core(), fed(locked), amended]),
+        Vec::<String>::new()
+    );
 }

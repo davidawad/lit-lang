@@ -9,12 +9,15 @@ contracts in §11 are the code form of this document. W1 beads implement
 against both and need no further design decisions; a gap found later is a
 SPEC bug and gets fixed here first.
 
-## 0. PROPOSED: paradigm (not adopted)
+## 0. Paradigm (ADOPTED)
 
-Status: PROPOSED by the pre-freeze design review
+Status: ADOPTED 2026-10-23, decided by the PM (dotfiles-3a) under David's
+delegation, from the pre-freeze design review
 ([`research/design-review-2026-10-23.md`](research/design-review-2026-10-23.md)
-§0, §1.2). Awaiting David's decision. Nothing below is normative until this
-status changes; §1 onward still describe the language as built.
+§0, §1.2). Normative: this section governs the language's design. Where §1
+onward still describes the language as built and conflicts with it, that text
+is migrating to this paradigm through the `lg-flu` and `lg-962` beads, and
+new work follows this section.
 
 1. **Core:** a typed, stratified Datalog with priorities over bitemporal facts.
    Each declaration denotes a set of claims (declaration id, version, valid

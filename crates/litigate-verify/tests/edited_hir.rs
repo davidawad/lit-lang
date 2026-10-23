@@ -303,7 +303,7 @@ fn strip_spans(v: &mut serde_json::Value) {
 /// as replay and `litigate test` count it, offering any engine service
 /// method.
 #[test]
-fn an_undeclared_counting_rule_is_the_shared_librarys() {
+fn an_undeclared_counting_rule_counts_with_the_shared_library() {
     let v = verify_edited(BASE, |p| {
         for d in deadlines(p) {
             d.counting = "core::frcp6".to_owned();

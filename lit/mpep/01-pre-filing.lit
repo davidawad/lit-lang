@@ -1,21 +1,21 @@
-// Imported by `litigate import` from packs/mpep-prosecution.json.
+// Ported from packs/mpep-prosecution.json (`litigate import`, then made strict).
 module mpep.pre-filing
 
-import mpep.deadlines.{ edge-period-01, edge-period-02 }
+import mpep.deadlines.{ provisional-pendency }
 import mpep.filing-to-allowance.{ nonprovisional-filed }
 import mpep.{ pre-filing-group }
 
 start pre-filing
 
-/// imported
-state pre-filing: "Pre-Filing" by applicant effective [2024-01-31, ..) cite ?("35 U.S.C. 111(b); 37 CFR 1.53(c)") {
+state pre-filing: "Pre-Filing" by applicant effective [2024-01-31, ..) cite 35 U.S.C. 111(b); 37 CFR 1.53(c)
+{
   group pre-filing-group
   note "Provisional application option: file under 35 U.S.C. 111(b) to secure a priority date for 12 months. No claims required. The 12-month window is unextendable — missing it forfeits domestic priority."
   _ "File provisional application" -> provisional-filed {
     authority cite 35 U.S.C. 111(b); 37 CFR 1.53(c)
     effort 8.hours
     cost 325.usd
-    within edge-period-01 {
+    within provisional-pendency {
       extendable false
       note "12-month period to file a nonprovisional claiming domestic benefit of the provisional is unextendable under 35 U.S.C. 119(e). Missing it forfeits the provisional's priority benefit."
     }
@@ -30,15 +30,15 @@ state pre-filing: "Pre-Filing" by applicant effective [2024-01-31, ..) cite ?("3
   }
 }
 
-/// imported
-state provisional-filed: "Provisional Filed" by applicant effective [2024-01-31, ..) cite ?("35 U.S.C. 111(b); 37 CFR 1.53(c)") {
+state provisional-filed: "Provisional Filed" by applicant effective [2024-01-31, ..) cite 35 U.S.C. 111(b); 37 CFR 1.53(c)
+{
   group pre-filing-group
   note "Provisional secures a U.S. priority date. Must be converted or claimed as priority within 12 months. Provisional does not start the 20-year patent term clock."
   _ "File nonprovisional within 12-month window" -> nonprovisional-filed {
     authority cite 35 U.S.C. 111(a); 35 U.S.C. 119(e); 37 CFR 1.53(b)
     effort 40.hours
     cost 2_000.usd
-    within edge-period-02 {
+    within provisional-pendency {
       extendable false
       note "12-month priority window. No extension available under any authority. After expiration, provisional's priority benefit is lost."
     }

@@ -1,0 +1,14 @@
+---
+source: crates/litigate-sema/tests/cov_types_expr.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:11:14 L1002 cannot find type `Nope`",
+    "pkgs/demo/main.lit:12:16 L1002 cannot find function `foo.bar`",
+    "pkgs/demo/main.lit:13:16 L2002 `Method` is not an event constructor or builtin",
+    "pkgs/demo/main.lit:14:16 L2001 `Served` takes 2 arguments, found 3 [note: `Served(document: Document, method: Method)`]",
+    "pkgs/demo/main.lit:15:26 L2001 `One` takes 1 argument, found 0 [note: `One(a: Method)`]",
+    "pkgs/demo/main.lit:16:26 L2001 `Bad` takes 1 argument, found 0 [note: `Bad(x: ?)`]",
+    "pkgs/demo/main.lit:17:16 L1002 cannot find function or event `Nope`",
+    "pkgs/demo/main.lit:18:26 L2001 `Served` takes at most 2 arguments, found 3 [note: `Served(document: Document, method: Method)`]",
+]

@@ -1,0 +1,16 @@
+---
+source: crates/litigate-sema/tests/cov_types_ty.rs
+expression: "check_body(\"type A = Days<Foo>\\ntype B = Money<USD>\\ntype C = Money<eur>\\ntype D = Interval<Number>\\ntype E = Interval<Nope>\\ntype F = List<Nope>\\ntype G = Dist<Number>\\ntype H = Dist<Served>\\ntype I = Dist<Nope>\\ntype J = Nope\")"
+---
+[
+    "pkgs/demo/main.lit:10:15 L2001 `Foo` is not a day unit",
+    "pkgs/demo/main.lit:11:16 L1002 unknown currency `USD` [fix: \"usd\"]",
+    "pkgs/demo/main.lit:12:16 L1002 unknown currency `eur`",
+    "pkgs/demo/main.lit:13:19 L2001 only `Interval<Date>` exists",
+    "pkgs/demo/main.lit:14:19 L1002 cannot find type `Nope`",
+    "pkgs/demo/main.lit:15:15 L1002 cannot find type `Nope`",
+    "pkgs/demo/main.lit:16:15 L2001 `Dist` needs an enum, found `Number`",
+    "pkgs/demo/main.lit:17:15 L2001 `Dist` needs an enum, found `Served`",
+    "pkgs/demo/main.lit:18:15 L1002 cannot find type `Nope`",
+    "pkgs/demo/main.lit:19:10 L1002 cannot find type `Nope`",
+]

@@ -28,9 +28,13 @@ pub fn parse(text: &str) -> Option<(u32, u32, u32)> {
     if !shape {
         return None;
     }
-    let year = text[0..4].parse().ok()?;
-    let month = text[5..7].parse().ok()?;
-    let day = text[8..10].parse().ok()?;
+    // The shape check guarantees ASCII digits, so each field is exact.
+    let field = |digits: &[u8]| digits.iter().fold(0, |n, d| n * 10 + u32::from(d - b'0'));
+    let (year, month, day) = (
+        field(&bytes[0..4]),
+        field(&bytes[5..7]),
+        field(&bytes[8..10]),
+    );
     (day >= 1 && day <= days_in_month(year, month)).then_some((year, month, day))
 }
 
@@ -53,6 +57,11 @@ mod tests {
         assert!(is_valid("2000-02-29"));
         assert!(!is_valid("2025-13-01"));
         assert!(!is_valid("2025-1-01"));
+        assert!(!is_valid("2025/01/01"));
+        assert!(!is_valid("2025-01/01"));
+        assert!(!is_valid("2025-0a-01"));
+        assert!(!is_valid("2025-01-00"));
+        assert_eq!(parse("2024-12-31"), Some((2024, 12, 31)));
     }
 
     proptest! {

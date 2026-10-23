@@ -1,0 +1,12 @@
+---
+source: crates/litigate-sema/tests/cov_types_expr.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:12:58 L2001 expected a `Method` variant, found `Mal` [note: variants: Personal, Mail] [fix: \"Mail\"]",
+    "pkgs/demo/main.lit:12:63 L2004 expected `Days<BusinessDays>`, found `Days<CalendarDays>` [note: `CalendarDays` and `BusinessDays` count different days; convert by declaring a deadline counted by a counting rule, e.g. `deadline <name>: N.<unit> from <Trigger> counted_by c6`, and compare its `deadline(<name>)` date] [fix: \"deadline(<name>)\"]",
+    "pkgs/demo/main.lit:13:58 L2001 expected a `Method` variant, found `Zzzzzz` [note: variants: Personal, Mail]",
+    "pkgs/demo/main.lit:13:66 L2004 expected `Days<BusinessDays>`, found `Days<CourtDays>` [note: `CourtDays` and `BusinessDays` count different days; convert by declaring a deadline counted by a counting rule, e.g. `deadline <name>: N.<unit> from <Trigger> counted_by c6`, and compare its `deadline(<name>)` date] [fix: \"deadline(<name>)\"]",
+    "pkgs/demo/main.lit:14:58 L1002 `Foo` is not an imported module [note: add `import Foo` to refer to `Foo.Mail`]",
+    "pkgs/demo/main.lit:16:28 L1002 cannot find name `x` [note: a name with a similar name exists: `a`] [fix: \"a\"]",
+]

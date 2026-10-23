@@ -1,0 +1,12 @@
+---
+source: crates/litigate-sema/tests/cov_types_expr.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:12:16 L2001 deadline `ok` is not a value [note: its due date is `deadline(..)`] [fix: \"deadline(ok)\"]",
+    "pkgs/demo/main.lit:13:16 L2001 node `s` is not a value",
+    "pkgs/demo/main.lit:16:24 L1002 cannot find name `n-n` [note: identifiers may contain `-`; subtraction needs spaces] [fix: \"n - n\"]",
+    "pkgs/demo/main.lit:17:24 L1002 cannot find name `n-x`",
+    "pkgs/demo/main.lit:18:24 L1002 cannot find name `x-n`",
+    "pkgs/demo/main.lit:19:24 L1002 `Method.Mail` is not an imported module [note: add `import Method.Mail` to refer to `Method.Mail.x`]",
+]

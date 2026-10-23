@@ -136,8 +136,7 @@ fn result_type(op: BinaryOp, l: &Type, r: &Type) -> Result<Type, (C, String)> {
         ))
     };
     let mixed = match (l, r) {
-        (T::Days(a), T::Days(b)) => a != b,
-        (T::Money(a), T::Money(b)) => a != b,
+        (T::Days(_), T::Days(_)) | (T::Money(_), T::Money(_)) => l != r,
         _ => false,
     };
     if mixed {
@@ -153,7 +152,7 @@ fn result_type(op: BinaryOp, l: &Type, r: &Type) -> Result<Type, (C, String)> {
         (B::Add | B::Sub, a, b) if a == b && matches!(a, T::Days(_) | T::Hours | T::Money(_) | T::Probability | T::Number) => Ok(a.clone()),
         (B::Mul | B::Div, T::Days(_) | T::Hours | T::Money(_), T::Number) => Ok(l.clone()),
         (B::Mul, T::Number, T::Days(_) | T::Hours | T::Money(_)) => Ok(r.clone()),
-        (B::Div, T::Money(a), T::Money(b)) if a == b => Ok(T::Number),
+        (B::Div, T::Money(_), T::Money(_)) => Ok(T::Number),
         (B::Mul | B::Div, T::Probability, T::Probability) | (B::Mul | B::Div | B::Rem, T::Number, T::Number) => Ok(l.clone()),
         (_, T::Date, T::Days(_) | T::Hours) | (_, T::Days(_) | T::Hours, T::Date) => Err((C::InvalidOperation, format!("cannot do date arithmetic with `{}`; dates move only through a counting rule (`deadline(..)`)", display(if *l == T::Date { r } else { l })))),
         _ => bad(),
@@ -259,6 +258,14 @@ pub fn fold(op: BinaryOp, a: &Value, b: &Value) -> Result<Option<Value>, ArithEr
         V::Days { amount, .. } => Some(Rational::integer(*amount)),
         _ => None,
     };
+    // A money or day result in whole units; `None` when an operand is not
+    // numeric.
+    let whole = || -> Result<Option<i64>, ArithError> {
+        let (Some(x), Some(y)) = (num(a), num(b)) else {
+            return Ok(None);
+        };
+        arith(x, y).and_then(int).map(Some)
+    };
     if matches!(op, B::Eq | B::Ne | B::Lt | B::Le | B::Gt | B::Ge) {
         let o = match (num(a), num(b), a, b) {
             (Some(x), Some(y), _, _) => q::cmp(x, y),
@@ -286,28 +293,21 @@ pub fn fold(op: BinaryOp, a: &Value, b: &Value) -> Result<Option<Value>, ArithEr
             Rational::integer(x.minor_units),
             Rational::integer(y.minor_units),
         )?),
-        (_, V::Money(m), other) | (_, other, V::Money(m)) => {
-            let (x, y) = if matches!(a, V::Money(_)) {
-                (num(a), num(other))
-            } else {
-                (num(other), num(b))
+        (_, V::Money(m), _) | (_, _, V::Money(m)) => {
+            let Some(v) = whole()? else {
+                return Ok(None);
             };
-            let v = arith(
-                x.ok_or(ArithError::Overflow)?,
-                y.ok_or(ArithError::Overflow)?,
-            )?;
             V::Money(Money {
-                minor_units: int(v)?,
+                minor_units: v,
                 currency: m.currency.clone(),
             })
         }
         (_, V::Days { unit, .. }, _) | (_, _, V::Days { unit, .. }) => {
-            let v = arith(
-                num(a).ok_or(ArithError::Overflow)?,
-                num(b).ok_or(ArithError::Overflow)?,
-            )?;
+            let Some(v) = whole()? else {
+                return Ok(None);
+            };
             V::Days {
-                amount: int(v)?,
+                amount: v,
                 unit: *unit,
             }
         }
@@ -374,5 +374,15 @@ mod tests {
             ),
             Ok(Some(Value::Boolean(true)))
         );
+    }
+
+    #[test]
+    fn currencies_do_not_mix() {
+        let usd = Type::Money("usd".into());
+        let eur = Type::Money("eur".into());
+        assert!(matches!(
+            result_type(BinaryOp::Add, &usd, &eur),
+            Err((C::UnitMismatch, _))
+        ));
     }
 }

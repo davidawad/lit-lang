@@ -305,13 +305,13 @@ fn condition(
     w.iter()
         .map(|(k, p)| {
             let q = if chosen.contains(k) {
-                rational::div(*p, mass)?
+                rational::div(*p, mass)
             } else {
-                hir::Rational::integer(0)
+                Ok(hir::Rational::integer(0))
             };
-            Ok((k.clone(), q))
+            q.map(|q| (k.clone(), q))
         })
-        .collect::<Result<_, rational::ArithError>>()
+        .collect::<Result<_, _>>()
         .map_err(Some)
 }
 

@@ -1,0 +1,16 @@
+---
+source: crates/litigate-sema/tests/cov_types_ty.rs
+expression: "check_body(\"type A = Date<Number>\\ntype B = Days\\ntype C = Days<CourtDays<Number>>\\ntype D = Money\\ntype E = Money<usd<Number>>\\ntype F = Interval\\ntype G = List\\ntype H = Dist\\ntype I = Method<Number>\\ntype J = Nope<Number>\")"
+---
+[
+    "pkgs/demo/main.lit:10:10 L2001 `Date` takes 0 type arguments, found 1",
+    "pkgs/demo/main.lit:11:10 L2001 `Days` takes 1 type argument, found 0",
+    "pkgs/demo/main.lit:12:15 L2001 `CourtDays` takes 0 type arguments, found 1",
+    "pkgs/demo/main.lit:13:10 L2001 `Money` takes 1 type argument, found 0",
+    "pkgs/demo/main.lit:14:16 L2001 `usd` takes 0 type arguments, found 1",
+    "pkgs/demo/main.lit:15:10 L2001 `Interval` takes 1 type argument, found 0",
+    "pkgs/demo/main.lit:16:10 L2001 `List` takes 1 type argument, found 0",
+    "pkgs/demo/main.lit:17:10 L2001 `Dist` takes 1 type argument, found 0",
+    "pkgs/demo/main.lit:18:10 L2001 `Method` takes 0 type arguments, found 1",
+    "pkgs/demo/main.lit:19:10 L1002 cannot find type `Nope`",
+]

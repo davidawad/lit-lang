@@ -115,8 +115,6 @@ pub enum ExprKind {
     Field(Box<Expr>, Name),
     /// `match e { p => e }`.
     Match(Box<Expr>, Vec<(Pattern, Expr)>),
-    /// Unparseable (already reported).
-    Error,
 }
 
 /// Match pattern.

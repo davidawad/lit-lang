@@ -153,12 +153,11 @@ fn arm_variant(
         Pattern::Ref(p) => p,
     };
     let local = en.rsplit("::").next().unwrap_or(en);
-    let name = if p.rest.len() == 1 && p.head.text == local {
-        &p.rest[0].1
-    } else {
-        &p.head
-    };
-    if !variants.contains(&name.text) || (!p.is_simple() && p.rest.len() != 1) {
+    // `Variant` or `Enum.Variant`; any other path shape names no variant.
+    let qualified =
+        p.rest.len() == 1 && p.head.text == local && p.instance.is_none() && p.version.is_none();
+    let name = if qualified { &p.rest[0].1 } else { &p.head };
+    if !(p.is_simple() || qualified) || !variants.contains(&name.text) {
         let mut report = Report::new(
             C::UnresolvedName,
             p.range,

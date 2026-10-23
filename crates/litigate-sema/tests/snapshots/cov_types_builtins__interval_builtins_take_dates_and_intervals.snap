@@ -1,0 +1,9 @@
+---
+source: crates/litigate-sema/tests/cov_types_builtins.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:13:19 L2001 expected `Date`, found `Number`",
+    "pkgs/demo/main.lit:14:31 L2001 expected `Interval<Date>`, found `Number`",
+    "pkgs/demo/main.lit:15:16 L2002 operator `!` is not defined for `Interval<Date>`",
+]

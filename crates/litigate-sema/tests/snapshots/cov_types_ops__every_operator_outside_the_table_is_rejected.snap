@@ -1,0 +1,24 @@
+---
+source: crates/litigate-sema/tests/cov_types_ops.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:10:16 L2002 operator `||` is not defined for `Bool` and `Number`",
+    "pkgs/demo/main.lit:11:16 L2002 operator `&&` is not defined for `Bool` and `Number`",
+    "pkgs/demo/main.lit:12:16 L2002 operator `==` is not defined for `Number` and `Bool`",
+    "pkgs/demo/main.lit:13:16 L2002 operator `!=` is not defined for `List<Number>` and `List<Number>`",
+    "pkgs/demo/main.lit:14:16 L2002 operator `<` is not defined for `String` and `String`",
+    "pkgs/demo/main.lit:15:16 L2002 operator `<=` is not defined for `Number` and `Bool`",
+    "pkgs/demo/main.lit:16:16 L2002 operator `>` is not defined for `String` and `String`",
+    "pkgs/demo/main.lit:17:16 L2002 operator `>=` is not defined for `String` and `String`",
+    "pkgs/demo/main.lit:18:24 L2002 operator `+` is not defined for `Bool` and `Bool`",
+    "pkgs/demo/main.lit:19:24 L2002 operator `-` is not defined for `Number` and `Bool`",
+    "pkgs/demo/main.lit:20:24 L2002 operator `*` is not defined for `String` and `Number`",
+    "pkgs/demo/main.lit:21:24 L2002 operator `/` is not defined for `String` and `Number`",
+    "pkgs/demo/main.lit:22:24 L2002 operator `%` is not defined for `Money<usd>` and `Number`",
+    "pkgs/demo/main.lit:23:16 L2002 operator `!=` is not defined for `Number` and `Bool`",
+    "pkgs/demo/main.lit:24:16 L2002 operator `==` is not defined for `List<Number>` and `List<Number>`",
+    "pkgs/demo/main.lit:25:16 L2002 operator `<` is not defined for `Number` and `Bool`",
+    "pkgs/demo/main.lit:26:16 L2002 operator `>` is not defined for `Number` and `Bool`",
+    "pkgs/demo/main.lit:27:16 L2002 operator `>=` is not defined for `Number` and `Bool`",
+]

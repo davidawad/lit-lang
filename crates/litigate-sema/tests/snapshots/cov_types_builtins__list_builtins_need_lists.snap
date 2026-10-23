@@ -1,0 +1,11 @@
+---
+source: crates/litigate-sema/tests/cov_types_builtins.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:13:20 L2001 `len` needs a list, found `Number`",
+    "pkgs/demo/main.lit:14:20 L1002 cannot find name `nope`",
+    "pkgs/demo/main.lit:16:30 L2001 expected `Number`, found `Bool`",
+    "pkgs/demo/main.lit:17:25 L2001 `contains` needs a list, found `Number`",
+    "pkgs/demo/main.lit:18:20 L2001 cannot infer the element type of an empty list here",
+]

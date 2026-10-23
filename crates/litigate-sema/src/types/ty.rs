@@ -116,8 +116,8 @@ pub fn resolve(scope: &Scope<'_>, t: &TypeRef, reports: &mut Vec<Report>) -> Opt
         }
         "Money" => {
             let arg = arity(t, 1, reports).then(|| &t.args[0])?;
-            if arg.name.text == "usd" && arg.args.is_empty() {
-                return Some(Type::Money("usd".into()));
+            if arg.name.text == "usd" {
+                return arity(arg, 0, reports).then(|| Type::Money("usd".into()));
             }
             let mut report = Report::new(
                 C::UnresolvedName,

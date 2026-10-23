@@ -1,0 +1,10 @@
+---
+source: crates/litigate-sema/tests/cov_types_shape.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:11:37 L1002 record has no field `cont` [fix: \"count\"]",
+    "pkgs/demo/main.lit:12:33 L1002 record has no field `zzzzzz`",
+    "pkgs/demo/main.lit:13:24 L2002 `Number` has no fields",
+    "pkgs/demo/main.lit:14:25 L1002 cannot find name `nope`",
+]

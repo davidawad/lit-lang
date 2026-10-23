@@ -1,0 +1,11 @@
+---
+source: crates/litigate-sema/tests/cov_types_expr.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:14:31 L1002 `Method` has no variant `Fax` [note: variants: Personal, Mail]",
+    "pkgs/demo/main.lit:15:24 L1002 `Method` is not an imported module [note: add `import Method` to refer to `Method@x.Mail`]",
+    "pkgs/demo/main.lit:16:24 L1002 `Served` is not an imported module [note: add `import Served` to refer to `Served.Mail`]",
+    "pkgs/demo/main.lit:17:24 L1002 `S` is not an imported module [note: add `import S` to refer to `S.Mail`]",
+    "pkgs/demo/main.lit:18:24 L1002 `Nope` is not an imported module [note: add `import Nope` to refer to `Nope.Mail`]",
+]

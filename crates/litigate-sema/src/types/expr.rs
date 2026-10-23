@@ -137,7 +137,6 @@ impl<'s, 'a> Checker<'s, 'a> {
             ExprKind::Match(scrutinee, arms) => {
                 super::shape::matching(self, scrutinee, arms, None, r)
             }
-            ExprKind::Error => self.error(r),
         }
     }
 
@@ -150,9 +149,7 @@ impl<'s, 'a> Checker<'s, 'a> {
                 return self.literal(Value::Hole(reason.clone()), expected.clone(), r);
             }
             (ExprKind::Paren(inner), _) => return self.check(inner, expected),
-            (ExprKind::Ref(path), Type::Named(_) | Type::Boolean) => {
-                self.reference(path, Some(expected))
-            }
+            (ExprKind::Ref(path), Type::Named(_)) => self.reference(path, Some(expected)),
             (ExprKind::Record(fields), Type::Distribution(en)) => {
                 return super::shape::distribution(self, fields, en, r)
             }
@@ -215,7 +212,8 @@ impl<'s, 'a> Checker<'s, 'a> {
     }
 
     /// Names that denote literals: enum variants (by expected type or
-    /// `Enum.Variant`), `true`/`false` where a `Bool` is expected, actors.
+    /// `Enum.Variant`) and actors. (`true`/`false` in expression position
+    /// always parse as literals.)
     fn literal_name(&mut self, path: &RefPath, expected: Option<&Type>) -> Option<Checked> {
         let r = path.range;
         if let Some(Type::Named(en)) = expected {
@@ -228,12 +226,6 @@ impl<'s, 'a> Checker<'s, 'a> {
                     ));
                 }
             }
-        }
-        if path.is_simple()
-            && expected == Some(&Type::Boolean)
-            && matches!(path.head.text.as_str(), "true" | "false")
-        {
-            return Some(self.literal(Value::Boolean(path.head.text == "true"), Type::Boolean, r));
         }
         if path.is_simple() && self.actors.contains(&path.head.text) {
             return Some(self.node(

@@ -1,0 +1,18 @@
+---
+source: crates/litigate-sema/tests/cov_types_ty.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:11:28 L2001 expected `Interval<Date>`, found `Number`",
+    "pkgs/demo/main.lit:11:31 L2001 expected `List<Number>`, found `Number`",
+    "pkgs/demo/main.lit:11:34 L2001 expected `Dist<Method>`, found `Number`",
+    "pkgs/demo/main.lit:11:37 L2001 expected `Role`, found `Number`",
+    "pkgs/demo/main.lit:11:40 L2001 expected `Unit`, found `Number`",
+    "pkgs/demo/main.lit:11:43 L2001 expected `Money<usd>`, found `Number`",
+    "pkgs/demo/main.lit:11:46 L2001 expected `Days<BusinessDays>`, found `Number`",
+    "pkgs/demo/main.lit:12:16 L2002 operator `!` is not defined for `{ x: Number, y: Bool }`",
+    "pkgs/demo/main.lit:13:16 L2002 operator `!` is not defined for `Unit`",
+    "pkgs/demo/main.lit:15:16 L2002 operator `!` is not defined for `Dist<Method>`",
+    "pkgs/demo/main.lit:16:16 L2002 operator `!` is not defined for `Role`",
+    "pkgs/demo/main.lit:17:16 L2002 operator `!` is not defined for `List<Number>`",
+]

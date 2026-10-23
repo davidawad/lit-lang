@@ -50,8 +50,10 @@ pub fn make(numerator: i128, denominator: i128) -> Result<Rational, ArithError> 
     let (n, d) = (numerator.unsigned_abs(), denominator.unsigned_abs());
     let g = gcd(n, d).max(1);
     let (n, d) = (n / g, d / g);
-    let n = i128::try_from(n).map_err(|_| ArithError::Overflow)?;
-    let n = i64::try_from(if negative { -n } else { n }).map_err(|_| ArithError::Overflow)?;
+    let n = i128::try_from(n)
+        .ok()
+        .and_then(|n| i64::try_from(if negative { -n } else { n }).ok())
+        .ok_or(ArithError::Overflow)?;
     let d = u64::try_from(d).map_err(|_| ArithError::Overflow)?;
     Ok(Rational {
         numerator: n,
@@ -69,9 +71,8 @@ fn parts(r: Rational) -> (i128, i128) {
 /// Overflow.
 pub fn add(a: Rational, b: Rational) -> Result<Rational, ArithError> {
     let ((an, ad), (bn, bd)) = (parts(a), parts(b));
-    let n = an
-        .checked_mul(bd)
-        .and_then(|x| bn.checked_mul(ad).and_then(|y| x.checked_add(y)));
+    // Each product is below 2^127 in magnitude; only the sum can overflow.
+    let n = (an * bd).checked_add(bn * ad);
     make(n.ok_or(ArithError::Overflow)?, ad * bd)
 }
 
@@ -155,8 +156,10 @@ pub fn sum(values: impl IntoIterator<Item = Rational>) -> Result<Rational, Arith
 pub fn parse_decimal(text: &str) -> Result<Rational, ArithError> {
     let digits: String = text.chars().filter(|c| *c != '_').collect();
     let (int, frac) = digits.split_once('.').unwrap_or((&digits, ""));
-    let scale = u32::try_from(frac.len()).map_err(|_| ArithError::Overflow)?;
-    let denominator = 10_i128.checked_pow(scale).ok_or(ArithError::Overflow)?;
+    let denominator = u32::try_from(frac.len())
+        .ok()
+        .and_then(|scale| 10_i128.checked_pow(scale))
+        .ok_or(ArithError::Overflow)?;
     let numerator: i128 = format!("{int}{frac}")
         .parse()
         .map_err(|_| ArithError::Overflow)?;
@@ -200,6 +203,30 @@ mod tests {
             Err(ArithError::Overflow)
         );
         assert_eq!(display(r(1, 3)), "1/3");
+        assert_eq!(display(r(-4, 2)), "-2");
+    }
+
+    #[test]
+    fn values_that_do_not_fit_overflow() {
+        let big = |denominator| Rational {
+            numerator: i64::MAX,
+            denominator,
+        };
+        // Both cross products are near 2^127; their sum is not an i128.
+        assert_eq!(
+            add(big(u64::MAX), big(u64::MAX - 1)),
+            Err(ArithError::Overflow)
+        );
+        assert_eq!(make(i128::MIN, 1), Err(ArithError::Overflow));
+        assert_eq!(make(1, i128::MAX), Err(ArithError::Overflow));
+        assert_eq!(
+            parse_decimal("0.000000000000000000000000000000000000001"),
+            Err(ArithError::Overflow)
+        );
+        assert_eq!(
+            parse_decimal("1234567890123456789012345678901234567890"),
+            Err(ArithError::Overflow)
+        );
     }
 
     proptest! {
@@ -207,21 +234,17 @@ mod tests {
         fn prop_add_sub_round_trip(a in -1000_i64..1000, b in 1_i64..1000, c in -1000_i64..1000, d in 1_i64..1000) {
             let (x, y) = (r(a, b), r(c, d));
             prop_assert_eq!(add(x, y).and_then(|s| sub(s, y)), Ok(x));
-            prop_assert_eq!(cmp(add(x, y)?, add(y, x)?), std::cmp::Ordering::Equal);
+            prop_assert_eq!(add(x, y), add(y, x));
         }
 
         #[test]
         fn prop_results_are_reduced(a in -1000_i64..1000, b in 1_i64..1000, c in 1_i64..1000, d in 1_i64..1000) {
-            let q = div(r(a, b), r(c, d))?;
+            let q = div(r(a, b), r(c, d));
+            prop_assert!(q.is_ok());
+            let q = q.unwrap_or(Rational::integer(0));
             let g = gcd(u128::from(q.numerator.unsigned_abs()), u128::from(q.denominator));
             prop_assert!(g == 1 || q.numerator == 0);
             prop_assert!(q.denominator >= 1);
-        }
-    }
-
-    impl From<ArithError> for TestCaseError {
-        fn from(e: ArithError) -> Self {
-            TestCaseError::fail(e.message())
         }
     }
 }

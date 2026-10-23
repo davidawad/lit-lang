@@ -1,0 +1,12 @@
+---
+source: crates/litigate-sema/tests/cov_types_shape.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:11:24 L2005 non-exhaustive match: missing `Mail` [fix: \", Mail => ?\"]",
+    "pkgs/demo/main.lit:11:59 L1002 `Method` has no variant `Mal` [fix: \"Mail\"]",
+    "pkgs/demo/main.lit:12:59 L1002 `Method` has no variant `Mail.x`",
+    "pkgs/demo/main.lit:13:59 L1002 `Method` has no variant `Method@i.Mail`",
+    "pkgs/demo/main.lit:14:59 L1002 `Method` has no variant `Method.Mail`",
+    "pkgs/demo/main.lit:15:59 L1002 `Method` has no variant `Zzzzzz`",
+]

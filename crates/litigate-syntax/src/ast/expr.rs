@@ -144,7 +144,10 @@ impl RecordField {
     /// key is a qualified reference (see [`RecordField::key_ref`]).
     #[must_use]
     pub fn key(&self) -> Option<Token> {
-        tokens(self.syntax()).find(|token| !crate::parser::is_trivia(token.kind()))
+        self.syntax()
+            .children_with_tokens()
+            .find(|element| !crate::parser::is_trivia(element.kind()))
+            .and_then(rowan::NodeOrToken::into_token)
     }
 
     /// Decoded key text: identifier text, unescaped string, or ref text.

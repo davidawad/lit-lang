@@ -1,7 +1,47 @@
-use super::{AstNode, EdgeDecl, Expr, NodeDecl};
+use super::{AstNode, CaseFile, EdgeDecl, Expr, LitFile, NodeDecl, Token};
 use crate::parse::{parse_case, parse_lit};
 use crate::syntax_kind::SyntaxKind;
 use rowan::{GreenNodeBuilder, SyntaxNode};
+
+mod case;
+mod decls;
+mod expr;
+mod items;
+
+/// The `.lit` fixture exercising SPEC §3-§8 constructs.
+const CONSTRUCTS: &str = include_str!("../../tests/fixtures/constructs.lit");
+/// The `.lit` fixture with cross-pack links and an instance.
+const LINKS: &str = include_str!("../../tests/fixtures/links.lit");
+/// The `.case` fixture with every optional case item.
+const MATTER: &str = include_str!("../../tests/fixtures/matter.case");
+
+/// Parses error-free `.lit` text and returns its typed root.
+fn lit(text: &str) -> LitFile {
+    let parsed = parse_lit(text);
+    assert!(parsed.is_ok(), "{:?}", parsed.errors());
+    parsed.lit_file().expect("lit root")
+}
+
+/// Parses error-free `.case` text and returns its typed root.
+fn case(text: &str) -> CaseFile {
+    let parsed = parse_case(text);
+    assert!(parsed.is_ok(), "{:?}", parsed.errors());
+    parsed.case_file().expect("case root")
+}
+
+/// The item of `file` of wrapper type `N` declaring `name`.
+fn decl<N: AstNode<Language = crate::LitLanguage>>(file: &LitFile, name: &str) -> N {
+    file.items()
+        .iter()
+        .filter_map(|item| N::cast(item.syntax().clone()))
+        .find(|node| text(super::token(node.syntax(), SyntaxKind::Ident)).as_deref() == Some(name))
+        .expect("declaration of the expected kind and name")
+}
+
+/// Token text, owned.
+fn text(token: Option<Token>) -> Option<String> {
+    token.map(|token| token.text().to_owned())
+}
 
 #[test]
 fn multi_kind_wrappers_cast_every_listed_kind() {
@@ -149,4 +189,28 @@ fn case_accessors_expose_blocks() {
 #[test]
 fn unescape_decodes_escapes() {
     assert_eq!(super::unescape(r#""a\"b\\c\nd""#), "a\"b\\c\nd");
+}
+
+#[test]
+fn unescape_decodes_control_escapes_and_drops_a_trailing_backslash() {
+    assert_eq!(super::unescape(r#""a\rb\tc""#), "a\rb\tc");
+    assert_eq!(super::unescape("unquoted\\"), "unquoted");
+}
+
+#[test]
+fn root_views_cast_only_their_own_file_kind() {
+    let lit_root = parse_lit("module m\n").syntax();
+    let case_root = parse_case("case c\n").syntax();
+    assert!(super::lit_file(lit_root.clone()).is_some());
+    assert!(super::lit_file(case_root.clone()).is_none());
+    assert!(super::case_file(case_root).is_some());
+    assert!(super::case_file(lit_root).is_none());
+}
+
+#[test]
+fn trait_syntax_matches_the_inherent_view() {
+    let file = lit("module m\n");
+    let via_trait = AstNode::syntax(&file);
+    assert_eq!(via_trait.kind(), SyntaxKind::SourceFile);
+    assert_eq!(via_trait, file.syntax());
 }

@@ -114,3 +114,6 @@ pub(crate) fn describe_set(expected: &[SyntaxKind]) -> std::string::String {
         [init @ .., last] => format!("one of {}, or {last}", init.join(", ")),
     }
 }
+
+#[cfg(test)]
+mod tests;

@@ -190,3 +190,6 @@ fn merge_closer_fixes(errors: &mut [SyntaxError]) {
         }
     }
 }
+
+#[cfg(test)]
+mod tests;

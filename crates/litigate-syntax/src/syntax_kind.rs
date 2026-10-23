@@ -267,6 +267,7 @@ mod tests {
         }
         assert_eq!(SyntaxKind::from_keyword("as_of"), Some(SyntaxKind::KwAsOf));
         assert_eq!(SyntaxKind::from_keyword("answer-due"), None);
-        assert!(!SyntaxKind::LBrace.is_keyword() && SyntaxKind::EdgeDecl.is_node());
+        assert!(!SyntaxKind::LBrace.is_keyword());
+        assert!(SyntaxKind::EdgeDecl.is_node());
     }
 }

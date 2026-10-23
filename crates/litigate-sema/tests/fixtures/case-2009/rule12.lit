@@ -16,14 +16,26 @@ event Denied(document: Document)
 /// action.
 event OrderedPriorRules()
 
-/// FRCP 6(b)(1): an order extending the time to respond.
+/// FRCP 6(b)(1)(A): an order extending the time to answer to a date.
+event AnswerExtended(until: Date) extends answer-period to until
+
+/// An order purporting to extend the time to answer after denial, which
+/// grants no `extend` capability.
+event AfterDenialExtended(until: Date) extends after-denial to until
+
+/// An order releasing the defendant from the answer period (a fixture
+/// for the `waive` capability).
+event AnswerReleased() waives answer-period
+
+/// An event named like an excusal but declaring no effect: its name
+/// gives it no meaning.
 event Extended(document: Document)
 
 /// FRCP 12(h)(1): a party forfeits an option (a defense it omitted).
-event Forfeited(option: String)
+event Forfeited(option: String) removes option
 
 /// FRCP 12(f): an order striking an option (an insufficient defense).
-event Struck(option: String)
+event Struck(option: String) removes option
 
 /// A party elects one option; the others at its fork fall away.
 event Elected(option: String)
@@ -33,8 +45,10 @@ rule duty answer-duty cite FRCP 12(a)(1)(A)(i)
 {
   deadline answer-period: 20.days from Served(complaint) counted_by frcp6
     effective [2007-12-01, 2009-12-01) known_at 2007-04-30
+    { bearer Defendant, extend { by Court, max 30.days }, waive { by Court } }
   deadline answer-period: 21.days from Served(complaint) counted_by frcp6
     effective [2009-12-01, ..) known_at 2009-03-26 supersedes answer-period@2007-12-01
+    { bearer Defendant, extend { by Court, max 30.days }, waive { by Court } }
 }
 
 /// Rule 12(a)(4)(A): answer after the court denies a Rule 12 motion.

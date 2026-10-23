@@ -86,7 +86,7 @@ impl Lower {
                         Some((head(&p), type_ref(&ty)))
                     })
                     .collect::<Option<_>>()?;
-                ItemKind::Event(name, params)
+                ItemKind::Event(name, params, self.clauses(node))
             }
             K::StateDecl | K::DecisionDecl | K::ChanceDecl | K::TerminalDecl => {
                 ItemKind::Node(self.node(node)?)

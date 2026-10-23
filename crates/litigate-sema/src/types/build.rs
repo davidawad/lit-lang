@@ -7,6 +7,7 @@ mod edge;
 mod imports;
 mod logic;
 mod node;
+mod obligation;
 mod package;
 
 pub use package::{check_package, expected_lock, PackageCheck};
@@ -60,7 +61,7 @@ pub fn item_name(item: &Item) -> Option<&Name> {
         ItemKind::Group(n, _)
         | ItemKind::TypeAlias(n, _)
         | ItemKind::Enum(n, _)
-        | ItemKind::Event(n, _)
+        | ItemKind::Event(n, _, _)
         | ItemKind::Rule(_, n, _, _)
         | ItemKind::Counting(n, _, _)
         | ItemKind::Calendar(n, _, _)
@@ -288,7 +289,7 @@ fn items(cx: &mut Cx<'_, '_>, tree: &ItemTree, index: &LineIndex, file: &FileId)
             }
             ItemKind::TypeAlias(n, t) => cx.alias(n, t, &aliases).map(Declaration::TypeAlias),
             ItemKind::Enum(n, v) => Some(Declaration::Enum(cx.enumeration(n, v))),
-            ItemKind::Event(n, p) => cx.event(n, p).map(Declaration::Event),
+            ItemKind::Event(n, p, effect) => cx.event(n, p, effect).map(Declaration::Event),
             ItemKind::Node(n) => {
                 out.first_node.get_or_insert_with(|| span(item.range));
                 Some(Declaration::Node(cx.node(n, item, *rule)))

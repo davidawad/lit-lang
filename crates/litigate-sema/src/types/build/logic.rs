@@ -247,8 +247,13 @@ impl Cx<'_, '_> {
         }
     }
 
-    /// `event E(p: T)`.
-    pub fn event(&mut self, name: &Name, params: &[(Name, TypeRef)]) -> Option<EventType> {
+    /// `event E(p: T) [effect]`.
+    pub fn event(
+        &mut self,
+        name: &Name,
+        params: &[(Name, TypeRef)],
+        effect: &[Field],
+    ) -> Option<EventType> {
         let mut seen = BTreeSet::new();
         let mut out = Vec::new();
         for (p, t) in params {
@@ -266,9 +271,11 @@ impl Cx<'_, '_> {
             }
             out.push((p.text.clone(), resolved?));
         }
+        let effect = self.effect(name, &out, effect);
         Some(EventType {
             name: name.text.clone(),
             params: out,
+            effect,
         })
     }
 

@@ -9,15 +9,12 @@
 //! package's patterns.
 use crate::hir::{
     DeadlineWindow, Declaration, Edge, EdgeDeadline, EventType, Expr, ExprKind, Node, Package,
-    Type, Value,
+    Relation, Type, Value,
 };
 use crate::precedence;
 use crate::temporal::world::PackInfo;
 use crate::temporal::{self, Key, MatterEvent, World};
 use std::collections::{BTreeMap, BTreeSet};
-
-/// Event type names that excuse a missed deadline when cited (SPEC §5.6).
-pub(super) const EXCUSALS: [&str; 3] = ["waived", "extended", "excused"];
 
 /// The used packages as one replayable graph.
 pub(super) struct Graph<'a> {
@@ -222,6 +219,28 @@ impl<'a> Graph<'a> {
         })
     }
 
+    /// The declarations the version of `qualified` in force on `date`
+    /// displaces by an `override` or `notwithstanding` claim (SPEC §5.5),
+    /// qualified.
+    pub fn claims(&self, qualified: &str, date: &str, known_at: Option<&str>) -> Vec<String> {
+        let Ok(v) = temporal::select(&self.world, &Self::key(qualified), date, known_at) else {
+            return Vec::new();
+        };
+        let pack = self.world.pack_of(v).to_owned();
+        self.world.decls[v]
+            .meta
+            .relations
+            .iter()
+            .filter_map(|r| match r {
+                Relation::Override(x) | Relation::Notwithstanding(x) => {
+                    let k = self.world.target(&pack, x).key;
+                    Some(format!("{}::{}", k.pack, k.name))
+                }
+                _ => None,
+            })
+            .collect()
+    }
+
     /// A note naming claimant pairs no relation or canon orders.
     pub fn unordered(&self, pairs: &[(usize, usize)]) -> String {
         format!(
@@ -298,7 +317,7 @@ impl<'a> Graph<'a> {
     /// The `has_event` patterns of every transition arm, with the pack each
     /// is written in: matter history the transitions read (an order
     /// keeping the prior rules, FRCP 86(a)(2)(B)), so an event matching
-    /// one is a legal timing-only event.
+    /// one is legal without taking an edge.
     pub fn transition_patterns(&self) -> Vec<(&'a str, &'a Expr)> {
         let mut out = Vec::new();
         for p in &self.packages {
@@ -362,11 +381,6 @@ impl<'a> Graph<'a> {
         }
         out
     }
-
-    /// Whether the used packages declare an excusing event type.
-    pub fn declares_excusal(&self) -> bool {
-        self.event_types().any(|(_, e)| is_excusal(&e.name))
-    }
 }
 
 /// The pack of qualified `pack::name` (empty when unqualified).
@@ -377,12 +391,6 @@ pub(super) fn pack_of(qualified: &str) -> &str {
 /// The base pack of an instance `base@origin` (a pack is its own base).
 pub(super) fn base(pack: &str) -> &str {
     pack.split_once('@').map_or(pack, |(b, _)| b)
-}
-
-/// Whether event type `name` (any spelling) is `Waived`/`Extended`/`Excused`.
-pub(super) fn is_excusal(name: &str) -> bool {
-    let local = name.rsplit("::").next().unwrap_or(name);
-    EXCUSALS.contains(&local.to_ascii_lowercase().as_str())
 }
 
 /// Calls `f` with the pattern of every `has_event(P)` inside `e`.

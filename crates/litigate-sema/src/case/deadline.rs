@@ -1,8 +1,8 @@
-//! Deadline tracking during replay (SPEC §5.3, §5.6): an event taken
-//! through an edge `within d` must fall on or before `d`'s due date,
-//! counted from the latest earlier event matching `d`'s trigger. A cited
-//! event alone cannot transform a deadline: this language version has no
-//! typed target, extent, or capability on an excusal.
+//! Deadline counting during replay (SPEC §5.3, §5.6): the due date of an
+//! obligation instance, counted from its trigger event under the deadline
+//! and counting versions governing the event it is judged at. Excusal and
+//! extension are typed transforms of an instance (`replay/obligations.rs`),
+//! never the mere presence of a cited event.
 //!
 //! Sema does not count days itself. The due date comes from a [`Clock`]:
 //! in production the engine's clock interpreter running the lowered
@@ -10,7 +10,6 @@
 //! exactly the arithmetic its scenario will run under.
 use super::graph::{display, Graph};
 use crate::hir::{DayUnit, Deadline, Declaration, Direction, Expr, ExprKind, Value};
-use crate::temporal::condition::matches;
 use crate::temporal::MatterEvent;
 
 /// One day-counted deadline computation: the engine clock's inputs.
@@ -91,7 +90,7 @@ fn kebab(name: &str) -> String {
 }
 
 /// The local names of the enum variants among a trigger's arguments.
-fn variant_args(args: &[Expr]) -> Vec<String> {
+pub(super) fn variant_args(args: &[Expr]) -> Vec<String> {
     args.iter()
         .filter_map(|a| match &a.kind {
             ExprKind::Literal {
@@ -119,36 +118,34 @@ pub(super) fn governing<'a>(
     }
 }
 
-/// The due date of deadline `d` (declared in `pack`) for the event at
-/// sorted index `at`, counted from the latest earlier event matching its
-/// trigger, under the counting version governing that event. `events` are
-/// the sorted events in `pack`'s view. `None` when no trigger has happened
-/// (no period is running).
+/// The due date of deadline `d` (declared in `pack`) for an instance
+/// triggered by `events[trigger]`, judged at `events[at]`: counted under
+/// the counting version governing `events[at]`. `events` are the sorted
+/// events in `pack`'s view (possibly with an `as_of` sentinel last);
+/// `candidates` are the trigger's [`variant_args`].
+#[allow(clippy::too_many_arguments)]
 pub(super) fn due(
     graph: &Graph<'_>,
     clock: &dyn Clock,
     pack: &str,
     d: &Deadline,
     events: &[MatterEvent<'_>],
+    (trigger, candidates): (usize, &[String]),
     at: usize,
     known_at: Option<&str>,
-) -> Option<Due> {
-    // Only a call matches a trigger pattern.
-    let (trigger, args) = (0..at).rev().find_map(|j| match &events[j].action.kind {
-        ExprKind::Call { args, .. } if matches(&d.trigger, events[j].action) => Some((j, args)),
-        _ => None,
-    })?;
-    let candidates = variant_args(args);
+) -> Due {
     let qualified = graph.qualify(pack, &d.counting);
+    // Use the shared temporal query so replay observes the same version,
+    // including known_at filtering, as test, lower, check, and the LSP.
     let counting = match graph.governing(&qualified, events, at, known_at) {
         Ok((_, Declaration::Counting(c))) => Some(c),
         _ => None,
     };
     let service = match counting {
         Some(c) => candidates
-            .into_iter()
-            .filter(|v| c.service_extensions.contains_key(v))
-            .map(|v| kebab(&v))
+            .iter()
+            .filter(|v| c.service_extensions.contains_key(*v))
+            .map(|v| kebab(v))
             .collect(),
         None => candidates.iter().map(|v| kebab(v)).collect(),
     };
@@ -181,12 +178,12 @@ pub(super) fn due(
     } else {
         clock.due(&request)
     };
-    Some(Due {
+    Due {
         deadline: d.meta.id.clone(),
         trigger,
         date,
         request,
-    })
+    }
 }
 
 /// How a due date was counted, for notes.

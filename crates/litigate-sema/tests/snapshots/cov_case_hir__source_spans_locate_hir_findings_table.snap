@@ -7,7 +7,7 @@ expression: table
         "12:3 L0004 `2010-02-30` is not a valid date",
     ],
     "removal: a removing name no used package declares is illegal": [
-        "12:14 L4001 `Withdrawn(\"twin-a\")` is not a legal event at stage `alpha::intake` (Intake)\n    note: legal events: Served(complaint) [serve], Filed(complaint) [file], Ruled() [rule], Logged() [log], Twin(complaint) [twin-a], Twin(complaint) [twin-b], Noted(motion) [probe], Benched(complaint) [to-bench], Benched(motion) [to-lone], Answered(motion) [archive], Reopened(motion) [stage]\n    note: replay stops at the first illegal event",
+        "12:14 L4001 `Withdrawn(\"twin-a\")` is not a legal event at stage `alpha::intake` (Intake)\n    note: legal events: Served(complaint) [serve], Filed(complaint) [file], Ruled() [rule], Logged() [log], Twin(complaint) [twin-a], Twin(complaint) [twin-b], Noted(motion) [probe], Benched(complaint) [to-bench], Benched(motion) [to-lone], Answered(motion) [archive], Reopened(motion) [stage]\n    note: an event that takes no edge must fire the trigger of an in-force deadline, be history a transition reads, or have a type declaring `removes`, `extends`, or `waives`\n    note: replay stops at the first illegal event",
     ],
     "removal: an option with no span of its own": [
         "12:14 L1002 `alpha` has no edge `zzzz` for `Forfeited(\"zzzz\")` to remove\n    note: `option` names an edge by its id: `edge`, or `pack::edge` in another package",

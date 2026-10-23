@@ -7,7 +7,7 @@ expression: table
         "ok: start frcp::answered",
     ],
     "after: one day late": [
-        "14:3 L4002 `Answered(complaint)` on 2009-12-29 missed deadline `answer-period`, due 2009-12-28\n    note @13:3: `answer-period` runs 21 calendar days from `Served(complaint, Personal)` on 2009-12-04 under `frcp6@2009-12-01`\n    note: a cited `Waived`, `Extended`, or `Excused` event between the trigger and this event would excuse it",
+        "14:3 L4002 `Answered(complaint)` on 2009-12-29 missed deadline `answer-period`, due 2009-12-28\n    note @13:3: `answer-period` runs 21 calendar days from `Served(complaint, Personal)` on 2009-12-04 under `frcp6@2009-12-01`\n    note: only a cited event of a type that `extends` this deadline, within its `extend` capability, moves the due date",
     ],
     "before: 2007 counting skips weekends and Veterans Day after denial (due 2009-11-23)": [
         "ok: start frcp::answered",
@@ -16,24 +16,29 @@ expression: table
         "ok: start frcp::answered",
     ],
     "before: one day late after denial": [
-        "16:3 L4002 `Answered(complaint)` on 2009-11-24 missed deadline `after-denial`, due 2009-11-23\n    note @15:3: `after-denial` runs 10 calendar days from `Denied(motion)` on 2009-11-06 under `frcp6@2007-12-01`\n    note: a cited `Waived`, `Extended`, or `Excused` event between the trigger and this event would excuse it",
+        "16:3 L4002 `Answered(complaint)` on 2009-11-24 missed deadline `after-denial`, due 2009-11-23\n    note @15:3: `after-denial` runs 10 calendar days from `Denied(motion)` on 2009-11-06 under `frcp6@2007-12-01`\n    note: only a cited event of a type that `extends` this deadline, within its `extend` capability, moves the due date",
     ],
-    "pending: an extension before the trigger does not cover it": [
-        "16:3 L4002 `MovedToDismiss(complaint)` on 2009-12-11 missed deadline `answer-period`, due 2009-12-10\n    note @14:3: `answer-period` runs 20 calendar days from `Served(complaint, Personal)` on 2009-11-20 under `frcp6@2007-12-01`\n    note: a cited `Waived`, `Extended`, or `Excused` event between the trigger and this event would excuse it",
+    "pending: an event named Extended declares no effect and is illegal": [
+        "14:14 L4001 `Extended(complaint)` is not a legal event at stage `frcp::respond` (Answer or move under Rule 12)\n    note: legal events: Answered(complaint) [answer], MovedToDismiss(complaint) [move-dismiss]\n    note: an event that takes no edge must fire the trigger of an in-force deadline, be history a transition reads, or have a type declaring `removes`, `extends`, or `waives`\n    note: replay stops at the first illegal event",
+    ],
+    "pending: an extension before the trigger has nothing to extend": [
+        "13:14 L4001 `AnswerExtended(2009-12-14)` has no open obligation of `frcp::answer-period` to extend\n    note: an obligation opens when its deadline's trigger happens, and closes when it is discharged, breached, waived, or superseded",
+        "16:3 L4002 `MovedToDismiss(complaint)` on 2009-12-11 missed deadline `answer-period`, due 2009-12-10\n    note @14:3: `answer-period` runs 20 calendar days from `Served(complaint, Personal)` on 2009-11-20 under `frcp6@2007-12-01`\n    note: only a cited event of a type that `extends` this deadline, within its `extend` capability, moves the due date",
     ],
     "pending: an order keeps the prior 20 days (due 2009-12-10), missed": [
-        "15:3 L4002 `MovedToDismiss(complaint)` on 2009-12-11 missed deadline `answer-period`, due 2009-12-10\n    note @13:3: `answer-period` runs 20 calendar days from `Served(complaint, Personal)` on 2009-11-20 under `frcp6@2007-12-01`\n    note: a cited `Waived`, `Extended`, or `Excused` event between the trigger and this event would excuse it",
+        "15:3 L4002 `MovedToDismiss(complaint)` on 2009-12-11 missed deadline `answer-period`, due 2009-12-10\n    note @13:3: `answer-period` runs 20 calendar days from `Served(complaint, Personal)` on 2009-11-20 under `frcp6@2007-12-01`\n    note: only a cited event of a type that `extends` this deadline, within its `extend` capability, moves the due date",
     ],
     "pending: an uncited extension is not an order": [
-        "15:14 L4001 `Extended(complaint)` is not a legal event at stage `frcp::respond` (Answer or move under Rule 12)\n    note: legal events: Answered(complaint) [answer], MovedToDismiss(complaint) [move-dismiss]\n    note: an excusing order takes effect only when it cites its authority (`cite ...`)\n    note: replay stops at the first illegal event",
+        "15:14 L4001 `AnswerExtended(2009-12-14)` transforms an obligation only when it cites its authority\n    note: add the order or rule after the party, e.g. `cite FRCP 6(b)(1)(A)`",
+        "16:3 L4002 `MovedToDismiss(complaint)` on 2009-12-11 missed deadline `answer-period`, due 2009-12-10\n    note @13:3: `answer-period` runs 20 calendar days from `Served(complaint, Personal)` on 2009-11-20 under `frcp6@2007-12-01`\n    note: only a cited event of a type that `extends` this deadline, within its `extend` capability, moves the due date",
     ],
     "pending: the amended 21 days govern (due 2009-12-11)": [
         "ok: start frcp::mtd-ruling",
     ],
-    "pending: the prior rules, excused by a cited extension": [
-        "16:3 L4002 `MovedToDismiss(complaint)` on 2009-12-11 missed deadline `answer-period`, due 2009-12-10\n    note @13:3: `answer-period` runs 20 calendar days from `Served(complaint, Personal)` on 2009-11-20 under `frcp6@2007-12-01`\n    note: a cited `Waived`, `Extended`, or `Excused` event between the trigger and this event would excuse it",
+    "pending: the prior rules, extended by a cited order within its bound": [
+        "ok: start frcp::mtd-ruling",
     ],
     "typestate: answering before service": [
-        "13:14 L4001 `Answered(complaint)` is not a legal event at stage `frcp::awaiting-service` (Complaint filed)\n    note: legal events: Served(complaint) [serve]\n    note: replay stops at the first illegal event",
+        "13:14 L4001 `Answered(complaint)` is not a legal event at stage `frcp::awaiting-service` (Complaint filed)\n    note: legal events: Served(complaint) [serve]\n    note: an event that takes no edge must fire the trigger of an in-force deadline, be history a transition reads, or have a type declaring `removes`, `extends`, or `waives`\n    note: replay stops at the first illegal event",
     ],
 }

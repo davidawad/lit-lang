@@ -45,7 +45,7 @@ macro_rules! registry {
     };
 }
 
-registry! { 59;
+registry! { 60;
     UnexpectedToken = "L0001" => "The token is not valid at this position in the grammar",
     UnterminatedLiteral = "L0002" => "A string, block comment, or other delimited literal was not closed",
     InvalidToken = "L0003" => "The source contains a character sequence that is not a token",
@@ -82,13 +82,14 @@ registry! { 59;
     InvalidTransition = "L3008" => "A transition's arms are not total or select an unknown version",
     InvalidCounting = "L3009" => "A counting rule or calendar is inconsistent or references unknown data",
     InvalidCaseEvent = "L4001" => "The event is out of order or is not a legal transition from the replayed posture",
-    DeadlineMissed = "L4002" => "The event missed its governing deadline without an excusing event",
+    DeadlineMissed = "L4002" => "The event missed the due date of the obligation it discharges",
     InvalidCaseFact = "L4003" => "The fact is not a fact-tagged node or names an edge that is not its own",
     MissingStake = "L4004" => "A reachable terminal needs a value or an explicit unvalued marker",
     InvalidParty = "L4005" => "A party, party role, or perspective is undeclared or ambiguous",
     InvalidBelief = "L4006" => "An observation is not at a chance node or names an edge that is not its own",
     InvalidAnalysis = "L4007" => "An analysis field is unknown, has a dedicated block, or has the wrong shape",
     StartConflict = "L4008" => "An explicit start disagrees with the posture derived from the events",
+    ObligationBreached = "L4009" => "A duty's obligation was neither discharged nor transformed by its due date: at as_of it is breached",
     VerificationFailed = "L5001" => "A required static verification obligation was not discharged",
     HoleInStrict = "L5002" => "Strict profile does not permit unresolved holes",
     UnreachableNode = "L5003" => "A node is not reachable from start and is not tagged entry",
@@ -114,7 +115,7 @@ impl DiagnosticCode {
     pub const fn severity(self, profile: Profile) -> Severity {
         match (self, profile) {
             (Self::AnonymousEdge, _) => Severity::Info,
-            (Self::UnusedDeclaration, _)
+            (Self::UnusedDeclaration | Self::ObligationBreached, _)
             | (
                 Self::RuleWithoutTest | Self::HolePresent | Self::NonCanonicalFormat,
                 Profile::Dev,

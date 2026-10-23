@@ -16,7 +16,7 @@ expression: table(&rows)
         "trace Took Noted(motion) alpha::filed -> alpha::defaulted",
     ],
     "cited: a cited event that is not an excusal is still illegal": [
-        "13:14 L4001 `Benched(complaint)` is not a legal event at stage `alpha::respond` (Respond)\n    note: legal events: Answered(complaint) [answer], Twin(motion) [late], Reopened(motion) [reopen]\n    note: replay stops at the first illegal event",
+        "13:14 L4001 `Benched(complaint)` is not a legal event at stage `alpha::respond` (Respond)\n    note: legal events: Answered(complaint) [answer], Twin(motion) [late], Reopened(motion) [reopen]\n    note: an event that takes no edge must fire the trigger of an in-force deadline, be history a transition reads, or have a type declaring `removes`, `extends`, or `waives`\n    note: replay stops at the first illegal event",
         "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
     ],
     "either: anyone takes an edge of a node with no actor": [
@@ -29,11 +29,11 @@ expression: table(&rows)
         "trace Took Ruled(2010-01-01, true, 3, 500 usd minor units) alpha::intake -> alpha::answered via alpha::rule",
     ],
     "fact: an undecided fact stops the next event": [
-        "13:14 L4001 `Benched(complaint)` is not a legal event at stage `alpha::f1` (F1)\n    note: legal events: none (no event moves this stage; it is decided by Court)\n    note: `alpha::f1` is a matter fact: resolve it with `facts { f1: <edge> }`\n    note: replay stops at the first illegal event",
+        "13:14 L4001 `Benched(complaint)` is not a legal event at stage `alpha::f1` (F1)\n    note: legal events: none (no event moves this stage; it is decided by Court)\n    note: an event that takes no edge must fire the trigger of an in-force deadline, be history a transition reads, or have a type declaring `removes`, `extends`, or `waives`\n    note: `alpha::f1` is a matter fact: resolve it with `facts { f1: <edge> }`\n    note: replay stops at the first illegal event",
         "trace Took Noted(motion) alpha::intake -> alpha::f1 via alpha::probe",
     ],
-    "uncited: an excusal without a cite does not excuse": [
-        "13:14 L4001 `Excused(complaint)` is not a legal event at stage `alpha::respond` (Respond)\n    note: legal events: Answered(complaint) [answer], Twin(motion) [late], Reopened(motion) [reopen]\n    note: an excusing order takes effect only when it cites its authority (`cite ...`)\n    note: replay stops at the first illegal event",
+    "uncited: a `waives` event without a cite releases nothing": [
+        "13:14 L4001 `Excused(complaint)` transforms an obligation only when it cites its authority\n    note: add the order or rule after the party, e.g. `cite FRCP 6(b)(1)(A)`",
         "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
     ],
     "ungoverned: the stage is not yet in force": [

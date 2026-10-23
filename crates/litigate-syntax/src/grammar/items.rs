@@ -192,6 +192,7 @@ fn event_decl(p: &mut Parser<'_>) {
             &[Ident],
             &mut param,
         );
+        while super::fields::field(p, super::fields::EVENT_EFFECTS) {}
     }
     p.finish();
 }

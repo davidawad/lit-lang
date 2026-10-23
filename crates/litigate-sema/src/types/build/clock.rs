@@ -40,7 +40,7 @@ impl Cx<'_, '_> {
         hit
     }
 
-    fn days(&mut self, e: &Expr) -> Option<(u64, DayUnit)> {
+    pub(super) fn days(&mut self, e: &Expr) -> Option<(u64, DayUnit)> {
         match self.ck.infer(e).value {
             // Day amounts here are unsigned duration literals (SPEC §3.1),
             // so the conversion cannot fail.
@@ -132,6 +132,7 @@ impl Cx<'_, '_> {
         };
         let trigger = self.pattern(trigger);
         let o = self.once(opts);
+        let obligation = self.obligation(name, &o, rule);
         let (amount, unit) = period?;
         Some(Deadline {
             meta,
@@ -143,6 +144,11 @@ impl Cx<'_, '_> {
             extendable: flag(o.get("extendable")),
             extension_authority: Self::string(o.get("extension_authority")),
             note: Self::string(o.get("note")),
+            bearer: obligation.bearer,
+            policy: obligation.policy,
+            linear: obligation.linear,
+            extend: obligation.extend,
+            waive: obligation.waive,
         })
     }
 

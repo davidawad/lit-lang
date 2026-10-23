@@ -5,6 +5,7 @@ expression: table
 {
     "events: a cite hole is the authority as written": [
         "ok: start alpha::intake",
+        "trace Removed Forfeited(\"twin-a\") alpha::intake -> alpha::intake",
     ],
     "events: a line missing its party keeps the rest resolving": [
         "13:3 L0001 expected `by` or `on`, found `2010-01-05`",
@@ -12,12 +13,13 @@ expression: table
     ],
     "events: an empty cite hole": [
         "ok: start alpha::intake",
+        "trace Removed Forfeited(\"twin-a\") alpha::intake -> alpha::intake",
     ],
     "events: an event dated on no calendar day": [
         "12:3 L0004 `2010-02-30` is not a valid proleptic Gregorian date",
     ],
     "events: out of order, sorted by a machine-applicable fix": [
-        "12:14 L4001 `Benched(complaint)` is not a legal event at stage `alpha::respond` (Respond)\n    note: legal events: Answered(complaint) [answer], Twin(motion) [late], Reopened(motion) [reopen]\n    note: replay stops at the first illegal event",
+        "12:14 L4001 `Benched(complaint)` is not a legal event at stage `alpha::respond` (Respond)\n    note: legal events: Answered(complaint) [answer], Twin(motion) [late], Reopened(motion) [reopen]\n    note: an event that takes no edge must fire the trigger of an in-force deadline, be history a transition reads, or have a type declaring `removes`, `extends`, or `waives`\n    note: replay stops at the first illegal event",
         "13:3 L4001 events must be in date order: 2010-01-04 comes after 2010-01-05\n    note: replay processes events sorted by date (ties keep source order)\n    fix @12:3-13:42 MachineApplicable: \"2010-01-04 Served(complaint, Mail) on d\\n  2010-01-05 Benched(complaint) by p\"",
         "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
     ],

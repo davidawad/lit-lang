@@ -304,7 +304,7 @@ fn resolve_types(sig: &mut Signature, tree: &ItemTree, imports: &[&Signature]) {
                 let ty = ty::resolve(&scope, target, &mut Vec::new());
                 Some((name.text.clone(), TypeSig::Alias(ty)))
             }
-            ItemKind::Event(name, params) => {
+            ItemKind::Event(name, params, _) => {
                 let scope = Scope::new(sig, tree, imports, Vec::new());
                 let params = params
                     .iter()

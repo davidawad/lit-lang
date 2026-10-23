@@ -25,12 +25,13 @@ pub use graph::{
     DeadlineWindow, Edge, EdgeDeadline, Instance, Link, Node, NodeKind, TriangularDuration, Valence,
 };
 pub use logic::{
-    Authority, DefaultRule, EnumDecl, EventType, Exception, ExceptionKind, Expectation, Metadata,
-    Relation, Rule, RuleKind, Test, TypeAlias,
+    Authority, DefaultRule, EnumDecl, EventEffect, EventType, Exception, ExceptionKind,
+    Expectation, Metadata, Relation, Rule, RuleKind, Test, TypeAlias,
 };
 pub use temporal::{
     Anchor, Calendar, Counting, Deadline, Direction, EndOfMonth, Holiday, HolidayDate, Interval,
     Observance, RollOn, ShortPeriod, Transition, TransitionArm,
+    Capability, TriggerPolicy,
 };
 pub use value::{Authored, DayUnit, Money, Rational, Type, Value};
 

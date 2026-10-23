@@ -35,7 +35,7 @@ fn deadline_table() {
             &At("2010-01-11"),
         ),
         (
-            "excused: a cited excusal between trigger and event",
+            "waived: a cited `waives` event between trigger and act releases it",
             alpha(&[
                 SERVED,
                 "2010-01-06 Excused(complaint) by c cite FRCP 6(b)",
@@ -44,7 +44,7 @@ fn deadline_table() {
             &At("2010-01-11"),
         ),
         (
-            "missed: a cited excusal before the trigger does not cover it",
+            "missed: a `waives` event before the trigger has nothing to release",
             alpha(&[
                 "2010-01-02 Excused(complaint) by c cite FRCP 6(b)",
                 SERVED,
@@ -53,7 +53,7 @@ fn deadline_table() {
             &At("2010-01-11"),
         ),
         (
-            "missed: a cited event that is not an excusal does not cover it",
+            "missed: a `removes` event does not excuse",
             alpha(&[
                 SERVED,
                 "2010-01-06 Forfeited(\"late\") by d cite FRCP 12(h)",
@@ -161,7 +161,7 @@ fn typestate_table() {
             &NoClock,
         ),
         (
-            "uncited: an excusal without a cite does not excuse",
+            "uncited: a `waives` event without a cite releases nothing",
             alpha(&[SERVED, "2010-01-05 Excused(complaint) by c"]),
             &NoClock,
         ),

@@ -3,25 +3,20 @@ source: crates/litigate-sema/tests/cov_case_replay.rs
 expression: table(&rows)
 ---
 {
-    "excused: a cited excusal between trigger and event": [
-        "14:3 L4002 `Answered(complaint)` on 2010-01-12 missed deadline `court-period`, due 2010-01-11\n    note @12:3: `court-period` runs 5 court days from `Served(complaint, Mail)` on 2010-01-04 under `ac@2009-12-01`\n    note: a cited `Waived`, `Extended`, or `Excused` event between the trigger and this event would excuse it",
+    "missed: a `removes` event does not excuse": [
+        "14:3 L4002 `Answered(complaint)` on 2010-01-12 missed deadline `court-period`, due 2010-01-11\n    note @12:3: `court-period` runs 5 court days from `Served(complaint, Mail)` on 2010-01-04 under `ac@2009-12-01`\n    note: only a cited event of a type that `extends` this deadline, within its `extend` capability, moves the due date",
         "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
-        "trace Timing Excused(complaint) alpha::respond -> alpha::respond",
+        "trace Removed Forfeited(\"late\") alpha::respond -> alpha::respond",
         "trace Took Answered(complaint) alpha::respond -> alpha::answered via alpha::answer",
     ],
-    "missed: a cited event that is not an excusal does not cover it": [
-        "14:3 L4002 `Answered(complaint)` on 2010-01-12 missed deadline `court-period`, due 2010-01-11\n    note @12:3: `court-period` runs 5 court days from `Served(complaint, Mail)` on 2010-01-04 under `ac@2009-12-01`\n    note: a cited `Waived`, `Extended`, or `Excused` event between the trigger and this event would excuse it",
-        "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
-        "trace Took Answered(complaint) alpha::respond -> alpha::answered via alpha::answer",
-    ],
-    "missed: a cited excusal before the trigger does not cover it": [
-        "14:3 L4002 `Answered(complaint)` on 2010-01-12 missed deadline `court-period`, due 2010-01-11\n    note @13:3: `court-period` runs 5 court days from `Served(complaint, Mail)` on 2010-01-04 under `ac@2009-12-01`\n    note: a cited `Waived`, `Extended`, or `Excused` event between the trigger and this event would excuse it",
-        "trace Timing Excused(complaint) alpha::intake -> alpha::intake",
+    "missed: a `waives` event before the trigger has nothing to release": [
+        "12:14 L4001 `Excused(complaint)` has no open obligation of `alpha::court-period` to waive\n    note: an obligation opens when its deadline's trigger happens, and closes when it is discharged, breached, waived, or superseded",
+        "14:3 L4002 `Answered(complaint)` on 2010-01-12 missed deadline `court-period`, due 2010-01-11\n    note @13:3: `court-period` runs 5 court days from `Served(complaint, Mail)` on 2010-01-04 under `ac@2009-12-01`\n    note: only a cited event of a type that `extends` this deadline, within its `extend` capability, moves the due date",
         "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
         "trace Took Answered(complaint) alpha::respond -> alpha::answered via alpha::answer",
     ],
     "missed: court days": [
-        "13:3 L4002 `Answered(complaint)` on 2010-01-12 missed deadline `court-period`, due 2010-01-11\n    note @12:3: `court-period` runs 5 court days from `Served(complaint, Mail)` on 2010-01-04 under `ac@2009-12-01`\n    note: a cited `Waived`, `Extended`, or `Excused` event between the trigger and this event would excuse it",
+        "13:3 L4002 `Answered(complaint)` on 2010-01-12 missed deadline `court-period`, due 2010-01-11\n    note @12:3: `court-period` runs 5 court days from `Served(complaint, Mail)` on 2010-01-04 under `ac@2009-12-01`\n    note: only a cited event of a type that `extends` this deadline, within its `extend` capability, moves the due date",
         "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
         "trace Took Answered(complaint) alpha::respond -> alpha::answered via alpha::answer",
     ],
@@ -57,6 +52,12 @@ expression: table(&rows)
     ],
     "untriggered: no period runs without a trigger": [
         "5:7 L4008 `start alpha::respond` disagrees with the replayed posture `alpha::answered`\n    note: posture is replayed from the events, never asserted\n    fix @5:1-5:14 MaybeIncorrect: \"\"",
+        "trace Took Answered(complaint) alpha::respond -> alpha::answered via alpha::answer",
+    ],
+    "waived: a cited `waives` event between trigger and act releases it": [
+        "ok: start alpha::answered",
+        "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
+        "trace Waived Excused(complaint) alpha::respond -> alpha::respond",
         "trace Took Answered(complaint) alpha::respond -> alpha::answered via alpha::answer",
     ],
 }

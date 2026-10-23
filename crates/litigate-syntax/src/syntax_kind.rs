@@ -129,7 +129,10 @@ syntax_kinds! {
         KwRebuts = "rebuts", KwUndercuts = "undercuts", KwPriority = "priority",
         KwUnless = "unless", KwOtherwise = "otherwise", KwGiven = "given",
         KwExpect = "expect", KwTrue = "true", KwFalse = "false", KwUnit = "unit",
-        KwUrl = "url", KwEdition = "edition",
+        KwUrl = "url", KwEdition = "edition", KwBearer = "bearer", KwTrigger = "trigger",
+        KwExtend = "extend", KwWaive = "waive", KwAfterExpiry = "after_expiry",
+        KwRemoves = "removes", KwElects = "elects", KwExtends = "extends",
+        KwWaives = "waives", KwTo = "to",
     }
     nodes {
         SourceFile => "Root of a `.lit` module.",
@@ -141,7 +144,7 @@ syntax_kinds! {
         GroupDecl => "`group id: \"Label\"`.",
         TypeDecl => "`type Name = Type`.",
         EnumDecl => "`enum Name { A, B }`.",
-        EventDecl => "`event Name(param: Type, ...)`.",
+        EventDecl => "`event Name(param: Type, ...)`, with an optional effect clause (`removes p`, `extends d to p`, `waives d`).",
         ParamList => "Parenthesized `name: Type` parameter list.",
         StateDecl => "`state` node declaration.",
         DecisionDecl => "`decision` node declaration.",

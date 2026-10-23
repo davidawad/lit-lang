@@ -27,6 +27,7 @@ use crate::hir::{self, Package};
 use crate::pkg::lock::LockFile;
 use graph::Graph;
 use litigate_base::{Diagnostic, DiagnosticCode as C, Profile, Severity};
+use replay::Replayed;
 use spans::{error, Build};
 
 /// A checked matter.
@@ -40,6 +41,68 @@ pub struct CheckedCase {
     /// The transitions replay made, in order; empty when replay did not
     /// run, and ending at the first illegal event when it stopped.
     pub trace: Vec<Step>,
+    /// Every obligation instance the replayed triggers created, in
+    /// creation order, with how each ended (or that it is still open at
+    /// `as_of`).
+    pub obligations: Vec<Obligation>,
+}
+
+/// One obligation instance (SPEC §5.6): created by a trigger event,
+/// consumed once by a discharge, a breach, a waiver, or a later trigger.
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize)]
+pub struct Obligation {
+    /// Qualified deadline id (`pack::deadline`).
+    pub deadline: String,
+    /// Source index of the trigger event in [`hir::Case::events`].
+    pub trigger: usize,
+    /// Trigger date.
+    pub date: String,
+    /// The party bearing it, when the deadline names a `bearer` played
+    /// by a declared party.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub bearer: Option<String>,
+    /// Declared in a `rule duty`: it must be discharged or it is breached.
+    pub linear: bool,
+    /// The due date it may not end before (`later_of`).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub floor: Option<String>,
+    /// The due date a cited `extends` event moved it to.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub extended_to: Option<String>,
+    /// How it ended, or `open`.
+    pub status: Status,
+    /// Source index of the event that ended it; `None` while open and for
+    /// a breach or lapse found at `as_of`.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub closed_by: Option<usize>,
+    /// Sorted index of the trigger event (replay-internal).
+    #[serde(skip)]
+    pub(crate) at: usize,
+    /// The trigger's service-method candidates (replay-internal).
+    #[serde(skip)]
+    pub(crate) candidates: Vec<String>,
+}
+
+/// How an obligation instance ended.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum Status {
+    /// Not yet due, or due but not countable, at `as_of`.
+    Open,
+    /// A timely act by its bearer took a `within` edge.
+    Discharged,
+    /// An act took the `within` edge after the due date (L4002).
+    Late,
+    /// A duty past due at `as_of` with no act: breached (L4009).
+    Breached,
+    /// A power past due at `as_of` with no act: it lapsed.
+    Lapsed,
+    /// A cited `waives` event released it.
+    Waived,
+    /// A later trigger restarted the period (`trigger latest`).
+    Superseded,
+    /// A `later_of` instance absorbed it.
+    Merged,
 }
 
 /// One transition of a replay (SPEC §5.6).
@@ -66,9 +129,19 @@ pub struct Step {
 pub enum Effect {
     /// The event took an edge.
     Took,
-    /// The event took no edge: it triggers a deadline, is history a
-    /// transition reads, or is a cited excusal.
-    Timing,
+    /// The event took no edge and fired the trigger of an in-force
+    /// deadline: it created (or, under `first`, re-fired) an obligation.
+    Triggered,
+    /// The event took no edge and is matter history a transition reads.
+    History,
+    /// A `removes` event took an option away.
+    Removed,
+    /// An `elects` event removed the alternatives to the option chosen.
+    Elected,
+    /// An `extends` event moved an obligation's due date.
+    Extended,
+    /// A `waives` event released an obligation.
+    Waived,
     /// A `facts` entry resolved a fact node.
     Fact,
 }
@@ -109,6 +182,7 @@ pub fn check_source(file: &str, text: &str, env: Env<'_>) -> CheckedCase {
             case: None,
             diagnostics,
             trace: Vec::new(),
+            obligations: Vec::new(),
         };
     };
     let mut checked = check(case, &resolved.spans, env);
@@ -124,7 +198,7 @@ pub fn check(mut case: hir::Case, spans: &CaseSpans, env: Env<'_>) -> CheckedCas
     case.removals.clear();
     dates(&case, spans, &mut out);
     let Some(used) = validate::pins(&case, env.packages, env.lock, spans, &mut out) else {
-        return done(case, out, Vec::new());
+        return done(case, out, Replayed::default());
     };
     let graph = Graph::new(used, env.packages);
     validate::parties(&case, &graph, spans, &mut out);
@@ -140,26 +214,27 @@ pub fn check(mut case: hir::Case, spans: &CaseSpans, env: Env<'_>) -> CheckedCas
                 format!("replay cannot begin at `{start}`: no such node"),
             ));
         }
-        return done(case, out, Vec::new());
+        return done(case, out, Replayed::default());
     }
-    let replayed = replay::replay(&graph, &case, spans, env.clock, &start);
-    out.extend(replayed.diagnostics);
-    case.removals = replayed.removals;
+    let mut replayed = replay::replay(&graph, &case, spans, env.clock, &start);
+    out.append(&mut replayed.diagnostics);
+    case.removals = std::mem::take(&mut replayed.removals);
     validate::facts_and_beliefs(&case, &graph, spans, &mut out);
-    if let Some(posture) = replayed.posture {
+    if let Some(posture) = replayed.posture.take() {
         validate::start(&case, &posture, spans, &mut out);
         validate::stakes(&case, &graph, &posture, env.profile, spans, &mut out);
         case.start = Some(posture);
     }
-    done(case, out, replayed.trace)
+    done(case, out, replayed)
 }
 
-fn done(case: hir::Case, mut diagnostics: Vec<Diagnostic>, trace: Vec<Step>) -> CheckedCase {
+fn done(case: hir::Case, mut diagnostics: Vec<Diagnostic>, replayed: Replayed) -> CheckedCase {
     sort_diagnostics(&mut diagnostics);
     CheckedCase {
         case: Some(case),
         diagnostics,
-        trace,
+        trace: replayed.trace,
+        obligations: replayed.obligations,
     }
 }
 

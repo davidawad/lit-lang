@@ -7,7 +7,7 @@ expression: table
         "12:14 L1002 `gamma` declares no event `Pinge`\n    note: events: Pinged, Struck\n    fix @12:14-12:26 MaybeIncorrect: \"gamma::Pinged\"",
     ],
     "another package: typed in its spelling, not legal at the primary start": [
-        "12:14 L4001 `gamma::Pinged(a)` is not a legal event at stage `alpha::intake` (Intake)\n    note: legal events: Served(complaint) [serve], Filed(complaint) [file], Ruled() [rule], Logged() [log], Twin(complaint) [twin-a], Twin(complaint) [twin-b], Noted(motion) [probe], Benched(complaint) [to-bench], Benched(motion) [to-lone], Answered(motion) [archive], Reopened(motion) [stage]\n    note: replay stops at the first illegal event",
+        "12:14 L4001 `gamma::Pinged(a)` is not a legal event at stage `alpha::intake` (Intake)\n    note: legal events: Served(complaint) [serve], Filed(complaint) [file], Ruled() [rule], Logged() [log], Twin(complaint) [twin-a], Twin(complaint) [twin-b], Noted(motion) [probe], Benched(complaint) [to-bench], Benched(motion) [to-lone], Answered(motion) [archive], Reopened(motion) [stage]\n    note: an event that takes no edge must fire the trigger of an in-force deadline, be history a transition reads, or have a type declaring `removes`, `extends`, or `waives`\n    note: replay stops at the first illegal event",
     ],
     "arity: one argument missing": [
         "12:14 L2001 `Benched` takes 1 argument, found 0\n    note: `Benched(document: Document)`; case events must be complete",

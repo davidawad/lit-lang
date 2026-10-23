@@ -1,21 +1,33 @@
 //! Event replay (SPEC §5.6): events in date order, each a legal transition
 //! from the posture it finds, judged under the versions governing its date
 //! (transitions applied, SPEC §5.4). The posture is derived, never asserted.
+//!
+//! An event that takes no edge must have a declared effect: it fires the
+//! trigger of an in-force deadline (creating an obligation instance), is
+//! history a transition reads, or is an event type declaring `removes`,
+//! `extends`, or `waives`. No such event is accepted where the matter has
+//! ended. Event names mean nothing.
 use super::deadline::Clock;
-use super::graph::{base, display, is_excusal, pack_of, Graph};
+use super::graph::{base, display, pack_of, Graph};
 use super::spans::{error, Build, CaseSpans, EventSpans};
-use super::{Effect, Step};
-use crate::hir::{Case, Declaration, Edge, Event, EventParty, Expr, Node, NodeKind, Removal};
+use super::{Effect, Obligation, Step};
+use crate::hir::{
+    Case, Declaration, Edge, Event, EventEffect, EventParty, Expr, ExprKind, Node, NodeKind,
+    Removal, Type, Value,
+};
 use crate::temporal::condition::matches;
 use crate::temporal::{MatterEvent, Ungoverned};
 use litigate_base::{Applicability, Diagnostic, DiagnosticCode as C};
 use std::collections::BTreeMap;
 
+mod obligations;
 mod removal;
+
+use obligations::Transform;
 mod within;
 
 /// Replay outcome.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, Default, PartialEq)]
 pub(super) struct Replayed {
     /// The derived posture; `None` when replay stopped at an error.
     pub posture: Option<String>,
@@ -25,6 +37,8 @@ pub(super) struct Replayed {
     pub removals: Vec<Removal>,
     /// The transitions replay made, in order.
     pub trace: Vec<Step>,
+    /// Obligation instances, in creation order.
+    pub obligations: Vec<Obligation>,
 }
 
 struct Cx<'c, 'g> {
@@ -40,6 +54,11 @@ struct Cx<'c, 'g> {
     removed: Vec<Removal>,
     out: Vec<Diagnostic>,
     trace: Vec<Step>,
+    /// Obligation instances so far.
+    obligations: Vec<Obligation>,
+    /// The `as_of` sentinel: a non-event dated `as_of`, read only for the
+    /// versions governing that date.
+    sentinel: Expr,
 }
 
 /// Events in date order, ties in source order.
@@ -80,27 +99,27 @@ pub(super) fn replay(
         removed: Vec::new(),
         out: Vec::new(),
         trace: Vec::new(),
+        obligations: Vec::new(),
+        sentinel: Expr {
+            ty: Type::Unit,
+            kind: ExprKind::Literal { value: Value::Unit },
+            span: None,
+        },
     };
     cx.order();
-    let mut posture = start.to_owned();
+    let mut posture = Some(start.to_owned());
     for k in 0..cx.sorted.len() {
-        match cx.step(k, &posture) {
-            Some(next) => posture = next,
-            None => {
-                return Replayed {
-                    posture: None,
-                    diagnostics: cx.out,
-                    removals: cx.removed,
-                    trace: cx.trace,
-                }
-            }
-        }
+        posture = posture.and_then(|p| cx.step(k, &p));
+    }
+    if posture.is_some() {
+        cx.at_as_of();
     }
     Replayed {
-        posture: Some(posture),
+        posture,
         diagnostics: cx.out,
         removals: cx.removed,
         trace: cx.trace,
+        obligations: cx.obligations,
     }
 }
 
@@ -137,6 +156,16 @@ impl<'c, 'g> Cx<'c, 'g> {
                 action: self.view(pack, k),
             })
             .collect()
+    }
+
+    /// [`Self::events`] followed by the `as_of` sentinel, which is last.
+    fn events_to_as_of(&self, pack: &str) -> Vec<MatterEvent<'_>> {
+        let mut events = self.events(pack);
+        events.push(MatterEvent {
+            date: &self.case.as_of,
+            action: &self.sentinel,
+        });
+        events
     }
 
     /// Out-of-order source is L4001 with a fix that sorts the block.
@@ -285,16 +314,27 @@ impl<'c, 'g> Cx<'c, 'g> {
             self.out.push(d);
         }
         let (posture, node) = self.follow_facts(posture.to_owned(), k)?;
-        match removal::option(self.graph, &event.action) {
-            Some((removal::OptionEffect::Remove, arg)) => {
-                self.remove(k, arg);
-                return Some(posture);
+        let ended = self.ended(&posture, node);
+        if let Some((pack, effect, args)) = self.effect(k) {
+            if ended {
+                self.illegal(k, &posture, node);
+                return None;
             }
-            Some((removal::OptionEffect::Elect, arg)) => {
-                self.elect(k, arg);
-                return Some(posture);
+            let applied = match effect {
+                EventEffect::Removes { param } => self.remove(k, args.get(*param)),
+                EventEffect::Elects { param } => self.elect(k, args.get(*param)),
+                EventEffect::Extends { deadline, param } => {
+                    self.transform(k, &pack, deadline, Transform::Extend(args.get(*param)))
+                }
+                EventEffect::Waives { deadline } => {
+                    self.transform(k, &pack, deadline, Transform::Waive)
+                }
+            };
+            if let Some(effect) = applied {
+                self.record(k, effect, &posture, &posture, None);
             }
-            None => {}
+            self.triggers(k);
+            return Some(posture);
         }
         let (matching, removed) = self.matching(k, &posture, node);
         let actor = self.actor(event);
@@ -302,13 +342,21 @@ impl<'c, 'g> Cx<'c, 'g> {
             .into_iter()
             .partition(|(_, e)| e.actor == "either" || actor.is_none_or(|a| a == e.actor));
         match (fits.as_slice(), misfits.as_slice(), removed) {
-            ([(pack, edge)], _, _) => Some(self.take(k, &posture, pack, edge)),
+            ([(pack, edge)], _, _) => {
+                let next = self.take(k, &posture, pack, edge);
+                self.triggers(k);
+                Some(next)
+            }
             ([], [], Some(r)) => {
                 self.takes_removed(k, &posture, &r);
                 None
             }
-            ([], [], None) if self.timing_only(k) => {
-                self.record(k, Effect::Timing, &posture, &posture, None);
+            ([], [], None) if !ended && self.triggers(k) => {
+                self.record(k, Effect::Triggered, &posture, &posture, None);
+                Some(posture)
+            }
+            ([], [], None) if !ended && self.history(k) => {
+                self.record(k, Effect::History, &posture, &posture, None);
                 Some(posture)
             }
             ([], [], None) => {
@@ -331,27 +379,51 @@ impl<'c, 'g> Cx<'c, 'g> {
                 None
             }
             (many, _, _) => {
-                let ids: Vec<String> = many
-                    .iter()
-                    .map(|(_, e)| format!("`{}`", e.id.as_deref().unwrap_or(&e.to)))
-                    .collect();
-                let d = error(
-                    C::InvalidCaseEvent,
-                    self.at(k, |e| e.action.as_ref()),
-                    format!(
-                        "`{}` at stage `{posture}` matches {} transitions",
-                        display(&event.action),
-                        many.len()
-                    ),
-                )
-                .note(format!(
-                    "candidates: {}; make the event's arguments specific",
-                    ids.join(", ")
-                ));
-                self.out.push(d);
+                self.ambiguous(k, &posture, many);
                 None
             }
         }
+    }
+
+    /// Event `k` at `posture` matches `many` edges (L4001).
+    fn ambiguous(&mut self, k: usize, posture: &str, many: &[(String, &Edge)]) {
+        let ids: Vec<String> = many
+            .iter()
+            .map(|(_, e)| format!("`{}`", e.id.as_deref().unwrap_or(&e.to)))
+            .collect();
+        let d = error(
+            C::InvalidCaseEvent,
+            self.at(k, |e| e.action.as_ref()),
+            format!(
+                "`{}` at stage `{posture}` matches {} transitions",
+                display(&self.sorted[k].1.action),
+                many.len()
+            ),
+        )
+        .note(format!(
+            "candidates: {}; make the event's arguments specific",
+            ids.join(", ")
+        ));
+        self.out.push(d);
+    }
+
+    /// Whether the matter has ended at `posture` (version `node`): a
+    /// terminal with no outgoing edge, links included.
+    fn ended(&self, posture: &str, node: &'g Node) -> bool {
+        matches!(node.kind, NodeKind::Terminal { .. }) && self.graph.edges(posture, node).is_empty()
+    }
+
+    /// The declared effect of event `k`'s type, with the pack declaring
+    /// the type and the event's arguments (SPEC §5.2).
+    fn effect(&self, k: usize) -> Option<(String, &'g EventEffect, &'c [Expr])> {
+        let ExprKind::Call { callee, args } = &self.sorted[k].1.action.kind else {
+            return None;
+        };
+        let (pack, name) = callee
+            .split_once("::")
+            .unwrap_or((self.graph.primary(), callee.as_str()));
+        let effect = self.graph.event_type(pack, name)?.effect.as_ref()?;
+        Some((pack.to_owned(), effect, args))
     }
 
     /// Event `k` takes `edge` (written in `pack`) from `posture`: its
@@ -378,39 +450,20 @@ impl<'c, 'g> Cx<'c, 'g> {
     }
 
     /// The actor of a `by` party (`on` events are done to the party).
-    fn actor(&self, event: &Event) -> Option<&str> {
+    fn actor(&self, event: &Event) -> Option<&'c str> {
         (event.relation == EventParty::By)
             .then(|| self.case.parties.iter().find(|p| p.id == event.party))
             .flatten()
             .map(|p| p.actor.as_str())
     }
 
-    /// An event that takes no edge: a cited excusal, history a transition
-    /// reads, or the trigger of a deadline governing its date.
-    fn timing_only(&self, k: usize) -> bool {
-        let event = self.sorted[k].1;
-        if event.authority.is_some()
-            && matches!(&event.action.kind, crate::hir::ExprKind::Call { callee, .. } if is_excusal(callee))
-        {
-            return true;
-        }
-        if self
-            .graph
+    /// Whether event `k` is history a transition reads (an order keeping
+    /// the prior rules, FRCP 86(a)(2)(B)).
+    fn history(&self, k: usize) -> bool {
+        self.graph
             .transition_patterns()
             .iter()
             .any(|(pack, p)| matches(p, self.view(pack, k)))
-        {
-            return true;
-        }
-        let known_at = self.case.known_at.as_deref();
-        self.graph.deadlines().iter().any(|q| {
-            let pack = pack_of(q);
-            let events = self.events(pack);
-            matches!(
-                self.graph.governing(q, &events, k, known_at),
-                Ok((w, Declaration::Deadline(d))) if matches(&d.trigger, self.view(pack_of(&w), k))
-            )
-        })
     }
 
     /// Typestate: the event is not legal at this stage (L4001).
@@ -450,18 +503,16 @@ impl<'c, 'g> Cx<'c, 'g> {
         } else {
             d.note(format!("legal events: {}", legal.join(", ")))
         };
+        if !self.ended(posture, node) {
+            d = d.note(
+                "an event that takes no edge must fire the trigger of an in-force deadline, be history a transition reads, or have a type declaring `removes`, `extends`, or `waives`",
+            );
+        }
         if node.tags.iter().any(|t| t == "fact") {
             d = d.note(format!(
                 "`{posture}` is a matter fact: resolve it with `facts {{ {}: <edge> }}`",
                 posture.rsplit("::").next().unwrap_or(posture)
             ));
-        }
-        if event.authority.is_none()
-            && matches!(&event.action.kind, crate::hir::ExprKind::Call { callee, .. } if is_excusal(callee))
-        {
-            d = d.note(
-                "an excusing order takes effect only when it cites its authority (`cite ...`)",
-            );
         }
         self.out
             .push(d.note("replay stops at the first illegal event"));

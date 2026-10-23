@@ -290,22 +290,34 @@ fn bowles_order_cannot_extend_the_statutory_appeal_limit() {
     assert!(ruling.contains("deadline had actually been February 24"));
     assert!(ruling.contains("deprived the Sixth Circuit of jurisdiction"));
 
-    // Replay a cited, overlong extension as the equivalent event pattern:
-    // the later filing must remain missed because the event carries no
-    // machine-readable deadline target or bounded extent.
+    // Replay the pattern on the fixture's answer period: served
+    // 2010-04-01, due 2010-04-22 (21 days); the court may extend it by at
+    // most 30 days (to 2010-05-22) but orders 2010-05-25, and the filing
+    // falls between the lawful and the ordered dates. The order exceeds
+    // its capability's bound and is rejected, so the filing stays missed.
     let checked = check_2009(&matter_2009(&[
-        "2010-05-01 Served(complaint, Personal) on widget",
-        "2010-05-25 Extended(complaint) by court cite FRCP 4(a)(6)",
-        "2010-06-01 MovedToDismiss(complaint) by widget",
+        "2010-04-01 Served(complaint, Personal) on widget",
+        "2010-04-20 AnswerExtended(2010-05-25) by court cite FRCP 6(b)(1)(A)",
+        "2010-05-24 MovedToDismiss(complaint) by widget",
     ]));
+    let rendered = render(&checked.diagnostics);
     assert!(
-        checked
-            .diagnostics
+        rendered
             .iter()
-            .any(|d| d.code.as_str() == "L4002"),
-        "the Bowles filing must remain untimely: {:#?}",
-        render(&checked.diagnostics)
+            .any(|d| d.contains("L4001") && d.contains("exceeds the bound")),
+        "the overlong order must be rejected: {rendered:#?}"
     );
+    assert!(
+        rendered.iter().any(|d| d.contains("L4002")),
+        "the Bowles filing must remain untimely: {rendered:#?}"
+    );
+    // The same order within the bound makes the filing timely.
+    let lawful = check_2009(&matter_2009(&[
+        "2010-04-01 Served(complaint, Personal) on widget",
+        "2010-04-20 AnswerExtended(2010-05-21) by court cite FRCP 6(b)(1)(A)",
+        "2010-05-21 MovedToDismiss(complaint) by widget",
+    ]));
+    assert!(lawful.ok(), "{:#?}", render(&lawful.diagnostics));
 }
 
 #[test]
@@ -354,11 +366,11 @@ fn amendment_replay_table() {
             ],
         ),
         (
-            "pending: the prior rules, excused by a cited extension",
+            "pending: the prior rules, extended by a cited order within its bound",
             vec![
                 served,
                 "2009-11-25 OrderedPriorRules() by court",
-                "2009-12-09 Extended(complaint) by court cite FRCP 6(b)(1)(A)",
+                "2009-12-09 AnswerExtended(2009-12-14) by court cite FRCP 6(b)(1)(A)",
                 "2009-12-11 MovedToDismiss(complaint) by widget",
             ],
         ),
@@ -367,17 +379,24 @@ fn amendment_replay_table() {
             vec![
                 served,
                 "2009-11-25 OrderedPriorRules() by court",
-                "2009-12-09 Extended(complaint) by court",
+                "2009-12-09 AnswerExtended(2009-12-14) by court",
                 "2009-12-11 MovedToDismiss(complaint) by widget",
             ],
         ),
         (
-            "pending: an extension before the trigger does not cover it",
+            "pending: an extension before the trigger has nothing to extend",
             vec![
-                "2009-11-18 Extended(complaint) by court cite FRCP 6(b)(1)(A)",
+                "2009-11-18 AnswerExtended(2009-12-14) by court cite FRCP 6(b)(1)(A)",
                 served,
                 "2009-11-25 OrderedPriorRules() by court",
                 "2009-12-11 MovedToDismiss(complaint) by widget",
+            ],
+        ),
+        (
+            "pending: an event named Extended declares no effect and is illegal",
+            vec![
+                served,
+                "2009-12-09 Extended(complaint) by court cite FRCP 6(b)(1)(A)",
             ],
         ),
         (

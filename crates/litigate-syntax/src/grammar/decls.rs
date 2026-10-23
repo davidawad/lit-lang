@@ -124,7 +124,7 @@ fn deadline(p: &mut Parser<'_>) {
         }
         let keywords = clauses(p, Clauses::RULE);
         expect_header_end(p, &keywords);
-        field_list(p, super::fields::DEADLINE_OPTS);
+        field_list(p, super::fields::DEADLINE_DECL_OPTS);
     }
     p.finish();
 }

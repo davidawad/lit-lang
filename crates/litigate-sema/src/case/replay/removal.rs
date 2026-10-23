@@ -1,70 +1,24 @@
 //! Option-removing events (SPEC §5.6). A waiver or an order striking a
 //! defense does not move the matter; it takes an option away for the rest
-//! of it. Such an event is a call to an event type named `Struck`,
-//! `Forfeited`, or `Withdrawn` that declares a parameter `option: String`;
-//! the string names the removed edge (`edge`, or `pack::edge` outside the
-//! primary package) and the event must cite its authority. An election
-//! (`Elected`, same parameter) names the option chosen instead: it removes
-//! every alternative at each fork offering that edge. Replay records each
-//! removal in [`Case::removals`](crate::hir::Case) and refuses any later
-//! event that would take a removed edge.
+//! of it. Such an event's type declares `removes p` for a parameter
+//! `p: String`; the string names the removed edge (`edge`, or `pack::edge`
+//! outside the primary package) and the event must cite its authority. An
+//! election declares `elects p` instead: `p` names the option chosen, and
+//! every alternative at each fork offering that edge is removed. Replay
+//! records each removal in [`Case::removals`](crate::hir::Case) and refuses
+//! any later event that would take a removed edge.
 use super::Cx;
-use crate::case::graph::{display, Graph};
+use crate::case::graph::display;
 use crate::case::spans::{error, Build};
-use crate::hir::{Edge, Expr, ExprKind, Removal, Type, Value};
+use crate::case::Effect;
+use crate::hir::{Edge, Expr, ExprKind, Removal, Value};
 use crate::resolve::suggest::nearest;
 use litigate_base::{Applicability, DiagnosticCode as C};
 
-/// Event type names that remove an option when they declare
-/// `option: String` (compared case-insensitively, like the excusals).
-pub(in crate::case) const REMOVALS: [&str; 3] = ["struck", "forfeited", "withdrawn"];
-
-/// The event type name that elects an option, removing its alternatives.
-pub(in crate::case) const ELECTION: &str = "elected";
-
-/// What an option event does with the edge its `option` names.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub(in crate::case) enum OptionEffect {
-    /// The edge leaves the matter.
-    Remove,
-    /// The edge is chosen; its alternatives leave the matter.
-    Elect,
-}
-
-/// The effect and `option` argument of `action` when it is an
-/// option-removing or electing event.
-pub(in crate::case) fn option<'e>(
-    graph: &Graph<'_>,
-    action: &'e Expr,
-) -> Option<(OptionEffect, &'e Expr)> {
-    let ExprKind::Call { callee, args } = &action.kind else {
-        return None;
-    };
-    let (pack, name) = callee
-        .split_once("::")
-        .unwrap_or((graph.primary(), callee.as_str()));
-    let lower = name.to_ascii_lowercase();
-    let effect = if REMOVALS.contains(&lower.as_str()) {
-        OptionEffect::Remove
-    } else if lower == ELECTION {
-        OptionEffect::Elect
-    } else {
-        return None;
-    };
-    let ty = graph.event_type(pack, name)?;
-    let i = ty
-        .params
-        .iter()
-        .position(|(p, t)| p == "option" && *t == Type::String)?;
-    args.get(i).map(|a| (effect, a))
-}
-
 impl Cx<'_, '_> {
-    /// Event `k` removes the edge its `option` argument names.
-    pub(super) fn remove(&mut self, k: usize, arg: &Expr) {
-        let Some((qualified, at, authority)) = self.named(k, arg, "remove") else {
-            return;
-        };
+    /// Event `k` removes the edge its `removes` argument `arg` names.
+    pub(super) fn remove(&mut self, k: usize, arg: Option<&Expr>) -> Option<Effect> {
+        let (qualified, at, authority) = self.named(k, arg?, "remove")?;
         if let Some(prior) = self.removed.iter().find(|r| r.edge == qualified) {
             let first = self
                 .spans
@@ -76,7 +30,7 @@ impl Cx<'_, '_> {
             )
             .note_at(Some(first), "removed here");
             self.out.push(d);
-            return;
+            return None;
         }
         let (index, event) = self.sorted[k];
         self.removed.push(Removal {
@@ -85,15 +39,14 @@ impl Cx<'_, '_> {
             event: index,
             authority,
         });
+        Some(Effect::Removed)
     }
 
-    /// Event `k` elects the edge its `option` argument names: every other
-    /// edge at each fork offering it is removed (an alternative removed
-    /// earlier stays removed once).
-    pub(super) fn elect(&mut self, k: usize, arg: &Expr) {
-        let Some((qualified, at, authority)) = self.named(k, arg, "elect") else {
-            return;
-        };
+    /// Event `k` elects the edge its `elects` argument `arg` names: every
+    /// other edge at each fork offering it is removed (an alternative
+    /// removed earlier stays removed once).
+    pub(super) fn elect(&mut self, k: usize, arg: Option<&Expr>) -> Option<Effect> {
+        let (qualified, at, authority) = self.named(k, arg?, "elect")?;
         let (index, event) = self.sorted[k];
         if let Some(prior) = self.removed.iter().find(|r| r.edge == qualified) {
             let first = self
@@ -109,7 +62,7 @@ impl Cx<'_, '_> {
             )
             .note_at(Some(first), "removed here");
             self.out.push(d);
-            return;
+            return None;
         }
         let (pack, local) = qualified.split_once("::").unwrap_or(("", &qualified));
         for alternative in self.graph.alternatives(pack, local) {
@@ -138,6 +91,7 @@ impl Cx<'_, '_> {
                 authority: authority.clone(),
             });
         }
+        Some(Effect::Elected)
     }
 
     /// The qualified edge, its span and the cited authority of option

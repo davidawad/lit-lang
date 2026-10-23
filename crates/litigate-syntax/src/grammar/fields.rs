@@ -53,6 +53,36 @@ pub(crate) const DEADLINE_OPTS: &[Spec] = &[
     (KwNote, Some(string)),
 ];
 
+/// Options of a `deadline` declaration: the [`DEADLINE_OPTS`] of a
+/// `within` edge, plus the obligation it creates (SPEC §5.3): who bears
+/// it, how a repeated trigger is treated, and the capabilities that
+/// extend or waive it.
+pub(crate) const DEADLINE_DECL_OPTS: &[Spec] = &[
+    (KwExtendable, Some(boolean)),
+    (KwExtensionAuthority, Some(string)),
+    (KwNote, Some(string)),
+    (KwBearer, Some(reference)),
+    (KwTrigger, Some(ref_or_call)),
+    (KwExtend, Some(capability)),
+    (KwWaive, Some(capability)),
+];
+
+/// Fields of an `extend`/`waive` capability.
+pub(crate) const CAPABILITY_FIELDS: &[Spec] = &[
+    (KwBy, Some(reference)),
+    (KwMax, Some(duration)),
+    (KwAfterExpiry, None),
+];
+
+/// The effect clause of an `event` declaration (SPEC §5.2).
+pub(crate) const EVENT_EFFECTS: &[Spec] = &[
+    (KwRemoves, Some(reference)),
+    (KwElects, Some(reference)),
+    (KwExtends, Some(reference)),
+    (KwTo, Some(reference)),
+    (KwWaives, Some(reference)),
+];
+
 pub(crate) const COUNTING_ITEMS: &[Spec] = &[
     (KwExcludeTriggerDay, None),
     (KwIncludeLastDay, None),
@@ -190,6 +220,26 @@ fn name_record(p: &mut Parser<'_>) -> bool {
 
 fn probabilities(p: &mut Parser<'_>) -> bool {
     record(p, Key::Ident, prob_value)
+}
+
+/// `{ by Actor, max Duration, after_expiry }`.
+fn capability(p: &mut Parser<'_>) -> bool {
+    field_list(p, CAPABILITY_FIELDS)
+}
+
+/// A policy name (`first`) or a call (`later_of(other)`).
+fn ref_or_call(p: &mut Parser<'_>) -> bool {
+    if !p.at(Ident) {
+        return false;
+    }
+    let checkpoint = p.checkpoint();
+    reference(p);
+    if p.at(LParen) {
+        p.start_at(checkpoint, CallExpr);
+        super::expr::arg_list(p);
+        p.finish();
+    }
+    true
 }
 
 fn deadline_opts(p: &mut Parser<'_>) {

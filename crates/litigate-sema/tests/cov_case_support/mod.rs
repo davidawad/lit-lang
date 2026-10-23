@@ -81,14 +81,14 @@ event Logged(hours: Hours)
 event Twin(document: Document)
 event Noted(document: Document)
 event Reopened(document: Document)
-event Forfeited(option: String)
-event Excused(document: Document)
+event Forfeited(option: String) removes option
+event Excused(document: Document) waives court-period
 event Benched(document: Document)
 
 counting ac cite FRCP 6(a) { exclude_trigger_day, include_last_day, holidays acal }
 calendar acal { new-year: fixed(1, 1) effective [1870-06-28, ..) observed nearest_weekday }
 
-deadline court-period: 5.court_days from Served(complaint) counted_by ac
+deadline court-period: 5.court_days from Served(complaint) counted_by ac { waive { by Court } }
 deadline business-period: 3.business_days from Filed(complaint) counted_by ac
 deadline remote-period: 10.days from Filed(complaint) counted_by bc
 deadline one-day: 1.days from Filed(complaint) counted_by ac

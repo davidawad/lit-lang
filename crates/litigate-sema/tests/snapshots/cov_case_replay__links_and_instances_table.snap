@@ -4,7 +4,7 @@ expression: table(&rows)
 ---
 {
     "missed: a link's deadline, declared and triggered in the links package's view": [
-        "13:3 L4002 `Noted(motion)` on 2010-01-09 missed deadline `delta::link-period`, due 2010-01-07\n    note @12:3: `link-period` runs 3 calendar days from `Benched(motion)` on 2010-01-04 under `ac@2009-12-01`\n    note: a cited `Waived`, `Extended`, or `Excused` event between the trigger and this event would excuse it",
+        "13:3 L4002 `Noted(motion)` on 2010-01-09 missed deadline `delta::link-period`, due 2010-01-07\n    note @12:3: `link-period` runs 3 calendar days from `Benched(motion)` on 2010-01-04 under `ac@2009-12-01`\n    note: only a cited event of a type that `extends` this deadline, within its `extend` capability, moves the due date",
         "trace Took Benched(motion) alpha::intake -> alpha::lone via alpha::to-lone",
         "trace Took Noted(motion) alpha::lone -> alpha::defaulted via alpha::wait",
     ],
@@ -30,6 +30,7 @@ expression: table(&rows)
     "removed: a link edge removed by id in its from node's package": [
         "14:14 L4001 `Noted(complaint)` at stage `alpha::bench` takes `alpha::hop`, which was removed on 2010-01-05\n    note @13:3: removed here, cite FRCP 12(h)\n    note: replay stops at the first illegal event",
         "trace Took Benched(complaint) alpha::intake -> alpha::bench via alpha::to-bench",
+        "trace Removed Forfeited(\"hop\") alpha::bench -> alpha::bench",
     ],
     "removed: an option far from every edge id": [
         "13:24 L1002 `alpha` has no edge `zzzzzzzzzzzzzzzz` for `Forfeited(\"zzzzzzzzzzzzzzzz\")` to remove\n    note: `option` names an edge by its id: `edge`, or `pack::edge` in another package",

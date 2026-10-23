@@ -164,4 +164,42 @@ pub struct EventType {
     pub name: String,
     /// Parameters in order.
     pub params: Vec<(String, Type)>,
+    /// The declared effect on a matter, if any (SPEC §5.2). Replay gives
+    /// an event's name no meaning: only this clause makes an event remove
+    /// or elect an option, extend an obligation, or waive one.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub effect: Option<EventEffect>,
+}
+
+/// What an event does to a matter besides taking an edge (SPEC §5.2).
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "effect", rename_all = "snake_case")]
+pub enum EventEffect {
+    /// `removes p`: the `String` parameter `p` names an edge the matter
+    /// loses for the rest of it.
+    Removes {
+        /// Index of the parameter in [`EventType::params`].
+        param: usize,
+    },
+    /// `elects p`: the `String` parameter `p` names the option chosen;
+    /// every alternative at each fork offering it leaves the matter.
+    Elects {
+        /// Index of the parameter in [`EventType::params`].
+        param: usize,
+    },
+    /// `extends d to p`: moves the due date of an open obligation of
+    /// deadline `d` to the `Date` parameter `p`, within `d`'s `extend`
+    /// capability.
+    Extends {
+        /// The deadline, as written in the declaring package's view.
+        deadline: String,
+        /// Index of the `Date` parameter in [`EventType::params`].
+        param: usize,
+    },
+    /// `waives d`: releases an open obligation of deadline `d`, under
+    /// `d`'s `waive` capability.
+    Waives {
+        /// The deadline, as written in the declaring package's view.
+        deadline: String,
+    },
 }

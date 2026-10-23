@@ -260,8 +260,9 @@ pub enum ItemKind {
     TypeAlias(Name, TypeRef),
     /// `enum E { a, b }`.
     Enum(Name, Vec<Name>),
-    /// `event E(p: T)`.
-    Event(Name, Vec<(Name, TypeRef)>),
+    /// `event E(p: T) [effect]`: the effect clause as fields
+    /// (`removes p`, `extends d`, `to p`, `waives d`).
+    Event(Name, Vec<(Name, TypeRef)>, Vec<Field>),
     /// Graph node.
     Node(NodeItem),
     /// `link`.

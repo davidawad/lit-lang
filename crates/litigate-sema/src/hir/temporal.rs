@@ -35,6 +35,65 @@ pub struct Deadline {
     pub extension_authority: Option<String>,
     /// Lowered `Deadline.note`.
     pub note: Option<String>,
+    /// The actor bearing each obligation instance (`bearer A`); `None`:
+    /// whoever takes the `within` edge.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub bearer: Option<String>,
+    /// How a trigger is treated while an instance is open (`trigger ...`).
+    #[serde(default, skip_serializing_if = "TriggerPolicy::is_first")]
+    pub policy: TriggerPolicy,
+    /// Declared in a `rule duty`: an instance is linear, consumed exactly
+    /// once by a discharge or a breach. Otherwise affine: it may lapse.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub linear: bool,
+    /// Who may extend an instance, and how far (`extend { ... }`); `None`:
+    /// no extension is possible.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub extend: Option<Capability>,
+    /// Who may waive an instance (`waive { ... }`); `None`: it cannot be
+    /// waived.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub waive: Option<Capability>,
+}
+
+/// How a matching trigger creates obligation instances (SPEC §5.3).
+#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "policy", content = "of", rename_all = "snake_case")]
+pub enum TriggerPolicy {
+    /// The first trigger runs the period; later ones are ignored while
+    /// its instance is open.
+    #[default]
+    First,
+    /// A later trigger restarts the period, superseding the open instance.
+    Latest,
+    /// Every trigger creates its own instance.
+    Each,
+    /// Like `latest`, and due no earlier than the open instance of the
+    /// named deadline, which it absorbs (FRCP 15(a)(3), FRAP 4(a)(3)).
+    LaterOf(String),
+}
+
+impl TriggerPolicy {
+    /// Whether this is the default policy.
+    #[must_use]
+    pub fn is_first(&self) -> bool {
+        *self == Self::First
+    }
+}
+
+/// A capability to transform an obligation instance (review §2.4): the
+/// principal that holds it and its bound.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Capability {
+    /// The actor that may exercise it (`by A`).
+    pub by: String,
+    /// Furthest extension past the counted due date, in calendar days
+    /// (`max N.days`); always `None` for `waive`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub max_days: Option<u64>,
+    /// May be exercised after the instance's due date (`after_expiry`).
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub after_expiry: bool,
 }
 
 /// Deadline counting direction.

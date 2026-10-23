@@ -424,10 +424,10 @@ mod tests {
 
     #[test]
     fn mappings_parse_and_reject_bad_specs() {
-        let map = pack_file_map(&specs(&["cafc=cafc-federal-circuit"])).map_err(|f| f.0);
+        let map = pack_file_map(&specs(&["cafc=cafc-federal-circuit"])).ok();
         assert_eq!(
             map.map(|m| m.into_iter().collect::<Vec<_>>()),
-            Ok(vec![("cafc".into(), "cafc-federal-circuit".into())])
+            Some(vec![("cafc".into(), "cafc-federal-circuit".into())])
         );
         for bad in [
             &["cafc"][..],
@@ -444,7 +444,7 @@ mod tests {
 
     #[test]
     fn renames_pack_map_and_clock_files_only() {
-        let map = pack_file_map(&specs(&["cofc=cofc-court"])).map_err(|f| f.0);
+        let map = pack_file_map(&specs(&["cofc=cofc-court"])).ok();
         let out = map.and_then(|m| {
             rename_packs(
                 files(&[
@@ -457,13 +457,12 @@ mod tests {
                 ]),
                 &m,
             )
-            .map_err(|f| f.0)
+            .ok()
         });
-        let paths: Result<Vec<String>, String> =
-            out.map(|o| o.into_iter().map(|(p, _)| p).collect());
+        let paths: Option<Vec<String>> = out.map(|o| o.into_iter().map(|(p, _)| p).collect());
         assert_eq!(
             paths,
-            Ok(specs(&[
+            Some(specs(&[
                 "litigatables/cofc.litigatable.json",
                 "packs/clock/cofc-court.json",
                 "packs/cofc-court.json",

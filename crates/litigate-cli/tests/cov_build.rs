@@ -76,3 +76,39 @@ fn an_unwritable_output_is_an_io_failure() {
     assert_eq!(run.code, 1, "{}", run.stdout);
     insta::assert_snapshot!(run.stderr, @"litigate build: out/litigatables: Not a directory (os error 20)");
 }
+
+#[test]
+fn a_malformed_pack_file_mapping_fails_before_checking() {
+    let run = litigate_in(
+        &repo(),
+        &[
+            "build",
+            "--pack-file",
+            "cafc",
+            "--out",
+            "unused",
+            "lit/examples",
+        ],
+    );
+    assert_eq!(run.code, 1, "{}", run.stdout);
+    assert!(run.stderr.contains("cafc"), "{}", run.stderr);
+}
+
+#[test]
+fn a_pack_file_mapping_for_an_unbuilt_pack_writes_nothing() {
+    let out = scratch("build-pack-file-unknown");
+    let run = litigate_in(
+        &repo(),
+        &[
+            "build",
+            "--pack-file",
+            "nope=elsewhere",
+            "--out",
+            out.to_str().unwrap(),
+            "lit/examples",
+        ],
+    );
+    assert_eq!(run.code, 1, "{}", run.stdout);
+    assert!(run.stderr.contains("`nope`"), "{}", run.stderr);
+    assert_eq!(std::fs::read_dir(&out).unwrap().count(), 0);
+}

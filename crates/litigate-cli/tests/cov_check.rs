@@ -28,6 +28,23 @@ fn a_package_that_does_not_lower_fails_check() {
     insta::assert_debug_snapshot!(located(&run.json));
 }
 
+/// `check --known-at` selects versions among those recorded by then, as
+/// `build --known-at` does: before the example's corpus date no version
+/// of its start node is visible.
+#[test]
+fn check_selects_versions_at_its_known_at() {
+    let dir = example("check-known-at", "", None);
+    let latest = litigate_in(&dir, &["check", "lit/examples"]);
+    assert_eq!(latest.code, 0, "{}", latest.stdout);
+    let early = litigate_in(&dir, &["check", "--known-at", "2000-01-01", "lit/examples"]);
+    assert_eq!(early.code, 2, "{}", early.stdout);
+    let errors: Vec<_> = located(&early.json)
+        .into_iter()
+        .filter(|d| d.1 == "error")
+        .collect();
+    insta::assert_debug_snapshot!(errors);
+}
+
 #[test]
 fn an_unparseable_matter_lock_fails_check() {
     let dir = example("check-lock", "", None);

@@ -494,6 +494,22 @@ must cover the package lifetime. A gap is legal only when declared with
 version with `from <= as_of < to`, among versions whose `known_at <=` the
 query's `known_at` (latest when omitted). No version is L3007.
 
+This is one query (`temporal::select`, supersession applied; for a matter's
+event, `temporal::governing` adds transitions). Lowering, `check`, inline
+`test`s and `tests-pass`, case replay, the deadline schedule,
+`explain-value` and the LSP select deadline, counting, calendar and node
+versions through it, so none can describe different law. Package queries
+(build, `check`, `test`, `tests-pass`) select among the versions recorded
+by the package `known_at` unless `check`/`build --known-at` (the LSP's
+`knownAt` initialization option) overrides it; a test counts each
+deadline under the versions in force on its trigger date. A matter
+selects at its own `as_of` and `known_at` (the latest corpus when it has
+none) in replay, lowering and its schedule alike. A counting rule a loaded
+package declares counts only under a version so selected; the shared clock
+library stands in only for a rule no loaded package declares. A counting
+version's clock fragment is lowered once, at its own `from` over the
+latest corpus.
+
 Refinements (temporal bead, `litigate-sema/src/temporal`):
 
 - **Lifetime.** A declaration's lifetime runs from its earliest version's

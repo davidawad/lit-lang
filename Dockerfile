@@ -24,14 +24,19 @@ RUN cargo chef cook --release --recipe-path recipe.json
 COPY Cargo.toml Cargo.lock ./
 COPY crates crates
 COPY editors editors
+# The hand-authored clock library; crates/litgraph-packs builds the packs
+# and named scenarios from lit/ and cases/ at compile time.
 COPY packs packs
+COPY lit lit
+COPY cases cases
 # litigate-cli (a litgraph-mcp dependency) embeds the language reference.
 COPY docs/litigate/SPEC.md docs/litigate/SPEC.md
-COPY scenarios scenarios
 COPY calibration calibration
 COPY sources sources
 RUN cargo build --release -p litgraph-cli -p litgraph-mcp && \
-    strip target/release/litgraph target/release/litgraph-mcp
+    strip target/release/litgraph target/release/litgraph-mcp && \
+    built="$(find target/release/build -path '*/litgraph-packs-*/out/packs' -type d | head -n 1)" && \
+    test -n "$built" && cp -r "$built" /build/built-packs
 
 # --- runtime: minimal non-root image ---------------------------------------
 FROM debian:bookworm-slim AS runtime
@@ -53,7 +58,7 @@ RUN apt-get update && \
 
 COPY --from=builder /build/target/release/litgraph /usr/local/bin/litgraph
 COPY --from=builder /build/target/release/litgraph-mcp /usr/local/bin/litgraph-mcp
-COPY --from=builder /build/packs /usr/share/litgraph/packs
+COPY --from=builder /build/built-packs /usr/share/litgraph/packs
 
 ENV LITGRAPH_PACKS=/usr/share/litgraph/packs
 USER litgraph

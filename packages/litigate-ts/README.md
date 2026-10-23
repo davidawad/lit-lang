@@ -30,9 +30,10 @@ written by hand:
    shipped, as `@litgraph/litigate-ts/schema.json`).
 2. `scripts/gen.mjs` compiles the bundle with `json-schema-to-typescript`.
 
-`just ts-gen` runs both; `just ts-gen-check` (part of `just ci` and the CI
-`litigate-ts` job) fails when the committed files are stale. To change a
-type, change the Rust type and rerun `just ts-gen`. `src/types.ts` only
+`just ts-gen` runs both. Neither file is committed (they are build
+outputs, so parallel schema changes never conflict on them): `just
+ts-build` and `just ts-test` regenerate them first. To change a type,
+change the Rust type and rerun `just ts-gen`. `src/types.ts` only
 derives names from the generated types (`OpOf<"simulate">`, `Doc<"pack">`).
 
 `Response.result` and `provenance` are `unknown`, as they are
@@ -44,14 +45,14 @@ structs in Rust and the types will follow.
 
 | recipe | does |
 | --- | --- |
-| `just ts-gen` | regenerate `schema/` and `src/generated/` |
-| `just ts-gen-check` | regenerate and fail if anything changed |
+| `just ts-gen` | generate `schema/` and `src/generated/` (gitignored) |
 | `just ts-build` | `just wasm`, copy it into `wasm/{node,web}`, `tsc` to `dist/` |
 | `just ts-test` | `ts-build`, build the native `litgraph`, then `tsc` + `vitest --typecheck` |
 
 Tests: `test/client.test.ts` (unit, over fake and real bindings, plus a
 check that `src/` has no `any`), `test/golden.test.ts` (every
-`scenarios/*.json` through wasm, by name and inline, for `solve`, `chain`
+named scenario, as `just lit-sync` builds it into `target/lit-build/`,
+through wasm, by name and inline, for `solve`, `chain`
 and a seeded `simulate`, plus `validate`, compared exactly with the native
 CLI output apart from `elapsed_ms`), `test/litigate.test.ts` (`litigate
 check`/`build` in memory against the native `litigate` CLI),

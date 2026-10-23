@@ -1,5 +1,7 @@
-// Every scenarios/*.json through the wasm client must give the native
+// Every named scenario through the wasm client must give the native
 // `litgraph` CLI's output (elapsed_ms aside): same engine, same contract.
+// The scenarios are build outputs: `just lit-sync` (a `just ts-test`
+// dependency) writes them to target/lit-build/scenarios/.
 import { spawnSync } from "node:child_process";
 import { readdirSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -8,7 +10,7 @@ import { loadNode, type NamedScenario, type Request } from "../src/node.js";
 
 const repo = fileURLToPath(new URL("../../../", import.meta.url));
 const bin = process.env["LITGRAPH_BIN"] ?? `${repo}target/debug/litgraph`;
-const scenarioDir = `${repo}scenarios/`;
+const scenarioDir = `${repo}target/lit-build/scenarios/`;
 const files = readdirSync(scenarioDir).filter((f) => f.endsWith(".json")).sort();
 
 function native(args: readonly string[]): unknown {
@@ -49,6 +51,6 @@ describe.each(files)("%s", (file) => {
   });
 
   it("validates as the CLI does", () => {
-    expect(lg.validate(named)).toStrictEqual(native(["validate", `scenarios/${file}`]));
+    expect(lg.validate(named)).toStrictEqual(native(["validate", `target/lit-build/scenarios/${file}`]));
   });
 });

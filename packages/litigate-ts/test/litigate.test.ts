@@ -59,7 +59,7 @@ describe("check matches the CLI", () => {
 });
 
 describe("build matches the CLI", () => {
-  // The inputs and file names `just lit-sync` builds the repository's packs/ and scenarios/ from.
+  // A subset of the inputs and file names in crates/litgraph-packs/build.args.
   const inputs = ["lit/cafc", "lit/cofc", "lit/frap", "lit/frcp", "lit/links", "cases/frcp-civil-case.case"];
   const out = "target/litigate-ts-golden";
 
@@ -73,7 +73,7 @@ describe("build matches the CLI", () => {
     expect(untimed({ ...built, files: {} })).toStrictEqual(expected);
     expect(built.files).toStrictEqual(tree(out));
     expect(built.files[`${out}/packs/frcp-civil-procedure.json`]).toBe(
-      readFileSync(`${repo}packs/frcp-civil-procedure.json`, "utf8"),
+      readFileSync(`${repo}target/lit-build/packs/frcp-civil-procedure.json`, "utf8"),
     );
   });
 

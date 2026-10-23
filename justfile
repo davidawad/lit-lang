@@ -161,46 +161,35 @@ wasm-smoke: wasm
 # ts-test, the wasm toolchain `just wasm` needs).
 
 ts_pkg := "packages/litigate-ts"
-# Generated, committed files; `ts-gen-check` fails when they are stale.
-ts_generated := ts_pkg + "/schema/litgraph.schema.json " + ts_pkg + "/src/generated/schemas.ts"
 
 # Install the package's pinned dev dependencies (package-lock.json).
 ts-install:
     cd {{ts_pkg}} && npm ci --no-audit --no-fund
 
-# Regenerate the JSON Schema bundle from the Rust types, then the
-# TypeScript types from it.
+# Generate the JSON Schema bundle from the Rust types, then the
+# TypeScript types from it. Both are build outputs (gitignored), never
+# committed, so parallel schema changes cannot conflict on them; ts-build
+# and ts-test run this first.
 ts-gen: ts-install
+    mkdir -p {{ts_pkg}}/schema
     cargo run -q -p litgraph-schema-bundle > {{ts_pkg}}/schema/litgraph.schema.json
     cd {{ts_pkg}} && npm run --silent gen
-
-# CI gate: regenerate, then fail if the committed generated files differ.
-ts-gen-check: ts-gen
-    #!/usr/bin/env bash
-    set -euo pipefail
-    stale="$(git status --porcelain --untracked-files=all -- {{ts_generated}})"
-    if [ -n "$stale" ]; then
-      echo "$stale" >&2
-      git --no-pager diff --stat -- {{ts_generated}} >&2
-      echo "ts-gen-check: generated TypeScript types are stale; run \`just ts-gen\` and commit the result" >&2
-      exit 1
-    fi
-    echo "ts-gen-check: generated types are up to date"
 
 # Build litgraph-wasm into the package (wasm/node, wasm/web), then compile
 # the TypeScript to dist/. The package is ESM and wasm-bindgen's nodejs
 # target is CommonJS, so wasm/node gets its own package.json.
-ts-build: wasm ts-install
+ts-build: wasm ts-gen
     rm -rf {{ts_pkg}}/wasm
     mkdir -p {{ts_pkg}}/wasm
     cp -r dist/wasm/node dist/wasm/web {{ts_pkg}}/wasm/
     echo '{"type": "commonjs"}' > {{ts_pkg}}/wasm/node/package.json
     cd {{ts_pkg}} && npm run --silent build
 
-# Unit, type-level, and golden tests (every scenarios/*.json through wasm
-# against the native `litgraph` CLI, and `litigate check`/`build` over lit/
-# and cases/ in memory against the native `litigate` CLI, both built here).
-ts-test: ts-build
+# Unit, type-level, and golden tests (every built scenarios/*.json, from
+# `lit-sync`'s target/lit-build/, through wasm against the native `litgraph`
+# CLI, and `litigate check`/`build` over lit/ and cases/ in memory against
+# the native `litigate` CLI, both built here).
+ts-test: ts-build lit-sync
     cargo build -q -p litgraph-cli -p litigate-cli
     cd {{ts_pkg}} && LITGRAPH_BIN="$(cd ../.. && pwd)/target/debug/litgraph" LITIGATE_BIN="$(cd ../.. && pwd)/target/debug/litigate" npm test
 
@@ -217,7 +206,7 @@ nix-check:
 
 # The single CI entry point: fast, deterministic gates only. Coverage,
 # audit, and deny hit the network/build cache so they're last.
-ci: fmt-check lint lit-sync-check ts-gen-check test ts-test doctest cov cov-litigate audit deny
+ci: fmt-check lint lit-sync-check test ts-test doctest cov cov-litigate audit deny
     @echo "ci: all gates passed"
 
 clean:
@@ -230,66 +219,76 @@ clean:
 lit-check *ARGS='--profile strict lit cases':
     cargo run -q -p litigate-cli -- --format human check {{ARGS}}
 
-# The generated repository files (DESIGN §11.4, SPEC §9.4): every
-# packs/*.json (and packs/links.json) is built from these lit/ packages,
-# every scenarios/*.json from these cases/ matters. lit/core and
-# lit/examples are library/teaching packages and emit no pack; the
-# hand-authored clock library (packs/clock/*.json other than a generated
-# pack's own fragment) and packs/*-SOURCES-NOTES.md are not generated.
-# `--pack-file ID=STEM` keeps a legacy file name where it is not the id.
-lit_sync_inputs := "lit/cafc lit/cofc lit/frap lit/frcp lit/frcrimp lit/itc lit/mpep lit/ptab lit/ttab lit/links cases/cofc-1498-patent-case.case cases/cofc-bid-protest.case cases/frcp-civil-case.case cases/ptab-ipr-defense.case cases/ttab-opposition-applicant-defense.case"
-lit_sync_names := "--pack-file cafc=cafc-federal-circuit --pack-file cofc=cofc-court-of-federal-claims"
+# The generated files (DESIGN §11.4, SPEC §9.4): every pack, links.json,
+# generated clock fragment and named scenario is built from lit/ and cases/
+# with the arguments in crates/litgraph-packs/build.args. They are build
+# outputs, never committed: crates/litgraph-packs builds and embeds them at
+# compile time, so parallel lit/ changes cannot conflict on them. Only the
+# Lit.lock files are committed (they merge through the litlock driver).
+lit_build_args := "crates/litgraph-packs/build.args"
+# Where `lit-sync` writes the build for inspection (`--packs-dir`,
+# `--scenarios-dir`, `litigate diff`).
+lit_build_dir := "target/lit-build"
 
-# Regenerate every committed Lit.lock, then packs/*.json, packs/links.json,
-# generated packs/clock/ fragments and scenarios/*.json from lit/ and
-# cases/. Never hand-edit those files; edit the source and run this. Run
-# it after a merge or rebase touching lit/: the Lit.lock merge driver
-# leaves a package both sides changed unmerged (L1007) until it does.
+# Regenerate every committed Lit.lock, then build packs/, packs/links.json,
+# generated packs/clock/ fragments and scenarios/ from lit/ and cases/ into
+# target/lit-build/ (the hand-authored packs/clock/*.json copied beside
+# them, as litgraph-packs embeds them). Run it after a merge or rebase
+# touching lit/: the Lit.lock merge driver leaves a package both sides
+# changed unmerged (L1007) until it does.
 lit-sync: lit-merge-driver
     #!/usr/bin/env bash
     set -euo pipefail
-    out="$(mktemp -d)"
-    trap 'rm -rf "$out"' EXIT
+    out="{{lit_build_dir}}"
     lit=(cargo run -q -p litigate-cli -- --format human)
     for lockfile in lit/*/Lit.lock; do
       "${lit[@]}" lock "${lockfile%/Lit.lock}" > /dev/null
     done
     "${lit[@]}" lock cases > /dev/null
-    "${lit[@]}" build {{lit_sync_inputs}} {{lit_sync_names}} --out "$out" > /dev/null \
-      || "${lit[@]}" build {{lit_sync_inputs}} {{lit_sync_names}} --out "$out"
-    rm -f packs/*.json scenarios/*.json
-    for f in "$out"/packs/*.json "$out"/packs/clock/*.json "$out"/scenarios/*.json; do
-      case "$f" in *.map.json) continue ;; esac
-      cp "$f" "${f#"$out"/}"
-    done
-    echo "lit-sync: regenerated Lit.lock files, packs/ and scenarios/ from lit/ and cases/"
+    mapfile -t args < <(grep -v -e '^#' -e '^[[:space:]]*$' {{lit_build_args}})
+    rm -rf "$out"
+    "${lit[@]}" build "${args[@]}" --out "$out" > /dev/null \
+      || "${lit[@]}" build "${args[@]}" --out "$out"
+    find "$out" -name '*.map.json' -delete
+    rm -rf "$out/litigatables"
+    cp -n packs/clock/*.json "$out/packs/clock/"
+    echo "lit-sync: regenerated Lit.lock files; built packs/ and scenarios/ into $out"
 
-# CI gate: regenerate, then fail if any generated file (a Lit.lock
-# included) differs from (or is missing from) what is committed.
+# CI gate: regenerate, then fail if a Lit.lock differs from (or is missing
+# from) what is committed, or if a generated file is tracked again.
 lit-sync-check: lit-sync
     #!/usr/bin/env bash
     set -euo pipefail
-    stale="$(git status --porcelain --untracked-files=all -- packs scenarios '*Lit.lock')"
+    stale="$(git status --porcelain --untracked-files=all -- '*Lit.lock')"
     if [ -n "$stale" ]; then
       echo "$stale" >&2
-      git --no-pager diff --stat -- packs scenarios '*Lit.lock' >&2
-      echo "lit-sync-check: packs/, scenarios/ or a Lit.lock is stale; run \`just lit-sync\` and commit the result" >&2
+      git --no-pager diff --stat -- '*Lit.lock' >&2
+      echo "lit-sync-check: a Lit.lock is stale; run \`just lit-sync\` and commit the result" >&2
       exit 1
     fi
-    echo "lit-sync-check: generated files are up to date"
+    # crates/litgraph-packs refuses a generated clock fragment committed
+    # under packs/clock/, so only these two places can hold one.
+    tracked="$(git ls-files -- ':(glob)packs/*.json' scenarios)"
+    if [ -n "$tracked" ]; then
+      echo "$tracked" >&2
+      echo "lit-sync-check: generated files are committed; \`git rm --cached\` them (crates/litgraph-packs builds them)" >&2
+      exit 1
+    fi
+    echo "lit-sync-check: Lit.lock files are up to date; no generated file is committed"
 
-# Semantic diff (SPEC §8.6) of a fresh build against the committed files,
-# without writing: what `lit-sync` would change, by JSON pointer.
+# Semantic diff (SPEC §8.6) of a fresh build against the last `lit-sync`
+# build in target/lit-build/, without writing: what changed since then.
 lit-diff:
     #!/usr/bin/env bash
     set -euo pipefail
     out="$(mktemp -d)"
     trap 'rm -rf "$out"' EXIT
     lit=(cargo run -q -p litigate-cli -- --format human)
-    "${lit[@]}" build {{lit_sync_inputs}} {{lit_sync_names}} --out "$out" > /dev/null \
-      || "${lit[@]}" build {{lit_sync_inputs}} {{lit_sync_names}} --out "$out"
-    "${lit[@]}" diff "$out" packs --check
-    "${lit[@]}" diff "$out" scenarios --check
+    mapfile -t args < <(grep -v -e '^#' -e '^[[:space:]]*$' {{lit_build_args}})
+    "${lit[@]}" build "${args[@]}" --out "$out" > /dev/null \
+      || "${lit[@]}" build "${args[@]}" --out "$out"
+    "${lit[@]}" diff "$out/packs" "{{lit_build_dir}}/packs" --check
+    "${lit[@]}" diff "$out/scenarios" "{{lit_build_dir}}/scenarios" --check
 
 lit-test:
     cargo nextest run -p litigate-base -p litigate-syntax -p litigate-sema -p litigate-verify -p litigate-lower -p litigate-import -p litigate-cli -p litigate-lsp -p tree-sitter-litigate

@@ -10,7 +10,11 @@ expression: "json!({\n    \"days\": clash(DayUnit::Calendar), \"court days\": cl
       "count": 1,
       "examples": [
         "pkgs/demo/main.lit:36:1: L5005 at `served`, duty `answer-period` closes on or after its trigger but duty `reply-period` closes 3 days before the same trigger, so no date meets both"
-      ]
+      ],
+      "evidence": {
+        "checked": 2,
+        "subjects": "nodes"
+      }
     },
     "accepted": false,
     "diagnostics": [
@@ -57,7 +61,11 @@ expression: "json!({\n    \"days\": clash(DayUnit::Calendar), \"court days\": cl
       "count": 1,
       "examples": [
         "pkgs/demo/main.lit:36:1: L5005 at `served`, duty `answer-period` closes on or after its trigger but duty `reply-period` closes 3 court days before the same trigger, so no date meets both"
-      ]
+      ],
+      "evidence": {
+        "checked": 2,
+        "subjects": "nodes"
+      }
     },
     "accepted": false,
     "diagnostics": [
@@ -104,7 +112,11 @@ expression: "json!({\n    \"days\": clash(DayUnit::Calendar), \"court days\": cl
       "count": 1,
       "examples": [
         "pkgs/demo/main.lit:36:1: L5005 at `served`, duty `answer-period` closes on or after its trigger but duty `reply-period` closes 3 business days before the same trigger, so no date meets both"
-      ]
+      ],
+      "evidence": {
+        "checked": 2,
+        "subjects": "nodes"
+      }
     },
     "accepted": false,
     "diagnostics": [

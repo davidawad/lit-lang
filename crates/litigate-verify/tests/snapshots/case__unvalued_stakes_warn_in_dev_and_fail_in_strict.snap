@@ -10,7 +10,11 @@ expression: "json!({ \"dev\": summary(&dev), \"strict\": summary(&strict) })"
       "count": 1,
       "examples": [
         "cases/examples/acme.case:25:55: L4004 stake `frcp-rule12-example::dismissed` is `unvalued`"
-      ]
+      ],
+      "evidence": {
+        "checked": 2,
+        "subjects": "events"
+      }
     },
     "accepted": true,
     "posture": "frcp-rule12-example::mtd-ruling",
@@ -25,7 +29,11 @@ expression: "json!({ \"dev\": summary(&dev), \"strict\": summary(&strict) })"
       "count": 1,
       "examples": [
         "cases/examples/acme.case:25:55: L4004 terminal `frcp-rule12-example::dismissed` is `unvalued`, which `strict` does not accept"
-      ]
+      ],
+      "evidence": {
+        "checked": 2,
+        "subjects": "events"
+      }
     },
     "accepted": false,
     "posture": "frcp-rule12-example::mtd-ruling",

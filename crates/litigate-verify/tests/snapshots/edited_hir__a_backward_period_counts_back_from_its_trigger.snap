@@ -10,7 +10,11 @@ expression: "tests_pass(BASE, |p|\n{ deadlines(p).next().expect(\"a deadline\").
     "examples": [
       "pkgs/demo/main.lit:46:10: L5006 expected deadline(answer-period) == 2025-03-24, but it is 2025-02-10",
       "pkgs/demo/main.lit:52:10: L5006 expected deadline(answer-period) == 2025-03-27, but it is 2025-02-10"
-    ]
+    ],
+    "evidence": {
+      "checked": 2,
+      "subjects": "inline tests"
+    }
   },
   "accepted": false,
   "diagnostics": [

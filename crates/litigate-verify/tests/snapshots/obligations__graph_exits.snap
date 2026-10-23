@@ -8,7 +8,11 @@ expression: "pair(Obligation::GraphExits, &\none(&onward(\"state next: \\\"Next\
       "name": "graph-exits",
       "status": "passed",
       "count": 0,
-      "examples": []
+      "examples": [],
+      "evidence": {
+        "checked": 2,
+        "subjects": "non-terminal nodes"
+      }
     },
     "accepted": true,
     "diagnostics": []
@@ -20,7 +24,11 @@ expression: "pair(Obligation::GraphExits, &\none(&onward(\"state next: \\\"Next\
       "count": 1,
       "examples": [
         "pkgs/demo/main.lit:56:1: L5004 `next` is not a terminal and has no outgoing edge"
-      ]
+      ],
+      "evidence": {
+        "checked": 2,
+        "subjects": "non-terminal nodes"
+      }
     },
     "accepted": false,
     "diagnostics": [

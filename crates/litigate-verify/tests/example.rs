@@ -40,6 +40,12 @@ fn dev_reports_the_three_holes_and_accepts() {
         tests.map(|f| (f.status, f.count)),
         Some((ObligationStatus::Passed, 0))
     );
+    // V3: every pass states what it was checked over.
+    for f in &dev.verification.report.obligations {
+        if f.status == ObligationStatus::Passed {
+            assert!(f.evidence.is_some(), "{f:?}");
+        }
+    }
     insta::assert_json_snapshot!(dev.verification.report);
 }
 

@@ -21,6 +21,7 @@ mod cite;
 mod context;
 mod deadline;
 mod diag;
+mod evidence;
 mod graph;
 mod lints;
 mod matter;
@@ -28,7 +29,9 @@ mod report;
 mod sema;
 
 pub use matter::{verify_case, verify_case_source, VerifiedCase};
-pub use report::{Finding, Obligation, ObligationStatus, VerificationReport, MAX_EXAMPLES};
+pub use report::{
+    Evidence, Finding, Obligation, ObligationStatus, VerificationReport, MAX_EXAMPLES,
+};
 pub use sema::obligation_of;
 
 pub(crate) use context::{same_expr, Context};
@@ -125,6 +128,7 @@ pub fn verify_package(
         .unwrap_or(&input.package.manifest.in_force.known_at);
     let mut b = Builder::default();
     sema::aggregate(&mut b, &input.check.diagnostics);
+    evidence::hir(&mut b, &cx);
     let mut out = Vec::new();
     let mut record = |b: &mut Builder, name: O, found: Vec<Diagnostic>| {
         out.extend(found.iter().cloned());
@@ -133,6 +137,8 @@ pub fn verify_package(
     match input.lowered.map(|l| &l.document) {
         Ok(Document::Pack(pack)) => {
             let reached = graph::reached(pack);
+            evidence::graph(&mut b, &cx, reached.len());
+            evidence::tests(&mut b, &cx);
             record(&mut b, O::GraphExits, graph::exits(&cx, pack));
             record(
                 &mut b,
@@ -156,12 +162,14 @@ pub fn verify_package(
             ] {
                 b.skip(name, "a links package has no graph or sources of its own; checked where it composes packs");
             }
+            evidence::tests(&mut b, &cx);
             record(&mut b, O::TestsPass, assertions::failures(&cx, known_at));
         }
         Err(lowering) => {
             sema::aggregate(&mut b, lowering);
             let every: std::collections::BTreeSet<String> =
                 cx.nodes().map(|n| n.meta.id.clone()).collect();
+            evidence::deadline(&mut b, every.len());
             record(
                 &mut b,
                 O::DeadlineSatisfiable,
@@ -178,6 +186,7 @@ pub fn verify_package(
         }
     }
     record(&mut b, O::DistExact, graph::empty_distributions(&cx));
+    evidence::holes(&mut b, input.check.holes.len());
     record(&mut b, O::Holes, lints::holes(&input.check.holes, profile));
     record(&mut b, O::RuleWithoutTest, lints::untested(&cx));
     b.skip(
@@ -195,6 +204,7 @@ pub fn verify_unchecked(check: &PackageCheck, profile: Profile) -> Verification 
     let mut b = Builder::default();
     sema::aggregate(&mut b, &check.diagnostics);
     let holes = lints::holes(&check.holes, profile);
+    evidence::holes(&mut b, check.holes.len());
     b.check(O::Holes, holes.clone());
     for name in O::ALL {
         b.skip(name, "not checked: the package has errors");

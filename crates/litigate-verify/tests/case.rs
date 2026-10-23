@@ -191,8 +191,13 @@ fn a_case_report_skips_package_obligations() {
         .filter(|f| f.status == ObligationStatus::Skipped)
         .count();
     assert_eq!(skipped + passed.len(), Obligation::ALL.len());
-    assert!(passed.contains(&Obligation::CaseReplay));
-    assert!(passed.contains(&Obligation::WellTyped));
+    // A matter's own checks pass on evidence; sema obligations of the
+    // packages it uses are not passed again by the absence of findings.
+    assert_eq!(passed, [Obligation::WellTyped, Obligation::CaseReplay]);
+    for name in passed {
+        let evidence = report.finding(name).and_then(|f| f.evidence.clone());
+        assert!(evidence.is_some_and(|e| e.checked > 0), "{name:?}");
+    }
     assert_eq!(
         status(&v, Obligation::GraphReachable),
         Some(ObligationStatus::Skipped)

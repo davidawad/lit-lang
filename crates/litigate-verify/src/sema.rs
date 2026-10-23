@@ -3,17 +3,6 @@
 use crate::report::{Builder, Obligation};
 use litigate_base::{Diagnostic, DiagnosticCode as C};
 
-/// Obligations whose result comes entirely from sema diagnostics.
-pub(crate) const SEMA: [Obligation; 7] = [
-    Obligation::WellTyped,
-    Obligation::EffectiveDisjoint,
-    Obligation::EffectiveCovered,
-    Obligation::PrecedenceAcyclic,
-    Obligation::DelegationRespected,
-    Obligation::ExceptionsOrdered,
-    Obligation::DistExact,
-];
-
 /// The obligation `code` violates, or `None` for a lint with no
 /// obligation (anonymous edges, unused declarations, formatting).
 ///
@@ -44,12 +33,10 @@ pub fn obligation_of(code: C) -> Option<Obligation> {
     })
 }
 
-/// Records every diagnostic against its obligation, and a clean result for
-/// each sema obligation that has none.
+/// Records every diagnostic against its obligation. A sema obligation with
+/// none passes only on the evidence `evidence::hir` records from the HIR;
+/// without HIR it is skipped, never passed by the absence of diagnostics.
 pub(crate) fn aggregate(builder: &mut Builder, diagnostics: &[Diagnostic]) {
-    for obligation in SEMA {
-        builder.check(obligation, Vec::new());
-    }
     for d in diagnostics {
         if let Some(obligation) = obligation_of(d.code) {
             builder.check(obligation, vec![d.clone()]);

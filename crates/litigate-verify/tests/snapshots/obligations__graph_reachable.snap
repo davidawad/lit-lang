@@ -8,7 +8,11 @@ expression: "pair(Obligation::GraphReachable, &\none(&with(\"state island: \\\"I
       "name": "graph-reachable",
       "status": "passed",
       "count": 0,
-      "examples": []
+      "examples": [],
+      "evidence": {
+        "checked": 4,
+        "subjects": "nodes"
+      }
     },
     "accepted": true,
     "diagnostics": []
@@ -21,7 +25,11 @@ expression: "pair(Obligation::GraphReachable, &\none(&with(\"state island: \\\"I
       "examples": [
         "pkgs/demo/main.lit:55:1: L5003 `island` is not reachable from start `served` or any `entry` node",
         "pkgs/demo/main.lit:56:1: L5003 `lone` is not reachable from start `served` or any `entry` node"
-      ]
+      ],
+      "evidence": {
+        "checked": 4,
+        "subjects": "nodes"
+      }
     },
     "accepted": false,
     "diagnostics": [

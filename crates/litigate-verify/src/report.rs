@@ -80,6 +80,17 @@ pub enum ObligationStatus {
     Skipped,
 }
 
+/// What an obligation was checked over: the positive evidence its result
+/// rests on. An obligation never passes for want of diagnostics alone; one
+/// that recorded no evidence and found nothing is skipped.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Evidence {
+    /// How many subjects the check covered (zero: it ran over none).
+    pub checked: usize,
+    /// What the subjects are, e.g. `version sets` or `nodes`.
+    pub subjects: String,
+}
+
 /// Evidence for one named obligation.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Finding {
@@ -91,6 +102,9 @@ pub struct Finding {
     pub count: usize,
     /// At most [`MAX_EXAMPLES`] examples, `file:line:col: CODE message`.
     pub examples: Vec<String>,
+    /// What the check covered; present on every passed finding.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub evidence: Option<Evidence>,
 }
 
 /// Results embedded in every litigatable.
@@ -122,18 +136,32 @@ impl VerificationReport {
 const NOT_APPLICABLE: &str = "not applicable to this artifact";
 
 /// Accumulates outcomes into a report. A checked obligation's findings
-/// merge across checks and override any skip, whichever came first; an
-/// obligation only skipped keeps its first reason; one never recorded is
+/// and evidence merge across checks and override any skip, whichever came
+/// first; an obligation only skipped, or checked with neither a finding
+/// nor evidence, keeps its first skip reason; one never recorded is
 /// skipped as not applicable.
 #[derive(Debug, Default)]
 pub(crate) struct Builder {
     checked: BTreeMap<Obligation, Vec<Diagnostic>>,
+    evidence: BTreeMap<Obligation, Evidence>,
     skipped: BTreeMap<Obligation, String>,
 }
 
 impl Builder {
     pub fn check(&mut self, name: Obligation, diagnostics: Vec<Diagnostic>) {
         self.checked.entry(name).or_default().extend(diagnostics);
+    }
+
+    /// Records that `name` was checked over `checked` more `subjects`.
+    pub fn evidence(&mut self, name: Obligation, checked: usize, subjects: &str) {
+        self.checked.entry(name).or_default();
+        self.evidence
+            .entry(name)
+            .or_insert_with(|| Evidence {
+                checked: 0,
+                subjects: subjects.to_owned(),
+            })
+            .checked += checked;
     }
 
     pub fn skip(&mut self, name: Obligation, reason: &str) {
@@ -150,9 +178,13 @@ impl Builder {
                     .skipped
                     .remove(&name)
                     .unwrap_or(NOT_APPLICABLE.to_owned());
-                self.checked
-                    .remove(&name)
-                    .map_or_else(|| skipped(name, reason), |found| checked(name, &found))
+                let evidence = self.evidence.remove(&name);
+                match self.checked.remove(&name) {
+                    Some(found) if !found.is_empty() || evidence.is_some() => {
+                        checked(name, &found, evidence)
+                    }
+                    _ => skipped(name, reason),
+                }
             })
             .collect();
         VerificationReport {
@@ -163,7 +195,7 @@ impl Builder {
 }
 
 /// The finding of an obligation that ran and found `found`.
-fn checked(name: Obligation, found: &[Diagnostic]) -> Finding {
+fn checked(name: Obligation, found: &[Diagnostic], evidence: Option<Evidence>) -> Finding {
     let mut sorted: Vec<&Diagnostic> = found.iter().collect();
     sorted.sort_by(|a, b| crate::diag::order(a, b));
     let status = if found.iter().any(|d| d.severity == Severity::Error) {
@@ -178,6 +210,7 @@ fn checked(name: Obligation, found: &[Diagnostic]) -> Finding {
         status,
         count: found.len(),
         examples: sorted.into_iter().take(MAX_EXAMPLES).map(example).collect(),
+        evidence,
     }
 }
 
@@ -187,6 +220,7 @@ fn skipped(name: Obligation, reason: String) -> Finding {
         status: ObligationStatus::Skipped,
         count: 0,
         examples: vec![reason],
+        evidence: None,
     }
 }
 
@@ -238,13 +272,48 @@ mod tests {
     fn a_check_replaces_an_earlier_skip_and_a_later_skip_is_ignored() {
         let mut b = Builder::default();
         b.skip(Obligation::Holes, "first");
-        b.check(Obligation::Holes, Vec::new());
+        b.evidence(Obligation::Holes, 0, "holes");
         b.skip(Obligation::Holes, "second");
         assert_eq!(status(b, Obligation::Holes), Some(ObligationStatus::Passed));
         let mut b = Builder::default();
-        b.check(Obligation::Holes, Vec::new());
+        b.evidence(Obligation::Holes, 2, "holes");
         b.skip(Obligation::Holes, "after");
         assert_eq!(status(b, Obligation::Holes), Some(ObligationStatus::Passed));
+    }
+
+    #[test]
+    fn a_pass_needs_evidence_and_evidence_sums() {
+        let mut b = Builder::default();
+        b.check(Obligation::WellTyped, Vec::new());
+        b.skip(Obligation::WellTyped, "not checked: the package has errors");
+        b.evidence(Obligation::DistExact, 2, "chance nodes");
+        b.evidence(Obligation::DistExact, 3, "chance nodes");
+        b.check(Obligation::DistExact, Vec::new());
+        let report = b.finish(Profile::Dev);
+        let typed = report.finding(Obligation::WellTyped);
+        assert_eq!(
+            typed.map(|f| (f.status, f.examples.clone(), f.evidence.clone())),
+            Some((
+                ObligationStatus::Skipped,
+                vec!["not checked: the package has errors".to_owned()],
+                None
+            ))
+        );
+        let dist = report.finding(Obligation::DistExact);
+        assert_eq!(
+            dist.map(|f| (f.status, f.evidence.clone())),
+            Some((
+                ObligationStatus::Passed,
+                Some(Evidence {
+                    checked: 5,
+                    subjects: "chance nodes".into()
+                })
+            ))
+        );
+        let value = serde_json::to_value(dist).unwrap();
+        assert_eq!(value["evidence"]["checked"], 5);
+        let typed = serde_json::to_value(typed).unwrap();
+        assert!(typed.get("evidence").is_none());
     }
 
     #[test]

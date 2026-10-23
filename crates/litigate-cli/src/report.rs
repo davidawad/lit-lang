@@ -58,6 +58,7 @@ pub fn findings_of(diagnostics: &[Diagnostic]) -> Vec<Finding> {
                     .take(MAX_EXAMPLES)
                     .map(|d| example(d))
                     .collect(),
+                evidence: None,
             })
         })
         .collect()
@@ -97,8 +98,16 @@ pub fn merge(parts: &[&[Finding]]) -> Vec<Finding> {
                     status: S::Skipped,
                     count: 0,
                     examples: reasons,
+                    evidence: None,
                 };
             };
+            let evidence = ran
+                .iter()
+                .filter_map(|f| f.evidence.clone())
+                .reduce(|mut all, e| {
+                    all.checked += e.checked;
+                    all
+                });
             Finding {
                 name,
                 status,
@@ -108,6 +117,7 @@ pub fn merge(parts: &[&[Finding]]) -> Vec<Finding> {
                     .flat_map(|f| f.examples.iter().cloned())
                     .take(MAX_EXAMPLES)
                     .collect(),
+                evidence,
             }
         })
         .collect()
@@ -117,6 +127,7 @@ pub fn merge(parts: &[&[Finding]]) -> Vec<Finding> {
 mod tests {
     use super::*;
     use litigate_base::{DiagnosticCode as C, Span};
+    use litigate_verify::Evidence;
     use proptest::prelude::*;
 
     fn status() -> impl Strategy<Value = S> {
@@ -140,6 +151,10 @@ mod tests {
                         status,
                         count,
                         examples: (0..count.max(1)).map(|i| format!("{i}")).collect(),
+                        evidence: (status != S::Skipped).then(|| Evidence {
+                            checked: count + 1,
+                            subjects: "subjects".into(),
+                        }),
                     }
                 })
                 .collect()
@@ -160,6 +175,9 @@ mod tests {
                 prop_assert_eq!(Some(f.status), worst.or(Some(S::Skipped)));
                 prop_assert_eq!(f.count, reports.iter().map(|r| r[i].count).sum::<usize>());
                 prop_assert!(f.examples.len() <= MAX_EXAMPLES.max(reports.len()));
+                let ran: Vec<&Finding> = reports.iter().map(|r| &r[i]).filter(|r| r.status != S::Skipped).collect();
+                let checked = ran.iter().map(|r| r.count + 1).sum::<usize>();
+                prop_assert_eq!(f.evidence.as_ref().map(|e| e.checked), (!ran.is_empty()).then_some(checked));
             }
         }
     }

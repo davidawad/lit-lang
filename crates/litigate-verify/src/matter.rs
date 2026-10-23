@@ -75,6 +75,7 @@ fn verified(checked: CheckedCase, spans: &CaseSpans, profile: Profile) -> Verifi
     sema::aggregate(&mut b, &checked.diagnostics);
     let added = if let Some(case) = &checked.case {
         let added = unvalued(case, spans, profile);
+        crate::evidence::replay(&mut b, case);
         b.check(O::CaseReplay, added.clone());
         added
     } else {

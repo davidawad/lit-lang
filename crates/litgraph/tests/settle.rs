@@ -302,7 +302,7 @@ fn rule68_shifts_post_offer_costs_on_a_judgment_not_more_favorable() {
     // A custom eligibility expression sees the offer as `offer`.
     let op = json!({ "op": "settle", "rule68": { "offer": 4000, "costs": 500, "eligible": "payoff <= offer" } });
     let (r, _) = ok(&pack, &plaintiff_scenario(), &op);
-    assert_eq!(r["rule68"]["triggered"], json!(["ct::mid", "ct::lose"]));
+    assert_eq!(r["rule68"]["triggered"], json!(["ct::lose", "ct::mid"]));
 }
 
 #[test]

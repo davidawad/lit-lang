@@ -124,6 +124,7 @@ impl Graph {
             }
         }
         g.add_links(&lf.links)?;
+        g.canonicalize();
         if !opts.no_flags
             && g.edges.iter().any(|e| {
                 !e.sets.is_empty()
@@ -291,6 +292,45 @@ impl Graph {
             forbids: e.forbids.clone(),
         });
         Ok(())
+    }
+
+    /// Canonical order (SPEC §4.1, §8.1): nodes by qualified id, and each
+    /// node's out-edges in its pack's edge order, then its links by id. The
+    /// order the packs are given in, a pack's node order and a links file's
+    /// link order are then unobservable: renaming a module file or listing
+    /// packs differently leaves every analysis bit-identical.
+    fn canonicalize(&mut self) {
+        let mut order: Vec<NodeIx> = (0..self.nodes.len()).collect();
+        order.sort_by(|&a, &b| self.nodes[a].id.cmp(&self.nodes[b].id));
+        let mut rank = vec![0; order.len()];
+        for (new, &old) in order.iter().enumerate() {
+            rank[old] = new;
+        }
+        self.nodes.sort_by(|a, b| a.id.cmp(&b.id));
+        for e in &mut self.edges {
+            e.from = rank[e.from];
+            e.to = rank[e.to];
+        }
+        self.edges.sort_by(|a, b| {
+            let links = if a.link && b.link {
+                a.id.cmp(&b.id)
+            } else {
+                a.link.cmp(&b.link)
+            };
+            a.from.cmp(&b.from).then(links)
+        });
+        self.node_ix = self
+            .nodes
+            .iter()
+            .enumerate()
+            .map(|(i, n)| (n.id.clone(), i))
+            .collect();
+        self.edge_ix = self
+            .edges
+            .iter()
+            .enumerate()
+            .map(|(i, e)| (e.id.clone(), i))
+            .collect();
     }
 
     fn rebuild_adjacency(&mut self) {

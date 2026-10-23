@@ -395,8 +395,11 @@ package's modules are all `*.lit` files under the directory holding
 `Lit.toml`. Module names are unique within a package (L1001) and are
 independent of file paths. They never affect node ids. **Module order** is
 the order of the module files' package-relative POSIX paths; it orders
-`Pack.groups`, `Pack.nodes`, and edges (§8.1). Node order is observable
-(Monte Carlo analyses visit nodes in order), so it is part of the source.
+`Pack.groups`, `Pack.nodes`, and edges (§8.1). It fixes the emitted JSON
+only: the engine visits nodes in canonical (qualified id) order, a node's
+edges in declaration order and its links by id, so renaming or reordering
+module files, or listing packs in another order, leaves every analysis
+bit-identical.
 
 ### 4.2 `Lit.lock` and digests
 
@@ -1098,7 +1101,8 @@ version in force then, or displaced by a claimant, is absent, and
 overlapping versions, or an edge or `start` naming an absent node, are
 L3007. A reference resolves to the selected claimant; unordered claimants
 are L3003. The default is the package `known_at` date for both. Node order is
-module order (the module files' paths, §4.1), then source order.
+module order (the module files' paths, §4.1), then source order; the
+engine does not observe it (§4.1).
 
 A cite hole `cite ?("text")` lowers to `"text"` exactly, so imported
 citations stay lossless; a cite hole without a reason lowers to an absent

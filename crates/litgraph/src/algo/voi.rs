@@ -60,7 +60,7 @@ pub struct VoiOptions {
     pub seed: u64,
     /// Rows (ranked by outcome EVPI) that also get the parameter EVPPI.
     pub top: usize,
-    /// Cap on uncertain nodes screened (in graph order, reachable from start).
+    /// Cap on uncertain nodes screened (in canonical id order, reachable from start).
     pub max_nodes: usize,
 }
 

@@ -38,7 +38,7 @@ construct lowers to each field below.
 | `roles` | object | **v2** actor → role mapping, see below |
 | `sources` | `[{id,title,url?,path?,sha256?,asOf?}]` | **v2** primary sources the pack was authored from. `cite`/`authority` strings should be traceable to one of these. `path` is **repo-relative only** (e.g. a sibling pack file) — never a local/absolute filesystem path; cite the official `url` for everything else. `litgraph lint` errors (`local-source-path`) on an absolute `path` |
 | `citeSyntax` | object | **v3** the citation syntax this pack's `cite`/`authority` strings use: rule-body prefixes and pack-private shorthands, see [Citation syntax](#citation-syntax-v3). The engine itself recognizes only U.S.C., C.F.R. and case citations |
-| `nodes`, `edges` | arrays | |
+| `nodes`, `edges` | arrays | Array order of `nodes` is not observable: the engine visits nodes in canonical (qualified id) order, whatever order packs are listed in, and a node's out-edges in this pack's `edges` order, then its `links.json` links by id |
 
 ## Nodes
 

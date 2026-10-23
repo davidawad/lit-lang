@@ -315,3 +315,91 @@ async fn litgraph_scenarios_env_var_overrides_the_embedded_scenarios() -> Result
     client.cancel().await?;
     Ok(())
 }
+
+#[tokio::test]
+async fn litigate_tools_are_listed_and_run_the_authoring_toolchain() -> Result<()> {
+    // Paths resolve against the server's working directory: the repo root.
+    let root = repo_dir("lit").join("..");
+    let client = connect_with(|cmd| {
+        cmd.current_dir(&root);
+    })
+    .await?;
+    let tools = client.list_all_tools().await?;
+    let names: Vec<&str> = tools.iter().map(|t| t.name.as_ref()).collect();
+    for expected in [
+        "litigate_check",
+        "litigate_build",
+        "litigate_where",
+        "litigate_explain",
+        "litigate_describe",
+    ] {
+        assert!(
+            names.contains(&expected),
+            "missing `{expected}` in {names:?}"
+        );
+    }
+
+    let call = |name: &'static str, args: Value| {
+        client.call_tool(CallToolRequestParams::new(name).with_arguments(object(args)))
+    };
+    let describe = call("litigate_describe", json!({})).await?;
+    let envelope = structured(&describe)?;
+    assert_eq!(envelope["op"], json!("describe"));
+    assert!(envelope["result"]["diagnostic_codes"].is_array());
+
+    let check = call("litigate_check", json!({ "paths": ["lit/examples"] })).await?;
+    let envelope = structured(&check)?;
+    assert_eq!(envelope["ok"], json!(true), "envelope: {envelope}");
+    assert_ne!(check.is_error, Some(true));
+
+    let found = call(
+        "litigate_where",
+        json!({ "id": "answer-duty", "paths": ["lit/examples"] }),
+    )
+    .await?;
+    let envelope = structured(&found)?;
+    assert_eq!(
+        envelope["result"]["declaration_span"]["file"],
+        json!("lit/examples/rule12.lit"),
+        "envelope: {envelope}"
+    );
+
+    let bad = call("litigate_check", json!({ "paths": ["lit"], "bogus": 1 })).await?;
+    assert_eq!(bad.is_error, Some(true));
+    let envelope = structured(&bad)?;
+    assert_eq!(envelope["ok"], json!(false));
+    if !envelope["error"]["message"]
+        .as_str()
+        .is_some_and(|m| m.contains("unknown field `bogus`"))
+    {
+        bail!("unexpected error envelope: {envelope}");
+    }
+    client.cancel().await?;
+    Ok(())
+}
+
+#[tokio::test]
+async fn litigate_build_writes_the_lowered_documents() -> Result<()> {
+    let root = repo_dir("lit").join("..");
+    let out = std::env::temp_dir().join(format!("litgraph-mcp-build-{}", std::process::id()));
+    let client = connect_with(|cmd| {
+        cmd.current_dir(&root);
+    })
+    .await?;
+    let built = client
+        .call_tool(
+            CallToolRequestParams::new("litigate_build").with_arguments(object(json!({
+                "paths": ["lit/examples"],
+                "out": out.display().to_string(),
+                "pack_files": ["frcp-rule12-example=rule12"],
+            }))),
+        )
+        .await?;
+    let envelope = structured(&built)?;
+    assert_eq!(envelope["ok"], json!(true), "envelope: {envelope}");
+    assert!(out.join("packs/rule12.json").is_file());
+    assert!(!out.join("packs/frcp-rule12-example.json").exists());
+    std::fs::remove_dir_all(&out)?;
+    client.cancel().await?;
+    Ok(())
+}

@@ -56,6 +56,19 @@ jobs:
           path: target/nextest/ci/junit.xml
           if-no-files-found: ignore
 
+  # packs/*.json and scenarios/*.json are generated from lit/ and cases/
+  # (DESIGN §11.4): regenerate them and fail when the committed files differ.
+  lit-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: just
+      - run: just lit-sync-check
+
   tree-sitter:
     runs-on: ubuntu-latest
     steps:

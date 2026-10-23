@@ -7,24 +7,29 @@ use litgraph::model::{
     local_edge_ids, CiteCode, CiteRuleForm, CiteShorthand, CiteSyntax, Group, NodeKind, Pack,
     RawEdge, RawNode, Role, Source,
 };
-use litigate_base::DiagnosticCode as C;
+use litigate_base::{DiagnosticCode as C, Span};
 use litigate_sema::hir::{self, ActorRole, Authored, Declaration};
 use std::collections::BTreeMap;
 
 /// Modules in module order (SPEC §4.1): their files' package-relative
-/// paths, which fix node order. A module without spanned declarations
-/// sorts by name; it contributes no nodes.
+/// paths, which fix node and link order. A module's file is that of its
+/// first spanned declaration; a link carries its span on its edge. A
+/// module with none (only instances) sorts by name; it contributes
+/// nothing ordered.
 pub(crate) fn module_order(pkg: &hir::Package) -> Vec<&hir::Module> {
-    let file = |m: &hir::Module| {
-        m.declarations
-            .iter()
-            .find_map(|d| litigate_sema::temporal::world::meta_of(d)?.span.clone())
-            .map(|s| s.file.0)
-    };
+    let file = |m: &hir::Module| m.declarations.iter().find_map(span_of).map(|s| s.file.0);
     let mut modules: Vec<(Option<String>, &hir::Module)> =
         pkg.modules.iter().map(|m| (file(m), m)).collect();
     modules.sort_by(|(a, x), (b, y)| a.cmp(b).then_with(|| x.name.cmp(&y.name)));
     modules.into_iter().map(|(_, m)| m).collect()
+}
+
+/// Where `d` is declared: its metadata span, or a link's edge span.
+pub(crate) fn span_of(d: &Declaration) -> Option<Span> {
+    match d {
+        Declaration::Link(l) => l.edge.span.clone(),
+        _ => litigate_sema::temporal::world::meta_of(d)?.span.clone(),
+    }
 }
 
 /// The declarations of `pkg` this build emits, in module then source order.

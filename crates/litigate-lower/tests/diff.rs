@@ -109,6 +109,31 @@ fn links_compare_instances_and_derived_link_ids() {
     assert_eq!(changes[0].id.as_deref(), Some("x@y"));
 }
 
+/// Links have no node list to regroup under: moving a link past one from
+/// another source node is an `order` change (tuq.37).
+#[test]
+fn link_order_across_source_nodes_is_significant() {
+    let a: LinkFile = serde_json::from_value(json!({
+        "links": [
+            {"from": "p::a", "to": "q::b", "label": "one"},
+            {"from": "r::c", "to": "q::b", "label": "two"},
+            {"from": "p::a", "to": "q::d", "label": "three"}
+        ]
+    }))
+    .unwrap_or_default();
+    let mut b = a.clone();
+    b.links.swap(0, 1);
+    let changes = semantic_diff_links(&a, &b);
+    assert_eq!(changes.len(), 1, "{changes:?}");
+    assert_eq!(changes[0].kind, ChangeKind::Order);
+    assert_eq!(changes[0].pointer, "/links/order");
+    assert_eq!(changes[0].id, None);
+    assert_eq!(
+        changes[0].after,
+        Some(json!(["r::c->q::b#0", "p::a->q::b#0", "p::a->q::d#0"]))
+    );
+}
+
 #[test]
 fn json_entry_point_detects_the_document_kind() {
     let text = base().to_string();
@@ -181,5 +206,19 @@ proptest! {
         prop_assert_eq!(changes.len(), 1);
         prop_assert_eq!(changes[0].kind, ChangeKind::Changed);
         prop_assert_eq!(changes[0].id.clone(), Some(b.nodes[i].id.clone()));
+    }
+
+    #[test]
+    fn any_link_permutation_is_reported(n in 2usize..8, seed in any::<prop::sample::Index>()) {
+        let links: Vec<Value> = (0..n)
+            .map(|i| json!({"from": format!("p::n{}", i % 3), "to": format!("q::m{i}"), "label": "l"}))
+            .collect();
+        let a: LinkFile = serde_json::from_value(json!({"links": links})).unwrap_or_default();
+        let mut b = a.clone();
+        b.links.rotate_left(seed.index(n - 1) + 1);
+        let changes = semantic_diff_links(&a, &b);
+        prop_assert_eq!(changes.len(), 1);
+        prop_assert_eq!(changes[0].kind, ChangeKind::Order);
+        prop_assert!(semantic_diff_links(&a, &a).is_empty());
     }
 }

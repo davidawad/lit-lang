@@ -188,10 +188,11 @@ ts-build: wasm ts-install
     cd {{ts_pkg}} && npm run --silent build
 
 # Unit, type-level, and golden tests (every scenarios/*.json through wasm
-# against the native `litgraph` CLI built here).
+# against the native `litgraph` CLI, and `litigate check`/`build` over lit/
+# and cases/ in memory against the native `litigate` CLI, both built here).
 ts-test: ts-build
-    cargo build -q -p litgraph-cli
-    cd {{ts_pkg}} && LITGRAPH_BIN="$(cd ../.. && pwd)/target/debug/litgraph" npm test
+    cargo build -q -p litgraph-cli -p litigate-cli
+    cd {{ts_pkg}} && LITGRAPH_BIN="$(cd ../.. && pwd)/target/debug/litgraph" LITIGATE_BIN="$(cd ../.. && pwd)/target/debug/litigate" npm test
 
 # --- nix ---------------------------------------------------------------
 

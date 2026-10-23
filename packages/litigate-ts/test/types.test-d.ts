@@ -7,7 +7,10 @@ import type {
   ErrorResponse,
   LinkFile,
   Litgraph,
+  Litigate,
   LitigateEnvelope,
+  LitigateResult,
+  LitigateRun,
   NamedScenario,
   OkResponse,
   Op,
@@ -33,6 +36,7 @@ describe("generated types", () => {
     expectTypeOf<Doc<"named-scenario">>().toEqualTypeOf<NamedScenario>();
     expectTypeOf<Doc<"litigate-envelope">>().toEqualTypeOf<LitigateEnvelope>();
     expectTypeOf<Doc<"source-map">>().toEqualTypeOf<SourceMap>();
+    expectTypeOf<Doc<"litigate-run">>().toEqualTypeOf<LitigateRun>();
     expectTypeOf<SchemaKind>().toEqualTypeOf<
       "request" | "response" | "scenario" | "named-scenario" | "pack" | "links" | "calibration" | "clock"
     >();
@@ -85,6 +89,18 @@ describe("client", () => {
     expectTypeOf((lg: Litgraph) => lg.op("simulate", { runs: 10, seed: 1 })).returns.toEqualTypeOf<Response>();
     expectTypeOf<typeof loadNode>().returns.toEqualTypeOf<Litgraph>();
     expectTypeOf<typeof loadWeb>().returns.toEqualTypeOf<Promise<Litgraph>>();
+  });
+
+  it("types litigate check and build", () => {
+    expectTypeOf<Litgraph["litigate"]>().toEqualTypeOf<Litigate>();
+    expectTypeOf<Litigate["check"]>().returns.toEqualTypeOf<LitigateResult>();
+    expectTypeOf<Litigate["build"]>().returns.toEqualTypeOf<LitigateResult>();
+    expectTypeOf<Litigate["run"]>().returns.toEqualTypeOf<LitigateRun>();
+    expectTypeOf<LitigateResult["envelope"]>().toEqualTypeOf<LitigateEnvelope | undefined>();
+    const bad = (lit: Litigate) =>
+      // @ts-expect-error profiles are `dev` or `strict`
+      lit.check([], { profile: "lax" });
+    expectTypeOf(bad).toBeFunction();
   });
 
   it("rejects an unknown op name", () => {

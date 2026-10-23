@@ -11,10 +11,11 @@ import type {
   Response,
   Validation,
 } from "./generated/schemas.js";
+import { Litigate, type LitigateWasm } from "./litigate.js";
 import type { ErrorResponse, OkResponse, OpArgs, OpName, OpOf, SchemaKind, ValidateKind } from "./types.js";
 
 /** The functions crates/litgraph-wasm exports (wasm-bindgen output). */
-export interface LitgraphWasm {
+export interface LitgraphWasm extends LitigateWasm {
   handle(request_json: string): string;
   handle_with_packs(request_json: string, packs_json: string): string;
   validate(doc_json: string, kind?: string | null): string;
@@ -22,7 +23,7 @@ export interface LitgraphWasm {
   describe(): string;
 }
 
-const exported = ["handle", "handle_with_packs", "validate", "schema", "describe"] as const;
+const exported = ["handle", "handle_with_packs", "validate", "schema", "describe", "litigate", "litigate_library"] as const;
 
 /** True when `module` exports every litgraph-wasm function. */
 export function isLitgraphWasm(module: unknown): module is LitgraphWasm {
@@ -87,9 +88,12 @@ export type RequestOptions = Omit<Request, "scenario" | "op">;
 export class Litgraph {
   readonly #wasm: LitgraphWasm;
   readonly #packs: string | undefined;
+  /** `litigate check`/`build` over in-memory files, through the same bindings. */
+  readonly litigate: Litigate;
 
   constructor(wasm: LitgraphWasm, packs?: PackSet) {
     this.#wasm = wasm;
+    this.litigate = new Litigate(wasm);
     this.#packs = packs === undefined ? undefined : JSON.stringify(packFiles(packs));
   }
 

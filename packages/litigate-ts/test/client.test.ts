@@ -5,8 +5,10 @@ import {
   isLitgraphWasm,
   isOk,
   Litgraph,
+  Litigate,
   LitgraphError,
   type LitgraphWasm,
+  type LitigateRun,
   loadNode,
   nodeBindings,
   type Pack,
@@ -41,6 +43,11 @@ function fake(reply: string): LitgraphWasm & { calls: string[][] } {
     validate: answer("validate"),
     schema: answer("schema"),
     describe: answer("describe"),
+    litigate: (args: string, files: string, library: boolean) => {
+      calls.push(["litigate", args, files, String(library)]);
+      return reply;
+    },
+    litigate_library: answer("litigate_library"),
   };
 }
 
@@ -85,6 +92,47 @@ describe("Litgraph over fake bindings", () => {
 
   it("returns describe as a response", () => {
     expect(new Litgraph(fake(JSON.stringify(failed))).describe()).toStrictEqual(failed);
+  });
+});
+
+describe("Litigate over fake bindings", () => {
+  const envelope = { ok: true, op: "build", result: {}, diagnostics: [], provenance: {}, elapsed_ms: 1 };
+  const run: LitigateRun = { code: 0, stdout: `${JSON.stringify(envelope)}\n`, stderr: "", files: { "o/a.json": "{}" } };
+
+  it("passes the CLI's flags and parses the envelope", () => {
+    const wasm = fake(JSON.stringify(run));
+    const lit = new Litgraph(wasm).litigate;
+    const built = lit.build(["lit/frcp"], {
+      files: { "lit/frcp/Lit.toml": "" },
+      library: false,
+      out: "o",
+      packFiles: { cafc: "cafc-federal-circuit" },
+      profile: "strict",
+      asOf: "2025-01-01",
+      knownAt: "2025-02-01",
+      lib: ["lit", "more"],
+    });
+    expect(built).toStrictEqual({ code: 0, stderr: "", files: { "o/a.json": "{}" }, envelope });
+    lit.check(["cases"]);
+    expect(wasm.calls).toStrictEqual([
+      [
+        "litigate",
+        JSON.stringify([
+          "--format", "json", "build", "--out", "o", "--pack-file", "cafc=cafc-federal-circuit",
+          "--profile", "strict", "--as-of", "2025-01-01", "--known-at", "2025-02-01", "--lib", "lit", "--lib", "more",
+          "lit/frcp",
+        ]),
+        JSON.stringify({ "lit/frcp/Lit.toml": "" }),
+        "false",
+      ],
+      ["litigate", JSON.stringify(["--format", "json", "check", "cases"]), "{}", "true"],
+    ]);
+  });
+
+  it("leaves the envelope out of a usage failure", () => {
+    const failure: LitigateRun = { code: 1, stdout: "", stderr: "litigate check: x: no such file or directory\n", files: {} };
+    const result = new Litigate(fake(JSON.stringify(failure))).check(["x"]);
+    expect(result).toStrictEqual({ code: 1, stderr: failure.stderr, files: {} });
   });
 });
 

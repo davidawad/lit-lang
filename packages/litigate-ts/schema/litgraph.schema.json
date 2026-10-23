@@ -34,6 +34,9 @@
     "litigate-envelope": {
       "$ref": "#/$defs/LitigateEnvelope"
     },
+    "litigate-run": {
+      "$ref": "#/$defs/LitigateRun"
+    },
     "source-map": {
       "$ref": "#/$defs/SourceMap"
     }
@@ -49,6 +52,7 @@
     "clock",
     "validation",
     "litigate-envelope",
+    "litigate-run",
     "source-map"
   ],
   "additionalProperties": false,
@@ -1292,6 +1296,40 @@
         "elapsed_ms"
       ],
       "description": "JSON response shape shared by all `litigate` operations."
+    },
+    "LitigateRun": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "uint8",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Exit code: 0 ok, 2 an error diagnostic, 1 usage or I/O."
+        },
+        "stdout": {
+          "type": "string",
+          "description": "Standard output: the envelope (JSON, one line) or its human rendering."
+        },
+        "stderr": {
+          "type": "string",
+          "description": "Standard error: a usage or I/O failure."
+        },
+        "files": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Files written (`build`'s outputs), by normalized path."
+        }
+      },
+      "required": [
+        "code",
+        "stdout",
+        "stderr",
+        "files"
+      ],
+      "description": "One `litigate` invocation over an in-memory file tree (litgraph-wasm's\n`litigate`): what the CLI prints and exits with, and the files it wrote."
     },
     "MinLength": {
       "type": "object",

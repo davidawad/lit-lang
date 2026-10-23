@@ -732,6 +732,7 @@ export interface LitgraphSchemas {
   clock: ClockLibrary;
   validation: Validation;
   "litigate-envelope": LitigateEnvelope;
+  "litigate-run": LitigateRun;
   "source-map": SourceMap;
 }
 /**
@@ -2086,6 +2087,30 @@ export interface Fix {
    * Whether the edit can be applied without review.
    */
   applicability: Applicability;
+}
+/**
+ * One `litigate` invocation over an in-memory file tree (litgraph-wasm's
+ * `litigate`): what the CLI prints and exits with, and the files it wrote.
+ */
+export interface LitigateRun {
+  /**
+   * Exit code: 0 ok, 2 an error diagnostic, 1 usage or I/O.
+   */
+  code: number;
+  /**
+   * Standard output: the envelope (JSON, one line) or its human rendering.
+   */
+  stdout: string;
+  /**
+   * Standard error: a usage or I/O failure.
+   */
+  stderr: string;
+  /**
+   * Files written (`build`'s outputs), by normalized path.
+   */
+  files: {
+    [k: string]: string | undefined;
+  };
 }
 /**
  * A generated document's sidecar.

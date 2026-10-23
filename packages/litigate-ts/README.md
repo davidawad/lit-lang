@@ -21,7 +21,7 @@ unwrap(r);                                               // the result, or throw
 
 Every exported document type (`Request`, `Response`, `Op`, `Scenario`,
 `NamedScenario`, `Pack`, `LinkFile`, `ClockLibrary`, `CalibrationSet`,
-`Validation`, the litigate CLI's `LitigateEnvelope` and `Diagnostic`, the
+`Validation`, the litigate CLI's `LitigateEnvelope`, `LitigateRun` and `Diagnostic`, the
 `*.map.json` `SourceMap`, ...) lives in `src/generated/schemas.ts`. None is
 written by hand:
 
@@ -53,7 +53,9 @@ Tests: `test/client.test.ts` (unit, over fake and real bindings, plus a
 check that `src/` has no `any`), `test/golden.test.ts` (every
 `scenarios/*.json` through wasm, by name and inline, for `solve`, `chain`
 and a seeded `simulate`, plus `validate`, compared exactly with the native
-CLI output apart from `elapsed_ms`), `test/web.test.ts` (the web build),
+CLI output apart from `elapsed_ms`), `test/litigate.test.ts` (`litigate
+check`/`build` in memory against the native `litigate` CLI),
+`test/web.test.ts` (the web build),
 and `test/types.test-d.ts` (type-level, `expect-type` via vitest).
 
 Toolchain: Node >= 20 (CI and development used Node 22), npm, the
@@ -61,24 +63,35 @@ Toolchain: Node >= 20 (CI and development used Node 22), npm, the
 version `crates/litgraph-wasm` pins). Dev dependencies are pinned in
 `package-lock.json`.
 
-## litigate check/build in wasm: not yet
+## litigate check/build in wasm
 
-`litigate-cli` does compile for `wasm32-unknown-unknown` once `getrandom`
-gets its `js` feature (as `litgraph-wasm` already does; it reaches
-litigate-cli through `litgraph`'s `rand`). It is not exposed because it
-cannot do anything useful there: every command loads its inputs from disk.
+`lg.litigate` runs `litigate check` and `litigate build` over an in-memory
+file tree: the same arguments, envelope (`LitigateEnvelope`) and exit code
+as the native CLI over a disk holding those files, with `build`'s outputs
+handed back instead of written.
 
-- `litigate_sema::pkg::load` reads package trees with `std::fs::read_dir` /
-  `read`, and `Session::load` (`crates/litigate-cli/src/ws.rs`) resolves
-  targets against `std::env::current_dir`, `canonicalize`s them, and reads
-  `.case` files and `Lit.lock` files directly. On `wasm32-unknown-unknown`
-  these calls fail at run time.
-- The `core` stdlib and library packages (`lit/`) are found by walking the
-  filesystem; nothing embeds them the way packs are embedded.
-- `build` writes its output with `std::fs::write` and `rename`.
+```ts
+const lit = loadNode().litigate;
+const files = { "cases/my.case": myCase, "cases/Lit.lock": myLock }; // repository-relative path -> text
+const checked = lit.check(["cases"], { files, profile: "strict" });   // LitigateResult
+checked.code;                                // 0 ok, 2 an error diagnostic, 1 usage or I/O (envelope absent)
+checked.envelope?.diagnostics;               // Diagnostic[]
+const built = lit.build(["lit/frcp", "cases"], { files, out: "out" });
+built.files["out/packs/frcp-civil-procedure.json"];  // every file the CLI would write under --out
+lit.library();                               // the embedded lit/ library, by path
+lit.run(["--format", "human", "check", "cases"], files);  // raw LitigateRun {code, stdout, stderr, files}
+```
 
-Exposing `check`/`build` needs an in-memory source set (files as
-`(path, text)` pairs) threaded through `litigate_sema::load` and
-`Session::load`, an embedded `lit/` library, and `build` returning its files
-instead of writing them. The envelope and source-map types it would return
-are already generated here (`LitigateEnvelope`, `SourceMap`).
+- The repository's `lit/` library is embedded in the wasm (by
+  `crates/litgraph-wasm/build.rs`); it fills in every `lit/` path `files`
+  does not give, so a matter's `uses` resolve. Pass `library: false` to
+  check only what you pass.
+- Only `check` and `build` run; any other command exits 1.
+- On the Rust side the loaders read a `litigate_sema::pkg::source::Source`:
+  `Disk` for the CLI, `MemoryTree` here (`litigate_cli::execute_in_memory`).
+- `test/litigate.test.ts` checks and builds the repository's `lit/` and
+  `cases/` through the wasm and compares with the native `litigate` CLI
+  (`LITIGATE_BIN`), envelope and written files alike.
+- Embedding the vendored source corpus (`sources/`, needed so cite checks
+  agree with the CLI) and `lit/` makes the wasm larger (the release
+  build is about 9 MB).

@@ -271,6 +271,44 @@ fn example_replay_table() {
 }
 
 #[test]
+fn bowles_order_cannot_extend_the_statutory_appeal_limit() {
+    // Source: sources/change-corpus/rulings/MANIFEST.json, entry
+    // `bowles-scotus-2007`, and its vendored text. The order was entered
+    // 2004-02-10; Rule 4(a)(6)/28 U.S.C. § 2107(c) allowed 14 days, through
+    // 2004-02-24. The district court's 17-day date was 2004-02-27; filing
+    // on 2004-02-26 was held untimely by the Supreme Court.
+    let root = case_support::repo_root();
+    let manifest =
+        std::fs::read_to_string(root.join("sources/change-corpus/rulings/MANIFEST.json"))
+            .expect("rulings manifest");
+    let ruling =
+        std::fs::read_to_string(root.join("sources/change-corpus/rulings/bowles-scotus-2007.txt"))
+            .expect("Bowles opinion text");
+    assert!(manifest.contains("\"id\": \"bowles-scotus-2007\""));
+    assert!(manifest.contains("\"file\": \"bowles-scotus-2007.pdf\""));
+    assert!(ruling.contains("notice of appeal on February 26"));
+    assert!(ruling.contains("deadline had actually been February 24"));
+    assert!(ruling.contains("deprived the Sixth Circuit of jurisdiction"));
+
+    // Replay a cited, overlong extension as the equivalent event pattern:
+    // the later filing must remain missed because the event carries no
+    // machine-readable deadline target or bounded extent.
+    let checked = check_2009(&matter_2009(&[
+        "2010-05-01 Served(complaint, Personal) on widget",
+        "2010-05-25 Extended(complaint) by court cite FRCP 4(a)(6)",
+        "2010-06-01 MovedToDismiss(complaint) by widget",
+    ]));
+    assert!(
+        checked
+            .diagnostics
+            .iter()
+            .any(|d| d.code.as_str() == "L4002"),
+        "the Bowles filing must remain untimely: {:#?}",
+        render(&checked.diagnostics)
+    );
+}
+
+#[test]
 fn pins_must_match_the_lock() {
     let mut stale = lock(examples());
     stale.packages[0].digest = format!("sha256:{}", "0".repeat(64));

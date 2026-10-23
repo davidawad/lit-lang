@@ -1,13 +1,14 @@
 //! Deadline tracking during replay (SPEC §5.3, §5.6): an event taken
 //! through an edge `within d` must fall on or before `d`'s due date,
-//! counted from the latest earlier event matching `d`'s trigger, unless a
-//! cited `Waived`/`Extended`/`Excused` event covers it.
+//! counted from the latest earlier event matching `d`'s trigger. A cited
+//! event alone cannot transform a deadline: this language version has no
+//! typed target, extent, or capability on an excusal.
 //!
 //! Sema does not count days itself. The due date comes from a [`Clock`]:
 //! in production the engine's clock interpreter running the lowered
 //! counting rule (`litigate_lower::EngineClock`), so a matter is judged by
 //! exactly the arithmetic its scenario will run under.
-use super::graph::{display, is_excusal, Graph};
+use super::graph::{display, Graph};
 use crate::hir::{DayUnit, Deadline, Declaration, Direction, Event, Expr, ExprKind, Value};
 use crate::temporal::condition::matches;
 use crate::temporal::MatterEvent;
@@ -175,15 +176,15 @@ pub(super) fn due(
 /// The earliest cited excusing event dated on or after `from` among the
 /// events (sorted by date) before index `at`, so dated on or before it.
 pub(super) fn excusal<'e>(
-    events: &[(usize, &'e Event)],
-    at: usize,
-    from: &str,
+    _events: &[(usize, &'e Event)],
+    _at: usize,
+    _from: &str,
 ) -> Option<&'e Event> {
-    events[..at]
-        .iter()
-        .map(|(_, e)| *e)
-        .filter(|e| e.authority.is_some() && from <= e.date.as_str())
-        .find(|e| matches!(&e.action.kind, ExprKind::Call { callee, .. } if is_excusal(callee)))
+    // Do not infer legal effect from an event constructor's spelling and a
+    // free-text citation. Without a deadline target, bounded extension, and
+    // issuer capability, accepting one can excuse a jurisdictional deadline
+    // (the Bowles v. Russell error).
+    None
 }
 
 /// How a due date was counted, for notes.

@@ -629,9 +629,14 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
   but is the trigger pattern of an in-force deadline is timing-only. Anything
   else, or an ambiguous match, is L4001. An event taken through an edge with
   `within d` must fall on or before d's due date, computed from the latest
-  matching trigger. Otherwise L4002, unless a prior event carries a `cite`
-  and matches a `waived`/`extended`/`excused` event type declared by the
-  package. The replayed node becomes the scenario `start`. An explicit
+  matching trigger. Otherwise L4002. A cited event named `Waived`,
+  `Extended`, or `Excused` does not change the deadline: this language
+  version has no typed deadline target, extension amount, or issuer
+  capability, so replay cannot establish that the issuing authority may
+  extend it or that the filing is within the granted extent. Such an event
+  cannot excuse a jurisdictional or otherwise non-extendable limit (as in
+  *Bowles v. Russell*, 551 U.S. 205 (2007)). The replayed node becomes the
+  scenario `start`. An explicit
   `start` that disagrees with the replayed node is L4008.
 - Option-removing events. A waiver or an order striking a defense does not
   move the matter; it takes an option away for the rest of it. An event

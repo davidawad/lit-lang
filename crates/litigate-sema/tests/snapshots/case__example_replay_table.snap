@@ -26,10 +26,10 @@ expression: table
         "24:22 L4003 `frcp-rule12-example::granted` is not an edge of fact `frcp-rule12-example::time-barred`\n    note: edges: barred, not-barred",
     ],
     "missed: mail service, one day after the rolled due date": [
-        "21:3 L4002 `MovedToDismiss(complaint)` on 2025-04-01 missed deadline `answer-period`, due 2025-03-31\n    note @20:3: `answer-period` runs 21 calendar days from `Served(complaint, Mail)` on 2025-03-05 under `frcp6@2009-12-01`, service by mail\n    note: no used package declares a `Waived`, `Extended`, or `Excused` event type to excuse it",
+        "21:3 L4002 `MovedToDismiss(complaint)` on 2025-04-01 missed deadline `answer-period`, due 2025-03-31\n    note @20:3: `answer-period` runs 21 calendar days from `Served(complaint, Mail)` on 2025-03-05 under `frcp6@2009-12-01`, service by mail\n    note: no used package declares a `Waived`, `Extended`, or `Excused` event type",
     ],
     "missed: one day after the answer period": [
-        "21:3 L4002 `MovedToDismiss(complaint)` on 2025-03-27 missed deadline `answer-period`, due 2025-03-26\n    note @20:3: `answer-period` runs 21 calendar days from `Served(complaint, Personal)` on 2025-03-05 under `frcp6@2009-12-01`\n    note: no used package declares a `Waived`, `Extended`, or `Excused` event type to excuse it",
+        "21:3 L4002 `MovedToDismiss(complaint)` on 2025-03-27 missed deadline `answer-period`, due 2025-03-26\n    note @20:3: `answer-period` runs 21 calendar days from `Served(complaint, Personal)` on 2025-03-05 under `frcp6@2009-12-01`\n    note: no used package declares a `Waived`, `Extended`, or `Excused` event type",
     ],
     "names: unknown node": [
         "26:19 L1002 no node `mtd-ruing` in `frcp-rule12-example`\n    fix @26:19-26:28 MaybeIncorrect: \"mtd-ruling\"",
@@ -78,7 +78,7 @@ expression: table
     ],
     "typestate: an event after as_of": [
         "21:3 L4001 event on 2025-07-01 is after the matter's as_of 2025-06-01\n    note: as_of selects the law the matter is analysed under; later events are not yet history",
-        "21:3 L4002 `MovedToDismiss(complaint)` on 2025-07-01 missed deadline `answer-period`, due 2025-03-26\n    note @20:3: `answer-period` runs 21 calendar days from `Served(complaint, Personal)` on 2025-03-05 under `frcp6@2009-12-01`\n    note: no used package declares a `Waived`, `Extended`, or `Excused` event type to excuse it",
+        "21:3 L4002 `MovedToDismiss(complaint)` on 2025-07-01 missed deadline `answer-period`, due 2025-03-26\n    note @20:3: `answer-period` runs 21 calendar days from `Served(complaint, Personal)` on 2025-03-05 under `frcp6@2009-12-01`\n    note: no used package declares a `Waived`, `Extended`, or `Excused` event type",
     ],
     "typestate: nothing moves a pending ruling": [
         "22:14 L4001 `Answered(complaint)` is not a legal event at stage `frcp-rule12-example::mtd-ruling` (Ruling on the motion to dismiss)\n    note: legal events: none (no event moves this stage; it is decided by Court)\n    note: replay stops at the first illegal event",

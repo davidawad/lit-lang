@@ -4,7 +4,7 @@ expression: table(&rows)
 ---
 {
     "excused: a cited excusal between trigger and event": [
-        "ok: start alpha::answered",
+        "14:3 L4002 `Answered(complaint)` on 2010-01-12 missed deadline `court-period`, due 2010-01-11\n    note @12:3: `court-period` runs 5 court days from `Served(complaint, Mail)` on 2010-01-04 under `ac@2009-12-01`\n    note: a cited `Waived`, `Extended`, or `Excused` event between the trigger and this event would excuse it",
         "trace Took Served(complaint, Mail) alpha::intake -> alpha::respond via alpha::serve",
         "trace Timing Excused(complaint) alpha::respond -> alpha::respond",
         "trace Took Answered(complaint) alpha::respond -> alpha::answered via alpha::answer",

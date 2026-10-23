@@ -518,8 +518,9 @@ creates (design review 2026-10-23 §2.4, §2.7):
   must come on or before the current due date. `max` is required and
   counts calendar days (L2007, L3009). `extend` with `extendable false`
   is L2007.
-- `waive { by A [, after_expiry] }`: actor `A` may release an instance.
-  `max` is not allowed (L2007).
+- `waive { by A [, after_expiry] }`: actor `A` may release an instance,
+  after its due date only with `after_expiry`. `max` is not allowed
+  (L2007).
 
 A deadline with no `extend` capability cannot be extended by any order: a
 jurisdictional limit such as the notice of appeal (*Bowles v. Russell*, 551
@@ -798,13 +799,14 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
   late, breached, lapsed, waived, superseded (`latest`), or merged
   (`later_of`). `CheckedCase.obligations` reports them.
 - Extension and waiver. An event whose type declares `extends d to p` or
-  `waives d` must carry a `cite`. It targets the one open instance of `d`
-  borne by its `on` party (or unbound), or the only open instance; none or
-  several is L4001. `d`'s governing version must grant the capability
-  (`extend`/`waive`), the event's `by` party must play its actor, an
-  extension without `after_expiry` must come on or before the current due
-  date, and the new date must be later than it and no later than the
-  bound. Each failure is L4001, and the instance is unchanged. A cited
+  `waives d` must carry a `cite`. It transforms every open instance of `d`
+  (an order extending the time to answer reaches each defendant's), all or
+  none; with none open it is L4001. `d`'s version governing the event must
+  grant the capability (`extend`/`waive`), and the event's `by` party must
+  play its actor. Without `after_expiry` the event must come on or before
+  each instance's current due date. An extension's new date must be later
+  than that date and no later than the bound. Each failure is L4001, and
+  no instance changes. A cited
   event that is not of such a type transforms nothing, so no order can
   enlarge a limit that grants no capability (as in *Bowles v. Russell*,
   551 U.S. 205 (2007)).

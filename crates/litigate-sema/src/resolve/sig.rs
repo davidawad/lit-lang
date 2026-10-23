@@ -3,7 +3,7 @@
 //! ranges, so an edit that keeps a module's interface intact is backdated
 //! and its importers are not re-checked.
 use crate::db::inputs::SourceFile;
-use crate::db::parse::tree::{Atom, ExprKind, Field, Item, ItemKind, ItemTree};
+use crate::db::parse::tree::{Atom, Expr, ExprKind, Field, Item, ItemKind, ItemTree};
 use crate::db::queries::{item_tree, manifest, module_graph, signature};
 use crate::hir::{Manifest, Type};
 use crate::resolve::scope::Scope;
@@ -159,7 +159,10 @@ pub fn value_of(item: &Item) -> Option<(&str, ValueKind)> {
         ItemKind::Node(n) => {
             let fact = n.fields.iter().any(|f| {
                 f.key.text == "tags"
-                    && f.values.iter().any(|(a, _)| matches!(a, Atom::Expr(e) if matches!(&e.kind, ExprKind::List(l) if l.iter().any(|x| matches!(&x.kind, ExprKind::Ref(r) if r.is_simple() && r.head.text == "fact")))))
+                    && f.values.iter().any(|(a, _)| {
+                        matches!(a, Atom::Expr(Expr { kind: ExprKind::List(l), .. })
+                            if l.iter().any(|x| matches!(&x.kind, ExprKind::Ref(r) if r.is_simple() && r.head.text == "fact")))
+                    })
             });
             let kind = ValueKind::Node {
                 chance: n.keyword.text == "chance",
@@ -220,10 +223,14 @@ pub fn build(db: &dyn salsa::Database, file: SourceFile) -> Signature {
             .collect()
     };
     for (name, ty) in default_types {
-        if let Some(v) = sig.values.get_mut(&name) {
-            if matches!(v.kind, ValueKind::Default(None)) {
-                v.kind = ValueKind::Default(ty);
-            }
+        // The first default of a name types it; a same-named declaration of
+        // another kind keeps its kind (L1001 reports the duplicate).
+        if let Some(ValueSig {
+            kind: kind @ ValueKind::Default(None),
+            ..
+        }) = sig.values.get_mut(&name)
+        {
+            *kind = ValueKind::Default(ty);
         }
     }
     sig
@@ -266,10 +273,13 @@ fn collect(sig: &mut Signature, items: &[(&Item, Option<&Item>)], m: Option<&Man
             }
             ItemKind::Instance(base, origin, fields) => {
                 let pack = clause(fields, "pack").and_then(|f| match f.values.first() {
-                    Some((Atom::Expr(e), _)) => match &e.kind {
-                        ExprKind::Ref(r) => Some(r.display()),
-                        _ => None,
-                    },
+                    Some((
+                        Atom::Expr(Expr {
+                            kind: ExprKind::Ref(r),
+                            ..
+                        }),
+                        _,
+                    )) => Some(r.display()),
                     _ => None,
                 });
                 sig.values

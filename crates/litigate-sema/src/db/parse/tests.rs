@@ -52,11 +52,14 @@ fn worked_example_lowers_cleanly() {
         )
         .count();
     assert_eq!(tests, 2);
-    let Some(ItemKind::Rule(kind, name, clauses, inner)) =
-        find(&tree.items, |k| matches!(k, ItemKind::Rule(..)))
-    else {
-        panic!("rule missing");
-    };
+    let (kind, name, clauses, inner) = tree
+        .items
+        .iter()
+        .find_map(|i| match &i.kind {
+            ItemKind::Rule(kind, name, clauses, inner) => Some((kind, name, clauses, inner)),
+            _ => None,
+        })
+        .expect("rule missing");
     assert_eq!(
         (kind.text.as_str(), name.text.as_str()),
         ("duty", "answer-duty")
@@ -109,22 +112,29 @@ fn every_construct_lowers_without_reports() {
             ..
         })
     ));
-    let Some(ItemKind::Transition(_, amends, _, arms)) =
-        find(&tree.items, |k| matches!(k, ItemKind::Transition(..)))
-    else {
-        panic!("transition missing");
-    };
+    let (amends, arms) = tree
+        .items
+        .iter()
+        .find_map(|i| match &i.kind {
+            ItemKind::Transition(_, amends, _, arms) => Some((amends, arms)),
+            _ => None,
+        })
+        .expect("transition missing");
     assert_eq!(
         amends.version.as_ref().map(|d| d.text.as_str()),
         Some("2009-12-01")
     );
-    assert!(arms[0].unless.is_some() && arms[1].unless.is_none());
+    assert!(arms[0].unless.is_some());
+    assert!(arms[1].unless.is_none());
     let links = parse(&read("crates/litigate-syntax/tests/fixtures/links.lit")).tree;
-    let Some(ItemKind::Instance(base, origin, fields)) =
-        find(&links.items, |k| matches!(k, ItemKind::Instance(..)))
-    else {
-        panic!("instance missing");
-    };
+    let (base, origin, fields) = links
+        .items
+        .iter()
+        .find_map(|i| match &i.kind {
+            ItemKind::Instance(base, origin, fields) => Some((base, origin, fields)),
+            _ => None,
+        })
+        .expect("instance missing");
     assert_eq!((base.text.as_str(), origin.text.as_str()), ("cafc", "cofc"));
     let patch = fields.iter().find(|f| f.key.text == "patch");
     assert!(matches!(
@@ -179,6 +189,7 @@ proptest! {
     fn lowering_is_total(src in "(module m\n)?[a-z_ :\"{}()\\[\\],.@?>=0-9\n/-]{0,120}") {
         let parsed = parse(&src);
         let len = u32::try_from(src.len()).unwrap_or(u32::MAX);
-        prop_assert!(parsed.reports.iter().all(|r| r.range.start <= r.range.end && r.range.end <= len));
+        prop_assert!(parsed.reports.iter().all(|r| r.range.start <= r.range.end));
+        prop_assert!(parsed.reports.iter().all(|r| r.range.end <= len));
     }
 }

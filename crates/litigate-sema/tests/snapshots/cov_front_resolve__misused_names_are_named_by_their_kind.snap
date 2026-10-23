@@ -1,0 +1,17 @@
+---
+source: crates/litigate-sema/tests/cov_front_resolve.rs
+expression: check_body(body)
+---
+[
+    "pkgs/demo/main.lit:11:11 L2007 a rebutting exception needs `=> <value>`",
+    "pkgs/demo/main.lit:12:22 L3008 `dl` must name a version (`dl@YYYY-MM-DD`)",
+    "pkgs/demo/main.lit:12:40 L3008 `dl` must name a version (`dl@YYYY-MM-DD`)",
+    "pkgs/demo/main.lit:15:36 L2001 deadline `dl` is not a value [fix: \"deadline(dl)\"]",
+    "pkgs/demo/main.lit:16:36 L2001 counting rule `c6` is not a value",
+    "pkgs/demo/main.lit:17:36 L2001 calendar `cal` is not a value",
+    "pkgs/demo/main.lit:18:37 L2001 exception `ex` is not a value",
+    "pkgs/demo/main.lit:19:38 L2001 transition `tr` is not a value",
+    "pkgs/demo/main.lit:20:32 L2001 rule `rl` is not a value",
+    "pkgs/demo/main.lit:21:32 L2001 node `t` is not a value",
+    "pkgs/demo/main.lit:22:30 L2001 `dflt` is a default, expected a node",
+]

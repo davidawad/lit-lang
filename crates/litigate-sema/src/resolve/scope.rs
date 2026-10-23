@@ -267,9 +267,11 @@ impl<'a> Scope<'a> {
     /// L1002 with a suggestion when nothing matches.
     pub fn value(&self, r: &RefPath) -> Result<(String, Found<'a, ValueSig>), Unresolved> {
         let value_keys = |s: &'a Signature| s.values.keys().map(String::as_str).collect::<Vec<_>>();
-        let (canonical, found) = if r.rest.iter().any(|(sep, _)| *sep == PathSep::Colons) {
+        let qualified =
+            r.instance.is_some() || r.rest.iter().any(|(sep, _)| *sep == PathSep::Colons);
+        let (canonical, found) = if qualified {
             self.qualified(r)?
-        } else if r.rest.is_empty() && r.instance.is_none() {
+        } else if r.rest.is_empty() {
             let found = self
                 .unqualified(&r.head.text, |s| s.values.get(&r.head.text))
                 .ok_or_else(|| self.unresolved(&r.head, "name", &self.candidates(value_keys)))?;
@@ -342,7 +344,7 @@ impl<'a> Scope<'a> {
 
     fn qualified(&self, r: &RefPath) -> Result<(String, Found<'a, ValueSig>), Unresolved> {
         let last = r.last();
-        if r.rest.len() != 1 {
+        if !matches!(r.rest[..], [(PathSep::Colons, _)]) {
             return Err(Unresolved::Report(Report::new(
                 C::UnresolvedName,
                 r.range,

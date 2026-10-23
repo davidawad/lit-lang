@@ -7,7 +7,7 @@ pub mod parse;
 pub mod queries;
 pub mod span;
 
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, Mutex, PoisonError};
 
 /// Shared log of executed queries (`query(Id(..))` debug strings).
 pub type EventLog = Arc<Mutex<Vec<String>>>;
@@ -32,9 +32,9 @@ impl LitDatabase {
         let sink = Arc::clone(&log);
         let storage = salsa::Storage::new(Some(Box::new(move |event: salsa::Event| {
             if let salsa::EventKind::WillExecute { database_key } = event.kind {
-                if let Ok(mut entries) = sink.lock() {
-                    entries.push(format!("{database_key:?}"));
-                }
+                sink.lock()
+                    .unwrap_or_else(PoisonError::into_inner)
+                    .push(format!("{database_key:?}"));
             }
         })));
         (

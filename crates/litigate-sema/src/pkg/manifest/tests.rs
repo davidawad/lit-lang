@@ -116,7 +116,7 @@ fn accepts_pack_schema_v3_keys() {
         .replace("cite_prefixes = [\"A\"]", "as_of = \"2025-06\"")
         + "\n[[cite_syntax.rules]]\nprefixes = [\"FRCP\"]\nheading = \"Rule {}\"\nsource = \"a\"\n\n[[cite_syntax.shorthands]]\nprefix = \"cfr\"\ncode = \"cfr\"\ntitle = 19\nsection_parts = 2\n";
     let m = parse_manifest(&text).map(|p| p.manifest);
-    let m = m.unwrap_or_else(|e| panic!("{e:?}"));
+    let m = m.expect("the manifest is valid");
     assert_eq!(m.counting.as_deref(), Some("frcp6"));
     assert_eq!(m.roles.get("either"), Some(&ActorRole::Nature));
     assert_eq!(m.sources[1].as_of.as_deref(), Some("2025-06"));
@@ -144,9 +144,10 @@ fn accepts_pack_schema_v3_keys() {
 fn links_manifests_have_no_pack_identity() {
     let links = "[package]\nname = \"links\"\nversion = \"0.1.0\"\nlanguage = 1\nin_force = \"0001-01-01\"\nknown_at = \"2026-10-19\"\n\n[dependencies]\ncafc = { version = \"^0.1.0\", path = \"../cafc\" }\n";
     let m = parse_manifest(links).map(|p| p.manifest);
-    let m = m.unwrap_or_else(|e| panic!("{e:?}"));
+    let m = m.expect("the manifest is valid");
     assert!(m.links);
-    assert!(m.pack_id.is_empty() && m.roles.is_empty());
+    assert!(m.pack_id.is_empty());
+    assert!(m.roles.is_empty());
     assert_eq!(
         errors(&links.replace("language = 1\n", "language = 1\ncounting = \"frcp6\"\n"))[0]
             .split(':')

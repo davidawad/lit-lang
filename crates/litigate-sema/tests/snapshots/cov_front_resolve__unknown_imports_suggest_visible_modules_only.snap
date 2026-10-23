@@ -1,0 +1,10 @@
+---
+source: crates/litigate-sema/tests/cov_front_resolve.rs
+expression: "render(&db, ws)"
+---
+[
+    "pkgs/demo/main.lit:2:8 L1002 cannot find module `shared.node` [fix: \"shared.nodes\"]",
+    "pkgs/demo/main.lit:3:8 L1002 cannot find module `hidden.nodes`",
+    "pkgs/dep/Lit.toml:1:1 L1008 the package declares no `start` node",
+    "pkgs/hidden/Lit.toml:1:1 L1008 the package declares no `start` node",
+]

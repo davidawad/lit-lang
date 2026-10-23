@@ -1,0 +1,45 @@
+---
+source: crates/litigate-sema/tests/cov_front_manifest.rs
+expression: out
+---
+[
+    [
+        "19:1 L1004 source id `1a` must be an identifier",
+    ],
+    [
+        "19:1 L1004 source `a` needs `url`, `path`, or both",
+    ],
+    [
+        "20:8 L1004 source path `/abs/a.txt` must be repository-relative",
+    ],
+    [
+        "20:8 L1004 source path `sources\\a.txt` must be repository-relative",
+    ],
+    [
+        "20:8 L1004 source path `sources/../a.txt` must be repository-relative",
+    ],
+    [
+        "20:8 L1004 source path `sources//a.txt` must be repository-relative",
+    ],
+    [
+        "19:1 L1004 source `a` has an empty cite prefix",
+    ],
+    [
+        "21:10 L1004 `sha256` must be 64 lowercase hex digits",
+    ],
+    [
+        "21:10 L1004 `sha256` must be 64 lowercase hex digits",
+    ],
+    [
+        "21:19 L1004 `section_heading` must contain `{n}`",
+    ],
+    [
+        "21:9 L1004 `as_of` must be a YYYY-MM-DD or YYYY-MM date, found `2025-13`",
+    ],
+    [
+        "21:9 L1004 `as_of` must be a YYYY-MM-DD or YYYY-MM date, found `June 2025`",
+    ],
+    [
+        "8:1 L1004 `sources` needs a pack identity: a links package's manifest has only `name`, `version`, `language`, `in_force`, `known_at`, and `[dependencies]` (add `pack_id` if this is a pack)",
+    ],
+]

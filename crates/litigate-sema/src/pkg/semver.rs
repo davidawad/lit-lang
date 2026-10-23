@@ -31,15 +31,11 @@ impl Version {
             Some((core, pre)) => (core, Some(pre)),
             None => (text, None),
         };
-        let mut parts = core.split('.');
-        let (major, minor, patch) = (
-            number(parts.next()?)?,
-            number(parts.next()?)?,
-            number(parts.next()?)?,
-        );
-        if parts.next().is_some() {
+        let parts: Vec<&str> = core.split('.').collect();
+        let [major, minor, patch] = parts[..] else {
             return None;
-        }
+        };
+        let (major, minor, patch) = (number(major)?, number(minor)?, number(patch)?);
         let pre = match pre {
             None => Vec::new(),
             Some(pre) => {
@@ -104,11 +100,12 @@ impl PartialOrd for Version {
 
 impl fmt::Display for Version {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}.{}.{}", self.major, self.minor, self.patch)?;
-        if !self.pre.is_empty() {
-            write!(f, "-{}", self.pre.join("."))?;
-        }
-        Ok(())
+        let pre = if self.pre.is_empty() {
+            String::new()
+        } else {
+            format!("-{}", self.pre.join("."))
+        };
+        write!(f, "{}.{}.{}{pre}", self.major, self.minor, self.patch)
     }
 }
 
@@ -181,22 +178,82 @@ mod tests {
     use proptest::prelude::*;
 
     fn req(r: &str, v: &str) -> bool {
-        match (Requirement::parse(r), Version::parse(v)) {
-            (Some(r), Some(v)) => r.matches(&v),
-            _ => false,
-        }
+        Requirement::parse(r)
+            .zip(Version::parse(v))
+            .is_some_and(|(r, v)| r.matches(&v))
+    }
+
+    fn version(text: &str) -> Version {
+        Version::parse(text).expect("a valid version")
     }
 
     #[test]
     fn caret_tilde_exact_and_at_least() {
-        assert!(req("^0.1.0", "0.1.9") && !req("^0.1.0", "0.2.0"));
-        assert!(req("^1.2.3", "1.9.0") && !req("^1.2.3", "2.0.0") && !req("^1.2.3", "1.2.2"));
-        assert!(req("^0.0.3", "0.0.3") && !req("^0.0.3", "0.0.4"));
-        assert!(req("~2024.12.0", "2024.12.5") && !req("~2024.12.0", "2024.13.0"));
-        assert!(req(">=1.0.0", "7.0.0") && req("=1.0.0", "1.0.0") && !req("=1.0.0", "1.0.1"));
-        assert!(!req("^1.0.0", "1.1.0-rc.1") && req("^1.1.0-rc.1", "1.1.0-rc.2"));
-        assert!(Version::parse("01.0.0").is_none() && Version::parse("1.0").is_none());
-        assert!(Requirement::parse("1.0.0").is_none());
+        for (r, v, matches) in [
+            ("^0.1.0", "0.1.9", true),
+            ("^0.1.0", "0.2.0", false),
+            ("^0.1.0", "1.1.0", false),
+            ("^1.2.3", "1.9.0", true),
+            ("^1.2.3", "2.0.0", false),
+            ("^1.2.3", "1.2.2", false),
+            ("^0.0.3", "0.0.3", true),
+            ("^0.0.3", "0.0.4", false),
+            ("~2024.12.0", "2024.12.5", true),
+            ("~2024.12.0", "2024.13.0", false),
+            (">=1.0.0", "7.0.0", true),
+            ("=1.0.0", "1.0.0", true),
+            ("=1.0.0", "1.0.1", false),
+            ("^1.0.0", "1.1.0-rc.1", false),
+            ("^1.1.0-rc.1", "1.1.0-rc.2", true),
+            ("^1.1.0-rc.1", "1.1.0", true),
+            ("1.0.0", "1.0.0", false),
+            ("^1.0", "1.0.0", false),
+        ] {
+            assert_eq!(req(r, v), matches, "{r} vs {v}");
+        }
+    }
+
+    #[test]
+    fn versions_are_strict_semver() {
+        for bad in [
+            "1.0",
+            "1.0.0.0",
+            "01.0.0",
+            "1.00.0",
+            "x.0.0",
+            "0.x.0",
+            "0.0.x",
+            "1..0",
+            "1.0.0-",
+            "1.0.0-rc..1",
+            "1.0.0-rc_1",
+            "1.0.0-rc.+",
+        ] {
+            assert_eq!(Version::parse(bad), None, "{bad}");
+        }
+        assert_eq!(version("0.10.200-rc-1.2").pre, ["rc-1", "2"]);
+    }
+
+    #[test]
+    fn pre_releases_order_before_their_release() {
+        let ordered = [
+            "1.0.0-1",
+            "1.0.0-2",
+            "1.0.0-alpha",
+            "1.0.0-alpha.1",
+            "1.0.0-alpha.beta",
+            "1.0.0-beta",
+            "1.0.0",
+            "1.0.1",
+        ];
+        for pair in ordered.windows(2) {
+            assert!(version(pair[0]) < version(pair[1]), "{pair:?}");
+            assert!(version(pair[1]) > version(pair[0]), "{pair:?}");
+        }
+        assert_eq!(
+            version("1.0.0-rc.1").cmp(&version("1.0.0-rc.1")),
+            Ordering::Equal
+        );
     }
 
     proptest! {

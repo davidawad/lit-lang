@@ -1,0 +1,42 @@
+---
+source: crates/litigate-sema/tests/cov_front_manifest.rs
+expression: out
+---
+[
+    [
+        "2:8 L1004 package name `Demo_Pkg` must be kebab-case",
+    ],
+    [
+        "5:11 L1004 pack id `demo--pack` must be kebab-case",
+    ],
+    [
+        "6:9 L1004 `forum` must be an identifier, found `1demo`",
+    ],
+    [
+        "7:13 L1004 `authority` must be an identifier, found `Federal.Rule`",
+    ],
+    [
+        "11:12 L1004 `counting` must be a counting-rule id, found `frcp-`",
+    ],
+    [
+        "11:12 L1004 `counting` must be a counting-rule id, found `a--b`",
+    ],
+    [
+        "10:18 L1004 `in_force_until` must be after `in_force`",
+    ],
+    [
+        "10:18 L1004 `in_force_until` must be a YYYY-MM-DD date, found `2020-02-30`",
+    ],
+    [
+        "13:14 L1004 `1applicant` is not a valid actor name",
+    ],
+    [
+        "17:8 L1004 dependency name `Core` must be kebab-case",
+    ],
+    [
+        "1:16 L1004 invalid Lit.toml: invalid type: integer `1`, expected a table",
+    ],
+    [
+        "17:8 L1004 invalid Lit.toml: invalid type: integer `1`, expected struct RawDependency",
+    ],
+]

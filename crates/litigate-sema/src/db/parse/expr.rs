@@ -1,9 +1,10 @@
 //! Expressions, references, types, and JSON records (SPEC §3.1, §3.3).
 use super::tree::{Expr, ExprKind, Json, Name, PathSep, Pattern, RefPath, TypeRef};
-use super::{elements, name, node_of, range, significant_range, token_of, Lower, SyntaxElement};
-use crate::db::span::Report;
+use super::{
+    elements, head, is_trivia, name, node_of, range, significant_range, token_of, Lower,
+    SyntaxElement,
+};
 use crate::hir::{BinaryOp, UnaryOp};
-use litigate_base::DiagnosticCode as C;
 use litigate_syntax::{SyntaxKind as K, SyntaxNode};
 
 /// True for node kinds that are expressions (including a bare `Ref`).
@@ -28,86 +29,107 @@ pub(crate) fn is_expr(kind: K) -> bool {
     )
 }
 
-/// `Ident ["@" Ident] {("::" | ".") Ident} ["@" Date]` from a `Ref` node.
-pub(crate) fn ref_path(node: &SyntaxNode) -> Option<RefPath> {
-    let mut tokens = elements(node)
-        .filter_map(SyntaxElement::into_token)
-        .peekable();
-    let head = name(&tokens.next().filter(|t| t.kind() == K::Ident)?);
+/// `Ident ["@" Ident] {("::" | ".") Ident} ["@" Date]` from a `Ref` node
+/// (or the `RefExpr` wrapping one). The grammar's `reference` rule is the
+/// only producer of `Ref` nodes, so its tokens are always in this shape.
+pub(crate) fn path_of(node: &SyntaxNode) -> RefPath {
+    let range = significant_range(node);
     let mut path = RefPath {
-        range: significant_range(node),
-        head,
+        head: Name {
+            text: String::new(),
+            range,
+        },
         instance: None,
         rest: Vec::new(),
         version: None,
+        range,
     };
-    while let Some(t) = tokens.next() {
-        let next = tokens.next()?;
-        match (t.kind(), next.kind()) {
-            (K::At, K::Ident) if path.rest.is_empty() && path.instance.is_none() => {
-                path.instance = Some(name(&next));
-            }
-            (K::At, K::Date) => path.version = Some(name(&next)),
-            (K::Dot, K::Ident) => path.rest.push((PathSep::Dot, name(&next))),
-            (K::ColonColon, K::Ident) => path.rest.push((PathSep::Colons, name(&next))),
-            _ => return None,
+    let mut separator = None;
+    let tokens = node
+        .descendants_with_tokens()
+        .filter_map(SyntaxElement::into_token)
+        .filter(|t| !is_trivia(t.kind()));
+    for t in tokens {
+        match (separator.take(), t.kind()) {
+            (None, K::Ident) => path.head = name(&t),
+            (Some(K::At), K::Ident) => path.instance = Some(name(&t)),
+            (Some(K::Dot), K::Ident) => path.rest.push((PathSep::Dot, name(&t))),
+            (Some(_), K::Ident) => path.rest.push((PathSep::Colons, name(&t))),
+            (_, K::Date) => path.version = Some(name(&t)),
+            (_, kind) => separator = Some(kind),
         }
     }
-    Some(path)
+    path
 }
 
-/// `Name<Args>` from a `TypeExpr` node.
-pub(crate) fn type_ref(node: &SyntaxNode) -> Option<TypeRef> {
-    let args = node_of(node, K::TypeArgs).map_or(Some(Vec::new()), |a| {
-        super::nodes_of(&a, K::TypeExpr)
-            .map(|t| type_ref(&t))
-            .collect()
-    })?;
-    Some(TypeRef {
-        name: name(&token_of(node, K::Ident)?),
-        args,
+/// [`path_of`] for callers chaining over optional nodes.
+#[allow(clippy::unnecessary_wraps)]
+pub(crate) fn ref_path(node: &SyntaxNode) -> Option<RefPath> {
+    Some(path_of(node))
+}
+
+/// `Name<Args>` from a `TypeExpr` node (the grammar's `type_expr` starts
+/// every one with its name).
+pub(crate) fn type_ref(node: &SyntaxNode) -> TypeRef {
+    TypeRef {
+        name: head(node),
+        args: node_of(node, K::TypeArgs).map_or_else(Vec::new, |a| {
+            super::nodes_of(&a, K::TypeExpr)
+                .map(|t| type_ref(&t))
+                .collect()
+        }),
         range: significant_range(node),
-    })
+    }
 }
 
-fn binary_op(kind: K) -> Option<BinaryOp> {
-    Some(match kind {
-        K::OrOr => BinaryOp::Or,
-        K::AndAnd => BinaryOp::And,
-        K::EqEq => BinaryOp::Eq,
-        K::NotEq => BinaryOp::Ne,
-        K::Less => BinaryOp::Lt,
-        K::LessEq => BinaryOp::Le,
-        K::Greater => BinaryOp::Gt,
-        K::GreaterEq => BinaryOp::Ge,
-        K::Plus => BinaryOp::Add,
-        K::Minus => BinaryOp::Sub,
-        K::Star => BinaryOp::Mul,
-        K::Slash => BinaryOp::Div,
-        K::Percent => BinaryOp::Rem,
-        _ => return None,
-    })
-}
+const BINARY_OPS: [(K, BinaryOp); 13] = [
+    (K::OrOr, BinaryOp::Or),
+    (K::AndAnd, BinaryOp::And),
+    (K::EqEq, BinaryOp::Eq),
+    (K::NotEq, BinaryOp::Ne),
+    (K::Less, BinaryOp::Lt),
+    (K::LessEq, BinaryOp::Le),
+    (K::Greater, BinaryOp::Gt),
+    (K::GreaterEq, BinaryOp::Ge),
+    (K::Plus, BinaryOp::Add),
+    (K::Minus, BinaryOp::Sub),
+    (K::Star, BinaryOp::Mul),
+    (K::Slash, BinaryOp::Div),
+    (K::Percent, BinaryOp::Rem),
+];
+
+/// Builds a JSON literal from its token text.
+type MakeJson = fn(&str) -> Json;
+/// Builds an expression literal from its token text.
+type MakeExpr = fn(&str) -> ExprKind;
+
+/// JSON literals by token kind.
+const JSON_LITERALS: [(K, MakeJson); 5] = [
+    (K::Number, |t| Json::Number(t.to_owned())),
+    (K::String, |t| Json::Str(litigate_syntax::ast::unescape(t))),
+    (K::KwTrue, |_| Json::Bool(true)),
+    (K::KwFalse, |_| Json::Bool(false)),
+    (K::KwUnset, |_| Json::Unset),
+];
+
+/// Expression literals by token kind (`unset` and `unvalued` are literals
+/// only in JSON records and stakes).
+const LITERALS: [(K, MakeExpr); 8] = [
+    (K::Number, |t| ExprKind::Number(t.to_owned())),
+    (K::Money, |t| ExprKind::Money(t.to_owned())),
+    (K::Duration, |t| ExprKind::Duration(t.to_owned())),
+    (K::String, |t| {
+        ExprKind::Str(litigate_syntax::ast::unescape(t))
+    }),
+    (K::Date, |t| ExprKind::Date(t.to_owned())),
+    (K::KwTrue, |_| ExprKind::Bool(true)),
+    (K::KwFalse, |_| ExprKind::Bool(false)),
+    (K::KwUnit, |_| ExprKind::Unit),
+];
 
 /// Expression children of `node`, in order.
 pub(crate) fn expr_children(node: &SyntaxNode) -> impl Iterator<Item = SyntaxNode> {
     node.children().filter(|n| is_expr(n.kind()))
-}
-
-/// A literal token as an expression.
-fn literal(token: &litigate_syntax::SyntaxToken) -> Option<ExprKind> {
-    let text = token.text().to_owned();
-    Some(match token.kind() {
-        K::Number => ExprKind::Number(text),
-        K::Money => ExprKind::Money(text),
-        K::Duration => ExprKind::Duration(text),
-        K::String => ExprKind::Str(name(token).text),
-        K::Date => ExprKind::Date(text),
-        K::KwTrue => ExprKind::Bool(true),
-        K::KwFalse => ExprKind::Bool(false),
-        K::KwUnit => ExprKind::Unit,
-        _ => return None,
-    })
 }
 
 /// Normalized citation text (whitespace runs collapsed, SPEC §2).
@@ -123,99 +145,126 @@ impl Lower {
     /// A `cite` expression. A cite hole `cite ?("text")` is a hole whose
     /// reason is the citation text (SPEC §2, §8.1).
     fn cite(&mut self, node: &SyntaxNode) -> Option<Expr> {
-        let Some(text) = token_of(node, K::CiteText) else {
-            return self.expr(&node_of(node, K::HoleExpr)?);
-        };
-        Some(Expr {
-            kind: ExprKind::Cite(cite_text(&text)),
-            range: range(text.text_range()),
-        })
+        match token_of(node, K::CiteText) {
+            Some(text) => Some(Expr {
+                kind: ExprKind::Cite(cite_text(&text)),
+                range: range(text.text_range()),
+            }),
+            None => self.expr(&node_of(node, K::HoleExpr)?),
+        }
     }
 
     /// Lowers an expression node; `None` when the node is incomplete (the
     /// parser already reported it).
     pub(crate) fn expr(&mut self, node: &SyntaxNode) -> Option<Expr> {
         let kind = match node.kind() {
-            K::Literal => literal(&elements(node).find_map(SyntaxElement::into_token)?)?,
-            K::HoleExpr => ExprKind::Hole(
+            K::HoleExpr => Some(ExprKind::Hole(
                 node_of(node, K::Literal)
                     .and_then(|l| token_of(&l, K::String))
                     .map(|t| name(&t).text),
-            ),
+            )),
             K::CiteExpr => return self.cite(node),
-            K::Ref => ExprKind::Ref(ref_path(node)?),
-            K::RefExpr => ExprKind::Ref(ref_path(&node_of(node, K::Ref)?)?),
-            K::CallExpr => {
-                let callee = ref_path(&node_of(node, K::Ref)?)?;
-                let args = node_of(node, K::ArgList)?;
-                let args = expr_children(&args)
-                    .map(|a| self.expr(&a))
-                    .collect::<Option<_>>()?;
-                ExprKind::Call(callee, args)
-            }
-            K::UnaryExpr => {
-                let op = match elements(node).next()?.kind() {
-                    K::Bang => UnaryOp::Not,
-                    K::Minus => UnaryOp::Neg,
-                    _ => return None,
-                };
-                ExprKind::Unary(op, Box::new(self.expr(&expr_children(node).next()?)?))
-            }
-            K::BinaryExpr => {
-                let mut operands = expr_children(node);
-                let lhs = self.expr(&operands.next()?)?;
-                let rhs = self.expr(&operands.next()?)?;
-                let op = elements(node)
-                    .filter_map(SyntaxElement::into_token)
-                    .find_map(|t| binary_op(t.kind()))?;
-                ExprKind::Binary(op, Box::new(lhs), Box::new(rhs))
-            }
-            K::Ratio => {
-                let mut numbers = elements(node)
-                    .filter_map(SyntaxElement::into_token)
-                    .filter(|t| t.kind() == K::Number)
-                    .map(|t| Expr {
-                        kind: ExprKind::Number(t.text().to_owned()),
-                        range: range(t.text_range()),
-                    });
-                let (n, d) = (numbers.next()?, numbers.next()?);
-                ExprKind::Binary(BinaryOp::Div, Box::new(n), Box::new(d))
-            }
-            K::ParenExpr => ExprKind::Paren(Box::new(self.expr(&expr_children(node).next()?)?)),
-            K::RecordExpr => ExprKind::Record(self.record(node)?),
-            K::ListExpr | K::IdList => ExprKind::List(
-                expr_children(node)
-                    .map(|e| self.expr(&e))
-                    .collect::<Option<_>>()?,
-            ),
-            K::FieldExpr => {
-                let base = self.expr(&expr_children(node).next()?)?;
-                let field = elements(node)
-                    .filter_map(SyntaxElement::into_token)
-                    .filter(|t| t.kind() == K::Ident)
-                    .last()?;
-                ExprKind::Field(Box::new(base), name(&field))
-            }
-            K::MatchExpr => {
-                let scrutinee = self.expr(&expr_children(node).next()?)?;
-                let arms = super::nodes_of(node, K::MatchArm)
-                    .map(|arm| self.match_arm(&arm))
-                    .collect::<Option<_>>()?;
-                ExprKind::Match(Box::new(scrutinee), arms)
-            }
-            _ => return None,
-        };
+            K::Ref | K::RefExpr => Some(ExprKind::Ref(path_of(node))),
+            K::CallExpr => self.call(node),
+            K::UnaryExpr => self.unary(node),
+            K::BinaryExpr => self.binary(node),
+            K::Ratio => ratio(node),
+            K::ParenExpr => self
+                .first_operand(node)
+                .map(|e| ExprKind::Paren(Box::new(e))),
+            K::RecordExpr => self.record(node).map(ExprKind::Record),
+            K::ListExpr | K::IdList => self.exprs(expr_children(node)).map(ExprKind::List),
+            K::FieldExpr => self.field_expr(node),
+            K::MatchExpr => self.match_expr(node),
+            // A `Literal`; any other node is not an expression.
+            _ => elements(node)
+                .find_map(SyntaxElement::into_token)
+                .filter(|_| node.kind() == K::Literal)
+                .and_then(|t| {
+                    LITERALS
+                        .iter()
+                        .find(|(k, _)| *k == t.kind())
+                        .map(|(_, make)| make(t.text()))
+                }),
+        }?;
         Some(Expr {
             kind,
             range: significant_range(node),
         })
     }
 
-    fn match_arm(&mut self, arm: &SyntaxNode) -> Option<(Pattern, Expr)> {
-        let pattern = match token_of(arm, K::Underscore) {
-            Some(u) => Pattern::Wildcard(range(u.text_range())),
-            None => Pattern::Ref(ref_path(&node_of(arm, K::Ref)?)?),
+    /// Every node of `nodes` lowered, or `None` if one is incomplete.
+    fn exprs(&mut self, nodes: impl Iterator<Item = SyntaxNode>) -> Option<Vec<Expr>> {
+        nodes.map(|n| self.expr(&n)).collect()
+    }
+
+    /// The first expression child of `node`, lowered.
+    pub(crate) fn first_operand(&mut self, node: &SyntaxNode) -> Option<Expr> {
+        self.expr(&expr_children(node).next()?)
+    }
+
+    /// `callee(args)`: `ref_or_call` always nests the callee `Ref` and the
+    /// `ArgList`, so only an incomplete argument drops the call.
+    fn call(&mut self, node: &SyntaxNode) -> Option<ExprKind> {
+        let args = node_of(node, K::ArgList).and_then(|a| self.exprs(expr_children(&a)));
+        node_of(node, K::Ref)
+            .zip(args)
+            .map(|(callee, args)| ExprKind::Call(path_of(&callee), args))
+    }
+
+    /// `!x` or `-x` (the only unary operators).
+    fn unary(&mut self, node: &SyntaxNode) -> Option<ExprKind> {
+        let op = if token_of(node, K::Bang).is_some() {
+            UnaryOp::Not
+        } else {
+            UnaryOp::Neg
         };
+        Some(ExprKind::Unary(op, Box::new(self.first_operand(node)?)))
+    }
+
+    /// `lhs op rhs`; the parser builds the node once `lhs` and `op` are
+    /// read, so a missing right operand is the incomplete case.
+    fn binary(&mut self, node: &SyntaxNode) -> Option<ExprKind> {
+        let mut operands = expr_children(node);
+        let op = elements(node)
+            .filter_map(SyntaxElement::into_token)
+            .find_map(|t| BINARY_OPS.iter().find(|(k, _)| *k == t.kind()));
+        let (Some(lhs), Some(rhs), Some((_, op))) = (operands.next(), operands.next(), op) else {
+            return None;
+        };
+        let lhs = self.expr(&lhs)?;
+        Some(ExprKind::Binary(
+            *op,
+            Box::new(lhs),
+            Box::new(self.expr(&rhs)?),
+        ))
+    }
+
+    /// `base.field` (`postfix` adds the field name with the dot).
+    fn field_expr(&mut self, node: &SyntaxNode) -> Option<ExprKind> {
+        let base = self.first_operand(node)?;
+        let field = elements(node)
+            .filter_map(SyntaxElement::into_token)
+            .filter(|t| t.kind() == K::Ident)
+            .last();
+        field.map(|f| ExprKind::Field(Box::new(base), name(&f)))
+    }
+
+    /// `match scrutinee { pattern => value ... }`.
+    fn match_expr(&mut self, node: &SyntaxNode) -> Option<ExprKind> {
+        let scrutinee = self.first_operand(node)?;
+        let arms = super::nodes_of(node, K::MatchArm)
+            .map(|arm| self.match_arm(&arm))
+            .collect::<Option<_>>()?;
+        Some(ExprKind::Match(Box::new(scrutinee), arms))
+    }
+
+    /// `(Ref | "_") "=>" Expr`.
+    fn match_arm(&mut self, arm: &SyntaxNode) -> Option<(Pattern, Expr)> {
+        let pattern = node_of(arm, K::Ref).map_or_else(
+            || Pattern::Wildcard(head(arm).range),
+            |r| Pattern::Ref(path_of(&r)),
+        );
         let value = super::nodes_after(arm, K::FatArrow).find(|n| is_expr(n.kind()))?;
         Some((pattern, self.expr(&value)?))
     }
@@ -223,55 +272,62 @@ impl Lower {
     /// `{ key: value, ... }` entries (keys may be contextual keywords).
     pub(crate) fn record(&mut self, node: &SyntaxNode) -> Option<Vec<(Name, Expr)>> {
         super::nodes_of(node, K::RecordField)
-            .map(|f| {
-                let key = elements(&f).find_map(SyntaxElement::into_token)?;
-                let value = expr_children(&f).next()?;
-                Some((name(&key), self.expr(&value)?))
-            })
+            .map(|f| Some((head(&f), self.expr(&expr_children(&f).next()?)?)))
             .collect()
     }
 
-    /// A `patch` record as JSON (SPEC §3.1 `JsonRecord`).
+    /// [`json`] for `.case` resolution, which lowers through a `Lower`.
+    #[allow(clippy::unused_self)]
     pub(crate) fn json(&mut self, node: &SyntaxNode) -> Option<Json> {
-        let bad = |lower: &mut Self| {
-            lower.reports.push(Report::new(
-                C::UnexpectedToken,
-                significant_range(node),
-                "expected a JSON value (number, string, `true`, `false`, `unset`, record, or list)",
-            ));
-            None
-        };
-        match node.kind() {
-            K::RecordExpr => super::nodes_of(node, K::RecordField)
-                .map(|f| {
-                    let key = elements(&f).find_map(SyntaxElement::into_token)?;
-                    Some((name(&key), self.json(&expr_children(&f).next()?)?))
-                })
-                .collect::<Option<_>>()
-                .map(Json::Object),
-            K::ListExpr => expr_children(node)
-                .map(|e| self.json(&e))
-                .collect::<Option<_>>()
-                .map(Json::Array),
-            K::UnaryExpr => match self.expr(node).map(|e| e.kind) {
-                Some(ExprKind::Unary(UnaryOp::Neg, inner)) => match inner.kind {
-                    ExprKind::Number(n) => Some(Json::Number(format!("-{n}"))),
-                    _ => bad(self),
-                },
-                _ => bad(self),
-            },
-            K::Literal => {
-                let token = elements(node).find_map(SyntaxElement::into_token)?;
-                match token.kind() {
-                    K::Number => Some(Json::Number(token.text().to_owned())),
-                    K::String => Some(Json::Str(name(&token).text)),
-                    K::KwTrue => Some(Json::Bool(true)),
-                    K::KwFalse => Some(Json::Bool(false)),
-                    K::KwUnset => Some(Json::Unset),
-                    _ => bad(self),
-                }
-            }
-            _ => bad(self),
-        }
+        json(node)
     }
+}
+
+/// A JSON value (SPEC §3.1 `JsonValue`) of a `patch` record or a
+/// `.case` analysis block. The grammar's `json_value` builds only these
+/// shapes, so `None` means an incomplete record or list (already
+/// reported by the parser).
+pub(crate) fn json(node: &SyntaxNode) -> Option<Json> {
+    match node.kind() {
+        K::RecordExpr => super::nodes_of(node, K::RecordField)
+            .map(|f| Some((head(&f), json(&expr_children(&f).next()?)?)))
+            .collect::<Option<_>>()
+            .map(Json::Object),
+        K::ListExpr => expr_children(node)
+            .map(|e| json(&e))
+            .collect::<Option<_>>()
+            .map(Json::Array),
+        // `signed_number`: a minus sign and a number.
+        K::UnaryExpr => Some(Json::Number(
+            node.descendants_with_tokens()
+                .filter_map(SyntaxElement::into_token)
+                .filter(|t| !is_trivia(t.kind()))
+                .map(|t| t.text().to_owned())
+                .collect(),
+        )),
+        _ => elements(node)
+            .find_map(SyntaxElement::into_token)
+            .and_then(|t| {
+                JSON_LITERALS
+                    .iter()
+                    .find(|(k, _)| *k == t.kind())
+                    .map(|(_, make)| make(t.text()))
+            }),
+    }
+}
+
+/// `n / d` (`prob_value` builds the node at the slash; the denominator may
+/// be missing).
+fn ratio(node: &SyntaxNode) -> Option<ExprKind> {
+    let mut numbers = elements(node)
+        .filter_map(SyntaxElement::into_token)
+        .filter(|t| t.kind() == K::Number)
+        .map(|t| Expr {
+            kind: ExprKind::Number(t.text().to_owned()),
+            range: range(t.text_range()),
+        });
+    let (Some(n), Some(d)) = (numbers.next(), numbers.next()) else {
+        return None;
+    };
+    Some(ExprKind::Binary(BinaryOp::Div, Box::new(n), Box::new(d)))
 }

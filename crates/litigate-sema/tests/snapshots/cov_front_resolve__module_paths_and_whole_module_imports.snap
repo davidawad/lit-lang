@@ -1,0 +1,11 @@
+---
+source: crates/litigate-sema/tests/cov_front_resolve.rs
+expression: "render(&db, ws)"
+---
+[
+    "pkgs/demo/main.lit:4:22 L1002 cannot find group `motions`",
+    "pkgs/demo/main.lit:4:53 L1002 cannot find name `ending` in `shared.nodes`",
+    "pkgs/demo/main.lit:4:70 L1002 cannot find name `nd` [fix: \"end\"]",
+    "pkgs/demo/main.lit:5:27 L1002 `base@copy` is not a valid qualified name (`pack::id`)",
+    "pkgs/demo/main.lit:6:29 L1002 `base@copy.done` is not a valid qualified name (`pack::id`)",
+]

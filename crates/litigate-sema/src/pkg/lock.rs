@@ -214,8 +214,11 @@ mod tests {
     #[test]
     fn verify_reports_missing_and_stale() {
         let lock = LockFile::new(vec![pkg("core", &[])]);
-        assert!(verify(None, &lock)
-            .is_err_and(|r| r.code == C::StaleLock && r.message.contains("missing")));
+        let missing = verify(None, &lock).err();
+        assert_eq!(
+            missing.map(|r| (r.code, r.message)),
+            Some((C::StaleLock, "Lit.lock is missing".to_owned()))
+        );
         let other = LockFile::new(vec![pkg("other", &[])]).render();
         let err = verify(Some(&other), &lock).err();
         let notes: Vec<String> = err
@@ -229,6 +232,63 @@ mod tests {
             ]
         );
         assert!(LockFile::parse("version = 2").is_err());
+    }
+
+    #[test]
+    fn unparseable_locks_are_stale() {
+        let lock = LockFile::new(vec![pkg("core", &[])]);
+        for (text, message) in [
+            (
+                "version = ",
+                "Lit.lock is invalid: string values must be quoted, expected literal string",
+            ),
+            (
+                "version = 1\ncolour = 2",
+                "Lit.lock is invalid: unknown field `colour`, expected `version` or `package`",
+            ),
+            (
+                "version = 2",
+                "Lit.lock format 2 is not supported (expected 1)",
+            ),
+        ] {
+            let report = verify(Some(text), &lock).err();
+            assert_eq!(
+                report.map(|r| (r.code, r.message)),
+                Some((C::StaleLock, message.to_owned())),
+                "{text}"
+            );
+        }
+    }
+
+    #[test]
+    fn verify_names_changed_packages_only() {
+        let mut changed = pkg("core", &[]);
+        changed.version = "1.1.0".into();
+        let locked = LockFile::new(vec![pkg("core", &[]), pkg("same", &[])]).render();
+        let expected = LockFile::new(vec![changed.clone(), pkg("same", &[])]);
+        let notes: Vec<String> = verify(Some(&locked), &expected)
+            .err()
+            .map(|r| r.notes.into_iter().map(|n| n.1).collect())
+            .unwrap_or_default();
+        let digest = &changed.digest;
+        assert_eq!(
+            notes,
+            [
+                "run `litigate lock` to regenerate Lit.lock".to_owned(),
+                format!("`core` changed (locked 1.0.0 {digest}, now 1.1.0 {digest})"),
+            ]
+        );
+    }
+
+    #[test]
+    fn control_characters_are_escaped() {
+        let mut p = pkg("a\u{1}b\u{7f}\"\\", &[]);
+        p.version = "tab\there".into();
+        let lock = LockFile::new(vec![p]);
+        let text = lock.render();
+        assert!(text.contains(r#"name = "a\u0001b\u007F\"\\""#), "{text}");
+        assert!(text.contains(r#"version = "tab\u0009here""#), "{text}");
+        assert_eq!(LockFile::parse(&text), Ok(lock));
     }
 
     proptest! {

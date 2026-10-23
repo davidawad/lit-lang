@@ -125,9 +125,9 @@ pub fn build(db: &dyn salsa::Database, ws: Workspace) -> ModuleGraph {
                     }
                 })
                 .collect();
-            if let Some(node) = nodes.get_mut(file) {
-                node.imports = imports;
-            }
+            nodes
+                .entry(*file)
+                .and_modify(|node: &mut FileNode| node.imports = imports);
         }
     }
     let order: Vec<SourceFile> = packages
@@ -153,16 +153,15 @@ fn break_cycles(nodes: &mut HashMap<SourceFile, FileNode>, order: &[SourceFile])
         }
         let mut stack: Vec<(SourceFile, usize)> = vec![(*root, 0)];
         marks.insert(*root, Mark::Active);
-        while let Some((file, next)) = stack.last().copied() {
+        while let Some(top) = stack.last_mut() {
+            let (file, next) = *top;
             let target = nodes.get(&file).and_then(|n| n.imports.get(next)).cloned();
             let Some(target) = target else {
                 marks.insert(file, Mark::Done);
                 stack.pop();
                 continue;
             };
-            if let Some(top) = stack.last_mut() {
-                top.1 += 1;
-            }
+            top.1 += 1;
             let ImportTarget::Module(dep) = target else {
                 continue;
             };
@@ -180,9 +179,9 @@ fn break_cycles(nodes: &mut HashMap<SourceFile, FileNode>, order: &[SourceFile])
                             .map(|n| n.module.clone())
                             .unwrap_or_default(),
                     );
-                    if let Some(slot) = nodes.get_mut(&file).and_then(|n| n.imports.get_mut(next)) {
-                        *slot = ImportTarget::Cycle(cycle);
-                    }
+                    nodes
+                        .entry(file)
+                        .and_modify(|n| n.imports[next] = ImportTarget::Cycle(cycle));
                 }
                 None => {
                     marks.insert(dep, Mark::Active);

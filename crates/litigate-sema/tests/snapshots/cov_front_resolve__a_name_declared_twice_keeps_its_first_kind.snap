@@ -1,0 +1,8 @@
+---
+source: crates/litigate-sema/tests/cov_front_resolve.rs
+expression: check_body(body)
+---
+[
+    "pkgs/demo/main.lit:11:9 L1001 `twice` is already declared in this module",
+    "pkgs/demo/main.lit:13:9 L1001 `same` is already declared in this module",
+]

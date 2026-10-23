@@ -54,9 +54,8 @@ fn read_lossy(path: &Path) -> io::Result<String> {
 /// Collects `.lit` files under `dir`, skipping hidden directories and
 /// nested packages (directories with their own `Lit.toml`).
 fn collect(dir: &Path, base: &Path, out: &mut Vec<LoadedFile>) -> io::Result<()> {
-    let mut entries: Vec<PathBuf> = std::fs::read_dir(dir)?
-        .map(|e| e.map(|e| e.path()))
-        .collect::<io::Result<_>>()?;
+    let mut entries: Vec<PathBuf> = std::fs::read_dir(dir)
+        .and_then(|entries| entries.map(|e| e.map(|e| e.path())).collect())?;
     entries.sort();
     for path in entries {
         let name = path
@@ -137,10 +136,11 @@ mod tests {
     use super::*;
 
     #[test]
-    fn loads_the_worked_example() -> io::Result<()> {
+    fn loads_the_worked_example() {
         let repo = Path::new(env!("CARGO_MANIFEST_DIR")).join("../..");
-        let pkgs = load_tree(&repo, &[repo.join("lit/examples")], None)?;
+        let pkgs = load_tree(&repo, &[repo.join("lit/examples")], None);
         let summary: Vec<(String, Vec<String>, bool)> = pkgs
+            .expect("the worked example loads")
             .into_iter()
             .map(|p| {
                 (
@@ -158,7 +158,6 @@ mod tests {
                 false
             )]
         );
-        Ok(())
     }
 
     #[test]
@@ -168,5 +167,17 @@ mod tests {
             "lit/core/a.lit"
         );
         assert_eq!(relative_to(Path::new("/r"), Path::new("/r")), ".");
+        assert_eq!(
+            relative_to(Path::new("/r"), Path::new("../up/a.lit")),
+            "../up/a.lit"
+        );
+        assert_eq!(
+            relative_to(Path::new("/r"), Path::new("./here/a.lit")),
+            "here/a.lit"
+        );
+        assert_eq!(
+            relative_to(Path::new("/r"), Path::new("/elsewhere")),
+            "elsewhere"
+        );
     }
 }

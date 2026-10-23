@@ -23,7 +23,7 @@ pub(crate) type SyntaxElement = rowan::NodeOrToken<SyntaxNode, SyntaxToken>;
 pub struct Parsed {
     /// Item tree (recovered on error).
     pub tree: ItemTree,
-    /// L0xxx reports from the parser and shape reports from lowering.
+    /// L0xxx reports from the parser (and any shape reports from lowering).
     pub reports: Vec<Report>,
 }
 
@@ -63,7 +63,8 @@ pub(crate) fn range(r: litigate_syntax::TextRange) -> TextRange {
 }
 
 /// Lowering state: reports for shapes the grammar accepts but the item tree
-/// cannot represent (e.g. a non-JSON value in a `patch` record).
+/// cannot represent. The grammar builds `patch` and analysis values only
+/// from JSON shapes, so no lowering rule reports today.
 #[derive(Default)]
 pub(crate) struct Lower {
     pub(crate) reports: Vec<Report>,
@@ -117,19 +118,28 @@ pub(crate) fn name(token: &SyntaxToken) -> Name {
 
 /// The node's range without leading doc comments or trailing trivia.
 pub(crate) fn significant_range(node: &SyntaxNode) -> TextRange {
-    let mut tokens = node
+    let significant = node
         .descendants_with_tokens()
         .filter_map(SyntaxElement::into_token)
-        .filter(|t| !is_trivia(t.kind()));
-    let first = tokens.next();
-    let last = tokens.last().or_else(|| first.clone());
-    match (first, last) {
-        (Some(f), Some(l)) => TextRange::new(
-            u32::from(f.text_range().start()),
-            u32::from(l.text_range().end()),
-        ),
-        _ => range(node.text_range()),
-    }
+        .filter(|t| !is_trivia(t.kind()))
+        .map(|t| t.text_range())
+        .reduce(litigate_syntax::TextRange::cover);
+    range(significant.unwrap_or(node.text_range()))
+}
+
+/// The first significant direct token of `node`: the keyword of a field or
+/// declaration, the key of a record field, the `_` of a wildcard arm, or the
+/// name of a type. The grammar starts every such node with that token; a
+/// node without one (never built) gives an empty name at its start.
+pub(crate) fn head(node: &SyntaxNode) -> Name {
+    let start = u32::from(node.text_range().start());
+    let empty = Name {
+        text: String::new(),
+        range: TextRange::new(start, start),
+    };
+    elements(node)
+        .find_map(SyntaxElement::into_token)
+        .map_or(empty, |t| name(&t))
 }
 
 /// The first direct `Ident` token (a declaration's name).

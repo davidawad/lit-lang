@@ -1,0 +1,12 @@
+---
+source: crates/litigate-sema/tests/cov_front_resolve.rs
+expression: "render(&db, ws)"
+---
+[
+    "pkgs/links/links.lit:2:19 L1002 `base::done::x` is not a valid qualified name (`pack::id`)",
+    "pkgs/links/links.lit:3:21 L1002 `base::done.x` is not a valid qualified name (`pack::id`)",
+    "pkgs/links/links.lit:4:31 L1002 no instance `base@nope` is declared in this package",
+    "pkgs/links/links.lit:5:27 L1002 cannot find pack ``",
+    "pkgs/links/links.lit:6:10 L2007 an instance needs `pack <pack-id>`",
+    "pkgs/links/links.lit:7:30 L0001 expected an identifier, found `}`",
+]

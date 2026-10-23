@@ -1,19 +1,11 @@
 //! Keyed fields and header clauses as [`Field`]s: `key value...`, where each
 //! value is an [`Atom`]. The parser has already restricted keys to each
 //! context's closed table (SPEC §3.1, §3.4); lowering only reshapes.
-use super::expr::is_expr;
+use super::expr::json;
 use super::tree::{Atom, Expr, ExprKind, Field, Name};
-use super::{elements, name, range, significant_range, token_of, Lower, SyntaxElement};
+use super::{elements, head, name, significant_range, Lower, SyntaxElement};
 use crate::db::span::TextRange;
 use litigate_syntax::{SyntaxKind as K, SyntaxNode};
-
-/// Node kinds that are header clauses of a declaration.
-fn is_clause(kind: K) -> bool {
-    matches!(
-        kind,
-        K::Field | K::VersionClause | K::Relation | K::CiteExpr
-    )
-}
 
 impl Lower {
     /// Header clauses that are direct children of `node`, in source order.
@@ -23,25 +15,22 @@ impl Lower {
 
     /// Header clauses among `nodes`, in order.
     pub(crate) fn clauses_in(&mut self, nodes: impl Iterator<Item = SyntaxNode>) -> Vec<Field> {
-        nodes
-            .filter(|n| is_clause(n.kind()))
-            .flat_map(|n| self.clause(&n))
-            .collect()
+        nodes.filter_map(|n| self.clause(&n)).collect()
     }
 
-    /// One clause node as fields (a `VersionClause` may hold both
-    /// `effective` and `known_at`).
-    pub(crate) fn clause(&mut self, node: &SyntaxNode) -> Vec<Field> {
+    /// One clause node as a field; `None` for other nodes and for a version
+    /// clause missing its value.
+    fn clause(&mut self, node: &SyntaxNode) -> Option<Field> {
         match node.kind() {
-            K::CiteExpr => self.cite_field(node).into_iter().collect(),
-            K::VersionClause => self.version_clause(node),
-            K::Field | K::Relation => self.field(node).into_iter().collect(),
-            _ => Vec::new(),
+            K::CiteExpr => self.cite_field(node),
+            K::VersionClause => self.field(node).filter(|f| !f.values.is_empty()),
+            K::Field | K::Relation => self.field(node),
+            _ => None,
         }
     }
 
     fn cite_field(&mut self, node: &SyntaxNode) -> Option<Field> {
-        let key = name(&token_of(node, K::KwCite)?);
+        let key = head(node);
         let value = self.expr(node)?;
         Some(Field {
             range: key.range.cover(value.range),
@@ -50,47 +39,18 @@ impl Lower {
         })
     }
 
-    fn version_clause(&mut self, node: &SyntaxNode) -> Vec<Field> {
-        let mut out: Vec<Field> = Vec::new();
-        for element in elements(node) {
-            match element {
-                SyntaxElement::Token(t) if t.kind().is_keyword() => out.push(Field {
-                    key: name(&t),
-                    values: Vec::new(),
-                    range: range(t.text_range()),
-                }),
-                SyntaxElement::Node(n) => {
-                    let atom = match n.kind() {
-                        K::Interval => interval(&n).map(|(from, to)| Atom::Interval(from, to)),
-                        _ => self.expr(&n).map(Atom::Expr),
-                    };
-                    if let (Some(atom), Some(field)) = (atom, out.last_mut()) {
-                        let r = significant_range(&n);
-                        field.values.push((atom, r));
-                        field.range = field.range.cover(r);
-                    }
-                }
-                SyntaxElement::Token(_) => {}
-            }
-        }
-        out.retain(|f| !f.values.is_empty());
-        out
-    }
-
-    /// A `Field`/`Relation`/`PatchDecl` node: its keyword, then one atom per
-    /// value child.
+    /// A `Field`/`Relation`/`VersionClause`/`PatchDecl` node: its keyword,
+    /// then one atom per value child.
     pub(crate) fn field(&mut self, node: &SyntaxNode) -> Option<Field> {
-        let key = elements(node).find_map(SyntaxElement::into_token)?;
-        let key = name(&key);
+        let key = head(node);
         let mut values = Vec::new();
         for child in node.children() {
             let r = significant_range(&child);
             let atom = match child.kind() {
                 K::FieldList => Some(Atom::Fields(self.field_list(&child))),
                 K::Interval => interval(&child).map(|(from, to)| Atom::Interval(from, to)),
-                K::RecordExpr if node.kind() == K::PatchDecl => self.json(&child).map(Atom::Json),
-                k if is_expr(k) => self.expr(&child).map(Atom::Expr),
-                _ => None,
+                K::RecordExpr if node.kind() == K::PatchDecl => json(&child).map(Atom::Json),
+                _ => self.expr(&child).map(Atom::Expr),
             };
             values.push((atom?, r));
         }

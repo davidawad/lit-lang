@@ -1,0 +1,15 @@
+---
+source: crates/litigate-sema/tests/cov_front_parse.rs
+expression: out
+---
+[
+    "a || b && c == d && e != f && g < h && i <= j && k > l && m >= n  ~>  (Or a (And (And (And (And (And (And b (Eq c d)) (Ne e f)) (Lt g h)) (Le i j)) (Gt k l)) (Ge m n)))",
+    "1 + 2 - 3 * 4 / 5 % 6  ~>  (Sub (Add 1 2) (Rem (Div (Mul 3 4) 5) 6))",
+    "-1 + !true  ~>  (Add (Neg 1) (Not true))",
+    "[unit, 1.usd, 2.days, \"s\\\"q\", 2020-01-01, false, ?, ?(\"why\")]  ~>  [unit 1.usd 2.days \"s\\\"q\" 2020-01-01 false ?None ?Some(\"why\")]",
+    "base@copy::x@2020-01-01 == pack::id && a.b.c  ~>  (And (Eq base@copy::x@2020-01-01 pack::id) a.b.c)",
+    "f(1, g()).h.i  ~>  (. (. (f 1 (g )) h) i)",
+    "(1).x  ~>  (. [1] x)",
+    "match x { a.b => 1, _ => 2 }  ~>  (match x a.b => 1, _ => 2)",
+    "{k: 1, when: 2}  ~>  {k: 1, when: 2}",
+]

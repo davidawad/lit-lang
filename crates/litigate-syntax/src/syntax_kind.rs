@@ -144,7 +144,7 @@ syntax_kinds! {
         GroupDecl => "`group id: \"Label\"`.",
         TypeDecl => "`type Name = Type`.",
         EnumDecl => "`enum Name { A, B }`.",
-        EventDecl => "`event Name(param: Type, ...)`, with an optional effect clause (`removes p`, `extends d to p`, `waives d`).",
+        EventDecl => "`event Name(param: Type, ...)`, with an optional effect clause (`removes p`, `elects p`, `extends d to p`, `waives d`).",
         ParamList => "Parenthesized `name: Type` parameter list.",
         StateDecl => "`state` node declaration.",
         DecisionDecl => "`decision` node declaration.",

@@ -31,6 +31,7 @@ event Released() waives answer
 event ReleasedReply() waives reply
 event ReleasedLate() waives late
 event Struck(option: String) removes option
+event Elected(option: String) elects option
 
 counting oc cite FRCP 6(a) { exclude_trigger_day, include_last_day, holidays ocal }
 calendar ocal { new-year: fixed(1, 1) effective [1870-06-28, ..) observed nearest_weekday }
@@ -507,6 +508,14 @@ fn malformed_effect_arguments_do_nothing() {
             "a removal with no argument",
             with_args(
                 &["2011-01-05 Struck(\"answer\") by c cite FRCP 12(f)"],
+                0,
+                Vec::new(),
+            ),
+        ),
+        (
+            "an election with no argument",
+            with_args(
+                &["2011-01-05 Elected(\"answer\") by c cite FRCP 12(f)"],
                 0,
                 Vec::new(),
             ),

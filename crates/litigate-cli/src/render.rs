@@ -236,6 +236,15 @@ mod tests {
     }
 
     #[test]
+    fn an_envelope_without_a_result_prints_only_its_status() {
+        let envelope = crate::out::envelope("fmt", &crate::out::Report::default(), 0.0);
+        assert_eq!(
+            human(&envelope, &[], false),
+            "litigate fmt: ok (0 error(s), 0 warning(s))\n"
+        );
+    }
+
+    #[test]
     fn a_failed_envelope_prints_its_result_too() {
         let span = Span {
             file: "a.lit".into(),

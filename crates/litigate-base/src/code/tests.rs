@@ -16,12 +16,14 @@ fn registry_is_sorted_unique_and_well_formed() {
     assert!(codes.windows(2).all(|w| w[0] < w[1]), "{codes:?}");
     for (code, variant) in codes.iter().zip(DiagnosticCode::ALL) {
         assert_eq!(code.len(), 5);
-        assert!(code.starts_with('L') && code[1..].bytes().all(|b| b.is_ascii_digit()));
+        assert!(code.starts_with('L'));
+        assert!(code[1..].bytes().all(|b| b.is_ascii_digit()));
         assert!(matches!(
             &code[1..2],
             "0" | "1" | "2" | "3" | "4" | "5" | "6" | "9"
         ));
-        assert!(!variant.explain().is_empty() && !variant.explain().ends_with('.'));
+        assert!(!variant.explain().is_empty());
+        assert!(!variant.explain().ends_with('.'));
         assert_eq!(DiagnosticCode::parse(code), Some(variant));
     }
 }
@@ -67,12 +69,14 @@ fn every_registered_code_exercises_its_stable_views() {
 #[test]
 fn well_formed_unknown_codes_decode_tolerantly() {
     let unknown = DiagnosticCode::decode("L3999").unwrap();
-    assert!(!unknown.is_known() && DiagnosticCode::TypeMismatch.is_known());
+    assert!(!unknown.is_known());
+    assert!(DiagnosticCode::TypeMismatch.is_known());
     assert_eq!(unknown.as_str(), "L3999");
     assert_eq!(DiagnosticCode::decode("L0000").unwrap().as_str(), "L0000");
     assert!(unknown.explain().contains("does not know"));
     assert_eq!(unknown.severity(Profile::Dev), Severity::Error);
-    assert!(!unknown.is_lint() && DiagnosticCode::decode("L9999").unwrap().is_lint());
+    assert!(!unknown.is_lint());
+    assert!(DiagnosticCode::decode("L9999").unwrap().is_lint());
     assert_eq!(
         DiagnosticCode::decode("L3004"),
         Some(DiagnosticCode::MissingDelegation)
@@ -114,7 +118,8 @@ fn severities_follow_the_profile_table() {
     );
     assert_eq!(C::AnonymousEdge.severity(Profile::Strict), Severity::Info);
     assert_eq!(C::TypeMismatch.severity(Profile::Dev), Severity::Error);
-    assert!(C::UnusedDeclaration.is_lint() && !C::HoleInStrict.is_lint());
+    assert!(C::UnusedDeclaration.is_lint());
+    assert!(!C::HoleInStrict.is_lint());
 }
 
 proptest! {

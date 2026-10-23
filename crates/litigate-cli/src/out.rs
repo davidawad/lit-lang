@@ -221,7 +221,8 @@ mod tests {
             ..Report::default()
         };
         let envelope = envelope("check", &report, 0.0);
-        assert!(envelope.result.is_none() && !envelope.ok);
+        assert!(envelope.result.is_none());
+        assert!(!envelope.ok);
         let d = &envelope.diagnostics[0];
         assert_eq!(d.profile, None);
         assert_eq!(

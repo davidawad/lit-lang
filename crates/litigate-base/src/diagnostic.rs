@@ -465,7 +465,8 @@ mod tests {
             d.ensure_derivation();
         }
         assert_eq!(kept.derivation, Some(own));
-        assert!(warning.derivation.is_none() && other.derivation.is_none());
+        assert!(warning.derivation.is_none());
+        assert!(other.derivation.is_none());
         let mut list = vec![Diagnostic::error(
             DiagnosticCode::NoVersionInForce,
             span("a.lit", 1),
@@ -498,8 +499,10 @@ mod tests {
         let decoded: Diagnostic = serde_json::from_value(wire()).unwrap();
         assert_eq!(decoded.severity, Severity::Warning);
         assert_eq!(decoded.span.file.0, "a.lit");
-        assert!(decoded.notes.is_empty() && decoded.labels.is_empty());
-        assert!(decoded.fixes.is_empty() && decoded.derivation.is_none());
+        assert!(decoded.notes.is_empty());
+        assert!(decoded.labels.is_empty());
+        assert!(decoded.fixes.is_empty());
+        assert!(decoded.derivation.is_none());
         for (text, severity) in [
             ("error", Severity::Error),
             ("info", Severity::Info),

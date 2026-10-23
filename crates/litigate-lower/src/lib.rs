@@ -234,7 +234,7 @@ impl<'a> Lowerer<'a> {
                 scenario,
                 source_map,
             }),
-            None => Err(sink.finish(()).err().unwrap_or_default()),
+            None => Err(sink.into_sorted()),
         }
     }
 }
@@ -261,15 +261,19 @@ fn manifest_file(pkg: &hir::Package) -> String {
 /// # Errors
 /// L6005 when the value cannot be serialized.
 pub fn render_scenario(named: &NamedScenario) -> Result<String, Box<Diagnostic>> {
-    let defaults = serde_json::to_value(litgraph::Scenario::default()).unwrap_or_default();
-    let mut value = serde_json::to_value(named).unwrap_or_default();
-    if let Some(fields) = value
-        .get_mut("scenario")
-        .and_then(serde_json::Value::as_object_mut)
-    {
-        fields.retain(|k, v| defaults.get(k) != Some(v));
-    }
+    let defaults = object(&litgraph::Scenario::default());
+    let mut scenario = object(&named.scenario);
+    scenario.retain(|k, v| defaults.get(k) != Some(v));
+    let mut value = object(named);
+    value.insert("scenario".to_owned(), serde_json::Value::Object(scenario));
     render(&value)
+}
+
+/// `value`'s fields as a JSON object (empty for a value that is not one).
+fn object<T: Serialize>(value: &T) -> serde_json::Map<String, serde_json::Value> {
+    serde_json::to_value(value)
+        .and_then(serde_json::from_value)
+        .unwrap_or_default()
 }
 
 /// Byte-deterministic JSON (SPEC §8.6): two-space indentation and a

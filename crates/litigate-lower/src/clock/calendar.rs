@@ -86,7 +86,8 @@ fn holiday(sink: &mut Sink, h: &hir::Holiday, span: Option<&Span>) -> Option<Hol
                 every: i32::from(*years),
                 anchor_year: i32::from(*from_year),
             });
-            from = from.max(Date::from_ymd(i32::from(*from_year), 1, 1).ok()?);
+            // January 1 exists in every year, so the fallback never applies.
+            from = Date::from_ymd(i32::from(*from_year), 1, 1).map_or(from, |jan1| from.max(jan1));
             EngineDate::Fixed {
                 month: u32::from(*month),
                 day: u32::from(*day),

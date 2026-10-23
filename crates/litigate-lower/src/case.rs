@@ -63,8 +63,13 @@ fn perspective(build: &Build<'_, '_>, sink: &mut Sink, case: &hir::Case) -> BTre
 }
 
 /// Builds the `Scenario` object from the dedicated blocks and `analysis`,
-/// then lets litgraph's own serde (`deny_unknown_fields`) judge it.
-fn scenario(build: &Build<'_, '_>, sink: &mut Sink, case: &hir::Case) -> Option<Scenario> {
+/// then lets litgraph's own serde (`deny_unknown_fields`) judge it. With it
+/// comes each removal's index in `remove_edges`.
+fn scenario(
+    build: &Build<'_, '_>,
+    sink: &mut Sink,
+    case: &hir::Case,
+) -> Option<(Scenario, Vec<usize>)> {
     let mut object = Map::new();
     for (key, value) in &case.analysis.fields {
         if DEDICATED.contains(&key.as_str()) {
@@ -122,13 +127,17 @@ fn scenario(build: &Build<'_, '_>, sink: &mut Sink, case: &hir::Case) -> Option<
     if !observe.is_empty() {
         put("observe", Value::Object(observe));
     }
-    if let Some(edges) = remove_edges(object.get("remove_edges"), case) {
-        object.insert("remove_edges".to_owned(), edges);
-    }
+    let at = match remove_edges(object.get("remove_edges"), case) {
+        Some((edges, at)) => {
+            object.insert("remove_edges".to_owned(), edges);
+            at
+        }
+        None => Vec::new(),
+    };
     match serde_json::from_value::<Scenario>(Value::Object(object)) {
         Ok(s) => {
             expressions(sink, &s);
-            Some(s)
+            Some((s, at))
         }
         Err(e) => {
             sink.error_with(
@@ -145,8 +154,9 @@ fn scenario(build: &Build<'_, '_>, sink: &mut Sink, case: &hir::Case) -> Option<
 /// `scenario.remove_edges`: any `analysis` entries, then each edge the
 /// replayed events removed (SPEC §8.3), once. `None` leaves the field as
 /// it is: nothing was removed, or `analysis` wrote a non-list, which
-/// litgraph's serde then rejects.
-fn remove_edges(authored: Option<&Value>, case: &hir::Case) -> Option<Value> {
+/// litgraph's serde then rejects. With the list comes each removal's index
+/// in it.
+fn remove_edges(authored: Option<&Value>, case: &hir::Case) -> Option<(Value, Vec<usize>)> {
     if case.removals.is_empty() {
         return None;
     }
@@ -155,27 +165,27 @@ fn remove_edges(authored: Option<&Value>, case: &hir::Case) -> Option<Value> {
         Some(Value::Array(items)) => items.clone(),
         Some(_) => return None,
     };
+    let mut at = Vec::with_capacity(case.removals.len());
     for r in &case.removals {
         let edge = Value::String(r.edge.clone());
-        if !edges.contains(&edge) {
+        let i = edges.iter().position(|e| *e == edge).unwrap_or(edges.len());
+        if i == edges.len() {
             edges.push(edge);
         }
+        at.push(i);
     }
-    Some(Value::Array(edges))
+    Some((Value::Array(edges), at))
 }
 
 /// One source-map entry per removed edge: the removing event and its cite,
-/// located in L0 under the cite syntax of the edge's package.
-fn removal_entries(build: &Build<'_, '_>, named: &NamedScenario, case: &hir::Case) -> Vec<Entry> {
+/// located in L0 under the cite syntax of the edge's package. `at` is each
+/// removal's index in `remove_edges`.
+fn removal_entries(build: &Build<'_, '_>, case: &hir::Case, at: &[usize]) -> Vec<Entry> {
     let mut sink = Sink::new("");
     case.removals
         .iter()
-        .filter_map(|r| {
-            let i = named
-                .scenario
-                .remove_edges
-                .iter()
-                .position(|e| *e == r.edge)?;
+        .zip(at)
+        .map(|(r, i)| {
             let pack = r.edge.split_once("::").map_or("", |(p, _)| p);
             let cite = build
                 .packages
@@ -194,13 +204,13 @@ fn removal_entries(build: &Build<'_, '_>, named: &NamedScenario, case: &hir::Cas
                             .map(Some(&r.authority))
                     },
                 );
-            Some(Entry {
+            Entry {
                 pointer: format!("/scenario/remove_edges/{i}"),
                 id: r.edge.clone(),
                 span: case.events.get(r.event).and_then(|e| e.action.span.clone()),
                 decl: None,
                 cite,
-            })
+            }
         })
         .collect()
 }
@@ -241,7 +251,7 @@ pub(crate) fn case(
     case: &hir::Case,
     sink: &mut Sink,
 ) -> Option<(NamedScenario, SourceMap)> {
-    let scenario = scenario(build, sink, case)?;
+    let (scenario, at) = scenario(build, sink, case)?;
     let named = NamedScenario {
         id: case.id.clone(),
         summary: case.summary.clone(),
@@ -258,15 +268,15 @@ pub(crate) fn case(
             .collect(),
         scenario,
     };
-    let checked = serde_json::to_string(&named)
-        .map_err(|e| e.to_string())
-        .and_then(|t| NamedScenario::from_json(&t).map_err(|e| e.to_string()));
-    if let Err(why) = checked {
+    // Serializing plain data cannot fail; were it to, the empty text would
+    // be rejected below like any other invalid scenario.
+    let text = serde_json::to_string(&named).unwrap_or_default();
+    if let Err(why) = NamedScenario::from_json(&text) {
         sink.error_with(
             C::InvalidAnalysis,
             None,
             "the matter is not a valid litgraph named scenario",
-            why,
+            why.to_string(),
         );
         return None;
     }
@@ -283,7 +293,7 @@ pub(crate) fn case(
             decl: None,
             cite: None,
         })
-        .chain(removal_entries(build, &named, case))
+        .chain(removal_entries(build, case, &at))
         .collect(),
         generated: crate::source_map::Generated::default(),
     };

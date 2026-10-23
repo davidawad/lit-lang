@@ -23,8 +23,14 @@ impl Sink {
 
     /// Records an error with `code` at `span` (else the fallback).
     pub fn error(&mut self, code: C, span: Option<&Span>, message: impl Into<String>) {
+        let diagnostic = self.located(code, span, message);
+        self.out.push(diagnostic);
+    }
+
+    /// An error with `code` at `span` (else the fallback), not yet recorded.
+    fn located(&self, code: C, span: Option<&Span>, message: impl Into<String>) -> Diagnostic {
         let at = span.cloned().unwrap_or_else(|| self.fallback.clone());
-        self.out.push(Diagnostic::error(code, at, message));
+        Diagnostic::error(code, at, message)
     }
 
     /// Records an error with a note.
@@ -35,13 +41,12 @@ impl Sink {
         message: impl Into<String>,
         note: impl Into<String>,
     ) {
-        self.error(code, span, message);
-        if let Some(last) = self.out.last_mut() {
-            last.notes.push(Note {
-                span: None,
-                message: note.into(),
-            });
-        }
+        let mut diagnostic = self.located(code, span, message);
+        diagnostic.notes.push(Note {
+            span: None,
+            message: note.into(),
+        });
+        self.out.push(diagnostic);
     }
 
     /// L6001: `what` has no lowering.
@@ -79,10 +84,16 @@ impl Sink {
 
     /// The diagnostics, sorted (SPEC §9.2), or `Ok(value)` when there are
     /// none.
-    pub fn finish<T>(mut self, value: T) -> Result<T, Vec<Diagnostic>> {
+    pub fn finish<T>(self, value: T) -> Result<T, Vec<Diagnostic>> {
         if self.out.is_empty() {
-            return Ok(value);
+            Ok(value)
+        } else {
+            Err(self.into_sorted())
         }
+    }
+
+    /// The diagnostics, sorted (SPEC §9.2).
+    pub fn into_sorted(mut self) -> Vec<Diagnostic> {
         self.out.sort_by(|a, b| {
             (&a.span.file.0, a.span.line, a.span.col, a.code.as_str()).cmp(&(
                 &b.span.file.0,
@@ -91,7 +102,7 @@ impl Sink {
                 b.code.as_str(),
             ))
         });
-        Err(self.out)
+        self.out
     }
 }
 

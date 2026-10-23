@@ -226,16 +226,12 @@ fn escape(segment: &str) -> String {
     segment.replace('~', "~0").replace('/', "~1")
 }
 
+/// Equality of two leaves (`walk` descends into arrays and objects itself):
+/// numbers by binary64 bits.
 fn same(a: &Value, b: &Value) -> bool {
     match (a, b) {
         (Value::Number(x), Value::Number(y)) => {
             x.as_f64().map(f64::to_bits) == y.as_f64().map(f64::to_bits)
-        }
-        (Value::Array(x), Value::Array(y)) => {
-            x.len() == y.len() && x.iter().zip(y).all(|(p, q)| same(p, q))
-        }
-        (Value::Object(x), Value::Object(y)) => {
-            x.len() == y.len() && x.iter().all(|(k, v)| y.get(k).is_some_and(|w| same(v, w)))
         }
         _ => a == b,
     }
@@ -361,7 +357,7 @@ fn by_id(
     let index = |items: &[Value]| -> BTreeMap<String, Value> {
         items
             .iter()
-            .filter_map(|v| Some((id_of(v, key)?.to_owned(), v.clone())))
+            .map(|v| (id_of(v, key).unwrap_or_default().to_owned(), v.clone()))
             .collect()
     };
     let (xs, ys) = (index(x), index(y));

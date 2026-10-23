@@ -63,10 +63,10 @@ pub(crate) fn fragment(
                 .push(calendar::holiday_calendar(sink, calendar, &pkg.manifest)?);
         }
     }
-    let checked = serde_json::to_string(&library)
-        .map_err(|e| e.to_string())
-        .and_then(|text| ClockLibrary::from_json(&text).map_err(|e| e.to_string()));
-    if let Err(why) = checked {
+    // Serializing plain data cannot fail; were it to, the empty text would
+    // be rejected below like any other invalid fragment.
+    let text = serde_json::to_string(&library).unwrap_or_default();
+    if let Err(why) = ClockLibrary::from_json(&text) {
         sink.error_with(
             C::LoweringUnsupported,
             first.meta.span.as_ref(),
@@ -74,7 +74,7 @@ pub(crate) fn fragment(
                 "counting rule `{}` is not a valid engine clock rule",
                 first.meta.id
             ),
-            why,
+            why.to_string(),
         );
         return None;
     }

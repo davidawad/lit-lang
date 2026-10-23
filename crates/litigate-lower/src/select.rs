@@ -52,23 +52,17 @@ impl<'a> Selection<'a> {
         let set = self.world.versions(key);
         match active(&self.world, key, &set, &self.as_of, Some(&self.known_at)) {
             Ok(v) => Ok(Some(v.decl)),
-            Err(Inactive::Miss(Miss::Ambiguous(_))) => Err(Box::new(
-                temporal::as_of(
-                    &self.world,
-                    key,
-                    &self.as_of,
-                    Some(&self.known_at),
-                    at.unwrap_or_else(|| temporal::world::nowhere(&key.name)),
-                )
-                .err()
-                .unwrap_or_else(|| {
-                    temporal::world::error(
-                        litigate_base::DiagnosticCode::NoVersionInForce,
-                        temporal::world::nowhere(&key.name),
-                        "ambiguous version",
-                    )
-                }),
-            )),
+            // `as_of` repeats the same query, so it fails the same way and
+            // explains the ambiguity.
+            Err(Inactive::Miss(Miss::Ambiguous(_))) => temporal::as_of(
+                &self.world,
+                key,
+                &self.as_of,
+                Some(&self.known_at),
+                at.unwrap_or_else(|| temporal::world::nowhere(&key.name)),
+            )
+            .map(Some)
+            .map_err(Box::new),
             Err(_) => Ok(None),
         }
     }

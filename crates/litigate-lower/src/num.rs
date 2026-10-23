@@ -45,10 +45,11 @@ pub fn ratio(n: i64, d: u64) -> Option<f64> {
     if magnitude == 0 {
         return Some(0.0);
     }
-    let bits = |v: u128| 128 - v.leading_zeros();
-    // Choose `shift` so that (magnitude << shift) / d lands in [2^52, 2^53).
-    let mut shift = 53 - i32::try_from(bits(u128::from(magnitude))).ok()?
-        + i32::try_from(bits(u128::from(d))).ok()?;
+    let bits = |v: u128| 128 - v.leading_zeros().cast_signed();
+    // Choose `shift` so that (magnitude << shift) / d lands in [2^52, 2^54):
+    // with `magnitude` in [2^(m-1), 2^m) and `d` in [2^(e-1), 2^e), the
+    // quotient is above 2^52 and below 2^54.
+    let mut shift = 53 - bits(u128::from(magnitude)) + bits(u128::from(d));
     let quotient = |shift: i32| -> (u128, u128, u128) {
         let (num, den) = if shift >= 0 {
             (u128::from(magnitude) << shift, u128::from(d))
@@ -58,12 +59,10 @@ pub fn ratio(n: i64, d: u64) -> Option<f64> {
         (num / den, num % den, den)
     };
     let (mut q, mut r, mut den) = quotient(shift);
+    // Halving a quotient of at least 2^53 leaves at least 2^52, so this
+    // lands in [2^52, 2^53) without ever undershooting.
     while q >= 1 << 53 {
         shift -= 1;
-        (q, r, den) = quotient(shift);
-    }
-    while q < 1 << 52 {
-        shift += 1;
         (q, r, den) = quotient(shift);
     }
     let twice = r * 2;

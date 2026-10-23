@@ -110,6 +110,15 @@ pub const REFINEMENT_WORDS: [&str; 1] = ["where"];
 /// Message prefix of every L0009 diagnostic (SPEC §2.1).
 pub const RESERVED_REFINEMENT: &str = "reserved: refinements (SMT tier)";
 
+/// Words reserved for the typed guard operations of a patch (SPEC §3.6):
+/// `when and p` narrows the patched edge's guard, `when or p` widens it.
+/// L0010 wherever they appear, in the grammar's `GuardOp` slot as well as
+/// anywhere an identifier could stand.
+pub const GUARD_OP_WORDS: [&str; 2] = ["and", "or"];
+
+/// Message prefix of every L0010 diagnostic (SPEC §3.6).
+pub const RESERVED_GUARD_OP: &str = "reserved: typed guard operations";
+
 /// Lexes `text` into a lossless token stream plus lexical errors.
 #[must_use]
 pub fn lex(text: &str) -> (Vec<Token>, Vec<SyntaxError>) {
@@ -197,6 +206,17 @@ impl Lexer<'_> {
                         format!(
                             "{RESERVED_REFINEMENT}: `{text}` introduces a refinement clause, which \
                              a later edition adds; it cannot be written or used as an identifier"
+                        ),
+                    );
+                } else if GUARD_OP_WORDS.contains(&text) {
+                    self.error(
+                        DiagnosticCode::ReservedGuardOp,
+                        start,
+                        end,
+                        format!(
+                            "{RESERVED_GUARD_OP}: `{text}` combines a patched edge's guard \
+                             (`when {text} p`), which a later change adds; it cannot be written or \
+                             used as an identifier"
                         ),
                     );
                 } else if RESERVED_WORDS.contains(&text) {

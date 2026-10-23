@@ -133,7 +133,7 @@ syntax_kinds! {
         KwUrl = "url", KwEdition = "edition", KwBearer = "bearer", KwTrigger = "trigger",
         KwExtend = "extend", KwWaive = "waive", KwAfterExpiry = "after_expiry", KwNever = "never",
         KwRemoves = "removes", KwElects = "elects", KwExtends = "extends",
-        KwWaives = "waives", KwTo = "to", KwWhere = "where",
+        KwWaives = "waives", KwTo = "to", KwWhere = "where", KwAnd = "and", KwOr = "or",
     }
     nodes {
         SourceFile => "Root of a `.lit` module.",
@@ -219,6 +219,7 @@ syntax_kinds! {
         EditionDecl => "Leading edition marker `edition 2026` of a `.lit` or `.case` file (additive).",
         RefinedType => "Reserved refinement type `{x: T | pred}` in a type position; always L0009 (SPEC §2.1).",
         WhereClause => "Reserved refinement clause `where pred` after a parameter or type declaration; always L0009 (SPEC §2.1).",
+        GuardOp => "Reserved typed guard operation in a patch: `when and pred`, `when or pred` or `supersedes when pred`, with its authority; always L0010 (SPEC §3.6).",
     }
 }
 

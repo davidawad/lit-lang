@@ -198,3 +198,92 @@ fn a_bare_pipe_outside_a_refinement_is_unexpected() {
     assert!(codes(&parsed).iter().all(|c| *c == "L0001"), "{parsed:?}");
     assert!(!codes(&parsed).is_empty());
 }
+
+/// A links module with one instance whose patch block is `body`.
+fn patched(body: &str) -> super::Parse {
+    parse_lit(&format!(
+        "module links\ninstance base@one {{\n  pack base\n  patch go {{\n{body}\n  }}\n}}\n"
+    ))
+}
+
+#[test]
+fn guard_operations_parse_into_their_slot_and_are_reserved() {
+    let parsed = patched(
+        "    note \"narrowed\"\n    when and has_event(Served()) effective [2026-11-01, ..) cite \
+         Fed. Cir. R. 1\n    when or date_of(Served()) < 2026-01-01\n    supersedes when \
+         true known_at 2026-10-01 cite ?(\"Order, Dkt. 12\")\n    note \"after\"",
+    );
+    assert_eq!(codes(&parsed), ["L0010", "L0010", "L0010"]);
+    for error in parsed.errors() {
+        assert!(error.message.starts_with(crate::RESERVED_GUARD_OP));
+    }
+    assert!(parsed.errors()[0].message.contains("`and`"));
+    assert!(parsed.errors()[1].message.contains("`or`"));
+    // The `supersedes when` form is reported over the whole operation.
+    let text = parsed.syntax().text().to_string();
+    let range = parsed.errors()[2].range;
+    assert!(text[range].starts_with("supersedes when true known_at"));
+    assert!(text[range].ends_with("Dkt. 12\")"));
+    let kinds = node_kinds(&parsed);
+    assert_eq!(
+        kinds.iter().filter(|k| **k == SyntaxKind::GuardOp).count(),
+        3
+    );
+    assert!(!kinds.contains(&SyntaxKind::Error), "{kinds:?}");
+    for kw in [
+        SyntaxKind::KwAnd,
+        SyntaxKind::KwOr,
+        SyntaxKind::KwSupersedes,
+    ] {
+        assert!(parsed
+            .syntax()
+            .descendants_with_tokens()
+            .any(|t| t.kind() == kw));
+    }
+    // The patch's own fields stay `Field`s beside the reserved slots.
+    let fields = parsed
+        .syntax()
+        .descendants()
+        .filter(|n| n.kind() == SyntaxKind::Field)
+        .count();
+    assert_eq!(fields, 3, "{kinds:?}");
+}
+
+#[test]
+fn a_malformed_guard_operation_reports_where_it_breaks() {
+    let no_when = patched("    supersedes true");
+    assert_eq!(codes(&no_when), ["L0010", "L0001"]);
+    let bare = patched("    when and");
+    assert_eq!(codes(&bare), ["L0010", "L0001"]);
+    let bare = patched("    supersedes when");
+    assert_eq!(codes(&bare), ["L0010", "L0001"]);
+    // A plain `when` is still a field; sema rejects it in a patch (L2007).
+    assert!(patched("    when true").is_ok());
+}
+
+#[test]
+fn and_and_or_are_reserved_everywhere_but_only_as_whole_words() {
+    for source in [
+        "module m\nstart and\n",
+        "module m\ngroup or: \"x\"\n",
+        "module m\nstate s: \"S\" {\n  go: \"Go\" -> s when and true\n}\n",
+    ] {
+        let parsed = parse_lit(source);
+        assert!(codes(&parsed).contains(&"L0010"), "{source}");
+        let reserved = parsed
+            .errors()
+            .iter()
+            .filter(|e| e.code.as_str() == "L0010");
+        for error in reserved {
+            assert!(
+                error.message.starts_with(crate::RESERVED_GUARD_OP),
+                "{source}"
+            );
+        }
+    }
+    assert!(codes(&parse_case("case or\n")).contains(&"L0010"));
+    assert_eq!(crate::GUARD_OP_WORDS, ["and", "or"]);
+    assert!(
+        parse_lit("module m\nstart reversed-and-remanded\ngroup or-else: \"and or\"\n").is_ok()
+    );
+}

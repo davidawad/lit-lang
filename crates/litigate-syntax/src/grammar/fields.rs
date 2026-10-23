@@ -311,17 +311,75 @@ pub(crate) fn stake_value(p: &mut Parser<'_>) -> bool {
     signed_money(p) || super::values::keyword_literal(p, &[KwUnvalued])
 }
 
-/// `patch Ident EdgeFields` inside an instance: typed edge fields, each
-/// replacing the base edge's.
+/// `patch Ident PatchFields` inside an instance: typed edge fields, each
+/// replacing the base edge's, and the reserved [`guard_op`]s.
 pub(crate) fn patch(p: &mut Parser<'_>) -> bool {
     if !p.at_kw(KwPatch) {
         return false;
     }
     p.start(PatchDecl);
     p.bump_as(KwPatch);
-    if p.expect(Ident) && !field_list(p, EDGE_FIELDS) {
+    if p.expect(Ident) && !patch_fields(p) {
         p.error_expected(&[LBrace]);
     }
     p.finish();
+    true
+}
+
+/// `PatchFields = "{" { (EdgeField | GuardOp) Sep } "}"` as a `FieldList`.
+fn patch_fields(p: &mut Parser<'_>) -> bool {
+    if !p.at(LBrace) {
+        return false;
+    }
+    let mut expected = keywords(EDGE_FIELDS);
+    expected.push(KwSupersedes);
+    brace_list(p, Sep::Optional, &expected, &mut |p| {
+        guard_op(p) || field(p, EDGE_FIELDS)
+    });
+    true
+}
+
+/// `GuardOp = ("when" ("and" | "or") | "supersedes" "when") Expr
+/// { VersionClause | Cite }` (SPEC §3.6): a typed operation on the patched
+/// edge's guard with its authority, parsed in full so the rest of the file
+/// parses, then rejected as L0010 until the operations are implemented.
+/// `and` and `or` are reserved words the lexer already reports; the
+/// `supersedes when` form is reported here.
+fn guard_op(p: &mut Parser<'_>) -> bool {
+    let combines = p.at_kw(KwWhen) && (p.nth_kw(1, KwAnd) || p.nth_kw(1, KwOr));
+    if !combines && !p.at_kw(KwSupersedes) {
+        return false;
+    }
+    let start = p.current_range().start();
+    p.start(GuardOp);
+    if combines {
+        p.bump_as(KwWhen);
+        let op = if p.at_kw(KwAnd) { KwAnd } else { KwOr };
+        p.bump_as(op);
+    } else {
+        p.bump_as(KwSupersedes);
+    }
+    if combines || p.at_kw(KwWhen) {
+        if !combines {
+            p.bump_as(KwWhen);
+        }
+        super::expr::require_expr(p);
+    } else {
+        p.error_expected(&[KwWhen]);
+    }
+    while super::clauses::version_clause(p) || super::values::cite(p) {}
+    p.finish();
+    if !combines {
+        let end = p.last_end().max(usize::from(start));
+        p.push_error(SyntaxError::new(
+            DiagnosticCode::ReservedGuardOp,
+            range(usize::from(start), end),
+            format!(
+                "{}: `supersedes when p` replaces a patched edge's guard, which a later \
+                 change adds; patch the edge's other fields",
+                crate::lexer::RESERVED_GUARD_OP
+            ),
+        ));
+    }
     true
 }

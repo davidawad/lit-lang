@@ -1,0 +1,10 @@
+---
+source: crates/litigate-sema/tests/cov_build_logic.rs
+expression: out
+---
+[
+    "pkgs/links/links.lit:5:6 L0010 reserved: typed guard operations: `and` combines a patched edge's guard (`when and p`), which a later change adds; it cannot be written or used as an identifier",
+    "pkgs/links/links.lit:6:6 L0010 reserved: typed guard operations: `or` combines a patched edge's guard (`when or p`), which a later change adds; it cannot be written or used as an identifier",
+    "pkgs/links/links.lit:7:1 L0010 reserved: typed guard operations: `supersedes when p` replaces a patched edge's guard, which a later change adds; patch the edge's other fields",
+    "pkgs/links/links.lit:8:8 L1002 cannot find name `nowhere`",
+]

@@ -32,6 +32,8 @@ fn identifiers_follow_the_lexer() {
         "world",
         "characterization",
         "where",
+        "and",
+        "or",
         "a-",
         "-a",
         "1",

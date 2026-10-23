@@ -4,7 +4,7 @@ use super::cx::{first_expr, first_ref, holes_of, nested, Cx};
 use crate::db::parse::tree::{Expr, ExprKind, Field, Name, RefPath};
 use crate::db::span::Report;
 use crate::hir::{self, ActorRole, BinaryOp, EdgePatch, Instance, Type, UnaryOp, Value};
-use litigate_base::DiagnosticCode as C;
+use litigate_base::{Applicability, DiagnosticCode as C};
 use std::collections::BTreeMap;
 
 impl Cx<'_, '_> {
@@ -175,17 +175,34 @@ impl Cx<'_, '_> {
     /// `patch edge { ... }`: the edge fields written, typed as on an edge
     /// declaration. `event`, `replaces` and `when` are not patchable: replay
     /// binds the base edge and derives facts from the base guards, and only
-    /// a link replaces edges.
+    /// a link replaces edges. A guard changes only by an explicit operation
+    /// with its authority (`when and`, `when or`, `supersedes when`; SPEC
+    /// §3.6), reserved today (L0010), never by an implicit overwrite.
     fn patch(&mut self, p: &Field) -> (String, EdgePatch) {
         // The parser writes a patch only after its edge's identifier.
         let edge = first_ref(Some(&p))
             .map(RefPath::display)
             .unwrap_or_default();
         let fields = self.once(nested(p));
-        for key in ["event", "replaces", "when"] {
+        for key in ["event", "replaces"] {
             if let Some(f) = fields.get(key) {
                 self.not_allowed(f, "in a `patch`: it writes the base edge's other fields");
             }
+        }
+        if let Some(f) = fields.get("when") {
+            self.report(
+                Report::new(
+                    C::InvalidField,
+                    f.key.range,
+                    "`when` is not allowed in a `patch`: it would overwrite the base edge's guard",
+                )
+                .fix(f.range, "", Applicability::MaybeIncorrect)
+                .note(
+                    "a guard changes only by an explicit operation citing its authority: \
+                     `when and p` narrows it, `when or p` widens it, `supersedes when p` \
+                     replaces it (SPEC §3.6; reserved, L0010)",
+                ),
+            );
         }
         let patch = EdgePatch {
             span: self.ck.span(p.range),

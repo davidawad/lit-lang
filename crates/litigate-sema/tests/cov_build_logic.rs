@@ -97,6 +97,26 @@ instance base@three { note \"no pack\" }\n",
     insta::assert_debug_snapshot!(out);
 }
 
+/// The typed guard operations of a patch (SPEC §3.6) are reserved: each is
+/// L0010 alone, never also the L2007 of a plain `when`, and the patch's
+/// other fields still check.
+#[test]
+fn patch_guard_operations_are_reserved() {
+    let out = links(
+        "module links\n\
+instance base@one { pack base,\n\
+patch go {\n\
+note \"narrowed by order\"\n\
+when and has_event(Go()) effective [2026-11-01, ..) cite Fed. Cir. R. 1\n\
+when or true\n\
+supersedes when false known_at 2026-10-01 cite ?(\"Order, Dkt. 12\")\n\
+within nowhere\n\
+}\n\
+}\n",
+    );
+    insta::assert_debug_snapshot!(out);
+}
+
 /// A `payoff_transform` is a `Money<usd>` expression over `payoff` and a
 /// declared `stake`, from literals, `+ - * /` and unary `-`.
 #[test]

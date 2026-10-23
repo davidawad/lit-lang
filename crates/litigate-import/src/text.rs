@@ -29,8 +29,9 @@ pub fn string(value: &str) -> String {
 /// and `_`, hyphens only between two of those, starting with a letter or
 /// `_` (or digits then a letter). The reserved word `cite`, the words
 /// reserved for later editions ([`litigate_syntax::RESERVED_WORDS`]), the
-/// refinement words ([`litigate_syntax::REFINEMENT_WORDS`]) and a lone `_`
-/// are not identifiers.
+/// refinement words ([`litigate_syntax::REFINEMENT_WORDS`]), the guard
+/// operation words ([`litigate_syntax::GUARD_OP_WORDS`]) and a lone `_` are
+/// not identifiers.
 #[must_use]
 pub fn is_ident(text: &str) -> bool {
     let continues = |c: char| c.is_ascii_alphanumeric() || c == '_';
@@ -48,6 +49,7 @@ pub fn is_ident(text: &str) -> bool {
         && text != "cite"
         && !litigate_syntax::RESERVED_WORDS.contains(&text)
         && !litigate_syntax::REFINEMENT_WORDS.contains(&text)
+        && !litigate_syntax::GUARD_OP_WORDS.contains(&text)
         && text
             .split('-')
             .all(|part| !part.is_empty() && part.chars().all(continues))

@@ -13,6 +13,17 @@ deadline) is reported back in every query response under `warnings` /
 `assumptions`, so an agent always knows which numbers are authored and which
 are fallbacks.
 
+**Packs are generated.** `packs/*.json`, `packs/links.json` and
+`scenarios/*.json` are build outputs of the litigate authoring language:
+each pack from its `lit/<forum>/` package, `links.json` from `lit/links/`,
+each named scenario from `cases/<id>.case` (`docs/litigate/SPEC.md` §9.4
+lists the exact mapping; `docs/litigate/TUTORIAL.md` walks through it).
+Edit the source and run `just lit-sync`; never edit the JSON by hand —
+`just ci` fails when the committed files are stale. This document stays the
+reference for the JSON the compiler emits and the engine reads (and for
+packs you load from elsewhere with `--packs-dir`): SPEC §8 says which `.lit`
+construct lowers to each field below.
+
 ## Top level
 
 | field | type | notes |
@@ -144,7 +155,12 @@ same reasoning as calibration's `Edge.base_id` handling above.
 ## Clock library (v3, `packs/clock/*.json`)
 
 Deadline counting is data. `packs/clock/` holds the **clock library**:
-holiday calendars and counting rules, shared by every pack. Each file is a
+holiday calendars and counting rules, shared by every pack. A forum
+package's own counting rules and calendars are generated into
+`packs/clock/<pack file>.json` by `just lit-sync` (today
+`mpep-prosecution.json`, 37 C.F.R. § 1.7); the shared fragments
+(`frap26`, `frcp6`, `itc210`, `rcfc6`, `us-federal-holidays`) are still
+hand-authored (SPEC §9.4). Each file is a
 fragment:
 
 ```json
@@ -428,7 +444,7 @@ compile time, same as everything else.
 
 ## Scenario library (`scenarios/*.json`)
 
-A **named scenario** is a matter profile: a human summary/notes, the packs it
+Generated from `cases/*.case` (see the note at the top). A **named scenario** is a matter profile: a human summary/notes, the packs it
 needs, its sourced facts, and the engine scenario itself (rates, stakes,
 perspective, masks, payoffs, probabilities, policy, modeling modes — the same
 `scenario` object a request carries; `litgraph schema scenario` gives its
@@ -471,6 +487,12 @@ onto a named `--scenario` via `extends` automatically. `--scenarios-dir` (or
 
 ## Authoring rules
 
+These rules hold for what the JSON says; since the flip you enforce them in
+the `lit/` source, where `litigate check` turns most of them into
+diagnostics (an unresolved cite is a hole, an error under `--profile
+strict`; an unknown field does not parse), and `litgraph lint` runs on the
+generated packs.
+
 1. Every `cite` / `authority` must be checkable against a `sources` entry or a
    public citation. No invented rule numbers. A `sources[].path` must be
    repo-relative (or omitted) — never a local filesystem path; cite the
@@ -492,7 +514,8 @@ onto a named `--scenario` via `extends` automatically. `--scenarios-dir` (or
 3. Hours are BigLaw-honest estimates for the move; `cost` is cash only.
 4. Terminals should carry `payoff` and `outcome` in v2 packs.
 5. Parsing is strict: an unknown field anywhere in a pack, edge, source, or
-   instance is a hard error (not a silently-ignored typo). Check a file
-   before opening a PR: `litgraph validate packs/your-pack.json` (or
-   `--kind pack` to force detection), and `litgraph lint --packs your-pack`
-   for content diagnostics once it parses.
+   instance is a hard error (not a silently-ignored typo). Before opening
+   a PR: `just lit-check` (or `litigate check lit/your-forum`), `just
+   lit-sync`, then `litgraph validate packs/your-pack.json` (or `--kind
+   pack` to force detection) and `litgraph lint --packs your-pack` on the
+   regenerated file.

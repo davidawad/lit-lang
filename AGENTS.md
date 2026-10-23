@@ -35,6 +35,30 @@ litgraph q - < examples/cofc-1498-settle.json   # settle: ZOPA, Nash/Rubinstein 
                                             # (needs scenario.opponent_objective; docs/SETTLEMENT.md)
 ```
 
+Packs and named scenarios are **generated**: `lit/<forum>/*.lit` and
+`cases/*.case` are the authoring surface (the litigate language), compiled
+by `just lit-sync`. Never hand-edit `packs/*.json` or `scenarios/*.json`.
+
+```bash
+cargo install --path crates/litigate-cli   # binary: litigate (or `cargo run -q -p litigate-cli --`)
+litigate describe                           # the language + CLI contract as JSON — start here
+litigate check lit/frcp                     # typecheck + verify one package (--profile strict for the gate)
+litigate check lit cases                    # everything; diagnostics carry stable codes + fixes
+litigate test lit/frcp                      # inline `test` blocks (deadline arithmetic etc.)
+litigate fix lit/frcp --dry-run             # machine-applicable fixes
+litigate where frcp-civil-procedure::service-window  # id → declaration span, versions, JSON pointers
+litigate explain L3004                      # what a diagnostic code means
+litigate run cases/frcp-civil-case.case --op solve  # compile a matter and run an engine op
+litigate diff lit/frcp --against packs/frcp-civil-procedure.json   # semantic diff (SPEC §8.6)
+just lit-sync                               # regenerate packs/, packs/links.json, scenarios/
+just lit-sync-check                         # CI gate: regenerate + fail if the committed files differ
+```
+
+`docs/litigate/TUTORIAL.md` is the four-step walkthrough (write a rule,
+test it, write a case, run solve); `docs/litigate/SPEC.md` is normative.
+Over MCP the same toolchain is the `litigate_describe`, `litigate_check`,
+`litigate_build`, `litigate_where` and `litigate_explain` tools.
+
 Packs are embedded in the binary at build time — no `packs/` directory is
 needed after install. Point at a different set with `LITGRAPH_PACKS=<dir>`
 or `--packs-dir <dir>`. The named scenario library (`scenarios/*.json`) is
@@ -80,10 +104,14 @@ rather than silently ignoring a typo.
    scenario resolves it for real via `scenario.facts` (`{node ref: edge
    ref}`), not by editing the pack. See `docs/PACK_SCHEMA.md#matter-facts-v2`.
 3. **Counterfactuals via `compare`**, not by editing packs.
-4. **Pack edits need sources.** Every new `authority`/`cite` must be
-   traceable to a `sources` entry or a public citation (`sources[].path` is
-   repo-relative only — never a local filesystem path). Run `validate`,
-   `lint`, and `cargo test` after any pack change. Never invent rule
+4. **Pack edits need sources, and happen in `lit/`.** Change a forum's
+   procedure in its `lit/<forum>/` package (a matter in `cases/`), run
+   `litigate check`, then `just lit-sync` and commit source and generated
+   JSON together; `just ci` fails on stale generated files. Every new
+   `authority`/`cite` must be traceable to a `sources` entry or a public
+   citation (`sources[].path` is repo-relative only — never a local
+   filesystem path); in `.lit` an unresolved cite is a hole. Run
+   `validate`, `lint`, and `cargo test` after any pack change. Never invent rule
    numbers or deadlines; mark uncertainty `UNVERIFIED` in `note`. If
    `sources[].path` points at a file under `sources/`, `lint` verifies the
    cite mechanically (`unverifiable-cite` warning with the exact reason if
@@ -124,8 +152,14 @@ crates/litgraph/src/
   lint.rs     content QA
   cite/       cite verification against L0 sources (normalize, corpus, fuzzy match)
 crates/litgraph-cli/   the `litgraph` binary
-crates/litgraph-mcp/   the `litgraph-mcp` binary: stdio MCP server, one tool per op
-packs/                 forum packs + links.json
+crates/litgraph-mcp/   the `litgraph-mcp` binary: stdio MCP server, one tool per op + litigate_* tools
+crates/litigate-*/     the authoring language: base (diagnostics), syntax, sema, verify, lower,
+                       import, cli (`litigate`), lsp; editors/ holds tree-sitter + editor modes
+lit/                   .lit rule packages, one per forum (+ core stdlib, links, examples)
+cases/                 .case matters (top level → scenarios/; requests/ reproduce examples/)
+packs/                 GENERATED forum packs + links.json (and packs/clock/<pack>.json);
+                       the shared packs/clock fragments and *-SOURCES-NOTES.md are hand-written
+scenarios/             GENERATED named scenarios
 sources/               vendored L0 primary-law text (see sources/PROVENANCE.md)
 calibration/           calibration/*.json overlay sets (real, sourced probabilities/durations)
 docs/                  ARCHITECTURE, PACK_SCHEMA, COST_FUNCTIONS, CRITIQUE, CALIBRATION, UNCERTAINTY
@@ -138,19 +172,21 @@ tests/golden/          hand-checked 2-6 node graphs; tests/README.md explains th
 Issue tracking: [GitHub Issues](https://github.com/davidawad/litgraph/issues)
 on this repository.
 
-## litigate (the authoring language, in progress)
+## litigate (the authoring language)
 
-`docs/litigate/DESIGN.md` is the root design: `.lit` rule modules and `.case`
-matters compile to this engine's pack/links/scenario JSON. Read it before
-touching `crates/litigate-*`, `lit/`, `cases/` or `editors/`. Rules while
-the epic is open:
+`docs/litigate/DESIGN.md` is the root design and `docs/litigate/SPEC.md`
+the normative spec: `.lit` rule modules and `.case` matters compile to this
+engine's pack/links/scenario JSON. Read them before touching
+`crates/litigate-*`, `lit/`, `cases/` or `editors/`. Rules:
 
 1. Work only inside the paths your bead owns; shared contracts (AST, HIR,
    diagnostics, CLI envelope) change only through the bead that owns them.
 2. No forum knowledge in `crates/*/src` (DESIGN §9). Forum facts live in
-   packs today and in `lit/` after the flip.
+   `lit/` (and the generated `packs/`).
 3. Every new crate follows the workspace lints, `deny.toml`, the 500-line
    file ceiling, and `just ci`. Add tests with the code, never after.
-4. After the flip (DESIGN §11) never hand-edit `packs/*.json` or
-   `scenarios/*.json`; edit `lit/` or `cases/` and run `just lit-sync`.
+4. The flip (DESIGN §11) has happened: never hand-edit `packs/*.json`,
+   `packs/links.json` or `scenarios/*.json`; edit `lit/` or `cases/` and run
+   `just lit-sync`. SPEC §9.4 lists exactly which files are generated, from
+   what, and the legacy file names `lit-sync` keeps (`--pack-file`).
    The epic is tracked in the local br store (prefix `lg`).

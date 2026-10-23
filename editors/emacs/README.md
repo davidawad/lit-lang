@@ -13,6 +13,8 @@ comfortable from Emacs:
 - **deadlines to Org**: computed due dates become headings with `DEADLINE`
   timestamps, so they show up in the agenda;
 - the procedure graph drawn with Graphviz, solved best line highlighted;
+- a **timeline** of any `.case` or `.lit` file, `magit-log --graph` style:
+  worlds (alternate timelines) as branches, layers you can switch off;
 - scenario JSON editing with flymake validation and completion;
 - an Org Babel backend, `#+begin_src litgraph`.
 
@@ -35,7 +37,8 @@ Nothing blocks Emacs: every call is a `make-process` with a timeout.
 
 The package is a directory of files: `litgraph.el` (core), `litgraph-view.el`,
 `litgraph-graph.el`, `litgraph-org.el`, `litgraph-scenario.el`,
-`litgraph-menu.el` and `ob-litgraph.el`. Entry points are autoloaded.
+`litgraph-menu.el`, `litgraph-timeline.el` and `ob-litgraph.el`. Entry points
+are autoloaded.
 
 **use-package with `:vc`** (Emacs 30; `package-vc` in 29):
 
@@ -96,7 +99,7 @@ See                      Scenario files       Engine
 g Graph (Graphviz)       o Open…              r Run any op…
 G Graph around a node    n New…               k Packs
 d Deadlines to Org       R Run this buffer    L Lint
-                         y Validate buffer    D Describe (the manual)
+T Timeline of a file     y Validate buffer    D Describe (the manual)
 ```
 
 Pick a scenario (`C`, completing from the library or a JSON file), optionally
@@ -209,6 +212,60 @@ fallback), `d` shows the dot source, `w` writes `.dot`/`.svg`/`.png`. A prefix
 argument draws only the neighborhood of a node. `RET` on a tree line explains
 that node.
 
+## Timeline
+
+`M-x litgraph-timeline` (`T` in the menu and in `litgraph-command-map`, and
+`C-c C-t` in a `litigate-mode` buffer) shows the timeline of a `.case` or
+`.lit` file: one row per event, deadline or fork in date order, with one graph
+lane per world. A fork row is where worlds diverge (an assumed order, a grant
+or denial, a hypothetical decision); the line under it names the worlds that
+leave it.
+
+```
+       Date        Kind      Status      Layer       Event or deadline
+*      2026-04-06  event     none        base_rule   Motion to reset the answer date filed  [37 C.F.R. § 2.106(a)]
++      —           fork      unknown     base_rule   Ruling on the motion — no ruling recorded as of 2026-04-08
+|\-\   w1 reset granted, w2 reset denied
+| * |  2026-04-10  event     none        case_order  Board order resets the answer date to 2026-05-13  [37 C.F.R. § 2.106(a)]
+o | |  2026-04-13  deadline  open        base_rule   Answer due (designated 2026-04-11, a Saturday; rolls to Monday)  [...]
+  o |  2026-04-13  deadline  superseded  base_rule   Answer due (original designation) — reset by order-reset-1  [...]
+  | o  2026-04-13  deadline  open        base_rule   Answer due  [37 C.F.R. §§ 2.105(a), 2.196]
+  o    2026-05-13  deadline  open        case_order  Answer due (as reset)  [37 C.F.R. § 2.106(a)]
+```
+
+Status and layer class are printed exactly as the op's JSON spells them
+(`met`, `open`, `late`, `lapsed`, `breached`, `unknown`, `superseded`, `none`;
+`base_rule`, `local_rule`, `standing_order`, `general_order`,
+`emergency_declaration`, `case_order`, `decision`); a status with a reason
+(always for `unknown` and `superseded`) shows it after the label.
+
+| key | action |
+|-----|--------|
+| `RET` | jump to the row's `.case`/`.lit` span; without one, to its cite in the file (or `litgraph-timeline-cite-function`) |
+| `=` | diff two worlds: common rows, changed rows (same source span), rows only in one |
+| `l` | toggle a layer on or off (the layer on the line, else asked) |
+| `t` | set `as_of` and `known_at` (empty for the default) |
+| `w` | show one world only; again for all |
+| `g` | refresh; saving the file, or a `.lit` file a row comes from, refreshes too |
+| `n` / `p` | next / previous row |
+| `j` | raw JSON |
+
+The buffer only renders the JSON of litgraph's `timeline` op (schema
+`litigate.timeline/1`, frozen in litgraph's `docs/litigate/TIMELINE.md`). How
+the op is called is one option, `litgraph-timeline-command`:
+
+```elisp
+(setq litgraph-timeline-command
+      '(:program nil                    ; nil: `litgraph-executable'
+        :args ("timeline" file "--json") ; `file' is the .case/.lit file
+        :as-of "--as-of" :known-at "--known-at"
+        :layers "--layers"              ; comma-separated enabled layer ids
+        :world "--world"))
+```
+
+The `litigate-mode` key is `litgraph-timeline-litigate-key` (nil for none); it
+is bound when `litigate-mode` (or the older `litigate-ts-mode`) loads.
+
 ## Scenario editing
 
 - `M-x litgraph-new-scenario` writes a runnable request skeleton extending a
@@ -258,6 +315,7 @@ reproducible. Warnings are reported in the echo area.
 | `s` `c` `x` `S` `p` `t` `w` | solve, chain, explain, simulate, path, tornado, sweep |
 | `g` | `litgraph-graph` |
 | `d` | `litgraph-deadlines-to-org` |
+| `T` | `litgraph-timeline` |
 | `o` `n` `v` | open / new scenario, validate buffer |
 | `C` `P` `.` | set scenario / packs / parameter |
 | `k` | cancel running processes |
@@ -271,7 +329,8 @@ reproducible. Warnings are reported in the echo area.
 | `litgraph-scenarios-dir` | exported as `LITGRAPH_SCENARIOS` |
 | `litgraph-default-scenario` / `litgraph-default-packs` | used until you pick your own |
 | `litgraph-timeout` | seconds before a call is killed (120) |
-| `litgraph-view-*`, `litgraph-graph-*`, `litgraph-org-*`, `litgraph-scenario-*` | see `M-x customize-group RET litgraph` |
+| `litgraph-timeline-command` | how the timeline op is called (see Timeline) |
+| `litgraph-view-*`, `litgraph-graph-*`, `litgraph-org-*`, `litgraph-scenario-*`, `litgraph-timeline-*` | see `M-x customize-group RET litgraph` |
 
 ## Development
 
@@ -286,6 +345,15 @@ Unit tests replace `litgraph-process-function` with a stub that answers from
 recorded real output in `test/fixtures/`; integration tests
 (`test/litgraph-integration-test.el`) skip themselves when no `litgraph`
 binary is found.
+
+The timeline tests render `test/fixtures/timeline-ttab-opposition.json`, the
+example of the frozen timeline schema; `timeline.v1.schema.json` beside it is
+the schema itself (both copied from litgraph `docs/litigate/`, main
+`6efcc35`), and the tests check the renderer's statuses and layer classes
+against its enums. When the schema changes, copy both again. The timeline
+integration test also skips when the binary has no `timeline` op; it runs on
+`test/fixtures/timeline-project/acme.case` (from litigate-mode.el's examples),
+or on `LITGRAPH_TIMELINE_FILE`.
 
 ## License
 

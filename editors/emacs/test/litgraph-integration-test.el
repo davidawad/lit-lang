@@ -15,6 +15,7 @@
 (require 'litgraph-org)
 (require 'litgraph-scenario)
 (require 'ob-litgraph)
+(require 'litgraph-timeline)
 
 (defmacro litgraph-it (&rest body)
   "Run BODY against the real binary with a clean session, or skip."
@@ -173,6 +174,49 @@
           (accept-process-output nil 0.05)))
       (should (stringp result))
       (should (string-match-p "<svg" result)))))
+
+(defun litgraph-it--timeline-op-p (binary)
+  "Non-nil if BINARY runs the timeline op, as `litgraph-timeline-command' says."
+  (let ((command (plist-get litgraph-timeline-command :args)))
+    (eq 0 (ignore-errors
+            (call-process binary nil nil nil (car command) "--help")))))
+
+(ert-deftest litgraph-it-timeline-renders-real-op ()
+  ;; The example project (Lit.toml, rule12.lit, acme.case) comes from
+  ;; litigate-mode.el's examples/.  LITGRAPH_TIMELINE_FILE names another
+  ;; .case or .lit file to try.
+  (litgraph-it
+    (let ((litgraph-executable (or (plist-get litgraph-timeline-command :program)
+                                   litgraph-executable)))
+      (unless (litgraph-it--timeline-op-p litgraph-executable)
+        (ert-skip "litgraph has no timeline op")))
+    (let* ((file (or (getenv "LITGRAPH_TIMELINE_FILE")
+                     (expand-file-name "fixtures/timeline-project/acme.case"
+                                       litgraph-test-dir)))
+           (buffer (litgraph-timeline file)))
+      (unwind-protect
+          (with-current-buffer buffer
+            (let ((deadline (+ (float-time) 30)))
+              (while (and (not litgraph-timeline--doc)
+                          (not litgraph-timeline--error)
+                          (< (float-time) deadline))
+                (accept-process-output nil 0.05)))
+            (should-not litgraph-timeline--error)
+            (should (equal (litgraph-get litgraph-timeline--doc 'schema)
+                           litgraph-timeline-schema))
+            (should (string-match-p "^Timeline  " (buffer-string)))
+            ;; Every state and layer class the op emits is one the schema has.
+            (dolist (row (litgraph-get litgraph-timeline--doc 'rows))
+              (should (member (litgraph-get row 'status 'state)
+                              litgraph-timeline-states))
+              (should (member (litgraph-get row 'layer)
+                              litgraph-timeline-layer-classes))
+              (when (equal (litgraph-get row 'status 'state) "unknown")
+                (should (litgraph-get row 'status 'reason))))
+            (dolist (layer (litgraph-get litgraph-timeline--doc 'layers))
+              (should (member (litgraph-get layer 'class)
+                              litgraph-timeline-layer-classes))))
+        (kill-buffer buffer)))))
 
 (provide 'litgraph-integration-test)
 

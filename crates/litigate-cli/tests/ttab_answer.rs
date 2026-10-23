@@ -47,7 +47,28 @@ fn check(name: &str, events: &[&str], order: bool) -> Run {
     .unwrap();
     let lock = litigate_in(&dir, &["lock", "cases"]);
     assert_eq!(lock.code, 0, "{}", lock.stdout);
-    litigate_in(&dir, &["check", "cases/answer.case"])
+    let explained = litigate_in(
+        &dir,
+        &["explain-value", "cases/answer.case", "answer-period"],
+    );
+    let mut run = litigate_in(&dir, &["check", "cases/answer.case"]);
+    run.json["explained"] = explained.json["result"].clone();
+    run
+}
+
+/// `explain-value`'s due date and the detail of each step that names the
+/// designation or the unknown date.
+fn explained(run: &Run) -> (String, Vec<String>) {
+    let e = &run.json["explained"];
+    let details = e["steps"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .filter_map(|s| s["detail"].as_str())
+        .filter(|d| d.contains("designates") || d.contains("unknown"))
+        .map(str::to_owned)
+        .collect();
+    (e["value"].as_str().unwrap_or("-").to_owned(), details)
 }
 
 /// `(deadline, due, status, designated, unknown)` of every scheduled
@@ -118,6 +139,13 @@ fn the_notice_designates_the_answer_date() {
                 "-"
             )]
         );
+        assert_eq!(
+            explained(&run),
+            (
+                rolled.to_owned(),
+                vec!["due on the date InstitutionNoticed() designates (its `due`), no earlier than 30 calendar day(s) after it, rolled by litigate-core::frcp6; in force [2017-01-14, ..)".to_owned()]
+            )
+        );
     }
 }
 
@@ -153,6 +181,15 @@ fn a_notice_without_its_due_date_leaves_the_answer_deadline_unknown() {
             "-",
             "`InstitutionNoticed` designates no due date for `answer-period` (its `due` is unknown), so the due date is unknown: it is the notice's to set, never counted in its place"
         )]
+    );
+    let (value, details) = explained(&run);
+    assert_eq!(value, "-");
+    assert_eq!(details.len(), 2, "{details:#?}");
+    assert!(
+        details[1].starts_with(
+            "triggered by InstitutionNoticed(?) on 2026-07-06; the due date is unknown: "
+        ),
+        "{details:#?}"
     );
 }
 

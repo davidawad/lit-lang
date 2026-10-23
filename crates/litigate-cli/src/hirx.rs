@@ -131,13 +131,19 @@ pub fn nodes_at<'p>(
 }
 
 /// The comparable key of an event argument: a variant or ref's local name,
-/// or the literal's JSON.
+/// a date as written, `?` for an unknown value, or the literal's JSON.
 fn arg_key(e: &Expr) -> String {
     match &e.kind {
         ExprKind::Literal {
             value: Value::Variant(v),
         } => local(v).to_owned(),
         ExprKind::Ref { target } => local(target).to_owned(),
+        ExprKind::Literal {
+            value: Value::Date(d),
+        } => d.clone(),
+        ExprKind::Literal {
+            value: Value::Hole(_),
+        } => "?".to_owned(),
         other => serde_json::to_string(other).unwrap_or_default(),
     }
 }
@@ -237,9 +243,15 @@ mod tests {
                 expr(ExprKind::Literal {
                     value: Value::Date("2025-01-02".into()),
                 }),
+                expr(ExprKind::Literal {
+                    value: Value::Hole(None),
+                }),
+                expr(ExprKind::Literal {
+                    value: Value::Boolean(true),
+                }),
             ],
         });
-        insta::assert_snapshot!(event_text(&event), @r#"Filed(party, {"expr":"literal","value":{"kind":"date","value":"2025-01-02"}})"#);
+        insta::assert_snapshot!(event_text(&event), @r#"Filed(party, 2025-01-02, ?, {"expr":"literal","value":{"kind":"boolean","value":true}})"#);
         let literal = variant("D::x");
         assert_eq!(event_parts(&literal), None);
         assert_eq!(event_text(&literal), "");

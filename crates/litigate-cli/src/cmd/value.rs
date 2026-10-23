@@ -158,7 +158,8 @@ impl Trace<'_> {
         // The declaration that counted the scheduled due date (a version
         // of `d`, or a claimant displacing it, SPEC §5.5), else the version
         // selected at the matter's dates.
-        let chosen = match scheduled {
+        // An instance whose due date is unknown names no counting version.
+        let chosen = match scheduled.filter(|s| s.unknown.is_none()) {
             Some(s) => versions
                 .iter()
                 .copied()

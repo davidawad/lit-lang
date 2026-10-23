@@ -5,7 +5,7 @@ mod support;
 
 use litigate_lower::{EngineClock, Lowerer};
 use litigate_sema::case::{Clock, DueRequest};
-use litigate_sema::hir::{Anchor, DayUnit, Direction, RollOn};
+use litigate_sema::hir::{self, Anchor, DayUnit, Direction, RollOn};
 use support::{counting_mut, example, lowered, render_diagnostics};
 
 /// A forward 21-calendar-day request under `counting`.
@@ -142,4 +142,16 @@ fn requests_the_engine_cannot_count() {
     insta::assert_snapshot!(text);
     // The standard library words this one differently across toolchains.
     assert!(clock.due(&too_long).is_err());
+}
+
+/// Two versions of a rule in one window select neither at its start, so
+/// neither contributes a fragment.
+#[test]
+fn an_ambiguous_version_contributes_no_fragment() {
+    let mut p = example();
+    let twin = hir::Declaration::Counting(counting_mut(&mut p).clone());
+    p.modules[0].declarations.push(twin);
+    let clock = EngineClock::lowered(&Lowerer::new(&[&p]), &[&p])
+        .unwrap_or_else(|d| panic!("{}", render_diagnostics(&d)));
+    assert_eq!(clock, EngineClock::new([]));
 }

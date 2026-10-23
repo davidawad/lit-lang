@@ -316,3 +316,16 @@ fn an_undeclared_counting_rule_is_the_shared_librarys() {
         outcome_of(&v, Obligation::TestsPass)
     );
 }
+
+/// Versions are selected over the package even when the caller lists only
+/// its dependencies.
+#[test]
+fn tests_select_over_an_unlisted_package() {
+    let v = support::verify_edited_in(BASE, |_| (), false);
+    assert_eq!(
+        status(&v, Obligation::TestsPass),
+        Some(ObligationStatus::Passed),
+        "{:#?}",
+        outcome_of(&v, Obligation::TestsPass)
+    );
+}

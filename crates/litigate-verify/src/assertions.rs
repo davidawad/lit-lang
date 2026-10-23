@@ -187,7 +187,7 @@ fn due(
         Some((pkg, c))
     };
     let library = match counting {
-        Some((pkg, c)) => clocks.get(cx, pkg, c)?,
+        Some((pkg, c)) => clocks.get(pkg, c)?,
         None => ClockLibrary::embedded().0.clone(),
     };
     let rule = deadline
@@ -277,12 +277,7 @@ impl<'a> Clocks<'a> {
         Some((self.packages[d.pack], d.decl))
     }
 
-    fn get(
-        &self,
-        cx: &Context<'_>,
-        pkg: &hir::Package,
-        counting: &hir::Counting,
-    ) -> Result<ClockLibrary, String> {
+    fn get(&self, pkg: &hir::Package, counting: &hir::Counting) -> Result<ClockLibrary, String> {
         let key = (
             counting.meta.id.clone(),
             counting.meta.effective.from.clone(),
@@ -290,33 +285,27 @@ impl<'a> Clocks<'a> {
         if let Some(found) = self.lowered.borrow().get(&key) {
             return found.clone();
         }
-        let lowered = lower_clock(cx, pkg, counting);
+        let lowered = self.lower(pkg, counting);
         self.lowered.borrow_mut().insert(key, lowered.clone());
         lowered
     }
-}
 
-/// The clock fragment lowering emits for version `counting` of `pkg`,
-/// lowered at that version's `from` date.
-fn lower_clock(
-    cx: &Context<'_>,
-    pkg: &hir::Package,
-    counting: &hir::Counting,
-) -> Result<ClockLibrary, String> {
-    Lowerer::new(cx.packages)
-        .clock_version(pkg, counting)
-        .map_err(|ds| {
-            ds.iter()
-                .map(|d| format!("{} {}", d.code.as_str(), d.message))
-                .collect::<Vec<_>>()
-                .join("; ")
-        })?
-        .ok_or_else(|| {
-            format!(
-                "counting rule `{}` has no engine lowering",
-                counting.meta.id
-            )
-        })
+    /// The clock fragment lowering emits for version `counting` of `pkg`,
+    /// lowered at that version's `from` date. A selected version is the
+    /// one in force on its own `from`, so it always has a fragment or
+    /// diagnostics; were it to have neither, the empty library names no
+    /// rule and the count fails there.
+    fn lower(&self, pkg: &hir::Package, counting: &hir::Counting) -> Result<ClockLibrary, String> {
+        Lowerer::new(&self.packages)
+            .clock_version(pkg, counting)
+            .map(Option::unwrap_or_default)
+            .map_err(|ds| {
+                ds.iter()
+                    .map(|d| format!("{} {}", d.code.as_str(), d.message))
+                    .collect::<Vec<_>>()
+                    .join("; ")
+            })
+    }
 }
 
 fn show(e: &Expr, v: &Value) -> String {

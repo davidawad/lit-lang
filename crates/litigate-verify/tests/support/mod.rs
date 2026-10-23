@@ -93,6 +93,16 @@ pub fn verify(packages: &[LoadedPackage], profile: Profile) -> Checked {
 /// and verifies the edited HIR in `strict` against the program's lowering
 /// (an edited package need not lower, and `tests-pass` needs a lowering).
 pub fn verify_edited(lit: &str, edit: impl FnOnce(&mut hir::Package)) -> Verification {
+    verify_edited_in(lit, edit, true)
+}
+
+/// [`verify_edited`], listing the package among the loaded ones only when
+/// `listed` (a caller may pass just its dependencies).
+pub fn verify_edited_in(
+    lit: &str,
+    edit: impl FnOnce(&mut hir::Package),
+    listed: bool,
+) -> Verification {
     let mut db = LitDatabase::default();
     let ws = create_workspace(&mut db, &[pkg("demo", "FederalRule", &[], lit)]);
     let checks = litigate_sema::check_workspace(&db, ws);
@@ -112,7 +122,7 @@ pub fn verify_edited(lit: &str, edit: impl FnOnce(&mut hir::Package)) -> Verific
         package: &package,
         check,
         lowered: lowered.as_ref().map_err(Vec::as_slice),
-        packages: &packages,
+        packages: if listed { &packages } else { &[] },
         options: &options,
     };
     verify_package(&input, SourceCorpus::embedded_ref(), Profile::Strict)

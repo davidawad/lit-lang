@@ -35,9 +35,13 @@ litgraph q - < examples/cofc-1498-settle.json   # settle: ZOPA, Nash/Rubinstein 
                                             # (needs scenario.opponent_objective; docs/SETTLEMENT.md)
 ```
 
-Packs and named scenarios are **generated**: `lit/<forum>/*.lit` and
-`cases/*.case` are the authoring surface (the litigate language), compiled
-by `just lit-sync`. Never hand-edit `packs/*.json` or `scenarios/*.json`.
+Packs and named scenarios are **build outputs, never committed**:
+`lit/<forum>/*.lit` and `cases/*.case` are the authoring surface (the
+litigate language). `crates/litgraph-packs` compiles them (the `litigate
+build` arguments in `crates/litgraph-packs/build.args`) at `cargo build`
+time and embeds the result; `just lit-sync` writes the same build to
+`target/lit-build/{packs,scenarios}` to read or pass as `--packs-dir`.
+`packs/` holds only the hand-authored clock library and source notes.
 
 ```bash
 cargo install --path crates/litigate-cli   # binary: litigate (or `cargo run -q -p litigate-cli --`)
@@ -49,9 +53,9 @@ litigate fix lit/frcp --dry-run             # machine-applicable fixes
 litigate where frcp-civil-procedure::service-window  # id → declaration span, versions, JSON pointers
 litigate explain L3004                      # what a diagnostic code means
 litigate run cases/frcp-civil-case.case --op solve  # compile a matter and run an engine op
-litigate diff lit/frcp --against packs/frcp-civil-procedure.json   # semantic diff (SPEC §8.6)
-just lit-sync                               # regenerate every Lit.lock, packs/, packs/links.json, scenarios/
-just lit-sync-check                         # CI gate: regenerate + fail if the committed files differ
+litigate diff lit/frcp --against target/lit-build/packs/frcp-civil-procedure.json   # semantic diff (SPEC §8.6)
+just lit-sync                               # regenerate every Lit.lock; build packs/, scenarios/ into target/lit-build/
+just lit-sync-check                         # CI gate: fail on a stale Lit.lock or a committed generated file
 ```
 
 `Lit.lock` files merge package by package through the `litlock` git merge
@@ -112,8 +116,9 @@ rather than silently ignoring a typo.
 3. **Counterfactuals via `compare`**, not by editing packs.
 4. **Pack edits need sources, and happen in `lit/`.** Change a forum's
    procedure in its `lit/<forum>/` package (a matter in `cases/`), run
-   `litigate check`, then `just lit-sync` and commit source and generated
-   JSON together; `just ci` fails on stale generated files. Every new
+   `litigate check`, then `just lit-sync` and commit the source and its
+   `Lit.lock` changes (the generated JSON is a build output, never
+   committed); `just ci` fails on a stale `Lit.lock`. Every new
    `authority`/`cite` must be traceable to a `sources` entry or a public
    citation (`sources[].path` is repo-relative only — never a local
    filesystem path); in `.lit` an unresolved cite is a hole. Run
@@ -188,11 +193,13 @@ engine's pack/links/scenario JSON. Read them before touching
 1. Work only inside the paths your bead owns; shared contracts (AST, HIR,
    diagnostics, CLI envelope) change only through the bead that owns them.
 2. No forum knowledge in `crates/*/src` (DESIGN §9). Forum facts live in
-   `lit/` (and the generated `packs/`).
+   `lit/` (and the packs built from it).
 3. Every new crate follows the workspace lints, `deny.toml`, the 500-line
    file ceiling, and `just ci`. Add tests with the code, never after.
-4. The flip (DESIGN §11) has happened: never hand-edit `packs/*.json`,
-   `packs/links.json` or `scenarios/*.json`; edit `lit/` or `cases/` and run
-   `just lit-sync`. SPEC §9.4 lists exactly which files are generated, from
-   what, and the legacy file names `lit-sync` keeps (`--pack-file`).
+4. The flip (DESIGN §11) has happened, and the generated packs, links,
+   clock fragments, scenarios and TypeScript bindings are build outputs
+   (lg-flu.31), never committed: edit `lit/` or `cases/` and run `just
+   lit-sync`. SPEC §9.4 lists exactly which files are generated, from what,
+   and the legacy file names kept (`--pack-file` in
+   `crates/litgraph-packs/build.args`).
    The epic is tracked in the local br store (prefix `lg`).

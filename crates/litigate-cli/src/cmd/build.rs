@@ -4,7 +4,7 @@
 //! repository (`packs/<id>.json`, `packs/links.json`, `packs/clock/<id>.json`,
 //! `scenarios/<id>.json`), so `diff OUT/packs packs` is the migration check.
 //! `--pack-file ID=STEM` renames a pack's files to `packs/STEM.json`, which
-//! `just lit-sync` uses to keep the repository's legacy file names.
+//! `crates/litgraph-packs/build.args` uses to keep the legacy file names.
 use super::check::{checked_in, Checked};
 use crate::cli::Dates;
 use crate::out::{Failure, Outcome, Report};

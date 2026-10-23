@@ -124,18 +124,22 @@ just lit-sync
 ```
 
 Replace `lit/frcp` with the package you changed. `litigate check lit cases`
-checks the full source tree. `just lit-sync` compiles the registered source
-packages and matters into `packs/*.json`, `packs/links.json`, generated clock
-fragments, and `scenarios/*.json`; commit generated outputs alongside their
-`.lit` or `.case` sources. `just lit-sync-check` verifies those outputs match
-the sources, and is part of `just ci`.
+checks the full source tree. `just lit-sync` regenerates the `Lit.lock`
+files and builds the registered source packages and matters into
+`target/lit-build/` (`packs/*.json`, `packs/links.json`, generated clock
+fragments, `scenarios/*.json`). Those are build outputs and are never
+committed: `crates/litgraph-packs` builds the same files at `cargo build`
+time and embeds them, so parallel changes to different packages never
+conflict on them. Commit the `.lit` or `.case` sources and their `Lit.lock`
+changes. `just lit-sync-check` (part of `just ci`) fails on a stale
+`Lit.lock` or a generated file that has been committed.
 
 When adding a new forum package or named matter, add its path to
-`lit_sync_inputs` in the root `justfile` so repository regeneration includes
-it. `lit/core` and `lit/examples` are library and teaching packages and do
-not emit packs. The shared `packs/clock/*.json` fragments and
-`packs/*-SOURCES-NOTES.md` files are hand-authored; generated clock fragments
-are produced by `just lit-sync` and must not be edited by hand.
+`crates/litgraph-packs/build.args` so the build includes it. `lit/core` and
+`lit/examples` are library and teaching packages and do not emit packs. The
+shared `packs/clock/*.json` fragments and `packs/*-SOURCES-NOTES.md` files
+are hand-authored; the build refuses a generated clock fragment that also
+exists there.
 
 ### Change a matter
 
@@ -148,8 +152,9 @@ operation) to inspect the result.
 
 ### Review the generated change
 
-For a source change, regenerate and inspect the resulting diff before opening
-a PR:
+For a source change, `just lit-sync` before the change, then `just lit-diff`
+after it shows what the change does to the generated files, by JSON
+pointer:
 
 ```bash
 just lit-sync

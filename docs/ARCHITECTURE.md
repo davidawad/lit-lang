@@ -42,12 +42,15 @@ L1a, L1b and L3 are the litigate authoring language
 cites), `litigate-lower` lowers to the engine's JSON, and `litigate-cli`
 (`litigate`), `litigate-lsp` and `litgraph-mcp`'s `litigate_*` tools are thin
 front ends over one library. The engine (L2 and up) reads only the lowered
-JSON and is unchanged by the language. **`packs/*.json`, `packs/links.json`
-and `scenarios/*.json` are generated**: edit `lit/` or `cases/`, run `just
-lit-sync`, commit both; `just ci` (`lit-sync-check`) fails when they are
-stale. SPEC §9.4 lists exactly which files are generated and from what.
+JSON and is unchanged by the language. **The packs, `links.json`,
+generated clock fragments and named scenarios are build outputs, never
+committed**: `crates/litgraph-packs` runs `litigate build` over `lit/` and
+`cases/` in its build script and embeds the result (`litgraph` cannot: the
+compiler depends on it). Edit `lit/` or `cases/` and commit the source and
+its `Lit.lock`; `just lit-sync` writes the build to `target/lit-build/`.
+SPEC §9.4 lists exactly which files are generated and from what.
 
-Packs are compiled into the `litgraph` binary at build time (`Catalog::embedded`)
+The binaries hand `litgraph-packs`' embedded files to `Catalog::embedded`,
 so a released binary needs no `packs/` directory alongside it; point at a
 different set with `$LITGRAPH_PACKS` or `--packs-dir` (`Catalog::load`).
 

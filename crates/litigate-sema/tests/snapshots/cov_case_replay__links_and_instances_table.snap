@@ -4,7 +4,7 @@ expression: table(&rows)
 ---
 {
     "missed: a link's deadline, declared and triggered in the links package's view": [
-        "13:3 L4002 `Noted(motion)` on 2010-01-09 missed deadline `delta::link-period`, due 2010-01-07\n    note @12:3: `link-period` runs 3 calendar days from `Benched(motion)` on 2010-01-04 under `ac@2009-12-01`\n    note: a cited `Waived`, `Extended`, or `Excused` event cannot excuse this deadline without a typed, bounded authorization",
+        "13:3 L4002 `Noted(motion)` on 2010-01-09 missed deadline `delta::link-period`, due 2010-01-07\n    note @12:3: `link-period` runs 3 calendar days from `Benched(motion)` on 2010-01-04 under `ac@2009-12-01`\n    note: a cited `Waived`, `Extended`, or `Excused` event between the trigger and this event would excuse it",
         "trace Took Benched(motion) alpha::intake -> alpha::lone via alpha::to-lone",
         "trace Took Noted(motion) alpha::lone -> alpha::defaulted via alpha::wait",
     ],

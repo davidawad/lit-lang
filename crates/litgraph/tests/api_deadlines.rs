@@ -444,3 +444,31 @@ fn edge_mode_missing_or_unknown_counting_rule_is_a_structured_warning() {
         assert!(w.example.contains(needle), "{}", w.example);
     }
 }
+
+/// A deadline naming its own counting rule is counted by it, not by its
+/// pack's: a FRAP 4 period in a district-court pack runs under FRAP 26,
+/// and a pack with no `counting` still counts a deadline that names one.
+#[test]
+fn a_deadline_naming_its_own_counting_rule_is_counted_by_it() {
+    let c = catalog(vec![
+        pack(json!({
+            "schemaVersion": 3, "counting": "frcp6", "id": "own-rule", "title": "Own rule",
+            "startNodeId": "trigger",
+            "nodes": [
+                {"id": "trigger", "kind": "state", "label": "Trigger"},
+                {"id": "due", "kind": "state", "label": "Due"}
+            ],
+            "edges": [
+                {"id": "appeal", "from": "trigger", "to": "due", "label": "Appeal",
+                 "deadline": {"length": 30, "counting": "frap26"}}
+            ]
+        })),
+        mystery_pack(),
+    ]);
+    let resp = handle(
+        &deadlines_req(&["own-rule"], D::new("2026-01-05").edge("appeal").op()),
+        &c,
+    );
+    assert!(resp.ok, "{resp:?}");
+    assert_eq!(resp.result.unwrap()["deadlines"][0]["rule_set"], json!("frap26"));
+}

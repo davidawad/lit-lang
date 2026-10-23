@@ -21,6 +21,7 @@ pub(crate) fn links(
     let cx = EdgeCx {
         selection: &build.selection,
         pack: &pkg.manifest.pack_id,
+        counting: None,
     };
     let mut links: Vec<(RawEdge, &hir::Edge)> = Vec::new();
     let mut instances = BTreeMap::new();

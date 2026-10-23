@@ -1,0 +1,82 @@
+module core.frcrimp45
+
+import core.calendar.{ us-federal-holidays }
+import core.time.{ Served, Scheduled, ServiceMethod }
+
+/// FRCrimP 45 as amended to December 1, 2023 (the vendored edition, as
+/// amended to December 1, 2024, prints that as its last amendment): every
+/// period "specified in these rules, in any local rule or court order, or in
+/// any statute that does not specify a method of computing time" (45(a)),
+/// the Speedy Trial Act's included. Its 45(a)(1)-(3) is FRCP 6(a)(1)-(3):
+/// exclude the trigger day, count every day, roll a last day off a
+/// Saturday, Sunday or legal holiday, count hours, and extend past an
+/// inaccessible clerk's office. 45(c) adds 3 days after service "under
+/// Rule 49(a)(4)(C), (D), and (E)": mailing, leaving it with the court
+/// clerk, and other nonelectronic means consented to in writing; service
+/// by the court's electronic-filing system or other consented electronic
+/// means (49(a)(3)) and personal delivery (49(a)(4)(A)-(B)) add nothing.
+/// Earlier versions (the amendment credits list 2002 through 2018) are not
+/// vendored and stay undeclared, as do 45(a)(6)(B)'s declared holidays and
+/// (C)'s state holidays: no declaration or state calendar is vendored. Rule
+/// 45 is silent on periods stated in months or years, so none is counted.
+counting frcrimp45 effective [2023-12-01, ..) known_at 2023-04-24 cite FRCrimP 45(a)
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite FRCrimP 45(c)
+  holidays us-federal-holidays
+  forums [frcrimp]
+  allow_hours
+}
+
+deadline frcrimp45-14-days: 14.days after Served() counted_by frcrimp45 cite FRCrimP 45(a)(1)
+{
+  forum frcrimp
+}
+
+deadline frcrimp45-7-days-before: 7.days before Scheduled() counted_by frcrimp45 cite FRCrimP 45(a)(5)
+{
+  forum frcrimp
+}
+
+test "fourteen days count every day" cite FRCrimP 45(a)(1)(B)
+{
+  given Served(Personal) on 2025-03-03
+  expect deadline(frcrimp45-14-days) == 2025-03-17
+}
+
+test "a last day on a Saturday runs to Monday" cite FRCrimP 45(a)(1)(C)
+{
+  given Served(Personal) on 2025-03-01
+  expect deadline(frcrimp45-14-days) == 2025-03-17
+}
+
+test "mail adds three days after the period would otherwise expire" cite FRCrimP 45(c)
+{
+  given Served(Mail) on 2025-03-03
+  expect deadline(frcrimp45-14-days) == 2025-03-20
+}
+
+test "electronic service adds nothing" cite FRCrimP 45(c)
+{
+  given Served(Electronic) on 2025-03-03
+  expect deadline(frcrimp45-14-days) == 2025-03-17
+}
+
+test "counted back, a Sunday last day moves to Friday" cite FRCrimP 45(a)(5)
+{
+  given Scheduled() on 2025-03-16
+  expect deadline(frcrimp45-7-days-before) == 2025-03-07
+}

@@ -29,6 +29,9 @@ pub struct Deadline {
     pub trigger: Expr,
     /// Qualified counting-rule id.
     pub counting: String,
+    /// The forum whose rules set the period (`forum F`, else the declaring
+    /// package's): its counting rule must be one of that forum's.
+    pub forum: String,
     /// Whether extensions are available (`Deadline.extendable`).
     pub extendable: Option<bool>,
     /// Extension authority text.
@@ -416,10 +419,22 @@ pub struct Counting {
     pub include_last_day: bool,
     /// Excluded last days that roll in the counting direction.
     pub roll_on: Vec<RollOn>,
-    /// Service method to added days, forward counting only.
-    pub service_extensions: BTreeMap<String, (u64, DayUnit)>,
-    /// Qualified holiday-calendar id.
+    /// What each service method adds, forward counting only: total over
+    /// [`SERVICE_METHODS`].
+    pub service_extensions: BTreeMap<String, ServiceTime>,
+    /// Qualified holiday-calendar id (closes either direction).
     pub calendar: String,
+    /// Qualified id of a calendar closing only periods counted forward
+    /// (`forward_holidays`, FRCP 6(a)(6)(C)).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub forward_calendar: Option<String>,
+    /// Qualified id of a calendar of declared days the forum closes on in
+    /// either direction (`declared_holidays`, FRCP 6(a)(6)(B)).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub declared_calendar: Option<String>,
+    /// The forums whose periods the rule computes (`forums [...]`, else the
+    /// declaring package's forum).
+    pub forums: Vec<String>,
     /// Where counting starts.
     pub anchor: Anchor,
     /// Periods shorter than `threshold` count in `unit` instead.
@@ -429,6 +444,35 @@ pub struct Counting {
     /// End-of-month policy; month and year periods need one.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub end_of_month: Option<EndOfMonth>,
+}
+
+/// The service methods, a closed set: the variants of `core.time`'s
+/// `ServiceMethod` and the engine's service vocabulary. A counting rule's
+/// `service_extension` names each exactly once (design review 2026-10-23,
+/// P8).
+pub const SERVICE_METHODS: [&str; 10] = [
+    "Personal",
+    "Electronic",
+    "Mail",
+    "Clerk",
+    "OtherConsented",
+    "CommercialCarrier",
+    "PrisonMail",
+    "MailForeign",
+    "Express",
+    "ExpressForeign",
+];
+
+/// What one service method adds under a counting rule.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ServiceTime {
+    /// The rule recognizes the method and adds this many days (zero
+    /// included) after the period would otherwise expire.
+    Adds(u64, DayUnit),
+    /// The rule does not name the method: a period served that way is not
+    /// counted.
+    Unrecognized,
 }
 
 /// Where a month or year period ends when its last month has no day

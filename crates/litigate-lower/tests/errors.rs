@@ -7,7 +7,7 @@ use litigate_base::DiagnosticCode as C;
 use litigate_lower::{Document, Lowerer, Options};
 use litigate_sema::hir::{
     self, Anchor, Authored, DayUnit, DeadlineWindow, Declaration, Direction, Interval, Money,
-    Observance, RollOn,
+    Observance, RollOn, ServiceTime,
 };
 use support::load_hir;
 
@@ -84,13 +84,13 @@ fn clock_shapes_the_engine_cannot_run() {
     let mut p = example();
     counting(&mut p)
         .service_extensions
-        .insert("Fax".into(), (1, DayUnit::Calendar));
+        .insert("Fax".into(), ServiceTime::Adds(1, DayUnit::Calendar));
     only(&p, C::LoweringUnsupported, "`Fax`");
 
     let mut p = example();
     counting(&mut p)
         .service_extensions
-        .insert("Mail".into(), (3, DayUnit::Court));
+        .insert("Mail".into(), ServiceTime::Adds(3, DayUnit::Court));
     only(&p, C::LoweringUnsupported, "calendar days");
 
     let mut p = example();

@@ -63,21 +63,19 @@ fn d(s: &str) -> Date {
 /// version in force at the build date (`itc210@2013-05-20`, whose service
 /// days the shipped rule matches) and so does the shipped rule, so this
 /// compares that version over every date.
-const RULES: [(&str, &str); 4] = [
-    ("frcp6", "2009-12-01"),
-    ("rcfc6", "2010-01-11"),
-    ("frap26", "2009-12-01"),
+const RULES: [(&str, &str); 6] = [
+    ("frcp6", "2016-12-01"),
+    ("rcfc6", "2017-08-01"),
+    ("frap26", "2016-12-01"),
     ("itc210", "1978-01-01"),
+    ("frcrimp45", "2023-12-01"),
+    ("sup-ct-30", "2023-01-01"),
 ];
 
-/// The methods a rule's service step lists (both libraries list the same).
-fn methods(id: &str) -> &'static [ServiceMethod] {
-    use ServiceMethod as M;
-    match id {
-        "frap26" => &[M::Mail, M::CommercialCarrier, M::PrisonMail],
-        "itc210" => &[M::Mail, M::MailForeign, M::Express, M::ExpressForeign],
-        _ => &[M::Mail, M::Clerk, M::OtherConsented],
-    }
+/// The methods a rule's service step is total over: every one, recognized
+/// or not (a refusal must agree too).
+fn methods(_id: &str) -> &'static [ServiceMethod] {
+    &ServiceMethod::ALL
 }
 
 /// Everything a computation reports except the trace text, which each
@@ -146,13 +144,16 @@ fn strict_check_of_lit_core_passes_with_no_holes() {
 }
 
 #[test]
-fn the_fragment_holds_all_four_rules_and_both_calendars() {
+fn the_fragment_holds_every_rule_and_both_calendars() {
     let ids: Vec<&str> = lowered()
         .counting_rules
         .iter()
         .map(|r| r.id.as_str())
         .collect();
-    assert_eq!(ids, ["frap26", "frcp6", "itc210", "rcfc6"]);
+    assert_eq!(
+        ids,
+        ["frap26", "frcp6", "frcrimp45", "itc210", "rcfc6", "sup-ct-30"]
+    );
     let calendars: Vec<&str> = lowered().calendars.iter().map(|c| c.id.as_str()).collect();
     assert_eq!(calendars, ["us-federal-holidays", "rcfc-legal-holidays"]);
 }
@@ -265,8 +266,8 @@ fn inaccessibility_and_hours_agree_with_the_shipped_rules() {
 
 #[test]
 fn additional_holidays_and_inaccessibility_agree_elsewhere() {
-    // FRCP 6(a)(6)(C) state holidays arrive as additional closed days; the
-    // clerk's office extension (6(a)(3)) under the Rule 6 family.
+    // Closed days the caller adds (in either direction); the clerk's office
+    // extension (6(a)(3)) under the Rule 6 family.
     let dl = DayDeadline {
         trigger: d("2026-07-27"),
         days: 14,
@@ -309,7 +310,7 @@ proptest! {
         days in 0i64..400,
         backward in any::<bool>(),
         court in any::<bool>(),
-        service in proptest::option::of(0usize..4),
+        service in proptest::option::of(0usize..10),
     ) {
         let (id, from) = RULES[r];
         let direction = if backward { Direction::Backward } else { Direction::Forward };

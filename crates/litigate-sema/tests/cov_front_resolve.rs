@@ -55,8 +55,8 @@ fn every_value_kind_has_a_noun() {
     let kinds = [
         node,
         K::Deadline,
-        K::Counting,
-        K::Calendar,
+        K::Counting(std::collections::BTreeSet::new()),
+        K::Calendar(false),
         K::Default(None),
         K::Exception,
         K::Transition,

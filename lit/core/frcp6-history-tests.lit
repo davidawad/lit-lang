@@ -33,6 +33,7 @@ event ThirdPartyComplaintExtensionMoved()
 /// no numeric ceiling.
 deadline removal-answer: 7.days after NoticeOfRemovalFiled() counted_by frcp6 cite "FRCP 81(c)(2)(C)"
 {
+  forum frcp
   extend { by Court, discretion GoodCause }
   extend { by Court, discretion GoodCause, on RemovalAnswerExtensionMoved() }
   extend { by Court, discretion ExcusableNeglect, after_expiry, on RemovalAnswerExtensionMoved() }
@@ -40,6 +41,7 @@ deadline removal-answer: 7.days after NoticeOfRemovalFiled() counted_by frcp6 ci
 
 deadline third-party-complaint: 14.days after AnswerServed() counted_by frcp6 cite "FRCP 14(a)(1)"
 {
+  forum frcp
   extend { by Court, discretion GoodCause }
   extend { by Court, discretion GoodCause, on ThirdPartyComplaintExtensionMoved() }
   extend {
@@ -104,7 +106,25 @@ test "1985-2001: only mail adds three days" cite "FRCP (2008 ed.) 6 (2001 Commit
   expect deadline(frcp6-10-days) == 1999-03-19
 }
 
-test "1985: ten days skip weekends and Veterans Day" cite "FRCP (2008 ed.) 6 (1985 Advisory Committee Note)"
+test "2001-2009: consented electronic service adds three days" cite FRCP (2008 ed.) 6(d)
+{
+  given Served(Electronic) on 2008-03-03
+  expect deadline(frcp6-14-days) == 2008-03-20
+}
+
+test "2009-2016: electronic service under Rule 5(b)(2)(E) adds three days" cite FRCP (2011 ed.) 6(d)
+{
+  given Served(Electronic) on 2016-07-01
+  expect deadline(frcp6-14-days) == 2016-07-18
+}
+
+test "from December 1, 2016 the same electronic service adds nothing" cite FRCP 6(d)
+{
+  given Served(Electronic) on 2016-12-01
+  expect deadline(frcp6-14-days) == 2016-12-15
+}
+
+test "1985: ten days skip weekends and Veterans Day" cite FRCP (2008 ed.) 6 (1985 Advisory Committee Note)
 {
   given Served(Personal) on 1999-11-05
   expect deadline(frcp6-10-days) == 1999-11-22

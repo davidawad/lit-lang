@@ -1,10 +1,10 @@
 # The litigate standard library (DESIGN §4, SPEC §4.3): domain types, the
 # role taxonomy, the authority lattice, the federal legal-holiday calendars,
-# and the four counting rules (FRCP 6, RCFC 6, FRAP 26, 19 C.F.R. 201.14 via
-# 210.6(a)) with their earlier versions. Every package may import `core`
-# without declaring it. It declares several counting rules and names none
-# here, so it is a counting-rule library (SPEC §8.2): its pack names no
-# rule and its clock fragment holds all four.
+# and the counting rules (FRCP 6, FRCrimP 45, RCFC 6, FRAP 26, Sup. Ct. R.
+# 30, 19 C.F.R. 201.14 via 210.6(a)) with their earlier versions. Every
+# package may import `core` without declaring it. It declares several
+# counting rules and names none here, so it is a counting-rule library (SPEC
+# §8.2): its pack names no rule and its clock fragment holds them all.
 [package]
 name = "core"
 version = "1.0.0"
@@ -145,3 +145,28 @@ path_sha256 = "02ce787e06ce9d46aa341d0aab319a23cda0eaf6c631077a7bd64c4a6a0faa86"
 as_of = "2013-04-19"
 cite_prefixes = ["78 FR"]
 section_heading = "78 FR {n}"
+
+[sources.frcrimp]
+title = "Federal Rules of Criminal Procedure, as amended to Dec. 1, 2024"
+url = "https://www.uscourts.gov/sites/default/files/2025-02/federal-rules-of-criminal-procedure-dec-1-2024_0.pdf"
+path = "sources/frcrimp.txt"
+sha256 = "c89161b8a258b62af4d5298de832c43bd72f2eea1104c7625a5b561658e5875c"
+as_of = "2024-12-01"
+cite_prefixes = ["FRCrimP"]
+section_heading = "Fed. R. Crim. P. {n}"
+
+[sources.scotus]
+title = "Rules of the Supreme Court of the United States (adopted Dec. 5, 2022, effective Jan. 1, 2023)"
+url = "https://www.supremecourt.gov/filingandrules/2023RulesoftheCourt.pdf"
+path = "sources/scotus-rules.txt"
+sha256 = "05f435c766fd596333828846d097828238ff89a266c24e3afca9ecd2fb9c19db"
+as_of = "2023-01-01"
+cite_prefixes = ["Sup. Ct. R."]
+section_heading = "Sup. Ct. R. {n}"
+
+[sources.cfr-37-1]
+title = "37 C.F.R. Part 1 (Rules of Practice in Patent Cases)"
+url = "https://www.ecfr.gov/current/title-37/chapter-I/subchapter-A/part-1"
+path = "sources/cfr-37-part1.txt"
+cite_prefixes = ["37 CFR", "37 C.F.R."]
+section_heading = "37 C.F.R. § {n}"

@@ -21,6 +21,7 @@ description = "Post-grant adversarial challenges to issued patents before the US
 jurisdiction = "35 U.S.C. Chapter 31 (AIA Trials) / 37 C.F.R. Part 42 / USPTO PTAB"
 in_force = "2012-09-16"
 known_at = "2026-08-26"
+counting = "uspto-1-7"
 
 [package.roles]
 applicant = "self"
@@ -133,5 +134,8 @@ title = "Court of Appeals Miscellaneous Fee Schedule (docketing fee $600, effect
 url = "https://www.uscourts.gov/court-programs/fees/court-appeals-miscellaneous-fee-schedule"
 as_of = "2023-12-01"
 
+# counting: 37 C.F.R. § 42.1(a) applies 37 C.F.R. § 1.7 to the Board, so the
+# pack counts under lit/mpep's `uspto-1-7`, the Office's own rule.
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+mpep-prosecution = { version = "^0.1.0", path = "../mpep" }

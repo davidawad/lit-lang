@@ -5,7 +5,10 @@ import core.calendar.{ us-federal-holidays }
 /// FRCP 6(a) and 6(e) from the 1963 amendments (effective July 1, 1963):
 /// Saturdays join Sundays and legal holidays as days a period cannot end
 /// on, and inside a period of less than 7 days none of them is counted
-/// (1963 Advisory Committee Note); service by mail adds 3 days.
+/// (1963 Advisory Committee Note); service by mail adds 3 days, and the
+/// other methods of former Rule 5(b), delivery and leaving a copy with the
+/// clerk, none (the 2001 Committee Note: Rule 5(b)(2)(A)-(C) "carry forward
+/// the method-of-service provisions of former Rule 5(b)").
 ///
 /// Until December 1, 2005, Rule 6(e) said only that "3 days shall be
 /// added to the prescribed period" (2005 Committee Note, text as amended:
@@ -23,8 +26,20 @@ counting frcp6 effective [1963-07-01, 1985-08-01) known_at 1963-01-21 cite "FRCP
   include_last_day
   roll_forward_on [weekend, legal_holiday]
   short_period { below: 7.days, count: business_days }
-  service_extension { Mail: 3.days }
+  service_extension {
+    Personal: 0.days
+    Electronic: unrecognized
+    Mail: 3.days
+    Clerk: 0.days
+    OtherConsented: unrecognized
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  }
   holidays us-federal-holidays
+  forums [frcp]
 }
 
 /// The 1985 amendments (effective August 1, 1985): the short-period
@@ -37,13 +52,27 @@ counting frcp6 effective [1985-08-01, 2001-12-01) known_at 1985-04-29 supersedes
   include_last_day
   roll_forward_on [weekend, legal_holiday, inaccessible]
   short_period { below: 11.days, count: business_days }
-  service_extension { Mail: 3.days }
+  service_extension {
+    Personal: 0.days
+    Electronic: unrecognized
+    Mail: 3.days
+    Clerk: 0.days
+    OtherConsented: unrecognized
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  }
   holidays us-federal-holidays
+  forums [frcp]
 }
 
 /// The 2001 amendments (effective December 1, 2001): the 3 added days reach
 /// service by leaving a copy with the clerk and by other consented means,
-/// electronic service included (2001 Committee Note). The order of adding
+/// electronic service included (Rule 5(b)(2)(D) "including electronic
+/// means", 532 U.S. 1089; 5(b)(2)(E) once restyled in 2007). Personal
+/// delivery (5(b)(2)(A)) adds nothing in any version. The order of adding
 /// them is the contested pre-2005 one (see the 1963 version).
 /// Rule 6 is silent on periods stated in months or years (Rule 60(c)(1)'s
 /// "a year"): they run to the corresponding day of the later month, and a
@@ -57,11 +86,19 @@ counting frcp6 effective [2001-12-01, 2005-12-01) known_at 2001-04-23 supersedes
   roll_forward_on [weekend, legal_holiday, inaccessible]
   short_period { below: 11.days, count: business_days }
   service_extension {
+    Personal: 0.days
+    Electronic: 3.days
     Mail: 3.days
     Clerk: 3.days
     OtherConsented: 3.days
-  } cite "FRCP (2008 ed.) 6 (2001 Committee Note)"
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite FRCP (2008 ed.) 6 (2001 Committee Note)
   holidays us-federal-holidays
+  forums [frcp]
   end_of_month clamp
 }
 
@@ -76,32 +113,81 @@ counting frcp6 effective [2005-12-01, 2009-12-01) known_at 2005-04-25 supersedes
   roll_forward_on [weekend, legal_holiday, inaccessible]
   short_period { below: 11.days, count: business_days }
   service_extension {
+    Personal: 0.days
+    Electronic: 3.days
     Mail: 3.days
     Clerk: 3.days
     OtherConsented: 3.days
-  } cite "FRCP (2008 ed.) 6(d)"
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite FRCP (2008 ed.) 6(d)
   holidays us-federal-holidays
+  forums [frcp]
   end_of_month clamp
 }
 
 /// The 2009 time-computation amendments (adopted March 26, 2009, effective
 /// December 1, 2009): every day counts (6(a)(1)(B)), periods may be stated
 /// in hours (6(a)(2)), and the clerk's office inaccessibility rule is
-/// 6(a)(3). The 2016 amendment removed electronic service from 6(d); the
-/// engine has no electronic service method to extend, so this version
-/// already lists only mail, the clerk, and other consented means.
+/// 6(a)(3). 6(d) still adds 3 days after service "under Rule 5(b)(2)(C),
+/// (D), (E), or (F)", electronic service (E) included (2011 ed.).
 /// Rule 6 is silent on periods stated in months or years (Rule 60(c)(1)'s
 /// "a year"): they run to the corresponding day of the later month, and a
 /// month without that day (a February 29 anniversary) ends on its last day.
 /// `end_of_month clamp` is the earlier of the two readings; UNVERIFIED: no
 /// rule text or vendored decision fixes it.
-counting frcp6 effective [2009-12-01, ..) known_at 2009-03-26 supersedes frcp6@2005-12-01 cite "FRCP 6(a)"
+counting frcp6 effective [2009-12-01, 2016-12-01) known_at 2009-03-26 supersedes frcp6@2005-12-01 cite FRCP (2011 ed.) 6(a)
 {
   exclude_trigger_day
   include_last_day
   roll_forward_on [weekend, legal_holiday, inaccessible]
-  service_extension { Mail: 3.days, Clerk: 3.days, OtherConsented: 3.days } cite "FRCP 6(d)"
+  service_extension {
+    Personal: 0.days
+    Electronic: 3.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite FRCP (2011 ed.) 6(d)
   holidays us-federal-holidays
+  forums [frcp]
+  allow_hours
+  end_of_month clamp
+}
+
+/// The 2016 amendment (adopted April 28, 2016, effective December 1, 2016)
+/// removes electronic service from 6(d): the 3 days follow service "under
+/// Rule 5(b)(2)(C) (mail), (D) (leaving with the clerk), or (F) (other means
+/// consented to)" only (the amendment as printed in volume 578 of the U.S.
+/// Reports; Committee Note, "to remove service by electronic means under
+/// Rule 5(b)(2)(E) from the modes of service that allow 3 added days").
+/// Electronic service adds nothing.
+counting frcp6 effective [2016-12-01, ..) known_at 2016-04-28 supersedes frcp6@2009-12-01 cite FRCP 6(a)
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite FRCP 6(d)
+  holidays us-federal-holidays
+  forums [frcp]
   allow_hours
   end_of_month clamp
 }

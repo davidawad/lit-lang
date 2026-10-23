@@ -75,14 +75,17 @@ impl ClockLibrary {
         Ok(lib)
     }
 
-    /// Ids in `other` that collide with ids already here or repeat within
-    /// `other` itself.
+    /// Ids in `other` that repeat within `other` itself, or collide with a
+    /// different definition already here. A calendar `other` restates
+    /// unchanged is no collision: two packages' rules may close on one
+    /// shared calendar, and each fragment carries it.
     fn collisions(&self, other: &ClockLibrary) -> Vec<String> {
-        let mut cals: BTreeSet<&str> = self.calendars.iter().map(|c| c.id.as_str()).collect();
+        let mut cals: BTreeSet<&str> = BTreeSet::new();
         let mut rules: BTreeSet<&str> = self.counting_rules.iter().map(|r| r.id.as_str()).collect();
         let mut out = vec![];
         for c in &other.calendars {
-            if !cals.insert(&c.id) {
+            let differs = self.calendars.iter().any(|k| k.id == c.id && k != c);
+            if !cals.insert(&c.id) || differs {
                 out.push(format!("calendar {}", c.id));
             }
         }
@@ -118,7 +121,12 @@ impl ClockLibrary {
             };
             let dups = lib.collisions(&frag);
             if dups.is_empty() {
-                lib.calendars.extend(frag.calendars);
+                let new: Vec<HolidayCalendar> = frag
+                    .calendars
+                    .into_iter()
+                    .filter(|c| lib.calendars.iter().all(|k| k.id != c.id))
+                    .collect();
+                lib.calendars.extend(new);
                 lib.counting_rules.extend(frag.counting_rules);
             } else {
                 errors.push((
@@ -131,6 +139,7 @@ impl ClockLibrary {
             lib.counting_rules.drain(..).partition(|r| {
                 r.holidays
                     .iter()
+                    .chain(&r.forward_holidays)
                     .all(|h| lib.calendars.iter().any(|c| &c.id == h))
             });
         lib.counting_rules = kept;
@@ -140,7 +149,12 @@ impl ClockLibrary {
                 format!(
                     "counting rule {} names unknown holiday calendar(s) {}; rule skipped",
                     r.id,
-                    r.holidays.join(", ")
+                    r.holidays
+                        .iter()
+                        .chain(&r.forward_holidays)
+                        .map(String::as_str)
+                        .collect::<Vec<_>>()
+                        .join(", ")
                 ),
             )
         }));
@@ -178,17 +192,21 @@ impl ClockLibrary {
                     ids.join(", ")
                 ))
             })?;
-        let calendars = rule
-            .holidays
-            .iter()
-            .map(|h| {
-                self.calendars
-                    .iter()
-                    .find(|c| &c.id == h)
-                    .ok_or_else(|| Error::NotFound(format!("holiday calendar {h:?}")))
-            })
-            .collect::<Result<Vec<_>>>()?;
-        Ok(Clock { rule, calendars })
+        let resolve = |ids: &[String]| {
+            ids.iter()
+                .map(|h| {
+                    self.calendars
+                        .iter()
+                        .find(|c| &c.id == h)
+                        .ok_or_else(|| Error::NotFound(format!("holiday calendar {h:?}")))
+                })
+                .collect::<Result<Vec<_>>>()
+        };
+        Ok(Clock {
+            rule,
+            calendars: resolve(&rule.holidays)?,
+            forward_calendars: resolve(&rule.forward_holidays)?,
+        })
     }
 }
 
@@ -217,7 +235,9 @@ mod tests {
                 "steps": [
                     {"op": "anchor", "kind": "trigger", "text": "t"},
                     {"op": "count", "periods": [{"count": "calendar", "text": "c"}]},
-                    {"op": "base"}
+                    {"op": "base"},
+                    {"op": "service", "text": "s", "backwardText": "b", "methods": [],
+                     "unrecognized": crate::clock::ServiceMethod::ALL}
                 ]
             }]
         })
@@ -226,9 +246,12 @@ mod tests {
 
     #[test]
     fn merge_skips_redefinitions_bad_fragments_and_dangling_rules() {
+        let mut other_a: serde_json::Value = serde_json::from_str(&frag("a", "a")).unwrap();
+        other_a["calendars"][0]["title"] = serde_json::json!("another a");
+        other_a["countingRules"][0]["id"] = serde_json::json!("r-other");
         let (lib, errors) = ClockLibrary::merge([
             ("clock/a.json".to_string(), frag("a", "a")),
-            ("clock/b.json".to_string(), frag("a", "a")),
+            ("clock/b.json".to_string(), other_a.to_string()),
             ("clock/c.json".to_string(), "{ not json".to_string()),
             ("clock/d.json".to_string(), frag("d", "missing")),
             (
@@ -244,6 +267,24 @@ mod tests {
             .iter()
             .any(|e| e.1.contains("unknown holiday calendar")));
         assert!(lib.clock("r-a").is_ok());
+    }
+
+    #[test]
+    fn merge_shares_a_calendar_two_fragments_restate_unchanged() {
+        let mut b: serde_json::Value = serde_json::from_str(&frag("a", "a")).unwrap();
+        b["countingRules"][0]["id"] = serde_json::json!("r-b");
+        b["countingRules"][0]["forwardHolidays"] = serde_json::json!(["a"]);
+        let (lib, errors) = ClockLibrary::merge([
+            ("clock/a.json".to_string(), frag("a", "a")),
+            ("clock/b.json".to_string(), b.to_string()),
+        ]);
+        assert!(errors.is_empty(), "{errors:?}");
+        assert_eq!(lib.calendars.len(), 1);
+        assert_eq!(lib.clock("r-b").unwrap().forward_calendars.len(), 1);
+        b["countingRules"][0]["forwardHolidays"] = serde_json::json!(["missing"]);
+        let (lib, errors) = ClockLibrary::merge([("clock/b.json".to_string(), b.to_string())]);
+        assert!(lib.counting_rules.is_empty());
+        assert!(errors[0].1.contains("a, missing"), "{errors:?}");
     }
 
     #[test]

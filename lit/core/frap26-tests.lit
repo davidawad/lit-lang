@@ -7,17 +7,60 @@ import core.time.{ Served, Scheduled, ServiceMethod }
 // crates/litgraph/tests/clock_*.rs and every `frap26` deadline in
 // tests/cases/*.json (each named for its case), counted under the FRAP 26
 // version in force on the trigger date.
-deadline frap26-1-day: 1.days after Served() counted_by frap26 cite "FRAP 26(a)(1)"
-deadline frap26-5-days: 5.days after Served() counted_by frap26 cite "FRAP 26(a)(1)"
-deadline frap26-10-days: 10.days after Served() counted_by frap26 cite "FRAP 26(a)(1)"
-deadline frap26-14-days: 14.days after Served() counted_by frap26 cite "FRAP 26(a)(1)"
-deadline frap26-26-days: 26.days after Served() counted_by frap26 cite "FRAP 26(a)(1)"
-deadline frap26-30-days: 30.days after Served() counted_by frap26 cite "FRAP 4(a)(1)(A)"
-deadline frap26-45-days: 45.days after Served() counted_by frap26 cite "FRAP 40(d)(1)"
-deadline frap26-60-days: 60.days after Served() counted_by frap26 cite "FRAP 4(a)(1)(B)"
-deadline frap26-63-days: 63.days after Served() counted_by frap26 cite "FRAP 26(a)(1)"
-deadline frap26-90-days: 90.days after Served() counted_by frap26 cite "FRAP 26(a)(1)"
-deadline frap26-2-days-before: 2.days before Scheduled() counted_by frap26 cite "FRAP 26(a)(5)"
+deadline frap26-1-day: 1.days after Served() counted_by frap26 cite FRAP 26(a)(1)
+{
+  forum frap
+}
+
+deadline frap26-5-days: 5.days after Served() counted_by frap26 cite FRAP 26(a)(1)
+{
+  forum frap
+}
+
+deadline frap26-10-days: 10.days after Served() counted_by frap26 cite FRAP 26(a)(1)
+{
+  forum frap
+}
+
+deadline frap26-14-days: 14.days after Served() counted_by frap26 cite FRAP 26(a)(1)
+{
+  forum frap
+}
+
+deadline frap26-26-days: 26.days after Served() counted_by frap26 cite FRAP 26(a)(1)
+{
+  forum frap
+}
+
+deadline frap26-30-days: 30.days after Served() counted_by frap26 cite FRAP 4(a)(1)(A)
+{
+  forum frap
+}
+
+deadline frap26-45-days: 45.days after Served() counted_by frap26 cite FRAP 40(d)(1)
+{
+  forum frap
+}
+
+deadline frap26-60-days: 60.days after Served() counted_by frap26 cite FRAP 4(a)(1)(B)
+{
+  forum frap
+}
+
+deadline frap26-63-days: 63.days after Served() counted_by frap26 cite FRAP 26(a)(1)
+{
+  forum frap
+}
+
+deadline frap26-90-days: 90.days after Served() counted_by frap26 cite FRAP 26(a)(1)
+{
+  forum frap
+}
+
+deadline frap26-2-days-before: 2.days before Scheduled() counted_by frap26 cite FRAP 26(a)(5)
+{
+  forum frap
+}
 
 test "a notice of appeal 30 days after entry of judgment" cite "FRAP 4(a)(1)(A)"
 {
@@ -43,13 +86,25 @@ test "prison mail adds three days" cite "FRAP 26(c)"
   expect deadline(frap26-30-days) == 2026-02-09
 }
 
-test "leaving a copy with the clerk is not a FRAP 25 method and adds nothing" cite "FRAP 26(c)"
+test "since December 1, 2016 electronic service adds nothing" cite FRAP 26(c)
 {
-  given Served(Clerk) on 2026-07-20
+  given Served(Electronic) on 2026-07-20
   expect deadline(frap26-14-days) == 2026-08-03
 }
 
-test "backward onto Saturday rolls to Friday" cite "FRAP 26(a)(5)"
+test "before December 1, 2016 electronic service added three days" cite FRAP (2011 ed.) 26(c)
+{
+  given Served(Electronic) on 2016-07-01
+  expect deadline(frap26-14-days) == 2016-07-18
+}
+
+test "from December 1, 2002 electronic service added three days" cite FRAP (2008 ed.) 26(c)
+{
+  given Served(Electronic) on 2008-03-03
+  expect deadline(frap26-14-days) == 2008-03-20
+}
+
+test "backward onto Saturday rolls to Friday" cite FRAP 26(a)(5)
 {
   given Scheduled() on 2026-07-27
   expect deadline(frap26-2-days-before) == 2026-07-24
@@ -199,13 +254,7 @@ test "1996-2002: commercial carrier adds three days" cite "FRAP (2008 ed.) 26 (1
   expect deadline(frap26-10-days) == 2000-03-16
 }
 
-test "before 1996, commercial carrier added nothing" cite "FRAP (2008 ed.) 26 (1996 Advisory Committee Note)"
-{
-  given Served(CommercialCarrier) on 1994-03-04
-  expect deadline(frap26-10-days) == 1994-03-14
-}
-
-test "before 1996, mail added three days" cite "FRAP (2008 ed.) 26 (1996 Advisory Committee Note)"
+test "before 1996, mail added three days" cite FRAP (2008 ed.) 26 (1996 Advisory Committee Note)
 {
   given Served(Mail) on 1994-03-04
   expect deadline(frap26-10-days) == 1994-03-17

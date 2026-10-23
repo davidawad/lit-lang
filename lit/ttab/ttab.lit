@@ -2,7 +2,7 @@
 module ttab
 
 import core.authority.{ CaseOrder }
-import core.frcp6.{ frcp6 }
+import core.calendar.{ dc-federal-holidays }
 
 group pre: "Pre-opposition"
 group standstill: "Standstill and negotiation"
@@ -16,17 +16,50 @@ group abandon: "Abandon now"
 group threat: "Infringement suit threat"
 group terminals: "Terminals"
 
-// The deadlines every `within` edge of the pack reads. The legacy pack
-// counts them under FRCP 6 (its `counting`); the Board's own computation
-// rule is 37 C.F.R. § 2.196, which agrees for every period here (calendar
-// days, a last day on a Saturday, Sunday, or Federal holiday rolls to the
-// next day that is none of them).
+// The deadlines every `within` edge of the pack reads, counted by the
+// Board's own computation rule, 37 C.F.R. § 2.196 (`ttab-2-196` below), not
+// by a court's (no cross-forum borrowing).
 //
 // Effective dates: the vendored eCFR text drops its amendment-history lines
 // (sources/PROVENANCE.md), so the dates below come from the Federal
 // Register. 37 C.F.R. §§ 2.101, 2.102, 2.105, 2.120, and 2.145 read as
 // cited since the TTAB rules revision, 81 FR 69950 (Oct. 7, 2016),
 // effective January 14, 2017.
+/// 37 C.F.R. § 2.196: "Whenever periods of time are specified in this part
+/// in days, calendar days are intended", and a last day on a "Saturday,
+/// Sunday, or Federal holiday within the District of Columbia" runs to "the
+/// next succeeding day that is not a Saturday, Sunday, or a Federal
+/// holiday". Unchanged in the eCFR from its first point in time,
+/// January 1, 2017 (sources/cfr-37-part2-history.txt). § 2.119(c) dates
+/// service by first-class mail, Priority Mail Express or overnight courier
+/// from mailing or delivery to the courier and, from January 14, 2017 (81
+/// FR 69975, Oct. 7, 2016), adds no time for it: the text in force until
+/// then added "5 days" (37 C.F.R. (eCFR 2017-01-01) § 2.119(c)), and earlier
+/// texts are not vendored, so this version starts there. § 2.119(b)'s
+/// methods are email or other electronic transmission, delivery, leaving a
+/// copy, mail, Priority Mail Express and overnight courier; the others are
+/// not recognized.
+counting ttab-2-196 effective [2017-01-14, ..) known_at 2016-10-07 cite 37 C.F.R. § 2.196
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 0.days
+    Clerk: unrecognized
+    OtherConsented: unrecognized
+    CommercialCarrier: 0.days
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: 0.days
+    ExpressForeign: unrecognized
+  } cite 37 C.F.R. § 2.119(c)
+  holidays dc-federal-holidays
+  forums [ttab]
+}
+
 /// Publication of the application for opposition (15 U.S.C. § 1062(a),
 /// 37 C.F.R. § 2.80).
 event Published()
@@ -91,7 +124,7 @@ event CivilActionPeriodExtended(until: Date) extends civil-action-period to unti
 /// days expire (§ 2.102(c)).
 rule duty opposition-time effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CFR 2.101(c)"
 {
-  deadline opposition-period: 30.days from Published() counted_by frcp6
+  deadline opposition-period: 30.days from Published() counted_by ttab-2-196
 }
 
 test "the opposition period runs 30 days from publication" cite "37 CFR 2.101(c)"
@@ -113,10 +146,10 @@ test "an opposition period ending on Thanksgiving rolls to Friday" cite "37 CFR 
 /// publication.
 rule duty extensions-of-time effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CFR 2.102(c)"
 {
-  deadline first-extension-90: 90.days from OppositionPeriodExpired() counted_by frcp6 cite "37 CFR 2.102(c)(1)(ii)"
-  deadline second-extension-60: 60.days from FirstExtensionExpired() counted_by frcp6 cite "37 CFR 2.102(c)(2)"
-  deadline extended-period-120: 120.days from Published() counted_by frcp6 cite "37 CFR 2.102(c)(3)"
-  deadline outer-limit-180: 180.days from Published() counted_by frcp6 cite "37 CFR 2.102(c)"
+  deadline first-extension-90: 90.days from OppositionPeriodExpired() counted_by ttab-2-196 cite 37 CFR 2.102(c)(1)(ii)
+  deadline second-extension-60: 60.days from FirstExtensionExpired() counted_by ttab-2-196 cite 37 CFR 2.102(c)(2)
+  deadline extended-period-120: 120.days from Published() counted_by ttab-2-196 cite 37 CFR 2.102(c)(3)
+  deadline outer-limit-180: 180.days from Published() counted_by ttab-2-196 cite 37 CFR 2.102(c)
 }
 
 test "a 90-day first extension runs from the end of the original period" cite "37 CFR 2.102(c)(1)(ii)"
@@ -190,10 +223,8 @@ test "a day 180 on the Saturday before Labor Day rolls to Tuesday" cite "37 CFR 
 /// 2.106 (sources/cfr-37-part2-answer-time-history.txt).
 rule duty answer-time effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CFR 2.105(a)"
 {
-  deadline answer-period: 30.days from InstitutionNoticed() counted_by frcp6 delegable_to [CaseOrder] cite "37 CFR 2.105(a)"
-  {
-    designated due
-  }
+  deadline answer-period: 30.days from InstitutionNoticed() counted_by ttab-2-196 effective [2017-01-14, 2026-06-01) delegable_to [CaseOrder] cite 37 CFR 2.105(a)
+  deadline answer-period: 60.days from InstitutionNoticed() counted_by ttab-2-196 effective [2026-06-01, ..) known_at 2026-06-01 supersedes answer-period@2017-01-14 delegable_to [CaseOrder] cite 37 CFR 2.106(a)
 }
 
 test "a notice designating 30 days sets the answer date" cite "37 CFR 2.105(a)"
@@ -277,8 +308,8 @@ test "a cancellation answer is due on the date the notice designates" cite "37 C
 /// modified "by order of the Board" (§ 2.120(a)(2)(iv)).
 rule duty discovery-schedule effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CFR 2.120(a)(2)"
 {
-  deadline disclosure-period: 30.days from DiscoveryOpened() counted_by frcp6 delegable_to [CaseOrder] cite "37 CFR 2.120(a)(2)(ii)"
-  deadline discovery-period: 180.days from DiscoveryOpened() counted_by frcp6 delegable_to [CaseOrder] cite "37 CFR 2.120(a)(2)(i)"
+  deadline disclosure-period: 30.days from DiscoveryOpened() counted_by ttab-2-196 delegable_to [CaseOrder] cite 37 CFR 2.120(a)(2)(ii)
+  deadline discovery-period: 180.days from DiscoveryOpened() counted_by ttab-2-196 delegable_to [CaseOrder] cite 37 CFR 2.120(a)(2)(i)
 }
 
 test "initial disclosures are due 30 days after discovery opens" cite "37 CFR 2.120(a)(2)(ii)"
@@ -315,7 +346,7 @@ test "a discovery close on a Saturday rolls to Monday" cite "37 CFR 2.120(a)(2)(
 /// request was made, and neither has a numeric ceiling.
 rule duty review-time effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CFR 2.145(d)"
 {
-  deadline civil-action-period: 63.days from FinalDecision() counted_by frcp6 cite "37 CFR 2.145(d)(3)"
+  deadline civil-action-period: 63.days from FinalDecision() counted_by ttab-2-196 cite 37 CFR 2.145(d)(3)
   {
     extend { by director, discretion GoodCause, on CivilActionExtensionRequested() }
     extend {

@@ -4,7 +4,7 @@ module cafc.cert
 
 import cafc.{ Entered, Filed, Order, Paper, cert-group }
 import core.authority.{ CaseOrder }
-import core.frap26.{ frap26 }
+import core.supct30.{ sup-ct-30 }
 
 decision cert-petition-window: "Certiorari Petition Window" by applicant cite ?("28 U.S.C. § 2101(c); Sup. Ct. R. 13.1, 13.3") {
   group cert-group
@@ -74,11 +74,16 @@ terminal cert-granted: "CERT GRANTED — Case Transfers to the Supreme Court" ou
 /// days after entry of the judgment; "a justice of the Supreme Court, for
 /// good cause shown, may extend" it by up to 60 days. The period dates from
 /// the 1948 recodification of Title 28 (Act of June 25, 1948, effective
-/// September 1, 1948). Counting it with FRAP 26 approximates Sup. Ct. R.
-/// 30.1, which is not vendored.
-rule duty certiorari-petition cite "28 U.S.C. § 2101(c)"
+/// September 1, 1948). It is a period of the Supreme Court's Rules, counted
+/// by Sup. Ct. R. 30.1 (`core.supct30`), not by FRAP 26; that rule's
+/// vendored text is in force from January 1, 2023, so an earlier entry has
+/// no counting rule.
+rule duty certiorari-petition cite 28 U.S.C. § 2101(c)
 {
-  deadline cert-period: 90.days after Entered(PanelJudgment) counted_by frap26 effective [1948-09-01, ..) known_at 1948-06-25 delegable_to [CaseOrder] cite "28 U.S.C. § 2101(c)"
+  deadline cert-period: 90.days after Entered(PanelJudgment) counted_by sup-ct-30 effective [1948-09-01, ..) known_at 1948-06-25 delegable_to [CaseOrder] cite 28 U.S.C. § 2101(c)
+  {
+    forum scotus
+  }
 }
 
 test "a certiorari petition is due 90 days after entry of judgment" cite "28 U.S.C. § 2101(c)"
@@ -87,7 +92,7 @@ test "a certiorari petition is due 90 days after entry of judgment" cite "28 U.S
   expect deadline(cert-period) == 2026-07-07
 }
 
-test "a Sunday 90th day rolls the certiorari petition to Monday" cite "FRAP 26(a)(1)(C)"
+test "a Sunday 90th day rolls the certiorari petition to Monday" cite Sup. Ct. R. 30.1
 {
   given Entered(PanelJudgment) on 2026-03-02
   expect deadline(cert-period) == 2026-06-01

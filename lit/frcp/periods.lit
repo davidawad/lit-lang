@@ -346,6 +346,7 @@ deadline relief-from-judgment-period: 1.years after JudgmentEntered() counted_by
 /// forbids any other extension ("except as authorized in Rule 4").
 deadline notice-of-appeal-period: 30.days after JudgmentEntered() counted_by frap26 effective [2009-12-01, ..) known_at 2009-03-26 cite "28 U.S.C. § 2107(a)"
 {
+  forum frap
   extend {
     by court
     discretion GoodCauseOrExcusableNeglect
@@ -369,6 +370,7 @@ deadline notice-of-appeal-period: 30.days after JudgmentEntered() counted_by fra
 deadline cross-appeal-period: 14.days after NoticeOfAppealFiled() counted_by frap26 effective [2009-12-01, ..) known_at 2009-03-26 cite "FRAP 4(a)(3)"
 {
   trigger later_of(notice-of-appeal-period)
+  forum frap
   extend {
     by court
     discretion GoodCauseOrExcusableNeglect

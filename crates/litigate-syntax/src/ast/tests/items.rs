@@ -415,6 +415,25 @@ fn fields_view_values_by_shape() {
 }
 
 #[test]
+fn counting_closed_sets_forums_and_unrecognized_methods_parse() {
+    let file = lit("module m\ncounting c {\n  forums [frcp, frap]\n  forward_holidays state cite FRCP 6(a)(6)(C)\n  declared_holidays closures cite FRCP 6(a)(6)(B)\n  service_extension { Mail: 3.days, PrisonMail: unrecognized }\n}\n");
+    let counting: CountingDecl = decl(&file, "c");
+    let items = counting.items();
+    assert_eq!(items[0].keyword_kind(), Some(SyntaxKind::KwForums));
+    assert_eq!(items[0].id_list().map(|l| l.items().len()), Some(2));
+    assert_eq!(items[1].keyword_kind(), Some(SyntaxKind::KwForwardHolidays));
+    assert_eq!(items[1].value().map(|n| n.kind()), Some(SyntaxKind::Ref));
+    assert_eq!(
+        items[1].cite().and_then(|c| c.text()).as_deref(),
+        Some("FRCP 6(a)(6)(C)")
+    );
+    assert_eq!(items[2].keyword_kind(), Some(SyntaxKind::KwDeclaredHolidays));
+    assert_eq!(items[3].record().map(|r| r.fields().len()), Some(2));
+    let deadline = lit("module m\ndeadline d: 90.days after E() counted_by c { forum scotus }\n");
+    assert_eq!(deadline.items().len(), 1);
+}
+
+#[test]
 fn id_lists_decode_string_entries() {
     let file = lit("module m\nstate s: \"S\" { e \"E\" -> t { replaces [old, \"anon\\n1\"] } }\n");
     let node: NodeDecl = decl(&file, "s");

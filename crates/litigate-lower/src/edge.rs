@@ -14,6 +14,9 @@ pub(crate) struct EdgeCx<'s, 'a> {
     pub selection: &'s Selection<'a>,
     /// Pack id references are written in.
     pub pack: &'s str,
+    /// The pack's `counting` rule, if it names one: a deadline counted by
+    /// another rule names its own (`Deadline.counting`).
+    pub counting: Option<&'s str>,
 }
 
 /// `valence` as written in litgraph JSON.
@@ -113,8 +116,8 @@ fn deadline(
     d: &hir::EdgeDeadline,
     span: Option<&Span>,
 ) -> Option<Deadline> {
-    let (length, day_unit, declared) = match &d.window {
-        DeadlineWindow::Inline { length, unit } => (*length, *unit, None),
+    let (length, day_unit, declared, counting) = match &d.window {
+        DeadlineWindow::Inline { length, unit } => (*length, *unit, None, None),
         DeadlineWindow::Declared { deadline } => {
             let at = span.cloned().unwrap_or_else(|| sink.fallback.clone());
             match cx.selection.resolve(cx.pack, deadline, at) {
@@ -129,13 +132,14 @@ fn deadline(
                         );
                         return None;
                     }
-                    // A designated due date is the notice's in each matter
-                    // (SPEC §5.3): the pack has no window to give it, and
-                    // its least time is not one.
-                    if decl.designated.is_some() {
-                        return None;
-                    }
-                    (decl.amount, decl.unit, Some(decl))
+                    let at = span.cloned().unwrap_or_else(|| sink.fallback.clone());
+                    // A displacing counting rule counts under its own name.
+                    let rule = match cx.selection.resolve(cx.pack, &decl.counting, at) {
+                        Ok(Declaration::Counting(c)) => c.meta.id.clone(),
+                        _ => local(&decl.counting).to_owned(),
+                    };
+                    let own = (cx.counting != Some(rule.as_str())).then_some(rule);
+                    (decl.amount, decl.unit, Some(decl), own)
                 }
                 Ok(_) => {
                     sink.error(
@@ -175,5 +179,13 @@ fn deadline(
             .note
             .clone()
             .or_else(|| declared.and_then(|x| x.note.clone())),
+        counting,
     })
+}
+
+/// The unqualified name of a qualified declaration id (`core.frap26::frap26`
+/// is `frap26`): the engine's clock-library rule id.
+fn local(name: &str) -> &str {
+    let tail = name.rsplit("::").next().unwrap_or(name);
+    tail.rsplit('.').next().unwrap_or(tail)
 }

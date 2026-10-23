@@ -54,6 +54,14 @@
           "op": "service",
           "methods": [
             {
+              "method": "personal",
+              "days": 0
+            },
+            {
+              "method": "electronic",
+              "days": 0
+            },
+            {
               "method": "mail",
               "days": 3
             },
@@ -71,7 +79,13 @@
             }
           ],
           "text": "19 CFR 201.16(d)/(e): service by {method} adds {days} calendar day(s) -> {date}",
-          "backwardText": "19 CFR 201.16 service extensions apply to forward periods only; ignored"
+          "backwardText": "19 CFR 201.16 service extensions apply to forward periods only; ignored",
+          "unrecognized": [
+            "clerk",
+            "other-consented",
+            "commercial-carrier",
+            "prison-mail"
+          ]
         },
         {
           "op": "roll",

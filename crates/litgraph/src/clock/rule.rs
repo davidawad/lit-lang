@@ -127,10 +127,17 @@ pub enum Step {
         /// Candidate counting modes, first match wins.
         periods: Vec<Period>,
     },
-    /// Add a service-method extension to forward periods.
+    /// Add a service-method extension to forward periods. Total over
+    /// [`ServiceMethod`]: every method is in exactly one of `methods` and
+    /// `unrecognized`.
     Service {
-        /// Recognized methods, in the order error messages list them.
+        /// Recognized methods and the days each adds (zero included), in
+        /// the order error messages list them.
         methods: Vec<ServiceExtension>,
+        /// Methods the rule does not recognize: counting a period served
+        /// by one is refused.
+        #[serde(default, skip_serializing_if = "Vec::is_empty")]
+        unrecognized: Vec<ServiceMethod>,
         /// Cited trace text for an applied extension.
         text: String,
         /// Trace text when a method is given for a backward period.
@@ -218,8 +225,14 @@ pub struct CountingRule {
     pub source_url: String,
     /// Weekdays the forum is closed (a last day on one rolls).
     pub closed_weekdays: Vec<Weekday>,
-    /// Ids of the holiday calendars the forum closes on (unioned).
+    /// Ids of the holiday calendars the forum closes on (unioned), in
+    /// either counting direction.
     pub holidays: Vec<String>,
+    /// Ids of holiday calendars the forum closes on only for periods
+    /// counted forward ("for periods that are measured after an event",
+    /// FRCP 6(a)(6)(C), FRAP 26(a)(6)(C)).
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub forward_holidays: Vec<String>,
     /// Smallest allowed period, if larger than zero.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub min_length: Option<MinLength>,
@@ -309,10 +322,11 @@ impl CountingRule {
         if count(|s| matches!(s, Step::Base {})) != 1 {
             return bad("exactly one `base` step is required");
         }
-        if count(|s| matches!(s, Step::Service { .. })) > 1
-            || count(|s| matches!(s, Step::ClerkInaccessible { .. })) > 1
-        {
-            return bad("at most one `service` and one `clerkInaccessible` step");
+        if count(|s| matches!(s, Step::Service { .. })) != 1 {
+            return bad("exactly one `service` step is required: it is total over the service methods");
+        }
+        if count(|s| matches!(s, Step::ClerkInaccessible { .. })) > 1 {
+            return bad("at most one `clerkInaccessible` step");
         }
         let count_pos = self
             .steps
@@ -331,14 +345,36 @@ impl CountingRule {
                 {
                     return bad("a period's `below` must be >= 1");
                 }
-                Step::Service { methods, .. } => {
-                    for (i, m) in methods.iter().enumerate() {
-                        if m.days < 0 {
-                            return bad("service extension days must be >= 0");
-                        }
-                        if methods[..i].iter().any(|o| o.method == m.method) {
-                            return bad("duplicate service method");
-                        }
+                Step::Service {
+                    methods,
+                    unrecognized,
+                    ..
+                } => {
+                    if methods.iter().any(|m| m.days < 0) {
+                        return bad("service extension days must be >= 0");
+                    }
+                    let listed: Vec<ServiceMethod> = methods
+                        .iter()
+                        .map(|m| m.method)
+                        .chain(unrecognized.iter().copied())
+                        .collect();
+                    let distinct: std::collections::BTreeSet<ServiceMethod> =
+                        listed.iter().copied().collect();
+                    if distinct.len() != listed.len() {
+                        return bad("duplicate service method");
+                    }
+                    let missing: Vec<&str> = ServiceMethod::ALL
+                        .iter()
+                        .filter(|m| !distinct.contains(m))
+                        .map(|m| m.as_str())
+                        .collect();
+                    if !missing.is_empty() {
+                        return Err(Error::Invalid(format!(
+                            "counting rule {}: the `service` step is not total; it does not \
+                             list {}",
+                            self.id,
+                            missing.join(", ")
+                        )));
                     }
                 }
                 _ => {}
@@ -351,6 +387,11 @@ impl CountingRule {
         }
         if self.holidays.is_empty() && self.closed_weekdays.is_empty() {
             return bad("a rule must close on some weekday or holiday calendar");
+        }
+        let closed: std::collections::BTreeSet<_> =
+            self.closed_weekdays.iter().map(|w| w.number()).collect();
+        if closed.len() == 7 {
+            return bad("a rule must leave some weekday open, or a roll never ends");
         }
         self.templates()
             .into_iter()
@@ -374,7 +415,9 @@ mod tests {
         serde_json::json!([
             {"op": "anchor", "kind": "trigger", "text": "exclude {trigger}"},
             {"op": "count", "periods": [{"count": "calendar", "text": "count {n} -> {date}"}]},
-            {"op": "base"}
+            {"op": "base"},
+            {"op": "service", "text": "t", "backwardText": "b", "methods": [],
+             "unrecognized": ServiceMethod::ALL}
         ])
     }
 
@@ -416,8 +459,14 @@ mod tests {
             "anchor must be first"
         );
         let mut v = minimal();
-        v.as_array_mut().unwrap().pop();
+        v.as_array_mut().unwrap().remove(2);
         assert!(rule(&v).unwrap().validate().is_err(), "base is required");
+        let mut v = minimal();
+        v.as_array_mut().unwrap().pop();
+        assert!(
+            rule(&v).unwrap().validate().is_err(),
+            "the service step is required"
+        );
         let mut v = minimal();
         v[1]["periods"] = serde_json::json!([]);
         assert!(rule(&v).unwrap().validate().is_err(), "empty periods");
@@ -432,10 +481,40 @@ mod tests {
     #[test]
     fn duplicate_service_methods_are_rejected() {
         let mut v = minimal();
-        v.as_array_mut().unwrap().push(serde_json::json!({
-            "op": "service", "text": "t", "backwardText": "b",
-            "methods": [{"method": "mail", "days": 3}, {"method": "mail", "days": 5}]
-        }));
-        assert!(rule(&v).unwrap().validate().is_err());
+        v[3]["methods"] = serde_json::json!([{"method": "mail", "days": 3}]);
+        let err = rule(&v).unwrap().validate().unwrap_err().to_string();
+        assert!(err.contains("duplicate"), "{err}");
+        let mut v = minimal();
+        v[3]["methods"] = serde_json::json!([{"method": "mail", "days": -1}]);
+        v[3]["unrecognized"] = serde_json::json!([]);
+        assert!(rule(&v).unwrap().validate().is_err(), "negative days");
+    }
+
+    #[test]
+    fn the_service_step_is_total() {
+        let mut v = minimal();
+        v[3]["unrecognized"] = serde_json::json!(["mail"]);
+        let err = rule(&v).unwrap().validate().unwrap_err().to_string();
+        assert!(err.contains("not total") && err.contains("electronic"), "{err}");
+        let mut v = minimal();
+        let service = v[3].clone();
+        v.as_array_mut().unwrap().push(service);
+        assert!(rule(&v).unwrap().validate().is_err(), "two service steps");
+    }
+
+    #[test]
+    fn a_rule_closed_every_weekday_is_rejected() {
+        let mut r = rule(&minimal()).unwrap();
+        r.closed_weekdays = vec![
+            Weekday::Sunday,
+            Weekday::Monday,
+            Weekday::Tuesday,
+            Weekday::Wednesday,
+            Weekday::Thursday,
+            Weekday::Friday,
+            Weekday::Saturday,
+        ];
+        let err = r.validate().unwrap_err().to_string();
+        assert!(err.contains("weekday open"), "{err}");
     }
 }

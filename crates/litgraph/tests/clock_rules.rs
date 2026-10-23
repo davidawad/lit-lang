@@ -103,8 +103,26 @@ fn frap_rejects_a_service_method_it_does_not_list() {
     .unwrap_err();
     assert_eq!(
         err.to_string(),
-        "invalid: service method Clerk is not valid under Fed. R. App. P. 26; valid methods: mail, commercial-carrier, prison-mail"
+        "invalid: service method Clerk is not valid under Fed. R. App. P. 26; valid methods: personal, electronic, mail, commercial-carrier, prison-mail"
     );
+}
+
+#[test]
+fn a_method_a_rule_recognizes_for_no_days_adds_none_and_says_nothing() {
+    // FRCP 6(d) since 2016 and FRAP 26(c) add nothing after electronic
+    // service; personal delivery never adds days.
+    for (id, method) in [
+        ("frcp6", ServiceMethod::Electronic),
+        ("frap26", ServiceMethod::Electronic),
+        ("frcp6", ServiceMethod::Personal),
+    ] {
+        let served = run(id, "2026-07-20", 14, Direction::Forward, Unit::Calendar, Some(method))
+            .unwrap();
+        let unserved = run(id, "2026-07-20", 14, Direction::Forward, Unit::Calendar, None).unwrap();
+        assert_eq!(served.due_date, unserved.due_date, "{id} {method:?}");
+        assert!(!served.service_days_added);
+        assert_eq!(served.steps, unserved.steps);
+    }
 }
 
 #[test]
@@ -446,4 +464,63 @@ fn trace_snapshots() {
         hours.last_day_rolled,
         hours.steps.join("\n")
     ));
+}
+
+/// A rule closing on a forward-only calendar (FRCP 6(a)(6)(C)'s state
+/// holidays): the holiday closes a period counted forward, not one counted
+/// back.
+#[test]
+fn a_forward_only_holiday_closes_forward_periods_only() {
+    let lib = ClockLibrary::from_json(
+        &serde_json::json!({
+            "schemaVersion": 3,
+            "calendars": [{"id": "state", "title": "S", "holidays": [
+                {"id": "state-day", "name": "State day", "date": {"fixed": {"month": 8, "day": 3}}}
+            ]}],
+            "countingRules": [{
+                "id": "fwd", "label": "F", "sourceUrl": "u",
+                "closedWeekdays": ["saturday", "sunday"], "holidays": [],
+                "forwardHolidays": ["state"],
+                "steps": [
+                    {"op": "anchor", "kind": "trigger", "text": "t"},
+                    {"op": "count", "periods": [
+                        {"count": "calendar", "text": "c"},
+                        {"unit": "court", "count": "business", "text": "b"}
+                    ]},
+                    {"op": "roll",
+                     "forward": {"toward": "later", "text": "f {date}"},
+                     "backward": {"toward": "earlier", "text": "b {date}"}},
+                    {"op": "base"},
+                    {"op": "service", "text": "s", "backwardText": "b", "methods": [],
+                     "unrecognized": ServiceMethod::ALL}
+                ]
+            }]
+        })
+        .to_string(),
+    )
+    .unwrap();
+    let clock = lib.clock("fwd").unwrap();
+    let count = |trigger: &str, days, direction, unit| {
+        compute_due_date(
+            &DayDeadline {
+                trigger: d(trigger),
+                days,
+                direction,
+                unit,
+                service_method: None,
+            },
+            &clock,
+            &ClockConfig::default(),
+        )
+        .unwrap()
+        .due_date
+    };
+    // Monday 2026-08-03 is the state holiday.
+    assert!(clock.is_forward_holiday(d("2026-08-03")));
+    assert!(!clock.is_closed(d("2026-08-03"), &[]));
+    assert_eq!(count("2026-07-27", 7, Direction::Forward, Unit::Calendar), "2026-08-04");
+    assert_eq!(count("2026-08-10", 7, Direction::Backward, Unit::Calendar), "2026-08-03");
+    // Court days skip it forward, count it backward.
+    assert_eq!(count("2026-07-31", 1, Direction::Forward, Unit::Court), "2026-08-04");
+    assert_eq!(count("2026-08-04", 1, Direction::Backward, Unit::Court), "2026-08-03");
 }

@@ -2,11 +2,11 @@
 //! HIR (SPEC §5.3-§5.4). Structural checks only; overlap, coverage, and
 //! counting semantics are verified downstream.
 use super::cx::{first_expr, first_ref, flag, Cx};
-use crate::db::parse::tree::{ArmItem, Expr, ExprKind, Field, Item, Name, RefPath};
+use crate::db::parse::tree::{ArmItem, Atom, Expr, ExprKind, Field, Item, Name, RefPath};
 use crate::db::span::Report;
 use crate::hir::{
-    Anchor, Counting, DayUnit, Deadline, Designated, Direction, EndOfMonth, RollOn, ShortPeriod,
-    Transition, TransitionArm, Type, Value,
+    Anchor, Counting, DayUnit, Deadline, Direction, EndOfMonth, RollOn, ServiceTime,
+    ShortPeriod, Transition, TransitionArm, Type, Value, SERVICE_METHODS,
 };
 use crate::resolve::sig::{TypeSig, ValueKind};
 use crate::resolve::suggest;
@@ -83,7 +83,7 @@ impl Cx<'_, '_> {
     ) -> Option<Deadline> {
         let meta = self.meta(name, None, item, rule);
         let counting = self.value_ref(counted_by, "counting rule", |k| {
-            matches!(k, ValueKind::Counting)
+            matches!(k, ValueKind::Counting(_))
         });
         let period = match self.ck.infer(amount).value {
             Some(Value::Days { amount: n, unit }) => {
@@ -131,9 +131,13 @@ impl Cx<'_, '_> {
             _ => Direction::Forward,
         };
         let o = self.once_except(opts, "extend");
-        let designated = first_ref(o.get("designated"))
-            .and_then(|r| self.designated(name, trigger, r, (direction, period.map(|p| p.1))));
-        let trigger = self.pattern(trigger);
+        let forum = first_ref(o.get("forum")).map_or_else(
+            || self.manifest.map(|m| m.forum.clone()).unwrap_or_default(),
+            RefPath::display,
+        );
+        if counting.is_some() {
+            self.borrowing(name, counted_by, &forum);
+        }
         let obligation = self.obligation(name, opts, &o, rule);
         let (amount, unit) = period?;
         Some(Deadline {
@@ -143,6 +147,7 @@ impl Cx<'_, '_> {
             direction,
             trigger: trigger?,
             counting: counting?,
+            forum,
             extendable: flag(o.get("extendable")),
             extension_authority: Self::string(o.get("extension_authority")),
             note: Self::string(o.get("note")),
@@ -227,6 +232,38 @@ impl Cx<'_, '_> {
         })
     }
 
+    /// L3009 when deadline `name`, a period of `forum`'s rules, is counted
+    /// by `counted_by`, a rule computing other forums' periods (design
+    /// review 2026-10-23, L2-L4: no cross-forum borrowing).
+    fn borrowing(&mut self, name: &Name, counted_by: &RefPath, forum: &str) {
+        let Ok((_, found)) = self.ck.scope.value(counted_by) else {
+            return;
+        };
+        let ValueKind::Counting(forums) = &found.item.kind else {
+            return;
+        };
+        if forums.contains(forum) {
+            return;
+        }
+        let list = forums.iter().cloned().collect::<Vec<_>>().join(", ");
+        self.report(
+            Report::new(
+                C::InvalidCounting,
+                counted_by.range,
+                format!(
+                    "deadline `{}` is a period of forum `{forum}`, but counting rule `{}` \
+                     computes periods of {list}",
+                    name.text,
+                    counted_by.display()
+                ),
+            )
+            .note(
+                "a period is counted by the rule of the forum whose rules set it; count it by \
+                 that forum's rule, or name that forum with `{ forum F }`",
+            ),
+        );
+    }
+
     /// `counting c { ... }`.
     pub fn counting(
         &mut self,
@@ -250,9 +287,18 @@ impl Cx<'_, '_> {
                 )
             })
             .collect::<Vec<_>>();
-        let service_extensions = self.service_extensions(f.get("service_extension"));
+        let service_extensions = self.service_extensions(name, f.get("service_extension"));
+        let forward_calendar = self.closing_calendar(f.get("forward_holidays"), false);
+        let declared_calendar = self.closing_calendar(f.get("declared_holidays"), true);
+        let forums = match f.get("forums") {
+            Some(field) => Self::refs(Some(field))
+                .into_iter()
+                .map(RefPath::display)
+                .collect(),
+            None => vec![self.manifest.map(|m| m.forum.clone()).unwrap_or_default()],
+        };
         let calendar = if let Some(r) = first_ref(f.get("holidays")) {
-            self.value_ref(r, "calendar", |k| matches!(k, ValueKind::Calendar))
+            self.value_ref(r, "calendar", |k| matches!(k, ValueKind::Calendar(_)))
         } else {
             self.report(Report::new(
                 C::InvalidCounting,
@@ -288,6 +334,9 @@ impl Cx<'_, '_> {
             roll_on,
             service_extensions,
             calendar: calendar?,
+            forward_calendar,
+            declared_calendar,
+            forums,
             anchor: anchor?,
             short_period,
             hours: f.contains_key("allow_hours"),
@@ -295,22 +344,130 @@ impl Cx<'_, '_> {
         })
     }
 
-    fn service_extensions(&mut self, f: Option<&&Field>) -> BTreeMap<String, (u64, DayUnit)> {
-        let mut service_extensions = BTreeMap::new();
-        if let Some(ExprKind::Record(methods)) = f.and_then(|x| first_expr(x)).map(|e| &e.kind) {
-            for (method, e) in methods {
-                if let Some(d) = self.days(e) {
-                    if service_extensions.insert(method.text.clone(), d).is_some() {
-                        self.report(Report::new(
-                            C::InvalidCounting,
-                            method.range,
-                            format!("service method `{}` is listed twice", method.text),
-                        ));
-                    }
+    /// `service_extension { Method: N.days | unrecognized, ... }`: required,
+    /// and total over [`SERVICE_METHODS`] (L3009 otherwise).
+    fn service_extensions(
+        &mut self,
+        name: &Name,
+        f: Option<&&Field>,
+    ) -> BTreeMap<String, ServiceTime> {
+        let mut out = BTreeMap::new();
+        let Some(field) = f else {
+            self.report(
+                Report::new(
+                    C::InvalidCounting,
+                    name.range,
+                    format!(
+                        "counting rule `{}` needs `service_extension`, total over the service \
+                         methods",
+                        name.text
+                    ),
+                )
+                .note(format!(
+                    "give each of {} `N.days` (`0.days`: it adds none) or `unrecognized`",
+                    SERVICE_METHODS.join(", ")
+                )),
+            );
+            return out;
+        };
+        let Some(ExprKind::Record(methods)) = first_expr(field).map(|e| &e.kind) else {
+            return out;
+        };
+        for (method, e) in methods {
+            if !SERVICE_METHODS.contains(&method.text.as_str()) {
+                let mut report = Report::new(
+                    C::InvalidCounting,
+                    method.range,
+                    format!("`{}` is not a service method", method.text),
+                )
+                .note(format!("the service methods are {}", SERVICE_METHODS.join(", ")));
+                if let Some(best) = suggest::nearest(&method.text, SERVICE_METHODS) {
+                    report = report.fix(method.range, best, Applicability::MaybeIncorrect);
+                }
+                self.report(report);
+                continue;
+            }
+            let time = match &e.kind {
+                ExprKind::Ref(r) if r.is_simple() && r.head.text == "unrecognized" => {
+                    Some(ServiceTime::Unrecognized)
+                }
+                ExprKind::Ref(r) => {
+                    self.bad_counting(r, &["unrecognized"]);
+                    None
+                }
+                _ => self.days(e).map(|(n, unit)| ServiceTime::Adds(n, unit)),
+            };
+            if let Some(time) = time {
+                if out.insert(method.text.clone(), time).is_some() {
+                    self.report(Report::new(
+                        C::InvalidCounting,
+                        method.range,
+                        format!("service method `{}` is listed twice", method.text),
+                    ));
                 }
             }
         }
-        service_extensions
+        let missing: Vec<&str> = SERVICE_METHODS
+            .iter()
+            .copied()
+            .filter(|m| !methods.iter().any(|(k, _)| k.text == *m))
+            .collect();
+        if !missing.is_empty() {
+            self.report(
+                Report::new(
+                    C::InvalidCounting,
+                    field.key.range,
+                    format!(
+                        "`service_extension` is not total: it does not say what {} add",
+                        missing.join(", ")
+                    ),
+                )
+                .note("give each `N.days` (`0.days`: it adds none) or `unrecognized`"),
+            );
+        }
+        out
+    }
+
+    /// The calendar of `forward_holidays C cite X` or `declared_holidays C
+    /// cite X`: `X` is the rule that makes `C`'s days ones the forum closes
+    /// on, and is required. A `declared_holidays` calendar lists declared
+    /// days: each of its holidays is a `once(date)` with no observance.
+    fn closing_calendar(&mut self, f: Option<&&Field>, declared: bool) -> Option<String> {
+        let field = f?;
+        let cited = field.values.iter().any(|(a, _)| {
+            matches!(a, Atom::Expr(Expr { kind: ExprKind::Cite(_) | ExprKind::Hole(_), .. }))
+        });
+        if !cited {
+            self.report(
+                Report::new(
+                    C::InvalidCounting,
+                    field.key.range,
+                    format!("`{}` needs the `cite` of the rule closing on it", field.key.text),
+                )
+                .note(if declared {
+                    "whether a declared day closes the forum is a legal question its rule answers (FRCP 6(a)(6)(B))"
+                } else {
+                    "name the rule closing these days for forward periods (FRCP 6(a)(6)(C))"
+                }),
+            );
+        }
+        let r = first_ref(f)?;
+        let id = self.value_ref(r, "calendar", |k| matches!(k, ValueKind::Calendar(_)))?;
+        let lists_days = matches!(
+            self.ck.scope.value(r),
+            Ok((_, found)) if found.item.kind == ValueKind::Calendar(true)
+        );
+        if declared && !lists_days {
+            self.report(
+                Report::new(
+                    C::InvalidCounting,
+                    r.range,
+                    format!("`declared_holidays {}` names a calendar of rules, not of declared days", r.display()),
+                )
+                .note("a declared-closure calendar lists each declared day as `once(date)`, with no `observed`"),
+            );
+        }
+        Some(id)
     }
 
     fn short_period(&mut self, f: Option<&&Field>) -> Option<ShortPeriod> {

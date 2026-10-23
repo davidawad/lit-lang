@@ -12,7 +12,9 @@ import core.time.{ Served, ServiceMethod }
 /// 17711): mail adds 3 days, 10 to a foreign country; 49 FR 32570 (1984)
 /// made "clear" these are calendar, not working, days. Nothing is added
 /// for any other method: electronic service (from 2002's § 201.16(e), 67 FR
-/// 68037) displaces paragraph (d). The same Part 210 that § 201.14(a) names
+/// 68037) displaces paragraph (d); express delivery is delivery. Electronic
+/// service postdates most of this version, which does not recognize it;
+/// personal delivery adds nothing in any version. The same Part 210 that § 201.14(a) names
 /// was added by this notice; the 1994 rewrite's § 210.6 (19 C.F.R. § 210.6,
 /// 1997 ed.) only incorporates §§ 201.14 and 201.16(d). The 1991 (56 FR
 /// 11923) and 2011 (76 FR 61941) amendments revise § 201.14(b) only; 2003's
@@ -28,8 +30,20 @@ counting itc210 effective [1976-05-27, 2007-03-23) known_at 1976-04-27 cite "41 
   include_last_day
   roll_forward_on [weekend, legal_holiday]
   short_period { below: 7.days, count: business_days }
-  service_extension { Mail: 3.days, MailForeign: 10.days } cite "41 FR 17711"
+  service_extension {
+    Personal: 0.days
+    Electronic: unrecognized
+    Mail: 3.days
+    Clerk: unrecognized
+    OtherConsented: unrecognized
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: 10.days
+    Express: 0.days
+    ExpressForeign: 0.days
+  } cite 41 FR 17711
   holidays us-federal-holidays
+  forums [itc]
 }
 
 /// 72 FR 13689 (March 23, 2007, effective that day; implementing procedures
@@ -49,8 +63,20 @@ counting itc210 effective [2007-03-23, 2013-05-20) known_at 2007-03-23 supersede
   include_last_day
   roll_forward_on [weekend, legal_holiday]
   short_period { below: 7.days, count: business_days }
-  service_extension { Mail: 3.days, MailForeign: 10.days, Express: 1.days } cite "72 FR 13689"
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: unrecognized
+    OtherConsented: unrecognized
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: 10.days
+    Express: 1.days
+    ExpressForeign: 0.days
+  } cite 72 FR 13689
   holidays us-federal-holidays
+  forums [itc]
 }
 
 /// 19 C.F.R. § 210.6(a): Part 210 periods are computed under §§ 201.14 and
@@ -68,19 +94,45 @@ counting itc210 effective [2013-05-20, ..) known_at 2013-04-19 supersedes itc210
   roll_forward_on [weekend, legal_holiday]
   short_period { below: 7.days, count: business_days }
   service_extension {
+    Personal: 0.days
+    Electronic: 0.days
     Mail: 3.days
+    Clerk: unrecognized
+    OtherConsented: unrecognized
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
     MailForeign: 10.days
     Express: 1.days
     ExpressForeign: 5.days
   } cite "19 C.F.R. § 201.16(d)"
   holidays us-federal-holidays
+  forums [itc]
 }
 
-deadline itc210-1-day: 1.days after Served() counted_by itc210 cite "19 C.F.R. § 201.14(a)"
-deadline itc210-3-days: 3.days after Served() counted_by itc210 cite "19 C.F.R. § 201.14(a)"
-deadline itc210-5-days: 5.days after Served() counted_by itc210 cite "19 C.F.R. § 201.14(a)"
-deadline itc210-12-days: 12.days after Served() counted_by itc210 cite "19 C.F.R. § 210.43(a)(1)"
-deadline itc210-20-days: 20.days after Served() counted_by itc210 cite "19 C.F.R. § 210.13(a)"
+deadline itc210-1-day: 1.days after Served() counted_by itc210 cite 19 C.F.R. § 201.14(a)
+{
+  forum itc
+}
+
+deadline itc210-3-days: 3.days after Served() counted_by itc210 cite 19 C.F.R. § 201.14(a)
+{
+  forum itc
+}
+
+deadline itc210-5-days: 5.days after Served() counted_by itc210 cite 19 C.F.R. § 201.14(a)
+{
+  forum itc
+}
+
+deadline itc210-12-days: 12.days after Served() counted_by itc210 cite 19 C.F.R. § 210.43(a)(1)
+{
+  forum itc
+}
+
+deadline itc210-20-days: 20.days after Served() counted_by itc210 cite 19 C.F.R. § 210.13(a)
+{
+  forum itc
+}
 
 test "twenty days from a Monday" cite "19 C.F.R. § 201.14(a)"
 {

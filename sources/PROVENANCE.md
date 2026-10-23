@@ -378,32 +378,49 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   dropped). No wording changed. Used by `packs/ttab-trademark-trial-and-appeal-board.json`.
 - sha256 (this file): `66402ce5e48bf2a9aa039058b3bfc181d3511b9e94137fac8b6a3d84a26b33a7`
 
-### `cfr-37-part2-answer-time-history.txt` — 37 C.F.R. §§ 2.105, 2.106 and 2.113 (TTAB answer time) as of January 13 and 14, 2017
+### `cfr-37-part2-history.txt` — 37 C.F.R. §§ 2.119 and 2.196 as in force on dated eCFR points in time
 
-- The dates `lit/ttab`'s answer-time deadlines are in force from. For each
-  section, `## 37 C.F.R. (eCFR versions) § N` opens with a bracketed line
-  listing every version the eCFR records for it (2017-01-01, its first
-  recorded version, and 2017-01-14, the last amendment), then the section's
-  text as of 2017-01-14; `## 37 C.F.R. (eCFR 2017-01-13) § N` is the text
-  the day before. The headings are deliberately not canonical
-  `litgraph::cite::normalize` refs, so cites of the current sections resolve
-  to `cfr-37-part2.txt`, whose wording these 2017-01-14 texts match word for
-  word.
-- Fetched 2026-10-23 from the eCFR versioner API (`www.ecfr.gov`, Office of
-  the Federal Register): the version list
-  `/api/versioner/v1/versions/title-37.json?part=2` (sha256
-  `d1a55830383f26753b161838a0e0512897ba35fac0e0c293cd2541b1c2cd4bff`), and
-  `/api/versioner/v1/full/<date>/title-37.xml?part=2&section=<N>` for
-  2017-01-14 (§ 2.105 `ee15a98638c69c675b069e160a0eefff7ef4732bb6314b65b1d592987a156779`,
-  § 2.106 `84402a507a3cccf21ce99e1fd68bbeae1fd8cffc41c7f0c2c7390cb6e616f97f`,
-  § 2.113 `49c60f5418ec5228616ad9f2d250559919dba1648e3f6d32695bb066b3a7b48c`;
-  the 2026-10-19 responses are byte-identical) and 2017-01-13 (§ 2.105
-  `e67cbbcc06c258c1c5b8af8e44621cf92abd5ae1634cf7c81f6b0874725c1e9a`,
-  § 2.106 `2b48e49bf2cc100d9980228754be964b3d8ae664ae0267e801d99596ab8af263`,
-  § 2.113 `465446e09efbf10073a05610c2e5aeab43ca72a8f2f6c5979e89dcc4b484539c`).
-  Each `<HEAD>` and `<P>` became one line, tags stripped, entities decoded,
-  whitespace collapsed. No wording changed.
-- sha256 (this file): `93e7715ba5a605f480efdb1b9d82191fc1cfff00a242e066710adcfd298260f8`
+- The texts that date `lit/ttab`'s counting rule (37 C.F.R. § 2.196 with
+  § 2.119(c)'s service rule), which `cfr-37-part2.txt` cannot, having
+  dropped its amendment-history lines: `## 37 C.F.R. (eCFR 2017-01-01)
+  § 2.119` (the last text adding "5 days" after service by first-class
+  mail, Priority Mail Express, or overnight courier), `## 37 C.F.R. (eCFR
+  2017-01-14) § 2.119` (the text in force from January 14, 2017, with no
+  added time, and its source note `[81 FR 69975, Oct. 7, 2016]`), and `## 37
+  C.F.R. (eCFR 2017-01-01) § 2.196`. The headings are deliberately not
+  canonical refs, so cites of the current sections never match them.
+- Fetched 2026-10-23 from the eCFR point-in-time API
+  (`https://www.ecfr.gov/api/versioner/v1/full/<date>/title-37.xml?section=<n>`):
+  § 2.119 at 2017-01-01 (sha256
+  `baa801e7830e57f49aa20c0cf3d1953529bc932b0cd2290c348a99cacfe96a83`) and
+  2017-01-14 (`ce4965c42d3239c42332c5d9636b35131b4e447259eb8b6a7fcf3ef1e578a17b`),
+  § 2.196 at 2017-01-01
+  (`96acb388ef12e7b0b4ea61e5eb62a88cee212fbdab516167a218bfaeb012dd56`). The
+  versions API (`/api/versioner/v1/versions/title-37.json?section=<n>`)
+  lists § 2.119 versions on 2017-01-01, 2017-01-14 and 2018-11-30 (the last
+  leaves (c) unchanged) and § 2.196 only on 2017-01-01, the start of the
+  eCFR's point-in-time coverage: § 2.196 is unchanged since at least then.
+  Each `<P>` paragraph, the `<HEAD>` heading and the `<CITA>` source note are
+  one line each, tags stripped and entities decoded; no wording changed.
+- sha256 (this file): `ee74e8b29179176117c86a8e5789cf9ff7512e9a5bb9ced41fede0ce52f7e5ef`
+
+### `scotus-rules.txt` — Rules of the Supreme Court of the United States 13, 29 and 30 (adopted December 5, 2022, effective January 1, 2023)
+
+- The cert-petition period (Rule 13), service (Rule 29) and computation of
+  time (Rule 30) `lit/core`'s `sup-ct-30` counting rule and the FRAP and
+  Federal Circuit cert periods cite, one `## Sup. Ct. R. N.P` section per
+  numbered paragraph, each restating its rule's heading as its first line.
+- Fetched 2026-10-23 from `www.supremecourt.gov/filingandrules/2023RulesoftheCourt.pdf`
+  (sha256 `05f435c766fd596333828846d097828238ff89a266c24e3afca9ecd2fb9c19db`),
+  `pdftotext` (no `-layout`), running headers and page numbers stripped,
+  lines joined into one line per numbered paragraph. The PDF's text layer
+  drops the "fi" ligature ("fle" for "file"); it was restored word by word
+  (file, filed, filing, filers, first, final, specified, specific,
+  justified, office, officer, suffices, identifiable, confined, defined,
+  certified, certificate, affidavit, Notifications), and two line-break
+  hyphens inside words ("inter- nal", "ear- lier") were joined. No other
+  wording changed.
+- sha256 (this file): `94c56e4ee8ec59d5cf857f1271ee689de1568421ab67e19b71bb823b5feecbb4`
 
 ### `usc-15-lanham.txt` — Lanham Act sections (12 sections of 15 U.S.C.)
 

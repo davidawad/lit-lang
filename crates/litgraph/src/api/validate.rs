@@ -97,6 +97,15 @@ fn validate_pack(doc: &Value, catalog: &Catalog, out: &mut Validation) {
             if let Some(Err(e)) = p.counting.as_deref().map(|id| catalog.clock.clock(id)) {
                 out.errors.push(format!("pack {}: `counting`: {e}", p.id));
             }
+            for edge in &g.edges {
+                let own = edge.deadline.as_ref().and_then(|d| d.counting.as_deref());
+                if let Some(Err(e)) = own.map(|id| catalog.clock.clock(id)) {
+                    out.errors.push(format!(
+                        "pack {}: edge {}: `deadline.counting`: {e}",
+                        p.id, edge.id
+                    ));
+                }
+            }
             out.diagnostics = lint::lint(&g, &[p]);
         }
         Err(e) => out.errors.push(e.to_string()),
@@ -109,7 +118,7 @@ fn validate_clock(doc: &Value, catalog: &Catalog, out: &mut Validation) {
     match ClockLibrary::from_json(&doc.to_string()) {
         Ok(lib) => {
             for r in &lib.counting_rules {
-                for h in &r.holidays {
+                for h in r.holidays.iter().chain(&r.forward_holidays) {
                     let mut known = lib.calendars.iter().chain(&catalog.clock.calendars);
                     if !known.any(|c| &c.id == h) {
                         out.errors.push(format!(
@@ -347,6 +356,16 @@ mod tests {
         assert!(validate(&pack("frcp6"), None, &c).valid);
         let v = validate(&pack("frcp7"), None, &c);
         assert!(!v.valid && v.errors[0].contains("frcp7"), "{:?}", v.errors);
+        let mut own = pack("frcp6");
+        own["edges"][0]["deadline"] = json!({"length": 30, "counting": "frap27"});
+        let v = validate(&own, None, &c);
+        assert!(
+            !v.valid && v.errors[0].contains("deadline.counting") && v.errors[0].contains("frap27"),
+            "{:?}",
+            v.errors
+        );
+        own["edges"][0]["deadline"]["counting"] = json!("frap26");
+        assert!(validate(&own, None, &c).valid);
         Ok(())
     }
 

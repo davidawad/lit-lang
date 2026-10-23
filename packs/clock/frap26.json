@@ -51,6 +51,14 @@
           "op": "service",
           "methods": [
             {
+              "method": "personal",
+              "days": 0
+            },
+            {
+              "method": "electronic",
+              "days": 0
+            },
+            {
               "method": "mail",
               "days": 3
             },
@@ -64,7 +72,14 @@
             }
           ],
           "text": "Fed. R. App. P. 26(d)/(c): service by {method} adds {days} day(s) (after the period expires under the counting rule) -> {date}",
-          "backwardText": "Fed. R. App. P. 26(d)/(c) does not apply to backward-counted periods; ignored"
+          "backwardText": "Fed. R. App. P. 26(d)/(c) does not apply to backward-counted periods; ignored",
+          "unrecognized": [
+            "clerk",
+            "other-consented",
+            "mail-foreign",
+            "express",
+            "express-foreign"
+          ]
         },
         {
           "op": "roll",

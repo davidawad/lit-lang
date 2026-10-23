@@ -29,10 +29,66 @@ pub struct Clock<'a> {
     pub rule: &'a CountingRule,
     /// The calendars named by `rule.holidays`, in that order.
     pub calendars: Vec<&'a HolidayCalendar>,
+    /// The calendars named by `rule.forward_holidays`, in that order:
+    /// closed only for a period counted forward.
+    pub forward_calendars: Vec<&'a HolidayCalendar>,
 }
 
-impl Clock<'_> {
-    /// Every observed holiday in `year` across the rule's calendars.
+/// The days a forum is closed on: which depends on the counting direction
+/// (FRCP 6(a)(6)(C): a state's holidays close only periods "measured after
+/// an event").
+#[derive(Debug, Clone, Copy)]
+struct Closed<'c, 'a> {
+    clock: &'c Clock<'a>,
+    forward: bool,
+    additional: &'c [Date],
+}
+
+impl Closed<'_, '_> {
+    fn is(&self, date: Date) -> bool {
+        self.clock.is_closed(date, self.additional)
+            || (self.forward && self.clock.is_forward_holiday(date))
+    }
+
+    fn roll(&self, mut d: Date, toward: Toward) -> Date {
+        let step = match toward {
+            Toward::Later => 1,
+            Toward::Earlier => -1,
+        };
+        while self.is(d) {
+            d = d.add_days(step);
+        }
+        d
+    }
+
+    /// Advance `k` business days from `start` (exclusive of `start`).
+    fn advance_business(&self, start: Date, k: i64) -> Date {
+        let step = if self.forward { 1 } else { -1 };
+        let mut d = start;
+        let mut counted = 0;
+        while counted < k {
+            d = d.add_days(step);
+            if !self.is(d) {
+                counted += 1;
+            }
+        }
+        d
+    }
+}
+
+/// True if `date` is observed by one of `calendars` (checking the
+/// neighboring years too, since an observed date can cross a year
+/// boundary, e.g. Jan 1 observed Dec 31).
+fn observed(calendars: &[&HolidayCalendar], date: Date) -> bool {
+    let (year, _, _) = date.ymd();
+    [year - 1, year, year + 1]
+        .into_iter()
+        .any(|y| calendars.iter().any(|c| c.observed_in(y).contains(&date)))
+}
+
+impl<'a> Clock<'a> {
+    /// Every observed holiday in `year` across the rule's calendars (the
+    /// ones closing either direction).
     #[must_use]
     pub fn holidays_in(&self, year: i32) -> BTreeSet<Date> {
         self.calendars
@@ -41,21 +97,22 @@ impl Clock<'_> {
             .collect()
     }
 
-    /// True if `date` is a legal holiday under this rule: a calendar
-    /// holiday (checking the neighboring years too, since an observed date
-    /// can cross a year boundary, e.g. Jan 1 observed Dec 31) or one of
-    /// `additional`.
+    /// True if `date` is a legal holiday under this rule in either
+    /// counting direction: a calendar holiday or one of `additional`.
     #[must_use]
     pub fn is_legal_holiday(&self, date: Date, additional: &[Date]) -> bool {
-        let (year, _, _) = date.ymd();
-        additional.contains(&date)
-            || [year - 1, year, year + 1]
-                .into_iter()
-                .any(|y| self.holidays_in(y).contains(&date))
+        additional.contains(&date) || observed(&self.calendars, date)
     }
 
-    /// True if the forum is closed on `date` (a closed weekday or a legal
-    /// holiday).
+    /// True if `date` is a holiday of the rule's forward-only calendars.
+    #[must_use]
+    pub fn is_forward_holiday(&self, date: Date) -> bool {
+        observed(&self.forward_calendars, date)
+    }
+
+    /// True if the forum is closed on `date` in either counting direction
+    /// (a closed weekday or a legal holiday). A forward-only holiday also
+    /// closes it for a period counted forward.
     #[must_use]
     pub fn is_closed(&self, date: Date, additional: &[Date]) -> bool {
         let wd = date.weekday();
@@ -63,29 +120,12 @@ impl Clock<'_> {
             || self.is_legal_holiday(date, additional)
     }
 
-    fn roll(&self, mut d: Date, toward: Toward, add: &[Date]) -> Date {
-        let step = match toward {
-            Toward::Later => 1,
-            Toward::Earlier => -1,
-        };
-        while self.is_closed(d, add) {
-            d = d.add_days(step);
+    fn closed<'c>(&'c self, forward: bool, additional: &'c [Date]) -> Closed<'c, 'a> {
+        Closed {
+            clock: self,
+            forward,
+            additional,
         }
-        d
-    }
-
-    /// Advance `k` business days from `start` (exclusive of `start`).
-    fn advance_business(&self, start: Date, k: i64, forward: bool, add: &[Date]) -> Date {
-        let step = if forward { 1 } else { -1 };
-        let mut d = start;
-        let mut counted = 0;
-        while counted < k {
-            d = d.add_days(step);
-            if !self.is_closed(d, add) {
-                counted += 1;
-            }
-        }
-        d
     }
 }
 
@@ -161,6 +201,7 @@ impl Run<'_, '_> {
                 methods,
                 text,
                 backward_text,
+                ..
             } => self.service(methods, text, backward_text)?,
             Step::Base {} => self.base = self.current,
             Step::Roll { forward, backward } => {
@@ -173,17 +214,20 @@ impl Run<'_, '_> {
         Ok(())
     }
 
+    fn closed(&self) -> Closed<'_, '_> {
+        self.clock
+            .closed(self.forward, &self.cfg.additional_holidays)
+    }
+
     fn anchor(&mut self, kind: AnchorKind, text: &str) {
-        let add = &self.cfg.additional_holidays;
+        let closed = self.closed();
         self.anchor = match (kind, self.forward) {
             (AnchorKind::Trigger, _) => self.dl.trigger,
             (AnchorKind::AdjacentBusinessDay, true) => {
-                self.clock
-                    .roll(self.dl.trigger.add_days(1), Toward::Later, add)
+                closed.roll(self.dl.trigger.add_days(1), Toward::Later)
             }
             (AnchorKind::AdjacentBusinessDay, false) => {
-                self.clock
-                    .roll(self.dl.trigger.add_days(-1), Toward::Earlier, add)
+                closed.roll(self.dl.trigger.add_days(-1), Toward::Earlier)
             }
         };
         self.current = self.anchor;
@@ -211,12 +255,7 @@ impl Run<'_, '_> {
         };
         self.current = match p.count {
             CountUnit::Calendar => self.anchor.add_days(if self.forward { k } else { -k }),
-            CountUnit::Business => self.clock.advance_business(
-                self.anchor,
-                k,
-                self.forward,
-                &self.cfg.additional_holidays,
-            ),
+            CountUnit::Business => self.closed().advance_business(self.anchor, k),
         };
         self.nominal = self.current;
         self.say(&p.text, self.current, &[]);
@@ -283,6 +322,11 @@ impl Run<'_, '_> {
                 valid.join(", ")
             ))
         })?;
+        // A method the rule recognizes but adds nothing for moves nothing,
+        // and like a roll that moves nothing it says nothing.
+        if ext.days == 0 {
+            return Ok(());
+        }
         self.current = self.current.add_days(ext.days);
         self.applied.service = true;
         let (m, d) = (format!("{method:?}"), ext.days.to_string());
@@ -291,9 +335,7 @@ impl Run<'_, '_> {
     }
 
     fn roll(&mut self, r: &Roll) {
-        let next = self
-            .clock
-            .roll(self.current, r.toward, &self.cfg.additional_holidays);
+        let next = self.closed().roll(self.current, r.toward);
         if next != self.current {
             self.current = next;
             self.applied.rolled = true;
@@ -307,11 +349,7 @@ impl Run<'_, '_> {
         }
         match text {
             Some(t) => {
-                let next = self.clock.roll(
-                    self.current.add_days(1),
-                    Toward::Later,
-                    &self.cfg.additional_holidays,
-                );
+                let next = self.closed().roll(self.current.add_days(1), Toward::Later);
                 self.current = next;
                 self.applied.clerk = true;
                 self.say(t, next, &[]);
@@ -406,8 +444,9 @@ pub fn compute_hour_deadline(
     let due_day = Date::from_epoch_day(due_instant.div_euclid(86400));
     let n = dl.hours.to_string();
     let mut steps = vec![fill(&h.text, &[("n", &n)])];
-    let add = &cfg.additional_holidays;
-    let mut final_day = clock.roll(due_day, Toward::Later, add);
+    // An hours period runs forward from its trigger.
+    let closed = clock.closed(true, &cfg.additional_holidays);
+    let mut final_day = closed.roll(due_day, Toward::Later);
     let last_day_rolled = final_day != due_day;
     if last_day_rolled {
         let date = final_day.to_iso();
@@ -418,7 +457,7 @@ pub fn compute_hour_deadline(
         .as_deref()
         .filter(|_| cfg.clerk_inaccessible);
     if let Some(t) = inaccessible {
-        final_day = clock.roll(final_day.add_days(1), Toward::Later, add);
+        final_day = closed.roll(final_day.add_days(1), Toward::Later);
         let date = final_day.to_iso();
         steps.push(fill(t, &[("n", &n), ("date", &date)]));
     }

@@ -133,8 +133,9 @@ syntax_kinds! {
         KwUrl = "url", KwEdition = "edition", KwBearer = "bearer", KwTrigger = "trigger",
         KwExtend = "extend", KwWaive = "waive", KwAfterExpiry = "after_expiry", KwNever = "never",
         KwRemoves = "removes", KwElects = "elects", KwExtends = "extends",
-        KwWaives = "waives", KwTo = "to", KwWhere = "where", KwAnd = "and", KwOr = "or",
-        KwDesignated = "designated",
+        KwWaives = "waives", KwTo = "to", KwWhere = "where",
+        KwForums = "forums", KwForwardHolidays = "forward_holidays",
+        KwDeclaredHolidays = "declared_holidays",
     }
     nodes {
         SourceFile => "Root of a `.lit` module.",

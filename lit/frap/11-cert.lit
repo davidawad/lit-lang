@@ -1,25 +1,25 @@
 module frap.cert
 
 import core.authority.{ CaseOrder }
-import core.frap26.{ frap26 }
+import core.supct30.{ sup-ct-30 }
 import frap.events.{ EnteredOnAppeal }
 import frap.{ cert-group }
 
 /// A petition for certiorari is due within 90 days after entry of the
-/// court of appeals' judgment (28 U.S.C. § 2101(c)), or after denial of a
-/// timely petition for rehearing (Sup. Ct. R. 13.3; the Supreme Court's
-/// Rules are not vendored), so the period runs from the latest appellate
-/// entry. "A justice of the Supreme Court, for good cause shown, may extend
-/// the time ... for a period not exceeding sixty days" (§ 2101(c)), so it
-/// delegates to `CaseOrder`. Sup. Ct. R. 30.1 computes it as FRAP 26(a)
-/// does (exclude the trigger day; a last day on a weekend or federal legal
-/// holiday rolls forward), and the engine counts the pack's deadlines with
-/// `frap26`, so `frap26` counts it here too.
-rule duty petition-for-certiorari effective [2009-12-01, ..) known_at 2009-03-26 cite "28 U.S.C. § 2101(c)"
+/// court of appeals' judgment (28 U.S.C. § 2101(c); Sup. Ct. R. 13.1), or
+/// after denial of a timely petition for rehearing (Sup. Ct. R. 13.3), so
+/// the period runs from the latest appellate entry. "A justice of the
+/// Supreme Court, for good cause shown, may extend the time ... for a period
+/// not exceeding sixty days" (§ 2101(c)), so it delegates to `CaseOrder`.
+/// It is a period of the Supreme Court's Rules, not of FRAP: Sup. Ct. R.
+/// 30.1 computes it (`core.supct30`), and its vendored text is the Rules in
+/// force from January 1, 2023, so an earlier entry has no counting rule.
+rule duty petition-for-certiorari effective [2009-12-01, ..) known_at 2009-03-26 cite 28 U.S.C. § 2101(c)
 {
-  deadline cert-period: 90.days after EnteredOnAppeal() counted_by frap26 delegable_to [CaseOrder] cite "28 U.S.C. § 2101(c)"
+  deadline cert-period: 90.days after EnteredOnAppeal() counted_by sup-ct-30 delegable_to [CaseOrder] cite 28 U.S.C. § 2101(c)
   {
     trigger latest
+    forum scotus
   }
 }
 
@@ -29,7 +29,7 @@ test "a cert petition is due 90 days after entry of judgment" cite "28 U.S.C. §
   expect deadline(cert-period) == 2026-01-13
 }
 
-test "a 90th day on a Sunday rolls to Monday" cite "FRAP 26(a)(1)(C)"
+test "a 90th day on a Sunday rolls to Monday" cite Sup. Ct. R. 30.1
 {
   given EnteredOnAppeal(Judgment) on 2025-03-03
   expect deadline(cert-period) == 2025-06-02

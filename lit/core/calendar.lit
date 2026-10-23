@@ -88,3 +88,33 @@ calendar rcfc-legal-holidays cite "RCFC 6(a)(6)(A)"
   thanksgiving-day: nth(4, thursday, 11) effective [1941-12-26, ..)
   christmas-day: fixed(12, 25) effective [1894-06-28, ..) observed nearest_weekday
 }
+
+/// The federal holidays "within the District of Columbia" of 37 C.F.R.
+/// §§ 1.7(a) and 2.196: the legal public holidays of 5 U.S.C. § 6103(a), observed under
+/// § 6103(b)(1), plus Inauguration Day, which § 6103(c) makes a holiday for
+/// federal employees in the District of Columbia area. Unlike the other
+/// holidays, § 6103(c) moves only a Sunday Inauguration Day (to Monday); a
+/// Saturday one is not observed on Friday (unlike core's
+/// `rcfc-legal-holidays`, which observes it then). Effective dates are those
+/// of core's `us-federal-holidays`.
+calendar dc-federal-holidays effective [2013-12-18, ..) known_at 2026-01-01 cite 37 CFR 1.7(a)
+{
+  new-years-day: fixed(1, 1) effective [1894-06-28, ..) observed nearest_weekday
+  inauguration-day: every(4, 1965, 1, 20) effective [1966-09-06, ..)
+  // § 6103(c)'s Sunday shift, spelled out: the engine has only the
+  // nearest-weekday observance. These are the Sunday Inauguration Days from
+  // 2024 to 2100.
+  inauguration-day-observed-2041: once(2041-01-21) effective [1966-09-06, ..)
+  inauguration-day-observed-2069: once(2069-01-21) effective [1966-09-06, ..)
+  inauguration-day-observed-2097: once(2097-01-21) effective [1966-09-06, ..)
+  mlk-day: nth(3, monday, 1) effective [1986-01-01, ..)
+  washingtons-birthday: nth(3, monday, 2) effective [1971-01-01, ..)
+  memorial-day: last(monday, 5) effective [1971-01-01, ..)
+  juneteenth: fixed(6, 19) effective [2021-06-17, ..) observed nearest_weekday
+  independence-day: fixed(7, 4) effective [1894-06-28, ..) observed nearest_weekday
+  labor-day: nth(1, monday, 9) effective [1894-06-28, ..)
+  columbus-day: nth(2, monday, 10) effective [1971-01-01, ..)
+  veterans-day: fixed(11, 11) effective [1978-01-01, ..) observed nearest_weekday
+  thanksgiving-day: nth(4, thursday, 11) effective [1941-12-26, ..)
+  christmas-day: fixed(12, 25) effective [1894-06-28, ..) observed nearest_weekday
+}

@@ -45,6 +45,12 @@ pub struct Deadline {
     /// Free-text note (traps, US-party variants, ...).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub note: Option<String>,
+    /// The clock-library counting rule of this window when it is not the
+    /// pack's `counting` (a FRAP 4 appeal period in a district-court pack
+    /// is counted under FRAP 26, not FRCP 6): a period is counted by the
+    /// rule of the forum whose rules set it, never borrowed.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub counting: Option<String>,
 }
 
 impl Deadline {

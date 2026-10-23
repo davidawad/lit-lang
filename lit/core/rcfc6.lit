@@ -15,38 +15,107 @@ counting rcfc6 effective [2002-05-01, 2010-01-11) known_at 2002-05-01 cite "RCFC
   roll_forward_on [weekend, legal_holiday, inaccessible]
   short_period { below: 11.days, count: business_days }
   service_extension {
+    Personal: 0.days
+    Electronic: unrecognized
     Mail: 3.days
     Clerk: 3.days
     OtherConsented: 3.days
-  } cite "RCFC 6 (2006 Amendment note)"
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite RCFC 6 (2006 Amendment note)
   holidays rcfc-legal-holidays
+  forums [cofc]
 }
 
 /// RCFC 6 as amended January 11, 2010 "in accordance with the corresponding
 /// changes to FRCP 6 that became effective December 1, 2009" (2010
 /// Amendment note): every day counts, hours periods, and the clerk's
 /// office inaccessibility rule (6(a)(3)). Its legal holidays add
-/// Inauguration Day (6(a)(6)(A)). RCFC 6, like FRCP 6, is silent on
-/// periods stated in months or years; PTAB borrows this rule for the
-/// months of 35 U.S.C. §§ 314(b), 315(b), 321(c) and 37 C.F.R. Part 42, so
-/// it counts them as the Patent Office does (MPEP 710.01(a)): to the
-/// corresponding day of the later month, else that month's last day.
-counting rcfc6 effective [2010-01-11, ..) known_at 2010-01-11 supersedes rcfc6@2002-05-01 cite "RCFC 6(a)"
+/// Inauguration Day (6(a)(6)(A)). 6(d) then followed FRCP 6(d) of 2009,
+/// whose 3 days followed electronic service too. RCFC 6, like FRCP 6, is
+/// silent on periods stated in months or years; it counts them as the
+/// Patent Office does (MPEP 710.01(a)): to the corresponding day of the
+/// later month, else that month's last day. UNVERIFIED: whether the 2002
+/// RCFC added days after electronic service; that version does not
+/// recognize it.
+counting rcfc6 effective [2010-01-11, 2017-08-01) known_at 2010-01-11 supersedes rcfc6@2002-05-01 cite RCFC 6 (2010 Amendment note)
 {
   exclude_trigger_day
   include_last_day
   roll_forward_on [weekend, legal_holiday, inaccessible]
-  service_extension { Mail: 3.days, Clerk: 3.days, OtherConsented: 3.days } cite "RCFC 6(d)"
+  service_extension {
+    Personal: 0.days
+    Electronic: 3.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite RCFC 6 (2010 Amendment note)
   holidays rcfc-legal-holidays
+  forums [cofc]
   allow_hours
   end_of_month clamp
 }
 
-deadline rcfc6-1-day: 1.days after Served() counted_by rcfc6 cite "RCFC 6(a)(1)"
-deadline rcfc6-10-days: 10.days after Served() counted_by rcfc6 cite "RCFC 6(a)(1)"
-deadline rcfc6-14-days: 14.days after Served() counted_by rcfc6 cite "RCFC 6(a)(1)"
-deadline rcfc6-26-days: 26.days after Served() counted_by rcfc6 cite "RCFC 6(a)(1)"
-deadline rcfc6-2-days-before: 2.days before Scheduled() counted_by rcfc6 cite "RCFC 6(a)(5)"
+/// RCFC 6(d) as amended August 1, 2017 "in accordance with the
+/// corresponding change to FRCP 6 that became effective December 1, 2016"
+/// (2017 Amendment note): the 3 days follow service "under RCFC 5(b)(2)(C)
+/// (mail), (D) (leaving with the clerk), or (F) (other means consented
+/// to)" only, so electronic service adds nothing.
+counting rcfc6 effective [2017-08-01, ..) known_at 2017-08-01 supersedes rcfc6@2010-01-11 cite RCFC 6(a)
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite RCFC 6(d)
+  holidays rcfc-legal-holidays
+  forums [cofc]
+  allow_hours
+  end_of_month clamp
+}
+
+deadline rcfc6-1-day: 1.days after Served() counted_by rcfc6 cite RCFC 6(a)(1)
+{
+  forum cofc
+}
+
+deadline rcfc6-10-days: 10.days after Served() counted_by rcfc6 cite RCFC 6(a)(1)
+{
+  forum cofc
+}
+
+deadline rcfc6-14-days: 14.days after Served() counted_by rcfc6 cite RCFC 6(a)(1)
+{
+  forum cofc
+}
+
+deadline rcfc6-26-days: 26.days after Served() counted_by rcfc6 cite RCFC 6(a)(1)
+{
+  forum cofc
+}
+
+deadline rcfc6-2-days-before: 2.days before Scheduled() counted_by rcfc6 cite RCFC 6(a)(5)
+{
+  forum cofc
+}
 
 test "an ordinary fourteen-day period matches FRCP 6" cite "RCFC 6(a)(1)"
 {

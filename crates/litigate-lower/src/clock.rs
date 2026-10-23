@@ -20,7 +20,7 @@ use litgraph::clock::rule::{
 };
 use litgraph::clock::{ClockLibrary, CountingRule, ServiceMethod, Unit};
 use litigate_base::{DiagnosticCode as C, Span};
-use litigate_sema::hir::{self, Anchor, DayUnit, Declaration, RollOn};
+use litigate_sema::hir::{self, Anchor, DayUnit, Declaration, RollOn, ServiceTime};
 
 /// The clock fragment of `pkg` and its source map: counting rule `only`
 /// when given, else every counting rule the package declares (one, or a
@@ -49,20 +49,22 @@ pub(crate) fn fragment(
     };
     let mut entries = Vec::new();
     for c in &rules {
-        let (rule, calendar) = lowered(build, pkg, c, sink)?;
+        let (rule, calendars) = lowered(build, pkg, c, sink)?;
         entries.push(entry(
             &format!("/countingRules/{}", library.counting_rules.len()),
             &c.meta,
         ));
         library.counting_rules.push(rule);
-        if library.calendars.iter().all(|k| k.id != calendar.meta.id) {
-            entries.push(entry(
-                &format!("/calendars/{}", library.calendars.len()),
-                &calendar.meta,
-            ));
-            library
-                .calendars
-                .push(calendar::holiday_calendar(sink, calendar, &pkg.manifest)?);
+        for calendar in calendars {
+            if library.calendars.iter().all(|k| k.id != calendar.meta.id) {
+                entries.push(entry(
+                    &format!("/calendars/{}", library.calendars.len()),
+                    &calendar.meta,
+                ));
+                library
+                    .calendars
+                    .push(calendar::holiday_calendar(sink, calendar, &pkg.manifest)?);
+            }
         }
     }
     // Serializing plain data cannot fail; were it to, the empty text would
@@ -104,33 +106,56 @@ fn entry(pointer: &str, meta: &hir::Metadata) -> Entry {
     }
 }
 
-/// Counting rule `c` as an engine rule, with the calendar declaration it
-/// names (in force at the build date).
+/// The calendars counting rule `c` closes on (in force at the build date):
+/// `holidays`, then `declared_holidays` (both closing either direction),
+/// then `forward_holidays`.
+struct Closing<'p> {
+    both: Vec<&'p hir::Calendar>,
+    forward: Option<&'p hir::Calendar>,
+}
+
+/// The calendar declaration `id` names, in force at the build date.
+fn resolve_calendar<'p>(
+    build: &Build<'_, 'p>,
+    pkg: &hir::Package,
+    id: &str,
+    at: Span,
+    sink: &mut Sink,
+) -> Option<&'p hir::Calendar> {
+    match build.selection.resolve(&pkg.manifest.pack_id, id, at.clone()) {
+        Ok(Declaration::Calendar(cal)) => Some(cal),
+        Ok(_) => {
+            sink.error(
+                C::TypeMismatch,
+                Some(&at),
+                format!("`holidays {id}` does not name a calendar"),
+            );
+            None
+        }
+        Err(d) => {
+            sink.out.push(d);
+            None
+        }
+    }
+}
+
+/// Counting rule `c` as an engine rule, with the calendar declarations it
+/// closes on (in force at the build date).
 fn lowered<'p>(
     build: &Build<'_, 'p>,
     pkg: &hir::Package,
     c: &hir::Counting,
     sink: &mut Sink,
-) -> Option<(CountingRule, &'p hir::Calendar)> {
+) -> Option<(CountingRule, Vec<&'p hir::Calendar>)> {
     let span = c.meta.span.as_ref();
     let at = span.cloned().unwrap_or_else(|| sink.fallback.clone());
-    let calendar = match build
-        .selection
-        .resolve(&pkg.manifest.pack_id, &c.calendar, at)
-    {
-        Ok(Declaration::Calendar(cal)) => cal,
-        Ok(_) => {
-            sink.error(
-                C::TypeMismatch,
-                span,
-                format!("`holidays {}` does not name a calendar", c.calendar),
-            );
-            return None;
-        }
-        Err(d) => {
-            sink.out.push(d);
-            return None;
-        }
+    let mut both = vec![resolve_calendar(build, pkg, &c.calendar, at.clone(), sink)?];
+    if let Some(id) = &c.declared_calendar {
+        both.push(resolve_calendar(build, pkg, id, at.clone(), sink)?);
+    }
+    let forward = match &c.forward_calendar {
+        Some(id) => Some(resolve_calendar(build, pkg, id, at, sink)?),
+        None => None,
     };
     let cited = c.meta.cite.as_deref().and_then(|cite| {
         let url = source_url(&pkg.manifest, Some(cite))?;
@@ -147,10 +172,10 @@ fn lowered<'p>(
         );
         return None;
     };
-    Some((
-        rule(sink, c, cite, &calendar.meta.id, source_url)?,
-        calendar,
-    ))
+    let closing = Closing { both, forward };
+    let rule = rule(sink, c, cite, &closing, source_url)?;
+    let calendars = closing.both.into_iter().chain(closing.forward).collect();
+    Some((rule, calendars))
 }
 
 /// The `url` of the source a cite resolves to: the longest matching
@@ -313,18 +338,18 @@ fn roll(
     }))
 }
 
-/// The service-extension step (forward periods only).
+/// The service-extension step (forward periods only), total over the
+/// engine's service methods as sema's `service_extension` is over the
+/// language's.
 fn service(
     sink: &mut Sink,
     c: &hir::Counting,
     cite: &str,
     span: Option<&Span>,
-) -> Result<Option<Step>, ()> {
-    if c.service_extensions.is_empty() {
-        return Ok(None);
-    }
+) -> Result<Step, ()> {
     let mut methods = Vec::new();
-    for (name, (days, unit)) in &c.service_extensions {
+    let mut unrecognized = Vec::new();
+    for (name, time) in &c.service_extensions {
         let Some(method) = service_method(name) else {
             sink.unsupported(
                 span,
@@ -332,29 +357,37 @@ fn service(
             );
             return Err(());
         };
-        let (DayUnit::Calendar, Ok(days)) = (unit, i64::try_from(*days)) else {
-            sink.unsupported(
-                span,
-                format!("service method `{name}` must add calendar days"),
-            );
-            return Err(());
-        };
-        methods.push(ServiceExtension { method, days });
+        match time {
+            ServiceTime::Unrecognized => unrecognized.push(method),
+            ServiceTime::Adds(days, unit) => {
+                let (DayUnit::Calendar, Ok(days)) = (unit, i64::try_from(*days)) else {
+                    sink.unsupported(
+                        span,
+                        format!("service method `{name}` must add calendar days"),
+                    );
+                    return Err(());
+                };
+                methods.push(ServiceExtension { method, days });
+            }
+        }
     }
-    Ok(Some(Step::Service {
+    methods.sort_by_key(|m| m.method);
+    unrecognized.sort();
+    Ok(Step::Service {
         methods,
+        unrecognized,
         text: format!("{cite}: service by {{method}} adds {{days}} day(s) -> {{date}}"),
         backward_text: format!("{cite}: service extensions apply to forward periods only; ignored"),
-    }))
+    })
 }
 
-/// `c`, cited as `cite`, as an engine counting rule closing on calendar
-/// `calendar`.
+/// `c`, cited as `cite`, as an engine counting rule closing on the
+/// `closing` calendars.
 fn rule(
     sink: &mut Sink,
     c: &hir::Counting,
     cite: &str,
-    calendar: &str,
+    closing: &Closing<'_>,
     source_url: String,
 ) -> Option<CountingRule> {
     let span = c.meta.span.as_ref();
@@ -383,7 +416,7 @@ fn rule(
             )),
             ignored_text: format!("{cite}: no inaccessibility extension applies; ignored"),
         });
-    let second_roll = service.as_ref().and(roll.clone());
+    let second_roll = roll.clone();
     // `base` is the day the period "would otherwise expire" (FRCP 6(d),
     // FRAP 26(c)): after its own last-day roll, before any added days.
     let steps = [
@@ -393,7 +426,7 @@ fn rule(
         Some(Step::Base {}),
     ]
     .into_iter()
-    .chain([service, second_roll, clerk])
+    .chain([Some(service), second_roll, clerk])
     .flatten()
     .collect();
     Some(CountingRule {
@@ -401,7 +434,8 @@ fn rule(
         label: cite.to_owned(),
         source_url,
         closed_weekdays: vec![Weekday::Saturday, Weekday::Sunday],
-        holidays: vec![calendar.to_owned()],
+        holidays: closing.both.iter().map(|k| k.meta.id.clone()).collect(),
+        forward_holidays: closing.forward.iter().map(|k| k.meta.id.clone()).collect(),
         min_length,
         steps,
         hours: c.hours.then(|| Hours {

@@ -243,9 +243,11 @@ pub(crate) fn pack(
 ) -> (Pack, SourceMap) {
     let m = &pkg.manifest;
     let decls = emitted(build, pkg, sink);
+    let counting = counting(sink, pkg, &decls);
     let cx = EdgeCx {
         selection: &build.selection,
         pack: &m.pack_id,
+        counting: counting.as_deref(),
     };
     let mut nodes = Vec::new();
     let mut edges: Vec<(RawEdge, &hir::Edge)> = Vec::new();
@@ -270,7 +272,6 @@ pub(crate) fn pack(
         }
     }
     dangling(build, sink, &pkg.start, &nodes, &edges);
-    let counting = counting(sink, pkg, &decls);
     let node_holes = origins
         .iter()
         .enumerate()

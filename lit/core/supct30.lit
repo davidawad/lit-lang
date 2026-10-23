@@ -1,0 +1,63 @@
+module core.supct30
+
+import core.calendar.{ us-federal-holidays }
+import core.time.{ Served, ServiceMethod }
+
+/// Sup. Ct. R. 30.1 (Rules adopted December 5, 2022, effective January 1,
+/// 2023): computing "any period of time prescribed or allowed by these
+/// Rules, by order of the Court, or by an applicable statute" (a cert
+/// petition's 90 days under 28 U.S.C. § 2101(c) and Rule 13.1), the
+/// trigger day is excluded and the last day included, "unless it is a
+/// Saturday, Sunday, federal legal holiday listed in 5 U. S. C. § 6103, or
+/// day on which the Court building is closed by order of the Court or the
+/// Chief Justice", when the period runs to the next day that is none of
+/// them. UNVERIFIED: whether Inauguration Day, which § 6103(c) lists for
+/// employees in the District of Columbia area, is "listed in § 6103"; the
+/// § 6103(a) holidays alone give the earlier date. No closure order is
+/// vendored, so none is declared. Service adds no time: Rule 29.3 serves
+/// "personally, by mail, or by third-party commercial carrier", and Rule 30
+/// adds nothing for any of them. Earlier editions of the Rules are not
+/// vendored and stay undeclared.
+counting sup-ct-30 effective [2023-01-01, ..) known_at 2022-12-05 cite Sup. Ct. R. 30.1
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday]
+  service_extension {
+    Personal: 0.days
+    Electronic: unrecognized
+    Mail: 0.days
+    Clerk: unrecognized
+    OtherConsented: unrecognized
+    CommercialCarrier: 0.days
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite Sup. Ct. R. 29.3
+  holidays us-federal-holidays
+  forums [scotus]
+}
+
+deadline sup-ct-30-90-days: 90.days after Served() counted_by sup-ct-30 cite Sup. Ct. R. 13.1
+{
+  forum scotus
+}
+
+test "ninety days from entry of judgment" cite Sup. Ct. R. 13.1
+{
+  given Served(Personal) on 2025-10-15
+  expect deadline(sup-ct-30-90-days) == 2026-01-13
+}
+
+test "a Sunday ninetieth day runs to Monday" cite Sup. Ct. R. 30.1
+{
+  given Served(Personal) on 2025-03-03
+  expect deadline(sup-ct-30-90-days) == 2025-06-02
+}
+
+test "service by mail adds nothing" cite Sup. Ct. R. 30.1
+{
+  given Served(Mail) on 2025-10-15
+  expect deadline(sup-ct-30-90-days) == 2026-01-13
+}

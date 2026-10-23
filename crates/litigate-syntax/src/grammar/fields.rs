@@ -66,7 +66,7 @@ pub(crate) const DEADLINE_DECL_OPTS: &[Spec] = &[
     (KwTrigger, Some(ref_or_call)),
     (KwExtend, Some(capability)),
     (KwWaive, Some(capability)),
-    (KwDesignated, Some(reference)),
+    (KwForum, Some(reference)),
 ];
 
 /// Fields of an `extend`/`waive` capability.
@@ -98,6 +98,9 @@ pub(crate) const COUNTING_ITEMS: &[Spec] = &[
     (KwRollForwardOn, Some(id_list)),
     (KwServiceExtension, Some(service_extension)),
     (KwHolidays, Some(reference)),
+    (KwForwardHolidays, Some(cited_reference)),
+    (KwDeclaredHolidays, Some(cited_reference)),
+    (KwForums, Some(id_list)),
     (KwAnchor, Some(reference)),
     (KwShortPeriod, Some(short_period)),
 ];
@@ -288,9 +291,24 @@ fn duration_value(p: &mut Parser<'_>) -> bool {
     duration_estimate(p) || ordered_fields(p, RANGE, false, &[KwMin, KwMax])
 }
 
-/// `service_extension { Method: Duration } [Cite]`.
+/// `service_extension { Method: Duration | unrecognized } [Cite]`.
 fn service_extension(p: &mut Parser<'_>) -> bool {
-    record(p, Key::Ident, duration) && {
+    record(p, Key::Ident, service_time) && {
+        cite(p);
+        true
+    }
+}
+
+/// What one service method adds: `N.days`, or `unrecognized` (a reference
+/// sema checks).
+fn service_time(p: &mut Parser<'_>) -> bool {
+    duration(p) || reference(p)
+}
+
+/// `Ref [cite ...]`: a calendar and the rule making it one the forum
+/// closes on (`forward_holidays`, `declared_holidays`).
+fn cited_reference(p: &mut Parser<'_>) -> bool {
+    reference(p) && {
         cite(p);
         true
     }

@@ -47,7 +47,7 @@ pub fn counting_hint(
             std::iter::once(c.scope.own)
                 .chain(c.scope.bindings.iter().map(|b| b.sig))
                 .filter_map(|s| s.values.get(*n))
-                .any(|v| matches!(v.kind, ValueKind::Counting))
+                .any(|v| matches!(v.kind, ValueKind::Counting(_)))
         })
         .map(str::to_owned)
         .collect();

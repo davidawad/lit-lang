@@ -26,10 +26,12 @@ pub enum ValueKind {
     },
     /// Deadline.
     Deadline,
-    /// Counting rule.
-    Counting,
-    /// Holiday calendar.
-    Calendar,
+    /// Counting rule, with the forums whose periods its versions compute
+    /// (`forums [...]`, else the declaring package's forum).
+    Counting(std::collections::BTreeSet<String>),
+    /// Holiday calendar; `true` when it lists only declared days: every
+    /// holiday a `once(date)` with no observance.
+    Calendar(bool),
     /// Default with its conclusion type (unknown when ill-typed).
     Default(Option<Type>),
     /// Exception.
@@ -49,8 +51,8 @@ impl ValueKind {
         match self {
             Self::Node { .. } => "node",
             Self::Deadline => "deadline",
-            Self::Counting => "counting rule",
-            Self::Calendar => "calendar",
+            Self::Counting(_) => "counting rule",
+            Self::Calendar(_) => "calendar",
             Self::Default(_) => "default",
             Self::Exception => "exception",
             Self::Transition => "transition",
@@ -177,8 +179,33 @@ pub fn value_of(item: &Item) -> Option<(&str, ValueKind)> {
             (n.name.text.as_str(), kind)
         }
         ItemKind::Deadline { name, .. } => (name.text.as_str(), ValueKind::Deadline),
-        ItemKind::Counting(name, ..) => (name.text.as_str(), ValueKind::Counting),
-        ItemKind::Calendar(name, ..) => (name.text.as_str(), ValueKind::Calendar),
+        ItemKind::Counting(name, _, fields) => (
+            name.text.as_str(),
+            ValueKind::Counting(
+                clause(fields, "forums")
+                    .into_iter()
+                    .flat_map(|f| &f.values)
+                    .flat_map(|(a, _)| match a {
+                        Atom::Expr(Expr {
+                            kind: ExprKind::List(l),
+                            ..
+                        }) => l.as_slice(),
+                        _ => &[],
+                    })
+                    .filter_map(|e| match &e.kind {
+                        ExprKind::Ref(r) => Some(r.display()),
+                        _ => None,
+                    })
+                    .collect(),
+            ),
+        ),
+        ItemKind::Calendar(name, _, holidays) => (
+            name.text.as_str(),
+            ValueKind::Calendar(holidays.iter().all(|h| {
+                h.observed.is_none()
+                    && matches!(&h.rule.kind, ExprKind::Call(f, _) if f.is_simple() && f.head.text == "once")
+            })),
+        ),
         ItemKind::Default(name, ..) => (name.text.as_str(), ValueKind::Default(None)),
         ItemKind::Exception { name, .. } => (name.text.as_str(), ValueKind::Exception),
         ItemKind::Transition(name, ..) => (name.text.as_str(), ValueKind::Transition),
@@ -239,13 +266,24 @@ pub fn build(db: &dyn salsa::Database, file: SourceFile) -> Signature {
 /// Records every declared name of `items` in `sig`.
 fn collect(sig: &mut Signature, items: &[(&Item, Option<&Item>)], m: Option<&Manifest>) {
     for (item, rule) in items {
-        if let Some((name, kind)) = value_of(item) {
+        if let Some((name, mut kind)) = value_of(item) {
             let from = effective_from(item, *rule, m);
+            // A counting rule with no `forums` computes its own package's.
+            if let ValueKind::Counting(forums) = &mut kind {
+                if forums.is_empty() {
+                    forums.insert(m.map(|m| m.forum.clone()).unwrap_or_default());
+                }
+            }
             match sig.values.get_mut(name) {
                 Some(existing)
                     if std::mem::discriminant(&existing.kind) == std::mem::discriminant(&kind) =>
                 {
                     existing.versions.push(from);
+                    if let (ValueKind::Counting(all), ValueKind::Counting(more)) =
+                        (&mut existing.kind, kind)
+                    {
+                        all.extend(more);
+                    }
                 }
                 Some(_) => {}
                 None => {

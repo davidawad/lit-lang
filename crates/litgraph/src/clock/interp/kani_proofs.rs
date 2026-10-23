@@ -11,6 +11,7 @@ fn weekend_clock() -> CountingRule {
         source_url: String::new(),
         closed_weekdays: vec![Weekday::Saturday, Weekday::Sunday],
         holidays: Vec::new(),
+        forward_holidays: Vec::new(),
         min_length: None,
         steps: Vec::new(),
         hours: None,
@@ -27,9 +28,10 @@ fn roll_forward_terminates_for_bounded_dates() {
     let clock = Clock {
         rule: &rule,
         calendars: Vec::new(),
+        forward_calendars: Vec::new(),
     };
     let start = Date::from_epoch_day(i64::from(epoch_day));
-    let rolled = clock.roll(start, Toward::Later, &[]);
+    let rolled = clock.closed(true, &[]).roll(start, Toward::Later);
     assert!(!clock.is_closed(rolled, &[]));
     assert!(rolled >= start);
 }
@@ -46,8 +48,11 @@ fn forward_business_counting_is_after_or_equal_to_trigger() {
     let clock = Clock {
         rule: &rule,
         calendars: Vec::new(),
+        forward_calendars: Vec::new(),
     };
     let trigger = Date::from_epoch_day(i64::from(epoch_day));
-    let result = clock.advance_business(trigger, i64::from(days), true, &[]);
+    let result = clock
+        .closed(true, &[])
+        .advance_business(trigger, i64::from(days));
     assert!(result >= trigger);
 }

@@ -44,12 +44,19 @@ pub enum Unit {
     Year,
 }
 
-/// Service methods that may add days to a period. The vocabulary is the
-/// union of every shipped rule's methods; each counting rule's `service`
-/// step lists the subset it recognizes and how many days each adds.
-#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, JsonSchema)]
+/// Service methods that may add days to a period: a closed vocabulary, the
+/// union of every shipped rule's methods. A counting rule's `service` step
+/// is total over it: each method either adds a number of days (zero
+/// included) or is one the rule does not recognize (design review
+/// 2026-10-23, P8).
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord, JsonSchema)]
 #[serde(rename_all = "kebab-case")]
 pub enum ServiceMethod {
+    /// Personal delivery (handing it over, or leaving it at an office or
+    /// dwelling).
+    Personal,
+    /// Electronic means.
+    Electronic,
     /// Mail (domestic).
     Mail,
     /// Leaving with the clerk.
@@ -69,10 +76,26 @@ pub enum ServiceMethod {
 }
 
 impl ServiceMethod {
+    /// Every service method, in declaration order.
+    pub const ALL: [ServiceMethod; 10] = [
+        ServiceMethod::Personal,
+        ServiceMethod::Electronic,
+        ServiceMethod::Mail,
+        ServiceMethod::Clerk,
+        ServiceMethod::OtherConsented,
+        ServiceMethod::CommercialCarrier,
+        ServiceMethod::PrisonMail,
+        ServiceMethod::MailForeign,
+        ServiceMethod::Express,
+        ServiceMethod::ExpressForeign,
+    ];
+
     /// The authored (kebab-case) name.
     #[must_use]
     pub fn as_str(self) -> &'static str {
         match self {
+            ServiceMethod::Personal => "personal",
+            ServiceMethod::Electronic => "electronic",
             ServiceMethod::Mail => "mail",
             ServiceMethod::Clerk => "clerk",
             ServiceMethod::OtherConsented => "other-consented",

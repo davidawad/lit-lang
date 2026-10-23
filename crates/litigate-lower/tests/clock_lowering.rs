@@ -6,7 +6,8 @@ mod support;
 
 use litigate_lower::{render, Lowerer};
 use litigate_sema::hir::{
-    Anchor, CiteRule, DayUnit, EndOfMonth, HolidayDate, Observance, RollOn, ShortPeriod,
+    Anchor, CiteRule, DayUnit, EndOfMonth, HolidayDate, Observance, RollOn, ServiceTime,
+    ShortPeriod,
 };
 use support::{
     calendar_mut, clock_of, counting_mut, example, lowered, lowering_errors, render_diagnostics,
@@ -147,7 +148,9 @@ fn a_bare_rule() {
     let mut p = example();
     let c = counting_mut(&mut p);
     c.roll_on.clear();
-    c.service_extensions.clear();
+    for time in c.service_extensions.values_mut() {
+        *time = ServiceTime::Unrecognized;
+    }
     c.hours = false;
     insta::assert_snapshot!(rule(&p));
 }
@@ -168,9 +171,11 @@ fn an_end_of_month_policy_is_a_months_provision() {
 fn a_camel_case_service_method_is_kebab_case() {
     let mut p = example();
     let c = counting_mut(&mut p);
-    c.service_extensions.clear();
+    for time in c.service_extensions.values_mut() {
+        *time = ServiceTime::Unrecognized;
+    }
     c.service_extensions
-        .insert("OtherConsented".into(), (3, DayUnit::Calendar));
+        .insert("OtherConsented".into(), ServiceTime::Adds(3, DayUnit::Calendar));
     c.roll_on = vec![RollOn::Weekend, RollOn::LegalHoliday];
     insta::assert_snapshot!(rule(&p));
 }
@@ -180,7 +185,7 @@ fn service_days_must_fit() {
     let mut p = example();
     counting_mut(&mut p)
         .service_extensions
-        .insert("Mail".into(), (u64::MAX, DayUnit::Calendar));
+        .insert("Mail".into(), ServiceTime::Adds(u64::MAX, DayUnit::Calendar));
     insta::assert_snapshot!(lowering_errors(&p));
 }
 

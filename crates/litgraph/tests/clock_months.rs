@@ -37,7 +37,11 @@ fn count(
         .iter()
         .map(|h| library.calendars.iter().find(|c| &c.id == h).unwrap())
         .collect();
-    let clock = Clock { rule, calendars };
+    let clock = Clock {
+        rule,
+        calendars,
+        forward_calendars: Vec::new(),
+    };
     let dl = DayDeadline {
         trigger: Date::parse_iso(trigger).unwrap(),
         days: n,

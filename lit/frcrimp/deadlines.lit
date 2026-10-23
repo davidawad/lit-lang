@@ -1,15 +1,17 @@
 // The criminal case's counted periods. FRCrimP 45(a) governs every period
 // in the criminal rules and in "any statute that does not specify a method
-// of computing time" (the Speedy Trial Act); since its 2009 amendment (Rule
-// 45 history note, sources/frcrimp.txt) its text matches FRCP 6(a), so
-// these count under `core.frcp6`. FRAP 4(b) counts under FRAP 26(a). No
-// trigger carries a service method: FRCrimP 45(c)'s three days follow only
-// service, and none of these periods runs from service.
+// of computing time" (the Speedy Trial Act), so these count under
+// `core.frcrimp45`, the criminal rules' own counting rule, not FRCP 6's
+// (no cross-forum borrowing). Its vendored text is the version in force
+// from December 1, 2023; a trigger before then has no counting rule. FRAP
+// 4(b) counts under FRAP 26(a), a period of the appellate rules. No trigger
+// carries a service method: FRCrimP 45(c)'s three days follow only service,
+// and none of these periods runs from service.
 module frcrimp.deadlines
 
 import core.authority.{ CaseOrder }
 import core.frap26.{ frap26 }
-import core.frcp6.{ frcp6 }
+import core.frcrimp45.{ frcrimp45 }
 
 /// An arrest, or service of a summons on the charge (18 U.S.C. § 3161(b)).
 event Arrested()
@@ -52,27 +54,27 @@ event AppealClockEvent(start: AppealStart)
 
 /// Rule 5(a)(1)(A) sets no day count ("without unnecessary delay"); the
 /// three days are the legacy pack's practice window, kept as a hole.
-deadline rule5-appearance: 3.days after Arrested() counted_by frcp6 effective [2024-12-01, ..) cite ?("Fed. R. Crim. P. 5(a)(1)(A) sets no day count (3 days is the legacy pack's practice estimate)")
+deadline rule5-appearance: 3.days after Arrested() counted_by frcrimp45 effective [2024-12-01, ..) cite ?("Fed. R. Crim. P. 5(a)(1)(A) sets no day count (3 days is the legacy pack's practice estimate)")
 /// 14 days after the initial appearance for a defendant in custody, set by
 /// the 2009 time-computation amendments (Rule 5.1 history note). A magistrate
 /// judge may extend it under 5.1(d).
-deadline prelim-in-custody: 14.days after InitialAppearance(InCustody) counted_by frcp6 effective [2009-12-01, ..) known_at 2009-03-26 delegable_to [CaseOrder] cite "FRCrimP 5.1(c); FRCrimP 5.1(d)"
+deadline prelim-in-custody: 14.days after InitialAppearance(InCustody) counted_by frcrimp45 effective [2009-12-01, ..) known_at 2009-03-26 delegable_to [CaseOrder] cite FRCrimP 5.1(c); FRCrimP 5.1(d)
 /// 21 days for a released defendant.
-deadline prelim-released: 21.days after InitialAppearance(Released) counted_by frcp6 effective [2009-12-01, ..) known_at 2009-03-26 delegable_to [CaseOrder] cite "FRCrimP 5.1(c); FRCrimP 5.1(d)"
+deadline prelim-released: 21.days after InitialAppearance(Released) counted_by frcrimp45 effective [2009-12-01, ..) known_at 2009-03-26 delegable_to [CaseOrder] cite FRCrimP 5.1(c); FRCrimP 5.1(d)
 /// 30 days from arrest or summons to indictment or information; an
 /// ends-of-justice continuance excludes time (§ 3161(h)(7)).
-deadline indictment-period: 30.days after Arrested() counted_by frcp6 effective [2024-12-01, ..) delegable_to [CaseOrder] cite "18 U.S.C. § 3161(b); 18 U.S.C. § 3161(h)"
+deadline indictment-period: 30.days after Arrested() counted_by frcrimp45 effective [2024-12-01, ..) delegable_to [CaseOrder] cite 18 U.S.C. § 3161(b); 18 U.S.C. § 3161(h)
 
 /// 70 days to trial from the later of the charge's filing and the
 /// appearance; § 3161(h)(7) continuances exclude time.
-deadline speedy-trial: 70.days after TrialClockEvent() counted_by frcp6 effective [2024-12-01, ..) delegable_to [CaseOrder] cite "18 U.S.C. § 3161(c)(1); 18 U.S.C. § 3161(h)"
+deadline speedy-trial: 70.days after TrialClockEvent() counted_by frcrimp45 effective [2024-12-01, ..) delegable_to [CaseOrder] cite 18 U.S.C. § 3161(c)(1); 18 U.S.C. § 3161(h)
 {
   trigger latest
 }
 
 /// 14 days from the later of verdict and discharge (2009 amendments, Rule 29
 /// history note). Rule 45(b)(1) lets the court extend it.
-deadline rule29-period: 14.days after VerdictOrDischarge() counted_by frcp6 effective [2009-12-01, ..) known_at 2009-03-26 delegable_to [CaseOrder] cite "FRCrimP 29(c)(1); FRCrimP 45(b)(1)"
+deadline rule29-period: 14.days after VerdictOrDischarge() counted_by frcrimp45 effective [2009-12-01, ..) known_at 2009-03-26 delegable_to [CaseOrder] cite FRCrimP 29(c)(1); FRCrimP 45(b)(1)
 {
   trigger latest
 }
@@ -82,14 +84,14 @@ deadline rule29-period: 14.days after VerdictOrDischarge() counted_by frcp6 effe
 /// 45(b)(1). Rule 33(b)(1)'s three years for newly discovered evidence has
 /// no declaration: the language has no year unit, and a day count would
 /// misstate a leap year.
-deadline rule33-period: 14.days after VerdictOrDischarge(Verdict) counted_by frcp6 effective [2009-12-01, ..) known_at 2009-03-26 delegable_to [CaseOrder] cite "FRCrimP 33(b)(2); FRCrimP 45(b)(1)"
+deadline rule33-period: 14.days after VerdictOrDischarge(Verdict) counted_by frcrimp45 effective [2009-12-01, ..) known_at 2009-03-26 delegable_to [CaseOrder] cite FRCrimP 33(b)(2); FRCrimP 45(b)(1)
 /// At least 35 days before sentencing, unless the defendant waives it;
 /// Rule 32(b)(2) lets the court change any Rule 32 time limit for good
 /// cause. Rule 32 was last amended December 1, 2011 (history note).
-deadline psr-disclosure: 35.days before SentencingScheduled() counted_by frcp6 effective [2011-12-01, ..) known_at 2011-04-26 delegable_to [CaseOrder] cite "FRCrimP 32(e)(2); FRCrimP 32(b)(2)"
+deadline psr-disclosure: 35.days before SentencingScheduled() counted_by frcrimp45 effective [2011-12-01, ..) known_at 2011-04-26 delegable_to [CaseOrder] cite FRCrimP 32(e)(2); FRCrimP 32(b)(2)
 /// 14 days after sentencing (2009 amendments, Rule 35 history note). Rule
 /// 45(b)(2) bars extending it, so nothing is delegated.
-deadline rule35-period: 14.days after SentenceImposed() counted_by frcp6 effective [2009-12-01, ..) known_at 2009-03-26 cite "FRCrimP 35(a); FRCrimP 45(b)(2)"
+deadline rule35-period: 14.days after SentenceImposed() counted_by frcrimp45 effective [2009-12-01, ..) known_at 2009-03-26 cite FRCrimP 35(a); FRCrimP 45(b)(2)
 
 /// 14 days from the later of the judgment's entry and the government's
 /// notice. The district court may extend it up to 30 days under 4(b)(4),
@@ -100,6 +102,7 @@ deadline rule35-period: 14.days after SentenceImposed() counted_by frcp6 effecti
 /// vintage of the vendored rules.
 deadline criminal-appeal: 14.days after AppealClockEvent() counted_by frap26 effective [2024-12-01, ..) delegable_to [CaseOrder] cite "FRAP 4(b)(1)(A); FRAP 4(b)(4)"
 {
+  forum frap
   trigger latest
   extend { by court, discretion GoodCauseOrExcusableNeglect, max 30.days, after_expiry }
   extend { never cite "FRAP 26(b)(1)" }

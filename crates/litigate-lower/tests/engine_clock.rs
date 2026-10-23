@@ -5,7 +5,7 @@ mod support;
 
 use litigate_lower::{EngineClock, Lowerer};
 use litigate_sema::case::{Clock, DueRequest};
-use litigate_sema::hir::{self, Anchor, DayUnit, Direction, RollOn};
+use litigate_sema::hir::{self, Anchor, DayUnit, Direction, RollOn, ServiceTime};
 use support::{counting_mut, example, lowered, render_diagnostics};
 
 /// A forward 21-calendar-day request under `counting`.
@@ -33,7 +33,7 @@ fn every_counting_version_is_lowered_at_its_start() {
     // three.
     counting_mut(&mut p)
         .service_extensions
-        .insert("Mail".into(), (5, DayUnit::Calendar));
+        .insert("Mail".into(), ServiceTime::Adds(5, DayUnit::Calendar));
     // A links package is skipped: its counting rule, which does not lower,
     // is never asked for.
     let mut links = example();

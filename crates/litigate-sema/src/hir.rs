@@ -30,9 +30,9 @@ pub use logic::{
     Expectation, Metadata, Relation, Rule, RuleKind, Test, TypeAlias,
 };
 pub use temporal::{
-    Anchor, Bound, Calendar, Capability, CauseStandard, Counting, DateRef, Deadline, Designated,
-    Direction, EndOfMonth, Extension, ExtensionWindow, Holiday, HolidayDate, Interval, Motion,
-    Observance, RollOn, ShortPeriod, Transition, TransitionArm, TriggerPolicy, Undesignated,
+    Anchor, Bound, Calendar, Capability, CauseStandard, Counting, DateRef, Deadline, Direction,
+    EndOfMonth, Extension, ExtensionWindow, Holiday, HolidayDate, Interval, Motion, Observance,
+    RollOn, ServiceTime, ShortPeriod, Transition, TransitionArm, TriggerPolicy, SERVICE_METHODS,
 };
 pub use value::{Authored, DayUnit, Money, Rational, Type, Value};
 

@@ -62,7 +62,7 @@ construct lowers to each field below.
 | `from`, `to`, `label` | string | |
 | `actor` | `applicant` \| `examiner` \| `office` \| `either` | v1 vocabulary kept for compatibility. Interpreted through `roles` |
 | `authority` | string | the rule/statute that authorizes or compels this transition |
-| `deadline` | `{length, unit?, extendable?, extensionAuthority?, note?}` | `length` in days. **v2** `unit`: `calendar` (default) or `court` (court days). The `deadlines` API op turns this into a concrete due date from a trigger date using the pack's v3 `counting` reference (see `docs/ARCHITECTURE.md`'s "Deadline clock") |
+| `deadline` | `{length, unit?, extendable?, extensionAuthority?, note?}` | `length` in `unit`s. **v2** `unit`: `calendar` (default) or `court` (court days); `week`, `month` or `year` (calendar months, counted by the rule's `months` provision; metrics read a month as 146097/4800 days and a year as 365.2425). The `deadlines` API op turns this into a concrete due date from a trigger date using the pack's v3 `counting` reference (see `docs/ARCHITECTURE.md`'s "Deadline clock") |
 | `duration` | `{min?, mode, max?}` days | **v2** expected elapsed calendar time for this transition. Distinct from `deadline` (a window you must act inside). If absent the engine falls back to `deadline.length` and says so |
 | `cost` | USD | out-of-pocket fees (filing fees, USPTO fees, bonds) |
 | `hours` | number | attorney hours to execute (self/opponent moves only) |
@@ -213,6 +213,7 @@ cross Dec 31/Jan 1), or one of the request's `additional_holidays`.
 | `minLength` | `{days, message}`? | shorter periods fail with `message` |
 | `steps` | `[Step]` | the pipeline below |
 | `hours` | `{text, rollText, inaccessibleText?}`? | hours provision: count every hour from the trigger instant, then continue to the same time on the next open day. With `inaccessibleText`, a request setting `clerk_inaccessible` (office inaccessible during the last hour) continues to the same time on the next open day after that, reported as `clerk_inaccessibility_applied`; without it the request is ignored. Absent: hours-based periods are rejected |
+| `months` | `{endOfMonth, text}`? | calendar-month provision: a `month` or `year` (twelve months) period runs from a `trigger` anchor to the corresponding day of the later month; when that month has no such day, `endOfMonth` `clamp` ends it on the month's last day and `roll` on the next month's first. The `count` step's periods are skipped; later steps apply. Absent: month and year periods are rejected. A `week` is seven calendar days under the `count` step's `calendar` period |
 
 `steps` run in order over a working date. `anchor` must come first and
 `count` second; `base` occurs exactly once; `service` and
@@ -221,7 +222,7 @@ cross Dec 31/Jan 1), or one of the request's `additional_holidays`.
 | `op` | fields | effect |
 |---|---|---|
 | `anchor` | `kind`, `text` | `trigger`: the trigger day is excluded (day 1 is the next day). `adjacent-business-day`: the first business day after (forward) or before (backward) the trigger is day 1; requires `minLength.days >= 1` |
-| `count` | `periods: [{unit?, below?, count, text}]` | the first period whose `unit` (`calendar`/`court`, the deadline's authored unit) and `below` (period shorter than this) match counts `n` days in `count` units: `calendar` (every day) or `business` (open days only). No match is an error |
+| `count` | `periods: [{unit?, below?, count, text}]` | the first period whose `unit` (`calendar`/`court`, the deadline's authored unit; a week is 7 calendar days) and `below` (period shorter than this) match counts `n` days in `count` units: `calendar` (every day) or `business` (open days only). No match is an error |
 | `service` | `methods: [{method, days}]`, `text`, `backwardText` | a forward period's service method adds `days`; a method not listed is an error naming the listed ones; a backward period ignores it with `backwardText` |
 | `base` | | records the working date as `base_date` |
 | `roll` | `forward`, `backward`: `{toward, text}` | moves a closed day `later` or `earlier` (chosen by counting direction); `text` is emitted, and `last_day_rolled` set, only if the date moved |
@@ -230,8 +231,10 @@ cross Dec 31/Jan 1), or one of the request's `additional_holidays`.
 Step `text` templates may use `{trigger}`, `{anchor}`, `{date}` (this
 step's result), `{n}` (period length), `{after}` (`after`/`before`),
 `{forward}` (`forward`/`backward`), `{method}` (the service method's name,
-e.g. `Mail`) and `{days}` (days the method adds). Any other placeholder
-fails validation.
+e.g. `Mail`), `{days}` (days the method adds) and `{unit}` (`month(s)` or
+`year(s)`, in the `months` text). Any other placeholder fails validation.
+The result reports `nominal_date`, the period's last day as counted before
+any roll or extension, beside the final `due_date`.
 
 ## Citation syntax (v3)
 

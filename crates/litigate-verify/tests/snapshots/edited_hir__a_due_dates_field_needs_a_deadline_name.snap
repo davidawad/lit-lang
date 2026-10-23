@@ -1,0 +1,41 @@
+---
+source: crates/litigate-verify/tests/edited_hir.rs
+expression: "tests_pass(BASE, |p|\n{\n    let e = first_expect(p); let date = e.rhs.clone();\n    *call_parts(&mut e.lhs).1 = vec![date]; let base =\n    Box::new(e.lhs.clone()); e.lhs.kind = ExprKind::Field\n    { base, field: \"nominal\".to_owned(), };\n})"
+---
+{
+  "finding": {
+    "name": "tests-pass",
+    "status": "failed",
+    "count": 1,
+    "examples": [
+      "pkgs/demo/main.lit:46:10: L5006 cannot evaluate the assertion: `deadline` takes a deadline name"
+    ]
+  },
+  "accepted": false,
+  "diagnostics": [
+    {
+      "code": "L5006",
+      "severity": "error",
+      "span": {
+        "file": "pkgs/demo/main.lit",
+        "line": 46,
+        "col": 10,
+        "end_line": 46,
+        "end_col": 33
+      },
+      "message": "cannot evaluate the assertion: `deadline` takes a deadline name",
+      "notes": [
+        {
+          "span": {
+            "file": "pkgs/demo/main.lit",
+            "line": 43,
+            "col": 1,
+            "end_line": 47,
+            "end_col": 2
+          },
+          "message": "in test \"answer due 21 days after personal service\""
+        }
+      ]
+    }
+  ]
+}

@@ -506,6 +506,17 @@
             }
           ],
           "description": "Hours provision; absent means hours-based periods are rejected."
+        },
+        "months": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Months"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Calendar-month provision; absent means month and year periods are\nrejected."
         }
       },
       "required": [
@@ -551,14 +562,14 @@
         "length": {
           "type": "number",
           "format": "double",
-          "description": "Length of the window in days."
+          "description": "Length of the window in `unit`s."
         },
         "unit": {
           "type": [
             "string",
             "null"
           ],
-          "description": "`calendar` (default) or `court` days."
+          "description": "`calendar` (default) or `court` days, or `week`, `month`, `year`."
         },
         "extendable": {
           "type": [
@@ -751,6 +762,21 @@
         }
       },
       "description": "A half-open date interval `[from, until)`; either end may be open."
+    },
+    "EndOfMonth": {
+      "oneOf": [
+        {
+          "type": "string",
+          "const": "clamp",
+          "description": "On the last day of that month (MPEP 710.01(a): a 3-month period\nfrom November 30 ends February 28, or 29)."
+        },
+        {
+          "type": "string",
+          "const": "roll",
+          "description": "On the first day of the following month."
+        }
+      ],
+      "description": "Where a month or year period ends when its last month has no day\ncorresponding to the anchor's (January 31 plus one month)."
     },
     "Entry": {
       "type": "object",
@@ -1382,6 +1408,25 @@
         }
       ],
       "description": "How to read a node where a chooser acts and world edges also leave."
+    },
+    "Months": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "endOfMonth": {
+          "$ref": "#/$defs/EndOfMonth",
+          "description": "Where a period ends when its last month is too short."
+        },
+        "text": {
+          "type": "string",
+          "description": "Cited trace text for the count."
+        }
+      },
+      "required": [
+        "endOfMonth",
+        "text"
+      ],
+      "description": "A calendar-month period provision: months and years (twelve months)\ncount from the anchor to the corresponding day of the later month."
     },
     "NamedScenario": {
       "type": "object",
@@ -3976,9 +4021,24 @@
           "type": "string",
           "const": "court",
           "description": "Court (\"business\") days: a pack-authored choice for a forum whose\nown rule counts business days."
+        },
+        {
+          "type": "string",
+          "const": "week",
+          "description": "Weeks of seven calendar days."
+        },
+        {
+          "type": "string",
+          "const": "month",
+          "description": "Calendar months."
+        },
+        {
+          "type": "string",
+          "const": "year",
+          "description": "Calendar years (twelve calendar months)."
         }
       ],
-      "description": "Calendar days versus business (\"court\") days, per `Deadline.unit` in\n`model::schema` (`docs/PACK_SCHEMA.md`). A counting rule's `count`\nstep decides what each unit means (`clock::rule::Period`)."
+      "description": "The unit a period is stated in, per `Deadline.unit` in `model::schema`\n(`docs/PACK_SCHEMA.md`). A counting rule's `count` step decides what\ncalendar and court days mean (`clock::rule::Period`); a week is seven\ncalendar days; months and years are calendar months, counted by the\nrule's `months` provision (`clock::rule::Months`)."
     },
     "Validation": {
       "type": "object",

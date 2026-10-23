@@ -630,11 +630,13 @@ export type Step =
  */
 export type AnchorKind = "trigger" | "adjacent-business-day";
 /**
- * Calendar days versus business ("court") days, per `Deadline.unit` in
- * `model::schema` (`docs/PACK_SCHEMA.md`). A counting rule's `count`
- * step decides what each unit means (`clock::rule::Period`).
+ * The unit a period is stated in, per `Deadline.unit` in `model::schema`
+ * (`docs/PACK_SCHEMA.md`). A counting rule's `count` step decides what
+ * calendar and court days mean (`clock::rule::Period`); a week is seven
+ * calendar days; months and years are calendar months, counted by the
+ * rule's `months` provision (`clock::rule::Months`).
  */
-export type Unit = "calendar" | "court";
+export type Unit = "calendar" | "court" | "week" | "month" | "year";
 /**
  * Which days a count step advances over.
  */
@@ -643,6 +645,11 @@ export type CountUnit = "calendar" | "business";
  * Which way a roll moves a closed day.
  */
 export type Toward = "later" | "earlier";
+/**
+ * Where a month or year period ends when its last month has no day
+ * corresponding to the anchor's (January 31 plus one month).
+ */
+export type EndOfMonth = "clamp" | "roll";
 /**
  * Stable diagnostic code (`litigate explain <code>`).
  */
@@ -1512,11 +1519,11 @@ export interface RawEdge {
  */
 export interface Deadline {
   /**
-   * Length of the window in days.
+   * Length of the window in `unit`s.
    */
   length: number;
   /**
-   * `calendar` (default) or `court` days.
+   * `calendar` (default) or `court` days, or `week`, `month`, `year`.
    */
   unit?: string | null;
   /**
@@ -1835,6 +1842,11 @@ export interface CountingRule {
    * Hours provision; absent means hours-based periods are rejected.
    */
   hours?: Hours | null;
+  /**
+   * Calendar-month provision; absent means month and year periods are
+   * rejected.
+   */
+  months?: Months | null;
 }
 /**
  * A minimum period length with its own cited error.
@@ -1917,6 +1929,20 @@ export interface Hours {
    * then ignored.
    */
   inaccessibleText?: string | null;
+}
+/**
+ * A calendar-month period provision: months and years (twelve months)
+ * count from the anchor to the corresponding day of the later month.
+ */
+export interface Months {
+  /**
+   * Where a period ends when its last month is too short.
+   */
+  endOfMonth: EndOfMonth;
+  /**
+   * Cited trace text for the count.
+   */
+  text: string;
 }
 /**
  * Outcome of validating one document.

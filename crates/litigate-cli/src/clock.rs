@@ -356,6 +356,16 @@ counting nourl cite XYZ 6(a)
             date(&package(&|d| d.unit = DayUnit::Court)),
             Ok("2025-04-01".to_owned())
         );
+        let weeks = package(&|d| {
+            d.amount = 3;
+            d.unit = DayUnit::Week;
+        });
+        assert_eq!(date(&weeks), Ok("2025-03-24".to_owned()));
+        // This package's rule declares no `end_of_month`.
+        for unit in [DayUnit::Month, DayUnit::Year] {
+            let months = package(&|d| d.unit = unit);
+            assert!(date(&months).is_err_and(|e| e.contains("no calendar-month provision")));
+        }
         let before = package(&|d| d.direction = hir::Direction::Backward);
         assert_eq!(date(&before), Ok("2025-02-10".to_owned()));
         // Mail service adds the counting rule's three days.

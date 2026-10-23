@@ -66,6 +66,38 @@ fn deadline_needs_a_deadline_name() {
 }
 
 #[test]
+fn only_a_due_dates_fields_are_evaluated() {
+    for callee in [None, Some("has_event")] {
+        insta::assert_json_snapshot!(tests_pass(BASE, |p| {
+            let e = first_expect(p);
+            let mut base = Box::new(e.rhs.clone());
+            if let Some(callee) = callee {
+                base = Box::new(e.lhs.clone());
+                *call_parts(&mut base).0 = callee.to_owned();
+            }
+            e.lhs.kind = ExprKind::Field {
+                base,
+                field: "nominal".to_owned(),
+            };
+        }));
+    }
+}
+
+#[test]
+fn a_due_dates_field_needs_a_deadline_name() {
+    insta::assert_json_snapshot!(tests_pass(BASE, |p| {
+        let e = first_expect(p);
+        let date = e.rhs.clone();
+        *call_parts(&mut e.lhs).1 = vec![date];
+        let base = Box::new(e.lhs.clone());
+        e.lhs.kind = ExprKind::Field {
+            base,
+            field: "nominal".to_owned(),
+        };
+    }));
+}
+
+#[test]
 fn only_known_calls_are_evaluated() {
     insta::assert_json_snapshot!(tests_pass(BASE, |p| {
         *call_parts(&mut first_expect(p).lhs).0 = "elapsed".to_owned();

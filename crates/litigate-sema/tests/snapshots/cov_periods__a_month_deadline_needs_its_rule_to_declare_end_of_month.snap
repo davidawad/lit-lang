@@ -1,0 +1,10 @@
+---
+source: crates/litigate-sema/tests/cov_periods.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:10:14 L3009 a month or year deadline needs a counting rule with `end_of_month`",
+    "pkgs/demo/main.lit:11:47 L1002 cannot find name `nope`",
+    "pkgs/demo/main.lit:13:42 L3009 unknown counting keyword `sideways`",
+    "pkgs/demo/main.lit:13:77 L3009 this period must be counted in days",
+]

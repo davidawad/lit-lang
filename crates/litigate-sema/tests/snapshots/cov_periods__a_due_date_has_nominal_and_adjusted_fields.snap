@@ -1,0 +1,10 @@
+---
+source: crates/litigate-sema/tests/cov_periods.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:13:20 L1002 a due date has no field `nominl` [fix: \"nominal\"]",
+    "pkgs/demo/main.lit:14:20 L1002 a due date has no field `zzzzzz`",
+    "pkgs/demo/main.lit:15:8 L2002 `Bool` has no fields",
+    "pkgs/demo/main.lit:16:8 L2002 `Date` has no fields",
+]

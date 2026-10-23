@@ -48,6 +48,18 @@ period); add the 6(d) service extension (mail, leaving with the clerk, other
 consented means: +3); roll the resulting last day again; then apply the
 6(a)(3) clerk-inaccessibility extension. The hours provision is 6(a)(2).
 
+**Months and years.** FRCP 6 and RCFC 6 are silent on periods stated in
+months or years (FRCP 60(c)(1)'s "a year"; the PTAB's statutory and Part 42
+months, which the PTAB pack counts under `rcfc6`). Both rules carry a
+`months` provision with `endOfMonth: clamp`: the period ends on the
+corresponding day of the later month, or on that month's last day when it
+has none, as MPEP 710.01(a) counts the Patent Office's months ("a 3-month
+shortened statutory period dated November 30 is due on the following
+February 28"). **Interpretive choice:** for FRCP/RCFC this is the earlier
+of the two readings of a February 29 anniversary; UNVERIFIED (no rule text
+fixes it). The last day then rolls under 6(a)(1)(C) like any other. Matches
+`end_of_month clamp` on `lit/core`'s `frcp6` and `rcfc6`.
+
 **Ordering of 6(d) and the rolls.** 6(d) adds 3 days "after the period would
 otherwise expire under Rule 6(a)". The 6(a) period therefore includes its
 initial last-day roll; then the three calendar days are added, and the new

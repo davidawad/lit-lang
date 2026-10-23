@@ -167,3 +167,23 @@ tests_pass!(
          expect deadline(zero-period) == 2025-03-03\n}"
     )
 );
+
+tests_pass!(
+    weeks_months_and_years_count_with_nominal_and_adjusted_dates,
+    Passed,
+    with(
+        "counting monthly cite FRCP 6(a)\n{\n  exclude_trigger_day\n  include_last_day\n  \
+         roll_forward_on [weekend, legal_holiday]\n  holidays federal\n  end_of_month clamp\n}\n\
+         rule duty period-duty cite FRCP 12(a)\n{\n  \
+         deadline week-period: 2.weeks from Served(complaint) counted_by monthly\n  \
+         deadline month-period: 3.months from Served(complaint) counted_by monthly\n  \
+         deadline year-period: 1.years from Served(complaint) counted_by monthly\n}\n\
+         test \"calendar periods\" cite FRCP 12(a)\n{\n  \
+         given Served(complaint, Personal) on 2024-11-30\n  \
+         expect deadline(week-period) == 2024-12-16\n  \
+         expect deadline(month-period).nominal == 2025-02-28\n  \
+         expect deadline(month-period).adjusted == 2025-02-28\n  \
+         expect deadline(year-period).nominal == 2025-11-30\n  \
+         expect deadline(year-period) == 2025-12-01\n}"
+    )
+);

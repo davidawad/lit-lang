@@ -101,6 +101,17 @@ fn pack_with(edit: impl FnOnce(&mut Value)) -> Input {
     Input::new("packs/p.json", pack.to_string())
 }
 
+/// Week, month and year deadlines keep their unit (`2.weeks`).
+#[test]
+fn calendar_period_deadlines_keep_their_unit() {
+    for (unit, suffix) in [("week", "weeks"), ("month", "months"), ("year", "years")] {
+        let input = pack_with(|p| p["edges"][0]["deadline"] = json!({"length": 2, "unit": unit}));
+        let files = import(&[input]).unwrap_or_else(|d| panic!("{d:?}"));
+        let text: String = files.files.iter().map(|f| f.text.as_str()).collect();
+        assert!(text.contains(&format!("deadline 2.{suffix}")), "{text}");
+    }
+}
+
 #[test]
 fn unrepresentable_values_are_l6002_with_their_json_pointer() {
     let inputs = vec![

@@ -103,6 +103,29 @@ fn edge_windows_that_lower() {
     assert_eq!(unit(2), Some((14.0, Some("court".to_owned()))));
 }
 
+/// Week, month and year windows keep their unit (`Deadline.unit`).
+#[test]
+fn calendar_period_windows_keep_their_unit() {
+    let units = [
+        (DayUnit::Week, "week"),
+        (DayUnit::Month, "month"),
+        (DayUnit::Year, "year"),
+    ];
+    for (unit, name) in units {
+        let mut p = example();
+        node_mut(&mut p, "respond").edges[2].deadline = Some(inline(2, unit));
+        let lowered = lowered(&p);
+        let window = pack_of(&lowered)
+            .edges
+            .iter()
+            .filter(|e| e.from == "respond")
+            .nth(2)
+            .and_then(|e| e.deadline.as_ref())
+            .map(|d| (d.length, d.unit.clone()));
+        assert_eq!(window, Some((2.0, Some(name.to_owned()))));
+    }
+}
+
 #[test]
 fn a_flag_payoff_needs_a_currency_with_a_lowering() {
     let mut p = example();

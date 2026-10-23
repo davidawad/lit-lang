@@ -199,13 +199,9 @@ impl Cx<'_, '_> {
         let days = Type::Days(DayUnit::Calendar);
         // Estimates may use decimal calendar days (`13.5.days`, SPEC §6);
         // every other spelling goes through the integral-days checker.
-        let get = |cx: &mut Self, x: &Expr| {
-            let text = match &x.kind {
-                ExprKind::Duration(text) => text.as_str(),
-                _ => "",
-            };
-            if let Some(amount) = decimal_days(text) {
-                return q::parse_decimal(amount)
+        let get = |cx: &mut Self, x: &Expr| match &x.kind {
+            ExprKind::Duration(text) if decimal_days(text).is_some() => {
+                q::parse_decimal(decimal_days(text).unwrap_or_default())
                     .map_err(|_| {
                         cx.report(Report::new(
                             C::ArithmeticError,
@@ -213,13 +209,15 @@ impl Cx<'_, '_> {
                             format!("`{text}` is not an exact day amount"),
                         ));
                     })
-                    .ok();
+                    .ok()
             }
-            if let Some((unit, numerator, denominator)) = calendar_span(text) {
+            ExprKind::Duration(text) if calendar_span(text).is_some() => {
+                let (unit, numerator, denominator) =
+                    calendar_span(text).unwrap_or((DayUnit::Calendar, 1, 1));
                 let Some(Value::Days { amount, .. }) = cx.constant(x, &Type::Days(unit)) else {
                     return None;
                 };
-                return q::make(i128::from(amount) * numerator, denominator)
+                q::make(i128::from(amount) * numerator, denominator)
                     .map_err(|_| {
                         cx.report(Report::new(
                             C::ArithmeticError,
@@ -227,12 +225,12 @@ impl Cx<'_, '_> {
                             format!("`{text}` is out of range"),
                         ));
                     })
-                    .ok();
+                    .ok()
             }
-            match cx.constant(x, &days) {
+            _ => match cx.constant(x, &days) {
                 Some(Value::Days { amount, .. }) => Some(Rational::integer(amount)),
                 _ => None,
-            }
+            },
         };
         if let Some(x) = first_expr(f) {
             return get(self, x).map(|mode| TriangularDuration {

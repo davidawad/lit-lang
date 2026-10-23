@@ -155,3 +155,36 @@ fn an_ambiguous_version_contributes_no_fragment() {
         .unwrap_or_else(|d| panic!("{}", render_diagnostics(&d)));
     assert_eq!(clock, EngineClock::new([]));
 }
+
+/// Weeks are seven calendar days; months and years count under the
+/// package rule's `end_of_month` policy, and a rule without one refuses.
+#[test]
+fn weeks_months_and_years_are_counted() {
+    let mut p = example();
+    let from = from_of(&mut p);
+    counting_mut(&mut p).end_of_month = Some(litigate_sema::hir::EndOfMonth::Clamp);
+    let clock = EngineClock::lowered(&Lowerer::new(&[&p]), &[&p])
+        .unwrap_or_else(|d| panic!("{}", render_diagnostics(&d)));
+    let due = |amount, unit, trigger: &str| {
+        let mut r = request("frcp6", Some(&from));
+        (r.amount, r.unit, r.trigger) = (amount, unit, trigger.to_owned());
+        clock.due(&r)
+    };
+    assert_eq!(
+        due(3, DayUnit::Week, "2025-03-03").as_deref(),
+        Ok("2025-03-24")
+    );
+    // November 30 plus three months: February has no 30th.
+    assert_eq!(
+        due(3, DayUnit::Month, "2024-11-30").as_deref(),
+        Ok("2025-02-28")
+    );
+    assert_eq!(
+        due(1, DayUnit::Year, "2025-03-04").as_deref(),
+        Ok("2026-03-04")
+    );
+    // The library's own `frcp6` carries a clamp provision too.
+    let mut r = request("frcp6", None);
+    (r.amount, r.unit) = (1, DayUnit::Month);
+    assert_eq!(EngineClock::new([]).due(&r).as_deref(), Ok("2025-04-03"));
+}

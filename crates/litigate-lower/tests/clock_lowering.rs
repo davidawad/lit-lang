@@ -5,7 +5,9 @@
 mod support;
 
 use litigate_lower::{render, Lowerer};
-use litigate_sema::hir::{Anchor, CiteRule, DayUnit, HolidayDate, Observance, RollOn, ShortPeriod};
+use litigate_sema::hir::{
+    Anchor, CiteRule, DayUnit, EndOfMonth, HolidayDate, Observance, RollOn, ShortPeriod,
+};
 use support::{
     calendar_mut, clock_of, counting_mut, example, lowered, lowering_errors, render_diagnostics,
 };
@@ -148,6 +150,18 @@ fn a_bare_rule() {
     c.service_extensions.clear();
     c.hours = false;
     insta::assert_snapshot!(rule(&p));
+}
+
+/// `end_of_month` lowers to the `months` provision, each policy with its
+/// own trace text.
+#[test]
+fn an_end_of_month_policy_is_a_months_provision() {
+    let mut p = example();
+    counting_mut(&mut p).end_of_month = Some(EndOfMonth::Clamp);
+    let clamp = clock_of(&lowered(&p)).counting_rules[0].months.clone();
+    counting_mut(&mut p).end_of_month = Some(EndOfMonth::Roll);
+    let roll = clock_of(&lowered(&p)).counting_rules[0].months.clone();
+    insta::assert_debug_snapshot!((clamp, roll));
 }
 
 #[test]

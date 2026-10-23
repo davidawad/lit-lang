@@ -76,7 +76,8 @@ DocComment   = "///", { char - "\n" } ;
 BlockComment = "/*", { char }, "*/" ;           (* non-nesting; unterminated = L0002 *)
 Date         = D4, "-", D2, "-", D2 ;           (* not followed by an ident char *)
 Money        = Number, ".", Currency ;
-Duration     = Number, ".", ("days" | "court_days" | "business_days" | "hours") ;
+Duration     = Number, ".", ("days" | "court_days" | "business_days" | "weeks"
+               | "months" | "years" | "hours") ;
 Number       = Digits, [ ".", Digits ] ;
 Digits       = digit, { digit | "_" } ;         (* "_" only between digits, else L0005 *)
 Currency     = "usd" ;                          (* closed set in v1; other suffix = L0005 *)
@@ -111,9 +112,10 @@ Punct        = "::" | "->" | "=>" | "==" | "!=" | "<=" | ">=" | "&&" | "||" | ".
   contains `,`, `{`, `}`, `//`, or runs of whitespace) or that is not yet a
   resolvable citation is kept as the hole's reason (§8.1).
 - **Typed literals.** `2_000_000.usd`, `21.days`, `5.court_days`,
-  `3.business_days`, and `8.hours` are single tokens. Day amounts must be
-  integers (L0005), except in a `duration` value, which is an elapsed-time
-  estimate (`duration 4.5.days`); the parser enforces this, not the lexer.
+  `3.business_days`, `2.weeks`, `9.months`, `1.years`, and `8.hours` are
+  single tokens. Period amounts must be integers (L0005), except decimal
+  days in a `duration` value, which is an elapsed-time estimate (`duration
+  4.5.days`); the parser enforces this, not the lexer.
   Hours may be decimal. Money may have at most the
   currency's minor-unit digits (2 for usd), else L2006. There is no rational
   token: `1/3` is a division of two numbers, folded exactly (§6). Negative
@@ -193,6 +195,7 @@ DeadlineDecl = "deadline", Ident, ":", Duration, ("from" | "after" | "before"),
 CountingDecl = "counting", Ident, { VersionClause | Relation | Cite },
                "{", { CountingItem, Sep }, "}" ;
 CountingItem = "exclude_trigger_day" | "include_last_day" | "allow_hours"
+             | "end_of_month", Ident
              | "roll_forward_on", IdList
              | "service_extension", "{", { Ident, ":", Duration, Sep }, "}", [ Cite ]
              | "holidays", Ref | "anchor", Ident
@@ -473,6 +476,20 @@ vocabulary):
    4. It applies only to forward counting (FRCP 6(d)).
 6. `allow_hours` permits `N.hours` deadlines (FRCP 6(a)(2)). Without it, an
    hours deadline is L3009.
+7. A week is seven calendar days (step 3). Months and years (twelve months)
+   are calendar months, counted from a `trigger_day` anchor to the
+   corresponding day of the later month; when that month has no such day
+   (January 31 plus one month), `end_of_month clamp` ends the period on its
+   last day (MPEP 710.01(a)) and `end_of_month roll` on the first day of the
+   next month. Steps 4-5 then apply. A month or year deadline counted by a
+   rule of the same module without `end_of_month` is L3009; the engine
+   rejects one whose rule has no `months` provision. The design review of
+   2026-10-23 (§2.1) gives the units: they never convert into one another.
+
+`deadline(d)` in a test is the due date `Due {nominal, adjusted}`: bare, or
+as `deadline(d).adjusted`, it is the date after every roll and extension;
+`deadline(d).nominal` is the last day as counted (step 3 or 7), before any
+of them.
 
 A calendar holiday uses one of these rules: `fixed(month, day)`,
 `nth(n, weekday, month)` (n in 1-4), `last(weekday, month)`,
@@ -699,7 +716,7 @@ the variants of enum `E` with exact non-negative weights summing to 1 (L2003).
 | Type | Literal | Permitted operations |
 |---|---|---|
 | `Date` | `2025-03-03` | `== != < <= > >=`; `in(Interval<Date>)` |
-| `Days<U>` (`U` = `CalendarDays`, `CourtDays`, `BusinessDays`) | `21.days`, `5.court_days`, `3.business_days` | comparisons; `+ -` with the same `U`; `* /` by `Number` with integral result; no unit conversion (L2004) |
+| `Days<U>` (`U` = `CalendarDays`, `CourtDays`, `BusinessDays`, `Weeks`, `Months`, `Years`) | `21.days`, `5.court_days`, `3.business_days`, `2.weeks`, `9.months`, `1.years` | comparisons; `+ -` with the same `U`; `* /` by `Number` with integral result; no unit conversion (L2004) |
 | `Hours` | `8.hours` | comparisons; `+ -` with `Hours`; `* /` by `Number` |
 | `Money<Cur>` | `2_000.usd` | comparisons; `+ -` same currency (L2004); `* /` by `Number` (exact, else L2006); `Money / Money` gives `Number` |
 | `Probability` | `p` values, `Number` in `[0,1]` | comparisons; `+ - * /` checked to stay in `[0,1]`; `1 - p` |
@@ -712,14 +729,16 @@ the variants of enum `E` with exact non-negative weights summing to 1 (L2003).
 | `String`, enums, records | | `==`, `!=`; record field projection `r.f` |
 | `List<T>` | `[a, b]` | `len(l)`, `contains(l, x)` |
 
-The builtins (closed list) are `deadline(d) -> Date` (tests: due date from the
-`given` events), `has_event(Pattern) -> Bool`, `prob`, `given`, `in`,
+The builtins (closed list) are `deadline(d) -> Due` (tests: due date from the
+`given` events; bare it is the adjusted `Date`, and `.nominal`/`.adjusted`
+project `Date`s, §5.3), `has_event(Pattern) -> Bool`, `prob`, `given`, `in`,
 `intersect`, `disjoint`, `len`, and `contains`, plus the event constructors
 from `event` declarations. There is no IO, ambient clock, mutation, float,
 implicit cast, or overloading beyond this table (L2002 otherwise). Field
 types: `p` is `Probability`, `effort` is `Hours`, `cost`/`payoff` are
-`Money<usd>`, `duration` is `Days<CalendarDays>` (`min <= mode <= max`, decimal amounts allowed),
-`deadline` is `Days<CalendarDays|CourtDays>`, and attrs are `Number`.
+`Money<usd>`, `duration` is `Days<CalendarDays>` (`min <= mode <= max`, decimal amounts allowed;
+weeks, months and years are estimates in mean Gregorian days: 7, 146097/4800 and 365.2425),
+`deadline` is `Days<CalendarDays|CourtDays|Weeks|Months|Years>`, and attrs are `Number`.
 
 ## 7. Verification obligations and profiles
 
@@ -882,6 +901,7 @@ L6001:
 | `service_extension { M: K.days }` | `service` `{method, days: K}`, then a second `roll`; `M` in kebab case must be an engine method (`mail`, `clerk`, `other-consented`, `commercial-carrier`, `prison-mail`, `mail-foreign`, `express`, `express-foreign`); non-calendar days are L6001 |
 | `inaccessible` in `roll_forward_on` | `clerkInaccessible` step (and, with `allow_hours`, `hours.inaccessibleText`: FRCP 6(a)(3)(B), FRAP 26(a)(3)(B)) |
 | `allow_hours` | `hours` provision |
+| `end_of_month clamp` / `roll` | `months` provision `{endOfMonth: "clamp"/"roll", text}` |
 
 The pipeline is therefore `anchor, count, roll, base, service, roll,
 clerkInaccessible` (absent steps dropped): §5.3 steps 1-6 in order. The

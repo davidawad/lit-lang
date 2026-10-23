@@ -1,0 +1,18 @@
+---
+source: crates/litigate-lower/tests/clock_lowering.rs
+expression: "(clamp, roll)"
+---
+(
+    Some(
+        Months {
+            end_of_month: Clamp,
+            text: "FRCP 6(a): count {n} {unit} {after} the anchor to the corresponding day, else the last day of that month -> {date}",
+        },
+    ),
+    Some(
+        Months {
+            end_of_month: Roll,
+            text: "FRCP 6(a): count {n} {unit} {after} the anchor to the corresponding day, else the first day of the next month -> {date}",
+        },
+    ),
+)

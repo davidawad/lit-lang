@@ -255,8 +255,11 @@ at build time like the packs; see `docs/PACK_SCHEMA.md`, "Clock library"):
   `count` (first matching period: by authored unit and/or a short-period
   threshold with an alternate unit), `service` (a method → days table),
   `base`, `roll` (later or earlier, per counting direction),
-  `clerkInaccessible` — plus an optional hours provision. Every step carries
-  its own cited trace text.
+  `clerkInaccessible` — plus optional hours and calendar-month provisions
+  (months and years run to the corresponding day of the later month under
+  an end-of-month policy; a week is seven calendar days). Every step
+  carries its own cited trace text, and the result reports the nominal
+  (as-counted) date beside the adjusted due date.
 
 The shipped rules are `frcp6`, `rcfc6` (FRCP 6 plus the Inauguration Day
 calendar), `frap26` (FRCP 6's pipeline with FRAP 26(c)'s service-method

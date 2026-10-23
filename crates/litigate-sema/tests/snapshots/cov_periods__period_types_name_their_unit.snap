@@ -1,0 +1,12 @@
+---
+source: crates/litigate-sema/tests/cov_periods.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:14:21 L2001 expected `Hours`, found `Days<Weeks>`",
+    "pkgs/demo/main.lit:15:21 L2001 expected `Hours`, found `Days<Months>`",
+    "pkgs/demo/main.lit:16:21 L2001 expected `Hours`, found `Days<Years>`",
+    "pkgs/demo/main.lit:18:13 L0005 day amounts must be integers",
+    "pkgs/demo/main.lit:18:13 L0005 day amounts must be integers, found `1.5`",
+    "pkgs/demo/main.lit:18:13 L2001 a deadline period is a duration such as `21.days`",
+]

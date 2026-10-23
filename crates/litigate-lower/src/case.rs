@@ -13,9 +13,6 @@ use litigate_sema::hir::{self, EventParty, Perspective, Stake};
 use serde_json::{Map, Value};
 use std::collections::BTreeMap;
 
-/// `Scenario` fields with a dedicated `.case` block (L4007 in `analysis`).
-const DEDICATED: [&str; 5] = ["start", "perspective", "facts", "payoffs", "observe"];
-
 /// `perspective`: a party makes its actor `self` and every other party's
 /// actor `opponent`, listing only the actors whose role changes from the
 /// primary package's; an explicit actor map is emitted as written.
@@ -65,26 +62,67 @@ fn perspective(build: &Build<'_, '_>, sink: &mut Sink, case: &hir::Case) -> BTre
     }
 }
 
-/// Builds the `Scenario` object from the dedicated blocks and `analysis`,
-/// then lets litgraph's own serde (`deny_unknown_fields`) judge it. With it
-/// comes each removal's index in `remove_edges`.
+/// The typed `analysis` fields as `Scenario` JSON. Each engine option is
+/// checked alone against the engine's schema, so an error names its field
+/// and span (L4007); each engine expression must parse (L6003).
+fn analysis(sink: &mut Sink, analysis: &hir::Analysis) -> Map<String, Value> {
+    expressions(sink, analysis);
+    let mut object = Map::new();
+    for (key, option) in &analysis.options {
+        let alone = Value::Object(Map::from_iter([(key.clone(), option.value.clone())]));
+        if let Err(e) = serde_json::from_value::<Scenario>(alone) {
+            sink.error_with(
+                C::InvalidAnalysis,
+                option.span.as_ref(),
+                format!("`analysis.{key}` is not a valid engine `{key}`"),
+                e.to_string(),
+            );
+        }
+        object.insert(key.clone(), option.value.clone());
+    }
+    let params: Map<String, Value> = analysis
+        .params
+        .iter()
+        .filter_map(|(name, v)| Some((name.clone(), Value::from(sink.number(*v, None)?))))
+        .collect();
+    if !params.is_empty() {
+        object.insert("params".to_owned(), Value::Object(params));
+    }
+    let texts = |map: &BTreeMap<String, hir::EngineExpr>| -> Value {
+        map.iter()
+            .map(|(name, e)| (name.clone(), Value::String(e.text.clone())))
+            .collect::<Map<String, Value>>()
+            .into()
+    };
+    if !analysis.metrics.is_empty() {
+        object.insert("metrics".to_owned(), texts(&analysis.metrics));
+    }
+    if !analysis.utilities.is_empty() {
+        object.insert("utilities".to_owned(), texts(&analysis.utilities));
+    }
+    for (field, e) in &analysis.expressions {
+        object.insert(field.clone(), Value::String(e.text.clone()));
+    }
+    if !analysis.calibration.is_empty() {
+        object.insert(
+            "calibration".to_owned(),
+            Value::from(analysis.calibration.clone()),
+        );
+    }
+    if let Some(d) = analysis.discount_annual.and_then(|d| sink.number(d, None)) {
+        object.insert("discount_annual".to_owned(), Value::from(d));
+    }
+    object
+}
+
+/// Builds the `Scenario` from the typed `analysis` and the dedicated
+/// blocks (SPEC §8.3), with each removal's index in `remove_edges`.
 fn scenario(
     build: &Build<'_, '_>,
     sink: &mut Sink,
     case: &hir::Case,
 ) -> Option<(Scenario, Vec<usize>)> {
-    let mut object = Map::new();
-    for (key, value) in &case.analysis.fields {
-        if DEDICATED.contains(&key.as_str()) {
-            sink.error(
-                C::InvalidAnalysis,
-                None,
-                format!("`{key}` has its own `.case` block; it cannot appear in `analysis`"),
-            );
-        } else {
-            object.insert(key.clone(), value.clone());
-        }
-    }
+    let mut object = analysis(sink, &case.analysis);
     let mut put = |key: &str, value: Value| {
         object.insert(key.to_owned(), value);
     };
@@ -130,54 +168,33 @@ fn scenario(
     if !observe.is_empty() {
         put("observe", Value::Object(observe));
     }
-    let at = match remove_edges(object.get("remove_edges"), case) {
-        Some((edges, at)) => {
-            object.insert("remove_edges".to_owned(), edges);
-            at
-        }
-        None => Vec::new(),
-    };
-    match serde_json::from_value::<Scenario>(Value::Object(object)) {
-        Ok(s) => {
-            expressions(sink, &s);
-            Some((s, at))
-        }
-        Err(e) => {
-            sink.error_with(
-                C::InvalidAnalysis,
-                None,
-                "the matter is not a valid litgraph scenario",
-                e.to_string(),
-            );
-            None
-        }
+    let (edges, at) = remove_edges(case);
+    if !edges.is_empty() {
+        put("remove_edges", Value::from(edges));
     }
+    // Every field but an engine option is typed, and each option was
+    // checked above: only an invalid option fails here.
+    let scenario = serde_json::from_value::<Scenario>(Value::Object(object)).ok()?;
+    Some((scenario, at))
 }
 
-/// `scenario.remove_edges`: any `analysis` entries, then each edge the
-/// replayed events removed (SPEC §8.3), once. `None` leaves the field as
-/// it is: nothing was removed, or `analysis` wrote a non-list, which
-/// litgraph's serde then rejects. With the list comes each removal's index
-/// in it.
-fn remove_edges(authored: Option<&Value>, case: &hir::Case) -> Option<(Value, Vec<usize>)> {
-    if case.removals.is_empty() {
-        return None;
-    }
-    let mut edges = match authored {
-        None => Vec::new(),
-        Some(Value::Array(items)) => items.clone(),
-        Some(_) => return None,
-    };
+/// `scenario.remove_edges`: the `analysis` entries, then each edge the
+/// replayed events removed (SPEC §8.3), once; with each removal's index
+/// in the list.
+fn remove_edges(case: &hir::Case) -> (Vec<String>, Vec<usize>) {
+    let mut edges = case.analysis.remove_edges.clone();
     let mut at = Vec::with_capacity(case.removals.len());
     for r in &case.removals {
-        let edge = Value::String(r.edge.clone());
-        let i = edges.iter().position(|e| *e == edge).unwrap_or(edges.len());
+        let i = edges
+            .iter()
+            .position(|e| *e == r.edge)
+            .unwrap_or(edges.len());
         if i == edges.len() {
-            edges.push(edge);
+            edges.push(r.edge.clone());
         }
         at.push(i);
     }
-    Some((Value::Array(edges), at))
+    (edges, at)
 }
 
 /// One source-map entry per removed edge: the removing event and its cite,
@@ -218,31 +235,32 @@ fn removal_entries(build: &Build<'_, '_>, case: &hir::Case, at: &[usize]) -> Vec
         .collect()
 }
 
-/// Expression-valued fields must parse as litgraph expressions (L6003).
-fn expressions(sink: &mut Sink, s: &Scenario) {
-    let single = [
-        ("mask", &s.mask),
-        ("probability_fn", &s.probability_fn),
-        ("opponent_objective", &s.opponent_objective),
-        ("cost", &s.cost),
-        ("utility", &s.utility),
-    ];
-    let named = single
+/// Every engine expression must parse as a litgraph expression (L6003),
+/// reported at its span.
+fn expressions(sink: &mut Sink, analysis: &hir::Analysis) {
+    let named = analysis
+        .expressions
         .iter()
-        .filter_map(|(field, v)| Some(((*field).to_owned(), v.as_ref()?)))
-        .chain(s.metrics.iter().map(|(k, v)| (format!("metrics.{k}"), v)))
+        .map(|(field, e)| (field.clone(), e))
         .chain(
-            s.utilities
+            analysis
+                .metrics
                 .iter()
-                .map(|(k, v)| (format!("utilities.{k}"), v)),
+                .map(|(k, e)| (format!("metrics.{k}"), e)),
+        )
+        .chain(
+            analysis
+                .utilities
+                .iter()
+                .map(|(k, e)| (format!("utilities.{k}"), e)),
         );
-    for (field, text) in named {
-        if let Err(e) = litgraph::expr::parse(text) {
+    for (field, e) in named {
+        if let Err(why) = litgraph::expr::parse(&e.text) {
             sink.error_with(
                 C::InvalidEngineExpression,
-                None,
+                e.span.as_ref(),
                 format!("`analysis.{field}` is not a litgraph expression"),
-                e.to_string(),
+                why.to_string(),
             );
         }
     }

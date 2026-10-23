@@ -1,6 +1,6 @@
 //! Atoms shared by declarations, fields, and case blocks: refs, id lists,
 //! literals, holes, citations, intervals, records, JSON values, and types.
-use super::{delimited, delimited_node, expr, Sep};
+use super::{delimited_node, expr, Sep};
 use crate::error::SyntaxError;
 use crate::parser::Parser;
 use crate::syntax_kind::SyntaxKind::{self, *};
@@ -258,8 +258,6 @@ pub(crate) enum Key {
     Ident,
     /// A (possibly qualified) `Ref` node.
     Ref,
-    /// An identifier or a string (JSON records).
-    Json,
 }
 
 /// `{ key ":" value Sep }` as a `RecordExpr`.
@@ -280,11 +278,7 @@ pub(crate) fn record(p: &mut Parser<'_>, key: Key, value: Value) -> bool {
 }
 
 fn record_field(p: &mut Parser<'_>, key: Key, value: Value) -> bool {
-    let starts = match key {
-        Key::Ident | Key::Ref => p.at(Ident),
-        Key::Json => p.at(Ident) || p.at(String),
-    };
-    if !starts {
+    if !p.at(Ident) {
         return false;
     }
     p.start(RecordField);
@@ -298,31 +292,6 @@ fn record_field(p: &mut Parser<'_>, key: Key, value: Value) -> bool {
     }
     p.finish();
     true
-}
-
-/// `{ (Ident | String) ":" JsonValue Sep }`.
-pub(crate) fn json_record(p: &mut Parser<'_>) -> bool {
-    record(p, Key::Json, json_value)
-}
-
-/// `JsonValue = SignedNumber | String | Bool | "unset" | JsonRecord | "[" ... "]"`.
-pub(crate) fn json_value(p: &mut Parser<'_>) -> bool {
-    if p.at(LBracket) {
-        p.start(ListExpr);
-        delimited(
-            p,
-            (LBracket, RBracket),
-            Sep::Required,
-            &[Number],
-            &mut json_value,
-        );
-        p.finish();
-        return true;
-    }
-    signed_number(p)
-        || string(p)
-        || keyword_literal(p, &[KwTrue, KwFalse, KwUnset])
-        || json_record(p)
 }
 
 /// `Type = Ident ["<" Type {"," Type} ">"] | RefinedType`.

@@ -210,12 +210,24 @@ fn edge(
     span: ToSpan<'_>,
     out: &mut Vec<Report>,
 ) -> Option<Expr> {
+    let qualified = edge_ref(graph, written, range, out)?;
+    let spelled = graph.respell(graph.primary(), &qualified);
+    Some(literal(Value::Edge(spelled), Type::Edge, range, span))
+}
+
+/// The edge `written` at `range` names, qualified (`pack::edge`); L1002
+/// with the nearest id as a fix when it names none.
+pub(super) fn edge_ref(
+    graph: &Graph<'_>,
+    written: &str,
+    range: TextRange,
+    out: &mut Vec<Report>,
+) -> Option<String> {
     let qualified = graph.qualify(graph.primary(), written);
     let (pack, local) = qualified.split_once("::").unwrap_or(("", written));
     let ids = graph.edge_ids(pack);
     if ids.contains(local) {
-        let spelled = graph.respell(graph.primary(), &qualified);
-        return Some(literal(Value::Edge(spelled), Type::Edge, range, span));
+        return Some(qualified);
     }
     let mut r = Report::new(
         C::UnresolvedName,

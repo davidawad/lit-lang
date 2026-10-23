@@ -46,12 +46,7 @@ pub(crate) fn import_case(
         .filter(|(key, _)| !DEDICATED.contains(&key.as_str()))
         .map(|(key, value)| (key.clone(), value.clone()))
         .collect();
-    if !rest.is_empty() {
-        out.push(format!(
-            "analysis {}",
-            json::record(&rest, "/scenario", issues)
-        ));
-    }
+    out.extend(json::analysis(&rest, issues));
     vec![Emitted::case(
         format!("cases/{}.case", named.id),
         out.join("\n\n"),

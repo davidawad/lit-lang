@@ -1,30 +1,11 @@
-//! The `facts`, `stakes`, `beliefs`, and `analysis` blocks of a matter.
-use super::{child, children, field_value, money, sig, token_text, R};
+//! The `facts`, `stakes`, and `beliefs` blocks of a matter.
+use super::{child, children, field_value, money, sig, R};
 use crate::db::parse::ref_path;
-use crate::db::parse::tree::Json;
 use crate::db::span::{Report, TextRange};
-use crate::hir::{Analysis, Observation, Stake};
+use crate::hir::{Observation, Stake};
 use litigate_base::DiagnosticCode as C;
 use litigate_syntax::{SyntaxKind as K, SyntaxNode};
 use std::collections::BTreeMap;
-
-fn json(j: &Json) -> Option<serde_json::Value> {
-    Some(match j {
-        Json::Number(n) => serde_json::from_str(&n.replace('_', "")).ok()?,
-        Json::Str(s) => serde_json::Value::String(s.clone()),
-        Json::Bool(b) => serde_json::Value::Bool(*b),
-        Json::Unset => serde_json::Value::Null,
-        Json::Object(fields) => serde_json::Value::Object(
-            fields
-                .iter()
-                .map(|(k, v)| Some((k.text.clone(), json(v)?)))
-                .collect::<Option<_>>()?,
-        ),
-        Json::Array(items) => {
-            serde_json::Value::Array(items.iter().map(json).collect::<Option<_>>()?)
-        }
-    })
-}
 
 impl R<'_, '_> {
     /// Record entries keyed by a node reference: (node, value node).
@@ -156,28 +137,5 @@ impl R<'_, '_> {
             observations.push(Observation { node, outcomes });
         }
         observations
-    }
-
-    pub(super) fn analysis(&mut self, block: &SyntaxNode) -> Analysis {
-        let mut fields = BTreeMap::new();
-        for f in child(block, K::RecordExpr)
-            .iter()
-            .flat_map(|r| children(r, K::RecordField))
-        {
-            let (Some((key, _)), Some(value)) = (token_text(&f, K::Ident), field_value(&f)) else {
-                continue;
-            };
-            match self.lower.json(&value).as_ref().and_then(json) {
-                Some(v) => {
-                    fields.insert(key, v);
-                }
-                None => self.out.push(Report::new(
-                    C::InvalidAnalysis,
-                    sig(&value),
-                    format!("`{key}` is not a JSON value"),
-                )),
-            }
-        }
-        Analysis { fields }
     }
 }

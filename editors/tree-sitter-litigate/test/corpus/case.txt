@@ -49,9 +49,9 @@ beliefs {
 }
 analysis {
   params: { rate: 650, opp_rate: -5.5 },
-  "mixed": "optimistic",
+  mixed: "optimistic",
   calibration: ["ptab-fy2024"],
-  horizon: unset,
+  remove_edges: [e1, cafc::e2],
   flag: true,
 }
 
@@ -190,32 +190,35 @@ analysis {
               (identifier))
             (number)))))
     (analysis_block
-      (json_record
-        (json_entry
+      (record_expression
+        (record_field
           (identifier)
-          (json_record
-            (json_entry
+          (record_expression
+            (record_field
               (identifier)
-              (signed_number
-                (number)))
-            (json_entry
+              (number))
+            (record_field
               (identifier)
-              (signed_number
+              (unary_expression
                 (number)))))
-        (json_entry
-          (string
-            (string_content))
+        (record_field
+          (identifier)
           (string
             (string_content)))
-        (json_entry
+        (record_field
           (identifier)
-          (json_list
+          (list_expression
             (string
               (string_content))))
-        (json_entry
+        (record_field
           (identifier)
-          (unset))
-        (json_entry
+          (list_expression
+            (ref
+              (identifier))
+            (ref
+              (identifier)
+              (identifier))))
+        (record_field
           (identifier)
           (boolean))))))
 

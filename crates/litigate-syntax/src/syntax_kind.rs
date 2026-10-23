@@ -120,7 +120,6 @@ syntax_kinds! {
         KwPack = "pack", KwRemoveEdges = "remove_edges",
         KwProbabilities = "probabilities", KwRoles = "roles",
         KwPayoffTransform = "payoff_transform", KwStake = "stake", KwPatch = "patch",
-        KwUnset = "unset",
         KwEffective = "effective", KwExcludeTriggerDay = "exclude_trigger_day",
         KwIncludeLastDay = "include_last_day", KwRollForwardOn = "roll_forward_on",
         KwServiceExtension = "service_extension", KwHolidays = "holidays",

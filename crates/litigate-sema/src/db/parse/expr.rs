@@ -1,5 +1,5 @@
 //! Expressions, references, types, and JSON records (SPEC §3.1, §3.3).
-use super::tree::{Expr, ExprKind, Json, Name, PathSep, Pattern, RefPath, TypeRef};
+use super::tree::{Expr, ExprKind, Name, PathSep, Pattern, RefPath, TypeRef};
 use super::{
     elements, head, is_trivia, name, node_of, range, significant_range, token_of, Lower,
     SyntaxElement,
@@ -98,22 +98,11 @@ const BINARY_OPS: [(K, BinaryOp); 13] = [
     (K::Percent, BinaryOp::Rem),
 ];
 
-/// Builds a JSON literal from its token text.
-type MakeJson = fn(&str) -> Json;
 /// Builds an expression literal from its token text.
 type MakeExpr = fn(&str) -> ExprKind;
 
-/// JSON literals by token kind.
-const JSON_LITERALS: [(K, MakeJson); 5] = [
-    (K::Number, |t| Json::Number(t.to_owned())),
-    (K::String, |t| Json::Str(litigate_syntax::ast::unescape(t))),
-    (K::KwTrue, |_| Json::Bool(true)),
-    (K::KwFalse, |_| Json::Bool(false)),
-    (K::KwUnset, |_| Json::Unset),
-];
-
-/// Expression literals by token kind (`unset` and `unvalued` are literals
-/// only in JSON records and stakes).
+/// Expression literals by token kind (`unvalued` is a literal only in
+/// stakes).
 const LITERALS: [(K, MakeExpr); 8] = [
     (K::Number, |t| ExprKind::Number(t.to_owned())),
     (K::Money, |t| ExprKind::Money(t.to_owned())),
@@ -274,45 +263,6 @@ impl Lower {
         super::nodes_of(node, K::RecordField)
             .map(|f| Some((head(&f), self.expr(&expr_children(&f).next()?)?)))
             .collect()
-    }
-
-    /// [`json`] for `.case` resolution, which lowers through a `Lower`.
-    #[allow(clippy::unused_self)]
-    pub(crate) fn json(&mut self, node: &SyntaxNode) -> Option<Json> {
-        json(node)
-    }
-}
-
-/// A JSON value (SPEC §3.1 `JsonValue`) of a `patch` record or a
-/// `.case` analysis block. The grammar's `json_value` builds only these
-/// shapes, so `None` means an incomplete record or list (already
-/// reported by the parser).
-pub(crate) fn json(node: &SyntaxNode) -> Option<Json> {
-    match node.kind() {
-        K::RecordExpr => super::nodes_of(node, K::RecordField)
-            .map(|f| Some((head(&f), json(&expr_children(&f).next()?)?)))
-            .collect::<Option<_>>()
-            .map(Json::Object),
-        K::ListExpr => expr_children(node)
-            .map(|e| json(&e))
-            .collect::<Option<_>>()
-            .map(Json::Array),
-        // `signed_number`: a minus sign and a number.
-        K::UnaryExpr => Some(Json::Number(
-            node.descendants_with_tokens()
-                .filter_map(SyntaxElement::into_token)
-                .filter(|t| !is_trivia(t.kind()))
-                .map(|t| t.text().to_owned())
-                .collect(),
-        )),
-        _ => elements(node)
-            .find_map(SyntaxElement::into_token)
-            .and_then(|t| {
-                JSON_LITERALS
-                    .iter()
-                    .find(|(k, _)| *k == t.kind())
-                    .map(|(_, make)| make(t.text()))
-            }),
     }
 }
 

@@ -56,9 +56,10 @@ fn an_unparseable_matter_lock_fails_check() {
 
 #[test]
 fn a_matter_that_does_not_lower_fails_check() {
+    // `mixed` is the engine's to type: sema leaves it to lowering.
     let case = acme().replace(
         "analysis { params: { rate: 650, opp_rate: 550 } }",
-        "analysis { frobnicate: 1 }",
+        "analysis { mixed: \"sideways\" }",
     );
     let dir = example("check-analysis", "", Some(&case));
     let run = litigate_in(&dir, &["check", "cases/examples/acme.case"]);

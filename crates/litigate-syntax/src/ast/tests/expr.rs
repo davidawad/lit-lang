@@ -130,18 +130,15 @@ fn match_arms_expose_patterns_and_values() {
 
 #[test]
 fn record_fields_decode_keys_and_values() {
-    let matter = case(&MATTER.replace(
-        "analysis {",
-        "analysis { \"la\\tbel\": \"x\", tags: [\"t\"],",
-    ));
+    let matter = case(&MATTER.replace("analysis {", "analysis { label: \"x\", tags: [\"t\"],"));
     let analysis = matter.block(SyntaxKind::AnalysisBlock).expect("analysis");
     let fields = analysis.record().expect("record").fields();
-    let quoted = &fields[0];
-    assert_eq!(quoted.key().map(|t| t.kind()), Some(SyntaxKind::String));
-    assert_eq!(quoted.key_text().as_deref(), Some("la\tbel"));
-    assert!(quoted.key_ref().is_none());
-    assert_eq!(quoted.value().map(|n| n.kind()), Some(SyntaxKind::Literal));
-    assert!(quoted.value_ref().is_none());
+    let named = &fields[0];
+    assert_eq!(named.key().map(|t| t.kind()), Some(SyntaxKind::Ident));
+    assert_eq!(named.key_text().as_deref(), Some("label"));
+    assert!(named.key_ref().is_none());
+    assert_eq!(named.value().map(|n| n.kind()), Some(SyntaxKind::Literal));
+    assert!(named.value_ref().is_none());
     let plain = &fields[1];
     assert_eq!(plain.key_text().as_deref(), Some("tags"));
     assert_eq!(

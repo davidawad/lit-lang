@@ -1,0 +1,58 @@
+---
+source: crates/litigate-sema/tests/cov_case_resolve.rs
+expression: table
+---
+{
+    "a field given twice": [
+        "15:23 L4007 `cost` is given more than once",
+    ],
+    "a field with no value": [
+        "15:18 L0001 expected an identifier, found `}`",
+    ],
+    "edges that do not resolve or are not refs": [
+        "15:27 L1002 `alpha` has no edge `dny`\n    note: an `EdgeRef` names an edge by its id: `edge`, or `pack::edge` in another package\n    fix @15:27-15:30 MaybeIncorrect: \"deny\"",
+        "15:32 L2001 expected an `EdgeRef` here: an edge id, unquoted (`edge` or `pack::edge`)",
+        "15:40 L1002 `alpha` has no edge `gamma::ping`\n    note: an `EdgeRef` names an edge by its id: `edge`, or `pack::edge` in another package",
+    ],
+    "engine options that are not plain values": [
+        "15:19 L4007 `mixed` is written with numbers, strings, booleans, records and lists",
+        "15:42 L4007 `objective` is written with numbers, strings, booleans, records and lists",
+        "15:68 L4007 `uncertainty` is written with numbers, strings, booleans, records and lists",
+        "15:90 L4007 `fee_shift` is written with numbers, strings, booleans, records and lists",
+        "15:121 L4007 `opponent` is written with numbers, strings, booleans, records and lists",
+    ],
+    "fields that would name engine nodes and edges by string": [
+        "15:12 L4007 `analysis` has no `probabilities`: it would name engine nodes or edges by string; a matter states what it knows with `facts` and `beliefs`",
+        "15:40 L4007 `analysis` has no `policy`: it would name engine nodes or edges by string; a matter states what it knows with `facts` and `beliefs`",
+    ],
+    "fields with their own blocks": [
+        "15:12 L4007 `start` has its own `.case` block; it cannot appear in `analysis`",
+        "15:22 L4007 `facts` has its own `.case` block; it cannot appear in `analysis`",
+        "15:32 L4007 `payoffs` has its own `.case` block; it cannot appear in `analysis`",
+        "15:44 L4007 `observe` has its own `.case` block; it cannot appear in `analysis`",
+        "15:56 L4007 `perspective` has its own `.case` block; it cannot appear in `analysis`",
+    ],
+    "ok: every field": [
+        "ok: start alpha::bench",
+        "trace Took Benched(complaint) alpha::intake -> alpha::bench via alpha::to-bench",
+    ],
+    "unknown fields, a near miss fixed": [
+        "15:12 L4007 `parms` is not an `analysis` field\n    note: fields: params, metrics, utilities, cost, utility, mask, probability_fn, opponent_objective, calibration, discount_annual, remove_edges, mixed, opponent, prob_fill, objective, fee_shift, uncertainty\n    fix @15:12-15:17 MaybeIncorrect: \"params\"",
+        "15:32 L4007 `frobnicate` is not an `analysis` field\n    note: fields: params, metrics, utilities, cost, utility, mask, probability_fn, opponent_objective, calibration, discount_annual, remove_edges, mixed, opponent, prob_fill, objective, fee_shift, uncertainty",
+    ],
+    "wrong shapes": [
+        "15:20 L4007 `params` is a record `{ name: value }`",
+        "15:32 L4007 `metrics` is a record `{ name: value }`",
+        "15:50 L4007 `calibration` is a list `[a, b]`",
+        "15:71 L4007 `remove_edges` is a list `[a, b]`",
+    ],
+    "wrong values": [
+        "15:28 L4007 `params.rate` is an exact number",
+        "15:40 L4007 `params.neg` is an exact number",
+        "15:49 L4007 `params.big` is an exact number",
+        "15:89 L4007 `utilities.u` is an engine expression, written as a string",
+        "15:100 L4007 `cost` is an engine expression, written as a string",
+        "15:117 L4007 a calibration set is named by a string",
+        "15:140 L4007 `discount_annual` is an exact number",
+    ],
+}

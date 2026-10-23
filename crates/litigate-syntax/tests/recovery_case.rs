@@ -115,7 +115,7 @@ fn case_items() {
             "beliefs { x }",
             &["L0001 5:11-5:12 expected an identifier or `}`, found `x`"],
         ),
-        ("analysis { \"k\": 1, k: [1, \"x\"] }", &[]),
+        ("analysis { k: 1, j: [1, \"x\", e], r: { a: -1 } }", &[]),
     ];
     let texts: Vec<String> = cases
         .iter()

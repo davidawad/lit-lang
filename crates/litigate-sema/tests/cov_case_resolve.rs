@@ -139,20 +139,6 @@ fn block_values_table() {
             "beliefs: an observation with no outcomes",
             "stakes { answered: 0.usd, defaulted: 0.usd }\nbeliefs { observe bench }",
         ),
-        (
-            "analysis: booleans, unset, nested records and lists are JSON",
-            "stakes { answered: 0.usd, defaulted: 0.usd }\n\
-             analysis { flag: true, off: false, gone: unset, params: { rate: 650 }, seeds: [1, 2] }",
-        ),
-        (
-            "analysis: a number JSON cannot read, alone, nested, and listed",
-            "stakes { answered: 0.usd, defaulted: 0.usd }\n\
-             analysis { n: 007, nested: { m: 007 }, list: [007] }",
-        ),
-        (
-            "analysis: a field with no value",
-            "stakes { answered: 0.usd, defaulted: 0.usd }\nanalysis { rate: }",
-        ),
     ];
     let table: BTreeMap<&str, Vec<String>> = rows
         .iter()
@@ -268,5 +254,72 @@ fn pins_resolve_through_the_lock() {
         (name, outcome(&checked))
     })
     .collect();
+    insta::assert_debug_snapshot!(table);
+}
+
+/// `analysis` is typed field by field (SPEC §8.3): a closed set of
+/// fields, each with its type; engine options are left to the engine's
+/// schema at lowering, but must be plain values.
+#[test]
+fn analysis_fields_table() {
+    let rows: Vec<(&str, &str)> = vec![
+        (
+            "ok: every field",
+            "analysis { params: { rate: 650, floor: -1.5 }, metrics: { m: \"hours\" }, \
+             utilities: { u: \"payoff\" }, cost: \"m\", utility: \"u\", mask: \"1\", \
+             probability_fn: \"p\", opponent_objective: \"-payoff\", calibration: [\"set\"], \
+             discount_annual: 0.08, remove_edges: [deny, alpha::allow], mixed: \"optimistic\", \
+             opponent: \"chance\", prob_fill: \"uniform\", \
+             objective: { type: \"robust\", credibility: 0.9, seed: 7, flag: true }, \
+             fee_shift: { fraction: 0.35 }, uncertainty: { default_concentration: 2, list: [1, -2] } }",
+        ),
+        (
+            "a field given twice",
+            "analysis { cost: \"a\", cost: \"b\" }",
+        ),
+        (
+            "unknown fields, a near miss fixed",
+            "analysis { parms: { rate: 1 }, frobnicate: 1 }",
+        ),
+        (
+            "fields with their own blocks",
+            "analysis { start: 1, facts: 1, payoffs: 1, observe: 1, perspective: 1 }",
+        ),
+        (
+            "fields that would name engine nodes and edges by string",
+            "analysis { probabilities: { deny: 1 }, policy: { bench: deny } }",
+        ),
+        (
+            "wrong shapes",
+            "analysis { params: 1, metrics: [1], calibration: \"set\", remove_edges: deny }",
+        ),
+        (
+            "wrong values",
+            "analysis { params: { rate: \"650\", neg: -x, big: 99999999999999999999 }, \
+             utilities: { u: 1 }, cost: m, calibration: [set], discount_annual: true }",
+        ),
+        (
+            "edges that do not resolve or are not refs",
+            "analysis { remove_edges: [dny, \"deny\", gamma::ping] }",
+        ),
+        (
+            "engine options that are not plain values",
+            "analysis { mixed: optimistic, objective: { type: x }, uncertainty: { n: -x }, \
+             fee_shift: { fraction: 1.usd }, opponent: [chance, 1] }",
+        ),
+        ("a field with no value", "analysis { rate: }"),
+    ];
+    let table: BTreeMap<&str, Vec<String>> = rows
+        .iter()
+        .map(|(name, tail)| {
+            let text = matter(
+                ALPHA_ONLY,
+                "",
+                &["2010-01-04 Benched(complaint) by p"],
+                &format!("stakes {{ answered: 0.usd, defaulted: 0.usd }}\n{tail}"),
+            );
+            (*name, run(&text, &NoClock, Profile::Dev))
+        })
+        .collect();
     insta::assert_debug_snapshot!(table);
 }

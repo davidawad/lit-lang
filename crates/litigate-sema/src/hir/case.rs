@@ -1,5 +1,6 @@
 //! Resolved `.case` matter.
-use super::{ActorRole, Expr, Money};
+use super::{ActorRole, Expr, Money, Rational};
+use litigate_base::Span;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
@@ -152,10 +153,46 @@ pub struct Observation {
     pub outcomes: Vec<(String, u64)>,
 }
 
-/// `analysis { ... }`: litgraph `Scenario` fields without a dedicated
-/// `.case` block, already converted to their JSON values (SPEC §8.3).
+/// `analysis { ... }` (SPEC §8.3): the litgraph `Scenario` fields a matter
+/// sets beyond its dedicated blocks, each typed.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct Analysis {
-    /// Scenario field name to JSON value.
-    pub fields: BTreeMap<String, serde_json::Value>,
+    /// `params`: exact dimensionless numbers by name.
+    pub params: BTreeMap<String, Rational>,
+    /// `metrics`: named edge expressions.
+    pub metrics: BTreeMap<String, EngineExpr>,
+    /// `utilities`: named terminal expressions.
+    pub utilities: BTreeMap<String, EngineExpr>,
+    /// `cost`, `utility`, `mask`, `probability_fn` and
+    /// `opponent_objective`, by field name.
+    pub expressions: BTreeMap<String, EngineExpr>,
+    /// `calibration`: calibration set names, in order.
+    pub calibration: Vec<String>,
+    /// `discount_annual`, exact.
+    pub discount_annual: Option<Rational>,
+    /// `remove_edges`: resolved edges (`pack::edge`), in order.
+    pub remove_edges: Vec<String>,
+    /// The engine's option fields (`mixed`, `opponent`, `prob_fill`,
+    /// `objective`, `fee_shift`, `uncertainty`), each checked against the
+    /// engine's own schema when the matter lowers.
+    pub options: BTreeMap<String, EngineOption>,
+}
+
+/// An expression in the engine's expression language (`analysis.metrics`,
+/// `utility`, ...), parsed by the engine when the matter lowers.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct EngineExpr {
+    /// The expression text.
+    pub text: String,
+    /// Where it is written.
+    pub span: Option<Span>,
+}
+
+/// An engine option's value, with where it is written.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct EngineOption {
+    /// The value as the engine reads it.
+    pub value: serde_json::Value,
+    /// Where it is written.
+    pub span: Option<Span>,
 }

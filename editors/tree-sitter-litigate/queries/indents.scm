@@ -29,8 +29,6 @@
   (count_map)
   (num_record)
   (money_record)
-  (json_record)
-  (json_list)
   (id_list)
   (import_list)
   (record_expression)

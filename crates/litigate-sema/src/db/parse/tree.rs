@@ -137,23 +137,6 @@ pub struct TypeRef {
     pub range: TextRange,
 }
 
-/// JSON value in `patch` records and `analysis`.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub enum Json {
-    /// Signed decimal text.
-    Number(String),
-    /// String.
-    Str(String),
-    /// Boolean.
-    Bool(bool),
-    /// `unset` (JSON null).
-    Unset,
-    /// Object in source order.
-    Object(Vec<(Name, Json)>),
-    /// Array.
-    Array(Vec<Json>),
-}
-
 /// One field value atom.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Atom {

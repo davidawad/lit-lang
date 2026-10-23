@@ -3,18 +3,6 @@ source: crates/litigate-sema/tests/cov_case_resolve.rs
 expression: table
 ---
 {
-    "analysis: a field with no value": [
-        "15:18 L0001 expected an identifier, found `}`",
-    ],
-    "analysis: a number JSON cannot read, alone, nested, and listed": [
-        "15:15 L4007 `n` is not a JSON value",
-        "15:28 L4007 `nested` is not a JSON value",
-        "15:46 L4007 `list` is not a JSON value",
-    ],
-    "analysis: booleans, unset, nested records and lists are JSON": [
-        "ok: start alpha::bench",
-        "trace Took Benched(complaint) alpha::intake -> alpha::bench via alpha::to-bench",
-    ],
     "beliefs: a count that is not a non-negative integer": [
         "15:35 L2001 an observation count is a non-negative integer",
     ],

@@ -106,5 +106,5 @@ module.exports = {
 
   count_entry: $ => seq(field('edge', $.ref), ':', field('count', $.number)),
 
-  analysis_block: $ => seq('analysis', field('value', $.json_record)),
+  analysis_block: $ => seq('analysis', field('value', $.record_expression)),
 };

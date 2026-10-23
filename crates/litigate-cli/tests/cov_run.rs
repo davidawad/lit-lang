@@ -63,7 +63,7 @@ fn a_matter_that_fails_its_check_is_not_run() {
             "L4007".to_owned(),
             "error".to_owned(),
             "cases/examples/acme.case".to_owned(),
-            1
+            27
         )]
     );
 }

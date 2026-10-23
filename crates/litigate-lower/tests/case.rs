@@ -10,12 +10,12 @@ use litgraph::scenario::{EventRelation, NamedScenario};
 use litigate_base::DiagnosticCode;
 use litigate_lower::{render_scenario, semantic_diff_scenarios, Lowerer};
 use litigate_sema::hir::{
-    Analysis, Case, CaseSource, Event, EventParty, Expr, ExprKind, Observation, Perspective,
-    Removal, Stake, Type,
+    Case, CaseSource, EngineExpr, EngineOption, Event, EventParty, Expr, ExprKind, Observation,
+    Perspective, Removal, Stake, Type,
 };
 use serde_json::{json, Map, Value};
 use std::collections::BTreeMap;
-use support::{acme, load_hir, pin, render_map, repo_root, usd};
+use support::{acme, analysis_of, load_hir, pin, render_map, repo_root, usd};
 
 #[test]
 fn acme_golden() {
@@ -45,19 +45,36 @@ fn codes(case: &Case) -> Vec<DiagnosticCode> {
         .collect()
 }
 
+/// Engine options are judged by litgraph's own schema, each on its own;
+/// engine expressions must parse.
 #[test]
 fn analysis_is_judged_by_litgraph() {
+    let option = |key: &str, value: Value| {
+        let mut case = acme();
+        case.perspective = None;
+        case.analysis
+            .options
+            .insert(key.into(), EngineOption { value, span: None });
+        codes(&case)
+    };
+    assert_eq!(
+        option("objective", json!({"type": "cvar", "alpah": 0.1})),
+        [DiagnosticCode::InvalidAnalysis]
+    );
+    assert_eq!(
+        option("mixed", json!("sideways")),
+        [DiagnosticCode::InvalidAnalysis]
+    );
+    assert_eq!(option("mixed", json!("optimistic")), []);
     let mut case = acme();
     case.perspective = None;
-    case.analysis.fields.insert("start".into(), json!("x"));
-    assert_eq!(codes(&case), [DiagnosticCode::InvalidAnalysis]);
-    let mut case = acme();
-    case.perspective = None;
-    case.analysis.fields.insert("strat".into(), json!("x"));
-    assert_eq!(codes(&case), [DiagnosticCode::InvalidAnalysis]);
-    let mut case = acme();
-    case.perspective = None;
-    case.analysis.fields.insert("mask".into(), json!("hours >"));
+    case.analysis.expressions.insert(
+        "mask".into(),
+        EngineExpr {
+            text: "hours >".into(),
+            span: None,
+        },
+    );
     assert_eq!(codes(&case), [DiagnosticCode::InvalidEngineExpression]);
     // `perspective <party>` needs the primary package's roles.
     assert_eq!(codes(&acme()), [DiagnosticCode::LoweringUnsupported]);
@@ -116,9 +133,7 @@ fn case_of(named: &Value) -> Case {
                 outcomes: counts.into_iter().collect(),
             })
             .collect(),
-        analysis: Analysis {
-            fields: scenario.into_iter().collect(),
-        },
+        analysis: analysis_of(scenario),
         removals: Vec::new(),
     }
 }
@@ -152,12 +167,7 @@ fn every_named_scenario_round_trips() {
 /// events (one per edge) instead of an `analysis` field.
 fn case_with_removals(named: &Value) -> Case {
     let mut case = case_of(named);
-    let edges = case
-        .analysis
-        .fields
-        .remove("remove_edges")
-        .and_then(|v| serde_json::from_value::<Vec<String>>(v).ok())
-        .unwrap_or_default();
+    let edges = std::mem::take(&mut case.analysis.remove_edges);
     case.removals = edges
         .into_iter()
         .enumerate()
@@ -184,7 +194,7 @@ fn masked_scenarios_round_trip_through_removals() {
         }
         let value: Value = serde_json::from_str(&text).unwrap_or_default();
         let case = case_with_removals(&value);
-        assert!(!case.analysis.fields.contains_key("remove_edges"));
+        assert!(case.analysis.remove_edges.is_empty());
         let lowered = Lowerer::new(&[])
             .case(&case, "cases/x.case")
             .unwrap_or_else(|d| panic!("{}: {d:#?}", path.display()));
@@ -202,16 +212,12 @@ fn masked_scenarios_round_trip_through_removals() {
     assert_eq!(masked, ["cofc-1498-patent-case", "cofc-bid-protest"]);
 }
 
-/// Derived removals follow any `analysis.remove_edges`, each edge once; a
-/// non-list `analysis.remove_edges` is still judged by litgraph.
+/// Derived removals follow any `analysis.remove_edges`, each edge once.
 #[test]
 fn removals_merge_with_analysis() {
     let mut case = acme();
     case.perspective = None;
-    case.analysis.fields.insert(
-        "remove_edges".into(),
-        json!(["frcp-rule12-example::answer"]),
-    );
+    case.analysis.remove_edges = vec!["frcp-rule12-example::answer".into()];
     case.removals = [
         "frcp-rule12-example::answer",
         "frcp-rule12-example::default",
@@ -242,10 +248,6 @@ fn removals_merge_with_analysis() {
         pointers,
         ["", "/scenario/remove_edges/0", "/scenario/remove_edges/1"]
     );
-    case.analysis
-        .fields
-        .insert("remove_edges".into(), json!("frcp-rule12-example::answer"));
-    assert_eq!(codes(&case), [DiagnosticCode::InvalidAnalysis]);
 }
 
 /// The engine resolves derived removals: compiled with the lowered pack,
@@ -302,8 +304,7 @@ proptest::proptest! {
         let mut case = acme();
         case.perspective = None;
         if !authored.is_empty() {
-            let list: Vec<String> = authored.iter().map(edge).collect();
-            case.analysis.fields.insert("remove_edges".into(), json!(list));
+            case.analysis.remove_edges = authored.iter().map(edge).collect();
         }
         case.removals = derived
             .iter()
@@ -433,4 +434,28 @@ fn a_matter_records_its_world_docket_and_holes() {
     assert_eq!(named.parties.len(), 2);
     let text = render_scenario(&named).unwrap_or_default();
     assert_eq!(NamedScenario::from_json(&text).ok(), Some(named));
+}
+
+/// `analysis` types every litgraph `Scenario` field the matter writes:
+/// its fields, the dedicated blocks and the untyped fields it refuses are
+/// exactly the engine's.
+#[test]
+fn analysis_fields_are_the_engine_scenario_fields() {
+    use litigate_sema::case::resolve::analysis::{DEDICATED, FIELDS, UNTYPED};
+    let schema =
+        serde_json::to_value(schemars::schema_for!(litgraph::Scenario)).unwrap_or_default();
+    let mut engine: Vec<&str> = schema["properties"]
+        .as_object()
+        .into_iter()
+        .flat_map(|p| p.keys().map(String::as_str))
+        .collect();
+    engine.sort_unstable();
+    let mut ours: Vec<&str> = FIELDS
+        .iter()
+        .chain(&DEDICATED)
+        .chain(&UNTYPED)
+        .copied()
+        .collect();
+    ours.sort_unstable();
+    assert_eq!(ours, engine);
 }

@@ -53,7 +53,6 @@ pub fn value(node: &SyntaxNode) -> Value {
             let inner = node.children().next().map_or(Value::Null, |n| value(&n));
             json!(-inner.as_f64().unwrap_or(f64::NAN))
         }
-        SyntaxKind::Ref => json!(text_of(node)),
         SyntaxKind::HoleExpr => ast::Hole::cast(node.clone())
             .and_then(|h| h.reason())
             .map_or(Value::Null, Value::String),
@@ -76,12 +75,6 @@ pub fn value(node: &SyntaxNode) -> Value {
             Value::Object(map)
         }
         SyntaxKind::FieldList => fields(node.children().filter_map(ast::Field::cast)),
-        _ if node
-            .first_token()
-            .is_some_and(|t| t.kind() == SyntaxKind::KwUnset) =>
-        {
-            Value::Null
-        }
         _ => json!(text_of(node)),
     }
 }

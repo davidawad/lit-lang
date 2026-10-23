@@ -26,25 +26,6 @@ module.exports = {
 
   money_entry: $ => seq(field('key', $.identifier), ':', field('value', $.signed_money)),
 
-  json_record: $ => braced($.json_entry),
-
-  json_entry: $ => seq(
-    field('key', choice($.identifier, $.string)),
-    ':',
-    field('value', $._json_value),
-  ),
-
-  _json_value: $ => choice(
-    $.signed_number,
-    $.string,
-    $.boolean,
-    alias('unset', $.unset),
-    $.json_record,
-    $.json_list,
-  ),
-
-  json_list: $ => commaList('[', $._json_value, ']'),
-
   signed_number: $ => seq(optional('-'), $.number),
 
   signed_money: $ => seq(optional('-'), $.money),

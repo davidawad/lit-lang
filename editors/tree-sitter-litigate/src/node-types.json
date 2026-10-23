@@ -160,7 +160,7 @@
         "required": true,
         "types": [
           {
-            "type": "json_record",
+            "type": "record_expression",
             "named": true
           }
         ]
@@ -2193,106 +2193,6 @@
           }
         ]
       }
-    }
-  },
-  {
-    "type": "json_entry",
-    "named": true,
-    "fields": {
-      "key": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          },
-          {
-            "type": "string",
-            "named": true
-          }
-        ]
-      },
-      "value": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "boolean",
-            "named": true
-          },
-          {
-            "type": "json_list",
-            "named": true
-          },
-          {
-            "type": "json_record",
-            "named": true
-          },
-          {
-            "type": "signed_number",
-            "named": true
-          },
-          {
-            "type": "string",
-            "named": true
-          },
-          {
-            "type": "unset",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "json_list",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "boolean",
-          "named": true
-        },
-        {
-          "type": "json_list",
-          "named": true
-        },
-        {
-          "type": "json_record",
-          "named": true
-        },
-        {
-          "type": "signed_number",
-          "named": true
-        },
-        {
-          "type": "string",
-          "named": true
-        },
-        {
-          "type": "unset",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "json_record",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "json_entry",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -4814,10 +4714,6 @@
   {
     "type": "unless",
     "named": false
-  },
-  {
-    "type": "unset",
-    "named": true
   },
   {
     "type": "unvalued",

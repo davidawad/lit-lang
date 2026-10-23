@@ -52,7 +52,7 @@
 (date) @constant.numeric
 (version_req) @string.special
 (boolean) @constant.builtin.boolean
-[(unit) (unset) (unvalued)] @constant.builtin
+[(unit) (unvalued)] @constant.builtin
 (hole) @constant.builtin
 (open_end) @constant.builtin
 [(anonymous) (wildcard)] @variable.builtin
@@ -115,7 +115,6 @@
 [
   (num_entry key: (identifier) @variable.other.member)
   (money_entry key: (identifier) @variable.other.member)
-  (json_entry key: (_) @variable.other.member)
   (record_field key: (identifier) @variable.other.member)
   (probability_entry key: (identifier) @variable.other.member)
   (role_entry key: (identifier) @variable.other.member)

@@ -280,12 +280,12 @@ pub fn acme() -> Case {
             node: q("mtd-ruling"),
             outcomes: vec![(q("granted"), 3), (q("denied"), 1)],
         }],
-        analysis: Analysis {
-            fields: BTreeMap::from([(
-                "params".into(),
-                serde_json::json!({"rate": 650, "opp_rate": 550}),
-            )]),
-        },
+        analysis: analysis_of(
+            serde_json::json!({"params": {"rate": 650, "opp_rate": 550}})
+                .as_object()
+                .cloned()
+                .unwrap_or_default(),
+        ),
         removals: Vec::new(),
     }
 }
@@ -297,4 +297,51 @@ pub fn render_map(map: &litigate_lower::SourceMap) -> String {
     assert_eq!(map.generated.version, env!("CARGO_PKG_VERSION"));
     "[version]".clone_into(&mut map.generated.version);
     litigate_lower::render(&map).unwrap_or_default()
+}
+
+/// A scenario's remaining fields (`rest`) as typed `analysis` HIR, as the
+/// importer writes and sema types them: numbers exact from their decimal
+/// text, expressions and calibration sets as written, every other field
+/// an engine option.
+#[must_use]
+pub fn analysis_of(rest: serde_json::Map<String, serde_json::Value>) -> Analysis {
+    use litigate_sema::hir::{EngineExpr, EngineOption};
+    use litigate_sema::types::rational::parse_decimal;
+    let exact = |v: &serde_json::Value| {
+        parse_decimal(&v.to_string()).unwrap_or_else(|e| panic!("{v}: {e:?}"))
+    };
+    let expr = |v: &serde_json::Value| EngineExpr {
+        text: v.as_str().unwrap_or_default().to_owned(),
+        span: None,
+    };
+    let strings = |v: &serde_json::Value| -> Vec<String> {
+        serde_json::from_value(v.clone()).unwrap_or_default()
+    };
+    let mut a = Analysis::default();
+    for (key, v) in rest {
+        let entries = v.as_object().cloned().unwrap_or_default();
+        match key.as_str() {
+            "params" => a.params = entries.iter().map(|(k, v)| (k.clone(), exact(v))).collect(),
+            "metrics" => a.metrics = entries.iter().map(|(k, v)| (k.clone(), expr(v))).collect(),
+            "utilities" => {
+                a.utilities = entries.iter().map(|(k, v)| (k.clone(), expr(v))).collect();
+            }
+            "cost" | "utility" | "mask" | "probability_fn" | "opponent_objective" => {
+                a.expressions.insert(key, expr(&v));
+            }
+            "calibration" => a.calibration = strings(&v),
+            "discount_annual" => a.discount_annual = Some(exact(&v)),
+            "remove_edges" => a.remove_edges = strings(&v),
+            _ => {
+                a.options.insert(
+                    key,
+                    EngineOption {
+                        value: v,
+                        span: None,
+                    },
+                );
+            }
+        }
+    }
+    a
 }

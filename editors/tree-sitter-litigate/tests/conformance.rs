@@ -125,10 +125,10 @@ fn worked_examples_have_the_expected_roots() {
 }
 
 /// Word-shaped anonymous nodes plus keywords the grammar aliases to named
-/// nodes (`unit`, `unset`, `unvalued`, `discretion`).
+/// nodes (`unit`, `unvalued`, `discretion`).
 fn grammar_keywords() -> BTreeSet<String> {
     let language: tree_sitter::Language = tree_sitter_litigate::LANGUAGE.into();
-    let aliased = ["unit", "unset", "unvalued", "discretion"];
+    let aliased = ["unit", "unvalued", "discretion"];
     (0..language.node_kind_count())
         .filter_map(|id| u16::try_from(id).ok())
         .filter(|&id| !language.node_kind_is_named(id) && language.node_kind_is_visible(id))

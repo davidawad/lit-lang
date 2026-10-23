@@ -7,7 +7,6 @@
   (deadline_decl_opts)
   (capability)
   (instance_decl)
-  (json_record)
   (rule_body)
   (counting_body)
   (calendar_body)

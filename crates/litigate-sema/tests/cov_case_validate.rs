@@ -109,14 +109,12 @@ fn stakes_and_removals_table() {
             ),
         ),
         (
-            "analysis: entries that are not edge names are skipped, a repeat is not",
+            "analysis: an edge removed twice",
             matter(
                 ALPHA_ONLY,
                 "",
                 &[BENCHED],
-                &format!(
-                    "{STAKES}\nanalysis {{ remove_edges: [\"deny\", 3, \"alpha::deny\", \"gamma::ping\"] }}"
-                ),
+                &format!("{STAKES}\nanalysis {{ remove_edges: [deny, alpha::deny] }}"),
             ),
         ),
         (
@@ -125,7 +123,7 @@ fn stakes_and_removals_table() {
                 ALPHA_ONLY,
                 "",
                 &["2010-01-04 Forfeited(twin-a) by d cite FRCP 12(h)"],
-                &format!("{STAKES}\nanalysis {{ remove_edges: [\"twin-a\"] }}"),
+                &format!("{STAKES}\nanalysis {{ remove_edges: [twin-a] }}"),
             ),
         ),
         (
@@ -134,7 +132,7 @@ fn stakes_and_removals_table() {
                 ALPHA_ONLY,
                 "",
                 &[BENCHED],
-                "stakes { answered: 0.usd }\nanalysis { remove_edges: [\"deny\"] }",
+                "stakes { answered: 0.usd }\nanalysis { remove_edges: [deny] }",
             ),
         ),
     ];

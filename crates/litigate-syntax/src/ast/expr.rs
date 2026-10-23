@@ -150,16 +150,13 @@ impl RecordField {
             .and_then(rowan::NodeOrToken::into_token)
     }
 
-    /// Decoded key text: identifier text, unescaped string, or ref text.
+    /// Key text: the identifier, or the ref text.
     #[must_use]
     pub fn key_text(&self) -> Option<String> {
         if let Some(reference) = self.key_ref() {
             return Some(reference.text());
         }
-        self.key().map(|token| match token.kind() {
-            SyntaxKind::String => unescape(token.text()),
-            _ => token.text().to_owned(),
-        })
+        self.key().map(|token| token.text().to_owned())
     }
 
     /// The key when it is a (possibly qualified) reference (case blocks).

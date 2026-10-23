@@ -162,8 +162,8 @@ pub(super) fn facts_and_beliefs(
     out: &mut Vec<Diagnostic>,
 ) {
     let known_at = case.known_at.as_deref();
-    let removed = removed_edges(case, graph);
-    duplicate_analysis_removals(case, graph, spans, out);
+    let removed = removed_edges(case);
+    duplicate_analysis_removals(case, spans, out);
     for (node_id, edge) in &case.facts {
         let (key, value) = spans
             .facts
@@ -279,7 +279,7 @@ fn edge_ids(n: &Node) -> String {
 /// Terminals reachable from `start` at `as_of`, pruned by `facts`.
 pub(super) fn reachable_terminals(case: &Case, graph: &Graph<'_>, start: &str) -> BTreeSet<String> {
     let known_at = case.known_at.as_deref();
-    let removed = removed_edges(case, graph);
+    let removed = removed_edges(case);
     let mut seen = BTreeSet::new();
     let mut terminals = BTreeSet::new();
     let mut todo = vec![start.to_owned()];
@@ -324,39 +324,15 @@ fn qualified_edge(graph: &Graph<'_>, node: &str, edge: &str) -> String {
 }
 
 /// Edges removed by replay events or the explicit analysis option.
-fn removed_edges(case: &Case, graph: &Graph<'_>) -> BTreeSet<String> {
+fn removed_edges(case: &Case) -> BTreeSet<String> {
     let mut removed: BTreeSet<String> = case.removals.iter().map(|r| r.edge.clone()).collect();
-    if let Some(serde_json::Value::Array(edges)) = case.analysis.fields.get("remove_edges") {
-        for value in edges {
-            let Some(edge) = value.as_str() else { continue };
-            let qualified = if edge.contains("::") {
-                edge.to_owned()
-            } else {
-                format!("{}::{edge}", graph.primary())
-            };
-            removed.insert(qualified);
-        }
-    }
+    removed.extend(case.analysis.remove_edges.iter().cloned());
     removed
 }
 
-fn duplicate_analysis_removals(
-    case: &Case,
-    graph: &Graph<'_>,
-    spans: &CaseSpans,
-    out: &mut Vec<Diagnostic>,
-) {
-    let Some(serde_json::Value::Array(edges)) = case.analysis.fields.get("remove_edges") else {
-        return;
-    };
+fn duplicate_analysis_removals(case: &Case, spans: &CaseSpans, out: &mut Vec<Diagnostic>) {
     let mut seen: BTreeSet<String> = case.removals.iter().map(|r| r.edge.clone()).collect();
-    for value in edges {
-        let Some(edge) = value.as_str() else { continue };
-        let qualified = if edge.contains("::") {
-            edge.to_owned()
-        } else {
-            format!("{}::{edge}", graph.primary())
-        };
+    for qualified in &case.analysis.remove_edges {
         if !seen.insert(qualified.clone()) {
             out.push(error(
                 C::InvalidCaseEvent,

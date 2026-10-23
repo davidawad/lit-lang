@@ -174,7 +174,7 @@ The canonical format (`litigate fmt', SPEC §10) uses two."
 
    :language 'litigate
    :feature 'constant
-   '([(boolean) (unit) (unset) (unvalued) (hole) (open_end)]
+   '([(boolean) (unit) (unvalued) (hole) (open_end)]
      @font-lock-constant-face
      [(anonymous) (wildcard)] @font-lock-builtin-face)
 
@@ -182,7 +182,6 @@ The canonical format (`litigate fmt', SPEC §10) uses two."
    :feature 'property
    '([(num_entry key: (identifier) @font-lock-property-name-face)
       (money_entry key: (identifier) @font-lock-property-name-face)
-      (json_entry key: (_) @font-lock-property-name-face)
       (record_field key: (identifier) @font-lock-property-name-face)
       (probability_entry key: (identifier) @font-lock-property-name-face)
       (role_entry key: (identifier) @font-lock-property-name-face)
@@ -239,8 +238,8 @@ The canonical format (`litigate fmt', SPEC §10) uses two."
     "role_map" "rule_body" "counting_body" "service_map" "short_period"
     "calendar_body" "transition_body" "test_body" "source_body"
     "parties_block" "events_block" "facts_block" "stakes_block"
-    "beliefs_block" "count_map" "num_record" "money_record" "json_record"
-    "json_list" "id_list" "import_list" "record_expression"
+    "beliefs_block" "count_map" "num_record" "money_record"
+    "id_list" "import_list" "record_expression"
     "list_expression" "arguments" "match_expression")
   "Node types whose contents indent one level (`@indent.begin').")
 

@@ -69,7 +69,7 @@ const CASE: [(&str, &str, &str, &str); 15] = [
     ("facts", "Resolved fact nodes: node to its edge.", "facts { time-barred: not-barred }", "scenario.facts"),
     ("stakes", "Terminal values; every reachable terminal needs one (L4004).", "stakes { judgment-entered: -2_000_000.usd, dismissed: 0.usd }", "scenario.payoffs"),
     ("beliefs", "Observed outcome counts at chance nodes.", "beliefs { observe mtd-ruling: { granted: 3, denied: 1 } }", "scenario.observe"),
-    ("analysis", "Any other litgraph Scenario field, as JSON.", "analysis { params: { rate: 650, opp_rate: 550 } }", "scenario.<field>"),
+    ("analysis", "The engine's Scenario fields with no block of their own, each typed: params (numbers), metrics/utilities/cost/utility/mask/probability_fn/opponent_objective (engine expression strings), calibration, discount_annual, remove_edges (EdgeRefs), and the engine options mixed, opponent, prob_fill, objective, fee_shift, uncertainty.", "analysis { params: { rate: 650, opp_rate: 550 } }", "scenario.<field>"),
     ("start", "An asserted start (legacy imports); must agree with replay (L4008).", "start demo-rules::mtd-ruling", "scenario.start"),
 ];
 

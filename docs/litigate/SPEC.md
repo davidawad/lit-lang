@@ -248,9 +248,6 @@ Ref          = Ident, [ "@", Ident ], { ("::" | "."), Ident }, [ "@", Date ] ;
 IdList       = "[", [ Ref, { ",", Ref }, [","] ], "]" ;
 NumRecord    = "{", { Ident, ":", SignedNumber, Sep }, "}" ;
 MoneyRecord  = "{", { Ident, ":", SignedMoney, Sep }, "}" ;
-JsonRecord   = "{", { (Ident | String), ":", JsonValue, Sep }, "}" ;
-JsonValue    = SignedNumber | String | Bool | "unset" | JsonRecord
-             | "[", [ JsonValue, { ",", JsonValue }, [","] ], "]" ;
 SignedNumber = [ "-" ], Number ;   SignedMoney = [ "-" ], Money ;
 Bool         = "true" | "false" ;
 Hole         = "?", [ "(", String, ")" ] ;
@@ -280,7 +277,7 @@ FactsBlock   = "facts", "{", { Ref, ":", Ref, Sep }, "}" ;
 StakesBlock  = "stakes", "{", { Ref, ":", (SignedMoney | "unvalued"), Sep }, "}" ;
 BeliefsBlock = "beliefs", "{", { "observe", Ref, ":", "{", { Ref, ":", Number, Sep },
                "}", Sep }, "}" ;
-AnalysisBlock= "analysis", JsonRecord ;
+AnalysisBlock= "analysis", RecordExpr ;
 ```
 
 A `SemVer` is `MAJOR.MINOR.PATCH[-pre]` built from adjacent `Number`, `.`,
@@ -1320,22 +1317,38 @@ loader (`ClockLibrary::from_json`), so an invalid one is L6001.
 | `facts` | `scenario.facts` qualified node to qualified edge |
 | `stakes` | `scenario.payoffs` qualified terminal to major-unit number |
 | `beliefs` | `scenario.observe` qualified node to `{qualified edge: count}` |
-| `Case.removals` (§5.6) | `scenario.remove_edges`: any `analysis.remove_edges` entries in order, then each removed edge not already listed; the source map has one entry per removed edge (`/scenario/remove_edges/i`) with the removing event's span and its cite located in L0 under the edge's package. A non-list `analysis.remove_edges` is left for litgraph to reject (L4007) |
-| `analysis { f: v }` | `scenario.f` = JSON of `v` (numbers exact to binary64; `unset` = JSON null) |
+| `Case.removals` (§5.6) | `scenario.remove_edges`: any `analysis.remove_edges` entries in order, then each removed edge not already listed; the source map has one entry per removed edge (`/scenario/remove_edges/i`) with the removing event's span and its cite located in L0 under the edge's package |
+| `analysis { f: v }` | `scenario.f` = `v` as the engine reads it (numbers exact to binary64, edges qualified `pack::edge`) |
 | (derived) | `NamedScenario.schema_version` = 2 |
 | `as_of`, `known_at`, the `uses` closure | `lowered` (§8.1): `asOf`, `knownAt`, `pins`, `worldDigest` |
 | parties | `parties[] {id, actor, entity_type}` in declared order |
 | events | `events[] {date, docket, action, relation, party, authority}` in docket order (§5.6: by date, then docket number, never source order), `docket` the `docket N` number when written; `action` is the typed call spelled compactly (`Served(complaint, Mail)`), `relation` `by`/`on`. Record only: replay already derived `scenario.start` and `scenario.remove_edges` from them |
 | `unvalued` stakes, source `as_of ?(..)` | `lowered.holes` (`/scenario/payoffs/<terminal>`, `/sources/<i>/as_of`) |
 
-`analysis` may contain any `Scenario` field except `start`, `perspective`,
-`facts`, `payoffs`, and `observe`, which have dedicated blocks (L4007). The
-lowerer assembles the object and deserializes it into
-`litgraph::scenario::Scenario` (`deny_unknown_fields`). A serde error is
-L4007 with the serde message as a note. Expression-valued fields (`mask`,
-`probability_fn`, `opponent_objective`, `metrics`, `utilities`, `cost`,
-`utility`) are parsed with litgraph's expression parser at lowering, and a
-parse error is L6003.
+`analysis` is a record of expressions, typed field by field. Its fields
+are a closed set; any other key is L4007 (with the nearest field as a
+fix), and so is a field given twice:
+
+| Field | Type |
+|---|---|
+| `params` | record of exact numbers, `{ rate: 650, floor: -1.5 }` (dimensionless: units for engine parameters are later work) |
+| `metrics`, `utilities` | record of engine expressions, each a string |
+| `cost`, `utility`, `mask`, `probability_fn`, `opponent_objective` | an engine expression, a string |
+| `calibration` | list of strings |
+| `discount_annual` | exact number |
+| `remove_edges` | list of `EdgeRef`: `[e-x, cafc::e-y]`, resolved as a `removes` argument is (§5.6; L1002, L2001) |
+| `mixed`, `opponent`, `prob_fill`, `objective`, `fee_shift`, `uncertainty` | engine options: numbers, strings, booleans, records and lists |
+
+A value of the wrong shape is L4007 at the value. `start`, `perspective`,
+`facts`, `payoffs`, and `observe` have dedicated blocks (L4007).
+`probabilities` and `policy` would name engine nodes and edges by string,
+so a matter does not write them (L4007): it states what it knows with
+`facts` and `beliefs`. An engine option's type is the engine's own:
+the lowerer checks each option alone against `litgraph::scenario::Scenario`
+(`deny_unknown_fields`), and a serde error is L4007 at the option, with
+the serde message as a note. Engine expressions are parsed with litgraph's
+expression parser at lowering, and a parse error is L6003 at the
+expression.
 
 ### 8.4 Links package to `LinkFile`
 
@@ -1883,7 +1896,7 @@ gets one row per condition when the conditions classify differently.
 | C51 | L4004 reachable terminal without a stake or `unvalued` (§5.6) | sema, verify | c | Reachability from the replayed start. `unvalued` being an error in `strict` is a profile rule (§7), not a type. |
 | C52 | L4005 unknown party actor, duplicate party id, unknown perspective party or actor (§5.6) | sema, lower | a | `Actor` is the closed enum of the primary package's actors; `parties` is a map; `perspective` takes a party id or a map over `Actor`. |
 | C53 | L4006 belief not on a chance node or edge not its own (§5.6) | sema | b | As C50 with `n : Node<Chance>`. |
-| C54 | L4007 analysis field unknown, duplicated by a dedicated block, or ill-shaped (§8.3) | sema, lower | a | Type the `analysis` record against litgraph `Scenario` minus the dedicated fields (today serde at lowering does it). |
+| C54 | L4007 analysis field unknown, given twice, duplicated by a dedicated block, untyped, or ill-shaped; an engine option the engine rejects (§8.3) | sema, lower | a | Sema types each field of the closed set (§8.3); an engine option is checked alone against the engine's own schema at lowering, at its span. |
 | C55 | L4008 explicit `start` disagrees with the replayed node (§5.6) | sema | c | Depends on the replay result (C48, C49). |
 | C56 | L5001 verification failed (generic) | none | n/a | Registered, never emitted. Kept so codes are never reused (§9.1). |
 | C57 | L5002 hole under `strict` (§7) | verify | a | `strict` types fields without the `Hole<T>` inhabitant (O14). |

@@ -5,6 +5,7 @@
 //! References resolve in the primary package unless qualified `pack::x`.
 //! Any syntax or resolution error leaves the case unresolved (`None`):
 //! replaying a partly understood history would report noise.
+pub mod analysis;
 mod blocks;
 
 use super::event::{self, ToSpan};

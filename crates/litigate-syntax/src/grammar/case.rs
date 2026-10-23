@@ -1,8 +1,6 @@
 //! `.case` files (SPEC §3.2): items in a fixed order.
 use super::fields::{field_list, stake_value, SOURCE_FIELDS};
-use super::values::{
-    call, cite, date, json_record, number, record, reference, require, string, Key,
-};
+use super::values::{call, cite, date, number, record, reference, require, string, Key};
 use super::{delimited, Sep};
 use crate::error::SyntaxError;
 use crate::parser::{Parser, CASE_ITEM_KEYWORDS};
@@ -133,7 +131,7 @@ fn case_item(p: &mut Parser<'_>, kw: SyntaxKind, kind: SyntaxKind) {
         }
         KwBeliefs => block(p, Sep::Optional, &mut observe),
         _ => {
-            require(p, json_record, &[LBrace]);
+            require(p, |p| record(p, Key::Ident, super::expr::expr), &[LBrace]);
         }
     }
     p.finish();

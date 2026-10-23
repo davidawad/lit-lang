@@ -92,6 +92,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (`1_000_000.usd - payoff`). Sema checks it (L1002, L2001, L2002, and
   L2007 for an unread `stake`), and lowering writes the engine's
   expression text.
+  A `.case` `analysis` block is a record of expressions typed field by
+  field instead of a JSON passthrough (SPEC §8.3): a closed set of fields
+  (an unknown one is L4007 with the nearest as a fix), `params` exact
+  numbers, engine expressions as strings, `remove_edges` unquoted
+  `EdgeRef`s, and the engine options checked alone against the engine's
+  schema at their own span. `probabilities` and `policy` are no longer
+  accepted, quoted keys and `unset` are gone with the `JsonRecord` syntax,
+  and `unset` is no longer a keyword.
 
 ### Fixed
 

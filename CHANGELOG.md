@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Actor, max N.days [, after_expiry] }` and `waive { by Actor }`
   capabilities; an event type declares `extends d to p` or `waives d`. A
   cited event of such a type, by the capability's actor and within its
-  bound, moves or releases one instance. This restores court-ordered
+  bound, moves or releases every open instance of the deadline. This restores court-ordered
   extensions, which v0.4 scored as missed deadlines after excusal was made
   fail-closed, without the *Bowles* defect: a limit with no `extend`
   capability admits no extension, and an order beyond the bound is rejected.

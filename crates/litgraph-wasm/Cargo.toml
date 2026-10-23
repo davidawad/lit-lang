@@ -21,6 +21,11 @@ crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 litgraph = { path = "../litgraph", default-features = false }
+# `litigate check`/`build` over an in-memory file tree. It enables
+# litgraph's `embed-sources`: cite verification needs the source corpus to
+# match the native CLI.
+litigate-cli = { path = "../litigate-cli" }
+litigate-sema = { path = "../litigate-sema" }
 serde.workspace = true
 serde_json.workspace = true
 # Pinned to the wasm-bindgen-cli in nixpkgs (the flake's dev shell); the CLI

@@ -1,7 +1,8 @@
-//! Reads package trees from disk: the root packages, their `path`
-//! dependencies (transitively), and the `core` stdlib when configured. This
-//! is the only module in sema that touches the filesystem.
+//! Reads package trees from a [`Source`] (the disk by default): the root
+//! packages, their `path` dependencies (transitively), and the `core`
+//! stdlib when configured.
 use super::manifest::parse_manifest;
+use super::source::{Disk, Source};
 use std::collections::BTreeSet;
 use std::io;
 use std::path::{Component, Path, PathBuf};
@@ -47,49 +48,61 @@ pub fn relative_to(repo_root: &Path, path: &Path) -> String {
     }
 }
 
-fn read_lossy(path: &Path) -> io::Result<String> {
-    std::fs::read(path).map(|bytes| String::from_utf8_lossy(&bytes).into_owned())
+fn read_lossy(src: &dyn Source, path: &Path) -> io::Result<String> {
+    src.read(path)
+        .map(|bytes| String::from_utf8_lossy(&bytes).into_owned())
 }
 
 /// Collects `.lit` files under `dir`, skipping hidden directories and
 /// nested packages (directories with their own `Lit.toml`).
-fn collect(dir: &Path, base: &Path, out: &mut Vec<LoadedFile>) -> io::Result<()> {
-    let mut entries: Vec<PathBuf> = std::fs::read_dir(dir)
-        .and_then(|entries| entries.map(|e| e.map(|e| e.path())).collect())?;
+fn collect(src: &dyn Source, dir: &Path, base: &Path, out: &mut Vec<LoadedFile>) -> io::Result<()> {
+    let mut entries: Vec<PathBuf> = src.entries(dir)?;
     entries.sort();
     for path in entries {
         let name = path
             .file_name()
             .map(|n| n.to_string_lossy().into_owned())
             .unwrap_or_default();
-        if path.is_dir() {
-            if !name.starts_with('.') && !path.join("Lit.toml").exists() {
-                collect(&path, base, out)?;
+        if src.is_dir(&path) {
+            if !name.starts_with('.') && !src.exists(&path.join("Lit.toml")) {
+                collect(src, &path, base, out)?;
             }
         } else if path.extension().is_some_and(|e| e == "lit") {
             out.push(LoadedFile {
                 relative: relative_to(base, &path),
-                text: read_lossy(&path)?,
+                text: read_lossy(src, &path)?,
             });
         }
     }
     Ok(())
 }
 
-/// Loads one package directory.
+/// Loads one package directory from disk.
 ///
 /// # Errors
 /// I/O errors reading `Lit.toml` or sources.
 pub fn load_package(repo_root: &Path, dir: &Path) -> io::Result<LoadedPackage> {
-    let manifest = read_lossy(&dir.join("Lit.toml"))?;
+    load_package_in(&Disk, repo_root, dir)
+}
+
+/// Loads one package directory from `src`.
+///
+/// # Errors
+/// I/O errors reading `Lit.toml` or sources.
+pub fn load_package_in(
+    src: &dyn Source,
+    repo_root: &Path,
+    dir: &Path,
+) -> io::Result<LoadedPackage> {
+    let manifest = read_lossy(src, &dir.join("Lit.toml"))?;
     let lock_path = dir.join("Lit.lock");
-    let lock = if lock_path.exists() {
-        Some(read_lossy(&lock_path)?)
+    let lock = if src.exists(&lock_path) {
+        Some(read_lossy(src, &lock_path)?)
     } else {
         None
     };
     let mut files = Vec::new();
-    collect(dir, dir, &mut files)?;
+    collect(src, dir, dir, &mut files)?;
     files.sort_by(|a, b| a.relative.cmp(&b.relative));
     Ok(LoadedPackage {
         root: relative_to(repo_root, dir),
@@ -100,13 +113,26 @@ pub fn load_package(repo_root: &Path, dir: &Path) -> io::Result<LoadedPackage> {
 }
 
 /// Loads `roots`, every `path` dependency reachable from them, and the
-/// stdlib directory when given. Each directory is loaded once; the result
-/// keeps discovery order (roots first).
+/// stdlib directory when given, from disk. Each directory is loaded once;
+/// the result keeps discovery order (roots first).
 ///
 /// # Errors
 /// I/O errors; a dependency path that does not exist is left for sema to
 /// report as L1006.
 pub fn load_tree(
+    repo_root: &Path,
+    roots: &[PathBuf],
+    stdlib: Option<&Path>,
+) -> io::Result<Vec<LoadedPackage>> {
+    load_tree_in(&Disk, repo_root, roots, stdlib)
+}
+
+/// [`load_tree`] from `src`.
+///
+/// # Errors
+/// As [`load_tree`].
+pub fn load_tree_in(
+    src: &dyn Source,
     repo_root: &Path,
     roots: &[PathBuf],
     stdlib: Option<&Path>,
@@ -118,11 +144,11 @@ pub fn load_tree(
     let mut i = 0;
     while let Some(dir) = queue.get(i).cloned() {
         i += 1;
-        let key = dir.canonicalize().unwrap_or_else(|_| dir.clone());
-        if !seen.insert(key) || !dir.join("Lit.toml").is_file() {
+        let key = src.canonicalize(&dir).unwrap_or_else(|_| dir.clone());
+        if !seen.insert(key) || !src.is_file(&dir.join("Lit.toml")) {
             continue;
         }
-        let pkg = load_package(repo_root, &dir)?;
+        let pkg = load_package_in(src, repo_root, &dir)?;
         if let Ok(parsed) = parse_manifest(&pkg.manifest) {
             queue.extend(parsed.dependency_paths.values().map(|p| dir.join(p)));
         }
@@ -157,6 +183,55 @@ mod tests {
                 vec!["rule12.lit".to_owned()],
                 false
             )]
+        );
+    }
+
+    #[test]
+    fn loads_from_memory() {
+        use crate::pkg::source::MemoryTree;
+        let example = include_str!("../../../../lit/examples/Lit.toml");
+        let manifest = |name: &str, deps: &str| {
+            let text = example.replace("\"frcp-rule12-example\"", &format!("\"{name}\""));
+            format!("{text}\n[dependencies]\n{deps}")
+        };
+        let tree = MemoryTree::new([
+            (
+                "app/Lit.toml",
+                manifest(
+                    "app",
+                    "dep = { version = \"^1.0.0\", path = \"../dep\" }\nghost = { version = \"^1.0.0\", path = \"../ghost\" }\n",
+                ),
+            ),
+            ("app/Lit.lock", "version = 1\n".to_owned()),
+            ("app/b.lit", "b".to_owned()),
+            ("app/sub/a.lit", "a".to_owned()),
+            ("app/sub/notes.txt", String::new()),
+            ("app/.hidden/h.lit", String::new()),
+            ("app/nested/Lit.toml", manifest("nested", "")),
+            ("dep/Lit.toml", manifest("dep", "")),
+        ]);
+        let pkgs =
+            load_tree_in(&tree, Path::new("/"), &[PathBuf::from("/app")], None).unwrap_or_default();
+        let summary: Vec<(String, Vec<String>, bool)> = pkgs
+            .into_iter()
+            .map(|p| {
+                (
+                    p.root,
+                    p.files.into_iter().map(|f| f.relative).collect(),
+                    p.lock.is_some(),
+                )
+            })
+            .collect();
+        assert_eq!(
+            summary,
+            [
+                (
+                    "app".to_owned(),
+                    vec!["b.lit".to_owned(), "sub/a.lit".to_owned()],
+                    true
+                ),
+                ("app/../dep".to_owned(), vec![], false),
+            ]
         );
     }
 

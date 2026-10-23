@@ -32,15 +32,16 @@ pub mod verdict;
 pub mod ws;
 
 pub use cmd::check::{check_session, Checked};
+pub use litigate_base::LitigateRun;
 
 use clap::Parser;
 use cli::{Cli, Format};
-use out::Printed;
+use litigate_sema::pkg::source::{Disk, MemoryTree, Source};
+use out::{Failure, Printed};
 use std::ffi::OsString;
 use std::io::{IsTerminal, Write};
 use std::path::{Path, PathBuf};
 use std::process::{Command, ExitCode};
-use std::time::Instant;
 
 /// Parses `args` (including the program name), runs the command, and
 /// returns what to print. Never panics on bad input.
@@ -52,9 +53,54 @@ where
     execute_on(args, std::io::stdout().is_terminal())
 }
 
+/// The commands [`execute_in`] runs: the ones that only read their inputs
+/// and write build outputs, both through the source.
+pub const IN_MEMORY_COMMANDS: [&str; 2] = ["check", "build"];
+
+/// [`execute`] over `src` instead of the disk, for hosts with no
+/// filesystem (WebAssembly): paths resolve in `src`, `build` writes into
+/// it, and output is never a terminal's. Only [`IN_MEMORY_COMMANDS`] run;
+/// any other command is a usage failure (exit 1).
+pub fn execute_in<I, T>(src: &dyn Source, args: I) -> Printed
+where
+    I: IntoIterator<Item = T>,
+    T: Into<OsString> + Clone,
+{
+    execute_with(args, false, src, true)
+}
+
+/// [`execute_in`] over a [`MemoryTree`] of `(path, text)` files; `args`
+/// leave out the program name. The run carries what `build` wrote.
+pub fn execute_in_memory(
+    files: impl IntoIterator<Item = (String, String)>,
+    args: &[String],
+) -> LitigateRun {
+    let tree = MemoryTree::new(files);
+    let printed = execute_in(
+        &tree,
+        std::iter::once("litigate").chain(args.iter().map(String::as_str)),
+    );
+    LitigateRun {
+        code: printed.code,
+        stdout: printed.stdout,
+        stderr: printed.stderr,
+        files: tree.written(),
+    }
+}
+
 /// [`execute`] for a standard output that is (`tty`) or is not a
 /// terminal: a terminal defaults to colored human output.
 fn execute_on<I, T>(args: I, tty: bool) -> Printed
+where
+    I: IntoIterator<Item = T>,
+    T: Into<OsString> + Clone,
+{
+    execute_with(args, tty, &Disk, false)
+}
+
+/// Parses and runs `args` over `src`; `in_memory` limits the commands to
+/// [`IN_MEMORY_COMMANDS`].
+fn execute_with<I, T>(args: I, tty: bool, src: &dyn Source, in_memory: bool) -> Printed
 where
     I: IntoIterator<Item = T>,
     T: Into<OsString> + Clone,
@@ -86,10 +132,42 @@ where
         .format
         .unwrap_or(if tty { Format::Human } else { Format::Json });
     let op = cli.command.name();
-    let started = Instant::now();
-    let outcome = cmd::dispatch(cli.command);
-    let elapsed_ms = started.elapsed().as_secs_f64() * 1000.0;
-    out::print(op, outcome, format, tty, elapsed_ms)
+    if in_memory && !IN_MEMORY_COMMANDS.contains(&op) {
+        let message = format!(
+            "only {} run over an in-memory source",
+            IN_MEMORY_COMMANDS.join(" and ")
+        );
+        return out::print(op, Err(Failure::new(message)), format, tty, 0.0);
+    }
+    let started = Stopwatch::start();
+    let outcome = cmd::dispatch(cli.command, src);
+    out::print(op, outcome, format, tty, started.elapsed_ms())
+}
+
+/// Wall-clock timing. `std::time::Instant` panics on
+/// `wasm32-unknown-unknown` (no clock), so there it reports 0.
+struct Stopwatch(
+    #[cfg(not(all(target_arch = "wasm32", target_os = "unknown")))] std::time::Instant,
+);
+
+impl Stopwatch {
+    fn start() -> Self {
+        Self(
+            #[cfg(not(all(target_arch = "wasm32", target_os = "unknown")))]
+            std::time::Instant::now(),
+        )
+    }
+
+    #[cfg(not(all(target_arch = "wasm32", target_os = "unknown")))]
+    fn elapsed_ms(&self) -> f64 {
+        self.0.elapsed().as_secs_f64() * 1000.0
+    }
+
+    #[cfg(all(target_arch = "wasm32", target_os = "unknown"))]
+    #[allow(clippy::unused_self)] // no clock on this target
+    fn elapsed_ms(&self) -> f64 {
+        0.0
+    }
 }
 
 /// The binary's `main`: [`execute`], print, exit.

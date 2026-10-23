@@ -2,6 +2,7 @@
 use crate::Diagnostic;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
+use std::collections::BTreeMap;
 
 /// Compiler checking profile.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
@@ -29,6 +30,20 @@ pub struct Envelope<T> {
     pub provenance: serde_json::Value,
     /// Wall time in milliseconds.
     pub elapsed_ms: f64,
+}
+
+/// One `litigate` invocation over an in-memory file tree (litgraph-wasm's
+/// `litigate`): what the CLI prints and exits with, and the files it wrote.
+#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+pub struct LitigateRun {
+    /// Exit code: 0 ok, 2 an error diagnostic, 1 usage or I/O.
+    pub code: u8,
+    /// Standard output: the envelope (JSON, one line) or its human rendering.
+    pub stdout: String,
+    /// Standard error: a usage or I/O failure.
+    pub stderr: String,
+    /// Files written (`build`'s outputs), by normalized path.
+    pub files: BTreeMap<String, String>,
 }
 
 impl<T> Envelope<T> {

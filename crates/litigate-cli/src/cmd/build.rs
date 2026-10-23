@@ -5,12 +5,13 @@
 //! `scenarios/<id>.json`), so `diff OUT/packs packs` is the migration check.
 //! `--pack-file ID=STEM` renames a pack's files to `packs/STEM.json`, which
 //! `just lit-sync` uses to keep the repository's legacy file names.
-use super::check::{checked, Checked};
+use super::check::{checked_in, Checked};
 use crate::cli::Dates;
 use crate::out::{Failure, Outcome, Report};
 use litigate_base::{Diagnostic, Profile, Severity};
 use litigate_lower::{render, render_scenario, Document, LoweredPackage, Lowerer, Options};
 use litigate_sema::pkg::manifest::is_kebab;
+use litigate_sema::pkg::source::{Disk, Source};
 use serde::Serialize;
 use serde_json::{json, Value};
 use sha2::{Digest, Sha256};
@@ -18,18 +19,20 @@ use std::collections::BTreeMap;
 use std::fmt::Write as _;
 use std::path::Path;
 
-/// Writes `text` to `path` atomically (temp file, then rename).
+/// Writes `text` to `path` on disk atomically (temp file, then rename).
 ///
 /// # Errors
 /// I/O failures.
 pub fn write_atomic(path: &Path, text: &str) -> Result<(), Failure> {
-    if let Some(dir) = path.parent().filter(|d| !d.as_os_str().is_empty()) {
-        std::fs::create_dir_all(dir)
-            .map_err(|e| Failure::new(format!("{}: {e}", dir.display())))?;
-    }
-    let tmp = path.with_extension("litigate-tmp");
-    std::fs::write(&tmp, text).map_err(|e| Failure::new(format!("{}: {e}", tmp.display())))?;
-    std::fs::rename(&tmp, path).map_err(|e| Failure::new(format!("{}: {e}", path.display())))
+    write_atomic_in(&Disk, path, text)
+}
+
+/// [`write_atomic`] in `src`.
+///
+/// # Errors
+/// I/O failures, naming the failing path.
+pub fn write_atomic_in(src: &dyn Source, path: &Path, text: &str) -> Result<(), Failure> {
+    Ok(src.write_atomic(path, text)?)
 }
 
 /// `sha256:<hex>` of `bytes`.
@@ -248,8 +251,8 @@ pub fn rename_packs(
     }
 }
 
-/// `litigate build`.
-pub fn build(args: &Args) -> Outcome {
+/// `litigate build` from and into `src`.
+pub fn build(src: &dyn Source, args: &Args) -> Outcome {
     let Args {
         paths,
         out,
@@ -260,7 +263,7 @@ pub fn build(args: &Args) -> Outcome {
     } = args;
     let (out, profile) = (out.as_str(), *profile);
     let stems = pack_file_map(pack_files)?;
-    let c = checked(paths, profile, dates.as_of.as_deref(), lib)?;
+    let c = checked_in(src, paths, profile, dates.as_of.as_deref(), lib)?;
     let options = Options {
         as_of: dates.as_of.clone(),
         known_at: dates.known_at.clone(),
@@ -284,7 +287,7 @@ pub fn build(args: &Args) -> Outcome {
     }
     built.files = rename_packs(built.files, &stems)?;
     for (path, text) in &built.files {
-        write_atomic(&Path::new(out).join(path), text)?;
+        write_atomic_in(src, &Path::new(out).join(path), text)?;
     }
     let shown = |p: &str| format!("{}/{p}", out.trim_end_matches('/'));
     let kind = |f: &dyn Fn(&str) -> bool| -> Vec<String> {

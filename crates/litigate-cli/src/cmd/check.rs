@@ -7,6 +7,7 @@ use crate::verdict::{self, Verdict};
 use crate::ws::{self, Session};
 use litigate_base::{Diagnostic, Profile};
 use litigate_lower::{EngineClock, Lowerer, Options};
+use litigate_sema::pkg::source::{Disk, Source};
 use litigate_verify::Finding;
 use serde_json::{json, Value};
 
@@ -36,8 +37,26 @@ pub fn checked(
     as_of: Option<&str>,
     lib: &[String],
 ) -> Result<Checked, Failure> {
-    let targets = ws::discover(paths)?;
-    Ok(check_session(Session::load(&targets, lib)?, profile, as_of))
+    checked_in(&Disk, paths, profile, as_of, lib)
+}
+
+/// [`checked`] from `src`.
+///
+/// # Errors
+/// Usage or I/O failures.
+pub fn checked_in(
+    src: &dyn Source,
+    paths: &[String],
+    profile: Profile,
+    as_of: Option<&str>,
+    lib: &[String],
+) -> Result<Checked, Failure> {
+    let targets = ws::discover_in(src, paths)?;
+    Ok(check_session(
+        Session::load_in(src, &targets, lib)?,
+        profile,
+        as_of,
+    ))
 }
 
 /// Loads and checks `targets`.
@@ -148,9 +167,15 @@ impl Checked {
     }
 }
 
-/// `litigate check`.
-pub fn check(paths: &[String], profile: Profile, dates: &Dates, lib: &[String]) -> Outcome {
-    let c = checked(paths, profile, dates.as_of.as_deref(), lib)?;
+/// `litigate check` over `src`.
+pub fn check(
+    src: &dyn Source,
+    paths: &[String],
+    profile: Profile,
+    dates: &Dates,
+    lib: &[String],
+) -> Outcome {
+    let c = checked_in(src, paths, profile, dates.as_of.as_deref(), lib)?;
     let profile_name = match profile {
         Profile::Dev => "dev",
         Profile::Strict => "strict",

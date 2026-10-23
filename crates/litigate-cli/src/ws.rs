@@ -1,12 +1,14 @@
 //! Finding and loading inputs: package directories, `.case` matters, and
 //! the library packages a matter `uses`. Paths are repository-relative to
 //! the working directory, so outputs carry no absolute paths (DESIGN §8).
+//! Each `*_in` function reads a [`Source`]; its plain twin reads the disk.
 use crate::out::Failure;
 use litigate_sema::db::inputs::{PackageInput, Workspace};
 use litigate_sema::hir;
 use litigate_sema::pkg::load::{relative_to, LoadedPackage};
 use litigate_sema::pkg::lock::LockFile;
 use litigate_sema::pkg::manifest::parse_manifest;
+use litigate_sema::pkg::source::{Disk, Source};
 use litigate_sema::types::build::expected_lock;
 use litigate_sema::{LitDatabase, PackageCheck};
 use std::collections::BTreeSet;
@@ -27,24 +29,20 @@ fn skipped(name: &str) -> bool {
     name.starts_with('.') || name == "target"
 }
 
-fn walk(dir: &Path, out: &mut Targets) -> std::io::Result<()> {
-    if dir.join("Lit.toml").is_file() {
+fn walk(src: &dyn Source, dir: &Path, out: &mut Targets) -> std::io::Result<()> {
+    if src.is_file(&dir.join("Lit.toml")) {
         out.packages.push(dir.to_path_buf());
     }
-    let mut entries: Vec<PathBuf> = std::fs::read_dir(dir).and_then(|listing| {
-        listing
-            .map(|e| e.map(|e| e.path()))
-            .collect::<std::io::Result<_>>()
-    })?;
+    let mut entries: Vec<PathBuf> = src.entries(dir)?;
     entries.sort();
     for path in entries {
         let name = path
             .file_name()
             .map(|n| n.to_string_lossy().into_owned())
             .unwrap_or_default();
-        if path.is_dir() {
+        if src.is_dir(&path) {
             if !skipped(&name) {
-                walk(&path, out)?;
+                walk(src, &path, out)?;
             }
         } else {
             match path.extension().and_then(|e| e.to_str()) {
@@ -61,10 +59,10 @@ fn walk(dir: &Path, out: &mut Targets) -> std::io::Result<()> {
 }
 
 /// The nearest directory at or above `file` holding `Lit.toml`.
-fn package_of(file: &Path) -> Option<PathBuf> {
+fn package_of(src: &dyn Source, file: &Path) -> Option<PathBuf> {
     file.ancestors()
         .skip(1)
-        .find(|dir| dir.join("Lit.toml").is_file())
+        .find(|dir| src.is_file(&dir.join("Lit.toml")))
         .map(Path::to_path_buf)
 }
 
@@ -74,14 +72,22 @@ fn package_of(file: &Path) -> Option<PathBuf> {
 /// A path that does not exist, or a file that is not `.lit`, `.case`, or
 /// `Lit.toml`, or a `.lit` file outside any package.
 pub fn discover(paths: &[String]) -> Result<Targets, Failure> {
+    discover_in(&Disk, paths)
+}
+
+/// [`discover`] in `src`.
+///
+/// # Errors
+/// As [`discover`].
+pub fn discover_in(src: &dyn Source, paths: &[String]) -> Result<Targets, Failure> {
     let mut out = Targets::default();
     for raw in paths {
         let path = PathBuf::from(raw);
-        if path.is_dir() {
-            walk(&path, &mut out)?;
+        if src.is_dir(&path) {
+            walk(src, &path, &mut out)?;
             continue;
         }
-        if !path.is_file() {
+        if !src.is_file(&path) {
             return Err(Failure::new(format!("{raw}: no such file or directory")));
         }
         let name = path
@@ -94,7 +100,7 @@ pub fn discover(paths: &[String]) -> Result<Targets, Failure> {
                 out.files.push(path);
             }
             Some("lit") => {
-                let dir = package_of(&path).ok_or_else(|| {
+                let dir = package_of(src, &path).ok_or_else(|| {
                     Failure::new(format!(
                         "{raw}: not inside a package (no Lit.toml above it)"
                     ))
@@ -124,9 +130,15 @@ pub fn discover(paths: &[String]) -> Result<Targets, Failure> {
 /// The library directories: `--lib` values, else `lit` when it exists.
 #[must_use]
 pub fn library_dirs(lib: &[String]) -> Vec<PathBuf> {
+    library_dirs_in(&Disk, lib)
+}
+
+/// [`library_dirs`] in `src`.
+#[must_use]
+pub fn library_dirs_in(src: &dyn Source, lib: &[String]) -> Vec<PathBuf> {
     if lib.is_empty() {
         let default = PathBuf::from("lit");
-        return if default.is_dir() {
+        return if src.is_dir(&default) {
             vec![default]
         } else {
             Vec::new()
@@ -139,35 +151,47 @@ pub fn library_dirs(lib: &[String]) -> Vec<PathBuf> {
 /// above each matter, so `cases/x.case` finds its sibling `lit/`.
 #[must_use]
 pub fn library_for(lib: &[String], cases: &[PathBuf]) -> Vec<PathBuf> {
-    let mut dirs = library_dirs(lib);
+    library_for_in(&Disk, lib, cases)
+}
+
+/// [`library_for`] in `src`.
+#[must_use]
+pub fn library_for_in(src: &dyn Source, lib: &[String], cases: &[PathBuf]) -> Vec<PathBuf> {
+    let mut dirs = library_dirs_in(src, lib);
     if lib.is_empty() {
         dirs.extend(cases.iter().filter_map(|case| {
-            let absolute = case.canonicalize().ok()?;
+            let absolute = src.canonicalize(case).ok()?;
             absolute
                 .ancestors()
                 .skip(1)
                 .map(|a| a.join("lit"))
-                .find(|l| l.is_dir())
+                .find(|l| src.is_dir(l))
         }));
     }
     let mut seen = BTreeSet::new();
-    dirs.retain(|d| seen.insert(d.canonicalize().unwrap_or_else(|_| d.clone())));
+    dirs.retain(|d| seen.insert(src.canonicalize(d).unwrap_or_else(|_| d.clone())));
     dirs
 }
 
 /// Every package directory under `dirs` with its manifest name.
 #[must_use]
 pub fn library(dirs: &[PathBuf]) -> Vec<(String, PathBuf)> {
+    library_in(&Disk, dirs)
+}
+
+/// [`library`] in `src`.
+#[must_use]
+pub fn library_in(src: &dyn Source, dirs: &[PathBuf]) -> Vec<(String, PathBuf)> {
     let mut found = Targets::default();
     for dir in dirs {
         // An unreadable library directory simply contributes no packages.
-        let _ = walk(dir, &mut found);
+        let _ = walk(src, dir, &mut found);
     }
     found
         .packages
         .into_iter()
         .filter_map(|dir| {
-            let text = std::fs::read_to_string(dir.join("Lit.toml")).ok()?;
+            let text = src.read_to_string(&dir.join("Lit.toml")).ok()?;
             let name = parse_manifest(&text).ok()?.manifest.name.clone();
             Some((name, dir))
         })
@@ -250,9 +274,15 @@ pub(crate) fn uses_of(text: &str) -> Vec<String> {
 /// Display path: repository-relative POSIX.
 #[must_use]
 pub fn shown(path: &Path) -> String {
-    let root = std::env::current_dir().unwrap_or_default();
-    let full = path.canonicalize().unwrap_or_else(|_| root.join(path));
-    let root = root.canonicalize().unwrap_or(root);
+    shown_in(&Disk, path)
+}
+
+/// [`shown`] in `src`.
+#[must_use]
+pub fn shown_in(src: &dyn Source, path: &Path) -> String {
+    let root = src.root().unwrap_or_default();
+    let full = src.canonicalize(path).unwrap_or_else(|_| root.join(path));
+    let root = src.canonicalize(&root).unwrap_or(root);
     if full.starts_with(&root) {
         relative_to(&root, &full)
     } else {
@@ -267,16 +297,25 @@ impl Session {
     /// # Errors
     /// I/O errors reading inputs.
     pub fn load(targets: &Targets, lib: &[String]) -> Result<Self, Failure> {
-        let root = std::env::current_dir()?;
+        Self::load_in(&Disk, targets, lib)
+    }
+
+    /// [`Session::load`] from `src`.
+    ///
+    /// # Errors
+    /// I/O errors reading inputs.
+    pub fn load_in(src: &dyn Source, targets: &Targets, lib: &[String]) -> Result<Self, Failure> {
+        let root = src.root()?;
         let cases = targets
             .cases
             .iter()
             .map(|p| {
                 Ok(CaseText {
-                    path: shown(p),
-                    text: std::fs::read_to_string(p)
+                    path: shown_in(src, p),
+                    text: src
+                        .read_to_string(p)
                         .map_err(|e| Failure::new(format!("{}: {e}", p.display())))?,
-                    lock: std::fs::read_to_string(p.with_file_name("Lit.lock")).ok(),
+                    lock: src.read_to_string(&p.with_file_name("Lit.lock")).ok(),
                 })
             })
             .collect::<Result<Vec<_>, Failure>>()?;
@@ -284,7 +323,7 @@ impl Session {
         let mut roots: Vec<PathBuf> = targets.packages.iter().map(|p| root.join(p)).collect();
         if !wanted.is_empty() {
             roots.extend(
-                library(&library_for(lib, &targets.cases))
+                library_in(src, &library_for_in(src, lib, &targets.cases))
                     .into_iter()
                     .filter(|(name, _)| wanted.contains(name))
                     .map(|(_, dir)| root.join(dir)),
@@ -295,7 +334,7 @@ impl Session {
             .iter()
             .map(|p| relative_to(&root, &root.join(p)))
             .collect();
-        let (db, ws) = litigate_sema::load(&root, &roots, None)?;
+        let (db, ws) = litigate_sema::load_in(src, &root, &roots, None)?;
         let packages = ws
             .packages(&db)
             .iter()

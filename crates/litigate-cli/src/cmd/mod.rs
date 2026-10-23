@@ -17,11 +17,13 @@ pub use explain::phase;
 
 use crate::cli::Command;
 use crate::out::Outcome;
+use litigate_sema::pkg::source::Source;
 
-/// Runs `command`.
+/// Runs `command`; `check` and `build` read (and write) `src`, every other
+/// command the disk.
 // One arm per subcommand, each only unpacking its arguments.
 #[allow(clippy::too_many_lines)]
-pub fn dispatch(command: Command) -> Outcome {
+pub fn dispatch(command: Command, src: &dyn Source) -> Outcome {
     match command {
         Command::Describe => Ok(crate::out::Report::of(crate::describe::describe())),
         Command::Lock { dir, locked } => lock::lock(dir.as_deref(), locked),
@@ -30,7 +32,7 @@ pub fn dispatch(command: Command) -> Outcome {
             profile,
             dates,
             library,
-        } => check::check(&paths, profile.into(), &dates, &library.lib),
+        } => check::check(src, &paths, profile.into(), &dates, &library.lib),
         Command::Build {
             paths,
             out,
@@ -38,14 +40,17 @@ pub fn dispatch(command: Command) -> Outcome {
             profile,
             dates,
             library,
-        } => build::build(&build::Args {
-            paths,
-            out,
-            pack_files,
-            profile: profile.into(),
-            dates,
-            lib: library.lib,
-        }),
+        } => build::build(
+            src,
+            &build::Args {
+                paths,
+                out,
+                pack_files,
+                profile: profile.into(),
+                dates,
+                lib: library.lib,
+            },
+        ),
         Command::Test {
             paths,
             filter,

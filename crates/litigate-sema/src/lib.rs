@@ -25,7 +25,20 @@ pub fn load(
     roots: &[PathBuf],
     stdlib: Option<&Path>,
 ) -> std::io::Result<(LitDatabase, Workspace)> {
-    let packages = pkg::load::load_tree(repo_root, roots, stdlib)?;
+    load_in(&pkg::source::Disk, repo_root, roots, stdlib)
+}
+
+/// [`load`] from `src`.
+///
+/// # Errors
+/// I/O errors reading package files.
+pub fn load_in(
+    src: &dyn pkg::source::Source,
+    repo_root: &Path,
+    roots: &[PathBuf],
+    stdlib: Option<&Path>,
+) -> std::io::Result<(LitDatabase, Workspace)> {
+    let packages = pkg::load::load_tree_in(src, repo_root, roots, stdlib)?;
     let mut db = LitDatabase::default();
     let ws = db::inputs::create_workspace(&mut db, &packages);
     Ok((db, ws))

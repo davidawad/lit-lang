@@ -6,5 +6,5 @@ mod line_index;
 
 pub use code::DiagnosticCode;
 pub use diagnostic::{Applicability, Diagnostic, Fix, Note, Severity, Span};
-pub use envelope::{Envelope, Profile};
+pub use envelope::{Envelope, LitigateRun, Profile};
 pub use line_index::{FileId, LineIndex};

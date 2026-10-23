@@ -4,6 +4,8 @@
 //! The contract is identical to the CLI and the Rust API: JSON strings in,
 //! JSON strings out, errors reported inside the response (`ok: false`), never
 //! thrown. Packs are embedded; pass your own with [`handle_with_packs`].
+//! [`litigate`] runs `litigate check`/`build` over an in-memory file tree,
+//! with the repository's `lit/` library embedded.
 //!
 //! ```js
 //! import init, { handle, describe } from "litgraph-wasm";
@@ -12,11 +14,15 @@
 //! const resp = JSON.parse(handle(JSON.stringify({ packs: [packId], op: { op: "solve" } })));
 //! ```
 
+use std::collections::BTreeMap;
 use std::sync::OnceLock;
 
 use litgraph::api::{self, Catalog};
+use litigate_cli::LitigateRun;
 use serde_json::{json, Value};
 use wasm_bindgen::prelude::wasm_bindgen;
+
+include!(concat!(env!("OUT_DIR"), "/embedded_library.rs"));
 
 fn catalog() -> Result<&'static Catalog, String> {
     static CATALOG: OnceLock<Result<Catalog, String>> = OnceLock::new();
@@ -90,6 +96,46 @@ pub fn schema(kind: &str) -> String {
     }
 }
 
+/// Runs the `litigate` CLI over an in-memory file tree and returns a
+/// `LitigateRun` (`{code, stdout, stderr, files}`) as JSON. `args_json` is
+/// the argument array without the program name (`["check", "lit", "cases"]`);
+/// only `check` and `build` run. `files_json` maps repository-relative paths
+/// to texts; with `with_library`, the embedded `lit/` library fills in every
+/// `lit/` path the caller does not give. `build --out DIR` writes into
+/// `files`, never to a disk. Output is JSON unless `--format human`.
+#[wasm_bindgen]
+#[must_use]
+pub fn litigate(args_json: &str, files_json: &str, with_library: bool) -> String {
+    let failed = |message: String| LitigateRun {
+        code: 1,
+        stderr: format!("litigate: {message}\n"),
+        ..LitigateRun::default()
+    };
+    let run = match (
+        serde_json::from_str::<Vec<String>>(args_json),
+        serde_json::from_str::<BTreeMap<String, String>>(files_json),
+    ) {
+        (Err(e), _) => failed(format!("args must be an array of strings: {e}")),
+        (_, Err(e)) => failed(format!("files must be an object of {{path: text}}: {e}")),
+        (Ok(args), Ok(files)) => {
+            let library = EMBEDDED_LIBRARY
+                .iter()
+                .filter(|_| with_library)
+                .map(|(path, text)| ((*path).to_owned(), (*text).to_owned()));
+            // The caller's files come last, so they win over the library's.
+            litigate_cli::execute_in_memory(library.chain(files), &args)
+        }
+    };
+    to_string(&run)
+}
+
+/// The embedded `lit/` library as a `{path: text}` JSON object.
+#[wasm_bindgen]
+#[must_use]
+pub fn litigate_library() -> String {
+    to_string(&EMBEDDED_LIBRARY.iter().copied().collect::<BTreeMap<_, _>>())
+}
+
 /// The machine-readable manual.
 #[wasm_bindgen]
 #[must_use]
@@ -119,6 +165,61 @@ mod tests {
             json!(true)
         );
         assert_eq!(parse(&validate("{", None))["ok"], json!(false));
+    }
+
+    fn run(args: &[&str], files: &Value, with_library: bool) -> LitigateRun {
+        let args = serde_json::to_string(args).unwrap_or_default();
+        serde_json::from_str(&litigate(&args, &files.to_string(), with_library)).unwrap_or_default()
+    }
+
+    #[test]
+    fn litigate_checks_and_builds_over_the_embedded_library() {
+        let case = include_str!("../../../cases/frcp-civil-case.case");
+        let lock = include_str!("../../../cases/Lit.lock");
+        let files = json!({ "cases/frcp-civil-case.case": case, "cases/Lit.lock": lock });
+        let checked = run(&["check", "cases"], &files, true);
+        assert_eq!((checked.code, checked.stderr.as_str()), (0, ""));
+        assert_eq!(parse(&checked.stdout)["ok"], json!(true));
+        let built = run(
+            &["build", "--out", "out", "lit/frcp", "cases"],
+            &files,
+            true,
+        );
+        assert_eq!(built.code, 0, "{}", built.stderr);
+        assert!(built
+            .files
+            .contains_key("out/packs/frcp-civil-procedure.json"));
+        assert!(built
+            .files
+            .contains_key("out/scenarios/frcp-civil-case.json"));
+        let library = parse(&litigate_library());
+        assert_eq!(
+            library
+                .as_object()
+                .map(|m| m.keys().all(|k| k.starts_with("lit/"))),
+            Some(true)
+        );
+        assert!(library["lit/frcp/Lit.toml"].is_string());
+    }
+
+    #[test]
+    fn litigate_files_override_the_library_and_failures_exit_1() {
+        let broken = json!({ "lit/examples/rule12.lit": "state" });
+        assert_eq!(run(&["check", "lit/examples"], &broken, true).code, 2);
+        let alone = run(&["check", "lit"], &json!({}), false);
+        assert_eq!(alone.code, 1);
+        assert_eq!(
+            alone.stderr,
+            "litigate check: lit: no such file or directory\n"
+        );
+        let bad = |args: &str, files: &str| -> LitigateRun {
+            serde_json::from_str(&litigate(args, files, true)).unwrap_or_default()
+        };
+        assert!(bad("{}", "{}").stderr.starts_with("litigate: args must be"));
+        assert!(bad("[]", "[]")
+            .stderr
+            .starts_with("litigate: files must be"));
+        assert_eq!(bad(r#"["explain", "L3004"]"#, "{}").code, 1);
     }
 
     #[test]

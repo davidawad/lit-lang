@@ -396,3 +396,6 @@ impl<'t> Parser<'t> {
         true
     }
 }
+
+#[cfg(test)]
+mod tests;

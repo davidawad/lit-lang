@@ -310,19 +310,18 @@ mod tests {
     /// compared with the links document and is no document of its kind.
     #[test]
     fn every_round_trip_outcome() {
-        let repo = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../..");
-        let read = |path: &str| std::fs::read_to_string(repo.join(path)).unwrap_or_default();
-        let text = read("packs/frcrimp-criminal-procedure.json");
+        let built = |dir: &str, file: &str| {
+            std::fs::read_to_string(std::path::Path::new(dir).join(file)).unwrap_or_default()
+        };
+        let read = |file: &str| built(litgraph_packs::PACKS_DIR, file);
+        let text = read("frcrimp-criminal-procedure.json");
         let mut pack: serde_json::Value = serde_json::from_str(&text).unwrap_or_default();
         let plain = [
             Input::new("pack.json".to_owned(), pack.to_string()),
-            Input::new(
-                "frcp.json".to_owned(),
-                read("packs/frcp-civil-procedure.json"),
-            ),
+            Input::new("frcp.json".to_owned(), read("frcp-civil-procedure.json")),
             Input::new(
                 "matter.json".to_owned(),
-                read("scenarios/frcp-civil-case.json"),
+                built(litgraph_packs::SCENARIOS_DIR, "frcp-civil-case.json"),
             ),
         ];
         let imported = litigate_import::import(&plain).unwrap_or_default();

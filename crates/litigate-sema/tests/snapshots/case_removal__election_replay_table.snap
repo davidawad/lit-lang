@@ -7,14 +7,17 @@ expression: table
         "15:14 L4001 `MovedToDismiss(complaint)` at stage `frcp::respond` takes `frcp::move-dismiss`, which was removed on 2009-12-11\n    note @14:3: removed here, cite FRCP 12(a)(1)(A)(i)\n    note: replay stops at the first illegal event",
     ],
     "elected: an alternative forfeited earlier is removed once": [
+        "13:3 L4009 obligation `frcp::answer-period` borne by `widget`, created by `Served(complaint, Personal)` on 2009-12-04, was neither discharged nor transformed by its due date 2009-12-28: at as_of 2010-06-01 it is breached\n    note: `answer-period` runs 21 calendar days from `Served(complaint, Personal)` on 2009-12-04 under `frcp6@2009-12-01`\n    note: a duty is consumed exactly once: by a timely act through a `within` edge, or by a breach",
         "ok: start frcp::respond",
         "removed frcp::move-dismiss on 2009-12-10 (event 1, cite FRCP 12(h)(1))",
         "removed frcp::default on 2009-12-11 (event 2, cite FRCP 12(a)(1)(A)(i))",
     ],
     "elected: an option removed earlier cannot be elected": [
+        "13:3 L4009 obligation `frcp::answer-period` borne by `widget`, created by `Served(complaint, Personal)` on 2009-12-04, was neither discharged nor transformed by its due date 2009-12-28: at as_of 2010-06-01 it is breached\n    note: `answer-period` runs 21 calendar days from `Served(complaint, Personal)` on 2009-12-04 under `frcp6@2009-12-01`\n    note: a duty is consumed exactly once: by a timely act through a `within` edge, or by a breach",
         "15:22 L4001 `frcp::move-dismiss` was removed on 2009-12-10, so it cannot be elected\n    note @14:3: removed here",
     ],
     "elected: an uncited election removes nothing": [
+        "13:3 L4009 obligation `frcp::answer-period` borne by `widget`, created by `Served(complaint, Personal)` on 2009-12-04, was neither discharged nor transformed by its due date 2009-12-28: at as_of 2010-06-01 it is breached\n    note: `answer-period` runs 21 calendar days from `Served(complaint, Personal)` on 2009-12-04 under `frcp6@2009-12-01`\n    note: a duty is consumed exactly once: by a timely act through a `within` edge, or by a breach",
         "14:14 L4001 `Elected(\"answer\")` elects an option only when it cites its authority\n    note: add the order or rule after the party, e.g. `cite FRCP 12(h)(1)`",
     ],
     "elected: the alternatives leave the matter": [

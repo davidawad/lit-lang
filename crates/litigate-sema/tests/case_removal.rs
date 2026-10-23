@@ -1,5 +1,5 @@
-//! Option-removing events (SPEC §5.6): a cited `Forfeited`/`Struck` event
-//! removes the edge it names for the rest of the matter, a cited `Elected`
+//! Option-removing events (SPEC §5.6): a cited event declaring `removes`
+//! removes the edge it names for the rest of the matter, a cited `elects`
 //! event removes the alternatives to the edge it names, sema records each
 //! removal in `Case::removals`, and lowering emits it as
 //! `scenario.remove_edges`.

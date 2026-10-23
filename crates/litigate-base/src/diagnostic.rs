@@ -137,7 +137,7 @@ impl WorldTag {
 pub struct Derivation {
     /// The inference rule, e.g. `defeats` or `winner`.
     pub rule: String,
-    /// The fact concluded, e.g. `winner(frcp::answer-due, v2)`.
+    /// The fact concluded, e.g. `winner(pkg::period, v2)`.
     pub fact: String,
     /// Where the fact comes from in source, when it has one location.
     #[serde(default, skip_serializing_if = "Option::is_none")]

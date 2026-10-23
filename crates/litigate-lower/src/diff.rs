@@ -6,7 +6,8 @@
 //! bits, arrays in order, except that nodes, edges, links, groups and
 //! sources are matched by id so a change is reported against the id it
 //! belongs to (`/nodes/answer-due/label`) and a pure reordering is one
-//! `order` change. Source maps and the generated marker are sidecars and
+//! `order` change (`/links/order` for links, whose whole order counts:
+//! unlike pack edges they have no node list to regroup under). Source maps and the generated marker are sidecars and
 //! never part of a document.
 use litgraph::clock::ClockLibrary;
 use litgraph::model::{local_edge_ids, LinkFile, NodeKind, Pack, RawEdge};
@@ -25,8 +26,8 @@ pub enum ChangeKind {
     Removed,
     /// Present in both with different values.
     Changed,
-    /// The same ids in a different order (node order, or edge order within
-    /// one source node, is significant).
+    /// The same ids in a different order (node and link order, or edge
+    /// order within one source node, is significant).
     Order,
 }
 
@@ -208,11 +209,15 @@ fn numbers_as_f64(value: Value) -> Value {
 }
 
 /// Arrays matched by an id field, and whether their order is compared as
-/// a whole or within groups (edges: within one source node).
+/// a whole or within groups. Pack edges are regrouped under their source
+/// node, so only order within one node is significant; links have no node
+/// list to group by, so their whole order is (SPEC §8.6).
 fn keyed(pointer: &str) -> Option<(&'static str, Option<&'static str>)> {
     match pointer {
-        "/nodes" | "/groups" | "/sources" | "/calendars" | "/countingRules" => Some(("id", None)),
-        "/edges" | "/links" => Some(("id", Some("from"))),
+        "/nodes" | "/groups" | "/sources" | "/calendars" | "/countingRules" | "/links" => {
+            Some(("id", None))
+        }
+        "/edges" => Some(("id", Some("from"))),
         _ => None,
     }
 }

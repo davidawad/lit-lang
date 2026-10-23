@@ -244,7 +244,7 @@ fn manifest_file(pkg: &hir::Package) -> String {
     pkg.modules
         .iter()
         .flat_map(|m| m.declarations.iter())
-        .find_map(|d| litigate_sema::temporal::world::meta_of(d)?.span.clone())
+        .find_map(pack::span_of)
         .and_then(|s| {
             std::path::Path::new(&s.file.0)
                 .parent()

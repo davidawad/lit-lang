@@ -1,0 +1,248 @@
+---
+source: crates/litigate-cli/tests/check.rs
+assertion_line: 32
+expression: run.json
+---
+{
+  "ok": true,
+  "op": "check",
+  "result": {
+    "profile": "dev",
+    "files": [
+      "cases/examples/acme.case",
+      "lit/examples/Lit.toml",
+      "lit/examples/rule12.lit"
+    ],
+    "obligations": [
+      {
+        "name": "well-typed",
+        "status": "passed",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "cite-resolves",
+        "status": "passed",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "effective-disjoint",
+        "status": "passed",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "effective-covered",
+        "status": "passed",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "precedence-acyclic",
+        "status": "passed",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "delegation-respected",
+        "status": "passed",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "exceptions-ordered",
+        "status": "passed",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "dist-exact",
+        "status": "passed",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "graph-exits",
+        "status": "passed",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "graph-reachable",
+        "status": "passed",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "deadline-satisfiable",
+        "status": "passed",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "tests-pass",
+        "status": "passed",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "case-replay",
+        "status": "passed",
+        "count": 0,
+        "examples": []
+      },
+      {
+        "name": "holes",
+        "status": "warning",
+        "count": 3,
+        "examples": [
+          "lit/examples/rule12.lit:72:43: L9002 hole: no calibration yet",
+          "lit/examples/rule12.lit:73:40: L9002 hole: no reason given",
+          "lit/examples/rule12.lit:79:97: L9002 hole: no reason given"
+        ]
+      },
+      {
+        "name": "rule-without-test",
+        "status": "passed",
+        "count": 0,
+        "examples": []
+      }
+    ],
+    "packages": [
+      {
+        "name": "frcp-rule12-example",
+        "version": "0.1.0",
+        "digest": "sha256:a9625dfeb2e385fc2f54e5e46999ce1f2f056196506b0c744ea24a5d8c187ed0",
+        "root": "lit/examples",
+        "requested": true,
+        "holes": 3,
+        "tests": {
+          "passed": 2,
+          "failed": 0
+        }
+      }
+    ],
+    "cases": [
+      {
+        "path": "cases/examples/acme.case",
+        "id": "acme-v-widget",
+        "start": "frcp-rule12-example::mtd-ruling",
+        "replay": [
+          {
+            "date": "",
+            "event": "fact",
+            "effect": "fact",
+            "from": "frcp-rule12-example::time-barred",
+            "to": "frcp-rule12-example::respond",
+            "edge": "frcp-rule12-example::not-barred"
+          },
+          {
+            "date": "2025-03-05",
+            "event": "Served(complaint, Personal)",
+            "effect": "timing",
+            "from": "frcp-rule12-example::respond",
+            "to": "frcp-rule12-example::respond"
+          },
+          {
+            "date": "2025-03-20",
+            "event": "MovedToDismiss(complaint)",
+            "effect": "took",
+            "from": "frcp-rule12-example::respond",
+            "to": "frcp-rule12-example::mtd-ruling",
+            "edge": "frcp-rule12-example::move-dismiss"
+          }
+        ],
+        "deadlines": [
+          {
+            "deadline": "frcp-rule12-example::answer-period",
+            "trigger": "Served(complaint, Personal)",
+            "trigger_date": "2025-03-05",
+            "due": "2025-03-26",
+            "rule": "frcp6",
+            "steps": [
+              "FRCP 6(a): exclude the trigger date 2025-03-05",
+              "FRCP 6(a): count 21 calendar day(s) after the anchor -> 2025-03-26"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "diagnostics": [
+    {
+      "code": "L9002",
+      "severity": "warning",
+      "span": {
+        "file": "lit/examples/rule12.lit",
+        "line": 72,
+        "col": 43,
+        "end_line": 72,
+        "end_col": 66
+      },
+      "message": "hole: no calibration yet"
+    },
+    {
+      "code": "L9002",
+      "severity": "warning",
+      "span": {
+        "file": "lit/examples/rule12.lit",
+        "line": 73,
+        "col": 40,
+        "end_line": 73,
+        "end_col": 41
+      },
+      "message": "hole: no reason given"
+    },
+    {
+      "code": "L9003",
+      "severity": "info",
+      "span": {
+        "file": "lit/examples/rule12.lit",
+        "line": 76,
+        "col": 51,
+        "end_line": 76,
+        "end_col": 94
+      },
+      "message": "the edge `answered -> judgment-entered` has no id, so cases and links cannot name it"
+    },
+    {
+      "code": "L9003",
+      "severity": "info",
+      "span": {
+        "file": "lit/examples/rule12.lit",
+        "line": 77,
+        "col": 60,
+        "end_line": 77,
+        "end_col": 99
+      },
+      "message": "the edge `default-risk -> judgment-entered` has no id, so cases and links cannot name it"
+    },
+    {
+      "code": "L9002",
+      "severity": "warning",
+      "span": {
+        "file": "lit/examples/rule12.lit",
+        "line": 79,
+        "col": 97,
+        "end_line": 79,
+        "end_col": 98
+      },
+      "message": "hole: no reason given"
+    }
+  ],
+  "provenance": {
+    "compiler_version": "0.4.0",
+    "language_version": 1,
+    "packages": [
+      {
+        "name": "frcp-rule12-example",
+        "version": "0.1.0",
+        "digest": "sha256:a9625dfeb2e385fc2f54e5e46999ce1f2f056196506b0c744ea24a5d8c187ed0"
+      }
+    ],
+    "as_of": null,
+    "known_at": null
+  },
+  "elapsed_ms": 0
+}

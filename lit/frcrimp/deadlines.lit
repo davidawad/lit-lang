@@ -1,0 +1,206 @@
+// The criminal case's counted periods. FRCrimP 45(a) governs every period
+// in the criminal rules and in "any statute that does not specify a method
+// of computing time" (the Speedy Trial Act); since its 2009 amendment (Rule
+// 45 history note, sources/frcrimp.txt) its text matches FRCP 6(a), so
+// these count under `core.frcp6`. FRAP 4(b) counts under FRAP 26(a). No
+// trigger carries a service method: FRCrimP 45(c)'s three days follow only
+// service, and none of these periods runs from service.
+module frcrimp.deadlines
+
+import core.authority.{ CaseOrder }
+import core.frap26.{ frap26 }
+import core.frcp6.{ frcp6 }
+
+/// An arrest, or service of a summons on the charge (18 U.S.C. § 3161(b)).
+event Arrested()
+
+/// Whether the defendant is held after the initial appearance (FRCrimP
+/// 5.1(c)).
+enum Custody { InCustody, Released }
+
+/// The initial appearance before a magistrate judge (FRCrimP 5).
+event InitialAppearance(custody: Custody)
+
+/// What starts the Speedy Trial Act's trial clock (18 U.S.C. § 3161(c)(1)).
+enum TrialClockStart { Indictment, Information, Appearance }
+
+/// The filing (and making public) of the indictment or information, or the
+/// defendant's appearance before a judicial officer of the charging court.
+/// The 70 days run from whichever occurs last, the most recent of these
+/// events.
+event TrialClockEvent(start: TrialClockStart)
+
+/// What starts the Rule 29(c)(1) period.
+enum VerdictStep { Verdict, JuryDischarged }
+
+/// A guilty verdict, or the court's discharge of the jury (FRCrimP
+/// 29(c)(1): whichever is later, the most recent of these events).
+event VerdictOrDischarge(step: VerdictStep)
+/// The date the court sets for sentencing; the presentence report is due
+/// counted back from it (FRCrimP 32(e)(2)).
+event SentencingScheduled()
+/// The oral announcement of the sentence (FRCrimP 35(c)).
+event SentenceImposed()
+
+/// What starts a defendant's FRAP 4(b)(1)(A) period.
+enum AppealStart { JudgmentEntered, GovernmentNotice }
+
+/// Entry of the judgment or order appealed from, or the government's
+/// notice of appeal (FRAP 4(b)(1)(A): the later of the two, the most recent
+/// of these events).
+event AppealClockEvent(start: AppealStart)
+
+/// Rule 5(a)(1)(A) sets no day count ("without unnecessary delay"); the
+/// three days are the legacy pack's practice window, kept as a hole.
+deadline rule5-appearance: 3.days after Arrested() counted_by frcp6 effective [2024-12-01, ..) cite ?("Fed. R. Crim. P. 5(a)(1)(A) sets no day count (3 days is the legacy pack's practice estimate)")
+/// 14 days after the initial appearance for a defendant in custody, set by
+/// the 2009 time-computation amendments (Rule 5.1 history note). A magistrate
+/// judge may extend it under 5.1(d).
+deadline prelim-in-custody: 14.days after InitialAppearance(InCustody) counted_by frcp6 effective [2009-12-01, ..) known_at 2009-03-26 delegable_to [CaseOrder] cite FRCrimP 5.1(c); FRCrimP 5.1(d)
+/// 21 days for a released defendant.
+deadline prelim-released: 21.days after InitialAppearance(Released) counted_by frcp6 effective [2009-12-01, ..) known_at 2009-03-26 delegable_to [CaseOrder] cite FRCrimP 5.1(c); FRCrimP 5.1(d)
+/// 30 days from arrest or summons to indictment or information; an
+/// ends-of-justice continuance excludes time (§ 3161(h)(7)).
+deadline indictment-period: 30.days after Arrested() counted_by frcp6 effective [2024-12-01, ..) delegable_to [CaseOrder] cite 18 U.S.C. § 3161(b); 18 U.S.C. § 3161(h)
+/// 70 days to trial from the later of the charge's filing and the
+/// appearance; § 3161(h)(7) continuances exclude time.
+deadline speedy-trial: 70.days after TrialClockEvent() counted_by frcp6 effective [2024-12-01, ..) delegable_to [CaseOrder] cite 18 U.S.C. § 3161(c)(1); 18 U.S.C. § 3161(h)
+/// 14 days from the later of verdict and discharge (2009 amendments, Rule 29
+/// history note). Rule 45(b)(1) lets the court extend it.
+deadline rule29-period: 14.days after VerdictOrDischarge() counted_by frcp6 effective [2009-12-01, ..) known_at 2009-03-26 delegable_to [CaseOrder] cite FRCrimP 29(c)(1); FRCrimP 45(b)(1)
+/// 14 days from the verdict for grounds other than newly discovered
+/// evidence (2009 amendments, Rule 33 history note); extendable under Rule
+/// 45(b)(1). Rule 33(b)(1)'s three years for newly discovered evidence has
+/// no declaration: the language has no year unit, and a day count would
+/// misstate a leap year.
+deadline rule33-period: 14.days after VerdictOrDischarge(Verdict) counted_by frcp6 effective [2009-12-01, ..) known_at 2009-03-26 delegable_to [CaseOrder] cite FRCrimP 33(b)(2); FRCrimP 45(b)(1)
+/// At least 35 days before sentencing, unless the defendant waives it;
+/// Rule 32(b)(2) lets the court change any Rule 32 time limit for good
+/// cause. Rule 32 was last amended December 1, 2011 (history note).
+deadline psr-disclosure: 35.days before SentencingScheduled() counted_by frcp6 effective [2011-12-01, ..) known_at 2011-04-26 delegable_to [CaseOrder] cite FRCrimP 32(e)(2); FRCrimP 32(b)(2)
+/// 14 days after sentencing (2009 amendments, Rule 35 history note). Rule
+/// 45(b)(2) bars extending it, so nothing is delegated.
+deadline rule35-period: 14.days after SentenceImposed() counted_by frcp6 effective [2009-12-01, ..) known_at 2009-03-26 cite FRCrimP 35(a); FRCrimP 45(b)(2)
+/// 14 days from the later of the judgment's entry and the government's
+/// notice. The district court may extend it up to 30 days under 4(b)(4).
+/// FRAP's vendored text carries no amendment history, so this is the
+/// vintage of the vendored rules.
+deadline criminal-appeal: 14.days after AppealClockEvent() counted_by frap26 effective [2024-12-01, ..) delegable_to [CaseOrder] cite FRAP 4(b)(1)(A); FRAP 4(b)(4)
+
+test "Rule 5 appearance window from arrest" cite FRCrimP 5(a)(1)(A)
+{
+  given Arrested() on 2025-03-03
+  expect deadline(rule5-appearance) == 2025-03-06
+}
+
+test "Rule 5 appearance window ending on Saturday rolls to Monday" cite FRCrimP 45(a)(1)(C)
+{
+  given Arrested() on 2025-07-02
+  expect deadline(rule5-appearance) == 2025-07-07
+}
+
+test "Rule 5.1 preliminary hearing, defendant in custody" cite FRCrimP 5.1(c)
+{
+  given InitialAppearance(InCustody) on 2025-03-03
+  expect deadline(prelim-in-custody) == 2025-03-17
+}
+
+test "Rule 5.1 preliminary hearing, defendant released" cite FRCrimP 5.1(c)
+{
+  given InitialAppearance(Released) on 2025-03-03
+  expect deadline(prelim-released) == 2025-03-24
+}
+
+test "Rule 5.1 period ending on Juneteenth rolls to Friday" cite FRCrimP 45(a)(6)(A)
+{
+  given InitialAppearance(InCustody) on 2025-06-05
+  expect deadline(prelim-in-custody) == 2025-06-20
+}
+
+test "Speedy Trial Act indictment period from arrest" cite 18 U.S.C. § 3161(b)
+{
+  given Arrested() on 2025-03-03
+  expect deadline(indictment-period) == 2025-04-02
+}
+
+test "Speedy Trial Act indictment period ending on Sunday rolls to Monday" cite FRCrimP 45(a)(1)(C)
+{
+  given Arrested() on 2025-03-07
+  expect deadline(indictment-period) == 2025-04-07
+}
+
+test "Speedy Trial Act trial period from indictment" cite 18 U.S.C. § 3161(c)(1)
+{
+  given TrialClockEvent(Indictment) on 2025-03-03
+  expect deadline(speedy-trial) == 2025-05-12
+}
+
+test "Speedy Trial Act trial period runs from the later appearance" cite 18 U.S.C. § 3161(c)(1)
+{
+  given TrialClockEvent(Indictment) on 2025-03-03
+  given TrialClockEvent(Appearance) on 2025-03-10
+  expect deadline(speedy-trial) == 2025-05-19
+}
+
+test "Rule 29 period ending on Independence Day rolls to Monday" cite FRCrimP 29(c)(1)
+{
+  given VerdictOrDischarge(Verdict) on 2025-06-20
+  expect deadline(rule29-period) == 2025-07-07
+}
+
+test "Rule 29 period runs from the later discharge of the jury" cite FRCrimP 29(c)(1)
+{
+  given VerdictOrDischarge(Verdict) on 2025-03-03
+  given VerdictOrDischarge(JuryDischarged) on 2025-03-05
+  expect deadline(rule29-period) == 2025-03-19
+}
+
+test "Rule 33 period runs from the verdict, not the discharge" cite FRCrimP 33(b)(2)
+{
+  given VerdictOrDischarge(Verdict) on 2025-03-03
+  given VerdictOrDischarge(JuryDischarged) on 2025-03-05
+  expect deadline(rule33-period) == 2025-03-17
+}
+
+test "Rule 32 presentence report counted back from sentencing" cite FRCrimP 32(e)(2)
+{
+  given SentencingScheduled() on 2025-04-07
+  expect deadline(psr-disclosure) == 2025-03-03
+}
+
+test "Rule 32 presentence report landing on Independence Day moves earlier" cite FRCrimP 45(a)(5)
+{
+  given SentencingScheduled() on 2025-08-08
+  expect deadline(psr-disclosure) == 2025-07-03
+}
+
+test "Rule 35(a) correction period" cite FRCrimP 35(a)
+{
+  given SentenceImposed() on 2025-03-03
+  expect deadline(rule35-period) == 2025-03-17
+}
+
+test "Rule 35(a) period ending on Saturday rolls to Monday" cite FRCrimP 45(a)(1)(C)
+{
+  given SentenceImposed() on 2025-03-01
+  expect deadline(rule35-period) == 2025-03-17
+}
+
+test "FRAP 4(b) appeal period from entry of judgment" cite FRAP 4(b)(1)(A)
+{
+  given AppealClockEvent(JudgmentEntered) on 2025-03-03
+  expect deadline(criminal-appeal) == 2025-03-17
+}
+
+test "FRAP 4(b) runs from the government's later notice" cite FRAP 4(b)(1)(A)
+{
+  given AppealClockEvent(JudgmentEntered) on 2025-03-03
+  given AppealClockEvent(GovernmentNotice) on 2025-03-10
+  expect deadline(criminal-appeal) == 2025-03-24
+}
+
+test "FRAP 4(b) period ending on Thanksgiving rolls to Friday" cite FRAP 26(a)(1)(C)
+{
+  given AppealClockEvent(JudgmentEntered) on 2025-11-13
+  expect deadline(criminal-appeal) == 2025-11-28
+}

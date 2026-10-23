@@ -3,7 +3,10 @@
 //! ceiling, before expiry and after it on a motion made after expiry, and
 //! FRAP 4(a)(5)'s extension of the notice-of-appeal and cross-appeal
 //! periods, on a motion no later than 30 days after the prescribed time,
-//! to the later of 30 days after it and 14 days after the order.
+//! to the later of 30 days after it and 14 days after the order; a
+//! Justice's extension of the certiorari period by up to 60 days (28
+//! U.S.C. § 2101(c)); and the Director's of the PTAB and TTAB appeal
+//! periods (37 C.F.R. §§ 90.3(c), 2.145(e)).
 // Test helpers below may unwrap: a panic is the failed assertion.
 #![allow(clippy::unwrap_used)]
 mod support;
@@ -500,7 +503,7 @@ fn no_court_extends_the_ptab_appeal_period() {
     // 2025-12-01).
     let run = matter(
         "ptab-90-3-court",
-        &["cafc", "mpep", "ptab"],
+        &["cafc", "mpep", "ptab", "ttab"],
         "cafc ^0.1.0, ptab-patent-trial-appeal-board ^0.1.0",
         "  owner: either Corporation\n  fedcir: court Tribunal\n",
         &[
@@ -576,5 +579,135 @@ fn the_director_extends_the_ttab_civil_action_period() {
     assert_eq!(
         effects(&court).1,
         ["only director may extend `ttab-trademark-trial-and-appeal-board::civil-action-period`, but `district` is court"]
+    );
+}
+
+/// `litigate check` of a FRAP matter: the court of appeals' judgment on
+/// 2025-10-15, then `events`. The certiorari petition is due 2026-01-13
+/// (28 U.S.C. § 2101(c), counted by Sup. Ct. R. 30.1).
+fn cert(name: &str, events: &[&str]) -> Run {
+    let judgment = "2025-10-15 EnteredOnAppeal(Judgment) on appellant";
+    let events: Vec<&str> = std::iter::once(judgment)
+        .chain(events.iter().copied())
+        .collect();
+    matter(
+        name,
+        &["frap"],
+        "frap-appellate-procedure ^0.1.0",
+        "  appellant: applicant Corporation\n  justice: justice Tribunal\n  panel: court Tribunal\n",
+        &events,
+        "frap-appellate-procedure::cert-not-sought",
+    )
+}
+
+#[test]
+fn a_justice_extends_the_cert_period_by_up_to_60_days() {
+    let run = cert(
+        "cert-2101c",
+        &[
+            "2026-01-02 CertExtensionApplied() by appellant",
+            "2026-01-07 CertPeriodExtended(2026-03-14) by justice cite Sup. Ct. R. 13.5",
+        ],
+    );
+    assert_eq!(run.code, 0, "{}", run.stdout);
+    assert_eq!(
+        extended(&run, "frap-appellate-procedure::cert-period"),
+        [(
+            "2026-03-14".to_owned(),
+            "GoodCause".to_owned(),
+            "2026-01-02".to_owned()
+        )]
+    );
+}
+
+#[test]
+fn a_cert_extension_past_60_days_or_by_a_court_is_rejected() {
+    let long = cert(
+        "cert-2101c-long",
+        &[
+            "2026-01-02 CertExtensionApplied() by appellant",
+            "2026-01-07 CertPeriodExtended(2026-03-15) by justice cite Sup. Ct. R. 13.5",
+        ],
+    );
+    assert_eq!(long.code, 2, "{}", long.stdout);
+    assert_eq!(
+        effects(&long).1,
+        ["an extension to 2026-03-15 exceeds the bound of `frap-appellate-procedure::cert-period`: prescribed_due + 60.days = 2026-03-14 (prescribed_due 2026-01-13, grant_order_entered 2026-01-07)"]
+    );
+    let court = cert(
+        "cert-2101c-court",
+        &[
+            "2026-01-02 CertExtensionApplied() by appellant",
+            "2026-01-07 CertPeriodExtended(2026-02-13) by panel cite Sup. Ct. R. 13.5",
+        ],
+    );
+    assert_eq!(court.code, 2, "{}", court.stdout);
+    assert_eq!(
+        effects(&court).1,
+        ["only justice may extend `frap-appellate-procedure::cert-period`, but `panel` is court"]
+    );
+    // The application is filed within the period (Sup. Ct. R. 30.2), and
+    // the Justice acts before it expires.
+    let late = cert(
+        "cert-2101c-late",
+        &[
+            "2026-01-14 CertExtensionApplied() by appellant",
+            "2026-01-15 CertPeriodExtended(2026-02-13) by justice cite Sup. Ct. R. 13.5",
+        ],
+    );
+    assert_eq!(late.code, 2, "{}", late.stdout);
+    assert_eq!(
+        effects(&late).1,
+        ["`frap-appellate-procedure::cert-period` expired on 2026-01-13, before `CertPeriodExtended(2026-02-13)` on 2026-01-15; the capability does not reach an expired period (no `after_expiry`)"]
+    );
+}
+
+/// `litigate check` of a Federal Circuit matter on a Board decision of
+/// 2026-03-02, whose notice of appeal is due 2026-05-04 (37 C.F.R. §
+/// 90.3(a)(1)), then `events`.
+fn fedcir_ptab(name: &str, events: &[&str]) -> Run {
+    let decision = "2026-03-02 Entered(BoardDecision) on appellant";
+    let events: Vec<&str> = std::iter::once(decision)
+        .chain(events.iter().copied())
+        .collect();
+    matter(
+        name,
+        &["cafc", "mpep", "ttab"],
+        "cafc ^0.1.0",
+        "  appellant: applicant Corporation\n  director: director Agency\n  fedcir: court Tribunal\n",
+        &events,
+        "cafc::window-blown-ptab",
+    )
+}
+
+#[test]
+fn the_director_not_the_court_extends_the_federal_circuit_ptab_window() {
+    let ok = fedcir_ptab(
+        "fedcir-90-3-c",
+        &[
+            "2026-05-01 PtabAppealExtensionRequested() by appellant",
+            "2026-05-06 PtabAppealPeriodExtended(2026-06-03) by director cite 37 C.F.R. § 90.3(c)(1)(i)",
+        ],
+    );
+    assert_eq!(ok.code, 0, "{}", ok.stdout);
+    assert_eq!(
+        extended(&ok, "cafc::ptab-noa-period"),
+        [(
+            "2026-06-03".to_owned(),
+            "GoodCause".to_owned(),
+            "2026-05-01".to_owned()
+        )]
+    );
+    let court = fedcir_ptab(
+        "fedcir-90-3-c-court",
+        &[
+            "2026-05-01 PtabAppealExtensionRequested() by appellant",
+            "2026-05-06 PtabAppealPeriodExtended(2026-06-03) by fedcir cite 37 C.F.R. § 90.3(c)(1)(i)",
+        ],
+    );
+    assert_eq!(court.code, 2, "{}", court.stdout);
+    assert_eq!(
+        effects(&court).1,
+        ["only director may extend `cafc::ptab-noa-period`, but `fedcir` is court"]
     );
 }

@@ -1,0 +1,30 @@
+---
+source: crates/litigate-sema/tests/cov_rules_nosource.rs
+expression: "(with_spans, without)"
+---
+(
+    [
+        "pkgs/demo/main.lit:18:1 L3002 `g` has no version in force on [2012-01-01, ..)\n    note: a gap is legal only when declared: a declaration that `supersedes g` over the gap",
+        "pkgs/demo/main.lit:16:1 L3001 versions of `p` overlap on [2012-01-01, 2014-01-01): [2009-12-01, ..) and [2012-01-01, 2014-01-01)\n    note @pkgs/demo/main.lit:15:1: the overlapping version is declared here\n    note: versions of one declaration must be pairwise disjoint so `as_of` selects exactly one",
+        "pkgs/demo/main.lit:21:44 L3008 a transition condition may test only `has_event(...)`, `true`/`false`, and `!`, `&&`, `||`\n    note: a transition chooses between versions from the matter's history alone",
+        "authority:1:1 L3006 authority `B > A` makes the order cyclic\n    note: levels on the cycle: A, B\n    note: authority is a strict partial order: no level may outrank itself",
+        "pkgs/demo/main.lit:24:1 L3003 `b@2009-12-01` and `a@2009-12-01` both apply to `tg` on [2009-12-01, ..), and neither prevails\n    note @pkgs/demo/main.lit:23:1: `a@2009-12-01` is declared here\n    note: no declared relation (`notwithstanding`, `override`, `subject_to`) orders them\n    note: the canons tie: both are FederalRule; equally specific (both at package level, same window length); both take effect on 2009-12-01\n    note: declare `b notwithstanding a` or `b subject_to a`",
+        "pkgs/demo/main.lit:27:1 L3005 exceptions `e2` and `e1` to `d` can both apply on [2009-12-01, ..) and are not ordered\n    note @pkgs/demo/main.lit:26:1: `e1` is declared here\n    note: some history makes both conditions true\n    note: make the conditions exclusive, or give both distinct `priority` values (larger wins)",
+        "pkgs/demo/main.lit:28:1 L3005 exceptions `e3` and `e1` to `d` can both apply on [2009-12-01, ..) and are not ordered\n    note @pkgs/demo/main.lit:26:1: `e1` is declared here\n    note: some history makes both conditions true\n    note: make the conditions exclusive, or give both distinct `priority` values (larger wins)",
+        "pkgs/demo/main.lit:28:1 L3005 exceptions `e3` and `e2` to `d` can both apply on [2009-12-01, ..) and are not ordered\n    note @pkgs/demo/main.lit:27:1: `e2` is declared here\n    note: some history makes both conditions true\n    note: make the conditions exclusive, or give both distinct `priority` values (larger wins)",
+        "pkgs/demo/main.lit:30:16 L2001 `within brief` needs a forward deadline, but `brief` counts backward (`before`)\n    note: a deadline's direction is part of its type: an edge window runs forward from the trigger",
+        "pkgs/demo/main.lit:31:1 L2007 a `duty` rule must contain the deadline it imposes\n    note: rule `empty` is a `duty`",
+    ],
+    [
+        "g:1:1 L3002 `g` has no version in force on [2012-01-01, ..)\n    note: a gap is legal only when declared: a declaration that `supersedes g` over the gap",
+        "p:1:1 L3001 versions of `p` overlap on [2012-01-01, 2014-01-01): [2009-12-01, ..) and [2012-01-01, 2014-01-01)\n    note @p:1:1: the overlapping version is declared here\n    note: versions of one declaration must be pairwise disjoint so `as_of` selects exactly one",
+        "tr:1:1 L3008 a transition condition may test only `has_event(...)`, `true`/`false`, and `!`, `&&`, `||`\n    note: a transition chooses between versions from the matter's history alone",
+        "authority:1:1 L3006 authority `B > A` makes the order cyclic\n    note: levels on the cycle: A, B\n    note: authority is a strict partial order: no level may outrank itself",
+        "b:1:1 L3003 `b@2009-12-01` and `a@2009-12-01` both apply to `tg` on [2009-12-01, ..), and neither prevails\n    note @a:1:1: `a@2009-12-01` is declared here\n    note: no declared relation (`notwithstanding`, `override`, `subject_to`) orders them\n    note: the canons tie: both are FederalRule; equally specific (both at package level, same window length); both take effect on 2009-12-01\n    note: declare `b notwithstanding a` or `b subject_to a`",
+        "e2:1:1 L3005 exceptions `e2` and `e1` to `d` can both apply on [2009-12-01, ..) and are not ordered\n    note: `e1` is declared here\n    note: some history makes both conditions true\n    note: make the conditions exclusive, or give both distinct `priority` values (larger wins)",
+        "e3:1:1 L3005 exceptions `e3` and `e1` to `d` can both apply on [2009-12-01, ..) and are not ordered\n    note: `e1` is declared here\n    note: some history makes both conditions true\n    note: make the conditions exclusive, or give both distinct `priority` values (larger wins)",
+        "e3:1:1 L3005 exceptions `e3` and `e2` to `d` can both apply on [2009-12-01, ..) and are not ordered\n    note: `e2` is declared here\n    note: some history makes both conditions true\n    note: make the conditions exclusive, or give both distinct `priority` values (larger wins)",
+        "w:1:1 L2001 `within brief` needs a forward deadline, but `brief` counts backward (`before`)\n    note: a deadline's direction is part of its type: an edge window runs forward from the trigger",
+        "empty:1:1 L2007 a `duty` rule must contain the deadline it imposes\n    note: rule `empty` is a `duty`",
+    ],
+)

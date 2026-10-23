@@ -19,14 +19,16 @@ use litigate_base::{Applicability, Diagnostic, DiagnosticCode as C};
 pub fn check(world: &World<'_>, loc: &dyn Locate, pack: usize) -> Vec<Diagnostic> {
     let mut out = Vec::new();
     for (key, set) in world.sets() {
-        let Some(&first) = set.versions.first().map(|v| &v.decl) else {
+        let owned = set
+            .versions
+            .first()
+            .map(|v| v.decl)
+            .filter(|&first| world.decls[first].pack == pack);
+        let Some(first) = owned else {
             continue;
         };
-        if world.decls[first].pack != pack {
-            continue;
-        }
         out.extend(overlaps(world, loc, &set));
-        out.extend(coverage(world, loc, key, &set));
+        out.extend(coverage(world, loc, key, &set, first));
         out.extend(succession(world, loc, key, &set));
     }
     out
@@ -78,10 +80,8 @@ fn coverage(
     loc: &dyn Locate,
     key: &Key,
     set: &VersionSet<usize>,
+    first: usize,
 ) -> Vec<Diagnostic> {
-    let Some(&first) = set.versions.first().map(|v| &v.decl) else {
-        return Vec::new();
-    };
     let lifetime = &world.packs[world.decls[first].pack].lifetime;
     let suspended = suspended_windows(world, key);
     let revivals = revival_points(world, key, None);
@@ -117,12 +117,15 @@ fn coverage(
                     g.to.as_deref().map_or_else(String::new, |t| format!("a version starting {t} that `revives {name}`, or "))
                 ),
             );
-            if let Some(prev) = before {
-                if let Some((_, Some(value))) = loc.clause(&world.decls[prev.decl], "effective") {
-                    let to = if after.is_some() { g.to.clone() } else { lifetime.to.clone() };
-                    let closed = Window { from: prev.in_force.from.clone(), to };
-                    d = d.with_fix(value, interval_text(&closed), Applicability::MaybeIncorrect);
-                }
+            let fix = before.and_then(|prev| {
+                loc.clause(&world.decls[prev.decl], "effective")
+                    .and_then(|(_, value)| value)
+                    .map(|value| (prev, value))
+            });
+            if let Some((prev, value)) = fix {
+                let to = if after.is_some() { g.to.clone() } else { lifetime.to.clone() };
+                let closed = Window { from: prev.in_force.from.clone(), to };
+                d = d.with_fix(value, interval_text(&closed), Applicability::MaybeIncorrect);
             }
             if let Some(next) = after {
                 d = d.with_note(world.decls[next.decl].meta.span.clone(), "the next version starts here");

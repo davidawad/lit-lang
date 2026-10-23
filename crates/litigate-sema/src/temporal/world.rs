@@ -112,8 +112,8 @@ pub struct World<'a> {
     pub ranks: Vec<Rank>,
     by_key: BTreeMap<Key, Vec<usize>>,
     incoming: BTreeMap<Key, Vec<Incoming<'a>>>,
-    exceptions: BTreeMap<Key, Vec<usize>>,
-    transitions: BTreeMap<(Key, String), usize>,
+    exceptions: BTreeMap<Key, Vec<(usize, &'a hir::Exception)>>,
+    transitions: BTreeMap<(Key, String), (usize, &'a hir::Transition)>,
 }
 
 /// A relation pointing at a declaration: who declares it, and on which
@@ -143,10 +143,10 @@ pub fn relation_target(r: &Relation) -> Option<&String> {
 
 /// The `rule` enclosing the declaration with `meta`: the rule whose source
 /// span contains it, or (for HIR without spans) the rule that lists its name.
+/// A module is one file, so its rules and declarations share it.
 fn enclosing<'r>(rules: &[&'r hir::Rule], meta: &Metadata) -> Option<(&'r str, RuleKind)> {
     let inside = |outer: &Span, inner: &Span| {
-        outer.file == inner.file
-            && outer != inner
+        outer != inner
             && (outer.line, outer.col) <= (inner.line, inner.col)
             && (inner.end_line, inner.end_col) <= (outer.end_line, outer.end_col)
     };
@@ -222,12 +222,12 @@ impl<'a> World<'a> {
                 match decl {
                     Declaration::Exception(e) => {
                         let t = self.target(&own, &e.target).key;
-                        self.exceptions.entry(t).or_default().push(i);
+                        self.exceptions.entry(t).or_default().push((i, e));
                     }
                     Declaration::Transition(t) => {
                         let a = self.target(&own, &t.amendment);
                         if let Some(v) = a.version {
-                            self.transitions.entry((a.key, v)).or_insert(i);
+                            self.transitions.entry((a.key, v)).or_insert((i, t));
                         }
                     }
                     _ => {}
@@ -263,9 +263,10 @@ impl<'a> World<'a> {
         self.incoming.iter().map(|(k, v)| (k, v.as_slice()))
     }
 
-    /// Exceptions (declaration indexes) whose target is `key`.
+    /// Exceptions (declaration index and declaration) whose target is
+    /// `key`, in declaration order.
     #[must_use]
-    pub fn exceptions_on(&self, key: &Key) -> &[usize] {
+    pub fn exceptions_on(&self, key: &Key) -> &[(usize, &'a hir::Exception)] {
         self.exceptions.get(key).map_or(&[], Vec::as_slice)
     }
 
@@ -277,6 +278,13 @@ impl<'a> World<'a> {
     /// The first transition amending `key@from`.
     #[must_use]
     pub fn transition_for(&self, key: &Key, from: &str) -> Option<usize> {
+        self.transition(key, from).map(|(i, _)| i)
+    }
+
+    /// The first transition amending `key@from`: declaration index and
+    /// declaration.
+    #[must_use]
+    pub fn transition(&self, key: &Key, from: &str) -> Option<(usize, &'a hir::Transition)> {
         self.transitions
             .get(&(key.clone(), from.to_owned()))
             .copied()

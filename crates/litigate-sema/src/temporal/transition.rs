@@ -71,17 +71,14 @@ pub fn governing(
         .map(|e| e.date)
         .min()
         .is_some_and(|first| first < v.in_force.from.as_str());
-    let Some(ti) = pending
-        .then(|| transition_for(world, key, &v.in_force.from))
+    let Some((ti, t)) = pending
+        .then(|| world.transition(key, &v.in_force.from))
         .flatten()
     else {
         return Ok(Governing {
             version: v.decl,
             via: None,
         });
-    };
-    let Declaration::Transition(t) = world.decls[ti].decl else {
-        return Err(Ungoverned::Transition("not a transition".into()));
     };
     let history: Vec<&Expr> = events
         .iter()
@@ -161,23 +158,23 @@ fn one(world: &World<'_>, loc: &dyn Locate, i: usize, t: &Transition) -> Vec<Dia
             .with_note(None, "a transition amends a version that directly follows an earlier one"),
         );
     }
+    // The world keeps the first transition per amended version, so any
+    // other is a later duplicate.
     if let Some(first) = transition_for(world, &amended.key, &at).filter(|&f| f != i) {
-        if first < i {
-            out.push(
-                error(
-                    C::InvalidTransition,
-                    span_of(loc, d, "amends"),
-                    format!(
-                        "`{name}@{at}` already has transition `{}`",
-                        world.decls[first].meta.id
-                    ),
-                )
-                .with_note(
-                    world.decls[first].meta.span.clone(),
-                    "the first transition is declared here",
+        out.push(
+            error(
+                C::InvalidTransition,
+                span_of(loc, d, "amends"),
+                format!(
+                    "`{name}@{at}` already has transition `{}`",
+                    world.decls[first].meta.id
                 ),
-            );
-        }
+            )
+            .with_note(
+                world.decls[first].meta.span.clone(),
+                "the first transition is declared here",
+            ),
+        );
     }
     for arm in &t.arms {
         out.extend(arm_checks(

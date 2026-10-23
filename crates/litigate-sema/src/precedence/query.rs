@@ -4,40 +4,44 @@ use crate::db::inputs::{PackageInput, SourceFile};
 use crate::db::parse::tree::{Item, ItemKind};
 use crate::db::queries::{check_module, item_tree, manifest};
 use crate::db::span::{to_span, TextRange};
+use crate::hir::Manifest;
 use crate::resolve::sig::{clauses_of, flatten};
 use crate::temporal::world::{Decl, Locate, PackInfo, Rank, World};
 use crate::types::build::item_name;
 use litigate_base::{Diagnostic, FileId, LineIndex, Span};
 use std::collections::BTreeMap;
 
-/// `pkg` followed by its transitive dependencies, each once, and the
-/// stdlib package `core`, which every package may import undeclared (SPEC
-/// §4.3) and whose authority lattice every package shares (§5.5).
-fn closure(db: &dyn salsa::Database, pkg: PackageInput) -> Vec<PackageInput> {
+/// `pkg` (whose manifest is `own`) followed by its transitive
+/// dependencies, each once with its manifest, and the stdlib package
+/// `core`, which every package may import undeclared (SPEC §4.3) and whose
+/// authority lattice every package shares (§5.5).
+fn closure<'db>(
+    db: &'db dyn salsa::Database,
+    pkg: PackageInput,
+    own: &'db Manifest,
+) -> Vec<(PackageInput, &'db Manifest)> {
+    let mut out = vec![(pkg, own)];
     let Some(ws) = pkg.files(db).first().map(|f| f.workspace(db)) else {
-        return vec![pkg];
+        return out;
     };
-    let by_name: BTreeMap<String, PackageInput> = ws
+    let by_name: BTreeMap<&str, (PackageInput, &Manifest)> = ws
         .packages(db)
         .iter()
         .filter_map(|p| {
             manifest(db, *p)
                 .as_ref()
                 .ok()
-                .map(|m| (m.manifest.name.clone(), *p))
+                .map(|m| (m.manifest.name.as_str(), (*p, &m.manifest)))
         })
         .collect();
-    let mut out = vec![pkg];
     let mut i = 0;
-    while let Some(&p) = out.get(i) {
+    while let Some(&(_, m)) = out.get(i) {
         i += 1;
-        if let Ok(m) = manifest(db, p) {
-            let deps = m.manifest.dependencies.keys().map(String::as_str);
-            for dep in deps.chain(["core"]) {
-                if let Some(&d) = by_name.get(dep) {
-                    if !out.contains(&d) {
-                        out.push(d);
-                    }
+        let deps = m.dependencies.keys().map(String::as_str);
+        for dep in deps.chain(["core"]) {
+            if let Some(&(d, dm)) = by_name.get(dep) {
+                if !out.iter().any(|&(p, _)| p == d) {
+                    out.push((d, dm));
                 }
             }
         }
@@ -46,17 +50,16 @@ fn closure(db: &dyn salsa::Database, pkg: PackageInput) -> Vec<PackageInput> {
 }
 
 /// Temporal and precedence diagnostics for `pkg` (L2001, L2007, L3001-L3009
-/// as SPEC §5.4-§5.5 assign them), sorted.
+/// as SPEC §5.4-§5.5 assign them), sorted; none without a valid manifest.
 #[salsa::tracked(returns(ref))]
 pub fn legal_checks(db: &dyn salsa::Database, pkg: PackageInput) -> Vec<Diagnostic> {
-    let packages = closure(db, pkg);
+    let Ok(own) = manifest(db, pkg) else {
+        return Vec::new();
+    };
     let mut world = World::default();
     let mut files: BTreeMap<String, SourceFile> = BTreeMap::new();
     let mut by_pack = Vec::new();
-    for p in &packages {
-        let Ok(m) = manifest(db, *p) else {
-            continue;
-        };
+    for (p, m) in closure(db, pkg, &own.manifest) {
         for f in p.files(db) {
             files.insert(f.path(db), *f);
         }
@@ -65,10 +68,7 @@ pub fn legal_checks(db: &dyn salsa::Database, pkg: PackageInput) -> Vec<Diagnost
             .files(db)
             .iter()
             .filter_map(|f| check_module(db, *f).module.as_ref());
-        world.add(PackInfo::of(&m.manifest), modules);
-    }
-    if world.packs.is_empty() || manifest(db, pkg).is_err() {
-        return Vec::new();
+        world.add(PackInfo::of(m), modules);
     }
     let loc = Source { db, files, by_pack };
     let mut out = super::check(&world, &loc, 0);
@@ -90,19 +90,26 @@ impl Source<'_> {
         d: &Decl<'_>,
         f: impl FnOnce(&Item, &dyn Fn(TextRange) -> Span) -> R,
     ) -> Option<R> {
-        let span = d.meta.span.as_ref()?;
-        let file = *self.files.get(&span.file.0)?;
-        let index = LineIndex::new(file.text(self.db));
-        let id = FileId(span.file.0.clone());
-        let conv = |r: TextRange| to_span(&id, &index, r);
-        let tree = &item_tree(self.db, file).tree;
-        let item = flatten(tree).into_iter().map(|(i, _)| i).find(|i| {
-            item_name(i).is_some_and(|n| n.text == d.meta.id) && {
-                let s = conv(i.range);
-                s.line == span.line && s.col == span.col
-            }
-        })?;
-        Some(f(item, &conv))
+        // Sema-built declarations always have a span in a file of the
+        // world, and an item there with their name at its start.
+        let span = d.meta.span.as_ref();
+        let file = span.and_then(|s| self.files.get(&s.file.0));
+        span.zip(file).and_then(|(span, &file)| {
+            let index = LineIndex::new(file.text(self.db));
+            let id = FileId(span.file.0.clone());
+            let conv = |r: TextRange| to_span(&id, &index, r);
+            let tree = &item_tree(self.db, file).tree;
+            flatten(tree)
+                .into_iter()
+                .map(|(i, _)| i)
+                .find(|i| {
+                    item_name(i).is_some_and(|n| n.text == d.meta.id) && {
+                        let s = conv(i.range);
+                        s.line == span.line && s.col == span.col
+                    }
+                })
+                .map(|item| f(item, &conv))
+        })
     }
 }
 
@@ -144,17 +151,21 @@ impl Locate for Source<'_> {
     }
 
     fn rank(&self, rank: &Rank) -> Option<Span> {
-        self.by_pack.get(rank.pack)?.iter().find_map(|file| {
-            let tree = &item_tree(self.db, *file).tree;
-            let range = flatten(tree).into_iter().find_map(|(i, _)| match &i.kind {
-                ItemKind::Authority(chain) => chain
-                    .windows(2)
-                    .find(|w| w[0].text == rank.above && w[1].text == rank.below)
-                    .map(|w| w[0].range.cover(w[1].range)),
-                _ => None,
-            })?;
-            let id = FileId(file.path(self.db));
-            Some(to_span(&id, &LineIndex::new(file.text(self.db)), range))
-        })
+        self.by_pack
+            .get(rank.pack)
+            .into_iter()
+            .flatten()
+            .find_map(|file| {
+                let tree = &item_tree(self.db, *file).tree;
+                let range = flatten(tree).into_iter().find_map(|(i, _)| match &i.kind {
+                    ItemKind::Authority(chain) => chain
+                        .windows(2)
+                        .find(|w| w[0].text == rank.above && w[1].text == rank.below)
+                        .map(|w| w[0].range.cover(w[1].range)),
+                    _ => None,
+                })?;
+                let id = FileId(file.path(self.db));
+                Some(to_span(&id, &LineIndex::new(file.text(self.db)), range))
+            })
     }
 }

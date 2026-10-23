@@ -43,7 +43,7 @@ enum Res<'a> {
 /// Exceptions (declaration indexes) targeting `key`.
 #[must_use]
 pub fn exceptions_on(world: &World<'_>, key: &Key) -> Vec<usize> {
-    world.exceptions_on(key).to_vec()
+    world.exceptions_on(key).iter().map(|&(i, _)| i).collect()
 }
 
 /// Evaluates default `key` on `date`, asking `atom` for each atom (for
@@ -92,18 +92,26 @@ fn node<'a>(
     if !holds {
         return Ok(Res::NotApplicable);
     }
+    let me = &d.meta.id;
+    let prefix = |mut by: Vec<String>| {
+        by.insert(0, me.clone());
+        by
+    };
+    // Undefeated exceptions in force on `date`, as what they make of `i`.
     let mut live: Vec<(Option<u32>, usize, Res<'a>)> = Vec::new();
-    for e in exceptions_on(world, &world.key(i)) {
+    for &(e, x) in world.exceptions_on(&world.key(i)) {
         if !Window::of(&world.decls[e].meta.effective).contains(date) {
             continue;
         }
         path.push(i);
         let r = node(world, e, date, atom, path);
         path.pop();
-        let r = r?;
-        if !matches!(r, Res::NotApplicable | Res::Undercut(_)) {
-            live.push((priority(world, e), e, r));
-        }
+        let made = match r? {
+            Res::Cut(by) => Res::Undercut(prefix(by)),
+            Res::Value(v, by) => Res::Value(v, prefix(by)),
+            Res::NotApplicable | Res::Undercut(_) => continue,
+        };
+        live.push((x.priority, e, made));
     }
     live.sort_by_key(|x| std::cmp::Reverse(x.0));
     if let [(p, x, _), (q, y, _), ..] = live.as_slice() {
@@ -114,34 +122,11 @@ fn node<'a>(
             ));
         }
     }
-    let me = d.meta.id.clone();
-    let prefix = |mut by: Vec<String>| {
-        by.insert(0, me.clone());
-        by
-    };
-    Ok(match live.into_iter().next() {
-        None => match own {
-            Some(v) => Res::Value(v, vec![me]),
-            None => Res::Cut(vec![me]),
-        },
-        Some((_, _, Res::Cut(by))) => Res::Undercut(prefix(by)),
-        Some((_, _, Res::Value(v, by))) => Res::Value(v, prefix(by)),
-        Some((_, _, other)) => other,
+    Ok(match (live.into_iter().next(), own) {
+        (Some((_, _, made)), _) => made,
+        (None, Some(v)) => Res::Value(v, vec![me.clone()]),
+        (None, None) => Res::Cut(vec![me.clone()]),
     })
-}
-
-fn priority(world: &World<'_>, i: usize) -> Option<u32> {
-    match world.decls[i].decl {
-        Declaration::Exception(e) => e.priority,
-        _ => None,
-    }
-}
-
-fn exception<'a>(world: &World<'a>, i: usize) -> Option<&'a Exception> {
-    match world.decls[i].decl {
-        Declaration::Exception(e) => Some(e),
-        _ => None,
-    }
 }
 
 /// L3005 for unordered overlapping exceptions (one of them in pack
@@ -151,9 +136,9 @@ pub fn check(world: &World<'_>, loc: &dyn Locate, pack: usize) -> Vec<Diagnostic
     let mut out = Vec::new();
     let targets: Vec<Key> = world.exception_targets().cloned().collect();
     for t in &targets {
-        let on = exceptions_on(world, t);
+        let on = world.exceptions_on(t);
         let set = world.versions(t);
-        for &e in on.iter().filter(|&&e| world.decls[e].pack == pack) {
+        for &(e, _) in on.iter().filter(|(e, _)| world.decls[*e].pack == pack) {
             let w = Window::of(&world.decls[e].meta.effective);
             if !set.versions.iter().any(|v| v.in_force.overlaps(&w)) {
                 out.push(error(
@@ -170,8 +155,8 @@ pub fn check(world: &World<'_>, loc: &dyn Locate, pack: usize) -> Vec<Diagnostic
         }
         for (j, &b) in on.iter().enumerate() {
             for &a in &on[..j] {
-                if world.decls[a].pack == pack || world.decls[b].pack == pack {
-                    out.extend(pair(world, loc, t, a, b, &on));
+                if world.decls[a.0].pack == pack || world.decls[b.0].pack == pack {
+                    out.extend(pair(world, loc, t, a, b, on));
                 }
             }
         }
@@ -183,11 +168,10 @@ fn pair(
     world: &World<'_>,
     loc: &dyn Locate,
     t: &Key,
-    a: usize,
-    b: usize,
-    all: &[usize],
+    (a, ea): (usize, &Exception),
+    (b, eb): (usize, &Exception),
+    all: &[(usize, &Exception)],
 ) -> Option<Diagnostic> {
-    let (ea, eb) = (exception(world, a)?, exception(world, b)?);
     let (wa, wb) = (
         Window::of(&world.decls[a].meta.effective),
         Window::of(&world.decls[b].meta.effective),
@@ -230,7 +214,7 @@ fn pair(
     );
     let top = all
         .iter()
-        .filter_map(|&i| exception(world, i).and_then(|e| e.priority))
+        .filter_map(|(_, e)| e.priority)
         .max()
         .unwrap_or(0);
     if ea.priority.is_none() {

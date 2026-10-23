@@ -1,0 +1,11 @@
+---
+source: crates/litigate-sema/tests/cov_rules_temporal.rs
+expression: "[show(\"p\"), show(\"p@2016-12-01\"), show(\"frcp::p@2016-12-01\"),\nshow(\"p@2016-02-30\"), show(\"p@soon\"),]"
+---
+[
+    "p -> demo::p @None",
+    "p@2016-12-01 -> demo::p @Some(\"2016-12-01\")",
+    "frcp::p@2016-12-01 -> frcp::p @Some(\"2016-12-01\")",
+    "p@2016-02-30 -> demo::p@2016-02-30 @None",
+    "p@soon -> demo::p@soon @None",
+]

@@ -190,6 +190,38 @@ mod tests {
         );
         assert_eq!(gaps(&span, &[]), vec![span.clone()]);
         assert!(gaps(&span, &[w("1999-01-01", None)]).is_empty());
+        let nested = [
+            w("2000-01-01", Some("2010-01-01")),
+            w("2001-01-01", Some("2002-01-01")),
+        ];
+        assert_eq!(gaps(&span, &nested), vec![w("2010-01-01", None)]);
+        let after_open = [w("2000-01-01", None), w("2005-01-01", Some("2006-01-01"))];
+        assert!(gaps(&span, &after_open).is_empty());
+    }
+
+    #[test]
+    fn within_needs_every_day_inside() {
+        let outer = w("2000-01-01", Some("2010-01-01"));
+        assert!(w("2001-01-01", Some("2002-01-01")).within(&outer));
+        assert!(
+            w("2020-01-01", Some("2020-01-01")).within(&outer),
+            "an empty window is within anything"
+        );
+        assert!(!w("1999-01-01", Some("2002-01-01")).within(&outer));
+        assert!(!w("2001-01-01", Some("2011-01-01")).within(&outer));
+        assert!(!w("2001-01-01", None).within(&outer));
+        assert!(w("2001-01-01", None).within(&w("2000-01-01", None)));
+    }
+
+    #[test]
+    fn invalid_dates_have_no_day_number() {
+        assert_eq!(day_number("2009-02-30"), None);
+        assert_eq!(w("2009-12-01", Some("not-a-date")).days(), None);
+        assert_eq!(w("not-a-date", Some("2009-12-01")).days(), None);
+        assert_eq!(
+            w("2009-12-01", Some("2009-12-01")).display(),
+            "[2009-12-01, 2009-12-01)"
+        );
     }
 
     #[test]

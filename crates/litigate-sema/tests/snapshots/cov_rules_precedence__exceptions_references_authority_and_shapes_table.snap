@@ -1,0 +1,26 @@
+---
+source: crates/litigate-sema/tests/cov_rules_precedence.rs
+expression: "table(&[(\"1 exceptions with too many atoms to prove disjoint\", &large),\n(\"2 versions of one exception never meet\", disjoint),\n(\"3 references through refs, deadlines, fields, and matches\", references),\n(\"4 an authority outranking itself\", \"authority A > A\"),\n(\"5 a cycle with a tail below it\",\n\"authority A > B\\nauthority B > A\\nauthority B > C\"),\n(\"6 a power rule with only a state\",\n\"rule power move {\\n  state x: \\\"X\\\" { _ \\\"go\\\" -> t }\\n}\"),\n(\"7 a liability rule with only a deadline\",\n\"rule liability l {\\n  deadline p: 21.days from Served(complaint) counted_by c6\\n}\",),\n(\"8 a backward deadline and a counting version it never meets\",\n\"counting itc effective [2009-12-01, 2012-01-01) { anchor next_business_day, holidays cal }\\n\\\n             counting itc effective [2012-01-01, ..) { holidays cal }\\n\\\n             deadline r: 7.days before Hearing(motion) counted_by itc effective [2013-01-01, ..)\",),])"
+---
+{
+    "1 exceptions with too many atoms to prove disjoint": [
+        "pkgs/demo/main.lit:33:28 L3005 exceptions `e2` and `e1` to `d` can both apply on [2009-12-01, ..) and are not ordered\n    note @32:1: `e1` is declared here\n    note: their conditions have too many atoms to prove disjoint\n    note: make the conditions exclusive, or give both distinct `priority` values (larger wins)\n    fix @32:200-32:200: \" priority 1\"\n    fix @33:208-33:208: \" priority 2\"",
+    ],
+    "2 versions of one exception never meet": [],
+    "3 references through refs, deadlines, fields, and matches": [
+        "pkgs/demo/main.lit:19:17 L3006 default/exception references forms a cycle: p1 -> p2 -> p1\n    note @20:17: `p2` continues the cycle here\n    note: remove one of the relations so the order is acyclic",
+    ],
+    "4 an authority outranking itself": [
+        "pkgs/demo/main.lit:13:11 L3006 authority `A > A` makes the order cyclic\n    note: levels on the cycle: A\n    note: authority is a strict partial order: no level may outrank itself",
+    ],
+    "5 a cycle with a tail below it": [
+        "pkgs/demo/main.lit:14:11 L3006 authority `B > A` makes the order cyclic\n    note: levels on the cycle: A, B\n    note: authority is a strict partial order: no level may outrank itself",
+    ],
+    "6 a power rule with only a state": [
+        "pkgs/demo/main.lit:13:12 L2007 a `power` rule must contain the `decision` it grants\n    note: rule `move` is a `power`",
+    ],
+    "7 a liability rule with only a deadline": [
+        "pkgs/demo/main.lit:13:16 L2007 a `liability` rule must contain its consequence nodes\n    note: rule `l` is a `liability`",
+    ],
+    "8 a backward deadline and a counting version it never meets": [],
+}

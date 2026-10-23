@@ -1,0 +1,8 @@
+---
+source: crates/litigate-sema/tests/cov_rules_nosource.rs
+expression: "lines(&precedence::check(&w, &NoSource, 1))"
+---
+[
+    "pkgs/y/rules.lit:8:1 L3003 `b@2009-12-01` and `x::a@2009-12-01` both apply to `x::tg` on [2009-12-01, ..), and neither prevails\n    note @pkgs/x/rules.lit:10:1: `x::a@2009-12-01` is declared here\n    note: no declared relation (`notwithstanding`, `override`, `subject_to`) orders them\n    note: the canons tie: both are FederalRule; equally specific (both at package level, same window length); both take effect on 2009-12-01\n    note: declare `b notwithstanding x::a` or `b subject_to x::a`",
+    "pkgs/y/rules.lit:9:1 L3005 exceptions `e1` and `e0` to `x::d` can both apply on [2009-12-01, ..) and are not ordered\n    note @pkgs/x/rules.lit:12:1: `e0` is declared here\n    note: some history makes both conditions true\n    note: make the conditions exclusive, or give both distinct `priority` values (larger wins)",
+]

@@ -1,0 +1,23 @@
+---
+source: crates/litigate-sema/tests/cov_rules_precedence.rs
+expression: "table(&[(\"1 claimants beating each other in a circle\",\n&(tg.clone() + &d(\"a\", 2, \"notwithstanding tg\") +\n&d(\"b\", 3, \"subject_to tg notwithstanding a\")),),\n(\"2 a claimant whose first relation is not a claim\",\n&(d(\"old\", 1, \"\") + &tg + &d(\"a\", 2, \"supersedes old notwithstanding tg\") +\n&d(\"b\", 3, \"notwithstanding tg\")),),\n(\"3 both claimants inside one rule\",\n&(tg.clone() + \"rule duty r {\\n  \" + &d(\"a\", 2, \"notwithstanding tg\") + \"  \" +\n&d(\"b\", 3, \"notwithstanding tg\") + \"}\"),),\n(\"4 one tie across two target versions is reported once\",\n&(d(\"tg\", 1, \"effective [2009-12-01, 2012-01-01)\") +\n&d(\"tg\", 1, \"effective [2012-01-01, ..)\") + &d(\"a\", 2, \"notwithstanding tg\") +\n&d(\"b\", 3, \"notwithstanding tg\")),),\n(\"5 delegating to an unranked level\",\n&(\"authority Alpha > Beta\\n\".to_owned() +\n&d(\"o\", 1, \"delegable_to [Alpha]\")),),])"
+---
+{
+    "1 claimants beating each other in a circle": [
+        "pkgs/demo/main.lit:14:57 L3006 declared precedence (`notwithstanding`, `override`, `subject_to`) forms a cycle: a -> tg -> b -> a\n    note @15:57: `b` continues the cycle here\n    note @15:71: `b` continues the cycle here\n    note: remove one of the relations so the order is acyclic",
+        "pkgs/demo/main.lit:15:57 L3003 `b@2009-12-01` and `a@2009-12-01` both apply to `tg` on [2009-12-01, ..), and neither prevails\n    note @14:57: `a@2009-12-01` is declared here\n    note: no declared relation (`notwithstanding`, `override`, `subject_to`) orders them\n    note: the canons tie: both are FederalRule; equally specific (both at package level, same window length); both take effect on 2009-12-01\n    note: declare `b notwithstanding a` or `b subject_to a`",
+        "pkgs/demo/main.lit:15:57 L3003 `b@2009-12-01` and `tg@2009-12-01` both apply to `tg` on [2009-12-01, ..), and neither prevails\n    note @13:10: `tg@2009-12-01` is declared here\n    note: no declared relation (`notwithstanding`, `override`, `subject_to`) orders them\n    note: the canons tie: both are FederalRule; equally specific (both at package level, same window length); both take effect on 2009-12-01\n    note: declare `b notwithstanding tg` or `b subject_to tg`",
+    ],
+    "2 a claimant whose first relation is not a claim": [
+        "pkgs/demo/main.lit:16:57 L3003 `b@2009-12-01` and `a@2009-12-01` both apply to `tg` on [2009-12-01, ..), and neither prevails\n    note @15:72: `a@2009-12-01` is declared here\n    note: no declared relation (`notwithstanding`, `override`, `subject_to`) orders them\n    note: the canons tie: both are FederalRule; equally specific (both at package level, same window length); both take effect on 2009-12-01\n    note: declare `b notwithstanding a` or `b subject_to a`",
+    ],
+    "3 both claimants inside one rule": [
+        "pkgs/demo/main.lit:16:59 L3003 `b@2009-12-01` and `a@2009-12-01` both apply to `tg` on [2009-12-01, ..), and neither prevails\n    note @15:59: `a@2009-12-01` is declared here\n    note: no declared relation (`notwithstanding`, `override`, `subject_to`) orders them\n    note: the canons tie: both are FederalRule; equally specific (both inside a `rule`, same window length); both take effect on 2009-12-01\n    note: declare `b notwithstanding a` or `b subject_to a`",
+    ],
+    "4 one tie across two target versions is reported once": [
+        "pkgs/demo/main.lit:16:57 L3003 `b@2009-12-01` and `a@2009-12-01` both apply to `tg` on [2009-12-01, 2012-01-01), and neither prevails\n    note @15:57: `a@2009-12-01` is declared here\n    note: no declared relation (`notwithstanding`, `override`, `subject_to`) orders them\n    note: the canons tie: both are FederalRule; equally specific (both at package level, same window length); both take effect on 2009-12-01\n    note: declare `b notwithstanding a` or `b subject_to a`",
+    ],
+    "5 delegating to an unranked level": [
+        "pkgs/demo/main.lit:14:57 L3004 `o` (FederalRule) delegates to `Alpha`, which is not a lower authority\n    note: `Alpha` and `FederalRule` are not ranked by any `authority` chain",
+    ],
+}

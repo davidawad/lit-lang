@@ -1,0 +1,13 @@
+---
+source: crates/litigate-sema/tests/cov_rules_temporal.rs
+expression: got
+---
+[
+    "ov as_of 2013-01-01: L3007 no version of `ov` is in force on 2013-01-01 [overlapping versions [2009-12-01, ..), [2012-01-01, 2014-01-01) (L3001)]",
+    "p as_of 2013-01-01: L3007 no version of `p` is in force on 2013-01-01 [superseded by `q` from 2012-01-01; repeal does not revive it (declare `revives p`)]",
+    "p2 as_of 2013-01-01: 20.days",
+    "p2 as_of 2017-01-01: 21.days",
+    "p3 as_of 2013-01-01: L3007 no version of `p3` is in force on 2013-01-01 [superseded by `q3` from 2012-01-01]",
+    "p3 as_of 2015-01-01: 20.days",
+    "p4 as_of 2017-01-01: 21.days",
+]

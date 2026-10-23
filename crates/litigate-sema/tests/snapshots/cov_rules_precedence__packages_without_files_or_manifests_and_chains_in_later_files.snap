@@ -1,0 +1,15 @@
+---
+source: crates/litigate-sema/tests/cov_rules_precedence.rs
+expression: "[run(&[empty]), run(&[broken]), run(&[two_files])]"
+---
+[
+    [
+        "pkgs/empty/Lit.toml:1:1 L1008 the package declares no `start` node",
+    ],
+    [
+        "pkgs/broken/Lit.toml:2:8 L1004 invalid Lit.toml: invalid type: integer `1`, expected a string",
+    ],
+    [
+        "pkgs/demo/auth.lit:4:11 L3006 authority `B > A` makes the order cyclic\n    note: levels on the cycle: A, B\n    note: authority is a strict partial order: no level may outrank itself",
+    ],
+]

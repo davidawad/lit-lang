@@ -1,0 +1,12 @@
+---
+source: crates/litigate-sema/tests/cov_rules_temporal.rs
+expression: "[outcome(&w, \"p\", &pending, 5), outcome(&w, \"p\", &early, 0),\noutcome(&w, \"p\", &pending, 1), outcome(&w, \"r\", &pending, 1),\noutcome(&w, \"r\", &pending[..1], 0), outcome(&w, \"q\", &pending, 1),]"
+---
+[
+    "Transition(\"no event #5\")",
+    "Inactive(Miss(NotInForce { hidden: [] }))",
+    "Transition(\"`foreign`: condition is not over `has_event`\")",
+    "Transition(\"arm selects unknown `q@2009-12-01`\")",
+    "version 2009-12-01 via None",
+    "Inactive(Miss(Ambiguous([Window { from: \"2009-12-01\", to: None }, Window { from: \"2016-12-01\", to: None }])))",
+]

@@ -112,18 +112,17 @@ pub fn suspensions(world: &World<'_>, key: &Key, known_at: Option<&str>) -> Vec<
                 .cloned();
             (next.clone(), next.is_some())
         };
-        let suspended = Window {
-            from: window.from.clone(),
-            to: end,
-        };
-        if !suspended.is_empty() {
-            out.push(Suspension {
-                by: i,
-                window: suspended,
-                version: r.version.clone(),
-                revived,
-            });
-        }
+        // Never empty: in-force windows are non-empty (L2007), and a
+        // revival point ends a suspension only after it starts.
+        out.push(Suspension {
+            by: i,
+            window: Window {
+                from: window.from,
+                to: end,
+            },
+            version: r.version.clone(),
+            revived,
+        });
     }
     out
 }

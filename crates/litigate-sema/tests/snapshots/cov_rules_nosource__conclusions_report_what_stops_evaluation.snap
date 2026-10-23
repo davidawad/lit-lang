@@ -1,0 +1,12 @@
+---
+source: crates/litigate-sema/tests/cov_rules_nosource.rs
+expression: "[show(\"d\", \"2009-01-01\"), show(\"d\", \"2010-01-01\"), show(\"u\", \"2010-01-01\"),\nshow(\"late\", \"2010-01-01\"), show(\"x1\", \"2010-01-01\"),\nshow(\"dl\", \"2010-01-01\"),]"
+---
+[
+    "d on 2009-01-01: `d` is not in force on 2009-01-01",
+    "d on 2010-01-01: `e1` and `e2` both apply to `d` with no order",
+    "u on 2010-01-01: `odd`: a condition atom is unknown",
+    "late on 2010-01-01: Literal { value: Number(Rational { numerator: 1, denominator: 1 }) } via late",
+    "x1 on 2010-01-01: `x1` is part of an exception cycle (L3006)",
+    "dl on 2010-01-01: `dl` is not a default or exception",
+]

@@ -148,11 +148,12 @@ fn cycle_through(graph: &Graph, start: &Key) -> Option<Vec<Edge>> {
     while let Some(n) = queue.pop_front() {
         for e in graph.get(&n).into_iter().flatten() {
             if e.to == *start {
+                // Every node reached, and only those, has a predecessor;
+                // `start` has none (an edge back to it ends the search).
                 let mut path = vec![e.clone()];
-                let mut at = n.clone();
-                while at != *start {
-                    let (p, edge) = prev.get(&at)?.clone();
-                    path.push(edge);
+                let mut at = &n;
+                while let Some((p, edge)) = prev.get(at) {
+                    path.push(edge.clone());
                     at = p;
                 }
                 path.reverse();

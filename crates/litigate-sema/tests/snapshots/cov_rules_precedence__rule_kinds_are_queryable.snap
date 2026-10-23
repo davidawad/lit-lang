@@ -1,0 +1,12 @@
+---
+source: crates/litigate-sema/tests/cov_rules_precedence.rs
+expression: got
+---
+[
+    "p: duty true kinds [Some(Duty)]",
+    "q: duty false kinds [Some(Power)]",
+    "free: duty false kinds [None]",
+    "m: duty false kinds [Some(Power)]",
+    "answer: duty false kinds [None]",
+    "nothing: duty false kinds []",
+]

@@ -231,7 +231,38 @@ mod tests {
         );
         assert_eq!(answer_period().predecessor(1), Some(0));
         assert_eq!(answer_period().predecessor(0), None);
+        assert_eq!(answer_period().predecessor(2), None);
         assert!(answer_period().gaps(&pkg).is_empty());
+    }
+
+    #[test]
+    fn overlaps_order_by_start_not_by_source() {
+        let set = VersionSet::new(vec![
+            v("2016-12-01", None, "2016-04-28", 21),
+            v("2009-12-01", Some("2017-01-01"), "2009-03-26", 20),
+        ]);
+        assert_eq!(
+            set.overlaps(),
+            vec![Overlap {
+                first: 1,
+                second: 0,
+                common: Window::new("2016-12-01", Some("2017-01-01")),
+            }]
+        );
+        assert_eq!(set.starting("2009-12-01").map(|v| v.decl), Some(20));
+        assert_eq!(set.starting("2010-01-01"), None);
+    }
+
+    #[test]
+    fn an_empty_set_has_no_lifetime() {
+        let empty = VersionSet::<u32>::default();
+        let pkg = Window::new("2009-12-01", None::<String>);
+        assert_eq!(empty.lifetime(&pkg), None);
+        assert!(empty.gaps(&pkg).is_empty());
+        assert_eq!(
+            empty.as_of("2010-01-01", None),
+            Err(Miss::NotInForce { hidden: vec![] })
+        );
     }
 
     fn date() -> impl Strategy<Value = String> {
@@ -253,14 +284,12 @@ mod tests {
                     decl: i,
                 })
                 .collect();
-            if open {
-                if let Some(last) = cuts.last() {
-                    versions.push(Version {
-                        in_force: Window::new(last.clone(), None::<String>),
-                        known_at: last.clone(),
-                        decl: versions.len(),
-                    });
-                }
+            if let (true, Some(last)) = (open, cuts.last()) {
+                versions.push(Version {
+                    in_force: Window::new(last.clone(), None::<String>),
+                    known_at: last.clone(),
+                    decl: versions.len(),
+                });
             }
             (VersionSet::new(versions), cuts)
         })

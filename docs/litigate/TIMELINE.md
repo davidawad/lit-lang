@@ -50,8 +50,14 @@ are omitted, but the layer is still listed so a UI can switch it back on.
 Every other world names its `parent` world, the `fork_row` where it
 diverges, and the `choice` that defines it: `assumed_order`, `grant`,
 `denial`, `hypothetical_decision`, `election` or `chance` (with
-`probability` when the model has one). A world's rows are its own rows plus
-its ancestors' rows up to the fork row.
+`probability` when the model has one).
+
+A world's view is its parent's view up to and including its fork row
+(following the parent's edges), plus its own rows. A world re-emits an ancestor row only when the row differs there (a
+different `due` or `status`); the re-emitted row has a new `id`, the same
+`source` span (or, when `source` is `null`, the same `kind` and `label`) and
+replaces the ancestor row in that world's view. Rows that do not change are
+never copied. A UI diffing two worlds pairs rows by that same key.
 
 ## Rows
 

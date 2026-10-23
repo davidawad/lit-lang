@@ -68,7 +68,7 @@ fn a_matter_that_does_not_lower_fails_check() {
 }
 
 #[test]
-fn a_deadline_the_engine_cannot_count_is_left_off_the_schedule() {
+fn a_deadline_the_engine_cannot_count_is_scheduled_unknown() {
     let dir = example(
         "check-business",
         "deadline in-business-days: 3.business_days from Served(complaint) counted_by frcp6",
@@ -76,13 +76,19 @@ fn a_deadline_the_engine_cannot_count_is_left_off_the_schedule() {
     );
     let run = litigate_in(&dir, &["check", "cases/examples/acme.case"]);
     assert_eq!(run.code, 0, "{}", run.stdout);
-    let deadlines: Vec<&str> = run.json["result"]["cases"][0]["deadlines"]
+    let deadlines: Vec<(&str, bool)> = run.json["result"]["cases"][0]["deadlines"]
         .as_array()
         .unwrap()
         .iter()
-        .map(|d| d["deadline"].as_str().unwrap())
+        .map(|d| (d["deadline"].as_str().unwrap(), d["due"].is_null()))
         .collect();
-    assert_eq!(deadlines, ["frcp-rule12-example::answer-period"]);
+    assert_eq!(
+        deadlines,
+        [
+            ("frcp-rule12-example::answer-period", false),
+            ("frcp-rule12-example::in-business-days", true),
+        ]
+    );
 }
 
 #[test]

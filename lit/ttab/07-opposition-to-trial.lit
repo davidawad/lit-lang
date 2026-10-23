@@ -27,7 +27,7 @@ state opposition-filed: "Notice of opposition filed (commenced)" by board cite "
   }
 }
 
-decision instituted: "Board institutes; answer due 60 days from institution order (historically 40)" by applicant cite ?("37 CFR 2.105(a); 2.106(a); TBMP 310.03(a)") {
+decision instituted: "Board institutes; answer due on the date the notice of institution designates" by applicant cite ?("37 CFR 2.105(a); 2.106(a); TBMP 310.03(a)") {
   group opposition
   answer-plain "File answer (denials, crowded-field amplification), no counterclaim" -> answered {
     authority cite "37 CFR 2.106(b)(1)-(2)"
@@ -36,7 +36,7 @@ decision instituted: "Board institutes; answer due 60 days from institution orde
       extendable true
       extension_authority "37 CFR 2.127(a); consented motion TBMP 509"
     }
-    note "Answer due 60 days from the institution order (TBMP 310.03(a): practice changing from 40 to 60 days)."
+    note "Answer due on the date the notice of institution designates, no less than 30 days from its mailing (37 CFR 2.105(a)), or as the Board resets it (2.106(a))."
     tags [answer-plain]
   }
   answer-s18 "File answer WITH Section 18 restriction counterclaim against the opposer's pleaded registration ($600/class)" -> answered {

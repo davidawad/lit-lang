@@ -29,9 +29,18 @@ pub struct Scheduled {
     pub trigger: String,
     /// Its date.
     pub trigger_date: String,
-    /// Due date.
-    pub due: String,
-    /// Counting rule.
+    /// Due date; `None` when it is unknown (`unknown` says why): a
+    /// designated date the notice does not give, or one that cannot be
+    /// counted. Never a guess in its place.
+    pub due: Option<String>,
+    /// Why the due date is unknown.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub unknown: Option<String>,
+    /// The date the trigger designates, before any roll (`designated p`).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub designated: Option<String>,
+    /// Counting rule; empty when the due date is unknown.
+    #[serde(skip_serializing_if = "String::is_empty")]
     pub rule: String,
     /// Counting steps.
     pub steps: Vec<String>,
@@ -264,26 +273,40 @@ fn schedule(
                 0,
                 case.known_at.as_deref(),
             );
-            if let Ok(due) = due {
-                out.push(Scheduled {
-                    deadline: o.deadline.clone(),
-                    trigger: hirx::event_text(&trigger.action),
-                    trigger_date: due.trigger,
-                    due: due.computed.due_date,
-                    rule: due.rule,
-                    steps: due.computed.steps,
-                    version: due.version,
-                    cite: due.cite,
-                    rolled: due.computed.last_day_rolled,
-                    method: due.method,
-                    bearer: o.bearer.clone(),
-                    floor: o.floor.clone(),
-                    extended_to: o.extended_to.clone(),
-                    extended_under: o.extended_under,
-                    request_made: o.request_made.clone(),
-                    status: o.status,
-                });
+            let mut scheduled = Scheduled {
+                deadline: o.deadline.clone(),
+                trigger: hirx::event_text(&trigger.action),
+                trigger_date: trigger.date.clone(),
+                due: None,
+                unknown: None,
+                designated: None,
+                rule: String::new(),
+                steps: Vec::new(),
+                version: String::new(),
+                cite: None,
+                rolled: false,
+                method: None,
+                bearer: o.bearer.clone(),
+                floor: o.floor.clone(),
+                extended_to: o.extended_to.clone(),
+                extended_under: o.extended_under,
+                request_made: o.request_made.clone(),
+                status: o.status,
+            };
+            match due {
+                Ok(due) => {
+                    scheduled.due = Some(due.computed.due_date);
+                    scheduled.designated = due.designated;
+                    scheduled.rule = due.rule;
+                    scheduled.steps = due.computed.steps;
+                    scheduled.version = due.version;
+                    scheduled.cite = due.cite;
+                    scheduled.rolled = due.computed.last_day_rolled;
+                    scheduled.method = due.method;
+                }
+                Err(why) => scheduled.unknown = Some(why),
             }
+            out.push(scheduled);
         }
     }
     out
@@ -379,13 +402,23 @@ mod tests {
     }
 
     #[test]
-    fn a_deadline_the_engine_cannot_count_is_left_off_the_schedule() {
+    fn a_deadline_the_engine_cannot_count_is_scheduled_unknown() {
         let c = checked(
             "deadline in-business-days: 3.business_days from Served(complaint) counted_by frcp6",
             ACME,
             None,
         );
-        let scheduled: Vec<&str> = c.schedule.iter().map(|s| s.deadline.as_str()).collect();
-        assert_eq!(scheduled, ["frcp-rule12-example::answer-period"]);
+        let scheduled: Vec<(&str, Option<&str>, bool)> = c
+            .schedule
+            .iter()
+            .map(|s| (s.deadline.as_str(), s.due.as_deref(), s.unknown.is_some()))
+            .collect();
+        assert_eq!(
+            scheduled,
+            [
+                ("frcp-rule12-example::answer-period", Some("2025-03-26"), false),
+                ("frcp-rule12-example::in-business-days", None, true),
+            ]
+        );
     }
 }

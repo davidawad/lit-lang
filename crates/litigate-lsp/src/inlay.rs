@@ -37,6 +37,9 @@ fn event_end(root: &SyntaxNode, date: &str, call: &str) -> Option<TextSize> {
 /// schedule's own versions and count, never a recount.
 fn label(s: &Scheduled) -> String {
     let (_, local) = s.deadline.split_once("::").unwrap_or(("", &s.deadline));
+    let Some(due) = &s.due else {
+        return format!("// {local} due unknown");
+    };
     let cite = s.cite.as_deref().unwrap_or(&s.rule);
     let mut flags = String::new();
     if s.rolled {
@@ -45,7 +48,7 @@ fn label(s: &Scheduled) -> String {
     if let Some(m) = &s.method {
         let _ = write!(flags, " +{m} service");
     }
-    format!("// {local} due {} ({cite}{flags})", s.due)
+    format!("// {local} due {due} ({cite}{flags})")
 }
 
 /// Deadline hints for the matter at `file` within `range`.

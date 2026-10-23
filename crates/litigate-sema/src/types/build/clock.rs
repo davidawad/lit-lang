@@ -5,10 +5,10 @@ use super::cx::{first_expr, first_ref, flag, Cx};
 use crate::db::parse::tree::{ArmItem, Expr, ExprKind, Field, Item, Name, RefPath};
 use crate::db::span::Report;
 use crate::hir::{
-    Anchor, Counting, DayUnit, Deadline, Direction, EndOfMonth, RollOn, ShortPeriod, Transition,
+    Anchor, Counting, DayUnit, Deadline, Designated, Direction, EndOfMonth, RollOn, ShortPeriod, Transition,
     TransitionArm, Type, Value,
 };
-use crate::resolve::sig::ValueKind;
+use crate::resolve::sig::{TypeSig, ValueKind};
 use crate::resolve::suggest;
 use litigate_base::{Applicability, DiagnosticCode as C};
 use std::collections::BTreeMap;
@@ -130,8 +130,12 @@ impl Cx<'_, '_> {
             "before" => Direction::Backward,
             _ => Direction::Forward,
         };
-        let trigger = self.pattern(trigger);
         let o = self.once_except(opts, "extend");
+        let designated =
+            first_ref(o.get("designated")).and_then(|r| {
+            self.designated(name, trigger, r, (direction, period.map(|p| p.1)))
+        });
+        let trigger = self.pattern(trigger);
         let obligation = self.obligation(name, opts, &o, rule);
         let (amount, unit) = period?;
         Some(Deadline {
@@ -149,6 +153,83 @@ impl Cx<'_, '_> {
             linear: obligation.linear,
             extend: obligation.extend,
             waive: obligation.waive,
+            designated,
+        })
+    }
+
+    /// `designated p` of deadline `name`: `p` is a `Date` parameter of the
+    /// event `trigger` matches, and the deadline counts forward in calendar
+    /// days (its least time, SPEC §5.3).
+    fn designated(
+        &mut self,
+        name: &Name,
+        trigger: &Expr,
+        r: &RefPath,
+        (direction, unit): (Direction, Option<DayUnit>),
+    ) -> Option<Designated> {
+        if unit.is_some_and(|u| u != DayUnit::Calendar) {
+            self.report(Report::new(
+                C::InvalidField,
+                r.range,
+                format!(
+                    "the least time a designated due date of `{}` allows is counted in calendar days",
+                    name.text
+                ),
+            ));
+            return None;
+        }
+        if direction == Direction::Backward {
+            self.report(Report::new(
+                C::InvalidField,
+                r.range,
+                format!(
+                    "deadline `{}` counts backward: only a forward period's due date is designated",
+                    name.text
+                ),
+            ));
+            return None;
+        }
+        let ExprKind::Call(callee, _) = &trigger.kind else {
+            return None;
+        };
+        let (event, found) = self
+            .ck
+            .scope
+            .user_type(&callee.head, &[])
+            .ok()
+            .filter(|_| callee.is_simple())?;
+        let TypeSig::Event(params) = found.item else {
+            return None;
+        };
+        let Some(param) = params
+            .iter()
+            .position(|(p, _)| r.is_simple() && *p == r.head.text)
+        else {
+            self.report(Report::new(
+                C::UnresolvedName,
+                r.range,
+                format!(
+                    "the trigger `{event}` of deadline `{}` has no parameter `{}`",
+                    name.text,
+                    r.display()
+                ),
+            ));
+            return None;
+        };
+        if params[param].1 != Some(Type::Date) {
+            self.report(Report::new(
+                C::TypeMismatch,
+                r.range,
+                format!(
+                    "parameter `{}` of `{event}` designates a due date, so it must have type `Date`",
+                    params[param].0
+                ),
+            ));
+            return None;
+        }
+        Some(Designated {
+            param,
+            name: params[param].0.clone(),
         })
     }
 

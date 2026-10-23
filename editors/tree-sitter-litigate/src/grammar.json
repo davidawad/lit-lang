@@ -2187,8 +2187,17 @@
                         "type": "FIELD",
                         "name": "key",
                         "content": {
-                          "type": "STRING",
-                          "value": "bearer"
+                          "type": "CHOICE",
+                          "members": [
+                            {
+                              "type": "STRING",
+                              "value": "bearer"
+                            },
+                            {
+                              "type": "STRING",
+                              "value": "designated"
+                            }
+                          ]
                         }
                       },
                       {

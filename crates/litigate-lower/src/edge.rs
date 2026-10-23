@@ -129,6 +129,12 @@ fn deadline(
                         );
                         return None;
                     }
+                    // A designated due date is the notice's in each matter
+                    // (SPEC §5.3): the pack has no window to give it, and
+                    // its least time is not one.
+                    if decl.designated.is_some() {
+                        return None;
+                    }
                     (decl.amount, decl.unit, Some(decl))
                 }
                 Ok(_) => {

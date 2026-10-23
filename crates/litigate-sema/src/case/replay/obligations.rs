@@ -17,7 +17,7 @@ use crate::case::spans::error;
 use crate::case::{Effect, Obligation, Status};
 use crate::hir::{
     Bound, Capability, CauseStandard, Deadline, Expr, ExprKind, Extension, ExtensionWindow, Motion,
-    TriggerPolicy, Value,
+    TriggerPolicy, Undesignated, Value,
 };
 use crate::temporal::condition::matches;
 use crate::temporal::MatterEvent;
@@ -245,6 +245,17 @@ impl<'g> Cx<'_, 'g> {
                 }
                 _ => continue,
             };
+            // A notice designating less time than its rule allows is
+            // rejected (37 C.F.R. § 2.105(a)); its instance has no due date.
+            if let Some(Err(Undesignated::BelowFloor(why))) = d.designation(date, view) {
+                let e = error(
+                    C::InvalidCaseEvent,
+                    self.at(k, |e| e.action.as_ref()),
+                    why,
+                )
+                .note("a designated due date must allow at least the deadline's own period; correct the date as the notice gives it");
+                self.out.push(e);
+            }
             fired = true;
             let displacing = self.graph.claims(q, date, known_at).iter().any(|x| {
                 found
@@ -508,7 +519,16 @@ impl<'g> Cx<'_, 'g> {
                     },
                 ..
             })) => Some(new.as_str()),
-            Transform::Extend(_) => return None,
+            Transform::Extend(_) => {
+                let d = error(
+                    C::InvalidCaseEvent,
+                    self.at(k, |e| e.action.as_ref()),
+                    format!("`{action}` extends `{q}` to no known date, which moves nothing"),
+                )
+                .note("an extension's new due date is the order's; record it, or omit the event until it is known");
+                self.out.push(d);
+                return None;
+            }
             Transform::Waive => None,
         };
         // Each grant licenses the transform when every open instance is

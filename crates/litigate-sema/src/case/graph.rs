@@ -457,6 +457,7 @@ pub fn display(e: &Expr) -> String {
         ExprKind::Literal { value } => match value {
             Value::Variant(v) => v.rsplit("::").next().unwrap_or(v).to_owned(),
             Value::Date(d) => d.clone(),
+            Value::Hole(_) => "?".to_owned(),
             Value::String(s) => format!("{s:?}"),
             Value::Edge(e) => e.clone(),
             Value::Boolean(b) => b.to_string(),

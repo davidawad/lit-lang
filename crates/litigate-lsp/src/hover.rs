@@ -66,6 +66,14 @@ fn interval(e: &hir::Interval) -> String {
 /// The type line of a declaration.
 fn typed(d: &Declaration) -> Option<String> {
     Some(match d {
+        Declaration::Deadline(x) if x.designated.is_some() => format!(
+            "`Date`: designated by {} (its `{}`), no earlier than {} `Days<{}>` after it, counted_by `{}`",
+            hirx::event_text(&x.trigger),
+            x.designated.as_ref().map_or("", |p| p.name.as_str()),
+            x.amount,
+            unit(x.unit),
+            hirx::local(&x.counting)
+        ),
         Declaration::Deadline(x) => format!(
             "`Days<{}>`: {} {} {} counted_by `{}`",
             unit(x.unit),

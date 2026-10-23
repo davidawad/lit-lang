@@ -52,15 +52,28 @@ impl Trace<'_> {
             hir::Direction::Forward => "after",
             hir::Direction::Backward => "before",
         };
-        let mut steps = vec![step(
-            format!("{}@{}", v.meta.id, v.meta.effective.from),
-            cite,
-            format!(
-                "{} {} day(s) {direction} {}, counted by {}; in force [{}, {})",
+        let period = match &v.designated {
+            Some(p) => format!(
+                "due on the date {} designates (its `{}`), no earlier than {} {} day(s) {direction} it, rolled by {}",
+                hirx::event_text(&v.trigger),
+                p.name,
+                v.amount,
+                name_of(v.unit),
+                v.counting,
+            ),
+            None => format!(
+                "{} {} day(s) {direction} {}, counted by {}",
                 v.amount,
                 name_of(v.unit),
                 hirx::event_text(&v.trigger),
                 v.counting,
+            ),
+        };
+        let mut steps = vec![step(
+            format!("{}@{}", v.meta.id, v.meta.effective.from),
+            cite,
+            format!(
+                "{period}; in force [{}, {})",
                 v.meta.effective.from,
                 v.meta.effective.to.as_deref().unwrap_or("..")
             ),
@@ -90,6 +103,16 @@ impl Trace<'_> {
                 }),
         );
         match scheduled {
+            Some(Scheduled {
+                unknown: Some(why),
+                trigger,
+                trigger_date,
+                ..
+            }) => steps.push(step(
+                v.counting.clone(),
+                None,
+                format!("triggered by {trigger} on {trigger_date}; the due date is unknown: {why}"),
+            )),
             Some(s) => {
                 let counting_cite = s.cite.as_ref();
                 steps.push(step(
@@ -159,7 +182,9 @@ impl Trace<'_> {
         let steps = chosen
             .map(|v| self.steps(d, v, scheduled))
             .unwrap_or_default();
-        let value = scheduled.map_or(Value::Null, |s| Value::String(s.due.clone()));
+        let value = scheduled
+            .and_then(|s| s.due.clone())
+            .map_or(Value::Null, Value::String);
         let versions = versions
             .iter()
             .map(|v| {

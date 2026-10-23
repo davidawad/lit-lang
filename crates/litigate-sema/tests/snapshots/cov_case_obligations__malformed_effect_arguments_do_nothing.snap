@@ -11,7 +11,7 @@ expression: rows
     ],
     "an extension whose date is not a date": [
         "13:3 L4009 obligation `omega::answer` borne by `d`, created by `Served(complaint)` on 2011-01-04, was neither discharged nor transformed by its due date 2011-01-14: at as_of 2011-02-01 it is breached\n    note: `answer` runs 10 calendar days from `Served(complaint)` on 2011-01-04 under `oc@2009-12-01`\n    note: a duty is consumed exactly once: by a timely act through a `within` edge, or by a breach",
-        "ok: start omega::open",
+        "14:14 L4001 `Ordered(3)` extends `omega::answer` to no known date, which moves nothing\n    note: an extension's new due date is the order's; record it, or omit the event until it is known",
         "trace Triggered Served(complaint) omega::open -> omega::open",
         "obligation omega::answer #0 Breached bearer d linear",
     ],

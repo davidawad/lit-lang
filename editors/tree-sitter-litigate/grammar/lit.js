@@ -227,10 +227,11 @@ module.exports = {
   ),
 
   // A deadline declaration's options add the obligation it creates
-  // (SPEC §5.3): bearer, trigger policy, and capabilities.
+  // (SPEC §5.3): bearer, trigger policy, capabilities, and the trigger
+  // parameter designating its due date.
   deadline_decl_opts: $ => braced(choice(
     $.deadline_opt,
-    seq(field('key', 'bearer'), field('value', $.identifier)),
+    seq(field('key', choice('bearer', 'designated')), field('value', $.identifier)),
     seq(field('key', 'trigger'), field('value', choice($.identifier, $.call_expression))),
     seq(field('key', choice('extend', 'waive')), field('value', $.capability)),
   )),

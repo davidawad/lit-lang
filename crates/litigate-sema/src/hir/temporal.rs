@@ -54,6 +54,92 @@ pub struct Deadline {
     /// waived.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub waive: Option<Capability>,
+    /// The trigger's `Date` parameter that designates each instance's due
+    /// date (`designated p`): the issuing notice or order sets the date,
+    /// and `amount`/`unit` are only the least time the rule allows it (37
+    /// C.F.R. § 2.105(a), "a time, not less than thirty days from the
+    /// mailing date of the notice"). `None`: the period is counted.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub designated: Option<Designated>,
+}
+
+/// Why a designated deadline has no due date (SPEC §5.3).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Undesignated {
+    /// The trigger leaves the date unknown (`?`, or no argument): the due
+    /// date is unknown, never counted in its place.
+    Unknown(String),
+    /// The trigger designates a date earlier than the rule allows: the
+    /// notice is rejected.
+    BelowFloor(String),
+}
+
+impl Undesignated {
+    /// The explanation.
+    #[must_use]
+    pub fn message(&self) -> &str {
+        match self {
+            Self::Unknown(m) | Self::BelowFloor(m) => m,
+        }
+    }
+}
+
+impl Deadline {
+    /// The due date that trigger event `action` on `date` designates, before
+    /// any roll (`designated p`); `None` when the period is counted. A date
+    /// earlier than `amount` calendar days from `date` is refused: "a time,
+    /// not less than thirty days from the mailing date of the notice" (37
+    /// C.F.R. § 2.105(a)).
+    ///
+    /// # Errors
+    /// The date is unknown, or below the floor.
+    #[must_use]
+    pub fn designation(&self, date: &str, action: &Expr) -> Option<Result<String, Undesignated>> {
+        let d = self.designated.as_ref()?;
+        let (event, args) = match &action.kind {
+            super::ExprKind::Call { callee, args } => (callee.as_str(), args.as_slice()),
+            _ => ("the trigger", &[][..]),
+        };
+        if !crate::temporal::condition::matches(&self.trigger, action) {
+            return Some(Err(Undesignated::Unknown(format!(
+                "`{event}` is not the trigger of `{}`, so it designates no due date for it",
+                self.meta.id
+            ))));
+        }
+        let designated = match args.get(d.param).map(|a| &a.kind) {
+            Some(super::ExprKind::Literal {
+                value: super::Value::Date(v),
+            }) => v.clone(),
+            _ => {
+                return Some(Err(Undesignated::Unknown(format!(
+                    "`{event}` designates no due date for `{}` (its `{}` is unknown), so the due date is unknown: it is the notice's to set, never counted in its place",
+                    self.meta.id, d.name
+                ))))
+            }
+        };
+        let floor = crate::types::date::add_days(date, self.amount).unwrap_or_default();
+        if designated < floor {
+            let cite = self
+                .meta
+                .cite
+                .as_ref()
+                .map_or_else(String::new, |c| format!(" ({c})"));
+            return Some(Err(Undesignated::BelowFloor(format!(
+                "`{event}` on {date} designates `{}` due {designated}, earlier than the least time the rule allows, {} calendar days from {date} ({floor}){cite}",
+                self.meta.id, self.amount
+            ))));
+        }
+        Some(Ok(designated))
+    }
+}
+
+/// The trigger parameter designating a deadline's due date (SPEC §5.3).
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Designated {
+    /// Its index among the trigger event's parameters.
+    pub param: usize,
+    /// Its name.
+    pub name: String,
 }
 
 /// How a matching trigger creates obligation instances (SPEC §5.3).

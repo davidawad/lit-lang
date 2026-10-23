@@ -135,7 +135,16 @@ fn argument(
         (Type::Date, S::Date(d)) => {
             Some(literal(Value::Date(d.clone()), Type::Date, a.range, span))
         }
-        (Type::Date, _) => mismatch(out, "a valid date"),
+        // An unknown date (`?`): a notice whose designated due date the
+        // matter does not have. The deadline it designates is then unknown
+        // (SPEC §5.3), never counted in its place.
+        (Type::Date, S::Hole(reason)) => Some(literal(
+            Value::Hole(reason.clone()),
+            Type::Date,
+            a.range,
+            span,
+        )),
+        (Type::Date, _) => mismatch(out, "a valid date or `?`"),
         (Type::String, S::Str(s)) => Some(literal(
             Value::String(s.clone()),
             Type::String,

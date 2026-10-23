@@ -71,6 +71,9 @@ pub(super) struct Due {
     pub request: DueRequest,
     /// The computed due date, or why it could not be computed.
     pub date: Result<String, String>,
+    /// The trigger parameter designating the due date (`designated p`);
+    /// `None` when the period is counted.
+    pub designated: Option<String>,
 }
 
 /// `CamelCase` to `kebab-case`.
@@ -176,13 +179,26 @@ pub(super) fn due(
             events[at].date
         ))
     } else {
-        clock.due(&request)
+        let event = &events[trigger];
+        match d.designation(event.date, event.action) {
+            None => clock.due(&request),
+            // The notice's date, rolled under the counting rule like any
+            // last day (37 C.F.R. § 2.196): counted zero days from it.
+            Some(Ok(designated)) => clock.due(&DueRequest {
+                trigger: designated,
+                amount: 0,
+                service: Vec::new(),
+                ..request.clone()
+            }),
+            Some(Err(why)) => Err(why.message().to_owned()),
+        }
     };
     Due {
         deadline: d.meta.id.clone(),
         trigger,
         date,
         request,
+        designated: d.designated.as_ref().map(|p| p.name.clone()),
     }
 }
 
@@ -193,6 +209,16 @@ pub(super) fn explain(d: &Due, trigger: &Expr) -> String {
     } else {
         format!(", service by {}", d.request.service.join("/"))
     };
+    if let Some(p) = &d.designated {
+        return format!(
+            "`{}` is due on the date `{}` on {} designates (its `{p}`), no earlier than {} from it, rolled under `{}`",
+            d.deadline,
+            display(trigger),
+            d.request.trigger,
+            d.request.unit.prose(d.request.amount),
+            d.request.counting,
+        );
+    }
     format!(
         "`{}` runs {} from `{}` on {} under `{}{}`{service}",
         d.deadline,

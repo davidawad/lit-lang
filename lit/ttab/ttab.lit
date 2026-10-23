@@ -48,9 +48,20 @@ event ExtensionRequested(term: ExtensionTerm)
 /// (37 C.F.R. § 2.102(c)(3)): the point an opposer must oppose, or seek the
 /// final extension, by.
 event ExtendedPeriodExpired()
-/// The Board's notice of institution, which sets the answer time and the
-/// trial schedule (37 C.F.R. §§ 2.105(a), 2.120(a)(1)).
-event InstitutionNoticed()
+/// The Board's notice of institution, which designates the answer time
+/// and sets the trial schedule (37 C.F.R. §§ 2.105(a), 2.120(a)(1)). Its
+/// date is the notice's mailing date; `due` is the date it designates for
+/// the answer, as the notice states it (`?` when the matter does not have
+/// it: the answer deadline is then unknown).
+event InstitutionNoticed(due: Date)
+/// The Board's designation of the time to answer a counterclaim (37
+/// C.F.R. § 2.106(b)(3)(iii)). Its date is the designation's mailing date;
+/// `due` is the date it designates.
+event CounterclaimAnswerTimeDesignated(due: Date)
+/// The Board's notice of institution of a cancellation proceeding (37
+/// C.F.R. § 2.113(a)). Its date is the notice's mailing date; `due` is the
+/// date it designates for the answer.
+event CancellationInstitutionNoticed(due: Date)
 /// The opening of the discovery period set in the institution order.
 event DiscoveryOpened()
 /// The Board's final decision in the opposition.
@@ -154,49 +165,101 @@ test "a day 180 on the Saturday before Labor Day rolls to Tuesday" cite "37 CFR 
 
 /// 37 C.F.R. § 2.105(a): the notice of institution "shall designate a
 /// time, not less than thirty days from the mailing date of the notice,
-/// within which an answer must be filed"; § 2.106(a) lets the Board reset
-/// it ("the time initially set, or as may later be reset by the Board").
-/// The answer time is therefore the notice's, an order in the proceeding:
-/// a matter whose notice designates a longer time records it in a
-/// `CaseOrder` layer, which the period delegates to.
+/// within which an answer must be filed". The answer is due on the date
+/// the notice designates, an input of each matter, never a period counted
+/// in its place: thirty days is only the least time the regulation allows,
+/// and a notice designating less is rejected. § 2.106(a) lets the Board
+/// reset it ("the time initially set, or as may later be reset by the
+/// Board"): an order of the Board in the proceeding is a `CaseOrder`
+/// layer, which the deadline delegates to. A designated last day on a
+/// Saturday, Sunday, or Federal holiday rolls to the next day that is none
+/// of them (§ 2.196).
 ///
-/// From June 1, 2026 the Board designates 60 days (TBMP 310.03(a), June
-/// 2026 edition, recording the change from 40). That edition is the
-/// earliest sourced date for the 60-day practice. Before it, the date the
-/// Board adopted the 40-day designation is not in `sources/`, so the
-/// period is the regulation's own floor, thirty days, from the rules
-/// revision that states it (81 FR 69950, effective January 14, 2017): no
-/// later than any date the notice may lawfully designate.
+/// In force from the TTAB rules revision, 81 FR 69950 (Oct. 7, 2016),
+/// effective January 14, 2017: the eCFR's last amendment of §§ 2.105 and
+/// 2.106 (sources/cfr-37-part2-answer-time-history.txt).
 rule duty answer-time effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CFR 2.105(a)"
 {
-  /// The cite is a hole: `cfr2` holds the 2026 text, which postdates this
-  /// version; the 2017 text of 2.105(a) is not vendored.
-  deadline answer-period: 30.days from InstitutionNoticed() counted_by frcp6 effective [2017-01-14, 2026-06-01) delegable_to [CaseOrder] cite ?("37 CFR 2.105(a)")
-  deadline answer-period: 60.days from InstitutionNoticed() counted_by frcp6 effective [2026-06-01, ..) known_at 2026-06-01 supersedes answer-period@2017-01-14 delegable_to [CaseOrder] cite "37 CFR 2.106(a)"
+  deadline answer-period: 30.days from InstitutionNoticed() counted_by frcp6 delegable_to [CaseOrder] cite "37 CFR 2.105(a)"
+  {
+    designated due
+  }
 }
 
-test "before June 2026 the answer is due no earlier than 30 days from the notice" cite "37 CFR 2.105(a)"
+test "a notice designating 30 days sets the answer date" cite "37 CFR 2.105(a)"
 {
-  given InstitutionNoticed() on 2025-03-03
+  given InstitutionNoticed(2025-04-02) on 2025-03-03
   expect deadline(answer-period) == 2025-04-02
 }
 
-test "the answer is due 60 days from the notice of institution" cite "37 CFR 2.105(a)"
+test "a notice designating 40 days sets the answer date" cite "37 CFR 2.105(a)"
 {
-  given InstitutionNoticed() on 2026-07-06
+  given InstitutionNoticed(2025-04-14) on 2025-03-05
+  expect deadline(answer-period) == 2025-04-14
+}
+
+test "a notice designating 60 days sets the answer date" cite "37 CFR 2.105(a)"
+{
+  given InstitutionNoticed(2026-09-04) on 2026-07-06
   expect deadline(answer-period) == 2026-09-04
 }
 
-test "an answer day on a Saturday rolls to Monday" cite "37 CFR 2.105(a)"
+test "a designated answer day on a Saturday rolls to Monday" cite "37 CFR 2.105(a)"
 {
-  given InstitutionNoticed() on 2026-06-09
+  given InstitutionNoticed(2026-08-08) on 2026-06-09
+  expect deadline(answer-period).nominal == 2026-08-08
   expect deadline(answer-period) == 2026-08-10
 }
 
-test "an answer day on Labor Day rolls to Tuesday" cite "37 CFR 2.105(a)"
+test "a designated answer day on Labor Day rolls to Tuesday" cite "37 CFR 2.105(a)"
 {
-  given InstitutionNoticed() on 2026-07-09
+  given InstitutionNoticed(2026-09-07) on 2026-07-09
   expect deadline(answer-period) == 2026-09-08
+}
+
+/// 37 C.F.R. § 2.106(b)(3)(iii): "A time, not less than thirty days, will
+/// be designated by the Board within which an answer to the counterclaim
+/// must be filed." As for the answer, the date is the Board's designation,
+/// thirty days from its mailing date the least it may allow; the Board may
+/// reset it (§ 2.106(b)(3)(iv)). In force from 81 FR 69950, effective
+/// January 14, 2017 (sources/cfr-37-part2-answer-time-history.txt).
+rule duty counterclaim-answer-time effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CFR 2.106(b)(3)(iii)"
+{
+  deadline counterclaim-answer-period: 30.days from CounterclaimAnswerTimeDesignated() counted_by frcp6 delegable_to [CaseOrder] cite "37 CFR 2.106(b)(3)(iii)"
+  {
+    designated due
+  }
+}
+
+test "the counterclaim answer is due on the date the Board designates" cite "37 CFR 2.106(b)(3)(iii)"
+{
+  given CounterclaimAnswerTimeDesignated(2025-12-10) on 2025-11-10
+  expect deadline(counterclaim-answer-period) == 2025-12-10
+}
+
+test "a designated counterclaim answer day on a Saturday rolls to Monday" cite "37 CFR 2.106(b)(3)(iii)"
+{
+  given CounterclaimAnswerTimeDesignated(2025-12-20) on 2025-11-10
+  expect deadline(counterclaim-answer-period) == 2025-12-22
+}
+
+/// 37 C.F.R. § 2.113(a): the notice of institution of a cancellation
+/// "shall designate a time, not less than thirty days from the mailing
+/// date of the notice, within which an answer must be filed", which the
+/// Board may later reset (§ 2.114(a)(1)). In force from 81 FR 69950,
+/// effective January 14, 2017 (sources/cfr-37-part2-answer-time-history.txt).
+rule duty cancellation-answer-time effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CFR 2.113(a)"
+{
+  deadline cancellation-answer-period: 30.days from CancellationInstitutionNoticed() counted_by frcp6 delegable_to [CaseOrder] cite "37 CFR 2.113(a)"
+  {
+    designated due
+  }
+}
+
+test "a cancellation answer is due on the date the notice designates" cite "37 CFR 2.113(a)"
+{
+  given CancellationInstitutionNoticed(2025-04-14) on 2025-03-05
+  expect deadline(cancellation-answer-period) == 2025-04-14
 }
 
 /// 37 C.F.R. § 2.120(a)(2): a 180-day discovery period, initial

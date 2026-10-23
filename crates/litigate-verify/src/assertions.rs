@@ -232,10 +232,20 @@ fn due(
         },
         |(_, c)| c.meta.id.as_str(),
     );
-    let trigger = clock::Date::parse_iso(date).map_err(|e| e.to_string())?;
+    // A designated due date is the given event's, rolled under the
+    // counting rule like any last day: counted zero days from it.
+    let designated = deadline
+        .designation(date, given)
+        .transpose()
+        .map_err(|why| why.message().to_owned())?;
+    let (start, days) = match &designated {
+        Some(d) => (d.as_str(), 0),
+        None => (date, deadline.amount),
+    };
+    let trigger = clock::Date::parse_iso(start).map_err(|e| e.to_string())?;
     let request = DayDeadline {
         trigger,
-        days: i64::try_from(deadline.amount)
+        days: i64::try_from(days)
             .map_err(|_| format!("`{target}` is too long for the clock to count"))?,
         direction: match deadline.direction {
             hir::Direction::Forward => clock::Direction::Forward,
@@ -248,7 +258,8 @@ fn due(
             hir::DayUnit::Month => Unit::Month,
             hir::DayUnit::Year => Unit::Year,
         },
-        service_method: service_method(counting.map(|(_, c)| c), event),
+        service_method: service_method(counting.map(|(_, c)| c), event)
+            .filter(|_| designated.is_none()),
     };
     library
         .clock(rule)

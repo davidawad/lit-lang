@@ -167,6 +167,9 @@ pub struct Due {
     pub trigger: String,
     /// Service method name applied, if any.
     pub method: Option<String>,
+    /// The due date the trigger designates (`designated p`), before any
+    /// roll; `None` when the period is counted.
+    pub designated: Option<String>,
     /// The engine's result.
     pub computed: ComputedDeadline,
 }
@@ -241,9 +244,19 @@ pub fn due(
         |(_, c)| c.meta.id.clone(),
     );
     let method = method_of(trigger.action, version.map(|(_, c)| c));
+    // A designated due date is the notice's, rolled under the counting
+    // rule like any last day: counted zero days from it, no service days.
+    let designated = d
+        .designation(trigger.date, trigger.action)
+        .transpose()
+        .map_err(|why| why.message().to_owned())?;
+    let (start, days, method) = match &designated {
+        Some(date) => (date.as_str(), 0, None),
+        None => (trigger.date, d.amount, method),
+    };
     let request = DayDeadline {
-        trigger: Date::parse_iso(trigger.date).map_err(|e| e.to_string())?,
-        days: i64::try_from(d.amount).map_err(|e| e.to_string())?,
+        trigger: Date::parse_iso(start).map_err(|e| e.to_string())?,
+        days: i64::try_from(days).map_err(|e| e.to_string())?,
         direction: match d.direction {
             hir::Direction::Forward => Direction::Forward,
             hir::Direction::Backward => Direction::Backward,
@@ -264,6 +277,7 @@ pub fn due(
         cite: version.and_then(|(_, c)| c.meta.cite.clone()),
         trigger: trigger.date.to_owned(),
         method: method.map(|(name, _)| name),
+        designated,
         computed,
     })
 }

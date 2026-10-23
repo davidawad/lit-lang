@@ -168,9 +168,7 @@ impl Cx<'_, '_> {
             }
             edges.push(self.edge(e, &n.name.text, actor.as_deref(), chance));
         }
-        if chance {
-            self.chance_sum(n, &edges);
-        }
+        self.probability_sum(n, &edges, chance);
         Node {
             meta,
             kind,
@@ -185,39 +183,62 @@ impl Cx<'_, '_> {
         }
     }
 
-    fn chance_sum(&mut self, n: &NodeItem, edges: &[Edge]) {
-        let known: Vec<Rational> = edges
+    /// `dist-exact` (SPEC §5.1, §13 O8): the `p` edges of a node are
+    /// `Dist<Edges(n)>` minus its self edges, which carry no `p` (L2008).
+    /// A chance node's known probabilities sum to exactly 1, or to at most
+    /// 1 while any is a hole. Any other node with `p` edges draws among
+    /// them: at most 1, and exactly 1 when every edge but a self edge
+    /// carries a known `p` (the engine would otherwise renormalise).
+    fn probability_sum(&mut self, n: &NodeItem, edges: &[Edge], chance: bool) {
+        let drawn: Vec<&Edge> = edges.iter().filter(|e| e.to != n.name.text).collect();
+        if !chance && drawn.iter().all(|e| e.probability.is_none()) {
+            return;
+        }
+        let known: Vec<Rational> = drawn
             .iter()
             .filter_map(|e| match &e.probability {
                 Some(Authored::Known(p)) => Some(*p),
                 _ => None,
             })
             .collect();
-        let holes = edges
+        let open = drawn
             .iter()
             .any(|e| matches!(e.probability, Some(Authored::Hole(_)) | None));
+        let one = Rational::integer(1);
+        let refinement = if open {
+            "while a `p` is open the known ones need `Σ p <= 1`"
+        } else {
+            "refinement `Dist<Edges(n)> = {m | Σ m(e) = 1}` over the edges other than self edges"
+        };
         match q::sum(known) {
-            Ok(total) if !holes && total != Rational::integer(1) && !edges.is_empty() => {
-                self.report(Report::new(
-                    C::InvalidDistribution,
-                    n.name.range,
-                    format!(
-                        "probabilities of chance node `{}` sum to {}, not exactly 1",
-                        n.name.text,
-                        q::display(total)
-                    ),
-                ));
+            Ok(total) if !open && total != one && !edges.is_empty() => {
+                self.report(
+                    Report::new(
+                        C::InvalidDistribution,
+                        n.name.range,
+                        format!(
+                            "probabilities of {} `{}` sum to {}, not exactly 1",
+                            if chance { "chance node" } else { "node" },
+                            n.name.text,
+                            q::display(total)
+                        ),
+                    )
+                    .note(refinement),
+                );
             }
-            Ok(total) if holes && q::cmp(total, Rational::integer(1)).is_gt() => {
-                self.report(Report::new(
-                    C::InvalidDistribution,
-                    n.name.range,
-                    format!(
-                        "known probabilities of `{}` already sum to {}",
-                        n.name.text,
-                        q::display(total)
-                    ),
-                ));
+            Ok(total) if open && q::cmp(total, one).is_gt() => {
+                self.report(
+                    Report::new(
+                        C::InvalidDistribution,
+                        n.name.range,
+                        format!(
+                            "known probabilities of `{}` already sum to {}",
+                            n.name.text,
+                            q::display(total)
+                        ),
+                    )
+                    .note(refinement),
+                );
             }
             Ok(_) => {}
             Err(e) => self.report(Report::new(C::ArithmeticError, n.name.range, e.message())),

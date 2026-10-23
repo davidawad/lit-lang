@@ -21,6 +21,9 @@ pub struct Checked {
     pub ty: Option<Type>,
     /// Exact constant value, when known.
     pub value: Option<Value>,
+    /// Exact linear form of a `Probability` term that does not fold
+    /// (`refine`), when its operator built one.
+    pub form: Option<super::refine::Linear>,
 }
 
 /// Expression checker for one module.
@@ -75,6 +78,7 @@ impl<'s, 'a> Checker<'s, 'a> {
             },
             ty,
             value,
+            form: None,
         }
     }
 

@@ -7,5 +7,6 @@ pub mod expr;
 pub mod literal;
 pub mod ops;
 pub mod rational;
+pub mod refine;
 pub mod shape;
 pub mod ty;

@@ -47,7 +47,15 @@ pub fn make(numerator: i128, denominator: i128) -> Result<Rational, ArithError> 
         return Err(ArithError::DivisionByZero);
     }
     let negative = (numerator < 0) != (denominator < 0);
-    let (n, d) = (numerator.unsigned_abs(), denominator.unsigned_abs());
+    reduce(
+        negative,
+        numerator.unsigned_abs(),
+        denominator.unsigned_abs(),
+    )
+}
+
+/// Reduces the fraction `±n / d` (`d > 0`) and narrows it to `i64 / u64`.
+fn reduce(negative: bool, n: u128, d: u128) -> Result<Rational, ArithError> {
     let g = gcd(n, d).max(1);
     let (n, d) = (n / g, d / g);
     let n = i128::try_from(n)
@@ -61,8 +69,12 @@ pub fn make(numerator: i128, denominator: i128) -> Result<Rational, ArithError> 
     })
 }
 
-fn parts(r: Rational) -> (i128, i128) {
-    (i128::from(r.numerator), i128::from(r.denominator))
+/// Magnitude of a numerator, and the denominator, widened.
+fn wide(r: Rational) -> (u128, u128) {
+    (
+        u128::from(r.numerator.unsigned_abs()),
+        u128::from(r.denominator),
+    )
 }
 
 /// `a + b`.
@@ -70,10 +82,18 @@ fn parts(r: Rational) -> (i128, i128) {
 /// # Errors
 /// Overflow.
 pub fn add(a: Rational, b: Rational) -> Result<Rational, ArithError> {
-    let ((an, ad), (bn, bd)) = (parts(a), parts(b));
-    // Each product is below 2^127 in magnitude; only the sum can overflow.
-    let n = (an * bd).checked_add(bn * ad);
-    make(n.ok_or(ArithError::Overflow)?, ad * bd)
+    let (ad, bd) = (i128::from(a.denominator), i128::from(b.denominator));
+    let g = i128::try_from(gcd(ad.unsigned_abs(), bd.unsigned_abs())).unwrap_or(1);
+    // Over the common denominator `ad / g * bd < 2^128`, each scaled
+    // numerator is `|i64| * u64 < 2^127`; only their sum can overflow.
+    let n = (i128::from(a.numerator) * (bd / g))
+        .checked_add(i128::from(b.numerator) * (ad / g))
+        .ok_or(ArithError::Overflow)?;
+    reduce(
+        n < 0,
+        n.unsigned_abs(),
+        (ad / g).unsigned_abs() * bd.unsigned_abs(),
+    )
 }
 
 /// `a - b`.
@@ -92,13 +112,25 @@ pub fn neg(a: Rational) -> Result<Rational, ArithError> {
     make(-i128::from(a.numerator), i128::from(a.denominator))
 }
 
+/// `±(an / ad) * (bn / bd)` with both operands reduced: cancelling across
+/// first keeps every product below `2^128`, and the result is reduced.
+fn product(
+    negative: bool,
+    (an, ad): (u128, u128),
+    (bn, bd): (u128, u128),
+) -> Result<Rational, ArithError> {
+    let (g1, g2) = (gcd(an, bd).max(1), gcd(bn, ad).max(1));
+    // Every factor is below `2^64`, so neither product overflows `u128`.
+    reduce(negative, (an / g1) * (bn / g2), (ad / g2) * (bd / g1))
+}
+
 /// `a * b`.
 ///
 /// # Errors
 /// Overflow.
 pub fn mul(a: Rational, b: Rational) -> Result<Rational, ArithError> {
-    let ((an, ad), (bn, bd)) = (parts(a), parts(b));
-    make(an * bn, ad * bd)
+    let negative = (a.numerator < 0) != (b.numerator < 0);
+    product(negative, wide(a), wide(b))
 }
 
 /// `a / b`.
@@ -106,8 +138,12 @@ pub fn mul(a: Rational, b: Rational) -> Result<Rational, ArithError> {
 /// # Errors
 /// Division by zero or overflow.
 pub fn div(a: Rational, b: Rational) -> Result<Rational, ArithError> {
-    let ((an, ad), (bn, bd)) = (parts(a), parts(b));
-    make(an * bd, ad * bn)
+    if b.numerator == 0 {
+        return Err(ArithError::DivisionByZero);
+    }
+    let negative = (a.numerator < 0) != (b.numerator < 0);
+    let (bn, bd) = wide(b);
+    product(negative, wide(a), (bd, bn))
 }
 
 /// `a % b` on integers (sign follows the dividend).
@@ -131,8 +167,9 @@ pub fn rem(a: Rational, b: Rational) -> Result<Rational, ArithError> {
 /// Total order of two rationals.
 #[must_use]
 pub fn cmp(a: Rational, b: Rational) -> std::cmp::Ordering {
-    let ((an, ad), (bn, bd)) = (parts(a), parts(b));
-    (an * bd).cmp(&(bn * ad))
+    // `|i64| * u64 < 2^127`: the cross products always fit an `i128`.
+    let cross = |x: Rational, y: Rational| i128::from(x.numerator) * i128::from(y.denominator);
+    cross(a, b).cmp(&cross(b, a))
 }
 
 /// True for values in the closed unit interval.
@@ -218,6 +255,56 @@ mod tests {
             Err(ArithError::Overflow)
         );
         assert_eq!(make(i128::MIN, 1), Err(ArithError::Overflow));
+        // `ad * bd` and `an * bd` here are above 2^127 (T2): they used to
+        // wrap or panic; now they are exact, or overflow when the reduced
+        // value does not fit.
+        let tiny = |denominator| Rational {
+            numerator: 1,
+            denominator,
+        };
+        assert_eq!(
+            add(tiny(u64::MAX), tiny(u64::MAX)),
+            Ok(Rational {
+                numerator: 2,
+                denominator: u64::MAX
+            })
+        );
+        assert_eq!(
+            add(tiny(u64::MAX), tiny(u64::MAX - 1)),
+            Err(ArithError::Overflow)
+        );
+        assert_eq!(
+            mul(tiny(u64::MAX), tiny(u64::MAX)),
+            Err(ArithError::Overflow)
+        );
+        assert_eq!(
+            mul(tiny(u64::MAX), Rational::integer(3)),
+            Ok(tiny(u64::MAX / 3))
+        );
+        assert_eq!(
+            div(big(u64::MAX), tiny(u64::MAX)),
+            Ok(Rational::integer(i64::MAX))
+        );
+        assert_eq!(
+            div(Rational::integer(i64::MAX), tiny(2)),
+            Err(ArithError::Overflow)
+        );
+        assert_eq!(
+            div(tiny(u64::MAX), tiny(u64::MAX)),
+            Ok(Rational::integer(1))
+        );
+        let minus = |denominator| Rational {
+            numerator: -1,
+            denominator,
+        };
+        assert_eq!(
+            div(minus(1), minus(i64::MAX.unsigned_abs())),
+            Ok(Rational::integer(i64::MAX))
+        );
+        assert_eq!(
+            div(minus(1), minus(i64::MIN.unsigned_abs())),
+            Err(ArithError::Overflow)
+        );
         assert_eq!(make(1, i128::MAX), Err(ArithError::Overflow));
         assert_eq!(
             parse_decimal("0.000000000000000000000000000000000000001"),

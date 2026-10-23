@@ -3,6 +3,7 @@
 //! L2004, anything outside the table is L2002.
 use super::expr::{Checked, Checker};
 use super::rational::{self as q, ArithError};
+use super::refine;
 use super::ty::{display, unit_name};
 use crate::db::parse::tree::Expr;
 use crate::db::span::{Report, TextRange};
@@ -208,7 +209,8 @@ pub fn binary(
             return c.error(r);
         }
     }
-    c.node(
+    let (lf, rf) = (refine::operand(&l), refine::operand(&rr));
+    let mut out = c.node(
         hir::ExprKind::Binary {
             op,
             lhs: Box::new(l.hir),
@@ -217,7 +219,23 @@ pub fn binary(
         Some(ty),
         value,
         r,
-    )
+    );
+    if out.ty == Some(Type::Probability) && out.value.is_none() {
+        // A term over unknowns: decide its refinement exactly (`refine`).
+        let decided = refine::combine(op, lf, rf, &out.hir).and_then(|form| match form {
+            Ok(form) => refine::probability(&form).map(|v| (Some(form), v)),
+            Err(v) => Ok((None, Some(v))),
+        });
+        match decided {
+            Ok((form, None)) => out.form = form,
+            Ok((_, Some(v))) => {
+                c.report(Report::new(C::ArithmeticError, r, v.message()).note(v.note()));
+                return c.error(r);
+            }
+            Err(err) => return c.arith(r, err),
+        }
+    }
+    out
 }
 
 fn int(r: Rational) -> Result<i64, ArithError> {

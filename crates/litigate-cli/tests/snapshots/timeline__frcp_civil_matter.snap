@@ -1,0 +1,110 @@
+---
+source: crates/litigate-cli/tests/timeline.rs
+expression: t
+---
+{
+  "schema": "litigate.timeline/1",
+  "source": {
+    "file": "cases/frcp-civil-case.case",
+    "kind": "case"
+  },
+  "as_of": "2024-12-01",
+  "known_at": null,
+  "layers": [
+    {
+      "id": "frcp-civil-procedure",
+      "class": "base_rule",
+      "authority": "FederalRule",
+      "label": "Federal Civil Litigation Under the FRCP",
+      "cite": null,
+      "effective": {
+        "from": "2024-12-01",
+        "to": null
+      },
+      "package": "frcp-civil-procedure",
+      "enabled": true
+    }
+  ],
+  "worlds": [
+    {
+      "id": "w0",
+      "label": "docket",
+      "parent": null,
+      "fork_row": null,
+      "choice": null
+    },
+    {
+      "id": "w1",
+      "label": "Conduct Rule 11 pre-filing investigation",
+      "parent": "w0",
+      "fork_row": "r1",
+      "choice": {
+        "kind": "election",
+        "label": "Conduct Rule 11 pre-filing investigation",
+        "cite": "FRCP 11(b)",
+        "probability": null
+      }
+    }
+  ],
+  "rows": [
+    {
+      "id": "r1",
+      "world": "w0",
+      "kind": "fork",
+      "date": null,
+      "due": null,
+      "label": "Pre-Filing Investigation",
+      "status": {
+        "state": "unknown",
+        "reason": "no outcome of `frcp-civil-procedure::pre-filing` recorded as of 2024-12-01"
+      },
+      "cite": "FRCP 11(b)",
+      "source": {
+        "file": "lit/frcp/01-pre-filing.lit",
+        "start": 125,
+        "end": 860,
+        "line": 8,
+        "column": 1
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "frcp-civil-procedure"
+      ],
+      "trigger": null
+    },
+    {
+      "id": "r2",
+      "world": "w1",
+      "kind": "event",
+      "date": null,
+      "due": null,
+      "label": "Conduct Rule 11 pre-filing investigation",
+      "status": {
+        "state": "none",
+        "reason": null
+      },
+      "cite": "FRCP 11(b)",
+      "source": {
+        "file": "lit/frcp/01-pre-filing.lit",
+        "start": 730,
+        "end": 858,
+        "line": 12,
+        "column": 3
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "frcp-civil-procedure"
+      ],
+      "trigger": "r1"
+    }
+  ],
+  "edges": [
+    {
+      "from": "r1",
+      "to": "r2",
+      "world": "w1",
+      "kind": "forks"
+    }
+  ],
+  "diagnostics": []
+}

@@ -1,0 +1,326 @@
+---
+source: crates/litigate-cli/tests/timeline.rs
+expression: t
+---
+{
+  "schema": "litigate.timeline/1",
+  "source": {
+    "file": "cases/frcp-filed.case",
+    "kind": "case"
+  },
+  "as_of": "2024-12-20",
+  "known_at": null,
+  "layers": [
+    {
+      "id": "frcp-civil-procedure",
+      "class": "base_rule",
+      "authority": "FederalRule",
+      "label": "Federal Civil Litigation Under the FRCP",
+      "cite": null,
+      "effective": {
+        "from": "2024-12-01",
+        "to": null
+      },
+      "package": "frcp-civil-procedure",
+      "enabled": true
+    }
+  ],
+  "worlds": [
+    {
+      "id": "w0",
+      "label": "docket",
+      "parent": null,
+      "fork_row": null,
+      "choice": null
+    },
+    {
+      "id": "w1",
+      "label": "Serve defendant via formal process",
+      "parent": "w0",
+      "fork_row": "r3",
+      "choice": {
+        "kind": "election",
+        "label": "Serve defendant via formal process",
+        "cite": "FRCP 4(e); 4(h); 4(f)",
+        "probability": null
+      }
+    },
+    {
+      "id": "w2",
+      "label": "Request waiver of service instead of formal process",
+      "parent": "w0",
+      "fork_row": "r3",
+      "choice": {
+        "kind": "election",
+        "label": "Request waiver of service instead of formal process",
+        "cite": "FRCP 4(d)(1)",
+        "probability": null
+      }
+    },
+    {
+      "id": "w3",
+      "label": "Fail to serve within 90 days -- no good cause shown",
+      "parent": "w0",
+      "fork_row": "r3",
+      "choice": {
+        "kind": "election",
+        "label": "Fail to serve within 90 days -- no good cause shown",
+        "cite": "FRCP 4(m)",
+        "probability": null
+      }
+    }
+  ],
+  "rows": [
+    {
+      "id": "r1",
+      "world": "w0",
+      "kind": "event",
+      "date": "2024-12-02",
+      "due": null,
+      "label": "ComplaintFiled() by plaintiff",
+      "status": {
+        "state": "none",
+        "reason": null
+      },
+      "cite": null,
+      "source": {
+        "file": "cases/frcp-filed.case",
+        "start": 418,
+        "end": 458,
+        "line": 14,
+        "column": 3
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "frcp-civil-procedure"
+      ],
+      "trigger": null
+    },
+    {
+      "id": "r2",
+      "world": "w0",
+      "kind": "deadline",
+      "date": null,
+      "due": "2025-03-03",
+      "label": "service-period: 90 days after ComplaintFiled()",
+      "status": {
+        "state": "open",
+        "reason": null
+      },
+      "cite": "FRCP 4(m)",
+      "source": {
+        "file": "lit/frcp/periods.lit",
+        "start": 8897,
+        "end": 9298,
+        "line": 158,
+        "column": 1
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "frcp-civil-procedure"
+      ],
+      "trigger": "r1"
+    },
+    {
+      "id": "r3",
+      "world": "w0",
+      "kind": "fork",
+      "date": null,
+      "due": null,
+      "label": "Rule 4(m) Service Window",
+      "status": {
+        "state": "unknown",
+        "reason": "no outcome of `frcp-civil-procedure::service-window` recorded as of 2024-12-20"
+      },
+      "cite": "FRCP 4(m)",
+      "source": {
+        "file": "lit/frcp/02-pleading-to-trial.lit",
+        "start": 555,
+        "end": 1958,
+        "line": 29,
+        "column": 1
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "frcp-civil-procedure"
+      ],
+      "trigger": "r1"
+    },
+    {
+      "id": "r4",
+      "world": "w1",
+      "kind": "event",
+      "date": null,
+      "due": null,
+      "label": "Serve defendant via formal process",
+      "status": {
+        "state": "none",
+        "reason": null
+      },
+      "cite": "FRCP 4(e); 4(h); 4(f)",
+      "source": {
+        "file": "lit/frcp/02-pleading-to-trial.lit",
+        "start": 1132,
+        "end": 1653,
+        "line": 33,
+        "column": 3
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "frcp-civil-procedure"
+      ],
+      "trigger": "r3"
+    },
+    {
+      "id": "r5",
+      "world": "w1",
+      "kind": "deadline",
+      "date": null,
+      "due": null,
+      "label": "answer-period: 21 days after ProcessServed()",
+      "status": {
+        "state": "unknown",
+        "reason": "counted from ProcessServed(), which no recorded event dates as of 2024-12-20"
+      },
+      "cite": "FRCP 12(a)(1)(A)(i)",
+      "source": {
+        "file": "lit/frcp/periods.lit",
+        "start": 10392,
+        "end": 10762,
+        "line": 187,
+        "column": 1
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "frcp-civil-procedure"
+      ],
+      "trigger": "r4"
+    },
+    {
+      "id": "r6",
+      "world": "w2",
+      "kind": "event",
+      "date": null,
+      "due": null,
+      "label": "Request waiver of service instead of formal process",
+      "status": {
+        "state": "none",
+        "reason": null
+      },
+      "cite": "FRCP 4(d)(1)",
+      "source": {
+        "file": "lit/frcp/02-pleading-to-trial.lit",
+        "start": 1656,
+        "end": 1804,
+        "line": 45,
+        "column": 3
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "frcp-civil-procedure"
+      ],
+      "trigger": "r3"
+    },
+    {
+      "id": "r7",
+      "world": "w2",
+      "kind": "deadline",
+      "date": null,
+      "due": null,
+      "label": "waiver-answer-period: 60 days after WaiverRequestSent()",
+      "status": {
+        "state": "unknown",
+        "reason": "counted from WaiverRequestSent(), which no recorded event dates as of 2024-12-20"
+      },
+      "cite": "FRCP 12(a)(1)(A)(ii)",
+      "source": {
+        "file": "lit/frcp/periods.lit",
+        "start": 9641,
+        "end": 10025,
+        "line": 170,
+        "column": 1
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "frcp-civil-procedure"
+      ],
+      "trigger": "r6"
+    },
+    {
+      "id": "r8",
+      "world": "w3",
+      "kind": "event",
+      "date": null,
+      "due": null,
+      "label": "Fail to serve within 90 days -- no good cause shown",
+      "status": {
+        "state": "none",
+        "reason": null
+      },
+      "cite": "FRCP 4(m)",
+      "source": {
+        "file": "lit/frcp/02-pleading-to-trial.lit",
+        "start": 1807,
+        "end": 1956,
+        "line": 50,
+        "column": 3
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "frcp-civil-procedure"
+      ],
+      "trigger": "r3"
+    }
+  ],
+  "edges": [
+    {
+      "from": "r1",
+      "to": "r2",
+      "world": "w0",
+      "kind": "triggers"
+    },
+    {
+      "from": "r2",
+      "to": "r3",
+      "world": "w0",
+      "kind": "sequence"
+    },
+    {
+      "from": "r1",
+      "to": "r3",
+      "world": "w0",
+      "kind": "triggers"
+    },
+    {
+      "from": "r3",
+      "to": "r4",
+      "world": "w1",
+      "kind": "forks"
+    },
+    {
+      "from": "r4",
+      "to": "r5",
+      "world": "w1",
+      "kind": "triggers"
+    },
+    {
+      "from": "r3",
+      "to": "r6",
+      "world": "w2",
+      "kind": "forks"
+    },
+    {
+      "from": "r6",
+      "to": "r7",
+      "world": "w2",
+      "kind": "triggers"
+    },
+    {
+      "from": "r3",
+      "to": "r8",
+      "world": "w3",
+      "kind": "forks"
+    }
+  ],
+  "diagnostics": []
+}

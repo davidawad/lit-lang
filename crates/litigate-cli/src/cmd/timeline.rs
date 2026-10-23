@@ -77,15 +77,12 @@ fn of_case(
 fn of_lit(args: &Args, c: &Checked, file: &str, diagnostics: &[Diagnostic]) -> Option<Timeline> {
     let all = c.session.hir();
     let texts = c.session.sources();
-    let owner = c
-        .session
-        .packages
-        .iter()
-        .find(|k| k.files.iter().any(|(f, _)| f == file))?;
-    let pkg = all
-        .iter()
-        .copied()
-        .find(|p| p.manifest.name == owner.name)?;
+    let pkg = all.iter().copied().find(|p| {
+        c.session
+            .packages
+            .iter()
+            .any(|k| k.name == p.manifest.name && k.files.iter().any(|(f, _)| f == file))
+    })?;
     let as_of = args
         .dates
         .as_of
@@ -122,10 +119,17 @@ pub fn timeline(args: &Args) -> Outcome {
             args.file
         )));
     }
+    // A matter's dates select its own law (`At`); the packages are checked
+    // as `check` checks them. A module's dates select the law it lists.
+    let options = if kind == "case" {
+        Dates::default().options()
+    } else {
+        args.dates.options()
+    };
     let c = checked(
         std::slice::from_ref(&args.file),
         Profile::Dev,
-        &args.dates.options(),
+        &options,
         &args.lib,
     )?;
     let file = ws::shown(path);

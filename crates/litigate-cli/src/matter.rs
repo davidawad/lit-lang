@@ -17,7 +17,7 @@ use litigate_sema::case::{Env, Obligation, Status, Step};
 use litigate_sema::hir;
 use litigate_sema::pkg::lock::LockFile;
 use litigate_sema::temporal::MatterEvent;
-use litigate_verify::Finding;
+use litigate_verify::{Finding, VerifiedCase};
 use serde::Serialize;
 
 /// An obligation instance the events created (SPEC §5.6).
@@ -107,8 +107,12 @@ pub struct CaseCheck {
     pub findings: Vec<Finding>,
     /// Replay trace.
     pub replay: Vec<Step>,
-    /// Deadlines the events triggered, with their due dates.
+    /// Deadlines the events triggered, with their due dates (empty unless
+    /// the matter lowers).
     pub schedule: Vec<Scheduled>,
+    /// Every deadline the events triggered, whether or not the clock
+    /// counts it and whether or not the matter has errors.
+    pub counted: Vec<Scheduled>,
     /// Names of the packages it uses, primary first.
     pub packages: Vec<String>,
 }
@@ -179,6 +183,29 @@ fn is_error(d: &Diagnostic) -> bool {
     d.severity == Severity::Error
 }
 
+/// Checks and verifies `case` under `env`, at `at`'s dates where given.
+fn verify(case: &CaseText, env: Env, at: At) -> VerifiedCase {
+    if at.as_of.is_none() && at.known_at.is_none() {
+        return litigate_verify::verify_case_source(&case.path, &case.text, env);
+    }
+    let resolved = litigate_sema::case::resolve(&case.path, &case.text, env.packages, env.lock);
+    match resolved.case {
+        Some(mut hcase) => {
+            if let Some(as_of) = at.as_of {
+                as_of.clone_into(&mut hcase.as_of);
+            }
+            if let Some(known_at) = at.known_at {
+                hcase.known_at = Some(known_at.to_owned());
+            }
+            let mut verified = litigate_verify::verify_case(hcase, &resolved.spans, env);
+            verified.checked.diagnostics.extend(resolved.diagnostics);
+            verified
+        }
+        // It does not resolve: the source path reports why.
+        None => litigate_verify::verify_case_source(&case.path, &case.text, env),
+    }
+}
+
 /// Checks one matter against the loaded packages.
 #[must_use]
 pub fn check(
@@ -213,26 +240,7 @@ pub fn check_at(
         clock: engine,
         profile,
     };
-    let verified = if at.as_of.is_none() && at.known_at.is_none() {
-        litigate_verify::verify_case_source(&case.path, &case.text, env)
-    } else {
-        let resolved = litigate_sema::case::resolve(&case.path, &case.text, &all, lock.as_ref());
-        match resolved.case {
-            Some(mut hcase) => {
-                if let Some(as_of) = at.as_of {
-                    as_of.clone_into(&mut hcase.as_of);
-                }
-                if let Some(known_at) = at.known_at {
-                    hcase.known_at = Some(known_at.to_owned());
-                }
-                let mut verified = litigate_verify::verify_case(hcase, &resolved.spans, env);
-                verified.checked.diagnostics.extend(resolved.diagnostics);
-                verified
-            }
-            // It does not resolve: the source path reports why.
-            None => litigate_verify::verify_case_source(&case.path, &case.text, env),
-        }
-    };
+    let verified = verify(case, env, at);
     let mut diagnostics = verified.diagnostics();
     let mut checked_case = verified.checked.case;
     if let Some(c) = checked_case
@@ -260,9 +268,17 @@ pub fn check_at(
             .filter_map(|pin| all.iter().copied().find(|p| p.manifest.name == pin.name))
             .collect()
     });
-    let schedule = match clean {
-        Some(c) if lowered.is_some() => schedule(&used, clocks, c, &verified.checked.obligations),
-        _ => Vec::new(),
+    // Every instance replay created is counted, errors or not (a late act
+    // is an error, and its deadline still has a due date); the schedule is
+    // that of a matter that lowers.
+    let counted = match checked_case.as_ref() {
+        Some(c) => schedule(&used, clocks, c, &verified.checked.obligations),
+        None => Vec::new(),
+    };
+    let schedule = if lowered.is_some() {
+        counted.clone()
+    } else {
+        Vec::new()
     };
     let extra = report::findings_of(&own);
     let findings = report::merge(&[&verified.verification.report.obligations, &extra]);
@@ -283,6 +299,7 @@ pub fn check_at(
         findings,
         replay: verified.checked.trace,
         schedule,
+        counted,
     }
 }
 

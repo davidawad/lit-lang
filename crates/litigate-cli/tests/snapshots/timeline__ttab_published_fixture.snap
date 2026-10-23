@@ -1,0 +1,400 @@
+---
+source: crates/litigate-cli/tests/timeline.rs
+expression: t
+---
+{
+  "schema": "litigate.timeline/1",
+  "source": {
+    "file": "cases/ttab-published.case",
+    "kind": "case"
+  },
+  "as_of": "2026-07-01",
+  "known_at": null,
+  "layers": [
+    {
+      "id": "ttab-trademark-trial-and-appeal-board",
+      "class": "base_rule",
+      "authority": "Regulation",
+      "label": "TTAB Trademark Trial and Appeal Board: Opposition (applicant perspective), extension of time through final decision and appeal",
+      "cite": null,
+      "effective": {
+        "from": "2025-01-18",
+        "to": null
+      },
+      "package": "ttab-trademark-trial-and-appeal-board",
+      "enabled": true
+    }
+  ],
+  "worlds": [
+    {
+      "id": "w0",
+      "label": "docket",
+      "parent": null,
+      "fork_row": null,
+      "choice": null
+    },
+    {
+      "id": "w1",
+      "label": "Opposer requests 30-day extension (granted on request)",
+      "parent": "w0",
+      "fork_row": "r6",
+      "choice": {
+        "kind": "election",
+        "label": "Opposer requests 30-day extension (granted on request)",
+        "cite": "37 CFR 2.102(c)(1)(i)",
+        "probability": null
+      }
+    },
+    {
+      "id": "w2",
+      "label": "Opposer requests 90-day extension (good cause)",
+      "parent": "w0",
+      "fork_row": "r6",
+      "choice": {
+        "kind": "election",
+        "label": "Opposer requests 90-day extension (good cause)",
+        "cite": "37 CFR 2.102(c)(1)(ii)",
+        "probability": null
+      }
+    },
+    {
+      "id": "w3",
+      "label": "Opposer opposes within the original 30 days",
+      "parent": "w0",
+      "fork_row": "r6",
+      "choice": {
+        "kind": "election",
+        "label": "Opposer opposes within the original 30 days",
+        "cite": "37 CFR 2.101(c)",
+        "probability": null
+      }
+    }
+  ],
+  "rows": [
+    {
+      "id": "r1",
+      "world": "w0",
+      "kind": "event",
+      "date": "2026-06-16",
+      "due": null,
+      "label": "Published() on applicant",
+      "status": {
+        "state": "none",
+        "reason": null
+      },
+      "cite": null,
+      "source": {
+        "file": "cases/ttab-published.case",
+        "start": 439,
+        "end": 474,
+        "line": 14,
+        "column": 3
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "ttab-trademark-trial-and-appeal-board"
+      ],
+      "trigger": null
+    },
+    {
+      "id": "r2",
+      "world": "w0",
+      "kind": "deadline",
+      "date": null,
+      "due": "2026-07-16",
+      "label": "opposition-period: 30 days after Published()",
+      "status": {
+        "state": "open",
+        "reason": null
+      },
+      "cite": "37 CFR 2.101(c)",
+      "source": {
+        "file": "lit/ttab/ttab.lit",
+        "start": 3422,
+        "end": 3491,
+        "line": 73,
+        "column": 3
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "ttab-trademark-trial-and-appeal-board"
+      ],
+      "trigger": "r1"
+    },
+    {
+      "id": "r3",
+      "world": "w0",
+      "kind": "deadline",
+      "date": null,
+      "due": "2026-10-14",
+      "label": "extended-period-120: 120 days after Published()",
+      "status": {
+        "state": "open",
+        "reason": null
+      },
+      "cite": "37 CFR 2.102(c)(3)",
+      "source": {
+        "file": "lit/ttab/ttab.lit",
+        "start": 4477,
+        "end": 4573,
+        "line": 97,
+        "column": 3
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "ttab-trademark-trial-and-appeal-board"
+      ],
+      "trigger": "r1"
+    },
+    {
+      "id": "r4",
+      "world": "w0",
+      "kind": "deadline",
+      "date": null,
+      "due": "2026-12-14",
+      "label": "outer-limit-180: 180 days after Published()",
+      "status": {
+        "state": "open",
+        "reason": null
+      },
+      "cite": "37 CFR 2.102(c)",
+      "source": {
+        "file": "lit/ttab/ttab.lit",
+        "start": 4576,
+        "end": 4665,
+        "line": 98,
+        "column": 3
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "ttab-trademark-trial-and-appeal-board"
+      ],
+      "trigger": "r1"
+    },
+    {
+      "id": "r5",
+      "world": "w0",
+      "kind": "deadline",
+      "date": null,
+      "due": null,
+      "label": "first-extension-90: 90 days after OppositionPeriodExpired()",
+      "status": {
+        "state": "unknown",
+        "reason": "counted from OppositionPeriodExpired(), which no recorded event dates as of 2026-07-01"
+      },
+      "cite": "37 CFR 2.102(c)(1)(ii)",
+      "source": {
+        "file": "lit/ttab/ttab.lit",
+        "start": 4252,
+        "end": 4364,
+        "line": 95,
+        "column": 3
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "ttab-trademark-trial-and-appeal-board"
+      ],
+      "trigger": null
+    },
+    {
+      "id": "r6",
+      "world": "w0",
+      "kind": "fork",
+      "date": null,
+      "due": null,
+      "label": "Application published for opposition",
+      "status": {
+        "state": "unknown",
+        "reason": "no outcome of `ttab-trademark-trial-and-appeal-board::published` recorded as of 2026-07-01"
+      },
+      "cite": "15 USC 1063(a); 37 CFR 2.101(c)",
+      "source": {
+        "file": "lit/ttab/01-pre.lit",
+        "start": 447,
+        "end": 1691,
+        "line": 21,
+        "column": 1
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "ttab-trademark-trial-and-appeal-board"
+      ],
+      "trigger": "r1"
+    },
+    {
+      "id": "r7",
+      "world": "w1",
+      "kind": "event",
+      "date": null,
+      "due": null,
+      "label": "Opposer requests 30-day extension (granted on request)",
+      "status": {
+        "state": "none",
+        "reason": null
+      },
+      "cite": "37 CFR 2.102(c)(1)(i)",
+      "source": {
+        "file": "lit/ttab/01-pre.lit",
+        "start": 746,
+        "end": 1026,
+        "line": 26,
+        "column": 3
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "ttab-trademark-trial-and-appeal-board"
+      ],
+      "trigger": "r6"
+    },
+    {
+      "id": "r8",
+      "world": "w1",
+      "kind": "deadline",
+      "date": null,
+      "due": null,
+      "label": "second-extension-60: 60 days after FirstExtensionExpired()",
+      "status": {
+        "state": "unknown",
+        "reason": "counted from FirstExtensionExpired(), which no recorded event dates as of 2026-07-01"
+      },
+      "cite": "37 CFR 2.102(c)(2)",
+      "source": {
+        "file": "lit/ttab/ttab.lit",
+        "start": 4367,
+        "end": 4474,
+        "line": 96,
+        "column": 3
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "ttab-trademark-trial-and-appeal-board"
+      ],
+      "trigger": "r7"
+    },
+    {
+      "id": "r9",
+      "world": "w2",
+      "kind": "event",
+      "date": null,
+      "due": null,
+      "label": "Opposer requests 90-day extension (good cause)",
+      "status": {
+        "state": "none",
+        "reason": null
+      },
+      "cite": "37 CFR 2.102(c)(1)(ii)",
+      "source": {
+        "file": "lit/ttab/01-pre.lit",
+        "start": 1029,
+        "end": 1314,
+        "line": 32,
+        "column": 3
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "ttab-trademark-trial-and-appeal-board"
+      ],
+      "trigger": "r6"
+    },
+    {
+      "id": "r10",
+      "world": "w3",
+      "kind": "event",
+      "date": null,
+      "due": null,
+      "label": "Opposer opposes within the original 30 days",
+      "status": {
+        "state": "none",
+        "reason": null
+      },
+      "cite": "37 CFR 2.101(c)",
+      "source": {
+        "file": "lit/ttab/01-pre.lit",
+        "start": 1317,
+        "end": 1689,
+        "line": 38,
+        "column": 3
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "ttab-trademark-trial-and-appeal-board"
+      ],
+      "trigger": "r6"
+    }
+  ],
+  "edges": [
+    {
+      "from": "r1",
+      "to": "r2",
+      "world": "w0",
+      "kind": "triggers"
+    },
+    {
+      "from": "r2",
+      "to": "r3",
+      "world": "w0",
+      "kind": "sequence"
+    },
+    {
+      "from": "r1",
+      "to": "r3",
+      "world": "w0",
+      "kind": "triggers"
+    },
+    {
+      "from": "r3",
+      "to": "r4",
+      "world": "w0",
+      "kind": "sequence"
+    },
+    {
+      "from": "r1",
+      "to": "r4",
+      "world": "w0",
+      "kind": "triggers"
+    },
+    {
+      "from": "r4",
+      "to": "r5",
+      "world": "w0",
+      "kind": "sequence"
+    },
+    {
+      "from": "r5",
+      "to": "r6",
+      "world": "w0",
+      "kind": "sequence"
+    },
+    {
+      "from": "r1",
+      "to": "r6",
+      "world": "w0",
+      "kind": "triggers"
+    },
+    {
+      "from": "r6",
+      "to": "r7",
+      "world": "w1",
+      "kind": "forks"
+    },
+    {
+      "from": "r7",
+      "to": "r8",
+      "world": "w1",
+      "kind": "triggers"
+    },
+    {
+      "from": "r6",
+      "to": "r9",
+      "world": "w2",
+      "kind": "forks"
+    },
+    {
+      "from": "r6",
+      "to": "r10",
+      "world": "w3",
+      "kind": "forks"
+    }
+  ],
+  "diagnostics": []
+}

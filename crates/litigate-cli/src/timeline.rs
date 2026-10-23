@@ -511,7 +511,7 @@ fn events(b: &mut Builder, m: &CaseCheck, case: &hir::Case, primary: &str) -> Ve
         let layer = taken
             .map(|(p, _)| p.manifest.name.clone())
             .or_else(|| {
-                m.schedule
+                m.counted
                     .iter()
                     .find(|s| s.trigger_event == i)
                     .and_then(|s| s.deadline.split_once("::"))
@@ -558,7 +558,7 @@ fn deadlines(
         })
     };
     let mut seen: Vec<String> = Vec::new();
-    for s in &m.schedule {
+    for s in &m.counted {
         seen.push(s.deadline.clone());
         let ended = closed(s.closed_by);
         let ended = ended.as_ref().map(|(e, d)| (e.as_str(), d.as_str()));
@@ -864,6 +864,13 @@ pub fn disabled_layers(ids: &[String], spec: &[String]) -> Result<Vec<String>, S
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::matter;
+    use crate::testkit::{self, ACME};
+    use crate::ws::Session;
+    use litigate_base::DiagnosticCode;
+    use serde_json::json;
+
+    const PACK: &str = "frcp-rule12-example";
 
     #[test]
     fn layer_classes_follow_the_package_authority() {
@@ -871,5 +878,459 @@ mod tests {
         assert_eq!(layer_class("StandingOrder"), LayerClass::StandingOrder);
         assert_eq!(layer_class("CaseOrder"), LayerClass::CaseOrder);
         assert_eq!(layer_class("Regulation"), LayerClass::BaseRule);
+    }
+
+    #[test]
+    fn every_obligation_end_reads_as_a_status() {
+        let closed = Some(("Answered(complaint)", "2025-03-20"));
+        let read = |s, closed, due| {
+            let t = obligation_status(s, closed, due, "2025-06-01");
+            (t.state, t.reason)
+        };
+        let cases = [
+            (Status::Open, RowState::Open, None),
+            (
+                Status::Discharged,
+                RowState::Met,
+                Some("discharged by Answered(complaint) on 2025-03-20"),
+            ),
+            (
+                Status::Late,
+                RowState::Late,
+                Some("acted by Answered(complaint) on 2025-03-20, after the due date"),
+            ),
+            (
+                Status::Breached,
+                RowState::Breached,
+                Some("past due at 2025-06-01 with no act by its bearer"),
+            ),
+            (
+                Status::Lapsed,
+                RowState::Lapsed,
+                Some("past due at 2025-06-01 with no act"),
+            ),
+            (
+                Status::Waived,
+                RowState::Superseded,
+                Some("waived by Answered(complaint) on 2025-03-20"),
+            ),
+            (
+                Status::Superseded,
+                RowState::Superseded,
+                Some("restarted by Answered(complaint) on 2025-03-20 (a later trigger)"),
+            ),
+            (
+                Status::Merged,
+                RowState::Superseded,
+                Some("absorbed by a `later_of` instance"),
+            ),
+        ];
+        for (status, state, reason) in cases {
+            assert_eq!(
+                read(status, closed, Some("2025-03-26")),
+                (state, reason.map(str::to_owned)),
+                "{status:?}"
+            );
+        }
+        assert_eq!(
+            read(Status::Discharged, None, None),
+            (RowState::Met, Some("discharged".to_owned()))
+        );
+        assert_eq!(
+            read(Status::Open, None, None),
+            (
+                RowState::Unknown,
+                Some("open at 2025-06-01 with no due date".to_owned())
+            )
+        );
+    }
+
+    #[test]
+    fn layers_are_enabled_named_or_disabled() {
+        let ids = vec!["a".to_owned(), "b".to_owned(), "c".to_owned()];
+        let spec = |items: &[&str]| {
+            disabled_layers(
+                &ids,
+                &items.iter().map(|s| (*s).to_owned()).collect::<Vec<_>>(),
+            )
+        };
+        assert_eq!(spec(&[]), Ok(vec![]));
+        assert_eq!(spec(&["-b"]), Ok(vec!["b".to_owned()]));
+        assert_eq!(spec(&["a", "+c"]), Ok(vec!["b".to_owned()]));
+        assert_eq!(
+            spec(&["a", "-a"]),
+            Ok(vec!["a".to_owned(), "b".to_owned(), "c".to_owned()])
+        );
+        assert_eq!(
+            spec(&["-d"]),
+            Err("no layer `d`; layers: a, b, c".to_owned())
+        );
+    }
+
+    /// The frozen example document.
+    fn example() -> Timeline {
+        serde_json::from_str(include_str!(
+            "../../../docs/litigate/examples/timeline-ttab-opposition.json"
+        ))
+        .unwrap()
+    }
+
+    fn row_ids(t: &Timeline) -> Vec<&str> {
+        t.rows.iter().map(|r| r.id.as_str()).collect()
+    }
+
+    fn world_ids(t: &Timeline) -> Vec<&str> {
+        t.worlds.iter().map(|w| w.id.as_str()).collect()
+    }
+
+    /// The example with a world `w3` nested under `w1` that names no fork
+    /// row, and a docket row after the fork.
+    fn nested() -> Timeline {
+        let mut t = example();
+        let mut w3 = t.worlds[1].clone();
+        w3.id = "w3".to_owned();
+        w3.parent = Some("w1".to_owned());
+        w3.fork_row = None;
+        t.worlds.push(w3);
+        let mut late = t.rows[0].clone();
+        late.id = "r10".to_owned();
+        t.rows.push(late);
+        t
+    }
+
+    #[test]
+    fn a_disabled_layer_drops_its_rows_and_the_worlds_forking_from_them() {
+        let mut t = nested();
+        // r7 triggered by the reset (r6) loses its trigger with it.
+        t.rows[6].trigger = Some("r6".to_owned());
+        apply_layers(&mut t, &["order-reset-1".to_owned()]);
+        assert_eq!(
+            row_ids(&t),
+            ["r1", "r2", "r3", "r4", "r5", "r7", "r9", "r10"]
+        );
+        assert_eq!(t.rows[5].trigger, None);
+        assert!(!t.layers[1].enabled && t.layers[0].enabled);
+        assert!(t.edges.iter().all(|e| e.from != "r6" && e.to != "r6"));
+        let mut t = nested();
+        apply_layers(&mut t, &["ttab".to_owned()]);
+        assert_eq!(world_ids(&t), ["w0"]);
+        assert!(t.rows.is_empty() && t.edges.is_empty());
+    }
+
+    #[test]
+    fn a_world_keeps_its_ancestors_up_to_its_fork() {
+        let mut t = nested();
+        assert_eq!(apply_world(&mut t, "w1"), Ok(()));
+        assert_eq!(world_ids(&t), ["w0", "w1"]);
+        assert_eq!(
+            row_ids(&t),
+            ["r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8"]
+        );
+        assert!(t.edges.iter().all(|e| e.world != "w2"));
+        // A world naming no fork row cuts nothing from its parent.
+        let mut t = nested();
+        assert_eq!(apply_world(&mut t, "w3"), Ok(()));
+        assert_eq!(world_ids(&t), ["w0", "w1", "w3"]);
+        assert_eq!(t.rows.len(), 8);
+        let mut t = nested();
+        assert_eq!(
+            apply_world(&mut t, "w7"),
+            Err("no world `w7`; worlds: w0, w1, w2, w3".to_owned())
+        );
+    }
+
+    /// The worked example (plus `extra`) with matter `text`, checked: its
+    /// session, which `f` reads with the matter.
+    fn with_matter(extra: &str, text: &str, f: impl FnOnce(&Session, matter::CaseCheck)) {
+        let session = testkit::example_locked(extra, text, None);
+        let all = session.hir();
+        let c = matter::check(
+            &session,
+            &session.cases[0],
+            &crate::cmd::check::engine(&all),
+            &crate::clock::Clocks::new(&all),
+            litigate_base::Profile::Dev,
+        );
+        f(&session, c);
+    }
+
+    /// The timeline of `m` in `session`, as JSON.
+    fn build(session: &Session, m: &matter::CaseCheck, case: &hir::Case) -> serde_json::Value {
+        let all = session.hir();
+        let texts = session.sources();
+        serde_json::to_value(of_case(m, case, &all, &texts, &m.diagnostics)).unwrap()
+    }
+
+    fn rows(t: &serde_json::Value) -> Vec<(String, String, String)> {
+        t["rows"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|r| {
+                (
+                    r["world"].as_str().unwrap().to_owned(),
+                    r["kind"].as_str().unwrap().to_owned(),
+                    r["status"]["state"].as_str().unwrap().to_owned(),
+                )
+            })
+            .collect()
+    }
+
+    #[test]
+    fn the_worked_example_forks_at_the_motion_ruling() {
+        with_matter("", ACME, |session, m| {
+            let t = build(session, &m, m.case.as_ref().unwrap());
+            assert_eq!(t["worlds"][1]["choice"]["kind"], "chance");
+            assert_eq!(t["worlds"][1]["choice"]["probability"], json!(null));
+            assert_eq!(t["rows"][2]["status"]["state"], "met");
+            assert_eq!(t["edges"][0]["kind"], "sequence");
+        });
+    }
+
+    #[test]
+    fn instances_without_a_version_or_declaration_are_left_out() {
+        with_matter("", ACME, |session, mut m| {
+            let case = m.case.clone().unwrap();
+            let mut superseded = m.counted[0].clone();
+            superseded.status = Status::Superseded;
+            superseded.closed_by = Some(1);
+            let mut unclosed = superseded.clone();
+            unclosed.closed_by = None;
+            m.counted[0].version = "nope@2000-01-01".to_owned();
+            m.counted.extend([superseded, unclosed]);
+            let mut uncounted = m.counted[0].clone();
+            uncounted.deadline = format!("{PACK}::answer-period");
+            uncounted.due = None;
+            uncounted.unknown = Some("no counting rule".to_owned());
+            uncounted.status = Status::Discharged;
+            uncounted.closed_by = Some(1);
+            let mut undeclared = uncounted.clone();
+            undeclared.deadline = format!("{PACK}::nope");
+            undeclared.status = Status::Open;
+            undeclared.closed_by = None;
+            m.counted.extend([uncounted, undeclared]);
+            let t = build(session, &m, &case);
+            let deadlines: Vec<&serde_json::Value> = t["rows"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .filter(|r| r["kind"] == "deadline")
+                .collect();
+            assert_eq!(deadlines.len(), 3, "{t:#}");
+            assert_eq!(
+                deadlines[2]["status"],
+                json!({"state": "met", "reason": "discharged by MovedToDismiss(complaint) on 2025-03-20: no counting rule"})
+            );
+            let supersedes = t["edges"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .filter(|e| e["kind"] == "supersedes")
+                .count();
+            assert_eq!(supersedes, 1);
+        });
+    }
+
+    #[test]
+    fn events_fall_back_to_the_primary_layer() {
+        with_matter("", ACME, |session, mut m| {
+            let mut case = m.case.clone().unwrap();
+            // No replay step for the first event, an unknown stage for the second.
+            m.replay.remove(0);
+            m.replay[0].from = format!("{PACK}::nope");
+            m.counted.clear();
+            let t = build(session, &m, &case);
+            assert_eq!(t["rows"][0]["provenance"], json!([PACK]));
+            // No used package: no layer, and no posture to fork at.
+            m.packages.clear();
+            case.start = None;
+            let t = build(session, &m, &case);
+            assert_eq!(t["rows"][0]["provenance"], json!([""]));
+            assert_eq!(t["worlds"].as_array().unwrap().len(), 1);
+            case.start = Some(format!("{PACK}::nope"));
+            let t = build(session, &m, &case);
+            assert_eq!(t["worlds"].as_array().unwrap().len(), 1);
+        });
+    }
+
+    #[test]
+    fn a_matter_at_the_start_forks_with_probabilities() {
+        let text = ACME
+            .replace("  2025-03-05 Served(complaint, Personal) on widget\n", "")
+            .replace("  2025-03-20 MovedToDismiss(complaint) by widget\n", "")
+            .replace("facts { time-barred: not-barred }\n", "");
+        with_matter("", &text, |session, m| {
+            let case = m.case.clone().unwrap();
+            assert_eq!(case.start, None);
+            let t = build(session, &m, &case);
+            assert_eq!(t["worlds"][1]["choice"]["probability"], json!(0.1));
+            assert_eq!(t["worlds"][2]["choice"]["probability"], json!(0.9));
+        });
+    }
+
+    #[test]
+    fn a_decision_forks_into_elections_with_unknown_governing_deadlines() {
+        let text = ACME
+            .replace("  2025-03-05 Served(complaint, Personal) on widget\n", "")
+            .replace("  2025-03-20 MovedToDismiss(complaint) by widget\n", "")
+            .replace(
+                "perspective widget",
+                "start frcp-rule12-example::respond\nperspective widget",
+            );
+        with_matter("", &text, |session, m| {
+            let mut case = m.case.clone().unwrap();
+            assert_eq!(case.start.as_deref(), Some("frcp-rule12-example::respond"));
+            let t = build(session, &m, &case);
+            assert_eq!(
+                rows(&t),
+                [
+                    ("w0", "deadline", "unknown"),
+                    ("w0", "fork", "unknown"),
+                    ("w1", "event", "none"),
+                    ("w2", "event", "none"),
+                    ("w3", "event", "none"),
+                ]
+                .map(|(a, b, c)| (a.to_owned(), b.to_owned(), c.to_owned()))
+            );
+            assert_eq!(t["worlds"][1]["choice"]["kind"], "election");
+            assert_eq!(
+                t["rows"][0]["status"]["reason"],
+                "counted from Served(complaint), which no recorded event dates as of 2025-06-01"
+            );
+            // A removed option forks no world.
+            case.removals.push(hir::Removal {
+                edge: format!("{PACK}::default"),
+                date: "2025-04-01".to_owned(),
+                event: 0,
+                authority: "FRCP 12".to_owned(),
+            });
+            let t = build(session, &m, &case);
+            assert_eq!(t["worlds"].as_array().unwrap().len(), 3);
+        });
+    }
+
+    #[test]
+    fn forks_read_the_actor_and_skip_what_does_not_branch() {
+        with_matter("", ACME, |session, m| {
+            let case = m.case.clone().unwrap();
+            let all = session.hir();
+            let texts = session.sources();
+            let mut b = Builder::new(&all, &texts, "2025-06-01".to_owned(), None);
+            assert!(b.node("nope").is_none());
+            assert!(b.node("nope::x").is_none());
+            assert!(b.node(&format!("{PACK}::nope")).is_none());
+            assert!(b.deadline("nope").is_none());
+            assert!(b.deadline("nope::x").is_none());
+            assert!(b.deadline(&format!("{PACK}::nope")).is_none());
+            let (pkg, terminal) = b.node(&format!("{PACK}::dismissed")).unwrap();
+            fork(&mut b, &case, pkg, terminal, &[], None);
+            assert!(b.rows.is_empty());
+            let (_, respond) = b.node(&format!("{PACK}::respond")).unwrap();
+            let mut state = respond.clone();
+            state.kind = NodeKind::State;
+            state.edges[0].actor = "Court".to_owned();
+            state.edges[1].to = "nope::x".to_owned();
+            // An edge back to the node itself is not an option.
+            state.edges[2].to = "respond".to_owned();
+            fork(&mut b, &case, pkg, &state, &[], None);
+            let kinds: Vec<ChoiceKind> = b.worlds[1..]
+                .iter()
+                .map(|w| w.choice.as_ref().unwrap().kind)
+                .collect();
+            assert_eq!(
+                kinds,
+                [ChoiceKind::HypotheticalDecision, ChoiceKind::Election]
+            );
+            // A deadline that does not resolve has no row.
+            let mut odd = respond.clone();
+            odd.edges[0].deadline = Some(hir::EdgeDeadline {
+                window: DeadlineWindow::Declared {
+                    deadline: "nope".to_owned(),
+                },
+                ..respond.edges[0].deadline.clone().unwrap()
+            });
+            let before = b.rows.len();
+            b.governing(
+                0,
+                pkg,
+                &odd,
+                &mut vec![format!("{PACK}::answer-period")],
+                None,
+            );
+            assert_eq!(b.rows.len(), before);
+        });
+    }
+
+    #[test]
+    fn deadline_labels_read_like_the_source() {
+        let session = testkit::example_with("");
+        let all = session.hir();
+        let decl = hirx::deadlines(all[0], "answer-period").next().unwrap();
+        assert_eq!(
+            deadline_label(decl),
+            "answer-period: 21 days after Served(complaint)"
+        );
+        let mut d = decl.clone();
+        d.amount = 1;
+        d.direction = hir::Direction::Backward;
+        let units = [
+            (hir::DayUnit::Calendar, "day"),
+            (hir::DayUnit::Court, "court day"),
+            (hir::DayUnit::Business, "business day"),
+            (hir::DayUnit::Week, "week"),
+            (hir::DayUnit::Month, "month"),
+            (hir::DayUnit::Year, "year"),
+        ];
+        for (unit, name) in units {
+            d.unit = unit;
+            assert_eq!(
+                deadline_label(&d),
+                format!("answer-period: 1 {name} before Served(complaint)")
+            );
+        }
+    }
+
+    #[test]
+    fn diagnostics_keep_errors_and_the_file_s_own_warnings() {
+        let session = testkit::example_with("");
+        let all = session.hir();
+        let texts = session.sources();
+        let b = Builder::new(&all, &texts, "2025-06-01".to_owned(), None);
+        let at = |file: &str, severity| {
+            let mut d = Diagnostic::error(
+                DiagnosticCode::InvalidStart,
+                Span {
+                    file: file.into(),
+                    line: 1,
+                    col: 1,
+                    end_line: 1,
+                    end_col: 7,
+                },
+                format!("{severity:?}"),
+            );
+            d.severity = severity;
+            d
+        };
+        let given = [
+            at("other.lit", Severity::Error),
+            at("other.lit", Severity::Warning),
+            at("lit/examples/rule12.lit", Severity::Warning),
+            at("lit/examples/rule12.lit", Severity::Info),
+            at("lit/examples/rule12.lit", Severity::Hint),
+        ];
+        let kept: Vec<(TimelineSeverity, usize)> =
+            diagnostics(&b, "lit/examples/rule12.lit", &given)
+                .into_iter()
+                .map(|d| (d.severity, d.source.unwrap().end))
+                .collect();
+        assert_eq!(
+            kept,
+            [
+                (TimelineSeverity::Note, 6),
+                (TimelineSeverity::Note, 6),
+                (TimelineSeverity::Warning, 6),
+                (TimelineSeverity::Error, 0),
+            ]
+        );
     }
 }

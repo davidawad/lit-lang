@@ -19,6 +19,7 @@
 mod assertions;
 mod cite;
 mod context;
+mod cycle;
 mod deadline;
 mod diag;
 mod evidence;
@@ -186,6 +187,7 @@ pub fn verify_package(
         }
     }
     record(&mut b, O::DistExact, graph::empty_distributions(&cx));
+    record(&mut b, O::WellTyped, cycle::unbounded(&cx));
     evidence::holes(&mut b, input.check.holes.len());
     record(&mut b, O::Holes, lints::holes(&input.check.holes, profile));
     record(&mut b, O::RuleWithoutTest, lints::untested(&cx));

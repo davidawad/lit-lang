@@ -3,6 +3,7 @@
 //! rules (SPEC §8.2), so a matter is judged by the arithmetic its scenario
 //! runs under.
 use crate::{LoweredPackage, Lowerer};
+use litgraph::clock::cycle::endless_roll;
 use litgraph::clock::rule::Step;
 use litgraph::clock::{
     compute_due_date, ClockConfig, ClockLibrary, Date, DayDeadline, Direction, ServiceMethod, Unit,
@@ -19,6 +20,9 @@ pub struct EngineClock {
     library: ClockLibrary,
     /// `(rule id, version from)` to that version's fragment.
     versions: BTreeMap<(String, String), ClockLibrary>,
+    /// Versions some date never rolls out of (`cycle::endless_roll`):
+    /// counting under them is refused, not run forever.
+    endless: BTreeMap<(String, String), String>,
 }
 
 fn overlay(library: &mut ClockLibrary, f: ClockLibrary) {
@@ -44,6 +48,7 @@ impl EngineClock {
         Self {
             library,
             versions: BTreeMap::new(),
+            endless: BTreeMap::new(),
         }
     }
 
@@ -71,6 +76,9 @@ impl EngineClock {
             for c in versions {
                 if let Some(fragment) = lowerer.clock_version(pkg, c)? {
                     let key = (c.meta.id.clone(), c.meta.effective.from.clone());
+                    if let Some(why) = endless_roll(&fragment) {
+                        clock.endless.insert(key.clone(), why);
+                    }
                     clock.versions.insert(key, fragment);
                 }
             }
@@ -91,6 +99,10 @@ impl EngineClock {
 
 impl Clock for EngineClock {
     fn due(&self, r: &DueRequest) -> Result<String, String> {
+        let key = r.version.clone().map(|from| (r.counting.clone(), from));
+        if let Some(why) = key.and_then(|k| self.endless.get(&k)) {
+            return Err(why.clone());
+        }
         let versioned = r.version.as_ref().and_then(|from| {
             let fragment = self.versions.get(&(r.counting.clone(), from.clone()))?;
             let mut library = self.library.clone();

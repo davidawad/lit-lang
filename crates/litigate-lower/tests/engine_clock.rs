@@ -188,3 +188,47 @@ fn weeks_months_and_years_are_counted() {
     (r.amount, r.unit) = (1, DayUnit::Month);
     assert_eq!(EngineClock::new([]).due(&r).as_deref(), Ok("2025-04-03"));
 }
+
+/// A version whose calendar closes every day would roll forever: replay is
+/// refused with the reason (`cycle::endless_roll`) instead of counting.
+#[test]
+fn a_version_that_never_rolls_is_refused_not_counted() {
+    let mut p = example();
+    let from = from_of(&mut p);
+    let calendar = p
+        .modules
+        .iter_mut()
+        .flat_map(|m| &mut m.declarations)
+        .find_map(|d| match d {
+            hir::Declaration::Calendar(c) => Some(c),
+            _ => None,
+        })
+        .unwrap_or_else(|| panic!("the example has a calendar"));
+    let template = calendar.holidays[0].clone();
+    calendar.holidays = (1..=12u8)
+        .flat_map(|month| {
+            let last = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][usize::from(month) - 1];
+            (1..=last).map(move |day| (month, day))
+        })
+        .map(|(month, day)| hir::Holiday {
+            id: format!("d{month}-{day}"),
+            date: hir::HolidayDate::Fixed { month, day },
+            observed: None,
+            ..template.clone()
+        })
+        .collect();
+    let clock = EngineClock::lowered(&Lowerer::new(&[&p]), &[&p])
+        .unwrap_or_else(|d| panic!("{}", render_diagnostics(&d)));
+    let refused = clock.due(&request("frcp6", Some(&from)));
+    assert!(
+        refused
+            .as_ref()
+            .is_err_and(|e| e.starts_with("counting rule `frcp6` never rolls to an open day from ")),
+        "{refused:?}"
+    );
+    // The library's own rule, which closes on federal holidays, still counts.
+    assert_eq!(
+        clock.due(&request("frcp6", None)).as_deref(),
+        Ok("2025-03-24")
+    );
+}

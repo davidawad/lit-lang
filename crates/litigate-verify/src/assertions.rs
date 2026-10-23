@@ -375,6 +375,8 @@ impl<'a> Clocks<'a> {
                     .collect::<Vec<_>>()
                     .join("; ")
             })
+            // Counting would not terminate (L3009 reports the rule).
+            .and_then(|lib| clock::cycle::endless_roll(&lib).map_or(Ok(lib), Err))
     }
 }
 

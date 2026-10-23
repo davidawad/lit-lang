@@ -23,8 +23,10 @@
 //! - [`rule`]: the `CountingRule` IR.
 //! - [`library`]: loading, merging and resolving the clock library.
 //! - [`interp`]: the generic interpreter.
+//! - [`cycle`]: properties of every date, decided over one Gregorian cycle.
 
 pub mod calendar;
+pub mod cycle;
 pub mod date;
 pub mod interp;
 pub mod library;

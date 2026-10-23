@@ -197,17 +197,18 @@ id.
 
 ## Making it part of the repository
 
-The repository's `packs/*.json`, `packs/links.json` and `scenarios/*.json`
-are generated from `lit/` and `cases/` (SPEC §9.4). To ship a new forum,
-add its package (and any named matter) to `lit_sync_inputs` in the
-`justfile`, then:
+The repository's packs, `links.json` and named scenarios are built from
+`lit/` and `cases/` at `cargo build` time by `crates/litgraph-packs`
+(SPEC §9.4); they are build outputs, never committed. To ship a new forum,
+add its package (and any named matter) to `crates/litgraph-packs/build.args`,
+then:
 
 ```bash
-just lit-sync                       # regenerate packs/ and scenarios/
-just lit-sync-check                 # what CI runs: fails if the committed files are stale
+just lit-sync                       # relock; build packs/ and scenarios/ into target/lit-build/
+just lit-sync-check                 # what CI runs: fails on a stale Lit.lock
 ```
 
-Commit the source and the regenerated JSON together, and never edit the JSON
-by hand. To change an existing forum, edit its `lit/<forum>/` package. `just
-lit-diff` shows, by JSON pointer, what the regenerated files would change
-(SPEC §8.6). Then run `just lit-sync`.
+Commit the source and its `Lit.lock` changes; the JSON is not committed. To
+change an existing forum, edit its `lit/<forum>/` package. Run `just
+lit-sync` before the edit; afterwards `just lit-diff` shows, by JSON pointer,
+what the edit changes in the built files (SPEC §8.6).

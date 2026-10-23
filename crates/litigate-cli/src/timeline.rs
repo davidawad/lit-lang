@@ -83,7 +83,7 @@ fn event_name(e: &hir::Expr) -> String {
     hirx::event_parts(e).map(|(c, _)| c).unwrap_or_default()
 }
 
-/// The module-qualified id (`ttab.opposition-to-trial.instituted`) of
+/// The module-qualified id (`<module>.<id>`) of
 /// declaration `id` of `pkg`: the rule or node id a row's `key` names.
 fn decl_key(pkg: &hir::Package, id: &str) -> String {
     let module = pkg

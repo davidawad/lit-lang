@@ -8,7 +8,7 @@ use super::lattice::{Lattice, Order};
 use crate::hir::Relation;
 use crate::temporal::interval::Window;
 use crate::temporal::world::{error, span_of, DiagnosticExt, Key, Locate, World};
-use litigate_base::{Applicability, Diagnostic, DiagnosticCode as C, Span};
+use litigate_base::{Applicability, Derivation, Diagnostic, DiagnosticCode as C, Span};
 
 /// Clauses after whose value a `delegable_to` clause can be inserted.
 const ANCHORS: [&str; 7] = [
@@ -138,13 +138,21 @@ pub fn check(
                                 "`{to}` and `{own}` are not ranked by any `authority` chain"
                             ),
                         };
+                        let at = span_of(loc, da, "delegable_to");
+                        let derivation = Derivation::new(
+                            "unlicensed",
+                            format!("unlicensed(`{}` delegable_to {to})", da.meta.id),
+                        )
+                        .at(Some(at.clone()))
+                        .premise(Derivation::new("rank", format!("¬below({to}, {own})")));
                         out.push(
                             error(
                                 C::MissingDelegation,
-                                span_of(loc, da, "delegable_to"),
+                                at,
                                 format!("`{}` ({own}) delegates to `{to}`, which is not a lower authority", da.meta.id),
                             )
-                            .with_note(None, why),
+                            .with_note(None, why)
+                            .derived(derivation),
                         );
                     }
                 }
@@ -269,11 +277,32 @@ fn missing_delegation(
             verb(keyword)
         ),
     );
-    if lattice.compare(mine, theirs) == Order::Incomparable {
-        d = d.with_note(None, format!("{mine} and {theirs} are not ranked by any `authority` chain, so `{keyword}` needs an explicit delegation"));
-    }
+    let rank = match lattice.compare(mine, theirs) {
+        Order::Incomparable => {
+            d = d.with_note(None, format!("{mine} and {theirs} are not ranked by any `authority` chain, so `{keyword}` needs an explicit delegation"));
+            format!("incomparable({mine}, {theirs})")
+        }
+        _ => format!("below({mine}, {theirs})"),
+    };
+    let mut derivation = Derivation::new(
+        "unlicensed",
+        format!("unlicensed(`{}` {keyword} `{name}`)", da.meta.id),
+    )
+    .at(Some(d.span.clone()))
+    .premise(
+        Derivation::new("claim", format!("displaces(`{}`, `{name}`)", da.meta.id))
+            .at(Some(d.span.clone())),
+    )
+    .premise(Derivation::new("rank", rank));
     for &b in missing {
         let db = &world.decls[b];
+        derivation = derivation.premise(
+            Derivation::new(
+                "no-capability",
+                format!("¬delegates(`{}`, {mine})", world.versioned(b, a)),
+            )
+            .at(db.meta.span.clone()),
+        );
         d = d.with_note(
             db.meta.span.clone(),
             format!(
@@ -293,7 +322,7 @@ fn missing_delegation(
             );
         }
     }
-    Some(d.with_note(
+    Some(d.derived(derivation).with_note(
         None,
         format!("only a rule's own text can delegate; `{keyword}` cannot grant itself the power"),
     ))

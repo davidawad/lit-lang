@@ -4,7 +4,7 @@
 use crate::hir::{Declaration, Expr, ExprKind, Relation};
 use crate::temporal::check::relation_key;
 use crate::temporal::world::{error, span_of, DiagnosticExt, Key, Locate, World};
-use litigate_base::{Diagnostic, DiagnosticCode as C};
+use litigate_base::{Derivation, Diagnostic, DiagnosticCode as C};
 use std::collections::{BTreeMap, BTreeSet};
 
 /// One directed edge `from -> to`, declared by declaration `by` with
@@ -193,13 +193,33 @@ pub fn check(world: &World<'_>, loc: &dyn Locate, pack: usize) -> Vec<Diagnostic
                 span_of(loc, &world.decls[first.by], first.clause),
                 format!("{reading} forms a cycle: {}", names.join(" -> ")),
             );
+            let mut derivation = Derivation::new("cycle", format!("cycle({})", names.join(", ")))
+                .at(Some(d.span.clone()));
+            for (e, from) in path.iter().zip(&names) {
+                let at = span_of(loc, &world.decls[e.by], e.clause);
+                derivation = derivation.premise(
+                    Derivation::new(
+                        "declared",
+                        format!(
+                            "prevails(`{from}`, `{}`) by `{}`'s `{}`",
+                            e.to.display(own),
+                            world.name(e.by, first.by),
+                            e.clause
+                        ),
+                    )
+                    .at(Some(at)),
+                );
+            }
             for e in path.iter().skip(1) {
                 d = d.with_note(
                     Some(span_of(loc, &world.decls[e.by], e.clause)),
                     format!("`{}` continues the cycle here", world.name(e.by, first.by)),
                 );
             }
-            out.push(d.with_note(None, "remove one of the relations so the order is acyclic"));
+            out.push(
+                d.derived(derivation)
+                    .with_note(None, "remove one of the relations so the order is acyclic"),
+            );
         }
     }
     out

@@ -10,7 +10,7 @@ use crate::hir::{Declaration, Exception, Expr};
 use crate::temporal::condition::{eval, jointly_satisfiable};
 use crate::temporal::interval::Window;
 use crate::temporal::world::{error, span_of, DiagnosticExt, Key, Locate, World};
-use litigate_base::{Applicability, Diagnostic, DiagnosticCode as C};
+use litigate_base::{Applicability, Derivation, Diagnostic, DiagnosticCode as C};
 
 /// How a default (or exception) came out, with the declarations that
 /// decided it in order.
@@ -184,6 +184,12 @@ fn pair(
     }
     let (da, db) = (&world.decls[a], &world.decls[b]);
     let target = t.display(world.pack_of(b));
+    let overlap = if sat.is_none() {
+        "their conditions have too many atoms to prove disjoint"
+    } else {
+        "some history makes both conditions true"
+    }
+    .to_owned();
     let mut d = error(
         C::ExceptionConflict,
         span_of(loc, db, "when"),
@@ -198,13 +204,31 @@ fn pair(
         da.meta.span.clone(),
         format!("`{}` is declared here", da.meta.id),
     )
-    .with_note(
-        None,
-        if sat.is_none() {
-            "their conditions have too many atoms to prove disjoint".to_owned()
-        } else {
-            "some history makes both conditions true".to_owned()
-        },
+    .with_note(None, overlap.clone())
+    .derived(
+        Derivation::new(
+            "conflict",
+            format!(
+                "conflict(`{target}`, `{}`, `{}`) on {}",
+                da.meta.id,
+                db.meta.id,
+                common.display()
+            ),
+        )
+        .at(Some(span_of(loc, db, "when")))
+        .premise(
+            Derivation::new("claim", format!("exception(`{}`, `{target}`)", da.meta.id))
+                .at(da.meta.span.clone()),
+        )
+        .premise(
+            Derivation::new("claim", format!("exception(`{}`, `{target}`)", db.meta.id))
+                .at(db.meta.span.clone()),
+        )
+        .premise(Derivation::new(
+            "no-priority",
+            format!("¬ordered(`{}`, `{}`)", da.meta.id, db.meta.id),
+        ))
+        .premise(Derivation::new("not-disjoint", overlap)),
     )
     .with_note(
         None,

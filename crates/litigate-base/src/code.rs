@@ -186,6 +186,23 @@ impl DiagnosticCode {
         }
     }
 
+    /// The rule of the resolution semantics an error with this code
+    /// concludes (SPEC §9.2): `Some` for every known L3xxx code.
+    #[must_use]
+    pub const fn derivation_rule(self) -> Option<&'static str> {
+        Some(match self {
+            Self::EffectiveOverlap => "overlap",
+            Self::EffectiveGap => "gap",
+            Self::UnresolvedPrecedence | Self::ExceptionConflict => "conflict",
+            Self::MissingDelegation => "unlicensed",
+            Self::PrecedenceCycle => "cycle",
+            Self::NoVersionInForce => "no-winner",
+            Self::InvalidTransition => "transition",
+            Self::InvalidCounting => "counting",
+            _ => return None,
+        })
+    }
+
     /// True for the lint range (L9xxx).
     #[must_use]
     pub fn is_lint(self) -> bool {

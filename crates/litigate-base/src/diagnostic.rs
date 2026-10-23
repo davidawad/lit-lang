@@ -277,6 +277,27 @@ impl Diagnostic {
         self
     }
 
+    /// Gives an L3xxx error without a derivation the one-step derivation
+    /// of its code's rule: the message is the fact concluded, and each
+    /// label a `premise` located at its span. Checks that know the claims
+    /// attach a full tree instead, which this keeps.
+    pub fn ensure_derivation(&mut self) {
+        let Some(rule) = self.code.derivation_rule() else {
+            return;
+        };
+        if self.severity != Severity::Error || self.derivation.is_some() {
+            return;
+        }
+        let mut derivation =
+            Derivation::new(rule, self.message.clone()).at(Some(self.span.clone()));
+        for label in &self.labels {
+            derivation = derivation.premise(
+                Derivation::new("premise", label.message.clone()).at(Some(label.span.clone())),
+            );
+        }
+        self.derivation = Some(derivation);
+    }
+
     /// The fingerprint of this diagnostic as the `occurrence`th (from 0)
     /// among diagnostics with its code, file, and message: 16 hex digits of
     /// FNV-1a-64 over those fields, so it survives edits that move lines.
@@ -300,7 +321,8 @@ impl Diagnostic {
 }
 
 /// Stamps envelope-level fields on sorted `diagnostics`: each one's
-/// fingerprint, and the profile and world they were found under.
+/// fingerprint, the profile and world they were found under, and a
+/// derivation on every L3xxx error ([`Diagnostic::ensure_derivation`]).
 pub fn stamp(diagnostics: &mut [Diagnostic], profile: Option<Profile>, world: &WorldTag) {
     let mut seen: std::collections::BTreeMap<(String, String, String), usize> =
         std::collections::BTreeMap::new();
@@ -315,6 +337,7 @@ pub fn stamp(diagnostics: &mut [Diagnostic], profile: Option<Profile>, world: &W
         *n += 1;
         d.profile = profile;
         d.world = Some(world.clone());
+        d.ensure_derivation();
     }
 }
 
@@ -417,6 +440,42 @@ mod tests {
             serde_json::json!({"name": "actual", "as_of": "2024-01-01"})
         );
         assert_eq!(value["profile"], "strict");
+    }
+
+    #[test]
+    fn every_l3_error_gets_a_derivation_and_keeps_its_own() {
+        let mut gap = Diagnostic::error(DiagnosticCode::EffectiveGap, span("a.lit", 3), "a gap")
+            .label(span("a.lit", 4), "the next version starts here");
+        gap.ensure_derivation();
+        let derivation = gap.derivation.clone().unwrap();
+        assert_eq!(
+            (derivation.rule.as_str(), derivation.fact.as_str()),
+            ("gap", "a gap")
+        );
+        assert_eq!(derivation.span, Some(span("a.lit", 3)));
+        assert_eq!(derivation.premises[0].rule, "premise");
+        assert_eq!(derivation.premises[0].span, Some(span("a.lit", 4)));
+        let own = Derivation::new("cycle", "cycle(a, b)");
+        let mut kept = Diagnostic::error(DiagnosticCode::PrecedenceCycle, span("a.lit", 1), "m")
+            .derived(own.clone());
+        let mut warning = Diagnostic::error(DiagnosticCode::InvalidCounting, span("a.lit", 1), "m");
+        warning.severity = Severity::Warning;
+        let mut other = Diagnostic::error(DiagnosticCode::TypeMismatch, span("a.lit", 1), "m");
+        for d in [&mut kept, &mut warning, &mut other] {
+            d.ensure_derivation();
+        }
+        assert_eq!(kept.derivation, Some(own));
+        assert!(warning.derivation.is_none() && other.derivation.is_none());
+        let mut list = vec![Diagnostic::error(
+            DiagnosticCode::NoVersionInForce,
+            span("a.lit", 1),
+            "m",
+        )];
+        stamp(&mut list, None, &WorldTag::actual(None, None));
+        assert_eq!(
+            list[0].derivation.as_ref().map(|d| d.rule.as_str()),
+            Some("no-winner")
+        );
     }
 
     fn error_of(value: serde_json::Value) -> String {

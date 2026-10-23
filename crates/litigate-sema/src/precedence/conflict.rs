@@ -24,7 +24,7 @@ use crate::temporal::activity::{boundaries, piece, suspensions};
 use crate::temporal::condition::{entails, matches};
 use crate::temporal::interval::Window;
 use crate::temporal::world::{error, span_of, DiagnosticExt, Key, Locate, World};
-use litigate_base::{Diagnostic, DiagnosticCode as C};
+use litigate_base::{Derivation, Diagnostic, DiagnosticCode as C};
 use std::cmp::Ordering;
 use std::collections::BTreeSet;
 
@@ -365,12 +365,37 @@ fn unresolved(
             da.meta.authority, db.meta.authority
         ),
     };
+    let on = window.display();
+    let undefeated = |x: &str, y: &str, at| {
+        Derivation::new(
+            "undefeated",
+            format!("undefeated(`{x}`, `{target}`) on {on}"),
+        )
+        .at(at)
+        .premise(Derivation::new(
+            "claim",
+            format!("claim(`{x}`, `{target}`)"),
+        ))
+        .premise(Derivation::new(
+            "no-declared-win",
+            format!("¬declared_win(`{y}`, `{x}`)"),
+        ))
+        .premise(Derivation::new("no-canon", canons.clone()))
+    };
+    let derivation = Derivation::new(
+        "conflict",
+        format!("conflict(`{target}`, `{na}`, `{nb}`) on {on}"),
+    )
+    .at(Some(d.span.clone()))
+    .premise(undefeated(&na, &nb, Some(span_of(loc, da, clause(a)))))
+    .premise(undefeated(&nb, &na, Some(d.span.clone())));
     d = d
+        .derived(derivation)
         .with_note(
             None,
             "no declared relation (`notwithstanding`, `override`, `subject_to`) orders them",
         )
-        .with_note(None, canons)
+        .with_note(None, canons.clone())
         .with_note(
             None,
             format!(

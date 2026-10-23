@@ -89,6 +89,22 @@ fn well_formed_unknown_codes_decode_tolerantly() {
 }
 
 #[test]
+fn exactly_the_l3_codes_name_a_derivation_rule() {
+    for code in DiagnosticCode::ALL {
+        assert_eq!(
+            code.derivation_rule().is_some(),
+            code.as_str().starts_with("L3"),
+            "{}",
+            code.as_str()
+        );
+    }
+    assert_eq!(
+        DiagnosticCode::decode("L3999").unwrap().derivation_rule(),
+        None
+    );
+}
+
+#[test]
 fn severities_follow_the_profile_table() {
     use DiagnosticCode as C;
     assert_eq!(C::HolePresent.severity(Profile::Dev), Severity::Warning);

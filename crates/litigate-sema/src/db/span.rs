@@ -118,9 +118,12 @@ pub fn to_span(file: &FileId, index: &LineIndex, range: TextRange) -> Span {
     }
 }
 
-/// Sorts diagnostics by `(file, line, col, code)` (SPEC §9.2) and drops
-/// exact duplicates.
+/// Sorts diagnostics by `(file, line, col, code)` (SPEC §9.2), drops
+/// exact duplicates, and gives every L3xxx error a derivation.
 pub fn sort_diagnostics(diagnostics: &mut Vec<Diagnostic>) {
+    diagnostics
+        .iter_mut()
+        .for_each(Diagnostic::ensure_derivation);
     diagnostics.sort_by(|a, b| {
         (&a.span.file, a.span.line, a.span.col, a.code, &a.message).cmp(&(
             &b.span.file,

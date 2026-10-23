@@ -14,7 +14,7 @@ use super::conflict::{claimants_at, decide};
 use crate::temporal::activity::Inactive;
 use crate::temporal::version::Miss;
 use crate::temporal::world::{error, DiagnosticExt, Key, World};
-use litigate_base::{Diagnostic, DiagnosticCode as C, Span};
+use litigate_base::{Derivation, Diagnostic, DiagnosticCode as C, Span};
 use std::collections::BTreeSet;
 
 /// Why no declaration governs a key on a date.
@@ -148,16 +148,30 @@ pub fn unresolved(
         at,
         format!("no single declaration governs `{name}` on {date}"),
     );
+    let mut derivation = Derivation::new("conflict", format!("conflict(`{name}`) on {date}"))
+        .at(Some(d.span.clone()));
     for &(a, b) in pairs {
+        let (na, nb) = (spelled(world, a, &key.pack), spelled(world, b, &key.pack));
+        let undefeated = |x: &str, y: &str, at: Option<Span>| {
+            Derivation::new(
+                "undefeated",
+                format!("undefeated(`{x}`, `{name}`) on {date}"),
+            )
+            .at(at)
+            .premise(Derivation::new(
+                "no-defeat",
+                format!("¬defeats(`{y}`, `{x}`)"),
+            ))
+        };
+        derivation = derivation
+            .premise(undefeated(&na, &nb, world.decls[a].meta.span.clone()))
+            .premise(undefeated(&nb, &na, world.decls[b].meta.span.clone()));
         d = d.with_note(
             world.decls[b].meta.span.clone(),
-            format!(
-                "`{}` and `{}` both apply, and neither prevails",
-                spelled(world, a, &key.pack),
-                spelled(world, b, &key.pack)
-            ),
+            format!("`{na}` and `{nb}` both apply, and neither prevails"),
         );
     }
+    d = d.derived(derivation);
     d.with_note(
         None,
         "declare the order with `notwithstanding` or `subject_to` (`litigate check` reports it as L3003)",

@@ -1,0 +1,29 @@
+---
+source: crates/litigate-sema/tests/derivations.rs
+expression: got
+---
+{
+    "L3002 an undeclared gap takes its rule's one-step derivation": [
+        "L3002 `p` has no version in force on [2012-01-01, 2013-01-01)\n  gap: `p` has no version in force on [2012-01-01, 2013-01-01) @13:67\n    premise: the next version starts here @14:1",
+    ],
+    "L3003 claimants tie on every canon": [
+        "L3003 `b@2009-12-01` and `a@2009-12-01` both apply to `tg` on [2009-12-01, ..), and neither prevails\n  conflict: conflict(`tg`, `a@2009-12-01`, `b@2009-12-01`) on [2009-12-01, ..) @15:67\n    undefeated: undefeated(`a@2009-12-01`, `tg`) on [2009-12-01, ..) @14:67\n      claim: claim(`a@2009-12-01`, `tg`)\n      no-declared-win: ¬declared_win(`b@2009-12-01`, `a@2009-12-01`)\n      no-canon: the canons tie: both are FederalRule; neither applies to a narrower subject matter; both at package level; both take effect on 2009-12-01\n    undefeated: undefeated(`b@2009-12-01`, `tg`) on [2009-12-01, ..) @15:67\n      claim: claim(`b@2009-12-01`, `tg`)\n      no-declared-win: ¬declared_win(`a@2009-12-01`, `b@2009-12-01`)\n      no-canon: the canons tie: both are FederalRule; neither applies to a narrower subject matter; both at package level; both take effect on 2009-12-01",
+    ],
+    "L3004 a delegation to a level that is not lower": [
+        "L3004 `o` (FederalRule) delegates to `Alpha`, which is not a lower authority\n  unlicensed: unlicensed(`o` delegable_to Alpha) @14:67\n    rank: ¬below(Alpha, FederalRule)",
+    ],
+    "L3004 a lower authority displaces without a delegation": [
+        "L3004 `o` (LocalRule) is declared notwithstanding `x::tg` (FederalRule), but `x::tg` does not delegate to LocalRule: missing `delegable_to [LocalRule]`\n  unlicensed: unlicensed(`o` notwithstanding `x::tg`) @10:57\n    claim: displaces(`o`, `x::tg`) @10:57\n    rank: below(LocalRule, FederalRule)\n    no-capability: ¬delegates(`x::tg@2009-12-01`, LocalRule) @9:1",
+    ],
+    "L3004 an unranked override": [
+        "L3004 `o` (Beta) overrides `x::tg` (Alpha), but `x::tg` does not delegate to Beta: missing `delegable_to [Beta]`\n  unlicensed: unlicensed(`o` override `x::tg`) @9:57\n    claim: displaces(`o`, `x::tg`) @9:57\n    rank: incomparable(Beta, Alpha)\n    no-capability: ¬delegates(`x::tg@2009-12-01`, Beta) @8:1",
+    ],
+    "L3005 exceptions not proved disjoint": [
+        "L3005 exceptions `e2` and `e1` to `dd` can both apply on [2009-12-01, ..) and are not ordered\n  conflict: conflict(`dd`, `e1`, `e2`) on [2009-12-01, ..) @33:29\n    claim: exception(`e1`, `dd`) @32:1\n    claim: exception(`e2`, `dd`) @33:1\n    no-priority: ¬ordered(`e1`, `e2`)\n    not-disjoint: their conditions have too many atoms to prove disjoint",
+    ],
+    "L3006 claimants beating each other in a circle": [
+        "L3006 declared precedence (`notwithstanding`, `override`, `subject_to`) forms a cycle: a -> tg -> b -> a\n  cycle: cycle(a, tg, b, a) @14:67\n    declared: prevails(`a`, `tg`) by `a`'s `notwithstanding` @14:67\n    declared: prevails(`tg`, `b`) by `b`'s `subject_to` @15:67\n    declared: prevails(`b`, `a`) by `b`'s `notwithstanding` @15:81",
+        "L3003 `b@2009-12-01` and `a@2009-12-01` both apply to `tg` on [2009-12-01, ..), and neither prevails\n  conflict: conflict(`tg`, `a@2009-12-01`, `b@2009-12-01`) on [2009-12-01, ..) @15:67\n    undefeated: undefeated(`a@2009-12-01`, `tg`) on [2009-12-01, ..) @14:67\n      claim: claim(`a@2009-12-01`, `tg`)\n      no-declared-win: ¬declared_win(`b@2009-12-01`, `a@2009-12-01`)\n      no-canon: the canons tie: both are FederalRule; neither applies to a narrower subject matter; both at package level; both take effect on 2009-12-01\n    undefeated: undefeated(`b@2009-12-01`, `tg`) on [2009-12-01, ..) @15:67\n      claim: claim(`b@2009-12-01`, `tg`)\n      no-declared-win: ¬declared_win(`a@2009-12-01`, `b@2009-12-01`)\n      no-canon: the canons tie: both are FederalRule; neither applies to a narrower subject matter; both at package level; both take effect on 2009-12-01",
+        "L3003 `b@2009-12-01` and `tg@2009-12-01` both apply to `tg` on [2009-12-01, ..), and neither prevails\n  conflict: conflict(`tg`, `tg@2009-12-01`, `b@2009-12-01`) on [2009-12-01, ..) @15:67\n    undefeated: undefeated(`tg@2009-12-01`, `tg`) on [2009-12-01, ..) @13:10\n      claim: claim(`tg@2009-12-01`, `tg`)\n      no-declared-win: ¬declared_win(`b@2009-12-01`, `tg@2009-12-01`)\n      no-canon: the canons tie: both are FederalRule; neither applies to a narrower subject matter; both at package level; both take effect on 2009-12-01\n    undefeated: undefeated(`b@2009-12-01`, `tg`) on [2009-12-01, ..) @15:67\n      claim: claim(`b@2009-12-01`, `tg`)\n      no-declared-win: ¬declared_win(`tg@2009-12-01`, `b@2009-12-01`)\n      no-canon: the canons tie: both are FederalRule; neither applies to a narrower subject matter; both at package level; both take effect on 2009-12-01",
+    ],
+}

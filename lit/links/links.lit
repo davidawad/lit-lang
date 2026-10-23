@@ -218,11 +218,16 @@ link ptab-appeal-to-cafc "Appeal the final written decision to the Federal Circu
   replaces ["ptab-patent-trial-appeal-board::federal-circuit-window->federal-circuit-notice-of-appeal#0"]
 }
 
-/// On remand the Board issues a new final written decision. The legacy
-/// authority is 28 U.S.C. § 2106, whose text speaks of the judgment "of a
-/// court"; kept as the pack has it.
+/// On remand the Board issues a new final written decision. 28 U.S.C.
+/// § 2106 reaches the judgment "of a court", which a Board decision is
+/// not. The Board's own statute governs: a final written decision is
+/// appealed "pursuant to sections 141 through 144" (35 U.S.C. § 319), and
+/// on its determination the court issues the Director its mandate and
+/// opinion, which "shall govern the further proceedings in the case"
+/// (35 U.S.C. § 144). The mandate is FRAP 41(a)'s certified judgment,
+/// opinion and costs direction.
 link cafc-remand-to-ptab "Remand: Board issues a new final written decision": cafc@ptab::remanded-to-ptab -> ptab-patent-trial-appeal-board::fwd-issued by office p 1 {
-  authority cite 28 U.S.C. § 2106
+  authority cite 35 U.S.C. § 144; 35 U.S.C. § 319; FRAP 41(a)
   tags [remand]
 }
 
@@ -263,10 +268,15 @@ link itc-appeal-to-cafc "Appeal the Commission's final determination to the Fede
   replaces ["itc-337::federal-circuit-appeal-window->appeal-filed#0"]
 }
 
-/// On remand the Commission issues a new final determination (legacy
-/// authority 28 U.S.C. § 2106, kept; see `cafc-remand-to-ptab`).
+/// On remand the Commission issues a new final determination. No statute
+/// speaks of the remand itself (and 28 U.S.C. § 2106 reaches only the
+/// judgment "of a court"): 19 U.S.C. § 1337(c) sends the review "in
+/// accordance with chapter 7 of title 5", whose § 706(2) has the court
+/// "hold unlawful and set aside agency action", and remand to the agency is
+/// the ordinary course (Florida Power & Light Co. v. Lorion, 470 U.S. 729,
+/// 744 (1985)). The mandate is FRAP 41(a)'s.
 link cafc-remand-to-itc "Remand: Commission issues a new final determination": cafc@itc::remanded-to-itc -> itc-337::commission-final-determination by office p 1 {
-  authority cite 28 U.S.C. § 2106
+  authority cite 19 U.S.C. § 1337(c); 5 U.S.C. § 706(2); FRAP 41(a)
   tags [remand]
 }
 
@@ -334,9 +344,12 @@ link ttab-appeal-to-cafc "Appeal the TTAB decision to the Federal Circuit on the
   replaces ["ttab-trademark-trial-and-appeal-board::decision-sustained->cafc-outcome#0"]
 }
 
-/// On remand the Board issues a new final decision (legacy authority 28
-/// U.S.C. § 2106, kept; see `cafc-remand-to-ptab`).
+/// On remand the Board issues a new final decision. As for the PTAB, the
+/// Lanham Act governs, not 28 U.S.C. § 2106: the court "shall issue its
+/// mandate and opinion to the Director", which "shall govern the further
+/// proceedings in the case" (15 U.S.C. § 1071(a)(4)). The mandate is FRAP
+/// 41(a)'s.
 link cafc-remand-to-ttab "Remand: Board issues a new final decision": cafc@ttab::remanded-to-ttab -> ttab-trademark-trial-and-appeal-board::final-decision by office p 1 {
-  authority cite 28 U.S.C. § 2106
+  authority cite 15 U.S.C. § 1071(a)(4); FRAP 41(a)
   tags [remand]
 }

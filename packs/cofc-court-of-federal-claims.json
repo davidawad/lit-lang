@@ -949,13 +949,14 @@
       "id": "e-protest-notice-to-complaint",
       "from": "bid-protest-prefiling-notice",
       "to": "bid-protest-complaint-filed",
-      "label": "File the protest complaint (1-5 days after pre-filing notice)",
+      "label": "File the protest complaint (1-5 court days after pre-filing notice)",
       "actor": "applicant",
       "authority": "RCFC Appendix C ¶2; RCFC 3",
       "deadline": {
         "length": 5.0,
+        "unit": "court",
         "extendable": false,
-        "note": "Notice must precede filing by at least 1 but no more than 5 days (excluding weekends/legal holidays); filing follows once that window is satisfied."
+        "note": "Notice must precede filing by at least 1 but no more than 5 days, not counting Saturdays, Sundays and RCFC 6(a)(6) legal holidays (court days, counted back from the filing date, which is excluded). This window is the outer limit counted forward: filing no later than the fifth court day after the notice. The 1-court-day minimum (notice no later than the court day before filing) is not part of this window."
       },
       "cost": 405.0,
       "hours": 20.0

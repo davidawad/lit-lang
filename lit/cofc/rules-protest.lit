@@ -7,25 +7,81 @@ import core.rcfc6.{ rcfc6 }
 /// apparently successful offeror.
 event ProtestNoticeGiven()
 
-/// Appendix C ¶2: the notice must precede the protest complaint by at least
-/// one and at most five days. The legacy pack models the window as five
-/// calendar days counted by RCFC 6 although its note reads the rule as
-/// excluding weekends and legal holidays; Appendix C is not in the vendored
-/// corpus, so neither reading can be checked here and the pack's stands.
-/// "Except in exceptional circumstances" is not a delegation to an order,
-/// so none is declared.
-rule duty protest-prefiling-notice cite ?("RCFC Appendix C ¶2") {
-  deadline protest-notice-window: 5.days after ProtestNoticeGiven() counted_by rcfc6 cite ?("RCFC Appendix C ¶2") {
+/// The protest complaint is filed.
+event ProtestFiled()
+
+/// Appendix C ¶2 (as amended August 2, 2021; unchanged through the July 27,
+/// 2026 rules): "Such notice must be provided at least 1 day—but no earlier
+/// than 5 days—in advance of filing a protest case, not including
+/// Saturdays, Sundays, and legal holidays as defined in RCFC 6(a)(6)." The
+/// paragraph's own exclusion displaces RCFC 6(a)(1)(B)'s count of every
+/// day, so both bounds are court days. They run backward from the filing
+/// (RCFC 6(a)(5)) with the filing day excluded (RCFC 6(a)(1)(A)): the notice
+/// falls on or after `protest-notice-earliest` and on or before
+/// `protest-notice-latest`. The 2018-2020 text required only 24 hours'
+/// notice in clerk's office business hours, with no outer limit; that
+/// version is not encoded. Legal holidays are RCFC 6(a)(6)(A)'s; days the
+/// President or Congress declares (6(a)(6)(B)) are not in the calendar.
+/// Appendix C is not in the vendored corpus, and its paragraph pinpoint has
+/// no citation syntax distinct from the RCFC rule numbers, so the rule's
+/// cite stays a hole. "Except in exceptional circumstances to be described
+/// in moving papers" excuses the notice; it delegates no period to an
+/// order, so none is declared.
+rule duty protest-prefiling-notice effective [2021-08-02, ..) known_at 2021-08-02 cite ?("RCFC Appendix C ¶2") {
+  deadline protest-notice-earliest: 5.court_days before ProtestFiled() counted_by rcfc6 cite ?("RCFC Appendix C ¶2") {
+    extendable false
+  }
+  deadline protest-notice-latest: 1.court_days before ProtestFiled() counted_by rcfc6 cite ?("RCFC Appendix C ¶2") {
+    extendable false
+  }
+  /// The same outer bound counted forward from the notice, which is the
+  /// shape an edge window takes: filing on or before the fifth court day
+  /// after the notice is the same condition as the notice on or after the
+  /// fifth court day before the filing, since both say at most four court
+  /// days lie strictly between them. The one-day minimum has no forward
+  /// edge window; `protest-notice-latest` states it.
+  deadline protest-notice-window: 5.court_days after ProtestNoticeGiven() counted_by rcfc6 cite ?("RCFC Appendix C ¶2") {
     extendable false
   }
 }
 
-test "the protest complaint follows the notice within five days" cite ?("RCFC Appendix C ¶2") {
-  given ProtestNoticeGiven() on 2026-08-05
-  expect deadline(protest-notice-window) == 2026-08-10
+test "the earliest notice for a Monday filing is the Monday before" cite RCFC 6(a)(5)
+{
+  given ProtestFiled() on 2026-08-10
+  expect deadline(protest-notice-earliest) == 2026-08-03
 }
 
-test "a window ending on the Saturday before Labor Day runs to Tuesday" cite RCFC 6(a)(6)(A)
+test "the latest notice for a Monday filing is the Friday before" cite RCFC 6(a)(5)
+{
+  given ProtestFiled() on 2026-08-10
+  expect deadline(protest-notice-latest) == 2026-08-07
+}
+
+test "Labor Day is not a day of notice before a Tuesday filing" cite RCFC 6(a)(6)(A)
+{
+  given ProtestFiled() on 2026-09-08
+  expect deadline(protest-notice-latest) == 2026-09-04
+}
+
+test "five court days before the Tuesday after Labor Day is the Monday a week before" cite RCFC 6(a)(6)(A)
+{
+  given ProtestFiled() on 2026-09-08
+  expect deadline(protest-notice-earliest) == 2026-08-31
+}
+
+test "Thanksgiving and a weekend push the earliest notice back eight calendar days" cite RCFC 6(a)(6)(A)
+{
+  given ProtestFiled() on 2026-11-30
+  expect deadline(protest-notice-earliest) == 2026-11-20
+}
+
+test "a Wednesday notice allows filing through the next Wednesday" cite RCFC 6(a)(1)(A)
+{
+  given ProtestNoticeGiven() on 2026-08-05
+  expect deadline(protest-notice-window) == 2026-08-12
+}
+
+test "a notice on the Monday before Labor Day allows filing through the Tuesday after" cite RCFC 6(a)(6)(A)
 {
   given ProtestNoticeGiven() on 2026-08-31
   expect deadline(protest-notice-window) == 2026-09-08

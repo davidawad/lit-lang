@@ -6,12 +6,12 @@ import cofc.{ bid-protest-group }
 state bid-protest-prefiling-notice: "Pre-Filing Notice to DOJ, Clerk, Contracting Officer & Awardee" by applicant cite ?("RCFC Appendix C ¶2-3") {
   group bid-protest-group
   note "Except in exceptional circumstances, protest counsel must give advance notice of the intent to file -- at least 1 day but no more than 5 days before filing (excluding Saturdays/Sundays/legal holidays) -- to DOJ Commercial Litigation Branch, the CoFC clerk, the procuring agency's contracting officer, and (if known) the apparently successful offeror. The notice must include the disclosure required by RCFC 7.1(a) plus solicitation number, contracting officer, whether injunctive relief will be sought, any prior GAO protest, and whether a protective order will be needed."
-  e-protest-notice-to-complaint "File the protest complaint (1-5 days after pre-filing notice)" -> bid-protest-complaint-filed {
+  e-protest-notice-to-complaint "File the protest complaint (1-5 court days after pre-filing notice)" -> bid-protest-complaint-filed {
     authority cite ?("RCFC Appendix C ¶2; RCFC 3")
     effort 20.hours
     cost 405.usd
     within protest-notice-window {
-      note "Notice must precede filing by at least 1 but no more than 5 days (excluding weekends/legal holidays); filing follows once that window is satisfied."
+      note "Notice must precede filing by at least 1 but no more than 5 days, not counting Saturdays, Sundays and RCFC 6(a)(6) legal holidays (court days, counted back from the filing date, which is excluded). This window is the outer limit counted forward: filing no later than the fifth court day after the notice. The 1-court-day minimum (notice no later than the court day before filing) is not part of this window."
     }
   }
 }

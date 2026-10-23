@@ -210,7 +210,7 @@ fn patched(body: &str) -> super::Parse {
 fn guard_operations_parse_into_their_slot_and_are_reserved() {
     let parsed = patched(
         "    note \"narrowed\"\n    when and has_event(Served()) effective [2026-11-01, ..) cite \
-         Fed. Cir. R. 1\n    when or date_of(Served()) < 2026-01-01\n    supersedes when \
+         \"Fed. Cir. R. 1\"\n    when or date_of(Served()) < 2026-01-01\n    supersedes when \
          true known_at 2026-10-01 cite ?(\"Order, Dkt. 12\")\n    note \"after\"",
     );
     assert_eq!(codes(&parsed), ["L0010", "L0010", "L0010"]);

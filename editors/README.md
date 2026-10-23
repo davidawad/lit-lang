@@ -8,6 +8,27 @@ registers the language server, `litigate lsp --stdio` (SPEC §9).
 Tooling (grammar builds, Helix query generation, the editor tests) lives in
 the [`litigate-editors`](litigate-editors) crate.
 
+## Standalone packages (install these)
+
+Each editor's support is also published as its own repository, laid out the
+way the Bend 2 packages are, so a user can install one without cloning this
+repository. The grammar repo is the source of truth for editors: the others
+pin its commit (`GRAMMAR_REV` in litigate.vim, `rev` in helix-litigate and in
+`languages.toml`, `litigate-mode-grammar-rev` in litigate-mode.el).
+
+| Editor | Repository | Install |
+|---|---|---|
+| grammar (any tree-sitter editor) | [davidawad/tree-sitter-litigate](https://github.com/davidawad/tree-sitter-litigate) | compile `src/parser.c` + `src/scanner.c` |
+| Vim, Neovim | [davidawad/litigate.vim](https://github.com/davidawad/litigate.vim) | `Plug 'davidawad/litigate.vim', { 'branch': 'main', 'do': 'bash scripts/build-parser.sh' }` |
+| Emacs 29+ | [davidawad/litigate-mode.el](https://github.com/davidawad/litigate-mode.el) | add `src/` to `load-path`, then `M-x litigate-mode-install-grammar` |
+| Helix | [davidawad/helix-litigate](https://github.com/davidawad/helix-litigate) | `./install.sh`, then merge its `languages.toml` |
+
+The directories below stay in this repository as the in-tree sources the
+`litigate-editors` tests exercise; the standalone repos were seeded from them
+at `6dbf033`. A change to the grammar or queries lands here and in
+tree-sitter-litigate; the consumers then bump their pins. All of them
+register `litigate lsp --stdio`.
+
 | Editor | Directory | Highlight | Indent | Folds | Symbols | LSP |
 |---|---|---|---|---|---|---|
 | Emacs 29+ (`treesit`) | [`emacs/`](emacs) | `litigate-ts-mode` font-lock (mirrors `highlights.scm`) | `treesit-simple-indent-rules` (mirrors `indents.scm`) | outline over top-level declarations (Emacs 30+) | imenu, `beginning-of-defun` | eglot |

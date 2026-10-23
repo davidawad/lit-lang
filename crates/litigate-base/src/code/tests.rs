@@ -27,6 +27,42 @@ fn registry_is_sorted_unique_and_well_formed() {
 }
 
 #[test]
+fn every_registered_code_exercises_its_stable_views() {
+    for code in DiagnosticCode::ALL {
+        assert_eq!(DiagnosticCode::parse(code.as_str()), Some(code));
+        assert!(!code.explain().is_empty());
+        assert_eq!(
+            serde_json::to_string(&code).unwrap(),
+            format!("\"{}\"", code.as_str())
+        );
+        assert_eq!(
+            serde_json::from_str::<DiagnosticCode>(&format!("\"{}\"", code.as_str())).unwrap(),
+            code
+        );
+        assert_eq!(code.is_lint(), code.as_str().starts_with("L9"));
+        for profile in [Profile::Dev, Profile::Strict] {
+            let severity = code.severity(profile);
+            if code == DiagnosticCode::AnonymousEdge {
+                assert_eq!(severity, Severity::Info);
+            } else if matches!(code, DiagnosticCode::UnusedDeclaration)
+                || (profile == Profile::Dev
+                    && matches!(
+                        code,
+                        DiagnosticCode::RuleWithoutTest
+                            | DiagnosticCode::HolePresent
+                            | DiagnosticCode::NonCanonicalFormat
+                    ))
+            {
+                assert_eq!(severity, Severity::Warning);
+            } else {
+                assert_eq!(severity, Severity::Error);
+            }
+        }
+    }
+    assert!(serde_json::from_str::<DiagnosticCode>("\"L3999\"").is_err());
+}
+
+#[test]
 fn severities_follow_the_profile_table() {
     use DiagnosticCode as C;
     assert_eq!(C::HolePresent.severity(Profile::Dev), Severity::Warning);

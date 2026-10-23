@@ -43,3 +43,47 @@ impl<T> Envelope<T> {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::{Envelope, Profile};
+
+    #[test]
+    fn success_envelope_serializes_stable_shape_and_profiles() {
+        let envelope = Envelope::success("check", 7_u8);
+        assert!(envelope.ok);
+        assert_eq!(envelope.op, "check");
+        assert_eq!(envelope.result, Some(7));
+        assert!(envelope.diagnostics.is_empty());
+        assert_eq!(envelope.provenance, serde_json::json!({}));
+        assert_eq!(envelope.elapsed_ms, 0.0);
+
+        let value = serde_json::to_value(envelope).unwrap();
+        assert_eq!(value["result"], 7);
+        assert_eq!(
+            serde_json::from_value::<Profile>(serde_json::json!("dev")).unwrap(),
+            Profile::Dev
+        );
+        assert_eq!(
+            serde_json::from_value::<Profile>(serde_json::json!("strict")).unwrap(),
+            Profile::Strict
+        );
+        assert!(serde_json::from_value::<Profile>(serde_json::json!("unknown")).is_err());
+    }
+
+    #[test]
+    fn absent_result_is_omitted() {
+        let envelope: Envelope<()> = Envelope {
+            ok: false,
+            op: "check".into(),
+            result: None,
+            diagnostics: Vec::new(),
+            provenance: serde_json::Value::Null,
+            elapsed_ms: 1.0,
+        };
+        assert!(serde_json::to_value(envelope)
+            .unwrap()
+            .get("result")
+            .is_none());
+    }
+}

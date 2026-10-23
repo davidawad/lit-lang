@@ -98,3 +98,42 @@ impl Diagnostic {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::{Applicability, Diagnostic, Fix, Note, Severity, Span};
+    use crate::DiagnosticCode;
+
+    #[test]
+    fn error_diagnostic_defaults_and_optional_fields_round_trip() {
+        let span = Span {
+            file: "src/main.lit".into(),
+            line: 1,
+            col: 2,
+            end_line: 1,
+            end_col: 3,
+        };
+        let mut diagnostic =
+            Diagnostic::error(DiagnosticCode::UnexpectedToken, span.clone(), "bad token");
+        assert_eq!(diagnostic.severity, Severity::Error);
+        assert!(diagnostic.notes.is_empty() && diagnostic.fixes.is_empty());
+        let value = serde_json::to_value(&diagnostic).unwrap();
+        assert!(value.get("notes").is_none() && value.get("fixes").is_none());
+        diagnostic.notes.push(Note {
+            span: None,
+            message: "expected identifier".into(),
+        });
+        diagnostic.fixes.push(Fix {
+            span,
+            replacement: "name".into(),
+            applicability: Applicability::MachineApplicable,
+        });
+        let decoded: Diagnostic =
+            serde_json::from_value(serde_json::to_value(diagnostic).unwrap()).unwrap();
+        assert_eq!(decoded.notes.len(), 1);
+        assert_eq!(
+            decoded.fixes[0].applicability,
+            Applicability::MachineApplicable
+        );
+    }
+}

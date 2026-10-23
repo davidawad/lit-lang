@@ -1,0 +1,31 @@
+case cofc-bid-protest
+uses cofc ^0.1.0
+as_of 2026-09-28
+summary "Post-award bid protest at the Court of Federal Claims under 28 U.S.C. §1491(b): a disappointed offeror challenging a federal procurement award."
+notes "Plaintiff is a disappointed offeror protesting a post-award procurement decision under the CoFC's concurrent bid-protest jurisdiction, 28 U.S.C. §1491(b)(1) (verified law.cornell.edu). Uses the `cofc` pack alone via its dedicated (8-node) bid-protest branch (`filing-track-fork` -> `bid-protest-*` -> `protest-sustained`/`protest-denied`); this scenario removes the two patent-track-only edges so the graph runs a clean protest matter (the pack's bid-protest branch does not merge back into the patent/general-civil answer-and-discovery machinery, so no further pruning is needed once those two edges are gone). RCFC Appendix C procedure (pre-filing notice, sealed complaint, initial status conference, TRO/PI practice, administrative-record cross-motions) is already sourced in the `cofc` pack (packs/cofc-SOURCES-NOTES.md); not re-verified here. Money numbers are illustrative: `protest-sustained`'s value is modeled as bid-and-proposal-cost recovery plus re-compete opportunity, NOT a share of the patent scenario's $1,000,000 stake — bid-protest relief is injunctive/declaratory (resolicitation, corrective action), not usually a damages award (the pack's own note on `protest-sustained` flags this explicitly; kept at the pack's own $200,000 placeholder here as well, since no more specific procurement value is known for an illustrative matter). Attorney rate $600/hr (illustrative bid-protest-specialist estimate, lower than the patent-track rate since Appendix C practice is record-review, not full discovery/trial). The pack's own probability estimates on the protest-sustained/denied fork are flagged 'TEACHING ESTIMATE' (not a cited GAO/CoFC sustain-rate statistic); this scenario does not override them."
+
+source "28 U.S.C. §1491(b)(1) — CoFC bid-protest jurisdiction" {
+  url "https://www.law.cornell.edu/uscode/text/28/1491"
+}
+
+perspective offeror
+
+parties {
+  offeror: applicant Corporation
+  united-states: examiner Government
+}
+
+events {
+  2026-09-08 Forfeited("e-filingfork-standard") by offeror cite 28 U.S.C. § 1491(b)(1)
+  2026-09-08 Forfeited("e-patentfork-adminclaim") by offeror cite 28 U.S.C. § 1498(a)
+  2026-09-08 Forfeited("e-patentfork-skipadmin") by offeror cite 28 U.S.C. § 1498(a)
+}
+
+stakes {
+  cofc::protest-sustained: 200_000.usd
+  cofc::protest-denied: 0.usd
+  cofc::dismissed-time-barred: 0.usd
+  cofc::dismissed-1500-bar: 0.usd
+}
+
+analysis { params: { rate: 600, opp_rate: 500 } }

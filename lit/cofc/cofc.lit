@@ -13,3 +13,10 @@ group general-track-group: "General Civil Track (RCFC 16, 26-37, 56)"
 group adr-group: "ADR Off-Ramp (Appendix H)"
 group patent-track-group: "§1498 Patent Track (Appendix J)"
 group trial-post-trial-group: "Trial & Post-Trial (RCFC 52, 58, 59, 54, EAJA)"
+
+/// An option the matter no longer has (SPEC §5.6): the claim's own
+/// character forecloses it, or a party gave it up. `option` names the edge
+/// (`e-filingfork-protest`), the event cites the authority that forecloses
+/// it, and replay removes the edge for the rest of the matter without
+/// moving it. A matter-level fact, not procedure, so no edge takes it.
+event Forfeited(option: String)

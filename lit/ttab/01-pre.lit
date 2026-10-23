@@ -5,7 +5,15 @@ import ttab.opposition-to-trial.{ opposition-filed }
 import ttab.pre-2.{ opposer-d120 }
 import ttab.pre-3.{ abandon-chance }
 import ttab.standstill.{ standstill-period }
-import ttab.{ first-extension-90, opposition-period, pre, second-extension-60 }
+import ttab.{
+  ExtendedPeriodExpired,
+  ExtensionRequested,
+  ExtensionTerm,
+  first-extension-90,
+  opposition-period,
+  pre,
+  second-extension-60,
+}
 
 start published
 
@@ -15,11 +23,13 @@ state published: "Application published for opposition" by opposer cite 15 USC 1
   note "Start of the 30-day opposition period after publication (37 CFR 2.101(c)). A matter scenario sets scenario.start to the node matching its current posture."
   tags [entry]
   _ "Opposer requests 30-day extension (granted on request)" -> ext-first-30 {
+    event ExtensionRequested(Thirty)
     authority cite 37 CFR 2.102(c)(1)(i)
     within opposition-period { extendable true, extension_authority "37 CFR 2.102(c)(2)-(3)" }
     attrs { opp_hours: 1 }
   }
   _ "Opposer requests 90-day extension (good cause)" -> ext-first-90 {
+    event ExtensionRequested(Ninety)
     authority cite 37 CFR 2.102(c)(1)(ii)
     within first-extension-90 { extendable true, extension_authority "37 CFR 2.102(c)(3)" }
     attrs { opp_fees: 200, opp_hours: 1 }
@@ -36,6 +46,7 @@ state ext-first-30: "First extension (30 days, granted on request)" by opposer c
 {
   group pre
   _ "Opposer requests additional 60 days (good cause)" -> ext-second-60 {
+    event ExtensionRequested(Sixty)
     authority cite 37 CFR 2.102(c)(2)
     within second-extension-60 { extendable true, extension_authority "37 CFR 2.102(c)(3)" }
     attrs { opp_fees: 200, opp_hours: 1 }
@@ -46,6 +57,7 @@ state ext-first-90: "First extension (90 days, good cause)" by board cite 37 CFR
 {
   group pre
   _ "Extension runs to day 120" -> period-ends-day120 {
+    event ExtendedPeriodExpired()
     authority cite 37 CFR 2.102(c)
     duration { min 0.days, mode 0.days, max 0.days }
   }
@@ -55,6 +67,7 @@ state ext-second-60: "Second extension (additional 60 days, good cause)" by boar
 {
   group pre
   _ "Extensions run to day 120" -> period-ends-day120 {
+    event ExtendedPeriodExpired()
     authority cite 37 CFR 2.102(c)
     duration { min 0.days, mode 0.days, max 0.days }
   }

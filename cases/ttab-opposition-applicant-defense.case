@@ -1,0 +1,49 @@
+case ttab-opposition-applicant-defense
+uses ttab-trademark-trial-and-appeal-board ^0.1.0
+as_of 2026-10-19
+summary "Applicant's view of a TTAB opposition to an ITU application, from day 120 of the opposition period: standstill vs refuse vs abandon vs fight, against a self-interested opposer."
+notes "PLACEHOLDER inputs (teaching estimates): rebrand_cost 100,000, opposer_stake 50,000 (what winning is worth to the opposer), cost_share 30,000 (opposer contribution in a rebrand settlement), rates 500/500, p_merits 0.60 (opposer wins on the merits if tried to decision), s18_shift 0.10 (merits mass moved by a Section 18 counterclaim), deal_mult 1.0, sfail_mult 0.5 (in-proceeding deal odds halve if standstill talks already failed). Payoffs are relative to 'keep the mark and get the registration' = 0; the utility reads terminal attrs rb/fx/sh and opponent_objective reads sw/sfx. The opposer's own costs come from edge attrs opp_hours/opp_fees via the shadowed opponent_dollars metric. Replace every param with the matter's own numbers. tornado/sweep/voi/posterior ignore opponent_objective (they assume a worst-case opposer), so use explicit solves for opposer-stake sensitivity."
+
+source "37 CFR 2.101, 2.102(c), 2.106, 2.117(c), 2.127(f), 2.133, 2.135 (eCFR)" {
+  url "https://www.ecfr.gov/current/title-37/chapter-I/subchapter-B/part-2"
+  as_of 2026-10-19
+}
+
+source "TBMP June 2026" { url "https://tbmp.uspto.gov/RDMS/TBMP/current", as_of ?("2026-06") }
+perspective applicant
+
+parties {
+  applicant: applicant Corporation
+  opposer: opposer Corporation
+}
+
+events {
+  2026-06-16 Published() on applicant
+  2026-07-14 ExtensionRequested(Ninety) by opposer
+  2026-10-14 ExtendedPeriodExpired() on applicant
+}
+
+analysis {
+  params: {
+    rate: 500
+    opp_rate: 500
+    rebrand_cost: 100000
+    opposer_stake: 50000
+    cost_share: 30000
+    p_merits: 0.6
+    s18_shift: 0.1
+    opp_hours_mult: 1
+    deal_mult: 1
+    sfail_mult: 0.5
+  }
+  metrics: {
+    opponent_dollars: "attr(\"opp_hours\", 0) * opp_rate * opp_hours_mult + attr(\"opp_fees\", 0)"
+  }
+  utilities: {
+    applicant_value: "0 - rebrand_cost * default(node.rb, 0) + default(node.fx, 0) + cost_share * default(node.sh, 0)"
+  }
+  utility: "applicant_value"
+  cost: "dollars"
+  opponent_objective: "opposer_stake * default(node.sw, 0) + default(node.sfx, 0) - cost_share * default(node.sh, 0)"
+  probability_fn: "tag(\"deal\") ? p * (deal_mult * (tag(\"inproc\") * flag(\"sfail\") * (sfail_mult - 1) + 1)) : (tag(\"no-deal\") ? 1 - (1 - p) * (deal_mult * (tag(\"inproc\") * flag(\"sfail\") * (sfail_mult - 1) + 1)) : (tag(\"cancel\") ? (tag(\"merits-opposer\") ? p_merits : 1 - p_merits) : (tag(\"merits-opposer\") ? p_merits - flag(\"s18\") * s18_shift : (tag(\"merits-applicant\") ? (1 - p_merits) * 0.85 + flag(\"s18\") * s18_shift * 0.8 : (tag(\"restrict\") ? (1 - p_merits) * 0.15 + flag(\"s18\") * s18_shift * 0.2 : p)))))"
+}

@@ -111,6 +111,14 @@ fn asserts_start(text: &str) -> bool {
         .is_some_and(|f| f.start().is_some())
 }
 
+/// The engine's default start for `case`: its primary package's start, qualified.
+fn default_start(all: &[&hir::Package], case: &hir::Case) -> Option<String> {
+    let primary = case.uses.first()?;
+    all.iter()
+        .find(|p| p.manifest.name == primary.name)
+        .map(|p| format!("{}::{}", p.manifest.pack_id, p.start))
+}
+
 fn is_error(d: &Diagnostic) -> bool {
     d.severity == Severity::Error
 }
@@ -144,10 +152,11 @@ pub fn check(
     let mut checked_case = verified.checked.case;
     if let Some(c) = checked_case
         .as_mut()
-        .filter(|c| c.events.is_empty() && !asserts_start(&case.text))
+        .filter(|c| c.start == default_start(&all, c) && !asserts_start(&case.text))
     {
-        // Nothing happened and no start is asserted: the matter sits at the
-        // engine's default start, which lowers as no `start` at all.
+        // No start is asserted and the events (none, or only option
+        // removals) leave the matter at the engine's default start, the
+        // primary package's: it lowers as no `start` at all.
         c.start = None;
     }
     let clean = checked_case

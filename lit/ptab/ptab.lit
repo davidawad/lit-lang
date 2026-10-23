@@ -34,6 +34,13 @@ event IprPetitionFiled()
 /// The Office's notice that a petition is incomplete (37 C.F.R. § 42.106(b)).
 event IncompletePetitionNoticed()
 event PetitionCorrected()
+/// A filed petition enters the Office's compliance review (37 C.F.R.
+/// §§ 42.106(a), 42.206(a)). No paper marks it; a matter dates it on the
+/// filing day.
+event PetitionDocketed()
+/// The Office finds the petition complete and accords it a filing date
+/// (37 C.F.R. §§ 42.106(a), 42.206(a)).
+event FilingDateAccorded()
 /// The notice according the petition a filing date (37 C.F.R. § 42.107(b)).
 event FilingDateNoticed()
 event PreliminaryResponseFiled()

@@ -131,6 +131,21 @@ jobs:
           path: lcov.info
           if-no-files-found: ignore
 
+  # Every litigate-* crate must stay at 100% lines, regions and branches
+  # (branch coverage needs nightly).
+  coverage-litigate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dtolnay/rust-toolchain@nightly
+        with:
+          components: llvm-tools-preview
+      - uses: Swatinem/rust-cache@v2
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: just,cargo-nextest,cargo-llvm-cov
+      - run: just cov-litigate
+
   audit:
     runs-on: ubuntu-latest
     steps:
@@ -236,18 +251,7 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: "22"
-      # TODO(litgraph): crates/litgraph/src/api/mod.rs:143 calls
-      # std::time::Instant::now() for elapsed_ms timing, which panics
-      # (unreachable trap) under wasm32-unknown-unknown -- no clock source
-      # on that target without a JS time shim (e.g. js_sys::Date::now()
-      # behind #[cfg(target_arch = "wasm32")]). Verified locally 2026-09-28
-      # with wasm-bindgen-cli 0.2.127: build + wasm-bindgen succeed, the
-      # smoke call panics with "RuntimeError: unreachable" inside
-      # litgraph::api::handle. Not fixable from this packaging workstream
-      # (crates/** is out of scope here) -- continue-on-error until the
-      # engine gets a wasm-safe clock. Drop this once wasm-smoke passes.
       - name: wasm smoke test
-        continue-on-error: true
         run: |
           node -e "
             const m = require('./dist/wasm/node/litgraph_wasm.js');

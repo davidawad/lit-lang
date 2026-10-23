@@ -360,7 +360,9 @@ Beyond the checker:
 All of this follows `config/programming-languages/rust/README.md` in the
 dotfiles and the swe-project-plugin-pack-rust gates: fmt, clippy
 `-D warnings`, nextest, deny, audit, machete, 500-line file ceiling, and the
-97% line-coverage floor on pure-logic crates.
+97% line-coverage floor on the `litgraph` engine. Every `litigate-*` crate is
+held to 100% lines, regions and branches with no exclusions (`just
+cov-litigate`, part of `just ci`).
 
 ## 8. Agent ergonomics
 

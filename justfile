@@ -56,11 +56,32 @@ cov:
 cov-html:
     cargo llvm-cov nextest -p litgraph --html --open
 
-# Pure-logic coverage lane for the authoring compiler. All code in syntax,
-# sema and lower is measured; engine, CLI and LSP crates are outside this
-# compiler-only floor.
-cov-litigate:
-    cargo llvm-cov nextest -p litigate-syntax -p litigate-sema -p litigate-lower --fail-under-lines {{cov_floor}}
+# Every litigate-* crate, each measured by its own tests, must stay at 100%
+# lines, regions and branches -- no exclusions. Branch coverage needs a
+# nightly toolchain (`rustup toolchain install nightly -c llvm-tools-preview`).
+litigate_crates := "litigate-base litigate-syntax litigate-sema litigate-lower litigate-verify litigate-import litigate-cli litigate-lsp"
+
+cov-litigate *CRATES=litigate_crates:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    failed=()
+    for crate in {{CRATES}}; do
+      json="$(cargo +nightly llvm-cov nextest --branch -p "$crate" --json --summary-only)"
+      line="$(jq -r '.data[0].totals | [.lines, .regions, .branches]
+        | map("\(.covered)/\(.count)") | join(" ")' <<<"$json")"
+      read -r lines regions branches <<<"$line"
+      echo "cov-litigate: $crate lines $lines regions $regions branches $branches"
+      if ! jq -e '.data[0].totals | [.lines, .regions, .branches]
+          | all(.covered == .count)' <<<"$json" >/dev/null; then
+        failed+=("$crate")
+      fi
+    done
+    if [ "${#failed[@]}" -ne 0 ]; then
+      echo "cov-litigate: below 100% lines/regions/branches: ${failed[*]}" >&2
+      echo "cov-litigate: see \`cargo +nightly llvm-cov nextest --branch -p <crate>\`" >&2
+      exit 1
+    fi
+    echo "cov-litigate: every litigate crate at 100% lines, regions and branches"
 
 # Ten-minute local parser and case-input fuzz smoke (five minutes each).
 fuzz:
@@ -120,12 +141,7 @@ wasm:
     wasm-bindgen --target web --out-dir dist/wasm/web target/wasm32-unknown-unknown/release/litgraph_wasm.wasm
     wasm-bindgen --target nodejs --out-dir dist/wasm/node target/wasm32-unknown-unknown/release/litgraph_wasm.wasm
 
-# KNOWN GAP (2026-09-28, verified locally with wasm-bindgen-cli 0.2.127):
-# this currently panics -- crates/litgraph/src/api/mod.rs:143 calls
-# std::time::Instant::now() (elapsed_ms timing), which has no clock source
-# on wasm32-unknown-unknown and traps with "RuntimeError: unreachable".
-# Out of scope for this packaging workstream (crates/** owned elsewhere);
-# needs a #[cfg(target_arch = "wasm32")] time source (e.g. js_sys::Date).
+# Build the Node target and run one solve through it.
 wasm-smoke: wasm
     node -e "const m=require('./dist/wasm/node/litgraph_wasm.js'); const r=JSON.parse(m.handle(JSON.stringify({packs:['cofc'],op:{op:'solve'}}))); if(!r.ok){console.error(r);process.exit(1)} console.log('wasm smoke ok')"
 
@@ -190,7 +206,7 @@ nix-check:
 
 # The single CI entry point: fast, deterministic gates only. Coverage,
 # audit, and deny hit the network/build cache so they're last.
-ci: fmt-check lint lit-sync-check ts-gen-check test ts-test doctest cov audit deny
+ci: fmt-check lint lit-sync-check ts-gen-check test ts-test doctest cov cov-litigate audit deny
     @echo "ci: all gates passed"
 
 clean:

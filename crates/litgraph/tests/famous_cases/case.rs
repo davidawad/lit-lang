@@ -13,7 +13,6 @@
 //! failure. The test asserts the graph still has no such edge, so closing a
 //! gap in a pack makes the test fail and tells you to merge the two legs.
 
-use litgraph::api::Catalog;
 use litgraph::model::{CompileOptions, EdgeIx, Graph, NodeIx};
 use serde::Deserialize;
 
@@ -174,7 +173,7 @@ pub fn load(slug: &str) -> Case {
 
 /// Compile the case's packs from the embedded catalog, links on.
 pub fn compile(case: &Case) -> Graph {
-    let catalog = Catalog::embedded().expect("embedded catalog loads");
+    let catalog = litgraph_packs::catalog().expect("embedded catalog loads");
     catalog
         .compile(&case.packs, true, &CompileOptions::default())
         .expect("case packs compile")

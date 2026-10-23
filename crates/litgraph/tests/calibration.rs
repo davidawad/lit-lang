@@ -7,7 +7,7 @@
 
 #![allow(clippy::unwrap_used, clippy::expect_used)]
 
-use litgraph::api::{apply_calibration, handle, CalibrationCatalog, Catalog, Request};
+use litgraph::api::{apply_calibration, handle, CalibrationCatalog, Request};
 use litgraph::model::CompileOptions;
 use serde_json::json;
 
@@ -18,7 +18,7 @@ use serde_json::json;
 /// no-op'ing at request time.
 #[test]
 fn every_embedded_calibration_entry_resolves() {
-    let packs = Catalog::embedded().expect("embedded packs");
+    let packs = litgraph_packs::catalog().expect("embedded packs");
     let calib = CalibrationCatalog::embedded().expect("embedded calibration");
     assert!(
         calib.sets.len() >= 4,
@@ -46,7 +46,7 @@ fn every_embedded_calibration_entry_resolves() {
 /// and is reported, with source/vintage/n, under `provenance.calibration`.
 #[test]
 fn scenario_calibration_applies_and_is_reported_in_provenance() {
-    let catalog = Catalog::embedded().unwrap();
+    let catalog = litgraph_packs::catalog().unwrap();
     let req: Request = serde_json::from_value(json!({
         "packs": ["ptab-patent-trial-appeal-board"],
         "scenario": { "calibration": ["ptab-fy2024"] },
@@ -80,7 +80,7 @@ fn scenario_calibration_applies_and_is_reported_in_provenance() {
 /// without checking whether the key exists first.
 #[test]
 fn no_calibration_requested_reports_empty_list() {
-    let catalog = Catalog::embedded().unwrap();
+    let catalog = litgraph_packs::catalog().unwrap();
     let req: Request = serde_json::from_value(json!({
         "packs": ["cofc"],
         "op": { "op": "describe" }
@@ -96,7 +96,7 @@ fn no_calibration_requested_reports_empty_list() {
 /// (`not-found`), not a panic.
 #[test]
 fn unknown_calibration_set_is_a_request_error() {
-    let catalog = Catalog::embedded().unwrap();
+    let catalog = litgraph_packs::catalog().unwrap();
     let req: Request = serde_json::from_value(json!({
         "packs": ["cofc"],
         "scenario": { "calibration": ["no-such-set"] },
@@ -115,7 +115,7 @@ fn unknown_calibration_set_is_a_request_error() {
 /// plenty of both.
 #[test]
 fn calibration_op_lists_gaps_ranked_by_swing() {
-    let catalog = Catalog::embedded().unwrap();
+    let catalog = litgraph_packs::catalog().unwrap();
     let req: Request = serde_json::from_value(json!({
         "packs": ["frcp-civil-procedure"],
         "op": { "op": "calibration", "top": 5, "max_candidates": 40 }
@@ -143,7 +143,7 @@ fn calibration_op_lists_gaps_ranked_by_swing() {
 /// 1.0) trigger no `probability-renormalized` warning.
 #[test]
 fn calibrated_fwd_outcomes_need_no_renormalization() {
-    let catalog = Catalog::embedded().unwrap();
+    let catalog = litgraph_packs::catalog().unwrap();
     let req: Request = serde_json::from_value(json!({
         "packs": ["ptab-patent-trial-appeal-board"],
         "scenario": { "calibration": ["ptab-fy2024"] },

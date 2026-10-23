@@ -28,13 +28,13 @@ mod render;
 
 use case::{Case, Walked};
 use expect_test::{expect_file, ExpectFile};
-use litgraph::api::{handle, Catalog, Op, Request};
+use litgraph::api::{handle, Op, Request};
 use litgraph::model::Graph;
 
 /// Run each deadline check through the real `deadlines` op and return one
 /// rendered line per check.
 fn check_deadlines(g: &Graph, case: &Case, walked: &[Walked]) -> Vec<String> {
-    let catalog = Catalog::embedded().unwrap();
+    let catalog = litgraph_packs::catalog().unwrap();
     let on_path: Vec<&str> = walked
         .iter()
         .flat_map(|w| &w.taken)

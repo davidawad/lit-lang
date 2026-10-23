@@ -41,7 +41,7 @@ struct Cli {
 fn load_catalog(cli: &Cli) -> anyhow::Result<Catalog> {
     let catalog = match &cli.packs_dir {
         Some(dir) => Catalog::load(dir),
-        None => Catalog::default_source(),
+        None => litgraph_packs::default_source(),
     }
     .context("loading packs")?;
     let scenarios_dir = cli
@@ -50,7 +50,7 @@ fn load_catalog(cli: &Cli) -> anyhow::Result<Catalog> {
         .or_else(|| std::env::var_os("LITGRAPH_SCENARIOS").map(PathBuf::from));
     match scenarios_dir {
         Some(dir) => catalog.with_scenarios_dir(&dir),
-        None => catalog.with_embedded_scenarios(),
+        None => litgraph_packs::with_scenarios(catalog),
     }
     .context("loading scenarios")
 }
@@ -94,12 +94,6 @@ mod tests {
         }
     }
 
-    fn repo_dir(name: &str) -> PathBuf {
-        let dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join(format!("../../{name}"));
-        assert!(dir.is_dir(), "expected a {name}/ dir at {}", dir.display());
-        dir
-    }
-
     #[test]
     fn load_catalog_defaults_to_the_embedded_packs_and_scenarios() {
         let catalog = load_catalog(&cli()).expect("embedded packs/scenarios must load");
@@ -110,7 +104,7 @@ mod tests {
 
     #[test]
     fn load_catalog_honors_packs_dir() {
-        let dir = repo_dir("packs");
+        let dir = PathBuf::from(litgraph_packs::PACKS_DIR);
         let catalog = load_catalog(&Cli {
             packs_dir: Some(dir.clone()),
             ..cli()
@@ -130,7 +124,7 @@ mod tests {
 
     #[test]
     fn load_catalog_honors_scenarios_dir_independently_of_packs_dir() {
-        let dir = repo_dir("scenarios");
+        let dir = PathBuf::from(litgraph_packs::SCENARIOS_DIR);
         let catalog = load_catalog(&Cli {
             scenarios_dir: Some(dir.clone()),
             ..cli()

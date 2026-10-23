@@ -2,8 +2,8 @@
 //! The agent-facing surface: one JSON request in, one JSON response out.
 //!
 //! ```
-//! use litgraph::api::{handle, Catalog, Request};
-//! let catalog = Catalog::embedded().unwrap();
+//! use litgraph::api::{handle, Request};
+//! let catalog = litgraph_packs::catalog().unwrap();
 //! let pack_id = &catalog.packs[0].1.id;
 //! let req: Request = serde_json::from_value(serde_json::json!(
 //!     { "packs": [pack_id], "scenario": { "params": { "rate": 900 } }, "op": { "op": "solve" } }
@@ -43,7 +43,7 @@ pub use calibration::{
 };
 #[cfg(kani)]
 pub(crate) use catalog::fnv1a64 as catalog_fnv1a64;
-pub use catalog::{fingerprint, Catalog};
+pub use catalog::{fingerprint, Catalog, EmbeddedFiles};
 pub use describe::{describe, schema, SCHEMA_KINDS};
 pub(crate) use envelope::Warn;
 pub use envelope::{ApiError, GroupedWarning, Response};

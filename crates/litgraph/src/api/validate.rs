@@ -207,7 +207,7 @@ mod tests {
 
     #[test]
     fn detects_and_validates_each_kind() -> Result<()> {
-        let c = Catalog::embedded()?;
+        let c = Catalog::embedded(litgraph_packs::PACKS, litgraph_packs::SCENARIOS)?;
         let ok = |d: Value| validate(&d, None, &c);
         assert_eq!(ok(json!({"op": {"op": "solve"}})).kind, "request");
         assert!(ok(json!({"packs": ["cofc"], "op": {"op": "solve"}})).valid);
@@ -232,7 +232,7 @@ mod tests {
     /// points at a non-existent edge fails at `Graph::compile`, not parse.
     #[test]
     fn links_compile_error_is_reported_without_panicking() -> Result<()> {
-        let c = Catalog::embedded()?;
+        let c = Catalog::embedded(litgraph_packs::PACKS, litgraph_packs::SCENARIOS)?;
         let doc = json!({
             "links": [
                 {
@@ -259,7 +259,7 @@ mod tests {
     /// above.
     #[test]
     fn links_parse_error_is_reported() -> Result<()> {
-        let c = Catalog::embedded()?;
+        let c = Catalog::embedded(litgraph_packs::PACKS, litgraph_packs::SCENARIOS)?;
         // `RawEdge` requires `to` and `label`; only `from` is given.
         let doc = json!({ "links": [ { "from": "cofc::claim-accrues" } ] });
         let v = validate(&doc, Some("links"), &c);
@@ -276,7 +276,7 @@ mod tests {
     /// mistakes, apply tolerates a multi-forum set used with a pack subset).
     #[test]
     fn calibration_set_detects_and_validates() -> Result<()> {
-        let c = Catalog::embedded()?;
+        let c = Catalog::embedded(litgraph_packs::PACKS, litgraph_packs::SCENARIOS)?;
         let good = json!({
             "id": "t", "title": "t",
             "entries": [{
@@ -311,7 +311,7 @@ mod tests {
     /// is reported as a parse error on the default ("scenario") kind.
     #[test]
     fn scenario_parse_error_is_reported() -> Result<()> {
-        let c = Catalog::embedded()?;
+        let c = Catalog::embedded(litgraph_packs::PACKS, litgraph_packs::SCENARIOS)?;
         let doc = json!({ "not_a_real_scenario_field": 1 });
         let v = validate(&doc, None, &c);
         assert_eq!(v.kind, "scenario");
@@ -322,7 +322,7 @@ mod tests {
 
     #[test]
     fn validates_clock_fragments_and_pack_counting_references() -> Result<()> {
-        let c = Catalog::embedded()?;
+        let c = Catalog::embedded(litgraph_packs::PACKS, litgraph_packs::SCENARIOS)?;
         let frcp6 = include_str!("../../../../packs/clock/frcp6.json");
         let doc: Value = serde_json::from_str(frcp6).map_err(|e| Error::Parse(e.to_string()))?;
         let v = validate(&doc, None, &c);
@@ -352,7 +352,7 @@ mod tests {
 
     #[test]
     fn rejects_a_pack_whose_cite_syntax_names_an_unknown_source() -> Result<()> {
-        let c = Catalog::embedded()?;
+        let c = Catalog::embedded(litgraph_packs::PACKS, litgraph_packs::SCENARIOS)?;
         let pack = |source: &str| {
             json!({"schemaVersion": 3, "id": "t", "title": "t", "startNodeId": "a",
                 "sources": [{"id": "s"}],

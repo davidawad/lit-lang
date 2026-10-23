@@ -30,12 +30,11 @@
 
 use std::collections::BTreeMap;
 
-use litgraph::api::Catalog;
 use litgraph::cite::{self, CiteOutcome, SourceCorpus};
 
 #[test]
 fn report_cite_verification_across_all_embedded_packs() {
-    let catalog = Catalog::embedded().expect("embedded catalog loads");
+    let catalog = litgraph_packs::catalog().expect("embedded catalog loads");
     let corpus = SourceCorpus::embedded();
 
     let mut strict_verified = 0usize;
@@ -138,7 +137,7 @@ fn report_cite_verification_across_all_embedded_packs() {
 #[test]
 #[ignore = "audit tool, run on demand with --ignored --nocapture; not part of the default suite"]
 fn list_misses_in_fully_vendored_families() {
-    let catalog = Catalog::embedded().expect("embedded catalog loads");
+    let catalog = litgraph_packs::catalog().expect("embedded catalog loads");
     let corpus = SourceCorpus::embedded();
     for (_, pack, _) in &catalog.packs {
         for check in cite::check_pack(pack, &corpus) {

@@ -140,10 +140,12 @@ fn a_fact_set_on_the_base_node_also_forces_its_flagged_copies() {
 /// should warn `fact-unset`.
 #[test]
 fn a_real_pack_fact_node_forces_its_flagged_copy_too() {
-    let root = concat!(env!("CARGO_MANIFEST_DIR"), "/../..");
     let pack = Pack::from_json(
-        &std::fs::read_to_string(format!("{root}/packs/ptab-patent-trial-appeal-board.json"))
-            .unwrap(),
+        &std::fs::read_to_string(format!(
+            "{}/ptab-patent-trial-appeal-board.json",
+            litgraph_packs::PACKS_DIR
+        ))
+        .unwrap(),
     )
     .unwrap();
     let g = Graph::compile(&[pack], &LinkFile::default(), &CompileOptions::default())

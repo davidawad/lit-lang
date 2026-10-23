@@ -271,7 +271,7 @@ fn empty_catalog_reports_no_packs_given() {
 /// which `group_warnings` caps at eight.
 #[test]
 fn full_catalog_surfaces_compile_notes_and_caps_warning_locations() {
-    let full = Catalog::embedded().expect("embedded packs always compile");
+    let full = litgraph_packs::catalog().expect("embedded packs always compile");
     let resp = handle(
         &Request {
             packs: vec![],

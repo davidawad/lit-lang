@@ -160,7 +160,7 @@ fn default_source_falls_back_to_embedded_without_the_env_var() {
     // `None => embedded()` branch (the `Some` branch needs `set_var`, which
     // is `unsafe` and this workspace forbids `unsafe_code` even in tests).
     assert!(std::env::var_os("LITGRAPH_PACKS").is_none());
-    let cat = Catalog::default_source().unwrap();
+    let cat = litgraph_packs::default_source().unwrap();
     assert_eq!(cat.origin, "embedded");
 }
 

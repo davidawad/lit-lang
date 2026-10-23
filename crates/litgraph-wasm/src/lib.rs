@@ -27,7 +27,7 @@ include!(concat!(env!("OUT_DIR"), "/embedded_library.rs"));
 fn catalog() -> Result<&'static Catalog, String> {
     static CATALOG: OnceLock<Result<Catalog, String>> = OnceLock::new();
     CATALOG
-        .get_or_init(|| Catalog::embedded().map_err(|e| e.to_string()))
+        .get_or_init(|| litgraph_packs::catalog().map_err(|e| e.to_string()))
         .as_ref()
         .map_err(Clone::clone)
 }

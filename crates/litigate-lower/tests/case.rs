@@ -15,7 +15,7 @@ use litigate_sema::hir::{
 };
 use serde_json::{json, Map, Value};
 use std::collections::BTreeMap;
-use support::{acme, analysis_of, load_hir, pin, render_map, repo_root, usd};
+use support::{acme, analysis_of, load_hir, pin, render_map, usd};
 
 #[test]
 fn acme_golden() {
@@ -150,8 +150,8 @@ fn case_of(named: &Value) -> Case {
 
 /// `scenarios/*.json`, sorted.
 fn scenario_paths() -> Vec<std::path::PathBuf> {
-    let dir = repo_root().join("scenarios");
-    let mut paths: Vec<_> = std::fs::read_dir(&dir)
+    let dir = std::path::Path::new(litgraph_packs::SCENARIOS_DIR);
+    let mut paths: Vec<_> = std::fs::read_dir(dir)
         .map(|r| r.filter_map(Result::ok).map(|e| e.path()).collect())
         .unwrap_or_default();
     paths.sort();

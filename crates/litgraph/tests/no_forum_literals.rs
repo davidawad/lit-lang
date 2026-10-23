@@ -253,7 +253,7 @@ fn hits(text: &str, keys: &BTreeSet<String>) -> Vec<(usize, String)> {
 #[test]
 fn no_forum_literals_in_engine() {
     let root = repo_root();
-    let keys = forum_keys(&root.join("packs"));
+    let keys = forum_keys(Path::new(litgraph_packs::PACKS_DIR));
     assert!(
         keys.len() >= 2,
         "expected pack ids and forum keys in packs/, found {keys:?}"

@@ -173,7 +173,7 @@ fn emit(v: &impl serde::Serialize, compact: bool) -> Result<()> {
 fn load_catalog(cli: &Cli) -> Result<Catalog> {
     let catalog = match &cli.packs_dir {
         Some(d) => Catalog::load(std::path::Path::new(d)),
-        None => Catalog::default_source(),
+        None => litgraph_packs::default_source(),
     }
     .context("loading packs")?;
     let scenarios_dir = cli
@@ -182,7 +182,7 @@ fn load_catalog(cli: &Cli) -> Result<Catalog> {
         .or_else(|| std::env::var("LITGRAPH_SCENARIOS").ok());
     match scenarios_dir {
         Some(d) => catalog.with_scenarios_dir(std::path::Path::new(&d)),
-        None => catalog.with_embedded_scenarios(),
+        None => litgraph_packs::with_scenarios(catalog),
     }
     .context("loading scenarios")
 }
@@ -255,17 +255,11 @@ mod tests {
     }
 
     fn packs_dir() -> String {
-        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-            .join("../../packs")
-            .display()
-            .to_string()
+        litgraph_packs::PACKS_DIR.to_string()
     }
 
     fn scenarios_dir() -> String {
-        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-            .join("../../scenarios")
-            .display()
-            .to_string()
+        litgraph_packs::SCENARIOS_DIR.to_string()
     }
 
     #[test]

@@ -228,10 +228,12 @@ mod tests {
     /// FWD already set the flag (docs/CALIBRATION.md, docs/PACK_SCHEMA.md#state-flags).
     #[test]
     fn a_calibrated_value_reaches_every_flagged_sibling_of_the_edge() {
-        let root = concat!(env!("CARGO_MANIFEST_DIR"), "/../..");
         let pack = Pack::from_json(
-            &std::fs::read_to_string(format!("{root}/packs/ptab-patent-trial-appeal-board.json"))
-                .unwrap(),
+            &std::fs::read_to_string(format!(
+                "{}/ptab-patent-trial-appeal-board.json",
+                litgraph_packs::PACKS_DIR
+            ))
+            .unwrap(),
         )
         .unwrap();
         let mut g = Graph::compile(&[pack], &LinkFile::default(), &CompileOptions::default())

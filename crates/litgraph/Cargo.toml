@@ -34,5 +34,8 @@ rand_chacha.workspace = true
 sha2.workspace = true
 
 [dev-dependencies]
+# The repository's packs and scenarios, built from lit/ and cases/ (a
+# dev-dependency cycle cargo allows: litgraph-packs builds on litgraph).
+litgraph-packs = { path = "../litgraph-packs" }
 expect-test = "1"
 proptest.workspace = true

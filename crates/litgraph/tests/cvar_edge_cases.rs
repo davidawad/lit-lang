@@ -310,8 +310,8 @@ fn cvar_y_range_override_is_used_verbatim_instead_of_the_default() {
 /// JSON and flow through to the `solve` op's reported `y_range`.
 #[test]
 fn cvar_y_range_override_flows_through_the_solve_op() {
-    use litgraph::api::{handle, Catalog, Request};
-    let catalog = Catalog::embedded().unwrap();
+    use litgraph::api::{handle, Request};
+    let catalog = litgraph_packs::catalog().unwrap();
     let pack = catalog.packs.first().unwrap().1.id.clone();
     let req = Request {
         packs: vec![pack],
@@ -330,8 +330,8 @@ fn cvar_y_range_override_flows_through_the_solve_op() {
 
 #[test]
 fn cvar_y_lo_without_y_hi_is_a_clear_error_not_a_parse_failure() {
-    use litgraph::api::{handle, Catalog, Request};
-    let catalog = Catalog::embedded().unwrap();
+    use litgraph::api::{handle, Request};
+    let catalog = litgraph_packs::catalog().unwrap();
     let pack = catalog.packs.first().unwrap().1.id.clone();
     let req = Request {
         packs: vec![pack],

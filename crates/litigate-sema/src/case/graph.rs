@@ -8,8 +8,8 @@
 //! expression into another package's view before it is compared with that
 //! package's patterns.
 use crate::hir::{
-    DeadlineWindow, Declaration, Edge, EdgeDeadline, EventType, Expr, ExprKind, Node, Package,
-    Relation, Type, Value,
+    DeadlineWindow, Declaration, Edge, EdgeDeadline, EventType, Expr, ExprKind, Extension, Node,
+    Package, Relation, Type, Value,
 };
 use crate::precedence;
 use crate::temporal::world::PackInfo;
@@ -314,6 +314,32 @@ impl<'a> Graph<'a> {
                 format!("{}::{}", k.pack, k.name)
             })
             .collect()
+    }
+
+    /// The motion patterns of every `extend` grant (`on M()`), with the
+    /// pack each is written in: a motion to extend is matter history the
+    /// grant reads (FRCP 6(b)(1)(B), FRAP 4(a)(5)(A)(i)), so an event
+    /// matching one is legal without taking an edge.
+    pub fn motion_patterns(&self) -> Vec<(&'a str, &'a Expr)> {
+        let mut out = Vec::new();
+        for p in &self.packages {
+            for d in declarations(p) {
+                if let Declaration::Deadline(x) = d {
+                    for g in &x.extend {
+                        if let Extension::Bounded {
+                            motion: Some(m), ..
+                        }
+                        | Extension::Discretionary {
+                            motion: Some(m), ..
+                        } = g
+                        {
+                            out.push((p.manifest.pack_id.as_str(), &m.event));
+                        }
+                    }
+                }
+            }
+        }
+        out
     }
 
     /// The `has_event` patterns of every transition arm, with the pack each

@@ -458,11 +458,13 @@ impl<'c, 'g> Cx<'c, 'g> {
     }
 
     /// Whether event `k` is history a transition reads (an order keeping
-    /// the prior rules, FRCP 86(a)(2)(B)).
+    /// the prior rules, FRCP 86(a)(2)(B)) or an extension grant reads (a
+    /// motion to extend).
     fn history(&self, k: usize) -> bool {
         self.graph
             .transition_patterns()
-            .iter()
+            .into_iter()
+            .chain(self.graph.motion_patterns())
             .any(|(pack, p)| matches(p, self.view(pack, k)))
     }
 

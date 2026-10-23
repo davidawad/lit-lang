@@ -106,8 +106,13 @@ expression: found
             extend: [
                 Bounded {
                     by: "Court",
-                    max_days: 30,
+                    until: Offset {
+                        from: PrescribedDue,
+                        days: 30,
+                    },
                     after_expiry: true,
+                    standard: None,
+                    motion: None,
                 },
             ],
             waive: Some(
@@ -367,8 +372,13 @@ expression: found
             extend: [
                 Bounded {
                     by: "Court",
-                    max_days: 1,
+                    until: Offset {
+                        from: PrescribedDue,
+                        days: 1,
+                    },
                     after_expiry: false,
+                    standard: None,
+                    motion: None,
                 },
             ],
             waive: None,
@@ -395,7 +405,7 @@ expression: found
                         line: 21,
                         col: 1,
                         end_line: 21,
-                        end_col: 181,
+                        end_col: 203,
                     },
                 ),
                 imported: false,
@@ -457,13 +467,61 @@ expression: found
             extend: [
                 Discretionary {
                     by: "Court",
-                    standard: "GoodCause",
+                    standard: GoodCause,
                     window: BeforeExpiry,
+                    motion: None,
                 },
                 Discretionary {
                     by: "Court",
-                    standard: "ExcusableNeglect",
+                    standard: ExcusableNeglect,
                     window: AfterExpiryOnMotion,
+                    motion: Some(
+                        Motion {
+                            event: Expr {
+                                ty: Named(
+                                    "Served",
+                                ),
+                                kind: Call {
+                                    callee: "Served",
+                                    args: [
+                                        Expr {
+                                            ty: Named(
+                                                "Document",
+                                            ),
+                                            kind: Literal {
+                                                value: Variant(
+                                                    "Document::complaint",
+                                                ),
+                                            },
+                                            span: Some(
+                                                Span {
+                                                    file: FileId(
+                                                        "pkgs/demo/main.lit",
+                                                    ),
+                                                    line: 21,
+                                                    col: 189,
+                                                    end_line: 21,
+                                                    end_col: 198,
+                                                },
+                                            ),
+                                        },
+                                    ],
+                                },
+                                span: Some(
+                                    Span {
+                                        file: FileId(
+                                            "pkgs/demo/main.lit",
+                                        ),
+                                        line: 21,
+                                        col: 182,
+                                        end_line: 21,
+                                        end_col: 199,
+                                    },
+                                ),
+                            },
+                            within: None,
+                        },
+                    ),
                 },
             ],
             waive: None,
@@ -490,7 +548,7 @@ expression: found
                         line: 22,
                         col: 1,
                         end_line: 22,
-                        end_col: 93,
+                        end_col: 111,
                     },
                 ),
                 imported: false,
@@ -550,7 +608,269 @@ expression: found
             policy: First,
             linear: false,
             extend: [
-                NonExtendable,
+                NonExtendable {
+                    authority: "FRCP 6(b)(2)",
+                },
+            ],
+            waive: None,
+        },
+    ),
+    Deadline(
+        Deadline {
+            meta: Metadata {
+                id: "i",
+                label: "",
+                cite: None,
+                effective: Interval {
+                    from: "2009-12-01",
+                    to: None,
+                    known_at: "2025-01-01",
+                },
+                authority: "FederalRule",
+                relations: [],
+                span: Some(
+                    Span {
+                        file: FileId(
+                            "pkgs/demo/main.lit",
+                        ),
+                        line: 23,
+                        col: 1,
+                        end_line: 23,
+                        end_col: 306,
+                    },
+                ),
+                imported: false,
+            },
+            amount: 14,
+            unit: Calendar,
+            direction: Forward,
+            trigger: Expr {
+                ty: Named(
+                    "Served",
+                ),
+                kind: Call {
+                    callee: "Served",
+                    args: [
+                        Expr {
+                            ty: Named(
+                                "Document",
+                            ),
+                            kind: Literal {
+                                value: Variant(
+                                    "Document::answer",
+                                ),
+                            },
+                            span: Some(
+                                Span {
+                                    file: FileId(
+                                        "pkgs/demo/main.lit",
+                                    ),
+                                    line: 23,
+                                    col: 33,
+                                    end_line: 23,
+                                    end_col: 39,
+                                },
+                            ),
+                        },
+                    ],
+                },
+                span: Some(
+                    Span {
+                        file: FileId(
+                            "pkgs/demo/main.lit",
+                        ),
+                        line: 23,
+                        col: 26,
+                        end_line: 23,
+                        end_col: 40,
+                    },
+                ),
+            },
+            counting: "c6",
+            extendable: Some(
+                true,
+            ),
+            extension_authority: None,
+            note: None,
+            bearer: None,
+            policy: First,
+            linear: false,
+            extend: [
+                Bounded {
+                    by: "Court",
+                    until: Max(
+                        [
+                            Offset {
+                                from: PrescribedDue,
+                                days: 30,
+                            },
+                            Offset {
+                                from: GrantOrderEntered,
+                                days: 14,
+                            },
+                        ],
+                    ),
+                    after_expiry: true,
+                    standard: Some(
+                        GoodCauseOrExcusableNeglect,
+                    ),
+                    motion: Some(
+                        Motion {
+                            event: Expr {
+                                ty: Named(
+                                    "Served",
+                                ),
+                                kind: Call {
+                                    callee: "Served",
+                                    args: [
+                                        Expr {
+                                            ty: Named(
+                                                "Document",
+                                            ),
+                                            kind: Literal {
+                                                value: Variant(
+                                                    "Document::complaint",
+                                                ),
+                                            },
+                                            span: Some(
+                                                Span {
+                                                    file: FileId(
+                                                        "pkgs/demo/main.lit",
+                                                    ),
+                                                    line: 23,
+                                                    col: 222,
+                                                    end_line: 23,
+                                                    end_col: 231,
+                                                },
+                                            ),
+                                        },
+                                    ],
+                                },
+                                span: Some(
+                                    Span {
+                                        file: FileId(
+                                            "pkgs/demo/main.lit",
+                                        ),
+                                        line: 23,
+                                        col: 215,
+                                        end_line: 23,
+                                        end_col: 232,
+                                    },
+                                ),
+                            },
+                            within: Some(
+                                Offset {
+                                    from: PrescribedDue,
+                                    days: 30,
+                                },
+                            ),
+                        },
+                    ),
+                },
+                NonExtendable {
+                    authority: "FRAP 26(b)(1)",
+                },
+            ],
+            waive: None,
+        },
+    ),
+    Deadline(
+        Deadline {
+            meta: Metadata {
+                id: "j",
+                label: "",
+                cite: None,
+                effective: Interval {
+                    from: "2009-12-01",
+                    to: None,
+                    known_at: "2025-01-01",
+                },
+                authority: "FederalRule",
+                relations: [],
+                span: Some(
+                    Span {
+                        file: FileId(
+                            "pkgs/demo/main.lit",
+                        ),
+                        line: 24,
+                        col: 1,
+                        end_line: 24,
+                        end_col: 134,
+                    },
+                ),
+                imported: false,
+            },
+            amount: 14,
+            unit: Calendar,
+            direction: Forward,
+            trigger: Expr {
+                ty: Named(
+                    "Served",
+                ),
+                kind: Call {
+                    callee: "Served",
+                    args: [
+                        Expr {
+                            ty: Named(
+                                "Document",
+                            ),
+                            kind: Literal {
+                                value: Variant(
+                                    "Document::answer",
+                                ),
+                            },
+                            span: Some(
+                                Span {
+                                    file: FileId(
+                                        "pkgs/demo/main.lit",
+                                    ),
+                                    line: 24,
+                                    col: 33,
+                                    end_line: 24,
+                                    end_col: 39,
+                                },
+                            ),
+                        },
+                    ],
+                },
+                span: Some(
+                    Span {
+                        file: FileId(
+                            "pkgs/demo/main.lit",
+                        ),
+                        line: 24,
+                        col: 26,
+                        end_line: 24,
+                        end_col: 40,
+                    },
+                ),
+            },
+            counting: "c6",
+            extendable: None,
+            extension_authority: None,
+            note: None,
+            bearer: None,
+            policy: First,
+            linear: false,
+            extend: [
+                Bounded {
+                    by: "Court",
+                    until: Min(
+                        [
+                            Offset {
+                                from: PrescribedDue,
+                                days: 0,
+                            },
+                            Offset {
+                                from: GrantOrderEntered,
+                                days: 1,
+                            },
+                        ],
+                    ),
+                    after_expiry: false,
+                    standard: None,
+                    motion: None,
+                },
             ],
             waive: None,
         },

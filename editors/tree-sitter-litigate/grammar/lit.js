@@ -205,9 +205,12 @@ module.exports = {
   capability: $ => braced(choice(
     seq(field('key', 'by'), field('value', $.identifier)),
     seq(field('key', 'max'), field('value', $.duration)),
+    seq(field('key', 'to'), field('value', $._expression)),
     seq(field('key', 'discretion'), field('value', $.identifier)),
     field('key', 'after_expiry'),
-    field('key', 'never'),
+    seq(field('key', 'on'), field('value', $.call_expression)),
+    seq(field('key', 'within'), field('value', $._expression)),
+    seq(field('key', 'never'), field('value', $.cite)),
   )),
 
   // Links and instances.

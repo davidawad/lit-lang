@@ -35,6 +35,11 @@ event OrderedPost(until: Date) extends post to until
 event OrderedLocked(until: Date) extends locked to until
 event OrderedMotion(until: Date) extends motion-only to until
 event ReleasedLocked() waives locked
+event MovedPost()
+event MovedMotion()
+event MovedAppeal()
+event OrderedAppeal(until: Date) extends appeal to until
+event OrderedCapped(until: Date) extends capped to until
 event Struck(option: String) removes option
 event Elected(option: String) elects option
 
@@ -64,12 +69,19 @@ deadline reply: 5.days from Noticed() counted_by oc { trigger latest }
 
 deadline post: 10.days from Entered() counted_by oc {
   extend { by Court, discretion GoodCause }
-  extend { by Court, discretion ExcusableNeglect, after_expiry }
+  extend { by Court, discretion ExcusableNeglect, after_expiry, on MovedPost() }
   extend { by Plaintiff, max 3.days }
 }
-deadline locked: 10.days from Entered() counted_by oc { extend { never } }
+deadline locked: 10.days from Entered() counted_by oc { extend { never cite FRCP 6(b)(2) } }
 deadline motion-only: 10.days from Entered() counted_by oc {
-  extend { by Court, discretion ExcusableNeglect, after_expiry }
+  extend { by Court, discretion ExcusableNeglect, after_expiry, on MovedMotion() }
+}
+deadline appeal: 10.days from Entered() counted_by oc {
+  extend { by Court, discretion GoodCauseOrExcusableNeglect, to max(prescribed_due + 30.days, grant_order_entered + 14.days), after_expiry, on MovedAppeal(), within prescribed_due + 30.days }
+  extend { never cite FRAP 26(b)(1) }
+}
+deadline capped: 10.days from Entered() counted_by oc {
+  extend { by Court, to min(prescribed_due + 5.days, (grant_order_entered + 2.days)) }
 }
 
 state open: \"Open\"
@@ -369,7 +381,53 @@ fn extensions_and_waivers() {
             "2011-02-01",
             &[
                 ENTERED,
+                "2011-01-18 MovedPost() by p",
                 "2011-01-20 OrderedPost(2011-03-01) by c cite FRCP 6(b)(1)(B)",
+            ],
+        ),
+        (
+            "extend: discretion after expiry without a motion after expiry is rejected",
+            "2011-02-01",
+            &[
+                ENTERED,
+                "2011-01-12 MovedPost() by p",
+                "2011-01-20 OrderedPost(2011-03-01) by c cite FRCP 6(b)(1)(B)",
+            ],
+        ),
+        (
+            "extend: FRAP 4(a)(5)(C), an order on day 40 reaches day 54",
+            "2011-04-01",
+            &[
+                ENTERED,
+                "2011-01-20 MovedAppeal() by p",
+                "2011-02-23 OrderedAppeal(2011-03-09) by c cite FRAP 4(a)(5)",
+            ],
+        ),
+        (
+            "extend: FRAP 4(a)(5)(C), not day 55",
+            "2011-04-01",
+            &[
+                ENTERED,
+                "2011-01-20 MovedAppeal() by p",
+                "2011-02-23 OrderedAppeal(2011-03-10) by c cite FRAP 4(a)(5)",
+            ],
+        ),
+        (
+            "extend: FRAP 4(a)(5)(A)(i), a motion past 30 days is no motion",
+            "2011-04-01",
+            &[
+                ENTERED,
+                "2011-02-14 MovedAppeal() by p",
+                "2011-02-15 OrderedAppeal(2011-02-20) by c cite FRAP 4(a)(5)",
+            ],
+        ),
+        (
+            "extend: a `min` bound takes the earlier date",
+            "2011-02-01",
+            &[
+                ENTERED,
+                "2011-01-14 OrderedCapped(2011-01-16) by c cite L.R. 6.1",
+                "2011-01-15 OrderedCapped(2011-01-18) by c cite L.R. 6.1",
             ],
         ),
         (
@@ -407,7 +465,7 @@ fn extensions_and_waivers() {
             ],
         ),
         (
-            "waive: `extend { never }` grants no waiver either",
+            "waive: `extend { never cite ... }` grants no waiver either",
             "2011-02-01",
             &[ENTERED, "2011-01-10 ReleasedLocked() by c cite FRCP 6(b)"],
         ),

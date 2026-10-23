@@ -42,10 +42,24 @@ deadline amended-answer: 14.days after Served(amended) counted_by frcp6 {
 deadline reply: 7.days after Served(answer) counted_by frcp6 {
   trigger latest
   extend { by Court, discretion GoodCause }
-  extend { by Court, discretion ExcusableNeglect, after_expiry }
+  extend { by Court, discretion ExcusableNeglect, after_expiry, on Served(answer) }
 }
 
-deadline renewal: 28.days after Served(answer) counted_by frcp6 { extend { never } }
+deadline notice: 30.days after Served(answer) counted_by frcp6 {
+  extend {
+    by Court
+    discretion GoodCauseOrExcusableNeglect
+    to max(prescribed_due + 30.days, grant_order_entered + 14.days)
+    after_expiry
+    on Served(answer)
+    within prescribed_due + 30.days
+  }
+  extend { never cite FRAP 26(b)(1) }
+}
+
+deadline renewal: 28.days after Served(answer) counted_by frcp6 {
+  extend { never cite FRCP 6(b)(2) }
+}
 
 /// An order extending the time to answer to a date.
 event Extended(until: Date) extends answer-period to until

@@ -71,7 +71,7 @@ fn item_casts_only_declarations() {
     let kinds: Vec<SyntaxKind> = file.items().iter().map(Item::kind).collect();
     assert_eq!(kinds.first(), Some(&SyntaxKind::TypeDecl));
     assert_eq!(kinds.last(), Some(&SyntaxKind::TestDecl));
-    assert_eq!(kinds.len(), 22);
+    assert_eq!(kinds.len(), 23);
     let module = file.module().expect("module");
     assert!(Item::cast(module.syntax().clone()).is_none());
 }

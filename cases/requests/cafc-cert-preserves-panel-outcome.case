@@ -1,0 +1,12 @@
+case cafc-cert-preserves-panel-outcome
+uses cafc ^0.1.0
+as_of 2026-06-09
+summary "A Federal Circuit appellant: how the matter runs on from a panel reversal, through rehearing and certiorari."
+notes "Ported from examples/cafc-cert-preserves-panel-outcome.json. The appellant at the Federal Circuit; nothing has happened yet, so the matter sits at the package start, and the op's `from` asks about the run after a panel reversal. The rate is illustrative."
+perspective appellant
+
+parties {
+  appellant: applicant Corporation
+}
+
+analysis { params: { rate: 700 } }

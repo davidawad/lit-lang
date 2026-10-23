@@ -10,6 +10,7 @@
 //! are the options its cited events took away: both are derived, never
 //! asserted.
 pub mod deadline;
+mod drawn;
 mod event;
 mod graph;
 mod replay;

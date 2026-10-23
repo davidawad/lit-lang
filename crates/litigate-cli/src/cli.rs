@@ -161,6 +161,10 @@ pub enum Command {
         /// The litgraph op: a name (`chain`) or a JSON object (`{"op":"solve"}`).
         #[arg(long, default_value = "chain")]
         op: String,
+        /// Do not compose links between the used packages (litgraph's
+        /// request `links: false`).
+        #[arg(long)]
+        no_links: bool,
         /// Shared options.
         #[command(flatten)]
         library: Library,

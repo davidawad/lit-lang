@@ -44,7 +44,12 @@ pub fn dispatch(command: Command) -> Outcome {
             library,
         } => test::test(&paths, filter.as_deref(), &library.lib),
         Command::Fmt { paths, check } => fmt::fmt(&paths, check),
-        Command::Run { case, op, library } => run::run(&case, &op, &library.lib),
+        Command::Run {
+            case,
+            op,
+            no_links,
+            library,
+        } => run::run(&case, &op, !no_links, &library.lib),
         Command::Where { id, paths, library } => where_::where_(&id, &paths, &library.lib),
         Command::Explain { code } => explain::explain(&code),
         Command::ExplainValue {

@@ -5,8 +5,7 @@ import ttab.standstill-2.{ opposer-d180 }
 import ttab.terminals.{ registration-restricted, settle-coexistence, settle-rebrand-transition }
 import ttab.{ standstill }
 
-/// imported
-state standstill-period: "Standstill: final 60-day extension by consent" effective [2026-10-19, ..) by board cite 37 CFR 2.102(c)(3)
+state standstill-period: "Standstill: final 60-day extension by consent" by board cite 37 CFR 2.102(c)(3)
 {
   group standstill
   note "Applicant consents to the final extension in exchange for a standstill (no suit, no opposition, talks). Cost of consent: the potential opposer keeps the option to oppose until day 180."
@@ -16,8 +15,7 @@ state standstill-period: "Standstill: final 60-day extension by consent" effecti
   }
 }
 
-/// imported
-decision neg-posture: "Choose negotiating posture during standstill" effective [2026-10-19, ..) by applicant cite ?("37 CFR 2.102(c)(3); TBMP 605") {
+decision neg-posture: "Choose negotiating posture during standstill" by applicant cite ?("37 CFR 2.102(c)(3); TBMP 605") {
   group standstill
   _ "Lead with rebrand-with-transition + the opposer cost contribution" -> neg-rebrand {
     authority cite ?("TBMP 605.01")
@@ -35,8 +33,7 @@ decision neg-posture: "Choose negotiating posture during standstill" effective [
   }
 }
 
-/// imported
-chance neg-rebrand: "Talks led by rebrand-with-transition and cost share" effective [2026-10-19, ..) by board cite ?("TBMP 605.01") {
+chance neg-rebrand: "Talks led by rebrand-with-transition and cost share" by board cite ?("TBMP 605.01") {
   group standstill
   tags [negotiation]
   _ "Deal: rebrand on a transition period with the opposer cost contribution" -> settle-rebrand-transition p 0.38 {
@@ -62,8 +59,7 @@ chance neg-rebrand: "Talks led by rebrand-with-transition and cost share" effect
   }
 }
 
-/// imported
-chance neg-coexist: "Talks led by coexistence / consent agreement" effective [2026-10-19, ..) by board cite ?("TBMP 605.03; TMEP 1207.01(d)(viii)") {
+chance neg-coexist: "Talks led by coexistence / consent agreement" by board cite ?("TBMP 605.03; TMEP 1207.01(d)(viii)") {
   group standstill
   tags [negotiation]
   _ "Deal: rebrand on a transition period with the opposer cost contribution" -> settle-rebrand-transition p 0.1 {

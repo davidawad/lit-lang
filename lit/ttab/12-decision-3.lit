@@ -4,8 +4,7 @@ module ttab.decision-3
 import ttab.terminals.{ registered, registration-restricted }
 import ttab.{ decision }
 
-/// imported
-state decision-restricted: "Registrable with restriction: applicant must move to amend" effective [2026-10-19, ..) by applicant cite 37 CFR 2.133(b)
+state decision-restricted: "Registrable with restriction: applicant must move to amend" by applicant cite 37 CFR 2.133(b)
 {
   group decision
   _ "Move to amend ID to conform to the findings" -> registration-restricted {
@@ -16,8 +15,7 @@ state decision-restricted: "Registrable with restriction: applicant must move to
   }
 }
 
-/// imported
-state noa-post-decision: "Judgment final; application returns to prior status, notice of allowance" effective [2026-10-19, ..) by applicant cite 37 CFR 2.136; 15 USC 1063(b)(2)
+state noa-post-decision: "Judgment final; application returns to prior status, notice of allowance" by applicant cite 37 CFR 2.136; 15 USC 1063(b)(2)
 {
   group decision
   _ "File statement of use ($150/class) and register" -> registered {

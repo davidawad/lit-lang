@@ -5,8 +5,7 @@ import ttab.appeal-2.{ opposer-appeal-outcome }
 import ttab.decision-3.{ noa-post-decision }
 import ttab.{ decision }
 
-/// imported
-chance decision-dismissed: "Opposition dismissed: the opposer may appeal" effective [2026-10-19, ..) by board cite 15 USC 1071; 37 CFR 2.145(d)
+chance decision-dismissed: "Opposition dismissed: the opposer may appeal" by board cite 15 USC 1071; 37 CFR 2.145(d)
 {
   group decision
   _ "Opposer does not appeal; judgment final after 63 days" -> noa-post-decision p 0.75 {

@@ -1,16 +1,24 @@
-# Imported by `litigate import` from packs/ttab-trademark-trial-and-appeal-board.json.
-# in_force and authority are placeholders: legacy JSON records neither.
+# Ported from packs/ttab-trademark-trial-and-appeal-board.json (`litigate
+# import`, then dated and cited by hand).
+#
+# in_force: the graph's fees ($600 per class to oppose or petition to cancel,
+# $200 / $400 extension requests, 37 C.F.R. § 2.6(a)(16)-(17), (22)-(23)) are
+# the FY 2025 schedule, 89 FR 91089 (Nov. 18, 2024; recorded in the vendored
+# § 2.6), effective January 18, 2025. Nodes inherit it; the deadlines in
+# ttab.lit carry their own intervals. known_at: the eCFR snapshot vendored
+# as sources/cfr-37-part2.txt.
+# authority: 37 C.F.R. Part 2 is agency rules of practice (lit/core).
 [package]
 name = "ttab-trademark-trial-and-appeal-board"
 version = "0.1.0"
 language = 1
 pack_id = "ttab-trademark-trial-and-appeal-board"
 forum = "ttab"
-authority = "Unclassified"
+authority = "Regulation"
 title = "TTAB Trademark Trial and Appeal Board: Opposition (applicant perspective), extension of time through final decision and appeal"
 description = "Opposition to an application (37 CFR Part 2 Subpart A, TBMP): extension of time to oppose, lapse/allowance, standstill and settlement, institution and answer, optional Section 18 counterclaim, discovery, trial, briefs, final decision, appeal (15 USC 1071), plus a parallel infringement-suit branch. Terminal attrs: rb = fraction of rebrand cost incurred, fx = other applicant USD, sh = 1 if the opposer pays a cost share, sw = opposer win fraction, sfx = opposer other USD; opp_hours/opp_fees on edges are the opposer's own cost. A scenario supplies the utility, opponent_objective and stakes from those attrs (see scenarios/ttab-opposition-applicant-defense.json). All probabilities and hours are teaching estimates."
 jurisdiction = "Trademark Trial and Appeal Board (USPTO)"
-in_force = "2026-10-19"
+in_force = "2025-01-18"
 known_at = "2026-10-19"
 counting = "frcp6"
 

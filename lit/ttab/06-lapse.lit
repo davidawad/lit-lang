@@ -5,8 +5,7 @@ import ttab.terminals.{ cancelled-rebrand, registered }
 import ttab.threat.{ infringement-suit-filed }
 import ttab.{ lapse }
 
-/// imported
-state period-lapsed: "Opposition period closed with no opposition filed" effective [2026-10-19, ..) by board cite 15 USC 1063(b)(2); 37 CFR 2.102(c)
+state period-lapsed: "Opposition period closed with no opposition filed" by board cite 15 USC 1063(b)(2); 37 CFR 2.102(c)
 {
   group lapse
   note "Opposition period closed. The opposer loses the opposition but keeps a petition to cancel within 5 years of registration (15 USC 1064(1)) and any infringement action."
@@ -16,8 +15,7 @@ state period-lapsed: "Opposition period closed with no opposition filed" effecti
   }
 }
 
-/// imported
-state notice-of-allowance: "Notice of allowance issued; 6 months to file statement of use (extendable to 24 months)" effective [2026-10-19, ..) by applicant cite 15 USC 1063(b)(2); 15 USC 1051(d)(1)-(2)
+state notice-of-allowance: "Notice of allowance issued; 6 months to file statement of use (extendable to 24 months)" by applicant cite 15 USC 1063(b)(2); 15 USC 1051(d)(1)-(2)
 {
   group lapse
   _ "File statement of use ($150/class) and register" -> post-registration-risk {
@@ -28,8 +26,7 @@ state notice-of-allowance: "Notice of allowance issued; 6 months to file stateme
   }
 }
 
-/// imported
-chance post-registration-risk: "Registered; opposer's residual options (cancellation within 5 years, infringement suit)" effective [2026-10-19, ..) by board cite 15 USC 1064(1); 15 USC 1114; 15 USC 1125(a)
+chance post-registration-risk: "Registered; opposer's residual options (cancellation within 5 years, infringement suit)" by board cite 15 USC 1064(1); 15 USC 1114; 15 USC 1125(a)
 {
   group lapse
   tags [fact-free]
@@ -51,8 +48,7 @@ chance post-registration-risk: "Registered; opposer's residual options (cancella
   }
 }
 
-/// imported
-chance cancellation-merits: "Petition to cancel (2(d)) tried to decision" effective [2026-10-19, ..) by board cite ?("15 USC 1064(1); TBMP 309.03") {
+chance cancellation-merits: "Petition to cancel (2(d)) tried to decision" by board cite ?("15 USC 1064(1); TBMP 309.03") {
   group lapse
   _ "Opposer wins: registration cancelled" -> cancelled-rebrand p 0.6 {
     authority cite 15 USC 1064(1); 15 USC 1052(d)

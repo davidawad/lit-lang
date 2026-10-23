@@ -5,8 +5,7 @@ import ttab.decision-3.{ noa-post-decision }
 import ttab.terminals.{ opposition-sustained }
 import ttab.{ appeal }
 
-/// imported
-chance opposer-appeal-outcome: "Opposer appeal decided" effective [2026-10-19, ..) by board cite 15 USC 1071
+chance opposer-appeal-outcome: "Opposer appeal decided" by board cite 15 USC 1071
 {
   group appeal
   _ "Dismissal affirmed" -> noa-post-decision p 0.85 {

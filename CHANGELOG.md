@@ -40,6 +40,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   periods grant 6(b)(1). Each extendable frcp period has an
   `...Extended(until: Date)` event, done by the new `court` role, so a
   matter records a court-ordered extension.
+- **Extension grants keyed on when the request was made** (lg-flu.24).
+  A before-expiry discretionary grant that names a motion (`discretion
+  GoodCause, on M()`) is on request: its window is judged on the
+  request's date, not the order's, so a request made before the period
+  expires licenses an order entered after it under good cause, and no
+  excusable neglect is demanded (FRCP 6(b)(1)(A); 37 C.F.R. §§
+  90.3(c)(1)(i), 2.145(e)(1)(i)). Each extended obligation records the
+  licensing grant's standard and the request's date (`extended_under`,
+  `request_made` in `litigate check`'s deadline schedule). A refusal for
+  a missing motion is preferred to a window refusal. Data: every lit/frcp
+  6(b)(1) period (and lit/core's two) gains the request grant; the PTAB
+  appeal period (37 C.F.R. § 90.3(c), the version in force from Mar. 29,
+  2024) and the TTAB civil-action period (§ 2.145(e)) are extendable by
+  the Director only, on written request, before expiry for good cause and
+  after it for excusable neglect, with no numeric ceiling; ptab and ttab
+  gain a `director` role, so no court party may grant them.
 - **Extension grants model the rule text exactly** (lg-flu.23). A
   bounded grant's bound is a closed date expression, `to max(...)`,
   `min(...)` over `prescribed_due` / `grant_order_entered` `+ N.days`

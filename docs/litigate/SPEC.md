@@ -536,9 +536,20 @@ creates (design review 2026-10-23 §2.4, §2.7):
   - `extend { by A, discretion S [, after_expiry, on M()] }`
     (discretionary): actor `A` may extend an instance to any later date.
     Its window is before expiry, on or before the current due date (FRCP
-    6(b)(1)(A)); with `after_expiry` it is after expiry, on motion (FRCP
-    6(b)(1)(B)), and then only after the due date. An `after_expiry`
-    discretionary grant must name its motion `on M()` (L2007).
+    6(b)(1)(A), "if the court acts ... before the original time or its
+    extension expires"); with `after_expiry` it is after expiry, on motion
+    (FRCP 6(b)(1)(B)), and then only after the due date. An `after_expiry`
+    discretionary grant must name its motion `on M()` (L2007). A
+    before-expiry discretionary grant that names a motion is on request:
+    the request is required, and its window is judged on the request's
+    date (`request_made`), not the order's, so a request made on or before
+    the due date licenses an order entered after it (FRCP 6(b)(1)(A), "or
+    if a request is made, before the original time or its extension
+    expires"; 37 C.F.R. §§ 90.3(c)(1)(i), 2.145(e)(1)(i), "Requested
+    before the expiration of the period ..., and upon a showing of good
+    cause"). FRCP 6(b)(1)(A) is therefore two grants, `discretion
+    GoodCause` (the court acts) and `discretion GoodCause, on M()` (a
+    request is made); a USPTO Director extension is only the second.
   - `extend { never cite X }` (lock): rule `X` forbids extending the
     period beyond the declaration's own other grants (FRCP 6(b)(2) with
     none; FRAP 26(b)(1) beside FRAP 4(a)(5)'s grant, "except as
@@ -860,14 +871,25 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
   matching `M` dated no earlier than the instance's trigger, no later
   than the order, no later than its `within` bound, and, for a
   discretionary `after_expiry` grant, after the current due date (FRCP
-  6(b)(1)(B): "on motion made after the time has expired"); and an
+  6(b)(1)(B): "on motion made after the time has expired"), or, for a
+  discretionary before-expiry grant on request, on or before it, whatever
+  the order's date (the window is the request's); and an
   extension's new date is later than that due date and, for a bounded
   grant, no later than its bound, evaluated with `prescribed_due` the
   instance's counted due date and `grant_order_entered` the event's date.
   A discretionary grant has no ceiling. An event matching a grant's
   motion pattern is matter history: legal at any stage, moving nothing.
+  The motion's date is its event's date as recorded: no counting rule
+  moves it (a request to the USPTO Director is filed on its Eastern Time
+  receipt date, "regardless of whether that date is a Saturday, Sunday,
+  or Federal holiday", 37 C.F.R. §§ 90.3(c)(2), 2.145(e)(2)(i)). The
+  first grant, in declaration order, that admits the event licenses it;
+  each extended instance records that grant's cause standard
+  (`extended_under`) and the date of the motion it read (`request_made`),
+  and `litigate check` reports both in the deadline schedule.
   When no grant admits the event, the refusal reported is the bound's in
-  preference to the window's or the motion's. Each failure is L4001, and
+  preference to the motion's, and the motion's to the window's. Each
+  failure is L4001, and
   no instance changes; a lock with no grant beside it is L4001 for any
   extension. A cited
   event that is not of such a type transforms nothing, so no order can

@@ -65,15 +65,8 @@ struct Grant<'g> {
     ceiling: Option<&'g Bound>,
     /// The motion the grant requires.
     motion: Option<&'g Motion>,
-    /// The motion must be made after the period expired (FRCP
-    /// 6(b)(1)(B)).
-    moved_after: bool,
-    /// The window is judged on `request_made`, the date of the motion,
-    /// not on the order's: a request made before expiry licenses an order
-    /// entered after it (FRCP 6(b)(1)(A), "if a request is made, before
-    /// the original time or its extension expires"; 37 C.F.R. §§
-    /// 90.3(c)(1)(i), 2.145(e)(1)(i)).
-    requested: bool,
+    /// When the motion must be made.
+    moved: Moved,
     /// The cause standard the grant applies, if it states one.
     standard: Option<CauseStandard>,
 }
@@ -95,8 +88,7 @@ impl<'g> Grant<'g> {
                 after: *after_expiry,
                 ceiling: Some(until),
                 motion: motion.as_ref(),
-                moved_after: false,
-                requested: false,
+                moved: Moved::Any,
                 standard: *standard,
             }),
             Extension::Discretionary {
@@ -112,8 +104,13 @@ impl<'g> Grant<'g> {
                     after,
                     ceiling: None,
                     motion: motion.as_ref(),
-                    moved_after: after,
-                    requested: !after && motion.is_some(),
+                    moved: if after {
+                        Moved::AfterExpiry
+                    } else if motion.is_some() {
+                        Moved::BeforeExpiry
+                    } else {
+                        Moved::Any
+                    },
                     standard: Some(*standard),
                 })
             }
@@ -129,8 +126,7 @@ impl<'g> Grant<'g> {
             after: c.after_expiry,
             ceiling: None,
             motion: None,
-            moved_after: false,
-            requested: false,
+            moved: Moved::Any,
             standard: None,
         }
     }
@@ -148,6 +144,33 @@ impl<'g> Grant<'g> {
 
 /// When a grant's motion must be made, relative to the instance's due
 /// date.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum Moved {
+    /// At any time after the trigger.
+    Any,
+    /// After the period expired (FRCP 6(b)(1)(B)).
+    AfterExpiry,
+    /// On or before the due date: the grant is on request, and its window
+    /// is judged on `request_made`, the motion's date, not on the order's,
+    /// so a request made before expiry licenses an order entered after it
+    /// (FRCP 6(b)(1)(A), "if a request is made, before the original time
+    /// or its extension expires"; 37 C.F.R. §§ 90.3(c)(1)(i),
+    /// 2.145(e)(1)(i)).
+    BeforeExpiry,
+}
+
+impl Moved {
+    /// The rule for an instance due `due`.
+    fn at(self, due: &String) -> Made<'_> {
+        match self {
+            Self::Any => Made::Any,
+            Self::AfterExpiry => Made::After(due),
+            Self::BeforeExpiry => Made::Before(due),
+        }
+    }
+}
+
+/// [`Moved`], with the instance's due date.
 #[derive(Debug, Clone, Copy)]
 enum Made<'a> {
     /// At any time after the trigger.
@@ -646,7 +669,7 @@ impl<'g> Cx<'_, 'g> {
             .map_err(|(b, e)| (b, e.note(why)));
         };
         let expired = event.date > current;
-        if !grant.requested && !grant.reaches(expired) {
+        if grant.moved != Moved::BeforeExpiry && !grant.reaches(expired) {
             let action = display(&event.action);
             return reject(
                 0,
@@ -654,20 +677,7 @@ impl<'g> Cx<'_, 'g> {
             );
         }
         let request = match grant.motion {
-            Some(m) => match self.requested(
-                pack,
-                k,
-                o.at,
-                m,
-                if grant.moved_after {
-                    Made::After(&current)
-                } else if grant.requested {
-                    Made::Before(&current)
-                } else {
-                    Made::Any
-                },
-                &counted,
-            ) {
+            Some(m) => match self.requested(pack, k, o.at, m, grant.moved.at(&current), &counted) {
                 Ok(date) => Some(date),
                 Err(why) => return reject(1, why),
             },

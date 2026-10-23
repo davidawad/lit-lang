@@ -119,9 +119,12 @@ pub enum Extension {
         #[serde(default, skip_serializing_if = "Option::is_none")]
         motion: Option<Motion>,
     },
-    /// `extend { by A, discretion S [, after_expiry, on M()] }`: the
+    /// `extend { by A, discretion S [, after_expiry] [, on M()] }`: the
     /// court's discretion under cause standard `S`, with no numeric ceiling
     /// (FRCP 6(b)(1)); after expiry only on motion `M` (FRCP 6(b)(1)(B)).
+    /// Before expiry with a motion, the grant is on request: the window is
+    /// judged on the request's date, so a request made before expiry
+    /// licenses a later order (FRCP 6(b)(1)(A); 37 C.F.R. § 90.3(c)(1)(i)).
     Discretionary {
         /// The actor that may extend.
         by: String,
@@ -130,7 +133,9 @@ pub enum Extension {
         /// When the grant may be exercised.
         window: ExtensionWindow,
         /// The motion the grant requires: always present for
-        /// [`ExtensionWindow::AfterExpiryOnMotion`].
+        /// [`ExtensionWindow::AfterExpiryOnMotion`]; for
+        /// [`ExtensionWindow::BeforeExpiry`], the request whose date is the
+        /// window's.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         motion: Option<Motion>,
     },

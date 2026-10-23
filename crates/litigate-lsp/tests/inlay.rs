@@ -94,3 +94,33 @@ fn a_counting_rule_from_another_package_is_cited() {
     let case = "cases/ptab-ipr-defense.case";
     insta::assert_json_snapshot!("ptab_ipr_defense_hints", labels(&hints(a, case, all())));
 }
+
+#[test]
+fn a_deadline_with_an_unknown_due_date_says_so() {
+    // The engine counts no business days: the schedule keeps the deadline,
+    // its due date unknown, and the hint says so rather than guessing.
+    let module = format!(
+        "{}\ndeadline in-business-days: 3.business_days from Served(complaint) counted_by frcp6\n",
+        support::read("lit/examples/rule12.lit")
+    );
+    let case = matter("  2025-03-03 Served(complaint, Personal) on widget\n");
+    let root = support::worked(
+        "inlay-unknown",
+        &[(CASE, &case), ("lit/ex/rule12.lit", &module)],
+    );
+    let mut host = support::host(&root);
+    support::pin(&root, &mut host);
+    let a = host.analyze();
+    let found = labels(&hints(a, CASE, all()));
+    let line = line_of(&case, "2025-03-03 Served(complaint, Personal");
+    assert_eq!(
+        found,
+        [
+            (
+                line,
+                "// answer-period due 2025-03-24 (FRCP 6(a))".to_owned()
+            ),
+            (line, "// in-business-days due unknown".to_owned()),
+        ]
+    );
+}

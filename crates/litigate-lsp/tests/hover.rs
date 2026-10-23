@@ -208,3 +208,21 @@ fn a_cursor_just_past_a_name_still_hovers_it() {
     let (_, range) = hover::at(a, MODULE, &text, offset(&text, "decision respond:", 16)).unwrap();
     assert_eq!(&text[std::ops::Range::<usize>::from(range)], "respond");
 }
+
+#[test]
+fn a_designated_deadline_shows_its_designating_parameter() {
+    let text = format!(
+        "{}\nevent Noticed(due: Date)\ndeadline noticed-period: 30.days from Noticed() counted_by frcp6 {{ designated due }}\n",
+        support::read("lit/examples/rule12.lit")
+    );
+    let root = support::worked("hover-designated", &[(MODULE, &text)]);
+    let mut host = support::host(&root);
+    let a = host.analyze();
+    let shown = value(a, MODULE, &text, "deadline noticed-period", 9).unwrap();
+    assert!(
+        shown.contains(
+            "`Date`: designated by Noticed() (its `due`), no earlier than 30 `Days<CalendarDays>` after it, counted_by `frcp6`"
+        ),
+        "{shown}"
+    );
+}

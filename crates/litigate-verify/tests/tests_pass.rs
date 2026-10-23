@@ -224,3 +224,28 @@ tests_pass!(
          expect deadline(answer-period) == 2025-03-10\n}"
     )
 );
+
+/// A deadline whose due date the trigger designates (`designated due`).
+const DESIGNATED: &str = "event Noticed(due: Date)\n\
+deadline noticed-answer: 30.days from Noticed() counted_by frcp6 { designated due }\n";
+
+tests_pass!(
+    a_designated_due_date_is_the_given_date_rolled,
+    Passed,
+    with(&format!(
+        "{DESIGNATED}test \"the notice sets the date\" cite FRCP 12(a)\n{{\n  \
+         given Noticed(2025-04-05) on 2025-03-03\n  \
+         expect deadline(noticed-answer).nominal == 2025-04-05\n  \
+         expect deadline(noticed-answer) == 2025-04-07\n}}"
+    ))
+);
+
+tests_pass!(
+    a_designated_due_date_below_the_period_is_refused,
+    Failed,
+    with(&format!(
+        "{DESIGNATED}test \"too short a notice\" cite FRCP 12(a)\n{{\n  \
+         given Noticed(2025-03-20) on 2025-03-03\n  \
+         expect deadline(noticed-answer) == 2025-03-20\n}}"
+    ))
+);

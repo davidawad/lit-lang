@@ -169,6 +169,30 @@ fn edge_values_without_a_lowering() {
 }
 
 #[test]
+fn a_designated_deadline_gives_its_edges_no_window() {
+    let windows = |p: &hir::Package| -> Vec<bool> {
+        let lowered = lower(p, &Options::default()).unwrap_or_else(|d| panic!("{d:#?}"));
+        let Document::Pack(pack) = lowered.document else {
+            panic!("expected a pack")
+        };
+        pack.edges.iter().map(|e| e.deadline.is_some()).collect()
+    };
+    let mut p = example();
+    let counted = windows(&p);
+    assert!(counted.contains(&true));
+    for d in decls(&mut p) {
+        if let Declaration::Deadline(x) = d {
+            x.designated = Some(hir::Designated {
+                param: 0,
+                name: "due".into(),
+            });
+        }
+    }
+    // The notice sets the date in each matter: no flat period stands in.
+    assert!(!windows(&p).contains(&true));
+}
+
+#[test]
 fn versions_are_selected_at_the_build_dates() {
     let mut p = example();
     let mut old = node(&mut p, "answered").clone();

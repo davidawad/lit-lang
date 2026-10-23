@@ -1,0 +1,29 @@
+---
+source: crates/litigate-cli/tests/cov_cmd_diff.rs
+expression: "paired.json[\"result\"]"
+---
+{
+  "equal": false,
+  "files": [
+    {
+      "a": "a/packs/frcp-rule12-example.json",
+      "b": "b/packs/renamed.json",
+      "kind": "pack",
+      "equal": true,
+      "changes": 0
+    },
+    {
+      "a": "a/packs/clock/frcp-rule12-example.json",
+      "b": "b/packs/clock/frcp-rule12-example.json",
+      "kind": "clock",
+      "equal": true,
+      "changes": 0
+    }
+  ],
+  "changes": [],
+  "unmatched": [
+    "broken.JSON",
+    "extra/deeper/anonymous.json",
+    "extra/scenario.json"
+  ]
+}

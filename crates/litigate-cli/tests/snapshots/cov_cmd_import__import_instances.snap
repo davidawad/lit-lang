@@ -1,0 +1,49 @@
+---
+source: crates/litigate-cli/tests/cov_cmd_import.rs
+expression: "run.json[\"result\"]"
+---
+{
+  "files": [
+    {
+      "path": "lit/frcp/01-ungrouped.lit",
+      "from": "p.json"
+    },
+    {
+      "path": "lit/frcp/02-pleadings.lit",
+      "from": "p.json"
+    },
+    {
+      "path": "lit/frcp/03-motions.lit",
+      "from": "p.json"
+    },
+    {
+      "path": "lit/frcp/04-pleadings-2.lit",
+      "from": "p.json"
+    },
+    {
+      "path": "lit/frcp/05-outcomes.lit",
+      "from": "p.json"
+    },
+    {
+      "path": "lit/frcp/Lit.toml",
+      "from": "p.json"
+    },
+    {
+      "path": "lit/frcp/frcp.lit",
+      "from": "p.json"
+    },
+    {
+      "path": "lit/links/Lit.toml",
+      "from": "links.json"
+    },
+    {
+      "path": "lit/links/links.lit",
+      "from": "links.json"
+    }
+  ],
+  "warnings": [
+    "Lit.toml `in_force` and `authority` are placeholders (legacy JSON records neither)",
+    "3 cite or value hole(s) carry legacy text for the porter to replace",
+    "imported matters assert `start`; replace it with `events` to derive posture"
+  ]
+}

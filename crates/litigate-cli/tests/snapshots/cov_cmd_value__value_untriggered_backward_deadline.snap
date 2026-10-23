@@ -1,0 +1,44 @@
+---
+source: crates/litigate-cli/tests/cov_cmd_value.rs
+expression: result
+---
+{
+  "value": null,
+  "type": "Date",
+  "id": "cov-pack::brief-period",
+  "steps": [
+    {
+      "rule": "brief-period@2009-12-01",
+      "cite": null,
+      "detail": "7 calendar day(s) before Hearing(), counted by frcp6; in force [2009-12-01, ..)"
+    },
+    {
+      "rule": "brief-period",
+      "cite": null,
+      "detail": "delegable to CaseOrder: a CaseOrder may override it"
+    },
+    {
+      "rule": "frcp6",
+      "cite": null,
+      "detail": "no event of the matter triggers it yet, so it has no due date"
+    }
+  ],
+  "versions": [
+    {
+      "in_force": {
+        "from": "2009-12-01",
+        "to": null
+      },
+      "known_at": "2025-01-01",
+      "span": {
+        "file": "lit/cov/cov.lit",
+        "line": 49,
+        "col": 1,
+        "end_line": 49,
+        "end_col": 89
+      },
+      "selected": true
+    }
+  ],
+  "overrides": []
+}

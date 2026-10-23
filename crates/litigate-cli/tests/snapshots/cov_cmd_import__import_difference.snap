@@ -1,0 +1,23 @@
+---
+source: crates/litigate-cli/tests/cov_cmd_import.rs
+expression: "run.json[\"diagnostics\"]"
+---
+[
+  {
+    "code": "L6002",
+    "severity": "error",
+    "span": {
+      "file": "s.json",
+      "line": 1,
+      "col": 1,
+      "end_line": 1,
+      "end_col": 1
+    },
+    "message": "the imported source lowers to JSON with 1 difference(s)",
+    "notes": [
+      {
+        "message": "/scenario/params/huge: Some(Number(1.2345678901234568e+20)) -> Some(Number(1.2345678901234567e+20))"
+      }
+    ]
+  }
+]

@@ -1,0 +1,32 @@
+---
+source: crates/litigate-cli/tests/cov_cmd_value.rs
+expression: "result[\"steps\"]"
+---
+[
+  {
+    "rule": "reply-period@2009-12-01",
+    "cite": "FRCP 12(a)(4)",
+    "detail": "14 calendar day(s) after Served(complaint), counted by frcp6; in force [2009-12-01, ..)"
+  },
+  {
+    "rule": "frcp6",
+    "cite": "FRCP 6(a)",
+    "detail": "triggered by Served(complaint, Personal) on 2025-03-05"
+  },
+  {
+    "rule": "frcp6",
+    "cite": "FRCP 6(a)",
+    "detail": "FRCP 6(a): exclude the trigger date 2025-03-05"
+  },
+  {
+    "rule": "frcp6",
+    "cite": "FRCP 6(a)",
+    "detail": "FRCP 6(a): count 14 calendar day(s) after the anchor -> 2025-03-19"
+  },
+  {
+    "rule": "L0",
+    "cite": "FRCP 12(a)(4)",
+    "detail": "primary-law text: FRCP 12(a)(4)",
+    "sections": []
+  }
+]

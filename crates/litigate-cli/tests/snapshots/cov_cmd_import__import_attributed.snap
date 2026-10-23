@@ -1,0 +1,64 @@
+---
+source: crates/litigate-cli/tests/cov_cmd_import.rs
+expression: "run.json[\"diagnostics\"]"
+---
+[
+  {
+    "code": "L6002",
+    "severity": "error",
+    "span": {
+      "file": "bad.json",
+      "line": 1,
+      "col": 1,
+      "end_line": 1,
+      "end_col": 1
+    },
+    "message": "the imported source does not check",
+    "notes": [
+      {
+        "span": {
+          "file": "lit/frcp/Lit.toml",
+          "line": 4,
+          "col": 8,
+          "end_line": 4,
+          "end_col": 19
+        },
+        "message": "L1004: package name `Not_Kebab` must be kebab-case"
+      },
+      {
+        "span": {
+          "file": "lit/frcp/Lit.toml",
+          "line": 7,
+          "col": 11,
+          "end_line": 7,
+          "end_col": 22
+        },
+        "message": "L1004: pack id `Not_Kebab` must be kebab-case"
+      }
+    ]
+  },
+  {
+    "code": "L6002",
+    "severity": "error",
+    "span": {
+      "file": "s.json",
+      "line": 1,
+      "col": 1,
+      "end_line": 1,
+      "end_col": 1
+    },
+    "message": "the imported source does not check",
+    "notes": [
+      {
+        "span": {
+          "file": "cases/cov-matter.case",
+          "line": 3,
+          "col": 6,
+          "end_line": 3,
+          "end_col": 21
+        },
+        "message": "L1006: package `cov-pack` is not loaded"
+      }
+    ]
+  }
+]

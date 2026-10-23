@@ -1,0 +1,23 @@
+---
+source: crates/litigate-cli/tests/cov_cmd_import.rs
+expression: stable(&run.json)
+---
+{
+  "ok": false,
+  "op": "import",
+  "diagnostics": [
+    {
+      "code": "L6002",
+      "severity": "error",
+      "span": {
+        "file": "x.json",
+        "line": 1,
+        "col": 1,
+        "end_line": 1,
+        "end_col": 1
+      },
+      "message": "not a pack, links file, or named scenario"
+    }
+  ],
+  "elapsed_ms": 0
+}

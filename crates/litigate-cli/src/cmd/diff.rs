@@ -307,3 +307,73 @@ fn has_ext(name: &str, ext: &str) -> bool {
         .extension()
         .is_some_and(|e| e.eq_ignore_ascii_case(ext))
 }
+
+#[cfg(test)]
+mod tests {
+    use super::{align, has_ext, identity, locate};
+    use proptest::prelude::*;
+    use std::collections::BTreeMap;
+
+    fn docs(keys: &[&str]) -> BTreeMap<String, (String, String)> {
+        keys.iter()
+            .map(|k| ((*k).to_owned(), ((*k).to_owned(), String::new())))
+            .collect()
+    }
+
+    #[test]
+    fn documents_are_identified_by_kind_and_id() {
+        assert_eq!(
+            identity(r#"{"id": "p", "nodes": []}"#).as_deref(),
+            Some("pack:p")
+        );
+        assert_eq!(identity(r#"{"links": []}"#).as_deref(), Some("links"));
+        assert_eq!(
+            identity(r#"{"id": "s", "summary": ""}"#).as_deref(),
+            Some("scenario:s")
+        );
+        assert_eq!(identity(r#"{"countingRules": []}"#), None);
+        assert_eq!(identity(r#"{"nodes": []}"#), None);
+        assert_eq!(identity(r#"{"title": "x"}"#), None);
+        assert_eq!(identity("not json"), None);
+    }
+
+    #[test]
+    fn a_single_file_pairs_with_the_one_primary_document() {
+        let (mut a, mut b) = (docs(&[""]), docs(&["pack:p", "packs/clock/p.json"]));
+        align(&mut a, &mut b);
+        assert_eq!(b.keys().collect::<Vec<_>>(), [""]);
+        assert_eq!(b[""].0, "pack:p");
+        let (mut a, mut b) = (docs(&["pack:p", "pack:q"]), docs(&[""]));
+        align(&mut a, &mut b);
+        assert_eq!(a.len(), 2, "two primaries: nothing to pair");
+        let (mut a, mut b) = (docs(&[""]), docs(&[""]));
+        align(&mut a, &mut b);
+        assert_eq!((a.len(), b.len()), (1, 1));
+    }
+
+    #[test]
+    fn extensions_match_case_insensitively() {
+        assert!(has_ext("a/B.JSON", "json"));
+        assert!(!has_ext("a/b.json5", "json"));
+        assert!(!has_ext("json", "json"));
+    }
+
+    proptest! {
+        /// A change's span is the first quoted occurrence of its id, else
+        /// the start of the file.
+        #[test]
+        fn changes_point_at_their_id(
+            before in "[a-z \n]{0,40}",
+            id in "[a-z]{1,8}",
+            after in "[a-z \n]{0,40}",
+        ) {
+            let text = format!("{before}\"{id}\"{after}");
+            let span = locate("f.json", &text, Some(&id));
+            let line = u32::try_from(before.matches('\n').count() + 1).unwrap();
+            let col = u32::try_from(before.rsplit('\n').next().map_or(0, str::len) + 1).unwrap();
+            prop_assert_eq!((span.line, span.col), (line, col));
+            let none = locate("f.json", &text, None);
+            prop_assert_eq!((none.line, none.col), (1, 1));
+        }
+    }
+}

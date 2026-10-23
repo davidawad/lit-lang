@@ -26,13 +26,12 @@ fn loaded(imported: &Imported) -> (Vec<LoadedPackage>, Vec<CaseText>) {
             });
             continue;
         }
-        let Some((dir, relative)) = file
+        // Every other `Imported` path is `lit/<dir>/<file>` (its contract).
+        let (dir, relative) = file
             .path
             .strip_prefix("lit/")
             .and_then(|r| r.split_once('/'))
-        else {
-            continue;
-        };
+            .unwrap_or_default();
         let pkg = packages
             .entry(dir.to_owned())
             .or_insert_with(|| LoadedPackage {
@@ -60,16 +59,17 @@ fn is_case(path: &str) -> bool {
         .is_some_and(|e| e.eq_ignore_ascii_case("case"))
 }
 
-/// The generated document an input must equal.
-fn counterpart(text: &str) -> Option<String> {
-    let value: Value = serde_json::from_str(text).ok()?;
-    let id = value.get("id").and_then(Value::as_str);
+/// The generated document an input must equal. `import` accepted the
+/// input, so it is JSON, and a pack or scenario has an `id`.
+fn counterpart(text: &str) -> String {
+    let value: Value = serde_json::from_str(text).unwrap_or_default();
+    let id = value.get("id").and_then(Value::as_str).unwrap_or_default();
     if value.get("nodes").is_some() {
-        Some(format!("packs/{}.json", id?))
+        format!("packs/{id}.json")
     } else if value.get("links").is_some() || value.get("instances").is_some() {
-        Some("packs/links.json".to_owned())
+        "packs/links.json".to_owned()
     } else {
-        Some(format!("scenarios/{}.json", id?))
+        format!("scenarios/{id}.json")
     }
 }
 
@@ -95,8 +95,6 @@ fn owns(generated: &str, file: &str) -> bool {
         .is_some_and(|(dir, _)| file.starts_with(&format!("lit/{dir}/")))
 }
 
-/// Round-trip diagnostics: generated source that does not check, or does
-/// not lower back to its input.
 /// One L6002 per input whose generated source has check errors.
 fn unchecked(
     imported: &Imported,
@@ -138,6 +136,8 @@ fn unchecked(
         .collect()
 }
 
+/// Round-trip diagnostics: generated source that does not check, or does
+/// not lower back to its input.
 fn round_trip(imported: &Imported, inputs: &[Input]) -> Vec<Diagnostic> {
     let (packages, cases) = loaded(imported);
     let mut session = Session::from_loaded(&packages, cases);
@@ -161,9 +161,7 @@ fn round_trip(imported: &Imported, inputs: &[Input]) -> Vec<Diagnostic> {
         .map(|(n, t)| (n.as_str(), t.as_str()))
         .collect();
     for input in inputs {
-        let Some(name) = counterpart(&input.text) else {
-            continue;
-        };
+        let name = counterpart(&input.text);
         let Some(text) = by_name.get(name.as_str()) else {
             out.push(Diagnostic::error(
                 C::SemanticDiff,
@@ -243,4 +241,31 @@ pub fn import(paths: &[String], out: &str) -> Outcome {
         ],
     });
     Ok(report)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{counterpart, is_case, owns};
+
+    #[test]
+    fn inputs_pair_with_the_document_they_lower_to() {
+        assert_eq!(counterpart(r#"{"id": "p", "nodes": []}"#), "packs/p.json");
+        assert_eq!(counterpart(r#"{"links": []}"#), "packs/links.json");
+        assert_eq!(counterpart(r#"{"instances": {}}"#), "packs/links.json");
+        assert_eq!(
+            counterpart(r#"{"id": "s", "scenario": {}}"#),
+            "scenarios/s.json"
+        );
+    }
+
+    #[test]
+    fn a_generated_file_owns_its_package_directory_or_itself() {
+        assert!(owns("lit/frcp/frcp.lit", "lit/frcp/Lit.toml"));
+        assert!(!owns("lit/frcp/frcp.lit", "lit/frcp-two/Lit.toml"));
+        assert!(!owns("lit/frcp/frcp.lit", "cases/x.case"));
+        assert!(owns("cases/x.case", "cases/x.case"));
+        assert!(!owns("cases/x.case", "cases/y.case"));
+        assert!(is_case("cases/X.CASE"));
+        assert!(!is_case("lit/x/x.lit"));
+    }
 }

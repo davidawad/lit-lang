@@ -1,0 +1,97 @@
+module frcp.cov
+
+package cov-example { forum frcp, authority FederalRule }
+
+start time-barred
+
+group pleadings: "Pleadings"
+group motions: "Motions"
+group outcomes: "Outcomes"
+
+enum Document { complaint, amended_complaint }
+enum ServiceMethod { Personal, Mail, Electronic }
+
+/// Service of a pleading on a party.
+event Served(document: Document, method: ServiceMethod)
+event Answered(document: Document)
+event MovedToDismiss(document: Document)
+event Hearing()
+
+authority Statute > FederalRule > LocalRule > CaseOrder
+
+counting frcp6 cite FRCP 6(a)
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension { Mail: 3.days } cite FRCP 6(d)
+  holidays federal-holidays
+  anchor trigger_day
+  allow_hours
+}
+
+calendar federal-holidays cite FRCP 6(a)(6)
+{
+  new-year: fixed(1, 1) effective [1870-06-28, ..) observed nearest_weekday
+  christmas: fixed(12, 25) effective [1870-06-28, ..) observed nearest_weekday
+}
+
+rule duty amend-duty cite FRCP 15(a)(3)
+{
+  deadline amended-answer-period: 14.days after Served(amended_complaint) counted_by frcp6
+}
+
+rule duty answer-duty cite FRCP 12(a)(1)(A)(i)
+{
+  deadline answer-period: 21.days from Served(complaint) counted_by frcp6
+}
+
+deadline brief-period: 7.days before Hearing() counted_by frcp6 delegable_to [CaseOrder]
+
+deadline reply-period: 14.days after Served(complaint) counted_by frcp6 notwithstanding answer-period cite FRCP 12(a)(4)
+
+default answer-days when has_event(Served(complaint, Personal)) => 21.days
+
+exception mail-days rebuts answer-days when has_event(Served(complaint, Mail)) => 24.days
+
+chance time-barred: "Is the claim time-barred?" by Court cite FRCP 8(c)(1)
+{
+  tags [fact]
+  barred "Barred" -> dismissed p 1/10
+  not-barred "Timely" -> respond p 9/10
+}
+
+decision respond: "Answer or move under Rule 12" by Defendant cite FRCP 12(a)(1)(A)(i)
+{
+  group pleadings
+  answer "File an answer" -> answered {
+    event Answered(complaint)
+    effort 8.hours
+    within answer-period
+  }
+  move-dismiss "Move to dismiss under Rule 12(b)(6)" -> mtd-ruling {
+    event MovedToDismiss(complaint)
+    effort 30.hours
+    within answer-period
+    tags [dispositive]
+  }
+  default "Let the deadline pass" -> default-risk { sets [defaulted], valence bad }
+}
+
+chance mtd-ruling: "Ruling on the motion to dismiss" by Court discretion cite FRCP 12(b)(6)
+{
+  group motions
+  granted "Motion granted" -> dismissed p 1/2
+  denied "Motion denied" -> answered p 1/2
+}
+
+state answered: "Answer filed" { group pleadings, _ "Proceed to judgment" -> judgment-entered }
+state default-risk: "Failure to respond"
+{
+  group outcomes
+  _ "Default entered" -> judgment-entered
+  _ "Default judgment by the clerk" -> judgment-entered
+}
+
+terminal judgment-entered: "Judgment entered" outcome [judgment, loss] { group outcomes, payoff -100.usd }
+terminal dismissed: "Action dismissed" outcome [judgment, win] { group outcomes, payoff 0.usd }

@@ -1,0 +1,54 @@
+---
+source: crates/litigate-cli/tests/cov_cmd_diff.rs
+expression: stable(&run.json)
+---
+{
+  "ok": true,
+  "op": "diff",
+  "result": {
+    "equal": false,
+    "files": [
+      {
+        "a": "a/packs/frcp-rule12-example.json",
+        "b": "b/packs/frcp-rule12-example.json",
+        "kind": "pack",
+        "equal": false,
+        "changes": 3
+      }
+    ],
+    "changes": [
+      {
+        "kind": "changed",
+        "pointer": "/nodes/answered/label",
+        "id": "answered",
+        "before": "Answer filed",
+        "after": "Answer lodged"
+      },
+      {
+        "kind": "removed",
+        "pointer": "/nodes/dismissed",
+        "id": "dismissed",
+        "before": {
+          "id": "dismissed",
+          "kind": "terminal",
+          "label": "Action dismissed",
+          "group": "outcomes",
+          "payoff": 0.0,
+          "outcome": [
+            "judgment",
+            "win"
+          ]
+        }
+      },
+      {
+        "kind": "changed",
+        "pointer": "/title",
+        "before": "FRCP Rule 12 response (worked example)",
+        "after": "Changed title"
+      }
+    ],
+    "unmatched": []
+  },
+  "diagnostics": [],
+  "elapsed_ms": 0
+}

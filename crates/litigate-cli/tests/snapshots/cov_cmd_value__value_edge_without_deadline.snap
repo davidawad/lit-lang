@@ -1,0 +1,207 @@
+---
+source: crates/litigate-cli/tests/cov_cmd_value.rs
+expression: stable(&run.json)
+---
+{
+  "ok": true,
+  "op": "explain-value",
+  "result": {
+    "value": {
+      "probability": null,
+      "hours": null,
+      "cost": null,
+      "deadline": null,
+      "due": null,
+      "authority": null
+    },
+    "type": "Edge",
+    "id": "cov-pack::default",
+    "span": {
+      "file": "lit/cov/cov.lit",
+      "line": 78,
+      "col": 3,
+      "end_line": 78,
+      "end_col": 84
+    },
+    "steps": [
+      {
+        "rule": "respond@2009-12-01",
+        "cite": "FRCP 12(a)(1)(A)(i)",
+        "detail": "edge `default` of `respond` -> `default-risk`, taken by Defendant"
+      }
+    ],
+    "versions": [
+      {
+        "in_force": {
+          "from": "2009-12-01",
+          "to": null
+        },
+        "known_at": "2025-01-01",
+        "span": {
+          "file": "lit/cov/cov.lit",
+          "line": 64,
+          "col": 1,
+          "end_line": 79,
+          "end_col": 2
+        }
+      }
+    ],
+    "overrides": []
+  },
+  "diagnostics": [
+    {
+      "code": "L9001",
+      "severity": "warning",
+      "span": {
+        "file": "lit/cov/cov.lit",
+        "line": 22,
+        "col": 1,
+        "end_line": 31,
+        "end_col": 2
+      },
+      "message": "counting rule `frcp6` counts no tested deadline",
+      "notes": [
+        {
+          "message": "add a test that evaluates `deadline(d)` for a deadline `counted_by frcp6`"
+        }
+      ]
+    },
+    {
+      "code": "L9001",
+      "severity": "warning",
+      "span": {
+        "file": "lit/cov/cov.lit",
+        "line": 41,
+        "col": 3,
+        "end_line": 41,
+        "end_col": 91
+      },
+      "message": "deadline `amended-answer-period` has no test that evaluates `deadline(amended-answer-period)`",
+      "fixes": [
+        {
+          "span": {
+            "file": "lit/cov/cov.lit",
+            "line": 41,
+            "col": 91,
+            "end_line": 41,
+            "end_col": 91
+          },
+          "replacement": "\n\ntest \"amended-answer-period is due on the expected date\" {\n  given <trigger event> on <YYYY-MM-DD>\n  expect deadline(amended-answer-period) == <YYYY-MM-DD>\n}",
+          "applicability": "has_placeholders"
+        }
+      ]
+    },
+    {
+      "code": "L9001",
+      "severity": "warning",
+      "span": {
+        "file": "lit/cov/cov.lit",
+        "line": 46,
+        "col": 3,
+        "end_line": 46,
+        "end_col": 74
+      },
+      "message": "deadline `answer-period` has no test that evaluates `deadline(answer-period)`",
+      "fixes": [
+        {
+          "span": {
+            "file": "lit/cov/cov.lit",
+            "line": 46,
+            "col": 74,
+            "end_line": 46,
+            "end_col": 74
+          },
+          "replacement": "\n\ntest \"answer-period is due on the expected date\" {\n  given <trigger event> on <YYYY-MM-DD>\n  expect deadline(answer-period) == <YYYY-MM-DD>\n}",
+          "applicability": "has_placeholders"
+        }
+      ]
+    },
+    {
+      "code": "L9001",
+      "severity": "warning",
+      "span": {
+        "file": "lit/cov/cov.lit",
+        "line": 49,
+        "col": 1,
+        "end_line": 49,
+        "end_col": 89
+      },
+      "message": "deadline `brief-period` has no test that evaluates `deadline(brief-period)`",
+      "fixes": [
+        {
+          "span": {
+            "file": "lit/cov/cov.lit",
+            "line": 49,
+            "col": 89,
+            "end_line": 49,
+            "end_col": 89
+          },
+          "replacement": "\n\ntest \"brief-period is due on the expected date\" {\n  given <trigger event> on <YYYY-MM-DD>\n  expect deadline(brief-period) == <YYYY-MM-DD>\n}",
+          "applicability": "has_placeholders"
+        }
+      ]
+    },
+    {
+      "code": "L9001",
+      "severity": "warning",
+      "span": {
+        "file": "lit/cov/cov.lit",
+        "line": 51,
+        "col": 1,
+        "end_line": 51,
+        "end_col": 121
+      },
+      "message": "deadline `reply-period` has no test that evaluates `deadline(reply-period)`",
+      "fixes": [
+        {
+          "span": {
+            "file": "lit/cov/cov.lit",
+            "line": 51,
+            "col": 121,
+            "end_line": 51,
+            "end_col": 121
+          },
+          "replacement": "\n\ntest \"reply-period is due on the expected date\" {\n  given <trigger event> on <YYYY-MM-DD>\n  expect deadline(reply-period) == <YYYY-MM-DD>\n}",
+          "applicability": "has_placeholders"
+        }
+      ]
+    },
+    {
+      "code": "L9003",
+      "severity": "info",
+      "span": {
+        "file": "lit/cov/cov.lit",
+        "line": 88,
+        "col": 51,
+        "end_line": 88,
+        "end_col": 94
+      },
+      "message": "the edge `answered -> judgment-entered` has no id, so cases and links cannot name it"
+    },
+    {
+      "code": "L9003",
+      "severity": "info",
+      "span": {
+        "file": "lit/cov/cov.lit",
+        "line": 92,
+        "col": 3,
+        "end_line": 92,
+        "end_col": 42
+      },
+      "message": "the edge `default-risk -> judgment-entered` has no id, so cases and links cannot name it"
+    },
+    {
+      "code": "L9003",
+      "severity": "info",
+      "span": {
+        "file": "lit/cov/cov.lit",
+        "line": 93,
+        "col": 3,
+        "end_line": 93,
+        "end_col": 56
+      },
+      "message": "the edge `default-risk -> judgment-entered` has no id, so cases and links cannot name it"
+    }
+  ],
+  "elapsed_ms": 0
+}

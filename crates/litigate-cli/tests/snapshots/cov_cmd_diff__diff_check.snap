@@ -1,0 +1,52 @@
+---
+source: crates/litigate-cli/tests/cov_cmd_diff.rs
+expression: "run.json[\"diagnostics\"]"
+---
+[
+  {
+    "code": "L6002",
+    "severity": "error",
+    "span": {
+      "file": "b/packs/frcp-rule12-example.json",
+      "line": 1,
+      "col": 1,
+      "end_line": 1,
+      "end_col": 1
+    },
+    "message": "changed at /title: \"FRCP Rule 12 response (worked example)\" -> \"Changed title\""
+  },
+  {
+    "code": "L6002",
+    "severity": "error",
+    "span": {
+      "file": "b/packs/frcp-rule12-example.json",
+      "line": 62,
+      "col": 13,
+      "end_line": 62,
+      "end_col": 13
+    },
+    "message": "changed at /nodes/answered/label: \"Answer filed\" -> \"Answer lodged\"",
+    "notes": [
+      {
+        "message": "belongs to `answered`"
+      }
+    ]
+  },
+  {
+    "code": "L6002",
+    "severity": "error",
+    "span": {
+      "file": "b/packs/frcp-rule12-example.json",
+      "line": 88,
+      "col": 13,
+      "end_line": 88,
+      "end_col": 13
+    },
+    "message": "removed at /nodes/dismissed: {\"id\":\"dismissed\",\"kind\":\"terminal\",\"label\":\"Action dismissed\",\"group\":\"outcomes\",\"payoff\":0.0,\"outcome\":[\"judgment\",\"win\"]} -> (absent)",
+    "notes": [
+      {
+        "message": "belongs to `dismissed`"
+      }
+    ]
+  }
+]

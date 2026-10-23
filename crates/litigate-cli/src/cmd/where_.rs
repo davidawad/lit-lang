@@ -56,15 +56,13 @@ pub fn overrides(packages: &[&hir::Package], target: &str) -> Vec<Value> {
         .iter()
         .flat_map(|p| hirx::declarations(p).map(move |d| (*p, d)))
         .flat_map(|(p, d)| {
-            let meta = meta_of(d);
-            let relations = meta.map(|m| m.relations.clone()).unwrap_or_default();
-            let mut found: Vec<Value> = relations
-                .iter()
-                .filter(|r| relation_target(r).is_some_and(|t| local(t) == target))
-                .filter_map(|r| {
-                    let m = meta?;
-                    let relation = serde_json::to_value(r).ok()?.get("relation").cloned();
-                    Some(json!({"package": p.manifest.name, "id": m.id, "relation": relation, "span": m.span, "cite": m.cite}))
+            let mut found: Vec<Value> = meta_of(d)
+                .into_iter()
+                .flat_map(|m| m.relations.iter().map(move |r| (m, r)))
+                .filter(|(_, r)| relation_target(r).is_some_and(|t| local(t) == target))
+                .map(|(m, r)| {
+                    let relation = serde_json::to_value(r).ok().and_then(|v| v.get("relation").cloned());
+                    json!({"package": p.manifest.name, "id": m.id, "relation": relation, "span": m.span, "cite": m.cite})
                 })
                 .collect();
             if let Declaration::Exception(e) = d {
@@ -77,14 +75,14 @@ pub fn overrides(packages: &[&hir::Package], target: &str) -> Vec<Value> {
         .collect()
 }
 
-/// The L0 sections the lowered source maps of `pkg` record for cite `text`.
+/// The L0 sections the lowered source maps of `pkg` record for cite `text`
+/// (none when `pkg` does not lower or no entry carries that cite).
 pub fn cite_sections(all: &[&hir::Package], pkg: &hir::Package, text: &str) -> Option<Value> {
     let out = Lowerer::new(all)
         .with_corpus(litgraph::cite::SourceCorpus::embedded_ref())
-        .package(pkg, &Options::default())
-        .ok()?;
-    std::iter::once(&out.source_map)
-        .chain(out.clock.as_ref().map(|(_, m)| m))
+        .package(pkg, &Options::default());
+    out.iter()
+        .flat_map(|out| std::iter::once(&out.source_map).chain(out.clock.as_ref().map(|(_, m)| m)))
         .flat_map(|m| m.entries.iter())
         .filter_map(|e| e.cite.as_ref())
         .find(|c| c.text == text)
@@ -107,11 +105,8 @@ fn lowered(all: &[&hir::Package], pkg: &hir::Package, id: &str) -> (Vec<String>,
     for (n, map) in maps.iter().enumerate() {
         let prefix = if n == 0 { "" } else { "clock:" };
         for e in &map.entries {
-            if e.id == id
-                || e.decl
-                    .as_deref()
-                    .is_some_and(|d| d.split('@').next() == Some(id))
-            {
+            // A versioned entry's `decl` is `id@from` of this same id.
+            if e.id == id {
                 pointers.push(format!("{prefix}{}", e.pointer));
                 if let Some(cite) = &e.cite {
                     l0 = serde_json::to_value(cite).unwrap_or_default();
@@ -219,6 +214,7 @@ pub fn where_(id: &str, paths: &[String], lib: &[String]) -> Outcome {
 #[cfg(test)]
 mod tests {
     use super::split;
+    use proptest::prelude::*;
 
     #[test]
     fn ids_split_into_pack_name_version() {
@@ -231,5 +227,27 @@ mod tests {
             (Some("cafc"), "affirmed", None)
         );
         assert_eq!(split("respond"), (None, "respond", None));
+        // Ten characters after `@` that are not a date stay in the id.
+        assert_eq!(
+            split("respond@abcdefghij"),
+            (None, "respond@abcdefghij", None)
+        );
+        assert_eq!(split("respond@2009"), (None, "respond@2009", None));
+    }
+
+    proptest! {
+        /// `pack::name@date` always splits back into its three parts.
+        #[test]
+        fn qualified_versioned_ids_round_trip(
+            pack in "[a-z][a-z0-9-]{0,12}",
+            name in "[a-z][a-z0-9-]{0,12}",
+            date in "[0-9]{4}-[0-9]{2}-[0-9]{2}",
+        ) {
+            let id = format!("{pack}::{name}@{date}");
+            prop_assert_eq!(
+                split(&id),
+                (Some(pack.as_str()), name.as_str(), Some(date.as_str()))
+            );
+        }
     }
 }

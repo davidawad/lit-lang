@@ -1,0 +1,44 @@
+---
+source: crates/litigate-cli/tests/cov_cmd_query.rs
+expression: result
+---
+{
+  "matches": [
+    {
+      "id": "cov-pack::amend-duty",
+      "kind": "rule",
+      "span": {
+        "file": "lit/cov/cov.lit",
+        "line": 39,
+        "col": 1,
+        "end_line": 42,
+        "end_col": 2
+      },
+      "cite": "FRCP 15(a)(3)",
+      "in_force": {
+        "from": "2009-12-01",
+        "to": null
+      },
+      "detail": "duty: amended-answer-period"
+    },
+    {
+      "id": "cov-pack::answer-duty",
+      "kind": "rule",
+      "span": {
+        "file": "lit/cov/cov.lit",
+        "line": 44,
+        "col": 1,
+        "end_line": 47,
+        "end_col": 2
+      },
+      "cite": "FRCP 12(a)(1)(A)(i)",
+      "in_force": {
+        "from": "2009-12-01",
+        "to": null
+      },
+      "detail": "duty: answer-period"
+    }
+  ],
+  "total": 2,
+  "next_cursor": null
+}

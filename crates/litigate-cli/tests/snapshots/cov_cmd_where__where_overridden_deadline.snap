@@ -1,0 +1,55 @@
+---
+source: crates/litigate-cli/tests/cov_cmd_where.rs
+expression: result
+---
+{
+  "id": "cov-pack::answer-period",
+  "kind": "deadline",
+  "package": "cov-example",
+  "declaration_span": {
+    "file": "lit/cov/cov.lit",
+    "line": 46,
+    "col": 3,
+    "end_line": 46,
+    "end_col": 74
+  },
+  "versions": [
+    {
+      "in_force": {
+        "from": "2009-12-01",
+        "to": null
+      },
+      "known_at": "2025-01-01",
+      "span": {
+        "file": "lit/cov/cov.lit",
+        "line": 46,
+        "col": 3,
+        "end_line": 46,
+        "end_col": 74
+      },
+      "cite": null,
+      "authority": "FederalRule"
+    }
+  ],
+  "edges": [],
+  "overrides": [
+    {
+      "package": "cov-example",
+      "id": "reply-period",
+      "relation": "notwithstanding",
+      "span": {
+        "file": "lit/cov/cov.lit",
+        "line": 51,
+        "col": 1,
+        "end_line": 51,
+        "end_col": 121
+      },
+      "cite": "FRCP 12(a)(4)"
+    }
+  ],
+  "source": null,
+  "lowered": [
+    "/edges/2/deadline",
+    "/edges/3/deadline"
+  ]
+}

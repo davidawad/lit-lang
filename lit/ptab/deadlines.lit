@@ -320,7 +320,7 @@ test "rehearing under the pre-2021 rule: a Sunday last day rolls to Monday" cite
 /// Director Review Process of June 29, 2021, which the pack cites. The
 /// pack's "37 CFR 42.73(d)(1)" is the estoppel rule, not Director review.
 /// UNVERIFIED: the process is not vendored.
-rule duty director-review-deadline cite ?("USPTO Interim Director Review Process (June 29, 2021); not vendored") {
+rule duty director-review-deadline effective [2021-06-29, ..) known_at 2021-06-29 cite ?("USPTO Interim Director Review Process (June 29, 2021); not vendored") {
   deadline director-review-period: 30.days after DecisionEntered(FinalWritten) counted_by rcfc6 effective [2021-06-29, ..) known_at 2021-06-29 delegable_to [CaseOrder] cite ?("USPTO Interim Director Review Process (June 29, 2021): 30 days from the final written decision, per the pack; the pack's 37 CFR 42.73(d)(1) is the estoppel rule")
   deadline director-review-after-rehearing-period: 30.days after DecisionEntered(Rehearing) counted_by rcfc6 effective [2021-06-29, ..) known_at 2021-06-29 delegable_to [CaseOrder] cite ?("USPTO Interim Director Review Process (June 29, 2021): 30 days from the rehearing decision, per the pack; the pack's 37 CFR 42.73(d)(1) is the estoppel rule")
 }

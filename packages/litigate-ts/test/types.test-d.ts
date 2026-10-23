@@ -23,6 +23,7 @@ import type {
   Scenario,
   SchemaKind,
   SourceMap,
+  Timeline,
   Validation,
   ValidateKind,
 } from "../src/index.js";
@@ -37,6 +38,10 @@ describe("generated types", () => {
     expectTypeOf<Doc<"litigate-envelope">>().toEqualTypeOf<LitigateEnvelope>();
     expectTypeOf<Doc<"source-map">>().toEqualTypeOf<SourceMap>();
     expectTypeOf<Doc<"litigate-run">>().toEqualTypeOf<LitigateRun>();
+    expectTypeOf<Doc<"timeline">>().toEqualTypeOf<Timeline>();
+    expectTypeOf<Timeline["rows"][number]["status"]["state"]>().toEqualTypeOf<
+      "met" | "open" | "late" | "lapsed" | "breached" | "unknown" | "superseded" | "none"
+    >();
     expectTypeOf<SchemaKind>().toEqualTypeOf<
       "request" | "response" | "scenario" | "named-scenario" | "pack" | "links" | "calibration" | "clock"
     >();

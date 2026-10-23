@@ -11,7 +11,10 @@ export type DocumentKind = keyof LitgraphSchemas;
 export type Doc<K extends DocumentKind> = LitgraphSchemas[K];
 
 /** Kinds litgraph itself publishes a schema for (`litgraph schema <kind>`). */
-export type SchemaKind = Exclude<DocumentKind, "validation" | "litigate-envelope" | "litigate-run" | "source-map">;
+export type SchemaKind = Exclude<
+  DocumentKind,
+  "validation" | "litigate-envelope" | "litigate-run" | "source-map" | "timeline"
+>;
 
 /** Kinds `validate` accepts as a forced kind. */
 export type ValidateKind = Exclude<SchemaKind, "response">;

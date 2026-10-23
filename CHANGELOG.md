@@ -143,6 +143,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `LITGRAPH_PACKS` unset; `.env.example` points it at
   `target/lit-build/packs`.
 
+- **Timeline op** (lg-z2m.1; docs/litigate/TIMELINE.md). `litigate
+  timeline FILE` and the MCP tool `litigate_timeline` print the timeline
+  of a `.case` or `.lit` file as the frozen `litigate.timeline/1` JSON
+  (docs/litigate/timeline.v1.schema.json), the envelope's `result`: a
+  matter's events and every deadline its events triggered, in date order,
+  with due date, status and reason (a deadline the clock cannot count is
+  a row with `due: null` and `unknown`), then the deadlines governing the
+  options of its current posture and a fork row there, each option one
+  alternate world. Options `--as-of`, `--known-at`, `--layers` (`ID`,
+  `+ID`, `-ID`) and `--world`. Each package is one layer until the lg-fq2
+  change layers land. The Rust types (`litigate_base::timeline`) join the
+  schema bundle as kind `timeline`, so the generated `packages/litigate-ts`
+  bindings export `Timeline`. Golden timelines of the TTAB opposition and FRCP matters
+  and two fixtures (a fork and unknown deadlines each) are validated
+  against the frozen schema, as is its example.
+
 - **Reserved typed guard operations in patches** (lg-flu.35; SPEC §3.6,
   PM ruling 2026-10-23 on L2007). A later decision or order that narrows,
   widens or replaces an edge's guard will be written explicitly, with its

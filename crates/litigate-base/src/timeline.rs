@@ -2,7 +2,8 @@
 //! `.case` or `.lit` file, as `litigate timeline` prints it. The schema is
 //! frozen in `docs/litigate/timeline.v1.schema.json` (described in
 //! `docs/litigate/TIMELINE.md`); these types serialize to exactly it, so a
-//! renderer (the Emacs timeline buffer, lg-z2m.2) reads one contract.
+//! renderer (the Emacs timeline buffer, lg-z2m.2) reads one contract. A
+//! nullable field is always serialized (`null`), never omitted.
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 

@@ -2,7 +2,8 @@
 //! One JSON Schema (draft 2020-12) holding every document kind a non-Rust
 //! binding needs: the litgraph request/response contract, packs, links,
 //! scenarios, clock fragments, calibration sets, `validate` results, and the
-//! litigate CLI envelope, in-memory run and `*.map.json` sidecar.
+//! litigate CLI envelope, in-memory run, `*.map.json` sidecar and
+//! `litigate timeline` document (`litigate.timeline/1`).
 //!
 //! The root is an object whose properties are the kinds, each a `$ref` into
 //! one shared `$defs`, so a type used by several kinds (a `Scenario` inside
@@ -14,6 +15,7 @@ use litgraph::api::{CalibrationSet, Request, Response, Validation};
 use litgraph::clock::ClockLibrary;
 use litgraph::model::{LinkFile, Pack};
 use litgraph::scenario::{NamedScenario, Scenario};
+use litigate_base::timeline::Timeline;
 use litigate_base::{Envelope, LitigateRun};
 use litigate_lower::source_map::SourceMap;
 use schemars::{JsonSchema, SchemaGenerator};
@@ -51,6 +53,7 @@ fn kinds() -> Vec<Kind> {
         kind::<Envelope<Value>>("litigate-envelope", "LitigateEnvelope"),
         kind::<LitigateRun>("litigate-run", "LitigateRun"),
         kind::<SourceMap>("source-map", "SourceMap"),
+        kind::<Timeline>("timeline", "Timeline"),
     ]
 }
 

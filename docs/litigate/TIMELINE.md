@@ -91,3 +91,55 @@ A deadline the engine cannot compute is a row with `due: null`,
 `sequence` orders rows in one world, `triggers` links a trigger to what it
 starts, `supersedes` links a reset to the row it replaces, and `forks` links
 a fork row to the first row of a child world.
+
+## Producing a timeline
+
+```bash
+litigate timeline cases/ttab-opposition-applicant-defense.case   # the envelope; the document is `result`
+litigate timeline lit/ttab/ttab.lit --as-of 2026-10-19
+litigate timeline cases/ptab-ipr-defense.case --world w2 --layers=-cafc
+```
+
+Over MCP the same command is the `litigate_timeline` tool (`file`, `as_of`,
+`known_at`, `layers`, `world`, `lib`). The document is the envelope's
+`result` (the envelope's `diagnostics` are every diagnostic of the check;
+the document's are the errors and the source file's own warnings). A
+matter that does not resolve, or a module whose package does not check,
+has no `result`.
+
+| Option | Effect |
+|---|---|
+| `--as-of DATE` | A matter is replayed and judged at `DATE` instead of its own `as_of`; a module lists the deadlines in force on `DATE` (default: its package's `known_at`). |
+| `--known-at DATE` | The knowledge date, as for `check`. |
+| `--layers ID,+ID,-ID` | `ID` or `+ID` enables only the named layers; `-ID` disables one. A disabled layer stays listed with `enabled: false`; its rows, the worlds forking from them and their edges go. |
+| `--world ID` | Only world `ID` and its ancestors, each ancestor up to the fork row its child branches at. Row ids are the same as in the full document. |
+
+What fills the document today:
+
+- **Rows of a matter.** Its events (`date`, the cite of the edge the event
+  took, else the event's own authority); every obligation instance replay
+  created, `due` the counted (or extended) date with the replayed status
+  (`discharged` is `met`; `waived`, `merged` and a restarted period are
+  `superseded` with the reason); then, at the replayed posture, the
+  deadlines governing its options that no event has triggered, `unknown`.
+  A matter with errors (a late act) still lists its counted deadlines.
+- **Worlds.** One fork row at the replayed posture (`unknown` until an
+  outcome is recorded) and one world per option still open: `chance` for
+  a chance node (with `probability` when authored), `election` for a
+  decision or a party's move, `hypothetical_decision` for a tribunal's.
+  A world holds the hypothetical event of taking the option and the
+  deadlines governing the options it leads to, `unknown` because no
+  recorded event dates them. `assumed_order`, `grant` and `denial` wait
+  for orders and decisions as layers (lg-fq2).
+- **Layers.** Each package the matter uses (or the module's package) is
+  one layer, `id` and `package` its name, `class` `base_rule` unless its
+  authority is `LocalRule`, `StandingOrder` or `CaseOrder`, `effective`
+  its `in_force` interval; every row's `provenance` is the one layer that
+  declares it.
+- **Rows of a module.** Each deadline the `.lit` file declares that is in
+  force at `as_of`, `unknown` (a rule module records no events).
+
+The Rust types are `litigate_base::timeline`; the schema bundle publishes
+them as kind `timeline` (TypeScript `Timeline` in `packages/litigate-ts`).
+`crates/litigate-cli/tests/timeline.rs` validates the op's output and the
+example above against the frozen schema.

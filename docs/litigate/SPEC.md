@@ -2147,6 +2147,7 @@ All commands accept `--format json|human` (default `human` on a TTY, else
 | `fix` | `PATHS...`, `--code CODE`, `--dry-run`, `--include-maybe` | `{fixes:[{code, message?, edits:[{span, replacement}], applicability}], changed_files, skipped_overlapping, dry_run}`; only machine-applicable fixes without `--include-maybe`; a fix applies whole or not at all |
 | `where` | `ID` (qualified node/edge/declaration, code, or cite) | `{id, kind, declaration_span, versions:[{in_force, known_at, span}], lowered:[json_pointer]}` |
 | `explain-value` | `--case FILE`, `--value EXPR` | `{value, type, steps:[{rule, cite, detail}], versions, overrides}` |
+| `timeline` | `FILE` (`.case` or `.lit`), `--as-of`, `--known-at`, `--layers ID,+ID,-ID`, `--world ID` | a `litigate.timeline/1` document ([TIMELINE.md](TIMELINE.md), schema `timeline.v1.schema.json`) |
 | `diff` | `A B` (generated or expected JSON files or package dirs), `--as-of` | `{equal, changes:[{pointer, before, after}]}` per §8.6 |
 | `query` | `KIND` (`nodes\|edges\|deadlines\|holes\|cites\|versions`), `--match TEXT`, `--limit N`, `--cursor C` | `{matches:[{id, kind, span, cite, in_force}], next_cursor}` |
 | `import` | `JSON...`, `--out DIR` | `{files:[{path, from}], warnings}`; output must round-trip under §8.6 (L6002 otherwise) |

@@ -135,10 +135,8 @@ fn output_that_cannot_be_written_is_a_failure() {
     assert!(run.stderr.contains("o/lit/frcp"), "{}", run.stderr);
 }
 
-/// A number too large for an exact `params` value is caught by the check
-/// of the generated source, at its span.
 #[test]
-fn a_number_the_typed_source_cannot_hold_fails_the_check() {
+fn a_number_without_a_lossless_spelling_is_a_difference() {
     let dir = scratch("import-difference");
     std::fs::copy(
         repo().join("packs/frcp-civil-procedure.json"),
@@ -155,6 +153,32 @@ fn a_number_the_typed_source_cannot_hold_fails_the_check() {
     let text = serde_json::to_string_pretty(&scenario)
         .unwrap()
         .replace("\"ZERO\"", "-0.0");
+    std::fs::write(dir.join("s.json"), text).unwrap();
+    let run = litigate_in(&dir, &["import", "p.json", "s.json", "--out", "o"]);
+    assert_eq!(run.code, 2, "{}", run.stdout);
+    assert!(!dir.join("o").exists());
+    insta::assert_json_snapshot!("import_difference", run.json["diagnostics"]);
+}
+
+/// A number too large for an exact `params` value is caught by the check
+/// of the generated source, at its span.
+#[test]
+fn a_number_the_typed_source_cannot_hold_fails_the_check() {
+    let dir = scratch("import-unchecked-number");
+    std::fs::copy(
+        repo().join("packs/frcp-civil-procedure.json"),
+        dir.join("p.json"),
+    )
+    .unwrap();
+    let mut scenario: Value = serde_json::from_str(
+        &std::fs::read_to_string(repo().join("scenarios/frcp-civil-case.json")).unwrap(),
+    )
+    .unwrap();
+    // Written as text: as binary64 the integer would already be rounded.
+    scenario["scenario"]["params"]["huge"] = Value::from("HUGE");
+    let text = serde_json::to_string_pretty(&scenario)
+        .unwrap()
+        .replace("\"HUGE\"", "123456789012345678901");
     std::fs::write(dir.join("s.json"), text).unwrap();
     let run = litigate_in(&dir, &["import", "p.json", "s.json", "--out", "o"]);
     assert_eq!(run.code, 2, "{}", run.stdout);

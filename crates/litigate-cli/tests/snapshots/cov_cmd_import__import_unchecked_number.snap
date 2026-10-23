@@ -13,13 +13,20 @@ expression: "run.json[\"diagnostics\"]"
       "end_line": 1,
       "end_col": 1
     },
-    "message": "the imported source lowers to JSON with 1 difference(s)",
-    "notes": [
+    "message": "the imported source does not check",
+    "labels": [
       {
-        "message": "/scenario/params/zero: Some(Number(0.0)) -> Some(Number(-0.0))"
+        "span": {
+          "file": "cases/frcp-civil-case.case",
+          "line": 23,
+          "col": 54,
+          "end_line": 23,
+          "end_col": 75
+        },
+        "message": "L4007: `params.huge` is an exact number"
       }
     ],
-    "fingerprint": "b89cded1824ab785",
+    "fingerprint": "52ea9ba4a9a72e5c",
     "world": {
       "name": "actual"
     }

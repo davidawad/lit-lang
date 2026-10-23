@@ -319,6 +319,7 @@ fn a_patch_replaces_whole_fields() {
         }),
         tags: Some(Vec::new()),
         attrs: Some(BTreeMap::new()),
+        holes: BTreeMap::from([("cost".into(), Some("the fee".into()))]),
         ..note("Answer it")
     };
     links.modules[0].declarations = vec![Declaration::Instance(hir::Instance {
@@ -338,6 +339,20 @@ fn a_patch_replaces_whole_fields() {
         .next()
         .cloned();
     insta::assert_json_snapshot!(patched);
+    // The cost hole stays visible in the lowered header.
+    let holes: Vec<(String, Option<String>)> = file
+        .lowered
+        .iter()
+        .flat_map(|l| l.holes.iter())
+        .map(|h| (h.pointer.clone(), h.reason.clone()))
+        .collect();
+    assert_eq!(
+        holes,
+        [(
+            "/instances/copy/patch_edges/answer/cost".to_owned(),
+            Some("the fee".to_owned())
+        )]
+    );
 }
 
 /// Overlapping span-less versions are ambiguous at the declaration's

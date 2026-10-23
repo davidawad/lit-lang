@@ -109,7 +109,10 @@
 
               postInstall = ''
                 mkdir -p $out/share/litgraph
-                cp -r packs $out/share/litgraph/packs
+                # The packs are build outputs of crates/litgraph-packs.
+                built="$(find target -path '*/litgraph-packs-*/out/packs' -type d | head -n 1)"
+                test -n "$built"
+                cp -r "$built" $out/share/litgraph/packs
               '';
 
               meta = with pkgs.lib; {
@@ -199,9 +202,9 @@
 
           devShells.default = pkgs.mkShell {
             packages = devTools;
-            shellHook = ''
-              export LITGRAPH_PACKS="$PWD/packs"
-            '';
+            # No LITGRAPH_PACKS: the packs are build outputs embedded in the
+            # binary (crates/litgraph-packs); `just lit-sync` writes a copy
+            # to target/lit-build/packs for `--packs-dir`.
           };
 
           checks = {

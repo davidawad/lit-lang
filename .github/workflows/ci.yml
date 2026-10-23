@@ -58,8 +58,9 @@ jobs:
           path: target/nextest/ci/junit.xml
           if-no-files-found: ignore
 
-  # packs/*.json and scenarios/*.json are generated from lit/ and cases/
-  # (DESIGN §11.4): regenerate them and fail when the committed files differ.
+  # packs/*.json and scenarios/*.json are built from lit/ and cases/ at
+  # compile time (crates/litgraph-packs), never committed: build them, fail
+  # when a committed Lit.lock is stale or a generated file is tracked.
   lit-sync:
     runs-on: ubuntu-latest
     steps:
@@ -71,8 +72,9 @@ jobs:
           tool: just
       - run: just lit-sync-check
 
-  # packages/litigate-ts: generated types must match the Rust schemas, and
-  # the client's unit, type-level and golden (wasm vs native CLI) tests pass.
+  # packages/litigate-ts: types generated from the Rust schemas (ts-test
+  # regenerates them), and the client's unit, type-level and golden (wasm vs
+  # native CLI) tests pass.
   litigate-ts:
     runs-on: ubuntu-latest
     steps:
@@ -87,7 +89,6 @@ jobs:
       - uses: taiki-e/install-action@v2
         with:
           tool: just,wasm-bindgen-cli@0.2.127
-      - run: just ts-gen-check
       - run: just ts-test
 
   tree-sitter:

@@ -70,7 +70,10 @@ jobs:
           cp "target/${{ matrix.target }}/release/litigate" "dist/$name/"
           cp "target/${{ matrix.target }}/release/litigate-lsp" "dist/$name/"
           cp README.md LICENSE "dist/$name/" 2>/dev/null || true
-          cp -r packs "dist/$name/packs"
+          # The packs are build outputs of crates/litgraph-packs, not files.
+          built="$(find "target/${{ matrix.target }}/release/build" -path '*/litgraph-packs-*/out/packs' -type d | head -n 1)"
+          test -n "$built"
+          cp -r "$built" "dist/$name/packs"
           tar -C dist -czf "dist/$name.tar.gz" "$name"
           ( cd dist && shasum -a 256 "$name.tar.gz" > "$name.tar.gz.sha256" )
 

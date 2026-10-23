@@ -184,7 +184,7 @@ describe("Litgraph over the real wasm", () => {
     expect(lg.validate({ nope: 1 }, "request").valid).toBe(false);
   });
 
-  // The committed bundle the types are generated from must be exactly
+  // The generated bundle the types are generated from must be exactly
   // what the wasm build publishes for every litgraph kind.
   it("publishes the schemas the types were generated from", () => {
     const bundle = JSON.parse(readFileSync(new URL("../schema/litgraph.schema.json", import.meta.url), "utf8")) as {

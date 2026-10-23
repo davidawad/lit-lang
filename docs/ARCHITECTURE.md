@@ -16,45 +16,73 @@ Each layer only depends on the layers beneath it. An agent can enter at any
 layer and always find the next one up/down by id.
 
 ```
- L7  Accretion      lint → fix packs · calibrate probabilities · save scenarios · add links
+ L7  Accretion      diagnostics with machine-applicable fixes → edit .lit/.case → recheck
+                    · lint · calibrate probabilities · save matters · add links
  L6  Answers        explain · compare · best line   (+ warnings, provenance)
+                    · litigate explain-value (value → rule → source span)
  L5  Analyses       solve · chain · simulate · path · pareto · sweep · tornado · structure
-                    · posterior · voi (uncertain probabilities, docs/UNCERTAINTY.md)
- L5  Analyses       solve · chain · simulate · path · pareto · sweep · tornado · structure · settle
+                    · settle · posterior · voi (uncertain probabilities, docs/UNCERTAINTY.md)
  L4  View           scenario resolved against the graph: roles, active edges,
                     probabilities, costs, utilities, node plans, warnings
- L3  Scenario       the matter: perspective, stakes/payoffs, rates, custom
-                    functions, counterfactual masks, calibration overrides, modes
+ L3  Case           .case matter: parties, replayed event history, derived posture,
+                    facts, stakes, beliefs → lowers to scenario JSON (scenarios/*.json):
+                    perspective, payoffs, rates, custom functions, masks, calibration, modes
  L2  Graph          packs + links compiled into one namespaced graph
- L1  Packs          one forum's procedure each (FRCP, FRAP, CAFC, CoFC, PTAB, ITC, USPTO…)
+ L1b Litigatable    a compiled, verified, content-hashed rule library as of an interval:
+                    IR + verification report + source map → lowers to pack/links JSON
+                    (packs/*.json, packs/links.json: one forum's procedure each)
+ L1a Lit source     lit/<forum>/*.lit modules: typed, dated, ranked, cited rules
  L0  Sources        primary law (rules PDFs, statutes) with sha256, as-of dates
 ```
+
+L1a, L1b and L3 are the litigate authoring language
+(`docs/litigate/DESIGN.md` §2, normative detail in `docs/litigate/SPEC.md`):
+`crates/litigate-syntax` parses, `litigate-sema` resolves and type-checks,
+`litigate-verify` discharges obligations (temporal, precedence, coverage,
+cites), `litigate-lower` lowers to the engine's JSON, and `litigate-cli`
+(`litigate`), `litigate-lsp` and `litgraph-mcp`'s `litigate_*` tools are thin
+front ends over one library. The engine (L2 and up) reads only the lowered
+JSON and is unchanged by the language. **`packs/*.json`, `packs/links.json`
+and `scenarios/*.json` are generated**: edit `lit/` or `cases/`, run `just
+lit-sync`, commit both; `just ci` (`lit-sync-check`) fails when they are
+stale. SPEC §9.4 lists exactly which files are generated and from what.
 
 Packs are compiled into the `litgraph` binary at build time (`Catalog::embedded`)
 so a released binary needs no `packs/` directory alongside it; point at a
 different set with `$LITGRAPH_PACKS` or `--packs-dir` (`Catalog::load`).
 
-- **L0 → L1**: every `cite`/`authority` in a pack should trace to a `sources`
-  entry (sha256 + as-of). A pack is a claim about the law; sources make it
+- **L0 → L1a**: every cite in a `.lit` rule must resolve to a span of the
+  vendored L0 text (a hole otherwise, an error under `--profile strict`), and
+  every `cite`/`authority` in a generated pack traces to a `sources` entry
+  (sha256 + as-of). A pack is a claim about the law; sources make it
   checkable. `litgraph lint`'s `unverifiable-cite` diagnostic checks this
   mechanically: it normalizes the cite, resolves it against the vendored
   L0 text a `sources[].path` points at, and (if `note` quotes a phrase)
   fuzzy-matches the quote within that span — see `crates/litgraph/src/cite/`
   and `sources/PROVENANCE.md`.
-- **L1 → L2**: `packs/links.json` is where forums meet (district court
+- **L1a → L1b**: `litigate check` types the rules, selects the versions in
+  force on the build dates, and verifies them; `litigate build` writes the
+  litigatable (IR + verification report + source map + content hash) and
+  lowers it, with a `*.map.json` source map from every JSON pointer back to
+  its declaration and cite.
+- **L1b → L2**: `packs/links.json` (generated from `lit/links`) is where forums meet (district court
   judgment → Federal Circuit; PTAB FWD → CAFC; CoFC judgment → CAFC; CAFC
   remand → back). Ids are namespaced `pack::node`; local ids resolve when
   unique.
 - **L2 → L3/L4**: nothing about a particular matter lives in a pack. The
-  scenario carries it, and `View` turns it into dense arrays plus a list of
-  every fallback taken.
+  `.case` matter carries it: its posture is derived by replaying its event
+  history against the rules, never asserted; it lowers to a scenario, and
+  `View` turns that into dense arrays plus a list of every fallback taken.
 - **L4 → L5**: algorithms consume only the view. They never read JSON, never
   guess, and never special-case a pack.
 - **L5 → L6**: the API renders results with ids *and* labels, rounds numbers,
   keeps outputs small by default (`top`, `limit`, opt-in `full_policy`), and
   attaches `warnings` + `provenance` to every response.
 - **L6 → L7**: `lint` turns what an analysis exposed (unquantified chance
-  nodes, missing payoffs, dead ends, unsourced packs) into concrete edits.
+  nodes, missing payoffs, dead ends, unsourced packs) into concrete edits,
+  and `litigate check` diagnostics carry machine-applicable fixes
+  (`litigate fix`); the edits land in `lit/` or `cases/`, never in the
+  generated JSON.
 
 ## Design commitments (why an agent can trust and steer it)
 
@@ -146,7 +174,7 @@ running an analysis.
 describe ─► packs (quality) ─► explain <node> ─► solve ─► chain / simulate
     │                              │                 │
     │                              └── compare / sweep / tornado (what-ifs, sensitivity)
-    └────────────────────────────── lint ─► edit pack / links / scenario ─► re-run
+    └──── lint ─► edit lit/ or cases/ ─► litigate check ─► just lit-sync ─► re-run
 ```
 
 1. `describe` once per session (or when an error says so).
@@ -169,8 +197,9 @@ describe ─► packs (quality) ─► explain <node> ─► solve ─► chain 
    paying to learn (`docs/UNCERTAINTY.md`).
 7. Report numbers **with** their warnings. Heuristic payoffs and filled
    probabilities are not facts.
-8. Accrete: fix what `lint` and the warnings exposed, in the pack, with a
-   source.
+8. Accrete: fix what `lint` and the warnings exposed, in the package's
+   `lit/` source (or the matter's `.case`), with a source; `litigate check`,
+   then `just lit-sync` regenerates the pack. Never edit the generated JSON.
 
 ## Composition model
 
@@ -197,9 +226,11 @@ engine's own JSON Schema for `Op`, so a tool's shape can't drift from what
 a raw request verbatim. Packs, `links.json`, the named scenario library,
 and the manual are MCP resources under `litgraph://…` URIs
 (`litgraph://packs/<id>`, `litgraph://links`, `litgraph://scenarios`,
-`litgraph://scenarios/<id>`, `litgraph://describe`). See the README's
-"MCP server" section for client setup (Claude Code, Claude Desktop,
-generic clients).
+`litgraph://scenarios/<id>`, `litgraph://describe`). The `litigate_check`,
+`litigate_build`, `litigate_where`, `litigate_explain` and `litigate_describe`
+tools run the authoring toolchain through the `litigate_cli` library and
+return the `litigate` envelope unchanged. See the README's "MCP server"
+section for client setup (Claude Code, Claude Desktop, generic clients).
 
 ## Deadline clock
 

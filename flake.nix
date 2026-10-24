@@ -61,7 +61,8 @@
           # litigate-smt's build.rs links the pinned Z3 release's static
           # libz3.a. The Nix sandbox has no network, so fetch the same zip
           # here and hand it over offline; build.rs re-checks the SHA-256.
-          # Keep in step with ASSETS in crates/litigate-smt/build.rs.
+          # Keep in step with ASSETS in crates/litigate-smt/build.rs
+          # (crates/litigate-smt/tests/pins.rs fails when they differ).
           z3Version = "5.1.0";
           z3Asset =
             {

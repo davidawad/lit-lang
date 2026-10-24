@@ -21,7 +21,8 @@ use sha2::{Digest, Sha256};
 const Z3_VERSION: &str = "5.1.0";
 
 /// Official release assets (<https://github.com/Z3Prover/z3/releases/tag/z3-5.1.0>)
-/// with the SHA-256 digests GitHub publishes for them.
+/// with the SHA-256 digests GitHub publishes for them. `flake.nix` pins the
+/// same assets for offline Nix builds; `tests/pins.rs` fails when they differ.
 const ASSETS: &[(&str, &str, &str, &str)] = &[
     (
         "linux",

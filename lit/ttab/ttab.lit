@@ -262,15 +262,21 @@ test "a designated answer day on Labor Day rolls to Tuesday" cite "37 CFR 2.105(
 
 /// 37 C.F.R. § 2.106(b)(3)(iii): "A time, not less than thirty days, will
 /// be designated by the Board within which an answer to the counterclaim
-/// must be filed." As for the answer, the date is the Board's designation,
-/// thirty days from its mailing date the least it may allow; the Board may
-/// reset it (§ 2.106(b)(3)(iv)). In force from 81 FR 69950, effective
-/// January 14, 2017 (sources/cfr-37-part2-answer-time-history.txt).
+/// must be filed." As for the answer, the date is the Board's
+/// designation. Unlike § 2.105(a), the rule names no start for the thirty
+/// days: measuring them from the designation's mailing date is an
+/// interpretation, so a designation short of it stands, with a warning
+/// naming the interpretation (L4011), never a rejection. The Board may
+/// reset or extend the time "to enable a party fully to present or meet a
+/// counterclaim" (§ 2.106(b)(3)(iv)): an order of the Board is a
+/// `CaseOrder` layer, as for the answer. In force from 81 FR 69950,
+/// effective January 14, 2017 (sources/cfr-37-part2-answer-time-history.txt).
 rule duty counterclaim-answer-time effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CFR 2.106(b)(3)(iii)"
 {
   deadline counterclaim-answer-period: 30.days from CounterclaimAnswerTimeDesignated() counted_by ttab-2-196 delegable_to [CaseOrder] cite "37 CFR 2.106(b)(3)(iii)"
   {
     designated due
+    interpretation "37 CFR 2.106(b)(3)(iii) names no start for its thirty days; measured from the designation's mailing date, as 2.105(a) measures the answer's"
   }
 }
 
@@ -284,6 +290,12 @@ test "a designated counterclaim answer day on a Saturday rolls to Monday" cite "
 {
   given CounterclaimAnswerTimeDesignated(2025-12-20) on 2025-11-10
   expect deadline(counterclaim-answer-period) == 2025-12-22
+}
+
+test "a counterclaim answer date short of thirty days from mailing stands" cite "37 CFR 2.106(b)(3)(iii)"
+{
+  given CounterclaimAnswerTimeDesignated(2025-12-01) on 2025-11-10
+  expect deadline(counterclaim-answer-period) == 2025-12-01
 }
 
 /// 37 C.F.R. § 2.113(a): the notice of institution of a cancellation

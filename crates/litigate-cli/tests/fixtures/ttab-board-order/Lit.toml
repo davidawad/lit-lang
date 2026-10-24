@@ -1,10 +1,13 @@
 # A Board order in one TTAB proceeding, as a `CaseOrder` layer over
 # `lit/ttab` (lg-flu.27): it resets the time to answer to the date the
 # order sets, which § 2.106(a) allows ("the time initially set, or as may
-# later be reset by the Board"). `answer-period` delegates to `CaseOrder`,
-# so the override is licensed. Copy it beside a matter's packages, set
+# later be reset by the Board"), and the time to answer a counterclaim,
+# which § 2.106(b)(3)(iv) allows ("may be reset or extended ... to enable
+# a party fully to present or meet a counterclaim"). `answer-period` and
+# `counterclaim-answer-period` delegate to `CaseOrder`, so the overrides
+# are licensed. Copy it beside a matter's packages, set
 # `in_force` to the order's date, and record the order as an
-# `AnswerTimeReset(<due>)` event.
+# `AnswerTimeReset(<due>)` or `CounterclaimAnswerTimeReset(<due>)` event.
 [package]
 name = "ttab-board-order"
 version = "0.1.0"

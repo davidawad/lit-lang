@@ -58,7 +58,8 @@ pub(crate) const DEADLINE_OPTS: &[Spec] = &[
 /// Options of a `deadline` declaration: the [`DEADLINE_OPTS`] of a
 /// `within` edge, plus the obligation it creates (SPEC §5.3): who bears
 /// it, how a repeated trigger is treated, the capabilities that extend
-/// or waive it, and the trigger parameter that designates its due date.
+/// or waive it, the trigger parameter that designates its due date, and
+/// the interpretation its least time rests on.
 pub(crate) const DEADLINE_DECL_OPTS: &[Spec] = &[
     (KwExtendable, Some(boolean)),
     (KwExtensionAuthority, Some(string)),
@@ -69,6 +70,7 @@ pub(crate) const DEADLINE_DECL_OPTS: &[Spec] = &[
     (KwWaive, Some(capability)),
     (KwDesignated, Some(reference)),
     (KwForum, Some(reference)),
+    (KwInterpretation, Some(string)),
 ];
 
 /// Fields of an `extend`/`waive` capability.

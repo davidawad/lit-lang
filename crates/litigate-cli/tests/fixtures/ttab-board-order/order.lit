@@ -1,6 +1,6 @@
 module ttab-board-order
 
-import ttab.{ answer-period, ttab-2-196 }
+import ttab.{ answer-period, counterclaim-answer-period, ttab-2-196 }
 
 start reset
 
@@ -17,4 +17,22 @@ deadline answer-reset: 0.days from AnswerTimeReset() counted_by ttab-2-196 overr
   trigger latest
 }
 
-terminal reset: "Answer time reset by the Board" cite "37 CFR 2.106(a)" { payoff 0.usd }
+/// The Board's order resetting or extending the time to answer a
+/// counterclaim "to enable a party fully to present or meet a
+/// counterclaim" (37 C.F.R. § 2.106(b)(3)(iv)). Its date is the order's;
+/// `due` is the date it sets.
+event CounterclaimAnswerTimeReset(due: Date)
+
+/// The counterclaim answer is due on the date the order sets, replacing
+/// the date the Board first designated (`trigger latest`). The rule
+/// states no least time for a reset.
+deadline counterclaim-answer-reset: 0.days from CounterclaimAnswerTimeReset() counted_by ttab-2-196 override counterclaim-answer-period cite "37 CFR 2.106(b)(3)(iv)"
+{
+  designated due
+  trigger latest
+}
+
+terminal reset: "Answer time reset by the Board" cite "37 CFR 2.106(a)"
+{
+  payoff 0.usd
+}

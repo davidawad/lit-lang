@@ -67,11 +67,16 @@ fn interval(e: &hir::Interval) -> String {
 fn typed(d: &Declaration) -> Option<String> {
     Some(match d {
         Declaration::Deadline(x) if x.designated.is_some() => format!(
-            "`Date`: designated by {} (its `{}`), no earlier than {} `Days<{}>` after it, counted_by `{}`",
+            "`Date`: designated by {} (its `{}`), no earlier than {} `Days<{}>` after it{}, counted_by `{}`",
             hirx::event_text(&x.trigger),
             x.designated.as_ref().map_or("", |p| p.name.as_str()),
             x.amount,
             unit(x.unit),
+            if x.designated.as_ref().is_some_and(|p| p.interpretation.is_some()) {
+                " by interpretation (a shorter date stands, with a warning)"
+            } else {
+                ""
+            },
             hirx::local(&x.counting)
         ),
         Declaration::Deadline(x) => format!(

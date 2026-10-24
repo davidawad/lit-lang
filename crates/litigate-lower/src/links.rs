@@ -54,10 +54,12 @@ pub(crate) fn links(
             _ => {}
         }
     }
-    let link_holes = links
-        .iter()
-        .enumerate()
-        .flat_map(|(i, (_, e))| crate::holes::at(&format!("/links/{i}"), &e.holes));
+    let link_holes = links.iter().enumerate().flat_map(|(i, (_, e))| {
+        let base = format!("/links/{i}");
+        let mut found = crate::holes::at(&base, &e.holes);
+        found.extend(edge::undeclared(&cx, &base, e));
+        found
+    });
     let file = LinkFile {
         schema_version: Some(LINKS_SCHEMA_VERSION),
         instances,

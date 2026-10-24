@@ -210,6 +210,7 @@ fn a_designation_reads_the_trigger_argument_or_nothing() {
     d.designated = Some(Designated {
         param: 0,
         name: "due".into(),
+        interpretation: None,
     });
     assert_eq!(
         d.designation("2025-01-02", &on),
@@ -226,4 +227,21 @@ fn a_designation_reads_the_trigger_argument_or_nothing() {
         message(d.designation("2025-01-02", &date("2025-02-03"))).as_deref(),
         Some("`the trigger` designates no due date for `answer` (its `due` is unknown), so the due date is unknown: it is the notice's to set, never counted in its place")
     );
+    assert_eq!(d.interpreted_shortfall("2025-01-10", &on), None);
+    // Under an interpretation a short date stands, with the shortfall.
+    d.designated = Some(Designated {
+        param: 0,
+        name: "due".into(),
+        interpretation: Some("no start named".into()),
+    });
+    assert_eq!(
+        d.designation("2025-01-10", &on),
+        Some(Ok("2025-02-03".to_owned()))
+    );
+    assert_eq!(
+        d.interpreted_shortfall("2025-01-10", &on).as_deref(),
+        Some("`Noticed` on 2025-01-10 designates `answer` due 2025-02-03, earlier than 30 calendar days from 2025-01-10 (2025-02-09); the date stands: the rule names no start for its least time, and measuring it from 2025-01-10 is an interpretation: no start named")
+    );
+    assert_eq!(d.interpreted_shortfall("2025-01-02", &on), None);
+    assert_eq!(d.interpreted_shortfall("2025-01-02", &date("x")), None);
 }

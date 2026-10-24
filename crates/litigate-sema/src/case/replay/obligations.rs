@@ -263,6 +263,18 @@ impl<'g> Cx<'_, 'g> {
                 )
                 .note("a designated due date must allow at least the deadline's own period; correct the date as the notice gives it");
                 self.out.push(e);
+            } else if let Some(why) = d.interpreted_shortfall(date, view) {
+                // Where the rule names no start for its least time (37
+                // C.F.R. § 2.106(b)(3)(iii)), the date the notice gives
+                // stands: only an interpretation finds it short.
+                let mut e = error(
+                    C::DesignationShortOfInterpretation,
+                    self.at(k, |e| e.action.as_ref()),
+                    why,
+                )
+                .note("check the date as the notice gives it; if it is right, the interpretation, not the notice, is in question");
+                e.severity = Severity::Warning;
+                self.out.push(e);
             }
             fired = true;
             let displacing = self.graph.claims(q, date, known_at).iter().any(|x| {

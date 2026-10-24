@@ -5,7 +5,10 @@
 //! have leaves the deadline unknown, never counted in its place, and an
 //! answer to it neither timely nor late (a warning, L4010); and a
 //! Board order resetting it (§ 2.106(a)) is a `CaseOrder` layer that
-//! replaces it.
+//! replaces it. The counterclaim answer (§ 2.106(b)(3)(iii)) names no
+//! start for its thirty days, so a designation short of thirty days from
+//! mailing stands with a warning naming the interpretation (L4011), and
+//! a Board order resetting it (§ 2.106(b)(3)(iv)) is the same layer.
 // Test helpers below may unwrap: a panic is the failed assertion.
 #![allow(clippy::unwrap_used)]
 mod support;
@@ -94,7 +97,12 @@ fn schedule(run: &Run) -> Vec<[String; 5]> {
 
 /// The [`schedule`] rows of the answer period alone.
 fn answer_rows(run: &Run) -> Vec<[String; 5]> {
-    let id = format!("{TTAB}::answer-period");
+    rows(run, "answer-period")
+}
+
+/// The [`schedule`] rows of `TTAB`'s deadline `deadline` alone.
+fn rows(run: &Run, deadline: &str) -> Vec<[String; 5]> {
+    let id = format!("{TTAB}::{deadline}");
     schedule(run).into_iter().filter(|r| r[0] == id).collect()
 }
 
@@ -309,4 +317,149 @@ fn an_answer_by_the_designated_date_is_timely_and_after_it_late() {
         errors(&late),
         ["`AnswerFiled(WithCounterclaim)` on 2026-08-18 missed deadline `answer-period`, due 2026-08-17"]
     );
+}
+
+#[test]
+fn a_counterclaim_answer_date_short_of_thirty_days_from_mailing_stands_with_a_warning() {
+    // Mailed 2026-07-06; thirty days from it is 2026-08-05.
+    let run = check(
+        "ttab-counterclaim-short",
+        &["2026-07-06 CounterclaimAnswerTimeDesignated(2026-07-27) on applicant"],
+        false,
+    );
+    assert_eq!(run.code, 0, "{}", run.stdout);
+    assert_eq!(errors(&run), Vec::<String>::new());
+    assert_eq!(
+        replay_warnings(&run),
+        ["`CounterclaimAnswerTimeDesignated` on 2026-07-06 designates `counterclaim-answer-period` due 2026-07-27, earlier than 30 calendar days from 2026-07-06 (2026-08-05) (37 CFR 2.106(b)(3)(iii)); the date stands: the rule names no start for its least time, and measuring it from 2026-07-06 is an interpretation: 37 CFR 2.106(b)(3)(iii) names no start for its thirty days; measured from the designation's mailing date, as 2.105(a) measures the answer's"]
+    );
+    let codes: Vec<&str> = run.json["diagnostics"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .filter(|d| d["code"].as_str().unwrap().starts_with("L4"))
+        .map(|d| d["code"].as_str().unwrap())
+        .collect();
+    assert_eq!(codes, ["L4011"]);
+    assert_eq!(
+        rows(&run, "counterclaim-answer-period"),
+        [row(
+            &format!("{TTAB}::counterclaim-answer-period"),
+            "2026-07-27",
+            "lapsed",
+            "2026-07-27",
+            "-"
+        )]
+    );
+    // Thirty days or more from mailing: no warning.
+    let run = check(
+        "ttab-counterclaim-thirty",
+        &["2026-07-06 CounterclaimAnswerTimeDesignated(2026-08-05) on applicant"],
+        false,
+    );
+    assert_eq!(run.code, 0, "{}", run.stdout);
+    assert_eq!(replay_warnings(&run), Vec::<String>::new());
+}
+
+#[test]
+fn a_cancellation_answer_date_short_of_thirty_days_from_mailing_is_rejected() {
+    // 37 C.F.R. § 2.113(a) names the start: "from the mailing date of the
+    // notice".
+    let run = check(
+        "ttab-cancellation-short",
+        &["2026-07-06 CancellationInstitutionNoticed(2026-08-04) on applicant"],
+        false,
+    );
+    assert_eq!(run.code, 2, "{}", run.stdout);
+    assert_eq!(
+        errors(&run),
+        ["`CancellationInstitutionNoticed` on 2026-07-06 designates `cancellation-answer-period` due 2026-08-04, earlier than the least time the rule allows, 30 calendar days from 2026-07-06 (2026-08-05) (37 CFR 2.113(a))"]
+    );
+}
+
+#[test]
+fn a_board_order_resets_the_counterclaim_answer_date() {
+    let run = check(
+        "ttab-counterclaim-reset",
+        &[
+            "2026-07-06 CounterclaimAnswerTimeDesignated(2026-08-05) on applicant",
+            "2026-08-03 ttab-board-order::CounterclaimAnswerTimeReset(2026-09-08) by board cite \"37 CFR 2.106(b)(3)(iv)\"",
+        ],
+        true,
+    );
+    assert_eq!(run.code, 0, "{}", run.stdout);
+    assert_eq!(errors(&run), Vec::<String>::new());
+    assert_eq!(replay_warnings(&run), Vec::<String>::new());
+    assert_eq!(
+        rows(&run, "counterclaim-answer-period"),
+        [
+            row(
+                &format!("{TTAB}::counterclaim-answer-period"),
+                "2026-08-05",
+                "superseded",
+                "2026-08-05",
+                "-"
+            ),
+            row(
+                &format!("{TTAB}::counterclaim-answer-period"),
+                "2026-09-08",
+                "open",
+                "2026-09-08",
+                "-"
+            ),
+        ]
+    );
+}
+
+#[test]
+fn the_generated_pack_leaves_the_answer_extension_undeclared() {
+    // The pack format carries no designated window (lg-flu.32): each answer
+    // edge's extension is a hole, never `extendable: false`, and the reason
+    // keeps what the source states.
+    let out = scratch("ttab-pack");
+    let run = support::litigate(&[
+        "build",
+        "lit/core",
+        "lit/ttab",
+        "--out",
+        out.to_str().unwrap(),
+    ]);
+    assert_eq!(run.code, 0, "{}", run.stdout);
+    let pack: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(out.join(format!("packs/{TTAB}.json"))).unwrap())
+            .unwrap();
+    let edges = pack["edges"].as_array().unwrap();
+    let answers: Vec<usize> = (0..edges.len())
+        .filter(|&i| edges[i]["from"] == "instituted" && edges[i]["to"] != "talks-instituted")
+        .filter(|&i| edges[i]["to"] != "judgment-2135")
+        .collect();
+    assert_eq!(
+        answers
+            .iter()
+            .map(|&i| edges[i]["to"].as_str().unwrap())
+            .collect::<Vec<_>>(),
+        ["answered", "answered", "notice-of-default"]
+    );
+    assert!(answers.iter().all(|&i| edges[i].get("deadline").is_none()));
+    let holes = pack["lowered"]["holes"].as_array().unwrap();
+    for &i in &answers {
+        for field in ["extendable", "extensionAuthority"] {
+            let pointer = format!("/edges/{i}/deadline/{field}");
+            let hole = holes
+                .iter()
+                .find(|h| h["pointer"] == pointer.as_str())
+                .unwrap_or_else(|| panic!("no hole at {pointer}"));
+            assert!(hole["reason"]
+                .as_str()
+                .unwrap()
+                .starts_with("`within answer-period`: the due date is the one each matter's notice or order designates, and the pack format carries no designated window, so its extension is undeclared here, never not-extendable"));
+        }
+    }
+    let plain = holes
+        .iter()
+        .find(|h| h["pointer"] == format!("/edges/{}/deadline/extendable", answers[0]).as_str())
+        .unwrap();
+    assert!(plain["reason"].as_str().unwrap().ends_with(
+        "; the source states extendable true, extension_authority \"37 CFR 2.127(a); consented motion TBMP 509\", which is not emitted"
+    ));
 }

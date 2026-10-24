@@ -98,12 +98,34 @@ impl Deadline {
     /// caller has matched `action` against the trigger. A date
     /// earlier than `amount` calendar days from `date` is refused: "a time,
     /// not less than thirty days from the mailing date of the notice" (37
-    /// C.F.R. § 2.105(a)).
+    /// C.F.R. § 2.105(a)). Under an `interpretation` the rule names no
+    /// start, so such a date stands ([`Self::interpreted_shortfall`]).
     ///
     /// # Errors
     /// The date is unknown, or below the floor.
     #[must_use]
     pub fn designation(&self, date: &str, action: &Expr) -> Option<Result<String, Undesignated>> {
+        self.designate(date, action).map(|r| r.map(|(due, _)| due))
+    }
+
+    /// Why the date trigger event `action` on `date` designates is short
+    /// of the least time measured from `date` when only an
+    /// `interpretation` measures it from there (37 C.F.R.
+    /// § 2.106(b)(3)(iii), "A time, not less than thirty days, will be
+    /// designated by the Board", names no start): a warning naming the
+    /// interpretation, never a rejection. `None` otherwise.
+    #[must_use]
+    pub fn interpreted_shortfall(&self, date: &str, action: &Expr) -> Option<String> {
+        self.designate(date, action)?.ok()?.1
+    }
+
+    /// The designated due date, with the shortfall an interpretation
+    /// tolerates.
+    fn designate(
+        &self,
+        date: &str,
+        action: &Expr,
+    ) -> Option<Result<(String, Option<String>), Undesignated>> {
         let d = self.designated.as_ref()?;
         let (event, args) = match &action.kind {
             super::ExprKind::Call { callee, args } => (callee.as_str(), args.as_slice()),
@@ -121,18 +143,27 @@ impl Deadline {
             }
         };
         let floor = crate::types::date::add_days(date, self.amount).unwrap_or_default();
-        if designated < floor {
-            let cite = self
-                .meta
-                .cite
-                .as_ref()
-                .map_or_else(String::new, |c| format!(" ({c})"));
-            return Some(Err(Undesignated::BelowFloor(format!(
+        if designated >= floor {
+            return Some(Ok((designated, None)));
+        }
+        let cite = self
+            .meta
+            .cite
+            .as_ref()
+            .map_or_else(String::new, |c| format!(" ({c})"));
+        Some(match &d.interpretation {
+            None => Err(Undesignated::BelowFloor(format!(
                 "`{event}` on {date} designates `{}` due {designated}, earlier than the least time the rule allows, {} calendar days from {date} ({floor}){cite}",
                 self.meta.id, self.amount
-            ))));
-        }
-        Some(Ok(designated))
+            ))),
+            Some(why) => {
+                let short = format!(
+                    "`{event}` on {date} designates `{}` due {designated}, earlier than {} calendar days from {date} ({floor}){cite}; the date stands: the rule names no start for its least time, and measuring it from {date} is an interpretation: {why}",
+                    self.meta.id, self.amount
+                );
+                Ok((designated, Some(short)))
+            }
+        })
     }
 }
 
@@ -143,6 +174,13 @@ pub struct Designated {
     pub param: usize,
     /// Its name.
     pub name: String,
+    /// The interpretation measuring the least time from the trigger's
+    /// date, where the rule names no start (`interpretation "..."`): a
+    /// date short of it is a warning naming this, not a rejection.
+    /// `None`: the rule names the start (37 C.F.R. § 2.105(a), "from the
+    /// mailing date of the notice"), and a date short of it is rejected.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub interpretation: Option<String>,
 }
 
 /// A chained period's trigger: the end of another deadline's period

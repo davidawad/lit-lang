@@ -192,7 +192,8 @@ deadline n4: 3.days from Nope(complaint) counted_by c6",
 fn designated_deadlines_lower_the_designating_parameter() {
     let deadlines: Vec<_> = declarations(
         "event Noticed(document: Document, due: Date)\n\
-deadline answer: 30.days from Noticed() counted_by c6 { designated due }",
+deadline answer: 30.days from Noticed() counted_by c6 { designated due }\n\
+deadline counterclaim: 30.days from Noticed() counted_by c6 { designated due, interpretation \"measured from mailing\" }",
     )
     .into_iter()
     .filter_map(|d| match d {
@@ -214,7 +215,9 @@ deadline d4: 30.days from Noticed() counted_by c6 { designated document }\n\
 deadline d5: 30.days from 3 counted_by c6 { designated due }\n\
 deadline d6: 30.days from Nope() counted_by c6 { designated due }\n\
 deadline d7: 30.days from Document() counted_by c6 { designated due }\n\
-deadline d8: 30.days from Noticed() counted_by c6 { designated due.x }",
+deadline d8: 30.days from Noticed() counted_by c6 { designated due.x }\n\
+deadline d9: 30.days from Noticed() counted_by c6 { interpretation \"measured from mailing\" }\n\
+deadline d10: 30.days from Noticed() counted_by c6 { designated nope, interpretation \"measured from mailing\" }",
     );
     insta::assert_debug_snapshot!(out);
 }

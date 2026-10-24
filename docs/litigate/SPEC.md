@@ -220,6 +220,7 @@ DeadlineDecl = "deadline", Ident, ":", Duration, ("from" | "after" | "before"),
                [ DeclOpts ] ;
 DeclOpts     = "{", { ( "extendable", Bool | "extension_authority", String
              | "note", String | "bearer", Ref | "trigger", ( Ref | CallExpr )
+             | "designated", Ref | "interpretation", String
              | ("extend" | "waive"), Capability | "forum", Ref ), Sep }, "}" ;
 Capability   = "{", { ( "by", Ref | "max", Duration | "to", Expr
              | "discretion", Ident | "after_expiry" | "on", CallExpr
@@ -792,7 +793,17 @@ creates (design review 2026-10-23 §2.4, §2.7):
   of the trigger's event (L1002, L2001), and the deadline must count
   forward (L2007) in calendar days (L2007). An edge `within` a designated
   deadline lowers with no `RawEdge.deadline` window (§8.1): the date is
-  each matter's. A later order replacing the date (37 C.F.R. § 2.106(a),
+  each matter's, and its extension is undeclared, never not-extendable.
+- `interpretation "I"`, beside `designated p`: the rule names no start
+  for its least time, and measuring `N.days` from the trigger's date is
+  the author's interpretation `I`, not the rule's text (37 C.F.R.
+  § 2.106(b)(3)(iii), "A time, not less than thirty days, will be
+  designated by the Board", against § 2.105(a)'s "not less than thirty
+  days from the mailing date of the notice"). A trigger whose `p` is
+  earlier than its date plus `N` then stands: the due date is `p`, and a
+  matter reports L4011, a warning naming the shortfall and `I`, instead
+  of rejecting the notice (a test's `deadline(d)` evaluates to it). Only
+  a rule that names the start rejects. Without `designated` it is L2007. A later order replacing the date (37 C.F.R. § 2.106(a),
   "as may later be reset by the Board") is a lower-authority package
   (`CaseOrder`) whose own designated deadline, `trigger latest`,
   overrides the delegating one, triggered by the order's event (§5.5).
@@ -1381,7 +1392,7 @@ other code (syntax, names, types, L3009, L5001, lowering) counts against
 | `graph-reachable` | every node is reachable from `start` or an `entry`-tagged node | L5003 |
 | `deadline-satisfiable` | for each reachable node, the due-date windows of mandatory (`duty`) deadlines on its outgoing edges intersect for some trigger date | L5005 |
 | `tests-pass` | every `test` assertion holds | L5006 |
-| `case-replay` | sema's case checker accepts the matter: it resolves, its pins, parties, facts, stakes, and beliefs are valid, and its events order, match, and meet deadlines on the engine clock (§5.6) | L4001-L4010 |
+| `case-replay` | sema's case checker accepts the matter: it resolves, its pins, parties, facts, stakes, and beliefs are valid, and its events order, match, and meet deadlines on the engine clock (§5.6) | L4001-L4011 |
 | `holes` | lists every hole with reason and span | L9002 / L5002 |
 | `rule-without-test` | every deadline and counting rule is exercised by a `test` | L9001 |
 
@@ -1430,7 +1441,7 @@ Anything without a lowering is L6001.
 | edge, in node order then edge order | `Pack.edges[]`: `from` = enclosing node, `id` (omitted for `_`), `to`, `label`, `actor` |
 | `p`, `effort`, `cost` | `RawEdge.probability`, `hours`, `cost` |
 | `authority` | `RawEdge.authority` (string, cite text, or cite-hole reason) |
-| `within d` | `RawEdge.deadline` `{length: N, unit, extendable, extensionAuthority, note}` from d's version in force, edge options winning; absent when that version is `designated` (§5.3) |
+| `within d` | `RawEdge.deadline` `{length: N, unit, extendable, extensionAuthority, note}` from d's version in force, edge options winning; absent when that version is `designated` (§5.3), its `extendable` and `extensionAuthority` then `lowered.holes` entries (below) |
 | `deadline N.unit {…}` | same, from the literal; `unit` omitted for calendar days, `"court"` for court days; business days are L6001 |
 | `duration` | `RawEdge.duration {min, mode, max}` (a single duration is `{mode}`) |
 | `valence`, `court_listener_url`, `action_id`, `note`, `tags`, `attrs`, `sets`, `clears`, `requires`, `forbids` | same-named `RawEdge` fields |
@@ -1475,7 +1486,12 @@ header"):
   carries (an `event` pattern) is checked, never emitted. A links
   package's instance `stake ?` is `/instances/<name>/stake`; a case's
   `unvalued` stake is `/scenario/payoffs/<terminal>` and a source
-  `as_of ?(..)` is `/sources/<i>/as_of`.
+  `as_of ?(..)` is `/sources/<i>/as_of`. An edge `within` a designated
+  deadline (§5.3) has no `deadline` to carry its extension, so
+  `/edges/<i>/deadline/extendable` and `.../extensionAuthority` (for a
+  link, `/links/<i>/...`) are holes with no `?` in the source: undeclared,
+  never `extendable: false`, the reason naming the deadline and whatever
+  `extendable` or `extension_authority` the edge or declaration states.
 
 The engine checks the header on read (version, sorted pins, recomputed
 digest, holes inside the document) and warns `authored-hole` for a pack
@@ -1800,6 +1816,7 @@ unchanged, and is graded `error`; anything else is rejected.
 | L2001 | type mismatch | L4008 | start conflict |
 | | | L4009 | obligation breached |
 | | | L4010 | timeliness unknown |
+| | | L4011 | designation short of an interpretation |
 | L2002 | invalid operation | L5001 | verification failed (generic) |
 | L2003 | invalid distribution | L5002 | hole in strict |
 | L2004 | unit mismatch | L5003 | unreachable node |
@@ -1814,7 +1831,7 @@ unchanged, and is graded `error`; anything else is rejected.
 | L9005 | unused declaration | | |
 
 Severity (`DiagnosticCode::severity(profile)`): every non-L9 code except
-L4009 and L4010 is `error`. L9003 is `info`. L4009, L4010 and L9005 are `warning`. L9001, L9002, and L9004 are
+L4009, L4010 and L4011 is `error`. L9003 is `info`. L4009, L4010, L4011 and L9005 are `warning`. L9001, L9002, and L9004 are
 `warning` in `dev` and `error` in `strict`.
 
 ### 9.2 Shapes

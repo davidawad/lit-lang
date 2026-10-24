@@ -89,6 +89,9 @@ pub(super) struct Due {
     /// The trigger parameter designating the due date (`designated p`);
     /// `None` when the period is counted.
     pub designated: Option<String>,
+    /// The least time of the designated due date is measured from the
+    /// trigger only by `interpretation`.
+    pub interpreted: bool,
     /// The trigger leaves the designated due date unknown (`?`): an act
     /// against it is neither timely nor late.
     pub unknown: bool,
@@ -299,6 +302,10 @@ impl Judged<'_, '_> {
             request,
             from,
             designated: d.designated.as_ref().map(|p| p.name.clone()),
+            interpreted: d
+                .designated
+                .as_ref()
+                .is_some_and(|p| p.interpretation.is_some()),
             unknown,
         }
     }
@@ -367,11 +374,16 @@ pub(super) fn explain(d: &Due, trigger: &Expr) -> String {
     };
     if let Some(p) = &d.designated {
         return format!(
-            "`{}` is due on the date `{}` on {} designates (its `{p}`), no earlier than {} from it, rolled under `{}`",
+            "`{}` is due on the date `{}` on {} designates (its `{p}`), no earlier than {} from it{}, rolled under `{}`",
             d.deadline,
             display(trigger),
             d.request.trigger,
             d.request.unit.prose(d.request.amount),
+            if d.interpreted {
+                " by interpretation"
+            } else {
+                ""
+            },
             d.request.counting,
         );
     }

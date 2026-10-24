@@ -276,10 +276,12 @@ pub(crate) fn pack(
         .iter()
         .enumerate()
         .flat_map(|(i, n)| holes::at(&format!("/nodes/{i}"), &n.holes));
-    let edge_holes = edges
-        .iter()
-        .enumerate()
-        .flat_map(|(i, (_, e))| holes::at(&format!("/edges/{i}"), &e.holes));
+    let edge_holes = edges.iter().enumerate().flat_map(|(i, (_, e))| {
+        let base = format!("/edges/{i}");
+        let mut found = holes::at(&base, &e.holes);
+        found.extend(edge::undeclared(&cx, &base, e));
+        found
+    });
     let lowered = build.lowered(node_holes.chain(edge_holes).collect());
     let pack = Pack {
         schema_version: PACK_SCHEMA_VERSION,

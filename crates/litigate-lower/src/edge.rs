@@ -1,7 +1,7 @@
 //! HIR edges to `RawEdge` (SPEC §8.1), shared by packs and links.
 use crate::diag::Sink;
 use crate::select::Selection;
-use litgraph::model::{Deadline, Duration, RawEdge};
+use litgraph::model::{Deadline, Duration, Hole, RawEdge};
 use litigate_base::{DiagnosticCode as C, Span};
 use litigate_sema::hir::{
     self, Authored, DayUnit, DeadlineWindow, Declaration, Direction, Rational, Valence,
@@ -86,6 +86,62 @@ pub(crate) fn edge(cx: &EdgeCx<'_, '_>, sink: &mut Sink, from: String, e: &hir::
         requires: e.requires.clone(),
         forbids: e.forbids.clone(),
     }
+}
+
+/// The `lowered.holes` of edge `e` emitted at `base` (`/edges/3`) that its
+/// source leaves no `?` for: a `within d` whose version in force is
+/// `designated` lowers with no `deadline` window (SPEC §5.3, §8.1), so
+/// whether the deadline is extendable, and on what authority, is
+/// undeclared there, never not-extendable (fail-closed). Each field is a
+/// hole whose reason names the deadline and what the source states of
+/// it, so nothing it says is dropped silently.
+pub(crate) fn undeclared(cx: &EdgeCx<'_, '_>, base: &str, e: &hir::Edge) -> Vec<Hole> {
+    let Some(d) = &e.deadline else {
+        return Vec::new();
+    };
+    let DeadlineWindow::Declared { deadline } = &d.window else {
+        return Vec::new();
+    };
+    // An unresolved reference is the edge lowering's error.
+    let Ok(Declaration::Deadline(decl)) = cx.selection.resolve(
+        cx.pack,
+        deadline,
+        e.span.clone().unwrap_or_else(|| crate::diag::start_of("")),
+    ) else {
+        return Vec::new();
+    };
+    if decl.designated.is_none() {
+        return Vec::new();
+    }
+    let mut stated = Vec::new();
+    if let Some(x) = d.extendable.or(decl.extendable) {
+        stated.push(format!("extendable {x}"));
+    }
+    if let Some(x) = d
+        .extension_authority
+        .as_ref()
+        .or(decl.extension_authority.as_ref())
+    {
+        stated.push(format!("extension_authority {x:?}"));
+    }
+    let stated = if stated.is_empty() {
+        String::new()
+    } else {
+        format!(
+            "; the source states {}, which is not emitted",
+            stated.join(", ")
+        )
+    };
+    let reason = format!(
+        "`within {deadline}`: the due date is the one each matter's notice or order designates, and the pack format carries no designated window, so its extension is undeclared here, never not-extendable{stated}"
+    );
+    ["extendable", "extensionAuthority"]
+        .into_iter()
+        .map(|field| Hole {
+            pointer: format!("{base}/deadline/{field}"),
+            reason: Some(reason.clone()),
+        })
+        .collect()
 }
 
 /// `Deadline.unit`: absent for calendar days, `"court"` for court days,

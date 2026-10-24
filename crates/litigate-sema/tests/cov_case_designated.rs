@@ -1,8 +1,10 @@
 //! Designated deadlines in replay (SPEC §5.3; lg-flu.27): the due date is
 //! the trigger's `Date` argument, rolled under the counting rule; a notice
 //! designating less than the deadline's period is rejected; an unknown
-//! date (`?`) leaves the deadline unknown; and a version whose trigger is
-//! another event designates nothing for an instance it did not open.
+//! date (`?`) leaves the deadline unknown; a version whose trigger is
+//! another event designates nothing for an instance it did not open; and
+//! where only an `interpretation` measures the least time from the
+//! trigger (lg-flu.32), a shorter date stands with a warning (L4011).
 mod cov_case_support;
 
 use cov_case_support::{check, compile, lock, outcome, package};
@@ -19,6 +21,7 @@ start open
 event Noticed(due: Date)
 event Reset(due: Date)
 event Answered()
+event Designated(due: Date)
 
 counting oc cite \"FRCP 6(a)\" { exclude_trigger_day, include_last_day, holidays ocal }
 calendar ocal { new-year: fixed(1, 1) effective [1870-06-28, ..) observed nearest_weekday }
@@ -32,6 +35,15 @@ rule duty answer-duty cite \"FRCP 12(a)\"
   deadline answer: 0.days from Reset() counted_by oc effective [2012-01-01, ..) {
     bearer Defendant
     designated due
+  }
+}
+
+rule duty counter-duty cite \"FRCP 12(a)\"
+{
+  deadline counter: 30.days from Designated() counted_by oc effective [2009-12-01, ..) cite \"FRCP 12(a)\" {
+    bearer Defendant
+    designated due
+    interpretation \"the rule names no start\"
   }
 }
 
@@ -127,6 +139,14 @@ fn the_trigger_designates_the_due_date() {
         (
             "a notice designating less than 30 days is rejected",
             run("2011-01-10", &["2011-01-04 Noticed(2011-02-02) on d"]),
+        ),
+        (
+            "under an interpretation a date short of 30 days stands, with a warning",
+            run("2011-03-01", &["2011-01-04 Designated(2011-02-02) on d"]),
+        ),
+        (
+            "under an interpretation a date of 30 days or more draws no warning",
+            run("2011-01-10", &["2011-01-04 Designated(2011-02-03) on d"]),
         ),
         (
             "an unknown designated date leaves the deadline open, never counted",

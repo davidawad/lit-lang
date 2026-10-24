@@ -226,3 +226,21 @@ fn a_designated_deadline_shows_its_designating_parameter() {
         "{shown}"
     );
 }
+
+#[test]
+fn an_interpreted_designated_deadline_says_its_least_time_is_an_interpretation() {
+    let text = format!(
+        "{}\nevent Noticed(due: Date)\ndeadline noticed-period: 30.days from Noticed() counted_by frcp6 {{ designated due, interpretation \"no start named\" }}\n",
+        support::read("lit/examples/rule12.lit")
+    );
+    let root = support::worked("hover-interpreted", &[(MODULE, &text)]);
+    let mut host = support::host(&root);
+    let a = host.analyze();
+    let shown = value(a, MODULE, &text, "deadline noticed-period", 9).unwrap();
+    assert!(
+        shown.contains(
+            "`Date`: designated by Noticed() (its `due`), no earlier than 30 `Days<CalendarDays>` after it by interpretation (a shorter date stands, with a warning), counted_by `frcp6`"
+        ),
+        "{shown}"
+    );
+}

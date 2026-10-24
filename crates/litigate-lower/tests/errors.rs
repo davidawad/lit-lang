@@ -169,27 +169,109 @@ fn edge_values_without_a_lowering() {
         .all(|(c, m)| *c == C::LoweringUnsupported && m.contains("backward")));
 }
 
-#[test]
-fn a_designated_deadline_gives_its_edges_no_window() {
-    let windows = |p: &hir::Package| -> Vec<bool> {
-        let lowered = lower(p, &Options::default()).unwrap_or_else(|d| panic!("{d:#?}"));
-        let Document::Pack(pack) = lowered.document else {
-            panic!("expected a pack")
-        };
-        pack.edges.iter().map(|e| e.deadline.is_some()).collect()
+/// `p` lowered to its pack.
+fn pack_of(p: &hir::Package) -> Box<litgraph::model::Pack> {
+    let lowered = lower(p, &Options::default()).unwrap_or_else(|d| panic!("{d:#?}"));
+    let Document::Pack(pack) = lowered.document else {
+        panic!("expected a pack")
     };
-    let mut p = example();
-    let counted = windows(&p);
-    assert!(counted.contains(&true));
-    for d in decls(&mut p) {
+    pack
+}
+
+/// Whether each edge of `p`'s pack has a `deadline` window.
+fn windows(p: &hir::Package) -> Vec<bool> {
+    pack_of(p)
+        .edges
+        .iter()
+        .map(|e| e.deadline.is_some())
+        .collect()
+}
+
+/// The `(pointer, reason)` of each `lowered.holes` entry of `p`'s pack
+/// under an edge's `deadline`.
+fn deadline_holes(p: &hir::Package) -> Vec<(String, String)> {
+    pack_of(p)
+        .lowered
+        .unwrap_or_else(|| panic!("a pack has a lowered header"))
+        .holes
+        .into_iter()
+        .filter(|h| h.pointer.contains("/deadline/"))
+        .map(|h| (h.pointer, h.reason.unwrap_or_default()))
+        .collect()
+}
+
+/// Every deadline of `p` designated by its trigger's first argument.
+fn designate(p: &mut hir::Package) {
+    for d in decls(p) {
         if let Declaration::Deadline(x) = d {
             x.designated = Some(hir::Designated {
                 param: 0,
                 name: "due".into(),
+                interpretation: None,
             });
         }
     }
+}
+
+#[test]
+fn a_designated_deadline_gives_its_edges_no_window() {
+    let mut p = example();
+    assert!(windows(&p).contains(&true));
+    designate(&mut p);
     // The notice sets the date in each matter: no flat period stands in.
+    assert!(!windows(&p).contains(&true));
+}
+
+#[test]
+fn a_designated_deadline_leaves_its_edges_extension_undeclared() {
+    let mut p = example();
+    let counted = windows(&p);
+    assert_eq!(deadline_holes(&p), Vec::<(String, String)>::new());
+    designate(&mut p);
+    // Its extension is undeclared, never not-extendable, and what the
+    // source states of it is named, not dropped silently (lg-flu.32).
+    let found = deadline_holes(&p);
+    let pointers: Vec<&str> = found.iter().map(|(p, _)| p.as_str()).collect();
+    let want: Vec<String> = (0..counted.len())
+        .filter(|&i| counted[i])
+        .flat_map(|i| {
+            [
+                format!("/edges/{i}/deadline/extendable"),
+                format!("/edges/{i}/deadline/extensionAuthority"),
+            ]
+        })
+        .collect();
+    assert_eq!(pointers, want);
+    assert!(
+        found
+            .iter()
+            .all(|(_, r)| r.contains("is undeclared here, never not-extendable")),
+        "{found:#?}"
+    );
+    // What the edge and declaration state is echoed, edge options winning.
+    for d in decls(&mut p) {
+        match d {
+            Declaration::Deadline(x) => {
+                x.extendable = Some(true);
+                x.extension_authority = Some("Rule X".into());
+            }
+            Declaration::Node(n) => {
+                for e in &mut n.edges {
+                    if let Some(w) = e.deadline.as_mut() {
+                        w.extendable = Some(false);
+                    }
+                }
+            }
+            _ => {}
+        }
+    }
+    let found = deadline_holes(&p);
+    assert!(
+        found.iter().all(|(_, r)| r.ends_with(
+            "; the source states extendable false, extension_authority \"Rule X\", which is not emitted"
+        )),
+        "{found:#?}"
+    );
     assert!(!windows(&p).contains(&true));
 }
 

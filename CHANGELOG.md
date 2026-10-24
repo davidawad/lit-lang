@@ -239,7 +239,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   naming the trigger that left the due date unknown (new code L4010,
   a warning in both profiles) instead of failing with L3009.
 
+- **Interpreted least times** (lg-flu.32; SPEC §5.3, §9.1). A designated
+  deadline may state `interpretation "..."`: the rule names no start for
+  its least time, so measuring it from the trigger's date is the
+  author's interpretation. A notice designating less then stands, with
+  the new warning L4011 naming the shortfall and the interpretation,
+  instead of being rejected. `lit/ttab`'s counterclaim answer (37 C.F.R.
+  § 2.106(b)(3)(iii), "A time, not less than thirty days, will be
+  designated by the Board") states one. The answer (§ 2.105(a)) and the
+  cancellation answer (§ 2.113(a)) are still rejected below thirty days,
+  because those rules count "from the mailing date of the notice". New
+  contextual keyword `interpretation` (tree-sitter and editor highlights
+  updated). The Board-order fixture
+  (`crates/litigate-cli/tests/fixtures/ttab-board-order`) also resets
+  the counterclaim answer time (§ 2.106(b)(3)(iv)) through the same
+  `CaseOrder` layer.
+
 ### Changed
+
+- **Generated packs leave a designated deadline's extension undeclared**
+  (lg-flu.32; SPEC §8.1). An edge `within` a designated deadline still
+  lowers with no `deadline` window. Its `deadline/extendable` and
+  `deadline/extensionAuthority` are now `lowered.holes` entries, whose
+  reason names the deadline and whatever extension the source states.
+  The extension used to be dropped with no trace, and it is never
+  emitted as not-extendable. `lit/ttab`'s "File no answer" edge no
+  longer states `extendable false` for an answer time the Board may
+  reset (§ 2.106(a)).
 
 - **Typed boundaries** (design review §6 item 12; SPEC §5.2, §5.6, §6).
   Breaking for `.lit` and `.case` source. A `removes p` or `elects p`

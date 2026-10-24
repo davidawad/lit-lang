@@ -131,8 +131,9 @@ impl Cx<'_, '_> {
             _ => Direction::Forward,
         };
         let o = self.once_except(opts, "extend");
-        let designated = first_ref(o.get("designated"))
+        let mut designated = first_ref(o.get("designated"))
             .and_then(|r| self.designated(name, trigger, r, (direction, period.map(|p| p.1))));
+        self.interpretation(name, &o, designated.as_mut());
         let (trigger, chain) = self.trigger(name, trigger);
         let forum = self.forum(name, o.get("forum"), counted_by, counting.is_some());
         let obligation = self.obligation(name, opts, &o, rule);
@@ -175,6 +176,32 @@ impl Cx<'_, '_> {
             self.borrowing(name, counted_by, &forum);
         }
         forum
+    }
+
+    /// `interpretation "..."` of deadline `name`, qualifying its
+    /// `designated` least time (SPEC §5.3): L2007 without one.
+    fn interpretation(
+        &mut self,
+        name: &Name,
+        o: &BTreeMap<&str, &Field>,
+        designated: Option<&mut Designated>,
+    ) {
+        let Some(f) = o.get("interpretation") else {
+            return;
+        };
+        match designated {
+            Some(d) => d.interpretation = Self::string(Some(f)),
+            // A designation already reported leaves nothing to qualify.
+            None if o.contains_key("designated") => {}
+            None => self.report(Report::new(
+                C::InvalidField,
+                f.range,
+                format!(
+                    "`interpretation` qualifies the least time of a designated due date, and `{}` designates none",
+                    name.text
+                ),
+            )),
+        }
     }
 
     /// `designated p` of deadline `name`: `p` is a `Date` parameter of the
@@ -246,6 +273,7 @@ impl Cx<'_, '_> {
         Some(Designated {
             param,
             name: params[param].0.clone(),
+            interpretation: None,
         })
     }
 

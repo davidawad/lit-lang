@@ -50,4 +50,16 @@ expression: rows
         "trace Triggered Noticed(2011-02-10) sigma::open -> sigma::open",
         "obligation sigma::answer #0 Breached",
     ],
+    "under an interpretation a date of 30 days or more draws no warning": [
+        "ok: start sigma::open",
+        "trace Triggered Designated(2011-02-03) sigma::open -> sigma::open",
+        "obligation sigma::counter #0 Open",
+    ],
+    "under an interpretation a date short of 30 days stands, with a warning": [
+        "10:3 L4009 obligation `sigma::counter` borne by `d`, created by `Designated(2011-02-02)` on 2011-01-04, was neither discharged nor transformed by its due date 2011-02-02: at as_of 2011-03-01 it is breached\n    note: `counter` is due on the date `Designated(2011-02-02)` on 2011-01-04 designates (its `due`), no earlier than 30 calendar days from it by interpretation, rolled under `oc`\n    note: a duty is consumed exactly once: by a timely act through a `within` edge, or by a breach",
+        "10:14 L4011 `Designated` on 2011-01-04 designates `counter` due 2011-02-02, earlier than 30 calendar days from 2011-01-04 (2011-02-03) (FRCP 12(a)); the date stands: the rule names no start for its least time, and measuring it from 2011-01-04 is an interpretation: the rule names no start\n    note: check the date as the notice gives it; if it is right, the interpretation, not the notice, is in question",
+        "ok: start sigma::open",
+        "trace Triggered Designated(2011-02-02) sigma::open -> sigma::open",
+        "obligation sigma::counter #0 Breached",
+    ],
 }

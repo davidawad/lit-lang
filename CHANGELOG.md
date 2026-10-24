@@ -113,6 +113,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   patched guard's provenance (`guards`: base, ops with authority and
   whether in force, composed). `and`/`or` are keywords only there (L0010
   elsewhere). Tree-sitter `guard_op` gains `authority_clause`.
+- **Pack schema v5: designated deadline windows and extension bounds**
+  (lg-flu.33; SPEC §5.3, §8.1, §8.7; `docs/PACK_SCHEMA.md`). A pack
+  `deadline` is now a counted `length` or a `designated` window
+  `{minPeriod, sourceEvent, sourceEventArg, interpretation?}`: the due
+  date the triggering notice or order sets in each matter, its least time
+  in calendar days, never a counted `length`. Each `extend` grant of a
+  `within` deadline lowers to `deadline.extensions`, a sum tagged by
+  `bound`: `bounded` (date bound `until`, as FRAP 4(a)(5)(C)),
+  `discretionary` (cause standard and window, as FRCP 6(b)(1)) or
+  `nonExtendable` (the forbidding rule, as FRCP 6(b)(2)). No grant is no
+  `extensions`: undeclared, never not-extendable. `links.json` is
+  schema 3 for the same fields on a link. The engine rejects a window
+  with both or neither of `length` and `designated`, and either new
+  field in an older version. The `deadlines` op reports a designated
+  window as `deadline-uncomputable`, naming the event and argument,
+  instead of counting its least time. `litigate import` reports both
+  fields as L6002 at their pointer: they come from a `deadline`
+  declaration, whose trigger event and counting rule an edge window
+  does not carry.
 
 - **The 2012 text of 37 C.F.R. § 90.3 is vendored and its Director
   extensions granted** (lg-flu.25). `sources/fr-uspto-90-3-history.txt`
@@ -433,6 +452,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `CaseOrder` layer.
 
 ### Changed
+
+- **A designated deadline's extension is no longer a hole** (lg-flu.33,
+  superseding lg-flu.32's lowering). The answer edges of `lit/ttab` now
+  carry their `designated` window, so `deadline/extendable` and
+  `deadline/extensionAuthority` lower as they do for a counted window:
+  stated values are emitted, and an unstated one is absent (undeclared),
+  never `extendable: false`. The answering edges'
+  `extension_authority ?(..)` stays their hole.
 
 - **Generated packs leave a designated deadline's extension undeclared**
   (lg-flu.32; SPEC §8.1). An edge `within` a designated deadline still

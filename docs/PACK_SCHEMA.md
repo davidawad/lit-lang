@@ -1,11 +1,12 @@
-# Pack schema (v3)
+# Pack schema (v5)
 
 A **pack** is one forum's procedure as a directed graph: nodes are procedural
 postures, edges are transitions (moves, rulings, draws). Packs are JSON files in
 `packs/`. v1 packs (the civ-pro-the-gathering statechart format) load unchanged;
 v2 adds the fields marked **v2** below; v3 adds the optional `counting` reference
-to the clock library (`packs/clock/`, below). Every added field is optional, so
-older files remain valid.
+to the clock library (`packs/clock/`, below); v4 the `lowered` header; v5 a
+designated deadline window and extension grants (**v5** below). Every added
+field is optional, so older files remain valid.
 
 The engine never guesses silently. Anything it has to infer (a payoff from a
 label, a uniform draw where probabilities are missing, an elapsed time from a
@@ -30,7 +31,7 @@ construct lowers to each field below.
 
 | field | type | notes |
 |---|---|---|
-| `schemaVersion` | `1`, `2`, `3` or `4` | `4` is v3 plus `lowered`; the compiler always emits `4` |
+| `schemaVersion` | `1` to `5` | `4` is v3 plus `lowered`; `5` adds a `designated` deadline window and `extensions` (below); the compiler always emits `5` |
 | `id` | string | pack id, also the namespace prefix when composing (`cofc::complaint-filed`) |
 | `title`, `description`, `jurisdiction` | string | |
 | `forum` | string | **v2** short forum key: `frcp`, `frap`, `cafc`, `cofc`, `ptab`, `itc`, `uspto`, ... |
@@ -45,8 +46,8 @@ construct lowers to each field below.
 
 ## The `lowered` header
 
-Every document the compiler generates (pack `schemaVersion` 4, `links.json`
-and named scenario schema 2, clock fragment `schemaVersion` 4) carries a
+Every document the compiler generates (pack `schemaVersion` 5, `links.json`
+3, named scenario schema 2, clock fragment `schemaVersion` 4) carries a
 `lowered` object; a hand-authored document has none. It is provenance,
 not meaning: `litigate diff` ignores it (SPEC §8.6).
 
@@ -95,7 +96,7 @@ the exact JCS text that digests and litigatable hashes are taken over.
 | `from`, `to`, `label` | string | |
 | `actor` | `applicant` \| `examiner` \| `office` \| `either` | v1 vocabulary kept for compatibility. Interpreted through `roles` |
 | `authority` | string | the rule/statute that authorizes or compels this transition |
-| `deadline` | `{length, unit?, extendable?, extensionAuthority?, note?, counting?}` | `length` in `unit`s. **v3** `counting`: the clock-library rule this window is counted by when it is not the pack's `counting` (a FRAP 4 period in a district-court pack, a certiorari period counted by `sup-ct-30`); a period is counted by the rule of the forum whose rules set it. **v2** `unit`: `calendar` (default) or `court` (court days); `week`, `month` or `year` (calendar months, counted by the rule's `months` provision; metrics read a month as 146097/4800 days and a year as 365.2425). The `deadlines` API op turns this into a concrete due date from a trigger date using the pack's v3 `counting` reference (see `docs/ARCHITECTURE.md`'s "Deadline clock") |
+| `deadline` | `{length, unit?, extendable?, extensionAuthority?, note?, counting?}` or **v5** `{designated, extendable?, extensionAuthority?, extensions?, note?, counting?}` | `length` in `unit`s. **v5** `designated` `{minPeriod, sourceEvent, sourceEventArg, interpretation?}` replaces `length` (exactly one of the two): the due date is the `Date` argument `sourceEventArg` of the triggering notice or order `sourceEvent` in each matter, not a counted period (37 C.F.R. § 2.105(a)); `minPeriod` is the least time in calendar days from the trigger's date (`unit`, if given, is `calendar`), and `interpretation`, when present, says the rule names no start for it, so a shorter designation stands with a warning instead of being rejected. Such a window has no length for metrics (`days` is `0`, `has_deadline` is `1`), and the `deadlines` op reports it as `deadline-uncomputable` rather than count its least time. **v5** `extensions`: the rule's extension grants, each tagged by `bound`: `bounded` `{by, until, afterExpiry?, standard?, motion?}` (no later than date bound `until`), `discretionary` `{by, standard, window, motion?}` (any later date; `window` `beforeExpiry` or `afterExpiryOnMotion`), `nonExtendable` `{authority}` (rule `authority` forbids extending beyond the other grants). `standard` is `GoodCause`, `ExcusableNeglect` or `GoodCauseOrExcusableNeglect`; a date bound is `{"offset": {"from": "prescribedDue" \| "grantOrderEntered", "days": N}}`, `{"max": [...]}` or `{"min": [...]}`; a `motion` is `{event, within?}`, `event` the motion's event pattern. An absent `extendable` and no `extensions` are undeclared, never "not extendable". **v3** `counting`: the clock-library rule this window is counted by when it is not the pack's `counting` (a FRAP 4 period in a district-court pack, a certiorari period counted by `sup-ct-30`); a period is counted by the rule of the forum whose rules set it. **v2** `unit`: `calendar` (default) or `court` (court days); `week`, `month` or `year` (calendar months, counted by the rule's `months` provision; metrics read a month as 146097/4800 days and a year as 365.2425). The `deadlines` API op turns this into a concrete due date from a trigger date using the pack's v3 `counting` reference (see `docs/ARCHITECTURE.md`'s "Deadline clock") |
 | `duration` | `{min?, mode, max?}` days | **v2** expected elapsed calendar time for this transition. Distinct from `deadline` (a window you must act inside). If absent the engine falls back to `deadline.length` and says so |
 | `cost` | USD | out-of-pocket fees (filing fees, USPTO fees, bonds) |
 | `hours` | number | attorney hours to execute (self/opponent moves only) |
@@ -333,8 +334,9 @@ fails if any pack id or forum key from `packs/*.json` appears in
 
 `packs/links.json` joins packs into one multi-forum graph. Its top-level
 shape is `{"links": [...], "instances": {...}}`; the generated file adds
-`"schemaVersion": 2` and a [`lowered` header](#the-lowered-header) (absent,
-the version is `1`).
+`"schemaVersion": 3` and a [`lowered` header](#the-lowered-header) (absent,
+the version is `1`; `2` adds the header, `3` a link `deadline`'s
+`designated` window and `extensions`, as pack v5).
 
 ```json
 { "links": [

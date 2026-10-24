@@ -990,8 +990,10 @@ creates (design review 2026-10-23 §2.4, §2.7):
   trigger and its date, in `unknown`. `p` must name a `Date` parameter
   of the trigger's event (L1002, L2001), and the deadline must count
   forward (L2007) in calendar days (L2007). An edge `within` a designated
-  deadline lowers with no `RawEdge.deadline` window (§8.1): the date is
-  each matter's, and its extension is undeclared, never not-extendable.
+  deadline lowers to a `designated` `RawEdge.deadline` window with no
+  `length` (§8.1): the date is each matter's, `N` its least time; what
+  the source does not state of its extension is undeclared, never
+  not-extendable.
 - `interpretation "I"`, beside `designated p`: the rule names no start
   for its least time, and measuring `N.days` from the trigger's date is
   the author's interpretation `I`, not the rule's text (37 C.F.R.
@@ -1679,7 +1681,8 @@ Anything without a lowering is L6001.
 | edge, in node order then edge order | `Pack.edges[]`: `from` = enclosing node, `id` (omitted for `_`), `to`, `label`, `actor` |
 | `p`, `effort`, `cost` | `RawEdge.probability`, `hours`, `cost` |
 | `authority` | `RawEdge.authority` (string, cite text, or cite-hole reason) |
-| `within d` | `RawEdge.deadline` `{length: N, unit, extendable, extensionAuthority, note}` from d's version in force, edge options winning; absent when that version is `designated` (§5.3), its `extendable` and `extensionAuthority` then `lowered.holes` entries (below) |
+| `within d` | `RawEdge.deadline` `{length: N, unit, extendable, extensionAuthority, extensions, note}` from d's version in force, edge options winning (pack schema v5); when that version is `designated p` (§5.3), `{designated: {minPeriod: N, sourceEvent, sourceEventArg: p, interpretation}, ...}` with no `length` or `unit`: `sourceEvent` the trigger's event, `interpretation` present only beside `interpretation` |
+| `extend { ... }` of d | `Deadline.extensions[]`, one per grant in source order, tagged by `bound`: `{bound: "bounded", by, until, afterExpiry, standard, motion}`, `{bound: "discretionary", by, standard, window: "beforeExpiry" \| "afterExpiryOnMotion", motion}`, `{bound: "nonExtendable", authority}`; a date bound is `{offset: {from: "prescribedDue" \| "grantOrderEntered", days}}`, `{max: [...]}` or `{min: [...]}`; a motion is `{event, within}`, `event` its pattern in source spelling (`ExtensionMoved(AnswerPeriod)`). No grant is no `extensions`: undeclared, never not-extendable |
 | `deadline N.unit {…}` | same, from the literal; `unit` omitted for calendar days, `"court"` for court days; business days are L6001 |
 | `duration` | `RawEdge.duration {min, mode, max}` (a single duration is `{mode}`) |
 | `valence`, `court_listener_url`, `action_id`, `note`, `tags`, `attrs`, `sets`, `clears`, `requires`, `forbids` | same-named `RawEdge` fields |
@@ -1726,13 +1729,10 @@ header"):
   package's instance `stake ?` is `/instances/<name>/stake`; a case's
   `unvalued` stake is `/scenario/payoffs/<terminal>` and a source
   `as_of ?(..)` is `/sources/<i>/as_of`. An edge `within` a designated
-  deadline (§5.3) has no `deadline` to carry its extension, so
-  `/edges/<i>/deadline/extendable` and `.../extensionAuthority` (for a
-  link, `/links/<i>/...`) are holes with no `?` in the source: undeclared,
-  never `extendable: false`, the reason naming the deadline and whatever
-  `extendable` or `extension_authority` the edge or declaration states;
-  an edge's own `extension_authority ?(..)` is the hole at
-  `.../extensionAuthority`, with its reason, in place of that one;
+  deadline (§5.3) carries its `designated` window (pack v5), so its
+  extension lowers as a counted window's does, and an edge's own
+  `extension_authority ?(..)` is the hole at
+  `/edges/<i>/deadline/extensionAuthority`;
 - `basis`: one `{pointer, basis, source}` per labelled node, edge or link
   (§5.1 "basis"), sorted; a scenario's one label is at `/scenario` (§8.3).
 
@@ -1994,7 +1994,11 @@ reject unknown fields.
 `litigate import` (crate `litigate-import`) turns legacy JSON into source
 that lowers back to semantically equal JSON (§8.6). A value with no exact
 spelling is L6002 at the input file, with its JSON pointer as a note; the
-importer never approximates. Its output is canonical `fmt` output that
+importer never approximates. A `designated` window and `extensions`
+(pack v5, links v3) are such values: each comes from a `deadline`
+declaration (§5.3), whose trigger event and `counted_by` rule an edge
+window does not carry, so `/edges/<i>/deadline/designated` and
+`.../extensions` are L6002, never dropped or counted instead. Its output is canonical `fmt` output that
 parses with no diagnostics, and it follows these conventions:
 
 - A pack becomes `lit/<dir>/` where `<dir>` is the pack's `forum` key (the

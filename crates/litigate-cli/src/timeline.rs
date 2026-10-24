@@ -1699,6 +1699,7 @@ mod tests {
         d.designated = Some(hir::Designated {
             param: 0,
             name: "due".to_owned(),
+            interpretation: None,
         });
         assert_eq!(
             deadline_label(&d),

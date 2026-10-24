@@ -162,3 +162,23 @@ fn an_adopting_rule_resolves_and_holds_the_words_it_is_cited_for() {
         "{unbound:?}"
     );
 }
+
+#[test]
+fn a_quote_is_held_to_the_bound_file_not_another_with_the_heading() {
+    // `## 37 C.F.R. § 1.136` is vendored twice; only the fragments file
+    // titles it with an em dash.
+    let cfr = "[sources.cfr]\ntitle = \"37 C.F.R. Part 1\"\npath = \"sources/cfr-37-part1.txt\"\n\
+         path_sha256 = \"e5765fec0e8c5f295d4f230ed9743b7972dbd41340693833abf990fe1918d1ec\"\n\
+         cite_prefixes = [\"37 C.F.R.\"]\nsection_heading = \"37 C.F.R. § {n}\"\n";
+    let sources = format!("{FRCP}\n{cfr}");
+    let lit =
+        adopted("cite \"37 C.F.R. § 1.136\" quote \"37 C.F.R. § 1.136 — Extensions of time\"");
+    let c = verify(
+        &[pkg_with_sources("demo", "FederalRule", &[], &sources, &lit)],
+        Profile::Strict,
+    );
+    assert_eq!(
+        unresolved(&c),
+        ["`37 C.F.R. § 1.136` is cited for \"37 C.F.R. § 1.136 — Extensions of time\", which its vendored text does not hold"]
+    );
+}

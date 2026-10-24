@@ -458,6 +458,9 @@ fn a_named_forum_takes_its_adopting_cite_and_quote() {
         .text()
         .to_string()
         .ends_with("quote \"within the time\""));
+    let unquoted = lit("module m\ndeadline d: 60.days after E() counted_by c { forum frap cite \"FRAP 4\", note \"n\" }\n");
+    let deadline: DeadlineDecl = decl(&unquoted, "d");
+    assert_eq!(deadline.options().len(), 2);
 }
 
 #[test]

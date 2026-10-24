@@ -319,11 +319,18 @@ fn service_time(p: &mut Parser<'_>) -> bool {
 /// (SPEC §5.3).
 fn adopted_forum(p: &mut Parser<'_>) -> bool {
     reference(p) && {
-        if cite(p) && p.at_kw(KwQuote) {
-            p.bump_as(KwQuote);
-            require(p, string, &[String]);
+        if cite(p) {
+            quote(p);
         }
         true
+    }
+}
+
+/// `[quote "..."]` after an adopting cite.
+fn quote(p: &mut Parser<'_>) {
+    if p.at_kw(KwQuote) {
+        p.bump_as(KwQuote);
+        require(p, string, &[String]);
     }
 }
 

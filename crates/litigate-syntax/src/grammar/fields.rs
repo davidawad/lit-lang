@@ -316,7 +316,7 @@ fn service_time(p: &mut Parser<'_>) -> bool {
 
 /// `Ref [cite ... [quote "..."]]`: the forum whose rules set a period
 /// and the rule adopting them for it, with the words that adopt them
-/// (`forum frap cite "28 U.S.C. § 2522" quote "within the time ..."`).
+/// (SPEC §5.3).
 fn adopted_forum(p: &mut Parser<'_>) -> bool {
     reference(p) && {
         if cite(p) && p.at_kw(KwQuote) {

@@ -171,10 +171,9 @@ impl Deadline {
     }
 }
 
-/// The rule by which another forum's rules set a deadline's period
-/// (SPEC §5.3): 28 U.S.C. § 2522 gives a Court of Federal Claims appeal
-/// "the time ... prescribed for appeals to United States courts of appeals
-/// from the United States district courts", FRAP 4's.
+/// The rule by which another forum's rules set a deadline's period, a
+/// statute giving one court's appeals the time prescribed for another's
+/// (SPEC §5.3).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Adoption {
     /// Its cite (a cite hole's reason).

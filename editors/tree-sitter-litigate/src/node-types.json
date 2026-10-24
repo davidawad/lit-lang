@@ -792,6 +792,32 @@
     }
   },
   {
+    "type": "certificate_req",
+    "named": true,
+    "fields": {
+      "kind": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "ref",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "cite",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "cite",
     "named": true,
     "fields": {
@@ -1344,6 +1370,36 @@
     }
   },
   {
+    "type": "ecf_code",
+    "named": true,
+    "fields": {
+      "code": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "hole",
+            "named": true
+          },
+          {
+            "type": "string",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "cite",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "edge_decl",
     "named": true,
     "fields": {
@@ -1778,6 +1834,51 @@
         "types": [
           {
             "type": "_expression",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "cite",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "exclusion_list",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "hole",
+          "named": true
+        },
+        {
+          "type": "ref",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "exclusions",
+    "named": true,
+    "fields": {
+      "items": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "exclusion_list",
             "named": true
           }
         ]
@@ -2351,6 +2452,129 @@
     }
   },
   {
+    "type": "limit_body",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "certificate_req",
+          "named": true
+        },
+        {
+          "type": "ecf_code",
+          "named": true
+        },
+        {
+          "type": "exclusions",
+          "named": true
+        },
+        {
+          "type": "limit_bound",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "limit_bound",
+    "named": true,
+    "fields": {
+      "measure": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "lines",
+            "named": false
+          },
+          {
+            "type": "pages",
+            "named": false
+          },
+          {
+            "type": "words",
+            "named": false
+          }
+        ]
+      },
+      "value": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "hole",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "cite",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "limit_decl",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "limit_body",
+            "named": true
+          }
+        ]
+      },
+      "paper": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "ref",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "cite",
+          "named": true
+        },
+        {
+          "type": "effective_clause",
+          "named": true
+        },
+        {
+          "type": "known_at_clause",
+          "named": true
+        },
+        {
+          "type": "relation",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "link_decl",
     "named": true,
     "fields": {
@@ -2453,6 +2677,10 @@
         },
         {
           "type": "import_decl",
+          "named": true
+        },
+        {
+          "type": "limit_decl",
           "named": true
         },
         {
@@ -4443,6 +4671,10 @@
     "named": false
   },
   {
+    "type": "certificate",
+    "named": false
+  },
+  {
     "type": "chance",
     "named": false
   },
@@ -4528,6 +4760,10 @@
     "named": false
   },
   {
+    "type": "ecf",
+    "named": false
+  },
+  {
     "type": "edition",
     "named": false
   },
@@ -4569,6 +4805,10 @@
   },
   {
     "type": "exclude_trigger_day",
+    "named": false
+  },
+  {
+    "type": "excludes",
     "named": false
   },
   {
@@ -4668,9 +4908,17 @@
     "named": false
   },
   {
+    "type": "limit",
+    "named": false
+  },
+  {
     "type": "line_comment",
     "named": true,
     "extra": true
+  },
+  {
+    "type": "lines",
+    "named": false
   },
   {
     "type": "link",
@@ -4762,6 +5010,10 @@
   },
   {
     "type": "package",
+    "named": false
+  },
+  {
+    "type": "pages",
     "named": false
   },
   {
@@ -4974,6 +5226,10 @@
   },
   {
     "type": "within",
+    "named": false
+  },
+  {
+    "type": "words",
     "named": false
   },
   {

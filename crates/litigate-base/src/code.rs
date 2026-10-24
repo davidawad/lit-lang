@@ -55,7 +55,7 @@ macro_rules! registry {
     };
 }
 
-registry! { 69;
+registry! { 70;
     UnexpectedToken = "L0001" => "The token is not valid at this position in the grammar",
     UnterminatedLiteral = "L0002" => "A string, block comment, or other delimited literal was not closed",
     InvalidToken = "L0003" => "The source contains a character sequence that is not a token",

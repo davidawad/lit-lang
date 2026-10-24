@@ -21,6 +21,11 @@ fn frcp(name: &str, as_of: &str, events: &[&str]) -> Run {
     for pkg in ["core", "frcp"] {
         copy_dir(&repo().join("lit").join(pkg), &dir.join("lit").join(pkg));
     }
+    // The copied locks pin the vendored L0 texts (SPEC §4.2).
+    #[cfg(unix)]
+    std::os::unix::fs::symlink(repo().join("sources"), dir.join("sources")).unwrap();
+    #[cfg(not(unix))]
+    copy_dir(&repo().join("sources"), &dir.join("sources"));
     std::fs::create_dir_all(dir.join("cases")).unwrap();
     let events = events.iter().fold(String::new(), |mut s, e| {
         let _ = writeln!(s, "  {e}");

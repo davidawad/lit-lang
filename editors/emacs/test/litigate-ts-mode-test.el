@@ -160,6 +160,17 @@ Only patterns written as a bracketed list followed by @CAPTURE count."
     (should (eq (litigate-test--face-at "Plaintiff") 'font-lock-type-face))
     (should (eq (litigate-test--face-at "parties") 'font-lock-keyword-face))))
 
+(ert-deftest litigate-ts-mode-guard-operators-are-contextual-keywords ()
+  (with-temp-buffer
+    (litigate-ts-mode)
+    (insert "module m\nstart and\ninstance base@one {\n  pack base\n  patch go {\n    when and ready\n    when or permitted\n  }\n}\n")
+    (let ((treesit-font-lock-level 4))
+      (treesit-font-lock-recompute-features)
+      (font-lock-ensure))
+    (should-not (eq (litigate-test--face-at "and") 'font-lock-keyword-face))
+    (should (eq (litigate-test--face-at "and" 2) 'font-lock-keyword-face))
+    (should (eq (litigate-test--face-at "or") 'font-lock-keyword-face))))
+
 (ert-deftest litigate-ts-mode-imenu ()
   (litigate-test--with-file (expand-file-name "lit/examples/rule12.lit" litigate-test--repo)
     (let* ((index (imenu--make-index-alist t))

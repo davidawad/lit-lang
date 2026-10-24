@@ -91,7 +91,7 @@ The canonical format (`litigate fmt', SPEC §10) uses two."
     "basis" "allow_hours" "end_of_month" "effective" "observed" "amends" "subject_to" "notwithstanding"
     "supersedes" "revives" "override" "delegable_to" "rebuts" "undercuts"
     "priority" "url" "bearer" "designated" "interpretation" "trigger" "extend" "waive" "after_expiry" "never"
-    "removes" "elects" "extends" "waives" "to" "where" "and" "or" "forums"
+    "removes" "elects" "extends" "waives" "to" "where" "forums"
     "forward_holidays" "declared_holidays" "quote"
     "words" "pages" "lines" "certificate" "excludes" "ecf"
     "given" "expect" "on")
@@ -160,6 +160,7 @@ The canonical format (`litigate fmt', SPEC §10) uses two."
    `([,@litigate-ts-mode--conditional-keywords] @font-lock-keyword-face
      "cite" @font-lock-preprocessor-face
      (discretion) @font-lock-keyword-face
+     (guard_op operator: ["and" "or"] @font-lock-keyword-face)
      [,@litigate-ts-mode--declaration-keywords] @font-lock-keyword-face
      [,@litigate-ts-mode--clause-keywords] @font-lock-keyword-face)
 

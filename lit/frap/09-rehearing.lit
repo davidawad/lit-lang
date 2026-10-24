@@ -44,7 +44,7 @@ decision rehearing-window: "Seek Rehearing?" by applicant cite "FRAP 40(a)(1)"
 {
   group rehearing-group
   note "After judgment entry, parties have 14 days (or 45 if the U.S. is a party) to file a petition for panel rehearing, en banc rehearing, or both in a combined petition. Most circuits treat the deadline as firm. Filing preserves the issue and tolls the 90-day certiorari clock under Supreme Court Rule 13.3."
-  _ "Petition for rehearing / en banc" -> rehearing-petition-filed {
+  edge-rehearing-wi-rehearing-pe-petition-for-rehea "Petition for rehearing / en banc" -> rehearing-petition-filed {
     authority cite "FRAP 40(a)(1); FRAP 35(c)"
     effort 60.hours
     within rehearing-period {
@@ -55,7 +55,7 @@ decision rehearing-window: "Seek Rehearing?" by applicant cite "FRAP 40(a)(1)"
     duration { min 2.1.days, mode 7.days, max 14.days }
     note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
   }
-  _ "No rehearing sought — time expires" -> mandate-issued {
+  edge-rehearing-wi-mandate-issu-no-rehearing-sough "No rehearing sought — time expires" -> mandate-issued {
     authority cite "FRAP 41(b)(1)"
     effort 0.hours
     within rehearing-period {
@@ -70,16 +70,16 @@ state rehearing-petition-filed: "Petition for Rehearing / Rehearing En Banc File
 {
   group rehearing-group
   note "The petition must comply with FRAP 32 formatting and cannot exceed 3,900 words (computer-generated) or 15 pages (typewritten). For panel rehearing, it must identify specific overlooked legal or factual points; for en banc, it must show a conflict with another circuit, an intra-circuit conflict, conflict with Supreme Court precedent, or a question of exceptional importance."
-  _ "Panel rules on rehearing" -> panel-rehearing-decision { authority cite "FRAP 40(a)(4)" }
+  edge-rehearing-pe-panel-rehear-panel-rules-on-reh "Panel rules on rehearing" -> panel-rehearing-decision { authority cite "FRAP 40(a)(4)" }
 }
 
 chance panel-rehearing-decision: "Panel Rules on Rehearing" by examiner discretion cite "FRAP 40(a)(4), 40(e)" {
   group rehearing-group
   note "The panel rules on the petition; no fixed FRAP deadline exists, though circuit practice generally resolves it in under 40 days. Grant rates are extremely low; panels rarely reverse their own decisions absent a substantial legal or factual error. No response is permitted unless the court requests one."
-  _ "Panel grants rehearing" -> rehearing-granted-amended-opinion p 0.05 {
+  edge-panel-rehear-rehearing-gr-panel-grants-rehea "Panel grants rehearing" -> rehearing-granted-amended-opinion p 0.05 {
     authority cite "FRAP 40(e)"
   }
-  _ "Panel denies — en banc poll proceeds" -> en-banc-poll-decision by office p 0.95 {
+  edge-panel-rehear-en-banc-poll-panel-denies-en-ba "Panel denies — en banc poll proceeds" -> en-banc-poll-decision by office p 0.95 {
     authority cite "FRAP 40(a)(4); FRAP 40(c); 28 U.S.C. § 46(c)"
   }
 }
@@ -87,10 +87,10 @@ chance panel-rehearing-decision: "Panel Rules on Rehearing" by examiner discreti
 chance en-banc-poll-decision: "Active Judges Vote on En Banc Rehearing" by examiner discretion cite "FRAP 40(c), 28 U.S.C. § 46(c)" {
   group rehearing-group
   note "All active judges of the circuit vote on whether to order en banc rehearing; a majority of active judges must vote in favor to grant. FRAP 40(c) provides that 'unless a judge calls for a vote, a vote need not be taken' — the court may dispose of the petition without a formal poll, effectively a denial. En banc rehearing is extraordinarily rare, reserved for circuit splits or truly exceptional questions."
-  _ "Majority votes to rehear en banc" -> rehearing-granted-amended-opinion p 0.02 {
+  edge-en-banc-poll-rehearing-gr-majority-votes-to "Majority votes to rehear en banc" -> rehearing-granted-amended-opinion p 0.02 {
     authority cite "FRAP 40(c); FRAP 40(e); 28 U.S.C. § 46(c)"
   }
-  _ "En banc poll fails" -> rehearing-en-banc-both-denied by office p 0.98 {
+  edge-en-banc-poll-rehearing-en-en-banc-poll-fails "En banc poll fails" -> rehearing-en-banc-both-denied by office p 0.98 {
     authority cite "FRAP 40(c); FRAP 40(a)(4)"
   }
 }
@@ -99,7 +99,7 @@ state rehearing-granted-amended-opinion: "Rehearing Granted — Opinion Amended 
 {
   group rehearing-group
   note "When panel rehearing is granted, the panel may dispose of the case without further briefing, order supplemental briefing or argument, or issue other appropriate orders. For en banc rehearing, the panel opinion is vacated entirely and the case is reargued before all active judges."
-  _ "Amended opinion becomes judgment" -> mandate-issued {
+  edge-rehearing-gr-mandate-issu-amended-opinion-be "Amended opinion becomes judgment" -> mandate-issued {
     authority cite "FRAP 41(b)(1)"
     within mandate-period {
       note "After the amended opinion is filed (or the rehearing is disposed of), the mandate issues 7 days later. The amended opinion becomes the circuit's final judgment for purposes of the Supreme Court's 90-day certiorari deadline."
@@ -113,7 +113,7 @@ terminal rehearing-en-banc-both-denied: "Rehearing and Rehearing En Banc Both De
   note "Once both panel and en banc petitions are denied (or the deadline to file them passes without filing), the original panel decision is final at the circuit level. The mandate issues 7 days after the later of expiration of the petition period or entry of the order denying it. The 90-day certiorari deadline now runs from this denial. PLACEHOLDER PAYOFF: $400,000, override per matter. Reachable from any panel disposition (affirmed, reversed, remanded, mixed) with rehearing then exhausted, so a single payoff necessarily blends a possible win with a possible loss; override once the matter's actual panel disposition is known."
   valence good
   payoff 400_000.usd
-  _ "Mandate clock resumes" -> mandate-issued {
+  edge-rehearing-en-mandate-issu-mandate-clock-resu "Mandate clock resumes" -> mandate-issued {
     authority cite "FRAP 41(b)(1); FRAP 41(b)(3)"
     within mandate-period {
       note "The mandate issues 7 days after the order denying rehearing and/or en banc rehearing, or 7 days after expiration of the petition deadline if no petition was timely filed. This triggers finality at the circuit level and starts the 90-day certiorari clock."

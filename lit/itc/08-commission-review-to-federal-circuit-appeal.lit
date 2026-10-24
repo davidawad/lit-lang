@@ -17,7 +17,7 @@ decision petition-for-review-window: "Petition-for-Review Window" by applicant e
 {
   group commission-review-group
   note "12 days after service for a violation ID; 10 days for a terminating summary determination (see summary-determination-id above); 5 business days for other 210.42(c) determinations. A pure player node — file, or let the window close."
-  _ "File Petition for Commission Review (Rule 210.43(a)(1))" -> petition-filed {
+  edge-petition-for-petition-fil-file-petition-for "File Petition for Commission Review (Rule 210.43(a)(1))" -> petition-filed {
     authority cite "cfr210.43.a.1"
     effort 45.hours
     cost 3_000.usd
@@ -28,7 +28,7 @@ decision petition-for-review-window: "Petition-for-Review Window" by applicant e
     valence good
     action_id "file.petition.review"
   }
-  _ "No petition filed — issues decided adversely are abandoned (Rule 210.43(a)(4))" -> id-becomes-commission-determination {
+  edge-petition-for-id-becomes-c-no-petition-filed "No petition filed — issues decided adversely are abandoned (Rule 210.43(a)(4))" -> id-becomes-commission-determination {
     authority cite "cfr210.43.a.4"
     effort 0.hours
     valence bad
@@ -39,7 +39,7 @@ state petition-filed: "Petition for Commission Review Filed" effective [2025-02-
 {
   group commission-review-group
   note "Must identify the seeking party, specify the issues for review, and cite clearly-erroneous-fact, erroneous-legal-conclusion, or Commission-policy grounds; concise statement of facts and argument capped at 100 pages (summary required past 50, capped at 10). Unraised issues are deemed abandoned."
-  _ "Opposing party responds — 8 days for a violation-ID petition, 5 business days otherwise (Rule 210.43(c))" -> petition-response {
+  edge-petition-fil-petition-res-opposing-party-res "Opposing party responds — 8 days for a violation-ID petition, 5 business days otherwise (Rule 210.43(c))" -> petition-response {
     authority cite "cfr210.43.c"
     cost 2_500.usd
     within petition-response-period {
@@ -54,7 +54,7 @@ state petition-response: "Response to Petition Filed" by office effective [2025-
 {
   group commission-review-group
   note "8 days to respond to a § 210.42(a)(1) violation-ID petition, 5 business days for other petition types. A party in default may not respond on issues where it defaulted."
-  _ "Commission decides whether to grant the petition — 45 days for a terminating summary determination, 30 days otherwise (Rule 210.43(d))" -> commission-review-decision {
+  edge-petition-res-commission-r-commission-decides "Commission decides whether to grant the petition — 45 days for a terminating summary determination, 30 days otherwise (Rule 210.43(d))" -> commission-review-decision {
     authority cite "cfr210.43.d"
     duration { mode 30.days, max 45.days }
     note "Duration: 19 CFR 210.43(d) gives the Commission 30 days to decide whether to review (45 for a terminating summary determination) -- sourced, not an estimate."
@@ -69,10 +69,10 @@ chance commission-review-decision: "Commission Decides Whether to Grant Review" 
 {
   group commission-review-group
   note "Grant rate authored at 0.35 / denial at 0.65 — APPROXIMATE. Granted 'if it appears that an error or abuse... is present or if the petition raises a policy matter... which the Commission thinks it necessary or appropriate to address' — decided 'based upon the petition and response thereto, without oral argument or further written submissions unless the Commission shall order otherwise.'"
-  _ "Petition granted — error/abuse present, or a policy matter the Commission wishes to address (Rule 210.43(d))" -> review-granted p 0.35 {
+  edge-commission-r-review-grant-petition-granted-e "Petition granted — error/abuse present, or a policy matter the Commission wishes to address (Rule 210.43(d))" -> review-granted p 0.35 {
     authority cite "cfr210.43.d"
   }
-  _ "Petition denied — the ID becomes the Commission's final determination" -> id-becomes-commission-determination p 0.65 {
+  edge-commission-r-id-becomes-c-petition-denied-th "Petition denied — the ID becomes the Commission's final determination" -> id-becomes-commission-determination p 0.65 {
     authority cite "cfr210.42.a.1"
   }
 }
@@ -81,7 +81,7 @@ state review-granted: "Commission Review Granted" by office effective [2025-02-0
 {
   group commission-review-group
   note "The Commission decides within 45 days for a potentially investigation-terminating summary determination, 30 days for other determinations."
-  _ "Commission reviews on the merits and issues its opinion" -> commission-opinion {
+  edge-review-grant-commission-o-commission-reviews "Commission reviews on the merits and issues its opinion" -> commission-opinion {
     authority cite "cfr210.43.d"
   }
 }
@@ -90,7 +90,7 @@ state id-becomes-commission-determination: "ID Matures into the Commission's Det
 {
   group commission-review-group
   note "Reached either because no petition was timely filed (flag itc337/petition-review-abandoned raised as to the adversely-decided issues, per the abandonment-of-issues-not-of-case principle: 'a party's failure to file a petition for review shall constitute abandonment of all issues decided adversely to that party') or because the Commission declined to order review. By operation of 210.42(a)(1), the ALJ's Initial Determination becomes the Commission's own final determination 60 days after service, with no separate Commission opinion ever written — the ITC's version of a magistrate's R&R adopted by non-objection (cf. Certain Automated Mechanical Transmission Systems, 337-TA-503)."
-  _ "Non-reviewed ID matures into the Commission's Final Determination by operation of Rule 210.42(a)(1)" -> commission-final-determination {
+  edge-id-becomes-c-commission-f-non-reviewed-id-ma "Non-reviewed ID matures into the Commission's Final Determination by operation of Rule 210.42(a)(1)" -> commission-final-determination {
     authority cite "cfr210.42.a.1"
   }
 }
@@ -99,7 +99,7 @@ state commission-opinion: "Commission Reviews on the Merits" by office effective
 {
   group commission-review-group
   note "The Commission decides the petition 'based upon the petition and response thereto, without oral argument or further written submissions unless the Commission shall order otherwise' — granted where 'an error or abuse... is present' or the petition 'raises a policy matter... which the Commission thinks it necessary or appropriate to address.' Decision due within 45 days for a potentially investigation-terminating summary determination, 30 days otherwise. The Commission may affirm, reverse, or modify the ALJ in whole or in part (cf. the Samsung/Apple pair, 337-TA-794 and 337-TA-796, and Certain Footwear Products, 337-TA-936, where review genuinely changed the outcome)."
-  _ "Commission's opinion becomes the Commission's Final Determination" -> commission-final-determination {
+  edge-commission-o-commission-f-commission-s-opini "Commission's opinion becomes the Commission's Final Determination" -> commission-final-determination {
     authority cite "cfr210.43.d"
   }
 }
@@ -111,10 +111,10 @@ chance commission-final-determination: "Commission Final Determination" by offic
 {
   group commission-review-group
   note "The § 1337(b)(1) 'earliest practicable time' mandate resolves here, whether the determination arrived by non-reviewed ID maturation, Commission opinion, or (see cafc-remanded below) a Federal Circuit remand. No-violation authored at 0.35 / violation-with-remedy at 0.65 — APPROXIMATE."
-  _ "Commission's Final Determination: no violation" -> no-violation-outcome p 0.35 {
+  edge-commission-f-no-violation-commission-s-final "Commission's Final Determination: no violation" -> no-violation-outcome p 0.35 {
     authority cite "usc1337.b.1"
   }
-  _ "Commission's Final Determination: violation found — Commission determines remedy" -> remedy-determined p 0.65 {
+  edge-commission-f-remedy-deter-commission-s-final "Commission's Final Determination: violation found — Commission determines remedy" -> remedy-determined p 0.65 {
     authority cite "usc1337.d"
   }
 }
@@ -123,7 +123,7 @@ state no-violation-outcome: "Commission Determination: No Violation" by applican
 {
   group commission-review-group
   note "Complainant's investigation concludes without relief. Still a 'final determination' any adversely affected person — including the complainant — may appeal under § 1337(c)."
-  _ "Complainant (or another adversely affected person) considers appeal of the no-violation determination" -> federal-circuit-appeal-window {
+  edge-no-violation-federal-circ-complainant-or-ano "Complainant (or another adversely affected person) considers appeal of the no-violation determination" -> federal-circuit-appeal-window {
     authority cite "usc1337.c"
     effort 0.hours
   }
@@ -133,7 +133,7 @@ state remedy-determined: "Commission Determines Remedy" by office effective [199
 {
   group commission-review-group
   note "A limited exclusion order (LEO) runs only against adjudicated respondents' imports. A general exclusion order (GEO) runs against the article itself regardless of source, and is available only on the heightened Certain Airless Paint Spray Pumps (337-TA-90) showing — now codified at § 1337(d)(2) — of a widespread pattern of unauthorized use plus business conditions suggesting other, not-yet-identified foreign manufacturers may enter the market (cf. Certain Height-Adjustable Desk Platforms, 337-TA-1125, a clean textbook GEO grant). In addition to, or instead of, an exclusion order, the Commission may issue a cease-and-desist order (CDO) reaching domestic conduct — sales of existing U.S. inventory — that an exclusion order cannot touch (§ 1337(f))."
-  _ "Commission serves the determination — the 60-day Presidential (USTR) disapproval window begins (§ 1337(j))" -> presidential-review-window {
+  edge-remedy-deter-presidential-commission-serves "Commission serves the determination — the 60-day Presidential (USTR) disapproval window begins (§ 1337(j))" -> presidential-review-window {
     authority cite "usc1337.j"
     duration { mode 60.days, max 60.days }
     note "Duration: 19 U.S.C. § 1337(j)'s disapproval window is 60 days -- sourced, not an estimate."
@@ -147,10 +147,10 @@ chance presidential-review-window: "Presidential (USTR) Review Window" by office
 {
   group presidential-review-group
   note "A 60-day window, delegated in practice to the U.S. Trade Representative (Presidential Memorandum of July 21, 2005, 70 Fed. Reg. 43,251), during which a Commission remedy is not yet enforceable as a final matter. Approval-by-silence authored at 0.9 / disapproval at 0.1 — APPROXIMATE and deliberately skewed toward approval: the veto is rare enough that its two confirmed modern instances (Certain Electronic Devices..., 337-TA-794 — the Samsung/Apple FRAND-SEP veto, August 2013, the first since 1987; and the 1987 DRAM veto candidate flagged in design/itc-classic-cases.md §2.10) are each individually notable. Contrast Certain Baseband Processor Chips, 337-TA-543, and Certain Tobacco Heating Articles, 337-TA-1199, where the same 60-day window ran and the remedy simply took effect — the ordinary case this node models most of the time."
-  _ "President/USTR disapproves within 60 days for policy reasons — determination and remedy have no force or effect (§ 1337(j))" -> determination-vetoed p 0.1 {
+  edge-presidential-determinatio-president-ustr-dis "President/USTR disapproves within 60 days for policy reasons — determination and remedy have no force or effect (§ 1337(j))" -> determination-vetoed p 0.1 {
     authority cite "usc1337.j"
   }
-  _ "60 days elapse without disapproval — the remedy takes effect (§ 1337(j))" -> remedy-in-effect p 0.9 {
+  edge-presidential-remedy-in-ef-60-days-elapse-wit "60 days elapse without disapproval — the remedy takes effect (§ 1337(j))" -> remedy-in-effect p 0.9 {
     authority cite "usc1337.j"
   }
 }
@@ -167,7 +167,7 @@ state remedy-in-effect: "Remedy Takes Effect" by applicant effective [1995-01-01
 {
   group remedy-enforcement-group
   note "The exclusion order and/or cease-and-desist order become enforceable; U.S. Customs and Border Protection administers exclusion at the border. Post-order enforcement mechanics (advisory opinions, modification/enforcement proceedings under 19 CFR 210.75-210.79, and redesign-around fights like Certain Robotic Vacuum Cleaning Devices, 337-TA-1252, or the Masimo/Apple Watch saga, 337-TA-1276) are OUT OF SCOPE for this pack per its own scope note and are not modeled downstream of this node — a deliberate boundary matching content/rulepacks/itc-337-pack.json's stated first-pass limits, not an oversight."
-  _ "Respondent (or another adversely affected person) considers appeal of the violation determination and remedy" -> federal-circuit-appeal-window {
+  edge-remedy-in-ef-federal-circ-respondent-or-anot "Respondent (or another adversely affected person) considers appeal of the violation determination and remedy" -> federal-circuit-appeal-window {
     authority cite "usc1337.c"
     effort 0.hours
   }
@@ -182,7 +182,7 @@ decision federal-circuit-appeal-window: "Federal Circuit Appeal Window" by appli
 {
   group federal-circuit-appeal-group
   note "Any person adversely affected by a final Commission determination may appeal — reachable from BOTH a no-violation outcome (complainant appeals) and a remedy-in-effect outcome (respondent appeals), the same fork viewed from either side of the caption."
-  _ "File Notice of Appeal to the Federal Circuit — 60 days after the determination becomes final (§ 1337(c); 28 U.S.C. § 1295(a)(6))" -> appeal-filed {
+  edge-federal-circ-appeal-filed-file-notice-of-app "File Notice of Appeal to the Federal Circuit — 60 days after the determination becomes final (§ 1337(c); 28 U.S.C. § 1295(a)(6))" -> appeal-filed {
     authority cite "usc1337.c"
     effort 6.hours
     cost 600.usd
@@ -194,7 +194,7 @@ decision federal-circuit-appeal-window: "Federal Circuit Appeal Window" by appli
     action_id "file.appeal.fedcir"
     note "Filing fee $600.00: the Court of Appeals docketing fee (Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2023) alone -- no ITC-clerk equivalent of 28 U.S.C. § 1917's $5.00 district-clerk notice fee applies to a direct agency-to-CAFC appeal (matches cafc-federal-circuit.json's itc-file-noa edge)."
   }
-  _ "No appeal filed within 60 days — the Commission's determination stands (§ 1337(c))" -> determination-final-unappealed {
+  edge-federal-circ-determinatio-no-appeal-filed-wi "No appeal filed within 60 days — the Commission's determination stands (§ 1337(c))" -> determination-final-unappealed {
     authority cite "usc1337.c"
     effort 0.hours
     valence bad
@@ -205,7 +205,7 @@ state appeal-filed: "Notice of Appeal Filed (Federal Circuit)" by office effecti
 {
   group federal-circuit-appeal-group
   note "28 U.S.C. § 1295(a)(6) vests the Federal Circuit with exclusive jurisdiction over Section 337 appeals, reviewed 'in accordance with chapter 7 of title 5' (the APA)."
-  _ "Federal Circuit reviews the Commission's determination" -> federal-circuit-review {
+  edge-appeal-filed-federal-circ-federal-circuit-re "Federal Circuit reviews the Commission's determination" -> federal-circuit-review {
     authority cite "usc1337.c"
     duration { min 240.days, mode 365.days, max 540.days }
     note "Duration: estimate. The Federal Circuit's own published median time from docketing to disposition is roughly a year across all appeal types; § 337-appeal-specific data is not in the local corpus."
@@ -227,11 +227,11 @@ chance federal-circuit-review: "Federal Circuit Reviews the Determination" by of
 {
   group federal-circuit-appeal-group
   note "Affirmance authored at 0.7 / reversal-or-remand at 0.3 — APPROXIMATE. Standard of review tracks APA § 706 (substantial evidence for Commission fact-finding, de novo for legal conclusions) — see e.g. TianRui Group Co. v. ITC (337-TA-655, extraterritorial trade-secret jurisdiction affirmed) and ClearCorrect Operating v. ITC (337-TA-833, 'articles' jurisdiction REVERSED as to purely digital transmissions)."
-  _ "Federal Circuit affirms the Commission" -> cafc-affirmed p 0.7 {
+  edge-federal-circ-cafc-affirme-federal-circuit-af "Federal Circuit affirms the Commission" -> cafc-affirmed p 0.7 {
     authority cite "usc1337.c"
     court_listener_url "https://www.courtlistener.com/opinion/615096/tianrui-group-co-v-international-trade-commission/"
   }
-  _ "Federal Circuit reverses or remands to the Commission for further proceedings" -> cafc-remanded p 0.3 {
+  edge-federal-circ-cafc-remande-federal-circuit-re "Federal Circuit reverses or remands to the Commission for further proceedings" -> cafc-remanded p 0.3 {
     authority cite "usc1337.c"
     court_listener_url "https://www.courtlistener.com/opinion/3153481/clearcorrect-operating-llc-v-international-trade-commission/"
   }
@@ -251,7 +251,7 @@ state cafc-remanded: "Federal Circuit Reverses or Remands" by office effective [
   group federal-circuit-appeal-group
   note "Remand does not simply 'send the case back' — it can produce a genuinely different final answer (cf. Certain Sleep-Disordered Breathing Treatment Systems, 337-TA-890: ALJ Pender's remand determination reversed the original violation finding to no violation, followed by a separate Commission Advisory Opinion in the same investigation number under 19 CFR 210.79). Closes a deliberate cycle back into commission-final-determination — the ITC analog of mpep-prosecution.json's RCE loop, except the 'loop' here is judicial rather than administrative."
   court_listener_url "https://www.courtlistener.com/opinion/3153481/clearcorrect-operating-llc-v-international-trade-commission/"
-  _ "Commission reconsiders on remand — a remand determination can genuinely change the outcome (cf. Certain Sleep-Disordered Breathing Treatment Systems, 337-TA-890)" -> commission-final-determination {
+  edge-cafc-remande-commission-f-commission-reconsi "Commission reconsiders on remand — a remand determination can genuinely change the outcome (cf. Certain Sleep-Disordered Breathing Treatment Systems, 337-TA-890)" -> commission-final-determination {
     authority cite "usc1337.c"
   }
 }

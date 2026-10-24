@@ -7,7 +7,7 @@ state post-hearing-briefing: "Post-Hearing Briefing" by examiner effective [2025
 {
   group post-hearing-briefing-group
   note "Post-hearing and reply briefs filed on the evidentiary record built at the hearing."
-  _ "ALJ issues the violation Initial Determination — no later than 4 months before the target date (Rule 210.42(a)(1))" -> initial-determination {
+  edge-post-hearing-initial-dete-alj-issues-the-vio "ALJ issues the violation Initial Determination — no later than 4 months before the target date (Rule 210.42(a)(1))" -> initial-determination {
     authority cite "cfr210.42.a.1"
     duration { min 30.days, mode 60.days, max 120.days }
     note "Duration: estimate for post-hearing briefing plus ALJ drafting time; 19 CFR 210.42(a)(1) only fixes the ID's relationship to the target date, not this interval directly."

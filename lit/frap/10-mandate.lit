@@ -33,7 +33,7 @@ state mandate-issued: "Mandate Issues" by office cite "Fed. R. App. P. 41(a)–(
 {
   group mandate-group
   note "The mandate is the formal order returning jurisdiction to the district court — distinct from the opinion and critical for enforcing the judgment. It issues automatically 7 days after either expiration of the rehearing period or denial of a timely rehearing petition. The mandate, not the opinion, is what actually binds the district court."
-  _ "Judgment final — cert clock runs" -> cert-petition-window {
+  edge-mandate-issu-cert-petitio-judgment-final-cer "Judgment final — cert clock runs" -> cert-petition-window {
     authority cite "Fed. R. App. P. 41(b); Sup. Ct. R. 13.3"
     within cert-period {
       extendable true
@@ -42,7 +42,7 @@ state mandate-issued: "Mandate Issues" by office cite "Fed. R. App. P. 41(a)–(
     }
     duration { min 13.5.days, mode 45.days, max 90.days }
   }
-  _ "Move to stay mandate for cert" -> mandate-stayed-pending-cert by applicant {
+  edge-mandate-issu-mandate-stay-move-to-stay-manda "Move to stay mandate for cert" -> mandate-stayed-pending-cert by applicant {
     authority cite "Fed. R. App. P. 41(d)(1)"
     effort 8.hours
     note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
@@ -53,7 +53,7 @@ state mandate-stayed-pending-cert: "Mandate Stayed Pending Certiorari" by examin
 {
   group mandate-group
   note "On motion, the court of appeals may stay its mandate pending a cert petition — otherwise the district court could enforce the judgment while the Supreme Court is still deciding whether to take the case. The stay is discretionary and requires a showing of likelihood of cert grant plus irreparable harm."
-  _ "Stay granted — cert proceeds" -> cert-petition-window {
+  edge-mandate-stay-cert-petitio-stay-granted-cert "Stay granted — cert proceeds" -> cert-petition-window {
     authority cite "Fed. R. App. P. 41(d)(2)"
     within cert-period {
       extendable true

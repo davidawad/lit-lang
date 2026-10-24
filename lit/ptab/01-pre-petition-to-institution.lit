@@ -37,16 +37,16 @@ state patent-granted: "Patent Granted" by applicant cite "35 U.S.C. § 151"
 {
   group pre-petition-group
   note "The patent issues with all claims allowed. If an AIA patent (effective date post-Sept 16, 2011), the 9-month PGR window under 35 U.S.C. § 321(c) begins to run on this date; the 20-year statutory term also begins. Any third-party challenge via IPR is subject to the 1-year bar under § 315(b) if infringement suit is later served."
-  _ "Get sued for infringement" -> infringement-complaint-served by either {
+  edge-patent-grant-infringement-get-sued-for-infri "Get sued for infringement" -> infringement-complaint-served by either {
     event ComplaintServed()
     authority cite "35 U.S.C. § 315(b)"
   }
-  _ "Consider challenging without suit" -> challenge-vehicle-decision {
+  edge-patent-grant-challenge-ve-consider-challengi "Consider challenging without suit" -> challenge-vehicle-decision {
     authority cite "35 U.S.C. § 311; 35 U.S.C. § 321"
     effort 2.hours
     note "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move; basis: estimate."
   }
-  _ "File PGR petition directly" -> pgr-petition-filed {
+  edge-patent-grant-pgr-petition-file-pgr-petition "File PGR petition directly" -> pgr-petition-filed {
     event PgrPetitionFiled()
     authority cite "35 U.S.C. § 321(c)"
     effort 130.hours
@@ -65,12 +65,12 @@ state infringement-complaint-served: "Infringement Complaint Served" by applican
 {
   group pre-petition-group
   note "Service of an infringement complaint — including amended, counterclaim, or cross-claim allegations — starts the unextendable 1-year clock to file an IPR petition. A voluntarily dismissed complaint still starts or restarts this bar; estoppel under § 315(e)(1) attaches to all invalidation grounds raised or reasonably could have been raised, binding the petitioner in any subsequent proceeding."
-  _ "Evaluate IPR/PGR after being sued" -> challenge-vehicle-decision {
+  edge-infringement-challenge-ve-evaluate-ipr-pgr-a "Evaluate IPR/PGR after being sued" -> challenge-vehicle-decision {
     authority cite "35 U.S.C. § 315(b)"
     effort 8.hours
     note "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move; basis: estimate."
   }
-  _ "File IPR directly after being sued" -> ipr-petition-filed {
+  edge-infringement-ipr-petition-file-ipr-directly "File IPR directly after being sued" -> ipr-petition-filed {
     event IprPetitionFiled()
     authority cite "35 U.S.C. § 311; 35 U.S.C. § 315(b)"
     effort 120.hours
@@ -89,21 +89,21 @@ decision challenge-vehicle-decision: "Petitioner Chooses Challenge Vehicle" by a
 {
   group pre-petition-group
   note "IPR (102/103 only) may be filed by any third party, anytime after patent grant, but is barred one year after service of an infringement complaint. PGR (101/102/103/112) is available only to third parties within 9 months of an AIA patent's grant date. The two remedies are largely mutually exclusive by timing; PGR is narrower in eligible timing but broader in grounds."
-  _ "File IPR petition" -> ipr-petition-filed {
+  edge-challenge-ve-ipr-petition-file-ipr-petition "File IPR petition" -> ipr-petition-filed {
     event IprPetitionFiled()
     authority cite "35 U.S.C. § 311-312; 37 C.F.R. § 42.104"
     effort 120.hours
     cost 23_750.usd
     note "Hours: BigLaw-honest estimate for the drafting/analysis effort of this move; basis: estimate. IPR request fee $23,750.00, verified, effective/last-amended 1/14/2025 (37 CFR 42.15(a)(1)): covers up to 20 claims; $470.00 per claim over 20 at request (42.15(a)(3)). A post-institution fee of $28,125.00 (42.15(a)(2)), plus $940.00 per claim over 20 instituted (42.15(a)(4)), falls due only if the Board institutes -- not modeled on this edge."
   }
-  _ "File IPR petition with a motion for joinder to an instituted IPR" -> institution-granted {
+  edge-challenge-ve-institution-file-ipr-petition "File IPR petition with a motion for joinder to an instituted IPR" -> institution-granted {
     event JoinderMotionFiled()
     authority cite "35 U.S.C. § 315(c); 37 CFR 42.122"
     effort 135.hours
     cost 23_750.usd
     note "Hours: the IPR petition's 120 plus 15 for the joinder motion, BigLaw-honest estimates; basis: estimate. Fee: the IPR request fee, as on `File IPR petition`. The § 315(b) time bar does not apply to a request for joinder (35 U.S.C. § 315(b), last sentence), so this petition skips the time-bar check; modeled as joined into the instituted trial."
   }
-  _ "File PGR petition within 9 months" -> pgr-petition-filed {
+  edge-challenge-ve-pgr-petition-file-pgr-petition "File PGR petition within 9 months" -> pgr-petition-filed {
     event PgrPetitionFiled()
     authority cite "35 U.S.C. § 321(c)"
     effort 130.hours
@@ -126,13 +126,13 @@ chance ipr-petition-filed: "IPR Petition Filed" by office discretion cite "35 U.
 {
   group petition-group
   note "IPR petition must identify each claim, ground(s), and provide claim charts with specific limitations mapped to prior art. Word limit of 14,000 (37 CFR 42.24(a)(1)(i)) is strict — failure to comply is grounds for rejecting the filing date. Grounds limited to §§102/103 (patents and printed publications only). The Office then reviews fee payment, form/word-count compliance and threshold sufficiency (e.g., whether claim charts actually chart the claims) and mails one paper: a notice of filing date accorded, or a notice of an incomplete petition the petitioner may correct. No published rate of incomplete-petition notices, so the split is left unauthored. The § 315(b) time bar is not a filing-date requirement: the patent owner raises it in the preliminary response and the Board decides it at institution, so it is checked after the notice."
-  _ "Notice of filing date accorded -- POPR clock starts" -> petition-time-bar-check p ?("no published defect-notice rate") {
+  edge-ipr-petition-petition-tim-notice-of-filing-d "Notice of filing date accorded -- POPR clock starts" -> petition-time-bar-check p ?("no published defect-notice rate") {
     event FilingDateNoticed()
     authority cite "37 CFR §42.106(a); 37 CFR §42.107(b)"
     duration { min 3.days, mode 10.days, max 21.days }
     note "Duration: estimate, the Office's own administrative compliance check before according a filing date."
   }
-  _ "Notice of an incomplete petition" -> petition-defect-noticed p ?("no published defect-notice rate") {
+  edge-ipr-petition-petition-def-notice-of-an-incom "Notice of an incomplete petition" -> petition-defect-noticed p ?("no published defect-notice rate") {
     event IncompletePetitionNoticed()
     authority cite "37 CFR §42.106(b)"
   }
@@ -143,13 +143,13 @@ chance pgr-petition-filed: "PGR Petition Filed" by office discretion cite "35 U.
 {
   group petition-group
   note "PGR is available only within 9 months of patent grant (35 U.S.C. §321(e)) and only for AIA patents. Word limit of 18,700 (37 CFR 42.24(a)(1)(ii)). Broader grounds available than IPR (101, 102, 103, 112) but only one PGR window exists per patent. The Office then reviews fee payment, form/word-count compliance and threshold sufficiency (e.g., whether claim charts actually chart the claims) and mails one paper: a notice of filing date accorded, or a notice of an incomplete petition the petitioner may correct. No published rate of incomplete-petition notices, so the split is left unauthored."
-  _ "Notice of filing date accorded -- POPR clock starts" -> popr-window p ?("no published defect-notice rate") {
+  edge-pgr-petition-popr-window-notice-of-filing-d "Notice of filing date accorded -- POPR clock starts" -> popr-window p ?("no published defect-notice rate") {
     event FilingDateNoticed()
     authority cite "37 CFR §42.206(a); 37 CFR §42.207(b)"
     duration { min 3.days, mode 10.days, max 21.days }
     note "Duration: estimate, the Office's own administrative compliance check before according a filing date."
   }
-  _ "Notice of an incomplete petition" -> petition-defect-noticed p ?("no published defect-notice rate") {
+  edge-pgr-petition-petition-def-notice-of-an-incom "Notice of an incomplete petition" -> petition-defect-noticed p ?("no published defect-notice rate") {
     event IncompletePetitionNoticed()
     authority cite "37 CFR §42.206(b)"
   }
@@ -190,7 +190,7 @@ decision petition-defect-noticed: "Petition Defect Noticed" by applicant cite "3
 {
   group petition-group
   note "The Office has rejected the filing date for a correctable defect. The petitioner may correct and refile; the corrected petition takes the date of the correction, not the original filing."
-  _ "Correct petition defect and refile" -> ipr-petition-filed {
+  edge-petition-def-ipr-petition-correct-petition-d "Correct petition defect and refile" -> ipr-petition-filed {
     event PetitionCorrected()
     authority cite "37 CFR §42.106(b)"
     effort 5.hours
@@ -214,7 +214,7 @@ decision popr-window: "POPR Window Open" cite "37 CFR 42.107(b)"
 {
   group popr-group
   note "The 90-day clock runs from the Board's notice of the petition's filing date, not the actual petition filing date — delays between filing and notice can be consequential. The period is extendable by 30 days upon request without cause. Patent owner must decide early whether to respond, waive, or disclaim."
-  _ "File Patent Owner Preliminary Response" -> popr-filed {
+  edge-popr-window-popr-filed-file-patent-owner "File Patent Owner Preliminary Response" -> popr-filed {
     event PreliminaryResponseFiled()
     authority cite "37 CFR 42.107(a), (b)"
     within popr-period {
@@ -224,11 +224,11 @@ decision popr-window: "POPR Window Open" cite "37 CFR 42.107(b)"
     }
     duration { min 13.5.days, mode 45.days, max 90.days }
   }
-  _ "Waive the preliminary response" -> popr-waived {
+  edge-popr-window-popr-waived-waive-the-prelimin "Waive the preliminary response" -> popr-waived {
     event PreliminaryResponseWaived()
     authority cite "37 CFR 42.107(b)"
   }
-  _ "Disclaim all challenged claims" -> claims-disclaimed-preinstitution {
+  edge-popr-window-claims-discl-disclaim-all-chall "Disclaim all challenged claims" -> claims-disclaimed-preinstitution {
     authority cite "37 CFR 42.107(e)"
     valence good
   }
@@ -238,7 +238,7 @@ state popr-filed: "POPR Filed" by office cite "37 CFR 42.107(a)"
 {
   group popr-group
   note "Word-limited (14,000 IPR / 18,700 PGR). May argue the merits and/or discretionary denial (Fintiv, §325(d) follow-on-petition factors). No new testimonial evidence without Board authorization, except a district court claim-construction ruling entered before the deadline."
-  _ "POPR complete — Board decides institution" -> institution-decision {
+  edge-popr-filed-institution-popr-complete-boar "POPR complete — Board decides institution" -> institution-decision {
     authority cite "35 U.S.C. 314(b), 37 CFR 42.108"
     within institution-period {
       extendable true
@@ -253,7 +253,7 @@ state popr-waived: "POPR Waived" by office cite "37 CFR 42.107(b)"
 {
   group popr-group
   note "Waiver (express or implied by inaction) accelerates institution to within 3 months of the petition filing date rather than the full POPR period — speed versus tipping your hand pre-institution."
-  _ "POPR waived — Board decides institution" -> institution-decision {
+  edge-popr-waived-institution-popr-waived-board "POPR waived — Board decides institution" -> institution-decision {
     authority cite ?("35 U.S.C. 314(b), 37 CFR 42.108(a)(1)")
     within institution-period-on-waiver {
       extendable true
@@ -279,13 +279,13 @@ chance institution-decision: "Institution Decision" by examiner discretion cite 
 {
   group institution-group
   note "Board institutes if petitioner shows a reasonable likelihood of prevailing on at least one claim — a lower bar than PGR's more-likely-than-not standard (35 U.S.C. 324(a)). Discretionary denial under the Fintiv factors and §325(d) can block institution even where the merits showing is met."
-  _ "Deny institution on the merits" -> institution-denied-merits p 0.2 {
+  edge-institution-institution-deny-institution-o "Deny institution on the merits" -> institution-denied-merits p 0.2 {
     authority cite "35 U.S.C. 314(a); 37 CFR 42.108"
   }
-  _ "Deny institution on discretionary grounds" -> institution-denied-fintiv p 0.15 {
+  edge-institution-institution-deny-institution-o-2 "Deny institution on discretionary grounds" -> institution-denied-fintiv p 0.15 {
     authority cite ?("Apple Inc. v. Fintiv, Inc., IPR2020-00019, Paper 11 (PTAB June 5, 2020) (precedential); 35 U.S.C. 325(d)")
   }
-  _ "Institute trial on all challenged claims" -> institution-granted p 0.65 {
+  edge-institution-institution-institute-trial-on "Institute trial on all challenged claims" -> institution-granted p 0.65 {
     event TrialInstituted()
     authority cite ?("35 U.S.C. 314(a); SAS Institute Inc. v. Iancu, 138 S. Ct. 1386 (2018); 37 CFR 42.120")
   }
@@ -297,7 +297,7 @@ terminal institution-denied-merits: "Institution Denied — No Reasonable Likeli
   note "Petitioner failed to establish a reasonable likelihood of prevailing on any challenged claim. Denial is unreviewable to the Federal Circuit under 314(d); only Director review (post-Arthrex) can revisit it. Patent survives and petitioner's filing and prosecution costs are sunk. PLACEHOLDER PAYOFF: $0, override per matter. Petitioner never gets a trial; the patent survives."
   valence good
   payoff 0.usd
-  _ "File a follow-on petition" -> challenge-vehicle-decision {
+  edge-institution-challenge-ve-file-a-follow-on-p "File a follow-on petition" -> challenge-vehicle-decision {
     authority cite ?("General Plastic Industrial Co. v. Canon Kabushiki Kaisha, IPR2016-01357, Paper 19 (PTAB Nov. 23, 2016) (precedential)")
     effort 100.hours
     within ipr-time-bar {
@@ -315,7 +315,7 @@ terminal institution-denied-fintiv: "Institution Denied — Fintiv Discretion" b
   note "Denied despite a merits showing, weighing the six Fintiv factors against parallel district court litigation. Also unreviewable under 314(d). A Sotera-style stipulation not to pursue overlapping invalidity grounds in the parallel case can defeat this denial before it issues. PLACEHOLDER PAYOFF: $0, override per matter. Denied on discretionary grounds despite a merits showing; the patent survives (for this petition -- a later refiling is a new matter, not modeled as a re-entry here)."
   valence good
   payoff 0.usd
-  _ "Refile after parallel case resolves" -> challenge-vehicle-decision {
+  edge-institution-challenge-ve-refile-after-paral "Refile after parallel case resolves" -> challenge-vehicle-decision {
     authority cite ?("35 U.S.C. 325(d); Fintiv factor 4 (parallel litigation status)")
     effort 60.hours
     within ipr-time-bar {
@@ -331,7 +331,7 @@ terminal institution-denied-fintiv: "Institution Denied — Fintiv Discretion" b
 state institution-granted: "Trial Instituted" by office cite ?("35 U.S.C. 314(a); SAS Institute Inc. v. Iancu, 138 S. Ct. 1386 (2018)") {
   group institution-group
   note "Post-SAS, institution is all-or-nothing per petition — every challenged claim and ground, not a subset. Trial officially begins; the one-year final-written-decision clock (35 U.S.C. 316(a)(11)) starts."
-  _ "Board issues scheduling order" -> scheduling-order-issued {
+  edge-institution-scheduling-o-board-issues-sched "Board issues scheduling order" -> scheduling-order-issued {
     event SchedulingOrderIssued()
     authority cite ?("37 CFR 42.5(a); PTAB Standing Order on Motions")
     within scheduling-order-period {
@@ -340,7 +340,7 @@ state institution-granted: "Trial Instituted" by office cite ?("35 U.S.C. 314(a)
     }
     duration { min 4.5.days, mode 15.days, max 30.days }
   }
-  _ "Consider early settlement" -> settlement-decision by either {
+  edge-institution-settlement-d-consider-early-set "Consider early settlement" -> settlement-decision by either {
     authority cite "35 U.S.C. 317; 37 CFR 42.74"
   }
 }

@@ -93,7 +93,7 @@ test "denial of a timely rehearing petition restarts the 90 days" cite "28 U.S.C
 decision cert-petition-window: "Certiorari Petition Window" by applicant cite "Sup. Ct. R. 13.1, 13.3; 28 U.S.C. § 1254(1)" {
   group cert-group
   note "90 days from entry of judgment or from denial of a timely rehearing petition — not extendable except by a single application to a Circuit Justice for good cause, filed before the deadline expires."
-  _ "File petition for certiorari" -> cert-petition-filed {
+  edge-cert-petitio-cert-petitio-file-petition-for "File petition for certiorari" -> cert-petition-filed {
     authority cite "Sup. Ct. R. 13.1; 28 U.S.C. § 1254(1)"
     effort 80.hours
     within cert-period {
@@ -104,7 +104,7 @@ decision cert-petition-window: "Certiorari Petition Window" by applicant cite "S
     duration { min 13.5.days, mode 45.days, max 90.days }
     note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
   }
-  _ "90-day window lapses" -> cert-not-sought {
+  edge-cert-petitio-cert-not-sou-90-day-window-laps "90-day window lapses" -> cert-not-sought {
     authority cite "Sup. Ct. R. 13.1"
     effort 0.hours
     note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
@@ -123,15 +123,15 @@ state cert-petition-filed: "Petition for Certiorari Filed" by examiner cite "Sup
 {
   group cert-group
   note "Governed by the 'rule of four' — cert is granted on the vote of any four Justices, not a majority. Discretionary review, not a matter of right; the petition must meet one of the Rule 10 criteria (typically a circuit split, an important federal question, or conflict with Supreme Court precedent)."
-  _ "Supreme Court considers petition" -> cert-review-decision { authority cite "Sup. Ct. R. 10" }
+  edge-cert-petitio-cert-review-supreme-court-cons "Supreme Court considers petition" -> cert-review-decision { authority cite "Sup. Ct. R. 10" }
 }
 
 chance cert-review-decision: "Supreme Court Grants or Denies Certiorari" by office discretion cite "Sup. Ct. R. 10"
 {
   group cert-group
   note "The Supreme Court grants certiorari to only about 1% of petitions. Most petitions receive zero substantive review; the Court's denial is typically summary and involves only a screening review by law clerks. No opinions are issued on the merits of denied petitions."
-  _ "Certiorari denied" -> cert-denied p 0.99 { authority cite "Sup. Ct. R. 10" }
-  _ "Certiorari granted" -> cert-granted p 0.01 {
+  edge-cert-review-cert-denied-certiorari-denied "Certiorari denied" -> cert-denied p 0.99 { authority cite "Sup. Ct. R. 10" }
+  edge-cert-review-cert-granted-certiorari-granted "Certiorari granted" -> cert-granted p 0.01 {
     authority cite "28 U.S.C. § 1254(1); Sup. Ct. R. 10"
   }
 }

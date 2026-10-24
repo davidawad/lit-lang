@@ -55,7 +55,7 @@ decision transcript-order-fork: "Transcript Needed?" by applicant cite "FRAP 10(
 {
   group record-group
   note "Appellant must decide within 14 days of the notice of appeal whether to order the transcript. Ordering creates an enforceable duty on the court reporter to transcribe and file; failure to order by the deadline doesn't waive the opportunity to appeal, but will delay the record and potentially prejudice waiver arguments if the record remains incomplete."
-  _ "Order the necessary transcript" -> transcript-ordered {
+  edge-transcript-o-transcript-o-order-the-necessar "Order the necessary transcript" -> transcript-ordered {
     authority cite "FRAP 10(b)(1)"
     effort 2.hours
     within transcript-order-period {
@@ -74,7 +74,7 @@ decision transcript-order-fork: "Transcript Needed?" by applicant cite "FRAP 10(
     }
     note "The usual route when the appeal is from a ruling on the papers (a Rule 12(b)(6) dismissal, a summary judgment) and there is no hearing transcript to order: the record is the original papers and docket entries (FRAP 10(a)). Hours: teaching estimate, a one-page certificate."
   }
-  _ "File agreed statement instead" -> statement-in-lieu-of-transcript {
+  edge-transcript-o-statement-in-file-agreed-statem "File agreed statement instead" -> statement-in-lieu-of-transcript {
     authority cite "FRAP 10(c)-(d)"
     effort 6.hours
     note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
@@ -85,7 +85,7 @@ state transcript-ordered: "Transcript Ordered" by office cite "FRAP 10(b)(1)"
 {
   group record-group
   note "Written order must be filed with the district clerk; appellant arranges payment with the reporter at the time of ordering. If ordering only a partial transcript, appellant must designate issues on appeal, and appellee then has 14 days to designate additional portions — refusal to order those portions gives appellee grounds to seek a court order compelling appellant to do so, shifting cost and timeline control from appellant to appellee."
-  _ "Transcript completed and filed" -> record-transmitted {
+  edge-transcript-o-record-trans-transcript-complet "Transcript completed and filed" -> record-transmitted {
     authority cite "FRAP 11(b)"
     within transcript-filing-period {
       extendable true
@@ -100,12 +100,12 @@ state statement-in-lieu-of-transcript: "Agreed Statement in Lieu of Transcript" 
 {
   group record-group
   note "Agreed statement must be signed by both parties and contain only facts 'essential to the court's resolution of the issues' — neither party may later expand it mid-appeal to contest completeness. The statement still requires district court approval before certification, creating a procedural gate. Missing the district court's approval forecloses this pathway and forces a return to transcript ordering."
-  _ "Agreed statement approved" -> record-transmitted { authority cite "FRAP 10(d); FRAP 11(a)" }
+  edge-statement-in-record-trans-agreed-statement-a "Agreed statement approved" -> record-transmitted { authority cite "FRAP 10(d); FRAP 11(a)" }
 }
 
 state record-transmitted: "Record on Appeal Complete and Transmitted" by office cite "FRAP 11(b)"
 {
   group record-group
   note "The record is 'complete' when the transcript is filed (or agreed statement approved) and the district clerk has numbered and transmitted all original papers to the appellate clerk. The reporter's duty is to note receipt and file within 30 days; delays beyond 30 days require a reporter request for extension (not appellant's action), and failure to report timely triggers mandatory circuit-to-district notification, shifting the compliance burden to the trial judge."
-  _ "Record complete — motions begin" -> stay-pending-appeal-fork
+  edge-record-trans-stay-pending-record-complete-mo "Record complete — motions begin" -> stay-pending-appeal-fork
 }

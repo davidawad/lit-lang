@@ -15,7 +15,7 @@ decision patent-challenged: "Patent Challenged (Post-Grant)" effective [2024-01-
 {
   group post-grant-group
   note "A third party (or, for reexam, anyone including the owner) attacks the issued patent. Three doors, decided by the CHALLENGER: inter partes review (IPR, 102/103 on patents/publications, subject to the 315(b) one-year bar), post-grant review (PGR, broad grounds incl. 101/112 but only within 9 months of grant), or ex parte reexamination (EPR, SNQ standard, no petitioner estoppel). This is the first genuinely ADVERSARIAL region of the chart — the outcomes are opposing-party draws, not examiner draws."
-  _ "Challenger files IPR petition (35 U.S.C. 311)" -> ipr-petition-filed {
+  edge-patent-chall-ipr-petition-challenger-files-i "Challenger files IPR petition (35 U.S.C. 311)" -> ipr-petition-filed {
     authority cite "35 U.S.C. 311–314; 37 CFR 42.100"
     cost 23_750.usd
     within ipr-time-bar {
@@ -25,7 +25,7 @@ decision patent-challenged: "Patent Challenged (Post-Grant)" effective [2024-01-
     duration { min 54.8.days, mode 182.5.days, max 365.days }
     note "IPR request fee $23,750.00, verified, effective/last-amended 1/14/2025 (37 CFR 42.15(a)(1)): covers up to 20 claims; $470.00 per claim over 20 at request (42.15(a)(3)). A post-institution fee of $28,125.00 (42.15(a)(2)), plus $940.00 per claim over 20 instituted (42.15(a)(4)), falls due only if the Board institutes -- not modeled on this edge."
   }
-  _ "Challenger files PGR petition within 9 months (35 U.S.C. 321)" -> pgr-petition-filed {
+  edge-patent-chall-pgr-petition-challenger-files-p "Challenger files PGR petition within 9 months (35 U.S.C. 321)" -> pgr-petition-filed {
     authority cite "35 U.S.C. 321–324; 37 CFR 42.200"
     cost 25_000.usd
     within pgr-window {
@@ -35,7 +35,7 @@ decision patent-challenged: "Patent Challenged (Post-Grant)" effective [2024-01-
     duration { min 40.5.days, mode 135.days, max 270.days }
     note "PGR request fee $25,000.00, verified, effective/last-amended 1/14/2025 (37 CFR 42.15(b)(1)): covers up to 20 claims; $595.00 per claim over 20 at request (42.15(b)(3)). A post-institution fee of $34,375.00 (42.15(b)(2)), plus $1,315.00 per claim over 20 instituted (42.15(b)(4)), falls due only if the Board institutes -- not modeled on this edge. (This edge previously and incorrectly reused the IPR request fee of $23,750.00; corrected to the PGR-specific fee.)"
   }
-  _ "Requester files ex parte reexam request (35 U.S.C. 302)" -> epr-requested {
+  edge-patent-chall-epr-requeste-requester-files-ex "Requester files ex parte reexam request (35 U.S.C. 302)" -> epr-requested {
     authority cite "35 U.S.C. 302; 37 CFR 1.510; MPEP 2209"
     cost 13_545.usd
     note "Any person, any time during enforceability, even anonymously. Non-streamlined ex parte reexam request fee $13,545.00, undiscounted/large-entity, effective 1/19/2025 (37 CFR 1.20(c)(2)); a streamlined ex parte reexam (a newer, faster USPTO option, narrower eligibility) costs $6,775.00 instead (37 CFR 1.20(c)(1)(i)) -- this edge models the non-streamlined default since streamlined-track eligibility isn't tracked by this pack."
@@ -66,10 +66,10 @@ chance ipr-institution-decision: "IPR Institution Decision" by office discretion
   group post-grant-group
   note "The Board institutes only on a reasonable likelihood the petitioner prevails on ≥1 claim (35 U.S.C. 314(a)); it may deny on discretionary grounds. Institution rate authored at 0.65 — APPROXIMATE, a mid-2010s–2020s historical order of magnitude (institution rates have varied ~0.55–0.68 across vintages/PTAB policy); flagged, not a live figure."
   court_listener_url "https://www.courtlistener.com/opinion/3214886/cuozzo-speed-technologies-llc-v-lee/"
-  _ "PTAB institutes trial (35 U.S.C. 314(a))" -> ipr-trial-instituted p 0.65 {
+  edge-ipr-institut-ipr-trial-in-ptab-institutes-tr "PTAB institutes trial (35 U.S.C. 314(a))" -> ipr-trial-instituted p 0.65 {
     authority cite "35 U.S.C. 314(a); 37 CFR 42.108"
   }
-  _ "PTAB denies institution (Fintiv / 325(d) / merits)" -> claims-confirmed p 0.35 {
+  edge-ipr-institut-claims-confi-ptab-denies-instit "PTAB denies institution (Fintiv / 325(d) / merits)" -> claims-confirmed p 0.35 {
     authority cite "35 U.S.C. 314(a); 37 CFR 42.108"
     note "Denial ends the challenge; claims stand. Institution modeled 0.65 / denial 0.35 (APPROXIMATE, flagged on the node)."
   }
@@ -87,7 +87,7 @@ decision ipr-trial-instituted: "IPR Trial Instituted" by applicant effective [20
     authority cite "35 U.S.C. 316(d); 37 CFR 42.121"
     effort 80.hours
   }
-  _ "Settle before final written decision (35 U.S.C. 317) — avoid estoppel" -> claims-confirmed {
+  edge-ipr-trial-in-claims-confi-settle-before-fina "Settle before final written decision (35 U.S.C. 317) — avoid estoppel" -> claims-confirmed {
     authority cite "35 U.S.C. 317; 37 CFR 42.72–42.74"
     effort 20.hours
     valence good
@@ -99,13 +99,13 @@ chance ipr-final-written-decision: "IPR Final Written Decision" by office discre
 {
   group post-grant-group
   note "The Board's final written decision on the instituted claims. Distribution authored at 0.65 all-cancelled / 0.20 all-upheld / 0.15 mixed-with-substitute — APPROXIMATE; of instituted IPRs reaching a FWD, a majority historically find all instituted claims unpatentable. Estoppel (315(e)) attaches here."
-  _ "FWD: all instituted claims held unpatentable" -> claims-cancelled p 0.65 {
+  edge-ipr-final-wr-claims-cance-fwd-all-instituted "FWD: all instituted claims held unpatentable" -> claims-cancelled p 0.65 {
     authority cite "35 U.S.C. 318(a); 318(b)"
   }
-  _ "FWD: claims upheld (patentability confirmed)" -> claims-confirmed p 0.2 {
+  edge-ipr-final-wr-claims-confi-fwd-claims-upheld "FWD: claims upheld (patentability confirmed)" -> claims-confirmed p 0.2 {
     authority cite "35 U.S.C. 318(a); 318(b)"
   }
-  _ "FWD: mixed — substitute claims entered (intervening rights)" -> claims-amended p 0.15 {
+  edge-ipr-final-wr-claims-amend-fwd-mixed-substitu "FWD: mixed — substitute claims entered (intervening rights)" -> claims-amended p 0.15 {
     authority cite "35 U.S.C. 318(a); 318(c)"
   }
 }
@@ -133,10 +133,10 @@ chance pgr-institution-decision: "PGR Institution Decision" by office discretion
 {
   group post-grant-group
   note "Institution on a showing that it is more likely than not at least one claim is unpatentable. Authored at 0.55 — APPROXIMATE (PGR volume is thin; treated as broadly comparable to IPR institution); flagged."
-  _ "PTAB institutes PGR (35 U.S.C. 324(a))" -> pgr-trial-instituted p 0.55 {
+  edge-pgr-institut-pgr-trial-in-ptab-institutes-pg "PTAB institutes PGR (35 U.S.C. 324(a))" -> pgr-trial-instituted p 0.55 {
     authority cite "35 U.S.C. 324(a); 37 CFR 42.208"
   }
-  _ "PTAB denies institution" -> claims-confirmed p 0.45 {
+  edge-pgr-institut-claims-confi-ptab-denies-instit "PTAB denies institution" -> claims-confirmed p 0.45 {
     authority cite "35 U.S.C. 324(a); 37 CFR 42.208"
   }
 }
@@ -153,7 +153,7 @@ decision pgr-trial-instituted: "PGR Trial Instituted" by applicant effective [20
     authority cite "35 U.S.C. 326(d); 37 CFR 42.221"
     effort 80.hours
   }
-  _ "Settle before final written decision (35 U.S.C. 327) — avoid estoppel" -> claims-confirmed {
+  edge-pgr-trial-in-claims-confi-settle-before-fina "Settle before final written decision (35 U.S.C. 327) — avoid estoppel" -> claims-confirmed {
     authority cite "35 U.S.C. 327; 37 CFR 42.72–42.74"
     effort 20.hours
     valence good
@@ -164,11 +164,11 @@ chance pgr-final-written-decision: "PGR Final Written Decision" by office discre
 {
   group post-grant-group
   note "Final written decision on the instituted claims. Distribution authored 0.60 cancelled / 0.25 upheld / 0.15 mixed — APPROXIMATE; PGR's broader grounds make cancellation modestly likelier than IPR. 325(e) estoppel attaches here."
-  _ "FWD: claims held unpatentable (incl. 101/112 grounds)" -> claims-cancelled p 0.6 {
+  edge-pgr-final-wr-claims-cance-fwd-claims-held-un "FWD: claims held unpatentable (incl. 101/112 grounds)" -> claims-cancelled p 0.6 {
     authority cite "35 U.S.C. 328(a); 328(b)"
   }
-  _ "FWD: claims upheld" -> claims-confirmed p 0.25 { authority cite "35 U.S.C. 328(a); 328(b)" }
-  _ "FWD: mixed — substitute claims entered (intervening rights)" -> claims-amended p 0.15 {
+  edge-pgr-final-wr-claims-confi-fwd-claims-upheld "FWD: claims upheld" -> claims-confirmed p 0.25 { authority cite "35 U.S.C. 328(a); 328(b)" }
+  edge-pgr-final-wr-claims-amend-fwd-mixed-substitu "FWD: mixed — substitute claims entered (intervening rights)" -> claims-amended p 0.15 {
     authority cite "35 U.S.C. 328(a); 328(c)"
   }
 }
@@ -182,10 +182,10 @@ chance epr-requested: "Ex Parte Reexam Requested" by office discretion effective
   group post-grant-group
   note "A reexam request is filed (by anyone, even anonymously or the owner). The Office decides within 3 months whether it raises a substantial new question of patentability (SNQ, 35 U.S.C. 303(a)). Grant rate authored at 0.92 — APPROXIMATE; SNQ grants historically run high (~90%+); flagged."
   court_listener_url "https://www.courtlistener.com/opinion/209660/in-re-swanson/"
-  _ "Director grants reexam — SNQ found (35 U.S.C. 303)" -> epr-ordered p 0.92 {
+  edge-epr-requeste-epr-ordered-director-grants-re "Director grants reexam — SNQ found (35 U.S.C. 303)" -> epr-ordered p 0.92 {
     authority cite "35 U.S.C. 303(a); 304; 37 CFR 1.515"
   }
-  _ "Request denied — no substantial new question" -> claims-confirmed p 0.08 {
+  edge-epr-requeste-claims-confi-request-denied-no "Request denied — no substantial new question" -> claims-confirmed p 0.08 {
     authority cite "35 U.S.C. 303(a); 37 CFR 1.515(a)"
     note "Denial (no SNQ) leaves the claims untouched. Grant modeled 0.92 / denial 0.08 (APPROXIMATE, flagged on the node)."
   }
@@ -217,13 +217,13 @@ chance epr-examination: "Reexam Examination → Certificate" by office discretio
 {
   group post-grant-group
   note "Ex parte examination proceeds with special dispatch and concludes in a reexamination certificate (35 U.S.C. 307). Distribution authored 0.66 amended/narrowed / 0.22 confirmed / 0.12 all-cancelled — APPROXIMATE; most reexam certificates change or narrow at least some claims. New/amended claims carry intervening rights (35 U.S.C. 307(b))."
-  _ "Reexam certificate: claims amended / narrowed" -> claims-amended p 0.66 {
+  edge-epr-examinat-claims-amend-reexam-certificate "Reexam certificate: claims amended / narrowed" -> claims-amended p 0.66 {
     authority cite "35 U.S.C. 307; 307(b); 37 CFR 1.570"
   }
-  _ "Reexam certificate: claims confirmed as patentable" -> claims-confirmed p 0.22 {
+  edge-epr-examinat-claims-confi-reexam-certificate "Reexam certificate: claims confirmed as patentable" -> claims-confirmed p 0.22 {
     authority cite "35 U.S.C. 307; 37 CFR 1.570"
   }
-  _ "Reexam certificate: claims cancelled" -> claims-cancelled p 0.12 {
+  edge-epr-examinat-claims-cance-reexam-certificate "Reexam certificate: claims cancelled" -> claims-cancelled p 0.12 {
     authority cite "35 U.S.C. 307; 37 CFR 1.570"
   }
 }

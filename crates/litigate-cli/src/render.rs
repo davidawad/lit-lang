@@ -370,9 +370,20 @@ mod tests {
                     Severity::Info,
                     "ITC dependency info",
                 ),
+                diagnostic(
+                    "unmapped.case",
+                    DiagnosticCode::HolePresent,
+                    Severity::Warning,
+                    "unmapped matter hole",
+                ),
             ],
             check_render: Some(crate::out::CheckRender {
-                own_files: ["mine.lit".to_owned(), "case.case".to_owned()].into(),
+                own_files: [
+                    "mine.lit".to_owned(),
+                    "case.case".to_owned(),
+                    "unmapped.case".to_owned(),
+                ]
+                .into(),
                 package_by_file: [
                     ("mine.lit".to_owned(), "mine".to_owned()),
                     ("lit/ttab/rules.lit".to_owned(), "ttab".to_owned()),
@@ -397,7 +408,7 @@ mod tests {
         assert!(!text.contains("dependency hint"), "{text}");
         assert!(!text.contains("unmapped dependency info"), "{text}");
         assert!(
-            text.contains("matter: 1 holes; --verbose to show"),
+            text.contains("matter: 2 holes; --verbose to show"),
             "{text}"
         );
     }

@@ -34,8 +34,10 @@ pub enum ValueKind {
     Calendar(bool),
     /// Default with its conclusion type (unknown when ill-typed).
     Default(Option<Type>),
-    /// Exception.
-    Exception,
+    /// Exception, with the conclusion type of the default its chain of
+    /// targets ends at (unknown when that default is ill-typed or the chain
+    /// does not resolve).
+    Exception(Option<Type>),
     /// Transition.
     Transition,
     /// Rule wrapper.
@@ -54,7 +56,7 @@ impl ValueKind {
             Self::Counting(_) => "counting rule",
             Self::Calendar(_) => "calendar",
             Self::Default(_) => "default",
-            Self::Exception => "exception",
+            Self::Exception(_) => "exception",
             Self::Transition => "transition",
             Self::Rule => "rule",
             Self::Instance(_) => "instance",
@@ -196,7 +198,7 @@ pub fn value_of(item: &Item) -> Option<(&str, ValueKind)> {
             })),
         ),
         ItemKind::Default(name, ..) => (name.text.as_str(), ValueKind::Default(None)),
-        ItemKind::Exception { name, .. } => (name.text.as_str(), ValueKind::Exception),
+        ItemKind::Exception { name, .. } => (name.text.as_str(), ValueKind::Exception(None)),
         ItemKind::Transition(name, ..) => (name.text.as_str(), ValueKind::Transition),
         ItemKind::Rule(_, name, ..) => (name.text.as_str(), ValueKind::Rule),
         _ => return None,
@@ -249,7 +251,52 @@ pub fn build(db: &dyn salsa::Database, file: SourceFile) -> Signature {
             *kind = ValueKind::Default(ty);
         }
     }
+    exception_types(&mut sig, tree, &imports, &items);
     sig
+}
+
+/// Types every exception by the default its targets lead to, to a fixpoint
+/// so an exception may target one declared after it (a cycle stays unknown;
+/// L3006 reports it).
+fn exception_types(
+    sig: &mut Signature,
+    tree: &ItemTree,
+    imports: &[&Signature],
+    items: &[(&Item, Option<&Item>)],
+) {
+    loop {
+        let found: Vec<(String, Type)> = {
+            let scope = Scope::new(sig, tree, imports, Vec::new());
+            items
+                .iter()
+                .filter_map(|(item, _)| match &item.kind {
+                    ItemKind::Exception { name, target, .. } => {
+                        let (_, f) = scope.value(target).ok()?;
+                        let ty = match &f.item.kind {
+                            ValueKind::Default(t) | ValueKind::Exception(t) => t.as_ref()?,
+                            _ => return None,
+                        };
+                        Some((name.text.clone(), scope.localize(f.sig, ty)))
+                    }
+                    _ => None,
+                })
+                .collect()
+        };
+        let mut changed = false;
+        for (name, ty) in found {
+            if let Some(ValueSig {
+                kind: kind @ ValueKind::Exception(None),
+                ..
+            }) = sig.values.get_mut(&name)
+            {
+                *kind = ValueKind::Exception(Some(ty));
+                changed = true;
+            }
+        }
+        if !changed {
+            return;
+        }
+    }
 }
 
 /// Records every declared name of `items` in `sig`.
@@ -321,28 +368,60 @@ fn collect(sig: &mut Signature, items: &[(&Item, Option<&Item>)], m: Option<&Man
     }
 }
 
-/// Resolves alias targets and event parameter types (aliases in
-/// declaration order; an alias seeing a later or cyclic alias gets `None`).
+/// Resolves alias targets and event parameter types. Aliases resolve to a
+/// fixpoint, so one may name an alias declared after it; a cyclic alias
+/// stays `None` (L3006 reports it). Event parameters resolve once every
+/// alias has.
 fn resolve_types(sig: &mut Signature, tree: &ItemTree, imports: &[&Signature]) {
+    let mut aliases = Vec::new();
+    let mut events = Vec::new();
     for (item, _) in flatten(tree) {
-        let resolved = match &item.kind {
+        let (name, placeholder) = match &item.kind {
             ItemKind::TypeAlias(name, target) => {
-                let scope = Scope::new(sig, tree, imports, Vec::new());
-                let ty = ty::resolve(&scope, target, &mut Vec::new());
-                Some((name.text.clone(), TypeSig::Alias(ty)))
+                aliases.push((name.text.clone(), target));
+                (name, TypeSig::Alias(None))
             }
             ItemKind::Event(name, params, _) => {
-                let scope = Scope::new(sig, tree, imports, Vec::new());
+                events.push((name.text.clone(), params));
+                (name, TypeSig::Event(Vec::new()))
+            }
+            _ => continue,
+        };
+        sig.types.entry(name.text.clone()).or_insert(placeholder);
+    }
+    loop {
+        let resolved: Vec<(String, Type)> = {
+            let scope = Scope::new(sig, tree, imports, Vec::new());
+            aliases
+                .iter()
+                .filter(|(name, _)| matches!(sig.types.get(name), Some(TypeSig::Alias(None))))
+                .filter_map(|(name, target)| {
+                    Some((name.clone(), ty::resolve(&scope, target, &mut Vec::new())?))
+                })
+                .collect()
+        };
+        if resolved.is_empty() {
+            break;
+        }
+        for (name, ty) in resolved {
+            sig.types.insert(name, TypeSig::Alias(Some(ty)));
+        }
+    }
+    let typed: Vec<(String, TypeSig)> = {
+        let scope = Scope::new(sig, tree, imports, Vec::new());
+        events
+            .iter()
+            .filter(|(name, _)| matches!(sig.types.get(name), Some(TypeSig::Event(p)) if p.is_empty()))
+            .map(|(name, params)| {
                 let params = params
                     .iter()
                     .map(|(p, t)| (p.text.clone(), ty::resolve(&scope, t, &mut Vec::new())))
                     .collect();
-                Some((name.text.clone(), TypeSig::Event(params)))
-            }
-            _ => None,
-        };
-        if let Some((name, ts)) = resolved {
-            sig.types.entry(name).or_insert(ts);
-        }
+                (name.clone(), TypeSig::Event(params))
+            })
+            .collect()
+    };
+    for (name, ts) in typed {
+        sig.types.insert(name, ts);
     }
 }

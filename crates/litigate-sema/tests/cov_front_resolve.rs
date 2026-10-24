@@ -58,7 +58,7 @@ fn every_value_kind_has_a_noun() {
         K::Counting(std::collections::BTreeSet::new()),
         K::Calendar(false),
         K::Default(None),
-        K::Exception,
+        K::Exception(None),
         K::Transition,
         K::Rule,
         K::Instance(None),

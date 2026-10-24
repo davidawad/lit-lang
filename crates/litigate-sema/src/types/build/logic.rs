@@ -49,10 +49,10 @@ impl Cx<'_, '_> {
         let meta = self.meta(name, None, item, rule);
         let resolved = self.ck.scope.value(target).map_err(|r| self.report(r)).ok();
         let target_ty = match resolved.as_ref().map(|(_, f)| (f.sig, &f.item.kind)) {
-            Some((sig, ValueKind::Default(t))) => {
+            Some((sig, ValueKind::Default(t) | ValueKind::Exception(t))) => {
                 t.as_ref().map(|t| self.ck.scope.localize(sig, t))
             }
-            Some((_, ValueKind::Exception)) | None => None,
+            None => None,
             Some((_, other)) => {
                 self.report(Report::new(
                     C::TypeMismatch,

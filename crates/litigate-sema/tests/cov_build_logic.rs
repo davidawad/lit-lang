@@ -206,3 +206,33 @@ link e \"E\": base::done -> base::entry { when true }\n",
     ]);
     insta::assert_debug_snapshot!(render(&db, ws));
 }
+
+#[test]
+fn a_forward_alias_types_an_event_parameter() {
+    // T3: `Late` is declared after the alias and event that use it; the
+    // event keeps its parameter type, so a wrong argument is reported.
+    let out = check_body(
+        "type Early = Late\nevent Paid(amount: Early)\ntype Late = Money<usd>\n\
+test \"t\" {\n  given Paid(\"x\") on 2025-01-01\n  expect true == true\n}",
+    );
+    assert_eq!(out.len(), 1, "{out:?}");
+    assert!(out[0].contains("L2001"), "{out:?}");
+}
+
+#[test]
+fn an_exception_to_an_exception_concludes_its_default_type() {
+    // T6: a rebuttal of an exception is checked against the root default's
+    // conclusion type, also when it is declared before its target.
+    let out = check_body(
+        "exception first rebuts second when true => \"x\" priority 2\n\
+default base when true => 1\n\
+exception second rebuts base when true => 2 priority 1\n\
+exception third rebuts first when true => 3\n\
+exception loop-a rebuts loop-b when true => \"y\"\n\
+exception loop-b rebuts loop-a when true => 4",
+    );
+    assert_eq!(
+        out,
+        ["pkgs/demo/main.lit:10:44 L2001 expected `Number`, found `String`"]
+    );
+}

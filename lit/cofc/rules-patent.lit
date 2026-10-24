@@ -21,6 +21,16 @@ event ClaimConstructionOrderEntered()
 /// The parties hold a mandatory settlement discussion (Appendix J, Rule 16).
 event SettlementDiscussionHeld()
 
+/// The paper Patent Rule 17 requires within 7 days after each settlement
+/// discussion: "(a) a joint statement of compliance with PRCFC 16,
+/// indicating that settlement discussions were conducted and apprising the
+/// court of the outcome; or (b) a motion requesting that the case be
+/// dismissed".
+enum SettlementReport { ComplianceStatement, DismissalMotion }
+
+/// The parties file their Patent Rule 17 `paper`.
+event SettlementDiscussionReported(paper: SettlementReport)
+
 /// RCFC Appendix J, the Patent Rules, supplementing the RCFC in every action
 /// under 28 U.S.C. § 1498(a) respecting patents (Rule 1(a)). Appendix J is
 /// not in the vendored corpus, so every cite stays a hole; the deadlines are
@@ -65,10 +75,10 @@ rule duty patent-cascade cite ?("RCFC Appendix J") {
   /// unextendable and records no delegation.
   deadline settlement-discussion-period: 14.days after ClaimConstructionOrderEntered() counted_by rcfc6 cite ?("RCFC Appendix J, Rule 16(a)")
 
-  /// Rule 17: a joint statement of compliance, or a motion to dismiss after
-  /// settlement, is due 7 days after each discussion. Unextendable in the
-  /// legacy pack; no delegation recorded.
-  deadline settlement-statement-period: 7.days after SettlementDiscussionHeld() counted_by rcfc6 cite ?("RCFC Appendix J, Rule 17")
+  /// Rule 17: "Within 7 days after each settlement discussion", a joint
+  /// statement of compliance or a motion requesting that the case be
+  /// dismissed. Unextendable in the legacy pack; no delegation recorded.
+  deadline settlement-statement-period: 7.days after SettlementDiscussionHeld() counted_by rcfc6 cite "PRCFC 17"
 }
 
 test "patent-jpsr-period: 49 days after AnswerFiled" cite ?("RCFC Appendix J, Rule 3") {
@@ -170,7 +180,8 @@ test "settlement-discussion-period: Juneteenth observed rolls to Monday" cite "R
   expect deadline(settlement-discussion-period) == 2027-06-21
 }
 
-test "settlement-statement-period: 7 days after SettlementDiscussionHeld" cite ?("RCFC Appendix J, Rule 17") {
+test "settlement-statement-period: 7 days after SettlementDiscussionHeld" cite "PRCFC 17"
+{
   given SettlementDiscussionHeld() on 2026-08-03
   expect deadline(settlement-statement-period) == 2026-08-10
 }

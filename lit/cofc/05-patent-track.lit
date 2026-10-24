@@ -13,6 +13,8 @@ import cofc.rules-patent.{
   patent-jpsr-period,
   settlement-discussion-period,
   settlement-statement-period,
+  SettlementDiscussionReported,
+  SettlementReport,
 }
 
 import cofc.trial-post-trial.{ trial-bench }
@@ -177,7 +179,8 @@ state patent-mandatory-settlement-discussion: "Mandatory Settlement Discussion" 
   group patent-track-group
   note "The parties MUST meet and confer (in person, phone, or videoconference) within 14 days after: (a) the Claim Construction Opinion and Order, (b) any order on a motion for judgment on a claim/defense that doesn't dismiss the case, and (c) the conclusion of trial. Within 7 days after each such discussion, the parties must file either a joint statement of compliance (Rule 17(a)) or a motion to dismiss following settlement (Rule 17(b)) -- failure to actually hold the discussion is itself sanctionable good-faith-participation noncompliance (Rule 20)."
   e-settlementmeet-to-fork "Parties report the outcome of the discussion" -> patent-settlement-fork {
-    authority cite ?("RCFC Appendix J Rule 17")
+    authority cite "PRCFC 17"
+    event SettlementDiscussionReported()
     within settlement-statement-period {
       extendable false
       note "Joint statement of compliance (or a motion to dismiss on settlement) due within 7 days after the discussion."
@@ -185,14 +188,29 @@ state patent-mandatory-settlement-discussion: "Mandatory Settlement Discussion" 
   }
 }
 
-chance patent-settlement-fork: "Settlement Reached at Mandatory Discussion?" by office cite ?("RCFC Appendix J, Rule 17") {
+/// Whether the discussion settled the case is a matter fact (`tags
+/// [fact]`), read from the Patent Rule 17 paper the parties filed: a motion
+/// requesting dismissal reports a settlement, a joint statement of
+/// compliance that the case goes on. A history with neither paper, or both,
+/// decides nothing, and the probabilities are only its prior. A statement
+/// that apprises the court of a settlement not yet followed by a motion to
+/// dismiss is recorded as the statement it is, so the matter continues
+/// until it states its `facts` (Rule 17(a) leaves the outcome to the
+/// statement's text, which the event does not carry).
+chance patent-settlement-fork: "Settlement Reached at Mandatory Discussion?" by office cite "PRCFC 17"
+{
   group patent-track-group
-  note "Outcome distribution authored at 0.30 settled / 0.70 case-continues -- TEACHING ESTIMATE, reflecting that claim construction is a major but not usually case-ending uncertainty-resolution event; most §1498 cases still need a damages determination even after claims are construed favorably or unfavorably for one side."
+  note "A matter fact derived from the Patent Rule 17 paper (a motion requesting dismissal, or a joint statement of compliance). Prior: 0.30 settled / 0.70 case-continues -- TEACHING ESTIMATE, reflecting that claim construction is a major but not usually case-ending uncertainty-resolution event; most §1498 cases still need a damages determination even after claims are construed favorably or unfavorably for one side."
+  tags [fact]
   e-settlementfork-settles "Settlement reached at the mandatory discussion" -> settled-adr p 0.3 {
-    note "TEACHING ESTIMATE -- claim construction is a major, but not usually case-ending, uncertainty-resolution event."
+    when has_event(SettlementDiscussionReported(DismissalMotion)) && !has_event(SettlementDiscussionReported(ComplianceStatement))
+    authority cite "PRCFC 17"
+    note "TEACHING ESTIMATE prior -- claim construction is a major, but not usually case-ending, uncertainty-resolution event."
   }
   e-settlementfork-continues "No settlement; case continues" -> patent-final-contentions-expert-discovery p 0.7 {
-    note "TEACHING ESTIMATE, see sibling edge note."
+    when has_event(SettlementDiscussionReported(ComplianceStatement)) && !has_event(SettlementDiscussionReported(DismissalMotion))
+    authority cite "PRCFC 17"
+    note "TEACHING ESTIMATE prior, see sibling edge note."
   }
 }
 

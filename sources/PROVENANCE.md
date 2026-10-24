@@ -299,6 +299,27 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   to its end, one line per block element.
 - sha256 (this file): `c246fa771851ef008653521977a993531d589881d85354e9c9f949f9c1b1a284`
 
+### `rcfc-appendices.txt` — RCFC Appendix H ¶ 3 (ADR ground rules) and Appendix J Patent Rules 16-17 (mandatory settlement discussions)
+
+- `## RCFC App. H 3`: paragraph 3 ("Procedures") of Appendix H through
+  ground rule (i), from the court's standalone `23. Appendix H.pdf`
+  (`www.uscfc.uscourts.gov`, fetched 2026-10-24; sha256
+  `41228005f2b5d60119d7b53f3bee122060a17f2234f91ab0b9cfa9f916b5ce2b`, the
+  hash `lit/cofc`'s `rcfc-app-h` binding already recorded). `pdftotext
+  -layout` text, its two columns read left then right (the 2020 Amendment
+  note calls the referral clause "Paragraph 3(b)(1)", confirming the ground
+  rules are paragraph 3's), lines joined and hyphenated line breaks
+  closed; no wording changed. Ground rule (j) and the patent and copyright
+  disclosure lists are omitted.
+- `## PRCFC 16`, `## PRCFC 17`: Title V of the Patent Rules (Appendix J),
+  from the court's compiled rules `Rules 10.08.26.pdf` (fetched 2026-10-24;
+  sha256 `943733526f5391cad22562adf31411148fecfb03f01ae7bcf8bd6ec051a0c971`),
+  whose title page reads "As amended through July 27, 2026", the expression
+  `lit/cofc` is in force from. The standalone `Patent Rules 7.27.26.pdf` the
+  `rcfc-app-j` binding records no longer resolves. Same extraction; page
+  furniture dropped.
+- sha256 (this file): `b49c8c942e95cbee386893d3899e4ac93b6b6bce1fea8eeff05e2ad44fa1800b`
+
 ### `fr-usitc-time-history.txt` — Federal Register excerpts dating 19 C.F.R. §§ 201.14(a), 201.16(d)-(f) and 210.6 (USITC computation of time and service), 1976-2018
 
 - Excerpts, one `## <vol> FR <page>` section per printed page, of every

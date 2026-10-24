@@ -4,7 +4,7 @@
 module cafc.decision-to-rehearing
 
 import cafc.mandate.{ mandate-issued }
-import cafc.{ Entered, Filed, Order, Paper, decision-group, rehearing-group }
+import cafc.{ BecameFinal, Entered, Filed, Order, Paper, decision-group, rehearing-group }
 import core.authority.{ CaseOrder }
 import core.frap26.{ frap26 }
 
@@ -96,34 +96,46 @@ terminal dismissed-jurisdictional-defect: "Dismissed — Jurisdictional/Mootness
   payoff 0.usd
 }
 
-/// A structural router, not a discretion draw: the pack's equal split only
-/// stands in for the origin the playthrough entered from (see its note).
-/// It is a draw, not a choice (no party picks the tribunal a case came
-/// from), so it is a `chance` node; each `cafc@origin` instance sets its
-/// own route to 1.
+/// Where a vacated judgment goes back to is a matter fact (`tags [fact]`),
+/// not a draw: the tribunal the appeal came from, which the matter's
+/// history names by the entry that opened its notice-of-appeal period
+/// (`Entered(Judgment)` a district court's, `Entered(CofcJudgment)` the
+/// Court of Federal Claims', `Entered(BoardDecision)` the PTAB's,
+/// `Entered(TtabDecision)` the TTAB's, `BecameFinal()` the ITC's). Each
+/// guard holds only when that one origin's entry is in the history, so
+/// they are disjoint, and a history naming none (or several) decides
+/// nothing: the matter states its `facts`. The probabilities are only the
+/// prior of a matter whose history does not decide it; each `cafc@origin`
+/// instance sets its own route to 1.
 chance remand-destination: "Vacated/Remanded — Destination Tribunal" by office cite "FRAP 36(a)"
 {
   group decision-group
-  note "Structural router, not an independent statistical draw: which of the four remand terminals applies is determined entirely by which entry-* node this playthrough started from, not by chance. The 0.25/0.25/0.25/0.25 split exists only because the engine's schema requires probabilities on a chance node's out-edges to sum to 1 — see cafc-SOURCES-NOTES.md."
+  note "A matter fact, not an independent statistical draw: which of the remand terminals applies is determined entirely by the tribunal the appeal came from, which replay reads from the matter's own entry event. The 0.25/0.25/0.25/0.25 split is only the prior of a matter whose history does not name its origin -- see cafc-SOURCES-NOTES.md."
+  tags [fact]
   remand-route-district-court "Case originated at the district court" -> remanded-to-district-court p 0.25 {
+    when has_event(Entered(Judgment)) && !has_event(Entered(CofcJudgment)) && !has_event(Entered(BoardDecision)) && !has_event(Entered(TtabDecision)) && !has_event(BecameFinal())
     authority cite "FRAP 36(a)"
-    note "Structural, not statistical — see remand-destination's note."
+    note "Prior only -- see remand-destination's note."
   }
   remand-route-ptab "Case originated at the PTAB" -> remanded-to-ptab p 0.25 {
+    when has_event(Entered(BoardDecision)) && !has_event(Entered(Judgment)) && !has_event(Entered(CofcJudgment)) && !has_event(Entered(TtabDecision)) && !has_event(BecameFinal())
     authority cite "FRAP 36(a)"
-    note "Structural, not statistical — see remand-destination's note."
+    note "Prior only -- see remand-destination's note."
   }
   remand-route-itc "Case originated at the ITC" -> remanded-to-itc p 0.25 {
+    when has_event(BecameFinal()) && !has_event(Entered(Judgment)) && !has_event(Entered(CofcJudgment)) && !has_event(Entered(BoardDecision)) && !has_event(Entered(TtabDecision))
     authority cite "FRAP 36(a)"
-    note "Structural, not statistical — see remand-destination's note."
+    note "Prior only -- see remand-destination's note."
   }
   remand-route-cofc "Case originated at the CoFC" -> remanded-to-cofc p 0.25 {
+    when has_event(Entered(CofcJudgment)) && !has_event(Entered(Judgment)) && !has_event(Entered(BoardDecision)) && !has_event(Entered(TtabDecision)) && !has_event(BecameFinal())
     authority cite "FRAP 36(a)"
-    note "Structural, not statistical — see remand-destination's note."
+    note "Prior only -- see remand-destination's note."
   }
   remand-route-ttab "Case originated at the TTAB" -> remanded-to-ttab p 0 {
+    when has_event(Entered(TtabDecision)) && !has_event(Entered(Judgment)) && !has_event(Entered(CofcJudgment)) && !has_event(Entered(BoardDecision)) && !has_event(BecameFinal())
     authority cite "FRAP 36(a)"
-    note "Structural, not statistical — see remand-destination's note. Authored 0.0 in the unscoped base so the existing four 0.25 splits (and every base-pack output) are unchanged; the cafc@ttab instance sets this route to 1.0."
+    note "Prior only -- see remand-destination's note. Authored 0.0 in the unscoped base so the existing four 0.25 splits (and every base-pack output) are unchanged; the cafc@ttab instance sets this route to 1.0."
   }
 }
 

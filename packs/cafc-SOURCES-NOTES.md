@@ -95,7 +95,10 @@
   requirement for the node the team lead specifically called out).
 - `remand-destination`'s 0.25/0.25/0.25/0.25 split is explicitly **structural**, not statistical — the
   real destination is determined by which `entry-*` node the playthrough started from, not by chance;
-  documented in both the node's `note` and each edge's `note`.
+  documented in both the node's `note` and each edge's `note`. In `lit/cafc` it is a `fact` node:
+  each route's `when` guard reads the origin's own entry event (`Entered(Judgment)`,
+  `Entered(CofcJudgment)`, `Entered(BoardDecision)`, `Entered(TtabDecision)`, `BecameFinal()`), so a
+  matter's replay derives the destination and the split is only the prior of one that names no origin.
 - `mediation-screening`, `mediation-outcome`, and `oral-argument-fork` are **intentionally left with no
   probability at all** on any of their edges (not even a rough estimate) — no selection rate,
   settlement rate, or CAFC-specific oral-argument rate could be verified in the sources reviewed, and

@@ -19,8 +19,13 @@ group rehearing-group: "Rehearing & Rehearing En Banc"
 group mandate-group: "Mandate & Costs"
 group cert-group: "Certiorari to the Supreme Court"
 
-/// A judgment, decision or order whose entry starts a period.
-enum Order { Judgment, BoardDecision, PanelJudgment, RehearingDenial }
+/// A judgment, decision or order whose entry starts a period. Each origin
+/// tribunal's own: `Judgment` a district court's, `CofcJudgment` the Court
+/// of Federal Claims', `BoardDecision` the Patent Trial and Appeal Board's
+/// and `TtabDecision` the Trademark Trial and Appeal Board's final
+/// decision (an ITC determination's appeal runs from `BecameFinal`), so a
+/// matter's history names the tribunal it came from.
+enum Order { Judgment, CofcJudgment, BoardDecision, TtabDecision, PanelJudgment, RehearingDenial }
 
 /// A paper whose filing starts a period.
 enum Paper {

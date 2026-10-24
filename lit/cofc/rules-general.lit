@@ -10,6 +10,16 @@ event AnswerFiled()
 /// All discovery, including expert discovery, closes (RCFC 56(b)).
 event DiscoveryClosed()
 
+/// What the order concluding an ADR proceeding indicates: "whether a
+/// proposed settlement has been reached in whole or in part" (Appendix H ¶
+/// 3(h)). `NoWholeSettlement` is a settlement in part or none, either of
+/// which leaves claims to litigate.
+enum AdrOutcome { WholeSettlement, NoWholeSettlement }
+
+/// The settlement judge or third-party neutral enters the order concluding
+/// the ADR proceeding, indicating `outcome` (Appendix H ¶ 3(h)).
+event AdrConcluded(outcome: AdrOutcome)
+
 /// Appendix A ¶4 (case management under RCFC 16(b)): the Joint Preliminary
 /// Status Report is due 49 days after the answer, deferred while a
 /// case-dispositive motion is pending (¶6). Appendix A is not in the

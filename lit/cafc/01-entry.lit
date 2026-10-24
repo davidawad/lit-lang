@@ -257,7 +257,7 @@ rule duty itc-notice-of-appeal cite "19 U.S.C. § 1337(c)"
 /// Court of Federal Claims' own rule, is not applied to it.
 rule duty cofc-notice-of-appeal cite "28 U.S.C. § 2522"
 {
-  deadline cofc-noa-period: 60.days after Entered(Judgment) counted_by frap26 effective [2002-12-01, 2009-12-01) known_at 2002-04-29 delegable_to [CaseOrder] cite "28 U.S.C. § 2522; FRAP (2008 ed.) 4(a)(1)(B); FRAP (2008 ed.) 4(a)(5)(A)"
+  deadline cofc-noa-period: 60.days after Entered(CofcJudgment) counted_by frap26 effective [2002-12-01, 2009-12-01) known_at 2002-04-29 delegable_to [CaseOrder] cite "28 U.S.C. § 2522; FRAP (2008 ed.) 4(a)(1)(B); FRAP (2008 ed.) 4(a)(5)(A)"
   {
     forum frap
     extend {
@@ -270,7 +270,7 @@ rule duty cofc-notice-of-appeal cite "28 U.S.C. § 2522"
     }
     extend { never cite "FRAP (2008 ed.) 26(b)(1)" }
   }
-  deadline cofc-noa-period: 60.days after Entered(Judgment) counted_by frap26 effective [2009-12-01, ..) known_at 2009-03-26 supersedes cofc-noa-period@2002-12-01 delegable_to [CaseOrder] cite "28 U.S.C. § 2522; FRAP 4(a)(1)(B); FRAP 4(a)(5)(A)"
+  deadline cofc-noa-period: 60.days after Entered(CofcJudgment) counted_by frap26 effective [2009-12-01, ..) known_at 2009-03-26 supersedes cofc-noa-period@2002-12-01 delegable_to [CaseOrder] cite "28 U.S.C. § 2522; FRAP 4(a)(1)(B); FRAP 4(a)(5)(A)"
   {
     forum frap cite "28 U.S.C. § 2522" quote "within the time and in the manner prescribed for appeals to United States courts of appeals from the United States district courts"
     extend {
@@ -305,7 +305,7 @@ event TtabAppealPeriodExtended(until: Date) extends ttab-noa-period to until
 /// a court.
 rule duty ttab-notice-of-appeal cite "37 C.F.R. § 2.145(d)(1)"
 {
-  deadline ttab-noa-period: 63.days after Entered(BoardDecision) counted_by ttab-2-196 effective [2017-01-14, ..) known_at 2016-10-07 cite "37 C.F.R. § 2.145(d)(1); 37 C.F.R. § 2.145(d)(4)(ii)"
+  deadline ttab-noa-period: 63.days after Entered(TtabDecision) counted_by ttab-2-196 effective [2017-01-14, ..) known_at 2016-10-07 cite "37 C.F.R. § 2.145(d)(1); 37 C.F.R. § 2.145(d)(4)(ii)"
   {
     forum ttab
     extend { by director, discretion GoodCause, on TtabAppealExtensionRequested() }
@@ -362,30 +362,30 @@ test "a Sunday 60th day rolls to Monday" cite "FRAP 26(a)(1)(C)"
 
 test "a CoFC notice of appeal is due 60 days after entry" cite "28 U.S.C. § 2522"
 {
-  given Entered(Judgment) on 2026-03-02
+  given Entered(CofcJudgment) on 2026-03-02
   expect deadline(cofc-noa-period) == 2026-05-01
 }
 
 test "a 60th day on observed Independence Day rolls to Monday" cite "FRAP 26(a)(6)(A)"
 {
-  given Entered(Judgment) on 2026-05-04
+  given Entered(CofcJudgment) on 2026-05-04
   expect deadline(cofc-noa-period) == 2026-07-06
 }
 
 test "a TTAB notice of appeal is due 63 days after the final decision" cite "37 C.F.R. § 2.145(d)(1)"
 {
-  given Entered(BoardDecision) on 2026-03-02
+  given Entered(TtabDecision) on 2026-03-02
   expect deadline(ttab-noa-period) == 2026-05-04
 }
 
 test "a 63rd day on Labor Day rolls to Tuesday" cite "37 C.F.R. § 2.145(d)(4)(ii)"
 {
-  given Entered(BoardDecision) on 2026-07-06
+  given Entered(TtabDecision) on 2026-07-06
   expect deadline(ttab-noa-period) == 2026-09-08
 }
 
 test "a TTAB 63rd day on Inauguration Day rolls to Friday" cite "37 C.F.R. § 2.145(d)(4)(ii)"
 {
-  given Entered(BoardDecision) on 2032-11-18
+  given Entered(TtabDecision) on 2032-11-18
   expect deadline(ttab-noa-period) == 2033-01-21
 }

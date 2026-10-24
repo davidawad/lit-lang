@@ -368,6 +368,7 @@ fn a_filing_limit_takes_relations_on_either_side_of_its_body() {
 fn a_malformed_filing_limit_reports_where_it_breaks() {
     for (item, expected) in [
         ("limit", vec!["L0011", "L0001"]),
+        ("limit \"brief\"", vec!["L0011", "L0001"]),
         ("limit brief", vec!["L0011", "L0001"]),
         ("limit brief { words 13000 }", vec!["L0011", "L0001"]),
         ("limit brief { words <= }", vec!["L0011", "L0001"]),

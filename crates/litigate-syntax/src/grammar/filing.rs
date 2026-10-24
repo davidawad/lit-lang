@@ -4,7 +4,7 @@
 //! until lg-962.10 implements them. `limit`, `certificate` and `excludes`
 //! are reserved words the lexer already reports; nothing here reports
 //! L0011 a second time.
-use super::clauses::version_clause;
+use super::clauses::{clauses, Clauses};
 use super::values::{cite, hole, number, reference, require, string};
 use super::{brace_list, delimited_node, Sep};
 use crate::parser::Parser;
@@ -13,28 +13,25 @@ use crate::syntax_kind::SyntaxKind::*;
 /// The length measures of a `limit` body.
 const MEASURES: [crate::SyntaxKind; 3] = [KwWords, KwPages, KwLines];
 
-/// `LimitDecl = "limit" Ref {VersionClause | Cite} LimitBody
-/// {VersionClause | Cite}`.
+/// `LimitDecl = "limit" Ref {VersionClause | Relation | Cite} LimitBody
+/// {VersionClause | Relation | Cite}`: the clauses may lead or follow the
+/// body (`limit brief { ... } cite "..."`).
 pub(crate) fn limit(p: &mut Parser<'_>) {
     p.start(LimitDecl);
     p.bump_as(KwLimit);
     if require(p, reference, &[Ident]) {
-        authority(p);
+        let mut expected = clauses(p, Clauses::RULE);
         if p.at(LBrace) {
-            let mut expected = MEASURES.to_vec();
-            expected.extend([KwRequires, KwExcludes, KwEcf]);
-            brace_list(p, Sep::Optional, &expected, &mut entry);
-            authority(p);
+            let mut entries = MEASURES.to_vec();
+            entries.extend([KwRequires, KwExcludes, KwEcf]);
+            brace_list(p, Sep::Optional, &entries, &mut entry);
+            clauses(p, Clauses::RULE);
         } else {
-            p.error_expected(&[KwEffective, KwKnownAt, KwCite, LBrace]);
+            expected.push(LBrace);
+            p.error_expected(&expected);
         }
     }
     p.finish();
-}
-
-/// `{VersionClause | Cite}`: the declaration's versions and authority.
-fn authority(p: &mut Parser<'_>) {
-    while version_clause(p) || cite(p) {}
 }
 
 /// One `limit` body entry, each with its own `{Cite}`.

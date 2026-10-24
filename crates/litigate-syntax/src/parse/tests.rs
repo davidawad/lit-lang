@@ -352,6 +352,19 @@ fn filing_limits_parse_into_their_slot_and_are_reserved() {
 }
 
 #[test]
+fn a_filing_limit_takes_relations_on_either_side_of_its_body() {
+    let parsed = limited(
+        "limit local::brief override frap::brief delegable_to [CaseOrder] {\n  words <= ?\n} \
+         supersedes local::old-brief cite ?(\"local rule\")",
+    );
+    assert_eq!(codes(&parsed), ["L0011"]);
+    let kinds = node_kinds(&parsed);
+    assert!(!kinds.contains(&SyntaxKind::Error), "{kinds:?}");
+    let relations = kinds.iter().filter(|k| **k == SyntaxKind::Relation).count();
+    assert_eq!(relations, 3);
+}
+
+#[test]
 fn a_malformed_filing_limit_reports_where_it_breaks() {
     for (item, expected) in [
         ("limit", vec!["L0011", "L0001"]),

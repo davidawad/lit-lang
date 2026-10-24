@@ -258,6 +258,18 @@ fn reserved_filing_limits_parse_here_and_are_l0011_in_the_compiler() {
             assert!(error.message.starts_with(litigate_syntax::RESERVED_FILING));
         }
     }
+    // A local rule or order displaces a limit through the relations (§5.5).
+    let source = "module m\nlimit local::brief override frap::brief {\n  words <= ?\n} \
+                  cite ?(\"local rule\")\n";
+    let tree = parse(source);
+    assert!(syntax_errors(&tree).is_empty(), "{source}");
+    assert!(find(tree.root_node(), "relation").is_some(), "{source}");
+    let codes: Vec<&str> = litigate_syntax::parse_lit(source)
+        .errors()
+        .iter()
+        .map(|e| e.code.as_str())
+        .collect();
+    assert_eq!(codes, ["L0011"], "{source}");
 }
 
 /// Self-contained top-level items; any sequence of them is a valid module

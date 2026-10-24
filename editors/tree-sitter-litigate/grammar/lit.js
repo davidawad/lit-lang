@@ -313,9 +313,9 @@ module.exports = {
   limit_decl: $ => seq(
     'limit',
     field('paper', $.ref),
-    repeat(choice($._version_clause, $.cite)),
+    repeat(choice($._version_clause, $.relation, $.cite)),
     field('body', $.limit_body),
-    repeat(choice($._version_clause, $.cite)),
+    repeat(choice($._version_clause, $.relation, $.cite)),
   ),
 
   limit_body: $ => braced($._limit_entry),

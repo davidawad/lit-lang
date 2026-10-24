@@ -97,8 +97,9 @@ fn extension_bounds_read_back_as_written() {
         ExtensionBound::NonExtendable { .. }
     ));
     assert_eq!(serde_json::to_value(d).unwrap(), deadline);
-    // A misspelled field of a bound is an error, as everywhere in a pack.
-    let mut typo = deadline.clone();
-    typo["extensions"][1]["windw"] = json!("beforeExpiry");
-    assert!(pack(5, &typo).unwrap_err().contains("windw"));
+    // A field another bound has is an error, as is any unknown field in
+    // a pack: a discretionary grant states no date bound.
+    let mut wrong = deadline.clone();
+    wrong["extensions"][1]["until"] = json!({"offset": {"from": "prescribedDue", "days": 1}});
+    assert!(pack(5, &wrong).unwrap_err().contains("until"));
 }

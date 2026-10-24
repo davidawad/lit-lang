@@ -2,6 +2,8 @@
 //! and an FRCP matter (each with a fork and an unknown deadline), the
 //! options, and every output validated against the frozen schema
 //! `docs/litigate/timeline.v1.schema.json` together with its example.
+//! `replaced_by` (lg-z2m.4): a world triggering a deadline its parent
+//! left untriggered, and restarted or absorbed periods.
 // Test helpers below may unwrap: a panic is the failed assertion.
 #![allow(clippy::unwrap_used)]
 mod support;
@@ -212,6 +214,27 @@ fn check_references(t: &Value) {
         assert!(named(&e["from"], &rows) && named(&e["to"], &rows), "{e}");
         assert!(named(&e["world"], &worlds), "{e}");
     }
+    assert_eq!(replaced_by_errors(t), Vec::<String>::new(), "{t:#}");
+}
+
+/// The errors of each row's `replaced_by`: it must name the key of
+/// another row in the same world's view.
+fn replaced_by_errors(t: &Value) -> Vec<String> {
+    let mut errors = Vec::new();
+    for r in t["rows"].as_array().unwrap() {
+        let Some(key) = r.get("replaced_by") else {
+            continue;
+        };
+        let world = r["world"].as_str().unwrap();
+        let view = view_keys(t, world);
+        if key == &r["key"] || !view.iter().any(|k| key == k.as_str()) {
+            errors.push(format!(
+                "{}: replaced_by {key} is not another row's key in world {world}'s view",
+                r["id"]
+            ));
+        }
+    }
+    errors
 }
 
 /// The timeline document of `litigate timeline ARGS` run in `dir`,
@@ -231,13 +254,18 @@ fn timeline(args: &[&str]) -> Value {
     timeline_in(&repo(), args)
 }
 
-/// A scratch tree with the TTAB, FRCP and core packages and the timeline
-/// fixture matters under `cases/`, locked.
+/// A scratch tree with the TTAB, FRCP, FRAP and core packages, the
+/// synthetic `timeline-fixture` package and the timeline fixture matters
+/// under `cases/`, locked.
 fn fixtures() -> PathBuf {
     let dir = scratch("timeline-fixtures");
-    for pkg in ["ttab", "frcp", "core"] {
+    for pkg in ["ttab", "frcp", "frap", "core"] {
         copy_dir(&repo().join("lit").join(pkg), &dir.join("lit").join(pkg));
     }
+    copy_dir(
+        &repo().join("crates/litigate-cli/tests/fixtures/timeline-package"),
+        &dir.join("lit/fixture"),
+    );
     copy_dir(
         &repo().join("crates/litigate-cli/tests/fixtures/timeline"),
         &dir.join("cases"),
@@ -394,11 +422,20 @@ fn keys_are_unique_in_every_world_view_of_every_case() {
     // exits 2; its timeline is golden-tested there.
     for case in cases.iter().filter(|c| !c.ends_with("e2e-ttab-short.case")) {
         let t = timeline(&[case]);
-        // The op re-emits no row yet (lg-z2m.3), so no key may repeat in
-        // a view, inherited or not.
+        // The only row the op re-emits is a parent's deadline a world
+        // triggers (superseded, with `replaced_by`), so any other key
+        // repeating in a view, inherited or not, is a collision.
+        let reemitted: Vec<&str> = t["rows"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .filter(|r| r["world"] != "w0" && r.get("replaced_by").is_some())
+            .map(|r| r["key"].as_str().unwrap())
+            .collect();
         for w in t["worlds"].as_array().unwrap() {
             let id = w["id"].as_str().unwrap();
             let mut keys = view_keys(&t, id);
+            keys.retain(|k| !reemitted.contains(&k.as_str()));
             let count = keys.len();
             keys.sort();
             keys.dedup();
@@ -836,4 +873,140 @@ fn human_output_renders_the_envelope() {
     let stdout = String::from_utf8_lossy(&out.stdout);
     assert_eq!(out.status.code(), Some(0));
     assert!(stdout.contains("litigate timeline: ok"), "{stdout}");
+}
+
+/// The row of `t` in world `world` with key `key`.
+fn row<'t>(t: &'t Value, world: &str, key: &str) -> &'t Value {
+    t["rows"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|r| r["world"] == world && r["key"] == key)
+        .unwrap_or_else(|| panic!("no row {key} in {world}: {t:#}"))
+}
+
+#[test]
+fn a_world_triggering_a_deadline_its_parent_left_untriggered_re_emits_it() {
+    // Nothing recorded: the period governing `act` is untriggered in the
+    // docket; the world that starts it triggers it.
+    let dir = fixtures();
+    let t = timeline_in(&dir, &["cases/waiting.case"]);
+    let parent = "fixture.act-period@event:Started";
+    let child = "fixture.act-period@event:Started@fork:fixture.waiting@start";
+    let docket = row(&t, "w0", parent);
+    assert_eq!(docket["status"]["state"], "unknown");
+    assert!(docket.get("replaced_by").is_none(), "{docket}");
+    let again = row(&t, "w1", parent);
+    assert_ne!(again["id"], docket["id"]);
+    assert_eq!(
+        again["status"],
+        json!({"state": "superseded", "reason": "triggered in this world by `Start the period`"})
+    );
+    assert_eq!(again["replaced_by"], child);
+    let started = row(&t, "w1", "event:Started@fork:fixture.waiting@start");
+    let triggered = row(&t, "w1", child);
+    assert_eq!(triggered["trigger"], started["id"]);
+    assert!(triggered.get("replaced_by").is_none(), "{triggered}");
+    assert!(t["edges"].as_array().unwrap().contains(&json!({
+        "from": started["id"], "to": again["id"], "world": "w1", "kind": "supersedes"
+    })));
+    // The world that acts at once triggers nothing: it inherits the row.
+    assert!(t["rows"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .all(|r| r["world"] != "w2" || r["kind"] == "event"));
+    insta::assert_json_snapshot!("untriggered_in_parent_triggered_in_child", t);
+}
+
+#[test]
+fn a_restarted_or_absorbed_period_names_the_row_replacing_it() {
+    let dir = fixtures();
+    // FRAP 4(a)(4)(A): the order disposing of the tolling motion restarts
+    // the civil notice-of-appeal period (`trigger latest`).
+    let t = timeline_in(&dir, &["cases/frap-reentered.case"]);
+    let first = row(
+        &t,
+        "w0",
+        "frap.appeal-periods.notice-civil-period@event:EnteredBelow@2025-03-03",
+    );
+    assert_eq!(first["status"]["state"], "superseded");
+    assert_eq!(
+        first["replaced_by"],
+        "frap.appeal-periods.notice-civil-period@event:EnteredBelow@2025-03-20"
+    );
+    insta::assert_json_snapshot!("reset_restarted_period", t);
+    // FRAP 4(a)(3): the cross-appeal period absorbs the notice-of-appeal
+    // period (`later_of`).
+    let t = timeline_in(&dir, &["cases/frcp-cross-appeal.case"]);
+    let absorbed = row(
+        &t,
+        "w0",
+        "frcp.periods.notice-of-appeal-period@event:JudgmentEntered@2025-06-02",
+    );
+    assert_eq!(
+        absorbed["status"],
+        json!({"state": "superseded", "reason": "absorbed by a `later_of` instance"})
+    );
+    assert_eq!(
+        absorbed["replaced_by"],
+        "frcp.periods.cross-appeal-period@event:NoticeOfAppealFiled@2025-06-05"
+    );
+    // Only a superseded row with a replacement names one.
+    let named: Vec<&Value> = t["rows"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .filter(|r| r.get("replaced_by").is_some())
+        .collect();
+    assert_eq!(named, [absorbed]);
+    insta::assert_json_snapshot!("reset_absorbed_period", t);
+}
+
+#[test]
+fn the_validator_rejects_a_dangling_replaced_by() {
+    let text = std::fs::read_to_string(
+        repo().join("docs/litigate/examples/timeline-ttab-opposition.json"),
+    );
+    let example: Value = serde_json::from_str(&text.unwrap()).unwrap();
+    assert_eq!(replaced_by_errors(&example), Vec::<String>::new());
+    let r7 = example["rows"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .position(|r| r["id"] == "r7")
+        .unwrap();
+    let with = |key: &Value| {
+        let mut t = example.clone();
+        t["rows"][r7]["replaced_by"] = key.clone();
+        t
+    };
+    // No row has the key; the key is r9's, in world w2 (not in w1's view);
+    // the key is r7's own.
+    for key in [
+        json!("ttab.answer.answer-period@nowhere"),
+        json!(
+            "event:MotionDenied@fork:ttab.answer.reset-ruling@event:MotionToResetFiled@2026-04-06"
+        ),
+        example["rows"][r7]["key"].clone(),
+    ] {
+        let t = with(&key);
+        assert_eq!(schema_errors(&t), Vec::<String>::new());
+        assert_eq!(
+            replaced_by_errors(&t),
+            [format!(
+                "\"r7\": replaced_by {key} is not another row's key in world w1's view"
+            )]
+        );
+    }
+    // A key the world inherits from its parent resolves.
+    assert_eq!(
+        replaced_by_errors(&with(&json!("event:MotionToResetFiled@2026-04-06"))),
+        Vec::<String>::new()
+    );
+    // The schema rejects an empty or non-string key.
+    assert!(schema_errors(&with(&json!("")))
+        .join("\n")
+        .contains("/rows/6/replaced_by: \"\" is empty"));
+    assert!(!schema_errors(&with(&json!(null))).is_empty());
 }

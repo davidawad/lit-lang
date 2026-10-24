@@ -4,7 +4,9 @@ The timeline op (lg-z2m.1) prints the timeline of a `.case` or `.lit` file as
 JSON. The Emacs timeline buffer (lg-z2m.2) and any other UI only render it.
 The schema is frozen: [`timeline.v1.schema.json`](timeline.v1.schema.json).
 Later work (the lg-fq2 change layers, guard operations) fills in more data
-under the same fields; it does not add fields or bump the version.
+under the same fields; it does not add fields or bump the version. The one
+exception is the optional row field `replaced_by` (lg-z2m.4), added
+without a version bump because a reader that ignores it loses nothing.
 
 An illustrative document, written by hand rather than produced by the
 engine, is [`examples/timeline-ttab-opposition.json`](examples/timeline-ttab-opposition.json).
@@ -62,6 +64,12 @@ worlds by `key` only:
 - A row the child world drops is re-emitted the same way with
   `status.state` `superseded` (deadlines) or `none` (events) and a `reason`.
   A child world never drops a row by leaving it out.
+- A deadline the parent left untriggered (`<rule>@event:<Name>`) that the
+  child world triggers gets a child row keyed by its trigger
+  (`<rule>@event:<Name>@<fork key>`), and the child re-emits the parent's
+  row (the parent's key, a new id) `superseded`, with `replaced_by` the
+  child row's key. A diff then reads the parent row as replaced, not as a
+  removal and an unrelated addition.
 - A row that exists only in the child world has a `key` the parent lacks.
 - Rows that do not change are never copied.
 
@@ -71,7 +79,7 @@ A UI diffing two worlds pairs rows by `key`.
 
 | Field | Meaning |
 |---|---|
-| `key` | Stable identity across worlds and runs, derived from what caused the row and never from its position, so inserting a row never renumbers others: a deadline or obligation is `<rule node id>@<key of its trigger row>`; a `.case` event is `event:<Name>@<declaration>`, where the declaration is the event's declared id, else its `<date>/<docket>` (date alone when it has no docket number), and an event a world assumes is `event:<Name>@<key of the fork row>`; a fork is `fork:<node id>@<key of its trigger row>` (a node can fork more than once in a matter, once per motion or appeal). An event without a declared id gets an info-level lint whose fix inserts a generated id, because a `<date>/<docket>` key changes when the date is corrected. Until events declare ids (lg-flu.39): an election or removal event with no docket number is `event:<Name>@<date>/<option edge id>` (the edge it elects or removes, as written); a deadline nothing has triggered is `<rule node id>@event:<Name>` of its trigger pattern; a fork's trigger row is the event that moved the matter to its node, and a fork no event moved the matter to is `fork:<node id>@start`; an event a world assumes is named by its edge's event pattern, else the edge's id, else the node the edge leads to. Two rows of one world that still share a key are an error (L1001) naming both, never told apart by position. Never derived from a label. |
+| `key` | Stable identity across worlds and runs, derived from what caused the row and never from its position, so inserting a row never renumbers others: a deadline or obligation is `<rule node id>@<key of its trigger row>`; a `.case` event is `event:<Name>@<declaration>`, where the declaration is the event's declared id, else its `<date>/<docket>` (date alone when it has no docket number), and an event a world assumes is `event:<Name>@<key of the fork row>`; a fork is `fork:<node id>@<key of its trigger row>` (a node can fork more than once in a matter, once per motion or appeal). An event without a declared id gets an info-level lint whose fix inserts a generated id, because a `<date>/<docket>` key changes when the date is corrected. An election or removal event with neither a declared id nor a docket number is `event:<Name>@<date>/<option edge id>` (the edge it elects or removes, as written); a deadline nothing has triggered is `<rule node id>@event:<Name>` of its trigger pattern; a fork's trigger row is the event that moved the matter to its node, and a fork no event moved the matter to is `fork:<node id>@start`; an event a world assumes is named by its edge's event pattern, else the edge's id, else the node the edge leads to. Two rows of one world that still share a key are an error (L1001) naming both, never told apart by position. Never derived from a label. |
 | `kind` | `event`, `deadline` or `fork`. |
 | `date` | When an event happened; `null` for deadlines and unresolved forks. |
 | `due` | A deadline's due date; `null` when it cannot be computed. |
@@ -82,6 +90,7 @@ A UI diffing two worlds pairs rows by `key`.
 | `layer` | The class of the layer that decided the row: the last entry of `provenance`. |
 | `provenance` | Layer ids in the order they applied, base first. Never empty. |
 | `trigger` | The row that started this one, or `null`. |
+| `replaced_by` | Optional: the `key` of the row replacing this one, which must be a key of the same world's view. Present on a `superseded` row whenever a replacing row exists (a child world's row for a deadline the parent left untriggered; the new instance of a restarted period; the `later_of` instance that absorbed one); absent otherwise, never `null`. `status.reason` is for people and carries no machine meaning: never parse it, follow `replaced_by`. |
 
 A deadline the engine cannot compute is a row with `due: null`,
 `status.state: "unknown"` and the reason. It is never left out.
@@ -89,8 +98,9 @@ A deadline the engine cannot compute is a row with `due: null`,
 ## Edges
 
 `sequence` orders rows in one world, `triggers` links a trigger to what it
-starts, `supersedes` links a reset to the row it replaces, and `forks` links
-a fork row to the first row of a child world.
+starts, `supersedes` links a reset (or the event a world assumes) to the
+row it supersedes, and `forks` links a fork row to the first row of a child
+world.
 
 ## Producing a timeline
 
@@ -124,12 +134,16 @@ What fills the document today:
   `superseded` with the reason); then, at the replayed posture, the
   deadlines governing its options that no event has triggered, `unknown`.
   A matter with errors (a late act) still lists its counted deadlines.
+  A restarted period names the instance its later trigger created, and an
+  absorbed one the `later_of` instance, as `replaced_by`.
 - **Worlds.** One fork row at the replayed posture (`unknown` until an
   outcome is recorded) and one world per option still open: `chance` for
   a chance node (with `probability` when authored), `election` for a
   decision or a party's move, `hypothetical_decision` for a tribunal's.
-  A world holds the hypothetical event of taking the option and the
-  deadlines governing the options it leads to, `unknown` because no
+  A world holds the hypothetical event of taking the option, a row for
+  each docket deadline nothing has triggered that the event triggers
+  (with the docket's row re-emitted `superseded`, `replaced_by` it), and
+  the deadlines governing the options it leads to, `unknown` because no
   recorded event dates them. `assumed_order`, `grant` and `denial` wait
   for orders and decisions as layers (lg-fq2).
 - **Layers.** Each package the matter uses (or the module's package) is
@@ -140,11 +154,11 @@ What fills the document today:
 - **Rows of a module.** Each deadline the `.lit` file declares that is in
   force at `as_of`, `unknown` (a rule module records no events).
 - **Keys.** A rule or node id is module-qualified (`ttab.opposition-period`,
-  `frcp.pleading-to-trial.service-window`). `.case` events have no
-  declared ids yet, so an event's key is `event:<Name>@<date>` (with
-  `/<docket>` when it has a docket number, else `/<option edge id>` for an
-  election or removal: `event:Elected@2026-09-14/e-casetype-patent`), and
-  the lint that would insert ids does not exist yet. Two rows of one world
+  `frcp.pleading-to-trial.service-window`). An event that declares an id
+  is keyed `event:<Name>@<id>`; one that does not (L9006, whose fix
+  inserts an id) is `event:<Name>@<date>` (with `/<docket>` when it has a
+  docket number, else `/<option edge id>` for an election or removal:
+  `event:Elected@2026-09-14/e-casetype-patent`). Two rows of one world
   that still share a key (two events of one name on one date, neither an
   election nor a removal, with no docket numbers) are an error, L1001,
   naming both: the document is still emitted and the exit is nonzero.

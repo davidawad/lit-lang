@@ -1,0 +1,50 @@
+module fixture
+
+package timeline-fixture { forum fixture, authority FederalRule }
+
+start waiting
+
+event Started()
+event Acted()
+
+authority Statute > FederalRule > LocalRule
+
+counting days cite "Fixture 1"
+{
+  exclude_trigger_day
+  include_last_day
+  holidays no-holidays
+  anchor trigger_day
+}
+
+calendar no-holidays cite "Fixture 1"
+{}
+
+rule duty act-duty cite "Fixture 2"
+{
+  deadline act-period: 10.days from Started() counted_by days
+}
+
+/// The mover may start the period, or act at once; acting is governed by
+/// the period that starting it opens.
+decision waiting: "Start the period, or act" by mover cite "Fixture 3"
+{
+  start "Start the period" -> running { event Started() }
+  act "Act" -> finished { event Acted(), within act-period }
+}
+
+state running: "Period running" cite "Fixture 3"
+{
+  act-running "Act" -> finished { event Acted(), within act-period }
+}
+
+terminal finished: "Finished" outcome [judgment] cite "Fixture 3"
+{
+  payoff 0.usd
+}
+
+test "the period ends ten days after it starts" cite "Fixture 2"
+{
+  given Started() on 2024-01-02
+  expect deadline(act-period) == 2024-01-12
+}

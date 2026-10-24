@@ -3,7 +3,8 @@
 //! frozen in `docs/litigate/timeline.v1.schema.json` (described in
 //! `docs/litigate/TIMELINE.md`); these types serialize to exactly it, so a
 //! renderer (the Emacs timeline buffer, lg-z2m.2) reads one contract. A
-//! nullable field is always serialized (`null`), never omitted.
+//! nullable field is always serialized (`null`), never omitted; the one
+//! optional field, a row's `replaced_by`, is omitted when unset.
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
@@ -248,6 +249,11 @@ pub struct TimelineRow {
     pub provenance: Vec<String>,
     /// The row that started this one.
     pub trigger: Option<String>,
+    /// The `key` of the row that replaces this one, in this world's view:
+    /// set on a `superseded` row whenever a replacing row exists, omitted
+    /// otherwise. The status reason is for people; this is the link.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub replaced_by: Option<String>,
 }
 
 /// How two rows of one world are linked.

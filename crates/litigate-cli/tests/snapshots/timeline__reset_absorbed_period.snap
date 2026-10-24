@@ -1,0 +1,424 @@
+---
+source: crates/litigate-cli/tests/timeline.rs
+expression: t
+---
+{
+  "schema": "litigate.timeline/1",
+  "source": {
+    "file": "cases/frcp-cross-appeal.case",
+    "kind": "case"
+  },
+  "as_of": "2025-06-10",
+  "known_at": null,
+  "layers": [
+    {
+      "id": "frcp-civil-procedure",
+      "class": "base_rule",
+      "authority": "FederalRule",
+      "label": "Federal Civil Litigation Under the FRCP",
+      "cite": null,
+      "effective": {
+        "from": "2024-12-01",
+        "to": null
+      },
+      "package": "frcp-civil-procedure",
+      "enabled": true
+    }
+  ],
+  "worlds": [
+    {
+      "id": "w0",
+      "label": "docket",
+      "parent": null,
+      "fork_row": null,
+      "choice": null
+    },
+    {
+      "id": "w1",
+      "label": "Conduct Rule 11 pre-filing investigation",
+      "parent": "w0",
+      "fork_row": "r9",
+      "choice": {
+        "kind": "election",
+        "label": "Conduct Rule 11 pre-filing investigation",
+        "cite": "FRCP 11(b)",
+        "probability": null
+      }
+    }
+  ],
+  "rows": [
+    {
+      "id": "r1",
+      "key": "event:JudgmentEntered@2025-06-02",
+      "world": "w0",
+      "kind": "event",
+      "date": "2025-06-02",
+      "due": null,
+      "label": "JudgmentEntered() by judge",
+      "status": {
+        "state": "none",
+        "reason": null
+      },
+      "cite": null,
+      "source": {
+        "file": "cases/frcp-cross-appeal.case",
+        "start": 484,
+        "end": 521,
+        "line": 14,
+        "column": 3
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "frcp-civil-procedure"
+      ],
+      "trigger": null
+    },
+    {
+      "id": "r2",
+      "key": "event:NoticeOfAppealFiled@2025-06-05",
+      "world": "w0",
+      "kind": "event",
+      "date": "2025-06-05",
+      "due": null,
+      "label": "NoticeOfAppealFiled() by judge",
+      "status": {
+        "state": "none",
+        "reason": null
+      },
+      "cite": null,
+      "source": {
+        "file": "cases/frcp-cross-appeal.case",
+        "start": 524,
+        "end": 565,
+        "line": 15,
+        "column": 3
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "frcp-civil-procedure"
+      ],
+      "trigger": null
+    },
+    {
+      "id": "r3",
+      "key": "frcp.periods.cross-appeal-period@event:NoticeOfAppealFiled@2025-06-05",
+      "world": "w0",
+      "kind": "deadline",
+      "date": null,
+      "due": "2025-06-20",
+      "label": "cross-appeal-period: 14 days after NoticeOfAppealFiled()",
+      "status": {
+        "state": "open",
+        "reason": null
+      },
+      "cite": "FRAP 4(a)(3)",
+      "source": {
+        "file": "lit/frcp/periods.lit",
+        "start": 19246,
+        "end": 19730,
+        "line": 370,
+        "column": 1
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "frcp-civil-procedure"
+      ],
+      "trigger": "r2"
+    },
+    {
+      "id": "r4",
+      "key": "frcp.periods.alter-amend-period@event:JudgmentEntered@2025-06-02",
+      "world": "w0",
+      "kind": "deadline",
+      "date": null,
+      "due": "2025-06-30",
+      "label": "alter-amend-period: 28 days after JudgmentEntered()",
+      "status": {
+        "state": "open",
+        "reason": null
+      },
+      "cite": "FRCP 59(e)",
+      "source": {
+        "file": "lit/frcp/periods.lit",
+        "start": 16722,
+        "end": 16887,
+        "line": 322,
+        "column": 1
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "frcp-civil-procedure"
+      ],
+      "trigger": "r1"
+    },
+    {
+      "id": "r5",
+      "key": "frcp.periods.jmol-renewal-period@event:JudgmentEntered@2025-06-02",
+      "world": "w0",
+      "kind": "deadline",
+      "date": null,
+      "due": "2025-06-30",
+      "label": "jmol-renewal-period: 28 days after JudgmentEntered()",
+      "status": {
+        "state": "open",
+        "reason": null
+      },
+      "cite": "FRCP 50(b)",
+      "source": {
+        "file": "lit/frcp/periods.lit",
+        "start": 16052,
+        "end": 16218,
+        "line": 306,
+        "column": 1
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "frcp-civil-procedure"
+      ],
+      "trigger": "r1"
+    },
+    {
+      "id": "r6",
+      "key": "frcp.periods.new-trial-period@event:JudgmentEntered@2025-06-02",
+      "world": "w0",
+      "kind": "deadline",
+      "date": null,
+      "due": "2025-06-30",
+      "label": "new-trial-period: 28 days after JudgmentEntered()",
+      "status": {
+        "state": "open",
+        "reason": null
+      },
+      "cite": "FRCP 59(b)",
+      "source": {
+        "file": "lit/frcp/periods.lit",
+        "start": 16382,
+        "end": 16545,
+        "line": 314,
+        "column": 1
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "frcp-civil-procedure"
+      ],
+      "trigger": "r1"
+    },
+    {
+      "id": "r7",
+      "key": "frcp.periods.notice-of-appeal-period@event:JudgmentEntered@2025-06-02",
+      "world": "w0",
+      "kind": "deadline",
+      "date": null,
+      "due": "2025-07-02",
+      "label": "notice-of-appeal-period: 30 days after JudgmentEntered()",
+      "status": {
+        "state": "superseded",
+        "reason": "absorbed by a `later_of` instance"
+      },
+      "cite": "28 U.S.C. § 2107(a)",
+      "source": {
+        "file": "lit/frcp/periods.lit",
+        "start": 18170,
+        "end": 18621,
+        "line": 347,
+        "column": 1
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "frcp-civil-procedure"
+      ],
+      "trigger": "r1",
+      "replaced_by": "frcp.periods.cross-appeal-period@event:NoticeOfAppealFiled@2025-06-05"
+    },
+    {
+      "id": "r8",
+      "key": "frcp.periods.relief-from-judgment-period@event:JudgmentEntered@2025-06-02",
+      "world": "w0",
+      "kind": "deadline",
+      "date": null,
+      "due": "2026-06-02",
+      "label": "relief-from-judgment-period: 1 year after JudgmentEntered()",
+      "status": {
+        "state": "open",
+        "reason": null
+      },
+      "cite": "FRCP 60(c)(1)",
+      "source": {
+        "file": "lit/frcp/periods.lit",
+        "start": 17179,
+        "end": 17356,
+        "line": 331,
+        "column": 1
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "frcp-civil-procedure"
+      ],
+      "trigger": "r1"
+    },
+    {
+      "id": "r9",
+      "key": "fork:frcp.pre-filing.pre-filing@start",
+      "world": "w0",
+      "kind": "fork",
+      "date": null,
+      "due": null,
+      "label": "Pre-Filing Investigation",
+      "status": {
+        "state": "unknown",
+        "reason": "no outcome of `frcp-civil-procedure::pre-filing` recorded as of 2025-06-10"
+      },
+      "cite": "FRCP 11(b)",
+      "source": {
+        "file": "lit/frcp/01-pre-filing.lit",
+        "start": 125,
+        "end": 864,
+        "line": 8,
+        "column": 1
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "frcp-civil-procedure"
+      ],
+      "trigger": null
+    },
+    {
+      "id": "r10",
+      "key": "event:jurisdiction-venue-check@fork:frcp.pre-filing.pre-filing@start",
+      "world": "w1",
+      "kind": "event",
+      "date": null,
+      "due": null,
+      "label": "Conduct Rule 11 pre-filing investigation",
+      "status": {
+        "state": "none",
+        "reason": null
+      },
+      "cite": "FRCP 11(b)",
+      "source": {
+        "file": "lit/frcp/01-pre-filing.lit",
+        "start": 732,
+        "end": 862,
+        "line": 12,
+        "column": 3
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "frcp-civil-procedure"
+      ],
+      "trigger": "r9"
+    }
+  ],
+  "edges": [
+    {
+      "from": "r1",
+      "to": "r2",
+      "world": "w0",
+      "kind": "sequence"
+    },
+    {
+      "from": "r2",
+      "to": "r3",
+      "world": "w0",
+      "kind": "triggers"
+    },
+    {
+      "from": "r3",
+      "to": "r4",
+      "world": "w0",
+      "kind": "sequence"
+    },
+    {
+      "from": "r1",
+      "to": "r4",
+      "world": "w0",
+      "kind": "triggers"
+    },
+    {
+      "from": "r4",
+      "to": "r5",
+      "world": "w0",
+      "kind": "sequence"
+    },
+    {
+      "from": "r1",
+      "to": "r5",
+      "world": "w0",
+      "kind": "triggers"
+    },
+    {
+      "from": "r5",
+      "to": "r6",
+      "world": "w0",
+      "kind": "sequence"
+    },
+    {
+      "from": "r1",
+      "to": "r6",
+      "world": "w0",
+      "kind": "triggers"
+    },
+    {
+      "from": "r6",
+      "to": "r7",
+      "world": "w0",
+      "kind": "sequence"
+    },
+    {
+      "from": "r1",
+      "to": "r7",
+      "world": "w0",
+      "kind": "triggers"
+    },
+    {
+      "from": "r7",
+      "to": "r8",
+      "world": "w0",
+      "kind": "sequence"
+    },
+    {
+      "from": "r1",
+      "to": "r8",
+      "world": "w0",
+      "kind": "triggers"
+    },
+    {
+      "from": "r8",
+      "to": "r9",
+      "world": "w0",
+      "kind": "sequence"
+    },
+    {
+      "from": "r9",
+      "to": "r10",
+      "world": "w1",
+      "kind": "forks"
+    }
+  ],
+  "diagnostics": [
+    {
+      "code": "L9006",
+      "severity": "note",
+      "message": "this event declares no id: its timeline key `event:JudgmentEntered@2025-06-02` changes if its date is corrected",
+      "source": {
+        "file": "cases/frcp-cross-appeal.case",
+        "start": 484,
+        "end": 494,
+        "line": 14,
+        "column": 3
+      }
+    },
+    {
+      "code": "L9006",
+      "severity": "note",
+      "message": "this event declares no id: its timeline key `event:NoticeOfAppealFiled@2025-06-05` changes if its date is corrected",
+      "source": {
+        "file": "cases/frcp-cross-appeal.case",
+        "start": 524,
+        "end": 534,
+        "line": 15,
+        "column": 3
+      }
+    }
+  ]
+}

@@ -1,0 +1,265 @@
+---
+source: crates/litigate-cli/tests/timeline.rs
+expression: t
+---
+{
+  "schema": "litigate.timeline/1",
+  "source": {
+    "file": "cases/waiting.case",
+    "kind": "case"
+  },
+  "as_of": "2024-01-10",
+  "known_at": null,
+  "layers": [
+    {
+      "id": "timeline-fixture",
+      "class": "base_rule",
+      "authority": "FederalRule",
+      "label": "Timeline fixture (synthetic)",
+      "cite": null,
+      "effective": {
+        "from": "2020-01-01",
+        "to": null
+      },
+      "package": "timeline-fixture",
+      "enabled": true
+    }
+  ],
+  "worlds": [
+    {
+      "id": "w0",
+      "label": "docket",
+      "parent": null,
+      "fork_row": null,
+      "choice": null
+    },
+    {
+      "id": "w1",
+      "label": "Start the period",
+      "parent": "w0",
+      "fork_row": "r2",
+      "choice": {
+        "kind": "election",
+        "label": "Start the period",
+        "cite": null,
+        "probability": null
+      }
+    },
+    {
+      "id": "w2",
+      "label": "Act",
+      "parent": "w0",
+      "fork_row": "r2",
+      "choice": {
+        "kind": "election",
+        "label": "Act",
+        "cite": null,
+        "probability": null
+      }
+    }
+  ],
+  "rows": [
+    {
+      "id": "r1",
+      "key": "fixture.act-period@event:Started",
+      "world": "w0",
+      "kind": "deadline",
+      "date": null,
+      "due": null,
+      "label": "act-period: 10 days after Started()",
+      "status": {
+        "state": "unknown",
+        "reason": "counted from Started(), which no recorded event dates as of 2024-01-10"
+      },
+      "cite": "Fixture 2",
+      "source": {
+        "file": "lit/fixture/fixture.lit",
+        "start": 377,
+        "end": 436,
+        "line": 25,
+        "column": 3
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "timeline-fixture"
+      ],
+      "trigger": null
+    },
+    {
+      "id": "r2",
+      "key": "fork:fixture.waiting@start",
+      "world": "w0",
+      "kind": "fork",
+      "date": null,
+      "due": null,
+      "label": "Start the period, or act",
+      "status": {
+        "state": "unknown",
+        "reason": "no outcome of `timeline-fixture::waiting` recorded as of 2024-01-10"
+      },
+      "cite": "Fixture 3",
+      "source": {
+        "file": "lit/fixture/fixture.lit",
+        "start": 553,
+        "end": 746,
+        "line": 30,
+        "column": 1
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "timeline-fixture"
+      ],
+      "trigger": null
+    },
+    {
+      "id": "r3",
+      "key": "event:Started@fork:fixture.waiting@start",
+      "world": "w1",
+      "kind": "event",
+      "date": null,
+      "due": null,
+      "label": "Start the period",
+      "status": {
+        "state": "none",
+        "reason": null
+      },
+      "cite": null,
+      "source": {
+        "file": "lit/fixture/fixture.lit",
+        "start": 628,
+        "end": 683,
+        "line": 32,
+        "column": 3
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "timeline-fixture"
+      ],
+      "trigger": "r2"
+    },
+    {
+      "id": "r4",
+      "key": "fixture.act-period@event:Started",
+      "world": "w1",
+      "kind": "deadline",
+      "date": null,
+      "due": null,
+      "label": "act-period: 10 days after Started()",
+      "status": {
+        "state": "superseded",
+        "reason": "triggered in this world by `Start the period`"
+      },
+      "cite": "Fixture 2",
+      "source": {
+        "file": "lit/fixture/fixture.lit",
+        "start": 377,
+        "end": 436,
+        "line": 25,
+        "column": 3
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "timeline-fixture"
+      ],
+      "trigger": null,
+      "replaced_by": "fixture.act-period@event:Started@fork:fixture.waiting@start"
+    },
+    {
+      "id": "r5",
+      "key": "fixture.act-period@event:Started@fork:fixture.waiting@start",
+      "world": "w1",
+      "kind": "deadline",
+      "date": null,
+      "due": null,
+      "label": "act-period: 10 days after Started()",
+      "status": {
+        "state": "unknown",
+        "reason": "counted from Started(), which this world assumes but no recorded event dates"
+      },
+      "cite": "Fixture 2",
+      "source": {
+        "file": "lit/fixture/fixture.lit",
+        "start": 377,
+        "end": 436,
+        "line": 25,
+        "column": 3
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "timeline-fixture"
+      ],
+      "trigger": "r3"
+    },
+    {
+      "id": "r6",
+      "key": "event:Acted@fork:fixture.waiting@start",
+      "world": "w2",
+      "kind": "event",
+      "date": null,
+      "due": null,
+      "label": "Act",
+      "status": {
+        "state": "none",
+        "reason": null
+      },
+      "cite": null,
+      "source": {
+        "file": "lit/fixture/fixture.lit",
+        "start": 686,
+        "end": 744,
+        "line": 33,
+        "column": 3
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "timeline-fixture"
+      ],
+      "trigger": "r2"
+    }
+  ],
+  "edges": [
+    {
+      "from": "r1",
+      "to": "r2",
+      "world": "w0",
+      "kind": "sequence"
+    },
+    {
+      "from": "r2",
+      "to": "r3",
+      "world": "w1",
+      "kind": "forks"
+    },
+    {
+      "from": "r3",
+      "to": "r4",
+      "world": "w1",
+      "kind": "sequence"
+    },
+    {
+      "from": "r3",
+      "to": "r4",
+      "world": "w1",
+      "kind": "supersedes"
+    },
+    {
+      "from": "r4",
+      "to": "r5",
+      "world": "w1",
+      "kind": "sequence"
+    },
+    {
+      "from": "r3",
+      "to": "r5",
+      "world": "w1",
+      "kind": "triggers"
+    },
+    {
+      "from": "r2",
+      "to": "r6",
+      "world": "w2",
+      "kind": "forks"
+    }
+  ],
+  "diagnostics": []
+}

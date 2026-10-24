@@ -1,0 +1,16 @@
+case timeline-frap-reentered
+uses frap-appellate-procedure ^0.1.0
+as_of 2025-04-01
+summary "Timeline fixture: a final judgment entered, then the order disposing of a tolling motion, which restarts the civil notice-of-appeal period."
+notes "Test fixture for `litigate timeline` (lg-z2m.4). The dates are illustrative, not a real matter's."
+perspective applicant
+
+parties {
+  applicant: applicant Corporation
+  court: court Tribunal
+}
+
+events {
+  2025-03-03 EnteredBelow(FinalJudgment) by court
+  2025-03-20 EnteredBelow(TollingDisposition) by court
+}

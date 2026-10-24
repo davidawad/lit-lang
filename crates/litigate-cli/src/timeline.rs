@@ -75,6 +75,8 @@ struct Draft {
     source: Option<TimelineSpan>,
     layer: String,
     trigger: Option<usize>,
+    /// The row that replaces this one in its world's view.
+    replaced_by: Option<usize>,
 }
 
 /// The constructor name of event pattern `e` (`Served` of
@@ -116,10 +118,14 @@ fn option_edge(all: &[&hir::Package], e: &hir::Expr) -> Option<String> {
         })
 }
 
-/// The `key` of matter event `e`: `event:<Name>@<date>/<docket>`, else
+/// The `key` of matter event `e`: `event:<Name>@<id>` when it declares
+/// an id, else `event:<Name>@<date>/<docket>`, else
 /// `event:<Name>@<date>/<option edge id>` for an election or removal,
 /// else `event:<Name>@<date>`.
 fn event_key(all: &[&hir::Package], e: &hir::Event) -> String {
+    if e.id.is_some() {
+        return e.key();
+    }
     let declared = e
         .docket
         .map(|n| n.to_string())
@@ -172,6 +178,9 @@ struct Builder<'a> {
     forks: Vec<Option<usize>>,
     /// `supersedes` links, by draft index.
     supersedes: Vec<(usize, usize)>,
+    /// The docket's deadline rows nothing has triggered, by draft index,
+    /// with their qualified deadline ids.
+    untriggered: Vec<(usize, String)>,
 }
 
 impl<'a> Builder<'a> {
@@ -200,6 +209,7 @@ impl<'a> Builder<'a> {
             rows: Vec::new(),
             forks: vec![None],
             supersedes: Vec::new(),
+            untriggered: Vec::new(),
         }
     }
 
@@ -311,6 +321,7 @@ impl<'a> Builder<'a> {
                 source: self.source(decl.meta.span.as_ref()),
                 layer,
                 trigger,
+                replaced_by: None,
             };
         self.push(row)
     }
@@ -343,7 +354,7 @@ impl<'a> Builder<'a> {
                     hirx::event_text(&decl.trigger),
                     self.as_of
                 );
-                self.deadline_row(
+                let row = self.deadline_row(
                     world,
                     owner,
                     decl,
@@ -351,6 +362,9 @@ impl<'a> Builder<'a> {
                     status(RowState::Unknown, Some(reason)),
                     trigger,
                 );
+                if trigger.is_none() {
+                    self.untriggered.push((row, id));
+                }
             }
         }
     }
@@ -415,6 +429,7 @@ impl<'a> Builder<'a> {
                 layer: class,
                 provenance: vec![r.layer.clone()],
                 trigger: r.trigger.map(|t| ids[t].clone()),
+                replaced_by: r.replaced_by.map(|x| self.rows[x].key.clone()),
             });
         }
         let worlds = self
@@ -620,6 +635,7 @@ fn events(
             source: b.source(spans.events.get(i).and_then(|s| s.whole.as_ref())),
             layer,
             trigger: None,
+            replaced_by: None,
         };
         let row = b.push(row);
         if step.is_some_and(|s| s.effect == Effect::Took) {
@@ -645,7 +661,9 @@ fn deadlines(
         })
     };
     let mut seen: Vec<String> = Vec::new();
-    for s in &m.counted {
+    // The row of each instance, parallel to `m.counted`.
+    let mut made: Vec<Option<usize>> = vec![None; m.counted.len()];
+    for (n, s) in m.counted.iter().enumerate() {
         seen.push(s.deadline.clone());
         let ended = closed(s.closed_by);
         let ended = ended.as_ref().map(|(e, d)| (e.as_str(), d.as_str()));
@@ -663,7 +681,7 @@ fn deadlines(
                         s.unknown.as_deref().unwrap_or_default()
                     ));
                 }
-                b.deadline_row(0, pkg, decl, None, state, trigger);
+                made[n] = Some(b.deadline_row(0, pkg, decl, None, state, trigger));
             }
             continue;
         };
@@ -672,11 +690,35 @@ fn deadlines(
         };
         let state = obligation_status(s.status, ended, Some(&due), &b.as_of, &name);
         let row = b.deadline_row(0, pkg, decl, Some(due), state, trigger);
+        made[n] = Some(row);
         if let (Status::Superseded, Some(j)) = (s.status, s.closed_by) {
             b.supersedes.push((event_rows[j], row));
         }
     }
+    for n in 0..m.counted.len() {
+        if let Some(row) = made[n] {
+            b.rows[row].replaced_by = replacement(&m.counted, n).and_then(|k| made[k]);
+        }
+    }
     seen
+}
+
+/// The instance that replaced instance `n` of `counted`: for a period
+/// restarted by a later trigger, the instance of the same deadline that
+/// trigger created; for one a `later_of` instance absorbed, that instance
+/// (created by the event that closed it, with the absorbed date as its
+/// floor). `None` for any other end.
+fn replacement(counted: &[Scheduled], n: usize) -> Option<usize> {
+    let s = &counted[n];
+    let by = s.closed_by?;
+    counted.iter().position(|o| {
+        o.trigger_event == by
+            && match s.status {
+                Status::Superseded => o.deadline == s.deadline,
+                Status::Merged => o.deadline != s.deadline && o.floor.is_some(),
+                _ => false,
+            }
+    })
 }
 
 /// The loaded text of `path`.
@@ -760,6 +802,7 @@ fn fork(
         source: b.source(node.meta.span.as_ref()),
         layer: layer.clone(),
         trigger,
+        replaced_by: None,
     };
     let fork_at = b.push(fork_row);
     for edge in options {
@@ -792,12 +835,56 @@ fn fork(
             source: b.source(edge.span.as_ref()),
             layer: layer.clone(),
             trigger: Some(fork_at),
+            replaced_by: None,
         };
         let taken = b.push(taken);
+        if let Some(event) = &edge.event {
+            triggered(b, world, taken, event);
+        }
         if let Some((next_pkg, next)) = b.node(&target(pkg, &edge.to)) {
             let mut seen = seen.to_vec();
             b.governing(world, next_pkg, next, &mut seen, Some(taken));
         }
+    }
+}
+
+/// The docket's untriggered deadlines that `world`'s assumed event
+/// `taken` (the edge event `event`) triggers: each is a row of `world`
+/// triggered by it, and the docket's row is re-emitted in `world` (its
+/// key, a new id) `superseded`, replaced by the new row, so a diff of the
+/// two worlds pairs them by key rather than showing a removal and an
+/// addition. Each is already among the deadlines the world has a row
+/// for, so the world's governing deadlines do not list it again.
+fn triggered(b: &mut Builder, world: usize, taken: usize, event: &hir::Expr) {
+    for (parent, id) in b.untriggered.clone() {
+        let Some((owner, decl)) = b
+            .deadline(&id)
+            .filter(|(_, d)| hirx::matches(&d.trigger, event))
+        else {
+            continue;
+        };
+        let label = b.rows[taken].label.clone();
+        let mut again = b.rows[parent].clone();
+        again.world = world;
+        again.status = status(
+            RowState::Superseded,
+            Some(format!("triggered in this world by `{label}`")),
+        );
+        let again = b.push(again);
+        b.supersedes.push((taken, again));
+        let reason = format!(
+            "counted from {}, which this world assumes but no recorded event dates",
+            hirx::event_text(&decl.trigger)
+        );
+        let row = b.deadline_row(
+            world,
+            owner,
+            decl,
+            None,
+            status(RowState::Unknown, Some(reason)),
+            Some(taken),
+        );
+        b.rows[again].replaced_by = Some(row);
     }
 }
 
@@ -920,13 +1007,25 @@ pub fn apply_world(t: &mut Timeline, id: &str) -> Result<(), String> {
 }
 
 /// Removes rows `dropped` and worlds `dead`, the edges touching either,
-/// and triggers naming a dropped row.
+/// triggers naming a dropped row, and a `replaced_by` naming a key no
+/// longer in its row's world (a replacing row is always in the world of
+/// the row it replaces).
 fn retain(t: &mut Timeline, dropped: &[String], dead: &[String]) {
     t.worlds.retain(|w| !dead.contains(&w.id));
     t.rows.retain(|r| !dropped.contains(&r.id));
+    let kept: BTreeSet<(String, String)> = t
+        .rows
+        .iter()
+        .map(|r| (r.world.clone(), r.key.clone()))
+        .collect();
     for r in &mut t.rows {
         if r.trigger.as_ref().is_some_and(|x| dropped.contains(x)) {
             r.trigger = None;
+        }
+        if let Some(key) = r.replaced_by.take() {
+            if kept.contains(&(r.world.clone(), key.clone())) {
+                r.replaced_by = Some(key);
+            }
         }
     }
     t.edges.retain(|e| {
@@ -1243,6 +1342,8 @@ mod tests {
             ["r1", "r2", "r3", "r4", "r5", "r7", "r9", "r10"]
         );
         assert_eq!(t.rows[5].trigger, None);
+        // r7's replacement (r8) went with its layer, so r7 names none.
+        assert_eq!(t.rows[5].replaced_by, None);
         assert!(!t.layers[1].enabled);
         assert!(t.layers[0].enabled);
         let ends: Vec<&str> = t
@@ -1267,6 +1368,7 @@ mod tests {
             row_ids(&t),
             ["r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8"]
         );
+        assert_eq!(t.rows[6].replaced_by.as_ref(), Some(&t.rows[7].key));
         assert!(t.edges.iter().all(|e| e.world != "w2"));
         // A world naming no fork row cuts nothing from its parent.
         let mut t = nested();
@@ -1676,6 +1778,9 @@ mod tests {
             let mut served = case.events[0].clone();
             served.docket = Some(2);
             assert_eq!(event_key(&all, &served), "event:Served@2025-03-05/2");
+            // A declared id is the key, whatever the date or docket.
+            served.id = Some("service".to_owned());
+            assert_eq!(event_key(&all, &served), "event:Served@service");
             assert_eq!(decl_key(all[0], "nope"), "frcp-rule12-example.nope");
         });
     }

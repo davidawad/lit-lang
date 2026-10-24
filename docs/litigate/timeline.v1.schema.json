@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://gitlab.com/davidawad/litgraph/docs/litigate/timeline.v1.schema.json",
   "title": "litigate timeline v1",
-  "description": "Timeline DAG of a .case or .lit file: rows (events, deadlines, forks) per world, with layer provenance. Frozen for lg-z2m (2026-10-23); see docs/litigate/TIMELINE.md. Later work adds data, not fields.",
+  "description": "Timeline DAG of a .case or .lit file: rows (events, deadlines, forks) per world, with layer provenance. Frozen for lg-z2m (2026-10-23); see docs/litigate/TIMELINE.md. Later work adds data, not fields; the optional row field replaced_by (lg-z2m.4) is the one exception, without a version bump.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -385,6 +385,11 @@
             "string",
             "null"
           ]
+        },
+        "replaced_by": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Optional. The key of the row that replaces this one in the same world's view. Set on a superseded row whenever a replacing row exists (a child world's row for a deadline its parent left untriggered, a restarted or absorbed period); absent otherwise. status.reason stays human-readable and carries no machine meaning."
         }
       }
     },

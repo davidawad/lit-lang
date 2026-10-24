@@ -1,0 +1,16 @@
+case timeline-frcp-cross-appeal
+uses frcp-civil-procedure ^2024.12.0
+as_of 2025-06-10
+summary "Timeline fixture: judgment entered, then a first notice of appeal whose cross-appeal period absorbs the notice-of-appeal period."
+notes "Test fixture for `litigate timeline` (lg-z2m.4). The dates are illustrative, not a real matter's; they follow frcp_extensions.rs (FRAP 4(a)(3))."
+perspective plaintiff
+
+parties {
+  plaintiff: applicant Corporation
+  judge: court Tribunal
+}
+
+events {
+  2025-06-02 JudgmentEntered() by judge
+  2025-06-05 NoticeOfAppealFiled() by judge
+}

@@ -94,6 +94,9 @@ async fn a_burst_of_edits_is_checked_once() {
         .iter()
         .any(|d| d["message"].as_str().unwrap().contains("frcp6zyx")));
     assert_eq!(c.status().await["checks"].as_u64().unwrap(), before + 1);
+    // An unpinned matter does not resolve, so it names no world.
+    let worlds = c.request("litigate/worlds", Value::Null).await;
+    assert_eq!(worlds["worlds"].as_array().unwrap().len(), 1, "{worlds}");
 }
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
@@ -187,9 +190,24 @@ async fn the_world_picker_selects_the_dates_packages_are_checked_at() {
 
 #[tokio::test]
 async fn rename_edits_every_version_and_reference() {
-    let extra = "deadline reply-period: 14.days from Served(complaint) counted_by frcp6 effective [2009-12-01, 2016-12-01)\ndeadline reply-period: 21.days from Served(complaint) counted_by frcp6 effective [2016-12-01, ..)\n";
+    let extra = "deadline reply-period: 14.days from Served(complaint) counted_by frcp6 effective [2009-12-01, 2016-12-01)\ndeadline reply-period: 21.days from Served(complaint) counted_by frcp6 effective [2016-12-01, ..)\nenum Stage { reply-period }\n";
     let module = format!("{}\n{extra}", read("lit/examples/rule12.lit"));
-    let root = support::worked("editing-rename", &[("lit/ex/rule12.lit", &module)]);
+    // Another package declaring the same name: its declaration is not
+    // renamed with this package's.
+    let other = read("lit/examples/Lit.toml")
+        .replace("frcp-rule12-example", "other-example")
+        .replace("pack_id = \"frcp-rule12-example\"", "pack_id = \"other\"");
+    let root = support::worked(
+        "editing-rename",
+        &[
+            ("lit/ex/rule12.lit", &module),
+            ("lit/other/Lit.toml", &other),
+            (
+                "lit/other/m.lit",
+                "module other.m\nstart reply-period\nstate reply-period: \"R\"\n",
+            ),
+        ],
+    );
     let (mut c, _) = Client::start(&root, json!({})).await;
     let module_uri = file_uri(&root, MODULE);
     let case_uri = file_uri(&root, CASE);
@@ -232,7 +250,9 @@ async fn rename_edits_every_version_and_reference() {
     let mut rename = position(&module_uri, reply);
     rename["newName"] = json!("response-period");
     let edit = c.request("textDocument/rename", rename).await;
-    assert_eq!(changes(&edit, &root)[MODULE].len(), 2, "both versions");
+    let found = changes(&edit, &root);
+    assert_eq!(found.keys().collect::<Vec<_>>(), [MODULE]);
+    assert_eq!(found[MODULE].len(), 2, "both versions, not the variant");
 
     // A party of the matter, in the matter only.
     let party = at(&case, "widget: Defendant", 0, 1);
@@ -251,11 +271,14 @@ async fn rename_edits_every_version_and_reference() {
     assert_eq!(
         c.request(
             "textDocument/prepareRename",
-            position(&module_uri, module_name)
+            position(&module_uri, module_name.clone())
         )
         .await,
         Value::Null
     );
+    let mut rename = position(&module_uri, module_name);
+    rename["newName"] = json!("renamed");
+    assert_eq!(c.request("textDocument/rename", rename).await, Value::Null);
     let mut bad = position(&module_uri, at(&module, "time-barred:", 0, 2));
     bad["newName"] = json!("two words");
     let error = c.request_error("textDocument/rename", bad).await;
@@ -333,4 +356,12 @@ async fn completion_offers_what_a_reference_can_name() {
     );
     assert!(found.contains(&"answer-period".to_owned()), "{found:?}");
     assert!(found.iter().all(|l| l.starts_with("ans")), "{found:?}");
+    // Only declarations follow a qualifier: not the package's variants.
+    c.open_at(&case_uri, &format!("{case}\nfrcp-rule12-example::Pe"))
+        .await;
+    let variant = json!({"line": lines + 1, "character": 23});
+    let found = c
+        .request("textDocument/completion", complete(&case_uri, variant))
+        .await;
+    assert_eq!(found, json!([]));
 }

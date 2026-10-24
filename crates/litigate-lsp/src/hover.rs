@@ -232,7 +232,7 @@ fn declaration(out: &mut String, analysis: &Analysis, pkg: &hir::Package, name: 
             let _ = writeln!(out, "- {} · {}{at}", interval(&m.effective), m.authority);
         }
     }
-    governing(out, analysis, pkg, name);
+    governing(out, analysis, pkg, name, &qualified);
     // Sema spans every declaration it builds from source.
     if let Some((cite, line)) = metas.iter().find_map(|m| {
         let line = m.span.as_ref().map_or(0, |s| s.line);
@@ -242,9 +242,16 @@ fn declaration(out: &mut String, analysis: &Analysis, pkg: &hir::Package, name: 
     }
 }
 
-/// What governs declaration `name` of `pkg` in the selected world, if one
-/// is selected (`litigate/selectWorld`): the per-world resolution query.
-fn governing(out: &mut String, analysis: &Analysis, pkg: &hir::Package, name: &str) {
+/// What governs declaration `name` (`qualified`) of `pkg` in the selected
+/// world, if one is selected (`litigate/selectWorld`): the per-world
+/// resolution query.
+fn governing(
+    out: &mut String,
+    analysis: &Analysis,
+    pkg: &hir::Package,
+    name: &str,
+    qualified: &str,
+) {
     let Some((as_of, known_at)) = &analysis.world else {
         return;
     };
@@ -261,7 +268,7 @@ fn governing(out: &mut String, analysis: &Analysis, pkg: &hir::Package, name: &s
         let world = WorldId::new(&session.db, as_of.clone(), known_at.clone());
         let line = match world_selection(&session.db, input, world).get(name) {
             Some(Resolution::Governed { pack, id, from, .. })
-                if *pack == pkg.manifest.pack_id && id == name =>
+                if format!("{pack}::{id}") == qualified =>
             {
                 format!("in force on {when}: the version from {from}")
             }

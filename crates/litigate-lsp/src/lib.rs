@@ -542,15 +542,17 @@ impl LanguageServer for Server {
                 let changes: std::collections::HashMap<Url, Vec<TextEdit>> = edits
                     .into_iter()
                     .filter_map(|(file, ranges)| {
-                        let text = analysis.text(&file)?;
-                        let edits = ranges
-                            .into_iter()
-                            .map(|r| TextEdit {
-                                range: convert::range(&text, r),
-                                new_text: params.new_name.clone(),
-                            })
-                            .collect();
-                        Some((analysis.uri_of(&file)?, edits))
+                        let text = analysis.text(&file).unwrap_or_default();
+                        analysis.uri_of(&file).map(|uri| {
+                            let edits = ranges
+                                .into_iter()
+                                .map(|r| TextEdit {
+                                    range: convert::range(&text, r),
+                                    new_text: params.new_name.clone(),
+                                })
+                                .collect();
+                            (uri, edits)
+                        })
                     })
                     .collect();
                 (!changes.is_empty()).then(|| WorkspaceEdit {

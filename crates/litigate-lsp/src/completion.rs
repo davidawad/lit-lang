@@ -121,12 +121,46 @@ pub fn at(analysis: &Analysis, file: &str, text: &str, offset: usize) -> Vec<Com
 
 #[cfg(test)]
 mod tests {
-    use super::prefix;
+    use super::{kind_of, noun, prefix};
+    use crate::index::{Def, Space};
+    use litigate_syntax::{SyntaxKind as K, TextRange};
+    use tower_lsp::lsp_types::CompletionItemKind as C;
+
+    #[test]
+    fn a_name_completes_as_its_kind() {
+        let def = |space: Space, kind: K| Def {
+            name: "x".into(),
+            space,
+            kind,
+            file: "m.lit".into(),
+            name_range: TextRange::default(),
+            full_range: TextRange::default(),
+            package: None,
+        };
+        let cases = [
+            (
+                def(Space::Variant("E".into()), K::EnumDecl),
+                C::ENUM_MEMBER,
+                "variant of E",
+            ),
+            (def(Space::Party, K::PartyDecl), C::VARIABLE, "party"),
+            (def(Space::Role, K::PackageDecl), C::VARIABLE, "actor"),
+            (def(Space::Decl, K::EnumDecl), C::ENUM, "enum"),
+            (def(Space::Decl, K::EventDecl), C::EVENT, "event"),
+            (def(Space::Decl, K::TypeDecl), C::STRUCT, "type"),
+            (def(Space::Decl, K::CalendarDecl), C::CONSTANT, "calendar"),
+            (def(Space::Decl, K::StateDecl), C::REFERENCE, "state"),
+        ];
+        for (d, kind, called) in cases {
+            assert_eq!((kind_of(&d), noun(&d).as_str()), (kind, called));
+        }
+    }
 
     #[test]
     fn the_prefix_is_the_identifier_before_the_cursor() {
         let p = |t: &str| prefix(t, t.len());
         assert_eq!(p("x answer-p"), ("answer-p".into(), None));
+        assert_eq!(p("x amended_c"), ("amended_c".into(), None));
         assert_eq!(p("counted_by "), (String::new(), None));
         assert_eq!(p("frcp::ans"), ("ans".into(), Some("frcp".into())));
         assert_eq!(p("x core::"), (String::new(), Some("core".into())));

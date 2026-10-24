@@ -77,8 +77,9 @@ fn an_edge_shows_its_authority_and_cited_text() {
 #[test]
 fn a_shadowed_package_shows_the_first_of_its_name() {
     // Two packages share a name: hover reads the first, which lacks the
-    // second's node, so the edge has no target line. The duplicate
-    // versions do not lower, so the cite resolves without a sidecar.
+    // second's node, so the edge has no target line. Each lowers on its
+    // own (neither depends on the other), so the cite resolves through
+    // the first one's sidecar.
     let twin = support::read("lit/examples/rule12.lit").replace(
         "state answered:",
         "state extra: \"Extra\" { onward \"On\" -> answered }\nstate answered:",
@@ -100,6 +101,27 @@ fn a_shadowed_package_shows_the_first_of_its_name() {
         "{edge}"
     );
     let cite = value(a, file, &twin, "FRCP 8(c)(1)", 1).unwrap();
+    assert!(
+        cite.starts_with("**cite** FRCP 8(c)(1)\n\n**L0** 8(c)(1)"),
+        "{cite}"
+    );
+}
+
+#[test]
+fn a_package_that_does_not_lower_resolves_cites_without_a_sidecar() {
+    // A counting rule cited with no source to verify does not lower
+    // (L6001): the package checks, so its cites still resolve, from the
+    // vendored corpus alone.
+    let text = format!(
+        "{}\ncounting nourl cite \"XYZ 6(a)\"\n{{\n  exclude_trigger_day\n  include_last_day\n  holidays federal-holidays\n}}\n",
+        support::read("lit/examples/rule12.lit")
+    );
+    let root = support::worked("hover-unlowered", &[(MODULE, &text)]);
+    let mut host = support::host(&root);
+    let a = host.analyze();
+    let verdict = &a.checked.verdicts[0].1;
+    assert!(verdict.lowered.is_none() && a.hir("frcp-rule12-example").is_some());
+    let cite = value(a, MODULE, &text, "FRCP 8(c)(1)", 1).unwrap();
     assert!(
         cite.starts_with("**cite** FRCP 8(c)(1)\n\n**L0** 8(c)(1)"),
         "{cite}"

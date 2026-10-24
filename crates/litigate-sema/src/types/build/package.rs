@@ -6,7 +6,7 @@ use crate::db::queries::{check_module, item_tree, manifest, signature};
 use crate::db::resolution::{resolution, Selected};
 use crate::db::span::{sort_diagnostics, to_span, Report, TextRange};
 use crate::hir;
-use crate::pkg::lock::{digest, merkle, semantic_digest, LockFile, LockedPackage, UNCHECKED};
+use crate::pkg::lock::{digest, semantic_digest, LockFile, LockedPackage, UNCHECKED};
 use crate::resolve::sig::flatten;
 use litigate_base::{Diagnostic, DiagnosticCode as C, FileId, LineIndex};
 use std::collections::BTreeMap;
@@ -61,7 +61,7 @@ fn dependency_reports(
         return missing.chain(conflict).collect();
     }
     // A selected dependency whose own resolution selects this package
-    // closes a cycle: no lock row can hold the digest of both.
+    // closes a cycle: the Merkle digest of neither covers the other.
     let cycle = resolved.selected.iter().find(|(_, d)| {
         d.input != pkg
             && resolution(db, ws, d.input)
@@ -357,21 +357,18 @@ pub fn expected_lock(db: &dyn salsa::Database, ws: Workspace, root: PackageInput
     LockFile::new(
         solution
             .values()
-            .map(|s| locked(db, solution, s.input, &mut Vec::new()))
+            .map(|s| locked(db, solution, s.input))
             .collect(),
     )
 }
 
-/// `pkg`'s lock row under `solution`. `path` holds the packages whose rows
-/// are being computed: a dependency on one of them closes a cycle and is
-/// entered without a digest.
+/// `pkg`'s lock row under `solution`: its own digests, and each direct
+/// dependency pinned as `name version` (SPEC §4.2).
 fn locked(
     db: &dyn salsa::Database,
     solution: &BTreeMap<String, Selected>,
     pkg: PackageInput,
-    path: &mut Vec<PackageInput>,
 ) -> LockedPackage {
-    path.push(pkg);
     let m = manifest(db, pkg).as_ref().ok().map(|p| &p.manifest);
     let name = m.map(|m| m.name.clone()).unwrap_or_default();
     let version = m.map(|m| m.version.clone()).unwrap_or_default();
@@ -400,27 +397,12 @@ fn locked(
     let dependencies: Vec<String> = m
         .into_iter()
         .flat_map(|m| m.dependencies.keys())
-        .filter_map(|dep| solution.get(dep).map(|d| (dep, d)))
-        .map(|(dep, d)| {
-            let head = format!("{dep} {}", d.version);
-            if path.contains(&d.input) {
-                head
-            } else {
-                format!("{head} {}", locked(db, solution, d.input, path).digest)
-            }
-        })
+        .filter_map(|dep| solution.get(dep).map(|d| format!("{dep} {}", d.version)))
         .collect();
-    path.pop();
-    let content = if semantic == UNCHECKED {
-        &source
-    } else {
-        &semantic
-    };
     let mut sorted = (texts, dependencies);
     sorted.0.sort();
     sorted.1.sort();
     LockedPackage {
-        digest: merkle(&name, &version, language, content, &sorted.0, &sorted.1),
         name,
         version,
         language,

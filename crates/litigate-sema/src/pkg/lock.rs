@@ -5,6 +5,7 @@ use litigate_base::DiagnosticCode as C;
 use serde::Deserialize;
 use serde_json::Value;
 use sha2::{Digest, Sha256};
+use std::collections::BTreeMap;
 use std::fmt::Write as _;
 
 /// The `Lit.lock` format this compiler reads and writes.
@@ -92,6 +93,7 @@ pub(crate) fn canonical(value: &Value, skip: &[&str], out: &mut String) {
 /// digest of a package that does not check), the number of `texts` and
 /// each entry, then the number of `dependencies` and each entry (which
 /// carries the dependency's own Merkle digest). Returns `sha256:<hex>`.
+/// It is never stored: [`LockFile::merkle`] computes it on read.
 #[must_use]
 pub fn merkle(
     name: &str,
@@ -134,8 +136,6 @@ pub struct LockedPackage {
     pub version: String,
     /// Language version.
     pub language: u32,
-    /// Merkle digest ([`merkle`]), `sha256:<hex>`.
-    pub digest: String,
     /// Source digest ([`digest`]), `sha256:<hex>`.
     pub source: String,
     /// Semantic digest ([`semantic_digest`]), `sha256:<hex>`, or
@@ -146,9 +146,23 @@ pub struct LockedPackage {
     /// (`missing` in place of the digest when the file is absent).
     #[serde(default)]
     pub texts: Vec<String>,
-    /// Sorted `"name version sha256:<merkle>"` entries (`"name version"`
-    /// where the dependency closes a cycle).
+    /// Sorted `"name version"` entries, each naming exactly one row of
+    /// the same lock.
     pub dependencies: Vec<String>,
+}
+
+impl LockedPackage {
+    /// What the row's Merkle digest covers of the package itself: the
+    /// semantic digest, or the source digest of a package that does not
+    /// check.
+    #[must_use]
+    pub fn content(&self) -> &str {
+        if self.semantic == UNCHECKED {
+            &self.source
+        } else {
+            &self.semantic
+        }
+    }
 }
 
 /// Parsed `Lit.lock`.
@@ -193,11 +207,10 @@ impl LockFile {
         for p in &self.packages {
             let _ = write!(
                 out,
-                "\n[[package]]\nname = {}\nversion = {}\nlanguage = {}\ndigest = {}\nsource = {}\nsemantic = {}\ntexts = [{}]\ndependencies = [{}]\n",
+                "\n[[package]]\nname = {}\nversion = {}\nlanguage = {}\nsource = {}\nsemantic = {}\ntexts = [{}]\ndependencies = [{}]\n",
                 quote(&p.name),
                 quote(&p.version),
                 p.language,
-                quote(&p.digest),
                 quote(&p.source),
                 quote(&p.semantic),
                 list(&p.texts),
@@ -221,7 +234,125 @@ impl LockFile {
             )
             .note("regenerate it with `litigate lock`"));
         }
-        toml::from_str(text).map_err(|e| invalid(&e))
+        let lock: Self = toml::from_str(text).map_err(|e| invalid(&e))?;
+        lock.pins()?;
+        Ok(lock)
+    }
+
+    /// The row `"name version"` names, if exactly one does.
+    fn row(&self, pin: &str) -> Option<&LockedPackage> {
+        let (name, version) = pin.rsplit_once(' ')?;
+        self.find(name, version)
+    }
+
+    /// The row of `name` at `version`, if exactly one is.
+    fn find(&self, name: &str, version: &str) -> Option<&LockedPackage> {
+        let mut rows = self
+            .packages
+            .iter()
+            .filter(|p| p.name == name && p.version == version);
+        let row = rows.next();
+        rows.next().is_none().then_some(row).flatten()
+    }
+
+    /// Every row is the only one of its name and version, and every
+    /// dependency names exactly one row.
+    ///
+    /// # Errors
+    /// L1007 naming the first row or dependency that does not.
+    fn pins(&self) -> Result<(), Report> {
+        let fail = |message: String| {
+            Err(Report::new(C::StaleLock, TextRange::default(), message)
+                .note("regenerate it with `litigate lock`"))
+        };
+        for p in &self.packages {
+            if self.find(&p.name, &p.version).is_none() {
+                return fail(format!(
+                    "Lit.lock locks `{}` {} more than once",
+                    p.name, p.version
+                ));
+            }
+            if let Some(dep) = p.dependencies.iter().find(|d| self.row(d).is_none()) {
+                return fail(format!(
+                    "Lit.lock: `{}` depends on `{dep}`, which names no locked package",
+                    p.name
+                ));
+            }
+        }
+        Ok(())
+    }
+
+    /// The Merkle digest of every row, computed on read: [`merkle`] over
+    /// the row's own digests and each dependency's Merkle digest, keyed by
+    /// `"name version"`. A dependency that closes a cycle is entered
+    /// without a digest. Rows come from a lock [`LockFile::parse`] (or
+    /// [`LockFile::new`] over resolved rows) accepted, so every dependency
+    /// names exactly one row.
+    #[must_use]
+    pub fn merkle(&self) -> BTreeMap<String, String> {
+        let mut done = BTreeMap::new();
+        for p in &self.packages {
+            self.digest_of(p, &mut Vec::new(), &mut done);
+        }
+        done
+    }
+
+    /// `p`'s Merkle digest, and whether it entered a dependency that
+    /// closes a cycle through `path` (so depends on where the walk began
+    /// and is recorded only for the row the walk began at).
+    fn digest_of(
+        &self,
+        p: &LockedPackage,
+        path: &mut Vec<String>,
+        done: &mut BTreeMap<String, String>,
+    ) -> (String, bool) {
+        let key = format!("{} {}", p.name, p.version);
+        if let Some(d) = done.get(&key) {
+            return (d.clone(), false);
+        }
+        path.push(key.clone());
+        let mut cyclic = false;
+        let mut deps = Vec::new();
+        for d in &p.dependencies {
+            match self.row(d) {
+                Some(row) if !path.contains(d) => {
+                    let (digest, through) = self.digest_of(row, path, done);
+                    cyclic |= through;
+                    deps.push(format!("{d} {digest}"));
+                }
+                _ => {
+                    cyclic = true;
+                    deps.push(d.clone());
+                }
+            }
+        }
+        path.pop();
+        let digest = merkle(
+            &p.name,
+            &p.version,
+            p.language,
+            p.content(),
+            &p.texts,
+            &deps,
+        );
+        if !cyclic || path.is_empty() {
+            done.insert(key, digest.clone());
+        }
+        (digest, cyclic)
+    }
+
+    /// The Merkle root: SHA-256 over the format tag and each row's
+    /// [`LockFile::merkle`] digest in row order. Returns `sha256:<hex>`.
+    #[must_use]
+    pub fn root(&self) -> String {
+        let rows = self.merkle();
+        format!(
+            "sha256:{}",
+            framed(
+                std::iter::once("litlock root 2".as_bytes())
+                    .chain(rows.iter().flat_map(|(k, d)| [k.as_bytes(), d.as_bytes()]))
+            )
+        )
     }
 
     /// The format version of `Lit.lock` text, read before its rows so an
@@ -295,7 +426,11 @@ pub fn verify(existing: Option<&str>, expected: &LockFile) -> Result<(), Report>
             Some(f) if f != p => {
                 report = report.note(format!(
                     "`{}` changed (locked {} {}, now {} {})",
-                    p.name, f.version, f.digest, p.version, p.digest
+                    p.name,
+                    f.version,
+                    f.content(),
+                    p.version,
+                    p.content()
                 ));
             }
             Some(_) => {}
@@ -311,58 +446,6 @@ pub fn verify(existing: Option<&str>, expected: &LockFile) -> Result<(), Report>
     Err(report)
 }
 
-/// The digest a three-way merge writes for a package both sides changed
-/// differently. It is never a real digest, so the merged lock is stale
-/// (L1007) until `litigate lock` regenerates it from the merged sources.
-pub const UNMERGED: &str = "unmerged: run `litigate lock`";
-
-/// A three-way merge of `Lit.lock` texts (the git merge driver).
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct Merged {
-    /// The merged lock, sorted as [`LockFile::new`] sorts.
-    pub lock: LockFile,
-    /// Packages both sides changed differently, written with [`UNMERGED`].
-    pub unresolved: Vec<String>,
-}
-
-/// Merges `ours` and `theirs` against `base` package by package. A row
-/// only one side changed takes that side; a row both sides changed the
-/// same way is kept. A row both sides changed differently (or one changed
-/// and the other removed) keeps the changed row with an [`UNMERGED`]
-/// digest: no lock text holds the digest of the merged sources, so the
-/// result fails closed with L1007 instead of conflicting.
-#[must_use]
-pub fn merge(base: &LockFile, ours: &LockFile, theirs: &LockFile) -> Merged {
-    let row = |lock: &LockFile, name: &str| lock.packages.iter().find(|p| p.name == name).cloned();
-    let mut names: Vec<&str> = [base, ours, theirs]
-        .iter()
-        .flat_map(|l| l.packages.iter().map(|p| p.name.as_str()))
-        .collect();
-    names.sort_unstable();
-    names.dedup();
-    let mut packages = Vec::new();
-    let mut unresolved = Vec::new();
-    for name in names {
-        let (o, a, b) = (row(base, name), row(ours, name), row(theirs, name));
-        let merged = if a == o || a == b {
-            b
-        } else if b == o {
-            a
-        } else {
-            unresolved.push(name.to_owned());
-            a.or(b).map(|p| LockedPackage {
-                digest: UNMERGED.to_owned(),
-                ..p
-            })
-        };
-        packages.extend(merged);
-    }
-    Merged {
-        lock: LockFile::new(packages),
-        unresolved,
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -373,7 +456,6 @@ mod tests {
             name: name.into(),
             version: "1.0.0".into(),
             language: 1,
-            digest: merkle(name, "1.0.0", 1, "sha256:0", &[], &[]),
             source: format!("sha256:{}", digest("m", [])),
             semantic: UNCHECKED.to_owned(),
             texts: vec!["rules sources/rules.txt missing".to_owned()],
@@ -394,6 +476,7 @@ mod tests {
         let lock = LockFile::new(vec![
             pkg("zeta", &["core 1.0.0", "alpha 1.0.0"]),
             pkg("core", &[]),
+            pkg("alpha", &["core 1.0.0"]),
         ]);
         let text = lock.render();
         insta::assert_snapshot!(text);
@@ -527,12 +610,12 @@ mod tests {
             .err()
             .map(|r| r.notes.into_iter().map(|n| n.1).collect())
             .unwrap_or_default();
-        let digest = &changed.digest;
+        let source = &changed.source;
         assert_eq!(
             notes,
             [
                 "run `litigate lock` to regenerate Lit.lock".to_owned(),
-                format!("`core` changed (locked 1.0.0 {digest}, now 1.1.0 {digest})"),
+                format!("`core` changed (locked 1.0.0 {source}, now 1.1.0 {source})"),
             ]
         );
     }
@@ -549,73 +632,115 @@ mod tests {
     }
 
     #[test]
-    fn merge_takes_each_sides_changes_and_marks_both_changed_rows() {
-        let digested = |name: &str, d: &str| LockedPackage {
-            digest: d.to_owned(),
-            ..pkg(name, &[])
-        };
-        let base = LockFile::new(vec![
-            pkg("core", &[]),
-            pkg("frcp", &["core 1.0.0"]),
-            pkg("gone", &[]),
-            pkg("ptab", &["core 1.0.0"]),
-            pkg("same", &[]),
-        ]);
-        let ours = LockFile::new(vec![
-            digested("core", "a"),
-            pkg("frcp", &["core 1.0.0"]),
-            digested("ptab", "a"),
-            digested("same", "x"),
-        ]);
-        let theirs = LockFile::new(vec![
-            digested("core", "b"),
-            digested("frcp", "b"),
-            pkg("gone", &[]),
-            digested("ptab", "b"),
-            digested("same", "x"),
-            digested("added", "b"),
-        ]);
-        let merged = merge(&base, &ours, &theirs);
-        let unmerged = |name: &str| digested(name, UNMERGED);
-        assert_eq!(
-            merged,
-            Merged {
-                lock: LockFile::new(vec![
-                    digested("added", "b"),
-                    unmerged("core"),
-                    digested("frcp", "b"),
-                    unmerged("ptab"),
-                    digested("same", "x"),
-                ]),
-                unresolved: vec!["core".to_owned(), "ptab".to_owned()],
-            }
-        );
-        let stale = verify(Some(&merged.lock.render()), &base).err();
-        assert_eq!(stale.map(|r| r.code), Some(C::StaleLock));
+    fn every_pin_names_exactly_one_row() {
+        let twice = LockFile::new(vec![pkg("core", &[]), pkg("core", &[])]).render();
+        let dangling = LockFile::new(vec![pkg("app", &["core 1.0.0"])]).render();
+        let unversioned = LockFile::new(vec![pkg("core", &[]), pkg("app", &["core"])]).render();
+        for (text, message) in [
+            (twice, "Lit.lock locks `core` 1.0.0 more than once"),
+            (
+                dangling,
+                "Lit.lock: `app` depends on `core 1.0.0`, which names no locked package",
+            ),
+            (
+                unversioned,
+                "Lit.lock: `app` depends on `core`, which names no locked package",
+            ),
+        ] {
+            let report = LockFile::parse(&text).err();
+            assert_eq!(
+                report.map(|r| (r.code, r.message)),
+                Some((C::StaleLock, message.to_owned()))
+            );
+        }
     }
 
     #[test]
-    fn merge_marks_a_row_one_side_changed_and_the_other_removed() {
-        let base = LockFile::new(vec![pkg("frcp", &[])]);
-        let mut changed = pkg("frcp", &[]);
-        changed.version = "2.0.0".into();
-        let ours = LockFile::new(vec![]);
-        let theirs = LockFile::new(vec![changed.clone()]);
-        let marked = LockFile::new(vec![LockedPackage {
-            digest: UNMERGED.to_owned(),
-            ..changed
-        }]);
-        for (a, b) in [(&ours, &theirs), (&theirs, &ours)] {
-            let merged = merge(&base, a, b);
-            assert_eq!(merged.lock, marked);
-            assert_eq!(merged.unresolved, ["frcp"]);
-        }
+    fn merkle_digests_are_computed_on_read_over_dependencies() {
+        let lock = LockFile::new(vec![
+            pkg("core", &[]),
+            pkg("frcp", &["core 1.0.0"]),
+            pkg("links", &["core 1.0.0", "frcp 1.0.0"]),
+            pkg("ttab", &["core 1.0.0"]),
+        ]);
+        let rows = lock.merkle();
+        let core = merkle(
+            "core",
+            "1.0.0",
+            1,
+            &lock.packages[0].source,
+            &lock.packages[0].texts,
+            &[],
+        );
+        assert_eq!(rows["core 1.0.0"], core);
+        let frcp = merkle(
+            "frcp",
+            "1.0.0",
+            1,
+            &lock.packages[1].source,
+            &lock.packages[1].texts,
+            &[format!("core 1.0.0 {core}")],
+        );
+        assert_eq!(rows["frcp 1.0.0"], frcp);
+        let root = lock.root();
+        assert!(root.starts_with("sha256:") && root.len() == 71, "{root}");
+        // A change to frcp's own digest moves frcp, links and the root,
+        // never ttab or core.
+        let mut edited = lock.clone();
+        edited.packages[1].semantic = "sha256:1".to_owned();
+        let moved = edited.merkle();
+        let same: Vec<&str> = rows
+            .iter()
+            .filter(|(k, d)| moved[*k] == **d)
+            .map(|(k, _)| k.as_str())
+            .collect();
+        assert_eq!(same, ["core 1.0.0", "ttab 1.0.0"]);
+        assert_ne!(edited.root(), root);
+    }
+
+    #[test]
+    fn a_cycle_is_digested_from_where_the_walk_begins() {
+        let lock = LockFile::new(vec![
+            pkg("a", &["b 1.0.0"]),
+            pkg("b", &["a 1.0.0"]),
+            pkg("c", &["a 1.0.0"]),
+        ]);
+        let rows = lock.merkle();
+        let b_in_a = merkle(
+            "b",
+            "1.0.0",
+            1,
+            &lock.packages[1].source,
+            &lock.packages[1].texts,
+            &["a 1.0.0".to_owned()],
+        );
+        let a = merkle(
+            "a",
+            "1.0.0",
+            1,
+            &lock.packages[0].source,
+            &lock.packages[0].texts,
+            &[format!("b 1.0.0 {b_in_a}")],
+        );
+        assert_eq!(rows["a 1.0.0"], a);
+        assert_eq!(
+            rows["b 1.0.0"],
+            merkle(
+                "b",
+                "1.0.0",
+                1,
+                &lock.packages[1].source,
+                &lock.packages[1].texts,
+                &[format!("a 1.0.0 {a}")]
+            )
+        );
+        assert_eq!(rows.len(), 3);
     }
 
     proptest! {
         #[test]
         fn prop_quoted_strings_parse_back(s in "\\PC{0,24}") {
-            let lock = LockFile::new(vec![LockedPackage { name: s.clone(), version: s.clone(), digest: s.clone(), source: s.clone(), semantic: s.clone(), texts: vec![s.clone()], dependencies: vec![s], language: 1 }]);
+            let lock = LockFile::new(vec![LockedPackage { name: s.clone(), version: s.clone(), source: s.clone(), semantic: s.clone(), texts: vec![s.clone()], dependencies: Vec::new(), language: 1 }]);
             prop_assert_eq!(LockFile::parse(&lock.render()).ok(), Some(lock));
         }
     }

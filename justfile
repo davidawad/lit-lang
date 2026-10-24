@@ -23,16 +23,7 @@ install:
     just merge-drivers
 
 # Register every git merge driver `.gitattributes` names in this clone.
-merge-drivers: lit-merge-driver tree-sitter-merge-driver
-
-# Register the `litlock` git merge driver `.gitattributes` names for every
-# `Lit.lock` (SPEC §4.2) in this clone. Idempotent; a no-op outside git.
-lit-merge-driver:
-    #!/usr/bin/env bash
-    set -euo pipefail
-    git rev-parse --git-dir > /dev/null 2>&1 || exit 0
-    git config merge.litlock.name "Lit.lock package-by-package merge (litigate lock --merge)"
-    git config merge.litlock.driver 'cargo run -q --manifest-path "$(git rev-parse --show-toplevel)/Cargo.toml" -p litigate-cli -- lock --merge %O %A %B > /dev/null'
+merge-drivers: tree-sitter-merge-driver
 
 # Register the `tsgenerate` git merge driver `.gitattributes` names for the
 # generated tree-sitter parser (editors/tree-sitter-litigate/src). When both
@@ -268,7 +259,8 @@ lit-check *ARGS='--profile strict lit cases':
 # with the arguments in crates/litgraph-packs/build.args. They are build
 # outputs, never committed: crates/litgraph-packs builds and embeds them at
 # compile time, so parallel lit/ changes cannot conflict on them. Only the
-# Lit.lock files are committed (they merge through the litlock driver).
+# Lit.lock files are committed (each row holds only its own package's
+# digests, so edits to different packages merge as plain text).
 lit_build_args := "crates/litgraph-packs/build.args"
 # Where `lit-sync` writes the build for inspection (`--packs-dir`,
 # `--scenarios-dir`, `litigate diff`).
@@ -277,9 +269,9 @@ lit_build_dir := "target/lit-build"
 # Regenerate every committed Lit.lock, then build packs/, packs/links.json,
 # generated packs/clock/ fragments and scenarios/ from lit/ and cases/ into
 # target/lit-build/ (the hand-authored packs/clock/*.json copied beside
-# them, as litgraph-packs embeds them). Run it after a merge or rebase
-# touching lit/: the Lit.lock merge driver leaves a package both sides
-# changed unmerged (L1007) until it does.
+# them, as litgraph-packs embeds them). Run it after a merge or rebase in
+# which both sides changed one package: its Lit.lock row conflicts (or is
+# stale, L1007) until it does, like a Cargo.lock.
 lit-sync: merge-drivers
     #!/usr/bin/env bash
     set -euo pipefail

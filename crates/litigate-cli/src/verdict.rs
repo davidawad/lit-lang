@@ -11,6 +11,7 @@ use litgraph::cite::SourceCorpus;
 use litigate_base::{Diagnostic, DiagnosticCode as C, Profile, Severity};
 use litigate_lower::{LoweredPackage, Lowerer, Options};
 use litigate_sema::hir;
+use litigate_sema::types::build::expected_lock;
 use litigate_syntax::FileKind;
 use litigate_verify::{Finding, PackageInput, Verification};
 use std::path::Path;
@@ -135,7 +136,30 @@ pub fn package(
                 packages: &all,
                 options,
             };
-            let verification = litigate_verify::verify_package(&input, corpus, profile);
+            let verify = || litigate_verify::verify_package(&input, corpus, profile);
+            let verification = match &session.cache {
+                // Keyed by the Merkle root of the package's resolution, so a
+                // change to any dependency's digest misses (SPEC §4.2), and
+                // by every package loaded beside it, which verification reads,
+                // each at the path its diagnostics name.
+                Some(cache) => {
+                    let root = expected_lock(&session.db, session.ws, pkg.input).root();
+                    let mut loaded: Vec<String> = session
+                        .packages
+                        .iter()
+                        .filter(|p| p.check.package.is_some())
+                        .map(|p| format!("{} {} {} {}", p.name, p.version, p.digest, p.root))
+                        .collect();
+                    loaded.sort();
+                    let loaded = loaded.join("\n");
+                    let profile = format!("{profile:?}");
+                    let as_of = options.as_of.as_deref().unwrap_or_default();
+                    let known_at = options.known_at.as_deref().unwrap_or_default();
+                    let key = [pkg.root.as_str(), &root, &loaded, &profile, as_of, known_at];
+                    cache.verified(&key, verify)
+                }
+                None => verify(),
+            };
             let (tests, _) =
                 inline_tests::run(clocks, hir, &pkg.files, None, options.known_at.as_deref());
             (verification, lowering.ok(), tests)

@@ -14,6 +14,7 @@
 //! assert_eq!(envelope["result"]["code"], "L3004");
 //! # Ok::<(), String>(())
 //! ```
+pub mod cache;
 pub mod cli;
 pub mod clock;
 mod cmd;

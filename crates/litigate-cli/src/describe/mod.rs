@@ -258,7 +258,7 @@ const RESULTS: [(&str, &str); 17] = [
     ("describe", "this document"),
     (
         "lock",
-        "{lockfile, changed, packages:[{name, version, digest}]}; --merge: {lockfile, changed, unresolved:[name], stale_format}",
+        "{lockfile, changed, packages:[{name, version, digest}]} (matters: {lockfiles:[{lockfile, changed, cases, packages}]}); --root adds root, the Merkle root computed from the verified lock (null when stale)",
     ),
     ("check", "{profile, files, obligations:[{obligation, passed, detail}], packages, cases:[{path, id, start, replay, deadlines}]}"),
     ("build", "{outputs:{packs, links, clock, scenarios, source_maps, litigatables}, litigatable_hash, litigatables:[{package, path, content_hash}], obligations}"),

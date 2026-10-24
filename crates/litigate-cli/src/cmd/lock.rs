@@ -1,22 +1,32 @@
-//! `litigate lock [DIR] [--locked]`: write or verify `Lit.lock` (SPEC §4.2)
-//! for a package, or for each directory of matters under `DIR` (the lock
-//! beside a `.case` pins the packages it `uses`, SPEC §5.6); `--merge` is
-//! the git merge driver for `Lit.lock`.
+//! `litigate lock [DIR] [--locked] [--root]`: write or verify `Lit.lock`
+//! (SPEC §4.2) for a package, or for each directory of matters under `DIR`
+//! (the lock beside a `.case` pins the packages it `uses`, SPEC §5.6);
+//! `--root` verifies and prints the Merkle root computed from the lock.
 use crate::out::{Failure, Outcome, Report};
 use crate::ws::{self, CaseText, Session};
 use litigate_base::{Diagnostic, FileId, LineIndex};
-use litigate_sema::pkg::lock::{LockFile, FORMAT};
+use litigate_sema::pkg::lock::LockFile;
 use serde_json::{json, Value};
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
-/// `litigate lock`.
-pub fn lock(dir: Option<&str>, locked: bool) -> Outcome {
+/// The Merkle root of the lock `text`, when it verified (`diagnostics`
+/// empty): computed on read, never stored.
+fn root_of(text: Option<&str>, diagnostics: &[Diagnostic]) -> Value {
+    text.filter(|_| diagnostics.is_empty())
+        .and_then(|t| LockFile::parse(t).ok())
+        .map_or(Value::Null, |l| Value::String(l.root()))
+}
+
+/// `litigate lock`. `root` verifies as `locked` does, and adds the lock's
+/// Merkle root to the result.
+pub fn lock(dir: Option<&str>, locked: bool, root: bool) -> Outcome {
+    let locked = locked || root;
     let dir = dir.unwrap_or(".").to_owned();
     let targets = ws::discover(std::slice::from_ref(&dir))?;
     let session = Session::load(&targets, &[])?;
     if !Path::new(&dir).join("Lit.toml").is_file() && !session.cases.is_empty() {
-        return matters(&session, &targets.cases, locked);
+        return matters(&session, &targets.cases, locked, root);
     }
     let pkg = session
         .requested()
@@ -39,45 +49,10 @@ pub fn lock(dir: Option<&str>, locked: bool) -> Outcome {
     } else if changed {
         crate::cmd::build::write_atomic(&file, &text)?;
     }
+    if root {
+        report.result["root"] = root_of(existing.as_deref(), &report.diagnostics);
+    }
     Ok(report)
-}
-
-/// `litigate lock --merge BASE OURS THEIRS`: writes the three-way merge
-/// into `OURS`. Packages both sides changed get an unmerged digest, so the
-/// lock stays stale (L1007) until `litigate lock` regenerates it. A side
-/// in another format has no rows to merge: the result is an empty lock,
-/// stale the same way (`stale_format`).
-pub fn merge(paths: &[String]) -> Outcome {
-    let read = |path: &String| {
-        let text =
-            std::fs::read_to_string(path).map_err(|e| Failure::new(format!("{path}: {e}")))?;
-        let failed =
-            |r: litigate_sema::db::span::Report| Failure::new(format!("{path}: {}", r.message));
-        let lock = (LockFile::format(&text).map_err(failed)? == FORMAT)
-            .then(|| LockFile::parse(&text).map_err(failed))
-            .transpose()?;
-        Ok::<_, Failure>((text, lock))
-    };
-    let [base, ours, theirs] = [&paths[0], &paths[1], &paths[2]].map(read);
-    let (ours_text, ours) = ours?;
-    let (base, theirs) = (base?.1, theirs?.1);
-    let sides = base.zip(ours).zip(theirs);
-    let stale_format = sides.is_none();
-    let merged = sides.map_or_else(
-        || litigate_sema::pkg::lock::Merged {
-            lock: LockFile::new(Vec::new()),
-            unresolved: Vec::new(),
-        },
-        |((base, ours), theirs)| litigate_sema::pkg::lock::merge(&base, &ours, &theirs),
-    );
-    let text = merged.lock.render();
-    crate::cmd::build::write_atomic(Path::new(&paths[1]), &text)?;
-    Ok(Report::of(json!({
-        "lockfile": ws::shown(Path::new(&paths[1])),
-        "changed": text != ours_text,
-        "unresolved": merged.unresolved,
-        "stale_format": stale_format,
-    })))
 }
 
 fn pinned(session: &Session) -> Vec<Value> {
@@ -90,7 +65,7 @@ fn pinned(session: &Session) -> Vec<Value> {
 }
 
 /// One `Lit.lock` per directory holding matters.
-fn matters(session: &Session, paths: &[PathBuf], locked: bool) -> Outcome {
+fn matters(session: &Session, paths: &[PathBuf], locked: bool, root: bool) -> Outcome {
     let mut dirs: BTreeMap<PathBuf, Vec<&CaseText>> = BTreeMap::new();
     for (path, case) in paths.iter().zip(&session.cases) {
         let parent = path.parent().map(Path::to_path_buf).unwrap_or_default();
@@ -105,21 +80,32 @@ fn matters(session: &Session, paths: &[PathBuf], locked: bool) -> Outcome {
         let shown = ws::shown(&file);
         let existing = cases.first().and_then(|c| c.lock.clone());
         let changed = existing.as_deref() != Some(text.as_str());
-        if locked {
-            report
-                .diagnostics
-                .extend(stale(&shown, existing.as_deref(), &expected));
-        } else if changed {
-            crate::cmd::build::write_atomic(&file, &text)?;
-        }
-        files.push(json!({
+        let diagnostics: Vec<Diagnostic> = if locked {
+            stale(&shown, existing.as_deref(), &expected)
+                .into_iter()
+                .collect()
+        } else {
+            if changed {
+                crate::cmd::build::write_atomic(&file, &text)?;
+            }
+            Vec::new()
+        };
+        let merkle = expected.merkle();
+        let mut entry = json!({
             "lockfile": shown,
             "changed": changed,
             "cases": cases.iter().map(|c| c.path.clone()).collect::<Vec<_>>(),
             "packages": expected.packages.iter().map(|p| json!({
-                "name": p.name, "version": p.version, "digest": p.digest,
+                "name": p.name,
+                "version": p.version,
+                "digest": merkle[&format!("{} {}", p.name, p.version)],
             })).collect::<Vec<_>>(),
-        }));
+        });
+        if root {
+            entry["root"] = root_of(existing.as_deref(), &diagnostics);
+        }
+        report.diagnostics.extend(diagnostics);
+        files.push(entry);
     }
     report.result = json!({"lockfiles": files});
     report.provenance = crate::prov::session(&session.packages, None, None);

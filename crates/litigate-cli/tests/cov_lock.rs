@@ -132,115 +132,63 @@ fn unwritable_and_unreadable_lock_inputs_fail() {
     insta::assert_snapshot!(unreadable.stderr, @"litigate lock: cases/examples/acme.case: Permission denied (os error 13)");
 }
 
-/// Runs `git ARGS` in `dir` with a throwaway identity, returning success.
-fn git(dir: &std::path::Path, args: &[&str]) -> bool {
-    std::process::Command::new("git")
-        .current_dir(dir)
-        .args([
-            "-c",
-            "user.name=t",
-            "-c",
-            "user.email=t@t",
-            "-c",
-            "commit.gpgsign=false",
-        ])
-        .args(args)
-        .output()
-        .unwrap()
-        .status
-        .success()
-}
-
 #[test]
-fn the_merge_driver_lets_two_edits_to_one_package_merge_then_fail_closed() {
-    let dir = example("lock-merge-git", "", None);
+fn root_is_computed_from_a_verified_lock() {
+    let dir = example("lock-root", "", None);
     assert_eq!(litigate_in(&dir, &["lock", "lit/examples"]).code, 0);
-    std::fs::copy(
-        support::repo().join(".gitattributes"),
-        dir.join(".gitattributes"),
+    let run = litigate_in(&dir, &["lock", "--root", "lit/examples"]);
+    assert_eq!(run.code, 0, "{}", run.stdout);
+    let root = run.json["result"]["root"].as_str().unwrap().to_owned();
+    assert!(root.starts_with("sha256:") && root.len() == 71, "{root}");
+    // Computed on read, never stored.
+    let text = std::fs::read_to_string(dir.join("lit/examples/Lit.lock")).unwrap();
+    assert!(!text.contains(&root[7..]), "{text}");
+    let matters = litigate_in(&dir, &["lock", "--root", "cases/examples"]);
+    assert_eq!(matters.code, 0, "{}", matters.stdout);
+    assert!(matters.json["result"]["lockfiles"][0]["root"].is_string());
+    // A stale lock has no root: L1007, and nothing is written.
+    let module = dir.join("lit/examples/rule12.lit");
+    let source = std::fs::read_to_string(&module).unwrap();
+    std::fs::write(
+        &module,
+        format!(
+            "{source}
+terminal extra: \"Extra\"\n"
+        ),
     )
     .unwrap();
-    let driver = format!("{} lock --merge %O %A %B", env!("CARGO_BIN_EXE_litigate"));
-    let module = dir.join("lit/examples/rule12.lit");
-    let text = std::fs::read_to_string(&module).unwrap();
-    let edit = |branch: &str, edited: String| {
-        assert!(git(&dir, &["checkout", "-q", "-B", branch, "main"]));
-        std::fs::write(&module, edited).unwrap();
-        assert_eq!(litigate_in(&dir, &["lock", "lit/examples"]).code, 0);
-        assert_eq!(litigate_in(&dir, &["lock", "cases/examples"]).code, 0);
-        assert!(git(&dir, &["commit", "-q", "-am", branch]));
-    };
-    assert!(git(&dir, &["init", "-q", "-b", "main"]));
-    assert!(git(&dir, &["config", "merge.litlock.driver", &driver]));
-    assert!(git(&dir, &["add", "."]));
-    assert!(git(&dir, &["commit", "-q", "-m", "base"]));
-    edit("top", format!("// top\n{text}"));
-    edit("bottom", format!("{text}// bottom\n"));
-    assert!(git(&dir, &["merge", "-q", "--no-edit", "top"]));
-    let merged = std::fs::read_to_string(dir.join("cases/examples/Lit.lock")).unwrap();
-    assert!(
-        merged.contains("digest = \"unmerged: run `litigate lock`\""),
-        "{merged}"
+    let stale = litigate_in(&dir, &["lock", "--root", "lit/examples"]);
+    assert_eq!(stale.code, 2, "{}", stale.stdout);
+    assert_eq!(stale.json["result"]["root"], serde_json::Value::Null);
+    assert_eq!(
+        std::fs::read_to_string(dir.join("lit/examples/Lit.lock")).unwrap(),
+        text
     );
-    for lockfile in ["lit/examples", "cases/examples"] {
-        let stale = litigate_in(&dir, &["lock", "--locked", lockfile]);
-        assert_eq!(stale.code, 2, "{lockfile}: {}", stale.stdout);
-        assert_eq!(litigate_in(&dir, &["lock", lockfile]).code, 0);
-        assert_eq!(litigate_in(&dir, &["lock", "--locked", lockfile]).code, 0);
-    }
+    std::fs::write(dir.join("cases/examples/Lit.lock"), "version = 1\n").unwrap();
+    let matters = litigate_in(&dir, &["lock", "--root", "cases/examples"]);
+    assert_eq!(matters.code, 2, "{}", matters.stdout);
+    assert_eq!(
+        matters.json["result"]["lockfiles"][0]["root"],
+        serde_json::Value::Null
+    );
 }
 
 #[test]
-fn merge_reports_what_it_wrote_and_fails_on_bad_inputs() {
-    let dir = scratch("lock-merge");
-    let lock = "version = 2\n";
-    let other = "version = 2\n\n[[package]]\nname = \"a\"\nversion = \"1.0.0\"\nlanguage = 1\ndigest = \"d\"\nsource = \"s\"\nsemantic = \"unchecked\"\ntexts = []\ndependencies = []\n";
-    for (name, text) in [("o", lock), ("a", lock), ("b", other), ("bad", "x")] {
-        std::fs::write(dir.join(name), text).unwrap();
-    }
-    let run = litigate_in(&dir, &["lock", "--merge", "o", "a", "b"]);
-    assert_eq!(run.code, 0, "{}", run.stderr);
-    insta::assert_snapshot!(run.json["result"], @r#"{"lockfile":"a","changed":true,"unresolved":[],"stale_format":false}"#);
-    assert_eq!(std::fs::read_to_string(dir.join("a")).unwrap(), other);
-    let again = litigate_in(&dir, &["lock", "--merge", "o", "a", "b"]);
-    assert_eq!(again.json["result"]["changed"], false);
-    let missing = litigate_in(&dir, &["lock", "--merge", "o", "a", "nope"]);
-    assert_eq!(missing.code, 1);
-    insta::assert_snapshot!(missing.stderr, @"litigate lock: nope: No such file or directory (os error 2)");
-    let base = litigate_in(&dir, &["lock", "--merge", "bad", "a", "b"]);
-    assert_eq!(
-        (base.code, base.stderr.starts_with("litigate lock: bad: ")),
-        (1, true)
+fn a_pin_naming_no_locked_row_is_stale() {
+    let dir = example("lock-dangling", "", None);
+    let path = dir.join("cases/examples/Lit.lock");
+    let text = std::fs::read_to_string(&path).unwrap();
+    let pinned = text.replacen(
+        "dependencies = []",
+        "dependencies = [\n    \"core 9.9.9\",\n]",
+        1,
     );
-    let bad = litigate_in(&dir, &["lock", "--merge", "o", "bad", "b"]);
-    assert_eq!(bad.code, 1);
-    insta::assert_snapshot!(bad.stderr, @"litigate lock: bad: Lit.lock is invalid: key with no value, expected `=`");
-    std::fs::write(dir.join("row"), "version = 2\ncolour = 1\n").unwrap();
-    let row = litigate_in(&dir, &["lock", "--merge", "o", "a", "row"]);
-    assert_eq!(row.code, 1);
-    insta::assert_snapshot!(row.stderr, @"litigate lock: row: Lit.lock is invalid: unknown field `colour`, expected `version` or `package`");
-    // A side in another format (a lock from before format 2) merges to an
-    // empty lock: stale (L1007) until `litigate lock`, never a conflict.
-    std::fs::write(dir.join("v1"), "version = 1\n\n[[package]]\nname = \"a\"\n").unwrap();
-    let older = litigate_in(&dir, &["lock", "--merge", "o", "a", "v1"]);
-    assert_eq!(older.code, 0, "{}", older.stderr);
-    insta::assert_snapshot!(older.json["result"], @r#"{"lockfile":"a","changed":true,"unresolved":[],"stale_format":true}"#);
-    assert_eq!(
-        std::fs::read_to_string(dir.join("a")).unwrap(),
-        "version = 2\n"
+    assert_ne!(pinned, text);
+    std::fs::write(&path, pinned).unwrap();
+    let stale = litigate_in(&dir, &["lock", "--locked", "cases/examples"]);
+    assert_eq!(stale.code, 2, "{}", stale.stdout);
+    insta::assert_snapshot!(
+        stale.json["diagnostics"][0]["message"],
+        @r#""Lit.lock: `frcp-rule12-example` depends on `core 9.9.9`, which names no locked package""#
     );
-}
-
-#[cfg(unix)]
-#[test]
-fn merge_into_an_unwritable_directory_fails() {
-    let dir = scratch("lock-merge-unwritable");
-    for name in ["o", "a", "b"] {
-        std::fs::write(dir.join(name), "version = 2\n").unwrap();
-    }
-    support::chmod(&dir, 0o555);
-    let run = litigate_in(&dir, &["lock", "--merge", "o", "a", "b"]);
-    support::chmod(&dir, 0o755);
-    assert_eq!(run.code, 1);
-    insta::assert_snapshot!(run.stderr, @"litigate lock: a.litigate-tmp: Permission denied (os error 13)");
 }

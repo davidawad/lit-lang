@@ -269,6 +269,8 @@ pub struct Session {
     pub packages: Vec<Pkg>,
     /// Matters.
     pub cases: Vec<CaseText>,
+    /// The verification cache: only for a session read from disk.
+    pub cache: Option<crate::cache::Cache>,
 }
 
 /// Package names a `.case` text `uses`.
@@ -359,6 +361,10 @@ impl Session {
             ws,
             packages,
             cases,
+            cache: src
+                .on_disk()
+                .then(|| crate::cache::Cache::from_env(&root))
+                .flatten(),
         })
     }
 
@@ -378,6 +384,7 @@ impl Session {
             ws,
             packages,
             cases,
+            cache: None,
         }
     }
 

@@ -65,10 +65,12 @@ just lit-sync                               # regenerate every Lit.lock; build p
 just lit-sync-check                         # CI gate: fail on a stale Lit.lock or a committed generated file
 ```
 
-`Lit.lock` files merge package by package through the `litlock` git merge
-driver (`.gitattributes`; `just lit-sync` registers it). After a merge or
-rebase touching `lit/`, run `just lit-sync`: a package both sides changed
-is left with an unmerged digest (L1007) until it does.
+`Lit.lock` files hold one row per package with only that package's own
+digests (dependencies pinned as `name version`), so branches editing
+different packages merge as plain text. When both sides changed one
+package, its row conflicts: run `just lit-sync` and commit the result; a
+lock that does not match its sources is an error (L1007), never relocked
+silently. `litigate lock --root DIR` prints the lock's Merkle root.
 
 The generated tree-sitter parser (`editors/tree-sitter-litigate/src`) is
 committed and merges through the `tsgenerate` driver, which keeps ours

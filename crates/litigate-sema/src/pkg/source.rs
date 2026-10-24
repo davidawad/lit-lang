@@ -30,6 +30,11 @@ pub trait Source {
     /// # Errors
     /// A missing or unreadable directory.
     fn entries(&self, dir: &Path) -> io::Result<Vec<PathBuf>>;
+    /// True for the real filesystem, where a build cache may live
+    /// (SPEC §4.2); false for an in-memory tree.
+    fn on_disk(&self) -> bool {
+        false
+    }
     /// True for an existing directory.
     fn is_dir(&self, path: &Path) -> bool;
     /// True for an existing file.
@@ -61,6 +66,10 @@ pub struct Disk;
 impl Source for Disk {
     fn root(&self) -> io::Result<PathBuf> {
         std::env::current_dir()
+    }
+
+    fn on_disk(&self) -> bool {
+        true
     }
 
     fn read(&self, path: &Path) -> io::Result<Vec<u8>> {

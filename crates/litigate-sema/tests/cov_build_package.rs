@@ -101,29 +101,16 @@ fn the_lock_lists_each_transitive_dependency_once() {
         .packages
         .iter()
         .map(|p| {
-            let deps: Vec<&str> = p
-                .dependencies
-                .iter()
-                .map(|d| d.rsplit_once(' ').map_or(d.as_str(), |(head, _)| head))
-                .collect();
-            format!("{} <- {}", p.name, deps.join(", "))
+            format!("{} <- {}", p.name, p.dependencies.join(", "))
         })
         .collect();
     insta::assert_debug_snapshot!(names);
-    // Each dependency entry carries that dependency's own Merkle digest.
-    let digest = |name: &str| {
-        parsed
-            .packages
-            .iter()
-            .find(|p| p.name == name)
-            .map(|p| p.digest.clone())
-    };
+    // Each dependency is pinned by name and version; its Merkle digest is
+    // computed on read, once per row of the diamond.
     let root = parsed.packages.iter().find(|p| p.name == "root");
     assert_eq!(
         root.map(|r| r.dependencies.clone()),
-        Some(vec![
-            format!("left 1.0.0 {}", digest("left").unwrap_or_default()),
-            format!("right 1.0.0 {}", digest("right").unwrap_or_default()),
-        ])
+        Some(vec!["left 1.0.0".to_owned(), "right 1.0.0".to_owned()])
     );
+    assert_eq!(parsed.merkle().len(), 4);
 }

@@ -95,6 +95,8 @@ fn scratch(name: &str) -> PathBuf {
 fn disk_is_the_working_directory() {
     let dir = scratch("disk");
     assert_eq!(Disk.root().ok(), std::env::current_dir().ok());
+    assert!(Disk.on_disk());
+    assert!(!MemoryTree::new(Vec::<(String, String)>::new()).on_disk());
     let file = dir.join("a/b.txt");
     assert!(Disk.write_atomic(&file, "text").is_ok());
     assert_eq!(Disk.read(&file).ok(), Some(b"text".to_vec()));

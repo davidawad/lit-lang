@@ -23,12 +23,14 @@ use support::{copy_dir, litigate_in, repo, scratch, Run};
 const TTAB: &str = "ttab-trademark-trial-and-appeal-board";
 
 /// `litigate check` of one TTAB matter with `events`, over copies of
-/// `lit/core` and `lit/ttab` and, with `order`, the Board-order fixture.
+/// `lit/core` and `lit/ttab` (with the vendored L0 texts their locks pin)
+/// and, with `order`, the Board-order fixture.
 fn check(name: &str, events: &[&str], order: bool) -> Run {
     let dir = scratch(name);
     for pkg in ["core", "ttab"] {
         copy_dir(&repo().join("lit").join(pkg), &dir.join("lit").join(pkg));
     }
+    copy_dir(&repo().join("sources"), &dir.join("sources"));
     let mut uses = format!("uses {TTAB} ^0.1.0");
     if order {
         copy_dir(

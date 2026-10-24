@@ -2,8 +2,8 @@
 //! Parallel `lit/` changes merge without an integration job (lg-flu.31):
 //! the generated packs and scenarios are build outputs, so two branches
 //! editing different packages touch only their own `.lit` sources and the
-//! per-package `Lit.lock` entries, and rebase cleanly with no merge driver
-//! (landing runs where cargo, so the `litlock` driver, is unavailable).
+//! per-package `Lit.lock` rows (each holding only its own package's
+//! digests, SPEC §4.2), and rebase cleanly with no merge driver.
 //! The control commits the generated files as the repository used to: the
 //! same two edits then conflict on them. Needs `git`; skips without it.
 // Test helpers below may unwrap: a panic is the failed assertion.
@@ -172,11 +172,7 @@ fn two_branches(name: &str, committed: bool) -> PathBuf {
         copy_tree(&src.join(dir), &root.join(dir));
     }
     std::fs::create_dir_all(root.join("crates/litgraph-packs")).unwrap();
-    for file in [
-        ".gitignore",
-        ".gitattributes",
-        "crates/litgraph-packs/build.args",
-    ] {
+    for file in [".gitignore", "crates/litgraph-packs/build.args"] {
         std::fs::copy(src.join(file), root.join(file)).unwrap();
     }
     git_ok(&root, &["init", "-q"]);
@@ -191,7 +187,6 @@ fn two_branches(name: &str, committed: bool) -> PathBuf {
             "scenarios",
             "crates",
             ".gitignore",
-            ".gitattributes",
         ]
     } else {
         &["add", "-A"]

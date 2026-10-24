@@ -49,7 +49,8 @@ fn the_lock_pins_vendored_l0_texts_only() {
     ))
     .unwrap();
     assert_eq!(row(&again, "app").semantic, row(&lock, "app").semantic);
-    assert_ne!(row(&again, "app").digest, row(&lock, "app").digest);
+    assert_ne!(row(&again, "app").texts, row(&lock, "app").texts);
+    assert_ne!(again.root(), lock.root());
 }
 
 fn tree_text(db: &litigate_sema::LitDatabase, ws: litigate_sema::Workspace) -> String {
@@ -67,13 +68,13 @@ fn a_package_that_does_not_check_locks_its_source_digest() {
     let app = row(&lock, "app");
     assert_eq!(app.semantic, UNCHECKED);
     assert_eq!(
-        app.digest,
+        lock.merkle()["app 1.0.0"],
         litigate_sema::pkg::lock::merkle("app", "1.0.0", 1, &app.source, &[], &[])
     );
 }
 
 #[test]
-fn a_dependency_cycle_is_l1011_and_entered_without_a_digest() {
+fn a_dependency_cycle_is_l1011_and_entered_by_name_and_version() {
     let (db, ws) = workspace(&[
         package("a", &["b"], &[("a.lit", PACK)]),
         package(
@@ -83,12 +84,13 @@ fn a_dependency_cycle_is_l1011_and_entered_without_a_digest() {
         ),
     ]);
     insta::assert_debug_snapshot!(render(&db, ws));
-    // Inside `a`'s row, `b`'s digest covers `b` with the edge back to `a`
-    // cut, so it is not `b`'s own row digest.
+    // Each row pins the other by name and version only; the Merkle digests
+    // computed on read cut the edge back to where the walk began.
     let lock = LockFile::parse(&litigate_sema::render_lock(&db, ws, ws.packages(&db)[0])).unwrap();
     let (a, b) = (row(&lock, "a"), row(&lock, "b"));
-    assert!(a.dependencies[0].starts_with("b 1.0.0 sha256:"));
-    assert_ne!(a.dependencies[0], format!("b 1.0.0 {}", b.digest));
+    assert_eq!(a.dependencies, ["b 1.0.0"]);
+    assert_eq!(b.dependencies, ["a 1.0.0"]);
+    assert_eq!(lock.merkle().len(), 2);
 }
 
 #[test]

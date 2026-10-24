@@ -589,6 +589,33 @@ Today:
   `limit_bound`, `certificate_req`, `exclusions`, `exclusion_list`,
   `ecf_code`) so editors highlight it; the compiler rejects it.
 
+### 3.7 Reserved: filing requirements
+
+Filing limits record requirements of a filed document, including a
+certificate of compliance and exclusions from a word, page or line count.
+Electronic filing codes are data supplied by a forum. The declarations
+below are parsed into their typed syntax nodes so editors and later
+implementations can preserve them, but remain reserved and fail closed
+with L0011; they do not yet authorize or validate a filing.
+
+```lit
+/// FRAP 32(a)(7) and 32(f)-(g).
+limit principal-brief override frap::brief delegable_to [CaseOrder] effective [1998-12-01, ..) {
+  words <= 13_000 cite "FRAP 32(a)(7)(B)(i)"
+  lines <= 1300
+  pages <= ?("local rule")
+  requires certificate compliance cite "FRAP 32(g)(1)"
+  excludes [cover-page, table-of-contents, ?("local rule")] cite "FRAP 32(f)"
+  ecf "brief"
+  ecf ?("district ECF code")
+} supersedes local::old-brief cite "FRAP 32" known_at 2026-10-24
+```
+
+The parser reserves `limit`, `certificate` and `excludes`. Each form is
+parsed far enough to produce its dedicated syntax nodes and one L0011,
+without a syntax error; the error prevents formatting and lowering. The
+`ecf` value is data, not a forum rule inferred by the compiler.
+
 ## 4. Packages, modules, names
 
 ### 4.1 `Lit.toml`

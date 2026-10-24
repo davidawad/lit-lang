@@ -203,6 +203,10 @@ fn a_forward_only_calendar_lengthens_the_run() {
     ));
 }
 
+fn refused<T>(r: litgraph::Result<T>) -> String {
+    r.err().map(|e| e.to_string()).unwrap_or_default()
+}
+
 /// LW6: the interpreter refuses instead of looping when no open day
 /// follows: the roll, a court-day count through the closed run, and an
 /// hours period's roll all stop after one Gregorian cycle; a court-day
@@ -210,8 +214,8 @@ fn a_forward_only_calendar_lengthens_the_run() {
 #[test]
 fn counting_under_a_rule_closed_on_every_day_is_refused() {
     use litgraph::clock::{
-        compute_due_date, compute_hour_deadline, ClockConfig, DayDeadline, Direction,
-        HourDeadline, Unit,
+        compute_due_date, compute_hour_deadline, ClockConfig, DayDeadline, Direction, HourDeadline,
+        Unit,
     };
     let lib = library(
         "",
@@ -226,10 +230,11 @@ fn counting_under_a_rule_closed_on_every_day_is_refused() {
         service_method: None,
     };
     let cfg = ClockConfig::default();
-    fn refused<T>(r: litgraph::Result<T>) -> String {
-        r.err().map(|e| e.to_string()).unwrap_or_default()
-    }
-    let roll = refused(compute_due_date(&deadline(30, Unit::Calendar), &clock, &cfg));
+    let roll = refused(compute_due_date(
+        &deadline(30, Unit::Calendar),
+        &clock,
+        &cfg,
+    ));
     assert!(roll.contains("a roll under it never ends"), "{roll}");
     let court = refused(compute_due_date(&deadline(5, Unit::Court), &clock, &cfg));
     assert!(court.contains("a roll under it never ends"), "{court}");

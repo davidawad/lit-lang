@@ -284,7 +284,10 @@ fn what_the_compiler_rejects_lexically_is_rejected_here() {
         ("default d when x == 1900-02-29 => 1", "L0004"),
         ("default d when x == 2026-13-01 => 1", "L0004"),
         ("default d when x == 2026-04-31 => 1", "L0004"),
-        ("test \"t\" { given Ev(a) on 2026-02-30 expect true }", "L0004"),
+        (
+            "test \"t\" { given Ev(a) on 2026-02-30 expect true }",
+            "L0004",
+        ),
         ("default d when x == 1__0 => 1", "L0005"),
         ("default d when x == 1_ => 1", "L0005"),
         ("default d when x == 2__0.usd => 1", "L0005"),
@@ -302,7 +305,13 @@ fn what_the_compiler_rejects_lexically_is_rejected_here() {
         assert!(codes.contains(&code), "{source:?}: {codes:?}");
         assert!(rejected_here(&source), "tree-sitter accepts {source:?}");
     }
-    for date in ["2024-02-29", "2000-02-29", "0000-02-29", "1900-02-28", "2026-12-31"] {
+    for date in [
+        "2024-02-29",
+        "2000-02-29",
+        "0000-02-29",
+        "1900-02-28",
+        "2026-12-31",
+    ] {
         let source = format!("module m\ndefault d when x == {date} => 1\n");
         assert!(litigate_syntax::parse_lit(&source).is_ok(), "{source}");
         assert!(!rejected_here(&source), "{source}");

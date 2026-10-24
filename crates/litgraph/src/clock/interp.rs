@@ -397,7 +397,9 @@ impl Run<'_, '_> {
         }
         match text {
             Some(t) => {
-                let next = self.closed().roll(self.current.add_days(1), Toward::Later)?;
+                let next = self
+                    .closed()
+                    .roll(self.current.add_days(1), Toward::Later)?;
                 self.current = next;
                 self.applied.clerk = true;
                 self.say(t, next, &[]);

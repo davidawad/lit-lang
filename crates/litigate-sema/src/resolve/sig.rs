@@ -411,7 +411,9 @@ fn resolve_types(sig: &mut Signature, tree: &ItemTree, imports: &[&Signature]) {
         let scope = Scope::new(sig, tree, imports, Vec::new());
         events
             .iter()
-            .filter(|(name, _)| matches!(sig.types.get(name), Some(TypeSig::Event(p)) if p.is_empty()))
+            .filter(
+                |(name, _)| matches!(sig.types.get(name), Some(TypeSig::Event(p)) if p.is_empty()),
+            )
             .map(|(name, params)| {
                 let params = params
                     .iter()

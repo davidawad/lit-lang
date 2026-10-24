@@ -1,5 +1,5 @@
 //! Command-line grammar (SPEC §9.3). Every subcommand produces one envelope.
-use clap::{Args, Parser, Subcommand, ValueEnum};
+use clap::{ArgGroup, Args, Parser, Subcommand, ValueEnum};
 use litigate_base::Profile;
 
 /// `litigate`: check, compile, and query legal procedure modules.
@@ -188,6 +188,44 @@ pub enum Command {
         #[command(flatten)]
         library: Library,
     },
+    /// Export a matter's computed deadlines as an iCalendar (`.ics`) file.
+    Calendar {
+        /// The `.case` file.
+        case: String,
+        /// Also write the calendar to this file.
+        #[arg(long, value_name = "FILE")]
+        out: Option<String>,
+        /// Every deadline the events created, not only the open ones.
+        #[arg(long)]
+        all: bool,
+        /// Remind this many days before each due date (repeatable).
+        #[arg(long, value_name = "DAYS")]
+        remind: Vec<u32>,
+        /// Shared options.
+        #[command(flatten)]
+        library: Library,
+    },
+    /// Replay a matter with a proposed filing added: is it a legal, timely
+    /// move, what does it discharge, and which deadlines does it trigger?
+    #[command(group(ArgGroup::new("party").required(true).args(["by", "on"])))]
+    LintFiling {
+        /// The `.case` file.
+        case: String,
+        /// The event as the matter would record it, e.g. `Answered(complaint)`.
+        event: String,
+        /// The filing date.
+        #[arg(long, value_name = "DATE")]
+        date: String,
+        /// The party making the filing.
+        #[arg(long, value_name = "PARTY")]
+        by: Option<String>,
+        /// The party served (for a service event).
+        #[arg(long, value_name = "PARTY")]
+        on: Option<String>,
+        /// Shared options.
+        #[command(flatten)]
+        library: Library,
+    },
     /// Resolve an id at any layer: node, edge, declaration, diagnostic code, or cite.
     Where {
         /// `pack::node`, `node`, `decl@YYYY-MM-DD`, `L0412`, or cite text.
@@ -344,6 +382,8 @@ impl Command {
             Self::Test { .. } => "test",
             Self::Fmt { .. } => "fmt",
             Self::Run { .. } => "run",
+            Self::Calendar { .. } => "calendar",
+            Self::LintFiling { .. } => "lint-filing",
             Self::Where { .. } => "where",
             Self::Explain { .. } => "explain",
             Self::ExplainValue { .. } => "explain-value",

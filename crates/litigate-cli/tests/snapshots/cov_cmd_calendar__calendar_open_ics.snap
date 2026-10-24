@@ -1,0 +1,52 @@
+---
+source: crates/litigate-cli/tests/cov_cmd_calendar.rs
+assertion_line: 68
+expression: ics
+---
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//litgraph//litigate <version>//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:cal-matter
+BEGIN:VEVENT
+UID:1d1b1cdf7d704f8b2955d3b1fddd6222@litigate
+DTSTAMP:20250310T000000Z
+DTSTART;VALUE=DATE:20250319
+DTEND;VALUE=DATE:20250320
+SUMMARY:answer-period due (cal-matter)
+DESCRIPTION:Deadline: cov-pack::answer-period\nAuthority: FRCP 12(a)(4)\nTr
+ igger: Served(complaint\, Personal) on 2025-03-05\nCounting: frcp6 (FRCP 6
+ (a))\n- FRCP 6(a): exclude the trigger date 2025-03-05\n- FRCP 6(a): count
+  14 calendar day(s) after the anchor -> 2025-03-19\nStatus as of 2025-03-1
+ 0: open\nComputed by litigate from cases/cal.case\; the cited rule text go
+ verns.
+CATEGORIES:litigate,open
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER;RELATED=START:-P3D
+DESCRIPTION:answer-period due in 3 day(s)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:2d16a75a021ed878b436cc6fb5eaf1ed@litigate
+DTSTAMP:20250310T000000Z
+DTSTART;VALUE=DATE:20250321
+DTEND;VALUE=DATE:20250322
+SUMMARY:amended-answer-period due (cal-matter)
+DESCRIPTION:Deadline: cov-pack::amended-answer-period\nAuthority: FRCP 15(a
+ )(3)\nTrigger: Served(amended_complaint\, Personal) on 2025-03-07\nCountin
+ g: frcp6 (FRCP 6(a))\n- FRCP 6(a): exclude the trigger date 2025-03-07\n- 
+ FRCP 6(a): count 14 calendar day(s) after the anchor -> 2025-03-21\nStatus
+  as of 2025-03-10: open\nComputed by litigate from cases/cal.case\; the ci
+ ted rule text governs.
+CATEGORIES:litigate,open
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER;RELATED=START:-P3D
+DESCRIPTION:amended-answer-period due in 3 day(s)
+END:VALARM
+END:VEVENT
+END:VCALENDAR

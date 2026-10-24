@@ -21,7 +21,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `cases/e2e-ttab-{ok,short,unknown}.case` (one notice mailed 2026-10-21
   designating 2026-11-30, 2026-11-05 and `?`), are golden-tested through
   `litigate check` and `explain-value`.
-
 - **The certiorari extension's timing follows Sup. Ct. R. 13.5, 30.2 and
   30.3, from the Rules effective March 16, 2026** (lg-flu.41).
   `sources/scotus-rules.txt` is re-vendored from the current
@@ -53,7 +52,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `FILING_WORDS`); `requires` stays the edge field keyword. No file in the
   corpus changes. The tree-sitter grammar (`limit_decl`) and the Emacs,
   Helix and Neovim highlights, indents and folds follow.
-
 - **The Court of Federal Claims appeal window declares its adoption of
   FRAP 4 with 28 U.S.C. § 2522's words** (lg-flu.43). A deadline's
   `forum F` option may now carry the adopting rule and the words that
@@ -85,7 +83,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   2017-01-01 and 2017-01-14, paragraph (a) unchanged) is added to
   `sources/cfr-37-part2-answer-time-history.txt`, and TBMP § 509 (June
   2026) to `sources/tbmp.txt`, cited as practice guidance, not authority.
-
 - **`litigate import` restores a v2 scenario's parties and holes**
   (lg-flu.28, from lg-flu.14). A lowered scenario's `parties` come back as
   the `.case` `parties` block, and its `lowered.holes` as `unvalued` stakes
@@ -132,7 +129,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   fields as L6002 at their pointer: they come from a `deadline`
   declaration, whose trigger event and counting rule an edge window
   does not carry.
-
 - **The 2012 text of 37 C.F.R. § 90.3 is vendored and its Director
   extensions granted** (lg-flu.25). `sources/fr-uspto-90-3-history.txt`
   holds § 90.3 as published in 77 FR 48677-48678 (effective Sept. 16,
@@ -143,7 +139,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   it for excusable neglect, where it was refused. Under the 2012 text the
   request is filed "as provided in § 104.2", not vendored, so the 2024
   receipt-date rule is not applied to it.
-
 - **`workflow-sound`: soundness checks on the procedure net** (lg-flu.18;
   design review §2.7, §2.8, §6 item 27; SPEC §7, §9.1, §13). A new
   verification obligation reads the lowered pack as a bounded workflow
@@ -158,17 +153,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `within` edge. Each finding's note gives a firing sequence reaching it.
   A larger net is undecided, which is an L5007 error. Every package in
   `lit/` and `cases/` passes.
-
-- **Five rulings of 2026-10-23 recorded as normative** (lg-litigate-epic-tuq.52;
-  SPEC §5.4, §5.6, §9.3, §9.4; `crates/litigate-cli/tests/rulings.rs`
-  pins each). An event dated after a matter's `as_of` is L4001. A
-  cited excusing event covers a missed deadline only when its type
-  declares `extends`/`waives` and an `after_expiry` grant admits it; a
-  name or a cite alone covers nothing. The shared clock library
-  (`packs/clock/*.json`) is hand-written. `just lit-sync` and
-  `crates/litgraph-packs` build under the `dev` profile. A version's
-  `known_at` is its recording date when no vendored source dates its
-  promulgation (the frcp $505 fee versions, `known_at 2026-10-22`).
 - **Declared `.case` event ids** (lg-flu.39; SPEC §5.6, PM ruling
   2026-10-23 on timeline keys). An event line may start with an id,
   `service: 2025-03-03 Served(Personal) on roadrunner`. The id is the
@@ -179,17 +163,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   editor quick fix) writes a generated id, `<event-name>-<n>: `, that no
   other event of the matter uses. A repeated id is L1001. Tree-sitter,
   Emacs, Helix and Neovim highlight the id.
-
-- **The tree-sitter parser merges without conflicts** (lg-flu.37). The
-  generated `editors/tree-sitter-litigate/src/{parser.c,grammar.json,node-types.json}`
-  stay committed (the crate's `build.rs` and editor packages compile
-  them) and get the `tsgenerate` git merge driver, which keeps ours when
-  both sides changed them, so two branches changing different grammar
-  rules rebase cleanly. `just tree-sitter-generate` regenerates them from
-  the merged grammar; `just tree-sitter-merge-driver` (and `just
-  merge-drivers`, run by `just install` and `just lit-sync`) registers the
-  driver. `just ci` now runs `just tree-sitter-test`, which fails on a
-  stale parser and runs `script/merge-test`.
 - **`LITGRAPH_PACKS` and `--packs-dir` stay CLI contract** (lg-flu.34; PM
   ruling 2026-10-23 on lg-flu.31). `litgraph` and `litgraph-mcp` load
   packs from `--packs-dir`, else `$LITGRAPH_PACKS`, else the packs built
@@ -204,7 +177,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   to the empty string counts as unset. The dev shells leave
   `LITGRAPH_PACKS` unset; `.env.example` points it at
   `target/lit-build/packs`.
-
 - **Timeline op** (lg-z2m.1; docs/litigate/TIMELINE.md). `litigate
   timeline FILE` and the MCP tool `litigate_timeline` print the timeline
   of a `.case` or `.lit` file as the frozen `litigate.timeline/1` JSON
@@ -226,6 +198,127 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   layer whose authority is not in its package's authority lattice is an
   error (L1004) and the timeline has no result. An act the engine judges
   neither timely nor late (L4010) is `unknown` with the reason.
+- **Interpreted least times** (lg-flu.32; SPEC §5.3, §9.1). A designated
+  deadline may state `interpretation "..."`: the rule names no start for
+  its least time, so measuring it from the trigger's date is the
+  author's interpretation. A notice designating less then stands, with
+  the new warning L4011 naming the shortfall and the interpretation,
+  instead of being rejected. `lit/ttab`'s counterclaim answer (37 C.F.R.
+  § 2.106(b)(3)(iii), "A time, not less than thirty days, will be
+  designated by the Board") states one. The answer (§ 2.105(a)) and the
+  cancellation answer (§ 2.113(a)) are still rejected below thirty days,
+  because those rules count "from the mailing date of the notice". New
+  contextual keyword `interpretation` (tree-sitter and editor highlights
+  updated). The Board-order fixture
+  (`crates/litigate-cli/tests/fixtures/ttab-board-order`) also resets
+  the counterclaim answer time (§ 2.106(b)(3)(iv)) through the same
+  `CaseOrder` layer.
+
+### Changed
+
+- **A designated deadline's extension is no longer a hole** (lg-flu.33,
+  superseding lg-flu.32's lowering). The answer edges of `lit/ttab` now
+  carry their `designated` window, so `deadline/extendable` and
+  `deadline/extensionAuthority` lower as they do for a counted window:
+  stated values are emitted, and an unstated one is absent (undeclared),
+  never `extendable: false`. The answer period's extension authority and
+  its two FRCP 6(b)(1)(A) grants (lg-flu.45) are now in the pack, each
+  grant with the 37 C.F.R. § 2.116(a) interpretation it rests on, where
+  they used to be named only in a hole's reason.
+- **Generated packs leave a designated deadline's extension undeclared**
+  (lg-flu.32; SPEC §8.1). An edge `within` a designated deadline still
+  lowers with no `deadline` window. Its `deadline/extendable` and
+  `deadline/extensionAuthority` are now `lowered.holes` entries, whose
+  reason names the deadline and whatever extension the source states.
+  The extension used to be dropped with no trace, and it is never
+  emitted as not-extendable. `lit/ttab`'s "File no answer" edge no
+  longer states `extendable false` for an answer time the Board may
+  reset (§ 2.106(a)). Its answering edges no longer state an extension
+  authority, none being verified for the answer time:
+  `extension_authority` may now be a hole (`?("reason")`, SPEC §3.1,
+  tree-sitter updated), and they write
+  `extension_authority ?("TTAB answer-time extension authority")`, which
+  is the pack's `deadline/extensionAuthority` hole. The Board's reset
+  (§ 2.106(a)) stays a `CaseOrder` layer.
+
+### Fixed
+
+- **59 cite holes are string cites; the 28 U.S.C. App. edition bindings
+  carry their edition dates** (lg-flu.30). Holes kept only because the
+  retired cite mode stopped at a comma (`cite ?("FRAP 3(a), (c)(1),
+  (4)-(5)")`, `cite ?("35 U.S.C. § 286, last paragraph")`) are quoted
+  cites where every citation in them is a rule or statute whose pinpoint
+  is in the vendored text. The other 272 stay holes: case citations,
+  unvendored texts (TBMP sections, RCFC appendices, Sup. Ct. R. 10, the
+  MPEP, Federal Register notices), pinpoints the text lacks (37 C.F.R.
+  § 42.108(a)(1)), commentary, and the FRAP cites of `lit/frcp`'s versions that
+  left force on 2023-12-01, whose earlier FRAP text is not vendored. `lit/core`'s `frcp-2008`,
+  `frcp-2011`, `frap-2008` and `frap-2011` sources held the fetch date
+  (2026-10-22) as `as_of`; each now holds the effective date of the last
+  amendment its rule's credits print (2007-12-01, 2009-12-01, 2005-12-01,
+  2009-12-01), so the FRCP 6 and FRAP 26 versions whose window contains
+  that date cite their own text and lose `historical`.
+- **Remaining type, syntax and lowering bugs from the 2026-10-23 design
+  review** (lg-flu.19; review §5.3-§5.5, §6 item 30). Sema: a type alias
+  may name one declared after it, so an event parameter typed by a
+  forward alias keeps its type and its arguments are checked (T3); an
+  exception to an exception checks its conclusion against the root
+  default's type (T6); a `Dist` record denotes only enums an
+  `import m.{x}` list makes visible (T8); a hole in a `when`/`unless`
+  condition or fact guard is L2001 even in `dev` (T12, SPEC §5.2); an
+  unresolved `n-1` whose `n` resolves offers the fix `n - 1` (S4's
+  non-breaking part). Syntax: a `.field` chain stops at the 256 cap
+  operator chains have (S5); recovery anchors an indented item outside
+  every bracket, not only at column 1 (S6); one recovery error (L0001,
+  L0002) per position, and an error of another code there is no longer
+  hidden (S8, SPEC §3.4). Tree-sitter rejects what the compiler rejects
+  lexically: exact whitespace, `_` only between digits, real Gregorian
+  dates (`invalid_date` in expressions), with conformance tests (S7).
+  Lowering and clocks: replay refuses a business-day period, as edge
+  lowering and the CLI do, instead of counting court days (LW3); a cite
+  prefix binds only at a token boundary, so `FRCP 6` no longer binds
+  `FRCP 60` (LW4); `litigate build` never writes an empty output (LW5);
+  the clock interpreter refuses a closed run or a court-day count longer
+  than one Gregorian cycle instead of looping (LW6). T5, T7 and T9-T11
+  break source or output and stay with the identity-lock, edition and
+  capability work.
+
+## [0.6.0] - 2026-10-24
+
+### Added
+
+- **Five rulings of 2026-10-23 recorded as normative** (lg-litigate-epic-tuq.52;
+  SPEC §5.4, §5.6, §9.3, §9.4; `crates/litigate-cli/tests/rulings.rs`
+  pins each). An event dated after a matter's `as_of` is L4001. A
+  cited excusing event covers a missed deadline only when its type
+  declares `extends`/`waives` and an `after_expiry` grant admits it; a
+  name or a cite alone covers nothing. The shared clock library
+  (`packs/clock/*.json`) is hand-written. `just lit-sync` and
+  `crates/litgraph-packs` build under the `dev` profile. A version's
+  `known_at` is its recording date when no vendored source dates its
+  promulgation (the frcp $505 fee versions, `known_at 2026-10-22`).
+- **Deadline calendars and a filing linter** (lg-litigate-epic-tuq.29,
+  DESIGN §10). `litigate calendar CASE` exports a matter's computed
+  deadlines as an RFC 5545 `.ics` file (`--out`): all-day events with
+  stable UIDs, the deadline's authority, the counting steps and optional
+  `--remind` alarms; open deadlines unless `--all`. A deadline whose due
+  date is unknown is listed under `unscheduled` with the reason, never
+  given a date, and a matter with errors has no calendar. `litigate
+  lint-filing CASE EVENT --date D --by PARTY` replays the matter with a
+  proposed filing added: L4001 when it is not a legal move on that date,
+  L4002 when it misses the obligation it discharges; otherwise the result
+  lists what it discharges and the deadlines it triggers, with due dates.
+
+- **The tree-sitter parser merges without conflicts** (lg-flu.37). The
+  generated `editors/tree-sitter-litigate/src/{parser.c,grammar.json,node-types.json}`
+  stay committed (the crate's `build.rs` and editor packages compile
+  them) and get the `tsgenerate` git merge driver, which keeps ours when
+  both sides changed them, so two branches changing different grammar
+  rules rebase cleanly. `just tree-sitter-generate` regenerates them from
+  the merged grammar; `just tree-sitter-merge-driver` (and `just
+  merge-drivers`, run by `just install` and `just lit-sync`) registers the
+  driver. `just ci` now runs `just tree-sitter-test`, which fails on a
+  stale parser and runs `script/merge-test`.
 
 - **Reserved typed guard operations in patches** (lg-flu.35; SPEC §3.6,
   PM ruling 2026-10-23 on L2007). A later decision or order that narrows,
@@ -435,49 +528,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   naming the trigger that left the due date unknown (new code L4010,
   a warning in both profiles) instead of failing with L3009.
 
-- **Interpreted least times** (lg-flu.32; SPEC §5.3, §9.1). A designated
-  deadline may state `interpretation "..."`: the rule names no start for
-  its least time, so measuring it from the trigger's date is the
-  author's interpretation. A notice designating less then stands, with
-  the new warning L4011 naming the shortfall and the interpretation,
-  instead of being rejected. `lit/ttab`'s counterclaim answer (37 C.F.R.
-  § 2.106(b)(3)(iii), "A time, not less than thirty days, will be
-  designated by the Board") states one. The answer (§ 2.105(a)) and the
-  cancellation answer (§ 2.113(a)) are still rejected below thirty days,
-  because those rules count "from the mailing date of the notice". New
-  contextual keyword `interpretation` (tree-sitter and editor highlights
-  updated). The Board-order fixture
-  (`crates/litigate-cli/tests/fixtures/ttab-board-order`) also resets
-  the counterclaim answer time (§ 2.106(b)(3)(iv)) through the same
-  `CaseOrder` layer.
-
 ### Changed
-
-- **A designated deadline's extension is no longer a hole** (lg-flu.33,
-  superseding lg-flu.32's lowering). The answer edges of `lit/ttab` now
-  carry their `designated` window, so `deadline/extendable` and
-  `deadline/extensionAuthority` lower as they do for a counted window:
-  stated values are emitted, and an unstated one is absent (undeclared),
-  never `extendable: false`. The answer period's extension authority and
-  its two FRCP 6(b)(1)(A) grants (lg-flu.45) are now in the pack, each
-  grant with the 37 C.F.R. § 2.116(a) interpretation it rests on, where
-  they used to be named only in a hole's reason.
-
-- **Generated packs leave a designated deadline's extension undeclared**
-  (lg-flu.32; SPEC §8.1). An edge `within` a designated deadline still
-  lowers with no `deadline` window. Its `deadline/extendable` and
-  `deadline/extensionAuthority` are now `lowered.holes` entries, whose
-  reason names the deadline and whatever extension the source states.
-  The extension used to be dropped with no trace, and it is never
-  emitted as not-extendable. `lit/ttab`'s "File no answer" edge no
-  longer states `extendable false` for an answer time the Board may
-  reset (§ 2.106(a)). Its answering edges no longer state an extension
-  authority, none being verified for the answer time:
-  `extension_authority` may now be a hole (`?("reason")`, SPEC §3.1,
-  tree-sitter updated), and they write
-  `extension_authority ?("TTAB answer-time extension authority")`, which
-  is the pack's `deadline/extensionAuthority` hole. The Board's reset
-  (§ 2.106(a)) stays a `CaseOrder` layer.
 
 - **Typed boundaries** (design review §6 item 12; SPEC §5.2, §5.6, §6).
   Breaking for `.lit` and `.case` source. A `removes p` or `elects p`
@@ -524,46 +575,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `AnswerFiled(Plain | WithCounterclaim)` the two answer edges.
 
 ### Fixed
-
-- **59 cite holes are string cites; the 28 U.S.C. App. edition bindings
-  carry their edition dates** (lg-flu.30). Holes kept only because the
-  retired cite mode stopped at a comma (`cite ?("FRAP 3(a), (c)(1),
-  (4)-(5)")`, `cite ?("35 U.S.C. § 286, last paragraph")`) are quoted
-  cites where every citation in them is a rule or statute whose pinpoint
-  is in the vendored text. The other 272 stay holes: case citations,
-  unvendored texts (TBMP sections, RCFC appendices, Sup. Ct. R. 10, the
-  MPEP, Federal Register notices), pinpoints the text lacks (37 C.F.R.
-  § 42.108(a)(1)), commentary, and the FRAP cites of `lit/frcp`'s versions that
-  left force on 2023-12-01, whose earlier FRAP text is not vendored. `lit/core`'s `frcp-2008`,
-  `frcp-2011`, `frap-2008` and `frap-2011` sources held the fetch date
-  (2026-10-22) as `as_of`; each now holds the effective date of the last
-  amendment its rule's credits print (2007-12-01, 2009-12-01, 2005-12-01,
-  2009-12-01), so the FRCP 6 and FRAP 26 versions whose window contains
-  that date cite their own text and lose `historical`.
-- **Remaining type, syntax and lowering bugs from the 2026-10-23 design
-  review** (lg-flu.19; review §5.3-§5.5, §6 item 30). Sema: a type alias
-  may name one declared after it, so an event parameter typed by a
-  forward alias keeps its type and its arguments are checked (T3); an
-  exception to an exception checks its conclusion against the root
-  default's type (T6); a `Dist` record denotes only enums an
-  `import m.{x}` list makes visible (T8); a hole in a `when`/`unless`
-  condition or fact guard is L2001 even in `dev` (T12, SPEC §5.2); an
-  unresolved `n-1` whose `n` resolves offers the fix `n - 1` (S4's
-  non-breaking part). Syntax: a `.field` chain stops at the 256 cap
-  operator chains have (S5); recovery anchors an indented item outside
-  every bracket, not only at column 1 (S6); one recovery error (L0001,
-  L0002) per position, and an error of another code there is no longer
-  hidden (S8, SPEC §3.4). Tree-sitter rejects what the compiler rejects
-  lexically: exact whitespace, `_` only between digits, real Gregorian
-  dates (`invalid_date` in expressions), with conformance tests (S7).
-  Lowering and clocks: replay refuses a business-day period, as edge
-  lowering and the CLI do, instead of counting court days (LW3); a cite
-  prefix binds only at a token boundary, so `FRCP 6` no longer binds
-  `FRCP 60` (LW4); `litigate build` never writes an empty output (LW5);
-  the clock interpreter refuses a closed run or a court-day count longer
-  than one Gregorian cycle instead of looping (LW6). T5, T7 and T9-T11
-  break source or output and stay with the identity-lock, edition and
-  capability work.
 
 - **A chain on a dependency's period opens in case replay** (lg-flu.29).
   Replay's world holds the used packages' dependencies, as `check` and

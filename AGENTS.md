@@ -53,6 +53,12 @@ litigate fix lit/frcp --dry-run             # machine-applicable fixes
 litigate where frcp-civil-procedure::service-window  # id → declaration span, versions, JSON pointers
 litigate explain L3004                      # what a diagnostic code means
 litigate run cases/frcp-civil-case.case --op solve  # compile a matter and run an engine op
+litigate calendar cases/ptab-ipr-defense.case --out popr.ics --remind 7
+                                            # open deadlines as an RFC 5545 calendar (--all: every one);
+                                            # an unknown due date is listed under `unscheduled`, never given one
+litigate lint-filing cases/ptab-ipr-defense.case 'PreliminaryResponseFiled()' --date 2026-09-10 --by owner
+                                            # replay the matter with a proposed filing: L4001 not a legal move,
+                                            # L4002 late; else what it discharges and the deadlines it triggers
 litigate diff lit/frcp --against target/lit-build/packs/frcp-civil-procedure.json   # semantic diff (SPEC §8.6)
 just lit-sync                               # regenerate every Lit.lock; build packs/, scenarios/ into target/lit-build/
 just lit-sync-check                         # CI gate: fail on a stale Lit.lock or a committed generated file

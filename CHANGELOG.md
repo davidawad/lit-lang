@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **A designated due date the matter does not record is `unknown`, never
+  `open`** (lg-flu.46). A notice of institution whose answer date is `?`
+  leaves the TTAB answer period with status `unknown` at `as_of` and the
+  reason "notice due date not recorded", naming the notice and its
+  mailing date, in the schedule, in `explain-value` (which now reports a
+  deadline's `status` and `reason`) and in the LSP's inlay hint; it never
+  lapses however late `as_of` is. Three end-to-end TTAB matters,
+  `cases/e2e-ttab-{ok,short,unknown}.case` (one notice mailed 2026-10-21
+  designating 2026-11-30, 2026-11-05 and `?`), are golden-tested through
+  `litigate check` and `explain-value`.
+
 - **The certiorari extension's timing follows Sup. Ct. R. 13.5, 30.2 and
   30.3, from the Rules effective March 16, 2026** (lg-flu.41).
   `sources/scotus-rules.txt` is re-vendored from the current

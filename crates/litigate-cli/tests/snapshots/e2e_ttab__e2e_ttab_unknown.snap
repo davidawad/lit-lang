@@ -1,0 +1,24 @@
+---
+source: crates/litigate-cli/tests/e2e_ttab.rs
+expression: g
+---
+{
+  "code": 0,
+  "diagnostics": [],
+  "deadlines": [
+    {
+      "deadline": "ttab-trademark-trial-and-appeal-board::answer-period",
+      "trigger": "InstitutionNoticed(?)",
+      "trigger_date": "2026-10-21",
+      "due": null,
+      "unknown": "notice due date not recorded: `InstitutionNoticed` on 2026-10-21 designates the due date of `answer-period` (its `due`), and the matter records it as `?`; it is the notice's to set, never counted in its place",
+      "steps": [],
+      "status": "unknown"
+    }
+  ],
+  "explain_value": {
+    "value": null,
+    "status": "unknown",
+    "reason": "notice due date not recorded: `InstitutionNoticed` on 2026-10-21 designates the due date of `answer-period` (its `due`), and the matter records it as `?`; it is the notice's to set, never counted in its place"
+  }
+}

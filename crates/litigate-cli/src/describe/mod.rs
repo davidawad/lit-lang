@@ -267,7 +267,7 @@ const RESULTS: [(&str, &str); 15] = [
     ("run", "litgraph's response verbatim: {ok, api_version, op, result, warnings, provenance, elapsed_ms}; exit 2 when it is ok:false"),
     ("where", "{id, kind, package, declaration_span, versions, edges, overrides, source, lowered:[json_pointer]} (or {kind: cite, cited_by} / {kind: diagnostic, ...})"),
     ("explain", "{code, explanation, phase, severity:{dev, strict}}"),
-    ("explain-value", "{value, type, id, steps:[{rule, cite, detail}], versions, overrides}"),
+    ("explain-value", "{value, type, id, status, reason, steps:[{rule, cite, detail}], versions, overrides}; a deadline's status is its instance's (`unknown` with the reason when its due date is), null when nothing triggers it"),
     ("diff", "{equal, files:[{a, b, kind, equal, changes}], changes:[{kind, pointer, id, before, after, document}], unmatched}"),
     ("query", "{matches:[{id, kind, label, span, cite, in_force, detail}], total, next_cursor}"),
     ("timeline", "a litigate.timeline/1 document (docs/litigate/timeline.v1.schema.json): {schema, source, as_of, known_at, layers, worlds, rows, edges, diagnostics}"),

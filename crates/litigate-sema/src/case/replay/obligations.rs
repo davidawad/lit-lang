@@ -470,7 +470,8 @@ impl<'g> Cx<'_, 'g> {
     }
 
     /// At `as_of`: every open instance past its due date is breached (a
-    /// duty, L4009) or lapses (a power).
+    /// duty, L4009) or lapses (a power); one whose trigger left its
+    /// designated due date unknown is unknown.
     pub(super) fn at_as_of(&mut self) {
         for i in 0..self.obligations.len() {
             if self.obligations[i].status != Status::Open {
@@ -479,8 +480,15 @@ impl<'g> Cx<'_, 'g> {
             let Some(due) = self.due_of(i, self.sorted.len(), true) else {
                 continue;
             };
-            let Ok(date) = effective(&self.obligations[i], &due) else {
-                continue;
+            let date = match effective(&self.obligations[i], &due) {
+                Ok(date) => date,
+                // The trigger left the designated date unknown (`?`): the
+                // instance is neither open nor lapsed, but unknown.
+                Err(_) if due.unknown => {
+                    self.obligations[i].status = Status::Unknown;
+                    continue;
+                }
+                Err(_) => continue,
             };
             if self.case.as_of <= date {
                 continue;

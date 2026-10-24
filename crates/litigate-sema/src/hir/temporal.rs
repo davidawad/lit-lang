@@ -141,7 +141,7 @@ impl Deadline {
             }) => v.clone(),
             _ => {
                 return Some(Err(Undesignated::Unknown(format!(
-                    "`{event}` designates no due date for `{}` (its `{}` is unknown), so the due date is unknown: it is the notice's to set, never counted in its place",
+                    "notice due date not recorded: `{event}` on {date} designates the due date of `{}` (its `{}`), and the matter records it as `?`; it is the notice's to set, never counted in its place",
                     self.meta.id, d.name
                 ))))
             }

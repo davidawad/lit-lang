@@ -33,7 +33,9 @@ pub struct Scheduled {
     /// designated date the notice does not give, or one that cannot be
     /// counted. Never a guess in its place.
     pub due: Option<String>,
-    /// Why the due date is unknown.
+    /// Why the due date is unknown: with `status` `unknown`, for a
+    /// designated date the trigger leaves `?`, the reason names the
+    /// trigger ("notice due date not recorded: ...").
     #[serde(skip_serializing_if = "Option::is_none")]
     pub unknown: Option<String>,
     /// The date the trigger designates, before any roll (`designated p`).
@@ -73,7 +75,9 @@ pub struct Scheduled {
     /// the order's date.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub request_made: Option<String>,
-    /// How replay ended it, or `open` at `as_of`.
+    /// How replay ended it, or `open` at `as_of`; `unknown`, never
+    /// `open` or `lapsed`, when the trigger left its designated due date
+    /// unknown.
     pub status: Status,
     /// Source index of the trigger event in the matter's `events`.
     #[serde(skip)]

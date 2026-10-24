@@ -33,16 +33,16 @@ expression: rows
         "obligation sigma::answer #0 Discharged",
     ],
     "an answer to an unknown date is neither timely nor late": [
-        "11:3 L4010 `Answered()` on 2011-02-10 took deadline `answer`, but `Noticed(?)` left its due date (`due`) unknown: whether it is timely or late is unknown\n    note @10:3: `Noticed` designates no due date for `answer` (its `due` is unknown), so the due date is unknown: it is the notice's to set, never counted in its place\n    note: `answer` is due on the date `Noticed(?)` on 2011-01-04 designates (its `due`), no earlier than 30 calendar days from it, rolled under `oc`\n    note: record the due date the notice designates in place of `?` to judge it",
+        "11:3 L4010 `Answered()` on 2011-02-10 took deadline `answer`, but `Noticed(?)` left its due date (`due`) unknown: whether it is timely or late is unknown\n    note @10:3: notice due date not recorded: `Noticed` on 2011-01-04 designates the due date of `answer` (its `due`), and the matter records it as `?`; it is the notice's to set, never counted in its place\n    note: `answer` is due on the date `Noticed(?)` on 2011-01-04 designates (its `due`), no earlier than 30 calendar days from it, rolled under `oc`\n    note: record the due date the notice designates in place of `?` to judge it",
         "ok: start sigma::done",
         "trace Triggered Noticed(?) sigma::open -> sigma::open",
         "trace Took Answered() sigma::open -> sigma::done via sigma::answer",
         "obligation sigma::answer #0 Unjudged",
     ],
-    "an unknown designated date leaves the deadline open, never counted": [
+    "an unknown designated date leaves the deadline unknown, never counted, open or lapsed": [
         "ok: start sigma::open",
         "trace Triggered Noticed(?) sigma::open -> sigma::open",
-        "obligation sigma::answer #0 Open",
+        "obligation sigma::answer #0 Unknown",
     ],
     "past the designated date with no answer the duty is breached": [
         "10:3 L4009 obligation `sigma::answer` borne by `d`, created by `Noticed(2011-02-10)` on 2011-01-04, was neither discharged nor transformed by its due date 2011-02-10: at as_of 2011-03-01 it is breached\n    note: `answer` is due on the date `Noticed(2011-02-10)` on 2011-01-04 designates (its `due`), no earlier than 30 calendar days from it, rolled under `oc`\n    note: a duty is consumed exactly once: by a timely act through a `within` edge, or by a breach",

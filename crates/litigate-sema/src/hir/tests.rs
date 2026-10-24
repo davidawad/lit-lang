@@ -230,7 +230,7 @@ fn a_designation_reads_the_trigger_argument_or_nothing() {
     );
     assert_eq!(
         message(d.designation("2025-01-02", &date("2025-02-03"))).as_deref(),
-        Some("`the trigger` designates no due date for `answer` (its `due` is unknown), so the due date is unknown: it is the notice's to set, never counted in its place")
+        Some("notice due date not recorded: `the trigger` on 2025-01-02 designates the due date of `answer` (its `due`), and the matter records it as `?`; it is the notice's to set, never counted in its place")
     );
     assert_eq!(d.interpreted_shortfall("2025-01-10", &on), None);
     // Under an interpretation a short date stands, with the shortfall.

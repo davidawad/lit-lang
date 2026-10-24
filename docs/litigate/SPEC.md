@@ -964,10 +964,13 @@ creates (design review 2026-10-23 §2.4, §2.7):
   (`deadline(d).nominal`); it rolls under the counting rule like any last
   day (37 C.F.R. § 2.196), counted zero days from it, with no service
   days. A trigger whose `p` is `?` leaves the due date unknown: the
-  instance stays open, never lapses or breaches, an act through its
+  instance never lapses or breaches, an act through its
   `within` edge is judged neither timely nor late (L4010, a warning
-  naming the trigger; the instance ends `unjudged`), and the schedule reports it with
-  no `due` and the reason in `unknown`. `p` must name a `Date` parameter
+  naming the trigger; the instance ends `unjudged`), and with no such act
+  it ends `unknown` at `as_of`, never `open` or `lapsed`. The schedule,
+  `explain-value` (its `status` and `reason`) and the LSP's hint report it
+  with no `due` and the reason, "notice due date not recorded" naming the
+  trigger and its date, in `unknown`. `p` must name a `Date` parameter
   of the trigger's event (L1002, L2001), and the deadline must count
   forward (L2007) in calendar days (L2007). An edge `within` a designated
   deadline lowers with no `RawEdge.deadline` window (§8.1): the date is
@@ -1376,7 +1379,8 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
   breach is a fact of the matter, a liability of the bearer). Any other
   instance past due lapses. Each instance ends exactly once: discharged,
   late, unjudged (§5.3, a designated date left unknown), breached, lapsed, waived, superseded (`latest`), or merged
-  (`later_of`). `CheckedCase.obligations` reports them.
+  (`later_of`); one still open at `as_of` whose trigger left its
+  designated date unknown is `unknown` (§5.3). `CheckedCase.obligations` reports them.
 - Extension and waiver. An event whose type declares `extends d to p` or
   `waives d` must carry a `cite`. It transforms every open instance of `d`
   (an order extending the time to answer reaches each defendant's), all or
@@ -2161,7 +2165,7 @@ All commands accept `--format json|human` (default `human` on a TTY, else
 | `explain` | `CODE` | `{code, explanation, severity:{dev, strict}}` |
 | `fix` | `PATHS...`, `--code CODE`, `--dry-run`, `--include-maybe` | `{fixes:[{code, message?, edits:[{span, replacement}], applicability}], changed_files, skipped_overlapping, dry_run}`; only machine-applicable fixes without `--include-maybe`; a fix applies whole or not at all |
 | `where` | `ID` (qualified node/edge/declaration, code, or cite) | `{id, kind, declaration_span, versions:[{in_force, known_at, span}], lowered:[json_pointer]}` |
-| `explain-value` | `--case FILE`, `--value EXPR` | `{value, type, steps:[{rule, cite, detail}], versions, overrides}` |
+| `explain-value` | `--case FILE`, `--value EXPR` | `{value, type, status, reason, steps:[{rule, cite, detail}], versions, overrides}` |
 | `timeline` | `FILE` (`.case` or `.lit`), `--as-of`, `--known-at`, `--layers ID,+ID,-ID`, `--world ID` | a `litigate.timeline/1` document ([TIMELINE.md](TIMELINE.md), schema `timeline.v1.schema.json`) |
 | `diff` | `A B` (generated or expected JSON files or package dirs), `--as-of` | `{equal, changes:[{pointer, before, after}]}` per §8.6 |
 | `query` | `KIND` (`nodes\|edges\|deadlines\|holes\|cites\|versions`), `--match TEXT`, `--limit N`, `--cursor C` | `{matches:[{id, kind, span, cite, in_force}], next_cursor}` |

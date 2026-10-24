@@ -149,7 +149,7 @@ fn the_trigger_designates_the_due_date() {
             run("2011-01-10", &["2011-01-04 Designated(2011-02-03) on d"]),
         ),
         (
-            "an unknown designated date leaves the deadline open, never counted",
+            "an unknown designated date leaves the deadline unknown, never counted, open or lapsed",
             run("2011-12-01", &["2011-01-04 Noticed(?) on d"]),
         ),
         (

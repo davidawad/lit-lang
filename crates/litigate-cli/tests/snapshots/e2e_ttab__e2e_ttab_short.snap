@@ -1,0 +1,20 @@
+---
+source: crates/litigate-cli/tests/e2e_ttab.rs
+expression: g
+---
+{
+  "code": 2,
+  "diagnostics": [
+    {
+      "code": "L4001",
+      "severity": "error",
+      "message": "`InstitutionNoticed` on 2026-10-21 designates `answer-period` due 2026-11-05, earlier than the least time the rule allows, 30 calendar days from 2026-10-21 (2026-11-20) (37 CFR 2.105(a))"
+    }
+  ],
+  "deadlines": [],
+  "explain_value": {
+    "value": null,
+    "status": null,
+    "reason": null
+  }
+}

@@ -82,7 +82,7 @@ pub struct Obligation {
     /// 90.3(c)(1), 2.145(e)(1)).
     #[serde(skip_serializing_if = "Option::is_none")]
     pub request_made: Option<String>,
-    /// How it ended, or `open`.
+    /// How it ended, `open`, or `unknown`.
     pub status: Status,
     /// Source index of the event that ended it; `None` while open and for
     /// a breach or lapse found at `as_of`.
@@ -109,6 +109,9 @@ pub enum Status {
     /// An act took the `within` edge, but the trigger left the designated
     /// due date unknown (`?`): neither timely nor late (L4010).
     Unjudged,
+    /// Undischarged at `as_of`, and the trigger left the designated due
+    /// date unknown (`?`): neither open nor lapsed, whatever `as_of`.
+    Unknown,
     /// A duty borne by a party, past due at `as_of` with no act:
     /// breached, a liability of its bearer (L4009).
     Breached,

@@ -203,14 +203,16 @@ fn a_notice_without_its_due_date_leaves_the_answer_deadline_unknown() {
     );
     assert_eq!(run.code, 0, "{}", run.stdout);
     assert_eq!(errors(&run), Vec::<String>::new());
+    // At as_of, past the least time (2026-08-05), the instance is unknown
+    // with the reason: never open, never lapsed (lg-flu.46).
     assert_eq!(
         schedule(&run),
         [row(
             &format!("{TTAB}::answer-period"),
             "-",
-            "open",
+            "unknown",
             "-",
-            "`InstitutionNoticed` designates no due date for `answer-period` (its `due` is unknown), so the due date is unknown: it is the notice's to set, never counted in its place"
+            "notice due date not recorded: `InstitutionNoticed` on 2026-07-06 designates the due date of `answer-period` (its `due`), and the matter records it as `?`; it is the notice's to set, never counted in its place"
         )]
     );
     let (value, details) = explained(&run);
@@ -284,7 +286,7 @@ fn an_answer_to_a_notice_without_its_due_date_is_neither_timely_nor_late() {
             "-",
             "unjudged",
             "-",
-            "`InstitutionNoticed` designates no due date for `answer-period` (its `due` is unknown), so the due date is unknown: it is the notice's to set, never counted in its place"
+            "notice due date not recorded: `InstitutionNoticed` on 2026-07-06 designates the due date of `answer-period` (its `due`), and the matter records it as `?`; it is the notice's to set, never counted in its place"
         )]
     );
 }

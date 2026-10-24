@@ -150,7 +150,9 @@ fn postures_are_replayed_and_removals_derived() {
 fn matters_have_no_strict_findings_of_their_own() {
     // Strict fails on the used packages' own holes (lit/<forum>); nothing
     // in the matters themselves is a hole, unvalued, or unresolved. Advice
-    // (L9006, an event without an id) is not a finding.
+    // (L9006, an event without an id) is not a finding. The end-to-end
+    // fixture whose notice designates too short a date is rejected by
+    // design (L4001, `e2e_ttab.rs`).
     let out = litigate(&["check", "--profile", "strict", "cases"]);
     let own: Vec<&Value> = out.json["diagnostics"]
         .as_array()
@@ -158,6 +160,7 @@ fn matters_have_no_strict_findings_of_their_own() {
         .iter()
         .filter(|d| d["span"]["file"].as_str().unwrap().starts_with("cases/"))
         .filter(|d| d["severity"] != "info")
+        .filter(|d| !(d["span"]["file"] == "cases/e2e-ttab-short.case" && d["code"] == "L4001"))
         .collect();
     assert!(own.is_empty(), "{own:#?}");
 }

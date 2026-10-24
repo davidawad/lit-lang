@@ -138,8 +138,10 @@ impl Trace<'_> {
         steps
     }
 
-    /// `(due date, steps, versions)` of deadline `d` in the matter.
-    fn deadline(&self, d: &str) -> (Value, Vec<Value>, Vec<Value>) {
+    /// `(due date, steps, versions, status)` of deadline `d` in the
+    /// matter; `status` is `{status, reason}` of its instance, the reason
+    /// set when the due date is unknown, or `null` when nothing triggers it.
+    fn deadline(&self, d: &str) -> (Value, Vec<Value>, Vec<Value>, Value) {
         let versions: Vec<&hir::Deadline> = hirx::deadlines(self.pkg, d).collect();
         let qualified = format!("{}::{d}", self.pkg.manifest.pack_id);
         // A claimant displacing a deadline that also fired has no instance
@@ -184,6 +186,10 @@ impl Trace<'_> {
         let value = scheduled
             .and_then(|s| s.due.clone())
             .map_or(Value::Null, Value::String);
+        let status = scheduled.map_or(
+            Value::Null,
+            |s| json!({"status": s.status, "reason": s.unknown}),
+        );
         let versions = versions
             .iter()
             .map(|v| {
@@ -195,7 +201,7 @@ impl Trace<'_> {
                 })
             })
             .collect();
-        (value, steps, versions)
+        (value, steps, versions, status)
     }
 
     /// The result for edge `name` of `node`.
@@ -212,7 +218,7 @@ impl Trace<'_> {
         if let Some(DeadlineWindow::Declared { deadline }) =
             edge.deadline.as_ref().map(|d| &d.window)
         {
-            let (value, more, _) = self.deadline(local(deadline));
+            let (value, more, ..) = self.deadline(local(deadline));
             steps.push(step(
                 name.to_owned(),
                 None,
@@ -277,9 +283,10 @@ pub fn explain_value(case: Option<&str>, value: Option<&str>, lib: &[String]) ->
         .copied()
         .find(|p| hirx::deadlines(p, name).next().is_some())
     {
-        let (value, steps, versions) = trace(pkg).deadline(name);
+        let (value, steps, versions, status) = trace(pkg).deadline(name);
         report.result = json!({
             "value": value, "type": "Date", "id": format!("{}::{name}", pkg.manifest.pack_id),
+            "status": status["status"], "reason": status["reason"],
             "steps": steps, "versions": versions, "overrides": overrides(&all, name),
         });
         return Ok(report);

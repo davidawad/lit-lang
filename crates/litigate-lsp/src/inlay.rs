@@ -38,7 +38,11 @@ fn event_end(root: &SyntaxNode, date: &str, call: &str) -> Option<TextSize> {
 fn label(s: &Scheduled) -> String {
     let (_, local) = s.deadline.split_once("::").unwrap_or(("", &s.deadline));
     let Some(due) = &s.due else {
-        return format!("// {local} due unknown");
+        // The reason's head ("notice due date not recorded"); the tooltip
+        // has it whole.
+        let why = s.unknown.as_deref().unwrap_or_default();
+        let head = why.split_once(": ").map_or(why, |(h, _)| h);
+        return format!("// {local} due unknown: {head}");
     };
     let cite = s.cite.as_deref().unwrap_or(&s.rule);
     let mut flags = String::new();
@@ -49,6 +53,29 @@ fn label(s: &Scheduled) -> String {
         let _ = write!(flags, " +{m} service");
     }
     format!("// {local} due {due} ({cite}{flags})")
+}
+
+/// The hover of one scheduled deadline: its count, or why its due date
+/// is unknown.
+fn tooltip(s: &Scheduled) -> String {
+    if let Some(why) = &s.unknown {
+        return format!(
+            "`{}` triggered by `{}` on {}: the due date is unknown: {why}",
+            s.deadline, s.trigger, s.trigger_date
+        );
+    }
+    format!(
+        "`{}` triggered by `{}` on {}, counted by `{}`:\n\n{}",
+        s.deadline,
+        s.trigger,
+        s.trigger_date,
+        s.rule,
+        s.steps
+            .iter()
+            .map(|x| format!("- {x}"))
+            .collect::<Vec<_>>()
+            .join("\n")
+    )
 }
 
 /// Deadline hints for the matter at `file` within `range`.
@@ -70,18 +97,7 @@ pub fn hints(analysis: &Analysis, file: &str, range: Range) -> Vec<InlayHint> {
                 text_edits: None,
                 tooltip: Some(InlayHintTooltip::MarkupContent(MarkupContent {
                     kind: MarkupKind::Markdown,
-                    value: format!(
-                        "`{}` triggered by `{}` on {}, counted by `{}`:\n\n{}",
-                        s.deadline,
-                        s.trigger,
-                        s.trigger_date,
-                        s.rule,
-                        s.steps
-                            .iter()
-                            .map(|x| format!("- {x}"))
-                            .collect::<Vec<_>>()
-                            .join("\n")
-                    ),
+                    value: tooltip(s),
                 })),
                 padding_left: Some(true),
                 padding_right: None,

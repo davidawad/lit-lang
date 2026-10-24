@@ -1,0 +1,28 @@
+---
+source: crates/litigate-cli/tests/e2e_ttab.rs
+expression: g
+---
+{
+  "code": 0,
+  "diagnostics": [],
+  "deadlines": [
+    {
+      "deadline": "ttab-trademark-trial-and-appeal-board::answer-period",
+      "trigger": "InstitutionNoticed(2026-11-30)",
+      "trigger_date": "2026-10-21",
+      "due": "2026-11-30",
+      "designated": "2026-11-30",
+      "rule": "ttab-2-196",
+      "steps": [
+        "37 C.F.R. § 2.196: exclude the trigger date 2026-11-30",
+        "37 C.F.R. § 2.196: count 0 calendar day(s) after the anchor -> 2026-11-30"
+      ],
+      "status": "open"
+    }
+  ],
+  "explain_value": {
+    "value": "2026-11-30",
+    "status": "open",
+    "reason": null
+  }
+}

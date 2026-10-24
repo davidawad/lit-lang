@@ -6,7 +6,7 @@
 mod support;
 
 use litigate_lsp::inlay::hints;
-use tower_lsp::lsp_types::{InlayHint, InlayHintLabel, Position, Range};
+use tower_lsp::lsp_types::{InlayHint, InlayHintLabel, InlayHintTooltip, Position, Range};
 
 const CASE: &str = "cases/acme.case";
 
@@ -120,7 +120,34 @@ fn a_deadline_with_an_unknown_due_date_says_so() {
                 line,
                 "// answer-period due 2025-03-24 (FRCP 6(a))".to_owned()
             ),
-            (line, "// in-business-days due unknown".to_owned()),
+            (
+                line,
+                "// in-business-days due unknown: `in-business-days` counts business days, which have no engine lowering".to_owned()
+            ),
         ]
+    );
+}
+
+#[test]
+fn a_notice_without_its_due_date_hints_the_reason() {
+    // The notice's designated date is `?`: the hint names why the due date
+    // is unknown, the tooltip has the reason whole (lg-flu.46).
+    let mut host = support::host(&support::repo());
+    let a = host.analyze();
+    let case = "cases/e2e-ttab-unknown.case";
+    let found = hints(a, case, all());
+    assert_eq!(
+        labels(&found),
+        [(
+            line_of(&support::read(case), "2026-10-21 InstitutionNoticed(?)"),
+            "// answer-period due unknown: notice due date not recorded".to_owned()
+        )]
+    );
+    let Some(InlayHintTooltip::MarkupContent(tip)) = &found[0].tooltip else {
+        panic!("no tooltip");
+    };
+    assert_eq!(
+        tip.value,
+        "`ttab-trademark-trial-and-appeal-board::answer-period` triggered by `InstitutionNoticed(?)` on 2026-10-21: the due date is unknown: notice due date not recorded: `InstitutionNoticed` on 2026-10-21 designates the due date of `answer-period` (its `due`), and the matter records it as `?`; it is the notice's to set, never counted in its place"
     );
 }

@@ -55,7 +55,7 @@ macro_rules! registry {
     };
 }
 
-registry! { 64;
+registry! { 67;
     UnexpectedToken = "L0001" => "The token is not valid at this position in the grammar",
     UnterminatedLiteral = "L0002" => "A string, block comment, or other delimited literal was not closed",
     InvalidToken = "L0003" => "The source contains a character sequence that is not a token",
@@ -110,6 +110,9 @@ registry! { 64;
     NoExit = "L5004" => "A non-terminal node has no outgoing edge",
     DeadlineUnsatisfiable = "L5005" => "Mandatory deadlines on a reachable state have an empty intersection",
     TestFailed = "L5006" => "An inline test assertion does not hold",
+    NoOptionToComplete = "L5007" => "A reachable marking of the procedure net cannot reach a terminal: the matter is stuck or only cycles",
+    DeadTransition = "L5008" => "An edge out of a reachable node is enabled in no reachable marking of the procedure net",
+    ObligationUnconsumed = "L5009" => "An obligation an edge creates reaches a terminal neither discharged nor offered for discharge",
     LoweringUnsupported = "L6001" => "The source construct has no lowering in the target litgraph schema",
     SemanticDiff = "L6002" => "Generated output is not semantically equal to the expected document",
     InvalidEngineExpression = "L6003" => "An embedded litgraph expression string does not parse",

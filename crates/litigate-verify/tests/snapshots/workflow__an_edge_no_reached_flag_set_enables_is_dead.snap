@@ -1,0 +1,59 @@
+---
+source: crates/litigate-verify/tests/workflow.rs
+expression: "sound(&edit(\"within answer-period }\",\n\"within answer-period, forbids [a, b] }\\n  \\\n         twice \\\"Serve again\\\" -> served { sets [a] }\\n  \\\n         thrice \\\"Serve a third time\\\" -> served { sets [b] }\\n  \\\n         again \\\"Answer again\\\" -> answered { requires [c] }\"))"
+---
+{
+  "finding": {
+    "name": "workflow-sound",
+    "status": "failed",
+    "count": 2,
+    "examples": [
+      "pkgs/demo/main.lit:36:1: L5007 from `served` with flags {a} no terminal is reachable through its enabled edges `twice`, `thrice`",
+      "pkgs/demo/main.lit:36:1: L5008 edge `again` out of `served` is never enabled: it requires [c], and `served` is reached only with no flags or flags {a} or flags {b} or flags {a, b}"
+    ],
+    "evidence": {
+      "checked": 5,
+      "subjects": "markings"
+    }
+  },
+  "accepted": false,
+  "diagnostics": [
+    {
+      "code": "L5007",
+      "severity": "error",
+      "span": {
+        "file": "pkgs/demo/main.lit",
+        "line": 36,
+        "col": 1,
+        "end_line": 42,
+        "end_col": 2
+      },
+      "message": "from `served` with flags {a} no terminal is reachable through its enabled edges `twice`, `thrice`",
+      "notes": [
+        {
+          "message": "reached by `served` -> `twice`"
+        },
+        {
+          "message": "route a path from here to a terminal, or declare the node where the matter ends `terminal`"
+        }
+      ]
+    },
+    {
+      "code": "L5008",
+      "severity": "error",
+      "span": {
+        "file": "pkgs/demo/main.lit",
+        "line": 36,
+        "col": 1,
+        "end_line": 42,
+        "end_col": 2
+      },
+      "message": "edge `again` out of `served` is never enabled: it requires [c], and `served` is reached only with no flags or flags {a} or flags {b} or flags {a, b}",
+      "notes": [
+        {
+          "message": "set the flags it requires on a path into the node, or remove the edge"
+        }
+      ]
+    }
+  ]
+}

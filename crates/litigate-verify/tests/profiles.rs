@@ -41,7 +41,7 @@ fn a_hole_warns_in_dev_and_fails_in_strict() {
 fn an_untested_rule_warns_in_dev_and_fails_in_strict() {
     let lit = with(
         "rule duty reply-duty cite \"FRCP 12(a)\"\n{\n  deadline reply-period: 14.days from \
-         Answered(complaint) counted_by frcp6\n}",
+         Served(complaint) counted_by frcp6\n}",
     );
     let dev = verify_one(&lit, Profile::Dev);
     let strict = verify_one(&lit, Profile::Strict);

@@ -25,6 +25,9 @@ pub fn obligation_of(code: C) -> Option<Obligation> {
         C::NoExit => Obligation::GraphExits,
         C::DeadlineUnsatisfiable => Obligation::DeadlineSatisfiable,
         C::TestFailed => Obligation::TestsPass,
+        C::NoOptionToComplete | C::DeadTransition | C::ObligationUnconsumed => {
+            Obligation::WorkflowSound
+        }
         C::HoleInStrict | C::HolePresent => Obligation::Holes,
         C::RuleWithoutTest => Obligation::RuleWithoutTest,
         C::AnonymousEdge | C::NonCanonicalFormat | C::UnusedDeclaration => return None,
@@ -95,6 +98,9 @@ mod tests {
             (C::UnreachableNode, Obligation::GraphReachable),
             (C::DeadlineUnsatisfiable, Obligation::DeadlineSatisfiable),
             (C::TestFailed, Obligation::TestsPass),
+            (C::NoOptionToComplete, Obligation::WorkflowSound),
+            (C::DeadTransition, Obligation::WorkflowSound),
+            (C::ObligationUnconsumed, Obligation::WorkflowSound),
             (C::DeadlineMissed, Obligation::CaseReplay),
             (C::StartConflict, Obligation::CaseReplay),
             (C::HoleInStrict, Obligation::Holes),

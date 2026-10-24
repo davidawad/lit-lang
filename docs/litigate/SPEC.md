@@ -1354,7 +1354,7 @@ ranges over [0, 2]``, ``fails when a = 1, b = 1: `a + b` = 2 > 1``.
   on: how many subjects the check covered and what they are (`declarations`,
   `version sets`, `relations and authority chains`, `displacing relations
   and delegations`, `exceptions and precedence claims`, `chance nodes`,
-  `non-terminal nodes`, `nodes`, `cites`, `inline tests`, `events`, `case
+  `non-terminal nodes`, `nodes`, `markings`, `cites`, `inline tests`, `events`, `case
   entries`, `holes`, `deadline and counting rules`). Every `passed` finding
   carries it (`checked: 0` says the check ran over nothing). An obligation
   is never passed by the absence of diagnostics: one with no evidence and no
@@ -1378,6 +1378,19 @@ earlier phases count against the obligation whose code the table lists
 other code (syntax, names, types, L3009, L5001, lowering) counts against
 `well-typed`, so no error ever leaves every obligation passed.
 
+`workflow-sound` reads the lowered pack as a bounded workflow net (design
+review §2.7, §2.8). Every edge moves the one control token from its node to
+its target, so the control places carry the P-invariant "exactly one
+token", a marking is a node and a flag set, and exploring the reachable
+markings decides each property exactly. Each finding's note gives a firing
+sequence reaching it. A matter leaves a rule package only through a
+terminal, so a duty the package creates must be dischargeable in it. A duty's obligation token is consumed by
+its act (a `within` edge) or by the breach at its due date (§5.6), and a
+terminal moots it, so the token is not conserved; what L5009 requires is
+that the act can happen after the obligation is created, not that it does
+on every path. A net with more reachable markings than the bound is
+undecided, which is an L5007 error.
+
 | Obligation | Definition | Code |
 |---|---|---|
 | `well-typed` | every expression and field typechecks, matches are exhaustive, no forbidden operation | L2xxx |
@@ -1391,6 +1404,7 @@ other code (syntax, names, types, L3009, L5001, lowering) counts against
 | `graph-exits` | every non-terminal node has at least one outgoing edge after `requires`/`forbids` are ignored | L5004 |
 | `graph-reachable` | every node is reachable from `start` or an `entry`-tagged node | L5003 |
 | `deadline-satisfiable` | for each reachable node, the due-date windows of mandatory (`duty`) deadlines on its outgoing edges intersect for some trigger date | L5005 |
+| `workflow-sound` | the procedure net (one control place per node, one 1-safe place per state flag, `requires`/`forbids` honoured) explored from `start` and every `entry` node within 65536 markings is sound: every reachable marking can reach a terminal (L5007), every edge out of a reachable node is enabled in some reachable marking (L5008), and after every edge whose `event` matches a `duty` deadline's trigger some marking enabling a `within` edge of it is reachable (L5009) | L5007-L5009 |
 | `tests-pass` | every `test` assertion holds | L5006 |
 | `case-replay` | sema's case checker accepts the matter: it resolves, its pins, parties, facts, stakes, and beliefs are valid, and its events order, match, and meet deadlines on the engine clock (§5.6) | L4001-L4011 |
 | `holes` | lists every hole with reason and span | L9002 / L5002 |
@@ -1825,6 +1839,9 @@ unchanged, and is graded `error`; anything else is rejected.
 | L2005 | non-exhaustive match | L5004 | no exit |
 | L2006 | arithmetic error | L5005 | deadline unsatisfiable |
 | L2007 | invalid field | L5006 | test failed |
+| | | L5007 | no option to complete |
+| | | L5008 | dead transition |
+| | | L5009 | obligation unconsumable |
 | L2008 | invalid probability | L6001 | lowering unsupported |
 | L9001 | rule without test | L6002 | semantic diff |
 | L9002 | hole present | L6003 | invalid engine expression |
@@ -2155,6 +2172,7 @@ mutation testing and mechanized metatheory are out of scope here
 | O13 | `case-replay` | b+c | Event order and posture typestate are (b) (C47, C48); deadline timing, stakes and start agreement are (c) (C49, C51, C55). |
 | O14 | `holes` | a | A hole is a distinct inhabitant `Hole<T>` of each field type; listing them is a traversal of the typed tree. |
 | O15 | `rule-without-test` | c | Which deadlines and counting rules a test exercises is a whole-package relation between `test` bodies and declarations. |
+| O16 | `workflow-sound` | c | Reachability over the markings of the bounded procedure net (node and flag set), forward from the roots and backward from terminals and from markings enabling a duty's `within` edge. |
 
 ### 13.3 Diagnostic codes (§9.1)
 
@@ -2242,6 +2260,9 @@ gets one row per condition when the conditions classify differently.
 | C76 | L4009 a duty's instance borne by a party is open past its due date at `as_of` (§5.6) | sema | c | Linearity of the instance is by construction (each ends once); whether it is past due needs the clock at `as_of`, as C49. |
 | C77 | L0009 refinement syntax (`{x: T \| p}` or `where`) used before the SMT tier adds it (§3.5) | syntax | a | Grammar: a reserved slot that always rejects. |
 | C78 | L0010 typed guard operation (`when and p`, `when or p`, `supersedes when p`) in a patch before lg-flu.36 adds it (§3.6) | syntax | a | Grammar: a reserved slot that always rejects. |
+| C79 | L5007 a reachable marking of the procedure net reaches no terminal; more markings than the bound (§7) | verify | c | O16. |
+| C80 | L5008 an edge out of a reachable node is enabled in no reachable marking (§7) | verify | c | O16. |
+| C81 | L5009 after an edge creating a duty's obligation no marking enabling its `within` edge is reachable (§7) | verify | c | O16. |
 
 ### 13.4 SPEC rules with no code of their own
 
@@ -2277,12 +2298,12 @@ they are listed so the v2 type system keeps them.
 ### 13.5 Summary
 
 Counting each row once by its primary class (a mixed row counts as its
-first class): obligations O1-O15 are 3 (a), 5 (b), 7 (c); codes C1-C78
-are 31 (a), 24 (b), 22 (c), one n/a; rules R1-R23 are 14 (a), 6 (b),
+first class): obligations O1-O16 are 3 (a), 5 (b), 8 (c); codes C1-C81
+are 31 (a), 24 (b), 25 (c), one n/a; rules R1-R23 are 14 (a), 6 (b),
 3 (c).
 
-- The (c) rows share six reasons: graph reachability (O10, O11, C51,
-  C58, C60), cycle detection (O5, C9, C38, C39), whole-package activity
+- The (c) rows share six reasons: graph reachability (O10, O11, O16,
+  C51, C58, C60, C79-C81), cycle detection (O5, C9, C38, C39), whole-package activity
   under supersession and precedence (O4, C34, C35, C41's second half),
   execution through calendars (O11, O12, C49, C55, C61), aggregation over
   every module of a package (C15, O15, C69, C73, R23), and external

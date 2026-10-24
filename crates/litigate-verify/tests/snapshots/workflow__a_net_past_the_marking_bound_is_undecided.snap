@@ -1,0 +1,34 @@
+---
+source: crates/litigate-verify/tests/workflow.rs
+expression: json!(found)
+---
+{
+  "finding": {
+    "name": "workflow-sound",
+    "status": "failed",
+    "count": 1,
+    "examples": [
+      "pkgs/demo/main.lit:36:1: L5007 the procedure net of `demo` has more than 65536 reachable markings, so its soundness is undecided"
+    ]
+  },
+  "accepted": false,
+  "diagnostics": [
+    {
+      "code": "L5007",
+      "severity": "error",
+      "span": {
+        "file": "pkgs/demo/main.lit",
+        "line": 36,
+        "col": 1,
+        "end_line": 39,
+        "end_col": 2
+      },
+      "message": "the procedure net of `demo` has more than 65536 reachable markings, so its soundness is undecided",
+      "notes": [
+        {
+          "message": "split the package, or use fewer state flags"
+        }
+      ]
+    }
+  ]
+}

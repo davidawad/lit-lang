@@ -1,0 +1,59 @@
+---
+source: crates/litigate-verify/tests/workflow.rs
+expression: "sound(&edit(\"within answer-period }\",\n\"within answer-period, requires [late] }\"))"
+---
+{
+  "finding": {
+    "name": "workflow-sound",
+    "status": "failed",
+    "count": 2,
+    "examples": [
+      "pkgs/demo/main.lit:36:1: L5007 `served` with no flags enables no edge: every edge out of it requires or forbids a flag, so the matter is stuck there",
+      "pkgs/demo/main.lit:36:1: L5008 edge `answer` out of `served` is never enabled: it requires [late], and `served` is reached only with no flags"
+    ],
+    "evidence": {
+      "checked": 1,
+      "subjects": "markings"
+    }
+  },
+  "accepted": false,
+  "diagnostics": [
+    {
+      "code": "L5007",
+      "severity": "error",
+      "span": {
+        "file": "pkgs/demo/main.lit",
+        "line": 36,
+        "col": 1,
+        "end_line": 39,
+        "end_col": 2
+      },
+      "message": "`served` with no flags enables no edge: every edge out of it requires or forbids a flag, so the matter is stuck there",
+      "notes": [
+        {
+          "message": "reached by `served`"
+        },
+        {
+          "message": "add an edge enabled under these flags, or change the guards"
+        }
+      ]
+    },
+    {
+      "code": "L5008",
+      "severity": "error",
+      "span": {
+        "file": "pkgs/demo/main.lit",
+        "line": 36,
+        "col": 1,
+        "end_line": 39,
+        "end_col": 2
+      },
+      "message": "edge `answer` out of `served` is never enabled: it requires [late], and `served` is reached only with no flags",
+      "notes": [
+        {
+          "message": "set the flags it requires on a path into the node, or remove the edge"
+        }
+      ]
+    }
+  ]
+}

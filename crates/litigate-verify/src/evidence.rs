@@ -100,6 +100,12 @@ pub(crate) fn deadline(b: &mut Builder, nodes: usize) {
     b.evidence(O::DeadlineSatisfiable, nodes, "nodes");
 }
 
+/// The evidence of `workflow-sound`: the reachable markings of the
+/// procedure net.
+pub(crate) fn net(b: &mut Builder, markings: usize) {
+    b.evidence(O::WorkflowSound, markings, "markings");
+}
+
 /// The evidence of `holes`: the holes inventoried.
 pub(crate) fn holes(b: &mut Builder, holes: usize) {
     b.evidence(O::Holes, holes, "holes");

@@ -20,6 +20,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   request is filed "as provided in § 104.2", not vendored, so the 2024
   receipt-date rule is not applied to it.
 
+- **`workflow-sound`: soundness checks on the procedure net** (lg-flu.18;
+  design review §2.7, §2.8, §6 item 27; SPEC §7, §9.1, §13). A new
+  verification obligation reads the lowered pack as a bounded workflow
+  net, with one control place per node (the P-invariant "exactly one
+  token") and one 1-safe place per state flag, `requires`/`forbids`
+  honoured. It explores every marking reachable from `start` and the
+  `entry` nodes, at most 65536 of them, and reports L5007 where a marking
+  can no longer reach a terminal (a node the reached flags leave with no
+  enabled edge, or a cycle with no way out), L5008 for an edge no reached
+  marking enables, and L5009 for a `rule duty` obligation that an edge's
+  `event` creates and that no later marking can discharge through a
+  `within` edge. Each finding's note gives a firing sequence reaching it.
+  A larger net is undecided, which is an L5007 error. Every package in
+  `lit/` and `cases/` passes.
+
 - **Five rulings of 2026-10-23 recorded as normative** (lg-litigate-epic-tuq.52;
   SPEC §5.4, §5.6, §9.3, §9.4; `crates/litigate-cli/tests/rulings.rs`
   pins each). An event dated after a matter's `as_of` is L4001. A

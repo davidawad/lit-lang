@@ -34,6 +34,9 @@ pub enum Obligation {
     GraphReachable,
     /// Mandatory deadline windows are jointly satisfiable.
     DeadlineSatisfiable,
+    /// The procedure net is sound: every marking can complete, no edge is
+    /// dead, and no obligation reaches a terminal unconsumed.
+    WorkflowSound,
     /// Inline tests pass.
     TestsPass,
     /// Case events replay legally.
@@ -46,7 +49,7 @@ pub enum Obligation {
 
 impl Obligation {
     /// Every obligation, in report order.
-    pub const ALL: [Self; 15] = [
+    pub const ALL: [Self; 16] = [
         Self::WellTyped,
         Self::CiteResolves,
         Self::EffectiveDisjoint,
@@ -58,6 +61,7 @@ impl Obligation {
         Self::GraphExits,
         Self::GraphReachable,
         Self::DeadlineSatisfiable,
+        Self::WorkflowSound,
         Self::TestsPass,
         Self::CaseReplay,
         Self::Holes,

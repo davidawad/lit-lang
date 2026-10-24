@@ -1,0 +1,80 @@
+---
+source: crates/litigate-verify/tests/workflow.rs
+expression: sound(&lit)
+---
+{
+  "finding": {
+    "name": "workflow-sound",
+    "status": "failed",
+    "count": 3,
+    "examples": [
+      "pkgs/demo/main.lit:36:1: L5007 from `served` with no flags no terminal is reachable through its enabled edges `answer`",
+      "pkgs/demo/main.lit:69:1: L5007 `s14` with no flags enables no edge: every edge out of it requires or forbids a flag, so the matter is stuck there",
+      "pkgs/demo/main.lit:69:1: L5008 edge `stop` out of `s14` is never enabled: it requires [never], and `s14` is reached only with no flags"
+    ],
+    "evidence": {
+      "checked": 16,
+      "subjects": "markings"
+    }
+  },
+  "accepted": false,
+  "diagnostics": [
+    {
+      "code": "L5007",
+      "severity": "error",
+      "span": {
+        "file": "pkgs/demo/main.lit",
+        "line": 36,
+        "col": 1,
+        "end_line": 39,
+        "end_col": 2
+      },
+      "message": "from `served` with no flags no terminal is reachable through its enabled edges `answer`",
+      "notes": [
+        {
+          "message": "reached by `served`"
+        },
+        {
+          "message": "route a path from here to a terminal, or declare the node where the matter ends `terminal`"
+        }
+      ]
+    },
+    {
+      "code": "L5007",
+      "severity": "error",
+      "span": {
+        "file": "pkgs/demo/main.lit",
+        "line": 69,
+        "col": 1,
+        "end_line": 69,
+        "end_col": 68
+      },
+      "message": "`s14` with no flags enables no edge: every edge out of it requires or forbids a flag, so the matter is stuck there",
+      "notes": [
+        {
+          "message": "reached by `served` -> ... 3 more -> `e2` -> `e3` -> `e4` -> `e5` -> `e6` -> `e7` -> `e8` -> `e9` -> `e10` -> `e11` -> `e12` -> `e13`"
+        },
+        {
+          "message": "add an edge enabled under these flags, or change the guards"
+        }
+      ]
+    },
+    {
+      "code": "L5008",
+      "severity": "error",
+      "span": {
+        "file": "pkgs/demo/main.lit",
+        "line": 69,
+        "col": 1,
+        "end_line": 69,
+        "end_col": 68
+      },
+      "message": "edge `stop` out of `s14` is never enabled: it requires [never], and `s14` is reached only with no flags",
+      "notes": [
+        {
+          "message": "set the flags it requires on a path into the node, or remove the edge"
+        }
+      ]
+    }
+  ]
+}

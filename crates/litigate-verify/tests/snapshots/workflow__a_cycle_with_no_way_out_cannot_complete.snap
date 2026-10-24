@@ -1,0 +1,41 @@
+---
+source: crates/litigate-verify/tests/workflow.rs
+expression: "sound(&with(\"state loop-a: \\\"A\\\" { tags [entry], _ \\\"Go\\\" -> loop-b }\\n\\\n         state loop-b: \\\"B\\\" { _ \\\"Back\\\" -> loop-a }\"))"
+---
+{
+  "finding": {
+    "name": "workflow-sound",
+    "status": "failed",
+    "count": 1,
+    "examples": [
+      "pkgs/demo/main.lit:55:1: L5007 from `loop-a` with no flags no terminal is reachable through its enabled edges `loop-a -> loop-b`"
+    ],
+    "evidence": {
+      "checked": 4,
+      "subjects": "markings"
+    }
+  },
+  "accepted": false,
+  "diagnostics": [
+    {
+      "code": "L5007",
+      "severity": "error",
+      "span": {
+        "file": "pkgs/demo/main.lit",
+        "line": 55,
+        "col": 1,
+        "end_line": 55,
+        "end_col": 53
+      },
+      "message": "from `loop-a` with no flags no terminal is reachable through its enabled edges `loop-a -> loop-b`",
+      "notes": [
+        {
+          "message": "reached by `loop-a`"
+        },
+        {
+          "message": "route a path from here to a terminal, or declare the node where the matter ends `terminal`"
+        }
+      ]
+    }
+  ]
+}

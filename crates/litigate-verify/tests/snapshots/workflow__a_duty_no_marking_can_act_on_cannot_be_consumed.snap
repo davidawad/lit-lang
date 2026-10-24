@@ -1,0 +1,41 @@
+---
+source: crates/litigate-verify/tests/workflow.rs
+expression: "sound(&with(\"rule duty reply-duty cite \\\"FRCP 12(a)\\\"\\n{\\n  deadline reply-period: 14.days from \\\n             Answered(complaint) counted_by frcp6\\n}\").replacen(\"within answer-period }\",\n\"within answer-period }\\n  mark \\\"Mark\\\" -> served { sets [marked] }\", 1))"
+---
+{
+  "finding": {
+    "name": "workflow-sound",
+    "status": "failed",
+    "count": 1,
+    "examples": [
+      "pkgs/demo/main.lit:36:1: L5009 obligation `demo::reply-period`, created by edge `answer`, can never be consumed: no marking reachable from `answered` with no flags offers a `within reply-period` edge"
+    ],
+    "evidence": {
+      "checked": 4,
+      "subjects": "markings"
+    }
+  },
+  "accepted": false,
+  "diagnostics": [
+    {
+      "code": "L5009",
+      "severity": "error",
+      "span": {
+        "file": "pkgs/demo/main.lit",
+        "line": 36,
+        "col": 1,
+        "end_line": 40,
+        "end_col": 2
+      },
+      "message": "obligation `demo::reply-period`, created by edge `answer`, can never be consumed: no marking reachable from `answered` with no flags offers a `within reply-period` edge",
+      "notes": [
+        {
+          "message": "created by `served` -> `answer`"
+        },
+        {
+          "message": "a duty is consumed by a `within` act or a breach at its due date: route a path to a node offering its `within` edge, or make the deadline a `power`"
+        }
+      ]
+    }
+  ]
+}

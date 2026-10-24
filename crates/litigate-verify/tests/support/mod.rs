@@ -129,6 +129,39 @@ pub fn verify_edited_in(
     verify_package(&input, SourceCorpus::embedded_ref(), Profile::Strict)
 }
 
+/// Checks and lowers one program, applies `edit` to its lowered pack (a
+/// pack another front end might produce), and verifies it in `strict`.
+pub fn verify_pack_edited(
+    lit: &str,
+    edit: impl FnOnce(&mut litgraph::model::Pack),
+) -> Verification {
+    let mut db = LitDatabase::default();
+    let ws = create_workspace(&mut db, &[pkg("demo", "FederalRule", &[], lit)]);
+    let checks = litigate_sema::check_workspace(&db, ws);
+    let check = &checks[0];
+    let Some(package) = check.package.clone() else {
+        panic!("the program does not check: {:#?}", check.diagnostics);
+    };
+    let options = Options::default();
+    let Ok(mut lowered) = Lowerer::new(&[&package])
+        .with_corpus(SourceCorpus::embedded_ref())
+        .package(&package, &options)
+    else {
+        panic!("the program does not lower");
+    };
+    if let litigate_lower::Document::Pack(pack) = &mut lowered.document {
+        edit(pack);
+    }
+    let input = PackageInput {
+        package: &package,
+        check,
+        lowered: Ok(&lowered),
+        packages: &[&package],
+        options: &options,
+    };
+    verify_package(&input, SourceCorpus::embedded_ref(), Profile::Strict)
+}
+
 /// Every declaration of `package`, mutably.
 pub fn declarations(package: &mut hir::Package) -> impl Iterator<Item = &mut hir::Declaration> {
     package

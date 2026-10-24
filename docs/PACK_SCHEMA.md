@@ -57,11 +57,12 @@ not meaning: `litigate diff` ignores it (SPEC §8.6).
 | `knownAt` | date | corpus date versions were selected among (absent: the latest) |
 | `worldDigest` | `sha256:<hex>` | SHA-256 of the JCS text (RFC 8785) of `{"asOf", "knownAt", "pins"}` (`knownAt` omitted when absent): the identity of the world |
 | `holes` | `[{pointer,reason?}]` | every explicit `?` the source left in an emitted field: `pointer` is the JSON pointer of that field in this document (`/edges/3/probability`, `/nodes/0/cite`, `/instances/cafc@cofc-gov/stake`, `/scenario/payoffs/<terminal>`), `reason` the `?("reason")` text. The field itself is absent, or for a cite or source date holds the reason text |
+| `basis` | `[{pointer,basis,source?}]` | where numbers come from (design review 2026-10-23 §2.10), `basis` one of `sourced` < `calibrated` < `expert` < `estimate` < `hole` (best first; the join of two labels is the worse). A pack or link file labels each node or edge (`/nodes/i`, `/edges/i`, `/links/i`) whose source declares a `basis`, `source` the cite, `dataset@date` or expert; a number with no label is an `estimate`. A scenario has one label at `/scenario`: the join over every number of the packs it uses, a hole where the source wrote `?` and the probabilities of a node the matter gives a `prior` its own estimate |
 
 Reading a document checks the header: `lowered` needs the schema version
 above, `pins` must be sorted and unique, `worldDigest` must match its pins
-and dates, and every hole must point into the document (array indices in
-bounds; the field itself may be absent). A pack whose holes leave a number
+and dates, and every hole and basis label must point into the document
+(array indices in bounds; the field itself may be absent). A pack whose holes leave a number
 open (`probability`, `cost`, `hours`, `payoff`, `payoffByFlag`, `duration`,
 `attrs`, or an instance `stake`) adds one `authored-hole` warning per pack
 to every response that compiles it: the number rests on a fill, not on the

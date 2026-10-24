@@ -185,7 +185,8 @@ NodeClause   = "by", Ref | "discretion" | "info", Ref | "outcome", IdList
 NodeBody     = "{", { (NodeField | EdgeDecl), Sep }, "}" ;
 NodeField    = "group", Ident | "note", String | "valence", Ident
              | "court_listener_url", String | "tags", IdList | "attrs", NumRecord
-             | "payoff", (SignedMoney | Hole) | "payoff_by_flag", MoneyRecord ;
+             | "payoff", (SignedMoney | Hole) | "payoff_by_flag", MoneyRecord
+             | "basis", Expr ;                         (* §5.1 "Basis" *)
 EdgeDecl     = (Ident | "_"), String, "->", Ref, { EdgeClause }, [ EdgeFields ] ;
 EdgeClause   = "by", Ref | "p", ProbValue ;
 ProbValue    = Number, [ "/", Number ] | Hole | "(", Expr, ")" ;
@@ -198,7 +199,8 @@ EdgeField    = "event", CallExpr | "authority", (String | Cite) | "effort", Dura
              | "valence", Ident | "court_listener_url", String | "action_id", String
              | "note", String | "tags", IdList | "attrs", NumRecord
              | "sets", IdList | "clears", IdList | "requires", IdList
-             | "forbids", IdList | "replaces", ReplaceList | "when", Expr ;
+             | "forbids", IdList | "replaces", ReplaceList | "when", Expr
+             | "basis", Expr ;
 ReplaceList  = "[", [ (Ref | String), { ",", (Ref | String) }, [","] ], "]" ;
 DeadlineOpts = "{", { ("extendable", Bool | "extension_authority", (String | Hole)
              | "note", String | "counting", String), Sep }, "}" ;
@@ -283,7 +285,7 @@ PartiesBlock = "parties", "{", { Ident, ":", Ident, Ident, Sep }, "}" ;
 EventsBlock  = "events", "{", { Date, [ "docket", Number ], CallExpr, ("by" | "on"), Ident, [ Cite ] }, "}" ;
 FactsBlock   = "facts", "{", { Ref, ":", Ref, Sep }, "}" ;
 StakesBlock  = "stakes", "{", { Ref, ":", (SignedMoney | "unvalued"), Sep }, "}" ;
-BeliefsBlock = "beliefs", "{", { "observe", Ref, ":", "{", { Ref, ":", Number, Sep },
+BeliefsBlock = "beliefs", "{", { ("prior" | "observe"), Ref, ":", "{", { Ref, ":", Number, Sep },
                "}", Sep }, "}" ;
 AnalysisBlock= "analysis", RecordExpr ;
 ```
@@ -630,6 +632,18 @@ admits a wrong digest. An unparseable side exits 1, leaving git's conflict.
 - Tags `entry` (an extra root for reachability) and `fact` (a matter fact,
   allowed only on `chance`, L2007) carry meaning. All other tags are opaque.
 - `group` must name a declared group (L1002).
+- `basis B` on a node or an edge says where its numbers come from (its
+  payoffs and attrs; its `p`, effort, cost, duration and attrs), a lattice
+  best first (design review 2026-10-23 §2.10): `sourced("cite")` (read
+  from a primary source; the cite resolves like an `authority`,
+  `cite-resolves`), `calibrated("dataset", date)` (measured),
+  `expert("name")` (a named judgment), `estimate`. Anything else is L2001.
+  A number with no `basis` is an estimate and a `?` is a hole, the worst
+  label. A `patch` may not write one (L2007): its numbers keep their base
+  edge's. Labels lower to `lowered.basis` (§8.1) and join: a scenario is
+  labelled with the worst basis of every number of the packs it uses
+  (§8.3), so an analysis never reads as better sourced than its inputs.
+  `strict` accepts estimates because the output carries its label.
 
 ### 5.2 Types, enums, events, match
 
@@ -1270,6 +1284,15 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
   (`scenario.payoffs`, §8.3); the package is not changed.
 - `beliefs { observe node: { edge: count } }`: node must be a chance node, edges
   its own (L4006).
+- `beliefs { prior node: { edge: α } }` declares the Dirichlet prior the
+  observations update (design review 2026-10-23 §2.11): pseudo-counts, not
+  a mutated point probability; with two outcomes it is `Beta(α, β)`. Like
+  `observe` it names a world draw (L4006); it gives every outcome edge of
+  it (every edge but a self edge) a positive exact number (L2001 for
+  anything else), each once, the node at most one prior, and the sum must
+  stay exact (each L4006). Its total `Σα` is the node's strength, so
+  `analysis.uncertainty.concentration` may not name the node too (L4006).
+  An anonymous outcome edge cannot be named, so its node takes no prior.
 - `analysis`: litgraph `Scenario` fields that have no dedicated block (§8.3).
 - Posture is replayed, never asserted.
 
@@ -1290,6 +1313,8 @@ the variants of enum `E` with exact non-negative weights summing to 1 (L2003).
 | `Probability` | `p` values, `Number` in `[0,1]` | comparisons; `+ - * /` checked to stay in `[0,1]` (below); `1 - p` |
 | `Number` | `21`, `0.35`, `1/3` | comparisons; `+ - * / %` (`%` integers only) |
 | `Dist<E>` | record `{ variant: p, ... }` | `prob(d, Variant)`; `given(d, [Variants])` conditions on a nonzero-mass subset |
+| `Dist<E, C>` | record `{ c: { variant: p, ... }, ... }`, a `Dist<E>` for every variant of `C` (L2003 otherwise) | `at(d, c) -> Dist<E>`, the distribution under condition `c` |
+| `Credal` | `credal(lo, hi)`, `lo <= hi` probabilities (L2006 when empty) | `+ - *` with a `Credal` or `Probability`, by interval arithmetic, the result within `[0, 1]` (L2006); `== !=`; a point only through `lower(s)`, `upper(s)` or `mean(s)` (the midpoint), each a decision rule; a `Credal` where a `Probability` is required (an edge's `p`, a `Dist` weight) is L2001 |
 | `Cite` | `cite ...` | `==` only |
 | `Interval<Date>` | `[d, d)` in clauses | `in`, `intersect`, `disjoint` |
 | `Role` | actor names | `==` only |
@@ -1303,7 +1328,8 @@ The builtins (closed list) are `deadline(d) -> Due` (tests: due date from the
 project `Date`s, §5.3), `has_event(Pattern) -> Bool`, `date_of(Pattern) ->
 Date` (the date of the latest matching event; read only by fact guards,
 §5.1, §5.6), `prob`, `given`, `in`,
-`intersect`, `disjoint`, `len`, and `contains`, plus the event constructors
+`intersect`, `disjoint`, `len`, `contains`, `credal`, `lower`, `upper`,
+`mean`, and `at`, plus the event constructors
 from `event` declarations. There is no IO, ambient clock, mutation, float,
 implicit cast, or overloading beyond this table (L2002 otherwise). Field
 types: `p` is `Probability`, `effort` is `Hours`, `cost`/`payoff` are
@@ -1440,7 +1466,7 @@ Anything without a lowering is L6001.
 |---|---|
 | `Lit.toml` `pack_id`, `title`, `description`, `jurisdiction`, `forum` | `Pack.id`, `title`, `description`, `jurisdiction`, `forum` |
 | (derived) | `Pack.schemaVersion` = 4 (v3 plus `lowered`) |
-| (the build) | `Pack.lowered` `{pins, asOf, knownAt, worldDigest, holes}` (below) |
+| (the build) | `Pack.lowered` `{pins, asOf, knownAt, worldDigest, holes, basis}` (below) |
 | manifest `counting` | `Pack.counting` (the counting-rule id, verbatim) |
 | manifest `[[cite_syntax.*]]` | `Pack.citeSyntax.rules[]`/`shorthands[]` in order (`section_parts` is `sectionParts`) |
 | `start` | `Pack.startNodeId` |
@@ -1459,6 +1485,7 @@ Anything without a lowering is L6001.
 | `deadline N.unit {…}` | same, from the literal; `unit` omitted for calendar days, `"court"` for court days; business days are L6001 |
 | `duration` | `RawEdge.duration {min, mode, max}` (a single duration is `{mode}`) |
 | `valence`, `court_listener_url`, `action_id`, `note`, `tags`, `attrs`, `sets`, `clears`, `requires`, `forbids` | same-named `RawEdge` fields |
+| node or edge `basis` | `lowered.basis[]` `{pointer: "/nodes/i" \| "/edges/i", basis, source}`: `sourced` with the cite, `calibrated` with `dataset@date`, `expert` with the name, `estimate`; a link's at `/links/i` |
 | `counting` / `calendar` | `Pack.counting` (the rule id) plus a clock-library fragment (§8.2) |
 | `event`, authority lattice, relations, defaults, exceptions, transitions, tests, types | not emitted (verification only) |
 
@@ -1507,10 +1534,12 @@ header"):
   never `extendable: false`, the reason naming the deadline and whatever
   `extendable` or `extension_authority` the edge or declaration states;
   an edge's own `extension_authority ?(..)` is the hole at
-  `.../extensionAuthority`, with its reason, in place of that one.
+  `.../extensionAuthority`, with its reason, in place of that one;
+- `basis`: one `{pointer, basis, source}` per labelled node, edge or link
+  (§5.1 "basis"), sorted; a scenario's one label is at `/scenario` (§8.3).
 
 The engine checks the header on read (version, sorted pins, recomputed
-digest, holes inside the document) and warns `authored-hole` for a pack
+digest, holes and basis labels inside the document) and warns `authored-hole` for a pack
 whose holes leave a number open.
 
 ### 8.2 Clock IR (pack schema v3, clock schema 4)
@@ -1612,7 +1641,9 @@ loader (`ClockLibrary::from_json`), so an invalid one is L6001.
 | `perspective` | `scenario.perspective` actor-to-role map: `perspective party` lists only the actors whose role differs from the primary package's roles (which must be loaded, else L6001); an explicit `{ actor: role }` map is emitted as written |
 | `facts` | `scenario.facts` qualified node to qualified edge |
 | `stakes` | `scenario.payoffs` qualified terminal to major-unit number; a terminal without a stake keeps its pack-authored `payoff` (§5.6) and is not listed |
-| `beliefs` | `scenario.observe` qualified node to `{qualified edge: count}` |
+| `beliefs` `observe` | `scenario.observe` qualified node to `{qualified edge: count}` |
+| `beliefs` `prior node: { e: α }` | `scenario.probabilities` each outcome edge to its mean `α / Σα`, and `scenario.uncertainty.concentration` the node to `Σα` (L6004 when exact arithmetic overflows) |
+| the packs of the `uses` closure, as built at the matter's dates | `lowered.basis` `[{pointer: "/scenario", basis}]`: the join over every node's and edge's numbers (§5.1 "basis"), the probabilities of a node with a `prior` the matter's estimate; absent when the packs hold no number |
 | `Case.removals` (§5.6) | `scenario.remove_edges`: any `analysis.remove_edges` entries in order, then each removed edge not already listed; the source map has one entry per removed edge (`/scenario/remove_edges/i`) with the removing event's span and its cite located in L0 under the edge's package |
 | `analysis { f: v }` | `scenario.f` = `v` as the engine reads it (numbers exact to binary64, edges qualified `pack::edge`) |
 | (derived) | `NamedScenario.schema_version` = 2 |
@@ -1627,7 +1658,7 @@ fix), and so is a field given twice:
 
 | Field | Type |
 |---|---|
-| `params` | record of exact numbers, `{ rate: 650.usd / 1.hours, floor: -1.5 }` (dimensionless: units for engine parameters are later work) |
+| `params` | the `Params` record: the engine's own parameters typed, `rate` and `opp_rate` a `Rate<usd, Hours>` and `carry_per_day` a `Rate<usd, CalendarDays>`, written as money over a period (`650.usd / 1.hours`, `30.usd / 1.days`; a bare number is L4007 with a fix), `stakes` and `loss_aversion` a `Number`; any other parameter (read by the matter's own `metrics`) a `Number` or a `Rate`, `{ rate: 650.usd / 1.hours, floor: -1.5 }`. A rate lowers to major units per its unit, exactly (L6004 on overflow) |
 | `metrics`, `utilities` | record of engine expressions, each a string |
 | `cost`, `utility`, `mask`, `probability_fn`, `opponent_objective` | an engine expression, a string |
 | `calibration` | list of strings |
@@ -2368,3 +2399,41 @@ edge under a perspective that maps `either` to `self` is a choice even on
 a `chance` node); typing a draw's actors as non-parties is left to the
 delegation and role work (§6 item 2).
 
+
+### 13.8 Status: basis, priors, conditional and credal probabilities, rates (lg-flu.16)
+
+Design review 2026-10-23 §6 item 22 (§2.10, §2.11), decided as follows:
+
+1. **Basis labels.** `basis` on a node or edge (§5.1) with the lattice
+   `sourced < calibrated < expert < estimate < hole`; an unlabelled
+   number is an estimate. Propagation is the lattice join: generated
+   packs and link files carry their labels in `lowered.basis` (§8.1) and
+   a scenario carries the join over the packs it uses (§8.3), so `strict`
+   output is always labelled rather than estimate-free. The join is over
+   every number of those packs, not only the ones an op reads: sound and
+   coarse until the engine propagates labels per op. A `patch` keeps its
+   base edge's labels (L2007 on `basis` there). The corpus's prose
+   "basis: estimate" notes are not rewritten here: an unlabelled number
+   already is an estimate.
+2. **Priors.** `beliefs { prior node: { edge: α } }` (§5.6, §8.3) types
+   the beliefs block's counts as Dirichlet pseudo-counts and declares the
+   prior they update. `Beta(α, β)` is its two-outcome case, written by
+   edge, not positionally: the language has no edge order to bind a
+   positional `beta(a, b)` to (§6 item 4). It lowers to the engine's
+   `probabilities` and `uncertainty.concentration`, which already
+   implement the Dirichlet model (`docs/UNCERTAINTY.md`).
+3. **Credal sets.** `Credal` (`credal(lo, hi)`) is an expression type with
+   interval arithmetic and the projections `lower`, `upper`, `mean` (§6).
+   It never reaches the engine: a credal set is a point only through a
+   projection, the decision rule, so no lowering changes. A credal sum or
+   difference that does not fold is rejected (L2006) rather than boxed: no
+   solver is involved.
+4. **Conditional distributions.** `Dist<E, C>` (§6), a record of `Dist<E>`
+   rows total over `C`, read with `at(d, c)`. A condition that does not
+   fold leaves the row unknown, so its `prob` is an atom in `[0, 1]` (§6
+   refinement).
+5. **Rates.** `analysis.params` is typed by the engine's own parameters
+   (`Params`, §8.3): money per hour or per calendar day, written as a
+   division of literals. `Rate` is an `analysis` type only; `.lit`
+   expressions do not divide money by time, since no `.lit` construct
+   consumes a rate.

@@ -233,7 +233,16 @@ impl Cx<'_, '_> {
                 None
             }
             _ => {
-                if num.ty.is_some() {
+                if num.ty == Some(Type::Credal) {
+                    self.report(
+                        Report::new(
+                            C::TypeMismatch,
+                            p.range,
+                            "`p` is a point probability, found a `Credal` set",
+                        )
+                        .note(crate::types::uncertain::PROJECT),
+                    );
+                } else if num.ty.is_some() {
                     self.report(Report::new(
                         C::InvalidProbability,
                         p.range,

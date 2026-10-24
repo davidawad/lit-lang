@@ -7,13 +7,14 @@ use crate::resolve::{scope::Scope, sig::TypeSig};
 use litigate_base::{Applicability, DiagnosticCode as C};
 
 /// Built-in type constructor names.
-pub const BUILTINS: [&str; 15] = [
+pub const BUILTINS: [&str; 16] = [
     "Date",
     "Days",
     "Hours",
     "Money",
     "Probability",
     "Dist",
+    "Credal",
     "Cite",
     "Interval",
     "Role",
@@ -48,6 +49,8 @@ pub fn display(ty: &Type) -> String {
         Type::Money(c) => format!("Money<{c}>"),
         Type::Probability => "Probability".into(),
         Type::Distribution(e) => format!("Dist<{e}>"),
+        Type::Conditional(e, c) => format!("Dist<{e}, {c}>"),
+        Type::Credal => "Credal".into(),
         Type::Cite => "Cite".into(),
         Type::DateInterval => "Interval<Date>".into(),
         Type::Role => "Role".into(),
@@ -93,6 +96,7 @@ pub fn resolve(scope: &Scope<'_>, t: &TypeRef, reports: &mut Vec<Report>) -> Opt
         "Date" => simple(Type::Date, reports),
         "Hours" => simple(Type::Hours, reports),
         "Probability" => simple(Type::Probability, reports),
+        "Credal" => simple(Type::Credal, reports),
         "Cite" => simple(Type::Cite, reports),
         "Role" => simple(Type::Role, reports),
         "Bool" => simple(Type::Boolean, reports),
@@ -161,18 +165,29 @@ pub fn resolve(scope: &Scope<'_>, t: &TypeRef, reports: &mut Vec<Report>) -> Opt
             resolve(scope, arg, reports).map(|inner| Type::List(Box::new(inner)))
         }
         "Dist" => {
-            let arg = arity(t, 1, reports).then(|| &t.args[0])?;
-            match resolve(scope, arg, reports)? {
-                Type::Named(n) if scope.enum_variants(&n).is_some() => Some(Type::Distribution(n)),
-                other => {
-                    reports.push(Report::new(
-                        C::TypeMismatch,
-                        arg.range,
-                        format!("`Dist` needs an enum, found `{}`", display(&other)),
-                    ));
-                    None
+            // `Dist<E>`, or `Dist<E, C>`: a `Dist<E>` per variant of `C`.
+            if t.args.len() != 2 && !arity(t, 1, reports) {
+                return None;
+            }
+            let mut enums = Vec::new();
+            for arg in &t.args {
+                match resolve(scope, arg, reports)? {
+                    Type::Named(n) if scope.enum_variants(&n).is_some() => enums.push(n),
+                    other => {
+                        reports.push(Report::new(
+                            C::TypeMismatch,
+                            arg.range,
+                            format!("`Dist` needs an enum, found `{}`", display(&other)),
+                        ));
+                        return None;
+                    }
                 }
             }
+            let outcome = enums.remove(0);
+            Some(match enums.pop() {
+                Some(given) => Type::Conditional(outcome, given),
+                None => Type::Distribution(outcome),
+            })
         }
         _ => {
             let resolved = scope.user_type(&t.name, &BUILTINS);

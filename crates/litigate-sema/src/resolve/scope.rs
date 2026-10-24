@@ -179,6 +179,9 @@ impl<'a> Scope<'a> {
         match ty {
             Type::Named(n) => Type::Named(self.localize_name(sig, n)),
             Type::Distribution(e) => Type::Distribution(self.localize_name(sig, e)),
+            Type::Conditional(e, c) => {
+                Type::Conditional(self.localize_name(sig, e), self.localize_name(sig, c))
+            }
             Type::List(t) => Type::List(Box::new(self.localize(sig, t))),
             Type::Record(fields) => Type::Record(
                 fields

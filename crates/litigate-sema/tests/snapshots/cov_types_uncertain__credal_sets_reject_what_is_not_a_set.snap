@@ -1,0 +1,18 @@
+---
+source: crates/litigate-sema/tests/cov_types_uncertain.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:10:24 L2006 credal set [3/4, 1/4] is empty: its lower bound exceeds its upper bound",
+    "pkgs/demo/main.lit:11:31 L2001 expected `Probability`, found `Credal`",
+    "pkgs/demo/main.lit:12:29 L2001 expected `Credal`, found `Number`",
+    "pkgs/demo/main.lit:13:29 L1002 cannot find name `nope`",
+    "pkgs/demo/main.lit:14:24 L2006 credal set [1, 2] leaves [0, 1]",
+    "pkgs/demo/main.lit:15:24 L2006 credal set [-1, -1/4] leaves [0, 1]",
+    "pkgs/demo/main.lit:17:24 L2006 a sum or difference of credal sets that does not fold is not provably within [0, 1]",
+    "pkgs/demo/main.lit:18:24 L2002 operator `/` is not defined for `Credal` and `Credal`",
+    "pkgs/demo/main.lit:19:16 L2002 operator `<` is not defined for `Credal` and `Credal`",
+    "pkgs/demo/main.lit:20:24 L2006 exact arithmetic overflowed",
+    "pkgs/demo/main.lit:21:24 L2006 exact arithmetic overflowed",
+    "pkgs/demo/main.lit:22:24 L2001 `lower` takes 1 argument, found 0",
+]

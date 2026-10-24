@@ -106,7 +106,7 @@ The canonical format (`litigate fmt', SPEC §10) uses two."
 
 (defconst litigate-ts-mode--builtins
   '("deadline" "has_event" "prob" "given" "in" "intersect" "disjoint" "len"
-    "contains" "fixed" "nth" "last" "every" "once")
+    "contains" "credal" "lower" "upper" "mean" "at" "fixed" "nth" "last" "every" "once")
   "Builtin functions and holiday rules.")
 
 ;;; Font-lock.

@@ -1,5 +1,7 @@
 //! The closed builtin list (SPEC §6): `deadline`, `has_event`, `date_of`,
-//! `prob`, `given`, `in`, `intersect`, `disjoint`, `len`, `contains`.
+//! `prob`, `given`, `in`, `intersect`, `disjoint`, `len`, `contains`, and
+//! the uncertainty builtins `credal`, `lower`, `upper`, `mean`, `at`
+//! (checked in [`super::uncertain`]).
 use super::expr::{Checked, Checker};
 use super::rational;
 use super::ty::display;
@@ -10,7 +12,7 @@ use crate::resolve::sig::ValueKind;
 use litigate_base::DiagnosticCode as C;
 
 /// Builtin function names.
-pub const NAMES: [&str; 10] = [
+pub const NAMES: [&str; 15] = [
     "deadline",
     "has_event",
     "date_of",
@@ -21,6 +23,11 @@ pub const NAMES: [&str; 10] = [
     "disjoint",
     "len",
     "contains",
+    "credal",
+    "lower",
+    "upper",
+    "mean",
+    "at",
 ];
 
 fn arity(c: &mut Checker<'_, '_>, name: &str, args: &[Expr], n: usize, r: TextRange) -> bool {
@@ -47,7 +54,10 @@ pub fn call(c: &mut Checker<'_, '_>, name: &str, args: &[Expr], r: TextRange) ->
     }
     let n = match name {
         "deadline" | "has_event" | "date_of" | "len" => 1,
-        _ => 2,
+        _ => super::uncertain::NAMES
+            .iter()
+            .find(|(n, _)| *n == name)
+            .map_or(2, |(_, arity)| *arity),
     };
     if !arity(c, name, args, n, r) {
         return Some(c.error(r));
@@ -91,6 +101,7 @@ pub fn call(c: &mut Checker<'_, '_>, name: &str, args: &[Expr], r: TextRange) ->
             mk(c, vec![arg.hir], ty, None)
         }
         "prob" | "given" => dist_call(c, name, args, r),
+        "credal" | "lower" | "upper" | "mean" | "at" => super::uncertain::call(c, name, args, r),
         "in" | "intersect" | "disjoint" => {
             let first = if name == "in" {
                 Type::Date

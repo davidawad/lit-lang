@@ -161,6 +161,9 @@ impl<'s, 'a> Checker<'s, 'a> {
             (ExprKind::Record(fields), Type::Distribution(en)) => {
                 return super::shape::distribution(self, fields, en, r)
             }
+            (ExprKind::Record(fields), Type::Conditional(en, given)) => {
+                return super::uncertain::conditional(self, fields, en, given, r)
+            }
             (ExprKind::List(items), Type::List(inner)) => {
                 super::shape::list(self, items, Some(inner), r)
             }
@@ -205,6 +208,9 @@ impl<'s, 'a> Checker<'s, 'a> {
                     r,
                     format!("expected `{}`, found `{}`", display(e), display(t)),
                 );
+                if (t, e) == (&Type::Credal, &Type::Probability) {
+                    report = report.note(super::uncertain::PROJECT);
+                }
                 if let (Type::Days(a), Type::Days(b)) = (t, e) {
                     report = Report::new(
                         C::UnitMismatch,

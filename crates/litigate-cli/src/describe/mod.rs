@@ -212,7 +212,7 @@ pub struct Describe {
     pub envelope: EnvelopeInfo,
 }
 
-const BUILTINS: [(&str, &str); 10] = [
+const BUILTINS: [(&str, &str); 15] = [
     (
         "deadline",
         "deadline(d) -> Date: due date of deadline d from the latest matching `given` event",
@@ -241,6 +241,17 @@ const BUILTINS: [(&str, &str); 10] = [
     ),
     ("len", "len(List<T>) -> Number"),
     ("contains", "contains(List<T>, T) -> Bool"),
+    (
+        "credal",
+        "credal(Probability, Probability) -> Credal: the probabilities from lower to upper (epistemic uncertainty)",
+    ),
+    ("lower", "lower(Credal) -> Probability: the least point (a decision rule)"),
+    ("upper", "upper(Credal) -> Probability: the greatest point (a decision rule)"),
+    ("mean", "mean(Credal) -> Probability: the midpoint (a decision rule)"),
+    (
+        "at",
+        "at(Dist<E, C>, C) -> Dist<E>: a conditional distribution under one condition",
+    ),
 ];
 
 const RESULTS: [(&str, &str); 14] = [

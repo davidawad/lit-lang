@@ -23,6 +23,8 @@ pub fn show_type(t: &Type) -> String {
         Type::Money(c) => format!("Money<{}>", c.to_uppercase()),
         Type::Probability => "Probability".into(),
         Type::Distribution(e) => format!("Dist<{e}>"),
+        Type::Conditional(e, c) => format!("Dist<{e}, {c}>"),
+        Type::Credal => "Credal".into(),
         Type::Cite => "Cite".into(),
         Type::DateInterval => "Interval<Date>".into(),
         Type::Role => "Role".into(),

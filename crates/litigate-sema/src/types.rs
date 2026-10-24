@@ -10,3 +10,4 @@ pub mod rational;
 pub mod refine;
 pub mod shape;
 pub mod ty;
+pub mod uncertain;

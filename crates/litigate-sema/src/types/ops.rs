@@ -148,7 +148,8 @@ fn result_type(op: BinaryOp, l: &Type, r: &Type) -> Result<Type, (C, String)> {
     }
     match (op, l, r) {
         (B::Or | B::And, T::Boolean, T::Boolean) => Ok(T::Boolean),
-        (B::Eq | B::Ne, a, b) if a == b && !matches!(a, T::List(_) | T::Distribution(_) | T::Unit) => Ok(T::Boolean),
+        (B::Eq | B::Ne, a, b) if a == b && !matches!(a, T::List(_) | T::Distribution(_) | T::Conditional(..) | T::Unit) => Ok(T::Boolean),
+        (B::Add | B::Sub | B::Mul, T::Credal | T::Probability, T::Credal | T::Probability) if *l == T::Credal || *r == T::Credal => Ok(T::Credal),
         (B::Lt | B::Le | B::Gt | B::Ge, a, b) if a == b && matches!(a, T::Date | T::Days(_) | T::Hours | T::Money(_) | T::Probability | T::Number) => Ok(T::Boolean),
         (B::Add | B::Sub, a, b) if a == b && matches!(a, T::Days(_) | T::Hours | T::Money(_) | T::Probability | T::Number) => Ok(a.clone()),
         (B::Mul | B::Div, T::Days(_) | T::Hours | T::Money(_), T::Number) => Ok(l.clone()),
@@ -173,9 +174,10 @@ pub fn binary(
     let (Some(lt), Some(rt)) = (l.ty.clone(), rr.ty.clone()) else {
         return c.error(r);
     };
-    if lt == Type::Probability && rt == Type::Number {
+    let point = |t: &Type| matches!(t, Type::Probability | Type::Credal);
+    if point(&lt) && rt == Type::Number {
         rr = c.coerce(rr, &Type::Probability, rhs.range);
-    } else if lt == Type::Number && rt == Type::Probability {
+    } else if lt == Type::Number && point(&rt) {
         l = c.coerce(l, &Type::Probability, lhs.range);
     }
     let (Some(lt), Some(rt)) = (l.ty.clone(), rr.ty.clone()) else {
@@ -193,12 +195,19 @@ pub fn binary(
         }
     };
     let value = match (&l.value, &rr.value) {
+        (Some(a), Some(b)) if ty == Type::Credal => match super::uncertain::fold(op, a, b) {
+            Ok(v) => v,
+            Err(err) => return c.arith(r, err),
+        },
         (Some(a), Some(b)) => match fold(op, a, b) {
             Ok(v) => v,
             Err(err) => return c.arith(r, err),
         },
         _ => None,
     };
+    if ty == Type::Credal && super::uncertain::out_of_range(c, op, value.as_ref(), r) {
+        return c.error(r);
+    }
     if let Some(Value::Probability(p)) = &value {
         if !q::is_probability(*p) {
             c.report(Report::new(

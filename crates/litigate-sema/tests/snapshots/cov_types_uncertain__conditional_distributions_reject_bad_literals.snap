@@ -1,0 +1,18 @@
+---
+source: crates/litigate-sema/tests/cov_types_uncertain.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:12:28 L2003 `Dist<Method, Document>` is missing `answer`",
+    "pkgs/demo/main.lit:13:71 L2003 condition `complaint` appears twice",
+    "pkgs/demo/main.lit:13:142 L2003 `Document` has no variant `reply`",
+    "pkgs/demo/main.lit:14:41 L2003 `Dist<Method>` is missing `Mail`",
+    "pkgs/demo/main.lit:15:27 L2003 no visible enum has these conditions",
+    "pkgs/demo/main.lit:16:27 L2001 ambiguous conditional distribution: enums Method, Other all have these outcomes",
+    "pkgs/demo/main.lit:17:27 L2001 cannot infer the outcome enum: write the first condition's `Dist` as a record",
+    "pkgs/demo/main.lit:18:27 L2003 no visible enum has these outcomes",
+    "pkgs/demo/main.lit:19:27 L2001 `at` needs a conditional `Dist<E, C>`, found `Number`",
+    "pkgs/demo/main.lit:20:27 L1002 cannot find name `nope`",
+    "pkgs/demo/main.lit:21:24 L2001 `Dist` needs an enum, found `Number`",
+    "pkgs/demo/main.lit:22:11 L2001 `Dist` takes 1 type argument, found 3",
+]

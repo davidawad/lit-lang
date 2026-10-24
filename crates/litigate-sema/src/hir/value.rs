@@ -17,6 +17,12 @@ pub enum Type {
     Probability,
     /// Exact distribution over a closed enum.
     Distribution(String),
+    /// `Dist<E, C>`: a `Dist<E>` for each variant of the conditioning
+    /// enum `C` (outcome enum, then condition enum), total over `C`.
+    Conditional(String, String),
+    /// `Credal`: a closed interval of probabilities `[lower, upper]`
+    /// (epistemic uncertainty about a point probability).
+    Credal,
     /// Citation resolved to an L0 span.
     Cite,
     /// Half-open date interval.
@@ -147,6 +153,16 @@ pub enum Value {
     Probability(Rational),
     /// Exhaustive enum-to-probability pairs in variant order.
     Distribution(Vec<(String, Rational)>),
+    /// A conditional distribution: each condition variant (in variant
+    /// order) with its exhaustive distribution.
+    Conditional(Vec<(String, Vec<(String, Rational)>)>),
+    /// A credal interval `[lower, upper]` within `[0, 1]`.
+    Credal {
+        /// Least probability.
+        lower: Rational,
+        /// Greatest probability.
+        upper: Rational,
+    },
     /// Resolved citation reference.
     Cite(String),
     /// Explicit unresolved value and optional reason.

@@ -125,4 +125,5 @@
 ((call_expression function: (ref . (identifier) @function.builtin .))
   (#any-of? @function.builtin
     "deadline" "has_event" "prob" "given" "in" "intersect" "disjoint" "len" "contains"
+    "credal" "lower" "upper" "mean" "at"
     "fixed" "nth" "last" "every" "once"))

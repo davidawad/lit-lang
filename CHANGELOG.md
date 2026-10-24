@@ -282,6 +282,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   than one Gregorian cycle instead of looping (LW6). T5, T7 and T9-T11
   break source or output and stay with the identity-lock, edition and
   capability work.
+- `litigate lint-filing` no longer reports L9006 for the filing line it
+  splices into the matter: that line cannot declare an id, and the
+  fix pointed at a line the `.case` file does not have.
 
 ## [0.6.0] - 2026-10-24
 

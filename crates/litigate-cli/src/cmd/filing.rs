@@ -8,7 +8,10 @@
 //!
 //! The matter itself must check clean first. Diagnostics are then every
 //! error of the matter with the filing, and the warnings the filing adds
-//! to the matter as of the filing date.
+//! to the matter as of the filing date. The filing's own line is written
+//! here, not by the user, and cannot declare an id, so the L9006 its
+//! missing id draws (with a fix aimed at a line the file does not have)
+//! is not reported.
 use super::check::check_session;
 use crate::filing;
 use crate::ics;
@@ -16,7 +19,7 @@ use crate::matter::{CaseCheck, Scheduled};
 use crate::out::{Failure, Outcome, Report};
 use crate::ws::{self, CaseText, Session};
 use litgraph::clock::Date;
-use litigate_base::{Diagnostic, Profile, Severity};
+use litigate_base::{Diagnostic, DiagnosticCode, Profile, Severity};
 use litigate_lower::Options;
 use litigate_sema::case::{Status, Step};
 use serde_json::{json, Value};
@@ -61,11 +64,12 @@ fn known(known: &[Diagnostic], d: &Diagnostic) -> bool {
 }
 
 /// Every error of the matter with the filing (`filed`), and the warnings
-/// it adds to the matter without it (`at`).
+/// it adds to the matter without it (`at`), less the filing's L9006.
 fn added(at: &CaseCheck, filed: &CaseCheck) -> Vec<Diagnostic> {
     filed
         .diagnostics
         .iter()
+        .filter(|d| d.code != DiagnosticCode::UndeclaredEventId)
         .filter(|d| match d.severity {
             Severity::Error => true,
             _ => !known(&at.diagnostics, d),

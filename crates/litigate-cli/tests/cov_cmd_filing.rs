@@ -117,6 +117,8 @@ fn a_service_event_triggers_a_deadline_without_moving_as_of() {
         ],
     );
     assert_eq!(run.code, 0, "{}", run.stdout);
+    // The filing line lint-filing writes declares no id; its L9006 is not reported.
+    assert_eq!(codes(&run.json), Vec::<String>::new());
     let result = &run.json["result"];
     assert_eq!(result["as_of"], "2025-03-10");
     assert_eq!(

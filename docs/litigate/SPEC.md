@@ -282,7 +282,8 @@ SourceDecl   = "source", String, [ "{", { ("url", String | "as_of", (Date | Hole
                "}" ] ;
 PerspectiveDecl = "perspective", ( Ident | "{", { Ident, ":", Ident, Sep }, "}" ) ;
 PartiesBlock = "parties", "{", { Ident, ":", Ident, Ident, Sep }, "}" ;
-EventsBlock  = "events", "{", { Date, [ "docket", Number ], CallExpr, ("by" | "on"), Ident, [ Cite ] }, "}" ;
+EventsBlock  = "events", "{", { [ Ident, ":" ], Date, [ "docket", Number ], CallExpr, ("by" | "on"), Ident,
+               [ Cite ] }, "}" ;
 FactsBlock   = "facts", "{", { Ref, ":", Ref, Sep }, "}" ;
 StakesBlock  = "stakes", "{", { Ref, ":", (SignedMoney | "unvalued"), Sep }, "}" ;
 BeliefsBlock = "beliefs", "{", { ("prior" | "observe"), Ref, ":", "{", { Ref, ":", Number, Sep },
@@ -1160,6 +1161,17 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
   docketed events on different dates whose numbers are equal or fall is
   L4001. Source that contradicts docket order is L4001 with a fix that
   sorts the block.
+- Event ids. An event may declare an id before its date, `id: date ...`;
+  ids are unique among a matter's events (L1001) and live in their own
+  namespace. The id is the event's timeline key, `event:<Name>@<id>`
+  (docs/litigate/TIMELINE.md), where `Name` is the event type's own name
+  without its package; an event without one is keyed
+  `event:<Name>@<date>[/<docket>]`, which changes when its date or docket
+  number is corrected. So an event without an id is L9006 (info), with a
+  machine-applicable fix that writes `<name>-<n>: ` before the date:
+  `<name>` the type's name in kebab case, `n` the least positive number
+  no other event of the matter declares or is given. An id does not
+  affect docket order or replay.
 - Replay sees the used packages and their dependencies (`core`
   included), as `check` does: a dependency's counting rules count under
   their own versions and transitions, and its events and enums are
@@ -1903,9 +1915,10 @@ unchanged, and is graded `error`; anything else is rejected.
 | L9003 | anonymous edge | L6004 | non-finite number |
 | L9004 | non-canonical format | L6005 | output error |
 | L9005 | unused declaration | | |
+| L9006 | undeclared event id | | |
 
 Severity (`DiagnosticCode::severity(profile)`): every non-L9 code except
-L4009, L4010, L4011 and L4012 is `error`. L9003 is `info`. L4009, L4010, L4011, L4012 and L9005 are `warning`. L9001, L9002, and L9004 are
+L4009, L4010, L4011 and L4012 is `error`. L9003 and L9006 are `info`. L4009, L4010, L4011, L4012 and L9005 are `warning`. L9001, L9002, and L9004 are
 `warning` in `dev` and `error` in `strict`.
 
 ### 9.2 Shapes
@@ -2318,6 +2331,7 @@ gets one row per condition when the conditions classify differently.
 | C79 | L5007 a reachable marking of the procedure net reaches no terminal; more markings than the bound (§7) | verify | c | O16. |
 | C80 | L5008 an edge out of a reachable node is enabled in no reachable marking (§7) | verify | c | O16. |
 | C81 | L5009 after an edge creating a duty's obligation no marking enabling its `within` edge is reachable (§7) | verify | c | O16. |
+| C82 | L9006 a `.case` event declares no id (§5.6) | sema | a | Syntactic: the event line has no `Ident ":"` before its date. |
 
 ### 13.4 SPEC rules with no code of their own
 

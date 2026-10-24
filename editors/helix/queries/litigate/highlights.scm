@@ -97,6 +97,7 @@
 (party_decl actor: (identifier) @type)
 (party_decl entity: (identifier) @type)
 (party_decl name: (identifier) @variable)
+(case_event id: (identifier) @label)
 
 (rule_decl name: (identifier) @function)
 (deadline_decl name: (identifier) @function)

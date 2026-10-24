@@ -29,6 +29,7 @@
 (exception_decl name: (identifier) @local.definition.function)
 (import_list (identifier) @local.definition.import)
 (party_decl name: (identifier) @local.definition.var)
+(case_event id: (identifier) @local.definition.var)
 
 (ref . (identifier) @local.reference)
 (start_decl node: (identifier) @local.reference)

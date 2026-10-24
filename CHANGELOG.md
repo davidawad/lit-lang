@@ -75,6 +75,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `crates/litgraph-packs` build under the `dev` profile. A version's
   `known_at` is its recording date when no vendored source dates its
   promulgation (the frcp $505 fee versions, `known_at 2026-10-22`).
+- **Declared `.case` event ids** (lg-flu.39; SPEC §5.6, PM ruling
+  2026-10-23 on timeline keys). An event line may start with an id,
+  `service: 2025-03-03 Served(Personal) on roadrunner`. The id is the
+  event's timeline key, `event:<Name>@<id>` (`hir::Event::key`). Without
+  an id the key is `event:<Name>@<date>[/<docket>]`, which changes when
+  the date is corrected. An event without an id gets the new info lint
+  L9006. Its machine-applicable fix (`litigate fix --code L9006`, or the
+  editor quick fix) writes a generated id, `<event-name>-<n>: `, that no
+  other event of the matter uses. A repeated id is L1001. Tree-sitter,
+  Emacs, Helix and Neovim highlight the id.
 
 - **The tree-sitter parser merges without conflicts** (lg-flu.37). The
   generated `editors/tree-sitter-litigate/src/{parser.c,grammar.json,node-types.json}`

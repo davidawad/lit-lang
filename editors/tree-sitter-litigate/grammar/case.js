@@ -78,6 +78,7 @@ module.exports = {
   events_block: $ => seq('events', '{', repeat($.case_event), '}'),
 
   case_event: $ => seq(
+    optional(seq(field('id', $.identifier), ':')),
     field('date', $.date),
     optional(seq('docket', field('docket', $.number))),
     field('event', $.call_expression),

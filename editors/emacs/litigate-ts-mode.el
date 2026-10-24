@@ -140,6 +140,7 @@ The canonical format (`litigate fmt', SPEC §10) uses two."
      (link_decl name: (identifier) @font-lock-property-name-face)
      (holiday_decl name: (identifier) @font-lock-property-name-face)
      (party_decl name: (identifier) @font-lock-variable-name-face)
+     (case_event id: (identifier) @font-lock-variable-name-face)
      ([(rule_decl) (deadline_decl) (counting_decl) (calendar_decl)
        (transition_decl) (default_decl) (exception_decl)]
       name: (identifier) @font-lock-function-name-face)

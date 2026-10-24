@@ -227,3 +227,24 @@ fn docket_needs_a_number_to_be_a_keyword() {
     assert!(parsed.is_ok(), "{:?}", parsed.errors());
     assert!(!parse(&bare, FileKind::Case).is_ok());
 }
+
+#[test]
+fn an_event_id_needs_a_date_after_it() {
+    let declared = case(
+        "^1.0.0",
+        "events {\n  answer: 2025-01-01 Answered(x) by a\n}\n",
+    );
+    let parsed = parse(&declared, FileKind::Case);
+    assert!(parsed.is_ok(), "{:?}", parsed.errors());
+    // An id followed by anything but a date stops the line there; an
+    // identifier without `:` is not an event.
+    for rest in [
+        "events { answer: Answered(x) by a }\n",
+        "events { answer Answered(x) by a }\n",
+    ] {
+        assert!(
+            !parse(&case("^1.0.0", rest), FileKind::Case).is_ok(),
+            "{rest}"
+        );
+    }
+}

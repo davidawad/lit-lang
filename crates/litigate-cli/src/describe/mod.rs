@@ -243,7 +243,7 @@ const BUILTINS: [(&str, &str); 10] = [
     ("contains", "contains(List<T>, T) -> Bool"),
 ];
 
-const RESULTS: [(&str, &str); 14] = [
+const RESULTS: [(&str, &str); 15] = [
     ("describe", "this document"),
     (
         "lock",
@@ -254,6 +254,7 @@ const RESULTS: [(&str, &str); 14] = [
     ("test", "{passed, failed, tests:[{package, name, cite, span, passed, expectations:[{text, passed, actual, expected, steps}]}]}"),
     ("fmt", "{files:[{path, changed}]}"),
     ("run", "litgraph's response verbatim: {ok, api_version, op, result, warnings, provenance, elapsed_ms}; exit 2 when it is ok:false"),
+    ("calendar", "{case, as_of, written, events:[{uid, deadline, due, status, trigger, trigger_date, authority, counting, counting_cite}], unscheduled:[{deadline, trigger, trigger_date, status, reason}], ics}; open deadlines only unless --all; a due date that is unknown is never given one"),
     ("where", "{id, kind, package, declaration_span, versions, edges, overrides, source, lowered:[json_pointer]} (or {kind: cite, cited_by} / {kind: diagnostic, ...})"),
     ("explain", "{code, explanation, phase, severity:{dev, strict}}"),
     ("explain-value", "{value, type, id, steps:[{rule, cite, detail}], versions, overrides}"),

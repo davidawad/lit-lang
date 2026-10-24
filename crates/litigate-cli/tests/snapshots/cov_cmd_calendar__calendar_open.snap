@@ -1,0 +1,44 @@
+---
+source: crates/litigate-cli/tests/cov_cmd_calendar.rs
+assertion_line: 67
+expression: result
+---
+{
+  "case": "cal-matter",
+  "as_of": "2025-03-10",
+  "written": null,
+  "events": [
+    {
+      "uid": "1d1b1cdf7d704f8b2955d3b1fddd6222@litigate",
+      "deadline": "cov-pack::answer-period",
+      "due": "2025-03-19",
+      "status": "open",
+      "trigger": "Served(complaint, Personal)",
+      "trigger_date": "2025-03-05",
+      "authority": "FRCP 12(a)(4)",
+      "counting": "frcp6",
+      "counting_cite": "FRCP 6(a)"
+    },
+    {
+      "uid": "2d16a75a021ed878b436cc6fb5eaf1ed@litigate",
+      "deadline": "cov-pack::amended-answer-period",
+      "due": "2025-03-21",
+      "status": "open",
+      "trigger": "Served(amended_complaint, Personal)",
+      "trigger_date": "2025-03-07",
+      "authority": "FRCP 15(a)(3)",
+      "counting": "frcp6",
+      "counting_cite": "FRCP 6(a)"
+    }
+  ],
+  "unscheduled": [
+    {
+      "deadline": "cov-pack::in-business-days",
+      "trigger": "Served(complaint, Personal)",
+      "trigger_date": "2025-03-05",
+      "status": "open",
+      "reason": "`in-business-days` counts business days, which have no engine lowering"
+    }
+  ],
+  "ics": null
+}

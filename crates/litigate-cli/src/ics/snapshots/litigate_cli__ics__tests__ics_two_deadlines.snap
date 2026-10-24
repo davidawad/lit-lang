@@ -1,0 +1,59 @@
+---
+source: crates/litigate-cli/src/ics/tests.rs
+expression: stable(&ics)
+---
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//litgraph//litigate <version>//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:acme-v-widget
+BEGIN:VEVENT
+UID:c7f1e7c9ba3a90a23418cc7aa94c1f46@litigate
+DTSTAMP:20250310T000000Z
+DTSTART;VALUE=DATE:20250326
+DTEND;VALUE=DATE:20250327
+SUMMARY:answer-period due (acme-v-widget)
+DESCRIPTION:Deadline: p::answer-period\nAuthority: FRCP 12(a)(1)(A)(i)\nTri
+ gger: Served(complaint\, Personal) on 2025-03-05\nCounting: frcp6 (FRCP 6(
+ a))\n- FRCP 6(a): exclude the trigger date 2025-03-05\nStatus as of 2025-0
+ 3-10: open\nComputed by litigate from cases/acme.case\; the cited rule tex
+ t governs.
+CATEGORIES:litigate,open
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER;RELATED=START:-P7D
+DESCRIPTION:answer-period due in 7 day(s)
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER;RELATED=START:-P1D
+DESCRIPTION:answer-period due in 1 day(s)
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+UID:3504eca598a3d8e3d5627c765fe9fcc4@litigate
+DTSTAMP:20250310T000000Z
+DTSTART;VALUE=DATE:20250408
+DTEND;VALUE=DATE:20250409
+SUMMARY:[lapsed] reply-period due (acme-v-widget)
+DESCRIPTION:Deadline: p::reply-period\nTrigger: Served(complaint\, Personal
+ ) on 2025-03-05\nBearer: widget\nExtended to 2025-04-08 (counted due date 
+ 2025-04-01)\nNot before: 2025-03-31\nCounting: frcp6\n- FRCP 6(a): exclude
+  the trigger date 2025-03-05\nStatus as of 2025-03-10: lapsed\nComputed by
+  litigate from cases/acme.case\; the cited rule text governs.
+CATEGORIES:litigate,lapsed
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER;RELATED=START:-P7D
+DESCRIPTION:reply-period due in 7 day(s)
+END:VALARM
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER;RELATED=START:-P1D
+DESCRIPTION:reply-period due in 1 day(s)
+END:VALARM
+END:VEVENT
+END:VCALENDAR

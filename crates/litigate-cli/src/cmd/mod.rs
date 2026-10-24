@@ -1,5 +1,6 @@
 //! One module per subcommand; [`dispatch`] routes the parsed command.
 mod build;
+mod calendar;
 pub(crate) mod check;
 mod diff;
 mod explain;
@@ -66,6 +67,19 @@ pub fn dispatch(command: Command, src: &dyn Source) -> Outcome {
             no_links,
             library,
         } => run::run(&case, &op, !no_links, &library.lib),
+        Command::Calendar {
+            case,
+            out,
+            all,
+            remind,
+            library,
+        } => calendar::calendar(&calendar::Args {
+            case,
+            out,
+            all,
+            remind,
+            lib: library.lib,
+        }),
         Command::Where { id, paths, library } => where_::where_(&id, &paths, &library.lib),
         Command::Explain { code } => explain::explain(&code),
         Command::ExplainValue {

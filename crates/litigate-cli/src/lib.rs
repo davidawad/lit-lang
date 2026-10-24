@@ -19,6 +19,7 @@ pub mod clock;
 mod cmd;
 pub mod describe;
 pub mod hirx;
+pub mod ics;
 pub mod inline_tests;
 pub mod matter;
 pub mod out;

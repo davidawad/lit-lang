@@ -23,7 +23,7 @@ fn name_of<T: serde::Serialize>(value: T) -> String {
 }
 
 /// The rule (`rule duty x { deadline d ... }`) declaring deadline `d`.
-fn rule_of<'p>(pkg: &'p hir::Package, d: &str) -> Option<&'p hir::Rule> {
+pub(super) fn rule_of<'p>(pkg: &'p hir::Package, d: &str) -> Option<&'p hir::Rule> {
     hirx::declarations(pkg).find_map(|x| match x {
         hir::Declaration::Rule(r) if r.declarations.iter().any(|n| local(n) == d) => Some(r),
         _ => None,

@@ -188,6 +188,23 @@ pub enum Command {
         #[command(flatten)]
         library: Library,
     },
+    /// Export a matter's computed deadlines as an iCalendar (`.ics`) file.
+    Calendar {
+        /// The `.case` file.
+        case: String,
+        /// Also write the calendar to this file.
+        #[arg(long, value_name = "FILE")]
+        out: Option<String>,
+        /// Every deadline the events created, not only the open ones.
+        #[arg(long)]
+        all: bool,
+        /// Remind this many days before each due date (repeatable).
+        #[arg(long, value_name = "DAYS")]
+        remind: Vec<u32>,
+        /// Shared options.
+        #[command(flatten)]
+        library: Library,
+    },
     /// Resolve an id at any layer: node, edge, declaration, diagnostic code, or cite.
     Where {
         /// `pack::node`, `node`, `decl@YYYY-MM-DD`, `L0412`, or cite text.
@@ -319,6 +336,7 @@ impl Command {
             Self::Test { .. } => "test",
             Self::Fmt { .. } => "fmt",
             Self::Run { .. } => "run",
+            Self::Calendar { .. } => "calendar",
             Self::Where { .. } => "where",
             Self::Explain { .. } => "explain",
             Self::ExplainValue { .. } => "explain-value",

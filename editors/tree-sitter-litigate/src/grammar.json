@@ -3156,6 +3156,10 @@
             "members": [
               {
                 "type": "SYMBOL",
+                "name": "authority_clause"
+              },
+              {
+                "type": "SYMBOL",
                 "name": "_version_clause"
               },
               {
@@ -3163,6 +3167,23 @@
                 "name": "cite"
               }
             ]
+          }
+        }
+      ]
+    },
+    "authority_clause": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "by"
+        },
+        {
+          "type": "FIELD",
+          "name": "level",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
           }
         }
       ]

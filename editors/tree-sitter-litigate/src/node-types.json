@@ -199,6 +199,22 @@
     }
   },
   {
+    "type": "authority_clause",
+    "named": true,
+    "fields": {
+      "level": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "authority_decl",
     "named": true,
     "fields": {
@@ -2123,6 +2139,10 @@
       "multiple": true,
       "required": false,
       "types": [
+        {
+          "type": "authority_clause",
+          "named": true
+        },
         {
           "type": "cite",
           "named": true

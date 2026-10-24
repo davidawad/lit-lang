@@ -55,7 +55,7 @@ macro_rules! registry {
     };
 }
 
-registry! { 67;
+registry! { 68;
     UnexpectedToken = "L0001" => "The token is not valid at this position in the grammar",
     UnterminatedLiteral = "L0002" => "A string, block comment, or other delimited literal was not closed",
     InvalidToken = "L0003" => "The source contains a character sequence that is not a token",
@@ -104,6 +104,7 @@ registry! { 67;
     ObligationBreached = "L4009" => "A duty's obligation was neither discharged nor transformed by its due date: at as_of it is breached",
     TimelinessUnknown = "L4010" => "An act discharged an obligation whose designated due date is unknown: it is judged neither timely nor late",
     DesignationShortOfInterpretation = "L4011" => "A trigger designates a due date short of a least time measured from its date only by interpretation: the date stands, with a warning naming the interpretation",
+    ExtensionByInterpretation = "L4012" => "An extension is licensed by a grant that rests on an interpretation: the extension stands, with a warning naming the interpretation",
     VerificationFailed = "L5001" => "A required static verification obligation was not discharged",
     HoleInStrict = "L5002" => "Strict profile does not permit unresolved holes",
     UnreachableNode = "L5003" => "A node is not reachable from start and is not tagged entry",
@@ -189,7 +190,8 @@ impl DiagnosticCode {
                 Self::UnusedDeclaration
                 | Self::ObligationBreached
                 | Self::TimelinessUnknown
-                | Self::DesignationShortOfInterpretation,
+                | Self::DesignationShortOfInterpretation
+                | Self::ExtensionByInterpretation,
                 _,
             )
             | (

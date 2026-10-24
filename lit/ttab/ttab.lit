@@ -101,6 +101,14 @@ event AnswerFiled(form: AnswerForm)
 /// C.F.R. § 2.106(b)(3)(iii)). Its date is the designation's mailing date;
 /// `due` is the date it designates.
 event CounterclaimAnswerTimeDesignated(due: Date)
+/// A party's motion to extend its time to answer, made before that time
+/// expires (Fed. R. Civ. P. 6(b)(1)(A), applied through 37 C.F.R.
+/// § 2.116(a); TBMP § 509.01). Its date is `request_made`.
+event AnswerExtensionMoved()
+/// The Board extends the time to answer the notice of opposition to
+/// `until` (Fed. R. Civ. P. 6(b)(1)(A), applied through 37 C.F.R.
+/// § 2.116(a)).
+event AnswerTimeExtended(until: Date) extends answer-period to until
 /// The Board's notice of institution of a cancellation proceeding (37
 /// C.F.R. § 2.113(a)). Its date is the notice's mailing date; `due` is the
 /// date it designates for the answer.
@@ -218,14 +226,45 @@ test "a day 180 on the Saturday before Labor Day rolls to Tuesday" cite "37 CFR 
 /// Saturday, Sunday, or Federal holiday rolls to the next day that is none
 /// of them (§ 2.196).
 ///
+/// Extension. Part 2 states no extension of the answer time of its own.
+/// § 2.116(a): "Except as otherwise provided, and wherever applicable and
+/// appropriate, procedure and practice in inter partes proceedings shall
+/// be governed by the Federal Rules of Civil Procedure." Fed. R. Civ. P.
+/// 6(b)(1): "When an act may or must be done within a specified time, the
+/// court may, for good cause, extend the time: (A) with or without motion
+/// or notice if the court acts, or if a request is made, before the
+/// original time or its extension expires". Whether Rule 6(b) is
+/// "applicable and appropriate" to the answer time is a judgment, so its
+/// two (A) grants are declared as an interpretation: an extension under
+/// them stands, with a warning naming it (L4012). TBMP § 509.01 records
+/// the Board's practice ("Pursuant to Fed. R. Civ. P. 6(b), made
+/// applicable to Board proceedings by 37 C.F.R. § 2.116(a)"); it is
+/// guidance, not authority. Rule 6(b)(1)(B)'s motion after expiry is not
+/// declared: an applicant past its answer time is in default, which the
+/// Board excuses on good cause (TBMP § 509.01) and § 2.106(a)'s reset
+/// covers, as its own `CaseOrder` path.
+///
 /// In force from the TTAB rules revision, 81 FR 69950 (Oct. 7, 2016),
-/// effective January 14, 2017: the eCFR's last amendment of §§ 2.105 and
-/// 2.106 (sources/cfr-37-part2-answer-time-history.txt).
+/// effective January 14, 2017: the eCFR's last amendment of §§ 2.105,
+/// 2.106 and 2.116, whose paragraph (a) reads the same before and after
+/// it (sources/cfr-37-part2-answer-time-history.txt).
 rule duty answer-time effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CFR 2.105(a)"
 {
   deadline answer-period: 30.days from InstitutionNoticed() counted_by ttab-2-196 delegable_to [CaseOrder] cite "37 CFR 2.105(a)"
   {
     designated due
+    extension_authority "FRCP 6(b)(1)(A), applied through 37 CFR 2.116(a) (interpretation)"
+    extend {
+      by board
+      discretion GoodCause
+      interpretation "37 CFR 2.116(a) applies the Federal Rules of Civil Procedure 'wherever applicable and appropriate'; that FRCP 6(b)(1)(A) reaches the time to answer is that judgment (TBMP § 509.01 so practises; guidance, not authority)"
+    }
+    extend {
+      by board
+      discretion GoodCause
+      on AnswerExtensionMoved()
+      interpretation "37 CFR 2.116(a) applies the Federal Rules of Civil Procedure 'wherever applicable and appropriate'; that FRCP 6(b)(1)(A) reaches the time to answer is that judgment (TBMP § 509.01 so practises; guidance, not authority)"
+    }
   }
 }
 

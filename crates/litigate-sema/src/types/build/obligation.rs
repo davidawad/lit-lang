@@ -172,6 +172,7 @@ impl Cx<'_, '_> {
         }
         let by = self.by(f, &fields);
         let after_expiry = fields.contains_key("after_expiry");
+        let interpretation = Self::string(fields.get("interpretation"));
         let standard = match fields.get("discretion") {
             Some(d) => Some(self.standard(first_ref(Some(d))?)?),
             None => None,
@@ -195,6 +196,7 @@ impl Cx<'_, '_> {
                 after_expiry,
                 standard,
                 motion,
+                interpretation,
             });
         }
         let Some(standard) = standard else {
@@ -223,6 +225,7 @@ impl Cx<'_, '_> {
             standard,
             window,
             motion,
+            interpretation,
         })
     }
 
@@ -332,6 +335,12 @@ impl Cx<'_, '_> {
             if let Some(m) = fields.get(bound) {
                 self.not_allowed(m, "on a `waive` capability: a waiver has no extent");
             }
+        }
+        if let Some(i) = fields.get("interpretation") {
+            self.not_allowed(
+                i,
+                "on a `waive` capability: only an `extend` grant rests on one",
+            );
         }
         Some(Capability {
             by: self.by(f, &fields)?,

@@ -378,7 +378,7 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   dropped). No wording changed. Used by `packs/ttab-trademark-trial-and-appeal-board.json`.
 - sha256 (this file): `66402ce5e48bf2a9aa039058b3bfc181d3511b9e94137fac8b6a3d84a26b33a7`
 
-### `cfr-37-part2-answer-time-history.txt` — 37 C.F.R. §§ 2.105, 2.106 and 2.113 (TTAB answer time) as of January 13 and 14, 2017
+### `cfr-37-part2-answer-time-history.txt` — 37 C.F.R. §§ 2.105, 2.106, 2.113 and 2.116 (TTAB answer time) as of January 13 and 14, 2017
 
 - The dates `lit/ttab`'s answer-time deadlines are in force from. For each
   section, `## 37 C.F.R. (eCFR versions) § N` opens with a bracketed line
@@ -403,7 +403,19 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   § 2.113 `465446e09efbf10073a05610c2e5aeab43ca72a8f2f6c5979e89dcc4b484539c`).
   Each `<HEAD>` and `<P>` became one line, tags stripped, entities decoded,
   whitespace collapsed. No wording changed.
-- sha256 (this file): `93e7715ba5a605f480efdb1b9d82191fc1cfff00a242e066710adcfd298260f8`
+- § 2.116 (the Federal Rules of Civil Procedure govern inter partes
+  procedure "wherever applicable and appropriate", which `lit/ttab`'s
+  answer-time extension reads FRCP 6(b)(1)(A) through), fetched 2026-10-24
+  the same way: the version list
+  `/api/versioner/v1/versions/title-37.json?section=2.116` (sha256
+  `b30211620065f5d4a4612b29c270bb2ae6f3e80a55cb5e19d292906c55930910`;
+  versions 2017-01-01 and 2017-01-14 only), and the section at 2017-01-14
+  (`ce683532c79bc3168c1b103f204c4bada23fa3c32c09c368551b9a5790a65683`; the
+  2026-10-19 response is byte-identical) and 2017-01-13
+  (`44b401f931dd4498c0d6316539f4c778e551b8976deb8682338c2bbf62f75a41`).
+  Paragraph (a) reads the same in both; the 2017 amendment (81 FR 69975)
+  changed (c) and (e)-(g) only.
+- sha256 (this file): `2e5f7e43fa7ffe053c139a3c49f967c0d996652a0db371859c55fd30d1bc1a66`
 
 ### `cfr-37-part2-history.txt` — 37 C.F.R. §§ 2.119, 2.128 and 2.196 as in force on dated eCFR points in time
 
@@ -466,13 +478,18 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   running page headers removed). No wording changed. Used by the TTAB pack.
 - sha256 (this file): `9ea6b13b33cf0bb61a2a1ea337097c0981665d4d30a045fece2a77324dae6c4c`
 
-### `tbmp.txt` — Trademark Trial and Appeal Board Manual of Procedure §§ 112 and 113.05 (June 2026)
+### `tbmp.txt` — Trademark Trial and Appeal Board Manual of Procedure §§ 112, 113.05 and 509 (June 2026)
 
 - The TBMP sections the TTAB package's chained briefing periods (§ 112:
   a period running from a prior due date counts from "the actual due date
   ..., not the adjusted date under 37 C.F.R. § 2.196") and its service rule
-  (§ 113.05: no added time after service by mail) cite, one `## TBMP § N`
-  section each, the section's own heading as its first line.
+  (§ 113.05: no added time after service by mail) cite, and § 509 (motions
+  to extend or reopen time, 509 through 509.02: FRCP 6(b) "made applicable
+  to Board proceedings by 37 C.F.R. § 2.116(a)"), which the answer-time
+  extension cites as practice guidance, one `## TBMP § N` section each
+  (each numbered subsection its own), the section's own heading as its
+  first line. § 509 opens with the rule texts the manual reprints (FRCP
+  6(b), 37 C.F.R. §§ 2.120(a), 2.121, 2.127(a)), kept as printed.
 - Fetched 2026-10-23 from
   `www.uspto.gov/sites/default/files/documents/tbmp-Master-June2026.pdf`
   (sha256 `015cf2b665d74b25080321f67dad7ffebe412118f6f0460ec3530f4801639b8e`,
@@ -480,8 +497,9 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   `pdftotext` (no `-layout`); running page headers and page numbers
   removed and each section's NOTES (its footnoted authorities) omitted. No
   wording changed. The TBMP binds no one: it restates the Board's practice
-  under 37 C.F.R. Part 2.
-- sha256 (this file): `84d70300d5b36ac966e3b65513b86726ebc5fc04c0b97218704a3c55f02a3e86`
+  under 37 C.F.R. Part 2. § 509 was cut the same way on 2026-10-24 from
+  the same PDF (digest checked again), with form feeds dropped.
+- sha256 (this file): `39df33edc821a318331129cdc6730ac961cd962d7d3f3f1c758309465eb21d86`
 
 ### `fr-uspto-90-3-history.txt` — 37 C.F.R. § 90.3 as added in 2012 (77 FR 48612, 48677-48678)
 

@@ -9,6 +9,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **The TTAB answer time is extendable under FRCP 6(b)(1)(A), read
+  through 37 C.F.R. § 2.116(a) as an interpretation** (lg-flu.45). An
+  `extend` grant may now carry `interpretation "..."` (SPEC §5.3): the
+  rule reaches the period only as the author reads it, so an extension
+  the grant licenses stands with a new warning, L4012, naming the
+  interpretation. `lit/ttab`'s `answer-period` declares Rule 6(b)(1)(A)'s
+  two grants (the Board acting, or on an `AnswerExtensionMoved()`
+  request made before the date) that way, since § 2.116(a) applies the
+  Federal Rules only "wherever applicable and appropriate"; the Board's
+  order is the new `AnswerTimeExtended(until)` event. The answering
+  edges no longer leave the extension authority a hole: the generated
+  pack's holes name "FRCP 6(b)(1)(A), applied through 37 CFR 2.116(a)
+  (interpretation)". Rule 6(b)(1)(B) is not declared: an applicant past
+  its answer time is in default, and the Board's § 2.106(a) reset stays
+  its own `CaseOrder` path, unchanged. § 2.116's eCFR history (versions
+  2017-01-01 and 2017-01-14, paragraph (a) unchanged) is added to
+  `sources/cfr-37-part2-answer-time-history.txt`, and TBMP § 509 (June
+  2026) to `sources/tbmp.txt`, cited as practice guidance, not authority.
+
 - **The 2012 text of 37 C.F.R. § 90.3 is vendored and its Director
   extensions granted** (lg-flu.25). `sources/fr-uspto-90-3-history.txt`
   holds § 90.3 as published in 77 FR 48677-48678 (effective Sept. 16,

@@ -42,6 +42,7 @@ event OrderedAppeal(until: Date) extends appeal to until
 event OrderedCapped(until: Date) extends capped to until
 event MovedRequest()
 event OrderedRequested(until: Date) extends requested to until
+event OrderedInterpreted(until: Date) extends interpreted to until
 event Struck(option: EdgeRef) removes option
 event Elected(option: EdgeRef) elects option
 
@@ -84,6 +85,10 @@ deadline appeal: 10.days from Entered() counted_by oc {
 }
 deadline requested: 10.days from Entered() counted_by oc {
   extend { by Court, discretion GoodCause, on MovedRequest() }
+}
+deadline interpreted: 10.days from Entered() counted_by oc {
+  extend { by Court, max 5.days, interpretation \"a bounded reading\" }
+  extend { by Court, discretion GoodCause, interpretation \"the rule reaches it only as read\" }
 }
 deadline capped: 10.days from Entered() counted_by oc {
   extend { by Court, to min(prescribed_due + 5.days, (grant_order_entered + 2.days)) }
@@ -499,6 +504,22 @@ fn extensions_and_waivers() {
                 ENTERED,
                 "2011-01-15 MovedRequest() by p",
                 "2011-01-20 OrderedRequested(2011-02-10) by c cite \"FRCP 6(b)(1)(A)\"",
+            ],
+        ),
+        (
+            "extend: a bounded grant resting on an interpretation stands, with a warning",
+            "2011-02-01",
+            &[
+                ENTERED,
+                "2011-01-10 OrderedInterpreted(2011-01-18) by c cite \"FRCP 6(b)(1)(A)\"",
+            ],
+        ),
+        (
+            "extend: a discretionary grant resting on an interpretation stands, with a warning",
+            "2011-02-01",
+            &[
+                ENTERED,
+                "2011-01-10 OrderedInterpreted(2011-01-30) by c cite \"FRCP 6(b)(1)(A)\"",
             ],
         ),
         (

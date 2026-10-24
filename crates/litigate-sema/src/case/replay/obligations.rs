@@ -69,11 +69,14 @@ struct Grant<'g> {
     moved: Moved,
     /// The cause standard the grant applies, if it states one.
     standard: Option<CauseStandard>,
+    /// The interpretation the grant rests on, if any.
+    interpretation: Option<&'g str>,
 }
 
 impl<'g> Grant<'g> {
     /// An `extend` grant; `None` for an `extend { never ... }` lock.
     fn extend(x: &'g Extension) -> Option<Self> {
+        let interpretation = x.interpretation();
         match x {
             Extension::Bounded {
                 by,
@@ -90,12 +93,14 @@ impl<'g> Grant<'g> {
                 motion: motion.as_ref(),
                 moved: Moved::Any,
                 standard: *standard,
+                interpretation,
             }),
             Extension::Discretionary {
                 by,
                 window,
                 motion,
                 standard,
+                ..
             } => {
                 let after = *window == ExtensionWindow::AfterExpiryOnMotion;
                 Some(Self {
@@ -112,6 +117,7 @@ impl<'g> Grant<'g> {
                         Moved::Any
                     },
                     standard: Some(*standard),
+                    interpretation,
                 })
             }
             Extension::NonExtendable { .. } => None,
@@ -128,6 +134,7 @@ impl<'g> Grant<'g> {
             motion: None,
             moved: Moved::Any,
             standard: None,
+            interpretation: None,
         }
     }
 
@@ -581,6 +588,22 @@ impl<'g> Cx<'_, 'g> {
             o.extended_to = Some(new.to_owned());
             o.extended_under = grant.standard;
             o.request_made = request;
+        }
+        if let Some(why) = grant.interpretation {
+            // The rule reaches the period only as the author reads it (FRCP
+            // 6(b) through 37 C.F.R. § 2.116(a), "wherever applicable and
+            // appropriate"): the extension stands, with a warning.
+            let mut e = error(
+                C::ExtensionByInterpretation,
+                self.at(k, |e| e.action.as_ref()),
+                format!(
+                    "`{action}` on {} extends `{q}` to {new} under a grant that rests on an interpretation: {why}",
+                    event.date
+                ),
+            )
+            .note("the order stands; whether the rule reaches the period at all is the interpretation's, not the order's");
+            e.severity = Severity::Warning;
+            self.out.push(e);
         }
         Some(Effect::Extended)
     }

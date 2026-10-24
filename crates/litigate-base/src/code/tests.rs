@@ -52,6 +52,7 @@ fn every_registered_code_exercises_its_stable_views() {
                     | DiagnosticCode::ObligationBreached
                     | DiagnosticCode::TimelinessUnknown
                     | DiagnosticCode::DesignationShortOfInterpretation
+                    | DiagnosticCode::ExtensionByInterpretation
             ) || (profile == Profile::Dev
                 && matches!(
                     code,

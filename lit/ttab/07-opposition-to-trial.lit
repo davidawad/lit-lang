@@ -43,7 +43,7 @@ decision instituted: "Board institutes; answer due on the date the notice of ins
     authority cite "37 CFR 2.106(b)(1)-(2)"
     effort 8.hours
     event AnswerFiled(Plain)
-    within answer-period { extension_authority ?("TTAB answer-time extension authority") }
+    within answer-period
     note "Answer due on the date the notice of institution designates, no less than 30 days from its mailing (37 CFR 2.105(a)), or as the Board resets it (2.106(a))."
     tags [answer-plain]
   }
@@ -52,7 +52,7 @@ decision instituted: "Board institutes; answer due on the date the notice of ins
     effort 33.hours
     cost 600.usd
     event AnswerFiled(WithCounterclaim)
-    within answer-period { extension_authority ?("TTAB answer-time extension authority") }
+    within answer-period
     note "Counterclaim to restrict the opposer's pleaded registration (Section 18, 15 USC 1068; 37 CFR 2.133(d)); compulsory if grounds are known at answer (2.106(b)(3)(i)). $600 per class (2.6(a)(16)(ii)). Hours: 8 answer + 25 counterclaim (teaching estimate)."
     tags [answer-s18]
     attrs { opp_hours: 18 }

@@ -277,6 +277,10 @@ pub enum Extension {
         /// The motion the grant requires, if any (FRAP 4(a)(5)(A)(i)).
         #[serde(default, skip_serializing_if = "Option::is_none")]
         motion: Option<Motion>,
+        /// The interpretation the grant rests on, if the rule reaches the
+        /// period only as the author reads it (`interpretation "..."`).
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        interpretation: Option<String>,
     },
     /// `extend { by A, discretion S [, after_expiry] [, on M()] }`: the
     /// court's discretion under cause standard `S`, with no numeric ceiling
@@ -297,6 +301,12 @@ pub enum Extension {
         /// window's.
         #[serde(default, skip_serializing_if = "Option::is_none")]
         motion: Option<Motion>,
+        /// The interpretation the grant rests on, if the rule reaches the
+        /// period only as the author reads it: FRCP 6(b) applied to a TTAB
+        /// period through 37 C.F.R. § 2.116(a), "wherever applicable and
+        /// appropriate".
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        interpretation: Option<String>,
     },
     /// `extend { never cite "X" }`: the rule `X` forbids extending the
     /// period beyond the deadline's own other grants, so no order, local
@@ -314,6 +324,18 @@ impl Extension {
     pub fn by(&self) -> Option<&str> {
         match self {
             Self::Bounded { by, .. } | Self::Discretionary { by, .. } => Some(by),
+            Self::NonExtendable { .. } => None,
+        }
+    }
+
+    /// The interpretation the grant rests on; `None` for a grant the
+    /// rule's own text makes and for [`Self::NonExtendable`].
+    #[must_use]
+    pub fn interpretation(&self) -> Option<&str> {
+        match self {
+            Self::Bounded { interpretation, .. } | Self::Discretionary { interpretation, .. } => {
+                interpretation.as_deref()
+            }
             Self::NonExtendable { .. } => None,
         }
     }

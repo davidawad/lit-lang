@@ -753,6 +753,7 @@ fn a_lock_bars_a_delegated_override_from_granting_an_extension() {
                     after_expiry: false,
                     standard: None,
                     motion: None,
+                    interpretation: None,
                 }];
             }
         }

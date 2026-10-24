@@ -9,6 +9,10 @@
 //! start for its thirty days, so a designation short of thirty days from
 //! mailing stands with a warning naming the interpretation (L4011), and
 //! a Board order resetting it (§ 2.106(b)(3)(iv)) is the same layer.
+//! The Board's extension of the answer time is Fed. R. Civ. P. 6(b)(1)(A)
+//! reached through § 2.116(a), "wherever applicable and appropriate"
+//! (lg-flu.45): an interpretation, so an extension under it stands with a
+//! warning naming it (L4012), and the reset path is unchanged.
 // Test helpers below may unwrap: a panic is the failed assertion.
 #![allow(clippy::unwrap_used)]
 mod support;
@@ -232,6 +236,8 @@ fn a_board_order_resets_the_answer_date() {
     );
     assert_eq!(run.code, 0, "{}", run.stdout);
     assert_eq!(errors(&run), Vec::<String>::new());
+    // A reset is the Board's own order under 2.106(a), no interpretation.
+    assert_eq!(replay_warnings(&run), Vec::<String>::new());
     assert_eq!(
         schedule(&run),
         [
@@ -450,20 +456,158 @@ fn the_generated_pack_leaves_the_answer_extension_undeclared() {
         assert_eq!(found.len(), 1, "one hole at {pointer}");
         found[0]["reason"].as_str().unwrap().to_owned()
     };
+    // The declaration's authority (FRCP 6(b)(1)(A) through 37 CFR
+    // 2.116(a), an interpretation) is named in the reason, never emitted
+    // as a window (lg-flu.45).
     for &i in &answers {
-        assert_eq!(
-            hole(i, "extendable"),
-            "`within answer-period`: the due date is the one each matter's notice or order designates, and the pack format carries no designated window, so its extension is undeclared here, never not-extendable"
-        );
+        for field in ["extendable", "extensionAuthority"] {
+            assert_eq!(
+                hole(i, field),
+                "`within answer-period`: the due date is the one each matter's notice or order designates, and the pack format carries no designated window, so its extension is undeclared here, never not-extendable; the source states extension_authority \"FRCP 6(b)(1)(A), applied through 37 CFR 2.116(a) (interpretation)\", which is not emitted"
+            );
+        }
     }
-    // The answering edges leave the authority a hole of their own (no
-    // extension authority for the answer time is verified); the default
-    // edge states none, so the lowering's hole stands.
-    for &i in &answers[..2] {
-        assert_eq!(
-            hole(i, "extensionAuthority"),
-            "TTAB answer-time extension authority"
-        );
-    }
-    assert!(hole(answers[2], "extensionAuthority").starts_with("`within answer-period`"));
+}
+
+/// The interpretation the answer time's extension grants rest on.
+const RULE_6B: &str = "37 CFR 2.116(a) applies the Federal Rules of Civil Procedure 'wherever applicable and appropriate'; that FRCP 6(b)(1)(A) reaches the time to answer is that judgment (TBMP § 509.01 so practises; guidance, not authority)";
+
+/// The codes of every replay (L4xxx) diagnostic.
+fn replay_codes(run: &Run) -> Vec<String> {
+    run.json["diagnostics"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .filter_map(|d| d["code"].as_str())
+        .filter(|c| c.starts_with("L4"))
+        .map(str::to_owned)
+        .collect()
+}
+
+/// `(due, extended_to, status, extended_under, request_made)` of each
+/// answer-period row.
+fn extended(run: &Run) -> Vec<[String; 5]> {
+    let id = format!("{TTAB}::answer-period");
+    let field = |o: &serde_json::Value, k: &str| o[k].as_str().unwrap_or("-").to_owned();
+    run.json["result"]["cases"][0]["deadlines"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .filter(|o| o["deadline"] == id.as_str())
+        .map(|o| {
+            [
+                field(o, "due"),
+                field(o, "extended_to"),
+                field(o, "status"),
+                field(o, "extended_under"),
+                field(o, "request_made"),
+            ]
+        })
+        .collect()
+}
+
+#[test]
+fn an_answer_extension_through_rule_6b_stands_with_the_interpretation_warning() {
+    // Designated 2026-08-05; the applicant moves on 2026-08-03 and the
+    // Board grants on 2026-08-07, after the date: the request was made
+    // before expiry (FRCP 6(b)(1)(A)).
+    let run = check(
+        "ttab-extended-on-request",
+        &[
+            "2026-07-06 InstitutionNoticed(2026-08-05) on applicant",
+            "2026-08-03 AnswerExtensionMoved() by applicant",
+            "2026-08-07 AnswerTimeExtended(2026-09-04) by board cite \"FRCP 6(b)(1)(A); 37 CFR 2.116(a)\"",
+        ],
+        false,
+    );
+    assert_eq!(run.code, 0, "{}", run.stdout);
+    assert_eq!(errors(&run), Vec::<String>::new());
+    assert_eq!(
+        replay_warnings(&run),
+        [format!("`AnswerTimeExtended(2026-09-04)` on 2026-08-07 extends `{TTAB}::answer-period` to 2026-09-04 under a grant that rests on an interpretation: {RULE_6B}")]
+    );
+    assert_eq!(replay_codes(&run), ["L4012"]);
+    assert_eq!(
+        extended(&run),
+        [[
+            "2026-08-05",
+            "2026-09-04",
+            "open",
+            "GoodCause",
+            "2026-08-03"
+        ]
+        .map(str::to_owned)]
+    );
+    // The Board acting on its own before the date needs no motion; the
+    // warning is the same.
+    let run = check(
+        "ttab-extended-by-board",
+        &[
+            "2026-07-06 InstitutionNoticed(2026-08-05) on applicant",
+            "2026-08-04 AnswerTimeExtended(2026-09-04) by board cite \"FRCP 6(b)(1)(A); 37 CFR 2.116(a)\"",
+        ],
+        false,
+    );
+    assert_eq!(run.code, 0, "{}", run.stdout);
+    assert_eq!(replay_codes(&run), ["L4012"]);
+    assert_eq!(
+        extended(&run),
+        [["2026-08-05", "2026-09-04", "open", "GoodCause", "-"].map(str::to_owned)]
+    );
+    // An answer by the extended date is timely.
+    let run = check(
+        "ttab-extended-answered",
+        &[
+            "2026-06-02 Published() on applicant",
+            "2026-06-30 OppositionFiled() by opposer",
+            "2026-07-06 InstitutionNoticed(2026-08-05) on applicant",
+            "2026-08-04 AnswerTimeExtended(2026-08-19) by board cite \"FRCP 6(b)(1)(A); 37 CFR 2.116(a)\"",
+            "2026-08-19 AnswerFiled(Plain) by applicant",
+        ],
+        false,
+    );
+    assert_eq!(run.code, 0, "{}", run.stdout);
+    assert_eq!(errors(&run), Vec::<String>::new());
+    assert_eq!(replay_codes(&run), ["L4012"]);
+    assert_eq!(
+        extended(&run),
+        [["2026-08-05", "2026-08-19", "discharged", "GoodCause", "-"].map(str::to_owned)]
+    );
+}
+
+#[test]
+fn an_answer_extension_after_the_date_without_a_prior_request_is_rejected() {
+    // Rule 6(b)(1)(B)'s motion after expiry is not declared: an applicant
+    // past its answer time is in default, and the Board's reset (2.106(a))
+    // is its path.
+    let run = check(
+        "ttab-extended-late",
+        &[
+            "2026-07-06 InstitutionNoticed(2026-08-05) on applicant",
+            "2026-08-10 AnswerTimeExtended(2026-09-04) by board cite \"FRCP 6(b)(1)(A); 37 CFR 2.116(a)\"",
+        ],
+        false,
+    );
+    assert_eq!(run.code, 2, "{}", run.stdout);
+    assert_eq!(replay_codes(&run), ["L4001"]);
+    assert_eq!(
+        errors(&run),
+        ["`AnswerTimeExtended(2026-09-04)` requires a motion `AnswerExtensionMoved()` made before the period expired on 2026-08-05, and none precedes the order on 2026-08-10"]
+    );
+    // Only the Board extends.
+    let run = check(
+        "ttab-extended-by-applicant",
+        &[
+            "2026-07-06 InstitutionNoticed(2026-08-05) on applicant",
+            "2026-08-04 AnswerTimeExtended(2026-09-04) by applicant cite \"FRCP 6(b)(1)(A)\"",
+        ],
+        false,
+    );
+    assert_eq!(run.code, 2, "{}", run.stdout);
+    assert_eq!(
+        errors(&run),
+        [format!(
+            "only board may extend `{TTAB}::answer-period`, but `applicant` is applicant"
+        )]
+    );
 }

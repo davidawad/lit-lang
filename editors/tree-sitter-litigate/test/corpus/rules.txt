@@ -346,6 +346,7 @@ deadline answer-period: 21.days from Served(complaint) counted_by frcp6 {
   trigger later_of(original)
   extend { by Court, max 30.days, after_expiry }
   extend { by Court, discretion GoodCause }
+  extend { by Board, discretion GoodCause, interpretation "i" }
   extend { never cite "FRCP 6(b)(2)" }
   waive { by Court }
   note "n"
@@ -383,6 +384,11 @@ deadline answer-period: 21.days from Served(complaint) counted_by frcp6 {
         (capability
           (identifier)
           (identifier))
+        (capability
+          (identifier)
+          (identifier)
+          (string
+            (string_content)))
         (capability
           (cite
             (string

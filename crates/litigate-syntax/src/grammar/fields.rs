@@ -85,6 +85,7 @@ pub(crate) const CAPABILITY_FIELDS: &[Spec] = &[
     (KwOn, Some(call)),
     (KwWithin, Some(bound)),
     (KwNever, Some(cite)),
+    (KwInterpretation, Some(string)),
 ];
 
 /// The effect clause of an `event` declaration (SPEC §5.2).

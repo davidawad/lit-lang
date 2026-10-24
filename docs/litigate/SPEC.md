@@ -226,7 +226,7 @@ DeclOpts     = "{", { ( "extendable", Bool | "extension_authority", (String | Ho
              | ("extend" | "waive"), Capability | "forum", Ref ), Sep }, "}" ;
 Capability   = "{", { ( "by", Ref | "max", Duration | "to", Expr
              | "discretion", Ident | "after_expiry" | "on", CallExpr
-             | "within", Expr | "never", Cite ), Sep }, "}" ;
+             | "within", Expr | "never", Cite | "interpretation", String ), Sep }, "}" ;
 CountingDecl = "counting", Ident, { VersionClause | Relation | Cite },
                "{", { CountingItem, Sep }, "}" ;
 CountingItem = "exclude_trigger_day" | "include_last_day" | "allow_hours"
@@ -787,6 +787,15 @@ creates (design review 2026-10-23 §2.4, §2.7):
 
   A grant with an actor under `extendable false`, or a lock with no grant
   beside it under `extendable true`, is L2007.
+
+  `interpretation "I"` in a bounded or discretionary grant: the rule
+  making the grant reaches the period only as the author reads it, and
+  `I` is that reading, not the rule's text (37 C.F.R. § 2.116(a) applies
+  the Federal Rules of Civil Procedure to TTAB inter partes proceedings
+  "wherever applicable and appropriate", so FRCP 6(b)(1)(A) reaches the
+  answer time only by that judgment). An extension the grant licenses
+  stands, and a matter reports L4012, a warning naming the order, the
+  new date and `I`. On a lock or a `waive` capability it is L2007.
 - `designated p`: the due date of each instance is the trigger's `Date`
   parameter `p`, as the notice or order that is the trigger states it,
   never a period counted in its place (37 C.F.R. § 2.105(a): the notice of
@@ -1230,7 +1239,9 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
   first grant, in declaration order, that admits the event licenses it;
   each extended instance records that grant's cause standard
   (`extended_under`) and the date of the motion it read (`request_made`),
-  and `litigate check` reports both in the deadline schedule.
+  and `litigate check` reports both in the deadline schedule. A grant
+  that rests on an `interpretation` (§5.3) licenses the extension with
+  L4012, a warning naming it.
   When no grant admits the event, the refusal reported is the bound's in
   preference to the motion's, and the motion's to the window's. Each
   failure is L4001, and
@@ -1432,7 +1443,7 @@ undecided, which is an L5007 error.
 | `deadline-satisfiable` | for each reachable node, the due-date windows of mandatory (`duty`) deadlines on its outgoing edges intersect for some trigger date | L5005 |
 | `workflow-sound` | the procedure net (one control place per node, one 1-safe place per state flag, `requires`/`forbids` honoured) explored from `start` and every `entry` node within 65536 markings is sound: every reachable marking can reach a terminal (L5007), every edge out of a reachable node is enabled in some reachable marking (L5008), and after every edge whose `event` matches a `duty` deadline's trigger some marking enabling a `within` edge of it is reachable (L5009) | L5007-L5009 |
 | `tests-pass` | every `test` assertion holds | L5006 |
-| `case-replay` | sema's case checker accepts the matter: it resolves, its pins, parties, facts, stakes, and beliefs are valid, and its events order, match, and meet deadlines on the engine clock (§5.6) | L4001-L4011 |
+| `case-replay` | sema's case checker accepts the matter: it resolves, its pins, parties, facts, stakes, and beliefs are valid, and its events order, match, and meet deadlines on the engine clock (§5.6) | L4001-L4012 |
 | `holes` | lists every hole with reason and span | L9002 / L5002 |
 | `rule-without-test` | every deadline and counting rule is exercised by a `test` | L9001 |
 
@@ -1864,6 +1875,7 @@ unchanged, and is graded `error`; anything else is rejected.
 | | | L4009 | obligation breached |
 | | | L4010 | timeliness unknown |
 | | | L4011 | designation short of an interpretation |
+| | | L4012 | extension by an interpretation |
 | L2002 | invalid operation | L5001 | verification failed (generic) |
 | L2003 | invalid distribution | L5002 | hole in strict |
 | L2004 | unit mismatch | L5003 | unreachable node |
@@ -1881,7 +1893,7 @@ unchanged, and is graded `error`; anything else is rejected.
 | L9005 | unused declaration | | |
 
 Severity (`DiagnosticCode::severity(profile)`): every non-L9 code except
-L4009, L4010 and L4011 is `error`. L9003 is `info`. L4009, L4010, L4011 and L9005 are `warning`. L9001, L9002, and L9004 are
+L4009, L4010, L4011 and L4012 is `error`. L9003 is `info`. L4009, L4010, L4011, L4012 and L9005 are `warning`. L9001, L9002, and L9004 are
 `warning` in `dev` and `error` in `strict`.
 
 ### 9.2 Shapes

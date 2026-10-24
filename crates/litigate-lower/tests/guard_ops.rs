@@ -9,6 +9,7 @@ use litigate_sema::db::inputs::create_workspace;
 use litigate_sema::hir::Package;
 use litigate_sema::pkg::load::{LoadedFile, LoadedPackage};
 use litigate_sema::LitDatabase;
+use std::collections::BTreeMap;
 
 const BASE_TOML: &str = "[package]
 name = \"base\"
@@ -91,7 +92,7 @@ fn compiled(ops: &[&str]) -> Vec<Package> {
             relative: format!("{name}.lit"),
             text: text.to_owned(),
         }],
-        texts: Default::default(),
+        texts: BTreeMap::default(),
     };
     // An unrelated pack loads first: its nodes are never the base's.
     let loaded = [

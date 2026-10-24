@@ -273,7 +273,14 @@ pub(crate) fn pack(
     }
     dangling(build, sink, &pkg.start, &nodes, &edges);
     let syntax = cite_syntax(sink, m);
-    let lowered = build.lowered(lowered_holes(build, pkg, &syntax, &origins, &edges));
+    let mut basis = crate::basis::labels("/nodes", origins.iter().map(|n| n.basis.as_ref()));
+    basis.extend(crate::basis::labels(
+        "/edges",
+        edges.iter().map(|(_, e)| e.basis.as_ref()),
+    ));
+    let lowered = build
+        .lowered(lowered_holes(build, pkg, &syntax, &origins, &edges))
+        .with_basis(basis);
     let pack = Pack {
         schema_version: PACK_SCHEMA_VERSION,
         id: m.pack_id.clone(),

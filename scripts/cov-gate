@@ -7,10 +7,13 @@
 #
 # Usage:
 #   scripts/cov-gate lines <floor> <name> < export.json
-#       TOTAL line coverage (covered * 100 / count, summed over .data[] the
-#       way cargo-llvm-cov's --fail-under-lines sums it) must be >= floor.
+#       TOTAL line coverage (covered / count, summed over .data[] the way
+#       cargo-llvm-cov's --fail-under-lines sums it) must be >= floor, a
+#       percent with at most two decimals. Compared exactly in integers:
+#       covered * 10000 >= floor_hundredths * count.
 #   scripts/cov-gate full <name> < export.json
-#       lines, regions and branches must all be fully covered.
+#       lines, regions and branches must all be fully covered (covered ==
+#       count, integers).
 #   scripts/cov-gate reject-low lines <floor> <name> < export.json
 #   scripts/cov-gate reject-low full <name> < export.json
 #       Self-check: the gate must fail on an unreachable floor (lines,
@@ -36,24 +39,45 @@ totals() {
     | "\(map(.covered) | add // 0) \(map(.count) | add // 0)"' <<<"$2"
 }
 
+# Every verdict is exact integer arithmetic on the covered and count
+# totals; no printed, rounded or floating percentage is ever compared.
+
+# A whole number of lines, regions or branches, else fail.
+count_ok() {
+  [[ "$1" =~ ^[0-9]+$ ]] || { echo "cov-gate: not a count: $1" >&2; return 1; }
+}
+
+# floor percent -> integer hundredths of a percent ("97" -> 9700, "97.5" ->
+# 9750, "100.01" -> 10001). More than two decimals is refused, not rounded.
+hundredths() {
+  [[ "$1" =~ ^([0-9]+)(\.([0-9]{1,2}))?$ ]] || {
+    echo "cov-gate: floor must be a percent with at most two decimals: $1" >&2
+    return 1
+  }
+  local whole="${BASH_REMATCH[1]}" frac="${BASH_REMATCH[3]}00"
+  echo $((10#$whole * 100 + 10#${frac:0:2}))
+}
+
 # covered count -> percent with two decimals, truncated (never rounded up
-# over a floor).
+# over a floor). Display only.
 percent() {
-  jq -nr --argjson c "$1" --argjson n "$2" \
-    'if $n == 0 then "0.00" else ($c * 10000 / $n | floor) as $p
-      | "\($p / 100 | floor).\($p % 100 | tostring | if length == 1 then "0" + . else . end)" end'
+  local p
+  if [ "$2" -eq 0 ]; then echo "0.00"; return; fi
+  p=$(($1 * 10000 / $2))
+  printf '%d.%02d\n' $((p / 100)) $((p % 100))
 }
 
 gate_lines() {
-  local floor="$1" name="$2" json sums covered count pct ok
+  local floor="$1" name="$2" json sums covered count pct fh
   json="$(cat)"
   # Each step is checked: this runs under `if`, where `set -e` is off.
+  fh="$(hundredths "$floor")" || return 1
   sums="$(totals lines "$json")" || return 1
   read -r covered count <<<"$sums"
+  count_ok "$covered" && count_ok "$count" || return 1
   pct="$(percent "$covered" "$count")" || return 1
-  ok="$(jq -nr --argjson c "$covered" --argjson n "$count" --argjson f "$floor" \
-    '$n > 0 and ($c * 100 / $n) >= $f')" || return 1
-  if [ "$ok" = true ]; then
+  # covered/count >= fh/10000, cross-multiplied.
+  if [ "$count" -gt 0 ] && [ $((covered * 10000)) -ge $((fh * count)) ]; then
     echo "cov: $name TOTAL lines $pct% ($covered/$count) >= floor $floor%: pass"
   else
     echo "cov: $name TOTAL lines $pct% ($covered/$count) < floor $floor%: FAIL" >&2
@@ -67,8 +91,9 @@ gate_full() {
   for m in lines regions branches; do
     sums="$(totals "$m" "$json")" || return 1
     read -r covered count <<<"$sums"
+    count_ok "$covered" && count_ok "$count" || return 1
     report+=" $m $covered/$count"
-    if [ "$covered" != "$count" ] || { [ "$m" = lines ] && [ "$count" = 0 ]; }; then
+    if [ "$covered" -ne "$count" ] || { [ "$m" = lines ] && [ "$count" -eq 0 ]; }; then
       ok=false
     fi
   done
@@ -120,11 +145,18 @@ reject_low() {
 }
 
 # The input with its line totals moved just under the floor (count kept,
-# covered the largest integer still below floor%), so the floor itself,
-# not only 100%, is what the self-check exercises.
+# covered the largest integer with covered * 10000 < floor_hundredths *
+# count), so the floor itself, not only 100%, is what the self-check
+# exercises.
 below() {
-  jq --argjson f "$2" '.data[0].totals.lines |=
-    (if .count > 0 then .covered = ([((.count * $f / 100) | ceil) - 1, 0] | max) else . end)' <<<"$1"
+  local fh count covered
+  fh="$(hundredths "$2")" || return 1
+  count="$(jq -r '.data[0].totals.lines.count // 0' <<<"$1")"
+  count_ok "$count" || return 1
+  covered=$(((fh * count + 9999) / 10000 - 1))
+  [ "$covered" -ge 0 ] || covered=0
+  jq --argjson c "$covered" '.data[0].totals.lines |=
+    (if .count > 0 then .covered = $c else . end)' <<<"$1"
 }
 
 fixture() {
@@ -159,7 +191,32 @@ self_test() {
   expect fail "96.99% under floor 97" gate_lines 97 t <<<"$(fixture 9699/10000 1/1 0/0)"
   expect pass "97.00% at floor 97" gate_lines 97 t <<<"$(fixture 9700/10000 1/1 0/0)"
   expect pass "98.19% over floor 97" gate_lines 97 t <<<"$(fixture 11456/11667 1/1 0/0)"
+  # Exactly at the floor passes; one covered line fewer fails.
+  expect pass "291/300 at floor 97" gate_lines 97 t <<<"$(fixture 291/300 1/1 0/0)"
+  expect fail "290/300 under floor 97" gate_lines 97 t <<<"$(fixture 290/300 1/1 0/0)"
+  expect pass "1950/2000 at floor 97.5" gate_lines 97.5 t <<<"$(fixture 1950/2000 1/1 0/0)"
+  expect fail "1949/2000 under floor 97.5" gate_lines 97.5 t <<<"$(fixture 1949/2000 1/1 0/0)"
+  expect pass "1950/2000 at floor 97.50" gate_lines 97.50 t <<<"$(fixture 1950/2000 1/1 0/0)"
+  expect pass "97/100 at floor 97.00" gate_lines 97.00 t <<<"$(fixture 97/100 1/1 0/0)"
+  expect fail "96/100 under floor 97.00" gate_lines 97.00 t <<<"$(fixture 96/100 1/1 0/0)"
+  expect pass "9701/10000 at floor 97.01" gate_lines 97.01 t <<<"$(fixture 9701/10000 1/1 0/0)"
+  expect fail "9700/10000 under floor 97.01" gate_lines 97.01 t <<<"$(fixture 9700/10000 1/1 0/0)"
+  # 1/3 is 33.33...%: displayed 33.33, but floating 1 * 100 / 3 rounding
+  # must not decide a floor of 33.34 nor fail 33.33.
+  expect pass "1/3 over floor 33.33" gate_lines 33.33 t <<<"$(fixture 1/3 1/1 0/0)"
+  expect fail "1/3 under floor 33.34" gate_lines 33.34 t <<<"$(fixture 1/3 1/1 0/0)"
+  # Large totals stay exact (no float precision loss).
+  expect pass "97/100 scaled to 10^9 at floor 97" gate_lines 97 t <<<"$(fixture 970000000/1000000000 1/1 0/0)"
+  expect fail "one line short at 10^9, floor 97" gate_lines 97 t <<<"$(fixture 969999999/1000000000 1/1 0/0)"
   expect fail "100% under floor 100.01" gate_lines 100.01 t <<<"$(fixture 10/10 1/1 0/0)"
+  expect fail "1/1 under floor 100.01" gate_lines 100.01 t <<<"$(fixture 1/1 1/1 0/0)"
+  expect fail "10^9 of 10^9 under floor 100.01" gate_lines 100.01 t <<<"$(fixture 1000000000/1000000000 1/1 0/0)"
+  expect pass "100% at floor 100" gate_lines 100 t <<<"$(fixture 10/10 1/1 0/0)"
+  # A floor is a percent with at most two decimals; anything else is refused.
+  expect fail "floor with three decimals" gate_lines 96.995 t <<<"$(fixture 10/10 1/1 0/0)"
+  expect fail "floor not a number" gate_lines 9x t <<<"$(fixture 10/10 1/1 0/0)"
+  expect fail "negative floor" gate_lines -1 t <<<"$(fixture 10/10 1/1 0/0)"
+  expect fail "fractional count" gate_lines 97 t <<<"$(fixture 9.7/10 1/1 0/0)"
   expect fail "no lines measured" gate_lines 97 t <<<"$(fixture 0/0 0/0 0/0)"
   expect fail "no data" gate_lines 97 t <<<'{"data":[]}'
   expect fail "not JSON" gate_lines 97 t <<<'TOTAL 98.19%'
@@ -171,11 +228,14 @@ self_test() {
   expect fail "full, a line short" gate_full t <<<"$(fixture 9/10 5/5 4/4)"
   expect fail "full, a region short" gate_full t <<<"$(fixture 10/10 4/5 4/4)"
   expect fail "full, a branch short" gate_full t <<<"$(fixture 10/10 5/5 3/4)"
+  expect fail "full, one line short at 10^9" gate_full t <<<"$(fixture 999999999/1000000000 5/5 4/4)"
+  expect fail "full, fractional count" gate_full t <<<"$(fixture 9.5/10 5/5 4/4)"
   expect fail "full, no lines measured" gate_full t <<<"$(fixture 0/0 0/0 0/0)"
   expect fail "full, not JSON" gate_full t <<<'cov-litigate: t lines 10/10'
   # The self-checks pass on a gate that enforces its floor.
   expect pass "reject-low lines" reject_low lines 97 t <<<"$(fixture 11456/11667 1/1 0/0)"
   expect pass "reject-low lines, small input" reject_low lines 97 t <<<"$(fixture 3/3 1/1 0/0)"
+  expect pass "reject-low lines, floor 97.5" reject_low lines 97.5 t <<<"$(fixture 1999/2000 1/1 0/0)"
   expect pass "reject-low full" reject_low full t <<<"$(fixture 10/10 5/5 4/4)"
   expect pass "reject-low full, no branches" reject_low full t <<<"$(fixture 10/10 5/5 0/0)"
   # ... and fail on a gate that does not: a floor of 0 admits anything, and

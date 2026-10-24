@@ -108,8 +108,10 @@ rather than silently ignoring a typo.
 
 Reading the coverage result: the `just cov` verdict is its `cov:` line,
 `cov: litgraph TOTAL lines P% (covered/count) >= floor 97%: pass` (or `<
-... FAIL` and a nonzero exit). That line's number is the one compared with
-the floor: it is truncated, so the per-file table above it, which rounds,
+... FAIL` and a nonzero exit). The verdict is exact integer arithmetic on
+`covered/count` (`covered * 10000 >= floor_hundredths * count`; the floor
+takes at most two decimals), never on a printed percentage; `P%` is that
+ratio truncated for display, so the per-file table above it, which rounds,
 can show 0.01 more. Quote that line and the recipe's exit code, never a
 number from the table or from another run. `just cov-litigate` prints one
 `cov-litigate: <crate> lines c/n regions c/n branches c/n: pass|FAIL` line

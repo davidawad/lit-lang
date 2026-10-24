@@ -96,6 +96,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   declare no events. Uncommenting the block and deleting what it derives
   replays to the same scenario against the authored packages (checked by hand
   on the four corpus matters with events).
+- **Typed guard operations in patches** (lg-flu.36; SPEC §3.6). A later
+  decision or order changes a fact edge's guard inside a links package's
+  `patch`, explicitly and on its authority: `when and C` narrows it,
+  `when or C` widens it, `supersedes when C` replaces it, each with
+  `by Level` (its authority level; new), `effective [from, to)` and
+  `cite`. Missing any of the three is L2007 and the operation is dropped;
+  a cite hole keeps it unapplied. Operations on one edge apply in
+  authority, then effective-date, order, never source or file order;
+  non-commuting operations no authority or date orders are L3003. An
+  operation needs a capability over the base node (L3004), may act only
+  on a named edge of a `fact` node (L2007), and the composed guards stay
+  disjoint (L2005). Replay at an instance posture reads the composed
+  guard in force on the date it reads, and a fact step's trace records
+  the operations (`Step.guard_ops`); a links source map records each
+  patched guard's provenance (`guards`: base, ops with authority and
+  whether in force, composed). `and`/`or` are keywords only there (L0010
+  elsewhere). Tree-sitter `guard_op` gains `authority_clause`.
 
 - **The 2012 text of 37 C.F.R. § 90.3 is vendored and its Director
   extensions granted** (lg-flu.25). `sources/fr-uspto-90-3-history.txt`

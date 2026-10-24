@@ -121,26 +121,32 @@ fn expressible(id: &str, direction: Direction, unit: Unit) -> bool {
     id != "itc210" || (direction == Direction::Forward && unit == Unit::Calendar)
 }
 
+/// `lit/core` checks clean in `dev`. Its only strict failures are holes:
+/// cites whose vendored text postdates the version citing it with no
+/// vendored amendment history to prove the text unamended (SPEC §7).
 #[test]
-fn strict_check_of_lit_core_passes_with_no_holes() {
+fn strict_check_of_lit_core_fails_only_on_unproved_cites() {
+    let dev = litigate(&["check", "lit/core"]);
+    assert_eq!(dev.code, 0, "{}", dev.stdout);
     let run = litigate(&["check", "--profile", "strict", "lit/core"]);
-    assert_eq!(run.code, 0, "{}", run.stdout);
     let result = &run.json["result"];
     for f in result["obligations"].as_array().unwrap() {
         // A rule package has no events, so only case replay is skipped.
         let skipped = f["name"] == "case-replay" && f["status"] == "skipped";
-        assert!(f["status"] == "passed" || skipped, "{f}");
+        let holes = f["name"] == "holes";
+        assert!(f["status"] == "passed" || skipped || holes, "{f}");
     }
     let core = &result["packages"][0];
     assert_eq!(core["name"], "core");
-    assert_eq!(core["holes"], 0);
     assert_eq!(core["tests"]["failed"], 0);
     assert!(core["tests"]["passed"].as_u64().unwrap() >= 100, "{core}");
-    assert!(
-        run.json["diagnostics"].as_array().unwrap().is_empty(),
-        "{}",
-        run.stdout
-    );
+    let diagnostics = run.json["diagnostics"].as_array().unwrap();
+    assert_eq!(core["holes"].as_u64(), Some(diagnostics.len() as u64));
+    for d in diagnostics {
+        assert_eq!(d["code"], "L5002", "{d}");
+        let message = d["message"].as_str().unwrap();
+        assert!(message.contains("is not proved the text in force"), "{d}");
+    }
 }
 
 #[test]

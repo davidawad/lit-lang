@@ -41,7 +41,7 @@ pub enum Obligation {
     TestsPass,
     /// Case events replay legally.
     CaseReplay,
-    /// Explicit holes are inventoried.
+    /// Explicit holes, and cites no amendment history proves, are inventoried.
     Holes,
     /// Every deadline and counting rule is exercised by an inline test.
     RuleWithoutTest,

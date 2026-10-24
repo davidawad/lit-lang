@@ -74,6 +74,11 @@ fn loaded(name: &str, body: &str, deps: &[&str], lit: &str) -> LoadedPackage {
 
 /// Checks `packages` and verifies the last one under `profile`.
 pub fn verify(packages: &[LoadedPackage], profile: Profile) -> Checked {
+    verify_in(packages, profile, SourceCorpus::embedded_ref())
+}
+
+/// [`verify`] against `corpus`.
+pub fn verify_in(packages: &[LoadedPackage], profile: Profile, corpus: &SourceCorpus) -> Checked {
     let mut db = LitDatabase::default();
     let ws = create_workspace(&mut db, packages);
     let checks = litigate_sema::check_workspace(&db, ws);
@@ -81,13 +86,7 @@ pub fn verify(packages: &[LoadedPackage], profile: Profile) -> Checked {
     let Some(last) = checks.last() else {
         panic!("no packages");
     };
-    check_package(
-        last,
-        &hirs,
-        SourceCorpus::embedded_ref(),
-        &Options::default(),
-        profile,
-    )
+    check_package(last, &hirs, corpus, &Options::default(), profile)
 }
 
 /// Checks and lowers one program, applies `edit` to its HIR (an input sema

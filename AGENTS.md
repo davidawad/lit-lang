@@ -164,7 +164,10 @@ the gate (`scripts/cov-gate`) over fixed known-low and known-ok inputs.
    it can't) — see `docs/PACK_SCHEMA.md`'s authoring rule 1.
    In `Lit.toml`, a binding with a vendored `path` pins that file with
    `path_sha256`; `litigate check` resolves cites only against the pinned
-   text, and a cite is a string: `cite "FRCP 12(b)(6)"`.
+   text, and a cite is a string: `cite "FRCP 12(b)(6)"`. A cite whose
+   vendored text is dated after its version takes effect is a hole unless
+   the section's vendored amendment history (`## versions <heading>`, e.g.
+   `sources/ecfr-versions-title-37.txt`) shows no amendment since.
 5. **Probabilities**: only on non-self edges, with basis + vintage in
    `note`. Unauthored beats invented.
 6. **Pin modes when comparing to v1** (`mixed: optimistic`,

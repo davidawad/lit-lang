@@ -46,9 +46,17 @@ fn the_tutorial_runs_as_written() {
     // The tutorial's blocks are already canonical: `fmt --check` passes.
     let fmt = run(&["fmt", "--check", "lit/my-court", "cases"]);
     assert_eq!(fmt.code, 0, "{}", fmt.stdout);
+    let dev = run(&["check", "lit/my-court", "cases"]);
+    assert_eq!(dev.code, 0, "{}", dev.stdout);
+    // Strict finds nothing in the tutorial's files; `lit/core`'s cites of
+    // texts no vendored history dates are holes (SPEC §7).
     let strict = run(&["check", "--profile", "strict", "lit/my-court", "cases"]);
-    assert_eq!(strict.code, 0, "{}", strict.stdout);
-    assert_eq!(strict.json["diagnostics"], json!([]));
+    for d in strict.json["diagnostics"].as_array().unwrap() {
+        let file = d["span"]["file"].as_str().unwrap();
+        let message = d["message"].as_str().unwrap();
+        assert!(file.contains("/core/"), "{d}");
+        assert!(message.contains("is not proved the text in force"), "{d}");
+    }
 
     let tested = run(&["test", "lit/my-court"]);
     assert_eq!(

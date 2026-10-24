@@ -325,6 +325,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   proposed filing added: L4001 when it is not a legal move on that date,
   L4002 when it misses the obligation it discharges; otherwise the result
   lists what it discharges and the deadlines it triggers, with due dates.
+- **A cite's vendored text must be proved its version's text** (lg-flu.40;
+  SPEC §4.3, §7, §8.6; PM ruling 2026-10-23 on lg-flu.27-a3). A vendored
+  text dated D is the text of a cite whose version takes effect at E < D
+  only when the section's vendored amendment history (a `## versions
+  <heading>` block in a pinned file) shows no amendment in (E, D]: an
+  amendment exactly at E holds, one exactly at D or strictly between
+  breaks. Otherwise the cite is a hole: inventoried by the `holes`
+  obligation (L9002 in `dev`, L5002 in `strict`), counted in `check`'s
+  `packages[].holes`, and a `lowered.holes` entry at the cite, its reason
+  naming the breaking amendment (effective date, eCFR version and issue
+  date, history file) or why there is no history. A proving history is
+  recorded in the cite's source map as `history` (counting rules' and
+  calendars' cites are now located in the clock source map too). The
+  eCFR versioner's version list of each 37 C.F.R. section `lit/mpep`,
+  `lit/ptab` and `lit/ttab` cite is vendored as
+  `sources/ecfr-versions-title-37.txt` and bound as `ecfr-versions-37`:
+  the 2017-01-14 TTAB answer-time cites (§§ 2.105(a), 2.106(b)(3)(iii),
+  2.113(a)) and § 2.196 are proved, while 551 cites across the packages,
+  54 of them in `lit/core`, are now holes (their texts postdate their
+  versions and no history for FRCP, FRAP, RCFC, U.S.C. or 19 C.F.R. is
+  vendored), so `litigate check --profile strict lit/core` reports them.
+  An unvendored dated binding keeps lg-flu.6's window rule (L1010).
 
 - **Law not encoded before a date, pre-2009 FRAP 4, declared USPTO
   closures, and outcomes read from the docket** (lg-flu.26; design review

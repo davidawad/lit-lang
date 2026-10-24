@@ -86,7 +86,7 @@ struct Versions {
 /// Whether a cite's vendored text is its version's text.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Proof {
-    /// Nothing to prove: the text is undated or not after E.
+    /// Nothing to prove: no vendored text, or one undated or not after E.
     Moot,
     /// No amendment in (E, D].
     Holds(History),
@@ -105,10 +105,12 @@ pub enum Proof {
 
 impl Citations<'_> {
     /// Whether `section`'s vendored text (dated by its binding's `as_of`)
-    /// is the text in force at `effective`.
+    /// is the text in force at `effective`. A section located in no
+    /// vendored file has no text to prove.
     #[must_use]
     pub fn prove(&self, section: &L0Section, effective: &str) -> Proof {
-        let Some(d) = section.as_of.as_deref().filter(|d| *d > effective) else {
+        let vendored = section.path.as_ref().and(section.as_of.as_deref());
+        let Some(d) = vendored.filter(|d| *d > effective) else {
             return Proof::Moot;
         };
         let heading = format!("{PREFIX}{}", section.heading);
@@ -177,9 +179,10 @@ impl Citations<'_> {
     /// text then. `None` when every section is proved (or needs no proof).
     #[must_use]
     pub fn unproven(&self, text: &str, effective: &str) -> Option<String> {
-        let map = self.map(Some(&text.to_owned()))?;
-        let mut why: Vec<String> = map
-            .sections
+        let sections = self
+            .map(Some(&text.to_owned()))
+            .map_or_else(Vec::new, |m| m.sections);
+        let mut why: Vec<String> = sections
             .iter()
             .filter_map(|s| failure(s, &self.prove(s, effective)))
             .collect();

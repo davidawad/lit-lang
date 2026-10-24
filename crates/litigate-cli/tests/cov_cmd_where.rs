@@ -52,7 +52,10 @@ fn a_counting_rule_lowers_into_the_clock_file() {
         run.json["result"]["lowered"],
         json!(["clock:/countingRules/0"])
     );
-    assert_eq!(run.json["result"]["source"], json!({"text": "FRCP 6(a)"}));
+    // The rule's cite is located like a node's (SPEC §8.6).
+    let source = &run.json["result"]["source"];
+    assert_eq!(source["text"], json!("FRCP 6(a)"));
+    assert_eq!(source["sections"][0]["heading"], json!("6"));
 }
 
 #[test]

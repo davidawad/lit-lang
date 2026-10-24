@@ -439,7 +439,7 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   dropped). No wording changed. Used by `packs/ttab-trademark-trial-and-appeal-board.json`.
 - sha256 (this file): `66402ce5e48bf2a9aa039058b3bfc181d3511b9e94137fac8b6a3d84a26b33a7`
 
-### `cfr-37-part2-answer-time-history.txt` — 37 C.F.R. §§ 2.105, 2.106, 2.113 and 2.116 (TTAB answer time) as of January 13 and 14, 2017
+### `cfr-37-part2-answer-time-history.txt` — 37 C.F.R. §§ 2.105, 2.106 and 2.113 (TTAB answer time) as of January 13 and 14, 2017
 
 - The dates `lit/ttab`'s answer-time deadlines are in force from. For each
   section, `## 37 C.F.R. (eCFR versions) § N` opens with a bracketed line
@@ -464,19 +464,7 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   § 2.113 `465446e09efbf10073a05610c2e5aeab43ca72a8f2f6c5979e89dcc4b484539c`).
   Each `<HEAD>` and `<P>` became one line, tags stripped, entities decoded,
   whitespace collapsed. No wording changed.
-- § 2.116 (the Federal Rules of Civil Procedure govern inter partes
-  procedure "wherever applicable and appropriate", which `lit/ttab`'s
-  answer-time extension reads FRCP 6(b)(1)(A) through), fetched 2026-10-24
-  the same way: the version list
-  `/api/versioner/v1/versions/title-37.json?section=2.116` (sha256
-  `b30211620065f5d4a4612b29c270bb2ae6f3e80a55cb5e19d292906c55930910`;
-  versions 2017-01-01 and 2017-01-14 only), and the section at 2017-01-14
-  (`ce683532c79bc3168c1b103f204c4bada23fa3c32c09c368551b9a5790a65683`; the
-  2026-10-19 response is byte-identical) and 2017-01-13
-  (`44b401f931dd4498c0d6316539f4c778e551b8976deb8682338c2bbf62f75a41`).
-  Paragraph (a) reads the same in both; the 2017 amendment (81 FR 69975)
-  changed (c) and (e)-(g) only.
-- sha256 (this file): `2e5f7e43fa7ffe053c139a3c49f967c0d996652a0db371859c55fd30d1bc1a66`
+- sha256 (this file): `93e7715ba5a605f480efdb1b9d82191fc1cfff00a242e066710adcfd298260f8`
 
 ### `cfr-37-part2-history.txt` — 37 C.F.R. §§ 2.119, 2.128 and 2.196 as in force on dated eCFR points in time
 
@@ -512,39 +500,97 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   one line each, tags stripped and entities decoded; no wording changed.
 - sha256 (this file): `ea972783c810a458f4754ce2597e2f29f08235d9d5cdcb8c0e8d1cd2508688e4`
 
-### `scotus-rules.txt` — Rules of the Supreme Court of the United States 13, 29 and 30 (adopted February 17, 2026, effective March 16, 2026)
+### `ecfr-versions-title-37.txt` — eCFR versioner version lists of the 37 C.F.R. sections cited
 
-- The cert-petition period and its extension (Rule 13), service (Rule 29)
-  and computation and extension of time (Rule 30) `lit/core`'s `sup-ct-30`
-  counting rule and the FRAP and Federal Circuit cert periods cite, one
-  `## Sup. Ct. R. N.P` section per numbered paragraph, each restating its
-  rule's heading as its first line.
-- Fetched 2026-10-24 from `www.supremecourt.gov/filingandrules/2026RulesoftheCourt_WEB.pdf`
-  (sha256 `5200e38d590cc40929cb719987c936dc529717b4037259d1b63a2309cb6b0f32`),
-  the edition the Court's Rules page lists as current, `pdftotext -layout`,
-  running headers and page numbers stripped, lines joined into one line
-  per numbered paragraph. The text layer keeps the "fi" and "fl"
-  ligatures as U+FB01 and U+FB02; they are spelled out. A line-break
-  hyphen was dropped when the joined word appears in the 2023 edition's
-  text, and kept when the hyphenated word does (one: "cross-petition" in
-  13.4); the five others were dropped by reading ("subsections" and
-  "submission", new in 29.2, and "identifiable", "office", "officer",
-  split at a ligature). No other wording changed.
-- Against the 2023 edition (`2023RulesoftheCourt.pdf`, adopted December 5,
-  2022, effective January 1, 2023, sha256
-  `05f435c766fd596333828846d097828238ff89a266c24e3afca9ecd2fb9c19db`,
-  vendored here before as sha256
-  `94c56e4ee8ec59d5cf857f1271ee689de1568421ab67e19b71bb823b5feecbb4`),
-  Rules 13 and 30 and Rule 29's paragraphs 1, 3, 4, 5 and 7 are word for
-  word the same; 29.2 (an electronic submission is timely, paper copies
-  within three days) and 29.6 (stock ticker symbols) are the only changes,
-  as the Court's "Revisions to Rules of the Supreme Court" of the same
-  date (`www.supremecourt.gov/filingandrules/2026_Rules_Revisions.pdf`,
-  sha256 `b05a3a77c71708fb390e8e90ad2720cca2b0dc9fb827294b2d4f4ab00b56292f`,
-  revising Rules 14, 15, 24, 29 and 48 only) states. So 30.1's computation
-  and 13.5's and 30.2's extension timing read the same from January 1,
-  2023.
-- sha256 (this file): `881464325decc0ce5cc63ae4bac10facc84766e266dbff30454186f78dc3d5f2`
+- The amendment histories `cite-resolves` reads (SPEC §4.3): a cite of
+  `cfr-37-part1.txt`, `cfr-37-part2.txt` or `cfr-37-part42.txt` (dated by
+  its binding's `as_of`) by a declaration in force from an earlier date is
+  that declaration's text only when its section's list shows no version
+  effective after that date, up to the text's. One `## versions 37 C.F.R.
+  § N` block per section `lit/mpep`, `lit/ptab` and `lit/ttab` cite: an
+  `as_of 2026-10-24` line (the fetch date), then the response to
+  `https://www.ecfr.gov/api/versioner/v1/versions/title-37.json?section=N`
+  (Office of the Federal Register), byte for byte on one line. The
+  headings are deliberately not canonical refs, so no cite resolves to
+  them. The lists start at 2017-01-01, the start of the eCFR's
+  point-in-time coverage, so they prove nothing about a version in force
+  before then.
+- Fetched 2026-10-24. SHA-256 of each response (the block's last line):
+  - § 1.7: `b05d1efdaec5cec72f84229707f964daf359e135632c8b4991b392f852559924`
+  - § 1.16: `900c41f00037c23fa8b52824d40130736add9505ae93d6281a6ab1278dd877d2`
+  - § 1.17: `b513e1f80b76adf6307496fdf47f9cd72ab1a9ab19ce32937bf6399fd256ac67`
+  - § 1.18: `a4146e56fed715df85c88743dc5e4aa6082a443e862008370f20c5a77e6dd8d6`
+  - § 1.20: `bdd9ed0d99fd816ba08cd73171f91f889ebdc7e5c7ff4b2e19808e4ce2d8ccf7`
+  - § 1.104: `5fddd6eedd918f2df6f119fb47e121b5b1e7cebf3486640b3d9e9ee0a0160607`
+  - § 1.133: `38b8935cde1f81a0cfcc14bcff451321c1123467502d77bfc551619479cfd85c`
+  - § 1.134: `55620caa0644f3718d1bef52df4695e19615d327c22308653c59d4c427868dbb`
+  - § 1.137: `f26dd480c778a76b648ba4c75a64f9f9f0fd39ef82c79557136eee5a5285f45a`
+  - § 1.142: `0129bd8c6dfe95d6a4b9f368fa4fd8ed2dbfa69a3cf11bc7cbcfbe0f77754876`
+  - § 1.143: `1d8c24c98826b1c45afa62e3d3beb0e9058f7f69dbc39f6f52894e265f3f43eb`
+  - § 1.144: `ee0c94275014897f8f7cf1d79159279282f42ebb0409834b725d014698603e1f`
+  - § 1.171: `38ca49f03e43511563a695250d4606dc97823f070c9ddd5360846a41f99fe9ce`
+  - § 1.510: `e0bf431ace62f84139482f725a0744f75ddee66bf1e5a6ee4ed5045925f184db`
+  - § 1.515: `08132fb4845e07a2700b1cd59d51c3fe8ef8d9459bf41e260c6ce648220b8652`
+  - § 1.530: `bcf8895a4e81671153c042587d5998287b2861a5d28856aec6a7f97cff3ed19d`
+  - § 1.550: `227ae4a84aafa256f300f8d0038cb00c11fe3a707811653aa4e121d4469cd599`
+  - § 1.570: `2d8de876d87fc0959d7fc3b75a5474f29f656c2aaee5d94f6e170860a82faa40`
+  - § 2.6: `1feac2b52422420078093d563df7306811bd966b277904d4ab0522222c2f55b7`
+  - § 2.68: `d424543583ec96f886e0882c5a4ef0b009024808e7793623d658e771365ccae5`
+  - § 2.88: `f398efe4ae636f678ab9f3ff310179ea17dff38893d7a7d329cc3d98711376cb`
+  - § 2.101: `55690d36a068e612d3be376204f62a6f09348df1def93b51dcb7a70c51e4f856`
+  - § 2.102: `cebb4ba1e7e3b5726dea84d9f63e2d87e473a228ec3fad3a8d9a4bfbcd2bc364`
+  - § 2.105: `8196196e26e9e069cc98745fcf25745f8c1d89f0b60b2694c8f4c9e033d6e923`
+  - § 2.106: `bafe6722400078cf4e3850cceb4b1d29103bbef827ca65187cf83f044339290e`
+  - § 2.111: `fb478d7488ffb7792802e803e75cee79a136c7701fce99de636281dce5e7f45b`
+  - § 2.113: `e37846c21e075a78123b969a47ebd61d86329f57978b4850b06a07aa5aaa07c0`
+  - § 2.120: `7abdbb0667ea2eaaa70359c0aa3cb31322564c946465be1a43ad99fcafe11fb3`
+  - § 2.121: `bd59901972a1e2b677dcba6440a8a1a0c42c64ed2e09c2918500fce51810f9c1`
+  - § 2.123: `aaccb79f28ab614449c4dea8cf13dcfb11e37ed7623852b9177b8899e6f6abb5`
+  - § 2.125: `6d928b5fd8ec7a6a2403373732bf3f87fe58420e117d140526ba13915fcec701`
+  - § 2.128: `84c1c21d2f4b29b9a74f282c7cbce3a59d43d1300977eaa25185e8bd692fe267`
+  - § 2.129: `46be73aa4f50e11629cfe8229278a767a4f587dc6aaad5c867e6928e4ab5f45d`
+  - § 2.133: `83b7d43f1b32283d04c6a66c8c12ef47df669234152394d60a533b8df55c7808`
+  - § 2.135: `57ea6363fff223478410917f2fbdea6cd1fa2362fb10f035ef894c44c79e1575`
+  - § 2.136: `3883d7604e57461bca0e5e369061981d122190f76c99826ec4879e44161d9143`
+  - § 2.145: `b8b24d0d7ec1cb15937362ee8757a8856587e90baf74d7b2a6fea0d8d34a007b`
+  - § 2.196: `155ecb2188b4f43e202e074a05847754add55d6f03cc4acb73153c254be56ccb`
+  - § 42.5: `ad8584b6f44f8258a42f04904bc65ad3e9b797c63f092a73bc25854f990b28c2`
+  - § 42.23: `cd4d5610fbb61e14540badd51f9bb8e69f98dfe5c6e2b811dbe2b11b6562852a`
+  - § 42.51: `96e272b43757047438bebd6040f3be92414702bdcb6a38cf072408e129ae8f59`
+  - § 42.54: `d536aac43c230b3829f992d6094b3352ee27b407f1d6a256421887458b16d2b5`
+  - § 42.70: `a992cb2349c371cd96924d00ccbae5007b1184c51d5dd88cbb5cbf7d25b5a1c5`
+  - § 42.71: `8821cdf86cc686b2cb114d91fa18c47c09c4862768303fdeae5d885bcc89f7f5`
+  - § 42.73: `a094844ec3755b2bfaae6307843923e5e71ec492392a173aedd3ed2d619d3918`
+  - § 42.74: `c027a7caba2e40c7fd62d67abd987160040fdc71e5b3e72fbad397a8388581ca`
+  - § 42.104: `2fb8632176a967fdbbfb54dda888edea6e206f4f8cda7cf8fbc45043d116d020`
+  - § 42.106: `ebfcec77e715a797a50c95f84387f892a75e1f9566b56f50df4106f4c5188d78`
+  - § 42.107: `d568d69556be8736e4317c4839fe5baf15335d3e12a60520769d0c7ef4ecc295`
+  - § 42.108: `7e1d5e33e5c00dafa685a99cd18769674f5c5d62a7f8de1fde20d68decadb5b8`
+  - § 42.120: `8a94bc1d501668bcacbb20e1f0328f21baf83bf23605c6a5f70639bd491c4269`
+  - § 42.121: `fd40f74f4930ffbdfc57a64fd311b2d540a70692afb44d56885c862bf6e66567`
+  - § 42.122: `97b014134fa28a48101dd37780b44c417558f5216b61fdca8cd493dfefcc7f8f`
+  - § 42.204: `1e5dac78eda9bb275a1f82817a7a2da8811c8c28c6a0b2e3470d7f0526adb440`
+  - § 42.206: `4e5bb6f2549185ec1066db76a6825964ad85208ceecb52d8c989e4242c24b018`
+  - § 42.207: `492b8169f500af5691e238c57d13fc70a5bd49fb1bee44f0bdfc55519c354619`
+- sha256 (this file): `083c3103173ebdc82ab3caa6b704469dd825b22ddfe1419ff8855d4f56d42058`
+
+### `scotus-rules.txt` — Rules of the Supreme Court of the United States 13, 29 and 30 (adopted December 5, 2022, effective January 1, 2023)
+
+- The cert-petition period (Rule 13), service (Rule 29) and computation of
+  time (Rule 30) `lit/core`'s `sup-ct-30` counting rule and the FRAP and
+  Federal Circuit cert periods cite, one `## Sup. Ct. R. N.P` section per
+  numbered paragraph, each restating its rule's heading as its first line.
+- Fetched 2026-10-23 from `www.supremecourt.gov/filingandrules/2023RulesoftheCourt.pdf`
+  (sha256 `05f435c766fd596333828846d097828238ff89a266c24e3afca9ecd2fb9c19db`),
+  `pdftotext` (no `-layout`), running headers and page numbers stripped,
+  lines joined into one line per numbered paragraph. The PDF's text layer
+  drops the "fi" ligature (so "file" reads "f-l-e"); it was restored word
+  by word (file, filed, filing, filers, first, final, specified, specific,
+  justified, office, officer, suffices, identifiable, confined, defined,
+  certified, certificate, affidavit, Notifications), and two line-break
+  hyphens inside words ("inter- nal", "ear- lier") were joined. No other
+  wording changed.
+- sha256 (this file): `94c56e4ee8ec59d5cf857f1271ee689de1568421ab67e19b71bb823b5feecbb4`
 
 ### `usc-15-lanham.txt` — Lanham Act sections (12 sections of 15 U.S.C.)
 
@@ -555,18 +601,13 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   running page headers removed). No wording changed. Used by the TTAB pack.
 - sha256 (this file): `9ea6b13b33cf0bb61a2a1ea337097c0981665d4d30a045fece2a77324dae6c4c`
 
-### `tbmp.txt` — Trademark Trial and Appeal Board Manual of Procedure §§ 112, 113.05 and 509 (June 2026)
+### `tbmp.txt` — Trademark Trial and Appeal Board Manual of Procedure §§ 112 and 113.05 (June 2026)
 
 - The TBMP sections the TTAB package's chained briefing periods (§ 112:
   a period running from a prior due date counts from "the actual due date
   ..., not the adjusted date under 37 C.F.R. § 2.196") and its service rule
-  (§ 113.05: no added time after service by mail) cite, and § 509 (motions
-  to extend or reopen time, 509 through 509.02: FRCP 6(b) "made applicable
-  to Board proceedings by 37 C.F.R. § 2.116(a)"), which the answer-time
-  extension cites as practice guidance, one `## TBMP § N` section each
-  (each numbered subsection its own), the section's own heading as its
-  first line. § 509 opens with the rule texts the manual reprints (FRCP
-  6(b), 37 C.F.R. §§ 2.120(a), 2.121, 2.127(a)), kept as printed.
+  (§ 113.05: no added time after service by mail) cite, one `## TBMP § N`
+  section each, the section's own heading as its first line.
 - Fetched 2026-10-23 from
   `www.uspto.gov/sites/default/files/documents/tbmp-Master-June2026.pdf`
   (sha256 `015cf2b665d74b25080321f67dad7ffebe412118f6f0460ec3530f4801639b8e`,
@@ -574,28 +615,5 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   `pdftotext` (no `-layout`); running page headers and page numbers
   removed and each section's NOTES (its footnoted authorities) omitted. No
   wording changed. The TBMP binds no one: it restates the Board's practice
-  under 37 C.F.R. Part 2. § 509 was cut the same way on 2026-10-24 from
-  the same PDF (digest checked again), with form feeds dropped.
-- sha256 (this file): `39df33edc821a318331129cdc6730ac961cd962d7d3f3f1c758309465eb21d86`
-
-### `fr-uspto-90-3-history.txt` — 37 C.F.R. § 90.3 as added in 2012 (77 FR 48612, 48677-48678)
-
-- The text of § 90.3 in force from September 16, 2012 to March 29, 2024,
-  which `usc-cfr-prosecution-fragments.txt` (the current text) cannot
-  give: one `## 77 FR <page>` section per printed page, each opening with
-  a bracketed line naming the issue, page and FR Doc. number; everything
-  after it is the printed text, verbatim except for line joining, `Sec.`
-  printed as `§`, the GPO text's doubled backtick and apostrophe quotes
-  as straight double quotes, and its `----` as an em dash. Page 48612 carries the rule's summary and effective date;
-  48677-48678 the amendatory instruction adding Part 90 and § 90.3 in
-  full, including the verbatim "appeal of commencing" in (c)(1)(ii).
-- Fetched 2026-10-24 from `www.govinfo.gov`'s Federal Register HTML
-  rendering of FR Doc. 2012-17900
-  (`https://www.govinfo.gov/content/pkg/FR-2012-08-14/html/2012-17900.htm`,
-  sha256 `230a9429a1acfe78b073b0d75d9a2a08e8ecfa8eecfce3a22ab8f163e82aaae9`),
-  whose `[[Page N]]` markers give the page.
-- How the version list was found: the federalregister.gov API's rules
-  with a CFR reference to 37 C.F.R. Part 90 are exactly two, 77 FR 48612
-  (2012-17900, effective 2012-09-16) and 89 FR 22084 (2024-06659,
-  effective 2024-03-29), matching the current section's history line.
-- sha256 (this file): `86152eebd93a8b638b25c9263e235194c7400797d2840e73d59da0977e4f4d74`
+  under 37 C.F.R. Part 2.
+- sha256 (this file): `84d70300d5b36ac966e3b65513b86726ebc5fc04c0b97218704a3c55f02a3e86`

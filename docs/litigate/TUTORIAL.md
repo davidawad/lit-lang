@@ -24,7 +24,7 @@ pack_id = "my-court"          # the litgraph pack id; node ids become my-court::
 forum = "frcp"                # a district court: FRCP 6 counts its periods (SPEC §5.3)
 authority = "FederalRule"     # default rank of every declaration (SPEC §5.5)
 title = "My court: answer or default"
-in_force = "2009-12-01"       # default effective start
+in_force = "2024-12-01"       # default effective start: the date of the text cited
 known_at = "2024-12-01"       # default corpus date
 
 [package.roles]               # actor -> self | opponent | nature
@@ -106,7 +106,10 @@ and usually a machine-applicable fix (`litigate fix lit/my-court`).
 probability you do not know yet is a hole, `p ?("no data yet")`. Holes
 compile under the default `dev` profile with a warning. Under `--profile
 strict`, the repository gate (`just lit-check`), they are errors (L5002), as
-are cites that resolve to no source.
+are cites that resolve to no source. A cite whose vendored text is dated
+after its declaration takes effect is a hole too, unless the section's
+vendored amendment history shows the text unamended since (SPEC §7): that
+is why `in_force` above is the date of the vendored FRCP text.
 
 ## 2. Test it
 

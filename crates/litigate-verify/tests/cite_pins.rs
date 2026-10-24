@@ -69,10 +69,27 @@ fn dated(cite: &str) -> String {
 
 const AS_OF: &str = "section_heading = \"Rule {n}\"\n";
 const DATED: &str = "section_heading = \"Rule {n}\"\nas_of = \"2024-12-01\"\n";
+/// The FRCP binding's vendored `path` and its pin.
+const VENDORED: &str = "path = \"sources/frcp.txt\"\n";
 
+/// `lit` checked strictly under the FRCP binding dated `as_of` (a
+/// `section_heading` line plus the date) with no vendored text.
+fn unvendored(as_of: &str, lit: &str) -> Checked {
+    let sources = FRCP
+        .replacen(VENDORED, "", 1)
+        .replacen(PIN, "", 1)
+        .replacen(AS_OF, as_of, 1);
+    verify(
+        &[pkg_with_sources("demo", "FederalRule", &[], &sources, lit)],
+        Profile::Strict,
+    )
+}
+
+/// An unvendored expression keeps the window rule: it must not postdate
+/// the citing version's window.
 #[test]
-fn an_expression_after_the_window_does_not_resolve() {
-    let late = under(AS_OF, DATED, &dated("cite \"FRCP 12(a)\""));
+fn an_unvendored_expression_after_the_window_does_not_resolve() {
+    let late = unvendored(DATED, &dated("cite \"FRCP 12(a)\""));
     assert_eq!(
         unresolved(&late),
         ["`FRCP 12(a)` cites source `frcp` as of 2024-12-01, but this version left force on 2010-01-01"]
@@ -80,23 +97,25 @@ fn an_expression_after_the_window_does_not_resolve() {
     let finding = late.verification.report.finding(Obligation::CiteResolves);
     assert!(finding.is_some_and(|f| f.count == 1));
     // `historical` says the later text is cited on purpose.
-    let historical = under(AS_OF, DATED, &dated("cite \"FRCP 12(a)\" historical"));
+    let historical = unvendored(DATED, &dated("cite \"FRCP 12(a)\" historical"));
     assert_eq!(unresolved(&historical), Vec::<String>::new());
     // A binding without a date has no expression to compare.
-    let undated = under(AS_OF, AS_OF, &dated("cite \"FRCP 12(a)\""));
+    let undated = unvendored(AS_OF, &dated("cite \"FRCP 12(a)\""));
     assert_eq!(unresolved(&undated), Vec::<String>::new());
     // An expression dated inside the window is fine.
-    let early = under(
-        AS_OF,
+    let early = unvendored(
         "section_heading = \"Rule {n}\"\nas_of = \"2000-01-01\"\n",
         &dated("cite \"FRCP 12(a)\""),
     );
     assert_eq!(unresolved(&early), Vec::<String>::new());
+    // A vendored text is held to its amendment history instead.
+    let vendored = under(AS_OF, DATED, &dated("cite \"FRCP 12(a)\""));
+    assert_eq!(unresolved(&vendored), Vec::<String>::new());
 }
 
 #[test]
 fn a_cite_hole_cites_no_expression() {
-    let holed = under(AS_OF, DATED, &dated("cite ?(\"FRCP 12(a)\")"));
+    let holed = unvendored(DATED, &dated("cite ?(\"FRCP 12(a)\")"));
     assert_eq!(unresolved(&holed), Vec::<String>::new());
     // A hole with the same reason elsewhere does not excuse the cite: not
     // before it, not after it, and not in another file.
@@ -109,7 +128,10 @@ fn a_cite_hole_cites_no_expression() {
         "start served\n\ndefault before cite ?(\"FRCP 12(a)\") when true => 1",
         1,
     );
-    let sources = FRCP.replacen(AS_OF, DATED, 1);
+    let sources = FRCP
+        .replacen(VENDORED, "", 1)
+        .replacen(PIN, "", 1)
+        .replacen(AS_OF, DATED, 1);
     let mut pkg = pkg_with_sources("demo", "FederalRule", &[], &sources, &lit);
     pkg.files.push(LoadedFile {
         relative: "other.lit".to_owned(),

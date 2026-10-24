@@ -8,7 +8,7 @@ use crate::ws::{self, Session};
 use litigate_base::{Diagnostic, Profile};
 use litigate_lower::Options;
 use litigate_sema::pkg::source::{Disk, Source};
-use litigate_verify::Finding;
+use litigate_verify::{Finding, Obligation};
 use serde_json::{json, Value};
 
 /// A completed check.
@@ -161,13 +161,15 @@ impl Checked {
             .iter()
             .zip(&self.verdicts)
             .map(|(p, (_, v))| {
+                // Written holes and the cites no amendment history proves.
+                let holes = v.findings.iter().find(|f| f.name == Obligation::Holes);
                 json!({
                     "name": p.name,
                     "version": p.version,
                     "digest": p.digest,
                     "root": p.root,
                     "requested": p.requested,
-                    "holes": p.check.holes.len(),
+                    "holes": holes.map_or(0, |f| f.count),
                     "tests": {
                         "passed": v.tests.iter().filter(|t| t.passed).count(),
                         "failed": v.tests.iter().filter(|t| !t.passed).count(),

@@ -153,7 +153,11 @@ pub fn verify_package(
                 O::DeadlineSatisfiable,
                 deadline::unsatisfiable(&cx, &reached),
             );
-            record(&mut b, O::CiteResolves, cite::unresolved(&cx, pack, corpus));
+            record(
+                &mut b,
+                O::CiteResolves,
+                cite::unresolved(&cx, pack, corpus, &input.check.holes),
+            );
             holes.extend(cite::unproven(&cx, pack, corpus, &input.check.holes));
             record(&mut b, O::TestsPass, assertions::failures(&cx, known_at));
         }

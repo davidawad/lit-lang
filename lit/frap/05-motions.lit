@@ -37,7 +37,7 @@ decision stay-pending-appeal-fork: "Move to Stay Judgment Pending Appeal?" by ap
     effort 0.hours
     note "FRAP 8(a)(1) says a party 'must ordinarily move first in the district court' for a stay -- a stay is something a party may seek, not a required step. A party with nothing to stay (e.g. a plaintiff appealing a dismissal) goes straight to briefing. Mirrors cafc-federal-circuit.json's motions-decline edge. Hours: 0, a no-action transition."
   }
-  edge-stay-pending-stay-granted-move-for-stay-pend "Move for stay pending appeal — granted" -> stay-granted {
+  edge-stay-pending-appeal-fork-stay-granted "Move for stay pending appeal — granted" -> stay-granted {
     authority cite "FRAP 8(a)(1)"
     effort 15.hours
     within motion-response-period {
@@ -49,7 +49,7 @@ decision stay-pending-appeal-fork: "Move to Stay Judgment Pending Appeal?" by ap
     valence good
     note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
   }
-  edge-stay-pending-stay-denied-stay-motion-denied "Stay motion denied" -> stay-denied by examiner {
+  edge-stay-pending-appeal-fork-stay-denied "Stay motion denied" -> stay-denied by examiner {
     authority cite "FRAP 8(a)"
     within motion-response-period {
       extendable true
@@ -64,12 +64,16 @@ state stay-granted: "Stay Granted — Enforcement Suspended" by office cite "FRA
 {
   group motions-group
   note "Stay is almost always conditioned on a supersedeas bond equal to the judgment plus interest and costs. The bond requirement is the real control gate — inability to post money kills the stay in practice, regardless of legal merit on the appeal."
-  edge-stay-granted-appellant-br-proceed-to-briefin "Proceed to briefing under stay" -> appellant-brief-window { authority cite "FRAP 8(a)(1)" }
+  edge-stay-granted-appellant-brief-window "Proceed to briefing under stay" -> appellant-brief-window {
+    authority cite "FRAP 8(a)(1)"
+  }
 }
 
 state stay-denied: "Stay Denied — Judgment Enforceable" by office cite "FRAP 8(a)"
 {
   group motions-group
   note "Judgment becomes executable while the appeal is pending. Critical trap: if the appellee executes and collects before reversal, the appellant's only remedy is replevin or an action against the judgment creditor — reversal does not automatically restore collected funds."
-  edge-stay-denied-appellant-br-proceed-to-briefin "Proceed to briefing" -> appellant-brief-window { authority cite "FRAP 8(a)" }
+  edge-stay-denied-appellant-brief-window "Proceed to briefing" -> appellant-brief-window {
+    authority cite "FRAP 8(a)"
+  }
 }

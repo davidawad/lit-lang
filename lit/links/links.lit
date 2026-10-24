@@ -221,7 +221,7 @@ link ptab-appeal-to-cafc "Appeal the final written decision to the Federal Circu
   authority cite "35 U.S.C. §§ 141(c), 319; 37 C.F.R. § 90.3"
   note "Supersedes the PTAB pack's abstract Federal Circuit region when both packs are loaded."
   tags [appeal]
-  replaces ["ptab-patent-trial-appeal-board::federal-circuit-window->federal-circuit-notice-of-appeal#0"]
+  replaces [ptab-patent-trial-appeal-board::edge-federal-circuit-window-federal-circuit-notice-of-appeal]
 }
 
 /// On remand the Board issues a new final written decision. 28 U.S.C.
@@ -270,7 +270,7 @@ link itc-appeal-to-cafc "Appeal the Commission's final determination to the Fede
   authority cite "19 U.S.C. § 1337(c); 28 U.S.C. § 1295(a)(6)"
   note "Supersedes the ITC pack's abstract appeal edge when both packs are loaded."
   tags [appeal]
-  replaces ["itc-337::federal-circuit-appeal-window->appeal-filed#0"]
+  replaces [itc-337::edge-federal-circuit-appeal-window-appeal-filed]
 }
 
 /// On remand the Commission issues a new final determination. No statute
@@ -312,7 +312,7 @@ link frcp-appeal-to-regional-circuit "Proceed under FRAP in the regional circuit
   authority cite "28 U.S.C. § 1291; Fed. R. App. P. 3, 4"
   note "Non-patent civil appeals; the regional circuit is one of two routes out of `notice-of-appeal-filed` (see `frcp-appeal-to-cafc-district-court`). Which applies is a fact about the case (does it arise under the patent laws, or carry a compulsory patent counterclaim, 28 U.S.C. § 1295(a)(1)?), not a free choice between forums with concurrent jurisdiction — a matter scenario should `remove_edges` whichever of the two does not apply, the same way a `cafc@<origin>` instance keeps only the one true origin edge."
   tags [appeal]
-  replaces ["frcp-civil-procedure::notice-of-appeal-filed->cross-appeal-window#0"]
+  replaces [frcp-civil-procedure::edge-notice-of-appeal-filed-cross-appeal-window]
 }
 
 /// The Federal Circuit for a district-court patent judgment.
@@ -320,7 +320,7 @@ link frcp-appeal-to-cafc-district-court "Proceed to the Federal Circuit (distric
   authority cite "28 U.S.C. § 1295(a)(1)"
   note "The Federal Circuit has exclusive jurisdiction over an appeal from a final district-court judgment in a civil action arising under an Act of Congress relating to patents (or plant variety protection), or in which a party asserted a compulsory patent counterclaim -- including a final judgment under 28 U.S.C. § 1292(c)(1)-(2). Coexists with `frcp-appeal-to-regional-circuit` as the other route out of `notice-of-appeal-filed`; a matter scenario selects the applicable one with `scenario.remove_edges` (see that link's note). Routes into the `cafc@district-court` instance, which mirrors `cafc@ptab`/`cafc@itc`/`cafc@cofc`: it keeps only `origin-to-district-court` and remands only back to the district court."
   tags [appeal, patent]
-  replaces ["frcp-civil-procedure::notice-of-appeal-filed->cross-appeal-window#0"]
+  replaces [frcp-civil-procedure::edge-notice-of-appeal-filed-cross-appeal-window]
 }
 
 // -------------------------------------------------------------------------

@@ -1,6 +1,5 @@
 ---
 source: crates/litigate-verify/tests/case.rs
-assertion_line: 157
 expression: "json!({\n    \"summary\": summary(&v), \"well-typed\":\n    v.verification.report.finding(Obligation::WellTyped),\n})"
 ---
 {
@@ -16,9 +15,7 @@ expression: "json!({\n    \"summary\": summary(&v), \"well-typed\":\n    v.verif
     "accepted": false,
     "posture": null,
     "diagnostics": [
-      "cases/examples/acme.case:2:6 L1006 package `no-such-package` is not loaded",
-      "cases/examples/acme.case:20:3 L9006 this event declares no id: its timeline key `event:Served@2025-03-05` changes if its date is corrected",
-      "cases/examples/acme.case:21:3 L9006 this event declares no id: its timeline key `event:MovedToDismiss@2025-03-20` changes if its date is corrected"
+      "cases/examples/acme.case:2:6 L1006 package `no-such-package` is not loaded"
     ]
   },
   "well-typed": {

@@ -9,7 +9,7 @@ terminal affirmed: "AFFIRMED" by applicant outcome [loss, affirmed] cite "FRAP 3
   note "Judgment stands because no reversible error was found, but 'affirmed' need not mean the court agreed with the district court's reasoning — it only means the outcome was legally permissible. The real trap is assuming the panel endorsed the lower court's reasoning. PLACEHOLDER PAYOFF: $0, override per matter. Self is the appellant (the party that lost below and sought review); AFFIRMED means that loss stands. The pack's authored `valence` of 'good' tracks a clean/expected disposition, not who wins -- flagged since it runs the other way from self's payoff."
   valence good
   payoff 0.usd
-  edge-affirmed-rehearing-wi-losing-party-weigh "Losing party weighs rehearing" -> rehearing-window {
+  edge-affirmed-rehearing-window "Losing party weighs rehearing" -> rehearing-window {
     authority cite "FRAP 40(a)(1)"
     effort 3.hours
     within rehearing-period {
@@ -28,7 +28,7 @@ terminal reversed: "REVERSED" by applicant outcome [win, reversed] cite "FRAP 36
   note "Final reversal with judgment entered — the panel disagreed on the merits and imposed its own definitive holding without remand. Relatively rare in civil practice because most reversals require factfinding or application-of-law tasks unsuited to appellate authority. PLACEHOLDER PAYOFF: $1,000,000, override per matter."
   valence good
   payoff 1_000_000.usd
-  edge-reversed-rehearing-wi-losing-party-weigh "Losing party weighs rehearing" -> rehearing-window {
+  edge-reversed-rehearing-window "Losing party weighs rehearing" -> rehearing-window {
     authority cite "FRAP 40(a)(1)"
     effort 3.hours
     within rehearing-period {
@@ -47,7 +47,7 @@ terminal reversed-and-remanded: "REVERSED AND REMANDED" by applicant outcome [wi
   note "The standard reversal posture: the panel identifies the wrong legal rule or standard applied below, vacates judgment, and returns the case for the district court to redecide under the correct rule. This is the most common reversal outcome. PLACEHOLDER PAYOFF: $600,000, override per matter. A real win on the merits, discounted because further proceedings remain before the case is actually over."
   valence good
   payoff 600_000.usd
-  edge-reversed-and-rehearing-wi-losing-party-weigh "Losing party weighs rehearing" -> rehearing-window {
+  edge-reversed-and-remanded-rehearing-window "Losing party weighs rehearing" -> rehearing-window {
     authority cite "FRAP 40(a)(1)"
     effort 3.hours
     within rehearing-period {
@@ -66,7 +66,7 @@ terminal vacated-and-remanded: "VACATED AND REMANDED" by applicant outcome [rema
   note "Doesn't necessarily hold the district court wrong on the merits — often signals a procedural defect, intervening change in law, or need for further fact-finding. The trap: this outcome looks like reversal but gives the district court wide latitude on remand. PLACEHOLDER PAYOFF: $400,000, override per matter, matching this project's remand tier -- a procedural defect requires a redo, and the outcome on remand is genuinely open."
   valence good
   payoff 400_000.usd
-  edge-vacated-and-rehearing-wi-losing-party-weigh "Losing party weighs rehearing" -> rehearing-window {
+  edge-vacated-and-remanded-rehearing-window "Losing party weighs rehearing" -> rehearing-window {
     authority cite "FRAP 40(a)(1)"
     effort 3.hours
     within rehearing-period {
@@ -85,7 +85,7 @@ terminal affirmed-in-part-reversed-in-part: "AFFIRMED IN PART, REVERSED IN PART"
   note "Common in multi-claim or multi-party appeals decided claim-by-claim under different standards of review — a genuine mixed result, not a compromise. Each part stands on its own legal footing. PLACEHOLDER PAYOFF: $250,000, override per matter, matching this project's affirmed-in-part tier (see cafc)."
   valence caution
   payoff 250_000.usd
-  edge-affirmed-in-rehearing-wi-either-party-weigh "Either party weighs rehearing" -> rehearing-window {
+  edge-affirmed-in-part-reversed-in-part-rehearing-window "Either party weighs rehearing" -> rehearing-window {
     authority cite "FRAP 40(a)(1)"
     effort 3.hours
     within rehearing-period {

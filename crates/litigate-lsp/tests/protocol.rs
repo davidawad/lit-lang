@@ -45,7 +45,7 @@ async fn publishes_the_check_diagnostics_of_the_worked_example() {
     let mut c = Client::repo().await;
     // SPEC §12: under `dev`, L9002 for the three holes and L9003 for the two `_` edges.
     let ds = c.diagnostics(&uri(LIT)).await;
-    assert_eq!(codes(&ds), ["L9002", "L9002", "L9002", "L9003", "L9003"]);
+    assert_eq!(codes(&ds), ["L9002", "L9002", "L9002"]);
     insta::assert_json_snapshot!("worked_example_dev", shape(&ds));
     let status = c.status().await;
     assert_eq!(
@@ -103,16 +103,16 @@ async fn strict_profile_fails_each_hole() {
 async fn edits_recheck_incrementally_over_one_database() {
     let mut c = Client::repo().await;
     let text = read(LIT);
-    assert_eq!(c.diagnostics(&uri(LIT)).await.len(), 5);
+    assert_eq!(c.diagnostics(&uri(LIT)).await.len(), 3);
     c.open(LIT, &text).await;
     // `p 1/10` -> `p 2/10`: the fact's distribution no longer sums to one.
     let range = json!({"start": at(&text, "1/10", 0, 0), "end": at(&text, "1/10", 0, 1)});
     c.edit(LIT, 2, range.clone(), "2").await;
-    let broken = c.diagnostics_where(&uri(LIT), |ds| ds.len() != 5).await;
+    let broken = c.diagnostics_where(&uri(LIT), |ds| ds.len() != 3).await;
     assert!(codes(&broken).contains(&"L2003".to_owned()), "{broken:?}");
     c.edit(LIT, 3, range, "1").await;
-    let fixed = c.diagnostics_where(&uri(LIT), |ds| ds.len() == 5).await;
-    assert_eq!(shape(&fixed).len(), 5);
+    let fixed = c.diagnostics_where(&uri(LIT), |ds| ds.len() == 3).await;
+    assert_eq!(shape(&fixed).len(), 3);
     assert_eq!(
         c.status().await["rebuilds"],
         1,

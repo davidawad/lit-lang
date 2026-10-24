@@ -1,5 +1,6 @@
 ---
 source: crates/litigate-lower/tests/golden.rs
+assertion_line: 30
 expression: text
 ---
 {
@@ -75,12 +76,14 @@ expression: text
     {
       "actor": "either",
       "from": "answered",
+      "id": "edge-answered-judgment-entered",
       "label": "Proceed to judgment",
       "to": "judgment-entered"
     },
     {
       "actor": "either",
       "from": "default-risk",
+      "id": "edge-default-risk-judgment-entered",
       "label": "Default entered",
       "to": "judgment-entered"
     }
@@ -119,12 +122,12 @@ expression: text
     "knownAt": "2025-01-01",
     "pins": [
       {
-        "digest": "sha256:f6e4d10b854a7ee94ff0a4724ea12d292a30fc8ca7e2abbcfd5017aec9cb63d5",
+        "digest": "sha256:8e77c09e7d93d3e29e427a29dd359bebd7c8fcb03faa5e9aaf8088c07de24001",
         "name": "frcp-rule12-example",
         "version": "0.1.0"
       }
     ],
-    "worldDigest": "sha256:3dcf681522aceecae23fb72da3826a36c87f719370a3700118599f35bdb45c46"
+    "worldDigest": "sha256:5aaeba5d2c6c4e6f53c48675712a6af43c8b735187322e617c713abae45c385f"
   },
   "nodes": [
     {

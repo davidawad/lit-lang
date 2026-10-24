@@ -1,6 +1,6 @@
 ---
 source: crates/litigate-cli/tests/check.rs
-assertion_line: 40
+assertion_line: 26
 expression: run.json
 ---
 {
@@ -162,7 +162,7 @@ expression: run.json
         "examples": [
           "lit/examples/rule12.lit:83:43: L9002 hole: no calibration yet",
           "lit/examples/rule12.lit:84:40: L9002 hole: no reason given",
-          "lit/examples/rule12.lit:90:97: L9002 hole: no reason given"
+          "lit/examples/rule12.lit:97:97: L9002 hole: no reason given"
         ],
         "evidence": {
           "checked": 3,
@@ -184,7 +184,7 @@ expression: run.json
       {
         "name": "frcp-rule12-example",
         "version": "0.1.0",
-        "digest": "sha256:f6e4d10b854a7ee94ff0a4724ea12d292a30fc8ca7e2abbcfd5017aec9cb63d5",
+        "digest": "sha256:8e77c09e7d93d3e29e427a29dd359bebd7c8fcb03faa5e9aaf8088c07de24001",
         "root": "lit/examples",
         "requested": true,
         "holes": 3,
@@ -243,84 +243,6 @@ expression: run.json
   },
   "diagnostics": [
     {
-      "code": "L9006",
-      "severity": "info",
-      "span": {
-        "file": "cases/examples/acme.case",
-        "line": 20,
-        "col": 3,
-        "end_line": 20,
-        "end_col": 13
-      },
-      "message": "this event declares no id: its timeline key `event:Served@2025-03-05` changes if its date is corrected",
-      "notes": [
-        {
-          "message": "declare one before the date: `id: YYYY-MM-DD Event(...) by party`"
-        }
-      ],
-      "fixes": [
-        {
-          "edits": [
-            {
-              "span": {
-                "file": "cases/examples/acme.case",
-                "line": 20,
-                "col": 3,
-                "end_line": 20,
-                "end_col": 13
-              },
-              "replacement": "served-1: 2025-03-05"
-            }
-          ],
-          "applicability": "machine_applicable"
-        }
-      ],
-      "fingerprint": "9e9f01b449d6efca",
-      "profile": "dev",
-      "world": {
-        "name": "actual"
-      }
-    },
-    {
-      "code": "L9006",
-      "severity": "info",
-      "span": {
-        "file": "cases/examples/acme.case",
-        "line": 21,
-        "col": 3,
-        "end_line": 21,
-        "end_col": 13
-      },
-      "message": "this event declares no id: its timeline key `event:MovedToDismiss@2025-03-20` changes if its date is corrected",
-      "notes": [
-        {
-          "message": "declare one before the date: `id: YYYY-MM-DD Event(...) by party`"
-        }
-      ],
-      "fixes": [
-        {
-          "edits": [
-            {
-              "span": {
-                "file": "cases/examples/acme.case",
-                "line": 21,
-                "col": 3,
-                "end_line": 21,
-                "end_col": 13
-              },
-              "replacement": "moved-to-dismiss-1: 2025-03-20"
-            }
-          ],
-          "applicability": "machine_applicable"
-        }
-      ],
-      "fingerprint": "8a005587c890f87e",
-      "profile": "dev",
-      "world": {
-        "name": "actual"
-      }
-    },
-    {
       "code": "L9002",
       "severity": "warning",
       "span": {
@@ -355,47 +277,13 @@ expression: run.json
       }
     },
     {
-      "code": "L9003",
-      "severity": "info",
-      "span": {
-        "file": "lit/examples/rule12.lit",
-        "line": 87,
-        "col": 51,
-        "end_line": 87,
-        "end_col": 94
-      },
-      "message": "the edge `answered -> judgment-entered` has no id, so cases and links cannot name it",
-      "fingerprint": "3feb519645cb7769",
-      "profile": "dev",
-      "world": {
-        "name": "actual"
-      }
-    },
-    {
-      "code": "L9003",
-      "severity": "info",
-      "span": {
-        "file": "lit/examples/rule12.lit",
-        "line": 88,
-        "col": 60,
-        "end_line": 88,
-        "end_col": 99
-      },
-      "message": "the edge `default-risk -> judgment-entered` has no id, so cases and links cannot name it",
-      "fingerprint": "3bcae67dd7e310c9",
-      "profile": "dev",
-      "world": {
-        "name": "actual"
-      }
-    },
-    {
       "code": "L9002",
       "severity": "warning",
       "span": {
         "file": "lit/examples/rule12.lit",
-        "line": 90,
+        "line": 97,
         "col": 97,
-        "end_line": 90,
+        "end_line": 97,
         "end_col": 98
       },
       "message": "hole: no reason given",
@@ -413,7 +301,7 @@ expression: run.json
       {
         "name": "frcp-rule12-example",
         "version": "0.1.0",
-        "digest": "sha256:f6e4d10b854a7ee94ff0a4724ea12d292a30fc8ca7e2abbcfd5017aec9cb63d5"
+        "digest": "sha256:8e77c09e7d93d3e29e427a29dd359bebd7c8fcb03faa5e9aaf8088c07de24001"
       }
     ],
     "as_of": null,

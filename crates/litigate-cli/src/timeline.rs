@@ -1484,7 +1484,7 @@ mod tests {
             assert_eq!(
                 messages,
                 [
-                    "rows `r1` (Served(complaint, Personal) on widget (line 20)) and `x2` (Served(complaint, Personal) on widget (line 20)) of world `w0` share the key `event:Served@2025-03-05`: nothing in their cause tells them apart; give the events docket numbers",
+                    "rows `r1` (Served(complaint, Personal) on widget (line 20)) and `x2` (Served(complaint, Personal) on widget (line 20)) of world `w0` share the key `event:Served@served-1`: nothing in their cause tells them apart; give the events docket numbers",
                     "rows `x3` (MovedToDismiss(complaint) by widget) and `x4` (MovedToDismiss(complaint) by widget) of world `w0` share the key `k`: nothing in their cause tells them apart; give the events docket numbers",
                 ]
             );
@@ -1626,8 +1626,14 @@ mod tests {
     #[test]
     fn a_matter_at_the_start_forks_with_probabilities() {
         let text = ACME
-            .replace("  2025-03-05 Served(complaint, Personal) on widget\n", "")
-            .replace("  2025-03-20 MovedToDismiss(complaint) by widget\n", "")
+            .replace(
+                "  served-1: 2025-03-05 Served(complaint, Personal) on widget\n",
+                "",
+            )
+            .replace(
+                "  moved-to-dismiss-1: 2025-03-20 MovedToDismiss(complaint) by widget\n",
+                "",
+            )
             .replace("facts { time-barred: not-barred }\n", "");
         with_matter("", &text, |session, m| {
             let case = m.case.clone().unwrap();
@@ -1641,8 +1647,14 @@ mod tests {
     #[test]
     fn a_decision_forks_into_elections_with_unknown_governing_deadlines() {
         let text = ACME
-            .replace("  2025-03-05 Served(complaint, Personal) on widget\n", "")
-            .replace("  2025-03-20 MovedToDismiss(complaint) by widget\n", "")
+            .replace(
+                "  served-1: 2025-03-05 Served(complaint, Personal) on widget\n",
+                "",
+            )
+            .replace(
+                "  moved-to-dismiss-1: 2025-03-20 MovedToDismiss(complaint) by widget\n",
+                "",
+            )
             .replace(
                 "perspective widget",
                 "start frcp-rule12-example::respond\nperspective widget",
@@ -1761,15 +1773,15 @@ mod tests {
             assert_eq!(
                 keys,
                 [
-                    "event:Served@2025-03-05",
-                    "event:MovedToDismiss@2025-03-20",
-                    "frcp.rule12.answer-period@event:Served@2025-03-05",
-                    "fork:frcp.rule12.mtd-ruling@event:MovedToDismiss@2025-03-20",
-                    "event:granted@fork:frcp.rule12.mtd-ruling@event:MovedToDismiss@2025-03-20",
-                    "event:denied@fork:frcp.rule12.mtd-ruling@event:MovedToDismiss@2025-03-20",
+                "event:Served@served-1",
+                "event:MovedToDismiss@moved-to-dismiss-1",
+                "frcp.rule12.answer-period@event:Served@served-1",
+                "fork:frcp.rule12.mtd-ruling@event:MovedToDismiss@moved-to-dismiss-1",
+                "event:granted@fork:frcp.rule12.mtd-ruling@event:MovedToDismiss@moved-to-dismiss-1",
+                "event:denied@fork:frcp.rule12.mtd-ruling@event:MovedToDismiss@moved-to-dismiss-1",
                 ]
             );
-            // An anonymous option with no event is keyed by where it leads.
+            // A named option without an event uses its stable edge ID.
             let all = session.hir();
             let texts = session.sources();
             let mut b = Builder::new(&all, &texts, "2025-06-01".to_owned(), None);
@@ -1777,12 +1789,12 @@ mod tests {
             fork(&mut b, &case, pkg, answered, &[], None);
             assert_eq!(
                 b.rows[1].key,
-                "event:judgment-entered@fork:frcp.rule12.answered@start"
+                "event:edge-answered-judgment-entered@fork:frcp.rule12.answered@start"
             );
             let mut served = case.events[0].clone();
             served.docket = Some(2);
-            assert_eq!(event_key(&all, &served), "event:Served@2025-03-05/2");
-            // A declared id is the key, whatever the date or docket.
+            assert_eq!(event_key(&all, &served), "event:Served@served-1");
+            // An explicit ID overrides the case event's own key.
             served.id = Some("service".to_owned());
             assert_eq!(event_key(&all, &served), "event:Served@service");
             assert_eq!(decl_key(all[0], "nope"), "frcp-rule12-example.nope");

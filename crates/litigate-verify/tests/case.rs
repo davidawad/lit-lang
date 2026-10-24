@@ -122,8 +122,8 @@ fn a_missed_deadline_fails_case_replay() {
 #[test]
 fn events_out_of_order_fail_case_replay() {
     let swapped = acme().replace(
-        "  2025-03-05 Served(complaint, Personal) on widget\n  2025-03-20 MovedToDismiss(complaint) by widget\n",
-        "  2025-03-20 MovedToDismiss(complaint) by widget\n  2025-03-05 Served(complaint, Personal) on widget\n",
+        "  served-1: 2025-03-05 Served(complaint, Personal) on widget\n  moved-to-dismiss-1: 2025-03-20 MovedToDismiss(complaint) by widget\n",
+        "  moved-to-dismiss-1: 2025-03-20 MovedToDismiss(complaint) by widget\n  served-1: 2025-03-05 Served(complaint, Personal) on widget\n",
     );
     assert_ne!(swapped, acme());
     let v = source(&swapped, Profile::Strict);

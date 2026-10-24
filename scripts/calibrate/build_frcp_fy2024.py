@@ -68,7 +68,7 @@ def main() -> None:
         ),
         "entries": [
             entry(
-                "frcp-civil-procedure::service-completed->voluntary-dismissal#0",
+                "frcp-civil-procedure::edge-service-completed-voluntary-dismissal",
                 months_no_action,
                 n_no_action,
                 f"'Total' row, 'No Court Action' column (a voluntary/stipulated dismissal or "
@@ -77,7 +77,7 @@ def main() -> None:
                 f"{days(months_no_action)} days.",
             ),
             entry(
-                "frcp-civil-procedure::discovery-open->voluntary-dismissal#0",
+                "frcp-civil-procedure::edge-discovery-open-voluntary-dismissal",
                 months_no_action,
                 n_no_action,
                 "Same 'No Court Action' figure as the other voluntary-dismissal edge above "
@@ -85,7 +85,7 @@ def main() -> None:
                 "dismissal was reached at, only that no court ruling was involved.",
             ),
             entry(
-                "frcp-civil-procedure::sj-ruling->summary-judgment-granted#0",
+                "frcp-civil-procedure::edge-sj-ruling-summary-judgment-granted",
                 months_pretrial,
                 n_pretrial,
                 f"'Total' row, 'During or After Pretrial' column (the closest published proxy "

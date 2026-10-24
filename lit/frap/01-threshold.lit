@@ -12,22 +12,28 @@ state trial-court-disposition: "District Court Order or Judgment Entered" cite "
 {
   group threshold-group
   note "Entry of a district court judgment or order marks the gateway moment for appellate jurisdiction. Not every order triggers appeal rights — the order must fall within one of the narrow statutory categories. Miscategorizing an order (treating an interlocutory order as final, or vice versa) cascades into jurisdictional dismissal downstream, regardless of merit."
-  edge-trial-court-appealabilit-assess-order-for-f "Assess order for finality" -> appealability-fork { authority cite "28 U.S.C. § 1291" }
+  edge-trial-court-disposition-appealability-fork "Assess order for finality" -> appealability-fork {
+    authority cite "28 U.S.C. § 1291"
+  }
 }
 
 decision appealability-fork: "Is the Order a Final Judgment?" by office cite "28 U.S.C. § 1291"
 {
   group threshold-group
   note "The finality inquiry is mechanical but requires precision: a final decision must dispose of all claims as to all parties, or be certified under Federal Rule of Civil Procedure 54(b). Many seemingly conclusive orders fail the test because they leave pending counterclaims, third-party claims, or unresolved damages issues. Appealing too early results in dismissal for lack of jurisdiction."
-  edge-appealabilit-final-judgme-order-is-a-final-j "Order is a final judgment" -> final-judgment-entered { authority cite "28 U.S.C. § 1291" }
-  edge-appealabilit-interlocutor-order-is-interlocu "Order is interlocutory" -> interlocutory-order-issued { authority cite "28 U.S.C. § 1291" }
+  edge-appealability-fork-final-judgment-entered "Order is a final judgment" -> final-judgment-entered {
+    authority cite "28 U.S.C. § 1291"
+  }
+  edge-appealability-fork-interlocutory-order-issued "Order is interlocutory" -> interlocutory-order-issued {
+    authority cite "28 U.S.C. § 1291"
+  }
 }
 
 state final-judgment-entered: "Final Judgment" by office cite "28 U.S.C. § 1291; Fed. R. App. P. 4(a)(1)(A)"
 {
   group threshold-group
   note "A true final judgment ends the district court's power over the case on the merits and triggers the 30-day appeal clock. The judgment must resolve the entire controversy between the parties. Partial judgments, conditional orders, and orders that reserve jurisdiction (e.g., to tax costs or award attorney fees) may fail the finality test and block immediate appeal."
-  edge-final-judgme-appeal-clock-final-judgment-sta "Final judgment starts appeal clock" -> appeal-clock-open {
+  edge-final-judgment-entered-appeal-clock-open "Final judgment starts appeal clock" -> appeal-clock-open {
     authority cite "Fed. R. App. P. 4(a)(1)(A)"
     within notice-civil-period {
       extendable true
@@ -42,7 +48,7 @@ state interlocutory-order-issued: "Interlocutory Order" by applicant cite "28 U.
 {
   group threshold-group
   note "An interlocutory order does not end the litigation on the merits and thus falls outside the default appeal-of-right gate under § 1291. Section 1292 creates three narrow exceptions, but the default assumption is that an interlocutory order is not appealable. Trying to appeal without qualifying through one of the three doors results in dismissal."
-  edge-interlocutor-interlocutor-check-interlocutor "Check interlocutory review doors" -> interlocutory-review-fork {
+  edge-interlocutory-order-issued-interlocutory-review-fork "Check interlocutory review doors" -> interlocutory-review-fork {
     authority cite "28 U.S.C. § 1292"
     effort 3.hours
     note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
@@ -85,15 +91,16 @@ decision interlocutory-review-fork: "Interlocutory Review Door Available?" by ap
     duration { min 1.5.days, mode 5.days, max 10.days }
     note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
   }
-  edge-interlocutor-interlocutor-no-interlocutory-d "No interlocutory door applies" -> interlocutory-review-unavailable by office {
+  edge-interlocutory-review-fork-interlocutory-review-unavailable "No interlocutory door applies" -> interlocutory-review-unavailable by office {
     authority cite "28 U.S.C. § 1291"
   }
 }
 
-state immediately-appealable-interlocutory: "Interlocutory Order Ripe for Appeal" by office cite "28 U.S.C. §§ 1292(a)(1), 1292(b); Fed. R. App. P. 5" {
+state immediately-appealable-interlocutory: "Interlocutory Order Ripe for Appeal" by office cite "28 U.S.C. §§ 1292(a)(1), 1292(b); Fed. R. App. P. 5"
+{
   group threshold-group
   note "Whichever door got you here, the downstream notice-of-appeal mechanics are identical to a final-judgment appeal. The narrow jurisdictional gate is passed; the 30-day notice-of-appeal deadline and standard briefing rules now apply."
-  edge-immediately-appeal-clock-interlocutory-orde "Interlocutory order ripe for appeal" -> appeal-clock-open {
+  edge-immediately-appealable-interlocutory-appeal-clock-open "Interlocutory order ripe for appeal" -> appeal-clock-open {
     authority cite "Fed. R. App. P. 4(a)(1)(A)"
   }
 }

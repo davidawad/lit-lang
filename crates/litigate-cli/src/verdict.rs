@@ -194,14 +194,17 @@ mod tests {
         let mut pkg = hir_with("");
         for decl in &mut pkg.modules[0].declarations {
             if let hir::Declaration::Node(n) = decl {
-                n.edges.iter_mut().for_each(|e| e.span = None);
+                n.edges.iter_mut().for_each(|e| {
+                    e.span = None;
+                    e.id = None;
+                });
             }
         }
         let found: Vec<(String, u32)> = anonymous_edges(&pkg)
             .into_iter()
             .map(|d| (d.span.file.0, d.span.line))
             .collect();
-        assert_eq!(found, vec![("lit/examples/Lit.toml".to_owned(), 1); 2]);
+        assert_eq!(found, vec![("lit/examples/Lit.toml".to_owned(), 1); 9]);
     }
 
     #[test]

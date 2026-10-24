@@ -9,7 +9,7 @@ decision cross-appeal-fork: "Appellee Considers a Cross-Appeal" by applicant cit
 {
   group docketing-group
   note "A party wishing to attack a judgment (not merely defend it against the appellant's arguments) must file its own notice of cross-appeal. A cross-appeal asserts a separate basis for reversal or a request that the court award a more favorable judgment to the cross-appellant than the district court gave."
-  edge-cross-appeal-cross-appeal-file-notice-of-cro "File notice of cross-appeal" -> cross-appeal-filed {
+  edge-cross-appeal-fork-cross-appeal-filed "File notice of cross-appeal" -> cross-appeal-filed {
     authority cite "FRAP 4(a)(3)"
     effort 4.hours
     cost 605.usd
@@ -21,7 +21,7 @@ decision cross-appeal-fork: "Appellee Considers a Cross-Appeal" by applicant cit
     duration { min 2.1.days, mode 7.days, max 14.days }
     note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate. Same $605.00 filing fee as an initial notice of appeal (Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2023, plus 28 U.S.C. § 1917's $5.00 notice fee) — a separate notice, a separate fee."
   }
-  edge-cross-appeal-cross-appeal-decline-to-cross-a "Decline to cross-appeal" -> cross-appeal-not-filed {
+  edge-cross-appeal-fork-cross-appeal-not-filed "Decline to cross-appeal" -> cross-appeal-not-filed {
     authority cite "FRAP 4(a)(3)"
     effort 0.hours
     note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
@@ -32,24 +32,28 @@ state cross-appeal-filed: "Notice of Cross-Appeal Filed" by office cite "FRAP 4(
 {
   group docketing-group
   note "Due within 14 days after the first notice of appeal, or the otherwise-applicable Rule 4(a)(1) period, whichever is later. The district court may extend it under FRAP 4(a)(5); otherwise missing it forecloses cross-appellate relief."
-  edge-cross-appeal-voluntary-di-cross-appeal-docke "Cross-appeal docketed" -> voluntary-dismissal-fork { authority cite "FRAP 3; FRAP 28.1" }
+  edge-cross-appeal-filed-voluntary-dismissal-fork "Cross-appeal docketed" -> voluntary-dismissal-fork {
+    authority cite "FRAP 3; FRAP 28.1"
+  }
 }
 
 state cross-appeal-not-filed: "No Cross-Appeal — Judgment Defended Only" by office cite ?("FRAP 4(a)(3); United States v. American Railway Express Co., 265 U.S. 425 (1924)") {
   group docketing-group
   note "Without a cross-appeal, a party cannot argue for reversal or a more favorable judgment on appeal. The party is confined to defending the judgment on existing grounds or alternative theories, but cannot affirmatively seek relief — this is the binding cross-appeal constraint."
-  edge-cross-appeal-voluntary-di-proceed-without-cr "Proceed without cross-appeal" -> voluntary-dismissal-fork { authority cite "FRAP 28.1" }
+  edge-cross-appeal-not-filed-voluntary-dismissal-fork "Proceed without cross-appeal" -> voluntary-dismissal-fork {
+    authority cite "FRAP 28.1"
+  }
 }
 
 decision voluntary-dismissal-fork: "Parties Consider Dismissing the Appeal" cite "FRAP 42(b)"
 {
   group docketing-group
   note "By stipulation of all parties (with costs as agreed) or on the appellant's own motion — courts almost always grant such dismissals unless compelling institutional interests (e.g., class certification, precedential impact) require retention of the case."
-  edge-voluntary-di-voluntarily-stipulate-to-or-mo "Stipulate to or move for dismissal" -> voluntarily-dismissed {
+  edge-voluntary-dismissal-fork-voluntarily-dismissed "Stipulate to or move for dismissal" -> voluntarily-dismissed {
     authority cite "FRAP 42(b)"
     valence good
   }
-  edge-voluntary-di-transcript-o-appeal-proceeds-or "Appeal proceeds — order the record" -> transcript-order-fork by applicant {
+  edge-voluntary-dismissal-fork-transcript-order-fork "Appeal proceeds — order the record" -> transcript-order-fork by applicant {
     authority cite "FRAP 10(b)"
     effort 2.hours
     note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."

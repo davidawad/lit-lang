@@ -1,5 +1,6 @@
 ---
 source: crates/litigate-sema/tests/fixtures.rs
+assertion_line: 24
 expression: check.package
 ---
 {
@@ -40,7 +41,7 @@ expression: check.package
     ],
     "dependencies": {}
   },
-  "digest": "f6e4d10b854a7ee94ff0a4724ea12d292a30fc8ca7e2abbcfd5017aec9cb63d5",
+  "digest": "8e77c09e7d93d3e29e427a29dd359bebd7c8fcb03faa5e9aaf8088c07de24001",
   "modules": [
     {
       "name": "frcp.rule12",
@@ -824,8 +825,8 @@ expression: check.package
               "file": "lit/examples/rule12.lit",
               "line": 87,
               "col": 1,
-              "end_line": 87,
-              "end_col": 96
+              "end_line": 90,
+              "end_col": 2
             }
           },
           "kind": {
@@ -840,7 +841,7 @@ expression: check.package
           "actor": null,
           "edges": [
             {
-              "id": null,
+              "id": "edge-answered-judgment-entered",
               "to": "judgment-entered",
               "label": "Proceed to judgment",
               "actor": "either",
@@ -863,10 +864,10 @@ expression: check.package
               "forbids": [],
               "span": {
                 "file": "lit/examples/rule12.lit",
-                "line": 87,
-                "col": 51,
-                "end_line": 87,
-                "end_col": 94
+                "line": 89,
+                "col": 3,
+                "end_line": 89,
+                "end_col": 75
               }
             }
           ]
@@ -886,10 +887,10 @@ expression: check.package
             "relations": [],
             "span": {
               "file": "lit/examples/rule12.lit",
-              "line": 88,
+              "line": 92,
               "col": 1,
-              "end_line": 88,
-              "end_col": 101
+              "end_line": 95,
+              "end_col": 2
             }
           },
           "kind": {
@@ -904,7 +905,7 @@ expression: check.package
           "actor": null,
           "edges": [
             {
-              "id": null,
+              "id": "edge-default-risk-judgment-entered",
               "to": "judgment-entered",
               "label": "Default entered",
               "actor": "either",
@@ -927,10 +928,10 @@ expression: check.package
               "forbids": [],
               "span": {
                 "file": "lit/examples/rule12.lit",
-                "line": 88,
-                "col": 60,
-                "end_line": 88,
-                "end_col": 99
+                "line": 94,
+                "col": 3,
+                "end_line": 94,
+                "end_col": 75
               }
             }
           ]
@@ -950,9 +951,9 @@ expression: check.package
             "relations": [],
             "span": {
               "file": "lit/examples/rule12.lit",
-              "line": 90,
+              "line": 97,
               "col": 1,
-              "end_line": 90,
+              "end_line": 97,
               "end_col": 100
             }
           },
@@ -995,9 +996,9 @@ expression: check.package
             "relations": [],
             "span": {
               "file": "lit/examples/rule12.lit",
-              "line": 91,
+              "line": 98,
               "col": 1,
-              "end_line": 91,
+              "end_line": 98,
               "end_col": 96
             }
           },
@@ -1054,9 +1055,9 @@ expression: check.package
                       },
                       "span": {
                         "file": "lit/examples/rule12.lit",
-                        "line": 95,
+                        "line": 102,
                         "col": 16,
-                        "end_line": 95,
+                        "end_line": 102,
                         "end_col": 25
                       }
                     },
@@ -1074,9 +1075,9 @@ expression: check.package
                       },
                       "span": {
                         "file": "lit/examples/rule12.lit",
-                        "line": 95,
+                        "line": 102,
                         "col": 27,
-                        "end_line": 95,
+                        "end_line": 102,
                         "end_col": 35
                       }
                     }
@@ -1084,9 +1085,9 @@ expression: check.package
                 },
                 "span": {
                   "file": "lit/examples/rule12.lit",
-                  "line": 95,
+                  "line": 102,
                   "col": 9,
-                  "end_line": 95,
+                  "end_line": 102,
                   "end_col": 36
                 }
               },
@@ -1113,9 +1114,9 @@ expression: check.package
                       },
                       "span": {
                         "file": "lit/examples/rule12.lit",
-                        "line": 96,
+                        "line": 103,
                         "col": 19,
-                        "end_line": 96,
+                        "end_line": 103,
                         "end_col": 32
                       }
                     }
@@ -1123,9 +1124,9 @@ expression: check.package
                 },
                 "span": {
                   "file": "lit/examples/rule12.lit",
-                  "line": 96,
+                  "line": 103,
                   "col": 10,
-                  "end_line": 96,
+                  "end_line": 103,
                   "end_col": 33
                 }
               },
@@ -1143,9 +1144,9 @@ expression: check.package
                 },
                 "span": {
                   "file": "lit/examples/rule12.lit",
-                  "line": 96,
+                  "line": 103,
                   "col": 37,
-                  "end_line": 96,
+                  "end_line": 103,
                   "end_col": 47
                 }
               }
@@ -1153,9 +1154,9 @@ expression: check.package
           ],
           "span": {
             "file": "lit/examples/rule12.lit",
-            "line": 93,
+            "line": 100,
             "col": 1,
-            "end_line": 97,
+            "end_line": 104,
             "end_col": 2
           }
         },
@@ -1188,9 +1189,9 @@ expression: check.package
                       },
                       "span": {
                         "file": "lit/examples/rule12.lit",
-                        "line": 101,
+                        "line": 108,
                         "col": 16,
-                        "end_line": 101,
+                        "end_line": 108,
                         "end_col": 25
                       }
                     },
@@ -1208,9 +1209,9 @@ expression: check.package
                       },
                       "span": {
                         "file": "lit/examples/rule12.lit",
-                        "line": 101,
+                        "line": 108,
                         "col": 27,
-                        "end_line": 101,
+                        "end_line": 108,
                         "end_col": 31
                       }
                     }
@@ -1218,9 +1219,9 @@ expression: check.package
                 },
                 "span": {
                   "file": "lit/examples/rule12.lit",
-                  "line": 101,
+                  "line": 108,
                   "col": 9,
-                  "end_line": 101,
+                  "end_line": 108,
                   "end_col": 32
                 }
               },
@@ -1247,9 +1248,9 @@ expression: check.package
                       },
                       "span": {
                         "file": "lit/examples/rule12.lit",
-                        "line": 102,
+                        "line": 109,
                         "col": 19,
-                        "end_line": 102,
+                        "end_line": 109,
                         "end_col": 32
                       }
                     }
@@ -1257,9 +1258,9 @@ expression: check.package
                 },
                 "span": {
                   "file": "lit/examples/rule12.lit",
-                  "line": 102,
+                  "line": 109,
                   "col": 10,
-                  "end_line": 102,
+                  "end_line": 109,
                   "end_col": 33
                 }
               },
@@ -1277,9 +1278,9 @@ expression: check.package
                 },
                 "span": {
                   "file": "lit/examples/rule12.lit",
-                  "line": 102,
+                  "line": 109,
                   "col": 37,
-                  "end_line": 102,
+                  "end_line": 109,
                   "end_col": 47
                 }
               }
@@ -1287,9 +1288,9 @@ expression: check.package
           ],
           "span": {
             "file": "lit/examples/rule12.lit",
-            "line": 99,
+            "line": 106,
             "col": 1,
-            "end_line": 103,
+            "end_line": 110,
             "end_col": 2
           }
         }

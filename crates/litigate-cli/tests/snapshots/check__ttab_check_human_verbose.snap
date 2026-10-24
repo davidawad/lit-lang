@@ -1,0 +1,745 @@
+---
+source: crates/litigate-cli/tests/check.rs
+expression: verbose_text
+---
+[L4001] Error: `InstitutionNoticed` on 2026-10-21 designates `answer-period` due 2026-11-05, earlier than the least time the rule allows, 30 calendar days from 2026-10-21 (2026-11-20) (37 CFR 2.105(a))
+    ╭─[ cases/e2e-ttab-short.case:12:26 ]
+    │
+ 12 │   instituted: 2026-10-21 InstitutionNoticed(2026-11-05) on applicant
+    │                          ───────────────┬──────────────  
+    │                                         ╰──────────────── The event is out of order or is not a legal transition from the replayed posture
+    │ 
+    │ Note: a designated due date must allow at least the deadline's own period; correct the date as the notice gives it
+────╯
+[L9002] Warning: hole: 37 CFR 2.102(c)(3); TBMP 207.03
+    ╭─[ lit/ttab/01-pre.lit:79:145 ]
+    │
+ 79 │ decision period-ends-day120: "Day 120: opposition period expires unless the applicant consents to the final 60-day extension" by applicant cite ?("37 CFR 2.102(c)(3); TBMP 207.03") {
+    │                                                                                                                                                 ──────────────────┬─────────────────  
+    │                                                                                                                                                                   ╰─────────────────── The source explicitly leaves this value unknown
+────╯
+[L9002] Warning: hole: 37 CFR 2.102(c)(3); TBMP 605
+    ╭─[ lit/ttab/02-standstill.lit:18:88 ]
+    │
+ 18 │ decision neg-posture: "Choose negotiating posture during standstill" by applicant cite ?("37 CFR 2.102(c)(3); TBMP 605") {
+    │                                                                                        ────────────────┬────────────────  
+    │                                                                                                        ╰────────────────── The source explicitly leaves this value unknown
+────╯
+[L9002] Warning: hole: TBMP 605.01
+    ╭─[ lit/ttab/02-standstill.lit:21:20 ]
+    │
+ 21 │     authority cite ?("TBMP 605.01")
+    │                    ────────┬───────  
+    │                            ╰───────── The source explicitly leaves this value unknown
+────╯
+[L9002] Warning: hole: TBMP 605.03; TMEP 1207.01(d)(viii)
+    ╭─[ lit/ttab/02-standstill.lit:28:20 ]
+    │
+ 28 │     authority cite ?("TBMP 605.03; TMEP 1207.01(d)(viii)")
+    │                    ───────────────────┬───────────────────  
+    │                                       ╰───────────────────── The source explicitly leaves this value unknown
+────╯
+[L9002] Warning: hole: TBMP 605.01
+    ╭─[ lit/ttab/02-standstill.lit:36:89 ]
+    │
+ 36 │ chance neg-rebrand: "Talks led by rebrand-with-transition and cost share" by board cite ?("TBMP 605.01") {
+    │                                                                                         ────────┬───────  
+    │                                                                                                 ╰───────── The source explicitly leaves this value unknown
+────╯
+[L9002] Warning: hole: TBMP 605.03
+    ╭─[ lit/ttab/02-standstill.lit:40:20 ]
+    │
+ 40 │     authority cite ?("TBMP 605.03")
+    │                    ────────┬───────  
+    │                            ╰───────── The source explicitly leaves this value unknown
+────╯
+[L9002] Warning: hole: TBMP 605.03; TMEP 1207.01(d)(viii)
+    ╭─[ lit/ttab/02-standstill.lit:45:20 ]
+    │
+ 45 │     authority cite ?("TBMP 605.03; TMEP 1207.01(d)(viii)")
+    │                    ───────────────────┬───────────────────  
+    │                                       ╰───────────────────── The source explicitly leaves this value unknown
+────╯
+[L9002] Warning: hole: TBMP 212.01-.02; 37 CFR 2.133(a)
+    ╭─[ lit/ttab/02-standstill.lit:50:20 ]
+    │
+ 50 │     authority cite ?("TBMP 212.01-.02; 37 CFR 2.133(a)")
+    │                    ──────────────────┬──────────────────  
+    │                                      ╰──────────────────── The source explicitly leaves this value unknown
+────╯
+[L9002] Warning: hole: TBMP 605.03; TMEP 1207.01(d)(viii)
+    ╭─[ lit/ttab/02-standstill.lit:62:82 ]
+    │
+ 62 │ chance neg-coexist: "Talks led by coexistence / consent agreement" by board cite ?("TBMP 605.03; TMEP 1207.01(d)(viii)") {
+    │                                                                                  ───────────────────┬───────────────────  
+    │                                                                                                     ╰───────────────────── The source explicitly leaves this value unknown
+────╯
+[L9002] Warning: hole: TBMP 605.03
+    ╭─[ lit/ttab/02-standstill.lit:66:20 ]
+    │
+ 66 │     authority cite ?("TBMP 605.03")
+    │                    ────────┬───────  
+    │                            ╰───────── The source explicitly leaves this value unknown
+────╯
+[L9002] Warning: hole: TBMP 605.03; TMEP 1207.01(d)(viii)
+    ╭─[ lit/ttab/02-standstill.lit:71:20 ]
+    │
+ 71 │     authority cite ?("TBMP 605.03; TMEP 1207.01(d)(viii)")
+    │                    ───────────────────┬───────────────────  
+    │                                       ╰───────────────────── The source explicitly leaves this value unknown
+────╯
+[L9002] Warning: hole: TBMP 212.01-.02; 37 CFR 2.133(a)
+    ╭─[ lit/ttab/02-standstill.lit:76:20 ]
+    │
+ 76 │     authority cite ?("TBMP 212.01-.02; 37 CFR 2.133(a)")
+    │                    ──────────────────┬──────────────────  
+    │                                      ╰──────────────────── The source explicitly leaves this value unknown
+────╯
+[L9002] Warning: hole: 37 CFR 2.68; 37 CFR 2.135; TBMP 602.01
+   ╭─[ lit/ttab/05-pre-3.lit:7:116 ]
+   │
+ 7 │ state abandon-chance: "Application abandoned before any opposition (37 CFR 2.68; no 2.135 judgment)" by board cite ?("37 CFR 2.68; 37 CFR 2.135; TBMP 602.01") {
+   │                                                                                                                    ─────────────────────┬─────────────────────  
+   │                                                                                                                                         ╰─────────────────────── The source explicitly leaves this value unknown
+───╯
+[L9002] Warning: hole: 15 USC 1064(1); TBMP 309.03
+    ╭─[ lit/ttab/06-lapse.lit:51:100 ]
+    │
+ 51 │ chance cancellation-merits: "Petition to cancel (2(d)) tried to decision" by board discretion cite ?("15 USC 1064(1); TBMP 309.03") {
+    │                                                                                                    ────────────────┬───────────────  
+    │                                                                                                                    ╰───────────────── The source explicitly leaves this value unknown
+────╯
+[L9002] Warning: hole: 37 CFR 2.105(a); 2.106(a); TBMP 310.03(a)
+    ╭─[ lit/ttab/07-opposition-to-trial.lit:40:120 ]
+    │
+ 40 │ decision instituted: "Board institutes; answer due on the date the notice of institution designates" by applicant cite ?("37 CFR 2.105(a); 2.106(a); TBMP 310.03(a)") {
+    │                                                                                                                        ───────────────────────┬──────────────────────  
+    │                                                                                                                                               ╰──────────────────────── The source explicitly leaves this value unknown
+────╯
+[L9002] Warning: hole: 37 CFR 2.106(b)(3); 2.133(d); 15 USC 1068; 37 CFR 2.6(a)(16)(ii); TBMP 313.02, 309.03(d)
+    ╭─[ lit/ttab/07-opposition-to-trial.lit:51:20 ]
+    │
+ 51 │     authority cite ?("37 CFR 2.106(b)(3); 2.133(d); 15 USC 1068; 37 CFR 2.6(a)(16)(ii); TBMP 313.02, 309.03(d)")
+    │                    ──────────────────────────────────────────────┬──────────────────────────────────────────────  
+    │                                                                  ╰──────────────────────────────────────────────── The source explicitly leaves this value unknown
+────╯
+[L9002] Warning: hole: 37 CFR 2.135; TBMP 602.01
+    ╭─[ lit/ttab/07-opposition-to-trial.lit:68:20 ]
+    │
+ 68 │     authority cite ?("37 CFR 2.135; TBMP 602.01")
+    │                    ───────────────┬──────────────  
+    │                                   ╰──────────────── The source explicitly leaves this value unknown
+────╯
+[L9002] Warning: hole: 37 CFR 2.117(c); TBMP 605.02
+    ╭─[ lit/ttab/07-opposition-to-trial.lit:75:20 ]
+    │
+ 75 │     authority cite ?("37 CFR 2.117(c); TBMP 605.02")
+    │                    ────────────────┬────────────────  
+    │                                    ╰────────────────── The source explicitly leaves this value unknown
+────╯
+[L9002] Warning: hole: FRCP 55(c) via 37 CFR 2.116(a); TBMP 312
+    ╭─[ lit/ttab/07-opposition-to-trial.lit:89:20 ]
+    │
+ 89 │     authority cite ?("FRCP 55(c) via 37 CFR 2.116(a); TBMP 312")
+    │                    ──────────────────────┬──────────────────────  
+    │                                          ╰──────────────────────── The source explicitly leaves this value unknown
+────╯
+[L9002] Warning: hole: 37 CFR 2.106(b); TBMP 311
+    ╭─[ lit/ttab/07-opposition-to-trial.lit:99:77 ]
+    │
+ 99 │ decision answered: "Answer on file; exits and next stage" by applicant cite ?("37 CFR 2.106(b); TBMP 311") {
+    │                                                                             ───────────────┬──────────────  
+    │                                                                                            ╰──────────────── The source explicitly leaves this value unknown
+────╯
+[L9002] Warning: hole: 37 CFR 2.135; TBMP 602.01
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:102:20 ]
+     │
+ 102 │     authority cite ?("37 CFR 2.135; TBMP 602.01")
+     │                    ───────────────┬──────────────  
+     │                                   ╰──────────────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: 37 CFR 2.135; TBMP 602.01
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:109:20 ]
+     │
+ 109 │     authority cite ?("37 CFR 2.135; TBMP 602.01")
+     │                    ───────────────┬──────────────  
+     │                                   ╰──────────────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: 37 CFR 2.117(c); TBMP 605.02
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:115:20 ]
+     │
+ 115 │     authority cite ?("37 CFR 2.117(c); TBMP 605.02")
+     │                    ────────────────┬────────────────  
+     │                                    ╰────────────────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: 37 CFR 2.120(a)(2)(i); TBMP 401.01
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:124:20 ]
+     │
+ 124 │     authority cite ?("37 CFR 2.120(a)(2)(i); TBMP 401.01")
+     │                    ───────────────────┬───────────────────  
+     │                                       ╰───────────────────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: 37 CFR 2.117(c); TBMP 605.02
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:132:85 ]
+     │
+ 132 │ chance talks-instituted: "Suspended for settlement after institution" by board cite ?("37 CFR 2.117(c); TBMP 605.02") {
+     │                                                                                     ────────────────┬────────────────  
+     │                                                                                                     ╰────────────────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: TBMP 605.03
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:136:20 ]
+     │
+ 136 │     authority cite ?("TBMP 605.03")
+     │                    ────────┬───────  
+     │                            ╰───────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: TBMP 605.03
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:141:20 ]
+     │
+ 141 │     authority cite ?("TBMP 605.03")
+     │                    ────────┬───────  
+     │                            ╰───────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: TBMP 605.02
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:151:20 ]
+     │
+ 151 │     authority cite ?("TBMP 605.02")
+     │                    ────────┬───────  
+     │                            ╰───────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: 37 CFR 2.117(c); TBMP 605.02
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:172:78 ]
+     │
+ 172 │ chance talks-answered: "Suspended for settlement after answer" by board cite ?("37 CFR 2.117(c); TBMP 605.02") {
+     │                                                                              ────────────────┬────────────────  
+     │                                                                                              ╰────────────────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: TBMP 605.03
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:176:20 ]
+     │
+ 176 │     authority cite ?("TBMP 605.03")
+     │                    ────────┬───────  
+     │                            ╰───────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: TBMP 605.03
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:181:20 ]
+     │
+ 181 │     authority cite ?("TBMP 605.03")
+     │                    ────────┬───────  
+     │                            ╰───────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: TBMP 605.02
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:191:20 ]
+     │
+ 191 │     authority cite ?("TBMP 605.02")
+     │                    ────────┬───────  
+     │                            ╰───────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: 37 CFR 2.120(a)(2)(ii); TBMP 401.02
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:209:103 ]
+     │
+ 209 │ state initial-disclosures: "Initial disclosures served (30 days after discovery opens)" by board cite ?("37 CFR 2.120(a)(2)(ii); TBMP 401.02") {
+     │                                                                                                       ────────────────────┬───────────────────  
+     │                                                                                                                           ╰───────────────────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: 37 CFR 2.135; TBMP 602.01
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:221:20 ]
+     │
+ 221 │     authority cite ?("37 CFR 2.135; TBMP 602.01")
+     │                    ───────────────┬──────────────  
+     │                                   ╰──────────────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: 37 CFR 2.135; TBMP 602.01
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:228:20 ]
+     │
+ 228 │     authority cite ?("37 CFR 2.135; TBMP 602.01")
+     │                    ───────────────┬──────────────  
+     │                                   ╰──────────────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: 37 CFR 2.117(c); TBMP 605.02
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:234:20 ]
+     │
+ 234 │     authority cite ?("37 CFR 2.117(c); TBMP 605.02")
+     │                    ────────────────┬────────────────  
+     │                                    ╰────────────────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: 37 CFR 2.121(a); TBMP 702.04
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:252:96 ]
+     │
+ 252 │ decision discovery-closed: "Discovery closed; ACR/trial/settlement decision" by applicant cite ?("37 CFR 2.121(a); TBMP 702.04") {
+     │                                                                                                ────────────────┬────────────────  
+     │                                                                                                                ╰────────────────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: 37 CFR 2.135; TBMP 602.01
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:255:20 ]
+     │
+ 255 │     authority cite ?("37 CFR 2.135; TBMP 602.01")
+     │                    ───────────────┬──────────────  
+     │                                   ╰──────────────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: 37 CFR 2.135; TBMP 602.01
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:262:20 ]
+     │
+ 262 │     authority cite ?("37 CFR 2.135; TBMP 602.01")
+     │                    ───────────────┬──────────────  
+     │                                   ╰──────────────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: 37 CFR 2.117(c); TBMP 605.02
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:268:20 ]
+     │
+ 268 │     authority cite ?("37 CFR 2.117(c); TBMP 605.02")
+     │                    ────────────────┬────────────────  
+     │                                    ╰────────────────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: TBMP 702.04; 37 CFR 2.120(a)(2)(iv)
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:277:20 ]
+     │
+ 277 │     authority cite ?("TBMP 702.04; 37 CFR 2.120(a)(2)(iv)")
+     │                    ────────────────────┬───────────────────  
+     │                                        ╰───────────────────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: 37 CFR 2.117(c); TBMP 605.02
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:291:83 ]
+     │
+ 291 │ chance talks-discovery: "Suspended for settlement during discovery" by board cite ?("37 CFR 2.117(c); TBMP 605.02") {
+     │                                                                                   ────────────────┬────────────────  
+     │                                                                                                   ╰────────────────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: TBMP 605.03
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:295:20 ]
+     │
+ 295 │     authority cite ?("TBMP 605.03")
+     │                    ────────┬───────  
+     │                            ╰───────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: TBMP 605.03
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:300:20 ]
+     │
+ 300 │     authority cite ?("TBMP 605.03")
+     │                    ────────┬───────  
+     │                            ╰───────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: TBMP 605.02
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:310:20 ]
+     │
+ 310 │     authority cite ?("TBMP 605.02")
+     │                    ────────┬───────  
+     │                            ╰───────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: 37 CFR 2.117(c); TBMP 605.02
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:316:78 ]
+     │
+ 316 │ chance talks-trial: "Suspended for settlement after discovery" by board cite ?("37 CFR 2.117(c); TBMP 605.02") {
+     │                                                                              ────────────────┬────────────────  
+     │                                                                                              ╰────────────────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: TBMP 605.03
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:320:20 ]
+     │
+ 320 │     authority cite ?("TBMP 605.03")
+     │                    ────────┬───────  
+     │                            ╰───────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: TBMP 605.03
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:325:20 ]
+     │
+ 325 │     authority cite ?("TBMP 605.03")
+     │                    ────────┬───────  
+     │                            ╰───────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: TBMP 605.02
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:335:20 ]
+     │
+ 335 │     authority cite ?("TBMP 605.02")
+     │                    ────────┬───────  
+     │                            ╰───────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: TBMP 702.04; TBMP 528.05(a)(2); TTAB ACR notice (2011-12-22)
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:341:106 ]
+     │
+ 341 │ state acr-record: "ACR: stipulated record, Board decides on summary-judgment-style briefs" by board cite ?("TBMP 702.04; TBMP 528.05(a)(2); TTAB ACR notice (2011-12-22)") {
+     │                                                                                                          ────────────────────────────────┬────────────────────────────────  
+     │                                                                                                                                          ╰────────────────────────────────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: TBMP 702.04
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:345:20 ]
+     │
+ 345 │     authority cite ?("TBMP 702.04")
+     │                    ────────┬───────  
+     │                            ╰───────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: 37 CFR 2.121(a)-(c); TBMP 702.01
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:350:122 ]
+     │
+ 350 │ state trial-periods: "Trial periods: pretrial disclosures, plaintiff 30d, defendant 30d, rebuttal 15d" by applicant cite ?("37 CFR 2.121(a)-(c); TBMP 702.01") {
+     │                                                                                                                          ──────────────────┬──────────────────  
+     │                                                                                                                                            ╰──────────────────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: 37 CFR 2.135; TBMP 602.01
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:364:20 ]
+     │
+ 364 │     authority cite ?("37 CFR 2.135; TBMP 602.01")
+     │                    ───────────────┬──────────────  
+     │                                   ╰──────────────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: 37 CFR 2.135; TBMP 602.01
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:371:20 ]
+     │
+ 371 │     authority cite ?("37 CFR 2.135; TBMP 602.01")
+     │                    ───────────────┬──────────────  
+     │                                   ╰──────────────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: 37 CFR 2.117(c); TBMP 605.02
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:377:20 ]
+     │
+ 377 │     authority cite ?("37 CFR 2.117(c); TBMP 605.02")
+     │                    ────────────────┬────────────────  
+     │                                    ╰────────────────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: 37 CFR 2.128(a)-(b); TBMP 801.02
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:386:20 ]
+     │
+ 386 │     authority cite ?("37 CFR 2.128(a)-(b); TBMP 801.02")
+     │                    ──────────────────┬──────────────────  
+     │                                      ╰──────────────────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: 37 CFR 2.117(c); TBMP 605.02
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:394:77 ]
+     │
+ 394 │ chance talks-briefs: "Suspended for settlement before briefs" by board cite ?("37 CFR 2.117(c); TBMP 605.02") {
+     │                                                                             ────────────────┬────────────────  
+     │                                                                                             ╰────────────────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: TBMP 605.03
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:398:20 ]
+     │
+ 398 │     authority cite ?("TBMP 605.03")
+     │                    ────────┬───────  
+     │                            ╰───────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: TBMP 605.03
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:403:20 ]
+     │
+ 403 │     authority cite ?("TBMP 605.03")
+     │                    ────────┬───────  
+     │                            ╰───────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: TBMP 605.02
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:413:20 ]
+     │
+ 413 │     authority cite ?("TBMP 605.02")
+     │                    ────────┬───────  
+     │                            ╰───────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: 37 CFR 2.129; TBMP 801
+     ╭─[ lit/ttab/07-opposition-to-trial.lit:423:20 ]
+     │
+ 423 │     authority cite ?("37 CFR 2.129; TBMP 801")
+     │                    ─────────────┬─────────────  
+     │                                 ╰─────────────── The source explicitly leaves this value unknown
+─────╯
+[L9002] Warning: hole: 15 USC 1071; 37 CFR 2.145(d)(1),(3); TBMP 901.01, 902.02
+    ╭─[ lit/ttab/08-decision.lit:31:113 ]
+    │
+ 31 │ decision decision-sustained: "Opposition sustained: appeal choice (63 days, 37 CFR 2.145(d))" by applicant cite ?("15 USC 1071; 37 CFR 2.145(d)(1),(3); TBMP 901.01, 902.02") {
+    │                                                                                                                 ──────────────────────────────┬──────────────────────────────  
+    │                                                                                                                                               ╰──────────────────────────────── The source explicitly leaves this value unknown
+────╯
+[L9002] Warning: hole: 15 USC 1114(1); Frisch's Restaurants v. Elby's Big Boy, 670 F.2d 642 (6th Cir. 1982)
+    ╭─[ lit/ttab/14-threat.lit:29:71 ]
+    │
+ 29 │ chance suit-merits: "Suit tried to judgment" by board discretion cite ?("15 USC 1114(1); Frisch's Restaurants v. Elby's Big Boy, 670 F.2d 642 (6th Cir. 1982)") {
+    │                                                                       ────────────────────────────────────────────┬────────────────────────────────────────────  
+    │                                                                                                                   ╰────────────────────────────────────────────── The source explicitly leaves this value unknown
+────╯
+[L9002] Warning: hole: 37 CFR 2.133(b); TBMP 212
+    ╭─[ lit/ttab/15-terminals.lit:14:142 ]
+    │
+ 14 │ terminal registration-restricted: "Restricted registration (ID narrowed by consent or Board 2.133(b))" outcome [restricted, registered] cite ?("37 CFR 2.133(b); TBMP 212") {
+    │                                                                                                                                              ───────────────┬──────────────  
+    │                                                                                                                                                             ╰──────────────── The source explicitly leaves this value unknown
+────╯
+[L9002] Warning: hole: 37 CFR 2.127(f); 37 CFR 2.136; B&B Hardware v. Hargis, 575 U.S. 138 (2015)
+    ╭─[ lit/ttab/15-terminals.lit:21:146 ]
+    │
+ 21 │ terminal opposition-sustained: "Opposition sustained: application refused; no damages, no fees (37 CFR 2.127(f))" outcome [loss, sustained] cite ?("37 CFR 2.127(f); 37 CFR 2.136; B&B Hardware v. Hargis, 575 U.S. 138 (2015)") {
+    │                                                                                                                                                  ───────────────────────────────────────┬───────────────────────────────────────  
+    │                                                                                                                                                                                         ╰───────────────────────────────────────── The source explicitly leaves this value unknown
+────╯
+[L9002] Warning: hole: 37 CFR 2.135; TBMP 602.01
+    ╭─[ lit/ttab/15-terminals.lit:28:130 ]
+    │
+ 28 │ terminal judgment-2135: "Abandoned without consent after commencement: judgment against applicant" outcome [loss, judgment] cite ?("37 CFR 2.135; TBMP 602.01") {
+    │                                                                                                                                  ───────────────┬──────────────  
+    │                                                                                                                                                 ╰──────────────── The source explicitly leaves this value unknown
+────╯
+[L9002] Warning: hole: TBMP 605.03
+    ╭─[ lit/ttab/15-terminals.lit:42:164 ]
+    │
+ 42 │ terminal settle-rebrand-transition: "Settlement: rebrand on a transition period with the opposer cost contribution" outcome [settlement, rebrand, cost-share] cite ?("TBMP 605.03") {
+    │                                                                                                                                                                    ────────┬───────  
+    │                                                                                                                                                                            ╰───────── The source explicitly leaves this value unknown
+────╯
+[L9002] Warning: hole: TBMP 605.03; TMEP 1207.01(d)(viii)
+    ╭─[ lit/ttab/15-terminals.lit:49:140 ]
+    │
+ 49 │ terminal settle-coexistence: "Settlement: coexistence agreement; registration proceeds" outcome [settlement, coexistence, registered] cite ?("TBMP 605.03; TMEP 1207.01(d)(viii)") {
+    │                                                                                                                                            ───────────────────┬───────────────────  
+    │                                                                                                                                                               ╰───────────────────── The source explicitly leaves this value unknown
+────╯
+litigate check: failed (1 error(s), 68 warning(s))
+{
+  "profile": "dev",
+  "files": [
+    "cases/e2e-ttab-short.case",
+    "lit/ttab/../core/Lit.toml",
+    "lit/ttab/../core/authority.lit",
+    "lit/ttab/../core/calendar.lit",
+    "lit/ttab/../core/core.lit",
+    "lit/ttab/../core/frap26-tests.lit",
+    "lit/ttab/../core/frap26.lit",
+    "lit/ttab/../core/frcp6-history-tests.lit",
+    "lit/ttab/../core/frcp6-tests.lit",
+    "lit/ttab/../core/frcp6.lit",
+    "lit/ttab/../core/frcrimp45.lit",
+    "lit/ttab/../core/itc210.lit",
+    "lit/ttab/../core/money.lit",
+    "lit/ttab/../core/rcfc6.lit",
+    "lit/ttab/../core/roles.lit",
+    "lit/ttab/../core/supct30.lit",
+    "lit/ttab/../core/time.lit",
+    "lit/ttab/01-pre.lit",
+    "lit/ttab/02-standstill.lit",
+    "lit/ttab/03-pre-2.lit",
+    "lit/ttab/04-standstill-2.lit",
+    "lit/ttab/05-pre-3.lit",
+    "lit/ttab/06-lapse.lit",
+    "lit/ttab/07-opposition-to-trial.lit",
+    "lit/ttab/08-decision.lit",
+    "lit/ttab/09-appeal.lit",
+    "lit/ttab/10-decision-2.lit",
+    "lit/ttab/11-appeal-2.lit",
+    "lit/ttab/12-decision-3.lit",
+    "lit/ttab/13-abandon.lit",
+    "lit/ttab/14-threat.lit",
+    "lit/ttab/15-terminals.lit",
+    "lit/ttab/Lit.toml",
+    "lit/ttab/ttab.lit"
+  ],
+  "obligations": [
+    {
+      "name": "well-typed",
+      "status": "passed",
+      "count": 0,
+      "examples": [],
+      "evidence": {
+        "checked": 366,
+        "subjects": "declarations"
+      }
+    },
+    {
+      "name": "cite-resolves",
+      "status": "passed",
+      "count": 0,
+      "examples": [],
+      "evidence": {
+        "checked": 423,
+        "subjects": "cites"
+      }
+    },
+    {
+      "name": "effective-disjoint",
+      "status": "passed",
+      "count": 0,
+      "examples": [],
+      "evidence": {
+        "checked": 140,
+        "subjects": "version sets"
+      }
+    },
+    {
+      "name": "effective-covered",
+      "status": "passed",
+      "count": 0,
+      "examples": [],
+      "evidence": {
+        "checked": 140,
+        "subjects": "version sets"
+      }
+    },
+    {
+      "name": "precedence-acyclic",
+      "status": "passed",
+      "count": 0,
+      "examples": [],
+      "evidence": {
+        "checked": 25,
+        "subjects": "relations and authority chains"
+      }
+    },
+    {
+      "name": "delegation-respected",
+      "status": "passed",
+      "count": 0,
+      "examples": [],
+      "evidence": {
+        "checked": 19,
+        "subjects": "displacing relations and delegations"
+      }
+    },
+    {
+      "name": "exceptions-ordered",
+      "status": "passed",
+      "count": 0,
+      "examples": [],
+      "evidence": {
+        "checked": 0,
+        "subjects": "exceptions and precedence claims"
+      }
+    },
+    {
+      "name": "dist-exact",
+      "status": "passed",
+      "count": 0,
+      "examples": [],
+      "evidence": {
+        "checked": 19,
+        "subjects": "chance nodes"
+      }
+    },
+    {
+      "name": "graph-exits",
+      "status": "passed",
+      "count": 0,
+      "examples": [],
+      "evidence": {
+        "checked": 47,
+        "subjects": "non-terminal nodes"
+      }
+    },
+    {
+      "name": "graph-reachable",
+      "status": "passed",
+      "count": 0,
+      "examples": [],
+      "evidence": {
+        "checked": 61,
+        "subjects": "nodes"
+      }
+    },
+    {
+      "name": "deadline-satisfiable",
+      "status": "passed",
+      "count": 0,
+      "examples": [],
+      "evidence": {
+        "checked": 61,
+        "subjects": "nodes"
+      }
+    },
+    {
+      "name": "workflow-sound",
+      "status": "passed",
+      "count": 0,
+      "examples": [],
+      "evidence": {
+        "checked": 257,
+        "subjects": "markings"
+      }
+    },
+    {
+      "name": "tests-pass",
+      "status": "passed",
+      "count": 0,
+      "examples": [],
+      "evidence": {
+        "checked": 163,
+        "subjects": "inline tests"
+      }
+    },
+    {
+      "name": "case-replay",
+      "status": "failed",
+      "count": 1,
+      "examples": [
+        "cases/e2e-ttab-short.case:12:26: L4001 `InstitutionNoticed` on 2026-10-21 designates `answer-period` due 2026-11-05, earlier than the least time the rule allows, 30 calendar days from 2026-10-21 (2026-11-20) (37 CFR 2.105(a))"
+      ],
+      "evidence": {
+        "checked": 1,
+        "subjects": "events"
+      }
+    },
+    {
+      "name": "holes",
+      "status": "warning",
+      "count": 68,
+      "examples": [
+        "lit/ttab/01-pre.lit:79:145: L9002 hole: 37 CFR 2.102(c)(3); TBMP 207.03",
+        "lit/ttab/02-standstill.lit:18:88: L9002 hole: 37 CFR 2.102(c)(3); TBMP 605",
+        "lit/ttab/02-standstill.lit:21:20: L9002 hole: TBMP 605.01",
+        "lit/ttab/02-standstill.lit:28:20: L9002 hole: TBMP 605.03; TMEP 1207.01(d)(viii)",
+        "lit/ttab/02-standstill.lit:36:89: L9002 hole: TBMP 605.01",
+        "lit/ttab/02-standstill.lit:40:20: L9002 hole: TBMP 605.03",
+        "lit/ttab/02-standstill.lit:45:20: L9002 hole: TBMP 605.03; TMEP 1207.01(d)(viii)",
+        "lit/ttab/02-standstill.lit:50:20: L9002 hole: TBMP 212.01-.02; 37 CFR 2.133(a)"
+      ],
+      "evidence": {
+        "checked": 68,
+        "subjects": "holes"
+      }
+    },
+    {
+      "name": "rule-without-test",
+      "status": "passed",
+      "count": 0,
+      "examples": [],
+      "evidence": {
+        "checked": 80,
+        "subjects": "deadline and counting rules"
+      }
+    }
+  ],
+  "packages": [
+    {
+      "name": "ttab-trademark-trial-and-appeal-board",
+      "version": "0.1.0",
+      "digest": "sha256:4be6244162d24eeeb5271284169f6140d18c6e23a158224b91e8ae85b2a88c1f",
+      "root": "lit/ttab",
+      "requested": false,
+      "holes": 68,
+      "tests": {
+        "passed": 30,
+        "failed": 0
+      }
+    },
+    {
+      "name": "core",
+      "version": "1.0.0",
+      "digest": "sha256:2867b14fb17cb539b8cc776eb18097c522da16d862909f5b4d488ff0b1bc447a",
+      "root": "lit/ttab/../core",
+      "requested": false,
+      "holes": 0,
+      "tests": {
+        "passed": 133,
+        "failed": 0
+      }
+    }
+  ],
+  "cases": [
+    {
+      "path": "cases/e2e-ttab-short.case",
+      "id": "e2e-ttab-short",
+      "start": null,
+      "replay": [
+        {
+          "date": "2026-10-21",
+          "event": "InstitutionNoticed(2026-11-05)",
+          "effect": "triggered",
+          "from": "ttab-trademark-trial-and-appeal-board::published",
+          "to": "ttab-trademark-trial-and-appeal-board::published"
+        }
+      ],
+      "deadlines": []
+    }
+  ]
+}

@@ -8,19 +8,19 @@ leg 1: MercExchange sues eBay and Half.com for infringing its online-auction pat
        via frcp-civil-procedure::verdict-for-plaintiff (nature, FRCP 52(a); 58)
        at  frcp-civil-procedure::final-judgment-entered "Final Judgment Entered"
     2. [-] The 28-day post-trial motion window opens
-       via frcp-civil-procedure::final-judgment-entered->post-trial-motion-window#0 (self, FRCP 50(b); 59(b); 59(e))
+       via frcp-civil-procedure::edge-final-judgment-entered-post-trial-motion-window (self, FRCP 50(b); 59(b); 59(e))
        at  frcp-civil-procedure::post-trial-motion-window "Post-Trial Motion Window"
     3. [-] Defendants renew their JMOL motions (new-trial motions were also filed; the pack takes one motion at a time)
-       via frcp-civil-procedure::post-trial-motion-window->rule50b-jmol-filed#0 (self, FRCP 50(b), within 28 calendar days)
+       via frcp-civil-procedure::edge-post-trial-motion-window-rule50b-jmol-filed (self, FRCP 50(b), within 28 calendar days)
        at  frcp-civil-procedure::rule50b-jmol-filed "Renewed Motion for JMOL Filed"
     4. [-] Motions briefed
-       via frcp-civil-procedure::rule50b-jmol-filed->post-trial-ruling#0 (self, FRCP 50(b))
+       via frcp-civil-procedure::edge-rule50b-jmol-filed-post-trial-ruling (self, FRCP 50(b))
        at  frcp-civil-procedure::post-trial-ruling "Court Rules on Post-Trial Motion"
     5. [2003-08-06] JMOL and new trial denied (inducement award set aside); permanent injunction denied; judgment for $29.5M
-       via frcp-civil-procedure::post-trial-ruling->notice-of-appeal-window#0 (nature, FRAP 4(a)(4))
+       via frcp-civil-procedure::edge-post-trial-ruling-notice-of-appeal-window (nature, FRAP 4(a)(4))
        at  frcp-civil-procedure::notice-of-appeal-window "Notice of Appeal Window"
     6. [-] eBay and Half.com appeal (No. 03-1600)
-       via frcp-civil-procedure::notice-of-appeal-window->notice-of-appeal-filed#0 (self, FRAP 4(a)(1)(A), within 30 calendar days)
+       via frcp-civil-procedure::edge-notice-of-appeal-window-notice-of-appeal-filed (self, FRAP 4(a)(1)(A), within 30 calendar days)
        at  frcp-civil-procedure::notice-of-appeal-filed "Notice of Appeal Filed"
     7. [-] A patent case goes to the Federal Circuit (28 U.S.C. § 1295(a)(1)), not the Fourth Circuit
        via links::frcp-appeal-to-cafc-district-court (self, cross-forum link, 28 U.S.C. § 1295(a)(1))

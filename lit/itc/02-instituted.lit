@@ -7,7 +7,7 @@ state instituted: "Investigation Instituted" by office effective [2025-02-03, ..
 {
   group instituted-group
   note "Federal Register notice publishes, defining the accused-product scope in plain language; the investigation is numbered 'Inv. No. 337-TA-XXXX.' Within 45 days the ALJ must issue a target-date order (19 CFR 210.51(a)) — if the target date does not exceed 16 months from institution the order is final and not subject to interlocutory review. Discovery formally opens on this publication (signal itc337/discovery-open), running CONCURRENTLY with the response period modeled downstream — the response-then-discovery sequencing below is a teaching linearization, not a claim that discovery waits for the response."
-  edge-instituted-response-per-notice-of-investig "Notice of investigation served on respondent(s) — 20-day response clock begins (Rule 210.13(a))" -> response-period-open {
+  edge-instituted-response-period-open "Notice of investigation served on respondent(s) — 20-day response clock begins (Rule 210.13(a))" -> response-period-open {
     authority cite "cfr210.13.a"
   }
 }

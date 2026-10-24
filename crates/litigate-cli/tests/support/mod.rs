@@ -107,6 +107,12 @@ pub fn example(name: &str, extra: &str, case: Option<&str>) -> PathBuf {
     let module = dir.join("lit/examples/rule12.lit");
     let text = std::fs::read_to_string(&module).unwrap();
     std::fs::write(&module, format!("{text}\n{extra}\n")).unwrap();
+    let package_lock = litigate_in(&dir, &["lock", "lit/examples"]);
+    assert_eq!(
+        package_lock.code, 0,
+        "{}{}",
+        package_lock.stdout, package_lock.stderr
+    );
     if let Some(case) = case {
         std::fs::write(dir.join("cases/examples/acme.case"), case).unwrap();
     }

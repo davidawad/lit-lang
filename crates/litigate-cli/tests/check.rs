@@ -7,7 +7,7 @@ mod support;
 use support::{codes, litigate, scratch};
 
 #[test]
-fn dev_check_reports_holes_and_anonymous_edges_and_replays_acme() {
+fn dev_check_reports_holes_and_replays_acme() {
     let run = litigate(&["check", "lit/examples", "cases/examples"]);
     assert_eq!(run.code, 0, "{}", run.stdout);
     let found = codes(&run.json);
@@ -18,22 +18,13 @@ fn dev_check_reports_holes_and_anonymous_edges_and_replays_acme() {
             .count(),
         3
     );
-    assert_eq!(
-        found
+    assert!(
+        !found
             .iter()
-            .filter(|c| c.0 == "L9003" && c.1 == "info")
-            .count(),
-        2
+            .any(|c| matches!(c.0.as_str(), "L9003" | "L9006")),
+        "{found:?}"
     );
-    // The worked example's two events declare no id (L9006, info).
-    assert_eq!(
-        found
-            .iter()
-            .filter(|c| c.0 == "L9006" && c.1 == "info")
-            .count(),
-        2
-    );
-    assert_eq!(found.len(), 7, "{found:?}");
+    assert_eq!(found.len(), 3, "{found:?}");
     let case = &run.json["result"]["cases"][0];
     assert_eq!(case["start"], "frcp-rule12-example::mtd-ruling");
     assert_eq!(case["deadlines"][0]["due"], "2025-03-26");
@@ -109,6 +100,7 @@ fn ttab_check_human_output_groups_library_noise_and_verbose_restores_it() {
         default_text.contains("ttab-trademark-trial-and-appeal-board: 68 holes; --verbose to show")
     );
     assert!(!default_text.contains("[L9003]"));
+    insta::assert_snapshot!("ttab_check_human_default", default_text);
 
     let verbose = run(&[
         "--format",
@@ -121,6 +113,7 @@ fn ttab_check_human_output_groups_library_noise_and_verbose_restores_it() {
     let verbose_text = String::from_utf8_lossy(&verbose.stdout);
     assert!(verbose_text.contains("[L9002]"));
     assert!(!verbose_text.contains("--verbose to show"));
+    insta::assert_snapshot!("ttab_check_human_verbose", verbose_text);
 
     let json = run(&["--format", "json", "check", "cases/e2e-ttab-short.case"]);
     let document: serde_json::Value = serde_json::from_slice(&json.stdout).unwrap();
@@ -130,6 +123,21 @@ fn ttab_check_human_output_groups_library_noise_and_verbose_restores_it() {
         .unwrap()
         .iter()
         .any(|d| d["code"] == "L9002"));
+}
+
+#[test]
+fn shipped_packages_have_no_anonymous_edges() {
+    let run = litigate(&["check", "lit"]);
+    assert_eq!(run.code, 0, "{}", run.stdout);
+    assert!(
+        !run.json["diagnostics"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|diagnostic| diagnostic["code"] == "L9003"),
+        "{}",
+        run.stdout
+    );
 }
 
 #[test]
@@ -158,7 +166,7 @@ fn a_failing_test_is_l5006() {
         d["message"].as_str().unwrap().contains("\"2025-03-24\""),
         "{d}"
     );
-    assert_eq!(d["span"]["line"], 96);
+    assert_eq!(d["span"]["line"], 103);
 }
 
 #[test]

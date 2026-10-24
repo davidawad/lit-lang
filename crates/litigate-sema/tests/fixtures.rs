@@ -26,18 +26,12 @@ fn worked_example_checks_and_lowers_to_hir() -> std::io::Result<()> {
 }
 
 #[test]
-fn worked_example_lock_is_reported_missing_then_round_trips() -> std::io::Result<()> {
+fn worked_example_lock_matches_and_round_trips() -> std::io::Result<()> {
     let repo = repo();
     let (db, ws) = litigate_sema::load(&repo, &[repo.join("lit/examples")], None)?;
     let pkg = ws.packages(&db)[0];
     let missing = litigate_sema::lock_diagnostics(&db, ws, pkg);
-    assert_eq!(
-        missing
-            .iter()
-            .map(|d| (d.code, d.span.file.0.as_str()))
-            .collect::<Vec<_>>(),
-        [(C::StaleLock, "lit/examples/Lit.lock")]
-    );
+    assert!(missing.is_empty(), "{missing:#?}");
     let text = litigate_sema::render_lock(&db, ws, pkg);
     assert!(text.starts_with("version = 2\n\n[[package]]\nname = \"frcp-rule12-example\"\nversion = \"0.1.0\"\nlanguage = 1\nsource = \"sha256:"));
     let expected = litigate_sema::pkg::lock::LockFile::parse(&text)

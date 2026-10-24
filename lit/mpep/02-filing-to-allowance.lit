@@ -22,10 +22,10 @@ chance nonprovisional-filed: "Nonprovisional Filed" by office discretion effecti
 {
   group filing-group
   note "Specification (with or without claims), drawings (if necessary), filing fee, search fee, examination fee, and oath/declaration required. Filing date = date specification received at USPTO (37 CFR 1.53(b)). The 20-year term begins here."
-  edge-nonprovision-missing-part-uspto-issues-notic "USPTO issues Notice to File Missing Parts" -> missing-parts p 0.15 {
+  edge-nonprovisional-filed-missing-parts "USPTO issues Notice to File Missing Parts" -> missing-parts p 0.15 {
     authority cite "37 CFR 1.53(f); MPEP 601"
   }
-  edge-nonprovision-pre-examinat-application-comple "Application complete — assigned to examiner" -> pre-examination p 0.85 {
+  edge-nonprovisional-filed-pre-examination "Application complete — assigned to examiner" -> pre-examination p 0.85 {
     authority cite "37 CFR 1.104; MPEP 704"
   }
 }
@@ -34,7 +34,7 @@ state missing-parts: "Notice: Missing Parts" by applicant effective [2024-01-31,
 {
   group filing-group
   note "USPTO issues a Notice to File Missing Parts if oath/declaration, basic fee, or specification is deficient. Applicant has a surcharge deadline to supply missing parts. Failure to respond = abandonment."
-  edge-missing-part-pre-examinat-file-missing-parts "File missing parts + surcharge" -> pre-examination {
+  edge-missing-parts-pre-examination "File missing parts + surcharge" -> pre-examination {
     authority cite "37 CFR 1.53(f); 37 CFR 1.16(f)"
     effort 2.hours
     cost 170.usd
@@ -47,7 +47,7 @@ state missing-parts: "Notice: Missing Parts" by applicant effective [2024-01-31,
     valence good
     note "Surcharge $170.00, undiscounted/large-entity, effective 1/19/2025 (37 CFR 1.16(f): late filing fee, oath/declaration, or an application filed without at least one claim)."
   }
-  edge-missing-part-abandoned-no-fail-to-supply-mis "Fail to supply missing parts" -> abandoned-no-reply {
+  edge-missing-parts-abandoned-no-reply "Fail to supply missing parts" -> abandoned-no-reply {
     authority cite "37 CFR 1.135; 35 U.S.C. 133"
     effort 0.hours
     valence bad
@@ -63,14 +63,14 @@ chance pre-examination: "Pre-Examination Processing" by examiner discretion effe
 {
   group filing-group
   note "Application assigned to a Technology Center and art unit. Examiner assigned. Awaiting first Office Action. Applicant may file a Request for Prioritized Examination (Track One) under 37 CFR 1.102(e) to accelerate."
-  edge-pre-examinat-non-final-oa-examiner-issues-no "Examiner issues Non-Final Office Action" -> non-final-oa p 0.7 {
+  edge-pre-examination-non-final-oa "Examiner issues Non-Final Office Action" -> non-final-oa p 0.7 {
     authority cite "35 U.S.C. 132; 37 CFR 1.104; MPEP 706"
   }
-  edge-pre-examinat-allowance-examiner-allows-on "Examiner allows on first action (FAOM)" -> allowance p 0.1 {
+  edge-pre-examination-allowance "Examiner allows on first action (FAOM)" -> allowance p 0.1 {
     authority cite "37 CFR 1.311; MPEP 1303"
     note "First Action Allowance (FAOM) — rare but occurs on well-drafted claims with strong prior art searches."
   }
-  edge-pre-examinat-restriction-examiner-issues-re "Examiner issues Restriction / Election Requirement" -> restriction-requirement p 0.2 {
+  edge-pre-examination-restriction-requirement "Examiner issues Restriction / Election Requirement" -> restriction-requirement p 0.2 {
     authority cite ?("37 CFR 1.142; 35 U.S.C. 121; MPEP 803")
     note "Restriction rate modeled at 0.20 (defensible 0.15–0.25 band; multi-invention applications draw restriction before/at first action). Rebalanced the pre-examination stochastic node: non-final-oa 0.90→0.70, allowance 0.10 held, restriction 0.20 — sum 1.0."
   }
@@ -80,7 +80,7 @@ state non-final-oa: "Non-Final Office Action" by applicant effective [2024-01-31
 {
   group examination-group
   note "Examiner's first rejection or objection. SSP (shortened statutory period) is typically 3 months. Extendable month-by-month up to the 6-month statutory ceiling under 37 CFR 1.136(a). Extensions require fees per 37 CFR 1.17(a)."
-  edge-non-final-oa-applicant-re-receive-and-docket "Receive and docket Office Action" -> applicant-response-window {
+  edge-non-final-oa-applicant-response-window "Receive and docket Office Action" -> applicant-response-window {
     authority cite "37 CFR 1.134; 35 U.S.C. 133"
     effort 0.5.hours
   }
@@ -90,7 +90,7 @@ decision applicant-response-window: "Response Window Open" by applicant effectiv
 {
   group examination-group
   note "Applicant must reply within the SSP (3 months) or extend. The 6-month statutory ceiling under 35 U.S.C. 133 cannot be extended for any reason — missing it triggers immediate abandonment. Three extension slots available (1, 2, and 3 additional months) under 37 CFR 1.136(a)."
-  edge-applicant-re-amendment-fi-file-amendment-res "File amendment/response within SSP (3 months)" -> amendment-filed {
+  edge-applicant-response-window-amendment-filed "File amendment/response within SSP (3 months)" -> amendment-filed {
     authority cite "37 CFR 1.111; MPEP 714"
     effort 15.hours
     within ssp-reply {
@@ -101,7 +101,7 @@ decision applicant-response-window: "Response Window Open" by applicant effectiv
     duration { min 13.5.days, mode 45.days, max 90.days }
     valence good
   }
-  edge-applicant-re-extension-ta-file-extension-of "File extension of time (1-month)" -> extension-taken {
+  edge-applicant-response-window-extension-taken "File extension of time (1-month)" -> extension-taken {
     authority cite "37 CFR 1.136(a); 37 CFR 1.17(a)"
     effort 0.5.hours
     cost 235.usd
@@ -113,12 +113,12 @@ decision applicant-response-window: "Response Window Open" by applicant effectiv
     duration { min 4.5.days, mode 15.days, max 30.days }
     note "1-month extension fee $235.00, undiscounted/large-entity, effective 1/19/2025 (37 CFR 1.17(a)(1))."
   }
-  edge-applicant-re-abandoned-no-fail-to-reply-with "Fail to reply within 6-month statutory ceiling" -> abandoned-no-reply {
+  edge-applicant-response-window-abandoned-no-reply "Fail to reply within 6-month statutory ceiling" -> abandoned-no-reply {
     authority cite "35 U.S.C. 133; 37 CFR 1.135"
     effort 0.hours
     valence bad
   }
-  edge-applicant-re-interview-co-request-examiner-i "Request examiner interview" -> interview-conducted {
+  edge-applicant-response-window-interview-conducted "Request examiner interview" -> interview-conducted {
     authority cite "37 CFR 1.133; MPEP 713"
     effort 2.hours
   }
@@ -128,7 +128,7 @@ state extension-taken: "Extension of Time Taken" by applicant effective [2024-01
 {
   group examination-group
   note "Extension granted per 37 CFR 1.136(a). Each extension costs fees under 37 CFR 1.17(a). Maximum 3 extensions (months 4, 5, 6). Month 6 is the absolute ceiling — 35 U.S.C. 133 permits no further extension."
-  edge-extension-ta-amendment-fi-file-amendment-wit "File amendment within extended period" -> amendment-filed {
+  edge-extension-taken-amendment-filed "File amendment within extended period" -> amendment-filed {
     authority cite "37 CFR 1.111; MPEP 714"
     effort 15.hours
     within extension-month {
@@ -138,7 +138,7 @@ state extension-taken: "Extension of Time Taken" by applicant effective [2024-01
     }
     duration { min 4.5.days, mode 15.days, max 30.days }
   }
-  edge-extension-ta-extension-ta-take-additional-ex "Take additional extension of time" -> extension-taken {
+  edge-extension-taken-extension-taken "Take additional extension of time" -> extension-taken {
     authority cite "37 CFR 1.136(a); 37 CFR 1.17(a)"
     effort 0.5.hours
     cost 690.usd
@@ -155,11 +155,13 @@ chance amendment-filed: "Amendment / Response Filed" by examiner discretion effe
 {
   group examination-group
   note "Applicant files amendment with or without arguments. Examiner must act on a complete reply. Traversal of rejections, claim amendments, and/or declaration/affidavit under 37 CFR 1.131 or 1.132 are common tools."
-  edge-amendment-fi-allowance-examiner-allows-al "Examiner allows all claims" -> allowance p 0.35 { authority cite "37 CFR 1.311; MPEP 1303" }
-  edge-amendment-fi-non-final-oa-examiner-issues-ne "Examiner issues new Non-Final OA" -> non-final-oa p 0.15 {
+  edge-amendment-filed-allowance "Examiner allows all claims" -> allowance p 0.35 {
+    authority cite "37 CFR 1.311; MPEP 1303"
+  }
+  edge-amendment-filed-non-final-oa "Examiner issues new Non-Final OA" -> non-final-oa p 0.15 {
     authority cite "35 U.S.C. 132; 37 CFR 1.104"
   }
-  edge-amendment-fi-final-reject-examiner-issues-fi "Examiner issues Final Rejection" -> final-rejection p 0.5 {
+  edge-amendment-filed-final-rejection "Examiner issues Final Rejection" -> final-rejection p 0.5 {
     authority cite "37 CFR 1.113; MPEP 706.07"
   }
 }
@@ -168,7 +170,7 @@ state interview-conducted: "Examiner Interview" by applicant effective [2024-01-
 {
   group examination-group
   note "Applicant may request an interview at any stage. Interviews are not a substitute for a written reply but can clarify the examiner's position and narrow disputed issues efficiently."
-  edge-interview-co-amendment-fi-follow-up-intervie "Follow up interview with amendment" -> amendment-filed {
+  edge-interview-conducted-amendment-filed "Follow up interview with amendment" -> amendment-filed {
     authority cite "37 CFR 1.111; MPEP 713.04"
     effort 12.hours
   }
@@ -178,14 +180,16 @@ state allowance: "Application Allowed" by office effective [2024-01-31, ..) cite
 {
   group allowance-group
   note "Examiner concludes all claims are patentable. Notice of Allowance (NOA) mailed. Issue fee due within 3 months from NOA date. This deadline is NOT extendable under any authority — 37 CFR 1.311(a); MPEP 1306 [R-01.2024] ('The period for payment of the issue fee and any required publication fee is not extendable, see 37 CFR 1.311(a).'). The only relief for a missed issue fee is revival under 37 CFR 1.137, not an extension of time."
-  edge-allowance-noa-received-notice-of-allowanc "Notice of Allowance mailed" -> noa-received { authority cite "37 CFR 1.311; MPEP 1303" }
+  edge-allowance-noa-received "Notice of Allowance mailed" -> noa-received {
+    authority cite "37 CFR 1.311; MPEP 1303"
+  }
 }
 
 state final-rejection: "Final Rejection" by applicant effective [2024-01-31, ..) cite "37 CFR 1.113; MPEP 706.07"
 {
   group examination-group
   note "Second or subsequent rejection is 'final.' After final, reply is limited to appeal (37 CFR 41.31), after-final amendment (37 CFR 1.116), AFCP 2.0 (MPEP 706.07(h)), or RCE (37 CFR 1.114). The 3-month SSP still runs; extensions still available under 37 CFR 1.136(a)."
-  edge-final-reject-after-final-receive-and-docket "Receive and docket Final Rejection" -> after-final-decision {
+  edge-final-rejection-after-final-decision "Receive and docket Final Rejection" -> after-final-decision {
     authority cite "37 CFR 1.113; 35 U.S.C. 133"
     effort 0.5.hours
   }
@@ -195,7 +199,7 @@ decision after-final-decision: "After-Final Choice" by applicant effective [2024
 {
   group after-final-group
   note "Four paths from final rejection: (1) after-final amendment (37 CFR 1.116 — limited scope); (2) AFCP 2.0 (no-fee examiner review of after-final amendment); (3) RCE (restart prosecution, costs filing/search/exam fees); (4) Notice of Appeal (37 CFR 41.31). The RCE-vs-appeal fork is the key economic decision point of prosecution."
-  edge-after-final-after-final-file-after-final-a "File after-final amendment (37 CFR 1.116)" -> after-final-amendment {
+  edge-after-final-decision-after-final-amendment "File after-final amendment (37 CFR 1.116)" -> after-final-amendment {
     authority cite "37 CFR 1.116; MPEP 714.12"
     effort 10.hours
     within final-reply {
@@ -205,7 +209,7 @@ decision after-final-decision: "After-Final Choice" by applicant effective [2024
     }
     duration { min 13.5.days, mode 45.days, max 90.days }
   }
-  edge-after-final-rce-filed-file-rce-restart-p "File RCE — restart prosecution" -> rce-filed {
+  edge-after-final-decision-rce-filed "File RCE — restart prosecution" -> rce-filed {
     authority cite "37 CFR 1.114; MPEP 706.07(h)"
     effort 12.hours
     cost 1_500.usd
@@ -218,7 +222,7 @@ decision after-final-decision: "After-Final Choice" by applicant effective [2024
     note "1st RCE fee $1,500.00, undiscounted/large-entity, effective 1/19/2025 (37 CFR 1.17(e)(1)); a 2nd or subsequent RCE is $2,860.00 (1.17(e)(2)). Marks the application as having used at least one RCE (37 CFR 1.114): a scenario can price a second/subsequent RCE differently with a cost expression that reads flag('rce-filed-before'). See docs/PACK_SCHEMA.md#state-flags."
     sets [rce-filed-before]
   }
-  edge-after-final-notice-of-ap-file-notice-of-app "File Notice of Appeal to PTAB" -> notice-of-appeal {
+  edge-after-final-decision-notice-of-appeal "File Notice of Appeal to PTAB" -> notice-of-appeal {
     authority cite "37 CFR 41.31(a)(1); 37 CFR 1.134; MPEP 1204"
     effort 6.hours
     cost 905.usd
@@ -230,12 +234,12 @@ decision after-final-decision: "After-Final Choice" by applicant effective [2024
     duration { min 13.5.days, mode 45.days, max 90.days }
     note "Notice of Appeal fee $905.00, undiscounted/large-entity, effective 1/19/2025 (37 CFR 41.20(b)(1)); a separate appeal-forwarding fee is due later, when the appeal brief is filed."
   }
-  edge-after-final-abandoned-no-fail-to-reply-afte "Fail to reply after final — abandonment" -> abandoned-no-reply {
+  edge-after-final-decision-abandoned-no-reply "Fail to reply after final — abandonment" -> abandoned-no-reply {
     authority cite "35 U.S.C. 133; 37 CFR 1.135"
     effort 0.hours
     valence bad
   }
-  edge-after-final-continuation-file-continuation "File continuation to pursue additional claims (37 CFR 1.53(b))" -> continuation-filed {
+  edge-after-final-decision-continuation-filed "File continuation to pursue additional claims (37 CFR 1.53(b))" -> continuation-filed {
     authority cite "37 CFR 1.53(b); 35 U.S.C. 120; MPEP 201.07"
     effort 25.hours
     cost 2_000.usd
@@ -253,23 +257,23 @@ state after-final-amendment: "After-Final Amendment Filed" by examiner effective
 {
   group after-final-group
   note "After-final amendment is limited: may cancel claims or comply with examiner requirements; substantive amendments only entered if they place application in condition for allowance or do not require additional search/examination."
-  edge-after-final-allowance-examiner-enters-am "Examiner enters amendment and allows" -> allowance {
+  edge-after-final-amendment-allowance "Examiner enters amendment and allows" -> allowance {
     authority cite "37 CFR 1.116; MPEP 714.12"
   }
-  edge-after-final-rce-filed-amendment-not-ente "Amendment not entered — file RCE" -> rce-filed by applicant {
+  edge-after-final-amendment-rce-filed "Amendment not entered — file RCE" -> rce-filed by applicant {
     authority cite "37 CFR 1.114"
     effort 12.hours
     cost 1_500.usd
     note "1st RCE fee $1,500.00, undiscounted/large-entity, effective 1/19/2025 (37 CFR 1.17(e)(1)); a 2nd or subsequent RCE is $2,860.00 (1.17(e)(2)) -- see sets:rce-filed-before."
     sets [rce-filed-before]
   }
-  edge-after-final-notice-of-ap-amendment-not-ente "Amendment not entered — appeal" -> notice-of-appeal by applicant {
+  edge-after-final-amendment-notice-of-appeal "Amendment not entered — appeal" -> notice-of-appeal by applicant {
     authority cite "37 CFR 41.31"
     effort 6.hours
     cost 905.usd
     note "Notice of Appeal fee $905.00, undiscounted/large-entity, effective 1/19/2025 (37 CFR 41.20(b)(1))."
   }
-  edge-after-final-advisory-act-examiner-issues-ad "Examiner issues Advisory Action (amendment not entered)" -> advisory-action {
+  edge-after-final-amendment-advisory-action "Examiner issues Advisory Action (amendment not entered)" -> advisory-action {
     authority cite "37 CFR 1.116; MPEP 714.13; MPEP 706.07(f)"
     note "Advisory Action does NOT reset or toll the 35 U.S.C. 133 clock — the period for reply keeps running from the final rejection (MPEP 714.13)."
   }
@@ -279,17 +283,19 @@ chance rce-filed: "RCE Filed" by examiner discretion effective [2024-01-31, ..) 
 {
   group after-final-group
   note "Request for Continued Examination reopens prosecution. Requires a submission (amendment, affidavit, or other reply) + the RCE fee under 37 CFR 1.17(e). Patent term adjustment (PTA) is affected by RCE filing — can reduce or eliminate PTA. This is the key economic trap: RCE costs money and time, appeal costs less up front but risks all claims."
-  edge-rce-filed-non-final-oa-examiner-issues-ne "Examiner issues new Non-Final OA after RCE" -> non-final-oa p 0.7 {
+  edge-rce-filed-non-final-oa "Examiner issues new Non-Final OA after RCE" -> non-final-oa p 0.7 {
     authority cite "37 CFR 1.104; MPEP 706"
   }
-  edge-rce-filed-allowance-examiner-allows-af "Examiner allows after RCE submission" -> allowance p 0.3 { authority cite "37 CFR 1.311" }
+  edge-rce-filed-allowance "Examiner allows after RCE submission" -> allowance p 0.3 {
+    authority cite "37 CFR 1.311"
+  }
 }
 
 state notice-of-appeal: "Notice of Appeal Filed" by applicant effective [2024-01-31, ..) cite "37 CFR 41.31; MPEP 1204"
 {
   group appeal-group
   note "Notice of Appeal filed with the Patent Trial and Appeal Board (PTAB). Appeal fee required. Appellant has 2 months from filing the notice to file the appeal brief (37 CFR 41.37), extendable."
-  edge-notice-of-ap-appeal-brief-file-appeal-brief "File Appeal Brief (within 2 months)" -> appeal-brief-filed {
+  edge-notice-of-appeal-appeal-brief-filed "File Appeal Brief (within 2 months)" -> appeal-brief-filed {
     authority cite "37 CFR 41.37; MPEP 1205"
     effort 40.hours
     within appeal-brief {
@@ -300,7 +306,7 @@ state notice-of-appeal: "Notice of Appeal Filed" by applicant effective [2024-01
     duration { min 9.days, mode 30.days, max 60.days }
     valence good
   }
-  edge-notice-of-ap-appeal-dismi-fail-to-file-appea "Fail to file appeal brief — appeal dismissed" -> appeal-dismissed {
+  edge-notice-of-appeal-appeal-dismissed "Fail to file appeal brief — appeal dismissed" -> appeal-dismissed {
     authority cite "37 CFR 41.37(a); MPEP 1215.04; MPEP 710.02(e)"
     effort 0.hours
     within appeal-brief {
@@ -317,14 +323,16 @@ state appeal-brief-filed: "Appeal Brief Filed" by examiner effective [2024-01-31
 {
   group appeal-group
   note "Appeal brief must be filed within 2 months of the notice of appeal (37 CFR 41.37(a)), extendable up to 5 months under 37 CFR 1.136(a) (this period is NOT a 35 U.S.C. 133 statutory period — MPEP 710.02(e)). Failure to file the brief within the time prescribed by 37 CFR 41.37 results in DISMISSAL of the appeal by operation of the rule (MPEP 1215.04), not automatic abandonment. Dismissal ripens into abandonment only if no allowed claims remain."
-  edge-appeal-brief-examiners-an-examiner-files-ans "Examiner files Answer" -> examiners-answer { authority cite "37 CFR 41.39; MPEP 1207" }
+  edge-appeal-brief-filed-examiners-answer "Examiner files Answer" -> examiners-answer {
+    authority cite "37 CFR 41.39; MPEP 1207"
+  }
 }
 
 state examiners-answer: "Examiner's Answer" by applicant effective [2024-01-31, ..) cite "37 CFR 41.39; MPEP 1207"
 {
   group appeal-group
   note "Examiner may respond with an Examiner's Answer, which may include new grounds of rejection. If new grounds raised, applicant may reopen prosecution (via RCE) or submit reply brief within 2 months."
-  edge-examiners-an-ptab-decisio-pay-appeal-forward "Pay appeal forwarding fee — appeal forwarded to PTAB" -> ptab-decision {
+  edge-examiners-answer-ptab-decision "Pay appeal forwarding fee — appeal forwarded to PTAB" -> ptab-decision {
     authority cite "37 CFR 41.20(b)(4); 37 CFR 41.45; MPEP 1208.01"
     effort 1.hours
     cost 2_535.usd
@@ -335,7 +343,7 @@ state examiners-answer: "Examiner's Answer" by applicant effective [2024-01-31, 
     duration { min 9.days, mode 30.days, max 60.days }
     note "Appeal forwarding fee $2,535.00, undiscounted/large-entity, effective 1/19/2025 (37 CFR 41.20(b)(4))."
   }
-  edge-examiners-an-rce-filed-reopen-prosecution "Reopen prosecution via RCE (new grounds in Answer)" -> rce-filed {
+  edge-examiners-answer-rce-filed "Reopen prosecution via RCE (new grounds in Answer)" -> rce-filed {
     authority cite "37 CFR 1.114; MPEP 1207.03"
     effort 12.hours
     cost 1_500.usd
@@ -348,22 +356,28 @@ chance ptab-decision: "PTAB Decision" by office discretion effective [2024-01-31
 {
   group appeal-group
   note "PTAB issues its decision: affirmance (examiner sustained), reversal (examiner overruled), or new ground of rejection (applicant must respond). PTAB may affirm in part, reverse in part."
-  edge-ptab-decisio-ptab-reversa-ptab-reverses-exam "PTAB reverses examiner" -> ptab-reversal p 0.3 { authority cite "37 CFR 41.50(b); MPEP 1214" }
-  edge-ptab-decisio-ptab-affirme-ptab-affirms-exami "PTAB affirms examiner" -> ptab-affirmed p 0.7 { authority cite "37 CFR 41.50; MPEP 1214" }
+  edge-ptab-decision-ptab-reversal "PTAB reverses examiner" -> ptab-reversal p 0.3 {
+    authority cite "37 CFR 41.50(b); MPEP 1214"
+  }
+  edge-ptab-decision-ptab-affirmed "PTAB affirms examiner" -> ptab-affirmed p 0.7 {
+    authority cite "37 CFR 41.50; MPEP 1214"
+  }
 }
 
 state ptab-reversal: "PTAB Reversed (Allowable)" by examiner effective [2024-01-31, ..) cite "37 CFR 41.50(b); MPEP 1214"
 {
   group appeal-group
   note "PTAB reversed the examiner's rejection. Application returns to examiner for allowance processing unless examiner reopens prosecution on different grounds. Strong applicant win — proceed to Notice of Allowance."
-  edge-ptab-reversa-allowance-examiner-processes "Examiner processes allowance after reversal" -> allowance { authority cite "MPEP 1214.04" }
+  edge-ptab-reversal-allowance "Examiner processes allowance after reversal" -> allowance {
+    authority cite "MPEP 1214.04"
+  }
 }
 
 decision ptab-affirmed: "PTAB Affirmed" by applicant effective [2024-01-31, ..) cite "37 CFR 41.50; 35 U.S.C. 141; 35 U.S.C. 145"
 {
   group appeal-group
   note "PTAB affirmed the examiner. Applicant may: (1) file Request for Rehearing (37 CFR 41.52); (2) appeal to Federal Circuit under 35 U.S.C. 141; or (3) file civil action in EDVA under 35 U.S.C. 145. All further paths have cost and strategic implications."
-  edge-ptab-affirme-federal-circ-appeal-to-federal "Appeal to Federal Circuit (35 U.S.C. 141)" -> federal-circuit-appeal {
+  edge-ptab-affirmed-federal-circuit-appeal "Appeal to Federal Circuit (35 U.S.C. 141)" -> federal-circuit-appeal {
     authority cite "35 U.S.C. 141; 37 CFR 90.1"
     effort 80.hours
     within court-review {
@@ -372,7 +386,7 @@ decision ptab-affirmed: "PTAB Affirmed" by applicant effective [2024-01-31, ..) 
     }
     duration { min 9.4.days, mode 31.5.days, max 63.days }
   }
-  edge-ptab-affirme-sec145-actio-file-civil-action "File civil action in E.D. Va. (35 U.S.C. 145)" -> sec145-action {
+  edge-ptab-affirmed-sec145-action "File civil action in E.D. Va. (35 U.S.C. 145)" -> sec145-action {
     authority cite "35 U.S.C. 145; 37 CFR 90.3"
     effort 120.hours
     within court-review {
@@ -381,7 +395,7 @@ decision ptab-affirmed: "PTAB Affirmed" by applicant effective [2024-01-31, ..) 
     }
     duration { min 9.4.days, mode 31.5.days, max 63.days }
   }
-  edge-ptab-affirme-abandoned-no-take-no-further-ac "Take no further action — application abandoned" -> abandoned-no-reply {
+  edge-ptab-affirmed-abandoned-no-reply "Take no further action — application abandoned" -> abandoned-no-reply {
     authority cite "37 CFR 1.135"
     effort 0.hours
   }
@@ -392,10 +406,10 @@ state federal-circuit-appeal: "Federal Circuit Appeal" by office effective [2024
   group appeal-group
   note "Appeal to the U.S. Court of Appeals for the Federal Circuit. Must be filed within 63 days of PTAB decision. Standard of review: substantial evidence for factual findings; de novo for claim construction and legal determinations."
   court_listener_url "https://www.courtlistener.com/opinion/209543/in-re-bilski/"
-  edge-federal-circ-allowance-federal-circuit-re "Federal Circuit reverses — allowance ordered" -> allowance {
+  edge-federal-circuit-appeal-allowance "Federal Circuit reverses — allowance ordered" -> allowance {
     authority cite "35 U.S.C. 141; MPEP 1216"
   }
-  edge-federal-circ-abandoned-no-federal-circuit-af "Federal Circuit affirms — no further appeal" -> abandoned-no-reply by applicant {
+  edge-federal-circuit-appeal-abandoned-no-reply "Federal Circuit affirms — no further appeal" -> abandoned-no-reply by applicant {
     authority cite "37 CFR 1.135"
     effort 0.hours
   }
@@ -405,8 +419,10 @@ state sec145-action: "Civil Action (35 U.S.C. 145)" by office effective [2024-01
 {
   group appeal-group
   note "De novo civil action in E.D. Va. against the USPTO Director. Allows introduction of new evidence not in the record. Must be filed within 63 days of PTAB decision. If applicant loses, USPTO may recover its attorney fees."
-  edge-sec145-actio-allowance-district-court-ord "District court orders allowance" -> allowance { authority cite "35 U.S.C. 145; MPEP 1216" }
-  edge-sec145-actio-abandoned-no-district-court-aff "District court affirms — abandoned" -> abandoned-no-reply by applicant {
+  edge-sec145-action-allowance "District court orders allowance" -> allowance {
+    authority cite "35 U.S.C. 145; MPEP 1216"
+  }
+  edge-sec145-action-abandoned-no-reply "District court affirms — abandoned" -> abandoned-no-reply by applicant {
     authority cite "37 CFR 1.135"
     effort 0.hours
   }
@@ -416,11 +432,11 @@ chance appeal-dismissed: "Appeal Dismissed (No Brief)" by office effective [2024
 {
   group appeal-group
   note "No appeal brief filed within the 37 CFR 41.37 period — appeal stands DISMISSED by operation of the rule (MPEP 1215.04 [R-01.2024]). Consequence splits on the record: applications having NO allowed claims are abandoned; where an allowed claim exists, the examiner cancels the rejected/withdrawn claims and issues the application on the allowed claim(s) (MPEP 1215.04, ¶ 12.209)."
-  edge-appeal-dismi-abandoned-no-no-allowed-claims "No allowed claims — application abandoned" -> abandoned-no-reply p 0.8 {
+  edge-appeal-dismissed-abandoned-no-reply "No allowed claims — application abandoned" -> abandoned-no-reply p 0.8 {
     authority cite "MPEP 1215.04; 37 CFR 1.135"
     note "Per MPEP 1215.04: 'Applications having no allowed claims will be abandoned.' Claims allowable only for their dependency from rejected claims are treated as rejected. Modeled at 0.8 (most appealed applications reach the Board with all claims under rejection)."
   }
-  edge-appeal-dismi-patent-issue-allowed-claim-s-ex "Allowed claim(s) exist — examiner cancels rejected claims and issues" -> patent-issued p 0.2 {
+  edge-appeal-dismissed-patent-issued "Allowed claim(s) exist — examiner cancels rejected claims and issues" -> patent-issued p 0.2 {
     authority cite "MPEP 1215.04 (¶ 12.209); 37 CFR 1.311"
     note "Per MPEP 1215.04: where an allowed claim exists, the examiner cancels the nonallowed claims and allows the application on the allowed claim(s) — a salvaged (narrowed) patent rather than abandonment. Modeled at 0.2. Sum with the abandonment branch = 1.0."
   }
@@ -464,10 +480,10 @@ decision restriction-requirement: "Restriction / Election Requirement" by applic
 state election-made: "Election Filed" by examiner effective [2024-01-31, ..) cite ?("37 CFR 1.143; 37 CFR 1.144; MPEP 818") {
   group examination-group
   note "Applicant elects one invention. Election WITH traverse (37 CFR 1.143) preserves the right to petition the restriction requirement under 37 CFR 1.144 (petition to the Director, within the reply period); election WITHOUT traverse concedes it. Withdrawn (non-elected) claims may be prosecuted in a divisional under 35 U.S.C. 121."
-  edge-election-mad-non-final-oa-examiner-examines "Examiner examines elected claims — issues Office Action" -> non-final-oa {
+  edge-election-made-non-final-oa "Examiner examines elected claims — issues Office Action" -> non-final-oa {
     authority cite "35 U.S.C. 132; 37 CFR 1.104; MPEP 821.04"
   }
-  edge-election-mad-divisional-f-file-divisional-fo "File divisional for non-elected invention (35 U.S.C. 121 shield)" -> divisional-filed by applicant {
+  edge-election-made-divisional-filed "File divisional for non-elected invention (35 U.S.C. 121 shield)" -> divisional-filed by applicant {
     authority cite "37 CFR 1.53(b); 35 U.S.C. 121; MPEP 201.06"
     effort 30.hours
     cost 2_000.usd
@@ -479,7 +495,7 @@ state divisional-filed: "Divisional Application Filed" by office effective [2024
 {
   group filing-group
   note "Divisional filed for the non-elected invention. 35 U.S.C. 121 SHIELD: a patent issuing on a divisional filed as a result of a restriction requirement (and complying with 35 U.S.C. 120) shall NOT be used as a double-patenting reference against the other application/patent (35 U.S.C. 121, 3rd sentence; MPEP 804.01). Divisional gets its own examination."
-  edge-divisional-f-pre-examinat-divisional-dockete "Divisional docketed — enters examination" -> pre-examination {
+  edge-divisional-filed-pre-examination "Divisional docketed — enters examination" -> pre-examination {
     authority cite "37 CFR 1.104; MPEP 704"
   }
 }
@@ -488,7 +504,7 @@ state continuation-filed: "Continuation Application Filed" by office effective [
 {
   group filing-group
   note "Continuation filed under 37 CFR 1.53(b) to pursue further claims to the same disclosure (MPEP 201.07). Must be co-pending — filed before the parent issues or goes abandoned. Claims the benefit of the parent's filing date under 35 U.S.C. 120. A common alternative to RCE/appeal that keeps the parent's prosecution posture alive in a fresh child."
-  edge-continuation-pre-examinat-continuation-docke "Continuation docketed — enters examination" -> pre-examination {
+  edge-continuation-filed-pre-examination "Continuation docketed — enters examination" -> pre-examination {
     authority cite "37 CFR 1.104; MPEP 704"
   }
 }
@@ -497,7 +513,7 @@ state advisory-action: "Advisory Action" by applicant effective [2024-01-31, ..)
 {
   group after-final-group
   note "Examiner issues an Advisory Action responding to an after-final amendment (typically not entering it, or entering it for appeal purposes only). CRITICAL: filing the after-final amendment does NOT toll the running of the statutory period for reply to the final rejection — 'The filing of an amendment after final rejection, whether or not it is entered, does not stop the running of the statutory period for reply' (MPEP 714.13). The 35 U.S.C. 133 six-month clock keeps running from the final rejection date; extensions may still be needed to preserve the appeal/RCE window."
-  edge-advisory-act-after-final-advisory-action-re "Advisory Action received — reassess (clock still running, MPEP 714.13)" -> after-final-decision {
+  edge-advisory-action-after-final-decision "Advisory Action received — reassess (clock still running, MPEP 714.13)" -> after-final-decision {
     authority cite "37 CFR 1.116; MPEP 714.13"
     effort 1.hours
     note "The 1.116 filing bought no time — applicant must still appeal, file an RCE/continuation, or otherwise reply before the 6-month 35 U.S.C. 133 ceiling, taking 37 CFR 1.136(a) extensions as needed."
@@ -508,7 +524,7 @@ state noa-received: "Notice of Allowance Received" by applicant effective [2024-
 {
   group allowance-group
   note "Notice of Allowance specifies the issue fee and any required publication fee. Both are due 3 months from the NOA mailing date. This period is NOT extendable — 37 CFR 1.311(a); MPEP 1306 [R-01.2024]: 'The period for payment of the issue fee and any required publication fee is not extendable, see 37 CFR 1.311(a).' No extension of time under 37 CFR 1.136(a) or (b) is available. Trap: unlike a shortened statutory period for reply, there is NO safety-valve extension here — miss the 3 months and the application is abandoned; only a 37 CFR 1.137 revival petition (unintentional delay) can restore it."
-  edge-noa-received-issue-fee-pa-pay-issue-fee-with "Pay issue fee within 3 months" -> issue-fee-paid {
+  edge-noa-received-issue-fee-paid "Pay issue fee within 3 months" -> issue-fee-paid {
     authority cite "37 CFR 1.311(a); 37 CFR 1.18(a); MPEP 1306"
     effort 1.hours
     cost 1_290.usd
@@ -520,7 +536,7 @@ state noa-received: "Notice of Allowance Received" by applicant effective [2024-
     valence good
     note "Utility issue fee $1,290.00, undiscounted/large-entity, effective 1/19/2025 (37 CFR 1.18(a)(1))."
   }
-  edge-noa-received-abandoned-is-fail-to-pay-issue "Fail to pay issue fee — abandonment" -> abandoned-issue-fee {
+  edge-noa-received-abandoned-issue-fee "Fail to pay issue fee — abandonment" -> abandoned-issue-fee {
     authority cite "37 CFR 1.311; 37 CFR 1.135"
     effort 0.hours
     valence bad
@@ -531,7 +547,9 @@ state issue-fee-paid: "Issue Fee Paid" by office effective [2024-01-31, ..) cite
 {
   group allowance-group
   note "Issue fee and publication fee (if required) paid. Application forwarded for patent printing. Applicant may file a continuation, divisional, or CIP before the patent issues to pursue additional claims."
-  edge-issue-fee-pa-patent-issue-patent-issues "Patent issues" -> patent-issued { authority cite "35 U.S.C. 151; MPEP 1309" }
+  edge-issue-fee-paid-patent-issued "Patent issues" -> patent-issued {
+    authority cite "35 U.S.C. 151; MPEP 1309"
+  }
 }
 
 terminal patent-issued: "Patent Issued" by applicant outcome [win, issued] effective [2024-01-31, ..) cite "35 U.S.C. 151; MPEP 1309"
@@ -540,11 +558,11 @@ terminal patent-issued: "Patent Issued" by applicant outcome [win, issued] effec
   note "Patent granted. 20-year term from nonprovisional filing date (35 U.S.C. 154(a)(2)), subject to patent term adjustment (PTA) for USPTO delays and patent term extension (PTE) for regulatory review under 35 U.S.C. 156. PLACEHOLDER PAYOFF: $1,000,000, override per matter, matching this project's full-win stake convention."
   valence good
   payoff 1_000_000.usd
-  edge-patent-issue-maintenance-maintenance-fees-b "Maintenance fees become due (3.5 / 7.5 / 11.5 years)" -> maintenance-due {
+  edge-patent-issued-maintenance-due "Maintenance fees become due (3.5 / 7.5 / 11.5 years)" -> maintenance-due {
     authority cite "37 CFR 1.362; 35 U.S.C. 41(b)"
     effort 0.2.hours
   }
-  edge-patent-issue-patent-chall-third-party-challe "Third party challenges the issued patent (post-grant)" -> patent-challenged by office {
+  edge-patent-issued-patent-challenged "Third party challenges the issued patent (post-grant)" -> patent-challenged by office {
     authority cite "35 U.S.C. 311; 321; 302"
     note "The post-grant afterlife. Modeled as a world event off the (terminal) issuance node — like the existing patent-issued→maintenance-due edge, this out-edge is walked by the simulator but treated as absorbing by the from-start EV/absorbing-chain analysis (issuance is a terminal). The adversarial sub-chain rooted here is analyzed on its own — see design/graph-algorithms.md §8.5."
   }
@@ -566,7 +584,7 @@ terminal patent-issued: "Patent Issued" by applicant outcome [win, issued] effec
     valence good
     note "Reissue filing fees $3,670.00 total, undiscounted/large-entity, effective 1/19/2025: $350.00 basic filing (37 CFR 1.16(e)) + $770.00 search (1.16(n)) + $2,550.00 examination (1.16(r)) -- the reissue examination fee is well above the $880.00 utility examination fee."
   }
-  edge-patent-issue-patent-issue-miss-2-year-broade "Miss 2-year broadening reissue window — broadening permanently barred" -> patent-issued {
+  edge-patent-issued-patent-issued "Miss 2-year broadening reissue window — broadening permanently barred" -> patent-issued {
     authority cite ?("35 U.S.C. § 251, ¶ 4; MPEP 1412")
     effort 0.hours
     valence bad
@@ -578,14 +596,14 @@ state maintenance-due: "Maintenance Fees Required" by applicant effective [2024-
 {
   group allowance-group
   note "Maintenance fees required at 3.5, 7.5, and 11.5 years after grant (37 CFR 1.362). A 6-month grace period with surcharge is available. Failure to pay within the grace period = expiration. Small and micro entities pay reduced fees."
-  edge-maintenance-maintenance-pay-maintenance-fe "Pay maintenance fee on time" -> maintenance-due {
+  edge-maintenance-due-maintenance-due "Pay maintenance fee on time" -> maintenance-due {
     authority cite "37 CFR 1.362; 37 CFR 1.20(e)-(g)"
     effort 0.5.hours
     cost 2_150.usd
     valence good
     note "3.5-year maintenance fee $2,150.00, undiscounted/large-entity, effective 1/19/2025 (37 CFR 1.20(e)); the 7.5-year fee is $4,040.00 (1.20(f)) and the 11.5-year fee is $8,280.00 (1.20(g)) -- this edge's self-loop models only the recurring 3.5-year-tier default since the pack has no windowed-maintenance-cycle state."
   }
-  edge-maintenance-patent-expir-fail-to-pay-mainte "Fail to pay maintenance fee — patent expires" -> patent-expired {
+  edge-maintenance-due-patent-expired "Fail to pay maintenance fee — patent expires" -> patent-expired {
     authority cite "37 CFR 1.362(f); 35 U.S.C. 41(b)"
     effort 0.hours
     valence bad
@@ -598,7 +616,7 @@ terminal abandoned-no-reply: "ABANDONED — Failure to Reply" by applicant outco
   note "PERMADEATH. Application abandoned for failure to reply within the 6-month statutory ceiling. The 6-month period under 35 U.S.C. 133 cannot be extended for any reason. Revival requires a petition under 37 CFR 1.137 (unintentional delay standard). Revival is not guaranteed. PLACEHOLDER PAYOFF: $0, override per matter."
   valence bad
   payoff 0.usd
-  edge-abandoned-no-applicant-re-petition-to-revive "Petition to revive — unintentional delay (37 CFR 1.137)" -> applicant-response-window {
+  edge-abandoned-no-reply-applicant-response-window "Petition to revive — unintentional delay (37 CFR 1.137)" -> applicant-response-window {
     authority cite "37 CFR 1.137; 37 CFR 1.17(m); MPEP 711.03(c)"
     effort 4.hours
     cost 2_260.usd
@@ -612,7 +630,7 @@ terminal abandoned-issue-fee: "ABANDONED — Issue Fee Not Paid" by applicant ou
   note "PERMADEATH. Application abandoned for failure to pay the issue fee within the extended period. Revival available under 37 CFR 1.137 for unintentional delay. Competitor may have relied on abandonment — revival does not undo intervening rights. PLACEHOLDER PAYOFF: $0, override per matter."
   valence bad
   payoff 0.usd
-  edge-abandoned-is-noa-received-petition-to-revive "Petition to revive — pay issue fee late (37 CFR 1.137)" -> noa-received {
+  edge-abandoned-issue-fee-noa-received "Petition to revive — pay issue fee late (37 CFR 1.137)" -> noa-received {
     authority cite "37 CFR 1.137; 37 CFR 1.17(m); MPEP 711.03(c)"
     effort 4.hours
     cost 2_260.usd

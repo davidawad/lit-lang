@@ -62,7 +62,7 @@ decision appellant-brief-window: "Appellant's Opening Brief Due" by applicant ci
 {
   group briefing-group
   note "The 40-day deadline runs from the date the record is filed with the court, not from the notice of appeal. Appellant must track the actual record closure date to avoid confusion; missing this self-inflicted trap is a leading cause of appellate dismissal. FRAP 28(a) sets required contents; FRAP 32(a)(7) caps the brief at 13,000 words (or 30 pages if monospaced)."
-  edge-appellant-br-appellant-br-file-opening-brief "File opening brief" -> appellant-brief-filed {
+  edge-appellant-brief-window-appellant-brief-filed "File opening brief" -> appellant-brief-filed {
     authority cite "FRAP 31(a)(1)"
     effort 100.hours
     within appellant-brief-period {
@@ -73,7 +73,7 @@ decision appellant-brief-window: "Appellant's Opening Brief Due" by applicant ci
     duration { min 6.days, mode 20.days, max 40.days }
     note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
   }
-  edge-appellant-br-appeal-dismi-fail-to-file-openi "Fail to file opening brief" -> appeal-dismissed-no-brief {
+  edge-appellant-brief-window-appeal-dismissed-no-brief "Fail to file opening brief" -> appeal-dismissed-no-brief {
     authority cite "FRAP 31(c)"
     effort 0.hours
     valence bad
@@ -85,7 +85,7 @@ state appellant-brief-filed: "Opening Brief Filed" by applicant cite "FRAP 28(a)
 {
   group briefing-group
   note "The opening brief frames the issues, selects the standard of review, and defines the factual universe for appellate review. The appellant is bound by these choices; the reply brief cannot resurrect abandoned arguments, and new theories in reply are waived. The 13,000-word cap forces ruthless economy in issue-spotting."
-  edge-appellant-br-appellee-bri-appellee-files-res "Appellee files response brief" -> appellee-brief-filed {
+  edge-appellant-brief-filed-appellee-brief-filed "Appellee files response brief" -> appellee-brief-filed {
     authority cite "FRAP 31(a)(1); FRAP 28(b)"
     effort 90.hours
     within appellee-brief-period {
@@ -110,7 +110,7 @@ state appellee-brief-filed: "Appellee's Response Brief Filed" by applicant cite 
 {
   group briefing-group
   note "The appellee enjoys asymmetric freedom: it may defend the judgment on any ground in the record without admitting any fact or standard the appellant proposed, and may attack the appellant's statement of the case or standard of review without conceding issue-framing. The 30-day period runs from service of the opening brief and can be extended for good cause."
-  edge-appellee-bri-reply-brief-file-reply-brief "File reply brief" -> reply-brief-filed {
+  edge-appellee-brief-filed-reply-brief-filed "File reply brief" -> reply-brief-filed {
     authority cite "FRAP 31(a)(1); FRAP 28(c)"
     effort 40.hours
     within reply-brief-period {
@@ -121,7 +121,7 @@ state appellee-brief-filed: "Appellee's Response Brief Filed" by applicant cite 
     duration { min 3.1.days, mode 10.5.days, max 21.days }
     note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
   }
-  edge-appellee-bri-briefing-com-waive-reply-brief "Waive reply brief" -> briefing-complete {
+  edge-appellee-brief-filed-briefing-complete "Waive reply brief" -> briefing-complete {
     authority cite "FRAP 28(c)"
     effort 1.hours
     note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
@@ -132,12 +132,16 @@ state reply-brief-filed: "Appellant's Reply Brief Filed" by office cite "FRAP 31
 {
   group briefing-group
   note "The reply brief is optional — failure to file waives no substantive right, but filing one that strays beyond the appellee's response opens waiver traps. The 6,500-word cap is non-negotiable; new arguments, new authorities, and arguments not fairly responsive to the response brief are all waived."
-  edge-reply-brief-briefing-com-briefing-closes "Briefing closes" -> briefing-complete { authority cite "FRAP 31" }
+  edge-reply-brief-filed-briefing-complete "Briefing closes" -> briefing-complete {
+    authority cite "FRAP 31"
+  }
 }
 
 state briefing-complete: "Briefing Closed" by office cite "FRAP 31"
 {
   group briefing-group
   note "Once all briefs are filed or the reply deadline expires, the written record closes and is fixed. No supplemental briefs are permitted absent extraordinary circumstances (e.g., intervening Supreme Court authority). The panel's decision is now constrained to the four corners of the briefs and the certified record on appeal."
-  edge-briefing-com-oral-argumen-clerk-calendars-ar "Clerk calendars argument decision" -> oral-argument-fork { authority cite "FRAP 34(a)" }
+  edge-briefing-complete-oral-argument-fork "Clerk calendars argument decision" -> oral-argument-fork {
+    authority cite "FRAP 34(a)"
+  }
 }

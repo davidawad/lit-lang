@@ -106,7 +106,7 @@ decision appeal-clock-open: "Notice of Appeal Window Open" by applicant cite "FR
     valence good
     note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate. Same $605.00 fee as a civil appeal (Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2023, plus 28 U.S.C. § 1917's $5.00 notice fee) applies in principle, but most criminal appellants proceed in forma pauperis with appointed CJA counsel (FRAP 24(a); 28 U.S.C. § 1915), waiving prepayment."
   }
-  edge-appeal-clock-tolling-moti-file-rule-4-a-4-to "File Rule 4(a)(4) tolling motion" -> tolling-motion-filed {
+  edge-appeal-clock-open-tolling-motion-filed "File Rule 4(a)(4) tolling motion" -> tolling-motion-filed {
     authority cite "FRAP 4(a)(4)(A); FRCP 50(b), 59(e), 60(b)(2)"
     effort 8.hours
     within tolling-motion-period {
@@ -117,13 +117,13 @@ decision appeal-clock-open: "Notice of Appeal Window Open" by applicant cite "FR
     duration { min 4.2.days, mode 14.days, max 28.days }
     note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
   }
-  edge-appeal-clock-notice-of-ap-let-the-deadline-l "Let the deadline lapse" -> notice-of-appeal-untimely {
+  edge-appeal-clock-open-notice-of-appeal-untimely "Let the deadline lapse" -> notice-of-appeal-untimely {
     authority cite ?("Bowles v. Russell, 551 U.S. 205 (2007); 28 U.S.C. § 2107")
     effort 0.hours
     valence bad
     note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."
   }
-  edge-appeal-clock-post-deadlin-move-to-extend-or "Move to extend or reopen deadline" -> post-deadline-relief-motion {
+  edge-appeal-clock-open-post-deadline-relief-motion "Move to extend or reopen deadline" -> post-deadline-relief-motion {
     authority cite "FRAP 4(a)(5)(A)"
     effort 10.hours
     within notice-civil-period {
@@ -136,21 +136,23 @@ decision appeal-clock-open: "Notice of Appeal Window Open" by applicant cite "FR
   }
 }
 
-state notice-of-appeal-filed: "Notice of Appeal Filed" by office cite "FRAP 3(a), (c)(1), (4)-(5)" {
+state notice-of-appeal-filed: "Notice of Appeal Filed" by office cite "FRAP 3(a), (c)(1), (4)-(5)"
+{
   group notice-group
   note "The notice must specify the party taking the appeal, designate the judgment/order appealed from, and identify the court to which the appeal is taken. Courts construe informal notices liberally per Foman v. Davis, 371 U.S. 178 (1962), unless the defect is fatal (wrong party or judgment)."
-  edge-notice-of-ap-deficient-no-notice-omits-requi "Notice omits required contents" -> deficient-notice-of-appeal {
+  edge-notice-of-appeal-filed-deficient-notice-of-appeal "Notice omits required contents" -> deficient-notice-of-appeal {
     authority cite "FRAP 3(c); FRAP 3(e)"
   }
-  edge-notice-of-ap-docketed-in-notice-complies-do "Notice complies — docketed" -> docketed-in-court-of-appeals {
+  edge-notice-of-appeal-filed-docketed-in-court-of-appeals "Notice complies — docketed" -> docketed-in-court-of-appeals {
     authority cite "FRAP 3(d); FRAP 12(a); FRAP 12(b)(3)"
   }
 }
 
-state tolling-motion-filed: "Rule 4(a)(4) Tolling Motion Filed" by examiner cite "FRAP 4(a)(4)(A); FRCP 50, 59, 52(b), 60(b)" {
+state tolling-motion-filed: "Rule 4(a)(4) Tolling Motion Filed" by examiner cite "FRAP 4(a)(4)(A); FRCP 50, 59, 52(b), 60(b)"
+{
   group notice-group
   note "Motions for judgment as a matter of law, new trial, amended findings, altered/amended judgment, and certain Rule 60(b) motions toll the appeal clock when filed within their own FRCP deadlines (typically 28 days). A motion filed one day after the FRCP deadline does not toll."
-  edge-tolling-moti-tolling-moti-district-court-rul "District court rules on the motion" -> tolling-motion-disposed {
+  edge-tolling-motion-filed-tolling-motion-disposed "District court rules on the motion" -> tolling-motion-disposed {
     authority cite "FRAP 4(a)(4)(A)"
   }
 }
@@ -159,7 +161,7 @@ state tolling-motion-disposed: "Tolling Motion Disposed" by office cite "FRAP 4(
 {
   group notice-group
   note "The full appeal period runs anew from the entry of the order disposing of the last remaining tolling motion. If multiple tolling motions are pending, the clock does not restart until the final one is decided."
-  edge-tolling-moti-appeal-clock-appeal-clock-resta "Appeal clock restarts from disposition" -> appeal-clock-open {
+  edge-tolling-motion-disposed-appeal-clock-open "Appeal clock restarts from disposition" -> appeal-clock-open {
     authority cite "FRAP 4(a)(4)(A)"
     within notice-civil-period {
       extendable false
@@ -180,11 +182,11 @@ terminal notice-of-appeal-untimely: "DISMISSED — Untimely Notice of Appeal (Ju
 chance deficient-notice-of-appeal: "Notice of Appeal Contents Deficient" by examiner discretion cite ?("FRAP 3(c)(1), (4)-(5); Foman v. Davis, 371 U.S. 178 (1962); Smith v. Barry, 502 U.S. 244 (1992); Torres v. Oakland Scavenger Co., 487 U.S. 312 (1988)") {
   group notice-group
   note "Courts apply liberal construction to informal notices where the intent to appeal is objectively clear (Foman/Smith line). However, naming the wrong party, wrong judgment, or wrong court may be jurisdictionally fatal and incurable, even if intent is clear (Torres)."
-  edge-deficient-no-docketed-in-court-excuses-the "Court excuses the technical defect" -> docketed-in-court-of-appeals p 0.75 {
+  edge-deficient-notice-of-appeal-docketed-in-court-of-appeals "Court excuses the technical defect" -> docketed-in-court-of-appeals p 0.75 {
     authority cite ?("Foman v. Davis, 371 U.S. 178 (1962); Smith v. Barry, 502 U.S. 244 (1992); FRAP 3(e)")
     valence good
   }
-  edge-deficient-no-notice-of-ap-defect-held-jurisd "Defect held jurisdictional, uncurable" -> notice-of-appeal-untimely p 0.25 {
+  edge-deficient-notice-of-appeal-notice-of-appeal-untimely "Defect held jurisdictional, uncurable" -> notice-of-appeal-untimely p 0.25 {
     authority cite ?("Torres v. Oakland Scavenger Co., 487 U.S. 312 (1988); FRAP 3(c)")
     valence bad
   }
@@ -194,11 +196,11 @@ chance post-deadline-relief-motion: "Motion to Extend or Reopen Time" by examine
 {
   group notice-group
   note "FRAP 4(a)(5) allows the district court to extend time up to 30 additional days for excusable neglect or good cause. FRAP 4(a)(6) allows reopening for 14 days for lack of notice of entry (motion filed within 14 days of actual notice, no later than 180 days after entry). Both carry absolute outer limits."
-  edge-post-deadlin-notice-of-ap-court-grants-exten "Court grants extension or reopening" -> notice-of-appeal-filed p 0.6 {
+  edge-post-deadline-relief-motion-notice-of-appeal-filed "Court grants extension or reopening" -> notice-of-appeal-filed p 0.6 {
     authority cite "FRAP 4(a)(5)(A); FRAP 4(a)(6)"
     valence good
   }
-  edge-post-deadlin-notice-of-ap-court-denies-relie "Court denies relief — deadline stands" -> notice-of-appeal-untimely p 0.4 {
+  edge-post-deadline-relief-motion-notice-of-appeal-untimely "Court denies relief — deadline stands" -> notice-of-appeal-untimely p 0.4 {
     authority cite ?("Bowles v. Russell, 551 U.S. 205 (2007); FRAP 4(a)(5)-(6)")
     valence bad
   }
@@ -208,7 +210,7 @@ state docketed-in-court-of-appeals: "Appeal Docketed" by applicant cite "FRAP 3(
 {
   group notice-group
   note "The district clerk transmits the notice to the court of appeals clerk, who dockets the appeal and assigns a case number. Docketing is ministerial; appellate jurisdiction attaches when the notice is filed in the district court, not when docketed in the appellate court."
-  edge-docketed-in-cross-appeal-appellee-weighs-a "Appellee weighs a cross-appeal" -> cross-appeal-fork {
+  edge-docketed-in-court-of-appeals-cross-appeal-fork "Appellee weighs a cross-appeal" -> cross-appeal-fork {
     authority cite "FRAP 4(a)(3); FRAP 4(a)(4)"
     effort 3.hours
     note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate."

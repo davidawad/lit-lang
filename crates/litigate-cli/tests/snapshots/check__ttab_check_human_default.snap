@@ -1,0 +1,270 @@
+---
+source: crates/litigate-cli/tests/check.rs
+expression: default_text
+---
+[L4001] Error: `InstitutionNoticed` on 2026-10-21 designates `answer-period` due 2026-11-05, earlier than the least time the rule allows, 30 calendar days from 2026-10-21 (2026-11-20) (37 CFR 2.105(a))
+    ╭─[ cases/e2e-ttab-short.case:12:26 ]
+    │
+ 12 │   instituted: 2026-10-21 InstitutionNoticed(2026-11-05) on applicant
+    │                          ───────────────┬──────────────  
+    │                                         ╰──────────────── The event is out of order or is not a legal transition from the replayed posture
+    │ 
+    │ Note: a designated due date must allow at least the deadline's own period; correct the date as the notice gives it
+────╯
+ttab-trademark-trial-and-appeal-board: 68 holes; --verbose to show
+litigate check: failed (1 error(s), 68 warning(s))
+{
+  "profile": "dev",
+  "files": [
+    "cases/e2e-ttab-short.case",
+    "lit/ttab/../core/Lit.toml",
+    "lit/ttab/../core/authority.lit",
+    "lit/ttab/../core/calendar.lit",
+    "lit/ttab/../core/core.lit",
+    "lit/ttab/../core/frap26-tests.lit",
+    "lit/ttab/../core/frap26.lit",
+    "lit/ttab/../core/frcp6-history-tests.lit",
+    "lit/ttab/../core/frcp6-tests.lit",
+    "lit/ttab/../core/frcp6.lit",
+    "lit/ttab/../core/frcrimp45.lit",
+    "lit/ttab/../core/itc210.lit",
+    "lit/ttab/../core/money.lit",
+    "lit/ttab/../core/rcfc6.lit",
+    "lit/ttab/../core/roles.lit",
+    "lit/ttab/../core/supct30.lit",
+    "lit/ttab/../core/time.lit",
+    "lit/ttab/01-pre.lit",
+    "lit/ttab/02-standstill.lit",
+    "lit/ttab/03-pre-2.lit",
+    "lit/ttab/04-standstill-2.lit",
+    "lit/ttab/05-pre-3.lit",
+    "lit/ttab/06-lapse.lit",
+    "lit/ttab/07-opposition-to-trial.lit",
+    "lit/ttab/08-decision.lit",
+    "lit/ttab/09-appeal.lit",
+    "lit/ttab/10-decision-2.lit",
+    "lit/ttab/11-appeal-2.lit",
+    "lit/ttab/12-decision-3.lit",
+    "lit/ttab/13-abandon.lit",
+    "lit/ttab/14-threat.lit",
+    "lit/ttab/15-terminals.lit",
+    "lit/ttab/Lit.toml",
+    "lit/ttab/ttab.lit"
+  ],
+  "obligations": [
+    {
+      "name": "well-typed",
+      "status": "passed",
+      "count": 0,
+      "examples": [],
+      "evidence": {
+        "checked": 366,
+        "subjects": "declarations"
+      }
+    },
+    {
+      "name": "cite-resolves",
+      "status": "passed",
+      "count": 0,
+      "examples": [],
+      "evidence": {
+        "checked": 423,
+        "subjects": "cites"
+      }
+    },
+    {
+      "name": "effective-disjoint",
+      "status": "passed",
+      "count": 0,
+      "examples": [],
+      "evidence": {
+        "checked": 140,
+        "subjects": "version sets"
+      }
+    },
+    {
+      "name": "effective-covered",
+      "status": "passed",
+      "count": 0,
+      "examples": [],
+      "evidence": {
+        "checked": 140,
+        "subjects": "version sets"
+      }
+    },
+    {
+      "name": "precedence-acyclic",
+      "status": "passed",
+      "count": 0,
+      "examples": [],
+      "evidence": {
+        "checked": 25,
+        "subjects": "relations and authority chains"
+      }
+    },
+    {
+      "name": "delegation-respected",
+      "status": "passed",
+      "count": 0,
+      "examples": [],
+      "evidence": {
+        "checked": 19,
+        "subjects": "displacing relations and delegations"
+      }
+    },
+    {
+      "name": "exceptions-ordered",
+      "status": "passed",
+      "count": 0,
+      "examples": [],
+      "evidence": {
+        "checked": 0,
+        "subjects": "exceptions and precedence claims"
+      }
+    },
+    {
+      "name": "dist-exact",
+      "status": "passed",
+      "count": 0,
+      "examples": [],
+      "evidence": {
+        "checked": 19,
+        "subjects": "chance nodes"
+      }
+    },
+    {
+      "name": "graph-exits",
+      "status": "passed",
+      "count": 0,
+      "examples": [],
+      "evidence": {
+        "checked": 47,
+        "subjects": "non-terminal nodes"
+      }
+    },
+    {
+      "name": "graph-reachable",
+      "status": "passed",
+      "count": 0,
+      "examples": [],
+      "evidence": {
+        "checked": 61,
+        "subjects": "nodes"
+      }
+    },
+    {
+      "name": "deadline-satisfiable",
+      "status": "passed",
+      "count": 0,
+      "examples": [],
+      "evidence": {
+        "checked": 61,
+        "subjects": "nodes"
+      }
+    },
+    {
+      "name": "workflow-sound",
+      "status": "passed",
+      "count": 0,
+      "examples": [],
+      "evidence": {
+        "checked": 257,
+        "subjects": "markings"
+      }
+    },
+    {
+      "name": "tests-pass",
+      "status": "passed",
+      "count": 0,
+      "examples": [],
+      "evidence": {
+        "checked": 163,
+        "subjects": "inline tests"
+      }
+    },
+    {
+      "name": "case-replay",
+      "status": "failed",
+      "count": 1,
+      "examples": [
+        "cases/e2e-ttab-short.case:12:26: L4001 `InstitutionNoticed` on 2026-10-21 designates `answer-period` due 2026-11-05, earlier than the least time the rule allows, 30 calendar days from 2026-10-21 (2026-11-20) (37 CFR 2.105(a))"
+      ],
+      "evidence": {
+        "checked": 1,
+        "subjects": "events"
+      }
+    },
+    {
+      "name": "holes",
+      "status": "warning",
+      "count": 68,
+      "examples": [
+        "lit/ttab/01-pre.lit:79:145: L9002 hole: 37 CFR 2.102(c)(3); TBMP 207.03",
+        "lit/ttab/02-standstill.lit:18:88: L9002 hole: 37 CFR 2.102(c)(3); TBMP 605",
+        "lit/ttab/02-standstill.lit:21:20: L9002 hole: TBMP 605.01",
+        "lit/ttab/02-standstill.lit:28:20: L9002 hole: TBMP 605.03; TMEP 1207.01(d)(viii)",
+        "lit/ttab/02-standstill.lit:36:89: L9002 hole: TBMP 605.01",
+        "lit/ttab/02-standstill.lit:40:20: L9002 hole: TBMP 605.03",
+        "lit/ttab/02-standstill.lit:45:20: L9002 hole: TBMP 605.03; TMEP 1207.01(d)(viii)",
+        "lit/ttab/02-standstill.lit:50:20: L9002 hole: TBMP 212.01-.02; 37 CFR 2.133(a)"
+      ],
+      "evidence": {
+        "checked": 68,
+        "subjects": "holes"
+      }
+    },
+    {
+      "name": "rule-without-test",
+      "status": "passed",
+      "count": 0,
+      "examples": [],
+      "evidence": {
+        "checked": 80,
+        "subjects": "deadline and counting rules"
+      }
+    }
+  ],
+  "packages": [
+    {
+      "name": "ttab-trademark-trial-and-appeal-board",
+      "version": "0.1.0",
+      "digest": "sha256:4be6244162d24eeeb5271284169f6140d18c6e23a158224b91e8ae85b2a88c1f",
+      "root": "lit/ttab",
+      "requested": false,
+      "holes": 68,
+      "tests": {
+        "passed": 30,
+        "failed": 0
+      }
+    },
+    {
+      "name": "core",
+      "version": "1.0.0",
+      "digest": "sha256:2867b14fb17cb539b8cc776eb18097c522da16d862909f5b4d488ff0b1bc447a",
+      "root": "lit/ttab/../core",
+      "requested": false,
+      "holes": 0,
+      "tests": {
+        "passed": 133,
+        "failed": 0
+      }
+    }
+  ],
+  "cases": [
+    {
+      "path": "cases/e2e-ttab-short.case",
+      "id": "e2e-ttab-short",
+      "start": null,
+      "replay": [
+        {
+          "date": "2026-10-21",
+          "event": "InstitutionNoticed(2026-11-05)",
+          "effect": "triggered",
+          "from": "ttab-trademark-trial-and-appeal-board::published",
+          "to": "ttab-trademark-trial-and-appeal-board::published"
+        }
+      ],
+      "deadlines": []
+    }
+  ]
+}

@@ -24,7 +24,7 @@ shape and resolves every `ref` against the loaded packs.
   "entries": [
     {
       "target": "edge-probability", // edge-probability | edge-duration | node-attr
-      "ref": "ptab-patent-trial-appeal-board::institution-decision->institution-granted#0",
+      "ref": "ptab-patent-trial-appeal-board::edge-institution-decision-institution-granted",
       "value": 0.6810,              // required for edge-probability / node-attr
       "source": {
         "title": "PTAB Trial Statistics FY24 End of Year Outcome Roundup",
@@ -43,7 +43,7 @@ shape and resolves every `ref` against the loaded packs.
 | field | notes |
 |---|---|
 | `target` | `edge-probability` (sets `value`, 0..=1), `edge-duration` (sets `distribution`, a `Duration` — `{min?, mode, max?}` days), or `node-attr` (sets `attr` + `value`) |
-| `ref` | node or edge ref, same resolution as everywhere else in the engine (qualified `pack::local` recommended). An instance-qualified ref like `cafc@cofc::panel-to-affirmed` targets one `links.json` pack instance only, not the base pack or its siblings. An edge ref applies to every [state-flag](PACK_SCHEMA.md#state-flags) product-graph copy of that edge, not just the one whose id matches exactly: a calibration entry authors one value for the edge a pack describes, not one per flag-history it can be taken under (e.g. `ptab-patent-trial-appeal-board.json`'s `fwd-issued->fwd-all-unpatentable#0` and its `{ipr-estopped}` sibling, reachable after a Director-review remand for further proceedings, both get the calibrated value from a single entry) |
+| `ref` | node or edge ref, same resolution as everywhere else in the engine (qualified `pack::local` recommended). An instance-qualified ref like `cafc@cofc::panel-to-affirmed` targets one `links.json` pack instance only, not the base pack or its siblings. An edge ref applies to every [state-flag](PACK_SCHEMA.md#state-flags) product-graph copy of that edge, not just the one whose id matches exactly: a calibration entry authors one value for the edge a pack describes, not one per flag-history it can be taken under (e.g. `ptab-patent-trial-appeal-board.json`'s `edge-fwd-issued-fwd-all-unpatentable` and its `{ipr-estopped}` sibling, reachable after a Director-review remand for further proceedings, both get the calibrated value from a single entry) |
 | `source` | `title`, `url` (fetched and checked to resolve when the entry was authored), `vintageStart`/`vintageEnd` (the reporting period), `retrieved` (when you checked it) |
 | `n` | sample size, or the count itself for a full-population annual total |
 | `method` | required whenever the value is derived arithmetic from the source's raw counts (show the arithmetic) |
@@ -97,7 +97,7 @@ whether or not the request asked for calibration (an empty array if not):
     "applied": [
       {
         "target": "edge-probability",
-        "ref": "ptab-patent-trial-appeal-board::institution-decision->institution-granted#0",
+        "ref": "ptab-patent-trial-appeal-board::edge-institution-decision-institution-granted",
         "value": 0.681,
         "n": 1087,
         "sourceTitle": "PTAB Trial Statistics FY24 End of Year Outcome Roundup",

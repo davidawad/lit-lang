@@ -11,7 +11,7 @@ state pre-filing: "Pre-Filing" by applicant effective [2024-01-31, ..) cite "35 
 {
   group pre-filing-group
   note "Provisional application option: file under 35 U.S.C. 111(b) to secure a priority date for 12 months. No claims required. The 12-month window is unextendable — missing it forfeits domestic priority."
-  edge-pre-filing-provisional-file-provisional-a "File provisional application" -> provisional-filed {
+  edge-pre-filing-provisional-filed "File provisional application" -> provisional-filed {
     authority cite "35 U.S.C. 111(b); 37 CFR 1.53(c)"
     effort 8.hours
     cost 325.usd
@@ -22,7 +22,7 @@ state pre-filing: "Pre-Filing" by applicant effective [2024-01-31, ..) cite "35 
     duration { min 54.8.days, mode 182.5.days, max 365.days }
     note "Provisional filing fee $325.00, undiscounted/large-entity, effective 1/19/2025 (USPTO fee schedule; 37 CFR 1.16(d)); halve for small entity, one-fifth for micro entity -- not modeled here since this pack doesn't track entity size."
   }
-  edge-pre-filing-nonprovision-file-nonprovisiona "File nonprovisional directly (no provisional)" -> nonprovisional-filed {
+  edge-pre-filing-nonprovisional-filed "File nonprovisional directly (no provisional)" -> nonprovisional-filed {
     authority cite "35 U.S.C. 111(a); 37 CFR 1.53(b)"
     effort 40.hours
     cost 2_000.usd
@@ -34,7 +34,7 @@ state provisional-filed: "Provisional Filed" by applicant effective [2024-01-31,
 {
   group pre-filing-group
   note "Provisional secures a U.S. priority date. Must be converted or claimed as priority within 12 months. Provisional does not start the 20-year patent term clock."
-  edge-provisional-nonprovision-file-nonprovisiona "File nonprovisional within 12-month window" -> nonprovisional-filed {
+  edge-provisional-filed-nonprovisional-filed "File nonprovisional within 12-month window" -> nonprovisional-filed {
     authority cite "35 U.S.C. 111(a); 35 U.S.C. 119(e); 37 CFR 1.53(b)"
     effort 40.hours
     cost 2_000.usd

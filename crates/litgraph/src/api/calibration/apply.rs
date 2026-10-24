@@ -240,7 +240,7 @@ mod tests {
             .expect("ptab pack compiles");
 
         let base_id =
-            "ptab-patent-trial-appeal-board::fwd-issued->fwd-all-unpatentable#0".to_string();
+            "ptab-patent-trial-appeal-board::edge-fwd-issued-fwd-all-unpatentable".to_string();
         let flagged_id = format!("{base_id}{{ipr-estopped}}");
         // The flagged sibling must actually exist (via the Director-review
         // remand loop) or this test would trivially pass for the wrong

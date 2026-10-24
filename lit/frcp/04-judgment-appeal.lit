@@ -10,7 +10,7 @@ decision notice-of-appeal-window: "Notice of Appeal Window" by applicant effecti
 {
   group judgment-appeal-group
   note "30 days after entry of judgment (60 days if the United States or its officer/agency is a party). Bowles v. Russell, 551 U.S. 205 (2007): this statutory appeal deadline (rooted in 28 U.S.C. 2107) is JURISDICTIONAL, not a mere claim-processing rule -- unlike most deadlines in this chart, no equitable exception (excusable neglect, unique circumstances, waiver by the opposing party) can revive it once blown, though FRAP 4(a)(5) allows a district court to grant a limited extension (excusable neglect or good cause, capped at 30 days past the original deadline or 14 days after the extension order, whichever is later) if sought BEFORE the original deadline expires or shortly after."
-  edge-notice-of-ap-notice-of-ap-file-notice-of-app "File notice of appeal within 30 days of entry of judgment" -> notice-of-appeal-filed {
+  edge-notice-of-appeal-window-notice-of-appeal-filed "File notice of appeal within 30 days of entry of judgment" -> notice-of-appeal-filed {
     authority cite "FRAP 4(a)(1)(A)"
     effort 4.hours
     cost 605.usd
@@ -23,13 +23,13 @@ decision notice-of-appeal-window: "Notice of Appeal Window" by applicant effecti
     valence good
     note "Filing fee $605.00, verified: $600.00 court-of-appeals docketing fee (Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2023, raised from $500.00) plus the $5.00 statutory notice-of-appeal fee (28 U.S.C. § 1917), both collected by the district clerk on filing."
   }
-  edge-notice-of-ap-appeal-windo-miss-the-frap-4-a "Miss the FRAP 4(a) deadline -- no timely extension sought" -> appeal-window-blown {
+  edge-notice-of-appeal-window-appeal-window-blown "Miss the FRAP 4(a) deadline -- no timely extension sought" -> appeal-window-blown {
     authority cite ?("FRAP 4(a)(1)(A); Bowles v. Russell, 551 U.S. 205 (2007)")
     effort 0.hours
     valence bad
     court_listener_url "https://www.courtlistener.com/opinion/145714/bowles-v-russell/"
   }
-  edge-notice-of-ap-judgment-fin-elect-not-to-appea "Elect not to appeal -- judgment becomes final" -> judgment-final-no-appeal {
+  edge-notice-of-appeal-window-judgment-final-no-appeal "Elect not to appeal -- judgment becomes final" -> judgment-final-no-appeal {
     authority cite "28 U.S.C. 1291"
     effort 0.hours
   }
@@ -47,7 +47,7 @@ decision notice-of-appeal-window: "Notice of Appeal Window" by applicant effecti
 decision notice-of-appeal-window: "Notice of Appeal Window" by applicant effective [2013-12-01, 2023-12-01) known_at 2026-10-22 cite ?("FRAP 4(a)(1)(A); 4(a)(1)(B)") {
   group judgment-appeal-group
   note "30 days after entry of judgment (60 days if the United States or its officer/agency is a party). Bowles v. Russell, 551 U.S. 205 (2007): this statutory appeal deadline (rooted in 28 U.S.C. 2107) is JURISDICTIONAL, not a mere claim-processing rule -- unlike most deadlines in this chart, no equitable exception (excusable neglect, unique circumstances, waiver by the opposing party) can revive it once blown, though FRAP 4(a)(5) allows a district court to grant a limited extension (excusable neglect or good cause, capped at 30 days past the original deadline or 14 days after the extension order, whichever is later) if sought BEFORE the original deadline expires or shortly after."
-  edge-notice-of-ap-notice-of-ap-file-notice-of-app-2 "File notice of appeal within 30 days of entry of judgment" -> notice-of-appeal-filed {
+  edge-notice-of-appeal-window-notice-of-appeal-filed "File notice of appeal within 30 days of entry of judgment" -> notice-of-appeal-filed {
     authority cite ?("FRAP 4(a)(1)(A)")
     effort 4.hours
     cost 505.usd
@@ -60,13 +60,13 @@ decision notice-of-appeal-window: "Notice of Appeal Window" by applicant effecti
     valence good
     note "Filing fee $505.00: $500.00 court-of-appeals docketing fee (Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2013, raised from $450.00) plus the $5.00 statutory notice-of-appeal fee (28 U.S.C. § 1917), both collected by the district clerk on filing."
   }
-  edge-notice-of-ap-appeal-windo-miss-the-frap-4-a-2 "Miss the FRAP 4(a) deadline -- no timely extension sought" -> appeal-window-blown {
+  edge-notice-of-appeal-window-appeal-window-blown "Miss the FRAP 4(a) deadline -- no timely extension sought" -> appeal-window-blown {
     authority cite ?("FRAP 4(a)(1)(A); Bowles v. Russell, 551 U.S. 205 (2007)")
     effort 0.hours
     valence bad
     court_listener_url "https://www.courtlistener.com/opinion/145714/bowles-v-russell/"
   }
-  edge-notice-of-ap-judgment-fin-elect-not-to-appea-2 "Elect not to appeal -- judgment becomes final" -> judgment-final-no-appeal {
+  edge-notice-of-appeal-window-judgment-final-no-appeal "Elect not to appeal -- judgment becomes final" -> judgment-final-no-appeal {
     authority cite "28 U.S.C. 1291"
     effort 0.hours
   }
@@ -76,7 +76,9 @@ state notice-of-appeal-filed: "Notice of Appeal Filed" by office cite "FRAP 3; 4
 {
   group judgment-appeal-group
   note "Filed with the district clerk, specifying the party taking the appeal, the judgment/order appealed from, and the court to which the appeal is taken. The district court retains jurisdiction over matters not involved in the appeal, but generally loses jurisdiction over the merits of what is on appeal."
-  edge-notice-of-ap-cross-appeal-notice-served-on-a "Notice served on all parties" -> cross-appeal-window { authority cite "FRAP 3(d)" }
+  edge-notice-of-appeal-filed-cross-appeal-window "Notice served on all parties" -> cross-appeal-window {
+    authority cite "FRAP 3(d)"
+  }
 }
 
 terminal appeal-window-blown: "APPEAL FORFEITED -- Judgment Final" outcome [procedural-default, waiver-trap, final] cite ?("FRAP 4(a)(1)(A); Bowles v. Russell, 551 U.S. 205 (2007)") {
@@ -101,7 +103,7 @@ decision cross-appeal-window: "Cross-Appeal Window" by applicant effective [2023
 {
   group judgment-appeal-group
   note "A party who wants to challenge a different part of the same judgment -- not merely defend the judgment on alternative grounds -- must file its own notice of appeal within 14 days after the first notice of appeal was filed, or within the time otherwise prescribed by Rule 4(a)(1), whichever period ends later."
-  edge-cross-appeal-cross-appeal-file-cross-appeal "File cross-appeal" -> cross-appeal-filed {
+  edge-cross-appeal-window-cross-appeal-filed "File cross-appeal" -> cross-appeal-filed {
     authority cite "FRAP 4(a)(3)"
     effort 6.hours
     cost 605.usd
@@ -113,7 +115,7 @@ decision cross-appeal-window: "Cross-Appeal Window" by applicant effective [2023
     duration { min 2.1.days, mode 7.days, max 14.days }
     note "Filing fee $605.00, same fee as the lead notice of appeal ($600.00 docketing fee, Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2023, plus 28 U.S.C. § 1917's $5.00 notice fee) -- a separate notice, a separate fee."
   }
-  edge-cross-appeal-appellate-br-no-cross-appeal-ap "No cross-appeal -- appellee will defend the judgment on the existing record" -> appellate-briefing {
+  edge-cross-appeal-window-appellate-briefing "No cross-appeal -- appellee will defend the judgment on the existing record" -> appellate-briefing {
     authority cite "FRAP 28.1"
     effort 0.hours
     note "Hours: 0, a default/no-action transition with no billable work of its own."
@@ -127,7 +129,7 @@ decision cross-appeal-window: "Cross-Appeal Window" by applicant effective [2023
 decision cross-appeal-window: "Cross-Appeal Window" by applicant effective [2013-12-01, 2023-12-01) known_at 2026-10-22 cite ?("FRAP 4(a)(3)") {
   group judgment-appeal-group
   note "A party who wants to challenge a different part of the same judgment -- not merely defend the judgment on alternative grounds -- must file its own notice of appeal within 14 days after the first notice of appeal was filed, or within the time otherwise prescribed by Rule 4(a)(1), whichever period ends later."
-  edge-cross-appeal-cross-appeal-file-cross-appeal-2 "File cross-appeal" -> cross-appeal-filed {
+  edge-cross-appeal-window-cross-appeal-filed "File cross-appeal" -> cross-appeal-filed {
     authority cite ?("FRAP 4(a)(3)")
     effort 6.hours
     cost 505.usd
@@ -139,7 +141,7 @@ decision cross-appeal-window: "Cross-Appeal Window" by applicant effective [2013
     duration { min 2.1.days, mode 7.days, max 14.days }
     note "Filing fee $505.00, same fee as the lead notice of appeal ($500.00 docketing fee, Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2013, plus 28 U.S.C. § 1917's $5.00 notice fee) -- a separate notice, a separate fee."
   }
-  edge-cross-appeal-appellate-br-no-cross-appeal-ap-2 "No cross-appeal -- appellee will defend the judgment on the existing record" -> appellate-briefing {
+  edge-cross-appeal-window-appellate-briefing "No cross-appeal -- appellee will defend the judgment on the existing record" -> appellate-briefing {
     authority cite ?("FRAP 28.1")
     effort 0.hours
     note "Hours: 0, a default/no-action transition with no billable work of its own."
@@ -150,7 +152,7 @@ state cross-appeal-filed: "Cross-Appeal Filed" by office cite "FRAP 4(a)(3); 28"
 {
   group judgment-appeal-group
   note "The cross-appeal is docketed together with the lead appeal; briefing order and page limits under FRAP 28.1 are adjusted to account for both parties' status as appellant and appellee."
-  edge-cross-appeal-appellate-br-cross-appeal-docke "Cross-appeal docketed with the lead appeal" -> appellate-briefing {
+  edge-cross-appeal-filed-appellate-briefing "Cross-appeal docketed with the lead appeal" -> appellate-briefing {
     authority cite "FRAP 3; 28.1"
   }
 }
@@ -159,7 +161,7 @@ state appellate-briefing: "Appellate Briefing & Argument" by applicant cite "FRA
 {
   group judgment-appeal-group
   note "Principal brief, response brief, and reply brief (FRAP 28), followed by oral argument unless the panel unanimously agrees it is unnecessary (FRAP 34(a)(2)). Standard of review varies sharply by issue: de novo for pure legal conclusions (including summary judgment grants and 12(b)(6) dismissals), clear error for a bench trial's factual findings (Rule 52(a)(6)), and highly deferential abuse-of-discretion review for most evidentiary and case-management rulings (protective orders, sanctions, motions in limine)."
-  edge-appellate-br-court-of-app-complete-frap-28-b "Complete FRAP 28 briefing and oral argument" -> court-of-appeals-decision {
+  edge-appellate-briefing-court-of-appeals-decision "Complete FRAP 28 briefing and oral argument" -> court-of-appeals-decision {
     authority cite "FRAP 28; 34"
     effort 160.hours
     cost 45_000.usd
@@ -173,7 +175,7 @@ chance court-of-appeals-decision: "Court of Appeals Decision" by examiner discre
   coa-affirms "Court of appeals affirms" -> judgment-affirmed p 0.55 {
     authority cite "28 U.S.C. 1291"
   }
-  edge-court-of-app-judgment-rev-court-of-appeals-r "Court of appeals reverses or vacates and remands" -> judgment-reversed-remanded p 0.35 {
+  edge-court-of-appeals-decision-judgment-reversed-remanded "Court of appeals reverses or vacates and remands" -> judgment-reversed-remanded p 0.35 {
     authority cite "28 U.S.C. 2106"
   }
   coa-affirmed-in-part "Affirmed in part, reversed in part -- net affirmance for appellee" -> judgment-affirmed p 0.1 {

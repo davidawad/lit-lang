@@ -9,6 +9,7 @@ use support::{example, litigate_in, located, scratch};
 #[test]
 fn a_package_lock_is_written_once_then_left_alone() {
     let dir = example("lock-package", "", None);
+    std::fs::remove_file(dir.join("lit/examples/Lit.lock")).unwrap();
     let first = litigate_in(&dir, &["lock", "lit/examples"]);
     assert_eq!(first.code, 0, "{}", first.stderr);
     assert_eq!(first.json["result"]["changed"], true);
@@ -114,6 +115,7 @@ fn a_matter_reads_only_the_lock_beside_it() {
 #[test]
 fn unwritable_and_unreadable_lock_inputs_fail() {
     let dir = example("lock-unwritable", "", None);
+    std::fs::remove_file(dir.join("lit/examples/Lit.lock")).unwrap();
     support::chmod(&dir.join("lit/examples"), 0o555);
     let package = litigate_in(&dir, &["lock", "lit/examples"]);
     support::chmod(&dir.join("lit/examples"), 0o755);

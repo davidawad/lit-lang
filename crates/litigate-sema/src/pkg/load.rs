@@ -208,7 +208,7 @@ mod tests {
             [(
                 "lit/examples".to_owned(),
                 vec!["rule12.lit".to_owned()],
-                false
+                true
             )]
         );
     }

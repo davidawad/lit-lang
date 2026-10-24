@@ -5,7 +5,8 @@ module cafc.cert
 import cafc.{ Entered, Filed, Order, Paper, cert-group }
 import core.supct30.{ sup-ct-30 }
 
-decision cert-petition-window: "Certiorari Petition Window" by applicant cite "28 U.S.C. § 2101(c); Sup. Ct. R. 13.1, 13.3" {
+decision cert-petition-window: "Certiorari Petition Window" by applicant cite "28 U.S.C. § 2101(c); Sup. Ct. R. 13.1, 13.3"
+{
   group cert-group
   cert-window-file "File petition for certiorari" -> cert-petition-filed {
     authority cite "28 U.S.C. § 2101(c); Sup. Ct. R. 13.1, 13.3"
@@ -19,12 +20,11 @@ decision cert-petition-window: "Certiorari Petition Window" by applicant cite "2
     }
     tags [appeal]
   }
-  cert-window-lapse "90-day window lapses" -> cert-not-sought {
-    authority cite "Sup. Ct. R. 13.1"
-  }
+  cert-window-lapse "90-day window lapses" -> cert-not-sought { authority cite "Sup. Ct. R. 13.1" }
 }
 
-terminal cert-not-sought: "FINAL — Certiorari Not Sought" outcome [final] cite "Sup. Ct. R. 13.1" {
+terminal cert-not-sought: "FINAL — Certiorari Not Sought" outcome [final] cite "Sup. Ct. R. 13.1"
+{
   group cert-group
   note "Not seeking certiorari leaves the panel's disposition undisturbed, so this restores whatever the panel actually decided (panel-decision's own panel-to-affirmed/panel-to-reversed/panel-to-mixed edges `sets` the matching flag, carried forward through rehearing/mandate by the state-flag product graph — docs/PACK_SCHEMA.md#state-flags). `payoff: 0` is the fallback only when this terminal is reached with none of those flags set (e.g. a direct scenario.start here). See docs/CRITIQUE.md and cafc-SOURCES-NOTES.md."
   valence good

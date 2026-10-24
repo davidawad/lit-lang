@@ -1,8 +1,9 @@
 ---
 source: crates/litigate-syntax/tests/snapshots.rs
+assertion_line: 38
 expression: parsed.debug_tree()
 ---
-SourceFile@0..3094
+SourceFile@0..3163
   ModuleDecl@0..18
     KwModule@0..6 "module"
     Whitespace@6..7 " "
@@ -775,7 +776,7 @@ SourceFile@0..3094
       Whitespace@2367..2368 "\n"
       RBrace@2368..2369 "}"
   Whitespace@2369..2371 "\n\n"
-  StateDecl@2371..2466
+  StateDecl@2371..2498
     KwState@2371..2376 "state"
     Whitespace@2376..2377 " "
     Ident@2377..2385 "answered"
@@ -783,245 +784,243 @@ SourceFile@0..3094
     Whitespace@2386..2387 " "
     String@2387..2401 "\"Answer filed\""
     Whitespace@2401..2402 " "
-    EdgeBlock@2402..2466
+    EdgeBlock@2402..2498
       LBrace@2402..2403 "{"
-      Whitespace@2403..2404 " "
-      Field@2404..2419
-        KwGroup@2404..2409 "group"
-        Whitespace@2409..2410 " "
-        Ref@2410..2419
-          Ident@2410..2419 "pleadings"
-      Comma@2419..2420 ","
-      Whitespace@2420..2421 " "
-      EdgeDecl@2421..2464
-        Underscore@2421..2422 "_"
-        Whitespace@2422..2423 " "
-        String@2423..2444 "\"Proceed to judgment\""
-        Whitespace@2444..2445 " "
-        Arrow@2445..2447 "->"
-        Whitespace@2447..2448 " "
-        Ref@2448..2464
-          Ident@2448..2464 "judgment-entered"
-      Whitespace@2464..2465 " "
-      RBrace@2465..2466 "}"
-  Whitespace@2466..2467 "\n"
-  StateDecl@2467..2567
-    KwState@2467..2472 "state"
-    Whitespace@2472..2473 " "
-    Ident@2473..2485 "default-risk"
-    Colon@2485..2486 ":"
-    Whitespace@2486..2487 " "
-    String@2487..2507 "\"Failure to respond\""
-    Whitespace@2507..2508 " "
-    EdgeBlock@2508..2567
-      LBrace@2508..2509 "{"
-      Whitespace@2509..2510 " "
-      Field@2510..2524
-        KwGroup@2510..2515 "group"
-        Whitespace@2515..2516 " "
-        Ref@2516..2524
-          Ident@2516..2524 "outcomes"
-      Comma@2524..2525 ","
-      Whitespace@2525..2526 " "
-      EdgeDecl@2526..2565
-        Underscore@2526..2527 "_"
-        Whitespace@2527..2528 " "
-        String@2528..2545 "\"Default entered\""
-        Whitespace@2545..2546 " "
-        Arrow@2546..2548 "->"
-        Whitespace@2548..2549 " "
-        Ref@2549..2565
-          Ident@2549..2565 "judgment-entered"
-      Whitespace@2565..2566 " "
-      RBrace@2566..2567 "}"
-  Whitespace@2567..2569 "\n\n"
-  TerminalDecl@2569..2668
-    KwTerminal@2569..2577 "terminal"
-    Whitespace@2577..2578 " "
-    Ident@2578..2594 "judgment-entered"
-    Colon@2594..2595 ":"
-    Whitespace@2595..2596 " "
-    String@2596..2614 "\"Judgment entered\""
-    Whitespace@2614..2615 " "
-    Field@2615..2639
-      KwOutcome@2615..2622 "outcome"
-      Whitespace@2622..2623 " "
-      IdList@2623..2639
-        LBracket@2623..2624 "["
-        Ref@2624..2632
-          Ident@2624..2632 "judgment"
-        Comma@2632..2633 ","
-        Whitespace@2633..2634 " "
-        Ref@2634..2638
-          Ident@2634..2638 "loss"
-        RBracket@2638..2639 "]"
-    Whitespace@2639..2640 " "
-    EdgeBlock@2640..2668
-      LBrace@2640..2641 "{"
-      Whitespace@2641..2642 " "
-      Field@2642..2656
-        KwGroup@2642..2647 "group"
-        Whitespace@2647..2648 " "
-        Ref@2648..2656
-          Ident@2648..2656 "outcomes"
-      Comma@2656..2657 ","
-      Whitespace@2657..2658 " "
-      Field@2658..2666
-        KwPayoff@2658..2664 "payoff"
-        Whitespace@2664..2665 " "
-        HoleExpr@2665..2666
-          Question@2665..2666 "?"
-      Whitespace@2666..2667 " "
-      RBrace@2667..2668 "}"
-  Whitespace@2668..2669 "\n"
-  TerminalDecl@2669..2764
-    KwTerminal@2669..2677 "terminal"
-    Whitespace@2677..2678 " "
-    Ident@2678..2687 "dismissed"
-    Colon@2687..2688 ":"
-    Whitespace@2688..2689 " "
-    String@2689..2707 "\"Action dismissed\""
-    Whitespace@2707..2708 " "
-    Field@2708..2731
-      KwOutcome@2708..2715 "outcome"
-      Whitespace@2715..2716 " "
-      IdList@2716..2731
-        LBracket@2716..2717 "["
+      Whitespace@2403..2406 "\n  "
+      Field@2406..2421
+        KwGroup@2406..2411 "group"
+        Whitespace@2411..2412 " "
+        Ref@2412..2421
+          Ident@2412..2421 "pleadings"
+      Whitespace@2421..2424 "\n  "
+      EdgeDecl@2424..2496
+        Ident@2424..2454 "edge-answered-judgmen ..."
+        Whitespace@2454..2455 " "
+        String@2455..2476 "\"Proceed to judgment\""
+        Whitespace@2476..2477 " "
+        Arrow@2477..2479 "->"
+        Whitespace@2479..2480 " "
+        Ref@2480..2496
+          Ident@2480..2496 "judgment-entered"
+      Whitespace@2496..2497 "\n"
+      RBrace@2497..2498 "}"
+  Whitespace@2498..2500 "\n\n"
+  StateDecl@2500..2636
+    KwState@2500..2505 "state"
+    Whitespace@2505..2506 " "
+    Ident@2506..2518 "default-risk"
+    Colon@2518..2519 ":"
+    Whitespace@2519..2520 " "
+    String@2520..2540 "\"Failure to respond\""
+    Whitespace@2540..2541 " "
+    EdgeBlock@2541..2636
+      LBrace@2541..2542 "{"
+      Whitespace@2542..2545 "\n  "
+      Field@2545..2559
+        KwGroup@2545..2550 "group"
+        Whitespace@2550..2551 " "
+        Ref@2551..2559
+          Ident@2551..2559 "outcomes"
+      Whitespace@2559..2562 "\n  "
+      EdgeDecl@2562..2634
+        Ident@2562..2596 "edge-default-risk-jud ..."
+        Whitespace@2596..2597 " "
+        String@2597..2614 "\"Default entered\""
+        Whitespace@2614..2615 " "
+        Arrow@2615..2617 "->"
+        Whitespace@2617..2618 " "
+        Ref@2618..2634
+          Ident@2618..2634 "judgment-entered"
+      Whitespace@2634..2635 "\n"
+      RBrace@2635..2636 "}"
+  Whitespace@2636..2638 "\n\n"
+  TerminalDecl@2638..2737
+    KwTerminal@2638..2646 "terminal"
+    Whitespace@2646..2647 " "
+    Ident@2647..2663 "judgment-entered"
+    Colon@2663..2664 ":"
+    Whitespace@2664..2665 " "
+    String@2665..2683 "\"Judgment entered\""
+    Whitespace@2683..2684 " "
+    Field@2684..2708
+      KwOutcome@2684..2691 "outcome"
+      Whitespace@2691..2692 " "
+      IdList@2692..2708
+        LBracket@2692..2693 "["
+        Ref@2693..2701
+          Ident@2693..2701 "judgment"
+        Comma@2701..2702 ","
+        Whitespace@2702..2703 " "
+        Ref@2703..2707
+          Ident@2703..2707 "loss"
+        RBracket@2707..2708 "]"
+    Whitespace@2708..2709 " "
+    EdgeBlock@2709..2737
+      LBrace@2709..2710 "{"
+      Whitespace@2710..2711 " "
+      Field@2711..2725
+        KwGroup@2711..2716 "group"
+        Whitespace@2716..2717 " "
         Ref@2717..2725
-          Ident@2717..2725 "judgment"
-        Comma@2725..2726 ","
-        Whitespace@2726..2727 " "
-        Ref@2727..2730
-          Ident@2727..2730 "win"
-        RBracket@2730..2731 "]"
-    Whitespace@2731..2732 " "
-    EdgeBlock@2732..2764
-      LBrace@2732..2733 "{"
-      Whitespace@2733..2734 " "
-      Field@2734..2748
-        KwGroup@2734..2739 "group"
-        Whitespace@2739..2740 " "
-        Ref@2740..2748
-          Ident@2740..2748 "outcomes"
-      Comma@2748..2749 ","
-      Whitespace@2749..2750 " "
-      Field@2750..2762
-        KwPayoff@2750..2756 "payoff"
-        Whitespace@2756..2757 " "
-        Literal@2757..2762
-          Money@2757..2762 "0.usd"
-      Whitespace@2762..2763 " "
-      RBrace@2763..2764 "}"
-  Whitespace@2764..2766 "\n\n"
-  TestDecl@2766..2942
-    KwTest@2766..2770 "test"
-    Whitespace@2770..2771 " "
-    String@2771..2814 "\"answer due 21 days a ..."
-    Whitespace@2814..2815 " "
-    CiteExpr@2815..2841
-      KwCite@2815..2819 "cite"
-      Whitespace@2819..2820 " "
-      String@2820..2841 "\"FRCP 12(a)(1)(A)(i)\""
-    Whitespace@2841..2842 "\n"
-    LBrace@2842..2843 "{"
-    Whitespace@2843..2846 "\n  "
-    GivenStmt@2846..2893
-      KwGiven@2846..2851 "given"
-      Whitespace@2851..2852 " "
-      CallExpr@2852..2879
-        Ref@2852..2858
-          Ident@2852..2858 "Served"
-        ArgList@2858..2879
-          LParen@2858..2859 "("
-          RefExpr@2859..2868
-            Ref@2859..2868
-              Ident@2859..2868 "complaint"
-          Comma@2868..2869 ","
-          Whitespace@2869..2870 " "
-          RefExpr@2870..2878
-            Ref@2870..2878
-              Ident@2870..2878 "Personal"
-          RParen@2878..2879 ")"
-      Whitespace@2879..2880 " "
-      KwOn@2880..2882 "on"
-      Whitespace@2882..2883 " "
-      Literal@2883..2893
-        Date@2883..2893 "2025-03-03"
-    Whitespace@2893..2896 "\n  "
-    ExpectStmt@2896..2940
-      KwExpect@2896..2902 "expect"
-      Whitespace@2902..2903 " "
-      BinaryExpr@2903..2940
-        CallExpr@2903..2926
-          Ref@2903..2911
-            Ident@2903..2911 "deadline"
-          ArgList@2911..2926
-            LParen@2911..2912 "("
-            RefExpr@2912..2925
-              Ref@2912..2925
-                Ident@2912..2925 "answer-period"
-            RParen@2925..2926 ")"
-        Whitespace@2926..2927 " "
-        EqEq@2927..2929 "=="
-        Whitespace@2929..2930 " "
-        Literal@2930..2940
-          Date@2930..2940 "2025-03-24"
-    Whitespace@2940..2941 "\n"
-    RBrace@2941..2942 "}"
-  Whitespace@2942..2944 "\n\n"
-  TestDecl@2944..3093
-    KwTest@2944..2948 "test"
-    Whitespace@2948..2949 " "
-    String@2949..2979 "\"mail service adds th ..."
-    Whitespace@2979..2980 " "
-    CiteExpr@2980..2996
-      KwCite@2980..2984 "cite"
-      Whitespace@2984..2985 " "
-      String@2985..2996 "\"FRCP 6(d)\""
-    Whitespace@2996..2997 "\n"
-    LBrace@2997..2998 "{"
-    Whitespace@2998..3001 "\n  "
-    GivenStmt@3001..3044
-      KwGiven@3001..3006 "given"
-      Whitespace@3006..3007 " "
-      CallExpr@3007..3030
-        Ref@3007..3013
-          Ident@3007..3013 "Served"
-        ArgList@3013..3030
-          LParen@3013..3014 "("
-          RefExpr@3014..3023
-            Ref@3014..3023
-              Ident@3014..3023 "complaint"
-          Comma@3023..3024 ","
-          Whitespace@3024..3025 " "
-          RefExpr@3025..3029
-            Ref@3025..3029
-              Ident@3025..3029 "Mail"
-          RParen@3029..3030 ")"
-      Whitespace@3030..3031 " "
-      KwOn@3031..3033 "on"
-      Whitespace@3033..3034 " "
-      Literal@3034..3044
-        Date@3034..3044 "2025-03-03"
-    Whitespace@3044..3047 "\n  "
-    ExpectStmt@3047..3091
-      KwExpect@3047..3053 "expect"
+          Ident@2717..2725 "outcomes"
+      Comma@2725..2726 ","
+      Whitespace@2726..2727 " "
+      Field@2727..2735
+        KwPayoff@2727..2733 "payoff"
+        Whitespace@2733..2734 " "
+        HoleExpr@2734..2735
+          Question@2734..2735 "?"
+      Whitespace@2735..2736 " "
+      RBrace@2736..2737 "}"
+  Whitespace@2737..2738 "\n"
+  TerminalDecl@2738..2833
+    KwTerminal@2738..2746 "terminal"
+    Whitespace@2746..2747 " "
+    Ident@2747..2756 "dismissed"
+    Colon@2756..2757 ":"
+    Whitespace@2757..2758 " "
+    String@2758..2776 "\"Action dismissed\""
+    Whitespace@2776..2777 " "
+    Field@2777..2800
+      KwOutcome@2777..2784 "outcome"
+      Whitespace@2784..2785 " "
+      IdList@2785..2800
+        LBracket@2785..2786 "["
+        Ref@2786..2794
+          Ident@2786..2794 "judgment"
+        Comma@2794..2795 ","
+        Whitespace@2795..2796 " "
+        Ref@2796..2799
+          Ident@2796..2799 "win"
+        RBracket@2799..2800 "]"
+    Whitespace@2800..2801 " "
+    EdgeBlock@2801..2833
+      LBrace@2801..2802 "{"
+      Whitespace@2802..2803 " "
+      Field@2803..2817
+        KwGroup@2803..2808 "group"
+        Whitespace@2808..2809 " "
+        Ref@2809..2817
+          Ident@2809..2817 "outcomes"
+      Comma@2817..2818 ","
+      Whitespace@2818..2819 " "
+      Field@2819..2831
+        KwPayoff@2819..2825 "payoff"
+        Whitespace@2825..2826 " "
+        Literal@2826..2831
+          Money@2826..2831 "0.usd"
+      Whitespace@2831..2832 " "
+      RBrace@2832..2833 "}"
+  Whitespace@2833..2835 "\n\n"
+  TestDecl@2835..3011
+    KwTest@2835..2839 "test"
+    Whitespace@2839..2840 " "
+    String@2840..2883 "\"answer due 21 days a ..."
+    Whitespace@2883..2884 " "
+    CiteExpr@2884..2910
+      KwCite@2884..2888 "cite"
+      Whitespace@2888..2889 " "
+      String@2889..2910 "\"FRCP 12(a)(1)(A)(i)\""
+    Whitespace@2910..2911 "\n"
+    LBrace@2911..2912 "{"
+    Whitespace@2912..2915 "\n  "
+    GivenStmt@2915..2962
+      KwGiven@2915..2920 "given"
+      Whitespace@2920..2921 " "
+      CallExpr@2921..2948
+        Ref@2921..2927
+          Ident@2921..2927 "Served"
+        ArgList@2927..2948
+          LParen@2927..2928 "("
+          RefExpr@2928..2937
+            Ref@2928..2937
+              Ident@2928..2937 "complaint"
+          Comma@2937..2938 ","
+          Whitespace@2938..2939 " "
+          RefExpr@2939..2947
+            Ref@2939..2947
+              Ident@2939..2947 "Personal"
+          RParen@2947..2948 ")"
+      Whitespace@2948..2949 " "
+      KwOn@2949..2951 "on"
+      Whitespace@2951..2952 " "
+      Literal@2952..2962
+        Date@2952..2962 "2025-03-03"
+    Whitespace@2962..2965 "\n  "
+    ExpectStmt@2965..3009
+      KwExpect@2965..2971 "expect"
+      Whitespace@2971..2972 " "
+      BinaryExpr@2972..3009
+        CallExpr@2972..2995
+          Ref@2972..2980
+            Ident@2972..2980 "deadline"
+          ArgList@2980..2995
+            LParen@2980..2981 "("
+            RefExpr@2981..2994
+              Ref@2981..2994
+                Ident@2981..2994 "answer-period"
+            RParen@2994..2995 ")"
+        Whitespace@2995..2996 " "
+        EqEq@2996..2998 "=="
+        Whitespace@2998..2999 " "
+        Literal@2999..3009
+          Date@2999..3009 "2025-03-24"
+    Whitespace@3009..3010 "\n"
+    RBrace@3010..3011 "}"
+  Whitespace@3011..3013 "\n\n"
+  TestDecl@3013..3162
+    KwTest@3013..3017 "test"
+    Whitespace@3017..3018 " "
+    String@3018..3048 "\"mail service adds th ..."
+    Whitespace@3048..3049 " "
+    CiteExpr@3049..3065
+      KwCite@3049..3053 "cite"
       Whitespace@3053..3054 " "
-      BinaryExpr@3054..3091
-        CallExpr@3054..3077
-          Ref@3054..3062
-            Ident@3054..3062 "deadline"
-          ArgList@3062..3077
-            LParen@3062..3063 "("
-            RefExpr@3063..3076
-              Ref@3063..3076
-                Ident@3063..3076 "answer-period"
-            RParen@3076..3077 ")"
-        Whitespace@3077..3078 " "
-        EqEq@3078..3080 "=="
-        Whitespace@3080..3081 " "
-        Literal@3081..3091
-          Date@3081..3091 "2025-03-27"
-    Whitespace@3091..3092 "\n"
-    RBrace@3092..3093 "}"
-  Whitespace@3093..3094 "\n"
+      String@3054..3065 "\"FRCP 6(d)\""
+    Whitespace@3065..3066 "\n"
+    LBrace@3066..3067 "{"
+    Whitespace@3067..3070 "\n  "
+    GivenStmt@3070..3113
+      KwGiven@3070..3075 "given"
+      Whitespace@3075..3076 " "
+      CallExpr@3076..3099
+        Ref@3076..3082
+          Ident@3076..3082 "Served"
+        ArgList@3082..3099
+          LParen@3082..3083 "("
+          RefExpr@3083..3092
+            Ref@3083..3092
+              Ident@3083..3092 "complaint"
+          Comma@3092..3093 ","
+          Whitespace@3093..3094 " "
+          RefExpr@3094..3098
+            Ref@3094..3098
+              Ident@3094..3098 "Mail"
+          RParen@3098..3099 ")"
+      Whitespace@3099..3100 " "
+      KwOn@3100..3102 "on"
+      Whitespace@3102..3103 " "
+      Literal@3103..3113
+        Date@3103..3113 "2025-03-03"
+    Whitespace@3113..3116 "\n  "
+    ExpectStmt@3116..3160
+      KwExpect@3116..3122 "expect"
+      Whitespace@3122..3123 " "
+      BinaryExpr@3123..3160
+        CallExpr@3123..3146
+          Ref@3123..3131
+            Ident@3123..3131 "deadline"
+          ArgList@3131..3146
+            LParen@3131..3132 "("
+            RefExpr@3132..3145
+              Ref@3132..3145
+                Ident@3132..3145 "answer-period"
+            RParen@3145..3146 ")"
+        Whitespace@3146..3147 " "
+        EqEq@3147..3149 "=="
+        Whitespace@3149..3150 " "
+        Literal@3150..3160
+          Date@3150..3160 "2025-03-27"
+    Whitespace@3160..3161 "\n"
+    RBrace@3161..3162 "}"
+  Whitespace@3162..3163 "\n"

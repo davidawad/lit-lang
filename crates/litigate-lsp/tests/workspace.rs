@@ -45,7 +45,7 @@ fn without_a_client_root_the_root_holds_lit() {
         .iter()
         .map(|d| d.code.as_str())
         .collect();
-    assert_eq!(codes, ["L9003", "L9003", "L9002", "L9002", "L9002"]);
+    assert_eq!(codes, ["L9002", "L9002", "L9002"]);
 }
 
 #[test]

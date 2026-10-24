@@ -18,7 +18,7 @@ decision response-period-open: "Response Window Open" by applicant effective [20
 {
   group response-period-group
   note "Respondent has 20 days from service of the complaint and notice of investigation to answer under oath, admitting/denying/explaining each allegation (10 days if a temporary-relief motion is pending in an uncomplicated investigation). Direct structural analog of mpep-prosecution.json's applicant-response-window: the canonical player node opening this pack's response fork."
-  edge-response-per-response-fil-file-response-to-t "File response to the complaint and notice of investigation (Rule 210.13(a))" -> response-filed {
+  edge-response-period-open-response-filed "File response to the complaint and notice of investigation (Rule 210.13(a))" -> response-filed {
     authority cite "cfr210.13.a"
     effort 90.hours
     cost 20_000.usd
@@ -29,7 +29,7 @@ decision response-period-open: "Response Window Open" by applicant effective [20
     valence good
     action_id "file.response"
   }
-  edge-response-per-default-trac-fail-to-respond-wi "Fail to respond within 20 days — default exposure (Rule 210.13(default); 210.16(a))" -> default-track {
+  edge-response-period-open-default-track "Fail to respond within 20 days — default exposure (Rule 210.13(default); 210.16(a))" -> default-track {
     authority cite "cfr210.13.default"
     effort 0.hours
     valence bad
@@ -40,7 +40,7 @@ state response-filed: "Response Filed" by office effective [2025-02-03, ..) cite
 {
   group response-period-group
   note "Written response under oath addressing each allegation; for patent complaints, non-infringement claim charts and, if invalidity is asserted, its basis and prior art."
-  edge-response-fil-discovery-op-discovery-is-open "Discovery is open (Federal Register publication triggers it — modeled here as concurrent with the response period, see instituted's note) (Rule 210.27(b))" -> discovery-open {
+  edge-response-filed-discovery-open "Discovery is open (Federal Register publication triggers it — modeled here as concurrent with the response period, see instituted's note) (Rule 210.27(b))" -> discovery-open {
     authority cite "cfr210.27.b"
   }
 }
@@ -49,7 +49,7 @@ state default-track: "Default Exposure — No Timely Response" by examiner effec
 {
   group response-period-group
   note "Failure to respond in the manner 19 CFR 210.13 prescribes (or otherwise failing to answer and to show cause). Default may also arise from abuse of process or discovery non-cooperation (see discovery-sanctions below, which can also route here)."
-  edge-default-trac-show-cause-o-alj-issues-sua-spo "ALJ issues sua sponte order to show cause why respondent should not be found in default (Rule 210.16(b))" -> show-cause-order {
+  edge-default-track-show-cause-order "ALJ issues sua sponte order to show cause why respondent should not be found in default (Rule 210.16(b))" -> show-cause-order {
     authority cite "cfr210.16.b"
   }
 }
@@ -58,14 +58,14 @@ decision show-cause-order: "Order to Show Cause (Default)" by applicant effectiv
 {
   group response-period-group
   note "The ALJ may issue a show-cause order sua sponte; a proposed respondent may instead file a Notice of Intent to Default at any time before the final Initial Determination, skipping the show-cause exchange entirely. Both are respondent choices, not ALJ determinations — modeled as a pure player node."
-  edge-show-cause-o-response-fil-respond-to-the-sho "Respond to the show-cause order — cure the default with a belated response (Rule 210.16(b))" -> response-filed {
+  edge-show-cause-order-response-filed "Respond to the show-cause order — cure the default with a belated response (Rule 210.16(b))" -> response-filed {
     authority cite "cfr210.16.b"
     effort 10.hours
     cost 2_000.usd
     valence good
     action_id "respond.show-cause"
   }
-  edge-show-cause-o-default-foun-file-notice-of-int "File Notice of Intent to Default, or fail to show cause (Rule 210.16(b))" -> default-found {
+  edge-show-cause-order-default-found "File Notice of Intent to Default, or fail to show cause (Rule 210.16(b))" -> default-found {
     authority cite "cfr210.16.b"
     effort 2.hours
     valence bad
@@ -77,7 +77,7 @@ state default-found: "Default Entered" by office effective [2025-02-03, ..) cite
 {
   group response-period-group
   note "Respondent is deemed to waive its right to appear, to be served with documents, and to contest the allegations at issue. Reached either from the response-window default track or from a case-dispositive discovery sanction below (cf. Certain Opaque Polymers, 337-TA-883 — Organik Kimya's spoliation drew case-dispositive default, affirmed by the Federal Circuit)."
-  edge-default-foun-default-reli-facts-alleged-in-t "Facts alleged in the complaint presumed true as to the defaulting respondent (Rule 210.16(c); § 1337(g))" -> default-relief-determination {
+  edge-default-found-default-relief-determination "Facts alleged in the complaint presumed true as to the defaulting respondent (Rule 210.16(c); § 1337(g))" -> default-relief-determination {
     authority cite "cfr210.16.c"
   }
 }
@@ -86,7 +86,7 @@ state default-relief-determination: "Default Relief Determination" by examiner e
 {
   group response-period-group
   note "Facts alleged in the complaint are presumed true as to the defaulting respondent. Default is not a free exit for the complainant's adversary: the Commission may still issue an exclusion order or cease-and-desist order against the defaulting respondent's imports, after considering public health and welfare, competitive conditions, and consumer interests (19 CFR 210.16(c))."
-  edge-default-reli-violation-id-alj-issues-a-viola "ALJ issues a violation ID on the presumed-true facts, after considering public health, competitive effects, and consumer interests (§ 1337(g))" -> violation-id {
+  edge-default-relief-determination-violation-id "ALJ issues a violation ID on the presumed-true facts, after considering public health, competitive effects, and consumer interests (§ 1337(g))" -> violation-id {
     authority cite "usc1337.g"
   }
 }
@@ -169,19 +169,19 @@ decision discovery-open: "Discovery Open" by applicant effective [2025-02-03, ..
     cost 800.usd
     action_id "confer.meet-and-confer"
   }
-  edge-discovery-op-order-compel-file-motion-to-com "File Motion to Compel Discovery (Rule 210.33(a))" -> order-compelling-discovery {
+  edge-discovery-open-order-compelling-discovery "File Motion to Compel Discovery (Rule 210.33(a))" -> order-compelling-discovery {
     authority cite "cfr210.33.a"
     effort 14.hours
     cost 5_000.usd
     action_id "file.motion.compel"
   }
-  edge-discovery-op-cbi-designat-designate-material "Designate Material as Confidential Business Information (Rule 210.5)" -> cbi-designated {
+  edge-discovery-open-cbi-designated "Designate Material as Confidential Business Information (Rule 210.5)" -> cbi-designated {
     authority cite "cfr210.5.disclosure"
     effort 1.hours
     cost 0.usd
     action_id "designate.cbi"
   }
-  edge-discovery-op-public-versi-file-public-redact "File Public (Redacted) Version of a confidential submission within 30 days (Rule 210.5)" -> public-version-filed {
+  edge-discovery-open-public-version-filed "File Public (Redacted) Version of a confidential submission within 30 days (Rule 210.5)" -> public-version-filed {
     authority cite "cfr210.5.public-version"
     effort 5.hours
     cost 500.usd
@@ -192,7 +192,7 @@ decision discovery-open: "Discovery Open" by applicant effective [2025-02-03, ..
     valence good
     action_id "file.public-version"
   }
-  edge-discovery-op-prehearing-discovery-record-c "Discovery record complete — case proceeds toward the summary-determination window and hearing (Rule 210.51(a))" -> prehearing {
+  edge-discovery-open-prehearing "Discovery record complete — case proceeds toward the summary-determination window and hearing (Rule 210.51(a))" -> prehearing {
     authority cite "cfr210.51.a"
     effort 0.hours
     duration { min 120.days, mode 270.days, max 420.days }
@@ -207,10 +207,10 @@ chance order-compelling-discovery: "ALJ Rules on Motion to Compel" by examiner d
 {
   group discovery-group
   note "Grant rate authored at 0.7 / noncompliance-continues at 0.3 — APPROXIMATE."
-  edge-order-compel-discovery-op-alj-grants-the-mot "ALJ grants the motion — opposing party complies with compelled discovery" -> discovery-open p 0.7 {
+  edge-order-compelling-discovery-discovery-open "ALJ grants the motion — opposing party complies with compelled discovery" -> discovery-open p 0.7 {
     authority cite "cfr210.33.a"
   }
-  edge-order-compel-discovery-sa-noncompliance-cont "Noncompliance continues — ALJ proceeds to sanctions (Rule 210.33(b)-(c))" -> discovery-sanctions p 0.3 {
+  edge-order-compelling-discovery-discovery-sanctions "Noncompliance continues — ALJ proceeds to sanctions (Rule 210.33(b)-(c))" -> discovery-sanctions p 0.3 {
     authority cite "cfr210.33.b"
   }
 }
@@ -222,10 +222,10 @@ chance discovery-sanctions: "ALJ Rules on Discovery Sanctions" by examiner discr
 {
   group discovery-group
   note "Non-monetary sanctions include an adverse inference, treating disputed matters as resolved against the non-compliant party, evidence preclusion, striking filings, and 'other sanctions under Federal Rule of Civil Procedure 37(b)' — one of the few places Part 210 explicitly imports an FRCP provision by name. Monetary sanctions (attorney's fees) run under 210.33(c), except never against the United States, the Commission, or Commission investigative attorneys. Case-dispositive default authored at 0.15 — APPROXIMATE but grounded: Certain Opaque Polymers (337-TA-883) is the teaching case for this exact branch (Chief ALJ Pender: 'spoliation on a staggering scale'; Federal Circuit affirmed both the default sanction and the resulting 25-year exclusion order)."
-  edge-discovery-sa-discovery-op-non-case-dispositi "Non-case-dispositive sanction imposed — adverse inference, evidence preclusion, or fee-shift (Rule 210.33(b)-(c)); discovery continues" -> discovery-open p 0.85 {
+  edge-discovery-sanctions-discovery-open "Non-case-dispositive sanction imposed — adverse inference, evidence preclusion, or fee-shift (Rule 210.33(b)-(c)); discovery continues" -> discovery-open p 0.85 {
     authority cite "cfr210.33.b"
   }
-  edge-discovery-sa-default-foun-case-dispositive-d "Case-dispositive default sanction for egregious noncompliance (Rule 210.33(b)) — cf. Organik Kimya spoliation, 337-TA-883" -> default-found p 0.15 {
+  edge-discovery-sanctions-default-found "Case-dispositive default sanction for egregious noncompliance (Rule 210.33(b)) — cf. Organik Kimya spoliation, 337-TA-883" -> default-found p 0.15 {
     authority cite "cfr210.33.b"
     valence bad
     court_listener_url "https://www.courtlistener.com/opinion/4348900/organik-kimya-san-ve-tic-as-v-international-trade-commission/"
@@ -236,7 +236,7 @@ state cbi-designated: "Material Designated CBI" by applicant effective [2013-05-
 {
   group discovery-group
   note "Confidential business information is defined per 19 CFR 201.6(a),(c). Properly designated CBI cannot be disclosed without submitter consent except to persons granted access under a 210.34(a) protective order, Commission staff directly administering the investigation, U.S. officers conducting § 1337(j) review, or CBP officers administering an exclusion."
-  edge-cbi-designat-protective-o-move-for-a-protect "Move for a Protective Order (Rule 210.34(a))" -> protective-order-ruling {
+  edge-cbi-designated-protective-order-ruling "Move for a Protective Order (Rule 210.34(a))" -> protective-order-ruling {
     authority cite "cfr210.34.a"
     effort 10.hours
     cost 4_000.usd
@@ -252,10 +252,10 @@ chance protective-order-ruling: "ALJ Rules on Protective-Order Motion" by examin
 {
   group discovery-group
   note "Grant rate authored at 0.9 / denial at 0.1 — APPROXIMATE; ALJs routinely issue CBI protective orders on the good-cause showing this fact pattern almost always makes. A denial leaves discovery to proceed under 210.5's default confidentiality treatment rather than a case-specific order."
-  edge-protective-o-protective-o-alj-issues-the-pro "ALJ issues the protective order on a good-cause showing (Rule 210.34(a))" -> protective-order-issued p 0.9 {
+  edge-protective-order-ruling-protective-order-issued "ALJ issues the protective order on a good-cause showing (Rule 210.34(a))" -> protective-order-issued p 0.9 {
     authority cite "cfr210.34.a"
   }
-  edge-protective-o-discovery-op-alj-denies-the-mot "ALJ denies the motion — default 210.5 confidentiality treatment applies instead" -> discovery-open p 0.1 {
+  edge-protective-order-ruling-discovery-open "ALJ denies the motion — default 210.5 confidentiality treatment applies instead" -> discovery-open p 0.1 {
     authority cite "cfr210.34.a"
   }
 }
@@ -264,7 +264,7 @@ state protective-order-issued: "Protective Order Issued" by examiner effective [
 {
   group discovery-group
   note "Restrictions on discovery scope, confidentiality designations for trade secrets, sealed depositions — issued 'for the protection of the public interest or that justice requires' on good cause shown."
-  edge-protective-o-discovery-op-protective-order-i "Protective order in effect — discovery continues under its terms" -> discovery-open {
+  edge-protective-order-issued-discovery-open "Protective order in effect — discovery continues under its terms" -> discovery-open {
     authority cite "cfr210.34.a"
   }
 }
@@ -275,10 +275,10 @@ chance public-version-filed: "Public (Redacted) Version Filed" by examiner effec
 {
   group discovery-group
   note "Properly-redacted acceptance authored at 0.92 / still-unredacted-CBI at 0.08 — APPROXIMATE, modeling the authoring-error case the pack's own flagRules target (file.public-version with params.unredactedCbiIncluded=true raises the violation flag below)."
-  edge-public-versi-discovery-op-public-version-pro "Public version properly redacted — accepted" -> discovery-open p 0.92 {
+  edge-public-version-filed-discovery-open "Public version properly redacted — accepted" -> discovery-open p 0.92 {
     authority cite "cfr210.5.public-version"
   }
-  edge-public-versi-cbi-violatio-public-version-sti "Public version still contains unredacted CBI — unauthorized disclosure (Rule 210.34(b))" -> cbi-violation-found p 0.08 {
+  edge-public-version-filed-cbi-violation-found "Public version still contains unredacted CBI — unauthorized disclosure (Rule 210.34(b))" -> cbi-violation-found p 0.08 {
     authority cite "cfr210.34.b"
     valence bad
   }
@@ -288,7 +288,7 @@ state cbi-violation-found: "CBI Protective-Order Violation Found" by office effe
 {
   group discovery-group
   note "A nominally 'public version' that still contains unredacted CBI is the unauthorized-disclosure event 19 CFR 210.34(b) requires immediately reporting to both the submitter and the ALJ. Flag itc337/cbi-protective-order-violated is raised — no FRCP analog exists; this is a disqualification risk for the individual attorney, not merely a discovery-sanction risk."
-  edge-cbi-violatio-counsel-disq-commission-imposes "Commission imposes reprimand, disqualification from the investigation, and referral to licensing authorities (Rule 210.34(c))" -> counsel-disqualified {
+  edge-cbi-violation-found-counsel-disqualified "Commission imposes reprimand, disqualification from the investigation, and referral to licensing authorities (Rule 210.34(c))" -> counsel-disqualified {
     authority cite "cfr210.34.c"
   }
 }

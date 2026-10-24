@@ -8,10 +8,10 @@ chance reissue-pending: "Reissue Application Pending" by office discretion effec
   group reissue-group
   note "A reissue application has been filed, surrendering the original patent. The original patent remains in force during reissue prosecution (35 U.S.C. § 252). The reissue application is examined like an original application: no new matter may be introduced (35 U.S.C. § 251, ¶ 3); broadening claims must have been filed within the 2-year window (35 U.S.C. § 251, ¶ 4). Recapture rule (MPEP 1412.02): scope surrendered by amendment or argument during original prosecution to overcome prior art cannot be reclaimed in reissue."
   court_listener_url "https://www.courtlistener.com/opinion/214772/in-re-tanaka/"
-  edge-reissue-pend-reissue-gran-reissue-examinatio "Reissue examination completes — reissue patent granted" -> reissue-granted p 0.7 {
+  edge-reissue-pending-reissue-granted "Reissue examination completes — reissue patent granted" -> reissue-granted p 0.7 {
     authority cite "35 U.S.C. § 251; MPEP 1460"
   }
-  edge-reissue-pend-reissue-aban-reissue-abandoned "Reissue abandoned (failure to reply or rejection sustained)" -> reissue-abandoned p 0.3 {
+  edge-reissue-pending-reissue-abandoned "Reissue abandoned (failure to reply or rejection sustained)" -> reissue-abandoned p 0.3 {
     authority cite "35 U.S.C. § 251; 37 CFR 1.135"
     note "TRAP: abandonment of the reissue does NOT revive the original patent — both are lost."
   }

@@ -1,5 +1,6 @@
 ---
 source: crates/litigate-cli/tests/timeline.rs
+assertion_line: 522
 expression: "json!({\"parent\": before, \"child\": after, \"child_only\": child_only})"
 ---
 {
@@ -18,23 +19,23 @@ expression: "json!({\"parent\": before, \"child\": after, \"child_only\": child_
     ],
     [
       "Serve defendant via formal process",
-      "event:service-completed@fork:frcp.pleading-to-trial.service-window@start"
+      "event:edge-service-window-service-completed@fork:frcp.pleading-to-trial.service-window@start"
     ],
     [
       "Serve defendant via formal process",
-      "frcp.periods.answer-period@event:service-completed@fork:frcp.pleading-to-trial.service-window@start"
+      "frcp.periods.answer-period@event:edge-service-window-service-completed@fork:frcp.pleading-to-trial.service-window@start"
     ],
     [
       "Request waiver of service instead of formal process",
-      "event:waiver-requested@fork:frcp.pleading-to-trial.service-window@start"
+      "event:edge-service-window-waiver-requested@fork:frcp.pleading-to-trial.service-window@start"
     ],
     [
       "Request waiver of service instead of formal process",
-      "frcp.periods.waiver-answer-period@event:waiver-requested@fork:frcp.pleading-to-trial.service-window@start"
+      "frcp.periods.waiver-answer-period@event:edge-service-window-waiver-requested@fork:frcp.pleading-to-trial.service-window@start"
     ],
     [
       "Fail to serve within 90 days -- no good cause shown",
-      "event:service-window-blown@fork:frcp.pleading-to-trial.service-window@start"
+      "event:edge-service-window-service-window-blown@fork:frcp.pleading-to-trial.service-window@start"
     ]
   ],
   "child": [
@@ -60,19 +61,19 @@ expression: "json!({\"parent\": before, \"child\": after, \"child_only\": child_
     ],
     [
       "Serve defendant via formal process",
-      "event:service-completed@fork:frcp.pleading-to-trial.service-window@start"
+      "event:edge-service-window-service-completed@fork:frcp.pleading-to-trial.service-window@start"
     ],
     [
       "Request waiver of service instead of formal process",
-      "event:waiver-requested@fork:frcp.pleading-to-trial.service-window@start"
+      "event:edge-service-window-waiver-requested@fork:frcp.pleading-to-trial.service-window@start"
     ],
     [
       "Request waiver of service instead of formal process",
-      "frcp.periods.waiver-answer-period@event:waiver-requested@fork:frcp.pleading-to-trial.service-window@start"
+      "frcp.periods.waiver-answer-period@event:edge-service-window-waiver-requested@fork:frcp.pleading-to-trial.service-window@start"
     ],
     [
       "Fail to serve within 90 days -- no good cause shown",
-      "event:service-window-blown@fork:frcp.pleading-to-trial.service-window@start"
+      "event:edge-service-window-service-window-blown@fork:frcp.pleading-to-trial.service-window@start"
     ]
   ],
   "child_only": [

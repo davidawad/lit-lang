@@ -5,73 +5,73 @@ packs: ptab-patent-trial-appeal-board, cafc (links on)
 leg 1: U.S. Patent No. 6,179,053 (wellhead protection for fracking) issued to Oil States in 2001.
   start  ptab-patent-trial-appeal-board::patent-granted "Patent Granted"
     1. [2012] Oil States sues Greene's for infringement in the E.D. Tex.
-       via ptab-patent-trial-appeal-board::patent-granted->infringement-complaint-served#0 (nature, 35 U.S.C. § 315(b))
+       via ptab-patent-trial-appeal-board::edge-patent-granted-infringement-complaint-served (nature, 35 U.S.C. § 315(b))
        at  ptab-patent-trial-appeal-board::infringement-complaint-served "Infringement Complaint Served"
     2. [-] Near the close of discovery, Greene's petitions for IPR2014-00216 against claims 1 and 22 (exact date not found)
-       via ptab-patent-trial-appeal-board::infringement-complaint-served->ipr-petition-filed#0 (self, 35 U.S.C. § 311; 35 U.S.C. § 315(b), within 1 year(s))
+       via ptab-patent-trial-appeal-board::edge-infringement-complaint-served-ipr-petition-filed (self, 35 U.S.C. § 311; 35 U.S.C. § 315(b), within 1 year(s))
        at  ptab-patent-trial-appeal-board::ipr-petition-filed "IPR Petition Filed"
     3. [-] Notice of filing date accorded
-       via ptab-patent-trial-appeal-board::ipr-petition-filed->petition-time-bar-check#0 (nature, 37 CFR §42.106(a); 37 CFR §42.107(b))
+       via ptab-patent-trial-appeal-board::edge-ipr-petition-filed-petition-time-bar-check (nature, 37 CFR §42.106(a); 37 CFR §42.107(b))
        at  ptab-patent-trial-appeal-board::petition-time-bar-check "Is the IPR Petition Filed Within 1 Year of Complaint Service?"
     4. [-] Patent owner's preliminary-response window: the 35 U.S.C. § 315(b) one-year bar is clear
        via ptab-patent-trial-appeal-board::e-time-bar-clear (nature, 35 U.S.C. §315(b))
        at  ptab-patent-trial-appeal-board::popr-window "POPR Window Open"
     5. [-] Oil States files a response opposing review
-       via ptab-patent-trial-appeal-board::popr-window->popr-filed#0 (nature, 37 CFR 42.107(a), (b), within 3 month(s))
+       via ptab-patent-trial-appeal-board::edge-popr-window-popr-filed (nature, 37 CFR 42.107(a), (b), within 3 month(s))
        at  ptab-patent-trial-appeal-board::popr-filed "POPR Filed"
     6. [-] The Board decides institution (date not found)
-       via ptab-patent-trial-appeal-board::popr-filed->institution-decision#0 (nature, 35 U.S.C. 314(b), 37 CFR 42.108, within 3 month(s))
+       via ptab-patent-trial-appeal-board::edge-popr-filed-institution-decision (nature, 35 U.S.C. 314(b), 37 CFR 42.108, within 3 month(s))
        at  ptab-patent-trial-appeal-board::institution-decision "Institution Decision"
     7. [-] Review instituted
-       via ptab-patent-trial-appeal-board::institution-decision->institution-granted#0 (nature, 35 U.S.C. 314(a); SAS Institute Inc. v. Iancu, 138 S. Ct. 1386 (2018); 37 CFR 42.120)
+       via ptab-patent-trial-appeal-board::edge-institution-decision-institution-granted (nature, 35 U.S.C. 314(a); SAS Institute Inc. v. Iancu, 138 S. Ct. 1386 (2018); 37 CFR 42.120)
        at  ptab-patent-trial-appeal-board::institution-granted "Trial Instituted"
     8. [-] Scheduling order
-       via ptab-patent-trial-appeal-board::institution-granted->scheduling-order-issued#0 (nature, 37 CFR 42.5(a); PTAB Standing Order on Motions, within 30 calendar days)
+       via ptab-patent-trial-appeal-board::edge-institution-granted-scheduling-order-issued (nature, 37 CFR 42.5(a); PTAB Standing Order on Motions, within 30 calendar days)
        at  ptab-patent-trial-appeal-board::scheduling-order-issued "Scheduling Order Issued"
     9. [-] Mandatory disclosures
-       via ptab-patent-trial-appeal-board::scheduling-order-issued->mandatory-disclosures#0 (nature, 37 CFR 42.51(a))
+       via ptab-patent-trial-appeal-board::edge-scheduling-order-issued-mandatory-disclosures (nature, 37 CFR 42.51(a))
        at  ptab-patent-trial-appeal-board::mandatory-disclosures "Mandatory Initial Disclosures Exchanged"
    10. [-] Patent owner response window opens
-       via ptab-patent-trial-appeal-board::mandatory-disclosures->patent-owner-response-window#0 (nature, 37 CFR 42.120(b), within 3 month(s))
+       via ptab-patent-trial-appeal-board::edge-mandatory-disclosures-patent-owner-response-window (nature, 37 CFR 42.120(b), within 3 month(s))
        at  ptab-patent-trial-appeal-board::patent-owner-response-window "Patent Owner Response Window"
    11. [-] Patent owner response (route assumed)
-       via ptab-patent-trial-appeal-board::patent-owner-response-window->patent-owner-response-filed#0 (nature, 37 CFR 42.120, within 3 month(s))
+       via ptab-patent-trial-appeal-board::edge-patent-owner-response-window-patent-owner-response-filed (nature, 37 CFR 42.120, within 3 month(s))
        at  ptab-patent-trial-appeal-board::patent-owner-response-filed "Patent Owner Response Filed"
    12. [-] Petitioner reply (route assumed)
-       via ptab-patent-trial-appeal-board::patent-owner-response-filed->petitioner-reply-brief#0 (self, 37 CFR 42.23(a), within 60 calendar days)
+       via ptab-patent-trial-appeal-board::edge-patent-owner-response-filed-petitioner-reply-brief (self, 37 CFR 42.23(a), within 60 calendar days)
        at  ptab-patent-trial-appeal-board::petitioner-reply-brief "Petitioner Reply Filed"
    13. [-] Sur-reply: forced by the pack (see quirks)
-       via ptab-patent-trial-appeal-board::petitioner-reply-brief->patent-owner-sur-reply#0 (nature, 37 CFR 42.23(b), within 30 calendar days)
+       via ptab-patent-trial-appeal-board::edge-petitioner-reply-brief-patent-owner-sur-reply (nature, 37 CFR 42.23(b), within 30 calendar days)
        at  ptab-patent-trial-appeal-board::patent-owner-sur-reply "Patent Owner Sur-Reply Filed"
    14. [-] Oil States weighs amending
-       via ptab-patent-trial-appeal-board::patent-owner-sur-reply->motion-to-amend-decision#0 (nature, 35 U.S.C. 316(d); 37 CFR 42.121)
+       via ptab-patent-trial-appeal-board::edge-patent-owner-sur-reply-motion-to-amend-decision (nature, 35 U.S.C. 316(d); 37 CFR 42.121)
        at  ptab-patent-trial-appeal-board::motion-to-amend-decision "Motion to Amend Decision Point"
    15. [-] Oil States moves to amend (the FWD denies the motion)
-       via ptab-patent-trial-appeal-board::motion-to-amend-decision->mta-filed#0 (nature, 35 U.S.C. 316(d); 37 CFR 42.121)
+       via ptab-patent-trial-appeal-board::edge-motion-to-amend-decision-mta-filed (nature, 35 U.S.C. 316(d); 37 CFR 42.121)
        at  ptab-patent-trial-appeal-board::mta-filed "Contingent Motion to Amend Filed"
    16. [-] Preliminary guidance: forced by the pack (see quirks)
-       via ptab-patent-trial-appeal-board::mta-filed->mta-preliminary-guidance#0 (nature, MTA Pilot Program, 84 Fed. Reg. 9497 (Mar. 15, 2019))
+       via ptab-patent-trial-appeal-board::edge-mta-filed-mta-preliminary-guidance (nature, MTA Pilot Program, 84 Fed. Reg. 9497 (Mar. 15, 2019))
        at  ptab-patent-trial-appeal-board::mta-preliminary-guidance "Board Issues Preliminary Guidance"
    17. [-] Greene's opposes the amendment
-       via ptab-patent-trial-appeal-board::mta-preliminary-guidance->petitioner-opposition-mta#0 (nature, 37 CFR 42.121(c))
+       via ptab-patent-trial-appeal-board::edge-mta-preliminary-guidance-petitioner-opposition-mta (nature, 37 CFR 42.121(c))
        at  ptab-patent-trial-appeal-board::petitioner-opposition-mta "Petitioner Opposes Motion to Amend"
    18. [-] Briefing closes
-       via ptab-patent-trial-appeal-board::petitioner-opposition-mta->oral-hearing-request#0 (nature, 37 CFR 42.70)
+       via ptab-patent-trial-appeal-board::edge-petitioner-opposition-mta-oral-hearing-request (nature, 37 CFR 42.70)
        at  ptab-patent-trial-appeal-board::oral-hearing-request "Oral Hearing Requested"
    19. [-] Oral hearing (not found in the sources read; route assumed)
-       via ptab-patent-trial-appeal-board::oral-hearing-request->oral-hearing-held#0 (nature, 37 CFR 42.70(a), (b))
+       via ptab-patent-trial-appeal-board::edge-oral-hearing-request-oral-hearing-held (nature, 37 CFR 42.70(a), (b))
        at  ptab-patent-trial-appeal-board::oral-hearing-held "Oral Hearing Held"
    20. [-] Case submitted
-       via ptab-patent-trial-appeal-board::oral-hearing-held->fwd-issued#0 (nature, 37 CFR 42.70(b))
+       via ptab-patent-trial-appeal-board::edge-oral-hearing-held-fwd-issued (nature, 37 CFR 42.70(b))
        at  ptab-patent-trial-appeal-board::fwd-issued "Board Issues Final Written Decision"
    21. [2015-05-01] Final written decision: claims 1 and 22 unpatentable as anticipated; motion to amend denied (Paper 53)
-       via ptab-patent-trial-appeal-board::fwd-issued->fwd-all-unpatentable#0 (nature, 35 U.S.C. § 318(a))
+       via ptab-patent-trial-appeal-board::edge-fwd-issued-fwd-all-unpatentable (nature, 35 U.S.C. § 318(a))
        at  ptab-patent-trial-appeal-board::fwd-all-unpatentable "FWD: All Claims Unpatentable" {ipr-estopped}
    22. [-] Oil States weighs post-decision relief
-       via ptab-patent-trial-appeal-board::fwd-all-unpatentable->post-fwd-options#0 (nature, 37 CFR § 42.71(d))
+       via ptab-patent-trial-appeal-board::edge-fwd-all-unpatentable-post-fwd-options (nature, 37 CFR § 42.71(d))
        at  ptab-patent-trial-appeal-board::post-fwd-options "Post-FWD Options" {ipr-estopped}
    23. [-] No rehearing or Director review in the sources read; straight to appeal (route assumed)
-       via ptab-patent-trial-appeal-board::post-fwd-options->federal-circuit-window#0 (nature, 35 U.S.C. § 319)
+       via ptab-patent-trial-appeal-board::edge-post-fwd-options-federal-circuit-window (nature, 35 U.S.C. § 319)
        at  ptab-patent-trial-appeal-board::federal-circuit-window "Federal Circuit Appeal Window" {ipr-estopped}
    24. [-] Oil States appeals to the Federal Circuit (35 U.S.C. § 141)
        via links::ptab-appeal-to-cafc (nature, cross-forum link, 35 U.S.C. §§ 141(c), 319; 37 C.F.R. § 90.3)

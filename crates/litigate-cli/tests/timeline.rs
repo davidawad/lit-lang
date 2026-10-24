@@ -472,11 +472,11 @@ fn an_election_is_keyed_by_the_option_it_elects() {
         events,
         [
             (
-                "event:Elected@2026-09-14/e-filingfork-standard",
+                "event:Elected@elected-1",
                 "Elected(e-filingfork-standard) by owner"
             ),
             (
-                "event:Elected@2026-09-14/e-casetype-patent",
+                "event:Elected@elected-2",
                 "Elected(e-casetype-patent) by owner"
             ),
         ]
@@ -511,7 +511,7 @@ fn a_child_world_inserting_an_earlier_trigger_keeps_every_inherited_key() {
     // The docket and every world the parent forks into: each key the
     // parent has, the child has unchanged, except the answer period its
     // first world assumed, which the child's docket now records.
-    let assumed = "frcp.periods.answer-period@event:service-completed@fork:frcp.pleading-to-trial.service-window@start";
+    let assumed = "frcp.periods.answer-period@event:edge-service-window-service-completed@fork:frcp.pleading-to-trial.service-window@start";
     let inherited: Vec<&(String, String)> = before.iter().filter(|(_, k)| k != assumed).collect();
     for row in &inherited {
         assert!(after.contains(row), "{row:?} not in {after:#?}");

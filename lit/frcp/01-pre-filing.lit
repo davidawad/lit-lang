@@ -9,7 +9,7 @@ state pre-filing: "Pre-Filing Investigation" by applicant cite "FRCP 11(b)"
 {
   group pre-filing-group
   note "Before signing any pleading, motion, or paper, counsel certifies (Rule 11(b)) that it is not presented for an improper purpose, the legal contentions are warranted, and the factual contentions have (or will likely have) evidentiary support after reasonable inquiry. Rule 11(c)(2) gives the recipient of a Rule 11 motion a 21-day safe harbor to withdraw or correct the challenged paper before the motion may be filed with the court -- skipping the safe harbor makes the motion itself improper."
-  edge-pre-filing-jurisdiction-conduct-rule-11-pr "Conduct Rule 11 pre-filing investigation" -> jurisdiction-venue-check {
+  edge-pre-filing-jurisdiction-venue-check "Conduct Rule 11 pre-filing investigation" -> jurisdiction-venue-check {
     authority cite "FRCP 11(b)"
     effort 15.hours
   }
@@ -23,7 +23,7 @@ state jurisdiction-venue-check: "Subject-Matter Jurisdiction & Venue Assessment"
   group pre-filing-group
   note "Federal question jurisdiction (28 U.S.C. 1331) or diversity jurisdiction (1332(a): complete diversity of citizenship under Strawbridge v. Curtiss, 7 U.S. 267 (1806), plus an amount in controversy exceeding $75,000). Venue lies where a substantial part of the events occurred or where any defendant resides if all defendants reside in the same state (1391(b)(1)-(2)). Unlike personal jurisdiction and venue, subject-matter jurisdiction can never be waived or conferred by consent -- Rule 12(h)(3) requires dismissal the moment the court determines it is lacking, even post-judgment."
   court_listener_url "https://www.courtlistener.com/opinion/84812/strawbridge-v-curtiss/"
-  edge-jurisdiction-complaint-fi-file-complaint-est "File complaint establishing subject-matter jurisdiction and venue" -> complaint-filed {
+  edge-jurisdiction-venue-check-complaint-filed "File complaint establishing subject-matter jurisdiction and venue" -> complaint-filed {
     authority cite "28 U.S.C. 1331; 1332(a); 1391(b); FRCP 3"
     effort 10.hours
     cost 405.usd
@@ -35,5 +35,7 @@ state complaint-filed: "Complaint Filed" by office cite "FRCP 3; 8(a); 28 U.S.C.
 {
   group pre-filing-group
   note "An action is commenced by filing a complaint with the court (Rule 3) -- this is what stops the statute of limitations clock. Rule 8(a) requires a short and plain statement of the grounds for jurisdiction, the claim showing entitlement to relief, and a demand for judgment. The district-court civil filing fee is a fixed statutory amount under 28 U.S.C. 1914(a) plus an administrative fee set by the Judicial Conference."
-  edge-complaint-fi-service-wind-clerk-signs-seals "Clerk signs, seals, and issues the summons" -> service-window { authority cite "FRCP 4(b)" }
+  edge-complaint-filed-service-window "Clerk signs, seals, and issues the summons" -> service-window {
+    authority cite "FRCP 4(b)"
+  }
 }

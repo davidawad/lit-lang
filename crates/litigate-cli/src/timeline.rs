@@ -467,6 +467,12 @@ fn obligation_status(
                 "timeliness unknown: {trigger} due date not recorded; acted{by}"
             )),
         ),
+        // A designated date the trigger left unknown, with no act against
+        // it: unknown, never open or lapsed (lg-flu.46).
+        Status::Unknown => status(
+            RowState::Unknown,
+            Some(format!("{trigger} due date not recorded")),
+        ),
         Status::Breached => status(
             RowState::Breached,
             Some(format!("past due at {as_of} with no act by its bearer")),
@@ -650,7 +656,7 @@ fn deadlines(
             // against it says so itself, L4010).
             if let Some((pkg, decl)) = b.deadline(&s.deadline) {
                 let mut state = obligation_status(s.status, ended, None, &b.as_of, &name);
-                if s.status != Status::Unjudged {
+                if !matches!(s.status, Status::Unjudged | Status::Unknown) {
                     state.reason = Some(format!(
                         "{}: {}",
                         state.reason.unwrap_or_default(),
@@ -1121,6 +1127,11 @@ mod tests {
                 Status::Unjudged,
                 RowState::Unknown,
                 Some("timeliness unknown: Served due date not recorded; acted by Answered(complaint) on 2025-03-20"),
+            ),
+            (
+                Status::Unknown,
+                RowState::Unknown,
+                Some("Served due date not recorded"),
             ),
             (
                 Status::Breached,

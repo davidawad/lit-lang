@@ -968,7 +968,8 @@ creates (design review 2026-10-23 §2.4, §2.7):
   `within` edge is judged neither timely nor late (L4010, a warning
   naming the trigger; the instance ends `unjudged`), and with no such act
   it ends `unknown` at `as_of`, never `open` or `lapsed`. The schedule,
-  `explain-value` (its `status` and `reason`) and the LSP's hint report it
+  `explain-value` (its `status` and `reason`), the LSP's hint and the
+  timeline (`status.state` `unknown`, TIMELINE.md) report it
   with no `due` and the reason, "notice due date not recorded" naming the
   trigger and its date, in `unknown`. `p` must name a `Date` parameter
   of the trigger's event (L1002, L2001), and the deadline must count

@@ -14,7 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   leaves the TTAB answer period with status `unknown` at `as_of` and the
   reason "notice due date not recorded", naming the notice and its
   mailing date, in the schedule, in `explain-value` (which now reports a
-  deadline's `status` and `reason`) and in the LSP's inlay hint; it never
+  deadline's `status` and `reason`), in the LSP's inlay hint and on the
+  timeline (`status.state` `unknown`, reason "InstitutionNoticed due date
+  not recorded"); it never
   lapses however late `as_of` is. Three end-to-end TTAB matters,
   `cases/e2e-ttab-{ok,short,unknown}.case` (one notice mailed 2026-10-21
   designating 2026-11-30, 2026-11-05 and `?`), are golden-tested through

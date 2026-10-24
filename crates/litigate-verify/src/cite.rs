@@ -26,23 +26,10 @@ use litigate_base::{Diagnostic, DiagnosticCode as C, Profile, Severity, Span};
 use litigate_lower::source_map::{Citations, L0Section, Pin};
 use litigate_sema::Hole;
 
-/// [`unresolved`] and [`unproven`].
-pub(crate) fn check(
-    cx: &Context<'_>,
-    pack: &Pack,
-    corpus: &SourceCorpus,
-    holes: &[Hole],
-) -> (Vec<Diagnostic>, Vec<Hole>) {
-    (
-        unresolved(cx, pack, corpus, holes),
-        unproven(cx, pack, corpus, holes),
-    )
-}
-
 /// L1010 for every citation that does not resolve. `holes` are the
 /// package's: a cite hole's reason is resolved like a cite, but a hole
 /// cites no expression, so it is never held to its version's window.
-fn unresolved(
+pub(crate) fn unresolved(
     cx: &Context<'_>,
     pack: &Pack,
     corpus: &SourceCorpus,
@@ -67,10 +54,48 @@ fn unresolved(
                         .or_else(|| expression(cx, &cite, s, &span).filter(|_| !hole))
                 })
                 .chain(unkeyed)
+                .chain(
+                    cite.quote
+                        .and_then(|q| unquoted(cx, corpus, text, q, &sections, &span)),
+                )
                 .map(|d| exempt(d, cite.imported, cx.profile))
                 .collect::<Vec<_>>()
         })
         .collect()
+}
+
+/// L1010 when no vendored section `text` resolves to holds `quote`, the
+/// words it is cited for, compared with whitespace runs collapsed: a quote
+/// the corpus cannot show is not the rule's text.
+fn unquoted(
+    cx: &Context<'_>,
+    corpus: &SourceCorpus,
+    text: &str,
+    quote: &str,
+    sections: &[L0Section],
+    span: &Span,
+) -> Option<Diagnostic> {
+    let words = |s: &str| s.split_whitespace().collect::<Vec<_>>().join(" ");
+    let quote = words(quote);
+    let found = sections.iter().any(|s| {
+        corpus.lookup_all(&s.heading).iter().any(|(file, section)| {
+            s.path.as_ref() == Some(file) && words(&section.body).contains(&quote)
+        })
+    });
+    if found {
+        return None;
+    }
+    let d = emit(
+        C::UnboundCite,
+        cx.profile,
+        span.clone(),
+        format!("`{text}` is cited for \"{quote}\", which its vendored text does not hold"),
+    );
+    Some(note(
+        d,
+        None,
+        "quote the cited rule's words exactly as the vendored source gives them",
+    ))
 }
 
 /// A hole for every cite whose expression (the binding's `as_of`, D)
@@ -80,7 +105,12 @@ fn unresolved(
 /// cites (no window), `historical` cites (a later edition reporting the
 /// earlier text, say) and cites already written as holes (`holes`, the
 /// package's) are exempt: a hole cites no expression.
-fn unproven(cx: &Context<'_>, pack: &Pack, corpus: &SourceCorpus, holes: &[Hole]) -> Vec<Hole> {
+pub(crate) fn unproven(
+    cx: &Context<'_>,
+    pack: &Pack,
+    corpus: &SourceCorpus,
+    holes: &[Hole],
+) -> Vec<Hole> {
     let sources = &cx.package.manifest.sources;
     let citations = Citations::new(pack.cite_syntax.clone(), sources, Some(corpus));
     cx.cites()

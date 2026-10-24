@@ -54,7 +54,7 @@ state entry-district-court: "District Court Patent Judgment Entered" by applican
   }
 }
 
-state entry-ptab: "PTAB Final Written Decision (or Operative Post-FWD Decision)" by applicant cite ?("28 U.S.C. § 1295(a)(4)(A); 35 U.S.C. §§ 141-144, 319") {
+state entry-ptab: "PTAB Final Written Decision (or Operative Post-FWD Decision)" by applicant cite "28 U.S.C. § 1295(a)(4)(A); 35 U.S.C. §§ 141-144, 319" {
   group entry-group
   note "Reached from ptab-patent-trial-appeal-board.json's fwd-all-unpatentable / fwd-all-confirmed / fwd-mixed terminals, or from a later rehearing/Director-review decision if one was sought. Only actual trial participants may appeal (35 U.S.C. § 319) — no § 145 civil-action alternative exists for AIA trials, unlike ex parte prosecution appeals under § 145."
   ptab-file-noa "File notice of appeal with the Director (USPTO)" -> notice-of-appeal-filed {
@@ -74,7 +74,7 @@ state entry-ptab: "PTAB Final Written Decision (or Operative Post-FWD Decision)"
   }
 }
 
-state entry-itc: "ITC Final Determination — Presidential (USTR) Review Period Expired" by applicant cite ?("28 U.S.C. § 1295(a)(6); 19 U.S.C. § 1337(c), (j)") {
+state entry-itc: "ITC Final Determination — Presidential (USTR) Review Period Expired" by applicant cite "28 U.S.C. § 1295(a)(6); 19 U.S.C. § 1337(c), (j)" {
   group entry-group
   note "Reached from itc-337.json's no-violation-outcome or remedy-in-effect nodes, i.e. only after the 60-day § 1337(j) Presidential/USTR disapproval window has run without a veto (a veto is itc-337.json's determination-vetoed terminal — no force or effect, nothing to appeal). Any person adversely affected, including the complainant on a no-violation determination, may appeal."
   itc-file-noa "File notice of appeal to the Federal Circuit" -> notice-of-appeal-filed {
@@ -171,7 +171,7 @@ state entry-ttab: "TTAB Final Decision (Opposition, Cancellation or Ex Parte App
     tags [appeal]
   }
   ttab-window-blown "Let the 63-day window lapse" -> window-blown-ttab {
-    authority cite ?("37 C.F.R. § 2.145(d)(1), (e)")
+    authority cite "37 C.F.R. § 2.145(d)(1), (e)"
   }
 }
 

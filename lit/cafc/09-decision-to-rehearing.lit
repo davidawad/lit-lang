@@ -162,10 +162,10 @@ terminal remanded-to-ttab: "Remanded to the TTAB" outcome [remand] {
   payoff 400_000.usd
 }
 
-decision rehearing-window: "Losing Party Weighs Rehearing" by applicant cite ?("Fed. Cir. R. 40(a)(1), (f)") {
+decision rehearing-window: "Losing Party Weighs Rehearing" by applicant cite "Fed. Cir. R. 40(a)(1), (f)" {
   group rehearing-group
   rehearing-file "File petition for panel rehearing/rehearing en banc/combined petition" -> rehearing-petition-filed {
-    authority cite ?("Fed. Cir. R. 40(a)-(b), (f)")
+    authority cite "Fed. Cir. R. 40(a)-(b), (f)"
     effort 90.hours
     cost 0.usd
     event Filed(RehearingPetition)
@@ -183,7 +183,7 @@ decision rehearing-window: "Losing Party Weighs Rehearing" by applicant cite ?("
   }
 }
 
-state rehearing-petition-filed: "Petition for Panel Rehearing / Rehearing En Banc / Combined Petition Filed" by office cite ?("Fed. Cir. R. 40(a)(1)-(2), (b)") {
+state rehearing-petition-filed: "Petition for Panel Rehearing / Rehearing En Banc / Combined Petition Filed" by office cite "Fed. Cir. R. 40(a)(1)-(2), (b)" {
   group rehearing-group
   note "Panel rehearing is the ordinary means of reconsideration; rehearing en banc 'is not favored' (Rule 40(a)(1)). A party seeking both must combine them in a single document unless a local rule says otherwise."
   rehearing-panel-considers "Panel (and full court, if en banc sought) considers the petition" -> panel-en-banc-rehearing-decision {
@@ -194,7 +194,7 @@ state rehearing-petition-filed: "Petition for Panel Rehearing / Rehearing En Ban
 /// A tribunal-discretion draw. It stays a `decision` by `office`, as in the
 /// pack, because a `chance` node lowers to kind `state`; its probabilities
 /// are the pack's, with their bases in each edge's note.
-chance panel-en-banc-rehearing-decision: "Panel (and, if Combined, the Full Court) Rules on the Petition" by office discretion cite ?("Fed. Cir. R. 40(a)(1)-(4), (c)") {
+chance panel-en-banc-rehearing-decision: "Panel (and, if Combined, the Full Court) Rules on the Petition" by office discretion cite "Fed. Cir. R. 40(a)(1)-(4), (c)" {
   group rehearing-group
   rehearing-denied-edge "Deny rehearing and rehearing en banc" -> rehearing-denied p 0.93 {
     authority cite "Fed. Cir. R. 40(a)(1)"

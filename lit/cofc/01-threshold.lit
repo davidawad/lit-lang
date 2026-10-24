@@ -25,11 +25,11 @@ decision patent-claim-fork: "Is This a §1498(a) Patent/Copyright Use Claim?" by
   }
 }
 
-decision patent-admin-claim-fork: "File the Optional §286 Administrative Claim?" by applicant cite ?("35 U.S.C. § 286, last paragraph") {
+decision patent-admin-claim-fork: "File the Optional §286 Administrative Claim?" by applicant cite "35 U.S.C. § 286, last paragraph" {
   group threshold-group
   note "A §1498(a) plaintiff may first file a written claim for compensation with the agency, tolling §2501 while the agency considers it, or sue without one: the administrative claim is not a jurisdictional prerequisite."
   e-patentfork-adminclaim "§1498(a) claim; plaintiff elects to file a §286 administrative claim for compensation" -> patent-admin-claim-filed {
-    authority cite ?("35 U.S.C. § 286, last paragraph")
+    authority cite "35 U.S.C. § 286, last paragraph"
     effort 8.hours
     cost 0.usd
     note "Optional -- tolls §2501 while the agency considers the claim, but is not a jurisdictional prerequisite to suit."
@@ -39,17 +39,17 @@ decision patent-admin-claim-fork: "File the Optional §286 Administrative Claim?
   }
 }
 
-state patent-admin-claim-filed: "Written Administrative Claim for Compensation Filed (Optional)" by office cite ?("35 U.S.C. § 286, last paragraph") {
+state patent-admin-claim-filed: "Written Administrative Claim for Compensation Filed (Optional)" by office cite "35 U.S.C. § 286, last paragraph" {
   group threshold-group
   note "The patentee may (but need not) file a written claim for compensation with the department/agency having authority to settle it. Filing this claim tolls the running of §2501's 6-year period, for up to 6 years, between the date the agency receives the written claim and the date the agency mails notice that the claim is denied. This is the patent-specific analog to an administrative exhaustion step -- purely optional, and skipping it does not forfeit the CoFC suit, it just forgoes the tolling."
   e-adminclaim-resolved "Agency considers the claim (tolling runs up to 6 years)" -> patent-admin-claim-resolved {
-    authority cite ?("35 U.S.C. § 286, last paragraph")
+    authority cite "35 U.S.C. § 286, last paragraph"
     duration { min 30.days, mode 365.days, max 6.years }
     note "Tolling caps at 6 years; the agency may also simply never respond, in which case the cap controls."
   }
 }
 
-state patent-admin-claim-resolved: "Agency Mails Notice of Claim Denial (or 6-Year Tolling Cap Reached)" cite ?("35 U.S.C. § 286, last paragraph") {
+state patent-admin-claim-resolved: "Agency Mails Notice of Claim Denial (or 6-Year Tolling Cap Reached)" cite "35 U.S.C. § 286, last paragraph" {
   group threshold-group
   note "Tolling ends on the earlier of the agency's mailed denial notice or 6 years of pendency. The §2501 limitations clock resumes running from this point (net of the tolled interval)."
   e-adminclaim-to-limitations "§2501 clock resumes running (net of the tolled interval)" -> limitations-check

@@ -214,7 +214,7 @@ decision oral-hearing-request: "Oral Hearing Requested" cite "37 CFR 42.70(a)"
 {
   group hearing-group
   note "Either party may request oral argument; the Board may also order one sua sponte. Not requesting one waives it — cases are often decided entirely on the papers, and waiving means no opportunity for live advocacy or Board questions before the FWD."
-  _ "Request oral argument" -> oral-hearing-held { authority cite ?("37 CFR 42.70(a), (b)") }
+  _ "Request oral argument" -> oral-hearing-held { authority cite "37 CFR 42.70(a), (b)" }
   _ "Waive oral argument" -> fwd-issued {
     authority cite "37 CFR 42.70(a)"
     duration { min 30.days, mode 60.days, max 120.days }
@@ -254,7 +254,7 @@ chance fwd-issued: "Board Issues Final Written Decision" by examiner discretion 
   }
 }
 
-terminal fwd-all-unpatentable: "FWD: All Claims Unpatentable" outcome [win, fwd] cite ?("35 U.S.C. §§ 318(a), 318(b), 315(e)") {
+terminal fwd-all-unpatentable: "FWD: All Claims Unpatentable" outcome [win, fwd] cite "35 U.S.C. §§ 318(a), 318(b), 315(e)" {
   group fwd-group
   note "Every instituted claim held unpatentable. Full 315(e) estoppel attaches: petitioner and privies are barred from later asserting in the USPTO, district court, or ITC any ground raised or that reasonably could have been raised here, construed broadly. The worst terminal for the patent owner. PLACEHOLDER PAYOFF: $1,000,000, override per matter. Full win: every instituted claim invalidated."
   valence good
@@ -275,7 +275,7 @@ terminal fwd-all-confirmed: "FWD: All Claims Confirmed Patentable" outcome [loss
   }
 }
 
-terminal fwd-mixed: "FWD: Mixed Result" outcome [mixed, fwd] cite ?("35 U.S.C. §§ 318(a), 318(b), 315(e)") {
+terminal fwd-mixed: "FWD: Mixed Result" outcome [mixed, fwd] cite "35 U.S.C. §§ 318(a), 318(b), 315(e)" {
   group fwd-group
   note "Some claims cancelled, others confirmed. 315(e) estoppel attaches claim-by-claim and ground-by-ground to what was actually decided. Patent survives but narrower — the AIA-trial analog of mpep-prosecution's claims-amended terminal. PLACEHOLDER PAYOFF: $400,000, override per matter, matching this project's partial/mixed-result tier."
   valence good

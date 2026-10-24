@@ -479,6 +479,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **59 cite holes are string cites; the 28 U.S.C. App. edition bindings
+  carry their edition dates** (lg-flu.30). Holes kept only because the
+  retired cite mode stopped at a comma (`cite ?("FRAP 3(a), (c)(1),
+  (4)-(5)")`, `cite ?("35 U.S.C. § 286, last paragraph")`) are quoted
+  cites where every citation in them is a rule or statute whose pinpoint
+  is in the vendored text. The other 272 stay holes: case citations,
+  unvendored texts (TBMP sections, RCFC appendices, Sup. Ct. R. 10, the
+  MPEP, Federal Register notices), pinpoints the text lacks (37 C.F.R.
+  § 42.108(a)(1)), commentary, and the FRAP cites of `lit/frcp`'s versions that
+  left force on 2023-12-01, whose earlier FRAP text is not vendored. `lit/core`'s `frcp-2008`,
+  `frcp-2011`, `frap-2008` and `frap-2011` sources held the fetch date
+  (2026-10-22) as `as_of`; each now holds the effective date of the last
+  amendment its rule's credits print (2007-12-01, 2009-12-01, 2005-12-01,
+  2009-12-01), so the FRCP 6 and FRAP 26 versions whose window contains
+  that date cite their own text and lose `historical`.
+
 - **A chain on a dependency's period opens in case replay** (lg-flu.29).
   Replay's world holds the used packages' dependencies, as `check` and
   lowering do: a chain on a dependency's deadline opens from the event

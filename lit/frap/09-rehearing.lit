@@ -73,7 +73,7 @@ state rehearing-petition-filed: "Petition for Rehearing / Rehearing En Banc File
   _ "Panel rules on rehearing" -> panel-rehearing-decision { authority cite "FRAP 40(a)(4)" }
 }
 
-chance panel-rehearing-decision: "Panel Rules on Rehearing" by examiner discretion cite ?("FRAP 40(a)(4), 40(e)") {
+chance panel-rehearing-decision: "Panel Rules on Rehearing" by examiner discretion cite "FRAP 40(a)(4), 40(e)" {
   group rehearing-group
   note "The panel rules on the petition; no fixed FRAP deadline exists, though circuit practice generally resolves it in under 40 days. Grant rates are extremely low; panels rarely reverse their own decisions absent a substantial legal or factual error. No response is permitted unless the court requests one."
   _ "Panel grants rehearing" -> rehearing-granted-amended-opinion p 0.05 {
@@ -84,7 +84,7 @@ chance panel-rehearing-decision: "Panel Rules on Rehearing" by examiner discreti
   }
 }
 
-chance en-banc-poll-decision: "Active Judges Vote on En Banc Rehearing" by examiner discretion cite ?("FRAP 40(c), 28 U.S.C. § 46(c)") {
+chance en-banc-poll-decision: "Active Judges Vote on En Banc Rehearing" by examiner discretion cite "FRAP 40(c), 28 U.S.C. § 46(c)" {
   group rehearing-group
   note "All active judges of the circuit vote on whether to order en banc rehearing; a majority of active judges must vote in favor to grant. FRAP 40(c) provides that 'unless a judge calls for a vote, a vote need not be taken' — the court may dispose of the petition without a formal poll, effectively a denial. En banc rehearing is extraordinarily rare, reserved for circuit splits or truly exceptional questions."
   _ "Majority votes to rehear en banc" -> rehearing-granted-amended-opinion p 0.02 {
@@ -108,7 +108,7 @@ state rehearing-granted-amended-opinion: "Rehearing Granted — Opinion Amended 
   }
 }
 
-terminal rehearing-en-banc-both-denied: "Rehearing and Rehearing En Banc Both Denied (Final)" by office outcome [final] cite ?("FRAP 40(a)(1), FRAP 41(b)(1)") {
+terminal rehearing-en-banc-both-denied: "Rehearing and Rehearing En Banc Both Denied (Final)" by office outcome [final] cite "FRAP 40(a)(1), FRAP 41(b)(1)" {
   group rehearing-group
   note "Once both panel and en banc petitions are denied (or the deadline to file them passes without filing), the original panel decision is final at the circuit level. The mandate issues 7 days after the later of expiration of the petition period or entry of the order denying it. The 90-day certiorari deadline now runs from this denial. PLACEHOLDER PAYOFF: $400,000, override per matter. Reachable from any panel disposition (affirmed, reversed, remanded, mixed) with rehearing then exhausted, so a single payoff necessarily blends a possible win with a possible loss; override once the matter's actual panel disposition is known."
   valence good

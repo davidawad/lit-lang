@@ -107,7 +107,7 @@ decision appeal-clock-open: "Notice of Appeal Window Open" by applicant cite "FR
     note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate. Same $605.00 fee as a civil appeal (Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2023, plus 28 U.S.C. § 1917's $5.00 notice fee) applies in principle, but most criminal appellants proceed in forma pauperis with appointed CJA counsel (FRAP 24(a); 28 U.S.C. § 1915), waiving prepayment."
   }
   _ "File Rule 4(a)(4) tolling motion" -> tolling-motion-filed {
-    authority cite ?("FRAP 4(a)(4)(A); FRCP 50(b), 59(e), 60(b)(2)")
+    authority cite "FRAP 4(a)(4)(A); FRCP 50(b), 59(e), 60(b)(2)"
     effort 8.hours
     within tolling-motion-period {
       extendable false
@@ -136,7 +136,7 @@ decision appeal-clock-open: "Notice of Appeal Window Open" by applicant cite "FR
   }
 }
 
-state notice-of-appeal-filed: "Notice of Appeal Filed" by office cite ?("FRAP 3(a), (c)(1), (4)-(5)") {
+state notice-of-appeal-filed: "Notice of Appeal Filed" by office cite "FRAP 3(a), (c)(1), (4)-(5)" {
   group notice-group
   note "The notice must specify the party taking the appeal, designate the judgment/order appealed from, and identify the court to which the appeal is taken. Courts construe informal notices liberally per Foman v. Davis, 371 U.S. 178 (1962), unless the defect is fatal (wrong party or judgment)."
   _ "Notice omits required contents" -> deficient-notice-of-appeal {
@@ -147,7 +147,7 @@ state notice-of-appeal-filed: "Notice of Appeal Filed" by office cite ?("FRAP 3(
   }
 }
 
-state tolling-motion-filed: "Rule 4(a)(4) Tolling Motion Filed" by examiner cite ?("FRAP 4(a)(4)(A); FRCP 50, 59, 52(b), 60(b)") {
+state tolling-motion-filed: "Rule 4(a)(4) Tolling Motion Filed" by examiner cite "FRAP 4(a)(4)(A); FRCP 50, 59, 52(b), 60(b)" {
   group notice-group
   note "Motions for judgment as a matter of law, new trial, amended findings, altered/amended judgment, and certain Rule 60(b) motions toll the appeal clock when filed within their own FRCP deadlines (typically 28 days). A motion filed one day after the FRCP deadline does not toll."
   _ "District court rules on the motion" -> tolling-motion-disposed {

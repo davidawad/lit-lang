@@ -216,7 +216,7 @@ decision popr-window: "POPR Window Open" cite "37 CFR 42.107(b)"
   note "The 90-day clock runs from the Board's notice of the petition's filing date, not the actual petition filing date — delays between filing and notice can be consequential. The period is extendable by 30 days upon request without cause. Patent owner must decide early whether to respond, waive, or disclaim."
   _ "File Patent Owner Preliminary Response" -> popr-filed {
     event PreliminaryResponseFiled()
-    authority cite ?("37 CFR 42.107(a), (b)")
+    authority cite "37 CFR 42.107(a), (b)"
     within popr-period {
       extendable true
       extension_authority "37 CFR 42.107(b) (one 30-day extension available without cause)"
@@ -239,7 +239,7 @@ state popr-filed: "POPR Filed" by office cite "37 CFR 42.107(a)"
   group popr-group
   note "Word-limited (14,000 IPR / 18,700 PGR). May argue the merits and/or discretionary denial (Fintiv, §325(d) follow-on-petition factors). No new testimonial evidence without Board authorization, except a district court claim-construction ruling entered before the deadline."
   _ "POPR complete — Board decides institution" -> institution-decision {
-    authority cite ?("35 U.S.C. 314(b), 37 CFR 42.108")
+    authority cite "35 U.S.C. 314(b), 37 CFR 42.108"
     within institution-period {
       extendable true
       extension_authority "37 CFR 42.108(a)(1) (extendable by 1 month with parties' consent)"

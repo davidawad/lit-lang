@@ -116,65 +116,65 @@ instance cafc@cofc-gov {
 /// A judgment for the United States after a bench trial (RCFC 52(a), 58) is
 /// appealable by the plaintiff (28 U.S.C. § 1295(a)(3)).
 link cofc-appeal-judgment-for-government "Plaintiff appeals the judgment to the Federal Circuit": cofc::judgment-for-government -> cafc@cofc::entry-cofc by applicant {
-  authority cite ?("28 U.S.C. §§ 1295(a)(3), 2522")
+  authority cite "28 U.S.C. §§ 1295(a)(3), 2522"
   tags [appeal]
 }
 
 /// Summary judgment for the United States (RCFC 56) is a final decision.
 link cofc-appeal-sj-for-government "Plaintiff appeals the summary judgment": cofc::summary-judgment-for-government -> cafc@cofc::entry-cofc by applicant {
-  authority cite ?("28 U.S.C. §§ 1295(a)(3), 2522")
+  authority cite "28 U.S.C. §§ 1295(a)(3), 2522"
   tags [appeal]
 }
 
 /// A dismissal for lack of subject-matter jurisdiction (RCFC 12(b)(1)).
 link cofc-appeal-dismissal-jurisdiction "Plaintiff appeals the RCFC 12(b)(1) dismissal": cofc::dismissed-lack-of-jurisdiction -> cafc@cofc::entry-cofc by applicant {
-  authority cite ?("28 U.S.C. §§ 1295(a)(3), 2522")
+  authority cite "28 U.S.C. §§ 1295(a)(3), 2522"
   tags [appeal]
 }
 
 /// A dismissal for failure to state a claim (RCFC 12(b)(6)).
 link cofc-appeal-dismissal-failure-to-state "Plaintiff appeals the RCFC 12(b)(6) dismissal": cofc::dismissed-failure-to-state -> cafc@cofc::entry-cofc by applicant {
-  authority cite ?("28 U.S.C. §§ 1295(a)(3), 2522")
+  authority cite "28 U.S.C. §§ 1295(a)(3), 2522"
   tags [appeal]
 }
 
 /// A dismissal under the six-year limitation of 28 U.S.C. § 2501.
 link cofc-appeal-time-bar "Plaintiff appeals the § 2501 time-bar dismissal": cofc::dismissed-time-barred -> cafc@cofc::entry-cofc by applicant {
-  authority cite ?("28 U.S.C. §§ 1295(a)(3), 2522")
+  authority cite "28 U.S.C. §§ 1295(a)(3), 2522"
   tags [appeal]
 }
 
 /// A dismissal under 28 U.S.C. § 1500 (same claim pending in another
 /// court).
 link cofc-appeal-1500-bar "Plaintiff appeals the § 1500 dismissal": cofc::dismissed-1500-bar -> cafc@cofc::entry-cofc by applicant {
-  authority cite ?("28 U.S.C. §§ 1295(a)(3), 2522")
+  authority cite "28 U.S.C. §§ 1295(a)(3), 2522"
   tags [appeal]
 }
 
 /// A bid-protest judgment under 28 U.S.C. § 1491(b) is appealed the same
 /// way.
 link cofc-appeal-protest-denied "Protester appeals the bid-protest judgment": cofc::protest-denied -> cafc@cofc::entry-cofc by applicant {
-  authority cite ?("28 U.S.C. §§ 1295(a)(3), 2522")
+  authority cite "28 U.S.C. §§ 1295(a)(3), 2522"
   tags [appeal]
 }
 
 /// The government's appeals enter `cafc@cofc-gov`, by `examiner` (the
 /// United States, the opponent in the cofc package).
 link cofc-gov-appeal-judgment-for-plaintiff "United States appeals the judgment for plaintiff": cofc::judgment-for-plaintiff -> cafc@cofc-gov::entry-cofc by examiner {
-  authority cite ?("28 U.S.C. §§ 1295(a)(3), 2522")
+  authority cite "28 U.S.C. §§ 1295(a)(3), 2522"
   note "The government's appeal decision (Solicitor General authorization, 28 C.F.R. § 0.20(b)) is modeled as the opponent's choice; with no probability authored it is solved adversarially (worst case for the plaintiff). Author a probability here to use an appeal rate instead."
   tags [appeal]
 }
 
 /// A judgment entered for the plaintiff on summary judgment.
 link cofc-gov-appeal-sj-for-plaintiff "United States appeals the judgment entered for plaintiff": cofc::judgment-entered -> cafc@cofc-gov::entry-cofc by examiner {
-  authority cite ?("28 U.S.C. §§ 1295(a)(3), 2522")
+  authority cite "28 U.S.C. §§ 1295(a)(3), 2522"
   tags [appeal]
 }
 
 /// A sustained bid protest; an intervenor awardee may appeal as well.
 link cofc-gov-appeal-protest-sustained "United States (or intervenor) appeals the sustained protest": cofc::protest-sustained -> cafc@cofc-gov::entry-cofc by examiner {
-  authority cite ?("28 U.S.C. §§ 1295(a)(3), 2522")
+  authority cite "28 U.S.C. §§ 1295(a)(3), 2522"
   tags [appeal]
 }
 
@@ -218,7 +218,7 @@ instance cafc@ptab {
 /// composed graph has one route into the Federal Circuit; either party may
 /// take it. The window is a choice, so the link carries no `p`.
 link ptab-appeal-to-cafc "Appeal the final written decision to the Federal Circuit": ptab-patent-trial-appeal-board::federal-circuit-window -> cafc@ptab::entry-ptab {
-  authority cite ?("35 U.S.C. §§ 141(c), 319; 37 C.F.R. § 90.3")
+  authority cite "35 U.S.C. §§ 141(c), 319; 37 C.F.R. § 90.3"
   note "Supersedes the PTAB pack's abstract Federal Circuit region when both packs are loaded."
   tags [appeal]
   replaces ["ptab-patent-trial-appeal-board::federal-circuit-window->federal-circuit-notice-of-appeal#0"]
@@ -309,7 +309,7 @@ instance cafc@district-court {
 
 /// The regional circuit under FRAP 3 and 4 (non-patent civil appeals).
 link frcp-appeal-to-regional-circuit "Proceed under FRAP in the regional circuit (detailed appellate track)": frcp-civil-procedure::notice-of-appeal-filed -> frap-appellate-procedure::notice-of-appeal-filed by applicant {
-  authority cite ?("28 U.S.C. § 1291; Fed. R. App. P. 3, 4")
+  authority cite "28 U.S.C. § 1291; Fed. R. App. P. 3, 4"
   note "Non-patent civil appeals; the regional circuit is one of two routes out of `notice-of-appeal-filed` (see `frcp-appeal-to-cafc-district-court`). Which applies is a fact about the case (does it arise under the patent laws, or carry a compulsory patent counterclaim, 28 U.S.C. § 1295(a)(1)?), not a free choice between forums with concurrent jurisdiction — a matter scenario should `remove_edges` whichever of the two does not apply, the same way a `cafc@<origin>` instance keeps only the one true origin edge."
   tags [appeal]
   replaces ["frcp-civil-procedure::notice-of-appeal-filed->cross-appeal-window#0"]

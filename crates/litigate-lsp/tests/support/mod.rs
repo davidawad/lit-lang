@@ -55,8 +55,12 @@ pub struct Client {
 }
 
 impl Client {
-    /// Starts a server rooted at `root` and completes the handshake.
-    pub async fn start(root: &Path, options: Value) -> (Self, Value) {
+    /// Starts a server rooted at `root` and completes the handshake. Edits
+    /// are checked at once (`debounceMs` 0) unless `options` say otherwise.
+    pub async fn start(root: &Path, mut options: Value) -> (Self, Value) {
+        if options.get("debounceMs").is_none() {
+            options["debounceMs"] = json!(0);
+        }
         let root = Url::from_file_path(root).unwrap();
         let (mut client, init) = Self::initialize(
             json!({"processId": null, "rootUri": root, "capabilities": {}, "initializationOptions": options}),

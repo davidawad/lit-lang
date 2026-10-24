@@ -6,10 +6,14 @@
 //! The salsa database lives across edits. When an edit keeps the set of
 //! packages, files, manifests, and locks, only the changed source texts are
 //! set on the existing inputs, so sema re-derives just what depends on them
-//! (DESIGN §3.8); otherwise the session is rebuilt.
+//! (DESIGN §3.8), and verification and replay re-run only for the packages
+//! and matters the edit reaches ([`litigate_cli::queries`]); otherwise the
+//! session is rebuilt. A check a newer edit supersedes is cancelled between
+//! packages and matters ([`Host::run`]), and the last complete analysis
+//! stays current until the next one completes.
 use crate::analysis::Analysis;
 use litigate_base::Profile;
-use litigate_cli::check_session;
+use litigate_cli::check_session_with;
 use litigate_cli::ws::{self, CaseText, Session};
 use litigate_lower::Options;
 use litigate_sema::pkg::load::{load_tree, relative_to, LoadedFile, LoadedPackage};
@@ -18,15 +22,24 @@ use salsa::Setter;
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::{Path, PathBuf};
 
+/// How long an edit waits for the next before the workspace is checked,
+/// by default.
+pub const DEBOUNCE_MS: u64 = 200;
+
 /// Server-wide settings (`initializationOptions`).
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Settings {
     /// Check profile (`"profile": "dev" | "strict"`), default `dev`.
     pub profile: Profile,
-    /// Law-in-force date for package checks (`"asOf"`), as `--as-of`.
+    /// Law-in-force date for package checks (`"asOf"`), as `--as-of`: the
+    /// world's valid time (`litigate/selectWorld` changes it).
     pub as_of: Option<String>,
-    /// Corpus date for package checks (`"knownAt"`), as `--known-at`.
+    /// Corpus date for package checks (`"knownAt"`), as `--known-at`: the
+    /// world's transaction time.
     pub known_at: Option<String>,
+    /// Milliseconds an edit waits for the next before the workspace is
+    /// checked (`"debounceMs"`), default [`DEBOUNCE_MS`].
+    pub debounce_ms: u64,
 }
 
 impl Default for Settings {
@@ -35,16 +48,18 @@ impl Default for Settings {
             profile: Profile::Dev,
             as_of: None,
             known_at: None,
+            debounce_ms: DEBOUNCE_MS,
         }
     }
 }
 
 impl Settings {
     /// Reads `{"profile": "strict", "asOf": "2025-01-01", "knownAt":
-    /// "2025-01-01"}`; anything else keeps the default.
+    /// "2025-01-01", "debounceMs": 50}`; anything else keeps the default.
     #[must_use]
     pub fn from_options(options: Option<&serde_json::Value>) -> Self {
-        let get = |key: &str| options.and_then(|o| o.get(key)).and_then(|v| v.as_str());
+        let value = |key: &str| options.and_then(|o| o.get(key));
+        let get = |key: &str| value(key).and_then(|v| v.as_str());
         Self {
             profile: match get("profile") {
                 Some("strict") => Profile::Strict,
@@ -52,6 +67,9 @@ impl Settings {
             },
             as_of: get("asOf").map(str::to_owned),
             known_at: get("knownAt").map(str::to_owned),
+            debounce_ms: value("debounceMs")
+                .and_then(serde_json::Value::as_u64)
+                .unwrap_or(DEBOUNCE_MS),
         }
     }
 }
@@ -100,6 +118,11 @@ pub struct Host {
     /// How many times the database was built from scratch (tests observe
     /// that edits reuse it).
     pub rebuilds: usize,
+    /// How many checks ran, complete or cancelled (tests observe that
+    /// debounced edits share one).
+    pub checks: usize,
+    /// How many checks were cancelled.
+    pub cancelled: usize,
 }
 
 /// The nearest directory at or above `file` holding `Lit.toml`.
@@ -234,6 +257,16 @@ impl Host {
 
     /// Re-checks the workspace and returns the analysis.
     pub fn analyze(&mut self) -> &Analysis {
+        self.run(&|| false).1
+    }
+
+    /// Re-checks the workspace, stopping between packages and matters once
+    /// `cancelled` holds. Returns whether the check completed, and the
+    /// current analysis: the new one, or after a cancelled check the last
+    /// complete one (the first check's partial one when there is none).
+    /// What a cancelled check computed stays memoized in the database.
+    pub fn run(&mut self, cancelled: &dyn Fn() -> bool) -> (bool, &Analysis) {
+        self.checks += 1;
         let root = self.root();
         let (dirs, case_paths) = self.targets(&root);
         let loaded = self.packages(&root, &dirs);
@@ -248,8 +281,22 @@ impl Host {
             })
             .collect();
         let key = Key::of(&root, &loaded);
-        let session = match self.analysis.take() {
-            Some((old, analysis)) if old == key => reuse(analysis.checked.session, &loaded, cases),
+        let mut previous = self.analysis.take();
+        // Reusing the last session lends it to this check; the packages and
+        // matters it showed are kept to hand back if the check is cancelled.
+        let mut shown = None;
+        let session = match previous.as_mut() {
+            Some((old, analysis)) if *old == key => {
+                let mut session = std::mem::replace(
+                    &mut analysis.checked.session,
+                    Session::from_loaded(&[], Vec::new()),
+                );
+                shown = Some((
+                    std::mem::take(&mut session.packages),
+                    std::mem::take(&mut session.cases),
+                ));
+                reuse(session, &loaded, cases)
+            }
             _ => {
                 self.rebuilds += 1;
                 Session::from_loaded(&loaded, cases)
@@ -259,14 +306,34 @@ impl Host {
             as_of: self.settings.as_of.clone(),
             known_at: self.settings.known_at.clone(),
         };
-        let checked = check_session(session, self.settings.profile, &options);
-        let loose = self
-            .open
-            .iter()
-            .map(|(path, open)| (path.clone(), open.text.clone()))
-            .collect();
-        let analysis = Analysis::new(root, checked, loose);
-        &self.analysis.insert((key, analysis)).1
+        let checked = check_session_with(session, self.settings.profile, &options, cancelled);
+        let complete = checked.complete;
+        self.cancelled += usize::from(!complete);
+        let current = match previous {
+            Some((old, mut analysis)) if !complete => {
+                if let Some((packages, cases)) = shown {
+                    let mut session = checked.session;
+                    session.packages = packages;
+                    session.cases = cases;
+                    analysis.checked.session = session;
+                }
+                (old, analysis)
+            }
+            _ => {
+                let loose = self
+                    .open
+                    .iter()
+                    .map(|(path, open)| (path.clone(), open.text.clone()))
+                    .collect();
+                let world = self
+                    .settings
+                    .as_of
+                    .clone()
+                    .map(|a| (a, self.settings.known_at.clone()));
+                (key, Analysis::new(root, checked, loose).in_world(world))
+            }
+        };
+        (complete, &self.analysis.insert(current).1)
     }
 
     /// The last analysis, if any.

@@ -25,6 +25,10 @@ pub struct Checked {
     pub findings: Vec<Finding>,
     /// The profile.
     pub profile: Profile,
+    /// Every package and matter was checked: false when
+    /// [`check_session_with`] was cancelled part way, and `verdicts` and
+    /// `cases` hold only those checked before.
+    pub complete: bool,
 }
 
 /// Loads and checks `paths`.
@@ -97,6 +101,7 @@ pub fn check_session(session: Session, profile: Profile, options: &Options) -> C
     let verdicts: Vec<(String, Verdict)> = session
         .packages
         .iter()
+        .take_while(|_| !cancelled())
         .map(|p| {
             (
                 p.name.clone(),
@@ -110,6 +115,7 @@ pub fn check_session(session: Session, profile: Profile, options: &Options) -> C
         .iter()
         .map(|c| matter::check(&session, c, &clocks, profile))
         .collect();
+    let complete = verdicts.len() == session.packages.len() && cases.len() == inputs.len();
     let diagnostics: Vec<Diagnostic> = verdicts
         .iter()
         .flat_map(|(_, v)| v.diagnostics.iter().cloned())
@@ -128,6 +134,7 @@ pub fn check_session(session: Session, profile: Profile, options: &Options) -> C
         diagnostics,
         findings,
         profile,
+        complete,
     }
 }
 

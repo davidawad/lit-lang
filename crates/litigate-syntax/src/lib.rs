@@ -44,3 +44,4 @@ pub use lexer::{
 pub use parse::{parse, parse_case, parse_lit, Edition, FileKind, Parse, SyntaxNode, SyntaxToken};
 pub use rowan::{TextRange, TextSize};
 pub use syntax_kind::{LitLanguage, SyntaxKind};
+pub use vocab::{CASE_ITEM_KEYWORDS, LIT_ITEM_KEYWORDS};

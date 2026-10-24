@@ -27,6 +27,9 @@ pub struct Analysis {
     pub diagnostics: BTreeMap<String, Vec<Diagnostic>>,
     /// Definitions and references.
     pub index: Index,
+    /// The selected world: `as_of` and `known_at` (`None`: each package's
+    /// own dates).
+    pub world: Option<(String, Option<String>)>,
 }
 
 impl Analysis {
@@ -62,7 +65,15 @@ impl Analysis {
             files,
             diagnostics,
             index,
+            world: None,
         }
+    }
+
+    /// The analysis, checked in `world`.
+    #[must_use]
+    pub fn in_world(mut self, world: Option<(String, Option<String>)>) -> Self {
+        self.world = world;
+        self
     }
 
     /// The repository-relative path of `uri`.

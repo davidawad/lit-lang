@@ -1,11 +1,14 @@
 //! Hover: what a name is (kind, qualified id, type), every effective
-//! version of it, and the L0 text its `cite` resolves to.
+//! version of it, what governs it in the selected world, and the L0 text
+//! its `cite` resolves to.
 use crate::analysis::Analysis;
 use crate::cite::{self, Located};
 use crate::index::{Def, Space};
 use litgraph::cite::SourceCorpus;
 use litigate_cli::hirx;
+use litigate_sema::db::ids::WorldId;
 use litigate_sema::hir::{self, DayUnit, Declaration, NodeKind, Type};
+use litigate_sema::precedence::worlds::{world_selection, Resolution};
 use litigate_sema::temporal::world::meta_of;
 use litigate_syntax::{parse, SyntaxKind as K, SyntaxToken, TextRange, TextSize};
 use std::fmt::Write as _;
@@ -229,12 +232,55 @@ fn declaration(out: &mut String, analysis: &Analysis, pkg: &hir::Package, name: 
             let _ = writeln!(out, "- {} · {}{at}", interval(&m.effective), m.authority);
         }
     }
+    governing(out, analysis, pkg, name);
     // Sema spans every declaration it builds from source.
     if let Some((cite, line)) = metas.iter().find_map(|m| {
         let line = m.span.as_ref().map_or(0, |s| s.line);
         m.cite.clone().map(|cite| (cite, line))
     }) {
         cited(out, analysis, pkg, &cite, line);
+    }
+}
+
+/// What governs declaration `name` of `pkg` in the selected world, if one
+/// is selected (`litigate/selectWorld`): the per-world resolution query.
+fn governing(out: &mut String, analysis: &Analysis, pkg: &hir::Package, name: &str) {
+    let Some((as_of, known_at)) = &analysis.world else {
+        return;
+    };
+    let session = &analysis.checked.session;
+    let when = known_at
+        .as_ref()
+        .map_or_else(|| as_of.clone(), |k| format!("{as_of} (known_at {k})"));
+    for input in session
+        .packages
+        .iter()
+        .filter(|p| p.name == pkg.manifest.name)
+        .map(|p| p.input)
+    {
+        let world = WorldId::new(&session.db, as_of.clone(), known_at.clone());
+        let line = match world_selection(&session.db, input, world).get(name) {
+            Some(Resolution::Governed { pack, id, from, .. })
+                if *pack == pkg.manifest.pack_id && id == name =>
+            {
+                format!("in force on {when}: the version from {from}")
+            }
+            Some(Resolution::Governed {
+                pack,
+                id,
+                from,
+                span,
+            }) => {
+                let at = span
+                    .as_ref()
+                    .map(|s| format!(" — `{}:{}`", s.file.0, s.line))
+                    .unwrap_or_default();
+                format!("on {when}, governed by `{pack}::{id}@{from}`{at}")
+            }
+            Some(Resolution::Unselected(why)) => format!("on {when}: {why}"),
+            None => continue,
+        };
+        let _ = writeln!(out, "\n**world** {line}");
     }
 }
 

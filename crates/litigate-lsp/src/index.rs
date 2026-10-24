@@ -71,6 +71,8 @@ pub struct Index {
     pub uses: Vec<Use>,
     /// Pack id to package name.
     packs: BTreeMap<String, String>,
+    /// What each file sees.
+    scopes: BTreeMap<String, FileScope>,
 }
 
 /// A reference's name and its `pack::` qualifier.
@@ -88,11 +90,12 @@ struct Pending {
 }
 
 /// What a file sees.
-struct FileScope {
+#[derive(Debug, Clone, Default)]
+pub struct FileScope {
     /// Its package (a `.lit` module or the package's `Lit.toml`).
-    package: Option<String>,
+    pub package: Option<String>,
     /// Packages it may name: its own and dependencies, or a matter's uses.
-    visible: Vec<String>,
+    pub visible: Vec<String>,
 }
 
 fn scope_of(file: &str, text: &str, checked: &Checked) -> FileScope {
@@ -299,7 +302,14 @@ impl Index {
                 target,
             });
         }
+        index.scopes = scopes;
         index
+    }
+
+    /// What `file` sees (nothing, for a file not indexed).
+    #[must_use]
+    pub fn scope(&self, file: &str) -> FileScope {
+        self.scopes.get(file).cloned().unwrap_or_default()
     }
 
     /// Declares the names of `file` and queues its references.
@@ -443,7 +453,8 @@ impl Index {
 
     /// Package name for a qualifier: names pass through; pack ids map back
     /// through `package` declarations.
-    fn package_named(&self, qualifier: &str) -> String {
+    #[must_use]
+    pub fn package_named(&self, qualifier: &str) -> String {
         self.packs
             .get(qualifier)
             .cloned()

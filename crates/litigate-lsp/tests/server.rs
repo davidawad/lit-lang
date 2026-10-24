@@ -30,8 +30,15 @@ async fn ask_everything(c: &mut Client, uri: &str) -> Vec<(String, Value)> {
     with_range["context"] = json!({"diagnostics": []});
     let mut formatting = doc.clone();
     formatting["options"] = json!({"tabSize": 2, "insertSpaces": true});
+    let mut rename = position(uri, 0, 0);
+    rename["newName"] = json!("renamed");
+    let mut complete = position(uri, 0, 0);
+    complete["context"] = json!({"triggerKind": 1});
     let requests = [
         ("textDocument/hover", position(uri, 0, 0)),
+        ("textDocument/prepareRename", position(uri, 0, 0)),
+        ("textDocument/rename", rename),
+        ("textDocument/completion", complete),
         ("textDocument/definition", position(uri, 0, 0)),
         ("textDocument/references", position(uri, 0, 0)),
         ("textDocument/documentSymbol", doc.clone()),
@@ -62,7 +69,10 @@ async fn before_the_first_analysis_there_is_nothing_to_answer() {
     )
     .await;
     let status = c.status().await;
-    assert_eq!(status, json!({"rebuilds": 0, "files": []}));
+    assert_eq!(
+        status,
+        json!({"rebuilds": 0, "checks": 0, "cancelled": 0, "files": []})
+    );
     let module = file_uri(&root.join("lit/ex/rule12.lit"));
     let answers = ask_everything(&mut c, &module).await;
     // Formatting reads the open documents, not the analysis.

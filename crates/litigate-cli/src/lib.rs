@@ -36,7 +36,7 @@ pub mod timeline;
 pub mod verdict;
 pub mod ws;
 
-pub use cmd::check::{check_session, Checked};
+pub use cmd::check::{check_session, check_session_with, Checked};
 pub use litigate_base::LitigateRun;
 
 use clap::Parser;

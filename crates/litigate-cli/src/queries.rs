@@ -277,6 +277,27 @@ mod tests {
     }
 
     #[test]
+    fn a_cancelled_check_stops_and_says_so() {
+        let session = testkit::example_and("", vec![case(ACME, None)]);
+        let done = crate::check_session(session, Profile::Dev, &Options::default());
+        assert!(done.complete);
+        let session = testkit::example_and("", vec![case(ACME, None)]);
+        let stopped =
+            crate::check_session_with(session, Profile::Dev, &Options::default(), &|| true);
+        assert!(!stopped.complete);
+        assert!(stopped.verdicts.is_empty() && stopped.cases.is_empty());
+        // Packages checked, then cancelled before the matter.
+        let session = testkit::example_and("", vec![case(ACME, None)]);
+        let calls = std::cell::Cell::new(0);
+        let half = crate::check_session_with(session, Profile::Dev, &Options::default(), &|| {
+            calls.set(calls.get() + 1);
+            calls.get() > 1
+        });
+        assert!(!half.complete);
+        assert_eq!((half.verdicts.len(), half.cases.len()), (1, 0));
+    }
+
+    #[test]
     fn matters_keep_their_inputs_as_they_change() {
         let mut session = logged(vec![case("a", None), case("b", None)]);
         let inputs = session.case_inputs();

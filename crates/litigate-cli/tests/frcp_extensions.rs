@@ -787,6 +787,35 @@ fn a_late_federal_circuit_cert_application_needs_extraordinary_circumstances() {
             "2026-04-01".to_owned(),
             "ExtraordinaryCircumstances".to_owned(),
             "2026-02-25".to_owned()
+#[test]
+fn the_federal_circuit_cross_appeal_runs_to_the_later_of_14_days_and_frap_4a1() {
+    // A district-court judgment of 2026-03-02: the FRAP 4(a)(1)(A) notice
+    // is due 2026-04-01. A first notice on 2026-03-05 counts 14 days to
+    // 2026-03-19; "whichever period ends later" is 2026-04-01, so the
+    // cross-appeal instance absorbs the 4(a)(1)(A) one as its floor.
+    let run = matter(
+        "fedcir-4a3-later",
+        &["cafc", "mpep", "ttab"],
+        "cafc ^0.1.0",
+        "  appellant: applicant Corporation\n  fedcir: court Tribunal\n",
+        &[
+            "2026-03-02 Entered(Judgment) on appellant",
+            "2026-03-05 Filed(NoticeOfAppeal) by appellant",
+        ],
+        "cafc::window-blown-district-court",
+    );
+    assert_eq!(run.code, 0, "{}", run.stdout);
+    assert_eq!(effects(&run).1, Vec::<String>::new());
+    assert_eq!(
+        scheduled(&run, "cafc::district-court-noa-period"),
+        [("2026-04-01".to_owned(), "-".to_owned(), "merged".to_owned())]
+    );
+    assert_eq!(
+        scheduled(&run, "cafc::cross-appeal-period"),
+        [(
+            "2026-03-19".to_owned(),
+            "2026-04-01".to_owned(),
+            "lapsed".to_owned()
         )]
     );
 }

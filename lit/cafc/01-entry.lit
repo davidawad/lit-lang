@@ -3,6 +3,7 @@
 // the appeal at the matching `window-blown-*` terminal.
 module cafc.entry
 
+import cafc.appeal-periods.{ district-court-noa-period }
 import cafc.docketing.{ notice-of-appeal-filed }
 import cafc.{ AppealExtensionMoved, BecameFinal, Entered, Filed, Order, Paper, entry-group }
 import core.authority.{ CaseOrder }
@@ -175,26 +176,6 @@ state entry-ttab: "TTAB Final Decision (Opposition, Cancellation or Ex Parte App
   }
 }
 
-/// FRAP 4(a)(1)(A): 30 days after entry of the judgment. The period is the
-/// one FRAP has set since it took effect on July 1, 1968 (Supreme Court
-/// order of December 4, 1967); the district court may extend it under FRAP
-/// 4(a)(5)(A), a delegation to an order in the case.
-rule duty district-court-notice-of-appeal cite "FRAP 4(a)(1)(A)"
-{
-  deadline district-court-noa-period: 30.days after Entered(Judgment) counted_by frap26 effective [1968-07-01, ..) known_at 1967-12-04 delegable_to [CaseOrder] cite "FRAP 4(a)(1)(A); FRAP 4(a)(5)(A)"
-  {
-    extend {
-      by court
-      discretion GoodCauseOrExcusableNeglect
-      to max(prescribed_due + 30.days, grant_order_entered + 14.days)
-      after_expiry
-      on AppealExtensionMoved()
-      within prescribed_due + 30.days
-    }
-    extend { never cite "FRAP 26(b)(1)" }
-  }
-}
-
 /// A request to the Director to extend the time to appeal a Board decision
 /// (37 C.F.R. § 90.3(c)(1)), dated when the Office receives it (§
 /// 90.3(c)(2)); under the 2012 text it "must be filed as provided in §
@@ -261,7 +242,10 @@ rule duty itc-notice-of-appeal cite "19 U.S.C. § 1337(c)"
 /// party to every CoFC judgment, so FRAP 4(a)(1)(B)'s 60 days run from
 /// entry. § 2522 names the Court of Federal Claims since the Federal Courts
 /// Administration Act of 1992 (Pub. L. 102-572, § 902, effective October 29,
-/// 1992). FRAP 4(a)(5)(A) extensions apply through § 2522.
+/// 1992). FRAP 4(a)(5)(A) extensions apply through § 2522, with the
+/// pre-2009 bound of `district-court-noa-period@2002-12-01` before December
+/// 1, 2009; no version is declared before December 1, 2002, for the same
+/// reason as there.
 ///
 /// FRAP 26 counts it, by incorporation rather than borrowing: § 2522
 /// prescribes "the time and in the manner prescribed for appeals to United
@@ -273,7 +257,20 @@ rule duty itc-notice-of-appeal cite "19 U.S.C. § 1337(c)"
 /// Court of Federal Claims' own rule, is not applied to it.
 rule duty cofc-notice-of-appeal cite "28 U.S.C. § 2522"
 {
-  deadline cofc-noa-period: 60.days after Entered(Judgment) counted_by frap26 effective [1992-10-29, ..) known_at 1992-10-29 delegable_to [CaseOrder] cite "28 U.S.C. § 2522; FRAP 4(a)(1)(B); FRAP 4(a)(5)(A)"
+  deadline cofc-noa-period: 60.days after Entered(Judgment) counted_by frap26 effective [2002-12-01, 2009-12-01) known_at 2002-04-29 delegable_to [CaseOrder] cite "28 U.S.C. § 2522; FRAP (2008 ed.) 4(a)(1)(B); FRAP (2008 ed.) 4(a)(5)(A)"
+  {
+    forum frap
+    extend {
+      by court
+      discretion GoodCauseOrExcusableNeglect
+      to max(prescribed_due + 30.days, grant_order_entered + 10.days)
+      after_expiry
+      on AppealExtensionMoved()
+      within prescribed_due + 30.days
+    }
+    extend { never cite "FRAP (2008 ed.) 26(b)(1)" }
+  }
+  deadline cofc-noa-period: 60.days after Entered(Judgment) counted_by frap26 effective [2009-12-01, ..) known_at 2009-03-26 supersedes cofc-noa-period@2002-12-01 delegable_to [CaseOrder] cite "28 U.S.C. § 2522; FRAP 4(a)(1)(B); FRAP 4(a)(5)(A)"
   {
     forum frap cite "28 U.S.C. § 2522" quote "within the time and in the manner prescribed for appeals to United States courts of appeals from the United States district courts"
     extend {

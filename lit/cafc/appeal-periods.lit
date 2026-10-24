@@ -1,0 +1,110 @@
+// The FRAP 4(a) periods of a district-court appeal, in one module so that
+// the cross-appeal period can name the notice-of-appeal period it may not
+// end before (FRAP 4(a)(3)) while the entry and cross-appeal modules, which
+// route into each other, both use them.
+module cafc.appeal-periods
+
+import cafc.{ AppealExtensionMoved, Entered, Filed, Order, Paper }
+import core.authority.{ CaseOrder }
+import core.frap26.{ frap26 }
+
+/// FRAP 4(a)(1)(A): 30 days after entry of the judgment; the district
+/// court may extend it under FRAP 4(a)(5)(A), a delegation to an order in
+/// the case. Two versions, each the text a vendored edition prints. Before
+/// the 2009 amendments (2008 edition of 28 U.S.C. App.) no extension "may
+/// exceed 30 days after the prescribed time or 10 days after the date when
+/// the order granting the motion is entered, whichever is later"
+/// (4(a)(5)(C)); FRAP 26(a)(2) then left weekends and legal holidays out of
+/// those 10 days, and a bound counts calendar days, so that version's is
+/// never later than the rule's (UNVERIFIED for the days between: an
+/// extension to one of them is refused, never an untimely notice
+/// accepted). It is in force from December 1, 2002, when 4(a)(5)(A)(ii)
+/// took the text that edition prints (2002 Committee Note: before it most
+/// circuits read good cause as reaching only a motion made before expiry);
+/// earlier law is not declared. From December 1, 2009 the order's 10 days
+/// are 14 (2009 Committee Note, 2011 edition).
+rule duty district-court-notice-of-appeal cite "FRAP 4(a)(1)(A)"
+{
+  deadline district-court-noa-period: 30.days after Entered(Judgment) counted_by frap26 effective [2002-12-01, 2009-12-01) known_at 2002-04-29 delegable_to [CaseOrder] cite "FRAP (2008 ed.) 4(a)(1)(A); FRAP (2008 ed.) 4(a)(5)(A)"
+  {
+    extend {
+      by court
+      discretion GoodCauseOrExcusableNeglect
+      to max(prescribed_due + 30.days, grant_order_entered + 10.days)
+      after_expiry
+      on AppealExtensionMoved()
+      within prescribed_due + 30.days
+    }
+    extend { never cite "FRAP (2008 ed.) 26(b)(1)" }
+  }
+  deadline district-court-noa-period: 30.days after Entered(Judgment) counted_by frap26 effective [2009-12-01, ..) known_at 2009-03-26 supersedes district-court-noa-period@2002-12-01 delegable_to [CaseOrder] cite "FRAP 4(a)(1)(A); FRAP 4(a)(5)(A)"
+  {
+    extend {
+      by court
+      discretion GoodCauseOrExcusableNeglect
+      to max(prescribed_due + 30.days, grant_order_entered + 14.days)
+      after_expiry
+      on AppealExtensionMoved()
+      within prescribed_due + 30.days
+    }
+    extend { never cite "FRAP 26(b)(1)" }
+  }
+}
+
+/// FRAP 4(a)(3): any other party may file a notice of appeal within 14 days
+/// after the first notice was filed, or within the otherwise-applicable
+/// FRAP 4(a) time, whichever ends later. `later_of` absorbs the open
+/// FRAP 4(a)(1)(A) instance, `district-court-noa-period`, so the due date
+/// is never before it (SPEC §5.3) and `litigate check` reports it as the
+/// floor. Only that period is the floor: where FRAP 4(a)(1)(B)'s 60 days
+/// run (a CoFC judgment, through 28 U.S.C. § 2522) the floor is the
+/// earlier 30-day date, never a later one; a PTAB, ITC or TTAB appeal
+/// opens no 4(a)(1) instance, so its cross-appeal runs 14 days from the
+/// notice alone. FRAP 4(a)(5)(A) extends "the time to file a notice of
+/// appeal" and 4(a)(5)(B) names 4(a)(3), so the period carries the trial
+/// court's 4(a)(5) grant and FRAP 26(b)(1)'s lock; no delegation to a case
+/// order is declared. As for `district-court-noa-period`, the version
+/// before December 1, 2009 is the 2008 edition's, whose 4(a)(5)(C) bound
+/// is 10 days after the order (counted here in calendar days, the earlier
+/// date), in force from December 1, 2002; earlier law is not declared.
+rule duty cross-appeal-notice cite "FRAP 4(a)(3)"
+{
+  deadline cross-appeal-period: 14.days after Filed(NoticeOfAppeal) counted_by frap26 effective [2002-12-01, 2009-12-01) known_at 2002-04-29 cite "FRAP (2008 ed.) 4(a)(3)"
+  {
+    trigger later_of(district-court-noa-period)
+    extend {
+      by court
+      discretion GoodCauseOrExcusableNeglect
+      to max(prescribed_due + 30.days, grant_order_entered + 10.days)
+      after_expiry
+      on AppealExtensionMoved()
+      within prescribed_due + 30.days
+    }
+    extend { never cite "FRAP (2008 ed.) 26(b)(1)" }
+  }
+  deadline cross-appeal-period: 14.days after Filed(NoticeOfAppeal) counted_by frap26 effective [2009-12-01, ..) known_at 2009-03-26 supersedes cross-appeal-period@2002-12-01 cite "FRAP 4(a)(3)"
+  {
+    trigger later_of(district-court-noa-period)
+    extend {
+      by court
+      discretion GoodCauseOrExcusableNeglect
+      to max(prescribed_due + 30.days, grant_order_entered + 14.days)
+      after_expiry
+      on AppealExtensionMoved()
+      within prescribed_due + 30.days
+    }
+    extend { never cite "FRAP 26(b)(1)" }
+  }
+}
+
+test "a notice of cross-appeal is due 14 days after the first notice" cite "FRAP 4(a)(3)"
+{
+  given Filed(NoticeOfAppeal) on 2026-03-02
+  expect deadline(cross-appeal-period) == 2026-03-16
+}
+
+test "a Saturday 14th day rolls the cross-appeal notice to Monday" cite "FRAP 26(a)(1)(C)"
+{
+  given Filed(NoticeOfAppeal) on 2026-03-21
+  expect deadline(cross-appeal-period) == 2026-04-06
+}

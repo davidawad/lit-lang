@@ -279,6 +279,26 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   its end.
 - sha256 (this file): `a55dd4c3b28e99491083474806c9e8bb621e4fd43b2fddf5c4359d1202f03f20`
 
+### `usc-28-app-frap4-history.txt` — FRAP 4 as printed in the 2008 and 2011 editions of 28 U.S.C. App.
+
+- The pre-December 1, 2009 text of FRAP 4 and its amendment history, which
+  date the earlier versions of the FRAP 4(a) appeal periods in `lit/frcp`,
+  `lit/frap` and `lit/cafc`: `## FRAP (2008 ed.) Rule 4` (the text as
+  amended through December 1, 2005, its amendment credits and every
+  Advisory Committee Note from 1967 to 2005) and `## FRAP (2011 ed.) Rule
+  4` (the text after the 2009, 2010 and 2011 amendments, with the 2009
+  Committee Note that lengthens 4(a)(5)(C)'s 10 days to 14). The headings
+  are deliberately not canonical refs, as in `usc-28-app-time-history.txt`.
+- Fetched 2026-10-24 from `www.govinfo.gov`'s official United States Code
+  (GPO), 2008 and 2011 Editions, granules
+  `USCODE-2008-title28-app-federalru-rule4.htm` (sha256
+  `9f1f9ca13c2e78bc28572e9abd1347434673846f35663fcec5c203a5d79593eb`) and
+  `USCODE-2011-title28-app-federalru-rule4.htm`
+  (`2a42d46c84b552edcf5385cfe73f41686a8ed0071bfe2c59f9ca101ac74234cb`).
+  Same extraction as `usc-5-6103.txt`, from each page's `Rule 4.` heading
+  to its end, one line per block element.
+- sha256 (this file): `c246fa771851ef008653521977a993531d589881d85354e9c9f949f9c1b1a284`
+
 ### `fr-usitc-time-history.txt` — Federal Register excerpts dating 19 C.F.R. §§ 201.14(a), 201.16(d)-(f) and 210.6 (USITC computation of time and service), 1976-2018
 
 - Excerpts, one `## <vol> FR <page>` section per printed page, of every

@@ -296,3 +296,15 @@ test "answer-period: 21 days under the 2009 text" cite "FRCP 12(a)(1)(A)(i)"
   given ProcessServed() on 2010-03-01
   expect deadline(answer-period) == 2010-03-22
 }
+
+test "notice-of-appeal-period: before 2009, 30 days; a Sunday 30th day rolls past Independence Day" cite "FRAP (2008 ed.) 4(a)(1)(A)"
+{
+  given JudgmentEntered() on 2005-06-03
+  expect deadline(notice-of-appeal-period) == 2005-07-05
+}
+
+test "cross-appeal-period: before 2009, 14 days; a 14th day on Christmas rolls to the 26th" cite "FRAP (2008 ed.) 4(a)(3)"
+{
+  given NoticeOfAppealFiled() on 2007-12-11
+  expect deadline(cross-appeal-period) == 2007-12-26
+}

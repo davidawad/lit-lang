@@ -333,6 +333,35 @@ deadline relief-from-judgment-period: 1.years after JudgmentEntered() counted_by
   extend { never cite "FRCP 6(b)(2)" }
 }
 
+/// FRAP 4(a)(1)(A) before the 2009 amendments, as the 2008 edition of 28
+/// U.S.C. App. prints it: the same 30 days and the same FRAP 4(a)(5)
+/// grant, except that no extension "may exceed 30 days after the
+/// prescribed time or 10 days after the date when the order granting the
+/// motion is entered, whichever is later" (4(a)(5)(C)). In force from
+/// December 1, 2002, when 4(a)(5)(A)(ii) took the text that edition
+/// prints: before it most circuits read good cause as reaching only a
+/// motion made before expiry (2002 Committee Note), so earlier law is not
+/// declared. The 2005 amendment touched only 4(a)(6). FRAP 26(a)(2) then
+/// left weekends and legal holidays out of a period under 11 days, so the
+/// order's 10 days ran past 10 calendar days; a bound counts calendar days,
+/// so this one is never later than the rule's: an extension it allows the
+/// rule allowed, and one to a later day inside the FRAP 26(a)(2) count is
+/// refused (UNVERIFIED for those days, the direction that never accepts an
+/// untimely notice).
+deadline notice-of-appeal-period: 30.days after JudgmentEntered() counted_by frap26 effective [2002-12-01, 2009-12-01) known_at 2002-04-29 cite "FRAP (2008 ed.) 4(a)(1)(A)"
+{
+  forum frap
+  extend {
+    by court
+    discretion GoodCauseOrExcusableNeglect
+    to max(prescribed_due + 30.days, grant_order_entered + 10.days)
+    after_expiry
+    on ExtensionMoved(NoticeOfAppealPeriod)
+    within prescribed_due + 30.days
+  }
+  extend { never cite "FRAP (2008 ed.) 26(b)(1)" }
+}
+
 /// 28 U.S.C. § 2107(a): "no appeal shall bring any judgment ... before a
 /// court of appeals for review unless notice of appeal is filed, within
 /// thirty days after the entry" (restated in FRAP 4(a)(1)(A)). A statutory
@@ -344,7 +373,7 @@ deadline relief-from-judgment-period: 1.years after JudgmentEntered() counted_by
 /// is later (FRAP 4(a)(5)(C)), for excusable neglect or good cause whether
 /// the motion comes before or after expiry (4(a)(5)(A)(ii)). FRAP 26(b)(1)
 /// forbids any other extension ("except as authorized in Rule 4").
-deadline notice-of-appeal-period: 30.days after JudgmentEntered() counted_by frap26 effective [2009-12-01, ..) known_at 2009-03-26 cite "28 U.S.C. § 2107(a)"
+deadline notice-of-appeal-period: 30.days after JudgmentEntered() counted_by frap26 effective [2009-12-01, ..) known_at 2009-03-26 supersedes notice-of-appeal-period@2002-12-01 cite "28 U.S.C. § 2107(a)"
 {
   forum frap
   extend {
@@ -358,6 +387,26 @@ deadline notice-of-appeal-period: 30.days after JudgmentEntered() counted_by fra
   extend { never cite "FRAP 26(b)(1)" }
 }
 
+/// FRAP 4(a)(3) before the 2009 amendments: the same 14 days, "or within
+/// the time otherwise prescribed by this Rule 4(a), whichever period ends
+/// later" (2008 edition of 28 U.S.C. App.), with the pre-2009 FRAP 4(a)(5)
+/// grant of `notice-of-appeal-period@2002-12-01` and its calendar-day
+/// bound.
+deadline cross-appeal-period: 14.days after NoticeOfAppealFiled() counted_by frap26 effective [2002-12-01, 2009-12-01) known_at 2002-04-29 cite "FRAP (2008 ed.) 4(a)(3)"
+{
+  trigger later_of(notice-of-appeal-period)
+  forum frap
+  extend {
+    by court
+    discretion GoodCauseOrExcusableNeglect
+    to max(prescribed_due + 30.days, grant_order_entered + 10.days)
+    after_expiry
+    on ExtensionMoved(CrossAppealPeriod)
+    within prescribed_due + 30.days
+  }
+  extend { never cite "FRAP (2008 ed.) 26(b)(1)" }
+}
+
 /// FRAP 4(a)(3): a cross-appeal is due "within 14 days after the date when
 /// the first notice was filed, or within the time otherwise prescribed by
 /// this Rule 4(a), whichever period ends later": `later_of` absorbs the
@@ -367,7 +416,7 @@ deadline notice-of-appeal-period: 30.days after JudgmentEntered() counted_by fra
 /// notice of appeal" and 4(a)(5)(B) names 4(a)(3), so the cross-appeal
 /// period carries the same grant and FRAP 26(b)(1) lock as the notice of
 /// appeal, its bound counted from the later date.
-deadline cross-appeal-period: 14.days after NoticeOfAppealFiled() counted_by frap26 effective [2009-12-01, ..) known_at 2009-03-26 cite "FRAP 4(a)(3)"
+deadline cross-appeal-period: 14.days after NoticeOfAppealFiled() counted_by frap26 effective [2009-12-01, ..) known_at 2009-03-26 supersedes cross-appeal-period@2002-12-01 cite "FRAP 4(a)(3)"
 {
   trigger later_of(notice-of-appeal-period)
   forum frap

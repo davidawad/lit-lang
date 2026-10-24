@@ -28,6 +28,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `sources/cfr-37-part2-answer-time-history.txt`, and TBMP § 509 (June
   2026) to `sources/tbmp.txt`, cited as practice guidance, not authority.
 
+- **`litigate import` restores a v2 scenario's parties and holes**
+  (lg-flu.28, from lg-flu.14). A lowered scenario's `parties` come back as
+  the `.case` `parties` block, and its `lowered.holes` as `unvalued` stakes
+  and `as_of ?(..)` sources; a hole with no `.case` spelling is L6002. Its
+  `events` come back only as a commented `events` block: the import still
+  asserts the replayed `start`, `facts` and `remove_edges`, since which of
+  those the events derive is known only to replay, and imported packages
+  declare no events. Uncommenting the block and deleting what it derives
+  replays to the same scenario against the authored packages (checked by hand
+  on the four corpus matters with events).
+
 - **The 2012 text of 37 C.F.R. § 90.3 is vendored and its Director
   extensions granted** (lg-flu.25). `sources/fr-uspto-90-3-history.txt`
   holds § 90.3 as published in 77 FR 48677-48678 (effective Sept. 16,

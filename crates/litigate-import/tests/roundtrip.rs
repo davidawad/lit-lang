@@ -104,13 +104,21 @@ fn every_scenario_round_trips() {
             .find(|f| f.from == input.path)
             .unwrap_or_else(|| panic!("{}: no case", input.path));
         let back = read_case(file);
-        // Import writes the replayed posture, not the docket (SPEC §8.7),
-        // so a v2 file's parties, events and `lowered` header do not come
-        // back.
+        // Import writes the replayed posture, with the docket only as a
+        // comment (SPEC §8.7), so a v2 file's events and `lowered` header
+        // do not come back; its parties and explicit holes do.
+        let holes: Vec<(String, Option<String>)> = original
+            .lowered
+            .iter()
+            .flat_map(|l| &l.holes)
+            .map(|h| (h.pointer.clone(), h.reason.clone()))
+            .collect();
+        let mut back_holes = support::case_holes(file);
+        back_holes.sort();
+        assert_eq!(holes, back_holes, "{}: holes", input.path);
         let as_json = |s: &NamedScenario| {
             let mut s = s.clone();
             s.schema_version = None;
-            s.parties.clear();
             s.events.clear();
             s.lowered = None;
             support::numbers_as_f64(serde_json::to_value(&s).unwrap_or_default())

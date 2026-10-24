@@ -1834,6 +1834,18 @@ parses with no diagnostics, and it follows these conventions:
   `^0.1.0`, `as_of` the primary package's `known_at`, an explicit `start`
   (legacy scenarios assert posture; the porter replaces it with `events`),
   and every `Scenario` field without a dedicated block under `analysis`.
+  A v2 scenario's `parties` become its `parties` block, and its
+  `lowered.holes` (§8.3) its holes: each `/scenario/payoffs/<terminal>` an
+  `unvalued` stake, each `/sources/<i>/as_of` an `as_of ?(reason)` (bare
+  `?` without a reason, a hole even when the reason is a date); any other
+  hole is L6002. Its `events` stay a comment holding the `events` block:
+  replay derived the asserted `start`, `remove_edges` and `facts` from them,
+  which of those it derived is known only to replay (an `elects` event
+  removes edges it does not name, an explicit `start` beside events is
+  where replay begins, and an `analysis` removal an event repeats is
+  L4001), and imported packages declare no events (legacy JSON has
+  none). Against packages that declare them, uncommenting the block and
+  deleting what it derives replays to the same scenario.
 
 ## 9. Diagnostics, JSON, CLI
 

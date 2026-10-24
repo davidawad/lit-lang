@@ -2,7 +2,12 @@
 //!
 //! Legacy scenarios assert their posture (`scenario.start`) instead of
 //! replaying events, so the import writes an explicit `start` and no
-//! `events`; the porter replaces it with the matter's real history.
+//! `events`; the porter replaces it with the matter's real history. A v2
+//! scenario's `parties` come back as a `parties` block and its explicit
+//! holes (`lowered.holes`) as `unvalued` stakes and `as_of ?` sources. Its
+//! `events` come back as a comment only: replaying them would derive again
+//! the `start`, `facts` and `remove_edges` the import already asserts, and
+//! which of those they derive is known only to replay.
 use crate::issues::Issues;
 use crate::json;
 use crate::links::role_name;
@@ -10,7 +15,7 @@ use crate::manifest::{IN_FORCE_PLACEHOLDER, VERSION};
 use crate::text;
 use crate::Emitted;
 use litgraph::model::{Pack, Role};
-use litgraph::scenario::NamedScenario;
+use litgraph::scenario::{DocketEvent, EventRelation, NamedScenario};
 use serde_json::{Map, Value};
 use std::collections::BTreeMap;
 
@@ -32,11 +37,12 @@ pub(crate) fn import_case(
         .first()
         .and_then(|p| packs.get(p.as_str()))
         .copied();
-    let mut out = header(named, from, primary, issues);
+    let holes = Holes::of(named, issues);
+    let mut out = header(named, from, primary, &holes, issues);
     out.extend(posture(named, primary, issues));
     let scenario = &named.scenario;
-    if !scenario.payoffs.is_empty() {
-        out.push(stakes(raw, issues));
+    if !scenario.payoffs.is_empty() || !holes.unvalued.is_empty() {
+        out.push(stakes(raw, &holes, issues));
     }
     if !scenario.observe.is_empty() {
         out.push(beliefs(&scenario.observe, issues));
@@ -53,12 +59,85 @@ pub(crate) fn import_case(
     )]
 }
 
-fn source_text(source: &litgraph::scenario::ScenarioSource) -> String {
+/// The explicit holes of a v2 scenario (SPEC §8.3): the terminals of its
+/// `unvalued` stakes, and each source whose `as_of` is a hole, with the
+/// hole's reason.
+#[derive(Default)]
+struct Holes {
+    unvalued: Vec<String>,
+    as_of: BTreeMap<usize, Option<String>>,
+}
+
+impl Holes {
+    /// `named`'s `lowered.holes`; a hole that has no `.case` spelling is
+    /// reported.
+    fn of(named: &NamedScenario, issues: &mut Issues) -> Self {
+        let mut holes = Self::default();
+        let listed = named.lowered.iter().flat_map(|l| &l.holes);
+        for (i, hole) in listed.enumerate() {
+            let at = format!("/lowered/holes/{i}");
+            let source = hole
+                .pointer
+                .strip_prefix("/sources/")
+                .and_then(|rest| rest.strip_suffix("/as_of"))
+                .and_then(|n| n.parse::<usize>().ok())
+                .filter(|n| {
+                    named
+                        .sources
+                        .get(*n)
+                        .is_some_and(|s| as_of_matches(s, hole))
+                });
+            let terminal = hole
+                .pointer
+                .strip_prefix("/scenario/payoffs/")
+                .map(unescape_token)
+                .filter(|t| hole.reason.is_none() && !named.scenario.payoffs.contains_key(t));
+            match (source, terminal) {
+                (Some(n), _) => {
+                    holes.as_of.insert(n, hole.reason.clone());
+                }
+                (None, Some(terminal)) => holes.unvalued.push(terminal),
+                (None, None) => issues.report(
+                    &at,
+                    format!(
+                        "the hole at `{}` has no `.case` spelling (SPEC §8.3)",
+                        hole.pointer
+                    ),
+                ),
+            }
+        }
+        holes
+    }
+}
+
+/// Whether `source`'s `as_of` is what a hole with `hole`'s reason lowers
+/// to: the reason, or the empty string for a bare `?`.
+fn as_of_matches(
+    source: &litgraph::scenario::ScenarioSource,
+    hole: &litgraph::model::Hole,
+) -> bool {
+    source.as_of.as_deref() == Some(hole.reason.as_deref().unwrap_or_default())
+}
+
+/// A JSON pointer reference token unescaped (RFC 6901 §4).
+fn unescape_token(token: &str) -> String {
+    token.replace("~1", "/").replace("~0", "~")
+}
+
+fn source_text(
+    source: &litgraph::scenario::ScenarioSource,
+    hole: Option<&Option<String>>,
+) -> String {
     let mut fields = Vec::new();
     if let Some(url) = &source.url {
         fields.push(format!("url {}", text::string(url)));
     }
-    if let Some(as_of) = &source.as_of {
+    if let Some(reason) = hole {
+        fields.push(match reason {
+            Some(reason) => format!("as_of ?({})", text::string(reason)),
+            None => "as_of ?".to_owned(),
+        });
+    } else if let Some(as_of) = &source.as_of {
         // Text that is not a whole date (`2026-06`) stays as a hole's reason.
         if is_date(as_of) {
             fields.push(format!("as_of {as_of}"));
@@ -95,23 +174,29 @@ fn perspective(
     format!("perspective {{ {} }}", entries.join(", "))
 }
 
-/// `stakes` in the scenario's own key order (the raw JSON object).
-fn stakes(raw: &Map<String, Value>, issues: &mut Issues) -> String {
+/// `stakes` in the scenario's own key order (the raw JSON object), then
+/// each `unvalued` terminal in hole order.
+fn stakes(raw: &Map<String, Value>, holes: &Holes, issues: &mut Issues) -> String {
     let payoffs = raw
         .get("payoffs")
         .and_then(Value::as_object)
         .cloned()
         .unwrap_or_default();
-    let entries: Vec<String> = payoffs
-        .iter()
-        .map(|(node, value)| {
+    let valued = payoffs.iter().map(|(node, value)| {
+        let money = value.as_f64().and_then(text::money);
+        (node, Some(money))
+    });
+    let unvalued = holes.unvalued.iter().map(|terminal| (terminal, None));
+    let entries: Vec<String> = valued
+        .chain(unvalued)
+        .map(|(node, money)| {
             let at = format!("/scenario/payoffs/{node}");
-            let money = value.as_f64().and_then(text::money);
-            format!(
-                "{}: {}",
-                issues.ident(node, &at, true),
-                issues.spell(money, &at, "payoff")
-            )
+            let node = issues.ident(node, &at, true);
+            let stake = match money {
+                Some(money) => issues.spell(money, &at, "payoff"),
+                None => "unvalued".to_owned(),
+            };
+            format!("{node}: {stake}")
         })
         .collect();
     format!("stakes {{ {} }}", entries.join(", "))
@@ -158,6 +243,7 @@ fn header(
     named: &NamedScenario,
     from: &str,
     primary: Option<&Pack>,
+    holes: &Holes,
     issues: &mut Issues,
 ) -> Vec<String> {
     let id = issues.ident(&named.id, "/id", false);
@@ -188,13 +274,70 @@ fn header(
     if !named.notes.is_empty() {
         out.push(format!("notes {}", text::string(&named.notes)));
     }
-    for source in &named.sources {
-        out.push(source_text(source));
+    for (i, source) in named.sources.iter().enumerate() {
+        out.push(source_text(source, holes.as_of.get(&i)));
     }
     out
 }
 
-/// `start`, `perspective`, and `facts`: the asserted posture.
+/// `parties` in declared order, one per line.
+fn parties(named: &NamedScenario, issues: &mut Issues) -> String {
+    let entries: Vec<String> = named
+        .parties
+        .iter()
+        .enumerate()
+        .map(|(i, party)| {
+            let at = format!("/parties/{i}");
+            format!(
+                "{}: {} {}",
+                issues.ident(&party.id, &format!("{at}/id"), false),
+                issues.ident(&party.actor, &format!("{at}/actor"), false),
+                issues.ident(&party.entity_type, &format!("{at}/entity_type"), false)
+            )
+        })
+        .collect();
+    format!("parties {{\n{}\n}}", entries.join("\n"))
+}
+
+/// The docket as a commented `events` block: the record of what replay
+/// derived the asserted posture from, for the porter to restore. An event
+/// whose text would break out of its comment line is reported.
+fn docket(events: &[DocketEvent], issues: &mut Issues) -> String {
+    let mut out = vec![
+        "// The docket this matter was lowered from. Replay derived the posture".to_owned(),
+        "// asserted here (`start`, `facts`, `remove_edges`) from it; to replay it".to_owned(),
+        "// instead, against packages that declare its events, uncomment it and".to_owned(),
+        "// delete what it derives (SPEC §8.7).".to_owned(),
+        "// events {".to_owned(),
+    ];
+    out.extend(events.iter().enumerate().map(|(i, e)| {
+        if [&e.date, &e.action, &e.party]
+            .iter()
+            .any(|t| t.contains(['\n', '\r']))
+        {
+            issues.report(&format!("/events/{i}"), "a docket event spans lines");
+        }
+        let docket = e.docket.map(|n| format!(" docket {n}")).unwrap_or_default();
+        let relation = match e.relation {
+            EventRelation::By => "by",
+            EventRelation::On => "on",
+        };
+        let cite = e
+            .authority
+            .as_ref()
+            .map(|a| format!(" cite {}", text::string(a)))
+            .unwrap_or_default();
+        format!(
+            "//   {}{docket} {} {relation} {}{cite}",
+            e.date, e.action, e.party
+        )
+    }));
+    out.push("// }".to_owned());
+    out.join("\n")
+}
+
+/// `start`, `perspective`, `parties`, the docket comment and `facts`: the
+/// asserted posture.
 fn posture(named: &NamedScenario, primary: Option<&Pack>, issues: &mut Issues) -> Vec<String> {
     let mut out = Vec::new();
     let scenario = &named.scenario;
@@ -211,6 +354,12 @@ fn posture(named: &NamedScenario, primary: Option<&Pack>, issues: &mut Issues) -
     }
     if !scenario.perspective.is_empty() {
         out.push(perspective(&scenario.perspective, primary, issues));
+    }
+    if !named.parties.is_empty() {
+        out.push(parties(named, issues));
+    }
+    if !named.events.is_empty() {
+        out.push(docket(&named.events, issues));
     }
     if !scenario.facts.is_empty() {
         let entries: Vec<String> = scenario

@@ -14,7 +14,8 @@
 //! - a citation that doesn't parse under the pack's citation syntax, or has
 //!   no `cite` spelling, is a cite hole `cite ?("original text")`;
 //! - every node and link carries the `/// imported` marker (SPEC §7);
-//! - a `.case` asserts its `start` rather than replaying `events`.
+//! - a `.case` asserts its `start` rather than replaying `events`; a v2
+//!   scenario's docket is kept as a commented `events` block.
 //!
 //! ```
 //! use litigate_import::{import, Input};

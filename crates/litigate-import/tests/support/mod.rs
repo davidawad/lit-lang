@@ -291,10 +291,29 @@ pub fn read_case(file: &ImportedFile) -> NamedScenario {
         (SyntaxKind::FactsBlock, "facts"),
         (SyntaxKind::StakesBlock, "payoffs"),
     ] {
-        let map = entries(kind);
+        // An `unvalued` stake lowers to a hole, not a payoff.
+        let mut map = entries(kind);
+        map.retain(|_, v| !v.is_null());
         if !map.is_empty() {
             scenario.insert(key.into(), Value::Object(map));
         }
+    }
+    let parties: Vec<Value> = case
+        .parties()
+        .iter()
+        .map(|p| {
+            let id = p.syntax().first_token().map(|t| t.text().to_owned());
+            json!({
+                "id": id,
+                "actor": p.actor().map(|r| r.text()),
+                "entity_type": p.entity().map(|r| r.text()),
+            })
+        })
+        .collect();
+    if !parties.is_empty() {
+        // Parties are v2 fields, as a lowered matter writes them.
+        named.insert("schema_version".into(), json!(2));
+        named.insert("parties".into(), Value::Array(parties));
     }
     let observe: Map<String, Value> = case
         .block(SyntaxKind::BeliefsBlock)
@@ -317,6 +336,32 @@ pub fn read_case(file: &ImportedFile) -> NamedScenario {
     let text = Value::Object(named).to_string();
     NamedScenario::from_json(&text)
         .unwrap_or_else(|e| panic!("{}: read-back scenario is invalid: {e}", file.path))
+}
+
+/// The `(pointer, reason)` of each explicit hole a `.case` lowers to
+/// `lowered.holes` (SPEC §8.3): `unvalued` stakes, then `as_of` holes.
+pub fn case_holes(file: &ImportedFile) -> Vec<(String, Option<String>)> {
+    let parse = reader::parsed(&file.text, FileKind::Case, &file.path);
+    let case = parse
+        .case_file()
+        .unwrap_or_else(|| panic!("{}: not a case", file.path));
+    let unvalued = case
+        .block(SyntaxKind::StakesBlock)
+        .map(|b| b.entries())
+        .unwrap_or_default()
+        .into_iter()
+        .filter(|e| e.value().is_some_and(|n| reader::value(&n).is_null()))
+        .map(|e| {
+            (
+                format!("/scenario/payoffs/{}", e.key_text().unwrap_or_default()),
+                None,
+            )
+        });
+    let as_of = case.sources().into_iter().enumerate().filter_map(|(i, s)| {
+        let hole = s.syntax().descendants().find_map(|n| ast::Hole::cast(n))?;
+        Some((format!("/sources/{i}/as_of"), hole.reason()))
+    });
+    unvalued.chain(as_of).collect()
 }
 
 /// SPEC §8.6: absent kind is `state`, absent deadline unit is `calendar`,
@@ -425,6 +470,10 @@ fn header(case: &ast::CaseFile, named: &mut Map<String, Value>) {
                 .cloned()
                 .unwrap_or_default();
             out.insert("title".into(), json!(token_string(source.title())));
+            // A bare `as_of ?` lowers to the empty string.
+            if out.get("as_of").is_some_and(Value::is_null) {
+                out.insert("as_of".into(), json!(""));
+            }
             Value::Object(out)
         })
         .collect();

@@ -1,9 +1,10 @@
 //! Every diagnostic the importer emits that the snapshots don't pin:
 //! structural errors at their JSON pointer, malformed documents at serde's
 //! position with serde's message, two inputs claiming one output path, and
-//! a generated file the formatter rejects. All are L6002 errors at the
+//! a generated file the formatter rejects, v2 holes and docket events with
+//! no `.case` spelling. All are L6002 errors at the
 //! input file.
-use litgraph::model::{LinkFile, Pack};
+use litgraph::model::{Hole, LinkFile, Lowered, Pack, Pin};
 use litgraph::scenario::NamedScenario;
 use litigate_base::{DiagnosticCode, Severity};
 use litigate_import::{import, Input};
@@ -365,4 +366,62 @@ fn untyped_analysis_fields_are_reported() {
     let messages: Vec<(String, Option<String>)> =
         reported(&inputs).into_iter().map(|r| (r.3, r.4)).collect();
     insta::assert_debug_snapshot!(messages);
+}
+
+#[test]
+fn v2_holes_and_events_with_no_case_spelling_are_reported() {
+    let hole = |pointer: &str, reason: Option<&str>| Hole {
+        pointer: pointer.into(),
+        reason: reason.map(str::to_owned),
+    };
+    let pin = Pin {
+        name: "p".into(),
+        version: "0.1.0".into(),
+        digest: format!("sha256:{}", "0".repeat(64)),
+    };
+    // Sorted by pointer, as `Lowered::new` keeps them.
+    let holes = vec![
+        // A hole no `.case` block writes.
+        hole("/scenario/params/rate", None),
+        // A stake hole whose terminal also has a payoff, or with a reason.
+        hole("/scenario/payoffs/p::b", None),
+        hole("/scenario/payoffs/p::c", Some("why")),
+        // A source `as_of` hole its `as_of` text contradicts.
+        hole("/sources/0/as_of", Some("2026-06")),
+    ];
+    let lowered = Lowered::new(vec![pin], "2026-02-01".into(), None, holes);
+    let named = json!({
+        "schema_version": 2, "id": "s", "summary": "S", "packs": ["p"],
+        "sources": [{"title": "T", "as_of": "2026-07"}],
+        "scenario": {"payoffs": {"p::b": 5}},
+        "parties": [{"id": "me", "actor": "applicant", "entity_type": "Corporation"}],
+        "events": [{"date": "2026-01-02", "action": "A(\n)", "relation": "by", "party": "me"}],
+        "lowered": lowered,
+    });
+    let inputs = [Input::new("scenarios/s.json", named.to_string())];
+    let file = "scenarios/s.json";
+    let no_spelling =
+        |pointer: &str| format!("the hole at `{pointer}` has no `.case` spelling (SPEC §8.3)");
+    assert_eq!(
+        reported(&inputs),
+        [
+            at(
+                file,
+                &no_spelling("/scenario/params/rate"),
+                "/lowered/holes/0"
+            ),
+            at(
+                file,
+                &no_spelling("/scenario/payoffs/p::b"),
+                "/lowered/holes/1"
+            ),
+            at(
+                file,
+                &no_spelling("/scenario/payoffs/p::c"),
+                "/lowered/holes/2"
+            ),
+            at(file, &no_spelling("/sources/0/as_of"), "/lowered/holes/3"),
+            at(file, "a docket event spans lines", "/events/0"),
+        ]
+    );
 }

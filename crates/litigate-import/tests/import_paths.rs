@@ -6,7 +6,7 @@
 //! where losslessness is.
 mod support;
 
-use litgraph::model::{LinkFile, Pack};
+use litgraph::model::{Hole, LinkFile, Lowered, Pack, Pin};
 use litgraph::scenario::NamedScenario;
 use litigate_import::{ImportedFile, Input};
 use serde_json::{json, Value};
@@ -385,4 +385,91 @@ fn params_import_with_units() {
     let files = import_ok(std::slice::from_ref(&input));
     let case = text(&files, "cases/none.case");
     assert!(case.contains("analysis { params: {} }"), "{case}");
+}
+
+/// A v2 named scenario `id` using package `p`, its `lowered` header holding
+/// `holes`, with `edit` applied to its JSON.
+fn v2_scenario(id: &str, holes: Vec<Hole>, edit: impl FnOnce(&mut Value)) -> Input {
+    let pin = Pin {
+        name: "p".into(),
+        version: "0.1.0".into(),
+        digest: format!("sha256:{}", "0".repeat(64)),
+    };
+    let lowered = Lowered::new(vec![pin], "2026-02-01".into(), None, holes);
+    let mut named = json!({
+        "schema_version": 2, "id": id, "summary": "S", "packs": ["p"],
+        "scenario": {}, "lowered": lowered,
+    });
+    edit(&mut named);
+    Input::new(format!("scenarios/{id}.json"), named.to_string())
+}
+
+#[test]
+fn a_v2_scenario_restores_its_parties_and_holes_and_keeps_its_docket_as_a_comment() {
+    let hole = |pointer: &str, reason: Option<&str>| Hole {
+        pointer: pointer.into(),
+        reason: reason.map(str::to_owned),
+    };
+    let holes = vec![
+        hole("/scenario/payoffs/p::c", None),
+        hole("/sources/0/as_of", Some("2026-06-01")),
+        hole("/sources/1/as_of", None),
+    ];
+    let input = v2_scenario("docket", holes, |named| {
+        named["sources"] = json!([
+            {"title": "Reasoned", "as_of": "2026-06-01"},
+            {"title": "Bare", "as_of": ""},
+            {"title": "Dated", "as_of": "2026-01-05"},
+        ]);
+        named["scenario"] = json!({"start": "p::b", "payoffs": {"p::b": 5}});
+        named["parties"] = json!([
+            {"id": "me", "actor": "applicant", "entity_type": "Corporation"},
+            {"id": "them", "actor": "either", "entity_type": "Individual"},
+        ]);
+        named["events"] = json!([
+            {"date": "2026-01-02", "docket": 3, "action": "Filed(complaint, Mail)",
+             "relation": "by", "party": "me", "authority": "Rule \"4\""},
+            {"date": "2026-01-03", "action": "Noticed()", "relation": "on", "party": "them"},
+        ]);
+    });
+    let files = import_ok(std::slice::from_ref(&input));
+    let case = text(&files, "cases/docket.case");
+    // The reasoned hole stays a hole although its reason is a date.
+    for expected in [
+        "source \"Reasoned\" { as_of ?(\"2026-06-01\") }\n",
+        "source \"Bare\" { as_of ? }\n",
+        "source \"Dated\" { as_of 2026-01-05 }\n",
+        "parties {\n  me: applicant Corporation\n  them: either Individual\n}\n",
+        "// events {\n\
+         //   2026-01-02 docket 3 Filed(complaint, Mail) by me cite \"Rule \\\"4\\\"\"\n\
+         //   2026-01-03 Noticed() on them\n\
+         // }\n",
+        "stakes { p::b: 5.usd, p::c: unvalued }\n",
+    ] {
+        assert!(case.contains(expected), "{expected} not in\n{case}");
+    }
+    let original = NamedScenario::from_json(&input.text).unwrap_or_else(|e| panic!("{e}"));
+    let file = &package(&files, "cases")[0];
+    let back = read_case(file);
+    assert_eq!(back.parties, original.parties);
+    let as_json = |s: &NamedScenario| {
+        let mut s = s.clone();
+        s.schema_version = None;
+        s.events.clear();
+        s.lowered = None;
+        numbers_as_f64(serde_json::to_value(&s).unwrap_or_default())
+    };
+    let (expected, actual) = (as_json(&original), as_json(&back));
+    assert!(
+        expected == actual,
+        "{:?}",
+        first_difference(&expected, &actual, "")
+    );
+    let holes: Vec<(String, Option<String>)> = original
+        .lowered
+        .iter()
+        .flat_map(|l| &l.holes)
+        .map(|h| (h.pointer.clone(), h.reason.clone()))
+        .collect();
+    assert_eq!(support::case_holes(file), holes);
 }

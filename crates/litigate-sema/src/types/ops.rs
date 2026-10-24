@@ -12,7 +12,8 @@ use crate::resolve::sig::ValueKind;
 use litigate_base::{Applicability, DiagnosticCode as C};
 use std::cmp::Ordering;
 
-const fn symbol(op: BinaryOp) -> &'static str {
+/// The operator's source spelling.
+pub(crate) const fn symbol(op: BinaryOp) -> &'static str {
     match op {
         BinaryOp::Or => "||",
         BinaryOp::And => "&&",

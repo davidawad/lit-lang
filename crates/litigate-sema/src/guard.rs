@@ -275,8 +275,9 @@ pub fn respell(e: &Expr, from: &str, base: &str) -> Expr {
 }
 
 /// A guard as text (`has_event(Served()) && (date_of(Filed()) <
-/// 2026-01-01)`), for the provenance trace: every nested binary
-/// operation is parenthesised.
+/// 2026-01-01)`), for diagnostics and the provenance trace: every binary
+/// operand that is itself binary is parenthesised, and atoms read as a
+/// matter's events do ([`crate::case::display_event`]).
 #[must_use]
 pub fn text(e: &Expr) -> String {
     fn operand(e: &Expr) -> String {
@@ -286,39 +287,21 @@ pub fn text(e: &Expr) -> String {
         }
     }
     match &e.kind {
-        ExprKind::Literal { value } => match value {
-            Value::Boolean(b) => b.to_string(),
-            Value::Date(d) => d.clone(),
-            Value::Variant(v) => v.clone(),
-            other => format!("{other:?}"),
-        },
-        ExprKind::Ref { target } => target.clone(),
-        ExprKind::Call { callee, args } => format!(
-            "{callee}({})",
-            args.iter().map(text).collect::<Vec<_>>().join(", ")
-        ),
         ExprKind::Unary {
             op: UnaryOp::Not,
             operand: x,
         } => format!("!{}", operand(x)),
-        ExprKind::Binary { op, lhs, rhs } => {
-            format!("{} {} {}", operand(lhs), symbol(*op), operand(rhs))
-        }
-        _ => "_".to_owned(),
-    }
-}
-
-fn symbol(op: BinaryOp) -> &'static str {
-    match op {
-        BinaryOp::And => "&&",
-        BinaryOp::Or => "||",
-        BinaryOp::Eq => "==",
-        BinaryOp::Ne => "!=",
-        BinaryOp::Lt => "<",
-        BinaryOp::Le => "<=",
-        BinaryOp::Gt => ">",
-        BinaryOp::Ge => ">=",
-        _ => "?",
+        ExprKind::Binary { op, lhs, rhs } => format!(
+            "{} {} {}",
+            operand(lhs),
+            crate::types::ops::symbol(*op),
+            operand(rhs)
+        ),
+        ExprKind::Call { callee, args } => format!(
+            "{callee}({})",
+            args.iter().map(text).collect::<Vec<_>>().join(", ")
+        ),
+        _ => crate::case::display_event(e),
     }
 }
 
@@ -344,7 +327,8 @@ fn nodes_with_edge<'w>(world: &World<'w>, pack: &str, edge: &str) -> Vec<(usize,
         .collect()
 }
 
-/// The span of `op` (its declaration span when it has none).
+/// The span of `op` (a placeholder naming its instance for HIR without
+/// source locations).
 fn at(op: &GuardOp, instance: &Instance) -> Span {
     op.span
         .clone()

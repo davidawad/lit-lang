@@ -4,12 +4,19 @@ expression: rows
 ---
 {
     "accepted: narrow, widen and replace with their authority": [],
+    "authority: a `cite` or an `effective` interval missing (L2007)": [
+        "7:5 L2007 `when and` needs its authority: `cite` missing\n    note: a guard operation is a modification by a later instrument: it names the instrument's authority level, the date it takes effect and the instrument (SPEC §3.6); without them it does not apply",
+        "8:5 L2007 `when and` needs its authority: `effective [from, to)` missing\n    note: a guard operation is a modification by a later instrument: it names the instrument's authority level, the date it takes effect and the instrument (SPEC §3.6); without them it does not apply",
+    ],
+    "authority: an empty effective interval": [
+        "6:96 L2007 empty interval [2010-01-01, 2009-01-01)",
+    ],
     "capability: a delegated case order is licensed": [],
     "capability: a local rule the node does not delegate to (L3004)": [
         "6:18 L3004 `supersedes when` by `LocalRule` cannot change the guard of `timely`: node `check` is `FederalRule` and does not delegate to `LocalRule`",
     ],
-    "disjointness: widening timely lets it overlap late (L2005)": [
-        "6:18 L2005 from 2010-01-01 the guards of `timely` and `late` on fact `check` can both hold\n    note: composed: `has_event(Moved()) || has_event(Excused())` and `!has_event(Moved()) && has_event(Struck())`; a fact has one value, so a changed guard stays exclusive of its siblings (SPEC §3.6)",
+    "disjointness: widening timely lets it overlap late, reported once (L2005)": [
+        "7:5 L2005 from 2010-01-01 the guards of `timely` and `late` on fact `check` can both hold\n    note: composed: `has_event(Moved()) || has_event(Excused())` and `!has_event(Moved()) && has_event(Struck())`; a fact has one value, so a changed guard stays exclusive of its siblings (SPEC §3.6)",
     ],
     "order: disjoint intervals never meet": [],
     "order: same authority and date, replace and narrow do not commute (L3003)": [

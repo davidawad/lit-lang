@@ -318,6 +318,21 @@ fn guard_operation_checks() {
             )),
         ),
         (
+            "authority: a `cite` or an `effective` interval missing (L2007)",
+            diagnostics(&format!(
+                "  patch timely {{\n    {}\n    {}\n  }}",
+                op("when and", "FederalRule", "2010-01-01").replace(" cite \"Order, Dkt. 12\"", ""),
+                op("when and", "FederalRule", "2010-01-01").replace(" effective [2010-01-01, ..)", "")
+            )),
+        ),
+        (
+            "authority: an empty effective interval",
+            diagnostics(&format!(
+                "  patch timely {{ {} }}",
+                op("when and", "FederalRule", "2010-01-01").replace("..)", "2009-01-01)")
+            )),
+        ),
+        (
             "unknown level (L1002)",
             diagnostics(&format!(
                 "  patch timely {{ {} }}",
@@ -350,14 +365,24 @@ fn guard_operation_checks() {
             )),
         ),
         (
-            "disjointness: widening timely lets it overlap late (L2005)",
+            "disjointness: widening timely lets it overlap late, reported once (L2005)",
             diagnostics(&format!(
-                "  patch timely {{ {} }}",
-                op("when or", "FederalRule", "2010-01-01").replace("has_event(Moved()) && ", "")
+                "  patch timely {{\n    {}\n    {}\n  }}",
+                op("when or", "FederalRule", "2010-01-01").replace("has_event(Moved()) && ", ""),
+                op("when or", "FederalRule", "2010-06-01").replace("has_event(Moved()) && ", "")
             )),
         ),
     ]
     .into_iter()
     .collect();
     insta::assert_debug_snapshot!(rows);
+}
+
+/// A guard operation the parser could not finish (no condition) is left
+/// out of the item tree; the parse error stands alone.
+#[test]
+fn a_guard_operation_without_a_condition_is_dropped() {
+    let parsed = litigate_sema::db::parse::parse(&layer("  patch timely {\n    when and\n  }"));
+    let codes: Vec<&str> = parsed.reports.iter().map(|r| r.code.as_str()).collect();
+    assert_eq!(codes, ["L0001"]);
 }

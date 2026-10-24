@@ -186,10 +186,21 @@ impl Cx<'_, '_> {
         let edge = first_ref(Some(&p))
             .map(RefPath::display)
             .unwrap_or_default();
-        let (ops, written): (Vec<Field>, Vec<Field>) = nested(p)
+        let kind = |f: &Field| {
+            GUARD_OPS
+                .iter()
+                .find(|(k, _)| *k == f.key.text)
+                .map(|(_, kind)| *kind)
+        };
+        let written: Vec<Field> = nested(p)
             .iter()
+            .filter(|f| kind(f).is_none())
             .cloned()
-            .partition(|f| GUARD_OPS.iter().any(|(k, _)| *k == f.key.text));
+            .collect();
+        let ops: Vec<(GuardOpKind, &Field)> = nested(p)
+            .iter()
+            .filter_map(|f| Some((kind(f)?, f)))
+            .collect();
         let fields = self.once(&written);
         for key in ["event", "replaces"] {
             if let Some(f) = fields.get(key) {
@@ -220,7 +231,10 @@ impl Cx<'_, '_> {
         let patch = EdgePatch {
             span: self.ck.span(p.range),
             holes: holes_of(&written),
-            guard_ops: ops.iter().filter_map(|f| self.guard_op(f)).collect(),
+            guard_ops: ops
+                .into_iter()
+                .filter_map(|(kind, f)| self.guard_op(kind, f))
+                .collect(),
             ..self.edge_fields(&fields)
         };
         (edge, patch)
@@ -231,11 +245,7 @@ impl Cx<'_, '_> {
     /// instrument's level (`by Level`), `effective` interval and `cite`. An
     /// operation missing any of them is L2007 and dropped (fail-closed),
     /// never defaulted.
-    fn guard_op(&mut self, f: &Field) -> Option<GuardOp> {
-        let kind = GUARD_OPS
-            .iter()
-            .find(|(k, _)| *k == f.key.text)
-            .map(|(_, kind)| *kind)?;
+    fn guard_op(&mut self, kind: GuardOpKind, f: &Field) -> Option<GuardOp> {
         let condition = self.guard(f, true, true);
         let clauses = self.once(nested(f));
         let by = first_ref(clauses.get("by")).and_then(|r| {

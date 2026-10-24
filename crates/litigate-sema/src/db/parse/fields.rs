@@ -80,24 +80,25 @@ impl Lower {
     /// spell): its condition, then its `by`, version and `cite` clauses as
     /// nested fields. `None` without a condition (a parse error).
     fn guard_op(&mut self, node: &SyntaxNode) -> Option<Field> {
+        let condition = node
+            .children()
+            .find(|c| super::is_expr(c.kind()))
+            .and_then(|c| self.expr(&c))?;
         let words: Vec<SyntaxToken> = elements(node)
             .map_while(rowan::NodeOrToken::into_token)
             .collect();
+        let start = super::range(node.text_range()).start;
+        let end = words
+            .last()
+            .map_or(start, |t| super::range(t.text_range()).end);
         let key = Name {
             text: words
                 .iter()
                 .map(SyntaxToken::text)
                 .collect::<Vec<_>>()
                 .join(" "),
-            range: words
-                .iter()
-                .map(|t| super::range(t.text_range()))
-                .reduce(TextRange::cover)?,
+            range: TextRange::new(start, end),
         };
-        let condition = node
-            .children()
-            .find(|c| c.kind() != K::CiteExpr && super::is_expr(c.kind()))?;
-        let condition = self.expr(&condition)?;
         let clauses = self.clauses(node);
         let mut values = vec![(Atom::Expr(condition.clone()), condition.range)];
         if let Some(r) = clauses.iter().map(|f| f.range).reduce(TextRange::cover) {

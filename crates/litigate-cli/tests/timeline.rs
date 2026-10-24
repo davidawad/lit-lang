@@ -263,6 +263,11 @@ fn fixtures(test: &str) -> PathBuf {
     for pkg in ["ttab", "frcp", "frap", "core"] {
         copy_dir(&repo().join("lit").join(pkg), &dir.join("lit").join(pkg));
     }
+    // The copied locks pin the vendored L0 texts (SPEC §4.2).
+    #[cfg(unix)]
+    std::os::unix::fs::symlink(repo().join("sources"), dir.join("sources")).unwrap();
+    #[cfg(not(unix))]
+    copy_dir(&repo().join("sources"), &dir.join("sources"));
     copy_dir(
         &repo().join("crates/litigate-cli/tests/fixtures/timeline-package"),
         &dir.join("lit/fixture"),
@@ -835,7 +840,7 @@ fn a_matter_with_errors_reports_them_in_the_timeline() {
             "2025-10-01",
         ],
     );
-    // Its events declare no ids: L9006 notes aside.
+    // Notes (L9006, an event without an id) aside.
     let codes: Vec<&Value> = later.json["result"]["diagnostics"]
         .as_array()
         .unwrap()

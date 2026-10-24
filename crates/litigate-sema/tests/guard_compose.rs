@@ -6,8 +6,8 @@ mod cov_case_support;
 
 use litigate_sema::guard::{self, Applied};
 use litigate_sema::hir::{
-    Authored, BinaryOp, Declaration, Expr, ExprKind, GuardOp, GuardOpKind, Interval, Type,
-    UnaryOp, Value,
+    Authored, BinaryOp, Declaration, Expr, ExprKind, GuardOp, GuardOpKind, Interval, Type, UnaryOp,
+    Value,
 };
 use litigate_sema::precedence::Lattice;
 use litigate_sema::temporal::world::{Rank, World};
@@ -75,7 +75,13 @@ fn composition_orders_by_authority_then_date() {
     let l = lattice();
     let replace = op(GuardOpKind::Replace, has("A"), "Low", "2011-01-01", None);
     let narrow = op(GuardOpKind::Narrow, has("B"), "High", "2010-01-01", None);
-    let widen = op(GuardOpKind::Widen, has("C"), "High", "2012-01-01", Some("2013-01-01"));
+    let widen = op(
+        GuardOpKind::Widen,
+        has("C"),
+        "High",
+        "2012-01-01",
+        Some("2013-01-01"),
+    );
     let ops = [&narrow, &widen, &replace];
     assert_eq!(guard::order(&l, &ops), [2, 0, 1]);
     // The base is replaced first, so `B` and `C` apply to `A`.
@@ -88,7 +94,10 @@ fn composition_orders_by_authority_then_date() {
     // Out of every interval, or not yet recorded: the base stands.
     let none = guard::compose(&l, Some(&has("Z")), &ops, "2009-06-01", None);
     assert!(none.applied.is_empty());
-    assert_eq!(none.guard.as_ref().map(guard::text), Some("has_event(Z())".to_owned()));
+    assert_eq!(
+        none.guard.as_ref().map(guard::text),
+        Some("has_event(Z())".to_owned())
+    );
     let unknown = guard::compose(&l, None, &ops, "2012-06-01", Some("2024-01-01"));
     assert_eq!(unknown.guard, None);
     // No base guard reads as `true`.
@@ -102,8 +111,20 @@ fn composition_orders_by_authority_then_date() {
 #[test]
 fn only_unordered_operations_that_do_not_commute_and_meet_are_ambiguous() {
     let l = lattice();
-    let a = op(GuardOpKind::Replace, has("A"), "Other", "2010-01-01", Some("2011-01-01"));
-    let b = op(GuardOpKind::Narrow, has("B"), "High", "2010-06-01", Some("2012-01-01"));
+    let a = op(
+        GuardOpKind::Replace,
+        has("A"),
+        "Other",
+        "2010-01-01",
+        Some("2011-01-01"),
+    );
+    let b = op(
+        GuardOpKind::Narrow,
+        has("B"),
+        "High",
+        "2010-06-01",
+        Some("2012-01-01"),
+    );
     let c = op(GuardOpKind::Narrow, has("C"), "High", "2011-01-01", None);
     let d = op(GuardOpKind::Narrow, has("D"), "High", "2011-01-01", None);
     let e = op(GuardOpKind::Widen, has("E"), "Other", "2011-01-01", None);
@@ -180,7 +201,10 @@ fn respelling_reads_a_guard_in_the_base_view() {
     assert_eq!(args[0].ty, Type::Named("links::Period".to_owned()));
     // A links package without a pack id leaves its own names as written,
     // and a guard written in the base package is already in its view.
-    assert_eq!(guard::text(&guard::respell(&has("Filed"), "", "base")), "has_event(Filed())");
+    assert_eq!(
+        guard::text(&guard::respell(&has("Filed"), "", "base")),
+        "has_event(Filed())"
+    );
     assert_eq!(guard::respell(&has("Filed"), "base", "base"), has("Filed"));
 }
 

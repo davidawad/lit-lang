@@ -423,8 +423,15 @@ fn capability(
         let unlicensed = nodes.iter().find(|&&(i, _)| {
             let meta = world.decls[i].meta;
             let window = &meta.effective;
-            let overlaps = window.to.as_deref().is_none_or(|to| to > op.effective.from.as_str())
-                && op.effective.to.as_deref().is_none_or(|to| to > window.from.as_str());
+            let overlaps = window
+                .to
+                .as_deref()
+                .is_none_or(|to| to > op.effective.from.as_str())
+                && op
+                    .effective
+                    .to
+                    .as_deref()
+                    .is_none_or(|to| to > window.from.as_str());
             let licensed = matches!(
                 lattice.compare(&op.by, &meta.authority),
                 Order::Above | Order::Equal
@@ -472,7 +479,11 @@ fn disjoint(world: &World<'_>, lattice: &Lattice, instance: &Instance, out: &mut
         .find(|(_, i)| std::ptr::eq(*i, instance))
         .map_or("", |(p, _)| world.packs[*p].pack.as_str());
     let mut seen: Vec<(String, String)> = Vec::new();
-    for (edge, patch) in instance.patch_edges.iter().filter(|(_, p)| !p.guard_ops.is_empty()) {
+    for (edge, patch) in instance
+        .patch_edges
+        .iter()
+        .filter(|(_, p)| !p.guard_ops.is_empty())
+    {
         for (_, node) in nodes_with_edge(world, base, edge) {
             if !node.tags.iter().any(|t| t == "fact") {
                 continue;
@@ -487,7 +498,12 @@ fn disjoint(world: &World<'_>, lattice: &Lattice, instance: &Instance, out: &mut
                         let ops: Vec<GuardOp> = instance
                             .patch_edges
                             .get(id)
-                            .map(|p| p.guard_ops.iter().map(|o| respelled(o, from, base)).collect())
+                            .map(|p| {
+                                p.guard_ops
+                                    .iter()
+                                    .map(|o| respelled(o, from, base))
+                                    .collect()
+                            })
                             .unwrap_or_default();
                         let refs: Vec<&GuardOp> = ops.iter().collect();
                         compose(lattice, e.guard.as_ref(), &refs, date, None)

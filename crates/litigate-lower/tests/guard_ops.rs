@@ -71,7 +71,8 @@ base = { version = \"^1.0.0\", path = \"../base\" }
 
 const NARROW: &str = "    when and has_event(Excused()) by CaseOrder effective [2010-01-01, ..) \
                       cite \"Order, Dkt. 12\"";
-const REPLACE: &str = "    supersedes when has_event(Excused()) by FederalRule effective [2026-01-01, ..) \
+const REPLACE: &str =
+    "    supersedes when has_event(Excused()) by FederalRule effective [2026-01-01, ..) \
                        cite \"Fed. R. Civ. P. 1\"";
 
 /// The base pack (two versions of `check`, the build emitting the

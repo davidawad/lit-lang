@@ -68,7 +68,11 @@ impl<'a> Graph<'a> {
                             .guard_ops
                             .iter()
                             .map(|op| GuardOp {
-                                condition: crate::guard::respell(&op.condition, from, base(&i.pack)),
+                                condition: crate::guard::respell(
+                                    &op.condition,
+                                    from,
+                                    base(&i.pack),
+                                ),
                                 ..op.clone()
                             })
                             .collect();
@@ -328,10 +332,18 @@ impl<'a> Graph<'a> {
             .map(|ops| ops.iter().collect())
             .unwrap_or_default();
         if ops.is_empty() {
-            return (edge.guard.as_ref().map(std::borrow::Cow::Borrowed), Vec::new());
+            return (
+                edge.guard.as_ref().map(std::borrow::Cow::Borrowed),
+                Vec::new(),
+            );
         }
-        let composed =
-            crate::guard::compose(self.world.lattice(), edge.guard.as_ref(), &ops, date, known_at);
+        let composed = crate::guard::compose(
+            self.world.lattice(),
+            edge.guard.as_ref(),
+            &ops,
+            date,
+            known_at,
+        );
         let applied = composed.applied.iter().map(|&i| ops[i]).collect();
         (composed.guard.map(std::borrow::Cow::Owned), applied)
     }

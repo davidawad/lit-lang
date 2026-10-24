@@ -13,6 +13,7 @@ use cov_case_support::{check, compile, lock, matter, outcome, package, At};
 use litigate_base::{Profile, Severity};
 use litigate_sema::hir::Package;
 use std::collections::BTreeMap;
+use std::fmt::Write as _;
 
 const BASE: &str = "module base
 start intake
@@ -95,10 +96,10 @@ fn diagnostics(patches: &str) -> Vec<String> {
                 d.span.col,
                 d.code.as_str(),
                 d.message,
-                d.notes
-                    .iter()
-                    .map(|n| format!("\n    note: {}", n.message))
-                    .collect::<String>()
+                d.notes.iter().fold(String::new(), |mut s, n| {
+                    let _ = write!(s, "\n    note: {}", n.message);
+                    s
+                })
             )
         })
         .collect()
@@ -126,7 +127,10 @@ fn replay_known(packages: &[Package], events: &[&str], known_at: Option<&str>) -
         "stakes { base::won: 0.usd, base::barred: 0.usd }",
     );
     if let Some(k) = known_at {
-        text = text.replace("as_of 2011-06-01\n", &format!("as_of 2011-06-01\nknown_at {k}\n"));
+        text = text.replace(
+            "as_of 2011-06-01\n",
+            &format!("as_of 2011-06-01\nknown_at {k}\n"),
+        );
     }
     let checked = check(
         &text,
@@ -198,7 +202,8 @@ fn guard_operations_in_replay() {
     let later = world(&NARROW.replace("2010-01-01", "2012-01-01"));
     let hole = world(&NARROW.replace("cite \"Order, Dkt. 12\"", "cite ?(\"Order, Dkt. 12\")"));
     let ended = world(&NARROW.replace("[2010-01-01, ..)", "[2010-01-01, 2010-02-05)"));
-    let recorded = world(&NARROW.replace("[2010-01-01, ..)", "[2010-01-01, ..) known_at 2025-09-01"));
+    let recorded =
+        world(&NARROW.replace("[2010-01-01, ..)", "[2010-01-01, ..) known_at 2025-09-01"));
     let rows: BTreeMap<&str, Vec<String>> = [
         (
             "base: the unpatched guard derives timely",
@@ -277,6 +282,7 @@ fn layered_operations_compose_in_authority_order_not_source_order() {
 }
 
 #[test]
+#[allow(clippy::too_many_lines)] // one table row per rule
 fn guard_operation_checks() {
     // Narrowing `timely` (or replacing it inside `has_event(Moved())`)
     // keeps it disjoint from `late`, whose guard needs `!has_event(Moved())`.
@@ -322,7 +328,8 @@ fn guard_operation_checks() {
             diagnostics(&format!(
                 "  patch timely {{\n    {}\n    {}\n  }}",
                 op("when and", "FederalRule", "2010-01-01").replace(" cite \"Order, Dkt. 12\"", ""),
-                op("when and", "FederalRule", "2010-01-01").replace(" effective [2010-01-01, ..)", "")
+                op("when and", "FederalRule", "2010-01-01")
+                    .replace(" effective [2010-01-01, ..)", "")
             )),
         ),
         (
@@ -359,8 +366,7 @@ fn guard_operation_checks() {
             "order: disjoint intervals never meet",
             diagnostics(&format!(
                 "  patch timely {{\n    {}\n    {}\n  }}",
-                op("supersedes when", "FederalRule", "2010-01-01")
-                    .replace("..)", "2010-06-01)"),
+                op("supersedes when", "FederalRule", "2010-01-01").replace("..)", "2010-06-01)"),
                 op("when and", "FederalRule", "2010-06-01")
             )),
         ),

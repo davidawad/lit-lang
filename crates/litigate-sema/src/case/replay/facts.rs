@@ -80,7 +80,12 @@ impl<'g> Cx<'_, 'g> {
     /// instance's edge reads its guard as the patch's guard operations in
     /// force on that date compose it (SPEC §3.6); the operations that made
     /// the deciding guard come back for the trace.
-    fn fact_edge(&mut self, posture: &str, node: &'g Node, k: usize) -> Option<(String, Vec<Applied>)> {
+    fn fact_edge(
+        &mut self,
+        posture: &str,
+        node: &'g Node,
+        k: usize,
+    ) -> Option<(String, Vec<Applied>)> {
         if !node.tags.iter().any(|t| t == "fact") {
             return None;
         }
@@ -96,8 +101,8 @@ impl<'g> Cx<'_, 'g> {
             .iter()
             .find(|e| {
                 let (guard, ops) = self.graph.guard(posture, e, date, known_at);
-                let holds = guard
-                    .is_some_and(|g| eval(&g, &mut |a| self.atom(pack, k, a)) == Some(true));
+                let holds =
+                    guard.is_some_and(|g| eval(&g, &mut |a| self.atom(pack, k, a)) == Some(true));
                 if holds {
                     applied = ops.into_iter().map(Applied::of).collect();
                 }

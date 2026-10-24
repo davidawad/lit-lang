@@ -28,8 +28,7 @@ pub(crate) fn links(
     let mut instances = BTreeMap::new();
     let mut spans: BTreeMap<String, Option<Span>> = BTreeMap::new();
     let mut bases: BTreeMap<String, Option<Pack>> = BTreeMap::new();
-    let mut instance_holes: Vec<Hole> = Vec::new();
-    let mut guards = Vec::new();
+    let (mut instance_holes, mut guards): (Vec<Hole>, Vec<GuardTrace>) = (Vec::new(), Vec::new());
     for d in decls {
         match d {
             Declaration::Link(l) => {

@@ -103,6 +103,7 @@ pub(crate) fn item(p: &mut Parser<'_>, kw: SyntaxKind) {
         KwEvent => event_decl(p),
         KwState | KwDecision | KwChance | KwTerminal => node_decl(p, kw),
         KwAuthority => authority(p),
+        KwLimit => super::filing::limit(p),
         _ => decls::decl(p, kw),
     }
 }

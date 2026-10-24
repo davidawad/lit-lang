@@ -27,7 +27,12 @@ pub const LIT_ITEM_KEYWORDS: &[SyntaxKind] = &[
     KwDefault,
     KwException,
     KwTest,
+    KwLimit,
 ];
+
+/// Item keywords of reserved declarations (`limit`, SPEC §3.7): anchors
+/// for recovery, but left out of "expected" lists and keyword fixes.
+pub const RESERVED_ITEM_KEYWORDS: &[SyntaxKind] = &[KwLimit];
 
 /// Top-level item keywords of `.case` files.
 pub const CASE_ITEM_KEYWORDS: &[SyntaxKind] = &[
@@ -77,6 +82,7 @@ pub(crate) const fn is_decl(kind: SyntaxKind) -> bool {
             | DefaultDecl
             | ExceptionDecl
             | TestDecl
+            | LimitDecl
     )
 }
 

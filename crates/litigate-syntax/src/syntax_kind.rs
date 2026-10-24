@@ -137,6 +137,8 @@ syntax_kinds! {
         KwDesignated = "designated", KwInterpretation = "interpretation",
         KwForums = "forums", KwForwardHolidays = "forward_holidays",
         KwDeclaredHolidays = "declared_holidays",
+        KwLimit = "limit", KwWords = "words", KwPages = "pages", KwLines = "lines",
+        KwCertificate = "certificate", KwExcludes = "excludes", KwEcf = "ecf",
     }
     nodes {
         SourceFile => "Root of a `.lit` module.",
@@ -224,6 +226,11 @@ syntax_kinds! {
         RefinedType => "Reserved refinement type `{x: T | pred}` in a type position; always L0009 (SPEC §2.1).",
         WhereClause => "Reserved refinement clause `where pred` after a parameter or type declaration; always L0009 (SPEC §2.1).",
         GuardOp => "Reserved typed guard operation in a patch: `when and pred`, `when or pred` or `supersedes when pred`, with its authority; always L0010 (SPEC §3.6).",
+        LimitDecl => "Reserved filing-requirement declaration `limit paper-kind { ... }` with its versions and authority; always L0011 (SPEC §3.7).",
+        LimitBound => "Reserved length bound `words|pages|lines <= N` of a `limit` body (SPEC §3.7).",
+        CertificateReq => "Reserved `requires certificate kind` of a `limit` body; always L0011 (SPEC §3.7).",
+        Exclusions => "Reserved `excludes [item, ?(\"reason\"), ...]` of a `limit` body; always L0011 (SPEC §3.7).",
+        EcfCode => "Reserved `ecf \"code\"` ECF event code of a `limit` body, as data (SPEC §3.7).",
     }
 }
 

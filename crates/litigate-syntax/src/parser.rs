@@ -5,7 +5,9 @@ use crate::lexer::Token;
 use crate::suggest::nearest;
 use crate::syntax_kind::SyntaxKind::{self, *};
 use crate::vocab::describe_set;
-pub(crate) use crate::vocab::{is_decl, is_trivia, CASE_ITEM_KEYWORDS, LIT_ITEM_KEYWORDS};
+pub(crate) use crate::vocab::{
+    is_decl, is_trivia, CASE_ITEM_KEYWORDS, LIT_ITEM_KEYWORDS, RESERVED_ITEM_KEYWORDS,
+};
 use litigate_base::{Applicability, DiagnosticCode};
 use rowan::{Checkpoint, GreenNode, GreenNodeBuilder, TextRange};
 
@@ -260,7 +262,15 @@ impl<'t> Parser<'t> {
 
     /// Reports L0001 at the current token: "expected X, found Y", with a
     /// machine-applicable keyword fix when the found word is a near miss.
+    /// A reserved item keyword ([`RESERVED_ITEM_KEYWORDS`]) anchors recovery
+    /// but is never offered: writing it is an error.
     pub(crate) fn error_expected(&mut self, expected: &[SyntaxKind]) {
+        let expected: Vec<SyntaxKind> = expected
+            .iter()
+            .copied()
+            .filter(|kind| !RESERVED_ITEM_KEYWORDS.contains(kind))
+            .collect();
+        let expected = expected.as_slice();
         let at = self.current_range();
         let mut error = SyntaxError::new(
             DiagnosticCode::UnexpectedToken,

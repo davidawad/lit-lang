@@ -287,3 +287,123 @@ fn and_and_or_are_reserved_everywhere_but_only_as_whole_words() {
         parse_lit("module m\nstart reversed-and-remanded\ngroup or-else: \"and or\"\n").is_ok()
     );
 }
+
+/// A module whose only item after `module m` is `item`.
+fn limited(item: &str) -> super::Parse {
+    parse_lit(&format!("module m\n\n{item}\n\nstart s\n"))
+}
+
+#[test]
+fn filing_limits_parse_into_their_slot_and_are_reserved() {
+    let parsed = limited(
+        "/// FRAP 32(a)(7) and 32(f)-(g).\nlimit principal-brief effective [1998-12-01, ..) {\n  \
+         words <= 13_000 cite \"FRAP 32(a)(7)(B)(i)\"\n  lines <= 1300\n  pages <= ?(\"local \
+         rule\")\n  requires certificate compliance cite \"FRAP 32(g)(1)\"\n  excludes \
+         [cover-page, table-of-contents, ?(\"local rule\")] cite \"FRAP 32(f)\"\n  ecf \
+         \"brief\"\n  ecf ?(\"district ECF code\")\n} cite \"FRAP 32\" known_at 2026-10-24",
+    );
+    assert_eq!(codes(&parsed), ["L0011", "L0011", "L0011"]);
+    for error in parsed.errors() {
+        assert!(error.message.starts_with(crate::RESERVED_FILING));
+    }
+    for (error, word) in parsed
+        .errors()
+        .iter()
+        .zip(["limit", "certificate", "excludes"])
+    {
+        assert!(error.message.contains(&format!("`{word}`")), "{word}");
+    }
+    let kinds = node_kinds(&parsed);
+    assert!(!kinds.contains(&SyntaxKind::Error), "{kinds:?}");
+    let count = |kind| kinds.iter().filter(|k| **k == kind).count();
+    assert_eq!(count(SyntaxKind::LimitDecl), 1);
+    assert_eq!(count(SyntaxKind::LimitBound), 3);
+    assert_eq!(count(SyntaxKind::CertificateReq), 1);
+    assert_eq!(count(SyntaxKind::Exclusions), 1);
+    assert_eq!(count(SyntaxKind::EcfCode), 2);
+    assert_eq!(count(SyntaxKind::VersionClause), 2);
+    assert_eq!(count(SyntaxKind::CiteExpr), 4);
+    // The doc comment leads the declaration; the next item still parses.
+    let limit = parsed
+        .syntax()
+        .children()
+        .find(|n| n.kind() == SyntaxKind::LimitDecl)
+        .expect("limit");
+    assert!(limit.text().to_string().starts_with("/// FRAP 32"));
+    assert!(kinds.contains(&SyntaxKind::StartDecl));
+    for kw in [
+        SyntaxKind::KwLimit,
+        SyntaxKind::KwWords,
+        SyntaxKind::KwPages,
+        SyntaxKind::KwLines,
+        SyntaxKind::KwRequires,
+        SyntaxKind::KwCertificate,
+        SyntaxKind::KwExcludes,
+        SyntaxKind::KwEcf,
+    ] {
+        assert!(
+            parsed
+                .syntax()
+                .descendants_with_tokens()
+                .any(|t| t.kind() == kw),
+            "{kw:?}"
+        );
+    }
+}
+
+#[test]
+fn a_malformed_filing_limit_reports_where_it_breaks() {
+    for (item, expected) in [
+        ("limit", vec!["L0011", "L0001"]),
+        ("limit brief", vec!["L0011", "L0001"]),
+        ("limit brief { words 13000 }", vec!["L0011", "L0001"]),
+        ("limit brief { words <= }", vec!["L0011", "L0001"]),
+        (
+            "limit brief { requires compliance }",
+            vec!["L0011", "L0001"],
+        ),
+        (
+            "limit brief { requires certificate }",
+            vec!["L0011", "L0011", "L0001"],
+        ),
+        (
+            "limit brief { excludes cover-page }",
+            vec!["L0011", "L0011", "L0001"],
+        ),
+        ("limit brief { ecf }", vec!["L0011", "L0001"]),
+        ("limit brief { note \"x\" }", vec!["L0011", "L0001"]),
+    ] {
+        assert_eq!(codes(&limited(item)), expected, "{item}");
+    }
+}
+
+#[test]
+fn filing_words_are_reserved_everywhere_but_only_as_whole_words() {
+    for source in [
+        "module m\nstart limit\n",
+        "module m\ngroup certificate: \"x\"\n",
+        "module m\nstate s: \"S\" {\n  go \"Go\" -> s { requires [excludes] }\n}\n",
+        "module m\nstate s: \"S\" {\n  go \"Go\" -> s { requires certificate service }\n}\n",
+    ] {
+        let parsed = parse_lit(source);
+        assert!(codes(&parsed).contains(&"L0011"), "{source}");
+        let reserved = parsed
+            .errors()
+            .iter()
+            .filter(|e| e.code.as_str() == "L0011");
+        for error in reserved {
+            assert!(
+                error.message.starts_with(crate::RESERVED_FILING),
+                "{source}"
+            );
+        }
+    }
+    assert!(codes(&parse_case("case limit\n")).contains(&"L0011"));
+    assert_eq!(crate::FILING_WORDS, ["limit", "certificate", "excludes"]);
+    // `requires` stays the edge field; the body words stay identifiers.
+    assert!(parse_lit(
+        "module m\nstart no-transcript-certificate\ngroup words: \"limit\"\n\
+         state s: \"S\" {\n  go \"Go\" -> s { requires [ecf, pages, lines] }\n}\n"
+    )
+    .is_ok());
+}

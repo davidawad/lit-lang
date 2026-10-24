@@ -38,7 +38,8 @@ mod vocab;
 pub use error::{span_of, SyntaxError, TextFix};
 pub use format::{check_format, format, FormatError};
 pub use lexer::{
-    GUARD_OP_WORDS, REFINEMENT_WORDS, RESERVED_GUARD_OP, RESERVED_REFINEMENT, RESERVED_WORDS,
+    FILING_WORDS, GUARD_OP_WORDS, REFINEMENT_WORDS, RESERVED_FILING, RESERVED_GUARD_OP,
+    RESERVED_REFINEMENT, RESERVED_WORDS,
 };
 pub use parse::{parse, parse_case, parse_lit, Edition, FileKind, Parse, SyntaxNode, SyntaxToken};
 pub use rowan::{TextRange, TextSize};

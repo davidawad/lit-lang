@@ -66,6 +66,7 @@ registry! { 69;
     UnknownEdition = "L0008" => "The edition marker names an edition this compiler does not know",
     ReservedRefinement = "L0009" => "Refinement syntax (`{x: T | p}` or a `where` clause) is reserved for the SMT tier and not yet accepted",
     ReservedGuardOp = "L0010" => "A typed guard operation in a patch (`when and p`, `when or p`, `supersedes when p`) is reserved and not yet accepted",
+    ReservedFilingRequirement = "L0011" => "A filing requirement (`limit paper { words <= N }`, `requires certificate kind`, `excludes [...]`) is reserved and not yet accepted",
     DuplicateName = "L1001" => "A declaration name is duplicated in the same namespace",
     UnresolvedName = "L1002" => "A referenced declaration or imported module could not be resolved",
     ImportCycle = "L1003" => "Module imports must form an acyclic dependency graph",

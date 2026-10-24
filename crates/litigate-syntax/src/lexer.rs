@@ -120,6 +120,16 @@ pub const GUARD_OP_WORDS: [&str; 2] = ["and", "or"];
 /// Message prefix of every L0010 diagnostic (SPEC §3.6).
 pub const RESERVED_GUARD_OP: &str = "reserved: typed guard operations";
 
+/// Words reserved for filing requirements (SPEC §3.7): `limit` declares a
+/// paper kind's length limits, `requires certificate` the certificates it
+/// must carry, `excludes` what does not count toward a limit. L0011
+/// wherever they appear, in the grammar's `limit` slot as well as anywhere
+/// an identifier could stand. `requires` stays the edge field keyword.
+pub const FILING_WORDS: [&str; 3] = ["limit", "certificate", "excludes"];
+
+/// Message prefix of every L0011 diagnostic (SPEC §3.7).
+pub const RESERVED_FILING: &str = "reserved: filing requirements";
+
 /// Lexes `text` into a lossless token stream plus lexical errors.
 #[must_use]
 pub fn lex(text: &str) -> (Vec<Token>, Vec<SyntaxError>) {
@@ -214,6 +224,17 @@ impl Lexer<'_> {
                             "{RESERVED_GUARD_OP}: `{text}` combines a patched edge's guard \
                              (`when {text} p`), which a later change adds; it cannot be written or \
                              used as an identifier"
+                        ),
+                    );
+                } else if FILING_WORDS.contains(&text) {
+                    self.error(
+                        DiagnosticCode::ReservedFilingRequirement,
+                        start,
+                        end,
+                        format!(
+                            "{RESERVED_FILING}: `{text}` belongs to a paper's filing requirements \
+                             (length limits, certificates, exclusions), which a later change adds; \
+                             it cannot be written or used as an identifier"
                         ),
                     );
                 } else if RESERVED_WORDS.contains(&text) {

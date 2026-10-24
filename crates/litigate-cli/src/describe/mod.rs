@@ -254,7 +254,7 @@ const BUILTINS: [(&str, &str); 15] = [
     ),
 ];
 
-const RESULTS: [(&str, &str); 17] = [
+const RESULTS: [(&str, &str); 18] = [
     ("describe", "this document"),
     (
         "lock",

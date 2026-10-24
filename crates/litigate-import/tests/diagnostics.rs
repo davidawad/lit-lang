@@ -454,3 +454,19 @@ fn declaration_only_windows_and_grants_are_reported_not_dropped() {
         ]
     );
 }
+
+#[test]
+fn a_patch_field_of_the_wrong_type_is_not_a_whole_field() {
+    let links = json!({"instances": {
+        "p@q": {"pack": "p", "patch_edges": {"typed": {"hours": "many"}}}
+    }, "links": []});
+    let found = reported(&[Input::new("packs/links.json", links.to_string())]);
+    assert_eq!(found.len(), 1, "{found:?}");
+    assert!(
+        found[0]
+            .3
+            .starts_with("a `patch` replaces whole edge fields; this one is not: invalid type"),
+        "{found:?}"
+    );
+    assert_eq!(found[0].4.as_deref(), Some("/instances/p@q/patch_edges/typed"));
+}

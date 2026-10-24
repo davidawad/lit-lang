@@ -74,6 +74,9 @@ jobs:
           built="$(find "target/${{ matrix.target }}/release/build" -path '*/litgraph-packs-*/out/packs' -type d | head -n 1)"
           test -n "$built"
           cp -r "$built" "dist/$name/packs"
+          # The Merkle root of every Lit.lock (SPEC §4.2), computed on read.
+          scripts/release/lit-roots.sh "target/${{ matrix.target }}/release/litigate" > "dist/$name/LITLOCK-ROOTS"
+          cp "dist/$name/LITLOCK-ROOTS" dist/LITLOCK-ROOTS
           tar -C dist -czf "dist/$name.tar.gz" "$name"
           ( cd dist && shasum -a 256 "$name.tar.gz" > "$name.tar.gz.sha256" )
 
@@ -83,6 +86,12 @@ jobs:
           path: |
             dist/*.tar.gz
             dist/*.tar.gz.sha256
+
+      - uses: actions/upload-artifact@v7
+        if: matrix.target == 'x86_64-unknown-linux-gnu'
+        with:
+          name: litlock-roots
+          path: dist/LITLOCK-ROOTS
 
   wasm:
     runs-on: ubuntu-latest
@@ -124,13 +133,26 @@ jobs:
         with:
           path: dist
           merge-multiple: true
+      # The release records the Merkle root of every Lit.lock (SPEC §4.2).
+      - name: lock roots for the release notes
+        run: |
+          set -euo pipefail
+          {
+            echo "## Lit.lock Merkle roots"
+            echo
+            echo '```'
+            cat dist/LITLOCK-ROOTS
+            echo '```'
+          } > notes.md
       - uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ env.TAG }}
+          body_path: notes.md
           files: |
             dist/*.tar.gz
             dist/*.tar.gz.sha256
             dist/litgraph-wasm.sha256
+            dist/LITLOCK-ROOTS
           generate_release_notes: true
 
   docker:

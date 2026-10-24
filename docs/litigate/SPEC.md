@@ -701,38 +701,69 @@ leave it unchanged, and any change to what the package means changes it.
 
 **`Lit.lock`** is deterministic TOML, format `version = 2`, then one
 `[[package]]` table per package of the root's resolution, sorted by name
-then version, with `name`, `version`, `language`, `digest`, `source` (the
-source digest, `sha256:<hex>`), `semantic` (the semantic digest, or
-`"unchecked"` for a package with errors), `texts` and `dependencies`, the
-last two sorted arrays of one entry per line. `texts` pins the vendored L0
-texts: `"<source id> <path> sha256:<hex>"` for each `[sources.*]` binding
-whose `path` is under `sources/`, the digest of the file's bytes
-(`missing` in its place when the file is absent; a `path` elsewhere, a
-generated pack, is not pinned). `dependencies` holds `"name version
-sha256:<digest>"`, the dependency's own `digest` (`"name version"` where it
-closes a cycle, in a package graph L1011 already rejects). `digest` is the row's Merkle digest: SHA-256, framed as
-above, over `litlock 2`, the name, version and language, the semantic
-digest (the source digest for an `unchecked` package), the number of
-`texts` and each entry, then the number of `dependencies` and each entry.
-A change to a package, to an L0 text it pins, or to anything it depends
-on therefore changes every digest above it, while reformatting changes
-only `source`. The lock has no timestamps or absolute paths. Only
-`litigate lock` writes it. Any other command finds a missing or stale lock
-(including format 1) and reports L1007. A matter's pin records the locked
-`source` digest and selects the loaded package of the locked version.
+then version, with `name`, `version`, `language`, `source` (the source
+digest, `sha256:<hex>`), `semantic` (the semantic digest, or `"unchecked"`
+for a package with errors), `texts` and `dependencies`, the last two
+sorted arrays of one entry per line. A row holds only its own package's
+digests. `texts` pins the vendored L0 texts: `"<source id> <path>
+sha256:<hex>"` for each `[sources.*]` binding whose `path` is under
+`sources/`, the digest of the file's bytes (`missing` in its place when
+the file is absent; a `path` elsewhere, a generated pack, is not pinned).
+`dependencies` pins each direct dependency as `"name version"`, which must
+name exactly one row of the same lock; a row locked twice, or a pin naming
+no row, makes the lock invalid. The lock has no timestamps or absolute
+paths. Only `litigate lock` writes it. Every command that checks a
+package or matter recomputes each row's digests from the sources and the
+L0 texts and fails closed: an invalid or mismatched lock (including
+format 1, and a format 2 lock with a stored `digest`), or a missing one
+where a package with dependencies or a matter needs it, is L1007, never a
+silent relock. A matter's pin records the locked `source` digest
+and selects the loaded package of the locked version.
 
-`Lit.lock` merges package by package. `.gitattributes` names the `litlock`
-driver, `litigate lock --merge BASE OURS THEIRS`, which writes into `OURS`:
-a `[[package]]` row (keyed by `name`) that only one side changed takes that
-side, and one both sides changed the same way is kept. A row both sides
-changed differently, or one side changed and the other removed, keeps the
-changed row with digest ``"unmerged: run `litigate lock`"``. No lock text
-holds the digest of the merged sources, so that lock is stale (L1007)
-until `litigate lock` regenerates it; the merge never conflicts and never
-admits a wrong digest. A side in another format (a format 1 lock) has no
-rows to merge: the result is an empty format 2 lock, stale the same way,
-and `stale_format` is true. An unparseable side exits 1, leaving git's
-conflict.
+**Merkle root.** The Merkle digest of a row is computed on read, never
+stored: SHA-256, framed as above, over `litlock 2`, the name, version and
+language, the semantic digest (the source digest for an `unchecked`
+package), the number of `texts` and each entry, then the number of
+`dependencies` and each entry with the Merkle digest of the row it names
+appended (an entry closing a cycle, in a package graph L1011 already
+rejects, is entered bare). A change to a package, to an L0 text it pins,
+or to anything it depends on therefore changes every Merkle digest above
+it. The lock's *Merkle root* is SHA-256, framed the same way, over `litlock
+root 2` then each row's `"name version"` and Merkle digest in that order.
+`litigate lock --root DIR` verifies the lock as `--locked` does and adds
+`root` to its result (`null`, with L1007, when the lock is stale). A
+release records the root of every committed lock in its release notes and
+in the `LITLOCK-ROOTS` manifest shipped in each archive.
+
+**Verification cache.** "Package X verified against its dependencies at
+digest Z" is a build-cache fact, not a lock fact. `litigate check` and
+`build`, reading from disk, record each package's verification under
+`target/litigate/verified/` (`LITIGATE_CACHE` names another directory, or
+`off`), keyed by the compiler build, the package's root, the Merkle root of
+its resolution, every package loaded beside it (name, version, source
+digest, root), the profile and the build dates. A change to any
+dependency's digest changes the Merkle root of every dependent's
+resolution, so every dependent's entry misses and is verified again. CI
+(`CI` set to anything but empty or `false`) re-verifies from scratch,
+neither reading nor writing the cache; an in-memory build never uses it.
+An entry that cannot be read or written is a miss, never an error.
+
+*Rationale.* The lock follows the Cargo.lock model: each row records only
+facts about its own package, so the rows of two packages are independent
+lines of text, and two branches that edit different packages change
+different rows and merge as plain text with no merge driver. Storing a
+dependency's digest in its dependents' rows made every edit to a widely
+used package rewrite every row above it, so independent edits conflicted
+and needed a custom merge driver to resolve. The integrity the stored
+digests gave is kept without storing them: every row is rechecked against
+its sources on every load, dependencies resolve by name and version to a
+row that is itself checked, and the Merkle root that identifies the whole
+graph is derived on read and recorded where it is needed, at a release.
+Whether a dependent was verified against a particular dependency is a
+property of a build, not of the sources, so it lives in the build cache,
+where a dependency change invalidates it and CI can ignore it. When both
+sides of a merge changed the same package its row conflicts, as a
+Cargo.lock does, and `litigate lock` regenerates it.
 
 ### 4.3 Names and resolution
 
@@ -2315,7 +2346,7 @@ All commands accept `--format json|human` (default `human` on a TTY, else
 | Command | Arguments | `result` |
 |---|---|---|
 | `describe` | | `{language_version, grammar, types, builtins, diagnostic_codes:[{code, explain}], commands}` |
-| `lock` | `[PKG_DIR]`, `--locked`, `--merge BASE OURS THEIRS` | `{lockfile, changed, packages:[{name,version,digest}]}`; `--locked` fails (L1007) instead of writing; `--merge` (§4.2) gives `{lockfile, changed, unresolved:[name], stale_format}` |
+| `lock` | `[PKG_DIR]`, `--locked`, `--root` | `{lockfile, changed, packages:[{name,version,digest}]}` (a directory of matters: `{lockfiles:[{lockfile, changed, cases, packages}]}`); `--locked` fails (L1007) instead of writing; `--root` verifies as `--locked` does and adds `root`, the lock's Merkle root computed on read (§4.2; `null` when stale) |
 | `compat` | `OLD NEW` (two package directories) | `{package, old:{version, semantic}, new:{version, semantic}, class, required, declared, ok, changes:[{class, kind, what, now?}]}` per §4.4; L1012 when the bump is too small |
 | `check` | `PATHS...`, `--profile dev\|strict` (default `dev`), `--as-of`, `--known-at` | `{profile, files, obligations:[Finding], packages}` |
 | `build` | `PKG_OR_CASE...`, `--profile dev\|strict` (default `dev`), `--as-of`, `--known-at`, `--out DIR`, `--pack-file ID=STEM` (repeatable) | `{outputs:{packs:[path], links:[path], clock:[path], scenarios:[path], source_maps:[path], litigatables:[path]}, litigatable_hash, litigatables, obligations}` |

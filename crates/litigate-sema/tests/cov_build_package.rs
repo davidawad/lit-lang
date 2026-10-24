@@ -100,9 +100,7 @@ fn the_lock_lists_each_transitive_dependency_once() {
     let names: Vec<String> = parsed
         .packages
         .iter()
-        .map(|p| {
-            format!("{} <- {}", p.name, p.dependencies.join(", "))
-        })
+        .map(|p| format!("{} <- {}", p.name, p.dependencies.join(", ")))
         .collect();
     insta::assert_debug_snapshot!(names);
     // Each dependency is pinned by name and version; its Merkle digest is

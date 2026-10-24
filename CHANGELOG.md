@@ -657,12 +657,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   matter's pins all read it, so load order no longer decides. No
   satisfying choice is the new L1011 with PubGrub's explanation (it was a
   misleading L1006).
-- **Merkle `Lit.lock` v2** (SPEC §4.2). Each row records the source
-  digest, a semantic digest of the span-free HIR (reformatting does not
-  change it), the SHA-256 of every vendored L0 text under `sources/` its
-  `[sources.*]` bindings name, and each dependency's own digest; the row's
-  `digest` is the Merkle hash over them. Format 1 locks are stale (L1007):
-  run `just lit-sync`.
+- **`Lit.lock` v2, Cargo.lock model** (SPEC §4.2, lg-flu.7). Each row
+  records only its own package: the source digest, a semantic digest of
+  the span-free HIR (reformatting does not change it), the SHA-256 of
+  every vendored L0 text under `sources/` its `[sources.*]` bindings name,
+  and each dependency pinned as `name version`, which must name exactly
+  one row. Every load rechecks every row and fails closed (L1007), never
+  relocking silently; format 1 locks, and v2 locks that stored a `digest`,
+  are stale: run `just lit-sync`. The Merkle digests and the lock's Merkle
+  root are computed on read: `litigate lock --root DIR` prints the root,
+  and a release records every lock's root in its notes and in the
+  `LITLOCK-ROOTS` manifest of each archive (`scripts/release/lit-roots.sh`).
+  Whether a package was verified against its dependencies is a build-cache
+  fact (`target/litigate/verified/`, `LITIGATE_CACHE`), keyed by the
+  Merkle root of its resolution so a dependency change invalidates its
+  dependents; CI (`CI` set) re-verifies from scratch, ignoring it.
 - **Stable identity with `formerly`** (SPEC §4.3). A node or named edge
   lists the ids it had before a rename (`formerly [old-id]`); a `.case`
   written against an old id still resolves, with the new L9007 warning
@@ -673,6 +682,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   computes may differ) or `none`; a version bump smaller than the class
   needs is the new L1012 with the least sufficient version as a fix. This
   is what `^` and `~` requirements now mean for a legal package.
+
+### Removed
+
+- **The `litlock` merge driver** (`litigate lock --merge`,
+  `.gitattributes`, `just lit-merge-driver`; lg-flu.7). With each lock row
+  holding only its own package's digests, two branches editing different
+  packages rebase cleanly as plain text (`merge_safe`); when both changed
+  one package its row conflicts like a Cargo.lock, and `just lit-sync`
+  regenerates it.
 
 ## [0.5.0] - 2026-10-23
 

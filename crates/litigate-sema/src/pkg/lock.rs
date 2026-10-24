@@ -683,7 +683,8 @@ mod tests {
         );
         assert_eq!(rows["frcp 1.0.0"], frcp);
         let root = lock.root();
-        assert!(root.starts_with("sha256:") && root.len() == 71, "{root}");
+        assert!(root.starts_with("sha256:"), "{root}");
+        assert_eq!(root.len(), 71);
         // A change to frcp's own digest moves frcp, links and the root,
         // never ttab or core.
         let mut edited = lock.clone();

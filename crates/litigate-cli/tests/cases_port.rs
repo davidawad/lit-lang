@@ -29,7 +29,11 @@ const SCENARIOS: [(&str, Option<&str>); 5] = [
 
 /// Examples whose matter resolves the Court of Federal Claims limitations and § 1500 fact
 /// nodes through `facts` where the example removed the barred edges: the
-/// answer is the same, and litgraph's `fact-unset` warning is gone.
+/// answer is the same, and litgraph's `fact-unset` warning is gone. The
+/// example may warn on other fact nodes (the Federal Circuit's
+/// `remand-destination`, which the matter states too); one whose removal
+/// left a fact node a single edge does not warn on it, the graph deciding
+/// it alone.
 const FACTS_FIXED: [&str; 9] = [
     "cofc-1498-chain",
     "cofc-1498-risk-averse-sim",
@@ -214,7 +218,6 @@ fn run_reproduces_every_scenario_bearing_example() {
         let mut theirs = engine(&request);
         assert_eq!(theirs["ok"], true, "{stem}");
         if FACTS_FIXED.contains(&stem.as_str()) {
-            assert!(has_fact_unset(&theirs), "{stem}: no fact-unset to fix");
             assert!(!has_fact_unset(&ours), "{stem}: facts left unset");
             theirs = without_fact_unset(theirs);
         }

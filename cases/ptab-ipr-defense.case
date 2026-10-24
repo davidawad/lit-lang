@@ -29,6 +29,10 @@ events {
   2026-06-18 FilingDateNoticed() on owner
 }
 
+// The Federal Circuit remands a PTAB decision to the Board: the remand
+// destination is a matter fact (lit/cafc's `remand-destination`).
+facts { cafc::remand-destination: cafc::remand-route-ptab }
+
 stakes {
   ptab-patent-trial-appeal-board::ipr-time-barred: 3_000_000.usd
   ptab-patent-trial-appeal-board::claims-disclaimed-preinstitution: 1_500_000.usd

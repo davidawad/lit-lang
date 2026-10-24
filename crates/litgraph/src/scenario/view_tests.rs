@@ -41,6 +41,20 @@ fn unset_fact_uses_the_authored_prior_and_warns() {
 }
 
 #[test]
+fn a_fact_node_with_one_live_edge_is_decided_without_warning() {
+    // A links instance that removes every route but one (`cafc@cofc`'s
+    // `remand-destination`) leaves the fact nothing to decide.
+    let json = FACT_JSON.replace(
+        r#",
+        {"id": "e-barred", "from": "check", "to": "barred", "label": "barred", "actor": "office", "probability": 0.1}"#,
+        "",
+    );
+    let g = fact_pack(&json);
+    let v = View::new(&g, &Scenario::default()).unwrap();
+    assert!(!v.warnings.iter().any(|w| w.code == "fact-unset"));
+}
+
+#[test]
 fn set_fact_forces_its_edge_and_zeroes_the_sibling_without_warning() {
     let g = fact_pack(FACT_JSON);
     let sc = Scenario {

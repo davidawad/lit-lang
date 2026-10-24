@@ -139,30 +139,29 @@ state adr-mediation-session: "ADR Session(s) Conducted" cite ?("RCFC Appendix H 
   note "Confidential, off-the-record sessions before a settlement judge or agreed third-party neutral; no transcript, and ADR communications/documents are not disclosed to the assigned judge absent a Rule 16(f)(2) sanctions violation."
   e-adr-session-to-outcome "ADR session(s) conclude" -> adr-outcome-ruling {
     authority cite "RCFC App. H 3(h)"
-    event AdrConcluded()
   }
 }
 
-/// Whether ADR settled the case is a matter fact (`tags [fact]`): the order
-/// concluding the proceeding indicates "whether a proposed settlement has
-/// been reached in whole or in part" (Appendix H ¶ 3(h)), so replay reads
-/// it from that order. A settlement in part leaves claims to litigate, the
-/// impasse edge. The probabilities are only the prior of a matter whose
-/// history has no concluding order.
+/// The order concluding the ADR proceeding indicates "whether a proposed
+/// settlement has been reached in whole or in part" (Appendix H ¶ 3(h)), so
+/// a matter's docket decides the outcome: each edge is taken by that order
+/// (`AdrConcluded`). A settlement in part leaves claims to litigate, the
+/// impasse edge. It is real uncertainty until the order is entered, not a
+/// fact knowable at filing, so the node is a draw, not `fact`: the
+/// probabilities are the prior of a matter that has no order yet.
 chance adr-outcome-ruling: "ADR Concludes" by office cite "RCFC App. H 3(h)"
 {
   group adr-group
-  note "A matter fact derived from the order concluding the ADR proceeding (Appendix H ¶3(h)). Prior: 0.40 settlement-reached / 0.60 impasse-returns-to-litigation -- TEACHING ESTIMATE, not a cited empirical CoFC ADR settlement-rate figure."
-  tags [fact]
+  note "Decided on the docket by the order concluding the ADR proceeding (Appendix H ¶3(h)). Prior: 0.40 settlement-reached / 0.60 impasse-returns-to-litigation -- TEACHING ESTIMATE, not a cited empirical CoFC ADR settlement-rate figure."
   e-adr-settles "Settlement reached" -> settled-adr p 0.4 {
-    when has_event(AdrConcluded(WholeSettlement)) && !has_event(AdrConcluded(NoWholeSettlement))
+    event AdrConcluded(WholeSettlement)
     authority cite "RCFC App. H 3(h)"
-    note "TEACHING ESTIMATE prior -- not a cited empirical CoFC ADR settlement-rate figure."
+    note "TEACHING ESTIMATE -- not a cited empirical CoFC ADR settlement-rate figure."
   }
   e-adr-impasse "Impasse; parties return to litigation" -> discovery-open p 0.6 {
-    when has_event(AdrConcluded(NoWholeSettlement)) && !has_event(AdrConcluded(WholeSettlement))
+    event AdrConcluded(NoWholeSettlement)
     authority cite "RCFC App. H 3(h)"
-    note "TEACHING ESTIMATE prior, see sibling edge note."
+    note "TEACHING ESTIMATE, see sibling edge note."
   }
 }
 

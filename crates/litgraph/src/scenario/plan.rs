@@ -151,7 +151,9 @@ impl PlanInputs<'_> {
             .filter(|&&e| self.authored[e].is_none())
             .count();
         if self.is_fact(n) {
-            if !self.fact_nodes.contains(&n) {
+            // One live out-edge (a links instance removed the others)
+            // decides the fact by the graph alone: nothing is unset.
+            if edges.len() > 1 && !self.fact_nodes.contains(&n) {
                 self.warn(
                     out,
                     n,

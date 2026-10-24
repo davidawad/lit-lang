@@ -840,7 +840,7 @@ fn a_matter_with_errors_reports_them_in_the_timeline() {
             "2025-10-01",
         ],
     );
-    // Notes (L9006, an event without an id) aside.
+    // The L9006 notes (the matter's events declare no ids) are not replay's.
     let codes: Vec<&Value> = later.json["result"]["diagnostics"]
         .as_array()
         .unwrap()

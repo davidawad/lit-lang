@@ -138,3 +138,25 @@ state f: \"F\" info filing { x \"File\" -> t }",
     );
     assert!(matches!(&info[..], [Declaration::Node(n)] if n.info.as_deref() == Some("filing")));
 }
+
+#[test]
+fn an_extension_authority_hole_leaves_it_undeclared() {
+    let out = nodes(
+        "deadline dl: 3.days from Served(complaint) counted_by c6\n\
+state open: \"S\" by Plaintiff {\n\
+  a \"A\" -> done { within dl { extension_authority ?(\"unverified\") } }\n\
+}\n\
+terminal done: \"Done\" outcome [won]",
+        &["open"],
+    );
+    let [Declaration::Node(n)] = out.as_slice() else {
+        panic!("{out:?}");
+    };
+    let e = &n.edges[0];
+    let d = e.deadline.as_ref().unwrap();
+    assert_eq!((d.extendable, d.extension_authority.as_deref()), (None, None));
+    assert_eq!(
+        e.holes.get("within.extension_authority"),
+        Some(&Some("unverified".to_owned()))
+    );
+}

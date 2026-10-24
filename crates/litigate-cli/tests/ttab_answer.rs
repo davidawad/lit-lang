@@ -414,8 +414,7 @@ fn a_board_order_resets_the_counterclaim_answer_date() {
 #[test]
 fn the_generated_pack_leaves_the_answer_extension_undeclared() {
     // The pack format carries no designated window (lg-flu.32): each answer
-    // edge's extension is a hole, never `extendable: false`, and the reason
-    // keeps what the source states.
+    // edge's extension is a hole, never `extendable: false`.
     let out = scratch("ttab-pack");
     let run = support::litigate(&[
         "build",
@@ -442,24 +441,29 @@ fn the_generated_pack_leaves_the_answer_extension_undeclared() {
     );
     assert!(answers.iter().all(|&i| edges[i].get("deadline").is_none()));
     let holes = pack["lowered"]["holes"].as_array().unwrap();
+    let hole = |i: usize, field: &str| {
+        let pointer = format!("/edges/{i}/deadline/{field}");
+        let found: Vec<_> = holes
+            .iter()
+            .filter(|h| h["pointer"] == pointer.as_str())
+            .collect();
+        assert_eq!(found.len(), 1, "one hole at {pointer}");
+        found[0]["reason"].as_str().unwrap().to_owned()
+    };
     for &i in &answers {
-        for field in ["extendable", "extensionAuthority"] {
-            let pointer = format!("/edges/{i}/deadline/{field}");
-            let hole = holes
-                .iter()
-                .find(|h| h["pointer"] == pointer.as_str())
-                .unwrap_or_else(|| panic!("no hole at {pointer}"));
-            assert!(hole["reason"]
-                .as_str()
-                .unwrap()
-                .starts_with("`within answer-period`: the due date is the one each matter's notice or order designates, and the pack format carries no designated window, so its extension is undeclared here, never not-extendable"));
-        }
+        assert_eq!(
+            hole(i, "extendable"),
+            "`within answer-period`: the due date is the one each matter's notice or order designates, and the pack format carries no designated window, so its extension is undeclared here, never not-extendable"
+        );
     }
-    let plain = holes
-        .iter()
-        .find(|h| h["pointer"] == format!("/edges/{}/deadline/extendable", answers[0]).as_str())
-        .unwrap();
-    assert!(plain["reason"].as_str().unwrap().ends_with(
-        "; the source states extendable true, extension_authority \"37 CFR 2.127(a); consented motion TBMP 509\", which is not emitted"
-    ));
+    // The answering edges leave the authority a hole of their own (no
+    // extension authority for the answer time is verified); the default
+    // edge states none, so the lowering's hole stands.
+    for &i in &answers[..2] {
+        assert_eq!(
+            hole(i, "extensionAuthority"),
+            "TTAB answer-time extension authority"
+        );
+    }
+    assert!(hole(answers[2], "extensionAuthority").starts_with("`within answer-period`"));
 }

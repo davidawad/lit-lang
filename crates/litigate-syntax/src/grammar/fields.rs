@@ -4,7 +4,7 @@ use super::clauses::keyword_field;
 use super::values::{
     boolean, call, cite, date_or_hole, duration, duration_estimate, id_list, money_or_hole, number,
     prob_value, record, reference, replaces_list, require, signed_money, signed_number, string,
-    Key, Value,
+    string_or_hole, Key, Value,
 };
 use super::{brace_list, delimited_node, Sep};
 use crate::error::{range, SyntaxError};
@@ -50,7 +50,7 @@ pub(crate) const EDGE_FIELDS: &[Spec] = &[
 
 pub(crate) const DEADLINE_OPTS: &[Spec] = &[
     (KwExtendable, Some(boolean)),
-    (KwExtensionAuthority, Some(string)),
+    (KwExtensionAuthority, Some(string_or_hole)),
     (KwNote, Some(string)),
     (KwCounting, Some(string)),
 ];
@@ -62,7 +62,7 @@ pub(crate) const DEADLINE_OPTS: &[Spec] = &[
 /// the interpretation its least time rests on.
 pub(crate) const DEADLINE_DECL_OPTS: &[Spec] = &[
     (KwExtendable, Some(boolean)),
-    (KwExtensionAuthority, Some(string)),
+    (KwExtensionAuthority, Some(string_or_hole)),
     (KwNote, Some(string)),
     (KwBearer, Some(reference)),
     (KwTrigger, Some(ref_or_call)),

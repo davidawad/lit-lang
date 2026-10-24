@@ -79,6 +79,12 @@ pub(crate) fn date_or_hole(p: &mut Parser<'_>) -> bool {
     date(p) || hole(p)
 }
 
+/// `String | Hole`: a string, or a hole leaving it undeclared
+/// (`extension_authority ?("reason")`).
+pub(crate) fn string_or_hole(p: &mut Parser<'_>) -> bool {
+    string(p) || hole(p)
+}
+
 /// A `Literal` node holding one token of `kind`.
 pub(crate) fn token_literal(p: &mut Parser<'_>, kind: SyntaxKind) -> bool {
     if !p.at(kind) {

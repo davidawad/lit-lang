@@ -265,7 +265,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   The extension used to be dropped with no trace, and it is never
   emitted as not-extendable. `lit/ttab`'s "File no answer" edge no
   longer states `extendable false` for an answer time the Board may
-  reset (§ 2.106(a)).
+  reset (§ 2.106(a)). Its answering edges no longer state an extension
+  authority, none being verified for the answer time:
+  `extension_authority` may now be a hole (`?("reason")`, SPEC §3.1,
+  tree-sitter updated), and they write
+  `extension_authority ?("TTAB answer-time extension authority")`, which
+  is the pack's `deadline/extensionAuthority` hole. The Board's reset
+  (§ 2.106(a)) stays a `CaseOrder` layer.
 
 - **Typed boundaries** (design review §6 item 12; SPEC §5.2, §5.6, §6).
   Breaking for `.lit` and `.case` source. A `removes p` or `elects p`

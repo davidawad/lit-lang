@@ -148,7 +148,7 @@ impl Cx<'_, '_> {
             counting: counting?,
             forum,
             extendable: flag(o.get("extendable")),
-            extension_authority: Self::string(o.get("extension_authority")),
+            extension_authority: self.string_or_hole(o.get("extension_authority")),
             note: Self::string(o.get("note")),
             bearer: obligation.bearer,
             policy: obligation.policy,

@@ -204,6 +204,22 @@ impl Cx<'_, '_> {
         }
     }
 
+    /// String value of a field that may be a hole. A hole
+    /// (`extension_authority ?("reason")`) leaves the value undeclared
+    /// and is recorded as a hole.
+    pub fn string_or_hole(&mut self, f: Option<&&Field>) -> Option<String> {
+        match f.and_then(|f| first_expr(f)) {
+            Some(Expr {
+                kind: ExprKind::Hole(reason),
+                range,
+            }) => {
+                self.ck.holes.push((*range, reason.clone()));
+                None
+            }
+            _ => Self::string(f),
+        }
+    }
+
     /// Simple identifiers of an `IdList` field (opaque tags and flags).
     pub fn idents(&mut self, f: Option<&&Field>) -> Vec<String> {
         Self::refs(f)

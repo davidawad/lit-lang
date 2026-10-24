@@ -393,3 +393,45 @@ state s: "S" cite ?("RCFC Appendix J, Rule 3") {
               (duration_range
                 (duration)
                 (duration)))))))))
+
+================================================================================
+An extension authority hole
+================================================================================
+
+module m
+decision d: "D" by a {
+  answer "Answer" -> answered {
+    within answer-period { extension_authority ?("TTAB answer-time extension authority") }
+  }
+}
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (node_decl
+      (identifier)
+      (string
+        (string_content))
+      (by_clause
+        (ref
+          (identifier)))
+      (node_body
+        (edge_decl
+          (identifier)
+          (string
+            (string_content))
+          (ref
+            (identifier))
+          (edge_fields
+            (edge_field
+              (ref
+                (identifier))
+              (deadline_opts
+                (deadline_opt
+                  (hole
+                    (string
+                      (string_content))))))))))))

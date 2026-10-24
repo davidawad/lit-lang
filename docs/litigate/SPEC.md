@@ -200,7 +200,7 @@ EdgeField    = "event", CallExpr | "authority", (String | Cite) | "effort", Dura
              | "sets", IdList | "clears", IdList | "requires", IdList
              | "forbids", IdList | "replaces", ReplaceList | "when", Expr ;
 ReplaceList  = "[", [ (Ref | String), { ",", (Ref | String) }, [","] ], "]" ;
-DeadlineOpts = "{", { ("extendable", Bool | "extension_authority", String
+DeadlineOpts = "{", { ("extendable", Bool | "extension_authority", (String | Hole)
              | "note", String | "counting", String), Sep }, "}" ;
 
 LinkDecl     = "link", (Ident | "_"), String, ":", Ref, "->", Ref, { EdgeClause },
@@ -218,7 +218,7 @@ RuleDecl     = "rule", ("duty" | "power" | "liability"), Ident, { VersionClause
 DeadlineDecl = "deadline", Ident, ":", Duration, ("from" | "after" | "before"),
                Expr, "counted_by", Ref, { VersionClause | Relation | Cite },
                [ DeclOpts ] ;
-DeclOpts     = "{", { ( "extendable", Bool | "extension_authority", String
+DeclOpts     = "{", { ( "extendable", Bool | "extension_authority", (String | Hole)
              | "note", String | "bearer", Ref | "trigger", ( Ref | CallExpr )
              | "designated", Ref | "interpretation", String
              | ("extend" | "waive"), Capability | "forum", Ref ), Sep }, "}" ;
@@ -1491,7 +1491,9 @@ header"):
   `/edges/<i>/deadline/extendable` and `.../extensionAuthority` (for a
   link, `/links/<i>/...`) are holes with no `?` in the source: undeclared,
   never `extendable: false`, the reason naming the deadline and whatever
-  `extendable` or `extension_authority` the edge or declaration states.
+  `extendable` or `extension_authority` the edge or declaration states;
+  an edge's own `extension_authority ?(..)` is the hole at
+  `.../extensionAuthority`, with its reason, in place of that one.
 
 The engine checks the header on read (version, sorted pins, recomputed
 digest, holes inside the document) and warns `authored-hole` for a pack

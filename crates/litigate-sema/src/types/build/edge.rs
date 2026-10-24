@@ -288,7 +288,7 @@ impl Cx<'_, '_> {
         Some(EdgeDeadline {
             window,
             extendable: flag(opts.get("extendable")),
-            extension_authority: Self::string(opts.get("extension_authority")),
+            extension_authority: self.string_or_hole(opts.get("extension_authority")),
             note: Self::string(opts.get("note")),
             counting: Self::string(opts.get("counting")).filter(|_| within.is_none()),
         })

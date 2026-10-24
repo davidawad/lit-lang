@@ -2136,12 +2136,38 @@
               "type": "FIELD",
               "name": "key",
               "content": {
+                "type": "STRING",
+                "value": "extension_authority"
+              }
+            },
+            {
+              "type": "FIELD",
+              "name": "value",
+              "content": {
                 "type": "CHOICE",
                 "members": [
                   {
-                    "type": "STRING",
-                    "value": "extension_authority"
+                    "type": "SYMBOL",
+                    "name": "string"
                   },
+                  {
+                    "type": "SYMBOL",
+                    "name": "hole"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "key",
+              "content": {
+                "type": "CHOICE",
+                "members": [
                   {
                     "type": "STRING",
                     "value": "note"

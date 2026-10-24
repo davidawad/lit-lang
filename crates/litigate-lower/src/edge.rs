@@ -94,7 +94,8 @@ pub(crate) fn edge(cx: &EdgeCx<'_, '_>, sink: &mut Sink, from: String, e: &hir::
 /// whether the deadline is extendable, and on what authority, is
 /// undeclared there, never not-extendable (fail-closed). Each field is a
 /// hole whose reason names the deadline and what the source states of
-/// it, so nothing it says is dropped silently.
+/// it, so nothing it says is dropped silently; a field the source itself
+/// leaves a hole keeps that hole and its reason.
 pub(crate) fn undeclared(cx: &EdgeCx<'_, '_>, base: &str, e: &hir::Edge) -> Vec<Hole> {
     let Some(d) = &e.deadline else {
         return Vec::new();
@@ -135,13 +136,18 @@ pub(crate) fn undeclared(cx: &EdgeCx<'_, '_>, base: &str, e: &hir::Edge) -> Vec<
     let reason = format!(
         "`within {deadline}`: the due date is the one each matter's notice or order designates, and the pack format carries no designated window, so its extension is undeclared here, never not-extendable{stated}"
     );
-    ["extendable", "extensionAuthority"]
-        .into_iter()
-        .map(|field| Hole {
-            pointer: format!("{base}/deadline/{field}"),
-            reason: Some(reason.clone()),
-        })
-        .collect()
+    // A field the source leaves a `?` for is already a hole of its own.
+    [
+        ("extendable", "within.extendable"),
+        ("extensionAuthority", "within.extension_authority"),
+    ]
+    .into_iter()
+    .filter(|(_, path)| !e.holes.contains_key(*path))
+    .map(|(field, _)| Hole {
+        pointer: format!("{base}/deadline/{field}"),
+        reason: Some(reason.clone()),
+    })
+    .collect()
 }
 
 /// `Deadline.unit`: absent for calendar days, `"court"` for court days,

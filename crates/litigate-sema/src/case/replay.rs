@@ -17,7 +17,7 @@ use crate::hir::{
 };
 use crate::temporal::condition::matches;
 use crate::temporal::transition::Seq;
-use crate::temporal::{MatterEvent, Ungoverned};
+use crate::temporal::{Inactive, MatterEvent, Miss, Ungoverned};
 use litigate_base::{Applicability, Diagnostic, DiagnosticCode as C};
 use std::collections::BTreeMap;
 
@@ -319,6 +319,19 @@ impl<'c, 'g> Cx<'c, 'g> {
                     && self.graph.used(&Graph::key(&q).pack) =>
             {
                 Some(n)
+            }
+            Err(Ungoverned::Inactive(Inactive::Miss(Miss::Before { earliest }))) => {
+                let d = error(
+                    C::NoVersionInForce,
+                    self.at(k, |e| e.date.as_ref()),
+                    format!(
+                        "stage `{posture}` is not encoded before {earliest}: no version is in force on {}",
+                        self.sorted[k].1.date
+                    ),
+                )
+                .note(crate::temporal::not_encoded(&earliest));
+                self.out.push(d);
+                None
             }
             Ok(_) | Err(Ungoverned::Inactive(_)) => {
                 let d = error(

@@ -36,6 +36,9 @@ impl Unselected {
                 "{} versions of {what} are in force on {date}",
                 windows.len()
             ),
+            Self::Inactive(Inactive::Miss(Miss::Before { earliest })) => {
+                format!("{what} is not encoded before {earliest}: no version is in force on {date}")
+            }
             Self::Inactive(_) => format!("no version of {what} is in force on {date}"),
             Self::Unresolved(pairs) => format!(
                 "no single declaration governs {what} on {date}: {}",

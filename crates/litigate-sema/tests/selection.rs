@@ -438,7 +438,7 @@ fn selection_failures_explain_themselves() {
     assert!(matches!(inactive, Unselected::Inactive(Inactive::Miss(_))));
     assert_eq!(
         inactive.describe(&world, "`answer-period`", "2000-01-01"),
-        "no version of `answer-period` is in force on 2000-01-01"
+        "`answer-period` is not encoded before 2009-12-01: no version is in force on 2000-01-01"
     );
 }
 

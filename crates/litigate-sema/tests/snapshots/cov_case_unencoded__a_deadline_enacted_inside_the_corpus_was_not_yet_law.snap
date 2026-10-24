@@ -1,0 +1,7 @@
+---
+source: crates/litigate-sema/tests/cov_case_unencoded.rs
+expression: "run(\"2013-01-01\", &[\"2011-06-01 Enacted() on d\"])"
+---
+[
+    "10:14 L4001 `Enacted()` is not a legal event at stage `tau::open` (Open)\n    note: legal events: Answered() [answer]\n    note: an event that takes no edge must fire the trigger of an in-force deadline, be history a transition reads, or have a type declaring `removes`, `extends`, or `waives`\n    note: replay stops at the first illegal event",
+]

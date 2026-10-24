@@ -151,7 +151,9 @@ pub fn active<'v>(
     date: &str,
     known_at: Option<&str>,
 ) -> Result<&'v Version<usize>, Inactive> {
-    let v = set.as_of(date, known_at).map_err(Inactive::Miss)?;
+    let v = set
+        .as_of(date, known_at)
+        .map_err(|miss| Inactive::Miss(encoded(world, set, date, miss)))?;
     match suspensions(world, key, known_at).into_iter().find(|s| {
         s.window.contains(date)
             && v.in_force.from < s.window.from
@@ -159,6 +161,28 @@ pub fn active<'v>(
     }) {
         Some(s) => Err(Inactive::Superseded(s)),
         None => Ok(v),
+    }
+}
+
+/// `miss` as the query on `date` should report it. A date before every
+/// recorded version is a hole in the corpus (`unknown_before`, SPEC §5.4)
+/// only when it also precedes the package's `in_force`, the start of the
+/// corpus the package encodes; inside that corpus, a declaration whose
+/// first version starts later was not yet law, a finding (L3007 as no
+/// version in force).
+fn encoded(
+    world: &World<'_>,
+    set: &super::version::VersionSet<usize>,
+    date: &str,
+    miss: Miss,
+) -> Miss {
+    let covered = set
+        .versions
+        .first()
+        .is_some_and(|v| world.packs[world.decls[v.decl].pack].lifetime.from.as_str() <= date);
+    match miss {
+        Miss::Before { .. } if covered => Miss::NotInForce { hidden: Vec::new() },
+        other => other,
     }
 }
 

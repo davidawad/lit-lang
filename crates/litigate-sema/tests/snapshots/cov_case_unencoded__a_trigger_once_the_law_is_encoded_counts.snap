@@ -1,0 +1,10 @@
+---
+source: crates/litigate-sema/tests/cov_case_unencoded.rs
+expression: "run(\"2013-01-01\",\n&[\"2010-01-04 Noticed() on d\", \"2010-01-20 Answered() by d\"])"
+---
+[
+    "ok: start tau::done",
+    "trace Triggered Noticed() tau::open -> tau::open",
+    "trace Took Answered() tau::open -> tau::done via tau::answer",
+    "obligation tau::answer #0 Discharged unencoded None",
+]

@@ -27,15 +27,7 @@ impl Cx<'_, '_> {
         let qualified = self.graph.qualify(pack, id);
         let q = logical(&qualified);
         let Some((w, d)) = self.governing(&q, k, false) else {
-            let e = error(
-                C::NoVersionInForce,
-                self.at(k, |e| e.date.as_ref()),
-                format!(
-                    "deadline `{id}` has no version governing {}",
-                    self.sorted[k].1.date
-                ),
-            );
-            self.out.push(e);
+            self.ungoverned(k, id, &q);
             return;
         };
         let (source, event) = self.sorted[k];
@@ -44,6 +36,11 @@ impl Cx<'_, '_> {
             self.foreign(k, &q);
             return;
         };
+        if let Some(earliest) = self.obligations[i].unencoded.clone() {
+            self.close(&[i], Status::Unjudged, source);
+            self.unencoded(k, id, i, &earliest);
+            return;
+        }
         let pack = pack_of(&w);
         let due = self.count(i, pack, d, &self.events(pack), k);
         let trigger = self.sorted[due.trigger].1;
@@ -115,6 +112,52 @@ impl Cx<'_, '_> {
         .note_at(Some(trigger_at), why)
         .note(how)
         .note("record the due date the notice designates in place of `?` to judge it");
+        e.severity = Severity::Warning;
+        self.out.push(e);
+    }
+
+    /// Event `k` takes deadline `id` (logical `q`), which no version
+    /// governs on its date (L3007), naming the date its law is encoded
+    /// from when the date precedes it (`unknown_before`).
+    fn ungoverned(&mut self, k: usize, id: &str, q: &str) {
+        let date = &self.sorted[k].1.date;
+        let unencoded = self.graph.unencoded(q, date, self.case.known_at.as_deref());
+        let mut e = error(
+            C::NoVersionInForce,
+            self.at(k, |e| e.date.as_ref()),
+            match &unencoded {
+                Some((earliest, _)) => {
+                    format!("deadline `{id}` is not encoded before {earliest}: no version governs {date}")
+                }
+                None => format!("deadline `{id}` has no version governing {date}"),
+            },
+        );
+        if let Some((earliest, _)) = &unencoded {
+            e = e.note(crate::temporal::not_encoded(earliest));
+        }
+        self.out.push(e);
+    }
+
+    /// Event `k` took deadline `id` whose instance `i` opened before the
+    /// deadline's law is encoded (from `earliest`; L4010, a warning): fail
+    /// closed, the act is neither timely nor late.
+    fn unencoded(&mut self, k: usize, id: &str, i: usize, earliest: &str) {
+        let event = self.sorted[k].1;
+        let o = &self.obligations[i];
+        let trigger = self.sorted[o.at].1;
+        let trigger_at = self.at(o.at, |e| e.whole.as_ref());
+        let mut e = error(
+            C::TimelinessUnknown,
+            self.at(k, |e| e.date.as_ref()),
+            format!(
+                "`{}` on {} took deadline `{id}`, but `{}` on {} started it before its law is encoded: whether it is timely or late is unknown",
+                display(&event.action),
+                event.date,
+                display(&trigger.action),
+                trigger.date,
+            ),
+        )
+        .note_at(Some(trigger_at), crate::temporal::not_encoded(earliest));
         e.severity = Severity::Warning;
         self.out.push(e);
     }

@@ -17,6 +17,7 @@ use crate::case::spans::error;
 use crate::case::{Effect, Obligation, Status};
 use crate::hir::{
     Bound, BoundDates, Capability, CauseStandard, Deadline, Expr, ExprKind, Extension,
+    Bound, Capability, CauseStandard, Deadline, Declaration, Expr, ExprKind, Extension,
     ExtensionWindow, Motion, TriggerPolicy, Undesignated, Value,
 };
 use crate::temporal::condition::matches;
@@ -292,7 +293,49 @@ impl<'g> Cx<'_, 'g> {
             if displacing {
                 continue;
             }
-            self.create(q, pack_of(w), d, k, &candidates);
+            self.create(q, pack_of(w), d, k, &candidates, None);
+        }
+        fired | self.unencoded_triggers(k, &found)
+    }
+
+    /// Opens an instance, due date unknown, of every deadline whose
+    /// trigger event `k` matches but whose law is not encoded on its date
+    /// (`unknown_before`, SPEC §5.4), with a warning; whether any did.
+    /// Fail closed: a period the corpus does not know is neither absent
+    /// nor counted under a later version.
+    fn unencoded_triggers(&mut self, k: usize, found: &[(String, String, &'g Deadline)]) -> bool {
+        let known_at = self.case.known_at.as_deref();
+        let date = self.sorted[k].1.date.clone();
+        let mut fired = false;
+        for q in self.graph.deadlines() {
+            if found.iter().any(|(f, _, _)| *f == q) {
+                continue;
+            }
+            let Some((earliest, Declaration::Deadline(d))) =
+                self.graph.unencoded(&q, &date, known_at)
+            else {
+                continue;
+            };
+            let view = self.view(pack_of(&q), k);
+            let candidates = match &view.kind {
+                ExprKind::Call { args, .. } if d.chain.is_none() && matches(&d.trigger, view) => {
+                    deadline::variant_args(args)
+                }
+                _ => continue,
+            };
+            let mut e = error(
+                C::NoVersionInForce,
+                self.at(k, |e| e.action.as_ref()),
+                format!(
+                    "`{}` on {date} starts deadline `{q}`, which is not encoded before {earliest}: its due date is unknown",
+                    display(view)
+                ),
+            )
+            .note(crate::temporal::not_encoded(&earliest));
+            e.severity = Severity::Warning;
+            self.out.push(e);
+            self.create(&q, pack_of(&q), d, k, &candidates, Some(&earliest));
+            fired = true;
         }
         fired
     }
@@ -340,7 +383,15 @@ impl<'g> Cx<'_, 'g> {
     }
 
     /// Instances of deadline `q` (in `pack`, version `d`) for event `k`.
-    fn create(&mut self, q: &str, pack: &str, d: &'g Deadline, k: usize, candidates: &[String]) {
+    fn create(
+        &mut self,
+        q: &str,
+        pack: &str,
+        d: &'g Deadline,
+        k: usize,
+        candidates: &[String],
+        unencoded: Option<&str>,
+    ) {
         let source = self.sorted[k].0;
         for bearer in self.bearers(d, k) {
             let open = self.open(q, |b| b == bearer.as_deref());
@@ -368,6 +419,7 @@ impl<'g> Cx<'_, 'g> {
                 extended_to: None,
                 extended_under: None,
                 request_made: None,
+                unencoded: unencoded.map(str::to_owned),
                 status: Status::Open,
                 closed_by: None,
                 at: k,
@@ -436,6 +488,9 @@ impl<'g> Cx<'_, 'g> {
     /// (`to_as_of`: of the events followed by the `as_of` sentinel) under
     /// the deadline declaration governing it; `None` when none does.
     pub(super) fn due_of(&self, i: usize, at: usize, to_as_of: bool) -> Option<Due> {
+        if self.obligations[i].unencoded.is_some() {
+            return None;
+        }
         let (w, d) = self.governing(&self.obligations[i].deadline, at, to_as_of)?;
         let pack = pack_of(&w);
         let events = if to_as_of {

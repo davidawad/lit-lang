@@ -27,6 +27,13 @@ pub enum Miss {
         /// Versions in force on the date whose `known_at` is after the query's.
         hidden: Vec<String>,
     },
+    /// The date precedes every version recorded by the query's `known_at`
+    /// (L3007, `unknown_before`): the law is not encoded before `earliest`,
+    /// a hole in the corpus rather than a finding that no law applied.
+    Before {
+        /// The earliest recorded version's `from`.
+        earliest: String,
+    },
     /// More than one version holds the date (an unchecked L3001 overlap).
     Ambiguous(Vec<Window>),
 }
@@ -68,8 +75,9 @@ impl<T> VersionSet<T> {
     /// `known_at` (`None`: every version, the latest corpus).
     ///
     /// # Errors
-    /// [`Miss::NotInForce`] when none applies, [`Miss::Ambiguous`] when the
-    /// set overlaps on that date.
+    /// [`Miss::Before`] when `as_of` precedes every recorded version,
+    /// [`Miss::NotInForce`] when none applies otherwise, [`Miss::Ambiguous`]
+    /// when the set overlaps on that date.
     pub fn as_of(&self, as_of: &str, known_at: Option<&str>) -> Result<&Version<T>, Miss> {
         let (visible, hidden): (Vec<&Version<T>>, Vec<&Version<T>>) = self
             .versions
@@ -78,6 +86,10 @@ impl<T> VersionSet<T> {
             .partition(|v| known_at.is_none_or(|k| v.known_at.as_str() <= k));
         match visible.as_slice() {
             [one] => Ok(one),
+            [] if hidden.is_empty() => Err(self.before(as_of, known_at).map_or_else(
+                || Miss::NotInForce { hidden: Vec::new() },
+                |earliest| Miss::Before { earliest },
+            )),
             [] => Err(Miss::NotInForce {
                 hidden: hidden.iter().map(|v| v.in_force.display()).collect(),
             }),
@@ -85,6 +97,18 @@ impl<T> VersionSet<T> {
                 many.iter().map(|v| v.in_force.clone()).collect(),
             )),
         }
+    }
+
+    /// The earliest `from` among the versions recorded by `known_at`, when
+    /// `as_of` precedes it: the date before which the law is not encoded.
+    fn before(&self, as_of: &str, known_at: Option<&str>) -> Option<String> {
+        self.versions
+            .iter()
+            .filter(|v| known_at.is_none_or(|k| v.known_at.as_str() <= k))
+            .map(|v| v.in_force.from.as_str())
+            .min()
+            .filter(|earliest| as_of < *earliest)
+            .map(str::to_owned)
     }
 
     /// The version whose window starts on `from` (the `@date` selector).
@@ -178,8 +202,16 @@ mod tests {
         let set = answer_period();
         assert_eq!(set.as_of("2009-11-30", None).map(|v| v.decl), Ok(20));
         assert_eq!(set.as_of("2009-12-01", None).map(|v| v.decl), Ok(21));
+        // Before the earliest version the law is not encoded
+        // (`unknown_before`); with no version recorded yet, nothing is.
         assert_eq!(
             set.as_of("1990-01-01", None),
+            Err(Miss::Before {
+                earliest: "1993-12-01".into()
+            })
+        );
+        assert_eq!(
+            set.as_of("1990-01-01", Some("1990-01-01")),
             Err(Miss::NotInForce { hidden: vec![] })
         );
     }
@@ -304,11 +336,15 @@ mod tests {
             match set.as_of(&d, None) {
                 Ok(v) => prop_assert_eq!(vec![v.decl], holding),
                 Err(miss) => {
-                    prop_assert_eq!(miss, Miss::NotInForce { hidden: vec![] });
                     prop_assert!(holding.is_empty());
                     let first = cuts.first().cloned().unwrap_or_default();
                     let covered_end = set.versions.last().and_then(|v| v.in_force.to.clone());
-                    prop_assert!(d < first || covered_end.is_some_and(|e| d >= e));
+                    if d < first {
+                        prop_assert_eq!(miss, Miss::Before { earliest: first });
+                    } else {
+                        prop_assert_eq!(miss, Miss::NotInForce { hidden: vec![] });
+                        prop_assert!(covered_end.is_some_and(|e| d >= e));
+                    }
                 }
             }
         }

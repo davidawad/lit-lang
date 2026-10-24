@@ -1,0 +1,10 @@
+---
+source: crates/litigate-sema/tests/cov_case_unencoded.rs
+expression: "run(\"2013-01-01\", &[\"2008-06-02 Noticed() on d\"])"
+---
+[
+    "10:14 L3007 `Noticed()` on 2008-06-02 starts deadline `tau::answer`, which is not encoded before 2009-12-01: its due date is unknown\n    note: law not encoded before 2009-12-01 (unknown_before): the corpus records no earlier version, a hole in the corpus, not a finding that no law applied; vendor the earlier text and declare its version",
+    "ok: start tau::open",
+    "trace Triggered Noticed() tau::open -> tau::open",
+    "obligation tau::answer #0 Open unencoded Some(\"2009-12-01\")",
+]

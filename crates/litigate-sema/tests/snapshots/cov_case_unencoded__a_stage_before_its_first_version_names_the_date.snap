@@ -1,0 +1,7 @@
+---
+source: crates/litigate-sema/tests/cov_case_unencoded.rs
+expression: "run(\"2013-01-01\", &[\"1999-06-01 Noticed() on d\"])"
+---
+[
+    "10:3 L3007 stage `tau::open` is not encoded before 2000-01-01: no version is in force on 1999-06-01\n    note: law not encoded before 2000-01-01 (unknown_before): the corpus records no earlier version, a hole in the corpus, not a finding that no law applied; vendor the earlier text and declare its version",
+]

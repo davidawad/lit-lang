@@ -72,8 +72,16 @@ pub fn inactive(
     use world::DiagnosticExt;
     let set = world.versions(key);
     let name = key.display(&key.pack);
-    let base = error_at(at, format!("no version of `{name}` is in force on {as_of}"));
+    let base = error_at(
+        at.clone(),
+        format!("no version of `{name}` is in force on {as_of}"),
+    );
     match why {
+        Inactive::Miss(Miss::Before { earliest }) => error_at(
+            at,
+            format!("`{name}` is not encoded before {earliest}: no version is in force on {as_of}"),
+        )
+        .with_note(None, not_encoded(earliest)),
         Inactive::Miss(Miss::NotInForce { hidden }) if hidden.is_empty() => base.with_note(
             None,
             format!(
@@ -118,6 +126,17 @@ pub fn inactive(
             ),
         ),
     }
+}
+
+/// Why a date before `earliest`, the earliest recorded version, selects
+/// nothing (`unknown_before`, SPEC §5.4): a hole in the corpus.
+#[must_use]
+pub fn not_encoded(earliest: &str) -> String {
+    format!(
+        "law not encoded before {earliest} (unknown_before): the corpus records no earlier \
+         version, a hole in the corpus, not a finding that no law applied; vendor the earlier \
+         text and declare its version"
+    )
 }
 
 fn error_at(at: Span, message: String) -> Diagnostic {

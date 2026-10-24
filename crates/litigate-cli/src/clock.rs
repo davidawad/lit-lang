@@ -11,7 +11,7 @@ use litgraph::clock::{
 use litigate_lower::Lowerer;
 use litigate_sema::hir::{self, DayUnit, Declaration, DueEnd, Expr};
 use litigate_sema::precedence::select::unordered;
-use litigate_sema::temporal::{self, Key, MatterEvent, Ungoverned, World};
+use litigate_sema::temporal::{self, Inactive, Key, MatterEvent, Miss, Ungoverned, World};
 use std::collections::BTreeMap;
 
 /// Every version of every declaration the loaded packages declare, and
@@ -109,9 +109,20 @@ fn governing(
         .map(|g| Some(g.version))
         .map_err(|why| {
             let name = key.display("");
-            if let Ungoverned::Unresolved(pairs) = why {
-                let pairs = unordered(world, &pairs, "");
-                return format!("no single declaration governs {what} `{name}` on {date}: {pairs}");
+            match why {
+                Ungoverned::Unresolved(pairs) => {
+                    let pairs = unordered(world, &pairs, "");
+                    return format!(
+                        "no single declaration governs {what} `{name}` on {date}: {pairs}"
+                    );
+                }
+                Ungoverned::Inactive(Inactive::Miss(Miss::Before { earliest })) => {
+                    return format!(
+                        "{what} `{name}` is not encoded before {earliest}, so nothing governs {date}: {}",
+                        temporal::not_encoded(&earliest)
+                    );
+                }
+                _ => {}
             }
             let recorded = known_at.map_or_else(String::new, |k| format!(" recorded by {k}"));
             format!("no version of {what} `{name}`{recorded} governs {date}")
@@ -682,7 +693,10 @@ deadline chained-nourl: 1.days from deadline(nourl-base).nominal counted_by frcp
         );
         assert_eq!(
             refusal(&none, "answer-period", "2000-01-01"),
-            format!("no version of deadline `{name}::answer-period` governs 2000-01-01")
+            format!(
+                "deadline `{name}::answer-period` is not encoded before 2009-12-01, so nothing governs 2000-01-01: {}",
+                temporal::not_encoded("2009-12-01")
+            )
         );
         assert_eq!(
             refusal(

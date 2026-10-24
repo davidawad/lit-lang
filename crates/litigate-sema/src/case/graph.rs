@@ -266,6 +266,25 @@ impl<'a> Graph<'a> {
         })
     }
 
+    /// When `date` precedes every version of `qualified` recorded by
+    /// `known_at`, the date its law is encoded from and that earliest
+    /// version (`unknown_before`, SPEC §5.4); `None` otherwise.
+    pub fn unencoded(
+        &self,
+        qualified: &str,
+        date: &str,
+        known_at: Option<&str>,
+    ) -> Option<(String, &'a Declaration)> {
+        let key = Self::key(qualified);
+        let Err(temporal::Inactive::Miss(temporal::Miss::Before { earliest })) =
+            temporal::select(&self.world, &key, date, known_at)
+        else {
+            return None;
+        };
+        let version = self.world.versions(&key).starting(&earliest)?.decl;
+        Some((earliest, self.world.decls[version].decl))
+    }
+
     /// The declarations the version of `qualified` in force on `date`
     /// displaces by an `override` or `notwithstanding` claim (SPEC §5.5),
     /// qualified.

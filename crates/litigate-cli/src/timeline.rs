@@ -105,7 +105,8 @@ fn event_key(e: &hir::Event) -> String {
 }
 
 /// A deadline declaration's display label (`answer-period: 30 days after
-/// InstitutionNoticed()`).
+/// InstitutionNoticed()`, or for a designated one `answer-period: the date
+/// InstitutionNoticed() designates, at least 30 days after it`).
 fn deadline_label(d: &hir::Deadline) -> String {
     let unit = match d.unit {
         hir::DayUnit::Calendar => "day",
@@ -120,12 +121,14 @@ fn deadline_label(d: &hir::Deadline) -> String {
         hir::Direction::Forward => "after",
         hir::Direction::Backward => "before",
     };
-    format!(
-        "{}: {} {unit}{plural} {direction} {}",
-        d.meta.id,
-        d.amount,
-        hirx::event_text(&d.trigger)
-    )
+    let trigger = hirx::event_text(&d.trigger);
+    if d.designated.is_some() {
+        return format!(
+            "{}: the date {trigger} designates, at least {} {unit}{plural} {direction} it",
+            d.meta.id, d.amount
+        );
+    }
+    format!("{}: {} {unit}{plural} {direction} {trigger}", d.meta.id, d.amount)
 }
 
 /// Builds one timeline over the loaded packages.

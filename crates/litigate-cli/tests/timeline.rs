@@ -351,16 +351,9 @@ fn a_rule_module_lists_its_deadlines_undated() {
     assert!(rows.iter().all(|r| r["kind"] == "deadline"
         && r["status"]["state"] == "unknown"
         && r["due"].is_null()));
-    // The answer period in force on 2026-10-19 is the 60-day one.
-    assert!(rows
-        .iter()
-        .any(|r| r["label"] == "answer-period: 60 days after InstitutionNoticed()"));
-    let earlier = timeline(&["lit/ttab/ttab.lit", "--as-of", "2026-01-01"]);
-    assert!(earlier["rows"]
-        .as_array()
-        .unwrap()
-        .iter()
-        .any(|r| r["label"] == "answer-period: 30 days after InstitutionNoticed()"));
+    // The answer period is the date the institution notice designates.
+    assert!(rows.iter().any(|r| r["label"]
+        == "answer-period: the date InstitutionNoticed() designates, at least 30 days after it"));
     let default = timeline(&["lit/ttab/ttab.lit"]);
     assert_eq!(default["as_of"], "2026-10-19");
 }

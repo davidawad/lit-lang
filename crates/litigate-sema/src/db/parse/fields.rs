@@ -4,7 +4,7 @@
 use super::tree::{Atom, Expr, ExprKind, Field, Name};
 use super::{elements, head, name, significant_range, Lower, SyntaxElement};
 use crate::db::span::TextRange;
-use litigate_syntax::{SyntaxKind as K, SyntaxNode};
+use litigate_syntax::{SyntaxKind as K, SyntaxNode, SyntaxToken};
 
 impl Lower {
     /// Header clauses that are direct children of `node`, in source order.
@@ -63,12 +63,48 @@ impl Lower {
         Some(Field { key, values, range })
     }
 
-    /// Every field (and `patch`) of a braced `FieldList`.
+    /// Every field (and `patch`, and guard operation) of a braced
+    /// `FieldList`.
     pub(crate) fn field_list(&mut self, node: &SyntaxNode) -> Vec<Field> {
         node.children()
-            .filter(|n| matches!(n.kind(), K::Field | K::PatchDecl))
-            .filter_map(|n| self.field(&n))
+            .filter_map(|n| match n.kind() {
+                K::Field | K::PatchDecl => self.field(&n),
+                K::GuardOp => self.guard_op(&n),
+                _ => None,
+            })
             .collect()
+    }
+
+    /// A `GuardOp` (SPEC §3.6) as a field keyed by its operator words
+    /// (`when and`, `when or`, `supersedes when`, which no other key can
+    /// spell): its condition, then its `by`, version and `cite` clauses as
+    /// nested fields. `None` without a condition (a parse error).
+    fn guard_op(&mut self, node: &SyntaxNode) -> Option<Field> {
+        let words: Vec<SyntaxToken> = elements(node)
+            .map_while(rowan::NodeOrToken::into_token)
+            .collect();
+        let key = Name {
+            text: words
+                .iter()
+                .map(SyntaxToken::text)
+                .collect::<Vec<_>>()
+                .join(" "),
+            range: words
+                .iter()
+                .map(|t| super::range(t.text_range()))
+                .reduce(TextRange::cover)?,
+        };
+        let condition = node
+            .children()
+            .find(|c| c.kind() != K::CiteExpr && super::is_expr(c.kind()))?;
+        let condition = self.expr(&condition)?;
+        let clauses = self.clauses(node);
+        let mut values = vec![(Atom::Expr(condition.clone()), condition.range)];
+        if let Some(r) = clauses.iter().map(|f| f.range).reduce(TextRange::cover) {
+            values.push((Atom::Fields(clauses), r));
+        }
+        let range = values.iter().fold(key.range, |acc, (_, r)| acc.cover(*r));
+        Some(Field { key, values, range })
     }
 }
 

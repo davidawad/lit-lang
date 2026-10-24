@@ -29,6 +29,25 @@ impl<'a> Selection<'a> {
         }
     }
 
+    /// The authority lattice every loaded package shares.
+    pub fn lattice(&self) -> &litigate_sema::precedence::Lattice {
+        self.world.lattice()
+    }
+
+    /// The emitted version of the node of pack `pack` with edge `edge`.
+    pub fn node_with_edge(&self, pack: &str, edge: &str) -> Option<&'a hir::Node> {
+        self.world.decls.iter().find_map(|d| match d.decl {
+            Declaration::Node(n)
+                if self.world.packs[d.pack].pack == pack
+                    && n.edges.iter().any(|e| e.id.as_deref() == Some(edge))
+                    && self.emits(pack, d.decl) == Ok(true) =>
+            {
+                Some(n)
+            }
+            _ => None,
+        })
+    }
+
     /// Whether `decl` of pack `pack` is the version this build emits.
     /// Declarations without versions (links, instances, types) always are;
     /// a declaration with no version in force, or displaced by a claimant

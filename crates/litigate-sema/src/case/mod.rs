@@ -142,6 +142,11 @@ pub struct Step {
     /// The qualified edge taken, if it has an id (or the fact's edge).
     #[serde(skip_serializing_if = "Option::is_none")]
     pub edge: Option<String>,
+    /// For a fact a guard derived on an instance's edge, the patch's guard
+    /// operations that composed that guard (SPEC §3.6), in the order they
+    /// applied, each with its authority.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub guard_ops: Vec<crate::guard::Applied>,
 }
 
 /// How a replay step moved the matter.

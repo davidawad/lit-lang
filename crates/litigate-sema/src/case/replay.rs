@@ -538,6 +538,7 @@ impl<'c, 'g> Cx<'c, 'g> {
             from: from.to_owned(),
             to: to.to_owned(),
             edge,
+            guard_ops: Vec::new(),
         });
     }
 

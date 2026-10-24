@@ -360,7 +360,7 @@ pub(crate) fn stake_value(p: &mut Parser<'_>) -> bool {
 }
 
 /// `patch Ident PatchFields` inside an instance: typed edge fields, each
-/// replacing the base edge's, and the reserved [`guard_op`]s.
+/// replacing the base edge's, and [`guard_op`]s.
 pub(crate) fn patch(p: &mut Parser<'_>) -> bool {
     if !p.at_kw(KwPatch) {
         return false;
@@ -388,17 +388,15 @@ fn patch_fields(p: &mut Parser<'_>) -> bool {
 }
 
 /// `GuardOp = ("when" ("and" | "or") | "supersedes" "when") Expr
-/// { VersionClause | Cite }` (SPEC §3.6): a typed operation on the patched
-/// edge's guard with its authority, parsed in full so the rest of the file
-/// parses, then rejected as L0010 until the operations are implemented.
-/// `and` and `or` are reserved words the lexer already reports; the
-/// `supersedes when` form is reported here.
+/// { "by" Ident | VersionClause | Cite }` (SPEC §3.6): a typed operation
+/// on the patched edge's guard (narrow, widen, replace) with its
+/// authority. `and` and `or` are keywords only here; the lexer reports
+/// them anywhere else ([`crate::GUARD_OP_WORDS`]).
 fn guard_op(p: &mut Parser<'_>) -> bool {
     let combines = p.at_kw(KwWhen) && (p.nth_kw(1, KwAnd) || p.nth_kw(1, KwOr));
     if !combines && !p.at_kw(KwSupersedes) {
         return false;
     }
-    let start = p.current_range().start();
     p.start(GuardOp);
     if combines {
         p.bump_as(KwWhen);
@@ -415,19 +413,13 @@ fn guard_op(p: &mut Parser<'_>) -> bool {
     } else {
         p.error_expected(&[KwWhen]);
     }
-    while super::clauses::version_clause(p) || super::values::cite(p) {}
-    p.finish();
-    if !combines {
-        let end = p.last_end().max(usize::from(start));
-        p.push_error(SyntaxError::new(
-            DiagnosticCode::ReservedGuardOp,
-            range(usize::from(start), end),
-            format!(
-                "{}: `supersedes when p` replaces a patched edge's guard, which a later \
-                 change adds; patch the edge's other fields",
-                crate::lexer::RESERVED_GUARD_OP
-            ),
-        ));
+    loop {
+        if p.at_kw(KwBy) && p.nth(1) == Ident {
+            keyword_field(p, KwBy, Some(reference));
+        } else if !(super::clauses::version_clause(p) || super::values::cite(p)) {
+            break;
+        }
     }
+    p.finish();
     true
 }

@@ -111,14 +111,14 @@ pub const REFINEMENT_WORDS: [&str; 1] = ["where"];
 /// Message prefix of every L0009 diagnostic (SPEC §2.1).
 pub const RESERVED_REFINEMENT: &str = "reserved: refinements (SMT tier)";
 
-/// Words reserved for the typed guard operations of a patch (SPEC §3.6):
+/// The keywords of the typed guard operations of a patch (SPEC §3.6):
 /// `when and p` narrows the patched edge's guard, `when or p` widens it.
-/// L0010 wherever they appear, in the grammar's `GuardOp` slot as well as
-/// anywhere an identifier could stand.
+/// They are keywords only in the grammar's `GuardOp` slot; anywhere else,
+/// where an identifier could stand, they are L0010.
 pub const GUARD_OP_WORDS: [&str; 2] = ["and", "or"];
 
 /// Message prefix of every L0010 diagnostic (SPEC §3.6).
-pub const RESERVED_GUARD_OP: &str = "reserved: typed guard operations";
+pub const RESERVED_GUARD_OP: &str = "reserved: guard-operation keyword";
 
 /// Words reserved for filing requirements (SPEC §3.7): `limit` declares a
 /// paper kind's length limits, `requires certificate` the certificates it
@@ -222,8 +222,8 @@ impl Lexer<'_> {
                         end,
                         format!(
                             "{RESERVED_GUARD_OP}: `{text}` combines a patched edge's guard \
-                             (`when {text} p`), which a later change adds; it cannot be written or \
-                             used as an identifier"
+                             only in `when {text} p` inside a `patch`; it cannot be used as an \
+                             identifier"
                         ),
                     );
                 } else if FILING_WORDS.contains(&text) {

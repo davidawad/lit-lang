@@ -1,9 +1,12 @@
 //! Instances of a links package (SPEC §8.4): `instance base@origin`, its
 //! probabilities, roles, and typed `patch`es.
 use super::cx::{first_expr, first_ref, holes_of, nested, Cx};
-use crate::db::parse::tree::{Expr, ExprKind, Field, Name, RefPath};
+use crate::db::parse::tree::{Atom, Expr, ExprKind, Field, Name, RefPath};
 use crate::db::span::Report;
-use crate::hir::{self, ActorRole, BinaryOp, EdgePatch, Instance, Type, UnaryOp, Value};
+use crate::hir::{
+    self, ActorRole, BinaryOp, EdgePatch, GuardOp, GuardOpKind, Instance, Interval, Type, UnaryOp,
+    Value,
+};
 use litigate_base::{Applicability, DiagnosticCode as C};
 use std::collections::BTreeMap;
 
@@ -173,17 +176,21 @@ impl Cx<'_, '_> {
     }
 
     /// `patch edge { ... }`: the edge fields written, typed as on an edge
-    /// declaration. `event`, `replaces` and `when` are not patchable: replay
-    /// binds the base edge and derives facts from the base guards, and only
-    /// a link replaces edges. A guard changes only by an explicit operation
-    /// with its authority (`when and`, `when or`, `supersedes when`; SPEC
-    /// §3.6), reserved today (L0010), never by an implicit overwrite.
+    /// declaration, and the typed operations on its guard. `event`,
+    /// `replaces` and `when` are not patchable: replay binds the base edge,
+    /// only a link replaces edges, and a guard changes only by an explicit
+    /// operation with its authority (`when and`, `when or`, `supersedes
+    /// when`; SPEC §3.6), never by an implicit overwrite.
     fn patch(&mut self, p: &Field) -> (String, EdgePatch) {
         // The parser writes a patch only after its edge's identifier.
         let edge = first_ref(Some(&p))
             .map(RefPath::display)
             .unwrap_or_default();
-        let fields = self.once(nested(p));
+        let (ops, written): (Vec<Field>, Vec<Field>) = nested(p)
+            .iter()
+            .cloned()
+            .partition(|f| GUARD_OPS.iter().any(|(k, _)| *k == f.key.text));
+        let fields = self.once(&written);
         for key in ["event", "replaces"] {
             if let Some(f) = fields.get(key) {
                 self.not_allowed(f, "in a `patch`: it writes the base edge's other fields");
@@ -206,18 +213,117 @@ impl Cx<'_, '_> {
                 .note(
                     "a guard changes only by an explicit operation citing its authority: \
                      `when and p` narrows it, `when or p` widens it, `supersedes when p` \
-                     replaces it (SPEC §3.6; reserved, L0010)",
+                     replaces it (SPEC §3.6)",
                 ),
             );
         }
         let patch = EdgePatch {
             span: self.ck.span(p.range),
-            holes: holes_of(nested(p)),
+            holes: holes_of(&written),
+            guard_ops: ops.iter().filter_map(|f| self.guard_op(f)).collect(),
             ..self.edge_fields(&fields)
         };
         (edge, patch)
     }
+
+    /// One typed guard operation (SPEC §3.6): its condition, typed as a
+    /// fact edge's `when`, and its authority, which is required whole: the
+    /// instrument's level (`by Level`), `effective` interval and `cite`. An
+    /// operation missing any of them is L2007 and dropped (fail-closed),
+    /// never defaulted.
+    fn guard_op(&mut self, f: &Field) -> Option<GuardOp> {
+        let kind = GUARD_OPS
+            .iter()
+            .find(|(k, _)| *k == f.key.text)
+            .map(|(_, kind)| *kind)?;
+        let condition = self.guard(f, true, true);
+        let clauses = self.once(nested(f));
+        let by = first_ref(clauses.get("by")).and_then(|r| {
+            self.ck
+                .scope
+                .authority(&r.head)
+                .map_err(|e| self.ck.report(e))
+                .ok()
+                .map(|()| r.head.text.clone())
+        });
+        let cite = match clauses.get("cite").and_then(|c| first_expr(c)) {
+            Some(Expr {
+                kind: ExprKind::Hole(reason),
+                range,
+            }) => {
+                self.ck.holes.push((*range, reason.clone()));
+                Some(hir::Authored::Hole(reason.clone()))
+            }
+            _ => Self::string(clauses.get("cite")).map(hir::Authored::Known),
+        };
+        let effective = match clauses.get("effective").and_then(|e| e.values.first()) {
+            Some((Atom::Interval(from, to), _)) => {
+                if let Some(to) = to.as_ref().filter(|to| to.text <= from.text) {
+                    self.report(Report::new(
+                        C::InvalidField,
+                        from.range.cover(to.range),
+                        format!("empty interval [{}, {})", from.text, to.text),
+                    ));
+                }
+                let known_at = match clauses.get("known_at").and_then(|k| first_expr(k)) {
+                    Some(Expr {
+                        kind: ExprKind::Date(d),
+                        ..
+                    }) => Some(d.clone()),
+                    _ => self.manifest.map(|m| m.in_force.known_at.clone()),
+                };
+                Some(Interval {
+                    from: from.text.clone(),
+                    to: to.as_ref().map(|t| t.text.clone()),
+                    known_at: known_at.unwrap_or_default(),
+                })
+            }
+            _ => None,
+        };
+        let missing: Vec<&str> = [
+            ("`by Level`", clauses.contains_key("by")),
+            ("`effective [from, to)`", clauses.contains_key("effective")),
+            ("`cite`", clauses.contains_key("cite")),
+        ]
+        .into_iter()
+        .filter_map(|(what, written)| (!written).then_some(what))
+        .collect();
+        if !missing.is_empty() {
+            self.report(
+                Report::new(
+                    C::InvalidField,
+                    f.key.range,
+                    format!(
+                        "`{}` needs its authority: {} missing",
+                        f.key.text,
+                        missing.join(", ")
+                    ),
+                )
+                .note(
+                    "a guard operation is a modification by a later instrument: it names the \
+                     instrument's authority level, the date it takes effect and the instrument \
+                     (SPEC §3.6); without them it does not apply",
+                ),
+            );
+        }
+        Some(GuardOp {
+            kind,
+            condition: condition?,
+            by: by?,
+            cite: cite?,
+            effective: effective?,
+            span: self.ck.span(f.range),
+        })
+    }
 }
+
+/// The guard operations' keys (the parse tree spells each by its words)
+/// and kinds.
+const GUARD_OPS: [(&str, GuardOpKind); 3] = [
+    ("when and", GuardOpKind::Narrow),
+    ("when or", GuardOpKind::Widen),
+    ("supersedes when", GuardOpKind::Replace),
+];
 
 /// Whether `x` names `name` anywhere.
 fn reads(x: &Expr, name: &str) -> bool {

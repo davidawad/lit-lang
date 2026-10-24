@@ -168,6 +168,7 @@ pub fn parse(text: &str, kind: FileKind) -> Parse {
         FileKind::Case => case_file(&mut parser),
     }
     let (green, parse_errors) = parser.finish_file();
+    licensed_guard_words(&green, &mut errors);
     let lexical = errors.clone();
     errors.extend(parse_errors.into_iter().filter(|error| {
         !lexical.iter().any(|lex| {
@@ -186,6 +187,17 @@ pub fn parse(text: &str, kind: FileKind) -> Parse {
         errors,
         kind,
     }
+}
+
+/// Drops the lexer's L0010 for each `and`/`or` the parser read as a keyword
+/// of a guard operation (SPEC §3.6): the only place they may stand.
+fn licensed_guard_words(green: &GreenNode, errors: &mut Vec<SyntaxError>) {
+    let keywords: Vec<_> = SyntaxNode::new_root(green.clone())
+        .descendants_with_tokens()
+        .filter(|t| matches!(t.kind(), SyntaxKind::KwAnd | SyntaxKind::KwOr))
+        .map(|t| t.text_range())
+        .collect();
+    errors.retain(|e| e.code != DiagnosticCode::ReservedGuardOp || !keywords.contains(&e.range));
 }
 
 /// Parses a `.lit` rule module.

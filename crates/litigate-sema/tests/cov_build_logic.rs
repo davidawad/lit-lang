@@ -109,11 +109,12 @@ instance base@three { note \"no pack\" }\n",
     insta::assert_debug_snapshot!(out);
 }
 
-/// The typed guard operations of a patch (SPEC §3.6) are reserved: each is
-/// L0010 alone, never also the L2007 of a plain `when`, and the patch's
-/// other fields still check.
+/// The typed guard operations of a patch (SPEC §3.6) need their whole
+/// authority (`by`, `effective`, `cite`): each missing part is named in one
+/// L2007, never also the L2007 of a plain `when`, and the patch's other
+/// fields still check.
 #[test]
-fn patch_guard_operations_are_reserved() {
+fn patch_guard_operations_need_their_authority() {
     let out = links(
         "module links\n\
 instance base@one { pack base,\n\

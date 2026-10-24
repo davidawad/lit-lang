@@ -207,23 +207,13 @@ fn patched(body: &str) -> super::Parse {
 }
 
 #[test]
-fn guard_operations_parse_into_their_slot_and_are_reserved() {
+fn guard_operations_parse_into_their_slot() {
     let parsed = patched(
-        "    note \"narrowed\"\n    when and has_event(Served()) effective [2026-11-01, ..) cite \
-         \"Fed. Cir. R. 1\"\n    when or date_of(Served()) < 2026-01-01\n    supersedes when \
-         true known_at 2026-10-01 cite ?(\"Order, Dkt. 12\")\n    note \"after\"",
+        "    note \"narrowed\"\n    when and has_event(Served()) by CaseOrder effective \
+         [2026-11-01, ..) cite \"Fed. Cir. R. 1\"\n    when or date_of(Served()) < 2026-01-01\n    \
+         supersedes when true known_at 2026-10-01 cite ?(\"Order, Dkt. 12\")\n    note \"after\"",
     );
-    assert_eq!(codes(&parsed), ["L0010", "L0010", "L0010"]);
-    for error in parsed.errors() {
-        assert!(error.message.starts_with(crate::RESERVED_GUARD_OP));
-    }
-    assert!(parsed.errors()[0].message.contains("`and`"));
-    assert!(parsed.errors()[1].message.contains("`or`"));
-    // The `supersedes when` form is reported over the whole operation.
-    let text = parsed.syntax().text().to_string();
-    let range = parsed.errors()[2].range;
-    assert!(text[range].starts_with("supersedes when true known_at"));
-    assert!(text[range].ends_with("Dkt. 12\")"));
+    assert!(parsed.is_ok(), "{:?}", parsed.errors());
     let kinds = node_kinds(&parsed);
     assert_eq!(
         kinds.iter().filter(|k| **k == SyntaxKind::GuardOp).count(),
@@ -240,23 +230,26 @@ fn guard_operations_parse_into_their_slot_and_are_reserved() {
             .descendants_with_tokens()
             .any(|t| t.kind() == kw));
     }
-    // The patch's own fields stay `Field`s beside the reserved slots.
+    // The patch's own fields stay `Field`s beside the operations, and the
+    // operation's `by` level is one too.
     let fields = parsed
         .syntax()
         .descendants()
         .filter(|n| n.kind() == SyntaxKind::Field)
         .count();
-    assert_eq!(fields, 3, "{kinds:?}");
+    assert_eq!(fields, 4, "{kinds:?}");
 }
 
 #[test]
 fn a_malformed_guard_operation_reports_where_it_breaks() {
     let no_when = patched("    supersedes true");
-    assert_eq!(codes(&no_when), ["L0010", "L0001"]);
+    assert_eq!(codes(&no_when), ["L0001"]);
     let bare = patched("    when and");
-    assert_eq!(codes(&bare), ["L0010", "L0001"]);
+    assert_eq!(codes(&bare), ["L0001"]);
     let bare = patched("    supersedes when");
-    assert_eq!(codes(&bare), ["L0010", "L0001"]);
+    assert_eq!(codes(&bare), ["L0001"]);
+    // `by` with no level is not a clause of the operation.
+    assert_eq!(codes(&patched("    when or true by")), ["L0001"]);
     // A plain `when` is still a field; sema rejects it in a patch (L2007).
     assert!(patched("    when true").is_ok());
 }

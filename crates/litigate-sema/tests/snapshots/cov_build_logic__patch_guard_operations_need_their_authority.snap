@@ -1,0 +1,11 @@
+---
+source: crates/litigate-sema/tests/cov_build_logic.rs
+expression: out
+---
+[
+    "pkgs/links/links.lit:5:1 L2007 `when and` needs its authority: `by Level` missing",
+    "pkgs/links/links.lit:5:20 L1002 cannot find function or event `Go`",
+    "pkgs/links/links.lit:6:1 L2007 `when or` needs its authority: `by Level`, `effective [from, to)`, `cite` missing",
+    "pkgs/links/links.lit:7:1 L2007 `supersedes when` needs its authority: `by Level`, `effective [from, to)` missing",
+    "pkgs/links/links.lit:8:8 L1002 cannot find name `nowhere`",
+]

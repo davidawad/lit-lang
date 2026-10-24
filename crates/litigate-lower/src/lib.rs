@@ -139,6 +139,7 @@ impl Build<'_, '_> {
             as_of: self.selection.as_of.clone(),
             known_at: self.selection.known_at.clone(),
             entries: Vec::new(),
+            guards: Vec::new(),
         }
     }
 

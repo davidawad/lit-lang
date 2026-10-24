@@ -2,6 +2,7 @@
 //! lockfiles, name resolution, type checking, and HIR (SPEC §4-§6, §11).
 pub mod case;
 pub mod db;
+pub mod guard;
 pub mod hir;
 pub mod pkg;
 pub mod precedence;

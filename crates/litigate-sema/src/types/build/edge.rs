@@ -127,13 +127,14 @@ impl Cx<'_, '_> {
             forbids: list(self, "forbids"),
             span: None,
             holes: BTreeMap::new(),
+            guard_ops: Vec::new(),
         }
     }
 
     /// A fact edge's `when` guard (SPEC §5.1): a condition over the
     /// matter's history, allowed only on the named edges of a `fact` node
     /// (the fact it derives names its edge).
-    fn guard(&mut self, f: &Field, fact: bool, named: bool) -> Option<crate::hir::Expr> {
+    pub(super) fn guard(&mut self, f: &Field, fact: bool, named: bool) -> Option<crate::hir::Expr> {
         if !fact {
             self.not_allowed(f, "outside the edges of a `fact` chance node");
             return None;

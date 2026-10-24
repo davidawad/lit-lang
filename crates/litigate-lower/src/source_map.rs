@@ -157,6 +157,54 @@ pub struct SourceMap {
     pub known_at: Option<String>,
     /// Entries in document order.
     pub entries: Vec<Entry>,
+    /// A links document's patched guards (SPEC §3.6), by instance then
+    /// edge: the provenance of each guard operation.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub guards: Vec<GuardTrace>,
+}
+
+/// One patched edge's guard and the typed operations on it (SPEC §3.6),
+/// so an alternate timeline can diff guards between change-file sets.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+pub struct GuardTrace {
+    /// The patch's JSON pointer (`/instances/<name>/patch_edges/<edge>`).
+    pub pointer: String,
+    /// The base edge's own guard, in the base pack's view; absent when it
+    /// has none.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub base: Option<String>,
+    /// Every operation, in the order they apply (authority, then
+    /// effective date; never source order).
+    pub ops: Vec<GuardOpTrace>,
+    /// The guard in force at the build dates; absent when there is none.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub composed: Option<String>,
+}
+
+/// One guard operation with its authority.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+pub struct GuardOpTrace {
+    /// `narrow`, `widen` or `replace`.
+    pub op: String,
+    /// The condition, in the base pack's view.
+    pub condition: String,
+    /// The instrument's authority level.
+    pub by: String,
+    /// The instrument; a hole's reason when unverified (it then never
+    /// applies).
+    pub cite: String,
+    /// First day in force.
+    pub from: String,
+    /// First day no longer in force; absent when open.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub to: Option<String>,
+    /// When the instrument became known.
+    pub known_at: String,
+    /// Whether it is in force at the build dates.
+    pub applied: bool,
+    /// Declaring source span.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub span: Option<Span>,
 }
 
 /// Resolves citations under one pack's citation syntax and source

@@ -453,6 +453,7 @@ pub(crate) fn case(
         })
         .chain(removal_entries(build, case, &at))
         .collect(),
+        guards: Vec::new(),
         generated: crate::source_map::Generated::default(),
     };
     Some((named, map))

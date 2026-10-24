@@ -291,4 +291,65 @@ pub struct EdgePatch {
     /// their reasons.
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub holes: BTreeMap<String, Option<String>>,
+    /// The typed operations on the base edge's guard (SPEC §3.6), in
+    /// source order; [`crate::guard::compose`] applies them in the order
+    /// their authorities and effective dates fix. Only operations with
+    /// their whole authority are kept (the rest are reported).
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub guard_ops: Vec<GuardOp>,
+}
+
+/// What a guard operation does to the guard `g` in force (SPEC §3.6).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum GuardOpKind {
+    /// `when and C`: `g && C`.
+    Narrow,
+    /// `when or C`: `g || C`.
+    Widen,
+    /// `supersedes when C`: `C`.
+    Replace,
+}
+
+impl GuardOpKind {
+    /// The name (`narrow`, `widen`, `replace`).
+    #[must_use]
+    pub const fn name(self) -> &'static str {
+        match self {
+            Self::Narrow => "narrow",
+            Self::Widen => "widen",
+            Self::Replace => "replace",
+        }
+    }
+
+    /// The source spelling (`when and`).
+    #[must_use]
+    pub const fn keyword(self) -> &'static str {
+        match self {
+            Self::Narrow => "when and",
+            Self::Widen => "when or",
+            Self::Replace => "supersedes when",
+        }
+    }
+}
+
+/// A typed operation on a patched edge's guard with its authority (SPEC
+/// §3.6): the instrument's level, `cite` and `effective` interval.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct GuardOp {
+    /// Narrow, widen or replace.
+    pub kind: GuardOpKind,
+    /// The `Bool` condition, typed as a `when` guard (SPEC §5.1), in the
+    /// view of the package that writes it.
+    pub condition: super::Expr,
+    /// The instrument's authority level (`by Level`).
+    pub by: String,
+    /// The instrument (`cite`); a hole leaves it unverified and the
+    /// operation then does not apply.
+    pub cite: Authored<String>,
+    /// When it is in force (`effective`), and when it became known
+    /// (`known_at`, else the package's).
+    pub effective: super::Interval,
+    /// Source span of the operation.
+    pub span: Option<litigate_base::Span>,
 }

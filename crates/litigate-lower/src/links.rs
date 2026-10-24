@@ -1,12 +1,13 @@
 //! A links package to a litgraph `LinkFile` (SPEC §8.4).
 use crate::diag::Sink;
 use crate::edge::{self, EdgeCx};
-use crate::source_map::{Citations, Entry, SourceMap};
+use crate::source_map::{Citations, Entry, GuardOpTrace, GuardTrace, SourceMap};
 use crate::Build;
 use litgraph::model::{
     local_edge_ids, pointer_token, Hole, Instance, LinkFile, Pack, RawEdge, LINKS_SCHEMA_VERSION,
 };
 use litigate_base::{DiagnosticCode as C, Span};
+use litigate_sema::guard;
 use litigate_sema::hir::{self, Declaration};
 use serde_json::{Map, Value};
 use std::collections::BTreeMap;
@@ -28,6 +29,7 @@ pub(crate) fn links(
     let mut spans: BTreeMap<String, Option<Span>> = BTreeMap::new();
     let mut bases: BTreeMap<String, Option<Pack>> = BTreeMap::new();
     let mut instance_holes: Vec<Hole> = Vec::new();
+    let mut guards = Vec::new();
     for d in decls {
         match d {
             Declaration::Link(l) => {
@@ -42,6 +44,7 @@ pub(crate) fn links(
                     .or_insert_with(|| base_pack(build, &i.pack));
                 if let Some(instance) = instance(&cx, sink, i, base.as_ref(), span.as_ref()) {
                     instance_holes.extend(holes_of(i));
+                    guards.extend(guard_traces(build, &pkg.manifest.pack_id, i, &instance));
                     spans.insert(i.name.clone(), span);
                     instances.insert(i.name.clone(), instance);
                 }
@@ -92,9 +95,68 @@ pub(crate) fn links(
         id: String::new(),
         package: Some(build.package_ref(pkg)),
         entries: link_entries.chain(instance_entries).collect(),
+        guards,
         ..build.map_header()
     };
     (file, map)
+}
+
+/// The guard provenance of instance `i`'s patches that lowered (SPEC
+/// §3.6): each patched edge's base guard, its operations in the order
+/// they apply with their authority and whether each is in force at the
+/// build dates, and the guard they compose then.
+fn guard_traces(
+    build: &Build<'_, '_>,
+    from: &str,
+    i: &hir::Instance,
+    lowered: &Instance,
+) -> Vec<GuardTrace> {
+    let base = i.pack.as_str();
+    let selection = &build.selection;
+    let (as_of, known_at) = (selection.as_of.as_str(), selection.known_at.as_deref());
+    i.patch_edges
+        .iter()
+        .filter(|(edge, p)| !p.guard_ops.is_empty() && lowered.patch_edges.contains_key(*edge))
+        .map(|(edge, p)| {
+            let guard = selection
+                .node_with_edge(base, edge)
+                .and_then(|n| n.edges.iter().find(|e| e.id.as_deref() == Some(edge)))
+                .and_then(|e| e.guard.as_ref());
+            let ops: Vec<hir::GuardOp> = p
+                .guard_ops
+                .iter()
+                .map(|op| guard::respelled(op, from, base))
+                .collect();
+            let refs: Vec<&hir::GuardOp> = ops.iter().collect();
+            let composed = guard::compose(selection.lattice(), guard, &refs, as_of, known_at);
+            GuardTrace {
+                pointer: format!(
+                    "/instances/{}/patch_edges/{}",
+                    pointer_token(&i.name),
+                    pointer_token(edge)
+                ),
+                base: guard.map(guard::text),
+                ops: guard::order(selection.lattice(), &refs)
+                    .into_iter()
+                    .map(|k| {
+                        let a = guard::Applied::of(refs[k]);
+                        GuardOpTrace {
+                            op: a.op.name().to_owned(),
+                            condition: a.condition,
+                            by: a.by,
+                            cite: a.cite,
+                            from: a.from,
+                            to: a.to,
+                            known_at: a.known_at,
+                            applied: composed.applied.contains(&k),
+                            span: refs[k].span.clone(),
+                        }
+                    })
+                    .collect(),
+                composed: composed.guard.as_ref().map(guard::text),
+            }
+        })
+        .collect()
 }
 
 /// The holes of instance `i`: a `stake` hole and each patch's.

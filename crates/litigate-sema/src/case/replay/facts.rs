@@ -14,6 +14,7 @@ use super::Cx;
 use crate::case::graph::pack_of;
 use crate::case::spans::error;
 use crate::case::{Effect, Step};
+use crate::guard::Applied;
 use crate::hir::{BinaryOp, Declaration, Expr, ExprKind, Node, Value};
 use crate::temporal::condition::{eval, has_event, matches};
 use litigate_base::DiagnosticCode as C;
@@ -30,7 +31,7 @@ impl<'g> Cx<'_, 'g> {
         let mut followed = BTreeSet::new();
         loop {
             let node = self.node(&posture, k)?;
-            let Some(edge) = self
+            let Some((edge, guard_ops)) = self
                 .fact_edge(&posture, node, k)
                 .filter(|_| followed.insert(posture.clone()))
             else {
@@ -50,6 +51,7 @@ impl<'g> Cx<'_, 'g> {
                 from: posture,
                 to: next.clone(),
                 edge: Some(edge),
+                guard_ops,
             });
             posture = next;
         }
@@ -65,7 +67,7 @@ impl<'g> Cx<'_, 'g> {
         if let Ok((_, Declaration::Node(node))) =
             self.graph.governing(posture, &events, at, known_at)
         {
-            if let Some(edge) = self.fact_edge(posture, node, at) {
+            if let Some((edge, _)) = self.fact_edge(posture, node, at) {
                 self.derived.insert(posture.to_owned(), edge);
             }
         }
@@ -74,19 +76,32 @@ impl<'g> Cx<'_, 'g> {
     /// The qualified edge that resolves fact node `posture` (version `node`)
     /// before sorted event `k` (`as_of` when `k` is past the last event):
     /// the edge whose guard holds, which a `facts` entry must agree with
-    /// (L4003), else the `facts` entry. `None` for any other node.
-    fn fact_edge(&mut self, posture: &str, node: &Node, k: usize) -> Option<String> {
+    /// (L4003), else the `facts` entry. `None` for any other node. An
+    /// instance's edge reads its guard as the patch's guard operations in
+    /// force on that date compose it (SPEC §3.6); the operations that made
+    /// the deciding guard come back for the trace.
+    fn fact_edge(&mut self, posture: &str, node: &'g Node, k: usize) -> Option<(String, Vec<Applied>)> {
         if !node.tags.iter().any(|t| t == "fact") {
             return None;
         }
         let pack = pack_of(posture);
+        let date = self
+            .sorted
+            .get(k)
+            .map_or(self.case.as_of.as_str(), |(_, e)| e.date.as_str());
+        let known_at = self.case.known_at.as_deref();
+        let mut applied = Vec::new();
         let derived = node
             .edges
             .iter()
             .find(|e| {
-                e.guard
-                    .as_ref()
-                    .is_some_and(|g| eval(g, &mut |a| self.atom(pack, k, a)) == Some(true))
+                let (guard, ops) = self.graph.guard(posture, e, date, known_at);
+                let holds = guard
+                    .is_some_and(|g| eval(&g, &mut |a| self.atom(pack, k, a)) == Some(true));
+                if holds {
+                    applied = ops.into_iter().map(Applied::of).collect();
+                }
+                holds
             })
             .and_then(|e| e.id.as_ref())
             .map(|id| format!("{pack}::{id}"));
@@ -101,9 +116,10 @@ impl<'g> Cx<'_, 'g> {
                 )
                 .note("a `when` guard that holds derives the fact; drop the `facts` entry or correct the history");
                 self.out.push(e);
-                Some(d)
+                Some((d, applied))
             }
-            (derived, stated) => derived.or(stated),
+            (Some(d), _) => Some((d, applied)),
+            (None, stated) => stated.map(|s| (s, Vec::new())),
         }
     }
 

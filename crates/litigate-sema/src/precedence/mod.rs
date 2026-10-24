@@ -35,5 +35,6 @@ pub fn check(world: &World<'_>, loc: &dyn Locate, pack: usize) -> Vec<Diagnostic
     out.extend(delegation::check(world, &lattice, loc, pack));
     out.extend(defeasible::check(world, loc, pack));
     out.extend(shape::check(world, loc, pack));
+    out.extend(crate::guard::check(world, pack));
     out
 }

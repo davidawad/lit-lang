@@ -8,8 +8,8 @@
 //! expression into another package's view before it is compared with that
 //! package's patterns.
 use crate::hir::{
-    DeadlineWindow, Declaration, Edge, EdgeDeadline, EventType, Expr, ExprKind, Extension, Node,
-    Package, Relation, Type, Value,
+    DeadlineWindow, Declaration, Edge, EdgeDeadline, EventType, Expr, ExprKind, Extension, GuardOp,
+    Node, Package, Relation, Type, Value,
 };
 use crate::precedence;
 use crate::temporal::{self, Key, MatterEvent, World};
@@ -24,6 +24,10 @@ pub(super) struct Graph<'a> {
     /// Link edges by qualified `from` node, each with the from node's pack
     /// and respelled into its view (see [`Graph::new`]).
     links: BTreeMap<String, Vec<(String, Edge)>>,
+    /// The guard operations of the used links packages' patches (SPEC
+    /// §3.6) by qualified instance edge `base@origin::edge`, respelled into
+    /// the base pack's view.
+    guard_ops: BTreeMap<String, Vec<GuardOp>>,
     /// Loaded transitive dependencies of the used packages that are not
     /// themselves used: vocabulary (their enums) and law a used package's
     /// declarations read (a chained period's base, a counting rule), but
@@ -52,10 +56,29 @@ impl<'a> Graph<'a> {
             deps,
             packages,
             links: BTreeMap::new(),
+            guard_ops: BTreeMap::new(),
         };
         let mut links: BTreeMap<String, Vec<(String, Edge)>> = BTreeMap::new();
         for p in &graph.packages {
             for d in declarations(p) {
+                if let Declaration::Instance(i) = d {
+                    let from = p.manifest.pack_id.as_str();
+                    for (edge, patch) in &i.patch_edges {
+                        let ops: Vec<GuardOp> = patch
+                            .guard_ops
+                            .iter()
+                            .map(|op| GuardOp {
+                                condition: graph.respelled(from, base(&i.pack), &op.condition),
+                                ..op.clone()
+                            })
+                            .collect();
+                        graph
+                            .guard_ops
+                            .entry(format!("{}::{edge}", i.name))
+                            .or_default()
+                            .extend(ops);
+                    }
+                }
                 if let Declaration::Link(l) = d {
                     let (from, pack) = (p.manifest.pack_id.as_str(), pack_of(&l.from));
                     let mut edge = l.edge.clone();
@@ -286,6 +309,31 @@ impl<'a> Graph<'a> {
                     .map(|(p, e)| (p.clone(), e)),
             )
             .collect()
+    }
+
+    /// The guard of edge `edge` of node `posture` on `date` (SPEC §3.6):
+    /// its own, with the guard operations of an instance's patch in force
+    /// then composed over it, and the operations applied.
+    pub fn guard(
+        &self,
+        posture: &str,
+        edge: &'a Edge,
+        date: &str,
+        known_at: Option<&str>,
+    ) -> (Option<std::borrow::Cow<'a, Expr>>, Vec<&GuardOp>) {
+        let ops: Vec<&GuardOp> = edge
+            .id
+            .as_ref()
+            .and_then(|id| self.guard_ops.get(&format!("{}::{id}", pack_of(posture))))
+            .map(|ops| ops.iter().collect())
+            .unwrap_or_default();
+        if ops.is_empty() {
+            return (edge.guard.as_ref().map(std::borrow::Cow::Borrowed), Vec::new());
+        }
+        let composed =
+            crate::guard::compose(self.world.lattice(), edge.guard.as_ref(), &ops, date, known_at);
+        let applied = composed.applied.iter().map(|&i| ops[i]).collect();
+        (composed.guard.map(std::borrow::Cow::Owned), applied)
     }
 
     /// The qualified target of `edge` declared in `pack`.

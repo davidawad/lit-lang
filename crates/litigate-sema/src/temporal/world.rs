@@ -111,6 +111,9 @@ pub struct World<'a> {
     pub decls: Vec<Decl<'a>>,
     /// Authority order links.
     pub ranks: Vec<Rank>,
+    /// Instances (`instance base@origin`) by owning package, in load and
+    /// source order: their patches' guard operations (SPEC §3.6).
+    pub instances: Vec<(usize, &'a hir::Instance)>,
     lattice: Lattice,
     by_key: BTreeMap<Key, Vec<usize>>,
     incoming: BTreeMap<Key, Vec<Incoming<'a>>>,
@@ -193,6 +196,9 @@ impl<'a> World<'a> {
                 .collect();
             for decl in &module.declarations {
                 self.rank(pack, decl);
+                if let Declaration::Instance(i) = decl {
+                    self.instances.push((pack, i));
+                }
                 let Some(meta) = meta_of(decl) else {
                     continue;
                 };
@@ -235,6 +241,14 @@ impl<'a> World<'a> {
             }
         }
         self.lattice = Lattice::new(&self.ranks);
+    }
+
+    /// The instances package `pack` declares.
+    pub fn instances_of(&self, pack: usize) -> impl Iterator<Item = &'a hir::Instance> + '_ {
+        self.instances
+            .iter()
+            .filter(move |(p, _)| *p == pack)
+            .map(|(_, i)| *i)
     }
 
     /// The authority lattice of every `authority` chain added so far.

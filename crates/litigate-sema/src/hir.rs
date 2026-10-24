@@ -23,8 +23,8 @@ pub use case::{
 };
 pub use expr::{BinaryOp, Expr, ExprKind, Pattern, UnaryOp};
 pub use graph::{
-    Basis, DeadlineWindow, Edge, EdgeDeadline, EdgePatch, Instance, Link, Node, NodeKind,
-    TriangularDuration, Valence,
+    Basis, DeadlineWindow, Edge, EdgeDeadline, EdgePatch, GuardOp, GuardOpKind, Instance, Link,
+    Node, NodeKind, TriangularDuration, Valence,
 };
 pub use logic::{
     Authority, DefaultRule, EnumDecl, EventEffect, EventType, Exception, ExceptionKind,

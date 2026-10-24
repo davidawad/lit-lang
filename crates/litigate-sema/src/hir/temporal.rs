@@ -372,14 +372,22 @@ pub enum CauseStandard {
     ExcusableNeglect,
     /// Either excusable neglect or good cause (FRAP 4(a)(5)(A)(ii)).
     GoodCauseOrExcusableNeglect,
+    /// Extraordinary circumstances, the exception to a timing requirement
+    /// on the application: an application to extend the time to file a
+    /// petition for certiorari "must be filed with the Clerk at least 10
+    /// days before the date the petition is due, except in extraordinary
+    /// circumstances" (Sup. Ct. R. 13.5; 30.2, "the most extraordinary
+    /// circumstances").
+    ExtraordinaryCircumstances,
 }
 
 impl CauseStandard {
     /// Every standard, in declaration order.
-    pub const ALL: [Self; 3] = [
+    pub const ALL: [Self; 4] = [
         Self::GoodCause,
         Self::ExcusableNeglect,
         Self::GoodCauseOrExcusableNeglect,
+        Self::ExtraordinaryCircumstances,
     ];
 
     /// Its identifier in source.
@@ -389,6 +397,7 @@ impl CauseStandard {
             Self::GoodCause => "GoodCause",
             Self::ExcusableNeglect => "ExcusableNeglect",
             Self::GoodCauseOrExcusableNeglect => "GoodCauseOrExcusableNeglect",
+            Self::ExtraordinaryCircumstances => "ExtraordinaryCircumstances",
         }
     }
 }
@@ -403,6 +412,10 @@ pub enum DateRef {
     /// The date of the order granting the extension
     /// (`grant_order_entered`).
     GrantOrderEntered,
+    /// The instance's due date as last extended (`current_due`): "the date
+    /// the petition is due" (Sup. Ct. R. 13.5), which an earlier extension
+    /// has moved.
+    CurrentDue,
 }
 
 impl DateRef {
@@ -412,14 +425,43 @@ impl DateRef {
         match self {
             Self::PrescribedDue => "prescribed_due",
             Self::GrantOrderEntered => "grant_order_entered",
+            Self::CurrentDue => "current_due",
+        }
+    }
+
+    /// Every date reference, in declaration order.
+    pub const ALL: [Self; 3] = [
+        Self::PrescribedDue,
+        Self::GrantOrderEntered,
+        Self::CurrentDue,
+    ];
+
+    /// Its date among `at`.
+    fn of(self, at: BoundDates<'_>) -> &str {
+        match self {
+            Self::PrescribedDue => at.prescribed_due,
+            Self::GrantOrderEntered => at.grant_order_entered,
+            Self::CurrentDue => at.current_due,
         }
     }
 }
 
+/// The dates a [`Bound`] is counted from, one per [`DateRef`].
+#[derive(Debug, Clone, Copy)]
+pub struct BoundDates<'a> {
+    /// `prescribed_due`.
+    pub prescribed_due: &'a str,
+    /// `current_due`.
+    pub current_due: &'a str,
+    /// `grant_order_entered`.
+    pub grant_order_entered: &'a str,
+}
+
 /// A date bound: a closed expression language of `max`/`min` over
-/// `DateRef + N.days` (FRAP 4(a)(5)(C): "30 days after the prescribed time
-/// or 14 days after the date when the order granting the motion is
-/// entered, whichever is later").
+/// `DateRef + N.days` and `DateRef - N.days` (FRAP 4(a)(5)(C): "30 days
+/// after the prescribed time or 14 days after the date when the order
+/// granting the motion is entered, whichever is later"; Sup. Ct. R. 30.2,
+/// "at least 10 days before the specified final filing date").
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Bound {
@@ -430,6 +472,13 @@ pub enum Bound {
         /// Calendar days after it.
         days: u64,
     },
+    /// `r - N.days`, calendar days.
+    Before {
+        /// The date counted from.
+        from: DateRef,
+        /// Calendar days before it.
+        days: u64,
+    },
     /// The latest of the operands.
     Max(Vec<Bound>),
     /// The earliest of the operands.
@@ -437,20 +486,15 @@ pub enum Bound {
 }
 
 impl Bound {
-    /// The bound's date, given the dates of `prescribed_due` and
-    /// `grant_order_entered`; `None` if a date cannot be counted.
+    /// The bound's date, given the dates it is counted from; `None` if a
+    /// date cannot be counted.
     #[must_use]
-    pub fn date(&self, due: &str, order: &str) -> Option<String> {
+    pub fn date(&self, at: BoundDates<'_>) -> Option<String> {
         match self {
-            Self::Offset { from, days } => {
-                let at = match from {
-                    DateRef::PrescribedDue => due,
-                    DateRef::GrantOrderEntered => order,
-                };
-                crate::types::date::add_days(at, *days)
-            }
+            Self::Offset { from, days } => crate::types::date::add_days(from.of(at), *days),
+            Self::Before { from, days } => crate::types::date::sub_days(from.of(at), *days),
             Self::Max(xs) | Self::Min(xs) => {
-                let dates: Option<Vec<String>> = xs.iter().map(|x| x.date(due, order)).collect();
+                let dates: Option<Vec<String>> = xs.iter().map(|x| x.date(at)).collect();
                 let latest = matches!(self, Self::Max(_));
                 dates.and_then(|d| {
                     if latest {
@@ -468,6 +512,7 @@ impl Bound {
     pub fn display(&self) -> String {
         match self {
             Self::Offset { from, days } => format!("{} + {days}.days", from.name()),
+            Self::Before { from, days } => format!("{} - {days}.days", from.name()),
             Self::Max(xs) | Self::Min(xs) => format!(
                 "{}({})",
                 if matches!(self, Self::Max(_)) {
@@ -481,11 +526,12 @@ impl Bound {
     }
 }
 
-/// The motion an extension grant requires (`on M() [, within W]`): an
-/// event of pattern `M` after the instance opens and no later than the
-/// order, and no later than bound `W` when given (FRAP 4(a)(5)(A)(i): "no
-/// later than 30 days after the time prescribed by this Rule 4(a)
-/// expires").
+/// The motion an extension grant requires (`on M() [, within W] [,
+/// unless D()]`): an event of pattern `M` after the instance opens and no
+/// later than the order, and no later than bound `W` when given (FRAP
+/// 4(a)(5)(A)(i): "no later than 30 days after the time prescribed by this
+/// Rule 4(a) expires"), with no event of pattern `D` from the instance's
+/// opening to the order (Sup. Ct. R. 30.3).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Motion {
     /// The motion's event pattern.
@@ -493,6 +539,11 @@ pub struct Motion {
     /// The latest date the motion may be made.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub within: Option<Bound>,
+    /// The event that, once it precedes the order, bars the grant (`unless
+    /// D()`): a denial of the motion, which may not be renewed ("Once
+    /// denied, such an application may not be renewed", Sup. Ct. R. 30.3).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub unless: Option<Expr>,
 }
 
 /// Deadline counting direction.

@@ -43,6 +43,9 @@ event OrderedCapped(until: Date) extends capped to until
 event MovedRequest()
 event OrderedRequested(until: Date) extends requested to until
 event OrderedInterpreted(until: Date) extends interpreted to until
+event MovedTimed()
+event DeniedTimed()
+event OrderedTimed(until: Date) extends timed to until
 event Struck(option: EdgeRef) removes option
 event Elected(option: EdgeRef) elects option
 
@@ -89,6 +92,10 @@ deadline requested: 10.days from Entered() counted_by oc {
 deadline interpreted: 10.days from Entered() counted_by oc {
   extend { by Court, max 5.days, interpretation \"a bounded reading\" }
   extend { by Court, discretion GoodCause, interpretation \"the rule reaches it only as read\" }
+}
+deadline timed: 20.days from Entered() counted_by oc {
+  extend { by Court, discretion GoodCause, max 30.days, on MovedTimed(), within current_due - 10.days, unless DeniedTimed() }
+  extend { by Court, discretion ExtraordinaryCircumstances, max 30.days, on MovedTimed(), within current_due, unless DeniedTimed() }
 }
 deadline capped: 10.days from Entered() counted_by oc {
   extend { by Court, to min(prescribed_due + 5.days, (grant_order_entered + 2.days)) }
@@ -562,6 +569,90 @@ fn extensions_and_waivers() {
             &[
                 "2011-01-04 Noticed() by p",
                 "2011-01-05 ReleasedReply() by c cite \"FRCP 6(b)\"",
+            ],
+        ),
+    ];
+    insta::assert_debug_snapshot!(table(rows));
+}
+
+/// `timed`, due 2011-01-24: a motion at least 10 days before the due date
+/// as last extended licenses a good-cause extension, a later one only an
+/// extraordinary one, a denial bars both, and a motion is spent by the
+/// extension it licenses (Sup. Ct. R. 13.5, 30.2, 30.3).
+#[test]
+fn timed_motions_denials_and_spent_motions() {
+    let rows: &[(&str, &str, &[&str])] = &[
+        (
+            "a motion 10 days before the due date is timely for good cause",
+            "2011-03-01",
+            &[
+                ENTERED,
+                "2011-01-14 MovedTimed() by p",
+                "2011-01-16 OrderedTimed(2011-02-01) by c cite \"R 13.5\"",
+            ],
+        ),
+        (
+            "a later motion licenses only the extraordinary grant",
+            "2011-03-01",
+            &[
+                ENTERED,
+                "2011-01-15 MovedTimed() by p",
+                "2011-01-16 OrderedTimed(2011-02-01) by c cite \"R 13.5\"",
+            ],
+        ),
+        (
+            "a denial bars a renewed motion",
+            "2011-03-01",
+            &[
+                "2011-01-03 DeniedTimed() by c",
+                ENTERED,
+                "2011-01-10 MovedTimed() by p",
+                "2011-01-11 DeniedTimed() by c",
+                "2011-01-12 MovedTimed() by p",
+                "2011-01-13 OrderedTimed(2011-02-01) by c cite \"R 13.5\"",
+            ],
+        ),
+        (
+            "a denial before the trigger or after the order bars nothing",
+            "2011-03-01",
+            &[
+                "2011-01-03 DeniedTimed() by c",
+                ENTERED,
+                "2011-01-10 MovedTimed() by p",
+                "2011-01-12 OrderedTimed(2011-02-01) by c cite \"R 13.5\"",
+                "2011-01-13 DeniedTimed() by c",
+            ],
+        ),
+        (
+            "a second extension reads a fresh motion against the extended due date",
+            "2011-03-01",
+            &[
+                ENTERED,
+                "2011-01-10 MovedTimed() by p",
+                "2011-01-12 OrderedTimed(2011-02-01) by c cite \"R 13.5\"",
+                "2011-01-22 MovedTimed() by p",
+                "2011-01-23 OrderedTimed(2011-02-20) by c cite \"R 13.5\"",
+            ],
+        ),
+        (
+            "a motion is spent by the extension it licensed",
+            "2011-03-01",
+            &[
+                ENTERED,
+                "2011-01-10 MovedTimed() by p",
+                "2011-01-12 OrderedTimed(2011-02-01) by c cite \"R 13.5\"",
+                "2011-01-23 OrderedTimed(2011-02-20) by c cite \"R 13.5\"",
+            ],
+        ),
+        (
+            "the cap still runs from the prescribed due date",
+            "2011-03-01",
+            &[
+                ENTERED,
+                "2011-01-10 MovedTimed() by p",
+                "2011-01-12 OrderedTimed(2011-02-01) by c cite \"R 13.5\"",
+                "2011-01-22 MovedTimed() by p",
+                "2011-01-23 OrderedTimed(2011-02-24) by c cite \"R 13.5\"",
             ],
         ),
     ];

@@ -451,23 +451,39 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   one line each, tags stripped and entities decoded; no wording changed.
 - sha256 (this file): `ea972783c810a458f4754ce2597e2f29f08235d9d5cdcb8c0e8d1cd2508688e4`
 
-### `scotus-rules.txt` — Rules of the Supreme Court of the United States 13, 29 and 30 (adopted December 5, 2022, effective January 1, 2023)
+### `scotus-rules.txt` — Rules of the Supreme Court of the United States 13, 29 and 30 (adopted February 17, 2026, effective March 16, 2026)
 
-- The cert-petition period (Rule 13), service (Rule 29) and computation of
-  time (Rule 30) `lit/core`'s `sup-ct-30` counting rule and the FRAP and
-  Federal Circuit cert periods cite, one `## Sup. Ct. R. N.P` section per
-  numbered paragraph, each restating its rule's heading as its first line.
-- Fetched 2026-10-23 from `www.supremecourt.gov/filingandrules/2023RulesoftheCourt.pdf`
-  (sha256 `05f435c766fd596333828846d097828238ff89a266c24e3afca9ecd2fb9c19db`),
-  `pdftotext` (no `-layout`), running headers and page numbers stripped,
-  lines joined into one line per numbered paragraph. The PDF's text layer
-  drops the "fi" ligature (so "file" reads "f-l-e"); it was restored word
-  by word (file, filed, filing, filers, first, final, specified, specific,
-  justified, office, officer, suffices, identifiable, confined, defined,
-  certified, certificate, affidavit, Notifications), and two line-break
-  hyphens inside words ("inter- nal", "ear- lier") were joined. No other
-  wording changed.
-- sha256 (this file): `94c56e4ee8ec59d5cf857f1271ee689de1568421ab67e19b71bb823b5feecbb4`
+- The cert-petition period and its extension (Rule 13), service (Rule 29)
+  and computation and extension of time (Rule 30) `lit/core`'s `sup-ct-30`
+  counting rule and the FRAP and Federal Circuit cert periods cite, one
+  `## Sup. Ct. R. N.P` section per numbered paragraph, each restating its
+  rule's heading as its first line.
+- Fetched 2026-10-24 from `www.supremecourt.gov/filingandrules/2026RulesoftheCourt_WEB.pdf`
+  (sha256 `5200e38d590cc40929cb719987c936dc529717b4037259d1b63a2309cb6b0f32`),
+  the edition the Court's Rules page lists as current, `pdftotext -layout`,
+  running headers and page numbers stripped, lines joined into one line
+  per numbered paragraph. The text layer keeps the "fi" and "fl"
+  ligatures as U+FB01 and U+FB02; they are spelled out. A line-break
+  hyphen was dropped when the joined word appears in the 2023 edition's
+  text, and kept when the hyphenated word does (one: "cross-petition" in
+  13.4); the five others were dropped by reading ("subsections" and
+  "submission", new in 29.2, and "identifiable", "office", "officer",
+  split at a ligature). No other wording changed.
+- Against the 2023 edition (`2023RulesoftheCourt.pdf`, adopted December 5,
+  2022, effective January 1, 2023, sha256
+  `05f435c766fd596333828846d097828238ff89a266c24e3afca9ecd2fb9c19db`,
+  vendored here before as sha256
+  `94c56e4ee8ec59d5cf857f1271ee689de1568421ab67e19b71bb823b5feecbb4`),
+  Rules 13 and 30 and Rule 29's paragraphs 1, 3, 4, 5 and 7 are word for
+  word the same; 29.2 (an electronic submission is timely, paper copies
+  within three days) and 29.6 (stock ticker symbols) are the only changes,
+  as the Court's "Revisions to Rules of the Supreme Court" of the same
+  date (`www.supremecourt.gov/filingandrules/2026_Rules_Revisions.pdf`,
+  sha256 `b05a3a77c71708fb390e8e90ad2720cca2b0dc9fb827294b2d4f4ab00b56292f`,
+  revising Rules 14, 15, 24, 29 and 48 only) states. So 30.1's computation
+  and 13.5's and 30.2's extension timing read the same from January 1,
+  2023.
+- sha256 (this file): `881464325decc0ce5cc63ae4bac10facc84766e266dbff30454186f78dc3d5f2`
 
 ### `usc-15-lanham.txt` — Lanham Act sections (12 sections of 15 U.S.C.)
 

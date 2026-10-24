@@ -16,8 +16,8 @@ use crate::case::graph::{display, pack_of, Graph};
 use crate::case::spans::error;
 use crate::case::{Effect, Obligation, Status};
 use crate::hir::{
-    Bound, Capability, CauseStandard, Deadline, Expr, ExprKind, Extension, ExtensionWindow, Motion,
-    TriggerPolicy, Undesignated, Value,
+    Bound, BoundDates, Capability, CauseStandard, Deadline, Expr, ExprKind, Extension,
+    ExtensionWindow, Motion, TriggerPolicy, Undesignated, Value,
 };
 use crate::temporal::condition::matches;
 use crate::temporal::MatterEvent;
@@ -764,8 +764,9 @@ impl<'g> Cx<'_, 'g> {
                 outside(&o.deadline, &action, &current, &event.date, expired),
             );
         }
+        let made = grant.moved.at(&current);
         let request = match grant.motion {
-            Some(m) => match self.requested(pack, k, o.at, m, grant.moved.at(&current), &counted) {
+            Some(m) => match self.requested(pack, k, i, m, made, (&counted, &current)) {
                 Ok(date) => Some(date),
                 Err(why) => return reject(1, why),
             },
@@ -786,7 +787,13 @@ impl<'g> Cx<'_, 'g> {
         let Some(ceiling) = grant.ceiling else {
             return Ok(request);
         };
-        let bound = ceiling.date(&counted, &event.date).unwrap_or_default();
+        let bound = ceiling
+            .date(BoundDates {
+                prescribed_due: &counted,
+                current_due: &current,
+                grant_order_entered: &event.date,
+            })
+            .unwrap_or_default();
         if new > bound.as_str() {
             return reject(
                 2,
@@ -801,31 +808,38 @@ impl<'g> Cx<'_, 'g> {
         Ok(request)
     }
 
-    /// The date of the motion `m` order `k`'s grant requires for the
-    /// instance opened at event `opened` (counted `prescribed` due date;
+    /// The date of the motion `m` order `k`'s grant requires for instance
+    /// `i` (counted `prescribed` due date, `current` as last extended;
     /// `made`: when the motion must be made relative to the due date): the
     /// earliest event of `m`'s pattern (in `pack`'s view) on or after the
-    /// trigger, no later than the order and no later than `m`'s bound; or
-    /// why there is none. The motion's date is its event's date as recorded:
-    /// a request to the USPTO Director is filed on its Eastern Time
-    /// receipt date, "regardless of whether that date is a Saturday,
+    /// trigger, after any motion an earlier extension of the instance read
+    /// (a motion is spent by the extension it licenses), no later than the
+    /// order and no later than `m`'s bound, with no denial of `m`'s
+    /// `unless` pattern from the trigger to the order (Sup. Ct. R. 30.3);
+    /// or why there is none. The motion's date is its event's date as
+    /// recorded: a request to the USPTO Director is filed on its Eastern
+    /// Time receipt date, "regardless of whether that date is a Saturday,
     /// Sunday, or Federal holiday" (37 C.F.R. §§ 90.3(c)(2), 2.145(e)(2)),
     /// and no counting rule moves it.
     fn requested(
         &self,
         pack: &str,
         k: usize,
-        opened: usize,
+        i: usize,
         m: &Motion,
         made: Made<'_>,
-        prescribed: &str,
+        (prescribed, current): (&str, &str),
     ) -> Result<String, String> {
         let order = self.sorted[k].1;
-        let from = self.sorted[opened].1.date.as_str();
-        let latest = m
-            .within
-            .as_ref()
-            .and_then(|w| w.date(prescribed, &order.date));
+        let from = self.sorted[self.obligations[i].at].1.date.as_str();
+        let spent = self.obligations[i].request_made.as_deref();
+        let latest = m.within.as_ref().and_then(|w| {
+            w.date(BoundDates {
+                prescribed_due: prescribed,
+                current_due: current,
+                grant_order_entered: &order.date,
+            })
+        });
         let moved = (0..self.sorted.len()).find(|&j| {
             let date = self.sorted[j].1.date.as_str();
             j != k
@@ -837,8 +851,30 @@ impl<'g> Cx<'_, 'g> {
                     Made::Before(a) => date <= a.as_str(),
                 }
                 && latest.as_deref().is_none_or(|l| date <= l)
+                && spent.is_none_or(|s| date > s)
                 && matches(&m.event, self.view(pack, j))
         });
+        let denied = m.unless.as_ref().and_then(|u| {
+            (0..self.sorted.len())
+                .find(|&j| {
+                    let date = self.sorted[j].1.date.as_str();
+                    j != k
+                        && date >= from
+                        && date <= order.date.as_str()
+                        && matches(u, self.view(pack, j))
+                })
+                .map(|j| (u, self.sorted[j].1))
+        });
+        if let Some((u, denial)) = denied {
+            return Err(format!(
+                "`{}` on {} bars `{}`: once denied, the motion `{}` may not be renewed (`unless {}`)",
+                display(&denial.action),
+                denial.date,
+                display(&order.action),
+                display(&m.event),
+                display(u)
+            ));
+        }
         if let Some(j) = moved {
             return Ok(self.sorted[j].1.date.clone());
         }
@@ -858,6 +894,12 @@ impl<'g> Cx<'_, 'g> {
         }
         if let (Some(w), Some(l)) = (&m.within, &latest) {
             let _ = write!(why, " no later than {} = {l}", w.display());
+        }
+        if let Some(s) = spent {
+            let _ = write!(
+                why,
+                " after the one made on {s}, spent by an earlier extension"
+            );
         }
         let _ = write!(why, ", and none precedes the order on {}", order.date);
         Err(why)

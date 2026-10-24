@@ -84,6 +84,7 @@ pub(crate) const CAPABILITY_FIELDS: &[Spec] = &[
     (KwAfterExpiry, None),
     (KwOn, Some(call)),
     (KwWithin, Some(bound)),
+    (KwUnless, Some(call)),
     (KwNever, Some(cite)),
     (KwInterpretation, Some(string)),
 ];
@@ -247,7 +248,8 @@ fn bound(p: &mut Parser<'_>) -> bool {
 }
 
 /// `{ by Actor, max Duration | to Bound, discretion Standard,
-/// after_expiry, on Motion(), within Bound }` or `{ never cite "X" }`.
+/// after_expiry, on Motion(), within Bound, unless Denial() }` or `{ never
+/// cite "X" }`.
 fn capability(p: &mut Parser<'_>) -> bool {
     field_list(p, CAPABILITY_FIELDS)
 }

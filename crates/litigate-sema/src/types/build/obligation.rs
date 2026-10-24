@@ -130,13 +130,12 @@ impl Cx<'_, '_> {
             .map(TriggerPolicy::LaterOf)
     }
 
-    /// `prescribed_due` or `grant_order_entered` (L2007 otherwise).
+    /// `prescribed_due`, `grant_order_entered` or `current_due` (L2007
+    /// otherwise).
     fn date_ref(&mut self, e: &Expr) -> Option<DateRef> {
         let found = match &e.kind {
             ExprKind::Ref(r) if r.is_simple() => {
-                [DateRef::PrescribedDue, DateRef::GrantOrderEntered]
-                    .into_iter()
-                    .find(|d| d.name() == r.head.text)
+                DateRef::ALL.into_iter().find(|d| d.name() == r.head.text)
             }
             _ => None,
         };
@@ -148,7 +147,7 @@ impl Cx<'_, '_> {
         self.report(Report::new(
             C::InvalidField,
             e.range,
-            "a date bound is `max(...)`, `min(...)`, or `prescribed_due` / `grant_order_entered` `+ N.days`",
+            "a date bound is `max(...)`, `min(...)`, or `prescribed_due` / `grant_order_entered` / `current_due` `+ N.days` or `- N.days`",
         ));
         None
     }
@@ -170,6 +169,10 @@ impl Cx<'_, '_> {
             self.not_allowed(w, "without `on`: `within` bounds the motion");
             return None;
         }
+        if let (Some(u), None) = (fields.get("unless"), fields.get("on")) {
+            self.not_allowed(u, "without `on`: `unless` names the motion's denial");
+            return None;
+        }
         let by = self.by(f, &fields);
         let after_expiry = fields.contains_key("after_expiry");
         let interpretation = Self::string(fields.get("interpretation"));
@@ -178,7 +181,11 @@ impl Cx<'_, '_> {
             None => None,
         };
         let motion = match fields.get("on") {
-            Some(m) => Some(self.motion(m, fields.get("within").copied())?),
+            Some(m) => Some(self.motion(
+                m,
+                fields.get("within").copied(),
+                fields.get("unless").copied(),
+            )?),
             None => None,
         };
         let bound = match (fields.get("max"), fields.get("to")) {
@@ -285,19 +292,33 @@ impl Cx<'_, '_> {
         found
     }
 
-    /// The motion `on M()` of a grant, bounded by `within W` when given.
-    fn motion(&mut self, on: &Field, within: Option<&Field>) -> Option<Motion> {
+    /// The motion `on M()` of a grant, bounded by `within W` and barred by
+    /// `unless D()` when given.
+    fn motion(
+        &mut self,
+        on: &Field,
+        within: Option<&Field>,
+        unless: Option<&Field>,
+    ) -> Option<Motion> {
         let event = self.pattern(first_expr(on)?)?;
         let within = match within {
             Some(w) => Some(self.bound(first_expr(w)?)?),
             None => None,
         };
-        Some(Motion { event, within })
+        let unless = match unless {
+            Some(u) => Some(self.pattern(first_expr(u)?)?),
+            None => None,
+        };
+        Some(Motion {
+            event,
+            within,
+            unless,
+        })
     }
 
-    /// A date bound: `max(b, ...)`, `min(b, ...)`, or `r + N.days` with
-    /// `r` one of `prescribed_due`, `grant_order_entered` (L2007
-    /// otherwise).
+    /// A date bound: `max(b, ...)`, `min(b, ...)`, or `r + N.days` or `r -
+    /// N.days` with `r` one of `prescribed_due`, `grant_order_entered`,
+    /// `current_due` (L2007 otherwise).
     fn bound(&mut self, e: &Expr) -> Option<Bound> {
         match &e.kind {
             ExprKind::Paren(inner) => self.bound(inner),
@@ -318,10 +339,14 @@ impl Cx<'_, '_> {
                 from: self.date_ref(e)?,
                 days: 0,
             }),
-            ExprKind::Binary(BinaryOp::Add, l, n) => {
+            ExprKind::Binary(op @ (BinaryOp::Add | BinaryOp::Sub), l, n) => {
                 let from = self.date_ref(l)?;
                 let days = self.calendar_days(n)?;
-                Some(Bound::Offset { from, days })
+                Some(if *op == BinaryOp::Add {
+                    Bound::Offset { from, days }
+                } else {
+                    Bound::Before { from, days }
+                })
             }
             _ => self.no_bound(e),
         }

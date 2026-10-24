@@ -542,6 +542,7 @@ expression: found
                                 ),
                             },
                             within: None,
+                            unless: None,
                         },
                     ),
                     interpretation: None,
@@ -795,6 +796,7 @@ expression: found
                                     days: 30,
                                 },
                             ),
+                            unless: None,
                         },
                     ),
                     interpretation: None,
@@ -1057,11 +1059,272 @@ expression: found
                                 ),
                             },
                             within: None,
+                            unless: None,
                         },
                     ),
                     interpretation: Some(
                         "read as reaching it",
                     ),
+                },
+            ],
+            waive: None,
+            designated: None,
+        },
+    ),
+    Deadline(
+        Deadline {
+            meta: Metadata {
+                id: "l",
+                label: "",
+                cite: None,
+                historical: false,
+                effective: Interval {
+                    from: "2009-12-01",
+                    to: None,
+                    known_at: "2025-01-01",
+                },
+                authority: "FederalRule",
+                relations: [],
+                span: Some(
+                    Span {
+                        file: FileId(
+                            "pkgs/demo/main.lit",
+                        ),
+                        line: 26,
+                        col: 1,
+                        end_line: 26,
+                        end_col: 303,
+                    },
+                ),
+                imported: false,
+            },
+            amount: 14,
+            unit: Calendar,
+            direction: Forward,
+            trigger: Expr {
+                ty: Named(
+                    "Served",
+                ),
+                kind: Call {
+                    callee: "Served",
+                    args: [
+                        Expr {
+                            ty: Named(
+                                "Document",
+                            ),
+                            kind: Literal {
+                                value: Variant(
+                                    "Document::answer",
+                                ),
+                            },
+                            span: Some(
+                                Span {
+                                    file: FileId(
+                                        "pkgs/demo/main.lit",
+                                    ),
+                                    line: 26,
+                                    col: 33,
+                                    end_line: 26,
+                                    end_col: 39,
+                                },
+                            ),
+                        },
+                    ],
+                },
+                span: Some(
+                    Span {
+                        file: FileId(
+                            "pkgs/demo/main.lit",
+                        ),
+                        line: 26,
+                        col: 26,
+                        end_line: 26,
+                        end_col: 40,
+                    },
+                ),
+            },
+            chain: None,
+            counting: "c6",
+            forum: "demo",
+            extendable: None,
+            extension_authority: None,
+            note: None,
+            bearer: None,
+            policy: First,
+            linear: false,
+            extend: [
+                Bounded {
+                    by: "Court",
+                    until: Offset {
+                        from: PrescribedDue,
+                        days: 60,
+                    },
+                    after_expiry: false,
+                    standard: Some(
+                        GoodCause,
+                    ),
+                    motion: Some(
+                        Motion {
+                            event: Expr {
+                                ty: Named(
+                                    "Served",
+                                ),
+                                kind: Call {
+                                    callee: "Served",
+                                    args: [
+                                        Expr {
+                                            ty: Named(
+                                                "Document",
+                                            ),
+                                            kind: Literal {
+                                                value: Variant(
+                                                    "Document::complaint",
+                                                ),
+                                            },
+                                            span: Some(
+                                                Span {
+                                                    file: FileId(
+                                                        "pkgs/demo/main.lit",
+                                                    ),
+                                                    line: 26,
+                                                    col: 121,
+                                                    end_line: 26,
+                                                    end_col: 130,
+                                                },
+                                            ),
+                                        },
+                                    ],
+                                },
+                                span: Some(
+                                    Span {
+                                        file: FileId(
+                                            "pkgs/demo/main.lit",
+                                        ),
+                                        line: 26,
+                                        col: 114,
+                                        end_line: 26,
+                                        end_col: 131,
+                                    },
+                                ),
+                            },
+                            within: Some(
+                                Before {
+                                    from: CurrentDue,
+                                    days: 10,
+                                },
+                            ),
+                            unless: Some(
+                                Expr {
+                                    ty: Named(
+                                        "Served",
+                                    ),
+                                    kind: Call {
+                                        callee: "Served",
+                                        args: [
+                                            Expr {
+                                                ty: Named(
+                                                    "Document",
+                                                ),
+                                                kind: Literal {
+                                                    value: Variant(
+                                                        "Document::answer",
+                                                    ),
+                                                },
+                                                span: Some(
+                                                    Span {
+                                                        file: FileId(
+                                                            "pkgs/demo/main.lit",
+                                                        ),
+                                                        line: 26,
+                                                        col: 177,
+                                                        end_line: 26,
+                                                        end_col: 183,
+                                                    },
+                                                ),
+                                            },
+                                        ],
+                                    },
+                                    span: Some(
+                                        Span {
+                                            file: FileId(
+                                                "pkgs/demo/main.lit",
+                                            ),
+                                            line: 26,
+                                            col: 170,
+                                            end_line: 26,
+                                            end_col: 184,
+                                        },
+                                    ),
+                                },
+                            ),
+                        },
+                    ),
+                    interpretation: None,
+                },
+                Bounded {
+                    by: "Court",
+                    until: Offset {
+                        from: PrescribedDue,
+                        days: 60,
+                    },
+                    after_expiry: false,
+                    standard: Some(
+                        ExtraordinaryCircumstances,
+                    ),
+                    motion: Some(
+                        Motion {
+                            event: Expr {
+                                ty: Named(
+                                    "Served",
+                                ),
+                                kind: Call {
+                                    callee: "Served",
+                                    args: [
+                                        Expr {
+                                            ty: Named(
+                                                "Document",
+                                            ),
+                                            kind: Literal {
+                                                value: Variant(
+                                                    "Document::complaint",
+                                                ),
+                                            },
+                                            span: Some(
+                                                Span {
+                                                    file: FileId(
+                                                        "pkgs/demo/main.lit",
+                                                    ),
+                                                    line: 26,
+                                                    col: 269,
+                                                    end_line: 26,
+                                                    end_col: 278,
+                                                },
+                                            ),
+                                        },
+                                    ],
+                                },
+                                span: Some(
+                                    Span {
+                                        file: FileId(
+                                            "pkgs/demo/main.lit",
+                                        ),
+                                        line: 26,
+                                        col: 262,
+                                        end_line: 26,
+                                        end_col: 279,
+                                    },
+                                ),
+                            },
+                            within: Some(
+                                Offset {
+                                    from: CurrentDue,
+                                    days: 0,
+                                },
+                            ),
+                            unless: None,
+                        },
+                    ),
+                    interpretation: None,
                 },
             ],
             waive: None,

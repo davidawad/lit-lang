@@ -253,6 +253,8 @@ module.exports = {
     field('key', 'after_expiry'),
     seq(field('key', 'on'), field('value', $.call_expression)),
     seq(field('key', 'within'), field('value', $._expression)),
+    // The motion's denial, after which the grant is barred (SPEC §5.3).
+    seq(field('key', 'unless'), field('value', $.call_expression)),
     seq(field('key', 'never'), field('value', $.cite)),
     // A grant reached only by reading a rule as applying (SPEC §5.3).
     seq(field('key', 'interpretation'), field('value', $.string)),

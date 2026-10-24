@@ -158,14 +158,16 @@ fn a_bound_past_the_calendar_has_no_date() {
         from: DateRef::PrescribedDue,
         days: 1,
     };
+    let at = BoundDates {
+        prescribed_due: "2025-01-01",
+        current_due: "2025-01-15",
+        grant_order_entered: "2025-02-01",
+    };
     assert_eq!(
-        Bound::Min(vec![near.clone()]).date("2025-01-01", "2025-02-01"),
+        Bound::Min(vec![near.clone()]).date(at),
         Some("2025-01-02".to_owned())
     );
-    assert_eq!(
-        Bound::Max(vec![near, far]).date("2025-01-01", "2025-02-01"),
-        None
-    );
+    assert_eq!(Bound::Max(vec![near, far]).date(at), None);
 }
 
 #[test]

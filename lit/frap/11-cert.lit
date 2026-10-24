@@ -10,6 +10,9 @@ event CertPeriodExtended(until: Date) extends cert-period to until
 /// An application to a Justice to extend the time to file the petition
 /// (Sup. Ct. R. 13.5, 22, 30.2, 30.3).
 event CertExtensionApplied()
+/// A Justice's denial of the application: "Once denied, such an
+/// application may not be renewed" (Sup. Ct. R. 30.3).
+event CertExtensionDenied()
 
 /// A petition for certiorari is due within 90 days after entry of the
 /// court of appeals' judgment (28 U.S.C. § 2101(c); Sup. Ct. R. 13.1), or
@@ -22,13 +25,27 @@ event CertExtensionApplied()
 /// Its only extender is a Justice: "A justice of the Supreme Court, for
 /// good cause shown, may extend the time for applying for a writ of
 /// certiorari for a period not exceeding sixty days" (§ 2101(c); Sup. Ct.
-/// R. 13.5), so no court or case order may move it (no `delegable_to`).
-/// The application "shall be filed within the period sought to be
-/// extended" (Sup. Ct. R. 30.2), so the grant reads one made by the due
-/// date. Rule 30.2's further "at least 10 days before" the due date is not
-/// a bar (a later application "will not be granted except in the most
-/// extraordinary circumstances") and is not modeled; neither is Rule
-/// 30.3's bar on renewing a denied application.
+/// R. 13.5, "For good cause, a Justice may extend the time ... for a
+/// period not exceeding 60 days"), so no court or case order may move it
+/// (no `delegable_to`), and an application to extend "shall be made to an
+/// individual Justice" (Sup. Ct. R. 30.3). The sixty days run from the
+/// prescribed due date, so a second extension shares them.
+///
+/// The application's timing is Sup. Ct. R. 13.5 and 30.2: it "must be
+/// filed with the Clerk at least 10 days before the date the petition is
+/// due, except in extraordinary circumstances", and "if filed less than 10
+/// days before the final filing date, such application will not be
+/// granted except in the most extraordinary circumstances". So the grant
+/// is two: for good cause on an application made by the due date (as last
+/// extended, `current_due`) less 10 days, and on extraordinary
+/// circumstances on one made later but still "within the period sought to
+/// be extended" (30.2). "Once denied, such an application may not be
+/// renewed" (30.3): a denial bars both. The Justice acts by the due date
+/// (no `after_expiry`): the vendored Rules say nothing of an order on a
+/// timely application entered after the period has run, so that stays
+/// undeclared. Rule 22's presentation and service, and 13.5's contents of
+/// the application and its naming of each party it is for, are not
+/// modeled.
 rule duty petition-for-certiorari effective [2009-12-01, ..) known_at 2009-03-26 cite "28 U.S.C. § 2101(c)"
 {
   deadline cert-period: 90.days after EnteredOnAppeal() counted_by sup-ct-30 cite "28 U.S.C. § 2101(c)"
@@ -40,7 +57,16 @@ rule duty petition-for-certiorari effective [2009-12-01, ..) known_at 2009-03-26
       discretion GoodCause
       max 60.days
       on CertExtensionApplied()
-      within prescribed_due
+      within current_due - 10.days
+      unless CertExtensionDenied()
+    }
+    extend {
+      by justice
+      discretion ExtraordinaryCircumstances
+      max 60.days
+      on CertExtensionApplied()
+      within current_due
+      unless CertExtensionDenied()
     }
   }
 }

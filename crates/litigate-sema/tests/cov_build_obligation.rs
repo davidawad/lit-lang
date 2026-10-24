@@ -42,6 +42,7 @@ deadline h: 14.days from Served(answer) counted_by c6 { extendable false, extend
 deadline i: 14.days from Served(answer) counted_by c6 { extendable true, extend { by Court, discretion GoodCauseOrExcusableNeglect, to max(prescribed_due + 30.days, grant_order_entered + 14.days), after_expiry, on Served(complaint), within prescribed_due + 30.days }, extend { never cite \"FRAP 26(b)(1)\" } }\n\
 deadline j: 14.days from Served(answer) counted_by c6 { extend { by Court, to min(prescribed_due, (grant_order_entered + 1.days)) } }\n\
 deadline k: 14.days from Served(answer) counted_by c6 { extend { by Court, max 3.days, interpretation \"read as reaching it\" }, extend { by Court, discretion GoodCause, on Served(complaint), interpretation \"read as reaching it\" } }\n\
+deadline l: 14.days from Served(answer) counted_by c6 { extend { by Court, discretion GoodCause, max 60.days, on Served(complaint), within current_due - 10.days, unless Served(answer) }, extend { by Court, discretion ExtraordinaryCircumstances, max 60.days, on Served(complaint), within current_due } }\n\
 event Moved(until: Date, option: String) extends a to until\n\
 event Released() waives b\n\
 event Dropped(option: EdgeRef) removes option\n\
@@ -105,7 +106,12 @@ deadline av: 21.days from Served(complaint) counted_by c6 { extend { by Court, t
 deadline aw: 21.days from Served(complaint) counted_by c6 { extend { by Court, max 3.days, on } }\n\
 deadline ax: 21.days from Served(complaint) counted_by c6 { extend { by Court, max 3.days, on Served(complaint), within } }\n\
 deadline ay: 21.days from Served(complaint) counted_by c6 { waive { by Court, interpretation \"read as reaching it\" } }\n\
-deadline az: 21.days from Served(complaint) counted_by c6 { extend { never cite \"FRCP 6(b)(2)\", interpretation \"read as reaching it\" } }",
+deadline az: 21.days from Served(complaint) counted_by c6 { extend { never cite \"FRCP 6(b)(2)\", interpretation \"read as reaching it\" } }\n\
+deadline ba: 21.days from Served(complaint) counted_by c6 { extend { by Court, max 3.days, unless Served(answer) } }\n\
+deadline bb: 21.days from Served(complaint) counted_by c6 { extend { by Court, max 3.days, on Served(complaint), unless Nothing() } }\n\
+deadline bc: 21.days from Served(complaint) counted_by c6 { extend { by Court, max 3.days, on Served(complaint), unless } }\n\
+deadline bd: 21.days from Served(complaint) counted_by c6 { extend { by Court, to filed - 3.days } }\n\
+deadline be: 21.days from Served(complaint) counted_by c6 { extend { by Court, to current_due - 3.court_days } }",
     );
     insta::assert_debug_snapshot!(out);
 }

@@ -733,7 +733,7 @@ creates (design review 2026-10-23 §2.4, §2.7):
   several (FRCP 6(b)(1)'s (A) and (B) are two). Its bound is a sum, and
   a grant states exactly one (otherwise L2007):
   - `extend { by A, max N.days | to B [, discretion S] [, after_expiry]
-    [, on M() [, within W]] }` (bounded): actor `A` may extend an
+    [, on M() [, within W] [, unless D()]] }` (bounded): actor `A` may extend an
     instance to a date no later than date bound `B`. Without
     `after_expiry` the extension must come on or before the current due
     date; with it, before or after. `max N.days` is `to prescribed_due +
@@ -775,16 +775,40 @@ creates (design review 2026-10-23 §2.4, §2.7):
     grants an extension there.
 
   The cause standard `S` is a closed set: `GoodCause`, `ExcusableNeglect`,
-  or `GoodCauseOrExcusableNeglect` (FRAP 4(a)(5)(A)(ii)); any other
+  `GoodCauseOrExcusableNeglect` (FRAP 4(a)(5)(A)(ii)), or
+  `ExtraordinaryCircumstances`, the exception to a timing requirement on
+  the motion (Sup. Ct. R. 13.5, "at least 10 days before the date the
+  petition is due, except in extraordinary circumstances"); any other
   identifier is L2007. A date bound (`to`, `within`) is a closed
-  expression: `max(b, ...)`, `min(b, ...)`, or `r + N.days` (or `r`) with
-  `r` one of `prescribed_due` (the instance's counted due date, raised to
-  any `later_of` floor) and `grant_order_entered` (the date of the order
-  exercising the grant); anything else is L2007, and days other than
-  calendar days L3009. `on M()` names the motion the grant requires, an
-  event pattern; `within W` bounds the motion's date (FRAP
+  expression: `max(b, ...)`, `min(b, ...)`, or `r + N.days`, `r - N.days`
+  (or `r`) with `r` one of `prescribed_due` (the instance's counted due
+  date, raised to any `later_of` floor), `current_due` (that date as last
+  extended: "the date the petition is due" after an earlier extension) and
+  `grant_order_entered` (the date of the order exercising the grant);
+  anything else is L2007, and days other than calendar days L3009. `on
+  M()` names the motion the grant requires, an event pattern: the
+  earliest such event from the trigger to the order, after any motion an
+  earlier extension of the instance read (a motion is spent by the
+  extension it licenses). `within W` bounds the motion's date (FRAP
   4(a)(5)(A)(i): no later than 30 days after the prescribed time expires,
-  whenever the order comes) and needs `on` (L2007).
+  whenever the order comes; Sup. Ct. R. 30.2, `within current_due -
+  10.days`). `unless D()` names the motion's denial: an event of pattern
+  `D` from the trigger to the order bars the grant ("Once denied, such an
+  application may not be renewed", Sup. Ct. R. 30.3), and a matter may
+  record it without taking an edge, like the motion. Both need `on`
+  (L2007).
+
+  A certiorari period is therefore two grants, the timely and the
+  excepted:
+
+  ```
+  extend { by justice, discretion GoodCause, max 60.days,
+           on CertExtensionApplied(), within current_due - 10.days,
+           unless CertExtensionDenied() }
+  extend { by justice, discretion ExtraordinaryCircumstances, max 60.days,
+           on CertExtensionApplied(), within current_due,
+           unless CertExtensionDenied() }
+  ```
 
   A grant with an actor under `extendable false`, or a lock with no grant
   beside it under `extendable true`, is L2007.

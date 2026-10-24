@@ -9,6 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **The certiorari extension's timing follows Sup. Ct. R. 13.5, 30.2 and
+  30.3, from the Rules effective March 16, 2026** (lg-flu.41).
+  `sources/scotus-rules.txt` is re-vendored from the current
+  `2026RulesoftheCourt_WEB.pdf`: Rules 13 and 30 read word for word as in
+  the 2023 edition, and 29.2 (electronic submission) and 29.6 (ticker
+  symbols) carry the 2026 revisions. The FRAP and Federal Circuit
+  `cert-period`s now declare two grants: a Justice's good-cause extension
+  on an application made at least 10 days before the due date, and one on
+  extraordinary circumstances for a later application still within the
+  period; a `CertExtensionDenied()` bars both, since a denied application
+  "may not be renewed". The `extend` language gains what that needed
+  (SPEC §5.3): `r - N.days` bounds, the `current_due` date reference (the
+  due date as last extended), the `ExtraordinaryCircumstances` cause
+  standard, and `unless D()`, the motion's denial. A motion is now spent
+  by the extension it licenses, so a second extension needs a fresh
+  motion. Rule 22's presentation and service, and an order on a timely
+  application entered after the period has run, stay undeclared.
+
 - **The TTAB answer time is extendable under FRCP 6(b)(1)(A), read
   through 37 C.F.R. § 2.116(a) as an interpretation** (lg-flu.45). An
   `extend` grant may now carry `interpretation "..."` (SPEC §5.3): the

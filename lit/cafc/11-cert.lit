@@ -74,6 +74,9 @@ terminal cert-granted: "CERT GRANTED — Case Transfers to the Supreme Court" ou
 event CertPeriodExtended(until: Date) extends cert-period to until
 /// An application to a Justice to extend the time to file the petition.
 event CertExtensionApplied()
+/// A Justice's denial of the application, which "may not be renewed"
+/// (Sup. Ct. R. 30.3).
+event CertExtensionDenied()
 
 /// 28 U.S.C. § 2101(c): a petition for certiorari in a civil case is due 90
 /// days after entry of the judgment. The period dates from the 1948
@@ -85,8 +88,11 @@ event CertExtensionApplied()
 /// "A justice of the Supreme Court, for good cause shown, may extend the
 /// time for applying for a writ of certiorari for a period not exceeding
 /// sixty days" (§ 2101(c)): a Justice is the only extender, so no court or
-/// case order may move it (no `delegable_to`), and the application is made
-/// within the period (as `frap.cert` reads Sup. Ct. R. 30.2).
+/// case order may move it (no `delegable_to`). The application's timing
+/// is `frap.cert`'s reading of Sup. Ct. R. 13.5, 30.2 and 30.3: for good
+/// cause when made at least 10 days before the due date, on extraordinary
+/// circumstances when made later within the period, and never once
+/// denied.
 rule duty certiorari-petition cite "28 U.S.C. § 2101(c)"
 {
   deadline cert-period: 90.days after Entered(PanelJudgment) counted_by sup-ct-30 effective [1948-09-01, ..) known_at 1948-06-25 cite "28 U.S.C. § 2101(c)"
@@ -97,7 +103,16 @@ rule duty certiorari-petition cite "28 U.S.C. § 2101(c)"
       discretion GoodCause
       max 60.days
       on CertExtensionApplied()
-      within prescribed_due
+      within current_due - 10.days
+      unless CertExtensionDenied()
+    }
+    extend {
+      by justice
+      discretion ExtraordinaryCircumstances
+      max 60.days
+      on CertExtensionApplied()
+      within current_due
+      unless CertExtensionDenied()
     }
   }
 }

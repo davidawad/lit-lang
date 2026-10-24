@@ -78,6 +78,14 @@ pub fn add_days(text: &str, days: u64) -> Option<String> {
     Some(civil_from_days(days_from_civil(y, m, d).checked_add(n)?))
 }
 
+/// The date `days` calendar days before valid ISO date `text`.
+#[must_use]
+pub fn sub_days(text: &str, days: u64) -> Option<String> {
+    let (y, m, d) = parse(text)?;
+    let n = i64::try_from(days).ok()?;
+    Some(civil_from_days(days_from_civil(y, m, d).checked_sub(n)?))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -93,6 +101,16 @@ mod tests {
         assert_eq!(add_days("2024-13-01", 1), None);
         assert_eq!(add_days("2024-01-01", u64::MAX), None);
         assert_eq!(add_days("2024-01-01", i64::MAX as u64), None);
+    }
+
+    #[test]
+    fn subtracts_calendar_days() {
+        assert_eq!(sub_days("2026-01-13", 10).as_deref(), Some("2026-01-03"));
+        assert_eq!(sub_days("2024-03-01", 1).as_deref(), Some("2024-02-29"));
+        assert_eq!(sub_days("2000-01-01", 1).as_deref(), Some("1999-12-31"));
+        assert_eq!(sub_days("2024-13-01", 1), None);
+        assert_eq!(sub_days("2024-01-01", u64::MAX), None);
+        assert_eq!(sub_days("0001-01-01", i64::MAX as u64), None);
     }
     use proptest::prelude::*;
 

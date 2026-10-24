@@ -343,9 +343,10 @@ impl<'a> Graph<'a> {
             .collect()
     }
 
-    /// The motion patterns of every `extend` grant (`on M()`), with the
-    /// pack each is written in: a motion to extend is matter history the
-    /// grant reads (FRCP 6(b)(1)(B), FRAP 4(a)(5)(A)(i)), so an event
+    /// The motion patterns of every `extend` grant (`on M()`, and its
+    /// denial `unless D()`), with the pack each is written in: a motion to
+    /// extend and its denial are matter history the grant reads (FRCP
+    /// 6(b)(1)(B), FRAP 4(a)(5)(A)(i), Sup. Ct. R. 30.3), so an event
     /// matching one is legal without taking an edge.
     pub fn motion_patterns(&self) -> Vec<(&'a str, &'a Expr)> {
         let mut out = Vec::new();
@@ -360,7 +361,9 @@ impl<'a> Graph<'a> {
                             motion: Some(m), ..
                         } = g
                         {
-                            out.push((p.manifest.pack_id.as_str(), &m.event));
+                            let pack = p.manifest.pack_id.as_str();
+                            out.push((pack, &m.event));
+                            out.extend(m.unless.iter().map(|u| (pack, u)));
                         }
                     }
                 }

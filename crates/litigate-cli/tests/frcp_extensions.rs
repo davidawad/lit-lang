@@ -704,6 +704,93 @@ fn a_cert_extension_past_60_days_or_by_a_court_is_rejected() {
     );
 }
 
+/// An application less than 10 days before the due date is granted only
+/// in extraordinary circumstances (Sup. Ct. R. 13.5, 30.2); once denied it
+/// may not be renewed (Sup. Ct. R. 30.3); a second application is timed
+/// against the due date as extended, and the 60 days run from the
+/// prescribed one (28 U.S.C. § 2101(c)).
+#[test]
+fn cert_extension_timing_follows_rules_13_5_and_30() {
+    let late = cert(
+        "cert-30-2-late",
+        &[
+            "2026-01-05 CertExtensionApplied() by appellant",
+            "2026-01-07 CertPeriodExtended(2026-02-13) by justice cite \"Sup. Ct. R. 13.5\"",
+        ],
+    );
+    assert_eq!(late.code, 0, "{}", late.stdout);
+    assert_eq!(
+        extended(&late, "frap-appellate-procedure::cert-period"),
+        [(
+            "2026-02-13".to_owned(),
+            "ExtraordinaryCircumstances".to_owned(),
+            "2026-01-05".to_owned()
+        )]
+    );
+    let renewed = cert(
+        "cert-30-3-renewed",
+        &[
+            "2026-01-02 CertExtensionApplied() by appellant",
+            "2026-01-05 CertExtensionDenied() by justice",
+            "2026-01-06 CertExtensionApplied() by appellant",
+            "2026-01-07 CertPeriodExtended(2026-02-13) by justice cite \"Sup. Ct. R. 13.5\"",
+        ],
+    );
+    assert_eq!(renewed.code, 2, "{}", renewed.stdout);
+    assert_eq!(
+        effects(&renewed).1,
+        ["`CertExtensionDenied()` on 2026-01-05 bars `CertPeriodExtended(2026-02-13)`: once denied, the motion `CertExtensionApplied()` may not be renewed (`unless CertExtensionDenied()`)"]
+    );
+    let second = cert(
+        "cert-13-5-second",
+        &[
+            "2026-01-02 CertExtensionApplied() by appellant",
+            "2026-01-07 CertPeriodExtended(2026-02-12) by justice cite \"Sup. Ct. R. 13.5\"",
+            "2026-02-02 CertExtensionApplied() by appellant",
+            "2026-02-04 CertPeriodExtended(2026-03-14) by justice cite \"Sup. Ct. R. 13.5\"",
+        ],
+    );
+    assert_eq!(second.code, 0, "{}", second.stdout);
+    assert_eq!(
+        extended(&second, "frap-appellate-procedure::cert-period"),
+        [(
+            "2026-03-14".to_owned(),
+            "GoodCause".to_owned(),
+            "2026-02-02".to_owned()
+        )]
+    );
+}
+
+/// The Federal Circuit's certiorari period has the same two grants: its
+/// panel judgment of 2025-12-01 makes the petition due 2026-03-02 (the
+/// 90th day a Sunday, Sup. Ct. R. 30.1), so an application on 2026-02-25
+/// is late for good cause and is granted only in extraordinary
+/// circumstances (Sup. Ct. R. 13.5, 30.2).
+#[test]
+fn a_late_federal_circuit_cert_application_needs_extraordinary_circumstances() {
+    let run = matter(
+        "fedcir-cert-30-2",
+        &["cafc", "mpep", "ttab"],
+        "cafc ^0.1.0",
+        "  appellant: applicant Corporation\n  justice: justice Tribunal\n  fedcir: court Tribunal\n",
+        &[
+            "2025-12-01 Entered(PanelJudgment) on appellant",
+            "2026-02-25 CertExtensionApplied() by appellant",
+            "2026-02-27 CertPeriodExtended(2026-04-01) by justice cite \"Sup. Ct. R. 13.5\"",
+        ],
+        "cafc::cert-not-sought",
+    );
+    assert_eq!(run.code, 0, "{}", run.stdout);
+    assert_eq!(
+        extended(&run, "cafc::cert-period"),
+        [(
+            "2026-04-01".to_owned(),
+            "ExtraordinaryCircumstances".to_owned(),
+            "2026-02-25".to_owned()
+        )]
+    );
+}
+
 /// `litigate check` of a Federal Circuit matter on a Board decision of
 /// 2026-03-02, whose notice of appeal is due 2026-05-04 (37 C.F.R. §
 /// 90.3(a)(1)), then `events`.

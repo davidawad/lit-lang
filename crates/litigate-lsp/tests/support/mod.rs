@@ -215,7 +215,10 @@ impl Client {
 
     /// Opens the file at `uri` with `text`.
     pub async fn open_at(&mut self, uri: &str, text: &str) {
-        let language = if uri.ends_with(".case") {
+        let language = if Path::new(uri)
+            .extension()
+            .is_some_and(|e| e.eq_ignore_ascii_case("case"))
+        {
             "litigate-case"
         } else {
             "litigate"

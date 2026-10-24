@@ -55,7 +55,7 @@ it.
 | `litigate-cli` | the `litigate` binary (§9.4) |
 | `litigate-lsp` | the language server over the same salsa database |
 
-Crates: `logos` 0.15 (lexer), `rowan` 0.16 (lossless CST), `salsa` 0.26
+Crates: `logos` 0.15 (lexer), `rowan` 0.16 (lossless CST), `salsa` 0.28
 (incremental queries), `tower-lsp` 0.20 on `tokio` (LSP), `insta` (snapshot
 tests for diagnostics and outputs), `proptest` (invariants), `ariadne` 0.5
 (human diagnostic rendering), `serde`/`serde_json` (all JSON), `toml` for
@@ -2361,7 +2361,7 @@ All commands accept `--format json|human` (default `human` on a TTY, else
 | `diff` | `A B` (generated or expected JSON files or package dirs), `--as-of` | `{equal, changes:[{pointer, before, after}]}` per §8.6 |
 | `query` | `KIND` (`nodes\|edges\|deadlines\|holes\|cites\|versions`), `--match TEXT`, `--limit N`, `--cursor C` | `{matches:[{id, kind, span, cite, in_force}], next_cursor}` |
 | `import` | `JSON...`, `--out DIR` | `{files:[{path, from}], warnings}`; output must round-trip under §8.6 (L6002 otherwise) |
-| `lsp` | `--stdio` | LSP session (no envelope) |
+| `lsp` | `--stdio` | LSP session (no envelope); `initializationOptions` `{profile, asOf, knownAt, debounceMs}`; custom requests `litigate/status`, `litigate/worlds` (the selected world and those the workspace names) and `litigate/selectWorld {asOf, knownAt}` |
 
 `build` writes pack `ID` to `packs/ID.json` (its source map to
 `packs/ID.map.json`, its clock fragment to `packs/clock/ID.json`); `--pack-file

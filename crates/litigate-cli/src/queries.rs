@@ -185,6 +185,13 @@ mod tests {
             .count()
     }
 
+    /// The `dev` key, interned again after each edit: the same values,
+    /// the same key.
+    fn dev(db: &LitDatabase) -> (salsa::Id, Build<'_>) {
+        let build = Build::of(db, Profile::Dev, &Options::default());
+        (build.as_id(), build)
+    }
+
     fn logged(cases: Vec<CaseText>) -> Session {
         let (db, _) = LitDatabase::with_event_log();
         let module = format!("{RULE12}\n\n");
@@ -222,12 +229,6 @@ mod tests {
         let mut session = logged(vec![case(ACME, Some(&lock))]);
         let inputs = session.case_inputs();
         let pkg = session.packages[0].input;
-        // The key is interned again after each edit: the same values, the
-        // same key.
-        fn dev(db: &LitDatabase) -> (salsa::Id, Build<'_>) {
-            let build = Build::of(db, Profile::Dev, &Options::default());
-            (build.as_id(), build)
-        }
         let (id, build) = dev(&session.db);
         let first = package_verdict(&session.db, session.ws, pkg, build).clone();
         let replayed = case_check(&session.db, session.ws, inputs[0], build).clone();
@@ -285,7 +286,7 @@ mod tests {
         let stopped =
             crate::check_session_with(session, Profile::Dev, &Options::default(), &|| true);
         assert!(!stopped.complete);
-        assert!(stopped.verdicts.is_empty() && stopped.cases.is_empty());
+        assert_eq!((stopped.verdicts.len(), stopped.cases.len()), (0, 0));
         // Packages checked, then cancelled before the matter.
         let session = testkit::example_and("", vec![case(ACME, None)]);
         let calls = std::cell::Cell::new(0);

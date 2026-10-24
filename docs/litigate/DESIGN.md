@@ -350,6 +350,40 @@ lit/                     stdlib (§4.1)
 cases/                   .case ports of scenarios/ and examples/
 ```
 
+### 6.1 Queries and the language server
+
+One salsa database serves `check`, `build` and the language server, with
+the granularity of design review §4.1 (lg-flu.17):
+
+- **Position-independent item tree.** `item_tree(file)` anchors every range
+  at its top-level declaration; `anchors(file)` is the side table that
+  locates them (rust-analyzer's `AstIdMap`). Moving declarations, by
+  blank lines, comments or reindentation, leaves the item tree equal, so
+  salsa backdates it.
+- **Typing per declaration.** `check_decl(DeclId)` types one top-level
+  declaration and builds its HIR with position-free spans;
+  `check_module(file)` runs the module-level checks and locates that HIR
+  (`hir::spans`). An edit inside one declaration re-types only it.
+- **Resolution per world.** The world is an interned key
+  (`WorldId {as_of, known_at}`): `world_selection(package, world)` is what
+  governs each of a package's declarations there, and
+  `resolve_in(decl, world)` reads one, backdated per declaration.
+  Switching worlds re-runs neither parsing nor typing.
+- **Verification and replay.** `package_verdict(ws, package, build)` reads
+  only the packages the package can see (its closure; all of them for a
+  links package) and `case_check(ws, case, build)` replays one `CaseFile`
+  input; clock fragments and the engine clock are lowered once per
+  workspace.
+
+The language server keeps that database across edits. Edits wait
+`debounceMs` for the next; a check runs on a blocking thread, so a newer
+edit arrives while it runs and cancels it between packages and matters,
+the last complete analysis answering requests meanwhile. On top of it the
+server offers rename (every version of a declaration and every reference,
+across files), completion, and a world picker (`litigate/worlds`,
+`litigate/selectWorld`) whose world hover reports what governs each
+declaration in.
+
 All crates live in the litgraph workspace. That gives one `cargo test`, one
 `just ci`, one AGENTS.md, and lowering against litgraph's real types. The
 language can split into its own repository later. Nothing here assumes the

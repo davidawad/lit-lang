@@ -10,7 +10,7 @@ use litigate_sema::db::inputs::create_workspace;
 use litigate_sema::db::queries::{check_decl, check_module, item_tree, span_map};
 use litigate_sema::db::span::{Anchors, Encoded, Positions, SpanMap, TextRange};
 use litigate_sema::hir::spans::Spans;
-use litigate_sema::types::build::check_decl_at;
+use litigate_sema::types::build::{check_decl_at, DeclCheck};
 use litigate_sema::{LitDatabase, SourceFile};
 use salsa::plumbing::AsId;
 use salsa::Setter;
@@ -94,6 +94,10 @@ fn editing_one_declaration_retypes_only_it() {
         .map(|d| ran(&log, "check_decl", d.as_id()))
         .collect();
     assert_eq!(retyped, [false, false, true, false], "{log:?}");
+    // An index past the items (a declaration since deleted) checks to
+    // nothing.
+    let gone = DeclId::new(&db, file, 99);
+    assert_eq!(check_decl(&db, gone), &DeclCheck::default());
 }
 
 #[test]

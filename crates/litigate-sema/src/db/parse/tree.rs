@@ -583,6 +583,7 @@ impl Ranges for TestStmt {
 }
 
 impl Ranges for ItemKind {
+    #[allow(clippy::too_many_lines)] // one arm per declaration kind
     fn ranges_mut(&mut self, f: &mut dyn FnMut(&mut TextRange)) {
         match self {
             Self::Start(r) => r.ranges_mut(f),

@@ -58,6 +58,7 @@ async fn hover(c: &mut Client, uri: &str, text: &str, needle: &str) -> String {
         .to_owned()
 }
 
+#[allow(clippy::needless_pass_by_value)] // positions are built inline
 fn position(uri: &str, at: Value) -> Value {
     json!({"textDocument": {"uri": uri}, "position": at})
 }
@@ -189,6 +190,7 @@ async fn the_world_picker_selects_the_dates_packages_are_checked_at() {
 }
 
 #[tokio::test]
+#[allow(clippy::too_many_lines)] // one workspace, every kind of rename
 async fn rename_edits_every_version_and_reference() {
     let extra = "deadline reply-period: 14.days from Served(complaint) counted_by frcp6 effective [2009-12-01, 2016-12-01)\ndeadline reply-period: 21.days from Served(complaint) counted_by frcp6 effective [2016-12-01, ..)\nenum Stage { reply-period }\n";
     let module = format!("{}\n{extra}", read("lit/examples/rule12.lit"));

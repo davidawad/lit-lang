@@ -52,6 +52,8 @@ fn every_listed_command_exists() {
         "describe",
         "fix",
         "lock",
+        "calendar",
+        "lint-filing",
     ] {
         assert!(names.contains(&wanted), "{wanted} missing");
     }

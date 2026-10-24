@@ -18,6 +18,7 @@ pub mod cli;
 pub mod clock;
 mod cmd;
 pub mod describe;
+pub mod filing;
 pub mod hirx;
 pub mod ics;
 pub mod inline_tests;

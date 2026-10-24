@@ -1,0 +1,64 @@
+---
+source: crates/litigate-cli/tests/cov_cmd_filing.rs
+assertion_line: 76
+expression: stable(&run.json)
+---
+{
+  "schema_version": 2,
+  "ok": true,
+  "op": "lint-filing",
+  "result": {
+    "case": "lf-matter",
+    "filing": {
+      "date": "2025-03-07",
+      "event": "Answered(complaint)",
+      "mode": "by",
+      "party": "widget",
+      "line": "2025-03-07 Answered(complaint) by widget"
+    },
+    "as_of": "2025-03-10",
+    "accepted": true,
+    "replay": [
+      {
+        "date": "2025-03-07",
+        "event": "Answered(complaint)",
+        "effect": "took",
+        "from": "cov-pack::respond",
+        "to": "cov-pack::answered",
+        "edge": "cov-pack::answer"
+      }
+    ],
+    "discharges": [
+      {
+        "deadline": "cov-pack::answer-period",
+        "trigger": "Served(complaint, Personal)",
+        "trigger_date": "2025-03-05",
+        "due": "2025-03-19",
+        "unknown": null,
+        "status": "discharged",
+        "before": "open"
+      }
+    ],
+    "triggers": [],
+    "open_before": [
+      {
+        "deadline": "cov-pack::answer-period",
+        "trigger": "Served(complaint, Personal)",
+        "trigger_date": "2025-03-05",
+        "due": "2025-03-19",
+        "unknown": null,
+        "status": "open"
+      },
+      {
+        "deadline": "cov-pack::borne-period",
+        "trigger": "Served(complaint, Personal)",
+        "trigger_date": "2025-03-05",
+        "due": "2025-03-10",
+        "unknown": null,
+        "status": "open"
+      }
+    ]
+  },
+  "diagnostics": [],
+  "elapsed_ms": 0
+}

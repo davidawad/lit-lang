@@ -4,6 +4,7 @@ mod calendar;
 pub(crate) mod check;
 mod diff;
 mod explain;
+mod filing;
 mod fix;
 mod fmt;
 mod import;
@@ -80,6 +81,27 @@ pub fn dispatch(command: Command, src: &dyn Source) -> Outcome {
             remind,
             lib: library.lib,
         }),
+        Command::LintFiling {
+            case,
+            event,
+            date,
+            by,
+            on,
+            library,
+        } => {
+            let (mode, party) = match (by, on) {
+                (Some(party), _) => ("by", party),
+                (None, party) => ("on", party.unwrap_or_default()),
+            };
+            filing::lint_filing(&filing::Args {
+                case,
+                event,
+                date,
+                mode,
+                party,
+                lib: library.lib,
+            })
+        }
         Command::Where { id, paths, library } => where_::where_(&id, &paths, &library.lib),
         Command::Explain { code } => explain::explain(&code),
         Command::ExplainValue {

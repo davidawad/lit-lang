@@ -420,3 +420,21 @@ fn filing_words_are_reserved_everywhere_but_only_as_whole_words() {
     )
     .is_ok());
 }
+
+#[test]
+fn the_spec_filing_limit_example_parses_and_is_only_reserved() {
+    let spec = include_str!("../../../../docs/litigate/SPEC.md");
+    let section = &spec[spec
+        .find("### 3.7 Reserved: filing requirements")
+        .expect("§3.7")..];
+    let body = section
+        .split("```lit\n")
+        .nth(1)
+        .and_then(|rest| rest.split("```").next())
+        .expect("a lit example in §3.7");
+    let parsed = limited(body.trim_end());
+    assert_eq!(codes(&parsed), ["L0011", "L0011", "L0011"], "{body}");
+    let kinds = node_kinds(&parsed);
+    assert!(!kinds.contains(&SyntaxKind::Error), "{kinds:?}");
+    assert!(kinds.contains(&SyntaxKind::Relation));
+}

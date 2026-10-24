@@ -26,6 +26,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   by the extension it licenses, so a second extension needs a fresh
   motion. Rule 22's presentation and service, and an order on a timely
   application entered after the period has run, stay undeclared.
+- **Filing-requirement syntax is reserved** (lg-962.9, SPEC §3.7, PM
+  ruling 2026-10-24). A paper kind's length limits, certificates,
+  exclusions and ECF event codes will be a cited, versioned `.lit`
+  declaration that local rules, standing orders and case orders modify
+  through the same relations and layers as deadlines: `limit
+  principal-brief { words <= 13_000 cite "FRAP 32(a)(7)(B)(i)", requires
+  certificate compliance, excludes [cover-page, ?("local rule")], ecf
+  ?("...") } cite "FRAP 32(e)"`. The form parses into a new `LimitDecl`
+  CST node and is rejected with the new code L0011, whose message begins
+  `reserved: filing requirements`, until lg-962.10 implements it. `limit`,
+  `certificate` and `excludes` are reserved words (L0011 anywhere,
+  `FILING_WORDS`); `requires` stays the edge field keyword. No file in the
+  corpus changes. The tree-sitter grammar (`limit_decl`) and the Emacs,
+  Helix and Neovim highlights, indents and folds follow.
 
 - **The TTAB answer time is extendable under FRCP 6(b)(1)(A), read
   through 37 C.F.R. § 2.116(a) as an interpretation** (lg-flu.45). An

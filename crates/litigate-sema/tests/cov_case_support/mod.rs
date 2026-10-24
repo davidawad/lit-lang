@@ -3,7 +3,7 @@
 //! counting rule outside the matter's `uses`), a second used package
 //! `gamma`, and a links package `delta`.
 #![allow(dead_code)]
-use litigate_base::{Diagnostic, Profile};
+use litigate_base::{Diagnostic, DiagnosticCode, Profile};
 use litigate_sema::case::{check_source, CheckedCase, Clock, Env};
 use litigate_sema::hir::Package;
 use litigate_sema::pkg::load::{LoadedFile, LoadedPackage};
@@ -224,7 +224,7 @@ pub fn check(
     profile: Profile,
 ) -> CheckedCase {
     let refs: Vec<&Package> = packages.iter().collect();
-    check_source(
+    let mut checked = check_source(
         "cases/t.case",
         text,
         Env {
@@ -233,7 +233,13 @@ pub fn check(
             clock,
             profile,
         },
-    )
+    );
+    // An event without an id (L9006, info) is on nearly every fixture
+    // line; its own tests read it from `check_source`.
+    checked
+        .diagnostics
+        .retain(|d| d.code != DiagnosticCode::UndeclaredEventId);
+    checked
 }
 
 /// A clock that puts every due date on one day.

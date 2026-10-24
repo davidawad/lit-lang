@@ -25,7 +25,15 @@ fn dev_check_reports_holes_and_anonymous_edges_and_replays_acme() {
             .count(),
         2
     );
-    assert_eq!(found.len(), 5, "{found:?}");
+    // The worked example's two events declare no id (L9006, info).
+    assert_eq!(
+        found
+            .iter()
+            .filter(|c| c.0 == "L9006" && c.1 == "info")
+            .count(),
+        2
+    );
+    assert_eq!(found.len(), 7, "{found:?}");
     let case = &run.json["result"]["cases"][0];
     assert_eq!(case["start"], "frcp-rule12-example::mtd-ruling");
     assert_eq!(case["deadlines"][0]["due"], "2025-03-26");

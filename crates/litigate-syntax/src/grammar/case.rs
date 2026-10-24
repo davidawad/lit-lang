@@ -233,13 +233,21 @@ fn party(p: &mut Parser<'_>) -> bool {
     true
 }
 
-/// `Date ["docket" Number] CallExpr ("by" | "on") Ident [Cite]`.
+/// `[Ident ":"] Date ["docket" Number] CallExpr ("by" | "on") Ident [Cite]`.
 fn event(p: &mut Parser<'_>) -> bool {
-    if !p.at(Date) {
+    let id = p.at(Ident) && p.nth(1) == Colon;
+    if !(id || p.at(Date)) {
         return false;
     }
     p.start(CaseEvent);
-    date(p);
+    if id {
+        p.bump();
+        p.bump();
+    }
+    if !require(p, date, &[Date]) {
+        p.finish();
+        return true;
+    }
     if p.at_kw(KwDocket) && p.nth(1) == Number {
         p.bump_as(KwDocket);
         p.bump();

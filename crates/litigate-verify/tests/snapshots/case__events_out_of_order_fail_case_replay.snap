@@ -1,5 +1,6 @@
 ---
 source: crates/litigate-verify/tests/case.rs
+assertion_line: 130
 expression: summary(&v)
 ---
 {
@@ -18,6 +19,8 @@ expression: summary(&v)
   "accepted": false,
   "posture": "frcp-rule12-example::mtd-ruling",
   "diagnostics": [
-    "cases/examples/acme.case:21:3 L4001 events must be in docket order: 2025-03-05 comes after 2025-03-20"
+    "cases/examples/acme.case:20:3 L9006 this event declares no id: its timeline key `event:MovedToDismiss@2025-03-20` changes if its date is corrected",
+    "cases/examples/acme.case:21:3 L4001 events must be in docket order: 2025-03-05 comes after 2025-03-20",
+    "cases/examples/acme.case:21:3 L9006 this event declares no id: its timeline key `event:Served@2025-03-05` changes if its date is corrected"
   ]
 }

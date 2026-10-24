@@ -1,0 +1,10 @@
+---
+source: crates/litigate-sema/tests/case_event_ids.rs
+expression: "ids(&[&format!(\"2010-01-04 {RULED}\"), &format!(\"ruled-1: 2010-01-05 {RULED}\"),\n&format!(\"2010-01-06 docket 2 alpha::{RULED}\"),\n\"2010-01-07 Answered(complaint) by p\",\n\"2010-01-08 Answered(complaint) by p\",])"
+---
+[
+    "12:3 L9006 this event declares no id: its timeline key `event:Ruled@2010-01-04` changes if its date is corrected\n    note: declare one before the date: `id: YYYY-MM-DD Event(...) by party`\n    fix @12:3-12:13 MachineApplicable: \"ruled-2: 2010-01-04\"",
+    "14:3 L9006 this event declares no id: its timeline key `event:Ruled@2010-01-06/2` changes if its date is corrected\n    note: declare one before the date: `id: YYYY-MM-DD Event(...) by party`\n    fix @14:3-14:13 MachineApplicable: \"ruled-3: 2010-01-06\"",
+    "15:3 L9006 this event declares no id: its timeline key `event:Answered@2010-01-07` changes if its date is corrected\n    note: declare one before the date: `id: YYYY-MM-DD Event(...) by party`\n    fix @15:3-15:13 MachineApplicable: \"answered-1: 2010-01-07\"",
+    "16:3 L9006 this event declares no id: its timeline key `event:Answered@2010-01-08` changes if its date is corrected\n    note: declare one before the date: `id: YYYY-MM-DD Event(...) by party`\n    fix @16:3-16:13 MachineApplicable: \"answered-2: 2010-01-08\"",
+]

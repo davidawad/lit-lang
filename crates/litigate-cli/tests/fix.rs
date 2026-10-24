@@ -41,8 +41,11 @@ fn out_of_order_events_are_fixed() {
     let before = litigate_in(&dir, &["check", "cases/m.case"]);
     assert_eq!(before.code, 2);
     assert!(codes(&before.json).contains(&("L4001".to_owned(), "error".to_owned())));
+    // The two generated ids (L9006) rewrite dates inside the lines the
+    // sort moves, so the sort waits for the next run.
     let dry = litigate_in(&dir, &["fix", "cases/m.case", "--dry-run"]);
-    assert_eq!(dry.json["result"]["fixes"].as_array().unwrap().len(), 1);
+    assert_eq!(dry.json["result"]["fixes"].as_array().unwrap().len(), 2);
+    assert_eq!(dry.json["result"]["skipped_overlapping"], 1);
     assert_eq!(
         std::fs::read_to_string(dir.join("cases/m.case")).unwrap(),
         OUT_OF_ORDER
@@ -87,14 +90,50 @@ fn replay_errors_are_precise() {
     let wrong_party = wrong_party.replace("  2025-03-20 MovedToDismiss(complaint) by acme\n  2025-03-05 Served(complaint, Personal) on widget", "  2025-03-05 Served(complaint, Personal) on widget\n  2025-03-20 MovedToDismiss(complaint) by acme");
     let dir = workspace("party", &wrong_party);
     let run = litigate_in(&dir, &["check", "cases/m.case"]);
+    let error = run.json["diagnostics"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|d| d["severity"] == "error")
+        .unwrap();
     assert!(
-        run.json["diagnostics"][0]["message"]
+        error["message"]
             .as_str()
             .unwrap()
             .contains("is taken by Defendant, but `acme` plays Plaintiff"),
         "{}",
         run.stdout
     );
+}
+
+#[test]
+fn generated_event_ids_stay_with_their_lines_through_a_sort() {
+    let dir = workspace("ids", OUT_OF_ORDER);
+    let ids = litigate_in(&dir, &["fix", "cases/m.case"]);
+    assert_eq!(
+        ids.json["result"]["skipped_overlapping"], 1,
+        "{}",
+        ids.stdout
+    );
+    let sorted = litigate_in(&dir, &["fix", "cases/m.case"]);
+    assert_eq!(sorted.json["result"]["fixes"][0]["code"], "L4001");
+    let text = std::fs::read_to_string(dir.join("cases/m.case")).unwrap();
+    assert!(
+        text.contains(
+            "  served-1: 2025-03-05 Served(complaint, Personal) on widget\n  \
+             moved-to-dismiss-1: 2025-03-20 MovedToDismiss(complaint) by widget\n"
+        ),
+        "{text}"
+    );
+    let after = litigate_in(&dir, &["check", "cases/m.case"]);
+    assert_eq!(after.code, 0, "{}", after.stdout);
+    assert!(
+        !codes(&after.json).iter().any(|c| c.0 == "L9006"),
+        "{}",
+        after.stdout
+    );
+    let fmt = litigate_in(&dir, &["fmt", "--check", "cases/m.case"]);
+    assert_eq!(fmt.code, 0, "{}", fmt.stdout);
 }
 
 proptest! {

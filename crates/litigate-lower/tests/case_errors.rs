@@ -98,6 +98,7 @@ fn removals_are_located_at_their_events() {
         end_col: 40,
     };
     let event = Event {
+        id: None,
         date: "2025-03-10".into(),
         docket: None,
         action: Expr {

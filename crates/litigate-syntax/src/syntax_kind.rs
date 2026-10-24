@@ -208,7 +208,7 @@ syntax_kinds! {
         PartiesBlock => "`parties { ... }`.",
         PartyDecl => "`id: Actor EntityType`.",
         EventsBlock => "`events { ... }`.",
-        CaseEvent => "`date [docket N] Call by|on party [cite \"...\"]`.",
+        CaseEvent => "`[id:] date [docket N] Call by|on party [cite \"...\"]`.",
         FactsBlock => "`facts { node: edge }`.",
         StakesBlock => "`stakes { terminal: money|unvalued }`.",
         BeliefsBlock => "`beliefs { prior ... observe ... }`.",

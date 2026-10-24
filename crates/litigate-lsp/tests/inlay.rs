@@ -43,7 +43,7 @@ fn the_hint_follows_the_triggering_event() {
     // day restarts it (SPEC §5.3). Same-day services are docketed: events
     // of one date are ordered by docket number (SPEC §5.6).
     let case = matter(
-        "  2025-03-01 Served(complaint, Electronic) on widget\n  2025-03-05 docket 4 Served(complaint, Mail) on widget\n  2025-03-05 docket 5 Served(complaint, Personal) on widget\n",
+        "  first: 2025-03-01 Served(complaint, Electronic) on widget\n  mailed: 2025-03-05 docket 4 Served(complaint, Mail) on widget\n  handed: 2025-03-05 docket 5 Served(complaint, Personal) on widget\n",
     );
     let root = support::worked("inlay-order", &[(CASE, &case)]);
     let mut host = support::host(&root);

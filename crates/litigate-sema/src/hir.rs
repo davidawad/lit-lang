@@ -10,6 +10,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
 mod case;
+pub(crate) use case::own_name;
 mod expr;
 mod graph;
 mod logic;

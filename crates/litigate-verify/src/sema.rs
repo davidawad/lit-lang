@@ -30,7 +30,9 @@ pub fn obligation_of(code: C) -> Option<Obligation> {
         }
         C::HoleInStrict | C::HolePresent => Obligation::Holes,
         C::RuleWithoutTest => Obligation::RuleWithoutTest,
-        C::AnonymousEdge | C::NonCanonicalFormat | C::UnusedDeclaration => return None,
+        C::AnonymousEdge | C::NonCanonicalFormat | C::UnusedDeclaration | C::UndeclaredEventId => {
+            return None
+        }
         c if c.as_str().starts_with("L4") => Obligation::CaseReplay,
         _ => Obligation::WellTyped,
     })

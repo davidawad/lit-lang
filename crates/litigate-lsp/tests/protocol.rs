@@ -128,6 +128,8 @@ async fn edits_recheck_incrementally_over_one_database() {
     let ds = c
         .diagnostics_where(&uri(CASE), |ds| codes(ds).contains(&"L4003".to_owned()))
         .await;
+    // Advice (severity 3: L9006 on each event without an id) aside.
+    let ds: Vec<Value> = ds.into_iter().filter(|d| d["severity"] != 3).collect();
     assert_eq!(codes(&ds), ["L4003"], "{ds:?}");
 }
 

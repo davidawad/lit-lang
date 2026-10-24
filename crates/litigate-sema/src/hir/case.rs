@@ -111,6 +111,10 @@ pub struct Party {
 /// Docket event.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Event {
+    /// The declared id (`id: date ...`): the event's timeline key, which a
+    /// corrected date or docket number does not change (SPEC §5.6).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub id: Option<String>,
     /// Event date.
     pub date: String,
     /// Docket sequence number (`docket N`): orders the event among others
@@ -125,6 +129,31 @@ pub struct Event {
     pub party: String,
     /// Cite-backed extension/waiver/excuse, if any.
     pub authority: Option<String>,
+}
+
+impl Event {
+    /// The event's timeline row key (docs/litigate/TIMELINE.md):
+    /// `event:<Name>@<id>` when it declares an id, else
+    /// `event:<Name>@<date>[/<docket>]`. `Name` is the constructor's own
+    /// name, without its package or module path.
+    #[must_use]
+    pub fn key(&self) -> String {
+        let name = match &self.action.kind {
+            super::ExprKind::Call { callee, .. } => own_name(callee),
+            _ => "",
+        };
+        match (&self.id, self.docket) {
+            (Some(id), _) => format!("event:{name}@{id}"),
+            (None, Some(docket)) => format!("event:{name}@{}/{docket}", self.date),
+            (None, None) => format!("event:{name}@{}", self.date),
+        }
+    }
+}
+
+/// An event constructor's own name: `callee` without its package or
+/// module path.
+pub(crate) fn own_name(callee: &str) -> &str {
+    callee.rsplit([':', '.']).next().unwrap_or(callee)
 }
 
 /// Event-party relation.

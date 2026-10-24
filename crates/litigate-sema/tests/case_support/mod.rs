@@ -3,7 +3,7 @@
 //! (`fixtures/case-2009`), their `Lit.lock`, the engine clock over their
 //! lowered counting rules, and diagnostic rendering.
 #![allow(dead_code)]
-use litigate_base::{Diagnostic, Profile};
+use litigate_base::{Diagnostic, DiagnosticCode, Profile};
 use litigate_lower::{EngineClock, Lowerer};
 use litigate_sema::case::{check_source, CheckedCase, Env};
 use litigate_sema::hir::Package;
@@ -149,7 +149,7 @@ pub fn check_with(
     profile: Profile,
 ) -> CheckedCase {
     let refs: Vec<&Package> = packages.iter().collect();
-    check_source(
+    let mut checked = check_source(
         "cases/t.case",
         text,
         Env {
@@ -158,7 +158,13 @@ pub fn check_with(
             clock,
             profile,
         },
-    )
+    );
+    // An event without an id (L9006, info) is on nearly every fixture
+    // line; its own tests read it from `check_source`.
+    checked
+        .diagnostics
+        .retain(|d| d.code != DiagnosticCode::UndeclaredEventId);
+    checked
 }
 
 /// Checks `text` against the worked example.

@@ -1,5 +1,6 @@
 ---
 source: crates/litigate-cli/tests/cov_check.rs
+assertion_line: 54
 expression: located(&run.json)
 ---
 [
@@ -14,6 +15,18 @@ expression: located(&run.json)
         "error",
         "cases/examples/acme.case",
         2,
+    ),
+    (
+        "L9006",
+        "info",
+        "cases/examples/acme.case",
+        20,
+    ),
+    (
+        "L9006",
+        "info",
+        "cases/examples/acme.case",
+        21,
     ),
     (
         "L9002",

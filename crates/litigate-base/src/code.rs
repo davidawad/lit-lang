@@ -55,7 +55,7 @@ macro_rules! registry {
     };
 }
 
-registry! { 68;
+registry! { 69;
     UnexpectedToken = "L0001" => "The token is not valid at this position in the grammar",
     UnterminatedLiteral = "L0002" => "A string, block comment, or other delimited literal was not closed",
     InvalidToken = "L0003" => "The source contains a character sequence that is not a token",
@@ -124,6 +124,7 @@ registry! { 68;
     AnonymousEdge = "L9003" => "An anonymous edge cannot be referenced by cases or links",
     NonCanonicalFormat = "L9004" => "The file is not in litigate fmt canonical form",
     UnusedDeclaration = "L9005" => "The declaration or import is never used",
+    UndeclaredEventId = "L9006" => "A case event declares no id, so its timeline key changes when its date or docket number is corrected",
 }
 
 /// What `explain` says of an [`DiagnosticCode::Unknown`] code.
@@ -185,7 +186,7 @@ impl DiagnosticCode {
     #[must_use]
     pub const fn severity(self, profile: Profile) -> Severity {
         match (self, profile) {
-            (Self::AnonymousEdge, _) => Severity::Info,
+            (Self::AnonymousEdge | Self::UndeclaredEventId, _) => Severity::Info,
             (
                 Self::UnusedDeclaration
                 | Self::ObligationBreached

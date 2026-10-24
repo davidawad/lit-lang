@@ -23,9 +23,9 @@ use crate::pkg::lock::LockFile;
 use crate::pkg::semver::{Requirement, Version};
 use crate::resolve::suggest::nearest;
 use crate::types::rational;
-use litigate_base::{Applicability, Diagnostic, DiagnosticCode as C, FileId, LineIndex};
+use litigate_base::{Applicability, Diagnostic, DiagnosticCode as C, FileId, LineIndex, Severity};
 use litigate_syntax::{SyntaxKind as K, SyntaxNode};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 /// Resolver output.
 #[derive(Debug, Clone, PartialEq)]
@@ -97,6 +97,33 @@ fn docket_token(line: &SyntaxNode) -> Option<(String, TextRange)> {
         })
 }
 
+/// The id before `:` on an event line, with its range: the line's only
+/// direct `Ident` token (callee and party are inside nodes).
+fn event_id(line: &SyntaxNode) -> Option<(String, TextRange)> {
+    line.children_with_tokens()
+        .filter_map(rowan::NodeOrToken::into_token)
+        .find(|t| t.kind() == K::Ident)
+        .map(|t| {
+            let n = crate::db::parse::name(&t);
+            (n.text, n.range)
+        })
+}
+
+/// `AnswerFiled` → `answer-filed`: a word boundary before each capital
+/// that follows a lowercase letter or digit.
+fn kebab(name: &str) -> String {
+    let mut out = String::new();
+    let mut prev_lower = false;
+    for c in name.chars() {
+        if c.is_ascii_uppercase() && prev_lower {
+            out.push('-');
+        }
+        prev_lower = c.is_ascii_lowercase() || c.is_ascii_digit();
+        out.push(c.to_ascii_lowercase());
+    }
+    out
+}
+
 /// A docket number: a whole number from 1 (digit separators allowed).
 fn docket_number(text: &str) -> Option<u64> {
     text.replace('_', "").parse().ok().filter(|&n| n > 0)
@@ -141,7 +168,8 @@ pub fn resolve(file: &str, text: &str, packages: &[&Package], lock: Option<&Lock
     let out = std::mem::take(&mut r.out);
     let diagnostics: Vec<Diagnostic> = out.iter().map(|x| x.to_diagnostic(&file, &index)).collect();
     Resolved {
-        case: case.filter(|_| syntax_ok && diagnostics.is_empty()),
+        case: case
+            .filter(|_| syntax_ok && diagnostics.iter().all(|d| d.severity != Severity::Error)),
         spans: r.spans,
         diagnostics,
     }
@@ -396,8 +424,9 @@ impl R<'_, '_> {
     fn events(&mut self, block: &SyntaxNode, text: &str) -> Vec<Event> {
         let lines: Vec<SyntaxNode> = children(block, K::CaseEvent).collect();
         self.sort_fix(&lines, text);
+        let ids = self.event_ids(&lines);
         let mut events = Vec::new();
-        for line in &lines {
+        for (line, id) in lines.iter().zip(ids) {
             let date = child(line, K::Literal).and_then(|l| token_text(&l, K::Date));
             let call = child(line, K::CallExpr).and_then(|c| self.lower.expr(&c));
             let party = child(line, K::Ref).and_then(|r| ref_path(&r));
@@ -428,6 +457,7 @@ impl R<'_, '_> {
                 .map(|c| token_text(&c, K::String).map_or_else(String::new, |t| t.0));
             self.spans.events.push(EventSpans {
                 whole: Some(self.s(sig(line))),
+                id: id.as_ref().map(|i| self.s(i.1)),
                 date: date.as_ref().map(|d| self.s(d.1)),
                 docket: docket.as_ref().map(|d| self.s(d.1)),
                 action: call.as_ref().map(|c| self.s(c.range)),
@@ -455,6 +485,7 @@ impl R<'_, '_> {
                 continue;
             };
             events.push(Event {
+                id: id.map(|i| i.0),
                 date,
                 docket: number,
                 action,
@@ -464,6 +495,71 @@ impl R<'_, '_> {
             });
         }
         events
+    }
+
+    /// Each line's declared id. A repeated id is L1001. A line with none
+    /// is L9006 (info), with a fix writing `<event>-<n>: ` before its
+    /// date, `n` the least that no other line declares or is given: the
+    /// date and docket key it would otherwise have changes when either is
+    /// corrected (SPEC §5.6).
+    fn event_ids(&mut self, lines: &[SyntaxNode]) -> Vec<Option<(String, TextRange)>> {
+        let ids: Vec<Option<(String, TextRange)>> = lines.iter().map(event_id).collect();
+        let mut first: BTreeMap<&str, TextRange> = BTreeMap::new();
+        for (id, range) in ids.iter().flatten() {
+            if let Some(at) = first.get(id.as_str()) {
+                self.out.push(
+                    Report::new(
+                        C::DuplicateName,
+                        *range,
+                        format!("event id `{id}` is declared twice"),
+                    )
+                    .note_at(*at, "first declared here"),
+                );
+            } else {
+                first.insert(id, *range);
+            }
+        }
+        let mut taken: BTreeSet<String> = first.into_keys().map(str::to_owned).collect();
+        for (line, id) in lines.iter().zip(&ids) {
+            let date = child(line, K::Literal).and_then(|l| token_text(&l, K::Date));
+            let callee = child(line, K::CallExpr)
+                .and_then(|c| child(&c, K::Ref))
+                .and_then(|r| ref_path(&r));
+            // A line missing its date or call is already a syntax error.
+            let (None, Some((date, at)), Some(callee)) = (id, date, callee) else {
+                continue;
+            };
+            let name = crate::hir::own_name(&callee.display()).to_owned();
+            let stem = kebab(&name);
+            let mut n = 1;
+            while taken.contains(&format!("{stem}-{n}")) {
+                n += 1;
+            }
+            let generated = format!("{stem}-{n}");
+            let docket = docket_token(line)
+                .and_then(|(d, _)| docket_number(&d))
+                .map_or_else(String::new, |d| format!("/{d}"));
+            self.out.push(
+                Report::new(
+                    C::UndeclaredEventId,
+                    at,
+                    format!(
+                        "this event declares no id: its timeline key \
+                         `event:{name}@{date}{docket}` changes if its date is corrected"
+                    ),
+                )
+                .note("declare one before the date: `id: YYYY-MM-DD Event(...) by party`")
+                // Rewriting the date, not inserting before it, makes the fix
+                // overlap (and so wait for) one that moves the line.
+                .fix(
+                    at,
+                    format!("{generated}: {date}"),
+                    Applicability::MachineApplicable,
+                ),
+            );
+            taken.insert(generated);
+        }
+        ids
     }
 
     /// The machine-applicable fix that sorts out-of-order event lines by

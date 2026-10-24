@@ -1,5 +1,6 @@
 ---
 source: crates/litigate-cli/tests/cov_cmd_value.rs
+assertion_line: 93
 expression: stable(&run.json)
 ---
 {
@@ -50,6 +51,82 @@ expression: stable(&run.json)
     "overrides": []
   },
   "diagnostics": [
+    {
+      "code": "L9006",
+      "severity": "info",
+      "span": {
+        "file": "cases/cov.case",
+        "line": 14,
+        "col": 3,
+        "end_line": 14,
+        "end_col": 13
+      },
+      "message": "this event declares no id: its timeline key `event:Served@2025-03-05` changes if its date is corrected",
+      "notes": [
+        {
+          "message": "declare one before the date: `id: YYYY-MM-DD Event(...) by party`"
+        }
+      ],
+      "fixes": [
+        {
+          "edits": [
+            {
+              "span": {
+                "file": "cases/cov.case",
+                "line": 14,
+                "col": 3,
+                "end_line": 14,
+                "end_col": 13
+              },
+              "replacement": "served-1: 2025-03-05"
+            }
+          ],
+          "applicability": "machine_applicable"
+        }
+      ],
+      "fingerprint": "52225464b1b2269c",
+      "world": {
+        "name": "actual"
+      }
+    },
+    {
+      "code": "L9006",
+      "severity": "info",
+      "span": {
+        "file": "cases/cov.case",
+        "line": 15,
+        "col": 3,
+        "end_line": 15,
+        "end_col": 13
+      },
+      "message": "this event declares no id: its timeline key `event:MovedToDismiss@2025-03-19` changes if its date is corrected",
+      "notes": [
+        {
+          "message": "declare one before the date: `id: YYYY-MM-DD Event(...) by party`"
+        }
+      ],
+      "fixes": [
+        {
+          "edits": [
+            {
+              "span": {
+                "file": "cases/cov.case",
+                "line": 15,
+                "col": 3,
+                "end_line": 15,
+                "end_col": 13
+              },
+              "replacement": "moved-to-dismiss-1: 2025-03-19"
+            }
+          ],
+          "applicability": "machine_applicable"
+        }
+      ],
+      "fingerprint": "e9f7258d66bb73d4",
+      "world": {
+        "name": "actual"
+      }
+    },
     {
       "code": "L9001",
       "severity": "warning",

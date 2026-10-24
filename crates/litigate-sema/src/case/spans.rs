@@ -13,6 +13,8 @@ use std::collections::BTreeMap;
 pub struct EventSpans {
     /// The whole line.
     pub whole: Option<Span>,
+    /// The declared id before `:`.
+    pub id: Option<Span>,
     /// The date.
     pub date: Option<Span>,
     /// The docket number after `docket`.

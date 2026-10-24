@@ -1,5 +1,6 @@
 ---
 source: crates/litigate-cli/tests/check.rs
+assertion_line: 63
 expression: run.json
 ---
 {
@@ -241,6 +242,84 @@ expression: run.json
     ]
   },
   "diagnostics": [
+    {
+      "code": "L9006",
+      "severity": "info",
+      "span": {
+        "file": "cases/examples/acme.case",
+        "line": 20,
+        "col": 3,
+        "end_line": 20,
+        "end_col": 13
+      },
+      "message": "this event declares no id: its timeline key `event:Served@2025-03-05` changes if its date is corrected",
+      "notes": [
+        {
+          "message": "declare one before the date: `id: YYYY-MM-DD Event(...) by party`"
+        }
+      ],
+      "fixes": [
+        {
+          "edits": [
+            {
+              "span": {
+                "file": "cases/examples/acme.case",
+                "line": 20,
+                "col": 3,
+                "end_line": 20,
+                "end_col": 13
+              },
+              "replacement": "served-1: 2025-03-05"
+            }
+          ],
+          "applicability": "machine_applicable"
+        }
+      ],
+      "fingerprint": "9e9f01b449d6efca",
+      "profile": "strict",
+      "world": {
+        "name": "actual"
+      }
+    },
+    {
+      "code": "L9006",
+      "severity": "info",
+      "span": {
+        "file": "cases/examples/acme.case",
+        "line": 21,
+        "col": 3,
+        "end_line": 21,
+        "end_col": 13
+      },
+      "message": "this event declares no id: its timeline key `event:MovedToDismiss@2025-03-20` changes if its date is corrected",
+      "notes": [
+        {
+          "message": "declare one before the date: `id: YYYY-MM-DD Event(...) by party`"
+        }
+      ],
+      "fixes": [
+        {
+          "edits": [
+            {
+              "span": {
+                "file": "cases/examples/acme.case",
+                "line": 21,
+                "col": 3,
+                "end_line": 21,
+                "end_col": 13
+              },
+              "replacement": "moved-to-dismiss-1: 2025-03-20"
+            }
+          ],
+          "applicability": "machine_applicable"
+        }
+      ],
+      "fingerprint": "8a005587c890f87e",
+      "profile": "strict",
+      "world": {
+        "name": "actual"
+      }
+    },
     {
       "code": "L5002",
       "severity": "error",

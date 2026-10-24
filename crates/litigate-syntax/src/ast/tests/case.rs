@@ -245,3 +245,20 @@ fn docket_is_a_keyword_only_before_a_number() {
     let file = parsed.case_file().expect("case root");
     assert!(file.events()[0].docket().is_none());
 }
+
+#[test]
+fn an_event_may_declare_an_id_before_its_date() {
+    let file = matter("events {\n  answer: 2025-01-01 docket 3 Answered(x) by acme\n  2025-01-02 Moved() by acme\n}\n");
+    let events = file.events();
+    assert_eq!(text(events[0].id()).as_deref(), Some("answer"));
+    assert_eq!(text(events[0].date()).as_deref(), Some("2025-01-01"));
+    assert_eq!(text(events[0].docket()).as_deref(), Some("3"));
+    assert_eq!(events[0].party().map(|r| r.text()).as_deref(), Some("acme"));
+    assert!(events[1].id().is_none());
+    // An id must be followed by the event's date.
+    let parsed = parse_case(&format!("{HEAD}events {{ answer: Answered(x) by acme }}\n"));
+    assert!(!parsed.is_ok());
+    let file = parsed.case_file().expect("case root");
+    assert_eq!(text(file.events()[0].id()).as_deref(), Some("answer"));
+    assert!(file.events()[0].date().is_none());
+}

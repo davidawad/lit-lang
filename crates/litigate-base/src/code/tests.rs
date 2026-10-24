@@ -44,7 +44,10 @@ fn every_registered_code_exercises_its_stable_views() {
         assert_eq!(code.is_lint(), code.as_str().starts_with("L9"));
         for profile in [Profile::Dev, Profile::Strict] {
             let severity = code.severity(profile);
-            if code == DiagnosticCode::AnonymousEdge {
+            if matches!(
+                code,
+                DiagnosticCode::AnonymousEdge | DiagnosticCode::UndeclaredEventId
+            ) {
                 assert_eq!(severity, Severity::Info);
             } else if matches!(
                 code,

@@ -167,12 +167,18 @@ parties {
 }
 
 events {
-  2025-03-03 Served(Personal) on roadrunner
+  service: 2025-03-03 Served(Personal) on roadrunner
 }
 
 stakes { my-court::defaulted: 100_000.usd }
 analysis { params: { rate: 650.usd / 1.hours, opp_rate: 550.usd / 1.hours } }
 ```
+
+Each event line starts with an id (`service:`) that you choose. It names
+the event in the timeline, and it stays the same if you later correct the
+event's date. An event without an id gets an info note (L9006). Its fix,
+`litigate fix cases --code L9006`, writes a generated id such as
+`served-1:`.
 
 ```bash
 litigate lock cases                 # pins my-court in cases/Lit.lock

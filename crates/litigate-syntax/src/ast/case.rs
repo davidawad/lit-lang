@@ -184,6 +184,13 @@ impl PartyDecl {
 }
 
 impl CaseEvent {
+    /// The declared id before `:`, if written (its timeline key, SPEC
+    /// §5.6).
+    #[must_use]
+    pub fn id(&self) -> Option<Token> {
+        token(self.syntax(), SyntaxKind::Ident)
+    }
+
     /// Event date.
     #[must_use]
     pub fn date(&self) -> Option<Token> {

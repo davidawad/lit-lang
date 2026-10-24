@@ -409,6 +409,7 @@ proptest::proptest! {
 /// A docket event `callee(args)` with `relation` to `party`.
 fn event(date: &str, callee: &str, relation: EventParty, party: &str) -> Event {
     Event {
+        id: None,
         date: date.into(),
         docket: None,
         action: Expr {

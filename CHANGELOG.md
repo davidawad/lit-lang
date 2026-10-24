@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Five rulings of 2026-10-23 recorded as normative** (lg-litigate-epic-tuq.52;
+  SPEC §5.4, §5.6, §9.3, §9.4; `crates/litigate-cli/tests/rulings.rs`
+  pins each). An event dated after a matter's `as_of` is L4001. A
+  cited excusing event covers a missed deadline only when its type
+  declares `extends`/`waives` and an `after_expiry` grant admits it; a
+  name or a cite alone covers nothing. The shared clock library
+  (`packs/clock/*.json`) is hand-written. `just lit-sync` and
+  `crates/litgraph-packs` build under the `dev` profile. A version's
+  `known_at` is its recording date when no vendored source dates its
+  promulgation (the frcp $505 fee versions, `known_at 2026-10-22`).
+
 - **The tree-sitter parser merges without conflicts** (lg-flu.37). The
   generated `editors/tree-sitter-litigate/src/{parser.c,grammar.json,node-types.json}`
   stay committed (the crate's `build.rs` and editor packages compile

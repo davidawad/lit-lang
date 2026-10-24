@@ -902,6 +902,15 @@ must cover the package lifetime. A gap is legal only when declared with
 `supersedes`/`revives` (L3002). A query at `(as_of, known_at)` selects the
 version with `from <= as_of < to`, among versions whose `known_at <=` the
 query's `known_at` (latest when omitted). No version is L3007.
+A version's `known_at` is when the corpus can show it was known: its
+promulgation date where a source the package binds dates one, else the
+date the version was recorded, never an earlier guess (ruling
+2026-10-23). The
+$505 court-of-appeals fee versions of frcp's `notice-of-appeal-window`
+and `cross-appeal-window` (in force `[2013-12-01, 2023-12-01)`) are
+`known_at 2026-10-22`, the day they were recorded, after the package
+`known_at` 2024-12-01: package queries do not see them, and a matter at
+the latest corpus does.
 
 This is one query (`temporal::select`, supersession applied; precedence,
 §5.5, picks among the claimants it finds with `precedence::select`, and
@@ -1096,7 +1105,11 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
   any of them `uses`, with its resolved dependencies; `litigate lock DIR`
   writes one per directory of matters under `DIR`. A matter with no lock
   beside it, or a pin the lock does not hold, is L1007.
-- `as_of` selects law in force (§5.4). It is compile-time only.
+- `as_of` selects law in force (§5.4). It is compile-time only. It is
+  also the date the matter is analysed on, so an event dated after
+  `as_of` is L4001: it is not yet history (ruling 2026-10-23). Replay
+  still judges it, so its own errors are reported beside that one; an
+  event dated on `as_of` is history. Move `as_of` forward to record it.
 - `parties { id: Actor EntityType }`: the actor must be declared by the
   primary package (L4005). Party ids are unique.
 - `perspective party` makes that party's actor `self`, every other party's
@@ -1201,6 +1214,15 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
   event that is not of such a type transforms nothing, so no order can
   enlarge a limit that grants no capability (as in *Bowles v. Russell*,
   551 U.S. 205 (2007)).
+- Excusing a missed deadline (ruling 2026-10-23). A cited excusing event
+  covers a missed deadline, and this is the only way one is covered: the
+  event's type declares `extends d to p` or `waives d`, and a grant of
+  `d` with `after_expiry` admits it as above. It then covers every open
+  instance of `d`, whoever bears it, at once: an extended instance is
+  judged against its new date, and a waived one ends waived. An event's
+  name (`Excused`, `Waived`, `Extended`) and its `cite` give it no effect
+  of their own: without a declared effect a cited event covers nothing,
+  and without a `cite` an excusing event is L4001.
 - Option-removing events. A waiver or an order striking a defense does not
   move the matter; it takes an option away for the rest of it. An event
   whose type declares `removes p` is option-removing: its `p` argument
@@ -1875,7 +1897,7 @@ All commands accept `--format json|human` (default `human` on a TTY, else
 | `describe` | | `{language_version, grammar, types, builtins, diagnostic_codes:[{code, explain}], commands}` |
 | `lock` | `[PKG_DIR]`, `--locked`, `--merge BASE OURS THEIRS` | `{lockfile, changed, packages:[{name,version,digest}]}`; `--locked` fails (L1007) instead of writing; `--merge` (§4.2) gives `{lockfile, changed, unresolved:[name]}` |
 | `check` | `PATHS...`, `--profile dev\|strict` (default `dev`), `--as-of`, `--known-at` | `{profile, files, obligations:[Finding], packages}` |
-| `build` | `PKG_OR_CASE...`, `--as-of`, `--known-at`, `--out DIR`, `--pack-file ID=STEM` (repeatable) | `{outputs:{packs:[path], links:[path], clock:[path], scenarios:[path], source_maps:[path], litigatables:[path]}, litigatable_hash, litigatables, obligations}` |
+| `build` | `PKG_OR_CASE...`, `--profile dev\|strict` (default `dev`), `--as-of`, `--known-at`, `--out DIR`, `--pack-file ID=STEM` (repeatable) | `{outputs:{packs:[path], links:[path], clock:[path], scenarios:[path], source_maps:[path], litigatables:[path]}, litigatable_hash, litigatables, obligations}` |
 | `fmt` | `PATHS...`, `--check` | `{files:[{path, changed}]}`; `--check` reports L9004 instead of writing |
 | `explain` | `CODE` | `{code, explanation, severity:{dev, strict}}` |
 | `fix` | `PATHS...`, `--code CODE`, `--dry-run`, `--include-maybe` | `{fixes:[{code, message?, edits:[{span, replacement}], applicability}], changed_files, skipped_overlapping, dry_run}`; only machine-applicable fixes without `--include-maybe`; a fix applies whole or not at all |
@@ -1914,7 +1936,7 @@ disjoint source files and never conflict on generated output. Edit `lit/` or
 |---|---|
 | `packs/<file>.json` | each forum package `lit/<forum>/` (not `lit/core`, a library, nor `lit/examples`) |
 | `packs/links.json` | `lit/links/` |
-| `packs/clock/<file>.json` | a forum package's own counting rules and calendars (today only `mpep-prosecution`) |
+| `packs/clock/<file>.json` | a forum package's own counting rules and calendars (today `mpep-prosecution` and `ttab-trademark-trial-and-appeal-board`) |
 | `scenarios/<id>.json` | each top-level `cases/<id>.case` (not `cases/requests/` nor `cases/examples/`) |
 
 `<file>` is the pack id, except where the build maps it with `--pack-file`
@@ -1926,13 +1948,27 @@ directory, so a removed package's file disappears; source maps and
 litigatables are not kept. The hand-authored clock fragments are copied
 beside the generated ones (a fragment both hand-authored and generated is a
 build failure). Not generated:
-`lit/core`'s counting rules and calendars are not yet the engine's clock
-library, so `packs/clock/{frap26,frcp6,itc210,rcfc6,us-federal-holidays}.json`
-stay hand-authored (with `packs/clock/SOURCES-NOTES.md` and
-`packs/*-SOURCES-NOTES.md`), as do `examples/*.json` requests, which the
-`cases/requests/` matters reproduce through `litigate run`. Generated JSON is
-the canonical rendering of §8.6, so its bytes need not match a hand-written
-predecessor; `litigate diff` is the equality that matters.
+the shared clock library is hand-written (ruling 2026-10-23).
+`packs/clock/{frap26,frcp6,frcrimp45,itc210,rcfc6,sup-ct-30,us-federal-holidays}.json`
+are committed `schemaVersion: 3` fragments with no `lowered` header (with
+`packs/clock/SOURCES-NOTES.md` and `packs/*-SOURCES-NOTES.md`); no build
+writes or rewrites them, and a build writes a forum package's own
+fragment (`clock/<pack id>.json`, `schemaVersion: 4`) only under a name
+none of them has. `lit/core`'s counting rules and calendars are a
+library packages import, not a generator for these files. Also
+hand-written: `examples/*.json` requests, which the
+`cases/requests/` matters reproduce through `litigate run`.
+
+`just lit-sync` and `crates/litgraph-packs` build under the `dev`
+profile (ruling 2026-10-23): `build.args` names no `--profile`, and
+`build` defaults to `dev`. A fail-closed hole (`?`, §7) is then an L9002
+warning and lowers to `lowered.holes`, so the build never blocks on an
+unverified rule text, date or authority, and nothing is filled in to pass
+`strict`. `strict` grades the same sources in `just lit-check`.
+
+Generated JSON is the canonical rendering of §8.6, so its bytes need not
+match a hand-written predecessor; `litigate diff` is the equality that
+matters.
 
 ## 10. Canonical formatting (`litigate fmt`)
 
@@ -2156,7 +2192,7 @@ gets one row per condition when the conditions classify differently.
 | C45 | L3009 counting: anchor/exclude combination; unknown anchor, roll kind or unit; duplicate service method; `short_period` unit (§5.3) | sema, lower | a | `Anchor = TriggerDay {exclude_trigger_day} \| NextBusinessDay` makes the illegal combinations unrepresentable; roll kinds and units are enums; service extensions are a map keyed by the closed `ServiceMethod` enum. |
 | C46 | L3009 `N.hours` without `allow_hours`; backward deadline on a `next_business_day` rule; `nth` outside 1-4; unknown calendar; closed days that never end (§5.3, §5.5) | sema, verify | b | `Counting<hours: Bool, anchor: Anchor>` as indices: an hours deadline needs `hours = true`; `Deadline<Bwd>` needs `anchor ≠ NextBusinessDay`; `nth: {n \| 1 ≤ n ≤ 4}`; calendar is a resolved `Ref` (a). Closed-day runs: `Counting = {c \| ∀d. ∃k. open_c(d + k)}`, decided by Gregorian-cycle enumeration (lg-962.3). |
 | C47 | L4001 case events out of docket order, docket numbers contradicting dates, unordered same-day events that do not commute (§5.6) | sema | b | Events list `{es \| ∀i<j. ¬(e_j ≺ e_i)}` with `≺` the (date, docket) order (QF_LIA, ground); the fix sorts by (date, docket). |
-| C48 | L4001 event matches no edge or several; takes no edge without a declared effect, a firing trigger or transition history, or where the matter has ended; matches only removed edges; removal or transform without `cite`; removal repeated; discharge of another party's obligation; extension or waiver with no target, no capability, the wrong principal, after expiry, or beyond its bound (§5.6) | sema | b | Typestate (DESIGN §4.5) as an indexed type: the matter is `Case<n, R, O>` (posture node `n`, removed edge set `R`, open obligation instances `O`); an event `e` types only as `Case<n, R, O> → Case<to(edge), R, O'>` for the unique edge of `n` not in `R` whose pattern it matches, or as `Case<n, R', O'>` by its declared effect or the triggers it fires (C41). The capability check is a ground comparison of the principal and of dates against the bound. Finite and ground: one step per event. |
+| C48 | L4001 event dated after `as_of`, matches no edge or several; takes no edge without a declared effect, a firing trigger or transition history, or where the matter has ended; matches only removed edges; removal or transform without `cite`; removal repeated; discharge of another party's obligation; extension or waiver with no target, no capability, the wrong principal, after expiry, or beyond its bound (§5.6) | sema | b | Typestate (DESIGN §4.5) as an indexed type: the matter is `Case<n, R, O>` (posture node `n`, removed edge set `R`, open obligation instances `O`); an event `e` types only as `Case<n, R, O> → Case<to(edge), R, O'>` for the unique edge of `n` not in `R` whose pattern it matches, or as `Case<n, R', O'>` by its declared effect or the triggers it fires (C41). The capability check is a ground comparison of the principal and of dates against the bound. Finite and ground: one step per event. |
 | C49 | L4002 act discharges an obligation instance after its due date (§5.6) | sema | c | The due date comes from counting through holiday calendars and inaccessible days from the instance's trigger: execution, not a type. |
 | C50 | L4003 `facts` node not a `fact` chance node or edge not its own (§5.6) | sema | b | `facts {n: Edges(n)}` with `n : Node<Chance, fact>` (index on the referenced node's signature). |
 | C51 | L4004 reachable terminal without a stake, `unvalued`, or a pack-authored known payoff (§5.6) | sema, verify | c | Reachability from the replayed start. `unvalued` being an error in `strict` is a profile rule (§7), not a type. |

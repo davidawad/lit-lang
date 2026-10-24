@@ -47,6 +47,21 @@ pub struct SourceFile {
     pub workspace: Workspace,
 }
 
+/// One `.case` matter, an input so its check is memoized while its text,
+/// its lock and the packages it reads are unchanged.
+#[salsa::input(debug)]
+pub struct CaseFile {
+    /// Repository-relative path.
+    #[returns(ref)]
+    pub path: String,
+    /// Contents.
+    #[returns(ref)]
+    pub text: String,
+    /// The `Lit.lock` beside it, if present.
+    #[returns(ref)]
+    pub lock: Option<String>,
+}
+
 impl PackageInput {
     /// Repository-relative path of `Lit.toml`.
     pub fn manifest_path(self, db: &dyn salsa::Database) -> String {

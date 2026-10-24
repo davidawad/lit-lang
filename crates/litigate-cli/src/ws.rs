@@ -371,7 +371,16 @@ impl Session {
     /// A session over in-memory packages (all requested) and matters.
     #[must_use]
     pub fn from_loaded(loaded: &[LoadedPackage], cases: Vec<CaseText>) -> Self {
-        let mut db = LitDatabase::default();
+        Self::from_loaded_in(LitDatabase::default(), loaded, cases)
+    }
+
+    /// [`Session::from_loaded`] in `db` (one recording its query log, say).
+    #[must_use]
+    pub fn from_loaded_in(
+        mut db: LitDatabase,
+        loaded: &[LoadedPackage],
+        cases: Vec<CaseText>,
+    ) -> Self {
         let ws = litigate_sema::db::inputs::create_workspace(&mut db, loaded);
         let requested: BTreeSet<String> = loaded.iter().map(|p| p.root.clone()).collect();
         let packages = ws
@@ -386,6 +395,37 @@ impl Session {
             cases,
             cache: None,
         }
+    }
+
+    /// The salsa input of every matter, in order: the inputs of the last
+    /// call, with only what changed in `cases` since set on them (so a
+    /// matter whose text and lock are unchanged keeps its memoized check),
+    /// created for new matters.
+    pub fn case_inputs(&mut self) -> Vec<CaseFile> {
+        use salsa::Setter;
+        self.case_files.truncate(self.cases.len());
+        for (i, case) in self.cases.iter().enumerate() {
+            let Some(&input) = self.case_files.get(i) else {
+                let input = CaseFile::new(
+                    &self.db,
+                    case.path.clone(),
+                    case.text.clone(),
+                    case.lock.clone(),
+                );
+                self.case_files.push(input);
+                continue;
+            };
+            if input.path(&self.db) != &case.path {
+                input.set_path(&mut self.db).to(case.path.clone());
+            }
+            if input.text(&self.db) != &case.text {
+                input.set_text(&mut self.db).to(case.text.clone());
+            }
+            if input.lock(&self.db) != &case.lock {
+                input.set_lock(&mut self.db).to(case.lock.clone());
+            }
+        }
+        self.case_files.clone()
     }
 
     /// The file a diagnostic `FileId` names. Sema keeps paths outside the
@@ -504,7 +544,7 @@ impl Session {
 
 /// One package input as loaded: its sema check, files, and digest.
 #[must_use]
-pub fn package(db: &LitDatabase, input: PackageInput, requested: &BTreeSet<String>) -> Pkg {
+pub fn package(db: &dyn salsa::Database, input: PackageInput, requested: &BTreeSet<String>) -> Pkg {
     let root = input.root(db).clone();
     let check = litigate_sema::db::queries::check_package(db, input).clone();
     let manifest = parse_manifest(input.manifest_text(db)).ok();

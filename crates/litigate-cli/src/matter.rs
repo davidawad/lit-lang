@@ -10,7 +10,7 @@
 use crate::clock::{self, Clocks};
 use crate::hirx;
 use crate::report;
-use crate::ws::{CaseText, Session};
+use crate::ws::CaseText;
 use litigate_base::{Diagnostic, FileId, LineIndex, Profile, Severity};
 use litigate_lower::{LoweredCase, Lowerer};
 use litigate_sema::case::{Env, Obligation, Status, Step};
@@ -97,7 +97,7 @@ pub struct At<'a> {
 }
 
 /// A checked matter.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct CaseCheck {
     /// Repository-relative path.
     pub path: String,
@@ -245,7 +245,7 @@ pub fn check_at(
     let mut checked_case = verified.checked.case;
     if let Some(c) = checked_case
         .as_mut()
-        .filter(|c| c.start == default_start(&all, c) && !asserts_start(&case.text))
+        .filter(|c| c.start == default_start(all, c) && !asserts_start(&case.text))
     {
         // No start is asserted and the events (none, or only option
         // removals) leave the matter at the engine's default start, the
@@ -255,7 +255,7 @@ pub fn check_at(
     let clean = checked_case
         .as_ref()
         .filter(|_| !own.iter().chain(&diagnostics).any(is_error));
-    let lowered = clean.and_then(|c| match Lowerer::new(&all).case(c, &case.path) {
+    let lowered = clean.and_then(|c| match Lowerer::new(all).case(c, &case.path) {
         Ok(lowered) => Some(lowered),
         Err(errors) => {
             own.extend(errors);
@@ -408,7 +408,7 @@ mod tests {
         let session = testkit::example_locked(extra, text, lock);
         let all = session.hir();
         check(
-            &session,
+            &all,
             &session.cases[0],
             &Clocks::new(&all),
             Profile::Dev,

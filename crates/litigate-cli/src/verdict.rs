@@ -6,7 +6,7 @@ use crate::clock::Clocks;
 use crate::hirx;
 use crate::inline_tests::{self, TestResult};
 use crate::report;
-use crate::ws::{Pkg, Session};
+use crate::ws::Pkg;
 use litgraph::cite::SourceCorpus;
 use litigate_base::{Diagnostic, DiagnosticCode as C, Profile, Severity};
 use litigate_lower::{LoweredPackage, Lowerer, Options};
@@ -18,7 +18,7 @@ use std::path::Path;
 use std::sync::OnceLock;
 
 /// One package's findings.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Verdict {
     /// Every diagnostic: sema's, the lowering's, verification's, and the
     /// CLI's own, severities set for the profile.
@@ -58,14 +58,13 @@ pub fn anonymous_edges(pkg: &hir::Package) -> Vec<Diagnostic> {
 
 /// `Lit.lock` diagnostics: a lock that exists, or one a package with
 /// dependencies needs.
-fn lock(session: &Session, pkg: &Pkg) -> Vec<Diagnostic> {
-    let has_deps =
-        litigate_sema::pkg::manifest::parse_manifest(pkg.input.manifest_text(&session.db))
-            .is_ok_and(|m| !m.manifest.dependencies.is_empty());
-    if pkg.input.lock_text(&session.db).is_none() && !has_deps {
+fn lock(db: &dyn salsa::Database, ws: Workspace, pkg: &Pkg) -> Vec<Diagnostic> {
+    let has_deps = litigate_sema::pkg::manifest::parse_manifest(pkg.input.manifest_text(db))
+        .is_ok_and(|m| !m.manifest.dependencies.is_empty());
+    if pkg.input.lock_text(db).is_none() && !has_deps {
         return Vec::new();
     }
-    litigate_sema::lock_diagnostics(&session.db, session.ws, pkg.input)
+    litigate_sema::lock_diagnostics(db, ws, pkg.input)
 }
 
 /// L9004 for every `.lit` file not in canonical form.
@@ -103,8 +102,10 @@ pub fn corpus() -> &'static SourceCorpus {
 /// Verifies one package at the build dates `options`.
 #[must_use]
 pub fn package(
-    session: &Session,
+    db: &dyn salsa::Database,
+    ws: Workspace,
     pkg: &Pkg,
+    all: &[&hir::Package],
     clocks: &Clocks,
     profile: Profile,
     options: &Options,
@@ -112,7 +113,7 @@ pub fn package(
     let all = session.hir();
     let corpus = corpus();
     let mut own: Vec<Diagnostic> = pkg.check.diagnostics.clone();
-    let locked = lock(session, pkg);
+    let locked = lock(db, ws, pkg);
     own.extend(locked.iter().cloned());
     if profile == Profile::Strict {
         own.extend(format(pkg));
@@ -125,7 +126,7 @@ pub fn package(
         ),
         Some(hir) => {
             own.extend(anonymous_edges(hir));
-            let lowering = Lowerer::new(&all).with_corpus(corpus).package(hir, options);
+            let lowering = Lowerer::new(all).with_corpus(corpus).package(hir, options);
             if let Err(errors) = &lowering {
                 own.extend(errors.iter().cloned());
             }
@@ -133,7 +134,7 @@ pub fn package(
                 package: hir,
                 check: &pkg.check,
                 lowered: lowering.as_ref().map_err(Vec::as_slice),
-                packages: &all,
+                packages: all,
                 options,
             };
             let verify = || litigate_verify::verify_package(&input, corpus, profile);
@@ -212,10 +213,13 @@ mod tests {
         let session = example_with(
             "counting nourl cite \"XYZ 6(a)\"\n{\n  exclude_trigger_day\n  include_last_day\n  holidays federal-holidays\n}",
         );
-        let clocks = Clocks::new(&session.hir());
+        let all = session.hir();
+        let clocks = Clocks::new(&all);
         let verdict = package(
-            &session,
+            &session.db,
+            session.ws,
             &session.packages[0],
+            &all,
             &clocks,
             Profile::Dev,
             &Options::default(),

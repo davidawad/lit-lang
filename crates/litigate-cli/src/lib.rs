@@ -26,6 +26,7 @@ pub mod inline_tests;
 pub mod matter;
 pub mod out;
 pub mod prov;
+pub mod queries;
 mod render;
 pub mod report;
 pub mod span;

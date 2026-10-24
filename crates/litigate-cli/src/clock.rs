@@ -24,12 +24,69 @@ pub struct Clocks<'a> {
     packages: Vec<&'a hir::Package>,
     /// Each counting version's fragment (by declaration address, which
     /// every scope shares), or why it does not lower.
-    fragments: BTreeMap<usize, Result<ClockLibrary, String>>,
+    fragments: BTreeMap<usize, Cow<'a, Result<ClockLibrary, String>>>,
 }
+
+/// A counting version's identity across loads: pack id, local id, and its
+/// effective `from` and `known_at`.
+pub type VersionKey = (String, String, String, String);
+
+/// The clock fragment of every counting version, or why it does not lower.
+pub type Fragments = BTreeMap<VersionKey, Result<ClockLibrary, String>>;
 
 /// The identity of a loaded declaration, the same in every world over it.
 fn address(decl: &Declaration) -> usize {
     std::ptr::from_ref(decl).addr()
+}
+
+fn version_key(pkg: &hir::Package, c: &hir::Counting) -> VersionKey {
+    (
+        pkg.manifest.pack_id.clone(),
+        c.meta.id.clone(),
+        c.meta.effective.from.clone(),
+        c.meta.effective.known_at.clone(),
+    )
+}
+
+/// The counting versions of `packages`: address, package, declaration.
+fn countings<'a>(
+    packages: &[&'a hir::Package],
+) -> Vec<(usize, &'a hir::Package, &'a hir::Counting)> {
+    World::from_packages(packages)
+        .decls
+        .iter()
+        .filter_map(|d| match d.decl {
+            Declaration::Counting(c) => Some((address(d.decl), packages[d.pack], c)),
+            _ => None,
+        })
+        .collect()
+}
+
+/// The clock fragment of version `c` of `p`, or why it does not lower.
+fn lower(
+    lowerer: &Lowerer<'_>,
+    p: &hir::Package,
+    c: &hir::Counting,
+) -> Result<ClockLibrary, String> {
+    match lowerer.clock_version(p, c) {
+        Ok(Some(library)) => Ok(library),
+        Ok(None) => Err(format!("counting rule `{}` does not lower", c.meta.id)),
+        Err(diagnostics) => Err(diagnostics.first().map_or_else(String::new, |d| {
+            format!("{}: {}", d.code.as_str(), d.message)
+        })),
+    }
+}
+
+/// Lowers every version of every counting rule of `packages`, each at its
+/// own `from` date (what [`Clocks::new`] does, kept by version so it can
+/// be computed once and shared, [`Clocks::with_fragments`]).
+#[must_use]
+pub fn fragments(packages: &[&hir::Package]) -> Fragments {
+    let lowerer = Lowerer::new(packages);
+    countings(packages)
+        .into_iter()
+        .map(|(_, p, c)| (version_key(p, c), lower(&lowerer, p, c)))
+        .collect()
 }
 
 impl<'a> Clocks<'a> {
@@ -38,23 +95,23 @@ impl<'a> Clocks<'a> {
     #[must_use]
     pub fn new(packages: &[&'a hir::Package]) -> Self {
         let lowerer = Lowerer::new(packages);
-        let fragments = World::from_packages(packages)
-            .decls
-            .iter()
-            .filter_map(|d| match d.decl {
-                Declaration::Counting(c) => Some((address(d.decl), packages[d.pack], c)),
-                _ => None,
-            })
-            .map(|(i, p, c)| {
-                let fragment = match lowerer.clock_version(p, c) {
-                    Ok(Some(library)) => Ok(library),
-                    Ok(None) => Err(format!("counting rule `{}` does not lower", c.meta.id)),
-                    Err(diagnostics) => Err(diagnostics.first().map_or_else(String::new, |d| {
-                        format!("{}: {}", d.code.as_str(), d.message)
-                    })),
-                };
-                (i, fragment)
-            })
+        let fragments = countings(packages)
+            .into_iter()
+            .map(|(i, p, c)| (i, Cow::Owned(lower(&lowerer, p, c))))
+            .collect();
+        Self {
+            packages: packages.to_vec(),
+            fragments,
+        }
+    }
+
+    /// [`Clocks::new`] over fragments lowered already, by [`fragments`] of
+    /// these packages or more.
+    #[must_use]
+    pub fn with_fragments(packages: &[&'a hir::Package], lowered: &'a Fragments) -> Self {
+        let fragments = countings(packages)
+            .into_iter()
+            .filter_map(|(i, p, c)| Some((i, Cow::Borrowed(lowered.get(&version_key(p, c))?))))
             .collect();
         Self {
             packages: packages.to_vec(),
@@ -74,6 +131,12 @@ impl<'a> Clocks<'a> {
             .filter(|p| roots.contains(&p.manifest.name.as_str()))
             .collect();
         World::closure(&roots, &self.packages)
+    }
+
+    /// How many counting versions have a fragment.
+    #[cfg(test)]
+    pub(crate) fn lowered_versions(&self) -> usize {
+        self.fragments.len()
     }
 
     /// The clock fragment of counting declaration `decl` (of a loaded

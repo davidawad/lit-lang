@@ -1,12 +1,12 @@
 //! `litigate check`: every package and matter, every obligation.
 use crate::cli::Dates;
-use crate::clock::Clocks;
-use crate::matter::{self, CaseCheck};
+use crate::matter::CaseCheck;
 use crate::out::{Failure, Outcome, Report};
-use crate::verdict::{self, Verdict};
+use crate::queries::{case_check, package_verdict, Build};
+use crate::verdict::Verdict;
 use crate::ws::{self, Session};
 use litigate_base::{Diagnostic, Profile};
-use litigate_lower::{EngineClock, Lowerer, Options};
+use litigate_lower::Options;
 use litigate_sema::pkg::source::{Disk, Source};
 use litigate_verify::Finding;
 use serde_json::{json, Value};
@@ -87,7 +87,9 @@ pub fn engine(all: &[&litigate_sema::hir::Package]) -> EngineClock {
 
 /// Checks everything loaded in `session` at the build dates `options`
 /// (each defaults to the package's `known_at`; a matter selects at its own
-/// `as_of` and `known_at`).
+/// `as_of` and `known_at`), through the session database's queries
+/// ([`crate::queries`]): a session checked again after an edit re-runs only
+/// what the edit reaches.
 #[must_use]
 pub fn check_session(session: Session, profile: Profile, options: &Options) -> Checked {
     let all = session.hir();
@@ -98,12 +100,13 @@ pub fn check_session(session: Session, profile: Profile, options: &Options) -> C
         .map(|p| {
             (
                 p.name.clone(),
-                verdict::package(&session, p, &clocks, profile, options),
+                package_verdict(db, session.ws, p.input, build).clone(),
             )
         })
         .collect();
-    let cases: Vec<CaseCheck> = session
-        .cases
+    // A matter is checked at its own dates.
+    let dated = Build::of(db, profile, &Options::default());
+    let cases: Vec<CaseCheck> = inputs
         .iter()
         .map(|c| matter::check(&session, c, &clocks, profile))
         .collect();

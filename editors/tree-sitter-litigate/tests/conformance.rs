@@ -217,6 +217,49 @@ fn reserved_guard_operations_parse_here_and_are_l0010_in_the_compiler() {
     }
 }
 
+/// The reserved filing requirements (SPEC §3.7): the grammar gives a
+/// `limit` declaration and each body entry a node so editors highlight
+/// them, and the compiler rejects them with L0011 only (once per reserved
+/// word), so the slot never shadows another error.
+#[test]
+fn reserved_filing_limits_parse_here_and_are_l0011_in_the_compiler() {
+    for (entry, node, reserved) in [
+        (
+            "words <= 13_000 cite \"FRAP 32(a)(7)(B)(i)\"",
+            "limit_bound",
+            1,
+        ),
+        ("pages <= ?(\"local rule\")", "limit_bound", 1),
+        ("lines <= 1300", "limit_bound", 1),
+        (
+            "requires certificate compliance cite \"FRAP 32(g)(1)\"",
+            "certificate_req",
+            2,
+        ),
+        (
+            "excludes [cover-page, ?(\"local rule\")] cite \"FRAP 32(f)\"",
+            "exclusion_list",
+            2,
+        ),
+        ("ecf \"code\"", "ecf_code", 1),
+        ("ecf ?(\"district ECF event code\")", "ecf_code", 1),
+    ] {
+        let source = format!(
+            "module m\nlimit brief effective [1998-12-01, ..) {{\n  {entry}\n}} cite \"FRAP 32\"\nstart s\n"
+        );
+        let tree = parse(&source);
+        assert!(syntax_errors(&tree).is_empty(), "{source}");
+        assert!(find(tree.root_node(), "limit_decl").is_some(), "{source}");
+        assert!(find(tree.root_node(), node).is_some(), "{source}");
+        let compiled = litigate_syntax::parse_lit(&source);
+        let codes: Vec<&str> = compiled.errors().iter().map(|e| e.code.as_str()).collect();
+        assert_eq!(codes, vec!["L0011"; reserved], "{source}");
+        for error in compiled.errors() {
+            assert!(error.message.starts_with(litigate_syntax::RESERVED_FILING));
+        }
+    }
+}
+
 /// Self-contained top-level items; any sequence of them is a valid module
 /// body because items are juxtaposed (SPEC §3.1).
 const ITEMS: [&str; 12] = [

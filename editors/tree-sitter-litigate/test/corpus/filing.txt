@@ -1,0 +1,77 @@
+================================================================================
+Reserved filing requirements
+================================================================================
+
+module frap.length
+
+/// FRAP 32(a)(7), 32(f) and 32(g).
+limit principal-brief effective [1998-12-01, ..) {
+  words <= 13_000 cite "FRAP 32(a)(7)(B)(i)"
+  lines <= 1300 cite "FRAP 32(a)(7)(B)(i)"
+  pages <= 30 cite "FRAP 32(a)(7)(A)"
+  requires certificate compliance cite "FRAP 32(g)(1)"
+  excludes [cover-page, table-of-contents, ?("any item excluded by local rule")] cite "FRAP 32(f)"
+  ecf ?("district ECF event code")
+} cite "FRAP 32"
+
+start s
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)
+        (identifier)))
+    (doc_comment)
+    (limit_decl
+      (ref
+        (identifier))
+      (effective_clause
+        (interval
+          (date)
+          (open_end)))
+      (limit_body
+        (limit_bound
+          (number)
+          (cite
+            (string
+              (string_content))))
+        (limit_bound
+          (number)
+          (cite
+            (string
+              (string_content))))
+        (limit_bound
+          (number)
+          (cite
+            (string
+              (string_content))))
+        (certificate_req
+          (ref
+            (identifier))
+          (cite
+            (string
+              (string_content))))
+        (exclusions
+          (exclusion_list
+            (ref
+              (identifier))
+            (ref
+              (identifier))
+            (hole
+              (string
+                (string_content))))
+          (cite
+            (string
+              (string_content))))
+        (ecf_code
+          (hole
+            (string
+              (string_content)))))
+      (cite
+        (string
+          (string_content))))
+    (start_decl
+      (identifier))))

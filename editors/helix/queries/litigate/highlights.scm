@@ -14,7 +14,7 @@
   "edition" "module" "import" "package" "start" "group" "type" "enum" "event"
   "state" "decision" "chance" "terminal" "link" "instance" "rule"
   "deadline" "counting" "calendar" "transition" "authority" "default"
-  "exception" "test"
+  "exception" "test" "limit"
   "case" "uses" "as_of" "known_at" "summary" "notes" "source" "perspective"
   "parties" "events" "facts" "stakes" "beliefs" "prior" "observe" "analysis"
 ] @keyword
@@ -33,6 +33,7 @@
   "priority" "url" "bearer" "designated" "interpretation" "trigger" "extend" "waive" "after_expiry" "never"
   "removes" "elects" "extends" "waives" "to" "where" "and" "or" "forums"
   "forward_holidays" "declared_holidays"
+  "words" "pages" "lines" "certificate" "excludes" "ecf"
 ] @keyword
 
 (discretion) @keyword

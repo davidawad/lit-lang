@@ -26,6 +26,8 @@
   (transition_body)
   (test_body)
   (source_body)
+  (limit_body)
+  (exclusion_list)
   (parties_block)
   (events_block)
   (facts_block)

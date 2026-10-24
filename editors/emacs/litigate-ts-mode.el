@@ -75,7 +75,7 @@ The canonical format (`litigate fmt', SPEC §10) uses two."
   '("edition" "module" "import" "package" "start" "group" "type" "enum" "event"
     "state" "decision" "chance" "terminal" "link" "instance" "rule"
     "deadline" "counting" "calendar" "transition" "authority" "default"
-    "exception" "test"
+    "exception" "test" "limit"
     "case" "uses" "as_of" "known_at" "summary" "notes" "source" "perspective"
     "parties" "events" "facts" "stakes" "beliefs" "prior" "observe" "analysis")
   "Keywords that open a declaration.")
@@ -93,6 +93,7 @@ The canonical format (`litigate fmt', SPEC §10) uses two."
     "priority" "url" "bearer" "designated" "interpretation" "trigger" "extend" "waive" "after_expiry" "never"
     "removes" "elects" "extends" "waives" "to" "where" "and" "or" "forums"
     "forward_holidays" "declared_holidays"
+    "words" "pages" "lines" "certificate" "excludes" "ecf"
     "given" "expect" "on")
   "Clause, field and test keywords.")
 
@@ -238,6 +239,7 @@ The canonical format (`litigate fmt', SPEC §10) uses two."
     "instance_decl" "probability_map"
     "role_map" "rule_body" "counting_body" "service_map" "short_period"
     "calendar_body" "transition_body" "test_body" "source_body"
+    "limit_body" "exclusion_list"
     "parties_block" "events_block" "facts_block" "stakes_block"
     "beliefs_block" "count_map" "num_record" "money_record"
     "id_list" "import_list" "record_expression"

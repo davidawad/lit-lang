@@ -13,6 +13,7 @@
   (calendar_body)
   (transition_body)
   (test_body)
+  (limit_body)
   (variant_list)
   (source_body)
   (parties_block)

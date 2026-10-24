@@ -13,7 +13,7 @@ module.exports = {
     $.module_decl,
     repeat($.import_decl),
     optional($.package_decl),
-    repeat($._item),
+    repeat(choice($._item, $.limit_decl)),
   ),
 
   module_decl: $ => seq('module', field('path', $.module_path)),
@@ -306,6 +306,43 @@ module.exports = {
     field('predicate', $._expression),
     repeat(choice($._version_clause, $.cite)),
   ),
+
+  // SPEC §3.7: filing requirements (a paper kind's length limits,
+  // certificates, exclusions and ECF event codes) are reserved. They parse
+  // here so editors highlight them; the compiler rejects them (L0011).
+  limit_decl: $ => seq(
+    'limit',
+    field('paper', $.ref),
+    repeat(choice($._version_clause, $.cite)),
+    field('body', $.limit_body),
+    repeat(choice($._version_clause, $.cite)),
+  ),
+
+  limit_body: $ => braced($._limit_entry),
+
+  _limit_entry: $ => choice(
+    $.limit_bound,
+    $.certificate_req,
+    $.exclusions,
+    $.ecf_code,
+  ),
+
+  limit_bound: $ => seq(
+    field('measure', choice('words', 'pages', 'lines')),
+    '<=',
+    field('value', choice($.number, $.hole)),
+    repeat($.cite),
+  ),
+
+  certificate_req: $ => seq('requires', 'certificate', field('kind', $.ref), repeat($.cite)),
+
+  // What does not count toward the limit; a hole where unvendored.
+  exclusions: $ => seq('excludes', field('items', $.exclusion_list), repeat($.cite)),
+
+  exclusion_list: $ => commaList('[', choice($.ref, $.hole), ']'),
+
+  // ECF event codes are data (strings), never keywords.
+  ecf_code: $ => seq('ecf', field('code', choice($.string, $.hole)), repeat($.cite)),
 
   probability_map: $ => braced($.probability_entry),
 

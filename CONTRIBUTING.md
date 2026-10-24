@@ -41,7 +41,8 @@ CI runs the same recipe, so a clean `just ci` locally means CI should pass.
   run as part of `test`; `just proptest` filters to just those).
 - **Coverage**: ≥97% line coverage on the `litgraph` crate (the pure-logic
   engine; the CLI crate is thin and not gated the same way):
-  `just cov` (`cargo llvm-cov nextest -p litgraph --fail-under-lines 97`).
+  `just cov`; its `cov: litgraph TOTAL lines ...` line is the gated number
+  (AGENTS.md, "Reading the coverage result").
 - **Formal verification**: Kani harnesses (`#[cfg(kani)]` / `#[kani::proof]`
   in `crates/litgraph`) for properties worth proving, not just testing —
   numerical invariants, no-panic guarantees on untrusted input. Run with

@@ -326,6 +326,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   L4002 when it misses the obligation it discharges; otherwise the result
   lists what it discharges and the deadlines it triggers, with due dates.
 
+- **Law not encoded before a date, pre-2009 FRAP 4, declared USPTO
+  closures, and outcomes read from the docket** (lg-flu.26; design review
+  2026-10-23 item 6, L5, L7, L11, L13).
+  - `unknown_before` (SPEC §5.4): a date before every recorded version of a
+    declaration, and before its package's `in_force`, is the hole "law not
+    encoded before D" (`Miss::Before`), not "no version in force". Replay
+    names it for a stage and a deadline; a trigger then opens an instance
+    whose due date is unknown (an L3007 warning), never counted under a
+    later version, so an act against it is unjudged (L4010) and it is
+    never breached. A declaration enacted later inside the package's corpus
+    is still simply not yet law. The CLI schedule reports the reason.
+  - FRAP 4 as printed in the 2008 and 2011 editions of 28 U.S.C. App.
+    (`sources/usc-28-app-frap4-history.txt`): the notice-of-appeal and
+    cross-appeal periods of `lit/frcp`, `lit/frap` and `lit/cafc` gain a
+    version from December 1, 2002 (when 4(a)(5)(A)(ii) took the 2008
+    edition's text) to December 1, 2009, whose 4(a)(5)(C) bound is 10 days
+    after the order (in calendar days, the earlier date); `lit/cafc` no
+    longer claims the 14-day bound from 1968 (district court) or 1992
+    (CoFC). The Federal Circuit cross-appeal runs to the later of 14 days
+    and the FRAP 4(a)(1)(A) period (`later_of(district-court-noa-period)`,
+    new module `cafc.appeal-periods`).
+  - Declared closures (L11): `lit/core`'s `uspto-closures`, the days the
+    USPTO designated "a Federal holiday within the District of Columbia"
+    (37 C.F.R. § 1.9(h); TBMP § 112), vendored from its notices
+    (`sources/uspto-closures.txt`), close `uspto-1-7` and `ttab-2-196`. No
+    FRCP/FRAP 6(a)(6)(B) day is declared.
+  - The Federal Circuit `remand-destination` is a `fact` node whose guards
+    read the origin's entry event; new `Order` variants `CofcJudgment` and
+    `TtabDecision` open the CoFC and TTAB notice periods (so a CoFC matter
+    no longer opens the district court's, nor a PTAB matter the TTAB's).
+    The CoFC ADR outcome and patent settlement fork stay draws, decided on
+    the docket by the Appendix H ¶3(h) concluding order (`AdrConcluded`)
+    and the Patent Rule 17 paper (`SettlementDiscussionReported`), both
+    vendored (`sources/rcfc-appendices.txt`). CoFC and PTAB matters state
+    the remand destination.
+  - litgraph: a `fact` node with one live out-edge (a links instance
+    removed the rest) is decided and does not warn `fact-unset`.
+
 - **The tree-sitter parser merges without conflicts** (lg-flu.37). The
   generated `editors/tree-sitter-litigate/src/{parser.c,grammar.json,node-types.json}`
   stay committed (the crate's `build.rs` and editor packages compile

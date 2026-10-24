@@ -1136,6 +1136,18 @@ and `cross-appeal-window` (in force `[2013-12-01, 2023-12-01)`) are
 `known_at` 2024-12-01: package queries do not see them, and a matter at
 the latest corpus does.
 
+`unknown_before`: when `as_of` precedes every version so recorded and also
+precedes the package's `in_force` (the start of the corpus the package
+encodes), the miss is the hole "law not encoded before D", D the earliest
+version's `from`, not a finding that no law applied; the L3007 message says
+so. Inside the package's corpus a declaration whose first version starts
+later was not yet law (plain L3007). In a matter, a stage not encoded on an
+event's date is that L3007; an event matching the trigger of a deadline not
+encoded on its date opens an instance whose due date is unknown (an L3007
+warning) and is legal for that reason. The instance is never counted under
+a later version: an act taking it is neither timely nor late (L4010, a
+warning), and it is never breached or lapsed at `as_of`.
+
 This is one query (`temporal::select`, supersession applied; precedence,
 §5.5, picks among the claimants it finds with `precedence::select`, and
 for a matter's event `temporal::governing` adds transitions). Lowering,

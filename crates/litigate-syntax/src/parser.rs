@@ -19,6 +19,9 @@ pub(crate) struct Parser<'t> {
     text: &'t str,
     tokens: Vec<Token>,
     sig: Vec<usize>,
+    /// Bracket depth (`{`, `(`, `[` opened and not yet closed) before each
+    /// significant token, counted lexically from the start of the file.
+    brackets: Vec<usize>,
     pos: usize,
     emitted: usize,
     builder: GreenNodeBuilder<'static>,
@@ -32,16 +35,32 @@ pub(crate) struct Parser<'t> {
 
 impl<'t> Parser<'t> {
     pub(crate) fn new(text: &'t str, tokens: Vec<Token>, items: &'static [SyntaxKind]) -> Self {
-        let sig = tokens
+        let sig: Vec<usize> = tokens
             .iter()
             .enumerate()
             .filter(|(_, token)| !is_trivia(token.kind))
             .map(|(index, _)| index)
             .collect();
+        let mut depth = 0usize;
+        let brackets = sig
+            .iter()
+            .map(|index| match tokens[*index].kind {
+                LBrace | LParen | LBracket => {
+                    depth += 1;
+                    depth - 1
+                }
+                RBrace | RParen | RBracket => {
+                    depth = depth.saturating_sub(1);
+                    depth
+                }
+                _ => depth,
+            })
+            .collect();
         Self {
             text,
             tokens,
             sig,
+            brackets,
             pos: 0,
             emitted: 0,
             builder: GreenNodeBuilder::new(),
@@ -130,9 +149,23 @@ impl<'t> Parser<'t> {
         self.last_end() == usize::from(self.current_range().start())
     }
 
-    /// A top-level item keyword starting a line: a recovery anchor.
+    /// True when only spaces and tabs precede the current token on its line.
+    fn first_on_line(&self) -> bool {
+        let start = usize::from(self.current_range().start());
+        self.text[..start]
+            .rsplit('\n')
+            .next()
+            .is_some_and(|indent| indent.bytes().all(|b| b == b' ' || b == b'\t'))
+    }
+
+    /// A recovery anchor: a top-level item keyword starting a line, at
+    /// column 1 or, indented, outside every bracket. Recovery does not
+    /// depend on indentation: an indented item after an error anchors as
+    /// long as the brackets before it are balanced.
     pub(crate) fn at_item_anchor(&self) -> bool {
-        self.at_line_start() && self.at_any_kw(self.item_keywords).is_some()
+        let outside = self.brackets.get(self.pos).is_some_and(|d| *d == 0);
+        (self.at_line_start() || (outside && self.first_on_line()))
+            && self.at_any_kw(self.item_keywords).is_some()
     }
 
     pub(crate) fn item_keywords(&self) -> &'static [SyntaxKind] {
@@ -306,7 +339,7 @@ impl<'t> Parser<'t> {
     }
 
     /// Reports L0001 and wraps tokens up to the follow set (`follow`, a
-    /// top-level item keyword at column 1, or EOF) in an `Error` node.
+    /// recovery anchor (`at_item_anchor`), or EOF) in an `Error` node.
     /// Nested delimiters are skipped as a unit.
     pub(crate) fn recover(&mut self, expected: &[SyntaxKind], follow: &[SyntaxKind]) {
         self.error_expected(expected);

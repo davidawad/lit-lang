@@ -335,9 +335,12 @@ are left-associative.
   expression in parentheses.
 - Recovery: on an unexpected token, emit L0001 with the expected set and
   `span` = the token. Then skip to the next token in the current item's
-  follow set (`,`, `}`, or a top-level item keyword at column 1), wrapping
-  the skipped tokens in an `Error` node. Each error position reports one
-  diagnostic. Unclosed delimiters are L0002 at the opener, with a
+  follow set (`,`, `}`, or a top-level item keyword first on its line, at
+  column 1 or, indented, outside every bracket), wrapping the skipped tokens
+  in an `Error` node. Each error position reports at most one recovery
+  diagnostic (L0001/L0002; a second is the first's cascade), beside any
+  diagnostic of another code there (a reserved word or refinement, a bad
+  literal). Unclosed delimiters are L0002 at the opener, with a
   machine-applicable fix inserting the closer at end of line.
 - Lowering never runs on a file with L0xxx errors. Sema runs on the
   recovered tree so the LSP still works.

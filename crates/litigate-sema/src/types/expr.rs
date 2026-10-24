@@ -374,18 +374,20 @@ impl<'s, 'a> Checker<'s, 'a> {
         }
     }
 
-    /// `a-b` that does not resolve while `a` and `b` do: offer `a - b`.
+    /// `a-b` that does not resolve while `a` and `b` do, `b` a name or a
+    /// whole number (`n-1` lexes as one identifier): offer `a - b`.
     fn hyphen_fix(&self, path: &RefPath, report: Report) -> Report {
         if !path.is_simple() {
             return report;
         }
         let names = self.scope.value_names();
         let known = |s: &str| names.contains(&s) || self.actors.contains(s);
+        let number = |s: &str| s.bytes().all(|b| b.is_ascii_digit());
         let text = &path.head.text;
         let split = text
             .match_indices('-')
             .map(|(i, _)| (&text[..i], &text[i + 1..]))
-            .find(|(a, b)| known(a) && known(b));
+            .find(|(a, b)| known(a) && (known(b) || number(b)));
         match split {
             Some((a, b)) => report
                 .note("identifiers may contain `-`; subtraction needs spaces")

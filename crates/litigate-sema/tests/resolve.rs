@@ -102,6 +102,22 @@ type T = Mony<usd>\ntype U = Money<USD>\ntype V = V\n";
 }
 
 #[test]
+fn a_name_minus_a_number_is_offered_as_subtraction() {
+    // S4: `a-1` lexes as one identifier; when it does not resolve but `a`
+    // does, the fix writes the subtraction. `a-1x` is no number.
+    let src = "module main\nstart s\nstate s: \"S\" { _ \"go\" -> s }\n\
+default a when true => 1\ndefault c when true => a-1\ndefault d when true => a-1x\n";
+    let (db, ws) = workspace(&[package("demo", &[], &[("main.lit", src)])]);
+    assert_eq!(
+        render(&db, ws),
+        [
+            "pkgs/demo/main.lit:5:24 L1002 cannot find name `a-1` [fix: \"a - 1\"]",
+            "pkgs/demo/main.lit:6:24 L1002 cannot find name `a-1x`",
+        ]
+    );
+}
+
+#[test]
 fn links_packages_resolve_qualified_names() {
     let base = "module base\nstart entry\nstate entry: \"E\" { go \"Go\" -> done }\nterminal done: \"D\"\n";
     let links = "module links\nlink appeal \"Appeal\": base::done -> base@copy::entry p 1/2 { replaces [base::go] }\n\

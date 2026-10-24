@@ -113,7 +113,8 @@ impl Parse {
             .unwrap_or_default()
     }
 
-    /// Syntax errors, sorted by position, at most one per position.
+    /// Syntax errors, sorted by position: at most one recovery error
+    /// (L0001/L0002) per position, beside any errors of other codes there.
     #[must_use]
     pub fn errors(&self) -> &[SyntaxError] {
         &self.errors
@@ -179,8 +180,13 @@ pub fn parse(text: &str, kind: FileKind) -> Parse {
                     .is_some_and(|r| !r.is_empty())
         })
     }));
+    // Recovery (L0001, L0002) reports one error per position: a second is
+    // the cascade of the first, which wins. An error of any other code (a
+    // reserved word, refinement or guard operation, a bad literal) is a
+    // distinct problem and stays beside it.
     errors.sort_by_key(|error| error.range.start());
-    errors.dedup_by_key(|error| error.range.start());
+    let mut seen = std::collections::HashSet::new();
+    errors.retain(|error| seen.insert((error.range.start(), dedup_class(error.code))));
     merge_closer_fixes(&mut errors);
     Parse {
         green,
@@ -198,6 +204,15 @@ fn licensed_guard_words(green: &GreenNode, errors: &mut Vec<SyntaxError>) {
         .map(|t| t.text_range())
         .collect();
     errors.retain(|e| e.code != DiagnosticCode::ReservedGuardOp || !keywords.contains(&e.range));
+}
+
+/// The class within which errors at one position are deduplicated: every
+/// recovery error shares one, any other code is its own.
+const fn dedup_class(code: DiagnosticCode) -> Option<DiagnosticCode> {
+    match code {
+        DiagnosticCode::UnexpectedToken | DiagnosticCode::UnterminatedLiteral => None,
+        other => Some(other),
+    }
 }
 
 /// Parses a `.lit` rule module.

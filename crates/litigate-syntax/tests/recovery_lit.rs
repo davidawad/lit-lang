@@ -365,3 +365,26 @@ fn postfix_fields_holes_and_calls_named_match() {
     assert_eq!(kinds("(a).b"), [FieldExpr, ParenExpr]);
     assert_eq!(kinds("? == ?(\"r\")"), [HoleExpr, HoleExpr]);
 }
+
+#[test]
+fn recovery_does_not_depend_on_indentation() {
+    // S6: an indented item after an error anchors recovery like one at
+    // column 1 when the brackets before it are balanced; inside an open
+    // bracket only column 1 anchors.
+    let items = |text: &str| {
+        let parsed = parse(text, FileKind::Lit);
+        assert_eq!(parsed.syntax().to_string(), text);
+        let terminals = parsed
+            .syntax()
+            .descendants()
+            .filter(|n| n.kind() == SyntaxKind::TerminalDecl)
+            .count();
+        (terminals, parsed.errors().len())
+    };
+    let flush = items("module m\ndefault d when => 1 1\nterminal t: \"T\"\n");
+    let indented = items("module m\ndefault d when => 1 1\n    terminal t: \"T\"\n");
+    assert_eq!(flush, indented);
+    assert_eq!(flush.0, 1);
+    let open = items("module m\ntest \"t\" { expect (\n    terminal t: \"T\"\n");
+    assert_eq!(open.0, 0);
+}

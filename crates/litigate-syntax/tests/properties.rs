@@ -12,13 +12,17 @@ fn check_total(text: &str, kind: FileKind) -> Result<(), TestCaseError> {
     let parsed = parse(text, kind);
     prop_assert_eq!(parsed.syntax().to_string(), text);
     let len = u32::try_from(text.len()).unwrap_or(u32::MAX);
-    let starts: Vec<u32> = parsed
+    // Sorted by position; at one position at most one recovery error
+    // (L0001/L0002) and one of each other code.
+    let recovery = |c: &str| matches!(c, "L0001" | "L0002");
+    let starts: Vec<(u32, &str)> = parsed
         .errors()
         .iter()
-        .map(|e| e.range.start().into())
+        .map(|e| (e.range.start().into(), e.code.as_str()))
         .collect();
     prop_assert!(
-        starts.windows(2).all(|w| w[0] < w[1]),
+        starts.windows(2).all(|w| w[0].0 < w[1].0
+            || (w[0].0 == w[1].0 && w[0].1 != w[1].1 && !(recovery(w[0].1) && recovery(w[1].1)))),
         "unsorted or duplicate: {starts:?}"
     );
     for error in parsed.errors() {
@@ -297,6 +301,16 @@ fn deep_nesting_does_not_overflow() {
     }
     let chain = format!("module m\ndefault d when 1{} => 2\n", " + 1".repeat(50_000));
     assert_eq!(parse(&chain, FileKind::Lit).syntax().to_string(), chain);
+    // S5: a `.field` chain stops at the same cap as an operator chain.
+    let fields = |n: usize| format!("module m\ndefault d when (x){} => 2\n", ".a".repeat(n));
+    assert!(parse(&fields(256), FileKind::Lit).is_ok());
+    let long = fields(50_000);
+    let parsed = parse(&long, FileKind::Lit);
+    assert_eq!(parsed.syntax().to_string(), long);
+    assert!(parsed
+        .errors()
+        .iter()
+        .any(|e| e.message == "expression chains more than 256 field accesses; split it"));
 }
 
 /// Applies every machine-applicable fix (later offsets first).

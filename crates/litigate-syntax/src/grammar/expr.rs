@@ -35,7 +35,8 @@ const LEVELS: [&[SyntaxKind]; 5] = [
     &[Star, Slash, Percent],
 ];
 const COMPARISON: usize = 2;
-/// Longest operator chain at one precedence level (bounds tree depth).
+/// Longest operator chain at one precedence level, and longest `.field`
+/// chain (bounds tree depth).
 const MAX_CHAIN: usize = 256;
 
 fn binary(p: &mut Parser<'_>, level: usize) -> bool {
@@ -105,7 +106,18 @@ fn postfix(p: &mut Parser<'_>) -> bool {
     if was_ref {
         return true;
     }
+    let mut seen = 0usize;
     while p.at(Dot) && p.nth(1) == Ident {
+        if seen >= MAX_CHAIN {
+            let at = p.current_range();
+            p.push_error(SyntaxError::new(
+                DiagnosticCode::UnexpectedToken,
+                at,
+                format!("expression chains more than {MAX_CHAIN} field accesses; split it"),
+            ));
+            break;
+        }
+        seen += 1;
         p.start_at(checkpoint, FieldExpr);
         p.bump();
         p.bump();

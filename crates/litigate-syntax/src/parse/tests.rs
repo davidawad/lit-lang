@@ -129,8 +129,13 @@ fn refinement_types_parse_into_their_slot_and_are_reserved() {
 #[test]
 fn a_malformed_refinement_type_reports_where_it_breaks() {
     let unclosed = parse_lit("module m\ntype T = {d: Days | d > 0.days\n");
-    // One error per position: the unclosed brace (with its fix) wins.
-    assert_eq!(codes(&unclosed), ["L0002"]);
+    // One recovery error per position, the unclosed brace (with its fix);
+    // the reserved refinement there is a distinct error and stays (S8).
+    assert_eq!(codes(&unclosed), ["L0002", "L0009"]);
+    // A recovery error at the same position as the unclosed brace is its
+    // cascade and is dropped.
+    let cascade = parse_lit("module m\npackage p {\nstart s\n");
+    assert_eq!(codes(&cascade), ["L0002", "L0001"]);
     let no_pipe = parse_lit("module m\ntype T = {d: Days}\n");
     assert_eq!(codes(&no_pipe), ["L0009", "L0001"]);
     let no_type = parse_lit("module m\ntype T = {d: | d}\nstart s\n");
@@ -141,7 +146,7 @@ fn a_malformed_refinement_type_reports_where_it_breaks() {
     assert_eq!(codes(&no_colon), ["L0009", "L0001"]);
     // Unclosed before the next item: the brace's L0002, then that item.
     let anchored = parse_lit("module m\ntype T = {d: Days | d > 0.days\nstart s\n");
-    assert_eq!(codes(&anchored), ["L0002"]);
+    assert_eq!(codes(&anchored), ["L0002", "L0009"]);
     assert!(anchored
         .syntax()
         .descendants()

@@ -6,6 +6,7 @@
 #![allow(clippy::unwrap_used)]
 mod support;
 
+use std::fmt::Write as _;
 use std::path::Path;
 use support::scratch;
 
@@ -16,9 +17,7 @@ fn manifest(name: &str, deps: &[&str]) -> String {
     if !deps.is_empty() {
         text.push_str("\n[dependencies]\n");
         for d in deps {
-            text.push_str(&format!(
-                "{d} = {{ version = \"^1.0.0\", path = \"../{d}\" }}\n"
-            ));
+            let _ = writeln!(text, "{d} = {{ version = \"^1.0.0\", path = \"../{d}\" }}");
         }
     }
     text

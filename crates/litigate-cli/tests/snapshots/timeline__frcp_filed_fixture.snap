@@ -125,7 +125,7 @@ expression: t
     },
     {
       "id": "r3",
-      "key": "fork:frcp.pleading-to-trial.service-window@event:ComplaintFiled@2024-12-02",
+      "key": "fork:frcp.pleading-to-trial.service-window@start",
       "world": "w0",
       "kind": "fork",
       "date": null,
@@ -147,11 +147,11 @@ expression: t
       "provenance": [
         "frcp-civil-procedure"
       ],
-      "trigger": "r1"
+      "trigger": null
     },
     {
       "id": "r4",
-      "key": "event:service-completed@fork:frcp.pleading-to-trial.service-window@event:ComplaintFiled@2024-12-02",
+      "key": "event:service-completed@fork:frcp.pleading-to-trial.service-window@start",
       "world": "w1",
       "kind": "event",
       "date": null,
@@ -177,7 +177,7 @@ expression: t
     },
     {
       "id": "r5",
-      "key": "frcp.periods.answer-period@event:service-completed@fork:frcp.pleading-to-trial.service-window@event:ComplaintFiled@2024-12-02",
+      "key": "frcp.periods.answer-period@event:service-completed@fork:frcp.pleading-to-trial.service-window@start",
       "world": "w1",
       "kind": "deadline",
       "date": null,
@@ -203,7 +203,7 @@ expression: t
     },
     {
       "id": "r6",
-      "key": "event:waiver-requested@fork:frcp.pleading-to-trial.service-window@event:ComplaintFiled@2024-12-02",
+      "key": "event:waiver-requested@fork:frcp.pleading-to-trial.service-window@start",
       "world": "w2",
       "kind": "event",
       "date": null,
@@ -229,7 +229,7 @@ expression: t
     },
     {
       "id": "r7",
-      "key": "frcp.periods.waiver-answer-period@event:waiver-requested@fork:frcp.pleading-to-trial.service-window@event:ComplaintFiled@2024-12-02",
+      "key": "frcp.periods.waiver-answer-period@event:waiver-requested@fork:frcp.pleading-to-trial.service-window@start",
       "world": "w2",
       "kind": "deadline",
       "date": null,
@@ -255,7 +255,7 @@ expression: t
     },
     {
       "id": "r8",
-      "key": "event:service-window-blown@fork:frcp.pleading-to-trial.service-window@event:ComplaintFiled@2024-12-02",
+      "key": "event:service-window-blown@fork:frcp.pleading-to-trial.service-window@start",
       "world": "w3",
       "kind": "event",
       "date": null,
@@ -292,12 +292,6 @@ expression: t
       "to": "r3",
       "world": "w0",
       "kind": "sequence"
-    },
-    {
-      "from": "r1",
-      "to": "r3",
-      "world": "w0",
-      "kind": "triggers"
     },
     {
       "from": "r3",

@@ -1,0 +1,16 @@
+case timeline-frcp-served
+uses frcp-civil-procedure ^2024.12.0
+as_of 2024-12-20
+summary "Timeline fixture: frcp-filed with the service its first world assumes recorded, dated before the service period's due date."
+notes "Test fixture for `litigate timeline` (lg-z2m.1): the child of `frcp-filed`, which inserts a triggering event (ProcessServed, which starts the answer period) ahead of the parent's service-period row. Every key the parent has stays identical. The dates are illustrative, not a real matter's."
+start frcp-civil-procedure::service-window
+perspective plaintiff
+
+parties {
+  plaintiff: applicant Corporation
+}
+
+events {
+  2024-12-02 ComplaintFiled() by plaintiff
+  2024-12-10 ProcessServed() on plaintiff
+}

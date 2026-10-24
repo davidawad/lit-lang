@@ -22,10 +22,10 @@ use litigate_base::timeline::{
     TimelineSeverity, TimelineSource, TimelineSourceKind, TimelineSpan, TimelineStatus,
     TimelineWorld, TIMELINE_SCHEMA,
 };
-use litigate_base::{Diagnostic, Severity, Span};
-use litigate_sema::case::Status;
+use litigate_base::{Diagnostic, DiagnosticCode, Severity, Span};
+use litigate_sema::case::{Effect, Status};
 use litigate_sema::hir::{self, DeadlineWindow, Declaration, NodeKind};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 /// The layer class of a package with authority level `authority`.
 #[must_use]
@@ -98,10 +98,35 @@ fn decl_key(pkg: &hir::Package, id: &str) -> String {
     format!("{module}.{id}")
 }
 
-/// The `key` of matter event `e`: `event:<Name>@<date>[/<docket>]`.
-fn event_key(e: &hir::Event) -> String {
-    let docket = e.docket.map(|n| format!("/{n}")).unwrap_or_default();
-    format!("event:{}@{}{docket}", event_name(&e.action), e.date)
+/// The edge an election or removal event `e` names (its `elects` or
+/// `removes` argument, as written), by its event type among `all`.
+fn option_edge(all: &[&hir::Package], e: &hir::Expr) -> Option<String> {
+    let (name, args) = hirx::event_parts(e)?;
+    all.iter()
+        .copied()
+        .flat_map(hirx::declarations)
+        .find_map(|d| match d {
+            Declaration::Event(t) if t.name == name => match t.effect {
+                Some(hir::EventEffect::Removes { param } | hir::EventEffect::Elects { param }) => {
+                    args.get(param).cloned()
+                }
+                _ => None,
+            },
+            _ => None,
+        })
+}
+
+/// The `key` of matter event `e`: `event:<Name>@<date>/<docket>`, else
+/// `event:<Name>@<date>/<option edge id>` for an election or removal,
+/// else `event:<Name>@<date>`.
+fn event_key(all: &[&hir::Package], e: &hir::Event) -> String {
+    let declared = e
+        .docket
+        .map(|n| n.to_string())
+        .or_else(|| option_edge(all, &e.action))
+        .map(|d| format!("/{d}"))
+        .unwrap_or_default();
+    format!("event:{}@{}{declared}", event_name(&e.action), e.date)
 }
 
 /// A deadline declaration's display label (`answer-period: 30 days after
@@ -128,7 +153,10 @@ fn deadline_label(d: &hir::Deadline) -> String {
             d.meta.id, d.amount
         );
     }
-    format!("{}: {} {unit}{plural} {direction} {trigger}", d.meta.id, d.amount)
+    format!(
+        "{}: {} {unit}{plural} {direction} {trigger}",
+        d.meta.id, d.amount
+    )
 }
 
 /// Builds one timeline over the loaded packages.
@@ -412,12 +440,14 @@ impl<'a> Builder<'a> {
     }
 }
 
-/// How an obligation instance's end reads as a row status.
+/// How an obligation instance's end reads as a row status; `trigger` is
+/// the name of the event that created it.
 fn obligation_status(
     ended: Status,
     closed: Option<(&str, &str)>,
     due: Option<&str>,
     as_of: &str,
+    trigger: &str,
 ) -> TimelineStatus {
     let by = closed.map_or_else(String::new, |(event, date)| {
         format!(" by {event} on {date}")
@@ -434,7 +464,7 @@ fn obligation_status(
         Status::Unjudged => status(
             RowState::Unknown,
             Some(format!(
-                "timeliness unknown: designated due date not recorded; acted{by}"
+                "timeliness unknown: {trigger} due date not recorded; acted{by}"
             )),
         ),
         Status::Breached => status(
@@ -507,7 +537,7 @@ pub fn of_case(
         b.layer(pkg);
     }
     let primary = used.first().map(|p| p.manifest.name.clone());
-    let event_rows = events(&mut b, m, case, &primary.unwrap_or_default());
+    let (event_rows, moved) = events(&mut b, m, case, &primary.unwrap_or_default());
     let mut seen = deadlines(&mut b, m, case, &event_rows);
     let start = case.start.clone().or_else(|| {
         used.first()
@@ -515,7 +545,7 @@ pub fn of_case(
     });
     if let Some((pkg, node)) = start.as_deref().and_then(|s| b.node(s)) {
         b.governing(0, pkg, node, &mut seen, None);
-        fork(&mut b, case, pkg, node, &seen, event_rows.last().copied());
+        fork(&mut b, case, pkg, node, &seen, moved);
     }
     let source = TimelineSource {
         file: m.path.clone(),
@@ -527,10 +557,17 @@ pub fn of_case(
 
 /// One docket row per event of `case`, in source order (dates sort them
 /// later): its layer is the package of the edge it took, else of a
-/// deadline it triggered, else `primary`.
-fn events(b: &mut Builder, m: &CaseCheck, case: &hir::Case, primary: &str) -> Vec<usize> {
+/// deadline it triggered, else `primary`. With the rows, the last row
+/// whose event moved the matter (took an edge): the cause of the posture.
+fn events(
+    b: &mut Builder,
+    m: &CaseCheck,
+    case: &hir::Case,
+    primary: &str,
+) -> (Vec<usize>, Option<usize>) {
     let spans = litigate_sema::case::resolve(&m.path, texts_of(b, &m.path), b.all, None).spans;
     let mut rows = Vec::new();
+    let mut moved = None;
     for (i, e) in case.events.iter().enumerate() {
         let text = hirx::event_text(&e.action);
         let step = m
@@ -563,7 +600,7 @@ fn events(b: &mut Builder, m: &CaseCheck, case: &hir::Case, primary: &str) -> Ve
             hir::EventParty::On => "on",
         };
         let row = Draft {
-            key: event_key(e),
+            key: event_key(b.all, e),
             world: 0,
             kind: RowKind::Event,
             date: Some(e.date.clone()),
@@ -578,9 +615,13 @@ fn events(b: &mut Builder, m: &CaseCheck, case: &hir::Case, primary: &str) -> Ve
             layer,
             trigger: None,
         };
-        rows.push(b.push(row));
+        let row = b.push(row);
+        if step.is_some_and(|s| s.effect == Effect::Took) {
+            moved = Some(row);
+        }
+        rows.push(row);
     }
-    rows
+    (rows, moved)
 }
 
 /// One docket row per obligation instance replay created, triggered by
@@ -603,15 +644,19 @@ fn deadlines(
         let ended = closed(s.closed_by);
         let ended = ended.as_ref().map(|(e, d)| (e.as_str(), d.as_str()));
         let trigger = Some(event_rows[s.trigger_event]);
+        let name = event_name(&case.events[s.trigger_event].action);
         let Some(due) = s.extended_to.clone().or_else(|| s.due.clone()) else {
-            // The clock cannot count it: no due date, and why.
+            // The clock cannot count it: no due date, and why (an act
+            // against it says so itself, L4010).
             if let Some((pkg, decl)) = b.deadline(&s.deadline) {
-                let mut state = obligation_status(s.status, ended, None, &b.as_of);
-                state.reason = Some(format!(
-                    "{}: {}",
-                    state.reason.unwrap_or_default(),
-                    s.unknown.as_deref().unwrap_or_default()
-                ));
+                let mut state = obligation_status(s.status, ended, None, &b.as_of, &name);
+                if s.status != Status::Unjudged {
+                    state.reason = Some(format!(
+                        "{}: {}",
+                        state.reason.unwrap_or_default(),
+                        s.unknown.as_deref().unwrap_or_default()
+                    ));
+                }
                 b.deadline_row(0, pkg, decl, None, state, trigger);
             }
             continue;
@@ -619,7 +664,7 @@ fn deadlines(
         let Some((pkg, decl)) = b.counted_by(s) else {
             continue;
         };
-        let state = obligation_status(s.status, ended, Some(&due), &b.as_of);
+        let state = obligation_status(s.status, ended, Some(&due), &b.as_of, &name);
         let row = b.deadline_row(0, pkg, decl, Some(due), state, trigger);
         if let (Status::Superseded, Some(j)) = (s.status, s.closed_by) {
             b.supersedes.push((event_rows[j], row));
@@ -666,7 +711,8 @@ fn choice(pkg: &hir::Package, node: &hir::Node, edge: &hir::Edge) -> TimelineCho
 }
 
 /// The fork at the matter's posture `node` (of `pkg`): a fork row in the
-/// docket, and one world per option still open to the matter.
+/// docket, triggered by `trigger` (the event that moved the matter there,
+/// else none: `@start`), and one world per option still open to it.
 fn fork(
     b: &mut Builder,
     case: &hir::Case,
@@ -882,6 +928,121 @@ fn retain(t: &mut Timeline, dropped: &[String], dead: &[String]) {
     });
 }
 
+/// An error (L1001) for each row whose `key` an earlier row of its world
+/// already has, naming both, added to `t`'s diagnostics too. Keys derive
+/// from cause, never position, so two such rows have nothing to tell them
+/// apart until events declare ids.
+pub fn check_keys(t: &mut Timeline) -> Vec<Diagnostic> {
+    let mut found = Vec::new();
+    for (n, r) in t.rows.iter().enumerate() {
+        let Some(first) = t.rows[..n]
+            .iter()
+            .find(|p| p.world == r.world && p.key == r.key)
+        else {
+            continue;
+        };
+        let at = r.source.clone().unwrap_or_else(|| TimelineSpan {
+            file: t.source.file.clone(),
+            start: 0,
+            end: 0,
+            line: 1,
+            column: 1,
+        });
+        let line = |x: &TimelineRow| {
+            x.source
+                .as_ref()
+                .map_or_else(String::new, |s| format!(" (line {})", s.line))
+        };
+        let message = format!(
+            "rows `{}` ({}{}) and `{}` ({}{}) of world `{}` share the key `{}`: nothing in their cause tells them apart; give the events docket numbers",
+            first.id,
+            first.label,
+            line(first),
+            r.id,
+            r.label,
+            line(r),
+            r.world,
+            r.key
+        );
+        let span = Span {
+            file: at.file.as_str().into(),
+            line: at.line,
+            col: at.column,
+            end_line: at.line,
+            end_col: at.column,
+        };
+        found.push((
+            Diagnostic::error(DiagnosticCode::DuplicateName, span, message.clone()),
+            TimelineDiagnostic {
+                code: DiagnosticCode::DuplicateName.as_str().to_owned(),
+                severity: TimelineSeverity::Error,
+                message,
+                source: Some(at),
+            },
+        ));
+    }
+    found
+        .into_iter()
+        .map(|(d, td)| {
+            t.diagnostics.push(td);
+            d
+        })
+        .collect()
+}
+
+/// The authority names of the lattice package `pkg` sees (SPEC §5.5): the
+/// `authority` chains it, its dependencies (transitively) and `core`
+/// declare.
+fn lattice<'p>(all: &[&'p hir::Package], pkg: &hir::Package) -> BTreeSet<&'p str> {
+    let mut todo = vec![pkg.manifest.name.clone(), "core".to_owned()];
+    let mut visited: BTreeSet<String> = BTreeSet::new();
+    let mut names = BTreeSet::new();
+    while let Some(name) = todo.pop() {
+        if !visited.insert(name.clone()) {
+            continue;
+        }
+        let Some(p) = all.iter().copied().find(|p| p.manifest.name == name) else {
+            continue;
+        };
+        todo.extend(p.manifest.dependencies.keys().cloned());
+        for d in hirx::declarations(p) {
+            if let Declaration::Authority(a) = d {
+                names.insert(a.name.as_str());
+                names.extend(a.outranks.iter().map(String::as_str));
+            }
+        }
+    }
+    names
+}
+
+/// An error (L1004) for each layer of `t` whose authority is not in the
+/// lattice its package sees: such a name is never passed through.
+#[must_use]
+pub fn authority_errors(t: &Timeline, all: &[&hir::Package]) -> Vec<Diagnostic> {
+    t.layers
+        .iter()
+        .filter_map(|l| {
+            let pkg = all.iter().copied().find(|p| p.manifest.name == l.package)?;
+            let names = lattice(all, pkg);
+            if names.contains(l.authority.as_str()) {
+                return None;
+            }
+            let known: Vec<&str> = names.into_iter().collect();
+            Some(Diagnostic::error(
+                DiagnosticCode::InvalidManifest,
+                crate::inline_tests::nowhere(pkg),
+                format!(
+                    "layer `{}`: authority `{}` is not in the authority lattice package `{}` declares (known: {})",
+                    l.id,
+                    l.authority,
+                    pkg.manifest.name,
+                    if known.is_empty() { "none".to_owned() } else { known.join(", ") }
+                ),
+            ))
+        })
+        .collect()
+}
+
 /// Ids of `t`'s layers.
 #[must_use]
 pub fn layer_ids(t: &Timeline) -> Vec<String> {
@@ -942,7 +1103,7 @@ mod tests {
     fn every_obligation_end_reads_as_a_status() {
         let closed = Some(("Answered(complaint)", "2025-03-20"));
         let read = |s, closed, due| {
-            let t = obligation_status(s, closed, due, "2025-06-01");
+            let t = obligation_status(s, closed, due, "2025-06-01", "Served");
             (t.state, t.reason)
         };
         let cases = [
@@ -956,6 +1117,11 @@ mod tests {
                 Status::Late,
                 RowState::Late,
                 Some("acted by Answered(complaint) on 2025-03-20, after the due date"),
+            ),
+            (
+                Status::Unjudged,
+                RowState::Unknown,
+                Some("timeliness unknown: Served due date not recorded; acted by Answered(complaint) on 2025-03-20"),
             ),
             (
                 Status::Breached,
@@ -1139,6 +1305,122 @@ mod tests {
                 )
             })
             .collect()
+    }
+
+    #[test]
+    fn the_lattice_is_the_package_s_its_dependencies_and_core() {
+        let session = testkit::example_with("");
+        let all = session.hir();
+        let mut pkg = all[0].clone();
+        assert!(lattice(&all, &pkg).contains("FederalRule"));
+        // A dependency that is not loaded adds nothing; one met twice is
+        // read once.
+        pkg.manifest
+            .dependencies
+            .insert("nowhere".to_owned(), "^1".to_owned());
+        pkg.manifest
+            .dependencies
+            .insert("core".to_owned(), "^1".to_owned());
+        assert_eq!(lattice(&all, &pkg), lattice(&all, all[0]));
+        with_matter("", ACME, |session, m| {
+            let all = session.hir();
+            let texts = session.sources();
+            let mut t = of_case(&m, m.case.as_ref().unwrap(), &all, &texts, &[]);
+            assert_eq!(authority_errors(&t, &all), Vec::<Diagnostic>::new());
+            let mut bad = t.layers[0].clone();
+            bad.authority = "Constitution".to_owned();
+            let mut ghost = bad.clone();
+            ghost.package = "ghost".to_owned();
+            t.layers.extend([bad, ghost]);
+            let errors = authority_errors(&t, &all);
+            assert_eq!(errors.len(), 1, "{errors:#?}");
+            assert_eq!(errors[0].code, DiagnosticCode::InvalidManifest);
+            assert_eq!(errors[0].span.file.0, "lit/examples/Lit.toml");
+            assert!(errors[0]
+                .message
+                .starts_with("layer `frcp-rule12-example`: authority `Constitution` is not in the authority lattice package `frcp-rule12-example` declares (known: "));
+        });
+    }
+
+    #[test]
+    fn rows_sharing_a_key_in_one_world_are_an_error_naming_both() {
+        with_matter("", ACME, |session, m| {
+            let all = session.hir();
+            let texts = session.sources();
+            let mut t = of_case(&m, m.case.as_ref().unwrap(), &all, &texts, &[]);
+            assert_eq!(check_keys(&mut t), Vec::<Diagnostic>::new());
+            let before = t.diagnostics.len();
+            // The same key in another world is no collision.
+            let mut elsewhere = t.rows[0].clone();
+            elsewhere.id = "x1".to_owned();
+            elsewhere.world = "w1".to_owned();
+            let mut twin = t.rows[0].clone();
+            twin.id = "x2".to_owned();
+            let mut first = t.rows[1].clone();
+            first.source = None;
+            first.id = "x3".to_owned();
+            first.key = "k".to_owned();
+            let mut second = first.clone();
+            second.id = "x4".to_owned();
+            t.rows.extend([elsewhere, twin, first, second]);
+            let errors = check_keys(&mut t);
+            let messages: Vec<&str> = errors.iter().map(|d| d.message.as_str()).collect();
+            assert_eq!(
+                messages,
+                [
+                    "rows `r1` (Served(complaint, Personal) on widget (line 20)) and `x2` (Served(complaint, Personal) on widget (line 20)) of world `w0` share the key `event:Served@2025-03-05`: nothing in their cause tells them apart; give the events docket numbers",
+                    "rows `x3` (MovedToDismiss(complaint) by widget) and `x4` (MovedToDismiss(complaint) by widget) of world `w0` share the key `k`: nothing in their cause tells them apart; give the events docket numbers",
+                ]
+            );
+            assert!(errors
+                .iter()
+                .all(|d| d.code == DiagnosticCode::DuplicateName));
+            assert_eq!(errors[0].span.line, 20);
+            assert_eq!(errors[1].span.file.0, "cases/examples/acme.case");
+            assert_eq!(errors[1].span.line, 1);
+            assert_eq!(t.diagnostics.len(), before + 2);
+            assert_eq!(t.diagnostics[before].code, "L1001");
+        });
+    }
+
+    #[test]
+    fn only_an_election_or_removal_names_an_option_edge() {
+        with_matter("", ACME, |session, m| {
+            let case = m.case.as_ref().unwrap();
+            let all = session.hir();
+            let served = &case.events[0].action;
+            let moved = &case.events[1].action;
+            assert_eq!(option_edge(&all, served), None);
+            let mut pkg = all[0].clone();
+            let declare = |pkg: &mut hir::Package, effect| {
+                for module in &mut pkg.modules {
+                    for d in &mut module.declarations {
+                        if let Declaration::Event(t) = d {
+                            t.effect.clone_from(&effect);
+                        }
+                    }
+                }
+            };
+            declare(&mut pkg, Some(hir::EventEffect::Elects { param: 0 }));
+            let elects = [&pkg];
+            assert_eq!(option_edge(&elects, served).as_deref(), Some("complaint"));
+            assert_eq!(option_edge(&elects, moved).as_deref(), Some("complaint"));
+            declare(&mut pkg, Some(hir::EventEffect::Removes { param: 9 }));
+            assert_eq!(option_edge(&[&pkg], served), None);
+            declare(
+                &mut pkg,
+                Some(hir::EventEffect::Waives {
+                    deadline: "answer-period".to_owned(),
+                }),
+            );
+            assert_eq!(option_edge(&[&pkg], served), None);
+            let mut literal = served.clone();
+            literal.kind = hir::ExprKind::Literal {
+                value: hir::Value::Edge("e".to_owned()),
+            };
+            assert_eq!(option_edge(&[&pkg], &literal), None);
+            assert_eq!(hirx::event_text(&literal), "");
+        });
     }
 
     #[test]
@@ -1376,7 +1658,7 @@ mod tests {
             );
             let mut served = case.events[0].clone();
             served.docket = Some(2);
-            assert_eq!(event_key(&served), "event:Served@2025-03-05/2");
+            assert_eq!(event_key(&all, &served), "event:Served@2025-03-05/2");
             assert_eq!(decl_key(all[0], "nope"), "frcp-rule12-example.nope");
         });
     }

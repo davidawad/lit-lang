@@ -1,0 +1,88 @@
+---
+source: crates/litigate-cli/tests/timeline.rs
+expression: "json!({\"parent\": before, \"child\": after, \"child_only\": child_only})"
+---
+{
+  "parent": [
+    [
+      "docket",
+      "event:ComplaintFiled@2024-12-02"
+    ],
+    [
+      "docket",
+      "frcp.periods.service-period@event:ComplaintFiled@2024-12-02"
+    ],
+    [
+      "docket",
+      "fork:frcp.pleading-to-trial.service-window@start"
+    ],
+    [
+      "Serve defendant via formal process",
+      "event:service-completed@fork:frcp.pleading-to-trial.service-window@start"
+    ],
+    [
+      "Serve defendant via formal process",
+      "frcp.periods.answer-period@event:service-completed@fork:frcp.pleading-to-trial.service-window@start"
+    ],
+    [
+      "Request waiver of service instead of formal process",
+      "event:waiver-requested@fork:frcp.pleading-to-trial.service-window@start"
+    ],
+    [
+      "Request waiver of service instead of formal process",
+      "frcp.periods.waiver-answer-period@event:waiver-requested@fork:frcp.pleading-to-trial.service-window@start"
+    ],
+    [
+      "Fail to serve within 90 days -- no good cause shown",
+      "event:service-window-blown@fork:frcp.pleading-to-trial.service-window@start"
+    ]
+  ],
+  "child": [
+    [
+      "docket",
+      "event:ComplaintFiled@2024-12-02"
+    ],
+    [
+      "docket",
+      "event:ProcessServed@2024-12-10"
+    ],
+    [
+      "docket",
+      "frcp.periods.answer-period@event:ProcessServed@2024-12-10"
+    ],
+    [
+      "docket",
+      "frcp.periods.service-period@event:ComplaintFiled@2024-12-02"
+    ],
+    [
+      "docket",
+      "fork:frcp.pleading-to-trial.service-window@start"
+    ],
+    [
+      "Serve defendant via formal process",
+      "event:service-completed@fork:frcp.pleading-to-trial.service-window@start"
+    ],
+    [
+      "Request waiver of service instead of formal process",
+      "event:waiver-requested@fork:frcp.pleading-to-trial.service-window@start"
+    ],
+    [
+      "Request waiver of service instead of formal process",
+      "frcp.periods.waiver-answer-period@event:waiver-requested@fork:frcp.pleading-to-trial.service-window@start"
+    ],
+    [
+      "Fail to serve within 90 days -- no good cause shown",
+      "event:service-window-blown@fork:frcp.pleading-to-trial.service-window@start"
+    ]
+  ],
+  "child_only": [
+    [
+      "docket",
+      "event:ProcessServed@2024-12-10"
+    ],
+    [
+      "docket",
+      "frcp.periods.answer-period@event:ProcessServed@2024-12-10"
+    ]
+  ]
+}

@@ -145,7 +145,17 @@ pub fn timeline(args: &Args) -> Outcome {
         diagnostics,
         ..Report::default()
     };
+    if let Some(t) = &built {
+        let invalid = timeline::authority_errors(t, &c.session.hir());
+        if !invalid.is_empty() {
+            // A layer whose authority is not in its lattice has no class:
+            // the document is not emitted.
+            report.diagnostics.extend(invalid);
+            return Ok(report);
+        }
+    }
     if let Some(mut t) = built {
+        report.diagnostics.extend(timeline::check_keys(&mut t));
         let off = timeline::disabled_layers(&timeline::layer_ids(&t), &args.layers)
             .map_err(Failure::new)?;
         timeline::apply_layers(&mut t, &off);

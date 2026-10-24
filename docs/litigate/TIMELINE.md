@@ -71,7 +71,7 @@ A UI diffing two worlds pairs rows by `key`.
 
 | Field | Meaning |
 |---|---|
-| `key` | Stable identity across worlds and runs, derived from what caused the row and never from its position, so inserting a row never renumbers others: a deadline or obligation is `<rule node id>@<key of its trigger row>`; a `.case` event is `event:<Name>@<declaration>`, where the declaration is the event's declared id, else its `<date>/<docket>` (date alone when it has no docket number), and an event a world assumes is `event:<Name>@<key of the fork row>`; a fork is `fork:<node id>@<key of its trigger row>` (a node can fork more than once in a matter, once per motion or appeal). An event without a declared id gets an info-level lint whose fix inserts a generated id, because a `<date>/<docket>` key changes when the date is corrected. Never derived from a label. |
+| `key` | Stable identity across worlds and runs, derived from what caused the row and never from its position, so inserting a row never renumbers others: a deadline or obligation is `<rule node id>@<key of its trigger row>`; a `.case` event is `event:<Name>@<declaration>`, where the declaration is the event's declared id, else its `<date>/<docket>` (date alone when it has no docket number), and an event a world assumes is `event:<Name>@<key of the fork row>`; a fork is `fork:<node id>@<key of its trigger row>` (a node can fork more than once in a matter, once per motion or appeal). An event without a declared id gets an info-level lint whose fix inserts a generated id, because a `<date>/<docket>` key changes when the date is corrected. Until events declare ids (lg-flu.39): an election or removal event with no docket number is `event:<Name>@<date>/<option edge id>` (the edge it elects or removes, as written); a deadline nothing has triggered is `<rule node id>@event:<Name>` of its trigger pattern; a fork's trigger row is the event that moved the matter to its node, and a fork no event moved the matter to is `fork:<node id>@start`; an event a world assumes is named by its edge's event pattern, else the edge's id, else the node the edge leads to. Two rows of one world that still share a key are an error (L1001) naming both, never told apart by position. Never derived from a label. |
 | `kind` | `event`, `deadline` or `fork`. |
 | `date` | When an event happened; `null` for deadlines and unresolved forks. |
 | `due` | A deadline's due date; `null` when it cannot be computed. |
@@ -104,8 +104,9 @@ Over MCP the same command is the `litigate_timeline` tool (`file`, `as_of`,
 `known_at`, `layers`, `world`, `lib`). The document is the envelope's
 `result` (the envelope's `diagnostics` are every diagnostic of the check;
 the document's are the errors and the source file's own warnings). A
-matter that does not resolve, or a module whose package does not check,
-has no `result`.
+matter that does not resolve, a module whose package does not check, or
+a timeline with a layer whose authority is not in its lattice has no
+`result`.
 
 | Option | Effect |
 |---|---|
@@ -141,14 +142,28 @@ What fills the document today:
 - **Keys.** A rule or node id is module-qualified (`ttab.opposition-period`,
   `frcp.pleading-to-trial.service-window`). `.case` events have no
   declared ids yet, so an event's key is `event:<Name>@<date>` (with
-  `/<docket>` when it has a docket number), and the lint that would insert
-  ids does not exist yet; two events of one name on one date with no
-  docket numbers share a key. Where the cause has no row, the key names
-  it anyway: a deadline nothing has triggered is `<rule id>@event:<Name>`
-  of its trigger pattern (`frcp.periods.answer-period@event:ProcessServed`),
-  and a fork with no event before it is `fork:<node id>@start`. An event a
-  world assumes is named by its edge's event pattern, else the edge's id,
-  else the node the edge leads to.
+  `/<docket>` when it has a docket number, else `/<option edge id>` for an
+  election or removal: `event:Elected@2026-09-14/e-casetype-patent`), and
+  the lint that would insert ids does not exist yet. Two rows of one world
+  that still share a key (two events of one name on one date, neither an
+  election nor a removal, with no docket numbers) are an error, L1001,
+  naming both: the document is still emitted and the exit is nonzero.
+  Where the cause has no row, the key names it anyway: a deadline nothing
+  has triggered is `<rule id>@event:<Name>` of its trigger pattern
+  (`frcp.periods.answer-period@event:ProcessServed`), and a fork is keyed
+  by the event that moved the matter to its node (an event that only
+  triggers a deadline or is history does not), else `fork:<node id>@start`.
+  An event a world assumes is named by its edge's event pattern, else the
+  edge's id, else the node the edge leads to.
+- **Unjudged acts.** An act against a deadline whose designated due date
+  the trigger left unknown (L4010) is `unknown`, `due: null`, with the
+  reason `timeliness unknown: <Trigger> due date not recorded; acted by
+  <event> on <date>`. The schema has no other state for it.
+- **Authorities.** Each layer's `authority` must be a name in the
+  authority lattice its package sees (the `authority` chains of the
+  package, its dependencies and `core`). A name outside it is an error,
+  L1004 at the package's `Lit.toml`, and the timeline has no `result`:
+  the name is never passed through.
 
 The Rust types are `litigate_base::timeline`; the schema bundle publishes
 them as kind `timeline` (TypeScript `Timeline` in `packages/litigate-ts`).

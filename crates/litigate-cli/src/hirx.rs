@@ -153,6 +153,9 @@ fn arg_key(e: &Expr) -> String {
         ExprKind::Literal {
             value: Value::Hole(_),
         } => "?".to_owned(),
+        ExprKind::Literal {
+            value: Value::Edge(edge),
+        } => edge.clone(),
         other => serde_json::to_string(other).unwrap_or_default(),
     }
 }

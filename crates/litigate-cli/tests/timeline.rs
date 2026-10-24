@@ -339,6 +339,176 @@ fn frcp_filed_fixture_forks_with_unknown_deadlines() {
     insta::assert_json_snapshot!("frcp_filed_fixture", t);
 }
 
+/// The keys of world `id`'s view, in document order: each ancestor's rows
+/// up to the fork row the path branches at, then its own.
+fn view_keys(t: &Value, id: &str) -> Vec<String> {
+    let worlds = t["worlds"].as_array().unwrap();
+    let world = |w: &str| worlds.iter().find(|x| x["id"] == w).unwrap();
+    let mut path = vec![(id.to_owned(), None)];
+    let mut at = world(id);
+    while let Some(parent) = at["parent"].as_str() {
+        path.push((
+            parent.to_owned(),
+            at["fork_row"].as_str().map(str::to_owned),
+        ));
+        at = world(parent);
+    }
+    let mut keys = Vec::new();
+    for (w, cut) in path.iter().rev() {
+        for r in t["rows"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .filter(|r| r["world"] == *w)
+        {
+            keys.push(r["key"].as_str().unwrap().to_owned());
+            if cut.as_deref() == r["id"].as_str() {
+                break;
+            }
+        }
+    }
+    keys
+}
+
+/// Every `.case` file under `dir`, repository-relative, sorted.
+fn cases_under(dir: &Path) -> Vec<String> {
+    let mut found = Vec::new();
+    for entry in std::fs::read_dir(dir).unwrap() {
+        let path = entry.unwrap().path();
+        if path.is_dir() {
+            found.extend(cases_under(&path));
+        } else if path.extension().is_some_and(|e| e == "case") {
+            let shown = path.strip_prefix(repo()).unwrap();
+            found.push(shown.to_string_lossy().replace('\\', "/"));
+        }
+    }
+    found.sort();
+    found
+}
+
+#[test]
+fn keys_are_unique_in_every_world_view_of_every_case() {
+    let cases = cases_under(&repo().join("cases"));
+    assert!(cases.len() >= 20, "{cases:?}");
+    for case in &cases {
+        let t = timeline(&[case]);
+        // The op re-emits no row yet (lg-z2m.3), so no key may repeat in
+        // a view, inherited or not.
+        for w in t["worlds"].as_array().unwrap() {
+            let id = w["id"].as_str().unwrap();
+            let mut keys = view_keys(&t, id);
+            let count = keys.len();
+            keys.sort();
+            keys.dedup();
+            assert_eq!(keys.len(), count, "{case} {id}: {:?}", view_keys(&t, id));
+        }
+        assert!(
+            !t["diagnostics"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|d| d["code"] == "L1001"),
+            "{case}"
+        );
+    }
+}
+
+#[test]
+fn an_election_is_keyed_by_the_option_it_elects() {
+    let t = timeline(&["cases/cofc-1498-patent-case.case"]);
+    let events: Vec<(&str, &str)> = t["rows"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .filter(|r| r["kind"] == "event" && r["world"] == "w0")
+        .map(|r| (r["key"].as_str().unwrap(), r["label"].as_str().unwrap()))
+        .collect();
+    assert_eq!(
+        events,
+        [
+            (
+                "event:Elected@2026-09-14/e-filingfork-standard",
+                "Elected(e-filingfork-standard) by owner"
+            ),
+            (
+                "event:Elected@2026-09-14/e-casetype-patent",
+                "Elected(e-casetype-patent) by owner"
+            ),
+        ]
+    );
+}
+
+#[test]
+fn a_child_world_inserting_an_earlier_trigger_keeps_every_inherited_key() {
+    // `frcp-served` is `frcp-filed`'s first world ("Serve defendant via
+    // formal process") with its service recorded on 2024-12-10: an event
+    // that triggers the answer period, ahead of the parent's service-period
+    // row (due 2025-03-03) in date order.
+    let dir = fixtures();
+    let parent = timeline_in(&dir, &["cases/frcp-filed.case"]);
+    let child = timeline_in(&dir, &["cases/frcp-served.case"]);
+    let keys = |t: &Value| -> Vec<(String, String)> {
+        let worlds = t["worlds"].as_array().unwrap();
+        t["rows"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|r| {
+                let world = worlds.iter().find(|w| w["id"] == r["world"]).unwrap();
+                (
+                    world["label"].as_str().unwrap().to_owned(),
+                    r["key"].as_str().unwrap().to_owned(),
+                )
+            })
+            .collect()
+    };
+    let (before, after) = (keys(&parent), keys(&child));
+    // The docket and every world the parent forks into: each key the
+    // parent has, the child has unchanged, except the answer period its
+    // first world assumed, which the child's docket now records.
+    let assumed = "frcp.periods.answer-period@event:service-completed@fork:frcp.pleading-to-trial.service-window@start";
+    let inherited: Vec<&(String, String)> = before.iter().filter(|(_, k)| k != assumed).collect();
+    for row in &inherited {
+        assert!(after.contains(row), "{row:?} not in {after:#?}");
+    }
+    assert!(after
+        .iter()
+        .any(|(w, k)| w == "docket"
+            && k == "frcp.periods.answer-period@event:ProcessServed@2024-12-10"));
+    let child_only: Vec<&(String, String)> =
+        after.iter().filter(|row| !before.contains(row)).collect();
+    // Stable across runs.
+    assert_eq!(keys(&timeline_in(&dir, &["cases/frcp-served.case"])), after);
+    insta::assert_json_snapshot!(
+        "child_world_inherited_keys",
+        json!({"parent": before, "child": after, "child_only": child_only})
+    );
+}
+
+#[test]
+fn an_answer_to_a_notice_without_its_due_date_reads_unknown_with_why() {
+    let dir = fixtures();
+    let t = timeline_in(&dir, &["cases/ttab-unjudged.case"]);
+    let answer = t["rows"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|r| r["key"] == "ttab.answer-period@event:InstitutionNoticed@2026-07-06")
+        .unwrap();
+    assert_eq!(answer["due"], Value::Null);
+    assert_eq!(
+        answer["status"],
+        json!({"state": "unknown", "reason": "timeliness unknown: InstitutionNoticed due date not recorded; acted by AnswerFiled(Plain) on 2026-08-10"})
+    );
+    let codes: Vec<&Value> = t["diagnostics"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|d| &d["code"])
+        .collect();
+    assert!(codes.contains(&&json!("L4010")), "{codes:?}");
+}
+
 #[test]
 fn a_rule_module_lists_its_deadlines_undated() {
     let t = timeline(&["lit/ttab/ttab.lit", "--as-of", "2026-10-19"]);
@@ -536,6 +706,57 @@ fn a_module_of_a_package_that_does_not_check_has_no_timeline() {
     let run = litigate_in(&dir, &["timeline", "lit/examples/rule12.lit"]);
     assert_eq!(run.code, 2, "{}", run.stdout);
     assert!(run.json.get("result").is_none(), "{}", run.json);
+}
+
+#[test]
+fn a_layer_authority_outside_the_lattice_is_an_error_not_passed_through() {
+    let dir = scratch("timeline-authority");
+    copy_dir(&repo().join("lit/examples"), &dir.join("lit/examples"));
+    copy_dir(&repo().join("cases/examples"), &dir.join("cases/examples"));
+    let manifest = dir.join("lit/examples/Lit.toml");
+    let text = std::fs::read_to_string(&manifest).unwrap();
+    std::fs::write(
+        &manifest,
+        text.replace(
+            "authority = \"FederalRule\"",
+            "authority = \"Constitution\"",
+        ),
+    )
+    .unwrap();
+    let module = dir.join("lit/examples/rule12.lit");
+    let text = std::fs::read_to_string(&module).unwrap();
+    std::fs::write(
+        &module,
+        text.replace("authority FederalRule }", "authority Constitution }"),
+    )
+    .unwrap();
+    let lock = litigate_in(&dir, &["lock", "cases/examples"]);
+    assert_eq!(lock.code, 0, "{}", lock.stdout);
+    let run = litigate_in(&dir, &["timeline", "cases/examples/acme.case"]);
+    assert_eq!(run.code, 2, "{}", run.stdout);
+    assert_eq!(run.json["ok"], false);
+    assert!(run.json.get("result").is_none(), "{}", run.json);
+    let invalid: Vec<&Value> = run.json["diagnostics"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .filter(|d| d["code"] == "L1004")
+        .collect();
+    assert_eq!(invalid.len(), 1, "{}", run.stdout);
+    assert_eq!(invalid[0]["severity"], "error");
+    let message = invalid[0]["message"].as_str().unwrap();
+    assert!(
+        message.starts_with(
+            "layer `frcp-rule12-example`: authority `Constitution` is not in the authority lattice"
+        ),
+        "{message}"
+    );
+    assert!(message.contains("FederalRule"), "{message}");
+    assert!(
+        !run.stdout.contains("\"authority\":\"Constitution\""),
+        "{}",
+        run.stdout
+    );
 }
 
 #[test]

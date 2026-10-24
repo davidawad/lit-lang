@@ -157,7 +157,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   schema bundle as kind `timeline`, so the generated `packages/litigate-ts`
   bindings export `Timeline`. Golden timelines of the TTAB opposition and FRCP matters
   and two fixtures (a fork and unknown deadlines each) are validated
-  against the frozen schema, as is its example.
+  against the frozen schema, as is its example. Every row has a key derived
+  from its cause (an election or removal by the option it names); keys are
+  unique in every world view of every matter under `cases/`, and two rows
+  of one world that still share one are an error (L1001) naming both. A
+  layer whose authority is not in its package's authority lattice is an
+  error (L1004) and the timeline has no result. An act the engine judges
+  neither timely nor late (L4010) is `unknown` with the reason.
 
 - **Reserved typed guard operations in patches** (lg-flu.35; SPEC §3.6,
   PM ruling 2026-10-23 on L2007). A later decision or order that narrows,

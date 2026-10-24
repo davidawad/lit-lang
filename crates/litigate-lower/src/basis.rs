@@ -26,6 +26,17 @@ pub(crate) fn label(pointer: String, b: &hir::Basis) -> BasisLabel {
     }
 }
 
+/// The labels of the objects at `{prefix}/{i}` that declare a basis.
+pub(crate) fn labels<'a>(
+    prefix: &str,
+    declared: impl Iterator<Item = Option<&'a hir::Basis>>,
+) -> Vec<BasisLabel> {
+    declared
+        .enumerate()
+        .filter_map(|(i, b)| Some(label(format!("{prefix}/{i}"), b?)))
+        .collect()
+}
+
 /// The lattice element of a declared basis (an estimate when none).
 fn rank(b: Option<&hir::Basis>) -> Basis {
     b.map_or(Basis::Estimate, |b| label(String::new(), b).basis)

@@ -60,26 +60,13 @@ pub(crate) fn links(
         found.extend(edge::undeclared(&cx, &base, e));
         found
     });
+    let basis = crate::basis::labels("/links", links.iter().map(|(_, e)| e.basis.as_ref()));
+    let lowered = build.lowered(link_holes.chain(instance_holes).collect());
     let file = LinkFile {
         schema_version: Some(LINKS_SCHEMA_VERSION),
         instances,
         links: links.iter().map(|(e, _)| e.clone()).collect(),
-        lowered: Some(
-            build
-                .lowered(link_holes.chain(instance_holes).collect())
-                .with_basis(
-                    links
-                        .iter()
-                        .enumerate()
-                        .filter_map(|(i, (_, e))| {
-                            Some(crate::basis::label(
-                                format!("/links/{i}"),
-                                e.basis.as_ref()?,
-                            ))
-                        })
-                        .collect(),
-                ),
-        ),
+        lowered: Some(lowered.with_basis(basis)),
     };
     let citations = Citations::new(litgraph::model::CiteSyntax::default(), &[], build.corpus);
     let link_entries = links

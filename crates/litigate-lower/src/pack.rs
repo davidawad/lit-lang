@@ -282,17 +282,14 @@ pub(crate) fn pack(
         found.extend(edge::undeclared(&cx, &base, e));
         found
     });
-    let node_basis = origins.iter().enumerate().filter_map(|(i, n)| {
-        let b = n.basis.as_ref()?;
-        Some(crate::basis::label(format!("/nodes/{i}"), b))
-    });
-    let edge_basis = edges.iter().enumerate().filter_map(|(i, (_, e))| {
-        let b = e.basis.as_ref()?;
-        Some(crate::basis::label(format!("/edges/{i}"), b))
-    });
+    let mut basis = crate::basis::labels("/nodes", origins.iter().map(|n| n.basis.as_ref()));
+    basis.extend(crate::basis::labels(
+        "/edges",
+        edges.iter().map(|(_, e)| e.basis.as_ref()),
+    ));
     let lowered = build
         .lowered(node_holes.chain(edge_holes).collect())
-        .with_basis(node_basis.chain(edge_basis).collect());
+        .with_basis(basis);
     let pack = Pack {
         schema_version: PACK_SCHEMA_VERSION,
         id: m.pack_id.clone(),

@@ -16,8 +16,7 @@ use crate::case::graph::{display, pack_of, Graph};
 use crate::case::spans::error;
 use crate::case::{Effect, Obligation, Status};
 use crate::hir::{
-    Bound, BoundDates, Capability, CauseStandard, Deadline, Expr, ExprKind, Extension,
-    Bound, Capability, CauseStandard, Deadline, Declaration, Expr, ExprKind, Extension,
+    Bound, BoundDates, Capability, CauseStandard, Deadline, Declaration, Expr, ExprKind, Extension,
     ExtensionWindow, Motion, TriggerPolicy, Undesignated, Value,
 };
 use crate::temporal::condition::matches;

@@ -82,13 +82,12 @@ pub struct Obligation {
     /// 90.3(c)(1), 2.145(e)(1)).
     #[serde(skip_serializing_if = "Option::is_none")]
     pub request_made: Option<String>,
-    /// How it ended, `open`, or `unknown`.
+    /// How it ended, or `open`.
     /// The date its deadline's law is encoded from, when the trigger
     /// precedes every recorded version (`unknown_before`, SPEC §5.4): its
     /// due date is unknown, never counted under a later version.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub unencoded: Option<String>,
-    /// How it ended, or `open`.
     pub status: Status,
     /// Source index of the event that ended it; `None` while open and for
     /// a breach or lapse found at `as_of`.

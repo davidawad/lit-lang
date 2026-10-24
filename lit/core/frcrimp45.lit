@@ -19,7 +19,7 @@ import core.time.{ Served, Scheduled, ServiceMethod }
 /// vendored and stay undeclared, as do 45(a)(6)(B)'s declared holidays and
 /// (C)'s state holidays: no declaration or state calendar is vendored. Rule
 /// 45 is silent on periods stated in months or years, so none is counted.
-counting frcrimp45 effective [2023-12-01, ..) known_at 2023-04-24 cite FRCrimP 45(a)
+counting frcrimp45 effective [2023-12-01, ..) known_at 2023-04-24 cite "FRCrimP 45(a)"
 {
   exclude_trigger_day
   include_last_day
@@ -35,47 +35,47 @@ counting frcrimp45 effective [2023-12-01, ..) known_at 2023-04-24 cite FRCrimP 4
     MailForeign: unrecognized
     Express: unrecognized
     ExpressForeign: unrecognized
-  } cite FRCrimP 45(c)
+  } cite "FRCrimP 45(c)"
   holidays us-federal-holidays
   forums [frcrimp]
   allow_hours
 }
 
-deadline frcrimp45-14-days: 14.days after Served() counted_by frcrimp45 cite FRCrimP 45(a)(1)
+deadline frcrimp45-14-days: 14.days after Served() counted_by frcrimp45 cite "FRCrimP 45(a)(1)"
 {
   forum frcrimp
 }
 
-deadline frcrimp45-7-days-before: 7.days before Scheduled() counted_by frcrimp45 cite FRCrimP 45(a)(5)
+deadline frcrimp45-7-days-before: 7.days before Scheduled() counted_by frcrimp45 cite "FRCrimP 45(a)(5)"
 {
   forum frcrimp
 }
 
-test "fourteen days count every day" cite FRCrimP 45(a)(1)(B)
+test "fourteen days count every day" cite "FRCrimP 45(a)(1)(B)"
 {
   given Served(Personal) on 2025-03-03
   expect deadline(frcrimp45-14-days) == 2025-03-17
 }
 
-test "a last day on a Saturday runs to Monday" cite FRCrimP 45(a)(1)(C)
+test "a last day on a Saturday runs to Monday" cite "FRCrimP 45(a)(1)(C)"
 {
   given Served(Personal) on 2025-03-01
   expect deadline(frcrimp45-14-days) == 2025-03-17
 }
 
-test "mail adds three days after the period would otherwise expire" cite FRCrimP 45(c)
+test "mail adds three days after the period would otherwise expire" cite "FRCrimP 45(c)"
 {
   given Served(Mail) on 2025-03-03
   expect deadline(frcrimp45-14-days) == 2025-03-20
 }
 
-test "electronic service adds nothing" cite FRCrimP 45(c)
+test "electronic service adds nothing" cite "FRCrimP 45(c)"
 {
   given Served(Electronic) on 2025-03-03
   expect deadline(frcrimp45-14-days) == 2025-03-17
 }
 
-test "counted back, a Sunday last day moves to Friday" cite FRCrimP 45(a)(5)
+test "counted back, a Sunday last day moves to Friday" cite "FRCrimP 45(a)(5)"
 {
   given Scheduled() on 2025-03-16
   expect deadline(frcrimp45-7-days-before) == 2025-03-07

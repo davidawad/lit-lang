@@ -21,7 +21,7 @@ event Opposed()
 event Replied()
 event Rejoined()
 
-counting oc cite FRCP 6(a) { exclude_trigger_day, include_last_day, holidays ocal }
+counting oc cite \"FRCP 6(a)\" { exclude_trigger_day, include_last_day, holidays ocal }
 calendar ocal { new-year: fixed(1, 1) effective [1870-06-28, ..) observed nearest_weekday }
 
 deadline base: 10.days from Served(complaint) counted_by oc
@@ -117,7 +117,7 @@ enum Doc { complaint }
 
 event Served(doc: Doc)
 
-counting oc cite FRCP 6(a) { exclude_trigger_day, include_last_day, holidays ocal }
+counting oc cite \"FRCP 6(a)\" { exclude_trigger_day, include_last_day, holidays ocal }
 calendar ocal { new-year: fixed(1, 1) effective [1870-06-28, ..) observed nearest_weekday }
 
 deadline dep-base: 10.days from Served(complaint) counted_by oc

@@ -606,7 +606,7 @@ fn a_justice_extends_the_cert_period_by_up_to_60_days() {
         "cert-2101c",
         &[
             "2026-01-02 CertExtensionApplied() by appellant",
-            "2026-01-07 CertPeriodExtended(2026-03-14) by justice cite Sup. Ct. R. 13.5",
+            "2026-01-07 CertPeriodExtended(2026-03-14) by justice cite \"Sup. Ct. R. 13.5\"",
         ],
     );
     assert_eq!(run.code, 0, "{}", run.stdout);
@@ -626,7 +626,7 @@ fn a_cert_extension_past_60_days_or_by_a_court_is_rejected() {
         "cert-2101c-long",
         &[
             "2026-01-02 CertExtensionApplied() by appellant",
-            "2026-01-07 CertPeriodExtended(2026-03-15) by justice cite Sup. Ct. R. 13.5",
+            "2026-01-07 CertPeriodExtended(2026-03-15) by justice cite \"Sup. Ct. R. 13.5\"",
         ],
     );
     assert_eq!(long.code, 2, "{}", long.stdout);
@@ -638,7 +638,7 @@ fn a_cert_extension_past_60_days_or_by_a_court_is_rejected() {
         "cert-2101c-court",
         &[
             "2026-01-02 CertExtensionApplied() by appellant",
-            "2026-01-07 CertPeriodExtended(2026-02-13) by panel cite Sup. Ct. R. 13.5",
+            "2026-01-07 CertPeriodExtended(2026-02-13) by panel cite \"Sup. Ct. R. 13.5\"",
         ],
     );
     assert_eq!(court.code, 2, "{}", court.stdout);
@@ -652,7 +652,7 @@ fn a_cert_extension_past_60_days_or_by_a_court_is_rejected() {
         "cert-2101c-late",
         &[
             "2026-01-14 CertExtensionApplied() by appellant",
-            "2026-01-15 CertPeriodExtended(2026-02-13) by justice cite Sup. Ct. R. 13.5",
+            "2026-01-15 CertPeriodExtended(2026-02-13) by justice cite \"Sup. Ct. R. 13.5\"",
         ],
     );
     assert_eq!(late.code, 2, "{}", late.stdout);
@@ -686,7 +686,7 @@ fn the_director_not_the_court_extends_the_federal_circuit_ptab_window() {
         "fedcir-90-3-c",
         &[
             "2026-05-01 PtabAppealExtensionRequested() by appellant",
-            "2026-05-06 PtabAppealPeriodExtended(2026-06-03) by director cite 37 C.F.R. § 90.3(c)(1)(i)",
+            "2026-05-06 PtabAppealPeriodExtended(2026-06-03) by director cite \"37 C.F.R. § 90.3(c)(1)(i)\"",
         ],
     );
     assert_eq!(ok.code, 0, "{}", ok.stdout);
@@ -702,7 +702,7 @@ fn the_director_not_the_court_extends_the_federal_circuit_ptab_window() {
         "fedcir-90-3-c-court",
         &[
             "2026-05-01 PtabAppealExtensionRequested() by appellant",
-            "2026-05-06 PtabAppealPeriodExtended(2026-06-03) by fedcir cite 37 C.F.R. § 90.3(c)(1)(i)",
+            "2026-05-06 PtabAppealPeriodExtended(2026-06-03) by fedcir cite \"37 C.F.R. § 90.3(c)(1)(i)\"",
         ],
     );
     assert_eq!(court.code, 2, "{}", court.stdout);

@@ -18,7 +18,7 @@ import core.time.{ Served, ServiceMethod }
 /// "personally, by mail, or by third-party commercial carrier", and Rule 30
 /// adds nothing for any of them. Earlier editions of the Rules are not
 /// vendored and stay undeclared.
-counting sup-ct-30 effective [2023-01-01, ..) known_at 2022-12-05 cite Sup. Ct. R. 30.1
+counting sup-ct-30 effective [2023-01-01, ..) known_at 2022-12-05 cite "Sup. Ct. R. 30.1"
 {
   exclude_trigger_day
   include_last_day
@@ -34,29 +34,29 @@ counting sup-ct-30 effective [2023-01-01, ..) known_at 2022-12-05 cite Sup. Ct. 
     MailForeign: unrecognized
     Express: unrecognized
     ExpressForeign: unrecognized
-  } cite Sup. Ct. R. 29.3
+  } cite "Sup. Ct. R. 29.3"
   holidays us-federal-holidays
   forums [scotus]
 }
 
-deadline sup-ct-30-90-days: 90.days after Served() counted_by sup-ct-30 cite Sup. Ct. R. 13.1
+deadline sup-ct-30-90-days: 90.days after Served() counted_by sup-ct-30 cite "Sup. Ct. R. 13.1"
 {
   forum scotus
 }
 
-test "ninety days from entry of judgment" cite Sup. Ct. R. 13.1
+test "ninety days from entry of judgment" cite "Sup. Ct. R. 13.1"
 {
   given Served(Personal) on 2025-10-15
   expect deadline(sup-ct-30-90-days) == 2026-01-13
 }
 
-test "a Sunday ninetieth day runs to Monday" cite Sup. Ct. R. 30.1
+test "a Sunday ninetieth day runs to Monday" cite "Sup. Ct. R. 30.1"
 {
   given Served(Personal) on 2025-03-03
   expect deadline(sup-ct-30-90-days) == 2025-06-02
 }
 
-test "service by mail adds nothing" cite Sup. Ct. R. 30.1
+test "service by mail adds nothing" cite "Sup. Ct. R. 30.1"
 {
   given Served(Mail) on 2025-10-15
   expect deadline(sup-ct-30-90-days) == 2026-01-13

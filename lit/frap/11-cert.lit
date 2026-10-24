@@ -29,9 +29,9 @@ event CertExtensionApplied()
 /// a bar (a later application "will not be granted except in the most
 /// extraordinary circumstances") and is not modeled; neither is Rule
 /// 30.3's bar on renewing a denied application.
-rule duty petition-for-certiorari effective [2009-12-01, ..) known_at 2009-03-26 cite 28 U.S.C. § 2101(c)
+rule duty petition-for-certiorari effective [2009-12-01, ..) known_at 2009-03-26 cite "28 U.S.C. § 2101(c)"
 {
-  deadline cert-period: 90.days after EnteredOnAppeal() counted_by sup-ct-30 cite 28 U.S.C. § 2101(c)
+  deadline cert-period: 90.days after EnteredOnAppeal() counted_by sup-ct-30 cite "28 U.S.C. § 2101(c)"
   {
     trigger latest
     forum scotus
@@ -51,7 +51,7 @@ test "a cert petition is due 90 days after entry of judgment" cite "28 U.S.C. §
   expect deadline(cert-period) == 2026-01-13
 }
 
-test "a 90th day on a Sunday rolls to Monday" cite Sup. Ct. R. 30.1
+test "a 90th day on a Sunday rolls to Monday" cite "Sup. Ct. R. 30.1"
 {
   given EnteredOnAppeal(Judgment) on 2025-03-03
   expect deadline(cert-period) == 2025-06-02

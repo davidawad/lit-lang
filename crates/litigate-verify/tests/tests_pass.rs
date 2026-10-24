@@ -175,9 +175,9 @@ tests_pass!(
     the_engine_clock_rejects_a_period_it_cannot_count,
     Failed,
     with(
-        "counting nbd cite FRCP 6(a)\n{\n  anchor next_business_day\n  include_last_day\n  \
+        "counting nbd cite \"FRCP 6(a)\"\n{\n  anchor next_business_day\n  include_last_day\n  \
          holidays federal\n  service_extension { Personal: 0.days, Electronic: unrecognized, Mail: unrecognized, Clerk: unrecognized, OtherConsented: unrecognized, CommercialCarrier: unrecognized, PrisonMail: unrecognized, MailForeign: unrecognized, Express: unrecognized, ExpressForeign: unrecognized }\n}\n\
-         rule duty zero-duty cite FRCP 12(a)\n{\n  deadline zero-period: 0.days from \
+         rule duty zero-duty cite \"FRCP 12(a)\"\n{\n  deadline zero-period: 0.days from \
          Served(complaint) counted_by nbd\n}\n\
          test \"a zero-day period\" cite \"FRCP 12(a)\"\n{\n  \
          given Served(complaint, Personal) on 2025-03-03\n  \
@@ -189,9 +189,9 @@ tests_pass!(
     weeks_months_and_years_count_with_nominal_and_adjusted_dates,
     Passed,
     with(
-        "counting monthly cite FRCP 6(a)\n{\n  exclude_trigger_day\n  include_last_day\n  \
+        "counting monthly cite \"FRCP 6(a)\"\n{\n  exclude_trigger_day\n  include_last_day\n  \
          roll_forward_on [weekend, legal_holiday]\n  holidays federal\n  end_of_month clamp\n  service_extension { Personal: 0.days, Electronic: unrecognized, Mail: unrecognized, Clerk: unrecognized, OtherConsented: unrecognized, CommercialCarrier: unrecognized, PrisonMail: unrecognized, MailForeign: unrecognized, Express: unrecognized, ExpressForeign: unrecognized }\n}\n\
-         rule duty period-duty cite FRCP 12(a)\n{\n  \
+         rule duty period-duty cite \"FRCP 12(a)\"\n{\n  \
          deadline week-period: 2.weeks from Served(complaint) counted_by monthly\n  \
          deadline month-period: 3.months from Served(complaint) counted_by monthly\n  \
          deadline year-period: 1.years from Served(complaint) counted_by monthly\n}\n\
@@ -235,10 +235,10 @@ tests_pass!(
     a_chained_period_counts_from_the_end_it_names,
     Passed,
     with(
-        "rule duty chain-duty cite FRCP 12(a)\n{\n  \
+        "rule duty chain-duty cite \"FRCP 12(a)\"\n{\n  \
          deadline after-answer: 10.days from deadline(answer-period).nominal counted_by frcp6\n  \
          deadline after-after: 10.days from deadline(after-answer).adjusted counted_by frcp6\n}\n\
-         test \"chained periods\" cite FRCP 12(a)\n{\n  \
+         test \"chained periods\" cite \"FRCP 12(a)\"\n{\n  \
          given Served(complaint, Personal) on 2025-03-03\n  \
          expect deadline(after-answer) == 2025-04-03\n  \
          expect deadline(after-after) == 2025-04-14\n}"
@@ -249,10 +249,10 @@ tests_pass!(
     a_cycle_of_chained_periods_is_not_counted,
     Failed,
     with(
-        "rule duty loop-duty cite FRCP 12(a)\n{\n  \
+        "rule duty loop-duty cite \"FRCP 12(a)\"\n{\n  \
          deadline loop-a: 1.days from deadline(loop-b).nominal counted_by frcp6\n  \
          deadline loop-b: 1.days from deadline(loop-a).nominal counted_by frcp6\n}\n\
-         test \"a cycle\" cite FRCP 12(a)\n{\n  \
+         test \"a cycle\" cite \"FRCP 12(a)\"\n{\n  \
          given Served(complaint, Personal) on 2025-03-03\n  \
          expect deadline(loop-a) == 2025-03-04\n}"
     )
@@ -262,11 +262,11 @@ tests_pass!(
     a_cycle_through_the_version_in_force_is_not_counted,
     Failed,
     with(
-        "rule duty loop-duty cite FRCP 12(a)\n{\n  \
+        "rule duty loop-duty cite \"FRCP 12(a)\"\n{\n  \
          deadline loop-a: 1.days from Served(complaint) counted_by frcp6 effective [2009-12-01, 2020-01-01)\n  \
          deadline loop-a: 1.days from deadline(loop-b).nominal counted_by frcp6 effective [2020-01-01, ..)\n  \
          deadline loop-b: 1.days from deadline(loop-a).nominal counted_by frcp6\n}\n\
-         test \"a cycle in force\" cite FRCP 12(a)\n{\n  \
+         test \"a cycle in force\" cite \"FRCP 12(a)\"\n{\n  \
          given Served(complaint, Personal) on 2025-03-03\n  \
          expect deadline(loop-a) == 2025-03-04\n}"
     )
@@ -276,12 +276,12 @@ tests_pass!(
     a_chain_on_a_period_the_clock_cannot_count_is_not_counted,
     Failed,
     with(
-        "counting nbd cite FRCP 6(a)\n{\n  anchor next_business_day\n  include_last_day\n  \
+        "counting nbd cite \"FRCP 6(a)\"\n{\n  anchor next_business_day\n  include_last_day\n  \
          holidays federal\n}\n\
-         rule duty zero-duty cite FRCP 12(a)\n{\n  deadline zero-period: 0.days from \
+         rule duty zero-duty cite \"FRCP 12(a)\"\n{\n  deadline zero-period: 0.days from \
          Served(complaint) counted_by nbd\n  \
          deadline after-zero: 1.days from deadline(zero-period).adjusted counted_by frcp6\n}\n\
-         test \"after a zero-day period\" cite FRCP 12(a)\n{\n  \
+         test \"after a zero-day period\" cite \"FRCP 12(a)\"\n{\n  \
          given Served(complaint, Personal) on 2025-03-03\n  \
          expect deadline(after-zero) == 2025-03-04\n}"
     )

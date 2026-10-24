@@ -87,9 +87,9 @@ event CertExtensionApplied()
 /// sixty days" (§ 2101(c)): a Justice is the only extender, so no court or
 /// case order may move it (no `delegable_to`), and the application is made
 /// within the period (as `frap.cert` reads Sup. Ct. R. 30.2).
-rule duty certiorari-petition cite 28 U.S.C. § 2101(c)
+rule duty certiorari-petition cite "28 U.S.C. § 2101(c)"
 {
-  deadline cert-period: 90.days after Entered(PanelJudgment) counted_by sup-ct-30 effective [1948-09-01, ..) known_at 1948-06-25 cite 28 U.S.C. § 2101(c)
+  deadline cert-period: 90.days after Entered(PanelJudgment) counted_by sup-ct-30 effective [1948-09-01, ..) known_at 1948-06-25 cite "28 U.S.C. § 2101(c)"
   {
     forum scotus
     extend {
@@ -108,7 +108,7 @@ test "a certiorari petition is due 90 days after entry of judgment" cite "28 U.S
   expect deadline(cert-period) == 2026-07-07
 }
 
-test "a Sunday 90th day rolls the certiorari petition to Monday" cite Sup. Ct. R. 30.1
+test "a Sunday 90th day rolls the certiorari petition to Monday" cite "Sup. Ct. R. 30.1"
 {
   given Entered(PanelJudgment) on 2026-03-02
   expect deadline(cert-period) == 2026-06-01

@@ -33,7 +33,7 @@ rule duty criminal-notice-of-appeal effective [2009-12-01, ..) known_at 2009-03-
 /// court may extend them (FRCP 6(b)(2)), so there is no delegation.
 rule duty tolling-motion effective [2009-12-01, ..) known_at 2009-03-26 cite "FRCP 59(b)"
 {
-  deadline tolling-motion-period: 28.days after EnteredBelow(FinalJudgment) counted_by frcp6 cite FRCP 59(e)
+  deadline tolling-motion-period: 28.days after EnteredBelow(FinalJudgment) counted_by frcp6 cite "FRCP 59(e)"
   {
     forum frcp
   }

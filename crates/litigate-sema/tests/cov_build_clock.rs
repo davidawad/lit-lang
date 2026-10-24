@@ -71,8 +71,8 @@ fn counting_rules_lower_every_option() {
   roll_forward_on [weekend, legal_holiday, inaccessible]\n\
   service_extension { Personal: 1.court_days, Electronic: 0.days, Mail: 3.days, Clerk: unrecognized, OtherConsented: unrecognized, CommercialCarrier: unrecognized, PrisonMail: unrecognized, MailForeign: unrecognized, Express: unrecognized, ExpressForeign: unrecognized }\n\
   holidays cal\n  anchor next_business_day\n\
-  forward_holidays cal cite FRCP 6(a)(6)(C)\n\
-  declared_holidays closures cite FRCP 6(a)(6)(B)\n\
+  forward_holidays cal cite \"FRCP 6(a)(6)(C)\"\n\
+  declared_holidays closures cite \"FRCP 6(a)(6)(B)\"\n\
   forums [frcp, frap]\n\
   short_period { below: 11.days, count: business_days }\n\
 }\n\
@@ -123,10 +123,10 @@ fn closing_calendars_need_a_cite_and_declared_days() {
         "calendar closures { eo: once(2018-12-05) effective [2018-12-05, 2018-12-06) }\n\
 calendar observed-closures { eo: once(2018-12-05) effective [2018-12-05, 2018-12-06) observed nearest_weekday }\n\
 counting f1 { holidays cal, forward_holidays cal }\n\
-counting f2 { holidays cal, declared_holidays cal cite FRCP 6(a)(6)(B) }\n\
+counting f2 { holidays cal, declared_holidays cal cite \"FRCP 6(a)(6)(B)\" }\n\
 counting f3 { holidays cal, declared_holidays observed-closures cite ?(\"no order is vendored\") }\n\
 counting f4 { holidays cal, declared_holidays closures }\n\
-counting f5 { holidays cal, forward_holidays nope cite FRCP 6(a)(6)(C) }\n\
+counting f5 { holidays cal, forward_holidays nope cite \"FRCP 6(a)(6)(C)\" }\n\
 counting f6 { holidays cal, forward_holidays }",
     );
     insta::assert_debug_snapshot!(out);

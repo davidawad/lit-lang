@@ -178,7 +178,7 @@ expression: stable(&run.json)
         "line": 62,
         "col": 1,
         "end_line": 62,
-        "end_col": 121
+        "end_col": 123
       },
       "message": "deadline `reply-period` has no test that evaluates `deadline(reply-period)`",
       "fixes": [
@@ -188,9 +188,9 @@ expression: stable(&run.json)
               "span": {
                 "file": "lit/cov/cov.lit",
                 "line": 62,
-                "col": 121,
+                "col": 123,
                 "end_line": 62,
-                "end_col": 121
+                "end_col": 123
               },
               "replacement": "\n\ntest \"reply-period is due on the expected date\" {\n  given <trigger event> on <YYYY-MM-DD>\n  expect deadline(reply-period) == <YYYY-MM-DD>\n}"
             }

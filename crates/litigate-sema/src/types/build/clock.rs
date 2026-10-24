@@ -516,7 +516,7 @@ impl Cx<'_, '_> {
             matches!(
                 a,
                 Atom::Expr(Expr {
-                    kind: ExprKind::Cite(_) | ExprKind::Hole(_),
+                    kind: ExprKind::Cite(..) | ExprKind::Hole(_),
                     ..
                 })
             )

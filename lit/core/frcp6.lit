@@ -96,7 +96,7 @@ counting frcp6 effective [2001-12-01, 2005-12-01) known_at 2001-04-23 supersedes
     MailForeign: unrecognized
     Express: unrecognized
     ExpressForeign: unrecognized
-  } cite FRCP (2008 ed.) 6 (2001 Committee Note)
+  } cite "FRCP (2008 ed.) 6 (2001 Committee Note)"
   holidays us-federal-holidays
   forums [frcp]
   end_of_month clamp
@@ -123,7 +123,7 @@ counting frcp6 effective [2005-12-01, 2009-12-01) known_at 2005-04-25 supersedes
     MailForeign: unrecognized
     Express: unrecognized
     ExpressForeign: unrecognized
-  } cite FRCP (2008 ed.) 6(d)
+  } cite "FRCP (2008 ed.) 6(d)"
   holidays us-federal-holidays
   forums [frcp]
   end_of_month clamp
@@ -139,7 +139,7 @@ counting frcp6 effective [2005-12-01, 2009-12-01) known_at 2005-04-25 supersedes
 /// month without that day (a February 29 anniversary) ends on its last day.
 /// `end_of_month clamp` is the earlier of the two readings; UNVERIFIED: no
 /// rule text or vendored decision fixes it.
-counting frcp6 effective [2009-12-01, 2016-12-01) known_at 2009-03-26 supersedes frcp6@2005-12-01 cite FRCP (2011 ed.) 6(a)
+counting frcp6 effective [2009-12-01, 2016-12-01) known_at 2009-03-26 supersedes frcp6@2005-12-01 cite "FRCP (2011 ed.) 6(a)" historical
 {
   exclude_trigger_day
   include_last_day
@@ -155,7 +155,7 @@ counting frcp6 effective [2009-12-01, 2016-12-01) known_at 2009-03-26 supersedes
     MailForeign: unrecognized
     Express: unrecognized
     ExpressForeign: unrecognized
-  } cite FRCP (2011 ed.) 6(d)
+  } cite "FRCP (2011 ed.) 6(d)"
   holidays us-federal-holidays
   forums [frcp]
   allow_hours
@@ -169,7 +169,7 @@ counting frcp6 effective [2009-12-01, 2016-12-01) known_at 2009-03-26 supersedes
 /// Reports; Committee Note, "to remove service by electronic means under
 /// Rule 5(b)(2)(E) from the modes of service that allow 3 added days").
 /// Electronic service adds nothing.
-counting frcp6 effective [2016-12-01, ..) known_at 2016-04-28 supersedes frcp6@2009-12-01 cite FRCP 6(a)
+counting frcp6 effective [2016-12-01, ..) known_at 2016-04-28 supersedes frcp6@2009-12-01 cite "FRCP 6(a)"
 {
   exclude_trigger_day
   include_last_day
@@ -185,7 +185,7 @@ counting frcp6 effective [2016-12-01, ..) known_at 2016-04-28 supersedes frcp6@2
     MailForeign: unrecognized
     Express: unrecognized
     ExpressForeign: unrecognized
-  } cite FRCP 6(d)
+  } cite "FRCP 6(d)"
   holidays us-federal-holidays
   forums [frcp]
   allow_hours
@@ -219,7 +219,7 @@ event PriorServiceRuleOrdered()
 /// Congress, vendored under sources/change-corpus/rules/congress-packages/).
 /// Its own event, so an order keeping the pre-2009 rules in a matter
 /// pending since then does not also keep the 2009 text.
-transition frcp6-2016 amends frcp6@2016-12-01 cite FRCP 86(a)(2)(B)
+transition frcp6-2016 amends frcp6@2016-12-01 cite "FRCP 86(a)(2)(B)"
 {
   unless has_event(PriorServiceRuleOrdered()) -> frcp6@2009-12-01
   otherwise -> frcp6@2016-12-01

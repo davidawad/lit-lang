@@ -26,7 +26,7 @@ deadline dl: 3.days from Served(complaint) counted_by c6\n\
 state rich: \"Rich\" by Plaintiff {\n\
   group g\n  valence caution\n  note \"n\"\n  court_listener_url \"u\"\n  attrs { weight: -1.5 }\n\
   a \"A\" -> done { within dl { extendable false }, effort 2.hours, cost 3.usd, event Served(complaint), duration 13.5.days, valence bad }\n\
-  b \"B\" -> done by either { deadline 5.court_days { extendable true, extension_authority \"Court\", counting \"frap26\" }, duration { min 1.days, mode 2.5.days }, action_id \"x\", note \"m\", tags [t], sets [s], clears [c], requires [r], forbids [f], authority cite FRCP 6(a) }\n\
+  b \"B\" -> done by either { deadline 5.court_days { extendable true, extension_authority \"Court\", counting \"frap26\" }, duration { min 1.days, mode 2.5.days }, action_id \"x\", note \"m\", tags [t], sets [s], clears [c], requires [r], forbids [f], authority cite \"FRCP 6(a)\" }\n\
 }\n\
 terminal done: \"Done\" outcome [won] { valence neutral, payoff ?(\"tbd\"), payoff_by_flag { won: 5.usd, lost: -2.usd } }\n\
 state good: \"Good\" { valence good }",

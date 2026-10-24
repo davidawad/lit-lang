@@ -216,13 +216,13 @@ event PtabAppealPeriodExtended(until: Date) extends ptab-noa-period to until
 /// period expires (good cause) or after (excusable neglect) (§ 90.3(c)(1)),
 /// not a court; the grants are on the version in force from March 29, 2024,
 /// whose text is vendored (UNVERIFIED: the 2012 version's paragraph (c)).
-rule duty ptab-notice-of-appeal cite 37 C.F.R. § 90.3(a)(1)
+rule duty ptab-notice-of-appeal cite "37 C.F.R. § 90.3(a)(1)"
 {
-  deadline ptab-noa-period: 63.days after Entered(BoardDecision) counted_by uspto-1-7 effective [2012-09-16, 2024-03-29) known_at 2012-08-14 cite 37 C.F.R. § 90.3(a)(1); 37 C.F.R. § 90.3(b)(2)
+  deadline ptab-noa-period: 63.days after Entered(BoardDecision) counted_by uspto-1-7 effective [2012-09-16, 2024-03-29) known_at 2012-08-14 cite "37 C.F.R. § 90.3(a)(1); 37 C.F.R. § 90.3(b)(2)"
   {
     forum ptab
   }
-  deadline ptab-noa-period: 63.days after Entered(BoardDecision) counted_by uspto-1-7 effective [2024-03-29, ..) known_at 2024-03-29 supersedes ptab-noa-period@2012-09-16 cite 37 C.F.R. § 90.3(a)(1); 37 C.F.R. § 90.3(b)(2)
+  deadline ptab-noa-period: 63.days after Entered(BoardDecision) counted_by uspto-1-7 effective [2024-03-29, ..) known_at 2024-03-29 supersedes ptab-noa-period@2012-09-16 cite "37 C.F.R. § 90.3(a)(1); 37 C.F.R. § 90.3(b)(2)"
   {
     forum ptab
     extend { by director, discretion GoodCause, on PtabAppealExtensionRequested() }
@@ -261,7 +261,7 @@ rule duty itc-notice-of-appeal cite "19 U.S.C. § 1337(c)"
 /// 3 of the Federal Rules of Appellate Procedure". That time is FRAP 4's,
 /// a period of FRAP (`forum frap`), which FRAP 26(a) computes; RCFC 6, the
 /// Court of Federal Claims' own rule, is not applied to it.
-rule duty cofc-notice-of-appeal cite 28 U.S.C. § 2522
+rule duty cofc-notice-of-appeal cite "28 U.S.C. § 2522"
 {
   deadline cofc-noa-period: 60.days after Entered(Judgment) counted_by frap26 effective [1992-10-29, ..) known_at 1992-10-29 delegable_to [CaseOrder] cite "28 U.S.C. § 2522; FRAP 4(a)(1)(B); FRAP 4(a)(5)(A)"
   {
@@ -296,9 +296,9 @@ event TtabAppealPeriodExtended(until: Date) extends ttab-noa-period to until
 /// extender is the Director, on a written request made before the period
 /// expires (good cause) or after (excusable neglect) (§ 2.145(e)(1)), not
 /// a court.
-rule duty ttab-notice-of-appeal cite 37 C.F.R. § 2.145(d)(1)
+rule duty ttab-notice-of-appeal cite "37 C.F.R. § 2.145(d)(1)"
 {
-  deadline ttab-noa-period: 63.days after Entered(BoardDecision) counted_by ttab-2-196 effective [2017-01-14, ..) known_at 2016-10-07 cite 37 C.F.R. § 2.145(d)(1); 37 C.F.R. § 2.145(d)(4)(ii)
+  deadline ttab-noa-period: 63.days after Entered(BoardDecision) counted_by ttab-2-196 effective [2017-01-14, ..) known_at 2016-10-07 cite "37 C.F.R. § 2.145(d)(1); 37 C.F.R. § 2.145(d)(4)(ii)"
   {
     forum ttab
     extend { by director, discretion GoodCause, on TtabAppealExtensionRequested() }
@@ -329,19 +329,19 @@ test "a PTAB notice of appeal is due 63 days after the final decision" cite "37 
   expect deadline(ptab-noa-period) == 2026-05-04
 }
 
-test "a 63rd day on Memorial Day rolls to Tuesday" cite 37 C.F.R. § 90.3(b)(2)
+test "a 63rd day on Memorial Day rolls to Tuesday" cite "37 C.F.R. § 90.3(b)(2)"
 {
   given Entered(BoardDecision) on 2026-03-23
   expect deadline(ptab-noa-period) == 2026-05-26
 }
 
-test "a 63rd day on Inauguration Day, a District of Columbia holiday, rolls to Friday" cite 37 C.F.R. § 90.3(b)(2)
+test "a 63rd day on Inauguration Day, a District of Columbia holiday, rolls to Friday" cite "37 C.F.R. § 90.3(b)(2)"
 {
   given Entered(BoardDecision) on 2032-11-18
   expect deadline(ptab-noa-period) == 2033-01-21
 }
 
-test "an ITC notice of appeal is due 60 days after the determination becomes final" cite 19 U.S.C. § 1337(c)
+test "an ITC notice of appeal is due 60 days after the determination becomes final" cite "19 U.S.C. § 1337(c)"
 {
   given BecameFinal() on 2026-03-02
   expect deadline(itc-noa-period) == 2026-05-01
@@ -371,13 +371,13 @@ test "a TTAB notice of appeal is due 63 days after the final decision" cite "37 
   expect deadline(ttab-noa-period) == 2026-05-04
 }
 
-test "a 63rd day on Labor Day rolls to Tuesday" cite 37 C.F.R. § 2.145(d)(4)(ii)
+test "a 63rd day on Labor Day rolls to Tuesday" cite "37 C.F.R. § 2.145(d)(4)(ii)"
 {
   given Entered(BoardDecision) on 2026-07-06
   expect deadline(ttab-noa-period) == 2026-09-08
 }
 
-test "a TTAB 63rd day on Inauguration Day rolls to Friday" cite 37 C.F.R. § 2.145(d)(4)(ii)
+test "a TTAB 63rd day on Inauguration Day rolls to Friday" cite "37 C.F.R. § 2.145(d)(4)(ii)"
 {
   given Entered(BoardDecision) on 2032-11-18
   expect deadline(ttab-noa-period) == 2033-01-21

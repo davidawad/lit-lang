@@ -39,7 +39,7 @@ group terminals: "Terminals"
 /// methods are email or other electronic transmission, delivery, leaving a
 /// copy, mail, Priority Mail Express and overnight courier; the others are
 /// not recognized.
-counting ttab-2-196 effective [2017-01-14, ..) known_at 2016-10-07 cite 37 C.F.R. § 2.196
+counting ttab-2-196 effective [2017-01-14, ..) known_at 2016-10-07 cite "37 C.F.R. § 2.196"
 {
   exclude_trigger_day
   include_last_day
@@ -55,7 +55,7 @@ counting ttab-2-196 effective [2017-01-14, ..) known_at 2016-10-07 cite 37 C.F.R
     MailForeign: unrecognized
     Express: 0.days
     ExpressForeign: unrecognized
-  } cite 37 C.F.R. § 2.119(c)
+  } cite "37 C.F.R. § 2.119(c)"
   holidays dc-federal-holidays
   forums [ttab]
 }
@@ -146,10 +146,10 @@ test "an opposition period ending on Thanksgiving rolls to Friday" cite "37 CFR 
 /// publication.
 rule duty extensions-of-time effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CFR 2.102(c)"
 {
-  deadline first-extension-90: 90.days from OppositionPeriodExpired() counted_by ttab-2-196 cite 37 CFR 2.102(c)(1)(ii)
-  deadline second-extension-60: 60.days from FirstExtensionExpired() counted_by ttab-2-196 cite 37 CFR 2.102(c)(2)
-  deadline extended-period-120: 120.days from Published() counted_by ttab-2-196 cite 37 CFR 2.102(c)(3)
-  deadline outer-limit-180: 180.days from Published() counted_by ttab-2-196 cite 37 CFR 2.102(c)
+  deadline first-extension-90: 90.days from OppositionPeriodExpired() counted_by ttab-2-196 cite "37 CFR 2.102(c)(1)(ii)"
+  deadline second-extension-60: 60.days from FirstExtensionExpired() counted_by ttab-2-196 cite "37 CFR 2.102(c)(2)"
+  deadline extended-period-120: 120.days from Published() counted_by ttab-2-196 cite "37 CFR 2.102(c)(3)"
+  deadline outer-limit-180: 180.days from Published() counted_by ttab-2-196 cite "37 CFR 2.102(c)"
 }
 
 test "a 90-day first extension runs from the end of the original period" cite "37 CFR 2.102(c)(1)(ii)"
@@ -223,8 +223,10 @@ test "a day 180 on the Saturday before Labor Day rolls to Tuesday" cite "37 CFR 
 /// 2.106 (sources/cfr-37-part2-answer-time-history.txt).
 rule duty answer-time effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CFR 2.105(a)"
 {
-  deadline answer-period: 30.days from InstitutionNoticed() counted_by ttab-2-196 effective [2017-01-14, 2026-06-01) delegable_to [CaseOrder] cite 37 CFR 2.105(a)
-  deadline answer-period: 60.days from InstitutionNoticed() counted_by ttab-2-196 effective [2026-06-01, ..) known_at 2026-06-01 supersedes answer-period@2017-01-14 delegable_to [CaseOrder] cite 37 CFR 2.106(a)
+  /// The cite is a hole: `cfr2` holds the 2026 text, which postdates this
+  /// version; the 2017 text of 2.105(a) is not vendored.
+  deadline answer-period: 30.days from InstitutionNoticed() counted_by ttab-2-196 effective [2017-01-14, 2026-06-01) delegable_to [CaseOrder] cite ?("37 CFR 2.105(a)")
+  deadline answer-period: 60.days from InstitutionNoticed() counted_by ttab-2-196 effective [2026-06-01, ..) known_at 2026-06-01 supersedes answer-period@2017-01-14 delegable_to [CaseOrder] cite "37 CFR 2.106(a)"
 }
 
 test "a notice designating 30 days sets the answer date" cite "37 CFR 2.105(a)"
@@ -308,8 +310,8 @@ test "a cancellation answer is due on the date the notice designates" cite "37 C
 /// modified "by order of the Board" (§ 2.120(a)(2)(iv)).
 rule duty discovery-schedule effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CFR 2.120(a)(2)"
 {
-  deadline disclosure-period: 30.days from DiscoveryOpened() counted_by ttab-2-196 delegable_to [CaseOrder] cite 37 CFR 2.120(a)(2)(ii)
-  deadline discovery-period: 180.days from DiscoveryOpened() counted_by ttab-2-196 delegable_to [CaseOrder] cite 37 CFR 2.120(a)(2)(i)
+  deadline disclosure-period: 30.days from DiscoveryOpened() counted_by ttab-2-196 delegable_to [CaseOrder] cite "37 CFR 2.120(a)(2)(ii)"
+  deadline discovery-period: 180.days from DiscoveryOpened() counted_by ttab-2-196 delegable_to [CaseOrder] cite "37 CFR 2.120(a)(2)(i)"
 }
 
 test "initial disclosures are due 30 days after discovery opens" cite "37 CFR 2.120(a)(2)(ii)"
@@ -356,11 +358,11 @@ event RebuttalTestimonyClosed()
 /// applies (a counterclaim, consolidated proceedings, more than two
 /// parties) the Board sets the dates instead, which these do not model;
 /// no extension power is declared.
-deadline plaintiff-brief-period: 60.days after RebuttalTestimonyClosed() counted_by ttab-2-196 effective [2017-01-14, ..) known_at 2016-10-07 cite 37 CFR 2.128(a)(1)
-deadline defendant-brief-period: 30.days after deadline(plaintiff-brief-period).nominal counted_by ttab-2-196 effective [2017-01-14, ..) known_at 2016-10-07 cite 37 CFR 2.128(a)(1); TBMP § 112
-deadline reply-brief-period: 15.days after deadline(defendant-brief-period).nominal counted_by ttab-2-196 effective [2017-01-14, ..) known_at 2016-10-07 cite 37 CFR 2.128(a)(1); TBMP § 112
+deadline plaintiff-brief-period: 60.days after RebuttalTestimonyClosed() counted_by ttab-2-196 effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CFR 2.128(a)(1)"
+deadline defendant-brief-period: 30.days after deadline(plaintiff-brief-period).nominal counted_by ttab-2-196 effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CFR 2.128(a)(1); TBMP § 112"
+deadline reply-brief-period: 15.days after deadline(defendant-brief-period).nominal counted_by ttab-2-196 effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CFR 2.128(a)(1); TBMP § 112"
 
-test "a Sunday 30th day rolls the defendant's brief to Monday; the reply runs from the Sunday" cite TBMP § 112
+test "a Sunday 30th day rolls the defendant's brief to Monday; the reply runs from the Sunday" cite "TBMP § 112"
 {
   given RebuttalTestimonyClosed() on 2026-03-02
   expect deadline(plaintiff-brief-period) == 2026-05-01
@@ -369,7 +371,7 @@ test "a Sunday 30th day rolls the defendant's brief to Monday; the reply runs fr
   expect deadline(reply-brief-period) == 2026-06-15
 }
 
-test "a Saturday 60th day: the plaintiff's brief rolls to Monday, and the defendant's runs from the Saturday" cite TBMP § 112
+test "a Saturday 60th day: the plaintiff's brief rolls to Monday, and the defendant's runs from the Saturday" cite "TBMP § 112"
 {
   given RebuttalTestimonyClosed() on 2026-03-03
   expect deadline(plaintiff-brief-period).nominal == 2026-05-02
@@ -388,7 +390,7 @@ test "a Saturday 60th day: the plaintiff's brief rolls to Monday, and the defend
 /// request was made, and neither has a numeric ceiling.
 rule duty review-time effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CFR 2.145(d)"
 {
-  deadline civil-action-period: 63.days from FinalDecision() counted_by ttab-2-196 cite 37 CFR 2.145(d)(3)
+  deadline civil-action-period: 63.days from FinalDecision() counted_by ttab-2-196 cite "37 CFR 2.145(d)(3)"
   {
     extend { by director, discretion GoodCause, on CivilActionExtensionRequested() }
     extend {

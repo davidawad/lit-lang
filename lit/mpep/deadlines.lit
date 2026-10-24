@@ -25,7 +25,7 @@ import core.calendar.{ dc-federal-holidays }
 /// Board's counting rule too (`forums [uspto, ptab]`). § 1.7 adds no time
 /// for any manner of service: a period runs from the action or event that
 /// sets it, and no service method is recognized.
-counting uspto-1-7 effective [2013-12-18, ..) known_at 2026-01-01 cite 37 CFR 1.7(a)
+counting uspto-1-7 effective [2013-12-18, ..) known_at 2026-01-01 cite "37 CFR 1.7(a)"
 {
   exclude_trigger_day
   include_last_day
@@ -41,7 +41,7 @@ counting uspto-1-7 effective [2013-12-18, ..) known_at 2026-01-01 cite 37 CFR 1.
     MailForeign: unrecognized
     Express: unrecognized
     ExpressForeign: unrecognized
-  } cite 37 CFR 1.7(a)
+  } cite "37 CFR 1.7(a)"
   holidays dc-federal-holidays
   forums [uspto, ptab]
   end_of_month clamp
@@ -181,7 +181,7 @@ test "ssp-reply: from February 28, three months end on May 28, not May 31 (MPEP 
 /// a month chained on the period's end gets wrong whenever that end was cut
 /// to a short month's last day; the extended periods below count instead
 /// from the action itself.
-deadline extension-month: 1.months from ReplyPeriodEnded() counted_by uspto-1-7 effective [2024-01-31, ..) cite 37 CFR 1.136(a)
+deadline extension-month: 1.months from ReplyPeriodEnded() counted_by uspto-1-7 effective [2024-01-31, ..) cite "37 CFR 1.136(a)"
 
 test "extension-month: 1 month from Monday, 2025-03-03" cite "37 CFR 1.7(a)"
 {
@@ -205,11 +205,11 @@ test "extension-month: the last day, 2025-06-19, is a holiday; due Friday" cite 
 /// own period, 3 + k months from the mail date, its last day rolled under
 /// § 1.7(a). Three months of extension reach the six-month ceiling of 35
 /// U.S.C. § 133.
-deadline ssp-reply-extended-1: 4.months from OfficeActionMailed() counted_by uspto-1-7 effective [2024-01-31, ..) cite 37 CFR 1.136(a); MPEP 710.01(a)
-deadline ssp-reply-extended-2: 5.months from OfficeActionMailed() counted_by uspto-1-7 effective [2024-01-31, ..) cite 37 CFR 1.136(a); MPEP 710.01(a)
-deadline ssp-reply-extended-3: 6.months from OfficeActionMailed() counted_by uspto-1-7 effective [2024-01-31, ..) cite 37 CFR 1.136(a); 35 U.S.C. 133
+deadline ssp-reply-extended-1: 4.months from OfficeActionMailed() counted_by uspto-1-7 effective [2024-01-31, ..) cite "37 CFR 1.136(a); MPEP 710.01(a)"
+deadline ssp-reply-extended-2: 5.months from OfficeActionMailed() counted_by uspto-1-7 effective [2024-01-31, ..) cite "37 CFR 1.136(a); MPEP 710.01(a)"
+deadline ssp-reply-extended-3: 6.months from OfficeActionMailed() counted_by uspto-1-7 effective [2024-01-31, ..) cite "37 CFR 1.136(a); 35 U.S.C. 133"
 
-test "a reply due April 30 on a January 31 action is extended a month to May 31 (MPEP 710.01(a))" cite MPEP 710.01(a)
+test "a reply due April 30 on a January 31 action is extended a month to May 31 (MPEP 710.01(a))" cite "MPEP 710.01(a)"
 {
   given OfficeActionMailed() on 2024-01-31
   expect deadline(ssp-reply) == 2024-04-30
@@ -219,7 +219,7 @@ test "a reply due April 30 on a January 31 action is extended a month to May 31 
   expect deadline(ssp-reply-extended-3) == 2024-07-31
 }
 
-test "a reply due February 28 on a November 30 action is extended to March 30, not March 28" cite MPEP 710.01(a)
+test "a reply due February 28 on a November 30 action is extended to March 30, not March 28" cite "MPEP 710.01(a)"
 {
   given OfficeActionMailed() on 2024-11-30
   expect deadline(ssp-reply) == 2025-02-28

@@ -416,7 +416,7 @@ fn fields_view_values_by_shape() {
 
 #[test]
 fn counting_closed_sets_forums_and_unrecognized_methods_parse() {
-    let file = lit("module m\ncounting c {\n  forums [frcp, frap]\n  forward_holidays state cite FRCP 6(a)(6)(C)\n  declared_holidays closures cite FRCP 6(a)(6)(B)\n  service_extension { Mail: 3.days, PrisonMail: unrecognized }\n}\n");
+    let file = lit("module m\ncounting c {\n  forums [frcp, frap]\n  forward_holidays state cite \"FRCP 6(a)(6)(C)\"\n  declared_holidays closures cite \"FRCP 6(a)(6)(B)\"\n  service_extension { Mail: 3.days, PrisonMail: unrecognized }\n}\n");
     let counting: CountingDecl = decl(&file, "c");
     let items = counting.items();
     assert_eq!(items[0].keyword_kind(), Some(SyntaxKind::KwForums));

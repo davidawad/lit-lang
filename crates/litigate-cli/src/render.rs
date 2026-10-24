@@ -185,9 +185,7 @@ pub fn human_with_check(
         if counts[4] > 0 {
             parts.push(format!("{} holes", counts[4]));
         }
-        if !parts.is_empty() {
-            let _ = writeln!(out, "{name}: {}; --verbose to show", parts.join(", "));
-        }
+        let _ = writeln!(out, "{name}: {}; --verbose to show", parts.join(", "));
     }
     let count = |s: Severity| {
         envelope
@@ -306,6 +304,7 @@ mod tests {
     }
 
     #[test]
+    #[allow(clippy::too_many_lines)]
     fn check_human_output_filters_workspace_noise_and_groups_holes() {
         let span = |file: &str| Span {
             file: file.into(),
@@ -314,6 +313,10 @@ mod tests {
             end_line: 1,
             end_col: 2,
         };
+        let diagnostic = |file: &str, code, severity, message: &str| Diagnostic {
+            severity,
+            ..Diagnostic::error(code, span(file), message)
+        };
         let own_warning = Diagnostic {
             severity: Severity::Warning,
             ..Diagnostic::error(DiagnosticCode::HolePresent, span("case.case"), "unknown")
@@ -321,29 +324,59 @@ mod tests {
         };
         let own_error =
             Diagnostic::error(DiagnosticCode::UnresolvedName, span("mine.lit"), "bad name");
-        let dep_info = Diagnostic {
-            severity: Severity::Info,
-            ..Diagnostic::error(
-                DiagnosticCode::AnonymousEdge,
-                span("lit/ttab/rules.lit"),
-                "anonymous",
-            )
-        };
-        let dep_hole = Diagnostic {
-            severity: Severity::Warning,
-            ..Diagnostic::error(
-                DiagnosticCode::HolePresent,
-                span("lit/ttab/rules.lit"),
-                "unknown",
-            )
-        };
         let report = crate::out::Report {
-            diagnostics: vec![own_warning, own_error, dep_info, dep_hole],
+            diagnostics: vec![
+                own_warning,
+                own_error,
+                diagnostic(
+                    "lit/ttab/rules.lit",
+                    DiagnosticCode::AnonymousEdge,
+                    Severity::Info,
+                    "anonymous",
+                ),
+                diagnostic(
+                    "lit/ttab/rules.lit",
+                    DiagnosticCode::HolePresent,
+                    Severity::Warning,
+                    "unknown",
+                ),
+                diagnostic(
+                    "lit/ttab/rules.lit",
+                    DiagnosticCode::UnresolvedName,
+                    Severity::Error,
+                    "bad dependency name",
+                ),
+                diagnostic(
+                    "lit/ttab/rules.lit",
+                    DiagnosticCode::UnresolvedName,
+                    Severity::Warning,
+                    "dependency warning",
+                ),
+                diagnostic(
+                    "lit/ttab/rules.lit",
+                    DiagnosticCode::UnresolvedName,
+                    Severity::Hint,
+                    "dependency hint",
+                ),
+                diagnostic(
+                    "unknown/file.lit",
+                    DiagnosticCode::AnonymousEdge,
+                    Severity::Info,
+                    "unmapped dependency info",
+                ),
+                diagnostic(
+                    "lit/itc/rules.lit",
+                    DiagnosticCode::AnonymousEdge,
+                    Severity::Info,
+                    "ITC dependency info",
+                ),
+            ],
             check_render: Some(crate::out::CheckRender {
                 own_files: ["mine.lit".to_owned(), "case.case".to_owned()].into(),
                 package_by_file: [
                     ("mine.lit".to_owned(), "mine".to_owned()),
                     ("lit/ttab/rules.lit".to_owned(), "ttab".to_owned()),
+                    ("lit/itc/rules.lit".to_owned(), "itc".to_owned()),
                 ]
                 .into(),
                 ..Default::default()
@@ -355,9 +388,14 @@ mod tests {
         assert!(text.contains("bad name"), "{text}");
         assert!(!text.contains("anonymous"), "{text}");
         assert!(
-            text.contains("ttab: 1 info, 1 holes; --verbose to show"),
+            text.contains("ttab: 1 error, 1 warning, 1 info, 1 hint, 1 holes; --verbose to show"),
             "{text}"
         );
+        assert!(text.contains("itc: 1 info; --verbose to show"), "{text}");
+        assert!(!text.contains("bad dependency name"), "{text}");
+        assert!(!text.contains("dependency warning"), "{text}");
+        assert!(!text.contains("dependency hint"), "{text}");
+        assert!(!text.contains("unmapped dependency info"), "{text}");
         assert!(
             text.contains("matter: 1 holes; --verbose to show"),
             "{text}"

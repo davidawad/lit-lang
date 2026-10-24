@@ -458,8 +458,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   carry their `designated` window, so `deadline/extendable` and
   `deadline/extensionAuthority` lower as they do for a counted window:
   stated values are emitted, and an unstated one is absent (undeclared),
-  never `extendable: false`. The answering edges'
-  `extension_authority ?(..)` stays their hole.
+  never `extendable: false`. The answer period's extension authority and
+  its two FRCP 6(b)(1)(A) grants (lg-flu.45) are now in the pack, each
+  grant with the 37 C.F.R. § 2.116(a) interpretation it rests on, where
+  they used to be named only in a hole's reason.
 
 - **Generated packs leave a designated deadline's extension undeclared**
   (lg-flu.32; SPEC §8.1). An edge `within` a designated deadline still

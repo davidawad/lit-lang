@@ -31,7 +31,10 @@ fn roll_forward_terminates_for_bounded_dates() {
         forward_calendars: Vec::new(),
     };
     let start = Date::from_epoch_day(i64::from(epoch_day));
-    let rolled = clock.closed(true, &[]).roll(start, Toward::Later);
+    let rolled = clock
+        .closed(true, &[])
+        .roll(start, Toward::Later)
+        .expect("a weekend rule always rolls");
     assert!(!clock.is_closed(rolled, &[]));
     assert!(rolled >= start);
 }
@@ -53,6 +56,7 @@ fn forward_business_counting_is_after_or_equal_to_trigger() {
     let trigger = Date::from_epoch_day(i64::from(epoch_day));
     let result = clock
         .closed(true, &[])
-        .advance_business(trigger, i64::from(days));
+        .advance_business(trigger, i64::from(days))
+        .expect("an open rule always counts");
     assert!(result >= trigger);
 }

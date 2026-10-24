@@ -212,12 +212,21 @@ pub(crate) fn source_url(m: &hir::Manifest, cite: Option<&str>) -> Option<String
     });
     let (_, source) = by_prefix
         .chain(by_rule)
-        .filter(|(p, _)| cite.starts_with(p.as_str()))
+        .filter(|(p, _)| has_prefix(cite, p))
         .max_by_key(|(p, _)| p.len())?;
     m.sources
         .iter()
         .find(|s| s.id == source)
         .and_then(|s| s.url.clone())
+}
+
+/// `cite` starts with `prefix` at a token boundary: `FRCP 6` is a prefix
+/// of `FRCP 6(a)` but not of `FRCP 60`.
+fn has_prefix(cite: &str, prefix: &str) -> bool {
+    let word = |c: char| c.is_alphanumeric();
+    cite.strip_prefix(prefix).is_some_and(|rest| {
+        !(prefix.chars().next_back().is_some_and(word) && rest.chars().next().is_some_and(word))
+    })
 }
 
 /// The engine service method for a `.lit` method name (`Mail`,

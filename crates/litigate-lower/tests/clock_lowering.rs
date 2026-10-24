@@ -353,3 +353,25 @@ fn closing_calendars_must_resolve() {
     assert_eq!(lowering_errors(&p), declared);
     assert!(declared.contains("nowhere"), "{declared}");
 }
+
+/// LW4: a prefix binds a cite only at a token boundary, so `FRCP 6` binds
+/// `FRCP 6(a)` but not `FRCP 60`; a prefix ending in punctuation binds
+/// whatever follows.
+#[test]
+fn a_cite_prefix_ends_at_a_token_boundary() {
+    let mut p = example();
+    p.manifest.sources[0].cite_prefixes = vec!["FRCP 6".into()];
+    counting_mut(&mut p).meta.cite = Some("FRCP 6(a)".into());
+    assert_eq!(
+        clock_of(&lowered(&p)).counting_rules[0].source_url,
+        "https://www.law.cornell.edu/rules/frcp"
+    );
+    counting_mut(&mut p).meta.cite = Some("FRCP 60".into());
+    assert!(lowering_errors(&p).contains("needs a `cite` bound to a source"));
+    p.manifest.sources[0].cite_prefixes = vec!["FRCP 6(".into()];
+    counting_mut(&mut p).meta.cite = Some("FRCP 6(a)".into());
+    assert_eq!(
+        clock_of(&lowered(&p)).counting_rules[0].source_url,
+        "https://www.law.cornell.edu/rules/frcp"
+    );
+}

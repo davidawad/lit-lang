@@ -52,7 +52,8 @@ pub type Output = (String, String);
 
 /// [`render`]'s byte-deterministic JSON of a generated document. These
 /// are derive-`Serialize` trees with string map keys, which always
-/// serialize, so the text is never empty in practice.
+/// serialize; a failure is the empty text, which [`nonempty`] refuses to
+/// write.
 pub(crate) fn text<T: Serialize>(value: &T) -> String {
     render(value).unwrap_or_default()
 }
@@ -215,6 +216,21 @@ pub fn pack_file_map(specs: &[String]) -> Result<BTreeMap<String, String>, Failu
     })
 }
 
+/// `files` unchanged when every one has contents. A generated document is
+/// never empty, so an empty one failed to serialize: writing it would
+/// leave a file that reads as a build output and is none.
+///
+/// # Errors
+/// The first empty output's path.
+pub fn nonempty(files: Vec<Output>) -> Result<Vec<Output>, Failure> {
+    match files.iter().find(|(_, text)| text.is_empty()) {
+        Some((path, _)) => Err(Failure::new(format!(
+            "`{path}` did not serialize; nothing was written"
+        ))),
+        None => Ok(files),
+    }
+}
+
 /// Renames each mapped pack's outputs (`packs/ID.json`, its source map, and
 /// its `packs/clock/` fragment) to `STEM`.
 ///
@@ -284,7 +300,7 @@ pub fn build(src: &dyn Source, args: &Args) -> Outcome {
     // `check` lowered every package at these same dates, so a build that
     // checks lowers without errors.
     let mut built = lower_all(&c, &options);
-    built.files = rename_packs(built.files, &stems)?;
+    built.files = nonempty(rename_packs(built.files, &stems)?)?;
     for (path, text) in &built.files {
         write_atomic_in(src, &Path::new(out).join(path), text)?;
     }
@@ -411,6 +427,20 @@ mod tests {
         );
         assert!(built.files.is_empty());
         assert!(built.diagnostics.is_empty());
+    }
+
+    #[test]
+    fn an_empty_output_is_never_written() {
+        let full = vec![("packs/a.json".to_owned(), "{}".to_owned())];
+        assert_eq!(nonempty(full.clone()), Ok(full));
+        let empty = vec![
+            ("packs/a.json".to_owned(), "{}".to_owned()),
+            ("packs/b.json".to_owned(), String::new()),
+        ];
+        assert_eq!(
+            nonempty(empty).unwrap_err().0,
+            "`packs/b.json` did not serialize; nothing was written"
+        );
     }
 
     fn specs(list: &[&str]) -> Vec<String> {

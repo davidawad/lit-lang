@@ -202,3 +202,49 @@ fn a_forward_only_calendar_lengthens_the_run() {
         ClosedRun::Bounded { longest: 2, .. }
     ));
 }
+
+/// LW6: the interpreter refuses instead of looping when no open day
+/// follows: the roll, a court-day count through the closed run, and an
+/// hours period's roll all stop after one Gregorian cycle; a court-day
+/// count longer than a cycle is refused before it starts.
+#[test]
+fn counting_under_a_rule_closed_on_every_day_is_refused() {
+    use litgraph::clock::{
+        compute_due_date, compute_hour_deadline, ClockConfig, DayDeadline, Direction,
+        HourDeadline, Unit,
+    };
+    let lib = library(
+        "",
+        r#""sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday""#,
+    );
+    let clock = lib.clock();
+    let deadline = |days, unit| DayDeadline {
+        trigger: Date::parse_iso("2025-03-03").unwrap(),
+        days,
+        direction: Direction::Forward,
+        unit,
+        service_method: None,
+    };
+    let cfg = ClockConfig::default();
+    fn refused<T>(r: litgraph::Result<T>) -> String {
+        r.err().map(|e| e.to_string()).unwrap_or_default()
+    }
+    let roll = refused(compute_due_date(&deadline(30, Unit::Calendar), &clock, &cfg));
+    assert!(roll.contains("a roll under it never ends"), "{roll}");
+    let court = refused(compute_due_date(&deadline(5, Unit::Court), &clock, &cfg));
+    assert!(court.contains("a roll under it never ends"), "{court}");
+    let hours = HourDeadline {
+        trigger_epoch_seconds: 1_740_960_000,
+        hours: 24,
+    };
+    let hourly = refused(compute_hour_deadline(&hours, &clock, &cfg));
+    assert!(hourly.contains("a roll under it never ends"), "{hourly}");
+    let open = library("", r#""saturday", "sunday""#);
+    let long = refused(compute_due_date(
+        &deadline(CYCLE_DAYS + 1, Unit::Court),
+        &open.clock(),
+        &cfg,
+    ));
+    assert!(long.contains("longer than a Gregorian cycle"), "{long}");
+    assert!(compute_due_date(&deadline(10, Unit::Court), &open.clock(), &cfg).is_ok());
+}

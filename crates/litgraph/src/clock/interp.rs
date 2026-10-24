@@ -50,30 +50,72 @@ impl Closed<'_, '_> {
             || (self.forward && self.clock.is_forward_holiday(date))
     }
 
-    fn roll(&self, mut d: Date, toward: Toward) -> Date {
+    /// The first open day from `d` toward `toward`.
+    ///
+    /// # Errors
+    /// `Error::Invalid` when more than [`MAX_RUN_DAYS`] days in a row are
+    /// closed: a rule closing every day from some date on never rolls.
+    fn roll(&self, mut d: Date, toward: Toward) -> Result<Date> {
         let step = match toward {
             Toward::Later => 1,
             Toward::Earlier => -1,
         };
+        let mut run = 0;
         while self.is(d) {
+            run += 1;
+            if run > MAX_RUN_DAYS {
+                return Err(endless(self.clock, d));
+            }
             d = d.add_days(step);
         }
-        d
+        Ok(d)
     }
 
     /// Advance `k` business days from `start` (exclusive of `start`).
-    fn advance_business(&self, start: Date, k: i64) -> Date {
+    ///
+    /// # Errors
+    /// `Error::Invalid` for more than [`MAX_RUN_DAYS`] business days, or
+    /// a closed run longer than that.
+    fn advance_business(&self, start: Date, k: i64) -> Result<Date> {
+        if k > MAX_RUN_DAYS {
+            return Err(Error::Invalid(format!(
+                "{}: a period of {k} court days is longer than a Gregorian cycle \
+                 ({MAX_RUN_DAYS} days); it is not counted",
+                self.clock.rule.label
+            )));
+        }
         let step = if self.forward { 1 } else { -1 };
         let mut d = start;
-        let mut counted = 0;
+        let (mut counted, mut run) = (0, 0);
         while counted < k {
             d = d.add_days(step);
-            if !self.is(d) {
+            if self.is(d) {
+                run += 1;
+                if run > MAX_RUN_DAYS {
+                    return Err(endless(self.clock, d));
+                }
+            } else {
                 counted += 1;
+                run = 0;
             }
         }
-        d
+        Ok(d)
     }
+}
+
+/// Longest run of closed days, and longest court-day count, the
+/// interpreter walks: one Gregorian cycle (`cycle::CYCLE_DAYS`, 400
+/// years). Closures repeat with that cycle, so a longer closed run never
+/// ends; [`super::cycle::endless_roll`] decides that statically.
+pub const MAX_RUN_DAYS: i64 = super::cycle::CYCLE_DAYS;
+
+/// The refusal for a rule that is closed from `at` on.
+fn endless(clock: &Clock<'_>, at: Date) -> Error {
+    Error::Invalid(format!(
+        "{}: no open day within {MAX_RUN_DAYS} days of {}; a roll under it never ends",
+        clock.rule.label,
+        at.to_iso()
+    ))
 }
 
 /// True if `date` is observed by one of `calendars` (checking the
@@ -195,7 +237,7 @@ impl Run<'_, '_> {
 
     fn step(&mut self, s: &Step) -> Result<()> {
         match s {
-            Step::Anchor { kind, text } => self.anchor(*kind, text),
+            Step::Anchor { kind, text } => self.anchor(*kind, text)?,
             Step::Count { periods } => self.count(periods)?,
             Step::Service {
                 methods,
@@ -205,10 +247,10 @@ impl Run<'_, '_> {
             } => self.service(methods, text, backward_text)?,
             Step::Base {} => self.base = self.current,
             Step::Roll { forward, backward } => {
-                self.roll(if self.forward { forward } else { backward });
+                self.roll(if self.forward { forward } else { backward })?;
             }
             Step::ClerkInaccessible { text, ignored_text } => {
-                self.clerk(text.as_deref(), ignored_text);
+                self.clerk(text.as_deref(), ignored_text)?;
             }
         }
         Ok(())
@@ -219,19 +261,20 @@ impl Run<'_, '_> {
             .closed(self.forward, &self.cfg.additional_holidays)
     }
 
-    fn anchor(&mut self, kind: AnchorKind, text: &str) {
+    fn anchor(&mut self, kind: AnchorKind, text: &str) -> Result<()> {
         let closed = self.closed();
         self.anchor = match (kind, self.forward) {
             (AnchorKind::Trigger, _) => self.dl.trigger,
             (AnchorKind::AdjacentBusinessDay, true) => {
-                closed.roll(self.dl.trigger.add_days(1), Toward::Later)
+                closed.roll(self.dl.trigger.add_days(1), Toward::Later)?
             }
             (AnchorKind::AdjacentBusinessDay, false) => {
-                closed.roll(self.dl.trigger.add_days(-1), Toward::Earlier)
+                closed.roll(self.dl.trigger.add_days(-1), Toward::Earlier)?
             }
         };
         self.current = self.anchor;
         self.say(text, self.anchor, &[]);
+        Ok(())
     }
 
     fn count(&mut self, periods: &[Period]) -> Result<()> {
@@ -255,7 +298,7 @@ impl Run<'_, '_> {
         };
         self.current = match p.count {
             CountUnit::Calendar => self.anchor.add_days(if self.forward { k } else { -k }),
-            CountUnit::Business => self.closed().advance_business(self.anchor, k),
+            CountUnit::Business => self.closed().advance_business(self.anchor, k)?,
         };
         self.nominal = self.current;
         self.say(&p.text, self.current, &[]);
@@ -338,28 +381,30 @@ impl Run<'_, '_> {
         Ok(())
     }
 
-    fn roll(&mut self, r: &Roll) {
-        let next = self.closed().roll(self.current, r.toward);
+    fn roll(&mut self, r: &Roll) -> Result<()> {
+        let next = self.closed().roll(self.current, r.toward)?;
         if next != self.current {
             self.current = next;
             self.applied.rolled = true;
             self.say(&r.text, next, &[]);
         }
+        Ok(())
     }
 
-    fn clerk(&mut self, text: Option<&str>, ignored_text: &str) {
+    fn clerk(&mut self, text: Option<&str>, ignored_text: &str) -> Result<()> {
         if !self.cfg.clerk_inaccessible {
-            return;
+            return Ok(());
         }
         match text {
             Some(t) => {
-                let next = self.closed().roll(self.current.add_days(1), Toward::Later);
+                let next = self.closed().roll(self.current.add_days(1), Toward::Later)?;
                 self.current = next;
                 self.applied.clerk = true;
                 self.say(t, next, &[]);
             }
             _ => self.say(ignored_text, self.current, &[]),
         }
+        Ok(())
     }
 }
 
@@ -450,7 +495,7 @@ pub fn compute_hour_deadline(
     let mut steps = vec![fill(&h.text, &[("n", &n)])];
     // An hours period runs forward from its trigger.
     let closed = clock.closed(true, &cfg.additional_holidays);
-    let mut final_day = closed.roll(due_day, Toward::Later);
+    let mut final_day = closed.roll(due_day, Toward::Later)?;
     let last_day_rolled = final_day != due_day;
     if last_day_rolled {
         let date = final_day.to_iso();
@@ -461,7 +506,7 @@ pub fn compute_hour_deadline(
         .as_deref()
         .filter(|_| cfg.clerk_inaccessible);
     if let Some(t) = inaccessible {
-        final_day = closed.roll(final_day.add_days(1), Toward::Later);
+        final_day = closed.roll(final_day.add_days(1), Toward::Later)?;
         let date = final_day.to_iso();
         steps.push(fill(t, &[("n", &n), ("date", &date)]));
     }

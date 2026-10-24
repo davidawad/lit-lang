@@ -19,6 +19,6 @@ events {
 facts { limitations-check: e-limitations-timely, section-1500-check: e-1500-clear }
 
 analysis {
-  params: { rate: 850, stakes: 1 }
+  params: { rate: 850.usd / 1.hours, stakes: 1 }
   opponent_objective: "-payoff + (tag('settlement') ? 50000 : 0)"
 }

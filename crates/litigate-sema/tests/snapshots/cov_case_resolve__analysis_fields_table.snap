@@ -40,9 +40,23 @@ expression: table
         "ok: start alpha::bench",
         "trace Took Benched(complaint) alpha::intake -> alpha::bench via alpha::to-bench",
     ],
+    "typed params: engine rates are money per unit of time": [
+        "15:28 L4007 `params.rate` is a `Rate<usd, Hours>`, written as money per hour: `N.usd / 1.hours`\n    note: a bare number has no unit; the engine reads it as USD per unit of time\n    fix @15:28-15:31 MachineApplicable: \"650.usd / 1.hours\"",
+        "15:43 L4007 `params.opp_rate` is a `Rate<usd, Hours>`, written as money per hour: `N.usd / 1.hours`",
+        "15:67 L4007 `params.carry_per_day` is a `Rate<usd, CalendarDays>`, found `Rate<usd, Hours>`",
+        "15:92 L4007 `params.stakes` is a `Number`, found `Rate<usd, Hours>`",
+    ],
+    "typed params: malformed rates": [
+        "15:28 L4007 `params.rate`: a rate is a money literal over a period, `650.usd / 1.hours`",
+        "15:59 L4007 `params.opp_rate`: a rate is per `N.hours` or per calendar `N.days`",
+        "15:96 L4007 `params.carry_per_day`: a rate is per `N.hours` or per calendar `N.days`",
+        "15:103 L2006 `1.005.usd` is not a whole number of cents",
+        "15:136 L2006 `params.r2`: division by zero",
+        "15:149 L4007 `params.r3` is an exact number",
+    ],
     "unknown fields, a near miss fixed": [
         "15:12 L4007 `parms` is not an `analysis` field\n    note: fields: params, metrics, utilities, cost, utility, mask, probability_fn, opponent_objective, calibration, discount_annual, remove_edges, mixed, opponent, prob_fill, objective, fee_shift, uncertainty\n    fix @15:12-15:17 MaybeIncorrect: \"params\"",
-        "15:32 L4007 `frobnicate` is not an `analysis` field\n    note: fields: params, metrics, utilities, cost, utility, mask, probability_fn, opponent_objective, calibration, discount_annual, remove_edges, mixed, opponent, prob_fill, objective, fee_shift, uncertainty",
+        "15:46 L4007 `frobnicate` is not an `analysis` field\n    note: fields: params, metrics, utilities, cost, utility, mask, probability_fn, opponent_objective, calibration, discount_annual, remove_edges, mixed, opponent, prob_fill, objective, fee_shift, uncertainty",
     ],
     "wrong shapes": [
         "15:20 L4007 `params` is a record `{ name: value }`",
@@ -51,7 +65,7 @@ expression: table
         "15:71 L4007 `remove_edges` is a list `[a, b]`",
     ],
     "wrong values": [
-        "15:28 L4007 `params.rate` is an exact number",
+        "15:28 L4007 `params.rate` is a `Rate<usd, Hours>`, written as money per hour: `N.usd / 1.hours`",
         "15:40 L4007 `params.neg` is an exact number",
         "15:49 L4007 `params.big` is an exact number",
         "15:89 L4007 `utilities.u` is an engine expression, written as a string",

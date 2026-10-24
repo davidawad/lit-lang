@@ -9,6 +9,14 @@ use serde_json::{Map, Value};
 /// does not type.
 const UNTYPED: [&str; 2] = ["probabilities", "policy"];
 
+/// The engine parameters typed as a `Rate` (SPEC §8.3 `Params`), with the
+/// duration suffix of their time unit.
+const RATES: [(&str, &str); 3] = [
+    ("rate", "hours"),
+    ("opp_rate", "hours"),
+    ("carry_per_day", "days"),
+];
+
 /// `rest` as an `analysis` record; `None` when nothing is left to write.
 pub(crate) fn analysis(rest: &Map<String, Value>, issues: &mut Issues) -> Option<String> {
     let entries: Vec<String> = rest
@@ -26,12 +34,37 @@ pub(crate) fn analysis(rest: &Map<String, Value>, issues: &mut Issues) -> Option
             }
             let spelled = match (key.as_str(), value) {
                 ("remove_edges", Value::Array(items)) => edges(items, &at, issues),
+                ("params", Value::Object(map)) => params(map, &at, issues),
                 _ => value_text(value, &at, issues),
             };
             Some(format!("{key}: {spelled}"))
         })
         .collect();
     (!entries.is_empty()).then(|| format!("analysis {{ {} }}", entries.join(", ")))
+}
+
+/// `params`, each engine rate spelled as money per its time unit
+/// (`650.usd / 1.hours`); every other entry as written.
+fn params(map: &Map<String, Value>, pointer: &str, issues: &mut Issues) -> String {
+    let entries: Vec<String> = map
+        .iter()
+        .map(|(key, value)| {
+            let at = format!("{pointer}/{key}");
+            let name = issues.ident(key, &at, false);
+            let spelled = match RATES.iter().find(|(r, _)| r == key) {
+                Some((_, per)) => {
+                    let money = value.as_f64().and_then(text::money);
+                    format!("{} / 1.{per}", issues.spell(money, &at, "rate"))
+                }
+                None => value_text(value, &at, issues),
+            };
+            format!("{name}: {spelled}")
+        })
+        .collect();
+    if entries.is_empty() {
+        return "{}".to_owned();
+    }
+    format!("{{ {} }}", entries.join(", "))
 }
 
 /// Edge ids as a list of `EdgeRef`s.

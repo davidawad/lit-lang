@@ -393,7 +393,7 @@ mod tests {
     #[test]
     fn a_matter_that_does_not_lower_has_no_scenario_or_schedule() {
         let text = ACME.replace(
-            "analysis { params: { rate: 650, opp_rate: 550 } }",
+            "analysis { params: { rate: 650.usd / 1.hours, opp_rate: 550.usd / 1.hours } }",
             "analysis { frobnicate: 1 }",
         );
         let c = checked("", &text, None);

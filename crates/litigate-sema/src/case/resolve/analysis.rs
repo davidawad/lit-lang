@@ -83,7 +83,7 @@ impl R<'_, '_> {
         out
     }
 
-    fn invalid(&mut self, range: TextRange, message: String) {
+    pub(super) fn invalid(&mut self, range: TextRange, message: String) {
         self.out
             .push(Report::new(C::InvalidAnalysis, range, message));
     }
@@ -93,8 +93,8 @@ impl R<'_, '_> {
         match key {
             "params" => {
                 for (name, v) in self.record(key, value) {
-                    if let Some(n) = self.number(&format!("params.{}", name.text), v) {
-                        out.params.insert(name.text.clone(), n);
+                    if let Some(p) = self.param(name, v) {
+                        out.params.insert(name.text.clone(), p);
                     }
                 }
             }
@@ -202,7 +202,7 @@ impl R<'_, '_> {
     }
 
     /// An exact number, optionally negated (reported otherwise).
-    fn number(&mut self, path: &str, value: &Expr) -> Option<Rational> {
+    pub(super) fn number(&mut self, path: &str, value: &Expr) -> Option<Rational> {
         let parsed = match &value.kind {
             ExprKind::Number(text) => rational::parse_decimal(text).ok(),
             ExprKind::Unary(UnaryOp::Neg, inner) => match &inner.kind {

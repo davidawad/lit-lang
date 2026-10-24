@@ -7,6 +7,7 @@
 //! replaying a partly understood history would report noise.
 pub mod analysis;
 mod blocks;
+mod params;
 
 use super::event::{self, ToSpan};
 use super::graph::Graph;

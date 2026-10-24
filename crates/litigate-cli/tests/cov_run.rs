@@ -46,7 +46,7 @@ fn run_needs_an_existing_matter() {
 #[test]
 fn a_matter_that_fails_its_check_is_not_run() {
     let case = acme().replace(
-        "analysis { params: { rate: 650, opp_rate: 550 } }",
+        "analysis { params: { rate: 650.usd / 1.hours, opp_rate: 550.usd / 1.hours } }",
         "analysis { frobnicate: 1 }",
     );
     let dir = example("run-failing", "", Some(&case));

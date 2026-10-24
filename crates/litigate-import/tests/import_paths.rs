@@ -360,3 +360,29 @@ fn analysis_imports_as_expressions() {
         "{case}"
     );
 }
+
+/// `params` spells each engine rate as money per its time unit (SPEC
+/// §8.3 `Params`); every other entry as written, and an empty record as
+/// `{}`.
+#[test]
+fn params_import_with_units() {
+    let named = json!({"id": "rates", "summary": "Rates.", "packs": ["elsewhere"],
+                       "scenario": {"params": {"rate": 650, "opp_rate": 512.5,
+                                               "carry_per_day": 30, "stakes": 2}}});
+    let input = Input::new("scenarios/rates.json", named.to_string());
+    let files = import_ok(std::slice::from_ref(&input));
+    let case = text(&files, "cases/rates.case");
+    assert!(
+        case.contains(
+            "params: {\n    rate: 650.usd / 1.hours\n    opp_rate: 512.5.usd / 1.hours\n    \
+             carry_per_day: 30.usd / 1.days\n    stakes: 2\n  }"
+        ),
+        "{case}"
+    );
+    let named = json!({"id": "none", "summary": "None.", "packs": ["elsewhere"],
+                       "scenario": {"params": {}}});
+    let input = Input::new("scenarios/none.json", named.to_string());
+    let files = import_ok(std::slice::from_ref(&input));
+    let case = text(&files, "cases/none.case");
+    assert!(case.contains("analysis { params: {} }"), "{case}");
+}

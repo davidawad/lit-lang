@@ -157,8 +157,8 @@ pub struct Observation {
 /// sets beyond its dedicated blocks, each typed.
 #[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 pub struct Analysis {
-    /// `params`: exact dimensionless numbers by name.
-    pub params: BTreeMap<String, Rational>,
+    /// `params`: typed scenario parameters by name (SPEC §8.3 `Params`).
+    pub params: BTreeMap<String, Param>,
     /// `metrics`: named edge expressions.
     pub metrics: BTreeMap<String, EngineExpr>,
     /// `utilities`: named terminal expressions.
@@ -176,6 +176,38 @@ pub struct Analysis {
     /// `objective`, `fee_shift`, `uncertainty`), each checked against the
     /// engine's own schema when the matter lowers.
     pub options: BTreeMap<String, EngineOption>,
+}
+
+/// One scenario parameter (`analysis.params`), typed by the `Params`
+/// record (SPEC §8.3): a dimensionless number or a money rate.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "type", content = "value", rename_all = "snake_case")]
+pub enum Param {
+    /// An exact dimensionless `Number`.
+    Number(Rational),
+    /// A `Rate<Cur, Per>`: money per unit of time.
+    Rate(Rate),
+}
+
+/// Money per unit of time (`650.usd / 1.hours`), exact.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Rate {
+    /// Minor units of `currency` per one `per`.
+    pub minor_units: Rational,
+    /// Lowercase ISO 4217 code.
+    pub currency: String,
+    /// The time unit the money is spent per.
+    pub per: RateUnit,
+}
+
+/// The time unit of a [`Rate`].
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum RateUnit {
+    /// Per attorney hour (`Rate<usd, Hours>`).
+    Hour,
+    /// Per calendar day (`Rate<usd, CalendarDays>`).
+    CalendarDay,
 }
 
 /// An expression in the engine's expression language (`analysis.metrics`,

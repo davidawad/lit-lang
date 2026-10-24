@@ -1627,7 +1627,7 @@ fix), and so is a field given twice:
 
 | Field | Type |
 |---|---|
-| `params` | record of exact numbers, `{ rate: 650, floor: -1.5 }` (dimensionless: units for engine parameters are later work) |
+| `params` | record of exact numbers, `{ rate: 650.usd / 1.hours, floor: -1.5 }` (dimensionless: units for engine parameters are later work) |
 | `metrics`, `utilities` | record of engine expressions, each a string |
 | `cost`, `utility`, `mask`, `probability_fn`, `opponent_objective` | an engine expression, a string |
 | `calibration` | list of strings |

@@ -360,7 +360,7 @@ fn an_instance_transform_without_a_typed_spelling_is_reported() {
 fn untyped_analysis_fields_are_reported() {
     let named = json!({"id": "s", "summary": "S", "packs": ["p"],
                        "scenario": {"probabilities": {"p::e": 0.5}, "policy": {"p::n": "p::e"},
-                                    "discount_annual": null}});
+                                    "discount_annual": null, "params": {"rate": 0.001}}});
     let inputs = [Input::new("scenarios/s.json", named.to_string())];
     let messages: Vec<(String, Option<String>)> =
         reported(&inputs).into_iter().map(|r| (r.3, r.4)).collect();

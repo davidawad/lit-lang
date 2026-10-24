@@ -335,7 +335,12 @@ pub fn analysis_of(rest: serde_json::Map<String, serde_json::Value>) -> Analysis
     for (key, v) in rest {
         let entries = v.as_object().cloned().unwrap_or_default();
         match key.as_str() {
-            "params" => a.params = entries.iter().map(|(k, v)| (k.clone(), exact(v))).collect(),
+            "params" => {
+                a.params = entries
+                    .iter()
+                    .map(|(k, v)| (k.clone(), hir::Param::Number(exact(v))))
+                    .collect();
+            }
             "metrics" => a.metrics = entries.iter().map(|(k, v)| (k.clone(), expr(v))).collect(),
             "utilities" => {
                 a.utilities = entries.iter().map(|(k, v)| (k.clone(), expr(v))).collect();

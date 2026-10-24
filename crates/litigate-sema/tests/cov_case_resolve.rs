@@ -265,7 +265,7 @@ fn analysis_fields_table() {
     let rows: Vec<(&str, &str)> = vec![
         (
             "ok: every field",
-            "analysis { params: { rate: 650, floor: -1.5 }, metrics: { m: \"hours\" }, \
+            "analysis { params: { rate: 650.usd / 1.hours, floor: -1.5 }, metrics: { m: \"hours\" }, \
              utilities: { u: \"payoff\" }, cost: \"m\", utility: \"u\", mask: \"1\", \
              probability_fn: \"p\", opponent_objective: \"-payoff\", calibration: [\"set\"], \
              discount_annual: 0.08, remove_edges: [deny, alpha::allow], mixed: \"optimistic\", \
@@ -279,7 +279,7 @@ fn analysis_fields_table() {
         ),
         (
             "unknown fields, a near miss fixed",
-            "analysis { parms: { rate: 1 }, frobnicate: 1 }",
+            "analysis { parms: { rate: 1.usd / 1.hours }, frobnicate: 1 }",
         ),
         (
             "fields with their own blocks",
@@ -306,6 +306,18 @@ fn analysis_fields_table() {
             "engine options that are not plain values",
             "analysis { mixed: optimistic, objective: { type: x }, uncertainty: { n: -x }, \
              fee_shift: { fraction: 1.usd }, opponent: [chance, 1] }",
+        ),
+        (
+            "typed params: engine rates are money per unit of time",
+            "analysis { params: { rate: 650, opp_rate: 650.125, carry_per_day: 1.usd / 1.hours, \
+             stakes: 1.usd / 1.hours, loss_aversion: 2.25, custom: 400.usd / 8.hours, \
+             daily: 30.usd / 1.days } }",
+        ),
+        (
+            "typed params: malformed rates",
+            "analysis { params: { rate: x / 1.hours, opp_rate: 1.usd / 1.court_days, \
+             carry_per_day: 1.usd / 2, r1: 1.005.usd / 1.hours, r2: 1.usd / 0.hours, \
+             r3: (650.usd / 1.hours) } }",
         ),
         ("a field with no value", "analysis { rate: }"),
         (

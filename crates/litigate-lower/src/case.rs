@@ -83,7 +83,7 @@ fn analysis(sink: &mut Sink, analysis: &hir::Analysis) -> Map<String, Value> {
     let params: Map<String, Value> = analysis
         .params
         .iter()
-        .filter_map(|(name, v)| Some((name.clone(), Value::from(sink.number(*v, None)?))))
+        .filter_map(|(name, v)| Some((name.clone(), Value::from(param(sink, name, v)?))))
         .collect();
     if !params.is_empty() {
         object.insert("params".to_owned(), Value::Object(params));
@@ -113,6 +113,26 @@ fn analysis(sink: &mut Sink, analysis: &hir::Analysis) -> Map<String, Value> {
         object.insert("discount_annual".to_owned(), Value::from(d));
     }
     object
+}
+
+/// A parameter as the engine reads it: a number, or a rate in major
+/// units (USD) per its time unit (L6004 when that has no binary64 value).
+fn param(sink: &mut Sink, name: &str, p: &hir::Param) -> Option<f64> {
+    let exact = match p {
+        hir::Param::Number(n) => Ok(*n),
+        hir::Param::Rate(r) => {
+            litigate_sema::types::rational::div(r.minor_units, hir::Rational::integer(100))
+        }
+    };
+    let Ok(exact) = exact else {
+        sink.error(
+            C::NonFiniteNumber,
+            None,
+            format!("`params.{name}` in major units overflows exact arithmetic"),
+        );
+        return None;
+    };
+    sink.number(exact, None)
 }
 
 /// Builds the `Scenario` from the typed `analysis` and the dedicated

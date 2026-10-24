@@ -252,12 +252,12 @@ fn removals_lower_to_remove_edges() {
 #[test]
 fn facts_and_duplicate_analysis_removals_are_diagnosed() {
     let removed_fact = case_support::acme().replace(
-        "analysis { params: { rate: 650, opp_rate: 550 } }",
-        "analysis { params: { rate: 650, opp_rate: 550 }, remove_edges: [not-barred] }",
+        "analysis { params: { rate: 650.usd / 1.hours, opp_rate: 550.usd / 1.hours } }",
+        "analysis { params: { rate: 650.usd / 1.hours, opp_rate: 550.usd / 1.hours }, remove_edges: [not-barred] }",
     );
     let duplicated = case_support::acme().replace(
-        "analysis { params: { rate: 650, opp_rate: 550 } }",
-        "analysis { params: { rate: 650, opp_rate: 550 }, remove_edges: [frcp-rule12-example::move-dismiss, move-dismiss] }",
+        "analysis { params: { rate: 650.usd / 1.hours, opp_rate: 550.usd / 1.hours } }",
+        "analysis { params: { rate: 650.usd / 1.hours, opp_rate: 550.usd / 1.hours }, remove_edges: [frcp-rule12-example::move-dismiss, move-dismiss] }",
     );
     let cases = BTreeMap::from([
         (

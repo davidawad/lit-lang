@@ -11,7 +11,7 @@ use litigate_base::DiagnosticCode;
 use litigate_lower::{render_scenario, semantic_diff_scenarios, Lowerer};
 use litigate_sema::hir::{
     Case, CaseSource, EngineExpr, EngineOption, Event, EventParty, Expr, ExprKind, Observation,
-    Perspective, Removal, Stake, Type,
+    Param, Perspective, Rate, RateUnit, Rational, Removal, Stake, Type,
 };
 use serde_json::{json, Map, Value};
 use std::collections::BTreeMap;
@@ -21,8 +21,21 @@ use support::{acme, analysis_of, load_hir, pin, render_map, usd};
 fn acme_golden() {
     let packages = load_hir(&["lit/examples"]);
     let refs: Vec<_> = packages.iter().collect();
+    // `rate: 650.usd / 1.hours` lowers to the engine's 650 USD per hour.
+    let mut case = acme();
+    case.analysis.params.insert(
+        "rate".into(),
+        Param::Rate(Rate {
+            minor_units: Rational {
+                numerator: 65_000,
+                denominator: 1,
+            },
+            currency: "usd".into(),
+            per: RateUnit::Hour,
+        }),
+    );
     let lowered = Lowerer::new(&refs)
-        .case(&acme(), "cases/examples/acme.case")
+        .case(&case, "cases/examples/acme.case")
         .unwrap_or_else(|d| panic!("{d:#?}"));
     let text = render_scenario(&lowered.scenario).unwrap_or_default();
     insta::assert_snapshot!("acme_scenario", text);
@@ -80,10 +93,26 @@ fn analysis_is_judged_by_litgraph() {
     case.perspective = None;
     case.analysis.params.insert(
         "x".into(),
-        litigate_sema::hir::Rational {
+        Param::Number(Rational {
             numerator: 1,
             denominator: 0,
-        },
+        }),
+    );
+    assert_eq!(codes(&case), [DiagnosticCode::NonFiniteNumber]);
+    // A rate lowers in major units; one whose cents-to-dollars division
+    // overflows exact arithmetic is L6004 too.
+    let mut case = acme();
+    case.perspective = None;
+    case.analysis.params.insert(
+        "rate".into(),
+        Param::Rate(Rate {
+            minor_units: Rational {
+                numerator: 1,
+                denominator: u64::MAX,
+            },
+            currency: "usd".into(),
+            per: RateUnit::Hour,
+        }),
     );
     assert_eq!(codes(&case), [DiagnosticCode::NonFiniteNumber]);
     // `perspective <party>` needs the primary package's roles.

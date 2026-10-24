@@ -53,6 +53,14 @@ pub fn value(node: &SyntaxNode) -> Value {
             let inner = node.children().next().map_or(Value::Null, |n| value(&n));
             json!(-inner.as_f64().unwrap_or(f64::NAN))
         }
+        // A rate, `650.usd / 1.hours`: major units per unit of time.
+        SyntaxKind::BinaryExpr => {
+            let operands: Vec<f64> = node
+                .children()
+                .map(|n| value(&n).as_f64().unwrap_or(f64::NAN))
+                .collect();
+            json!(operands[0] / operands[1])
+        }
         SyntaxKind::HoleExpr => ast::Hole::cast(node.clone())
             .and_then(|h| h.reason())
             .map_or(Value::Null, Value::String),

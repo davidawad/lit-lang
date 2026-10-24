@@ -18,7 +18,7 @@ stakes { demo-court::won: 1_000_000.usd, demo-court::lost: -2_500.75.usd }
 beliefs { observe demo-court::ruling: { demo-court::denied: 3 } }
 
 analysis {
-  params: { rate: 650, p_merits: 0.6 }
+  params: { rate: 650.usd / 1.hours, p_merits: 0.6 }
   remove_edges: [demo-court::denied]
   utility: "applicant_value"
   metrics: { opponent_dollars: "attr(\"opp_hours\", 0) * rate" }

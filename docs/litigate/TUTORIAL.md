@@ -171,7 +171,7 @@ events {
 }
 
 stakes { my-court::defaulted: 100_000.usd }
-analysis { params: { rate: 650, opp_rate: 550 } }
+analysis { params: { rate: 650.usd / 1.hours, opp_rate: 550.usd / 1.hours } }
 ```
 
 ```bash

@@ -37,4 +37,7 @@ stakes {
   cofc::voluntary-dismissal-early: 0.usd
 }
 
-analysis { params: { rate: 650, opp_rate: 550 }, opponent_objective: "-payoff" }
+analysis {
+  params: { rate: 650.usd / 1.hours, opp_rate: 550.usd / 1.hours }
+  opponent_objective: "-payoff"
+}

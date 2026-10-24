@@ -314,18 +314,22 @@ mod tests {
             std::fs::read_to_string(std::path::Path::new(dir).join(file)).unwrap_or_default()
         };
         let read = |file: &str| built(litgraph_packs::PACKS_DIR, file);
-        let text = read("frcrimp-criminal-procedure.json");
+        // These packages use only edge-window shapes the importer can spell;
+        // FRCP/FRAP grants are refused by design until the source language
+        // has a lossless spelling for their deadline-level grants.
+        let text = read("cofc-court-of-federal-claims.json");
         let mut pack: serde_json::Value = serde_json::from_str(&text).unwrap_or_default();
         let plain = [
             Input::new("pack.json".to_owned(), pack.to_string()),
-            Input::new("frcp.json".to_owned(), read("frcp-civil-procedure.json")),
+            Input::new("mpep.json".to_owned(), read("mpep-prosecution.json")),
             Input::new(
                 "matter.json".to_owned(),
-                built(litgraph_packs::SCENARIOS_DIR, "frcp-civil-case.json"),
+                built(litgraph_packs::SCENARIOS_DIR, "cofc-1498-patent-case.json"),
             ),
         ];
         let imported = litigate_import::import(&plain).unwrap_or_default();
-        assert_eq!(codes(&round_trip(&imported, &plain)), []);
+        let round = round_trip(&imported, &plain);
+        assert_eq!(codes(&round), [], "{round:#?}");
         let mut relabelled = pack.clone();
         relabelled["title"] = "Another title".into();
         let extra = [

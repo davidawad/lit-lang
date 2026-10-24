@@ -16,6 +16,7 @@ fn remand(name: &str, event: &str) -> (String, f64) {
     for pkg in ["core", "cafc", "mpep", "ttab"] {
         copy_dir(&repo().join("lit").join(pkg), &dir.join("lit").join(pkg));
     }
+    copy_dir(&repo().join("sources"), &dir.join("sources"));
     std::fs::create_dir_all(dir.join("cases")).unwrap();
     std::fs::write(
         dir.join("cases/remand.case"),

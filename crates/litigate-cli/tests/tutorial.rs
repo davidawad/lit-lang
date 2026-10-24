@@ -29,6 +29,7 @@ fn the_tutorial_runs_as_written() {
         panic!("three lit blocks expected, found {}", lit.len())
     };
     let root = scratch("tutorial");
+    copy_dir(&repo().join("sources"), &root.join("sources"));
     copy_dir(&repo().join("lit/core"), &root.join("lit/core"));
     let pkg = root.join("lit/my-court");
     std::fs::create_dir_all(&pkg).unwrap();

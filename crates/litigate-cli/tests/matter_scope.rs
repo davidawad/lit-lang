@@ -50,6 +50,7 @@ fn workspace(name: &str, packages: &[&str], cases: &[&str]) -> PathBuf {
     for pkg in packages {
         copy_dir(&repo().join("lit").join(pkg), &dir.join("lit").join(pkg));
     }
+    copy_dir(&repo().join("sources"), &dir.join("sources"));
     broken(&dir);
     std::fs::create_dir_all(dir.join("cases")).unwrap();
     for case in cases {

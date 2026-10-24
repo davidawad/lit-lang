@@ -155,6 +155,7 @@ fn fixtures(name: &str) -> PathBuf {
     for pkg in ["ttab", "frcp", "frap", "core"] {
         copy_dir(&repo().join("lit").join(pkg), &dir.join("lit").join(pkg));
     }
+    copy_dir(&repo().join("sources"), &dir.join("sources"));
     copy_dir(
         &repo().join("crates/litigate-cli/tests/fixtures/timeline-package"),
         &dir.join("lit/fixture"),
@@ -188,6 +189,8 @@ fn check_with_sources(sources: &Path) -> Run {
             "--format",
             "json",
             "check",
+            "--profile",
+            "strict",
             "cases/ttab-opposition-applicant-defense.case",
         ])
         .output()
@@ -225,13 +228,26 @@ fn a_corpus_older_than_the_pin_names_the_stale_binary() {
     std::fs::write(&rules, format!("{text}\n")).unwrap();
     let run = check_with_sources(&old);
     assert_eq!(run.code, 2, "{}", run.stdout);
-    let stale: Vec<&Value> = run.json["diagnostics"]
+    let errors: Vec<&Value> = run.json["diagnostics"]
         .as_array()
         .unwrap()
         .iter()
         .filter(|d| d["severity"] == "error")
         .collect();
+    let stale: Vec<&Value> = errors
+        .iter()
+        .copied()
+        .filter(|d| {
+            d["code"] == "L1010" && d["message"].as_str().unwrap().contains("source `scotus`")
+        })
+        .collect();
     assert_eq!(stale.len(), 5, "{stale:#?}");
+    assert!(
+        errors
+            .iter()
+            .all(|d| d["code"] == "L1010" || d["code"] == "L5002"),
+        "{errors:#?}"
+    );
     for d in stale {
         assert_eq!(d["code"], "L1010");
         let message = d["message"].as_str().unwrap();
@@ -253,10 +269,19 @@ fn an_unreadable_sources_override_fails_every_vendored_cite_closed() {
     assert_eq!(run.code, 2, "{}", run.stdout);
     let messages = errors(&run);
     assert!(!messages.is_empty());
+    let cite_errors: Vec<&String> = messages.iter().filter(|m| m.contains(" L1010 ")).collect();
+    assert!(!cite_errors.is_empty(), "{messages:#?}");
+    assert!(
+        cite_errors.iter().all(|m| {
+            m.contains("is not in the vendored source corpus")
+                || m.contains("is not the text source")
+        }),
+        "{cite_errors:#?}"
+    );
     assert!(
         messages
             .iter()
-            .all(|m| m.contains(" L1010 ") && m.contains("is not in the vendored source corpus")),
+            .all(|m| m.contains(" L1010 ") || m.contains(" L5002 ")),
         "{messages:#?}"
     );
 }

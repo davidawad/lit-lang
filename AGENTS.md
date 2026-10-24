@@ -106,6 +106,20 @@ Parsing is strict everywhere — packs, scenarios, requests, and op
 arguments reject unknown fields with an error naming the valid ones,
 rather than silently ignoring a typo.
 
+Reading the coverage result: the `just cov` verdict is its `cov:` line,
+`cov: litgraph TOTAL lines P% (covered/count) >= floor 97%: pass` (or `<
+... FAIL` and a nonzero exit). That line's number is the one compared with
+the floor: it is truncated, so the per-file table above it, which rounds,
+can show 0.01 more. Quote that line and the recipe's exit code, never a
+number from the table or from another run. `just cov-litigate` prints one
+`cov-litigate: <crate> lines c/n regions c/n branches c/n: pass|FAIL` line
+per crate. Both recipes start with `cargo llvm-cov clean --workspace`, so
+data left in `target/llvm-cov-target` by another branch or crate cannot
+skew the number, and end with a `cov self-check:` line: a floor of 100.01
+or a known-low input must fail, else the recipe fails with `cov
+self-check: floor not enforced`. `just cov-gate-test` (in `just ci`) runs
+the gate (`scripts/cov-gate`) over fixed known-low and known-ok inputs.
+
 ## Rules
 
 1. **Report warnings with numbers.** `payoff-not-authored`,

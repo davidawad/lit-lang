@@ -1,0 +1,205 @@
+#!/usr/bin/env bash
+# The coverage verdict for `just cov` and `just cov-litigate` (lg-flu.42).
+# Reads one `llvm-cov export --summary-only` JSON (what `cargo llvm-cov
+# report --json --summary-only` prints) on stdin, prints the totals it
+# compares and exits 1 when they are below the floor. The printed number is
+# the gated number: both come from the same read of the same JSON.
+#
+# Usage:
+#   scripts/cov-gate lines <floor> <name> < export.json
+#       TOTAL line coverage (covered * 100 / count, summed over .data[] the
+#       way cargo-llvm-cov's --fail-under-lines sums it) must be >= floor.
+#   scripts/cov-gate full <name> < export.json
+#       lines, regions and branches must all be fully covered.
+#   scripts/cov-gate reject-low lines <floor> <name> < export.json
+#   scripts/cov-gate reject-low full <name> < export.json
+#       Self-check: the gate must fail on an unreachable floor (lines,
+#       floor 100.01) or on this input with one covered line, region and
+#       branch taken away (full); exits 1 ("floor not enforced") if it passes.
+#   scripts/cov-gate self-test
+#       The gate's verdicts on fixed known-low and known-ok inputs.
+#
+# No lines measured (count 0, or no .data) fails: nothing measured is not
+# covered.
+set -euo pipefail
+
+self="${BASH_SOURCE[0]}"
+
+usage() {
+  sed -n '/^# Usage:/,/^# covered\.$/p' "$self" | sed 's/^# \{0,1\}//' >&2
+  exit 2
+}
+
+# metric -> "covered count" summed over every export in .data.
+totals() {
+  jq -r --arg m "$1" '[.data[]?.totals[$m] // {covered: 0, count: 0}]
+    | "\(map(.covered) | add // 0) \(map(.count) | add // 0)"' <<<"$2"
+}
+
+# covered count -> percent with two decimals, truncated (never rounded up
+# over a floor).
+percent() {
+  jq -nr --argjson c "$1" --argjson n "$2" \
+    'if $n == 0 then "0.00" else ($c * 10000 / $n | floor) as $p
+      | "\($p / 100 | floor).\($p % 100 | tostring | if length == 1 then "0" + . else . end)" end'
+}
+
+gate_lines() {
+  local floor="$1" name="$2" json sums covered count pct ok
+  json="$(cat)"
+  # Each step is checked: this runs under `if`, where `set -e` is off.
+  sums="$(totals lines "$json")" || return 1
+  read -r covered count <<<"$sums"
+  pct="$(percent "$covered" "$count")" || return 1
+  ok="$(jq -nr --argjson c "$covered" --argjson n "$count" --argjson f "$floor" \
+    '$n > 0 and ($c * 100 / $n) >= $f')" || return 1
+  if [ "$ok" = true ]; then
+    echo "cov: $name TOTAL lines $pct% ($covered/$count) >= floor $floor%: pass"
+  else
+    echo "cov: $name TOTAL lines $pct% ($covered/$count) < floor $floor%: FAIL" >&2
+    return 1
+  fi
+}
+
+gate_full() {
+  local name="$1" json m sums covered count report="" ok=true
+  json="$(cat)"
+  for m in lines regions branches; do
+    sums="$(totals "$m" "$json")" || return 1
+    read -r covered count <<<"$sums"
+    report+=" $m $covered/$count"
+    if [ "$covered" != "$count" ] || { [ "$m" = lines ] && [ "$count" = 0 ]; }; then
+      ok=false
+    fi
+  done
+  if [ "$ok" = true ]; then
+    echo "cov-litigate: $name$report: pass"
+  else
+    echo "cov-litigate: $name$report: FAIL (below 100%)" >&2
+    return 1
+  fi
+}
+
+# One covered line, region and branch fewer (a branch-free input gains one
+# uncovered branch), so a gate that passes it does not enforce 100%.
+lowered() {
+  jq '.data[0].totals |= with_entries(
+    if .key == "lines" or .key == "regions" or .key == "branches" then
+      .value |= (if .count > 0 then .covered = (.count - 1) else .count = 1 | .covered = 0 end)
+    else . end)' <<<"$1"
+}
+
+reject_low() {
+  local kind="$1" json
+  shift
+  json="$(cat)"
+  jq -e '.data | length > 0' <<<"$json" > /dev/null || { echo "cov self-check: no coverage data" >&2; return 1; }
+  case "$kind" in
+    lines)
+      [ "$#" -eq 2 ] || usage
+      if gate_lines 100.01 "$2" <<<"$json" > /dev/null 2>&1; then
+        echo "cov self-check: floor not enforced ($2 passed --fail-under-lines 100.01)" >&2
+        return 1
+      fi
+      if gate_lines "$1" "$2" <<<"$(below "$json" "$1")" > /dev/null 2>&1; then
+        echo "cov self-check: floor not enforced ($2 passed a known-low input under floor $1)" >&2
+        return 1
+      fi
+      echo "cov self-check: $2 floor $1% enforced (unreachable floor and a known-low input fail)"
+      ;;
+    full)
+      [ "$#" -eq 1 ] || usage
+      if gate_full "$1" <<<"$(lowered "$json")" > /dev/null 2>&1; then
+        echo "cov self-check: floor not enforced ($1 passed a known-low input at 100%)" >&2
+        return 1
+      fi
+      echo "cov self-check: $1 100% gate enforced (a known-low input fails)"
+      ;;
+    *) usage ;;
+  esac
+}
+
+# The input with its line totals moved just under the floor (count kept,
+# covered the largest integer still below floor%), so the floor itself,
+# not only 100%, is what the self-check exercises.
+below() {
+  jq --argjson f "$2" '.data[0].totals.lines |=
+    (if .count > 0 then .covered = ([((.count * $f / 100) | ceil) - 1, 0] | max) else . end)' <<<"$1"
+}
+
+fixture() {
+  # lines regions branches, each "covered/count"
+  local l="${1%/*}" lt="${1#*/}" r="${2%/*}" rt="${2#*/}" b="${3%/*}" bt="${3#*/}"
+  printf '{"data":[{"totals":{"lines":{"covered":%s,"count":%s},"regions":{"covered":%s,"count":%s},"branches":{"covered":%s,"count":%s}}}]}' \
+    "$l" "$lt" "$r" "$rt" "$b" "$bt"
+}
+
+# Runs a command in a subshell with one function redefined.
+stubbed() {
+  (
+    eval "$1"
+    shift
+    "$@"
+  )
+}
+
+self_test() {
+  local failures=0
+  expect() {
+    local want="$1" desc="$2" got
+    shift 2
+    if "$@" > /dev/null 2>&1; then got=pass; else got=fail; fi
+    if [ "$got" != "$want" ]; then
+      echo "cov-gate self-test: $desc: want $want, got $got" >&2
+      failures=$((failures + 1))
+    fi
+  }
+  # The lg-flu.34-a1 report: 95.82% must fail a 97% floor.
+  expect fail "95.82% under floor 97" gate_lines 97 t <<<"$(fixture 9582/10000 1/1 0/0)"
+  expect fail "96.99% under floor 97" gate_lines 97 t <<<"$(fixture 9699/10000 1/1 0/0)"
+  expect pass "97.00% at floor 97" gate_lines 97 t <<<"$(fixture 9700/10000 1/1 0/0)"
+  expect pass "98.19% over floor 97" gate_lines 97 t <<<"$(fixture 11456/11667 1/1 0/0)"
+  expect fail "100% under floor 100.01" gate_lines 100.01 t <<<"$(fixture 10/10 1/1 0/0)"
+  expect fail "no lines measured" gate_lines 97 t <<<"$(fixture 0/0 0/0 0/0)"
+  expect fail "no data" gate_lines 97 t <<<'{"data":[]}'
+  expect fail "not JSON" gate_lines 97 t <<<'TOTAL 98.19%'
+  # Summed over .data like cargo-llvm-cov: 100/100 + 0/100 is 50%.
+  expect fail "summed over every export" gate_lines 97 t \
+    <<<'{"data":[{"totals":{"lines":{"covered":100,"count":100}}},{"totals":{"lines":{"covered":0,"count":100}}}]}'
+  expect pass "full at 100%" gate_full t <<<"$(fixture 10/10 5/5 4/4)"
+  expect pass "full at 100%, no branches" gate_full t <<<"$(fixture 10/10 5/5 0/0)"
+  expect fail "full, a line short" gate_full t <<<"$(fixture 9/10 5/5 4/4)"
+  expect fail "full, a region short" gate_full t <<<"$(fixture 10/10 4/5 4/4)"
+  expect fail "full, a branch short" gate_full t <<<"$(fixture 10/10 5/5 3/4)"
+  expect fail "full, no lines measured" gate_full t <<<"$(fixture 0/0 0/0 0/0)"
+  expect fail "full, not JSON" gate_full t <<<'cov-litigate: t lines 10/10'
+  # The self-checks pass on a gate that enforces its floor.
+  expect pass "reject-low lines" reject_low lines 97 t <<<"$(fixture 11456/11667 1/1 0/0)"
+  expect pass "reject-low lines, small input" reject_low lines 97 t <<<"$(fixture 3/3 1/1 0/0)"
+  expect pass "reject-low full" reject_low full t <<<"$(fixture 10/10 5/5 4/4)"
+  expect pass "reject-low full, no branches" reject_low full t <<<"$(fixture 10/10 5/5 0/0)"
+  # ... and fail on a gate that does not: a floor of 0 admits anything, and
+  # a gate stubbed to always pass.
+  expect fail "reject-low lines, floor 0" reject_low lines 0 t <<<"$(fixture 3/3 1/1 0/0)"
+  expect fail "reject-low lines, gate always passes" \
+    stubbed 'gate_lines() { cat > /dev/null; }' reject_low lines 97 t <<<"$(fixture 3/3 1/1 0/0)"
+  expect fail "reject-low full, gate always passes" \
+    stubbed 'gate_full() { cat > /dev/null; }' reject_low full t <<<"$(fixture 10/10 5/5 4/4)"
+  expect fail "reject-low, no data" reject_low full t <<<'{"data":[]}'
+  if [ "$failures" -ne 0 ]; then
+    echo "cov-gate self-test: $failures verdict(s) wrong" >&2
+    return 1
+  fi
+  echo "cov-gate self-test: every known-low input fails, every known-ok input passes"
+}
+
+[ "$#" -gt 0 ] || usage
+cmd="$1"
+shift
+case "$cmd" in
+  lines) [ "$#" -eq 2 ] || usage; gate_lines "$@" ;;
+  full) [ "$#" -eq 1 ] || usage; gate_full "$@" ;;
+  reject-low) [ "$#" -ge 1 ] || usage; reject_low "$@" ;;
+  self-test) [ "$#" -eq 0 ] || usage; self_test ;;
+  *) usage ;;
+esac

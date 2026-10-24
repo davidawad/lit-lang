@@ -76,8 +76,34 @@ doctest:
 proptest:
     cargo nextest run --workspace -E 'test(prop_)'
 
+# Coverage runs serialize on a lock in the target dir and start from
+# `cargo llvm-cov clean --workspace`: report collects every workspace
+# member's executable under target/llvm-cov-target, but a `-p` run cleans
+# only that package, so binaries left by an earlier branch or another
+# crate's run (stale coverage data) otherwise skew the number (lg-flu.42).
+cov_lock := 'target="$(cargo metadata --format-version 1 --no-deps | jq -r .target_directory)"; mkdir -p "$target"; exec 9> "$target/llvm-cov.lock"; if command -v flock > /dev/null; then flock 9; fi'
+
+# The per-file table, then the verdict: scripts/cov-gate's, on the one
+# JSON summary it prints from ("cov: litgraph TOTAL lines P% (covered/count)
+# >= floor F%: pass"); cargo-llvm-cov's --fail-under-lines on the same data
+# must agree. Then the self-checks: an unreachable floor (100.01) and a
+# known-low input must fail.
 cov:
-    cargo llvm-cov nextest -p litgraph --fail-under-lines {{cov_floor}}
+    #!/usr/bin/env bash
+    set -euo pipefail
+    scripts/cov-gate self-test
+    {{cov_lock}}
+    cargo llvm-cov clean --workspace
+    cargo llvm-cov nextest -p litgraph --no-report
+    cargo llvm-cov report -p litgraph --summary-only
+    json="$(cargo llvm-cov report -p litgraph --json --summary-only)"
+    scripts/cov-gate lines {{cov_floor}} litgraph <<<"$json"
+    cargo llvm-cov report -p litgraph --summary-only --fail-under-lines {{cov_floor}} > /dev/null
+    if cargo llvm-cov report -p litgraph --summary-only --fail-under-lines 100.01 > /dev/null 2>&1; then
+      echo "cov self-check: floor not enforced (cargo llvm-cov report --fail-under-lines 100.01 passed)" >&2
+      exit 1
+    fi
+    scripts/cov-gate reject-low lines {{cov_floor}} litgraph <<<"$json"
 
 cov-html:
     cargo llvm-cov nextest -p litgraph --html --open
@@ -90,17 +116,14 @@ litigate_crates := "litigate-base litigate-syntax litigate-sema litigate-lower l
 cov-litigate *CRATES=litigate_crates:
     #!/usr/bin/env bash
     set -euo pipefail
+    scripts/cov-gate self-test
+    {{cov_lock}}
+    cargo +nightly llvm-cov clean --workspace
     failed=()
     for crate in {{CRATES}}; do
       json="$(cargo +nightly llvm-cov nextest --branch -p "$crate" --json --summary-only)"
-      line="$(jq -r '.data[0].totals | [.lines, .regions, .branches]
-        | map("\(.covered)/\(.count)") | join(" ")' <<<"$json")"
-      read -r lines regions branches <<<"$line"
-      echo "cov-litigate: $crate lines $lines regions $regions branches $branches"
-      if ! jq -e '.data[0].totals | [.lines, .regions, .branches]
-          | all(.covered == .count)' <<<"$json" >/dev/null; then
-        failed+=("$crate")
-      fi
+      scripts/cov-gate full "$crate" <<<"$json" || failed+=("$crate")
+      scripts/cov-gate reject-low full "$crate" <<<"$json"
     done
     if [ "${#failed[@]}" -ne 0 ]; then
       echo "cov-litigate: below 100% lines/regions/branches: ${failed[*]}" >&2
@@ -108,6 +131,11 @@ cov-litigate *CRATES=litigate_crates:
       exit 1
     fi
     echo "cov-litigate: every litigate crate at 100% lines, regions and branches"
+
+# The coverage gate's own verdicts on fixed known-low and known-ok inputs
+# (no build; `cov` and `cov-litigate` run it first too).
+cov-gate-test:
+    scripts/cov-gate self-test
 
 # Ten-minute local parser and case-input fuzz smoke (five minutes each).
 fuzz:
@@ -222,7 +250,7 @@ nix-check:
 
 # The single CI entry point: fast, deterministic gates only. Coverage,
 # audit, and deny hit the network/build cache so they're last.
-ci: fmt-check lint lit-sync-check tree-sitter-test test ts-test doctest cov cov-litigate audit deny
+ci: fmt-check lint cov-gate-test lit-sync-check tree-sitter-test test ts-test doctest cov cov-litigate audit deny
     @echo "ci: all gates passed"
 
 clean:

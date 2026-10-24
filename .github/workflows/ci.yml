@@ -121,13 +121,11 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - uses: taiki-e/install-action@v2
         with:
-          tool: cargo-nextest,cargo-llvm-cov
-      # TODO(litgraph): coverage on the pure-logic crate is below the 97%
-      # line-coverage floor while the engine is mid-rewrite; the other
-      # workstream in this repo is raising it. Drop continue-on-error once
-      # `just cov` passes on main.
-      - run: cargo llvm-cov nextest -p litgraph --fail-under-lines 97 --lcov --output-path lcov.info
-        continue-on-error: true
+          tool: just,cargo-nextest,cargo-llvm-cov
+      # Below the justfile's cov_floor fails the job, as do the gate's
+      # self-checks (an unreachable floor and a known-low input must fail).
+      - run: just cov
+      - run: cargo llvm-cov report -p litgraph --lcov --output-path lcov.info
       - uses: actions/upload-artifact@v7
         with:
           name: coverage-lcov

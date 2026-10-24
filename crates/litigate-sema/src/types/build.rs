@@ -1,5 +1,6 @@
 //! HIR construction: name resolution and type checking of every item of a
 //! module, then package-level assembly (SPEC §4-§6, §11).
+mod basis;
 mod calendar;
 mod clock;
 mod cx;

@@ -78,3 +78,13 @@ fn the_edition_marker_stays_first() {
         Ok("edition 2026\ncase c\nuses p ^1.0.0\nas_of 2025-01-01\nsummary \"s\"\n\nparties {\n  a: X Y\n}\n")
     );
 }
+
+#[test]
+fn basis_fields_format_like_other_fields() {
+    let text = "module a\nchance c: \"C\" {\n  basis   expert( \"Jane Roe\" )\n  x \"X\" -> y p 1/2 {basis sourced(\"R 1\"),note \"n\"}\n}\n";
+    let out = format(text, FileKind::Lit).unwrap_or_default();
+    assert_eq!(
+        out,
+        "module a\n\nchance c: \"C\" { basis expert(\"Jane Roe\"), x \"X\" -> y p 1/2 { basis sourced(\"R 1\"), note \"n\" } }\n"
+    );
+}

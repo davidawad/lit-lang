@@ -64,7 +64,22 @@ pub(crate) fn links(
         schema_version: Some(LINKS_SCHEMA_VERSION),
         instances,
         links: links.iter().map(|(e, _)| e.clone()).collect(),
-        lowered: Some(build.lowered(link_holes.chain(instance_holes).collect())),
+        lowered: Some(
+            build
+                .lowered(link_holes.chain(instance_holes).collect())
+                .with_basis(
+                    links
+                        .iter()
+                        .enumerate()
+                        .filter_map(|(i, (_, e))| {
+                            Some(crate::basis::label(
+                                format!("/links/{i}"),
+                                e.basis.as_ref()?,
+                            ))
+                        })
+                        .collect(),
+                ),
+        ),
     };
     let citations = Citations::new(litgraph::model::CiteSyntax::default(), &[], build.corpus);
     let link_entries = links
@@ -250,6 +265,7 @@ fn patch(cx: &EdgeCx<'_, '_>, sink: &mut Sink, p: &hir::EdgePatch, base: &RawEdg
         requires: p.requires.clone().unwrap_or_default(),
         forbids: p.forbids.clone().unwrap_or_default(),
         guard: None,
+        basis: None,
         span: p.span.clone(),
         holes: BTreeMap::new(),
     };

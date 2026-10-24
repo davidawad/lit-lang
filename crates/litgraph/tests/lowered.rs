@@ -7,7 +7,7 @@
 
 use litgraph::api::{handle, validate, Catalog, Request};
 use litgraph::clock::ClockLibrary;
-use litgraph::model::{world_digest, Hole, LinkFile, Lowered, Pin};
+use litgraph::model::{world_digest, Basis, BasisLabel, Hole, LinkFile, Lowered, Pin};
 use litgraph::scenario::NamedScenario;
 use litgraph::Pack;
 use serde_json::{json, Value};
@@ -73,6 +73,50 @@ fn a_pack_header_needs_v4_and_a_matching_world() {
     let stray = pack(4, Some(header(&[("/edges/9/probability", None)])));
     assert!(Pack::from_json(&stray.to_string()).is_err());
     assert!(Pack::from_json(&pack(4, None).to_string()).is_ok());
+}
+
+/// Basis labels (design review 2026-10-23 §2.10) are sorted, joined to
+/// the worse label, and must point into the document.
+#[test]
+fn basis_labels_join_and_point_into_the_document() {
+    assert_eq!(Basis::Sourced.join(Basis::Expert), Basis::Expert);
+    assert_eq!(Basis::Hole.join(Basis::Calibrated), Basis::Hole);
+    assert_eq!(Basis::Estimate.join(Basis::Estimate), Basis::Estimate);
+    let label = |pointer: &str, basis| BasisLabel {
+        pointer: pointer.into(),
+        basis,
+        source: None,
+    };
+    let lowered = serde_json::from_value::<Lowered>(header(&[]))
+        .unwrap()
+        .with_basis(vec![
+            label("/nodes/1", Basis::Sourced),
+            label("/edges/1", Basis::Expert),
+            label("/edges/1", Basis::Expert),
+        ]);
+    assert_eq!(
+        lowered.basis,
+        [
+            label("/edges/1", Basis::Expert),
+            label("/nodes/1", Basis::Sourced)
+        ]
+    );
+    let value = serde_json::to_value(&lowered).unwrap();
+    assert_eq!(
+        value["basis"][0],
+        json!({"pointer": "/edges/1", "basis": "expert"})
+    );
+    assert!(Pack::from_json(&pack(4, Some(value)).to_string()).is_ok());
+    let stray = serde_json::to_value(
+        serde_json::from_value::<Lowered>(header(&[]))
+            .unwrap()
+            .with_basis(vec![label("/edges/9", Basis::Estimate)]),
+    )
+    .unwrap();
+    let err = Pack::from_json(&pack(4, Some(stray)).to_string())
+        .unwrap_err()
+        .to_string();
+    assert!(err.contains("lowered basis `/edges/9`"), "{err}");
 }
 
 #[test]

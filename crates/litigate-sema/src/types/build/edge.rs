@@ -82,6 +82,7 @@ impl Cx<'_, '_> {
             guard: fields
                 .get("when")
                 .and_then(|f| self.guard(f, fact, e.name.is_some())),
+            basis: self.basis(fields.get("basis")),
             span: self.ck.span(e.range),
             holes: holes_of(e.clauses.iter().chain(&e.fields)),
         }

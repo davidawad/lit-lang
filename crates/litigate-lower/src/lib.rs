@@ -24,6 +24,7 @@
 //! assert!(semantic_diff(&pack, &again).is_empty());
 //! # Ok::<(), String>(())
 //! ```
+mod basis;
 mod case;
 mod clock;
 mod diag;

@@ -83,6 +83,18 @@ link b \"B\": nope::x -> base::entry by Whoever\n",
     insta::assert_debug_snapshot!(out);
 }
 
+/// A link may say where its numbers come from; a patch may not relabel
+/// the base edge's (design review 2026-10-23 §2.10).
+#[test]
+fn links_carry_a_basis_and_patches_do_not() {
+    let out = links(
+        "module links\n\
+link a \"A\": base::done -> base::entry { basis expert(\"Jane Roe\") }\n\
+instance base@one { pack base,\n  patch go { basis estimate }\n}\n",
+    );
+    insta::assert_debug_snapshot!(out);
+}
+
 #[test]
 fn instances_check_pack_probabilities_roles_and_patches() {
     let out = links(

@@ -27,7 +27,7 @@ pub use entities::{CompileOptions, Edge, Node, PackMeta, PayoffSource, DEFAULT_M
 pub use graph::{heuristic_payoff, qualify, EdgeIx, Graph, NodeIx};
 pub use links::{local_edge_ids, merge_patch, Instance, LinkFile, LINKS_SCHEMA_VERSION};
 pub(crate) use lowered::check_header;
-pub use lowered::{pointer_token, world_digest, Hole, Lowered, Pin};
+pub use lowered::{pointer_token, world_digest, Basis, BasisLabel, Hole, Lowered, Pin};
 pub use schema::{
     default_roles, Deadline, Duration, Group, NodeKind, Pack, RawEdge, RawNode, Role, Source,
     PACK_SCHEMA_VERSION,

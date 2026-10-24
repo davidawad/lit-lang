@@ -193,7 +193,7 @@ const NODE_HEADERS_AND_BODIES: Cases = &[
         (
             "module m\nstate s: \"S\" { 5 }\n",
             &[
-                "L0001 2:16-2:17 expected one of `group`, `note`, `valence`, `court_listener_url`, `tags`, `attrs`, `payoff`, `payoff_by_flag`, an identifier, or `}`, found `5`",
+                "L0001 2:16-2:17 expected one of `group`, `note`, `valence`, `court_listener_url`, `tags`, `attrs`, `payoff`, `payoff_by_flag`, `basis`, an identifier, or `}`, found `5`",
             ],
         ),
         (

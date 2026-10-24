@@ -26,7 +26,7 @@ const commaList = (open, item, close) =>
  */
 const EDGE_ID_WORDS = [
   'group', 'note', 'valence', 'court_listener_url', 'tags', 'attrs', 'payoff',
-  'payoff_by_flag', 'by', 'p',
+  'payoff_by_flag', 'basis', 'by', 'p',
 ];
 
 module.exports = { PREC, braced, commaList, EDGE_ID_WORDS };

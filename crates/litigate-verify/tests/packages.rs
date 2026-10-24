@@ -162,6 +162,28 @@ fn cite_resolves_checks_edge_authorities() {
     insta::assert_json_snapshot!(outcome(&c, Obligation::CiteResolves));
 }
 
+/// The cite of a `basis sourced(..)` on an edge or a node resolves like
+/// any other (design review 2026-10-23 §2.10).
+#[test]
+fn cite_resolves_checks_sourced_bases() {
+    let lit = edit(
+        "{ event Answered(complaint), within answer-period }",
+        "{ event Answered(complaint), within answer-period, basis sourced(\"FRCP 98(a)\") }",
+    )
+    .replacen(
+        "{ payoff 0.usd }",
+        "{ payoff 0.usd, basis sourced(\"FRCP 97(a)\") }",
+        1,
+    );
+    let c = verify_one(&lit, Profile::Strict);
+    let found = outcome(&c, Obligation::CiteResolves);
+    let text = serde_json::to_string(&found).unwrap_or_default();
+    assert!(
+        text.contains("FRCP 98(a)") && text.contains("FRCP 97(a)"),
+        "{text}"
+    );
+}
+
 #[test]
 fn only_duty_deadlines_constrain_a_node() {
     // An inline window and a top-level deadline beside a `power` rule:

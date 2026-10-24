@@ -435,3 +435,65 @@ decision d: "D" by a {
                   (hole
                     (string
                       (string_content))))))))))))
+
+================================================================================
+Basis fields
+================================================================================
+
+module a
+chance c: "C" {
+  basis expert("Jane Roe")
+  basis "Edge named basis" -> x p 1/2
+  y "Y" -> y p 1/2 { basis sourced("R 1"), note "n" }
+}
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (node_decl
+      (identifier)
+      (string
+        (string_content))
+      (node_body
+        (node_field
+          (call_expression
+            (ref
+              (identifier))
+            (arguments
+              (string
+                (string_content)))))
+        (edge_decl
+          (identifier)
+          (string
+            (string_content))
+          (ref
+            (identifier))
+          (probability
+            (fraction
+              (number)
+              (number))))
+        (edge_decl
+          (identifier)
+          (string
+            (string_content))
+          (ref
+            (identifier))
+          (probability
+            (fraction
+              (number)
+              (number)))
+          (edge_fields
+            (edge_field
+              (call_expression
+                (ref
+                  (identifier))
+                (arguments
+                  (string
+                    (string_content)))))
+            (edge_field
+              (string
+                (string_content)))))))))

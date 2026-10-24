@@ -2,7 +2,7 @@
 use crate::diag::Sink;
 use crate::source_map::{Citations, CiteMap, Entry, SourceMap};
 use crate::Build;
-use litgraph::model::{pointer_token, Hole, Role};
+use litgraph::model::{pointer_token, BasisLabel, Hole, Role};
 use litgraph::scenario::{
     DocketEvent, EventRelation, NamedScenario, ScenarioParty, ScenarioSource,
     SCENARIO_SCHEMA_VERSION,
@@ -356,6 +356,39 @@ fn holes(case: &hir::Case) -> Vec<Hole> {
     stakes.chain(sources).collect()
 }
 
+/// The scenario's one basis label (SPEC §8.3): the join over every number
+/// of the packs it uses, as built at its dates.
+fn basis(build: &Build<'_, '_>, case: &hir::Case) -> Vec<BasisLabel> {
+    // Selection errors belong to the packs' own builds, not the matter's.
+    let mut quiet = Sink::new("");
+    let primed = |pack: &str, n: &hir::Node| {
+        let id = format!("{pack}::{}", n.meta.id);
+        case.priors.iter().any(|p| p.node == id)
+    };
+    let nodes: Vec<(&hir::Node, bool)> = case
+        .uses
+        .iter()
+        .filter_map(|u| build.packages.iter().find(|p| p.manifest.name == u.name))
+        .flat_map(|pkg| {
+            let pack = &pkg.manifest.pack_id;
+            crate::pack::emitted(build, pkg, &mut quiet)
+                .into_iter()
+                .filter_map(move |d| match d {
+                    hir::Declaration::Node(n) => Some((n, primed(pack, n))),
+                    _ => None,
+                })
+        })
+        .collect();
+    crate::basis::join(nodes)
+        .map(|basis| BasisLabel {
+            pointer: "/scenario".to_owned(),
+            basis,
+            source: None,
+        })
+        .into_iter()
+        .collect()
+}
+
 /// `case` as a named scenario and its source map.
 pub(crate) fn case(
     build: &Build<'_, '_>,
@@ -391,7 +424,7 @@ pub(crate) fn case(
         events: litigate_sema::case::docket_order(&case.events)
             .map(event)
             .collect(),
-        lowered: Some(build.lowered(holes(case))),
+        lowered: Some(build.lowered(holes(case)).with_basis(basis(build, case))),
     };
     // Serializing plain data cannot fail; were it to, the empty text would
     // be rejected below like any other invalid scenario.

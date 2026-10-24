@@ -53,6 +53,7 @@ fn edge(id: Option<&str>, to: &str, p: Authored<Rational>) -> Edge {
         requires: vec![],
         forbids: vec!["defaulted".into()],
         guard: None,
+        basis: None,
         span: None,
         holes: BTreeMap::new(),
     }
@@ -70,6 +71,7 @@ fn chance_node() -> Node {
         attrs: BTreeMap::new(),
         actor: Some("office".into()),
         info: None,
+        basis: None,
         edges: vec![
             edge(
                 Some("granted"),

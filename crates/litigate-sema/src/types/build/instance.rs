@@ -189,6 +189,12 @@ impl Cx<'_, '_> {
                 self.not_allowed(f, "in a `patch`: it writes the base edge's other fields");
             }
         }
+        if let Some(f) = fields.get("basis") {
+            self.not_allowed(
+                f,
+                "in a `patch`: the base edge's numbers keep their own basis",
+            );
+        }
         if let Some(f) = fields.get("when") {
             self.report(
                 Report::new(

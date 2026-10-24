@@ -26,7 +26,7 @@ beliefs { prior mtd-ruling: { granted: 1, denied: 3 }, observe mtd-ruling: { gra
 analysis { params: { rate: 650.usd / 1.hours, opp_rate: 550.usd / 1.hours } }
 "#;
 
-const LIT: [(&str, &str, &str, &str); 26] = [
+const LIT: [(&str, &str, &str, &str); 27] = [
     ("edition", "Optional first line of a .lit or .case file naming its language edition; absent means 2026 (L0008 for an unknown year).", "edition 2026", "not emitted"),
     ("module", "Names the module; the first line of every .lit file.", "module demo.rules", "not emitted"),
     ("import", "Brings another module's declarations into scope.", "import demo.counting.{rule6}", "not emitted"),
@@ -41,6 +41,7 @@ const LIT: [(&str, &str, &str, &str); 26] = [
     ("chance", "A node resolved by nature or a court's discretion; only its edges carry `p` (L2008), which must sum to exactly 1 (L2003) or be holes. A `fact` chance node's edges may carry `when` guards over the matter's history (`has_event`, `date_of`, `deadline`), pairwise disjoint (L2005): replay derives the fact from the one that holds.", "chance mtd-ruling: \"Ruling\" by Court discretion cite \"R. 12(b)(6)\"\n{\n  granted \"Granted\" -> dismissed p 1/4\n  denied \"Denied\" -> answered p ?(\"no calibration yet\")\n}", "Pack.nodes[] kind state, edges with probability"),
     ("terminal", "An absorbing outcome node.", "terminal dismissed: \"Action dismissed\" outcome [judgment, win] { payoff 0.usd }", "Pack.nodes[] kind terminal"),
     ("edge", "An edge inside a node body: id (or `_`), label, target, and fields.", "state s: \"S\" { go \"Go\" -> t { cost 1_500.usd, effort 2.hours, tags [x] } }", "Pack.edges[]"),
+    ("basis", "Where a node's or edge's numbers come from, a lattice best first: `sourced(\"cite\")` (the cite resolves like an authority), `calibrated(\"dataset\", date)`, `expert(\"name\")`, `estimate`; a number with none is an estimate, a `?` a hole. Not in a `patch`. A matter's scenario carries the join over every number of the packs it uses.", "chance mtd-ruling: \"Ruling\" by Court\n{\n  granted \"Granted\" -> dismissed p 1/4 { basis expert(\"Jane Roe\") }\n  denied \"Denied\" -> answered p 3/4 { basis calibrated(\"fjc-idb\", 2024-09-30) }\n}", "lowered.basis[] {pointer, basis, source}; a scenario's at /scenario"),
     ("link", "A cross-package edge (links packages only).", "link appeal \"Notice of appeal\": trial::judgment -> appeal::notice-filed by Plaintiff", "LinkFile.links[]"),
     ("instance", "A re-rooted copy of a pack for a link origin.", "instance appeal@trial { pack appeal, remove_edges [x], roles { appellant: self } }", "LinkFile.instances[]"),
     ("rule", "A duty, power, or liability rule grouping deadlines.", "rule duty answer-duty cite \"R. 12(a)(1)(A)(i)\"\n{\n  deadline answer-period: 21.days from Served(complaint) counted_by rule6\n}", "not emitted (verification); its deadlines lower to edge deadlines"),

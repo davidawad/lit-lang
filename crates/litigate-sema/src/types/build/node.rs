@@ -193,6 +193,7 @@ impl Cx<'_, '_> {
             info: first_ref(clauses.get("info"))
                 .filter(|_| kw == "decision")
                 .map(RefPath::display),
+            basis: self.basis(fields.get("basis")),
             edges,
             holes: holes_of(n.clauses.iter().chain(&n.fields)),
         }

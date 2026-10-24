@@ -24,6 +24,7 @@ pub(crate) const NODE_FIELDS: &[Spec] = &[
     (KwAttrs, Some(num_record)),
     (KwPayoff, Some(money_or_hole)),
     (KwPayoffByFlag, Some(money_record)),
+    (KwBasis, Some(bound)),
 ];
 
 pub(crate) const EDGE_FIELDS: &[Spec] = &[
@@ -46,6 +47,7 @@ pub(crate) const EDGE_FIELDS: &[Spec] = &[
     (KwForbids, Some(id_list)),
     (KwReplaces, Some(replaces_list)),
     (KwWhen, Some(bound)),
+    (KwBasis, Some(bound)),
 ];
 
 pub(crate) const DEADLINE_OPTS: &[Spec] = &[

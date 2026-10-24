@@ -157,6 +157,8 @@ module.exports = {
     seq(field('key', 'attrs'), field('value', $.num_record)),
     seq(field('key', 'payoff'), field('value', choice($.signed_money, $.hole))),
     seq(field('key', 'payoff_by_flag'), field('value', $.money_record)),
+    // Where the node's numbers come from (design review §2.10).
+    seq(field('key', 'basis'), field('value', $._expression)),
   ),
 
   // SPEC §3.4: `Ident|_ String ->` is an edge; the field keywords are also
@@ -206,6 +208,8 @@ module.exports = {
     seq(field('key', 'attrs'), field('value', $.num_record)),
     // A fact edge's guard over the matter's history (SPEC §5.1).
     seq(field('key', 'when'), field('value', $._expression)),
+    // Where the edge's numbers come from (design review §2.10).
+    seq(field('key', 'basis'), field('value', $._expression)),
   ),
 
   // `min` and `max` are optional; `mode` is required (SPEC §3.1).

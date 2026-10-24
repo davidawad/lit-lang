@@ -65,6 +65,48 @@ impl Hole {
     }
 }
 
+/// Where a number comes from (design review 2026-10-23 §2.10), best
+/// first: a lattice whose join is the worse of two labels.
+#[derive(
+    Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord, Hash, JsonSchema,
+)]
+#[serde(rename_all = "lowercase")]
+pub enum Basis {
+    /// Read from a cited primary source.
+    Sourced,
+    /// Measured on a dataset as of a date.
+    Calibrated,
+    /// A named expert's judgment.
+    Expert,
+    /// A teaching or working estimate (the label of an unlabelled number).
+    Estimate,
+    /// An explicit hole: no value at all.
+    Hole,
+}
+
+impl Basis {
+    /// The worse of `self` and `other`.
+    #[must_use]
+    pub fn join(self, other: Self) -> Self {
+        self.max(other)
+    }
+}
+
+/// The basis of a value of the document: the object at `pointer` (an
+/// edge, a node, or the whole scenario), every number of which rests on
+/// `basis`.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord, JsonSchema)]
+#[serde(deny_unknown_fields)]
+pub struct BasisLabel {
+    /// JSON pointer (RFC 6901) of the labelled object in this document.
+    pub pointer: String,
+    /// The label.
+    pub basis: Basis,
+    /// What it rests on: the cite, `dataset@date`, or the expert.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub source: Option<String>,
+}
+
 /// Provenance of a lowered document.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, JsonSchema)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -82,6 +124,11 @@ pub struct Lowered {
     /// Explicit holes, by pointer.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub holes: Vec<Hole>,
+    /// Labelled values, by pointer; a number with no label is an
+    /// `estimate`. A scenario's one label, at `/scenario`, is the join
+    /// over every number of the packs it uses.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub basis: Vec<BasisLabel>,
 }
 
 impl Lowered {
@@ -105,7 +152,17 @@ impl Lowered {
             known_at,
             world_digest,
             holes,
+            basis: Vec::new(),
         }
+    }
+
+    /// The header with `basis` as its labels, sorted.
+    #[must_use]
+    pub fn with_basis(mut self, mut basis: Vec<BasisLabel>) -> Self {
+        basis.sort();
+        basis.dedup();
+        self.basis = basis;
+        self
     }
 
     /// Checks the header against `doc`, the whole document it heads: pins
@@ -130,10 +187,16 @@ impl Lowered {
                 self.world_digest
             ));
         }
-        let h = self.holes.iter().find(|h| !inside(doc, &h.pointer))?;
+        if let Some(h) = self.holes.iter().find(|h| !inside(doc, &h.pointer)) {
+            return Some(format!(
+                "lowered hole `{}` points outside the document",
+                h.pointer
+            ));
+        }
+        let b = self.basis.iter().find(|b| !inside(doc, &b.pointer))?;
         Some(format!(
-            "lowered hole `{}` points outside the document",
-            h.pointer
+            "lowered basis `{}` points outside the document",
+            b.pointer
         ))
     }
 }

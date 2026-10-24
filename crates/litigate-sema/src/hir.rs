@@ -22,7 +22,7 @@ pub use case::{
 };
 pub use expr::{BinaryOp, Expr, ExprKind, Pattern, UnaryOp};
 pub use graph::{
-    DeadlineWindow, Edge, EdgeDeadline, EdgePatch, Instance, Link, Node, NodeKind,
+    Basis, DeadlineWindow, Edge, EdgeDeadline, EdgePatch, Instance, Link, Node, NodeKind,
     TriangularDuration, Valence,
 };
 pub use logic::{

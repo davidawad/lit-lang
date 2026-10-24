@@ -28,6 +28,9 @@ pub struct Node {
     /// from the other decisions naming the same set.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub info: Option<String>,
+    /// Where the node's numbers (payoffs, attrs) come from (`basis`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub basis: Option<Basis>,
     /// Outgoing edges in source order.
     pub edges: Vec<Edge>,
     /// Explicit holes in the node's header and fields, by dotted field
@@ -58,6 +61,32 @@ pub enum NodeKind {
         /// Payoff override keyed by state flag (`payoffByFlag`).
         payoff_by_flag: BTreeMap<String, Money>,
     },
+}
+
+/// Where a node's or edge's numbers come from (`basis`; design review
+/// 2026-10-23 §2.10). A number with none is an estimate; a `?` is a hole.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "basis", rename_all = "snake_case")]
+pub enum Basis {
+    /// `sourced("cite")`: read from a cited primary source.
+    Sourced {
+        /// The cite text.
+        cite: String,
+    },
+    /// `calibrated("dataset", date)`: measured on a dataset as of a date.
+    Calibrated {
+        /// The dataset.
+        dataset: String,
+        /// Its date.
+        as_of: String,
+    },
+    /// `expert("name")`: a named expert's judgment.
+    Expert {
+        /// Who.
+        name: String,
+    },
+    /// `estimate`: a working estimate, said so.
+    Estimate,
 }
 
 /// Display valence of a node or edge.
@@ -123,6 +152,10 @@ pub struct Edge {
     /// history that, when it holds, derives the fact.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub guard: Option<super::Expr>,
+    /// Where the edge's numbers (`p`, effort, cost, duration, attrs) come
+    /// from (`basis`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub basis: Option<Basis>,
     /// Source span.
     pub span: Option<litigate_base::Span>,
     /// Explicit holes in the edge's clauses and fields, by dotted field

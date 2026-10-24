@@ -97,8 +97,9 @@ impl<'a> Context<'a> {
     /// Every cite of the package with its declaring span, the in-force
     /// window of its declaration version, and whether that declaration is
     /// `/// imported`: declaration `cite`s (and whether each is marked
-    /// `historical`), edge `authority`s (imported with their node, in its
-    /// window), and test `cite`s (no window).
+    /// `historical`), edge `authority`s and the cites of `basis sourced(..)`
+    /// on nodes and edges (imported with their node, in its window), and
+    /// test `cite`s (no window).
     pub fn cites(&self) -> impl Iterator<Item = Cite<'a>> {
         self.declarations().flat_map(|d| {
             let meta = meta_of(d);
@@ -113,7 +114,13 @@ impl<'a> Context<'a> {
                 Declaration::Node(n) => n
                     .edges
                     .iter()
-                    .filter_map(|e| Some((e.authority.as_deref()?, e.span.as_ref(), false)))
+                    .flat_map(|e| {
+                        [e.authority.as_deref(), sourced(e.basis.as_ref())]
+                            .into_iter()
+                            .flatten()
+                            .map(|c| (c, e.span.as_ref(), false))
+                    })
+                    .chain(sourced(n.basis.as_ref()).map(|c| (c, n.meta.span.as_ref(), false)))
                     .collect(),
                 _ => Vec::new(),
             };
@@ -128,6 +135,14 @@ impl<'a> Context<'a> {
                     imported,
                 })
         })
+    }
+}
+
+/// The cite a `basis sourced("...")` rests on.
+fn sourced(basis: Option<&hir::Basis>) -> Option<&str> {
+    match basis? {
+        hir::Basis::Sourced { cite } => Some(cite),
+        _ => None,
     }
 }
 

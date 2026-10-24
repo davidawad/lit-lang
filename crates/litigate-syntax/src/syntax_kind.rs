@@ -114,7 +114,7 @@ syntax_kinds! {
         KwWithin = "within", KwDuration = "duration", KwMin = "min", KwMode = "mode",
         KwMax = "max", KwSets = "sets", KwClears = "clears", KwRequires = "requires",
         KwForbids = "forbids", KwTags = "tags", KwAttrs = "attrs", KwNote = "note",
-        KwValence = "valence", KwCourtListenerUrl = "court_listener_url",
+        KwValence = "valence", KwBasis = "basis", KwCourtListenerUrl = "court_listener_url",
         KwActionId = "action_id", KwExtendable = "extendable",
         KwExtensionAuthority = "extension_authority", KwReplaces = "replaces",
         KwPack = "pack", KwRemoveEdges = "remove_edges",

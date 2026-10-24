@@ -17,8 +17,8 @@ parties {
   widget: Defendant Corporation
 }
 events {
-  2025-03-05 docket 4 Served(complaint, Personal) on widget
-  2025-03-20 MovedToDismiss(complaint) by widget
+  service: 2025-03-05 docket 4 Served(complaint, Personal) on widget
+  motion: 2025-03-20 MovedToDismiss(complaint) by widget
 }
 facts { time-barred: not-barred }
 stakes { judgment-entered: -2_000_000.usd, dismissed: 0.usd }
@@ -66,7 +66,7 @@ const CASE: [(&str, &str, &str, &str); 15] = [
     ("source", "A sourced fact behind the matter's numbers.", "source \"Demo Rules of Procedure\" { url \"https://example.org/rules\", as_of 2024-12-01 }", "NamedScenario.sources[]"),
     ("perspective", "Whose side the analysis takes (a party, or an actor-to-role map).", "perspective widget", "scenario.perspective"),
     ("parties", "Each party and its role in the primary package.", "  acme: Plaintiff Corporation", "provenance only"),
-    ("events", "Dated history, replayed to derive posture (never asserted), in docket order: by date, then `docket N`; same-day events need docket numbers unless they elect or remove options.", "  2025-03-05 docket 4 Served(complaint, Personal) on widget", "scenario.start (replayed)"),
+    ("events", "Dated history, replayed to derive posture (never asserted), in docket order: by date, then `docket N`; same-day events need docket numbers unless they elect or remove options. A leading `id:` is the event's timeline key, unchanged when its date is corrected (L9006 info without one).", "  service: 2025-03-05 docket 4 Served(complaint, Personal) on widget", "scenario.start (replayed)"),
     ("facts", "Resolved fact nodes: node to its edge.", "facts { time-barred: not-barred }", "scenario.facts"),
     ("stakes", "Terminal values; every reachable terminal needs one (L4004).", "stakes { judgment-entered: -2_000_000.usd, dismissed: 0.usd }", "scenario.payoffs"),
     ("beliefs", "The matter's priors over chance nodes (`prior`: Dirichlet pseudo-counts for every outcome, Beta for two) and the outcome counts observed since (`observe`), which update them.", "beliefs { prior mtd-ruling: { granted: 1, denied: 3 }, observe mtd-ruling: { granted: 3, denied: 1 } }", "scenario.probabilities + uncertainty.concentration (prior), scenario.observe"),

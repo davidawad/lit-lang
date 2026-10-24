@@ -197,7 +197,9 @@ rule duty district-court-notice-of-appeal cite "FRAP 4(a)(1)(A)"
 
 /// A request to the Director to extend the time to appeal a Board decision
 /// (37 C.F.R. § 90.3(c)(1)), dated when the Office receives it (§
-/// 90.3(c)(2)).
+/// 90.3(c)(2)); under the 2012 text it "must be filed as provided in §
+/// 104.2 of this title" (77 FR 48678), not vendored, so it is dated when
+/// the matter records it filed.
 event PtabAppealExtensionRequested()
 /// The Director's extension of the time to appeal a Board decision to
 /// `until` (37 C.F.R. § 90.3(c)(1)).
@@ -214,13 +216,20 @@ event PtabAppealPeriodExtended(until: Date) extends ptab-noa-period to until
 /// December 18, 2013 counts it and an earlier decision has no counting rule.
 /// Its extender is the Director, on a written request made before the
 /// period expires (good cause) or after (excusable neglect) (§ 90.3(c)(1)),
-/// not a court; the grants are on the version in force from March 29, 2024,
-/// whose text is vendored (UNVERIFIED: the 2012 version's paragraph (c)).
+/// not a court. The 2012 version's paragraph (c)(1), as published (77 FR
+/// 48677), has the same two grants.
 rule duty ptab-notice-of-appeal cite "37 C.F.R. § 90.3(a)(1)"
 {
-  deadline ptab-noa-period: 63.days after Entered(BoardDecision) counted_by uspto-1-7 effective [2012-09-16, 2024-03-29) known_at 2012-08-14 cite "37 C.F.R. § 90.3(a)(1); 37 C.F.R. § 90.3(b)(2)"
+  deadline ptab-noa-period: 63.days after Entered(BoardDecision) counted_by uspto-1-7 effective [2012-09-16, 2024-03-29) known_at 2012-08-14 cite "77 FR 48677; 77 FR 48612"
   {
     forum ptab
+    extend { by director, discretion GoodCause, on PtabAppealExtensionRequested() }
+    extend {
+      by director
+      discretion ExcusableNeglect
+      after_expiry
+      on PtabAppealExtensionRequested()
+    }
   }
   deadline ptab-noa-period: 63.days after Entered(BoardDecision) counted_by uspto-1-7 effective [2024-03-29, ..) known_at 2024-03-29 supersedes ptab-noa-period@2012-09-16 cite "37 C.F.R. § 90.3(a)(1); 37 C.F.R. § 90.3(b)(2)"
   {

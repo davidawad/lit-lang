@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **The 2012 text of 37 C.F.R. § 90.3 is vendored and its Director
+  extensions granted** (lg-flu.25). `sources/fr-uspto-90-3-history.txt`
+  holds § 90.3 as published in 77 FR 48677-48678 (effective Sept. 16,
+  2012, 77 FR 48612). Its paragraph (c)(1) has the same two grants as the
+  2024 text, so the PTAB appeal period's 2012-2024 version (`lit/ptab`'s
+  `appeal-period`, `lit/cafc`'s `ptab-noa-period`) is now extendable by
+  the Director on written request, before expiry for good cause and after
+  it for excusable neglect, where it was refused. Under the 2012 text the
+  request is filed "as provided in § 104.2", not vendored, so the 2024
+  receipt-date rule is not applied to it.
+
 - **Five rulings of 2026-10-23 recorded as normative** (lg-litigate-epic-tuq.52;
   SPEC §5.4, §5.6, §9.3, §9.4; `crates/litigate-cli/tests/rulings.rs`
   pins each). An event dated after a matter's `as_of` is L4001. A

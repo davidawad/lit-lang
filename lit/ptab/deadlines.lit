@@ -372,6 +372,9 @@ test "Director review after rehearing: a Sunday last day before MLK Day rolls to
 /// date the Office of the General Counsel receives the email, "regardless
 /// of whether that date is a Saturday, Sunday, or Federal holiday within
 /// the District of Columbia" (§ 90.3(c)(2)). That date is `request_made`.
+/// Under the 2012 text the request "must be filed as provided in § 104.2
+/// of this title" (77 FR 48678), which is not vendored: its date is the
+/// filing date the matter records, and no receipt-date rule is applied.
 event AppealExtensionRequested()
 /// The Director, or the Director's designee, extends the time for appeal
 /// to `until` (37 C.F.R. § 90.3(c)(1)).
@@ -392,14 +395,21 @@ event AppealPeriodExtended(until: Date) extends appeal-period to until
 /// neglect" (§ 90.3(c)(1)). Both turn on when the request was made, not
 /// when the Director acts, and neither has a numeric ceiling. The
 /// extender is the Director: no court, district or Federal Circuit, holds
-/// the power. The grants are on the version in force from Mar. 29, 2024,
-/// whose text is vendored; the 2012 version's paragraph (c) is not
-/// vendored, so it grants nothing here (UNVERIFIED: its pre-2024 text).
+/// the power. The 2012 version, as published (77 FR 48677-48678, effective
+/// Sept. 16, 2012, 77 FR 48612), has the same two grants: "The Director, or
+/// his designee, may extend the time ... upon written request if: (i)
+/// Requested before the expiration of the period ..., and upon a showing
+/// of good cause; or (ii) Requested after the expiration of the period
+/// ..., and upon a showing that the failure to act was the result of
+/// excusable neglect"; the 2024 revision changed "his designee" and how
+/// the request is filed (§ 90.3(c)(2)), not the grants.
 rule duty appeal-deadline cite "37 C.F.R. § 90.3(a)(1)"
 {
-  deadline appeal-period: 63.days after DecisionEntered() counted_by uspto-1-7 effective [2012-09-16, 2024-03-29) known_at 2012-08-14 cite "37 C.F.R. § 90.3(a)(1); 37 C.F.R. § 90.3(b)(1)"
+  deadline appeal-period: 63.days after DecisionEntered() counted_by uspto-1-7 effective [2012-09-16, 2024-03-29) known_at 2012-08-14 cite "77 FR 48677; 77 FR 48612"
   {
     trigger latest
+    extend { by director, discretion GoodCause, on AppealExtensionRequested() }
+    extend { by director, discretion ExcusableNeglect, after_expiry, on AppealExtensionRequested() }
   }
   deadline appeal-period: 63.days after DecisionEntered() counted_by uspto-1-7 effective [2024-03-29, ..) known_at 2024-03-29 supersedes appeal-period@2012-09-16 cite "37 C.F.R. § 90.3(a)(1); 37 C.F.R. § 90.3(b)(1)"
   {

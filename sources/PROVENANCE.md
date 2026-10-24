@@ -482,3 +482,25 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   wording changed. The TBMP binds no one: it restates the Board's practice
   under 37 C.F.R. Part 2.
 - sha256 (this file): `84d70300d5b36ac966e3b65513b86726ebc5fc04c0b97218704a3c55f02a3e86`
+
+### `fr-uspto-90-3-history.txt` — 37 C.F.R. § 90.3 as added in 2012 (77 FR 48612, 48677-48678)
+
+- The text of § 90.3 in force from September 16, 2012 to March 29, 2024,
+  which `usc-cfr-prosecution-fragments.txt` (the current text) cannot
+  give: one `## 77 FR <page>` section per printed page, each opening with
+  a bracketed line naming the issue, page and FR Doc. number; everything
+  after it is the printed text, verbatim except for line joining, `Sec.`
+  printed as `§`, the GPO text's doubled backtick and apostrophe quotes
+  as straight double quotes, and its `----` as an em dash. Page 48612 carries the rule's summary and effective date;
+  48677-48678 the amendatory instruction adding Part 90 and § 90.3 in
+  full, including the verbatim "appeal of commencing" in (c)(1)(ii).
+- Fetched 2026-10-24 from `www.govinfo.gov`'s Federal Register HTML
+  rendering of FR Doc. 2012-17900
+  (`https://www.govinfo.gov/content/pkg/FR-2012-08-14/html/2012-17900.htm`,
+  sha256 `230a9429a1acfe78b073b0d75d9a2a08e8ecfa8eecfce3a22ab8f163e82aaae9`),
+  whose `[[Page N]]` markers give the page.
+- How the version list was found: the federalregister.gov API's rules
+  with a CFR reference to 37 C.F.R. Part 90 are exactly two, 77 FR 48612
+  (2012-17900, effective 2012-09-16) and 89 FR 22084 (2024-06659,
+  effective 2024-03-29), matching the current section's history line.
+- sha256 (this file): `86152eebd93a8b638b25c9263e235194c7400797d2840e73d59da0977e4f4d74`

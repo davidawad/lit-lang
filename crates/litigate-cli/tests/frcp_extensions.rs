@@ -496,6 +496,48 @@ fn the_director_extends_only_on_written_request() {
 }
 
 #[test]
+fn the_director_extends_the_ptab_appeal_period_under_the_2012_text() {
+    // Decided 2020-01-02, under the 2012 version (77 FR 48677): the appeal
+    // is due Thursday 2020-03-05. Its § 90.3(c)(1) has the same two
+    // grants: a request before expiry is good cause though the Director
+    // acts after it, one after expiry excusable neglect.
+    for (name, requested, under) in [
+        ("ptab-2012-90-3-c-1-i", "2020-03-04", "GoodCause"),
+        ("ptab-2012-90-3-c-1-ii", "2020-03-09", "ExcusableNeglect"),
+    ] {
+        let run = ptab(
+            name,
+            "2020-01-02",
+            &[
+                &format!("{requested} AppealExtensionRequested() by owner"),
+                "2020-03-10 AppealPeriodExtended(2020-04-06) by director cite \"77 FR 48677\"",
+            ],
+        );
+        assert_eq!(run.code, 0, "{}", run.stdout);
+        assert_eq!(effects(&run).1, Vec::<String>::new());
+        assert_eq!(
+            extended(&run, "ptab-patent-trial-appeal-board::appeal-period"),
+            [(
+                "2020-04-06".to_owned(),
+                under.to_owned(),
+                requested.to_owned()
+            )]
+        );
+    }
+    // Still only "upon written request".
+    let run = ptab(
+        "ptab-2012-90-3-no-request",
+        "2020-01-02",
+        &["2020-02-03 AppealPeriodExtended(2020-04-06) by director cite \"77 FR 48677\""],
+    );
+    assert_eq!(run.code, 2, "{}", run.stdout);
+    assert_eq!(
+        effects(&run).1,
+        ["`AppealPeriodExtended(2020-04-06)` requires a motion `AppealExtensionRequested()` made before the period expired on 2020-03-05, and none precedes the order on 2020-02-03"]
+    );
+}
+
+#[test]
 fn no_court_extends_the_ptab_appeal_period() {
     // The Director, not the Federal Circuit or a district court, holds the
     // § 90.3(c) power. A matter's parties play its primary package's

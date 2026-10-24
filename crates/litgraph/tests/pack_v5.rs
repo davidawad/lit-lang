@@ -82,7 +82,11 @@ fn extension_bounds_read_back_as_written() {
                            {"min": [{"offset": {"from": "grantOrderEntered", "days": 14}}]}]},
          "afterExpiry": true, "standard": "GoodCauseOrExcusableNeglect",
          "motion": {"event": "AppealExtensionMoved()",
-                    "within": {"offset": {"from": "prescribedDue", "days": 30}}}},
+                    "within": {"offset": {"from": "prescribedDue", "days": 30}},
+                    "unless": "AppealExtensionDenied()"}},
+        {"bound": "bounded", "by": "justice",
+         "until": {"before": {"from": "currentDue", "days": 10}},
+         "standard": "ExtraordinaryCircumstances"},
         {"bound": "discretionary", "by": "court", "standard": "GoodCause", "window": "beforeExpiry",
          "interpretation": "37 CFR 2.116(a) reaches the period"},
         {"bound": "discretionary", "by": "court", "standard": "ExcusableNeglect",
@@ -93,13 +97,13 @@ fn extension_bounds_read_back_as_written() {
     let found = pack(5, &deadline).unwrap();
     let d = found.edges[0].deadline.as_ref().unwrap();
     assert!(matches!(
-        d.extensions[3],
+        d.extensions[4],
         ExtensionBound::NonExtendable { .. }
     ));
     assert_eq!(serde_json::to_value(d).unwrap(), deadline);
     // A field another bound has is an error, as is any unknown field in
     // a pack: a discretionary grant states no date bound.
     let mut wrong = deadline.clone();
-    wrong["extensions"][1]["until"] = json!({"offset": {"from": "prescribedDue", "days": 1}});
+    wrong["extensions"][2]["until"] = json!({"offset": {"from": "prescribedDue", "days": 1}});
     assert!(pack(5, &wrong).unwrap_err().contains("until"));
 }

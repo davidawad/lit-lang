@@ -248,16 +248,26 @@ fn cause(s: hir::CauseStandard) -> CauseStandard {
         hir::CauseStandard::GoodCauseOrExcusableNeglect => {
             CauseStandard::GoodCauseOrExcusableNeglect
         }
+        hir::CauseStandard::ExtraordinaryCircumstances => CauseStandard::ExtraordinaryCircumstances,
+    }
+}
+
+fn date_ref(r: hir::DateRef) -> DateRef {
+    match r {
+        hir::DateRef::PrescribedDue => DateRef::PrescribedDue,
+        hir::DateRef::GrantOrderEntered => DateRef::GrantOrderEntered,
+        hir::DateRef::CurrentDue => DateRef::CurrentDue,
     }
 }
 
 fn bound(b: &hir::Bound) -> DateBound {
     match b {
         hir::Bound::Offset { from, days } => DateBound::Offset {
-            from: match from {
-                hir::DateRef::PrescribedDue => DateRef::PrescribedDue,
-                hir::DateRef::GrantOrderEntered => DateRef::GrantOrderEntered,
-            },
+            from: date_ref(*from),
+            days: *days,
+        },
+        hir::Bound::Before { from, days } => DateBound::Before {
+            from: date_ref(*from),
             days: *days,
         },
         hir::Bound::Max(xs) => DateBound::Max(xs.iter().map(bound).collect()),
@@ -270,6 +280,7 @@ fn motion(m: &hir::Motion) -> Motion {
     Motion {
         event: litigate_sema::case::display_event(&m.event),
         within: m.within.as_ref().map(bound),
+        unless: m.unless.as_ref().map(litigate_sema::case::display_event),
     }
 }
 

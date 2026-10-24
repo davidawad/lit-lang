@@ -210,6 +210,9 @@ pub enum CauseStandard {
     ExcusableNeglect,
     /// Either (FRAP 4(a)(5)(A)(ii)).
     GoodCauseOrExcusableNeglect,
+    /// Extraordinary circumstances, the exception to a timing requirement
+    /// on the application (Sup. Ct. R. 13.5).
+    ExtraordinaryCircumstances,
 }
 
 /// When a discretionary extension may be granted.
@@ -232,10 +235,15 @@ pub struct Motion {
     /// The latest date the motion may be made.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub within: Option<DateBound>,
+    /// The event pattern that, once it precedes the order, bars the grant
+    /// (a denial that may not be renewed, Sup. Ct. R. 30.3).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub unless: Option<String>,
 }
 
-/// A date bound: `max`/`min` over calendar-day offsets from the
-/// prescribed due date or the granting order's date (FRAP 4(a)(5)(C)).
+/// A date bound: `max`/`min` over calendar-day offsets after or before
+/// the prescribed or current due date or the granting order's date (FRAP
+/// 4(a)(5)(C); Sup. Ct. R. 30.2).
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, JsonSchema)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub enum DateBound {
@@ -244,6 +252,13 @@ pub enum DateBound {
         /// The date counted from.
         from: DateRef,
         /// Calendar days after it.
+        days: u64,
+    },
+    /// `from` minus `days` calendar days.
+    Before {
+        /// The date counted from.
+        from: DateRef,
+        /// Calendar days before it.
         days: u64,
     },
     /// The latest of the operands.
@@ -260,6 +275,9 @@ pub enum DateRef {
     PrescribedDue,
     /// The date of the order granting the extension.
     GrantOrderEntered,
+    /// The window's due date as last extended (Sup. Ct. R. 13.5, "the
+    /// date the petition is due").
+    CurrentDue,
 }
 
 /// Expected elapsed calendar time of a transition, in days (triangular).

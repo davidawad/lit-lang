@@ -322,14 +322,18 @@ fn grants() -> Vec<hir::Extension> {
             motion: Some(hir::Motion {
                 event: moved(),
                 within: Some(due(30)),
+                unless: Some(moved()),
             }),
             interpretation: Some("read so".into()),
         },
         Extension::Bounded {
             by: "Court".into(),
-            until: due(7),
+            until: Bound::Before {
+                from: R::CurrentDue,
+                days: 10,
+            },
             after_expiry: false,
-            standard: None,
+            standard: Some(S::ExtraordinaryCircumstances),
             motion: None,
             interpretation: None,
         },
@@ -347,6 +351,7 @@ fn grants() -> Vec<hir::Extension> {
             motion: Some(hir::Motion {
                 event: moved(),
                 within: None,
+                unless: None,
             }),
             interpretation: None,
         },
@@ -383,14 +388,18 @@ fn bounds() -> Vec<litgraph::model::ExtensionBound> {
             motion: Some(Motion {
                 event: "Moved(answer)".into(),
                 within: Some(due(30)),
+                unless: Some("Moved(answer)".into()),
             }),
             interpretation: Some("read so".into()),
         },
         ExtensionBound::Bounded {
             by: "Court".into(),
-            until: due(7),
+            until: DateBound::Before {
+                from: DateRef::CurrentDue,
+                days: 10,
+            },
             after_expiry: false,
-            standard: None,
+            standard: Some(CauseStandard::ExtraordinaryCircumstances),
             motion: None,
             interpretation: None,
         },
@@ -408,6 +417,7 @@ fn bounds() -> Vec<litgraph::model::ExtensionBound> {
             motion: Some(Motion {
                 event: "Moved(answer)".into(),
                 within: None,
+                unless: None,
             }),
             interpretation: None,
         },

@@ -60,6 +60,56 @@ fn matter_locks_are_left_alone_when_current_and_reported_when_stale() {
     insta::assert_debug_snapshot!(located(&stale.json));
 }
 
+/// A matter reads only the `Lit.lock` in its own directory: neither a
+/// parent directory's matter lock nor the package's own lock pins it, and
+/// `lock` writes one per directory of matters (SPEC §5.6).
+#[test]
+fn a_matter_reads_only_the_lock_beside_it() {
+    let dir = example("lock-beside", "", None);
+    assert_eq!(litigate_in(&dir, &["lock", "lit/examples"]).code, 0);
+    std::fs::create_dir_all(dir.join("cases/examples/nested")).unwrap();
+    std::fs::copy(
+        dir.join("cases/examples/acme.case"),
+        dir.join("cases/examples/nested/acme.case"),
+    )
+    .unwrap();
+    let nested = "cases/examples/nested/acme.case";
+    let unpinned = litigate_in(&dir, &["check", nested]);
+    assert_eq!(unpinned.code, 2, "{}", unpinned.stdout);
+    let errors: Vec<(String, String, String, u64)> = located(&unpinned.json)
+        .into_iter()
+        .filter(|d| d.1 == "error")
+        .collect();
+    assert_eq!(
+        errors,
+        [("L1007".into(), "error".into(), nested.into(), 2)],
+        "{}",
+        unpinned.stdout
+    );
+    assert!(
+        unpinned.stdout.contains("the matter has no Lit.lock"),
+        "{}",
+        unpinned.stdout
+    );
+    let lock = litigate_in(&dir, &["lock", "cases/examples"]);
+    assert_eq!(lock.code, 0, "{}", lock.stderr);
+    let files: Vec<(&str, bool)> = lock.json["result"]["lockfiles"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|f| (f["lockfile"].as_str().unwrap(), f["changed"] == true))
+        .collect();
+    assert_eq!(
+        files,
+        [
+            ("cases/examples/Lit.lock", false),
+            ("cases/examples/nested/Lit.lock", true),
+        ]
+    );
+    let pinned = litigate_in(&dir, &["check", nested]);
+    assert_eq!(pinned.code, 0, "{}", pinned.stdout);
+}
+
 #[cfg(unix)]
 #[test]
 fn unwritable_and_unreadable_lock_inputs_fail() {

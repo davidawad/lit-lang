@@ -63,6 +63,27 @@ fn a_terminal_whose_pack_authors_a_payoff_needs_no_stake() {
     assert_eq!(codes, ["L4004"], "{:#?}", render(&hole.diagnostics));
 }
 
+/// A pack-authored payoff is a valued stake, not an `unvalued` one, so
+/// `strict` accepts it too (SPEC §5.6).
+#[test]
+fn a_pack_authored_payoff_counts_as_valued_in_strict() {
+    let stakes = "stakes { judgment-entered: -2_000_000.usd, dismissed: 0.usd }";
+    let authored = check_example(
+        &edited(&[(stakes, "stakes { judgment-entered: -2_000_000.usd }")]),
+        Profile::Strict,
+    );
+    assert!(authored.ok(), "{:#?}", render(&authored.diagnostics));
+    let unvalued = check_example(
+        &edited(&[(
+            stakes,
+            "stakes { judgment-entered: unvalued, dismissed: 0.usd }",
+        )]),
+        Profile::Strict,
+    );
+    let codes: Vec<&str> = unvalued.diagnostics.iter().map(|d| d.code.as_str()).collect();
+    assert_eq!(codes, ["L4004"], "{:#?}", render(&unvalued.diagnostics));
+}
+
 #[test]
 fn an_instance_ref_names_its_base_packs_node() {
     let stakes = "dismissed: 0.usd }";

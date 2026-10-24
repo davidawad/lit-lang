@@ -64,6 +64,27 @@ fn an_unvalued_stake_has_no_payoff() {
     assert_eq!(payoffs.len(), 1);
 }
 
+/// A case stake on a terminal whose pack authors a payoff overrides it in
+/// `scenario.payoffs`; without one the pack's payoff applies (SPEC §5.6).
+#[test]
+fn a_stake_overrides_a_pack_authored_payoff() {
+    let terminal = "frcp-rule12-example::dismissed";
+    let mut case = acme();
+    case.stakes.insert(
+        terminal.into(),
+        Stake::Value(Money {
+            minor_units: 5_000,
+            currency: "usd".into(),
+        }),
+    );
+    let lowered = lower(&case).unwrap_or_else(|d| panic!("{d}"));
+    assert_eq!(lowered.scenario.scenario.payoffs.get(terminal), Some(&50.0));
+    case.stakes.remove(terminal);
+    let lowered = lower(&case).unwrap_or_else(|d| panic!("{d}"));
+    let payoffs = &lowered.scenario.scenario.payoffs;
+    assert!(!payoffs.contains_key(terminal), "{payoffs:?}");
+}
+
 /// A removal's source-map entry is located at its event's action; a
 /// repeated edge points at its one `remove_edges` index, and an edge of a
 /// pack the workspace loads is cited under that pack's syntax.

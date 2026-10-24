@@ -1088,6 +1088,14 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
 
 - `uses` pins resolve through `Lit.lock`. The first package is primary:
   unqualified refs resolve in it.
+- A matter's lock is the `Lit.lock` beside it: the file of that name in
+  the `.case` file's own directory. No other lock pins a matter: not a
+  parent directory's, and not a used package's own `Lit.lock` (§4.2),
+  which pins only that package's dependencies.
+  One lock serves every matter in its directory and pins each package
+  any of them `uses`, with its resolved dependencies; `litigate lock DIR`
+  writes one per directory of matters under `DIR`. A matter with no lock
+  beside it, or a pin the lock does not hold, is L1007.
 - `as_of` selects law in force (§5.4). It is compile-time only.
 - `parties { id: Actor EntityType }`: the actor must be declared by the
   primary package (L4005). Party ids are unique.
@@ -1220,7 +1228,13 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
   must be its own (L4003), and the history must not derive another edge
   of it (L4003). A fact the history derives needs no entry.
 - `stakes`: every terminal reachable from the replayed start needs a value
-  or `unvalued` (L4004). `unvalued` is an error in `strict`.
+  or `unvalued` (L4004). `unvalued` is an error in `strict`. A terminal
+  whose package authors a known `payoff` (in the version in force at
+  `as_of`, known at `known_at`) already has a value: it is a valued stake,
+  in `strict` too, and needs no entry. A `payoff ?` hole is not a value,
+  so its terminal still needs a stake. A stake on a terminal with an
+  authored payoff overrides that payoff for the matter
+  (`scenario.payoffs`, §8.3); the package is not changed.
 - `beliefs { observe node: { edge: count } }`: node must be a chance node, edges
   its own (L4006).
 - `analysis`: litgraph `Scenario` fields that have no dedicated block (§8.3).
@@ -1543,7 +1557,7 @@ loader (`ClockLibrary::from_json`), so an invalid one is L6001.
 | replayed/explicit start | `scenario.start` (qualified `pack::node`): the explicit `start`, else the replayed node; omitted when neither exists (the primary package's start applies) |
 | `perspective` | `scenario.perspective` actor-to-role map: `perspective party` lists only the actors whose role differs from the primary package's roles (which must be loaded, else L6001); an explicit `{ actor: role }` map is emitted as written |
 | `facts` | `scenario.facts` qualified node to qualified edge |
-| `stakes` | `scenario.payoffs` qualified terminal to major-unit number |
+| `stakes` | `scenario.payoffs` qualified terminal to major-unit number; a terminal without a stake keeps its pack-authored `payoff` (§5.6) and is not listed |
 | `beliefs` | `scenario.observe` qualified node to `{qualified edge: count}` |
 | `Case.removals` (§5.6) | `scenario.remove_edges`: any `analysis.remove_edges` entries in order, then each removed edge not already listed; the source map has one entry per removed edge (`/scenario/remove_edges/i`) with the removing event's span and its cite located in L0 under the edge's package |
 | `analysis { f: v }` | `scenario.f` = `v` as the engine reads it (numbers exact to binary64, edges qualified `pack::edge`) |
@@ -2145,7 +2159,7 @@ gets one row per condition when the conditions classify differently.
 | C48 | L4001 event matches no edge or several; takes no edge without a declared effect, a firing trigger or transition history, or where the matter has ended; matches only removed edges; removal or transform without `cite`; removal repeated; discharge of another party's obligation; extension or waiver with no target, no capability, the wrong principal, after expiry, or beyond its bound (§5.6) | sema | b | Typestate (DESIGN §4.5) as an indexed type: the matter is `Case<n, R, O>` (posture node `n`, removed edge set `R`, open obligation instances `O`); an event `e` types only as `Case<n, R, O> → Case<to(edge), R, O'>` for the unique edge of `n` not in `R` whose pattern it matches, or as `Case<n, R', O'>` by its declared effect or the triggers it fires (C41). The capability check is a ground comparison of the principal and of dates against the bound. Finite and ground: one step per event. |
 | C49 | L4002 act discharges an obligation instance after its due date (§5.6) | sema | c | The due date comes from counting through holiday calendars and inaccessible days from the instance's trigger: execution, not a type. |
 | C50 | L4003 `facts` node not a `fact` chance node or edge not its own (§5.6) | sema | b | `facts {n: Edges(n)}` with `n : Node<Chance, fact>` (index on the referenced node's signature). |
-| C51 | L4004 reachable terminal without a stake or `unvalued` (§5.6) | sema, verify | c | Reachability from the replayed start. `unvalued` being an error in `strict` is a profile rule (§7), not a type. |
+| C51 | L4004 reachable terminal without a stake, `unvalued`, or a pack-authored known payoff (§5.6) | sema, verify | c | Reachability from the replayed start. `unvalued` being an error in `strict` is a profile rule (§7), not a type. |
 | C52 | L4005 unknown party actor, duplicate party id, unknown perspective party or actor (§5.6) | sema, lower | a | `Actor` is the closed enum of the primary package's actors; `parties` is a map; `perspective` takes a party id or a map over `Actor`. |
 | C53 | L4006 belief not on a chance node or edge not its own (§5.6) | sema | b | As C50 with `n : Node<Chance>`. |
 | C54 | L4007 analysis field unknown, given twice, duplicated by a dedicated block, untyped, or ill-shaped; an engine option the engine rejects (§8.3) | sema, lower | a | Sema types each field of the closed set (§8.3); an engine option is checked alone against the engine's own schema at lowering, at its span. |

@@ -227,6 +227,9 @@
                 inherit cargoArtifacts;
                 partitions = 1;
                 partitionType = "count";
+                # The lock merge-driver tests run git (cov_lock.rs); crane runs nextest
+                # in the build phase, so git goes in nativeBuildInputs.
+                nativeBuildInputs = commonArgs.nativeBuildInputs ++ [ pkgs.git ];
               }
             );
           };

@@ -227,7 +227,10 @@ fn section(
                 "`{path}` is not the text source `{id}` pins (`path_sha256` {pinned}, the \
                  corpus file hashes to {actual})"
             ),
-            "cite the expression the corpus holds, or vendor the pinned text".to_owned(),
+            "cite the expression the corpus holds, or vendor the pinned text; a `litigate` \
+             built before the pin changed embeds the older text, so rebuild it or set \
+             `LITGRAPH_SOURCES` to the vendored `sources/`"
+                .to_owned(),
         )),
         Pin::NoPath | Pin::Absent | Pin::Verified => None,
     };

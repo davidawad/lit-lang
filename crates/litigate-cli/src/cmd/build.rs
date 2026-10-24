@@ -232,10 +232,11 @@ pub fn nonempty(files: Vec<Output>) -> Result<Vec<Output>, Failure> {
 }
 
 /// Renames each mapped pack's outputs (`packs/ID.json`, its source map, and
-/// its `packs/clock/` fragment) to `STEM`.
+/// its `packs/clock/` fragment) to `STEM`: the files `build` writes.
 ///
 /// # Errors
-/// A mapped id that no built pack has, or two outputs landing on one path.
+/// A mapped id that no built pack has, two outputs landing on one path, or
+/// an empty output ([`nonempty`]).
 pub fn rename_packs(
     files: Vec<Output>,
     map: &BTreeMap<String, String>,
@@ -267,7 +268,7 @@ pub fn rename_packs(
             "--pack-file: two outputs would be written to `{}`",
             w[0].0
         ))),
-        None => Ok(out),
+        None => nonempty(out),
     }
 }
 
@@ -300,7 +301,7 @@ pub fn build(src: &dyn Source, args: &Args) -> Outcome {
     // `check` lowered every package at these same dates, so a build that
     // checks lowers without errors.
     let mut built = lower_all(&c, &options);
-    built.files = nonempty(rename_packs(built.files, &stems)?)?;
+    built.files = rename_packs(built.files, &stems)?;
     for (path, text) in &built.files {
         write_atomic_in(src, &Path::new(out).join(path), text)?;
     }
@@ -450,7 +451,7 @@ mod tests {
     fn files(paths: &[&str]) -> Vec<Output> {
         paths
             .iter()
-            .map(|p| ((*p).to_owned(), String::new()))
+            .map(|p| ((*p).to_owned(), "{}".to_owned()))
             .collect()
     }
 

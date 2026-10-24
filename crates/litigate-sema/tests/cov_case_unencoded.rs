@@ -5,7 +5,8 @@
 //! trigger then opens an instance whose due date is unknown (a warning),
 //! never counted under the later version, so an act against it is neither
 //! timely nor late and it is never breached. Inside the package's corpus a
-//! declaration enacted later was simply not yet law.
+//! declaration enacted later was simply not yet law. A chained period
+//! not encoded either opens nothing of its own: it runs from its base.
 mod cov_case_support;
 
 use cov_case_support::{check, compile, lock, outcome, package, At};
@@ -31,6 +32,7 @@ rule duty answer-duty cite \"FRCP 12(a)\"
   }
 }
 
+deadline reply: 10.days from deadline(answer).adjusted counted_by oc cite \"FRCP 12(a)\"
 deadline fresh: 30.days from Enacted() counted_by oc effective [2012-01-01, ..) cite \"FRCP 12(a)\"
 
 state open: \"Open\" effective [2000-01-01, ..)

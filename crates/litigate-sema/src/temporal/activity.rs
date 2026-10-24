@@ -176,12 +176,16 @@ fn encoded(
     date: &str,
     miss: Miss,
 ) -> Miss {
-    let covered = set
-        .versions
-        .first()
-        .is_some_and(|v| world.packs[world.decls[v.decl].pack].lifetime.from.as_str() <= date);
     match miss {
-        Miss::Before { .. } if covered => Miss::NotInForce { hidden: Vec::new() },
+        // The versions of one key are one package's.
+        Miss::Before { .. }
+            if set
+                .versions
+                .iter()
+                .any(|v| world.packs[world.decls[v.decl].pack].lifetime.from.as_str() <= date) =>
+        {
+            Miss::NotInForce { hidden: Vec::new() }
+        }
         other => other,
     }
 }

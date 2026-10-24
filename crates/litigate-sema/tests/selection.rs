@@ -15,7 +15,7 @@ use litigate_sema::pkg::load::LoadedPackage;
 use litigate_sema::precedence::select::{resolve, unresolved};
 use litigate_sema::precedence::{conclude, select, Conclusion, Unselected};
 use litigate_sema::temporal::world::nowhere;
-use litigate_sema::temporal::{Inactive, Key, World};
+use litigate_sema::temporal::{Inactive, Key, Miss, World};
 use std::cell::RefCell;
 use std::fmt::Write as _;
 
@@ -439,6 +439,15 @@ fn selection_failures_explain_themselves() {
     assert_eq!(
         inactive.describe(&world, "`answer-period`", "2000-01-01"),
         "`answer-period` is not encoded before 2009-12-01: no version is in force on 2000-01-01"
+    );
+    // Inside the package's corpus a miss is a finding, not a hole.
+    assert_eq!(
+        Unselected::Inactive(Inactive::Miss(Miss::NotInForce { hidden: Vec::new() })).describe(
+            &world,
+            "`answer-period`",
+            "2030-01-01"
+        ),
+        "no version of `answer-period` is in force on 2030-01-01"
     );
 }
 

@@ -281,8 +281,9 @@ impl<'a> Graph<'a> {
         else {
             return None;
         };
-        let version = self.world.versions(&key).starting(&earliest)?.decl;
-        Some((earliest, self.world.decls[version].decl))
+        let set = self.world.versions(&key);
+        set.starting(&earliest)
+            .map(|v| (earliest.clone(), self.world.decls[v.decl].decl))
     }
 
     /// The declarations the version of `qualified` in force on `date`

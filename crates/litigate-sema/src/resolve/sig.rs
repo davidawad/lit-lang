@@ -373,21 +373,25 @@ fn collect(sig: &mut Signature, items: &[(&Item, Option<&Item>)], m: Option<&Man
 /// stays `None` (L3006 reports it). Event parameters resolve once every
 /// alias has.
 fn resolve_types(sig: &mut Signature, tree: &ItemTree, imports: &[&Signature]) {
+    // The first declaration of a type name owns it (L1001 reports the rest).
     let mut aliases = Vec::new();
     let mut events = Vec::new();
     for (item, _) in flatten(tree) {
-        let (name, placeholder) = match &item.kind {
-            ItemKind::TypeAlias(name, target) => {
-                aliases.push((name.text.clone(), target));
-                (name, TypeSig::Alias(None))
-            }
-            ItemKind::Event(name, params, _) => {
-                events.push((name.text.clone(), params));
-                (name, TypeSig::Event(Vec::new()))
-            }
+        let (name, alias, params) = match &item.kind {
+            ItemKind::TypeAlias(name, target) => (name, Some(target), None),
+            ItemKind::Event(name, params, _) => (name, None, Some(params)),
             _ => continue,
         };
-        sig.types.entry(name.text.clone()).or_insert(placeholder);
+        if sig.types.contains_key(&name.text) {
+            continue;
+        }
+        let key = name.text.clone();
+        sig.types.insert(key.clone(), TypeSig::Alias(None));
+        aliases.extend(alias.map(|t| (key.clone(), t)));
+        if let Some(params) = params {
+            sig.types.insert(key.clone(), TypeSig::Event(Vec::new()));
+            events.push((key, params));
+        }
     }
     loop {
         let resolved: Vec<(String, Type)> = {
@@ -411,9 +415,6 @@ fn resolve_types(sig: &mut Signature, tree: &ItemTree, imports: &[&Signature]) {
         let scope = Scope::new(sig, tree, imports, Vec::new());
         events
             .iter()
-            .filter(
-                |(name, _)| matches!(sig.types.get(name), Some(TypeSig::Event(p)) if p.is_empty()),
-            )
             .map(|(name, params)| {
                 let params = params
                     .iter()

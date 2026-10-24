@@ -259,3 +259,16 @@ chance ok: \"Ok\" { tags [fact]\n  y \"Y\" -> t p 1 { when ? } }",
         ]
     );
 }
+
+#[test]
+fn the_first_declaration_of_a_type_name_types_it() {
+    // A second `Paid` does not replace the first's parameters, and an
+    // event named like an enum stays the enum.
+    let out = check_body(
+        "event Paid(amount: Money<usd>)\nevent Paid(amount: Date)\nevent Method(x: Date)\n\
+test \"t\" {\n  given Paid(1.usd) on 2025-01-01\n  expect true == true\n}\n\
+default m when true => Method.Mail",
+    );
+    assert!(out.iter().all(|d| d.contains("L1001")), "{out:?}");
+    assert_eq!(out.len(), 2, "{out:?}");
+}

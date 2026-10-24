@@ -1027,7 +1027,6 @@ pub fn authority_errors(t: &Timeline, all: &[&hir::Package]) -> Vec<Diagnostic> 
             if names.contains(l.authority.as_str()) {
                 return None;
             }
-            let known: Vec<&str> = names.into_iter().collect();
             Some(Diagnostic::error(
                 DiagnosticCode::InvalidManifest,
                 crate::inline_tests::nowhere(pkg),
@@ -1036,7 +1035,7 @@ pub fn authority_errors(t: &Timeline, all: &[&hir::Package]) -> Vec<Diagnostic> 
                     l.id,
                     l.authority,
                     pkg.manifest.name,
-                    if known.is_empty() { "none".to_owned() } else { known.join(", ") }
+                    names.into_iter().collect::<Vec<_>>().join(", ")
                 ),
             ))
         })
@@ -1455,7 +1454,9 @@ mod tests {
             undeclared.deadline = format!("{PACK}::nope");
             undeclared.status = Status::Open;
             undeclared.closed_by = None;
-            m.counted.extend([uncounted, undeclared]);
+            let mut unjudged = uncounted.clone();
+            unjudged.status = Status::Unjudged;
+            m.counted.extend([uncounted, undeclared, unjudged]);
             let t = build(session, &m, &case);
             let deadlines: Vec<&serde_json::Value> = t["rows"]
                 .as_array()
@@ -1463,10 +1464,15 @@ mod tests {
                 .iter()
                 .filter(|r| r["kind"] == "deadline")
                 .collect();
-            assert_eq!(deadlines.len(), 3, "{t:#}");
+            assert_eq!(deadlines.len(), 4, "{t:#}");
             assert_eq!(
                 deadlines[2]["status"],
                 json!({"state": "met", "reason": "discharged by MovedToDismiss(complaint) on 2025-03-20: no counting rule"})
+            );
+            // An act the engine cannot judge says why itself.
+            assert_eq!(
+                deadlines[3]["status"],
+                json!({"state": "unknown", "reason": "timeliness unknown: Served due date not recorded; acted by MovedToDismiss(complaint) on 2025-03-20"})
             );
             let supersedes = t["edges"]
                 .as_array()
@@ -1690,6 +1696,14 @@ mod tests {
                 format!("answer-period: 1 {name} before Served(complaint)")
             );
         }
+        d.designated = Some(hir::Designated {
+            param: 0,
+            name: "due".to_owned(),
+        });
+        assert_eq!(
+            deadline_label(&d),
+            "answer-period: the date Served(complaint) designates, at least 1 year before it"
+        );
     }
 
     #[test]

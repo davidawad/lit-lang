@@ -259,11 +259,14 @@ mod tests {
                     value: Value::Hole(None),
                 }),
                 expr(ExprKind::Literal {
+                    value: Value::Edge("e-answer".into()),
+                }),
+                expr(ExprKind::Literal {
                     value: Value::Boolean(true),
                 }),
             ],
         });
-        insta::assert_snapshot!(event_text(&event), @r#"Filed(party, 2025-01-02, ?, {"expr":"literal","value":{"kind":"boolean","value":true}})"#);
+        insta::assert_snapshot!(event_text(&event), @r#"Filed(party, 2025-01-02, ?, e-answer, {"expr":"literal","value":{"kind":"boolean","value":true}})"#);
         let literal = variant("D::x");
         assert_eq!(event_parts(&literal), None);
         assert_eq!(event_text(&literal), "");

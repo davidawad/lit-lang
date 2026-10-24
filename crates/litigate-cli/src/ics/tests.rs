@@ -24,6 +24,8 @@ fn scheduled(deadline: &str, due: Option<&str>, status: Status) -> Scheduled {
         extended_under: None,
         request_made: None,
         status,
+        trigger_event: 0,
+        closed_by: None,
     }
 }
 

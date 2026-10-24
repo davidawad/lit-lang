@@ -13,6 +13,8 @@ use litigate_lower::{LoweredPackage, Lowerer, Options};
 use litigate_sema::hir;
 use litigate_syntax::FileKind;
 use litigate_verify::{Finding, PackageInput, Verification};
+use std::path::Path;
+use std::sync::OnceLock;
 
 /// One package's findings.
 #[derive(Debug, Clone)]
@@ -70,7 +72,7 @@ fn format(pkg: &Pkg) -> Vec<Diagnostic> {
     pkg.files
         .iter()
         .filter(|(p, _)| {
-            std::path::Path::new(p)
+            Path::new(p)
                 .extension()
                 .is_some_and(|e| e.eq_ignore_ascii_case("lit"))
         })
@@ -78,6 +80,23 @@ fn format(pkg: &Pkg) -> Vec<Diagnostic> {
             litigate_syntax::check_format(text, FileKind::Lit, &p.as_str().into())
         })
         .collect()
+}
+
+/// The source corpus cites bind and pins verify against:
+/// `$LITGRAPH_SOURCES` when set (an unreadable directory is an empty
+/// corpus, so every vendored cite fails closed), else the `sources/` this
+/// binary embedded when it was built. A binary built before a pin changed
+/// embeds the older text, so its check of the newer package is L1010
+/// until it is rebuilt or pointed at the vendored `sources/`.
+#[must_use]
+pub fn corpus() -> &'static SourceCorpus {
+    static OVERRIDE: OnceLock<SourceCorpus> = OnceLock::new();
+    match std::env::var_os("LITGRAPH_SOURCES") {
+        Some(dir) => {
+            OVERRIDE.get_or_init(|| SourceCorpus::load(Path::new(&dir)).unwrap_or_default())
+        }
+        None => SourceCorpus::embedded_ref(),
+    }
 }
 
 /// Verifies one package at the build dates `options`.
@@ -90,7 +109,7 @@ pub fn package(
     options: &Options,
 ) -> Verdict {
     let all = session.hir();
-    let corpus = SourceCorpus::embedded_ref();
+    let corpus = corpus();
     let mut own: Vec<Diagnostic> = pkg.check.diagnostics.clone();
     let locked = lock(session, pkg);
     own.extend(locked.iter().cloned());

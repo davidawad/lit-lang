@@ -126,7 +126,7 @@ pub struct Built {
 #[must_use]
 pub fn lower_all(c: &Checked, options: &Options) -> Built {
     let hir = c.session.hir();
-    let lowerer = Lowerer::new(&hir).with_corpus(litgraph::cite::SourceCorpus::embedded_ref());
+    let lowerer = Lowerer::new(&hir).with_corpus(crate::verdict::corpus());
     let mut built = Built {
         files: Vec::new(),
         litigatables: Vec::new(),

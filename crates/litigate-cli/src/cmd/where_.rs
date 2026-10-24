@@ -79,7 +79,7 @@ pub fn overrides(packages: &[&hir::Package], target: &str) -> Vec<Value> {
 /// (none when `pkg` does not lower or no entry carries that cite).
 pub fn cite_sections(all: &[&hir::Package], pkg: &hir::Package, text: &str) -> Option<Value> {
     let out = Lowerer::new(all)
-        .with_corpus(litgraph::cite::SourceCorpus::embedded_ref())
+        .with_corpus(crate::verdict::corpus())
         .package(pkg, &Options::default());
     out.iter()
         .flat_map(|out| std::iter::once(&out.source_map).chain(out.clock.as_ref().map(|(_, m)| m)))
@@ -92,7 +92,7 @@ pub fn cite_sections(all: &[&hir::Package], pkg: &hir::Package, text: &str) -> O
 /// JSON pointers `id` lowers to in `pkg`, with the L0 sections of its cite.
 fn lowered(all: &[&hir::Package], pkg: &hir::Package, id: &str) -> (Vec<String>, Value) {
     let Ok(out) = Lowerer::new(all)
-        .with_corpus(litgraph::cite::SourceCorpus::embedded_ref())
+        .with_corpus(crate::verdict::corpus())
         .package(pkg, &Options::default())
     else {
         return (Vec::new(), Value::Null);

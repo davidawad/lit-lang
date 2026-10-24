@@ -21,6 +21,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `cases/e2e-ttab-{ok,short,unknown}.case` (one notice mailed 2026-10-21
   designating 2026-11-30, 2026-11-05 and `?`), are golden-tested through
   `litigate check` and `explain-value`.
+- **Every matter checks clean, as a gate** (lg-flu.48).
+  `crates/litigate-cli/tests/matters_check.rs` checks `lit` and every
+  `.case` under `cases/` (the TTAB end-to-end matters among them) and the
+  timeline fixtures, and the `timeline` of each, requiring `ok: true` and no error;
+  `cases/e2e-ttab-short.case`, wrong by design, must fail with L4001 alone.
+  The PM's 5 L1010 on `Sup. Ct. R.` cites (`sources/scotus-rules.txt` "is
+  not the text source `scotus` pins") came from a `litigate` built before
+  lg-flu.41 re-vendored the 2026 Rules: a binary verifies pins against the
+  `sources/` it embedded at build time, and that one held the 2023 text.
+  Main's pin and text agree. `litigate check`, `build` and `where` now
+  honor `LITGRAPH_SOURCES` (as AGENTS.md documents), an unreadable one
+  failing every vendored cite closed, and the L1010 pin-mismatch note
+  names the stale binary and both remedies.
+
 - **The certiorari extension's timing follows Sup. Ct. R. 13.5, 30.2 and
   30.3, from the Rules effective March 16, 2026** (lg-flu.41).
   `sources/scotus-rules.txt` is re-vendored from the current

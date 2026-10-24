@@ -126,8 +126,8 @@ pub fn lint_filing(args: &Args) -> Outcome {
     let date = Date::parse_iso(&args.date)
         .map_err(|e| Failure::new(format!("--date {}: {e}", args.date)))?
         .to_iso();
-    let targets = ws::discover(std::slice::from_ref(&args.case))?;
-    let mut session = Session::load(&targets, &args.lib)?;
+    let mut session = ws::discover(std::slice::from_ref(&args.case))
+        .and_then(|targets| Session::load(&targets, &args.lib))?;
     let original = session
         .cases
         .first()

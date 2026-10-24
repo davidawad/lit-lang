@@ -19,6 +19,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `crates/litgraph-packs` build under the `dev` profile. A version's
   `known_at` is its recording date when no vendored source dates its
   promulgation (the frcp $505 fee versions, `known_at 2026-10-22`).
+- **Deadline calendars and a filing linter** (lg-litigate-epic-tuq.29,
+  DESIGN §10). `litigate calendar CASE` exports a matter's computed
+  deadlines as an RFC 5545 `.ics` file (`--out`): all-day events with
+  stable UIDs, the deadline's authority, the counting steps and optional
+  `--remind` alarms; open deadlines unless `--all`. A deadline whose due
+  date is unknown is listed under `unscheduled` with the reason, never
+  given a date, and a matter with errors has no calendar. `litigate
+  lint-filing CASE EVENT --date D --by PARTY` replays the matter with a
+  proposed filing added: L4001 when it is not a legal move on that date,
+  L4002 when it misses the obligation it discharges; otherwise the result
+  lists what it discharges and the deadlines it triggers, with due dates.
 
 - **The tree-sitter parser merges without conflicts** (lg-flu.37). The
   generated `editors/tree-sitter-litigate/src/{parser.c,grammar.json,node-types.json}`

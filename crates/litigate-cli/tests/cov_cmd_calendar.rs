@@ -131,6 +131,13 @@ fn an_unwritable_out_is_a_failure() {
 }
 
 #[test]
+fn a_missing_case_file_is_a_failure() {
+    let run = in_fixture(&["calendar", "cases/none.case"]);
+    assert_eq!(run.code, 1, "{}", run.stdout);
+    assert!(run.stderr.contains("cases/none.case"), "{}", run.stderr);
+}
+
+#[test]
 fn a_package_is_not_a_case() {
     let run = in_fixture(&["calendar", "lit/cov"]);
     assert_eq!(run.code, 1, "{}", run.stdout);

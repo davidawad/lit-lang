@@ -34,20 +34,23 @@ pub struct Args {
 /// The cite of the deadline version that counted `s` (which may be a
 /// claimant displacing its deadline), else of the rule declaring it.
 fn authority<'p>(all: &[&'p hir::Package], s: &Scheduled) -> Option<&'p str> {
-    let (pkg, v) = all.iter().find_map(|p| {
-        hirx::declarations(p).find_map(|d| match d {
-            hir::Declaration::Deadline(v)
-                if format!("{}@{}", v.meta.id, v.meta.effective.from) == s.version =>
-            {
-                Some((*p, v))
-            }
-            _ => None,
+    all.iter()
+        .find_map(|p| {
+            hirx::declarations(p).find_map(|d| match d {
+                hir::Declaration::Deadline(v)
+                    if format!("{}@{}", v.meta.id, v.meta.effective.from) == s.version =>
+                {
+                    Some((*p, v))
+                }
+                _ => None,
+            })
         })
-    })?;
-    v.meta
-        .cite
-        .as_deref()
-        .or_else(|| rule_of(pkg, &v.meta.id).and_then(|r| r.meta.cite.as_deref()))
+        .and_then(|(pkg, v)| {
+            v.meta
+                .cite
+                .as_deref()
+                .or_else(|| rule_of(pkg, &v.meta.id).and_then(|r| r.meta.cite.as_deref()))
+        })
 }
 
 /// `litigate calendar`.

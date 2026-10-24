@@ -787,6 +787,7 @@ fn a_matter_with_errors_reports_them_in_the_timeline() {
     );
     // Judged at a date after the event, it is no longer in the future
     // (L4001), but it still missed the answer period: a `late` row (L4002).
+    // Its two events declare no id, so each also carries an L9006 note.
     let later = litigate_in(
         &dir,
         &[
@@ -804,7 +805,12 @@ fn a_matter_with_errors_reports_them_in_the_timeline() {
         .filter(|d| d["severity"] != "note")
         .map(|d| &d["code"])
         .collect();
-    assert_eq!(codes, [&json!("L4002")], "{}", later.stdout);
+    assert_eq!(
+        codes,
+        [&json!("L9006"), &json!("L4002"), &json!("L9006")],
+        "{}",
+        later.stdout
+    );
     let late = later.json["result"]["rows"]
         .as_array()
         .unwrap()

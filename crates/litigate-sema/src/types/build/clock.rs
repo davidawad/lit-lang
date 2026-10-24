@@ -134,13 +134,7 @@ impl Cx<'_, '_> {
         let designated = first_ref(o.get("designated"))
             .and_then(|r| self.designated(name, trigger, r, (direction, period.map(|p| p.1))));
         let (trigger, chain) = self.trigger(name, trigger);
-        let forum = first_ref(o.get("forum")).map_or_else(
-            || self.manifest.map(|m| m.forum.clone()).unwrap_or_default(),
-            RefPath::display,
-        );
-        if counting.is_some() {
-            self.borrowing(name, counted_by, &forum);
-        }
+        let forum = self.forum(name, o.get("forum"), counted_by, counting.is_some());
         let obligation = self.obligation(name, opts, &o, rule);
         let (amount, unit) = period?;
         Some(Deadline {
@@ -162,6 +156,25 @@ impl Cx<'_, '_> {
             waive: obligation.waive,
             designated,
         })
+    }
+
+    /// Deadline `name`'s forum, its `forum F` option's or its package's;
+    /// a resolved counting rule must compute that forum's periods.
+    fn forum(
+        &mut self,
+        name: &Name,
+        field: Option<&&Field>,
+        counted_by: &RefPath,
+        counted: bool,
+    ) -> String {
+        let forum = first_ref(field).map_or_else(
+            || self.manifest.map(|m| m.forum.clone()).unwrap_or_default(),
+            RefPath::display,
+        );
+        if counted {
+            self.borrowing(name, counted_by, &forum);
+        }
+        forum
     }
 
     /// `designated p` of deadline `name`: `p` is a `Date` parameter of the

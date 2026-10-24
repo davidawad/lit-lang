@@ -229,7 +229,6 @@ impl Judged<'_, '_> {
         start: Option<Start>,
     ) -> Due {
         let (graph, events, at, known_at) = (self.graph, self.events, self.at, self.known_at);
-        let clock = self.clock;
         let qualified = graph.qualify(pack, &d.counting);
         // Use the shared temporal query so replay observes the same version,
         // including known_at filtering, as test, lower, check, and the LSP.
@@ -270,45 +269,28 @@ impl Judged<'_, '_> {
         // governs the event; the shared library's stands in only for a rule
         // no package declares.
         let from = start.as_ref().map(|s| s.from.clone());
-        let mut unknown = false;
-        let date = if let Some(Start {
+        let (date, unknown) = if let Some(Start {
             date: Err(why),
             from,
         }) = start
         {
-            Err(format!(
-                "`{}` runs from {from}, which is not counted: {why}",
-                d.meta.id
-            ))
-        } else if counting.is_none() && graph.declares(&qualified) {
-            Err(format!(
-                "no version of counting rule `{qualified}` governs {}",
-                events[at].date
-            ))
-        } else {
-            let event = &events[trigger];
-            match d.designation(event.date, event.action) {
-                // A displacing claimant counted for another deadline's
-                // instance: its trigger designates nothing for it.
-                Some(_) if !matches(&d.trigger, event.action) => Err(format!(
-                    "`{}` is not the trigger of `{}`, so it designates no due date for it",
-                    display(event.action),
+            (
+                Err(format!(
+                    "`{}` runs from {from}, which is not counted: {why}",
                     d.meta.id
                 )),
-                None => clock.due(&request),
-                // The notice's date, rolled under the counting rule like any
-                // last day (37 C.F.R. § 2.196): counted zero days from it.
-                Some(Ok(designated)) => clock.due(&DueRequest {
-                    trigger: designated,
-                    amount: 0,
-                    service: Vec::new(),
-                    ..request.clone()
-                }),
-                Some(Err(why)) => {
-                    unknown = matches!(why, Undesignated::Unknown(_));
-                    Err(why.message().to_owned())
-                }
-            }
+                false,
+            )
+        } else if counting.is_none() && graph.declares(&qualified) {
+            (
+                Err(format!(
+                    "no version of counting rule `{qualified}` governs {}",
+                    events[at].date
+                )),
+                false,
+            )
+        } else {
+            self.counted(d, &events[trigger], &request)
         };
         Due {
             deadline: d.meta.id.clone(),
@@ -318,6 +300,44 @@ impl Judged<'_, '_> {
             from,
             designated: d.designated.as_ref().map(|p| p.name.clone()),
             unknown,
+        }
+    }
+
+    /// `request` counted for `d`'s instance triggered by `event`, or the
+    /// date `event` designates; with whether that date is unknown (`?`).
+    fn counted(
+        &self,
+        d: &Deadline,
+        event: &MatterEvent<'_>,
+        request: &DueRequest,
+    ) -> (Result<String, String>, bool) {
+        match d.designation(event.date, event.action) {
+            // A displacing claimant counted for another deadline's
+            // instance: its trigger designates nothing for it.
+            Some(_) if !matches(&d.trigger, event.action) => (
+                Err(format!(
+                    "`{}` is not the trigger of `{}`, so it designates no due date for it",
+                    display(event.action),
+                    d.meta.id
+                )),
+                false,
+            ),
+            None => (self.clock.due(request), false),
+            // The notice's date, rolled under the counting rule like any
+            // last day (37 C.F.R. § 2.196): counted zero days from it.
+            Some(Ok(designated)) => (
+                self.clock.due(&DueRequest {
+                    trigger: designated,
+                    amount: 0,
+                    service: Vec::new(),
+                    ..request.clone()
+                }),
+                false,
+            ),
+            Some(Err(why)) => (
+                Err(why.message().to_owned()),
+                matches!(why, Undesignated::Unknown(_)),
+            ),
         }
     }
 }

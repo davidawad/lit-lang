@@ -272,7 +272,9 @@ fn a_designated_deadline_lowers_to_a_designated_window() {
     assert!(
         found.iter().all(|d| d.extendable == Some(false)
             && d.extension_authority.as_deref() == Some("Rule X")
-            && d.designated.as_ref().and_then(|x| x.interpretation.as_deref())
+            && d.designated
+                .as_ref()
+                .and_then(|x| x.interpretation.as_deref())
                 == Some("no start named")),
         "{found:#?}"
     );
@@ -300,14 +302,9 @@ fn moved() -> hir::Expr {
     )
 }
 
-#[test]
-fn extension_grants_lower_to_extension_bounds() {
+/// One `extend` grant of each shape, every bound and standard among them.
+fn grants() -> Vec<hir::Extension> {
     use hir::{Bound, CauseStandard as S, DateRef as R, Extension, ExtensionWindow as W};
-    use litgraph::model::{
-        CauseStandard, DateBound, DateRef, ExtensionBound, ExtensionWindow, Motion,
-    };
-    let mut p = example();
-    assert!(deadlines(&p).iter().all(|d| d.extensions.is_empty()));
     let due = |days| Bound::Offset {
         from: R::PrescribedDue,
         days,
@@ -316,7 +313,7 @@ fn extension_grants_lower_to_extension_bounds() {
         from: R::GrantOrderEntered,
         days,
     };
-    let grants = vec![
+    vec![
         Extension::Bounded {
             by: "Court".into(),
             until: Bound::Max(vec![due(30), Bound::Min(vec![due(0), order(14)])]),
@@ -356,17 +353,19 @@ fn extension_grants_lower_to_extension_bounds() {
         Extension::NonExtendable {
             authority: "FRCP 6(b)(2)".into(),
         },
-    ];
-    for d in decls(&mut p) {
-        if let Declaration::Deadline(x) = d {
-            x.extend.clone_from(&grants);
-        }
-    }
+    ]
+}
+
+/// [`grants`] as pack extension bounds.
+fn bounds() -> Vec<litgraph::model::ExtensionBound> {
+    use litgraph::model::{
+        CauseStandard, DateBound, DateRef, ExtensionBound, ExtensionWindow, Motion,
+    };
     let due = |days| DateBound::Offset {
         from: DateRef::PrescribedDue,
         days,
     };
-    let want = vec![
+    vec![
         ExtensionBound::Bounded {
             by: "Court".into(),
             until: DateBound::Max(vec![
@@ -415,7 +414,20 @@ fn extension_grants_lower_to_extension_bounds() {
         ExtensionBound::NonExtendable {
             authority: "FRCP 6(b)(2)".into(),
         },
-    ];
+    ]
+}
+
+#[test]
+fn extension_grants_lower_to_extension_bounds() {
+    let mut p = example();
+    assert!(deadlines(&p).iter().all(|d| d.extensions.is_empty()));
+    let grants = grants();
+    for d in decls(&mut p) {
+        if let Declaration::Deadline(x) = d {
+            x.extend.clone_from(&grants);
+        }
+    }
+    let want = bounds();
     let found = deadlines(&p);
     assert!(!found.is_empty());
     assert!(found.iter().all(|d| d.extensions == want), "{found:#?}");

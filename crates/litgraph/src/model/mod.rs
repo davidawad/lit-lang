@@ -30,6 +30,6 @@ pub(crate) use lowered::check_header;
 pub use lowered::{pointer_token, world_digest, Basis, BasisLabel, Hole, Lowered, Pin};
 pub use schema::{
     default_roles, CauseStandard, DateBound, DateRef, Deadline, Designated, Duration,
-    ExtensionBound, ExtensionWindow, Group, Motion, NodeKind, Pack, RawEdge, RawNode, Role,
-    Source, PACK_SCHEMA_VERSION,
+    ExtensionBound, ExtensionWindow, Group, Motion, NodeKind, Pack, RawEdge, RawNode, Role, Source,
+    PACK_SCHEMA_VERSION,
 };

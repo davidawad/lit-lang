@@ -35,9 +35,11 @@ fn a_window_is_counted_or_designated() {
     assert!(pack(5, &json!({"note": "n"}))
         .unwrap_err()
         .ends_with("`deadline`: needs `length` (or, a designated window, `designated`)"));
-    assert!(pack(5, &json!({"designated": designated(), "unit": "court"}))
-        .unwrap_err()
-        .ends_with("a designated window's least time is in calendar days"));
+    assert!(
+        pack(5, &json!({"designated": designated(), "unit": "court"}))
+            .unwrap_err()
+            .ends_with("a designated window's least time is in calendar days")
+    );
     assert!(pack(5, &json!({"designated": designated(), "unit": "calendar"})).is_ok());
     for bad in [json!(-1), json!(2.5)] {
         let mut d = designated();
@@ -90,7 +92,10 @@ fn extension_bounds_read_back_as_written() {
     let deadline = json!({"length": 21.0, "extensions": extensions});
     let found = pack(5, &deadline).unwrap();
     let d = found.edges[0].deadline.as_ref().unwrap();
-    assert!(matches!(d.extensions[3], ExtensionBound::NonExtendable { .. }));
+    assert!(matches!(
+        d.extensions[3],
+        ExtensionBound::NonExtendable { .. }
+    ));
     assert_eq!(serde_json::to_value(d).unwrap(), deadline);
     // A misspelled field of a bound is an error, as everywhere in a pack.
     let mut typo = deadline.clone();

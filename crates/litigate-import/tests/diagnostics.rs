@@ -468,5 +468,8 @@ fn a_patch_field_of_the_wrong_type_is_not_a_whole_field() {
             .starts_with("a `patch` replaces whole edge fields; this one is not: invalid type"),
         "{found:?}"
     );
-    assert_eq!(found[0].4.as_deref(), Some("/instances/p@q/patch_edges/typed"));
+    assert_eq!(
+        found[0].4.as_deref(),
+        Some("/instances/p@q/patch_edges/typed")
+    );
 }

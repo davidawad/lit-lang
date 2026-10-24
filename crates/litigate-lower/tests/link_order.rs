@@ -62,11 +62,10 @@ fn link_only_modules_lower_in_file_order() {
         .iter()
         .find(|(_, p)| p.manifest.links)
         .unwrap_or_else(|| panic!("no links package"));
-    let expected: LinkFile =
-        serde_json::from_str(&legacy(
-            &std::fs::read_to_string(built_path(origin)).unwrap_or_default(),
-        ))
-            .unwrap_or_else(|e| panic!("{e}"));
+    let expected: LinkFile = serde_json::from_str(&legacy(
+        &std::fs::read_to_string(built_path(origin)).unwrap_or_default(),
+    ))
+    .unwrap_or_else(|e| panic!("{e}"));
     let split = split(links);
     let lowered = Lowerer::new(&refs)
         .package(&split, &Options::default())

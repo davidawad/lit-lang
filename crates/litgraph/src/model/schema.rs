@@ -512,9 +512,17 @@ impl Pack {
         }
         pack.check_cite_syntax()?;
         pack.check_lowered()?;
-        for (e, id) in pack.edges.iter().zip(super::links::local_edge_ids(&pack.edges)) {
+        for (e, id) in pack
+            .edges
+            .iter()
+            .zip(super::links::local_edge_ids(&pack.edges))
+        {
             if let Some(d) = &e.deadline {
-                d.check(&format!("pack {}: edge {id}", pack.id), pack.schema_version, 5)?;
+                d.check(
+                    &format!("pack {}: edge {id}", pack.id),
+                    pack.schema_version,
+                    5,
+                )?;
             }
         }
         if let Some(e) = pack.edges.iter().find(|e| !e.replaces.is_empty()) {

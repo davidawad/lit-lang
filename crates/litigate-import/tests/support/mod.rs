@@ -64,7 +64,11 @@ pub fn legacy(text: &str) -> String {
     };
     for key in ["edges", "links"] {
         let edges = doc.get_mut(key).and_then(serde_json::Value::as_array_mut);
-        for edge in edges.into_iter().flatten().filter_map(|e| e.as_object_mut()) {
+        for edge in edges
+            .into_iter()
+            .flatten()
+            .filter_map(|e| e.as_object_mut())
+        {
             if edge
                 .get("deadline")
                 .is_some_and(|d| d.get("designated").is_some())

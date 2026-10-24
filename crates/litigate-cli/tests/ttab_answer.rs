@@ -461,13 +461,21 @@ fn the_generated_pack_carries_the_designated_answer_window() {
                 "minPeriod": 30, "sourceEvent": "InstitutionNoticed", "sourceEventArg": "due"
             })
         );
-        assert_eq!((&d["length"], &d["extendable"]), (&serde_json::Value::Null, &serde_json::Value::Null));
+        assert_eq!(
+            (&d["length"], &d["extendable"]),
+            (&serde_json::Value::Null, &serde_json::Value::Null)
+        );
         assert_eq!(d["extensionAuthority"], authority);
         let grants = d["extensions"].as_array().unwrap();
         assert_eq!(grants.len(), 2, "{d}");
         for g in grants {
             assert_eq!(
-                (&g["bound"], &g["standard"], &g["window"], &g["interpretation"]),
+                (
+                    &g["bound"],
+                    &g["standard"],
+                    &g["window"],
+                    &g["interpretation"]
+                ),
                 (
                     &serde_json::json!("discretionary"),
                     &serde_json::json!("GoodCause"),

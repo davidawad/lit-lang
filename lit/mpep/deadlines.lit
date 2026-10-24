@@ -1,7 +1,7 @@
 module mpep.deadlines
 
 import core.authority.{ CaseOrder }
-import core.calendar.{ dc-federal-holidays }
+import core.calendar.{ dc-federal-holidays, uspto-closures }
 
 /// The Patent Office's clock, 37 C.F.R. § 1.7(a): periods "in days" are
 /// calendar days, and an action due on a Saturday, Sunday, or "Federal
@@ -19,6 +19,10 @@ import core.calendar.{ dc-federal-holidays }
 /// effective December 18, 2013. UNVERIFIED: the effective date is from that
 /// Federal Register document, which is not vendored. Earlier text (65 FR
 /// 14871, 2000) is outside this package's lifetime and not modeled.
+///
+/// A weekday the Office is officially closed for the entire day is "a
+/// Federal holiday within the District of Columbia" (§ 1.9(h)): the days
+/// its notices designate close it too (core's `uspto-closures`).
 ///
 /// 37 C.F.R. § 42.1(a): "Sections 1.4, 1.7, ... of this chapter also apply
 /// to proceedings before the Board", so this is the Patent Trial and Appeal
@@ -43,6 +47,7 @@ counting uspto-1-7 effective [2013-12-18, ..) known_at 2026-01-01 cite "37 CFR 1
     ExpressForeign: unrecognized
   } cite "37 CFR 1.7(a)"
   holidays dc-federal-holidays
+  declared_holidays uspto-closures cite "37 CFR 1.9(h)"
   forums [uspto, ptab]
   end_of_month clamp
 }
@@ -108,6 +113,12 @@ test "missing-parts-reply: 2 months from Thursday, 2025-03-06" cite "37 CFR 1.7(
 {
   given MissingPartsNoticeMailed() on 2025-03-06
   expect deadline(missing-parts-reply) == 2025-05-06
+}
+
+test "missing-parts-reply: the last day, 2025-01-06, and the next are weather closures; due Wednesday" cite "37 CFR 1.9(h)"
+{
+  given MissingPartsNoticeMailed() on 2024-11-06
+  expect deadline(missing-parts-reply) == 2025-01-08
 }
 
 test "missing-parts-reply: the last day, 2025-05-26, is a holiday; due Tuesday" cite "37 CFR 1.7(a)"
@@ -309,10 +320,10 @@ test "issue-fee: 3 months from Tuesday, 2025-03-04" cite "37 CFR 1.7(a)"
   expect deadline(issue-fee) == 2025-06-04
 }
 
-test "issue-fee: the last day, 2025-12-25, is a holiday; due Friday" cite "37 CFR 1.7(a)"
+test "issue-fee: the last day, 2025-12-25, is a holiday and the 26th a closure; due Monday" cite "37 CFR 1.7(a)"
 {
   given NoticeOfAllowanceMailed() on 2025-09-25
-  expect deadline(issue-fee) == 2025-12-26
+  expect deadline(issue-fee) == 2025-12-29
 }
 
 /// 35 U.S.C. § 315(b): no inter partes review may be instituted on a petition

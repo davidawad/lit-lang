@@ -189,10 +189,10 @@ test "institution after waiver: three months from the election" cite "35 U.S.C. 
   expect deadline(institution-period-on-waiver) == 2025-08-01
 }
 
-test "institution after waiver: a last day on Christmas rolls to Friday" cite "35 U.S.C. § 314(b)"
+test "institution after waiver: a last day on Christmas rolls past the December 26, 2025 closure to Monday" cite "35 U.S.C. § 314(b)"
 {
   given PreliminaryResponseWaived() on 2025-09-25
-  expect deadline(institution-period-on-waiver) == 2025-12-26
+  expect deadline(institution-period-on-waiver) == 2025-12-29
 }
 
 /// No rule fixes when the scheduling order issues: the 30 days are the
@@ -425,10 +425,16 @@ test "appeal: 63 days from the final written decision" cite "37 C.F.R. § 90.3(a
   expect deadline(appeal-period) == 2025-05-05
 }
 
-test "appeal: a last day on Christmas rolls to Friday" cite "37 C.F.R. § 90.3(b)(2)"
+test "appeal: a last day on Christmas rolls past the December 26, 2025 closure to Monday" cite "37 C.F.R. § 90.3(b)(2)"
 {
   given DecisionEntered(FinalWritten) on 2025-10-23
-  expect deadline(appeal-period) == 2025-12-26
+  expect deadline(appeal-period) == 2025-12-29
+}
+
+test "appeal: a last day on the December 24, 2019 closure rolls past Christmas" cite "37 C.F.R. § 90.3(b)(2)"
+{
+  given DecisionEntered(FinalWritten) on 2019-10-22
+  expect deadline(appeal-period) == 2019-12-26
 }
 
 test "appeal: a rehearing decision resets the 63 days" cite "37 C.F.R. § 90.3(b)(1)"

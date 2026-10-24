@@ -1075,8 +1075,14 @@ Counting rule `c` defines (FRCP 6(a) vocabulary):
    declaration closes a forum is a legal question its rule answers, so
    both need the `cite` (L3009 without), and a declared calendar lists
    only `once(date)` days with no observance (L3009 otherwise). `lit/core`
-   declares neither: no state calendar or closure order is vendored, so
-   none is asserted.
+   declares no state calendar and no FRCP 6(a)(6)(B) or FRAP 26(a)(6)(B)
+   day: whether an executive order closing executive departments
+   "declares a holiday" for a court is a question no vendored source
+   answers, so none is asserted (the earlier date). Its one declared
+   calendar is `uspto-closures`, the days the Patent and Trademark Office
+   designated "a Federal holiday within the District of Columbia" (37
+   C.F.R. § 1.9(h); TBMP § 112), vendored from the Office's own notices
+   and read by `uspto-1-7` and `ttab-2-196`.
 9. `forums [f, ...]` names the forums whose periods the rule computes
    (default: its package's forum); a forum's own rules decide it (FRAP 26
    counts the courts of appeals', `frap` and `cafc`; 37 C.F.R. § 42.1(a)

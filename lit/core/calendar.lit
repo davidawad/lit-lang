@@ -118,3 +118,61 @@ calendar dc-federal-holidays effective [2013-12-18, ..) known_at 2026-01-01 cite
   thanksgiving-day: nth(4, thursday, 11) effective [1941-12-26, ..)
   christmas-day: fixed(12, 25) effective [1894-06-28, ..) observed nearest_weekday
 }
+
+/// The days the Patent and Trademark Office was officially closed for the
+/// entire day and designated "a Federal holiday within the District of
+/// Columbia": the declared-closure calendar (SPEC §5.3 step 8) of 37
+/// C.F.R. §§ 1.7(a) and 2.196. § 1.9(h) defines that holiday, "as used in
+/// this chapter" (Parts 1 and 2 alike), as "any day, except Saturdays and
+/// Sundays, when the Patent and Trademark Office is officially closed for
+/// business for the entire day", and TBMP § 112 says the same of a closure
+/// "by Executive Order of the President or by the Office of Personnel
+/// Management". Each day is one the Office's own notice designates (the
+/// executive orders closing executive departments on 2018-12-05,
+/// 2018-12-24, 2019-12-24, 2020-12-24, 2024-12-24, 2025-01-09, 2025-12-24
+/// and 2025-12-26, weather closures, and the 2011 and 2015 power outages),
+/// vendored in `sources/uspto-closures.txt` from the Office's operating
+/// status page, through the closures of December 26, 2025: the calendar is
+/// recorded as of January 1, 2026, the corpus date of the counting rules
+/// that read it, so the January 26-27, 2026 weather closures the page also
+/// lists are not declared yet. A closure the calendar does not list is not
+/// declared, so a last day on it is the earlier date, never a later one.
+calendar uspto-closures known_at 2026-01-01 cite "37 CFR 1.9(h)"
+{
+  closed-2009-12-21: once(2009-12-21) effective [2009-12-21, ..)
+  closed-2010-02-08: once(2010-02-08) effective [2010-02-08, ..)
+  closed-2010-02-09: once(2010-02-09) effective [2010-02-09, ..)
+  closed-2010-02-10: once(2010-02-10) effective [2010-02-10, ..)
+  closed-2010-02-11: once(2010-02-11) effective [2010-02-11, ..)
+  closed-2011-03-02: once(2011-03-02) effective [2011-03-02, ..)
+  closed-2012-10-29: once(2012-10-29) effective [2012-10-29, ..)
+  closed-2012-10-30: once(2012-10-30) effective [2012-10-30, ..)
+  closed-2013-03-06: once(2013-03-06) effective [2013-03-06, ..)
+  closed-2013-12-10: once(2013-12-10) effective [2013-12-10, ..)
+  closed-2014-01-21: once(2014-01-21) effective [2014-01-21, ..)
+  closed-2014-02-13: once(2014-02-13) effective [2014-02-13, ..)
+  closed-2014-03-03: once(2014-03-03) effective [2014-03-03, ..)
+  closed-2014-03-17: once(2014-03-17) effective [2014-03-17, ..)
+  closed-2014-12-26: once(2014-12-26) effective [2014-12-26, ..)
+  closed-2015-02-17: once(2015-02-17) effective [2015-02-17, ..)
+  closed-2015-03-05: once(2015-03-05) effective [2015-03-05, ..)
+  closed-2015-12-22: once(2015-12-22) effective [2015-12-22, ..)
+  closed-2015-12-23: once(2015-12-23) effective [2015-12-23, ..)
+  closed-2015-12-24: once(2015-12-24) effective [2015-12-24, ..)
+  closed-2016-01-25: once(2016-01-25) effective [2016-01-25, ..)
+  closed-2016-01-26: once(2016-01-26) effective [2016-01-26, ..)
+  closed-2018-12-05: once(2018-12-05) effective [2018-12-05, ..)
+  closed-2018-12-24: once(2018-12-24) effective [2018-12-24, ..)
+  closed-2019-01-14: once(2019-01-14) effective [2019-01-14, ..)
+  closed-2019-12-24: once(2019-12-24) effective [2019-12-24, ..)
+  closed-2020-12-24: once(2020-12-24) effective [2020-12-24, ..)
+  closed-2022-01-03: once(2022-01-03) effective [2022-01-03, ..)
+  closed-2022-01-07: once(2022-01-07) effective [2022-01-07, ..)
+  closed-2024-01-16: once(2024-01-16) effective [2024-01-16, ..)
+  closed-2024-12-24: once(2024-12-24) effective [2024-12-24, ..)
+  closed-2025-01-06: once(2025-01-06) effective [2025-01-06, ..)
+  closed-2025-01-07: once(2025-01-07) effective [2025-01-07, ..)
+  closed-2025-01-09: once(2025-01-09) effective [2025-01-09, ..)
+  closed-2025-12-24: once(2025-12-24) effective [2025-12-24, ..)
+  closed-2025-12-26: once(2025-12-26) effective [2025-12-26, ..)
+}

@@ -320,6 +320,26 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   furniture dropped.
 - sha256 (this file): `b49c8c942e95cbee386893d3899e4ac93b6b6bce1fea8eeff05e2ad44fa1800b`
 
+### `uspto-closures.txt` — the days the USPTO designated a "Federal holiday within the District of Columbia" (2009-2026)
+
+- `## USPTO operating status`: every entry of the Office's "Major events
+  affecting customers" page
+  (`www.uspto.gov/learning-and-resources/operating-status`, fetched
+  2026-10-24; sha256 of the HTML
+  `c539783875b0937908137a59faae756d4c7b743350af4edb8aa6ec3c943f7f23`)
+  that designates a day the Office was closed a federal holiday (under 35
+  U.S.C. § 21 and 37 C.F.R. §§ 1.7, 1.9 and 2.196): executive-order and
+  weather closures and the 2011 and 2015 power outages, each with its
+  heading when it has one. `## USPTO closed December 24, 2020`: the
+  Office's notice of that closure, which the page omits
+  (`www.uspto.gov/subscription-center/2020/uspto-closed-thursday-dec-24-2020-0`,
+  sha256 of the HTML
+  `cb5ec84ea98d1c3d61a6ce0a83fbd85a8c2f79b3ebbbc63ecbc1d5a6e1fb9363`).
+  Tags stripped, entities decoded, runs of spaces collapsed; other entries
+  (postal interruptions, "extraordinary situation" relief, window hours)
+  dropped. `lit/core`'s `uspto-closures` calendar lists these days.
+- sha256 (this file): `23ebcf53195a7a766c7a69fd417e2e936612435709b3f1f99a23a14e6224ae86`
+
 ### `fr-usitc-time-history.txt` — Federal Register excerpts dating 19 C.F.R. §§ 201.14(a), 201.16(d)-(f) and 210.6 (USITC computation of time and service), 1976-2018
 
 - Excerpts, one `## <vol> FR <page>` section per printed page, of every

@@ -1,5 +1,5 @@
 ================================================================================
-Reserved guard operations in a patch
+Guard operations in a patch
 ================================================================================
 
 module links
@@ -7,7 +7,7 @@ instance ptab@cafc {
   pack ptab
   patch time-barred {
     note "narrowed on appeal"
-    when and has_event(ComplaintServed()) effective [2026-11-01, ..) cite "Fed. Cir. R. 1"
+    when and has_event(ComplaintServed()) by FederalRule effective [2026-11-01, ..) cite "Fed. Cir. R. 1"
     when or date_of(Petition()) < 2026-01-01
     supersedes when true known_at 2026-10-01 cite ?("Order, Dkt. 12")
   }
@@ -40,6 +40,8 @@ instance ptab@cafc {
                   (ref
                     (identifier))
                   (arguments))))
+            (authority_clause
+              (identifier))
             (effective_clause
               (interval
                 (date)

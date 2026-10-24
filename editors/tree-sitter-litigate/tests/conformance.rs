@@ -193,27 +193,23 @@ fn reserved_refinements_parse_here_and_are_l0009_in_the_compiler() {
     }
 }
 
-/// The reserved guard operations of a patch (SPEC §3.6): the grammar gives
-/// each a `guard_op` node so editors highlight it, and the compiler rejects
-/// each with L0010 only, so the slot never shadows another error.
+/// The guard operations of a patch (SPEC §3.6): the grammar gives each a
+/// `guard_op` node, and the compiler's parser accepts each (sema checks
+/// the authority it needs).
 #[test]
-fn reserved_guard_operations_parse_here_and_are_l0010_in_the_compiler() {
+fn guard_operations_parse_here_and_in_the_compiler() {
     for op in [
-        "when and has_event(Served())",
+        "when and has_event(Served()) by CaseOrder",
         "when or date_of(Served()) < 2026-01-01 effective [2026-11-01, ..)",
         "supersedes when true known_at 2026-10-01 cite \"Fed. Cir. R. 1\"",
-        "supersedes when false cite ?(\"Order, Dkt. 12\")",
+        "supersedes when false by FederalRule cite ?(\"Order, Dkt. 12\")",
     ] {
         let source = format!("module links\ninstance a@b {{\n  patch go {{\n    {op}\n  }}\n}}\n");
         let tree = parse(&source);
         assert!(syntax_errors(&tree).is_empty(), "{source}");
         assert!(find(tree.root_node(), "guard_op").is_some(), "{source}");
         let compiled = litigate_syntax::parse_lit(&source);
-        let codes: Vec<&str> = compiled.errors().iter().map(|e| e.code.as_str()).collect();
-        assert_eq!(codes, ["L0010"], "{source}");
-        assert!(compiled.errors()[0]
-            .message
-            .starts_with(litigate_syntax::RESERVED_GUARD_OP));
+        assert!(compiled.is_ok(), "{source}: {:?}", compiled.errors());
     }
 }
 

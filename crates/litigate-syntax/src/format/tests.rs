@@ -88,3 +88,19 @@ fn basis_fields_format_like_other_fields() {
         "module a\n\nchance c: \"C\" { basis expert(\"Jane Roe\"), x \"X\" -> y p 1/2 { basis sourced(\"R 1\"), note \"n\" } }\n"
     );
 }
+
+#[test]
+fn guard_operations_keep_their_clauses_on_one_line() {
+    let out = fmt(
+        "module order\ninstance base@order {\n  pack base\n  patch timely {\n    \
+         supersedes when has_event(Struck())\n      by CaseOrder effective [2010-01-15, ..)\n      \
+         cite \"Order, Dkt. 12\"\n  }\n}\n",
+    );
+    assert_eq!(
+        out,
+        "module order\n\ninstance base@order {\n  pack base\n  patch timely {\n    supersedes \
+         when has_event(Struck()) by CaseOrder effective [2010-01-15, ..) cite \"Order, Dkt. \
+         12\"\n  }\n}\n"
+    );
+    assert_eq!(fmt(&out), out);
+}

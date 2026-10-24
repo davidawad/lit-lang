@@ -300,17 +300,18 @@ module.exports = {
 
   patch_fields: $ => braced(choice($.edge_field, $.guard_op)),
 
-  // SPEC §3.6: typed operations on a patched edge's guard, with their
-  // authority, are reserved. They parse here so editors highlight them;
-  // the compiler rejects them (L0010).
+  // SPEC §3.6: a typed operation on a patched edge's guard (narrow,
+  // widen, replace) with its authority: `by Level`, `effective`, `cite`.
   guard_op: $ => seq(
     choice(
       seq('when', field('operator', choice('and', 'or'))),
       seq(field('operator', 'supersedes'), 'when'),
     ),
     field('predicate', $._expression),
-    repeat(choice($._version_clause, $.cite)),
+    repeat(choice($.authority_clause, $._version_clause, $.cite)),
   ),
+
+  authority_clause: $ => seq('by', field('level', $.identifier)),
 
   // SPEC §3.7: filing requirements (a paper kind's length limits,
   // certificates, exclusions and ECF event codes) are reserved. They parse

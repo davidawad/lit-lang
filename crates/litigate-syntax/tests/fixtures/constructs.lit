@@ -97,7 +97,9 @@ state pending: "Pending" subject_to standing-order delegable_to [LocalRule] {
     cost ?
     duration { min 1.days, mode 5.days, max 30.days }
   }
-  stay "Stay" -> done by Court p 1/4 { deadline 14.court_days { extendable true, note "x" } }
+  stay "Stay" -> done by Court p 1/4 {
+    deadline 14.court_days { extendable true, extension_authority ?("y"), note "x" }
+  }
 }
 
 terminal done: "Done" outcome [judgment] { payoff -1_000.50.usd, payoff_by_flag { win: 10.usd } }

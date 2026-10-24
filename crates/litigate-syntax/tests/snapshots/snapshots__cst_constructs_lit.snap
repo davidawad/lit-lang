@@ -2,7 +2,7 @@
 source: crates/litigate-syntax/tests/snapshots.rs
 expression: parsed.debug_tree()
 ---
-SourceFile@0..3419
+SourceFile@0..3453
   Comment@0..74 "// Constructs from SP ..."
   Whitespace@74..75 "\n"
   ModuleDecl@75..107
@@ -1109,7 +1109,7 @@ SourceFile@0..3419
         Literal@2936..2937
           Number@2936..2937 "1"
   Whitespace@2937..2939 "\n\n"
-  StateDecl@2939..3223
+  StateDecl@2939..3257
     KwState@2939..2944 "state"
     Whitespace@2944..2945 " "
     Ident@2945..2952 "pending"
@@ -1132,7 +1132,7 @@ SourceFile@0..3419
           Ident@3004..3013 "LocalRule"
         RBracket@3013..3014 "]"
     Whitespace@3014..3015 " "
-    EdgeBlock@3015..3223
+    EdgeBlock@3015..3257
       LBrace@3015..3016 "{"
       Whitespace@3016..3019 "\n  "
       EdgeDecl@3019..3127
@@ -1205,7 +1205,7 @@ SourceFile@0..3419
           Whitespace@3123..3126 "\n  "
           RBrace@3126..3127 "}"
       Whitespace@3127..3130 "\n  "
-      EdgeDecl@3130..3221
+      EdgeDecl@3130..3255
         Ident@3130..3134 "stay"
         Whitespace@3134..3135 " "
         String@3135..3141 "\"Stay\""
@@ -1229,150 +1229,161 @@ SourceFile@0..3419
             Slash@3162..3163 "/"
             Number@3163..3164 "4"
         Whitespace@3164..3165 " "
-        FieldList@3165..3221
+        FieldList@3165..3255
           LBrace@3165..3166 "{"
-          Whitespace@3166..3167 " "
-          Field@3167..3219
-            KwDeadline@3167..3175 "deadline"
-            Whitespace@3175..3176 " "
-            Literal@3176..3189
-              Duration@3176..3189 "14.court_days"
-            Whitespace@3189..3190 " "
-            FieldList@3190..3219
-              LBrace@3190..3191 "{"
-              Whitespace@3191..3192 " "
-              Field@3192..3207
-                KwExtendable@3192..3202 "extendable"
-                Whitespace@3202..3203 " "
-                Literal@3203..3207
-                  KwTrue@3203..3207 "true"
-              Comma@3207..3208 ","
-              Whitespace@3208..3209 " "
-              Field@3209..3217
-                KwNote@3209..3213 "note"
-                Whitespace@3213..3214 " "
-                Literal@3214..3217
-                  String@3214..3217 "\"x\""
-              Whitespace@3217..3218 " "
-              RBrace@3218..3219 "}"
-          Whitespace@3219..3220 " "
-          RBrace@3220..3221 "}"
-      Whitespace@3221..3222 "\n"
-      RBrace@3222..3223 "}"
-  Whitespace@3223..3225 "\n\n"
-  TerminalDecl@3225..3322
-    KwTerminal@3225..3233 "terminal"
-    Whitespace@3233..3234 " "
-    Ident@3234..3238 "done"
-    Colon@3238..3239 ":"
-    Whitespace@3239..3240 " "
-    String@3240..3246 "\"Done\""
-    Whitespace@3246..3247 " "
-    Field@3247..3265
-      KwOutcome@3247..3254 "outcome"
-      Whitespace@3254..3255 " "
-      IdList@3255..3265
-        LBracket@3255..3256 "["
-        Ref@3256..3264
-          Ident@3256..3264 "judgment"
-        RBracket@3264..3265 "]"
-    Whitespace@3265..3266 " "
-    EdgeBlock@3266..3322
-      LBrace@3266..3267 "{"
-      Whitespace@3267..3268 " "
-      Field@3268..3288
-        KwPayoff@3268..3274 "payoff"
-        Whitespace@3274..3275 " "
-        UnaryExpr@3275..3288
-          Minus@3275..3276 "-"
-          Literal@3276..3288
-            Money@3276..3288 "1_000.50.usd"
-      Comma@3288..3289 ","
-      Whitespace@3289..3290 " "
-      Field@3290..3320
-        KwPayoffByFlag@3290..3304 "payoff_by_flag"
-        Whitespace@3304..3305 " "
-        RecordExpr@3305..3320
-          LBrace@3305..3306 "{"
-          Whitespace@3306..3307 " "
-          RecordField@3307..3318
-            Ident@3307..3310 "win"
-            Colon@3310..3311 ":"
-            Whitespace@3311..3312 " "
-            Literal@3312..3318
-              Money@3312..3318 "10.usd"
-          Whitespace@3318..3319 " "
-          RBrace@3319..3320 "}"
-      Whitespace@3320..3321 " "
-      RBrace@3321..3322 "}"
-  Whitespace@3322..3324 "\n\n"
-  TestDecl@3324..3418
-    KwTest@3324..3328 "test"
-    Whitespace@3328..3329 " "
-    String@3329..3338 "\"weights\""
-    Whitespace@3338..3339 " "
-    LBrace@3339..3340 "{"
-    Whitespace@3340..3341 " "
-    ExpectStmt@3341..3416
-      KwExpect@3341..3347 "expect"
-      Whitespace@3347..3348 " "
-      MatchExpr@3348..3416
-        KwMatch@3348..3353 "match"
-        Whitespace@3353..3354 " "
-        CallExpr@3354..3402
-          Ref@3354..3358
-            Ident@3354..3358 "prob"
-          ArgList@3358..3402
-            LParen@3358..3359 "("
-            RecordExpr@3359..3392
-              LBrace@3359..3360 "{"
-              Whitespace@3360..3361 " "
-              RecordField@3361..3375
-                Ident@3361..3368 "granted"
-                Colon@3368..3369 ":"
-                Whitespace@3369..3370 " "
-                BinaryExpr@3370..3375
-                  Literal@3370..3371
-                    Number@3370..3371 "1"
-                  Whitespace@3371..3372 " "
-                  Slash@3372..3373 "/"
-                  Whitespace@3373..3374 " "
-                  Literal@3374..3375
-                    Number@3374..3375 "2"
-              Comma@3375..3376 ","
-              Whitespace@3376..3377 " "
-              RecordField@3377..3390
-                Ident@3377..3383 "denied"
-                Colon@3383..3384 ":"
-                Whitespace@3384..3385 " "
-                BinaryExpr@3385..3390
-                  Literal@3385..3386
-                    Number@3385..3386 "1"
-                  Whitespace@3386..3387 " "
-                  Slash@3387..3388 "/"
-                  Whitespace@3388..3389 " "
-                  Literal@3389..3390
-                    Number@3389..3390 "2"
-              Whitespace@3390..3391 " "
-              RBrace@3391..3392 "}"
-            Comma@3392..3393 ","
-            Whitespace@3393..3394 " "
-            RefExpr@3394..3401
-              Ref@3394..3401
-                Ident@3394..3401 "granted"
-            RParen@3401..3402 ")"
-        Whitespace@3402..3403 " "
-        LBrace@3403..3404 "{"
-        Whitespace@3404..3405 " "
-        MatchArm@3405..3414
-          Underscore@3405..3406 "_"
-          Whitespace@3406..3407 " "
-          FatArrow@3407..3409 "=>"
-          Whitespace@3409..3410 " "
-          Literal@3410..3414
-            KwTrue@3410..3414 "true"
-        Whitespace@3414..3415 " "
-        RBrace@3415..3416 "}"
-    Whitespace@3416..3417 " "
-    RBrace@3417..3418 "}"
-  Whitespace@3418..3419 "\n"
+          Whitespace@3166..3171 "\n    "
+          Field@3171..3251
+            KwDeadline@3171..3179 "deadline"
+            Whitespace@3179..3180 " "
+            Literal@3180..3193
+              Duration@3180..3193 "14.court_days"
+            Whitespace@3193..3194 " "
+            FieldList@3194..3251
+              LBrace@3194..3195 "{"
+              Whitespace@3195..3196 " "
+              Field@3196..3211
+                KwExtendable@3196..3206 "extendable"
+                Whitespace@3206..3207 " "
+                Literal@3207..3211
+                  KwTrue@3207..3211 "true"
+              Comma@3211..3212 ","
+              Whitespace@3212..3213 " "
+              Field@3213..3239
+                KwExtensionAuthority@3213..3232 "extension_authority"
+                Whitespace@3232..3233 " "
+                HoleExpr@3233..3239
+                  Question@3233..3234 "?"
+                  LParen@3234..3235 "("
+                  Literal@3235..3238
+                    String@3235..3238 "\"y\""
+                  RParen@3238..3239 ")"
+              Comma@3239..3240 ","
+              Whitespace@3240..3241 " "
+              Field@3241..3249
+                KwNote@3241..3245 "note"
+                Whitespace@3245..3246 " "
+                Literal@3246..3249
+                  String@3246..3249 "\"x\""
+              Whitespace@3249..3250 " "
+              RBrace@3250..3251 "}"
+          Whitespace@3251..3254 "\n  "
+          RBrace@3254..3255 "}"
+      Whitespace@3255..3256 "\n"
+      RBrace@3256..3257 "}"
+  Whitespace@3257..3259 "\n\n"
+  TerminalDecl@3259..3356
+    KwTerminal@3259..3267 "terminal"
+    Whitespace@3267..3268 " "
+    Ident@3268..3272 "done"
+    Colon@3272..3273 ":"
+    Whitespace@3273..3274 " "
+    String@3274..3280 "\"Done\""
+    Whitespace@3280..3281 " "
+    Field@3281..3299
+      KwOutcome@3281..3288 "outcome"
+      Whitespace@3288..3289 " "
+      IdList@3289..3299
+        LBracket@3289..3290 "["
+        Ref@3290..3298
+          Ident@3290..3298 "judgment"
+        RBracket@3298..3299 "]"
+    Whitespace@3299..3300 " "
+    EdgeBlock@3300..3356
+      LBrace@3300..3301 "{"
+      Whitespace@3301..3302 " "
+      Field@3302..3322
+        KwPayoff@3302..3308 "payoff"
+        Whitespace@3308..3309 " "
+        UnaryExpr@3309..3322
+          Minus@3309..3310 "-"
+          Literal@3310..3322
+            Money@3310..3322 "1_000.50.usd"
+      Comma@3322..3323 ","
+      Whitespace@3323..3324 " "
+      Field@3324..3354
+        KwPayoffByFlag@3324..3338 "payoff_by_flag"
+        Whitespace@3338..3339 " "
+        RecordExpr@3339..3354
+          LBrace@3339..3340 "{"
+          Whitespace@3340..3341 " "
+          RecordField@3341..3352
+            Ident@3341..3344 "win"
+            Colon@3344..3345 ":"
+            Whitespace@3345..3346 " "
+            Literal@3346..3352
+              Money@3346..3352 "10.usd"
+          Whitespace@3352..3353 " "
+          RBrace@3353..3354 "}"
+      Whitespace@3354..3355 " "
+      RBrace@3355..3356 "}"
+  Whitespace@3356..3358 "\n\n"
+  TestDecl@3358..3452
+    KwTest@3358..3362 "test"
+    Whitespace@3362..3363 " "
+    String@3363..3372 "\"weights\""
+    Whitespace@3372..3373 " "
+    LBrace@3373..3374 "{"
+    Whitespace@3374..3375 " "
+    ExpectStmt@3375..3450
+      KwExpect@3375..3381 "expect"
+      Whitespace@3381..3382 " "
+      MatchExpr@3382..3450
+        KwMatch@3382..3387 "match"
+        Whitespace@3387..3388 " "
+        CallExpr@3388..3436
+          Ref@3388..3392
+            Ident@3388..3392 "prob"
+          ArgList@3392..3436
+            LParen@3392..3393 "("
+            RecordExpr@3393..3426
+              LBrace@3393..3394 "{"
+              Whitespace@3394..3395 " "
+              RecordField@3395..3409
+                Ident@3395..3402 "granted"
+                Colon@3402..3403 ":"
+                Whitespace@3403..3404 " "
+                BinaryExpr@3404..3409
+                  Literal@3404..3405
+                    Number@3404..3405 "1"
+                  Whitespace@3405..3406 " "
+                  Slash@3406..3407 "/"
+                  Whitespace@3407..3408 " "
+                  Literal@3408..3409
+                    Number@3408..3409 "2"
+              Comma@3409..3410 ","
+              Whitespace@3410..3411 " "
+              RecordField@3411..3424
+                Ident@3411..3417 "denied"
+                Colon@3417..3418 ":"
+                Whitespace@3418..3419 " "
+                BinaryExpr@3419..3424
+                  Literal@3419..3420
+                    Number@3419..3420 "1"
+                  Whitespace@3420..3421 " "
+                  Slash@3421..3422 "/"
+                  Whitespace@3422..3423 " "
+                  Literal@3423..3424
+                    Number@3423..3424 "2"
+              Whitespace@3424..3425 " "
+              RBrace@3425..3426 "}"
+            Comma@3426..3427 ","
+            Whitespace@3427..3428 " "
+            RefExpr@3428..3435
+              Ref@3428..3435
+                Ident@3428..3435 "granted"
+            RParen@3435..3436 ")"
+        Whitespace@3436..3437 " "
+        LBrace@3437..3438 "{"
+        Whitespace@3438..3439 " "
+        MatchArm@3439..3448
+          Underscore@3439..3440 "_"
+          Whitespace@3440..3441 " "
+          FatArrow@3441..3443 "=>"
+          Whitespace@3443..3444 " "
+          Literal@3444..3448
+            KwTrue@3444..3448 "true"
+        Whitespace@3448..3449 " "
+        RBrace@3449..3450 "}"
+    Whitespace@3450..3451 " "
+    RBrace@3451..3452 "}"
+  Whitespace@3452..3453 "\n"

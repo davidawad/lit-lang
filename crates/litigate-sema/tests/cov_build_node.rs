@@ -154,7 +154,10 @@ terminal done: \"Done\" outcome [won]",
     };
     let e = &n.edges[0];
     let d = e.deadline.as_ref().unwrap();
-    assert_eq!((d.extendable, d.extension_authority.as_deref()), (None, None));
+    assert_eq!(
+        (d.extendable, d.extension_authority.as_deref()),
+        (None, None)
+    );
     assert_eq!(
         e.holes.get("within.extension_authority"),
         Some(&Some("unverified".to_owned()))

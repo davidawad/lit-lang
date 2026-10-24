@@ -315,7 +315,7 @@ fn edges_expose_clauses_and_fields() {
     );
     let deadline = &stay.fields()[0];
     assert_eq!(deadline.keyword_kind(), Some(SyntaxKind::KwDeadline));
-    assert_eq!(deadline.options().len(), 2);
+    assert_eq!(deadline.options().len(), 3);
 
     let bare = &lit("module m\nstate s: \"S\" { go \"Go\" -> t }\n").items()[0];
     let edge = &NodeDecl::cast(bare.syntax().clone()).expect("node").edges()[0];

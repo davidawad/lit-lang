@@ -272,6 +272,28 @@ fn a_designated_deadline_leaves_its_edges_extension_undeclared() {
         )),
         "{found:#?}"
     );
+    // An authority the edge leaves a `?` for keeps that hole, once.
+    for d in decls(&mut p) {
+        if let Declaration::Node(n) = d {
+            for e in &mut n.edges {
+                if e.deadline.is_some() {
+                    e.holes.insert(
+                        "within.extension_authority".into(),
+                        Some("unverified".into()),
+                    );
+                }
+            }
+        }
+    }
+    let found = deadline_holes(&p);
+    assert_eq!(found.len(), want.len(), "{found:#?}");
+    for (pointer, reason) in &found {
+        assert_eq!(
+            pointer.ends_with("/extensionAuthority"),
+            reason == "unverified",
+            "{found:#?}"
+        );
+    }
     assert!(!windows(&p).contains(&true));
 }
 

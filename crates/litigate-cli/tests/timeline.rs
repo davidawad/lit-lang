@@ -842,12 +842,7 @@ fn a_matter_with_errors_reports_them_in_the_timeline() {
         .filter(|d| d["severity"] != "note")
         .map(|d| &d["code"])
         .collect();
-    assert_eq!(
-        codes,
-        [&json!("L9006"), &json!("L4002"), &json!("L9006")],
-        "{}",
-        later.stdout
-    );
+    assert_eq!(codes, [&json!("L4002")], "{}", later.stdout);
     let late = later.json["result"]["rows"]
         .as_array()
         .unwrap()

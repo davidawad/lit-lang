@@ -245,3 +245,85 @@ fn clock_files_replace_the_embedded_library_and_bad_ones_are_recorded() -> Resul
     );
     Ok(())
 }
+
+/// `resolve`: a flag beats its variable, which is then never read (here it
+/// names a directory that does not exist).
+#[test]
+fn resolve_prefers_the_flag_to_the_variable() -> Result<()> {
+    let packs = std::path::Path::new(litgraph_packs::PACKS_DIR);
+    let scenarios = std::path::Path::new(litgraph_packs::SCENARIOS_DIR);
+    std::env::set_var("LITGRAPH_PACKS", "/no/such/litgraph-packs-dir");
+    std::env::set_var("LITGRAPH_SCENARIOS", "/no/such/litgraph-scenarios-dir");
+    let c = Catalog::resolve(
+        Some(packs),
+        Some(scenarios),
+        litgraph_packs::PACKS,
+        litgraph_packs::SCENARIOS,
+    );
+    std::env::remove_var("LITGRAPH_PACKS");
+    std::env::remove_var("LITGRAPH_SCENARIOS");
+    let c = c?;
+    assert_eq!(c.origin, packs.display().to_string());
+    assert_eq!(c.scenarios_origin, scenarios.display().to_string());
+    Ok(())
+}
+
+/// `resolve`: a variable set to a directory that does not exist is an
+/// error naming the variable, not a silent fall back to the embedded set.
+#[test]
+fn resolve_names_the_variable_whose_directory_is_missing() {
+    std::env::set_var("LITGRAPH_PACKS", "/no/such/litgraph-packs-dir");
+    let e = Catalog::default_source(litgraph_packs::PACKS, litgraph_packs::SCENARIOS).unwrap_err();
+    std::env::remove_var("LITGRAPH_PACKS");
+    assert_eq!(e.code(), "io");
+    assert!(
+        e.to_string()
+            .contains("$LITGRAPH_PACKS: /no/such/litgraph-packs-dir"),
+        "{e}"
+    );
+
+    std::env::set_var("LITGRAPH_SCENARIOS", "/no/such/litgraph-scenarios-dir");
+    let e = Catalog::default_source(litgraph_packs::PACKS, litgraph_packs::SCENARIOS).unwrap_err();
+    std::env::remove_var("LITGRAPH_SCENARIOS");
+    assert!(e.to_string().contains("$LITGRAPH_SCENARIOS"), "{e}");
+}
+
+/// `resolve`: a flag naming a directory that does not exist is an error
+/// naming the flag.
+#[test]
+fn resolve_names_the_flag_whose_directory_is_missing() {
+    let missing = std::path::Path::new("/no/such/litgraph-dir");
+    let e = Catalog::resolve(Some(missing), None, &[], &[]).unwrap_err();
+    assert!(
+        e.to_string().contains("--packs-dir: /no/such/litgraph-dir"),
+        "{e}"
+    );
+    let e = Catalog::resolve(None, Some(missing), &[], &[]).unwrap_err();
+    assert!(
+        e.to_string()
+            .contains("--scenarios-dir: /no/such/litgraph-dir"),
+        "{e}"
+    );
+}
+
+/// `resolve`: a variable set to the empty string counts as unset.
+#[test]
+fn resolve_treats_an_empty_variable_as_unset() -> Result<()> {
+    std::env::set_var("LITGRAPH_PACKS", "");
+    let c = Catalog::default_source(litgraph_packs::PACKS, litgraph_packs::SCENARIOS);
+    std::env::remove_var("LITGRAPH_PACKS");
+    assert_eq!(c?.origin, "embedded");
+    Ok(())
+}
+
+/// `resolve`: a packs directory with no pack file in it (the repository's
+/// own `packs/`, which since the packs became build outputs holds only the
+/// hand-authored clock library) is an error, not an empty catalog.
+#[test]
+fn resolve_rejects_a_packs_directory_with_no_pack_file() {
+    let dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../packs");
+    let e = Catalog::resolve(Some(&dir), None, &[], &[]).unwrap_err();
+    assert_eq!(e.code(), "invalid");
+    assert!(e.to_string().contains("--packs-dir"), "{e}");
+    assert!(e.to_string().contains("holds no pack file"), "{e}");
+}

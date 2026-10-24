@@ -238,7 +238,11 @@ writing a rule, testing it, writing a case and solving it;
 Federal Circuit appeal). They're compiled into the `litgraph` binary at
 build time, so `litgraph packs` works right after install with no
 `packs/` directory needed — point at a different set with
-`LITGRAPH_PACKS=<dir>` or `--packs-dir <dir>`. Run `litgraph packs` for
+`LITGRAPH_PACKS=<dir>` or `--packs-dir <dir>` (precedence: the flag, else
+the variable, else the embedded set; `just lit-sync` writes the repo's
+built packs to `target/lit-build/packs`). A flag or variable naming a
+directory that does not exist, or holds no pack, is an error that names it,
+never a silent fallback. Run `litgraph packs` for
 live counts; schema is documented in
 [`docs/PACK_SCHEMA.md`](docs/PACK_SCHEMA.md). A pack (or `links.json`) that
 fails to parse is skipped, not fatal to the rest — `litgraph describe`'s

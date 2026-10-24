@@ -49,11 +49,13 @@ struct Cli {
     /// Document kind for `validate` (default: detected).
     #[arg(long)]
     kind: Option<String>,
-    /// Packs directory (default: `$LITGRAPH_PACKS`, else the packs built into this binary).
+    /// Packs directory. Precedence: this flag, else `$LITGRAPH_PACKS` (empty
+    /// counts as unset), else the packs built into this binary. A directory
+    /// that does not exist, or holds no pack, is an error naming its source.
     #[arg(long)]
     packs_dir: Option<String>,
-    /// Scenario library directory (default: `$LITGRAPH_SCENARIOS`, else the
-    /// scenarios built into this binary).
+    /// Scenario library directory. Precedence: this flag, else
+    /// `$LITGRAPH_SCENARIOS`, else the scenarios built into this binary.
     #[arg(long)]
     scenarios_dir: Option<String>,
     /// Calibration directory (default: `$LITGRAPH_CALIBRATION`, else the sets built into this
@@ -166,25 +168,15 @@ fn emit(v: &impl serde::Serialize, compact: bool) -> Result<()> {
     Ok(())
 }
 
-/// Resolve packs and the scenario library independently: `--packs-dir` /
-/// `--scenarios-dir` each fall back to their own env var, else what's built
-/// into this binary (`Catalog::default_source`'s precedent, applied to each
-/// half separately so overriding one never disturbs the other).
+/// Resolve packs and the scenario library independently, each from its
+/// flag, else its variable, else what's built into this binary
+/// ([`litgraph_packs::resolve`]; `litgraph-mcp` does the same).
 fn load_catalog(cli: &Cli) -> Result<Catalog> {
-    let catalog = match &cli.packs_dir {
-        Some(d) => Catalog::load(std::path::Path::new(d)),
-        None => litgraph_packs::default_source(),
-    }
-    .context("loading packs")?;
-    let scenarios_dir = cli
-        .scenarios_dir
-        .clone()
-        .or_else(|| std::env::var("LITGRAPH_SCENARIOS").ok());
-    match scenarios_dir {
-        Some(d) => catalog.with_scenarios_dir(std::path::Path::new(&d)),
-        None => litgraph_packs::with_scenarios(catalog),
-    }
-    .context("loading scenarios")
+    litgraph_packs::resolve(
+        cli.packs_dir.as_deref().map(std::path::Path::new),
+        cli.scenarios_dir.as_deref().map(std::path::Path::new),
+    )
+    .context("loading packs and scenarios")
 }
 
 fn run(cli: &Cli) -> Result<bool> {

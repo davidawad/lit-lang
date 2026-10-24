@@ -24,35 +24,23 @@ use rmcp::ServiceExt;
     about = "MCP stdio server for litgraph: every engine op as a tool, packs/links.json/scenarios/the manual as resources."
 )]
 struct Cli {
-    /// Packs directory (default: `$LITGRAPH_PACKS`, else the packs built
-    /// into this binary).
+    /// Packs directory. Precedence: this flag, else `$LITGRAPH_PACKS` (empty
+    /// counts as unset), else the packs built into this binary. A directory
+    /// that does not exist, or holds no pack, is an error naming its source.
     #[arg(long)]
     packs_dir: Option<PathBuf>,
-    /// Scenario library directory (default: `$LITGRAPH_SCENARIOS`, else the
-    /// scenarios built into this binary).
+    /// Scenario library directory. Precedence: this flag, else
+    /// `$LITGRAPH_SCENARIOS`, else the scenarios built into this binary.
     #[arg(long)]
     scenarios_dir: Option<PathBuf>,
 }
 
-/// Resolve packs and the scenario library independently: `--packs-dir` /
-/// `--scenarios-dir` each fall back to their own env var, else what's built
-/// into this binary -- the same precedent as `litgraph-cli`'s own
-/// `load_catalog`.
+/// Resolve packs and the scenario library independently, each from its
+/// flag, else its variable, else what's built into this binary
+/// ([`litgraph_packs::resolve`], as `litgraph-cli` does).
 fn load_catalog(cli: &Cli) -> anyhow::Result<Catalog> {
-    let catalog = match &cli.packs_dir {
-        Some(dir) => Catalog::load(dir),
-        None => litgraph_packs::default_source(),
-    }
-    .context("loading packs")?;
-    let scenarios_dir = cli
-        .scenarios_dir
-        .clone()
-        .or_else(|| std::env::var_os("LITGRAPH_SCENARIOS").map(PathBuf::from));
-    match scenarios_dir {
-        Some(dir) => catalog.with_scenarios_dir(&dir),
-        None => litgraph_packs::with_scenarios(catalog),
-    }
-    .context("loading scenarios")
+    litgraph_packs::resolve(cli.packs_dir.as_deref(), cli.scenarios_dir.as_deref())
+        .context("loading packs and scenarios")
 }
 
 #[tokio::main]
@@ -61,7 +49,7 @@ async fn main() -> ExitCode {
     let catalog = match load_catalog(&cli) {
         Ok(catalog) => catalog,
         Err(e) => {
-            eprintln!("litgraph-mcp: loading packs: {e:#}");
+            eprintln!("litgraph-mcp: {e:#}");
             return ExitCode::FAILURE;
         }
     };

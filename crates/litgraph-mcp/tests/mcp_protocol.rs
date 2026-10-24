@@ -280,6 +280,67 @@ async fn litgraph_packs_env_var_overrides_the_embedded_packs() -> Result<()> {
 }
 
 #[tokio::test]
+async fn packs_dir_flag_overrides_the_litgraph_packs_env_var() -> Result<()> {
+    let packs_dir = repo_dir("packs");
+    let client = connect_with(|cmd| {
+        cmd.env("LITGRAPH_PACKS", "/no/such/litgraph-packs-dir")
+            .arg("--packs-dir")
+            .arg(&packs_dir);
+    })
+    .await?;
+    let result = client
+        .call_tool(CallToolRequestParams::new("describe"))
+        .await?;
+    let envelope = structured(&result)?;
+    assert_eq!(
+        envelope["result"]["packs_source"],
+        json!(packs_dir.display().to_string())
+    );
+    client.cancel().await?;
+    Ok(())
+}
+
+#[tokio::test]
+async fn neither_flag_nor_env_var_serves_the_embedded_packs() -> Result<()> {
+    let client = connect_with(|cmd| {
+        cmd.env_remove("LITGRAPH_PACKS");
+    })
+    .await?;
+    let result = client
+        .call_tool(CallToolRequestParams::new("describe"))
+        .await?;
+    assert_eq!(
+        structured(&result)?["result"]["packs_source"],
+        json!("embedded")
+    );
+    client.cancel().await?;
+    Ok(())
+}
+
+/// A packs directory that does not exist stops the server before it
+/// speaks MCP, with an error naming where the directory came from.
+#[tokio::test]
+async fn a_missing_packs_directory_fails_naming_the_flag_or_env_var() -> Result<()> {
+    let missing = "/no/such/litgraph-packs-dir";
+    let bin = env!("CARGO_BIN_EXE_litgraph-mcp");
+    let by_env = Command::new(bin)
+        .env("LITGRAPH_PACKS", missing)
+        .output()
+        .await?;
+    let by_flag = Command::new(bin)
+        .env_remove("LITGRAPH_PACKS")
+        .args(["--packs-dir", missing])
+        .output()
+        .await?;
+    for (out, by) in [(by_env, "$LITGRAPH_PACKS"), (by_flag, "--packs-dir")] {
+        assert!(!out.status.success());
+        let err = String::from_utf8_lossy(&out.stderr);
+        assert!(err.contains(&format!("{by}: {missing}")), "{err}");
+    }
+    Ok(())
+}
+
+#[tokio::test]
 async fn scenarios_dir_flag_overrides_the_embedded_scenarios() -> Result<()> {
     let scenarios_dir = repo_dir("scenarios");
 

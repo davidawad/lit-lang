@@ -29,11 +29,16 @@ pub fn default_source() -> Result<Catalog> {
     Catalog::default_source(PACKS, SCENARIOS)
 }
 
-/// `catalog` with the embedded scenario library attached
-/// ([`Catalog::with_embedded_scenarios`] over [`SCENARIOS`]).
+/// [`Catalog::resolve`] over [`PACKS`] and [`SCENARIOS`]: each half from
+/// its flag (`--packs-dir`, `--scenarios-dir`), else its variable
+/// (`$LITGRAPH_PACKS`, `$LITGRAPH_SCENARIOS`), else embedded. The
+/// `litgraph` and `litgraph-mcp` binaries load their catalog with this.
 ///
 /// # Errors
-/// Only if an embedded scenario is malformed (the test suite checks).
-pub fn with_scenarios(catalog: Catalog) -> Result<Catalog> {
-    catalog.with_embedded_scenarios(SCENARIOS)
+/// As [`Catalog::resolve`].
+pub fn resolve(
+    packs_dir: Option<&std::path::Path>,
+    scenarios_dir: Option<&std::path::Path>,
+) -> Result<Catalog> {
+    Catalog::resolve(packs_dir, scenarios_dir, PACKS, SCENARIOS)
 }

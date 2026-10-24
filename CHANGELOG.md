@@ -86,6 +86,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   merge-drivers`, run by `just install` and `just lit-sync`) registers the
   driver. `just ci` now runs `just tree-sitter-test`, which fails on a
   stale parser and runs `script/merge-test`.
+- **`LITGRAPH_PACKS` and `--packs-dir` stay CLI contract** (lg-flu.34; PM
+  ruling 2026-10-23 on lg-flu.31). `litgraph` and `litgraph-mcp` load
+  packs from `--packs-dir`, else `$LITGRAPH_PACKS`, else the packs built
+  into the binary, and the scenario library the same way
+  (`--scenarios-dir`, `$LITGRAPH_SCENARIOS`). Both go through the new
+  `Catalog::resolve` (`litgraph_packs::resolve`); `Catalog::default_source`
+  is `resolve` with no flags, and `litgraph_packs::with_scenarios` is gone.
+  A flag or variable naming a directory that does not exist is now an `io`
+  error naming it (`$LITGRAPH_PACKS: /x is not a directory`). A packs
+  directory holding no pack file (a stale `LITGRAPH_PACKS=packs/`) is an
+  `invalid` error, where it used to load an empty catalog. A variable set
+  to the empty string counts as unset. The dev shells leave
+  `LITGRAPH_PACKS` unset; `.env.example` points it at
+  `target/lit-build/packs`.
 
 - **Reserved typed guard operations in patches** (lg-flu.35; SPEC §3.6,
   PM ruling 2026-10-23 on L2007). A later decision or order that narrows,

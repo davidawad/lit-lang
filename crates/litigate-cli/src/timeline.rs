@@ -1395,7 +1395,6 @@ mod tests {
         let c = matter::check(
             &session,
             &session.cases[0],
-            &crate::cmd::check::engine(&all),
             &crate::clock::Clocks::new(&all),
             litigate_base::Profile::Dev,
         );

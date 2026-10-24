@@ -2210,6 +2210,19 @@ ID=STEM` writes those as `STEM` instead. Both sides are kebab-case, an id is
 mapped once, `links` is reserved, and a mapping naming no built pack, or two
 outputs landing on one path, is a usage failure (exit 1).
 
+A matter's scope is the closure of what it `uses` under its packages'
+`[dependencies]`. `check`, `timeline` and `run` given only matters load
+nothing else, and a matter is checked, replayed and scheduled against its
+scope alone, also when other packages are loaded beside it: a package
+outside its scope never changes its result, and its diagnostics never
+appear in the matter's envelope nor set its `ok: false`. `check` given a
+directory or package still reports every package it finds. `run` composes
+(without `--no-links`) each library links package that depends on two or
+more packages the matter uses, and only those: its own diagnostics are
+the run's (a links package that does not check fails the run), while its
+dependencies outside the matter's scope are loaded for it but not
+reported.
+
 `justfile` recipes: `lit-check` runs `litigate check --profile strict lit cases`.
 `lit-sync` regenerates every `Lit.lock` and builds the generated files (§9.4)
 into `target/lit-build/`; `lit-sync-check` runs it and fails when a `Lit.lock`

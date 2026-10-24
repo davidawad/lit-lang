@@ -92,7 +92,6 @@ pub fn engine(all: &[&litigate_sema::hir::Package]) -> EngineClock {
 pub fn check_session(session: Session, profile: Profile, options: &Options) -> Checked {
     let all = session.hir();
     let clocks = Clocks::new(&all);
-    let engine = engine(&all);
     let verdicts: Vec<(String, Verdict)> = session
         .packages
         .iter()
@@ -106,7 +105,7 @@ pub fn check_session(session: Session, profile: Profile, options: &Options) -> C
     let cases: Vec<CaseCheck> = session
         .cases
         .iter()
-        .map(|c| matter::check(&session, c, &engine, &clocks, profile))
+        .map(|c| matter::check(&session, c, &clocks, profile))
         .collect();
     let diagnostics: Vec<Diagnostic> = verdicts
         .iter()

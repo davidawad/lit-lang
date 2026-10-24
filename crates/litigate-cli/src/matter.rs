@@ -12,7 +12,7 @@ use crate::hirx;
 use crate::report;
 use crate::ws::{CaseText, Session};
 use litigate_base::{Diagnostic, FileId, LineIndex, Profile, Severity};
-use litigate_lower::{EngineClock, LoweredCase, Lowerer};
+use litigate_lower::{LoweredCase, Lowerer};
 use litigate_sema::case::{Env, Obligation, Status, Step};
 use litigate_sema::hir;
 use litigate_sema::pkg::lock::LockFile;
@@ -210,16 +210,12 @@ fn verify(case: &CaseText, env: Env, at: At) -> VerifiedCase {
     }
 }
 
-/// Checks one matter against the loaded packages.
+/// Checks one matter against the packages it sees: the closure of what
+/// it `uses` ([`Session::scope`]). Any other loaded package, checked or
+/// not, cannot change its diagnostics, replay or schedule.
 #[must_use]
-pub fn check(
-    session: &Session,
-    case: &CaseText,
-    engine: &EngineClock,
-    clocks: &Clocks,
-    profile: Profile,
-) -> CaseCheck {
-    check_at(session, case, engine, clocks, profile, At::default())
+pub fn check(session: &Session, case: &CaseText, clocks: &Clocks, profile: Profile) -> CaseCheck {
+    check_at(session, case, clocks, profile, At::default())
 }
 
 /// [`check`] with the matter's dates replaced by `at`'s.
@@ -227,12 +223,12 @@ pub fn check(
 pub fn check_at(
     session: &Session,
     case: &CaseText,
-    engine: &EngineClock,
     clocks: &Clocks,
     profile: Profile,
     at: At,
 ) -> CaseCheck {
-    let all = session.hir();
+    let all = session.hir_of(&session.scope(case));
+    let engine = crate::cmd::check::engine(&all);
     // CLI-side findings: an unreadable lock, and lowering errors.
     let (lock, mut own) = match lock(case) {
         Ok(lock) => (lock, Vec::new()),
@@ -241,7 +237,7 @@ pub fn check_at(
     let env = Env {
         packages: &all,
         lock: lock.as_ref(),
-        clock: engine,
+        clock: &engine,
         profile,
     };
     let verified = verify(case, env, at);
@@ -411,11 +407,9 @@ mod tests {
     fn checked(extra: &str, text: &str, lock: Option<&str>) -> CaseCheck {
         let session = testkit::example_locked(extra, text, lock);
         let all = session.hir();
-        let engine = EngineClock::lowered(&Lowerer::new(&all), &all).unwrap();
         check(
             &session,
             &session.cases[0],
-            &engine,
             &Clocks::new(&all),
             Profile::Dev,
         )
@@ -473,11 +467,9 @@ mod tests {
     fn checked_at(text: &str, at: At) -> CaseCheck {
         let session = testkit::example_locked("", text, None);
         let all = session.hir();
-        let engine = EngineClock::lowered(&Lowerer::new(&all), &all).unwrap();
         check_at(
             &session,
             &session.cases[0],
-            &engine,
             &Clocks::new(&all),
             Profile::Dev,
             at,

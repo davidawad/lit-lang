@@ -1,7 +1,7 @@
 //! `litigate timeline FILE` (lg-z2m.1): the timeline of a `.case` or
 //! `.lit` file as a `litigate.timeline/1` document (docs/litigate/TIMELINE.md),
 //! the envelope's `result`.
-use super::check::{checked, engine, Checked};
+use super::check::{checked, Checked};
 use crate::cli::Dates;
 use crate::clock::Clocks;
 use crate::matter::{self, At};
@@ -58,7 +58,6 @@ fn of_case(
         let redone = matter::check_at(
             &c.session,
             &c.session.cases[0],
-            &engine(&all),
             &Clocks::new(&all),
             Profile::Dev,
             at,

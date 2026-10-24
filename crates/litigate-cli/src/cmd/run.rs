@@ -9,6 +9,7 @@ use litgraph::clock::ClockLibrary;
 use litigate_base::Profile;
 use litigate_lower::{Document, Options};
 use serde_json::{json, Value};
+use std::collections::BTreeSet;
 
 /// The op object for `--op`: a JSON object, or an op name.
 ///
@@ -34,20 +35,39 @@ fn merged(mut lib: ClockLibrary, fragment: &ClockLibrary) -> ClockLibrary {
     lib
 }
 
-/// `litigate run`; `links` composes the links packages between the used ones.
+/// `litigate run`; `links` composes the links packages between the used
+/// ones. The run sees the closure of what the matter `uses` and the links
+/// packages it composes: no other package is loaded, and a dependency of a
+/// links package outside the matter's closure is checked (the links
+/// package needs it) but never reported, so it cannot set `ok: false`.
 pub fn run(case: &str, op: &str, links: bool, lib: &[String]) -> Outcome {
     let op = op_value(op)?;
     let mut targets = crate::ws::discover(&[case.to_owned()])?;
-    // Links compose between whichever packs are loaded, as `links.json` does.
-    targets
-        .packages
-        .extend(crate::ws::links_packages(lib, &targets.cases));
+    let used: BTreeSet<String> = targets
+        .cases
+        .iter()
+        .filter_map(|p| std::fs::read_to_string(p).ok())
+        .flat_map(|t| crate::ws::uses_of(&t))
+        .collect();
+    if links {
+        // Links compose between whichever packs are loaded, as `links.json` does.
+        targets
+            .packages
+            .extend(crate::ws::links_packages(lib, &targets.cases, &used));
+    }
     let c = checked_targets(&targets, Profile::Dev, &Options::default(), lib)?;
+    let session = &c.session;
+    let mut scope = session.closure(used);
+    scope.extend(session.requested().map(|p| p.name.clone()));
     let mut report = Report {
         result: Value::Null,
-        provenance: c.provenance(None, None),
-        sources: c.session.sources(),
-        diagnostics: c.diagnostics.clone(),
+        provenance: crate::prov::session(
+            session.packages.iter().filter(|p| scope.contains(&p.name)),
+            None,
+            None,
+        ),
+        sources: session.sources(),
+        diagnostics: session.scoped(&scope, c.diagnostics.clone()),
         profile: Some(Profile::Dev),
         failed: false,
     };

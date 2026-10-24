@@ -3,6 +3,7 @@
 //! the working directory, so outputs carry no absolute paths (DESIGN §8).
 //! Each `*_in` function reads a [`Source`]; its plain twin reads the disk.
 use crate::out::Failure;
+use litigate_base::Diagnostic;
 use litigate_sema::db::inputs::{PackageInput, Workspace};
 use litigate_sema::hir;
 use litigate_sema::pkg::load::{relative_to, LoadedPackage};
@@ -198,16 +199,27 @@ pub fn library_in(src: &dyn Source, dirs: &[PathBuf]) -> Vec<(String, PathBuf)> 
         .collect()
 }
 
-/// Library packages that are links packages (SPEC §8.4).
+/// Library packages that are links packages (SPEC §8.4) able to compose
+/// something between `used` packages: those depending on two or more of
+/// them. A links package joining a used package only to packages a matter
+/// does not use composes nothing for it, so it is not loaded at all.
 #[must_use]
-pub fn links_packages(lib: &[String], cases: &[PathBuf]) -> Vec<PathBuf> {
+pub fn links_packages(lib: &[String], cases: &[PathBuf], used: &BTreeSet<String>) -> Vec<PathBuf> {
     library(&library_for(lib, cases))
         .into_iter()
         .filter(|(_, dir)| {
             std::fs::read_to_string(dir.join("Lit.toml"))
                 .ok()
                 .and_then(|t| parse_manifest(&t).ok())
-                .is_some_and(|m| m.manifest.links)
+                .is_some_and(|m| {
+                    m.manifest.links
+                        && m.manifest
+                            .dependencies
+                            .keys()
+                            .filter(|d| used.contains(*d))
+                            .count()
+                            >= 2
+                })
         })
         .map(|(_, dir)| dir)
         .collect()
@@ -226,6 +238,8 @@ pub struct Pkg {
     pub name: String,
     /// Manifest version.
     pub version: String,
+    /// Names of its declared dependencies (empty when the manifest is invalid).
+    pub dependencies: Vec<String>,
     /// `sha256:<hex>` content digest (SPEC §4.2).
     pub digest: String,
     /// Sema's result.
@@ -389,6 +403,66 @@ impl Session {
             .collect()
     }
 
+    /// The names of `packages` and of every loaded package they depend
+    /// on, transitively: what a matter `uses` that closure of (SPEC §5.6).
+    #[must_use]
+    pub fn closure(&self, packages: impl IntoIterator<Item = String>) -> BTreeSet<String> {
+        let mut seen = BTreeSet::new();
+        let mut todo: Vec<String> = packages.into_iter().collect();
+        while let Some(name) = todo.pop() {
+            if seen.insert(name.clone()) {
+                todo.extend(
+                    self.packages
+                        .iter()
+                        .filter(|p| p.name == name)
+                        .flat_map(|p| p.dependencies.iter().cloned()),
+                );
+            }
+        }
+        seen
+    }
+
+    /// Diagnostics not in a loaded package outside `names`: what a
+    /// command scoped to those packages reports.
+    #[must_use]
+    pub fn scoped(
+        &self,
+        names: &BTreeSet<String>,
+        diagnostics: Vec<Diagnostic>,
+    ) -> Vec<Diagnostic> {
+        let outside: BTreeSet<String> = self
+            .packages
+            .iter()
+            .filter(|p| !names.contains(&p.name))
+            .flat_map(|p| {
+                p.files
+                    .iter()
+                    .map(|(f, _)| f.clone())
+                    .chain([format!("{}/Lit.lock", p.root)])
+            })
+            .collect();
+        diagnostics
+            .into_iter()
+            .filter(|d| !outside.contains(&d.span.file.0))
+            .collect()
+    }
+
+    /// The closure of what `case` `uses`: the only packages it sees.
+    #[must_use]
+    pub fn scope(&self, case: &CaseText) -> BTreeSet<String> {
+        self.closure(uses_of(&case.text))
+    }
+
+    /// HIR of every package in `names` that checked without errors.
+    #[must_use]
+    pub fn hir_of(&self, names: &BTreeSet<String>) -> Vec<&hir::Package> {
+        self.packages
+            .iter()
+            .filter(|p| names.contains(&p.name))
+            .filter_map(|p| p.check.package.as_ref())
+            .collect()
+    }
+
     /// Packages the user named.
     pub fn requested(&self) -> impl Iterator<Item = &Pkg> {
         self.packages.iter().filter(|p| p.requested)
@@ -458,6 +532,10 @@ pub fn package(db: &LitDatabase, input: PackageInput, requested: &BTreeSet<Strin
         version: manifest
             .as_ref()
             .map(|m| m.manifest.version.clone())
+            .unwrap_or_default(),
+        dependencies: manifest
+            .as_ref()
+            .map(|m| m.manifest.dependencies.keys().cloned().collect())
             .unwrap_or_default(),
         digest: format!("sha256:{}", digest.trim_start_matches("sha256:")),
         root,

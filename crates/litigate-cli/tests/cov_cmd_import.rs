@@ -26,6 +26,19 @@ fn with_pack(name: &str) -> PathBuf {
     dir
 }
 
+/// `dir/p.json`, the built frcp pack without its extension grants (pack
+/// v5), which import reports rather than spells (L6002).
+fn legacy_frcp(dir: &Path) {
+    let built = Path::new(litgraph_packs::PACKS_DIR).join("frcp-civil-procedure.json");
+    let mut pack: Value = serde_json::from_str(&std::fs::read_to_string(built).unwrap()).unwrap();
+    for edge in pack["edges"].as_array_mut().unwrap() {
+        if let Some(d) = edge.get_mut("deadline").and_then(Value::as_object_mut) {
+            d.remove("extensions");
+        }
+    }
+    write(dir, "p.json", &pack);
+}
+
 /// Writes JSON `value` to `dir/name`.
 fn write(dir: &Path, name: &str, value: &Value) {
     std::fs::write(dir.join(name), serde_json::to_string_pretty(value).unwrap()).unwrap();
@@ -138,11 +151,7 @@ fn output_that_cannot_be_written_is_a_failure() {
 #[test]
 fn a_number_without_a_lossless_spelling_is_a_difference() {
     let dir = scratch("import-difference");
-    std::fs::copy(
-        std::path::Path::new(litgraph_packs::PACKS_DIR).join("frcp-civil-procedure.json"),
-        dir.join("p.json"),
-    )
-    .unwrap();
+    legacy_frcp(&dir);
     let mut scenario: Value = serde_json::from_str(
         &std::fs::read_to_string(
             std::path::Path::new(litgraph_packs::SCENARIOS_DIR).join("frcp-civil-case.json"),
@@ -168,11 +177,7 @@ fn a_number_without_a_lossless_spelling_is_a_difference() {
 #[test]
 fn a_number_the_typed_source_cannot_hold_fails_the_check() {
     let dir = scratch("import-unchecked-number");
-    std::fs::copy(
-        std::path::Path::new(litgraph_packs::PACKS_DIR).join("frcp-civil-procedure.json"),
-        dir.join("p.json"),
-    )
-    .unwrap();
+    legacy_frcp(&dir);
     let mut scenario: Value = serde_json::from_str(
         &std::fs::read_to_string(
             std::path::Path::new(litgraph_packs::SCENARIOS_DIR).join("frcp-civil-case.json"),

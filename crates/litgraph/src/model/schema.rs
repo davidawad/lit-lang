@@ -12,8 +12,9 @@ use super::cite_syntax::CiteSyntax;
 use super::lowered::{check_header, Lowered};
 use crate::error::{Error, Result};
 
-/// The newest pack `schemaVersion`: v3 plus the `lowered` header.
-pub const PACK_SCHEMA_VERSION: u32 = 4;
+/// The newest pack `schemaVersion`: v4 plus designated deadline windows
+/// and extension bounds (`Deadline.designated`, `Deadline.extensions`).
+pub const PACK_SCHEMA_VERSION: u32 = 5;
 
 /// Structural kind of a node.
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, JsonSchema)]
@@ -27,21 +28,36 @@ pub enum NodeKind {
     Terminal,
 }
 
-/// A window within which a transition must happen.
+/// A window within which a transition must happen: a counted `length`,
+/// or (v5) a `designated` due date each matter's notice or order sets.
+/// Exactly one of the two is present.
 #[derive(Debug, Clone, Serialize, Deserialize, Default, PartialEq, JsonSchema)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct Deadline {
-    /// Length of the window in `unit`s.
-    pub length: f64,
+    /// Length of the window in `unit`s; absent (v5) for a `designated`
+    /// window.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub length: Option<f64>,
     /// `calendar` (default) or `court` days, or `week`, `month`, `year`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub unit: Option<String>,
-    /// Whether extensions are available.
+    /// (v5) The due date is the one the triggering notice or order
+    /// designates, not a counted period (37 C.F.R. § 2.105(a)): the pack
+    /// has no fixed window to give it.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub designated: Option<Designated>,
+    /// Whether extensions are available; absent is undeclared, never
+    /// "not extendable".
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub extendable: Option<bool>,
     /// Authority for extensions.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub extension_authority: Option<String>,
+    /// (v5) Each extension grant the rule declares, its bound a sum: empty
+    /// is undeclared, never "not extendable"; only a `nonExtendable`
+    /// bound says no order extends the window beyond its other grants.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub extensions: Vec<ExtensionBound>,
     /// Free-text note (traps, US-party variants, ...).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub note: Option<String>,
@@ -58,16 +74,192 @@ impl Deadline {
     /// itself for calendar and court days, seven per week, and the mean
     /// Gregorian month (146097/4800 days) and year (365.2425 days) for
     /// months and years, whose exact length depends on the trigger date.
+    /// `None` for a `designated` window, whose length is each matter's.
     #[must_use]
-    pub fn days(&self) -> f64 {
-        self.length
-            * match self.unit.as_deref() {
-                Some("week") => 7.0,
-                Some("month") => 146_097.0 / 4800.0,
-                Some("year") => 365.2425,
-                _ => 1.0,
-            }
+    pub fn days(&self) -> Option<f64> {
+        Some(
+            self.length?
+                * match self.unit.as_deref() {
+                    Some("week") => 7.0,
+                    Some("month") => 146_097.0 / 4800.0,
+                    Some("year") => 365.2425,
+                    _ => 1.0,
+                },
+        )
     }
+
+    /// Check the window's shape in a document of `version`, where
+    /// designated windows and extension bounds arrive in `since`: exactly
+    /// one of `length` and `designated`, and a designated window counted
+    /// in calendar days with a whole-day least time.
+    ///
+    /// # Errors
+    /// `Error::Parse` naming the edge `at` and what does not hold.
+    pub fn check(&self, at: &str, version: u32, since: u32) -> Result<()> {
+        let bad = |why: String| Err(Error::Parse(format!("{at}: `deadline`: {why}")));
+        if version < since && (self.designated.is_some() || !self.extensions.is_empty()) {
+            return bad(format!(
+                "`designated` and `extensions` need schemaVersion {since}, found {version}"
+            ));
+        }
+        match (&self.length, &self.designated) {
+            (Some(_), Some(_)) => bad("give `length` or `designated`, not both".into()),
+            (None, None) => bad("needs `length` (or, a designated window, `designated`)".into()),
+            (None, Some(d)) => {
+                if self.unit.as_deref().is_some_and(|u| u != "calendar") {
+                    return bad("a designated window's least time is in calendar days".into());
+                }
+                if d.min_period < 0.0 || d.min_period.fract() != 0.0 || !d.min_period.is_finite() {
+                    return bad(format!(
+                        "`designated.minPeriod` {} is not a non-negative integer",
+                        d.min_period
+                    ));
+                }
+                Ok(())
+            }
+            (Some(_), None) => Ok(()),
+        }
+    }
+}
+
+/// (v5) A designated window: the triggering event carries the due date
+/// (SPEC §5.3, `designated p`).
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct Designated {
+    /// The least time the rule allows, in calendar days from the
+    /// trigger's date ("not less than thirty days from the mailing date
+    /// of the notice"); `0` allows any date from the trigger's own.
+    pub min_period: f64,
+    /// The qualified id of the triggering event (the notice or order).
+    pub source_event: String,
+    /// The `Date` argument of `sourceEvent` that designates the due date.
+    pub source_event_arg: String,
+    /// Present when the rule names no start for its least time and
+    /// measuring `minPeriod` from the trigger's date is this
+    /// interpretation (37 C.F.R. § 2.106(b)(3)(iii)): a date short of it
+    /// stands, with a warning. Absent: such a date is rejected.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub interpretation: Option<String>,
+}
+
+/// (v5) One extension grant of a deadline (SPEC §5.3 `extend`): its bound
+/// is a sum, so a rule that states no numeric ceiling is not forced to
+/// invent one (FRCP 6(b)).
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, JsonSchema)]
+#[serde(
+    tag = "bound",
+    rename_all = "camelCase",
+    rename_all_fields = "camelCase",
+    deny_unknown_fields
+)]
+pub enum ExtensionBound {
+    /// Actor `by` may extend to a date no later than `until`.
+    Bounded {
+        /// The actor that may extend.
+        by: String,
+        /// The latest date an extension may reach.
+        until: DateBound,
+        /// May be exercised after the due date as well as before.
+        #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+        after_expiry: bool,
+        /// The cause standard, if the rule states one.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        standard: Option<CauseStandard>,
+        /// The motion the grant requires, if any.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        motion: Option<Motion>,
+        /// The interpretation the grant rests on, when the rule reaches
+        /// the window only as its author reads it.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        interpretation: Option<String>,
+    },
+    /// Actor `by` may extend to any later date under `standard`, within
+    /// `window`, with no numeric ceiling (FRCP 6(b)(1)).
+    Discretionary {
+        /// The actor that may extend.
+        by: String,
+        /// The cause standard.
+        standard: CauseStandard,
+        /// When the grant may be exercised.
+        window: ExtensionWindow,
+        /// The motion the grant requires: always present after expiry;
+        /// before it, the request whose date is the window's.
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        motion: Option<Motion>,
+        /// The interpretation the grant rests on, when the rule reaches
+        /// the window only as its author reads it (FRCP 6(b) applied to
+        /// a TTAB period through 37 C.F.R. § 2.116(a)).
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        interpretation: Option<String>,
+    },
+    /// Rule `authority` forbids extending the window beyond the
+    /// deadline's other grants (FRCP 6(b)(2)).
+    NonExtendable {
+        /// The rule that forbids the extension.
+        authority: String,
+    },
+}
+
+/// The cause standard of an extension grant.
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, JsonSchema)]
+pub enum CauseStandard {
+    /// Good cause (FRCP 6(b)(1)(A)).
+    GoodCause,
+    /// Excusable neglect (FRCP 6(b)(1)(B)).
+    ExcusableNeglect,
+    /// Either (FRAP 4(a)(5)(A)(ii)).
+    GoodCauseOrExcusableNeglect,
+}
+
+/// When a discretionary extension may be granted.
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+pub enum ExtensionWindow {
+    /// On or before the due date (FRCP 6(b)(1)(A)).
+    BeforeExpiry,
+    /// After the due date, on motion (FRCP 6(b)(1)(B)).
+    AfterExpiryOnMotion,
+}
+
+/// The motion an extension grant requires.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct Motion {
+    /// The motion's event pattern, in source spelling with qualified ids
+    /// (`ExtensionMoved(AnswerPeriod)`).
+    pub event: String,
+    /// The latest date the motion may be made.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub within: Option<DateBound>,
+}
+
+/// A date bound: `max`/`min` over calendar-day offsets from the
+/// prescribed due date or the granting order's date (FRAP 4(a)(5)(C)).
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub enum DateBound {
+    /// `from` plus `days` calendar days.
+    Offset {
+        /// The date counted from.
+        from: DateRef,
+        /// Calendar days after it.
+        days: u64,
+    },
+    /// The latest of the operands.
+    Max(Vec<DateBound>),
+    /// The earliest of the operands.
+    Min(Vec<DateBound>),
+}
+
+/// A date an extension bound counts from.
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+pub enum DateRef {
+    /// The window's counted (or designated) due date.
+    PrescribedDue,
+    /// The date of the order granting the extension.
+    GrantOrderEntered,
 }
 
 /// Expected elapsed calendar time of a transition, in days (triangular).
@@ -320,6 +512,11 @@ impl Pack {
         }
         pack.check_cite_syntax()?;
         pack.check_lowered()?;
+        for (e, id) in pack.edges.iter().zip(super::links::local_edge_ids(&pack.edges)) {
+            if let Some(d) = &e.deadline {
+                d.check(&format!("pack {}: edge {id}", pack.id), pack.schema_version, 5)?;
+            }
+        }
         if let Some(e) = pack.edges.iter().find(|e| !e.replaces.is_empty()) {
             return Err(Error::Parse(format!(
                 "pack {}: edge {}->{} uses `replaces`, which is only valid in links.json",

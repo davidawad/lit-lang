@@ -190,6 +190,8 @@ pub struct Adoption {
 /// The trigger parameter designating a deadline's due date (SPEC §5.3).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Designated {
+    /// The qualified id of the trigger's event (the notice or order).
+    pub event: String,
     /// Its index among the trigger event's parameters.
     pub param: usize,
     /// Its name.

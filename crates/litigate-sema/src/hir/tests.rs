@@ -213,6 +213,7 @@ fn a_designation_reads_the_trigger_argument_or_nothing() {
     let on = noticed(vec![date("2025-02-03")]);
     assert_eq!(d.designation("2025-01-02", &on), None);
     d.designated = Some(Designated {
+        event: "Noticed".into(),
         param: 0,
         name: "due".into(),
         interpretation: None,
@@ -235,6 +236,7 @@ fn a_designation_reads_the_trigger_argument_or_nothing() {
     assert_eq!(d.interpreted_shortfall("2025-01-10", &on), None);
     // Under an interpretation a short date stands, with the shortfall.
     d.designated = Some(Designated {
+        event: "Noticed".into(),
         param: 0,
         name: "due".into(),
         interpretation: Some("no start named".into()),

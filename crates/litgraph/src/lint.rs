@@ -170,7 +170,7 @@ fn lint_pack_edges(p: &Pack, push: &mut Push<'_>) {
             );
         }
         if let Some(dl) = &e.deadline {
-            if dl.length <= 0.0 {
+            if dl.length.is_some_and(|l| l <= 0.0) {
                 push(
                     "error",
                     "bad-deadline",

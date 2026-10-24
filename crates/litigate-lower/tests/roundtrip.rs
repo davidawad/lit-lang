@@ -5,7 +5,7 @@ mod support;
 
 use litgraph::cite::SourceCorpus;
 use litigate_lower::{render, semantic_diff, semantic_diff_links, Document, Lowerer, Options};
-use support::{built_path, corpus, imported_hir, repo_root};
+use support::{built_path, corpus, imported_hir, legacy, repo_root};
 
 #[test]
 fn import_then_lower_is_semantically_equal() {
@@ -15,7 +15,7 @@ fn import_then_lower_is_semantically_equal() {
     let lowerer = Lowerer::new(&refs);
     let mut checked = Vec::new();
     for (origin, pkg) in &packages {
-        let original = std::fs::read_to_string(built_path(origin)).unwrap_or_default();
+        let original = legacy(&std::fs::read_to_string(built_path(origin)).unwrap_or_default());
         let lowered = lowerer
             .package(pkg, &Options::default())
             .unwrap_or_else(|d| {

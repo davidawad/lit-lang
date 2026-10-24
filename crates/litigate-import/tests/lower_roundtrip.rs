@@ -11,7 +11,7 @@ mod support;
 use serde_json::Value;
 use std::path::{Path, PathBuf};
 use std::process::Command;
-use support::{built_path, corpus, import_ok};
+use support::{corpus, import_ok};
 
 /// `target/<profile>/litigate`, built alongside this test binary.
 fn litigate() -> Option<PathBuf> {
@@ -129,7 +129,10 @@ fn import_then_lower_is_semantically_equal() {
                         && std::fs::read_to_string(g).ok().and_then(|t| id_of(&t)) == wanted)
             })
             .unwrap_or_else(|| panic!("{}: no lowered output among {generated:?}", input.path));
-        let original = built_path(&input.path);
+        // The input as imported (`support::legacy`), not the v5 build.
+        let original = root.join("original").join(&name);
+        std::fs::create_dir_all(root.join("original")).unwrap_or_default();
+        std::fs::write(&original, &input.text).unwrap_or_default();
         let diff = run(&bin, &["diff", output, &original.to_string_lossy()]);
         assert_eq!(
             diff["equal"],

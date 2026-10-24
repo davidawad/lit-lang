@@ -101,8 +101,8 @@ fn edge_windows_that_lower() {
             .and_then(|e| e.deadline.as_ref())
             .map(|d| (d.length, d.unit.clone()))
     };
-    assert_eq!(unit(0), Some((21.0, None)));
-    assert_eq!(unit(2), Some((14.0, Some("court".to_owned()))));
+    assert_eq!(unit(0), Some((Some(21.0), None)));
+    assert_eq!(unit(2), Some((Some(14.0), Some("court".to_owned()))));
 }
 
 /// Week, month and year windows keep their unit (`Deadline.unit`).
@@ -124,7 +124,7 @@ fn calendar_period_windows_keep_their_unit() {
             .nth(2)
             .and_then(|e| e.deadline.as_ref())
             .map(|d| (d.length, d.unit.clone()));
-        assert_eq!(window, Some((2.0, Some(name.to_owned()))));
+        assert_eq!(window, Some((Some(2.0), Some(name.to_owned()))));
     }
 }
 

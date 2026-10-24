@@ -27,3 +27,29 @@ fn ttab_pack_compiles_alone_and_with_cafc() {
         assert!(terminals >= 13, "{packs:?}: only {terminals} terminals");
     }
 }
+
+#[test]
+fn a_designated_answer_window_is_reported_not_counted() {
+    // Pack v5: the answer date is the notice's (37 C.F.R. § 2.105(a)), so
+    // the `deadlines` op counts no date from the notice in its place.
+    let catalog = litgraph_packs::catalog().expect("embedded catalog compiles");
+    let request = format!(
+        r#"{{"packs": ["{TTAB}"], "op": {{"op": "deadlines", "trigger": "2026-07-06", "node": "instituted"}}}}"#
+    );
+    let response = litgraph::api::handle_json(&request, &catalog);
+    assert!(response.ok, "{:?}", response.error);
+    let result = response.result.unwrap();
+    assert_eq!(result["count"], 0, "{result}");
+    let warning = response
+        .warnings
+        .iter()
+        .find(|w| w.code == "deadline-uncomputable")
+        .expect("a deadline-uncomputable warning");
+    assert_eq!(warning.count, 3, "{warning:?}");
+    assert!(
+        warning.example.contains(
+            "the deadline is designated by `InstitutionNoticed`'s `due` in each matter (at least 30 calendar days from it), not counted from a trigger"
+        ),
+        "{warning:?}"
+    );
+}

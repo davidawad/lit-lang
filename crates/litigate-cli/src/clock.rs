@@ -588,6 +588,7 @@ deadline chained-nourl: 1.days from deadline(nourl-base).nominal counted_by frcp
     fn a_designated_due_date_is_the_trigger_argument_rolled() {
         let pkg = package(&|d| {
             d.designated = Some(hir::Designated {
+                event: "Served".into(),
                 param: 1,
                 name: "due".into(),
                 interpretation: None,

@@ -29,6 +29,7 @@ pub use links::{local_edge_ids, merge_patch, Instance, LinkFile, LINKS_SCHEMA_VE
 pub(crate) use lowered::check_header;
 pub use lowered::{pointer_token, world_digest, Basis, BasisLabel, Hole, Lowered, Pin};
 pub use schema::{
-    default_roles, Deadline, Duration, Group, NodeKind, Pack, RawEdge, RawNode, Role, Source,
-    PACK_SCHEMA_VERSION,
+    default_roles, CauseStandard, DateBound, DateRef, Deadline, Designated, Duration,
+    ExtensionBound, ExtensionWindow, Group, Motion, NodeKind, Pack, RawEdge, RawNode, Role,
+    Source, PACK_SCHEMA_VERSION,
 };

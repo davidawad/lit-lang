@@ -7,13 +7,25 @@ mod support;
 
 use support::{litigate, litigate_in, scratch};
 
-fn corpus() -> Vec<String> {
+/// The built corpus, copied into `dir` in the legacy format the importer
+/// reads: a designated window and extension grants (pack v5, links v3)
+/// are a `deadline` declaration's, which import reports (L6002) rather
+/// than spells, so the window is dropped and the grants left undeclared,
+/// as lowering emitted them before v5.
+fn corpus(dir: &std::path::Path) -> Vec<String> {
     let mut paths = Vec::new();
-    for dir in [litgraph_packs::PACKS_DIR, litgraph_packs::SCENARIOS_DIR] {
-        for entry in std::fs::read_dir(dir).unwrap() {
+    for (kind, built) in [
+        ("packs", litgraph_packs::PACKS_DIR),
+        ("scenarios", litgraph_packs::SCENARIOS_DIR),
+    ] {
+        std::fs::create_dir_all(dir.join(kind)).unwrap();
+        for entry in std::fs::read_dir(built).unwrap() {
             let path = entry.unwrap().path();
             if path.extension().is_some_and(|e| e == "json") {
-                paths.push(path.to_string_lossy().into_owned());
+                let copy = dir.join(kind).join(path.file_name().unwrap());
+                let text = std::fs::read_to_string(&path).unwrap();
+                std::fs::write(&copy, legacy(&text)).unwrap();
+                paths.push(copy.to_string_lossy().into_owned());
             }
         }
     }
@@ -21,15 +33,34 @@ fn corpus() -> Vec<String> {
     paths
 }
 
+fn legacy(text: &str) -> String {
+    let mut doc: serde_json::Value = serde_json::from_str(text).unwrap();
+    for key in ["edges", "links"] {
+        let edges = doc.get_mut(key).and_then(serde_json::Value::as_array_mut);
+        for edge in edges.into_iter().flatten().filter_map(|e| e.as_object_mut()) {
+            if edge
+                .get("deadline")
+                .is_some_and(|d| d.get("designated").is_some())
+            {
+                edge.remove("deadline");
+            } else if let Some(d) = edge.get_mut("deadline").and_then(|d| d.as_object_mut()) {
+                d.remove("extensions");
+            }
+        }
+    }
+    doc.to_string()
+}
+
 #[test]
 fn import_check_run_matches_litgraph() {
     let out = scratch("corpus");
+    let inputs = scratch("corpus-inputs");
     let mut args = vec![
         "import".to_owned(),
         "--out".to_owned(),
         out.to_string_lossy().into_owned(),
     ];
-    args.extend(corpus());
+    args.extend(corpus(&inputs));
     let refs: Vec<&str> = args.iter().map(String::as_str).collect();
     let import = litigate(&refs);
     assert_eq!(import.code, 0, "{}", import.stdout);

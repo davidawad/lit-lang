@@ -237,7 +237,7 @@ pub struct EdgeEnv<'a> {
 impl Env for EdgeEnv<'_> {
     fn var(&self, name: &str) -> Option<f64> {
         let e = &self.g.edges[self.e];
-        let dl = e.deadline.as_ref().map(Deadline::days);
+        let dl = e.deadline.as_ref().and_then(Deadline::days);
         let elapsed = e.duration.as_ref().map(|d| d.mode).or(dl).unwrap_or(0.0);
         Some(match name {
             "hours" => e.hours,
@@ -246,7 +246,7 @@ impl Env for EdgeEnv<'_> {
             "elapsed" => elapsed,
             "elapsed_min" => e.duration.as_ref().and_then(|d| d.min).unwrap_or(elapsed),
             "elapsed_max" => e.duration.as_ref().and_then(|d| d.max).unwrap_or(elapsed),
-            "has_deadline" => b(dl.is_some()),
+            "has_deadline" => b(e.deadline.is_some()),
             "extendable" => b(e
                 .deadline
                 .as_ref()

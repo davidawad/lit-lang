@@ -312,6 +312,7 @@ impl Cx<'_, '_> {
             return None;
         }
         Some(Designated {
+            event: event.to_string(),
             param,
             name: params[param].0.clone(),
             interpretation: None,

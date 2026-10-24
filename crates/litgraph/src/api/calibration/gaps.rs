@@ -119,7 +119,7 @@ fn duration_gaps(
             truncated = true;
             break;
         }
-        let dl = g.edges[e].deadline.as_ref().map_or(0.0, Deadline::days);
+        let dl = g.edges[e].deadline.as_ref().and_then(Deadline::days).unwrap_or(0.0);
         let (lo, hi) = if dl > 0.0 {
             ((dl * (1.0 - rel)).max(0.0), dl * (1.0 + rel))
         } else {

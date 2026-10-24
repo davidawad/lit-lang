@@ -10,8 +10,9 @@ use super::schema::{NodeKind, Pack, RawEdge, Role};
 use crate::error::{Error, Result};
 
 /// The newest `links.json` `schemaVersion`: `2` adds the `lowered` header
-/// (absent is `1`).
-pub const LINKS_SCHEMA_VERSION: u32 = 2;
+/// (absent is `1`), `3` designated windows and extension bounds on a
+/// link's `deadline` (as pack v5).
+pub const LINKS_SCHEMA_VERSION: u32 = 3;
 
 /// A namespaced copy of a pack that remembers how it was entered — the
 /// product-graph construction for one piece of history, expressed as data.
@@ -94,6 +95,11 @@ impl LinkFile {
             return Err(Error::Parse(format!(
                 "links.json: unsupported schemaVersion {version}"
             )));
+        }
+        for (e, id) in self.links.iter().zip(local_edge_ids(&self.links)) {
+            if let Some(d) = &e.deadline {
+                d.check(&format!("links.json: link {id}"), version, 3)?;
+            }
         }
         check_header("links.json", version, 2, self.lowered.as_ref(), self)
     }

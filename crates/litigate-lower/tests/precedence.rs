@@ -48,7 +48,7 @@ fn windows(packages: &[&hir::Package], pkg: &hir::Package) -> Vec<f64> {
     };
     pack.edges
         .iter()
-        .filter_map(|e| e.deadline.as_ref().map(|d| d.length))
+        .filter_map(|e| e.deadline.as_ref().and_then(|d| d.length))
         .collect()
 }
 

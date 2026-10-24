@@ -161,11 +161,11 @@ fn link_files_read_v1_and_v2() {
         .unwrap_err()
         .to_string()
         .contains("links.json: `lowered` needs schemaVersion 2"));
-    let future = json!({"schemaVersion": 3, "links": []});
+    let future = json!({"schemaVersion": 4, "links": []});
     assert!(LinkFile::from_json(&future.to_string())
         .unwrap_err()
         .to_string()
-        .contains("unsupported schemaVersion 3"));
+        .contains("unsupported schemaVersion 4"));
     assert!(LinkFile::from_json("{").is_err());
     let catalog = litgraph_packs::catalog().unwrap();
     let checked = validate(&v2, None, &catalog);

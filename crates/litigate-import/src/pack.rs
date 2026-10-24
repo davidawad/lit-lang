@@ -17,7 +17,7 @@ pub(crate) fn import_pack(pack: &Pack, from: &str, dir: &str, issues: &mut Issue
         issues.report(
             "/schemaVersion",
             format!(
-                "schemaVersion {} is not derivable: lowering emits 4; a legacy pack is 3 exactly when it names a counting rule, else 2 (SPEC §8.1)",
+                "schemaVersion {} is not derivable: lowering emits {PACK_SCHEMA_VERSION}; a legacy pack is 3 exactly when it names a counting rule, else 2 (SPEC §8.1)",
                 pack.schema_version
             ),
         );

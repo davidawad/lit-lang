@@ -5,7 +5,7 @@ use crate::node::Spelling;
 use crate::text;
 use crate::Emitted;
 use litgraph::cite::normalize::CiteGrammar;
-use litgraph::model::{CiteSyntax, Instance, LinkFile, RawEdge, Role};
+use litgraph::model::{CiteSyntax, Instance, LinkFile, RawEdge, Role, PACK_SCHEMA_VERSION};
 use std::collections::BTreeMap;
 
 /// Packs known to this import: pack id to (package directory, citation
@@ -242,7 +242,17 @@ fn patch_fields(
     whole.insert("from".into(), "".into());
     whole.insert("to".into(), "".into());
     whole.insert("label".into(), "".into());
-    match serde_json::from_value::<RawEdge>(serde_json::Value::Object(whole)) {
+    // A window must be whole too: a `length` or a designated date.
+    let edge = serde_json::from_value::<RawEdge>(serde_json::Value::Object(whole))
+        .map_err(|e| e.to_string())
+        .and_then(|edge| {
+            edge.deadline
+                .iter()
+                .try_for_each(|d| d.check("the patch", PACK_SCHEMA_VERSION, PACK_SCHEMA_VERSION))
+                .map(|()| edge)
+                .map_err(|e| e.to_string())
+        });
+    match edge {
         Ok(edge) => {
             let mut fields = spelling.edge_fields(&edge, pointer);
             fields.extend(extra);

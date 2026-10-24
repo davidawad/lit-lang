@@ -420,9 +420,10 @@ fn a_board_order_resets_the_counterclaim_answer_date() {
 }
 
 #[test]
-fn the_generated_pack_leaves_the_answer_extension_undeclared() {
-    // The pack format carries no designated window (lg-flu.32): each answer
-    // edge's extension is a hole, never `extendable: false`.
+fn the_generated_pack_carries_the_designated_answer_window() {
+    // Pack v5 (lg-flu.33): each answer edge's window is the one the notice
+    // designates, its 30 days the least time, never a counted `length`;
+    // its extension is undeclared (absent), never `extendable: false`.
     let out = scratch("ttab-pack");
     let run = support::litigate(&[
         "build",
@@ -435,6 +436,7 @@ fn the_generated_pack_leaves_the_answer_extension_undeclared() {
     let pack: serde_json::Value =
         serde_json::from_slice(&std::fs::read(out.join(format!("packs/{TTAB}.json"))).unwrap())
             .unwrap();
+    assert_eq!(pack["schemaVersion"], 5);
     let edges = pack["edges"].as_array().unwrap();
     let answers: Vec<usize> = (0..edges.len())
         .filter(|&i| edges[i]["from"] == "instituted" && edges[i]["to"] != "talks-instituted")
@@ -447,28 +449,52 @@ fn the_generated_pack_leaves_the_answer_extension_undeclared() {
             .collect::<Vec<_>>(),
         ["answered", "answered", "notice-of-default"]
     );
-    assert!(answers.iter().all(|&i| edges[i].get("deadline").is_none()));
-    let holes = pack["lowered"]["holes"].as_array().unwrap();
-    let hole = |i: usize, field: &str| {
-        let pointer = format!("/edges/{i}/deadline/{field}");
-        let found: Vec<_> = holes
-            .iter()
-            .filter(|h| h["pointer"] == pointer.as_str())
-            .collect();
-        assert_eq!(found.len(), 1, "one hole at {pointer}");
-        found[0]["reason"].as_str().unwrap().to_owned()
-    };
     // The declaration's authority (FRCP 6(b)(1)(A) through 37 CFR
-    // 2.116(a), an interpretation) is named in the reason, never emitted
-    // as a window (lg-flu.45).
+    // 2.116(a), an interpretation) and its two grants are carried with the
+    // window, each grant naming the interpretation it rests on (lg-flu.45).
+    let authority = "FRCP 6(b)(1)(A), applied through 37 CFR 2.116(a) (interpretation)";
     for &i in &answers {
-        for field in ["extendable", "extensionAuthority"] {
+        let d = &edges[i]["deadline"];
+        assert_eq!(
+            d["designated"],
+            serde_json::json!({
+                "minPeriod": 30, "sourceEvent": "InstitutionNoticed", "sourceEventArg": "due"
+            })
+        );
+        assert_eq!((&d["length"], &d["extendable"]), (&serde_json::Value::Null, &serde_json::Value::Null));
+        assert_eq!(d["extensionAuthority"], authority);
+        let grants = d["extensions"].as_array().unwrap();
+        assert_eq!(grants.len(), 2, "{d}");
+        for g in grants {
             assert_eq!(
-                hole(i, field),
-                "`within answer-period`: the due date is the one each matter's notice or order designates, and the pack format carries no designated window, so its extension is undeclared here, never not-extendable; the source states extension_authority \"FRCP 6(b)(1)(A), applied through 37 CFR 2.116(a) (interpretation)\", which is not emitted"
+                (&g["bound"], &g["standard"], &g["window"], &g["interpretation"]),
+                (
+                    &serde_json::json!("discretionary"),
+                    &serde_json::json!("GoodCause"),
+                    &serde_json::json!("beforeExpiry"),
+                    &serde_json::json!(RULE_6B)
+                ),
+                "{g}"
             );
         }
+        assert_eq!(grants[1]["motion"]["event"], "AnswerExtensionMoved()");
     }
+    // Nothing under a deadline is a hole: the source states it all.
+    let holes: Vec<&str> = pack["lowered"]["holes"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .filter_map(|h| h["pointer"].as_str())
+        .filter(|p| p.contains("/deadline/"))
+        .collect();
+    assert_eq!(holes, Vec::<&str>::new());
+    // The engine reads the pack, and a deadline query reports the window
+    // as each matter's, not a date counted from the notice.
+    let loaded = litgraph::model::Pack::from_json(&pack.to_string()).unwrap();
+    assert!(loaded.edges[answers[0]]
+        .deadline
+        .as_ref()
+        .is_some_and(|d| d.days().is_none()));
 }
 
 /// The interpretation the answer time's extension grants rest on.

@@ -311,6 +311,24 @@ impl Spelling<'_> {
     }
 
     fn deadline(&mut self, deadline: &Deadline, pointer: &str) -> String {
+        // `designated` and `extend` are a `deadline` declaration's (SPEC
+        // §5.3), whose trigger event and `counted_by` rule an edge window
+        // does not carry: reported, never dropped or counted instead.
+        if !deadline.extensions.is_empty() {
+            self.issues.report(
+                &format!("{pointer}/extensions"),
+                "extension grants have no edge-window .lit spelling: they are a `deadline` \
+                 declaration's `extend { ... }` (SPEC §5.3)",
+            );
+        }
+        if deadline.designated.is_some() {
+            self.issues.report(
+                &format!("{pointer}/designated"),
+                "a designated window has no edge-window .lit spelling: it is a `deadline` \
+                 declaration's `designated p`, its trigger event's `Date` argument (SPEC §5.3)",
+            );
+            return "deadline ?".to_owned();
+        }
         let unit = match deadline.unit.as_deref() {
             None | Some("calendar") => "days",
             Some("court") => "court_days",
@@ -328,7 +346,9 @@ impl Spelling<'_> {
                 "days"
             }
         };
-        let length = text::duration(deadline.length, unit, true);
+        let length = deadline
+            .length
+            .and_then(|length| text::duration(length, unit, true));
         let out = format!(
             "deadline {}",
             self.issues.spell(

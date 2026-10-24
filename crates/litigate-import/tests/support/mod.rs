@@ -48,9 +48,34 @@ pub fn corpus() -> Vec<Input> {
         .into_iter()
         .map(|path| {
             let text = std::fs::read_to_string(built_path(&path)).unwrap_or_default();
-            Input::new(path, text)
+            Input::new(path, legacy(&text))
         })
         .collect()
+}
+
+/// `text`, a built pack or `links.json`, in the legacy format the
+/// importer reads: a designated window and extension grants (pack v5,
+/// links v3) are a `deadline` declaration's, which import reports (L6002)
+/// rather than spells, so the window is dropped and the grants left
+/// undeclared, as lowering emitted them before v5.
+pub fn legacy(text: &str) -> String {
+    let Ok(mut doc) = serde_json::from_str::<serde_json::Value>(text) else {
+        return text.to_owned();
+    };
+    for key in ["edges", "links"] {
+        let edges = doc.get_mut(key).and_then(serde_json::Value::as_array_mut);
+        for edge in edges.into_iter().flatten().filter_map(|e| e.as_object_mut()) {
+            if edge
+                .get("deadline")
+                .is_some_and(|d| d.get("designated").is_some())
+            {
+                edge.remove("deadline");
+            } else if let Some(d) = edge.get_mut("deadline").and_then(|d| d.as_object_mut()) {
+                d.remove("extensions");
+            }
+        }
+    }
+    doc.to_string()
 }
 
 /// Imports `inputs`, failing the test with every diagnostic on error.

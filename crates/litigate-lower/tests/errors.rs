@@ -130,7 +130,7 @@ fn a_shared_library_rule_needs_no_fragment() {
     };
     assert_eq!(
         (pack.schema_version, pack.counting.as_deref()),
-        (4, Some("frcp6"))
+        (litgraph::model::PACK_SCHEMA_VERSION, Some("frcp6"))
     );
 }
 
@@ -205,6 +205,7 @@ fn designate(p: &mut hir::Package) {
     for d in decls(p) {
         if let Declaration::Deadline(x) = d {
             x.designated = Some(hir::Designated {
+                event: "Noticed".into(),
                 param: 0,
                 name: "due".into(),
                 interpretation: None,
@@ -213,47 +214,49 @@ fn designate(p: &mut hir::Package) {
     }
 }
 
-#[test]
-fn a_designated_deadline_gives_its_edges_no_window() {
-    let mut p = example();
-    assert!(windows(&p).contains(&true));
-    designate(&mut p);
-    // The notice sets the date in each matter: no flat period stands in.
-    assert!(!windows(&p).contains(&true));
+/// The `deadline` of each edge of `p`'s pack that has one.
+fn deadlines(p: &hir::Package) -> Vec<litgraph::model::Deadline> {
+    pack_of(p)
+        .edges
+        .into_iter()
+        .filter_map(|e| e.deadline)
+        .collect()
 }
 
 #[test]
-fn a_designated_deadline_leaves_its_edges_extension_undeclared() {
+fn a_designated_deadline_lowers_to_a_designated_window() {
     let mut p = example();
     let counted = windows(&p);
-    assert_eq!(deadline_holes(&p), Vec::<(String, String)>::new());
+    assert!(counted.contains(&true));
     designate(&mut p);
-    // Its extension is undeclared, never not-extendable, and what the
-    // source states of it is named, not dropped silently (lg-flu.32).
-    let found = deadline_holes(&p);
-    let pointers: Vec<&str> = found.iter().map(|(p, _)| p.as_str()).collect();
-    let want: Vec<String> = (0..counted.len())
-        .filter(|&i| counted[i])
-        .flat_map(|i| {
-            [
-                format!("/edges/{i}/deadline/extendable"),
-                format!("/edges/{i}/deadline/extensionAuthority"),
-            ]
-        })
-        .collect();
-    assert_eq!(pointers, want);
+    // The notice sets the date in each matter: its least time is never a
+    // `length`, and every window the source has is kept (lg-flu.33).
+    assert_eq!(windows(&p), counted);
+    let found = deadlines(&p);
     assert!(
-        found
-            .iter()
-            .all(|(_, r)| r.contains("is undeclared here, never not-extendable")),
+        found.iter().all(|d| d.length.is_none()
+            && d.designated
+                == Some(litgraph::model::Designated {
+                    min_period: 21.0,
+                    source_event: "Noticed".into(),
+                    source_event_arg: "due".into(),
+                    interpretation: None,
+                })),
         "{found:#?}"
     );
-    // What the edge and declaration state is echoed, edge options winning.
+    // Its extension lowers as a counted window's does: what the source
+    // states, edge options winning; nothing stated is undeclared (absent),
+    // never not-extendable, and no hole stands in for it.
+    assert_eq!(deadline_holes(&p), Vec::<(String, String)>::new());
+    assert!(found.iter().all(|d| d.extendable.is_none()));
     for d in decls(&mut p) {
         match d {
             Declaration::Deadline(x) => {
                 x.extendable = Some(true);
                 x.extension_authority = Some("Rule X".into());
+                if let Some(designated) = x.designated.as_mut() {
+                    designated.interpretation = Some("no start named".into());
+                }
             }
             Declaration::Node(n) => {
                 for e in &mut n.edges {
@@ -265,36 +268,162 @@ fn a_designated_deadline_leaves_its_edges_extension_undeclared() {
             _ => {}
         }
     }
-    let found = deadline_holes(&p);
+    let found = deadlines(&p);
     assert!(
-        found.iter().all(|(_, r)| r.ends_with(
-            "; the source states extendable false, extension_authority \"Rule X\", which is not emitted"
-        )),
+        found.iter().all(|d| d.extendable == Some(false)
+            && d.extension_authority.as_deref() == Some("Rule X")
+            && d.designated.as_ref().and_then(|x| x.interpretation.as_deref())
+                == Some("no start named")),
         "{found:#?}"
     );
-    // An authority the edge leaves a `?` for keeps that hole, once.
+    assert_eq!(deadline_holes(&p), Vec::<(String, String)>::new());
+}
+
+/// The motion event pattern `Moved(answer)`.
+fn moved() -> hir::Expr {
+    let expr = |ty: &str, kind| hir::Expr {
+        ty: hir::Type::Named(ty.into()),
+        kind,
+        span: None,
+    };
+    expr(
+        "Moved",
+        hir::ExprKind::Call {
+            callee: "Moved".into(),
+            args: vec![expr(
+                "Doc",
+                hir::ExprKind::Literal {
+                    value: hir::Value::Variant("Doc::answer".into()),
+                },
+            )],
+        },
+    )
+}
+
+#[test]
+fn extension_grants_lower_to_extension_bounds() {
+    use hir::{Bound, CauseStandard as S, DateRef as R, Extension, ExtensionWindow as W};
+    use litgraph::model::{
+        CauseStandard, DateBound, DateRef, ExtensionBound, ExtensionWindow, Motion,
+    };
+    let mut p = example();
+    assert!(deadlines(&p).iter().all(|d| d.extensions.is_empty()));
+    let due = |days| Bound::Offset {
+        from: R::PrescribedDue,
+        days,
+    };
+    let order = |days| Bound::Offset {
+        from: R::GrantOrderEntered,
+        days,
+    };
+    let grants = vec![
+        Extension::Bounded {
+            by: "Court".into(),
+            until: Bound::Max(vec![due(30), Bound::Min(vec![due(0), order(14)])]),
+            after_expiry: true,
+            standard: Some(S::GoodCauseOrExcusableNeglect),
+            motion: Some(hir::Motion {
+                event: moved(),
+                within: Some(due(30)),
+            }),
+            interpretation: Some("read so".into()),
+        },
+        Extension::Bounded {
+            by: "Court".into(),
+            until: due(7),
+            after_expiry: false,
+            standard: None,
+            motion: None,
+            interpretation: None,
+        },
+        Extension::Discretionary {
+            by: "Court".into(),
+            standard: S::GoodCause,
+            window: W::BeforeExpiry,
+            motion: None,
+            interpretation: Some("read so".into()),
+        },
+        Extension::Discretionary {
+            by: "Court".into(),
+            standard: S::ExcusableNeglect,
+            window: W::AfterExpiryOnMotion,
+            motion: Some(hir::Motion {
+                event: moved(),
+                within: None,
+            }),
+            interpretation: None,
+        },
+        Extension::NonExtendable {
+            authority: "FRCP 6(b)(2)".into(),
+        },
+    ];
     for d in decls(&mut p) {
-        if let Declaration::Node(n) = d {
-            for e in &mut n.edges {
-                if e.deadline.is_some() {
-                    e.holes.insert(
-                        "within.extension_authority".into(),
-                        Some("unverified".into()),
-                    );
-                }
-            }
+        if let Declaration::Deadline(x) = d {
+            x.extend.clone_from(&grants);
         }
     }
-    let found = deadline_holes(&p);
-    assert_eq!(found.len(), want.len(), "{found:#?}");
-    for (pointer, reason) in &found {
-        assert_eq!(
-            pointer.ends_with("/extensionAuthority"),
-            reason == "unverified",
-            "{found:#?}"
-        );
-    }
-    assert!(!windows(&p).contains(&true));
+    let due = |days| DateBound::Offset {
+        from: DateRef::PrescribedDue,
+        days,
+    };
+    let want = vec![
+        ExtensionBound::Bounded {
+            by: "Court".into(),
+            until: DateBound::Max(vec![
+                due(30),
+                DateBound::Min(vec![
+                    due(0),
+                    DateBound::Offset {
+                        from: DateRef::GrantOrderEntered,
+                        days: 14,
+                    },
+                ]),
+            ]),
+            after_expiry: true,
+            standard: Some(CauseStandard::GoodCauseOrExcusableNeglect),
+            motion: Some(Motion {
+                event: "Moved(answer)".into(),
+                within: Some(due(30)),
+            }),
+            interpretation: Some("read so".into()),
+        },
+        ExtensionBound::Bounded {
+            by: "Court".into(),
+            until: due(7),
+            after_expiry: false,
+            standard: None,
+            motion: None,
+            interpretation: None,
+        },
+        ExtensionBound::Discretionary {
+            by: "Court".into(),
+            standard: CauseStandard::GoodCause,
+            window: ExtensionWindow::BeforeExpiry,
+            motion: None,
+            interpretation: Some("read so".into()),
+        },
+        ExtensionBound::Discretionary {
+            by: "Court".into(),
+            standard: CauseStandard::ExcusableNeglect,
+            window: ExtensionWindow::AfterExpiryOnMotion,
+            motion: Some(Motion {
+                event: "Moved(answer)".into(),
+                within: None,
+            }),
+            interpretation: None,
+        },
+        ExtensionBound::NonExtendable {
+            authority: "FRCP 6(b)(2)".into(),
+        },
+    ];
+    let found = deadlines(&p);
+    assert!(!found.is_empty());
+    assert!(found.iter().all(|d| d.extensions == want), "{found:#?}");
+    // The pack reads back with them (schema v5).
+    let pack = pack_of(&p);
+    let text = serde_json::to_string(&pack).unwrap_or_default();
+    let back = litgraph::model::Pack::from_json(&text).unwrap_or_else(|e| panic!("{e}"));
+    assert_eq!(back.edges, pack.edges);
 }
 
 #[test]
@@ -606,7 +735,10 @@ fn a_counting_rule_library_lowers_every_rule() {
     let Document::Pack(pack) = &lowered.document else {
         panic!("expected a pack")
     };
-    assert_eq!((pack.schema_version, pack.counting.as_deref()), (4, None));
+    assert_eq!(
+        (pack.schema_version, pack.counting.as_deref()),
+        (litgraph::model::PACK_SCHEMA_VERSION, None)
+    );
     let (clock, map) = lowered.clock.unwrap_or_else(|| panic!("no fragment"));
     let rules: Vec<&str> = clock.counting_rules.iter().map(|r| r.id.as_str()).collect();
     assert_eq!(rules, ["frcp6", "frcp6-copy"]);

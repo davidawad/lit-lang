@@ -56,12 +56,10 @@ pub(crate) fn links(
             _ => {}
         }
     }
-    let link_holes = links.iter().enumerate().flat_map(|(i, (_, e))| {
-        let base = format!("/links/{i}");
-        let mut found = crate::holes::at(&base, &e.holes);
-        found.extend(edge::undeclared(&cx, &base, e));
-        found
-    });
+    let link_holes = links
+        .iter()
+        .enumerate()
+        .flat_map(|(i, (_, e))| crate::holes::at(&format!("/links/{i}"), &e.holes));
     let basis = crate::basis::labels("/links", links.iter().map(|(_, e)| e.basis.as_ref()));
     let lowered = build.lowered(link_holes.chain(instance_holes).collect());
     let file = LinkFile {

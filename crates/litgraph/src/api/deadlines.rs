@@ -78,14 +78,28 @@ fn unit_of(d: &PackDeadline) -> Result<Unit> {
 }
 
 fn days_of(d: &PackDeadline) -> Result<i64> {
-    if d.length < 0.0 || d.length.fract() != 0.0 || !d.length.is_finite() {
+    // A designated due date is each matter's notice's to set: counting
+    // its least time in its place would be the wrong date.
+    let Some(length) = d.length else {
+        let why = d.designated.as_ref().map_or_else(
+            || "has no length".to_owned(),
+            |x| {
+                format!(
+                    "is designated by `{}`'s `{}` in each matter (at least {} calendar days \
+                     from it), not counted from a trigger",
+                    x.source_event, x.source_event_arg, x.min_period
+                )
+            },
+        );
+        return Err(Error::Invalid(format!("the deadline {why}")));
+    };
+    if length < 0.0 || length.fract() != 0.0 || !length.is_finite() {
         return Err(Error::Invalid(format!(
-            "deadline.length {} is not a non-negative integer",
-            d.length
+            "deadline.length {length} is not a non-negative integer"
         )));
     }
     #[allow(clippy::cast_possible_truncation)]
-    Ok(d.length as i64)
+    Ok(length as i64)
 }
 
 fn edge_result(

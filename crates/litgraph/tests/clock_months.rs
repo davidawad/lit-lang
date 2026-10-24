@@ -156,15 +156,17 @@ fn month_periods_need_a_provision_and_a_trigger_anchor() {
 fn a_deadline_reads_its_length_in_days() {
     let days = |length, unit: Option<&str>| {
         Deadline {
-            length,
+            length: Some(length),
             unit: unit.map(str::to_owned),
             ..Deadline::default()
         }
         .days()
     };
-    assert_eq!(days(21.0, None), 21.0);
-    assert_eq!(days(5.0, Some("court")), 5.0);
-    assert_eq!(days(2.0, Some("week")), 14.0);
-    assert_eq!(days(12.0, Some("month")), 365.2425);
-    assert_eq!(days(2.0, Some("year")), 730.485);
+    assert_eq!(days(21.0, None), Some(21.0));
+    assert_eq!(days(5.0, Some("court")), Some(5.0));
+    assert_eq!(days(2.0, Some("week")), Some(14.0));
+    assert_eq!(days(12.0, Some("month")), Some(365.2425));
+    assert_eq!(days(2.0, Some("year")), Some(730.485));
+    // A designated window's length is each matter's.
+    assert_eq!(Deadline::default().days(), None);
 }

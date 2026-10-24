@@ -1,10 +1,13 @@
 //! HIR edges to `RawEdge` (SPEC §8.1), shared by packs and links.
 use crate::diag::Sink;
 use crate::select::Selection;
-use litgraph::model::{Deadline, Duration, Hole, RawEdge};
+use litgraph::model::{
+    CauseStandard, DateBound, DateRef, Deadline, Designated, Duration, ExtensionBound,
+    ExtensionWindow, Motion, RawEdge,
+};
 use litigate_base::{DiagnosticCode as C, Span};
 use litigate_sema::hir::{
-    self, Authored, DayUnit, DeadlineWindow, Declaration, Direction, Rational, Valence,
+    self, Authored, DayUnit, DeadlineWindow, Declaration, Direction, Extension, Rational, Valence,
 };
 use std::collections::BTreeMap;
 
@@ -88,68 +91,6 @@ pub(crate) fn edge(cx: &EdgeCx<'_, '_>, sink: &mut Sink, from: String, e: &hir::
     }
 }
 
-/// The `lowered.holes` of edge `e` emitted at `base` (`/edges/3`) that its
-/// source leaves no `?` for: a `within d` whose version in force is
-/// `designated` lowers with no `deadline` window (SPEC §5.3, §8.1), so
-/// whether the deadline is extendable, and on what authority, is
-/// undeclared there, never not-extendable (fail-closed). Each field is a
-/// hole whose reason names the deadline and what the source states of
-/// it, so nothing it says is dropped silently; a field the source itself
-/// leaves a hole keeps that hole and its reason.
-pub(crate) fn undeclared(cx: &EdgeCx<'_, '_>, base: &str, e: &hir::Edge) -> Vec<Hole> {
-    let Some(d) = &e.deadline else {
-        return Vec::new();
-    };
-    let DeadlineWindow::Declared { deadline } = &d.window else {
-        return Vec::new();
-    };
-    // An unresolved reference is the edge lowering's error.
-    let Ok(Declaration::Deadline(decl)) = cx.selection.resolve(
-        cx.pack,
-        deadline,
-        e.span.clone().unwrap_or_else(|| crate::diag::start_of("")),
-    ) else {
-        return Vec::new();
-    };
-    if decl.designated.is_none() {
-        return Vec::new();
-    }
-    let mut stated = Vec::new();
-    if let Some(x) = d.extendable.or(decl.extendable) {
-        stated.push(format!("extendable {x}"));
-    }
-    if let Some(x) = d
-        .extension_authority
-        .as_ref()
-        .or(decl.extension_authority.as_ref())
-    {
-        stated.push(format!("extension_authority {x:?}"));
-    }
-    let stated = if stated.is_empty() {
-        String::new()
-    } else {
-        format!(
-            "; the source states {}, which is not emitted",
-            stated.join(", ")
-        )
-    };
-    let reason = format!(
-        "`within {deadline}`: the due date is the one each matter's notice or order designates, and the pack format carries no designated window, so its extension is undeclared here, never not-extendable{stated}"
-    );
-    // A field the source leaves a `?` for is already a hole of its own.
-    [
-        ("extendable", "within.extendable"),
-        ("extensionAuthority", "within.extension_authority"),
-    ]
-    .into_iter()
-    .filter(|(_, path)| !e.holes.contains_key(*path))
-    .map(|(field, _)| Hole {
-        pointer: format!("{base}/deadline/{field}"),
-        reason: Some(reason.clone()),
-    })
-    .collect()
-}
-
 /// `Deadline.unit`: absent for calendar days, `"court"` for court days,
 /// `"week"`, `"month"`, `"year"`; business days have no litgraph unit
 /// (L6001).
@@ -171,7 +112,10 @@ fn unit(sink: &mut Sink, unit: DayUnit, span: Option<&Span>) -> Result<Option<St
 }
 
 /// `within d` (from d's version in force, edge options winning) or a
-/// literal `deadline N.unit`.
+/// literal `deadline N.unit`. A designated `d` (SPEC §5.3) is a
+/// `designated` window, its amount the least time and never a `length`:
+/// the due date is each matter's notice's. `d`'s `extend` grants are its
+/// `extensions`.
 fn deadline(
     cx: &EdgeCx<'_, '_>,
     sink: &mut Sink,
@@ -192,12 +136,6 @@ fn deadline(
                                  litgraph edge window"
                             ),
                         );
-                        return None;
-                    }
-                    // A designated due date is the notice's in each matter
-                    // (SPEC §5.3): the pack has no window to give it, and
-                    // its least time is not one.
-                    if decl.designated.is_some() {
                         return None;
                     }
                     let at = span.cloned().unwrap_or_else(|| sink.fallback.clone());
@@ -235,9 +173,21 @@ fn deadline(
         );
         return None;
     };
+    let designated = declared
+        .and_then(|x| x.designated.as_ref())
+        .map(|x| Designated {
+            min_period: length,
+            source_event: x.event.clone(),
+            source_event_arg: x.name.clone(),
+            interpretation: x.interpretation.clone(),
+        });
     Some(Deadline {
-        length,
+        length: designated.is_none().then_some(length),
         unit: unit(sink, day_unit, span).ok()?,
+        designated,
+        extensions: declared
+            .map(|x| x.extend.iter().map(extension).collect())
+            .unwrap_or_default(),
         extendable: d.extendable.or(declared.and_then(|x| x.extendable)),
         extension_authority: d
             .extension_authority
@@ -249,6 +199,78 @@ fn deadline(
             .or_else(|| declared.and_then(|x| x.note.clone())),
         counting,
     })
+}
+
+/// One `extend` grant as a pack extension bound.
+fn extension(x: &Extension) -> ExtensionBound {
+    match x {
+        Extension::Bounded {
+            by,
+            until,
+            after_expiry,
+            standard,
+            motion: m,
+            interpretation,
+        } => ExtensionBound::Bounded {
+            by: by.clone(),
+            until: bound(until),
+            after_expiry: *after_expiry,
+            standard: standard.map(cause),
+            motion: m.as_ref().map(motion),
+            interpretation: interpretation.clone(),
+        },
+        Extension::Discretionary {
+            by,
+            standard,
+            window,
+            motion: m,
+            interpretation,
+        } => ExtensionBound::Discretionary {
+            by: by.clone(),
+            standard: cause(*standard),
+            window: match window {
+                hir::ExtensionWindow::BeforeExpiry => ExtensionWindow::BeforeExpiry,
+                hir::ExtensionWindow::AfterExpiryOnMotion => ExtensionWindow::AfterExpiryOnMotion,
+            },
+            motion: m.as_ref().map(motion),
+            interpretation: interpretation.clone(),
+        },
+        Extension::NonExtendable { authority } => ExtensionBound::NonExtendable {
+            authority: authority.clone(),
+        },
+    }
+}
+
+fn cause(s: hir::CauseStandard) -> CauseStandard {
+    match s {
+        hir::CauseStandard::GoodCause => CauseStandard::GoodCause,
+        hir::CauseStandard::ExcusableNeglect => CauseStandard::ExcusableNeglect,
+        hir::CauseStandard::GoodCauseOrExcusableNeglect => {
+            CauseStandard::GoodCauseOrExcusableNeglect
+        }
+    }
+}
+
+fn bound(b: &hir::Bound) -> DateBound {
+    match b {
+        hir::Bound::Offset { from, days } => DateBound::Offset {
+            from: match from {
+                hir::DateRef::PrescribedDue => DateRef::PrescribedDue,
+                hir::DateRef::GrantOrderEntered => DateRef::GrantOrderEntered,
+            },
+            days: *days,
+        },
+        hir::Bound::Max(xs) => DateBound::Max(xs.iter().map(bound).collect()),
+        hir::Bound::Min(xs) => DateBound::Min(xs.iter().map(bound).collect()),
+    }
+}
+
+/// The motion's event pattern in source spelling (`ExtensionMoved(AnswerPeriod)`).
+fn motion(m: &hir::Motion) -> Motion {
+    Motion {
+        event: litigate_sema::case::display_event(&m.event),
+        within: m.within.as_ref().map(bound),
+    }
 }
 
 /// The unqualified name of a qualified declaration id (`core.frap26::frap26`

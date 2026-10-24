@@ -138,7 +138,7 @@ fn links_structure_errors_name_their_json_pointer() {
             ),
             at(
                 "packs/links.json",
-                "a `patch` replaces whole edge fields; this one is not: missing field `length`",
+                "a `patch` replaces whole edge fields; this one is not: parse: the patch: `deadline`: needs `length` (or, a designated window, `designated`)",
                 "/instances/p@q/patch_edges/typed"
             ),
         ]
@@ -422,6 +422,35 @@ fn v2_holes_and_events_with_no_case_spelling_are_reported() {
             ),
             at(file, &no_spelling("/sources/0/as_of"), "/lowered/holes/3"),
             at(file, "a docket event spans lines", "/events/0"),
+        ]
+    );
+}
+
+#[test]
+fn declaration_only_windows_and_grants_are_reported_not_dropped() {
+    // A designated window and extension grants (pack v5) are a `deadline`
+    // declaration's, whose trigger event and counting rule an edge window
+    // does not carry: each is reported at its pointer (lg-flu.33).
+    let input = pack("v5", |p| {
+        p["schemaVersion"] = json!(5);
+        p["edges"][0]["deadline"] = json!({
+            "designated": {"minPeriod": 30, "sourceEvent": "Noticed", "sourceEventArg": "due"},
+            "extensions": [{"bound": "nonExtendable", "authority": "FRCP 6(b)(2)"}]
+        });
+    });
+    assert_eq!(
+        reported(&[input]),
+        [
+            at(
+                "packs/v5.json",
+                "extension grants have no edge-window .lit spelling: they are a `deadline` declaration's `extend { ... }` (SPEC §5.3)",
+                "/edges/0/deadline/extensions"
+            ),
+            at(
+                "packs/v5.json",
+                "a designated window has no edge-window .lit spelling: it is a `deadline` declaration's `designated p`, its trigger event's `Date` argument (SPEC §5.3)",
+                "/edges/0/deadline/designated"
+            ),
         ]
     );
 }

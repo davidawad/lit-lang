@@ -6,7 +6,7 @@ mod support;
 use litigate_base::FileId;
 use litigate_lower::{semantic_diff_links, ChangeKind, Document, LinkFile, Lowerer, Options};
 use litigate_sema::hir::{self, Declaration};
-use support::{built_path, corpus, imported_hir};
+use support::{built_path, corpus, imported_hir, legacy};
 
 /// `pkg`'s one module split in two link-only modules: the first half of
 /// its links in `01-first.lit` under the name that sorts last, the rest
@@ -63,7 +63,9 @@ fn link_only_modules_lower_in_file_order() {
         .find(|(_, p)| p.manifest.links)
         .unwrap_or_else(|| panic!("no links package"));
     let expected: LinkFile =
-        serde_json::from_str(&std::fs::read_to_string(built_path(origin)).unwrap_or_default())
+        serde_json::from_str(&legacy(
+            &std::fs::read_to_string(built_path(origin)).unwrap_or_default(),
+        ))
             .unwrap_or_else(|e| panic!("{e}"));
     let split = split(links);
     let lowered = Lowerer::new(&refs)

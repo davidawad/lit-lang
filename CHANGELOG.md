@@ -540,6 +540,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   amendment its rule's credits print (2007-12-01, 2009-12-01, 2005-12-01,
   2009-12-01), so the FRCP 6 and FRAP 26 versions whose window contains
   that date cite their own text and lose `historical`.
+- **Remaining type, syntax and lowering bugs from the 2026-10-23 design
+  review** (lg-flu.19; review §5.3-§5.5, §6 item 30). Sema: a type alias
+  may name one declared after it, so an event parameter typed by a
+  forward alias keeps its type and its arguments are checked (T3); an
+  exception to an exception checks its conclusion against the root
+  default's type (T6); a `Dist` record denotes only enums an
+  `import m.{x}` list makes visible (T8); a hole in a `when`/`unless`
+  condition or fact guard is L2001 even in `dev` (T12, SPEC §5.2); an
+  unresolved `n-1` whose `n` resolves offers the fix `n - 1` (S4's
+  non-breaking part). Syntax: a `.field` chain stops at the 256 cap
+  operator chains have (S5); recovery anchors an indented item outside
+  every bracket, not only at column 1 (S6); one recovery error (L0001,
+  L0002) per position, and an error of another code there is no longer
+  hidden (S8, SPEC §3.4). Tree-sitter rejects what the compiler rejects
+  lexically: exact whitespace, `_` only between digits, real Gregorian
+  dates (`invalid_date` in expressions), with conformance tests (S7).
+  Lowering and clocks: replay refuses a business-day period, as edge
+  lowering and the CLI do, instead of counting court days (LW3); a cite
+  prefix binds only at a token boundary, so `FRCP 6` no longer binds
+  `FRCP 60` (LW4); `litigate build` never writes an empty output (LW5);
+  the clock interpreter refuses a closed run or a court-day count longer
+  than one Gregorian cycle instead of looping (LW6). T5, T7 and T9-T11
+  break source or output and stay with the identity-lock, edition and
+  capability work.
 
 - **A chain on a dependency's period opens in case replay** (lg-flu.29).
   Replay's world holds the used packages' dependencies, as `check` and

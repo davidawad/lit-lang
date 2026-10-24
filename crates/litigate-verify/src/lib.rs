@@ -113,6 +113,8 @@ pub struct PackageInput<'a> {
 /// lowering failed, its diagnostics fail their obligations, those checks
 /// and `tests-pass` (which runs the lowered clock) are skipped, and the
 /// HIR obligations still run, `deadline-satisfiable` over every node.
+/// `holes` inventories the written holes, then each cite no amendment
+/// history proves (SPEC §4.3).
 #[must_use]
 pub fn verify_package(
     input: &PackageInput<'_>,
@@ -130,7 +132,6 @@ pub fn verify_package(
     let mut b = Builder::default();
     sema::aggregate(&mut b, &input.check.diagnostics);
     evidence::hir(&mut b, &cx);
-    // The written holes, then each cite no amendment history proves.
     let mut holes = input.check.holes.clone();
     let mut out = Vec::new();
     let mut record = |b: &mut Builder, name: O, found: Vec<Diagnostic>| {
@@ -153,12 +154,9 @@ pub fn verify_package(
                 O::DeadlineSatisfiable,
                 deadline::unsatisfiable(&cx, &reached),
             );
-            record(
-                &mut b,
-                O::CiteResolves,
-                cite::unresolved(&cx, pack, corpus, &input.check.holes),
-            );
-            holes.extend(cite::unproven(&cx, pack, corpus, &input.check.holes));
+            let (unresolved, unproven) = cite::check(&cx, pack, corpus, &input.check.holes);
+            record(&mut b, O::CiteResolves, unresolved);
+            holes.extend(unproven);
             record(&mut b, O::TestsPass, assertions::failures(&cx, known_at));
         }
         Ok(Document::Links(_)) => {

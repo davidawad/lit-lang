@@ -273,7 +273,46 @@ pub(crate) fn pack(
     }
     dangling(build, sink, &pkg.start, &nodes, &edges);
     let syntax = cite_syntax(sink, m);
-    let citations = Citations::new(syntax.clone(), &m.sources, build.corpus);
+    let lowered = build.lowered(lowered_holes(build, pkg, &syntax, &origins, &edges));
+    let pack = Pack {
+        schema_version: PACK_SCHEMA_VERSION,
+        id: m.pack_id.clone(),
+        title: m.title.clone(),
+        description: m.description.clone(),
+        jurisdiction: m.jurisdiction.clone(),
+        forum: Some(m.forum.clone()),
+        counting,
+        start_node_id: pkg.start.clone(),
+        groups: pkg
+            .groups
+            .iter()
+            .map(|g| Group {
+                id: g.id.clone(),
+                label: g.label.clone(),
+            })
+            .collect(),
+        roles: m.roles.iter().map(|(a, r)| (a.clone(), role(*r))).collect(),
+        sources: sources(m),
+        cite_syntax: syntax,
+        nodes,
+        edges: edges.iter().map(|(e, _)| e.clone()).collect(),
+        lowered: Some(lowered),
+    };
+    let map = pack_map(build, pkg, &pack, &origins, &edges);
+    (pack, map)
+}
+
+/// The holes of a lowered pack: each `?` its nodes (`origins`, in pack
+/// order) and `edges` wrote, and each cite no vendored amendment history
+/// proves was its text when its version took effect (SPEC §7).
+fn lowered_holes(
+    build: &Build<'_, '_>,
+    pkg: &hir::Package,
+    syntax: &CiteSyntax,
+    origins: &[&hir::Node],
+    edges: &[(RawEdge, &hir::Edge)],
+) -> Vec<Hole> {
+    let citations = Citations::new(syntax.clone(), &pkg.manifest.sources, build.corpus);
     let node_holes = origins.iter().enumerate().flat_map(|(i, n)| {
         let base = format!("/nodes/{i}");
         let mut out = holes::at(&base, &n.holes);
@@ -304,33 +343,7 @@ pub(crate) fn pack(
         ));
         out
     });
-    let lowered = build.lowered(node_holes.chain(edge_holes).collect());
-    let pack = Pack {
-        schema_version: PACK_SCHEMA_VERSION,
-        id: m.pack_id.clone(),
-        title: m.title.clone(),
-        description: m.description.clone(),
-        jurisdiction: m.jurisdiction.clone(),
-        forum: Some(m.forum.clone()),
-        counting,
-        start_node_id: pkg.start.clone(),
-        groups: pkg
-            .groups
-            .iter()
-            .map(|g| Group {
-                id: g.id.clone(),
-                label: g.label.clone(),
-            })
-            .collect(),
-        roles: m.roles.iter().map(|(a, r)| (a.clone(), role(*r))).collect(),
-        sources: sources(m),
-        cite_syntax: syntax,
-        nodes,
-        edges: edges.iter().map(|(e, _)| e.clone()).collect(),
-        lowered: Some(lowered),
-    };
-    let map = pack_map(build, pkg, &pack, &origins, &edges);
-    (pack, map)
+    node_holes.chain(edge_holes).collect()
 }
 
 /// The hole of the cite at `base`/`field` (`cite`, of a version in force

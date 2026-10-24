@@ -26,10 +26,23 @@ use litigate_base::{Diagnostic, DiagnosticCode as C, Profile, Severity, Span};
 use litigate_lower::source_map::{Citations, L0Section, Pin};
 use litigate_sema::Hole;
 
+/// [`unresolved`] and [`unproven`].
+pub(crate) fn check(
+    cx: &Context<'_>,
+    pack: &Pack,
+    corpus: &SourceCorpus,
+    holes: &[Hole],
+) -> (Vec<Diagnostic>, Vec<Hole>) {
+    (
+        unresolved(cx, pack, corpus, holes),
+        unproven(cx, pack, corpus, holes),
+    )
+}
+
 /// L1010 for every citation that does not resolve. `holes` are the
 /// package's: a cite hole's reason is resolved like a cite, but a hole
 /// cites no expression, so it is never held to its version's window.
-pub(crate) fn unresolved(
+fn unresolved(
     cx: &Context<'_>,
     pack: &Pack,
     corpus: &SourceCorpus,
@@ -67,12 +80,7 @@ pub(crate) fn unresolved(
 /// cites (no window), `historical` cites (a later edition reporting the
 /// earlier text, say) and cites already written as holes (`holes`, the
 /// package's) are exempt: a hole cites no expression.
-pub(crate) fn unproven(
-    cx: &Context<'_>,
-    pack: &Pack,
-    corpus: &SourceCorpus,
-    holes: &[Hole],
-) -> Vec<Hole> {
+fn unproven(cx: &Context<'_>, pack: &Pack, corpus: &SourceCorpus, holes: &[Hole]) -> Vec<Hole> {
     let sources = &cx.package.manifest.sources;
     let citations = Citations::new(pack.cite_syntax.clone(), sources, Some(corpus));
     cx.cites()

@@ -1,8 +1,8 @@
 //! Accessors for `.case` matters.
 use super::{
     child, children, fields_of, token, tokens, CallExpr, CaseBlock, CaseEvent, CaseFile, Cite,
-    Field, Literal, Node, ObserveDecl, PartyDecl, PerspectiveDecl, RecordExpr, RecordField, Ref,
-    SourceDecl, StartDecl, Token, UseItem, UsesDecl, VersionReq,
+    Field, Literal, Node, ObserveDecl, PartyDecl, PerspectiveDecl, PriorDecl, RecordExpr,
+    RecordField, Ref, SourceDecl, StartDecl, Token, UseItem, UsesDecl, VersionReq,
 };
 use crate::syntax_kind::SyntaxKind;
 
@@ -248,6 +248,26 @@ impl CaseBlock {
     #[must_use]
     pub fn observations(&self) -> Vec<ObserveDecl> {
         children(self.syntax())
+    }
+
+    /// `prior` entries of `beliefs`.
+    #[must_use]
+    pub fn priors(&self) -> Vec<PriorDecl> {
+        children(self.syntax())
+    }
+}
+
+impl PriorDecl {
+    /// The chance node the prior is over.
+    #[must_use]
+    pub fn node(&self) -> Option<Ref> {
+        child(self.syntax())
+    }
+
+    /// Pseudo-counts by outcome edge.
+    #[must_use]
+    pub fn counts(&self) -> Option<RecordExpr> {
+        child(self.syntax())
     }
 }
 

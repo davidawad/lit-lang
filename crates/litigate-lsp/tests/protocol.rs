@@ -221,6 +221,24 @@ async fn goto_definition_crosses_modules_and_matters() {
     }
 }
 
+/// An outcome inside a `prior` resolves to its node's edge, as one inside
+/// `observe` does.
+#[tokio::test]
+async fn goto_definition_reads_a_prior_outcome_as_its_nodes_edge() {
+    let mut c = Client::repo().await;
+    let text = read(CASE).replacen("observe mtd-ruling", "prior mtd-ruling", 1);
+    c.open(CASE, &text).await;
+    let lit = read(LIT);
+    let line = u64::try_from(
+        lit[..lit.find("granted \"Motion").unwrap()]
+            .matches('\n')
+            .count(),
+    )
+    .unwrap();
+    let found = c.at("definition", CASE, at(&text, "granted", 0, 1)).await;
+    assert_eq!(place(&found), (LIT.to_owned(), line));
+}
+
 #[tokio::test]
 async fn references_span_modules_and_matters() {
     let mut c = Client::repo().await;

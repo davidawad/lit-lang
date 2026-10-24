@@ -129,7 +129,7 @@ fn case_item(p: &mut Parser<'_>, kw: SyntaxKind, kind: SyntaxKind) {
         KwStakes => {
             require(p, |p| record(p, Key::Ref, stake_value), &[LBrace]);
         }
-        KwBeliefs => block(p, Sep::Optional, &mut observe),
+        KwBeliefs => block(p, Sep::Optional, &mut belief),
         _ => {
             require(p, |p| record(p, Key::Ident, super::expr::expr), &[LBrace]);
         }
@@ -258,13 +258,17 @@ fn event(p: &mut Parser<'_>) -> bool {
     true
 }
 
-/// `observe Ref ":" { Ref: Number Sep }`.
-fn observe(p: &mut Parser<'_>) -> bool {
-    if !p.at_kw(KwObserve) {
+/// `(prior | observe) Ref ":" { Ref: Number Sep }`.
+fn belief(p: &mut Parser<'_>) -> bool {
+    let Some(kw) = p.at_any_kw(&[KwPrior, KwObserve]) else {
         return false;
-    }
-    p.start(ObserveDecl);
-    p.bump_as(KwObserve);
+    };
+    p.start(if kw == KwPrior {
+        PriorDecl
+    } else {
+        ObserveDecl
+    });
+    p.bump_as(kw);
     if require(p, reference, &[Ident]) && p.expect(Colon) {
         require(p, |p| record(p, Key::Ref, number), &[LBrace]);
     }

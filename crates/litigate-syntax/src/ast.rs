@@ -140,6 +140,7 @@ ast_node!(UseItem, UseItem);
 ast_node!(VersionReq, VersionReq);
 ast_node!(SourceDecl, SourceDecl);
 ast_node!(ObserveDecl, ObserveDecl);
+ast_node!(PriorDecl, PriorDecl);
 ast_node!(ErrorNode, Error);
 
 /// Attempts to view a syntax root as a `.lit` source file.

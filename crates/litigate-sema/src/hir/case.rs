@@ -35,6 +35,9 @@ pub struct Case {
     pub stakes: BTreeMap<String, Stake>,
     /// Observed chance outcomes.
     pub observations: Vec<Observation>,
+    /// Declared priors the observations update (`beliefs { prior .. }`).
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub priors: Vec<Prior>,
     /// Remaining litgraph `Scenario` fields.
     pub analysis: Analysis,
     /// Options removed by cited option-removing events, in replay order.
@@ -151,6 +154,19 @@ pub struct Observation {
     pub node: String,
     /// Qualified edge to count, in source order.
     pub outcomes: Vec<(String, u64)>,
+}
+
+/// A Dirichlet prior over a draw's outcomes (`prior node: { edge: α }`):
+/// the matter's own judgment, as pseudo-counts. Its mean `α / Σα` replaces
+/// the authored probabilities and `Σα` is its strength; with two outcomes
+/// it is `Beta(α, β)`.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Prior {
+    /// Qualified draw node.
+    pub node: String,
+    /// Qualified outcome edge and its positive pseudo-count, in source
+    /// order.
+    pub pseudo_counts: Vec<(String, Rational)>,
 }
 
 /// `analysis { ... }` (SPEC §8.3): the litgraph `Scenario` fields a matter

@@ -212,7 +212,7 @@ fn blocks_expose_keywords_records_and_observations() {
     assert_eq!(keys, ["objective", "horizon", "mixed", "seed", "x"]);
     assert!(analysis.observations().is_empty());
 
-    let file = matter("beliefs { observe n: { e: 3, f: 1 } }\n");
+    let file = matter("beliefs { prior n: { e: 6, f: 4 }\n observe n: { e: 3, f: 1 } }\n");
     let beliefs: CaseBlock = file.block(SyntaxKind::BeliefsBlock).expect("beliefs");
     assert_eq!(
         beliefs.keyword().map(|t| t.kind()),
@@ -223,6 +223,10 @@ fn blocks_expose_keywords_records_and_observations() {
     let observation = &beliefs.observations()[0];
     assert_eq!(observation.node().map(|r| r.text()).as_deref(), Some("n"));
     assert_eq!(observation.counts().map(|r| r.fields().len()), Some(2));
+    let prior = &beliefs.priors()[0];
+    assert_eq!(prior.node().map(|r| r.text()).as_deref(), Some("n"));
+    assert_eq!(prior.counts().map(|r| r.fields().len()), Some(2));
+    assert_eq!(beliefs.observations().len(), 1);
 }
 
 #[test]

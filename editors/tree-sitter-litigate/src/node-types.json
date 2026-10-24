@@ -225,6 +225,10 @@
         {
           "type": "observation",
           "named": true
+        },
+        {
+          "type": "prior",
+          "named": true
         }
       ]
     }
@@ -3120,6 +3124,32 @@
     }
   },
   {
+    "type": "prior",
+    "named": true,
+    "fields": {
+      "counts": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "count_map",
+            "named": true
+          }
+        ]
+      },
+      "node": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "ref",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "probability",
     "named": true,
     "fields": {
@@ -4734,6 +4764,10 @@
   },
   {
     "type": "power",
+    "named": false
+  },
+  {
+    "type": "prior",
     "named": false
   },
   {

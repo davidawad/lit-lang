@@ -11,7 +11,7 @@ use litigate_base::DiagnosticCode;
 use litigate_lower::{render_scenario, semantic_diff_scenarios, Lowerer};
 use litigate_sema::hir::{
     Case, CaseSource, EngineExpr, EngineOption, Event, EventParty, Expr, ExprKind, Observation,
-    Param, Perspective, Rate, RateUnit, Rational, Removal, Stake, Type,
+    Param, Perspective, Prior, Rate, RateUnit, Rational, Removal, Stake, Type,
 };
 use serde_json::{json, Map, Value};
 use std::collections::BTreeMap;
@@ -46,6 +46,40 @@ fn acme_golden() {
     // and Plaintiff `opponent`, both differing from the package roles.
     let perspective = &lowered.scenario.scenario.perspective;
     assert_eq!(perspective.len(), 2);
+}
+
+/// A `prior` lowers to its mean as the outcomes' `probabilities` and its
+/// total as the node's `uncertainty.concentration` (SPEC §8.3); one whose
+/// pseudo-counts overflow exact arithmetic is L6004.
+#[test]
+fn priors_lower_to_probabilities_and_concentration() {
+    let packages = load_hir(&["lit/examples"]);
+    let refs: Vec<_> = packages.iter().collect();
+    let q = |id: &str| format!("frcp-rule12-example::{id}");
+    let r = |numerator, denominator| Rational {
+        numerator,
+        denominator,
+    };
+    let mut case = acme();
+    case.priors = vec![Prior {
+        node: q("mtd-ruling"),
+        pseudo_counts: vec![(q("granted"), r(3, 2)), (q("denied"), r(9, 2))],
+    }];
+    let lowered = Lowerer::new(&refs)
+        .case(&case, "cases/examples/acme.case")
+        .unwrap_or_else(|d| panic!("{d:#?}"));
+    let scenario = &lowered.scenario.scenario;
+    assert_eq!(
+        scenario.probabilities,
+        BTreeMap::from([(q("granted"), 0.25), (q("denied"), 0.75)])
+    );
+    assert_eq!(
+        scenario.uncertainty.concentration,
+        BTreeMap::from([(q("mtd-ruling"), 6.0)])
+    );
+    case.priors[0].pseudo_counts[0].1 = r(i64::MAX, 1);
+    case.perspective = None;
+    assert_eq!(codes(&case), [DiagnosticCode::NonFiniteNumber]);
 }
 
 fn codes(case: &Case) -> Vec<DiagnosticCode> {
@@ -172,6 +206,7 @@ fn case_of(named: &Value) -> Case {
                 outcomes: counts.into_iter().collect(),
             })
             .collect(),
+        priors: Vec::new(),
         analysis: analysis_of(scenario),
         removals: Vec::new(),
     }

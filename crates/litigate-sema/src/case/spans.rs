@@ -52,6 +52,8 @@ pub struct CaseSpans {
     pub stakes_end: Option<(Span, String, String)>,
     /// `observe` entries, in order: (node reference, outcome references).
     pub observations: Vec<(Option<Span>, Vec<Span>)>,
+    /// `prior` entries, in order: (node reference, outcome references).
+    pub priors: Vec<(Option<Span>, Vec<Span>)>,
 }
 
 impl CaseSpans {

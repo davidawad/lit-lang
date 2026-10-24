@@ -2,7 +2,8 @@
 use super::{child, children, field_value, money, sig, R};
 use crate::db::parse::ref_path;
 use crate::db::span::{Report, TextRange};
-use crate::hir::{Observation, Stake};
+use crate::hir::{Observation, Prior, Rational, Stake};
+use crate::types::rational;
 use litigate_base::DiagnosticCode as C;
 use litigate_syntax::{SyntaxKind as K, SyntaxNode};
 use std::collections::BTreeMap;
@@ -100,42 +101,70 @@ impl R<'_, '_> {
         stakes
     }
 
-    pub(super) fn beliefs(&mut self, block: &SyntaxNode) -> Vec<Observation> {
-        let mut observations = Vec::new();
-        for obs in children(block, K::ObserveDecl) {
-            let Some(node_ref) = child(&obs, K::Ref).and_then(|r| ref_path(&r)) else {
+    /// The `observe` and `prior` entries of `beliefs`, each with its node
+    /// and outcome spans.
+    pub(super) fn beliefs(&mut self, block: &SyntaxNode) -> (Vec<Observation>, Vec<Prior>) {
+        let (mut observations, mut priors) = (Vec::new(), Vec::new());
+        for decl in block
+            .children()
+            .filter(|c| matches!(c.kind(), K::ObserveDecl | K::PriorDecl))
+        {
+            let prior = decl.kind() == K::PriorDecl;
+            let Some(node_ref) = child(&decl, K::Ref).and_then(|r| ref_path(&r)) else {
                 continue;
             };
             let node_span = Some(self.s(node_ref.range));
             let Some(node) = self.node(&node_ref) else {
                 continue;
             };
-            let mut outcomes = Vec::new();
-            let mut outcome_spans = Vec::new();
-            let record = child(&obs, K::RecordExpr);
+            let (mut counts, mut outcome_spans) = (Vec::new(), Vec::new());
+            let record = child(&decl, K::RecordExpr);
             for f in record.iter().flat_map(|r| children(r, K::RecordField)) {
                 let (Some(edge), Some(value)) = (child(&f, K::Ref), field_value(&f)) else {
                     continue;
                 };
                 outcome_spans.push(self.s(sig(&edge)));
-                match value
-                    .text()
-                    .to_string()
-                    .trim()
-                    .replace('_', "")
-                    .parse::<u64>()
-                {
-                    Ok(n) => outcomes.push((Self::edge_of(&node, &edge), n)),
-                    Err(_) => self.out.push(Report::new(
+                let text = value.text().to_string();
+                let count = if prior {
+                    rational::parse_decimal(text.trim())
+                        .ok()
+                        .filter(|r| r.numerator > 0)
+                } else {
+                    text.trim()
+                        .replace('_', "")
+                        .parse::<i64>()
+                        .ok()
+                        .filter(|n| *n >= 0)
+                        .map(Rational::integer)
+                };
+                match count {
+                    Some(n) => counts.push((Self::edge_of(&node, &edge), n)),
+                    None => self.out.push(Report::new(
                         C::TypeMismatch,
                         sig(&value),
-                        "an observation count is a non-negative integer",
+                        if prior {
+                            "a prior pseudo-count is a positive number"
+                        } else {
+                            "an observation count is a non-negative integer"
+                        },
                     )),
                 }
             }
-            self.spans.observations.push((node_span, outcome_spans));
-            observations.push(Observation { node, outcomes });
+            if prior {
+                self.spans.priors.push((node_span, outcome_spans));
+                priors.push(Prior {
+                    node,
+                    pseudo_counts: counts,
+                });
+            } else {
+                self.spans.observations.push((node_span, outcome_spans));
+                let outcomes = counts
+                    .into_iter()
+                    .map(|(e, n)| (e, n.numerator.unsigned_abs()))
+                    .collect();
+                observations.push(Observation { node, outcomes });
+            }
         }
-        observations
+        (observations, priors)
     }
 }

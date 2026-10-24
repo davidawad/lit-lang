@@ -2,7 +2,7 @@
 source: crates/litigate-syntax/tests/snapshots.rs
 expression: parsed.debug_tree()
 ---
-CaseFile@0..737
+CaseFile@0..765
   KwCase@0..4 "case"
   Whitespace@4..5 " "
   Ident@5..18 "acme-v-widget"
@@ -223,35 +223,47 @@ CaseFile@0..737
     Whitespace@684..685 " "
     RBrace@685..686 "}"
   Whitespace@686..687 "\n"
-  AnalysisBlock@687..736
+  AnalysisBlock@687..764
     KwAnalysis@687..695 "analysis"
     Whitespace@695..696 " "
-    RecordExpr@696..736
+    RecordExpr@696..764
       LBrace@696..697 "{"
       Whitespace@697..698 " "
-      RecordField@698..734
+      RecordField@698..762
         Ident@698..704 "params"
         Colon@704..705 ":"
         Whitespace@705..706 " "
-        RecordExpr@706..734
+        RecordExpr@706..762
           LBrace@706..707 "{"
           Whitespace@707..708 " "
-          RecordField@708..717
+          RecordField@708..731
             Ident@708..712 "rate"
             Colon@712..713 ":"
             Whitespace@713..714 " "
-            Literal@714..717
-              Number@714..717 "650"
-          Comma@717..718 ","
-          Whitespace@718..719 " "
-          RecordField@719..732
-            Ident@719..727 "opp_rate"
-            Colon@727..728 ":"
-            Whitespace@728..729 " "
-            Literal@729..732
-              Number@729..732 "550"
+            BinaryExpr@714..731
+              Literal@714..721
+                Money@714..721 "650.usd"
+              Whitespace@721..722 " "
+              Slash@722..723 "/"
+              Whitespace@723..724 " "
+              Literal@724..731
+                Duration@724..731 "1.hours"
+          Comma@731..732 ","
           Whitespace@732..733 " "
-          RBrace@733..734 "}"
-      Whitespace@734..735 " "
-      RBrace@735..736 "}"
-  Whitespace@736..737 "\n"
+          RecordField@733..760
+            Ident@733..741 "opp_rate"
+            Colon@741..742 ":"
+            Whitespace@742..743 " "
+            BinaryExpr@743..760
+              Literal@743..750
+                Money@743..750 "550.usd"
+              Whitespace@750..751 " "
+              Slash@751..752 "/"
+              Whitespace@752..753 " "
+              Literal@753..760
+                Duration@753..760 "1.hours"
+          Whitespace@760..761 " "
+          RBrace@761..762 "}"
+      Whitespace@762..763 " "
+      RBrace@763..764 "}"
+  Whitespace@764..765 "\n"

@@ -22,7 +22,7 @@ events {
 }
 facts { time-barred: not-barred }
 stakes { judgment-entered: -2_000_000.usd, dismissed: 0.usd }
-beliefs { observe mtd-ruling: { granted: 3, denied: 1 } }
+beliefs { prior mtd-ruling: { granted: 1, denied: 3 }, observe mtd-ruling: { granted: 3, denied: 1 } }
 analysis { params: { rate: 650.usd / 1.hours, opp_rate: 550.usd / 1.hours } }
 "#;
 
@@ -68,8 +68,8 @@ const CASE: [(&str, &str, &str, &str); 15] = [
     ("events", "Dated history, replayed to derive posture (never asserted), in docket order: by date, then `docket N`; same-day events need docket numbers unless they elect or remove options.", "  2025-03-05 docket 4 Served(complaint, Personal) on widget", "scenario.start (replayed)"),
     ("facts", "Resolved fact nodes: node to its edge.", "facts { time-barred: not-barred }", "scenario.facts"),
     ("stakes", "Terminal values; every reachable terminal needs one (L4004).", "stakes { judgment-entered: -2_000_000.usd, dismissed: 0.usd }", "scenario.payoffs"),
-    ("beliefs", "Observed outcome counts at chance nodes.", "beliefs { observe mtd-ruling: { granted: 3, denied: 1 } }", "scenario.observe"),
-    ("analysis", "The engine's Scenario fields with no block of their own, each typed: params (numbers), metrics/utilities/cost/utility/mask/probability_fn/opponent_objective (engine expression strings), calibration, discount_annual, remove_edges (EdgeRefs), and the engine options mixed, opponent, prob_fill, objective, fee_shift, uncertainty.", "analysis { params: { rate: 650.usd / 1.hours, opp_rate: 550.usd / 1.hours } }", "scenario.<field>"),
+    ("beliefs", "The matter's priors over chance nodes (`prior`: Dirichlet pseudo-counts for every outcome, Beta for two) and the outcome counts observed since (`observe`), which update them.", "beliefs { prior mtd-ruling: { granted: 1, denied: 3 }, observe mtd-ruling: { granted: 3, denied: 1 } }", "scenario.probabilities + uncertainty.concentration (prior), scenario.observe"),
+    ("analysis", "The engine's Scenario fields with no block of their own, each typed: params (the Params record: rate and opp_rate are Rate<usd, Hours>, `650.usd / 1.hours`; carry_per_day a Rate<usd, CalendarDays>; others numbers), metrics/utilities/cost/utility/mask/probability_fn/opponent_objective (engine expression strings), calibration, discount_annual, remove_edges (EdgeRefs), and the engine options mixed, opponent, prob_fill, objective, fee_shift, uncertainty.", "analysis { params: { rate: 650.usd / 1.hours, opp_rate: 550.usd / 1.hours } }", "scenario.<field>"),
     ("start", "An asserted start (legacy imports); must agree with replay (L4008).", "start demo-rules::mtd-ruling", "scenario.start"),
 ];
 

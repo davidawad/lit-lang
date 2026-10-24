@@ -135,6 +135,37 @@ fn param(sink: &mut Sink, name: &str, p: &hir::Param) -> Option<f64> {
     sink.number(exact, None)
 }
 
+/// Each `prior` (SPEC §8.3) as the engine reads it: its mean `α / Σα` as
+/// its outcomes' `probabilities`, its total `Σα` as the node's
+/// `uncertainty.concentration` (L6004 when exact arithmetic overflows).
+fn priors(sink: &mut Sink, case: &hir::Case, scenario: &mut Scenario) {
+    use litigate_sema::types::rational as q;
+    for prior in &case.priors {
+        let exact = q::sum(prior.pseudo_counts.iter().map(|(_, a)| *a)).and_then(|t| {
+            let means: Result<Vec<_>, _> = prior
+                .pseudo_counts
+                .iter()
+                .map(|(edge, a)| q::div(*a, t).map(|p| (edge, p)))
+                .collect();
+            means.map(|m| (t, m))
+        });
+        let Ok((total, means)) = exact else {
+            sink.error(
+                C::NonFiniteNumber,
+                None,
+                format!("the prior on `{}` overflows exact arithmetic", prior.node),
+            );
+            continue;
+        };
+        let strength = sink.number(total, None).map(|t| (prior.node.clone(), t));
+        scenario.uncertainty.concentration.extend(strength);
+        for (edge, p) in means {
+            let p = sink.number(p, None).map(|p| (edge.clone(), p));
+            scenario.probabilities.extend(p);
+        }
+    }
+}
+
 /// Builds the `Scenario` from the typed `analysis` and the dedicated
 /// blocks (SPEC §8.3), with each removal's index in `remove_edges`.
 fn scenario(
@@ -194,7 +225,8 @@ fn scenario(
     }
     // Every field but an engine option is typed, and each option was
     // checked above: only an invalid option fails here.
-    let scenario = serde_json::from_value::<Scenario>(Value::Object(object)).ok()?;
+    let mut scenario = serde_json::from_value::<Scenario>(Value::Object(object)).ok()?;
+    priors(sink, case, &mut scenario);
     Some((scenario, at))
 }
 

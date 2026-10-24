@@ -77,7 +77,7 @@ The canonical format (`litigate fmt', SPEC §10) uses two."
     "deadline" "counting" "calendar" "transition" "authority" "default"
     "exception" "test"
     "case" "uses" "as_of" "known_at" "summary" "notes" "source" "perspective"
-    "parties" "events" "facts" "stakes" "beliefs" "observe" "analysis")
+    "parties" "events" "facts" "stakes" "beliefs" "prior" "observe" "analysis")
   "Keywords that open a declaration.")
 
 (defconst litigate-ts-mode--clause-keywords

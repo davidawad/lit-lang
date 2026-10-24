@@ -210,7 +210,7 @@ fn edge_context(r: &SyntaxNode) -> Option<String> {
         .nth(2)
         .and_then(|block| match block.kind() {
             K::FactsBlock if refs.len() == 2 && refs[1] == *r => name(&refs[0]),
-            K::ObserveDecl => block
+            K::ObserveDecl | K::PriorDecl => block
                 .children()
                 .find(|c| c.kind() == K::Ref)
                 .and_then(|n| name(&n)),

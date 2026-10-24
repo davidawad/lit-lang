@@ -44,6 +44,7 @@ events {
 facts { cofc::time-barred: cofc::not-barred, x: y }
 stakes { judgment: -2_000_000.usd, other: unvalued, cafc@cofc::win: 1.50.usd }
 beliefs {
+  prior sj: { e1: 6, e2: 4.5 }
   observe sj: { e1: 3, e2: 1 }
   observe x: { y: 0 },
 }
@@ -170,6 +171,18 @@ analysis {
         (signed_money
           (money))))
     (beliefs_block
+      (prior
+        (ref
+          (identifier))
+        (count_map
+          (count_entry
+            (ref
+              (identifier))
+            (number))
+          (count_entry
+            (ref
+              (identifier))
+            (number))))
       (observation
         (ref
           (identifier))

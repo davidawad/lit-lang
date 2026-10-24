@@ -294,6 +294,7 @@ pub fn acme() -> Case {
             node: q("mtd-ruling"),
             outcomes: vec![(q("granted"), 3), (q("denied"), 1)],
         }],
+        priors: Vec::new(),
         analysis: analysis_of(
             serde_json::json!({"params": {"rate": 650, "opp_rate": 550}})
                 .as_object()

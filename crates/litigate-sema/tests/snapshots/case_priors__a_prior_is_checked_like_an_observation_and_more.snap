@@ -1,0 +1,48 @@
+---
+source: crates/litigate-sema/tests/case_priors.rs
+expression: table
+---
+[
+    (
+        "two priors on one node",
+        [
+            "28:9 L4006 `frcp-rule12-example::mtd-ruling` has more than one prior",
+        ],
+    ),
+    (
+        "a node nobody draws",
+        [
+            "26:17 L4006 `frcp-rule12-example::respond` is not a chance node in force on 2025-06-01",
+        ],
+    ),
+    (
+        "outcomes that are not the node's, given twice, or left out",
+        [
+            "26:17 L4006 the prior on `frcp-rule12-example::mtd-ruling` gives no pseudo-count to `denied`",
+            "26:43 L4006 `granted` is given twice",
+            "26:55 L4006 `barred` is not an outcome of `frcp-rule12-example::mtd-ruling`",
+        ],
+    ),
+    (
+        "counts that are not positive numbers",
+        [
+            "26:40 L2001 a prior pseudo-count is a positive number",
+        ],
+    ),
+    (
+        "pseudo-counts that overflow",
+        [
+            "26:17 L4006 the pseudo-counts of `frcp-rule12-example::mtd-ruling` overflow exact arithmetic",
+        ],
+    ),
+    (
+        "a strength given twice",
+        [
+            "26:17 L4006 `frcp-rule12-example::mtd-ruling`'s strength is its prior's total; drop it from `analysis.uncertainty.concentration`",
+        ],
+    ),
+    (
+        "an unresolved node",
+        [],
+    ),
+]

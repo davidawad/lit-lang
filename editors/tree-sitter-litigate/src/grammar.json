@@ -5420,8 +5420,17 @@
                 "type": "SEQ",
                 "members": [
                   {
-                    "type": "SYMBOL",
-                    "name": "observation"
+                    "type": "CHOICE",
+                    "members": [
+                      {
+                        "type": "SYMBOL",
+                        "name": "prior"
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "observation"
+                      }
+                    ]
                   },
                   {
                     "type": "CHOICE",
@@ -5443,6 +5452,35 @@
               "value": "}"
             }
           ]
+        }
+      ]
+    },
+    "prior": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "prior"
+        },
+        {
+          "type": "FIELD",
+          "name": "node",
+          "content": {
+            "type": "SYMBOL",
+            "name": "ref"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ":"
+        },
+        {
+          "type": "FIELD",
+          "name": "counts",
+          "content": {
+            "type": "SYMBOL",
+            "name": "count_map"
+          }
         }
       ]
     },

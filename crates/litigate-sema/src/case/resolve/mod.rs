@@ -187,7 +187,8 @@ impl R<'_, '_> {
         let facts = child(root, K::FactsBlock).map_or_else(BTreeMap::new, |b| self.facts(&b));
         let stakes =
             child(root, K::StakesBlock).map_or_else(BTreeMap::new, |b| self.stakes(&b, text));
-        let observations = child(root, K::BeliefsBlock).map_or_else(Vec::new, |b| self.beliefs(&b));
+        let (observations, priors) =
+            child(root, K::BeliefsBlock).map_or_else(Default::default, |b| self.beliefs(&b));
         let analysis =
             child(root, K::AnalysisBlock).map_or_else(Analysis::default, |b| self.analysis(&b));
         Some(Case {
@@ -205,6 +206,7 @@ impl R<'_, '_> {
             facts,
             stakes,
             observations,
+            priors,
             analysis,
             removals: Vec::new(),
         })

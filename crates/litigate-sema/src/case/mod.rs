@@ -13,6 +13,7 @@ pub mod deadline;
 mod drawn;
 mod event;
 mod graph;
+mod prior;
 mod replay;
 pub mod resolve;
 pub mod spans;
@@ -237,6 +238,7 @@ pub fn check(mut case: hir::Case, spans: &CaseSpans, env: Env<'_>) -> CheckedCas
     out.append(&mut replayed.diagnostics);
     case.removals = std::mem::take(&mut replayed.removals);
     validate::facts_and_beliefs(&case, &graph, spans, &mut out);
+    prior::priors(&case, &graph, spans, &mut out);
     // A fact the history derives at the replayed posture is the matter's,
     // as if stated (SPEC §5.6).
     case.facts.append(&mut replayed.derived);

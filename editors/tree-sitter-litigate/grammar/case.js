@@ -98,7 +98,10 @@ module.exports = {
     field('value', choice($.signed_money, alias('unvalued', $.unvalued))),
   ),
 
-  beliefs_block: $ => seq('beliefs', braced($.observation)),
+  beliefs_block: $ => seq('beliefs', braced(choice($.prior, $.observation))),
+
+  // A Dirichlet prior (Beta for two outcomes): pseudo-counts per edge.
+  prior: $ => seq('prior', field('node', $.ref), ':', field('counts', $.count_map)),
 
   observation: $ => seq('observe', field('node', $.ref), ':', field('counts', $.count_map)),
 

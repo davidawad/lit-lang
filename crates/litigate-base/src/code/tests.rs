@@ -57,12 +57,15 @@ fn every_registered_code_exercises_its_stable_views() {
                     | DiagnosticCode::DesignationShortOfInterpretation
                     | DiagnosticCode::ExtensionByInterpretation
                     | DiagnosticCode::FormerName
+                    | DiagnosticCode::LateClaimProcessing
+                    | DiagnosticCode::ConcurrentTracks
             ) || (profile == Profile::Dev
                 && matches!(
                     code,
                     DiagnosticCode::RuleWithoutTest
                         | DiagnosticCode::HolePresent
                         | DiagnosticCode::NonCanonicalFormat
+                        | DiagnosticCode::NotEncoded
                 ))
             {
                 assert_eq!(severity, Severity::Warning);

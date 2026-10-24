@@ -1,0 +1,10 @@
+---
+source: crates/litigate-sema/tests/cov_case_markings.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:10:38 L2007 `spawn` names `a`, which is this edge's own source or target or is named twice: a track is another node",
+    "pkgs/demo/main.lit:11:38 L2007 `spawn` names `t`, which is this edge's own source or target or is named twice: a track is another node",
+    "pkgs/demo/main.lit:12:38 L1002 cannot find name `nowhere`",
+    "pkgs/demo/main.lit:12:50 L2007 `joins` names `s`, which is this edge's own source or target or is named twice: a track is another node",
+]

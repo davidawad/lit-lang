@@ -30,7 +30,7 @@ fn identifiers_follow_the_lexer() {
         "_",
         "cite",
         "world",
-        "characterization",
+        "lock",
         "where",
         "and",
         "or",

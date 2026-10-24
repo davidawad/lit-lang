@@ -70,6 +70,7 @@ impl Lower {
             .filter_map(|n| match n.kind() {
                 K::Field | K::PatchDecl => self.field(&n),
                 K::GuardOp => self.guard_op(&n),
+                K::CiteExpr => self.cite_field(&n),
                 _ => None,
             })
             .collect()

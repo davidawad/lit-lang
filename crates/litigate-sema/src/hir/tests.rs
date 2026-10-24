@@ -11,9 +11,21 @@ fn meta(id: &str) -> Metadata {
             from: "2009-12-01".into(),
             to: None,
             known_at: "2025-01-01".into(),
+            retracted: Some("2026-01-01".into()),
+            unknown_before: Some("2009-12-01".into()),
+            commenced: Some(Commenced {
+                from: "2009-12-01".into(),
+                to: None,
+            }),
         },
         authority: "FederalRule".into(),
         relations: vec![Relation::SubjectTo("frcp.rule6::computing-time".into())],
+        delegations: vec![Delegation {
+            to: "CaseOrder".into(),
+            ops: vec![DelegatedOp::Extend],
+            max: Some((30, DayUnit::Calendar)),
+            cite: Some("FRCP 6(b)(1)".into()),
+        }],
         span: None,
         historical: false,
         imported: false,
@@ -52,6 +64,8 @@ fn edge(id: Option<&str>, to: &str, p: Authored<Rational>) -> Edge {
         clears: vec![],
         requires: vec![],
         forbids: vec!["defaulted".into()],
+        spawn: vec!["discovery".into()],
+        joins: vec![],
         guard: None,
         basis: None,
         formerly: vec![],
@@ -211,6 +225,7 @@ fn a_designation_reads_the_trigger_argument_or_nothing() {
         extend: Vec::new(),
         waive: None,
         designated: None,
+        characterization: None,
     };
     let on = noticed(vec![date("2025-02-03")]);
     assert_eq!(d.designation("2025-01-02", &on), None);

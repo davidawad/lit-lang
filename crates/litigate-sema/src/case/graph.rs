@@ -341,6 +341,33 @@ impl<'a> Graph<'a> {
             .collect()
     }
 
+    /// The emergency grants reaching deadline `qualified` (governed by a
+    /// version of `authority`) in force on `date` and recorded by
+    /// `known_at`, whose authority equals or outranks `authority`: a
+    /// grant never widens its own power (SPEC §5.5).
+    pub fn emergency(
+        &self,
+        qualified: &str,
+        authority: &str,
+        date: &str,
+        known_at: Option<&str>,
+    ) -> Vec<&'a crate::hir::Grant> {
+        let lattice = self.world.lattice();
+        self.world
+            .grants(&Self::key(qualified))
+            .iter()
+            .map(|g| g.grant)
+            .filter(|g| temporal::Window::of(&g.meta.effective).contains(date))
+            .filter(|g| known_at.is_none_or(|k| g.meta.effective.known_at.as_str() <= k))
+            .filter(|g| {
+                matches!(
+                    lattice.compare(&g.meta.authority, authority),
+                    precedence::Order::Above | precedence::Order::Equal
+                )
+            })
+            .collect()
+    }
+
     /// A note naming claimant pairs no relation or canon orders.
     pub fn unordered(&self, pairs: &[(usize, usize)]) -> String {
         format!(

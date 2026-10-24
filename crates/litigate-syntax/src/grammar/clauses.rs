@@ -49,11 +49,17 @@ impl Clauses {
             out.extend([KwDiscretion, KwInfo, KwOutcome]);
         }
         if self.has(Self::VERSION) {
-            out.extend([KwEffective, KwKnownAt]);
+            out.extend([
+                KwEffective,
+                KwKnownAt,
+                KwRetracted,
+                KwUnknownBefore,
+                KwCommenced,
+            ]);
         }
         if self.has(Self::RELATION) {
             out.extend(RELATIONS);
-            out.push(KwDelegableTo);
+            out.push(KwDelegable);
         }
         out.push(KwCite);
         out
@@ -119,26 +125,40 @@ pub(crate) fn keyword_field(
     p.finish();
 }
 
-/// `VersionClause = "effective" Interval | "known_at" Date`.
+/// `VersionClause = ("effective" | "commenced") Interval | ("known_at" |
+/// "retracted" | "unknown_before") Date`.
 pub(crate) fn version_clause(p: &mut Parser<'_>) -> bool {
-    let (kw, value): (SyntaxKind, super::values::Value) = if p.at_kw(KwEffective) {
-        (KwEffective, interval)
-    } else if p.at_kw(KwKnownAt) {
-        (KwKnownAt, date)
-    } else {
-        return false;
-    };
+    let (kw, value): (SyntaxKind, super::values::Value) =
+        if let Some(kw) = p.at_any_kw(&[KwEffective, KwCommenced]) {
+            (kw, interval)
+        } else if let Some(kw) = p.at_any_kw(&[KwKnownAt, KwRetracted, KwUnknownBefore]) {
+            (kw, date)
+        } else {
+            return false;
+        };
     p.start(VersionClause);
     p.bump_as(kw);
-    let expected = if kw == KwEffective { LBracket } else { Date };
+    let expected = if matches!(kw, KwEffective | KwCommenced) {
+        LBracket
+    } else {
+        Date
+    };
     require(p, value, &[expected]);
     p.finish();
     true
 }
 
 /// `Relation = (subject_to | notwithstanding | supersedes | revives |
-/// override) Ref | delegable_to IdList`.
+/// override) Ref | delegable_to IdList | delegable Delegation`. The legacy
+/// `delegable_to` still parses so that sema can name its replacement.
 fn relation(p: &mut Parser<'_>) -> bool {
+    if p.at_kw(KwDelegable) && p.nth(1) == LBrace {
+        p.start(Relation);
+        p.bump_as(KwDelegable);
+        super::fields::delegation(p);
+        p.finish();
+        return true;
+    }
     if p.at_kw(KwDelegableTo) {
         p.start(Relation);
         p.bump_as(KwDelegableTo);

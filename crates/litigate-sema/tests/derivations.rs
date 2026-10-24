@@ -138,7 +138,7 @@ fn every_l3_error_carries_its_derivation() {
         ),
         (
             "L3004 a delegation to a level that is not lower",
-            single(&("authority Alpha > Beta\n".to_owned() + &d("o", 1, "delegable_to [Alpha]"))),
+            single(&("authority Alpha > Beta\n".to_owned() + &d("o", 1, "delegable { to Alpha, op set }"))),
         ),
         (
             "L3005 exceptions not proved disjoint",

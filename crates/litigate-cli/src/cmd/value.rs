@@ -8,7 +8,7 @@ use crate::matter::Scheduled;
 use crate::out::{Failure, Outcome, Report};
 use litigate_base::Profile;
 use litigate_lower::Options;
-use litigate_sema::hir::{self, DeadlineWindow, Relation};
+use litigate_sema::hir::{self, DeadlineWindow};
 use serde_json::{json, Value};
 
 fn step(rule: impl Into<String>, cite: Option<&String>, detail: impl Into<String>) -> Value {
@@ -87,19 +87,22 @@ impl Trace<'_> {
                 ),
             ));
         }
-        steps.extend(
-            v.meta
-                .relations
-                .iter()
-                .filter_map(|relation| match relation {
-                    Relation::DelegableTo(level) => Some(step(
-                        d.to_owned(),
-                        None,
-                        format!("delegable to {level}: a {level} may override it"),
-                    )),
-                    _ => None,
-                }),
-        );
+        steps.extend(v.meta.delegations.iter().map(|g| {
+            let ops: Vec<&str> = g.ops.iter().map(|o| o.name()).collect();
+            let bound = g.max.map_or_else(String::new, |(n, unit)| {
+                format!(", by no more than {}", unit.prose(n))
+            });
+            step(
+                d.to_owned(),
+                g.cite.as_ref(),
+                format!(
+                    "delegable to {}: a {} may {} it{bound}",
+                    g.to,
+                    g.to,
+                    ops.join(" or ")
+                ),
+            )
+        }));
         match scheduled {
             Some(Scheduled {
                 unknown: Some(why),

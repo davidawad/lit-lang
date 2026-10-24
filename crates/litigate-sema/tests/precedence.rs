@@ -71,7 +71,7 @@ fn overrides_need_delegation_and_conflicts_need_an_order() {
             &format!("effective [2012-01-01, ..) override answer-period{extra}"),
         )
     };
-    let delegated = " delegable_to [LocalRule, StandingOrder]";
+    let delegated = " delegable { to [LocalRule, StandingOrder], op set }";
     let cases: Vec<(&str, Vec<LoadedPackage>)> = vec![
         (
             "01 override without delegation",
@@ -163,7 +163,7 @@ fn overrides_need_delegation_and_conflicts_need_an_order() {
         ),
         (
             "09 delegation must point downward",
-            vec![core(""), frcp(" delegable_to [Statute]")],
+            vec![core(""), frcp(" delegable { to Statute, op set }")],
         ),
         (
             "10 override of a rule not yet in force",
@@ -216,7 +216,7 @@ fn winners(packages: &[LoadedPackage], dates: &[&str]) -> Vec<String> {
 
 #[test]
 fn the_winner_follows_relations_then_canons() {
-    let delegated = " delegable_to [LocalRule, StandingOrder]";
+    let delegated = " delegable { to [LocalRule, StandingOrder], op set }";
     let ov = |id: &str, window: &str| {
         override_decl(id, &format!("effective {window} override answer-period"))
     };

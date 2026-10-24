@@ -45,6 +45,13 @@ fn an_exception_overrides_its_default() {
 }
 
 #[test]
+fn a_grant_is_found_by_its_id() {
+    let run = in_fixture(&["where", "emergency", "--path", "lit/cov"]);
+    assert_eq!(run.code, 0, "{}", run.stdout);
+    assert_eq!(run.json["result"]["kind"], "grant");
+}
+
+#[test]
 fn a_counting_rule_lowers_into_the_clock_file() {
     let run = in_fixture(&["where", "frcp6", "--path", "lit/cov"]);
     assert_eq!(run.code, 0, "{}", run.stdout);

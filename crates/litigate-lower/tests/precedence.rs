@@ -124,8 +124,13 @@ fn a_downstream_claim_never_changes_an_upstream_pack() {
     let mut base = example();
     answer_period(&mut base)
         .meta
-        .relations
-        .push(Relation::DelegableTo("LocalRule".into()));
+        .delegations
+        .push(hir::Delegation {
+            to: "LocalRule".into(),
+            ops: vec![hir::DelegatedOp::Set],
+            max: None,
+            cite: None,
+        });
     let mut local = base.clone();
     local.manifest.name = "local-rules".into();
     local.manifest.pack_id = "local-rules".into();

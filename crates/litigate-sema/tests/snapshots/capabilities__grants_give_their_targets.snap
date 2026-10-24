@@ -1,0 +1,10 @@
+---
+source: crates/litigate-sema/tests/capabilities.rs
+expression: world
+---
+[
+    "pkgs/demo/main.lit:14:1 L3004 grant `locked-out` extends `a`, which is locked (`extend { never cite \"FRCP 6(b)(2)\" }`), without `unlock`: its extensions would have no effect",
+    "pkgs/demo/main.lit:15:1 L3004 grant `upward` delegates `a` (FederalRule) to `FederalRule`, which is not a lower authority",
+    "pkgs/demo/main.lit:16:1 L2009 grant `forbidden` gives jurisdictional deadline `j` a waiver and an extension without a bound and a delegation to a lower authority, which it admits from no instrument",
+    "pkgs/demo/main.lit:17:1 L2009 grant `waiver-only` gives jurisdictional deadline `j` a waiver, which it admits from no instrument",
+]

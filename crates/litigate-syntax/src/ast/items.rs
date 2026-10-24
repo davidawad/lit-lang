@@ -40,6 +40,7 @@ impl Item {
                 | DefaultDecl
                 | ExceptionDecl
                 | TestDecl
+                | GrantDecl
         )
         .then_some(Self(node))
     }
@@ -225,7 +226,8 @@ clause_accessors!(
     super::TransitionDecl,
     super::DefaultDecl,
     super::ExceptionDecl,
-    super::TestDecl
+    super::TestDecl,
+    super::GrantDecl
 );
 
 impl NodeDecl {
@@ -473,7 +475,7 @@ impl Interval {
 }
 
 impl Relation {
-    /// Relation keyword (`subject_to`, `delegable_to`, ...).
+    /// Relation keyword (`subject_to`, `delegable`, ...).
     #[must_use]
     pub fn keyword(&self) -> Option<Token> {
         keyword(self.syntax())
@@ -485,9 +487,15 @@ impl Relation {
         child(self.syntax())
     }
 
-    /// Authorities of `delegable_to [...]`.
+    /// Authorities of the legacy `delegable_to [...]`.
     #[must_use]
     pub fn delegates(&self) -> Option<IdList> {
+        child(self.syntax())
+    }
+
+    /// Fields of a `delegable { to L, op O, ... }` capability.
+    #[must_use]
+    pub fn delegation(&self) -> Option<FieldList> {
         child(self.syntax())
     }
 }

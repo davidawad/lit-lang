@@ -1,0 +1,10 @@
+---
+source: crates/litigate-sema/tests/bitemporal.rs
+expression: rows
+---
+{
+    "as recorded in 2015": "20.days",
+    "as recorded in 2020": "21.days",
+    "before either was recorded": "L3007 Error no version of `p` is in force on 2012-06-01",
+    "the latest corpus": "21.days",
+}

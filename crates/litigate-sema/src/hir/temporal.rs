@@ -12,6 +12,30 @@ pub struct Interval {
     pub to: Option<String>,
     /// Date the corpus recorded this version.
     pub known_at: String,
+    /// Date the corpus retracted this version (a later version of the same
+    /// window corrects it), if ever: transaction time is `[known_at,
+    /// retracted)`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub retracted: Option<String>,
+    /// Date before which the declaration's law is not encoded: a query
+    /// there with no version is a hole (L3010), not an absence of law.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub unknown_before: Option<String>,
+    /// The proceedings the version applies to (`commenced [from, to)`):
+    /// those commenced in the window; `None`: every proceeding.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub commenced: Option<Commenced>,
+}
+
+/// A window of proceeding commencement dates (design review §2.6:
+/// applicability keyed by a proceeding attribute).
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Commenced {
+    /// Inclusive first commencement date.
+    pub from: String,
+    /// Exclusive end; `None` is open-ended.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub to: Option<String>,
 }
 
 /// Typed deadline declaration.
@@ -73,6 +97,10 @@ pub struct Deadline {
     /// mailing date of the notice"). `None`: the period is counted.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub designated: Option<Designated>,
+    /// Jurisdictional or claim-processing (`characterization ...`);
+    /// `None`: not declared.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub characterization: Option<Characterization>,
 }
 
 /// Why a designated deadline has no due date (SPEC §5.3).
@@ -235,6 +263,64 @@ impl DueEnd {
             Self::Adjusted => "adjusted",
         }
     }
+}
+
+/// The character of a time limit (design review §2.4), an index of the
+/// deadline's type: a jurisdictional limit admits no waiver, no unbounded
+/// extension and no delegation (*Bowles v. Russell*, 551 U.S. 205
+/// (2007)); missing a claim-processing limit is an objection the opponent
+/// may raise or forfeit.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Characterization {
+    /// Which character.
+    pub kind: CharacterKind,
+    /// The authority characterizing it (`cite`); `None`: the deadline's.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub cite: Option<String>,
+}
+
+/// Jurisdictional or claim-processing.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum CharacterKind {
+    /// No waiver, forfeiture or equitable tolling.
+    Jurisdictional,
+    /// Enforced when the opponent objects; forfeitable.
+    ClaimProcessing,
+}
+
+impl CharacterKind {
+    /// Its identifier in source.
+    #[must_use]
+    pub fn name(self) -> &'static str {
+        match self {
+            Self::Jurisdictional => "jurisdictional",
+            Self::ClaimProcessing => "claim_processing",
+        }
+    }
+}
+
+/// An emergency capability grant (`grant g on [d, ...] { ... }`, design
+/// review §2.4): for its bounded `effective` window, the targets carry
+/// its capabilities as if declared, and `unlock` lifts their locks.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Grant {
+    /// Declaration metadata (its window is `meta.effective`).
+    pub meta: Metadata,
+    /// The deadlines it reaches.
+    pub targets: Vec<String>,
+    /// Lifts each target's `extend { never ... }` lock in the window.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub unlock: bool,
+    /// Extension grants added in the window.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub extend: Vec<Extension>,
+    /// Waiver capability added in the window.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub waive: Option<Capability>,
+    /// Delegations added in the window.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub delegations: Vec<super::logic::Delegation>,
 }
 
 /// How a matching trigger creates obligation instances (SPEC §5.3).

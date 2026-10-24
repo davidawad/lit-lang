@@ -49,7 +49,7 @@ fn graphs(world: &World<'_>) -> [(Graph, &'static str); 3] {
                     }
                     (&mut supersession, me.clone(), t)
                 }
-                Relation::Revives(_) | Relation::DelegableTo(_) => continue,
+                Relation::Revives(_) => continue,
             };
             graph.entry(from).or_default().push(Edge {
                 to: to.key,

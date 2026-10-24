@@ -60,6 +60,8 @@ impl Cx<'_, '_> {
             .and_then(|f| first_expr(f))
             .and_then(|x| self.pattern(x));
         let f = self.edge_fields(&fields);
+        let spawn = self.tracks(fields.get("spawn"), from, &to);
+        let joins = self.tracks(fields.get("joins"), from, &to);
         Edge {
             id: e.name.as_ref().map(|n| n.text.clone()),
             to,
@@ -82,6 +84,8 @@ impl Cx<'_, '_> {
             clears: f.clears.unwrap_or_default(),
             requires: f.requires.unwrap_or_default(),
             forbids: f.forbids.unwrap_or_default(),
+            spawn,
+            joins,
             guard: fields
                 .get("when")
                 .and_then(|f| self.guard(f, fact, e.name.is_some())),
@@ -90,6 +94,32 @@ impl Cx<'_, '_> {
             span: self.ck.span(e.range),
             holes: holes_of(e.clauses.iter().chain(&e.fields)),
         }
+    }
+
+    /// The nodes of a `spawn` or `joins` list on an edge from `from` to
+    /// `to`: each a node, none the edge's own source or target, none
+    /// twice (L2007).
+    fn tracks(&mut self, f: Option<&&Field>, from: &str, to: &str) -> Vec<String> {
+        let mut out: Vec<String> = Vec::new();
+        for r in Self::refs(f) {
+            let Some(node) = self.value_ref(r, "node", |k| matches!(k, ValueKind::Node { .. }))
+            else {
+                continue;
+            };
+            if node == from || node == to || out.contains(&node) {
+                let key = f.map_or("", |f| f.key.text.as_str());
+                self.report(Report::new(
+                    C::InvalidField,
+                    r.range,
+                    format!(
+                        "`{key}` names `{node}`, which is this edge's own source or target or is named twice: a track is another node"
+                    ),
+                ));
+                continue;
+            }
+            out.push(node);
+        }
+        out
     }
 
     /// The typed values of the edge fields in `fields` that a `patch` may

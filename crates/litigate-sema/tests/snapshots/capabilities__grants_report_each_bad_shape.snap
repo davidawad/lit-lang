@@ -1,0 +1,11 @@
+---
+source: crates/litigate-sema/tests/capabilities.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:13:7 L2007 grant `open-ended` has no end: an emergency grant is in force for a bounded window, `effective [from, to)`",
+    "pkgs/demo/main.lit:14:7 L2007 grant `empty` gives nothing: it states `unlock`, an `extend` or `waive` grant, or a `delegable` capability",
+    "pkgs/demo/main.lit:15:26 L2001 `s` is a node, expected a deadline",
+    "pkgs/demo/main.lit:16:65 L2007 `unlock` is given more than once [fix: \"\"]",
+    "pkgs/demo/main.lit:17:19 L1002 cannot find name `nope`",
+]

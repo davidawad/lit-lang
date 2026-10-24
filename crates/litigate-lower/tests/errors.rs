@@ -156,6 +156,14 @@ fn edge_values_without_a_lowering() {
     }));
     only(&p, C::LoweringUnsupported, "`eur`");
 
+    // Concurrent tracks have no engine lowering yet.
+    let mut p = example();
+    node(&mut p, "respond").edges[2].spawn = vec!["answered".into()];
+    only(&p, C::LoweringUnsupported, "concurrent tracks");
+    let mut p = example();
+    node(&mut p, "respond").edges[2].joins = vec!["answered".into()];
+    only(&p, C::LoweringUnsupported, "concurrent tracks");
+
     let mut p = example();
     for d in decls(&mut p) {
         if let Declaration::Deadline(x) = d {
@@ -457,6 +465,9 @@ fn versions_are_selected_at_the_build_dates() {
         from: "2009-12-01".into(),
         to: Some("2015-01-01".into()),
         known_at: "2025-01-01".into(),
+        retracted: None,
+        unknown_before: None,
+        commenced: None,
     };
     old.meta.label = "Answer filed (pre-2015)".into();
     p.modules[0].declarations.push(Declaration::Node(old));

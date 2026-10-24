@@ -1,0 +1,11 @@
+---
+source: crates/litigate-sema/tests/bitemporal.rs
+expression: rows
+---
+{
+    "none declared": "L3007 Error no version of `u` is in force on 2010-06-01",
+    "own unknown_before, after it": "20.days",
+    "own unknown_before, before it": "L3010 Warning the law of `p` is not encoded before 2012-01-01: no version is recorded for 2010-06-01",
+    "the rule's, before it": "L3010 Warning the law of `q` is not encoded before 2011-01-01: no version is recorded for 2010-06-01",
+    "the rule's, between it and the version": "L3007 Error no version of `q` is in force on 2011-06-01",
+}

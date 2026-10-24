@@ -15,7 +15,7 @@ import frap.{ record-group }
 /// delegates to `CaseOrder`.
 rule duty order-transcript effective [2009-12-01, ..) known_at 2009-03-26 cite "FRAP 10(b)(1)"
 {
-  deadline transcript-order-period: 14.days after NoticeOfAppealFiled() counted_by frap26 delegable_to [CaseOrder] cite "FRAP 10(b)(1)"
+  deadline transcript-order-period: 14.days after NoticeOfAppealFiled() counted_by frap26 delegable { to CaseOrder, op set } cite "FRAP 10(b)(1)"
 }
 
 /// FRAP 11(b)(1)(B): the reporter is to complete the transcript within 30
@@ -24,7 +24,7 @@ rule duty order-transcript effective [2009-12-01, ..) known_at 2009-03-26 cite "
 /// delegates to `CaseOrder`.
 rule duty file-transcript effective [2009-12-01, ..) known_at 2009-03-26 cite "FRAP 11(b)(1)(B)"
 {
-  deadline transcript-filing-period: 30.days after TranscriptOrderReceived() counted_by frap26 delegable_to [CaseOrder] cite "FRAP 11(b)(1)(B)"
+  deadline transcript-filing-period: 30.days after TranscriptOrderReceived() counted_by frap26 delegable { to CaseOrder, op set } cite "FRAP 11(b)(1)(B)"
 }
 
 test "the transcript order is due 14 days after the notice" cite "FRAP 10(b)(1)"

@@ -4,7 +4,7 @@ expression: got
 ---
 {
     "01 override without delegation": [
-        "pkgs/local/rules.lit:7:95 L3004 `local-answer` (LocalRule) overrides `frcp::answer-period` (FederalRule), but `frcp::answer-period` does not delegate to LocalRule: missing `delegable_to [LocalRule]`\n    note @9:1: `frcp::answer-period@2009-12-01` [2009-12-01, ..) delegates to no LocalRule\n    note: only a rule's own text can delegate; `override` cannot grant itself the power\n    fix @9:96-9:96: \" delegable_to [LocalRule]\"",
+        "pkgs/local/rules.lit:7:95 L3004 `local-answer` (LocalRule) overrides `frcp::answer-period` (FederalRule), but `frcp::answer-period` does not delegate to LocalRule: missing `delegable { to LocalRule, op set }`\n    note @9:1: `frcp::answer-period@2009-12-01` [2009-12-01, ..) delegates to no LocalRule\n    note: only a rule's own text can delegate; `override` cannot grant itself the power\n    fix @9:96-9:96: \" delegable { to LocalRule, op set }\"",
     ],
     "02 delegated override": [],
     "03 two overrides at one level tie": [

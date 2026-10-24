@@ -13,7 +13,7 @@ import frap.{ motions-group }
 /// service (`frap26`'s `service_extension`).
 rule duty respond-to-motion effective [2009-12-01, ..) known_at 2009-03-26 cite "FRAP 27(a)(3)(A)"
 {
-  deadline motion-response-period: 10.days after ServedPaper(Motion) counted_by frap26 delegable_to [CaseOrder] cite "FRAP 27(a)(3)(A)"
+  deadline motion-response-period: 10.days after ServedPaper(Motion) counted_by frap26 delegable { to CaseOrder, op set } cite "FRAP 27(a)(3)(A)"
 }
 
 test "a response is due 10 days after electronic service of the motion" cite "FRAP 27(a)(3)(A)"

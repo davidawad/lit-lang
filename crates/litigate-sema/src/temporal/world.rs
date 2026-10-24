@@ -119,6 +119,17 @@ pub struct World<'a> {
     incoming: BTreeMap<Key, Vec<Incoming<'a>>>,
     exceptions: BTreeMap<Key, Vec<(usize, &'a hir::Exception)>>,
     transitions: BTreeMap<(Key, String), Vec<(usize, &'a hir::Transition)>>,
+    grants: BTreeMap<Key, Vec<Granted<'a>>>,
+    commenced: Option<String>,
+}
+
+/// An emergency grant reaching a declaration: its package and the grant.
+#[derive(Debug, Clone, Copy)]
+pub struct Granted<'a> {
+    /// Owning package (index into [`World::packs`]).
+    pub pack: usize,
+    /// The grant.
+    pub grant: &'a hir::Grant,
 }
 
 /// A relation pointing at a declaration: who declares it, and on which
@@ -135,14 +146,13 @@ pub struct Incoming<'a> {
 
 /// The target text of a relation that names a declaration.
 #[must_use]
-pub fn relation_target(r: &Relation) -> Option<&String> {
+pub fn relation_target(r: &Relation) -> &String {
     match r {
         Relation::SubjectTo(t)
         | Relation::Notwithstanding(t)
         | Relation::Supersedes(t)
         | Relation::Revives(t)
-        | Relation::Override(t) => Some(t),
-        Relation::DelegableTo(_) => None,
+        | Relation::Override(t) => t,
     }
 }
 
@@ -199,6 +209,7 @@ impl<'a> World<'a> {
                 if let Declaration::Instance(i) = decl {
                     self.instances.push((pack, i));
                 }
+                self.grant(pack, decl);
                 let Some(meta) = meta_of(decl) else {
                     continue;
                 };
@@ -210,14 +221,12 @@ impl<'a> World<'a> {
                 let own = key.pack.clone();
                 self.by_key.entry(key.clone()).or_default().push(i);
                 for relation in &meta.relations {
-                    if let Some(text) = relation_target(relation) {
-                        let t = self.target(&own, text);
-                        self.incoming.entry(t.key).or_default().push(Incoming {
-                            by: i,
-                            relation,
-                            version: t.version,
-                        });
-                    }
+                    let t = self.target(&own, relation_target(relation));
+                    self.incoming.entry(t.key).or_default().push(Incoming {
+                        by: i,
+                        relation,
+                        version: t.version,
+                    });
                 }
                 match decl {
                     Declaration::Exception(e) => {
@@ -249,6 +258,18 @@ impl<'a> World<'a> {
             .iter()
             .filter(move |(p, _)| *p == pack)
             .map(|(_, i)| *i)
+    }
+
+    /// Queries concern a proceeding commenced on `date` (a matter's first
+    /// event), not one commenced on each query's own date.
+    pub fn set_commenced(&mut self, date: Option<String>) {
+        self.commenced = date;
+    }
+
+    /// The commencement date of the proceeding a query on `date` concerns.
+    #[must_use]
+    pub fn commenced<'d>(&'d self, date: &'d str) -> &'d str {
+        self.commenced.as_deref().unwrap_or(date)
     }
 
     /// The authority lattice of every `authority` chain added so far.
@@ -304,6 +325,31 @@ impl<'a> World<'a> {
             }
         }
         out
+    }
+
+    /// Records the targets `decl` reaches, if it is a `grant`.
+    fn grant(&mut self, pack: usize, decl: &'a Declaration) {
+        if let Declaration::Grant(grant) = decl {
+            let own = self.packs[pack].pack.clone();
+            for t in &grant.targets {
+                let key = self.target(&own, t).key;
+                self.grants
+                    .entry(key)
+                    .or_default()
+                    .push(Granted { pack, grant });
+            }
+        }
+    }
+
+    /// Every declaration some emergency grant reaches, with the grants.
+    pub fn granted(&self) -> impl Iterator<Item = (&Key, &[Granted<'a>])> + '_ {
+        self.grants.iter().map(|(k, v)| (k, v.as_slice()))
+    }
+
+    /// Emergency grants reaching `key`, in declaration order.
+    #[must_use]
+    pub fn grants(&self, key: &Key) -> &[Granted<'a>] {
+        self.grants.get(key).map_or(&[], Vec::as_slice)
     }
 
     /// Records the chain link `decl` declares, if it is an `authority`.
@@ -394,10 +440,19 @@ impl<'a> World<'a> {
     fn versions_of(&self, ids: &[usize]) -> VersionSet<usize> {
         VersionSet::new(
             ids.iter()
-                .map(|&i| Version {
-                    in_force: Window::of(&self.decls[i].meta.effective),
-                    known_at: self.decls[i].meta.effective.known_at.clone(),
-                    decl: i,
+                .map(|&i| {
+                    let effective = &self.decls[i].meta.effective;
+                    Version {
+                        in_force: Window::of(effective),
+                        known_at: effective.known_at.clone(),
+                        retracted: effective.retracted.clone(),
+                        unknown_before: effective.unknown_before.clone(),
+                        commenced: effective
+                            .commenced
+                            .as_ref()
+                            .map(|c| Window::new(c.from.clone(), c.to.clone())),
+                        decl: i,
+                    }
                 })
                 .collect(),
         )

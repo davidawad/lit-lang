@@ -61,7 +61,7 @@ fn claimants_across_packages_and_delegation_table() {
         d(
             "tg",
             1,
-            "effective [2009-12-01, ..) delegable_to [LocalRule]"
+            "effective [2009-12-01, ..) delegable { to LocalRule, op set }"
         )
     );
     let cases: Vec<(&str, Vec<LoadedPackage>)> = vec![
@@ -102,7 +102,7 @@ fn claimants_across_packages_and_delegation_table() {
                     "FederalRule",
                     &["core"],
                     "",
-                    &(C6.to_owned() + &d("tg", 1, "delegable_to [FederalRule]")),
+                    &(C6.to_owned() + &d("tg", 1, "delegable { to FederalRule, op set }")),
                 ),
             ],
         ),
@@ -132,7 +132,7 @@ fn a_lower_authority_listed_first_loses_on_authority() {
         d(
             "tg",
             1,
-            "effective [2009-12-01, ..) delegable_to [LocalRule, StandingOrder]"
+            "effective [2009-12-01, ..) delegable { to [LocalRule, StandingOrder], op set }"
         )
     );
     let packages = [
@@ -175,7 +175,7 @@ fn every_load_order_of_one_world_selects_alike() {
         d(
             "tg",
             1,
-            "effective [2009-12-01, ..) delegable_to [LocalRule]"
+            "effective [2009-12-01, ..) delegable { to LocalRule, op set }"
         )
     );
     let packages = [
@@ -248,7 +248,7 @@ fn claimant_ties_and_cycles_table() {
         ),
         (
             "5 delegating to an unranked level",
-            &("authority Alpha > Beta\n".to_owned() + &d("o", 1, "delegable_to [Alpha]")),
+            &("authority Alpha > Beta\n".to_owned() + &d("o", 1, "delegable { to Alpha, op set }")),
         ),
     ]));
 }

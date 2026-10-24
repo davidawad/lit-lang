@@ -5,6 +5,7 @@ mod calendar;
 mod clock;
 mod cx;
 pub(crate) use cx::refs;
+mod delegation;
 mod edge;
 mod imports;
 mod instance;
@@ -73,6 +74,7 @@ pub fn item_name(item: &Item) -> Option<&Name> {
         | ItemKind::Counting(n, _, _)
         | ItemKind::Calendar(n, _, _)
         | ItemKind::Transition(n, _, _, _)
+        | ItemKind::Grant(n, _, _)
         | ItemKind::Default(n, _, _, _) => Some(n),
         ItemKind::Node(n) => Some(&n.name),
         ItemKind::Deadline { name, .. } | ItemKind::Exception { name, .. } => Some(name),
@@ -509,6 +511,9 @@ fn items(cx: &mut Cx<'_, '_>, top: &Item, context: &ModuleContext) -> DeclCheck 
             ItemKind::Test(name, clauses, stmts) => {
                 Some(Declaration::Test(cx.test(item, name, clauses, stmts)))
             }
+            ItemKind::Grant(name, clauses, fields) => cx
+                .grant(item, *rule, name, clauses, fields)
+                .map(Declaration::Grant),
         };
         out.declarations.extend(d);
     }

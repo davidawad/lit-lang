@@ -2,7 +2,7 @@
 use super::{
     child, child_after, children, fields_of, keyword, token, AstNode, CalendarDecl, CallExpr, Cite,
     CountingDecl, DeadlineDecl, DefaultDecl, ExceptionDecl, ExpectStmt, Expr, Field, GivenStmt,
-    Hole, HolidayDecl, InstanceDecl, Literal, PatchDecl, Ref, RuleDecl, TestDecl, Token,
+    GrantDecl, Hole, HolidayDecl, InstanceDecl, Literal, PatchDecl, Ref, RuleDecl, TestDecl, Token,
     TransitionArm, TransitionDecl, VersionClause,
 };
 use crate::ast::items::Item;
@@ -97,6 +97,20 @@ impl HolidayDecl {
     #[must_use]
     pub fn observed(&self) -> Option<Ref> {
         child::<Field>(self.syntax()).and_then(|field| field.value_ref())
+    }
+}
+
+impl GrantDecl {
+    /// The deadlines it reaches (`on [d, ...]`).
+    #[must_use]
+    pub fn targets(&self) -> Option<super::IdList> {
+        child::<Field>(self.syntax()).and_then(|field| field.id_list())
+    }
+
+    /// Body fields (`unlock`, `extend`, `waive`, `delegable`).
+    #[must_use]
+    pub fn fields(&self) -> Vec<Field> {
+        fields_of(self.syntax())
     }
 }
 

@@ -177,10 +177,12 @@ impl Cx<'_, '_> {
 
     /// `patch edge { ... }`: the edge fields written, typed as on an edge
     /// declaration, and the typed operations on its guard. `event`,
-    /// `replaces` and `when` are not patchable: replay binds the base edge,
-    /// only a link replaces edges, and a guard changes only by an explicit
-    /// operation with its authority (`when and`, `when or`, `supersedes
-    /// when`; SPEC §3.6), never by an implicit overwrite.
+    /// declaration. `event`, `replaces`, `when`, `spawn` and `joins` are not
+    /// patchable: replay binds the base edge, its tracks, and the facts its
+    /// guards derive, and only a link replaces edges. A guard changes only
+    /// by an explicit operation with its authority (`when and`, `when or`,
+    /// `supersedes when`; SPEC §3.6), reserved today (L0010), never by an
+    /// implicit overwrite.
     fn patch(&mut self, p: &Field) -> (String, EdgePatch) {
         // The parser writes a patch only after its edge's identifier.
         let edge = first_ref(Some(&p))
@@ -202,7 +204,7 @@ impl Cx<'_, '_> {
             .filter_map(|f| Some((kind(f)?, f)))
             .collect();
         let fields = self.once(&written);
-        for key in ["event", "replaces"] {
+        for key in ["event", "replaces", "spawn", "joins"] {
             if let Some(f) = fields.get(key) {
                 self.not_allowed(f, "in a `patch`: it writes the base edge's other fields");
             }
@@ -286,6 +288,9 @@ impl Cx<'_, '_> {
                     from: from.text.clone(),
                     to: to.as_ref().map(|t| t.text.clone()),
                     known_at: known_at.unwrap_or_default(),
+                    retracted: None,
+                    unknown_before: None,
+                    commenced: None,
                 })
             }
             _ => None,

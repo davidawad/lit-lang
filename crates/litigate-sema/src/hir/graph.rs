@@ -153,6 +153,14 @@ pub struct Edge {
     pub requires: Vec<String>,
     /// Flags that must all be absent.
     pub forbids: Vec<String>,
+    /// Nodes where taking the edge starts a concurrent track each (`spawn`):
+    /// the matter's marking gains a token there (SPEC §5.6).
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub spawn: Vec<String>,
+    /// Nodes whose tracks the edge joins (`joins`): it is enabled only
+    /// while each holds a token, and taking it consumes them.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub joins: Vec<String>,
     /// Guard of a fact edge (`when`): a condition over the matter's
     /// history that, when it holds, derives the fact.
     #[serde(default, skip_serializing_if = "Option::is_none")]

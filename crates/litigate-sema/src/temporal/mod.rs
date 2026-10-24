@@ -82,6 +82,19 @@ pub fn inactive(
             format!("`{name}` is not encoded before {earliest}: no version is in force on {as_of}"),
         )
         .with_note(None, not_encoded(earliest)),
+        Inactive::Miss(Miss::NotEncoded { before }) => {
+            let mut d = Diagnostic::error(
+                C::NotEncoded,
+                base.span,
+                format!("the law of `{name}` is not encoded before {before}: no version is recorded for {as_of}"),
+            )
+            .with_note(
+                None,
+                format!("`unknown_before {before}` marks {as_of} as a hole in the corpus, not a day with no law; encode the earlier version to answer it"),
+            );
+            d.severity = litigate_base::Severity::Warning;
+            d
+        }
         Inactive::Miss(Miss::NotInForce { hidden }) if hidden.is_empty() => base.with_note(
             None,
             format!(

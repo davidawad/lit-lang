@@ -1,0 +1,37 @@
+---
+source: crates/litigate-sema/tests/capabilities.rs
+expression: out
+---
+{
+    "00 op extend / 30.days from Served() counted_by c6": [],
+    "01 op shorten / 30.days from Served() counted_by c6": [
+        "pkgs/local/rules.lit:6:60 L3004 `local-answer` (LocalRule) overrides `fed::answer-period` (FederalRule) by `extend`, but `fed::answer-period` delegates to LocalRule only `shorten`\n    note @10:1: `fed::answer-period@2009-12-01` declares its capabilities here; `set` covers `extend` and `shorten`, nothing covers `compute_method` or `suspend` but itself",
+    ],
+    "02 op set / 30.days from Served() counted_by c6": [],
+    "03 op shorten / 14.days from Served() counted_by c6": [],
+    "04 op extend / 14.days from Served() counted_by c6": [
+        "pkgs/local/rules.lit:6:60 L3004 `local-answer` (LocalRule) overrides `fed::answer-period` (FederalRule) by `shorten`, but `fed::answer-period` delegates to LocalRule only `extend`\n    note @10:1: `fed::answer-period@2009-12-01` declares its capabilities here; `set` covers `extend` and `shorten`, nothing covers `compute_method` or `suspend` but itself",
+    ],
+    "05 op compute_method / 21.days from Served() counted_by c7": [],
+    "06 op set / 21.days from Served() counted_by c7": [
+        "pkgs/local/rules.lit:6:60 L3004 `local-answer` (LocalRule) overrides `fed::answer-period` (FederalRule) by `compute_method`, but `fed::answer-period` delegates to LocalRule only `set`\n    note @10:1: `fed::answer-period@2009-12-01` declares its capabilities here; `set` covers `extend` and `shorten`, nothing covers `compute_method` or `suspend` but itself",
+    ],
+    "07 op set / 21.court_days from Served() counted_by c6": [],
+    "08 op extend / 21.court_days from Served() counted_by c6": [
+        "pkgs/local/rules.lit:6:66 L3004 `local-answer` (LocalRule) overrides `fed::answer-period` (FederalRule) by `set`, but `fed::answer-period` delegates to LocalRule only `extend`\n    note @10:1: `fed::answer-period@2009-12-01` declares its capabilities here; `set` covers `extend` and `shorten`, nothing covers `compute_method` or `suspend` but itself",
+    ],
+    "09 op set / 21.days from Served(motion) counted_by c6": [],
+    "10 op [extend, shorten] / 21.days from Served(motion) counted_by c6": [
+        "pkgs/local/rules.lit:6:66 L3004 `local-answer` (LocalRule) overrides `fed::answer-period` (FederalRule) by `set`, but `fed::answer-period` delegates to LocalRule only `[extend, shorten]`\n    note @10:1: `fed::answer-period@2009-12-01` declares its capabilities here; `set` covers `extend` and `shorten`, nothing covers `compute_method` or `suspend` but itself",
+    ],
+    "11 op shorten / 21.days from Served() counted_by c6": [],
+    "12 op extend, max 9.days / 30.days from Served() counted_by c6": [],
+    "13 op extend, max 8.days / 30.days from Served() counted_by c6": [
+        "pkgs/local/rules.lit:6:60 L3004 `local-answer` (LocalRule) overrides `fed::answer-period` (FederalRule) beyond its delegation's bound: no more than 8 calendar days past the declared period\n    note @10:1: `fed::answer-period@2009-12-01` delegates to LocalRule an extension of no more than 8 calendar days",
+    ],
+    "14 op set, max 8.days / 14.days from Served() counted_by c6": [],
+    "15 op set, max 30.days / 21.court_days from Served() counted_by c6": [
+        "pkgs/local/rules.lit:6:66 L3004 `local-answer` (LocalRule) overrides `fed::answer-period` (FederalRule) beyond its delegation's bound: no more than 30 calendar days past the declared period\n    note @10:1: `fed::answer-period@2009-12-01` delegates to LocalRule an extension of no more than 30 calendar days",
+    ],
+    "16 op extend, max 1.days } delegable { to LocalRule, op extend / 30.days from Served() counted_by c6": [],
+}

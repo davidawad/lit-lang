@@ -20,9 +20,9 @@ expression: stable(&run.json)
     "id": "cov-pack::default",
     "span": {
       "file": "lit/cov/cov.lit",
-      "line": 89,
+      "line": 91,
       "col": 3,
-      "end_line": 89,
+      "end_line": 91,
       "end_col": 84
     },
     "steps": [
@@ -41,9 +41,9 @@ expression: stable(&run.json)
         "known_at": "2025-01-01",
         "span": {
           "file": "lit/cov/cov.lit",
-          "line": 75,
+          "line": 77,
           "col": 1,
-          "end_line": 90,
+          "end_line": 92,
           "end_col": 2
         }
       }
@@ -222,7 +222,7 @@ expression: stable(&run.json)
         "line": 60,
         "col": 1,
         "end_line": 60,
-        "end_col": 89
+        "end_col": 135
       },
       "message": "deadline `brief-period` has no test that evaluates `deadline(brief-period)`",
       "fixes": [
@@ -232,9 +232,9 @@ expression: stable(&run.json)
               "span": {
                 "file": "lit/cov/cov.lit",
                 "line": 60,
-                "col": 89,
+                "col": 135,
                 "end_line": 60,
-                "end_col": 89
+                "end_col": 135
               },
               "replacement": "\n\ntest \"brief-period is due on the expected date\" {\n  given <trigger event> on <YYYY-MM-DD>\n  expect deadline(brief-period) == <YYYY-MM-DD>\n}"
             }
@@ -252,9 +252,9 @@ expression: stable(&run.json)
       "severity": "warning",
       "span": {
         "file": "lit/cov/cov.lit",
-        "line": 62,
+        "line": 64,
         "col": 1,
-        "end_line": 62,
+        "end_line": 64,
         "end_col": 123
       },
       "message": "deadline `reply-period` has no test that evaluates `deadline(reply-period)`",
@@ -264,9 +264,9 @@ expression: stable(&run.json)
             {
               "span": {
                 "file": "lit/cov/cov.lit",
-                "line": 62,
+                "line": 64,
                 "col": 123,
-                "end_line": 62,
+                "end_line": 64,
                 "end_col": 123
               },
               "replacement": "\n\ntest \"reply-period is due on the expected date\" {\n  given <trigger event> on <YYYY-MM-DD>\n  expect deadline(reply-period) == <YYYY-MM-DD>\n}"
@@ -285,9 +285,9 @@ expression: stable(&run.json)
       "severity": "info",
       "span": {
         "file": "lit/cov/cov.lit",
-        "line": 99,
+        "line": 101,
         "col": 51,
-        "end_line": 99,
+        "end_line": 101,
         "end_col": 94
       },
       "message": "the edge `answered -> judgment-entered` has no id, so cases and links cannot name it",
@@ -301,9 +301,9 @@ expression: stable(&run.json)
       "severity": "info",
       "span": {
         "file": "lit/cov/cov.lit",
-        "line": 103,
+        "line": 105,
         "col": 3,
-        "end_line": 103,
+        "end_line": 105,
         "end_col": 42
       },
       "message": "the edge `default-risk -> judgment-entered` has no id, so cases and links cannot name it",
@@ -317,9 +317,9 @@ expression: stable(&run.json)
       "severity": "info",
       "span": {
         "file": "lit/cov/cov.lit",
-        "line": 104,
+        "line": 106,
         "col": 3,
-        "end_line": 104,
+        "end_line": 106,
         "end_col": 56
       },
       "message": "the edge `default-risk -> judgment-entered` has no id, so cases and links cannot name it",

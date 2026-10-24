@@ -101,16 +101,14 @@ fn diagnostics(packages: &[LoadedPackage]) -> Vec<String> {
     render(&db, ws)
 }
 
-/// `hir` with every `delegable_to [level]` of package `fed` removed: what
+/// `hir` with every delegation to `level` of package `fed` removed: what
 /// selection sees if an unlicensed claim reached it (`check` rejects the
 /// source with L3004, so only HIR built directly can carry one).
 fn undelegated(mut hir: Vec<Package>, level: &str) -> Vec<Package> {
     for p in hir.iter_mut().filter(|p| p.manifest.name == "fed") {
         for d in p.modules.iter_mut().flat_map(|m| m.declarations.iter_mut()) {
             if let Declaration::Deadline(x) = d {
-                x.meta
-                    .relations
-                    .retain(|r| !matches!(r, Relation::DelegableTo(l) if l == level));
+                x.meta.delegations.retain(|g| g.to != level);
             }
         }
     }
@@ -128,7 +126,7 @@ fn who(hir: &[Package]) -> String {
     }
 }
 
-const DELEGATED: &str = " delegable_to [LocalRule]";
+const DELEGATED: &str = " delegable { to LocalRule, op set }";
 
 #[test]
 fn p1_a_licensed_override_is_selected() {
@@ -167,7 +165,7 @@ fn p1_a_displacing_claimant_is_followed_to_its_own_winner() {
         &["core", "fed"],
         &[(
             "rules.lit",
-            "module local.rules\nimport core.authority.{StandingOrder}\nimport fed.rules.{answer-period, c6, Served}\nstart l\nstate l: \"L\"\ndeadline local-answer: 14.days from Served() counted_by c6 override answer-period delegable_to [StandingOrder]\n",
+            "module local.rules\nimport core.authority.{StandingOrder}\nimport fed.rules.{answer-period, c6, Served}\nstart l\nstate l: \"L\"\ndeadline local-answer: 14.days from Served() counted_by c6 override answer-period delegable { to StandingOrder, op set }\n",
         )],
     );
     let hir = compile(&[core(), fed(DELEGATED), local, standing]);
@@ -176,16 +174,29 @@ fn p1_a_displacing_claimant_is_followed_to_its_own_winner() {
 
 #[test]
 fn p2_every_displacing_relation_needs_a_delegation() {
+    // A 3-day period over the 21-day one shortens it; a supersession of
+    // another declaration suspends it.
     let rows = [
-        ("override", "override answer-period", "order::order"),
+        (
+            "override",
+            "override answer-period",
+            "order::order",
+            "shorten",
+        ),
         (
             "notwithstanding",
             "notwithstanding answer-period",
             "order::order",
+            "shorten",
         ),
-        ("supersedes", "supersedes answer-period", "inactive"),
+        (
+            "supersedes",
+            "supersedes answer-period",
+            "inactive",
+            "suspend",
+        ),
     ];
-    for (relation, clause, licensed) in rows {
+    for (relation, clause, licensed, op) in rows {
         let decl = deadline(
             "order",
             3,
@@ -196,10 +207,15 @@ fn p2_every_displacing_relation_needs_a_delegation() {
         let found = diagnostics(&[core(), fed(""), order.clone()]);
         assert_eq!(found.len(), 1, "{relation}: {found:#?}");
         assert!(
-            found[0].contains("L3004") && found[0].contains("missing `delegable_to [CaseOrder]`"),
+            found[0].contains("L3004")
+                && found[0].contains(&format!("missing `delegable {{ to CaseOrder, op {op} }}`")),
             "{relation}: {found:#?}"
         );
-        let hir = compile(&[core(), fed(" delegable_to [CaseOrder]"), order]);
+        let hir = compile(&[
+            core(),
+            fed(&format!(" delegable {{ to CaseOrder, op {op} }}")),
+            order,
+        ]);
         assert_eq!(who(&hir), licensed, "{relation}");
         assert_eq!(
             who(&undelegated(hir, "CaseOrder")),
@@ -233,7 +249,8 @@ fn p2_a_revival_needs_a_delegation_too() {
             "effective [2012-01-01, ..) revives answer-period",
         ),
     );
-    let found = diagnostics(&[core(), fed(DELEGATED), pause.clone(), resume.clone()]);
+    let suspend = " delegable { to LocalRule, op suspend }";
+    let found = diagnostics(&[core(), fed(suspend), pause.clone(), resume.clone()]);
     assert_eq!(found.len(), 1, "{found:#?}");
     assert!(
         found[0].contains("L3004")
@@ -242,7 +259,7 @@ fn p2_a_revival_needs_a_delegation_too() {
     );
     let hir = compile(&[
         core(),
-        fed(" delegable_to [LocalRule, CaseOrder]"),
+        fed(" delegable { to [LocalRule, CaseOrder], op suspend }"),
         pause,
         resume,
     ]);
@@ -610,7 +627,11 @@ fn p1_replay_counts_under_the_selected_counting_rule() {
         "LocalRule",
         "counting l6 override c6 { holidays lcal }\ncalendar lcal { new-year: fixed(1, 1) effective [1870-06-28, ..) }\n",
     );
-    let hir = compile(&[core(), fed_with("", "delegable_to [LocalRule]"), local]);
+    let hir = compile(&[
+        core(),
+        fed_with("", "delegable { to LocalRule, op compute_method }"),
+        local,
+    ]);
     let (_, requests) = replay(&hir, BOTH, &[SERVED, ANSWERED]);
     assert_eq!(requests.last().map(|r| r.counting.as_str()), Some("l6"));
 }
@@ -725,7 +746,7 @@ fn ambiguous_and_absent_targets_explain_themselves() {
 fn a_lock_bars_a_delegated_override_from_granting_an_extension() {
     // FRAP 26(b)(1): the period delegates to a local rule, but its lock
     // forbids any extension beyond its own grant.
-    let locked = " delegable_to [LocalRule] { extend { by Court, max 30.days }, extend { never cite \"FRAP 26(b)(1)\" } }";
+    let locked = " delegable { to LocalRule, op set } { extend { by Court, max 30.days }, extend { never cite \"FRAP 26(b)(1)\" } }";
     let local = |clauses: &str| {
         over(
             "local",
@@ -787,7 +808,7 @@ fn a_lock_bars_a_delegated_override_from_granting_an_extension() {
         );
     }
     // Without a lock the same delegation may grant one.
-    let open = " delegable_to [LocalRule] { extend { by Court, max 30.days } }";
+    let open = " delegable { to LocalRule, op set } { extend { by Court, max 30.days } }";
     let widening = local("{ extend { by Court, max 60.days } }");
     assert_eq!(
         who(&compile(&[core(), fed(open), widening])),

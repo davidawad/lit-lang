@@ -102,7 +102,7 @@ state briefing-complete: "Briefing Closed" by applicant cite "Fed. Cir. R. 31"
 /// list in an agency appeal). Fed. Cir. R. 26(b) lets the court extend it.
 rule duty appellant-principal-brief cite "Fed. Cir. R. 31(a)(1)"
 {
-  deadline appellant-brief-period: 60.days after Docketed() counted_by frap26 effective [2025-12-01, ..) known_at 2025-12-01 delegable_to [CaseOrder] cite "Fed. Cir. R. 31(a)(1); Fed. Cir. R. 26(b)(1)"
+  deadline appellant-brief-period: 60.days after Docketed() counted_by frap26 effective [2025-12-01, ..) known_at 2025-12-01 delegable { to CaseOrder, op set } cite "Fed. Cir. R. 31(a)(1); Fed. Cir. R. 26(b)(1)"
 }
 
 /// Fed. Cir. R. 31(a)(2): the appellee's principal brief is due 40 days
@@ -110,7 +110,7 @@ rule duty appellant-principal-brief cite "Fed. Cir. R. 31(a)(1)"
 /// brief was not served electronically.
 rule duty appellee-principal-brief cite "Fed. Cir. R. 31(a)(2)"
 {
-  deadline appellee-brief-period: 40.days after BriefServed(Principal) counted_by frap26 effective [2025-12-01, ..) known_at 2025-12-01 delegable_to [CaseOrder] cite "Fed. Cir. R. 31(a)(2); Fed. Cir. R. 26(b)(1)"
+  deadline appellee-brief-period: 40.days after BriefServed(Principal) counted_by frap26 effective [2025-12-01, ..) known_at 2025-12-01 delegable { to CaseOrder, op set } cite "Fed. Cir. R. 31(a)(2); Fed. Cir. R. 26(b)(1)"
 }
 
 /// FRAP 31(a)(1): the reply brief is due 21 days after service of the
@@ -122,9 +122,9 @@ rule duty reply-brief cite "FRAP 31(a)(1)"
 {
   /// The 14-day reply period of the 2009 text (the 2009 amendment set the
   /// 7-days-before-argument limit and kept 14 days).
-  deadline reply-brief-period: 14.days after BriefServed(Response) counted_by frap26 effective [2009-12-01, 2018-12-01) known_at 2009-03-26 delegable_to [CaseOrder] cite ?("the 2009 reply-brief text (14 days); not vendored, the corpus holds only the current rule")
+  deadline reply-brief-period: 14.days after BriefServed(Response) counted_by frap26 effective [2009-12-01, 2018-12-01) known_at 2009-03-26 delegable { to CaseOrder, op set } cite ?("the 2009 reply-brief text (14 days); not vendored, the corpus holds only the current rule")
 
-  deadline reply-brief-period: 21.days after BriefServed(Response) counted_by frap26 effective [2018-12-01, ..) known_at 2018-04-26 supersedes reply-brief-period@2009-12-01 delegable_to [CaseOrder] cite "FRAP 31(a)(1); Fed. Cir. R. 26(b)(1)"
+  deadline reply-brief-period: 21.days after BriefServed(Response) counted_by frap26 effective [2018-12-01, ..) known_at 2018-04-26 supersedes reply-brief-period@2009-12-01 delegable { to CaseOrder, op set } cite "FRAP 31(a)(1); Fed. Cir. R. 26(b)(1)"
 }
 
 /// Fed. Cir. R. 30(a)(2): the joint appendix is due 7 days after the last
@@ -132,7 +132,7 @@ rule duty reply-brief cite "FRAP 31(a)(1)"
 /// extend it.
 rule duty joint-appendix cite "Fed. Cir. R. 30(a)(2)"
 {
-  deadline appendix-period: 7.days after Filed(ReplyBrief) counted_by frap26 effective [2025-12-01, ..) known_at 2025-12-01 delegable_to [CaseOrder] cite "Fed. Cir. R. 30(a)(2); Fed. Cir. R. 26(b)(1)"
+  deadline appendix-period: 7.days after Filed(ReplyBrief) counted_by frap26 effective [2025-12-01, ..) known_at 2025-12-01 delegable { to CaseOrder, op set } cite "Fed. Cir. R. 30(a)(2); Fed. Cir. R. 26(b)(1)"
 }
 
 test "the opening brief is due 60 days after docketing" cite "Fed. Cir. R. 31(a)(1)"

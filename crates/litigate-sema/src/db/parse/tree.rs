@@ -299,6 +299,9 @@ pub enum ItemKind {
     },
     /// `test "name" [cite] { stmts }`.
     Test(Name, Vec<Field>, Vec<TestStmt>),
+    /// `grant g on [targets] clauses { fields }`: header clauses (the
+    /// `on` targets among them), then the body.
+    Grant(Name, Vec<Field>, Vec<Field>),
 }
 
 /// Declaration with doc comment and range.

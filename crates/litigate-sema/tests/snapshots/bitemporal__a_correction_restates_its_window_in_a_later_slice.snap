@@ -1,0 +1,19 @@
+---
+source: crates/litigate-sema/tests/bitemporal.rs
+expression: "table(&[(\"1 a correction recorded when the original is retracted checks\",\n&(d(\"p\", 20,\n\"effective [2009-12-01, ..) known_at 2009-03-26 retracted 2020-01-01\") +\n&d(\"p\", 21, \"effective [2009-12-01, ..) known_at 2020-01-01\")),),\n(\"2 a correction recorded while the original is still held overlaps\",\n&(d(\"p\", 20,\n\"effective [2009-12-01, ..) known_at 2009-03-26 retracted 2020-01-01\") +\n&d(\"p\", 21, \"effective [2009-12-01, ..) known_at 2019-01-01\")),),\n(\"3 a retraction must come after the version is recorded\",\n&d(\"p\", 20, \"known_at 2009-03-26 retracted 2009-03-26\"),),\n(\"4 a retraction with no correction leaves the window uncovered\",\n&(d(\"p\", 20, \"effective [2009-12-01, 2012-01-01)\") +\n&d(\"p\", 21, \"effective [2012-01-01, ..) retracted 2026-01-01\")),),\n(\"5 a retraction with no date is a syntax error\", &d(\"p\", 20, \"retracted\")),])"
+---
+{
+    "1 a correction recorded when the original is retracted checks": [],
+    "2 a correction recorded while the original is still held overlaps": [
+        "pkgs/demo/main.lit:14:58 L3001 versions of `p` overlap on [2009-12-01, ..): [2009-12-01, ..) and [2009-12-01, ..)\n    note @13:58: the overlapping version is declared here\n    note: versions of one declaration must be pairwise disjoint so `as_of` selects exactly one",
+    ],
+    "3 a retraction must come after the version is recorded": [
+        "pkgs/demo/main.lit:13:78 L2007 `retracted 2009-03-26` is not after this version's `known_at 2009-03-26`: the corpus holds a version from its `known_at` until it is retracted",
+    ],
+    "4 a retraction with no correction leaves the window uncovered": [
+        "pkgs/demo/main.lit:13:58 L3002 `p` has no version in force on [2012-01-01, ..)\n    note: a gap is legal only when declared: a declaration that `supersedes p` over the gap\n    fix @13:68-13:92: \"[2009-12-01, ..)\"",
+    ],
+    "5 a retraction with no date is a syntax error": [
+        "pkgs/demo/main.lit:15:1 L0001 expected a date `YYYY-MM-DD`, found end of file",
+    ],
+}

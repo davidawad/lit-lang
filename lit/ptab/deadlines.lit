@@ -46,7 +46,7 @@ import ptab.{
 //
 // Delegation. "Times set by rule are default and may be modified by order"
 // (37 C.F.R. § 42.5(c)(1)), so every period a Part 42 rule sets is
-// `delegable_to [CaseOrder]`. Statutory periods (35 U.S.C. §§ 314(b),
+// `delegable { to CaseOrder, op set }`. Statutory periods (35 U.S.C. §§ 314(b),
 // 315(b), 321(c)) are not.
 /// 35 U.S.C. § 321(c): a post-grant review petition may be filed no later
 /// than "the date that is 9 months after the date of the grant".
@@ -115,7 +115,7 @@ test "315(b) bar: from February 29, the year ends on February 28" cite "35 U.S.C
 /// carries no amendment history.
 rule duty petition-correction-deadline cite "37 C.F.R. § 42.106(b)"
 {
-  deadline petition-correction-period: 1.months after IncompletePetitionNoticed() counted_by uspto-1-7 effective [2012-09-16, ..) known_at 2012-08-14 delegable_to [CaseOrder] cite "37 C.F.R. § 42.106(b); 37 C.F.R. § 42.5(c)(1)"
+  deadline petition-correction-period: 1.months after IncompletePetitionNoticed() counted_by uspto-1-7 effective [2012-09-16, ..) known_at 2012-08-14 delegable { to CaseOrder, op set } cite "37 C.F.R. § 42.106(b); 37 C.F.R. § 42.5(c)(1)"
 }
 
 test "petition correction: one month from the notice" cite "37 C.F.R. § 42.106(b)"
@@ -138,8 +138,8 @@ test "petition correction: a last day on Labor Day rolls to Tuesday" cite "37 C.
 /// vendored.
 rule duty popr-deadline cite "37 C.F.R. § 42.107(b)"
 {
-  deadline popr-period: 3.months after FilingDateNoticed() counted_by uspto-1-7 effective [2012-09-16, 2016-05-02) known_at 2012-08-14 delegable_to [CaseOrder] cite ?("the 2012 text (77 Fed. Reg. 48680 (Aug. 14, 2012)) is not vendored: 37 C.F.R. § 42.107(b) as promulgated")
-  deadline popr-period: 3.months after FilingDateNoticed() counted_by uspto-1-7 effective [2016-05-02, ..) known_at 2016-04-01 supersedes popr-period@2012-09-16 delegable_to [CaseOrder] cite "37 C.F.R. § 42.107(b); 37 C.F.R. § 42.207(b); 37 C.F.R. § 42.5(c)(1)"
+  deadline popr-period: 3.months after FilingDateNoticed() counted_by uspto-1-7 effective [2012-09-16, 2016-05-02) known_at 2012-08-14 delegable { to CaseOrder, op set } cite ?("the 2012 text (77 Fed. Reg. 48680 (Aug. 14, 2012)) is not vendored: 37 C.F.R. § 42.107(b) as promulgated")
+  deadline popr-period: 3.months after FilingDateNoticed() counted_by uspto-1-7 effective [2016-05-02, ..) known_at 2016-04-01 supersedes popr-period@2012-09-16 delegable { to CaseOrder, op set } cite "37 C.F.R. § 42.107(b); 37 C.F.R. § 42.207(b); 37 C.F.R. § 42.5(c)(1)"
 }
 
 test "POPR: three months from the filing-date notice" cite "37 C.F.R. § 42.107(b)"
@@ -198,7 +198,7 @@ test "institution after waiver: a last day on Christmas rolls past the December 
 /// No rule fixes when the scheduling order issues: the 30 days are the
 /// pack's practice estimate, and the Board sets the trial's times by order
 /// (37 C.F.R. § 42.5(c)(1)).
-deadline scheduling-order-period: 30.days after TrialInstituted() counted_by uspto-1-7 effective [2012-09-16, ..) known_at 2012-08-14 delegable_to [CaseOrder] cite ?("no rule: the pack's estimate that the scheduling order issues within 30 days of institution; times are set by order, 37 C.F.R. § 42.5(c)(1)")
+deadline scheduling-order-period: 30.days after TrialInstituted() counted_by uspto-1-7 effective [2012-09-16, ..) known_at 2012-08-14 delegable { to CaseOrder, op set } cite ?("no rule: the pack's estimate that the scheduling order issues within 30 days of institution; times are set by order, 37 C.F.R. § 42.5(c)(1)")
 
 test "scheduling order: 30 days from institution" cite "37 C.F.R. § 42.5(c)(1)"
 {
@@ -219,8 +219,8 @@ test "scheduling order: a last day on Juneteenth rolls to Friday" cite "37 C.F.R
 /// UNVERIFIED against the 2012 text, which is not vendored.
 rule duty patent-owner-response-deadline cite "37 C.F.R. § 42.120(b)"
 {
-  deadline patent-owner-response-period: 3.months after TrialInstituted() counted_by uspto-1-7 effective [2012-09-16, 2021-01-08) known_at 2012-08-14 delegable_to [CaseOrder] cite ?("the 2012 text (77 Fed. Reg. 48680 (Aug. 14, 2012)) is not vendored: 37 C.F.R. § 42.120(b) as promulgated")
-  deadline patent-owner-response-period: 3.months after TrialInstituted() counted_by uspto-1-7 effective [2021-01-08, ..) known_at 2020-12-09 supersedes patent-owner-response-period@2012-09-16 delegable_to [CaseOrder] cite "37 C.F.R. § 42.120(b); 37 C.F.R. § 42.5(c)(1)"
+  deadline patent-owner-response-period: 3.months after TrialInstituted() counted_by uspto-1-7 effective [2012-09-16, 2021-01-08) known_at 2012-08-14 delegable { to CaseOrder, op set } cite ?("the 2012 text (77 Fed. Reg. 48680 (Aug. 14, 2012)) is not vendored: 37 C.F.R. § 42.120(b) as promulgated")
+  deadline patent-owner-response-period: 3.months after TrialInstituted() counted_by uspto-1-7 effective [2021-01-08, ..) known_at 2020-12-09 supersedes patent-owner-response-period@2012-09-16 delegable { to CaseOrder, op set } cite "37 C.F.R. § 42.120(b); 37 C.F.R. § 42.5(c)(1)"
 }
 
 test "patent owner response: three months from institution" cite "37 C.F.R. § 42.120(b)"
@@ -244,7 +244,7 @@ test "patent owner response under the 2012 rule: a Saturday last day rolls to Mo
 /// The petitioner's reply. No rule sets it (37 C.F.R. § 42.23 governs only
 /// content); the 60 days after the patent owner response are the pack's
 /// "typically ... per the scheduling order". UNVERIFIED.
-deadline petitioner-reply-period: 60.days after PatentOwnerResponseFiled() counted_by uspto-1-7 effective [2012-09-16, ..) known_at 2012-08-14 delegable_to [CaseOrder] cite ?("scheduling order: the pack's typical 60 days after the patent owner response; not set by 37 C.F.R. § 42.23")
+deadline petitioner-reply-period: 60.days after PatentOwnerResponseFiled() counted_by uspto-1-7 effective [2012-09-16, ..) known_at 2012-08-14 delegable { to CaseOrder, op set } cite ?("scheduling order: the pack's typical 60 days after the patent owner response; not set by 37 C.F.R. § 42.23")
 
 test "petitioner reply: 60 days from the patent owner response" cite "37 C.F.R. § 42.5(c)(1)"
 {
@@ -260,7 +260,7 @@ test "petitioner reply: a last day on Washington's Birthday rolls to Tuesday" ci
 
 /// The patent owner's sur-reply: the pack's typical 30 days after the
 /// reply, set by scheduling order, not by rule. UNVERIFIED.
-deadline sur-reply-period: 30.days after PetitionerReplyFiled() counted_by uspto-1-7 effective [2012-09-16, ..) known_at 2012-08-14 delegable_to [CaseOrder] cite ?("scheduling order: the pack's typical 30 days after the petitioner reply; not set by 37 C.F.R. § 42.23")
+deadline sur-reply-period: 30.days after PetitionerReplyFiled() counted_by uspto-1-7 effective [2012-09-16, ..) known_at 2012-08-14 delegable { to CaseOrder, op set } cite ?("scheduling order: the pack's typical 30 days after the petitioner reply; not set by 37 C.F.R. § 42.23")
 
 test "sur-reply: 30 days from the reply" cite "37 C.F.R. § 42.5(c)(1)"
 {
@@ -278,7 +278,7 @@ test "sur-reply: a last day on New Year's Day rolls to Friday" cite "37 C.F.R. �
 /// only from the MTA Pilot Program (84 Fed. Reg. 9497, Mar. 15, 2019, as the
 /// pack cites it); the 30 days are the pack's typical period. UNVERIFIED:
 /// the notice is not vendored.
-deadline revised-mta-period: 30.days after PreliminaryGuidanceIssued() counted_by uspto-1-7 effective [2019-03-15, ..) known_at 2019-03-15 delegable_to [CaseOrder] cite ?("MTA Pilot Program, 84 Fed. Reg. 9497 (Mar. 15, 2019): the pack's typical 30 days after preliminary guidance")
+deadline revised-mta-period: 30.days after PreliminaryGuidanceIssued() counted_by uspto-1-7 effective [2019-03-15, ..) known_at 2019-03-15 delegable { to CaseOrder, op set } cite ?("MTA Pilot Program, 84 Fed. Reg. 9497 (Mar. 15, 2019): the pack's typical 30 days after preliminary guidance")
 
 test "revised motion to amend: 30 days from preliminary guidance" cite ?("MTA Pilot Program, 84 Fed. Reg. 9497 (Mar. 15, 2019)") {
   given PreliminaryGuidanceIssued() on 2025-06-02
@@ -293,7 +293,7 @@ test "revised motion to amend: a Saturday last day rolls to Monday" cite ?("MTA 
 /// The petitioner's opposition to a revised motion to amend: the pack's
 /// typical 30 days, set by Board order under the MTA Pilot Program.
 /// UNVERIFIED.
-deadline amendment-opposition-period: 30.days after RevisedMotionToAmendFiled() counted_by uspto-1-7 effective [2019-03-15, ..) known_at 2019-03-15 delegable_to [CaseOrder] cite ?("MTA Pilot Program, 84 Fed. Reg. 9497 (Mar. 15, 2019): the pack's typical 30 days after the revised motion; 37 C.F.R. § 42.121(c)")
+deadline amendment-opposition-period: 30.days after RevisedMotionToAmendFiled() counted_by uspto-1-7 effective [2019-03-15, ..) known_at 2019-03-15 delegable { to CaseOrder, op set } cite ?("MTA Pilot Program, 84 Fed. Reg. 9497 (Mar. 15, 2019): the pack's typical 30 days after the revised motion; 37 C.F.R. § 42.121(c)")
 
 test "opposition to a revised motion to amend: 30 days" cite "37 C.F.R. § 42.121(c)"
 {
@@ -314,8 +314,8 @@ test "opposition to a revised motion to amend: a last day on Thanksgiving rolls 
 /// UNVERIFIED against the earlier texts, which are not vendored.
 rule duty rehearing-deadline cite "37 C.F.R. § 42.71(d)(2)"
 {
-  deadline rehearing-period: 30.days after DecisionEntered(FinalWritten) counted_by uspto-1-7 effective [2012-09-16, 2021-01-08) known_at 2012-08-14 delegable_to [CaseOrder] cite ?("the 2012 and 2015 texts (77 Fed. Reg. 48612 (Aug. 14, 2012); 80 Fed. Reg. 28561 (May 19, 2015)) are not vendored: 37 C.F.R. § 42.71(d)(2) before the 2020 amendment")
-  deadline rehearing-period: 30.days after DecisionEntered(FinalWritten) counted_by uspto-1-7 effective [2021-01-08, ..) known_at 2020-12-09 supersedes rehearing-period@2012-09-16 delegable_to [CaseOrder] cite "37 C.F.R. § 42.71(d)(2); 37 C.F.R. § 42.5(c)(1)"
+  deadline rehearing-period: 30.days after DecisionEntered(FinalWritten) counted_by uspto-1-7 effective [2012-09-16, 2021-01-08) known_at 2012-08-14 delegable { to CaseOrder, op set } cite ?("the 2012 and 2015 texts (77 Fed. Reg. 48612 (Aug. 14, 2012); 80 Fed. Reg. 28561 (May 19, 2015)) are not vendored: 37 C.F.R. § 42.71(d)(2) before the 2020 amendment")
+  deadline rehearing-period: 30.days after DecisionEntered(FinalWritten) counted_by uspto-1-7 effective [2021-01-08, ..) known_at 2020-12-09 supersedes rehearing-period@2012-09-16 delegable { to CaseOrder, op set } cite "37 C.F.R. § 42.71(d)(2); 37 C.F.R. § 42.5(c)(1)"
 }
 
 test "rehearing: 30 days from the final written decision" cite "37 C.F.R. § 42.71(d)(2)"
@@ -342,8 +342,8 @@ test "rehearing under the pre-2021 rule: a Sunday last day rolls to Monday" cite
 /// pack's "37 CFR 42.73(d)(1)" is the estoppel rule, not Director review.
 /// UNVERIFIED: the process is not vendored.
 rule duty director-review-deadline effective [2021-06-29, ..) known_at 2021-06-29 cite ?("USPTO Interim Director Review Process (June 29, 2021); not vendored") {
-  deadline director-review-period: 30.days after DecisionEntered(FinalWritten) counted_by uspto-1-7 effective [2021-06-29, ..) known_at 2021-06-29 delegable_to [CaseOrder] cite ?("USPTO Interim Director Review Process (June 29, 2021): 30 days from the final written decision, per the pack; the pack's 37 CFR 42.73(d)(1) is the estoppel rule")
-  deadline director-review-after-rehearing-period: 30.days after DecisionEntered(Rehearing) counted_by uspto-1-7 effective [2021-06-29, ..) known_at 2021-06-29 delegable_to [CaseOrder] cite ?("USPTO Interim Director Review Process (June 29, 2021): 30 days from the rehearing decision, per the pack; the pack's 37 CFR 42.73(d)(1) is the estoppel rule")
+  deadline director-review-period: 30.days after DecisionEntered(FinalWritten) counted_by uspto-1-7 effective [2021-06-29, ..) known_at 2021-06-29 delegable { to CaseOrder, op set } cite ?("USPTO Interim Director Review Process (June 29, 2021): 30 days from the final written decision, per the pack; the pack's 37 CFR 42.73(d)(1) is the estoppel rule")
+  deadline director-review-after-rehearing-period: 30.days after DecisionEntered(Rehearing) counted_by uspto-1-7 effective [2021-06-29, ..) known_at 2021-06-29 delegable { to CaseOrder, op set } cite ?("USPTO Interim Director Review Process (June 29, 2021): 30 days from the rehearing decision, per the pack; the pack's 37 CFR 42.73(d)(1) is the estoppel rule")
 }
 
 test "Director review: 30 days from the final written decision" cite ?("USPTO Interim Director Review Process (June 29, 2021)") {

@@ -156,7 +156,7 @@ impl Cx<'_, '_> {
     /// B [, discretion S] [, after_expiry] [, on M() [, within W]] }`, or
     /// `{ by A, discretion S [, after_expiry, on M()] }`. Its bound is
     /// required: a date bound, a cause standard, or `never`.
-    fn extension(&mut self, f: &Field) -> Option<Extension> {
+    pub(super) fn extension(&mut self, f: &Field) -> Option<Extension> {
         let fields = self.once(nested(f));
         if let Some(never) = fields.get("never") {
             return self.lock(never, &fields);
@@ -354,7 +354,7 @@ impl Cx<'_, '_> {
 
     /// The `waive` capability `{ by A [, after_expiry] }`: a waiver has no
     /// extent, so no bound.
-    fn waiver(&mut self, f: &Field) -> Option<Capability> {
+    pub(super) fn waiver(&mut self, f: &Field) -> Option<Capability> {
         let fields = self.once(nested(f));
         for bound in ["max", "to", "discretion", "on", "within", "never"] {
             if let Some(m) = fields.get(bound) {

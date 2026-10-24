@@ -878,3 +878,35 @@ fn the_director_not_the_court_extends_the_federal_circuit_ptab_window() {
         ["only director may extend `cafc::ptab-noa-period`, but `fedcir` is court"]
     );
 }
+
+/// Before the vendored Supreme Court Rules (in force from 2023-01-01) the
+/// timing of a cert extension application (Sup. Ct. R. 13.5, 30.2) is not
+/// encoded: `sup-ct-30` has no version, so the period is not counted and
+/// an application made before the period would expire and one made after
+/// are judged alike, neither allowed nor denied (28 U.S.C. § 2101(c)'s own
+/// terms, a Justice, good cause and 60 days, stay on the grant).
+#[test]
+fn an_unvendored_cert_extension_is_unknown_on_timing_before_or_after_expiry() {
+    // A 2022-06-01 judgment's 90 days would end 2022-08-30.
+    for applied in ["2022-08-01", "2022-09-10"] {
+        let run = matter(
+            &format!("cert-2101c-{applied}"),
+            &["frap"],
+            "frap-appellate-procedure ^0.1.0",
+            "  appellant: applicant Corporation\n  justice: justice Tribunal\n  panel: court Tribunal\n",
+            &[
+                "2022-06-01 EnteredOnAppeal(Judgment) on appellant",
+                &format!("{applied} CertExtensionApplied() by appellant"),
+                "2022-09-12 CertPeriodExtended(2022-10-20) by justice cite \"Sup. Ct. R. 13.5\"",
+            ],
+            "frap-appellate-procedure::cert-not-sought",
+        );
+        assert_eq!(run.code, 2, "{}", run.stdout);
+        assert_eq!(
+            effects(&run).1,
+            ["cannot count `frap-appellate-procedure::cert-period` to judge `CertPeriodExtended(2022-10-20)`"],
+            "{applied}"
+        );
+        assert!(extended(&run, "frap-appellate-procedure::cert-period").is_empty());
+    }
+}

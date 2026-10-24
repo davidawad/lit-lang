@@ -1,0 +1,14 @@
+---
+source: crates/litigate-sema/tests/bitemporal.rs
+expression: "table(&[(\"1 two versions split one window by commencement\", &split),\n(\"2 commencement windows that overlap overlap\",\n&(d(\"p\", 30, \"effective [2017-01-14, ..) commenced [2017-01-14, 2027-01-01)\")\n+ &d(\"p\", 60, \"effective [2026-06-01, ..) commenced [2026-06-01, ..)\")),),\n(\"3 an empty commencement window\",\n&d(\"p\", 30, \"commenced [2026-06-01, 2026-06-01)\"),),\n(\"4 a rule's window applies to its declarations\",\n&(\"rule duty r commenced [2017-01-14, ..) {\\n\".to_owned() + &d(\"p\", 30, \"\") +\n\"}\\n\"),),])"
+---
+{
+    "1 two versions split one window by commencement": [],
+    "2 commencement windows that overlap overlap": [
+        "pkgs/demo/main.lit:14:58 L3001 versions of `p` overlap on [2026-06-01, ..): [2017-01-14, ..) and [2026-06-01, ..)\n    note @13:58: the overlapping version is declared here\n    note: versions of one declaration must be pairwise disjoint so `as_of` selects exactly one\n    fix @13:68-13:84: \"[2017-01-14, 2026-06-01)\"",
+    ],
+    "3 an empty commencement window": [
+        "pkgs/demo/main.lit:13:68 L2007 empty commencement window [2026-06-01, 2026-06-01)",
+    ],
+    "4 a rule's window applies to its declarations": [],
+}

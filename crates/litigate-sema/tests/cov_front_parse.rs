@@ -84,6 +84,9 @@ const DROPPED: &[&str] = &[
     "default d when true => match x { a => (1 +) }",
     "default d when true => {a: }",
     "default d when true => {a: (1 +)}",
+    "grant on [d] { unlock }",
+    "grant { unlock }",
+    "grant g on [d]",
 ];
 
 #[test]

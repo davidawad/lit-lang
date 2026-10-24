@@ -1,8 +1,8 @@
 //! Per-module building context: the expression checker plus field helpers
 //! and declaration metadata (labels, cites, effective intervals, relations).
 use crate::db::parse::tree::{Atom, Expr, ExprKind, Field, Item, Name, RefPath};
-use crate::db::span::Report;
-use crate::hir::{Interval, Manifest, Metadata, Relation};
+use crate::db::span::{Report, TextRange};
+use crate::hir::{Commenced, Interval, Manifest, Metadata, Relation};
 use crate::resolve::sig::{clause, clauses_of, ValueKind};
 use crate::types::expr::Checker;
 use litigate_base::{Applicability, DiagnosticCode as C};
@@ -378,7 +378,73 @@ impl Cx<'_, '_> {
             .or(rule_known)
             .or_else(|| pkg.map(|p| p.known_at))
             .unwrap_or_default();
-        Interval { from, to, known_at }
+        // A retraction belongs to the version itself; `unknown_before`
+        // may come from its rule.
+        let retracted = Self::date_clause(item, "retracted");
+        if let Some((r, range)) = &retracted {
+            if r.as_str() <= known_at.as_str() {
+                self.report(Report::new(
+                    C::InvalidField,
+                    *range,
+                    format!(
+                        "`retracted {r}` is not after this version's `known_at {known_at}`: the corpus holds a version from its `known_at` until it is retracted"
+                    ),
+                ));
+            }
+        }
+        let unknown_before = Self::date_clause(item, "unknown_before")
+            .or_else(|| rule.and_then(|r| Self::date_clause(r, "unknown_before")))
+            .map(|(d, _)| d)
+            .or_else(|| {
+                self.manifest
+                    .and_then(|m| m.in_force.unknown_before.clone())
+            });
+        let commenced = self
+            .commenced(item)
+            .or_else(|| rule.and_then(|r| self.commenced(r)));
+        Interval {
+            from,
+            to,
+            known_at,
+            retracted: retracted.map(|(d, _)| d),
+            unknown_before,
+            commenced,
+        }
+    }
+
+    /// `commenced [from, to)` of `item`: the proceedings a version
+    /// applies to (L2007 for an empty window).
+    fn commenced(&mut self, item: &Item) -> Option<Commenced> {
+        let Some((Atom::Interval(from, to), range)) =
+            clause(clauses_of(item), "commenced").and_then(|f| f.values.first())
+        else {
+            return None;
+        };
+        if to.as_ref().is_some_and(|t| t.text <= from.text) {
+            self.report(Report::new(
+                C::InvalidField,
+                *range,
+                format!(
+                    "empty commencement window [{}, {})",
+                    from.text,
+                    to.as_ref().map_or("", |t| t.text.as_str())
+                ),
+            ));
+        }
+        Some(Commenced {
+            from: from.text.clone(),
+            to: to.as_ref().map(|t| t.text.clone()),
+        })
+    }
+
+    /// The date of `item`'s `key` clause (`retracted`, `unknown_before`)
+    /// and where it is written.
+    fn date_clause(item: &Item, key: &str) -> Option<(String, TextRange)> {
+        let f = clause(clauses_of(item), key);
+        match (f, f.and_then(first_expr).map(|e| &e.kind)) {
+            (Some(f), Some(ExprKind::Date(d))) => Some((d.clone(), f.range)),
+            _ => None,
+        }
     }
 
     /// Declaration metadata.
@@ -399,6 +465,7 @@ impl Cx<'_, '_> {
             ));
         }
         let mut relations = Vec::new();
+        let mut delegations = Vec::new();
         for f in clauses {
             let target = first_expr(f).and_then(|e| match &e.kind {
                 ExprKind::Ref(r) => Some(r),
@@ -411,17 +478,11 @@ impl Cx<'_, '_> {
                 "revives" => Some(Relation::Revives),
                 "override" => Some(Relation::Override),
                 "delegable_to" => {
-                    for r in Self::refs(Some(&f)) {
-                        if self
-                            .ck
-                            .scope
-                            .authority(&r.head)
-                            .map_err(|e| self.ck.report(e))
-                            .is_ok()
-                        {
-                            relations.push(Relation::DelegableTo(r.head.text.clone()));
-                        }
-                    }
+                    self.legacy_delegation(f);
+                    None
+                }
+                "delegable" => {
+                    delegations.extend(self.delegation(f));
                     None
                 }
                 _ => None,
@@ -449,6 +510,7 @@ impl Cx<'_, '_> {
                 .map(|m| m.authority.clone())
                 .unwrap_or_default(),
             relations,
+            delegations,
             span: self.ck.span(item.range),
             imported: item
                 .doc

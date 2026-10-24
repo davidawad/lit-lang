@@ -139,6 +139,10 @@ syntax_kinds! {
         KwDeclaredHolidays = "declared_holidays", KwQuote = "quote",
         KwLimit = "limit", KwWords = "words", KwPages = "pages", KwLines = "lines",
         KwCertificate = "certificate", KwExcludes = "excludes", KwEcf = "ecf",
+        KwDelegable = "delegable", KwOp = "op", KwGrant = "grant", KwUnlock = "unlock",
+        KwCharacterization = "characterization", KwRetracted = "retracted",
+        KwUnknownBefore = "unknown_before", KwCommenced = "commenced",
+        KwSpawn = "spawn", KwJoins = "joins",
     }
     nodes {
         SourceFile => "Root of a `.lit` module.",
@@ -231,6 +235,7 @@ syntax_kinds! {
         CertificateReq => "Reserved `requires certificate kind` of a `limit` body; always L0011 (SPEC §3.7).",
         Exclusions => "Reserved `excludes [item, ?(\"reason\"), ...]` of a `limit` body; always L0011 (SPEC §3.7).",
         EcfCode => "Reserved `ecf \"code\"` ECF event code of a `limit` body, as data (SPEC §3.7).",
+        GrantDecl => "`grant id on [targets] { ... }`: an emergency capability grant for a bounded window (additive).",
     }
 }
 

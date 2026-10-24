@@ -113,11 +113,12 @@ Punct        = "::" | "->" | "=>" | "==" | "!=" | "<=" | ">=" | "&&" | "||" | ".
   (§8.1). After the citation, the contextual keyword `historical` on the
   same line marks a cite of an expression dated outside the declaration's
   window on purpose (§4.3).
-- **Reserved words.** `world`, `layer`, `precedent`, `overrule`,
-  `delegable`, `lock`, `grant` and `characterization` are reserved for
-  constructs a later edition adds (worlds and layers, precedent effects,
-  delegation grants and locks). They lex as `Ident` but are L0007 wherever
-  they appear, so no source written today collides with that syntax. Only
+- **Reserved words.** `world`, `layer`, `precedent`, `overrule` and
+  `lock` are reserved for constructs a later edition adds (worlds and
+  layers, precedent effects, locks against named authorities). They lex as
+  `Ident` but are L0007 wherever they appear, so no source written today
+  collides with that syntax. (`delegable`, `grant` and `characterization`,
+  reserved before, are the capability syntax of §5.3 and §5.5.) Only
   the whole word is reserved: `world-court` and `"world"` are fine. The
   list is `litigate_syntax::RESERVED_WORDS`. `where` is reserved the same
   way for refinements, but is L0009 rather than L0007 (§3.5); its list is
@@ -177,7 +178,7 @@ PackageDecl  = "package", Ident, "{", "forum", Ident, Sep, "authority", Ident, "
 Item         = StartDecl | GroupDecl | TypeDecl | EnumDecl | EventDecl | NodeDecl
              | LinkDecl | InstanceDecl | RuleDecl | DeadlineDecl | CountingDecl
              | CalendarDecl | TransitionDecl | AuthorityDecl | DefaultDecl
-             | ExceptionDecl | TestDecl ;
+             | ExceptionDecl | TestDecl | GrantDecl ;
 StartDecl    = "start", Ident ;
 GroupDecl    = "group", Ident, ":", String ;
 TypeDecl     = "type", Ident, "=", Type, [ WhereClause ] ;   (* WhereClause: §3.5 *)
@@ -211,6 +212,8 @@ EdgeField    = "event", CallExpr | "authority", (String | Cite) | "effort", Dura
              | "sets", IdList | "clears", IdList | "requires", IdList
              | "forbids", IdList | "replaces", ReplaceList | "when", Expr
              | "basis", Expr | "formerly", IdList ;
+             | "basis", Expr
+             | "spawn", IdList | "joins", IdList ;
 ReplaceList  = "[", [ (Ref | String), { ",", (Ref | String) }, [","] ], "]" ;
 DeadlineOpts = "{", { ("extendable", Bool | "extension_authority", (String | Hole)
              | "note", String | "counting", String), Sep }, "}" ;
@@ -233,8 +236,8 @@ DeadlineDecl = "deadline", Ident, ":", Duration, ("from" | "after" | "before"),
 DeclOpts     = "{", { ( "extendable", Bool | "extension_authority", (String | Hole)
              | "note", String | "bearer", Ref | "trigger", ( Ref | CallExpr )
              | "designated", Ref | "interpretation", String
-             | ("extend" | "waive"), Capability
-             | "forum", Ref, [ Cite, [ "quote", String ] ] ), Sep }, "}" ;
+             | ("extend" | "waive"), Capability | "forum", Ref
+             | "characterization", Ident, [ Cite ] ), Sep }, "}" ;
 Capability   = "{", { ( "by", Ref | "max", Duration | "to", Expr
              | "discretion", Ident | "after_expiry" | "on", CallExpr
              | "within", Expr | "never", Cite | "interpretation", String ), Sep }, "}" ;
@@ -259,11 +262,18 @@ ExceptionDecl= "exception", Ident, ("rebuts" | "undercuts"), Ref, { Cite },
                "when", Expr, [ "=>", Expr ], [ "priority", Number ] ;
 TestDecl     = "test", String, [ Cite ], "{", { TestStmt }, "}" ;
 TestStmt     = "given", Expr, "on", Date | "expect", Expr ;
+GrantDecl    = "grant", Ident, "on", IdList, { VersionClause | Cite },
+               "{", { GrantField, Sep }, "}" ;
+GrantField   = "unlock" | ("extend" | "waive"), Capability | "delegable", Delegation ;
 
-VersionClause= "effective", Interval | "known_at", Date ;
+VersionClause= ("effective" | "commenced"), Interval
+             | ("known_at" | "retracted" | "unknown_before"), Date ;
 Interval     = "[", Date, ",", (Date | ".."), ")" ;
 Relation     = ("subject_to" | "notwithstanding" | "supersedes" | "revives"
-             | "override"), Ref | "delegable_to", IdList ;
+             | "override"), Ref | "delegable", Delegation
+             | "delegable_to", IdList ;            (* legacy: L2007, §5.5 *)
+Delegation   = "{", { ( ("to" | "op"), (Ref | IdList) | "max", Duration | Cite ),
+               Sep }, "}" ;
 Cite         = "cite", ( String | Hole ), [ "historical" ] ;
 Ref          = Ident, [ "@", Ident ], { ("::" | "."), Ident }, [ "@", Date ] ;
 IdList       = "[", [ Ref, { ",", Ref }, [","] ], "]" ;
@@ -438,19 +448,13 @@ otherwise):
   event a fact is followed before, or `as_of`.
 - **Capability.** A guard operation displaces part of its target's
   effect, so like `supersedes` (§5.5 item 3) it needs a capability: its
-  level equals or outranks the base node's authority, or the base lists
-  it in `delegable_to`, on every version of the node in force during the
-  operation (L3004 otherwise).
-- **Composition.** The operations on one edge are a set. They apply in
-  the order their authorities and effective dates fix (§5.5): a lower
-  authority first, then, between equal authorities, the earlier `from`.
-  Source and file order are never consulted, so the result does not
-  depend on which file a manifest lists first, and the higher authority,
-  applying last, prevails (a `supersedes when` resets the guard for its
-  interval; `and` and `or` apply to the guard in force). Two operations
-  in force together that neither authority (incomparable or equal) nor
-  date (equal) orders are L3003, unless both narrow or both widen, which
-  commute (`litigate_sema::guard::order`, `compose`).
+  authority equals or outranks the base edge's, or the base delegates it a
+  `delegable` capability covering `set` (L3004).
+- **Composition.** Several operations on one edge apply in the order
+  their authorities and effective dates fix (§5.5), not in source or file
+  order, so the result does not depend on which file a manifest lists
+  first. A `supersedes when` resets the guard for its interval; `and`
+  and `or` operations apply to the guard in force.
 - **Placement.** A guard operation is written only inside a `patch`
   block, and only on an edge that may carry a `when`: a named edge of a
   `fact` chance node (§5.1; L2007 otherwise). On every date an operation
@@ -634,6 +638,7 @@ jurisdiction = "..."            # optional, Pack.jurisdiction
 in_force = "2009-12-01"         # default effective start
 in_force_until = "2030-01-01"   # optional default effective end (exclusive)
 known_at = "2025-01-01"         # default corpus date
+unknown_before = "2009-12-01"   # optional; no declaration's law is encoded before (§5.4)
 counting = "frcp6"              # optional; Pack.counting (v3): a counting-rule id
 
 [package.roles]                 # actor -> "self" | "opponent" | "nature"; Pack.roles
@@ -1085,10 +1090,12 @@ creates (design review 2026-10-23 §2.4, §2.7):
     none; FRAP 26(b)(1) beside FRAP 4(a)(5)'s grant, "except as
     authorized in Rule 4"). `never` takes no other field (L2007). A
     lower authority's `override`, `notwithstanding`, `supersedes` or
-    `revives` of a locked deadline, licensed only by `delegable_to`, may
-    not declare an `extend` grant the locked version does not: L3004, and
-    the relation has no effect on selection, so no local rule or order
-    grants an extension there.
+    `revives` of a locked deadline, licensed only by a `delegable`
+    capability (§5.5), may not declare an `extend` grant the locked
+    version does not: L3004, and the relation has no effect on selection,
+    so no local rule or order grants an extension there. An emergency
+    `grant` that `unlock`s the deadline (§5.5) lifts the lock for its
+    window.
 
   The cause standard `S` is a closed set: `GoodCause`, `ExcusableNeglect`,
   `GoodCauseOrExcusableNeglect` (FRAP 4(a)(5)(A)(ii)), or
@@ -1180,6 +1187,22 @@ creates (design review 2026-10-23 §2.4, §2.7):
 - `waive { by A [, after_expiry] }`: actor `A` may release an instance,
   after its due date only with `after_expiry`. `max`, `to`, `discretion`,
   `on`, `within` and `never` are not allowed (L2007).
+
+- `characterization jurisdictional | claim_processing [cite "X"]` indexes
+  the deadline's type by the character of the time limit (design review
+  2026-10-23 §2.4); any other word is L2007, and the cite (the deadline's
+  own when absent) is checked like every cite (`cite-resolves`). A
+  jurisdictional limit admits no waiver, forfeiture or equitable exception
+  (*Bowles v. Russell*, 551 U.S. 205 (2007), vendored at
+  `sources/change-corpus/rulings/bowles-scotus-2007.txt`), so these are
+  type errors (L2009): a `waive` capability, an `extend` grant without a
+  bound (`max` or `to`; a lock is fine), and a `delegable` clause; an
+  emergency `grant` giving it any of them is L2009 too. Only the bounded
+  extension a statute itself provides is declarable. A late act under a
+  claim-processing limit is an objection the opponent may raise or
+  forfeit: replay reports it L4013, a warning, not L4002 (§5.6). An
+  uncharacterized deadline is judged as before (L4002): the character is
+  declared only where a vendored authority states it.
 
 A deadline with no `extend` capability cannot be extended by any order: a
 jurisdictional limit such as the notice of appeal (*Bowles v. Russell*, 551
@@ -1287,9 +1310,6 @@ package defaults. Declarations with the same name are versions of one
 logical declaration. Their intervals must be pairwise disjoint (L3001) and
 must cover the package lifetime. A gap is legal only when declared with
 `supersedes`/`revives` (L3002). A query at `(as_of, known_at)` selects the
-version with `from <= as_of < to`, among versions whose `known_at <=` the
-query's `known_at` (latest when omitted). No version is L3007.
-
 **Cite text across versions.** Let E be the declaration version's `from`
 date and D the vendored source binding's `as_of`. When E < D, the cite is
 proved only if a source binding pins an eCFR versioner history for that
@@ -1303,6 +1323,9 @@ source map records the proving history's repository path, heading line,
 block hash, read date, and last version on or before E; it is copied into
 lowered cite provenance and the matter timeline. No Federal Register
 instrument is authority unless its text is itself vendored.
+version with `from <= as_of < to`, among versions the corpus held on the
+query's `known_at` (latest when omitted) that apply to the query's
+proceeding. No version is L3007, or L3010 before `unknown_before`.
 A version's `known_at` is when the corpus can show it was known: its
 promulgation date where a source the package binds dates one, else the
 date the version was recorded, never an earlier guess (ruling
@@ -1324,6 +1347,38 @@ encoded on its date opens an instance whose due date is unknown (an L3007
 warning) and is legal for that reason. The instance is never counted under
 a later version: an act taking it is neither timely nor late (L4010, a
 warning), and it is never breached or lapsed at `as_of`.
+Claims are bitemporal (design review 2026-10-23 §2.6, P9):
+
+- **Transaction time.** A version is held by the corpus from its
+  `known_at` until it is `retracted D` (a version clause; `D` must be
+  after its `known_at`, else L2007): transaction time is `[known_at,
+  retracted)`. A correction is a new version of the same window recorded
+  on `D`, the version it corrects `retracted D`. A query at `known_at K`
+  sees the versions held on `K`; the latest corpus sees every version
+  never retracted. `d@D` selectors and the coverage of the lifetime read
+  the latest corpus.
+- **Disjointness per slice.** Two versions overlap (L3001) only when the
+  corpus held both at once and both apply to some proceeding; a
+  correction recorded when its original is retracted restates the window
+  legally, one recorded while the original is still held overlaps it.
+- **Applicability.** `commenced [from, to)` (a version clause, else the
+  rule's) makes a version apply only to proceedings commenced in the
+  window (an empty window is L2007). A matter is the proceeding commenced
+  on its first event: every query its replay makes, at whatever date,
+  concerns that proceeding, so a version for proceedings commenced before
+  an amendment keeps governing a pending matter. A package query (lowering,
+  `check`, tests) concerns a proceeding commenced on its own date. Two
+  versions whose windows split one valid-time window by commencement are
+  disjoint.
+- **`unknown_before D`.** A version clause (else the rule's, else the
+  package's `Lit.toml` `unknown_before`) marking the date before which the
+  declaration's law is not encoded. A query before the latest such date of
+  any version that no version answers is L3010, a hole (a warning in `dev`,
+  an error in `strict`), not "no version in force" (L3007): the earlier law
+  existed but the corpus does not hold it. In replay, an event that would
+  trigger a version of a deadline, but falls before its `unknown_before`,
+  is L3010 and counts no period; an act through a `within` edge on such a
+  date is L3010 and is not judged.
 
 This is one query (`temporal::select`, supersession applied; precedence,
 §5.5, picks among the claimants it finds with `precedence::select`, and
@@ -1351,9 +1406,9 @@ Refinements (temporal bead, `litigate-sema/src/temporal`):
 - **Declared gaps.** An uncovered day is legal when a declaration that
   `supersedes` this one covers it, when the version starting right after
   the gap `revives` it, or, for the trailing gap, when the version that
-  ends there carries a relation other than `delegable_to` (a sunset or a
-  temporary override: it declares what it amends). Disjointness ignores
-  `known_at`: two versions never restate one window.
+  ends there carries a relation (a sunset or a temporary override: it
+  declares what it amends). Disjointness is per transaction-time slice
+  and per proceeding (above).
 - **Supersession.** `A supersedes B` deactivates the versions of B that
   took effect before A did, from A's `from`. When A's window ends, B stays
   inactive unless A also says `revives B` (B returns after A's window), or
@@ -1408,8 +1463,10 @@ winner is chosen as follows:
    relation orders, and any remaining tie, are L3003.
 3. Every relation that displaces its target (`override`, `notwithstanding`,
    `supersedes`, `revives`) needs a capability: A's authority equals or
-   outranks B's, or B lists A's authority in `delegable_to` (L3004). An
-   unlicensed relation has no effect on selection.
+   outranks B's, or a typed `delegable` capability of B (or an emergency
+   `grant` reaching B) names A's authority and grants the operations the
+   relation performs, within its bound (L3004; below). An unlicensed
+   relation has no effect on selection.
 
 `default d when C => V` concludes V when C holds. `exception e rebuts d when C
 => V'` concludes V' instead. `exception e undercuts d when C` disables d
@@ -1481,17 +1538,59 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
   own counting rule: replay and the schedule take the latest event matching
   it, and a test's `deadline(d)` fails unless the `given` that triggers `d`
   also matches the claimant's trigger.
-- **Delegation.** A displacing relation (`override`, `notwithstanding`,
-  `supersedes`, `revives`) needs no delegation when A's authority equals
-  or outranks B's. Otherwise every version of B it acts on (for
+- **Delegation capabilities** (design review 2026-10-23 §2.4). A
+  delegating declaration states each capability it gives a lower
+  authority: `delegable { to L, op O [, max N.unit] [, cite "X"] }`, a
+  header clause, repeatable. `to` names the principal (an authority level,
+  or a list of levels, one capability each), strictly below the
+  declaration's own (L3004); `op` the operations granted, one or a list
+  of `extend`, `shorten`, `set` (covers `extend` and `shorten`, and any
+  other change of the value but its counting method), `suspend` and
+  `compute_method`; `max N.unit` the bound: an extension may add at most
+  `N` units, in the declared period's own unit and direction, and a
+  bounded capability admits nothing but a deadline (`max` needs `op
+  extend` or `op set`). `to` and `op` are required, an unknown operation is
+  L2007, an unknown level L1002, and the cite, when given, is the
+  delegating text (checked by `cite-resolves`; the declaration's own
+  otherwise). The legacy `delegable_to [L]` is L2007 with a fix spelling
+  `delegable { to L, op set }`, and delegates nothing.
+
+  A displacing relation from A needs no capability when A's authority
+  equals or outranks B's. Otherwise every version of B it acts on (for
   `override`/`notwithstanding`, those overlapping A's window; for
-  `supersedes`/`revives`, those that took effect before A) must list A's
-  authority, exactly, in `delegable_to` (L3004 at the relation clause,
-  naming the missing `delegable_to [Level]`, with a `maybe_incorrect` fix
-  inserting it into B). `delegable_to X` must name a
-  level strictly below the declaration's own (L3004). An override of a
-  declaration never in force during the override's window is L3007, as is
-  an exception never in force alongside its target.
+  `supersedes`/`revives`, those that took effect before A) must hold a
+  capability naming A's authority, exactly, that covers every operation
+  the relation performs: a `supersedes` or `revives` of another
+  declaration `suspend`s it; otherwise the operations are those its value
+  amounts to (`precedence::delegation::operations`): between deadlines,
+  `extend` or `shorten` for a longer or shorter period in the same unit
+  and direction, `compute_method` for another counting rule, `set` for
+  another unit, direction, trigger, bearer, policy or grants; between
+  counting rules `compute_method`; otherwise `set`; a claim that changes
+  nothing needs only some capability. When every covering capability is
+  bounded and none admits the claim, the bound refuses it. L3004 at the
+  relation clause names what is missing: the capability (`missing
+  `delegable { to L, op O }``, with a `maybe_incorrect` fix inserting it
+  into B), the operations (`delegates to L only `set``), the bound, or the
+  lock (§5.3); one diagnostic per kind, whatever the versions. An override
+  of a declaration never in force during the override's window is L3007,
+  as is an exception never in force alongside its target.
+- **Emergency grants.** `grant g on [d, ...] effective [from, to) cite "X" {
+  ... }` is an instrument giving the deadlines it names capabilities for a
+  bounded window (an open window is L2007; FRCP 87(b)(1)(C) limits a
+  Civil Rules emergency to a stated period): `unlock` lifts each target's
+  lock, `extend {...}` and `waive {...}` add case-level grants (§5.3),
+  `delegable {...}` adds delegations. A grant that gives nothing is
+  L2007, a target that is not a deadline L2001. A grant never widens its
+  own power: one whose authority does not equal or outrank a version it
+  reaches in its window is L3004 and has no effect, as is a delegation not
+  below that version's authority, and an `extend` grant reaching a locked
+  deadline without `unlock` (it would do nothing). In replay, a grant in
+  force on an order's date, recorded by the matter's `known_at` and
+  reaching the deadline's authority, adds its `extend` and `waive` grants
+  to the deadline's own; its extensions reach a locked deadline only with
+  `unlock`. In precedence, its delegations license a displacing claim
+  whose whole window lies in the grant's.
 - **Evaluation.** An exception applies only while its target's condition
   holds. Among an applicable node's applicable, undefeated exceptions the
   highest `priority` wins (an absent priority ranks lowest). A winning
@@ -1581,6 +1680,25 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
   every event that takes no edge is L4001. The replayed node becomes the
   scenario `start`. An explicit `start` that disagrees with the replayed
   node is L4008.
+- Markings (design review 2026-10-23 §2.8). The posture is a marking: one
+  token per concurrent track, replay starting with one. An edge may
+  `spawn [n, ...]`: taking it also starts a track at each node named. An
+  edge may `joins [n, ...]`: it is enabled only while each node named
+  holds another track's token, and taking it consumes those tokens (the
+  tracks merge into the edge's). `spawn` and `joins` name nodes other than
+  the edge's own source and target, each once (L2007), and a `patch` may
+  not write them. A `.case` is legal only as a firing sequence: facts are
+  followed on every track; an event takes the one enabled edge its
+  pattern matches on any track (two candidates on any tracks are
+  ambiguous, L4001; a match whose joined tracks are not all marked is
+  L4001, the transition not enabled); an event that takes no edge is legal
+  as above while some track has not ended, and the matter has ended when
+  every track has. `CheckedCase.marking` reports the marking at `as_of`,
+  the first track (the scenario `start`) first; more than one track there
+  is L4014, a warning: the engine walks one track, so the lowered scenario
+  starts at the first. A package declaring `spawn` or `joins` checks and
+  replays but does not build: concurrent tracks have no lowering in the
+  litgraph schema yet (L6001, §8.1).
 - Obligation instances. After an event is handled, every in-force deadline
   whose trigger it matches creates instances under its `bearer` and
   `trigger` policy (§5.3). The declaration governing a deadline may be a
@@ -1600,12 +1718,17 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
   breach is a fact of the matter, a liability of the bearer). Any other
   instance past due lapses. Each instance ends exactly once: discharged,
   late, unjudged (§5.3, a designated date left unknown), breached, lapsed, waived, superseded (`latest`), or merged
-  (`later_of`); one still open at `as_of` whose trigger left its
-  designated date unknown is `unknown` (§5.3). `CheckedCase.obligations` reports them.
+  (`later_of`). `CheckedCase.obligations` reports them.
+- Characterization. A late act under a `claim_processing` deadline
+  (§5.3) is L4013, a warning (untimely if the opponent objects, and the
+  objection can be forfeited); under a `jurisdictional` one it is L4002
+  with a note that no waiver, forfeiture or equitable exception excuses
+  it.
 - Extension and waiver. An event whose type declares `extends d to p` or
   `waives d` must carry a `cite`. It transforms every open instance of `d`
   (an order extending the time to answer reaches each defendant's), all or
-  none; with none open it is L4001. `d`'s version governing the event must
+  none; with none open it is L4001. `d`'s version governing the event, or
+  an emergency `grant` in force that day (§5.5), must
   grant the capability (an `extend` grant other than a `never` lock, or
   `waive`), and the event's `by` party must play the actor of at least one
   grant. One such grant must admit every open instance: its window holds
@@ -1826,7 +1949,7 @@ undecided, which is an L5007 error.
 | `effective-disjoint` | versions of each declaration are pairwise disjoint | L3001 |
 | `effective-covered` | versions cover the package lifetime except declared gaps | L3002 |
 | `precedence-acyclic` | authority order, relations, and default/exception references are acyclic | L3006 |
-| `delegation-respected` | every lower-authority `override` is delegated | L3004 |
+| `delegation-respected` | every lower-authority displacing relation holds a capability covering its operations within its bound, and every emergency grant reaches only what its authority outranks | L3004 |
 | `exceptions-ordered` | exceptions per target are disjoint or prioritized | L3005 |
 | `dist-exact` | every chance node's and `Dist` value's known probabilities sum to exactly 1 and cover all variants | L2003 |
 | `graph-exits` | every non-terminal node has at least one outgoing edge after `requires`/`forbids` are ignored | L5004 |
@@ -2287,6 +2410,8 @@ unchanged, and is graded `error`; anything else is rejected.
 | | | L4010 | timeliness unknown |
 | | | L4011 | designation short of an interpretation |
 | | | L4012 | extension by an interpretation |
+| | | L4013 | late under a claim-processing rule |
+| | | L4014 | concurrent tracks at as_of |
 | L2002 | invalid operation | L5001 | verification failed (generic) |
 | L2003 | invalid distribution | L5002 | hole in strict |
 | L2004 | unit mismatch | L5003 | unreachable node |
@@ -2297,6 +2422,7 @@ unchanged, and is graded `error`; anything else is rejected.
 | | | L5008 | dead transition |
 | | | L5009 | obligation unconsumable |
 | L2008 | invalid probability | L6001 | lowering unsupported |
+| L2009 | invalid capability (characterization) | L3010 | not encoded (`unknown_before`) |
 | L9001 | rule without test | L6002 | semantic diff |
 | L9002 | hole present | L6003 | invalid engine expression |
 | L9003 | anonymous edge | L6004 | non-finite number |
@@ -2307,6 +2433,9 @@ unchanged, and is graded `error`; anything else is rejected.
 
 Severity (`DiagnosticCode::severity(profile)`): every non-L9 code except
 L4009, L4010, L4011 and L4012 is `error`. L9003 and L9006 are `info`. L4009, L4010, L4011, L4012, L9005 and L9007 are `warning`. L9001, L9002, and L9004 are
+L4009, L4010, L4011, L4012, L4013, L4014 and L3010 is `error`. L9003 and
+L9006 are `info`. L4009, L4010, L4011, L4012, L4013, L4014 and L9005 are
+`warning`. L9001, L9002, L9004 and L3010 (a hole in the corpus) are
 `warning` in `dev` and `error` in `strict`.
 
 ### 9.2 Shapes
@@ -2635,7 +2764,7 @@ mutation testing and mechanized metatheory are out of scope here
 | O3 | `effective-disjoint` | b | Family refinement on the versions of one declaration: `Versions<d> = [Interval]` with `∀ i<j. to_i ≤ from_j ∨ to_j ≤ from_i` (QF_LIA, pairwise, finite). lg-962.3. |
 | O4 | `effective-covered` | c | Coverage minus declared gaps depends on which other declarations `supersedes`/`revives` this one, transitively and bitemporally (§5.4): activity over the whole package. |
 | O5 | `precedence-acyclic` | c | Cycle detection over the authority chains (with dependencies), the relation graph, and default/exception references. |
-| O6 | `delegation-respected` | b | Per declaration (bead lg-962.4 comment: each delegating declaration carries `delegable_to`): see C36. |
+| O6 | `delegation-respected` | b | Per declaration: each delegating declaration carries typed `delegable` capabilities (lg-962.4, §13.8): see C36. |
 | O7 | `exceptions-ordered` | b | Family refinement on the exceptions of one target: see C37. |
 | O8 | `dist-exact` | b | `Dist<E> = {m: E → Q | ∀e. m(e) ≥ 0 ∧ Σ_e m(e) = 1}`, total over `E`; a chance node's edges are `Dist<Edges(n)>`. Holes make it an SMT query (`Σ known ≤ 1`). Ground part done (lg-962.3): chance nodes, self edges excluded; no other node carries `p` (lg-flu.9, §5.1). |
 | O9 | `graph-exits` | a | Node kind index: the body of a non-terminal node is `NonEmpty<Edge>`. Checked per version of the node. |
@@ -2690,7 +2819,7 @@ gets one row per condition when the conditions classify differently.
 | C33 | L3001 versions of one declaration overlap (§5.4) | sema | b | O3. |
 | C34 | L3002 undeclared gap in version coverage (§5.4) | sema | c | O4. |
 | C35 | L3003 two claimants left unordered (§5.5) | sema | c | Claimants are every declaration naming the target in any relation, across the package and its dependencies, compared day by day over active versions after supersession; a whole-package fixpoint over activity. |
-| C36 | L3004 lower-authority displacing relation (`override`, `notwithstanding`, `supersedes`, `revives`) without delegation; `delegable_to` not strictly below own level (§5.5) | sema | b | Indexed by authority: B's signature carries `Delegable<L ⊆ Levels>` per version. `A override B` (likewise each displacing relation, over the versions it acts on) checks `auth(A) ≥ auth(B) ∨ ∀v ∈ Versions(B). overlaps(v, A) → auth(A) ∈ delegable(v)` (finite set, QF_LIA overlap). `delegable_to X` requires `X < auth(self)` in the fixed order. Per declaration, so no global search. |
+| C36 | L3004 lower-authority displacing relation (`override`, `notwithstanding`, `supersedes`, `revives`) without a capability covering its operations within its bound; a delegation not strictly below its declaration's level; an emergency grant wider than its authority (§5.5) | sema | b | Typed (lg-962.4): B's versions carry `Cap[to, ops, max]`; `A ⊳ B` checks `auth(A) ≥ auth(B) ∨ ∀v ∈ Versions(B). overlaps(v, A) → ∃c ∈ caps(v) ∪ grants(v, window(A)). c.to = auth(A) ∧ ops(A, v) ⊆ ↑c.ops ∧ within(c.max, A, v)`, all ground (finite op lattice, integer bound). Per declaration, so no global search. |
 | C37 | L3005 exceptions on one target neither disjoint nor prioritized (§5.5) | sema | b | Family refinement: for each pair on a target, `UNSAT(C_i ∧ C_j) ∨ priority_i ≠ priority_j` (propositional SAT over `has_event` atoms; small and finite). |
 | C38 | L3006 type alias, default or exception refers to itself (§5.2) | sema | c | Transitive self-reference is a cycle in the reference graph. (A direct `type T = T` alone is (a).) |
 | C39 | L3006 authority order, declared wins, supersession, default/exception references cyclic (§5.5) | sema | c | O5. |
@@ -2885,3 +3014,57 @@ Design review 2026-10-23 §6 item 22 (§2.10, §2.11), decided as follows:
    division of literals. `Rate` is an `analysis` type only; `.lit`
    expressions do not divide money by time, since no `.lit` construct
    consumes a rate.
+
+### 13.9 Status: capabilities, bitemporal claims, markings (lg-962.4)
+
+Design review 2026-10-23 §2.4, §2.6, §2.8 and §6 items 2, 6 and 13, decided
+as follows (each moved obligation has negative tests:
+`litigate-sema/tests/capabilities.rs`, `cov_case_capabilities.rs`,
+`bitemporal.rs`, `cov_case_markings.rs`):
+
+1. **Delegation as typed capabilities.** `delegable { to, op, max, cite }`
+   replaces `delegable_to [Level]` (L2007 with a fix); `delegation-respected`
+   is a ground typing judgment over the operations a claim performs and
+   the capability's bound (§5.5). The five-part capability of the review is
+   split across the two levels a capability is exercised at: a rule-level
+   capability (`delegable`: principal = authority, operation, bound, cite)
+   licenses a lower instrument, and a case-level grant (`extend`/`waive`:
+   principal = actor, bound `max`/`to`, condition `discretion`, procedure
+   `on`/`within`/`after_expiry`, lock `never`) licenses an order in a
+   matter. Emergency grants add either kind for a bounded window and lift
+   locks with `unlock`. The corpus's 99 `delegable_to` clauses were
+   migrated to `delegable { to L, op set }`, licensing every change of
+   value; a legacy clause also licensed suspension and a change of
+   counting method, which no package or matter in the corpus exercises:
+   `litigate-cli/tests/delegation_conversion.rs` lowers the corpus with
+   each clause widened back to every operation and finds every pack and
+   scenario byte-identical (source digests aside). The certiorari periods'
+   `CaseOrder` delegation (review L4) became 28 U.S.C. § 2101(c)'s own
+   bounded grant to a Justice, on an application within the period (Sup.
+   Ct. R. 13.5, 30.2; before the vendored 2023 Rules the period is not
+   counted, so an application's timing is unknown), and the
+   notice-of-appeal periods (frap, frcp, cafc) are `characterization
+   jurisdictional` (review L8). No vendored corpus states a Civil Rules emergency, so no
+   `grant` is declared.
+2. **Characterization.** `jurisdictional | claim_processing` indexes a
+   deadline's type: waivers, unbounded extensions and delegations of a
+   jurisdictional limit are type errors (L2009); a late act under a
+   claim-processing limit is L4013, a warning. Only limits a vendored
+   authority characterizes declare one (Bowles; Hamer and Harrow are not
+   vendored, so no deadline is `claim_processing` yet).
+3. **Bitemporal claims.** `retracted` closes a version's transaction
+   time; disjointness is per transaction-time slice and per proceeding;
+   `commenced [from, to)` keys applicability by the proceeding's
+   commencement date; `unknown_before` (clause, rule or `Lit.toml`) turns a
+   pre-encoding miss into the hole L3010 (§5.4). `lit/frcp` and `lit/frap`
+   declare theirs (review L5).
+4. **Markings.** `spawn`/`joins` give concurrent tracks; replay is a typed
+   firing sequence over the marking (§5.6). The litgraph engine walks one
+   track, so a package declaring tracks does not lower (L6001) and a
+   matter on several tracks lowers its first (L4014); the engine
+   extension (product construction) is future work, and no corpus package
+   declares a track yet.
+
+Not done here: the indexed `Rule[a, s, v, k, ap]` surface sugar (review
+§6 item 20, CAN-ADD-LATER) and workflow-soundness checks on the net (item
+27).

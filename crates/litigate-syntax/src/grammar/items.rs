@@ -30,6 +30,7 @@ pub(crate) const BODY_ITEM_KEYWORDS: &[SyntaxKind] = &[
     KwDefault,
     KwException,
     KwTest,
+    KwGrant,
 ];
 
 /// `LitFile = [EditionDecl] ModuleDecl {ImportDecl} [PackageDecl] {Item}`.

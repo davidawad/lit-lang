@@ -61,6 +61,15 @@ impl Lower {
         tree
     }
 
+    /// `grant g on [targets] clauses { fields }`.
+    fn grant(&mut self, node: &SyntaxNode) -> Option<ItemKind> {
+        Some(ItemKind::Grant(
+            ident(node)?,
+            self.clauses(node),
+            self.field_list(&node_of(node, K::FieldList)?),
+        ))
+    }
+
     /// One declaration (top level or inside a `rule`); `None` for nodes that
     /// are not declarations or are missing a required part. Each declaration
     /// is parsed left to right and stops at its first missing part, so only
@@ -135,6 +144,7 @@ impl Lower {
             ),
             K::ExceptionDecl => self.exception(node)?,
             K::TestDecl => self.test(node)?,
+            K::GrantDecl => self.grant(node)?,
             _ => return None,
         };
         Some(Item {

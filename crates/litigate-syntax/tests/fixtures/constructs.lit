@@ -72,6 +72,21 @@ deadline renewal: 28.days after Served(answer) counted_by frcp6 {
   extend { never cite "FRCP 6(b)(2)" }
 }
 
+deadline corrected: 21.days after Served(answer) counted_by frcp6 retracted 2011-01-01
+deadline unknown: 21.days after Served(answer) counted_by frcp6 unknown_before 2009-12-01
+
+deadline dg: 21.days after Served(answer) counted_by frcp6 delegable { to CaseOrder, op extend } {
+  characterization claim_processing cite "FRCP 12(a)"
+}
+
+grant emergency on [renewal, dg] effective [2020-03-15, 2020-06-13) cite "FRCP 87(c)(2)"
+{
+  unlock
+  extend { by Court, discretion GoodCause, to grant_order_entered + 30.days }
+  waive { by Court }
+  delegable { to CaseOrder, op set }
+}
+
 /// An order extending the time to answer to a date.
 event Extended(until: Date) extends answer-period to until
 event Forfeited(option: String) removes option
@@ -92,7 +107,11 @@ exception local-rule rebuts standing-order cite "LR 7.1"
 
 exception moot undercuts standing-order when len([1, 2]) > 1 && 3 % 2 == 1
 
-state pending: "Pending" subject_to standing-order delegable_to [LocalRule] {
+state pending: "Pending" subject_to standing-order delegable {
+  to LocalRule
+  op set
+  cite "FRCP 83(a)"
+} {
   ruling "Ruling" -> done p (1 - 1 / 4) {
     cost ?
     duration { min 1.days, mode 5.days, max 30.days }

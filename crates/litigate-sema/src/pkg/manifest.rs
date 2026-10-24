@@ -70,6 +70,8 @@ struct RawPackage {
     in_force: Spanned<String>,
     in_force_until: Option<Spanned<String>>,
     known_at: Spanned<String>,
+    // The date before which no declaration's law is encoded (SPEC §4.1).
+    unknown_before: Option<Spanned<String>>,
 }
 
 #[derive(Deserialize)]
@@ -220,6 +222,9 @@ pub fn parse_manifest(text: &str) -> Result<ParsedManifest, Vec<Report>> {
             from: p.in_force.get_ref().clone(),
             to: p.in_force_until.as_ref().map(|s| s.get_ref().clone()),
             known_at: p.known_at.get_ref().clone(),
+            retracted: None,
+            unknown_before: p.unknown_before.as_ref().map(|s| s.get_ref().clone()),
+            commenced: None,
         },
         sources,
         dependencies,
@@ -264,6 +269,9 @@ fn package_table(c: &mut Checker, p: &RawPackage) {
     }
     c.date("in_force", &p.in_force);
     c.date("known_at", &p.known_at);
+    if let Some(before) = &p.unknown_before {
+        c.date("unknown_before", before);
+    }
     if let Some(until) = &p.in_force_until {
         c.date("in_force_until", until);
         c.check(until.get_ref() > p.in_force.get_ref(), range(until), || {

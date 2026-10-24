@@ -8,11 +8,11 @@
 # period the pack's deadlines use in its present length and counting
 # (frap26@2009-12-01 in lit/core). The periods it replaced (10-day criminal
 # notice, transcript order and FRCP 59 motion; 14-day reply brief) are not
-# modeled, so a query before 2009-12-01 has no version in force (L3007)
-# rather than a wrong one.
+# modeled, so a query before 2009-12-01 is a hole in the corpus
+# (`unknown_before`, L3010) rather than a wrong answer or a day with no rule.
 # The FRAP are court rules under 28 U.S.C. § 2072, so the package authority
 # is `FederalRule`; its deadlines delegate to `CaseOrder`/`LocalRule` only
-# where the rule text says so (`delegable_to`, each with its cite).
+# where the rule text says so (`delegable`, each with its cite).
 [package]
 name = "frap-appellate-procedure"
 version = "0.1.0"
@@ -25,6 +25,7 @@ description = "Federal appellate procedure from a district court disposition thr
 jurisdiction = "Federal Rules of Appellate Procedure / U.S. Courts of Appeals"
 in_force = "2009-12-01"
 known_at = "2024-12-01"
+unknown_before = "2009-12-01"
 counting = "frap26"
 
 [package.roles]

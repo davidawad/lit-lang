@@ -181,6 +181,9 @@ impl Cx<'_, '_> {
                         from: from.text.clone(),
                         to: to.as_ref().map(|t| t.text.clone()),
                         known_at: meta.effective.known_at.clone(),
+                        retracted: meta.effective.retracted.clone(),
+                        unknown_before: None,
+                        commenced: None,
                     },
                     observed,
                 });

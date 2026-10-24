@@ -90,7 +90,7 @@ default same when true => 1\ndefault same when true => 2\n";
 #[test]
 fn unknown_groups_and_authorities_are_unresolved() {
     let body = "authority Statute > FederalRule\n\
-default d delegable_to [FederalRul] when true => 1\n\
+default d delegable { to FederalRul, op set } when true => 1\n\
 state g: \"G\" { group motion }\n";
     insta::assert_debug_snapshot!(check_body(body));
 }

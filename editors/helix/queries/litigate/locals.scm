@@ -29,6 +29,7 @@
 (calendar_decl name: (identifier) @local.definition.function)
 (holiday_decl name: (identifier) @local.definition.variable.other.member)
 (transition_decl name: (identifier) @local.definition.function)
+(grant_decl name: (identifier) @local.definition.function)
 (default_decl name: (identifier) @local.definition.function)
 (exception_decl name: (identifier) @local.definition.function)
 (import_list (identifier) @local.definition.variable)

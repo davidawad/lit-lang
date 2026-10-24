@@ -19,8 +19,13 @@ pub struct Metadata {
     pub effective: Interval,
     /// Authority level (declared, else enclosing rule's, else package's).
     pub authority: String,
-    /// Declared precedence/delegation relations.
+    /// Declared precedence relations.
     pub relations: Vec<Relation>,
+    /// Typed delegation capabilities (`delegable { ... }`, design review
+    /// §2.4): which lower authority may change the declaration, by which
+    /// operations, within which bound.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub delegations: Vec<Delegation>,
     /// Declaration source span.
     pub span: Option<litigate_base::Span>,
     /// Written by `litigate import` (a `/// imported` doc line, SPEC §8.7):
@@ -41,10 +46,75 @@ pub enum Relation {
     Supersedes(String),
     /// Target is explicitly reactivated after the superseding interval.
     Revives(String),
-    /// The named lower authority may override this declaration.
-    DelegableTo(String),
     /// Current declaration overrides the target (needs its delegation).
     Override(String),
+}
+
+/// One typed delegation capability (SPEC §5.5, design review §2.4): the
+/// lower authority `to` may change the declaration by the operations
+/// `ops`, an extension reaching no further than `max` past the declared
+/// period. A displacing relation from `to` is licensed only by a
+/// capability covering the operation it performs.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Delegation {
+    /// The principal: an authority level strictly below the declaration's.
+    pub to: String,
+    /// The operations delegated, in declared order.
+    pub ops: Vec<DelegatedOp>,
+    /// The most an extension may add to the declared period (`max N.unit`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub max: Option<(u64, crate::hir::DayUnit)>,
+    /// The rule text delegating (`cite`); `None`: the declaration's own.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub cite: Option<String>,
+}
+
+/// An operation a delegation grants (design review §2.4). A displacing
+/// relation performs the operations its effect on the target amounts to
+/// ([`crate::precedence::delegation::operations`]).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum DelegatedOp {
+    /// Lengthen a period.
+    Extend,
+    /// Shorten a period.
+    Shorten,
+    /// Replace the declaration's value: covers `extend` and `shorten`,
+    /// and any other change of the value but its counting method.
+    Set,
+    /// Suspend the declaration (`supersedes`/`revives` of another one).
+    Suspend,
+    /// Change how a period is counted (another counting rule).
+    ComputeMethod,
+}
+
+impl DelegatedOp {
+    /// Every operation, in declaration order.
+    pub const ALL: [Self; 5] = [
+        Self::Extend,
+        Self::Shorten,
+        Self::Set,
+        Self::Suspend,
+        Self::ComputeMethod,
+    ];
+
+    /// Its identifier in source.
+    #[must_use]
+    pub fn name(self) -> &'static str {
+        match self {
+            Self::Extend => "extend",
+            Self::Shorten => "shorten",
+            Self::Set => "set",
+            Self::Suspend => "suspend",
+            Self::ComputeMethod => "compute_method",
+        }
+    }
+
+    /// Whether a capability granting `self` licenses operation `op`.
+    #[must_use]
+    pub fn covers(self, op: Self) -> bool {
+        self == op || (self == Self::Set && matches!(op, Self::Extend | Self::Shorten))
+    }
 }
 
 /// Rule category.

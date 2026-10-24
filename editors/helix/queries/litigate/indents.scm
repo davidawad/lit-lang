@@ -15,6 +15,8 @@
   (deadline_opts)
   (deadline_decl_opts)
   (capability)
+  (delegation)
+  (grant_body)
   (instance_decl)
   (probability_map)
   (role_map)

@@ -28,14 +28,15 @@ pub use graph::{
     Node, NodeKind, TriangularDuration, Valence,
 };
 pub use logic::{
-    Authority, DefaultRule, EnumDecl, EventEffect, EventType, Exception, ExceptionKind,
-    Expectation, Metadata, Relation, Rule, RuleKind, Test, TypeAlias,
+    Authority, DefaultRule, DelegatedOp, Delegation, EnumDecl, EventEffect, EventType, Exception,
+    ExceptionKind, Expectation, Metadata, Relation, Rule, RuleKind, Test, TypeAlias,
 };
 pub use temporal::{
-    Adoption, Anchor, Bound, BoundDates, Calendar, Capability, CauseStandard, Chain, Counting,
-    DateRef, Deadline, Designated, Direction, DueEnd, EndOfMonth, Extension, ExtensionWindow,
-    Holiday, HolidayDate, Interval, Motion, Observance, RollOn, ServiceTime, ShortPeriod,
-    Transition, TransitionArm, TriggerPolicy, Undesignated, SERVICE_METHODS,
+    Adoption, Anchor, Bound, BoundDates, Calendar, Capability, CauseStandard, Chain, CharacterKind,
+    Characterization, Commenced, Counting, DateRef, Deadline, Designated, Direction, DueEnd,
+    EndOfMonth, Extension, ExtensionWindow, Grant, Holiday, HolidayDate, Interval, Motion,
+    Observance, RollOn, ServiceTime, ShortPeriod, Transition, TransitionArm, TriggerPolicy,
+    Undesignated, SERVICE_METHODS,
 };
 pub use value::{Authored, DayUnit, Money, Rational, Type, Value};
 
@@ -237,6 +238,8 @@ pub enum Declaration {
     Event(EventType),
     /// Inline test block.
     Test(Test),
+    /// Emergency capability grant.
+    Grant(Grant),
 }
 
 #[cfg(test)]

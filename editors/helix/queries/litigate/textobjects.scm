@@ -7,6 +7,7 @@
 (counting_decl body: (_) @function.inside) @function.around
 (calendar_decl body: (_) @function.inside) @function.around
 (transition_decl body: (_) @function.inside) @function.around
+(grant_decl body: (_) @function.inside) @function.around
 
 [
   (node_decl)
@@ -15,6 +16,7 @@
   (counting_decl)
   (calendar_decl)
   (transition_decl)
+  (grant_decl)
   (default_decl)
   (exception_decl)
   (event_decl)

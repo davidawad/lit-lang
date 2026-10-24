@@ -11,8 +11,8 @@
 //! (L3004), an order no authority or date fixes between operations that
 //! do not commute (L3003), and disjointness of the composed guards (L2005).
 use crate::hir::{
-    Authored, BinaryOp, Declaration, Expr, ExprKind, GuardOp, GuardOpKind, Instance, Node,
-    Relation, Type, UnaryOp, Value,
+    Authored, BinaryOp, Declaration, DelegatedOp, Expr, ExprKind, GuardOp, GuardOpKind, Instance,
+    Node, Type, UnaryOp, Value,
 };
 use crate::precedence::{Lattice, Order};
 use crate::temporal::condition;
@@ -435,10 +435,9 @@ fn capability(
             let licensed = matches!(
                 lattice.compare(&op.by, &meta.authority),
                 Order::Above | Order::Equal
-            ) || meta
-                .relations
-                .iter()
-                .any(|r| matches!(r, Relation::DelegableTo(x) if *x == op.by));
+            ) || meta.delegations.iter().any(|delegation| {
+                delegation.to == op.by && delegation.ops.contains(&DelegatedOp::Set)
+            });
             overlaps && !licensed
         });
         if let Some(&(i, node)) = unlicensed {

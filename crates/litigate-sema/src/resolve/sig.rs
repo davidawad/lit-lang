@@ -40,6 +40,8 @@ pub enum ValueKind {
     Exception(Option<Type>),
     /// Transition.
     Transition,
+    /// Emergency capability grant.
+    Grant,
     /// Rule wrapper.
     Rule,
     /// Pack instance `base@origin` and its base pack id.
@@ -58,6 +60,7 @@ impl ValueKind {
             Self::Default(_) => "default",
             Self::Exception(_) => "exception",
             Self::Transition => "transition",
+            Self::Grant => "grant",
             Self::Rule => "rule",
             Self::Instance(_) => "instance",
         }
@@ -137,6 +140,7 @@ pub fn clauses_of(item: &Item) -> &[Field] {
         | ItemKind::Transition(_, _, c, _)
         | ItemKind::Default(_, c, _, _)
         | ItemKind::Test(_, c, _)
+        | ItemKind::Grant(_, c, _)
         | ItemKind::Deadline { clauses: c, .. }
         | ItemKind::Exception { clauses: c, .. } => c,
         _ => &[],
@@ -201,6 +205,7 @@ pub fn value_of(item: &Item) -> Option<(&str, ValueKind)> {
         ItemKind::Exception { name, .. } => (name.text.as_str(), ValueKind::Exception(None)),
         ItemKind::Transition(name, ..) => (name.text.as_str(), ValueKind::Transition),
         ItemKind::Rule(_, name, ..) => (name.text.as_str(), ValueKind::Rule),
+        ItemKind::Grant(name, ..) => (name.text.as_str(), ValueKind::Grant),
         _ => return None,
     })
 }

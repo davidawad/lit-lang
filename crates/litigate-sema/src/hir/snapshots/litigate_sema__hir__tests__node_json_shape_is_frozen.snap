@@ -11,13 +11,31 @@ expression: "Declaration::Node(chance_node())"
     "effective": {
       "from": "2009-12-01",
       "to": null,
-      "known_at": "2025-01-01"
+      "known_at": "2025-01-01",
+      "retracted": "2026-01-01",
+      "unknown_before": "2009-12-01",
+      "commenced": {
+        "from": "2009-12-01"
+      }
     },
     "authority": "FederalRule",
     "relations": [
       {
         "relation": "subject_to",
         "target": "frcp.rule6::computing-time"
+      }
+    ],
+    "delegations": [
+      {
+        "to": "CaseOrder",
+        "ops": [
+          "extend"
+        ],
+        "max": [
+          30,
+          "calendar"
+        ],
+        "cite": "FRCP 6(b)(1)"
       }
     ],
     "span": null
@@ -80,6 +98,9 @@ expression: "Declaration::Node(chance_node())"
       "forbids": [
         "defaulted"
       ],
+      "spawn": [
+        "discovery"
+      ],
       "span": null
     },
     {
@@ -122,6 +143,9 @@ expression: "Declaration::Node(chance_node())"
       "requires": [],
       "forbids": [
         "defaulted"
+      ],
+      "spawn": [
+        "discovery"
       ],
       "span": null
     }

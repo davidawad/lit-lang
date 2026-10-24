@@ -31,8 +31,12 @@ mod within;
 /// Replay outcome.
 #[derive(Debug, Clone, Default, PartialEq)]
 pub(super) struct Replayed {
-    /// The derived posture; `None` when replay stopped at an error.
+    /// The derived posture, the first track's; `None` when replay stopped
+    /// at an error.
     pub posture: Option<String>,
+    /// The marking at `as_of` (SPEC §5.6): one node per track, the first
+    /// track's first; empty when replay stopped at an error.
+    pub marking: Vec<String>,
     /// Replay diagnostics.
     pub diagnostics: Vec<Diagnostic>,
     /// Options removed by the events replayed, in replay order.
@@ -154,16 +158,21 @@ pub(super) fn replay(
         },
     };
     cx.order();
-    let mut posture = Some(start.to_owned());
+    let mut marking = Some(vec![start.to_owned()]);
     for k in 0..cx.sorted.len() {
-        posture = posture.and_then(|p| cx.step(k, &p));
+        marking = marking.and_then(|m| cx.step(k, m));
     }
-    if let Some(p) = &posture {
-        cx.derive_at_as_of(p);
+    if let Some(m) = &marking {
+        for p in m {
+            cx.derive_at_as_of(p);
+        }
+        cx.tracks_at_as_of(m);
         cx.at_as_of();
     }
+    let marking = marking.unwrap_or_default();
     Replayed {
-        posture,
+        posture: marking.first().cloned(),
+        marking,
         diagnostics: cx.out,
         removals: cx.removed,
         trace: cx.trace,
@@ -400,8 +409,13 @@ impl<'c, 'g> Cx<'c, 'g> {
         (matching, removed)
     }
 
-    /// One event; the next posture, or `None` when replay must stop.
-    fn step(&mut self, k: usize, posture: &str) -> Option<String> {
+    /// One event at `marking` (one node per track, SPEC §5.6); the next
+    /// marking, or `None` when replay must stop. An event takes the one
+    /// enabled edge, from any track, its pattern matches: an edge `joins`
+    /// is enabled only while each joined node holds a token of another
+    /// track, and taking it consumes those tokens; `spawn` adds a token
+    /// per node named. The matter has ended when every track has.
+    fn step(&mut self, k: usize, marking: Vec<String>) -> Option<Vec<String>> {
         let event = self.sorted[k].1;
         if event.date > self.case.as_of {
             let d = error(
@@ -412,75 +426,199 @@ impl<'c, 'g> Cx<'c, 'g> {
             .note("as_of selects the law the matter is analysed under; later events are not yet history");
             self.out.push(d);
         }
-        let (posture, node) = self.follow_facts(posture.to_owned(), k)?;
-        let ended = self.ended(&posture, node);
-        if let Some((pack, effect, args)) = self.effect(k) {
-            if ended {
-                self.illegal(k, &posture, node);
-                return None;
-            }
-            let applied = match effect {
-                EventEffect::Removes { param } => self.remove(k, args.get(*param)),
-                EventEffect::Elects { param } => self.elect(k, args.get(*param)),
-                EventEffect::Extends { deadline, param } => {
-                    self.transform(k, &pack, deadline, Transform::Extend(args.get(*param)))
-                }
-                EventEffect::Waives { deadline } => {
-                    self.transform(k, &pack, deadline, Transform::Waive)
-                }
-            };
-            if let Some(effect) = applied {
-                self.record(k, effect, &posture, &posture, None);
-            }
-            self.triggers(k);
-            return Some(posture);
+        let mut tracks: Vec<(String, &'g Node)> = Vec::new();
+        for p in marking {
+            tracks.push(self.follow_facts(p, k)?);
         }
-        let (matching, removed) = self.matching(k, &posture, node);
-        let actor = self.actor(event);
-        let (fits, misfits): (Vec<_>, Vec<_>) = matching
+        let ended = tracks.iter().all(|(p, n)| self.ended(p, n));
+        let primary = tracks[0].0.clone();
+        if let Some(effect) = self.effect(k) {
+            return self.apply(k, tracks, ended, effect);
+        }
+        let mut matching: Vec<(usize, String, &'c Edge)> = Vec::new();
+        let mut removed = None;
+        for (i, (p, n)) in tracks.iter().enumerate() {
+            let (found, r) = self.matching(k, p, n);
+            removed = removed.or(r);
+            matching.extend(found.into_iter().map(|(pack, e)| (i, pack, e)));
+        }
+        let marked: Vec<String> = tracks.iter().map(|(p, _)| p.clone()).collect();
+        let (enabled, blocked): (Vec<_>, Vec<_>) = matching
             .into_iter()
-            .partition(|(_, e)| e.actor == "either" || actor.is_none_or(|a| a == e.actor));
-        match (fits.as_slice(), misfits.as_slice(), removed) {
-            ([(pack, edge)], _, _) => {
-                let next = self.take(k, &posture, pack, edge);
-                self.triggers(k);
-                Some(next)
-            }
-            ([], [], Some(r)) => {
-                self.takes_removed(k, &posture, &r);
+            .partition(|(i, pack, e)| self.joined(&marked, *i, pack, e).is_some());
+        let actor = self.actor(event);
+        let (fits, misfits): (Vec<_>, Vec<_>) = enabled
+            .into_iter()
+            .partition(|(_, _, e)| e.actor == "either" || actor.is_none_or(|a| a == e.actor));
+        match (
+            fits.as_slice(),
+            misfits.as_slice(),
+            blocked.as_slice(),
+            removed,
+        ) {
+            ([(i, pack, edge)], _, _, _) => Some(self.fire(k, &marked, *i, pack, edge)),
+            ([], [], [], Some(r)) => {
+                self.takes_removed(k, &primary, &r);
                 None
             }
-            ([], [], None) if !ended && self.triggers(k) => {
-                self.record(k, Effect::Triggered, &posture, &posture, None);
-                Some(posture)
+            ([], [], [], None) if !ended && self.triggers(k) => {
+                self.record(k, Effect::Triggered, &primary, &primary, None);
+                Some(marked)
             }
-            ([], [], None) if !ended && self.history(k) => {
-                self.record(k, Effect::History, &posture, &posture, None);
-                Some(posture)
+            ([], [], [], None) if !ended && self.history(k) => {
+                self.record(k, Effect::History, &primary, &primary, None);
+                Some(marked)
             }
-            ([], [], None) => {
-                self.illegal(k, &posture, node);
+            ([], [], [], None) => {
+                self.illegal(k, &tracks);
                 None
             }
-            ([], [(_, edge), ..], _) => {
-                let d = error(
-                    C::InvalidCaseEvent,
-                    self.at(k, |e| e.party.as_ref()),
-                    format!(
-                        "`{}` at stage `{posture}` is taken by {}, but `{}` plays {}",
-                        display(&event.action),
-                        edge.actor,
-                        event.party,
-                        actor.unwrap_or("?")
-                    ),
-                );
-                self.out.push(d);
+            ([], [], [(i, pack, edge), ..], _) => {
+                self.unjoined(k, &marked[*i], pack, edge);
                 None
             }
-            (many, _, _) => {
-                self.ambiguous(k, &posture, many);
+            ([], [(i, _, edge), ..], _, _) => {
+                self.misfit(k, &marked[*i], edge, actor);
                 None
             }
+            (many, _, _, _) => {
+                let many: Vec<(String, &Edge)> =
+                    many.iter().map(|(_, pack, e)| (pack.clone(), *e)).collect();
+                self.ambiguous(k, &marked.join("`, `"), &many);
+                None
+            }
+        }
+    }
+
+    /// Event `k`, whose type declares an effect, at `tracks`: illegal once
+    /// every track has ended; otherwise the effect applies and the
+    /// marking does not move.
+    fn apply(
+        &mut self,
+        k: usize,
+        tracks: Vec<(String, &'g Node)>,
+        ended: bool,
+        (pack, effect, args): (String, &'g EventEffect, &'c [Expr]),
+    ) -> Option<Vec<String>> {
+        if ended {
+            self.illegal(k, &tracks);
+            return None;
+        }
+        let applied = match effect {
+            EventEffect::Removes { param } => self.remove(k, args.get(*param)),
+            EventEffect::Elects { param } => self.elect(k, args.get(*param)),
+            EventEffect::Extends { deadline, param } => {
+                self.transform(k, &pack, deadline, Transform::Extend(args.get(*param)))
+            }
+            EventEffect::Waives { deadline } => {
+                self.transform(k, &pack, deadline, Transform::Waive)
+            }
+        };
+        let primary = &tracks[0].0;
+        if let Some(effect) = applied {
+            self.record(k, effect, primary, primary, None);
+        }
+        self.triggers(k);
+        Some(tracks.into_iter().map(|(p, _)| p).collect())
+    }
+
+    /// Event `k` takes `edge` (written in `pack`) of track `i` of `marked`:
+    /// the joined tracks' tokens are consumed, track `i` moves, and each
+    /// spawned node gains a track; the next marking.
+    fn fire(
+        &mut self,
+        k: usize,
+        marked: &[String],
+        i: usize,
+        pack: &str,
+        edge: &Edge,
+    ) -> Vec<String> {
+        let mut next = marked.to_vec();
+        for j in self.joined(marked, i, pack, edge).unwrap_or_default() {
+            next[j].clear();
+        }
+        next[i] = self.take(k, &marked[i], pack, edge);
+        next.retain(|p| !p.is_empty());
+        next.extend(edge.spawn.iter().map(|s| self.graph.qualify(pack, s)));
+        self.triggers(k);
+        next
+    }
+
+    /// Event `k` matches `edge` at `posture`, but its party does not play
+    /// the edge's actor (L4001).
+    fn misfit(&mut self, k: usize, posture: &str, edge: &Edge, actor: Option<&str>) {
+        let event = self.sorted[k].1;
+        let d = error(
+            C::InvalidCaseEvent,
+            self.at(k, |e| e.party.as_ref()),
+            format!(
+                "`{}` at stage `{posture}` is taken by {}, but `{}` plays {}",
+                display(&event.action),
+                edge.actor,
+                event.party,
+                actor.unwrap_or("?")
+            ),
+        );
+        self.out.push(d);
+    }
+
+    /// The other tracks (indices into `marked`) edge `e` of track `i`
+    /// (written in `pack`) consumes: one holding each node it `joins`;
+    /// `None` when one is missing.
+    fn joined(&self, marked: &[String], i: usize, pack: &str, e: &Edge) -> Option<Vec<usize>> {
+        let mut taken = Vec::new();
+        for node in &e.joins {
+            let q = self.graph.qualify(pack, node);
+            let j = (0..marked.len()).find(|&j| j != i && marked[j] == q && !taken.contains(&j))?;
+            taken.push(j);
+        }
+        Some(taken)
+    }
+
+    /// Event `k` matches edge `e` (written in `pack`) at `posture`, but the
+    /// tracks it joins are not all marked (L4001: the transition is not
+    /// enabled).
+    fn unjoined(&mut self, k: usize, posture: &str, pack: &str, e: &Edge) {
+        let want: Vec<String> = e
+            .joins
+            .iter()
+            .map(|n| format!("`{}`", self.graph.qualify(pack, n)))
+            .collect();
+        let d = error(
+            C::InvalidCaseEvent,
+            self.at(k, |e| e.action.as_ref()),
+            format!(
+                "`{}` at stage `{posture}` joins {}, but the matter has no track there",
+                display(&self.sorted[k].1.action),
+                want.join(" and ")
+            ),
+        )
+        .note("an edge that `joins` a track is enabled only while that track's token is at the node it names");
+        self.out.push(d);
+    }
+
+    /// L4014 (a warning) when the matter is on more than one track at
+    /// `as_of`: a lowered scenario starts at the first, since the engine
+    /// walks one track.
+    fn tracks_at_as_of(&mut self, marking: &[String]) {
+        // Replay starts with one track, and a join consumes only others.
+        let (first, rest) = (&marking[0], &marking[1..]);
+        if !rest.is_empty() {
+            let mut d = error(
+                C::ConcurrentTracks,
+                self.spans.at(None, self.id()),
+                format!(
+                    "the matter is on {} tracks at as_of {}: `{first}`, `{}`",
+                    marking.len(),
+                    self.case.as_of,
+                    rest.join("`, `")
+                ),
+            )
+            .note(format!(
+                "a lowered scenario starts at `{first}`: the engine walks one track"
+            ));
+            d.severity = litigate_base::Severity::Warning;
+            self.out.push(d);
         }
     }
 
@@ -574,13 +712,12 @@ impl<'c, 'g> Cx<'c, 'g> {
             .any(|(pack, p)| matches(p, self.view(pack, k)))
     }
 
-    /// Typestate: the event is not legal at this stage (L4001).
-    fn illegal(&mut self, k: usize, posture: &str, node: &'g Node) {
+    /// Typestate: the event is not legal at any track's stage (L4001).
+    fn illegal(&mut self, k: usize, tracks: &[(String, &'g Node)]) {
         let event = self.sorted[k].1;
-        let legal: Vec<String> = self
-            .graph
-            .edges(posture, node)
+        let legal: Vec<String> = tracks
             .iter()
+            .flat_map(|(posture, node)| self.graph.edges(posture, node))
             .filter_map(|(_, e)| {
                 let p = e.event.as_ref()?;
                 Some(format!(
@@ -590,7 +727,12 @@ impl<'c, 'g> Cx<'c, 'g> {
                 ))
             })
             .collect();
-        let stage = format!("`{posture}` ({})", node.meta.label);
+        let stages: Vec<String> = tracks
+            .iter()
+            .map(|(posture, node)| format!("`{posture}` ({})", node.meta.label))
+            .collect();
+        let (posture, node) = &tracks[0];
+        let stage = stages.join(" or ");
         let mut d = error(
             C::InvalidCaseEvent,
             self.at(k, |e| e.action.as_ref()),
@@ -611,7 +753,7 @@ impl<'c, 'g> Cx<'c, 'g> {
         } else {
             d.note(format!("legal events: {}", legal.join(", ")))
         };
-        if !self.ended(posture, node) {
+        if !tracks.iter().all(|(p, n)| self.ended(p, n)) {
             d = d.note(
                 "an event that takes no edge must fire the trigger of an in-force deadline, be history a transition reads, or have a type declaring `removes`, `extends`, or `waives`",
             );

@@ -13,15 +13,15 @@ macro_rules! items {
     () => {
         "one of `module`, `import`, `package`, `start`, `group`, `type`, `enum`, `event`, \
          `state`, `decision`, `chance`, `terminal`, `link`, `instance`, `rule`, `deadline`, \
-         `counting`, `calendar`, `transition`, `authority`, `default`, `exception`, or `test`"
+         `counting`, `calendar`, `transition`, `authority`, `default`, `exception`, `test`, or `grant`"
     };
 }
 
 /// What may follow a node declaration's header.
 macro_rules! node_clauses {
     () => {
-        "one of `by`, `discretion`, `info`, `outcome`, `effective`, `known_at`, `subject_to`, \
-         `notwithstanding`, `supersedes`, `revives`, `override`, `delegable_to`, `cite`, or `{`"
+        "one of `by`, `discretion`, `info`, `outcome`, `effective`, `known_at`, `retracted`, `unknown_before`, `commenced`, `subject_to`, \
+         `notwithstanding`, `supersedes`, `revives`, `override`, `delegable`, `cite`, or `{`"
     };
 }
 
@@ -268,7 +268,7 @@ const LINKS_INSTANCES_AND_RULES: Cases = &[
         (
             "module m\nrule duty r { 5 }\n",
             &[
-                "L0001 2:15-2:16 expected one of `start`, `group`, `type`, `enum`, `event`, `state`, `decision`, `chance`, `terminal`, `link`, `instance`, `rule`, `deadline`, `counting`, `calendar`, `transition`, `authority`, `default`, `exception`, `test`, or `}`, found `5`",
+                "L0001 2:15-2:16 expected one of `start`, `group`, `type`, `enum`, `event`, `state`, `decision`, `chance`, `terminal`, `link`, `instance`, `rule`, `deadline`, `counting`, `calendar`, `transition`, `authority`, `default`, `exception`, `test`, `grant`, or `}`, found `5`",
             ],
         ),
 ];
@@ -324,7 +324,7 @@ const DEADLINES_COUNTING_AND_CALENDARS: Cases = &[
         (
             "module m\ncounting c x\n",
             &[
-                "L0001 2:12-2:13 expected one of `effective`, `known_at`, `subject_to`, `notwithstanding`, `supersedes`, `revives`, `override`, `delegable_to`, `cite`, or `{`, found `x`",
+                "L0001 2:12-2:13 expected one of `effective`, `known_at`, `retracted`, `unknown_before`, `commenced`, `subject_to`, `notwithstanding`, `supersedes`, `revives`, `override`, `delegable`, `cite`, or `{`, found `x`",
             ],
         ),
         (
@@ -348,7 +348,7 @@ const DEADLINES_COUNTING_AND_CALENDARS: Cases = &[
         (
             "module m\ncalendar c x\n",
             &[
-                "L0001 2:12-2:13 expected one of `effective`, `known_at`, `cite`, or `{`, found `x`",
+                "L0001 2:12-2:13 expected one of `effective`, `known_at`, `retracted`, `unknown_before`, `commenced`, `cite`, or `{`, found `x`",
             ],
         ),
         (
@@ -398,7 +398,7 @@ const TRANSITIONS_DEFAULTS_EXCEPTIONS_AND_TESTS: Cases = &[
         (
             "module m\ndefault d x\n",
             &[
-                "L0001 2:11-2:12 expected one of `effective`, `known_at`, `subject_to`, `notwithstanding`, `supersedes`, `revives`, `override`, `delegable_to`, `cite`, or `when`, found `x`",
+                "L0001 2:11-2:12 expected one of `effective`, `known_at`, `retracted`, `unknown_before`, `commenced`, `subject_to`, `notwithstanding`, `supersedes`, `revives`, `override`, `delegable`, `cite`, or `when`, found `x`",
             ],
         ),
         (
@@ -424,4 +424,44 @@ const TRANSITIONS_DEFAULTS_EXCEPTIONS_AND_TESTS: Cases = &[
 #[test]
 fn transitions_defaults_exceptions_and_tests() {
     check_all(FileKind::Lit, TRANSITIONS_DEFAULTS_EXCEPTIONS_AND_TESTS);
+}
+
+/// Grants (`grant g on [d] { ... }`) and `delegable` capabilities: each
+/// missing part reports where it was expected.
+#[test]
+fn grants_and_delegations() {
+    check_all(
+        FileKind::Lit,
+        &[
+            ("module m\nstate s: \"S\" delegable_to [LocalRule]\n", &[]),
+            (
+                "module m\ngrant [d] { unlock }\n",
+                &["L0001 2:7-2:8 expected an identifier, found `[`"],
+            ),
+            (
+                "module m\ndeadline d: 1.days from E() counted_by c { characterization 3 }\n",
+                &["L0001 2:61-2:62 expected an identifier, found `3`"],
+            ),
+            (
+                "module m\ngrant g [d] { unlock }\n",
+                &["L0001 2:9-2:10 expected `on`, found `[`"],
+            ),
+            (
+                "module m\ngrant g on [d]\n",
+                &["L0001 3:1-3:1 expected one of `effective`, `known_at`, `retracted`, `unknown_before`, `commenced`, `cite`, or `{`, found end of file"],
+            ),
+            (
+                "module m\ngrant g on [d] effective [2020-01-01, 2020-02-01) { delegable x }\n",
+                &["L0001 2:63-2:64 expected an identifier, found `x`"],
+            ),
+            (
+                "module m\ndeadline d: 1.days from E() counted_by c delegable x\n",
+                &["L0001 2:42-2:51 expected one of `effective`, `known_at`, `retracted`, `unknown_before`, `commenced`, `subject_to`, `notwithstanding`, `supersedes`, `revives`, `override`, `delegable`, `cite`, or `{`, found `delegable`"],
+            ),
+            (
+                "module m\ndeadline d: 1.days from E() counted_by c retracted x\n",
+                &["L0001 2:52-2:53 expected a date `YYYY-MM-DD`, found `x`"],
+            ),
+        ],
+    );
 }

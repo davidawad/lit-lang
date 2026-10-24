@@ -32,7 +32,7 @@ fn metadata_lowers_cites_intervals_relations_and_docs() {
 default b1 when true => 1\ndefault b2 when true => 1\ndefault b3 when true => 1\n\
 default b4 when true => 1\ndefault b5 when true => 1\n\
 /// imported\n/// Documented default\n\
-default rel cite ?(\"FRCP 6(a), (b)\") effective [2000-01-01, ..) known_at 2020-01-01 subject_to b1 notwithstanding b2 supersedes b3 revives b4 override b5 delegable_to [Clerk] when true => 2\n\
+default rel cite ?(\"FRCP 6(a), (b)\") effective [2000-01-01, ..) known_at 2020-01-01 subject_to b1 notwithstanding b2 supersedes b3 revives b4 override b5 delegable { to Clerk, op set } when true => 2\n\
 /// imported\n\
 default marker when true => 3\n\
 rule duty r effective [2005-01-01, ..) known_at 2021-01-01 {\n\
@@ -47,7 +47,7 @@ fn metadata_reports_bad_cites_intervals_and_relations() {
     let out = check_body(
         "default c2\n  cite \"FRCP 6\"\n  cite \"FRCP 7\"\n  when true => 1\n\
 default e1 effective [2001-01-01, 2000-01-01) when true => 1\n\
-default r1 subject_to nope delegable_to [Nope] when true => 1",
+default r1 subject_to nope delegable { to Nope, op set } when true => 1",
     );
     insta::assert_debug_snapshot!(out);
 }

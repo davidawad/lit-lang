@@ -215,14 +215,18 @@ order the law does not give. The lattice records the law's hierarchy; it is
 never reshaped to make a package's data check.
 
 A lower authority may change a higher one's rule only where the higher rule
-delegates:
+delegates, by a typed capability naming the principal, the operations and
+the bound (SPEC §5.5):
 
 ```lit
-deadline answer_period ... delegable_to CaseOrder   // "unless the court orders otherwise"
+deadline answer_period ... delegable { to CaseOrder, op set }   // "unless the court orders otherwise"
 ```
 
-An `override` without a matching delegation is a compile error naming the
-missing delegation. Within one authority, Catala-style `default` and
+A displacing relation (`override`, `notwithstanding`, `supersedes`,
+`revives`) without a capability covering what it does to the target is a
+compile error naming the missing capability. An emergency `grant` gives
+capabilities for a bounded window, and a jurisdictional deadline admits no
+waiver, unbounded extension or delegation at all. Within one authority, Catala-style `default` and
 `exception` blocks express rule-plus-exceptions. Exceptions are checked to be
 non-overlapping or explicitly prioritized. Together this is Governatori and
 Rotolo's temporal defeasible logic, made static.

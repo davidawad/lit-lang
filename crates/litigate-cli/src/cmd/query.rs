@@ -100,7 +100,7 @@ fn overrides(pkg: &hir::Package) -> Vec<Candidate<'_>> {
                         .map(str::to_owned)
                 })
                 .unwrap_or_default();
-            let target = relation_target(r).cloned().unwrap_or_default();
+            let target = relation_target(r);
             (
                 Match {
                     detail: Some(format!("{relation} {target}")),
@@ -258,7 +258,7 @@ pub fn query(args: &Args) -> Outcome {
                 meta.is_some_and(|m| {
                     m.relations
                         .iter()
-                        .any(|r| relation_target(r).is_some_and(|t| local(t) == local(target)))
+                        .any(|r| local(relation_target(r)) == local(target))
                 })
             })
         })

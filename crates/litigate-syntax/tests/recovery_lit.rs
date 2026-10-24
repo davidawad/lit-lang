@@ -9,7 +9,7 @@ use support::diag::check_all;
 const ITEMS: &str = "one of `module`, `import`, `package`, `start`, `group`, `type`, \
                      `enum`, `event`, `state`, `decision`, `chance`, `terminal`, `link`, \
                      `instance`, `rule`, `deadline`, `counting`, `calendar`, `transition`, \
-                     `authority`, `default`, `exception`, or `test`";
+                     `authority`, `default`, `exception`, `test`, or `grant`";
 
 const EXPR: &str = "one of an identifier, a number, a string, a date `YYYY-MM-DD`, or `(`";
 
@@ -185,8 +185,8 @@ fn declarations() {
             (
                 "module m\nrule duty r subject_to { start s }\n",
                 &[
-                    "L0001 2:13-2:23 expected one of `effective`, `known_at`, `subject_to`, \
-                   `notwithstanding`, `supersedes`, `revives`, `override`, `delegable_to`, \
+                    "L0001 2:13-2:23 expected one of `effective`, `known_at`, `retracted`, `unknown_before`, `commenced`, `subject_to`, \
+                   `notwithstanding`, `supersedes`, `revives`, `override`, `delegable`, \
                    `cite`, or `{`, found `subject_to`",
                 ],
             ),

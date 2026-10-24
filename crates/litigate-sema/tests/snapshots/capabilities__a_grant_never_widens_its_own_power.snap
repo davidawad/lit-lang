@@ -1,0 +1,8 @@
+---
+source: crates/litigate-sema/tests/capabilities.rs
+expression: found
+---
+[
+    "pkgs/local/rules.lit:6:1 L3004 grant `self-help` (LocalRule) reaches `fed::answer-period` (FederalRule), which it does not outrank: a grant never widens its own power\n    note @10:1: `fed::answer-period` is declared here",
+    "pkgs/local/rules.lit:7:95 L3004 `local-answer` (LocalRule) overrides `fed::answer-period` (FederalRule), but `fed::answer-period` does not delegate to LocalRule: missing `delegable { to LocalRule, op extend }`\n    note @10:1: `fed::answer-period@2009-12-01` [2009-12-01, ..) delegates to no LocalRule\n    note: only a rule's own text can delegate; `override` cannot grant itself the power\n    fix @10:87-10:87: \" delegable { to LocalRule, op extend }\"",
+]

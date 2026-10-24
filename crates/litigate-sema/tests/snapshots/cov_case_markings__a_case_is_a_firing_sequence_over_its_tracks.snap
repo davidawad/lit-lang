@@ -1,0 +1,42 @@
+---
+source: crates/litigate-sema/tests/cov_case_markings.rs
+expression: out
+---
+{
+    "a motion spawns discovery; the trial joins it once closed": [
+        "ok: start mu::tried",
+        "trace Took Moved() mu::pleading -> mu::motion-pending via mu::motion",
+        "trace Took Closed() mu::discovery -> mu::discovery-closed via mu::close",
+        "trace Took Ruled() mu::motion-pending -> mu::ruled via mu::ruling",
+        "trace Took Tried() mu::ruled -> mu::tried via mu::trial",
+        "marking [\"mu::tried\"]",
+    ],
+    "an event both tracks can take is ambiguous": [
+        "13:14 L4001 `Stayed()` at stage `mu::motion-pending`, `mu::discovery` matches 2 transitions\n    note: candidates: `stay`, `stay`; make the event's arguments specific",
+        "trace Took Moved() mu::pleading -> mu::motion-pending via mu::motion",
+        "marking []",
+    ],
+    "an event no track can take is illegal at every stage": [
+        "13:14 L4001 `Tried()` is not a legal event at stage `mu::motion-pending` (Motion pending) or `mu::discovery` (Discovery)\n    note: legal events: Ruled() [ruling], Stayed() [stay], Closed() [close], Stayed() [stay]\n    note: an event that takes no edge must fire the trigger of an in-force deadline, be history a transition reads, or have a type declaring `removes`, `extends`, or `waives`\n    note: replay stops at the first illegal event",
+        "trace Took Moved() mu::pleading -> mu::motion-pending via mu::motion",
+        "marking []",
+    ],
+    "an event of the second track by the wrong party": [
+        "13:26 L4001 `Closed()` at stage `mu::discovery` is taken by Court, but `d` plays Defendant",
+        "trace Took Moved() mu::pleading -> mu::motion-pending via mu::motion",
+        "marking []",
+    ],
+    "the trial is not enabled while discovery is open": [
+        "14:14 L4001 `Tried()` at stage `mu::ruled` joins `mu::discovery-closed`, but the matter has no track there\n    note: an edge that `joins` a track is enabled only while that track's token is at the node it names",
+        "trace Took Moved() mu::pleading -> mu::motion-pending via mu::motion",
+        "trace Took Ruled() mu::motion-pending -> mu::ruled via mu::ruling",
+        "marking []",
+    ],
+    "two live tracks at as_of: the first is the lowered start": [
+        "1:6 L4014 the matter is on 2 tracks at as_of 2012-01-01: `mu::ruled`, `mu::discovery`\n    note: a lowered scenario starts at `mu::ruled`: the engine walks one track",
+        "ok: start mu::ruled",
+        "trace Took Moved() mu::pleading -> mu::motion-pending via mu::motion",
+        "trace Took Ruled() mu::motion-pending -> mu::ruled via mu::ruling",
+        "marking [\"mu::ruled\", \"mu::discovery\"]",
+    ],
+}

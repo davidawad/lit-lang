@@ -10,8 +10,25 @@ use crate::case::deadline::{self, Due};
 use crate::case::graph::{display, pack_of};
 use crate::case::spans::error;
 use crate::case::Status;
-use crate::hir::{DeadlineWindow, Edge};
-use litigate_base::{DiagnosticCode as C, Severity};
+use crate::hir::{CharacterKind, Deadline, DeadlineWindow, Edge};
+use litigate_base::{Diagnostic, DiagnosticCode as C, Severity};
+
+/// Late-act diagnostic `e` for deadline `id` (version `d`) by its
+/// character: a claim-processing limit is enforced when the opponent
+/// objects, and the objection can be forfeited, so the act is a warning
+/// (L4013); a jurisdictional one admits no exception (L4002, noted); an
+/// uncharacterized one stays L4002.
+fn characterized(mut e: Diagnostic, d: &Deadline, id: &str) -> Diagnostic {
+    match d.characterization.as_ref().map(|c| c.kind) {
+        Some(CharacterKind::ClaimProcessing) => {
+            e.code = C::LateClaimProcessing;
+            e.severity = Severity::Warning;
+            e.note(format!("`{id}` is a claim-processing rule: the act is untimely if the opponent objects, and the objection can be forfeited"))
+        }
+        Some(CharacterKind::Jurisdictional) => e.note(format!("`{id}` is jurisdictional: no waiver, forfeiture or equitable exception excuses it (Bowles v. Russell, 551 U.S. 205 (2007))")),
+        None => e,
+    }
+}
 
 impl Cx<'_, '_> {
     /// The `within` deadline of `edge` (declared in `pack`), taken by
@@ -84,7 +101,7 @@ impl Cx<'_, '_> {
                 )
                 .note_at(Some(trigger_at), how)
                 .note(self.moved(i));
-                self.out.push(e);
+                self.out.push(characterized(e, d, id));
             }
             Ok(_) => {}
         }
@@ -116,31 +133,39 @@ impl Cx<'_, '_> {
         self.out.push(e);
     }
 
-    /// Event `k` takes deadline `id` (logical `q`), which no version
-    /// governs on its date (L3007), naming the date its law is encoded
-    /// from when the date precedes it (`unknown_before`).
+    /// No version of deadline `id` (logical `q`) governs event `k`: L3007,
+    /// or L3010 (a warning) before the declaration's `unknown_before`,
+    /// where its law is not encoded and the act is judged against no
+    /// period.
     fn ungoverned(&mut self, k: usize, id: &str, q: &str) {
         let date = &self.sorted[k].1.date;
-        let unencoded = self.graph.unencoded(q, date, self.case.known_at.as_deref());
-        let mut e = error(
-            C::NoVersionInForce,
-            self.at(k, |e| e.date.as_ref()),
-            match &unencoded {
-                Some((earliest, _)) => {
-                    format!("deadline `{id}` is not encoded before {earliest}: no version governs {date}")
-                }
-                None => format!("deadline `{id}` has no version governing {date}"),
-            },
-        );
-        if let Some((earliest, _)) = &unencoded {
-            e = e.note(crate::temporal::not_encoded(earliest));
-        }
+        let unknown = self
+            .graph
+            .world
+            .versions(&crate::case::graph::Graph::key(q))
+            .unknown_before()
+            .filter(|b| date < b);
+        let e = match unknown {
+            Some(before) => {
+                let mut e = error(
+                    C::NotEncoded,
+                    self.at(k, |e| e.date.as_ref()),
+                    format!("deadline `{id}` is not encoded before {before}: its act on {date} is not judged"),
+                );
+                e.severity = Severity::Warning;
+                e
+            }
+            None => error(
+                C::NoVersionInForce,
+                self.at(k, |e| e.date.as_ref()),
+                format!("deadline `{id}` has no version governing {date}"),
+            ),
+        };
         self.out.push(e);
     }
 
-    /// Event `k` took deadline `id` whose instance `i` opened before the
-    /// deadline's law is encoded (from `earliest`; L4010, a warning): fail
-    /// closed, the act is neither timely nor late.
+    /// Event `k` takes deadline `id` whose trigger predates the law encoded
+    /// for it (L4010, a warning): fail closed, the act is neither timely nor late.
     fn unencoded(&mut self, k: usize, id: &str, i: usize, earliest: &str) {
         let event = self.sorted[k].1;
         let o = &self.obligations[i];
@@ -151,10 +176,7 @@ impl Cx<'_, '_> {
             self.at(k, |e| e.date.as_ref()),
             format!(
                 "`{}` on {} took deadline `{id}`, but `{}` on {} started it before its law is encoded: whether it is timely or late is unknown",
-                display(&event.action),
-                event.date,
-                display(&trigger.action),
-                trigger.date,
+                display(&event.action), event.date, display(&trigger.action), trigger.date,
             ),
         )
         .note_at(Some(trigger_at), crate::temporal::not_encoded(earliest));

@@ -95,6 +95,7 @@ rule duty civil-notice-of-appeal effective [2009-12-01, ..) known_at 2009-03-26 
 {
   deadline notice-civil-period: 30.days after EnteredBelow() counted_by frap26 cite "28 U.S.C. § 2107(a)"
   {
+    characterization jurisdictional cite "28 U.S.C. § 2107(a)"
     trigger latest
     extend {
       by court
@@ -108,6 +109,7 @@ rule duty civil-notice-of-appeal effective [2009-12-01, ..) known_at 2009-03-26 
   }
   deadline notice-us-party-period: 60.days after EnteredBelow() counted_by frap26 cite "28 U.S.C. § 2107(b)"
   {
+    characterization jurisdictional cite "28 U.S.C. § 2107(b)"
     extend {
       by court
       discretion GoodCauseOrExcusableNeglect

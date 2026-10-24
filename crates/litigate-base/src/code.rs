@@ -55,7 +55,7 @@ macro_rules! registry {
     };
 }
 
-registry! { 74;
+registry! { 78;
     UnexpectedToken = "L0001" => "The token is not valid at this position in the grammar",
     UnterminatedLiteral = "L0002" => "A string, block comment, or other delimited literal was not closed",
     InvalidToken = "L0003" => "The source contains a character sequence that is not a token",
@@ -88,6 +88,7 @@ registry! { 74;
     ArithmeticError = "L2006" => "Exact arithmetic overflowed, divided by zero, or left its domain",
     InvalidField = "L2007" => "A field is unknown, duplicated, or not allowed on this declaration kind",
     InvalidProbability = "L2008" => "An edge probability is outside [0,1], on a self edge, on an edge that is not a draw's, or missing at a chance node",
+    InvalidCapability = "L2009" => "A capability is not allowed by the deadline's characterization: a jurisdictional limit admits no waiver, no unbounded extension, and no delegation",
     EffectiveOverlap = "L3001" => "Two versions of the same declaration overlap in in-force time",
     EffectiveGap = "L3002" => "A declaration version gap is not explicitly declared",
     UnresolvedPrecedence = "L3003" => "Conflicting rules remain unordered after relations and canons are applied",
@@ -97,6 +98,7 @@ registry! { 74;
     NoVersionInForce = "L3007" => "No version of the declaration is in force at the selected date",
     InvalidTransition = "L3008" => "A transition's arms are not total or select an unknown version",
     InvalidCounting = "L3009" => "A counting rule or calendar is inconsistent or references unknown data",
+    NotEncoded = "L3010" => "No version is recorded for a date before the declaration's `unknown_before`: the law there is not encoded (a hole), not absent",
     InvalidCaseEvent = "L4001" => "The event is out of order or is not a legal transition from the replayed posture",
     DeadlineMissed = "L4002" => "The event missed the due date of the obligation it discharges",
     InvalidCaseFact = "L4003" => "The fact is not a fact-tagged node or names an edge that is not its own",
@@ -109,6 +111,8 @@ registry! { 74;
     TimelinessUnknown = "L4010" => "An act discharged an obligation whose designated due date is unknown: it is judged neither timely nor late",
     DesignationShortOfInterpretation = "L4011" => "A trigger designates a due date short of a least time measured from its date only by interpretation: the date stands, with a warning naming the interpretation",
     ExtensionByInterpretation = "L4012" => "An extension is licensed by a grant that rests on an interpretation: the extension stands, with a warning naming the interpretation",
+    LateClaimProcessing = "L4013" => "An act missed a claim-processing deadline: it is untimely if the opponent objects, and the objection may be forfeited",
+    ConcurrentTracks = "L4014" => "The matter is on more than one track at as_of: a lowered scenario starts at the first, since the engine walks one track",
     VerificationFailed = "L5001" => "A required static verification obligation was not discharged",
     HoleInStrict = "L5002" => "Strict profile does not permit unresolved holes",
     UnreachableNode = "L5003" => "A node is not reachable from start and is not tagged entry",
@@ -198,11 +202,16 @@ impl DiagnosticCode {
                 | Self::TimelinessUnknown
                 | Self::DesignationShortOfInterpretation
                 | Self::ExtensionByInterpretation
-                | Self::FormerName,
+                | Self::FormerName
+                | Self::LateClaimProcessing
+                | Self::ConcurrentTracks,
                 _,
             )
             | (
-                Self::RuleWithoutTest | Self::HolePresent | Self::NonCanonicalFormat,
+                Self::RuleWithoutTest
+                | Self::HolePresent
+                | Self::NonCanonicalFormat
+                | Self::NotEncoded,
                 Profile::Dev,
             ) => Severity::Warning,
             _ => Severity::Error,
@@ -222,6 +231,7 @@ impl DiagnosticCode {
             Self::NoVersionInForce => "no-winner",
             Self::InvalidTransition => "transition",
             Self::InvalidCounting => "counting",
+            Self::NotEncoded => "not-encoded",
             _ => return None,
         })
     }

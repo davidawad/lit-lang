@@ -415,3 +415,94 @@ deadline answer-period: 21.days from Served(complaint) counted_by frcp6 {
         (deadline_opt
           (string
             (string_content)))))))
+
+================================================================================
+Delegations, characterization, grants and bitemporal clauses
+================================================================================
+
+module a
+deadline answer-period: 21.days from Served(complaint) counted_by frcp6 effective [2009-12-01, ..) known_at 2009-03-26 retracted 2010-01-01 unknown_before 2009-12-01 commenced [2009-12-01, ..) delegable { to CaseOrder, op [extend, shorten], max 30.days, cite "FRCP 6(b)" } {
+  characterization claim_processing cite "FRCP 12(a)"
+}
+grant covid on [answer-period] effective [2020-03-15, 2020-06-13) cite "FRCP 87(c)(2)" {
+  unlock
+  extend { by Court, discretion GoodCause, to grant_order_entered + 30.days }
+  delegable { to [LocalRule, CaseOrder], op set }
+}
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (deadline_decl
+      (identifier)
+      (duration)
+      (call_expression
+        (ref
+          (identifier))
+        (arguments
+          (ref
+            (identifier))))
+      (ref
+        (identifier))
+      (effective_clause
+        (interval
+          (date)
+          (open_end)))
+      (known_at_clause
+        (date))
+      (retracted_clause
+        (date))
+      (unknown_before_clause
+        (date))
+      (commenced_clause
+        (interval
+          (date)
+          (open_end)))
+      (relation
+        (delegation
+          (identifier)
+          (id_list
+            (ref
+              (identifier))
+            (ref
+              (identifier)))
+          (duration)
+          (cite
+            (string
+              (string_content)))))
+      (deadline_decl_opts
+        (identifier)
+        (cite
+          (string
+            (string_content)))))
+    (grant_decl
+      (identifier)
+      (id_list
+        (ref
+          (identifier)))
+      (effective_clause
+        (interval
+          (date)
+          (date)))
+      (cite
+        (string
+          (string_content)))
+      (grant_body
+        (capability
+          (identifier)
+          (identifier)
+          (binary_expression
+            (ref
+              (identifier))
+            (duration)))
+        (delegation
+          (id_list
+            (ref
+              (identifier))
+            (ref
+              (identifier)))
+          (identifier))))))

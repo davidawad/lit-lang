@@ -238,15 +238,22 @@ impl<'g> Cx<'_, 'g> {
         let known_at = self.case.known_at.as_deref();
         let date = self.sorted[k].1.date.as_str();
         let mut fired = false;
+        let mut unencoded = Vec::new();
         let found: Vec<(String, String, &'g Deadline)> = self
             .graph
             .deadlines()
             .into_iter()
             .filter_map(|q| {
-                let (w, d) = self.governing(&q, k, false)?;
-                Some((q, w, d))
+                let found = self.governing(&q, k, false).map(|(w, d)| (q.clone(), w, d));
+                if found.is_none() {
+                    unencoded.push(q);
+                }
+                found
             })
             .collect();
+        for q in &unencoded {
+            fired |= self.not_encoded(q, k);
+        }
         for (q, w, d) in &found {
             let Some((root, pattern)) = self.root(w, d, k, CHAIN_DEPTH) else {
                 continue;
@@ -351,6 +358,40 @@ impl<'g> Cx<'_, 'g> {
         let base = self.graph.qualify(pack_of(q), &chain.deadline);
         let (w, base) = self.governing(&base, k, false)?;
         self.root(&w, base, k, depth.checked_sub(1)?)
+    }
+
+    /// L3010 when event `k` matches the trigger of a version of deadline
+    /// `q`, none of which governs its date because the law of `q` is not
+    /// encoded before the declaration's `unknown_before`: the matter has a
+    /// period there the corpus cannot count, a hole rather than no period.
+    /// Whether it reported one.
+    fn not_encoded(&mut self, q: &str, k: usize) -> bool {
+        let event = self.sorted[k].1;
+        let set = self.graph.world.versions(&Graph::key(q));
+        let Some(before) = set.unknown_before().filter(|b| event.date < *b) else {
+            return false;
+        };
+        let pack = pack_of(q);
+        let view = self.view(pack, k);
+        let triggered = set.versions.iter().any(|v| {
+            matches!(self.graph.world.decls[v.decl].decl, Declaration::Deadline(d) if matches(&d.trigger, view))
+        });
+        if triggered {
+            let mut e = error(
+                C::NotEncoded,
+                self.at(k, |e| e.date.as_ref()),
+                format!(
+                    "`{}` on {} triggers `{}`, whose law is not encoded before {before}: no due date is counted",
+                    display(&event.action),
+                    event.date,
+                    logical(q)
+                ),
+            )
+            .note(format!("`unknown_before {before}` marks the earlier law as a hole in the corpus; encode the version in force on {} to count it", event.date));
+            e.severity = Severity::Warning;
+            self.out.push(e);
+        }
+        triggered
     }
 
     /// The deadline declaration governing logical deadline `q` at event
@@ -722,10 +763,7 @@ impl<'g> Cx<'_, 'g> {
             self.out.push(e);
             return None;
         };
-        let grants: Vec<Grant<'g>> = match how {
-            Transform::Extend(_) => d.extend.iter().filter_map(Grant::extend).collect(),
-            Transform::Waive => d.waive.iter().map(Grant::waive).collect(),
-        };
+        let grants = self.grants(&w, d, &event.date, how);
         if grants.is_empty() {
             let lock = d.extend.iter().find_map(Extension::lock);
             let e = if let (Some(lock), Transform::Extend(_)) = (lock, how) {
@@ -776,6 +814,32 @@ impl<'g> Cx<'_, 'g> {
             return None;
         }
         Some((w, d, held))
+    }
+
+    /// The grants for `how` that deadline `d` (logical `w`) declares, then
+    /// those of the emergency grants in force on `date` reaching it; an
+    /// emergency extension reaches a locked deadline only when its grant
+    /// also lifts the lock (`unlock`).
+    fn grants(&self, w: &str, d: &'g Deadline, date: &str, how: Transform<'_>) -> Vec<Grant<'g>> {
+        let emergency =
+            self.graph
+                .emergency(w, &d.meta.authority, date, self.case.known_at.as_deref());
+        let locked =
+            d.extend.iter().any(|x| x.lock().is_some()) && !emergency.iter().any(|g| g.unlock);
+        match how {
+            Transform::Extend(_) => d
+                .extend
+                .iter()
+                .chain(emergency.iter().filter(|_| !locked).flat_map(|g| &g.extend))
+                .filter_map(Grant::extend)
+                .collect(),
+            Transform::Waive => d
+                .waive
+                .iter()
+                .chain(emergency.iter().filter_map(|g| g.waive.as_ref()))
+                .map(Grant::waive)
+                .collect(),
+        }
     }
 
     /// Whether event `k` may transform instance `i` (counted `due`) under

@@ -177,6 +177,62 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   editor quick fix) writes a generated id, `<event-name>-<n>: `, that no
   other event of the matter uses. A repeated id is L1001. Tree-sitter,
   Emacs, Helix and Neovim highlight the id.
+- **Typed delegation capabilities, characterization and emergency grants**
+  (lg-962.4; SPEC §5.3, §5.5, §13.8; design review 2026-10-23 §2.4, §6
+  item 2). `delegable { to L, op O [, max N.unit] [, cite "X"] }` replaces
+  `delegable_to [L]` (now L2007 with a fix): a displacing relation from a
+  lower authority is licensed only by a capability covering the
+  operations it performs (`extend`, `shorten`, `set`, `suspend`,
+  `compute_method`, derived from its value) within its bound, each refusal
+  an L3004 naming what is missing. `characterization jurisdictional |
+  claim_processing [cite "X"]` indexes a deadline: a jurisdictional one
+  admits no waiver, unbounded extension or delegation (new L2009), and a
+  late act under a claim-processing one is L4013, a warning, not L4002.
+  `grant g on [d] effective [from, to) { unlock, extend {...}, waive
+  {...}, delegable {...} }` gives deadlines capabilities for a bounded
+  window, never wider than its own authority (L3004), lifting locks with
+  `unlock`; replay honours grants in force on an order's date. New
+  contextual keywords `delegable`, `op`, `grant`, `unlock`,
+  `characterization` (no longer reserved). Corpus: every `delegable_to`
+  migrated to `delegable { to L, op set }`, and a test lowers the corpus
+  with each clause widened back to every operation and finds every pack
+  and scenario byte-identical; the certiorari periods (frap, cafc) keep
+  lg-flu.29's bounded Justice extension on an application within the
+  period (Sup. Ct. R. 13.5, 30.2; before the vendored 2023 Rules an
+  application's timing is unknown, the period uncounted), and the
+  notice-of-appeal periods (frap, frcp, cafc) are `characterization
+  jurisdictional` (28 U.S.C. § 2107; Bowles); the Federal Circuit's
+  district-court window loses its `CaseOrder` delegation. Delegation, characterization and grant cites
+  are checked by `cite-resolves`.
+
+- **Bitemporal claims** (lg-962.4; SPEC §4.1, §5.4; design review §2.6,
+  §6 item 6, P9, L5). `retracted D` closes a version's transaction time,
+  so a correction restates the window it corrects (disjointness is per
+  transaction-time slice); `commenced [from, to)` makes a version apply
+  only to proceedings commenced in the window (a matter is the proceeding
+  commenced on its first event); `unknown_before D` (version clause, rule,
+  or `Lit.toml`) makes a query before the encoded law a hole, new L3010
+  (a warning in `dev`), in selection and replay. `lit/frcp` and
+  `lit/frap` declare `unknown_before`.
+
+- **Markings** (lg-962.4; SPEC §5.6; design review §2.8, §6 item 13). An
+  edge may `spawn [nodes]` concurrent tracks and `joins [nodes]` others;
+  replay runs over the marking as a typed firing sequence (a join is
+  enabled only while the joined track is marked). `CheckedCase.marking`
+  reports the tracks at `as_of`; several is L4014, a warning. Tracks do
+  not lower to litgraph yet (L6001).
+
+
+- **The tree-sitter parser merges without conflicts** (lg-flu.37). The
+  generated `editors/tree-sitter-litigate/src/{parser.c,grammar.json,node-types.json}`
+  stay committed (the crate's `build.rs` and editor packages compile
+  them) and get the `tsgenerate` git merge driver, which keeps ours when
+  both sides changed them, so two branches changing different grammar
+  rules rebase cleanly. `just tree-sitter-generate` regenerates them from
+  the merged grammar; `just tree-sitter-merge-driver` (and `just
+  merge-drivers`, run by `just install` and `just lit-sync`) registers the
+  driver. `just ci` now runs `just tree-sitter-test`, which fails on a
+  stale parser and runs `script/merge-test`.
 - **`LITGRAPH_PACKS` and `--packs-dir` stay CLI contract** (lg-flu.34; PM
   ruling 2026-10-23 on lg-flu.31). `litgraph` and `litgraph-mcp` load
   packs from `--packs-dir`, else `$LITGRAPH_PACKS`, else the packs built

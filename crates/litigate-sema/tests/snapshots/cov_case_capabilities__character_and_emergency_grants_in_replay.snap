@@ -1,0 +1,62 @@
+---
+source: crates/litigate-sema/tests/cov_case_capabilities.rs
+expression: out
+---
+{
+    "a grant below the deadline's authority adds nothing": [
+        "13:14 L4001 `OrderedLocked(2020-05-01)` cannot extend `kappa::locked`: the deadline may not be extended (`extend { never cite \"FRCP 6(b)(2)\" }`)\n    note: no order, stipulation or consent extends a period its rule forbids extending (FRCP 6(b)(2))",
+        "trace Triggered Entered() kappa::open -> kappa::open",
+        "obligation kappa::appeal Lapsed",
+        "obligation kappa::locked Lapsed",
+    ],
+    "a grant in force unlocks and extends a locked deadline": [
+        "ok: start kappa::open",
+        "trace Triggered Entered() kappa::open -> kappa::open",
+        "trace Extended OrderedLocked(2020-05-01) kappa::open -> kappa::open",
+        "obligation kappa::appeal Lapsed",
+        "obligation kappa::locked Lapsed extended 2020-05-01",
+    ],
+    "a grant the matter's known_at has not recorded adds nothing": [
+        "14:14 L4001 `OrderedLocked(2020-05-01)` cannot extend `kappa::locked`: the deadline may not be extended (`extend { never cite \"FRCP 6(b)(2)\" }`)\n    note: no order, stipulation or consent extends a period its rule forbids extending (FRCP 6(b)(2))",
+        "trace Triggered Entered() kappa::open -> kappa::open",
+        "obligation kappa::appeal Open",
+        "obligation kappa::locked Open",
+    ],
+    "a grant's waiver releases an open answer in its window": [
+        "ok: start kappa::open",
+        "trace Triggered Served(complaint) kappa::open -> kappa::open",
+        "trace Waived Released() kappa::open -> kappa::open",
+        "obligation kappa::answer Waived",
+    ],
+    "an extension beyond the grant's bound is refused": [
+        "13:14 L4001 an extension to 2020-06-30 exceeds the bound of `kappa::answer`: grant_order_entered + 30.days = 2020-05-05 (prescribed_due 2020-04-11, grant_order_entered 2020-04-05)\n    note: `answer` runs 10 calendar days from `Served(complaint)` on 2020-04-01 under `oc@2009-12-01`",
+        "trace Triggered Served(complaint) kappa::open -> kappa::open",
+        "obligation kappa::answer Lapsed",
+    ],
+    "claim-processing: a late answer is a forfeitable objection (L4010, warning)": [
+        "13:3 L4013 `Answered(complaint)` on 2011-01-20 missed deadline `answer`, due 2011-01-14\n    note @12:3: `answer` runs 10 calendar days from `Served(complaint)` on 2011-01-04 under `oc@2009-12-01`\n    note: only a cited event of a type that `extends` this deadline, within its `extend` capability, moves the due date\n    note: `answer` is a claim-processing rule: the act is untimely if the opponent objects, and the objection can be forfeited",
+        "ok: start kappa::open",
+        "trace Triggered Served(complaint) kappa::open -> kappa::open",
+        "trace Took Answered(complaint) kappa::open -> kappa::open via kappa::answer",
+        "obligation kappa::answer Late",
+    ],
+    "jurisdictional: a late appeal is untimely, no exception (L4002)": [
+        "13:3 L4002 `Appealed()` on 2011-01-20 missed deadline `appeal`, due 2011-01-14\n    note @12:3: `appeal` runs 10 calendar days from `Entered()` on 2011-01-04 under `oc@2009-12-01`\n    note: only a cited event of a type that `extends` this deadline, within its `extend` capability, moves the due date\n    note: `appeal` is jurisdictional: no waiver, forfeiture or equitable exception excuses it (Bowles v. Russell, 551 U.S. 205 (2007))",
+        "trace Triggered Entered() kappa::open -> kappa::open",
+        "trace Took Appealed() kappa::open -> kappa::open via kappa::appeal",
+        "obligation kappa::appeal Late",
+        "obligation kappa::locked Lapsed",
+    ],
+    "outside its window the lock holds": [
+        "13:14 L4001 `OrderedLocked(2020-07-30)` cannot extend `kappa::locked`: the deadline may not be extended (`extend { never cite \"FRCP 6(b)(2)\" }`)\n    note: no order, stipulation or consent extends a period its rule forbids extending (FRCP 6(b)(2))",
+        "trace Triggered Entered() kappa::open -> kappa::open",
+        "obligation kappa::appeal Lapsed",
+        "obligation kappa::locked Lapsed",
+    ],
+    "without `unlock`, a grant's extension does not reach a locked deadline": [
+        "13:14 L4001 `OrderedLocked(2020-05-01)` cannot extend `kappa::locked`: the deadline may not be extended (`extend { never cite \"FRCP 6(b)(2)\" }`)\n    note: no order, stipulation or consent extends a period its rule forbids extending (FRCP 6(b)(2))",
+        "trace Triggered Entered() kappa::open -> kappa::open",
+        "obligation kappa::appeal Lapsed",
+        "obligation kappa::locked Lapsed",
+    ],
+}

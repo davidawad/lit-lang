@@ -1,0 +1,18 @@
+---
+source: crates/litigate-sema/tests/bitemporal.rs
+expression: rows
+---
+{
+    "a trigger before the encoded law is a hole, and the act is not judged": [
+        "11:3 L3010 `Served(complaint)` on 2011-01-04 triggers `old::answer`, whose law is not encoded before 2012-01-01: no due date is counted\n    note: `unknown_before 2012-01-01` marks the earlier law as a hole in the corpus; encode the version in force on 2011-01-04 to count it",
+        "12:3 L3010 deadline `answer` is not encoded before 2012-01-01: its act on 2011-01-20 is not judged",
+        "ok: start old::open",
+        "trace Triggered Served(complaint) old::open -> old::open",
+        "trace Took Answered(complaint) old::open -> old::open via old::answer",
+    ],
+    "after it, the period runs": [
+        "ok: start old::open",
+        "trace Triggered Served(complaint) old::open -> old::open",
+        "trace Took Answered(complaint) old::open -> old::open via old::answer",
+    ],
+}

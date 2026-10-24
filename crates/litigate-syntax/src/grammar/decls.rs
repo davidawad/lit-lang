@@ -23,6 +23,7 @@ pub(crate) fn decl(p: &mut Parser<'_>, kw: SyntaxKind) {
         KwTransition => transition(p),
         KwDefault => default(p),
         KwException => exception(p),
+        KwGrant => grant(p),
         _ => test(p),
     }
 }
@@ -125,6 +126,24 @@ fn deadline(p: &mut Parser<'_>) {
         let keywords = clauses(p, Clauses::RULE);
         expect_header_end(p, &keywords);
         field_list(p, super::fields::DEADLINE_DECL_OPTS);
+    }
+    p.finish();
+}
+
+/// `grant id on IdList {Version | Cite} { GrantField Sep }`.
+fn grant(p: &mut Parser<'_>) {
+    p.start(GrantDecl);
+    p.bump_as(KwGrant);
+    if p.expect(Ident) {
+        if p.at_kw(KwOn) {
+            keyword_field(p, KwOn, Some(super::values::id_list));
+        } else {
+            p.error_expected(&[KwOn]);
+        }
+        let clause_keywords = clauses(p, Clauses::CALENDAR);
+        if require_body(p, &clause_keywords) {
+            field_list(p, super::fields::GRANT_FIELDS);
+        }
     }
     p.finish();
 }

@@ -55,6 +55,7 @@ module.exports = {
     $.default_decl,
     $.exception_decl,
     $.test_decl,
+    $.grant_decl,
   ),
 
   start_decl: $ => seq('start', field('node', $.identifier)),
@@ -201,7 +202,7 @@ module.exports = {
       field('value', $.string),
     ),
     seq(
-      field('key', choice('tags', 'sets', 'clears', 'requires', 'forbids', 'formerly')),
+      field('key', choice('tags', 'sets', 'clears', 'requires', 'forbids', 'formerly', 'spawn', 'joins')),
       field('value', $.id_list),
     ),
     // A string entry names an anonymous edge by derived id (SPEC §3.1).
@@ -243,12 +244,20 @@ module.exports = {
     seq(field('key', choice('bearer', 'designated')), field('value', $.identifier)),
     seq(field('key', 'trigger'), field('value', choice($.identifier, $.call_expression))),
     seq(field('key', choice('extend', 'waive')), field('value', $.capability)),
-    // The forum whose rules set the period, and the rule adopting them
-    // with the words that adopt them (SPEC §5.3).
+    seq(field('key', 'forum'), field('value', $.identifier)),
     seq(
-      field('key', 'forum'), field('value', $.identifier),
-      optional(seq($.cite, optional(seq('quote', field('quote', $.string))))),
+      field('key', 'characterization'),
+      field('value', $.identifier),
+      optional(field('cite', $.cite)),
     ),
+  )),
+
+  // A typed delegation capability (SPEC §5.5): `delegable { to L, op O,
+  // max N.days, cite X }`.
+  delegation: $ => braced(choice(
+    seq(field('key', choice('to', 'op')), field('value', choice($.identifier, $.id_list))),
+    seq(field('key', 'max'), field('value', $.duration)),
+    $.cite,
   )),
 
   capability: $ => braced(choice(
@@ -480,6 +489,22 @@ module.exports = {
     optional(seq('priority', field('priority', $.number))),
   ),
 
+  // An emergency capability grant for a bounded window (SPEC §5.5).
+  grant_decl: $ => seq(
+    'grant',
+    field('name', $.identifier),
+    'on',
+    field('targets', $.id_list),
+    repeat(choice($._version_clause, $.cite)),
+    field('body', $.grant_body),
+  ),
+
+  grant_body: $ => braced(choice(
+    field('key', 'unlock'),
+    seq(field('key', choice('extend', 'waive')), field('value', $.capability)),
+    seq(field('key', 'delegable'), field('value', $.delegation)),
+  )),
+
   test_decl: $ => seq(
     'test',
     field('name', $.string),
@@ -493,11 +518,23 @@ module.exports = {
 
   expect_stmt: $ => seq('expect', field('assertion', $._expression)),
 
-  _version_clause: $ => choice($.effective_clause, $.known_at_clause),
+  _version_clause: $ => choice(
+    $.effective_clause,
+    $.known_at_clause,
+    $.retracted_clause,
+    $.unknown_before_clause,
+    $.commenced_clause,
+  ),
 
   effective_clause: $ => seq('effective', $.interval),
 
   known_at_clause: $ => seq('known_at', $.date),
+
+  retracted_clause: $ => seq('retracted', $.date),
+
+  unknown_before_clause: $ => seq('unknown_before', $.date),
+
+  commenced_clause: $ => seq('commenced', $.interval),
 
   interval: $ => seq(
     '[',
@@ -515,6 +552,7 @@ module.exports = {
       field('target', $.ref),
     ),
     seq(field('kind', 'delegable_to'), field('target', $.id_list)),
+    seq(field('kind', 'delegable'), field('capability', $.delegation)),
   ),
 
   // `cite "text" [historical]`; `cite ?("text")` is a cite hole.

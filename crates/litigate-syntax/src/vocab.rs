@@ -28,6 +28,7 @@ pub const LIT_ITEM_KEYWORDS: &[SyntaxKind] = &[
     KwException,
     KwTest,
     KwLimit,
+    KwGrant,
 ];
 
 /// Item keywords of reserved declarations (`limit`, SPEC §3.7): anchors
@@ -83,6 +84,7 @@ pub(crate) const fn is_decl(kind: SyntaxKind) -> bool {
             | ExceptionDecl
             | TestDecl
             | LimitDecl
+            | GrantDecl
     )
 }
 

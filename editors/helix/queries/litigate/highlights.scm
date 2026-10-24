@@ -14,7 +14,7 @@
   "edition" "module" "import" "package" "start" "group" "type" "enum" "event"
   "state" "decision" "chance" "terminal" "link" "instance" "rule"
   "deadline" "counting" "calendar" "transition" "authority" "default"
-  "exception" "test" "limit"
+  "exception" "test" "limit" "grant"
   "case" "uses" "as_of" "known_at" "summary" "notes" "source" "perspective"
   "parties" "events" "facts" "stakes" "beliefs" "prior" "observe" "analysis"
 ] @keyword
@@ -34,6 +34,7 @@
   "removes" "elects" "extends" "waives" "to" "where" "forums"
   "forward_holidays" "declared_holidays" "quote"
   "words" "pages" "lines" "certificate" "excludes" "ecf"
+  "delegable" "op" "unlock" "characterization" "retracted" "unknown_before" "commenced" "spawn" "joins"
 ] @keyword
 
 (discretion) @keyword
@@ -109,6 +110,7 @@
 (calendar_decl name: (identifier) @function)
 (holiday_decl name: (identifier) @variable.other.member)
 (transition_decl name: (identifier) @function)
+(grant_decl name: (identifier) @function)
 (default_decl name: (identifier) @function)
 (exception_decl name: (identifier) @function)
 (instance_decl base: (identifier) @namespace)

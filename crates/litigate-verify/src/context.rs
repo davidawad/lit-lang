@@ -103,11 +103,33 @@ impl<'a> Context<'a> {
     /// with their node, in its window), and test `cite`s (no window).
     pub fn cites(&self) -> impl Iterator<Item = Cite<'a>> {
         self.declarations().flat_map(|d| {
-            let meta = meta_of(d);
+            let meta = meta_of(d).or(match d {
+                Declaration::Grant(g) => Some(&g.meta),
+                _ => None,
+            });
             let imported = meta.is_some_and(|m| m.imported);
             let window = meta.map(|m| &m.effective);
             let own =
                 meta.and_then(|m| Some((m.cite.as_deref()?, m.span.as_ref(), m.historical, None)));
+            // A delegation's and a characterization's own authority, at
+            // the declaration.
+            let span = meta.and_then(|m| m.span.as_ref());
+            let historical = meta.is_some_and(|m| m.historical);
+            let delegated = meta
+                .into_iter()
+                .flat_map(|m| &m.delegations)
+                .chain(match d {
+                    Declaration::Grant(g) => g.delegations.as_slice(),
+                    _ => &[],
+                })
+                .filter_map(move |g| Some((g.cite.as_deref()?, span, historical, None)));
+            let characterized = match d {
+                Declaration::Deadline(x) => x
+                    .characterization
+                    .as_ref()
+                    .and_then(|c| Some((c.cite.as_deref()?, span, historical, None))),
+                _ => None,
+            };
             let test = match d {
                 Declaration::Test(t) => {
                     t.cite.as_deref().map(|c| (c, t.span.as_ref(), false, None))
@@ -145,6 +167,8 @@ impl<'a> Context<'a> {
                 .chain(test)
                 .chain(adoption)
                 .chain(edges)
+                .chain(delegated)
+                .chain(characterized)
                 .map(move |(text, span, historical, quote)| Cite {
                     text,
                     span,

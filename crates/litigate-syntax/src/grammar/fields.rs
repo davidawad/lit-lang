@@ -46,6 +46,8 @@ pub(crate) const EDGE_FIELDS: &[Spec] = &[
     (KwClears, Some(id_list)),
     (KwRequires, Some(id_list)),
     (KwForbids, Some(id_list)),
+    (KwSpawn, Some(id_list)),
+    (KwJoins, Some(id_list)),
     (KwReplaces, Some(replaces_list)),
     (KwWhen, Some(bound)),
     (KwBasis, Some(bound)),
@@ -75,6 +77,22 @@ pub(crate) const DEADLINE_DECL_OPTS: &[Spec] = &[
     (KwDesignated, Some(reference)),
     (KwForum, Some(adopted_forum)),
     (KwInterpretation, Some(string)),
+    (KwCharacterization, Some(characterization)),
+];
+
+/// Fields of a `delegable` capability (besides `cite`).
+pub(crate) const DELEGATION_FIELDS: &[Spec] = &[
+    (KwTo, Some(ref_or_list)),
+    (KwOp, Some(ref_or_list)),
+    (KwMax, Some(duration)),
+];
+
+/// Fields of a `grant` body.
+pub(crate) const GRANT_FIELDS: &[Spec] = &[
+    (KwUnlock, None),
+    (KwExtend, Some(capability)),
+    (KwWaive, Some(capability)),
+    (KwDelegable, Some(delegation)),
 ];
 
 /// Fields of an `extend`/`waive` capability.
@@ -254,6 +272,32 @@ fn bound(p: &mut Parser<'_>) -> bool {
 /// cite "X" }`.
 fn capability(p: &mut Parser<'_>) -> bool {
     field_list(p, CAPABILITY_FIELDS)
+}
+
+/// `{ to Level | [Level, ...], op Op | [Op, ...], max Duration, cite X }`.
+pub(crate) fn delegation(p: &mut Parser<'_>) -> bool {
+    if !p.at(LBrace) {
+        return false;
+    }
+    let mut expected = keywords(DELEGATION_FIELDS);
+    expected.push(KwCite);
+    brace_list(p, Sep::Optional, &expected, &mut |p| {
+        field(p, DELEGATION_FIELDS) || cite(p)
+    });
+    true
+}
+
+/// `characterization (jurisdictional | claim_processing) [Cite]`.
+fn characterization(p: &mut Parser<'_>) -> bool {
+    reference(p) && {
+        cite(p);
+        true
+    }
+}
+
+/// A name or a bracketed list of names.
+fn ref_or_list(p: &mut Parser<'_>) -> bool {
+    reference(p) || id_list(p)
 }
 
 /// A policy name (`first`) or a call (`later_of(other)`).

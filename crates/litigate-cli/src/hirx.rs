@@ -62,6 +62,7 @@ pub fn decl_id(decl: &Declaration) -> Option<String> {
         Declaration::TypeAlias(t) => Some(t.name.clone()),
         Declaration::Authority(a) => Some(a.name.clone()),
         Declaration::Instance(i) => Some(i.name.clone()),
+        Declaration::Grant(g) => Some(g.meta.id.clone()),
         _ => None,
     })
 }
@@ -90,6 +91,7 @@ pub fn decl_kind(decl: &Declaration) -> &'static str {
         Declaration::Enum(_) => "enum",
         Declaration::Event(_) => "event",
         Declaration::Test(_) => "test",
+        Declaration::Grant(_) => "grant",
     }
 }
 
@@ -271,6 +273,18 @@ mod tests {
         assert_eq!(event_parts(&literal), None);
         assert_eq!(event_text(&literal), "");
         assert!(!matches(&literal, &event));
+    }
+
+    #[test]
+    fn a_grant_has_an_id_and_its_kind() {
+        let pkg = crate::testkit::hir_with(
+            "grant g on [answer-period] effective [2020-03-15, 2020-06-13) { unlock }\n",
+        );
+        let grant = declarations(&pkg)
+            .find(|d| matches!(d, Declaration::Grant(_)))
+            .unwrap();
+        assert_eq!(decl_id(grant).as_deref(), Some("g"));
+        assert_eq!(decl_kind(grant), "grant");
     }
 
     #[test]

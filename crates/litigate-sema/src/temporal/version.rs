@@ -1,10 +1,18 @@
 //! Version sets of one logical declaration and bitemporal `as_of`
-//! selection (SPEC §5.4, DESIGN §4.4).
+//! selection (SPEC §5.4, DESIGN §4.4; design review §2.6).
 //!
 //! Versions are the same-named declarations of one package. `in_force` is
-//! when the law applied; `known_at` is when the corpus recorded it. A query
-//! at `(as_of, known_at)` sees only versions recorded by `known_at` and
-//! picks the one whose window holds `as_of`.
+//! when the law applied (valid time); `[known_at, retracted)` is when the
+//! corpus held it (transaction time): a correction is a new version of the
+//! same window recorded later, and the version it corrects is `retracted`
+//! then. A query at `(as_of, known_at)` sees only versions the corpus held
+//! on `known_at` (the latest corpus: those never retracted) and picks the
+//! one whose window holds `as_of`, among those that apply to the
+//! proceeding: a version may apply only to proceedings `commenced` in a
+//! window (by default the query concerns a proceeding commenced on its
+//! `as_of`). Before a declaration's `unknown_before` date its law is not
+//! encoded: a query there with no version is a hole, not an absence of
+//! law.
 use super::interval::{gaps, Window};
 
 /// One version: when it applied, when it was recorded, and its payload.
@@ -14,8 +22,56 @@ pub struct Version<T> {
     pub in_force: Window,
     /// When the corpus recorded it.
     pub known_at: String,
+    /// When the corpus retracted it (a later version corrects it), if ever.
+    pub retracted: Option<String>,
+    /// The date before which the declaration's law is not encoded, if
+    /// the version declares one.
+    pub unknown_before: Option<String>,
+    /// The commencement dates of the proceedings it applies to, if it
+    /// applies only to some.
+    pub commenced: Option<Window>,
     /// The declaration this version is.
     pub decl: T,
+}
+
+impl<T> Version<T> {
+    /// Whether the corpus held this version on `known_at` (`None`: the
+    /// latest corpus, which holds every version never retracted).
+    #[must_use]
+    pub fn held(&self, known_at: Option<&str>) -> bool {
+        match known_at {
+            Some(k) => {
+                self.known_at.as_str() <= k && self.retracted.as_deref().is_none_or(|r| k < r)
+            }
+            None => self.retracted.is_none(),
+        }
+    }
+
+    /// Whether the version applies to a proceeding commenced on
+    /// `commenced`.
+    #[must_use]
+    pub fn applies(&self, commenced: &str) -> bool {
+        self.commenced
+            .as_ref()
+            .is_none_or(|w| w.contains(commenced))
+    }
+
+    /// Whether no proceeding is one both this version and `other` apply to.
+    #[must_use]
+    pub fn apply_apart<U>(&self, other: &Version<U>) -> bool {
+        match (&self.commenced, &other.commenced) {
+            (Some(a), Some(b)) => !a.overlaps(b),
+            _ => false,
+        }
+    }
+
+    /// Whether the corpus never held this version and `other` at once.
+    #[must_use]
+    pub fn recorded_apart<U>(&self, other: &Version<U>) -> bool {
+        let ends_before = |v: Option<&String>, start: &String| v.is_some_and(|end| end <= start);
+        ends_before(self.retracted.as_ref(), &other.known_at)
+            || ends_before(other.retracted.as_ref(), &self.known_at)
+    }
 }
 
 /// Why a query selected no version.
@@ -36,6 +92,12 @@ pub enum Miss {
     },
     /// More than one version holds the date (an unchecked L3001 overlap).
     Ambiguous(Vec<Window>),
+    /// No version holds the date, which is before the date the
+    /// declaration's law is encoded from (`unknown_before`, L3010).
+    NotEncoded {
+        /// The `unknown_before` date.
+        before: String,
+    },
 }
 
 /// A pair of versions whose windows share days (L3001).
@@ -78,29 +140,48 @@ impl<T> VersionSet<T> {
     /// [`Miss::Before`] when `as_of` precedes every recorded version,
     /// [`Miss::NotInForce`] when none applies otherwise, [`Miss::Ambiguous`]
     /// when the set overlaps on that date.
+    /// [`Miss::NotEncoded`] when none applies before the declaration's
+    /// `unknown_before`, [`Miss::NotInForce`] when none applies otherwise,
+    /// [`Miss::Ambiguous`] when the set overlaps on that date.
     pub fn as_of(&self, as_of: &str, known_at: Option<&str>) -> Result<&Version<T>, Miss> {
+        self.as_of_in(as_of, known_at, as_of)
+    }
+
+    /// [`Self::as_of`] for a proceeding commenced on `commenced`.
+    ///
+    /// # Errors
+    /// As [`Self::as_of`].
+    pub fn as_of_in(
+        &self,
+        as_of: &str,
+        known_at: Option<&str>,
+        commenced: &str,
+    ) -> Result<&Version<T>, Miss> {
         let (visible, hidden): (Vec<&Version<T>>, Vec<&Version<T>>) = self
             .versions
             .iter()
-            .filter(|v| v.in_force.contains(as_of))
-            .partition(|v| known_at.is_none_or(|k| v.known_at.as_str() <= k));
+            .filter(|v| v.in_force.contains(as_of) && v.applies(commenced))
+            .partition(|v| v.held(known_at));
         match visible.as_slice() {
             [one] => Ok(one),
-            [] if hidden.is_empty() => Err(self.before(as_of, known_at).map_or_else(
-                || Miss::NotInForce { hidden: Vec::new() },
-                |earliest| Miss::Before { earliest },
-            )),
-            [] => Err(Miss::NotInForce {
-                hidden: hidden.iter().map(|v| v.in_force.display()).collect(),
-            }),
+            [] => match self.unknown_before().filter(|d| as_of < d.as_str()) {
+                Some(before) => Err(Miss::NotEncoded { before }),
+                None if hidden.is_empty() => Err(self.before(as_of, known_at).map_or_else(
+                    || Miss::NotInForce { hidden: Vec::new() },
+                    |earliest| Miss::Before { earliest },
+                )),
+                None => Err(Miss::NotInForce {
+                    hidden: hidden.iter().map(|v| v.in_force.display()).collect(),
+                }),
+            },
             many => Err(Miss::Ambiguous(
                 many.iter().map(|v| v.in_force.clone()).collect(),
             )),
         }
     }
 
-    /// The earliest `from` among the versions recorded by `known_at`, when
-    /// `as_of` precedes it: the date before which the law is not encoded.
+    /// The earliest `from` among versions visible at `known_at` before
+    /// which the law was not recorded in the corpus.
     fn before(&self, as_of: &str, known_at: Option<&str>) -> Option<String> {
         self.versions
             .iter()
@@ -111,29 +192,48 @@ impl<T> VersionSet<T> {
             .map(str::to_owned)
     }
 
+    /// The latest explicit `unknown_before` any version declares.
+    #[must_use]
+    pub fn unknown_before(&self) -> Option<String> {
+        self.versions
+            .iter()
+            .filter_map(|v| v.unknown_before.clone())
+            .max()
+    }
+
     /// The version whose window starts on `from` (the `@date` selector).
     #[must_use]
     pub fn starting(&self, from: &str) -> Option<&Version<T>> {
-        self.versions.iter().find(|v| v.in_force.from == from)
+        self.versions
+            .iter()
+            .find(|v| v.in_force.from == from && v.held(None))
     }
 
     /// Index of the version that ends exactly where the one at `index`
-    /// begins: the version an amendment replaces.
+    /// begins: the version an amendment replaces, as the latest corpus
+    /// holds it.
     #[must_use]
     pub fn predecessor(&self, index: usize) -> Option<usize> {
         let from = &self.versions.get(index)?.in_force.from;
         self.versions
             .iter()
-            .position(|v| v.in_force.to.as_ref() == Some(from))
+            .position(|v| v.in_force.to.as_ref() == Some(from) && v.held(None))
     }
 
-    /// Every pair of overlapping versions (`effective-disjoint`), ordered by
-    /// the later version's position.
+    /// Every pair of versions whose windows overlap while the corpus held
+    /// both, for a proceeding both apply to (`effective-disjoint`:
+    /// disjointness is per transaction-time slice and per proceeding, so a
+    /// correction may restate the window it corrects and two versions may
+    /// split one window by commencement date), ordered by the later
+    /// version's position.
     #[must_use]
     pub fn overlaps(&self) -> Vec<Overlap> {
         let mut out = Vec::new();
         for (j, b) in self.versions.iter().enumerate() {
             for (i, a) in self.versions.iter().enumerate().take(j) {
+                if a.recorded_apart(b) || a.apply_apart(b) {
+                    continue;
+                }
                 if let Some(common) = a.in_force.intersect(&b.in_force) {
                     let (first, second) = if a.in_force.from <= b.in_force.from {
                         (i, j)
@@ -158,6 +258,7 @@ impl<T> VersionSet<T> {
         let first = self
             .versions
             .iter()
+            .filter(|v| v.held(None))
             .map(|v| v.in_force.from.clone())
             .min()?;
         Window {
@@ -171,7 +272,12 @@ impl<T> VersionSet<T> {
     #[must_use]
     pub fn gaps(&self, package: &Window) -> Vec<Window> {
         self.lifetime(package).map_or_else(Vec::new, |life| {
-            let cover: Vec<Window> = self.versions.iter().map(|v| v.in_force.clone()).collect();
+            let cover: Vec<Window> = self
+                .versions
+                .iter()
+                .filter(|v| v.held(None))
+                .map(|v| v.in_force.clone())
+                .collect();
             gaps(&life, &cover)
         })
     }
@@ -186,6 +292,9 @@ mod tests {
         Version {
             in_force: Window::new(from, to),
             known_at: known.into(),
+            retracted: None,
+            unknown_before: None,
+            commenced: None,
             decl,
         }
     }
@@ -286,6 +395,54 @@ mod tests {
     }
 
     #[test]
+    fn a_correction_restates_its_window_in_a_later_transaction_slice() {
+        let mut original = v("2009-12-01", None, "2009-03-26", 1);
+        original.retracted = Some("2020-01-01".into());
+        let corrected = v("2009-12-01", None, "2020-01-01", 2);
+        let set = VersionSet::new(vec![original, corrected]);
+        assert!(set.overlaps().is_empty());
+        assert_eq!(
+            set.as_of("2012-01-01", Some("2015-01-01")).map(|v| v.decl),
+            Ok(1)
+        );
+        assert_eq!(
+            set.as_of("2012-01-01", Some("2020-01-01")).map(|v| v.decl),
+            Ok(2)
+        );
+        assert_eq!(set.as_of("2012-01-01", None).map(|v| v.decl), Ok(2));
+        assert_eq!(set.starting("2009-12-01").map(|v| v.decl), Some(2));
+        assert!(set
+            .gaps(&Window::new("2009-12-01", None::<String>))
+            .is_empty());
+        // Recorded while the original was still held: they overlap.
+        let mut early = v("2009-12-01", None, "2010-01-01", 3);
+        early.retracted = None;
+        let mut held = v("2009-12-01", None, "2009-03-26", 4);
+        held.retracted = Some("2020-01-01".into());
+        assert_eq!(VersionSet::new(vec![held, early]).overlaps().len(), 1);
+    }
+
+    #[test]
+    fn before_unknown_before_a_miss_is_a_hole() {
+        let mut first = v("2009-12-01", None, "2009-03-26", 1);
+        first.unknown_before = Some("2009-12-01".into());
+        let set = VersionSet::new(vec![first]);
+        assert_eq!(
+            set.as_of("2005-01-01", None),
+            Err(Miss::NotEncoded {
+                before: "2009-12-01".into()
+            })
+        );
+        assert_eq!(set.as_of("2010-01-01", None).map(|v| v.decl), Ok(1));
+        assert_eq!(
+            set.as_of("2010-01-01", Some("2009-01-01")),
+            Err(Miss::NotInForce {
+                hidden: vec!["[2009-12-01, ..)".into()]
+            })
+        );
+    }
+
+    #[test]
     fn an_empty_set_has_no_lifetime() {
         let empty = VersionSet::<u32>::default();
         let pkg = Window::new("2009-12-01", None::<String>);
@@ -313,6 +470,9 @@ mod tests {
                 .map(|(i, w)| Version {
                     in_force: Window::new(w[0].clone(), Some(w[1].clone())),
                     known_at: w[0].clone(),
+                    retracted: None,
+                    unknown_before: None,
+                    commenced: None,
                     decl: i,
                 })
                 .collect();
@@ -320,6 +480,9 @@ mod tests {
                 versions.push(Version {
                     in_force: Window::new(last.clone(), None::<String>),
                     known_at: last.clone(),
+                    retracted: None,
+                    unknown_before: None,
+                    commenced: None,
                     decl: versions.len(),
                 });
             }
@@ -358,7 +521,7 @@ mod tests {
             };
             let start = extra_from.max(end);
             let mut grown = set.clone();
-            grown.versions.push(Version { in_force: Window::new(start.clone(), None::<String>), known_at: start.clone(), decl: 99 });
+            grown.versions.push(Version { in_force: Window::new(start.clone(), None::<String>), known_at: start.clone(), retracted: None, unknown_before: None, commenced: None, decl: 99 });
             prop_assert!(grown.overlaps().is_empty());
             if d < start {
                 let before = set.as_of(&d, known.as_deref()).map(|v| v.decl);

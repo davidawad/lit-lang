@@ -71,7 +71,7 @@ fn item_casts_only_declarations() {
     let kinds: Vec<SyntaxKind> = file.items().iter().map(Item::kind).collect();
     assert_eq!(kinds.first(), Some(&SyntaxKind::TypeDecl));
     assert_eq!(kinds.last(), Some(&SyntaxKind::TestDecl));
-    assert_eq!(kinds.len(), 23);
+    assert_eq!(kinds.len(), 27);
     let module = file.module().expect("module");
     assert!(Item::cast(module.syntax().clone()).is_none());
 }
@@ -212,10 +212,19 @@ fn relations_expose_targets_and_delegates() {
     let delegable = &relations[1];
     assert_eq!(
         delegable.keyword().map(|t| t.kind()),
-        Some(SyntaxKind::KwDelegableTo)
+        Some(SyntaxKind::KwDelegable)
     );
     assert!(delegable.target().is_none());
-    let delegates = delegable.delegates().expect("delegates");
+    assert!(delegable.delegates().is_none());
+    let fields = delegable.delegation().expect("delegation");
+    let keys: Vec<String> = super::super::children::<super::super::Field>(fields.syntax())
+        .iter()
+        .filter_map(|f| f.keyword().map(|k| k.text().to_owned()))
+        .collect();
+    assert_eq!(keys, ["to", "op"]);
+    let legacy = lit("module m\nstate s: \"S\" delegable_to [LocalRule]\n");
+    let s: NodeDecl = decl(&legacy, "s");
+    let delegates = s.relations()[0].delegates().expect("delegates");
     let items: Vec<String> = delegates
         .items()
         .iter()
@@ -223,6 +232,34 @@ fn relations_expose_targets_and_delegates() {
         .collect();
     assert_eq!(items, ["LocalRule"]);
     assert!(delegates.strings().is_empty());
+    assert!(s.relations()[0].delegation().is_none());
+}
+
+#[test]
+fn grants_expose_targets_and_fields() {
+    let file = lit(CONSTRUCTS);
+    let grant = file
+        .items()
+        .iter()
+        .find_map(|item| super::super::GrantDecl::cast(item.syntax().clone()))
+        .expect("grant");
+    let targets: Vec<String> = grant
+        .targets()
+        .expect("targets")
+        .items()
+        .iter()
+        .map(super::super::Ref::text)
+        .collect();
+    assert_eq!(targets, ["renewal", "dg"]);
+    let keys: Vec<String> = grant
+        .fields()
+        .iter()
+        .filter_map(|f| f.keyword().map(|k| k.text().to_owned()))
+        .collect();
+    assert_eq!(keys, ["unlock", "extend", "waive", "delegable"]);
+    assert_eq!(grant.cites().len(), 1);
+    assert_eq!(grant.version_clauses().len(), 1);
+    assert!(grant.relations().is_empty());
 }
 
 #[test]

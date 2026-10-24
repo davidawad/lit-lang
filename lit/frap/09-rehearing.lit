@@ -17,10 +17,10 @@ import frap.{ rehearing-group }
 /// gave a petition for rehearing en banc the same time; the pack's edges
 /// still cite those pinpoints. The earlier text is not vendored, so that
 /// version's cite is a hole carrying it.
-deadline rehearing-period: 14.days after EnteredOnAppeal(Judgment) counted_by frap26 effective [2009-12-01, 2024-12-01) known_at 2009-03-26 delegable_to [LocalRule, CaseOrder] cite ?("FRAP 40(a)(1) and 35(c) before the December 2024 amendment (text not vendored)")
+deadline rehearing-period: 14.days after EnteredOnAppeal(Judgment) counted_by frap26 effective [2009-12-01, 2024-12-01) known_at 2009-03-26 delegable { to [LocalRule, CaseOrder], op set } cite ?("FRAP 40(a)(1) and 35(c) before the December 2024 amendment (text not vendored)")
 /// The December 1, 2024 amendment (order of Apr. 2, 2024) transferred Rule
 /// 35 into Rule 40 and moved the period to FRAP 40(d)(1), unchanged.
-deadline rehearing-period: 14.days after EnteredOnAppeal(Judgment) counted_by frap26 effective [2024-12-01, ..) known_at 2024-04-02 supersedes rehearing-period@2009-12-01 delegable_to [LocalRule, CaseOrder] cite "FRAP 40(d)(1)"
+deadline rehearing-period: 14.days after EnteredOnAppeal(Judgment) counted_by frap26 effective [2024-12-01, ..) known_at 2024-04-02 supersedes rehearing-period@2009-12-01 delegable { to [LocalRule, CaseOrder], op set } cite "FRAP 40(d)(1)"
 
 test "a rehearing petition is due 14 days after entry of judgment" cite "FRAP 40(d)(1)"
 {

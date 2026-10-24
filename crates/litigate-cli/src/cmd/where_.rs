@@ -59,7 +59,7 @@ pub fn overrides(packages: &[&hir::Package], target: &str) -> Vec<Value> {
             let mut found: Vec<Value> = meta_of(d)
                 .into_iter()
                 .flat_map(|m| m.relations.iter().map(move |r| (m, r)))
-                .filter(|(_, r)| relation_target(r).is_some_and(|t| local(t) == target))
+                .filter(|(_, r)| local(relation_target(r)) == target)
                 .map(|(m, r)| {
                     let relation = serde_json::to_value(r).ok().and_then(|v| v.get("relation").cloned());
                     json!({"package": p.manifest.name, "id": m.id, "relation": relation, "span": m.span, "cite": m.cite})

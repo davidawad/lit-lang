@@ -152,7 +152,7 @@ pub fn active<'v>(
     known_at: Option<&str>,
 ) -> Result<&'v Version<usize>, Inactive> {
     let v = set
-        .as_of(date, known_at)
+        .as_of_in(date, known_at, world.commenced(date))
         .map_err(|miss| Inactive::Miss(encoded(world, set, date, miss)))?;
     match suspensions(world, key, known_at).into_iter().find(|s| {
         s.window.contains(date)

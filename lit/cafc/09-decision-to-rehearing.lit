@@ -250,7 +250,7 @@ state rehearing-relief-granted: "Rehearing Granted — Panel Modifies, or Case R
 /// that local rule, and an order may still change the time.
 rule duty rehearing-petition cite "Fed. Cir. R. 40(f)(1)"
 {
-  deadline rehearing-period: 30.days after Entered(PanelJudgment) counted_by frap26 effective [2025-12-01, ..) known_at 2025-12-01 delegable_to [CaseOrder] cite "Fed. Cir. R. 40(f)(1); FRAP 40(d)(1)"
+  deadline rehearing-period: 30.days after Entered(PanelJudgment) counted_by frap26 effective [2025-12-01, ..) known_at 2025-12-01 delegable { to CaseOrder, op set } cite "Fed. Cir. R. 40(f)(1); FRAP 40(d)(1)"
 }
 
 /// FRAP 41(b): the mandate must issue 7 days after entry of an order
@@ -261,7 +261,7 @@ rule duty rehearing-petition cite "Fed. Cir. R. 40(f)(1)"
 /// days, under FRAP 26(a).
 rule duty mandate-issuance cite "FRAP 41(b)"
 {
-  deadline mandate-period: 7.days after Entered(RehearingDenial) counted_by frap26 effective [2018-12-01, ..) known_at 2018-04-26 delegable_to [CaseOrder] cite "FRAP 41(b)"
+  deadline mandate-period: 7.days after Entered(RehearingDenial) counted_by frap26 effective [2018-12-01, ..) known_at 2018-04-26 delegable { to CaseOrder, op set } cite "FRAP 41(b)"
 }
 
 test "a rehearing petition is due 30 days after entry of judgment" cite "Fed. Cir. R. 40(f)(1)"

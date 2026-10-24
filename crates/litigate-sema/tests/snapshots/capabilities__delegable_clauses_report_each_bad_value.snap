@@ -1,0 +1,15 @@
+---
+source: crates/litigate-sema/tests/capabilities.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:11:58 L2007 `delegable_to` is replaced by a typed capability naming what the lower authority may do: `delegable { to <Level>, op <op> [, max N.days] [, cite ...] }` [fix: \"delegable { to CaseOrder, op set }\"]",
+    "pkgs/demo/main.lit:12:58 L2007 `delegable_to` is replaced by a typed capability naming what the lower authority may do: `delegable { to <Level>, op <op> [, max N.days] [, cite ...] }` [fix: \"delegable { to [LocalRule, CaseOrder], op set }\"]",
+    "pkgs/demo/main.lit:13:58 L2007 a `delegable` capability names `to`: `delegable { to <Level>, op <op> }`",
+    "pkgs/demo/main.lit:14:58 L2007 a `delegable` capability names `op`: `delegable { to <Level>, op <op> }`",
+    "pkgs/demo/main.lit:15:87 L2007 `stretch` is not a delegable operation: expected `extend`, `shorten`, `set`, `suspend`, `compute_method`",
+    "pkgs/demo/main.lit:16:100 L2007 `max` bounds an extension: it needs `op extend` or `op set`",
+    "pkgs/demo/main.lit:17:73 L1002 cannot find authority `Nobody`",
+    "pkgs/demo/main.lit:20:92 L2007 `to` is given more than once [fix: \"\"]",
+    "pkgs/demo/main.lit:21:72 L0001 expected an identifier, found `,`",
+]

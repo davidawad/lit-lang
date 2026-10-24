@@ -93,11 +93,7 @@ fn coverage(
             let temporary = g.to == lifetime.to
                 && set.versions.iter().any(|v| {
                     v.in_force.to.as_ref() == Some(&g.from)
-                        && world.decls[v.decl]
-                            .meta
-                            .relations
-                            .iter()
-                            .any(|r| !matches!(r, Relation::DelegableTo(_)))
+                        && !world.decls[v.decl].meta.relations.is_empty()
                 });
             !revived && !temporary && !gaps(g, &suspended).is_empty()
         })
@@ -178,7 +174,6 @@ pub fn relation_key(r: &Relation) -> &'static str {
         Relation::Notwithstanding(_) => "notwithstanding",
         Relation::Supersedes(_) => "supersedes",
         Relation::Revives(_) => "revives",
-        Relation::DelegableTo(_) => "delegable_to",
         Relation::Override(_) => "override",
     }
 }

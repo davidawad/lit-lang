@@ -5,11 +5,11 @@ use super::cx::{first_expr, first_ref, flag, Cx};
 use crate::db::parse::tree::{ArmItem, Atom, Expr, ExprKind, Field, Item, Name, RefPath};
 use crate::db::span::Report;
 use crate::hir::{
-    Adoption, Anchor, Chain, Counting, DayUnit, Deadline, Designated, Direction, DueEnd,
-    EndOfMonth, RollOn, ServiceTime, ShortPeriod, Transition, TransitionArm, Type, Value,
+    Adoption, Anchor, Chain, CharacterKind, Counting, DayUnit, Deadline, Designated, Direction,
+    DueEnd, EndOfMonth, RollOn, ServiceTime, ShortPeriod, Transition, TransitionArm, Type, Value,
     SERVICE_METHODS,
 };
-use crate::resolve::sig::{TypeSig, ValueKind};
+use crate::resolve::sig::{clauses_of, TypeSig, ValueKind};
 use crate::resolve::suggest;
 use litigate_base::{Applicability, DiagnosticCode as C};
 use std::collections::BTreeMap;
@@ -139,6 +139,7 @@ impl Cx<'_, '_> {
         let forum = self.forum(name, o.get("forum"), counted_by, counting.is_some());
         let adoption = o.get("forum").and_then(|f| self.adoption(f));
         let obligation = self.obligation(name, opts, &o, rule);
+        let characterization = self.characterized(item, opts, &o);
         let (amount, unit) = period?;
         Some(Deadline {
             meta,
@@ -159,6 +160,7 @@ impl Cx<'_, '_> {
             extend: obligation.extend,
             waive: obligation.waive,
             designated,
+            characterization,
         })
     }
 
@@ -243,6 +245,26 @@ impl Cx<'_, '_> {
                 ),
             )),
         }
+    }
+
+    /// The deadline's `characterization` (options `opts`, indexed `o`),
+    /// and the capabilities a jurisdictional one forbids (L2009).
+    fn characterized(
+        &mut self,
+        item: &Item,
+        opts: &[Field],
+        o: &BTreeMap<&str, &Field>,
+    ) -> Option<crate::hir::Characterization> {
+        let characterization = o
+            .get("characterization")
+            .and_then(|f| self.characterization(f));
+        if characterization
+            .as_ref()
+            .is_some_and(|c| c.kind == CharacterKind::Jurisdictional)
+        {
+            self.jurisdictional(clauses_of(item), opts);
+        }
+        characterization
     }
 
     /// `designated p` of deadline `name`: `p` is a `Date` parameter of the

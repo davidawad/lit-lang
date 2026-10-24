@@ -48,6 +48,10 @@ pub struct CheckedCase {
     /// creation order, with how each ended (or that it is still open at
     /// `as_of`).
     pub obligations: Vec<Obligation>,
+    /// The marking at `as_of`: the node of each concurrent track, the
+    /// first (the posture in `case.start`) first; empty when replay did
+    /// not reach `as_of`.
+    pub marking: Vec<String>,
 }
 
 /// One obligation instance (SPEC §5.6): created by a trigger event,
@@ -215,6 +219,7 @@ pub fn check_source(file: &str, text: &str, env: Env<'_>) -> CheckedCase {
             diagnostics,
             trace: Vec::new(),
             obligations: Vec::new(),
+            marking: Vec::new(),
         };
     };
     let mut checked = check(case, &resolved.spans, env);
@@ -232,7 +237,13 @@ pub fn check(mut case: hir::Case, spans: &CaseSpans, env: Env<'_>) -> CheckedCas
     let Some(used) = validate::pins(&case, env.packages, env.lock, spans, &mut out) else {
         return done(case, out, Replayed::default());
     };
-    let graph = Graph::new(used, env.packages);
+    let mut graph = Graph::new(used, env.packages);
+    // The matter is one proceeding, commenced on its first event: a
+    // version applying only to proceedings commenced in a window (SPEC
+    // §5.4) is judged by that date throughout.
+    graph
+        .world
+        .set_commenced(case.events.iter().map(|e| e.date.clone()).min());
     validate::parties(&case, &graph, spans, &mut out);
     let start = case
         .start
@@ -271,6 +282,7 @@ fn done(case: hir::Case, mut diagnostics: Vec<Diagnostic>, replayed: Replayed) -
         diagnostics,
         trace: replayed.trace,
         obligations: replayed.obligations,
+        marking: replayed.marking,
     }
 }
 

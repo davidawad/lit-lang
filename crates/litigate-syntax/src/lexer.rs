@@ -92,16 +92,7 @@ const UNIT_SUFFIXES: [&str; 8] = [
 /// Words reserved for constructs a later edition adds (SPEC §2): the
 /// lexer reports each as L0007 wherever it appears as an identifier, so
 /// no source written today can collide with that syntax.
-pub const RESERVED_WORDS: [&str; 8] = [
-    "world",
-    "layer",
-    "precedent",
-    "overrule",
-    "delegable",
-    "lock",
-    "grant",
-    "characterization",
-];
+pub const RESERVED_WORDS: [&str; 5] = ["world", "layer", "precedent", "overrule", "lock"];
 
 /// Words reserved for the refinement surface syntax of the SMT tier
 /// (SPEC §2.1): L0009 wherever they appear, in the grammar's `where`

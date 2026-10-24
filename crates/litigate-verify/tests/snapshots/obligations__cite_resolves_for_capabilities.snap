@@ -1,0 +1,90 @@
+---
+source: crates/litigate-verify/tests/obligations.rs
+expression: "pair(Obligation::CiteResolves, & one(&capability_cites(\"FRCP 6(b)\")), &\none(&capability_cites(\"FRCP 99(b)\")))"
+---
+{
+  "pass": {
+    "finding": {
+      "name": "cite-resolves",
+      "status": "passed",
+      "count": 0,
+      "examples": [],
+      "evidence": {
+        "checked": 12,
+        "subjects": "cites"
+      }
+    },
+    "accepted": false,
+    "diagnostics": []
+  },
+  "fail": {
+    "finding": {
+      "name": "cite-resolves",
+      "status": "failed",
+      "count": 3,
+      "examples": [
+        "pkgs/demo/main.lit:55:1: L1010 `FRCP 99(b)` binds to source `frcp`, but `sources/frcp.txt` has no `## Rule 99` heading",
+        "pkgs/demo/main.lit:55:1: L1010 `FRCP 99(b)` binds to source `frcp`, but `sources/frcp.txt` has no `## Rule 99` heading",
+        "pkgs/demo/main.lit:63:1: L1010 `FRCP 99(b)` binds to source `frcp`, but `sources/frcp.txt` has no `## Rule 99` heading"
+      ],
+      "evidence": {
+        "checked": 12,
+        "subjects": "cites"
+      }
+    },
+    "accepted": false,
+    "diagnostics": [
+      {
+        "code": "L1010",
+        "severity": "error",
+        "span": {
+          "file": "pkgs/demo/main.lit",
+          "line": 55,
+          "col": 1,
+          "end_line": 58,
+          "end_col": 2
+        },
+        "message": "`FRCP 99(b)` binds to source `frcp`, but `sources/frcp.txt` has no `## Rule 99` heading",
+        "notes": [
+          {
+            "message": "cite a pinpoint that exists in the vendored text, or mark the cite `?(\"why\")` until the source is vendored"
+          }
+        ]
+      },
+      {
+        "code": "L1010",
+        "severity": "error",
+        "span": {
+          "file": "pkgs/demo/main.lit",
+          "line": 55,
+          "col": 1,
+          "end_line": 58,
+          "end_col": 2
+        },
+        "message": "`FRCP 99(b)` binds to source `frcp`, but `sources/frcp.txt` has no `## Rule 99` heading",
+        "notes": [
+          {
+            "message": "cite a pinpoint that exists in the vendored text, or mark the cite `?(\"why\")` until the source is vendored"
+          }
+        ]
+      },
+      {
+        "code": "L1010",
+        "severity": "error",
+        "span": {
+          "file": "pkgs/demo/main.lit",
+          "line": 63,
+          "col": 1,
+          "end_line": 63,
+          "end_col": 191
+        },
+        "message": "`FRCP 99(b)` binds to source `frcp`, but `sources/frcp.txt` has no `## Rule 99` heading",
+        "notes": [
+          {
+            "message": "cite a pinpoint that exists in the vendored text, or mark the cite `?(\"why\")` until the source is vendored"
+          }
+        ]
+      }
+    ]
+  }
+}

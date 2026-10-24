@@ -57,7 +57,9 @@ rule duty answer-duty cite "FRCP 12(a)(1)(A)(i)"
   deadline answer-period: 21.days from Served(complaint) counted_by frcp6
 }
 
-deadline brief-period: 7.days before Hearing() counted_by frcp6 delegable_to [CaseOrder]
+deadline brief-period: 7.days before Hearing() counted_by frcp6 delegable { to CaseOrder, op extend, max 7.days, cite "FRCP 6(b)(1)" }
+
+grant emergency on [brief-period] effective [2025-03-15, 2025-06-13) cite "FRCP 87(c)(2)" { unlock }
 
 deadline reply-period: 14.days after Served(complaint) counted_by frcp6 notwithstanding answer-period cite "FRCP 12(a)(4)"
 

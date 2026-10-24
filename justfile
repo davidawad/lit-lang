@@ -20,7 +20,10 @@ install:
     command -v cargo-audit >/dev/null 2>&1 || cargo install cargo-audit --locked
     command -v cargo-deny >/dev/null 2>&1 || cargo install cargo-deny --locked
     command -v cargo-machete >/dev/null 2>&1 || cargo install cargo-machete --locked
-    just lit-merge-driver
+    just merge-drivers
+
+# Register every git merge driver `.gitattributes` names in this clone.
+merge-drivers: lit-merge-driver tree-sitter-merge-driver
 
 # Register the `litlock` git merge driver `.gitattributes` names for every
 # `Lit.lock` (SPEC §4.2) in this clone. Idempotent; a no-op outside git.
@@ -30,6 +33,19 @@ lit-merge-driver:
     git rev-parse --git-dir > /dev/null 2>&1 || exit 0
     git config merge.litlock.name "Lit.lock package-by-package merge (litigate lock --merge)"
     git config merge.litlock.driver 'cargo run -q --manifest-path "$(git rev-parse --show-toplevel)/Cargo.toml" -p litigate-cli -- lock --merge %O %A %B > /dev/null'
+
+# Register the `tsgenerate` git merge driver `.gitattributes` names for the
+# generated tree-sitter parser (editors/tree-sitter-litigate/src). When both
+# sides changed it, the merge keeps ours (`true` leaves %A as is), so two
+# branches changing different grammar rules merge and rebase cleanly; then
+# `just tree-sitter-generate` regenerates it from the merged grammar. Needs
+# neither node nor cargo. Idempotent; a no-op outside git.
+tree-sitter-merge-driver:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    git rev-parse --git-dir > /dev/null 2>&1 || exit 0
+    git config merge.tsgenerate.name "generated tree-sitter parser: keep ours, then just tree-sitter-generate"
+    git config merge.tsgenerate.driver true
 
 # Run the CLI (release build) with any extra args, e.g. `just run describe`.
 run *ARGS:
@@ -206,7 +222,7 @@ nix-check:
 
 # The single CI entry point: fast, deterministic gates only. Coverage,
 # audit, and deny hit the network/build cache so they're last.
-ci: fmt-check lint lit-sync-check test ts-test doctest cov cov-litigate audit deny
+ci: fmt-check lint lit-sync-check tree-sitter-test test ts-test doctest cov cov-litigate audit deny
     @echo "ci: all gates passed"
 
 clean:
@@ -236,7 +252,7 @@ lit_build_dir := "target/lit-build"
 # them, as litgraph-packs embeds them). Run it after a merge or rebase
 # touching lit/: the Lit.lock merge driver leaves a package both sides
 # changed unmerged (L1007) until it does.
-lit-sync: lit-merge-driver
+lit-sync: merge-drivers
     #!/usr/bin/env bash
     set -euo pipefail
     out="{{lit_build_dir}}"
@@ -296,19 +312,36 @@ lit-test:
 
 # tree-sitter grammar (editors/tree-sitter-litigate): regenerating the parser
 # from grammar.js must reproduce the committed src/ byte for byte, then the
-# corpus (test/corpus) and highlight (test/highlight) tests must pass. Uses a
-# `tree-sitter` on PATH when it is the pinned version, else npx (needs node).
-# (Named tree-sitter-test: the ts-* recipes belong to packages/litigate-ts.)
+# corpus (test/corpus) and highlight (test/highlight) tests must pass, and
+# two branches changing different grammar rules must rebase cleanly
+# (script/merge-test). Uses a `tree-sitter` on PATH when it is the pinned
+# version, else npx (needs node).
+# (Named tree-sitter-*: the ts-* recipes belong to packages/litigate-ts.)
 ts_cli_version := "0.27.1"
+ts_cli := "if tree-sitter --version 2>/dev/null | grep -q ' " + ts_cli_version + "'; then ts=(tree-sitter); else ts=(npx --yes tree-sitter-cli@" + ts_cli_version + "); fi"
 tree-sitter-test:
     #!/usr/bin/env bash
     set -euo pipefail
     cd editors/tree-sitter-litigate
-    if tree-sitter --version 2>/dev/null | grep -q " {{ts_cli_version}}"; then ts=(tree-sitter); \
-    else ts=(npx --yes "tree-sitter-cli@{{ts_cli_version}}"); fi
+    {{ts_cli}}
+    before="$(mktemp -d)"
+    trap 'rm -rf "$before"' EXIT
+    cp -R src "$before/"
     "${ts[@]}" generate
-    git diff --exit-code --stat -- src || { echo "tree-sitter-test: src/ is stale; commit the regenerated parser" >&2; exit 1; }
+    diff -r -q "$before/src" src || { echo "tree-sitter-test: src/ is stale; run just tree-sitter-generate and commit src/" >&2; exit 1; }
     "${ts[@]}" test
+    script/merge-test "${ts[@]}"
+
+# Regenerate the tree-sitter parser (editors/tree-sitter-litigate/src) from
+# grammar.js and grammar/*.js. Run it after editing the grammar, and after a
+# merge or rebase touching the grammar: the tsgenerate merge driver keeps
+# our parser when both sides changed it.
+tree-sitter-generate:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    cd editors/tree-sitter-litigate
+    {{ts_cli}}
+    "${ts[@]}" generate
 
 # Editor modes (editors/{emacs,helix,nvim}): Emacs ERT batch suite, Helix
 # queries + `hx --health`, headless Neovim (editors/litigate-editors/tests).

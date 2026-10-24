@@ -63,6 +63,13 @@ driver (`.gitattributes`; `just lit-sync` registers it). After a merge or
 rebase touching `lit/`, run `just lit-sync`: a package both sides changed
 is left with an unmerged digest (L1007) until it does.
 
+The generated tree-sitter parser (`editors/tree-sitter-litigate/src`) is
+committed and merges through the `tsgenerate` driver, which keeps ours
+when both sides changed it (`just lit-sync` registers it too). After a
+merge or rebase touching the grammar, run `just tree-sitter-generate` and
+commit `src/`; `just tree-sitter-test` (in `just ci`) fails while it is
+stale.
+
 `docs/litigate/TUTORIAL.md` is the four-step walkthrough (write a rule,
 test it, write a case, run solve); `docs/litigate/SPEC.md` is normative.
 Over MCP the same toolchain is the `litigate_describe`, `litigate_check`,

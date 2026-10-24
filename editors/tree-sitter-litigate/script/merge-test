@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+# Two branches changing different grammar rules rebase (and merge) cleanly
+# once the `tsgenerate` merge driver is registered, and `tree-sitter
+# generate` then yields a parser with both changes (lg-flu.37). Without the
+# driver the same rebase conflicts on src/parser.c.
+#
+# Usage: script/merge-test <tree-sitter command...>
+#   e.g. script/merge-test npx --yes tree-sitter-cli@0.27.1
+# Run from anywhere; `just tree-sitter-test` runs it.
+set -euo pipefail
+[ "$#" -gt 0 ] || { echo "usage: $0 <tree-sitter command...>" >&2; exit 1; }
+ts=("$@")
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+root="$(cd "$here/../.." && pwd)"
+rel="editors/tree-sitter-litigate"
+
+tmp="$(mktemp -d)"
+trap 'rm -rf "$tmp"' EXIT
+mkdir -p "$tmp/$rel"
+cp "$root/.gitattributes" "$tmp/"
+cp -R "$here/grammar.js" "$here/grammar" "$here/src" "$here/tree-sitter.json" "$here/package.json" "$tmp/$rel/"
+
+fail() { echo "merge-test: $*" >&2; exit 1; }
+g() { git -C "$tmp" -c user.name=merge-test -c user.email=merge-test@invalid -c commit.gpgsign=false "$@"; }
+generate() { (cd "$tmp/$rel" && "${ts[@]}" generate); }
+# Change one grammar rule, regenerate the parser, commit both.
+change() { # branch, sed expression, message
+  g checkout -q -b "$1" base
+  sed -i.bak "$2" "$tmp/$rel/grammar/values.js"
+  rm "$tmp/$rel/grammar/values.js.bak"
+  cmp -s "$here/grammar/values.js" "$tmp/$rel/grammar/values.js" && fail "$1: the edit did not apply"
+  generate
+  g add -A
+  g commit -q -m "$3"
+}
+
+g init -q
+g add -A
+g commit -q -m base
+g branch -q -m base
+change a "s/boolean: _ => choice('true', 'false')/boolean: _ => choice('true', 'false', 'yes')/" "a: boolean yes"
+change b "s/hole: \$ => prec.right(seq('?',/hole: \$ => prec.right(seq(choice('?', 'unknown'),/" "b: hole unknown"
+
+# Without the driver the generated parser conflicts.
+b="$(g rev-parse b)"
+g checkout -q b
+if g rebase -q a > /dev/null 2>&1; then fail "rebase without the driver did not conflict: the test edits are too close"; fi
+g diff --name-only --diff-filter=U | grep -qx "$rel/src/parser.c" || fail "rebase without the driver failed, but not on src/parser.c"
+g rebase --abort
+
+# With it, the rebase is clean and keeps a's (ours) parser until regenerated.
+just --justfile "$root/justfile" --working-directory "$tmp" tree-sitter-merge-driver
+g rebase -q a > /dev/null || fail "rebase conflicted with the tsgenerate driver registered"
+for f in parser.c grammar.json node-types.json; do
+  g diff --quiet a HEAD -- "$rel/src/$f" || fail "rebase did not keep ours for src/$f"
+done
+grep -q "'yes'" "$tmp/$rel/grammar/values.js" || fail "rebased grammar lost a's rule"
+grep -q "'unknown'" "$tmp/$rel/grammar/values.js" || fail "rebased grammar lost b's rule"
+generate
+for sym in anon_sym_yes anon_sym_unknown; do
+  grep -q "$sym" "$tmp/$rel/src/parser.c" || fail "regenerated parser lacks $sym"
+done
+
+# A merge resolves the same way.
+g checkout -q -f -b m "$b"
+g merge -q --no-edit a > /dev/null || fail "merge conflicted with the tsgenerate driver registered"
+g diff --quiet "$b" HEAD -- "$rel/src" || fail "merge did not keep ours for src/"
+echo "merge-test: two grammar branches rebase and merge cleanly; the regenerated parser has both"

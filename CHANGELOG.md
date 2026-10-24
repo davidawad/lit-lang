@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **The tree-sitter parser merges without conflicts** (lg-flu.37). The
+  generated `editors/tree-sitter-litigate/src/{parser.c,grammar.json,node-types.json}`
+  stay committed (the crate's `build.rs` and editor packages compile
+  them) and get the `tsgenerate` git merge driver, which keeps ours when
+  both sides changed them, so two branches changing different grammar
+  rules rebase cleanly. `just tree-sitter-generate` regenerates them from
+  the merged grammar; `just tree-sitter-merge-driver` (and `just
+  merge-drivers`, run by `just install` and `just lit-sync`) registers the
+  driver. `just ci` now runs `just tree-sitter-test`, which fails on a
+  stale parser and runs `script/merge-test`.
+
 - **Reserved typed guard operations in patches** (lg-flu.35; SPEC §3.6,
   PM ruling 2026-10-23 on L2007). A later decision or order that narrows,
   widens or replaces an edge's guard will be written explicitly, with its

@@ -60,14 +60,38 @@ registers the `lit` and `case` file types.
 ## Commands
 
 ```bash
-just tree-sitter-test  # regenerate (must match committed src/), tree-sitter test
+just tree-sitter-generate  # regenerate src/ from grammar.js and grammar/*.js
+just tree-sitter-test      # regenerate (must match committed src/), tree-sitter test, script/merge-test
 cargo nextest run -p tree-sitter-litigate   # bindings + conformance (part of the workspace gate)
 ```
 
-`just tree-sitter-test` uses `tree-sitter` from `PATH` when it is the pinned version
-(0.27.1, also in `package.json`). Otherwise it uses `npx`. After editing
-`grammar.js` or `grammar/*.js`, run `tree-sitter generate` here and commit
-`src/` with the change. CI fails when the committed parser is stale.
+The recipes use `tree-sitter` from `PATH` when it is the pinned version
+(0.27.1, also in `package.json`). Otherwise they use `npx`. After editing
+`grammar.js` or `grammar/*.js`, run `just tree-sitter-generate` and commit
+`src/` with the change. `just ci` and CI fail when the committed parser is
+stale.
+
+## Merging grammar changes
+
+`src/` stays committed: the crate's `build.rs` compiles `src/parser.c`, so
+`cargo build` needs no node, and editor packages that build a grammar from
+its repository (nvim-treesitter, Helix) expect it there. Two branches that
+change different grammar rules both rewrite `src/parser.c`, though, so a
+text merge of it always conflicts. `.gitattributes` gives the generated
+`src/parser.c`, `src/grammar.json` and `src/node-types.json` the
+`tsgenerate` merge driver, which keeps ours when both sides changed them
+(no node or cargo needed). The grammar sources merge as text; then:
+
+```bash
+just tree-sitter-merge-driver   # once per clone (just install and just lit-sync do it)
+git rebase origin/main          # or git merge: no conflict in src/
+just tree-sitter-generate       # regenerate src/ from the merged grammar, then commit it
+```
+
+`script/merge-test` (run by `just tree-sitter-test`) checks this: in a
+scratch repository, two branches changing different grammar rules conflict
+on `src/parser.c` without the driver, rebase and merge cleanly with it,
+and regenerate into a parser with both changes.
 
 ## Conformance
 

@@ -3,3 +3,15 @@
 # do it). A package both sides changed gets an unmerged digest, so the lock
 # stays stale (L1007) until `just lit-sync` regenerates it.
 Lit.lock merge=litlock
+
+# The tree-sitter parser (editors/tree-sitter-litigate/src) is generated
+# from grammar.js and grammar/*.js and committed (the crate's build.rs and
+# editor packages compile src/parser.c). Two branches changing different
+# grammar rules both rewrite it, so a text merge always conflicts. The
+# `tsgenerate` driver (`just tree-sitter-merge-driver`, run by `just
+# install` and `just lit-sync`) resolves it to ours without node or cargo;
+# `just tree-sitter-generate` then regenerates it from the merged grammar,
+# and `just tree-sitter-test` (in `just ci`) fails while it is stale.
+editors/tree-sitter-litigate/src/parser.c merge=tsgenerate
+editors/tree-sitter-litigate/src/grammar.json merge=tsgenerate
+editors/tree-sitter-litigate/src/node-types.json merge=tsgenerate

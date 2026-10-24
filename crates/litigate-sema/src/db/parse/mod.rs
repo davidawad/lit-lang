@@ -4,6 +4,10 @@
 //! Lowering is total over recovered trees: a declaration missing a required
 //! part (already reported as L0xxx by the parser) is dropped, so later
 //! queries only see well-formed items while the LSP keeps working.
+//!
+//! The tree is position-independent: every range is anchored at its
+//! top-level node ([`crate::db::span`]), and [`anchors`] is the side table
+//! that locates them.
 mod expr;
 mod fields;
 mod items;
@@ -11,14 +15,14 @@ pub mod tree;
 
 pub(crate) use expr::{is_expr, ref_path};
 
-use crate::db::span::{Report, TextRange};
+use crate::db::span::{Anchors, Report, TextRange};
 use litigate_syntax::{SyntaxKind as K, SyntaxNode, SyntaxToken};
-use tree::{ItemTree, Name};
+use tree::{ItemTree, Name, Ranges};
 
 /// A CST node or token.
 pub(crate) type SyntaxElement = rowan::NodeOrToken<SyntaxNode, SyntaxToken>;
 
-/// Parse output: the tree and every syntax report.
+/// Parse output: the tree and every syntax report, their ranges anchored.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct Parsed {
     /// Item tree (recovered on error).
@@ -33,16 +37,46 @@ pub fn parse(src: &str) -> Parsed {
     lower(&litigate_syntax::parse_lit(src))
 }
 
-/// Lowers a parsed `.lit` file: its syntax errors plus the item tree.
+/// Lowers a parsed `.lit` file: its syntax errors plus the item tree, every
+/// range anchored at [`anchors`].
 #[must_use]
 pub fn lower(parse: &litigate_syntax::Parse) -> Parsed {
-    let reports: Vec<Report> = parse.errors().iter().map(syntax_report).collect();
+    let table = anchors(parse);
+    let mut reports: Vec<Report> = parse.errors().iter().map(syntax_report).collect();
     let mut cx = Lower;
-    let tree = parse
+    let mut tree = parse
         .lit_file()
         .map(|file| cx.file(file.syntax()))
         .unwrap_or_default();
+    let mut anchor = |r: &mut TextRange| *r = table.anchor(*r);
+    tree.ranges_mut(&mut anchor);
+    for report in &mut reports {
+        anchor(&mut report.range);
+        for (range, _) in &mut report.notes {
+            range.ranges_mut(&mut anchor);
+        }
+        for (range, _, _) in &mut report.fixes {
+            anchor(range);
+        }
+    }
     Parsed { tree, reports }
+}
+
+/// Where each top-level node of a parsed `.lit` file starts: its first
+/// significant byte, so trivia and doc comments around it never move it.
+#[must_use]
+pub fn anchors(parse: &litigate_syntax::Parse) -> Anchors {
+    Anchors(
+        parse
+            .lit_file()
+            .map(|file| {
+                file.syntax()
+                    .children()
+                    .map(|n| significant_range(&n).start)
+                    .collect()
+            })
+            .unwrap_or_default(),
+    )
 }
 
 pub(crate) fn syntax_report(e: &litigate_syntax::SyntaxError) -> Report {

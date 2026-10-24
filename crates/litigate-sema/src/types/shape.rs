@@ -259,7 +259,7 @@ pub fn matching(
             let _ = write!(s, ", {v} => ?");
             s
         });
-        let at = TextRange::new(r.end.saturating_sub(1), r.end.saturating_sub(1));
+        let at = r.at_last();
         let names = missing
             .iter()
             .map(|v| format!("`{v}`"))

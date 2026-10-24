@@ -322,11 +322,10 @@ fn namespace_duplicates(db: &dyn salsa::Database, pkg: PackageInput) -> Vec<Diag
                         .filter_map(|(i, _)| item_name(i))
                         .find(|n| n.text == *name)
                         .map_or(TextRange::default(), |n| n.range);
-                    let index = LineIndex::new(file.text(db));
                     out.push(
                         Report::new(C::DuplicateName, range, format!("`{name}` is also declared in module `{first}`"))
                             .note("names are unique across a package: node ids lower without module prefixes")
-                            .to_diagnostic(&FileId(file.path(db)), &index),
+                            .to_diagnostic(&FileId(file.path(db)), &span_map(db, *file)),
                     );
                 }
                 Some(_) => {}

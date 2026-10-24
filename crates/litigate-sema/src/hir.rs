@@ -14,6 +14,7 @@ pub(crate) use case::own_name;
 mod expr;
 mod graph;
 mod logic;
+pub mod spans;
 mod temporal;
 mod value;
 

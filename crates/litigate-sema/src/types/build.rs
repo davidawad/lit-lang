@@ -16,18 +16,22 @@ mod package;
 pub use package::{check_package, expected_lock, PackageCheck};
 
 use crate::db::inputs::SourceFile;
-use crate::db::parse::tree::{dotted, Item, ItemKind, ItemTree, Name};
-use crate::db::queries::{item_tree, manifest, signature};
-use crate::db::span::{sort_diagnostics, Report, TextRange};
+use crate::db::parse::tree::{dotted, Import, Item, ItemKind, ItemTree, Name, TypeRef};
+use crate::db::ids::DeclId;
+use crate::db::queries::{
+    check_decl, decl_item, item_tree, manifest, module_context_of, signature, span_map,
+};
+use crate::db::span::{sort_diagnostics, Encoded, Positions, Report, TextRange};
+use crate::hir::spans::Spans;
 use crate::hir::{self, Declaration, Rule, RuleKind};
 use crate::resolve::scope::Scope;
 use crate::resolve::sig::{clause, clauses_of, flatten, value_of, ValueKind};
 use crate::types::expr::Checker;
 use cx::Cx;
 use imports::{import_signatures, imports, pack_signatures};
-use litigate_base::{Applicability, Diagnostic, DiagnosticCode as C, FileId, LineIndex, Span};
+use litigate_base::{Applicability, Diagnostic, DiagnosticCode as C, FileId, Span};
 use serde::Serialize;
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 /// An explicit hole and its reason (SPEC §7 `holes`).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
@@ -176,12 +180,15 @@ fn package_header(
     }
 }
 
-/// Checks one module and builds its HIR.
+/// Checks one module and builds its HIR: the module-level checks
+/// (imports, duplicates, the package header, information sets) here, and
+/// each top-level declaration through its own [`crate::db::queries::check_decl`],
+/// whose position-free result is located with the file's [`SpanMap`].
 pub fn check_module(db: &dyn salsa::Database, file: SourceFile) -> ModuleCheck {
     let parsed = item_tree(db, file);
     let tree = &parsed.tree;
     let file_id = FileId(file.path(db));
-    let index = LineIndex::new(file.text(db));
+    let map = span_map(db, file);
     let mut reports = parsed.reports.clone();
     let m = manifest(db, file.package(db))
         .as_ref()
@@ -193,48 +200,43 @@ pub fn check_module(db: &dyn salsa::Database, file: SourceFile) -> ModuleCheck {
     if let (Some(header), Some(m)) = (&tree.package, m) {
         package_header(header, m, &mut reports);
     }
-    let (import_sigs, transitive) = import_signatures(db, file);
-    let links = tree
-        .items
-        .iter()
-        .any(|i| matches!(i.kind, ItemKind::Link(_) | ItemKind::Instance(..)));
-    let scope = Scope::new(
-        own,
-        tree,
-        &import_sigs,
-        if links {
-            pack_signatures(db, file)
-        } else {
-            Vec::new()
-        },
-    )
-    .with_transitive(transitive);
-    let mut ck = Checker::new(&scope);
-    ck.actors = m
-        .map(|m| m.roles.keys().cloned().collect())
-        .unwrap_or_default();
-    ck.file = Some((&file_id, &index));
-    let mut cx = Cx {
-        ck,
-        manifest: m,
-        links,
-        link_from: None,
-    };
-    let out = items(&mut cx, tree, &index, &file_id);
-    reports.append(&mut cx.ck.reports);
-    let holes = cx
-        .ck
-        .holes
+    let span = |r: TextRange| map.span(&file_id, r);
+    let mut out = Items::default();
+    let mut infos: Vec<InfoMember> = Vec::new();
+    let mut hole_ranges: Vec<(TextRange, Option<String>)> = Vec::new();
+    for index in 0..tree.items.len() {
+        let index = u32::try_from(index).unwrap_or(u32::MAX);
+        let decl = check_decl(db, DeclId::new(db, file, index));
+        reports.extend(decl.reports.iter().cloned());
+        hole_ranges.extend(decl.holes.iter().cloned());
+        infos.extend(decl.infos.iter().cloned());
+        out.groups.extend(decl.groups.iter().cloned());
+        out.starts
+            .extend(decl.starts.iter().map(|(n, r)| (n.clone(), span(*r))));
+        if out.first_node.is_none() {
+            out.first_node = decl.first_node.map(span);
+        }
+        if out.first_link.is_none() {
+            out.first_link = decl.first_link.map(span);
+        }
+        out.declarations
+            .extend(decl.declarations.iter().cloned().map(|mut d| {
+                d.spans_mut(&mut |s| map.decode(s));
+                d
+            }));
+    }
+    info_sets(&infos, &mut reports);
+    let holes = hole_ranges
         .iter()
         .map(|(r, reason)| Hole {
-            span: crate::db::span::to_span(&file_id, &index, *r),
+            span: span(*r),
             reason: reason.clone(),
         })
         .collect();
     let has_error = reports.iter().any(|r| !r.code.is_lint());
     let mut diagnostics: Vec<Diagnostic> = reports
         .iter()
-        .map(|r| r.to_diagnostic(&file_id, &index))
+        .map(|r| r.to_diagnostic(&file_id, &map))
         .collect();
     sort_diagnostics(&mut diagnostics);
     let module = (!has_error).then(|| hir::Module {
@@ -263,25 +265,140 @@ struct Items {
     first_link: Option<Span>,
 }
 
+/// What one top-level declaration's module needs to know: the module's
+/// imports, type aliases and counting rules, and whether it is a links
+/// module. Ranges are anchored, so it is backdated unless one of those
+/// changes.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct ModuleContext {
+    /// `import` declarations.
+    pub imports: Vec<Import>,
+    /// Type aliases by name (the last of a name wins).
+    pub aliases: BTreeMap<String, TypeRef>,
+    /// Counting rules by name (the first of a name) with their item keys.
+    pub countings: BTreeMap<String, BTreeSet<String>>,
+    /// The module declares a `link` or an `instance` (`::` qualification).
+    pub links: bool,
+}
+
+/// The [`ModuleContext`] of `tree`.
+#[must_use]
+pub fn module_context(tree: &ItemTree) -> ModuleContext {
+    let mut cx = ModuleContext {
+        imports: tree.imports.clone(),
+        ..ModuleContext::default()
+    };
+    for (item, _) in flatten(tree) {
+        match &item.kind {
+            ItemKind::TypeAlias(n, t) => {
+                cx.aliases.insert(n.text.clone(), t.clone());
+            }
+            ItemKind::Counting(n, _, fields) => {
+                cx.countings
+                    .entry(n.text.clone())
+                    .or_insert_with(|| fields.iter().map(|f| f.key.text.clone()).collect());
+            }
+            ItemKind::Link(_) | ItemKind::Instance(..) => cx.links = true,
+            _ => {}
+        }
+    }
+    cx
+}
+
+/// One top-level declaration checked: its HIR, whose spans are
+/// [`crate::db::span::Encoded`], and everything else with anchored ranges,
+/// so it is the same wherever the declaration moves in its file.
+#[derive(Debug, Clone, PartialEq, Default)]
+pub struct DeclCheck {
+    /// HIR declarations (a `rule` and the declarations nested in it).
+    pub declarations: Vec<Declaration>,
+    /// `group` declarations.
+    pub groups: Vec<hir::Group>,
+    /// `start` declarations: resolved node and location.
+    pub starts: Vec<(Option<String>, TextRange)>,
+    /// The declaration, if it is a node.
+    pub first_node: Option<TextRange>,
+    /// The declaration, if it is a link or instance.
+    pub first_link: Option<TextRange>,
+    /// Reports.
+    pub reports: Vec<Report>,
+    /// Holes and their reasons.
+    pub holes: Vec<(TextRange, Option<String>)>,
+    /// Decisions in information sets, checked across the module.
+    infos: Vec<InfoMember>,
+}
+
+/// Name resolution and type checking of top-level declaration `decl`, its
+/// HIR spans position-free.
+pub fn check_decl_in<'db>(db: &'db dyn salsa::Database, decl: DeclId<'db>) -> DeclCheck {
+    check_decl_at(db, decl, &Encoded)
+}
+
+/// [`check_decl_in`] with HIR spans placed by `at` (the file's
+/// [`crate::db::span::SpanMap`] places them where they are now: the
+/// reference a located [`crate::db::queries::check_decl`] must equal).
+pub fn check_decl_at<'db>(
+    db: &'db dyn salsa::Database,
+    decl: DeclId<'db>,
+    at: &dyn Positions,
+) -> DeclCheck {
+    let file = decl.file(db);
+    let Some(item) = decl_item(db, decl) else {
+        return DeclCheck::default();
+    };
+    let file_id = FileId(file.path(db));
+    let context = module_context_of(db, file);
+    let m = manifest(db, file.package(db))
+        .as_ref()
+        .ok()
+        .map(|p| &p.manifest);
+    let own = signature(db, file);
+    let (import_sigs, transitive) = import_signatures(db, file);
+    let scope = Scope::new(
+        own,
+        &context.imports,
+        &import_sigs,
+        if context.links {
+            pack_signatures(db, file)
+        } else {
+            Vec::new()
+        },
+    )
+    .with_transitive(transitive);
+    let mut ck = Checker::new(&scope);
+    ck.actors = m
+        .map(|m| m.roles.keys().cloned().collect())
+        .unwrap_or_default();
+    ck.file = Some((&file_id, at));
+    let mut cx = Cx {
+        ck,
+        manifest: m,
+        links: context.links,
+        link_from: None,
+    };
+    let mut out = items(&mut cx, item, context);
+    out.reports = cx.ck.reports;
+    out.holes = cx.ck.holes;
+    out
+}
+
 #[allow(clippy::too_many_lines)] // one arm per declaration kind
-fn items(cx: &mut Cx<'_, '_>, tree: &ItemTree, index: &LineIndex, file: &FileId) -> Items {
-    let span = |r: TextRange| crate::db::span::to_span(file, index, r);
-    let mut out = Items::default();
-    let flat = flatten(tree);
-    let aliases: BTreeMap<String, &crate::db::parse::tree::TypeRef> = flat
-        .iter()
-        .filter_map(|(i, _)| match &i.kind {
-            ItemKind::TypeAlias(n, t) => Some((n.text.clone(), t)),
-            _ => None,
-        })
-        .collect();
-    let local_counting = |name: &str, key: &str| local_counting(tree, name, key);
-    let mut infos: Vec<InfoMember> = Vec::new();
-    for (item, rule) in &flat {
+fn items(cx: &mut Cx<'_, '_>, top: &Item, context: &ModuleContext) -> DeclCheck {
+    let mut out = DeclCheck::default();
+    let aliases: BTreeMap<String, &crate::db::parse::tree::TypeRef> =
+        context.aliases.iter().map(|(n, t)| (n.clone(), t)).collect();
+    let local_counting =
+        |name: &str, key: &str| context.countings.get(name).map(|keys| keys.contains(key));
+    let nested: &[Item] = match &top.kind {
+        ItemKind::Rule(_, _, _, items) => items,
+        _ => &[],
+    };
+    let flat = std::iter::once((top, None)).chain(nested.iter().map(|i| (i, Some(top))));
+    for (item, rule) in flat {
         let d = match &item.kind {
             ItemKind::Start(r) => {
                 let node = cx.value_ref(r, "node", |k| matches!(k, ValueKind::Node { .. }));
-                out.starts.push((node, span(item.range)));
+                out.starts.push((node, item.range));
                 None
             }
             ItemKind::Group(n, label) => {
@@ -295,19 +412,19 @@ fn items(cx: &mut Cx<'_, '_>, tree: &ItemTree, index: &LineIndex, file: &FileId)
             ItemKind::Enum(n, v) => Some(Declaration::Enum(cx.enumeration(n, v))),
             ItemKind::Event(n, p, effect) => cx.event(n, p, effect).map(Declaration::Event),
             ItemKind::Node(n) => {
-                out.first_node.get_or_insert_with(|| span(item.range));
-                let node = cx.node(n, item, *rule);
+                out.first_node.get_or_insert(item.range);
+                let node = cx.node(n, item, rule);
                 if let Some(set) = &node.info {
-                    infos.push(InfoMember::of(n.name.range, set, &node));
+                    out.infos.push(InfoMember::of(n.name.range, set, &node));
                 }
                 Some(Declaration::Node(node))
             }
             ItemKind::Link(e) => {
-                out.first_link.get_or_insert_with(|| span(item.range));
+                out.first_link.get_or_insert(item.range);
                 cx.link(e).map(|l| Declaration::Link(Box::new(l)))
             }
             ItemKind::Instance(b, o, f) => {
-                out.first_link.get_or_insert_with(|| span(item.range));
+                out.first_link.get_or_insert(item.range);
                 cx.instance(b, o, f).map(Declaration::Instance)
             }
             ItemKind::Rule(kind, name, _, nested) => {
@@ -338,7 +455,7 @@ fn items(cx: &mut Cx<'_, '_>, tree: &ItemTree, index: &LineIndex, file: &FileId)
             } => cx
                 .deadline(
                     item,
-                    *rule,
+                    rule,
                     name,
                     amount,
                     direction,
@@ -349,13 +466,13 @@ fn items(cx: &mut Cx<'_, '_>, tree: &ItemTree, index: &LineIndex, file: &FileId)
                 )
                 .map(Declaration::Deadline),
             ItemKind::Counting(n, _, fields) => cx
-                .counting(item, *rule, n, fields)
+                .counting(item, rule, n, fields)
                 .map(Declaration::Counting),
             ItemKind::Calendar(n, _, h) => {
-                cx.calendar(item, *rule, n, h).map(Declaration::Calendar)
+                cx.calendar(item, rule, n, h).map(Declaration::Calendar)
             }
             ItemKind::Transition(n, amends, _, arms) => cx
-                .transition(item, *rule, n, amends, arms)
+                .transition(item, rule, n, amends, arms)
                 .map(Declaration::Transition),
             ItemKind::Authority(chain) => {
                 out.declarations.extend(
@@ -366,7 +483,7 @@ fn items(cx: &mut Cx<'_, '_>, tree: &ItemTree, index: &LineIndex, file: &FileId)
                 None
             }
             ItemKind::Default(n, _, when, then) => Some(Declaration::Default(
-                cx.default_rule(item, *rule, n, when, then),
+                cx.default_rule(item, rule, n, when, then),
             )),
             ItemKind::Exception {
                 name,
@@ -379,7 +496,7 @@ fn items(cx: &mut Cx<'_, '_>, tree: &ItemTree, index: &LineIndex, file: &FileId)
             } => cx
                 .exception(
                     item,
-                    *rule,
+                    rule,
                     name,
                     kind,
                     target,
@@ -394,12 +511,12 @@ fn items(cx: &mut Cx<'_, '_>, tree: &ItemTree, index: &LineIndex, file: &FileId)
         };
         out.declarations.extend(d);
     }
-    info_sets(&infos, &mut cx.ck.reports);
     out
 }
 
 /// A decision in an information set: where, which node and set, and the
 /// choices it offers its actor, as sorted `(label, actor)` pairs.
+#[derive(Debug, Clone, PartialEq, Eq)]
 struct InfoMember {
     at: TextRange,
     node: String,
@@ -449,11 +566,3 @@ fn info_sets(members: &[InfoMember], reports: &mut Vec<Report>) {
     }
 }
 
-/// Whether counting rule `name` has the item `key`; `None` when no rule
-/// of that name is declared in this module.
-fn local_counting(tree: &ItemTree, name: &str, key: &str) -> Option<bool> {
-    flatten(tree).iter().find_map(|(i, _)| match &i.kind {
-        ItemKind::Counting(n, _, f) if n.text == name => Some(f.iter().any(|x| x.key.text == key)),
-        _ => None,
-    })
-}

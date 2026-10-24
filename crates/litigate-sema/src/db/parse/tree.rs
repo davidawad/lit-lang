@@ -355,3 +355,378 @@ pub fn dotted(path: &[Name]) -> String {
         .collect::<Vec<_>>()
         .join(".")
 }
+
+/// Every [`TextRange`] of an item-tree value, visited mutably: how
+/// lowering anchors the tree (see [`crate::db::span`]).
+pub trait Ranges {
+    /// Calls `f` on every range, in no particular order.
+    fn ranges_mut(&mut self, f: &mut dyn FnMut(&mut TextRange));
+}
+
+impl Ranges for TextRange {
+    fn ranges_mut(&mut self, f: &mut dyn FnMut(&mut TextRange)) {
+        f(self);
+    }
+}
+
+impl<T: Ranges> Ranges for Vec<T> {
+    fn ranges_mut(&mut self, f: &mut dyn FnMut(&mut TextRange)) {
+        for x in self {
+            x.ranges_mut(f);
+        }
+    }
+}
+
+impl<T: Ranges> Ranges for Option<T> {
+    fn ranges_mut(&mut self, f: &mut dyn FnMut(&mut TextRange)) {
+        if let Some(x) = self {
+            x.ranges_mut(f);
+        }
+    }
+}
+
+impl<T: Ranges> Ranges for Box<T> {
+    fn ranges_mut(&mut self, f: &mut dyn FnMut(&mut TextRange)) {
+        (**self).ranges_mut(f);
+    }
+}
+
+impl<A: Ranges, B: Ranges> Ranges for (A, B) {
+    fn ranges_mut(&mut self, f: &mut dyn FnMut(&mut TextRange)) {
+        self.0.ranges_mut(f);
+        self.1.ranges_mut(f);
+    }
+}
+
+impl Ranges for Name {
+    fn ranges_mut(&mut self, f: &mut dyn FnMut(&mut TextRange)) {
+        f(&mut self.range);
+    }
+}
+
+impl Ranges for RefPath {
+    fn ranges_mut(&mut self, f: &mut dyn FnMut(&mut TextRange)) {
+        let Self {
+            head,
+            instance,
+            rest,
+            version,
+            range,
+        } = self;
+        head.ranges_mut(f);
+        instance.ranges_mut(f);
+        for (_, n) in rest {
+            n.ranges_mut(f);
+        }
+        version.ranges_mut(f);
+        f(range);
+    }
+}
+
+impl Ranges for Expr {
+    fn ranges_mut(&mut self, f: &mut dyn FnMut(&mut TextRange)) {
+        f(&mut self.range);
+        match &mut self.kind {
+            ExprKind::Number(_)
+            | ExprKind::Money(_)
+            | ExprKind::Duration(_)
+            | ExprKind::Str(_)
+            | ExprKind::Date(_)
+            | ExprKind::Bool(_)
+            | ExprKind::Unit
+            | ExprKind::Hole(_)
+            | ExprKind::Cite(..) => {}
+            ExprKind::Ref(r) => r.ranges_mut(f),
+            ExprKind::Call(r, args) => {
+                r.ranges_mut(f);
+                args.ranges_mut(f);
+            }
+            ExprKind::Unary(_, e) | ExprKind::Paren(e) => e.ranges_mut(f),
+            ExprKind::Binary(_, a, b) => {
+                a.ranges_mut(f);
+                b.ranges_mut(f);
+            }
+            ExprKind::Record(entries) => entries.ranges_mut(f),
+            ExprKind::List(items) => items.ranges_mut(f),
+            ExprKind::Field(e, n) => {
+                e.ranges_mut(f);
+                n.ranges_mut(f);
+            }
+            ExprKind::Match(e, arms) => {
+                e.ranges_mut(f);
+                arms.ranges_mut(f);
+            }
+        }
+    }
+}
+
+impl Ranges for Pattern {
+    fn ranges_mut(&mut self, f: &mut dyn FnMut(&mut TextRange)) {
+        match self {
+            Self::Ref(r) => r.ranges_mut(f),
+            Self::Wildcard(r) => f(r),
+        }
+    }
+}
+
+impl Ranges for TypeRef {
+    fn ranges_mut(&mut self, f: &mut dyn FnMut(&mut TextRange)) {
+        let Self { name, args, range } = self;
+        name.ranges_mut(f);
+        args.ranges_mut(f);
+        f(range);
+    }
+}
+
+impl Ranges for Atom {
+    fn ranges_mut(&mut self, f: &mut dyn FnMut(&mut TextRange)) {
+        match self {
+            Self::Expr(e) => e.ranges_mut(f),
+            Self::Fields(fields) => fields.ranges_mut(f),
+            Self::Interval(from, to) => {
+                from.ranges_mut(f);
+                to.ranges_mut(f);
+            }
+        }
+    }
+}
+
+impl Ranges for Field {
+    fn ranges_mut(&mut self, f: &mut dyn FnMut(&mut TextRange)) {
+        let Self { key, values, range } = self;
+        key.ranges_mut(f);
+        values.ranges_mut(f);
+        f(range);
+    }
+}
+
+impl Ranges for EdgeItem {
+    fn ranges_mut(&mut self, f: &mut dyn FnMut(&mut TextRange)) {
+        let Self {
+            name,
+            name_range,
+            label,
+            from,
+            to,
+            clauses,
+            fields,
+            range,
+        } = self;
+        name.ranges_mut(f);
+        f(name_range);
+        label.ranges_mut(f);
+        from.ranges_mut(f);
+        to.ranges_mut(f);
+        clauses.ranges_mut(f);
+        fields.ranges_mut(f);
+        f(range);
+    }
+}
+
+impl Ranges for NodeItem {
+    fn ranges_mut(&mut self, f: &mut dyn FnMut(&mut TextRange)) {
+        let Self {
+            keyword,
+            name,
+            label,
+            clauses,
+            fields,
+            edges,
+        } = self;
+        keyword.ranges_mut(f);
+        name.ranges_mut(f);
+        label.ranges_mut(f);
+        clauses.ranges_mut(f);
+        fields.ranges_mut(f);
+        edges.ranges_mut(f);
+    }
+}
+
+impl Ranges for HolidayItem {
+    fn ranges_mut(&mut self, f: &mut dyn FnMut(&mut TextRange)) {
+        let Self {
+            name,
+            rule,
+            effective,
+            observed,
+        } = self;
+        name.ranges_mut(f);
+        rule.ranges_mut(f);
+        effective.ranges_mut(f);
+        observed.ranges_mut(f);
+    }
+}
+
+impl Ranges for ArmItem {
+    fn ranges_mut(&mut self, f: &mut dyn FnMut(&mut TextRange)) {
+        let Self {
+            unless,
+            target,
+            range,
+        } = self;
+        unless.ranges_mut(f);
+        target.ranges_mut(f);
+        f(range);
+    }
+}
+
+impl Ranges for TestStmt {
+    fn ranges_mut(&mut self, f: &mut dyn FnMut(&mut TextRange)) {
+        match self {
+            Self::Given(e, date) => {
+                e.ranges_mut(f);
+                date.ranges_mut(f);
+            }
+            Self::Expect(e) => e.ranges_mut(f),
+        }
+    }
+}
+
+impl Ranges for ItemKind {
+    fn ranges_mut(&mut self, f: &mut dyn FnMut(&mut TextRange)) {
+        match self {
+            Self::Start(r) => r.ranges_mut(f),
+            Self::Group(a, b) => {
+                a.ranges_mut(f);
+                b.ranges_mut(f);
+            }
+            Self::TypeAlias(n, t) => {
+                n.ranges_mut(f);
+                t.ranges_mut(f);
+            }
+            Self::Enum(n, variants) => {
+                n.ranges_mut(f);
+                variants.ranges_mut(f);
+            }
+            Self::Event(n, params, effect) => {
+                n.ranges_mut(f);
+                params.ranges_mut(f);
+                effect.ranges_mut(f);
+            }
+            Self::Node(n) => n.ranges_mut(f),
+            Self::Link(e) => e.ranges_mut(f),
+            Self::Instance(base, origin, fields) => {
+                base.ranges_mut(f);
+                origin.ranges_mut(f);
+                fields.ranges_mut(f);
+            }
+            Self::Rule(kind, name, clauses, items) => {
+                kind.ranges_mut(f);
+                name.ranges_mut(f);
+                clauses.ranges_mut(f);
+                items.ranges_mut(f);
+            }
+            Self::Deadline {
+                name,
+                amount,
+                direction,
+                trigger,
+                counted_by,
+                clauses,
+                opts,
+            } => {
+                name.ranges_mut(f);
+                amount.ranges_mut(f);
+                direction.ranges_mut(f);
+                trigger.ranges_mut(f);
+                counted_by.ranges_mut(f);
+                clauses.ranges_mut(f);
+                opts.ranges_mut(f);
+            }
+            Self::Counting(n, clauses, fields) => {
+                n.ranges_mut(f);
+                clauses.ranges_mut(f);
+                fields.ranges_mut(f);
+            }
+            Self::Calendar(n, clauses, holidays) => {
+                n.ranges_mut(f);
+                clauses.ranges_mut(f);
+                holidays.ranges_mut(f);
+            }
+            Self::Transition(n, amends, clauses, arms) => {
+                n.ranges_mut(f);
+                amends.ranges_mut(f);
+                clauses.ranges_mut(f);
+                arms.ranges_mut(f);
+            }
+            Self::Authority(chain) => chain.ranges_mut(f),
+            Self::Default(n, clauses, when, then) => {
+                n.ranges_mut(f);
+                clauses.ranges_mut(f);
+                when.ranges_mut(f);
+                then.ranges_mut(f);
+            }
+            Self::Exception {
+                name,
+                kind,
+                target,
+                clauses,
+                when,
+                then,
+                priority,
+            } => {
+                name.ranges_mut(f);
+                kind.ranges_mut(f);
+                target.ranges_mut(f);
+                clauses.ranges_mut(f);
+                when.ranges_mut(f);
+                then.ranges_mut(f);
+                priority.ranges_mut(f);
+            }
+            Self::Test(name, clauses, stmts) => {
+                name.ranges_mut(f);
+                clauses.ranges_mut(f);
+                stmts.ranges_mut(f);
+            }
+        }
+    }
+}
+
+impl Ranges for Item {
+    fn ranges_mut(&mut self, f: &mut dyn FnMut(&mut TextRange)) {
+        let Self {
+            doc: _,
+            kind,
+            range,
+        } = self;
+        kind.ranges_mut(f);
+        f(range);
+    }
+}
+
+impl Ranges for Import {
+    fn ranges_mut(&mut self, f: &mut dyn FnMut(&mut TextRange)) {
+        let Self { path, names, range } = self;
+        path.ranges_mut(f);
+        names.ranges_mut(f);
+        f(range);
+    }
+}
+
+impl Ranges for PackageHeader {
+    fn ranges_mut(&mut self, f: &mut dyn FnMut(&mut TextRange)) {
+        let Self {
+            name,
+            fields,
+            range,
+        } = self;
+        name.ranges_mut(f);
+        fields.ranges_mut(f);
+        f(range);
+    }
+}
+
+impl Ranges for ItemTree {
+    fn ranges_mut(&mut self, f: &mut dyn FnMut(&mut TextRange)) {
+        let Self {
+            module,
+            imports,
+            package,
+            items,
+        } = self;
+        module.ranges_mut(f);
+        imports.ranges_mut(f);
+        package.ranges_mut(f);
+        items.ranges_mut(f);
+    }
+}

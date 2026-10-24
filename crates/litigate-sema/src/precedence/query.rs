@@ -9,7 +9,7 @@ use crate::hir::Manifest;
 use crate::resolve::sig::{clauses_of, flatten};
 use crate::temporal::world::{Decl, Locate, PackInfo, Rank, World};
 use crate::types::build::item_name;
-use litigate_base::{Diagnostic, FileId, LineIndex, Span};
+use litigate_base::{Diagnostic, FileId, Span};
 use std::collections::BTreeMap;
 
 /// `pkg` (whose manifest is `own`) followed by its transitive
@@ -94,9 +94,9 @@ impl Source<'_> {
         let span = d.meta.span.as_ref();
         let file = span.and_then(|s| self.files.get(&s.file.0));
         span.zip(file).and_then(|(span, &file)| {
-            let index = LineIndex::new(file.text(self.db));
+            let map = span_map(self.db, file);
             let id = FileId(span.file.0.clone());
-            let conv = |r: TextRange| to_span(&id, &index, r);
+            let conv = |r: TextRange| map.span(&id, r);
             let tree = &item_tree(self.db, file).tree;
             flatten(tree)
                 .into_iter()
@@ -145,7 +145,7 @@ impl Locate for Source<'_> {
 
     fn end(&self, d: &Decl<'_>) -> Option<Span> {
         self.item(d, |item, conv| {
-            conv(TextRange::new(item.range.end, item.range.end))
+            conv(item.range.at_end())
         })
     }
 
@@ -164,7 +164,7 @@ impl Locate for Source<'_> {
                     _ => None,
                 })?;
                 let id = FileId(file.path(self.db));
-                Some(to_span(&id, &LineIndex::new(file.text(self.db)), range))
+                Some(span_map(self.db, *file).span(&id, range))
             })
     }
 }

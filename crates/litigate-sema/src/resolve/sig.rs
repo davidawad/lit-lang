@@ -228,7 +228,7 @@ pub fn build(db: &dyn salsa::Database, file: SourceFile) -> Signature {
         .collect();
     resolve_types(&mut sig, tree, &imports);
     let default_types: Vec<(String, Option<Type>)> = {
-        let scope = Scope::new(&sig, tree, &imports, Vec::new());
+        let scope = Scope::new(&sig, &tree.imports, &imports, Vec::new());
         let mut checker = Checker::new(&scope);
         items
             .iter()

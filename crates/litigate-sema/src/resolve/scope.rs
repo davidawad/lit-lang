@@ -4,7 +4,7 @@
 //! are L1002 reports with nearest-match suggestions.
 use super::sig::{Signature, TypeSig, ValueKind, ValueSig};
 use super::suggest;
-use crate::db::parse::tree::{dotted, ItemTree, Name, PathSep, RefPath};
+use crate::db::parse::tree::{dotted, Import, Name, PathSep, RefPath};
 use crate::db::span::Report;
 use crate::hir::Type;
 use litigate_base::{Applicability, DiagnosticCode as C};
@@ -83,22 +83,20 @@ pub struct Scope<'a> {
 
 impl<'a> Scope<'a> {
     /// Builds a scope; `imports` are the signatures the graph resolved for
-    /// `tree.imports`, matched by module name.
+    /// the module's `declared` imports, matched by module name.
     #[must_use]
     pub fn new(
         own: &'a Signature,
-        tree: &ItemTree,
+        declared: &[Import],
         imports: &[&'a Signature],
         packs: Vec<&'a Signature>,
     ) -> Self {
-        let failed_modules = tree
-            .imports
+        let failed_modules = declared
             .iter()
             .map(|i| dotted(&i.path))
             .filter(|path| !imports.iter().any(|s| s.module == *path))
             .collect();
-        let failed_names = tree
-            .imports
+        let failed_names = declared
             .iter()
             .flat_map(|i| {
                 let sig = imports.iter().find(|s| s.module == dotted(&i.path));
@@ -116,8 +114,7 @@ impl<'a> Scope<'a> {
                     .map(|n| n.text.clone())
             })
             .collect();
-        let bindings = tree
-            .imports
+        let bindings = declared
             .iter()
             .filter_map(|i| {
                 let path = dotted(&i.path);

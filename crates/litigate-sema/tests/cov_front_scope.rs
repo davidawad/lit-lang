@@ -1,6 +1,5 @@
 //! Scope lookups over hand-built signatures (SPEC §4.3): nominal types are
 //! respelled across package boundaries, enums are found through imports.
-use litigate_sema::db::parse::tree::ItemTree;
 use litigate_sema::hir::Type;
 use litigate_sema::resolve::scope::{Binding, Scope};
 use litigate_sema::resolve::sig::{Signature, TypeSig};
@@ -29,7 +28,7 @@ fn named(n: &str) -> Type {
 fn types_from_another_package_are_requalified() {
     let own = sig("app", "app-pack", &[]);
     let dep = sig("dep", "dep-pack", &[]);
-    let scope = Scope::new(&own, &ItemTree::default(), &[], Vec::new());
+    let scope = Scope::new(&own, &[], &[], Vec::new());
     let written = Type::Record(vec![
         ("bare".to_owned(), named("Outcome")),
         ("ours".to_owned(), named("app-pack::Mine")),
@@ -60,7 +59,7 @@ fn types_from_another_package_are_requalified() {
 fn enums_are_found_through_imports() {
     let own = sig("app", "app-pack", &[("Local", &["x"])]);
     let imported = sig("app", "app-pack", &[("Outcome", &["granted", "denied"])]);
-    let mut scope = Scope::new(&own, &ItemTree::default(), &[], Vec::new());
+    let mut scope = Scope::new(&own, &[], &[], Vec::new());
     scope.bindings.push(Binding {
         path: imported.module.clone(),
         names: None,

@@ -5,10 +5,10 @@ use super::ops;
 use super::rational::{self, ArithError};
 use super::ty::display;
 use crate::db::parse::tree::{Expr, ExprKind, RefPath};
-use crate::db::span::{to_span, Report, TextRange};
+use crate::db::span::{Positions, Report, TextRange};
 use crate::hir::{self, Type, Value};
 use crate::resolve::{scope::Scope, sig::TypeSig, sig::ValueKind};
-use litigate_base::{Applicability, DiagnosticCode as C, FileId, LineIndex};
+use litigate_base::{Applicability, DiagnosticCode as C, FileId};
 use std::collections::BTreeSet;
 
 /// A checked expression: its HIR, type (`None` after an error), and
@@ -36,8 +36,8 @@ pub struct Checker<'s, 'a> {
     pub holes: Vec<(TextRange, Option<String>)>,
     /// Declared actors (values of type `Role`).
     pub actors: BTreeSet<String>,
-    /// File for HIR spans.
-    pub file: Option<(&'s FileId, &'s LineIndex)>,
+    /// File and positions for HIR spans.
+    pub file: Option<(&'s FileId, &'s dyn Positions)>,
     /// Names bound by the context being checked (`payoff` and `stake` in
     /// a `payoff_transform`), shadowing declarations.
     pub locals: Vec<(String, Type)>,
@@ -64,7 +64,7 @@ impl<'s, 'a> Checker<'s, 'a> {
     }
 
     pub(crate) fn span(&self, range: TextRange) -> Option<litigate_base::Span> {
-        self.file.map(|(f, i)| to_span(f, i, range))
+        self.file.map(|(f, at)| at.span(f, range))
     }
 
     pub(crate) fn node(

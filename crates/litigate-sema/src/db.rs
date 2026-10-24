@@ -1,6 +1,8 @@
 //! Salsa database: inputs (source files, `Lit.toml`, the workspace) and the
 //! tracked queries from parse to HIR. Public APIs take `&dyn
 //! salsa::Database`; no salsa type appears in HIR.
+#[allow(missing_docs)] // salsa-generated constructors and accessors
+pub mod ids;
 #[allow(missing_docs)] // salsa-generated constructors and setters
 pub mod inputs;
 pub mod parse;

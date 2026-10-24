@@ -711,12 +711,17 @@ fn deadlines(
 fn replacement(counted: &[Scheduled], n: usize) -> Option<usize> {
     let s = &counted[n];
     let by = s.closed_by?;
+    let restarted = match s.status {
+        Status::Superseded => true,
+        Status::Merged => false,
+        _ => return None,
+    };
     counted.iter().position(|o| {
         o.trigger_event == by
-            && match s.status {
-                Status::Superseded => o.deadline == s.deadline,
-                Status::Merged => o.deadline != s.deadline && o.floor.is_some(),
-                _ => false,
+            && if restarted {
+                o.deadline == s.deadline
+            } else {
+                o.deadline != s.deadline && o.floor.is_some()
             }
     })
 }
@@ -1782,6 +1787,37 @@ mod tests {
             served.id = Some("service".to_owned());
             assert_eq!(event_key(&all, &served), "event:Served@service");
             assert_eq!(decl_key(all[0], "nope"), "frcp-rule12-example.nope");
+        });
+    }
+
+    #[test]
+    fn a_replacement_is_the_restart_or_the_absorbing_instance() {
+        with_matter("", ACME, |_, m| {
+            let at = |deadline: &str, trigger, status, closed_by, floor: Option<&str>| {
+                let mut s = m.counted[0].clone();
+                s.deadline = deadline.to_owned();
+                s.trigger_event = trigger;
+                s.status = status;
+                s.closed_by = closed_by;
+                s.floor = floor.map(str::to_owned);
+                s
+            };
+            let counted = [
+                at("p::a", 0, Status::Merged, Some(1), None),
+                // Triggered by the absorbing event, but absorbs nothing:
+                // the same deadline, then one with no floor.
+                at("p::a", 1, Status::Open, None, None),
+                at("p::c", 1, Status::Open, None, None),
+                at("p::b", 1, Status::Open, None, Some("2025-07-02")),
+                at("p::a", 2, Status::Superseded, Some(3), None),
+                at("p::c", 3, Status::Open, None, None),
+                at("p::a", 3, Status::Open, None, None),
+                at("p::a", 4, Status::Discharged, Some(5), None),
+            ];
+            assert_eq!(replacement(&counted, 0), Some(3));
+            assert_eq!(replacement(&counted, 1), None);
+            assert_eq!(replacement(&counted, 4), Some(6));
+            assert_eq!(replacement(&counted, 7), None);
         });
     }
 

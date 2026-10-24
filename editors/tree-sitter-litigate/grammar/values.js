@@ -138,21 +138,35 @@ module.exports = {
     $.duration,
     $.string,
     $.date,
+    $.invalid_date,
     $.boolean,
     alias('unit', $.unit),
   ),
 
   boolean: _ => choice('true', 'false'),
 
-  // Digits = digit { digit | "_" }; malformed grouping is a compiler L0005,
-  // not a tree-sitter error, so the editor view stays lenient here.
-  number: _ => /\d[\d_]*(\.\d[\d_]*)?/,
+  // `_` only between two digits, as the compiler requires (L0005): `1__0`
+  // and `1_` are not one number.
+  number: _ => /\d+(_\d+)*(\.\d+(_\d+)*)?/,
 
-  money: _ => /\d[\d_]*(\.\d[\d_]*)?\.usd/,
+  money: _ => /\d+(_\d+)*(\.\d+(_\d+)*)?\.usd/,
 
-  duration: _ => /\d[\d_]*(\.\d[\d_]*)?\.(days|court_days|business_days|weeks|months|years|hours)/,
+  duration: _ => /\d+(_\d+)*(\.\d+(_\d+)*)?\.(days|court_days|business_days|weeks|months|years|hours)/,
 
-  date: _ => /\d{4}-\d{2}-\d{2}/,
+  // A valid proleptic Gregorian date (SPEC §2): months of 31 and 30 days,
+  // February's 28, and the 29th in a leap year (divisible by 4 and not by
+  // 100, or by 400).
+  date: _ => token(prec(1, choice(
+    /\d{4}-(0[13578]|1[02])-(0[1-9]|[12]\d|3[01])/,
+    /\d{4}-(0[469]|11)-(0[1-9]|[12]\d|30)/,
+    /\d{4}-02-(0[1-9]|1\d|2[0-8])/,
+    /(\d\d(0[48]|[2468][048]|[13579][26])|([02468][048]|[13579][26])00)-02-29/,
+  ))),
+
+  // A date-shaped literal no calendar has (`2026-02-30`; the compiler's
+  // L0004). Named so the editor view marks it instead of reading it as a
+  // subtraction `2026 - 02 - 30`; elsewhere a date must be valid.
+  invalid_date: _ => /\d{4}-\d{2}-\d{2}/,
 
   string: $ => seq(
     '"',

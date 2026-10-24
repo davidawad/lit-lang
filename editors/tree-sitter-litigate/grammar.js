@@ -28,7 +28,9 @@ module.exports = grammar({
 
   word: $ => $.identifier,
 
-  extras: $ => [/\s/, $.line_comment, $.doc_comment, $.block_comment],
+  // Whitespace is exactly the compiler's (SPEC §2): a no-break or other
+  // Unicode space is an invalid character (L0003), an ERROR here.
+  extras: $ => [/[ \t\r\n]/, $.line_comment, $.doc_comment, $.block_comment],
 
   supertypes: $ => [$._item, $._expression],
 

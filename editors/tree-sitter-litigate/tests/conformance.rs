@@ -268,6 +268,47 @@ fn reserved_filing_limits_parse_here_and_are_l0011_in_the_compiler() {
     assert_eq!(codes, ["L0011"], "{source}");
 }
 
+/// Lexical rejection parity (SPEC §2): input the compiler rejects as an
+/// invalid character, date or number is an `ERROR`, `MISSING` or
+/// `invalid_date` node here too, never a clean tree.
+fn rejected_here(text: &str) -> bool {
+    let tree = parse(text);
+    !syntax_errors(&tree).is_empty() || find(tree.root_node(), "invalid_date").is_some()
+}
+
+#[test]
+fn what_the_compiler_rejects_lexically_is_rejected_here() {
+    for (text, code) in [
+        ("default d when x == 2026-02-30 => 1", "L0004"),
+        ("default d when x == 2025-02-29 => 1", "L0004"),
+        ("default d when x == 1900-02-29 => 1", "L0004"),
+        ("default d when x == 2026-13-01 => 1", "L0004"),
+        ("default d when x == 2026-04-31 => 1", "L0004"),
+        ("test \"t\" { given Ev(a) on 2026-02-30 expect true }", "L0004"),
+        ("default d when x == 1__0 => 1", "L0005"),
+        ("default d when x == 1_ => 1", "L0005"),
+        ("default d when x == 2__0.usd => 1", "L0005"),
+        ("default d when x == 3.0__1.days => 1", "L0005"),
+        ("default d when\u{a0}true => 1", "L0003"),
+        ("default d when\u{2003}true => 1", "L0003"),
+        ("default d when\u{c}true => 1", "L0003"),
+    ] {
+        let source = format!("module m\n{text}\n");
+        let codes: Vec<&str> = litigate_syntax::parse_lit(&source)
+            .errors()
+            .iter()
+            .map(|e| e.code.as_str())
+            .collect();
+        assert!(codes.contains(&code), "{source:?}: {codes:?}");
+        assert!(rejected_here(&source), "tree-sitter accepts {source:?}");
+    }
+    for date in ["2024-02-29", "2000-02-29", "0000-02-29", "1900-02-28", "2026-12-31"] {
+        let source = format!("module m\ndefault d when x == {date} => 1\n");
+        assert!(litigate_syntax::parse_lit(&source).is_ok(), "{source}");
+        assert!(!rejected_here(&source), "{source}");
+    }
+}
+
 /// Self-contained top-level items; any sequence of them is a valid module
 /// body because items are juxtaposed (SPEC §3.1).
 const ITEMS: [&str; 12] = [
@@ -323,6 +364,24 @@ proptest! {
             .and_then(|n| n.child_by_field_name("name"))
             .expect("a node name");
         prop_assert_eq!(&source[node.byte_range()], name.as_str());
+    }
+
+    /// Every date-shaped literal: accepted here exactly when the compiler
+    /// accepts it (SPEC §2, L0004).
+    #[test]
+    fn prop_dates_agree_with_the_compiler(y in 0u32..10_000, m in 0u32..100, d in 0u32..100) {
+        let source = format!("module m\ndefault d when x == {y:04}-{m:02}-{d:02} => 1\n");
+        let valid = litigate_syntax::parse_lit(&source).is_ok();
+        prop_assert_eq!(rejected_here(&source), !valid, "{}", source);
+    }
+
+    /// Digit grouping: a number is accepted here exactly when the compiler
+    /// accepts it (SPEC §2, L0005).
+    #[test]
+    fn prop_digit_groups_agree_with_the_compiler(n in "[0-9][0-9_]{0,5}(\\.[0-9][0-9_]{0,3})?") {
+        let source = format!("module m\ndefault d when x == {n} => 1\n");
+        let valid = litigate_syntax::parse_lit(&source).is_ok();
+        prop_assert_eq!(rejected_here(&source), !valid, "{}", source);
     }
 
     #[test]

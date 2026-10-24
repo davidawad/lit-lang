@@ -39,10 +39,13 @@ registers the `lit` and `case` file types.
   (`a < b < c` is an error). `match` may only head a whole expression.
 - **Version requirements** (`^1.2.0`, §3.2) are one `version_req` token, so
   trivia inside one is an error.
-- **Leniency.** Number grouping (`1__0`), invalid dates (`2025-02-30`) and
-  every semantic rule are compiler diagnostics (L0004/L0005 and up), not
-  tree-sitter errors. Unknown typed-literal suffixes (`1.eur`) are errors
-  in both.
+- **Lexical parity.** What the compiler rejects lexically is rejected here
+  too: whitespace is exactly space, tab, CR and LF (a no-break space is an
+  `ERROR`, L0003), `_` groups digits only between two digits (`1__0` is no
+  number, L0005), and a date must exist (`2025-02-30` is an
+  `invalid_date` node in an expression, an `ERROR` elsewhere, L0004).
+  Unknown typed-literal suffixes (`1.eur`) are errors in both. Semantic
+  rules are compiler diagnostics only.
 
 ## Layout
 
@@ -104,7 +107,11 @@ and regenerate into a parser with both changes.
 2. The grammar's keyword set equals `litigate_syntax::SyntaxKind`'s
    contextual keywords.
 3. The SPEC §12 worked examples get the expected roots.
-4. Property tests cover juxtaposed items, citation text boundaries, kebab
+4. Lexical rejection parity: invalid characters, dates and digit groups
+   the compiler rejects are rejected here (a fixed table, and property
+   tests that every date-shaped literal and digit group is accepted here
+   exactly when the compiler accepts it).
+5. Property tests cover juxtaposed items, citation text boundaries, kebab
    identifiers, and that parsing any input returns a tree.
 
 When the compiler parser lands, a file it accepts and this grammar rejects

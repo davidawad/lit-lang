@@ -80,7 +80,11 @@ fn a_pack_authored_payoff_counts_as_valued_in_strict() {
         )]),
         Profile::Strict,
     );
-    let codes: Vec<&str> = unvalued.diagnostics.iter().map(|d| d.code.as_str()).collect();
+    let codes: Vec<&str> = unvalued
+        .diagnostics
+        .iter()
+        .map(|d| d.code.as_str())
+        .collect();
     assert_eq!(codes, ["L4004"], "{:#?}", render(&unvalued.diagnostics));
 }
 

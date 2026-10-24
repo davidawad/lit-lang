@@ -139,6 +139,16 @@ as_of = "2026-01-01"
 cite_prefixes = ["37 CFR", "37 C.F.R."]
 section_heading = "37 C.F.R. § {n}"
 
+# The eCFR versioner's version list of each 37 C.F.R. section cited: the
+# amendment history `cite-resolves` reads to prove a text dated after a
+# version took effect was that version's text (SPEC §4.3).
+[sources.ecfr-versions-37]
+title = "eCFR versioner: versions of the 37 C.F.R. sections cited"
+url = "https://www.ecfr.gov/api/versioner/v1/versions/title-37.json"
+path = "sources/ecfr-versions-title-37.txt"
+path_sha256 = "083c3103173ebdc82ab3caa6b704469dd825b22ddfe1419ff8855d4f56d42058"
+as_of = "2026-10-24"
+
 [sources.cfr-42-cite]
 title = "37 C.F.R. Part 42 (PTAB trial practice, for AIA-trial cross-references from prosecution)"
 url = "https://www.ecfr.gov/current/title-37/chapter-I/subchapter-A/part-42"

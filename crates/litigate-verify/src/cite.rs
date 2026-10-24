@@ -1,8 +1,11 @@
 //! `cite-resolves` (SPEC §7): every cite resolves to a source binding and,
 //! when the binding has a vendored `path`, to its pinpoint's `## heading`
 //! span in that file, whose text is the one the binding's `path_sha256`
-//! pins. The cited expression (the binding's `as_of`) must not postdate the
-//! citing version's window unless the cite is marked `historical`.
+//! pins. A cited expression (the binding's `as_of`, D) dated after the
+//! citing version took effect (E) is that version's text only when the
+//! section's vendored amendment history shows no amendment in (E, D];
+//! otherwise the cite is a hole whose reason names the amendment (or why
+//! there is no history to read). `historical` cites are exempt.
 //!
 //! Citations are parsed exactly as the lowering's source maps parse them
 //! (`litigate_lower::source_map::Citations`, litgraph's own parser under
@@ -14,7 +17,6 @@
 //! A cite of a declaration `litigate import` marked `/// imported` is
 //! exempt in `dev`: its failures are warnings, so a freshly imported pack
 //! checks while its citations are ported. `strict` exempts nothing.
-use crate::context::Cite;
 use crate::diag::{emit, note};
 use crate::Context;
 use litgraph::cite::{parse_cite_string, CiteGrammar, SourceCorpus};
@@ -24,14 +26,8 @@ use litigate_lower::source_map::{Citations, L0Section, Pin};
 use litigate_sema::Hole;
 
 /// L1010 for every citation that does not resolve. `holes` are the
-/// package's: a cite hole's reason is resolved like a cite, but a hole
-/// cites no expression, so it is never held to its version's window.
-pub(crate) fn unresolved(
-    cx: &Context<'_>,
-    pack: &Pack,
-    corpus: &SourceCorpus,
-    holes: &[Hole],
-) -> Vec<Diagnostic> {
+/// package's: a cite hole's reason is resolved like a cite.
+pub(crate) fn unresolved(cx: &Context<'_>, pack: &Pack, corpus: &SourceCorpus) -> Vec<Diagnostic> {
     let sources = &cx.package.manifest.sources;
     let citations = Citations::new(pack.cite_syntax.clone(), sources, Some(corpus));
     cx.cites()
@@ -43,58 +39,46 @@ pub(crate) fn unresolved(
                 .map(|m| m.sections)
                 .unwrap_or_default();
             let unkeyed = unkeyed(&citations, text, &span, cx);
-            let unquoted = cite
-                .quote
-                .and_then(|q| unquoted(cx, corpus, text, q, &sections, &span));
-            let hole = holes
-                .iter()
-                .any(|h| h.reason.as_deref() == Some(text) && within(&h.span, &span));
             sections
                 .iter()
-                .filter_map(|s| {
-                    section(cx, &citations, corpus, text, s, &span)
-                        .or_else(|| expression(cx, &cite, s, &span).filter(|_| !hole))
-                })
+                .filter_map(|s| section(cx, &citations, corpus, text, s, &span))
                 .chain(unkeyed)
-                .chain(unquoted)
                 .map(|d| exempt(d, cite.imported, cx.profile))
                 .collect::<Vec<_>>()
         })
         .collect()
 }
 
-/// L1010 when no vendored section `text` resolves to holds `quote`, the
-/// words it is cited for, compared with whitespace runs collapsed: a quote
-/// the corpus cannot show is not the rule's text.
-fn unquoted(
+/// A hole for every cite whose expression (the binding's `as_of`, D)
+/// postdates the day its version took effect (E) and that the section's
+/// vendored amendment history does not prove unamended in (E, D]: the
+/// text cited may not have been the law while that version was. Test
+/// cites (no window), `historical` cites (a later edition reporting the
+/// earlier text, say) and cites already written as holes (`holes`, the
+/// package's) are exempt: a hole cites no expression.
+pub(crate) fn unproven(
     cx: &Context<'_>,
+    pack: &Pack,
     corpus: &SourceCorpus,
-    text: &str,
-    quote: &str,
-    sections: &[L0Section],
-    span: &Span,
-) -> Option<Diagnostic> {
-    let words = |s: &str| s.split_whitespace().collect::<Vec<_>>().join(" ");
-    let quote = words(quote);
-    let found = sections.iter().any(|s| {
-        corpus.lookup_all(&s.heading).iter().any(|(file, section)| {
-            s.path.as_ref() == Some(file) && words(&section.body).contains(&quote)
+    holes: &[Hole],
+) -> Vec<Hole> {
+    let sources = &cx.package.manifest.sources;
+    let citations = Citations::new(pack.cite_syntax.clone(), sources, Some(corpus));
+    cx.cites()
+        .filter(|cite| !cite.historical)
+        .filter_map(|cite| {
+            let from = &cite.window?.from;
+            let span = cx.span_or_manifest(cite.span);
+            let written = holes
+                .iter()
+                .any(|h| h.reason.as_deref() == Some(cite.text) && within(&h.span, &span));
+            let reason = citations.unproven(cite.text, from).filter(|_| !written)?;
+            Some(Hole {
+                span,
+                reason: Some(reason),
+            })
         })
-    });
-    if found {
-        return None;
-    }
-    let d = emit(
-        C::UnboundCite,
-        cx.profile,
-        span.clone(),
-        format!("`{text}` is cited for \"{quote}\", which its vendored text does not hold"),
-    );
-    Some(note(
-        d,
-        None,
-        "quote the cited rule's words exactly as the vendored source gives them",
-    ))
+        .collect()
 }
 
 /// `d` as a warning when its declaration is imported and `profile` is
@@ -189,10 +173,7 @@ fn section(
                 "`{path}` is not the text source `{id}` pins (`path_sha256` {pinned}, the \
                  corpus file hashes to {actual})"
             ),
-            "cite the expression the corpus holds, or vendor the pinned text; a `litigate` \
-             built before the pin changed embeds the older text, so rebuild it or set \
-             `LITGRAPH_SOURCES` to the vendored `sources/`"
-                .to_owned(),
+            "cite the expression the corpus holds, or vendor the pinned text".to_owned(),
         )),
         Pin::NoPath | Pin::Absent | Pin::Verified => None,
     };
@@ -220,34 +201,4 @@ fn section(
         format!("`{text}` binds to source `{id}`, but {why}"),
     );
     Some(note(d, None, fix))
-}
-
-/// L1010 when the cited expression (the binding's `as_of`) is dated on or
-/// after the end of the citing version's window: the text cited was not
-/// yet the law while that version was. `historical` cites (a later edition
-/// reporting the earlier text, say) and expressions without a date are
-/// exempt; an expression older than the window is the text as amended to
-/// that date, presumed still current when the window opens.
-fn expression(cx: &Context<'_>, cite: &Cite<'_>, s: &L0Section, span: &Span) -> Option<Diagnostic> {
-    let as_of = s.as_of.as_deref()?;
-    let until = cite.window?.to.as_deref()?;
-    if cite.historical || as_of < until {
-        return None;
-    }
-    let d = emit(
-        C::UnboundCite,
-        cx.profile,
-        span.clone(),
-        format!(
-            "`{}` cites source `{}` as of {as_of}, but this version left force on {until}",
-            cite.text,
-            s.source.as_deref().unwrap_or_default(),
-        ),
-    );
-    Some(note(
-        d,
-        None,
-        "cite an expression in force during the version's window, or mark the cite \
-         `historical` when a later text is cited on purpose",
-    ))
 }

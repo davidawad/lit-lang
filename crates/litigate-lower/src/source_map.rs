@@ -16,6 +16,9 @@ use sha2::{Digest, Sha256};
 use std::collections::BTreeMap;
 use std::fmt::Write as _;
 
+pub mod history;
+pub use history::{Amendment, History, Proof};
+
 /// Marks a file as compiler output: who generated it, from which language
 /// version. Deterministic (no timestamps, no absolute paths).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
@@ -74,6 +77,10 @@ pub struct L0Section {
     /// only when `path`'s text is the one the binding's `path_sha256` pins.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub sha256: Option<String>,
+    /// The amendment history proving the text, dated after the citing
+    /// version took effect, was its text then (see [`history`]).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub history: Option<History>,
 }
 
 /// How a binding's vendored file checks against its `path_sha256` pin.
@@ -376,7 +383,21 @@ impl<'c> Citations<'c> {
             heading,
             source,
             pinpoint,
+            history: None,
         }
+    }
+
+    /// [`Citations::map`] for a cite of a version in force from
+    /// `effective`: each section a history proves carries that history.
+    #[must_use]
+    pub fn map_at(&self, text: Option<&String>, effective: Option<&str>) -> Option<CiteMap> {
+        let mut map = self.map(text)?;
+        for s in &mut map.sections {
+            if let Some(Proof::Holds(h)) = effective.map(|e| self.prove(s, e)) {
+                s.history = Some(h);
+            }
+        }
+        Some(map)
     }
 }
 

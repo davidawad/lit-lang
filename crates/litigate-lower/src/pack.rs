@@ -5,7 +5,7 @@ use crate::holes;
 use crate::source_map::{Citations, Entry, SourceMap};
 use crate::Build;
 use litgraph::model::{
-    local_edge_ids, CiteCode, CiteRuleForm, CiteShorthand, CiteSyntax, Group, NodeKind, Pack,
+    local_edge_ids, CiteCode, CiteRuleForm, CiteShorthand, CiteSyntax, Group, Hole, NodeKind, Pack,
     RawEdge, RawNode, Role, Source, PACK_SCHEMA_VERSION,
 };
 use litigate_base::{DiagnosticCode as C, Span};
@@ -272,22 +272,39 @@ pub(crate) fn pack(
         }
     }
     dangling(build, sink, &pkg.start, &nodes, &edges);
-    let node_holes = origins
-        .iter()
-        .enumerate()
-        .flat_map(|(i, n)| holes::at(&format!("/nodes/{i}"), &n.holes));
-    let edge_holes = edges
-        .iter()
-        .enumerate()
-        .flat_map(|(i, (_, e))| holes::at(&format!("/edges/{i}"), &e.holes));
-    let mut basis = crate::basis::labels("/nodes", origins.iter().map(|n| n.basis.as_ref()));
-    basis.extend(crate::basis::labels(
-        "/edges",
-        edges.iter().map(|(_, e)| e.basis.as_ref()),
-    ));
-    let lowered = build
-        .lowered(node_holes.chain(edge_holes).collect())
-        .with_basis(basis);
+    let syntax = cite_syntax(sink, m);
+    let citations = Citations::new(syntax.clone(), &m.sources, build.corpus);
+    let node_holes = origins.iter().enumerate().flat_map(|(i, n)| {
+        let base = format!("/nodes/{i}");
+        let mut out = holes::at(&base, &n.holes);
+        let cite = n.meta.cite.as_deref().filter(|_| !n.meta.historical);
+        out.extend(unproven(
+            &citations,
+            &base,
+            "cite",
+            cite,
+            &n.holes,
+            &n.meta.effective.from,
+        ));
+        out
+    });
+    let edge_holes = edges.iter().enumerate().flat_map(|(i, (raw, e))| {
+        let base = format!("/edges/{i}");
+        let mut out = holes::at(&base, &e.holes);
+        // An edge is in force with its node's version.
+        let from = origins.iter().find(|n| n.meta.id == raw.from);
+        let from = from.map_or("", |n| n.meta.effective.from.as_str());
+        out.extend(unproven(
+            &citations,
+            &base,
+            "authority",
+            e.authority.as_deref(),
+            &e.holes,
+            from,
+        ));
+        out
+    });
+    let lowered = build.lowered(node_holes.chain(edge_holes).collect());
     let pack = Pack {
         schema_version: PACK_SCHEMA_VERSION,
         id: m.pack_id.clone(),
@@ -307,13 +324,33 @@ pub(crate) fn pack(
             .collect(),
         roles: m.roles.iter().map(|(a, r)| (a.clone(), role(*r))).collect(),
         sources: sources(m),
-        cite_syntax: cite_syntax(sink, m),
+        cite_syntax: syntax,
         nodes,
         edges: edges.iter().map(|(e, _)| e.clone()).collect(),
         lowered: Some(lowered),
     };
     let map = pack_map(build, pkg, &pack, &origins, &edges);
     (pack, map)
+}
+
+/// The hole of the cite at `base`/`field` (`cite`, of a version in force
+/// from `from`) when no vendored amendment history proves its text was the
+/// text then (SPEC §7); none when the cite is written as a hole.
+fn unproven(
+    citations: &Citations<'_>,
+    base: &str,
+    field: &str,
+    cite: Option<&str>,
+    written: &BTreeMap<String, Option<String>>,
+    from: &str,
+) -> Option<Hole> {
+    let reason = citations
+        .unproven(cite?, from)
+        .filter(|_| !written.contains_key(field))?;
+    Some(Hole {
+        pointer: format!("{base}/{field}"),
+        reason: Some(reason),
+    })
 }
 
 /// The source map of a lowered pack.
@@ -339,7 +376,7 @@ fn pack_map(
             id: raw.id.clone(),
             span: n.meta.span.clone(),
             decl: Some(crate::select::Selection::versioned(&n.meta)),
-            cite: citations.map(raw.cite.as_ref()),
+            cite: citations.map_at(raw.cite.as_ref(), Some(&n.meta.effective.from)),
         });
     let ids = local_edge_ids(&pack.edges);
     let edge_entries = edges
@@ -351,7 +388,14 @@ fn pack_map(
             id,
             span: e.span.clone(),
             decl: None,
-            cite: citations.map(raw.authority.as_ref()),
+            // An edge is in force with its node's version.
+            cite: citations.map_at(
+                raw.authority.as_ref(),
+                nodes
+                    .iter()
+                    .find(|n| n.meta.id == raw.from)
+                    .map(|n| n.meta.effective.from.as_str()),
+            ),
         });
     SourceMap {
         kind: "pack".to_owned(),

@@ -6,7 +6,6 @@
 //! violate (`well-typed`, the temporal and precedence obligations,
 //! `dist-exact`), and this crate checks the rest on the lowered pack and
 //! HIR (`graph-exits`, `graph-reachable`, `deadline-satisfiable`,
-//! `workflow-sound`,
 //! `cite-resolves`, `tests-pass`, `holes`, `rule-without-test`). The
 //! result is a [`Verification`]: the [`VerificationReport`] embedded in the
 //! [`Litigatable`], plus the diagnostics this crate emits (sema's are
@@ -27,7 +26,6 @@ mod evidence;
 mod graph;
 mod lints;
 mod matter;
-mod net;
 mod report;
 mod sema;
 
@@ -108,14 +106,6 @@ pub struct PackageInput<'a> {
     pub options: &'a Options,
 }
 
-/// The obligations checked on the lowered pack alone.
-const ON_PACK: [O; 4] = [
-    O::GraphExits,
-    O::GraphReachable,
-    O::WorkflowSound,
-    O::CiteResolves,
-];
-
 /// Discharges every obligation of a checked rule package against the L0
 /// `corpus` under `profile`.
 ///
@@ -140,13 +130,15 @@ pub fn verify_package(
     let mut b = Builder::default();
     sema::aggregate(&mut b, &input.check.diagnostics);
     evidence::hir(&mut b, &cx);
+    // The written holes, then each cite no amendment history proves.
+    let mut holes = input.check.holes.clone();
     let mut out = Vec::new();
     let mut record = |b: &mut Builder, name: O, found: Vec<Diagnostic>| {
         out.extend(found.iter().cloned());
         b.check(name, found);
     };
-    match input.lowered.map(|l| (&l.document, &l.source_map)) {
-        Ok((Document::Pack(pack), map)) => {
+    match input.lowered.map(|l| &l.document) {
+        Ok(Document::Pack(pack)) => {
             let reached = graph::reached(pack);
             evidence::graph(&mut b, &cx, reached.len());
             evidence::tests(&mut b, &cx);
@@ -161,17 +153,17 @@ pub fn verify_package(
                 O::DeadlineSatisfiable,
                 deadline::unsatisfiable(&cx, &reached),
             );
-            let unsound = net::check(&mut b, &cx, pack, map);
-            record(&mut b, O::WorkflowSound, unsound);
-            record(
-                &mut b,
-                O::CiteResolves,
-                cite::unresolved(&cx, pack, corpus, &input.check.holes),
-            );
+            record(&mut b, O::CiteResolves, cite::unresolved(&cx, pack, corpus));
+            holes.extend(cite::unproven(&cx, pack, corpus, &input.check.holes));
             record(&mut b, O::TestsPass, assertions::failures(&cx, known_at));
         }
-        Ok((Document::Links(_), _)) => {
-            for name in ON_PACK.into_iter().chain([O::DeadlineSatisfiable]) {
+        Ok(Document::Links(_)) => {
+            for name in [
+                O::GraphExits,
+                O::GraphReachable,
+                O::DeadlineSatisfiable,
+                O::CiteResolves,
+            ] {
                 b.skip(name, "a links package has no graph or sources of its own; checked where it composes packs");
             }
             evidence::tests(&mut b, &cx);
@@ -187,15 +179,20 @@ pub fn verify_package(
                 O::DeadlineSatisfiable,
                 deadline::unsatisfiable(&cx, &every),
             );
-            for name in ON_PACK.into_iter().chain([O::TestsPass]) {
+            for name in [
+                O::GraphExits,
+                O::GraphReachable,
+                O::CiteResolves,
+                O::TestsPass,
+            ] {
                 b.skip(name, "not checked: the package did not lower");
             }
         }
     }
     record(&mut b, O::DistExact, graph::empty_distributions(&cx));
     record(&mut b, O::WellTyped, cycle::unbounded(&cx));
-    evidence::holes(&mut b, input.check.holes.len());
-    record(&mut b, O::Holes, lints::holes(&input.check.holes, profile));
+    evidence::holes(&mut b, holes.len());
+    record(&mut b, O::Holes, lints::holes(&holes, profile));
     record(&mut b, O::RuleWithoutTest, lints::untested(&cx));
     b.skip(
         O::CaseReplay,

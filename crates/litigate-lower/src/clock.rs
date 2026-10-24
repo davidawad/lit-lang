@@ -11,7 +11,7 @@
 mod calendar;
 
 use crate::diag::Sink;
-use crate::source_map::{Entry, SourceMap};
+use crate::source_map::{Citations, Entry, SourceMap};
 use crate::Build;
 use litgraph::clock::calendar::Weekday;
 use litgraph::clock::rule::{
@@ -51,19 +51,23 @@ pub(crate) fn fragment(
     for c in &rules {
         let (rule, calendars) = lowered(build, pkg, c, sink)?;
         entries.push(entry(
+            build,
+            pkg,
             &format!("/countingRules/{}", library.counting_rules.len()),
             &c.meta,
         ));
         library.counting_rules.push(rule);
         for calendar in calendars {
             if library.calendars.iter().all(|k| k.id != calendar.meta.id) {
-                entries.push(entry(
-                    &format!("/calendars/{}", library.calendars.len()),
-                    &calendar.meta,
-                ));
                 // A calendar's cite binds through its own package's sources,
                 // so every fragment carrying it carries the same calendar.
                 let owner = declaring(build, calendar).unwrap_or(pkg);
+                entries.push(entry(
+                    build,
+                    owner,
+                    &format!("/calendars/{}", library.calendars.len()),
+                    &calendar.meta,
+                ));
                 library.calendars.push(calendar::holiday_calendar(
                     sink,
                     calendar,
@@ -107,17 +111,18 @@ fn declaring<'p>(build: &Build<'_, 'p>, calendar: &hir::Calendar) -> Option<&'p 
     })
 }
 
-/// The source-map entry of one generated rule or calendar.
-fn entry(pointer: &str, meta: &hir::Metadata) -> Entry {
+/// The source-map entry of one generated rule or calendar declared in
+/// `pkg`, its cite located through `pkg`'s sources.
+fn entry(build: &Build<'_, '_>, pkg: &hir::Package, pointer: &str, meta: &hir::Metadata) -> Entry {
+    // The pack's own lowering reports a bad citation syntax.
+    let syntax = crate::pack::cite_syntax(&mut Sink::new(""), &pkg.manifest);
+    let citations = Citations::new(syntax, &pkg.manifest.sources, build.corpus);
     Entry {
         pointer: pointer.to_owned(),
         id: meta.id.clone(),
         span: meta.span.clone(),
         decl: Some(crate::select::Selection::versioned(meta)),
-        cite: meta.cite.as_ref().map(|text| crate::source_map::CiteMap {
-            text: text.clone(),
-            sections: Vec::new(),
-        }),
+        cite: citations.map_at(meta.cite.as_ref(), Some(&meta.effective.from)),
     }
 }
 

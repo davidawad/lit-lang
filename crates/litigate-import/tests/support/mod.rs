@@ -298,18 +298,7 @@ pub fn read_case(file: &ImportedFile) -> NamedScenario {
             scenario.insert(key.into(), Value::Object(map));
         }
     }
-    let parties: Vec<Value> = case
-        .parties()
-        .iter()
-        .map(|p| {
-            let id = p.syntax().first_token().map(|t| t.text().to_owned());
-            json!({
-                "id": id,
-                "actor": p.actor().map(|r| r.text()),
-                "entity_type": p.entity().map(|r| r.text()),
-            })
-        })
-        .collect();
+    let parties = parties(&case);
     if !parties.is_empty() {
         // Parties are v2 fields, as a lowered matter writes them.
         named.insert("schema_version".into(), json!(2));
@@ -338,6 +327,21 @@ pub fn read_case(file: &ImportedFile) -> NamedScenario {
         .unwrap_or_else(|e| panic!("{}: read-back scenario is invalid: {e}", file.path))
 }
 
+/// A case's `parties` as `NamedScenario.parties` entries.
+fn parties(case: &ast::CaseFile) -> Vec<Value> {
+    case.parties()
+        .iter()
+        .map(|p| {
+            let id = p.syntax().first_token().map(|t| t.text().to_owned());
+            json!({
+                "id": id,
+                "actor": p.actor().map(|r| r.text()),
+                "entity_type": p.entity().map(|r| r.text()),
+            })
+        })
+        .collect()
+}
+
 /// The `(pointer, reason)` of each explicit hole a `.case` lowers to
 /// `lowered.holes` (SPEC §8.3): `unvalued` stakes, then `as_of` holes.
 pub fn case_holes(file: &ImportedFile) -> Vec<(String, Option<String>)> {
@@ -358,7 +362,7 @@ pub fn case_holes(file: &ImportedFile) -> Vec<(String, Option<String>)> {
             )
         });
     let as_of = case.sources().into_iter().enumerate().filter_map(|(i, s)| {
-        let hole = s.syntax().descendants().find_map(|n| ast::Hole::cast(n))?;
+        let hole = s.syntax().descendants().find_map(ast::Hole::cast)?;
         Some((format!("/sources/{i}/as_of"), hole.reason()))
     });
     unvalued.chain(as_of).collect()

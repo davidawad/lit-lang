@@ -473,3 +473,19 @@ fn a_v2_scenario_restores_its_parties_and_holes_and_keeps_its_docket_as_a_commen
         .collect();
     assert_eq!(support::case_holes(file), holes);
 }
+
+#[test]
+fn a_v2_scenario_with_only_unvalued_stakes_writes_a_stakes_block() {
+    let hole = Hole {
+        pointer: "/scenario/payoffs/p::c".into(),
+        reason: None,
+    };
+    let input = v2_scenario("open", vec![hole], |_| {});
+    let files = import_ok(std::slice::from_ref(&input));
+    let case = text(&files, "cases/open.case");
+    assert!(case.ends_with("stakes { p::c: unvalued }\n"), "{case}");
+    assert_eq!(
+        support::case_holes(package(&files, "cases")[0]),
+        [("/scenario/payoffs/p::c".to_owned(), None)]
+    );
+}

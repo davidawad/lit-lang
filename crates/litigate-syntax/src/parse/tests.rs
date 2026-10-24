@@ -318,10 +318,14 @@ fn expression_boolean_words_have_machine_applicable_operator_fixes() {
 
     assert!(patched("    when and !ready && permitted || waived").is_ok());
     assert!(patched("    when and ready\n    when or permitted").is_ok());
+    let missing_not_operand = patched("    when and not");
+    assert!(codes(&missing_not_operand).contains(&"L0012"));
+    assert!(codes(&missing_not_operand).contains(&"L0001"));
     for source in [
         "module m\nstart a and b\n",
         "module m\nstart a or b\n",
         "module links\ninstance base@one {\n  pack base\n  patch go {\n    when and not ready\n  }\n}\n",
+        "module links\ninstance base@one {\n  pack base\n  patch go {\n    when and not\n  }\n}\n",
     ] {
         assert!(crate::format(source, crate::FileKind::Lit).is_err());
     }

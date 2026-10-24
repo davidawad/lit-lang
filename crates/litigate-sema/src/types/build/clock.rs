@@ -718,7 +718,7 @@ impl Cx<'_, '_> {
             let unless = arm
                 .unless
                 .as_ref()
-                .map(|c| self.ck.check(c, &Type::Boolean).hir);
+                .map(|c| self.ck.condition(c).hir);
             if let Some(selects) = versioned(self, &arm.target) {
                 out.push(TransitionArm { unless, selects });
             }

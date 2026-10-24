@@ -442,12 +442,18 @@ impl<'a> Scope<'a> {
     }
 
     /// Canonical names of visible enums whose variants include every key
-    /// (the enum a `Dist` record literal denotes).
+    /// (the enum a `Dist` record literal denotes). An `import m.{x}` makes
+    /// only the names it lists visible.
     #[must_use]
     pub fn enums_covering(&self, keys: &[&str]) -> Vec<String> {
-        let mut out: Vec<String> = std::iter::once(self.own)
-            .chain(self.bindings.iter().map(|b| b.sig))
-            .flat_map(|s| s.types.iter().map(move |(n, t)| (s, n, t)))
+        let mut out: Vec<String> = std::iter::once((self.own, None))
+            .chain(self.bindings.iter().map(|b| (b.sig, b.names.as_ref())))
+            .flat_map(|(s, names)| {
+                s.types
+                    .iter()
+                    .filter(move |(n, _)| names.is_none_or(|l| l.contains(n)))
+                    .map(move |(n, t)| (s, n, t))
+            })
             .filter_map(|(s, n, t)| match t {
                 TypeSig::Enum(v)
                     if !keys.is_empty() && keys.iter().all(|k| v.iter().any(|x| x == k)) =>

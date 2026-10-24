@@ -236,3 +236,26 @@ exception loop-b rebuts loop-a when true => 4",
         ["pkgs/demo/main.lit:10:44 L2001 expected `Number`, found `String`"]
     );
 }
+
+#[test]
+fn a_condition_cannot_be_a_hole() {
+    // T12: a hole in a `when` or `unless` is L2001, not a Bool nobody
+    // authored; a hole in a value still checks against the expected type.
+    let out = check_body(
+        "default d when ?(\"undecided\") => 1\n\
+exception e rebuts d when true && ? => ?\n\
+deadline p: 1.days from Served(complaint) counted_by c6 effective [2000-01-01, 2001-01-01)\n\
+deadline p: 2.days from Served(complaint) counted_by c6 effective [2001-01-01, ..)\n\
+transition tr amends p@2001-01-01 { unless ? -> p@2000-01-01, otherwise -> p@2001-01-01 }\n\
+chance ok: \"Ok\" { tags [fact]\n  y \"Y\" -> t p 1 { when ? } }",
+    );
+    assert_eq!(
+        out,
+        [
+            "pkgs/demo/main.lit:10:16 L2001 a condition cannot be a hole",
+            "pkgs/demo/main.lit:11:35 L2001 cannot infer the type of this hole",
+            "pkgs/demo/main.lit:14:44 L2001 a condition cannot be a hole",
+            "pkgs/demo/main.lit:16:25 L2001 a condition cannot be a hole",
+        ]
+    );
+}

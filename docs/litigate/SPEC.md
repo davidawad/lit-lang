@@ -807,7 +807,11 @@ second effect or a `to` without `extends` L2007, and `extends` without
 `match` must be
 exhaustive with no unreachable arms (L2005). There is no null, implicit
 conversion, subtyping, or recursion: a type alias may not refer to itself, and
-neither may a default or exception, directly or transitively (L3006). An event
+neither may a default or exception, directly or transitively (L3006). A type
+alias may name one declared after it. An exception to an exception concludes
+the type of the default its chain of targets ends at. A condition (`when`,
+`unless`) is never a hole, even in `dev`: whether a rule applies must be
+decided (L2001). An event
 pattern in a deadline trigger or edge `event` may omit trailing arguments,
 which then match anything. `given`, case events, and `has_event` arguments
 must be complete. A case event may write `?` for a `Date` argument the

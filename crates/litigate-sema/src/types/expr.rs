@@ -148,6 +148,30 @@ impl<'s, 'a> Checker<'s, 'a> {
         }
     }
 
+    /// Checks a condition (`when`, `unless`) as `Bool`. A hole stands for a
+    /// value not yet authored, which a condition cannot be: deciding what
+    /// applies needs its truth, so each hole in it is L2001 (once: a hole
+    /// whose type could not be inferred is reported already) and the
+    /// condition has no type.
+    pub fn condition(&mut self, e: &Expr) -> Checked {
+        let seen = self.holes.len();
+        let mut checked = self.check(e, &Type::Boolean);
+        let holes: Vec<TextRange> = self.holes.drain(seen..).map(|(r, _)| r).collect();
+        if !holes.is_empty() {
+            checked.ty = None;
+        }
+        for r in holes {
+            if !self.reports.iter().any(|x| x.range == r) {
+                self.report(
+                    Report::new(C::TypeMismatch, r, "a condition cannot be a hole").note(
+                        "a hole is an unauthored value; whether a rule applies must be decided",
+                    ),
+                );
+            }
+        }
+        checked
+    }
+
     /// Checks `e` against `expected`, reporting L2001 on a mismatch.
     pub fn check(&mut self, e: &Expr, expected: &Type) -> Checked {
         let r = e.range;

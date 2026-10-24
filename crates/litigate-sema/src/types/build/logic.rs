@@ -24,7 +24,7 @@ impl Cx<'_, '_> {
         then: &Expr,
     ) -> DefaultRule {
         let meta = self.meta(name, None, item, rule);
-        let condition = self.ck.check(when, &Type::Boolean).hir;
+        let condition = self.ck.condition(when).hir;
         let conclusion = self.ck.infer(then).hir;
         DefaultRule {
             meta,
@@ -84,7 +84,7 @@ impl Cx<'_, '_> {
             )),
             _ => {}
         }
-        let condition = self.ck.check(when, &Type::Boolean).hir;
+        let condition = self.ck.condition(when).hir;
         let conclusion =
             then.filter(|_| kind == ExceptionKind::Rebutting)
                 .map(|v| match &target_ty {

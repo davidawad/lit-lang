@@ -147,7 +147,7 @@ impl Cx<'_, '_> {
             return None;
         }
         let x = first_expr(f)?;
-        let checked = self.ck.check(x, &Type::Boolean);
+        let checked = self.ck.condition(x);
         checked.ty?;
         if condition::first_foreign_guard(&checked.hir).is_some() {
             self.report(

@@ -73,3 +73,22 @@ fn enums_are_found_through_imports() {
     assert_eq!(scope.enums_covering(&["granted"]), ["Outcome"]);
     assert_eq!(scope.enums_covering(&[]), Vec::<String>::new());
 }
+
+#[test]
+fn an_import_list_limits_the_enums_a_record_can_denote() {
+    // T8: `import app.types.{Other}` does not make `Outcome` visible.
+    let own = sig("app", "app-pack", &[]);
+    let imported = sig(
+        "app",
+        "app-pack",
+        &[("Outcome", &["granted", "denied"]), ("Other", &["granted"])],
+    );
+    let mut scope = Scope::new(&own, &ItemTree::default(), &[], Vec::new());
+    scope.bindings.push(Binding {
+        path: imported.module.clone(),
+        names: Some(vec!["Other".to_owned()]),
+        sig: &imported,
+    });
+    assert_eq!(scope.enums_covering(&["granted"]), ["Other"]);
+    assert_eq!(scope.enums_covering(&["denied"]), Vec::<String>::new());
+}

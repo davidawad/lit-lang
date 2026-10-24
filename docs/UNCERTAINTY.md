@@ -40,9 +40,10 @@ The prior strength is a pseudo-count total `c`, the *concentration*:
    comparable matters"). Every op that depends on it emits a
    `prior-concentration-estimated` warning at that node.
 
-A `.case` matter states its own prior as pseudo-counts per outcome,
-`beliefs { prior cofc::sj-ruling: { e-sj-govt: 6, e-sj-denied: 4 } }`
-(Beta(6, 4) here): it lowers to the node's `probabilities` (the mean
+A `.case` matter states its own prior as pseudo-counts for every outcome,
+`beliefs { prior sj-ruling: { e-sj-denied: 5, e-sj-govt: 2,
+e-sj-plaintiff: 1.5, e-sj-partial: 1.5 } }` (a Dirichlet; with two
+outcomes, a Beta): it lowers to the node's `probabilities` (the mean
 `α / Σα`) and `uncertainty.concentration` (`Σα`), and the matter's
 `observe` counts then update it (SPEC §5.6, §8.3).
 

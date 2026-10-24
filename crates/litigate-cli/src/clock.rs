@@ -312,19 +312,7 @@ impl Judged<'_, '_> {
         action: Option<&Expr>,
     ) -> Result<Due, String> {
         let (world, events, at, known_at) = (self.world, self.events, self.at, self.known_at);
-        let unit = match d.unit {
-            DayUnit::Calendar => Unit::Calendar,
-            DayUnit::Court => Unit::Court,
-            DayUnit::Week => Unit::Week,
-            DayUnit::Month => Unit::Month,
-            DayUnit::Year => Unit::Year,
-            DayUnit::Business => {
-                return Err(format!(
-                    "`{}` counts business days, which have no engine lowering",
-                    d.meta.id
-                ))
-            }
-        };
+        let unit = engine_unit(d)?;
         let counting_key = world.target(owner, &d.counting).key;
         let version = governing(world, "counting rule", &counting_key, events, at, known_at)?
             .and_then(|i| match world.decls[i].decl {
@@ -337,9 +325,20 @@ impl Judged<'_, '_> {
             |(_, c)| c.meta.id.clone(),
         );
         let method = action.and_then(|a| method_of(a, version.map(|(_, c)| c)));
+        // A designated due date is the notice's, rolled under the counting
+        // rule like any last day: counted zero days from it, no service
+        // days. A chained period (no event) designates nothing.
+        let designated = action
+            .and_then(|a| d.designation(trigger, a))
+            .transpose()
+            .map_err(|why| why.message().to_owned())?;
+        let (start, days, method) = match &designated {
+            Some(date) => (date.as_str(), 0, None),
+            None => (trigger, d.amount, method),
+        };
         let request = DayDeadline {
-            trigger: Date::parse_iso(trigger).map_err(|e| e.to_string())?,
-            days: i64::try_from(d.amount).map_err(|e| e.to_string())?,
+            trigger: Date::parse_iso(start).map_err(|e| e.to_string())?,
+            days: i64::try_from(days).map_err(|e| e.to_string())?,
             direction: match d.direction {
                 hir::Direction::Forward => Direction::Forward,
                 hir::Direction::Backward => Direction::Backward,
@@ -360,6 +359,7 @@ impl Judged<'_, '_> {
             cite: version.and_then(|(_, c)| c.meta.cite.clone()),
             trigger: trigger.to_owned(),
             method: method.map(|(name, _)| name),
+            designated,
             computed,
         })
     }

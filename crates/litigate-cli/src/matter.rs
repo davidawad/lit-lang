@@ -273,26 +273,39 @@ fn schedule(
                 0,
                 case.known_at.as_deref(),
             );
-            if let Ok(due) = due {
-                out.push(Scheduled {
-                    deadline: o.deadline.clone(),
-                    trigger: hirx::event_text(&trigger.action),
-                    trigger_date: due.trigger,
-                    due: due.computed.due_date,
-                    rule: due.rule,
-                    steps: due.computed.steps,
-                    version: due.version,
-                    cite: due.cite,
-                    rolled: due.computed.last_day_rolled,
+            let mut scheduled = Scheduled {
+                deadline: o.deadline.clone(),
+                trigger: hirx::event_text(&trigger.action),
+                trigger_date: trigger.date.clone(),
+                due: None,
+                unknown: None,
+                designated: None,
+                rule: String::new(),
+                steps: Vec::new(),
+                version: String::new(),
+                cite: None,
+                rolled: false,
+                method: None,
+                bearer: o.bearer.clone(),
+                floor: o.floor.clone(),
+                extended_to: o.extended_to.clone(),
+                extended_under: o.extended_under,
+                request_made: o.request_made.clone(),
+                status: o.status,
+            };
+            match due {
+                Ok(due) => {
+                    scheduled.due = Some(due.computed.due_date);
+                    scheduled.designated = due.designated;
+                    scheduled.rule = due.rule;
+                    scheduled.steps = due.computed.steps;
+                    scheduled.version = due.version;
+                    scheduled.cite = due.cite;
+                    scheduled.rolled = due.computed.last_day_rolled;
                     // A method the rule recognizes for no days added none.
-                    method: due.method.filter(|_| due.computed.service_days_added),
-                    bearer: o.bearer.clone(),
-                    floor: o.floor.clone(),
-                    extended_to: o.extended_to.clone(),
-                    extended_under: o.extended_under,
-                    request_made: o.request_made.clone(),
-                    status: o.status,
-                });
+                    scheduled.method = due.method.filter(|_| due.computed.service_days_added);
+                }
+                Err(why) => scheduled.unknown = Some(why),
             }
             out.push(scheduled);
         }

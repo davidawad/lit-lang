@@ -31,9 +31,9 @@ pub use logic::{
 };
 pub use temporal::{
     Anchor, Bound, Calendar, Capability, CauseStandard, Chain, Counting, DateRef, Deadline,
-    Direction, DueEnd, EndOfMonth, Extension, ExtensionWindow, Holiday, HolidayDate, Interval,
-    Motion, Observance, RollOn, ServiceTime, ShortPeriod, Transition, TransitionArm, TriggerPolicy,
-    SERVICE_METHODS,
+    Designated, Direction, DueEnd, EndOfMonth, Extension, ExtensionWindow, Holiday, HolidayDate,
+    Interval, Motion, Observance, RollOn, ServiceTime, ShortPeriod, Transition, TransitionArm,
+    TriggerPolicy, Undesignated, SERVICE_METHODS,
 };
 pub use value::{Authored, DayUnit, Money, Rational, Type, Value};
 

@@ -9,7 +9,10 @@
 //! counting rule (`litigate_lower::EngineClock`), so a matter is judged by
 //! exactly the arithmetic its scenario will run under.
 use super::graph::{display, Graph};
-use crate::hir::{DayUnit, Deadline, Declaration, Direction, DueEnd, Expr, ExprKind, Value};
+use crate::hir::{
+    DayUnit, Deadline, Declaration, Direction, DueEnd, Expr, ExprKind, Undesignated, Value,
+};
+use crate::temporal::condition::matches;
 use crate::temporal::MatterEvent;
 
 /// One day-counted deadline computation: the engine clock's inputs.
@@ -83,6 +86,12 @@ pub(super) struct Due {
     pub request: DueRequest,
     /// The computed due date, or why it could not be computed.
     pub date: Result<String, String>,
+    /// The trigger parameter designating the due date (`designated p`);
+    /// `None` when the period is counted.
+    pub designated: Option<String>,
+    /// The trigger leaves the designated due date unknown (`?`): an act
+    /// against it is neither timely nor late.
+    pub unknown: bool,
     /// For a chained period, the end it runs from ("the nominal end of
     /// `d`"); `None` when it runs from its trigger event.
     pub from: Option<String>,
@@ -261,6 +270,7 @@ impl Judged<'_, '_> {
         // governs the event; the shared library's stands in only for a rule
         // no package declares.
         let from = start.as_ref().map(|s| s.from.clone());
+        let mut unknown = false;
         let date = if let Some(Start {
             date: Err(why),
             from,
@@ -276,7 +286,29 @@ impl Judged<'_, '_> {
                 events[at].date
             ))
         } else {
-            clock.due(&request)
+            let event = &events[trigger];
+            match d.designation(event.date, event.action) {
+                // A displacing claimant counted for another deadline's
+                // instance: its trigger designates nothing for it.
+                Some(_) if !matches(&d.trigger, event.action) => Err(format!(
+                    "`{}` is not the trigger of `{}`, so it designates no due date for it",
+                    display(event.action),
+                    d.meta.id
+                )),
+                None => clock.due(&request),
+                // The notice's date, rolled under the counting rule like any
+                // last day (37 C.F.R. § 2.196): counted zero days from it.
+                Some(Ok(designated)) => clock.due(&DueRequest {
+                    trigger: designated,
+                    amount: 0,
+                    service: Vec::new(),
+                    ..request.clone()
+                }),
+                Some(Err(why)) => {
+                    unknown = matches!(why, Undesignated::Unknown(_));
+                    Err(why.message().to_owned())
+                }
+            }
         };
         Due {
             deadline: d.meta.id.clone(),
@@ -284,6 +316,8 @@ impl Judged<'_, '_> {
             date,
             request,
             from,
+            designated: d.designated.as_ref().map(|p| p.name.clone()),
+            unknown,
         }
     }
 }

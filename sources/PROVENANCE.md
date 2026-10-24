@@ -378,6 +378,33 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   dropped). No wording changed. Used by `packs/ttab-trademark-trial-and-appeal-board.json`.
 - sha256 (this file): `66402ce5e48bf2a9aa039058b3bfc181d3511b9e94137fac8b6a3d84a26b33a7`
 
+### `cfr-37-part2-answer-time-history.txt` — 37 C.F.R. §§ 2.105, 2.106 and 2.113 (TTAB answer time) as of January 13 and 14, 2017
+
+- The dates `lit/ttab`'s answer-time deadlines are in force from. For each
+  section, `## 37 C.F.R. (eCFR versions) § N` opens with a bracketed line
+  listing every version the eCFR records for it (2017-01-01, its first
+  recorded version, and 2017-01-14, the last amendment), then the section's
+  text as of 2017-01-14; `## 37 C.F.R. (eCFR 2017-01-13) § N` is the text
+  the day before. The headings are deliberately not canonical
+  `litgraph::cite::normalize` refs, so cites of the current sections resolve
+  to `cfr-37-part2.txt`, whose wording these 2017-01-14 texts match word for
+  word.
+- Fetched 2026-10-23 from the eCFR versioner API (`www.ecfr.gov`, Office of
+  the Federal Register): the version list
+  `/api/versioner/v1/versions/title-37.json?part=2` (sha256
+  `d1a55830383f26753b161838a0e0512897ba35fac0e0c293cd2541b1c2cd4bff`), and
+  `/api/versioner/v1/full/<date>/title-37.xml?part=2&section=<N>` for
+  2017-01-14 (§ 2.105 `ee15a98638c69c675b069e160a0eefff7ef4732bb6314b65b1d592987a156779`,
+  § 2.106 `84402a507a3cccf21ce99e1fd68bbeae1fd8cffc41c7f0c2c7390cb6e616f97f`,
+  § 2.113 `49c60f5418ec5228616ad9f2d250559919dba1648e3f6d32695bb066b3a7b48c`;
+  the 2026-10-19 responses are byte-identical) and 2017-01-13 (§ 2.105
+  `e67cbbcc06c258c1c5b8af8e44621cf92abd5ae1634cf7c81f6b0874725c1e9a`,
+  § 2.106 `2b48e49bf2cc100d9980228754be964b3d8ae664ae0267e801d99596ab8af263`,
+  § 2.113 `465446e09efbf10073a05610c2e5aeab43ca72a8f2f6c5979e89dcc4b484539c`).
+  Each `<HEAD>` and `<P>` became one line, tags stripped, entities decoded,
+  whitespace collapsed. No wording changed.
+- sha256 (this file): `93e7715ba5a605f480efdb1b9d82191fc1cfff00a242e066710adcfd298260f8`
+
 ### `cfr-37-part2-history.txt` — 37 C.F.R. §§ 2.119, 2.128 and 2.196 as in force on dated eCFR points in time
 
 - The texts that date `lit/ttab`'s counting rule (37 C.F.R. § 2.196 with

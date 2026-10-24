@@ -223,10 +223,10 @@ test "a day 180 on the Saturday before Labor Day rolls to Tuesday" cite "37 CFR 
 /// 2.106 (sources/cfr-37-part2-answer-time-history.txt).
 rule duty answer-time effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CFR 2.105(a)"
 {
-  /// The cite is a hole: `cfr2` holds the 2026 text, which postdates this
-  /// version; the 2017 text of 2.105(a) is not vendored.
-  deadline answer-period: 30.days from InstitutionNoticed() counted_by ttab-2-196 effective [2017-01-14, 2026-06-01) delegable_to [CaseOrder] cite ?("37 CFR 2.105(a)")
-  deadline answer-period: 60.days from InstitutionNoticed() counted_by ttab-2-196 effective [2026-06-01, ..) known_at 2026-06-01 supersedes answer-period@2017-01-14 delegable_to [CaseOrder] cite "37 CFR 2.106(a)"
+  deadline answer-period: 30.days from InstitutionNoticed() counted_by ttab-2-196 delegable_to [CaseOrder] cite "37 CFR 2.105(a)"
+  {
+    designated due
+  }
 }
 
 test "a notice designating 30 days sets the answer date" cite "37 CFR 2.105(a)"
@@ -268,7 +268,7 @@ test "a designated answer day on Labor Day rolls to Tuesday" cite "37 CFR 2.105(
 /// January 14, 2017 (sources/cfr-37-part2-answer-time-history.txt).
 rule duty counterclaim-answer-time effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CFR 2.106(b)(3)(iii)"
 {
-  deadline counterclaim-answer-period: 30.days from CounterclaimAnswerTimeDesignated() counted_by frcp6 delegable_to [CaseOrder] cite "37 CFR 2.106(b)(3)(iii)"
+  deadline counterclaim-answer-period: 30.days from CounterclaimAnswerTimeDesignated() counted_by ttab-2-196 delegable_to [CaseOrder] cite "37 CFR 2.106(b)(3)(iii)"
   {
     designated due
   }
@@ -293,7 +293,7 @@ test "a designated counterclaim answer day on a Saturday rolls to Monday" cite "
 /// effective January 14, 2017 (sources/cfr-37-part2-answer-time-history.txt).
 rule duty cancellation-answer-time effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CFR 2.113(a)"
 {
-  deadline cancellation-answer-period: 30.days from CancellationInstitutionNoticed() counted_by frcp6 delegable_to [CaseOrder] cite "37 CFR 2.113(a)"
+  deadline cancellation-answer-period: 30.days from CancellationInstitutionNoticed() counted_by ttab-2-196 delegable_to [CaseOrder] cite "37 CFR 2.113(a)"
   {
     designated due
   }

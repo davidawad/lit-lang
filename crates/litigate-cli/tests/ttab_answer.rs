@@ -162,7 +162,7 @@ fn the_notice_designates_the_answer_date() {
             explained(&run),
             (
                 rolled.to_owned(),
-                vec!["due on the date InstitutionNoticed() designates (its `due`), no earlier than 30 calendar day(s) after it, rolled by litigate-core::frcp6; in force [2017-01-14, ..)".to_owned()]
+                vec!["due on the date InstitutionNoticed() designates (its `due`), no earlier than 30 calendar day(s) after it, rolled by ttab-2-196; in force [2017-01-14, ..)".to_owned()]
             )
         );
     }

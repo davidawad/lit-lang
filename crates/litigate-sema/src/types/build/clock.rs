@@ -5,8 +5,8 @@ use super::cx::{first_expr, first_ref, flag, Cx};
 use crate::db::parse::tree::{ArmItem, Atom, Expr, ExprKind, Field, Item, Name, RefPath};
 use crate::db::span::Report;
 use crate::hir::{
-    Anchor, Chain, Counting, DayUnit, Deadline, Direction, DueEnd, EndOfMonth, RollOn, ServiceTime,
-    ShortPeriod, Transition, TransitionArm, Type, Value, SERVICE_METHODS,
+    Anchor, Chain, Counting, DayUnit, Deadline, Designated, Direction, DueEnd, EndOfMonth, RollOn,
+    ServiceTime, ShortPeriod, Transition, TransitionArm, Type, Value, SERVICE_METHODS,
 };
 use crate::resolve::sig::{TypeSig, ValueKind};
 use crate::resolve::suggest;
@@ -130,8 +130,10 @@ impl Cx<'_, '_> {
             "before" => Direction::Backward,
             _ => Direction::Forward,
         };
-        let (trigger, chain) = self.trigger(name, trigger);
         let o = self.once_except(opts, "extend");
+        let designated = first_ref(o.get("designated"))
+            .and_then(|r| self.designated(name, trigger, r, (direction, period.map(|p| p.1))));
+        let (trigger, chain) = self.trigger(name, trigger);
         let forum = first_ref(o.get("forum")).map_or_else(
             || self.manifest.map(|m| m.forum.clone()).unwrap_or_default(),
             RefPath::display,

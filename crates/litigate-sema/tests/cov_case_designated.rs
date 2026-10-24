@@ -60,6 +60,10 @@ impl Clock for Plus {
             due
         })
     }
+
+    fn nominal(&self, r: &DueRequest) -> Result<String, String> {
+        Ok(litigate_sema::types::date::add_days(&r.trigger, r.amount).unwrap_or_default())
+    }
 }
 
 fn run(as_of: &str, events: &[&str]) -> Vec<String> {

@@ -298,6 +298,16 @@ fn count(
         },
         |(_, c)| c.meta.id.as_str(),
     );
+    // A designated due date is the given event's, rolled under the
+    // counting rule like any last day: counted zero days from it.
+    let designated = deadline
+        .designation(date, given)
+        .transpose()
+        .map_err(|why| why.message().to_owned())?;
+    let (start, days) = match &designated {
+        Some(d) => (d.clone(), 0),
+        None => (start, deadline.amount),
+    };
     let trigger = clock::Date::parse_iso(&start).map_err(|e| e.to_string())?;
     let request = DayDeadline {
         trigger,

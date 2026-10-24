@@ -67,6 +67,7 @@ pub(crate) const DEADLINE_DECL_OPTS: &[Spec] = &[
     (KwTrigger, Some(ref_or_call)),
     (KwExtend, Some(capability)),
     (KwWaive, Some(capability)),
+    (KwDesignated, Some(reference)),
     (KwForum, Some(reference)),
 ];
 

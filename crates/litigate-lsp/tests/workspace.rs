@@ -134,3 +134,44 @@ fn packages_are_found_by_pack_id_or_name() {
     assert_eq!(by_name.as_deref(), Some("litigate-core"));
     assert!(a.hir_by_key("no-such-package").is_none());
 }
+
+#[test]
+fn a_cancelled_check_keeps_the_last_complete_analysis() {
+    let root = support::worked("ws-cancel", &[]);
+    let mut host = support::host(&root);
+    let module = root.join("lit/ex/rule12.lit");
+    let text = support::read("lit/examples/rule12.lit");
+    // Cancelled with nothing before it: its partial analysis is current.
+    let (complete, partial) = host.run(&|| true);
+    assert!(!complete);
+    assert!(partial.checked.verdicts.is_empty() && !partial.files.is_empty());
+
+    // Complete, then an edit cancelled: the complete analysis answers, its
+    // texts the ones it checked.
+    let checked = host.analyze().checked.verdicts.len();
+    assert_eq!(checked, 1);
+    let edited = text.replace("\"Pleadings\"", "\"Pleading papers\"");
+    open(&mut host, &module, &edited);
+    let (complete, kept) = host.run(&|| true);
+    assert!(!complete);
+    assert_eq!(kept.files["lit/ex/rule12.lit"], text);
+    assert_eq!(kept.checked.verdicts.len(), checked);
+    assert_eq!(kept.checked.session.packages[0].files[1].1, text);
+    // The next check reuses the database the cancelled one updated.
+    let fresh = host.analyze();
+    assert_eq!(fresh.files["lit/ex/rule12.lit"], edited);
+    assert_eq!((host.rebuilds, host.cancelled, host.checks), (1, 2, 4));
+
+    // A new file changes the workspace's shape: a cancelled rebuild leaves
+    // the last analysis as it was.
+    open(
+        &mut host,
+        &root.join("lit/ex/extra.lit"),
+        "module frcp.extra\n",
+    );
+    let (complete, kept) = host.run(&|| true);
+    assert!(!complete);
+    assert!(!kept.files.contains_key("lit/ex/extra.lit"));
+    assert_eq!(host.rebuilds, 2);
+    assert!(files(&mut host).contains(&"lit/ex/extra.lit".to_owned()));
+}

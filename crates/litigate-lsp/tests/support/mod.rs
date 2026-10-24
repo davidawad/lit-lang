@@ -122,6 +122,22 @@ impl Client {
             .expect("the server answers within a minute")
     }
 
+    /// Sends a request and returns its `error` (panics on a result).
+    pub async fn request_error(&mut self, method: &str, params: Value) -> Value {
+        self.id += 1;
+        let id = self.id;
+        self.send(json!({"jsonrpc": "2.0", "id": id, "method": method, "params": params}))
+            .await;
+        loop {
+            let message = self.recv().await;
+            if message.get("id") == Some(&json!(id)) && message.get("method").is_none() {
+                assert!(message.get("result").is_none(), "{method}: {message}");
+                return message["error"].clone();
+            }
+            self.notes.push(message);
+        }
+    }
+
     /// Sends a request and returns its `result` (panics on an error).
     pub async fn request(&mut self, method: &str, params: Value) -> Value {
         self.id += 1;
@@ -193,6 +209,20 @@ impl Client {
         self.notify(
             "textDocument/didOpen",
             json!({"textDocument": {"uri": uri(path), "languageId": language, "version": 1, "text": text}}),
+        )
+        .await;
+    }
+
+    /// Opens the file at `uri` with `text`.
+    pub async fn open_at(&mut self, uri: &str, text: &str) {
+        let language = if uri.ends_with(".case") {
+            "litigate-case"
+        } else {
+            "litigate"
+        };
+        self.notify(
+            "textDocument/didOpen",
+            json!({"textDocument": {"uri": uri, "languageId": language, "version": 1, "text": text}}),
         )
         .await;
     }

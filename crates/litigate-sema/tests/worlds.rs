@@ -146,3 +146,16 @@ fn a_package_without_a_valid_manifest_resolves_nothing() {
     let world = WorldId::new(&db, "2020-01-01".to_owned(), None);
     assert!(world_selection(&db, ws.packages(&db)[0], world).is_empty());
 }
+
+#[test]
+fn a_claim_on_a_declaration_governs_it() {
+    let (db, pkg, _) = demo(
+        "deadline q: 14.days from Served(complaint) counted_by c6 effective [2012-01-01, ..) notwithstanding p\n",
+    );
+    let world = WorldId::new(&db, "2020-01-01".to_owned(), None);
+    let Some(Resolution::Governed { id, from, .. }) = world_selection(&db, pkg, world).get("p")
+    else {
+        panic!("p is governed");
+    };
+    assert_eq!((id.as_str(), from.as_str()), ("q", "2012-01-01"));
+}

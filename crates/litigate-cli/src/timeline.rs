@@ -1849,6 +1849,7 @@ mod tests {
             );
         }
         d.designated = Some(hir::Designated {
+            event: "Served".to_owned(),
             param: 0,
             name: "due".to_owned(),
             interpretation: None,

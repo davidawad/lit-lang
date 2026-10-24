@@ -9,7 +9,7 @@ state period-lapsed: "Opposition period closed with no opposition filed" by boar
 {
   group lapse
   note "Opposition period closed. The opposer loses the opposition but keeps a petition to cancel within 5 years of registration (15 USC 1064(1)) and any infringement action."
-  _ "Office issues notice of allowance" -> notice-of-allowance {
+  edge-06-lapse-notice-of-allowance-1 "Office issues notice of allowance" -> notice-of-allowance {
     authority cite "15 USC 1063(b)(2)"
     duration { min 30.days, mode 60.days, max 120.days }
   }
@@ -18,7 +18,7 @@ state period-lapsed: "Opposition period closed with no opposition filed" by boar
 state notice-of-allowance: "Notice of allowance issued; 6 months to file statement of use (extendable to 24 months)" by applicant cite "15 USC 1063(b)(2); 15 USC 1051(d)(1)-(2)"
 {
   group lapse
-  _ "File statement of use ($150/class) and register" -> post-registration-risk {
+  edge-06-lapse-post-registration-risk-1 "File statement of use ($150/class) and register" -> post-registration-risk {
     authority cite "15 USC 1051(d); 37 CFR 2.88; 37 CFR 2.6(a)(3)(ii)"
     effort 1.5.hours
     cost 150.usd
@@ -30,18 +30,18 @@ chance post-registration-risk: "Registered; opposer's residual options (cancella
 {
   group lapse
   tags [fact-free]
-  _ "Opposer takes no further action" -> registered p 0.8 {
+  edge-06-lapse-registered-1 "Opposer takes no further action" -> registered p 0.8 {
     authority cite "15 USC 1064(1)"
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
   }
-  _ "Opposer petitions to cancel on 2(d) priority/confusion" -> cancellation-merits p 0.15 {
+  edge-06-lapse-cancellation-merits-1 "Opposer petitions to cancel on 2(d) priority/confusion" -> cancellation-merits p 0.15 {
     authority cite "15 USC 1064(1); 37 CFR 2.111; 2.6(a)(16)(ii)"
     effort 118.hours
     duration { min 700.days, mode 900.days, max 1200.days }
     note "Teaching estimate. Same evidence as above; cost mirrors a tried opposition (hours = stage sum below)."
     attrs { opp_fees: 600, opp_hours: 138 }
   }
-  _ "Opposer sues for infringement instead (15 USC 1114(1), 1125(a))" -> infringement-suit-filed p 0.05 {
+  edge-06-lapse-infringement-suit-filed-1 "Opposer sues for infringement instead (15 USC 1114(1), 1125(a))" -> infringement-suit-filed p 0.05 {
     authority cite "15 USC 1114(1); 15 USC 1125(a)"
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
     tags [threat]
@@ -50,12 +50,12 @@ chance post-registration-risk: "Registered; opposer's residual options (cancella
 
 chance cancellation-merits: "Petition to cancel (2(d)) tried to decision" by board discretion cite ?("15 USC 1064(1); TBMP 309.03") {
   group lapse
-  _ "Opposer wins: registration cancelled" -> cancelled-rebrand p 0.6 {
+  edge-06-lapse-cancelled-rebrand-1 "Opposer wins: registration cancelled" -> cancelled-rebrand p 0.6 {
     authority cite "15 USC 1064(1); 15 USC 1052(d)"
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
     tags [merits-opposer, cancel]
   }
-  _ "Applicant wins: registration stands" -> registered p 0.4 {
+  edge-06-lapse-registered-2 "Applicant wins: registration stands" -> registered p 0.4 {
     authority cite "15 USC 1064(1)"
     tags [merits-applicant, cancel]
   }

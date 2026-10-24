@@ -92,6 +92,47 @@ fn human_output_renders_diagnostics_with_source() {
 }
 
 #[test]
+fn ttab_check_human_output_groups_library_noise_and_verbose_restores_it() {
+    let run = |args: &[&str]| {
+        assert_cmd::Command::cargo_bin("litigate")
+            .unwrap()
+            .current_dir(support::repo())
+            .args(args)
+            .output()
+            .unwrap()
+    };
+    let default = run(&["--format", "human", "check", "cases/e2e-ttab-short.case"]);
+    assert_eq!(default.status.code(), Some(2));
+    let default_text = String::from_utf8_lossy(&default.stdout);
+    assert!(default_text.contains("designates `answer-period` due 2026-11-05"));
+    assert!(
+        default_text.contains("ttab-trademark-trial-and-appeal-board: 68 holes; --verbose to show")
+    );
+    assert!(!default_text.contains("[L9003]"));
+
+    let verbose = run(&[
+        "--format",
+        "human",
+        "check",
+        "--verbose",
+        "cases/e2e-ttab-short.case",
+    ]);
+    assert_eq!(verbose.status.code(), Some(2));
+    let verbose_text = String::from_utf8_lossy(&verbose.stdout);
+    assert!(verbose_text.contains("[L9002]"));
+    assert!(!verbose_text.contains("--verbose to show"));
+
+    let json = run(&["--format", "json", "check", "cases/e2e-ttab-short.case"]);
+    let document: serde_json::Value = serde_json::from_slice(&json.stdout).unwrap();
+    assert_eq!(document["diagnostics"].as_array().unwrap().len(), 69);
+    assert!(document["diagnostics"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|d| d["code"] == "L9002"));
+}
+
+#[test]
 fn inline_tests_pass_through_the_engine_clock() {
     let run = litigate(&["test", "lit/examples"]);
     assert_eq!(run.code, 0, "{}", run.stdout);

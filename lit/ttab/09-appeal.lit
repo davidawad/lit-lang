@@ -8,11 +8,11 @@ import ttab.{ appeal }
 chance cafc-outcome: "Federal Circuit decides" by board discretion cite "15 USC 1071(a); 28 USC 1295(a)(4)(B)"
 {
   group appeal
-  _ "Affirmed" -> opposition-sustained p 0.88 {
+  edge-09-appeal-opposition-sustained-1 "Affirmed" -> opposition-sustained p 0.88 {
     authority cite "28 USC 1295(a)(4)(B)"
     note "Teaching estimate. Substantial-evidence review of Board fact findings; affirmance rates for TTAB are high (no KB data; assumption)."
   }
-  _ "Reversed/vacated; application returns to allowance" -> noa-post-decision p 0.12 {
+  edge-09-appeal-noa-post-decision-1 "Reversed/vacated; application returns to allowance" -> noa-post-decision p 0.12 {
     authority cite "15 USC 1071(a)"
     note "Teaching estimate. Complement."
   }
@@ -21,11 +21,11 @@ chance cafc-outcome: "Federal Circuit decides" by board discretion cite "15 USC 
 chance district-outcome: "District court decides (de novo on new evidence)" by board discretion cite "15 USC 1071(b)"
 {
   group appeal
-  _ "Court upholds refusal" -> opposition-sustained p 0.72 {
+  edge-09-appeal-opposition-sustained-2 "Court upholds refusal" -> opposition-sustained p 0.72 {
     authority cite "15 USC 1071(b)"
     note "Teaching estimate. New evidence gives a real chance; still follows the Board on 2(d) usually (assumption)."
   }
-  _ "Court orders registration" -> noa-post-decision p 0.28 {
+  edge-09-appeal-noa-post-decision-2 "Court orders registration" -> noa-post-decision p 0.28 {
     authority cite "15 USC 1071(b)(1)"
     note "Teaching estimate. Complement."
   }

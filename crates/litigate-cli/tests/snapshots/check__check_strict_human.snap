@@ -1,5 +1,6 @@
 ---
 source: crates/litigate-cli/tests/check.rs
+assertion_line: 91
 expression: text
 ---
 [L5002] Error: strict does not permit holes: no calibration yet
@@ -19,20 +20,6 @@ expression: text
     │                                        ╰── Strict profile does not permit unresolved holes
     │ 
     │ Note: replace the `?` with a sourced value
-────╯
-[L9003] Advice: the edge `answered -> judgment-entered` has no id, so cases and links cannot name it
-    ╭─[ lit/examples/rule12.lit:87:51 ]
-    │
- 87 │ state answered: "Answer filed" { group pleadings, _ "Proceed to judgment" -> judgment-entered }
-    │                                                   ─────────────────────┬─────────────────────  
-    │                                                                        ╰─────────────────────── An anonymous edge cannot be referenced by cases or links
-────╯
-[L9003] Advice: the edge `default-risk -> judgment-entered` has no id, so cases and links cannot name it
-    ╭─[ lit/examples/rule12.lit:88:60 ]
-    │
- 88 │ state default-risk: "Failure to respond" { group outcomes, _ "Default entered" -> judgment-entered }
-    │                                                            ───────────────────┬───────────────────  
-    │                                                                               ╰───────────────────── An anonymous edge cannot be referenced by cases or links
 ────╯
 [L5002] Error: strict does not permit holes: no reason given
     ╭─[ lit/examples/rule12.lit:90:97 ]

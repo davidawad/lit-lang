@@ -9,14 +9,14 @@ decision opposer-d180: "Standstill expired without a deal: the opposer must oppo
 {
   group standstill
   tags [opponent-decision]
-  _ "Opposer files notice of opposition by day 180" -> opposition-filed {
+  edge-04-standstill-2-opposition-filed-1 "Opposer files notice of opposition by day 180" -> opposition-filed {
     authority cite "37 CFR 2.101(c), 2.102(c)(3)"
     event OppositionFiled()
     within outer-limit-180 { extendable false }
     tags [file-opposition]
     attrs { opp_fees: 600, opp_hours: 14 }
   }
-  _ "Opposer lets the opposition period lapse" -> period-lapsed {
+  edge-04-standstill-2-period-lapsed-1 "Opposer lets the opposition period lapse" -> period-lapsed {
     authority cite "37 CFR 2.101(c); 15 USC 1063(b)"
     tags [lapse]
   }

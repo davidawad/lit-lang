@@ -123,6 +123,9 @@ pub enum Command {
         /// Checking profile.
         #[arg(long, value_enum, default_value_t)]
         profile: ProfileArg,
+        /// Render diagnostics from dependency packages individually.
+        #[arg(long)]
+        verbose: bool,
         /// Shared options.
         #[command(flatten)]
         dates: Dates,

@@ -292,6 +292,7 @@ pub fn build(src: &dyn Source, args: &Args) -> Outcome {
         provenance: c.provenance(dates.as_of.as_deref(), dates.known_at.as_deref()),
         sources: c.session.sources(),
         diagnostics: c.diagnostics.clone(),
+        check_render: None,
         profile: Some(profile),
         failed: false,
     };

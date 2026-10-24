@@ -8,12 +8,12 @@ import ttab.{ decision }
 chance decision-dismissed: "Opposition dismissed: the opposer may appeal" by board cite "15 USC 1071; 37 CFR 2.145(d)"
 {
   group decision
-  _ "Opposer does not appeal; judgment final after 63 days" -> noa-post-decision p 0.75 {
+  edge-10-decision-2-noa-post-decision-1 "Opposer does not appeal; judgment final after 63 days" -> noa-post-decision p 0.75 {
     authority cite "37 CFR 2.136; 2.145(d)"
     duration { min 63.days, mode 63.days, max 63.days }
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
   }
-  _ "Opposer appeals to CAFC or files a civil action" -> opposer-appeal-outcome p 0.25 {
+  edge-10-decision-2-opposer-appeal-outcome-1 "Opposer appeals to CAFC or files a civil action" -> opposer-appeal-outcome p 0.25 {
     authority cite "15 USC 1071"
     effort 100.hours
     cost 1_200.usd

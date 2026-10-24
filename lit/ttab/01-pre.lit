@@ -24,19 +24,19 @@ state published: "Application published for opposition" by opposer cite "15 USC 
   group pre
   note "Start of the 30-day opposition period after publication (37 CFR 2.101(c)). A matter scenario sets scenario.start to the node matching its current posture."
   tags [entry]
-  _ "Opposer requests 30-day extension (granted on request)" -> ext-first-30 {
+  edge-01-pre-ext-first-30-1 "Opposer requests 30-day extension (granted on request)" -> ext-first-30 {
     event ExtensionRequested(Thirty)
     authority cite "37 CFR 2.102(c)(1)(i)"
     within opposition-period { extendable true, extension_authority "37 CFR 2.102(c)(2)-(3)" }
     attrs { opp_hours: 1 }
   }
-  _ "Opposer requests 90-day extension (good cause)" -> ext-first-90 {
+  edge-01-pre-ext-first-90-1 "Opposer requests 90-day extension (good cause)" -> ext-first-90 {
     event ExtensionRequested(Ninety)
     authority cite "37 CFR 2.102(c)(1)(ii)"
     within first-extension-90 { extendable true, extension_authority "37 CFR 2.102(c)(3)" }
     attrs { opp_fees: 200, opp_hours: 1 }
   }
-  _ "Opposer opposes within the original 30 days" -> opposition-filed {
+  edge-01-pre-opposition-filed-1 "Opposer opposes within the original 30 days" -> opposition-filed {
     authority cite "37 CFR 2.101(c)"
     event OppositionFiled()
     within opposition-period { extendable true, extension_authority "37 CFR 2.102(c)" }
@@ -48,7 +48,7 @@ state published: "Application published for opposition" by opposer cite "15 USC 
 state ext-first-30: "First extension (30 days, granted on request)" by opposer cite "37 CFR 2.102(c)(1)(i)"
 {
   group pre
-  _ "Opposer requests additional 60 days (good cause)" -> ext-second-60 {
+  edge-01-pre-ext-second-60-1 "Opposer requests additional 60 days (good cause)" -> ext-second-60 {
     event ExtensionRequested(Sixty)
     authority cite "37 CFR 2.102(c)(2)"
     within second-extension-60 { extendable true, extension_authority "37 CFR 2.102(c)(3)" }
@@ -59,7 +59,7 @@ state ext-first-30: "First extension (30 days, granted on request)" by opposer c
 state ext-first-90: "First extension (90 days, good cause)" by board cite "37 CFR 2.102(c)(1)(ii)"
 {
   group pre
-  _ "Extension runs to day 120" -> period-ends-day120 {
+  edge-01-pre-period-ends-day120-1 "Extension runs to day 120" -> period-ends-day120 {
     event ExtendedPeriodExpired()
     authority cite "37 CFR 2.102(c)"
     duration { min 0.days, mode 0.days, max 0.days }
@@ -69,7 +69,7 @@ state ext-first-90: "First extension (90 days, good cause)" by board cite "37 CF
 state ext-second-60: "Second extension (additional 60 days, good cause)" by board cite "37 CFR 2.102(c)(2)"
 {
   group pre
-  _ "Extensions run to day 120" -> period-ends-day120 {
+  edge-01-pre-period-ends-day120-2 "Extensions run to day 120" -> period-ends-day120 {
     event ExtendedPeriodExpired()
     authority cite "37 CFR 2.102(c)"
     duration { min 0.days, mode 0.days, max 0.days }
@@ -80,19 +80,19 @@ decision period-ends-day120: "Day 120: opposition period expires unless the appl
   group pre
   note "Day 120 from publication. The final 60 days (to day 180) is available only on the applicant's written consent or a showing of extraordinary circumstances; settlement talks, letters of protest, pending amendments and civil litigation are not extraordinary (TBMP 207.03)."
   tags [entry, day120]
-  _ "Consent to final 60-day extension under standstill" -> standstill-period {
+  edge-01-pre-standstill-period-1 "Consent to final 60-day extension under standstill" -> standstill-period {
     authority cite "37 CFR 2.102(c)(3)"
     effort 3.hours
     duration { min 1.days, mode 1.days, max 3.days }
     attrs { opp_hours: 2 }
   }
-  _ "Refuse consent; let the period expire" -> opposer-d120 {
+  edge-01-pre-opposer-d120-1 "Refuse consent; let the period expire" -> opposer-d120 {
     authority cite "37 CFR 2.101(c); 2.102(c)(3)"
     effort 1.hours
     duration { min 0.days, mode 1.days, max 1.days }
     tags [refuse-consent]
   }
-  _ "Abandon application now (before opposition)" -> abandon-chance {
+  edge-01-pre-abandon-chance-1 "Abandon application now (before opposition)" -> abandon-chance {
     authority cite "37 CFR 2.68"
     effort 2.hours
     tags [abandon-now]

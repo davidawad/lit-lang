@@ -22,6 +22,19 @@ pub struct Report {
     /// diagnostic (a litgraph `ok: false` response): exit 2, `ok` stays
     /// true because compilation itself succeeded.
     pub failed: bool,
+    /// Human-only filtering and grouping for `check`; JSON always carries all diagnostics.
+    pub check_render: Option<CheckRender>,
+}
+
+/// Check-specific human rendering policy.
+#[derive(Debug, Clone, Default)]
+pub struct CheckRender {
+    /// Show dependency diagnostics individually.
+    pub verbose: bool,
+    /// Files supplied by the user (and workspace files found under them).
+    pub own_files: std::collections::BTreeSet<String>,
+    /// Package name by source file.
+    pub package_by_file: std::collections::BTreeMap<String, String>,
 }
 
 impl Report {
@@ -146,7 +159,12 @@ pub fn print(op: &str, outcome: Outcome, format: Format, color: bool, elapsed_ms
                 s
             })
             .unwrap_or_default(),
-        Format::Human => render::human(&envelope, &report.sources, color),
+        Format::Human => render::human_with_check(
+            &envelope,
+            &report.sources,
+            color,
+            report.check_render.as_ref(),
+        ),
     };
     Printed {
         stdout,

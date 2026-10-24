@@ -123,12 +123,72 @@ pub(crate) fn severity_word(severity: Severity) -> &'static str {
 
 /// The whole envelope for a terminal.
 #[must_use]
+#[cfg(test)]
 pub fn human(envelope: &Envelope<Value>, sources: &[(String, String)], color: bool) -> String {
-    let mut out: String = envelope
-        .diagnostics
-        .iter()
-        .map(|d| diagnostic(d, sources, color))
-        .collect();
+    human_with_check(envelope, sources, color, None)
+}
+
+/// Human output with optional check-specific filtering. The serialized envelope
+/// is never changed by this view.
+#[must_use]
+pub fn human_with_check(
+    envelope: &Envelope<Value>,
+    sources: &[(String, String)],
+    color: bool,
+    check: Option<&crate::out::CheckRender>,
+) -> String {
+    use std::collections::BTreeMap;
+    let mut visible = Vec::new();
+    let mut grouped: BTreeMap<String, [usize; 5]> = BTreeMap::new();
+    for (index, d) in envelope.diagnostics.iter().enumerate() {
+        let Some(policy) = check.filter(|p| !p.verbose) else {
+            visible.push(index);
+            continue;
+        };
+        let file = &d.span.file.0;
+        if policy.own_files.contains(file) {
+            if d.code.as_str() == "L9002" {
+                let name = policy
+                    .package_by_file
+                    .get(file)
+                    .cloned()
+                    .unwrap_or_else(|| "matter".to_owned());
+                grouped.entry(name).or_default()[4] += 1;
+            } else if matches!(d.severity, Severity::Error | Severity::Warning) {
+                visible.push(index);
+            }
+        } else if let Some(name) = policy.package_by_file.get(file) {
+            let counts = grouped.entry(name.clone()).or_default();
+            if d.code.as_str() == "L9002" {
+                counts[4] += 1;
+            } else {
+                match d.severity {
+                    Severity::Error => counts[0] += 1,
+                    Severity::Warning => counts[1] += 1,
+                    Severity::Info => counts[2] += 1,
+                    Severity::Hint => counts[3] += 1,
+                }
+            }
+        }
+    }
+    let mut out = String::new();
+    for index in visible {
+        out.push_str(&diagnostic(&envelope.diagnostics[index], sources, color));
+    }
+    for (name, counts) in grouped {
+        let mut parts = Vec::new();
+        for (i, label) in [(0, "error"), (1, "warning"), (2, "info"), (3, "hint")] {
+            if counts[i] > 0 {
+                parts.push(format!("{} {label}", counts[i]));
+            }
+        }
+        if counts[4] > 0 {
+            parts.push(format!("{} holes", counts[4]));
+        }
+        if !parts.is_empty() {
+            let _ = writeln!(out, "{name}: {}; --verbose to show", parts.join(", "));
+        }
+    }
     let count = |s: Severity| {
         envelope
             .diagnostics
@@ -242,6 +302,65 @@ mod tests {
         assert_eq!(
             human(&envelope, &[], false),
             "litigate fmt: ok (0 error(s), 0 warning(s))\n"
+        );
+    }
+
+    #[test]
+    fn check_human_output_filters_workspace_noise_and_groups_holes() {
+        let span = |file: &str| Span {
+            file: file.into(),
+            line: 1,
+            col: 1,
+            end_line: 1,
+            end_col: 2,
+        };
+        let own_warning = Diagnostic {
+            severity: Severity::Warning,
+            ..Diagnostic::error(DiagnosticCode::HolePresent, span("case.case"), "unknown")
+                .note("details")
+        };
+        let own_error =
+            Diagnostic::error(DiagnosticCode::UnresolvedName, span("mine.lit"), "bad name");
+        let dep_info = Diagnostic {
+            severity: Severity::Info,
+            ..Diagnostic::error(
+                DiagnosticCode::AnonymousEdge,
+                span("lit/ttab/rules.lit"),
+                "anonymous",
+            )
+        };
+        let dep_hole = Diagnostic {
+            severity: Severity::Warning,
+            ..Diagnostic::error(
+                DiagnosticCode::HolePresent,
+                span("lit/ttab/rules.lit"),
+                "unknown",
+            )
+        };
+        let report = crate::out::Report {
+            diagnostics: vec![own_warning, own_error, dep_info, dep_hole],
+            check_render: Some(crate::out::CheckRender {
+                own_files: ["mine.lit".to_owned(), "case.case".to_owned()].into(),
+                package_by_file: [
+                    ("mine.lit".to_owned(), "mine".to_owned()),
+                    ("lit/ttab/rules.lit".to_owned(), "ttab".to_owned()),
+                ]
+                .into(),
+                ..Default::default()
+            }),
+            ..Default::default()
+        };
+        let envelope = crate::out::envelope("check", &report, 0.0);
+        let text = human_with_check(&envelope, &[], false, report.check_render.as_ref());
+        assert!(text.contains("bad name"), "{text}");
+        assert!(!text.contains("anonymous"), "{text}");
+        assert!(
+            text.contains("ttab: 1 info, 1 holes; --verbose to show"),
+            "{text}"
+        );
+        assert!(
+            text.contains("matter: 1 holes; --verbose to show"),
+            "{text}"
         );
     }
 

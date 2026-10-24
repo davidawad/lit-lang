@@ -7,7 +7,7 @@ import ttab.{ decision }
 state decision-restricted: "Registrable with restriction: applicant must move to amend" by applicant cite "37 CFR 2.133(b)"
 {
   group decision
-  _ "Move to amend ID to conform to the findings" -> registration-restricted {
+  edge-12-decision-3-registration-restricted-1 "Move to amend ID to conform to the findings" -> registration-restricted {
     authority cite "37 CFR 2.133(b)"
     effort 6.hours
     tags [restricted-amend]
@@ -18,7 +18,7 @@ state decision-restricted: "Registrable with restriction: applicant must move to
 state noa-post-decision: "Judgment final; application returns to prior status, notice of allowance" by applicant cite "37 CFR 2.136; 15 USC 1063(b)(2)"
 {
   group decision
-  _ "File statement of use ($150/class) and register" -> registered {
+  edge-12-decision-3-registered-1 "File statement of use ($150/class) and register" -> registered {
     authority cite "15 USC 1051(d); 37 CFR 2.6(a)(3)(ii)"
     effort 1.5.hours
     cost 150.usd

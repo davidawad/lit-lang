@@ -68,6 +68,7 @@ pub fn run(case: &str, op: &str, links: bool, lib: &[String]) -> Outcome {
         ),
         sources: session.sources(),
         diagnostics: session.scoped(&scope, c.diagnostics.clone()),
+        check_render: None,
         profile: Some(Profile::Dev),
         failed: false,
     };

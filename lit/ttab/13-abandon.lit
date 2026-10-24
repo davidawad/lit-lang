@@ -8,15 +8,15 @@ import ttab.{ abandon }
 chance abandon-aftermath: "Opposer decides whether to press its use-based claims after the application is gone" by board cite "15 USC 1114(1); 15 USC 1125(a)"
 {
   group abandon
-  _ "Opposer drops the C&D; applicant keeps using the mark unregistered" -> abandoned-keeps-using p 0.35 {
+  edge-13-abandon-abandoned-keeps-using-1 "Opposer drops the C&D; applicant keeps using the mark unregistered" -> abandoned-keeps-using p 0.35 {
     authority cite "15 USC 1125(a)"
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
   }
-  _ "Opposer presses; applicant rebrands on a negotiated timetable" -> rebrand-orderly p 0.55 {
+  edge-13-abandon-rebrand-orderly-1 "Opposer presses; applicant rebrands on a negotiated timetable" -> rebrand-orderly p 0.55 {
     authority cite "15 USC 1125(a)"
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
   }
-  _ "Opposer sues" -> infringement-suit-filed p 0.1 {
+  edge-13-abandon-infringement-suit-filed-1 "Opposer sues" -> infringement-suit-filed p 0.1 {
     authority cite "15 USC 1114(1); 1125(a)"
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
     tags [threat]

@@ -181,12 +181,31 @@ pub fn check(
     profile: Profile,
     dates: &Dates,
     lib: &[String],
+    verbose: bool,
 ) -> Outcome {
     let c = checked_in(src, paths, profile, &dates.options(), lib)?;
     let profile_name = match profile {
         Profile::Dev => "dev",
         Profile::Strict => "strict",
     };
+    let own_files: std::collections::BTreeSet<String> = c
+        .session
+        .packages
+        .iter()
+        .filter(|p| p.requested)
+        .flat_map(|p| p.files.iter().map(|(f, _)| f.clone()))
+        .chain(c.session.cases.iter().map(|case| case.path.clone()))
+        .collect();
+    let package_by_file: std::collections::BTreeMap<String, String> = c
+        .session
+        .packages
+        .iter()
+        .flat_map(|p| {
+            p.files
+                .iter()
+                .map(move |(f, _)| (f.clone(), p.name.clone()))
+        })
+        .collect();
     Ok(Report {
         result: json!({
             "profile": profile_name,
@@ -198,6 +217,11 @@ pub fn check(
         provenance: c.provenance(dates.as_of.as_deref(), dates.known_at.as_deref()),
         sources: c.session.sources(),
         diagnostics: c.diagnostics,
+        check_render: Some(crate::out::CheckRender {
+            verbose,
+            own_files,
+            package_by_file,
+        }),
         profile: Some(profile),
         failed: false,
     })

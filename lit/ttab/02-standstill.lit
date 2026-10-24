@@ -9,7 +9,7 @@ state standstill-period: "Standstill: final 60-day extension by consent" by boar
 {
   group standstill
   note "Applicant consents to the final extension in exchange for a standstill (no suit, no opposition, talks). Cost of consent: the potential opposer keeps the option to oppose until day 180."
-  _ "Standstill begins" -> neg-posture {
+  edge-02-standstill-neg-posture-1 "Standstill begins" -> neg-posture {
     authority cite "37 CFR 2.102(c)(3)"
     duration { min 1.days, mode 1.days, max 1.days }
   }
@@ -17,14 +17,14 @@ state standstill-period: "Standstill: final 60-day extension by consent" by boar
 
 decision neg-posture: "Choose negotiating posture during standstill" by applicant cite ?("37 CFR 2.102(c)(3); TBMP 605") {
   group standstill
-  _ "Lead with rebrand-with-transition + the opposer cost contribution" -> neg-rebrand {
+  edge-02-standstill-neg-rebrand-1 "Lead with rebrand-with-transition + the opposer cost contribution" -> neg-rebrand {
     authority cite ?("TBMP 605.01")
     effort 12.hours
     duration { min 20.days, mode 45.days, max 60.days }
     tags [posture-rebrand]
     attrs { opp_hours: 8 }
   }
-  _ "Lead with coexistence agreement (field limits, styling, mutual non-challenge)" -> neg-coexist {
+  edge-02-standstill-neg-coexist-1 "Lead with coexistence agreement (field limits, styling, mutual non-challenge)" -> neg-coexist {
     authority cite ?("TBMP 605.03; TMEP 1207.01(d)(viii)")
     effort 14.hours
     duration { min 20.days, mode 50.days, max 60.days }
@@ -36,22 +36,22 @@ decision neg-posture: "Choose negotiating posture during standstill" by applican
 chance neg-rebrand: "Talks led by rebrand-with-transition and cost share" by board cite ?("TBMP 605.01") {
   group standstill
   tags [negotiation]
-  _ "Deal: rebrand on a transition period with the opposer cost contribution" -> settle-rebrand-transition p 0.38 {
+  edge-02-standstill-settle-rebrand-transition-1 "Deal: rebrand on a transition period with the opposer cost contribution" -> settle-rebrand-transition p 0.38 {
     authority cite ?("TBMP 605.03")
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
     tags [deal]
   }
-  _ "Deal: coexistence / consent agreement, registration proceeds" -> settle-coexistence p 0.12 {
+  edge-02-standstill-settle-coexistence-1 "Deal: coexistence / consent agreement, registration proceeds" -> settle-coexistence p 0.12 {
     authority cite ?("TBMP 605.03; TMEP 1207.01(d)(viii)")
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
     tags [deal]
   }
-  _ "Deal: consent with narrowed ID (restricted registration)" -> registration-restricted p 0.05 {
+  edge-02-standstill-registration-restricted-1 "Deal: consent with narrowed ID (restricted registration)" -> registration-restricted p 0.05 {
     authority cite ?("TBMP 212.01-.02; 37 CFR 2.133(a)")
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
     tags [deal]
   }
-  _ "No deal by day 180" -> opposer-d180 p 0.45 {
+  edge-02-standstill-opposer-d180-1 "No deal by day 180" -> opposer-d180 p 0.45 {
     authority cite "37 CFR 2.102(c)(3)"
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
     tags [no-deal]
@@ -62,22 +62,22 @@ chance neg-rebrand: "Talks led by rebrand-with-transition and cost share" by boa
 chance neg-coexist: "Talks led by coexistence / consent agreement" by board cite ?("TBMP 605.03; TMEP 1207.01(d)(viii)") {
   group standstill
   tags [negotiation]
-  _ "Deal: rebrand on a transition period with the opposer cost contribution" -> settle-rebrand-transition p 0.1 {
+  edge-02-standstill-settle-rebrand-transition-2 "Deal: rebrand on a transition period with the opposer cost contribution" -> settle-rebrand-transition p 0.1 {
     authority cite ?("TBMP 605.03")
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
     tags [deal]
   }
-  _ "Deal: coexistence / consent agreement, registration proceeds" -> settle-coexistence p 0.28 {
+  edge-02-standstill-settle-coexistence-2 "Deal: coexistence / consent agreement, registration proceeds" -> settle-coexistence p 0.28 {
     authority cite ?("TBMP 605.03; TMEP 1207.01(d)(viii)")
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
     tags [deal]
   }
-  _ "Deal: consent with narrowed ID (restricted registration)" -> registration-restricted p 0.12 {
+  edge-02-standstill-registration-restricted-2 "Deal: consent with narrowed ID (restricted registration)" -> registration-restricted p 0.12 {
     authority cite ?("TBMP 212.01-.02; 37 CFR 2.133(a)")
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
     tags [deal]
   }
-  _ "No deal by day 180" -> opposer-d180 p 0.5 {
+  edge-02-standstill-opposer-d180-2 "No deal by day 180" -> opposer-d180 p 0.5 {
     authority cite "37 CFR 2.102(c)(3)"
     note "Teaching estimate (generic prior; a matter scenario overrides it via scenario.probabilities / probability_fn / observe). No docket statistic is claimed."
     tags [no-deal]

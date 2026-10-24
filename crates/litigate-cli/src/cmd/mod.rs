@@ -34,9 +34,10 @@ pub fn dispatch(command: Command, src: &dyn Source) -> Outcome {
         Command::Check {
             paths,
             profile,
+            verbose,
             dates,
             library,
-        } => check::check(src, &paths, profile.into(), &dates, &library.lib),
+        } => check::check(src, &paths, profile.into(), &dates, &library.lib, verbose),
         Command::Build {
             paths,
             out,

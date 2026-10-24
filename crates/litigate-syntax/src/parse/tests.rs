@@ -286,6 +286,40 @@ fn and_and_or_are_reserved_everywhere_but_only_as_whole_words() {
     );
 }
 
+#[test]
+fn expression_boolean_words_have_machine_applicable_operator_fixes() {
+    use litigate_base::Applicability;
+
+    for (source, word, replacement, code) in [
+        ("module m\nstart a and b\n", "and", "&&", "L0010"),
+        ("module m\nstart a or b\n", "or", "||", "L0010"),
+        (
+            "module links\ninstance base@one {\n  pack base\n  patch go {\n    when and not ready\n  }\n}\n",
+            "not",
+            "!",
+            "L0012",
+        ),
+    ] {
+        let parsed = parse_lit(source);
+        let error = parsed
+            .errors()
+            .iter()
+            .find(|error| error.code.as_str() == code)
+            .unwrap_or_else(|| panic!("expected {code}: {source}"));
+        assert_eq!(&source[error.range], word);
+        assert_eq!(error.fixes.len(), 1);
+        assert_eq!(&source[error.fixes[0].range], word);
+        assert_eq!(error.fixes[0].replacement, replacement);
+        assert_eq!(
+            error.fixes[0].applicability,
+            Applicability::MachineApplicable
+        );
+    }
+
+    assert!(patched("    when and !ready && permitted || waived").is_ok());
+    assert!(patched("    when and ready\n    when or permitted").is_ok());
+}
+
 /// A module whose only item after `module m` is `item`.
 fn limited(item: &str) -> super::Parse {
     parse_lit(&format!("module m\n\n{item}\n\nstart s\n"))

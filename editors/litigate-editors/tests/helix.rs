@@ -59,6 +59,54 @@ fn every_helix_query_compiles_and_runs_over_the_corpus() {
 }
 
 #[test]
+fn and_or_are_highlighted_as_keywords_only_in_guard_operations() {
+    let source = "module m\nstart and\ninstance base@one {\n  pack base\n  patch go {\n    when and ready\n    when or permitted\n  }\n}\n";
+    let mut parser = Parser::new();
+    parser.set_language(&language()).unwrap();
+    let tree = parser.parse(source, None).unwrap();
+    let query_source =
+        std::fs::read_to_string(helix::queries_dir().join("highlights.scm")).unwrap();
+    let query = Query::new(&language(), &query_source).unwrap();
+    let keyword = query
+        .capture_names()
+        .iter()
+        .position(|name| *name == "keyword")
+        .unwrap();
+    let mut cursor = QueryCursor::new();
+    let mut matches = cursor.matches(&query, tree.root_node(), source.as_bytes());
+    let mut highlighted = Vec::new();
+    while let Some(query_match) = matches.next() {
+        highlighted.extend(
+            query_match
+                .captures()
+                .iter()
+                .filter(|capture| capture.index as usize == keyword)
+                .map(|capture| {
+                    capture
+                        .node
+                        .utf8_text(source.as_bytes())
+                        .unwrap()
+                        .to_owned()
+                }),
+        );
+    }
+    assert_eq!(
+        highlighted
+            .iter()
+            .filter(|word| word.as_str() == "and")
+            .count(),
+        1
+    );
+    assert_eq!(
+        highlighted
+            .iter()
+            .filter(|word| word.as_str() == "or")
+            .count(),
+        1
+    );
+}
+
+#[test]
 fn textobjects_use_helix_object_names() {
     let source = std::fs::read_to_string(helix::queries_dir().join("textobjects.scm")).unwrap();
     let query = Query::new(&language(), &source).unwrap();

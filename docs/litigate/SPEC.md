@@ -124,8 +124,12 @@ Punct        = "::" | "->" | "=>" | "==" | "!=" | "<=" | ">=" | "&&" | "||" | ".
   `litigate_syntax::REFINEMENT_WORDS`. `and` and `or` are keywords of the
   typed guard operations of a patch (`when and`, `when or`, §3.6) and
   nothing else: anywhere an identifier could stand they are L0010. Their
-  list is `litigate_syntax::GUARD_OP_WORDS`. Boolean operators stay `&&`
-  and `||` (§3.3). `limit`, `certificate` and `excludes` are
+  list is `litigate_syntax::GUARD_OP_WORDS`. Boolean expressions use
+  `&&`, `||` and `!` (§3.3); `and`/`or` in expression position produce
+  L0010 with a machine-applicable fix to the matching symbolic operator,
+  and `not` produces L0012 with a fix to `!`. One spelling keeps
+  expressions uniform across guards, rules and matters. The formatter
+  never emits word operators in expressions. `limit`, `certificate` and `excludes` are
   reserved the same way for filing requirements, as L0011 (§3.7); their
   list is `litigate_syntax::FILING_WORDS`. `requires` stays the edge
   field keyword.
@@ -325,6 +329,15 @@ CiteExpr   = Cite ;
 
 Comparison is non-associative: `a < b < c` is L0001. All binary operators
 are left-associative.
+
+Boolean operators have exactly one expression spelling: `&&`, `||` and
+`!`. The words `and` and `or` are accepted only as the statement forms
+`when and C` and `when or C` in a patch (§3.6); in expressions they produce
+L0010 and a machine-applicable fix to `&&` or `||`. `not` in expression
+position produces L0012 and a machine-applicable fix to `!`. This keeps
+boolean expressions consistent across guards, rules and matters. Formatting
+does not run on syntax errors, and valid expression formatting preserves
+only the symbolic operators.
 
 ### 3.4 Parsing decisions and recovery
 
@@ -2092,6 +2105,7 @@ unchanged, and is graded `error`; anything else is rejected.
 | L0009 | reserved refinement | | |
 | L0010 | guard-operation keyword | | |
 | L0011 | reserved filing requirement | | |
+| L0012 | word boolean operator | | |
 | L1001 | duplicate name | L3007 | no version in force |
 | L1002 | unresolved name | L3008 | invalid transition |
 | L1003 | import cycle | L3009 | invalid counting |
@@ -2556,6 +2570,7 @@ gets one row per condition when the conditions classify differently.
 | C81 | L5009 after an edge creating a duty's obligation no marking enabling its `within` edge is reachable (§7) | verify | c | O16. |
 | C82 | L9006 a `.case` event declares no id (§5.6) | sema | a | Syntactic: the event line has no `Ident ":"` before its date. |
 | C83 | L0011 filing requirement (`limit`, `requires certificate`, `excludes`) before lg-962.10 adds it (§3.7) | syntax | a | Grammar: a reserved slot that always rejects. |
+| C84 | L0012 `not` in expression position (§3.3) | syntax | a | The expression grammar accepts symbolic `!` only; a machine-applicable fix makes the intended unary form explicit. |
 
 ### 13.4 SPEC rules with no code of their own
 

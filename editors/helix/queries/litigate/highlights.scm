@@ -31,12 +31,15 @@
   "basis" "allow_hours" "end_of_month" "effective" "observed" "amends" "subject_to" "notwithstanding"
   "supersedes" "revives" "override" "delegable_to" "rebuts" "undercuts"
   "priority" "url" "bearer" "designated" "interpretation" "trigger" "extend" "waive" "after_expiry" "never"
-  "removes" "elects" "extends" "waives" "to" "where" "and" "or" "forums"
+  "removes" "elects" "extends" "waives" "to" "where" "forums"
   "forward_holidays" "declared_holidays" "quote"
   "words" "pages" "lines" "certificate" "excludes" "ecf"
 ] @keyword
 
 (discretion) @keyword
+
+; These words are keywords only in typed guard operations, never in expressions.
+(guard_op operator: ["and" "or"] @keyword)
 
 [ "when" "unless" "otherwise" "match" ] @keyword.control.conditional
 

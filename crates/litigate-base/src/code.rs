@@ -55,7 +55,7 @@ macro_rules! registry {
     };
 }
 
-registry! { 70;
+registry! { 71;
     UnexpectedToken = "L0001" => "The token is not valid at this position in the grammar",
     UnterminatedLiteral = "L0002" => "A string, block comment, or other delimited literal was not closed",
     InvalidToken = "L0003" => "The source contains a character sequence that is not a token",
@@ -67,6 +67,7 @@ registry! { 70;
     ReservedRefinement = "L0009" => "Refinement syntax (`{x: T | p}` or a `where` clause) is reserved for the SMT tier and not yet accepted",
     ReservedGuardOp = "L0010" => "`and` or `or` used outside a typed guard operation of a patch (`when and p`, `when or p`), the only place they are keywords",
     ReservedFilingRequirement = "L0011" => "A filing requirement (`limit paper { words <= N }`, `requires certificate kind`, `excludes [...]`) is reserved and not yet accepted",
+    BooleanWordOperator = "L0012" => "Use `!` for boolean negation; `not` is not an expression operator",
     DuplicateName = "L1001" => "A declaration name is duplicated in the same namespace",
     UnresolvedName = "L1002" => "A referenced declaration or imported module could not be resolved",
     ImportCycle = "L1003" => "Module imports must form an acyclic dependency graph",

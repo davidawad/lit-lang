@@ -216,14 +216,20 @@ impl Lexer<'_> {
                         ),
                     );
                 } else if GUARD_OP_WORDS.contains(&text) {
-                    self.error(
-                        DiagnosticCode::ReservedGuardOp,
-                        start,
-                        end,
-                        format!(
-                            "{RESERVED_GUARD_OP}: `{text}` combines a patched edge's guard \
+                    self.errors.push(
+                        SyntaxError::new(
+                            DiagnosticCode::ReservedGuardOp,
+                            range(start, end),
+                            format!(
+                                "{RESERVED_GUARD_OP}: `{text}` combines a patched edge's guard \
                              only in `when {text} p` inside a `patch`; it cannot be used as an \
                              identifier"
+                            ),
+                        )
+                        .with_fix(
+                            range(start, end),
+                            if text == "and" { "&&" } else { "||" },
+                            Applicability::MachineApplicable,
                         ),
                     );
                 } else if FILING_WORDS.contains(&text) {

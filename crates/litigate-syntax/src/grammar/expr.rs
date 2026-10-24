@@ -83,6 +83,26 @@ fn binary(p: &mut Parser<'_>, level: usize) -> bool {
 }
 
 fn unary(p: &mut Parser<'_>) -> bool {
+    if p.at(Ident) && p.nth_text(0) == "not" {
+        let at = p.range_of(0);
+        p.push_error(
+            SyntaxError::new(
+                DiagnosticCode::BooleanWordOperator,
+                at,
+                "use `!` for boolean negation; `not` is not an expression operator",
+            )
+            .with_fix(at, "!", litigate_base::Applicability::MachineApplicable),
+        );
+        p.start(UnaryExpr);
+        p.bump();
+        p.nested(|p| {
+            if !unary(p) {
+                p.error_expected(EXPR_START);
+            }
+        });
+        p.finish();
+        return true;
+    }
     if matches!(p.nth(0), Bang | Minus) {
         p.start(UnaryExpr);
         p.bump();

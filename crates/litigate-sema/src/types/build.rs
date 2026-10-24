@@ -15,9 +15,9 @@ mod package;
 
 pub use package::{check_package, expected_lock, PackageCheck};
 
+use crate::db::ids::DeclId;
 use crate::db::inputs::SourceFile;
 use crate::db::parse::tree::{dotted, Import, Item, ItemKind, ItemTree, Name, TypeRef};
-use crate::db::ids::DeclId;
 use crate::db::queries::{
     check_decl, decl_item, item_tree, manifest, module_context_of, signature, span_map,
 };
@@ -385,8 +385,11 @@ pub fn check_decl_at<'db>(
 #[allow(clippy::too_many_lines)] // one arm per declaration kind
 fn items(cx: &mut Cx<'_, '_>, top: &Item, context: &ModuleContext) -> DeclCheck {
     let mut out = DeclCheck::default();
-    let aliases: BTreeMap<String, &crate::db::parse::tree::TypeRef> =
-        context.aliases.iter().map(|(n, t)| (n.clone(), t)).collect();
+    let aliases: BTreeMap<String, &crate::db::parse::tree::TypeRef> = context
+        .aliases
+        .iter()
+        .map(|(n, t)| (n.clone(), t))
+        .collect();
     let local_counting =
         |name: &str, key: &str| context.countings.get(name).map(|keys| keys.contains(key));
     let nested: &[Item] = match &top.kind {
@@ -468,9 +471,7 @@ fn items(cx: &mut Cx<'_, '_>, top: &Item, context: &ModuleContext) -> DeclCheck 
             ItemKind::Counting(n, _, fields) => cx
                 .counting(item, rule, n, fields)
                 .map(Declaration::Counting),
-            ItemKind::Calendar(n, _, h) => {
-                cx.calendar(item, rule, n, h).map(Declaration::Calendar)
-            }
+            ItemKind::Calendar(n, _, h) => cx.calendar(item, rule, n, h).map(Declaration::Calendar),
             ItemKind::Transition(n, amends, _, arms) => cx
                 .transition(item, rule, n, amends, arms)
                 .map(Declaration::Transition),
@@ -565,4 +566,3 @@ fn info_sets(members: &[InfoMember], reports: &mut Vec<Report>) {
         }
     }
 }
-

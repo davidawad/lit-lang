@@ -26,10 +26,7 @@ deadline d: 21.days from Served(complaint) counted_by c6
 
 fn one(text: &str) -> (LitDatabase, SourceFile) {
     let (mut db, _) = LitDatabase::with_event_log();
-    let ws = create_workspace(
-        &mut db,
-        &[common::package("demo", &[], &[("a.lit", text)])],
-    );
+    let ws = create_workspace(&mut db, &[common::package("demo", &[], &[("a.lit", text)])]);
     let file = ws.packages(&db)[0].files(&db)[0];
     (db, file)
 }
@@ -87,7 +84,8 @@ fn editing_one_declaration_retypes_only_it() {
     let (mut db, file) = one(A);
     let _ = check_module(&db, file);
     let _ = db.take_log();
-    file.set_text(&mut db).to(A.replace("\"End\"", "\"The end\""));
+    file.set_text(&mut db)
+        .to(A.replace("\"End\"", "\"The end\""));
     let _ = check_module(&db, file);
     let log = db.take_log();
     let ids = decls(&db, file);

@@ -144,9 +144,7 @@ impl Locate for Source<'_> {
     }
 
     fn end(&self, d: &Decl<'_>) -> Option<Span> {
-        self.item(d, |item, conv| {
-            conv(item.range.at_end())
-        })
+        self.item(d, |item, conv| conv(item.range.at_end()))
     }
 
     fn rank(&self, rank: &Rank) -> Option<Span> {

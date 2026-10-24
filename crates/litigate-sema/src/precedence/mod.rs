@@ -14,6 +14,7 @@ pub mod lattice;
 pub mod query;
 pub mod select;
 pub mod shape;
+pub mod worlds;
 
 pub use conflict::{beats, winner, Reason};
 pub use defeasible::{conclude, Conclusion};

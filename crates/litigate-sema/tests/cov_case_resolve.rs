@@ -319,6 +319,10 @@ fn analysis_fields_table() {
              carry_per_day: 1.usd / 2, r1: 1.005.usd / 1.hours, r2: 1.usd / 0.hours, \
              r3: (650.usd / 1.hours) } }",
         ),
+        (
+            "typed params: a bare carrying cost is per day",
+            "analysis { params: { carry_per_day: 30 } }",
+        ),
         ("a field with no value", "analysis { rate: }"),
         (
             "engine option numbers JSON cannot read",

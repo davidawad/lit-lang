@@ -16,7 +16,7 @@ const FORMS: &str =
 impl Cx<'_, '_> {
     /// The typed `basis` field, if written (L2001 when malformed).
     pub fn basis(&mut self, f: Option<&&Field>) -> Option<Basis> {
-        let x = first_expr(f?)?;
+        let x = f.and_then(|f| first_expr(f))?;
         let basis = shape(x);
         if basis.is_none() {
             self.report(

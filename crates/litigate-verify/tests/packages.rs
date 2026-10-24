@@ -174,6 +174,11 @@ fn cite_resolves_checks_sourced_bases() {
         "{ payoff 0.usd }",
         "{ payoff 0.usd, basis sourced(\"FRCP 97(a)\") }",
         1,
+    )
+    .replacen(
+        "{\n  answer \"File",
+        "{\n  basis estimate\n  answer \"File",
+        1,
     );
     let c = verify_one(&lit, Profile::Strict);
     let found = outcome(&c, Obligation::CiteResolves);

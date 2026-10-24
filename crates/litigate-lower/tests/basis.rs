@@ -145,6 +145,21 @@ fn a_scenario_joins_every_number_it_rests_on() {
         }
     }
     assert_eq!(scenario_basis(&pkg, &acme()), at(Basis::Sourced));
+    // A terminal valued only by flag has numbers too.
+    if let hir::NodeKind::Terminal {
+        payoff,
+        payoff_by_flag,
+        ..
+    } = &mut node_mut(&mut pkg, "dismissed").kind
+    {
+        *payoff = None;
+        payoff_by_flag.insert("settled".into(), usd(5));
+    }
+    node_mut(&mut pkg, "dismissed").basis = Some(hir::Basis::Expert {
+        name: "Jane Roe".into(),
+    });
+    assert_eq!(scenario_basis(&pkg, &acme()), at(Basis::Expert));
+    node_mut(&mut pkg, "dismissed").basis = Some(sourced.clone());
     node_mut(&mut pkg, "mtd-ruling").edges[0].basis = Some(hir::Basis::Calibrated {
         dataset: "d".into(),
         as_of: "2024-01-01".into(),

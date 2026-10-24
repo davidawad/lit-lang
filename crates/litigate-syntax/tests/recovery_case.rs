@@ -56,6 +56,7 @@ fn version_requirements() {
 fn beliefs_need_a_reference_and_a_colon() {
     let no_ref = case("^1.0.0", "beliefs { observe 1 }\n");
     let no_colon = case("^1.0.0", "beliefs { observe x 1 }\n");
+    let prior_no_colon = case("^1.0.0", "beliefs { prior x 1 }\n");
     check_all(
         FileKind::Case,
         &[
@@ -64,6 +65,10 @@ fn beliefs_need_a_reference_and_a_colon() {
                 &["L0001 5:19-5:20 expected an identifier, found `1`"],
             ),
             (&no_colon, &["L0001 5:21-5:22 expected `:`, found `1`"]),
+            (
+                &prior_no_colon,
+                &["L0001 5:19-5:20 expected `:`, found `1`"],
+            ),
         ],
     );
 }

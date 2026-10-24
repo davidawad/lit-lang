@@ -37,7 +37,9 @@ fn credal_sets_reject_what_is_not_a_set() {
          default j when credal(0, 1) < credal(0, 1) => 1\n\
          default k when true => mean(credal(1/9223372036854775807, 1/9223372036854775806))\n\
          default l when true => credal(1/9223372036854775807, 1) + credal(1/9223372036854775806, 1)\n\
-         default m when true => lower()",
+         default m when true => lower()\n\
+         default n when true => 2025-01-01 + credal(0, 1)\n\
+         default o when true => credal(0, 1) + 2025-01-01",
     );
     insta::assert_debug_snapshot!(out);
 }
@@ -77,6 +79,7 @@ fn conditional_distributions_reject_bad_literals() {
          default g when true => at({ complaint: { zip: 1 }, answer: { zip: 1 } }, Document.answer)\n\
          default h when true => at(1, Document.answer)\n\
          default i when true => at(nope, Document.answer)\n\
+         default j when has_event(P(1)) => 1\n\
          type T1 = Dist<Method, Number>\n\
          type T2 = Dist<Method, Document, Method>",
     );

@@ -40,6 +40,9 @@ expression: table
         "ok: start alpha::bench",
         "trace Took Benched(complaint) alpha::intake -> alpha::bench via alpha::to-bench",
     ],
+    "typed params: a bare carrying cost is per day": [
+        "15:37 L4007 `params.carry_per_day` is a `Rate<usd, CalendarDays>`, written as money per day: `N.usd / 1.days`\n    note: a bare number has no unit; the engine reads it as USD per unit of time\n    fix @15:37-15:39 MachineApplicable: \"30.usd / 1.days\"",
+    ],
     "typed params: engine rates are money per unit of time": [
         "15:28 L4007 `params.rate` is a `Rate<usd, Hours>`, written as money per hour: `N.usd / 1.hours`\n    note: a bare number has no unit; the engine reads it as USD per unit of time\n    fix @15:28-15:31 MachineApplicable: \"650.usd / 1.hours\"",
         "15:43 L4007 `params.opp_rate` is a `Rate<usd, Hours>`, written as money per hour: `N.usd / 1.hours`",

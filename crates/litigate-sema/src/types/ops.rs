@@ -146,10 +146,18 @@ fn result_type(op: BinaryOp, l: &Type, r: &Type) -> Result<Type, (C, String)> {
             format!("cannot combine `{}` with `{}`", display(l), display(r)),
         ));
     }
+    // Interval arithmetic: a credal set with a credal set or a point.
+    let interval = |t: &Type| matches!(t, T::Credal | T::Probability);
+    if matches!(op, B::Add | B::Sub | B::Mul)
+        && (*l == T::Credal || *r == T::Credal)
+        && interval(l)
+        && interval(r)
+    {
+        return Ok(T::Credal);
+    }
     match (op, l, r) {
         (B::Or | B::And, T::Boolean, T::Boolean) => Ok(T::Boolean),
         (B::Eq | B::Ne, a, b) if a == b && !matches!(a, T::List(_) | T::Distribution(_) | T::Conditional(..) | T::Unit) => Ok(T::Boolean),
-        (B::Add | B::Sub | B::Mul, T::Credal | T::Probability, T::Credal | T::Probability) if *l == T::Credal || *r == T::Credal => Ok(T::Credal),
         (B::Lt | B::Le | B::Gt | B::Ge, a, b) if a == b && matches!(a, T::Date | T::Days(_) | T::Hours | T::Money(_) | T::Probability | T::Number) => Ok(T::Boolean),
         (B::Add | B::Sub, a, b) if a == b && matches!(a, T::Days(_) | T::Hours | T::Money(_) | T::Probability | T::Number) => Ok(a.clone()),
         (B::Mul | B::Div, T::Days(_) | T::Hours | T::Money(_), T::Number) => Ok(l.clone()),
@@ -194,12 +202,16 @@ pub fn binary(
             return c.error(r);
         }
     };
-    let value = match (&l.value, &rr.value) {
-        (Some(a), Some(b)) if ty == Type::Credal => match super::uncertain::fold(op, a, b) {
-            Ok(v) => v,
-            Err(err) => return c.arith(r, err),
+    // A point beside a credal set is its one-point set.
+    let widen = |v: &Value| match v {
+        Value::Probability(p) if ty == Type::Credal => Value::Credal {
+            lower: *p,
+            upper: *p,
         },
-        (Some(a), Some(b)) => match fold(op, a, b) {
+        other => other.clone(),
+    };
+    let value = match (&l.value, &rr.value) {
+        (Some(a), Some(b)) => match fold(op, &widen(a), &widen(b)) {
             Ok(v) => v,
             Err(err) => return c.arith(r, err),
         },
@@ -309,6 +321,17 @@ pub fn fold(op: BinaryOp, a: &Value, b: &Value) -> Result<Option<Value>, ArithEr
         return Ok(Some(V::Boolean(ord(o))));
     }
     Ok(Some(match (op, a, b) {
+        (
+            _,
+            V::Credal {
+                lower: al,
+                upper: au,
+            },
+            V::Credal {
+                lower: bl,
+                upper: bu,
+            },
+        ) => super::uncertain::interval(op, (*al, *au), (*bl, *bu))?,
         (B::And, V::Boolean(x), V::Boolean(y)) => V::Boolean(*x && *y),
         (B::Or, V::Boolean(x), V::Boolean(y)) => V::Boolean(*x || *y),
         (_, V::Number(x), V::Number(y)) => V::Number(arith(*x, *y)?),

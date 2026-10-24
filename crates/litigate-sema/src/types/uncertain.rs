@@ -247,30 +247,25 @@ pub fn conditional(
     )
 }
 
-/// Interval arithmetic on credal sets (a probability is the one-point
-/// set): `+`, `-` and `*` of `[a, b]` and `[c, d]` within `[0, 1]`.
-/// `Ok(None)` unless one operand is a credal set and both fold.
+/// Interval arithmetic on credal sets `[al, au]` and `[bl, bu]` (a
+/// probability is the one-point set): `+`, `-`, and otherwise `*`.
 ///
 /// # Errors
 /// Exact arithmetic overflow.
-pub fn fold(op: BinaryOp, a: &Value, b: &Value) -> Result<Option<Value>, ArithError> {
-    let bounds = |v: &Value| match v {
-        Value::Credal { lower, upper } => Some((*lower, *upper)),
-        Value::Probability(p) => Some((*p, *p)),
-        _ => None,
-    };
-    let credal = matches!(a, Value::Credal { .. }) || matches!(b, Value::Credal { .. });
-    let (Some((al, au)), Some((bl, bu)), true) = (bounds(a), bounds(b), credal) else {
-        return Ok(None);
-    };
+pub fn interval(
+    op: BinaryOp,
+    (al, au): (Rational, Rational),
+    (bl, bu): (Rational, Rational),
+) -> Result<Value, ArithError> {
     let (lower, upper) = match op {
-        BinaryOp::Add => (q::add(al, bl)?, q::add(au, bu)?),
-        BinaryOp::Sub => (q::sub(al, bu)?, q::sub(au, bl)?),
+        BinaryOp::Add => (q::add(al, bl), q::add(au, bu)),
+        BinaryOp::Sub => (q::sub(al, bu), q::sub(au, bl)),
         // Every bound is non-negative, so the product's bounds are the
         // products of the bounds.
-        _ => (q::mul(al, bl)?, q::mul(au, bu)?),
+        _ => (q::mul(al, bl), q::mul(au, bu)),
     };
-    Ok(Some(Value::Credal { lower, upper }))
+    let (lower, upper) = lower.and_then(|l| upper.map(|u| (l, u)))?;
+    Ok(Value::Credal { lower, upper })
 }
 
 /// Reports a credal result that leaves `[0, 1]`, or a sum or difference
@@ -300,31 +295,4 @@ pub fn out_of_range(
     };
     c.report(Report::new(C::ArithmeticError, r, message));
     true
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn interval_arithmetic_folds_only_credal_operands() {
-        let r = |n, d| Rational {
-            numerator: n,
-            denominator: d,
-        };
-        let set = Value::Credal {
-            lower: r(1, 4),
-            upper: r(1, 2),
-        };
-        let p = Value::Probability(r(1, 2));
-        assert_eq!(fold(BinaryOp::Add, &p, &p), Ok(None));
-        assert_eq!(fold(BinaryOp::Mul, &set, &Value::Unit), Ok(None));
-        assert_eq!(
-            fold(BinaryOp::Sub, &p, &set),
-            Ok(Some(Value::Credal {
-                lower: r(0, 1),
-                upper: r(1, 4),
-            }))
-        );
-    }
 }

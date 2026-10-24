@@ -26,14 +26,15 @@ fn outcomes(n: &Node) -> Vec<String> {
         .collect()
 }
 
-/// Whether `analysis.uncertainty.concentration` names `node`.
+/// Whether `analysis.uncertainty.concentration` names `node` (its keys
+/// are identifiers, so by its local id).
 fn concentrated(case: &Case, node: &str) -> bool {
     case.analysis
         .options
         .get("uncertainty")
         .and_then(|o| o.value.get("concentration"))
         .and_then(serde_json::Value::as_object)
-        .is_some_and(|m| m.keys().any(|k| k == node || k == local(node)))
+        .is_some_and(|m| m.keys().any(|k| k == local(node)))
 }
 
 /// Checks every `prior` of `case` (L4006).

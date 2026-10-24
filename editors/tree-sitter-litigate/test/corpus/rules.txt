@@ -178,11 +178,11 @@ Counting closed sets, forums and unrecognized methods
 ================================================================================
 
 module a
-counting c cite FRCP 6(a)
+counting c cite "FRCP 6(a)"
 {
   service_extension { Personal: 0.days, PrisonMail: unrecognized }
   holidays federal-holidays
-  forward_holidays state cite FRCP 6(a)(6)(C)
+  forward_holidays state cite "FRCP 6(a)(6)(C)"
   declared_holidays closures
   forums [frcp, frap]
 }
@@ -198,7 +198,8 @@ deadline d: 90.days after Entered() counted_by c { forum scotus }
     (counting_decl
       (identifier)
       (cite
-        (cite_text))
+        (string
+          (string_content)))
       (counting_body
         (counting_item
           (service_map
@@ -215,7 +216,8 @@ deadline d: 90.days after Entered() counted_by c { forum scotus }
           (ref
             (identifier))
           (cite
-            (cite_text)))
+            (string
+              (string_content))))
         (counting_item
           (ref
             (identifier)))

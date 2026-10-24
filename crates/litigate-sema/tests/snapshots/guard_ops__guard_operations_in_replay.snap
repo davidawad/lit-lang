@@ -1,0 +1,92 @@
+---
+source: crates/litigate-sema/tests/guard_ops.rs
+expression: rows
+---
+{
+    "base: the unpatched guard derives timely": [
+        "ok: start base@order::check",
+        "trace Took Ordered() base::intake -> base@order::intake via base::enter",
+        "trace Triggered Moved() base@order::intake -> base@order::intake",
+        "trace Took Filed() base@order::intake -> base@order::check via base@order::file",
+        "fact base@order::check = base@order::timely",
+    ],
+    "cite hole: unverified, the operation does not apply": [
+        "ok: start base@order::check",
+        "trace Took Ordered() base::intake -> base@order::intake via base::enter",
+        "trace Triggered Moved() base@order::intake -> base@order::intake",
+        "trace Took Filed() base@order::intake -> base@order::check via base@order::file",
+        "fact base@order::check = base@order::timely",
+    ],
+    "ended before the date read: the base guard holds": [
+        "ok: start base@order::won",
+        "trace Took Ordered() base::intake -> base@order::intake via base::enter",
+        "trace Triggered Moved() base@order::intake -> base@order::intake",
+        "trace Took Filed() base@order::intake -> base@order::check via base@order::file",
+        "trace Fact fact base@order::check -> base@order::heard via base@order::timely",
+        "trace Took Noted() base@order::heard -> base@order::won via base@order::go",
+    ],
+    "known_at: recorded after the matter's corpus date, not yet known": [
+        "ok: start base@order::check",
+        "trace Took Ordered() base::intake -> base@order::intake via base::enter",
+        "trace Triggered Moved() base@order::intake -> base@order::intake",
+        "trace Took Filed() base@order::intake -> base@order::check via base@order::file",
+        "fact base@order::check = base@order::timely",
+    ],
+    "known_at: recorded by the matter's corpus date, it applies": [
+        "ok: start base@order::check",
+        "trace Took Ordered() base::intake -> base@order::intake via base::enter",
+        "trace Triggered Moved() base@order::intake -> base@order::intake",
+        "trace Took Filed() base@order::intake -> base@order::check via base@order::file",
+    ],
+    "narrow: `g && C` holds with it, and the trace names the operation": [
+        "ok: start base@order::won",
+        "trace Took Ordered() base::intake -> base@order::intake via base::enter",
+        "trace Triggered Moved() base@order::intake -> base@order::intake",
+        "trace Triggered Excused() base@order::intake -> base@order::intake",
+        "trace Took Filed() base@order::intake -> base@order::check via base@order::file",
+        "trace Fact fact base@order::check -> base@order::heard via base@order::timely",
+        "trace Took Noted() base@order::heard -> base@order::won via base@order::go",
+        "{\"op\":\"narrow\",\"condition\":\"has_event(Excused())\",\"by\":\"FederalRule\",\"cite\":\"Order, Dkt. 12\",\"from\":\"2010-01-01\",\"known_at\":\"2025-01-01\"}",
+    ],
+    "narrow: `g && C` no longer holds without the excuse": [
+        "ok: start base@order::check",
+        "trace Took Ordered() base::intake -> base@order::intake via base::enter",
+        "trace Triggered Moved() base@order::intake -> base@order::intake",
+        "trace Took Filed() base@order::intake -> base@order::check via base@order::file",
+    ],
+    "not yet in force: the base guard holds": [
+        "ok: start base@order::check",
+        "trace Took Ordered() base::intake -> base@order::intake via base::enter",
+        "trace Triggered Moved() base@order::intake -> base@order::intake",
+        "trace Took Filed() base@order::intake -> base@order::check via base@order::file",
+        "fact base@order::check = base@order::timely",
+    ],
+    "replace: `C` alone, the base guard is gone": [
+        "ok: start base@order::check",
+        "trace Took Ordered() base::intake -> base@order::intake via base::enter",
+        "trace Triggered Moved() base@order::intake -> base@order::intake",
+        "trace Took Filed() base@order::intake -> base@order::check via base@order::file",
+    ],
+    "replace: `C` holds": [
+        "ok: start base@order::check",
+        "trace Took Ordered() base::intake -> base@order::intake via base::enter",
+        "trace Triggered Excused() base@order::intake -> base@order::intake",
+        "trace Took Filed() base@order::intake -> base@order::check via base@order::file",
+        "fact base@order::check = base@order::timely",
+    ],
+    "widen: `g || C` holds on the excuse alone": [
+        "ok: start base@order::check",
+        "trace Took Ordered() base::intake -> base@order::intake via base::enter",
+        "trace Triggered Excused() base@order::intake -> base@order::intake",
+        "trace Took Filed() base@order::intake -> base@order::check via base@order::file",
+        "fact base@order::check = base@order::timely",
+    ],
+    "widen: the narrowed sibling no longer derives late on an excuse": [
+        "ok: start base@order::check",
+        "trace Took Ordered() base::intake -> base@order::intake via base::enter",
+        "trace Triggered Struck() base@order::intake -> base@order::intake",
+        "trace Triggered Excused() base@order::intake -> base@order::intake",
+        "trace Took Filed() base@order::intake -> base@order::check via base@order::file",
+        "fact base@order::check = base@order::timely",
+    ],
+}

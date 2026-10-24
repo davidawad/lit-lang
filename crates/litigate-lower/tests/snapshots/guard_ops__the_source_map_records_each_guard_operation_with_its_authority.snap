@@ -1,0 +1,78 @@
+---
+source: crates/litigate-lower/tests/guard_ops.rs
+expression: "[&one, &both, &before]"
+---
+[
+  [
+    {
+      "pointer": "/instances/base@order/patch_edges/timely",
+      "base": "has_event(Moved())",
+      "ops": [
+        {
+          "op": "narrow",
+          "condition": "has_event(Excused())",
+          "by": "CaseOrder",
+          "cite": "Order, Dkt. 12",
+          "from": "2010-01-01",
+          "known_at": "2025-01-01",
+          "applied": true
+        }
+      ],
+      "composed": "has_event(Moved()) && has_event(Excused())"
+    }
+  ],
+  [
+    {
+      "pointer": "/instances/base@order/patch_edges/timely",
+      "base": "has_event(Moved())",
+      "ops": [
+        {
+          "op": "narrow",
+          "condition": "has_event(Excused())",
+          "by": "CaseOrder",
+          "cite": "Order, Dkt. 12",
+          "from": "2010-01-01",
+          "known_at": "2025-01-01",
+          "applied": true
+        },
+        {
+          "op": "replace",
+          "condition": "has_event(Excused())",
+          "by": "FederalRule",
+          "cite": "Fed. R. Civ. P. 1",
+          "from": "2026-01-01",
+          "known_at": "2025-01-01",
+          "applied": true
+        }
+      ],
+      "composed": "has_event(Excused())"
+    }
+  ],
+  [
+    {
+      "pointer": "/instances/base@order/patch_edges/timely",
+      "base": "has_event(Moved())",
+      "ops": [
+        {
+          "op": "narrow",
+          "condition": "has_event(Excused())",
+          "by": "CaseOrder",
+          "cite": "Order, Dkt. 12",
+          "from": "2010-01-01",
+          "known_at": "2025-01-01",
+          "applied": true
+        },
+        {
+          "op": "replace",
+          "condition": "has_event(Excused())",
+          "by": "FederalRule",
+          "cite": "Fed. R. Civ. P. 1",
+          "from": "2026-01-01",
+          "known_at": "2025-01-01",
+          "applied": false
+        }
+      ],
+      "composed": "has_event(Moved()) && has_event(Excused())"
+    }
+  ]
+]

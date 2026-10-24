@@ -68,7 +68,7 @@ impl<'a> Graph<'a> {
                             .guard_ops
                             .iter()
                             .map(|op| GuardOp {
-                                condition: graph.respelled(from, base(&i.pack), &op.condition),
+                                condition: crate::guard::respell(&op.condition, from, base(&i.pack)),
                                 ..op.clone()
                             })
                             .collect();

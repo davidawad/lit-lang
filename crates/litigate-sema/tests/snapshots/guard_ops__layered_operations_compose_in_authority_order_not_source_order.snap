@@ -1,0 +1,31 @@
+---
+source: crates/litigate-sema/tests/guard_ops.rs
+expression: "[replay(&layered, &[ORDERED, STRUCK, EXCUSED, FILED, NOTED]),\nreplay(&layered, &[ORDERED, STRUCK, FILED]),\nreplay(&layered, &[ORDERED, MOVED, EXCUSED, FILED]),]"
+---
+[
+    [
+        "ok: start base@order::won",
+        "trace Took Ordered() base::intake -> base@order::intake via base::enter",
+        "trace Triggered Struck() base@order::intake -> base@order::intake",
+        "trace Triggered Excused() base@order::intake -> base@order::intake",
+        "trace Took Filed() base@order::intake -> base@order::check via base@order::file",
+        "trace Fact fact base@order::check -> base@order::heard via base@order::timely",
+        "trace Took Noted() base@order::heard -> base@order::won via base@order::go",
+        "{\"op\":\"replace\",\"condition\":\"has_event(Struck())\",\"by\":\"CaseOrder\",\"cite\":\"Order, Dkt. 12\",\"from\":\"2010-01-15\",\"known_at\":\"2025-01-01\"}",
+        "{\"op\":\"narrow\",\"condition\":\"has_event(Excused())\",\"by\":\"FederalRule\",\"cite\":\"Fed. R. Civ. P. 1\",\"from\":\"2009-12-01\",\"known_at\":\"2025-01-01\"}",
+    ],
+    [
+        "ok: start base@order::check",
+        "trace Took Ordered() base::intake -> base@order::intake via base::enter",
+        "trace Triggered Struck() base@order::intake -> base@order::intake",
+        "trace Took Filed() base@order::intake -> base@order::check via base@order::file",
+        "fact base@order::check = base@order::late",
+    ],
+    [
+        "ok: start base@order::check",
+        "trace Took Ordered() base::intake -> base@order::intake via base::enter",
+        "trace Triggered Moved() base@order::intake -> base@order::intake",
+        "trace Triggered Excused() base@order::intake -> base@order::intake",
+        "trace Took Filed() base@order::intake -> base@order::check via base@order::file",
+    ],
+]

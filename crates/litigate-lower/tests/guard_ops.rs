@@ -40,7 +40,14 @@ state intake: \"Intake\" by Plaintiff
   file \"File\" -> check { event Filed() }
 }
 
-chance check: \"Timely?\" by Court delegable_to [CaseOrder]
+chance check: \"Timely?\" by Court effective [2009-12-01, 2010-01-01) delegable_to [CaseOrder]
+{
+  tags [fact]
+  timely \"Timely\" -> won p 1/2 { when has_event(Moved()) && has_event(Filed()) }
+  late \"Late\" -> lost p 1/2 { when !has_event(Moved()) && !has_event(Excused()) }
+}
+
+chance check: \"Timely?\" by Court effective [2010-01-01, ..) delegable_to [CaseOrder]
 {
   tags [fact]
   timely \"Timely\" -> won p 1/2 { when has_event(Moved()) }
@@ -67,7 +74,8 @@ const NARROW: &str = "    when and has_event(Excused()) by CaseOrder effective [
 const REPLACE: &str = "    supersedes when has_event(Excused()) by FederalRule effective [2026-01-01, ..) \
                        cite \"Fed. R. Civ. P. 1\"";
 
-/// The base pack and a links package patching `timely` with `ops`.
+/// The base pack (two versions of `check`, the build emitting the
+/// later) and a links package patching `timely` with `ops`.
 fn compiled(ops: &[&str]) -> Vec<Package> {
     let links = format!(
         "module order\nimport base.{{ Moved, Excused, FederalRule, CaseOrder }}\n\
@@ -83,7 +91,13 @@ fn compiled(ops: &[&str]) -> Vec<Package> {
             text: text.to_owned(),
         }],
     };
+    // An unrelated pack loads first: its nodes are never the base's.
     let loaded = [
+        package(
+            "other",
+            &BASE_TOML.replace("\"base\"", "\"other\""),
+            "module other\nstart timely\nterminal timely: \"T\" { payoff 0.usd }\n",
+        ),
         package("base", BASE_TOML, BASE),
         package("order", LINKS_TOML, &links),
     ];

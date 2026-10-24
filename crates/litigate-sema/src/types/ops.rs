@@ -271,6 +271,7 @@ fn int(r: Rational) -> Result<i64, ArithError> {
 ///
 /// # Errors
 /// Overflow, division by zero, or a non-integral day/money result.
+#[allow(clippy::too_many_lines)] // one arm per value pair of the SPEC §6 table
 pub fn fold(op: BinaryOp, a: &Value, b: &Value) -> Result<Option<Value>, ArithError> {
     use BinaryOp as B;
     use Value as V;
@@ -321,17 +322,9 @@ pub fn fold(op: BinaryOp, a: &Value, b: &Value) -> Result<Option<Value>, ArithEr
         return Ok(Some(V::Boolean(ord(o))));
     }
     Ok(Some(match (op, a, b) {
-        (
-            _,
-            V::Credal {
-                lower: al,
-                upper: au,
-            },
-            V::Credal {
-                lower: bl,
-                upper: bu,
-            },
-        ) => super::uncertain::interval(op, (*al, *au), (*bl, *bu))?,
+        (_, V::Credal { lower: l, upper: u }, V::Credal { lower: m, upper: v }) => {
+            super::uncertain::interval(op, (*l, *u), (*m, *v))?
+        }
         (B::And, V::Boolean(x), V::Boolean(y)) => V::Boolean(*x && *y),
         (B::Or, V::Boolean(x), V::Boolean(y)) => V::Boolean(*x || *y),
         (_, V::Number(x), V::Number(y)) => V::Number(arith(*x, *y)?),

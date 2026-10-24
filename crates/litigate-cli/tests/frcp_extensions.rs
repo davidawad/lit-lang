@@ -787,6 +787,10 @@ fn a_late_federal_circuit_cert_application_needs_extraordinary_circumstances() {
             "2026-04-01".to_owned(),
             "ExtraordinaryCircumstances".to_owned(),
             "2026-02-25".to_owned()
+        )]
+    );
+}
+
 #[test]
 fn the_federal_circuit_cross_appeal_runs_to_the_later_of_14_days_and_frap_4a1() {
     // A district-court judgment of 2026-03-02: the FRAP 4(a)(1)(A) notice

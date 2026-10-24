@@ -88,6 +88,7 @@ pub struct Obligation {
     /// due date is unknown, never counted under a later version.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub unencoded: Option<String>,
+    /// Whether the obligation remains open or how it ended.
     pub status: Status,
     /// Source index of the event that ended it; `None` while open and for
     /// a breach or lapse found at `as_of`.

@@ -256,9 +256,10 @@ fn timeline(args: &[&str]) -> Value {
 
 /// A scratch tree with the TTAB, FRCP, FRAP and core packages, the
 /// synthetic `timeline-fixture` package and the timeline fixture matters
-/// under `cases/`, locked.
-fn fixtures() -> PathBuf {
-    let dir = scratch("timeline-fixtures");
+/// under `cases/`, locked, in a scratch directory of its own for `test`
+/// (tests run in parallel and each scratch call empties its directory).
+fn fixtures(test: &str) -> PathBuf {
+    let dir = scratch(&format!("timeline-fixtures-{test}"));
     for pkg in ["ttab", "frcp", "frap", "core"] {
         copy_dir(&repo().join("lit").join(pkg), &dir.join("lit").join(pkg));
     }
@@ -333,7 +334,7 @@ fn frcp_civil_matter() {
 
 #[test]
 fn ttab_published_fixture_forks_with_unknown_deadlines() {
-    let dir = fixtures();
+    let dir = fixtures("ttab_published_fixture_forks_with_unknown_deadlines");
     let t = timeline_in(&dir, &["cases/ttab-published.case"]);
     let unknown: Vec<&Value> = t["rows"]
         .as_array()
@@ -349,7 +350,7 @@ fn ttab_published_fixture_forks_with_unknown_deadlines() {
 
 #[test]
 fn frcp_filed_fixture_forks_with_unknown_deadlines() {
-    let dir = fixtures();
+    let dir = fixtures("frcp_filed_fixture_forks_with_unknown_deadlines");
     let t = timeline_in(&dir, &["cases/frcp-filed.case"]);
     let fork = &t["rows"]
         .as_array()
@@ -483,7 +484,7 @@ fn a_child_world_inserting_an_earlier_trigger_keeps_every_inherited_key() {
     // formal process") with its service recorded on 2024-12-10: an event
     // that triggers the answer period, ahead of the parent's service-period
     // row (due 2025-03-03) in date order.
-    let dir = fixtures();
+    let dir = fixtures("a_child_world_inserting_an_earlier_trigger_keeps_every_inherited_key");
     let parent = timeline_in(&dir, &["cases/frcp-filed.case"]);
     let child = timeline_in(&dir, &["cases/frcp-served.case"]);
     let keys = |t: &Value| -> Vec<(String, String)> {
@@ -526,7 +527,7 @@ fn a_child_world_inserting_an_earlier_trigger_keeps_every_inherited_key() {
 
 #[test]
 fn an_answer_to_a_notice_without_its_due_date_reads_unknown_with_why() {
-    let dir = fixtures();
+    let dir = fixtures("an_answer_to_a_notice_without_its_due_date_reads_unknown_with_why");
     let t = timeline_in(&dir, &["cases/ttab-unjudged.case"]);
     let answer = t["rows"]
         .as_array()
@@ -884,7 +885,7 @@ fn row<'t>(t: &'t Value, world: &str, key: &str) -> &'t Value {
 fn a_world_triggering_a_deadline_its_parent_left_untriggered_re_emits_it() {
     // Nothing recorded: the period governing `act` is untriggered in the
     // docket; the world that starts it triggers it.
-    let dir = fixtures();
+    let dir = fixtures("a_world_triggering_a_deadline_its_parent_left_untriggered_re_emits_it");
     let t = timeline_in(&dir, &["cases/waiting.case"]);
     let parent = "fixture.act-period@event:Started";
     let child = "fixture.act-period@event:Started@fork:fixture.waiting@start";
@@ -916,7 +917,7 @@ fn a_world_triggering_a_deadline_its_parent_left_untriggered_re_emits_it() {
 
 #[test]
 fn a_restarted_or_absorbed_period_names_the_row_replacing_it() {
-    let dir = fixtures();
+    let dir = fixtures("a_restarted_or_absorbed_period_names_the_row_replacing_it");
     // FRAP 4(a)(4)(A): the order disposing of the tolling motion restarts
     // the civil notice-of-appeal period (`trigger latest`).
     let t = timeline_in(&dir, &["cases/frap-reentered.case"]);

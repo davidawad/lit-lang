@@ -218,7 +218,7 @@ fn a_board_order_resets_the_answer_date() {
         "ttab-reset",
         &[
             "2026-07-06 InstitutionNoticed(2026-08-05) on applicant",
-            "2026-08-03 ttab-board-order::AnswerTimeReset(2026-09-08) by board cite 37 CFR 2.106(a)",
+            "2026-08-03 ttab-board-order::AnswerTimeReset(2026-09-08) by board cite \"37 CFR 2.106(a)\"",
         ],
         true,
     );

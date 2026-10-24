@@ -20,12 +20,12 @@ event Noticed(due: Date)
 event Reset(due: Date)
 event Answered()
 
-counting oc cite FRCP 6(a) { exclude_trigger_day, include_last_day, holidays ocal }
+counting oc cite \"FRCP 6(a)\" { exclude_trigger_day, include_last_day, holidays ocal }
 calendar ocal { new-year: fixed(1, 1) effective [1870-06-28, ..) observed nearest_weekday }
 
-rule duty answer-duty cite FRCP 12(a)
+rule duty answer-duty cite \"FRCP 12(a)\"
 {
-  deadline answer: 30.days from Noticed() counted_by oc effective [2009-12-01, 2012-01-01) cite FRCP 12(a) {
+  deadline answer: 30.days from Noticed() counted_by oc effective [2009-12-01, 2012-01-01) cite \"FRCP 12(a)\" {
     bearer Defendant
     designated due
   }

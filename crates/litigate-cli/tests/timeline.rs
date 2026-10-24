@@ -796,10 +796,12 @@ fn a_matter_with_errors_reports_them_in_the_timeline() {
             "2025-10-01",
         ],
     );
+    // Its events declare no ids: L9006 notes aside.
     let codes: Vec<&Value> = later.json["result"]["diagnostics"]
         .as_array()
         .unwrap()
         .iter()
+        .filter(|d| d["severity"] != "note")
         .map(|d| &d["code"])
         .collect();
     assert_eq!(codes, [&json!("L4002")], "{}", later.stdout);

@@ -147,6 +147,33 @@ deadline unknown: 3.days from Served(complaint) counted_by nope",
     insta::assert_debug_snapshot!(out);
 }
 
+/// `forum F cite "X" [quote "..."]` declares the rule adopting `F`'s
+/// period, with the words adopting it; a cite hole leaves it undeclared
+/// and quotes nothing.
+#[test]
+fn a_named_forum_carries_its_adopting_rule() {
+    let adoptions: Vec<_> = declarations(
+        "counting appellate { holidays cal, forums [frap, demo] }\n\
+deadline quoted: 3.days from Served(complaint) counted_by appellate { forum frap cite \"28 U.S.C. § 2522\" quote \"within the time\" }\n\
+deadline cited: 3.days from Served(complaint) counted_by appellate { forum frap cite \"FRAP 4\" historical }\n\
+deadline bare: 3.days from Served(complaint) counted_by appellate { forum frap }",
+    )
+    .into_iter()
+    .filter_map(|d| match d {
+        Declaration::Deadline(x) => Some((x.meta.id, x.adoption)),
+        _ => None,
+    })
+    .collect();
+    insta::assert_debug_snapshot!(adoptions);
+    let out = check_body(
+        "counting appellate { holidays cal, forums [frap, demo] }\n\
+deadline why: 3.days from Served(complaint) counted_by appellate { forum frap cite ?(\"unvendored\") }\n\
+deadline unsaid: 3.days from Served(complaint) counted_by appellate { forum frap cite ? }\n\
+deadline quoted: 3.days from Served(complaint) counted_by appellate { forum frap cite ?(\"unvendored\") quote \"words\" }",
+    );
+    insta::assert_debug_snapshot!(out);
+}
+
 #[test]
 fn counting_rules_reject_unknown_keywords_and_shapes() {
     let out = check_body(

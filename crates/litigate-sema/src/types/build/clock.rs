@@ -5,8 +5,9 @@ use super::cx::{first_expr, first_ref, flag, Cx};
 use crate::db::parse::tree::{ArmItem, Atom, Expr, ExprKind, Field, Item, Name, RefPath};
 use crate::db::span::Report;
 use crate::hir::{
-    Anchor, Chain, Counting, DayUnit, Deadline, Designated, Direction, DueEnd, EndOfMonth, RollOn,
-    ServiceTime, ShortPeriod, Transition, TransitionArm, Type, Value, SERVICE_METHODS,
+    Adoption, Anchor, Chain, Counting, DayUnit, Deadline, Designated, Direction, DueEnd,
+    EndOfMonth, RollOn, ServiceTime, ShortPeriod, Transition, TransitionArm, Type, Value,
+    SERVICE_METHODS,
 };
 use crate::resolve::sig::{TypeSig, ValueKind};
 use crate::resolve::suggest;
@@ -136,6 +137,7 @@ impl Cx<'_, '_> {
         self.interpretation(name, &o, designated.as_mut());
         let (trigger, chain) = self.trigger(name, trigger);
         let forum = self.forum(name, o.get("forum"), counted_by, counting.is_some());
+        let adoption = o.get("forum").and_then(|f| self.adoption(f));
         let obligation = self.obligation(name, opts, &o, rule);
         let (amount, unit) = period?;
         Some(Deadline {
@@ -147,6 +149,7 @@ impl Cx<'_, '_> {
             chain,
             counting: counting?,
             forum,
+            adoption,
             extendable: flag(o.get("extendable")),
             extension_authority: self.string_or_hole(o.get("extension_authority")),
             note: Self::string(o.get("note")),
@@ -176,6 +179,44 @@ impl Cx<'_, '_> {
             self.borrowing(name, counted_by, &forum);
         }
         forum
+    }
+
+    /// The adopting rule of `forum F cite "X" [quote "..."]`. A cite hole
+    /// is recorded as a hole; a quote needs a cite whose text it quotes,
+    /// so one beside a hole is L2007.
+    fn adoption(&mut self, field: &Field) -> Option<Adoption> {
+        let rest = Field {
+            key: field.key.clone(),
+            values: field.values.iter().skip(1).cloned().collect(),
+            range: field.range,
+        };
+        let cite = first_expr(&rest)?;
+        let hole = matches!(cite.kind, ExprKind::Hole(_));
+        let historical = matches!(cite.kind, ExprKind::Cite(_, true));
+        let quote = match rest.values.get(1) {
+            Some((
+                Atom::Expr(Expr {
+                    kind: ExprKind::Str(q),
+                    range,
+                }),
+                _,
+            )) => Some((q.clone(), *range)),
+            _ => None,
+        };
+        let cite = self.cite_text(Some(&&rest));
+        if let (true, Some((_, range))) = (hole, &quote) {
+            self.report(Report::new(
+                C::InvalidField,
+                *range,
+                "a `quote` quotes the text of its cite, and a cite hole has none",
+            ));
+            return None;
+        }
+        Some(Adoption {
+            cite: cite?,
+            historical,
+            quote: quote.map(|(q, _)| q),
+        })
     }
 
     /// `interpretation "..."` of deadline `name`, qualifying its

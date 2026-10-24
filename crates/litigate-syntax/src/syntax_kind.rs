@@ -136,7 +136,7 @@ syntax_kinds! {
         KwWaives = "waives", KwTo = "to", KwWhere = "where", KwAnd = "and", KwOr = "or",
         KwDesignated = "designated", KwInterpretation = "interpretation",
         KwForums = "forums", KwForwardHolidays = "forward_holidays",
-        KwDeclaredHolidays = "declared_holidays",
+        KwDeclaredHolidays = "declared_holidays", KwQuote = "quote",
         KwLimit = "limit", KwWords = "words", KwPages = "pages", KwLines = "lines",
         KwCertificate = "certificate", KwExcludes = "excludes", KwEcf = "ecf",
     }

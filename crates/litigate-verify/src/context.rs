@@ -97,20 +97,35 @@ impl<'a> Context<'a> {
     /// Every cite of the package with its declaring span, the in-force
     /// window of its declaration version, and whether that declaration is
     /// `/// imported`: declaration `cite`s (and whether each is marked
-    /// `historical`), edge `authority`s and the cites of `basis sourced(..)`
-    /// on nodes and edges (imported with their node, in its window), and
-    /// test `cite`s (no window).
+    /// `historical`), a deadline's adopting rule (`forum F cite "X" quote
+    /// "..."`, in its window, with the words it quotes), edge `authority`s
+    /// and the cites of `basis sourced(..)` on nodes and edges (imported
+    /// with their node, in its window), and test `cite`s (no window).
     pub fn cites(&self) -> impl Iterator<Item = Cite<'a>> {
         self.declarations().flat_map(|d| {
             let meta = meta_of(d);
             let imported = meta.is_some_and(|m| m.imported);
             let window = meta.map(|m| &m.effective);
-            let own = meta.and_then(|m| Some((m.cite.as_deref()?, m.span.as_ref(), m.historical)));
+            let own =
+                meta.and_then(|m| Some((m.cite.as_deref()?, m.span.as_ref(), m.historical, None)));
             let test = match d {
-                Declaration::Test(t) => t.cite.as_deref().map(|c| (c, t.span.as_ref(), false)),
+                Declaration::Test(t) => {
+                    t.cite.as_deref().map(|c| (c, t.span.as_ref(), false, None))
+                }
                 _ => None,
             };
-            let edges: Vec<(&str, Option<&Span>, bool)> = match d {
+            let adoption = match d {
+                Declaration::Deadline(x) => x.adoption.as_ref().map(|a| {
+                    (
+                        a.cite.as_str(),
+                        x.meta.span.as_ref(),
+                        a.historical,
+                        a.quote.as_deref(),
+                    )
+                }),
+                _ => None,
+            };
+            let edges: Vec<CiteOf<'_>> = match d {
                 Declaration::Node(n) => n
                     .edges
                     .iter()
@@ -118,25 +133,32 @@ impl<'a> Context<'a> {
                         [e.authority.as_deref(), sourced(e.basis.as_ref())]
                             .into_iter()
                             .flatten()
-                            .map(|c| (c, e.span.as_ref(), false))
+                            .map(|c| (c, e.span.as_ref(), false, None))
                     })
-                    .chain(sourced(n.basis.as_ref()).map(|c| (c, n.meta.span.as_ref(), false)))
+                    .chain(
+                        sourced(n.basis.as_ref()).map(|c| (c, n.meta.span.as_ref(), false, None)),
+                    )
                     .collect(),
                 _ => Vec::new(),
             };
             own.into_iter()
                 .chain(test)
+                .chain(adoption)
                 .chain(edges)
-                .map(move |(text, span, historical)| Cite {
+                .map(move |(text, span, historical, quote)| Cite {
                     text,
                     span,
                     window,
                     historical,
                     imported,
+                    quote,
                 })
         })
     }
 }
+
+/// A cite's text, span, `historical` mark, and quoted words.
+type CiteOf<'a> = (&'a str, Option<&'a Span>, bool, Option<&'a str>);
 
 /// The cite a `basis sourced("...")` rests on.
 fn sourced(basis: Option<&hir::Basis>) -> Option<&str> {
@@ -159,6 +181,9 @@ pub(crate) struct Cite<'a> {
     pub historical: bool,
     /// Its declaration carries the `/// imported` marker.
     pub imported: bool,
+    /// The words of the cited text it quotes (`quote "..."`), which its
+    /// vendored section must hold.
+    pub quote: Option<&'a str>,
 }
 
 fn declarations(pkg: &hir::Package) -> impl Iterator<Item = &Declaration> {

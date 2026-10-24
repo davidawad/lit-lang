@@ -1,0 +1,32 @@
+---
+source: crates/litigate-sema/tests/cov_build_clock.rs
+expression: adoptions
+---
+[
+    (
+        "quoted",
+        Some(
+            Adoption {
+                cite: "28 U.S.C. § 2522",
+                historical: false,
+                quote: Some(
+                    "within the time",
+                ),
+            },
+        ),
+    ),
+    (
+        "cited",
+        Some(
+            Adoption {
+                cite: "FRAP 4",
+                historical: true,
+                quote: None,
+            },
+        ),
+    ),
+    (
+        "bare",
+        None,
+    ),
+]

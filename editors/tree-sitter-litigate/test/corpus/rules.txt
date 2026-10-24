@@ -187,6 +187,7 @@ counting c cite "FRCP 6(a)"
   forums [frcp, frap]
 }
 deadline d: 90.days after Entered() counted_by c { forum scotus }
+deadline e: 60.days after Entered() counted_by c { forum frap cite "28 U.S.C. § 2522" quote "within the time" }
 
 ---
 
@@ -237,7 +238,23 @@ deadline d: 90.days after Entered() counted_by c { forum scotus }
       (ref
         (identifier))
       (deadline_decl_opts
-        (identifier)))))
+        (identifier)))
+    (deadline_decl
+      (identifier)
+      (duration)
+      (call_expression
+        (ref
+          (identifier))
+        (arguments))
+      (ref
+        (identifier))
+      (deadline_decl_opts
+        (identifier)
+        (cite
+          (string
+            (string_content)))
+        (string
+          (string_content))))))
 
 ================================================================================
 Calendars

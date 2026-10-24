@@ -43,6 +43,9 @@ pub(crate) fn unresolved(
                 .map(|m| m.sections)
                 .unwrap_or_default();
             let unkeyed = unkeyed(&citations, text, &span, cx);
+            let unquoted = cite
+                .quote
+                .and_then(|q| unquoted(cx, corpus, text, q, &sections, &span));
             let hole = holes
                 .iter()
                 .any(|h| h.reason.as_deref() == Some(text) && within(&h.span, &span));
@@ -53,10 +56,45 @@ pub(crate) fn unresolved(
                         .or_else(|| expression(cx, &cite, s, &span).filter(|_| !hole))
                 })
                 .chain(unkeyed)
+                .chain(unquoted)
                 .map(|d| exempt(d, cite.imported, cx.profile))
                 .collect::<Vec<_>>()
         })
         .collect()
+}
+
+/// L1010 when no vendored section `text` resolves to holds `quote`, the
+/// words it is cited for, compared with whitespace runs collapsed: a quote
+/// the corpus cannot show is not the rule's text.
+fn unquoted(
+    cx: &Context<'_>,
+    corpus: &SourceCorpus,
+    text: &str,
+    quote: &str,
+    sections: &[L0Section],
+    span: &Span,
+) -> Option<Diagnostic> {
+    let words = |s: &str| s.split_whitespace().collect::<Vec<_>>().join(" ");
+    let quote = words(quote);
+    let found = sections.iter().any(|s| {
+        corpus.lookup_all(&s.heading).iter().any(|(file, section)| {
+            s.path.as_ref() == Some(file) && words(&section.body).contains(&quote)
+        })
+    });
+    if found {
+        return None;
+    }
+    let d = emit(
+        C::UnboundCite,
+        cx.profile,
+        span.clone(),
+        format!("`{text}` is cited for \"{quote}\", which its vendored text does not hold"),
+    );
+    Some(note(
+        d,
+        None,
+        "quote the cited rule's words exactly as the vendored source gives them",
+    ))
 }
 
 /// `d` as a warning when its declaration is imported and `profile` is

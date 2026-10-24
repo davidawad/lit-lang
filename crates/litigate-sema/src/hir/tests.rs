@@ -199,6 +199,7 @@ fn a_designation_reads_the_trigger_argument_or_nothing() {
         chain: None,
         counting: "c".into(),
         forum: String::new(),
+        adoption: None,
         extendable: None,
         extension_authority: None,
         note: None,

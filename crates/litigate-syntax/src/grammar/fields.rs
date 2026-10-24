@@ -71,7 +71,7 @@ pub(crate) const DEADLINE_DECL_OPTS: &[Spec] = &[
     (KwExtend, Some(capability)),
     (KwWaive, Some(capability)),
     (KwDesignated, Some(reference)),
-    (KwForum, Some(reference)),
+    (KwForum, Some(adopted_forum)),
     (KwInterpretation, Some(string)),
 ];
 
@@ -312,6 +312,19 @@ fn service_extension(p: &mut Parser<'_>) -> bool {
 /// sema checks).
 fn service_time(p: &mut Parser<'_>) -> bool {
     duration(p) || reference(p)
+}
+
+/// `Ref [cite ... [quote "..."]]`: the forum whose rules set a period
+/// and the rule adopting them for it, with the words that adopt them
+/// (`forum frap cite "28 U.S.C. § 2522" quote "within the time ..."`).
+fn adopted_forum(p: &mut Parser<'_>) -> bool {
+    reference(p) && {
+        if cite(p) && p.at_kw(KwQuote) {
+            p.bump_as(KwQuote);
+            require(p, string, &[String]);
+        }
+        true
+    }
 }
 
 /// `Ref [cite ...]`: a calendar and the rule making it one the forum

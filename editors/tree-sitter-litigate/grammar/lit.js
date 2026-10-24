@@ -242,7 +242,12 @@ module.exports = {
     seq(field('key', choice('bearer', 'designated')), field('value', $.identifier)),
     seq(field('key', 'trigger'), field('value', choice($.identifier, $.call_expression))),
     seq(field('key', choice('extend', 'waive')), field('value', $.capability)),
-    seq(field('key', 'forum'), field('value', $.identifier)),
+    // The forum whose rules set the period, and the rule adopting them
+    // with the words that adopt them (SPEC §5.3).
+    seq(
+      field('key', 'forum'), field('value', $.identifier),
+      optional(seq($.cite, optional(seq('quote', field('quote', $.string))))),
+    ),
   )),
 
   capability: $ => braced(choice(

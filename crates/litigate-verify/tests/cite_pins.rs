@@ -119,3 +119,46 @@ fn a_cite_hole_cites_no_expression() {
     let c = verify(&[pkg], Profile::Strict);
     assert_eq!(unresolved(&c).len(), 1, "{:?}", unresolved(&c));
 }
+
+/// [`BASE`] with the answer period's forum adopted by `adoption`.
+fn adopted(adoption: &str) -> String {
+    let period = "deadline answer-period: 21.days from Served(complaint) counted_by frcp6";
+    assert!(BASE.contains(period));
+    BASE.replacen(period, &format!("{period} {{ forum demo {adoption} }}"), 1)
+}
+
+#[test]
+fn an_adopting_rule_resolves_and_holds_the_words_it_is_cited_for() {
+    let check = |adoption: &str| {
+        unresolved(&verify(
+            &[pkg_with_sources(
+                "demo",
+                "FederalRule",
+                &[],
+                FRCP,
+                &adopted(adoption),
+            )],
+            Profile::Strict,
+        ))
+    };
+    // The words may wrap in the vendored text.
+    let quoted =
+        "cite \"FRCP 12(a)\" quote \"Unless another time is specified by a federal statute\"";
+    assert_eq!(check(quoted), Vec::<String>::new());
+    assert_eq!(
+        check("cite \"FRCP 12(a)\" quote \"Unless another time is fixed by statute\""),
+        ["`FRCP 12(a)` is cited for \"Unless another time is fixed by statute\", which its vendored text does not hold"]
+    );
+    // A cite resolving to no vendored section holds no words at all.
+    assert_eq!(
+        check("cite \"Doe v. Roe, 1 U.S. 1 (1990)\" quote \"Unless another time\""),
+        ["`Doe v. Roe, 1 U.S. 1 (1990)` is cited for \"Unless another time\", which its vendored text does not hold"]
+    );
+    // The adopting cite itself must resolve.
+    let unbound = check("cite \"FRCP 99\"");
+    assert_eq!(unbound.len(), 1, "{unbound:?}");
+    assert!(
+        unbound[0].contains("has no `## Rule 99` heading"),
+        "{unbound:?}"
+    );
+}

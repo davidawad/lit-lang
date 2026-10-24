@@ -227,7 +227,8 @@ DeadlineDecl = "deadline", Ident, ":", Duration, ("from" | "after" | "before"),
 DeclOpts     = "{", { ( "extendable", Bool | "extension_authority", (String | Hole)
              | "note", String | "bearer", Ref | "trigger", ( Ref | CallExpr )
              | "designated", Ref | "interpretation", String
-             | ("extend" | "waive"), Capability | "forum", Ref ), Sep }, "}" ;
+             | ("extend" | "waive"), Capability
+             | "forum", Ref, [ Cite, [ "quote", String ] ] ), Sep }, "}" ;
 Capability   = "{", { ( "by", Ref | "max", Duration | "to", Expr
              | "discretion", Ident | "after_expiry" | "on", CallExpr
              | "within", Expr | "never", Cite | "interpretation", String ), Sep }, "}" ;
@@ -701,7 +702,12 @@ admits a wrong digest. An unparseable side exits 1, leaving git's conflict.
   or is a cite hole. An expression dated before the window opens is the
   text as amended to that date and is taken as still current when the
   window opens; a binding without `as_of` has no date to compare. Edge
-  `authority` cites are held to their node's window, test cites to none.
+  `authority` cites are held to their node's window, test cites to none,
+  and a deadline's adopting cite (`forum F cite "X"`, §5.3) to its
+  deadline's.
+- A cite given with `quote "..."` (a deadline's adopting rule, §5.3) is
+  cited for those words: one vendored section it resolves to must hold
+  them, compared with whitespace runs collapsed, else L1010.
 
 ## 5. Construct semantics
 
@@ -826,6 +832,15 @@ period (a FRAP 4 appeal period in a district-court package is `forum
 frap`; a certiorari petition's 90 days `forum scotus`). Its counting rule
 must compute that forum's periods (`forums` below); otherwise L3009, so no
 forum borrows another's computation rule (design review 2026-10-23, L2-L4).
+`forum F cite "X" quote "..."` declares the rule by which `F`'s rules set
+the period, the **adopting rule**, with the words that adopt them: a
+Court of Federal Claims appeal is `forum frap cite "28 U.S.C. § 2522"
+quote "within the time and in the manner prescribed for appeals to United
+States courts of appeals from the United States district courts"`. The
+cite resolves like any other and the words must be in its vendored text
+(§4.3, L1010), so the link rests on declared authority rather than an
+unstated reading. A cite hole leaves the adopting rule undeclared, and a
+`quote` beside one is L2007.
 
 A deadline declaration's options describe the obligation each trigger
 creates (design review 2026-10-23 §2.4, §2.7):

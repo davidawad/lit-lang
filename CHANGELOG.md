@@ -41,6 +41,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   corpus changes. The tree-sitter grammar (`limit_decl`) and the Emacs,
   Helix and Neovim highlights, indents and folds follow.
 
+- **The Court of Federal Claims appeal window declares its adoption of
+  FRAP 4 with 28 U.S.C. § 2522's words** (lg-flu.43). A deadline's
+  `forum F` option may now carry the adopting rule and the words that
+  adopt `F`'s period, `forum F cite "X" quote "..."` (SPEC §5.3); the cite
+  resolves like any other, and `cite-resolves` requires the quoted words
+  in the cited vendored section (whitespace runs collapsed), else L1010.
+  A `quote` beside a cite hole is L2007. `lit/cafc`'s `cofc-noa-period`
+  is `forum frap cite "28 U.S.C. § 2522" quote "within the time and in
+  the manner prescribed for appeals to United States courts of appeals
+  from the United States district courts"`, checked against the vendored
+  § 2522 in `sources/usc-additional.txt`, so its counting under FRAP 26
+  is a declared link, not an implicit reading. The FRAP 2016 transition
+  stays undeclared until a source for it is vendored.
 - **The TTAB answer time is extendable under FRCP 6(b)(1)(A), read
   through 37 C.F.R. § 2.116(a) as an interpretation** (lg-flu.45). An
   `extend` grant may now carry `interpretation "..."` (SPEC §5.3): the

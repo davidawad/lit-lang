@@ -37,6 +37,10 @@ pub struct Deadline {
     /// The forum whose rules set the period (`forum F`, else the declaring
     /// package's): its counting rule must be one of that forum's.
     pub forum: String,
+    /// The rule adopting `forum`'s period for this deadline (`forum F cite
+    /// "X" quote "..."`); `None`: no adopting rule is declared.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub adoption: Option<Adoption>,
     /// Whether extensions are available (`Deadline.extendable`).
     pub extendable: Option<bool>,
     /// Extension authority text.
@@ -165,6 +169,23 @@ impl Deadline {
             }
         })
     }
+}
+
+/// The rule by which another forum's rules set a deadline's period
+/// (SPEC §5.3): 28 U.S.C. § 2522 gives a Court of Federal Claims appeal
+/// "the time ... prescribed for appeals to United States courts of appeals
+/// from the United States district courts", FRAP 4's.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Adoption {
+    /// Its cite (a cite hole's reason).
+    pub cite: String,
+    /// The cite is marked `historical`.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub historical: bool,
+    /// The words of the cited rule that adopt the period, which must
+    /// appear in its vendored text.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub quote: Option<String>,
 }
 
 /// The trigger parameter designating a deadline's due date (SPEC §5.3).

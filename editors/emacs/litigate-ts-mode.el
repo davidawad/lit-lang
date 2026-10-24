@@ -92,7 +92,7 @@ The canonical format (`litigate fmt', SPEC §10) uses two."
     "supersedes" "revives" "override" "delegable_to" "rebuts" "undercuts"
     "priority" "url" "bearer" "designated" "interpretation" "trigger" "extend" "waive" "after_expiry" "never"
     "removes" "elects" "extends" "waives" "to" "where" "and" "or" "forums"
-    "forward_holidays" "declared_holidays"
+    "forward_holidays" "declared_holidays" "quote"
     "words" "pages" "lines" "certificate" "excludes" "ecf"
     "given" "expect" "on")
   "Clause, field and test keywords.")

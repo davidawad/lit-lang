@@ -437,6 +437,30 @@ fn counting_closed_sets_forums_and_unrecognized_methods_parse() {
 }
 
 #[test]
+fn a_named_forum_takes_its_adopting_cite_and_quote() {
+    let file = lit("module m\ndeadline d: 60.days after E() counted_by c { forum frap cite \"28 U.S.C. § 2522\" quote \"within the time\" }\n");
+    let deadline: DeadlineDecl = decl(&file, "d");
+    let forum = &deadline.options()[0];
+    assert_eq!(forum.keyword_kind(), Some(SyntaxKind::KwForum));
+    assert_eq!(
+        forum
+            .value_ref()
+            .map(|r| r.syntax().text().to_string())
+            .as_deref(),
+        Some("frap")
+    );
+    assert_eq!(
+        forum.cite().and_then(|c| c.text()).as_deref(),
+        Some("28 U.S.C. § 2522")
+    );
+    assert!(forum
+        .syntax()
+        .text()
+        .to_string()
+        .ends_with("quote \"within the time\""));
+}
+
+#[test]
 fn id_lists_decode_string_entries() {
     let file = lit("module m\nstate s: \"S\" { e \"E\" -> t { replaces [old, \"anon\\n1\"] } }\n");
     let node: NodeDecl = decl(&file, "s");

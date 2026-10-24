@@ -242,6 +242,10 @@ const DECLARATION_PARTS: &[(&str, &[&str])] = &[
         &["L0001 2:31-2:32 expected an identifier, found `3`"],
     ),
     (
+        "module m\ndeadline d: 1.days after E() counted_by c { forum f cite \"X\" quote 3 }\n",
+        &["L0001 2:68-2:69 expected a string, found `3`"],
+    ),
+    (
         "module m\ncounting c { declared_holidays closures, forums 3 }\n",
         &["L0001 2:49-2:50 expected an identifier, found `3`"],
     ),

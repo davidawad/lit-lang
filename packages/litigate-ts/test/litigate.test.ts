@@ -50,9 +50,11 @@ describe("check matches the CLI", () => {
 
   it("finds a matter's packages in the embedded library", () => {
     const cases: Files = tree("cases");
-    const expected = native(["check", "cases"]);
+    // Every matter but the one rejected by design (L4001, lg-flu.46).
+    const accepted = Object.keys(cases).filter((p) => p.endsWith(".case") && p !== "cases/e2e-ttab-short.case");
+    const expected = native(["check", ...accepted]);
     expect(expected.code).toBe(0);
-    expect(untimed(lit.check(["cases"], { files: cases }))).toStrictEqual(expected);
+    expect(untimed(lit.check(accepted, { files: cases }))).toStrictEqual(expected);
     expect(lit.library()["lit/frcp/Lit.toml"]).toBe(files["lit/frcp/Lit.toml"]);
     expect(lit.check(["cases"], { files: cases, library: false }).code).toBe(2);
   });

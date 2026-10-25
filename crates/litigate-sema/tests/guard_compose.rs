@@ -56,6 +56,9 @@ fn op(kind: GuardOpKind, condition: Expr, by: &str, from: &str, to: Option<&str>
             from: from.to_owned(),
             to: to.map(str::to_owned),
             known_at: "2025-01-01".to_owned(),
+            retracted: None,
+            unknown_before: None,
+            commenced: None,
         },
         span: None,
     }

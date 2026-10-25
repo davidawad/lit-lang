@@ -26,7 +26,7 @@ beliefs { prior mtd-ruling: { granted: 1, denied: 3 }, observe mtd-ruling: { gra
 analysis { params: { rate: 650.usd / 1.hours, opp_rate: 550.usd / 1.hours } }
 "#;
 
-const LIT: [(&str, &str, &str, &str); 27] = [
+const LIT: [(&str, &str, &str, &str); 28] = [
     ("edition", "Optional first line of a .lit or .case file naming its language edition; absent means 2026 (L0008 for an unknown year).", "edition 2026", "not emitted"),
     ("module", "Names the module; the first line of every .lit file.", "module demo.rules", "not emitted"),
     ("import", "Brings another module's declarations into scope.", "import demo.counting.{rule6}", "not emitted"),

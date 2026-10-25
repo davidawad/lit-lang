@@ -2,9 +2,9 @@
 //! and the item-tree [`Locate`] that gives them clause-precise spans.
 use crate::db::inputs::{PackageInput, SourceFile};
 use crate::db::parse::tree::{Item, ItemKind};
-use crate::db::queries::{check_module, item_tree, manifest};
+use crate::db::queries::{check_module, item_tree, manifest, span_map};
 use crate::db::resolution::{core, resolution};
-use crate::db::span::{to_span, TextRange};
+use crate::db::span::{Positions, TextRange};
 use crate::hir::Manifest;
 use crate::resolve::sig::{clauses_of, flatten};
 use crate::temporal::world::{Decl, Locate, PackInfo, Rank, World};
@@ -17,7 +17,7 @@ use std::collections::BTreeMap;
 /// `core`, which every package may import undeclared (SPEC §4.3) and whose
 /// authority lattice every package shares (§5.5). Each is the version
 /// `pkg`'s resolution selects (SPEC §4.2).
-fn closure<'db>(
+pub(crate) fn closure<'db>(
     db: &'db dyn salsa::Database,
     pkg: PackageInput,
     own: &'db Manifest,

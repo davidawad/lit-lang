@@ -112,6 +112,7 @@ impl Spans for Edge {
             guard,
             span,
             holes: _,
+            ..
         } = self;
         event.spans_mut(f);
         guard.spans_mut(f);
@@ -134,6 +135,7 @@ impl Spans for Node {
             info: _,
             edges,
             holes: _,
+            ..
         } = self;
         meta.spans_mut(f);
         edges.spans_mut(f);
@@ -171,6 +173,7 @@ impl Spans for EdgePatch {
             forbids: _,
             span,
             holes: _,
+            ..
         } = self;
         span.spans_mut(f);
     }
@@ -198,7 +201,7 @@ impl Spans for Instance {
 
 impl Spans for Motion {
     fn spans_mut(&mut self, f: &mut dyn FnMut(&mut Span)) {
-        let Self { event, within: _ } = self;
+        let Self { event, .. } = self;
         event.spans_mut(f);
     }
 }
@@ -234,6 +237,7 @@ impl Spans for super::Deadline {
             extend,
             waive: _,
             designated: _,
+            ..
         } = self;
         meta.spans_mut(f);
         trigger.spans_mut(f);

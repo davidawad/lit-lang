@@ -2,7 +2,7 @@
 //! namespaces, links-package shape) and the assembled package HIR.
 use super::{item_name, Hole, ModuleCheck};
 use crate::db::inputs::{PackageInput, Workspace};
-use crate::db::queries::{check_module, item_tree, manifest, signature};
+use crate::db::queries::{check_module, item_tree, manifest, signature, span_map};
 use crate::db::resolution::{resolution, Selected};
 use crate::db::span::{sort_diagnostics, to_span, Report, TextRange};
 use crate::hir;

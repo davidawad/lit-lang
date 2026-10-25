@@ -266,7 +266,7 @@ fn exception_types(
 ) {
     loop {
         let found: Vec<(String, Type)> = {
-            let scope = Scope::new(sig, tree, imports, Vec::new());
+            let scope = Scope::new(sig, &tree.imports, imports, Vec::new());
             items
                 .iter()
                 .filter_map(|(item, _)| match &item.kind {
@@ -395,7 +395,7 @@ fn resolve_types(sig: &mut Signature, tree: &ItemTree, imports: &[&Signature]) {
     }
     loop {
         let resolved: Vec<(String, Type)> = {
-            let scope = Scope::new(sig, tree, imports, Vec::new());
+            let scope = Scope::new(sig, &tree.imports, imports, Vec::new());
             aliases
                 .iter()
                 .filter(|(name, _)| matches!(sig.types.get(name), Some(TypeSig::Alias(None))))
@@ -412,7 +412,7 @@ fn resolve_types(sig: &mut Signature, tree: &ItemTree, imports: &[&Signature]) {
         }
     }
     let typed: Vec<(String, TypeSig)> = {
-        let scope = Scope::new(sig, tree, imports, Vec::new());
+        let scope = Scope::new(sig, &tree.imports, imports, Vec::new());
         events
             .iter()
             .map(|(name, params)| {

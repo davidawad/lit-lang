@@ -73,7 +73,10 @@ fn each_world_selects_the_version_in_force() {
     );
     match world_selection(&db, pkg, before).get("p") {
         Some(Resolution::Unselected(why)) => {
-            assert_eq!(why, "no version of `p` is in force on 2001-01-01");
+            assert_eq!(
+                why,
+                "`p` is not encoded before 2009-12-01: no version is in force on 2001-01-01"
+            );
         }
         other => panic!("{other:?}"),
     }

@@ -199,8 +199,9 @@ impl Spans for Instance {
 
 impl Spans for Motion {
     fn spans_mut(&mut self, f: &mut dyn FnMut(&mut Span)) {
-        let Self { event, .. } = self;
+        let Self { event, unless, .. } = self;
         event.spans_mut(f);
+        unless.spans_mut(f);
     }
 }
 

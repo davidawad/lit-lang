@@ -13,18 +13,18 @@ expression: rows
     ],
     "capability: a delegated case order is licensed": [],
     "capability: a local rule the node does not delegate to (L3004)": [
-        "6:18 L3004 `supersedes when` by `LocalRule` cannot change the guard of `timely`: node `check` is `FederalRule` and does not delegate to `LocalRule`",
+        "4:51 L3004 `supersedes when` by `LocalRule` cannot change the guard of `timely`: node `check` is `FederalRule` and does not delegate to `LocalRule`",
     ],
     "disjointness: widening timely lets it overlap late, reported once (L2005)": [
-        "7:5 L2005 from 2010-01-01 the guards of `timely` and `late` on fact `check` can both hold\n    note: composed: `has_event(Moved()) || has_event(Excused())` and `!has_event(Moved()) && has_event(Struck())`; a fact has one value, so a changed guard stays exclusive of its siblings (SPEC §3.6)",
+        "4:55 L2005 from 2010-01-01 the guards of `timely` and `late` on fact `check` can both hold\n    note: composed: `has_event(Moved()) || has_event(Excused())` and `!has_event(Moved()) && has_event(Struck())`; a fact has one value, so a changed guard stays exclusive of its siblings (SPEC §3.6)",
     ],
     "order: disjoint intervals never meet": [],
     "order: same authority and date, replace and narrow do not commute (L3003)": [
-        "8:5 L3003 `supersedes when` and `when and` on `timely` are in force together and neither authority nor effective date orders them",
+        "4:182 L3003 `supersedes when` and `when and` on `timely` are in force together and neither authority nor effective date orders them",
     ],
     "order: two narrowings commute, so no order is needed": [],
     "placement: `file` is not a fact edge, so it carries no guard (L2007)": [
-        "6:16 L2007 `when and` is not allowed on `file`: node `intake` of `base` is not a `fact` chance node, so its edges carry no `when` guard",
+        "4:49 L2007 `when and` is not allowed on `file`: node `intake` of `base` is not a `fact` chance node, so its edges carry no `when` guard",
     ],
     "unknown level (L1002)": [
         "6:73 L1002 cannot find authority `Nope`",

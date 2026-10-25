@@ -43,7 +43,7 @@ async fn advertises_every_feature() {
 #[tokio::test]
 async fn publishes_the_check_diagnostics_of_the_worked_example() {
     let mut c = Client::repo().await;
-    // SPEC §12: under `dev`, L9002 for the three holes and L9003 for the two `_` edges.
+    // SPEC §12: under `dev`, L9002 for the three holes; both edges are named.
     let ds = c.diagnostics(&uri(LIT)).await;
     assert_eq!(codes(&ds), ["L9002", "L9002", "L9002"]);
     insta::assert_json_snapshot!("worked_example_dev", shape(&ds));

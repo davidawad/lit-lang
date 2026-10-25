@@ -108,7 +108,7 @@ async fn a_newer_change_cancels_the_running_check() {
     let path = "lit/examples/rule12.lit";
     c.open(path, &read(path)).await;
     let ds = c.diagnostics(&support::uri(path)).await;
-    assert_eq!(codes(&ds), ["L9002", "L9002", "L9002", "L9003", "L9003"]);
+    assert_eq!(codes(&ds), ["L9002", "L9002", "L9002"]);
     let status = c.status().await;
     assert_eq!(status["cancelled"], json!(1), "{status}");
     assert_eq!(status["checks"], json!(2), "{status}");

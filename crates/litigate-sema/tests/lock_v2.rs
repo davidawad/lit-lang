@@ -6,6 +6,7 @@ mod common;
 use common::{manifest, package, render, workspace};
 use litigate_sema::pkg::lock::{LockFile, LockedPackage, UNCHECKED};
 use litigate_sema::pkg::source::MemoryTree;
+use salsa::Setter;
 use std::fmt::Write as _;
 use std::path::{Path, PathBuf};
 
@@ -71,6 +72,18 @@ fn a_package_that_does_not_check_locks_its_source_digest() {
         lock.merkle()["app 1.0.0"],
         litigate_sema::pkg::lock::merkle("app", "1.0.0", 1, &app.source, &[], &[])
     );
+}
+
+#[test]
+fn stale_lock_is_reported_with_its_source_location() {
+    let (mut db, ws) = workspace(&[package("app", &[], &[("m.lit", PACK)])]);
+    let pkg = ws.packages(&db)[0];
+    pkg.set_lock_text(&mut db)
+        .to(Some("not a valid lock\n".to_owned()));
+    let diagnostics = litigate_sema::lock_diagnostics(&db, ws, pkg);
+    assert_eq!(diagnostics.len(), 1);
+    assert_eq!(diagnostics[0].span.file.0, "pkgs/app/Lit.lock");
+    assert_eq!(diagnostics[0].span.line, 1);
 }
 
 #[test]

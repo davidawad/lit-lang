@@ -228,8 +228,9 @@ mod tests {
         let _clock = engine_clock(&session.db, session.ws);
 
         let broken = testkit::example_with(
-            "counting broken cite \"XYZ 6(a)\" { exclude_trigger_day include_last_day holidays federal-holidays }",
+            "counting broken cite \"XYZ 6(a)\" {\n  exclude_trigger_day\n  include_last_day\n  holidays federal-holidays\n}",
         );
+        assert!(broken.packages[0].check.package.is_some());
         let _clock = engine_clock(&broken.db, broken.ws);
     }
 

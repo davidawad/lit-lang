@@ -682,6 +682,11 @@ impl Ranges for ItemKind {
                 clauses.ranges_mut(f);
                 stmts.ranges_mut(f);
             }
+            Self::Grant(name, clauses, fields) => {
+                name.ranges_mut(f);
+                clauses.ranges_mut(f);
+                fields.ranges_mut(f);
+            }
         }
     }
 }

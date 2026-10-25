@@ -512,7 +512,7 @@ fn items(cx: &mut Cx<'_, '_>, top: &Item, context: &ModuleContext) -> DeclCheck 
                 Some(Declaration::Test(cx.test(item, name, clauses, stmts)))
             }
             ItemKind::Grant(name, clauses, fields) => cx
-                .grant(item, *rule, name, clauses, fields)
+                .grant(item, rule, name, clauses, fields)
                 .map(Declaration::Grant),
         };
         out.declarations.extend(d);

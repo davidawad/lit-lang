@@ -49,6 +49,7 @@ impl Spans for Metadata {
             effective: _,
             authority: _,
             relations: _,
+            delegations: _,
             span,
             imported: _,
         } = self;
@@ -284,6 +285,14 @@ impl Spans for Rule {
     }
 }
 
+impl Spans for super::Grant {
+    fn spans_mut(&mut self, f: &mut dyn FnMut(&mut Span)) {
+        let Self { meta, extend, .. } = self;
+        meta.spans_mut(f);
+        extend.spans_mut(f);
+    }
+}
+
 impl Spans for DefaultRule {
     fn spans_mut(&mut self, f: &mut dyn FnMut(&mut Span)) {
         let Self {
@@ -371,6 +380,7 @@ impl Spans for Declaration {
             Self::Exception(x) => x.spans_mut(f),
             Self::Transition(x) => x.spans_mut(f),
             Self::Test(x) => x.spans_mut(f),
+            Self::Grant(x) => x.spans_mut(f),
             Self::Authority(_) | Self::TypeAlias(_) | Self::Enum(_) | Self::Event(_) => {}
         }
     }

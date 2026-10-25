@@ -1289,6 +1289,20 @@ must cover the package lifetime. A gap is legal only when declared with
 `supersedes`/`revives` (L3002). A query at `(as_of, known_at)` selects the
 version with `from <= as_of < to`, among versions whose `known_at <=` the
 query's `known_at` (latest when omitted). No version is L3007.
+
+**Cite text across versions.** Let E be the declaration version's `from`
+date and D the vendored source binding's `as_of`. When E < D, the cite is
+proved only if a source binding pins an eCFR versioner history for that
+exact section, read at or after D, with no amendment effective in (E, D].
+An amendment effective exactly at E establishes the cited version; one at
+D or strictly between E and D breaks the proof. Missing or unusable history
+also fails closed: the cite becomes a hole, and its diagnostic names the
+first breaking amendment's Federal Register citation and effective date
+when available. A cite marked `historical` is an explicit exception. The
+source map records the proving history's repository path, heading line,
+block hash, read date, and last version on or before E; it is copied into
+lowered cite provenance and the matter timeline. No Federal Register
+instrument is authority unless its text is itself vendored.
 A version's `known_at` is when the corpus can show it was known: its
 promulgation date where a source the package binds dates one, else the
 date the version was recorded, never an earlier guess (ruling
@@ -1808,7 +1822,7 @@ undecided, which is an L5007 error.
 | Obligation | Definition | Code |
 |---|---|---|
 | `well-typed` | every expression and field typechecks, matches are exhaustive, no forbidden operation | L2xxx |
-| `cite-resolves` | every cite resolves to a binding and, when the binding has `path`, to the pinpoint's heading span in the text its `path_sha256` pins; no cite's expression postdates its version's window unless `historical` (§4.3) | L1010 |
+| `cite-resolves` | every cite resolves to a binding and, when the binding has `path`, to the pinpoint's heading span in the text its `path_sha256` pins; a vendored expression dated D proves text effective at E < D only when its pinned amendment history records no amendment to that section in (E, D]; otherwise it is a hole (§4.3) | L1010 |
 | `effective-disjoint` | versions of each declaration are pairwise disjoint | L3001 |
 | `effective-covered` | versions cover the package lifetime except declared gaps | L3002 |
 | `precedence-acyclic` | authority order, relations, and default/exception references are acyclic | L3006 |

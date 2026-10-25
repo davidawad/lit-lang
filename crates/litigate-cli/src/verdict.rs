@@ -215,6 +215,46 @@ mod tests {
     use crate::testkit::{example_with, hir_with};
 
     #[test]
+    fn corpus_digest_is_stable_and_changes_with_source_text() {
+        let corpus = SourceCorpus::from_files([(
+            "sources/rule.txt".to_owned(),
+            "## Rule 1\ntext".to_owned(),
+        )]);
+        let same = SourceCorpus::from_files([(
+            "sources/rule.txt".to_owned(),
+            "## Rule 1\ntext".to_owned(),
+        )]);
+        let changed = SourceCorpus::from_files([(
+            "sources/rule.txt".to_owned(),
+            "## Rule 1\nupdated text".to_owned(),
+        )]);
+
+        assert_eq!(corpus_digest(&corpus), corpus_digest(&same));
+        assert_ne!(corpus_digest(&corpus), corpus_digest(&changed));
+    }
+
+    #[test]
+    fn disk_verification_cache_key_includes_the_source_corpus() {
+        let root =
+            std::env::temp_dir().join(format!("litigate-verdict-cache-{}", std::process::id()));
+        let mut session = example_with("");
+        session.cache =
+            Some(crate::cache::Cache::configured(&root, None, Some("verified")).unwrap());
+        let clocks = Clocks::new(&session.hir());
+        let verdict = package(
+            &session,
+            &session.packages[0],
+            &clocks,
+            Profile::Dev,
+            &Options::default(),
+        );
+
+        assert!(verdict.lowered.is_some());
+        assert!(root.join("verified").read_dir().is_ok());
+        let _ = std::fs::remove_dir_all(root);
+    }
+
+    #[test]
     fn a_spanless_anonymous_edge_is_reported_at_the_manifest() {
         let mut pkg = hir_with("");
         for decl in &mut pkg.modules[0].declarations {

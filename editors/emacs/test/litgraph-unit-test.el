@@ -13,6 +13,14 @@
 (require 'litgraph-menu)
 (require 'ob-litgraph)
 
+(ert-deftest litgraph-test-skip-or-fail-respects-require-switch ()
+  (let ((process-environment (copy-sequence process-environment)))
+    (setenv "LITGRAPH_IT_REQUIRE" "1")
+    (should-error (litgraph-test-skip-or-fail "tool missing") :type 'error)
+    (setenv "LITGRAPH_IT_REQUIRE" nil)
+    (should-error (litgraph-test-skip-or-fail "tool missing")
+                  :type 'ert-test-skipped)))
+
 ;;;; Core: JSON, requests, process layer
 
 (ert-deftest litgraph-get-walks-paths ()

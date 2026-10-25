@@ -53,6 +53,7 @@ fixtures-sync:
 	mkdir -p test/fixtures/timeline-project/cases test/fixtures/timeline-project/lit
 	cp -R "$(LITGRAPH_DIR)/cases/examples" test/fixtures/timeline-project/cases/
 	cp -R "$(LITGRAPH_DIR)/lit/examples" test/fixtures/timeline-project/lit/
+	printf '%s\n' "$(LITGRAPH_SHA)" > .litgraph-rev
 
 autoloads:
 	$(BATCH) --eval '(loaddefs-generate default-directory "litgraph-autoloads.el")' || \

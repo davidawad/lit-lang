@@ -29,6 +29,12 @@
   "Fixture NAME parsed like a live response."
   (litgraph-parse (litgraph-test-fixture name)))
 
+(defun litgraph-test-skip-or-fail (reason)
+  "Skip with REASON, unless LITGRAPH_IT_REQUIRE requests a hard failure."
+  (if (equal (getenv "LITGRAPH_IT_REQUIRE") "1")
+      (error "%s (LITGRAPH_IT_REQUIRE=1)" reason)
+    (ert-skip reason)))
+
 (defvar litgraph-test-calls nil
   "The (ARGS . INPUT) of every stubbed process call, newest first.")
 

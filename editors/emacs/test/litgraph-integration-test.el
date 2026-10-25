@@ -4,7 +4,7 @@
 
 ;;; Commentary:
 
-;; Every test here skips itself when no `litgraph' binary is installed.
+;; Tests skip unavailable tools unless LITGRAPH_IT_REQUIRE=1.
 
 ;;; Code:
 
@@ -18,10 +18,10 @@
 (require 'litgraph-timeline)
 
 (defmacro litgraph-it (&rest body)
-  "Run BODY against the real binary with a clean session, or skip."
+  "Run BODY against the real binary with a clean session, or skip/fail."
   (declare (indent 0))
   `(let ((binary (litgraph-test-real-binary)))
-     (unless binary (ert-skip "litgraph binary not installed"))
+     (unless binary (litgraph-test-skip-or-fail "litgraph binary not installed"))
      (let ((litgraph-executable binary)
            (litgraph--cache (make-hash-table :test #'equal))
            (litgraph-scenario nil) (litgraph-packs nil) (litgraph-params nil)
@@ -81,7 +81,7 @@
             (insert dot)
             (should (zerop (call-process-region (point-min) (point-max) "dot" t nil nil
                                                 "-Tsvg" "-o" null-device))))
-        (ert-skip "graphviz not installed")))))
+        (litgraph-test-skip-or-fail "graphviz not installed")))))
 
 (ert-deftest litgraph-it-deadlines-to-org ()
   (litgraph-it
@@ -161,7 +161,8 @@
 
 (ert-deftest litgraph-it-graphviz-renders-svg-asynchronously ()
   (litgraph-it
-    (unless (executable-find "dot") (ert-skip "graphviz not installed"))
+    (unless (executable-find "dot")
+      (litgraph-test-skip-or-fail "graphviz not installed"))
     (let* ((graph (litgraph-get (litgraph-request-sync
                                  (litgraph-build-request "graph" "cofc-1498-patent-case"))
                                 'result))
@@ -195,7 +196,7 @@
   ;; lit/examples.  LITGRAPH_TIMELINE_FILE names another
   ;; .case or .lit file to try.
   (let ((binary (litgraph-it--timeline-binary)))
-    (unless binary (ert-skip "litigate binary not installed"))
+    (unless binary (litgraph-test-skip-or-fail "litigate binary not installed"))
     (let ((litgraph-executable binary)
           (litgraph--cache (make-hash-table :test #'equal))
           (litgraph-scenario nil) (litgraph-packs nil) (litgraph-params nil)

@@ -770,6 +770,20 @@
                            (seq-filter (lambda (call) (equal (car call) '("q" "-")))
                                        (reverse litgraph-test-calls)))))))
 
+(ert-deftest litgraph-graph-text-root-ignores-inactive-parent-filter ()
+  (let* ((graph (litgraph-parse
+                 "{\"nodes\":[{\"id\":\"branch\",\"label\":\"Inactive branch\"},{\"id\":\"root\",\"label\":\"Real root\"},{\"id\":\"leaf\",\"label\":\"Leaf\"}],\"edges\":[{\"id\":\"inactive\",\"from\":\"leaf\",\"to\":\"branch\",\"active\":false},{\"id\":\"active\",\"from\":\"root\",\"to\":\"leaf\",\"active\":true}]}"))
+         (litgraph-graph-show-inactive nil)
+         (lines (litgraph-graph-text graph)))
+    (should (equal (cdar lines) "root"))
+    (should (string-match-p "Real root" (caar lines)))))
+
+(ert-deftest litgraph-graph-text-prefers-declared-start ()
+  (let* ((graph (litgraph-parse
+                 "{\"start\":{\"id\":\"root\"},\"nodes\":[{\"id\":\"first\",\"label\":\"First root\"},{\"id\":\"root\",\"label\":\"Declared root\"}],\"edges\":[]}"))
+         (lines (litgraph-graph-text graph)))
+    (should (equal (cdar lines) "root"))))
+
 (ert-deftest litgraph-deadlines-to-org-command-end-to-end ()
   (litgraph-test-with-stub
     (let* ((file (make-temp-file "lg-e2e" nil ".org"))

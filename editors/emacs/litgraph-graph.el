@@ -253,15 +253,22 @@ The result is a list of (LINE . NODE-ID) pairs."
     (dolist (node (litgraph-get graph 'nodes))
       (puthash (litgraph-get node 'id) node nodes))
     (dolist (edge (litgraph-get graph 'edges))
+      ;; Inactive edges still establish graph structure, even when they are
+      ;; omitted from the displayed tree.  Otherwise their targets can look
+      ;; like roots and be selected ahead of the real start node.
+      (puthash (litgraph-get edge 'to) t has-parent)
       (when (or litgraph-graph-show-inactive
                 (not (assq 'active edge))
                 (litgraph-get edge 'active))
         (puthash (litgraph-get edge 'from)
                  (append (gethash (litgraph-get edge 'from) children)
                          (list edge))
-                 children)
-        (puthash (litgraph-get edge 'to) t has-parent)))
-    (let ((start (or start
+                 children)))
+    (let* ((declared-start (litgraph-get graph 'start))
+           (start (or start
+                      (if (stringp declared-start)
+                          declared-start
+                        (litgraph-get declared-start 'id))
                      (litgraph-get (seq-find
                                     (lambda (n)
                                       (not (gethash (litgraph-get n 'id)

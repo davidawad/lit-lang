@@ -75,6 +75,12 @@ fn widen_all(dir: &Path) -> usize {
                 out.push_str(&line);
                 n += k;
             }
+            // The formatter writes a long delegation as a multiline block.
+            // Keep the round-trip check independent of that layout.
+            let multiline = format!("\n    op set\n  }}");
+            let widened = format!("\n    {LEGACY_OPS}\n  }}");
+            n += out.matches(&multiline).count();
+            out = out.replace(&multiline, &widened);
             std::fs::write(&path, out).unwrap();
         }
     }

@@ -50,6 +50,13 @@ fn an_invalid_manifest_reports_and_builds_no_package() {
 }
 
 #[test]
+fn render_lock_handles_a_valid_package() {
+    let (db, ws) = workspace(&[package("root", &[], &[("root.lit", PACK)])]);
+    let lock = litigate_sema::render_lock(&db, ws, ws.packages(&db)[0]);
+    assert!(lock.contains("name = \"root\""), "{lock}");
+}
+
+#[test]
 fn a_package_without_files_needs_a_start() {
     let (db, ws) = workspace(&[package("empty", &[], &[])]);
     insta::assert_debug_snapshot!(render(&db, ws));

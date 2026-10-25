@@ -1791,9 +1791,35 @@ mod tests {
                 b.rows[1].key,
                 "event:edge-answered-judgment-entered@fork:frcp.rule12.answered@start"
             );
+            let mut unnamed = answered.clone();
+            unnamed.edges[0].event = None;
+            unnamed.edges[0].id = None;
+            let mut b = Builder::new(&all, &texts, "2025-06-01".to_owned(), None);
+            fork(&mut b, &case, pkg, &unnamed, &[], None);
+            assert_eq!(
+                b.rows[1].key,
+                "event:judgment-entered@fork:frcp.rule12.answered@start"
+            );
             let mut served = case.events[0].clone();
+            served.id = None;
             served.docket = Some(2);
-            assert_eq!(event_key(&all, &served), "event:Served@served-1");
+            assert_eq!(event_key(&all, &served), "event:Served@2025-03-05/2");
+            served.docket = None;
+            assert_eq!(event_key(&all, &served), "event:Served@2025-03-05");
+            let mut electing = all[0].clone();
+            for module in &mut electing.modules {
+                for declaration in &mut module.declarations {
+                    if let Declaration::Event(event) = declaration {
+                        if event.name == "Served" {
+                            event.effect = Some(hir::EventEffect::Elects { param: 0 });
+                        }
+                    }
+                }
+            }
+            assert_eq!(
+                event_key(&[&electing], &served),
+                "event:Served@2025-03-05/complaint"
+            );
             // An explicit ID overrides the case event's own key.
             served.id = Some("service".to_owned());
             assert_eq!(event_key(&all, &served), "event:Served@service");

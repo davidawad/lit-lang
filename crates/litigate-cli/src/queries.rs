@@ -223,6 +223,17 @@ mod tests {
     }
 
     #[test]
+    fn engine_clock_uses_the_loaded_rules_or_an_empty_clock_on_lowering_error() {
+        let session = testkit::example_with("");
+        let _clock = engine_clock(&session.db, session.ws);
+
+        let broken = testkit::example_with(
+            "counting broken cite \"XYZ 6(a)\" { exclude_trigger_day include_last_day holidays federal-holidays }",
+        );
+        let _clock = engine_clock(&broken.db, broken.ws);
+    }
+
+    #[test]
     fn a_build_key_carries_the_profile_and_dates() {
         let db = LitDatabase::default();
         let options = Options {

@@ -76,6 +76,45 @@ fn added(at: &CaseCheck, filed: &CaseCheck) -> Vec<Diagnostic> {
         .collect()
 }
 
+fn filing_line_number(text: &str, line: &str) -> Result<u32, Failure> {
+    text.lines()
+        .collect::<Vec<_>>()
+        .into_iter()
+        .rposition(|candidate_line| candidate_line.trim() == line)
+        .and_then(|index| u32::try_from(index).ok())
+        .and_then(|index| index.checked_add(1))
+        .ok_or_else(|| Failure::new("could not locate the proposed filing"))
+}
+
+fn added_line(at: &str, filed: &str, line: &str) -> Result<(), Failure> {
+    if filing::added(at, filed, line) {
+        Ok(())
+    } else {
+        Err(Failure::new(format!(
+            "`{line}` is not one event of a .case `events` block"
+        )))
+    }
+}
+
+fn generated_id(
+    diagnostics: &[Diagnostic],
+    filing_line: u32,
+    date: &str,
+) -> Result<String, Failure> {
+    diagnostics
+        .iter()
+        .filter(|d| d.code == DiagnosticCode::UndeclaredEventId && d.span.line == filing_line)
+        .flat_map(|d| d.fixes.iter())
+        .flat_map(|f| f.edits.iter())
+        .find_map(|e| {
+            e.replacement
+                .strip_suffix(date)
+                .and_then(|s| s.strip_suffix(": "))
+        })
+        .map(str::to_owned)
+        .ok_or_else(|| Failure::new("could not generate a stable id for the proposed filing"))
+}
+
 /// Add the machine-generated event id to a proposed filing, reusing the
 /// canonical L9006 fix and its collision checks.
 fn generated_filing_line(
@@ -89,39 +128,13 @@ fn generated_filing_line(
         text: filing::splice(&at.text, date, line),
         ..original.clone()
     };
-    if !filing::added(&at.text, &candidate.text, line) {
-        return Err(Failure::new(format!(
-            "`{line}` is not one event of a .case `events` block"
-        )));
-    }
+    added_line(&at.text, &candidate.text, line)?;
     session.cases = vec![original.clone(), at.clone(), candidate];
     let checked = check_session(session, Profile::Dev, &Options::default());
     let candidate_text = &checked.session.cases[2].text;
-    let filing_line = candidate_text
-        .lines()
-        .collect::<Vec<_>>()
-        .into_iter()
-        .rposition(|candidate_line| candidate_line.trim() == line)
-        .and_then(|index| u32::try_from(index).ok())
-        .and_then(|index| index.checked_add(1))
-        .ok_or_else(|| Failure::new("could not locate the proposed filing"))?;
-    let candidate_case = checked
-        .cases
-        .get(2)
-        .ok_or_else(|| Failure::new("could not check the proposed filing"))?;
-    let generated = candidate_case
-        .diagnostics
-        .iter()
-        .filter(|d| d.code == DiagnosticCode::UndeclaredEventId && d.span.line == filing_line)
-        .flat_map(|d| d.fixes.iter())
-        .flat_map(|f| f.edits.iter())
-        .find_map(|e| {
-            e.replacement
-                .strip_suffix(date)
-                .and_then(|s| s.strip_suffix(": "))
-        })
-        .map(str::to_owned)
-        .ok_or_else(|| Failure::new("could not generate a stable id for the proposed filing"))?;
+    let filing_line = filing_line_number(candidate_text, line)?;
+    let candidate_case = &checked.cases[2];
+    let generated = generated_id(&candidate_case.diagnostics, filing_line, date)?;
     Ok((checked.session, format!("{generated}: {line}")))
 }
 
@@ -220,11 +233,7 @@ pub fn lint_filing(args: &Args) -> Outcome {
     if report.has_errors() {
         return Ok(report);
     }
-    if !filing::added(&texts[1].text, &texts[2].text, &line) {
-        return Err(Failure::new(format!(
-            "`{line}` is not one event of a .case `events` block"
-        )));
-    }
+    added_line(&texts[1].text, &texts[2].text, &line)?;
     report.sources = files
         .chain([(texts[2].path.clone(), texts[2].text.clone())])
         .collect();
@@ -239,4 +248,41 @@ pub fn lint_filing(args: &Args) -> Outcome {
         "triggers": changes.triggers, "open_before": changes.open_before,
     });
     Ok(report)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn filing_validation_reports_non_events_and_missing_locations() {
+        assert!(added_line("events {\n}\n", "events {\n}\n", "2025-01-01 Hearing()").is_err());
+        assert_eq!(filing_line_number("events {\n  event\n}\n", "event"), Ok(2));
+        assert!(filing_line_number("events {\n}\n", "missing").is_err());
+    }
+
+    #[test]
+    fn missing_event_id_fix_is_reported() {
+        assert!(generated_id(&[], 1, "2025-01-01").is_err());
+        let span = litigate_base::Span {
+            file: "case.case".into(),
+            line: 1,
+            col: 1,
+            end_line: 1,
+            end_col: 2,
+        };
+        for replacement in ["id: wrong", "prefix2025-01-01"] {
+            let diagnostic = Diagnostic::error(
+                DiagnosticCode::UndeclaredEventId,
+                span.clone(),
+                "missing id",
+            )
+            .fix(
+                span.clone(),
+                replacement,
+                litigate_base::Applicability::MachineApplicable,
+            );
+            assert!(generated_id(&[diagnostic], 1, "2025-01-01").is_err());
+        }
+    }
 }

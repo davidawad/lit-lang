@@ -324,10 +324,17 @@ mod tests {
         };
         let own_error =
             Diagnostic::error(DiagnosticCode::UnresolvedName, span("mine.lit"), "bad name");
+        let own_info = diagnostic(
+            "mine.lit",
+            DiagnosticCode::AnonymousEdge,
+            Severity::Info,
+            "own info is hidden",
+        );
         let report = crate::out::Report {
             diagnostics: vec![
                 own_warning,
                 own_error,
+                own_info,
                 diagnostic(
                     "lit/ttab/rules.lit",
                     DiagnosticCode::AnonymousEdge,

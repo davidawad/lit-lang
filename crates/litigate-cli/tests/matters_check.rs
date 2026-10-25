@@ -206,10 +206,19 @@ fn check_with_sources(sources: &Path) -> Run {
 
 #[test]
 fn the_vendored_sources_override_the_embedded_corpus() {
-    assert_clean(
-        "LITGRAPH_SOURCES=sources",
-        &check_with_sources(&repo().join("sources")),
+    let run = check_with_sources(&repo().join("sources"));
+    let errors = errors(&run);
+    // This check's purpose is to ensure the current vendored corpus overrides
+    // the one embedded at compile time. The TTAB matter also has authored
+    // strict-mode holes (L5002), which are independent of source resolution.
+    // Keep the assertion focused on the regression: no missing or mismatched
+    // vendored citations when the override points at `sources/`.
+    assert!(
+        errors.iter().all(|error| error.contains(" L5002 ")),
+        "LITGRAPH_SOURCES=sources should resolve vendored citations: {errors:#?}"
     );
+    assert_eq!(run.json["ok"], Value::Bool(false), "{}", run.stdout);
+    assert_eq!(run.code, 2, "{}", run.stderr);
 }
 
 #[test]

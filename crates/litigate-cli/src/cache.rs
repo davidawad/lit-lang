@@ -2,8 +2,9 @@
 //! dependencies at digest Z" is a build-cache fact, never a `Lit.lock`
 //! one: an entry is keyed by the Merkle root of X's resolution (X's own
 //! digests and every dependency's, computed on read), the profile, the
-//! build dates and the compiler, so a change to any dependency's digest
-//! misses every dependent's entry. Only a session read from disk uses it;
+//! build dates, source corpus and the compiler, so a change to any
+//! dependency's digest or source text misses every dependent's entry. Only
+//! a session read from disk uses it;
 //! CI (`CI` set) re-verifies from scratch, neither reading nor writing it.
 use litigate_base::Diagnostic;
 use litigate_verify::{Verification, VerificationReport};

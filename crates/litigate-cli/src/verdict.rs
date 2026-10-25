@@ -14,6 +14,7 @@ use litigate_sema::hir;
 use litigate_sema::types::build::expected_lock;
 use litigate_syntax::FileKind;
 use litigate_verify::{Finding, PackageInput, Verification};
+use sha2::{Digest, Sha256};
 use std::path::Path;
 use std::sync::OnceLock;
 
@@ -156,7 +157,16 @@ pub fn package(
                     let profile = format!("{profile:?}");
                     let as_of = options.as_of.as_deref().unwrap_or_default();
                     let known_at = options.known_at.as_deref().unwrap_or_default();
-                    let key = [pkg.root.as_str(), &root, &loaded, &profile, as_of, known_at];
+                    let corpus_digest = corpus_digest(corpus);
+                    let key = [
+                        pkg.root.as_str(),
+                        &root,
+                        &loaded,
+                        &profile,
+                        as_of,
+                        known_at,
+                        &corpus_digest,
+                    ];
                     cache.verified(&key, verify)
                 }
                 None => verify(),
@@ -183,6 +193,20 @@ pub fn package(
         findings,
         lowered,
     }
+}
+
+/// A stable digest of every source file used to verify citations.
+fn corpus_digest(corpus: &SourceCorpus) -> String {
+    let mut files: Vec<_> = corpus.files.iter().collect();
+    files.sort_by(|a, b| a.0.cmp(b.0));
+    let mut hash = Sha256::new();
+    for (path, text) in files {
+        hash.update((path.len() as u64).to_be_bytes());
+        hash.update(path.as_bytes());
+        hash.update((text.len() as u64).to_be_bytes());
+        hash.update(text.as_bytes());
+    }
+    litigate_sema::pkg::lock::hex(&hash.finalize())
 }
 
 #[cfg(test)]

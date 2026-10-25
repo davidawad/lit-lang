@@ -118,6 +118,10 @@
         "named": true
       },
       {
+        "type": "grant_decl",
+        "named": true
+      },
+      {
         "type": "group_decl",
         "named": true
       },
@@ -543,11 +547,23 @@
           "named": true
         },
         {
+          "type": "commenced_clause",
+          "named": true
+        },
+        {
           "type": "effective_clause",
           "named": true
         },
         {
           "type": "known_at_clause",
+          "named": true
+        },
+        {
+          "type": "retracted_clause",
+          "named": true
+        },
+        {
+          "type": "unknown_before_clause",
           "named": true
         }
       ]
@@ -876,6 +892,21 @@
     }
   },
   {
+    "type": "commenced_clause",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "interval",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "count_entry",
     "named": true,
     "fields": {
@@ -965,6 +996,10 @@
           "named": true
         },
         {
+          "type": "commenced_clause",
+          "named": true
+        },
+        {
           "type": "effective_clause",
           "named": true
         },
@@ -974,6 +1009,14 @@
         },
         {
           "type": "relation",
+          "named": true
+        },
+        {
+          "type": "retracted_clause",
+          "named": true
+        },
+        {
+          "type": "unknown_before_clause",
           "named": true
         }
       ]
@@ -1147,6 +1190,10 @@
           "named": true
         },
         {
+          "type": "commenced_clause",
+          "named": true
+        },
+        {
           "type": "deadline_decl_opts",
           "named": true
         },
@@ -1161,6 +1208,14 @@
         {
           "type": "relation",
           "named": true
+        },
+        {
+          "type": "retracted_clause",
+          "named": true
+        },
+        {
+          "type": "unknown_before_clause",
+          "named": true
         }
       ]
     }
@@ -1169,12 +1224,26 @@
     "type": "deadline_decl_opts",
     "named": true,
     "fields": {
+      "cite": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "cite",
+            "named": true
+          }
+        ]
+      },
       "key": {
         "multiple": true,
         "required": false,
         "types": [
           {
             "type": "bearer",
+            "named": false
+          },
+          {
+            "type": "characterization",
             "named": false
           },
           {
@@ -1356,6 +1425,10 @@
           "named": true
         },
         {
+          "type": "commenced_clause",
+          "named": true
+        },
+        {
           "type": "effective_clause",
           "named": true
         },
@@ -1365,6 +1438,66 @@
         },
         {
           "type": "relation",
+          "named": true
+        },
+        {
+          "type": "retracted_clause",
+          "named": true
+        },
+        {
+          "type": "unknown_before_clause",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "delegation",
+    "named": true,
+    "fields": {
+      "key": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "max",
+            "named": false
+          },
+          {
+            "type": "op",
+            "named": false
+          },
+          {
+            "type": "to",
+            "named": false
+          }
+        ]
+      },
+      "value": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "duration",
+            "named": true
+          },
+          {
+            "type": "id_list",
+            "named": true
+          },
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "cite",
           "named": true
         }
       ]
@@ -1566,6 +1699,10 @@
             "named": false
           },
           {
+            "type": "joins",
+            "named": false
+          },
+          {
             "type": "note",
             "named": false
           },
@@ -1579,6 +1716,10 @@
           },
           {
             "type": "sets",
+            "named": false
+          },
+          {
+            "type": "spawn",
             "named": false
           },
           {
@@ -2093,6 +2234,114 @@
     }
   },
   {
+    "type": "grant_body",
+    "named": true,
+    "fields": {
+      "key": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "delegable",
+            "named": false
+          },
+          {
+            "type": "extend",
+            "named": false
+          },
+          {
+            "type": "unlock",
+            "named": false
+          },
+          {
+            "type": "waive",
+            "named": false
+          }
+        ]
+      },
+      "value": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "capability",
+            "named": true
+          },
+          {
+            "type": "delegation",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "grant_decl",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "grant_body",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "targets": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "id_list",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "cite",
+          "named": true
+        },
+        {
+          "type": "commenced_clause",
+          "named": true
+        },
+        {
+          "type": "effective_clause",
+          "named": true
+        },
+        {
+          "type": "known_at_clause",
+          "named": true
+        },
+        {
+          "type": "retracted_clause",
+          "named": true
+        },
+        {
+          "type": "unknown_before_clause",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "group_decl",
     "named": true,
     "fields": {
@@ -2164,11 +2413,23 @@
           "named": true
         },
         {
+          "type": "commenced_clause",
+          "named": true
+        },
+        {
           "type": "effective_clause",
           "named": true
         },
         {
           "type": "known_at_clause",
+          "named": true
+        },
+        {
+          "type": "retracted_clause",
+          "named": true
+        },
+        {
+          "type": "unknown_before_clause",
           "named": true
         }
       ]
@@ -2610,6 +2871,10 @@
           "named": true
         },
         {
+          "type": "commenced_clause",
+          "named": true
+        },
+        {
           "type": "effective_clause",
           "named": true
         },
@@ -2619,6 +2884,14 @@
         },
         {
           "type": "relation",
+          "named": true
+        },
+        {
+          "type": "retracted_clause",
+          "named": true
+        },
+        {
+          "type": "unknown_before_clause",
           "named": true
         }
       ]
@@ -3029,6 +3302,10 @@
           "named": true
         },
         {
+          "type": "commenced_clause",
+          "named": true
+        },
+        {
           "type": "discretion",
           "named": true
         },
@@ -3050,6 +3327,14 @@
         },
         {
           "type": "relation",
+          "named": true
+        },
+        {
+          "type": "retracted_clause",
+          "named": true
+        },
+        {
+          "type": "unknown_before_clause",
           "named": true
         }
       ]
@@ -3659,10 +3944,24 @@
     "type": "relation",
     "named": true,
     "fields": {
+      "capability": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "delegation",
+            "named": true
+          }
+        ]
+      },
       "kind": {
         "multiple": false,
         "required": true,
         "types": [
+          {
+            "type": "delegable",
+            "named": false
+          },
           {
             "type": "delegable_to",
             "named": false
@@ -3691,7 +3990,7 @@
       },
       "target": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "id_list",
@@ -3719,6 +4018,21 @@
         },
         {
           "type": "string",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "retracted_clause",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "date",
           "named": true
         }
       ]
@@ -3832,6 +4146,10 @@
           "named": true
         },
         {
+          "type": "commenced_clause",
+          "named": true
+        },
+        {
           "type": "effective_clause",
           "named": true
         },
@@ -3841,6 +4159,14 @@
         },
         {
           "type": "relation",
+          "named": true
+        },
+        {
+          "type": "retracted_clause",
+          "named": true
+        },
+        {
+          "type": "unknown_before_clause",
           "named": true
         }
       ]
@@ -4468,6 +4794,21 @@
     }
   },
   {
+    "type": "unknown_before_clause",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "date",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "use_item",
     "named": true,
     "fields": {
@@ -4741,11 +5082,19 @@
     "named": false
   },
   {
+    "type": "characterization",
+    "named": false
+  },
+  {
     "type": "cite",
     "named": false
   },
   {
     "type": "clears",
+    "named": false
+  },
+  {
+    "type": "commenced",
     "named": false
   },
   {
@@ -4786,6 +5135,10 @@
   },
   {
     "type": "default",
+    "named": false
+  },
+  {
+    "type": "delegable",
     "named": false
   },
   {
@@ -4930,6 +5283,10 @@
     "named": false
   },
   {
+    "type": "grant",
+    "named": false
+  },
+  {
     "type": "group",
     "named": false
   },
@@ -4968,6 +5325,10 @@
   {
     "type": "invalid_date",
     "named": true
+  },
+  {
+    "type": "joins",
+    "named": false
   },
   {
     "type": "known_at",
@@ -5048,6 +5409,10 @@
   },
   {
     "type": "on",
+    "named": false
+  },
+  {
+    "type": "op",
     "named": false
   },
   {
@@ -5151,6 +5516,10 @@
     "named": false
   },
   {
+    "type": "retracted",
+    "named": false
+  },
+  {
     "type": "revives",
     "named": false
   },
@@ -5180,6 +5549,10 @@
   },
   {
     "type": "source",
+    "named": false
+  },
+  {
+    "type": "spawn",
     "named": false
   },
   {
@@ -5255,7 +5628,15 @@
     "named": true
   },
   {
+    "type": "unknown_before",
+    "named": false
+  },
+  {
     "type": "unless",
+    "named": false
+  },
+  {
+    "type": "unlock",
     "named": false
   },
   {

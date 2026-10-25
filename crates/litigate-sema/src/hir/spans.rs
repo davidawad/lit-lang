@@ -112,7 +112,6 @@ impl Spans for Edge {
             forbids: _,
             guard,
             span,
-            holes: _,
             ..
         } = self;
         event.spans_mut(f);
@@ -135,7 +134,6 @@ impl Spans for Node {
             actor: _,
             info: _,
             edges,
-            holes: _,
             ..
         } = self;
         meta.spans_mut(f);
@@ -173,7 +171,6 @@ impl Spans for EdgePatch {
             requires: _,
             forbids: _,
             span,
-            holes: _,
             ..
         } = self;
         span.spans_mut(f);
@@ -236,8 +233,6 @@ impl Spans for super::Deadline {
             policy: _,
             linear: _,
             extend,
-            waive: _,
-            designated: _,
             ..
         } = self;
         meta.spans_mut(f);

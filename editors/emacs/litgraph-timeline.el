@@ -72,7 +72,7 @@
   :prefix "litgraph-timeline-")
 
 (defcustom litgraph-timeline-command
-  '(:program nil
+  '(:program "litigate"
     :args ("timeline" file "--json")
     :as-of "--as-of"
     :known-at "--known-at"
@@ -81,7 +81,7 @@
   "How to call the timeline op.
 A plist:
 
-  :program   the executable, or nil for `litgraph-executable'.
+  :program   the executable (defaults to `litigate').
   :args      the arguments; the symbol `file' stands for the absolute
              name of the .case or .lit file.
   :as-of     flag followed by the as_of date, when one is set.

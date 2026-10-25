@@ -252,11 +252,12 @@ Status and layer class are printed exactly as the op's JSON spells them
 
 The buffer only renders the JSON of litgraph's `timeline` op (schema
 `litigate.timeline/1`, frozen in litgraph's `docs/litigate/TIMELINE.md`). How
-the op is called is one option, `litgraph-timeline-command`:
+the op is called is one option, `litgraph-timeline-command` (defaulting to
+the `litigate` executable):
 
 ```elisp
 (setq litgraph-timeline-command
-      '(:program nil                    ; nil: `litgraph-executable'
+      '(:program "litigate"
         :args ("timeline" file "--json") ; `file' is the .case/.lit file
         :as-of "--as-of" :known-at "--known-at"
         :layers "--layers"              ; comma-separated enabled layer ids
@@ -351,7 +352,8 @@ example of the frozen timeline schema; `timeline.v1.schema.json` beside it is
 the schema itself (both copied from litgraph `docs/litigate/`, main
 `6efcc35`), and the tests check the renderer's statuses and layer classes
 against its enums. When the schema changes, copy both again. The timeline
-integration test also skips when the binary has no `timeline` op; it runs on
+integration test skips only when `litigate` is absent from PATH; an installed
+binary that lacks the `timeline` op fails the test. It runs on
 `test/fixtures/timeline-project/acme.case` (from litigate-mode.el's examples),
 or on `LITGRAPH_TIMELINE_FILE`.
 

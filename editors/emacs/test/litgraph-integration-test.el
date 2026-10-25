@@ -175,26 +175,31 @@
       (should (stringp result))
       (should (string-match-p "<svg" result)))))
 
-(defun litgraph-it--timeline-op-p (binary)
-  "Non-nil if BINARY runs the timeline op, as `litgraph-timeline-command' says."
-  (let ((command (plist-get litgraph-timeline-command :args)))
-    ;; Exit status alone is not enough: a binary without the op can still
-    ;; print its generic usage and exit 0, so look for the op's own flag.
-    (with-temp-buffer
-      (and (eq 0 (ignore-errors
-                   (call-process binary nil t nil (car command) "--help")))
-           (progn (goto-char (point-min))
-                  (search-forward "--as-of" nil t))))))
+(defun litgraph-it--timeline-binary ()
+  "Return the installed `litigate' executable, or nil if it is absent."
+  (executable-find (or (plist-get litgraph-timeline-command :program)
+                       "litigate")))
+
+(ert-deftest litgraph-it-timeline-binary-default-is-litigation-engine ()
+  (should (equal (plist-get litgraph-timeline-command :program) "litigate")))
+
+(ert-deftest litgraph-it-timeline-binary-presence-checks-configured-program ()
+  (let ((calls nil))
+    (cl-letf (((symbol-function 'executable-find)
+               (lambda (program) (push program calls) nil)))
+      (should-not (litgraph-it--timeline-binary))
+      (should (equal calls '("litigate"))))))
 
 (ert-deftest litgraph-it-timeline-renders-real-op ()
   ;; The example project (Lit.toml, rule12.lit, acme.case) comes from
   ;; litigate-mode.el's examples/.  LITGRAPH_TIMELINE_FILE names another
   ;; .case or .lit file to try.
-  (litgraph-it
-    (let ((litgraph-executable (or (plist-get litgraph-timeline-command :program)
-                                   litgraph-executable)))
-      (unless (litgraph-it--timeline-op-p litgraph-executable)
-        (ert-skip "litgraph has no timeline op")))
+  (let ((binary (litgraph-it--timeline-binary)))
+    (unless binary (ert-skip "litigate binary not installed"))
+    (let ((litgraph-executable binary)
+          (litgraph--cache (make-hash-table :test #'equal))
+          (litgraph-scenario nil) (litgraph-packs nil) (litgraph-params nil)
+          (litgraph-default-scenario nil) (litgraph-default-packs nil))
     (let* ((file (or (getenv "LITGRAPH_TIMELINE_FILE")
                      (expand-file-name "fixtures/timeline-project/acme.case"
                                        litgraph-test-dir)))
@@ -221,7 +226,7 @@
             (dolist (layer (litgraph-get litgraph-timeline--doc 'layers))
               (should (member (litgraph-get layer 'class)
                               litgraph-timeline-layer-classes))))
-        (kill-buffer buffer)))))
+        (kill-buffer buffer))))))
 
 (provide 'litgraph-integration-test)
 

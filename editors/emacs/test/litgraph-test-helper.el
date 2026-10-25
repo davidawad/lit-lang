@@ -67,8 +67,28 @@
        (if fixture
            (funcall callback 0 (litgraph-test-fixture fixture) "")
          (funcall callback 2 (litgraph-test-fixture "error") ""))))
-    (`("timeline" . ,_)
-     (funcall callback 0 (litgraph-test-fixture litgraph-test-timeline-fixture) ""))
+    (`("timeline" . ,args)
+     ;; Model clap's timeline parser: --format takes json|human, and only
+     ;; the date, layer, and world options are accepted.  In particular,
+     ;; obsolete or unknown flags must fail instead of returning a fixture.
+     (let ((rest args) (valid t) (file nil))
+       (while (and rest valid)
+         (let ((arg (pop rest)))
+           (cond
+            ((equal arg "--format")
+             (if (cl-member (pop rest) '("json" "human") :test #'equal) nil
+               (setq valid nil)))
+            ((member arg '("--as-of" "--known-at"))
+             (if (and rest (not (string-prefix-p "--" (car rest))))
+                 (pop rest) (setq valid nil)))
+            ((member arg '("--layers" "--world"))
+             (if rest (pop rest) (setq valid nil)))
+            ((string-prefix-p "--" arg) (setq valid nil))
+            ((null file) (setq file arg))
+            (t (setq valid nil)))))
+       (if (and valid file)
+           (funcall callback 0 (litgraph-test-fixture litgraph-test-timeline-fixture) "")
+         (funcall callback 2 "" "error: unexpected argument or invalid timeline arguments"))))
     ((and `("validate" . ,_) (guard t))
      (funcall callback 2 (litgraph-test-fixture litgraph-test-validate-fixture) ""))
     (_ (funcall callback 1 "" "unexpected call")))

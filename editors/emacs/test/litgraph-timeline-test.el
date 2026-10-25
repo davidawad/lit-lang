@@ -264,13 +264,13 @@
 
 (ert-deftest litgraph-timeline-args ()
   (should (equal (litgraph-timeline--args "/x/a.case")
-                 '("timeline" "/x/a.case" "--json")))
+                 '("timeline" "--format" "json" "/x/a.case")))
   (should (equal (litgraph-timeline--args "/x/a.case" "2026-04-08" "2026-01-01"
                                           '("ttab" "o1") "w1")
-                 '("timeline" "/x/a.case" "--json" "--as-of" "2026-04-08"
+                 '("timeline" "--format" "json" "/x/a.case" "--as-of" "2026-04-08"
                    "--known-at" "2026-01-01" "--layers" "ttab,o1" "--world" "w1")))
   (should (equal (litgraph-timeline--args "/x/a.case" nil nil "" nil)
-                 '("timeline" "/x/a.case" "--json" "--layers" "")))
+                 '("timeline" "--format" "json" "/x/a.case" "--layers" "")))
   (let ((litgraph-timeline-command
          '(:args ("tl" "--format" "json" file) :as-of "--at" :world nil)))
     (should (equal (litgraph-timeline--args "/x/a.case" "2026-04-08" nil t "w1")
@@ -297,7 +297,7 @@
       (let* ((file (expand-file-name "cases/example-ttab-opposition.case" dir))
              (buffer (litgraph-timeline-test-open dir)))
         (should (equal (car (car litgraph-test-calls))
-                       (list "timeline" file "--json")))
+                       (list "timeline" "--format" "json" file)))
         (with-current-buffer buffer
           (should (derived-mode-p 'litgraph-timeline-mode))
           (should (string-match-p "Ruling on the motion" (buffer-string)))
@@ -342,16 +342,16 @@
     (litgraph-timeline-test-in-dir dir
       (with-current-buffer (litgraph-timeline-test-open dir)
         (litgraph-timeline-set-dates "2026-05-01" "2026-04-01")
-        (should (equal (cdddr (car (car litgraph-test-calls)))
+        (should (equal (cddddr (car (car litgraph-test-calls)))
                        '("--as-of" "2026-05-01" "--known-at" "2026-04-01")))
         (cl-letf (((symbol-function 'read-string)
                    (lambda (&rest _) "2026-05-02")))
           (call-interactively #'litgraph-timeline-set-dates))
-        (should (equal (cdddr (car (car litgraph-test-calls)))
+        (should (equal (cddddr (car (car litgraph-test-calls)))
                        '("--as-of" "2026-05-02" "--known-at" "2026-05-02")))
         (cl-letf (((symbol-function 'read-string) (lambda (&rest _) "")))
           (call-interactively #'litgraph-timeline-set-dates))
-        (should (equal (length (car (car litgraph-test-calls))) 3))
+        (should (equal (length (car (car litgraph-test-calls))) 4))
         (cl-letf (((symbol-function 'read-string) (lambda (&rest _) "May 2")))
           (should-error (call-interactively #'litgraph-timeline-set-dates)
                         :type 'user-error))

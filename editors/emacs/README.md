@@ -258,7 +258,7 @@ the `litigate` executable):
 ```elisp
 (setq litgraph-timeline-command
       '(:program "litigate"
-        :args ("timeline" file "--json") ; `file' is the .case/.lit file
+        :args ("timeline" "--format" "json" file) ; `file' is the .case/.lit file
         :as-of "--as-of" :known-at "--known-at"
         :layers "--layers"              ; comma-separated enabled layer ids
         :world "--world"))

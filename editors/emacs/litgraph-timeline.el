@@ -73,7 +73,7 @@
 
 (defcustom litgraph-timeline-command
   '(:program "litigate"
-    :args ("timeline" file "--json")
+    :args ("timeline" "--format" "json" file)
     :as-of "--as-of"
     :known-at "--known-at"
     :layers "--layers"

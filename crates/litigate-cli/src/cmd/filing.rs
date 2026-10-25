@@ -266,6 +266,22 @@ mod tests {
     }
 
     #[test]
+    fn no_prior_diagnostic_is_not_a_duplicate() {
+        let diagnostic = Diagnostic::error(
+            DiagnosticCode::UndeclaredEventId,
+            litigate_base::Span {
+                file: "case.case".into(),
+                line: 1,
+                col: 1,
+                end_line: 1,
+                end_col: 2,
+            },
+            "missing id",
+        );
+        assert!(!known(&[], &diagnostic));
+    }
+
+    #[test]
     fn missing_event_id_fix_is_reported() {
         assert!(generated_id(&[], 1, "2025-01-01").is_err());
         let span = litigate_base::Span {

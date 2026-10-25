@@ -82,6 +82,11 @@ struct State {
     generation: Arc<AtomicU64>,
     /// [`Settings::debounce_ms`].
     debounce_ms: AtomicU64,
+    /// The last generation whose analysis completed. Several notifications
+    /// can enqueue refresh handlers while one check owns `host`; once the
+    /// first handler checks the newest generation, the queued handlers must
+    /// not replay that same (potentially expensive) workspace check.
+    completed_generation: Mutex<Option<u64>>,
 }
 
 /// The language server.
@@ -195,7 +200,11 @@ impl Server {
             host.open = docs.clone();
             let versions: BTreeMap<PathBuf, i32> =
                 docs.iter().map(|(p, o)| (p.clone(), o.version)).collect();
-            (self.state.generation.load(Ordering::SeqCst), versions)
+            let generation = self.state.generation.load(Ordering::SeqCst);
+            if *lock(&self.state.completed_generation) == Some(generation) {
+                return;
+            }
+            (generation, versions)
         };
         let latest = Arc::clone(&self.state.generation);
         let checked = tokio::task::spawn_blocking(move || {
@@ -209,6 +218,7 @@ impl Server {
         let Ok(Some(fresh)) = checked else {
             return;
         };
+        *lock(&self.state.completed_generation) = Some(generation);
         let sends: Vec<(Url, Vec<Diagnostic>)> = {
             let mut published = lock(&self.published);
             let mut sends: Vec<(Url, Vec<Diagnostic>)> = published

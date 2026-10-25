@@ -261,7 +261,10 @@ test "a day 180 on the Saturday before Labor Day rolls to Tuesday" cite "37 CFR 
 /// it (sources/cfr-37-part2-answer-time-history.txt).
 rule duty answer-time effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CFR 2.105(a)"
 {
-  deadline answer-period: 30.days from InstitutionNoticed() counted_by ttab-2-196 delegable { to CaseOrder, op set } cite "37 CFR 2.105(a)"
+  deadline answer-period: 30.days from InstitutionNoticed() counted_by ttab-2-196 delegable {
+    to CaseOrder
+    op set
+  } cite "37 CFR 2.105(a)"
   {
     designated due
     extension_authority "FRCP 6(b)(1)(A), applied through 37 CFR 2.116(a) (interpretation)"
@@ -323,7 +326,10 @@ test "a designated answer day on Labor Day rolls to Tuesday" cite "37 CFR 2.105(
 /// effective January 14, 2017 (sources/cfr-37-part2-answer-time-history.txt).
 rule duty counterclaim-answer-time effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CFR 2.106(b)(3)(iii)"
 {
-  deadline counterclaim-answer-period: 30.days from CounterclaimAnswerTimeDesignated() counted_by ttab-2-196 delegable { to CaseOrder, op set } cite "37 CFR 2.106(b)(3)(iii)"
+  deadline counterclaim-answer-period: 30.days from CounterclaimAnswerTimeDesignated() counted_by ttab-2-196 delegable {
+    to CaseOrder
+    op set
+  } cite "37 CFR 2.106(b)(3)(iii)"
   {
     designated due
     interpretation "37 CFR 2.106(b)(3)(iii) names no start for its thirty days; measured from the designation's mailing date, as 2.105(a) measures the answer's"
@@ -355,7 +361,10 @@ test "a counterclaim answer date short of thirty days from mailing stands" cite 
 /// effective January 14, 2017 (sources/cfr-37-part2-answer-time-history.txt).
 rule duty cancellation-answer-time effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CFR 2.113(a)"
 {
-  deadline cancellation-answer-period: 30.days from CancellationInstitutionNoticed() counted_by ttab-2-196 delegable { to CaseOrder, op set } cite "37 CFR 2.113(a)"
+  deadline cancellation-answer-period: 30.days from CancellationInstitutionNoticed() counted_by ttab-2-196 delegable {
+    to CaseOrder
+    op set
+  } cite "37 CFR 2.113(a)"
   {
     designated due
   }
@@ -372,8 +381,14 @@ test "a cancellation answer is due on the date the notice designates" cite "37 C
 /// modified "by order of the Board" (§ 2.120(a)(2)(iv)).
 rule duty discovery-schedule effective [2017-01-14, ..) known_at 2016-10-07 cite "37 CFR 2.120(a)(2)"
 {
-  deadline disclosure-period: 30.days from DiscoveryOpened() counted_by ttab-2-196 delegable { to CaseOrder, op set } cite "37 CFR 2.120(a)(2)(ii)"
-  deadline discovery-period: 180.days from DiscoveryOpened() counted_by ttab-2-196 delegable { to CaseOrder, op set } cite "37 CFR 2.120(a)(2)(i)"
+  deadline disclosure-period: 30.days from DiscoveryOpened() counted_by ttab-2-196 delegable {
+    to CaseOrder
+    op set
+  } cite "37 CFR 2.120(a)(2)(ii)"
+  deadline discovery-period: 180.days from DiscoveryOpened() counted_by ttab-2-196 delegable {
+    to CaseOrder
+    op set
+  } cite "37 CFR 2.120(a)(2)(i)"
 }
 
 test "initial disclosures are due 30 days after discovery opens" cite "37 CFR 2.120(a)(2)(ii)"

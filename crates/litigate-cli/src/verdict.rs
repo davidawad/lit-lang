@@ -117,6 +117,7 @@ pub fn package(
 
 /// [`package`] with the optional on-disk verification cache.
 #[must_use]
+#[allow(clippy::too_many_arguments)]
 pub fn package_with_cache(
     db: &dyn salsa::Database,
     ws: Workspace,

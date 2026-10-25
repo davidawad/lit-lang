@@ -82,7 +82,7 @@ fn an_import_list_limits_the_enums_a_record_can_denote() {
         "app-pack",
         &[("Outcome", &["granted", "denied"]), ("Other", &["granted"])],
     );
-    let mut scope = Scope::new(&own, &ItemTree::default(), &[], Vec::new());
+    let mut scope = Scope::new(&own, &[], &[], Vec::new());
     scope.bindings.push(Binding {
         path: imported.module.clone(),
         names: Some(vec!["Other".to_owned()]),

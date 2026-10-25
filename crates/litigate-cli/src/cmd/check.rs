@@ -12,19 +12,6 @@ use litigate_sema::pkg::source::{Disk, Source};
 use litigate_verify::{Finding, Obligation};
 use serde_json::{json, Value};
 
-fn check_targets(session: &Session) -> Vec<&ws::Pkg> {
-    let used: std::collections::BTreeSet<String> = session
-        .cases
-        .iter()
-        .flat_map(|case| ws::uses_of(&case.text))
-        .collect();
-    session
-        .packages
-        .iter()
-        .filter(|pkg| pkg.requested || used.contains(&pkg.name))
-        .collect()
-}
-
 /// A completed check.
 pub struct Checked {
     /// What was loaded.
@@ -123,8 +110,8 @@ pub fn check_session_with(
 ) -> Checked {
     let inputs = session.case_inputs();
     let build = Build::of(&session.db, profile, options);
-    let targets = check_targets(&session);
-    let verdicts: Vec<(String, Verdict)> = targets
+    let verdicts: Vec<(String, Verdict)> = session
+        .packages
         .iter()
         .take_while(|_| !cancelled())
         .map(|p| {
@@ -148,7 +135,7 @@ pub fn check_session_with(
         .take_while(|_| !cancelled())
         .map(|c| case_check(&session.db, session.ws, *c, build).clone())
         .collect();
-    let complete = verdicts.len() == targets.len() && cases.len() == inputs.len();
+    let complete = verdicts.len() == session.packages.len() && cases.len() == inputs.len();
     let diagnostics: Vec<Diagnostic> = verdicts
         .iter()
         .flat_map(|(_, v)| v.diagnostics.iter().cloned())
@@ -192,14 +179,6 @@ impl Checked {
         self.session
             .packages
             .iter()
-            .filter(|p| {
-                p.requested
-                    || self
-                        .session
-                        .cases
-                        .iter()
-                        .any(|case| ws::uses_of(&case.text).contains(&p.name))
-            })
             .zip(&self.verdicts)
             .map(|(p, (_, v))| {
                 // Written holes and the cites no amendment history proves.

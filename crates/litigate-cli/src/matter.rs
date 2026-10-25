@@ -240,14 +240,14 @@ pub fn check_packages(
     profile: Profile,
     at: At,
 ) -> CaseCheck {
-    let engine = crate::cmd::check::engine(&all);
+    let engine = crate::cmd::check::engine(all);
     // CLI-side findings: an unreadable lock, and lowering errors.
     let (lock, mut own) = match lock(case) {
         Ok(lock) => (lock, Vec::new()),
         Err(d) => (None, vec![d]),
     };
     let env = Env {
-        packages: &all,
+        packages: all,
         lock: lock.as_ref(),
         clock: &engine,
         profile,

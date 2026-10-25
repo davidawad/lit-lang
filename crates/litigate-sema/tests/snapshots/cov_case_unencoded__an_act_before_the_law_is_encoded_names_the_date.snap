@@ -4,7 +4,7 @@ expression: "run(\"2013-01-01\",\n&[\"2008-06-02 Noticed() on d\", \"2008-07-01 
 ---
 [
     "10:14 L3007 `Noticed()` on 2008-06-02 starts deadline `tau::answer`, which is not encoded before 2009-12-01: its due date is unknown\n    note: law not encoded before 2009-12-01 (unknown_before): the corpus records no earlier version, a hole in the corpus, not a finding that no law applied; vendor the earlier text and declare its version",
-    "11:3 L3007 deadline `answer` is not encoded before 2009-12-01: no version governs 2008-07-01\n    note: law not encoded before 2009-12-01 (unknown_before): the corpus records no earlier version, a hole in the corpus, not a finding that no law applied; vendor the earlier text and declare its version",
+    "11:3 L3007 deadline `answer` has no version governing 2008-07-01",
     "trace Triggered Noticed() tau::open -> tau::open",
     "trace Took Answered() tau::open -> tau::done via tau::answer",
     "obligation tau::answer #0 Open unencoded Some(\"2009-12-01\")",

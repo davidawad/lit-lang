@@ -428,7 +428,7 @@ fn ptab(name: &str, decided: &str, events: &[&str]) -> Run {
         .collect();
     matter(
         name,
-        &["mpep", "ptab"],
+        &["cafc", "mpep", "ptab", "ttab"],
         "ptab-patent-trial-appeal-board ^0.1.0",
         "  owner: either Corporation\n  director: director Agency\n",
         &events,

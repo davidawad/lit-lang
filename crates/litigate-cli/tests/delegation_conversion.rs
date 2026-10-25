@@ -30,20 +30,11 @@ const LEGACY_OPS: &str = "op [extend, shorten, set, suspend, compute_method]";
 /// lg-flu.29 then removed the four on the certiorari periods (frap, cafc)
 /// and the Federal Circuit PTAB and TTAB notice-of-appeal periods, now
 /// extended only by a Justice or the Director.
-const CONVERTED: usize = 95;
+const CONVERTED: usize = 94;
 
-/// The intentional corrections, the only declarations whose text differs
-/// beyond the mechanical conversion: `(file, declaration id, as committed,
-/// before the conversion)`. The district court notice-of-appeal period
-/// restates 28 U.S.C. § 2107(a), so it is jurisdictional and delegates
-/// nothing (L2009); its legacy `delegable_to [CaseOrder]` is restored, with
-/// the legacy meaning, and its characterization dropped.
-const CORRECTIONS: &[(&str, &str, &str, &str)] = &[(
-    "lit/cafc/01-entry.lit",
-    "district-court-noa-period",
-    "known_at 1967-12-04 cite \"FRAP 4(a)(1)(A); FRAP 4(a)(5)(A)\"\n  {\n    characterization jurisdictional cite \"28 U.S.C. § 2107(a)\"\n",
-    "known_at 1967-12-04 delegable { to CaseOrder, op [extend, shorten, set, suspend, compute_method] } cite \"FRAP 4(a)(1)(A); FRAP 4(a)(5)(A)\"\n  {\n",
-)];
+/// There are no extra corrections in this corpus: the district-court
+/// notice-of-appeal period is authored once in `appeal-periods.lit`.
+const CORRECTIONS: &[(&str, &str, &str, &str)] = &[];
 
 /// `line` with each `delegable { to L, op set }` widened to the legacy
 /// meaning, and how many it widened. Comments are left alone.

@@ -301,9 +301,8 @@ mod tests {
         };
         let proposed = format!("proposal: {date} Hearing() by widget");
 
-        let error = match generated_filing_line(session, &original, &at, date, &proposed) {
-            Err(error) => error,
-            Ok(_) => panic!("an explicit id has no L9006 fix to reuse"),
+        let Err(error) = generated_filing_line(session, &original, &at, date, &proposed) else {
+            panic!("an explicit id has no L9006 fix to reuse");
         };
 
         assert_eq!(

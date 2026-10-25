@@ -354,8 +354,12 @@ the schema itself (both copied from litgraph `docs/litigate/`, main
 against its enums. When the schema changes, copy both again. The timeline
 integration test skips only when `litigate` is absent from PATH; an installed
 binary that lacks the `timeline` op fails the test. It runs on
-`test/fixtures/timeline-project/acme.case` (from litigate-mode.el's examples),
-or on `LITGRAPH_TIMELINE_FILE`.
+`test/fixtures/timeline-project/cases/examples/acme.case`, synced from the
+litgraph engine at `527253abd5bf74af700b9bd32fc4f4aa26b072c5`, or on
+`LITGRAPH_TIMELINE_FILE`. To refresh it from that checkout, run
+`make fixtures-sync LITGRAPH_DIR=/path/to/litgraph`; set `LITGRAPH_SHA` to sync
+from another engine revision. The target verifies the checkout revision and
+copies the case, lockfile, and Lit package files while preserving their layout.
 
 ## License
 

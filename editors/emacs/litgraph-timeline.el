@@ -727,18 +727,25 @@ to leave layers to the op."
 
 (defun litgraph-timeline--decode (exit stdout stderr)
   "Turn a finished run (EXIT, STDOUT, STDERR) into (OK . DOC-OR-MESSAGE)."
-  (let ((parsed (and (not (memq exit '(timeout signal)))
-                     (not (string-empty-p (string-trim stdout)))
-                     (ignore-errors (litgraph-parse stdout)))))
+  (let* ((parsed (and (not (memq exit '(timeout signal)))
+                      (not (string-empty-p (string-trim stdout)))
+                      (ignore-errors (litgraph-parse stdout))))
+         ;; `litigate timeline' uses the standard CLI response envelope.
+         ;; Accept its result object as well as a bare timeline document.
+         (doc (if (and (consp parsed) (assq 'ok parsed)
+                       (litgraph-get parsed 'ok))
+                  (litgraph-get parsed 'result)
+                parsed)))
     (cond
-     ((and (consp parsed) (equal (litgraph-get parsed 'schema)
-                                 litgraph-timeline-schema))
-      (cons t parsed))
-     ((and (consp parsed) (assq 'schema parsed))
+     ((and (consp doc) (equal (litgraph-get doc 'schema)
+                              litgraph-timeline-schema))
+      (cons t doc))
+     ((and (consp doc) (assq 'schema doc))
       (cons nil (format "unsupported timeline schema %S (this buffer reads %s)"
-                        (litgraph-get parsed 'schema) litgraph-timeline-schema)))
+                        (litgraph-get doc 'schema) litgraph-timeline-schema)))
      ((and (consp parsed) (assq 'ok parsed))
-      (cons nil (cadr (litgraph--decode exit stdout stderr))))
+      (cons nil (or (litgraph-get parsed 'error 'message)
+                    (litgraph--describe-failure exit stdout stderr))))
      (t (cons nil
               (concat (litgraph--describe-failure exit stdout stderr)
                       (if (integerp exit)

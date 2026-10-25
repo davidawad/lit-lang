@@ -191,8 +191,8 @@
       (should (equal calls '("litigate"))))))
 
 (ert-deftest litgraph-it-timeline-renders-real-op ()
-  ;; The example project (Lit.toml, rule12.lit, acme.case) comes from
-  ;; litigate-mode.el's examples/.  LITGRAPH_TIMELINE_FILE names another
+  ;; The example project comes from litgraph's cases/examples and
+  ;; lit/examples.  LITGRAPH_TIMELINE_FILE names another
   ;; .case or .lit file to try.
   (let ((binary (litgraph-it--timeline-binary)))
     (unless binary (ert-skip "litigate binary not installed"))
@@ -201,7 +201,7 @@
           (litgraph-scenario nil) (litgraph-packs nil) (litgraph-params nil)
           (litgraph-default-scenario nil) (litgraph-default-packs nil))
     (let* ((file (or (getenv "LITGRAPH_TIMELINE_FILE")
-                     (expand-file-name "fixtures/timeline-project/acme.case"
+                     (expand-file-name "fixtures/timeline-project/cases/examples/acme.case"
                                        litgraph-test-dir)))
            (buffer (litgraph-timeline file)))
       (unwind-protect

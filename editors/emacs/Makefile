@@ -16,8 +16,10 @@ SRC    = litgraph.el litgraph-view.el litgraph-graph.el litgraph-org.el \
          ob-litgraph.el
 TESTS  = $(wildcard test/*-test.el)
 PACKAGE_LINT_DIR ?=
+LITGRAPH_DIR ?=
+LITGRAPH_SHA ?= 527253abd5bf74af700b9bd32fc4f4aa26b072c5
 
-.PHONY: all test compile lint checkdoc package-lint autoloads clean deps
+.PHONY: all test compile lint checkdoc package-lint autoloads clean deps fixtures-sync
 
 all: compile lint test
 
@@ -42,6 +44,15 @@ package-lint: deps
 
 deps:
 	@true
+
+# Sync the real timeline integration project from the pinned litgraph checkout.
+fixtures-sync:
+	@test -n "$(LITGRAPH_DIR)" || { echo "set LITGRAPH_DIR to a litgraph checkout" >&2; exit 2; }
+	@test "$$(git -C "$(LITGRAPH_DIR)" rev-parse HEAD)" = "$(LITGRAPH_SHA)" || { echo "litgraph checkout must be at $(LITGRAPH_SHA)" >&2; exit 2; }
+	rm -rf test/fixtures/timeline-project/cases/examples test/fixtures/timeline-project/lit/examples
+	mkdir -p test/fixtures/timeline-project/cases test/fixtures/timeline-project/lit
+	cp -R "$(LITGRAPH_DIR)/cases/examples" test/fixtures/timeline-project/cases/
+	cp -R "$(LITGRAPH_DIR)/lit/examples" test/fixtures/timeline-project/lit/
 
 autoloads:
 	$(BATCH) --eval '(loaddefs-generate default-directory "litgraph-autoloads.el")' || \

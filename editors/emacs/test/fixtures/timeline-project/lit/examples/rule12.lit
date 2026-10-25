@@ -18,18 +18,29 @@ event MovedToDismiss(document: Document)
 
 authority Statute > FederalRule > LocalRule
 
-counting frcp6 cite FRCP 6(a)
+counting frcp6 cite "FRCP 6(a)"
 {
   exclude_trigger_day
   include_last_day
   roll_forward_on [weekend, legal_holiday, inaccessible]
-  service_extension { Mail: 3.days } cite FRCP 6(d)
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: unrecognized
+    OtherConsented: unrecognized
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCP 6(d)"
   holidays federal-holidays
   anchor trigger_day
   allow_hours
 }
 
-calendar federal-holidays cite FRCP 6(a)(6)
+calendar federal-holidays cite "FRCP 6(a)(6)"
 {
   new-year: fixed(1, 1) effective [1870-06-28, ..) observed nearest_weekday
   mlk-day: nth(3, monday, 1) effective [1986-01-20, ..)
@@ -37,19 +48,19 @@ calendar federal-holidays cite FRCP 6(a)(6)
   christmas: fixed(12, 25) effective [1870-06-28, ..) observed nearest_weekday
 }
 
-rule duty answer-duty cite FRCP 12(a)(1)(A)(i)
+rule duty answer-duty cite "FRCP 12(a)(1)(A)(i)"
 {
   deadline answer-period: 21.days from Served(complaint) counted_by frcp6
 }
 
-chance time-barred: "Is the claim time-barred?" by Court cite FRCP 8(c)(1)
+chance time-barred: "Is the claim time-barred?" by Court cite "FRCP 8(c)(1)"
 {
   tags [fact]
   barred "Barred" -> dismissed p 1/10
   not-barred "Timely" -> respond p 9/10
 }
 
-decision respond: "Answer or move under Rule 12" by Defendant cite FRCP 12(a)(1)(A)(i)
+decision respond: "Answer or move under Rule 12" by Defendant cite "FRCP 12(a)(1)(A)(i)"
 {
   group pleadings
   answer "File an answer" -> answered {
@@ -66,7 +77,7 @@ decision respond: "Answer or move under Rule 12" by Defendant cite FRCP 12(a)(1)
   default "Let the deadline pass" -> default-risk { sets [defaulted], valence bad }
 }
 
-chance mtd-ruling: "Ruling on the motion to dismiss" by Court discretion cite FRCP 12(b)(6)
+chance mtd-ruling: "Ruling on the motion to dismiss" by Court discretion cite "FRCP 12(b)(6)"
 {
   group motions
   granted "Motion granted" -> dismissed p ?("no calibration yet")
@@ -79,13 +90,13 @@ state default-risk: "Failure to respond" { group outcomes, _ "Default entered" -
 terminal judgment-entered: "Judgment entered" outcome [judgment, loss] { group outcomes, payoff ? }
 terminal dismissed: "Action dismissed" outcome [judgment, win] { group outcomes, payoff 0.usd }
 
-test "answer due 21 days after personal service" cite FRCP 12(a)(1)(A)(i)
+test "answer due 21 days after personal service" cite "FRCP 12(a)(1)(A)(i)"
 {
   given Served(complaint, Personal) on 2025-03-03
   expect deadline(answer-period) == 2025-03-24
 }
 
-test "mail service adds three days" cite FRCP 6(d)
+test "mail service adds three days" cite "FRCP 6(d)"
 {
   given Served(complaint, Mail) on 2025-03-03
   expect deadline(answer-period) == 2025-03-27

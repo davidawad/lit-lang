@@ -279,6 +279,9 @@
 (ert-deftest litgraph-timeline-decode ()
   (should (car (litgraph-timeline--decode
                 0 (litgraph-test-fixture "timeline-ttab-opposition") "")))
+  (should (car (litgraph-timeline--decode
+                0 (concat "{\"ok\":true,\"result\":"
+                          (litgraph-test-fixture "timeline-ttab-opposition") "}") "")))
   (let ((no-op (litgraph-timeline--decode 2 "" "error: unrecognized subcommand 'timeline'")))
     (should-not (car no-op))
     (should (string-match-p "unrecognized subcommand" (cdr no-op)))

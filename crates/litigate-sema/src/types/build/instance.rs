@@ -242,6 +242,36 @@ impl Cx<'_, '_> {
         (edge, patch)
     }
 
+    fn guard_effective(&mut self, clauses: &BTreeMap<&str, &Field>) -> Option<Interval> {
+        let Some((Atom::Interval(from, to), _)) =
+            clauses.get("effective").and_then(|e| e.values.first())
+        else {
+            return None;
+        };
+        if let Some(to) = to.as_ref().filter(|to| to.text <= from.text) {
+            self.report(Report::new(
+                C::InvalidField,
+                from.range.cover(to.range),
+                format!("empty interval [{}, {})", from.text, to.text),
+            ));
+        }
+        let known_at = match clauses.get("known_at").and_then(|k| first_expr(k)) {
+            Some(Expr {
+                kind: ExprKind::Date(d),
+                ..
+            }) => Some(d.clone()),
+            _ => self.manifest.map(|m| m.in_force.known_at.clone()),
+        };
+        Some(Interval {
+            from: from.text.clone(),
+            to: to.as_ref().map(|t| t.text.clone()),
+            known_at: known_at.unwrap_or_default(),
+            retracted: None,
+            unknown_before: None,
+            commenced: None,
+        })
+    }
+
     /// One typed guard operation (SPEC §3.6): its condition, typed as a
     /// fact edge's `when`, and its authority, which is required whole: the
     /// instrument's level (`by Level`), `effective` interval and `cite`. An
@@ -268,33 +298,7 @@ impl Cx<'_, '_> {
             }
             _ => Self::string(clauses.get("cite")).map(hir::Authored::Known),
         };
-        let effective = match clauses.get("effective").and_then(|e| e.values.first()) {
-            Some((Atom::Interval(from, to), _)) => {
-                if let Some(to) = to.as_ref().filter(|to| to.text <= from.text) {
-                    self.report(Report::new(
-                        C::InvalidField,
-                        from.range.cover(to.range),
-                        format!("empty interval [{}, {})", from.text, to.text),
-                    ));
-                }
-                let known_at = match clauses.get("known_at").and_then(|k| first_expr(k)) {
-                    Some(Expr {
-                        kind: ExprKind::Date(d),
-                        ..
-                    }) => Some(d.clone()),
-                    _ => self.manifest.map(|m| m.in_force.known_at.clone()),
-                };
-                Some(Interval {
-                    from: from.text.clone(),
-                    to: to.as_ref().map(|t| t.text.clone()),
-                    known_at: known_at.unwrap_or_default(),
-                    retracted: None,
-                    unknown_before: None,
-                    commenced: None,
-                })
-            }
-            _ => None,
-        };
+        let effective = self.guard_effective(&clauses);
         let missing: Vec<&str> = [
             ("`by Level`", clauses.contains_key("by")),
             ("`effective [from, to)`", clauses.contains_key("effective")),

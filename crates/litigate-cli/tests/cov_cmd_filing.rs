@@ -117,13 +117,25 @@ fn a_service_event_triggers_a_deadline_without_moving_as_of() {
         ],
     );
     assert_eq!(run.code, 0, "{}", run.stdout);
-    // The filing line lint-filing writes declares no id; its L9006 is not reported.
+    // The filing line uses the id that `litigate fix` generates for L9006.
     assert_eq!(codes(&run.json), Vec::<String>::new());
     let result = &run.json["result"];
     assert_eq!(result["as_of"], "2025-03-10");
     assert_eq!(
         result["filing"]["line"],
-        "2025-03-08 Served(amended_complaint, Personal) on widget"
+        "served-2: 2025-03-08 Served(amended_complaint, Personal) on widget"
+    );
+    let timeline_case = MATTER.replace(
+        "  2025-03-05 Served(complaint, Personal) on widget",
+        "  2025-03-05 Served(complaint, Personal) on widget\n  served-2: 2025-03-08 Served(amended_complaint, Personal) on widget",
+    );
+    std::fs::write(dir.join("cases/lf.case"), timeline_case).unwrap();
+    let timeline = litigate_in(&dir, &["timeline", "cases/lf.case"]);
+    assert_eq!(timeline.code, 0, "{}", timeline.stdout);
+    assert!(
+        timeline.stdout.contains("event:Served@served-2"),
+        "{}",
+        timeline.stdout
     );
     let triggered: Vec<(&str, &str)> = result["triggers"]
         .as_array()

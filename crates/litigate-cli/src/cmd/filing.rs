@@ -9,9 +9,8 @@
 //! The matter itself must check clean first. Diagnostics are then every
 //! error of the matter with the filing, and the warnings the filing adds
 //! to the matter as of the filing date. The filing's own line is written
-//! here, not by the user, and cannot declare an id, so the L9006 its
-//! missing id draws (with a fix aimed at a line the file does not have)
-//! is not reported.
+//! here, not by the user. Its id is taken from the same L9006 fix that
+//! `litigate fix` would apply, keeping its timeline key stable.
 use super::check::check_session;
 use crate::filing;
 use crate::ics;
@@ -64,18 +63,66 @@ fn known(known: &[Diagnostic], d: &Diagnostic) -> bool {
 }
 
 /// Every error of the matter with the filing (`filed`), and the warnings
-/// it adds to the matter without it (`at`), less the filing's L9006.
+/// it adds to the matter without it (`at`).
 fn added(at: &CaseCheck, filed: &CaseCheck) -> Vec<Diagnostic> {
     filed
         .diagnostics
         .iter()
-        .filter(|d| d.code != DiagnosticCode::UndeclaredEventId)
         .filter(|d| match d.severity {
             Severity::Error => true,
             _ => !known(&at.diagnostics, d),
         })
         .cloned()
         .collect()
+}
+
+/// Add the machine-generated event id to a proposed filing, reusing the
+/// canonical L9006 fix and its collision checks.
+fn generated_filing_line(
+    mut session: Session,
+    original: &CaseText,
+    at: &CaseText,
+    date: &str,
+    line: &str,
+) -> Result<(Session, String), Failure> {
+    let candidate = CaseText {
+        text: filing::splice(&at.text, date, line),
+        ..original.clone()
+    };
+    if !filing::added(&at.text, &candidate.text, line) {
+        return Err(Failure::new(format!(
+            "`{line}` is not one event of a .case `events` block"
+        )));
+    }
+    session.cases = vec![original.clone(), at.clone(), candidate];
+    let checked = check_session(session, Profile::Dev, &Options::default());
+    let candidate_text = &checked.session.cases[2].text;
+    let filing_line = candidate_text
+        .lines()
+        .collect::<Vec<_>>()
+        .into_iter()
+        .rposition(|candidate_line| candidate_line.trim() == line)
+        .and_then(|index| u32::try_from(index).ok())
+        .and_then(|index| index.checked_add(1))
+        .ok_or_else(|| Failure::new("could not locate the proposed filing"))?;
+    let candidate_case = checked
+        .cases
+        .get(2)
+        .ok_or_else(|| Failure::new("could not check the proposed filing"))?;
+    let generated = candidate_case
+        .diagnostics
+        .iter()
+        .filter(|d| d.code == DiagnosticCode::UndeclaredEventId && d.span.line == filing_line)
+        .flat_map(|d| d.fixes.iter())
+        .flat_map(|f| f.edits.iter())
+        .find_map(|e| {
+            e.replacement
+                .strip_suffix(date)
+                .and_then(|s| s.strip_suffix(": "))
+        })
+        .map(str::to_owned)
+        .ok_or_else(|| Failure::new("could not generate a stable id for the proposed filing"))?;
+    Ok((checked.session, format!("{generated}: {line}")))
 }
 
 /// What the filing changed.
@@ -130,7 +177,7 @@ pub fn lint_filing(args: &Args) -> Outcome {
     let date = Date::parse_iso(&args.date)
         .map_err(|e| Failure::new(format!("--date {}: {e}", args.date)))?
         .to_iso();
-    let mut session = ws::discover(std::slice::from_ref(&args.case))
+    let session = ws::discover(std::slice::from_ref(&args.case))
         .and_then(|targets| Session::load(&targets, &args.lib))?;
     let original = session
         .cases
@@ -142,6 +189,7 @@ pub fn lint_filing(args: &Args) -> Outcome {
         text: filing::with_as_of(&original.text, &date),
         ..original.clone()
     };
+    let (mut session, line) = generated_filing_line(session, &original, &at, &date, &line)?;
     let filed = CaseText {
         text: filing::splice(&at.text, &date, &line),
         ..original.clone()

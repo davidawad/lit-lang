@@ -301,12 +301,13 @@ mod tests {
         };
         let proposed = format!("proposal: {date} Hearing() by widget");
 
-        let Err(error) = generated_filing_line(session, &original, &at, date, &proposed) else {
-            panic!("an explicit id has no L9006 fix to reuse");
-        };
+        let error = generated_filing_line(session, &original, &at, date, &proposed)
+            .map_err(|error| error.0)
+            .err()
+            .expect("an explicit id has no L9006 fix to reuse");
 
         assert_eq!(
-            error.0,
+            error,
             "could not generate a stable id for the proposed filing"
         );
     }

@@ -119,6 +119,23 @@ async fn a_newer_change_cancels_the_running_check() {
     );
 }
 
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+async fn queued_refreshes_for_one_generation_share_the_completed_check() {
+    let mut c = Client::repo().await;
+    let uri = support::uri("lit/examples/rule12.lit");
+    for _ in 0..3 {
+        c.notify(
+            "textDocument/didSave",
+            json!({"textDocument": {"uri": uri.clone()}}),
+        )
+        .await;
+    }
+
+    let status = c.status().await;
+    assert!(status["checks"].as_u64().unwrap() <= 3, "{status}");
+    assert_eq!(status["rebuilds"], json!(1), "{status}");
+}
+
 #[tokio::test]
 async fn the_world_picker_selects_the_dates_packages_are_checked_at() {
     let extra = "deadline reply-period: 14.days from Served(complaint) counted_by frcp6 effective [2012-01-01, ..) notwithstanding answer-period\n";

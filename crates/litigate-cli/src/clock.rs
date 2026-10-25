@@ -12,6 +12,7 @@ use litigate_lower::Lowerer;
 use litigate_sema::hir::{self, DayUnit, Declaration, DueEnd, Expr};
 use litigate_sema::precedence::select::unordered;
 use litigate_sema::temporal::{self, Inactive, Key, MatterEvent, Miss, Ungoverned, World};
+use std::borrow::Cow;
 use std::collections::BTreeMap;
 
 /// Every version of every declaration the loaded packages declare, and

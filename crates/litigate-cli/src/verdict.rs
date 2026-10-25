@@ -10,6 +10,7 @@ use crate::ws::Pkg;
 use litgraph::cite::SourceCorpus;
 use litigate_base::{Diagnostic, DiagnosticCode as C, Profile, Severity};
 use litigate_lower::{LoweredPackage, Lowerer, Options};
+use litigate_sema::db::inputs::Workspace;
 use litigate_sema::hir;
 use litigate_sema::types::build::expected_lock;
 use litigate_syntax::FileKind;
@@ -111,7 +112,21 @@ pub fn package(
     profile: Profile,
     options: &Options,
 ) -> Verdict {
-    let all = session.hir();
+    package_with_cache(db, ws, pkg, all, clocks, profile, options, None)
+}
+
+/// [`package`] with the optional on-disk verification cache.
+#[must_use]
+pub fn package_with_cache(
+    db: &dyn salsa::Database,
+    ws: Workspace,
+    pkg: &Pkg,
+    all: &[&hir::Package],
+    clocks: &Clocks,
+    profile: Profile,
+    options: &Options,
+    cache: Option<&crate::cache::Cache>,
+) -> Verdict {
     let corpus = corpus();
     let mut own: Vec<Diagnostic> = pkg.check.diagnostics.clone();
     let locked = lock(db, ws, pkg);
@@ -139,18 +154,18 @@ pub fn package(
                 options,
             };
             let verify = || litigate_verify::verify_package(&input, corpus, profile);
-            let verification = match &session.cache {
+            let verification = match cache
+                .filter(|_| std::env::var_os("LITGRAPH_SOURCES").is_none())
+            {
                 // Keyed by the Merkle root of the package's resolution, so a
                 // change to any dependency's digest misses (SPEC §4.2), and
                 // by every package loaded beside it, which verification reads,
                 // each at the path its diagnostics name.
                 Some(cache) => {
-                    let root = expected_lock(&session.db, session.ws, pkg.input).root();
-                    let mut loaded: Vec<String> = session
-                        .packages
+                    let root = expected_lock(db, ws, pkg.input).root();
+                    let mut loaded: Vec<String> = all
                         .iter()
-                        .filter(|p| p.check.package.is_some())
-                        .map(|p| format!("{} {} {} {}", p.name, p.version, p.digest, p.root))
+                        .map(|p| format!("{} {} {}", p.manifest.name, p.manifest.version, p.digest))
                         .collect();
                     loaded.sort();
                     let loaded = loaded.join("\n");
@@ -241,12 +256,15 @@ mod tests {
         session.cache =
             Some(crate::cache::Cache::configured(&root, None, Some("verified")).unwrap());
         let clocks = Clocks::new(&session.hir());
-        let verdict = package(
-            &session,
+        let verdict = package_with_cache(
+            &session.db,
+            session.ws,
             &session.packages[0],
+            &session.hir(),
             &clocks,
             Profile::Dev,
             &Options::default(),
+            session.cache.as_ref(),
         );
 
         assert!(verdict.lowered.is_some());

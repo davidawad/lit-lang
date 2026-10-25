@@ -10,7 +10,7 @@
 use crate::clock::{self, Clocks};
 use crate::hirx;
 use crate::report;
-use crate::ws::CaseText;
+use crate::ws::{CaseText, Session};
 use litigate_base::{Diagnostic, FileId, LineIndex, Profile, Severity};
 use litigate_lower::{LoweredCase, Lowerer};
 use litigate_sema::case::{Env, Obligation, Status, Step};
@@ -228,6 +228,18 @@ pub fn check_at(
     at: At,
 ) -> CaseCheck {
     let all = session.hir_of(&session.scope(case));
+    check_packages(&all, case, clocks, profile, at)
+}
+
+/// Checks a matter against an already scoped package set.
+#[must_use]
+pub fn check_packages(
+    all: &[&hir::Package],
+    case: &CaseText,
+    clocks: &Clocks,
+    profile: Profile,
+    at: At,
+) -> CaseCheck {
     let engine = crate::cmd::check::engine(&all);
     // CLI-side findings: an unreadable lock, and lowering errors.
     let (lock, mut own) = match lock(case) {
@@ -408,7 +420,7 @@ mod tests {
         let session = testkit::example_locked(extra, text, lock);
         let all = session.hir();
         check(
-            &all,
+            &session,
             &session.cases[0],
             &Clocks::new(&all),
             Profile::Dev,

@@ -17,7 +17,7 @@ use std::collections::BTreeMap;
 /// `core`, which every package may import undeclared (SPEC §4.3) and whose
 /// authority lattice every package shares (§5.5). Each is the version
 /// `pkg`'s resolution selects (SPEC §4.2).
-pub(crate) fn closure<'db>(
+pub fn closure<'db>(
     db: &'db dyn salsa::Database,
     pkg: PackageInput,
     own: &'db Manifest,

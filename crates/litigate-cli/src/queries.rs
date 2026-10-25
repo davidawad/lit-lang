@@ -93,7 +93,11 @@ pub fn clock_fragments(db: &dyn salsa::Database, ws: Workspace) -> Fragments {
 /// The packages `pkg` can see: every loaded package for a links package
 /// (it links them), else its dependency closure and `core`, read through
 /// the manifests so no other package's check is a dependency.
-fn visible(db: &dyn salsa::Database, ws: Workspace, pkg: PackageInput) -> Vec<&hir::Package> {
+pub(crate) fn visible(
+    db: &dyn salsa::Database,
+    ws: Workspace,
+    pkg: PackageInput,
+) -> Vec<&hir::Package> {
     let Ok(own) = manifest(db, pkg) else {
         return Vec::new();
     };
@@ -114,6 +118,17 @@ pub fn package_verdict<'db>(
     pkg: PackageInput,
     build: Build<'db>,
 ) -> Verdict {
+    package_verdict_with_cache(db, ws, pkg, build, None)
+}
+
+/// [`package_verdict`] with an optional disk cache for command sessions.
+pub(crate) fn package_verdict_with_cache<'db>(
+    db: &'db dyn salsa::Database,
+    ws: Workspace,
+    pkg: PackageInput,
+    build: Build<'db>,
+    cache: Option<&crate::cache::Cache>,
+) -> Verdict {
     let own = check_package(db, pkg).package.as_ref();
     let pkg = ws::package(db, pkg, &BTreeSet::new());
     // Lowering and verification know a package by its address: the
@@ -126,7 +141,7 @@ pub fn package_verdict<'db>(
         })
         .collect();
     let clocks = Clocks::with_fragments(&all, clock_fragments(db, ws));
-    verdict::package(
+    verdict::package_with_cache(
         db,
         ws,
         &pkg,
@@ -134,6 +149,7 @@ pub fn package_verdict<'db>(
         &clocks,
         build.profile(db),
         &build.options(db),
+        cache,
     )
 }
 
@@ -162,12 +178,12 @@ pub fn case_check<'db>(
         &World::closure_packages(&roots, &all),
         clock_fragments(db, ws),
     );
-    matter::check(
-        &all,
+    matter::check_packages(
+        &World::closure_packages(&roots, &all),
         &text,
-        engine_clock(db, ws),
         &clocks,
         build.profile(db),
+        matter::At::default(),
     )
 }
 

@@ -4,7 +4,7 @@
 //! Each `*_in` function reads a [`Source`]; its plain twin reads the disk.
 use crate::out::Failure;
 use litigate_base::Diagnostic;
-use litigate_sema::db::inputs::{PackageInput, Workspace};
+use litigate_sema::db::inputs::{CaseFile, PackageInput, Workspace};
 use litigate_sema::hir;
 use litigate_sema::pkg::load::{relative_to, LoadedPackage};
 use litigate_sema::pkg::lock::LockFile;
@@ -271,6 +271,8 @@ pub struct Session {
     pub cases: Vec<CaseText>,
     /// The verification cache: only for a session read from disk.
     pub cache: Option<crate::cache::Cache>,
+    /// Reused Salsa inputs for matter texts.
+    case_files: Vec<CaseFile>,
 }
 
 /// Package names a `.case` text `uses`.
@@ -365,6 +367,7 @@ impl Session {
                 .on_disk()
                 .then(|| crate::cache::Cache::from_env(&root))
                 .flatten(),
+            case_files: Vec::new(),
         })
     }
 
@@ -394,6 +397,7 @@ impl Session {
             packages,
             cases,
             cache: None,
+            case_files: Vec::new(),
         }
     }
 

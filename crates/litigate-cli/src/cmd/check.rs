@@ -7,9 +7,23 @@ use crate::verdict::Verdict;
 use crate::ws::{self, Session};
 use litigate_base::{Diagnostic, Profile};
 use litigate_lower::Options;
+use litigate_lower::{EngineClock, Lowerer};
 use litigate_sema::pkg::source::{Disk, Source};
 use litigate_verify::{Finding, Obligation};
 use serde_json::{json, Value};
+
+fn check_targets(session: &Session) -> Vec<&ws::Pkg> {
+    let used: std::collections::BTreeSet<String> = session
+        .cases
+        .iter()
+        .flat_map(|case| ws::uses_of(&case.text))
+        .collect();
+    session
+        .packages
+        .iter()
+        .filter(|pkg| pkg.requested || used.contains(&pkg.name))
+        .collect()
+}
 
 /// A completed check.
 pub struct Checked {
@@ -96,26 +110,45 @@ pub fn engine(all: &[&litigate_sema::hir::Package]) -> EngineClock {
 /// what the edit reaches.
 #[must_use]
 pub fn check_session(session: Session, profile: Profile, options: &Options) -> Checked {
-    let all = session.hir();
-    let clocks = Clocks::new(&all);
-    let verdicts: Vec<(String, Verdict)> = session
-        .packages
+    check_session_with(session, profile, options, &|| false)
+}
+
+/// Checks a session, stopping between packages and matters when cancelled.
+#[must_use]
+pub fn check_session_with(
+    mut session: Session,
+    profile: Profile,
+    options: &Options,
+    cancelled: &dyn Fn() -> bool,
+) -> Checked {
+    let inputs = session.case_inputs();
+    let build = Build::of(&session.db, profile, options);
+    let targets = check_targets(&session);
+    let verdicts: Vec<(String, Verdict)> = targets
         .iter()
         .take_while(|_| !cancelled())
         .map(|p| {
-            (
-                p.name.clone(),
-                package_verdict(db, session.ws, p.input, build).clone(),
-            )
+            let verdict = if let Some(cache) = session.cache.as_ref() {
+                crate::queries::package_verdict_with_cache(
+                    &session.db,
+                    session.ws,
+                    p.input,
+                    build,
+                    Some(cache),
+                )
+            } else {
+                package_verdict(&session.db, session.ws, p.input, build).clone()
+            };
+            (p.name.clone(), verdict)
         })
         .collect();
     // A matter is checked at its own dates.
-    let dated = Build::of(db, profile, &Options::default());
     let cases: Vec<CaseCheck> = inputs
         .iter()
-        .map(|c| matter::check(&session, c, &clocks, profile))
+        .take_while(|_| !cancelled())
+        .map(|c| case_check(&session.db, session.ws, *c, build).clone())
         .collect();
-    let complete = verdicts.len() == session.packages.len() && cases.len() == inputs.len();
+    let complete = verdicts.len() == targets.len() && cases.len() == inputs.len();
     let diagnostics: Vec<Diagnostic> = verdicts
         .iter()
         .flat_map(|(_, v)| v.diagnostics.iter().cloned())
@@ -159,6 +192,14 @@ impl Checked {
         self.session
             .packages
             .iter()
+            .filter(|p| {
+                p.requested
+                    || self
+                        .session
+                        .cases
+                        .iter()
+                        .any(|case| ws::uses_of(&case.text).contains(&p.name))
+            })
             .zip(&self.verdicts)
             .map(|(p, (_, v))| {
                 // Written holes and the cites no amendment history proves.

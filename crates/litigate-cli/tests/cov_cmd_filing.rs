@@ -187,6 +187,27 @@ fn text_that_is_not_one_event_is_a_failure() {
 }
 
 #[test]
+fn a_multiline_event_cannot_be_located_for_its_generated_id() {
+    let dir = matter("filing-multiline-event");
+    let run = lint(
+        &dir,
+        &[
+            "Answered(\ncomplaint)",
+            "--date",
+            "2025-03-07",
+            "--by",
+            "widget",
+        ],
+    );
+    assert_eq!(run.code, 1, "{}", run.stdout);
+    assert!(
+        run.stderr.contains("could not locate the proposed filing"),
+        "{}",
+        run.stderr
+    );
+}
+
+#[test]
 fn a_bad_date_is_a_failure() {
     let dir = matter("filing-bad-date");
     let run = lint(

@@ -233,7 +233,10 @@ pub fn lint_filing(args: &Args) -> Outcome {
     if report.has_errors() {
         return Ok(report);
     }
-    added_line(&texts[1].text, &texts[2].text, &line)?;
+    // `generated_filing_line` already checked this event without an id;
+    // the id added here is the L9006 machine-applicable fix from that same
+    // candidate, so it cannot change the event's syntax or move it out of
+    // the events block.
     report.sources = files
         .chain([(texts[2].path.clone(), texts[2].text.clone())])
         .collect();
@@ -253,6 +256,7 @@ pub fn lint_filing(args: &Args) -> Outcome {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::testkit;
 
     #[test]
     fn filing_validation_reports_non_events_and_missing_locations() {
@@ -284,5 +288,27 @@ mod tests {
             );
             assert!(generated_id(&[diagnostic], 1, "2025-01-01").is_err());
         }
+    }
+
+    #[test]
+    fn a_candidate_with_an_explicit_id_has_no_generated_id_fix() {
+        let session = testkit::example_locked("", testkit::ACME, None);
+        let original = session.cases[0].clone();
+        let date = "2025-06-02";
+        let at = CaseText {
+            text: crate::filing::with_as_of(&original.text, date),
+            ..original.clone()
+        };
+        let proposed = format!("proposal: {date} Hearing() by widget");
+
+        let error = match generated_filing_line(session, &original, &at, date, &proposed) {
+            Err(error) => error,
+            Ok(_) => panic!("an explicit id has no L9006 fix to reuse"),
+        };
+
+        assert_eq!(
+            error.0,
+            "could not generate a stable id for the proposed filing"
+        );
     }
 }

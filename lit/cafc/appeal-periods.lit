@@ -25,7 +25,7 @@ import core.frap26.{ frap26 }
 /// are 14 (2009 Committee Note, 2011 edition).
 rule duty district-court-notice-of-appeal cite "FRAP 4(a)(1)(A)"
 {
-  deadline district-court-noa-period: 30.days after Entered(Judgment) counted_by frap26 effective [2002-12-01, 2009-12-01) known_at 2002-04-29 delegable_to [CaseOrder] cite "FRAP (2008 ed.) 4(a)(1)(A); FRAP (2008 ed.) 4(a)(5)(A)"
+  deadline district-court-noa-period: 30.days after Entered(Judgment) counted_by frap26 effective [2002-12-01, 2009-12-01) known_at 2002-04-29 delegable { to CaseOrder, op extend } cite "FRAP (2008 ed.) 4(a)(1)(A); FRAP (2008 ed.) 4(a)(5)(A)"
   {
     extend {
       by court
@@ -37,7 +37,7 @@ rule duty district-court-notice-of-appeal cite "FRAP 4(a)(1)(A)"
     }
     extend { never cite "FRAP (2008 ed.) 26(b)(1)" }
   }
-  deadline district-court-noa-period: 30.days after Entered(Judgment) counted_by frap26 effective [2009-12-01, ..) known_at 2009-03-26 supersedes district-court-noa-period@2002-12-01 delegable_to [CaseOrder] cite "FRAP 4(a)(1)(A); FRAP 4(a)(5)(A)"
+  deadline district-court-noa-period: 30.days after Entered(Judgment) counted_by frap26 effective [2009-12-01, ..) known_at 2009-03-26 supersedes district-court-noa-period@2002-12-01 delegable { to CaseOrder, op extend } cite "FRAP 4(a)(1)(A); FRAP 4(a)(5)(A)"
   {
     extend {
       by court

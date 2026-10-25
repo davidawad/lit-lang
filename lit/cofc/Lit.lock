@@ -1,11 +1,41 @@
 version = 2
 
 [[package]]
+name = "cafc"
+version = "0.1.0"
+language = 1
+source = "sha256:f62f3b9baa7cb55ffbf303787dcb3256fbd6e2ddc4b96743d64c4f1e8da94921"
+semantic = "sha256:30144534d650711b997b70b7f234f12fd2464dee1bf65c2a5af6a3d41b0a09f3"
+texts = [
+    "cfr37-90-cite sources/usc-cfr-prosecution-fragments.txt sha256:5bbba22c27cd4f0957c799a8a1f48b6ba9d0670be03a9fec796a3c8ec394c1b3",
+    "cfr37-part2-cite sources/cfr-37-part2.txt sha256:66402ce5e48bf2a9aa039058b3bfc181d3511b9e94137fac8b6a3d84a26b33a7",
+    "fedcir-rules sources/fedcir-rules.txt sha256:f38803d4f0370b737c9fcc85f2013b757a6a7648609637c88e652322de75b1a9",
+    "fr-77-90-3 sources/fr-uspto-90-3-history.txt sha256:86152eebd93a8b638b25c9263e235194c7400797d2840e73d59da0977e4f4d74",
+    "frap-rules-cite sources/frap.txt sha256:87d71a1f443c5c084cc9f11932a66436ab300f83146ee2c5ce2654a8a4824479",
+    "frap4-2008 sources/usc-28-app-frap4-history.txt sha256:c246fa771851ef008653521977a993531d589881d85354e9c9f949f9c1b1a284",
+    "lanham-cite sources/usc-15-lanham.txt sha256:9ea6b13b33cf0bb61a2a1ea337097c0981665d4d30a045fece2a77324dae6c4c",
+    "usc-1337-cite sources/usc-19-1337.txt sha256:3865d7c3c1b4d9c0883d3eb29fd160c3c789d8cb8ffed675311e5dccd0892408",
+    "usc28-1254-cite sources/usc-additional.txt sha256:5dedd90ad2e3e67185a2ae4b1ddfa68f7d7695b092666521fb9478c5c23852d8",
+    "usc28-1295-cite sources/usc-additional.txt sha256:5dedd90ad2e3e67185a2ae4b1ddfa68f7d7695b092666521fb9478c5c23852d8",
+    "usc28-2101-cite sources/usc-additional.txt sha256:5dedd90ad2e3e67185a2ae4b1ddfa68f7d7695b092666521fb9478c5c23852d8",
+    "usc28-2107-cite sources/usc-additional.txt sha256:5dedd90ad2e3e67185a2ae4b1ddfa68f7d7695b092666521fb9478c5c23852d8",
+    "usc28-2522-cite sources/usc-additional.txt sha256:5dedd90ad2e3e67185a2ae4b1ddfa68f7d7695b092666521fb9478c5c23852d8",
+    "usc35-142-cite sources/usc-additional.txt sha256:5dedd90ad2e3e67185a2ae4b1ddfa68f7d7695b092666521fb9478c5c23852d8",
+    "usc35-319-cite sources/usc-additional.txt sha256:5dedd90ad2e3e67185a2ae4b1ddfa68f7d7695b092666521fb9478c5c23852d8",
+    "usc35-prosecution-cite sources/usc-cfr-prosecution-fragments.txt sha256:5bbba22c27cd4f0957c799a8a1f48b6ba9d0670be03a9fec796a3c8ec394c1b3",
+]
+dependencies = [
+    "core 1.0.0",
+    "mpep-prosecution 0.1.0",
+    "ttab-trademark-trial-and-appeal-board 0.1.0",
+]
+
+[[package]]
 name = "cofc"
 version = "0.1.0"
 language = 1
-source = "sha256:e98faff39fcaa940c05b7935222c1ed2de8b12e67423883ccbca67a2c5a837f3"
-semantic = "sha256:c4cda8db15a0645f5fcbb033442d9382070a81c1b1b16a1c062a33d1a48d1ce3"
+source = "sha256:88ce1bb97d7614310cc2170b3fb81874634285d08cfbd571b6793a1bae64e15a"
+semantic = "sha256:b7071227e3155626333113514edb403296e8321c79ec485502055cf039db117a"
 texts = [
     "prcfc-text sources/rcfc-appendices.txt sha256:b49c8c942e95cbee386893d3899e4ac93b6b6bce1fea8eeff05e2ad44fa1800b",
     "rcfc-app-h sources/rcfc-appendices.txt sha256:b49c8c942e95cbee386893d3899e4ac93b6b6bce1fea8eeff05e2ad44fa1800b",
@@ -20,6 +50,7 @@ texts = [
     "usc35-286 sources/usc-additional.txt sha256:5dedd90ad2e3e67185a2ae4b1ddfa68f7d7695b092666521fb9478c5c23852d8",
 ]
 dependencies = [
+    "cafc 0.1.0",
     "core 1.0.0",
 ]
 
@@ -50,3 +81,48 @@ texts = [
     "uspto-closures sources/uspto-closures.txt sha256:23ebcf53195a7a766c7a69fd417e2e936612435709b3f1f99a23a14e6224ae86",
 ]
 dependencies = []
+
+[[package]]
+name = "mpep-prosecution"
+version = "0.1.0"
+language = 1
+source = "sha256:e1a30042aa8ce6cff1f2232d1d75f02d8b8ddf981be09a4033e1be03c6c59044"
+semantic = "sha256:955bca6f3276f6fcc74c51321b60798b32959d08fb2896fb6aceb3232f31d176"
+texts = [
+    "cfr-37-part41-cite sources/cfr-37-part41.txt sha256:912ba8c173b834a4030c979c0ff3bc6f96d393dcff717c6d14812daba23934ee",
+    "cfr-37-patents sources/cfr-37-part1.txt sha256:e5765fec0e8c5f295d4f230ed9743b7972dbd41340693833abf990fe1918d1ec",
+    "cfr-42-cite sources/cfr-37-part42.txt sha256:06786d129e12353754288989ddad0ef9866bb068eb0a7a35e25465b65276e4a1",
+    "mpep-0700 sources/mpep.txt sha256:110b56e793d244d0f16d1f9f00afe18a1f3d6fe2338daba8e000fc297fe3d524",
+    "mpep-1200 sources/mpep.txt sha256:110b56e793d244d0f16d1f9f00afe18a1f3d6fe2338daba8e000fc297fe3d524",
+    "mpep-1300 sources/mpep.txt sha256:110b56e793d244d0f16d1f9f00afe18a1f3d6fe2338daba8e000fc297fe3d524",
+    "mpep-1400 sources/mpep.txt sha256:110b56e793d244d0f16d1f9f00afe18a1f3d6fe2338daba8e000fc297fe3d524",
+    "usc35-111 sources/usc-cfr-prosecution-fragments.txt sha256:5bbba22c27cd4f0957c799a8a1f48b6ba9d0670be03a9fec796a3c8ec394c1b3",
+    "usc35-132 sources/usc-cfr-prosecution-fragments.txt sha256:5bbba22c27cd4f0957c799a8a1f48b6ba9d0670be03a9fec796a3c8ec394c1b3",
+    "usc35-133 sources/usc-cfr-prosecution-fragments.txt sha256:5bbba22c27cd4f0957c799a8a1f48b6ba9d0670be03a9fec796a3c8ec394c1b3",
+    "usc35-134 sources/usc-additional.txt sha256:5dedd90ad2e3e67185a2ae4b1ddfa68f7d7695b092666521fb9478c5c23852d8",
+    "usc35-151 sources/usc-cfr-prosecution-fragments.txt sha256:5bbba22c27cd4f0957c799a8a1f48b6ba9d0670be03a9fec796a3c8ec394c1b3",
+    "usc35-154 sources/usc-additional.txt sha256:5dedd90ad2e3e67185a2ae4b1ddfa68f7d7695b092666521fb9478c5c23852d8",
+    "usc35-251 sources/usc-additional.txt sha256:5dedd90ad2e3e67185a2ae4b1ddfa68f7d7695b092666521fb9478c5c23852d8",
+    "usc35-304 sources/usc-additional.txt sha256:5dedd90ad2e3e67185a2ae4b1ddfa68f7d7695b092666521fb9478c5c23852d8",
+    "usc35-312 sources/usc-additional.txt sha256:5dedd90ad2e3e67185a2ae4b1ddfa68f7d7695b092666521fb9478c5c23852d8",
+]
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "ttab-trademark-trial-and-appeal-board"
+version = "0.1.0"
+language = 1
+source = "sha256:efb936327cbeb01d821464b7ed6f9dc297abfac3381720a55e3afb33da7451e6"
+semantic = "sha256:7bf512dda41779b980a664548775ec59c56a466cd71c9aca321108ca65f3724d"
+texts = [
+    "cfr2 sources/cfr-37-part2.txt sha256:66402ce5e48bf2a9aa039058b3bfc181d3511b9e94137fac8b6a3d84a26b33a7",
+    "frcp-rules sources/frcp.txt sha256:cb9a19a0ad99acdbd04f46acd3893bb96fbd34c9a8f66de57f5d171dbd268b44",
+    "lanham sources/usc-15-lanham.txt sha256:9ea6b13b33cf0bb61a2a1ea337097c0981665d4d30a045fece2a77324dae6c4c",
+    "tbmp-vendored sources/tbmp.txt sha256:39df33edc821a318331129cdc6730ac961cd962d7d3f3f1c758309465eb21d86",
+    "usc28-1295 sources/usc-additional.txt sha256:5dedd90ad2e3e67185a2ae4b1ddfa68f7d7695b092666521fb9478c5c23852d8",
+]
+dependencies = [
+    "core 1.0.0",
+]

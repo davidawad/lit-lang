@@ -526,6 +526,7 @@ fn a_rule_index_parses_after_the_rules_name() {
         codes(&parse_lit("module m\nrule duty r Rule[3] { start s }\n")),
         ["L0001"]
     );
+}
 
 /// Every `limit` entry shape, as `tests/filing.rs` lists them, through the
 /// crate's own parser build.

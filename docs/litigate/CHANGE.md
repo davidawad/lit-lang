@@ -335,8 +335,9 @@ judge = "..."                           # optional
   (L9009, info), and the layer is reported `in_force: false`; at `ca1`
   it binds. This is how the lg-fq2.3 circuit splits differ by circuit.
 - **Overruling.** An overruling in Λ withdraws the precedents it names
-  from its date (`overruled_by`); an overruling by a court that does not
-  bind the precedent's court is L2010.
+  from its date (`overruled_by`; with several, the earliest); an
+  overruling by a court that does not bind the precedent's court is
+  L2010.
 - **Modality.** An actual world admits only authoritative layers (L1014
   for `authoritative = false`); a counterfactual world admits any layer
   and is never checked under the strict profile (L1014). Real-case and
@@ -344,7 +345,9 @@ judge = "..."                           # optional
 - **Conflicts.** The world reports the temporal and precedence
   diagnostics its layers have together but none has alone: two local
   rules overriding the same delegated period differently are an
-  unresolved conflict (L3003) only in a world holding both. An
+  unresolved conflict (L3003) only in a world holding both. A precedent
+  that does not bind at ι has no claim in force there and conflicts with
+  nothing. An
   incomparable conflict is an error; where the law is unsettled at ι it
   will become a chance fork (lg-fq2.4).
 - **Malformed:** an unknown key, modality, layer, family or circuit is

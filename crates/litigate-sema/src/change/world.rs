@@ -273,16 +273,24 @@ pub fn check_world(
         at: &at,
         family,
     };
-    out.layers = layers
+    let (checked, fits): (Vec<Layer>, Vec<bool>) = layers
         .iter()
         .map(|&(pkg, m)| here.layer(db, pkg, m, overrulings.get(&m.name), &mut reports))
-        .collect();
+        .unzip();
+    out.layers = checked;
     out.diagnostics = reports
         .iter()
         .map(|r| r.to_diagnostic(&file, &index))
         .collect();
     out.diagnostics.extend(located);
-    out.diagnostics.extend(merged(db, &layers));
+    // A precedent that does not bind here has no claim in force here, so
+    // it conflicts with nothing (design review §3.3, S1).
+    let visible: Vec<(PackageInput, &Manifest)> = layers
+        .iter()
+        .zip(fits)
+        .filter_map(|(l, fits)| fits.then_some(*l))
+        .collect();
+    out.diagnostics.extend(merged(db, &visible));
     sort_diagnostics(&mut out.diagnostics);
     out.world = Some(world);
     out
@@ -297,9 +305,10 @@ struct Here<'w> {
 }
 
 impl Here<'_> {
-    /// Layer `m` (package `pkg`) as the world has it: L1014 for a
-    /// synthetic layer in an actual world, L9009 for a precedent that does
-    /// not bind here yet has binding effects.
+    /// Layer `m` (package `pkg`) as the world has it, and whether its
+    /// effects fit its class here: L1014 for a synthetic layer in an
+    /// actual world, L9009 for a precedent that does not bind here yet has
+    /// binding effects.
     fn layer(
         &self,
         db: &dyn salsa::Database,
@@ -307,7 +316,7 @@ impl Here<'_> {
         m: &Manifest,
         overruled_by: Option<&Overruled>,
         reports: &mut Vec<Report>,
-    ) -> Layer {
+    ) -> (Layer, bool) {
         let name = &m.name;
         let authoritative = m.instrument.as_ref().is_none_or(|i| i.authoritative);
         if !authoritative && self.world.modality == Modality::Actual {
@@ -332,13 +341,14 @@ impl Here<'_> {
             }
             other => (other.clone(), true),
         };
-        Layer {
+        let layer = Layer {
             name: name.clone(),
             version: m.version.clone(),
             class: kind.label().to_owned(),
             in_force: fits && overruled_by.is_none(),
             overruled_by: overruled_by.cloned(),
-        }
+        };
+        (layer, fits)
     }
 }
 
@@ -435,8 +445,8 @@ fn not_binding(world: &World, m: &Manifest, at: TextRange, family: Option<&Famil
     r
 }
 
-/// The precedents each overruling of `layers` withdraws, by name, with
-/// the overruling and its date; L2010, in the overruling's `Lit.toml`, for
+/// The precedents the overrulings of `layers` withdraw, by name, with
+/// the earliest valid overruling and its date; L2010, in the overruling's `Lit.toml`, for
 /// an overruling of something that is not a precedent, or by a court
 /// whose decisions do not bind the precedent's court.
 fn overrulings(
@@ -485,13 +495,18 @@ fn overrulings(
                 ));
                 continue;
             }
-            out.insert(
-                target.clone(),
-                Overruled {
-                    by: o.name.clone(),
-                    from: i.date.clone(),
-                },
-            );
+            // Withdrawn from the earliest overruling: a later one finds it
+            // already withdrawn (ties go to the first name).
+            let earlier = |old: &Overruled| (&i.date, &o.name) < (&old.from, &old.by);
+            if out.get(target).is_none_or(earlier) {
+                out.insert(
+                    target.clone(),
+                    Overruled {
+                        by: o.name.clone(),
+                        from: i.date.clone(),
+                    },
+                );
+            }
         }
     }
     out

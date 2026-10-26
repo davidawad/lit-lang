@@ -1,0 +1,26 @@
+[package]
+name = "alternative-characterization"
+version = "0.1.0"
+language = 1
+pack_id = "alternative-characterization"
+forum = "frcp"
+authority = "LocalRule"
+title = "Alternative characterization deadline fixture"
+description = "Synthetic motion showing a costed early-filing choice across two possible local-rule clocks."
+jurisdiction = "United States District Court for the Northern District of California"
+in_force = "2025-01-01"
+known_at = "2025-01-01"
+counting = "frcp6"
+
+[package.roles]
+Plaintiff = "self"
+Court = "nature"
+
+[sources.ndcal]
+title = "Northern District of California Civil Local Rules"
+url = "https://www.cand.uscourts.gov/rules/civil-local-rules/"
+as_of = "2025-01-01"
+cite_prefixes = ["N.D. Cal. Civ. L.R."]
+
+[dependencies]
+core = { version = "^1.0.0", path = "../lit/core" }

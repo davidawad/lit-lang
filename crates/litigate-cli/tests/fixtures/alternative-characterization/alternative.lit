@@ -1,0 +1,56 @@
+module ndcal.alternative-characterization
+
+import core.frcp6.{ frcp6 }
+
+start choose-filing
+
+event MotionFiled()
+
+rule duty administrative-opposition cite "N.D. Cal. Civ. L.R. 7-11(b)"
+{
+  deadline administrative-period: 4.days from MotionFiled() counted_by frcp6
+}
+
+rule duty regular-opposition cite "N.D. Cal. Civ. L.R. 7-3(a)"
+{
+  deadline regular-period: 14.days from MotionFiled() counted_by frcp6
+}
+
+decision choose-filing: "Pay to file early or wait" by Plaintiff cite "N.D. Cal. Civ. L.R. 7-3(a)"
+{
+  tags [entry]
+  early "File early to cover the shorter clock" -> characterization { effort 2.hours, cost 500.usd }
+  wait "Wait and accept the characterization risk" -> characterization { effort 0.hours }
+}
+
+chance characterization: "Court characterizes the motion" by Court discretion cite "N.D. Cal. Civ. L.R. 7-11(b)"
+{
+  administrative "Administrative motion: opposition in four days" -> administrative-window p 1/2 {
+    basis estimate
+    within administrative-period
+  }
+  regular "Regular motion: opposition in fourteen days" -> regular-window p 1/2 {
+    basis estimate
+    within regular-period
+  }
+}
+
+state administrative-window: "Administrative opposition window" {
+  resolve "Opposition filed" -> done
+}
+
+state regular-window: "Regular opposition window" { resolve "Opposition filed" -> done }
+
+terminal done: "Briefing complete" outcome [neutral]
+
+test "administrative characterization creates a four-day clock" cite "N.D. Cal. Civ. L.R. 7-11(b)"
+{
+  given MotionFiled() on 2025-03-03
+  expect deadline(administrative-period) == 2025-03-07
+}
+
+test "regular characterization creates a fourteen-day clock" cite "N.D. Cal. Civ. L.R. 7-3(a)"
+{
+  given MotionFiled() on 2025-03-03
+  expect deadline(regular-period) == 2025-03-17
+}

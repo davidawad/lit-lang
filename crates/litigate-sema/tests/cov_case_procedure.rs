@@ -4,7 +4,9 @@
 //! matter the order takes effect once the matter records `M` on or before
 //! the order's date. Otherwise it has no effect there (L3004) and replay
 //! keeps the delegating period; the motion itself is history, legal
-//! without taking an edge.
+//! without taking an edge. Here the procedure is a consented motion
+//! (`on ExtensionMoved(true)`), and the order reaches both versions of
+//! the answer period, reported once.
 mod cov_case_support;
 
 use cov_case_support::{check, compile, lock, outcome, package};
@@ -24,13 +26,24 @@ authority FederalRule > CaseOrder
 
 event Served(doc: Doc)
 event Answered(doc: Doc)
-event ExtensionMoved()
+event ExtensionMoved(consented: Bool)
 
 counting oc cite \"FRCP 6(a)\" { exclude_trigger_day, include_last_day, holidays ocal }
+/// Yields to `oc`: a relation that displaces nothing needs no motion.
+counting oc-old cite \"FRCP 6(a)\" subject_to oc { exclude_trigger_day, include_last_day, holidays ocal }
 calendar ocal { new-year: fixed(1, 1) effective [1870-06-28, ..) observed nearest_weekday }
 
-deadline answer: 21.days from Served(complaint) counted_by oc known_at 2009-01-01 delegable { to CaseOrder, op extend, discretion GoodCause, on ExtensionMoved() } {
+deadline answer: 21.days from Served(complaint) counted_by oc effective [2009-12-01, 2011-03-01) known_at 2009-01-01 delegable { to CaseOrder, op extend, discretion GoodCause, on ExtensionMoved(true) } {
   bearer Defendant
+}
+deadline answer: 21.days from Served(complaint) counted_by oc effective [2011-03-01, ..) known_at 2011-01-01 supersedes answer@2009-12-01 delegable { to CaseOrder, op extend, discretion GoodCause, on ExtensionMoved(true) } {
+  bearer Defendant
+}
+
+/// An emergency's delegation, on the same motion, outside the matter's
+/// dates.
+grant emergency on [answer] effective [2020-03-15, 2020-06-13) {
+  delegable { to CaseOrder, op extend, on ExtensionMoved(true) }
 }
 
 state open: \"Open\" known_at 2009-01-01
@@ -102,7 +115,7 @@ fn a_delegation_on_motion_takes_effect_only_once_moved() {
             "moved before the order: the order governs, the answer is timely",
             &[
                 "2011-01-04 Served(complaint) on d",
-                "2011-01-20 ExtensionMoved() by d",
+                "2011-01-20 ExtensionMoved(true) by d",
                 "2011-02-10 Answered(complaint) by d",
             ],
         ),
@@ -114,10 +127,18 @@ fn a_delegation_on_motion_takes_effect_only_once_moved() {
             ],
         ),
         (
+            "moved without consent: not the motion the capability names",
+            &[
+                "2011-01-04 Served(complaint) on d",
+                "2011-01-20 ExtensionMoved(false) by d",
+                "2011-02-10 Answered(complaint) by d",
+            ],
+        ),
+        (
             "moved after the order: too late to license it",
             &[
                 "2011-01-04 Served(complaint) on d",
-                "2011-02-05 ExtensionMoved() by d",
+                "2011-02-05 ExtensionMoved(true) by d",
                 "2011-02-10 Answered(complaint) by d",
             ],
         ),

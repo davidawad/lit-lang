@@ -4,22 +4,28 @@ expression: out
 ---
 {
     "moved after the order: too late to license it": [
-        "2:18 L3004 `reset::answer-extended` displaces `rho::answer` under a capability exercised on motion `rho::ExtensionMoved()`, which the matter does not record on or before 2011-02-01: the order has no effect here",
+        "2:18 L3004 `reset::answer-extended` displaces `rho::answer` under a capability exercised on motion `rho::ExtensionMoved(true)`, which the matter does not record on or before 2011-02-01: the order has no effect here",
         "14:3 L4002 `Answered(complaint)` on 2011-02-10 missed deadline `answer`, due 2011-01-25\n    note @12:3: `answer` runs 21 calendar days from `Served(complaint)` on 2011-01-04 under `oc@2009-12-01`\n    note: only a cited event of a type that `extends` this deadline, within its `extend` capability, moves the due date",
         "trace Triggered Served(complaint) rho::open -> rho::open",
-        "trace History ExtensionMoved() rho::open -> rho::open",
+        "trace History ExtensionMoved(true) rho::open -> rho::open",
         "trace Took Answered(complaint) rho::open -> rho::open via rho::answer",
         "obligation rho::answer Late",
     ],
     "moved before the order: the order governs, the answer is timely": [
         "ok: start rho::open",
         "trace Triggered Served(complaint) rho::open -> rho::open",
-        "trace History ExtensionMoved() rho::open -> rho::open",
+        "trace History ExtensionMoved(true) rho::open -> rho::open",
         "trace Took Answered(complaint) rho::open -> rho::open via rho::answer",
         "obligation rho::answer Discharged",
     ],
+    "moved without consent: not the motion the capability names": [
+        "2:18 L3004 `reset::answer-extended` displaces `rho::answer` under a capability exercised on motion `rho::ExtensionMoved(true)`, which the matter does not record on or before 2011-02-01: the order has no effect here",
+        "13:14 L4001 `ExtensionMoved(false)` is not a legal event at stage `rho::open` (Open)\n    note: legal events: Answered(complaint) [answer]\n    note: an event that takes no edge must fire the trigger of an in-force deadline, be history a transition reads, or have a type declaring `removes`, `extends`, or `waives`\n    note: replay stops at the first illegal event",
+        "trace Triggered Served(complaint) rho::open -> rho::open",
+        "obligation rho::answer Open",
+    ],
     "never moved: the order has no effect (L3004), the answer is late": [
-        "2:18 L3004 `reset::answer-extended` displaces `rho::answer` under a capability exercised on motion `rho::ExtensionMoved()`, which the matter does not record on or before 2011-02-01: the order has no effect here",
+        "2:18 L3004 `reset::answer-extended` displaces `rho::answer` under a capability exercised on motion `rho::ExtensionMoved(true)`, which the matter does not record on or before 2011-02-01: the order has no effect here",
         "13:3 L4002 `Answered(complaint)` on 2011-02-10 missed deadline `answer`, due 2011-01-25\n    note @12:3: `answer` runs 21 calendar days from `Served(complaint)` on 2011-01-04 under `oc@2009-12-01`\n    note: only a cited event of a type that `extends` this deadline, within its `extend` capability, moves the due date",
         "trace Triggered Served(complaint) rho::open -> rho::open",
         "trace Took Answered(complaint) rho::open -> rho::open via rho::answer",

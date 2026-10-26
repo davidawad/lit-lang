@@ -1,0 +1,155 @@
+---
+source: crates/litigate-cli/tests/worlds.rs
+expression: "json[\"result\"]"
+---
+{
+  "case": "rule-59e-motion",
+  "world": "docs/litigate/examples/timelines/rule-59e.world",
+  "modality": "counterfactual",
+  "location": {
+    "family": "district-civil",
+    "court": "d-sdny",
+    "circuit": "ca2"
+  },
+  "choices": {
+    "rule-59e-2009": {
+      "with": [
+        "change-frcp-2009-amendment"
+      ],
+      "without": []
+    }
+  },
+  "as_of": "2010-04-30",
+  "known_at": null,
+  "worlds": [
+    {
+      "id": "w1",
+      "choices": {
+        "rule-59e-2009": "with"
+      },
+      "layers": [
+        {
+          "name": "change-frcp-2009-amendment",
+          "version": "1.0.0",
+          "class": "amendment",
+          "in_force": true,
+          "overruled_by": null
+        },
+        {
+          "name": "change-frcp-base",
+          "version": "1.0.0",
+          "class": "base",
+          "in_force": true,
+          "overruled_by": null
+        }
+      ],
+      "lawful": true,
+      "filings": {
+        "motion": "timely"
+      },
+      "deadlines": [
+        {
+          "deadline": "change-frcp-base::alter-amend-period",
+          "trigger": "JudgmentEntered()",
+          "trigger_date": "2010-03-01",
+          "due": "2010-03-29",
+          "status": "discharged"
+        }
+      ],
+      "diagnostics": []
+    },
+    {
+      "id": "w2",
+      "choices": {
+        "rule-59e-2009": "without"
+      },
+      "layers": [
+        {
+          "name": "change-frcp-base",
+          "version": "1.0.0",
+          "class": "base",
+          "in_force": true,
+          "overruled_by": null
+        }
+      ],
+      "lawful": true,
+      "filings": {
+        "motion": "late"
+      },
+      "deadlines": [
+        {
+          "deadline": "change-frcp-base::alter-amend-period",
+          "trigger": "JudgmentEntered()",
+          "trigger_date": "2010-03-01",
+          "due": "2010-03-11",
+          "status": "late"
+        }
+      ],
+      "diagnostics": [
+        {
+          "code": "L4002",
+          "severity": "error",
+          "span": {
+            "file": "docs/litigate/examples/timelines/rule-59e.case",
+            "line": 15,
+            "col": 11,
+            "end_line": 15,
+            "end_col": 21
+          },
+          "message": "`AlterAmendMoved()` on 2010-03-25 missed deadline `change-frcp-base::alter-amend-period`, due 2010-03-11",
+          "labels": [
+            {
+              "span": {
+                "file": "docs/litigate/examples/timelines/rule-59e.case",
+                "line": 14,
+                "col": 3,
+                "end_line": 14,
+                "end_col": 72
+              },
+              "message": "`alter-amend-period` runs 10 calendar days from `change-frcp-base::JudgmentEntered()` on 2010-03-01 under `frcp6@2009-12-01`"
+            }
+          ],
+          "notes": [
+            {
+              "message": "only a cited event of a type that `extends` this deadline, within its `extend` capability, moves the due date"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "filings": [
+    {
+      "key": "motion",
+      "date": "2010-03-25",
+      "party": "movant-co",
+      "event": "AlterAmendMoved()",
+      "worlds": {
+        "timely": [
+          "w1"
+        ],
+        "late": [
+          "w2"
+        ]
+      }
+    }
+  ],
+  "outcomes": [
+    {
+      "worlds": [
+        "w1"
+      ],
+      "filings": {
+        "motion": "timely"
+      }
+    },
+    {
+      "worlds": [
+        "w2"
+      ],
+      "filings": {
+        "motion": "late"
+      }
+    }
+  ]
+}

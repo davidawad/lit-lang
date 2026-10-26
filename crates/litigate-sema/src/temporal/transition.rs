@@ -106,7 +106,8 @@ pub fn transition_for(world: &World<'_>, key: &Key, from: &str) -> Option<usize>
 /// declaration superseded by another logical declaration (`supersedes`
 /// across declarations: an amendment layer's new version of a base
 /// declaration, docs/litigate/CHANGE.md §2.2) is governed by the one
-/// superseding it, as by a displacing claimant, to the end of the chain.
+/// superseding it, as by a displacing claimant, to the end of the chain
+/// (SPEC §5.4).
 ///
 /// # Errors
 /// [`Ungoverned`] when nothing is selected or a transition fails.
@@ -117,17 +118,27 @@ pub fn governing(
     at: usize,
     known_at: Option<&str>,
 ) -> Result<Governing, Ungoverned> {
-    let mut key = key.clone();
-    let mut seen = BTreeSet::new();
-    loop {
-        match governing_one(world, &key, events, at, known_at) {
-            Err(Ungoverned::Inactive(Inactive::Superseded(s)))
-                if world.key(s.by) != key && seen.insert(key.clone()) =>
-            {
-                key = world.key(s.by);
-            }
-            found => return found,
+    governing_from(world, key, events, at, known_at, &mut BTreeSet::new())
+}
+
+/// [`governing`], following supersession from `key` through declarations
+/// not yet `seen` (a version superseding an earlier one of its own
+/// declaration leads back to it); where the superseding declaration
+/// governs nothing on the date, `key`'s own reason stands.
+fn governing_from(
+    world: &World<'_>,
+    key: &Key,
+    events: &[MatterEvent<'_>],
+    at: usize,
+    known_at: Option<&str>,
+    seen: &mut BTreeSet<Key>,
+) -> Result<Governing, Ungoverned> {
+    let found = governing_one(world, key, events, at, known_at);
+    match &found {
+        Err(Ungoverned::Inactive(Inactive::Superseded(s))) if seen.insert(key.clone()) => {
+            governing_from(world, &world.key(s.by), events, at, known_at, seen).or(found)
         }
+        _ => found,
     }
 }
 

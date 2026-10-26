@@ -1,0 +1,12 @@
+---
+source: crates/litigate-sema/tests/cov_rules_temporal.rs
+expression: got
+---
+[
+    "p on 2011-01-01: governed by p",
+    "p on 2013-01-01: governed by q",
+    "p on 2015-01-01: governed by r",
+    "m on 2013-01-01: governed by n",
+    "m on 2015-01-01: Inactive(Superseded(Suspension { by: 8, window: Window { from: \"2012-01-01\", to: None }, version: None, revived: false }))",
+    "u on 2013-01-01: Inactive(Superseded(Suspension { by: 5, window: Window { from: \"2012-01-01\", to: None }, version: Some(\"2009-12-01\"), revived: false }))",
+]

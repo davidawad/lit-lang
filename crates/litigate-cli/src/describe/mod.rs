@@ -257,7 +257,7 @@ const BUILTINS: [(&str, &str); 15] = [
 /// What `run`, every engine op subcommand, and `explain` on a path return.
 const ENGINE_RESPONSE: &str = "the engine's response verbatim: {ok, api_version, op, result, warnings, provenance, elapsed_ms}; exit 2 when it is ok:false";
 
-const RESULTS: [(&str, &str); 19] = [
+const RESULTS: [(&str, &str); 20] = [
     ("describe", "this document"),
     (
         "lock",
@@ -278,6 +278,7 @@ const RESULTS: [(&str, &str); 19] = [
     ("compat", "{package, old:{version, semantic}, new:{version, semantic}, class, required, declared, ok, changes:[{class, kind, what, now?}]}; L1012 when the bump is too small"),
     ("query", "{matches:[{id, kind, label, span, cite, in_force, detail}], total, next_cursor}"),
     ("timeline", "a litigate.timeline/1 document (docs/litigate/timeline.v1.schema.json): {schema, source, as_of, known_at, layers, worlds, rows, edges, diagnostics}"),
+    ("worlds", "{case, world, modality, location, choices, as_of, known_at, worlds:[{id, choices, layers:[{name, version, class, in_force, overruled_by}], lawful, filings:{key: timeliness}, deadlines:[{deadline, trigger, trigger_date, due, status}], diagnostics}], filings:[{key, date, party, event, worlds:{timeliness:[world id]}}], outcomes:[{worlds, filings}]}; timeliness: timely, late, unjudged, untimed, rejected, undetermined; a world's own errors are in its entry, not the envelope"),
     ("import", "{files:[{path, from}], warnings}"),
     ("fix", "{fixes:[{code, message?, edits:[{span, replacement}], applicability}], changed_files, skipped_overlapping, dry_run}; a fix's edits apply together or not at all"),
 ];

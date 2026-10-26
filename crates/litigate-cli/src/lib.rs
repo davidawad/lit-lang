@@ -152,9 +152,10 @@ fn execute_with(
     let format = cli.format.unwrap_or(format);
     let op = cli.command.name();
     if in_memory && !IN_MEMORY_COMMANDS.contains(&op) {
+        let (last, rest) = IN_MEMORY_COMMANDS.split_last().unwrap_or((&"", &[]));
         let message = format!(
-            "only {} run over an in-memory source",
-            IN_MEMORY_COMMANDS.join(" and ")
+            "only {} and {last} run over an in-memory source",
+            rest.join(", ")
         );
         return out::print(op, Err(Failure::new(message)), format, color, 0.0);
     }

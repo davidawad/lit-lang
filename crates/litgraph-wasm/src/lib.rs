@@ -4,8 +4,8 @@
 //! The contract is identical to the CLI and the Rust API: JSON strings in,
 //! JSON strings out, errors reported inside the response (`ok: false`), never
 //! thrown. Packs are embedded; pass your own with [`handle_with_packs`].
-//! [`litigate`] runs `litigate check`/`build` over an in-memory file tree,
-//! with the repository's `lit/` library embedded.
+//! [`litigate`] runs `litigate check`/`build`/`worlds` over an in-memory
+//! file tree, with the repository's `lit/` library embedded.
 //!
 //! ```js
 //! import init, { handle, describe } from "litgraph-wasm";
@@ -99,7 +99,7 @@ pub fn schema(kind: &str) -> String {
 /// Runs the `litigate` CLI over an in-memory file tree and returns a
 /// `LitigateRun` (`{code, stdout, stderr, files}`) as JSON. `args_json` is
 /// the argument array without the program name (`["check", "lit", "cases"]`);
-/// only `check` and `build` run. `files_json` maps repository-relative paths
+/// only `check`, `build` and `worlds` (alternate timelines) run. `files_json` maps repository-relative paths
 /// to texts; with `with_library`, the embedded `lit/` library fills in every
 /// `lit/` path the caller does not give. `build --out DIR` writes into
 /// `files`, never to a disk. Output is JSON unless `--format human`.
@@ -200,6 +200,50 @@ mod tests {
             Some(true)
         );
         assert!(library["lit/frcp/Lit.toml"].is_string());
+    }
+
+    #[test]
+    fn litigate_runs_a_matter_in_alternate_worlds() {
+        let examples = "../../docs/litigate/examples";
+        let files: BTreeMap<String, String> = [
+            "timelines/rule-59e.case",
+            "timelines/rule-59e.world",
+            "timelines/Lit.lock",
+            "timelines/post-judgment/Lit.toml",
+            "timelines/post-judgment/Lit.lock",
+            "timelines/post-judgment/post-judgment.lit",
+            "change/base/Lit.toml",
+            "change/base/Lit.lock",
+            "change/base/base.lit",
+            "change/amendment/Lit.toml",
+            "change/amendment/Lit.lock",
+            "change/amendment/amendment.lit",
+        ]
+        .iter()
+        .map(|f| {
+            let text = std::fs::read_to_string(format!("{examples}/{f}")).unwrap_or_default();
+            (format!("docs/litigate/examples/{f}"), text)
+        })
+        .collect();
+        let files = serde_json::to_value(files).unwrap_or_default();
+        let run = run(
+            &[
+                "worlds",
+                "docs/litigate/examples/timelines/rule-59e.case",
+                "--world",
+                "docs/litigate/examples/timelines/rule-59e.world",
+                "--path",
+                "docs/litigate/examples",
+            ],
+            &files,
+            true,
+        );
+        assert_eq!(run.code, 0, "{}{}", run.stdout, run.stderr);
+        let out = parse(&run.stdout);
+        assert_eq!(
+            out["result"]["filings"][0]["worlds"],
+            json!({"timely": ["w1"], "late": ["w2"]})
+        );
     }
 
     #[test]

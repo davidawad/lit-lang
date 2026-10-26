@@ -227,3 +227,59 @@ fn targets_parse_qualified_names_and_only_valid_version_dates() {
         show("p@soon"),
     ]);
 }
+
+/// A deadline superseded by another logical declaration is governed by
+/// it in a matter (SPEC §5.4; an amendment layer's new version of a base
+/// deadline), through a chain of them; where the superseding declaration
+/// governs nothing on the date, or the chain returns to a declaration
+/// already followed (an overlapping version of its own), the superseded
+/// one's own reason stands.
+#[test]
+fn a_superseded_deadline_is_governed_by_what_supersedes_it() {
+    let chain = d("p", 20, "")
+        + &d("q", 28, "effective [2012-01-01, ..) supersedes p")
+        + &d("r", 30, "effective [2014-01-01, ..) supersedes q")
+        + &d("m", 10, "")
+        + &d("n", 14, "effective [2012-01-01, 2014-01-01) supersedes m");
+    // Versions of one declaration disjoint per proceeding: the later one
+    // supersedes the earlier, which still applies to a proceeding
+    // commenced before it.
+    let own = d("u", 5, "effective [2009-12-01, ..) commenced [2009-12-01, 2012-01-01)")
+        + &d(
+            "u",
+            6,
+            "effective [2012-01-01, ..) commenced [2012-01-01, ..) supersedes u@2009-12-01",
+        );
+    let filed = Expr {
+        ty: Type::Unit,
+        kind: ExprKind::Literal { value: Value::Unit },
+        span: None,
+    };
+    let mut got: Vec<String> = Vec::new();
+    for (body, queries) in [
+        (
+            &chain,
+            &[
+                ("p", "2011-01-01"),
+                ("p", "2013-01-01"),
+                ("p", "2015-01-01"),
+                ("m", "2013-01-01"),
+                ("m", "2015-01-01"),
+            ][..],
+        ),
+        (&own, &[("u", "2013-01-01")][..]),
+    ] {
+        let packs = demo(body);
+        let mut w = world(&packs);
+        w.set_commenced(Some("2010-01-01".to_owned()));
+        for (n, at) in queries {
+            let events = [MatterEvent::on(at, &filed)];
+            let outcome = match governing(&w, &key(n), &events, 0, None) {
+                Ok(g) => format!("governed by {}", w.decls[g.version].meta.id),
+                Err(e) => format!("{e:?}"),
+            };
+            got.push(format!("{n} on {at}: {outcome}"));
+        }
+    }
+    insta::assert_debug_snapshot!(got);
+}

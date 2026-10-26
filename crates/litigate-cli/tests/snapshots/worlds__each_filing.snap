@@ -1,0 +1,38 @@
+---
+source: crates/litigate-cli/tests/worlds.rs
+expression: filings(&json)
+---
+{
+  "#1": {
+    "untimed": [
+      "w3",
+      "w4"
+    ],
+    "undetermined": [
+      "w1",
+      "w2"
+    ]
+  },
+  "motion": {
+    "timely": [
+      "w3"
+    ],
+    "late": [
+      "w4"
+    ],
+    "undetermined": [
+      "w1",
+      "w2"
+    ]
+  },
+  "again": {
+    "rejected": [
+      "w3",
+      "w4"
+    ],
+    "undetermined": [
+      "w1",
+      "w2"
+    ]
+  }
+}

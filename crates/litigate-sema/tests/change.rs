@@ -12,6 +12,7 @@ mod legal;
 
 use legal::{pkg, render, workspace, CORE};
 use litigate_base::{FileId, LineIndex, Profile};
+use litigate_sema::change::choice;
 use litigate_sema::change::world::{check_world, parse_world, Modality, WorldCheck};
 use litigate_sema::change::{class_index, key_range};
 use litigate_sema::db::span::TextRange;
@@ -901,4 +902,159 @@ fn a_world_reads_the_newest_valid_version_of_each_layer() {
         serde_json::to_value(&i).expect("json"),
         serde_json::json!({"source": "s", "issuer": "i", "date": "2020-01-01"})
     );
+}
+
+/// `w.world` with the world `located` gives, then `choices`.
+fn chosen(layers: &str, location: &str, choices: &str) -> String {
+    format!("{}{choices}", located(layers, location))
+}
+
+const CA1: &str = "family = \"civil\"\ncircuit = \"ca1\"";
+
+#[test]
+fn choice_points_span_one_world_per_combination() {
+    let lr = layer("lr", "local-rule", "civil", "LocalRule", "", "");
+    let co = layer("co", "case-order", "civil", "CaseOrder", "", "");
+    let co2 = layer("co2", "case-order", "civil", "CaseOrder", "", "");
+    let text = chosen(
+        "\"fed\"",
+        CA1,
+        "\n[choice.local]\nwithout = []\nwith = [\"lr\"]\n\n[choice.order]\nnone = []\nentered = [\"co\", \"co2\"]\nalone = [\"co\"]\n",
+    );
+    // `co` is in two options of one choice: legal, one choice owns it.
+    let (w, at) = parse_world(&text).unwrap();
+    let combos: Vec<String> = choice::combinations(&w)
+        .iter()
+        .map(|c| format!("{:?} {:?}", c.choices, c.layers))
+        .collect();
+    let mut all = vec![core(), fed(), lr, co, co2];
+    let (db, ws) = workspace(&all);
+    let checked = check_world(&db, ws, "w.world", &text, Profile::Dev);
+    // The world's own layers are checked; its choices' are the worlds'.
+    assert_eq!(shown(&checked), ["layer fed base in force"]);
+    let alternates = choice::enumerate(&db, ws, "w.world", &text, &w, &at, Profile::Dev);
+    let ids: Vec<(String, Vec<String>)> = alternates
+        .iter()
+        .map(|a| (a.id.clone(), shown(&a.check)))
+        .collect();
+    insta::assert_debug_snapshot!((combos, ids));
+    // The world reports its choices; a world without any reports none.
+    let json = serde_json::to_value(checked.world.as_ref().unwrap()).unwrap();
+    assert_eq!(json["choices"]["local"]["with"], serde_json::json!(["lr"]));
+    all.truncate(2);
+    let plain = world(&all, &located("\"fed\"", CA1), Profile::Dev);
+    let json = serde_json::to_value(plain.world.as_ref().unwrap()).unwrap();
+    assert!(json.get("choices").is_none(), "{json}");
+    assert_eq!(choice::combinations(plain.world.as_ref().unwrap()).len(), 1);
+}
+
+#[test]
+fn malformed_choice_points_are_l1013() {
+    let many: String = (0..13)
+        .map(|i| format!("\n[choice.c{i}]\nwithout = []\nwith = [\"l{i}\"]\n"))
+        .collect();
+    let rows: Vec<(&str, Vec<String>)> = [
+        ("one option", "\n[choice.c]\nwith = [\"lr\"]\n"),
+        (
+            "an option naming the world's own layer",
+            "\n[choice.c]\nwithout = []\nwith = [\"fed\"]\n",
+        ),
+        (
+            "a layer in two choices",
+            "\n[choice.a]\nwithout = []\nwith = [\"lr\"]\n\n[choice.b]\nwithout = []\nwith = [\"lr\"]\n",
+        ),
+        (
+            "two options with the same layers",
+            "\n[choice.c]\nfirst = [\"lr\"]\nagain = [\"lr\"]\n",
+        ),
+        ("more worlds than the limit", many.as_str()),
+        (
+            "an option layer that is not loaded",
+            "\n[choice.c]\nwithout = []\nwith = [\"ghost\"]\n",
+        ),
+    ]
+    .into_iter()
+    .map(|(name, choices)| {
+        let text = chosen("\"fed\"", CA1, choices);
+        (name, shown(&world(&[], &text, Profile::Dev)))
+    })
+    .chain([(
+        "a choice that is not a table",
+        shown(&world(
+            &[],
+            &format!("choice = 1\n{}", located("\"fed\"", CA1)),
+            Profile::Dev,
+        )),
+    )])
+    .collect();
+    insta::assert_debug_snapshot!(rows);
+}
+
+#[test]
+fn a_combination_with_an_error_is_reported_in_its_own_world() {
+    let what_if = layer(
+        "what-if",
+        "case-order",
+        "civil",
+        "CaseOrder",
+        "authoritative = false\n",
+        "",
+    );
+    let text = chosen(
+        "\"fed\"",
+        CA1,
+        "\n[choice.c]\nwithout = []\nwith = [\"what-if\"]\n",
+    );
+    let (db, ws) = workspace(&[core(), fed(), what_if]);
+    let (w, at) = parse_world(&text).unwrap();
+    let errors: Vec<(String, Vec<String>)> =
+        choice::enumerate(&db, ws, "w.world", &text, &w, &at, Profile::Dev)
+            .iter()
+            .map(|a| (a.id.clone(), shown(&a.check)))
+            .collect();
+    insta::assert_debug_snapshot!(errors);
+}
+
+#[test]
+fn an_overruled_precedent_is_in_force_until_the_overruling() {
+    let ca1 = precedent("ca1-rule", "ca1", true, INTERPRETS);
+    let en_banc = layer(
+        "en-banc",
+        "overruling",
+        "civil",
+        "CaseOrder",
+        "court = \"ca1\"\noverrules = [\"ca1-rule\"]\n",
+        "",
+    );
+    let at = |circuit: &str| format!("family = \"civil\"\ncircuit = \"{circuit}\"");
+    let packs = [ca1, en_banc];
+    let overruled = world(&packs, &located("\"ca1-rule\", \"en-banc\"", &at("ca1")), Profile::Dev);
+    let rule = overruled
+        .layers
+        .iter()
+        .find(|l| l.name == "ca1-rule")
+        .unwrap();
+    // Overruled from the overruling's date (2020-01-01), for every case
+    // still open then; a matter judged earlier, or at a `known_at`
+    // before it, still has it.
+    let got: Vec<bool> = [
+        ("2019-12-31", None),
+        ("2020-01-01", None),
+        ("2021-01-01", Some("2019-06-01")),
+        ("2021-01-01", Some("2020-06-01")),
+    ]
+    .iter()
+    .map(|(as_of, known_at)| rule.in_force_at(as_of, *known_at))
+    .collect();
+    assert_eq!(got, [true, false, true, false]);
+    // A precedent that does not bind at the location is never in force.
+    let sister = world(&packs, &located("\"ca1-rule\"", &at("ca2")), Profile::Dev);
+    assert!(!sister.layers[0].in_force_at("2019-12-31", None));
+    // Any other layer is in force at every date.
+    assert!(overruled
+        .layers
+        .iter()
+        .find(|l| l.name == "en-banc")
+        .unwrap()
+        .in_force_at("2000-01-01", None));
 }

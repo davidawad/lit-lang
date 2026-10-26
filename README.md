@@ -201,7 +201,7 @@ the CLI; an engine error (`ok: false`) comes back as a tool error carrying
 that envelope. `LITGRAPH_PACKS`/`--packs-dir` and
 `LITGRAPH_SCENARIOS`/`--scenarios-dir` work exactly as they do for the CLI.
 The `litigate_describe`, `litigate_check`, `litigate_build`,
-`litigate_where`, `litigate_timeline` and `litigate_explain` tools drive the authoring language
+`litigate_where`, `litigate_timeline`, `litigate_worlds` and `litigate_explain` tools drive the authoring language
 the packs are generated from (see [Packs](#packs)): they run the `litigate`
 toolchain as a library and return its envelope `{ok, op, result,
 diagnostics, provenance, elapsed_ms}`, with paths relative to the server's

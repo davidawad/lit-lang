@@ -1,0 +1,51 @@
+---
+source: crates/litigate-sema/tests/change.rs
+expression: rows
+---
+[
+    (
+        "one option",
+        [
+            "w.world:7:1 L1013 choice `c` has 1 option(s): a choice point has at least two",
+        ],
+    ),
+    (
+        "an option naming the world's own layer",
+        [
+            "w.world:9:9 L1013 layer `fed` is in every world (`layers`): choice `c` cannot leave it out",
+            "w.world:8:11 L1013 options `with` and `without` of choice `c` hold the same layers",
+        ],
+    ),
+    (
+        "a layer in two choices",
+        [
+            "w.world:13:9 L1013 layer `lr` belongs to choice `a`: a layer is in one choice point, so each world is one combination",
+            "w.world:12:11 L1013 options `with` and `without` of choice `b` hold the same layers",
+        ],
+    ),
+    (
+        "two options with the same layers",
+        [
+            "w.world:8:9 L1013 options `again` and `first` of choice `c` hold the same layers",
+        ],
+    ),
+    (
+        "more worlds than the limit",
+        [
+            "w.world:7:1 L1013 the choice points span 8192 worlds, more than 4096",
+        ],
+    ),
+    (
+        "an option layer that is not loaded",
+        [
+            "w.world:9:9 L1013 layer `ghost` is not a loaded package",
+            "layer fed base in force",
+        ],
+    ),
+    (
+        "a choice that is not a table",
+        [
+            "w.world:1:10 L1013 invalid world file: invalid type: integer `1`, expected a map",
+        ],
+    ),
+]

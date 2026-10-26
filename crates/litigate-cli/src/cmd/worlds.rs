@@ -14,7 +14,8 @@
 //! synthetic layer in an actual world) leave its law undetermined: its
 //! filings are `undetermined` there, never judged. A late filing is an
 //! outcome of its world, not an error of the query: the envelope carries
-//! errors only when the world file, a package or the matter itself fails.
+//! errors only when the world file or a package fails, or the matter
+//! itself (its syntax, names, pins or types, which no layer changes).
 use crate::clock::{self, Clocks};
 use crate::ics;
 use crate::matter::{self, At, CaseCheck, Scheduled};
@@ -200,11 +201,10 @@ fn timeliness(lawful: bool, m: &CaseCheck, filing: &Filing<'_>) -> Timeliness {
             Err(_) => Status::Unjudged,
         })
         .collect();
-    let rejected = m.diagnostics.iter().any(|d| {
-        is_error(d)
-            && d.span.file.0 == m.path
-            && (filing.lines.0..=filing.lines.1).contains(&d.span.line)
-    });
+    let rejected = m
+        .diagnostics
+        .iter()
+        .any(|d| is_error(d) && (filing.lines.0..=filing.lines.1).contains(&d.span.line));
     if closed.contains(&Status::Late) {
         Timeliness::Late
     } else if closed.contains(&Status::Unjudged) {
@@ -334,11 +334,22 @@ pub fn worlds(src: &dyn Source, args: &Args) -> Outcome {
         .flat_map(|(_, v)| v.diagnostics.iter().filter(|d| is_error(d)).cloned())
         .chain(base.diagnostics.iter().filter(|d| is_error(d)).cloned())
         .collect();
-    let Some(case) = base_case.case.as_ref().filter(|_| errors.is_empty()) else {
-        let mut all = errors;
-        all.extend(base_case.diagnostics.iter().cloned());
-        return Ok(failed(session, source, all));
+    let Some(case) = base_case.case.as_ref() else {
+        return Ok(failed(session, source, base_case.diagnostics.clone()));
     };
+    // The matter's own syntax, resolution, pins and types (L0xxx-L2xxx)
+    // are the same in every world: layers change only which law governs.
+    let mut errors = errors;
+    errors.extend(
+        base_case
+            .diagnostics
+            .iter()
+            .filter(|d| is_error(d) && d.code.as_str().as_bytes()[1] <= b'2')
+            .cloned(),
+    );
+    if !errors.is_empty() {
+        return Ok(failed(session, source, errors));
+    }
     let all = session.hir_of(&scope);
     let spans = litigate_sema::case::resolve(&base_case.path, &session.cases[0].text, &all, None)
         .spans;

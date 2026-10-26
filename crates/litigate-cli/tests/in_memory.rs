@@ -141,7 +141,7 @@ fn other_commands_do_not_run_in_memory() {
     assert_eq!(run.code, 1);
     assert_eq!(
         run.stderr,
-        "litigate explain: only check and build run over an in-memory source\n"
+        "litigate explain: only check, build and worlds run over an in-memory source\n"
     );
     let usage = litigate_cli::execute_in_memory([], &["frobnicate".into()]);
     assert_eq!((usage.code, usage.stdout.as_str()), (1, ""));

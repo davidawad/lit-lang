@@ -397,6 +397,7 @@ async fn litigate_tools_are_listed_and_run_the_authoring_toolchain() -> Result<(
         "litigate_build",
         "litigate_where",
         "litigate_timeline",
+        "litigate_worlds",
         "litigate_explain",
         "litigate_describe",
     ] {
@@ -428,6 +429,22 @@ async fn litigate_tools_are_listed_and_run_the_authoring_toolchain() -> Result<(
     assert_eq!(
         envelope["result"]["declaration_span"]["file"],
         json!("lit/examples/rule12.lit"),
+        "envelope: {envelope}"
+    );
+
+    let worlds = call(
+        "litigate_worlds",
+        json!({
+            "case": "docs/litigate/examples/timelines/rule-59e.case",
+            "world": "docs/litigate/examples/timelines/rule-59e.world",
+            "paths": ["docs/litigate/examples"],
+        }),
+    )
+    .await?;
+    let envelope = structured(&worlds)?;
+    assert_eq!(
+        envelope["result"]["filings"][0]["worlds"],
+        json!({"timely": ["w1"], "late": ["w2"]}),
         "envelope: {envelope}"
     );
 

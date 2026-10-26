@@ -209,6 +209,63 @@ const TOOLS: &[Spec] = &[
         ],
     },
     Spec {
+        name: "litigate_worlds",
+        command: "worlds",
+        doc: "Alternate timelines (docs/litigate/CHANGE.md §5.1): replay a `.case` matter in every world a `.world` file spans (its layers plus one option at each `[choice.ID]` choice point, and each `vary` layer with and without) at `as_of`/`known_at`. Returns each world's layers, outcome and deadlines, each filing (an event `by` a party) with the worlds in which it is timely, late, unjudged, untimed, rejected or undetermined, and the worlds grouped by outcome. A late filing is an outcome, not an error: `ok` is false only when the world file, a package or the matter fails.",
+        args: &[
+            arg(
+                "case",
+                Kind::Text,
+                Spell::Positional,
+                true,
+                "The `.case` file.",
+            ),
+            arg(
+                "world",
+                Kind::Text,
+                Spell::Flag("--world"),
+                true,
+                "The `.world` file: layers, location, modality, choice points.",
+            ),
+            arg(
+                "paths",
+                Kind::List,
+                Spell::Flag("--path"),
+                false,
+                "Package directories, or directories searched for packages, to load besides the library.",
+            ),
+            arg(
+                "layers",
+                Kind::List,
+                Spell::Flag("--layer"),
+                false,
+                "Layers (package names) added to every world.",
+            ),
+            arg(
+                "vary",
+                Kind::List,
+                Spell::Flag("--vary"),
+                false,
+                "Layers each made a choice point: every world with and without it.",
+            ),
+            arg(
+                "as_of",
+                Kind::Text,
+                Spell::Flag("--as-of"),
+                false,
+                "YYYY-MM-DD: judge the matter at this date (default: its own `as_of`).",
+            ),
+            arg(
+                "known_at",
+                Kind::Text,
+                Spell::Flag("--known-at"),
+                false,
+                "YYYY-MM-DD: select the versions recorded by this date (default: the matter's own `known_at`, else the latest corpus).",
+            ),
+            LIB,
+        ],
+    },
+    Spec {
         name: "litigate_explain",
         command: "explain",
         doc: "The long explanation of a litigate diagnostic code (e.g. `L3004`), with its severity under each profile.",
@@ -396,6 +453,7 @@ mod tests {
                 "litigate_build",
                 "litigate_where",
                 "litigate_timeline",
+                "litigate_worlds",
                 "litigate_explain"
             ]
         );

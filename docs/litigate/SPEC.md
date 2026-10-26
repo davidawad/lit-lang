@@ -1523,9 +1523,14 @@ Refinements (temporal bead, `litigate-sema/src/temporal`):
   enacted after A took effect is new law and is not suspended. `B@E
   supersedes B@D` documents succession and must name an earlier version
   (`D < E`, else L3006). `as_of` honours supersession: a superseded version
-  is L3007 with a note naming the superseding declaration. Supersession and
-  revival are bitemporal too: at `known_at` K only declarations recorded by
-  K (their `known_at <= K`) suspend or revive.
+  is L3007 with a note naming the superseding declaration. In a matter
+  (replay, its schedule, `litigate worlds`) a declaration superseded by
+  another logical declaration (an amendment layer's, CHANGE.md §2.2) is
+  governed by the one superseding it, as by a displacing claimant (§5.5):
+  an instance of B is counted under A, and A's own trigger opens no second
+  instance; where A governs nothing on the date, B's L3007 stands.
+  Supersession and revival are bitemporal too: at `known_at` K only
+  declarations recorded by K (their `known_at <= K`) suspend or revive.
 - **Transitions.** For an event, the version in force on its date governs,
   unless that version took effect after the matter's first event and a
   transition amends it; then the arms decide. Each arm must select the

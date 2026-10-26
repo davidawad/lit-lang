@@ -1,0 +1,20 @@
+---
+source: crates/litigate-sema/tests/change.rs
+expression: errors
+---
+[
+    (
+        "w1",
+        [
+            "w.world:9:9 L1014 layer `what-if` is not authoritative (a synthetic what-if): it may appear only in a counterfactual world",
+            "layer fed base in force",
+            "layer what-if case-order in force",
+        ],
+    ),
+    (
+        "w2",
+        [
+            "layer fed base in force",
+        ],
+    ),
+]

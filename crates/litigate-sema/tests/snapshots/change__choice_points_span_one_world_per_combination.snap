@@ -1,0 +1,61 @@
+---
+source: crates/litigate-sema/tests/change.rs
+expression: "(combos, ids)"
+---
+(
+    [
+        "{\"local\": \"with\", \"order\": \"alone\"} {\"co\", \"fed\", \"lr\"}",
+        "{\"local\": \"with\", \"order\": \"entered\"} {\"co\", \"co2\", \"fed\", \"lr\"}",
+        "{\"local\": \"with\", \"order\": \"none\"} {\"fed\", \"lr\"}",
+        "{\"local\": \"without\", \"order\": \"alone\"} {\"co\", \"fed\"}",
+        "{\"local\": \"without\", \"order\": \"entered\"} {\"co\", \"co2\", \"fed\"}",
+        "{\"local\": \"without\", \"order\": \"none\"} {\"fed\"}",
+    ],
+    [
+        (
+            "w1",
+            [
+                "layer co case-order in force",
+                "layer fed base in force",
+                "layer lr local-rule in force",
+            ],
+        ),
+        (
+            "w2",
+            [
+                "layer co case-order in force",
+                "layer co2 case-order in force",
+                "layer fed base in force",
+                "layer lr local-rule in force",
+            ],
+        ),
+        (
+            "w3",
+            [
+                "layer fed base in force",
+                "layer lr local-rule in force",
+            ],
+        ),
+        (
+            "w4",
+            [
+                "layer co case-order in force",
+                "layer fed base in force",
+            ],
+        ),
+        (
+            "w5",
+            [
+                "layer co case-order in force",
+                "layer co2 case-order in force",
+                "layer fed base in force",
+            ],
+        ),
+        (
+            "w6",
+            [
+                "layer fed base in force",
+            ],
+        ),
+    ],
+)

@@ -165,3 +165,15 @@ fn imports_name_their_module() {
         (Space::Module, "lit/p/b.lit")
     );
 }
+
+/// A declaration whose name is missing (a half-typed `state`) declares
+/// nothing, so the proptest's broken edits need not happen to write one
+/// for the index to stay total.
+#[test]
+fn a_nameless_declaration_declares_nothing() {
+    let text = "module p.a\n\nstart s\n\nstate s: \"S\" { }\nstate\n";
+    let (index, _) = index(&[("a.lit", text)], None);
+    let names: Vec<&str> = index.defs.iter().map(|d| d.name.as_str()).collect();
+    assert!(names.contains(&"s"), "{names:?}");
+    assert!(!names.contains(&"state"), "{names:?}");
+}

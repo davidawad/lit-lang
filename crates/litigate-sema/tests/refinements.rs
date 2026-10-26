@@ -59,7 +59,8 @@ fn table(rows: &[(&str, &[&str])]) {
 }
 
 #[test]
-fn predicates_outside_the_qualifier_grammar_are_l2011() {
+#[allow(clippy::too_many_lines)] // one table row per rejection
+fn predicates_outside_the_qualifier_grammar_are_l2012() {
     table(&[
         (
             "event E(a: Days<CalendarDays> where a * a > 1.days)",
@@ -231,7 +232,7 @@ fn ill_typed_predicates_report_their_type_errors() {
 }
 
 #[test]
-fn a_refinement_no_value_satisfies_is_l2013_with_an_unsat_core() {
+fn a_refinement_no_value_satisfies_is_l2014_with_an_unsat_core() {
     table(&[
         (
             "type Never = {d: Days<CalendarDays> | d > 60.days && d < 30.days}",

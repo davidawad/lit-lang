@@ -1,0 +1,36 @@
+---
+source: crates/litigate-sema/tests/case_refinements.rs
+expression: out
+---
+{
+    "a refinement reading two arguments": [
+        "13:29 L2012 `Stipulated`: method = Personal, days = 10 does not satisfy the refinement `method == Mail || days <= 3`\n    note: the refinement of parameter `method` of `Stipulated` (SPEC §3.5)",
+    ],
+    "an argument outside its alias's refinement and another's: both at their argument": [
+        "13:25 L2012 `Stipulated`: days = 45 does not satisfy the refinement `days > 0 && days <= 30`\n    note: the refinement of parameter `days` of `Stipulated`, from its type `Cap` (SPEC §3.5)",
+        "13:29 L2012 `Stipulated`: method = Personal, days = 45 does not satisfy the refinement `method == Mail || days <= 3`\n    note: the refinement of parameter `method` of `Stipulated` (SPEC §3.5)",
+    ],
+    "an order past its refinement, within the rule's bound: refused at replay": [
+        "13:14 L2012 `Ordered`: until = 2011-02-10, prescribed_due = 2011-01-14, grant_order_entered = 2011-01-10 does not satisfy the refinement `until <= prescribed_due + 14.days && until > grant_order_entered`\n    note: the refinement of parameter `until` of `Ordered` (SPEC §3.5)\n    note: `answer` runs 10 calendar days from `Served(Mail)` on 2011-01-04 under `oc@2009-12-01`, service by mail",
+        "trace Triggered Served(Mail) sigma::open -> sigma::open",
+        "obligation sigma::answer Lapsed None",
+    ],
+    "an order to an unknown date: the refinement is not judged": [
+        "13:14 L4001 `Ordered(?)` extends `sigma::answer` to no known date, which moves nothing\n    note: an extension's new due date is the order's; record it, or omit the event until it is known",
+        "trace Triggered Served(Mail) sigma::open -> sigma::open",
+        "obligation sigma::answer Lapsed None",
+    ],
+    "an order within its refinement extends the answer": [
+        "ok: start sigma::done",
+        "trace Triggered Served(Mail) sigma::open -> sigma::open",
+        "trace Extended Ordered(2011-01-20) sigma::open -> sigma::open",
+        "trace Took Answered() sigma::open -> sigma::done via sigma::answer",
+        "obligation sigma::answer Discharged Some(\"2011-01-20\")",
+    ],
+    "within every refinement: the stipulation is taken": [
+        "ok: start sigma::open",
+        "trace Triggered Served(Mail) sigma::open -> sigma::open",
+        "trace Took Stipulated(2, Personal) sigma::open -> sigma::open via sigma::stipulate",
+        "obligation sigma::answer Lapsed None",
+    ],
+}

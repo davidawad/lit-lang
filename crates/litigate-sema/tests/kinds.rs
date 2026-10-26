@@ -186,7 +186,7 @@ fn each_class_rejects_the_operations_outside_its_row() {
                 "case-order",
                 "CaseOrder",
                 "",
-                "type Amount = Money<usd>\nenum E { a, b }\nevent Ev()\ncalendar mine { new-year: fixed(1, 1) effective [1870-06-28, ..) }\ndefault d when true => 1\nrule duty r {\n  deadline inner: 3.days from Ev() counted_by c6\n}\ndeadline v: 1.days from Ev() counted_by c6 effective [2010-01-01, 2011-01-01)\ndeadline v: 2.days from Ev() counted_by c6 effective [2011-01-01, ..)\ntransition tr amends v@2011-01-01 { otherwise -> v@2011-01-01 }\nstate back: \"Back\" revives answer-period",
+                "type Amount = Money<usd>\nenum E { a, b }\nevent Ev()\ncalendar mine { new-year: fixed(1, 1) effective [1870-06-28, ..) }\ndefault d when true => 1\nexception own rebuts d when true => 2\nrule duty r {\n  deadline inner: 3.days from Ev() counted_by c6\n}\ndeadline v: 1.days from Ev() counted_by c6 effective [2010-01-01, 2011-01-01)\ndeadline v: 2.days from Ev() counted_by c6 effective [2011-01-01, ..)\ntransition tr amends v@2011-01-01 { otherwise -> v@2011-01-01 }\nstate back: \"Back\" revives answer-period",
             ),
         ),
         // Yielding and a class's own structure need nothing.

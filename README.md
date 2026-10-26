@@ -151,16 +151,18 @@ document's JSON Schema; `litgraph validate <file|->` checks a pack,
 
 ### Library
 
-The engine is a normal Rust crate (`litgraph`, in [`crates/litigate-engine`](crates/litigate-engine));
-`litgraph-cli` is a thin binary over `litgraph::api::handle`. Add it as a
-path or git dependency to embed the solver, the expression language, or the
-pack loader directly — nothing about the CLI is required.
+The engine is a Rust library crate (`litigate-engine`, in
+[`crates/litigate-engine`](crates/litigate-engine)), internal to the
+`litigate` compiler and not published; `litgraph-cli` is a thin binary over
+`litigate_engine::api::handle`. Add it as a path or git dependency to embed
+the solver, the expression language, or the pack loader directly — nothing
+about the CLI is required.
 
 ### MCP server
 
 `litgraph-mcp` ([`crates/litgraph-mcp`](crates/litgraph-mcp)) is a stdio
 [MCP](https://modelcontextprotocol.io) server: a thin wrapper over
-`litgraph::api::handle`, same as the CLI. Every op is its own tool
+`litigate_engine::api::handle`, same as the CLI. Every op is its own tool
 (`solve`, `chain`, `explain`, ...), each with an input schema sliced
 straight out of the engine's own JSON Schema for `Op` — plus one generic
 `litgraph` tool that takes a raw request `{packs, links, no_continuations,

@@ -37,7 +37,7 @@ time.
 ## Format
 
 Each `.txt` file is one or more sections, each starting at column 0 with
-`## <canonical ref>` (matching the ref strings `litgraph::cite::normalize`
+`## <canonical ref>` (matching the ref strings `litigate_engine::cite::normalize`
 produces — see `crates/litigate-engine/src/cite/normalize.rs`), optionally followed
 by a heading line, then the verbatim body text up to the next `## ` line.
 
@@ -266,7 +266,7 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   `## FRCP (2008 ed.) Rule 6`, `## FRCP (2011 ed.) Rule 6`, `## FRAP (2008
   ed.) Rule 26`, `## FRAP (2011 ed.) Rule 26` (each rule's text, its
   amendment credits, and its Advisory Committee Notes). The headings are
-  deliberately not canonical `litgraph::cite::normalize` refs, so pack cites
+  deliberately not canonical `litigate_engine::cite::normalize` refs, so pack cites
   of the current rules never match these superseded texts.
 - Fetched 2026-10-22 from `www.govinfo.gov`'s official United States Code
   (GPO), 2008 and 2011 Editions, granules
@@ -447,7 +447,7 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   recorded version, and 2017-01-14, the last amendment), then the section's
   text as of 2017-01-14; `## 37 C.F.R. (eCFR 2017-01-13) § N` is the text
   the day before. The headings are deliberately not canonical
-  `litgraph::cite::normalize` refs, so cites of the current sections resolve
+  `litigate_engine::cite::normalize` refs, so cites of the current sections resolve
   to `cfr-37-part2.txt`, whose wording these 2017-01-14 texts match word for
   word.
 - Fetched 2026-10-23 from the eCFR versioner API (`www.ecfr.gov`, Office of

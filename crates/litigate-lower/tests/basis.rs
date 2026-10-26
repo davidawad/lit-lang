@@ -197,3 +197,23 @@ fn a_scenario_joins_every_number_it_rests_on() {
     case.priors.remove(1);
     assert_eq!(scenario_basis(&pkg, &case), at(Basis::Calibrated));
 }
+
+/// An edge whose only number is a cost, or a duration, rests on it: the
+/// scenario's join reads it as an estimate like any unlabelled number.
+#[test]
+fn a_cost_or_a_duration_alone_is_a_number_the_scenario_rests_on() {
+    let mut pkg = example();
+    let respond = node_mut(&mut pkg, "respond");
+    respond.edges[2].cost = Some(Authored::Known(usd(5)));
+    respond.edges[1].hours = None;
+    respond.edges[1].duration = Some(hir::TriangularDuration {
+        min: None,
+        mode: Rational::integer(7),
+        max: None,
+    });
+    // The worked example's holes still make the join a hole.
+    assert_eq!(
+        scenario_basis(&pkg, &acme()),
+        vec![label("/scenario", Basis::Hole, None)]
+    );
+}

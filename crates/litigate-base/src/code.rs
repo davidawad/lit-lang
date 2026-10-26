@@ -8,7 +8,7 @@ use crate::{Profile, Severity};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 macro_rules! registry {
-    ($count:literal; $($variant:ident = $code:literal => $explain:literal,)+) => {
+    ($($variant:ident = $code:literal => $explain:literal,)+) => {
         /// Stable diagnostic codes. Numeric ranges are reserved by compiler phase.
         #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
         pub enum DiagnosticCode {
@@ -22,8 +22,11 @@ macro_rules! registry {
         }
 
         impl DiagnosticCode {
-            /// Complete code registry in stable (ascending code) order.
-            pub const ALL: [Self; $count] = [$(Self::$variant,)+];
+            /// Complete code registry in stable (ascending code) order. The length is
+            /// derived from the variant list, so two lands that each add a code cannot
+            /// race on a hand-kept count.
+            pub const ALL: [Self; <[&str]>::len(&[$(stringify!($variant),)+])] =
+                [$(Self::$variant,)+];
 
             /// Returns the stable five-character code.
             #[must_use]
@@ -55,7 +58,7 @@ macro_rules! registry {
     };
 }
 
-registry! { 79;
+registry! {
     UnexpectedToken = "L0001" => "The token is not valid at this position in the grammar",
     UnterminatedLiteral = "L0002" => "A string, block comment, or other delimited literal was not closed",
     InvalidToken = "L0003" => "The source contains a character sequence that is not a token",

@@ -14,6 +14,7 @@ use super::{failure, reply};
 use crate::cli::{Library, OpFlags};
 use crate::out::Failure;
 use litigate_engine::api::{self, Catalog};
+use litigate_sema::pkg::source::Disk;
 use serde_json::{json, Map, Value};
 use std::sync::OnceLock;
 
@@ -190,7 +191,7 @@ pub fn call(name: &str, mut args: Map<String, Value>, lib: &[String]) -> (Value,
     let started = crate::Stopwatch::start();
     let outcome = matter(&mut args, lib).and_then(|(target, flags)| {
         args.insert("op".to_owned(), json!(name));
-        crate::cmd::run::run(&target, &Value::Object(args).to_string(), &flags)
+        crate::cmd::run::run(&Disk, &target, &Value::Object(args).to_string(), &flags)
     });
     reply(name, outcome, started.elapsed_ms())
 }

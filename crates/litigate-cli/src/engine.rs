@@ -270,7 +270,6 @@ fn load_catalog(src: &dyn Source, cli: &Cli, builtin: Builtin) -> Result<Catalog
     Ok(catalog)
 }
 
-<<<<<<< HEAD
 /// The packs and named scenarios `litigate engine` serves when no flag
 /// names them: `$LITGRAPH_PACKS`/`$LITGRAPH_SCENARIOS`, else compiled from
 /// `lib` (default `lit`) and the matters under `cases` (default `cases`).
@@ -316,7 +315,6 @@ pub fn compiled(src: &dyn Source, lib: &[String], cases: &[String]) -> Result<Ca
         paths.extend(cases.iter().cloned());
     }
     Ok(compile(src, &paths, true, lib)?.catalog)
-
 }
 
 /// The response text and whether it is `ok`.

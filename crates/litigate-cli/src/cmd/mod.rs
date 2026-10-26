@@ -4,6 +4,7 @@ mod calendar;
 pub(crate) mod check;
 mod compat;
 mod diff;
+mod docket;
 mod explain;
 mod filing;
 mod fix;
@@ -106,6 +107,17 @@ pub fn dispatch(command: Command, src: &dyn Source) -> Outcome {
                 lib: library.lib,
             })
         }
+        Command::MatchDocket {
+            case,
+            docket,
+            out,
+            library,
+        } => docket::match_docket(&docket::Args {
+            case,
+            docket,
+            out,
+            lib: library.lib,
+        }),
         Command::Where { id, paths, library } => where_::where_(&id, &paths, &library.lib),
         Command::Explain { code, flags } if std::path::Path::new(&code).exists() => {
             run::run(&code, "explain", &flags)

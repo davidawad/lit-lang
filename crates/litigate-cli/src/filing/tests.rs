@@ -84,3 +84,19 @@ fn as_of_moves_forward_only() {
     assert_eq!(with_as_of(&text, "2025-03-01"), text);
     assert_eq!(with_as_of("", "2025-03-01"), "");
 }
+
+#[test]
+fn a_docketed_filing_goes_before_a_later_docket_number_of_its_date() {
+    let text = with_events("  2025-03-05 docket 2 A() on a\n  2025-03-05 docket 1_0 C() by a\n");
+    let line = "2025-03-05 docket 7 B() by a";
+    assert_eq!(
+        splice_docketed(&text, "2025-03-05", Some(7), line),
+        with_events(
+            "  2025-03-05 docket 2 A() on a\n  2025-03-05 docket 7 B() by a\n  2025-03-05 docket 1_0 C() by a\n"
+        )
+    );
+    assert_eq!(
+        splice_docketed(&text, "2025-03-05", Some(11), line),
+        splice(&text, "2025-03-05", line)
+    );
+}

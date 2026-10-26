@@ -49,10 +49,33 @@ pub fn with_as_of(text: &str, date: &str) -> String {
 /// `analysis` (or at the end).
 #[must_use]
 pub fn splice(text: &str, date: &str, line: &str) -> String {
+    splice_docketed(text, date, None, line)
+}
+
+/// A docket number as written (digit separators allowed).
+fn docket_number(text: &str) -> Option<u64> {
+    text.replace('_', "").parse().ok()
+}
+
+/// [`splice`] for an event with docket number `docket`: it also goes
+/// before an event of its own date with a greater docket number, so the
+/// block stays in docket order (SPEC §5.6).
+#[must_use]
+pub fn splice_docketed(text: &str, date: &str, docket: Option<u64>, line: &str) -> String {
     let file = case_file(text);
     let events = file.as_ref().map(CaseFile::events).unwrap_or_default();
-    let dated: Vec<_> = events.iter().filter_map(CaseEvent::date).collect();
-    if let Some(later) = dated.iter().find(|d| d.text() > date) {
+    let later = |e: &CaseEvent| {
+        e.date().is_some_and(|d| {
+            d.text() > date
+                || (d.text() == date
+                    && docket.is_some_and(|n| {
+                        e.docket()
+                            .and_then(|t| docket_number(t.text()))
+                            .is_some_and(|m| m > n)
+                    }))
+        })
+    };
+    if let Some(later) = events.iter().find(|e| later(e)).and_then(CaseEvent::date) {
         let start = offset(later.text_range().start());
         let at = text[..start].rfind('\n').map_or(0, |i| i + 1);
         return insert(text, at, &format!("  {line}\n"));

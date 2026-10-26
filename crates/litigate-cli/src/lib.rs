@@ -21,6 +21,7 @@ pub mod cli;
 pub mod clock;
 mod cmd;
 pub mod describe;
+pub mod docket;
 pub mod engine;
 pub mod filing;
 pub mod hirx;

@@ -82,6 +82,9 @@ litigate lint-filing cases/ptab-ipr-defense.case 'PreliminaryResponseFiled()' --
                                             # L4002 late; else what it discharges and the deadlines it triggers;
                                             # each open deadline lists its `moves` (file / extend / orders),
                                             # e.g. the FRCP 54(d)(2)(B) fee clock's (lit/frcp/fees.lit)
+litigate match-docket cases/ptab-ipr-defense.case recap.json --out advanced.case
+                                            # PACER/RECAP entries matched to declared event forms; only a supported,
+                                            # replay-accepted match advances the matter; the rest stay unresolved
 litigate diff lit/frcp --against target/lit-build/packs/frcp-civil-procedure.json   # semantic diff (SPEC §8.6)
 litigate compat old/lit/frcp lit/frcp      # compatibility class of a release + the bump it needs (SPEC §4.4)
 just lit-sync                               # regenerate every Lit.lock; build packs/, scenarios/ into target/lit-build/

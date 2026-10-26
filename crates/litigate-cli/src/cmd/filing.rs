@@ -190,7 +190,7 @@ fn known(known: &[Diagnostic], d: &Diagnostic) -> bool {
 
 /// Every error of the matter with the filing (`filed`), and the warnings
 /// it adds to the matter without it (`at`).
-fn added(at: &CaseCheck, filed: &CaseCheck) -> Vec<Diagnostic> {
+pub(super) fn added(at: &CaseCheck, filed: &CaseCheck) -> Vec<Diagnostic> {
     filed
         .diagnostics
         .iter()
@@ -241,17 +241,18 @@ fn generated_id(
         .ok_or_else(|| Failure::new("could not generate a stable id for the proposed filing"))
 }
 
-/// Add the machine-generated event id to a proposed filing, reusing the
-/// canonical L9006 fix and its collision checks.
-fn generated_filing_line(
+/// Add the machine-generated event id to a proposed filing (with docket
+/// number `docket`, if any), reusing the canonical L9006 fix and its
+/// collision checks.
+pub(super) fn generated_filing_line(
     mut session: Session,
     original: &CaseText,
     at: &CaseText,
-    date: &str,
+    (date, docket): (&str, Option<u64>),
     line: &str,
 ) -> Result<(Session, String), Failure> {
     let candidate = CaseText {
-        text: filing::splice(&at.text, date, line),
+        text: filing::splice_docketed(&at.text, date, docket, line),
         ..original.clone()
     };
     added_line(&at.text, &candidate.text, line)?;
@@ -265,17 +266,21 @@ fn generated_filing_line(
 }
 
 /// What the filing changed.
-struct Changes<'a> {
-    replay: Vec<&'a Step>,
-    discharges: Vec<Value>,
-    triggers: Vec<Value>,
-    open_before: Vec<Value>,
+pub(super) struct Changes<'a> {
+    pub(super) replay: Vec<&'a Step>,
+    pub(super) discharges: Vec<Value>,
+    pub(super) triggers: Vec<Value>,
+    pub(super) open_before: Vec<Value>,
 }
 
 /// The replay steps, obligation endings and new obligations of `filed`
 /// that the matter without the filing (`at`) lacks, and what `at` had
 /// open, each with its moves under `law`.
-fn changes<'a>(at: &'a CaseCheck, filed: &'a CaseCheck, law: &[&hir::Package]) -> Changes<'a> {
+pub(super) fn changes<'a>(
+    at: &'a CaseCheck,
+    filed: &'a CaseCheck,
+    law: &[&hir::Package],
+) -> Changes<'a> {
     let nodes = at
         .case
         .as_ref()
@@ -337,7 +342,7 @@ pub fn lint_filing(args: &Args) -> Outcome {
         text: filing::with_as_of(&original.text, &date),
         ..original.clone()
     };
-    let (mut session, line) = generated_filing_line(session, &original, &at, &date, &line)?;
+    let (mut session, line) = generated_filing_line(session, &original, &at, (&date, None), &line)?;
     let filed = CaseText {
         text: filing::splice(&at.text, &date, &line),
         ..original.clone()
@@ -507,7 +512,7 @@ mod tests {
         };
         let proposed = format!("proposal: {date} Hearing() by widget");
 
-        let error = generated_filing_line(session, &original, &at, date, &proposed)
+        let error = generated_filing_line(session, &original, &at, (date, None), &proposed)
             .map_err(|error| error.0)
             .err()
             .expect("an explicit id has no L9006 fix to reuse");
@@ -528,7 +533,7 @@ mod tests {
             ..original.clone()
         };
         let proposed = format!("{date} Hearing() by widget");
-        let line = generated_filing_line(session(), &original, &at, date, &proposed)
+        let line = generated_filing_line(session(), &original, &at, (date, None), &proposed)
             .map(|(_, line)| line)
             .ok();
         assert!(
@@ -541,7 +546,7 @@ mod tests {
             ("not an event", "is not one event"),
             (multiline.as_str(), "could not locate the proposed filing"),
         ] {
-            let error = generated_filing_line(session(), &original, &at, date, proposed)
+            let error = generated_filing_line(session(), &original, &at, (date, None), proposed)
                 .err()
                 .map(|error| error.0)
                 .unwrap_or_default();

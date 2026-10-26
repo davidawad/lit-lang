@@ -336,6 +336,21 @@ pub enum Command {
         #[command(flatten)]
         library: Library,
     },
+    /// Match PACER/RECAP docket entries to declared event forms and advance
+    /// the matter only by the entries the text supports and replay accepts.
+    MatchDocket {
+        /// The `.case` file.
+        case: String,
+        /// The docket: a JSON array of entries (`entry_number`, `date_filed`,
+        /// `description`), or an object holding one under `docket_entries` or `results`.
+        docket: String,
+        /// Write the advanced matter to this file.
+        #[arg(long, value_name = "FILE")]
+        out: Option<String>,
+        /// Shared options.
+        #[command(flatten)]
+        library: Library,
+    },
     /// Resolve an id at any layer: node, edge, declaration, diagnostic code, or cite.
     Where {
         /// `pack::node`, `node`, `decl@YYYY-MM-DD`, `L0412`, or cite text.
@@ -541,6 +556,7 @@ impl Command {
             Self::Engine { .. } => "engine",
             Self::Calendar { .. } => "calendar",
             Self::LintFiling { .. } => "lint-filing",
+            Self::MatchDocket { .. } => "match-docket",
             Self::Where { .. } => "where",
             Self::Explain { .. } => "explain",
             Self::ExplainValue { .. } => "explain-value",

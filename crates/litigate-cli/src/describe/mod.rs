@@ -257,7 +257,7 @@ const BUILTINS: [(&str, &str); 15] = [
 /// What `run`, every engine op subcommand, and `explain` on a path return.
 const ENGINE_RESPONSE: &str = "the engine's response verbatim: {ok, api_version, op, result, warnings, provenance, elapsed_ms}; exit 2 when it is ok:false";
 
-const RESULTS: [(&str, &str); 20] = [
+const RESULTS: [(&str, &str); 21] = [
     ("describe", "this document"),
     (
         "lock",
@@ -271,6 +271,7 @@ const RESULTS: [(&str, &str); 20] = [
     ("engine", "no envelope: the engine's raw response on stdout (`litigate engine describe` is its manual); exit 0 ok, 2 ok:false or invalid, 1 usage or I/O"),
     ("calendar", "{case, as_of, written, events:[{uid, deadline, due, status, trigger, trigger_date, authority, counting, counting_cite}], unscheduled:[{deadline, trigger, trigger_date, status, reason}], ics}; open deadlines only unless --all; a due date that is unknown is never given one"),
     ("lint-filing", "{case, filing:{date, event, mode, party, line}, as_of, accepted, replay:[step], discharges:[{deadline, due, before, status}], triggers:[{deadline, trigger, trigger_date, due, unknown, status}], open_before:[{deadline, trigger, trigger_date, due, unknown, status, moves:{file:[{edge, event}], extend:[{by, standard, window, request, until}], orders}}]}; diagnostics are the ones the filing adds (L4001 not a legal move, L4002 late); the matter must check clean first"),
+    ("match-docket", "{case, docket, as_of, advanced, unresolved, written, entries:[{entry_number, date_filed, description, source, status, reason?, candidates:[{event, confidence, matched, missing, call?, unsettled?}], event?:{call, mode, party, line}, diagnostics?, replay?, discharges?, triggers?}], text}; status is advanced | rejected | ambiguous | incomplete | unmatched | recorded, and only an advanced entry changes the matter; the matter must check clean first"),
     ("where", "{id, kind, package, declaration_span, versions, edges, overrides, source, lowered:[json_pointer]} (or {kind: cite, cited_by} / {kind: diagnostic, ...})"),
     ("explain", "{code, explanation, phase, severity:{dev, strict}}; given a matter or package path, the engine's explain response verbatim"),
     ("explain-value", "{value, type, id, status, reason, steps:[{rule, cite, detail}], versions, overrides}; a deadline's status is its instance's (`unknown` with the reason when its due date is), null when nothing triggers it"),

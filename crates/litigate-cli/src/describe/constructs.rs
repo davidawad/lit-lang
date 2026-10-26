@@ -21,7 +21,7 @@ events {
   motion: 2025-03-20 MovedToDismiss(complaint) by widget
 }
 facts { time-barred: not-barred }
-stakes { judgment-entered: -2_000_000.usd, dismissed: 0.usd }
+stakes { judgment-entered: -2_000_000.usd, dismissed: 0.usd fee_shift 0.5 }
 beliefs { prior mtd-ruling: { granted: 1, denied: 3 }, observe mtd-ruling: { granted: 3, denied: 1 } }
 analysis { params: { rate: 650.usd / 1.hours, opp_rate: 550.usd / 1.hours } }
 "#;

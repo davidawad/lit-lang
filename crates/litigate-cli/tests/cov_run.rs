@@ -1,13 +1,14 @@
-//! `run` refusals: an `--op` that is not JSON or not a litgraph op, a path
-//! with no matter, a missing path, and a matter that fails its check.
+//! `run` refusals: an `--op` that is not JSON or not an engine op, a bad
+//! `--arg` or `--set`, a path with neither a matter nor a pack, a missing
+//! path, and a matter that fails its check.
 // Test helpers below may unwrap: a panic is the failed assertion.
 #![allow(clippy::unwrap_used)]
 mod support;
 
-use support::{acme, example, litigate, litigate_in, located};
+use support::{acme, example, litigate, litigate_in, located, scratch};
 
 #[test]
-fn ops_that_are_not_json_or_not_litgraph_ops_are_usage_errors() {
+fn ops_that_are_not_json_or_not_engine_ops_are_usage_errors() {
     let bad_json = litigate(&["run", "cases/examples/acme.case", "--op", "{bad"]);
     assert_eq!(bad_json.code, 1);
     assert!(
@@ -27,17 +28,27 @@ fn ops_that_are_not_json_or_not_litgraph_ops_are_usage_errors() {
     assert!(
         unknown
             .stderr
-            .starts_with("litigate run: invalid litgraph op: "),
+            .starts_with("litigate run: invalid engine op: "),
         "{}",
         unknown.stderr
     );
 }
 
 #[test]
-fn run_needs_an_existing_matter() {
-    let none = litigate(&["run", "lit/examples", "--op", "chain"]);
+fn bad_op_arguments_are_usage_errors() {
+    let arg = litigate(&["solve", "cases/examples/acme.case", "--arg", "from"]);
+    assert_eq!(arg.code, 1);
+    insta::assert_snapshot!(arg.stderr, @"litigate solve: --arg expects K=V, got `from`");
+    let set = litigate(&["solve", "cases/examples/acme.case", "--set", "rate=fast"]);
+    assert_eq!(set.code, 1);
+    insta::assert_snapshot!(set.stderr, @"litigate solve: --set rate: `fast` is not a number (params are numeric)");
+}
+
+#[test]
+fn run_needs_a_matter_or_a_pack() {
+    let none = litigate_in(&scratch("run-nothing"), &["run", ".", "--op", "chain"]);
     assert_eq!(none.code, 1);
-    insta::assert_snapshot!(none.stderr, @"litigate run: lit/examples: not a .case file");
+    insta::assert_snapshot!(none.stderr, @"litigate run: .: neither a matter nor a package that lowers to a pack");
     let missing = litigate(&["run", "no/such.case", "--op", "chain"]);
     assert_eq!(missing.code, 1);
     insta::assert_snapshot!(missing.stderr, @"litigate run: no/such.case: no such file or directory");

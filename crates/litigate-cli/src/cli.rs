@@ -76,6 +76,104 @@ impl Dates {
     }
 }
 
+/// How an engine op runs on a compiled matter or package.
+#[derive(Debug, Clone, Default, Args)]
+pub struct OpFlags {
+    /// Op argument, e.g. `--arg node=answer-due --arg top=5` (repeatable;
+    /// numbers, `true`/`false` and JSON are typed, anything else a string).
+    #[arg(long = "arg", value_name = "K=V")]
+    pub args: Vec<String>,
+    /// Scenario parameter, e.g. `--set rate=900` (repeatable, numeric):
+    /// overrides the matter's `analysis { params }`.
+    #[arg(long = "set", value_name = "K=V")]
+    pub set: Vec<String>,
+    /// Do not compose links between the used packages (the engine's
+    /// request `links: false`).
+    #[arg(long)]
+    pub no_links: bool,
+    /// Shared options.
+    #[command(flatten)]
+    pub library: Library,
+}
+
+/// An engine op's target and flags.
+#[derive(Debug, Clone, Args)]
+pub struct OpArgs {
+    /// A `.case` matter (its scenario), or a package (`.lit` file or
+    /// package directory: its pack under the default scenario).
+    pub target: String,
+    /// Shared options.
+    #[command(flatten)]
+    pub flags: OpFlags,
+}
+
+/// The engine ops (`litigate engine describe` documents their arguments),
+/// each run on a compiled matter or package. `explain` is the
+/// `explain` command given a path instead of a diagnostic code.
+#[derive(Debug, Subcommand)]
+pub enum EngineOp {
+    /// Value and best line under the optimal policy.
+    Solve(OpArgs),
+    /// Absorption probabilities and expected totals under the optimal policy.
+    Chain(OpArgs),
+    /// Monte Carlo outcome distribution, tail risk, and the chance of a loss.
+    Simulate(OpArgs),
+    /// Shortest / k-shortest lines to a node, the terminals, or an outcome.
+    Path(OpArgs),
+    /// The N-objective Pareto frontier.
+    Pareto(OpArgs),
+    /// Value curve and policy breakpoints over one parameter (`--arg param=rate`).
+    Sweep(OpArgs),
+    /// What the answer is most sensitive to.
+    Tornado(OpArgs),
+    /// Uncalibrated probabilities and durations ranked by decision sensitivity.
+    Calibration(OpArgs),
+    /// Credible intervals over every chance node's Dirichlet posterior.
+    Posterior(OpArgs),
+    /// Value of information: EVPI per chance node, EVSI per study.
+    Voi(OpArgs),
+    /// Graph structure: summary, scc, dominators, mincut, betweenness, reachability.
+    Structure(OpArgs),
+    /// Concrete due dates and computation steps for authored deadline specs.
+    Deadlines(OpArgs),
+    /// Each side's walk-away value, the ZOPA, and when to settle.
+    Settle(OpArgs),
+    /// Base against a variant scenario (`--arg variant={..} --arg inner={..}`).
+    Compare(OpArgs),
+    /// The graph's nodes and edges (a neighborhood with `--arg node=ID`).
+    Graph(OpArgs),
+    /// A metric evaluated on every edge (`--arg spec=...`).
+    Metric(OpArgs),
+    /// The engine's content diagnostics.
+    Lint(OpArgs),
+}
+
+impl EngineOp {
+    /// The engine op name and its arguments.
+    #[must_use]
+    pub fn parts(&self) -> (&'static str, &OpArgs) {
+        match self {
+            Self::Solve(a) => ("solve", a),
+            Self::Chain(a) => ("chain", a),
+            Self::Simulate(a) => ("simulate", a),
+            Self::Path(a) => ("path", a),
+            Self::Pareto(a) => ("pareto", a),
+            Self::Sweep(a) => ("sweep", a),
+            Self::Tornado(a) => ("tornado", a),
+            Self::Calibration(a) => ("calibration", a),
+            Self::Posterior(a) => ("posterior", a),
+            Self::Voi(a) => ("voi", a),
+            Self::Structure(a) => ("structure", a),
+            Self::Deadlines(a) => ("deadlines", a),
+            Self::Settle(a) => ("settle", a),
+            Self::Compare(a) => ("compare", a),
+            Self::Graph(a) => ("graph", a),
+            Self::Metric(a) => ("metric", a),
+            Self::Lint(a) => ("lint", a),
+        }
+    }
+}
+
 /// Structured query kinds.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, ValueEnum)]
 pub enum QueryKind {
@@ -176,20 +274,29 @@ pub enum Command {
         #[arg(long)]
         check: bool,
     },
-    /// Compile a matter and run a litgraph operation on it.
+    /// Compile a matter or package and run an engine op on it.
     Run {
-        /// The `.case` file.
+        /// The `.case` file, `.lit` file, or package directory.
         case: String,
-        /// The litgraph op: a name (`chain`) or a JSON object (`{"op":"solve"}`).
+        /// The engine op: a name (`chain`) or a JSON object (`{"op":"solve"}`).
         #[arg(long, default_value = "chain")]
         op: String,
-        /// Do not compose links between the used packages (litgraph's
-        /// request `links: false`).
-        #[arg(long)]
-        no_links: bool,
         /// Shared options.
         #[command(flatten)]
-        library: Library,
+        flags: OpFlags,
+    },
+    /// An engine op on a compiled matter or package.
+    #[command(flatten)]
+    Op(EngineOp),
+    /// The engine's raw JSON-in/JSON-out interface over packs and named
+    /// scenarios (`litigate engine q '<request>'`, `litigate engine solve
+    /// --packs cofc`, `litigate engine --help`), for debugging and tools;
+    /// prints the engine response, not an envelope.
+    #[command(disable_help_flag = true)]
+    Engine {
+        /// The engine command and its arguments.
+        #[arg(trailing_var_arg = true, allow_hyphen_values = true, num_args = 0..)]
+        args: Vec<String>,
     },
     /// Export a matter's computed deadlines as an iCalendar (`.ics`) file.
     Calendar {
@@ -240,10 +347,15 @@ pub enum Command {
         #[command(flatten)]
         library: Library,
     },
-    /// The long explanation of a diagnostic code.
+    /// The long explanation of a diagnostic code; given a `.case`,
+    /// `.lit`, or package directory instead, the engine's `explain` op on
+    /// it (who decides, every option with its value and what happens next).
     Explain {
-        /// A code such as `L3004`.
+        /// A code such as `L3004`, or a matter or package path.
         code: String,
+        /// Shared options (a path only).
+        #[command(flatten)]
+        flags: OpFlags,
     },
     /// Trace a computed deadline or edge value back to its rules and sources.
     ExplainValue {
@@ -394,6 +506,8 @@ impl Command {
             Self::Test { .. } => "test",
             Self::Fmt { .. } => "fmt",
             Self::Run { .. } => "run",
+            Self::Op(op) => op.parts().0,
+            Self::Engine { .. } => "engine",
             Self::Calendar { .. } => "calendar",
             Self::LintFiling { .. } => "lint-filing",
             Self::Where { .. } => "where",

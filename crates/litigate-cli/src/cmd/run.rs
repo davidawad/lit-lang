@@ -1,26 +1,72 @@
-//! `litigate run CASE --op OP`: compile the matter and the packages it uses,
-//! then hand litgraph a catalog of exactly that output and return its
+//! `litigate run TARGET --op OP` and the op subcommands (`litigate solve
+//! TARGET`, ...): compile the matter or package and the packages it uses,
+//! then hand the engine a catalog of exactly that output and return its
 //! response verbatim as the result.
 use super::build::text;
 use super::check::checked_targets;
+use crate::cli::OpFlags;
 use crate::out::{Failure, Outcome, Report};
 use litigate_base::Profile;
-use litigate_engine::api::{handle, Catalog, Request};
+use litigate_engine::api::{fingerprint, handle, Catalog, Request};
 use litigate_engine::clock::ClockLibrary;
 use litigate_lower::{Document, Options};
-use serde_json::{json, Value};
+use serde_json::{json, Map, Value};
 use std::collections::BTreeSet;
 
 /// The op object for `--op`: a JSON object, or an op name.
 ///
 /// # Errors
 /// Text that is neither.
-pub fn op_value(op: &str) -> Result<Value, Failure> {
+pub fn op_value(op: &str) -> Result<Map<String, Value>, Failure> {
     if op.trim_start().starts_with('{') {
         serde_json::from_str(op).map_err(|e| Failure::new(format!("--op is not JSON: {e}")))
     } else {
-        Ok(json!({ "op": op }))
+        Ok(Map::from_iter([("op".to_owned(), json!(op))]))
     }
+}
+
+/// A `--arg` value: a number, `true`/`false`, JSON (`{...}`/`[...]`), or
+/// else the text itself.
+#[must_use]
+pub fn scalar(v: &str) -> Value {
+    if let Ok(x) = v.parse::<f64>() {
+        return json!(x);
+    }
+    match v {
+        "true" => json!(true),
+        "false" => json!(false),
+        _ if v.starts_with('{') || v.starts_with('[') => {
+            serde_json::from_str(v).unwrap_or_else(|_| json!(v))
+        }
+        _ => json!(v),
+    }
+}
+
+/// `K=V` split at the first `=`.
+///
+/// # Errors
+/// No `=`, naming `flag`.
+pub fn kv<'a>(s: &'a str, flag: &str) -> Result<(&'a str, &'a str), Failure> {
+    s.split_once('=')
+        .ok_or_else(|| Failure::new(format!("{flag} expects K=V, got `{s}`")))
+}
+
+/// The scenario `params` of `--set K=V` flags.
+///
+/// # Errors
+/// A flag that is not `K=V`, or a value that is not a number.
+pub fn params(set: &[String]) -> Result<Map<String, Value>, Failure> {
+    set.iter()
+        .map(|s| {
+            let (k, v) = kv(s, "--set")?;
+            let x: f64 = v.parse().map_err(|_| {
+                Failure::new(format!(
+                    "--set {k}: `{v}` is not a number (params are numeric)"
+                ))
+            })?;
+            Ok((k.to_owned(), json!(x)))
+        })
+        .collect()
 }
 
 /// The embedded clock library with `fragment`'s rules and calendars replacing same-id entries.
@@ -35,14 +81,36 @@ fn merged(mut lib: ClockLibrary, fragment: &ClockLibrary) -> ClockLibrary {
     lib
 }
 
-/// `litigate run`; `links` composes the links packages between the used
-/// ones. The run sees the closure of what the matter `uses` and the links
-/// packages it composes: no other package is loaded, and a dependency of a
-/// links package outside the matter's closure is checked (the links
-/// package needs it) but never reported, so it cannot set `ok: false`.
-pub fn run(case: &str, op: &str, links: bool, lib: &[String]) -> Outcome {
-    let op = op_value(op)?;
-    let mut targets = crate::ws::discover(&[case.to_owned()])?;
+/// Whether `p` is a links package (SPEC §8.4).
+fn is_links(p: &crate::ws::Pkg) -> bool {
+    p.check.package.as_ref().is_some_and(|h| h.manifest.links)
+}
+
+/// What [`compile`] made of its paths.
+pub(crate) struct Compiled {
+    /// Diagnostics and provenance of the compiled scope; no result yet.
+    pub report: Report,
+    /// The lowered packs, links, clock fragments and matter scenarios.
+    pub catalog: Catalog,
+    /// The scenario id of each matter that lowered, in path order.
+    pub scenarios: Vec<String>,
+    /// The pack id of each named package that lowered to a pack, and of
+    /// each package a named links package composes (without a matter).
+    pub packs: Vec<String>,
+}
+
+/// Check `paths` (matters and packages) and lower what they name into one
+/// catalog; `links` also loads the links packages composing two or more
+/// packages the matters use. The scope is the closure of what the matters
+/// `uses` and the named packages: no other package is loaded into the
+/// catalog, and a dependency of a links package outside that scope is
+/// checked (the links package needs it) but never reported, so it cannot
+/// set `ok: false`. A matter with errors lowers no scenario.
+///
+/// # Errors
+/// Usage or I/O failures.
+pub(crate) fn compile(paths: &[String], links: bool, lib: &[String]) -> Result<Compiled, Failure> {
+    let mut targets = crate::ws::discover(paths)?;
     let used: BTreeSet<String> = targets
         .cases
         .iter()
@@ -59,7 +127,7 @@ pub fn run(case: &str, op: &str, links: bool, lib: &[String]) -> Outcome {
     let session = &c.session;
     let mut scope = session.closure(used);
     scope.extend(session.requested().map(|p| p.name.clone()));
-    let mut report = Report {
+    let report = Report {
         result: Value::Null,
         provenance: crate::prov::session(
             session.packages.iter().filter(|p| scope.contains(&p.name)),
@@ -72,53 +140,99 @@ pub fn run(case: &str, op: &str, links: bool, lib: &[String]) -> Outcome {
         profile: Some(Profile::Dev),
         failed: false,
     };
-    let matter = c
-        .cases
-        .first()
-        .ok_or_else(|| Failure::new(format!("{case}: not a .case file")))?;
-    let Some(lowered) = matter.lowered.as_ref().filter(|_| !report.has_errors()) else {
-        return Ok(report);
-    };
+    let matter_packages: BTreeSet<&String> = c.cases.iter().flat_map(|m| &m.packages).collect();
+    // A links package named without a matter stands for the graph it
+    // composes: the packages it links.
+    let linked: BTreeSet<&String> = session
+        .requested()
+        .filter(|p| targets.cases.is_empty() && is_links(p))
+        .flat_map(|p| &p.dependencies)
+        .collect();
     let mut files = Vec::new();
+    let mut packs = Vec::new();
     let mut clock = ClockLibrary::embedded().0.clone();
-    // Verification lowered every package at the default dates already, and
-    // a clean check means each used one lowered.
-    let used = c
-        .session
+    // Verification lowered every package at the default dates already.
+    let lowered = session
         .packages
         .iter()
         .zip(&c.verdicts)
         .filter(|(p, _)| {
-            matter.packages.contains(&p.name)
-                || p.check.package.as_ref().is_some_and(|h| h.manifest.links)
+            p.requested || matter_packages.contains(&p.name) || linked.contains(&p.name)
         })
-        .filter_map(|(_, (_, v))| v.lowered.as_ref());
-    for out in used {
+        .filter_map(|(p, (_, v))| Some((p, v.lowered.as_ref()?)));
+    for (p, out) in lowered {
         files.push(match &out.document {
-            Document::Pack(pack) => (format!("{}.json", pack.id), text(pack)),
+            Document::Pack(pack) => {
+                if p.requested || linked.contains(&p.name) {
+                    packs.push(pack.id.clone());
+                }
+                (format!("{}.json", pack.id), text(pack))
+            }
             Document::Links(links) => ("links.json".to_owned(), text(links)),
         });
         if let Some((fragment, _)) = &out.clock {
             clock = merged(clock, fragment);
         }
     }
-    let request = serde_json::from_value::<Request>(
-        json!({ "scenario": lowered.scenario.id, "op": op, "links": links }),
-    )
-    .map_err(|e| Failure::new(format!("invalid litgraph op: {e}")));
     // `from_files` records unreadable files in the catalog rather than failing.
-    let (mut catalog, request) = Catalog::from_files("litigate".into(), files)
-        .map_err(Failure::from)
-        .and_then(|catalog| Ok((catalog, request?)))?;
+    let mut catalog = Catalog::from_files("litigate".into(), files)?;
     catalog.clock = clock;
-    let scenario_text = serde_json::to_string(&lowered.scenario).unwrap_or_default();
-    let fingerprint = litigate_engine::api::fingerprint(scenario_text.as_bytes());
     catalog.scenarios_origin = "litigate".into();
-    catalog.scenarios.push((
-        format!("{}.json", lowered.scenario.id),
-        lowered.scenario.clone(),
-        fingerprint,
-    ));
+    let mut scenarios = Vec::new();
+    for lowered in c.cases.iter().filter_map(|m| m.lowered.as_ref()) {
+        let scenario = &lowered.scenario;
+        let scenario_text = serde_json::to_string(scenario).unwrap_or_default();
+        catalog.scenarios.push((
+            format!("{}.json", scenario.id),
+            scenario.clone(),
+            fingerprint(scenario_text.as_bytes()),
+        ));
+        scenarios.push(scenario.id.clone());
+    }
+    Ok(Compiled {
+        report,
+        catalog,
+        scenarios,
+        packs,
+    })
+}
+
+/// `litigate run` (and each op subcommand): `op` on `target`, a matter
+/// (its scenario, with `--set` params composed onto it) or a package (its
+/// pack under the default scenario with the `--set` params). A target
+/// that fails its check is not run.
+pub fn run(target: &str, op: &str, flags: &OpFlags) -> Outcome {
+    let mut op = op_value(op)?;
+    for a in &flags.args {
+        let (k, v) = kv(a, "--arg")?;
+        op.insert(k.to_owned(), scalar(v));
+    }
+    let params = params(&flags.set)?;
+    let links = !flags.no_links;
+    let Compiled {
+        mut report,
+        catalog,
+        scenarios,
+        packs,
+    } = compile(&[target.to_owned()], links, &flags.library.lib)?;
+    if report.has_errors() {
+        return Ok(report);
+    }
+    // A matter's scenario names its own packs.
+    let (packs, scenario) = match (scenarios.first(), params.is_empty()) {
+        (Some(id), true) => (Vec::new(), json!(id)),
+        (Some(id), false) => (Vec::new(), json!({ "extends": id, "params": params })),
+        (None, _) if packs.is_empty() => {
+            return Err(Failure::new(format!(
+                "{target}: neither a matter nor a package that lowers to a pack"
+            )))
+        }
+        (None, _) => (packs, json!({ "params": params })),
+    };
+    let request = serde_json::from_value::<Request>(
+        json!({ "packs": packs, "scenario": scenario, "op": op, "links": links }),
+    )
+    .map_err(|e| Failure::new(format!("invalid engine op: {e}")))?;
     let response = handle(&request, &catalog);
     report.failed = !response.ok;
     report.result = serde_json::to_value(&response).unwrap_or_default();
@@ -131,11 +245,40 @@ mod tests {
 
     #[test]
     fn op_names_and_objects() {
-        assert_eq!(op_value("chain").ok(), Some(json!({"op": "chain"})));
         assert_eq!(
-            op_value(r#"{"op":"solve"}"#).ok(),
+            op_value("chain").ok().map(Value::Object),
+            Some(json!({"op": "chain"}))
+        );
+        assert_eq!(
+            op_value(r#"{"op":"solve"}"#).ok().map(Value::Object),
             Some(json!({"op": "solve"}))
         );
         assert!(op_value("{bad").is_err());
+        assert!(op_value("[1]").is_ok());
+    }
+
+    #[test]
+    fn scalars_are_typed_and_fall_back_to_text() {
+        assert_eq!(scalar("900"), json!(900.0));
+        assert_eq!(scalar("true"), json!(true));
+        assert_eq!(scalar("false"), json!(false));
+        assert_eq!(scalar("[1,2]"), json!([1, 2]));
+        assert_eq!(scalar("{not json"), json!("{not json"));
+        assert_eq!(scalar("answer-due"), json!("answer-due"));
+    }
+
+    #[test]
+    fn params_are_numeric_key_values() {
+        assert_eq!(
+            params(&["rate=900".into()]).ok().map(Value::Object),
+            Some(json!({"rate": 900.0}))
+        );
+        let no_eq = params(&["rate".into()]).err().map(|f| f.0);
+        assert_eq!(no_eq.as_deref(), Some("--set expects K=V, got `rate`"));
+        let text = params(&["rate=fast".into()]).err().map(|f| f.0);
+        assert_eq!(
+            text.as_deref(),
+            Some("--set rate: `fast` is not a number (params are numeric)")
+        );
     }
 }

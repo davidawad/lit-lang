@@ -3,9 +3,11 @@
 //! `{ok, op, result, diagnostics, provenance, elapsed_ms}`, so the binary,
 //! tests, and other front ends share one implementation.
 //!
-//! Exit codes mirror litgraph: `0` ok, `2` the input ran and failed (an
-//! error diagnostic, or a litgraph `ok: false` from `run`), `1` usage or
-//! I/O failure.
+//! Exit codes mirror the engine's: `0` ok, `2` the input ran and failed
+//! (an error diagnostic, or an engine `ok: false` from `run` or an op
+//! subcommand), `1` usage or I/O failure. `litigate engine` is the
+//! engine's own raw interface ([`engine`]) and prints its response, not an
+//! envelope.
 //!
 //! ```
 //! let printed = litigate_cli::execute(["litigate", "--format", "json", "explain", "L3004"]);
@@ -19,6 +21,7 @@ pub mod cli;
 pub mod clock;
 mod cmd;
 pub mod describe;
+pub mod engine;
 pub mod filing;
 pub mod hirx;
 pub mod ics;
@@ -155,6 +158,12 @@ fn execute_with(
         );
         return out::print(op, Err(Failure::new(message)), format, color, 0.0);
     }
+    if let cli::Command::Engine { args } = cli.command {
+        return engine::execute(
+            std::iter::once("litigate engine".to_owned()).chain(args),
+            engine::Builtin::Compiled,
+        );
+    }
     let started = Stopwatch::start();
     let outcome = cmd::dispatch(cli.command, src);
     out::print(op, outcome, format, color, started.elapsed_ms())
@@ -268,6 +277,19 @@ mod tests {
         let printed = run(&["litigate", "explain", "L3004"], false);
         let envelope: serde_json::Value = serde_json::from_str(&printed.stdout).unwrap_or_default();
         assert_eq!(envelope["result"]["code"], "L3004");
+    }
+
+    #[test]
+    fn the_engine_is_never_dispatched_as_an_envelope_command() {
+        let engine = cli::Command::Engine { args: Vec::new() };
+        assert!(cmd::dispatch(engine, &Disk).is_err());
+        let printed = run(&["litigate", "engine", "--version"], false);
+        assert_eq!(printed.code, 0);
+        assert!(
+            printed.stdout.starts_with("litigate engine "),
+            "{}",
+            printed.stdout
+        );
     }
 
     #[test]

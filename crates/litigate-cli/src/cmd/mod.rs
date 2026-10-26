@@ -11,7 +11,7 @@ mod fmt;
 mod import;
 mod lock;
 mod query;
-mod run;
+pub(crate) mod run;
 mod test;
 mod timeline;
 mod value;
@@ -62,12 +62,15 @@ pub fn dispatch(command: Command, src: &dyn Source) -> Outcome {
             library,
         } => test::test(&paths, filter.as_deref(), &library.lib),
         Command::Fmt { paths, check } => fmt::fmt(&paths, check),
-        Command::Run {
-            case,
-            op,
-            no_links,
-            library,
-        } => run::run(&case, &op, !no_links, &library.lib),
+        Command::Run { case, op, flags } => run::run(&case, &op, &flags),
+        Command::Op(op) => {
+            let (name, args) = op.parts();
+            run::run(&args.target, name, &args.flags)
+        }
+        // `execute` runs the engine's own interface before dispatching.
+        Command::Engine { .. } => Err(crate::out::Failure::new(
+            "engine prints its own response; run it through `execute`",
+        )),
         Command::Calendar {
             case,
             out,
@@ -103,7 +106,10 @@ pub fn dispatch(command: Command, src: &dyn Source) -> Outcome {
             })
         }
         Command::Where { id, paths, library } => where_::where_(&id, &paths, &library.lib),
-        Command::Explain { code } => explain::explain(&code),
+        Command::Explain { code, flags } if std::path::Path::new(&code).exists() => {
+            run::run(&code, "explain", &flags)
+        }
+        Command::Explain { code, .. } => explain::explain(&code),
         Command::ExplainValue {
             case,
             value,

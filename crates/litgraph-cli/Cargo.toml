@@ -1,6 +1,6 @@
 [package]
 name = "litgraph-cli"
-description = "JSON-in/JSON-out command line for litgraph: configure, submit and process litigation scenarios."
+description = "Deprecated `litgraph` binary: forwards to `litigate engine` with the built-in packs and scenarios."
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -22,8 +22,7 @@ path = "src/main.rs"
 
 [dependencies]
 litgraph-packs = { path = "../litgraph-packs" }
-litigate-engine = { path = "../litigate-engine" }
-serde.workspace = true
+litigate-cli = { path = "../litigate-cli" }
+
+[dev-dependencies]
 serde_json.workspace = true
-clap.workspace = true
-anyhow.workspace = true

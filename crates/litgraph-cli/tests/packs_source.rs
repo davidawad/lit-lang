@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-//! Where the `litgraph` binary reads its packs from, run as a child
+//! Where the deprecated `litgraph` shim (`litigate engine` with the packs
+//! built in) reads its packs from, run as a child
 //! process: `--packs-dir`, else `$LITGRAPH_PACKS`, else the packs built
 //! into it; a directory that does not exist is an error naming its source.
 
@@ -84,4 +85,21 @@ fn a_flag_naming_a_missing_directory_is_an_error_naming_it() {
     assert_eq!(out.status.code(), Some(1));
     let err = String::from_utf8_lossy(&out.stderr);
     assert!(err.contains(&format!("--packs-dir: {MISSING}")), "{err}");
+}
+
+#[test]
+fn every_run_notes_the_deprecation_and_forwards_to_litigate_engine() {
+    let out = describe(|_| {});
+    let err = String::from_utf8_lossy(&out.stderr);
+    assert!(
+        err.starts_with("litgraph: deprecated; use `litigate engine ...`"),
+        "{err}"
+    );
+    let help = Command::new(env!("CARGO_BIN_EXE_litgraph"))
+        .arg("--help")
+        .output()
+        .unwrap();
+    assert!(help.status.success());
+    let text = String::from_utf8_lossy(&help.stdout);
+    assert!(text.contains("Usage: litgraph"), "{text}");
 }

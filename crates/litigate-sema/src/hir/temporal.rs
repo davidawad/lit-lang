@@ -419,10 +419,18 @@ pub enum Extension {
     /// `extend { never cite "X" }`: the rule `X` forbids extending the
     /// period beyond the deadline's own other grants, so no order, local
     /// rule or stipulation adds one (FRCP 6(b)(2); FRAP 26(b), "except as
-    /// authorized in Rule 4").
+    /// authorized in Rule 4"). `lock against [L, ...] cite "X"` is the
+    /// named-authority lock (design review §2.4): it forbids the
+    /// extension to the lower authorities `L` only, so an emergency grant
+    /// of an authority it does not name reaches the period without
+    /// `unlock`.
     NonExtendable {
         /// The rule that forbids the extension.
         authority: String,
+        /// The authorities the lock binds, in declared order; empty for
+        /// `never`, which binds every authority.
+        #[serde(default, skip_serializing_if = "Vec::is_empty")]
+        against: Vec<String>,
     },
 }
 
@@ -452,7 +460,36 @@ impl Extension {
     #[must_use]
     pub fn lock(&self) -> Option<&str> {
         match self {
-            Self::NonExtendable { authority } => Some(authority),
+            Self::NonExtendable { authority, .. } => Some(authority),
+            Self::Bounded { .. } | Self::Discretionary { .. } => None,
+        }
+    }
+
+    /// Whether this is a lock binding authority level `level`: a `never`
+    /// lock binds every level, a named lock (`lock against [...]`) the
+    /// levels it names.
+    #[must_use]
+    pub fn locks(&self, level: &str) -> bool {
+        match self {
+            Self::NonExtendable { against, .. } => {
+                against.is_empty() || against.iter().any(|a| a == level)
+            }
+            Self::Bounded { .. } | Self::Discretionary { .. } => false,
+        }
+    }
+
+    /// A lock as written: `extend { never cite "X" }` or `lock against
+    /// [L, ...] cite "X"`; `None` for a grant.
+    #[must_use]
+    pub fn lock_source(&self) -> Option<String> {
+        match self {
+            Self::NonExtendable { authority, against } if against.is_empty() => {
+                Some(format!("extend {{ never cite \"{authority}\" }}"))
+            }
+            Self::NonExtendable { authority, against } => Some(format!(
+                "lock against [{}] cite \"{authority}\"",
+                against.join(", ")
+            )),
             Self::Bounded { .. } | Self::Discretionary { .. } => None,
         }
     }

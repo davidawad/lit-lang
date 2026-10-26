@@ -8,6 +8,7 @@ pub(crate) use cx::refs;
 mod delegation;
 mod edge;
 mod imports;
+mod index;
 mod instance;
 mod kind;
 mod logic;
@@ -442,6 +443,7 @@ fn items(cx: &mut Cx<'_, '_>, top: &Item, context: &ModuleContext) -> DeclCheck 
                     "liability" => RuleKind::Liability,
                     _ => RuleKind::Duty,
                 };
+                cx.rule_index(item);
                 let meta = cx.meta(name, None, item, None);
                 let declarations = nested
                     .iter()

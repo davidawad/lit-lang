@@ -217,3 +217,45 @@ fn character_and_emergency_grants_in_replay() {
         .collect();
     insta::assert_debug_snapshot!(out);
 }
+
+/// `kappa` with its grant's `unlock` dropped and `locked`'s lock naming
+/// `against`.
+fn named(against: &[&str]) -> Vec<Package> {
+    let mut hir = edited(|g| g.unlock = false);
+    for d in hir[0]
+        .modules
+        .iter_mut()
+        .flat_map(|m| m.declarations.iter_mut())
+    {
+        if let Declaration::Deadline(d) = d {
+            for x in &mut d.extend {
+                if let litigate_sema::hir::Extension::NonExtendable { against: a, .. } = x {
+                    *a = against.iter().map(|s| (*s).to_owned()).collect();
+                }
+            }
+        }
+    }
+    hir
+}
+
+#[test]
+fn a_named_lock_holds_only_against_the_authorities_it_names() {
+    let events = [
+        "2020-04-01 Entered() by c",
+        "2020-04-05 OrderedLocked(2020-05-01) by c cite \"FRCP 87(c)(2)\"",
+    ];
+    let rows: BTreeMap<&str, Vec<String>> = [
+        (
+            "a lock against case orders: the grant extends without `unlock`",
+            named(&["CaseOrder"]),
+        ),
+        (
+            "a lock against the grant's level: refused without `unlock`",
+            named(&["FederalRule"]),
+        ),
+    ]
+    .into_iter()
+    .map(|(name, hir)| (name, run(&hir, "", &events)))
+    .collect();
+    insta::assert_debug_snapshot!(rows);
+}

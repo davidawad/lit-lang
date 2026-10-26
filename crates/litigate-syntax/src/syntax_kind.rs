@@ -144,6 +144,7 @@ syntax_kinds! {
         KwCharacterization = "characterization", KwRetracted = "retracted",
         KwUnknownBefore = "unknown_before", KwCommenced = "commenced",
         KwSpawn = "spawn", KwJoins = "joins",
+        KwLock = "lock", KwAgainst = "against", KwRuleIndex = "Rule",
     }
     nodes {
         SourceFile => "Root of a `.lit` module.",
@@ -237,6 +238,7 @@ syntax_kinds! {
         Exclusions => "Reserved `excludes [item, ?(\"reason\"), ...]` of a `limit` body; always L0011 (SPEC §3.7).",
         EcfCode => "Reserved `ecf \"code\"` ECF event code of a `limit` body, as data (SPEC §3.7).",
         GrantDecl => "`grant id on [targets] { ... }`: an emergency capability grant for a bounded window (additive).",
+        IndexClause => "`Rule[a, s, v, k, ap]` after a rule's name: its authority, scope (class), valid, transaction and applicability indices, each `_` for its default (additive).",
     }
 }
 

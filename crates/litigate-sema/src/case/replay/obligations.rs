@@ -765,14 +765,14 @@ impl<'g> Cx<'_, 'g> {
         };
         let grants = self.grants(&w, d, &event.date, how);
         if grants.is_empty() {
-            let lock = d.extend.iter().find_map(Extension::lock);
+            let lock = d.extend.iter().find(|x| x.lock().is_some());
             let e = if let (Some(lock), Transform::Extend(_)) = (lock, how) {
                 error(
                     C::InvalidCaseEvent,
                     self.at(k, |e| e.action.as_ref()),
-                    format!("`{action}` cannot extend `{q}`: the deadline may not be extended (`extend {{ never cite \"{lock}\" }}`)"),
+                    format!("`{action}` cannot extend `{q}`: the deadline may not be extended (`{}`)", lock.lock_source().unwrap_or_default()),
                 )
-                .note(format!("no order, stipulation or consent extends a period its rule forbids extending ({lock})"))
+                .note(format!("no order, stipulation or consent extends a period its rule forbids extending ({})", lock.lock().unwrap_or_default()))
             } else {
                 error(
                     C::InvalidCaseEvent,
@@ -818,19 +818,21 @@ impl<'g> Cx<'_, 'g> {
 
     /// The grants for `how` that deadline `d` (logical `w`) declares, then
     /// those of the emergency grants in force on `date` reaching it; an
-    /// emergency extension reaches a locked deadline only when its grant
-    /// also lifts the lock (`unlock`).
+    /// emergency extension reaches a deadline locked against its grant's
+    /// authority only when a grant also lifts the lock (`unlock`).
     fn grants(&self, w: &str, d: &'g Deadline, date: &str, how: Transform<'_>) -> Vec<Grant<'g>> {
         let emergency =
             self.graph
                 .emergency(w, &d.meta.authority, date, self.case.known_at.as_deref());
-        let locked =
-            d.extend.iter().any(|x| x.lock().is_some()) && !emergency.iter().any(|g| g.unlock);
+        let unlocked = emergency.iter().any(|g| g.unlock);
+        let reaches = |g: &&&crate::hir::Grant| {
+            unlocked || !d.extend.iter().any(|x| x.locks(&g.meta.authority))
+        };
         match how {
             Transform::Extend(_) => d
                 .extend
                 .iter()
-                .chain(emergency.iter().filter(|_| !locked).flat_map(|g| &g.extend))
+                .chain(emergency.iter().filter(reaches).flat_map(|g| &g.extend))
                 .filter_map(Grant::extend)
                 .collect(),
             Transform::Waive => d

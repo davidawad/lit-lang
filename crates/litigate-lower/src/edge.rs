@@ -241,7 +241,7 @@ fn extension(x: &Extension) -> ExtensionBound {
             motion: m.as_ref().map(motion),
             interpretation: interpretation.clone(),
         },
-        Extension::NonExtendable { authority } => ExtensionBound::NonExtendable {
+        Extension::NonExtendable { authority, .. } => ExtensionBound::NonExtendable {
             authority: authority.clone(),
         },
     }

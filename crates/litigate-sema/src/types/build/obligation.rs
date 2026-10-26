@@ -44,7 +44,10 @@ impl Cx<'_, '_> {
         let linear =
             rule.is_some_and(|r| matches!(&r.kind, ItemKind::Rule(k, ..) if k.text == "duty"));
         let grants: Vec<&Field> = opts.iter().filter(|f| f.key.text == "extend").collect();
-        let built: Vec<Option<Extension>> = grants.iter().map(|f| self.extension(f)).collect();
+        let mut built: Vec<Option<Extension>> = grants.iter().map(|f| self.extension(f)).collect();
+        if let Some(f) = o.get("lock") {
+            built.push(self.named_lock(f, &built));
+        }
         let waive = o.get("waive").and_then(|f| self.waiver(f));
         // A lock (`never`) admits the declaration's own grants, so the
         // deadline is extendable exactly when it states one.
@@ -254,7 +257,51 @@ impl Cx<'_, '_> {
             .is_empty()
             .then_some(authority)
             .flatten()
-            .map(|authority| Extension::NonExtendable { authority })
+            .map(|authority| Extension::NonExtendable {
+                authority,
+                against: Vec::new(),
+            })
+    }
+
+    /// `lock against [L, ...] cite "X"`: a lock binding the authorities
+    /// `L` only (design review §2.4), each an authority level (L1002),
+    /// naming at least one and citing the rule that forbids the extension
+    /// (L2007). A deadline has one lock: beside `extend { never ... }`,
+    /// which binds every authority, it is L2007.
+    fn named_lock(&mut self, f: &Field, built: &[Option<Extension>]) -> Option<Extension> {
+        // Without `against [...]` the parser has reported it (L0001).
+        if f.values.is_empty() {
+            return None;
+        }
+        let names = Self::refs(Some(&f));
+        let mut against: Vec<String> = Vec::new();
+        let mut known = true;
+        for r in &names {
+            match self.ck.scope.authority(&r.head) {
+                Ok(()) if !against.contains(&r.head.text) => against.push(r.head.text.clone()),
+                Ok(()) => {}
+                Err(e) => {
+                    self.ck.report(e);
+                    known = false;
+                }
+            }
+        }
+        let cite = Field {
+            key: f.key.clone(),
+            values: f.values.iter().skip(1).cloned().collect(),
+            range: f.range,
+        };
+        let message = if names.is_empty() {
+            "a `lock` names the authorities it binds: `lock against [LocalRule, ...] cite \"<rule>\"`; `extend { never cite \"<rule>\" }` binds every authority"
+        } else if built.iter().flatten().any(|x| x.lock().is_some()) {
+            "a deadline has one lock: `extend { never ... }` binds every authority, so `lock against [...]` adds nothing beside it"
+        } else if let Some(authority) = Self::string(Some(&&cite)) {
+            return known.then_some(Extension::NonExtendable { authority, against });
+        } else {
+            "a `lock` cites the rule that forbids the extension: `lock against [...] cite \"<rule>\"`"
+        };
+        self.report(Report::new(C::InvalidField, f.key.range, message));
+        None
     }
 
     /// The calendar days of duration `e` (L3009 for other days).

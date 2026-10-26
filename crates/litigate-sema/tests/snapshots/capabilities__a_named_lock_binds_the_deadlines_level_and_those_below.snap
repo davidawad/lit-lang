@@ -1,0 +1,13 @@
+---
+source: crates/litigate-sema/tests/capabilities.rs
+expression: rows
+---
+{
+    "a higher authority": [
+        "pkgs/demo/main.lit:12:60 L3004 `a` (FederalRule) locks against `Statute`, which it does not bind: a lock binds the deadline's own authority and those below it",
+    ],
+    "an unranked one": [
+        "pkgs/demo/main.lit:12:60 L3004 `a` (FederalRule) locks against `Regulation`, which it does not bind: a lock binds the deadline's own authority and those below it",
+    ],
+    "its own level and lower ones": [],
+}

@@ -84,7 +84,9 @@ fn rule(p: &mut Parser<'_>) {
         Some(kind) => p.bump_as(kind),
         None => p.error_expected(&[KwDuty, KwPower, KwLiability]),
     }
-    p.expect(Ident);
+    if p.expect(Ident) && p.at_kw(KwRuleIndex) && p.nth(1) == LBracket {
+        super::clauses::index_clause(p);
+    }
     let clause_keywords = clauses(p, Clauses::RULE);
     if require_body(p, &clause_keywords) {
         let mut entry = |p: &mut Parser<'_>| match p.at_any_kw(BODY_ITEM_KEYWORDS) {

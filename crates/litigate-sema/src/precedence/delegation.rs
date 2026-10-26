@@ -144,8 +144,9 @@ pub enum Refusal<'w> {
     /// bound (the first's: `max N.unit`).
     Bound(u64, crate::hir::DayUnit),
     /// The target is locked against an extension the claim grants
-    /// (`extend { never cite "X" }`, naming X).
-    Locked(&'w str),
+    /// (`extend { never cite "X" }`, or `lock against [...]` naming the
+    /// claimant's authority): the lock.
+    Locked(&'w Extension),
 }
 
 /// The delegations of version `target` naming `by`'s authority: its own,
@@ -329,18 +330,20 @@ pub fn licensed(world: &World<'_>, by: usize, target: usize) -> bool {
     license(world, by, target, false).is_ok() && unmoved(world, by, target, false).is_none()
 }
 
-/// The authority of deadline `target`'s lock (`extend { never cite "X" }`)
-/// when deadline `by` grants an extension `target` does not state (FRAP
-/// 26(b): a local rule or order cannot grant there), and no licensed
-/// emergency grant `unlock`s `target` for `by`'s window.
+/// Deadline `target`'s lock binding `by`'s authority (`extend { never
+/// cite "X" }`, or `lock against [...]` naming it) when deadline `by`
+/// grants an extension `target` does not state (FRAP 26(b): a local rule
+/// or order cannot grant there), and no licensed emergency grant
+/// `unlock`s `target` for `by`'s window.
 #[must_use]
-pub fn lock_widened<'w>(world: &'w World<'_>, by: usize, target: usize) -> Option<&'w str> {
+pub fn lock_widened<'w>(world: &'w World<'_>, by: usize, target: usize) -> Option<&'w Extension> {
     let (Declaration::Deadline(mine), Declaration::Deadline(theirs)) =
         (world.decls[by].decl, world.decls[target].decl)
     else {
         return None;
     };
-    let lock = theirs.extend.iter().find_map(Extension::lock)?;
+    let level = &world.decls[by].meta.authority;
+    let lock = theirs.extend.iter().find(|x| x.locks(level))?;
     let window = Window::of(&world.decls[by].meta.effective);
     let unlocked = in_window(world, target, &window).iter().any(|g| g.unlock);
     (!unlocked
@@ -428,6 +431,11 @@ pub fn check(
         }
         for d in &da.meta.delegations {
             out.extend(misdelegated(lattice, loc, da, &da.meta.authority, d));
+        }
+        if let Declaration::Deadline(dl) = da.decl {
+            for x in &dl.extend {
+                out.extend(mislocked(lattice, loc, da, x));
+            }
         }
     }
     out.extend(grants(world, lattice, pack));
@@ -553,14 +561,18 @@ fn granted_capabilities(
             );
         }
     }
-    let lock = d.extend.iter().find_map(Extension::lock);
+    let lock = d
+        .extend
+        .iter()
+        .find(|x| x.locks(&g.meta.authority))
+        .and_then(Extension::lock_source);
     if let (Some(lock), false, false) = (lock, g.unlock, g.extend.is_empty()) {
         out.push(
             error(
                 C::MissingDelegation,
                 at.clone(),
                 format!(
-                    "grant `{}` extends `{name}`, which is locked (`extend {{ never cite \"{lock}\" }}`), without `unlock`: its extensions would have no effect",
+                    "grant `{}` extends `{name}`, which is locked (`{lock}`), without `unlock`: its extensions would have no effect",
                     g.meta.id
                 ),
             )
@@ -611,6 +623,40 @@ fn misdelegated(
         .with_note(None, why)
         .derived(derivation),
     )
+}
+
+/// L3004 for each authority a named lock `x` of `da` binds that is above
+/// `da`'s own or unranked against it: a rule binds its own level (an
+/// emergency grant of that level needs `unlock`) and those below it,
+/// never a higher authority.
+fn mislocked(lattice: &Lattice, loc: &dyn Locate, da: &Decl<'_>, x: &Extension) -> Vec<Diagnostic> {
+    let Extension::NonExtendable { against, .. } = x else {
+        return Vec::new();
+    };
+    let own = &da.meta.authority;
+    against
+        .iter()
+        .filter_map(|level| {
+            let why = match lattice.compare(level, own) {
+                Order::Below | Order::Equal => return None,
+                Order::Above => format!("`{level}` outranks `{own}`"),
+                Order::Incomparable => {
+                    format!("`{level}` and `{own}` are not ranked by any `authority` chain")
+                }
+            };
+            Some(
+                error(
+                    C::MissingDelegation,
+                    span_of(loc, da, "lock"),
+                    format!(
+                        "`{}` ({own}) locks against `{level}`, which it does not bind: a lock binds the deadline's own authority and those below it",
+                        da.meta.id
+                    ),
+                )
+                .with_note(None, why),
+            )
+        })
+        .collect()
 }
 
 /// The versions of `target` (only its `@D` version, when given) in force
@@ -809,19 +855,21 @@ impl Claim<'_, '_> {
                         .premise(Derivation::new("bound", format!("exceeds(`{}`, max {})", da.meta.id, unit.prose(n)))),
                 )
             }
-            Refusal::Locked(authority) => error(
+            Refusal::Locked(lock) => error(
                 C::MissingDelegation,
                 span.clone(),
                 format!(
-                    "`{}` ({mine}) {} `{name}` ({theirs}) with an extension it does not grant, but `{name}` is locked: `extend {{ never cite \"{authority}\" }}`",
+                    "`{}` ({mine}) {} `{name}` ({theirs}) with an extension it does not grant, but `{name}` is locked: `{}`",
                     da.meta.id,
                     verb(keyword),
+                    lock.lock_source().unwrap_or_default(),
                 ),
             )
             .with_note(
                 db.meta.span.clone(),
                 format!(
-                    "`{versioned}` delegates to {mine}, but a delegation does not reach past its lock: no local rule or order grants an extension there ({authority})",
+                    "`{versioned}` delegates to {mine}, but a delegation does not reach past its lock: no local rule or order grants an extension there ({})",
+                    lock.lock().unwrap_or_default(),
                 ),
             ),
         };

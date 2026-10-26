@@ -1,0 +1,10 @@
+---
+source: crates/litigate-sema/tests/capabilities.rs
+expression: rows
+---
+{
+    "against case orders only": [],
+    "against the local rule": [
+        "pkgs/local/rules.lit:6:87 L3004 `local-answer` (LocalRule) overrides `fed::answer-period` (FederalRule) with an extension it does not grant, but `fed::answer-period` is locked: `lock against [LocalRule, CaseOrder] cite \"FRAP 26(b)(1)\"`\n    note @10:1: `fed::answer-period@2009-12-01` delegates to LocalRule, but a delegation does not reach past its lock: no local rule or order grants an extension there (FRAP 26(b)(1))",
+    ],
+}

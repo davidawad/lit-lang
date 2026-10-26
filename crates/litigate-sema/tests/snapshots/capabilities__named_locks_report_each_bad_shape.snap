@@ -1,0 +1,13 @@
+---
+source: crates/litigate-sema/tests/capabilities.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:11:60 L2007 a `lock` names the authorities it binds: `lock against [LocalRule, ...] cite \"<rule>\"`; `extend { never cite \"<rule>\" }` binds every authority",
+    "pkgs/demo/main.lit:12:60 L2007 a `lock` cites the rule that forbids the extension: `lock against [...] cite \"<rule>\"`",
+    "pkgs/demo/main.lit:13:98 L2007 a deadline has one lock: `extend { never ... }` binds every authority, so `lock against [...]` adds nothing beside it",
+    "pkgs/demo/main.lit:14:74 L1002 cannot find authority `Nobody`",
+    "pkgs/demo/main.lit:15:95 L2007 `lock` is given more than once [fix: \"\"]",
+    "pkgs/demo/main.lit:16:65 L0001 expected `against`, found `[`",
+    "pkgs/demo/main.lit:17:10 L2007 deadline `g` is `extendable true` but grants no extension (`extend { never ... }` alone)",
+]

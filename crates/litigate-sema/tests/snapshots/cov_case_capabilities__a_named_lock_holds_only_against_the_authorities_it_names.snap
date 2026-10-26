@@ -1,0 +1,19 @@
+---
+source: crates/litigate-sema/tests/cov_case_capabilities.rs
+expression: rows
+---
+{
+    "a lock against case orders: the grant extends without `unlock`": [
+        "ok: start kappa::open",
+        "trace Triggered Entered() kappa::open -> kappa::open",
+        "trace Extended OrderedLocked(2020-05-01) kappa::open -> kappa::open",
+        "obligation kappa::appeal Lapsed",
+        "obligation kappa::locked Lapsed extended 2020-05-01",
+    ],
+    "a lock against the grant's level: refused without `unlock`": [
+        "13:14 L4001 `OrderedLocked(2020-05-01)` cannot extend `kappa::locked`: the deadline may not be extended (`lock against [FederalRule] cite \"FRCP 6(b)(2)\"`)\n    note: no order, stipulation or consent extends a period its rule forbids extending (FRCP 6(b)(2))",
+        "trace Triggered Entered() kappa::open -> kappa::open",
+        "obligation kappa::appeal Lapsed",
+        "obligation kappa::locked Lapsed",
+    ],
+}

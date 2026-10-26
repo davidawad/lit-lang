@@ -111,6 +111,22 @@ fn clause(p: &mut Parser<'_>, allowed: Clauses) -> bool {
         || (allowed.has(Clauses::RELATION) && relation(p))
 }
 
+/// `IndexClause = "Rule", "[", Index, { ",", Index }, "]"` with `Index =
+/// "_" | Interval | Ref`: a rule's indices (SPEC §3.1), `_` leaving one to
+/// its default. Sema checks there are five.
+pub(crate) fn index_clause(p: &mut Parser<'_>) {
+    p.start(IndexClause);
+    p.bump_as(KwRuleIndex);
+    super::delimited(
+        p,
+        (LBracket, RBracket),
+        super::Sep::Required,
+        &[Underscore, LBracket, Ident],
+        &mut |p| p.eat(Underscore) || interval(p) || reference(p),
+    );
+    p.finish();
+}
+
 /// A `Field` node: `keyword [value]`.
 pub(crate) fn keyword_field(
     p: &mut Parser<'_>,

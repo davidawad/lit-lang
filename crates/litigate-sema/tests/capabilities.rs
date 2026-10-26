@@ -644,3 +644,91 @@ fn grants_check_over_hir_without_spans_or_deadlines() {
         ]
     );
 }
+
+#[test]
+fn named_locks_report_each_bad_shape() {
+    let out = check_body(
+        "authority FederalRule > LocalRule > CaseOrder\n\
+deadline a: 21.days from Served(complaint) counted_by c6 { lock against [] cite \"FRAP 26(b)(1)\" }\n\
+deadline b: 21.days from Served(complaint) counted_by c6 { lock against [LocalRule] }\n\
+deadline c: 21.days from Served(complaint) counted_by c6 { extend { never cite \"FRCP 6(b)(2)\" }, lock against [LocalRule] cite \"FRAP 26(b)(1)\" }\n\
+deadline d: 21.days from Served(complaint) counted_by c6 { lock against [Nobody, CaseOrder] cite \"FRAP 26(b)(1)\" }\n\
+deadline e: 21.days from Served(complaint) counted_by c6 { lock against [CaseOrder] cite \"X\", lock against [LocalRule] cite \"Y\" }\n\
+deadline f: 21.days from Served(complaint) counted_by c6 { lock [CaseOrder] cite \"X\" }\n\
+deadline g: 21.days from Served(complaint) counted_by c6 { extendable true, lock against [CaseOrder] cite \"X\" }",
+    );
+    insta::assert_debug_snapshot!(out);
+    // Outside a deadline's options `lock` is still reserved (L0007).
+    let reserved = check_body("group lock: \"G\"");
+    assert!(
+        reserved.iter().any(|d| d.contains("L0007")),
+        "{reserved:#?}"
+    );
+}
+
+#[test]
+fn a_named_lock_binds_the_deadlines_level_and_those_below() {
+    let body = |against: &str| {
+        check_body(&format!(
+            "authority Statute > FederalRule > LocalRule > CaseOrder\n\
+authority Statute > Regulation > CaseOrder\n\
+deadline a: 21.days from Served(complaint) counted_by c6 {{ lock against {against} cite \"FRAP 26(b)(1)\" }}"
+        ))
+    };
+    let rows: BTreeMap<&str, Vec<String>> = [
+        (
+            "its own level and lower ones",
+            "[FederalRule, LocalRule, CaseOrder, CaseOrder]",
+        ),
+        ("a higher authority", "[Statute]"),
+        ("an unranked one", "[Regulation]"),
+    ]
+    .into_iter()
+    .map(|(name, against)| (name, body(against)))
+    .collect();
+    insta::assert_debug_snapshot!(rows);
+}
+
+#[test]
+fn a_named_lock_refuses_only_the_authorities_it_names() {
+    // FRAP 26(b)(1) binds the courts: a local rule the federal rule
+    // delegates to may not add an extension a lock against it forbids,
+    // and may when the lock names only case orders.
+    let claim = local_with(
+        "30.days from Served() counted_by c6 effective [2012-01-01, ..)",
+        "extend { by Court, max 60.days }",
+    );
+    let rows: BTreeMap<&str, Vec<String>> = [
+        ("against the local rule", "[LocalRule, CaseOrder]"),
+        ("against case orders only", "[CaseOrder]"),
+    ]
+    .into_iter()
+    .map(|(name, against)| {
+        let locked = format!(
+            "extend {{ by Court, max 30.days }}, lock against {against} cite \"FRAP 26(b)(1)\""
+        );
+        let fed = fed(" delegable { to LocalRule, op set }", &locked, "");
+        (name, diagnostics(&[core(), fed, claim.clone()]))
+    })
+    .collect();
+    insta::assert_debug_snapshot!(rows);
+}
+
+#[test]
+fn an_emergency_grant_of_an_unnamed_authority_needs_no_unlock() {
+    let rows: BTreeMap<&str, Vec<String>> = [
+        ("a lock against lower authorities", "[LocalRule, CaseOrder]"),
+        ("a lock against the grant's own level", "[FederalRule]"),
+    ]
+    .into_iter()
+    .map(|(name, against)| {
+        let body = format!(
+            "authority FederalRule > LocalRule > CaseOrder\n\
+deadline a: 21.days from Served(complaint) counted_by c6 {{ lock against {against} cite \"FRCP 6(b)(2)\" }}\n\
+grant emergency on [a] effective [2020-03-15, 2020-06-13) cite \"FRCP 87(c)(2)\" {{ extend {{ by Court, max 30.days }} }}"
+        );
+        (name, check_body(&body))
+    })
+    .collect();
+    insta::assert_debug_snapshot!(rows);
+}

@@ -91,7 +91,9 @@ const UNIT_SUFFIXES: [&str; 8] = [
 
 /// Words reserved for constructs a later edition adds (SPEC §2): the
 /// lexer reports each as L0007 wherever it appears as an identifier, so
-/// no source written today can collide with that syntax.
+/// no source written today can collide with that syntax. `lock` is a
+/// keyword only in a deadline's `lock against [...]` option, where the
+/// parser licenses it; anywhere else it stays L0007.
 pub const RESERVED_WORDS: [&str; 5] = ["world", "layer", "precedent", "overrule", "lock"];
 
 /// Words reserved for the refinement surface syntax of the SMT tier

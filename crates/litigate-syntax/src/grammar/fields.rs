@@ -79,6 +79,7 @@ pub(crate) const DEADLINE_DECL_OPTS: &[Spec] = &[
     (KwForum, Some(adopted_forum)),
     (KwInterpretation, Some(string)),
     (KwCharacterization, Some(characterization)),
+    (KwLock, Some(lock_against)),
 ];
 
 /// Fields of a `delegable` capability (besides `cite`): its principal,
@@ -298,6 +299,19 @@ fn characterization(p: &mut Parser<'_>) -> bool {
         cite(p);
         true
     }
+}
+
+/// `against [L, ...] [cite "X"]`, the value of a named-authority lock
+/// (`lock against [LocalRule, CaseOrder] cite "FRAP 26(b)(1)"`); sema
+/// requires the cite.
+fn lock_against(p: &mut Parser<'_>) -> bool {
+    if !p.expect_kw(KwAgainst) {
+        return true;
+    }
+    if require(p, id_list, &[LBracket]) {
+        cite(p);
+    }
+    true
 }
 
 /// A name or a bracketed list of names.

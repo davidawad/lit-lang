@@ -135,6 +135,9 @@ impl Locate for Source<'_> {
             let special = match (&item.kind, key) {
                 (ItemKind::Transition(_, amends, _, _), "amends") => Some(amends.range),
                 (ItemKind::Deadline { counted_by, .. }, "counted_by") => Some(counted_by.range),
+                (ItemKind::Deadline { opts, .. }, "lock") => {
+                    opts.iter().find(|f| f.key.text == key).map(|f| f.range)
+                }
                 (ItemKind::Exception { when, .. } | ItemKind::Default(_, _, when, _), "when") => {
                     Some(when.range)
                 }

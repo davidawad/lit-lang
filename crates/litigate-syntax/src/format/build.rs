@@ -252,6 +252,7 @@ fn spaced(prev: Prev, kind: SyntaxKind, parent: SyntaxKind) -> bool {
         || tight(prev.kind)
         || matches!(prev.kind, LParen | LBracket)
         || (kind == LParen && matches!(parent, ArgList | ParamList | HoleExpr))
+        || (kind == LBracket && parent == IndexClause)
         || (matches!(kind, Less | Greater) && parent == TypeArgs)
         || (prev.kind == Less && prev.parent == TypeArgs)
         || (matches!(prev.kind, Minus | Bang) && prev.parent == UnaryExpr)

@@ -1,0 +1,10 @@
+---
+source: crates/litigate-sema/tests/capabilities.rs
+expression: rows
+---
+{
+    "a lock against lower authorities": [],
+    "a lock against the grant's own level": [
+        "pkgs/demo/main.lit:12:1 L3004 grant `emergency` extends `a`, which is locked (`lock against [FederalRule] cite \"FRCP 6(b)(2)\"`), without `unlock`: its extensions would have no effect",
+    ],
+}

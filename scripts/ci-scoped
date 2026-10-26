@@ -229,7 +229,8 @@ run() {
       skip cov "test failed"
     else
       stage cov coverage "${cov[@]}"
-      grep -h '^COV_WAIVED' "$logdir/cov.log" || true
+      # The per-crate lines and regions and branches, waived or not.
+      [[ " ${failed[*]} " == *" cov "* ]] || sed 's/^/  /' "$logdir/cov.log"
     fi
     cargo +nightly llvm-cov clean --workspace > /dev/null 2>&1 || true
     exec 9>&-

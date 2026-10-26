@@ -3,7 +3,7 @@
 //! A predicate is typed into HIR in the qualifier grammar: linear
 //! comparisons of numbers, probabilities, hours, money, durations and dates
 //! (a date moves only by calendar days), `==`/`!=` on enums and `Bool`s,
-//! and `&&`, `||`, `!` over those. Anything else is L2011, so every
+//! and `&&`, `||`, `!` over those. Anything else is L2012, so every
 //! predicate is quantifier-free linear arithmetic over finitely many
 //! variables and every check on it terminates.
 //!
@@ -12,7 +12,7 @@
 //! evaluated exactly ([`eval`]); where values are open (is any value
 //! admitted at all, does an extension's refinement stay within its
 //! deadline's bound) the SMT tier decides it ([`smt::decide`]). The
-//! solver's `unknown` is a hole (L2014), never a pass.
+//! solver's `unknown` is a hole (L2015), never a pass.
 use super::expr::Checker;
 use super::rational as q;
 use super::ty::display;
@@ -27,7 +27,7 @@ pub mod smt;
 
 pub use eval::{eval, render};
 
-/// What a predicate may name besides the refined value, for the L2011
+/// What a predicate may name besides the refined value, for the L2012
 /// note listing the names in scope.
 const GRAMMAR: &str = "a refinement is linear: comparisons (`<`, `<=`, `>`, `>=`, `==`, `!=`) of \
      numbers, probabilities, hours, money, durations and dates, `+`, `-`, and `*` or `/` by a \
@@ -120,7 +120,7 @@ fn localize_in(e: &mut hir::Expr, f: &dyn Fn(&str) -> String) {
 }
 
 /// Types the predicate of `q` in the qualifier grammar, the names `vars`
-/// in scope; `None` after reporting (L2011, or the type error).
+/// in scope; `None` after reporting (L2012, or the type error).
 pub fn check(
     ck: &mut Checker<'_, '_>,
     q: &Qualifier,
@@ -140,7 +140,7 @@ struct Typer<'c, 's, 'a> {
     vars: &'c [(String, Type)],
 }
 
-/// What an expression outside the grammar is, for its L2011.
+/// What an expression outside the grammar is, for its L2012.
 const fn shape(e: &ExprKind) -> &'static str {
     match e {
         ExprKind::Hole(_) => "a hole",
@@ -565,7 +565,7 @@ pub fn inherited(scope: &Scope<'_>, t: &TypeRef, binder: Option<&str>) -> Vec<Lo
         .collect()
 }
 
-/// A refinement inside a type argument (`List<{x: T | p}>`): L2011, since
+/// A refinement inside a type argument (`List<{x: T | p}>`): L2012, since
 /// a refinement stands only as a parameter's or an alias's type.
 pub fn nested(ck: &mut Checker<'_, '_>, t: &TypeRef) {
     for arg in &t.args {
@@ -659,7 +659,7 @@ pub fn ground_all(
     }
 }
 
-/// Tier 1 on an event call `event(args)` written at `call`: L2012 when
+/// Tier 1 on an event call `event(args)` written at `call`: L2013 when
 /// refinement `r` is false of the arguments' values. A refinement naming
 /// an argument that is not constant (a hole, a pattern's open argument)
 /// or a bound date is not decided here.
@@ -685,7 +685,7 @@ pub fn ground(
     ck.report(violation(event, r, &env, at));
 }
 
-/// The L2012 report of refinement `r` of `event`, false under `env`: the
+/// The L2013 report of refinement `r` of `event`, false under `env`: the
 /// values of the names it reads, as a counterexample.
 #[must_use]
 pub fn violation(
@@ -697,7 +697,7 @@ pub fn violation(
     Report::new(C::RefinementViolated, at, message(event, r, env)).note(origin(event, r))
 }
 
-/// The message of an L2012: the values refinement `r` of `event` reads
+/// The message of an L2013: the values refinement `r` of `event` reads
 /// under `env`, and the refinement.
 #[must_use]
 pub fn message(event: &str, r: &Refinement, env: &dyn Fn(&str) -> Option<Value>) -> String {

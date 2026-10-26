@@ -62,51 +62,51 @@ fn predicates_outside_the_qualifier_grammar_are_l2011() {
     table(&[
         (
             "event E(a: Days<CalendarDays> where a * a > 1.days)",
-            &["10:37 L2011 `*` of `Days<CalendarDays>` and `Days<CalendarDays>` is not linear: one factor must be a constant number | <grammar>"],
+            &["10:37 L2012 `*` of `Days<CalendarDays>` and `Days<CalendarDays>` is not linear: one factor must be a constant number | <grammar>"],
         ),
         (
             "event E(a: Days<CalendarDays> where a / a > 1.days)",
-            &["10:37 L2011 `/` of `Days<CalendarDays>` and `Days<CalendarDays>` is not linear: one divisor must be a constant number | <grammar>"],
+            &["10:37 L2012 `/` of `Days<CalendarDays>` and `Days<CalendarDays>` is not linear: one divisor must be a constant number | <grammar>"],
         ),
         (
             "event E(a: Days<CalendarDays> where deadline(x) > 1.days)",
-            &["10:37 L2011 a call is outside the refinement qualifier grammar | <grammar>"],
+            &["10:37 L2012 a call is outside the refinement qualifier grammar | <grammar>"],
         ),
         (
             "event E(a: Days<CalendarDays> where a > ?)",
-            &["10:41 L2011 a hole is outside the refinement qualifier grammar | <grammar>"],
+            &["10:41 L2012 a hole is outside the refinement qualifier grammar | <grammar>"],
         ),
         (
             "event E(a: Number where a % 2 == 0)",
-            &["10:25 L2011 `%` is outside the refinement qualifier grammar | <grammar>"],
+            &["10:25 L2012 `%` is outside the refinement qualifier grammar | <grammar>"],
         ),
         (
             "event E(m: Method where match m { Mail => true, _ => false })",
-            &["10:25 L2011 a `match` is outside the refinement qualifier grammar | <grammar>"],
+            &["10:25 L2012 a `match` is outside the refinement qualifier grammar | <grammar>"],
         ),
         (
             "event E(a: String where a == \"x\")",
-            &["10:25 L2011 `==` on `String` is outside the refinement qualifier grammar | <grammar>"],
+            &["10:25 L2012 `==` on `String` is outside the refinement qualifier grammar | <grammar>"],
         ),
         (
             "event E(a: Bool where a < true)",
-            &["10:23 L2011 `<` on `Bool` is outside the refinement qualifier grammar | <grammar>"],
+            &["10:23 L2012 `<` on `Bool` is outside the refinement qualifier grammar | <grammar>"],
         ),
         (
             "event E(a: Date where -a < 2024-01-01)",
-            &["10:23 L2011 `-` on `Date` is outside the refinement qualifier grammar | <grammar>"],
+            &["10:23 L2012 `-` on `Date` is outside the refinement qualifier grammar | <grammar>"],
         ),
         (
             "event E(a: Date where a / 2 < 2024-01-01)",
-            &["10:23 L2011 `/` of `Date` and `Number` is outside the refinement qualifier grammar | <grammar>"],
+            &["10:23 L2012 `/` of `Date` and `Number` is outside the refinement qualifier grammar | <grammar>"],
         ),
         (
             "event E(a: Date where a + a < 2024-01-01)",
-            &["10:23 L2011 `+` of `Date` and `Date` is outside the refinement qualifier grammar | <grammar>"],
+            &["10:23 L2012 `+` of `Date` and `Date` is outside the refinement qualifier grammar | <grammar>"],
         ),
         (
             "event E(a: Number where zz)",
-            &["10:25 L2011 a refinement cannot name `zz` | it may name only `a`, and constants"],
+            &["10:25 L2012 a refinement cannot name `zz` | it may name only `a`, and constants"],
         ),
         (
             "event E(a: Number where a > 1.234.usd)",
@@ -118,11 +118,11 @@ fn predicates_outside_the_qualifier_grammar_are_l2011() {
         ),
         (
             "event E(a: Days<CalendarDays> where b > 1.days)",
-            &["10:37 L2011 a refinement cannot name `b` | it may name only `a`, and constants"],
+            &["10:37 L2012 a refinement cannot name `b` | it may name only `a`, and constants"],
         ),
         (
             "event E(aa: Days<CalendarDays>, b: Days<CalendarDays> where ab > b)",
-            &["10:61 L2011 a refinement cannot name `ab` | it may name only `b`, `aa`, and constants"],
+            &["10:61 L2012 a refinement cannot name `ab` | it may name only `b`, `aa`, and constants"],
         ),
         (
             "event E(m: Method where m == Method.Mail || m == r)",
@@ -130,11 +130,11 @@ fn predicates_outside_the_qualifier_grammar_are_l2011() {
         ),
         (
             "event E(a: Date where a + 3.court_days > 2024-01-01)",
-            &["10:23 L2011 a date moves by calendar days in a refinement, not by `Days<CourtDays>` | other units count through a counting rule, which a refinement does not run"],
+            &["10:23 L2012 a date moves by calendar days in a refinement, not by `Days<CourtDays>` | other units count through a counting rule, which a refinement does not run"],
         ),
         (
             "type L = List<{d: Days<CalendarDays> | d > 0.days}>",
-            &["10:15 L2011 a refinement stands only as a parameter's or a type declaration's type, not as a type argument | declare `type T = {x: B | p}` and use `T` as the argument; its values are not checked inside a container"],
+            &["10:15 L2012 a refinement stands only as a parameter's or a type declaration's type, not as a type argument | declare `type T = {x: B | p}` and use `T` as the argument; its values are not checked inside a container"],
         ),
     ]);
 }
@@ -170,30 +170,30 @@ fn a_refinement_no_value_satisfies_is_l2013_with_an_unsat_core() {
     table(&[
         (
             "type Never = {d: Days<CalendarDays> | d > 60.days && d < 30.days}",
-            &["10:14 L2013 no type `Never` satisfies its refinements: `d < 30.days` contradicts `d > 60.days` | 10:14 contradicted: `d > 60.days` | a value no program can write is a declaration error: relax or remove one of these refinements"],
+            &["10:14 L2014 no type `Never` satisfies its refinements: `d < 30.days` contradicts `d > 60.days` | 10:14 contradicted: `d > 60.days` | a value no program can write is a declaration error: relax or remove one of these refinements"],
         ),
         (
             "type Empty = Days<CalendarDays> where false",
-            &["10:33 L2013 no type `Empty` satisfies its refinement `false`: the type is empty | a value no program can write is a declaration error: relax or remove one of these refinements"],
+            &["10:33 L2014 no type `Empty` satisfies its refinement `false`: the type is empty | a value no program can write is a declaration error: relax or remove one of these refinements"],
         ),
         (
             "event E(a: Days<CalendarDays> where a > 10.days, b: Days<CalendarDays> where b > a && a > 20.days && b < 15.days)",
-            &["10:72 L2013 no `E(..)` satisfies its refinements: `b < 15.days` contradicts `b > a` and `a > 20.days` | 10:72 contradicted: `b > a` | 10:72 contradicted: `a > 20.days` | a value no program can write is a declaration error: relax or remove one of these refinements"],
+            &["10:72 L2014 no `E(..)` satisfies its refinements: `b < 15.days` contradicts `b > a` and `a > 20.days` | 10:72 contradicted: `b > a` | 10:72 contradicted: `a > 20.days` | a value no program can write is a declaration error: relax or remove one of these refinements"],
         ),
         (
             "type Short = {d: Days<CalendarDays> | d <= 10.days}\nevent E(a: Short where a > 20.days)",
-            &["11:18 L2013 no `E(..)` satisfies its refinements: `a > 20.days` contradicts `a <= 10.days` (from type `Short`) | 11:12 contradicted: `a <= 10.days` (from type `Short`) | a value no program can write is a declaration error: relax or remove one of these refinements"],
+            &["11:18 L2014 no `E(..)` satisfies its refinements: `a > 20.days` contradicts `a <= 10.days` (from type `Short`) | 11:12 contradicted: `a <= 10.days` (from type `Short`) | a value no program can write is a declaration error: relax or remove one of these refinements"],
         ),
         (
             // An enum has only its variants.
             "event E(m: Method where m != Mail && m != Personal)",
-            &["10:19 L2013 no `E(..)` satisfies its refinements: `m != Personal` contradicts `m != Mail` | 10:19 contradicted: `m != Mail` | a value no program can write is a declaration error: relax or remove one of these refinements"],
+            &["10:19 L2014 no `E(..)` satisfies its refinements: `m != Personal` contradicts `m != Mail` | 10:19 contradicted: `m != Mail` | a value no program can write is a declaration error: relax or remove one of these refinements"],
         ),
         (
             // A probability is in [0, 1], a `Bool` true or false, a date
             // one of a four-digit year.
             "event E(p: Probability where p > 1, b: Bool where b && !b, d: Date where d < 0001-01-01)",
-            &["10:24 L2013 no `E(..)` satisfies its refinement `p > 1`: the type is empty | a value no program can write is a declaration error: relax or remove one of these refinements"],
+            &["10:24 L2014 no `E(..)` satisfies its refinement `p > 1`: the type is empty | a value no program can write is a declaration error: relax or remove one of these refinements"],
         ),
     ]);
 }
@@ -207,7 +207,7 @@ fn an_alias_refinement_reaches_every_parameter_of_its_type() {
             "type Short = {d: Days<CalendarDays> | d <= 10.days}
 type Shorter = Short where it >= 8.days
 event E(a: Shorter, b: Days<CalendarDays> where b >= a + 3.days && b < 11.days)",
-            &["12:43 L2013 no `E(..)` satisfies its refinements: `b < 11.days` contradicts `a >= 8.days` (from type `Shorter`) and `b >= a + 3.days` | 12:12 contradicted: `a >= 8.days` (from type `Shorter`) | 12:43 contradicted: `b >= a + 3.days` | a value no program can write is a declaration error: relax or remove one of these refinements"],
+            &["12:43 L2014 no `E(..)` satisfies its refinements: `b < 11.days` contradicts `a >= 8.days` (from type `Shorter`) and `b >= a + 3.days` | 12:12 contradicted: `a >= 8.days` (from type `Shorter`) | 12:43 contradicted: `b >= a + 3.days` | a value no program can write is a declaration error: relax or remove one of these refinements"],
         ),
         (
             "type Late = {d: Date | d >= 2024-01-01}\nevent E(a: Late, b: Date where b < a - 1_000.days && b > 2021-06-01)",
@@ -224,7 +224,7 @@ fn constant_arguments_of_a_refined_event_are_checked_exactly() {
         (
             "event Extended(days: Days<CalendarDays> where days <= 30.days, method: Method)
 state x: \"X\" { _ \"go\" -> t { event Extended(45.days, Mail) } }",
-            &["11:45 L2012 `Extended`: days = 45.days does not satisfy the refinement `days <= 30.days` | the refinement of parameter `days` of `Extended` (SPEC §3.5)"],
+            &["11:45 L2013 `Extended`: days = 45.days does not satisfy the refinement `days <= 30.days` | the refinement of parameter `days` of `Extended` (SPEC §3.5)"],
         ),
         (
             "type Cap = {d: Days<CalendarDays> | d <= 30.days}
@@ -232,8 +232,8 @@ event Extended(days: Cap, method: Method where method == Mail || days <= 3.days)
 state x: \"X\" { _ \"go\" -> t { event Extended(10.days, Personal) } }
 state y: \"Y\" { _ \"go\" -> t { event Extended(31.days) } }",
             &[
-                "12:54 L2012 `Extended`: method = Personal, days = 10.days does not satisfy the refinement `method == Mail || days <= 3.days` | the refinement of parameter `method` of `Extended` (SPEC §3.5)",
-                "13:45 L2012 `Extended`: days = 31.days does not satisfy the refinement `days <= 30.days` | the refinement of parameter `days` of `Extended`, from its type `Cap` (SPEC §3.5)",
+                "12:54 L2013 `Extended`: method = Personal, days = 10.days does not satisfy the refinement `method == Mail || days <= 3.days` | the refinement of parameter `method` of `Extended` (SPEC §3.5)",
+                "13:45 L2013 `Extended`: days = 31.days does not satisfy the refinement `days <= 30.days` | the refinement of parameter `days` of `Extended`, from its type `Cap` (SPEC §3.5)",
             ],
         ),
         (
@@ -276,23 +276,23 @@ terminal t: \"T\"
     assert_eq!(
         common::render(&db, ws),
         [
-            "pkgs/user/main.lit:6:26 L2013 no `Both(..)` satisfies its refinements: `how != Mail` contradicts `how == Mail` (from type `base::MailOnly`)",
-            "pkgs/user/main.lit:7:32 L2011 `base.ceiling`, not a constant, is outside the refinement qualifier grammar",
-            "pkgs/user/main.lit:8:40 L2012 `Sent`: how = Personal does not satisfy the refinement `how == Mail`",
-            "pkgs/user/main.lit:8:50 L2012 `Sent`: days = 40 does not satisfy the refinement `days <= 30`",
+            "pkgs/user/main.lit:6:26 L2014 no `Both(..)` satisfies its refinements: `how != Mail` contradicts `how == Mail` (from type `base::MailOnly`)",
+            "pkgs/user/main.lit:7:32 L2012 `base.ceiling`, not a constant, is outside the refinement qualifier grammar",
+            "pkgs/user/main.lit:8:40 L2013 `Sent`: how = Personal does not satisfy the refinement `how == Mail`",
+            "pkgs/user/main.lit:8:50 L2013 `Sent`: days = 40 does not satisfy the refinement `days <= 30`",
         ]
     );
 }
 
 /// A question the SMT tier does not decide (here, exact arithmetic past
-/// `i64` while building it) is a hole: L2014, a warning in the dev
+/// `i64` while building it) is a hole: L2015, a warning in the dev
 /// profile and an error in strict, never a pass.
 #[test]
 fn an_undecided_refinement_is_a_hole() {
     let found = diagnostics("event E(a: Number where (a * 9_223_372_036_854_775_807) * 2 > 1)");
     assert_eq!(
         found,
-        ["10:19 L2014 the SMT tier did not decide whether any `E(..)` satisfies its refinements: exact arithmetic overflowed i64 | an undecided refinement is a hole, never a pass: simplify the predicates (fewer disjunctions, smaller constants)"]
+        ["10:19 L2015 the SMT tier did not decide whether any `E(..)` satisfies its refinements: exact arithmetic overflowed i64 | an undecided refinement is a hole, never a pass: simplify the predicates (fewer disjunctions, smaller constants)"]
     );
     let text =
         format!("{PRELUDE}event E(a: Number where (a * 9_223_372_036_854_775_807) * 2 > 1)\n");

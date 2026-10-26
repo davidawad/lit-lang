@@ -943,7 +943,7 @@ impl<'g> Cx<'_, 'g> {
     /// Tier 1 at replay (SPEC §3.5): the first refinement of event `k`'s
     /// type naming a bound date that its arguments and the instance's
     /// dates (`counted` prescribed, `current` as last extended; the
-    /// order's date `grant_order_entered`) do not satisfy, as L2012.
+    /// order's date `grant_order_entered`) do not satisfy, as L2013.
     fn unrefined(&self, k: usize, counted: &str, current: &str) -> Option<Diagnostic> {
         let event = self.sorted[k].1;
         let ExprKind::Call { callee, args } = &event.action.kind else {

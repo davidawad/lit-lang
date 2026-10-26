@@ -7,7 +7,7 @@
 //! probability in `[0, 1]`, an enum one of its variants), so a model is
 //! always a value a program could write. The query is quantifier-free
 //! linear arithmetic, which Z3 decides under a deterministic work budget;
-//! running out of it is `unknown`, a hole (L2014), never a pass. A wasm
+//! running out of it is `unknown`, a hole (L2015), never a pass. A wasm
 //! build links no solver: there every question is `unknown`.
 use crate::hir::{self, Type};
 #[cfg(not(target_arch = "wasm32"))]

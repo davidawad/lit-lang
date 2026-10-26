@@ -4,14 +4,14 @@ expression: out
 ---
 {
     "a refinement reading two arguments": [
-        "13:29 L2012 `Stipulated`: method = Personal, days = 10 does not satisfy the refinement `method == Mail || days <= 3`\n    note: the refinement of parameter `method` of `Stipulated` (SPEC §3.5)",
+        "13:29 L2013 `Stipulated`: method = Personal, days = 10 does not satisfy the refinement `method == Mail || days <= 3`\n    note: the refinement of parameter `method` of `Stipulated` (SPEC §3.5)",
     ],
     "an argument outside its alias's refinement and another's: both at their argument": [
-        "13:25 L2012 `Stipulated`: days = 45 does not satisfy the refinement `days > 0 && days <= 30`\n    note: the refinement of parameter `days` of `Stipulated`, from its type `Cap` (SPEC §3.5)",
-        "13:29 L2012 `Stipulated`: method = Personal, days = 45 does not satisfy the refinement `method == Mail || days <= 3`\n    note: the refinement of parameter `method` of `Stipulated` (SPEC §3.5)",
+        "13:25 L2013 `Stipulated`: days = 45 does not satisfy the refinement `days > 0 && days <= 30`\n    note: the refinement of parameter `days` of `Stipulated`, from its type `Cap` (SPEC §3.5)",
+        "13:29 L2013 `Stipulated`: method = Personal, days = 45 does not satisfy the refinement `method == Mail || days <= 3`\n    note: the refinement of parameter `method` of `Stipulated` (SPEC §3.5)",
     ],
     "an order past its refinement, within the rule's bound: refused at replay": [
-        "13:14 L2012 `Ordered`: until = 2011-02-10, prescribed_due = 2011-01-14, grant_order_entered = 2011-01-10 does not satisfy the refinement `until <= prescribed_due + 14.days && until > grant_order_entered`\n    note: the refinement of parameter `until` of `Ordered` (SPEC §3.5)\n    note: `answer` runs 10 calendar days from `Served(Mail)` on 2011-01-04 under `oc@2009-12-01`, service by mail",
+        "13:14 L2013 `Ordered`: until = 2011-02-10, prescribed_due = 2011-01-14, grant_order_entered = 2011-01-10 does not satisfy the refinement `until <= prescribed_due + 14.days && until > grant_order_entered`\n    note: the refinement of parameter `until` of `Ordered` (SPEC §3.5)\n    note: `answer` runs 10 calendar days from `Served(Mail)` on 2011-01-04 under `oc@2009-12-01`, service by mail",
         "trace Triggered Served(Mail) sigma::open -> sigma::open",
         "obligation sigma::answer Lapsed None",
     ],

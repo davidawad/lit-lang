@@ -110,7 +110,7 @@ pub(super) fn call(
     })
 }
 
-/// Tier 1 (SPEC §3.5): L2012 for each refinement of event type `ty` its
+/// Tier 1 (SPEC §3.5): L2013 for each refinement of event type `ty` its
 /// arguments `typed` (written as `args`) do not satisfy. One naming a
 /// bound date is judged when replay counts the due dates it reads, one
 /// naming an unknown (`?`) argument not at all.

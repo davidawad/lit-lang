@@ -2,7 +2,7 @@
 //! design review §2.2 tier 3, §2.4): an event that `extends d to p` and
 //! refines `p` claims every extension it records is within `d`'s
 //! `extend` bounds, and the SMT tier checks the claim for every matter at
-//! once (`well-typed`, L2012 with a counterexample).
+//! once (`well-typed`, L2013 with a counterexample).
 mod support;
 
 use litigate_base::Profile;
@@ -81,7 +81,7 @@ fn a_refinement_admitting_an_extension_past_the_bound_is_a_counterexample() {
     // every date coincides and the order reaches 31 days out.
     assert_eq!(
         messages,
-        ["9:33 L2012 `Extended` admits an extension of `answer-period` past its bound: when \
+        ["9:33 L2013 `Extended` admits an extension of `answer-period` past its bound: when \
           prescribed_due = 1970-01-01, grant_order_entered = 1970-01-01, current_due = 1970-01-01, \
           until = 1970-02-01 exceeds max(prescribed_due + 30.days, grant_order_entered + 14.days) = 1970-01-31"]
     );
@@ -92,13 +92,13 @@ fn an_undecided_bound_is_a_hole() {
     let (status, messages) = found(&program(
         " where until <= prescribed_due + 30.days || (until - prescribed_due) * 9_223_372_036_854_775_807 * 2 > 0.days",
     ));
-    // Undecided is a hole: an error in strict (sema's own L2014 on the
+    // Undecided is a hole: an error in strict (sema's own L2015 on the
     // event is aggregated beside it).
     assert_eq!(status, Some(ObligationStatus::Failed));
     assert_eq!(
         messages,
         [
-            "9:33 L2014 the SMT tier did not decide whether `Extended` stays within the bound of `answer-period`: exact arithmetic overflowed i64"
+            "9:33 L2015 the SMT tier did not decide whether `Extended` stays within the bound of `answer-period`: exact arithmetic overflowed i64"
         ]
     );
 }

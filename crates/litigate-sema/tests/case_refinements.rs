@@ -1,5 +1,5 @@
 //! Refinements in a matter (SPEC §3.5): a case event's arguments are
-//! checked exactly against its type's refinements (L2012 at the
+//! checked exactly against its type's refinements (L2013 at the
 //! argument), and a refinement naming a bound date (`prescribed_due`,
 //! `current_due`, `grant_order_entered`) when replay counts the dates it
 //! reads, refusing the extension it does not admit.

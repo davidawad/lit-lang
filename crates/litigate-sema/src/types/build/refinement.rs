@@ -1,7 +1,7 @@
 //! Refinements of aliases and events (SPEC §3.5): typed in the qualifier
 //! grammar, then checked satisfiable by the SMT tier: a refinement no
-//! value meets makes its type empty, which is a declaration error (L2013),
-//! and a question the solver does not decide is a hole (L2014).
+//! value meets makes its type empty, which is a declaration error (L2014),
+//! and a question the solver does not decide is a hole (L2015).
 use super::cx::Cx;
 use crate::db::parse::tree::{Field, Name, TypeRef};
 use crate::db::span::{Report, TextRange};
@@ -59,9 +59,9 @@ impl Cx<'_, '_> {
         found.into_iter().map(|(r, _)| r).collect()
     }
 
-    /// L2013 when no value of `vars` satisfies every refinement of
+    /// L2014 when no value of `vars` satisfies every refinement of
     /// `subject` (`asked`, as the solver is asked; `shown`, as reported),
-    /// naming an unsat core; L2014 when the solver does not decide.
+    /// naming an unsat core; L2015 when the solver does not decide.
     fn satisfiable(
         &mut self,
         subject: &str,
@@ -112,7 +112,7 @@ impl Cx<'_, '_> {
         }
     }
 
-    /// L2013 at the last conjunct of `core`, the others as located notes.
+    /// L2014 at the last conjunct of `core`, the others as located notes.
     fn vacuous(&mut self, subject: &str, shown: &[Located], core: &[usize]) {
         let members: Vec<&Located> = core.iter().filter_map(|&i| shown.get(i)).collect();
         // A refinement with no satisfying value is its own core; the solver

@@ -481,7 +481,7 @@ fn refinements(sig: &mut Signature, tree: &ItemTree, imports: &[&Signature]) {
                 .collect()
         };
         // An alias that does not settle (a cycle, L3006; an ill-typed
-        // refinement, L2011) stops the rounds once nothing else does.
+        // refinement, L2012) stops the rounds once nothing else does.
         if settled.is_empty() {
             break;
         }

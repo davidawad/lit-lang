@@ -4,7 +4,7 @@
 //! extension bounds. The SMT tier checks the claim for every matter at
 //! once: the event's refinements, with the bound dates open, together
 //! with `p` past every `extend { .. }` ceiling of each version of `d`. A
-//! model is a counterexample (L2012); `unknown` is a hole (L2014).
+//! model is a counterexample (L2013); `unknown` is a hole (L2015).
 //!
 //! A version with a discretionary grant (no ceiling) bounds nothing, and
 //! a version with no bounded grant has no bound to stay within: neither
@@ -18,7 +18,7 @@ use litigate_sema::hir::{
 };
 use litigate_sema::types::refinement::{self as refine, smt};
 
-/// L2012 (or L2014) for each refined `extends` event of the package whose
+/// L2013 (or L2015) for each refined `extends` event of the package whose
 /// refinements admit an extension past its deadline's bounds.
 pub(crate) fn bounds(cx: &Context<'_>) -> Vec<Diagnostic> {
     cx.declarations()
@@ -120,7 +120,7 @@ fn exceeds(
     }
 }
 
-/// L2012 for model `model` of the question: the values the claim reads,
+/// L2013 for model `model` of the question: the values the claim reads,
 /// `to`'s, and each ceiling's date there.
 fn counterexample(
     cx: &Context<'_>,

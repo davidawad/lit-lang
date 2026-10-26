@@ -233,7 +233,7 @@ impl Report {
         self
     }
 
-    /// A lint, or an undecided refinement (a hole, L2014): graded by
+    /// A lint, or an undecided refinement (a hole, L2015): graded by
     /// profile, so it does not stop a dev build; any other report is an
     /// error.
     #[must_use]

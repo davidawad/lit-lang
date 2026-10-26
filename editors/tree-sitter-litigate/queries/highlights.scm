@@ -31,6 +31,7 @@
   "forward_holidays" "declared_holidays" "quote"
   "words" "pages" "lines" "certificate" "excludes" "ecf"
   "delegable" "op" "unlock" "characterization" "retracted" "unknown_before" "commenced" "spawn" "joins"
+  "lock" "against" "Rule"
 ] @keyword
 
 (discretion) @keyword

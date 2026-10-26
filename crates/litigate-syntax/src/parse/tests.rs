@@ -482,3 +482,43 @@ fn the_spec_filing_limit_example_parses_and_is_only_reserved() {
     assert!(!kinds.contains(&SyntaxKind::Error), "{kinds:?}");
     assert!(kinds.contains(&SyntaxKind::Relation));
 }
+
+#[test]
+fn a_named_lock_is_a_deadline_option_and_lock_is_reserved_elsewhere() {
+    let parsed = parse_lit(
+        "module m\ndeadline d: 1.days from E() counted_by c {\n  lock against [LocalRule, CaseOrder] cite \"FRAP 26(b)(1)\"\n}\n",
+    );
+    assert!(parsed.is_ok(), "{:?}", parsed.errors());
+    for kw in [SyntaxKind::KwLock, SyntaxKind::KwAgainst] {
+        assert!(parsed
+            .syntax()
+            .descendants_with_tokens()
+            .any(|t| t.kind() == kw));
+    }
+    // Without `against`, or with no list, the option breaks where it does.
+    let bare =
+        parse_lit("module m\ndeadline d: 1.days from E() counted_by c { lock [CaseOrder] }\n");
+    assert_eq!(codes(&bare), ["L0001"]);
+    let empty = parse_lit("module m\ndeadline d: 1.days from E() counted_by c { lock against }\n");
+    assert_eq!(codes(&empty), ["L0001"]);
+    // Anywhere else `lock` is the reserved word (L0007).
+    assert_eq!(codes(&parse_lit("module m\nstart lock\n")), ["L0007"]);
+}
+
+#[test]
+fn a_rule_index_parses_after_the_rules_name() {
+    let parsed = parse_lit(
+        "module m\nrule duty r Rule[FederalRule, base, [2010-01-01, ..), _, [2010-01-01, 2020-01-01)] cite \"X\" { start s }\n",
+    );
+    assert!(parsed.is_ok(), "{:?}", parsed.errors());
+    assert!(node_kinds(&parsed).contains(&SyntaxKind::IndexClause));
+    // `Rule` with no bracket is not an index; a bad index breaks there.
+    assert_eq!(
+        codes(&parse_lit("module m\nrule duty r Rule { start s }\n")),
+        ["L0001"]
+    );
+    assert_eq!(
+        codes(&parse_lit("module m\nrule duty r Rule[3] { start s }\n")),
+        ["L0001"]
+    );
+}

@@ -104,3 +104,18 @@ fn guard_operations_keep_their_clauses_on_one_line() {
     );
     assert_eq!(fmt(&out), out);
 }
+
+#[test]
+fn a_rule_index_keeps_its_bracket_and_a_lock_its_list() {
+    let out = fmt(
+        "module m\nrule duty r Rule[FederalRule, _, [2010-01-01, ..), _, _] cite \"X\" {\n  deadline d: 1.days from E() counted_by c { lock against [LocalRule,CaseOrder] cite \"Y\" }\n}\n",
+    );
+    assert!(
+        out.contains("rule duty r Rule[FederalRule, _, [2010-01-01, ..), _, _] cite \"X\""),
+        "{out}"
+    );
+    assert!(
+        out.contains("lock against [LocalRule, CaseOrder] cite \"Y\""),
+        "{out}"
+    );
+}

@@ -125,7 +125,8 @@ fn worked_examples_have_the_expected_roots() {
 }
 
 /// Word-shaped anonymous nodes plus keywords the grammar aliases to named
-/// nodes (`unit`, `unvalued`, `discretion`).
+/// nodes (`unit`, `unvalued`, `discretion`). A word may be capitalized:
+/// `Rule` opens a rule's index (SPEC §3.1).
 fn grammar_keywords() -> BTreeSet<String> {
     let language: tree_sitter::Language = tree_sitter_litigate::LANGUAGE.into();
     let aliased = ["unit", "unvalued", "discretion"];
@@ -134,7 +135,7 @@ fn grammar_keywords() -> BTreeSet<String> {
         .filter(|&id| !language.node_kind_is_named(id) && language.node_kind_is_visible(id))
         .filter_map(|id| language.node_kind_for_id(id))
         .chain(aliased)
-        .filter(|kind| kind.chars().all(|c| c.is_ascii_lowercase() || c == '_'))
+        .filter(|kind| kind.chars().all(|c| c.is_ascii_alphabetic() || c == '_'))
         .filter(|kind| *kind != "_")
         .map(str::to_owned)
         .collect()

@@ -511,3 +511,58 @@ grant covid on [answer-period] effective [2020-03-15, 2020-06-13) cite "FRCP 87(
             (ref
               (identifier))
             (arguments)))))))
+
+================================================================================
+Named-authority locks and the rule index
+================================================================================
+
+module a
+rule duty answer Rule[FederalRule, base, [2009-12-01, ..), _, [2009-12-01, ..)] cite "FRCP 12(a)" {
+  deadline notice-period: 30.days after Entered() counted_by frap26 {
+    lock against [LocalRule, CaseOrder] cite "FRAP 26(b)(1)"
+  }
+}
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (rule_decl
+      (identifier)
+      (rule_index
+        (ref
+          (identifier))
+        (ref
+          (identifier))
+        (interval
+          (date)
+          (open_end))
+        (wildcard)
+        (interval
+          (date)
+          (open_end)))
+      (cite
+        (string
+          (string_content)))
+      (rule_body
+        (deadline_decl
+          (identifier)
+          (duration)
+          (call_expression
+            (ref
+              (identifier))
+            (arguments))
+          (ref
+            (identifier))
+          (deadline_decl_opts
+            (id_list
+              (ref
+                (identifier))
+              (ref
+                (identifier)))
+            (cite
+              (string
+                (string_content)))))))))

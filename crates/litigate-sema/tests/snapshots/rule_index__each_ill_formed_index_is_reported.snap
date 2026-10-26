@@ -1,0 +1,36 @@
+---
+source: crates/litigate-sema/tests/rule_index.rs
+expression: rows
+---
+{
+    "a closed transaction interval": [
+        "pkgs/demo/main.lit:11:40 L2007 a rule's transaction index is open, `[known_at, ..)`: a retraction belongs to the version it retracts, `retracted D` on that declaration",
+    ],
+    "a name for an interval": [
+        "pkgs/demo/main.lit:11:24 L2007 the valid index is an interval `[from, to)`, or `_` for its default",
+    ],
+    "a qualified name": [
+        "pkgs/demo/main.lit:11:21 L2007 the scope index is a name, or `_` for its default",
+    ],
+    "an index and its clause": [
+        "pkgs/demo/main.lit:11:48 L2007 `effective` is given twice: by the rule's `Rule[...]` index and as a clause",
+    ],
+    "an interval for a name": [
+        "pkgs/demo/main.lit:11:18 L2007 the authority index is a name, or `_` for its default",
+    ],
+    "an undeclared authority": [
+        "pkgs/demo/main.lit:11:18 L1002 cannot find authority `Nobody`",
+    ],
+    "another authority": [
+        "pkgs/demo/main.lit:11:18 L2007 the authority index `LocalRule` is not this rule's authority `FederalRule`: a rule's declarations have their package's (`authority` in Lit.toml)",
+    ],
+    "another class": [
+        "pkgs/demo/main.lit:11:21 L2007 the scope index `local-rule` is not this rule's class `base`: a rule's declarations have their package's (`kind` in Lit.toml)",
+    ],
+    "four indices": [
+        "pkgs/demo/main.lit:11:13 L2007 a rule's index is `Rule[authority, scope, valid, transaction, applicability]`, five indices with `_` for a default; this one has 4",
+    ],
+    "not a class": [
+        "pkgs/demo/main.lit:11:21 L2007 the scope index `fuzzy` is not an instrument class: expected `base`, `amendment`, `local-rule`, `general-order`, `standing-order`, `case-order`, `emergency-declaration`, `guidance`, `precedent`, `overruling`",
+    ],
+}

@@ -255,6 +255,13 @@ module.exports = {
       field('value', $.identifier),
       optional(field('cite', $.cite)),
     ),
+    // A named-authority lock (SPEC §5.3): the authorities it binds.
+    seq(
+      field('key', 'lock'),
+      'against',
+      field('value', $.id_list),
+      optional(field('cite', $.cite)),
+    ),
   )),
 
   // A typed delegation capability (SPEC §5.5): `delegable { to L, op O,
@@ -381,11 +388,19 @@ module.exports = {
     'rule',
     field('kind', choice('duty', 'power', 'liability')),
     field('name', $.identifier),
+    optional(field('index', $.rule_index)),
     repeat(choice($._version_clause, $.relation, $.cite)),
     field('body', $.rule_body),
   ),
 
   rule_body: $ => braced($._item),
+
+  // `Rule[a, s, v, k, ap]` (SPEC §3.1): a rule's indices, `_` for a
+  // default.
+  rule_index: $ => seq(
+    'Rule',
+    commaList('[', choice(alias('_', $.wildcard), $.interval, $.ref), ']'),
+  ),
 
   deadline_decl: $ => seq(
     'deadline',

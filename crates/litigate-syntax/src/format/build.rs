@@ -39,16 +39,23 @@ impl Builder {
 
     /// Emits every child of `node`.
     pub(crate) fn node(&mut self, node: &SyntaxNode) {
+        if node.kind() == RefinedType {
+            // Its braces enclose an expression, not a block: `{x: T | p}`
+            // stays on its line.
+            for child in node.children_with_tokens() {
+                match child {
+                    NodeOrToken::Node(child) => self.node(&child),
+                    NodeOrToken::Token(token) => self.token(&token),
+                }
+            }
+            return;
+        }
         let children: Vec<Element> = node.children_with_tokens().collect();
         let mut index = 0;
         while index < children.len() {
             match &children[index] {
                 NodeOrToken::Node(child) => self.node(child),
-                // A refinement type's braces enclose an expression, not a
-                // block: `{x: T | p}` stays on its line.
-                NodeOrToken::Token(token)
-                    if token.kind() == LBrace && node.kind() != RefinedType =>
-                {
+                NodeOrToken::Token(token) if token.kind() == LBrace => {
                     index = self.block(node, &children, index);
                     continue;
                 }
@@ -261,7 +268,9 @@ fn spaced(prev: Prev, kind: SyntaxKind, parent: SyntaxKind) -> bool {
         || (prev.kind == Less && prev.parent == TypeArgs)
         || (matches!(prev.kind, Minus | Bang) && prev.parent == UnaryExpr)
         || (prev.parent == Ratio && parent == Ratio)
-        || (prev.kind == LBrace && prev.parent == RefinedType)
-        || (kind == RBrace && parent == RefinedType)
+        // Only a refinement type's braces reach here (`block` lays out
+        // every other pair): `{x: T | p}`.
+        || prev.kind == LBrace
+        || kind == RBrace
         || (version(prev.parent) && version(parent)))
 }

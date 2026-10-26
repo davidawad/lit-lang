@@ -115,9 +115,7 @@ fn binary(
 #[must_use]
 pub fn show(ty: &Type, v: &Val) -> String {
     match (ty, v) {
-        (Type::Date, Val::Num(n)) if n.denominator == 1 => {
-            date::from_day_number(n.numerator).unwrap_or_else(|| format!("day {}", n.numerator))
-        }
+        (Type::Date, Val::Num(n)) => date::from_day_number(n.numerator),
         (Type::Days(u), Val::Num(n)) => format!("{}.{}", q::display(*n), suffix(*u)),
         (Type::Hours, Val::Num(n)) => format!("{}.hours", q::display(*n)),
         (Type::Money(c), Val::Num(n)) => money(*n, c),

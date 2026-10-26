@@ -120,16 +120,3 @@ fn a_rule_index_keeps_its_bracket_and_a_lock_its_list() {
     );
 }
 
-#[test]
-fn refinements_stay_on_their_line() {
-    let out = fmt(
-        "module m\ntype Short = {  d :Days<CalendarDays>|d<=60.days }\n\
-         event Extended(days: Days<CalendarDays>   where days <= 30.days, on: {t: Date | t >= 2026-01-01})\n",
-    );
-    assert_eq!(
-        out,
-        "module m\n\ntype Short = {d: Days<CalendarDays> | d <= 60.days}\n\n\
-         event Extended(days: Days<CalendarDays> where days <= 30.days, on: {t: Date | t >= 2026-01-01})\n"
-    );
-    assert_eq!(fmt(&out), out);
-}

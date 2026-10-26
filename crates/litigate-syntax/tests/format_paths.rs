@@ -123,3 +123,18 @@ fn a_rule_index_is_written_tight_to_its_keyword() {
     let stray = parse("module m\nrule duty q Rule { start s }\n", FileKind::Lit);
     assert_eq!(stray.errors().len(), 1);
 }
+
+/// A refinement type is an expression in braces, not a block (SPEC §3.5).
+#[test]
+fn refinements_stay_on_their_line() {
+    let out = fmt(
+        "module m\ntype Short = {  d :Days<CalendarDays>|d<=60.days }\n\
+         event Extended(days: Days<CalendarDays>   where days <= 30.days, on: {t: Date | t >= 2026-01-01})\n",
+    );
+    assert_eq!(
+        out,
+        "module m\n\ntype Short = {d: Days<CalendarDays> | d <= 60.days}\n\n\
+         event Extended(days: Days<CalendarDays> where days <= 30.days, on: {t: Date | t >= 2026-01-01})\n"
+    );
+    assert_eq!(fmt(&out), out);
+}

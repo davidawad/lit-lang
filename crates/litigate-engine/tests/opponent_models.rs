@@ -217,6 +217,13 @@ fn a_chance_model_naming_a_court_edge_sets_it_too() {
     assert_eq!(v.plan[mixed].control, Control::Chance);
     assert_eq!(v.prob[g.edge("stip::concede").unwrap()], Some(0.25));
     assert_eq!(v.prob[g.edge("stip::rule").unwrap()], Some(0.75));
+    // Naming only the opponent's edge leaves the court's authored 0.5.
+    let opp_only = with(json!({
+        "stip::mixed": { "model": "chance", "probabilities": { "concede": 0.25 } }
+    }));
+    let v = View::new(&g, &opp_only).unwrap();
+    assert!((v.prob[g.edge("stip::concede").unwrap()].unwrap() - 1.0 / 3.0).abs() < 1e-12);
+    assert!((v.prob[g.edge("stip::rule").unwrap()].unwrap() - 2.0 / 3.0).abs() < 1e-12);
     // An own-objective model keeps the court's draw as an interrupt.
     let own = with(json!({
         "stip::mixed": { "model": "own-objective", "payoffs": { "concede": 1.0 } }

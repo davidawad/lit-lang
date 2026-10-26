@@ -40,8 +40,7 @@ pub enum OpponentModel {
 }
 
 /// Which [`OpponentModel`] a node's plan follows, without its numbers.
-#[derive(Debug, Clone, Copy, Serialize, PartialEq, Eq)]
-#[serde(rename_all = "kebab-case")]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ModelKind {
     /// [`OpponentModel::Adversarial`].
     Adversarial,
@@ -54,7 +53,6 @@ pub enum ModelKind {
 /// `scenario.opponent_models` resolved against a graph: the model of every
 /// node (every flagged copy of the node named), and per edge the number its
 /// model gives it (a probability or a payoff).
-#[derive(Debug, Default)]
 pub(super) struct Models {
     pub kind: HashMap<NodeIx, ModelKind>,
     pub value: Vec<Option<f64>>,

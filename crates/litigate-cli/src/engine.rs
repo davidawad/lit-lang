@@ -262,6 +262,33 @@ fn load_catalog(cli: &Cli, builtin: Builtin) -> Result<Catalog, Failure> {
     Ok(catalog)
 }
 
+/// The packs and named scenarios `litigate engine` serves when no flag
+/// names them: `$LITGRAPH_PACKS`/`$LITGRAPH_SCENARIOS`, else compiled from
+/// `lib` (default `lit`) and the matters under `cases` (default `cases`).
+///
+/// # Errors
+/// A named directory that does not load, or a usage or I/O failure
+/// compiling the library.
+pub fn library_catalog(lib: Vec<String>, cases: Vec<String>) -> Result<Catalog, Failure> {
+    let cli = Cli {
+        command: "describe".into(),
+        input: None,
+        packs: None,
+        scenario: None,
+        set: Vec::new(),
+        args: Vec::new(),
+        kind: None,
+        packs_dir: None,
+        scenarios_dir: None,
+        calibration_dir: None,
+        lib,
+        cases,
+        no_links: false,
+        compact: true,
+    };
+    load_catalog(&cli, Builtin::Compiled)
+}
+
 /// The response text and whether it is `ok`.
 fn run(cli: &Cli, builtin: Builtin) -> Result<(String, bool), Failure> {
     if let Some(d) = &cli.calibration_dir {

@@ -27,6 +27,7 @@ pub mod hirx;
 pub mod ics;
 pub mod inline_tests;
 pub mod matter;
+pub mod mcp;
 pub mod out;
 pub mod prov;
 pub mod queries;
@@ -172,7 +173,7 @@ fn execute_with(
 
 /// Wall-clock timing. `std::time::Instant` panics on
 /// `wasm32-unknown-unknown` (no clock), so there it reports 0.
-struct Stopwatch(
+pub(crate) struct Stopwatch(
     #[cfg(not(all(target_arch = "wasm32", target_os = "unknown")))] std::time::Instant,
 );
 
@@ -203,8 +204,10 @@ where
     T: Into<OsString> + Clone,
 {
     let args: Vec<OsString> = args.into_iter().map(Into::into).collect();
-    if args.get(1).is_some_and(|arg| arg == "lsp") {
-        return lsp(&args[2..]);
+    match args.get(1).and_then(|arg| arg.to_str()) {
+        Some("lsp") => return lsp(&args[2..]),
+        Some("mcp") => return mcp::main(&args[2..]),
+        _ => {}
     }
     let printed = execute(args);
     // A closed pipe cannot be reported anywhere; the exit code still is.

@@ -182,7 +182,8 @@ pub fn upgrade_lock(session: &Session, check: &mut CaseCheck) -> Option<()> {
     for d in check
         .diagnostics
         .iter_mut()
-        .filter(|d| d.code == fixed.code && d.span.file == fixed.span.file)
+        // A matter check reports only the lock's own L1007 in the lock.
+        .filter(|d| d.span.file == fixed.span.file)
     {
         let (old, new) = (report::example(d), report::example(&fixed));
         check

@@ -22,6 +22,7 @@
 use std::collections::BTreeMap;
 use std::sync::OnceLock;
 
+use litigate_cli::out::Failure;
 use litigate_cli::LitigateRun;
 use litigate_engine::api::{self, Catalog};
 use serde_json::{json, Value};
@@ -39,17 +40,14 @@ fn embedded() -> impl Iterator<Item = (String, String)> {
 
 /// The packs and named scenarios `files` compile to, as `litigate engine`
 /// serves them: its `lit/` packages and `cases/` matters.
-fn compile(files: impl IntoIterator<Item = (String, String)>) -> Result<Catalog, String> {
-    litigate_cli::engine::compiled(&litigate_cli::memory_tree(files), &[], &[]).map_err(|f| f.0)
+fn compile(files: impl IntoIterator<Item = (String, String)>) -> Result<Catalog, Failure> {
+    litigate_cli::engine::compiled(&litigate_cli::memory_tree(files), &[], &[])
 }
 
 /// The embedded sources compiled, once.
-fn catalog() -> Result<&'static Catalog, &'static str> {
-    static CATALOG: OnceLock<Result<Catalog, String>> = OnceLock::new();
-    CATALOG
-        .get_or_init(|| compile(embedded()))
-        .as_ref()
-        .map_err(String::as_str)
+fn catalog() -> Result<&'static Catalog, &'static Failure> {
+    static CATALOG: OnceLock<Result<Catalog, Failure>> = OnceLock::new();
+    CATALOG.get_or_init(|| compile(embedded())).as_ref()
 }
 
 fn error(code: &str, message: &str) -> String {
@@ -57,21 +55,22 @@ fn error(code: &str, message: &str) -> String {
 }
 
 fn to_string(v: &impl serde::Serialize) -> String {
-    serde_json::to_string(v).unwrap_or_else(|e| error("invalid", &e.to_string()))
+    // Responses and runs are derive-`Serialize` trees with string keys.
+    serde_json::to_string(v).unwrap_or_default()
 }
 
-/// [`handle`] over `catalog`, or its compile failure as an error response.
-fn handle_in(catalog: Result<&Catalog, &str>, request_json: &str) -> String {
+/// [`handle`] over `catalog`, or its failure as an error response.
+fn handle_in(catalog: Result<&Catalog, &Failure>, request_json: &str) -> String {
     match catalog {
         Ok(c) => to_string(&api::handle_json(request_json, c)),
-        Err(e) => error("parse", e),
+        Err(e) => error("parse", &e.0),
     }
 }
 
-/// [`validate`] over `catalog`, or its compile failure as an error response.
-fn validate_in(catalog: Result<&Catalog, &str>, doc_json: &str, kind: Option<&str>) -> String {
+/// [`validate`] over `catalog`, or its failure as an error response.
+fn validate_in(catalog: Result<&Catalog, &Failure>, doc_json: &str, kind: Option<&str>) -> String {
     match (catalog, serde_json::from_str::<Value>(doc_json)) {
-        (Err(e), _) => error("parse", e),
+        (Err(e), _) => error("parse", &e.0),
         (Ok(c), Ok(doc)) => to_string(&api::validate(&doc, kind, c)),
         (Ok(_), Err(e)) => error("parse", &e.to_string()),
     }
@@ -97,10 +96,8 @@ pub fn handle_with_packs(request_json: &str, packs_json: &str) -> String {
     };
     let files = files.into_iter().map(|(k, v)| (k, v.to_string()));
     // `from_files` records a pack that does not parse rather than failing.
-    match Catalog::from_files("inline".into(), files) {
-        Ok(c) => handle_in(Ok(&c), request_json),
-        Err(e) => error("parse", &e.to_string()),
-    }
+    let catalog = Catalog::from_files("inline".into(), files).map_err(Failure::from);
+    handle_in(catalog.as_ref(), request_json)
 }
 
 /// Validate a document (pack, links, scenario or request) against the

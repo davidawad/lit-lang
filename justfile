@@ -103,7 +103,7 @@ cov-html:
 # lines, regions and branches -- no exclusions. (litigate-engine, the
 # renamed litgraph engine, keeps the `cov` floor above.) Branch coverage needs a
 # nightly toolchain (`rustup toolchain install nightly -c llvm-tools-preview`).
-litigate_crates := "litigate-base litigate-syntax litigate-sema litigate-lower litigate-verify litigate-import litigate-cli litigate-lsp litigate-smt"
+litigate_crates := "litigate-base litigate-syntax litigate-sema litigate-lower litigate-verify litigate-import litigate-cli litigate-lsp litigate-smt litigate-wasm"
 
 cov-litigate *CRATES=litigate_crates:
     #!/usr/bin/env bash

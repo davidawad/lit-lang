@@ -50,9 +50,10 @@ fn engine_requests_run_over_the_compiled_embedded_sources() {
 
 #[test]
 fn a_compile_failure_is_every_response() {
-    let failed = handle_in(Err("lit: broken"), "{}");
+    let broken = Failure::new("lit: broken");
+    let failed = handle_in(Err(&broken), "{}");
     assert_eq!(parse(&failed)["error"]["message"], json!("lit: broken"));
-    let failed = validate_in(Err("lit: broken"), "{}", None);
+    let failed = validate_in(Err(&broken), "{}", None);
     assert_eq!(parse(&failed)["error"]["code"], json!("parse"));
     // An empty tree has no `lit/` and no `cases/`: nothing to serve.
     let empty = compile([]).map(|c| (c.packs.len(), c.scenarios.len()));

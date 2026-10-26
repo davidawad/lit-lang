@@ -13,7 +13,8 @@ fn s(p: &Path) -> String {
     p.to_string_lossy().into_owned()
 }
 
-/// `root/{pkg/Lit.toml, pkg/a.lit, pkg/m.case, .hidden/x.lit, target/y.lit, notes.txt}`.
+/// `root/{pkg/Lit.toml, pkg/a.lit, pkg/m.case, pkg/w.world, .hidden/x.lit,
+/// target/y.lit, notes.txt}`.
 fn tree(name: &str) -> PathBuf {
     let dir = scratch(name);
     let manifest = std::fs::read_to_string(repo().join("lit/examples/Lit.toml")).unwrap();
@@ -21,6 +22,7 @@ fn tree(name: &str) -> PathBuf {
         ("pkg/Lit.toml", manifest.as_str()),
         ("pkg/a.lit", "module m\n"),
         ("pkg/m.case", "case c\n"),
+        ("pkg/w.world", "layers = [\"frcp-rule12-example\"]\n"),
         (".hidden/x.lit", "module x\n"),
         ("target/y.lit", "module y\n"),
         ("notes.txt", "not an input\n"),
@@ -40,6 +42,7 @@ fn walking_skips_hidden_and_target_directories() {
         Targets {
             packages: vec![dir.join("pkg")],
             cases: vec![dir.join("pkg/m.case")],
+            worlds: vec![dir.join("pkg/w.world")],
             files: vec![dir.join("pkg/a.lit"), dir.join("pkg/m.case")],
         }
     );
@@ -52,9 +55,11 @@ fn each_kind_of_file_names_its_inputs() {
         s(&dir.join("pkg/a.lit")),
         s(&dir.join("pkg/Lit.toml")),
         s(&dir.join("pkg/m.case")),
+        s(&dir.join("pkg/w.world")),
     ])
     .unwrap();
     assert_eq!(found.packages, [dir.join("pkg")]);
+    assert_eq!(found.worlds, [dir.join("pkg/w.world")]);
     assert_eq!(found.files, [dir.join("pkg/a.lit"), dir.join("pkg/m.case")]);
     let bare = litigate_in(&dir.join("pkg"), &["lock", "Lit.toml"]);
     assert_eq!(
@@ -76,7 +81,7 @@ fn files_that_are_not_inputs_are_usage_errors() {
     let shown = s(&dir.join("notes.txt"));
     assert_eq!(
         message(&dir.join("notes.txt")),
-        format!("{shown}: not a .lit, .case, or Lit.toml file")
+        format!("{shown}: not a .lit, .case, .world, or Lit.toml file")
     );
 }
 

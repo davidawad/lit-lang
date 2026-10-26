@@ -49,6 +49,7 @@ fn every_registered_code_exercises_its_stable_views() {
                 DiagnosticCode::AnonymousEdge
                     | DiagnosticCode::UndeclaredEventId
                     | DiagnosticCode::CiteProvedByHistory
+                    | DiagnosticCode::PrecedentNotBinding
             ) {
                 assert_eq!(severity, Severity::Info);
             } else if matches!(

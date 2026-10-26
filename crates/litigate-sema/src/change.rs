@@ -30,14 +30,6 @@ pub struct ClassIndex {
     pub missing: Option<String>,
 }
 
-impl ClassIndex {
-    /// Whether the family's cell narrows the class's row.
-    #[must_use]
-    pub fn narrowed(&self) -> bool {
-        self.cell.as_ref().is_some_and(|c| c.row.is_some())
-    }
-}
-
 /// The matrix `pkg` is checked against: `core`'s `[family.*]` tables.
 pub fn families(db: &dyn salsa::Database, pkg: PackageInput) -> &[Family] {
     pkg.files(db)

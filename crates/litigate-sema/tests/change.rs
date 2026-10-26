@@ -18,6 +18,7 @@ use litigate_sema::db::span::TextRange;
 use litigate_sema::hir::{Effect, Kind, Scope};
 use litigate_sema::pkg::load::LoadedPackage;
 use litigate_sema::pkg::manifest::parse_manifest;
+use std::fmt::Write as _;
 
 const START: &str = "module core.start\nstart z\nstate z: \"Z\"\n";
 
@@ -147,9 +148,10 @@ state l: \"L\"
         &format!("title = \"T\"\nkind = \"{kind}\"\n"),
         1,
     );
-    p.manifest.push_str(&format!(
+    let _ = write!(
+        p.manifest,
         "\n[sources.order]\npath = \"sources/order.txt\"\n\n[package.instrument]\nsource = \"order\"\nissuer = \"Demo\"\ndate = \"2020-01-01\"\n{extra}"
-    ));
+    );
     p
 }
 

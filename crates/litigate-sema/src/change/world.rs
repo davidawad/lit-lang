@@ -9,7 +9,7 @@ use crate::db::ids::DeclId;
 use crate::db::inputs::{PackageInput, Workspace};
 use crate::db::queries::{check_decl, check_package, item_tree, manifest};
 use crate::db::span::{sort_diagnostics, Report, TextRange};
-use crate::hir::{Family, Kind, Manifest, Row, Scope};
+use crate::hir::{Family, Kind, Manifest, Row};
 use crate::pkg::semver::Version;
 use litigate_base::{Diagnostic, DiagnosticCode as C, FileId, LineIndex, Profile};
 use serde::{Deserialize, Serialize};
@@ -268,41 +268,15 @@ pub fn check_world(
     }
     let mut located: Vec<Diagnostic> = Vec::new();
     let overrulings = overrulings(db, &layers, families, &mut located);
-    for &(pkg, m) in &layers {
-        let name = &m.name;
-        let authoritative = m.instrument.as_ref().is_none_or(|i| i.authoritative);
-        if !authoritative && world.modality == Modality::Actual {
-            reports.push(Report::new(
-                C::NotActualLaw,
-                at[name],
-                format!(
-                    "layer `{name}` is not authoritative (a synthetic what-if): it may appear \
-                     only in a counterfactual world"
-                ),
-            ));
-        }
-        let (kind, mut in_force) = match &m.kind {
-            Kind::Precedent { .. } => {
-                let s = scope(m, family, world.location.circuit.as_deref());
-                let kind = Kind::Precedent { scope: s };
-                let fits = effects_of(db, pkg).within(kind.row());
-                if !fits {
-                    reports.push(not_binding(&world, m, at[name], family));
-                }
-                (kind, fits || s == Scope::Binding)
-            }
-            other => (other.clone(), true),
-        };
-        let overruled_by = overrulings.get(name).cloned();
-        in_force &= overruled_by.is_none();
-        out.layers.push(Layer {
-            name: name.clone(),
-            version: m.version.clone(),
-            class: kind.label().to_owned(),
-            in_force,
-            overruled_by,
-        });
-    }
+    let here = Here {
+        world: &world,
+        at: &at,
+        family,
+    };
+    out.layers = layers
+        .iter()
+        .map(|&(pkg, m)| here.layer(db, pkg, m, overrulings.get(&m.name), &mut reports))
+        .collect();
     out.diagnostics = reports
         .iter()
         .map(|r| r.to_diagnostic(&file, &index))
@@ -312,6 +286,60 @@ pub fn check_world(
     sort_diagnostics(&mut out.diagnostics);
     out.world = Some(world);
     out
+}
+
+/// What a world's layers are checked against: the world, where its names
+/// are written, and its location's family.
+struct Here<'w> {
+    world: &'w World,
+    at: &'w BTreeMap<String, TextRange>,
+    family: Option<&'w Family>,
+}
+
+impl Here<'_> {
+    /// Layer `m` (package `pkg`) as the world has it: L1014 for a
+    /// synthetic layer in an actual world, L9009 for a precedent that does
+    /// not bind here yet has binding effects.
+    fn layer(
+        &self,
+        db: &dyn salsa::Database,
+        pkg: PackageInput,
+        m: &Manifest,
+        overruled_by: Option<&Overruled>,
+        reports: &mut Vec<Report>,
+    ) -> Layer {
+        let name = &m.name;
+        let authoritative = m.instrument.as_ref().is_none_or(|i| i.authoritative);
+        if !authoritative && self.world.modality == Modality::Actual {
+            reports.push(Report::new(
+                C::NotActualLaw,
+                self.at[name],
+                format!(
+                    "layer `{name}` is not authoritative (a synthetic what-if): it may appear \
+                     only in a counterfactual world"
+                ),
+            ));
+        }
+        let (kind, fits) = match &m.kind {
+            Kind::Precedent { .. } => {
+                let s = scope(m, self.family, self.world.location.circuit.as_deref());
+                let kind = Kind::Precedent { scope: s };
+                let fits = effects_of(db, pkg).within(kind.row());
+                if !fits {
+                    reports.push(not_binding(self.world, m, self.at[name], self.family));
+                }
+                (kind, fits)
+            }
+            other => (other.clone(), true),
+        };
+        Layer {
+            name: name.clone(),
+            version: m.version.clone(),
+            class: kind.label().to_owned(),
+            in_force: fits && overruled_by.is_none(),
+            overruled_by: overruled_by.cloned(),
+        }
+    }
 }
 
 /// The location's family, checking its circuit (L1013).

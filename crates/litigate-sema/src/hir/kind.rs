@@ -29,7 +29,7 @@ pub enum Kind {
     StandingOrder,
     /// An order in one case.
     CaseOrder,
-    /// A Judicial Conference emergency declaration (FRCP 87, FRCrimP 62,
+    /// A Judicial Conference emergency declaration (FRCP 87, Fed. R. Crim. P. 62,
     /// FRAP 2(b)): it grants capabilities, such as extending a locked
     /// period, to the courts it designates for a bounded window, and does
     /// nothing else.
@@ -402,13 +402,14 @@ pub struct Instrument {
     /// Its designation (an order or rule number, a reporter cite).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub designation: Option<String>,
-    /// The issuing court's id in the forum-family matrix (`scotus`, `ca9`,
-    /// `cafc`, `ptab`): precedent and overruling only, where binding scope
-    /// is computed from it.
+    /// The issuing court's id in the forum-family matrix (`scotus`, `ca9`):
+    /// precedent and overruling only, where binding scope is computed from
+    /// it.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub court: Option<String>,
-    /// When a precedent was designated precedential (PTAB SOP 2; a
-    /// published opinion's date where the legend is the designation).
+    /// When a precedent was designated precedential (a board's designation
+    /// order; a published opinion's date where the legend is the
+    /// designation).
     /// Absent, the decision is nonprecedential and binds nowhere.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub designated: Option<String>,
@@ -436,7 +437,7 @@ fn is_yes(b: &bool) -> bool {
 /// Data, not compiler code (design review §2.5 item 4).
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Family {
-    /// Its id (`district-civil`, `cofc`, `ptab`).
+    /// Its id (`district-civil`, `circuit-appellate`).
     pub id: String,
     /// What it is.
     pub title: String,

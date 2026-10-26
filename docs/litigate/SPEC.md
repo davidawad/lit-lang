@@ -213,7 +213,7 @@ PackageDecl  = "package", Ident, "{", "forum", Ident, Sep, "authority", Ident, "
 Item         = StartDecl | GroupDecl | TypeDecl | EnumDecl | EventDecl | NodeDecl
              | LinkDecl | InstanceDecl | RuleDecl | DeadlineDecl | CountingDecl
              | CalendarDecl | TransitionDecl | AuthorityDecl | DefaultDecl
-             | ExceptionDecl | TestDecl | GrantDecl ;
+             | ExceptionDecl | TestDecl | GrantDecl | RecharDecl | InvalidDecl ;
 StartDecl    = "start", Ident ;
 GroupDecl    = "group", Ident, ":", String ;
 TypeDecl     = "type", Ident, "=", Type, [ WhereClause ] ;   (* refinements: §3.5 *)
@@ -305,6 +305,10 @@ TestStmt     = "given", Expr, "on", Date | "expect", Expr ;
 GrantDecl    = "grant", Ident, "on", IdList, { VersionClause | Cite },
                "{", { GrantField, Sep }, "}" ;
 GrantField   = "unlock" | ("extend" | "waive"), Capability | "delegable", Delegation ;
+RecharDecl   = "recharacterize", Ident, ":", Ref,
+               "characterization", ("jurisdictional" | "claim_processing"),
+               { VersionClause | Cite } ;                 (* §5.7 *)
+InvalidDecl  = "invalidate", Ident, ":", Ref, { VersionClause | Cite } ;   (* §5.7 *)
 
 VersionClause= ("effective" | "commenced"), Interval
              | ("known_at" | "retracted" | "unknown_before"), Date ;
@@ -987,7 +991,10 @@ Cargo.lock does, and `litigate lock` regenerates it.
   edges, of the node), or that two declarations both claim, is L1001;
   versions of one node may repeat its `formerly`. Links packages and
   `::` references name current ids.
-- Each package has exactly one `start` (L1008). Every actor used by `by`, and
+- Each package has exactly one `start` (L1008), but a modification layer
+  (a `kind` other than `base`, §5.7) that declares no node has none: it
+  changes other packages' law and has no procedure of its own, and it
+  lowers to a pack with no nodes and an empty `startNodeId`. Every actor used by `by`, and
   the implicit `either`, must be a key of `[package.roles]` (L1009).
 - Cites resolve through `cite_prefixes`: the longest matching prefix wins,
   and no match is L1010. The pinpoint's first number (`12` in
@@ -2075,7 +2082,8 @@ and needs no solver. The effects a declaration has:
 | `set-prior` | `p` on an edge of a chance node |
 | `add-fact` | a `fact`-tagged node |
 | `waive` | in a `precedent` package, `override` or `notwithstanding` naming another package's declaration: the waiver is that relation (a prospective override under the target's delegation), and the period the declaration states is the waiver's, not a `prescribe` of its own |
-| `recharacterize`, `invalidate` | no declaration form in language 1; an overruling's `invalidate` is its `overrules` list (§5.8) |
+| `recharacterize` | a `recharacterize` declaration |
+| `invalidate` | an `invalidate` declaration; an overruling's `overrules` list withdraws whole precedents (§5.8) |
 
 A test has no effect, and `subject_to` displaces nothing. The rows are
 the forum-independent ceiling (`litigate_sema::hir::Kind::row`); a forum
@@ -2107,6 +2115,25 @@ family's `circuits`), else persuasive; a world narrows it at its location
 (§5.8). The L2010 diagnostic is at the clause performing the effect
 (else the declaration's name), once per effect per declaration, and its
 notes give the class's row and the classes that permit the effect.
+
+**Recharacterizations and invalidations.** `recharacterize r: d
+characterization c` gives deadline `d` the character `c`
+(`jurisdictional` or `claim_processing`, §5.3) over `r`'s `effective`
+window, its `cite` the holding (Harrow v. Department of Defense, 601 U.S.
+480 (2024): § 7703(b)(1) "is not jurisdictional"); `d`'s text stands.
+`invalidate i: d` withdraws `d` over `i`'s window: an annulment, or a
+precedent invalidating a rule or a doctrine (Bowles v. Russell, 551 U.S.
+205 (2007), of the "unique circumstances" doctrine). The target of a
+recharacterization is a deadline, and of an invalidation any declaration
+but a node, an instance or another invalidation (L2001 otherwise; L1002
+when it does not resolve); in both it is another package's declaration
+(L2007 for its own: a package changes its own declarations by versioning
+them). A characterization other than the two is L2007, a missing one
+L0001. Each form has exactly its effect, checked against the class row
+and the family's cell like any other (L2010), and in a world it is a
+binding effect, so a precedent that does not bind at the location is
+L9009 (§5.8). Neither lowers (§8.1): which character or claim a matter's
+deadline has under a world's layers is lg-fq2.4's world run.
 
 **The forum-family matrix.** `lit/core`'s `[family.*]` tables (§4.1;
 docs/litigate/CHANGE.md §3) are data, not compiler code (design review
@@ -2401,7 +2428,7 @@ Anything without a lowering is L6001.
 | `valence`, `court_listener_url`, `action_id`, `note`, `tags`, `attrs`, `sets`, `clears`, `requires`, `forbids` | same-named `RawEdge` fields |
 | node or edge `basis` | `lowered.basis[]` `{pointer: "/nodes/i" \| "/edges/i", basis, source}`: `sourced` with the cite, `calibrated` with `dataset@date`, `expert` with the name, `estimate`; a link's at `/links/i` |
 | `counting` / `calendar` | `Pack.counting` (the rule id) plus a clock-library fragment (§8.2) |
-| `event`, authority lattice, relations, defaults, exceptions, transitions, tests, types | not emitted (verification only) |
+| `event`, authority lattice, relations, defaults, exceptions, transitions, tests, types, recharacterizations, invalidations | not emitted (verification only) |
 
 Multiple versions: only the declaration the precedence selection (§5.5)
 picks at the build's `--as-of`/`--known-at` is emitted, with supersession
@@ -3549,7 +3576,33 @@ examples `crates/litigate-cli/tests/change_examples.rs`.
 5. **Waive** is a precedent's `override`/`notwithstanding`, licensed by
    the target's delegation (L3004).
 
-Still open: declaration forms for `recharacterize` and a precedent's
-`invalidate`; a `.case` that runs under a world, and enumeration across
-worlds (lg-fq2.4); the 2009 Committee Note golden tests (lg-fq2.5); and a
-modification layer without its own placeholder `start`.
+Still open: a `.case` that runs under a world, and enumeration across
+worlds (lg-fq2.4); the 2009 Committee Note golden tests (lg-fq2.5).
+§13.12 records lg-fq2.7.
+
+### 13.12 Status: recharacterize, invalidate, layers without a start (lg-fq2.7)
+
+Negative tests: `litigate-sema/tests/change.rs` (the class rows, targets,
+worlds, a layer without a start), `litigate-syntax/tests/recovery_decls.rs`
+(each missing part).
+
+1. **`recharacterize r: d characterization c`** and **`invalidate i: d`**
+   are declaration forms (§3.1) with exactly their effects (§5.7), so the
+   class rows and the family cells type-check them: a persuasive
+   precedent, guidance, a case order, a local rule or an overruling
+   recharacterizing, and a persuasive precedent, guidance or a local rule
+   invalidating, are L2010. The target is another package's deadline
+   (recharacterize) or claim (invalidate).
+2. **A modification layer declaring no node needs no `start`** (§4.3);
+   the change examples drop their placeholder nodes. A base package, and a
+   layer that declares a node, still has exactly one (L1008).
+3. **Example.** Bowles v. Russell `invalidate`s Thompson v. INS's "unique
+   circumstances" default (docs/litigate/examples/change/overruling), its
+   cite a hole: the vendored opinion has no heading to bind. No vendored
+   decision recharacterizes a corpus deadline (Harrow is not vendored), so
+   no example recharacterizes.
+
+Not done here: applying either form when a world's layers are merged
+(which character or claim a matter's deadline has in a world) is
+lg-fq2.4's world run; two layers of one world recharacterizing one
+deadline differently are not yet a set-merge conflict.

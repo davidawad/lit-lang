@@ -36,6 +36,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   own payoff per response, so stipulating can beat moving. `explain`'s
   `who_decides` names the model and `provenance.modes` echoes it; an entry
   that cannot apply warns `opponent-model-unused`.
+- **`recharacterize` and `invalidate` declarations; a layer without a
+  start** (lg-fq2.7; SPEC §5.7, §13.12). `recharacterize r: d
+  characterization claim_processing` gives another package's deadline a
+  new character over its window, and `invalidate i: d` withdraws another
+  package's claim; each has exactly its effect, so the class rows and
+  family cells type-check it (L2010 for a persuasive precedent, guidance,
+  a case order or local rule; an overruling may invalidate but not
+  recharacterize). A target of the wrong kind is L2001, the declaring
+  package's own declaration L2007. A modification layer that declares no
+  node needs no `start` (L1008 no longer fires), and lowers to an empty
+  pack; the change examples drop their placeholder nodes, and Bowles v.
+  Russell invalidates Thompson v. INS's "unique circumstances" default.
 - **Legal change as declared instrument classes, per forum family, in
   worlds** (lg-fq2.1; docs/litigate/CHANGE.md, SPEC §5.7-§5.8). New
   classes `general-order` and `emergency-declaration`. `lit/core`'s

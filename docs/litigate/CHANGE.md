@@ -193,9 +193,11 @@ cases; what it does; its effect row (the forum-independent ceiling,
     to another package's default. The text stands.
   - `recharacterize`: a deadline's `characterization` (Harrow v.
     Department of Defense, 601 U.S. 480 (2024): § 7703(b)(1) "is not
-    jurisdictional").
+    jurisdictional"), written `recharacterize r: d characterization
+    claim_processing effective [from, ..) cite "..."` (SPEC §5.7).
   - `invalidate`: of a rule or a doctrine (Bowles v. Russell, 551 U.S.
-    205 (2007), of the "unique circumstances" exception).
+    205 (2007), of the "unique circumstances" exception), written
+    `invalidate i: d effective [from, ..) cite "..."`.
   - `waive`: a prospective override of a declaration delegated to the
     waiving power (Light & Wonder, IPR2025-01072, Paper 30: "going
     forward, the Office is waiving the time period under 37 C.F.R.
@@ -237,7 +239,9 @@ cases; what it does; its effect row (the forum-independent ceiling,
   date, retroactively to open cases (Harper), never reopening final
   judgments (Loper Bright Enterprises v. Raimondo (2024): prior holdings
   "are still subject to statutory stare decisis").
-- **Row:** declare, invalidate.
+- **Row:** declare, invalidate: `overrules` withdraws whole precedents,
+  and an `invalidate` declaration one of their claims (Bowles invalidates
+  Thompson's "unique circumstances" default, §4).
 
 ### 2.11 `.case` and `hypothetical`
 
@@ -302,7 +306,7 @@ docs/litigate/examples/change` checks them all (test
 | emergency-declaration | `emergency-declaration/` | FRCP 87 (synthetic, `authoritative = false`) | unlocks 59(e) for 90 days, extensions ≤ 30 days |
 | guidance | `guidance/` | Fed. Cir. Practice Note to Rule 26 | fixes the court's draw on waiving a late notice (p 0) |
 | precedent | `precedent/` over `ptab-base/` | Light & Wonder, Paper 30 (designated June 22, 2026) | waives § 42.75(c)(1): 14 days → 30 |
-| overruling | `overruling/` over `overruled/` | Bowles v. Russell (2007) overruling Thompson v. INS (1964) | withdraws Thompson from June 14, 2007 |
+| overruling | `overruling/` over `overruled/` | Bowles v. Russell (2007) overruling Thompson v. INS (1964) | withdraws Thompson from June 14, 2007, and invalidates its "unique circumstances" default |
 
 `docs/litigate/examples/timelines/` holds a procedure over the base
 periods (`post-judgment/`: a Rule 59(e) motion `within` the base's
@@ -470,9 +474,11 @@ metadata, kept as metadata about instruments, never as edit scripts
   court scope, the rung rank. A distinct `GeneralOrder` rung would change
   the lattice every package shares.
 - A precedent's waiver is written `override` (language 1 has no `waive`
-  relation). `recharacterize` and a precedent's `invalidate` have rows but
-  no declaration form yet; an overruling's `invalidate` is its
-  `overrules` list.
+  relation). `recharacterize` and `invalidate` are declarations naming
+  another package's deadline or claim (lg-fq2.7); each is checked against
+  the class rows and family cells, and is not yet applied when a world's
+  layers merge (lg-fq2.4). No vendored decision recharacterizes a corpus
+  deadline, so no example does.
 - Binding scope uses the `designated` date as a fact of the instrument;
   gating a binding precedent's claims by that date at a query is the
   claims' own `effective` window.
@@ -483,8 +489,8 @@ metadata, kept as metadata about instruments, never as edit scripts
   (design review §3.4, §6 item 23) is not done yet: the query lists the
   readings' worlds side by side. Golden tests against the 2009 Committee
   Note examples and collected rulings are lg-fq2.5.
-- A modification layer still declares a placeholder `start` node, as
-  `lit/core` does.
+- A modification layer that declares no node has no `start` (lg-fq2.7);
+  `lit/core`, a base library, still declares its placeholder.
 - The COFC general-order example records its closed day; wiring a
   court's own closures into its counting rule's calendar is lg-fq2.6.
 - No corpus package changed class: each `lit/` package is a forum's base

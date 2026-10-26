@@ -301,7 +301,7 @@ DefaultDecl  = "default", Ident, { VersionClause | Relation | Cite },
 ExceptionDecl= "exception", Ident, ("rebuts" | "undercuts"), Ref, { Cite },
                "when", Expr, [ "=>", Expr ], [ "priority", Number ] ;
 TestDecl     = "test", String, [ Cite ], "{", { TestStmt }, "}" ;
-TestStmt     = "given", Expr, "on", Date | "expect", Expr ;
+TestStmt     = "given", Expr, [ "by", Ident ], "on", Date | "expect", Expr ;
 GrantDecl    = "grant", Ident, "on", IdList, { VersionClause | Cite },
                "{", { GrantField, Sep }, "}" ;
 GrantField   = "unlock" | ("extend" | "waive"), Capability | "delegable", Delegation ;
@@ -2274,7 +2274,13 @@ the variants of enum `E` with exact non-negative weights summing to 1 (L2003).
 
 The builtins (closed list) are `deadline(d) -> Due` (tests: due date from the
 `given` events; bare it is the adjusted `Date`, and `.nominal`/`.adjusted`
-project `Date`s, §5.3), `has_event(Pattern) -> Bool`, `date_of(Pattern) ->
+project `Date`s, §5.3; a later `given` whose type `extends d` moves the
+adjusted date as replay moves a matter's order, licensed by one of the
+selected declaration's own `extend` grants that its actor holds, within the
+grant's window, motion and bound: `given e by A on date` names the actor,
+as a matter's `by` party plays one, `A` an actor of `[package.roles]`
+(L1009); an order no grant licenses, one naming no actor included, leaves
+the assertion unevaluated, L5006), `has_event(Pattern) -> Bool`, `date_of(Pattern) ->
 Date` (the date of the latest matching event; read only by fact guards,
 §5.1, §5.6), `prob`, `given`, `in`,
 `intersect`, `disjoint`, `len`, `contains`, `credal`, `lower`, `upper`,

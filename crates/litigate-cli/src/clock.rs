@@ -291,12 +291,45 @@ pub fn due(
     at: usize,
     known_at: Option<&str>,
 ) -> Result<Due, String> {
+    let governing = deadline(world, pkg, name, events, at, known_at)?;
+    due_of(clocks, world, governing, events, at, known_at)
+}
+
+/// The declaration of deadline `name` of `pkg` governing `events[at]`
+/// among those recorded by `known_at`, with its pack, as [`due`] selects
+/// it: a version, or the claimant displacing it.
+///
+/// # Errors
+/// A message for an unknown deadline or one nothing governs on the event.
+pub fn deadline<'r, 'w>(
+    world: &'r World<'w>,
+    pkg: &hir::Package,
+    name: &str,
+    events: &[MatterEvent<'_>],
+    at: usize,
+    known_at: Option<&str>,
+) -> Result<(&'r str, &'w hir::Deadline), String> {
     let key = Key {
         pack: pkg.manifest.pack_id.clone(),
         name: hirx::local(name).to_owned(),
     };
     let missing = format!("`{name}` is not a deadline of `{}`", pkg.manifest.name);
-    let (owner, d) = deadline_of(world, &key, (events, at, known_at), missing)?;
+    deadline_of(world, &key, (events, at, known_at), missing)
+}
+
+/// [`due`] under `governing`, the declaration [`deadline`] selects (with
+/// its pack).
+///
+/// # Errors
+/// As [`due`], once the deadline is selected.
+pub fn due_of(
+    clocks: &Clocks<'_>,
+    world: &World<'_>,
+    (owner, d): (&str, &hir::Deadline),
+    events: &[MatterEvent<'_>],
+    at: usize,
+    known_at: Option<&str>,
+) -> Result<Due, String> {
     let judged = Judged {
         clocks,
         world,

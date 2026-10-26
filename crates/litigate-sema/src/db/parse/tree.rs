@@ -277,8 +277,8 @@ pub enum LimitEntryKind {
 /// Test statement.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum TestStmt {
-    /// `given e on date`.
-    Given(Expr, Name),
+    /// `given e [by actor] on date`.
+    Given(Expr, Option<RefPath>, Name),
     /// `expect e`.
     Expect(Expr),
 }
@@ -654,8 +654,9 @@ impl Ranges for ArmItem {
 impl Ranges for TestStmt {
     fn ranges_mut(&mut self, f: &mut dyn FnMut(&mut TextRange)) {
         match self {
-            Self::Given(e, date) => {
+            Self::Given(e, by, date) => {
                 e.ranges_mut(f);
+                by.ranges_mut(f);
                 date.ranges_mut(f);
             }
             Self::Expect(e) => e.ranges_mut(f),

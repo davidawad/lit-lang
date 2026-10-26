@@ -142,6 +142,7 @@ fn every_expression_form_evaluates_or_says_why() {
                 pkg: &pkg,
                 known_at: &pkg.manifest.in_force.known_at,
                 givens: &givens,
+                actors: &BTreeMap::new(),
                 steps: Vec::new(),
             };
             (name, cx.eval(&e).map(|v| v.json()))
@@ -174,6 +175,7 @@ fn expectations_carry_their_source_text_or_error() {
         pkg: &pkg,
         known_at: &pkg.manifest.in_force.known_at,
         givens: &[],
+        actors: &BTreeMap::new(),
         steps: Vec::new(),
     };
     let sources = [("t.lit".to_owned(), "abcdef\nghijkl\n".to_owned())];

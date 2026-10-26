@@ -275,6 +275,11 @@ pub struct Test {
     pub cite: Option<String>,
     /// `given <event> on <date>` facts in order.
     pub givens: Vec<(Expr, String)>,
+    /// The actor doing each `given <event> by <actor> on <date>`, by its
+    /// index in `givens`, as a matter's `by` party's actor: only it holds
+    /// the deadline grants made `by` that actor (SPEC §5.3).
+    #[serde(default, skip_serializing_if = "std::collections::BTreeMap::is_empty")]
+    pub actors: std::collections::BTreeMap<usize, String>,
     /// `expect` assertions in order.
     pub expects: Vec<Expectation>,
     /// Source span.

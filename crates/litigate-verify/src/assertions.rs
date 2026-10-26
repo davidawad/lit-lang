@@ -12,7 +12,10 @@
 //! it) in the law the package sees, among those recorded by the build's
 //! `known_at`, as lowering selects them; a counting rule no loaded
 //! package declares is the shared
-//! library's. `has_event(p)` is true when a `given`
+//! library's. A later `given` whose type `extends d` moves the adjusted
+//! date as replay would (sema's `case::grant::extensions`): licensed by
+//! one of the selected version's grants held by the actor it names
+//! (`given e by court on date`). `has_event(p)` is true when a `given`
 //! matches `p`. An assertion this evaluator cannot compute fails: an
 //! unevaluated test is not a passing one.
 use crate::diag::{emit, note};
@@ -20,6 +23,7 @@ use crate::{same_expr, Context};
 use litigate_base::{Diagnostic, DiagnosticCode as C};
 use litigate_engine::clock::{self, ClockConfig, ClockLibrary, DayDeadline, Unit};
 use litigate_lower::Lowerer;
+use litigate_sema::case::grant;
 use litigate_sema::hir::{self, BinaryOp, Declaration, Expr, ExprKind, Value};
 use litigate_sema::precedence::select::select;
 use litigate_sema::temporal::{Key, World};
@@ -156,12 +160,7 @@ fn due_field(
 ) -> Result<Value, String> {
     match args.first().map(|a| &a.kind) {
         Some(ExprKind::Ref { target }) => {
-            let (nominal, adjusted) = due(cx, clocks, test, target)?;
-            Ok(Value::Date(if field == "nominal" {
-                nominal
-            } else {
-                adjusted
-            }))
+            due(cx, clocks, test, target, field == "nominal").map(Value::Date)
         }
         _ => Err("`deadline` takes a deadline name".to_owned()),
     }
@@ -170,16 +169,18 @@ fn due_field(
 /// A matching `given`: its index, event, trigger arguments and date.
 type Given<'g> = (usize, &'g hir::Expr, &'g [hir::Expr], &'g str);
 
-/// The nominal and adjusted due dates of deadline `target` from the
-/// matching `given` selected by its trigger policy, using the shared
-/// version-selection query and the build's `known_at` date. A chained
-/// period's `given` is the one starting the period it follows.
+/// The `nominal` (or adjusted, then extended) due date of deadline
+/// `target` from the matching `given` selected by its trigger policy,
+/// using the shared version-selection query and the build's `known_at`
+/// date. A chained period's `given` is the one starting the period it
+/// follows.
 fn due(
     cx: &Context<'_>,
     clocks: &Clocks,
     test: &hir::Test,
     target: &str,
-) -> Result<(String, String), String> {
+    nominal: bool,
+) -> Result<String, String> {
     let versions = cx.deadline_versions(target);
     let first = versions
         .first()
@@ -198,15 +199,34 @@ fn due(
     } else {
         matching.max_by(order)
     };
-    let (given, event, date) = picked
-        .map(|(_, g, args, d)| (g, args, d))
-        .ok_or_else(|| format!("no `given` event matches the trigger of `{target}`"))?;
+    let (at, given, event, date) =
+        picked.ok_or_else(|| format!("no `given` event matches the trigger of `{target}`"))?;
     let (pkg, id) = cx.owner(target);
     let key = Key {
         pack: pkg.manifest.pack_id.clone(),
         name: id.to_owned(),
     };
-    count(clocks, (&key, target), (given, event, date), CHAIN_LIMIT)
+    let (counted, adjusted, governing) =
+        count(clocks, (&key, target), (given, event, date), CHAIN_LIMIT)?;
+    if nominal {
+        return Ok(counted);
+    }
+    let mut order: Vec<usize> = (0..test.givens.len()).collect();
+    order.sort_by(|&a, &b| test.givens[a].1.cmp(&test.givens[b].1).then(a.cmp(&b)));
+    let history: Vec<grant::Given<'_>> = order
+        .iter()
+        .map(|&i| grant::Given {
+            date: &test.givens[i].1,
+            action: &test.givens[i].0,
+            actor: test.actors.get(&i).map(String::as_str),
+        })
+        .collect();
+    let trigger = order.iter().position(|&i| i == at).unwrap_or_default();
+    let mut applied =
+        grant::extensions(governing, target, &history, trigger, &adjusted, |action| {
+            grant::extends(&clocks.world, cx.package, &key, action)
+        })?;
+    Ok(applied.pop().map_or(adjusted, |(_, new)| new))
 }
 
 /// How many chained periods a chain may follow before it is a cycle.
@@ -238,15 +258,15 @@ fn root_trigger<'a>(
 }
 
 /// The nominal and adjusted due dates of deadline `key`'s version in force
-/// on `date`, from `given` (whose trigger arguments are `event`) on
-/// `date`; a chained period counts from the end of the one it follows, at
-/// most `depth` links deep.
-fn count(
-    clocks: &Clocks,
+/// on `date` (with that declaration), from `given` (whose trigger
+/// arguments are `event`) on `date`; a chained period counts from the end
+/// of the one it follows, at most `depth` links deep.
+fn count<'a>(
+    clocks: &Clocks<'a>,
     (key, target): (&Key, &str),
     (given, event, date): (&Expr, &[Expr], &str),
     depth: usize,
-) -> Result<(String, String), String> {
+) -> Result<(String, String, &'a hir::Deadline), String> {
     let Some((owner, Declaration::Deadline(deadline))) = clocks.select(key, date) else {
         return Err(format!(
             "no version of `{target}` recorded by {} is in force on {date}",
@@ -265,7 +285,8 @@ fn count(
                 .target(&owner.manifest.pack_id, &chain.deadline)
                 .key;
             let name = base.display("");
-            let (nominal, adjusted) = count(clocks, (&base, &name), (given, event, date), depth)?;
+            let (nominal, adjusted, _) =
+                count(clocks, (&base, &name), (given, event, date), depth)?;
             let start = match chain.end {
                 hir::DueEnd::Nominal => nominal,
                 hir::DueEnd::Adjusted => adjusted,
@@ -324,7 +345,7 @@ fn count(
     library
         .clock(rule)
         .and_then(|clock| clock::compute_due_date(&request, &clock, &ClockConfig::default()))
-        .map(|c| (c.nominal_date, c.due_date))
+        .map(|c| (c.nominal_date, c.due_date, deadline))
         .map_err(|e| e.to_string())
 }
 

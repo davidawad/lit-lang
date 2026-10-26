@@ -248,6 +248,12 @@ impl GivenStmt {
         child(self.syntax())
     }
 
+    /// The `by` actor doing the event.
+    #[must_use]
+    pub fn by(&self) -> Option<Ref> {
+        child::<Field>(self.syntax()).and_then(|field| field.value_ref())
+    }
+
     /// The event date.
     #[must_use]
     pub fn date(&self) -> Option<Token> {

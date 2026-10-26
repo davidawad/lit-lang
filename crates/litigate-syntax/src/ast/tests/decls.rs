@@ -197,12 +197,31 @@ fn tests_expose_givens_and_expects() {
         Some("Served(c)")
     );
     assert_eq!(text(givens[0].date()).as_deref(), Some("2025-01-02"));
+    assert!(givens[0].by().is_none());
     let expects = test.expects();
     assert_eq!(expects.len(), 1);
     assert_eq!(
         expects[0].expr().map(|e| e.kind()),
         Some(SyntaxKind::BinaryExpr)
     );
+}
+
+#[test]
+fn a_given_names_the_actor_doing_it() {
+    let file = lit(
+        "module m\ntest \"extended\" {\n  given Extended(2025-02-01) by court on 2025-01-20\n}\n",
+    );
+    let test = TestDecl::cast(file.items()[0].syntax().clone()).expect("test");
+    let given = &test.givens()[0];
+    assert_eq!(
+        given.event().map(|e| e.syntax().to_string()).as_deref(),
+        Some("Extended(2025-02-01)")
+    );
+    assert_eq!(
+        given.by().map(|r| r.syntax().to_string()).as_deref(),
+        Some("court")
+    );
+    assert_eq!(text(given.date()).as_deref(), Some("2025-01-20"));
 }
 
 #[test]

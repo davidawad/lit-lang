@@ -569,7 +569,13 @@ module.exports = {
 
   test_body: $ => seq('{', repeat(choice($.given_stmt, $.expect_stmt)), '}'),
 
-  given_stmt: $ => seq('given', field('event', $._expression), 'on', field('date', $.date)),
+  given_stmt: $ => seq(
+    'given',
+    field('event', $._expression),
+    optional($.by_clause),
+    'on',
+    field('date', $.date),
+  ),
 
   expect_stmt: $ => seq('expect', field('assertion', $._expression)),
 

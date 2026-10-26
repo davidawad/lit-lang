@@ -351,6 +351,7 @@ impl Spans for Test {
             name: _,
             cite: _,
             givens,
+            actors: _,
             expects,
             span,
         } = self;

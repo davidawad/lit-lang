@@ -313,7 +313,7 @@ fn exception(p: &mut Parser<'_>) {
     p.finish();
 }
 
-/// `test "name" [Cite] { {given Expr on Date | expect Expr} }`.
+/// `test "name" [Cite] { {given Expr [by Ident] on Date | expect Expr} }`.
 fn test(p: &mut Parser<'_>) {
     p.start(TestDecl);
     p.bump_as(KwTest);
@@ -336,8 +336,14 @@ fn test_stmt(p: &mut Parser<'_>) -> bool {
     if p.at_kw(KwGiven) {
         p.start(GivenStmt);
         p.bump_as(KwGiven);
-        if require_expr(p) && p.expect_kw(KwOn) {
-            require(p, date, &[Date]);
+        if require_expr(p) {
+            // `by A`: the actor doing the event, as a matter's `by` party.
+            if p.at_kw(KwBy) && p.nth(1) == Ident {
+                keyword_field(p, KwBy, Some(reference));
+            }
+            if p.expect_kw(KwOn) {
+                require(p, date, &[Date]);
+            }
         }
         p.finish();
         return true;

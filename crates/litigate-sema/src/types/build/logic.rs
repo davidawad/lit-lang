@@ -176,7 +176,7 @@ impl Cx<'_, '_> {
         None
     }
 
-    /// `test "name" { given E on D, expect A op B }`.
+    /// `test "name" { given E [by A] on D, expect A op B }`.
     pub fn test(
         &mut self,
         item: &Item,
@@ -185,16 +185,20 @@ impl Cx<'_, '_> {
         stmts: &[TestStmt],
     ) -> Test {
         let mut givens = Vec::new();
+        let mut actors = BTreeMap::new();
         let mut expects = Vec::new();
         for s in stmts {
             match s {
-                TestStmt::Given(e, date) => {
+                TestStmt::Given(e, by, date) => {
                     if let Some((callee, args)) = self.call(
                         e,
                         C::TypeMismatch,
                         "`given` takes a complete event such as `Served(complaint, Mail)`",
                     ) {
                         let ch = self.ck.event_call(callee, args, false, e.range);
+                        if let Some(by) = by {
+                            actors.insert(givens.len(), self.actor(by));
+                        }
                         givens.push((ch.hir, date.text.clone()));
                     }
                 }
@@ -232,6 +236,7 @@ impl Cx<'_, '_> {
             name: name.text.clone(),
             cite: Self::string(clauses.iter().find(|f| f.key.text == "cite").as_ref()),
             givens,
+            actors,
             expects,
             span: self.ck.span(item.range),
         }

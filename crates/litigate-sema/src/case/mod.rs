@@ -12,6 +12,7 @@
 pub mod deadline;
 mod drawn;
 mod event;
+pub mod grant;
 mod graph;
 pub mod names;
 mod prior;

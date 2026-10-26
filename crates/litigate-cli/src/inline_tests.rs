@@ -5,16 +5,21 @@
 //! policy picks (the first under `first`, else the latest), computed by
 //! litgraph's clock interpreter over the lowered counting rule:
 //! `deadline(d).adjusted` (or bare `deadline(d)`) after every roll and
-//! extension, `deadline(d).nominal` the last day as counted.
+//! extension, `deadline(d).nominal` the last day as counted. A later
+//! `given` whose type `extends d` extends it as replay would: licensed by
+//! one of `d`'s grants held by the actor it names (`given e by court on
+//! date`), within the grant's window, motion and bound.
 use crate::clock::{self, Clocks};
 use crate::hirx;
 use crate::span;
 use litigate_base::{Diagnostic, DiagnosticCode, Span};
+use litigate_sema::case::grant::{self, Given};
 use litigate_sema::hir::{self, BinaryOp, Declaration, Expr, ExprKind, UnaryOp, Value};
-use litigate_sema::temporal::{MatterEvent, World};
+use litigate_sema::temporal::{Key, MatterEvent, World};
 use litigate_sema::types::rational;
 use serde::Serialize;
 use std::cmp::Ordering;
+use std::collections::BTreeMap;
 
 /// One evaluated `expect`.
 #[derive(Debug, Clone, PartialEq, Serialize)]
@@ -84,6 +89,8 @@ struct Cx<'a> {
     /// The corpus date versions are selected at.
     known_at: &'a str,
     givens: &'a [(Expr, String)],
+    /// The actor of each `given` naming one, by index.
+    actors: &'a BTreeMap<usize, String>,
     steps: Vec<String>,
 }
 
@@ -98,15 +105,16 @@ impl Cx<'_> {
         let matching = self
             .givens
             .iter()
-            .filter(|(e, _)| hirx::matches(trigger, e));
+            .enumerate()
+            .filter(|(_, (e, _))| hirx::matches(trigger, e));
         // The trigger policy picks the event that runs the period: the
         // first under `first` (the default), else the latest (SPEC §5.3).
         let picked = if any.policy.is_first() {
-            matching.min_by(|a, b| a.1.cmp(&b.1))
+            matching.min_by(|a, b| a.1 .1.cmp(&b.1 .1))
         } else {
-            matching.max_by(|a, b| a.1.cmp(&b.1))
+            matching.max_by(|a, b| a.1 .1.cmp(&b.1 .1))
         };
-        let (event, date) = picked.ok_or_else(|| {
+        let (at, (event, date)) = picked.ok_or_else(|| {
             format!(
                 "no `given` event matches the trigger {} of `{name}`",
                 hirx::event_text(trigger)
@@ -114,21 +122,56 @@ impl Cx<'_> {
         })?;
         let events = [MatterEvent::on(date, event)];
         let known_at = Some(self.known_at);
-        let due = clock::due(
-            self.clocks,
-            self.world,
-            self.pkg,
-            name,
-            &events,
-            0,
-            known_at,
-        )?;
+        let governing = clock::deadline(self.world, self.pkg, name, &events, 0, known_at)?;
+        let due = clock::due_of(self.clocks, self.world, governing, &events, 0, known_at)?;
         self.steps.extend(due.computed.steps.iter().cloned());
-        Ok(V::Date(if nominal {
-            due.computed.nominal_date
-        } else {
-            due.computed.due_date
-        }))
+        if nominal {
+            return Ok(V::Date(due.computed.nominal_date));
+        }
+        self.extended(governing.1, name, at, due.computed.due_date)
+    }
+
+    /// The due date of `d` (`name`) triggered by `given` `at`, counted
+    /// `counted`, after the later `given`s extending it ([`grant::extensions`]).
+    fn extended(
+        &mut self,
+        d: &hir::Deadline,
+        name: &str,
+        at: usize,
+        counted: String,
+    ) -> Result<V, String> {
+        let mut order: Vec<usize> = (0..self.givens.len()).collect();
+        order.sort_by(|&a, &b| self.givens[a].1.cmp(&self.givens[b].1).then(a.cmp(&b)));
+        let history: Vec<Given<'_>> = order
+            .iter()
+            .map(|&i| Given {
+                date: &self.givens[i].1,
+                action: &self.givens[i].0,
+                actor: self.actors.get(&i).map(String::as_str),
+            })
+            .collect();
+        let trigger = order.iter().position(|&i| i == at).unwrap_or_default();
+        let key = Key {
+            pack: self.pkg.manifest.pack_id.clone(),
+            name: hirx::local(name).to_owned(),
+        };
+        let world = self.world;
+        let pkg = self.pkg;
+        let applied = grant::extensions(d, name, &history, trigger, &counted, |action| {
+            grant::extends(world, pkg, &key, action)
+        })?;
+        let Some((_, last)) = applied.last() else {
+            return Ok(V::Date(counted));
+        };
+        for (k, new) in &applied {
+            let g = history[*k];
+            self.steps.push(format!(
+                "extended to {new} by `{}` on {}",
+                hirx::event_text(g.action),
+                g.date
+            ));
+        }
+        Ok(V::Date(last.clone()))
     }
 
     /// `deadline(d)` (adjusted) or its `field`.
@@ -279,6 +322,7 @@ pub fn run(
                 pkg,
                 known_at,
                 givens: &t.givens,
+                actors: &t.actors,
                 steps: Vec::new(),
             };
             let expectations: Vec<Expectation> = t

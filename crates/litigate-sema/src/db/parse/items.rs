@@ -378,10 +378,13 @@ impl Lower {
         if node.kind() == K::ExpectStmt {
             return Some(TestStmt::Expect(value));
         }
+        let by = node_of(node, K::Field)
+            .and_then(|f| node_of(&f, K::Ref))
+            .map(|r| path_of(&r));
         let date = nodes_after(node, K::KwOn)
             .next()
             .and_then(|l| token_of(&l, K::Date))?;
-        Some(TestStmt::Given(value, name(&date)))
+        Some(TestStmt::Given(value, by, name(&date)))
     }
 }
 

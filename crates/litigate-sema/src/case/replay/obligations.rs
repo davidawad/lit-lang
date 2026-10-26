@@ -12,18 +12,15 @@
 //! and its bound (a numeric cap, the court's discretion, or `never`).
 use super::Cx;
 use crate::case::deadline::{self, Due};
+use crate::case::grant::{self, Grant, Instance};
 use crate::case::graph::{display, pack_of, Graph};
 use crate::case::spans::error;
 use crate::case::{Effect, Obligation, Status};
-use crate::hir::{
-    Bound, BoundDates, Capability, CauseStandard, Deadline, Declaration, Expr, ExprKind, Extension,
-    ExtensionWindow, Motion, TriggerPolicy, Undesignated, Value,
-};
+use crate::hir::{Deadline, Declaration, Expr, ExprKind, TriggerPolicy, Undesignated, Value};
 use crate::temporal::condition::matches;
 use crate::temporal::MatterEvent;
 use crate::types::refinement;
 use litigate_base::{Diagnostic, DiagnosticCode as C, Severity};
-use std::fmt::Write as _;
 
 /// How an `extends`/`waives` event transforms an obligation.
 #[derive(Debug, Clone, Copy)]
@@ -68,158 +65,6 @@ impl<'e> Transform<'e> {
             Self::Extend(..) => "extended",
             Self::Waive => "waived",
         }
-    }
-}
-
-/// What licenses a transform, read off one `extend` grant or the `waive`
-/// capability of a deadline: who holds it, whether it reaches an instance
-/// before and after its due date, its date bound, if any, and the motion
-/// it requires, if any.
-#[derive(Debug, Clone, Copy)]
-pub(super) struct Grant<'g> {
-    by: &'g str,
-    before: bool,
-    after: bool,
-    /// The latest date an extension may reach; `None` under the court's
-    /// discretion (and for a waiver, which has no extent).
-    ceiling: Option<&'g Bound>,
-    /// The motion the grant requires.
-    pub(super) motion: Option<&'g Motion>,
-    /// When the motion must be made.
-    moved: Moved,
-    /// The cause standard the grant applies, if it states one.
-    standard: Option<CauseStandard>,
-    /// The interpretation the grant rests on, if any.
-    interpretation: Option<&'g str>,
-}
-
-impl<'g> Grant<'g> {
-    /// An `extend` grant; `None` for an `extend { never ... }` lock.
-    fn extend(x: &'g Extension) -> Option<Self> {
-        let interpretation = x.interpretation();
-        match x {
-            Extension::Bounded {
-                by,
-                until,
-                after_expiry,
-                motion,
-                standard,
-                ..
-            } => Some(Self {
-                by,
-                before: true,
-                after: *after_expiry,
-                ceiling: Some(until),
-                motion: motion.as_ref(),
-                moved: Moved::Any,
-                standard: *standard,
-                interpretation,
-            }),
-            Extension::Discretionary {
-                by,
-                window,
-                motion,
-                standard,
-                ..
-            } => {
-                let after = *window == ExtensionWindow::AfterExpiryOnMotion;
-                Some(Self {
-                    by,
-                    before: !after,
-                    after,
-                    ceiling: None,
-                    motion: motion.as_ref(),
-                    moved: if after {
-                        Moved::AfterExpiry
-                    } else if motion.is_some() {
-                        Moved::BeforeExpiry
-                    } else {
-                        Moved::Any
-                    },
-                    standard: Some(*standard),
-                    interpretation,
-                })
-            }
-            Extension::NonExtendable { .. } => None,
-        }
-    }
-
-    /// The `waive` capability.
-    fn waive(c: &'g Capability) -> Self {
-        Self {
-            by: &c.by,
-            before: true,
-            after: c.after_expiry,
-            ceiling: None,
-            motion: None,
-            moved: Moved::Any,
-            standard: None,
-            interpretation: None,
-        }
-    }
-
-    /// Whether it may be exercised on an instance that has (`expired`) or
-    /// has not passed its due date.
-    fn reaches(self, expired: bool) -> bool {
-        if expired {
-            self.after
-        } else {
-            self.before
-        }
-    }
-}
-
-/// When a grant's motion must be made, relative to the instance's due
-/// date.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-enum Moved {
-    /// At any time after the trigger.
-    Any,
-    /// After the period expired (FRCP 6(b)(1)(B)).
-    AfterExpiry,
-    /// On or before the due date: the grant is on request, and its window
-    /// is judged on `request_made`, the motion's date, not on the order's,
-    /// so a request made before expiry licenses an order entered after it
-    /// (FRCP 6(b)(1)(A), "if a request is made, before the original time
-    /// or its extension expires"; 37 C.F.R. §§ 90.3(c)(1)(i),
-    /// 2.145(e)(1)(i)).
-    BeforeExpiry,
-}
-
-impl Moved {
-    /// The rule for an instance due `due`.
-    fn at(self, due: &String) -> Made<'_> {
-        match self {
-            Self::Any => Made::Any,
-            Self::AfterExpiry => Made::After(due),
-            Self::BeforeExpiry => Made::Before(due),
-        }
-    }
-}
-
-/// [`Moved`], with the instance's due date.
-#[derive(Debug, Clone, Copy)]
-enum Made<'a> {
-    /// At any time after the trigger.
-    Any,
-    /// After the period expired on the date (FRCP 6(b)(1)(B)).
-    After(&'a String),
-    /// On or before the date the period expires (FRCP 6(b)(1)(A)).
-    Before(&'a String),
-}
-
-/// Why an event `action` on `date` is outside a grant's window for
-/// `deadline`, due `current`: the period has (`expired`) or has not
-/// passed.
-fn outside(deadline: &str, action: &str, current: &str, date: &str, expired: bool) -> String {
-    if expired {
-        format!(
-            "`{deadline}` expired on {current}, before `{action}` on {date}; the capability does not reach an expired period (no `after_expiry`)"
-        )
-    } else {
-        format!(
-            "`{deadline}` is due {current}, not expired when `{action}` comes on {date}; the grant reaches only an expired period, on motion"
-        )
     }
 }
 
@@ -887,10 +732,11 @@ impl<'g> Cx<'_, 'g> {
     }
 
     /// Whether event `k` may transform instance `i` (counted `due`) under
-    /// `grant`: extend it to `new`, or waive it when `new` is `None`. `Ok`
-    /// carries the date of the motion the grant read, if it reads one;
-    /// `Err` the refusal, ranked by how specific it is: the window (0),
-    /// the motion (1), the bound (2).
+    /// `grant`: extend it to `new`, or waive it when `new` is `None`
+    /// ([`grant::judge`]). `Ok` carries the date of the motion the grant
+    /// read, if it reads one; `Err` the refusal, ranked by how specific it
+    /// is: the window (0), the motion (1), the bound (2), the event type's
+    /// refinements (3).
     fn problem(
         &self,
         pack: &str,
@@ -904,7 +750,7 @@ impl<'g> Cx<'_, 'g> {
         let o = &self.obligations[i];
         let how = deadline::explain(due, &self.sorted[o.at].1.action);
         let reject = |rank: u8, message: String| {
-            Err((
+            (
                 rank,
                 error(
                     C::InvalidCaseEvent,
@@ -912,73 +758,45 @@ impl<'g> Cx<'_, 'g> {
                     message,
                 )
                 .note(how.clone()),
-            ))
+            )
         };
         let (Ok(current), Ok(counted)) = (effective(o, due), floored(o, due)) else {
             let why = due.date.clone().err().unwrap_or_default();
-            return reject(
+            let (rank, e) = reject(
                 2,
                 format!(
                     "cannot count `{}` to judge `{}`",
                     o.deadline,
                     display(&event.action)
                 ),
-            )
-            .map_err(|(b, e)| (b, e.note(why)));
-        };
-        let expired = event.date > current;
-        if grant.moved != Moved::BeforeExpiry && !grant.reaches(expired) {
-            let action = display(&event.action);
-            return reject(
-                0,
-                outside(&o.deadline, &action, &current, &event.date, expired),
             );
-        }
-        let made = grant.moved.at(&current);
-        let request = match grant.motion {
-            Some(m) => match self.requested(pack, k, i, m, made, (&counted, &current)) {
-                Ok(date) => Some(date),
-                Err(why) => return reject(1, why),
-            },
-            None => None,
+            return Err((rank, e.note(why)));
         };
-        let Some((new, by)) = new else {
-            return Ok(request);
-        };
-        if new <= current.as_str() {
-            return reject(
-                2,
-                format!(
-                    "an extension to {new} does not extend `{}`, already due {current}",
-                    o.deadline
-                ),
-            );
-        }
-        if let Some(d) = self.unrefined(k, by, &counted, &current) {
-            return Err((3, d.note(how)));
-        }
-        let Some(ceiling) = grant.ceiling else {
-            return Ok(request);
-        };
-        let bound = ceiling
-            .date(BoundDates {
-                prescribed_due: &counted,
-                current_due: &current,
-                grant_order_entered: &event.date,
+        let history: Vec<grant::Moment<'_>> = (0..self.sorted.len())
+            .map(|j| {
+                let e = self.sorted[j].1;
+                (e.date.as_str(), &e.action, self.view(pack, j))
             })
-            .unwrap_or_default();
-        if new > bound.as_str() {
-            return reject(
-                2,
-                format!(
-                    "an extension to {new} exceeds the bound of `{}`: {} = {bound} (prescribed_due {counted}, grant_order_entered {})",
-                    o.deadline,
-                    ceiling.display(),
-                    event.date
-                ),
-            );
+            .collect();
+        let instance = Instance {
+            deadline: &o.deadline,
+            from: &self.sorted[o.at].1.date,
+            prescribed: &counted,
+            current: &current,
+            spent: o.request_made.as_deref(),
+        };
+        let judged = grant::judge(&history, k, instance, grant, new.map(|(n, _)| n));
+        // A refinement is judged after the window, the motion and the
+        // extension's direction, before the bound (rank 3: the most
+        // specific refusal).
+        if let (Ok(_) | Err((2, _)), Some((new, by))) = (&judged, new) {
+            if new > current.as_str() {
+                if let Some(d) = self.unrefined(k, by, &counted, &current) {
+                    return Err((3, d.note(how)));
+                }
+            }
         }
-        Ok(request)
+        judged.map_err(|(rank, why)| reject(rank, why))
     }
 
     /// Tier 1 at replay (SPEC §3.5): the first refinement of event `k`'s
@@ -1020,102 +838,5 @@ impl<'g> Cx<'_, 'g> {
             )
             .note(refinement::origin(name, r)),
         )
-    }
-
-    /// The date of the motion `m` order `k`'s grant requires for instance
-    /// `i` (counted `prescribed` due date, `current` as last extended;
-    /// `made`: when the motion must be made relative to the due date): the
-    /// earliest event of `m`'s pattern (in `pack`'s view) on or after the
-    /// trigger, after any motion an earlier extension of the instance read
-    /// (a motion is spent by the extension it licenses), no later than the
-    /// order and no later than `m`'s bound, with no denial of `m`'s
-    /// `unless` pattern from the trigger to the order (Sup. Ct. R. 30.3);
-    /// or why there is none. The motion's date is its event's date as
-    /// recorded: a request to the USPTO Director is filed on its Eastern
-    /// Time receipt date, "regardless of whether that date is a Saturday,
-    /// Sunday, or Federal holiday" (37 C.F.R. §§ 90.3(c)(2), 2.145(e)(2)),
-    /// and no counting rule moves it.
-    fn requested(
-        &self,
-        pack: &str,
-        k: usize,
-        i: usize,
-        m: &Motion,
-        made: Made<'_>,
-        (prescribed, current): (&str, &str),
-    ) -> Result<String, String> {
-        let order = self.sorted[k].1;
-        let from = self.sorted[self.obligations[i].at].1.date.as_str();
-        let spent = self.obligations[i].request_made.as_deref();
-        let latest = m.within.as_ref().and_then(|w| {
-            w.date(BoundDates {
-                prescribed_due: prescribed,
-                current_due: current,
-                grant_order_entered: &order.date,
-            })
-        });
-        let moved = (0..self.sorted.len()).find(|&j| {
-            let date = self.sorted[j].1.date.as_str();
-            j != k
-                && date >= from
-                && date <= order.date.as_str()
-                && match made {
-                    Made::Any => true,
-                    Made::After(a) => date > a.as_str(),
-                    Made::Before(a) => date <= a.as_str(),
-                }
-                && latest.as_deref().is_none_or(|l| date <= l)
-                && spent.is_none_or(|s| date > s)
-                && matches(&m.event, self.view(pack, j))
-        });
-        let denied = m.unless.as_ref().and_then(|u| {
-            (0..self.sorted.len())
-                .find(|&j| {
-                    let date = self.sorted[j].1.date.as_str();
-                    j != k
-                        && date >= from
-                        && date <= order.date.as_str()
-                        && matches(u, self.view(pack, j))
-                })
-                .map(|j| (u, self.sorted[j].1))
-        });
-        if let Some((u, denial)) = denied {
-            return Err(format!(
-                "`{}` on {} bars `{}`: once denied, the motion `{}` may not be renewed (`unless {}`)",
-                display(&denial.action),
-                denial.date,
-                display(&order.action),
-                display(&m.event),
-                display(u)
-            ));
-        }
-        if let Some(j) = moved {
-            return Ok(self.sorted[j].1.date.clone());
-        }
-        let mut why = format!(
-            "`{}` requires a motion `{}`",
-            display(&order.action),
-            display(&m.event)
-        );
-        match made {
-            Made::Any => {}
-            Made::After(a) => {
-                let _ = write!(why, " made after the period expired on {a}");
-            }
-            Made::Before(a) => {
-                let _ = write!(why, " made before the period expired on {a}");
-            }
-        }
-        if let (Some(w), Some(l)) = (&m.within, &latest) {
-            let _ = write!(why, " no later than {} = {l}", w.display());
-        }
-        if let Some(s) = spent {
-            let _ = write!(
-                why,
-                " after the one made on {s}, spent by an earlier extension"
-            );
-        }
-        let _ = write!(why, ", and none precedes the order on {}", order.date);
-        Err(why)
     }
 }

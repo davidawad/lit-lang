@@ -109,3 +109,17 @@ fn a_record_before_a_broken_record_stays_flat() {
         "module m\n\ntest \"t\" {\n  expect f({ a: 1 }, {\n    b: 2 // c\n  })\n}\n"
     );
 }
+
+#[test]
+fn a_rule_index_is_written_tight_to_its_keyword() {
+    let out = fmt(
+        "module m\nrule duty r Rule[FederalRule, _, [2010-01-01, ..), _, _] cite \"X\" { start s }\n",
+    );
+    assert!(
+        out.contains("rule duty r Rule[FederalRule, _, [2010-01-01, ..), _, _] cite \"X\""),
+        "{out}"
+    );
+    // `Rule` without its bracket is no index, but a stray word.
+    let stray = parse("module m\nrule duty q Rule { start s }\n", FileKind::Lit);
+    assert_eq!(stray.errors().len(), 1);
+}

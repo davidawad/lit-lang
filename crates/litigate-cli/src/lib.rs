@@ -76,14 +76,23 @@ where
     execute_on(args, std::io::stdout().is_terminal())
 }
 
-/// The commands [`execute_in`] runs: the ones that only read their inputs
-/// and write build outputs, both through the source.
-pub const IN_MEMORY_COMMANDS: [&str; 3] = ["check", "build", "worlds"];
+/// The commands [`execute_in`] runs, besides the op subcommands
+/// (`solve`, `chain`, ...): the ones that only read their inputs and write
+/// build outputs, both through the source.
+pub const IN_MEMORY_COMMANDS: [&str; 5] = ["check", "build", "worlds", "run", "engine"];
+
+/// Whether [`execute_in`] runs `command`: one of [`IN_MEMORY_COMMANDS`] or
+/// an op subcommand.
+fn runs_in_memory(command: &cli::Command) -> bool {
+    matches!(command, cli::Command::Op(_)) || IN_MEMORY_COMMANDS.contains(&command.name())
+}
 
 /// [`execute`] over `src` instead of the disk, for hosts with no
 /// filesystem (WebAssembly): paths resolve in `src`, `build` writes into
-/// it, and output is never a terminal's. Only [`IN_MEMORY_COMMANDS`] run;
-/// any other command is a usage failure (exit 1).
+/// it, and output is never a terminal's. Only [`IN_MEMORY_COMMANDS`] and
+/// the op subcommands run, compiling the matter or package in `src` (and
+/// `engine` its `lit/` and `cases/`); any other command is a usage
+/// failure (exit 1).
 pub fn execute_in<I, T>(src: &dyn Source, args: I) -> Printed
 where
     I: IntoIterator<Item = T>,
@@ -102,11 +111,7 @@ pub fn execute_in_memory(
     files: impl IntoIterator<Item = (String, String)>,
     args: &[String],
 ) -> LitigateRun {
-    let mut files: std::collections::BTreeMap<String, String> = files.into_iter().collect();
-    for (path, text) in &litigate_engine::cite::SourceCorpus::embedded_ref().files {
-        files.entry(path.clone()).or_insert_with(|| text.clone());
-    }
-    let tree = MemoryTree::new(files);
+    let tree = memory_tree(files);
     let printed = execute_in(
         &tree,
         std::iter::once("litigate").chain(args.iter().map(String::as_str)),
@@ -117,6 +122,18 @@ pub fn execute_in_memory(
         stderr: printed.stderr,
         files: tree.written(),
     }
+}
+
+/// A [`MemoryTree`] of `(path, text)` files with the vendored L0 texts
+/// (`sources/*.txt`) the binary embeds filled in wherever `files` gives
+/// none, as [`execute_in_memory`] runs over.
+#[must_use]
+pub fn memory_tree(files: impl IntoIterator<Item = (String, String)>) -> MemoryTree {
+    let mut files: std::collections::BTreeMap<String, String> = files.into_iter().collect();
+    for (path, text) in &litigate_engine::cite::SourceCorpus::embedded_ref().files {
+        files.entry(path.clone()).or_insert_with(|| text.clone());
+    }
+    MemoryTree::new(files)
 }
 
 /// [`execute`] for a standard output that is (`tty`) or is not a
@@ -133,7 +150,7 @@ where
 
 /// Parses and runs `args` over `src`, in `format` unless `--format` says
 /// otherwise and in color when `color`; `in_memory` limits the commands to
-/// [`IN_MEMORY_COMMANDS`].
+/// those [`execute_in`] runs.
 fn execute_with(
     args: Vec<OsString>,
     format: Format,
@@ -166,16 +183,16 @@ fn execute_with(
     };
     let format = cli.format.unwrap_or(format);
     let op = cli.command.name();
-    if in_memory && !IN_MEMORY_COMMANDS.contains(&op) {
-        let (last, rest) = IN_MEMORY_COMMANDS.split_last().unwrap_or((&"", &[]));
+    if in_memory && !runs_in_memory(&cli.command) {
         let message = format!(
-            "only {} and {last} run over an in-memory source",
-            rest.join(", ")
+            "only {} and the op subcommands run over an in-memory source",
+            IN_MEMORY_COMMANDS.join(", ")
         );
         return out::print(op, Err(Failure::new(message)), format, color, 0.0);
     }
     if let cli::Command::Engine { args } = cli.command {
-        return engine::execute(
+        return engine::execute_in(
+            src,
             std::iter::once("litigate engine".to_owned()).chain(args),
             engine::Builtin::Compiled,
         );

@@ -214,10 +214,21 @@ pub fn library_in(src: &dyn Source, dirs: &[PathBuf]) -> Vec<(String, PathBuf)> 
 /// does not use composes nothing for it, so it is not loaded at all.
 #[must_use]
 pub fn links_packages(lib: &[String], cases: &[PathBuf], used: &BTreeSet<String>) -> Vec<PathBuf> {
-    library(&library_for(lib, cases))
+    links_packages_in(&Disk, lib, cases, used)
+}
+
+/// [`links_packages`] in `src`.
+#[must_use]
+pub fn links_packages_in(
+    src: &dyn Source,
+    lib: &[String],
+    cases: &[PathBuf],
+    used: &BTreeSet<String>,
+) -> Vec<PathBuf> {
+    library_in(src, &library_for_in(src, lib, cases))
         .into_iter()
         .filter(|(_, dir)| {
-            std::fs::read_to_string(dir.join("Lit.toml"))
+            src.read_to_string(&dir.join("Lit.toml"))
                 .ok()
                 .and_then(|t| parse_manifest(&t).ok())
                 .is_some_and(|m| {

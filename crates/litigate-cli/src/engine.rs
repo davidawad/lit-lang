@@ -18,6 +18,7 @@ use crate::cmd::run::{compile, kv, params, scalar};
 use crate::out::{Failure, Printed};
 use clap::{CommandFactory, FromArgMatches, Parser};
 use litigate_engine::api::{self, Catalog, EmbeddedFiles};
+use litigate_sema::pkg::source::{Disk, Source};
 use serde_json::{json, Map, Value};
 use std::ffi::OsString;
 use std::io::Read as _;
@@ -97,6 +98,18 @@ where
     I: IntoIterator<Item = T>,
     T: Into<OsString> + Clone,
 {
+    execute_in(&Disk, args, builtin)
+}
+
+/// [`execute`] over `src`: request, document and scenario files are read
+/// from it, and [`Builtin::Compiled`] compiles its `--lib` packages and
+/// `--cases` matters. Off the disk (WebAssembly) the packs and scenarios
+/// are always the compiled ones: a directory flag is a usage failure.
+pub fn execute_in<I, T>(src: &dyn Source, args: I, builtin: Builtin) -> Printed
+where
+    I: IntoIterator<Item = T>,
+    T: Into<OsString> + Clone,
+{
     let args: Vec<OsString> = args.into_iter().map(Into::into).collect();
     // Usage, help and `--version` name the program as invoked.
     let name = args
@@ -124,7 +137,7 @@ where
             };
         }
     };
-    match run(&cli, builtin) {
+    match run(src, &cli, builtin) {
         Ok((stdout, ok)) => Printed {
             stdout,
             stderr: String::new(),
@@ -138,28 +151,28 @@ where
     }
 }
 
-fn read_input(src: Option<&str>) -> Result<String, Failure> {
-    match src {
+fn read_input(src: &dyn Source, input: Option<&str>) -> Result<String, Failure> {
+    match input {
         None | Some("-") => {
             let mut s = String::new();
             std::io::stdin().read_to_string(&mut s)?;
             Ok(s)
         }
         Some(s) if s.trim_start().starts_with('{') => Ok(s.to_owned()),
-        Some(path) => {
-            std::fs::read_to_string(path).map_err(|e| Failure::new(format!("reading {path}: {e}")))
-        }
+        Some(path) => src
+            .read_to_string(Path::new(path))
+            .map_err(|e| Failure::new(format!("reading {path}: {e}"))),
     }
 }
 
 /// A `--scenario` value: inline JSON (`{...}`/`[...]`), an existing file
 /// (read and parsed as JSON), or otherwise a bare name from the library.
-fn scenario_arg(s: &str) -> Result<Value, Failure> {
+fn scenario_arg(src: &dyn Source, s: &str) -> Result<Value, Failure> {
     let t = s.trim_start();
     let text = if t.starts_with('{') || t.starts_with('[') {
         s.to_owned()
-    } else if Path::new(s).is_file() {
-        read_input(Some(s))?
+    } else if src.is_file(Path::new(s)) {
+        read_input(src, Some(s))?
     } else {
         return Ok(json!(s));
     };
@@ -167,9 +180,9 @@ fn scenario_arg(s: &str) -> Result<Value, Failure> {
 }
 
 /// Build a request from shorthand flags.
-fn shorthand(cli: &Cli) -> Result<Value, Failure> {
+fn shorthand(src: &dyn Source, cli: &Cli) -> Result<Value, Failure> {
     let mut scenario: Value = match &cli.scenario {
-        Some(s) => scenario_arg(s)?,
+        Some(s) => scenario_arg(src, s)?,
         None => json!({}),
     };
     if !cli.set.is_empty() {
@@ -220,7 +233,11 @@ fn named(flag: Option<&str>, var: &str) -> bool {
 
 /// Resolve packs and the scenario library independently, each from its
 /// flag, else its variable, else `builtin`.
-fn load_catalog(cli: &Cli, builtin: Builtin) -> Result<Catalog, Failure> {
+fn load_catalog(src: &dyn Source, cli: &Cli, builtin: Builtin) -> Result<Catalog, Failure> {
+    // No directory or variable is read off the disk: the compiled source is all there is.
+    if !src.on_disk() && matches!(builtin, Builtin::Compiled) {
+        return compiled(src, &cli.lib, &cli.cases);
+    }
     let packs_dir = cli.packs_dir.as_deref();
     let scenarios_dir = cli.scenarios_dir.as_deref();
     let (packs, scenarios) = match builtin {
@@ -237,16 +254,7 @@ fn load_catalog(cli: &Cli, builtin: Builtin) -> Result<Catalog, Failure> {
     let own_packs = !named(packs_dir, "LITGRAPH_PACKS");
     let own_scenarios = !named(scenarios_dir, "LITGRAPH_SCENARIOS");
     if matches!(builtin, Builtin::Compiled) && (own_packs || own_scenarios) {
-        let mut paths: Vec<String> = crate::ws::library_dirs(&cli.lib)
-            .iter()
-            .map(|d| d.to_string_lossy().into_owned())
-            .collect();
-        if cli.cases.is_empty() {
-            paths.extend(Path::new("cases").is_dir().then(|| "cases".to_owned()));
-        } else {
-            paths.extend(cli.cases.iter().cloned());
-        }
-        let compiled = compile(&paths, true, &cli.lib)?.catalog;
+        let compiled = compiled(src, &cli.lib, &cli.cases)?;
         if own_packs {
             catalog.origin = compiled.origin;
             catalog.packs = compiled.packs;
@@ -262,6 +270,7 @@ fn load_catalog(cli: &Cli, builtin: Builtin) -> Result<Catalog, Failure> {
     Ok(catalog)
 }
 
+<<<<<<< HEAD
 /// The packs and named scenarios `litigate engine` serves when no flag
 /// names them: `$LITGRAPH_PACKS`/`$LITGRAPH_SCENARIOS`, else compiled from
 /// `lib` (default `lit`) and the matters under `cases` (default `cases`).
@@ -286,11 +295,44 @@ pub fn library_catalog(lib: Vec<String>, cases: Vec<String>) -> Result<Catalog, 
         no_links: false,
         compact: true,
     };
-    load_catalog(&cli, Builtin::Compiled)
+    load_catalog(&Disk, &cli, Builtin::Compiled)
+}
+
+/// The catalog of the `lib` packages (default `lit`) and the `cases`
+/// matters (default `cases`, when it exists) in `src`, compiled: what
+/// `litigate engine` serves when no flag or variable names a directory.
+/// A matter with errors is left out.
+///
+/// # Errors
+/// Usage or I/O failures.
+pub fn compiled(src: &dyn Source, lib: &[String], cases: &[String]) -> Result<Catalog, Failure> {
+    let mut paths: Vec<String> = crate::ws::library_dirs_in(src, lib)
+        .iter()
+        .map(|d| d.to_string_lossy().into_owned())
+        .collect();
+    if cases.is_empty() {
+        paths.extend(src.is_dir(Path::new("cases")).then(|| "cases".to_owned()));
+    } else {
+        paths.extend(cases.iter().cloned());
+    }
+    Ok(compile(src, &paths, true, lib)?.catalog)
+
 }
 
 /// The response text and whether it is `ok`.
-fn run(cli: &Cli, builtin: Builtin) -> Result<(String, bool), Failure> {
+fn run(src: &dyn Source, cli: &Cli, builtin: Builtin) -> Result<(String, bool), Failure> {
+    if !src.on_disk() {
+        let flags = [
+            ("--packs-dir", &cli.packs_dir),
+            ("--scenarios-dir", &cli.scenarios_dir),
+            ("--calibration-dir", &cli.calibration_dir),
+        ];
+        if let Some((flag, _)) = flags.iter().find(|(_, dir)| dir.is_some()) {
+            return Err(Failure::new(format!(
+                "{flag} names a directory on disk; over an in-memory source the packs and scenarios are the compiled `--lib` and `--cases`"
+            )));
+        }
+    }
     if let Some(d) = &cli.calibration_dir {
         std::env::set_var("LITGRAPH_CALIBRATION", d);
     }
@@ -298,17 +340,17 @@ fn run(cli: &Cli, builtin: Builtin) -> Result<(String, bool), Failure> {
         let kind = cli.input.as_deref().unwrap_or("request");
         return Ok((emit(&api::schema(kind)?, cli.compact), true));
     }
-    let catalog = load_catalog(cli, builtin)?;
+    let catalog = load_catalog(src, cli, builtin)?;
     if cli.command == "validate" {
-        let doc: Value = serde_json::from_str(&read_input(cli.input.as_deref())?)
+        let doc: Value = serde_json::from_str(&read_input(src, cli.input.as_deref())?)
             .map_err(|e| Failure::new(format!("document is not JSON: {e}")))?;
         let v = api::validate(&doc, cli.kind.as_deref(), &catalog);
         return Ok((emit(&v, cli.compact), v.valid));
     }
     let request = if matches!(cli.command.as_str(), "q" | "run") {
-        read_input(cli.input.as_deref())?
+        read_input(src, cli.input.as_deref())?
     } else {
-        shorthand(cli)?.to_string()
+        shorthand(src, cli)?.to_string()
     };
     let resp = api::handle_json(&request, &catalog);
     Ok((emit(&resp, cli.compact), resp.ok))
@@ -346,23 +388,23 @@ mod tests {
     #[test]
     fn scenario_arg_reads_inline_json_a_file_or_falls_back_to_a_bare_name() {
         assert_eq!(
-            scenario_arg(r#"{"params":{"rate":9}}"#).ok(),
+            scenario_arg(&Disk, r#"{"params":{"rate":9}}"#).ok(),
             Some(json!({"params": {"rate": 9}}))
         );
-        assert_eq!(scenario_arg("[1]").ok(), Some(json!([1])));
-        assert!(message(scenario_arg("{not json")).starts_with("scenario JSON: "));
+        assert_eq!(scenario_arg(&Disk, "[1]").ok(), Some(json!([1])));
+        assert!(message(scenario_arg(&Disk, "{not json")).starts_with("scenario JSON: "));
         let file = std::env::temp_dir().join(format!(
             "litigate-engine-scenario-arg-{}.json",
             std::process::id()
         ));
         let _ = std::fs::write(&file, r#"{"params":{"rate":7}}"#);
         assert_eq!(
-            scenario_arg(&file.to_string_lossy()).ok(),
+            scenario_arg(&Disk, &file.to_string_lossy()).ok(),
             Some(json!({"params": {"rate": 7}}))
         );
         let _ = std::fs::remove_file(&file);
         assert_eq!(
-            scenario_arg("cofc-1498-patent-case").ok(),
+            scenario_arg(&Disk, "cofc-1498-patent-case").ok(),
             Some(json!("cofc-1498-patent-case"))
         );
     }
@@ -375,19 +417,19 @@ mod tests {
         ));
         let _ = std::fs::write(&file, [0xff, 0xfe]);
         let path = file.to_string_lossy().into_owned();
-        assert!(message(scenario_arg(&path)).starts_with(&format!("reading {path}: ")));
+        assert!(message(scenario_arg(&Disk, &path)).starts_with(&format!("reading {path}: ")));
         let _ = std::fs::remove_file(&file);
     }
 
     #[test]
     fn read_input_names_a_missing_file() {
-        assert!(message(read_input(Some("no/such/request.json")))
+        assert!(message(read_input(&Disk, Some("no/such/request.json")))
             .starts_with("reading no/such/request.json: "));
     }
 
     #[test]
     fn shorthand_defaults_to_every_pack_and_an_empty_scenario() {
-        let req = shorthand(&cli("solve")).unwrap_or_default();
+        let req = shorthand(&Disk, &cli("solve")).unwrap_or_default();
         assert_eq!(
             req,
             json!({"packs": [], "links": true, "scenario": {}, "op": {"op": "solve"}})
@@ -396,12 +438,15 @@ mod tests {
 
     #[test]
     fn shorthand_splits_packs_and_applies_arg_and_no_links() {
-        let req = shorthand(&Cli {
-            packs: Some("cofc,cafc".into()),
-            args: vec!["node=answer-due".into(), "top=5".into()],
-            no_links: true,
-            ..cli("explain")
-        })
+        let req = shorthand(
+            &Disk,
+            &Cli {
+                packs: Some("cofc,cafc".into()),
+                args: vec!["node=answer-due".into(), "top=5".into()],
+                no_links: true,
+                ..cli("explain")
+            },
+        )
         .unwrap_or_default();
         assert_eq!(req["packs"], json!(["cofc", "cafc"]));
         assert_eq!(req["links"], json!(false));
@@ -409,53 +454,71 @@ mod tests {
             req["op"],
             json!({"op": "explain", "node": "answer-due", "top": 5.0})
         );
-        let bad = shorthand(&Cli {
-            args: vec!["node".into()],
-            ..cli("explain")
-        });
+        let bad = shorthand(
+            &Disk,
+            &Cli {
+                args: vec!["node".into()],
+                ..cli("explain")
+            },
+        );
         assert_eq!(message(bad), "--arg expects K=V, got `node`");
     }
 
     #[test]
     fn shorthand_composes_set_onto_a_named_or_inline_scenario() {
-        let named = shorthand(&Cli {
-            scenario: Some("cofc-1498-patent-case".into()),
-            set: vec!["rate=999".into()],
-            ..cli("chain")
-        })
+        let named = shorthand(
+            &Disk,
+            &Cli {
+                scenario: Some("cofc-1498-patent-case".into()),
+                set: vec!["rate=999".into()],
+                ..cli("chain")
+            },
+        )
         .unwrap_or_default();
         assert_eq!(
             named["scenario"],
             json!({"extends": "cofc-1498-patent-case", "params": {"rate": 999.0}})
         );
-        let inline = shorthand(&Cli {
-            scenario: Some(r#"{"payoffs":{"cofc::x":1}}"#.into()),
-            set: vec!["rate=100".into()],
-            ..cli("chain")
-        })
+        let inline = shorthand(
+            &Disk,
+            &Cli {
+                scenario: Some(r#"{"payoffs":{"cofc::x":1}}"#.into()),
+                set: vec!["rate=100".into()],
+                ..cli("chain")
+            },
+        )
         .unwrap_or_default();
         assert_eq!(
             inline["scenario"],
             json!({"payoffs": {"cofc::x": 1}, "params": {"rate": 100.0}})
         );
-        let bad = shorthand(&Cli {
-            scenario: Some("{bad".into()),
-            ..cli("chain")
-        });
+        let bad = shorthand(
+            &Disk,
+            &Cli {
+                scenario: Some("{bad".into()),
+                ..cli("chain")
+            },
+        );
         assert!(message(bad).starts_with("scenario JSON"));
-        let text = shorthand(&Cli {
-            set: vec!["rate=fast".into()],
-            ..cli("chain")
-        });
+        let text = shorthand(
+            &Disk,
+            &Cli {
+                set: vec!["rate=fast".into()],
+                ..cli("chain")
+            },
+        );
         assert!(message(text).contains("not a number"));
     }
 
     #[test]
     fn shorthand_rejects_a_stray_positional_argument() {
-        let e = shorthand(&Cli {
-            input: Some("stray.json".into()),
-            ..cli("chain")
-        });
+        let e = shorthand(
+            &Disk,
+            &Cli {
+                input: Some("stray.json".into()),
+                ..cli("chain")
+            },
+        );
         assert!(message(e).contains("unexpected argument"));
     }
 
@@ -475,6 +538,18 @@ mod tests {
         assert_eq!(printed.code, 2, "{}", printed.stderr);
         let v: Value = serde_json::from_str(&printed.stdout).unwrap_or_default();
         assert_eq!((&v["ok"], &v["op"]), (&json!(false), &json!("describe")));
+    }
+
+    #[test]
+    fn embedded_files_serve_an_in_memory_source_too() {
+        let empty =
+            litigate_sema::pkg::source::MemoryTree::new(std::iter::empty::<(String, String)>());
+        let printed = execute_in(
+            &empty,
+            ["litgraph", "describe", "--compact"],
+            Builtin::Embedded(&[], &[]),
+        );
+        assert_eq!(printed.code, 2, "{}", printed.stderr);
     }
 
     #[test]

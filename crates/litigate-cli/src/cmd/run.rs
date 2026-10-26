@@ -11,6 +11,7 @@ use litigate_engine::api::{fingerprint, handle, Catalog, Request};
 use litigate_engine::clock::ClockLibrary;
 use litigate_engine::scenario::NamedScenario;
 use litigate_lower::{Document, Options};
+use litigate_sema::pkg::source::Source;
 use serde_json::{json, Map, Value};
 use std::collections::BTreeSet;
 
@@ -100,8 +101,8 @@ pub(crate) struct Compiled {
     pub packs: Vec<String>,
 }
 
-/// Check `paths` (matters and packages) and lower what they name into one
-/// catalog; `links` also loads the links packages composing two or more
+/// Check `paths` (matters and packages) in `src` and lower what they name
+/// into one catalog; `links` also loads the links packages composing two or more
 /// packages the matters use. The scope is the closure of what the matters
 /// `uses` and the named packages: no other package is loaded into the
 /// catalog, and a dependency of a links package outside that scope is
@@ -110,21 +111,29 @@ pub(crate) struct Compiled {
 ///
 /// # Errors
 /// Usage or I/O failures.
-pub(crate) fn compile(paths: &[String], links: bool, lib: &[String]) -> Result<Compiled, Failure> {
-    let mut targets = crate::ws::discover(paths)?;
+pub(crate) fn compile(
+    src: &dyn Source,
+    paths: &[String],
+    links: bool,
+    lib: &[String],
+) -> Result<Compiled, Failure> {
+    let mut targets = crate::ws::discover_in(src, paths)?;
     let used: BTreeSet<String> = targets
         .cases
         .iter()
-        .filter_map(|p| std::fs::read_to_string(p).ok())
+        .filter_map(|p| src.read_to_string(p).ok())
         .flat_map(|t| crate::ws::uses_of(&t))
         .collect();
     if links {
         // Links compose between whichever packs are loaded, as `links.json` does.
-        targets
-            .packages
-            .extend(crate::ws::links_packages(lib, &targets.cases, &used));
+        targets.packages.extend(crate::ws::links_packages_in(
+            src,
+            lib,
+            &targets.cases,
+            &used,
+        ));
     }
-    let c = checked_targets(&targets, Profile::Dev, &Options::default(), lib)?;
+    let c = checked_targets(src, &targets, Profile::Dev, &Options::default(), lib)?;
     let session = &c.session;
     let mut scope = session.closure(used);
     scope.extend(session.requested().map(|p| p.name.clone()));
@@ -207,11 +216,11 @@ fn named_scenario(scenario: &NamedScenario) -> (String, NamedScenario, String) {
     )
 }
 
-/// `litigate run` (and each op subcommand): `op` on `target`, a matter
+/// `litigate run` (and each op subcommand): `op` on `target` in `src`, a matter
 /// (its scenario, with `--set` params composed onto it) or a package (its
 /// pack under the default scenario with the `--set` params). A target
 /// that fails its check is not run.
-pub fn run(target: &str, op: &str, flags: &OpFlags) -> Outcome {
+pub fn run(src: &dyn Source, target: &str, op: &str, flags: &OpFlags) -> Outcome {
     let mut op = op_value(op)?;
     for a in &flags.args {
         let (k, v) = kv(a, "--arg")?;
@@ -224,7 +233,7 @@ pub fn run(target: &str, op: &str, flags: &OpFlags) -> Outcome {
         catalog,
         scenarios,
         packs,
-    } = compile(&[target.to_owned()], links, &flags.library.lib)?;
+    } = compile(src, &[target.to_owned()], links, &flags.library.lib)?;
     if report.has_errors() {
         return Ok(report);
     }

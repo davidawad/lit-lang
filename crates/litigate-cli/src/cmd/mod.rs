@@ -25,8 +25,9 @@ use crate::cli::Command;
 use crate::out::Outcome;
 use litigate_sema::pkg::source::Source;
 
-/// Runs `command`; `check`, `build` and `worlds` read (and `build`
-/// writes) `src`, every other command the disk.
+/// Runs `command`; `check`, `build`, `worlds`, `run` and the op
+/// subcommands read (and `build` writes) `src`, every other command the
+/// disk.
 // One arm per subcommand, each only unpacking its arguments.
 #[allow(clippy::too_many_lines)]
 pub fn dispatch(command: Command, src: &dyn Source) -> Outcome {
@@ -64,10 +65,10 @@ pub fn dispatch(command: Command, src: &dyn Source) -> Outcome {
             library,
         } => test::test(&paths, filter.as_deref(), &library.lib),
         Command::Fmt { paths, check } => fmt::fmt(&paths, check),
-        Command::Run { case, op, flags } => run::run(&case, &op, &flags),
+        Command::Run { case, op, flags } => run::run(src, &case, &op, &flags),
         Command::Op(op) => {
             let (name, args) = op.parts();
-            run::run(&args.target, name, &args.flags)
+            run::run(src, &args.target, name, &args.flags)
         }
         // `execute` runs the engine's own interface before dispatching.
         Command::Engine { .. } => Err(crate::out::Failure::new(
@@ -119,8 +120,8 @@ pub fn dispatch(command: Command, src: &dyn Source) -> Outcome {
             lib: library.lib,
         }),
         Command::Where { id, paths, library } => where_::where_(&id, &paths, &library.lib),
-        Command::Explain { code, flags } if std::path::Path::new(&code).exists() => {
-            run::run(&code, "explain", &flags)
+        Command::Explain { code, flags } if src.exists(std::path::Path::new(&code)) => {
+            run::run(src, &code, "explain", &flags)
         }
         Command::Explain { code, .. } => explain::explain(&code),
         Command::ExplainValue {

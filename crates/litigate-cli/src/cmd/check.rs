@@ -67,18 +67,19 @@ pub fn checked_in(
     ))
 }
 
-/// Loads and checks `targets`.
+/// Loads and checks `targets` from `src`.
 ///
 /// # Errors
 /// I/O failures.
 pub fn checked_targets(
+    src: &dyn Source,
     targets: &ws::Targets,
     profile: Profile,
     options: &Options,
     lib: &[String],
 ) -> Result<Checked, Failure> {
     Ok(check_session(
-        Session::load(targets, lib)?,
+        Session::load_in(src, targets, lib)?,
         profile,
         options,
     ))

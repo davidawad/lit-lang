@@ -1,7 +1,7 @@
-//! `check` and `build` over an in-memory copy of the repository's `lit/`
-//! and `cases/` print exactly what the binary prints over the disk (the
-//! wall-clock `elapsed_ms` aside), and `build` returns the files the
-//! binary writes.
+//! `check`, `build`, `run`, the op subcommands and `engine` over an
+//! in-memory copy of the repository's `lit/` and `cases/` print exactly
+//! what the binary prints over the disk (the wall-clock `elapsed_ms`
+//! aside), and `build` returns the files the binary writes.
 // Test helpers below may unwrap: a panic is the failed assertion.
 #![allow(clippy::unwrap_used)]
 mod support;
@@ -36,11 +36,15 @@ fn repo_files() -> BTreeMap<String, String> {
     files
 }
 
-/// `stdout` with a JSON envelope's `elapsed_ms` zeroed.
+/// `stdout` with the `elapsed_ms` of a JSON envelope or engine response,
+/// and of the engine response an envelope carries as its result, zeroed.
 fn untimed(stdout: &str) -> String {
     match serde_json::from_str::<Value>(stdout) {
         Ok(mut envelope) if envelope.get("elapsed_ms").is_some() => {
             envelope["elapsed_ms"] = Value::from(0);
+            if envelope["result"].get("elapsed_ms").is_some() {
+                envelope["result"]["elapsed_ms"] = Value::from(0);
+            }
             envelope.to_string()
         }
         _ => stdout.to_owned(),
@@ -136,12 +140,107 @@ fn build_returns_the_files_the_binary_writes() {
 }
 
 #[test]
+fn ops_compile_the_matter_or_package_in_memory() {
+    for args in [
+        &["--format", "json", "solve", "cases/frcp-civil-case.case"][..],
+        &[
+            "--format",
+            "json",
+            "run",
+            "cases/cofc-1498-patent-case.case",
+            "--op",
+            "chain",
+            "--set",
+            "rate=900",
+        ],
+        &["--format", "json", "chain", "lit/cofc"],
+        &["--format", "json", "solve", "lit/links"],
+        &["--format", "json", "solve", "lit/nope"],
+    ] {
+        let (native, memory) = both(args);
+        assert_eq!(memory, native, "{args:?}");
+    }
+    let (native, memory) = both(&["--format", "json", "solve", "cases/frcp-civil-case.case"]);
+    let envelope: Value = serde_json::from_str(&memory.stdout).unwrap();
+    assert_eq!(
+        (native.code, &envelope["result"]["ok"]),
+        (0, &Value::from(true))
+    );
+}
+
+#[test]
+fn engine_serves_the_compiled_lit_and_cases_in_memory() {
+    // The whole `lit/` and `cases/` once; the rest over the worked example.
+    let (native, memory) = both(&[
+        "engine",
+        "q",
+        r#"{"scenario":"cofc-1498-patent-case","op":{"op":"solve"}}"#,
+        "--compact",
+    ]);
+    assert_eq!(memory, native);
+    let response: Value = serde_json::from_str(&native.stdout).unwrap();
+    assert_eq!(response["ok"], Value::from(true));
+    let example = [
+        "--lib",
+        "lit/examples",
+        "--cases",
+        "cases/examples",
+        "--compact",
+    ];
+    for args in [
+        &[
+            "engine",
+            "q",
+            r#"{"scenario":"acme-v-widget","op":{"op":"solve"}}"#,
+        ][..],
+        &["engine", "describe"],
+        &[
+            "engine",
+            "chain",
+            "--scenario",
+            "acme-v-widget",
+            "--set",
+            "rate=900",
+        ],
+        &["engine", "validate", r#"{"params":{"rate":1}}"#],
+        &["engine", "run", "cases/examples/acme.case"],
+        &["engine", "schema", "scenario"],
+    ] {
+        let (native, memory) = both(&[args, &example[..]].concat());
+        assert_eq!(memory, native, "{args:?}");
+    }
+}
+
+#[test]
+fn engine_reads_no_directory_in_memory() {
+    for flag in ["--packs-dir", "--scenarios-dir", "--calibration-dir"] {
+        let args = ["engine".into(), "describe".into(), flag.into(), "x".into()];
+        let run = litigate_cli::execute_in_memory(repo_files(), &args);
+        assert_eq!((run.code, run.stdout.as_str()), (1, ""));
+        assert_eq!(
+            run.stderr,
+            format!("litigate engine: {flag} names a directory on disk; over an in-memory source the packs and scenarios are the compiled `--lib` and `--cases`\n")
+        );
+    }
+    // With no `cases/` there is no scenario library, only the packs.
+    let lit: BTreeMap<String, String> = repo_files()
+        .into_iter()
+        .filter(|(path, _)| path.starts_with("lit/"))
+        .collect();
+    let args = ["engine".into(), "describe".into(), "--compact".into()];
+    let run = litigate_cli::execute_in_memory(lit, &args);
+    let response: Value = serde_json::from_str(&run.stdout).unwrap();
+    assert_eq!(response["result"]["scenario_library"], Value::Array(vec![]));
+    assert!(!response["result"]["packs"].as_array().unwrap().is_empty());
+}
+
+#[test]
 fn other_commands_do_not_run_in_memory() {
     let run = litigate_cli::execute_in_memory(repo_files(), &["explain".into(), "L3004".into()]);
     assert_eq!(run.code, 1);
     assert_eq!(
         run.stderr,
-        "litigate explain: only check, build and worlds run over an in-memory source\n"
+        "litigate explain: only check, build, worlds, run, engine and the op subcommands run over an in-memory source\n"
     );
     let usage = litigate_cli::execute_in_memory([], &["frobnicate".into()]);
     assert_eq!((usage.code, usage.stdout.as_str()), (1, ""));

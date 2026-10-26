@@ -34,7 +34,7 @@ use crate::algo::structure::{is_cyclic, scc};
 use crate::algo::{fee, robust};
 use crate::error::Result;
 use crate::model::NodeIx;
-use crate::scenario::{Control, Objective, View, WAIT};
+use crate::scenario::{Control, NodePlan, Objective, View, WAIT};
 
 /// Tolerances for the cyclic (SCC-local) value-iteration backup.
 #[derive(Debug, Clone, Default)]
@@ -113,6 +113,21 @@ impl Ctx<'_> {
         -self.cost[e] + gamma(self.v, e) * value[self.v.g.edges[e].to]
     }
 
+    /// What choosing `e` (or WAIT) at our node `p` adds to the recovery of
+    /// the spend already behind it; 0 at anyone else's node.
+    fn bonus(&self, p: &NodePlan, e: usize) -> f64 {
+        match self.bonus {
+            Some(b) if p.control == Control::Me => {
+                if e == WAIT {
+                    p.wait.iter().map(|&(w, pr)| pr * b[w]).sum()
+                } else {
+                    b[e]
+                }
+            }
+            _ => 0.0,
+        }
+    }
+
     /// One backup at node n. Returns (value, chosen edge).
     fn backup(&self, n: NodeIx, value: &[f64]) -> (f64, Option<usize>) {
         let p = &self.v.plan[n];
@@ -149,16 +164,6 @@ impl Ctx<'_> {
                 self.q(e, value)
             }
         };
-        let bonus = |e: usize| match self.bonus {
-            Some(b) if p.control == Control::Me => {
-                if e == WAIT {
-                    p.wait.iter().map(|&(w, pr)| pr * b[w]).sum()
-                } else {
-                    b[e]
-                }
-            }
-            _ => 0.0,
-        };
         let mut best: Option<(f64, usize)> = None;
         if let Some(f) = forced {
             best = Some((q_of(f), f));
@@ -179,7 +184,7 @@ impl Ctx<'_> {
             };
             let options = p.choices.iter().copied().chain(q_wait.map(|_| WAIT));
             for e in options {
-                let q = q_of(e) + bonus(e);
+                let q = q_of(e) + self.bonus(p, e);
                 let better = match best {
                     None => true,
                     Some((b, be)) => {

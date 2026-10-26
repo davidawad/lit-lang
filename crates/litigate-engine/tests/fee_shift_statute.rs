@@ -14,7 +14,7 @@ use serde_json::{json, Value};
 
 /// We won (litigation cost 300), then choose: move for fees (100 of our
 /// hours) for a gross award of 50, or stop. `fees` carries `fee_shift`.
-fn pack(fee_shift: Value) -> Value {
+fn pack(fee_shift: &Value) -> Value {
     json!({
         "schemaVersion": 2, "id": "fees", "title": "fees", "startNodeId": "start",
         "roles": { "applicant": "self", "office": "nature" },
@@ -33,7 +33,7 @@ fn pack(fee_shift: Value) -> Value {
     })
 }
 
-fn graph(fee_shift: Value) -> litgraph::Result<Graph> {
+fn graph(fee_shift: &Value) -> litgraph::Result<Graph> {
     let p: Pack = serde_json::from_value(pack(fee_shift)).expect("pack parses");
     Graph::compile(&[p], &LinkFile::default(), &CompileOptions::default())
 }
@@ -50,15 +50,15 @@ fn solve(g: &Graph, sc: &Scenario) -> (f64, bool) {
 #[test]
 fn the_statutes_default_offsets_the_fee_motion_and_the_litigation() {
     // No fee shifting: the motion nets 50 - 100 < 0, so we stop.
-    let (value, moved) = solve(&graph(Value::Null).unwrap(), &Scenario::default());
+    let (value, moved) = solve(&graph(&Value::Null).unwrap(), &Scenario::default());
     assert!(!moved);
     assert!((value + 300.0).abs() < 1e-9, "{value}");
     // Full fee shifting: every hour on the way to the award is recovered.
-    let (value, moved) = solve(&graph(json!(1.0)).unwrap(), &Scenario::default());
+    let (value, moved) = solve(&graph(&json!(1.0)).unwrap(), &Scenario::default());
     assert!(moved);
     assert!((value - 50.0).abs() < 1e-9, "{value}");
     // Half: (300 + 100) / 2 recovered against the 50 award.
-    let (value, moved) = solve(&graph(json!(0.5)).unwrap(), &Scenario::default());
+    let (value, moved) = solve(&graph(&json!(0.5)).unwrap(), &Scenario::default());
     assert!(moved);
     assert!((value + 150.0).abs() < 1e-9, "{value}");
 }
@@ -67,7 +67,7 @@ fn the_statutes_default_offsets_the_fee_motion_and_the_litigation() {
 fn the_award_recovers_the_litigation_already_spent_so_the_motion_is_worth_filing() {
     // A 40 award at half: the motion alone nets 40 - 50 < 0, but it also
     // recovers 150 of the 300 already spent: 40 - 400 + 200 = -160 > -300.
-    let g = graph(json!(0.5)).unwrap();
+    let g = graph(&json!(0.5)).unwrap();
     let sc = Scenario {
         payoffs: [("fees::fees".to_owned(), 40.0)].into(),
         ..Scenario::default()
@@ -79,7 +79,7 @@ fn the_award_recovers_the_litigation_already_spent_so_the_motion_is_worth_filing
 
 #[test]
 fn the_scenario_replaces_the_packs_fraction_and_a_terminal_override_wins() {
-    let g = graph(json!(1.0)).unwrap();
+    let g = graph(&json!(1.0)).unwrap();
     // `fee_shift` with no eligible terminal turns the statute's default off.
     let off = Scenario {
         fee_shift: Some(FeeShift {
@@ -101,7 +101,7 @@ fn the_scenario_replaces_the_packs_fraction_and_a_terminal_override_wins() {
 
 #[test]
 fn simulate_credits_the_terminals_fraction_of_our_spend() {
-    let g = graph(json!(0.5)).unwrap();
+    let g = graph(&json!(0.5)).unwrap();
     let v = View::new(&g, &Scenario::default()).unwrap();
     let sol = mdp::solve(&v, &mdp::SolveOptions::default()).unwrap();
     let o = sim::SimOptions {
@@ -120,19 +120,18 @@ fn simulate_credits_the_terminals_fraction_of_our_spend() {
 #[test]
 fn fractions_outside_zero_one_and_off_terminals_are_errors() {
     for bad in [json!(1.5), json!(-0.1)] {
-        let err = graph(bad).err().expect("rejected").to_string();
+        let err = graph(&bad).expect_err("rejected").to_string();
         assert!(err.contains("feeShift"), "{err}");
     }
-    let mut off_terminal = pack(Value::Null);
+    let mut off_terminal = pack(&Value::Null);
     off_terminal["nodes"][1]["feeShift"] = json!(0.5);
     let p: Pack = serde_json::from_value(off_terminal).unwrap();
     let err = Graph::compile(&[p], &LinkFile::default(), &CompileOptions::default())
-        .err()
-        .expect("rejected")
+        .expect_err("rejected")
         .to_string();
     assert!(err.contains("on a terminal"), "{err}");
 
-    let g = graph(Value::Null).unwrap();
+    let g = graph(&Value::Null).unwrap();
     let cases = [
         (
             Scenario {
@@ -174,7 +173,7 @@ fn fractions_outside_zero_one_and_off_terminals_are_errors() {
 
 #[test]
 fn cvar_and_general_sum_warn_when_only_a_pack_shifts_fees() {
-    let g = graph(json!(1.0)).unwrap();
+    let g = graph(&json!(1.0)).unwrap();
     let sc: Scenario = serde_json::from_value(json!({
         "objective": { "type": "cvar", "alpha": 0.1 },
         "opponent_objective": "0"

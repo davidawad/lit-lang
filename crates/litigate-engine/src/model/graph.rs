@@ -43,6 +43,16 @@ pub struct Graph {
     pub(super) edge_ix: HashMap<String, EdgeIx>,
 }
 
+/// A node's `feeShift` must be a fraction in `[0, 1]`, on a terminal.
+fn check_fee_shift(qid: &str, kind: NodeKind, fee_shift: Option<f64>) -> Result<()> {
+    match fee_shift {
+        Some(f) if kind != NodeKind::Terminal || !(0.0..=1.0).contains(&f) => Err(Error::Invalid(
+            format!("node {qid}: feeShift {f} must be a fraction in [0, 1] on a terminal"),
+        )),
+        _ => Ok(()),
+    }
+}
+
 /// v1 terminal payoff heuristic (1 scoring point = $1,000). Only understands
 /// patent-prosecution vocabulary; always reported as `heuristic`.
 #[must_use]
@@ -164,13 +174,7 @@ impl Graph {
                     }),
                 (None, false) => (0.0, PayoffSource::Default),
             };
-            if let Some(f) = n.fee_shift {
-                if kind != NodeKind::Terminal || !(0.0..=1.0).contains(&f) {
-                    return Err(Error::Invalid(format!(
-                        "node {qid}: feeShift {f} must be a fraction in [0, 1] on a terminal"
-                    )));
-                }
-            }
+            check_fee_shift(&qid, kind, n.fee_shift)?;
             self.node_ix.insert(qid.clone(), self.nodes.len());
             self.nodes.push(Node {
                 id: qid.clone(),

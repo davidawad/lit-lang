@@ -367,6 +367,14 @@
         {
           "type": "SYMBOL",
           "name": "grant_decl"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "recharacterize_decl"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "invalidate_decl"
         }
       ]
     },
@@ -5377,6 +5385,108 @@
           "content": {
             "type": "SYMBOL",
             "name": "grant_body"
+          }
+        }
+      ]
+    },
+    "recharacterize_decl": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "recharacterize"
+        },
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ":"
+        },
+        {
+          "type": "FIELD",
+          "name": "target",
+          "content": {
+            "type": "SYMBOL",
+            "name": "ref"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "characterization"
+        },
+        {
+          "type": "FIELD",
+          "name": "characterization",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "_version_clause"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "cite"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "invalidate_decl": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "invalidate"
+        },
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ":"
+        },
+        {
+          "type": "FIELD",
+          "name": "target",
+          "content": {
+            "type": "SYMBOL",
+            "name": "ref"
+          }
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "_version_clause"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "cite"
+              }
+            ]
           }
         }
       ]

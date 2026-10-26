@@ -130,11 +130,19 @@
         "named": true
       },
       {
+        "type": "invalidate_decl",
+        "named": true
+      },
+      {
         "type": "link_decl",
         "named": true
       },
       {
         "type": "node_decl",
+        "named": true
+      },
+      {
+        "type": "recharacterize_decl",
         "named": true
       },
       {
@@ -2804,6 +2812,62 @@
     }
   },
   {
+    "type": "invalidate_decl",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "target": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "ref",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "cite",
+          "named": true
+        },
+        {
+          "type": "commenced_clause",
+          "named": true
+        },
+        {
+          "type": "effective_clause",
+          "named": true
+        },
+        {
+          "type": "known_at_clause",
+          "named": true
+        },
+        {
+          "type": "retracted_clause",
+          "named": true
+        },
+        {
+          "type": "unknown_before_clause",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "known_at_clause",
     "named": true,
     "fields": {},
@@ -3899,6 +3963,72 @@
       "types": [
         {
           "type": "probability_entry",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "recharacterize_decl",
+    "named": true,
+    "fields": {
+      "characterization": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "target": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "ref",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "cite",
+          "named": true
+        },
+        {
+          "type": "commenced_clause",
+          "named": true
+        },
+        {
+          "type": "effective_clause",
+          "named": true
+        },
+        {
+          "type": "known_at_clause",
+          "named": true
+        },
+        {
+          "type": "retracted_clause",
+          "named": true
+        },
+        {
+          "type": "unknown_before_clause",
           "named": true
         }
       ]
@@ -5467,6 +5597,10 @@
     "named": true
   },
   {
+    "type": "invalidate",
+    "named": false
+  },
+  {
     "type": "joins",
     "named": false
   },
@@ -5645,6 +5779,10 @@
   },
   {
     "type": "rebuts",
+    "named": false
+  },
+  {
+    "type": "recharacterize",
     "named": false
   },
   {

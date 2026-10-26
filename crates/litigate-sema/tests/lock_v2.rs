@@ -86,6 +86,38 @@ fn stale_lock_is_reported_with_its_source_location() {
     assert_eq!(diagnostics[0].span.line, 1);
 }
 
+/// A format-1 lock (lg-1od3): L1007 names `litigate lock DIR` and its
+/// machine-applicable fix replaces the lock with what that command writes.
+#[test]
+fn a_format_1_lock_carries_the_upgrade_as_a_fix() {
+    let (mut db, ws) = workspace(&[package("app", &[], &[("m.lit", PACK)])]);
+    let pkg = ws.packages(&db)[0];
+    let v1 = "version = 1\n\n[[package]]\nname = \"app\"\nversion = \"1.0.0\"\n";
+    pkg.set_lock_text(&mut db).to(Some(v1.to_owned()));
+    let diagnostics = litigate_sema::lock_diagnostics(&db, ws, pkg);
+    assert_eq!(diagnostics.len(), 1);
+    let d = &diagnostics[0];
+    assert_eq!(
+        d.message,
+        "Lit.lock format 1 is not supported (expected 2): run `litigate lock pkgs/app` to upgrade it"
+    );
+    assert_eq!(d.fixes.len(), 1);
+    let fix = &d.fixes[0];
+    assert_eq!(
+        fix.applicability,
+        litigate_base::Applicability::MachineApplicable
+    );
+    assert_eq!(fix.edits[0].span.file.0, "pkgs/app/Lit.lock");
+    assert_eq!(
+        (fix.edits[0].span.line, fix.edits[0].span.end_line),
+        (1, 6)
+    );
+    assert_eq!(
+        fix.edits[0].replacement,
+        litigate_sema::render_lock(&db, ws, pkg)
+    );
+}
+
 #[test]
 fn a_dependency_cycle_is_l1011_and_entered_by_name_and_version() {
     let (db, ws) = workspace(&[

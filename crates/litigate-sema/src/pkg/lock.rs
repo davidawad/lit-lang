@@ -577,7 +577,7 @@ mod tests {
             )
         );
         for current in ["version = 2", "version = 3", "version = "] {
-            assert_eq!(upgrade(current, ".", || unreachable!()), None, "{current}");
+            assert_eq!(upgrade(current, ".", String::new), None, "{current}");
         }
     }
 

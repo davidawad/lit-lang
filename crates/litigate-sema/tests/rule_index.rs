@@ -67,6 +67,7 @@ fn each_ill_formed_index_is_reported() {
             "Rule[[2010-01-01, ..), _, _, _, _]",
         ),
         ("a qualified name", "Rule[_, a.b, _, _, _]"),
+        ("a qualified authority", "Rule[a.b, _, _, _, _]"),
         ("a name for an interval", "Rule[_, _, base, _, _]"),
         (
             "a closed transaction interval",

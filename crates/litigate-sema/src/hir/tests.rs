@@ -271,3 +271,25 @@ fn a_designation_reads_the_trigger_argument_or_nothing() {
     assert_eq!(d.interpreted_shortfall("2025-01-02", &on), None);
     assert_eq!(d.interpreted_shortfall("2025-01-02", &date("x")), None);
 }
+
+#[test]
+fn only_a_lock_binds_a_level_or_is_written_as_one() {
+    let grant = Extension::Discretionary {
+        by: "Court".into(),
+        standard: CauseStandard::GoodCause,
+        window: ExtensionWindow::BeforeExpiry,
+        motion: None,
+        interpretation: None,
+    };
+    assert!(!grant.locks("CaseOrder"));
+    assert_eq!(grant.lock_source(), None);
+    let named = Extension::NonExtendable {
+        authority: "FRAP 26(b)(1)".into(),
+        against: vec!["CaseOrder".into()],
+    };
+    assert!(named.locks("CaseOrder") && !named.locks("LocalRule"));
+    assert_eq!(
+        named.lock_source().as_deref(),
+        Some("lock against [CaseOrder] cite \"FRAP 26(b)(1)\"")
+    );
+}

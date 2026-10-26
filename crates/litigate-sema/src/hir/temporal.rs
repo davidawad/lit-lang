@@ -459,8 +459,14 @@ impl Extension {
     /// The authority of a [`Self::NonExtendable`] lock.
     #[must_use]
     pub fn lock(&self) -> Option<&str> {
+        self.locked().map(|(authority, _)| authority)
+    }
+
+    /// A [`Self::NonExtendable`] lock's authority and the levels it binds
+    /// (none named: every level).
+    fn locked(&self) -> Option<(&str, &[String])> {
         match self {
-            Self::NonExtendable { authority, .. } => Some(authority),
+            Self::NonExtendable { authority, against } => Some((authority, against)),
             Self::Bounded { .. } | Self::Discretionary { .. } => None,
         }
     }
@@ -470,28 +476,21 @@ impl Extension {
     /// levels it names.
     #[must_use]
     pub fn locks(&self, level: &str) -> bool {
-        match self {
-            Self::NonExtendable { against, .. } => {
-                against.is_empty() || against.iter().any(|a| a == level)
-            }
-            Self::Bounded { .. } | Self::Discretionary { .. } => false,
-        }
+        self.locked()
+            .is_some_and(|(_, against)| against.is_empty() || against.iter().any(|a| a == level))
     }
 
     /// A lock as written: `extend { never cite "X" }` or `lock against
     /// [L, ...] cite "X"`; `None` for a grant.
     #[must_use]
     pub fn lock_source(&self) -> Option<String> {
-        match self {
-            Self::NonExtendable { authority, against } if against.is_empty() => {
-                Some(format!("extend {{ never cite \"{authority}\" }}"))
+        self.locked().map(|(authority, against)| {
+            if against.is_empty() {
+                format!("extend {{ never cite \"{authority}\" }}")
+            } else {
+                format!("lock against [{}] cite \"{authority}\"", against.join(", "))
             }
-            Self::NonExtendable { authority, against } => Some(format!(
-                "lock against [{}] cite \"{authority}\"",
-                against.join(", ")
-            )),
-            Self::Bounded { .. } | Self::Discretionary { .. } => None,
-        }
+        })
     }
 }
 

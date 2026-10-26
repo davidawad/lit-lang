@@ -132,12 +132,12 @@ impl Cx<'_, '_> {
     }
 }
 
-/// L2007 for clause `key` written beside the index standing for it.
+/// L2007 for clause `key` written beside the index standing for it: the
+/// index follows the rule's name, so a clause written out starts after it.
 fn twice(cx: &mut Cx<'_, '_>, clauses: &[Field], index: &Field, key: &str) {
-    let inside = |r: TextRange| r.start >= index.range.start && r.end <= index.range.end;
     for f in clauses
         .iter()
-        .filter(|f| f.key.text == key && !inside(f.key.range))
+        .filter(|f| f.key.text == key && f.key.range.start >= index.range.end)
     {
         cx.report(Report::new(
             C::InvalidField,

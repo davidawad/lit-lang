@@ -240,7 +240,9 @@ impl Report {
     pub fn to_diagnostic(&self, file: &FileId, at: &(impl Positions + ?Sized)) -> Diagnostic {
         let span = |range: TextRange| at.span(file, range);
         let mut d = Diagnostic::error(self.code, span(self.range), self.message.clone());
-        if self.code.is_lint() {
+        // A lint, or an undecided refinement (a hole): graded by profile,
+        // so a dev check still builds.
+        if self.code.is_lint() || self.code == DiagnosticCode::RefinementUndecided {
             d.severity = self.code.severity(Profile::Dev);
         }
         for (range, message) in &self.notes {

@@ -44,7 +44,11 @@ impl Builder {
         while index < children.len() {
             match &children[index] {
                 NodeOrToken::Node(child) => self.node(child),
-                NodeOrToken::Token(token) if token.kind() == LBrace => {
+                // A refinement type's braces enclose an expression, not a
+                // block: `{x: T | p}` stays on its line.
+                NodeOrToken::Token(token)
+                    if token.kind() == LBrace && node.kind() != RefinedType =>
+                {
                     index = self.block(node, &children, index);
                     continue;
                 }
@@ -257,5 +261,7 @@ fn spaced(prev: Prev, kind: SyntaxKind, parent: SyntaxKind) -> bool {
         || (prev.kind == Less && prev.parent == TypeArgs)
         || (matches!(prev.kind, Minus | Bang) && prev.parent == UnaryExpr)
         || (prev.parent == Ratio && parent == Ratio)
+        || (prev.kind == LBrace && prev.parent == RefinedType)
+        || (kind == RBrace && parent == RefinedType)
         || (version(prev.parent) && version(parent)))
 }

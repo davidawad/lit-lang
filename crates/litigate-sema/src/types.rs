@@ -8,6 +8,7 @@ pub mod literal;
 pub mod ops;
 pub mod rational;
 pub mod refine;
+pub mod refinement;
 pub mod shape;
 pub mod ty;
 pub mod uncertain;

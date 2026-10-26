@@ -21,6 +21,7 @@ use crate::hir::{
 };
 use crate::temporal::condition::matches;
 use crate::temporal::MatterEvent;
+use crate::types::refinement;
 use litigate_base::{Diagnostic, DiagnosticCode as C, Severity};
 use std::fmt::Write as _;
 
@@ -912,6 +913,9 @@ impl<'g> Cx<'_, 'g> {
                 ),
             );
         }
+        if let Some(d) = self.unrefined(k, &counted, &current) {
+            return Err((3, d.note(how)));
+        }
         let Some(ceiling) = grant.ceiling else {
             return Ok(request);
         };
@@ -934,6 +938,44 @@ impl<'g> Cx<'_, 'g> {
             );
         }
         Ok(request)
+    }
+
+    /// Tier 1 at replay (SPEC §3.5): the first refinement of event `k`'s
+    /// type naming a bound date that its arguments and the instance's
+    /// dates (`counted` prescribed, `current` as last extended; the
+    /// order's date `grant_order_entered`) do not satisfy, as L2012.
+    fn unrefined(&self, k: usize, counted: &str, current: &str) -> Option<Diagnostic> {
+        let event = self.sorted[k].1;
+        let ExprKind::Call { callee, args } = &event.action.kind else {
+            return None;
+        };
+        let (pack, name) = callee
+            .split_once("::")
+            .unwrap_or((self.graph.primary(), callee.as_str()));
+        let ty = self.graph.event_type(pack, name)?;
+        let env = |n: &str| match ty.params.iter().position(|(p, _)| p == n) {
+            Some(i) => match &args.get(i)?.kind {
+                ExprKind::Literal { value } => Some(value.clone()),
+                _ => None,
+            },
+            None => match n {
+                "prescribed_due" => Some(Value::Date(counted.to_owned())),
+                "current_due" => Some(Value::Date(current.to_owned())),
+                _ => Some(Value::Date(event.date.clone())),
+            },
+        };
+        let r = ty.refinements.iter().find(|r| {
+            refinement::names_bound_date(&r.predicate)
+                && refinement::eval(&r.predicate, &env) == Some(false)
+        })?;
+        Some(
+            error(
+                C::RefinementViolated,
+                self.at(k, |e| e.action.as_ref()),
+                refinement::message(callee, r, &env),
+            )
+            .note(refinement::origin(callee, r)),
+        )
     }
 
     /// The date of the motion `m` order `k`'s grant requires for instance

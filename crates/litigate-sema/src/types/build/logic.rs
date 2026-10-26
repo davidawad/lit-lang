@@ -215,9 +215,12 @@ impl Cx<'_, '_> {
         for r in reports {
             self.report(r);
         }
+        let resolved = resolved?;
+        let refinements = self.alias_refinements(name, target, &resolved);
         Some(TypeAlias {
             name: name.text.clone(),
-            target: resolved?,
+            target: resolved,
+            refinements,
         })
     }
 
@@ -275,12 +278,14 @@ impl Cx<'_, '_> {
             .find(|f| f.key.text == "paper")
             .and_then(|f| super::cx::first_ref(Some(&f)))
             .and_then(|r| self.value_ref(r, "filing limit", |k| matches!(k, ValueKind::Limit)));
+        let refinements = self.event_refinements(name, params, &out, effect);
         let effect = self.effect(name, &out, effect);
         Some(EventType {
             name: name.text.clone(),
             params: out,
             effect,
             paper,
+            refinements,
         })
     }
 

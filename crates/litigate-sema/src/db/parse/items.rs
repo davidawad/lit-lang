@@ -1,5 +1,5 @@
 //! Module header and declarations (SPEC §3.1).
-use super::expr::{expr_children, is_expr, path_of, type_ref};
+use super::expr::{declared_type, expr_children, is_expr, path_of};
 use super::tree::{
     ArmItem, EdgeItem, HolidayItem, Import, Item, ItemKind, ItemTree, LimitEntry, LimitEntryKind,
     LimitItem, Name, NodeItem, PackageHeader, TestStmt,
@@ -80,7 +80,13 @@ impl Lower {
             K::StartDecl => ItemKind::Start(path_of(&node_of(node, K::Ref)?)),
             K::GroupDecl => ItemKind::Group(ident(node)?, label(node)?),
             K::TypeDecl => {
-                ItemKind::TypeAlias(ident(node)?, type_ref(&node_of(node, K::TypeExpr)?))
+                // A declaration's `where` clause names the value `it`.
+                let it = Name {
+                    text: "it".into(),
+                    range: node_of(node, K::WhereClause)
+                        .map_or(range(node.text_range()), |c| head(&c).range),
+                };
+                ItemKind::TypeAlias(ident(node)?, declared_type(node, it)?)
             }
             K::EnumDecl => {
                 let mut names = idents(node).into_iter();
@@ -91,10 +97,7 @@ impl Lower {
                 let params = node
                     .descendants()
                     .filter(|p| p.kind() == K::Param)
-                    .map(|p| {
-                        let ty = node_of(&p, K::TypeExpr)?;
-                        Some((head(&p), type_ref(&ty)))
-                    })
+                    .map(|p| Some((head(&p), declared_type(&p, head(&p))?)))
                     .collect::<Option<_>>()?;
                 ItemKind::Event(name, params, self.clauses(node))
             }

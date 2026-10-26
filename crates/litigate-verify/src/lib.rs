@@ -28,6 +28,7 @@ mod graph;
 mod lints;
 mod matter;
 mod net;
+mod refinement;
 mod report;
 mod sema;
 
@@ -195,7 +196,9 @@ pub fn verify_package(
         }
     }
     record(&mut b, O::DistExact, graph::empty_distributions(&cx));
-    record(&mut b, O::WellTyped, cycle::unbounded(&cx));
+    let mut typed = cycle::unbounded(&cx);
+    typed.extend(refinement::bounds(&cx));
+    record(&mut b, O::WellTyped, typed);
     evidence::holes(&mut b, holes.len());
     record(&mut b, O::Holes, lints::holes(&holes, profile));
     record(&mut b, O::RuleWithoutTest, lints::untested(&cx));

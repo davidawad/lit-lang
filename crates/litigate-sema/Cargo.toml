@@ -16,6 +16,11 @@ litigate-base = { path = "../litigate-base" }
 litigate-syntax = { path = "../litigate-syntax" }
 rowan.workspace = true
 
+# The SMT tier of refinements (SPEC §3.5). Z3 is a native library: a wasm
+# build has no solver, and every question the tier asks there is `unknown`.
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+litigate-smt = { path = "../litigate-smt" }
+
 [dev-dependencies]
 insta = { workspace = true, features = ["json"] }
 proptest.workspace = true

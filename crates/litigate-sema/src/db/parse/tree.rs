@@ -127,7 +127,7 @@ pub enum Pattern {
     Wildcard(TextRange),
 }
 
-/// Type expression `Name<Args>`.
+/// Type expression `Name<Args>`, with the predicates refining it.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct TypeRef {
     /// Constructor name.
@@ -135,6 +135,22 @@ pub struct TypeRef {
     /// Arguments.
     pub args: Vec<TypeRef>,
     /// Range.
+    pub range: TextRange,
+    /// Refinements (SPEC §3.5), innermost first: `{x: T | p}` around the
+    /// base, then a `where p` clause after it.
+    pub refinements: Vec<Qualifier>,
+}
+
+/// One refinement predicate: `p` of `{x: T | p}` (binder `x`) or of a
+/// `where p` clause (binder the parameter, or `it` in a type
+/// declaration).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Qualifier {
+    /// The name the predicate gives the refined value.
+    pub binder: Name,
+    /// The predicate.
+    pub predicate: Expr,
+    /// The whole form: `{x: T | p}` or `where p`.
     pub range: TextRange,
 }
 
@@ -512,9 +528,28 @@ impl Ranges for Pattern {
 
 impl Ranges for TypeRef {
     fn ranges_mut(&mut self, f: &mut dyn FnMut(&mut TextRange)) {
-        let Self { name, args, range } = self;
+        let Self {
+            name,
+            args,
+            range,
+            refinements,
+        } = self;
         name.ranges_mut(f);
         args.ranges_mut(f);
+        f(range);
+        refinements.ranges_mut(f);
+    }
+}
+
+impl Ranges for Qualifier {
+    fn ranges_mut(&mut self, f: &mut dyn FnMut(&mut TextRange)) {
+        let Self {
+            binder,
+            predicate,
+            range,
+        } = self;
+        binder.ranges_mut(f);
+        predicate.ranges_mut(f);
         f(range);
     }
 }

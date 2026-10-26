@@ -158,11 +158,11 @@ fn keywords_match_the_compiler() {
     );
 }
 
-/// The reserved refinement forms (SPEC §3.5): the grammar gives each a
-/// node so editors highlight it, and the compiler rejects each with L0009
-/// only, so the slot never shadows another error.
+/// The refinement forms (SPEC §3.5): the grammar gives each a node so
+/// editors highlight it, and the compiler's parser accepts each (sema
+/// checks the predicate).
 #[test]
-fn reserved_refinements_parse_here_and_are_l0009_in_the_compiler() {
+fn refinements_parse_here_and_in_the_compiler() {
     for (source, node) in [
         (
             "module m\ntype T = {d: Days | d > 0.days}\n",
@@ -176,7 +176,10 @@ fn reserved_refinements_parse_here_and_are_l0009_in_the_compiler() {
             "module m\nevent E(on: {t: Date | t >= 2026-01-01})\n",
             "refined_type",
         ),
-        ("module m\ntype T = Days where T > 0.days\n", "where_clause"),
+        (
+            "module m\ntype T = Days where it > 0.days\n",
+            "where_clause",
+        ),
         (
             "module m\nevent E(on: Date where on >= 2026-01-01, x: E)\n",
             "where_clause",
@@ -186,12 +189,15 @@ fn reserved_refinements_parse_here_and_are_l0009_in_the_compiler() {
         assert!(syntax_errors(&tree).is_empty(), "{source}");
         assert!(find(tree.root_node(), node).is_some(), "{source}");
         let compiled = litigate_syntax::parse_lit(source);
-        let codes: Vec<&str> = compiled.errors().iter().map(|e| e.code.as_str()).collect();
-        assert_eq!(codes, ["L0009"], "{source}");
-        assert!(compiled.errors()[0]
-            .message
-            .starts_with(litigate_syntax::RESERVED_REFINEMENT));
+        assert!(compiled.is_ok(), "{source}: {:?}", compiled.errors());
     }
+    // `where` outside the slot is L0009 in the compiler.
+    let compiled = litigate_syntax::parse_lit("module m\nstart where\n");
+    let codes: Vec<&str> = compiled.errors().iter().map(|e| e.code.as_str()).collect();
+    assert_eq!(codes, ["L0009"]);
+    assert!(compiled.errors()[0]
+        .message
+        .starts_with(litigate_syntax::RESERVED_REFINEMENT));
 }
 
 /// The guard operations of a patch (SPEC §3.6): the grammar gives each a

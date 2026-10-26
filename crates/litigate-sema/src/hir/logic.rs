@@ -204,6 +204,32 @@ pub struct TypeAlias {
     pub name: String,
     /// Underlying type expression.
     pub target: Type,
+    /// The predicates refining it (SPEC §3.5): `type T = {x: B | p}` or
+    /// `type T = B where p`; every value of `T` satisfies each.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub refinements: Vec<Refinement>,
+}
+
+/// A refinement (SPEC §3.5): a `Bool` predicate in the qualifier grammar
+/// (linear comparisons of numbers, durations, money and dates; enum and
+/// boolean tests; `&&`, `||`, `!`) over the value it refines and, on an
+/// event, its other parameters. Checked by exact evaluation where the
+/// values are known, and by the SMT tier where they are not.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Refinement {
+    /// The name the predicate gives the refined value: the parameter of an
+    /// event, the binder `x` of an alias `{x: B | p}`, or `it`.
+    pub binder: String,
+    /// The predicate, typed `Bool`; a parameter is a [`ExprKind::Ref`] to
+    /// its name, a bound date of an `extends` event (SPEC §3.5) a `Ref` to
+    /// `prescribed_due`, `current_due` or `grant_order_entered`.
+    ///
+    /// [`ExprKind::Ref`]: super::ExprKind::Ref
+    pub predicate: Expr,
+    /// The alias the predicate comes from, when a parameter has a refined
+    /// alias type (in the event's package view).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub via: Option<String>,
 }
 
 /// Closed enum declaration.
@@ -257,6 +283,11 @@ pub struct EventType {
     /// `limit` declaring its filing requirements, by canonical name.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub paper: Option<String>,
+    /// The predicates its arguments satisfy (SPEC §3.5), from refined
+    /// parameter types, `where` clauses and refined aliases, in parameter
+    /// order.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub refinements: Vec<Refinement>,
 }
 
 /// What an event does to a matter besides taking an edge (SPEC §5.2).

@@ -106,8 +106,8 @@ module.exports = {
 
   type_args: $ => seq('<', $._type, repeat(seq(',', $._type)), '>'),
 
-  // SPEC §3.5: refinement syntax is reserved for the SMT tier. Both forms
-  // parse here so editors highlight them; the compiler rejects them (L0009).
+  // SPEC §3.5: refinement types and `where` clauses, discharged by ground
+  // evaluation and the SMT tier.
   refined_type: $ => seq(
     '{',
     field('binder', $.identifier),

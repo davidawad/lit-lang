@@ -97,6 +97,9 @@ pub(super) fn call(
         .map(|(a, (_, t))| argument(graph, &pack, a, t, span, out))
         .collect();
     let callee = spelled(graph, &pack, &name);
+    if let Some(typed) = &typed {
+        refined(&callee, ty, typed, args, out);
+    }
     Some(Expr {
         ty: Type::Named(callee.clone()),
         kind: ExprKind::Call {
@@ -105,6 +108,38 @@ pub(super) fn call(
         },
         span: Some(span(range)),
     })
+}
+
+/// Tier 1 (SPEC §3.5): L2012 for each refinement of event type `ty` its
+/// arguments `typed` (written as `args`) do not satisfy. One naming a
+/// bound date is judged when replay counts the due dates it reads, one
+/// naming an unknown (`?`) argument not at all.
+fn refined(
+    callee: &str,
+    ty: &crate::hir::EventType,
+    typed: &[Expr],
+    args: &[Src],
+    out: &mut Vec<Report>,
+) {
+    let value = |name: &str| {
+        let i = ty.params.iter().position(|(p, _)| p == name)?;
+        match &typed.get(i)?.kind {
+            ExprKind::Literal { value } => Some(value.clone()),
+            _ => None,
+        }
+    };
+    for r in &ty.refinements {
+        if crate::types::refinement::eval(&r.predicate, &value) != Some(false) {
+            continue;
+        }
+        let at = ty
+            .params
+            .iter()
+            .position(|(p, _)| *p == r.binder)
+            .and_then(|i| args.get(i))
+            .map(|a| a.range);
+        out.extend(at.map(|at| crate::types::refinement::violation(callee, r, &value, at)));
+    }
 }
 
 fn literal(value: Value, ty: Type, r: TextRange, span: ToSpan<'_>) -> Expr {

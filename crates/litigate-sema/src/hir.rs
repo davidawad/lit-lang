@@ -33,7 +33,7 @@ pub use graph::{
 pub use kind::{Cell, Effect, Family, Instrument, Kind, Row, Scope};
 pub use logic::{
     Authority, DefaultRule, DelegatedOp, Delegation, EnumDecl, EventEffect, EventType, Exception,
-    ExceptionKind, Expectation, Metadata, Relation, Rule, RuleKind, Test, TypeAlias,
+    ExceptionKind, Expectation, Metadata, Refinement, Relation, Rule, RuleKind, Test, TypeAlias,
 };
 pub use temporal::{
     Adoption, Anchor, Bound, BoundDates, Calendar, Capability, CauseStandard, Chain, CharacterKind,

@@ -3,9 +3,11 @@
 //! ranges, so an edit that keeps a module's interface intact is backdated
 //! and its importers are not re-checked.
 use crate::db::inputs::SourceFile;
-use crate::db::parse::tree::{Atom, Expr, ExprKind, Field, Item, ItemKind, ItemTree, RefPath};
+use crate::db::parse::tree::{
+    Atom, Expr, ExprKind, Field, Item, ItemKind, ItemTree, RefPath, TypeRef,
+};
 use crate::db::queries::{item_tree, manifest, module_graph, signature};
-use crate::hir::{Manifest, Type};
+use crate::hir::{Manifest, Refinement, Type};
 use crate::resolve::scope::Scope;
 use crate::types::{expr::Checker, ty};
 use std::collections::{BTreeMap, BTreeSet};
@@ -109,6 +111,9 @@ pub struct Signature {
     pub authorities: BTreeSet<String>,
     /// Actors declared in the package's `[package.roles]`.
     pub actors: BTreeSet<String>,
+    /// The refinements (SPEC §3.5) of each refined alias (naming the value
+    /// by its own binder) and event (naming its parameters), unlocated.
+    pub refinements: BTreeMap<String, Vec<Refinement>>,
 }
 
 /// Items with `rule` bodies hoisted, each paired with its enclosing rule.
@@ -437,4 +442,79 @@ fn resolve_types(sig: &mut Signature, tree: &ItemTree, imports: &[&Signature]) {
     for (name, ts) in typed {
         sig.types.insert(name, ts);
     }
+    refinements(sig, tree, imports);
+}
+
+/// Types the refinements of every alias and event (SPEC §3.5) into
+/// `sig.refinements`. An alias inherits the refinements of the alias it
+/// names, so aliases settle in rounds, each alias once its base has.
+fn refinements(sig: &mut Signature, tree: &ItemTree, imports: &[&Signature]) {
+    let candidate =
+        |t: &TypeRef| !t.refinements.is_empty() || !ty::BUILTINS.contains(&t.name.text.as_str());
+    let mut pending: Vec<(&str, &TypeRef)> = flatten(tree)
+        .into_iter()
+        .filter_map(|(item, _)| match &item.kind {
+            ItemKind::TypeAlias(name, target) if candidate(target) => {
+                Some((name.text.as_str(), target))
+            }
+            _ => None,
+        })
+        .collect();
+    loop {
+        let settled: Vec<(String, Vec<Refinement>)> = {
+            let scope = Scope::new(sig, &tree.imports, imports, Vec::new());
+            let waits = |t: &TypeRef| pending.iter().any(|(n, _)| *n == t.name.text);
+            pending
+                .iter()
+                .filter(|(_, t)| !waits(t))
+                .filter_map(|(name, t)| {
+                    let Some(TypeSig::Alias(Some(base))) = sig.types.get(*name) else {
+                        return None;
+                    };
+                    let mut ck = Checker::new(&scope);
+                    let found = crate::types::refinement::alias(&mut ck, t, base)?;
+                    Some((
+                        (*name).to_owned(),
+                        found.into_iter().map(|(r, _)| r).collect(),
+                    ))
+                })
+                .collect()
+        };
+        // An alias that does not settle (a cycle, L3006; an ill-typed
+        // refinement, L2011) stops the rounds once nothing else does.
+        if settled.is_empty() {
+            break;
+        }
+        pending.retain(|(n, _)| !settled.iter().any(|(s, _)| s == n));
+        for (name, rs) in settled {
+            if !rs.is_empty() {
+                sig.refinements.insert(name, rs);
+            }
+        }
+    }
+    let events: Vec<(String, Vec<Refinement>)> = {
+        let scope = Scope::new(sig, &tree.imports, imports, Vec::new());
+        flatten(tree)
+            .into_iter()
+            .filter_map(|(item, _)| match &item.kind {
+                ItemKind::Event(name, params, effect) => Some((name, params, effect)),
+                _ => None,
+            })
+            .filter_map(|(name, params, effect)| {
+                let Some(TypeSig::Event(typed)) = sig.types.get(&name.text) else {
+                    return None;
+                };
+                let typed: Vec<(String, Type)> = typed
+                    .iter()
+                    .map(|(p, t)| Some((p.clone(), t.clone()?)))
+                    .collect::<Option<_>>()?;
+                let extends = effect.iter().any(|f| f.key.text == "extends");
+                let mut ck = Checker::new(&scope);
+                let found = crate::types::refinement::event(&mut ck, params, &typed, extends)?;
+                let found: Vec<Refinement> = found.into_iter().map(|(r, _)| r).collect();
+                (!found.is_empty()).then(|| (name.text.clone(), found))
+            })
+            .collect()
+    };
+    sig.refinements.extend(events);
 }

@@ -69,6 +69,7 @@ fn every_registered_code_exercises_its_stable_views() {
                         | DiagnosticCode::HolePresent
                         | DiagnosticCode::NonCanonicalFormat
                         | DiagnosticCode::NotEncoded
+                        | DiagnosticCode::RefinementUndecided
                 ))
             {
                 assert_eq!(severity, Severity::Warning);

@@ -67,7 +67,7 @@ registry! {
     DanglingDocComment = "L0006" => "A documentation comment is not followed by a declaration",
     ReservedWord = "L0007" => "A word reserved for a future language construct is used as an identifier",
     UnknownEdition = "L0008" => "The edition marker names an edition this compiler does not know",
-    ReservedRefinement = "L0009" => "Refinement syntax (`{x: T | p}` or a `where` clause) is reserved for the SMT tier and not yet accepted",
+    ReservedRefinement = "L0009" => "`where` used outside a refinement clause (`T where p` after a parameter's or a type declaration's type), the only place it is a keyword",
     ReservedGuardOp = "L0010" => "`and` or `or` used outside a typed guard operation of a patch (`when and p`, `when or p`), the only place they are keywords",
     ReservedFilingRequirement = "L0011" => "`limit`, `certificate` or `excludes` used outside a top-level filing requirement (`limit paper { words <= N, requires certificate kind, excludes [...] }`), the only place they are keywords",
     BooleanWordOperator = "L0012" => "Use `!` for boolean negation; `not` is not an expression operator",
@@ -96,6 +96,10 @@ registry! {
     InvalidCapability = "L2009" => "A capability is not allowed by the deadline's characterization: a jurisdictional limit admits no waiver, no unbounded extension, and no delegation",
     ForbiddenEffect = "L2010" => "A declaration has an effect its package's instrument class (`kind` in Lit.toml) does not permit",
     ClassOutsideFamily = "L2011" => "An instrument class does not exist in its forum family, or exceeds the bound of its matrix cell",
+    InvalidRefinement = "L2012" => "A refinement predicate is outside the qualifier grammar (linear comparisons of numbers, durations, money and dates; enum and boolean tests; `&&`, `||`, `!`), names something other than the values it may, or stands where no refinement may",
+    RefinementViolated = "L2013" => "A value does not satisfy the refinement of the parameter it is given for, or an extension's refinement admits a date past its deadline's extension bound (with a counterexample)",
+    VacuousRefinement = "L2014" => "No value satisfies a refinement: its predicates contradict each other (an unsat core)",
+    RefinementUndecided = "L2015" => "The SMT tier could not decide a refinement obligation (its resource limit, or no solver in this build): a hole, never a pass",
     EffectiveOverlap = "L3001" => "Two versions of the same declaration overlap in in-force time",
     EffectiveGap = "L3002" => "A declaration version gap is not explicitly declared",
     UnresolvedPrecedence = "L3003" => "Conflicting rules remain unordered after relations and canons are applied",
@@ -226,7 +230,8 @@ impl DiagnosticCode {
                 Self::RuleWithoutTest
                 | Self::HolePresent
                 | Self::NonCanonicalFormat
-                | Self::NotEncoded,
+                | Self::NotEncoded
+                | Self::RefinementUndecided,
                 Profile::Dev,
             ) => Severity::Warning,
             _ => Severity::Error,

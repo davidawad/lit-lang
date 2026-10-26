@@ -96,13 +96,14 @@ const UNIT_SUFFIXES: [&str; 8] = [
 /// parser licenses it; anywhere else it stays L0007.
 pub const RESERVED_WORDS: [&str; 5] = ["world", "layer", "precedent", "overrule", "lock"];
 
-/// Words reserved for the refinement surface syntax of the SMT tier
-/// (SPEC §2.1): L0009 wherever they appear, in the grammar's `where`
-/// clause slot as well as anywhere an identifier could stand.
+/// The keyword of a refinement clause (SPEC §3.5): `T where p` after a
+/// parameter's or a type declaration's type. It is a keyword only in the
+/// grammar's `WhereClause` slot; anywhere else, where an identifier could
+/// stand, it is L0009.
 pub const REFINEMENT_WORDS: [&str; 1] = ["where"];
 
-/// Message prefix of every L0009 diagnostic (SPEC §2.1).
-pub const RESERVED_REFINEMENT: &str = "reserved: refinements (SMT tier)";
+/// Message prefix of every L0009 diagnostic (SPEC §3.5).
+pub const RESERVED_REFINEMENT: &str = "reserved: refinement keyword";
 
 /// The keywords of the typed guard operations of a patch (SPEC §3.6):
 /// `when and p` narrows the patched edge's guard, `when or p` widens it.
@@ -205,8 +206,9 @@ impl Lexer<'_> {
                         start,
                         end,
                         format!(
-                            "{RESERVED_REFINEMENT}: `{text}` introduces a refinement clause, which \
-                             a later edition adds; it cannot be written or used as an identifier"
+                            "{RESERVED_REFINEMENT}: `{text}` introduces a refinement clause only \
+                             after a parameter's or a type declaration's type (`T where p`); it \
+                             cannot be used as an identifier"
                         ),
                     );
                 } else if GUARD_OP_WORDS.contains(&text) {

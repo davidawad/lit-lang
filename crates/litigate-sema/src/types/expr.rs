@@ -428,10 +428,15 @@ impl<'s, 'a> Checker<'s, 'a> {
             )
             .into())
         };
-        let (name, params) = match lookup {
+        let (name, params, refinements) = match lookup {
             Ok((name, found)) => {
                 if let TypeSig::Event(params) = found.item {
-                    (name, self.scope.localize_params(found.sig, params))
+                    let refinements = found.sig.refinements.get(&callee.head.text);
+                    (
+                        name,
+                        self.scope.localize_params(found.sig, params),
+                        refinements,
+                    )
                 } else {
                     self.report(Report::new(
                         C::InvalidOperation,
@@ -487,14 +492,25 @@ impl<'s, 'a> Checker<'s, 'a> {
                 )),
             );
         }
-        let args: Vec<hir::Expr> = args
+        let checked: Vec<Checked> = args
             .iter()
             .zip(params.iter().map(Some).chain(std::iter::repeat(None)))
             .map(|(a, p)| match p.and_then(|(_, t)| t.as_ref()) {
-                Some(t) => self.check(a, t).hir,
-                None => self.infer(a).hir,
+                Some(t) => self.check(a, t),
+                None => self.infer(a),
             })
             .collect();
+        if arity_ok {
+            let values: Vec<(&str, Option<&Value>, TextRange)> = params
+                .iter()
+                .zip(checked.iter().zip(args))
+                .map(|((p, _), (c, a))| (p.as_str(), c.value.as_ref(), a.range))
+                .collect();
+            for refinement in refinements.into_iter().flatten() {
+                super::refinement::ground(self, &name, refinement, &values, r);
+            }
+        }
+        let args: Vec<hir::Expr> = checked.into_iter().map(|c| c.hir).collect();
         let ty = arity_ok.then(|| Type::Named(name.clone()));
         self.node(hir::ExprKind::Call { callee: name, args }, ty, None, r)
     }

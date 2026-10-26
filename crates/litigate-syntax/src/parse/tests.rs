@@ -99,19 +99,12 @@ fn node_kinds(parsed: &super::Parse) -> Vec<SyntaxKind> {
 }
 
 #[test]
-fn refinement_types_parse_into_their_slot_and_are_reserved() {
+fn refinement_types_parse_into_their_slot() {
     let parsed = parse_lit(
         "module m\ntype Short = {d: Days | d <= 60.days && d > 0.days}\n\
          event Served(on: {t: Date | t >= 2026-01-01}, how: String)\n",
     );
-    assert_eq!(codes(&parsed), ["L0009", "L0009"]);
-    for error in parsed.errors() {
-        assert!(error.message.starts_with(crate::RESERVED_REFINEMENT));
-    }
-    assert_eq!(
-        parsed.errors()[0].range,
-        crate::TextRange::new(22.into(), 60.into())
-    );
+    assert!(parsed.is_ok(), "{:?}", parsed.errors());
     let kinds = node_kinds(&parsed);
     assert_eq!(
         kinds
@@ -121,32 +114,31 @@ fn refinement_types_parse_into_their_slot_and_are_reserved() {
         2
     );
     assert!(!kinds.contains(&SyntaxKind::Error), "{kinds:?}");
-    // Nested refinements are reserved at every level.
+    // A refinement's base may itself be refined.
     let nested = parse_lit("module m\ntype T = {a: {b: Int | b > 0} | a < 9}\n");
-    assert_eq!(codes(&nested), ["L0009", "L0009"]);
+    assert!(nested.is_ok(), "{:?}", nested.errors());
 }
 
 #[test]
 fn a_malformed_refinement_type_reports_where_it_breaks() {
     let unclosed = parse_lit("module m\ntype T = {d: Days | d > 0.days\n");
-    // One recovery error per position, the unclosed brace (with its fix);
-    // the reserved refinement there is a distinct error and stays (S8).
-    assert_eq!(codes(&unclosed), ["L0002", "L0009"]);
+    // One recovery error per position: the unclosed brace (with its fix).
+    assert_eq!(codes(&unclosed), ["L0002"]);
     // A recovery error at the same position as the unclosed brace is its
     // cascade and is dropped.
     let cascade = parse_lit("module m\npackage p {\nstart s\n");
     assert_eq!(codes(&cascade), ["L0002", "L0001"]);
     let no_pipe = parse_lit("module m\ntype T = {d: Days}\n");
-    assert_eq!(codes(&no_pipe), ["L0009", "L0001"]);
+    assert_eq!(codes(&no_pipe), ["L0001"]);
     let no_type = parse_lit("module m\ntype T = {d: | d}\nstart s\n");
-    assert_eq!(codes(&no_type), ["L0009", "L0001"]);
+    assert_eq!(codes(&no_type), ["L0001"]);
     let no_binder = parse_lit("module m\ntype T = {: Days | d}\nstart s\n");
-    assert_eq!(codes(&no_binder), ["L0009", "L0001"]);
+    assert_eq!(codes(&no_binder), ["L0001"]);
     let no_colon = parse_lit("module m\ntype T = {d Days | d}\nstart s\n");
-    assert_eq!(codes(&no_colon), ["L0009", "L0001"]);
+    assert_eq!(codes(&no_colon), ["L0001"]);
     // Unclosed before the next item: the brace's L0002, then that item.
     let anchored = parse_lit("module m\ntype T = {d: Days | d > 0.days\nstart s\n");
-    assert_eq!(codes(&anchored), ["L0002", "L0009"]);
+    assert_eq!(codes(&anchored), ["L0002"]);
     assert!(anchored
         .syntax()
         .descendants()
@@ -154,19 +146,16 @@ fn a_malformed_refinement_type_reports_where_it_breaks() {
     let no_param_type = parse_lit("module m\nevent E(x: 1)\n");
     assert_eq!(codes(&no_param_type), ["L0001"]);
     let trailing = parse_lit("module m\ntype T = {d: Days | d e}\nstart s\n");
-    assert_eq!(codes(&trailing), ["L0009", "L0001"]);
+    assert_eq!(codes(&trailing), ["L0001"]);
 }
 
 #[test]
-fn where_clauses_parse_into_their_slot_and_are_reserved() {
+fn where_clauses_parse_into_their_slot() {
     let parsed = parse_lit(
         "module m\ntype Short = Days where it <= 60.days\n\
          event Served(on: Date where on >= 2026-01-01, how: String)\nstart s\n",
     );
-    assert_eq!(codes(&parsed), ["L0009", "L0009"]);
-    assert!(parsed.errors()[0]
-        .message
-        .starts_with(crate::RESERVED_REFINEMENT));
+    assert!(parsed.is_ok(), "{:?}", parsed.errors());
     let kinds = node_kinds(&parsed);
     assert_eq!(
         kinds
@@ -182,7 +171,10 @@ fn where_clauses_parse_into_their_slot_and_are_reserved() {
         .any(|t| t.kind() == SyntaxKind::KwWhere));
     // A clause without its predicate still parses the next item.
     let bare = parse_lit("module m\ntype T = Days where\nstart s\n");
-    assert_eq!(codes(&bare), ["L0009", "L0001"]);
+    assert_eq!(codes(&bare), ["L0001"]);
+    // A second `where` is not a keyword: the clause slot holds one.
+    let twice = parse_lit("module m\ntype T = Days where it > 0.days where\nstart s\n");
+    assert!(codes(&twice).contains(&"L0009"), "{twice:?}");
 }
 
 #[test]

@@ -16,6 +16,7 @@ mod logic;
 mod node;
 mod obligation;
 mod package;
+mod refinement;
 
 pub use package::{check_package, expected_lock, PackageCheck};
 

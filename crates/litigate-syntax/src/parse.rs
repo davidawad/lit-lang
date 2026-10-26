@@ -197,16 +197,17 @@ pub fn parse(text: &str, kind: FileKind) -> Parse {
 }
 
 /// Drops the lexer's L0010 for each `and`/`or` the parser read as a keyword
-/// of a guard operation (SPEC §3.6), and its L0007 for each `lock` read as
-/// the keyword of a deadline's `lock against [...]`: the only places they
-/// may stand.
+/// of a guard operation (SPEC §3.6), its L0007 for each `lock` read as
+/// the keyword of a deadline's `lock against [...]`, and its L0009 for each
+/// `where` read as the keyword of a refinement clause (§3.5): the only
+/// places they may stand.
 fn licensed_keywords(green: &GreenNode, errors: &mut Vec<SyntaxError>) {
     let keywords: Vec<_> = SyntaxNode::new_root(green.clone())
         .descendants_with_tokens()
         .filter(|t| {
             matches!(
                 t.kind(),
-                SyntaxKind::KwAnd | SyntaxKind::KwOr | SyntaxKind::KwLock
+                SyntaxKind::KwAnd | SyntaxKind::KwOr | SyntaxKind::KwLock | SyntaxKind::KwWhere
             )
         })
         .map(|t| t.text_range())
@@ -214,7 +215,9 @@ fn licensed_keywords(green: &GreenNode, errors: &mut Vec<SyntaxError>) {
     errors.retain(|e| {
         !matches!(
             e.code,
-            DiagnosticCode::ReservedGuardOp | DiagnosticCode::ReservedWord
+            DiagnosticCode::ReservedGuardOp
+                | DiagnosticCode::ReservedWord
+                | DiagnosticCode::ReservedRefinement
         ) || !keywords.contains(&e.range)
     });
 }

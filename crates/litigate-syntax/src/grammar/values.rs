@@ -379,9 +379,8 @@ pub(crate) fn type_expr(p: &mut Parser<'_>) -> bool {
     true
 }
 
-/// `RefinedType = "{" Ident ":" Type "|" Expr "}"` (SPEC §3.5): parsed in
-/// full so the rest of the file parses, then rejected as L0009 because
-/// refinements belong to the SMT tier.
+/// `RefinedType = "{" Ident ":" Type "|" Expr "}"` (SPEC §3.5): the base
+/// type refined by a predicate over the bound name.
 fn refined_type(p: &mut Parser<'_>) {
     let opener = p.current_range();
     p.start(RefinedType);
@@ -401,21 +400,11 @@ fn refined_type(p: &mut Parser<'_>) {
         }
     });
     p.finish();
-    let end = p.last_end().max(usize::from(opener.end()));
-    p.push_error(SyntaxError::new(
-        DiagnosticCode::ReservedRefinement,
-        range(usize::from(opener.start()), end),
-        format!(
-            "{}: a refinement type `{{x: T | p}}` is not yet part of the language; \
-             write the base type",
-            crate::lexer::RESERVED_REFINEMENT
-        ),
-    ));
 }
 
 /// `WhereClause = "where" Expr` (SPEC §3.5) after a parameter's or a type
-/// declaration's type. The lexer already reports `where` as L0009; the
-/// slot parses the predicate so the rest of the file parses.
+/// declaration's type: the only place `where` is a keyword (anywhere else
+/// the lexer's L0009 stands).
 pub(crate) fn where_clause(p: &mut Parser<'_>) {
     if !p.at_kw(KwWhere) {
         return;

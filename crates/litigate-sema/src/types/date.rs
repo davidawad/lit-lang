@@ -80,6 +80,20 @@ fn civil(days: i64) -> (i64, i64, i64) {
 #[cfg(kani)]
 mod proofs;
 
+/// The day number (days since 1970-01-01) of valid ISO date `text`.
+#[must_use]
+pub fn day_number(text: &str) -> Option<i64> {
+    let (y, m, d) = parse(text)?;
+    Some(days_from_civil(y, m, d))
+}
+
+/// The ISO date of day number `days`, when it is in `0001-01-01..=9999-12-31`.
+#[must_use]
+pub fn from_day_number(days: i64) -> Option<String> {
+    let range = days_from_civil(1, 1, 1)..=days_from_civil(9999, 12, 31);
+    range.contains(&days).then(|| civil_from_days(days))
+}
+
 /// The date `days` calendar days after valid ISO date `text`.
 #[must_use]
 pub fn add_days(text: &str, days: u64) -> Option<String> {
@@ -111,6 +125,18 @@ mod tests {
         assert_eq!(add_days("2024-13-01", 1), None);
         assert_eq!(add_days("2024-01-01", u64::MAX), None);
         assert_eq!(add_days("2024-01-01", i64::MAX as u64), None);
+    }
+
+    #[test]
+    fn day_numbers_round_trip_within_four_digit_years() {
+        assert_eq!(day_number("1970-01-02"), Some(1));
+        assert_eq!(day_number("1970-13-02"), None);
+        assert_eq!(from_day_number(1).as_deref(), Some("1970-01-02"));
+        let last = day_number("9999-12-31").unwrap_or_default();
+        assert_eq!(from_day_number(last).as_deref(), Some("9999-12-31"));
+        assert_eq!(from_day_number(last + 1), None);
+        let first = day_number("0001-01-01").unwrap_or_default();
+        assert_eq!(from_day_number(first - 1), None);
     }
 
     #[test]

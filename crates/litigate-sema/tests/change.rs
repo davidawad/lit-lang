@@ -573,6 +573,7 @@ fn located(layers: &str, location: &str) -> String {
 }
 
 #[test]
+#[allow(clippy::too_many_lines)] // one table row per case
 fn a_world_file_is_checked_against_its_family() {
     let lr = layer("lr", "local-rule", "civil", "LocalRule", "", "");
     let rows: Vec<(&str, Vec<String>)> = vec![
@@ -706,6 +707,7 @@ fn a_counterfactual_world_is_never_strict_and_synthetic_law_never_actual() {
 }
 
 #[test]
+#[allow(clippy::too_many_lines)] // one table row per case
 fn precedent_binds_per_circuit_and_an_overruling_withdraws_it() {
     let ca1 = precedent("ca1-rule", "ca1", true, INTERPRETS);
     let quiet = precedent("ca1-dicta", "ca1", true, "event Noted()");

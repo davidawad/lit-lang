@@ -10,7 +10,7 @@ mod support;
 
 use serde_json::Value;
 use std::fmt::Write as _;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use support::{copy_dir, litigate_in, repo, scratch, Run};
 
 const FEE: &str = "frcp-civil-procedure::fee-motion-period";
@@ -74,7 +74,7 @@ fn fee(run: &Run) -> Value {
 }
 
 /// `lint-filing` of `event` by the movant on `date`.
-fn lint(dir: &PathBuf, event: &str, date: &str) -> Run {
+fn lint(dir: &Path, event: &str, date: &str) -> Run {
     litigate_in(
         dir,
         &[

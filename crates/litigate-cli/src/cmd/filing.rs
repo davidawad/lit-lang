@@ -395,20 +395,49 @@ mod tests {
     use crate::testkit;
 
     #[test]
-    fn a_bounded_grant_before_expiry_is_a_move_with_its_ceiling() {
-        let bounded = Extension::Bounded {
+    fn a_bounded_grant_is_a_move_with_its_ceiling() {
+        let bounded = |after_expiry| Extension::Bounded {
             by: "justice".into(),
             until: hir::Bound::Offset {
                 from: hir::DateRef::PrescribedDue,
                 days: 60,
             },
-            after_expiry: false,
+            after_expiry,
             standard: None,
             motion: None,
             interpretation: None,
         };
+        let discretionary = |window| Extension::Discretionary {
+            by: "court".into(),
+            standard: hir::CauseStandard::GoodCause,
+            window,
+            motion: None,
+            interpretation: None,
+        };
+        let windows: Vec<Option<Value>> = [
+            bounded(false),
+            bounded(true),
+            discretionary(hir::ExtensionWindow::BeforeExpiry),
+            discretionary(hir::ExtensionWindow::AfterExpiryOnMotion),
+            Extension::NonExtendable {
+                authority: "FRCP 6(b)(2)".into(),
+            },
+        ]
+        .iter()
+        .map(|e| grant(e).map(|g| g["window"].clone()))
+        .collect();
         assert_eq!(
-            grant(&bounded),
+            windows,
+            [
+                Some(json!("before_expiry")),
+                Some(json!("any")),
+                Some(json!("before_expiry")),
+                Some(json!("after_expiry")),
+                None,
+            ]
+        );
+        assert_eq!(
+            grant(&bounded(false)),
             Some(json!({
                 "by": "justice", "standard": null, "window": "before_expiry", "request": null,
                 "until": {"offset": {"from": "prescribed_due", "days": 60}},

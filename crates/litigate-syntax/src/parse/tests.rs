@@ -526,4 +526,27 @@ fn a_rule_index_parses_after_the_rules_name() {
         codes(&parse_lit("module m\nrule duty r Rule[3] { start s }\n")),
         ["L0001"]
     );
+
+/// Every `limit` entry shape, as `tests/filing.rs` lists them, through the
+/// crate's own parser build.
+#[test]
+fn every_filing_entry_shape_parses_with_exactly_its_errors() {
+    for (entry, expected) in [
+        ("words <= 1", &[][..]),
+        ("pages <= ?", &[]),
+        ("words <=", &["L0001"]),
+        ("requires certificate c", &[]),
+        ("requires certificate c for [words]", &[]),
+        ("requires certificate c for words", &["L0001"]),
+        ("requires certificate", &["L0001"]),
+        ("excludes [a, ?]", &[]),
+        ("excludes a", &["L0001"]),
+        ("ecf \"brief\"", &[]),
+        ("ecf ?", &[]),
+        ("ecf", &["L0001"]),
+        ("note \"x\"", &["L0001"]),
+    ] {
+        let parsed = parse_lit(&format!("module m\nlimit brief {{ {entry} }}\n"));
+        assert_eq!(codes(&parsed), expected, "{entry}");
+    }
 }

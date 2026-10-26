@@ -266,7 +266,7 @@ mod tests {
     }
 
     #[test]
-    fn no_prior_diagnostic_is_not_a_duplicate() {
+    fn no_prior_diagnostic_is_not_a_duplicate() -> Result<(), &'static str> {
         let diagnostic = Diagnostic::error(
             DiagnosticCode::UndeclaredEventId,
             litigate_base::Span {
@@ -278,7 +278,9 @@ mod tests {
             },
             "missing id",
         );
-        assert!(!known(&[], &diagnostic));
+        (!known(&[], &diagnostic))
+            .then_some(())
+            .ok_or("a diagnostic with no prior entries is not a duplicate")
     }
 
     #[test]

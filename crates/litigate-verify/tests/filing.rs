@@ -1,6 +1,8 @@
 //! `cite-resolves` over filing limits (SPEC §3.7, §7): every bound's
 //! number and measure and every excluded part named must be in the cited
 //! vendored text, so a value the sources do not settle can only be a hole.
+// A panic is the failed assertion.
+#![allow(clippy::expect_used)]
 mod support;
 
 use litigate_base::Profile;

@@ -3,7 +3,7 @@
 //! this, so CST trivia and recovery details never reach name resolution or
 //! type checking.
 use crate::db::span::TextRange;
-use crate::hir::{BinaryOp, UnaryOp};
+use crate::hir::{BinaryOp, Measure, UnaryOp};
 
 /// Identifier (or date/text atom) with its range.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -248,9 +248,10 @@ pub struct LimitEntry {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum LimitEntryKind {
     /// `words|pages|lines <= N` (`N` a number or a hole).
-    Bound(Name, Expr),
-    /// `requires certificate c [for [measures]]`.
-    Certificate(RefPath, Option<Vec<Name>>),
+    Bound(Measure, Expr),
+    /// `requires certificate c [for [measures]]`, each measure with its
+    /// range (none without `for`).
+    Certificate(RefPath, Vec<(Measure, TextRange)>),
     /// `excludes [item, ?("reason"), ...]`.
     Excludes(Vec<Expr>),
     /// `ecf "code"` or `ecf ?("reason")`.
@@ -746,13 +747,12 @@ impl Ranges for LimitEntry {
     fn ranges_mut(&mut self, f: &mut dyn FnMut(&mut TextRange)) {
         let Self { kind, cites, range } = self;
         match kind {
-            LimitEntryKind::Bound(measure, max) => {
-                measure.ranges_mut(f);
-                max.ranges_mut(f);
-            }
+            LimitEntryKind::Bound(_, max) => max.ranges_mut(f),
             LimitEntryKind::Certificate(kind, measures) => {
                 kind.ranges_mut(f);
-                measures.ranges_mut(f);
+                for (_, range) in measures {
+                    f(range);
+                }
             }
             LimitEntryKind::Excludes(items) => items.ranges_mut(f),
             LimitEntryKind::Ecf(code) => code.ranges_mut(f),

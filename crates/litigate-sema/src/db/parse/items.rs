@@ -8,6 +8,7 @@ use super::{
     docs, elements, head, ident, label, name, node_of, nodes_after, nodes_of, range,
     significant_range, token_of, Lower, SyntaxElement,
 };
+use crate::hir::Measure;
 use litigate_syntax::{SyntaxKind as K, SyntaxNode};
 
 /// Identifier tokens directly under `node`, in order.
@@ -311,16 +312,22 @@ impl Lower {
 
     fn limit_entry(&mut self, node: &SyntaxNode) -> Option<LimitEntry> {
         let kind = match node.kind() {
-            K::LimitBound => LimitEntryKind::Bound(head(node), self.expr(&value_child(node)?)?),
+            K::LimitBound => LimitEntryKind::Bound(
+                measure(&head(node)),
+                value_child(node).and_then(|v| self.expr(&v))?,
+            ),
             K::CertificateReq => LimitEntryKind::Certificate(
                 path_of(&node_of(node, K::Ref)?),
-                node_of(node, K::IdList).map(|l| {
-                    elements(&l)
-                        .filter_map(SyntaxElement::into_token)
-                        .filter(|t| t.kind().is_keyword())
-                        .map(|t| name(&t))
-                        .collect()
-                }),
+                node_of(node, K::IdList)
+                    .iter()
+                    .flat_map(elements)
+                    .filter_map(SyntaxElement::into_token)
+                    .filter(|t| t.kind().is_keyword())
+                    .map(|t| {
+                        let n = name(&t);
+                        (measure(&n), n.range)
+                    })
+                    .collect(),
             ),
             K::Exclusions => LimitEntryKind::Excludes(
                 node_of(node, K::IdList)?
@@ -328,7 +335,7 @@ impl Lower {
                     .filter_map(|e| self.expr(&e))
                     .collect(),
             ),
-            K::EcfCode => LimitEntryKind::Ecf(self.expr(&value_child(node)?)?),
+            K::EcfCode => LimitEntryKind::Ecf(value_child(node).and_then(|v| self.expr(&v))?),
             _ => return None,
         };
         Some(LimitEntry {
@@ -365,6 +372,16 @@ fn import(node: &SyntaxNode) -> Option<Import> {
         names: node_of(node, K::ImportList).map(|l| idents(&l)),
         range: significant_range(node),
     })
+}
+
+/// The measure keyword `n` (the grammar admits only `words`, `pages` and
+/// `lines` there).
+fn measure(n: &Name) -> Measure {
+    match n.text.as_str() {
+        "words" => Measure::Words,
+        "pages" => Measure::Pages,
+        _ => Measure::Lines,
+    }
 }
 
 /// The value of a `limit` body entry: its first expression that is not

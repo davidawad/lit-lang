@@ -399,3 +399,19 @@ fn the_rows_are_the_matrix() {
     let json = serde_json::to_string(&Effect::GrantCap).expect("json");
     assert_eq!(json, "\"grant-cap\"");
 }
+
+/// A filing limit prescribes (SPEC §3.7, §5.7): a local rule may state
+/// one, persuasive precedent may not.
+#[test]
+fn a_filing_limit_prescribes() {
+    let limit = "limit brief { words <= 13_000 }";
+    let found = diagnostics(&[
+        ("local-rule", layer("local-rule", "LocalRule", "", limit)),
+        ("precedent", layer("precedent", "CaseOrder", "", limit)),
+    ]);
+    assert_eq!(found["local-rule"], Vec::<String>::new());
+    assert!(
+        found["precedent"].iter().any(|d| d.contains("L2010")),
+        "{found:#?}"
+    );
+}

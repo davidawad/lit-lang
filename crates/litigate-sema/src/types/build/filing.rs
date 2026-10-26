@@ -3,7 +3,7 @@
 //! explicit hole; nothing is filled in.
 use super::cx::Cx;
 use crate::db::parse::tree::{
-    Expr, ExprKind, Field, Item, LimitEntry, LimitEntryKind, LimitItem, Name,
+    Expr, ExprKind, Field, Item, LimitEntry, LimitEntryKind, LimitItem, RefPath,
 };
 use crate::db::span::{Report, TextRange};
 use crate::hir::{
@@ -38,21 +38,18 @@ impl Cx<'_, '_> {
             ecf: Vec::new(),
         };
         let mut seen: BTreeMap<String, TextRange> = BTreeMap::new();
-        let mut certified: Vec<(&Name, TextRange)> = Vec::new();
+        let mut certified: Vec<&(Measure, TextRange)> = Vec::new();
         for entry in &l.entries {
             let cite = self.entry_cite(&entry.cites);
             let span = self.ck.span(entry.range);
             match &entry.kind {
-                LimitEntryKind::Bound(measure, max) => {
-                    let Some(m) = Measure::parse(&measure.text) else {
-                        continue;
-                    };
+                LimitEntryKind::Bound(m, max) => {
                     if !self.first(&mut seen, m.as_str(), entry, "a bound on") {
                         continue;
                     }
-                    if let Some(max) = self.bound_max(m, max) {
+                    if let Some(max) = self.bound_max(*m, max) {
                         limit.bounds.push(LengthBound {
-                            measure: m,
+                            measure: *m,
                             max,
                             cite,
                             span,
@@ -60,42 +57,10 @@ impl Cx<'_, '_> {
                     }
                 }
                 LimitEntryKind::Certificate(kind, measures) => {
-                    if !kind.is_simple() {
-                        self.report(Report::new(
-                            C::InvalidField,
-                            kind.range,
-                            format!(
-                                "certificate kind `{}` must be a plain identifier",
-                                kind.display()
-                            ),
-                        ));
-                        continue;
+                    if let Some(c) = self.certificate(&mut seen, entry, kind, measures) {
+                        certified.extend(measures);
+                        limit.certificates.push(CertificateReq { cite, span, ..c });
                     }
-                    let key = format!("certificate {}", kind.head.text);
-                    if !self.first(&mut seen, &key, entry, "a requirement of") {
-                        continue;
-                    }
-                    let mut named = Vec::new();
-                    for m in measures.iter().flatten() {
-                        match Measure::parse(&m.text) {
-                            Some(x) if named.contains(&x) => self.report(Report::new(
-                                C::InvalidField,
-                                m.range,
-                                format!("`{}` is named twice", m.text),
-                            )),
-                            Some(x) => {
-                                named.push(x);
-                                certified.push((m, entry.range));
-                            }
-                            None => {}
-                        }
-                    }
-                    limit.certificates.push(CertificateReq {
-                        kind: kind.head.text.clone(),
-                        measures: named,
-                        cite,
-                        span,
-                    });
                 }
                 LimitEntryKind::Excludes(items) => {
                     if !self.first(&mut seen, "excludes", entry, "a second") {
@@ -114,20 +79,70 @@ impl Cx<'_, '_> {
                 }
             }
         }
-        // A certificate goes with bounds the body declares.
-        for (m, _) in certified {
-            if !limit.bounds.iter().any(|b| b.measure.as_str() == m.text) {
+        self.unbounded(&limit, &certified);
+        Some(limit)
+    }
+
+    /// L2007 for each measure a certificate goes with that `limit` does
+    /// not bound.
+    fn unbounded(&mut self, limit: &Limit, certified: &[&(Measure, TextRange)]) {
+        for (m, range) in certified {
+            if !limit.bounds.iter().any(|b| b.measure == *m) {
                 self.report(Report::new(
                     C::InvalidField,
-                    m.range,
+                    *range,
                     format!(
                         "the certificate goes with `{}`, which limit `{}` does not bound",
-                        m.text, limit.meta.id
+                        m.as_str(),
+                        limit.meta.id
                     ),
                 ));
             }
         }
-        Some(limit)
+    }
+
+    /// `requires certificate kind for [measures]`, without its cite and
+    /// span: a plain kind, once per body, each measure named once.
+    fn certificate(
+        &mut self,
+        seen: &mut BTreeMap<String, TextRange>,
+        entry: &LimitEntry,
+        kind: &RefPath,
+        measures: &[(Measure, TextRange)],
+    ) -> Option<CertificateReq> {
+        if !kind.is_simple() {
+            self.report(Report::new(
+                C::InvalidField,
+                kind.range,
+                format!(
+                    "certificate kind `{}` must be a plain identifier",
+                    kind.display()
+                ),
+            ));
+            return None;
+        }
+        let key = format!("certificate {}", kind.head.text);
+        if !self.first(seen, &key, entry, "a requirement of") {
+            return None;
+        }
+        let mut named = Vec::new();
+        for (m, range) in measures {
+            if named.contains(m) {
+                self.report(Report::new(
+                    C::InvalidField,
+                    *range,
+                    format!("`{}` is named twice", m.as_str()),
+                ));
+            } else {
+                named.push(*m);
+            }
+        }
+        Some(CertificateReq {
+            kind: kind.head.text.clone(),
+            measures: named,
+            cite: None,
+            span: None,
+        })
     }
 
     /// Whether `key` is new in this body; L2007 at `entry` when not.
@@ -164,20 +179,18 @@ impl Cx<'_, '_> {
             ));
         }
         let first = cites.first()?;
-        match super::cx::first_expr(first).map(|e| &e.kind) {
-            Some(ExprKind::Cite(text, _)) => Some(text.clone()),
-            _ => {
-                self.report(
-                    Report::new(
-                        C::InvalidField,
-                        first.range,
-                        "a limit entry's cite is a citation, not a hole",
-                    )
-                    .note("leave the entry uncited (the declaration's cite covers it), or write the value the sources do not settle as a hole"),
-                );
-                None
-            }
+        if let Some(text) = literal_text(super::cx::first_expr(first)) {
+            return Some(text);
         }
+        self.report(
+            Report::new(
+                C::InvalidField,
+                first.range,
+                "a limit entry's cite is a citation, not a hole",
+            )
+            .note("leave the entry uncited (the declaration's cite covers it), or write the value the sources do not settle as a hole"),
+        );
+        None
     }
 
     /// A bound's most: a whole number above zero, or a hole.
@@ -239,25 +252,31 @@ impl Cx<'_, '_> {
 
     /// An ECF event code: a string or a hole, each code once.
     fn ecf_code(&mut self, e: &Expr, declared: &[Ecf]) -> Option<Authored<String>> {
-        match &e.kind {
-            ExprKind::Hole(reason) => {
-                self.ck.holes.push((e.range, reason.clone()));
-                Some(Authored::Hole(reason.clone()))
-            }
-            ExprKind::Str(code) => {
-                let code = Authored::Known(code.clone());
-                if declared.iter().any(|d| d.code == code) {
-                    self.report(Report::new(
-                        C::InvalidField,
-                        e.range,
-                        "this ECF event code is declared twice",
-                    ));
-                    return None;
-                }
-                Some(code)
-            }
-            // The grammar admits only a string or a hole.
-            _ => None,
+        if let ExprKind::Hole(reason) = &e.kind {
+            self.ck.holes.push((e.range, reason.clone()));
+            return Some(Authored::Hole(reason.clone()));
         }
+        // The grammar admits only a string or a hole.
+        let code = literal_text(Some(e)).map(Authored::Known);
+        if code
+            .as_ref()
+            .is_some_and(|c| declared.iter().any(|d| d.code == *c))
+        {
+            self.report(Report::new(
+                C::InvalidField,
+                e.range,
+                "this ECF event code is declared twice",
+            ));
+            return None;
+        }
+        code
+    }
+}
+
+/// The text of a string or cite literal.
+fn literal_text(e: Option<&Expr>) -> Option<String> {
+    match e.map(|e| &e.kind) {
+        Some(ExprKind::Str(text) | ExprKind::Cite(text, _)) => Some(text.clone()),
+        _ => None,
     }
 }

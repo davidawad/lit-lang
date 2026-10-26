@@ -174,3 +174,14 @@ fn a_package_that_does_not_lower_has_no_pointers() {
     assert_eq!(result["lowered"], json!([]));
     assert!(result["source"].is_null());
 }
+
+#[test]
+fn a_filing_limit_lowers_into_the_packs_filing_limits() {
+    let run = litigate_in(&repo(), &["where", "principal-brief", "--path", "lit/frap"]);
+    assert_eq!(run.code, 0, "{}", run.stdout);
+    let result = &run.json["result"];
+    assert_eq!(result["id"], "frap-appellate-procedure::principal-brief");
+    assert_eq!(result["kind"], "limit");
+    assert_eq!(result["lowered"], json!(["/filingLimits/0"]));
+    assert_eq!(result["source"]["text"], json!("FRAP 32(a)(7)"));
+}

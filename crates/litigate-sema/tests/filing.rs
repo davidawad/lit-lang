@@ -2,6 +2,8 @@
 //! versioned `hir::Limit`s, events name the paper they file, and a paper's
 //! counts are judged fail-closed. The FRAP and PTAB limits are the real
 //! `lit/frap` and `lit/ptab` packages.
+// A panic is the failed assertion.
+#![allow(clippy::expect_used)]
 mod common;
 
 use common::{check_body, package, render, workspace, PRELUDE};
@@ -209,7 +211,10 @@ fn an_unvendored_exclusion_is_a_hole_and_leaves_over_unknown() {
     );
     let p = check.package.clone().expect("HIR");
     let brief = limit(&p, "brief");
-    assert!(brief.excludes.as_ref().is_some_and(|x| x.open()));
+    assert!(brief
+        .excludes
+        .as_ref()
+        .is_some_and(litigate_sema::hir::Exclusions::open));
     assert_eq!(
         brief.bounds[1].max,
         Authored::Hole(Some("local rule".into()))
@@ -348,6 +353,11 @@ fn ill_typed_filing_requirements_are_rejected() {
         ("event E() paper nothing", "L1002", "nothing"),
         ("event E() paper s", "L2001", "expected a filing limit"),
         (
+            "limit b {}\nstate x: \"X\" { _ \"go\" -> b }",
+            "L2001",
+            "is a filing limit",
+        ),
+        (
             "limit b {}\nevent E() paper b paper b",
             "L2007",
             "more than once",
@@ -356,6 +366,27 @@ fn ill_typed_filing_requirements_are_rejected() {
         let found = check_body(body);
         assert!(
             found.iter().any(|d| d.contains(code) && d.contains(says)),
+            "{body}: {found:#?}"
+        );
+    }
+}
+
+/// A malformed `limit` (L0001) still checks: each part the parser could
+/// not read is left out, never guessed.
+#[test]
+fn a_malformed_limit_reports_only_its_syntax_error() {
+    for body in [
+        "limit",
+        "limit b",
+        "limit b { words <= }",
+        "limit b { requires certificate }",
+        "limit b { excludes cover-page }",
+        "limit b { ecf }",
+        "limit b { note \"x\" }",
+    ] {
+        let found = check_body(body);
+        assert!(
+            found.iter().all(|d| d.contains("L0001")) && !found.is_empty(),
             "{body}: {found:#?}"
         );
     }

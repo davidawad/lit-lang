@@ -42,9 +42,6 @@ pub enum Measure {
 }
 
 impl Measure {
-    /// Every measure, in canonical order.
-    pub const ALL: [Self; 3] = [Self::Words, Self::Pages, Self::Lines];
-
     /// The keyword spelling (`words`, `pages`, `lines`).
     #[must_use]
     pub const fn as_str(self) -> &'static str {
@@ -53,12 +50,6 @@ impl Measure {
             Self::Pages => "pages",
             Self::Lines => "lines",
         }
-    }
-
-    /// The measure spelled `word`, if any.
-    #[must_use]
-    pub fn parse(word: &str) -> Option<Self> {
-        Self::ALL.into_iter().find(|m| m.as_str() == word)
     }
 }
 

@@ -5,7 +5,7 @@
 //! never a hole), so it is L6002.
 use crate::node::Spelling;
 use crate::text;
-use litigate_engine::model::{FilingLimit, Measure, Pack};
+use litigate_engine::model::{FilingLimit, Hole, Measure, Pack};
 
 /// The keyword of `m`.
 const fn measure(m: Measure) -> &'static str {
@@ -16,15 +16,23 @@ const fn measure(m: Measure) -> &'static str {
     }
 }
 
-/// The `?` or `?("reason")` of the hole `pack` lists at `pointer`.
-fn hole(pack: &Pack, pointer: &str) -> String {
-    let reason = pack
-        .lowered
+/// The hole `pack` lists at `pointer`.
+fn listed<'p>(pack: &'p Pack, pointer: &str) -> Option<&'p Hole> {
+    pack.lowered
         .iter()
         .flat_map(|l| &l.holes)
         .find(|h| h.pointer == pointer)
-        .and_then(|h| h.reason.as_deref());
-    reason.map_or_else(|| "?".to_owned(), |r| format!("?({})", text::string(r)))
+}
+
+/// `?`, or `?("reason")` when `hole` gives one.
+fn spelled(hole: Option<&Hole>) -> String {
+    hole.and_then(|h| h.reason.as_deref())
+        .map_or_else(|| "?".to_owned(), |r| format!("?({})", text::string(r)))
+}
+
+/// The `?` or `?("reason")` of the hole `pack` lists at `pointer`.
+fn hole(pack: &Pack, pointer: &str) -> String {
+    spelled(listed(pack, pointer))
 }
 
 impl Spelling<'_> {
@@ -83,18 +91,12 @@ impl Spelling<'_> {
                 .enumerate()
                 .map(|(k, item)| self.issues.ident(item, &format!("{at}/items/{k}"), false))
                 .collect();
-            let open = format!("{at}/open/");
-            let mut holes: Vec<(usize, String)> = pack
-                .lowered
-                .iter()
-                .flat_map(|l| &l.holes)
-                .filter_map(|h| {
-                    let n = h.pointer.strip_prefix(&open)?.parse().ok()?;
-                    Some((n, hole(pack, &h.pointer)))
-                })
-                .collect();
-            holes.sort();
-            items.extend(holes.into_iter().map(|(_, h)| h));
+            // Parts not yet identified: `open/0`, `open/1`, ... in order.
+            items.extend(
+                (0..)
+                    .map_while(|n| listed(pack, &format!("{at}/open/{n}")))
+                    .map(|h| spelled(Some(h))),
+            );
             let cite = self.entry_cite(x.cite.as_ref(), &format!("{at}/cite"));
             entries.push(format!("excludes [{}]{cite}", items.join(", ")));
         }

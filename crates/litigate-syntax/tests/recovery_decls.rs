@@ -26,6 +26,25 @@ macro_rules! node_clauses {
 }
 
 const FILE_HEADERS_AND_SIMPLE_ITEMS: Cases = &[
+    ("module m\nlimit b { ecf }\n", &["L0001 2:15-2:16 expected a string or `?`, found `}`"]),
+    ("module m\nlimit b { excludes x }\n", &["L0001 2:20-2:21 expected `[`, found `x`"]),
+    ("module m\nlimit b { words 1 }\n", &["L0001 2:17-2:18 expected `<=`, found `1`"]),
+    ("module m\nlimit b { requires x }\n", &["L0001 2:20-2:21 expected `certificate`, found `x`"]),
+    ("module m\nlimit\n", &["L0001 3:1-3:1 expected an identifier, found end of file"]),
+    (
+        "module m\nlimit b\n",
+        &["L0001 3:1-3:1 expected one of `effective`, `known_at`, `retracted`, `unknown_before`, \
+           `commenced`, `subject_to`, `notwithstanding`, `supersedes`, `revives`, `override`, \
+           `delegable`, `cite`, or `{`, found end of file"],
+    ),
+    (
+        "module m\nlimit b { requires certificate c for words }\n",
+        &["L0001 2:38-2:43 expected `[`, found `words`"],
+    ),
+    (
+        "module m\nlimit b { words <= 1, requires certificate c for [words, note] }\n",
+        &["L0001 2:58-2:62 expected one of `words`, `pages`, `lines`, or `]`, found `note`"],
+    ),
     ("foo\n", &["L0001 1:1-1:4 expected `module`, found `foo`"]),
     (
         "start s\n",

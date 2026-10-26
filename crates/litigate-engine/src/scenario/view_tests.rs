@@ -211,3 +211,59 @@ fn a_real_pack_fact_node_forces_its_flagged_copy_too() {
     // Neither copy should still be treated as an unset matter fact.
     assert!(!v.warnings.iter().any(|w| w.code == "fact-unset"));
 }
+
+/// One decision reaching one terminal either plainly or under flag `f`, so
+/// the terminal compiles to two copies: `demo::end` and `demo::end{f}`.
+/// Neither authors a payoff.
+const FLAGGED_JSON: &str = r#"{
+    "schemaVersion": 2, "id": "demo", "title": "Demo", "startNodeId": "go",
+    "nodes": [
+        {"id": "go", "label": "Go", "kind": "decision"},
+        {"id": "end", "label": "End", "kind": "terminal", "feeShift": 0.0}
+    ],
+    "edges": [
+        {"id": "plain", "from": "go", "to": "end", "label": "plain", "actor": "self"},
+        {"id": "flag", "from": "go", "to": "end", "label": "flag", "actor": "self", "sets": ["f"]}
+    ]
+}"#;
+
+#[test]
+fn a_payoff_reaches_every_flagged_copy_of_its_terminal() {
+    let g = fact_pack(FLAGGED_JSON);
+    let copies = g.node_family(g.node("demo::end").unwrap());
+    assert_eq!(copies.len(), 2);
+    let sc = Scenario {
+        payoffs: BTreeMap::from([("end".into(), 700.0)]),
+        ..Scenario::default()
+    };
+    let v = View::new(&g, &sc).unwrap();
+    for n in copies {
+        assert_eq!(v.payoff[n], 700.0, "{}", g.nodes[n].id);
+    }
+    assert!(!v.warnings.iter().any(|w| w.code == "payoff-not-authored"));
+}
+
+#[test]
+fn a_payoff_on_one_flagged_copy_wins_over_its_family() {
+    let g = fact_pack(FLAGGED_JSON);
+    let sc = Scenario {
+        payoffs: BTreeMap::from([("demo::end".into(), 700.0), ("demo::end{f}".into(), 50.0)]),
+        ..Scenario::default()
+    };
+    let v = View::new(&g, &sc).unwrap();
+    assert_eq!(v.payoff[g.node("demo::end").unwrap()], 700.0);
+    assert_eq!(v.payoff[g.node("demo::end{f}").unwrap()], 50.0);
+}
+
+#[test]
+fn a_fee_shift_reaches_every_flagged_copy_of_its_terminal() {
+    let g = fact_pack(FLAGGED_JSON);
+    let sc = Scenario {
+        fee_shifts: BTreeMap::from([("end".into(), 0.5)]),
+        ..Scenario::default()
+    };
+    let v = View::new(&g, &sc).unwrap();
+    for n in g.node_family(g.node("demo::end").unwrap()) {
+        assert_eq!(v.fee[n], 0.5, "{}", g.nodes[n].id);
+    }
+}

@@ -88,6 +88,31 @@ fn fact_overrides(g: &Graph, sc: &Scenario) -> Result<(BTreeMap<String, f64>, Ha
     Ok((overrides, fact_nodes))
 }
 
+/// Per-terminal scenario values (`scenario.payoffs`, `scenario.fee_shifts`:
+/// a `.case` stake and its `fee_shift`) resolved onto the compiled graph,
+/// as `(ref, node, value)` in the order to apply them. Like a fact, a value
+/// is authored once for the pack node it describes, so a ref naming a pack
+/// node reaches every state-flag copy of it (`Graph::node_family`); a ref
+/// naming one flagged copy outright (`won{declined}`) comes after every
+/// family, so it wins for that copy.
+pub(super) fn node_overrides<'a, V>(
+    g: &Graph,
+    values: &'a BTreeMap<String, V>,
+) -> Result<Vec<(&'a str, NodeIx, &'a V)>> {
+    let mut families = Vec::new();
+    let mut copies = Vec::new();
+    for (r, v) in values {
+        let n = g.node(r)?;
+        if g.nodes[n].flags.is_empty() {
+            families.extend(g.node_family(n).into_iter().map(|m| (r.as_str(), m, v)));
+        } else {
+            copies.push((r.as_str(), n, v));
+        }
+    }
+    families.extend(copies);
+    Ok(families)
+}
+
 /// One `authored-hole` warning per pack whose `lowered.holes` leave a
 /// number open: a dev build lowered each such `?` to an absent field, so
 /// whatever the engine computes from it rests on a fill, not on the pack.
@@ -149,8 +174,8 @@ impl<'g> View<'g> {
             })
             .collect();
         let mut payoff: Vec<f64> = g.nodes.iter().map(|n| n.payoff).collect();
-        for (r, v) in &sc.payoffs {
-            payoff[g.node(r)?] = *v;
+        for (_, n, v) in node_overrides(g, &sc.payoffs)? {
+            payoff[n] = *v;
         }
         let active = active_edges(g, sc, &role, &params, &payoff)?;
         let parts = ViewParts {
@@ -262,11 +287,9 @@ impl<'g> View<'g> {
             &format!("utility `{src}`"),
             &ex,
         ));
-        let overridden: Vec<NodeIx> = self
-            .sc
-            .payoffs
-            .keys()
-            .filter_map(|k| self.g.node(k).ok())
+        let overridden: HashSet<NodeIx> = node_overrides(self.g, &self.sc.payoffs)?
+            .into_iter()
+            .map(|(_, n, _)| n)
             .collect();
         let mut out = vec![0.0; self.g.nodes.len()];
         let mut guessed = 0;

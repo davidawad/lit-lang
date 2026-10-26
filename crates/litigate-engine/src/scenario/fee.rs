@@ -5,7 +5,8 @@
 //! A terminal's payoff is the gross amount; a fee award offsets what it
 //! cost to get there, the fee motion's own hours included. The fraction
 //! comes from, in order: the scenario's `fee_shifts` entry for that
-//! terminal (a `.case` stake's `fee_shift`), the scenario's `fee_shift`
+//! terminal (a `.case` stake's `fee_shift`, reaching every state-flag
+//! copy of it), the scenario's `fee_shift`
 //! (its `fraction` at every terminal its `eligible` expression selects, 0
 //! elsewhere), and the pack's `feeShift` (the statute's default).
 
@@ -56,9 +57,8 @@ pub(super) fn fractions(
             out[n] = if x == 0.0 { 0.0 } else { fs.fraction };
         }
     }
-    for (r, f) in &sc.fee_shifts {
+    for (r, n, f) in super::view::node_overrides(g, &sc.fee_shifts)? {
         check(&format!("fee_shifts.{r}"), *f)?;
-        let n = g.node(r)?;
         if !g.nodes[n].is_terminal() {
             return Err(Error::Invalid(format!(
                 "fee_shifts.{r}: {r} is not a terminal; only a terminal takes a fee award"

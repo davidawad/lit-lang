@@ -610,7 +610,8 @@ fn decision(c: &mut Checker, kind: &Kind, raw: &RawInstrument) {
         }),
         None => c.check(!decision, at, || {
             format!(
-                "a `{}` names its `court` (a forum-family court id such as `scotus` or `ca9`)",
+                "the `{}` instrument names its `court` (a forum-family court id such as \
+                 `scotus` or `ca9`)",
                 kind.name()
             )
         }),

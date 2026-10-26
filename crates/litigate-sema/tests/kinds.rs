@@ -156,7 +156,7 @@ fn each_class_rejects_the_operations_outside_its_row() {
         // displaces, nor defeats a default, nor states a fact.
         (
             "precedent prescribes and overrides",
-            layer("precedent", "CaseOrder", "", &format!("{override_}\nexception e rebuts open when true => false\nchance f: \"F\" {{ tags [fact]\n  yes \"Yes\" -> l p 1/2\n  no \"No\" -> l p 1/2\n}}")),
+            layer("precedent", "CaseOrder", "court = \"ca9\"\n", &format!("{override_}\nexception e rebuts open when true => false\nchance f: \"F\" {{ tags [fact]\n  yes \"Yes\" -> l p 1/2\n  no \"No\" -> l p 1/2\n}}")),
         ),
         // An overruling only retracts: two displacing claims, one report.
         (
@@ -164,7 +164,7 @@ fn each_class_rejects_the_operations_outside_its_row() {
             layer(
                 "overruling",
                 "CaseOrder",
-                "",
+                "court = \"ca9\"\noverrules = [\"p\"]\n",
                 "state x: \"X\" override answer-period notwithstanding open",
             ),
         ),
@@ -318,7 +318,7 @@ fn a_parsed_class_is_typed_and_base_is_omitted_from_hir() {
         layer(
             "precedent",
             "CaseOrder",
-            "designation = \"1 F.4th 1\"\n",
+            "designation = \"1 F.4th 1\"\ncourt = \"ca9\"\n",
             "",
         )
         .manifest,

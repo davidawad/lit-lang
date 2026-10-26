@@ -5,9 +5,9 @@ expression: diagnostics(&rows)
 {
     "amendment supersedes": [],
     "case-order delegates": [
-        "pkgs/order/rules.lit:6:10 L2010 a package of class `case-order` cannot give a capability\n    note: its class permits declare, prescribe, override, interpret, waive, set-prior, add-fact\n    note: `grant-cap` is permitted to: base, amendment, local-rule, standing-order",
-        "pkgs/order/rules.lit:7:10 L2010 a package of class `case-order` cannot give a capability\n    note: its class permits declare, prescribe, override, interpret, waive, set-prior, add-fact\n    note: `grant-cap` is permitted to: base, amendment, local-rule, standing-order",
-        "pkgs/order/rules.lit:8:7 L2010 a package of class `case-order` cannot give a capability\n    note: its class permits declare, prescribe, override, interpret, waive, set-prior, add-fact\n    note: `grant-cap` is permitted to: base, amendment, local-rule, standing-order",
+        "pkgs/order/rules.lit:6:10 L2010 a package of class `case-order` cannot give a capability\n    note: its class permits declare, prescribe, override, interpret, waive, set-prior, add-fact\n    note: `grant-cap` is permitted to: base, amendment, local-rule, standing-order, emergency-declaration",
+        "pkgs/order/rules.lit:7:10 L2010 a package of class `case-order` cannot give a capability\n    note: its class permits declare, prescribe, override, interpret, waive, set-prior, add-fact\n    note: `grant-cap` is permitted to: base, amendment, local-rule, standing-order, emergency-declaration",
+        "pkgs/order/rules.lit:8:7 L2010 a package of class `case-order` cannot give a capability\n    note: its class permits declare, prescribe, override, interpret, waive, set-prior, add-fact\n    note: `grant-cap` is permitted to: base, amendment, local-rule, standing-order, emergency-declaration",
     ],
     "case-order states its own structure": [
         "pkgs/order/rules.lit:18:20 L2010 a package of class `case-order` cannot replace another package's declaration in time\n    note: its class permits declare, prescribe, override, interpret, waive, set-prior, add-fact\n    note: `version` is permitted to: base, amendment",
@@ -18,18 +18,17 @@ expression: diagnostics(&rows)
     "case-order yields": [],
     "guidance sets priors": [
         "pkgs/order/rules.lit:10:8 L2010 guidance cannot set the prior of a draw by `Defendant`, whom it does not bind\n    note: it binds `Court` (`binds` in `[package.instrument]`)",
-        "pkgs/order/rules.lit:14:10 L2010 a package of class `guidance` cannot prescribe a time limit or how time is counted\n    note: its class permits declare, set-prior\n    note: `prescribe` is permitted to: base, amendment, local-rule, standing-order, case-order",
+        "pkgs/order/rules.lit:14:10 L2010 a package of class `guidance` cannot prescribe a time limit or how time is counted\n    note: its class permits declare, set-prior\n    note: `prescribe` is permitted to: base, amendment, local-rule, general-order, standing-order, case-order",
     ],
     "local-rule overrides": [],
     "local-rule ranks": [
         "pkgs/order/rules.lit:6:1 L2010 a package of class `local-rule` cannot order authority levels\n    note: its class permits declare, prescribe, override, interpret, waive, grant-cap, set-prior, add-fact\n    note: `rank` is permitted to: base",
     ],
     "overruling displaces twice": [
-        "pkgs/order/rules.lit:6:14 L2010 a package of class `overruling` cannot displace another package's declaration\n    note: its class permits declare, invalidate\n    note: `override` is permitted to: base, amendment, local-rule, standing-order, case-order",
+        "pkgs/order/rules.lit:6:14 L2010 a package of class `overruling` cannot displace another package's declaration\n    note: its class permits declare, invalidate\n    note: `override` is permitted to: base, amendment, local-rule, general-order, standing-order, case-order",
     ],
     "precedent prescribes and overrides": [
-        "pkgs/order/rules.lit:6:10 L2010 a package of class `persuasive precedent` cannot prescribe a time limit or how time is counted\n    note: its class permits declare, set-prior\n    note: `prescribe` is permitted to: base, amendment, local-rule, standing-order, case-order",
-        "pkgs/order/rules.lit:6:60 L2010 a package of class `persuasive precedent` cannot displace another package's declaration\n    note: its class permits declare, set-prior\n    note: `override` is permitted to: base, amendment, local-rule, standing-order, case-order",
+        "pkgs/order/rules.lit:6:60 L2010 a package of class `persuasive precedent` cannot waive another package's requirement\n    note: its class permits declare, set-prior\n    note: `waive` is permitted to: base, amendment, local-rule, general-order, standing-order, case-order, binding precedent",
         "pkgs/order/rules.lit:7:11 L2010 a package of class `persuasive precedent` cannot defeat another package's default\n    note: its class permits declare, set-prior\n    note: `interpret` is permitted to: base, amendment, local-rule, standing-order, case-order, binding precedent",
         "pkgs/order/rules.lit:8:8 L2010 a package of class `persuasive precedent` cannot state a matter fact\n    note: its class permits declare, set-prior\n    note: `add-fact` is permitted to: base, amendment, local-rule, standing-order, case-order",
     ],

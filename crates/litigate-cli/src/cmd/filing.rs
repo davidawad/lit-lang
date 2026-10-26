@@ -16,9 +16,9 @@
 //!
 //! The matter itself must check clean first, but for the missing
 //! lowering (L6001) of a package with concurrent tracks: replay, not the
-//! build, judges a filing. Diagnostics are then every
-//! error of the matter with the filing, and the warnings the filing adds
-//! to the matter as of the filing date. The filing's own line is written
+//! build, judges a filing. Diagnostics are then every error of the
+//! matter with the filing, and the warnings the filing adds to the
+//! matter as of the filing date. The filing's own line is written
 //! here, not by the user. Its id is taken from the same L9006 fix that
 //! `litigate fix` would apply, keeping its timeline key stable.
 use super::check::check_session;
@@ -189,23 +189,10 @@ fn moves(law: &[&hir::Package], nodes: &[(&str, &hir::Node)], s: &Scheduled) -> 
 
 /// Whether `d` bears on the filing. A package with concurrent tracks has
 /// no lowering (L6001) but checks and replays, and replay is what judges
-/// a filing, so that error neither blocks the lint nor is reported.
+/// a filing, so that error does not block the lint (the matter itself
+/// lowers: its scenario starts at the first track, L4014).
 fn judged(d: &Diagnostic) -> bool {
     d.code != DiagnosticCode::LoweringUnsupported
-}
-
-/// The obligation instances of `c`: every instance replay counted when
-/// nothing but a missing lowering is wrong with the matter, else its
-/// schedule (empty unless it lowers).
-fn scheduled(c: &CaseCheck) -> &[Scheduled] {
-    if c.diagnostics
-        .iter()
-        .any(|d| d.severity == Severity::Error && judged(d))
-    {
-        &c.schedule
-    } else {
-        &c.counted
-    }
 }
 
 /// Whether `known` already has a diagnostic like `d` (spans move with
@@ -221,7 +208,6 @@ pub(super) fn added(at: &CaseCheck, filed: &CaseCheck) -> Vec<Diagnostic> {
     filed
         .diagnostics
         .iter()
-        .filter(|d| judged(d))
         .filter(|d| match d.severity {
             Severity::Error => true,
             _ => !known(&at.diagnostics, d),
@@ -314,17 +300,17 @@ pub(super) fn changes<'a>(
         .as_ref()
         .map(|case| posture(law, case, &at.marking))
         .unwrap_or_default();
-    let (before, after) = (scheduled(at), scheduled(filed));
     Changes {
         replay: filed
             .replay
             .iter()
             .filter(|s| !at.replay.contains(s))
             .collect(),
-        discharges: after
+        discharges: filed
+            .schedule
             .iter()
             .filter_map(|s| {
-                before
+                at.schedule
                     .iter()
                     .find(|o| key(o) == key(s) && o.status != s.status)
                     .map(|o| {
@@ -334,12 +320,14 @@ pub(super) fn changes<'a>(
                     })
             })
             .collect(),
-        triggers: after
+        triggers: filed
+            .schedule
             .iter()
-            .filter(|s| !before.iter().any(|o| key(o) == key(s)))
+            .filter(|s| !at.schedule.iter().any(|o| key(o) == key(s)))
             .map(entry)
             .collect(),
-        open_before: before
+        open_before: at
+            .schedule
             .iter()
             .filter(|s| s.status == Status::Open)
             .map(|s| {

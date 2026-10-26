@@ -421,6 +421,7 @@ mod tests {
             discretionary(hir::ExtensionWindow::AfterExpiryOnMotion),
             Extension::NonExtendable {
                 authority: "FRCP 6(b)(2)".into(),
+                against: Vec::new(),
             },
         ]
         .iter()

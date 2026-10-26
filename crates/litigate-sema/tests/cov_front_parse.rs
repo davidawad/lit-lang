@@ -101,6 +101,32 @@ fn incomplete_declarations_are_dropped() {
     insta::assert_debug_snapshot!(reports(DROPPED));
 }
 
+#[test]
+fn a_syntax_error_keeps_its_notes_and_fixes() {
+    let parsed = lower("evnt E()");
+    let report = parsed
+        .reports
+        .iter()
+        .find(|r| !r.notes.is_empty())
+        .expect("a misspelled keyword is reported with a note");
+    assert_eq!(
+        report
+            .notes
+            .iter()
+            .map(|(_, n)| n.as_str())
+            .collect::<Vec<_>>(),
+        ["did you mean `event`?"]
+    );
+    assert_eq!(
+        report
+            .fixes
+            .iter()
+            .map(|(_, f, _)| f.as_str())
+            .collect::<Vec<_>>(),
+        ["event"]
+    );
+}
+
 fn only_item(body: &str) -> ItemKind {
     let items = lower(body).tree.items;
     assert_eq!(items.len(), 1, "{body}: {items:#?}");

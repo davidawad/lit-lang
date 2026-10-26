@@ -69,6 +69,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `simulate` use the per-terminal fraction, so a fee motion is no longer
   valued at the gross award less its own cost. A fee-shift fraction
   outside `[0, 1]` is an error.
+- **Deadline-protective moves as first-class actions** (lg-i0eq).
+  `lit/frcp/fees.lit` declares the FRCP 54(d)(2)(B) fee clock (14 days
+  after entry of judgment, `delegable` to a court order) with three
+  moves: a stipulated request (`TimeChangeStipulated(FeeMotionPeriod)`,
+  a 6(b)(1)(A) request the opponent joins), a motion to extend
+  (`ExtensionMoved(FeeMotionPeriod)`, for excusable neglect after
+  expiry), each re-anchored by the order `FeeMotionPeriodExtended(until)`
+  with the move's date as `request_made`; and a protective filing,
+  `FeeMotionFiled()`, a collateral edge from `final-judgment-entered` and
+  `post-trial-motion-window` back to the same node that discharges the
+  clock. `litigate lint-filing` now lists, for every obligation open
+  before the filing, its `moves`: the edges out of the posture that
+  discharge it, its extension grants with the request each rests on,
+  and the order events that exercise them.
 - **A designated due date the matter does not record is `unknown`, never
   `open`** (lg-flu.46). A notice of institution whose answer date is `?`
   leaves the TTAB answer period with status `unknown` at `as_of` and the

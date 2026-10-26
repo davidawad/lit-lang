@@ -1,5 +1,6 @@
 module frcp.post-trial-motions
 
+import frcp.fees.{ FeeMotionFiled, fee-motion-period }
 import frcp.judgment-appeal.{ notice-of-appeal-window }
 
 import frcp.periods.{
@@ -24,6 +25,17 @@ decision final-judgment-entered: "Final Judgment Entered" by applicant cite "FRC
     authority cite "FRAP 4(a)(1)(A)"
     effort 0.hours
     note "Hours: 0, a default/no-action transition with no billable work of its own."
+  }
+  edge-final-judgment-entered-fee-motion-filed "File the Rule 54(d)(2) fee motion (protective filing)" -> final-judgment-entered {
+    authority cite "FRCP 54(d)(2)(B)"
+    event FeeMotionFiled()
+    effort 15.hours
+    within fee-motion-period {
+      extendable true
+      extension_authority "FRCP 6(b)(1): on a stipulated request or motion, or by the court"
+      note "14 days after entry of judgment unless a statute or court order provides otherwise."
+    }
+    note "A collateral filing: it discharges the fee clock and leaves the post-judgment posture where it is, so the motion and appeal clocks run on (lit/frcp/fees.lit)."
   }
 }
 
@@ -75,6 +87,17 @@ decision post-trial-motion-window: "Post-Trial Motion Window" by applicant cite 
     authority cite "FRAP 4(a)(1)(A)"
     effort 0.hours
     note "Hours: 0, a default/no-action transition with no billable work of its own."
+  }
+  edge-post-trial-motion-window-fee-motion-filed "File the Rule 54(d)(2) fee motion (protective filing)" -> post-trial-motion-window {
+    authority cite "FRCP 54(d)(2)(B)"
+    event FeeMotionFiled()
+    effort 15.hours
+    within fee-motion-period {
+      extendable true
+      extension_authority "FRCP 6(b)(1): on a stipulated request or motion, or by the court"
+      note "14 days after entry of judgment unless a statute or court order provides otherwise."
+    }
+    note "A collateral filing: it discharges the fee clock and leaves the post-judgment posture where it is, so the motion and appeal clocks run on (lit/frcp/fees.lit)."
   }
 }
 

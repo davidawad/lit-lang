@@ -79,7 +79,9 @@ litigate calendar cases/ptab-ipr-defense.case --out popr.ics --remind 7
                                             # an unknown due date is listed under `unscheduled`, never given one
 litigate lint-filing cases/ptab-ipr-defense.case 'PreliminaryResponseFiled()' --date 2026-09-10 --by owner
                                             # replay the matter with a proposed filing: L4001 not a legal move,
-                                            # L4002 late; else what it discharges and the deadlines it triggers
+                                            # L4002 late; else what it discharges and the deadlines it triggers;
+                                            # each open deadline lists its `moves` (file / extend / orders),
+                                            # e.g. the FRCP 54(d)(2)(B) fee clock's (lit/frcp/fees.lit)
 litigate diff lit/frcp --against target/lit-build/packs/frcp-civil-procedure.json   # semantic diff (SPEC §8.6)
 litigate compat old/lit/frcp lit/frcp      # compatibility class of a release + the bump it needs (SPEC §4.4)
 just lit-sync                               # regenerate every Lit.lock; build packs/, scenarios/ into target/lit-build/

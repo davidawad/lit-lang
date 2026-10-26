@@ -46,7 +46,21 @@ expression: stable(&run.json)
         "trigger_date": "2025-03-05",
         "due": "2025-03-19",
         "unknown": null,
-        "status": "open"
+        "status": "open",
+        "moves": {
+          "file": [
+            {
+              "edge": "cov-pack::answer",
+              "event": "Answered(complaint)"
+            },
+            {
+              "edge": "cov-pack::move-dismiss",
+              "event": "MovedToDismiss(complaint)"
+            }
+          ],
+          "extend": [],
+          "orders": []
+        }
       },
       {
         "deadline": "cov-pack::borne-period",
@@ -54,7 +68,12 @@ expression: stable(&run.json)
         "trigger_date": "2025-03-05",
         "due": "2025-03-10",
         "unknown": null,
-        "status": "open"
+        "status": "open",
+        "moves": {
+          "file": [],
+          "extend": [],
+          "orders": []
+        }
       }
     ]
   },

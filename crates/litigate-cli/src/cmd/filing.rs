@@ -6,6 +6,13 @@
 //! it discharges (L4002). Otherwise the result lists the obligations it
 //! discharges and the deadlines it triggers, with their due dates.
 //!
+//! Each obligation open before the filing carries its `moves`, the
+//! actions that protect it (SPEC §9.3): the acts out of the matter's
+//! posture that discharge it (`file`), the extension grants of the
+//! version counting it, each with the request it rests on (`extend`),
+//! and the order events that exercise them (`orders`). Proposing one of
+//! them through `lint-filing` judges it.
+//!
 //! The matter itself must check clean first. Diagnostics are then every
 //! error of the matter with the filing, and the warnings the filing adds
 //! to the matter as of the filing date. The filing's own line is written
@@ -13,6 +20,7 @@
 //! `litigate fix` would apply, keeping its timeline key stable.
 use super::check::check_session;
 use crate::filing;
+use crate::hirx;
 use crate::ics;
 use crate::matter::{CaseCheck, Scheduled};
 use crate::out::{Failure, Outcome, Report};
@@ -21,6 +29,7 @@ use litigate_base::{Diagnostic, DiagnosticCode, Profile, Severity};
 use litigate_engine::clock::Date;
 use litigate_lower::Options;
 use litigate_sema::case::{Status, Step};
+use litigate_sema::hir::{self, DeadlineWindow, Declaration, EventEffect, Extension};
 use serde_json::{json, Value};
 
 /// What `lint-filing` was asked for.
@@ -53,6 +62,123 @@ fn entry(s: &Scheduled) -> Value {
         "due": due.clone().ok().map(Date::to_iso), "unknown": due.err(),
         "status": ics::status_name(s),
     })
+}
+
+/// One `extend` grant as a move: who exercises it, under what cause
+/// standard, in which window (`before_expiry`: on or before the current
+/// due date, judged on the request's date when it names one;
+/// `after_expiry`: after it, on motion; `any`), the request it rests on
+/// (`on M()`), and a bounded grant's ceiling; `None` for a lock.
+fn grant(e: &Extension) -> Option<Value> {
+    let (by, standard, window, motion, until) = match e {
+        Extension::Bounded {
+            by,
+            until,
+            after_expiry,
+            standard,
+            motion,
+            ..
+        } => (
+            by,
+            *standard,
+            if *after_expiry {
+                "any"
+            } else {
+                "before_expiry"
+            },
+            motion,
+            serde_json::to_value(until).ok(),
+        ),
+        Extension::Discretionary {
+            by,
+            standard,
+            window,
+            motion,
+            ..
+        } => (
+            by,
+            Some(*standard),
+            match window {
+                hir::ExtensionWindow::BeforeExpiry => "before_expiry",
+                hir::ExtensionWindow::AfterExpiryOnMotion => "after_expiry",
+            },
+            motion,
+            None,
+        ),
+        Extension::NonExtendable { .. } => return None,
+    };
+    Some(json!({
+        "by": by, "standard": standard, "window": window,
+        "request": motion.as_ref().map(|m| hirx::event_text(&m.event)), "until": until,
+    }))
+}
+
+/// The version of `s`'s deadline that counted it, among `law`.
+fn counted_by<'p>(law: &[&'p hir::Package], s: &Scheduled) -> Option<&'p hir::Deadline> {
+    law.iter()
+        .filter(|p| s.deadline.starts_with(&format!("{}::", p.manifest.pack_id)))
+        .flat_map(|p| hirx::deadlines(p, &s.deadline))
+        .find(|d| format!("{}@{}", d.meta.id, d.meta.effective.from) == s.version)
+}
+
+/// The events of `law` that extend `deadline` (`extends d to p`).
+fn orders(law: &[&hir::Package], deadline: &str) -> Vec<String> {
+    law.iter()
+        .flat_map(|p| hirx::declarations(p))
+        .filter_map(|d| match d {
+            Declaration::Event(hir::EventType {
+                name,
+                effect: Some(EventEffect::Extends { deadline: d, .. }),
+                ..
+            }) if hirx::local(d) == hirx::local(deadline) => Some(name.clone()),
+            _ => None,
+        })
+        .collect()
+}
+
+/// The node versions of `case`'s replayed posture in force on its
+/// `as_of`, each with its pack id.
+fn posture<'p>(law: &[&'p hir::Package], case: &hir::Case) -> Vec<(&'p str, &'p hir::Node)> {
+    case.start
+        .as_deref()
+        .and_then(|s| s.split_once("::"))
+        .into_iter()
+        .flat_map(|(pack, node)| {
+            law.iter()
+                .filter(move |p| p.manifest.pack_id == pack)
+                .flat_map(|p| {
+                    hirx::nodes_at(law, p, &case.as_of, case.known_at.as_deref())
+                        .into_iter()
+                        .map(|n| (p.manifest.pack_id.as_str(), n))
+                })
+                .filter(move |(_, n)| n.meta.id == node)
+        })
+        .collect()
+}
+
+/// The moves that protect `s`: the acts out of the posture (`nodes`)
+/// that discharge it, the grants that extend it, and their orders.
+fn moves(law: &[&hir::Package], nodes: &[(&str, &hir::Node)], s: &Scheduled) -> Value {
+    let file: Vec<Value> = nodes
+        .iter()
+        .flat_map(|(pack, n)| n.edges.iter().map(move |e| (pack, e)))
+        .filter(|(_, e)| {
+            matches!(&e.deadline, Some(hir::EdgeDeadline {
+                window: DeadlineWindow::Declared { deadline }, ..
+            }) if hirx::local(deadline) == hirx::local(&s.deadline))
+        })
+        .map(|(pack, e)| {
+            json!({
+                "edge": e.id.as_ref().map(|id| format!("{pack}::{id}")),
+                "event": e.event.as_ref().map(hirx::event_text),
+            })
+        })
+        .collect();
+    let extend: Vec<Value> = counted_by(law, s)
+        .into_iter()
+        .flat_map(|d| d.extend.iter().filter_map(grant))
+        .collect();
+    json!({"file": file, "extend": extend, "orders": orders(law, &s.deadline)})
 }
 
 /// Whether `known` already has a diagnostic like `d` (spans move with
@@ -148,8 +274,13 @@ struct Changes<'a> {
 
 /// The replay steps, obligation endings and new obligations of `filed`
 /// that the matter without the filing (`at`) lacks, and what `at` had
-/// open.
-fn changes<'a>(at: &'a CaseCheck, filed: &'a CaseCheck) -> Changes<'a> {
+/// open, each with its moves under `law`.
+fn changes<'a>(at: &'a CaseCheck, filed: &'a CaseCheck, law: &[&hir::Package]) -> Changes<'a> {
+    let nodes = at
+        .case
+        .as_ref()
+        .map(|case| posture(law, case))
+        .unwrap_or_default();
     Changes {
         replay: filed
             .replay
@@ -180,7 +311,11 @@ fn changes<'a>(at: &'a CaseCheck, filed: &'a CaseCheck) -> Changes<'a> {
             .schedule
             .iter()
             .filter(|s| s.status == Status::Open)
-            .map(entry)
+            .map(|s| {
+                let mut e = entry(s);
+                e["moves"] = moves(law, &nodes, s);
+                e
+            })
             .collect(),
     }
 }
@@ -241,7 +376,8 @@ pub fn lint_filing(args: &Args) -> Outcome {
         .chain([(texts[2].path.clone(), texts[2].text.clone())])
         .collect();
     report.diagnostics = added(at, filed);
-    let changes = changes(at, filed);
+    let law = c.session.hir_of(&c.session.closure(at.packages.clone()));
+    let changes = changes(at, filed, &law);
     report.result = json!({
         "case": filed.case.as_ref().map(|c| c.id.clone()),
         "filing": {"date": date, "event": args.event, "mode": args.mode, "party": args.party, "line": line},
@@ -257,6 +393,28 @@ pub fn lint_filing(args: &Args) -> Outcome {
 mod tests {
     use super::*;
     use crate::testkit;
+
+    #[test]
+    fn a_bounded_grant_before_expiry_is_a_move_with_its_ceiling() {
+        let bounded = Extension::Bounded {
+            by: "justice".into(),
+            until: hir::Bound::Offset {
+                from: hir::DateRef::PrescribedDue,
+                days: 60,
+            },
+            after_expiry: false,
+            standard: None,
+            motion: None,
+            interpretation: None,
+        };
+        assert_eq!(
+            grant(&bounded),
+            Some(json!({
+                "by": "justice", "standard": null, "window": "before_expiry", "request": null,
+                "until": {"offset": {"from": "prescribed_due", "days": 60}},
+            }))
+        );
+    }
 
     #[test]
     fn filing_validation_reports_non_events_and_missing_locations() {

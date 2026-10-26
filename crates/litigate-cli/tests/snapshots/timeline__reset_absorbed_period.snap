@@ -37,7 +37,7 @@ expression: t
       "id": "w1",
       "label": "Conduct Rule 11 pre-filing investigation",
       "parent": "w0",
-      "fork_row": "r9",
+      "fork_row": "r10",
       "choice": {
         "kind": "election",
         "label": "Conduct Rule 11 pre-filing investigation",
@@ -101,6 +101,32 @@ expression: t
     },
     {
       "id": "r3",
+      "key": "frcp.fees.fee-motion-period@event:JudgmentEntered@2025-06-02",
+      "world": "w0",
+      "kind": "deadline",
+      "date": null,
+      "due": "2025-06-16",
+      "label": "fee-motion-period: 14 days after JudgmentEntered()",
+      "status": {
+        "state": "open",
+        "reason": null
+      },
+      "cite": "FRCP 54(d)(2)(B)",
+      "source": {
+        "file": "lit/frcp/fees.lit",
+        "start": 2940,
+        "end": 3420,
+        "line": 54,
+        "column": 1
+      },
+      "layer": "base_rule",
+      "provenance": [
+        "frcp-civil-procedure"
+      ],
+      "trigger": "r1"
+    },
+    {
+      "id": "r4",
       "key": "frcp.periods.cross-appeal-period@event:NoticeOfAppealFiled@2025-06-05",
       "world": "w0",
       "kind": "deadline",
@@ -114,9 +140,9 @@ expression: t
       "cite": "FRAP 4(a)(3)",
       "source": {
         "file": "lit/frcp/periods.lit",
-        "start": 21853,
-        "end": 22379,
-        "line": 421,
+        "start": 22146,
+        "end": 22672,
+        "line": 426,
         "column": 1
       },
       "layer": "base_rule",
@@ -126,7 +152,7 @@ expression: t
       "trigger": "r2"
     },
     {
-      "id": "r4",
+      "id": "r5",
       "key": "frcp.periods.alter-amend-period@event:JudgmentEntered@2025-06-02",
       "world": "w0",
       "kind": "deadline",
@@ -140,9 +166,9 @@ expression: t
       "cite": "FRCP 59(e)",
       "source": {
         "file": "lit/frcp/periods.lit",
-        "start": 16876,
-        "end": 17041,
-        "line": 323,
+        "start": 17169,
+        "end": 17334,
+        "line": 328,
         "column": 1
       },
       "layer": "base_rule",
@@ -152,7 +178,7 @@ expression: t
       "trigger": "r1"
     },
     {
-      "id": "r5",
+      "id": "r6",
       "key": "frcp.periods.jmol-renewal-period@event:JudgmentEntered@2025-06-02",
       "world": "w0",
       "kind": "deadline",
@@ -166,9 +192,9 @@ expression: t
       "cite": "FRCP 50(b)",
       "source": {
         "file": "lit/frcp/periods.lit",
-        "start": 16206,
-        "end": 16372,
-        "line": 307,
+        "start": 16499,
+        "end": 16665,
+        "line": 312,
         "column": 1
       },
       "layer": "base_rule",
@@ -178,7 +204,7 @@ expression: t
       "trigger": "r1"
     },
     {
-      "id": "r6",
+      "id": "r7",
       "key": "frcp.periods.new-trial-period@event:JudgmentEntered@2025-06-02",
       "world": "w0",
       "kind": "deadline",
@@ -192,9 +218,9 @@ expression: t
       "cite": "FRCP 59(b)",
       "source": {
         "file": "lit/frcp/periods.lit",
-        "start": 16536,
-        "end": 16699,
-        "line": 315,
+        "start": 16829,
+        "end": 16992,
+        "line": 320,
         "column": 1
       },
       "layer": "base_rule",
@@ -204,7 +230,7 @@ expression: t
       "trigger": "r1"
     },
     {
-      "id": "r7",
+      "id": "r8",
       "key": "frcp.periods.notice-of-appeal-period@event:JudgmentEntered@2025-06-02",
       "world": "w0",
       "kind": "deadline",
@@ -218,9 +244,9 @@ expression: t
       "cite": "28 U.S.C. § 2107(a)",
       "source": {
         "file": "lit/frcp/periods.lit",
-        "start": 19846,
-        "end": 20405,
-        "line": 377,
+        "start": 20139,
+        "end": 20698,
+        "line": 382,
         "column": 1
       },
       "layer": "base_rule",
@@ -231,7 +257,7 @@ expression: t
       "replaced_by": "frcp.periods.cross-appeal-period@event:NoticeOfAppealFiled@2025-06-05"
     },
     {
-      "id": "r8",
+      "id": "r9",
       "key": "frcp.periods.relief-from-judgment-period@event:JudgmentEntered@2025-06-02",
       "world": "w0",
       "kind": "deadline",
@@ -245,9 +271,9 @@ expression: t
       "cite": "FRCP 60(c)(1)",
       "source": {
         "file": "lit/frcp/periods.lit",
-        "start": 17333,
-        "end": 17510,
-        "line": 332,
+        "start": 17626,
+        "end": 17803,
+        "line": 337,
         "column": 1
       },
       "layer": "base_rule",
@@ -257,7 +283,7 @@ expression: t
       "trigger": "r1"
     },
     {
-      "id": "r9",
+      "id": "r10",
       "key": "fork:frcp.pre-filing.pre-filing@start",
       "world": "w0",
       "kind": "fork",
@@ -283,7 +309,7 @@ expression: t
       "trigger": null
     },
     {
-      "id": "r10",
+      "id": "r11",
       "key": "event:edge-pre-filing-jurisdiction-venue-check@fork:frcp.pre-filing.pre-filing@start",
       "world": "w1",
       "kind": "event",
@@ -306,7 +332,7 @@ expression: t
       "provenance": [
         "frcp-civil-procedure"
       ],
-      "trigger": "r9"
+      "trigger": "r10"
     }
   ],
   "edges": [
@@ -320,6 +346,12 @@ expression: t
       "from": "r2",
       "to": "r3",
       "world": "w0",
+      "kind": "sequence"
+    },
+    {
+      "from": "r1",
+      "to": "r3",
+      "world": "w0",
       "kind": "triggers"
     },
     {
@@ -329,7 +361,7 @@ expression: t
       "kind": "sequence"
     },
     {
-      "from": "r1",
+      "from": "r2",
       "to": "r4",
       "world": "w0",
       "kind": "triggers"
@@ -389,8 +421,20 @@ expression: t
       "kind": "sequence"
     },
     {
+      "from": "r1",
+      "to": "r9",
+      "world": "w0",
+      "kind": "triggers"
+    },
+    {
       "from": "r9",
       "to": "r10",
+      "world": "w0",
+      "kind": "sequence"
+    },
+    {
+      "from": "r10",
+      "to": "r11",
       "world": "w1",
       "kind": "forks"
     }

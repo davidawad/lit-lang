@@ -1,0 +1,75 @@
+module frcp.fees
+
+import core.authority.{ CaseOrder }
+import core.frcp6.{ frcp6 }
+import frcp.periods.{ ExtendedPeriod, ExtensionMoved, JudgmentEntered, TimeChangeStipulated }
+
+// The FRCP 54(d)(2)(B) fee clock and the moves that protect it.
+//
+// Rule 54(d)(2)(B)(i): "Unless a statute or a court order provides
+// otherwise", a motion for attorney's fees must "be filed no later than 14
+// days after the entry of judgment". The period is not on FRCP 6(b)(2)'s
+// list, so FRCP 6(b)(1) reaches it like any other civil-rule period
+// (`lit/frcp/periods.lit`, "Extension"), and its own "unless ... a court
+// order provides otherwise" is the `delegable { to CaseOrder, op set }`.
+//
+// Protective moves. A party facing the clock has three first-class moves,
+// each a declared grant or edge, so replay judges each and `litigate
+// lint-filing` reports what each would do before it is made:
+//
+// - Stipulate (a local "stipulated request for order changing time"): the
+//   parties file `TimeChangeStipulated(FeeMotionPeriod)`; the court's order
+//   on it, `FeeMotionPeriodExtended(until)`, re-anchors the instance at
+//   `until`. The stipulation is a 6(b)(1)(A) request joined by the
+//   opponent, so it must be filed on or before the due date, and the order
+//   may follow after it (the window is the request's).
+// - Move to extend (a local "motion to change time"): the same, on
+//   `ExtensionMoved(FeeMotionPeriod)`; after expiry only on that motion and
+//   for excusable neglect (6(b)(1)(B)).
+// - File protectively: `FeeMotionFiled()` through a `within
+//   fee-motion-period` edge discharges the instance on the day it is filed.
+//   The edge leads back to its own node (`final-judgment-entered`,
+//   `post-trial-motion-window`): the motion is collateral to the merits, so
+//   the post-judgment motion and appeal clocks run on from the same posture.
+//
+// The grants are declared stipulation first, then motion, then the court
+// acting unasked, so an extension records the move that licensed it: its
+// `request_made` is the stipulation's or the motion's date.
+//
+// Only entry of judgment starts the clock. Whether some other disposition,
+// such as a Rule 41(a)(1)(A)(i) notice of dismissal stated to be with
+// prejudice, starts it is a question no vendored source answers, so no such
+// trigger is declared; a matter facing that risk records the moves above
+// once a judgment is entered, or files protectively.
+/// A motion for attorney's fees and related nontaxable expenses is filed
+/// (FRCP 54(d)(2)(A)).
+event FeeMotionFiled()
+/// The court extends the time to move for attorney's fees to `until` (FRCP
+/// 54(d)(2)(B), 6(b)(1)).
+event FeeMotionPeriodExtended(until: Date) extends fee-motion-period to until
+
+/// Rule 54(d)(2)(B)(i): the fee motion is due 14 days after entry of
+/// judgment, unless a statute or a court order provides otherwise. Rule 54
+/// last amended eff. December 1, 2009 (vendored history).
+deadline fee-motion-period: 14.days after JudgmentEntered() counted_by frcp6 effective [2009-12-01, ..) delegable {
+  to CaseOrder
+  op set
+} cite "FRCP 54(d)(2)(B)"
+{
+  extend { by court, discretion GoodCause, on TimeChangeStipulated(FeeMotionPeriod) }
+  extend { by court, discretion GoodCause, on ExtensionMoved(FeeMotionPeriod) }
+  extend { by court, discretion GoodCause }
+  extend { by court, discretion ExcusableNeglect, after_expiry, on ExtensionMoved(FeeMotionPeriod) }
+}
+
+test "fee-motion-period: 14 days after entry of judgment" cite "FRCP 54(d)(2)(B)"
+{
+  given JudgmentEntered() on 2025-06-02
+  expect deadline(fee-motion-period) == 2025-06-16
+}
+
+test "fee-motion-period: a last day on a legal holiday (2025-06-19) rolls forward" cite "FRCP 6(a)(1)(C)"
+{
+  given JudgmentEntered() on 2025-06-05
+  expect deadline(fee-motion-period) == 2025-06-20
+}

@@ -71,10 +71,15 @@ enum ExtendedPeriod {
   JuryDemandPeriod,
   NoticeOfAppealPeriod,
   CrossAppealPeriod,
+  FeeMotionPeriod,
 }
 
 /// A party moves to extend `period` (FRCP 6(b)(1)(B); FRAP 4(a)(5)(A)(i)).
 event ExtensionMoved(period: ExtendedPeriod)
+/// The parties file a stipulated request for an order changing the time
+/// for `period`: a request under FRCP 6(b)(1)(A), made when it is filed,
+/// that the opponent has joined (`lit/frcp/fees.lit`, "Protective moves").
+event TimeChangeStipulated(period: ExtendedPeriod)
 /// The complaint is filed (FRCP 3): the Rule 4(m) service clock starts.
 event ComplaintFiled()
 /// The summons and complaint are served under Rule 4. Service of process is

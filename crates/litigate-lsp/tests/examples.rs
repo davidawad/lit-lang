@@ -8,7 +8,7 @@
 mod support;
 
 use serde_json::{json, Value};
-use support::{read, uri, Client};
+use support::{read, Client};
 
 /// SPEC §12, then the construct fixtures (`links`, instances,
 /// transitions, defaults, exceptions: what §12 leaves out).
@@ -31,21 +31,21 @@ fn flatten(symbols: &Value, out: &mut Vec<Value>) {
 async fn formatting(c: &mut Client, path: &str) -> Value {
     c.request(
         "textDocument/formatting",
-        json!({"textDocument": {"uri": uri(path)}, "options": {"tabSize": 2, "insertSpaces": true}}),
+        json!({"textDocument": {"uri": c.uri(path)}, "options": {"tabSize": 2, "insertSpaces": true}}),
     )
     .await
 }
 
 #[tokio::test]
 async fn every_example_is_served() {
-    let mut c = Client::repo().await;
+    let mut c = Client::examples("examples-served", &EXAMPLES[3..]).await;
     for path in EXAMPLES {
         let text = read(path);
         c.open(path, &text).await;
         let symbols = c
             .request(
                 "textDocument/documentSymbol",
-                json!({"textDocument": {"uri": uri(path)}}),
+                json!({"textDocument": {"uri": c.uri(path)}}),
             )
             .await;
         let mut all = Vec::new();
@@ -60,7 +60,7 @@ async fn every_example_is_served() {
                 s["name"]
             );
             let found = c.at("definition", path, start.clone()).await;
-            assert_eq!(found["uri"], uri(path), "{path}: {}", s["name"]);
+            assert_eq!(found["uri"], c.uri(path), "{path}: {}", s["name"]);
             assert_eq!(found["range"]["start"], start, "{path}: {}", s["name"]);
         }
         if path.ends_with("Lit.toml") {
@@ -71,7 +71,7 @@ async fn every_example_is_served() {
             let formatted = edit["newText"].as_str().unwrap().to_owned();
             c.notify(
                 "textDocument/didChange",
-                json!({"textDocument": {"uri": uri(path), "version": 2},
+                json!({"textDocument": {"uri": c.uri(path), "version": 2},
                        "contentChanges": [{"text": formatted}]}),
             )
             .await;
@@ -86,7 +86,7 @@ async fn every_example_is_served() {
     // The worked example checks without errors (SPEC §12); the syntax
     // fixtures parse cleanly (`matter.case` is a matter, so it is checked,
     // and the packages it names are not in this workspace).
-    let worked: Vec<String> = EXAMPLES[..3].iter().map(|p| uri(p)).collect();
+    let worked: Vec<String> = EXAMPLES[..3].iter().map(|p| c.uri(p)).collect();
     let errors: Vec<&Value> = c
         .notes
         .iter()
@@ -108,19 +108,19 @@ async fn every_example_is_served() {
 
 #[tokio::test]
 async fn a_loose_document_gets_its_parse_diagnostics() {
-    let mut c = Client::repo().await;
+    let mut c = Client::examples("examples-loose", &EXAMPLES[3..4]).await;
     let path = "crates/litigate-syntax/tests/fixtures/constructs.lit";
     let broken = read(path).replacen("->", "", 1);
     c.open(path, &broken).await;
-    let ds = c.diagnostics(&uri(path)).await;
+    let ds = c.diagnostics(&c.uri(path)).await;
     assert!(ds.iter().any(|d| d["code"] == "L0001"), "{ds:?}");
     c.notify(
         "textDocument/didClose",
-        json!({"textDocument": {"uri": uri(path)}}),
+        json!({"textDocument": {"uri": c.uri(path)}}),
     )
     .await;
     assert_eq!(
-        c.diagnostics(&uri(path)).await,
+        c.diagnostics(&c.uri(path)).await,
         Vec::<Value>::new(),
         "closing clears them"
     );

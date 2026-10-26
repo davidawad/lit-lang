@@ -1,12 +1,15 @@
 //! LSP protocol tests over the SPEC §12 worked example (`lit/examples`,
 //! `cases/examples/acme.case`), driving the server in-process through the
-//! wire protocol at the repository root.
+//! wire protocol: at the repository root where the test is about the
+//! repository's analysis, else over the worked example alone at its
+//! repository paths ([`support::examples`]), so no answer waits on a
+//! check of every package and matter in the repository.
 #![allow(clippy::unwrap_used, clippy::expect_used)]
 
 mod support;
 
 use serde_json::{json, Value};
-use support::{at, codes, place, read, uri, Client};
+use support::{at, codes, read, uri, Client};
 
 const LIT: &str = "lit/examples/rule12.lit";
 const CASE: &str = "cases/examples/acme.case";
@@ -92,8 +95,12 @@ fn sources(roots: &[&str]) -> Vec<String> {
 
 #[tokio::test]
 async fn strict_profile_fails_each_hole() {
-    let (mut c, _) = Client::start(&support::repo(), json!({"profile": "strict"})).await;
-    let ds = c.diagnostics(&uri(LIT)).await;
+    let (mut c, _) = Client::start(
+        &support::examples("protocol-strict", &[]),
+        json!({"profile": "strict"}),
+    )
+    .await;
+    let ds = c.diagnostics(&c.uri(LIT)).await;
     let errors: Vec<&Value> = ds.iter().filter(|d| d["severity"] == 1).collect();
     assert_eq!(codes(&ds).iter().filter(|c| *c == "L5002").count(), 3);
     assert!(errors.len() >= 3);
@@ -101,17 +108,17 @@ async fn strict_profile_fails_each_hole() {
 
 #[tokio::test]
 async fn edits_recheck_incrementally_over_one_database() {
-    let mut c = Client::repo().await;
+    let mut c = Client::examples("protocol-edits", &[]).await;
     let text = read(LIT);
-    assert_eq!(c.diagnostics(&uri(LIT)).await.len(), 3);
+    assert_eq!(c.diagnostics(&c.uri(LIT)).await.len(), 3);
     c.open(LIT, &text).await;
     // `p 1/10` -> `p 2/10`: the fact's distribution no longer sums to one.
     let range = json!({"start": at(&text, "1/10", 0, 0), "end": at(&text, "1/10", 0, 1)});
     c.edit(LIT, 2, range.clone(), "2").await;
-    let broken = c.diagnostics_where(&uri(LIT), |ds| ds.len() != 3).await;
+    let broken = c.diagnostics_where(&c.uri(LIT), |ds| ds.len() != 3).await;
     assert!(codes(&broken).contains(&"L2003".to_owned()), "{broken:?}");
     c.edit(LIT, 3, range, "1").await;
-    let fixed = c.diagnostics_where(&uri(LIT), |ds| ds.len() == 3).await;
+    let fixed = c.diagnostics_where(&c.uri(LIT), |ds| ds.len() == 3).await;
     assert_eq!(shape(&fixed).len(), 3);
     assert_eq!(
         c.status().await["rebuilds"],
@@ -126,7 +133,7 @@ async fn edits_recheck_incrementally_over_one_database() {
     c.edit(CASE, 2, range, "nope").await;
     // (While the package was broken the matter could not resolve it.)
     let ds = c
-        .diagnostics_where(&uri(CASE), |ds| codes(ds).contains(&"L4003".to_owned()))
+        .diagnostics_where(&c.uri(CASE), |ds| codes(ds).contains(&"L4003".to_owned()))
         .await;
     // Advice (severity 3: L9006 on each event without an id) aside.
     let ds: Vec<Value> = ds.into_iter().filter(|d| d["severity"] != 3).collect();
@@ -135,7 +142,7 @@ async fn edits_recheck_incrementally_over_one_database() {
 
 #[tokio::test]
 async fn hover_shows_kind_type_versions_and_cite() {
-    let mut c = Client::repo().await;
+    let mut c = Client::examples("protocol-hover", &[]).await;
     let text = read(LIT);
     let value = |h: &Value| {
         h["contents"]["value"]
@@ -212,14 +219,14 @@ const GOTO: [(&str, &str, u32, &str, &str); 12] = [
 
 #[tokio::test]
 async fn goto_definition_crosses_modules_and_matters() {
-    let mut c = Client::repo().await;
+    let mut c = Client::examples("protocol-goto", &[]).await;
     c.open(CASE, &read(CASE)).await;
     for (from, needle, shift, to, target) in GOTO {
         let text = read(to);
         let line = u64::try_from(text[..text.find(target).unwrap()].matches('\n').count()).unwrap();
         let position = at(&read(from), needle, 0, shift);
         let found = c.at("definition", from, position).await;
-        assert_eq!(place(&found), (to.to_owned(), line), "{from}: {needle}");
+        assert_eq!(c.place(&found), (to.to_owned(), line), "{from}: {needle}");
     }
 }
 
@@ -227,7 +234,7 @@ async fn goto_definition_crosses_modules_and_matters() {
 /// `observe` does.
 #[tokio::test]
 async fn goto_definition_reads_a_prior_outcome_as_its_nodes_edge() {
-    let mut c = Client::repo().await;
+    let mut c = Client::examples("protocol-goto-prior", &[]).await;
     let text = read(CASE).replacen("observe mtd-ruling", "prior mtd-ruling", 1);
     c.open(CASE, &text).await;
     let lit = read(LIT);
@@ -238,17 +245,22 @@ async fn goto_definition_reads_a_prior_outcome_as_its_nodes_edge() {
     )
     .unwrap();
     let found = c.at("definition", CASE, at(&text, "granted", 0, 1)).await;
-    assert_eq!(place(&found), (LIT.to_owned(), line));
+    assert_eq!(c.place(&found), (LIT.to_owned(), line));
 }
 
 #[tokio::test]
 async fn references_span_modules_and_matters() {
-    let mut c = Client::repo().await;
+    let mut c = Client::examples("protocol-references", &[]).await;
     let lit = read(LIT);
     let refs = c
         .at("references", LIT, at(&lit, "deadline answer-period", 0, 10))
         .await;
-    let lines: Vec<(String, u64)> = refs.as_array().unwrap().iter().map(place).collect();
+    let lines: Vec<(String, u64)> = refs
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|l| c.place(l))
+        .collect();
     // The declaration, two `within`s, and the two inline tests.
     assert_eq!(lines.len(), 5, "{lines:?}");
     let ruling = c
@@ -258,7 +270,7 @@ async fn references_span_modules_and_matters() {
         .as_array()
         .unwrap()
         .iter()
-        .map(|l| place(l).0)
+        .map(|l| c.place(l).0)
         .collect();
     assert!(
         files.contains(&CASE.to_owned()),
@@ -269,11 +281,11 @@ async fn references_span_modules_and_matters() {
 
 #[tokio::test]
 async fn symbols_nest_edges_under_nodes() {
-    let mut c = Client::repo().await;
+    let mut c = Client::examples("protocol-symbols", &[]).await;
     let syms = c
         .request(
             "textDocument/documentSymbol",
-            json!({"textDocument": {"uri": uri(LIT)}}),
+            json!({"textDocument": {"uri": c.uri(LIT)}}),
         )
         .await;
     let tree: Vec<Value> = syms
@@ -329,7 +341,7 @@ async fn formatting_returns_the_canonical_text() {
 #[tokio::test]
 async fn code_actions_apply_the_diagnostic_fix() {
     // SPEC §9.2's example: `expected `->``, fixed by inserting `-> `.
-    let mut c = Client::repo().await;
+    let mut c = Client::examples("protocol-code-actions", &[]).await;
     let text = read(LIT);
     c.open(LIT, &text).await;
     let arrow = at(&text, "-> answered {", 0, 0);
@@ -337,7 +349,7 @@ async fn code_actions_apply_the_diagnostic_fix() {
     c.edit(LIT, 2, json!({"start": arrow, "end": end}), "")
         .await;
     let has = |ds: &[Value]| ds.iter().any(|d| d["code"] == "L0001");
-    let ds = c.diagnostics_where(&uri(LIT), has).await;
+    let ds = c.diagnostics_where(&c.uri(LIT), has).await;
     let l0001 = ds
         .iter()
         .find(|d| d["code"] == "L0001")
@@ -345,27 +357,27 @@ async fn code_actions_apply_the_diagnostic_fix() {
     let actions = c
         .request(
             "textDocument/codeAction",
-            json!({"textDocument": {"uri": uri(LIT)}, "range": l0001["range"], "context": {"diagnostics": [l0001]}}),
+            json!({"textDocument": {"uri": c.uri(LIT)}, "range": l0001["range"], "context": {"diagnostics": [l0001]}}),
         )
         .await;
     let action = &actions.as_array().unwrap()[0];
     assert_eq!(action["kind"], "quickfix");
     assert_eq!(action["isPreferred"], true);
-    let edit = &action["edit"]["changes"][uri(LIT)][0];
+    let edit = &action["edit"]["changes"][c.uri(LIT)][0];
     assert_eq!(edit["newText"], "-> ");
     assert_eq!(edit["range"]["start"], arrow);
 }
 
 #[tokio::test]
 async fn inlay_hints_show_engine_computed_deadlines() {
-    let mut c = Client::repo().await;
+    let mut c = Client::examples("protocol-inlay", &[]).await;
     let case = read(CASE);
     c.open(CASE, &case).await;
     let all = json!({"start": {"line": 0, "character": 0}, "end": {"line": 999, "character": 0}});
     let hints = c
         .request(
             "textDocument/inlayHint",
-            json!({"textDocument": {"uri": uri(CASE)}, "range": all}),
+            json!({"textDocument": {"uri": c.uri(CASE)}, "range": all}),
         )
         .await;
     let hints = hints.as_array().unwrap();
@@ -386,7 +398,7 @@ async fn inlay_hints_show_engine_computed_deadlines() {
     let hints = c
         .request(
             "textDocument/inlayHint",
-            json!({"textDocument": {"uri": uri(CASE)}, "range": all}),
+            json!({"textDocument": {"uri": c.uri(CASE)}, "range": all}),
         )
         .await;
     assert_eq!(

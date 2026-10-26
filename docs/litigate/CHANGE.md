@@ -304,6 +304,11 @@ docs/litigate/examples/change` checks them all (test
 | precedent | `precedent/` over `ptab-base/` | Light & Wonder, Paper 30 (designated June 22, 2026) | waives § 42.75(c)(1): 14 days → 30 |
 | overruling | `overruling/` over `overruled/` | Bowles v. Russell (2007) overruling Thompson v. INS (1964) | withdraws Thompson from June 14, 2007 |
 
+`docs/litigate/examples/timelines/` holds a procedure over the base
+periods (`post-judgment/`: a Rule 59(e) motion `within` the base's
+period), a synthetic matter, and the world whose alternate timelines
+§5.1 runs it in.
+
 ## 5. Worlds
 
 A world is `W = (Λ, ι, μ)` (design review §3.2): a finite **set** of
@@ -347,9 +352,9 @@ judge = "..."                           # optional
   rules overriding the same delegated period differently are an
   unresolved conflict (L3003) only in a world holding both. A precedent
   that does not bind at ι has no claim in force there and conflicts with
-  nothing. An
-  incomparable conflict is an error; where the law is unsettled at ι it
-  will become a chance fork (lg-fq2.4).
+  nothing. An incomparable conflict is an error; where the law is
+  unsettled at ι the readings are options of a choice point (§5.1), one
+  world each.
 - **Malformed:** an unknown key, modality, layer, family or circuit is
   L1013.
 
@@ -357,6 +362,88 @@ judge = "..."                           # optional
 a world's layers resolve among the loaded packages, else in the library
 (`--lib`, default `lit`). The result lists each world with its layers'
 classes (a precedent's at the location) and whether each is in force.
+
+### 5.1 Alternate timelines (lg-fq2.4)
+
+A world file may declare **choice points**: `[choice.ID]` tables whose
+keys name options and whose values are sets of layers. The file spans one
+alternate world per combination, one option taken at every choice point:
+its own `layers` plus the options'. A change toggled is a choice between
+leaving an instrument out and adding it; a contested question (unsettled
+law at ι, a circuit split) is a choice among its readings, one layer per
+reading. Each layer belongs to one choice point, so each world is exactly
+one combination (L1013 otherwise, as for a choice with one option, two
+options with the same layers, or more than 4096 worlds).
+
+```toml
+# docs/litigate/examples/timelines/rule-59e.world
+modality = "counterfactual"
+layers = ["change-frcp-base"]
+
+[location]
+family = "district-civil"
+court = "d-sdny"
+circuit = "ca2"
+
+[choice.rule-59e-2009]
+without = []
+with = ["change-frcp-2009-amendment"]
+```
+
+`litigate worlds CASE --world FILE [--path PATH] [--layer NAME] [--vary
+NAME] [--as-of DATE] [--known-at DATE]` (the MCP tool `litigate_worlds`;
+in wasm, `litigate(["worlds", ...], files)`) replays the matter in every
+world:
+
+- **The law of a world.** Its layers in force join the law the matter's
+  packages see, with their dependencies, exactly as a dependency's
+  declarations do: an amendment's `supersedes`, a local rule's or case
+  order's `override`, a precedent's waiver or exception, an emergency
+  `grant` take part in selection (SPEC §5.4, §5.5). A deadline an
+  amendment supersedes is counted under the amendment's version (the base
+  instance, never a second one). A layer's own new deadlines are replayed
+  only in a matter that `uses` the layer.
+- **In force at the query.** A precedent that does not bind at ι with
+  binding effects is not in force. An overruled precedent is in force
+  until the overruling's date: a matter judged before it (`as_of`), or at
+  a `known_at` before it, still has it; from then it is withdrawn for
+  every case still open (Harper v. Virginia Dep't of Taxation, 509 U.S.
+  86 (1993)). Versions are selected at `known_at` (the matter's own,
+  else the latest corpus): a version recorded later does not exist yet.
+- **Per filing.** Each event `by` a party is, per world, `timely`,
+  `late` (L4002), `unjudged` (its due date is unknown or cannot be
+  counted at `known_at`), `rejected` (another replay error at its event),
+  `untimed` (it answered no deadline there) or `undetermined` (the
+  world's own law is in error: a synthetic layer in an actual world, an
+  unresolved conflict). The result lists every world (choices, layers,
+  deadlines with due dates, its errors), every filing with the worlds of
+  each outcome, and the worlds grouped by identical outcome.
+- **Errors.** A late filing is an outcome of its world. The query fails
+  (exit 2) only for an invalid world file, a package in scope with an
+  error, or a matter error no layer can change (syntax, names, pins,
+  types: L0xxx-L2xxx).
+
+The example matter (`docs/litigate/examples/timelines/rule-59e.case`,
+synthetic facts) has judgment entered March 1, 2010 and a Rule 59(e)
+motion filed March 25:
+
+| World | Rule 59(e) | Due | Motion |
+|---|---|---|---|
+| `w1` (`with`) | 28 days, the 2009 amendment | 2010-03-29 | timely |
+| `w2` (`without`) | 10 days, the 2007 text (counted under FRCP 6 as amended in 2009) | 2010-03-11 | late |
+
+At `--known-at 2009-01-01`, before the order of March 26, 2009, the corpus
+holds neither the amendment nor a FRCP 6 version in force in 2010 (the
+2005 version ends December 1, 2009): the motion is `unjudged` in both.
+
+**Why no solver.** The worlds are a finite product of declared options,
+enumerated exhaustively, and each world's outcome is the stratified model
+the checker already computes (design review §3.3). An answer-set solver
+(clingo) would have to re-encode replay, counting and precedence to
+compute the same product; that re-encoding is worth having only as a
+differential oracle (design review §4.7, §6 item 24), and an external
+solver cannot run in the wasm build or the LSP (§4.6). Grouping worlds by
+outcome is a pass over the results.
 
 ## 6. Akoma Ntoso
 
@@ -389,10 +476,13 @@ metadata, kept as metadata about instruments, never as edit scripts
 - Binding scope uses the `designated` date as a fact of the instrument;
   gating a binding precedent's claims by that date at a query is the
   claims' own `effective` window.
-- A world reports its layers and conflicts; running a `.case` under a
-  chosen world (`uses` a world), listing outcomes across worlds, and
-  contested-question forks are lg-fq2.4. Golden tests against the 2009
-  Committee Note examples and collected rulings are lg-fq2.5.
+- A matter runs under a world through `litigate worlds` (§5.1), not by
+  naming a world in the `.case` (no `.case` syntax changed). A contested
+  question is a choice point the world declares; lowering it to a
+  `chance` node of the matter's scenario with a basis-labelled prior
+  (design review §3.4, §6 item 23) is not done yet: the query lists the
+  readings' worlds side by side. Golden tests against the 2009 Committee
+  Note examples and collected rulings are lg-fq2.5.
 - A modification layer still declares a placeholder `start` node, as
   `lit/core` does.
 - The COFC general-order example records its closed day; wiring a

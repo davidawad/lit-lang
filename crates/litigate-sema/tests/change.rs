@@ -950,9 +950,10 @@ fn choice_points_span_one_world_per_combination() {
 
 #[test]
 fn malformed_choice_points_are_l1013() {
-    let many: String = (0..13)
-        .map(|i| format!("\n[choice.c{i}]\nwithout = []\nwith = [\"l{i}\"]\n"))
-        .collect();
+    let many = (0..13).fold(String::new(), |mut s, i| {
+        let _ = write!(s, "\n[choice.c{i}]\nwithout = []\nwith = [\"l{i}\"]\n");
+        s
+    });
     let rows: Vec<(&str, Vec<String>)> = [
         ("one option", "\n[choice.c]\nwith = [\"lr\"]\n"),
         (
@@ -1028,7 +1029,11 @@ fn an_overruled_precedent_is_in_force_until_the_overruling() {
     );
     let at = |circuit: &str| format!("family = \"civil\"\ncircuit = \"{circuit}\"");
     let packs = [ca1, en_banc];
-    let overruled = world(&packs, &located("\"ca1-rule\", \"en-banc\"", &at("ca1")), Profile::Dev);
+    let overruled = world(
+        &packs,
+        &located("\"ca1-rule\", \"en-banc\"", &at("ca1")),
+        Profile::Dev,
+    );
     let rule = overruled
         .layers
         .iter()

@@ -26,7 +26,11 @@ fn packages() -> &'static [Package] {
         let (db, ws) = litigate_sema::load(&root, &dirs, None).unwrap_or_else(|e| panic!("{e}"));
         litigate_sema::check_workspace(&db, ws)
             .iter()
-            .map(|c| c.package.clone().unwrap_or_else(|| panic!("{:?}", c.diagnostics)))
+            .map(|c| {
+                c.package
+                    .clone()
+                    .unwrap_or_else(|| panic!("{:?}", c.diagnostics))
+            })
             .collect()
     })
 }
@@ -40,16 +44,19 @@ fn named(name: &str) -> &'static Package {
 
 /// The example matter, with `uses` as given, checked with `layers`.
 fn checked(uses: &str, layers: &[&str]) -> CheckedCase {
-    let text = std::fs::read_to_string(repo_root().join("docs/litigate/examples/timelines/rule-59e.case"))
-        .unwrap_or_default()
-        .replace(
-            "uses change-post-judgment ^1.0.0, change-frcp-base ^1.0.0",
-            uses,
-        );
+    let text =
+        std::fs::read_to_string(repo_root().join("docs/litigate/examples/timelines/rule-59e.case"))
+            .unwrap_or_default()
+            .replace(
+                "uses change-post-judgment ^1.0.0, change-frcp-base ^1.0.0",
+                uses,
+            );
     let refs: Vec<&Package> = packages().iter().collect();
     let lock = lock(packages());
     let resolved = resolve("cases/t.case", &text, &refs, Some(&lock));
-    let case = resolved.case.unwrap_or_else(|| panic!("{:?}", resolved.diagnostics));
+    let case = resolved
+        .case
+        .unwrap_or_else(|| panic!("{:?}", resolved.diagnostics));
     let layers: Vec<&Package> = layers.iter().map(|n| named(n)).collect();
     let clock = clock(packages());
     let env = Env {
@@ -78,7 +85,9 @@ fn the_2009_amendment_as_a_layer_makes_the_motion_timely() {
         obligations(&base),
         ["change-frcp-base::alter-amend-period Late"]
     );
-    assert!(render(&base.diagnostics).iter().any(|d| d.contains("L4002")));
+    assert!(render(&base.diagnostics)
+        .iter()
+        .any(|d| d.contains("L4002")));
     let amended = checked(OWN, &["change-frcp-2009-amendment"]);
     assert_eq!(
         obligations(&amended),
@@ -88,7 +97,11 @@ fn the_2009_amendment_as_a_layer_makes_the_motion_timely() {
     // A layer the matter uses is only used; a layer named twice is one.
     let used = checked(
         OWN,
-        &["change-frcp-base", "change-frcp-2009-amendment", "change-frcp-2009-amendment"],
+        &[
+            "change-frcp-base",
+            "change-frcp-2009-amendment",
+            "change-frcp-2009-amendment",
+        ],
     );
     assert_eq!(used.obligations, amended.obligations);
 }

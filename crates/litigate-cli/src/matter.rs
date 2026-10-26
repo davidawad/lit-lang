@@ -189,12 +189,7 @@ fn is_error(d: &Diagnostic) -> bool {
 
 /// Checks and verifies `case` under `env` in a world of `layers`, at
 /// `at`'s dates where given.
-fn verify<'a>(
-    case: &CaseText,
-    env: Env<'a>,
-    layers: &[&'a hir::Package],
-    at: At,
-) -> VerifiedCase {
+fn verify<'a>(case: &CaseText, env: Env<'a>, layers: &[&'a hir::Package], at: At) -> VerifiedCase {
     if at.as_of.is_none() && at.known_at.is_none() && layers.is_empty() {
         return litigate_verify::verify_case_source(&case.path, &case.text, env);
     }

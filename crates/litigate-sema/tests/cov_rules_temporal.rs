@@ -244,12 +244,15 @@ fn a_superseded_deadline_is_governed_by_what_supersedes_it() {
     // Versions of one declaration disjoint per proceeding: the later one
     // supersedes the earlier, which still applies to a proceeding
     // commenced before it.
-    let own = d("u", 5, "effective [2009-12-01, ..) commenced [2009-12-01, 2012-01-01)")
-        + &d(
-            "u",
-            6,
-            "effective [2012-01-01, ..) commenced [2012-01-01, ..) supersedes u@2009-12-01",
-        );
+    let own = d(
+        "u",
+        5,
+        "effective [2009-12-01, ..) commenced [2009-12-01, 2012-01-01)",
+    ) + &d(
+        "u",
+        6,
+        "effective [2012-01-01, ..) commenced [2012-01-01, ..) supersedes u@2009-12-01",
+    );
     let filed = Expr {
         ty: Type::Unit,
         kind: ExprKind::Literal { value: Value::Unit },

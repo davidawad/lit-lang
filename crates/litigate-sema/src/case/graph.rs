@@ -53,11 +53,18 @@ impl<'a> Graph<'a> {
     /// take part in selection like a dependency's, and like a
     /// dependency's their own triggers are never replayed. A layer the
     /// matter uses is only used.
-    pub fn under(packages: Vec<&'a Package>, layers: &[&'a Package], loaded: &[&'a Package]) -> Self {
+    pub fn under(
+        packages: Vec<&'a Package>,
+        layers: &[&'a Package],
+        loaded: &[&'a Package],
+    ) -> Self {
         let mut deps: Vec<&'a Package> = Vec::new();
         for l in layers {
             let name = l.manifest.name.as_str();
-            let seen = packages.iter().chain(&deps).any(|p| p.manifest.name == name);
+            let seen = packages
+                .iter()
+                .chain(&deps)
+                .any(|p| p.manifest.name == name);
             if !seen {
                 deps.push(l);
             }

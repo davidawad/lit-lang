@@ -11,6 +11,7 @@ mod support;
 use litigate_cli::LitigateRun;
 use serde_json::{json, Value};
 use std::collections::BTreeMap;
+use std::fmt::Write as _;
 use std::path::Path;
 use support::repo;
 
@@ -28,7 +29,10 @@ fn tree(dir: &str, out: &mut BTreeMap<String, String>) {
                 todo.push(path);
             } else {
                 let rel = path.strip_prefix(&root).unwrap().to_string_lossy();
-                out.insert(rel.replace('\\', "/"), std::fs::read_to_string(&path).unwrap());
+                out.insert(
+                    rel.replace('\\', "/"),
+                    std::fs::read_to_string(&path).unwrap(),
+                );
             }
         }
     }
@@ -37,7 +41,11 @@ fn tree(dir: &str, out: &mut BTreeMap<String, String>) {
 /// The example files, `lit/core`, and `edits` (path, text) over them.
 fn files(edits: &[(&str, &str)]) -> BTreeMap<String, String> {
     let mut out = BTreeMap::new();
-    for dir in ["lit/core", "docs/litigate/examples/timelines", "docs/litigate/examples/change"] {
+    for dir in [
+        "lit/core",
+        "docs/litigate/examples/timelines",
+        "docs/litigate/examples/change",
+    ] {
         tree(dir, &mut out);
     }
     for (path, text) in edits {
@@ -53,10 +61,17 @@ fn example(path: &str) -> String {
 /// `worlds CASE --world WORLD --path docs/litigate/examples ARGS` over
 /// `files`.
 fn worlds(files: BTreeMap<String, String>, args: &[&str]) -> (LitigateRun, Value) {
-    let mut all: Vec<String> = ["worlds", CASE, "--world", WORLD, "--path", "docs/litigate/examples"]
-        .iter()
-        .map(|s| (*s).to_owned())
-        .collect();
+    let mut all: Vec<String> = [
+        "worlds",
+        CASE,
+        "--world",
+        WORLD,
+        "--path",
+        "docs/litigate/examples",
+    ]
+    .iter()
+    .map(|s| (*s).to_owned())
+    .collect();
     all.extend(args.iter().map(|s| (*s).to_owned()));
     let run = litigate_cli::execute_in_memory(files, &all);
     let json = serde_json::from_str(&run.stdout).unwrap_or(Value::Null);
@@ -168,16 +183,21 @@ fn a_varied_choice_named_like_a_layer_is_taken() {
         &["--vary", "change-frcp87-what-if"],
     );
     assert_eq!(run.code, 1, "{}", run.stdout);
-    assert!(run.stderr.contains("is in the world already"), "{}", run.stderr);
+    assert!(
+        run.stderr.contains("is in the world already"),
+        "{}",
+        run.stderr
+    );
 }
 
 #[test]
 fn more_worlds_than_the_limit_is_a_usage_error() {
     // Twelve choices (4096 worlds; eleven of layers never loaded), and
     // one more varied on the command line.
-    let choices: String = (0..11)
-        .map(|i| format!("\n[choice.c{i}]\nwithout = []\nwith = [\"l{i}\"]\n"))
-        .collect();
+    let choices = (0..11).fold(String::new(), |mut s, i| {
+        let _ = write!(s, "\n[choice.c{i}]\nwithout = []\nwith = [\"l{i}\"]\n");
+        s
+    });
     let world = format!("{}{choices}", example(WORLD));
     let (run, _) = worlds(
         files(&[(WORLD, &world)]),

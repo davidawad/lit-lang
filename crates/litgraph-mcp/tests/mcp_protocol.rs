@@ -432,22 +432,6 @@ async fn litigate_tools_are_listed_and_run_the_authoring_toolchain() -> Result<(
         "envelope: {envelope}"
     );
 
-    let worlds = call(
-        "litigate_worlds",
-        json!({
-            "case": "docs/litigate/examples/timelines/rule-59e.case",
-            "world": "docs/litigate/examples/timelines/rule-59e.world",
-            "paths": ["docs/litigate/examples"],
-        }),
-    )
-    .await?;
-    let envelope = structured(&worlds)?;
-    assert_eq!(
-        envelope["result"]["filings"][0]["worlds"],
-        json!({"timely": ["w1"], "late": ["w2"]}),
-        "envelope: {envelope}"
-    );
-
     let timeline = call(
         "litigate_timeline",
         json!({ "file": "cases/examples/acme.case" }),
@@ -470,6 +454,32 @@ async fn litigate_tools_are_listed_and_run_the_authoring_toolchain() -> Result<(
     {
         bail!("unexpected error envelope: {envelope}");
     }
+    client.cancel().await?;
+    Ok(())
+}
+
+#[tokio::test]
+async fn litigate_worlds_runs_a_matter_in_alternate_worlds() -> Result<()> {
+    let root = repo_dir("lit").join("..");
+    let client = connect_with(|cmd| {
+        cmd.current_dir(&root);
+    })
+    .await?;
+    let worlds = client
+        .call_tool(
+            CallToolRequestParams::new("litigate_worlds").with_arguments(object(json!({
+                "case": "docs/litigate/examples/timelines/rule-59e.case",
+                "world": "docs/litigate/examples/timelines/rule-59e.world",
+                "paths": ["docs/litigate/examples"],
+            }))),
+        )
+        .await?;
+    let envelope = structured(&worlds)?;
+    assert_eq!(
+        envelope["result"]["filings"][0]["worlds"],
+        json!({"timely": ["w1"], "late": ["w2"]}),
+        "envelope: {envelope}"
+    );
     client.cancel().await?;
     Ok(())
 }

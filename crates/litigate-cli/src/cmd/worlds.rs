@@ -113,7 +113,9 @@ fn widen(
         .chain(args.vary.iter().map(|n| (n, true)))
     {
         if !session.packages.iter().any(|p| &p.name == name) {
-            return Err(Failure::new(format!("layer `{name}` is not a loaded package")));
+            return Err(Failure::new(format!(
+                "layer `{name}` is not a loaded package"
+            )));
         }
         let taken = world.layers.contains(name)
             || world.choices.contains_key(name)
@@ -123,7 +125,7 @@ fn widen(
                 "layer `{name}` is in the world already"
             )));
         }
-        at.entry(name.clone()).or_insert_with(TextRange::default);
+        at.entry(name.clone()).or_default();
         if vary {
             let options = [
                 ("without".to_owned(), BTreeSet::new()),
@@ -294,6 +296,47 @@ impl Query<'_> {
     }
 }
 
+impl Query<'_> {
+    /// Each filing with the worlds of each outcome, and the worlds grouped
+    /// by identical outcomes, from `runs` of the worlds `ids`.
+    fn outcomes(&self, runs: &[Run], ids: &[&str]) -> (Vec<Value>, Vec<Value>) {
+        let per_filing = self
+            .filings
+            .iter()
+            .enumerate()
+            .map(|(i, f)| {
+                let mut by: BTreeMap<Timeliness, Vec<&str>> = BTreeMap::new();
+                for (run, id) in runs.iter().zip(ids) {
+                    by.entry(run.fates[i]).or_default().push(id);
+                }
+                json!({
+                    "key": f.key, "date": f.event.date, "party": f.event.party,
+                    "event": crate::hirx::event_text(&f.event.action),
+                    "worlds": by.iter()
+                        .map(|(t, w)| (json!(t).as_str().unwrap_or_default().to_owned(), json!(w)))
+                        .collect::<serde_json::Map<_, _>>(),
+                })
+            })
+            .collect();
+        let mut classes: BTreeMap<&[Timeliness], Vec<&str>> = BTreeMap::new();
+        for (run, id) in runs.iter().zip(ids) {
+            classes.entry(run.fates.as_slice()).or_default().push(id);
+        }
+        let outcomes = classes
+            .iter()
+            .map(|(fates, worlds)| {
+                json!({
+                    "worlds": worlds,
+                    "filings": self.filings.iter().zip(fates.iter())
+                        .map(|(f, t)| (f.key.clone(), json!(t)))
+                        .collect::<serde_json::Map<_, _>>(),
+                })
+            })
+            .collect();
+        (per_filing, outcomes)
+    }
+}
+
 /// A report of `diagnostics` only: the query could not run.
 fn failed(session: &Session, extra: (String, String), diagnostics: Vec<Diagnostic>) -> Report {
     Report {
@@ -302,6 +345,28 @@ fn failed(session: &Session, extra: (String, String), diagnostics: Vec<Diagnosti
         diagnostics,
         ..Report::default()
     }
+}
+
+/// The errors that stop the query: of a package in `scope`, of the world
+/// file's own world, and the matter's own syntax, resolution, pins and
+/// types (L0xxx-L2xxx), the same in every world since layers change only
+/// which law governs.
+fn errors(c: &crate::Checked, scope: &BTreeSet<String>) -> Vec<Diagnostic> {
+    let packages = c
+        .verdicts
+        .iter()
+        .filter(|(name, _)| scope.contains(name))
+        .flat_map(|(_, v)| v.diagnostics.iter());
+    let matter = c.cases[0]
+        .diagnostics
+        .iter()
+        .filter(|d| d.code.as_str().as_bytes()[1] <= b'2');
+    packages
+        .chain(&c.worlds[0].diagnostics)
+        .chain(matter)
+        .filter(|d| is_error(d))
+        .cloned()
+        .collect()
 }
 
 /// `litigate worlds`.
@@ -316,7 +381,6 @@ pub fn worlds(src: &dyn Source, args: &Args) -> Outcome {
     let session = &c.session;
     let file = session.worlds[0].clone();
     let source = (file.path.clone(), file.text.clone());
-    let base = &c.worlds[0];
     let base_case = &c.cases[0];
     let (mut world, mut at) = parse_world(&file.text).unwrap_or_default();
     widen(session, &mut world, &mut at, args)?;
@@ -327,32 +391,16 @@ pub fn worlds(src: &dyn Source, args: &Args) -> Outcome {
         .chain(choice::layers(&world.choices))
         .cloned();
     scope.extend(session.closure(layer_names));
-    let errors: Vec<Diagnostic> = c
-        .verdicts
-        .iter()
-        .filter(|(name, _)| scope.contains(name))
-        .flat_map(|(_, v)| v.diagnostics.iter().filter(|d| is_error(d)).cloned())
-        .chain(base.diagnostics.iter().filter(|d| is_error(d)).cloned())
-        .collect();
     let Some(case) = base_case.case.as_ref() else {
         return Ok(failed(session, source, base_case.diagnostics.clone()));
     };
-    // The matter's own syntax, resolution, pins and types (L0xxx-L2xxx)
-    // are the same in every world: layers change only which law governs.
-    let mut errors = errors;
-    errors.extend(
-        base_case
-            .diagnostics
-            .iter()
-            .filter(|d| is_error(d) && d.code.as_str().as_bytes()[1] <= b'2')
-            .cloned(),
-    );
+    let errors = errors(&c, &scope);
     if !errors.is_empty() {
         return Ok(failed(session, source, errors));
     }
     let all = session.hir_of(&scope);
-    let spans = litigate_sema::case::resolve(&base_case.path, &session.cases[0].text, &all, None)
-        .spans;
+    let spans =
+        litigate_sema::case::resolve(&base_case.path, &session.cases[0].text, &all, None).spans;
     let query = Query {
         session,
         case: &session.cases[0],
@@ -376,38 +424,7 @@ pub fn worlds(src: &dyn Source, args: &Args) -> Outcome {
     );
     let runs: Vec<Run> = alternates.iter().map(|a| query.run(a)).collect();
     let ids: Vec<&str> = alternates.iter().map(|a| a.id.as_str()).collect();
-    let per_filing: Vec<Value> = query
-        .filings
-        .iter()
-        .enumerate()
-        .map(|(i, f)| {
-            let mut by: BTreeMap<Timeliness, Vec<&str>> = BTreeMap::new();
-            for (run, id) in runs.iter().zip(&ids) {
-                by.entry(run.fates[i]).or_default().push(id);
-            }
-            json!({
-                "key": f.key, "date": f.event.date, "party": f.event.party,
-                "event": crate::hirx::event_text(&f.event.action),
-                "worlds": by.iter().map(|(t, w)| (json!(t).as_str().unwrap_or_default().to_owned(), json!(w)))
-                    .collect::<serde_json::Map<_, _>>(),
-            })
-        })
-        .collect();
-    let mut classes: BTreeMap<&[Timeliness], Vec<&str>> = BTreeMap::new();
-    for (run, id) in runs.iter().zip(&ids) {
-        classes.entry(run.fates.as_slice()).or_default().push(id);
-    }
-    let outcomes: Vec<Value> = classes
-        .iter()
-        .map(|(fates, worlds)| {
-            json!({
-                "worlds": worlds,
-                "filings": query.filings.iter().zip(fates.iter())
-                    .map(|(f, t)| (f.key.clone(), json!(t)))
-                    .collect::<serde_json::Map<_, _>>(),
-            })
-        })
-        .collect();
+    let (per_filing, outcomes) = query.outcomes(&runs, &ids);
     let result = json!({
         "case": case.id,
         "world": file.path,

@@ -2038,6 +2038,10 @@ family = "district-civil"    # a [family.*] id of core
 court = "d-sdny"             # optional
 circuit = "ca2"              # required when the family's precedent has @circuit; one of its circuits
 judge = "..."                # optional
+
+[choice.rule-59e-2009]       # optional choice points (below)
+without = []                 # option name = set of layers
+with = ["pkg-c"]
 ```
 
 Unknown keys are rejected. `as_of` and `known_at` are query coordinates,
@@ -2072,6 +2076,34 @@ world's layers resolve among the loaded packages, else among the library
 packages (`--lib`, default `lit`, and the nearest `lit` above the world
 file). Its result adds `worlds: [{path, world, layers: [{name, version,
 class, in_force, overruled_by?}]}]` when any world was checked.
+
+**Choice points and alternate timelines** (lg-fq2.4; CHANGE.md §5.1).
+A `[choice.ID]` table names options, each a set of layers; the world
+spans one alternate world per combination (one option at every choice
+point): its own `layers` plus the options'. A choice with fewer than two
+options, an option naming one of the world's own layers or another
+choice's, two options of one choice with the same layers, or more than
+4096 combinations is L1013; an option's layer that is not loaded is L1013
+(`check`), and `check` checks the world its own `layers` make. `litigate
+worlds CASE --world FILE` (`--path` loads more packages; `--layer NAME`
+adds a layer to every world, `--vary NAME` makes it a choice point of its
+own, `without`/`with`) replays the matter in each world at `--as-of` and
+`--known-at` (the matter's own by default): the world's layers in force
+there join the law the matter's packages see, with their dependencies
+(their versions, supersessions, overrides, exceptions and grants take part
+in selection; a layer's own deadlines are replayed only in a matter that
+`uses` it). A layer is in force unless it is a precedent that does not
+bind at ι with binding effects, or a precedent an overruling of the world
+withdraws from a date on or before `as_of`, recorded by `known_at`
+(Harper: to every case still open). Each filing (an event `by` a party)
+is, in each world: `timely` (it discharged every deadline it answered),
+`late` (L4002), `unjudged` (a due date unknown or not countable at
+`known_at`), `rejected` (another replay error at its event), `untimed` (it
+answered no deadline), or `undetermined` (the world's own law is in
+error, L1014 or L3003, so nothing is judged there). Worlds with the same
+outcome for every filing are grouped. The worlds are enumerated
+exhaustively by the checker itself, each the stratified model of §5.4 and
+§5.5; no solver is involved.
 
 ## 6. Types and permitted operations
 
@@ -2791,6 +2823,7 @@ All commands accept `--format json|human` (default `human` on a TTY, else
 | `timeline` | `FILE` (`.case` or `.lit`), `--as-of`, `--known-at`, `--layers ID,+ID,-ID`, `--world ID` | a `litigate.timeline/1` document ([TIMELINE.md](TIMELINE.md), schema `timeline.v1.schema.json`) |
 | `calendar` | `CASE`, `--out FILE`, `--all`, `--remind DAYS` (repeatable) | `{case, as_of, written, events:[{uid, deadline, due, status, trigger, trigger_date, authority, counting, counting_cite}], unscheduled:[{deadline, trigger, trigger_date, status, reason}], ics}`: one all-day RFC 5545 `VEVENT` per deadline with a computed due date (open ones unless `--all`), `UID` a hash of case, deadline, trigger and trigger date, `DTSTAMP` the matter's `as_of`; an unknown due date is never given one. A matter with errors has no calendar |
 | `lint-filing` | `CASE EVENT`, `--date DATE`, `--by PARTY` \| `--on PARTY` | `{case, filing:{date, event, mode, party, line}, as_of, accepted, replay, discharges, triggers, open_before}`: the matter replayed with `DATE EVENT by\|on PARTY` spliced into `events` in docket order and `as_of` moved to `DATE` when later. Diagnostics are every error of the matter with the filing (L4001 not a legal move, L4002 late, ...) and the warnings it adds, less the L9006 of the spliced line (which cannot declare an id); the matter must check clean without it. Each `open_before` obligation carries `moves {file, extend, orders}`, what protects it on `DATE`: `file`, the `{edge, event}` of each edge out of the replayed posture `within` its deadline; `extend`, each non-lock grant of the version counting it as `{by, standard, window, request, until}` (`window` `before_expiry`, `after_expiry` or `any`; `request` the `on M()` pattern; `until` a bounded grant's bound); `orders`, the events declaring `extends` it. Text that is not one event is a usage failure |
+| `worlds` | `CASE`, `--world FILE`, `--path PATH` (repeatable), `--layer NAME` (repeatable), `--vary NAME` (repeatable), `--as-of`, `--known-at` | `{case, world, modality, location, choices, as_of, known_at, worlds:[{id, choices, layers:[{name, version, class, in_force, overruled_by}], lawful, filings:{key: timeliness}, deadlines:[{deadline, trigger, trigger_date, due, status}], diagnostics}], filings:[{key, date, party, event, worlds:{timeliness:[id]}}], outcomes:[{worlds, filings}]}` (§5.8): the matter in every world the file spans. A late filing is an outcome, never an envelope error; the envelope fails only for the world file, a package in scope, or the matter's own L0xxx-L2xxx errors. Runs over an in-memory source too (wasm) |
 | `diff` | `A B` (generated or expected JSON files or package dirs), `--as-of` | `{equal, changes:[{pointer, before, after}]}` per §8.6 |
 | `query` | `KIND` (`nodes\|edges\|deadlines\|holes\|cites\|versions`), `--match TEXT`, `--limit N`, `--cursor C` | `{matches:[{id, kind, span, cite, in_force}], next_cursor}` |
 | `import` | `JSON...`, `--out DIR` | `{files:[{path, from}], warnings}`; output must round-trip under §8.6 (L6002 otherwise) |

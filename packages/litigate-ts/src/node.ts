@@ -7,17 +7,17 @@ export * from "./index.js";
 
 let bindings: LitgraphWasm | undefined;
 
-/** The litgraph-wasm module (wasm/node), loaded once. */
+/** The litigate-wasm module (wasm/node), loaded once. */
 export function nodeBindings(): LitgraphWasm {
   if (bindings === undefined) {
-    const module: unknown = createRequire(import.meta.url)("../wasm/node/litgraph_wasm.js");
-    if (!isLitgraphWasm(module)) throw new Error("wasm/node/litgraph_wasm.js is not a litgraph-wasm build");
+    const module: unknown = createRequire(import.meta.url)("../wasm/node/litigate_wasm.js");
+    if (!isLitgraphWasm(module)) throw new Error("wasm/node/litigate_wasm.js is not a litigate-wasm build");
     bindings = module;
   }
   return bindings;
 }
 
-/** A client over the embedded packs, or over `packs`. */
+/** A client over the compiled embedded sources, or over `packs`. */
 export function loadNode(packs?: PackSet): Litgraph {
   return new Litgraph(nodeBindings(), packs);
 }

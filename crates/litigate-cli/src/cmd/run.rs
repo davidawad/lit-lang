@@ -101,6 +101,15 @@ pub(crate) struct Compiled {
     pub packs: Vec<String>,
 }
 
+/// The package names the matters at `cases` in `src` use.
+fn used_by(src: &dyn Source, cases: &[std::path::PathBuf]) -> BTreeSet<String> {
+    cases
+        .iter()
+        .filter_map(|p| src.read_to_string(p).ok())
+        .flat_map(|t| crate::ws::uses_of(&t))
+        .collect()
+}
+
 /// Check `paths` (matters and packages) in `src` and lower what they name
 /// into one catalog; `links` also loads the links packages composing two or more
 /// packages the matters use. The scope is the closure of what the matters
@@ -118,12 +127,7 @@ pub(crate) fn compile(
     lib: &[String],
 ) -> Result<Compiled, Failure> {
     let mut targets = crate::ws::discover_in(src, paths)?;
-    let used: BTreeSet<String> = targets
-        .cases
-        .iter()
-        .filter_map(|p| src.read_to_string(p).ok())
-        .flat_map(|t| crate::ws::uses_of(&t))
-        .collect();
+    let used = used_by(src, &targets.cases);
     if links {
         // Links compose between whichever packs are loaded, as `links.json` does.
         targets.packages.extend(crate::ws::links_packages_in(

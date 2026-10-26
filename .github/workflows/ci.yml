@@ -244,18 +244,18 @@ jobs:
       - uses: taiki-e/install-action@v2
         with:
           tool: wasm-bindgen-cli@0.2.127
-      - run: cargo build --release -p litgraph-wasm --target wasm32-unknown-unknown
+      - run: cargo build --release -p litigate-wasm --target wasm32-unknown-unknown
       - run: |
           mkdir -p dist/wasm/web dist/wasm/node
-          wasm-bindgen --target web --out-dir dist/wasm/web target/wasm32-unknown-unknown/release/litgraph_wasm.wasm
-          wasm-bindgen --target nodejs --out-dir dist/wasm/node target/wasm32-unknown-unknown/release/litgraph_wasm.wasm
+          wasm-bindgen --target web --out-dir dist/wasm/web target/wasm32-unknown-unknown/release/litigate_wasm.wasm
+          wasm-bindgen --target nodejs --out-dir dist/wasm/node target/wasm32-unknown-unknown/release/litigate_wasm.wasm
       - uses: actions/setup-node@v7
         with:
           node-version: "22"
       - name: wasm smoke test
         run: |
           node -e "
-            const m = require('./dist/wasm/node/litgraph_wasm.js');
+            const m = require('./dist/wasm/node/litigate_wasm.js');
             const r = JSON.parse(m.handle(JSON.stringify({packs:['cofc'],op:{op:'solve'}})));
             if (!r.ok) { console.error(r); process.exit(1); }
             console.log('wasm smoke ok');

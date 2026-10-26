@@ -1,13 +1,15 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-// `litigate check` and `litigate build` over an in-memory file tree, through
-// litgraph-wasm's `litigate` binding: the CLI's arguments and envelope, with
-// files passed in (and `build`'s outputs handed back) instead of a disk.
+// The `litigate` CLI over an in-memory file tree, through litigate-wasm's
+// `litigate` binding: `check`, `build`, `run`, the op subcommands and
+// `engine`, with the CLI's arguments and envelope, files passed in (and
+// `build`'s outputs handed back) instead of a disk.
 import type { LitigateEnvelope, LitigateRun, Profile } from "./generated/schemas.js";
 
-/** The litgraph-wasm functions this module calls. */
+/** The litigate-wasm functions this module calls. */
 export interface LitigateWasm {
   litigate(args_json: string, files_json: string, with_library: boolean): string;
   litigate_library(): string;
+  litigate_cases(): string;
 }
 
 /** Files by repository-relative POSIX path (`lit/frcp/Lit.toml`, `cases/x.case`, ...) to text. */
@@ -66,8 +68,9 @@ export class Litigate {
 
   /**
    * Runs `litigate ARGS` (no program name) over `files`, exactly as the
-   * CLI over a disk holding them. Only `check`, `build` and `worlds`
-   * (alternate timelines) run.
+   * CLI over a disk holding them. `check`, `build`, `worlds` (alternate
+   * timelines), `run`, the op subcommands (`solve`, `chain`, ...) and
+   * `engine` run; any other command exits 1.
    */
   run(args: readonly string[], files: Files = {}, library = true): LitigateRun {
     const json = this.#wasm.litigate(JSON.stringify(args), JSON.stringify(files), library);
@@ -89,6 +92,11 @@ export class Litigate {
   /** The `lit/` library embedded in the wasm, by path. */
   library(): Files {
     return parse<Record<string, string>>(this.#wasm.litigate_library());
+  }
+
+  /** The `cases/` matters embedded in the wasm, by path. */
+  cases(): Files {
+    return parse<Record<string, string>>(this.#wasm.litigate_cases());
   }
 
   #envelope(args: readonly string[], options: CheckOptions): LitigateResult {

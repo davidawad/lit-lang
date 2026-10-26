@@ -40,11 +40,12 @@ full_triggers='^(Cargo\.lock|Cargo\.toml|justfile|rust-toolchain(\.toml)?|clippy
 # Top-level directories outside any package that a package's build.rs
 # embeds (its cargo:rerun-if-changed inputs): crates/litgraph-packs builds
 # lit/ and cases/ with packs/clock; crates/litgraph-wasm embeds lit/;
+# crates/litigate-wasm embeds lit/ and cases/;
 # crates/litigate-engine embeds packs/clock, calibration/ and sources/ and
 # its tests read tests/ (golden and story snapshots).
 build_inputs='{
-  "lit/": ["litgraph-packs", "litgraph-wasm"],
-  "cases/": ["litgraph-packs"],
+  "lit/": ["litgraph-packs", "litgraph-wasm", "litigate-wasm"],
+  "cases/": ["litgraph-packs", "litigate-wasm"],
   "packs/": ["litgraph-packs", "litigate-engine"],
   "calibration/": ["litigate-engine"],
   "sources/": ["litigate-engine"],

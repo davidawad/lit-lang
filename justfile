@@ -205,22 +205,24 @@ docker-smoke: docker-build
 
 # --- wasm --------------------------------------------------------------
 
-# Build litgraph-wasm for the browser and Node targets into dist/wasm/.
-# Packs are embedded in the wasm binary (same build.rs as the CLI), so no
-# LITGRAPH_PACKS/packs-dir setup is needed at runtime.
+# Build litigate-wasm, the compiler and engine as WebAssembly, for the
+# browser and Node targets into dist/wasm/. lit/ and cases/ are embedded
+# as source and compiled in-process, so no packs-dir setup is needed at
+# runtime.
 wasm:
-    cargo build --release -p litgraph-wasm --target wasm32-unknown-unknown
+    cargo build --release -p litigate-wasm --target wasm32-unknown-unknown
     mkdir -p dist/wasm/web dist/wasm/node
-    wasm-bindgen --target web --out-dir dist/wasm/web target/wasm32-unknown-unknown/release/litgraph_wasm.wasm
-    wasm-bindgen --target nodejs --out-dir dist/wasm/node target/wasm32-unknown-unknown/release/litgraph_wasm.wasm
+    wasm-bindgen --target web --out-dir dist/wasm/web target/wasm32-unknown-unknown/release/litigate_wasm.wasm
+    wasm-bindgen --target nodejs --out-dir dist/wasm/node target/wasm32-unknown-unknown/release/litigate_wasm.wasm
 
-# Build the Node target and run one solve through it.
+# Build the Node target, then compile a matter and solve it, and run one
+# engine request, through it.
 wasm-smoke: wasm
-    node -e "const m=require('./dist/wasm/node/litgraph_wasm.js'); const r=JSON.parse(m.handle(JSON.stringify({packs:['cofc'],op:{op:'solve'}}))); if(!r.ok){console.error(r);process.exit(1)} console.log('wasm smoke ok')"
+    node -e "const m=require('./dist/wasm/node/litigate_wasm.js'); const run=JSON.parse(m.litigate(JSON.stringify(['solve','cases/frcp-civil-case.case']), m.litigate_cases(), true)); const r=JSON.parse(m.handle(JSON.stringify({packs:['cofc'],op:{op:'solve'}}))); if(run.code!==0||!r.ok){console.error(run,r);process.exit(1)} console.log('wasm smoke ok')"
 
 # --- typescript (packages/litigate-ts) ---------------------------------------
 # @litgraph/litigate-ts: types generated from the Rust schemas plus a typed
-# client over litgraph-wasm. Needs node >= 20 and npm (and, for ts-build /
+# client over litigate-wasm. Needs node >= 20 and npm (and, for ts-build /
 # ts-test, the wasm toolchain `just wasm` needs).
 
 ts_pkg := "packages/litigate-ts"
@@ -238,7 +240,7 @@ ts-gen: ts-install
     cargo run -q -p litgraph-schema-bundle > {{ts_pkg}}/schema/litgraph.schema.json
     cd {{ts_pkg}} && npm run --silent gen
 
-# Build litgraph-wasm into the package (wasm/node, wasm/web), then compile
+# Build litigate-wasm into the package (wasm/node, wasm/web), then compile
 # the TypeScript to dist/. The package is ESM and wasm-bindgen's nodejs
 # target is CommonJS, so wasm/node gets its own package.json.
 ts-build: wasm ts-gen
@@ -249,12 +251,13 @@ ts-build: wasm ts-gen
     cd {{ts_pkg}} && npm run --silent build
 
 # Unit, type-level, and golden tests (every built scenarios/*.json, from
-# `lit-sync`'s target/lit-build/, through wasm against the native `litgraph`
-# CLI, and `litigate check`/`build` over lit/ and cases/ in memory against
-# the native `litigate` CLI, both built here).
+# `lit-sync`'s target/lit-build/, through the wasm's own compile of lit/
+# and cases/ against the native `litigate engine` over that build, and
+# `litigate check`/`build`/ops/`engine` over lit/ and cases/ in memory
+# against the native `litigate` CLI, built here).
 ts-test: ts-build lit-sync
-    cargo build -q -p litgraph-cli -p litigate-cli
-    cd {{ts_pkg}} && LITGRAPH_BIN="$(cd ../.. && pwd)/target/debug/litgraph" LITIGATE_BIN="$(cd ../.. && pwd)/target/debug/litigate" npm test
+    cargo build -q -p litigate-cli
+    cd {{ts_pkg}} && LITIGATE_BIN="$(cd ../.. && pwd)/target/debug/litigate" npm test
 
 # --- nix ---------------------------------------------------------------
 

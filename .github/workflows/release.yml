@@ -106,24 +106,24 @@ jobs:
       - uses: taiki-e/install-action@v2
         with:
           tool: wasm-bindgen-cli@0.2.127
-      - run: cargo build --release --locked -p litgraph-wasm --target wasm32-unknown-unknown
+      - run: cargo build --release --locked -p litigate-wasm --target wasm32-unknown-unknown
       - name: package
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p dist/wasm/web dist/wasm/node
-          wasm-bindgen --target web --out-dir dist/wasm/web target/wasm32-unknown-unknown/release/litgraph_wasm.wasm
-          wasm-bindgen --target nodejs --out-dir dist/wasm/node target/wasm32-unknown-unknown/release/litgraph_wasm.wasm
-          tar -C dist/wasm/web -czf dist/litgraph-wasm-web.tar.gz .
-          tar -C dist/wasm/node -czf dist/litgraph-wasm-node.tar.gz .
-          ( cd dist && shasum -a 256 litgraph-wasm-web.tar.gz litgraph-wasm-node.tar.gz > litgraph-wasm.sha256 )
+          wasm-bindgen --target web --out-dir dist/wasm/web target/wasm32-unknown-unknown/release/litigate_wasm.wasm
+          wasm-bindgen --target nodejs --out-dir dist/wasm/node target/wasm32-unknown-unknown/release/litigate_wasm.wasm
+          tar -C dist/wasm/web -czf dist/litigate-wasm-web.tar.gz .
+          tar -C dist/wasm/node -czf dist/litigate-wasm-node.tar.gz .
+          ( cd dist && shasum -a 256 litigate-wasm-web.tar.gz litigate-wasm-node.tar.gz > litigate-wasm.sha256 )
       - uses: actions/upload-artifact@v7
         with:
-          name: litgraph-wasm
+          name: litigate-wasm
           path: |
-            dist/litgraph-wasm-web.tar.gz
-            dist/litgraph-wasm-node.tar.gz
-            dist/litgraph-wasm.sha256
+            dist/litigate-wasm-web.tar.gz
+            dist/litigate-wasm-node.tar.gz
+            dist/litigate-wasm.sha256
 
   github-release:
     needs: [binaries, wasm]
@@ -151,7 +151,7 @@ jobs:
           files: |
             dist/*.tar.gz
             dist/*.tar.gz.sha256
-            dist/litgraph-wasm.sha256
+            dist/litigate-wasm.sha256
             dist/LITLOCK-ROOTS
           generate_release_notes: true
 

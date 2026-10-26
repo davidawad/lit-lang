@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-// A thin typed layer over the litgraph-wasm bindings: the same JSON
-// request/response contract as `litgraph q`, with requests and responses
-// typed by the generated schemas.
+// A thin typed layer over the litigate-wasm bindings (the compiler and
+// engine as WebAssembly): the same JSON request/response contract as
+// `litigate engine q`, with requests and responses typed by the generated
+// schemas.
 import type {
   ApiError,
   ClockLibrary,
@@ -14,7 +15,7 @@ import type {
 import { Litigate, type LitigateWasm } from "./litigate.js";
 import type { ErrorResponse, OkResponse, OpArgs, OpName, OpOf, SchemaKind, ValidateKind } from "./types.js";
 
-/** The functions crates/litgraph-wasm exports (wasm-bindgen output). */
+/** The functions crates/litigate-wasm exports (wasm-bindgen output). */
 export interface LitgraphWasm extends LitigateWasm {
   handle(request_json: string): string;
   handle_with_packs(request_json: string, packs_json: string): string;
@@ -23,15 +24,24 @@ export interface LitgraphWasm extends LitigateWasm {
   describe(): string;
 }
 
-const exported = ["handle", "handle_with_packs", "validate", "schema", "describe", "litigate", "litigate_library"] as const;
+const exported = [
+  "handle",
+  "handle_with_packs",
+  "validate",
+  "schema",
+  "describe",
+  "litigate",
+  "litigate_library",
+  "litigate_cases",
+] as const;
 
-/** True when `module` exports every litgraph-wasm function. */
+/** True when `module` exports every litigate-wasm function. */
 export function isLitgraphWasm(module: unknown): module is LitgraphWasm {
   if (typeof module !== "object" || module === null) return false;
   return exported.every((name) => typeof Reflect.get(module, name) === "function");
 }
 
-/** Packs to run against instead of the embedded ones. */
+/** Packs to run against instead of the compiled embedded ones. */
 export interface PackSet {
   /** File name (`my-pack.json`) to pack. */
   readonly packs: Readonly<Record<string, Pack>>;
@@ -84,11 +94,16 @@ export function unwrap(response: Response): unknown {
 /** Request fields other than the scenario and op. */
 export type RequestOptions = Omit<Request, "scenario" | "op">;
 
-/** A litgraph engine over one set of packs (the embedded ones by default). */
+/**
+ * The engine over one set of packs: by default the packs and named
+ * scenarios the wasm compiles, in-process, from its embedded `lit/` and
+ * `cases/` source (once per instance), as `litigate engine` at the
+ * repository root.
+ */
 export class Litgraph {
   readonly #wasm: LitgraphWasm;
   readonly #packs: string | undefined;
-  /** `litigate check`/`build` over in-memory files, through the same bindings. */
+  /** The `litigate` CLI (check, build, run, op subcommands, engine) over in-memory files, through the same bindings. */
   readonly litigate: Litigate;
 
   constructor(wasm: LitgraphWasm, packs?: PackSet) {
@@ -102,7 +117,7 @@ export class Litgraph {
     return new Litgraph(this.#wasm, packs);
   }
 
-  /** A raw request JSON string in, the response JSON string out, exactly as `litgraph q`. */
+  /** A raw request JSON string in, the response JSON string out, exactly as `litigate engine q`. */
   runJson(request: string): string {
     return this.#packs === undefined
       ? this.#wasm.handle(request)
@@ -132,19 +147,19 @@ export class Litgraph {
     return this.op("chain", {}, scenario, options);
   }
 
-  /** The machine-readable manual (`litgraph describe`), always over the embedded packs. */
+  /** The machine-readable manual (`litigate engine describe`), always over the compiled embedded sources. */
   describe(): Response {
     return parse<Response>(this.#wasm.describe());
   }
 
-  /** Validates a document; `kind` forces its kind, else it is detected. Embedded packs only. */
+  /** Validates a document; `kind` forces its kind, else it is detected. Compiled embedded sources only. */
   validate(document: unknown, kind?: ValidateKind): Validation {
     const out = parse<Validation | Response>(this.#wasm.validate(JSON.stringify(document), kind ?? null));
     if ("ok" in out) throw new LitgraphError(out);
     return out;
   }
 
-  /** The JSON Schema (draft 2020-12) litgraph publishes for `kind`. */
+  /** The JSON Schema (draft 2020-12) the engine publishes for `kind`. */
   schema(kind: SchemaKind): Readonly<Record<string, unknown>> {
     const json = this.#wasm.schema(kind);
     const out = parse<Readonly<Record<string, unknown>>>(json);

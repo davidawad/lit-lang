@@ -4,7 +4,7 @@ import { loadNode } from "../src/node.js";
 import { isError, loadWeb } from "../src/web.js";
 
 it("loads the web build from bytes and agrees with the node build", async () => {
-  const bytes = readFileSync(new URL("../wasm/web/litgraph_wasm_bg.wasm", import.meta.url));
+  const bytes = readFileSync(new URL("../wasm/web/litigate_wasm_bg.wasm", import.meta.url));
   const web = await loadWeb({ module_or_path: bytes });
   const request = JSON.stringify({ scenario: "cofc-bid-protest", op: { op: "solve" } });
   const strip = (json: string): unknown => ({ ...JSON.parse(json), elapsed_ms: 0 });

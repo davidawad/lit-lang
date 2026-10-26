@@ -48,6 +48,7 @@ function fake(reply: string): LitgraphWasm & { calls: string[][] } {
       return reply;
     },
     litigate_library: answer("litigate_library"),
+    litigate_cases: answer("litigate_cases"),
   };
 }
 
@@ -61,7 +62,7 @@ const failed: Response = {
 };
 
 describe("bindings", () => {
-  it("recognizes a litgraph-wasm module", () => {
+  it("recognizes a litigate-wasm module", () => {
     expect(isLitgraphWasm(nodeBindings())).toBe(true);
     expect(nodeBindings()).toBe(nodeBindings());
     expect(isLitgraphWasm(null)).toBe(false);

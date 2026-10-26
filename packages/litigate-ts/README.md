@@ -1,15 +1,18 @@
 # @litgraph/litigate-ts
 
-A typed TypeScript client for the litgraph engine, compiled to WebAssembly
-(`crates/litgraph-wasm`). The JSON contract is the one `litgraph q` uses:
-the request goes in, `{ok, api_version, op, result, warnings, provenance,
-elapsed_ms}` comes out, and errors arrive as `ok: false` in the response
-rather than as exceptions. See `AGENTS.md`.
+A typed TypeScript client for the litigate compiler and engine, compiled
+to WebAssembly (`crates/litigate-wasm`). The wasm embeds the repository's
+`lit/` and `cases/` as source and compiles them in-process (once per
+instance) into the packs and named scenarios it serves. The JSON contract
+is the one `litigate engine q` uses: the request goes in, `{ok,
+api_version, op, result, warnings, provenance, elapsed_ms}` comes out, and
+errors arrive as `ok: false` in the response rather than as exceptions.
+See `AGENTS.md`.
 
 ```ts
 import { loadNode, unwrap } from "@litgraph/litigate-ts/node"; // or "@litgraph/litigate-ts/web" + await loadWeb()
 
-const lg = loadNode();                                   // the packs and scenario library built into the wasm
+const lg = loadNode();                                   // the packs and scenario library compiled from lit/ and cases/
 const r = lg.solve("cofc-1498-patent-case");             // Response
 const sim = lg.op("simulate", { runs: 500, seed: 1 }, { extends: "frcp-civil-case", params: { rate: 900 } });
 const mine = lg.withPacks({ packs: { "my.json": myPack }, links: myLinks }).chain();
@@ -47,29 +50,32 @@ structs in Rust and the types will follow.
 | --- | --- |
 | `just ts-gen` | generate `schema/` and `src/generated/` (gitignored) |
 | `just ts-build` | `just wasm`, copy it into `wasm/{node,web}`, `tsc` to `dist/` |
-| `just ts-test` | `ts-build`, build the native `litgraph`, then `tsc` + `vitest --typecheck` |
+| `just ts-test` | `ts-build`, build the native `litigate`, then `tsc` + `vitest --typecheck` |
 
 Tests: `test/client.test.ts` (unit, over fake and real bindings, plus a
 check that `src/` has no `any`), `test/golden.test.ts` (every
 named scenario, as `just lit-sync` builds it into `target/lit-build/`,
 through wasm, by name and inline, for `solve`, `chain`
 and a seeded `simulate`, plus `validate`, compared exactly with the native
-CLI output apart from `elapsed_ms`), `test/litigate.test.ts` (`litigate
-check`/`build` in memory against the native `litigate` CLI),
+`litigate engine` output over that build apart from `elapsed_ms`),
+`test/litigate.test.ts` (`litigate check`/`build`/ops/`engine` in memory
+against the native `litigate` CLI),
 `test/web.test.ts` (the web build),
 and `test/types.test-d.ts` (type-level, `expect-type` via vitest).
 
 Toolchain: Node >= 20 (CI and development used Node 22), npm, the
 `wasm32-unknown-unknown` Rust target, and `wasm-bindgen-cli` 0.2.127 (the
-version `crates/litgraph-wasm` pins). Dev dependencies are pinned in
+version `crates/litigate-wasm` pins). Dev dependencies are pinned in
 `package-lock.json`.
 
-## litigate check/build in wasm
+## The litigate CLI in wasm
 
-`lg.litigate` runs `litigate check` and `litigate build` over an in-memory
-file tree: the same arguments, envelope (`LitigateEnvelope`) and exit code
-as the native CLI over a disk holding those files, with `build`'s outputs
-handed back instead of written.
+`lg.litigate` runs `litigate check`, `build`, `run`, the op subcommands
+(`solve`, `chain`, ...) and `engine` over an in-memory file tree: the same
+arguments, envelope (`LitigateEnvelope`) and exit code as the native CLI
+over a disk holding those files, with `build`'s outputs handed back
+instead of written. An op compiles the matter or package it names, and
+the packages it uses, in-process, then runs the engine on the result.
 
 ```ts
 const lit = loadNode().litigate;
@@ -80,20 +86,25 @@ checked.envelope?.diagnostics;               // Diagnostic[]
 const built = lit.build(["lit/frcp", "cases"], { files, out: "out" });
 built.files["out/packs/frcp-civil-procedure.json"];  // every file the CLI would write under --out
 lit.library();                               // the embedded lit/ library, by path
-lit.run(["--format", "human", "check", "cases"], files);  // raw LitigateRun {code, stdout, stderr, files}
+lit.cases();                                 // the embedded cases/ matters, by path
+lit.run(["solve", "cases/my.case"], files);  // compile the matter, solve it: raw LitigateRun {code, stdout, stderr, files}
+lit.run(["engine", "q", JSON.stringify(request)], files);  // a raw engine request over files' compiled lit/ and cases/
 ```
 
-- The repository's `lit/` library is embedded in the wasm (by
-  `crates/litgraph-wasm/build.rs`); it fills in every `lit/` path `files`
-  does not give, so a matter's `uses` resolve. Pass `library: false` to
-  check only what you pass.
-- Only `check`, `build` and `worlds` (alternate timelines,
-  docs/litigate/CHANGE.md §5.1) run; any other command exits 1.
+- The repository's `lit/` library and `cases/` matters are embedded in
+  the wasm (by `crates/litigate-wasm/build.rs`); the library fills in
+  every `lit/` path `files` does not give, so a matter's `uses` resolve.
+  Pass `library: false` to check only what you pass.
+- Only `check`, `build`, `worlds` (alternate timelines,
+  docs/litigate/CHANGE.md §5.1), `run`, the op subcommands and `engine`
+  run; any other command exits 1. `engine` serves the packs and matters compiled
+  from `files` (`--lib`, `--cases`); a directory flag (`--packs-dir`,
+  ...) exits 1, as there is no disk.
 - On the Rust side the loaders read a `litigate_sema::pkg::source::Source`:
   `Disk` for the CLI, `MemoryTree` here (`litigate_cli::execute_in_memory`).
-- `test/litigate.test.ts` checks and builds the repository's `lit/` and
-  `cases/` through the wasm and compares with the native `litigate` CLI
-  (`LITIGATE_BIN`), envelope and written files alike.
+- `test/litigate.test.ts` checks, builds and runs ops on the repository's
+  `lit/` and `cases/` through the wasm and compares with the native
+  `litigate` CLI (`LITIGATE_BIN`), envelope and written files alike.
 - Embedding the vendored source corpus (`sources/`, needed so cite checks
-  agree with the CLI) and `lit/` makes the wasm larger (the release
-  build is about 9 MB).
+  agree with the CLI), `lit/` and `cases/` makes the wasm larger (the
+  release build is about 20 MB).

@@ -1,7 +1,8 @@
-// Every named scenario through the wasm client must give the native
-// `litgraph` CLI's output (elapsed_ms aside): same engine, same contract.
-// The scenarios are build outputs: `just lit-sync` (a `just ts-test`
-// dependency) writes them to target/lit-build/scenarios/.
+// Every named scenario through the wasm client, whose packs and scenarios
+// the wasm compiles in-process from the lit/ and cases/ source it embeds,
+// must give the native `litigate engine` output (elapsed_ms aside) over
+// the packs and scenarios `just lit-sync` (a `just ts-test` dependency)
+// builds into target/lit-build/: same compiler, same engine, same contract.
 import { spawnSync } from "node:child_process";
 import { readdirSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -9,13 +10,14 @@ import { describe, expect, it } from "vitest";
 import { loadNode, type NamedScenario, type Request } from "../src/node.js";
 
 const repo = fileURLToPath(new URL("../../../", import.meta.url));
-const bin = process.env["LITGRAPH_BIN"] ?? `${repo}target/debug/litgraph`;
+const bin = process.env["LITIGATE_BIN"] ?? `${repo}target/debug/litigate`;
+const build = ["--packs-dir", "target/lit-build/packs", "--scenarios-dir", "target/lit-build/scenarios"];
 const scenarioDir = `${repo}target/lit-build/scenarios/`;
 const files = readdirSync(scenarioDir).filter((f) => f.endsWith(".json")).sort();
 
 function native(args: readonly string[]): unknown {
-  const out = spawnSync(bin, [...args, "--compact"], { cwd: repo, encoding: "utf8", maxBuffer: 1 << 30 });
-  if (out.error !== undefined) throw new Error(`${bin}: ${out.error.message} (set LITGRAPH_BIN or run \`just ts-test\`)`);
+  const out = spawnSync(bin, ["engine", ...args, ...build, "--compact"], { cwd: repo, encoding: "utf8", maxBuffer: 1 << 30 });
+  if (out.error !== undefined) throw new Error(`${bin}: ${out.error.message} (set LITIGATE_BIN or run \`just ts-test\`)`);
   if (out.status !== 0 && out.status !== 2) throw new Error(`${bin} ${args.join(" ")}: exit ${String(out.status)}: ${out.stderr}`);
   return withoutTiming(JSON.parse(out.stdout));
 }

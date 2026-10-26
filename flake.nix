@@ -142,10 +142,10 @@
             }
           );
 
-          # --- wasm: litgraph-wasm for web + nodejs, via wasm-bindgen -----------
+          # --- wasm: litigate-wasm for web + nodejs, via wasm-bindgen -----------
           wasmArgs = commonArgs // {
-            pname = "litgraph-wasm";
-            cargoExtraArgs = "-p litgraph-wasm --target wasm32-unknown-unknown";
+            pname = "litigate-wasm";
+            cargoExtraArgs = "-p litigate-wasm --target wasm32-unknown-unknown";
             CARGO_BUILD_TARGET = "wasm32-unknown-unknown";
             doCheck = false; # host can't execute wasm32 test binaries without wasmtime
           };
@@ -155,17 +155,17 @@
           );
 
           # wasm-bindgen-cli must match the `wasm-bindgen` crate version pinned in
-          # crates/litgraph-wasm/Cargo.toml (=0.2.127) exactly -- a mismatch fails
+          # crates/litigate-wasm/Cargo.toml (=0.2.127) exactly -- a mismatch fails
           # at wasm-bindgen invocation time, not at cargo build time.
           litgraphWasm = pkgs.stdenv.mkDerivation {
-            pname = "litgraph-wasm";
+            pname = "litigate-wasm";
             version = "0.1.0";
             src = litgraphWasmRaw;
             nativeBuildInputs = [ pkgs.wasm-bindgen-cli ];
             buildPhase = ''
               runHook preBuild
               mkdir -p $out/web $out/node
-              wasm_file=$(find $src -name "litgraph_wasm.wasm" | head -1)
+              wasm_file=$(find $src -name "litigate_wasm.wasm" | head -1)
               wasm-bindgen --target web --out-dir $out/web "$wasm_file"
               wasm-bindgen --target nodejs --out-dir $out/node "$wasm_file"
               runHook postBuild

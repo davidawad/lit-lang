@@ -1,0 +1,352 @@
+#!/usr/bin/env bash
+# The per-bead gate behind `just ci-scoped` (lg-hbrr): the global checks,
+# then lint, tests and coverage for only the workspace packages a branch
+# changed plus every workspace package depending on them. One test run:
+# the instrumented nextest run is the test run, and coverage comes from it.
+# `just ci` stays the full gate (on main, periodically).
+#
+# Usage:
+#   scripts/ci-scoped run [BASE]
+#       Every stage, one line each, then `CI_SCOPED: pass|fail scope=...`.
+#       BASE defaults to the merge-base of HEAD with origin/main.
+#   scripts/ci-scoped scope [BASE]
+#       The scope alone: `full`, `none`, or one package per line.
+#   scripts/ci-scoped scope-of <metadata.json> < changed-files
+#       The scope of a list of changed paths (repo-relative, one per line)
+#       under a `cargo metadata --format-version 1 --no-deps` JSON.
+#   scripts/ci-scoped self-test
+#       The scope computation on fixed synthetic workspaces, and on this
+#       one against `cargo tree --invert`.
+#
+# Scope: a changed file belongs to the workspace package whose directory
+# holds it (the deepest one), or, outside every package, to the packages
+# whose build script embeds that directory (`build_inputs`). The scope is
+# those packages plus their transitive reverse dependencies among the
+# workspace members (normal, build and dev edges). A change to a file in
+# `full_triggers` scopes to the whole workspace; any other file (docs,
+# scripts, CI config) adds nothing, so only the global checks run.
+set -euo pipefail
+
+self="${BASH_SOURCE[0]}"
+
+usage() {
+  sed -n '/^# Usage:/,/^#       one against/p' "$self" | sed 's/^# \{0,1\}//' >&2
+  exit 2
+}
+
+# Paths whose change can affect every package's build, lint or tests.
+full_triggers='^(Cargo\.lock|Cargo\.toml|justfile|rust-toolchain(\.toml)?|clippy\.toml|\.cargo/|\.config/nextest)'
+
+# Top-level directories outside any package that a package's build.rs
+# embeds (its cargo:rerun-if-changed inputs): crates/litgraph-packs builds
+# lit/ and cases/ with packs/clock; crates/litgraph-wasm embeds lit/;
+# crates/litigate-engine embeds packs/clock, calibration/ and sources/ and
+# its tests read tests/ (golden and story snapshots).
+build_inputs='{
+  "lit/": ["litgraph-packs", "litgraph-wasm"],
+  "cases/": ["litgraph-packs"],
+  "packs/": ["litgraph-packs", "litigate-engine"],
+  "calibration/": ["litigate-engine"],
+  "sources/": ["litigate-engine"],
+  "tests/": ["litigate-engine"]
+}'
+
+# metadata JSON file, changed paths on stdin -> `full`, `none` or the
+# scoped package names, sorted, one per line.
+scope_of() {
+  local files
+  files="$(cat)"
+  jq -r --arg files "$files" --arg full "$full_triggers" --argjson inputs "$build_inputs" '
+    .workspace_root as $root
+    | .workspace_members as $ws
+    | [.packages[] | select(.id as $id | $ws | any(. == $id))
+        | {name, dir: (.manifest_path | ltrimstr($root + "/") | rtrimstr("Cargo.toml")),
+           paths: [.dependencies[] | .path // empty | ltrimstr($root + "/") + "/"]}] as $pk
+    | ($pk | map({key: .dir, value: .name}) | from_entries) as $by_dir
+    | ($pk | map({name, deps: [.paths[] | $by_dir[.] // empty]})) as $graph
+    | [$files | split("\n")[] | select(length > 0)] as $changed
+    | def owner($f):
+        [$pk[] | select(.dir as $d | $f | startswith($d))] | max_by(.dir | length) | .name // empty;
+      def rdeps:
+        . as $s
+        | [$graph[] | select(.name as $n | $s | any(. == $n) | not)
+            | select(any(.deps[]; . as $d | $s | any(. == $d))) | .name] as $new
+        | if ($new | length) == 0 then $s else ($s + $new | rdeps) end;
+    if any($changed[]; test($full)) then "full"
+    else
+      [$changed[] | . as $f
+        | (owner($f) // ($inputs | to_entries[] | select(.key as $k | $f | startswith($k)) | .value[]))]
+      | unique | map(. as $n | select($graph | any(.name == $n))) | rdeps | unique
+      | if length == 0 then "none" else .[] end
+    end' "$1"
+}
+
+base_of() {
+  if [ -n "${1:-}" ]; then
+    git rev-parse --verify "$1^{commit}"
+  else
+    git merge-base origin/main HEAD
+  fi
+}
+
+# Every path changed since BASE: committed (BASE...HEAD, renames as a
+# delete and an add), plus uncommitted and untracked ones for a local run.
+changed_files() {
+  {
+    git diff --name-only --no-renames "$1"...HEAD
+    git diff --name-only --no-renames HEAD
+    git ls-files --others --exclude-standard
+  } | sort -u
+}
+
+metadata() {
+  local out
+  out="$(mktemp)"
+  cargo metadata --format-version 1 --no-deps > "$out"
+  echo "$out"
+}
+
+scope() {
+  local base meta
+  base="$(base_of "${1:-}")"
+  meta="$(metadata)"
+  changed_files "$base" | scope_of "$meta"
+  rm -f "$meta"
+}
+
+# --- run -------------------------------------------------------------------
+
+failed=()
+logdir=""
+
+# name command... -> one line; the log tail on failure.
+stage() {
+  local name="$1" log start rc=0
+  shift
+  log="$logdir/$name.log"
+  start=$SECONDS
+  "$@" > "$log" 2>&1 || rc=$?
+  if [ "$rc" -eq 0 ]; then
+    echo "ci-scoped: $name: pass ($((SECONDS - start))s)"
+  else
+    echo "ci-scoped: $name: FAIL (exit $rc, $((SECONDS - start))s, log $log)"
+    tail -n 40 "$log" | sed 's/^/  | /'
+    failed+=("$name")
+  fi
+}
+
+skip() {
+  echo "ci-scoped: $1: skip ($2)"
+}
+
+# The scoped packages' coverage from the one instrumented run, per
+# litigate crate, through scripts/cov-gate full. Below 100% prints
+# COV_WAIVED and does not fail: `just ci` (cov-litigate, each crate by its
+# own tests) still enforces it.
+coverage() {
+  local json crate dir sums verdict
+  json="$(cargo +nightly llvm-cov report --json --summary-only)" || return 1
+  for crate in "$@"; do
+    dir="$(jq -r --arg c "$crate" '.workspace_root as $r | .packages[] | select(.name == $c)
+      | .manifest_path | rtrimstr("Cargo.toml")' "$meta")" || return 1
+    sums="$(jq --arg d "$dir" '{data: [{totals: ([.data[].files[] | select(.filename | startswith($d)) | .summary]
+      | {lines: {covered: (map(.lines.covered) | add // 0), count: (map(.lines.count) | add // 0)},
+         regions: {covered: (map(.regions.covered) | add // 0), count: (map(.regions.count) | add // 0)},
+         branches: {covered: (map(.branches.covered // 0) | add // 0), count: (map(.branches.count // 0) | add // 0)}})}]}' <<<"$json")" \
+      || return 1
+    if verdict="$("$(dirname "$self")/cov-gate" full "$crate" <<<"$sums" 2>&1)"; then
+      echo "$verdict"
+    else
+      echo "COV_WAIVED: ${verdict%: FAIL*}"
+    fi
+  done
+}
+
+run() {
+  local base files scope_out label target
+  base="$(base_of "${1:-}")"
+  meta="$(metadata)"
+  files="$(changed_files "$base")"
+  scope_out="$(scope_of "$meta" <<<"$files")"
+  target="$(jq -r .target_directory "$meta")"
+  logdir="$target/ci-scoped"
+  rm -rf "$logdir"
+  mkdir -p "$logdir"
+
+  local -a pkgs=() sel=() doc=() cov=()
+  case "$scope_out" in
+    full) label=full; sel=(--workspace) ;;
+    none) label=none ;;
+    *)
+      mapfile -t pkgs <<<"$scope_out"
+      label="$(IFS=,; echo "${pkgs[*]}")"
+      for p in "${pkgs[@]}"; do sel+=(-p "$p"); done
+      ;;
+  esac
+  echo "ci-scoped: scope: base $(git rev-parse --short "$base"), $(grep -c . <<<"$files" || true) changed file(s): $label"
+
+  # Global, always.
+  stage fmt-check cargo fmt --all -- --check
+  stage typos typos
+  stage self-test bash -c "'$self' self-test && '$(dirname "$self")/cov-gate' self-test"
+  stage lit-sync-check just lit-sync-check
+  if grep -q '^editors/tree-sitter-litigate/' <<<"$files"; then
+    stage tree-sitter-test just tree-sitter-test
+  else
+    skip tree-sitter-test "editors/tree-sitter-litigate unchanged"
+  fi
+  stage check cargo check --workspace --all-targets
+
+  # Scoped.
+  if [ "$label" = none ]; then
+    for s in clippy test doctest cov; do skip "$s" "no package in scope"; done
+  else
+    stage clippy cargo clippy "${sel[@]}" --all-targets -- -D warnings
+    if [ "$label" = full ]; then
+      mapfile -t pkgs < <(jq -r '.packages[].name' "$meta")
+    fi
+    # Coverage data is per target dir: serialize with `just cov` and
+    # `cov-litigate` on their lock, start clean, clean after.
+    exec 9> "$target/llvm-cov.lock"
+    if command -v flock > /dev/null; then flock 9; fi
+    cargo +nightly llvm-cov clean --workspace > /dev/null 2>&1
+    stage test cargo +nightly llvm-cov nextest --branch --no-report --no-tests=warn "${sel[@]}"
+    mapfile -t doc < <(jq -r --arg s "${pkgs[*]}" '($s | split(" ")) as $s
+      | .packages[] | select(.name as $n | $s | any(. == $n)) | select(any(.targets[]; .doctest)) | .name' "$meta")
+    if [ "${#doc[@]}" -eq 0 ]; then
+      skip doctest "no library in scope"
+    else
+      local -a docsel=()
+      for p in "${doc[@]}"; do docsel+=(-p "$p"); done
+      stage doctest cargo test --doc "${docsel[@]}"
+    fi
+    for p in "${pkgs[@]}"; do
+      for c in ${LITIGATE_CRATES:-}; do [ "$p" = "$c" ] && cov+=("$p"); done
+    done
+    if [ "${#cov[@]}" -eq 0 ]; then
+      skip cov "no litigate crate in scope"
+    elif [[ " ${failed[*]} " == *" test "* ]]; then
+      skip cov "test failed"
+    else
+      stage cov coverage "${cov[@]}"
+      grep -h '^COV_WAIVED' "$logdir/cov.log" || true
+    fi
+    cargo +nightly llvm-cov clean --workspace > /dev/null 2>&1 || true
+    exec 9>&-
+  fi
+
+  stage audit cargo audit
+  stage deny cargo deny check
+  rm -f "$meta"
+
+  if [ "${#failed[@]}" -eq 0 ]; then
+    echo "CI_SCOPED: pass scope=$label"
+  else
+    echo "CI_SCOPED: fail scope=$label (failed: ${failed[*]})"
+    return 1
+  fi
+}
+
+# --- self-test -------------------------------------------------------------
+
+# A synthetic `cargo metadata --no-deps` workspace at /w: "name:dir:dep,dep".
+fake_metadata() {
+  local spec name dir deps
+  for spec in "$@"; do
+    IFS=: read -r name dir deps <<<"$spec"
+    jq -n --arg n "$name" --arg d "$dir" --arg deps "$deps" '{
+      name: $n, id: ("path+file:///w/" + $d + "#" + $n), manifest_path: ("/w/" + $d + "/Cargo.toml"),
+      targets: [{doctest: true}],
+      dependencies: ([$deps | split(",")[] | select(length > 0)]
+        | map({name: (. | split("/") | last), path: ("/w/" + .)}) + [{name: "serde"}])}'
+  done | jq -s '{workspace_root: "/w", packages: ., workspace_members: map(.id)}'
+}
+
+self_test() {
+  local failures=0 meta real
+  meta="$(mktemp)"
+  real="$(mktemp)"
+  trap 'rm -f "$meta" "$real"' RETURN
+  # base <- syntax <- sema <- cli; syntax <- ts-litigate <- ts-editors;
+  # smt alone; packs <-> engine (a dev-dependency cycle), engine <- cli.
+  fake_metadata \
+    "base:crates/base:" \
+    "syntax:crates/syntax:crates/base" \
+    "sema:crates/sema:crates/base,crates/syntax" \
+    "cli:crates/cli:crates/sema,crates/litigate-engine" \
+    "smt:crates/smt:" \
+    "base-ext:crates/base-ext:" \
+    "litgraph-packs:crates/packs:crates/litigate-engine" \
+    "litigate-engine:crates/litigate-engine:crates/packs" \
+    "ts-litigate:editors/ts:crates/syntax" \
+    "ts-editors:editors/ts/editors:editors/ts" > "$meta"
+
+  expect() {
+    local want="$1" desc="$2" got
+    shift 2
+    got="$(printf '%s\n' "$@" | scope_of "$meta" | paste -sd' ')"
+    if [ "$got" != "$want" ]; then
+      echo "ci-scoped self-test: $desc: want [$want], got [$got]" >&2
+      failures=$((failures + 1))
+    fi
+  }
+  expect "smt" "a crate nothing depends on scopes to itself" crates/smt/src/lib.rs
+  expect "cli sema" "a crate scopes to it plus its dependents" crates/sema/src/lib.rs
+  expect "cli sema syntax ts-editors ts-litigate" "transitively" crates/syntax/src/lib.rs
+  expect "base cli sema syntax ts-editors ts-litigate" "a base crate scopes to everything depending on it" \
+    crates/base/src/lib.rs
+  expect "cli sema" "a crate's own manifest is the crate" crates/sema/Cargo.toml
+  expect "cli sema" "a crate's tests and fixtures are the crate" crates/sema/tests/fixtures/a.lit
+  expect "base-ext" "a directory prefix is not the package" crates/base-ext/src/lib.rs
+  expect "ts-editors" "a nested package owns its own files" editors/ts/editors/src/lib.rs
+  expect "cli litgraph-packs litigate-engine" "a dependency cycle terminates" crates/packs/build.rs
+  expect "cli smt" "two changed crates" crates/smt/src/lib.rs crates/cli/src/main.rs
+  expect "full" "Cargo.lock falls back to full" crates/smt/src/lib.rs Cargo.lock
+  expect "full" "the root manifest falls back to full" Cargo.toml
+  expect "full" "the justfile falls back to full" justfile
+  expect "full" "the toolchain falls back to full" rust-toolchain.toml
+  expect "full" ".cargo/ falls back to full" .cargo/config.toml
+  expect "full" "nextest config falls back to full" .config/nextest.toml
+  expect "full" "clippy config falls back to full" clippy.toml
+  expect "none" "a docs-only change runs global only" docs/litigate/SPEC.md README.md
+  expect "none" "a non-crate change runs global only" scripts/cov-gate .github/workflows/ci.yml _typos.toml
+  expect "none" "an empty diff runs global only"
+  expect "cli litgraph-packs litigate-engine" "lit/ is a build input of the packs" lit/frcp/rules.lit
+  expect "cli litgraph-packs litigate-engine" "tests/ snapshots are the engine's" tests/golden/x.json
+  expect "none" "a nested Cargo.lock is not the root one" docs/Cargo.lock
+  expect "full" "a mixed change with a trigger is full" docs/a.md justfile
+
+  # This workspace, against cargo's own reverse-dependency tree.
+  cargo metadata --format-version 1 --no-deps > "$real"
+  real_case() {
+    local crate="$1" want got
+    want="$(cargo tree --workspace --invert "$crate" -e normal,build,dev --prefix none \
+      | awk '{print $1}' | sort -u | paste -sd' ')"
+    got="$(jq -r --arg c "$crate" '.workspace_root as $r | .packages[] | select(.name == $c)
+      | .manifest_path | ltrimstr($r + "/") | rtrimstr("Cargo.toml") + "src/lib.rs"' "$real" \
+      | scope_of "$real" | paste -sd' ')"
+    if [ -z "$want" ] || [ "$got" != "$want" ]; then
+      echo "ci-scoped self-test: $crate in this workspace: want [$want] (cargo tree -i), got [$got]" >&2
+      failures=$((failures + 1))
+    fi
+  }
+  real_case litigate-base
+  real_case litigate-sema
+  real_case litigate-smt
+  if [ "$failures" -ne 0 ]; then
+    echo "ci-scoped self-test: $failures scope(s) wrong" >&2
+    return 1
+  fi
+  echo "ci-scoped self-test: every scope as expected"
+}
+
+[ "$#" -gt 0 ] || usage
+cmd="$1"
+shift
+case "$cmd" in
+  run) [ "$#" -le 1 ] || usage; run "$@" ;;
+  scope) [ "$#" -le 1 ] || usage; scope "$@" ;;
+  scope-of) [ "$#" -eq 1 ] || usage; scope_of "$1" ;;
+  self-test) [ "$#" -eq 0 ] || usage; self_test ;;
+  *) usage ;;
+esac

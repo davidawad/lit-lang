@@ -9,6 +9,38 @@ use crate::resolve::suggest::nearest;
 use litigate_base::{Applicability, Diagnostic, DiagnosticCode as C, Profile};
 use std::collections::BTreeSet;
 
+/// L3004 for each order of the matter's packages that displaces a
+/// declaration under a capability exercised on motion (`delegable { ...,
+/// on M() }`) when the matter records no such motion on or before the
+/// order's date: the order has no effect in this matter (SPEC §5.5), so
+/// replay keeps the delegating declaration.
+pub(super) fn motions(
+    case: &Case,
+    graph: &Graph<'_>,
+    spans: &CaseSpans,
+    out: &mut Vec<Diagnostic>,
+) {
+    let world = &graph.world;
+    let mut seen = BTreeSet::new();
+    for (by, target, motion) in crate::precedence::delegation::unmoved_claims(world) {
+        let (name, order) = (world.name(target, by), world.decls[by].meta.id.as_str());
+        if !seen.insert((by, name.clone())) {
+            continue;
+        }
+        let pack = world.pack_of(by);
+        let at = case.uses.iter().position(|u| u.pack_id == pack);
+        out.push(error(
+            C::MissingDelegation,
+            spans.at(at.and_then(|i| spans.uses.get(i)).and_then(Option::as_ref), &case.id),
+            format!(
+                "`{pack}::{order}` displaces `{name}` under a capability exercised on motion `{}`, which the matter does not record on or before {}: the order has no effect here",
+                super::graph::display(&motion),
+                world.decls[by].meta.effective.from
+            ),
+        ));
+    }
+}
+
 /// The packages `case.uses` pins, in `uses` order, when every pin agrees
 /// with `Lit.lock` and with the loaded package (version and content hash).
 pub(super) fn pins<'a>(

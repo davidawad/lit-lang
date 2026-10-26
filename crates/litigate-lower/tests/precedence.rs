@@ -129,6 +129,8 @@ fn a_downstream_claim_never_changes_an_upstream_pack() {
             to: "LocalRule".into(),
             ops: vec![hir::DelegatedOp::Set],
             max: None,
+            standard: None,
+            on: None,
             cite: None,
         });
     let mut local = base.clone();

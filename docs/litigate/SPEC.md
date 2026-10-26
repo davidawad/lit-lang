@@ -272,8 +272,8 @@ Interval     = "[", Date, ",", (Date | ".."), ")" ;
 Relation     = ("subject_to" | "notwithstanding" | "supersedes" | "revives"
              | "override"), Ref | "delegable", Delegation
              | "delegable_to", IdList ;            (* legacy: L2007, §5.5 *)
-Delegation   = "{", { ( ("to" | "op"), (Ref | IdList) | "max", Duration | Cite ),
-               Sep }, "}" ;
+Delegation   = "{", { ( ("to" | "op"), (Ref | IdList) | "max", Duration
+               | "discretion", Ident | "on", Call | Cite ), Sep }, "}" ;
 Cite         = "cite", ( String | Hole ), [ "historical" ] ;
 Ref          = Ident, [ "@", Ident ], { ("::" | "."), Ident }, [ "@", Date ] ;
 IdList       = "[", [ Ref, { ",", Ref }, [","] ], "]" ;
@@ -1565,8 +1565,9 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
   also matches the claimant's trigger.
 - **Delegation capabilities** (design review 2026-10-23 §2.4). A
   delegating declaration states each capability it gives a lower
-  authority: `delegable { to L, op O [, max N.unit] [, cite "X"] }`, a
-  header clause, repeatable. `to` names the principal (an authority level,
+  authority: `delegable { to L, op O [, max N.unit] [, discretion S] [, on
+  M()] [, cite "X"] }`, a header clause, repeatable: principal, operation,
+  bound, condition and procedure. `to` names the principal (an authority level,
   or a list of levels, one capability each), strictly below the
   declaration's own (L3004); `op` the operations granted, one or a list
   of `extend`, `shorten`, `set` (covers `extend` and `shorten`, and any
@@ -1574,8 +1575,11 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
   `compute_method`; `max N.unit` the bound: an extension may add at most
   `N` units, in the declared period's own unit and direction, and a
   bounded capability admits nothing but a deadline (`max` needs `op
-  extend` or `op set`). `to` and `op` are required, an unknown operation is
-  L2007, an unknown level L1002, and the cite, when given, is the
+  extend` or `op set`); `discretion S` the condition, the cause standard
+  the lower authority applies (the closed set of §5.3); `on M()` the
+  procedure, an event pattern naming the motion an exercise requires.
+  `to` and `op` are required, an unknown operation or cause standard is
+  L2007, an unknown level or event L1002, and the cite, when given, is the
   delegating text (checked by `cite-resolves`; the declaration's own
   otherwise). The legacy `delegable_to [L]` is L2007 with a fix spelling
   `delegable { to L, op set }`, and delegates nothing.
@@ -1600,6 +1604,16 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
   lock (§5.3); one diagnostic per kind, whatever the versions. An override
   of a declaration never in force during the override's window is L3007,
   as is an exception never in force alongside its target.
+
+  A capability with a procedure is exercised in a matter: a package's
+  own check admits the claim, since it cannot know whether the order was
+  made on motion. In a matter, when every capability admitting a claim
+  names a motion `on M()` and the matter records no event matching one
+  on or before the claim's effective date, the claim has no effect on
+  selection or replay there (the delegating declaration governs), and the
+  matter reports L3004 at the `uses` of the claim's package. The motion is
+  matter history: an event matching it is legal without taking an edge,
+  like an `extend` grant's motion (§5.6).
 - **Emergency grants.** `grant g on [d, ...] effective [from, to) cite "X" {
   ... }` is an instrument giving the deadlines it names capabilities for a
   bounded window (an open window is L2007; FRCP 87(b)(1)(C) limits a
@@ -2894,7 +2908,7 @@ gets one row per condition when the conditions classify differently.
 | C33 | L3001 versions of one declaration overlap (§5.4) | sema | b | O3. |
 | C34 | L3002 undeclared gap in version coverage (§5.4) | sema | c | O4. |
 | C35 | L3003 two claimants left unordered (§5.5) | sema | c | Claimants are every declaration naming the target in any relation, across the package and its dependencies, compared day by day over active versions after supersession; a whole-package fixpoint over activity. |
-| C36 | L3004 lower-authority displacing relation (`override`, `notwithstanding`, `supersedes`, `revives`) without a capability covering its operations within its bound; a delegation not strictly below its declaration's level; an emergency grant wider than its authority (§5.5) | sema | b | Typed (lg-962.4): B's versions carry `Cap[to, ops, max]`; `A ⊳ B` checks `auth(A) ≥ auth(B) ∨ ∀v ∈ Versions(B). overlaps(v, A) → ∃c ∈ caps(v) ∪ grants(v, window(A)). c.to = auth(A) ∧ ops(A, v) ⊆ ↑c.ops ∧ within(c.max, A, v)`, all ground (finite op lattice, integer bound). Per declaration, so no global search. |
+| C36 | L3004 lower-authority displacing relation (`override`, `notwithstanding`, `supersedes`, `revives`) without a capability covering its operations within its bound; a delegation not strictly below its declaration's level; an emergency grant wider than its authority (§5.5) | sema | b | Typed (lg-962.4): B's versions carry `Cap[to, ops, max, cause, on]`; `A ⊳ B` checks `auth(A) ≥ auth(B) ∨ ∀v ∈ Versions(B). overlaps(v, A) → ∃c ∈ caps(v) ∪ grants(v, window(A)). c.to = auth(A) ∧ ops(A, v) ⊆ ↑c.ops ∧ within(c.max, A, v)`, all ground (finite op lattice, integer bound). Per declaration, so no global search. |
 | C37 | L3005 exceptions on one target neither disjoint nor prioritized (§5.5) | sema | b | Family refinement: for each pair on a target, `UNSAT(C_i ∧ C_j) ∨ priority_i ≠ priority_j` (propositional SAT over `has_event` atoms; small and finite). |
 | C38 | L3006 type alias, default or exception refers to itself (§5.2) | sema | c | Transitive self-reference is a cycle in the reference graph. (A direct `type T = T` alone is (a).) |
 | C39 | L3006 authority order, declared wins, supersession, default/exception references cyclic (§5.5) | sema | c | O5. |
@@ -3098,18 +3112,20 @@ Design review 2026-10-23 §6 item 22 (§2.10, §2.11), decided as follows:
 Design review 2026-10-23 §2.4, §2.6, §2.8 and §6 items 2, 6 and 13, decided
 as follows (each moved obligation has negative tests:
 `litigate-sema/tests/capabilities.rs`, `cov_case_capabilities.rs`,
-`bitemporal.rs`, `cov_case_markings.rs`):
+`cov_case_procedure.rs`, `bitemporal.rs`, `cov_case_markings.rs`):
 
-1. **Delegation as typed capabilities.** `delegable { to, op, max, cite }`
-   replaces `delegable_to [Level]` (L2007 with a fix); `delegation-respected`
-   is a ground typing judgment over the operations a claim performs and
-   the capability's bound (§5.5). The five-part capability of the review is
-   split across the two levels a capability is exercised at: a rule-level
-   capability (`delegable`: principal = authority, operation, bound, cite)
-   licenses a lower instrument, and a case-level grant (`extend`/`waive`:
-   principal = actor, bound `max`/`to`, condition `discretion`, procedure
+1. **Delegation as typed capabilities.** `delegable { to, op, max,
+   discretion, on, cite }` replaces `delegable_to [Level]` (L2007 with a
+   fix); `delegation-respected` is a ground typing judgment over the
+   operations a claim performs, the capability's bound and, in a matter,
+   its procedure (§5.5). The five-part capability of the review exists at
+   both levels a capability is exercised at: a rule-level capability
+   (`delegable`: principal = authority, operation, bound `max`, condition
+   `discretion`, procedure `on`, cite) licenses a lower instrument, and a
+   case-level grant (`extend`/`waive`: principal = actor, bound
+   `max`/`to`, condition `discretion`, procedure
    `on`/`within`/`after_expiry`, lock `never`) licenses an order in a
-   matter. Emergency grants add either kind for a bounded window and lift
+   matter. No corpus delegation states a motion yet. Emergency grants add either kind for a bounded window and lift
    locks with `unlock`. The corpus's 99 `delegable_to` clauses were
    migrated to `delegable { to L, op set }`, licensing every change of
    value; a legacy clause also licensed suspension and a change of

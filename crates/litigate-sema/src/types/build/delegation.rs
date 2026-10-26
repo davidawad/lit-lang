@@ -1,13 +1,14 @@
 //! Typed delegation capabilities and characterization (SPEC §5.3, §5.5;
-//! design review §2.4): `delegable { to L, op O, max N.unit, cite X }`
-//! clauses, the legacy `delegable_to [L]` they replace, a deadline's
-//! `characterization`, and the capabilities a jurisdictional limit
-//! forbids.
+//! design review §2.4): `delegable { to L, op O, max N.unit, discretion
+//! S, on M(), cite X }` clauses, the legacy `delegable_to [L]` they
+//! replace, a deadline's `characterization`, and the capabilities a
+//! jurisdictional limit forbids.
 use super::cx::{first_expr, first_ref, nested, Cx};
 use crate::db::parse::tree::{ExprKind, Field, RefPath};
 use crate::db::span::Report;
-use crate::hir::{CharacterKind, Characterization, DelegatedOp, Delegation};
+use crate::hir::{CauseStandard, CharacterKind, Characterization, DelegatedOp, Delegation};
 use litigate_base::{Applicability, DiagnosticCode as C};
+use std::collections::BTreeMap;
 
 /// The names of a `Ref` or `[Ref, ...]` field value.
 fn names<'f>(f: Option<&&'f Field>) -> Vec<&'f RefPath> {
@@ -30,7 +31,7 @@ impl Cx<'_, '_> {
             Report::new(
                 C::InvalidField,
                 f.key.range,
-                "`delegable_to` is replaced by a typed capability naming what the lower authority may do: `delegable { to <Level>, op <op> [, max N.days] [, cite ...] }`",
+                "`delegable_to` is replaced by a typed capability naming what the lower authority may do: `delegable { to <Level>, op <op> [, max N.days] [, discretion <Standard>] [, on <Motion>()] [, cite ...] }`",
             )
             .note(format!(
                 "operations: {}",
@@ -46,9 +47,10 @@ impl Cx<'_, '_> {
 
     /// One `delegable { ... }` clause: a capability per principal it
     /// names. `to` and `op` are required, each principal must be an
-    /// authority level, each operation one of [`DelegatedOp::ALL`], and
-    /// `max` bounds an extension, so it needs `op extend` or `op set`
-    /// (L2007).
+    /// authority level, each operation one of [`DelegatedOp::ALL`], `max`
+    /// bounds an extension, so it needs `op extend` or `op set`, and
+    /// `discretion` names a cause standard (L2007); `on` is an event
+    /// pattern (L1002, L2001).
     pub(super) fn delegation(&mut self, f: &Field) -> Vec<Delegation> {
         let fields = self.once(nested(f));
         let mut ok = true;
@@ -100,6 +102,10 @@ impl Cx<'_, '_> {
             }
             None => None,
         };
+        let (standard, on) = self.condition_and_procedure(&fields).unwrap_or_else(|| {
+            ok = false;
+            (None, None)
+        });
         let cite = self.cite_text(fields.get("cite"));
         let mut out = Vec::new();
         for r in names(fields.get("to")) {
@@ -114,11 +120,31 @@ impl Cx<'_, '_> {
                     to: r.head.text.clone(),
                     ops: ops.clone(),
                     max,
+                    standard,
+                    on: on.clone(),
                     cite: cite.clone(),
                 });
             }
         }
         out
+    }
+
+    /// The condition `discretion S` (a cause standard, L2007 otherwise) and
+    /// the procedure `on M()` (an event pattern) of a `delegable` clause;
+    /// `None` when either is ill-typed.
+    fn condition_and_procedure(
+        &mut self,
+        fields: &BTreeMap<&str, &Field>,
+    ) -> Option<(Option<CauseStandard>, Option<crate::hir::Expr>)> {
+        let standard = match fields.get("discretion") {
+            Some(d) => Some(self.standard(first_ref(Some(d))?)?),
+            None => None,
+        };
+        let on = match fields.get("on") {
+            Some(m) => Some(self.pattern(first_expr(m)?)?),
+            None => None,
+        };
+        Some((standard, on))
     }
 
     /// `characterization jurisdictional | claim_processing [cite X]`.

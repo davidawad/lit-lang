@@ -256,10 +256,12 @@ module.exports = {
   )),
 
   // A typed delegation capability (SPEC §5.5): `delegable { to L, op O,
-  // max N.days, cite X }`.
+  // max N.days, discretion S, on M(), cite X }`.
   delegation: $ => braced(choice(
     seq(field('key', choice('to', 'op')), field('value', choice($.identifier, $.id_list))),
     seq(field('key', 'max'), field('value', $.duration)),
+    seq(field('key', 'discretion'), field('value', $.identifier)),
+    seq(field('key', 'on'), field('value', $.call_expression)),
     $.cite,
   )),
 

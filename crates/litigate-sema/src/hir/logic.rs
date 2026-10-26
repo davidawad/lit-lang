@@ -51,10 +51,12 @@ pub enum Relation {
 }
 
 /// One typed delegation capability (SPEC §5.5, design review §2.4): the
-/// lower authority `to` may change the declaration by the operations
-/// `ops`, an extension reaching no further than `max` past the declared
-/// period. A displacing relation from `to` is licensed only by a
-/// capability covering the operation it performs.
+/// lower authority `to` (principal) may change the declaration by the
+/// operations `ops`, an extension reaching no further than `max` past the
+/// declared period (bound), for cause `standard` (condition), on motion
+/// `on` (procedure). A displacing relation from `to` is licensed only by
+/// a capability covering the operation it performs; in a matter, one
+/// with a procedure only once the matter records the motion.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Delegation {
     /// The principal: an authority level strictly below the declaration's.
@@ -64,6 +66,14 @@ pub struct Delegation {
     /// The most an extension may add to the declared period (`max N.unit`).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub max: Option<(u64, crate::hir::DayUnit)>,
+    /// The cause standard the lower authority applies (`discretion S`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub standard: Option<crate::hir::CauseStandard>,
+    /// The motion an exercise requires (`on M()`): an order under the
+    /// capability takes effect in a matter only when the matter records a
+    /// matching event on or before the order's effective date.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub on: Option<Expr>,
     /// The rule text delegating (`cite`); `None`: the declaration's own.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub cite: Option<String>,

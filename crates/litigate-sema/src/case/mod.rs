@@ -244,6 +244,14 @@ pub fn check(mut case: hir::Case, spans: &CaseSpans, env: Env<'_>) -> CheckedCas
     graph
         .world
         .set_commenced(case.events.iter().map(|e| e.date.clone()).min());
+    // The matter's history: an order exercising a delegation on motion
+    // takes effect only once the motion is recorded (SPEC §5.5).
+    let motions = case
+        .events
+        .iter()
+        .map(|e| (e.date.clone(), graph.qualified(&e.action)))
+        .collect();
+    graph.world.set_motions(Some(motions));
     validate::parties(&case, &graph, spans, &mut out);
     let start = case
         .start
@@ -261,6 +269,7 @@ pub fn check(mut case: hir::Case, spans: &CaseSpans, env: Env<'_>) -> CheckedCas
     }
     let mut replayed = replay::replay(&graph, &case, spans, env.clock, &start);
     out.append(&mut replayed.diagnostics);
+    validate::motions(&case, &graph, spans, &mut out);
     case.removals = std::mem::take(&mut replayed.removals);
     validate::facts_and_beliefs(&case, &graph, spans, &mut out);
     prior::priors(&case, &graph, spans, &mut out);

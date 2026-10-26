@@ -1,7 +1,8 @@
 //! Typed delegation capabilities (SPEC §5.3, §5.5; design review
-//! 2026-10-23 §2.4): `delegable { to L, op O, max N.unit }` licenses a
-//! lower authority's displacing claim only for the operations it grants
-//! and within its bound; an emergency `grant` adds capabilities for a
+//! 2026-10-23 §2.4): `delegable { to L, op O, max N.unit, discretion S,
+//! on M() }` licenses a lower authority's displacing claim only for the
+//! operations it grants and within its bound, for a closed cause standard
+//! and on an event motion (`cov_case_procedure.rs` replays it); an emergency `grant` adds capabilities for a
 //! bounded window and can lift a lock; a jurisdictional deadline admits
 //! no waiver, no unbounded extension and no delegation. Each obligation
 //! moved into the type checker has a negative test here.
@@ -346,6 +347,20 @@ deadline j: 21.days from Served(complaint) counted_by c6 delegable { to FederalR
         )),
         "{upward:#?}"
     );
+}
+
+#[test]
+fn a_delegation_names_a_cause_standard_and_an_event_motion() {
+    let out = check_body(
+        "authority FederalRule > LocalRule > CaseOrder\n\
+deadline a: 21.days from Served(complaint) counted_by c6 delegable { to CaseOrder, op extend, discretion Whim }\n\
+deadline b: 21.days from Served(complaint) counted_by c6 delegable { to CaseOrder, op extend, on Moved() }\n\
+deadline c: 21.days from Served(complaint) counted_by c6 delegable { to CaseOrder, op extend, on max(1) }\n\
+deadline d: 21.days from Served(complaint) counted_by c6 delegable { to CaseOrder, op extend, discretion GoodCause, on Served(answer) }\n\
+deadline e: 21.days from Served(complaint) counted_by c6 delegable { to CaseOrder, op extend, discretion }\n\
+deadline f: 21.days from Served(complaint) counted_by c6 delegable { to CaseOrder, op extend, on }",
+    );
+    insta::assert_debug_snapshot!(out);
 }
 
 #[test]

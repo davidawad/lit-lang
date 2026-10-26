@@ -80,11 +80,14 @@ pub(crate) const DEADLINE_DECL_OPTS: &[Spec] = &[
     (KwCharacterization, Some(characterization)),
 ];
 
-/// Fields of a `delegable` capability (besides `cite`).
+/// Fields of a `delegable` capability (besides `cite`): its principal,
+/// operations, bound, condition and procedure.
 pub(crate) const DELEGATION_FIELDS: &[Spec] = &[
     (KwTo, Some(ref_or_list)),
     (KwOp, Some(ref_or_list)),
     (KwMax, Some(duration)),
+    (KwDiscretion, Some(reference)),
+    (KwOn, Some(call)),
 ];
 
 /// Fields of a `grant` body.
@@ -274,7 +277,8 @@ fn capability(p: &mut Parser<'_>) -> bool {
     field_list(p, CAPABILITY_FIELDS)
 }
 
-/// `{ to Level | [Level, ...], op Op | [Op, ...], max Duration, cite X }`.
+/// `{ to Level | [Level, ...], op Op | [Op, ...], max Duration, discretion
+/// Standard, on Motion(), cite X }`.
 pub(crate) fn delegation(p: &mut Parser<'_>) -> bool {
     if !p.at(LBrace) {
         return false;

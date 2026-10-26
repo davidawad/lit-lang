@@ -427,7 +427,7 @@ deadline answer-period: 21.days from Served(complaint) counted_by frcp6 effectiv
 grant covid on [answer-period] effective [2020-03-15, 2020-06-13) cite "FRCP 87(c)(2)" {
   unlock
   extend { by Court, discretion GoodCause, to grant_order_entered + 30.days }
-  delegable { to [LocalRule, CaseOrder], op set }
+  delegable { to [LocalRule, CaseOrder], op set, discretion GoodCause, on ExtensionMoved() }
 }
 
 ---
@@ -505,4 +505,9 @@ grant covid on [answer-period] effective [2020-03-15, 2020-06-13) cite "FRCP 87(
               (identifier))
             (ref
               (identifier)))
-          (identifier))))))
+          (identifier)
+          (identifier)
+          (call_expression
+            (ref
+              (identifier))
+            (arguments)))))))

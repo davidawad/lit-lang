@@ -1,15 +1,16 @@
 //! `delegation-respected` (SPEC §5.5 step 3, L3004): a lower authority may
 //! change a higher one's rule only by a typed capability the rule declares
-//! (`delegable { to L, op O, max N.unit }`, design review §2.4) or an
-//! emergency `grant` gives it for a window. Every relation that displaces
-//! its target needs one covering the operations it performs: `override`
-//! and `notwithstanding` (the value it replaces the target's with),
-//! `supersedes` and `revives` (suspension of another declaration). An
-//! unlicensed relation is L3004 here and has no effect on selection
-//! ([`licensed`]).
+//! (`delegable { to L, op O, max N.unit, discretion S, on M() }`, design
+//! review §2.4) or an emergency `grant` gives it for a window. Every
+//! relation that displaces its target needs one covering the operations
+//! it performs: `override` and `notwithstanding` (the value it replaces
+//! the target's with), `supersedes` and `revives` (suspension of another
+//! declaration). An unlicensed relation is L3004 here and has no effect on
+//! selection ([`licensed`]); in a matter, neither has one exercised
+//! without the motion its capability names ([`unmoved`]).
 use super::lattice::{Lattice, Order};
 use crate::hir::{
-    Declaration, DelegatedOp, Delegation, Expr, ExprKind, Extension, Relation, Value,
+    Declaration, DelegatedOp, Delegation, Expr, ExprKind, Extension, Relation, Type, Value,
 };
 use crate::temporal::condition::matches;
 use crate::temporal::interval::Window;
@@ -101,9 +102,9 @@ fn qualify(pack: &str, name: &str) -> String {
     }
 }
 
-/// Pattern `e`, written in package `pack`'s view, with every event and
-/// variant name fully qualified, so patterns of two packages compare
-/// ([`matches`] ignores types).
+/// Pattern `e`, written in package `pack`'s view, with every event, type
+/// and variant name fully qualified, so patterns of two packages compare
+/// ([`matches`] compares argument types).
 fn qualified(pack: &str, e: &Expr) -> Expr {
     let mut e = e.clone();
     qualify_in(pack, &mut e);
@@ -111,17 +112,24 @@ fn qualified(pack: &str, e: &Expr) -> Expr {
 }
 
 fn qualify_in(pack: &str, e: &mut Expr) {
+    if let Type::Named(n) = &mut e.ty {
+        *n = qualify(pack, n);
+    }
     if let ExprKind::Call { callee, args } = &mut e.kind {
         *callee = qualify(pack, callee);
         for a in args {
             qualify_in(pack, a);
         }
     }
+    // A variant is `Enum::variant` in its own package, `pack::Enum::variant`
+    // elsewhere.
     if let ExprKind::Literal {
         value: Value::Variant(v),
     } = &mut e.kind
     {
-        *v = qualify(pack, v);
+        if v.matches("::").count() < 2 {
+            *v = format!("{pack}::{v}");
+        }
     }
 }
 
@@ -218,9 +226,24 @@ pub fn license<'w>(
     target: usize,
     suspend: bool,
 ) -> Result<(), Refusal<'w>> {
+    if admitting(world, by, target, suspend)?.is_none() {
+        return Ok(());
+    }
+    lock_widened(world, by, target).map_or(Ok(()), |lock| Err(Refusal::Locked(lock)))
+}
+
+/// The capabilities admitting `by`'s claim on version `target` (covering
+/// its operations within their bounds); `None` when `by`'s own authority
+/// suffices.
+fn admitting<'w>(
+    world: &'w World<'_>,
+    by: usize,
+    target: usize,
+    suspend: bool,
+) -> Result<Option<Vec<&'w Delegation>>, Refusal<'w>> {
     let mine = &world.decls[by].meta.authority;
     if outranks(world.lattice(), mine, &world.decls[target].meta.authority) {
-        return Ok(());
+        return Ok(None);
     }
     let caps = capabilities(world, by, target);
     if caps.is_empty() {
@@ -234,21 +257,76 @@ pub fn license<'w>(
     if covering.is_empty() {
         return Err(Refusal::Uncovered(ops));
     }
+    let admitted: Vec<&Delegation> = covering
+        .iter()
+        .copied()
+        .filter(|d| d.max.is_none_or(|b| within_bound(world, b, by, target)))
+        .collect();
     // Every covering capability bounded, and no bound admits the claim.
-    let bounds: Option<Vec<(u64, crate::hir::DayUnit)>> = covering.iter().map(|d| d.max).collect();
-    if let Some(bounds) = bounds {
-        if !bounds.iter().any(|b| within_bound(world, *b, by, target)) {
-            return Err(Refusal::Bound(bounds[0].0, bounds[0].1));
+    match (admitted.is_empty(), covering[0].max) {
+        (true, Some((n, unit))) => Err(Refusal::Bound(n, unit)),
+        _ => Ok(Some(admitted)),
+    }
+}
+
+/// The motion `by`'s licensed claim on version `target` still lacks in
+/// the world's matter: every capability admitting it is exercised on
+/// motion (`delegable { ..., on M() }`) and the matter records none
+/// matching on or before `by`'s effective date (the first such motion,
+/// qualified). `None` outside a matter, for a claim its own authority
+/// licenses, and for one [`license`] refuses.
+#[must_use]
+pub fn unmoved(world: &World<'_>, by: usize, target: usize, suspend: bool) -> Option<Expr> {
+    let caps = admitting(world, by, target, suspend).ok()??;
+    let pack = world.pack_of(target);
+    let date = &world.decls[by].meta.effective.from;
+    let motions: Vec<Expr> = caps
+        .iter()
+        .map(|d| d.on.as_ref().map(|m| qualified(pack, m)))
+        .collect::<Option<_>>()?;
+    (!motions.iter().any(|m| world.moved(m, date))).then(|| motions[0].clone())
+}
+
+/// Every displacing claim of the world that [`unmoved`] holds back in its
+/// matter: (claimant, target version, the motion it lacks), in
+/// declaration order.
+#[must_use]
+pub fn unmoved_claims(world: &World<'_>) -> Vec<(usize, usize, Expr)> {
+    let mut out = Vec::new();
+    for (a, da) in world.decls.iter().enumerate() {
+        let window = Window::of(&da.meta.effective);
+        for r in &da.meta.relations {
+            let (versions, suspend) = match r {
+                Relation::Override(text) | Relation::Notwithstanding(text) => {
+                    let target = world.target(world.pack_of(a), text);
+                    (overlapping(world, &target, &window), false)
+                }
+                Relation::Supersedes(text) | Relation::Revives(text) => {
+                    let target = world.target(world.pack_of(a), text);
+                    let suspend = world.key(a) != target.key;
+                    (
+                        earlier(world, a, &target.key, target.version.as_deref()),
+                        suspend,
+                    )
+                }
+                Relation::SubjectTo(_) => continue,
+            };
+            out.extend(
+                versions
+                    .into_iter()
+                    .filter_map(|v| unmoved(world, a, v, suspend).map(|m| (a, v, m))),
+            );
         }
     }
-    lock_widened(world, by, target).map_or(Ok(()), |lock| Err(Refusal::Locked(lock)))
+    out
 }
 
 /// Whether declaration `by` may displace version `target` by an
-/// `override` or `notwithstanding` ([`license`]).
+/// `override` or `notwithstanding` ([`license`]), on the motion its
+/// capability requires when there is one ([`unmoved`]).
 #[must_use]
 pub fn licensed(world: &World<'_>, by: usize, target: usize) -> bool {
-    license(world, by, target, false).is_ok()
+    license(world, by, target, false).is_ok() && unmoved(world, by, target, false).is_none()
 }
 
 /// The authority of deadline `target`'s lock (`extend { never cite "X" }`)
@@ -295,7 +373,7 @@ pub fn licensed_over(world: &World<'_>, by: usize, key: &Key, version: Option<&s
     let suspend = world.key(by) != *key;
     earlier(world, by, key, version)
         .into_iter()
-        .all(|v| license(world, by, v, suspend).is_ok())
+        .all(|v| license(world, by, v, suspend).is_ok() && unmoved(world, by, v, suspend).is_none())
 }
 
 /// L3004 for every displacing relation of pack `pack` that no capability

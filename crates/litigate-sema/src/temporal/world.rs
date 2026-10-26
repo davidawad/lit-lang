@@ -121,6 +121,7 @@ pub struct World<'a> {
     transitions: BTreeMap<(Key, String), Vec<(usize, &'a hir::Transition)>>,
     grants: BTreeMap<Key, Vec<Granted<'a>>>,
     commenced: Option<String>,
+    motions: Option<Vec<(String, hir::Expr)>>,
 }
 
 /// An emergency grant reaching a declaration: its package and the grant.
@@ -264,6 +265,26 @@ impl<'a> World<'a> {
     /// event), not one commenced on each query's own date.
     pub fn set_commenced(&mut self, date: Option<String>) {
         self.commenced = date;
+    }
+
+    /// Queries concern a matter whose history is `events` (date and action,
+    /// every event and variant name qualified by its package): a
+    /// delegation exercised on motion (`delegable { ..., on M() }`) takes
+    /// effect only once the matter records the motion.
+    pub fn set_motions(&mut self, events: Option<Vec<(String, hir::Expr)>>) {
+        self.motions = events;
+    }
+
+    /// Whether the matter records an event matching `pattern` (qualified)
+    /// on or before `date`; outside a matter, always: a package's own
+    /// check cannot know whether an order was made on motion.
+    #[must_use]
+    pub fn moved(&self, pattern: &hir::Expr, date: &str) -> bool {
+        self.motions.as_ref().is_none_or(|events| {
+            events
+                .iter()
+                .any(|(d, e)| d.as_str() <= date && super::condition::matches(pattern, e))
+        })
     }
 
     /// The commencement date of the proceeding a query on `date` concerns.

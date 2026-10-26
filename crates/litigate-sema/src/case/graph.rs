@@ -482,8 +482,9 @@ impl<'a> Graph<'a> {
     }
 
     /// The motion patterns of every `extend` grant (`on M()`, and its
-    /// denial `unless D()`), with the pack each is written in: a motion to
-    /// extend and its denial are matter history the grant reads (FRCP
+    /// denial `unless D()`) and every delegation exercised on motion
+    /// (`delegable { ..., on M() }`), with the pack each is written in: a
+    /// motion and its denial are matter history the grant reads (FRCP
     /// 6(b)(1)(B), FRAP 4(a)(5)(A)(i), Sup. Ct. R. 30.3), so an event
     /// matching one is legal without taking an edge.
     pub fn motion_patterns(&self) -> Vec<(&'a str, &'a Expr)> {
@@ -507,7 +508,29 @@ impl<'a> Graph<'a> {
                 }
             }
         }
+        // A delegation exercised on motion reads the motion the same way.
+        for p in self.vocabulary() {
+            let pack = p.manifest.pack_id.as_str();
+            for d in declarations(p) {
+                let delegations = match d {
+                    Declaration::Grant(g) => &g.delegations,
+                    d => temporal::world::meta_of(d).map_or(&[][..], |m| &m.delegations),
+                };
+                out.extend(
+                    delegations
+                        .iter()
+                        .filter_map(|c| c.on.as_ref())
+                        .map(|m| (pack, m)),
+                );
+            }
+        }
         out
+    }
+
+    /// `e` (in the primary view) with every event and variant name
+    /// qualified by its package, as [`World::moved`] compares it.
+    pub fn qualified(&self, e: &Expr) -> Expr {
+        self.respelled(self.primary(), "", e)
     }
 
     /// The `has_event` patterns of every transition arm, with the pack each

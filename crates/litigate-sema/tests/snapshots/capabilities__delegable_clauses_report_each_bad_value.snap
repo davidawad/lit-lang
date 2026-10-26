@@ -3,8 +3,8 @@ source: crates/litigate-sema/tests/capabilities.rs
 expression: out
 ---
 [
-    "pkgs/demo/main.lit:11:58 L2007 `delegable_to` is replaced by a typed capability naming what the lower authority may do: `delegable { to <Level>, op <op> [, max N.days] [, cite ...] }` [fix: \"delegable { to CaseOrder, op set }\"]",
-    "pkgs/demo/main.lit:12:58 L2007 `delegable_to` is replaced by a typed capability naming what the lower authority may do: `delegable { to <Level>, op <op> [, max N.days] [, cite ...] }` [fix: \"delegable { to [LocalRule, CaseOrder], op set }\"]",
+    "pkgs/demo/main.lit:11:58 L2007 `delegable_to` is replaced by a typed capability naming what the lower authority may do: `delegable { to <Level>, op <op> [, max N.days] [, discretion <Standard>] [, on <Motion>()] [, cite ...] }` [fix: \"delegable { to CaseOrder, op set }\"]",
+    "pkgs/demo/main.lit:12:58 L2007 `delegable_to` is replaced by a typed capability naming what the lower authority may do: `delegable { to <Level>, op <op> [, max N.days] [, discretion <Standard>] [, on <Motion>()] [, cite ...] }` [fix: \"delegable { to [LocalRule, CaseOrder], op set }\"]",
     "pkgs/demo/main.lit:13:58 L2007 a `delegable` capability names `to`: `delegable { to <Level>, op <op> }`",
     "pkgs/demo/main.lit:14:58 L2007 a `delegable` capability names `op`: `delegable { to <Level>, op <op> }`",
     "pkgs/demo/main.lit:15:87 L2007 `stretch` is not a delegable operation: expected `extend`, `shorten`, `set`, `suspend`, `compute_method`",

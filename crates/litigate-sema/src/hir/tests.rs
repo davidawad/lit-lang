@@ -24,6 +24,8 @@ fn meta(id: &str) -> Metadata {
             to: "CaseOrder".into(),
             ops: vec![DelegatedOp::Extend],
             max: Some((30, DayUnit::Calendar)),
+            standard: None,
+            on: None,
             cite: Some("FRCP 6(b)(1)".into()),
         }],
         span: None,

@@ -220,6 +220,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   district-court window loses its `CaseOrder` delegation. Delegation, characterization and grant cites
   are checked by `cite-resolves`.
 
+- **A delegation's condition and procedure** (lg-962.4; SPEC §5.5;
+  design review §2.4). `delegable { to L, op O, max N.unit, discretion S,
+  on M() }` completes the five-part capability at the rule level:
+  `discretion` names the cause standard (L2007 outside the closed set),
+  `on` the motion an exercise requires (an event pattern, L1002). In a
+  matter, an order licensed only by capabilities on motion has no effect
+  unless the matter records the motion on or before the order's date
+  (L3004 at the order package's `uses`), and the motion is legal history
+  without an edge. Fixed: an override's trigger with an imported enum
+  variant (`Served(complaint)`) no longer reads as a change of trigger,
+  so it performs `extend` or `shorten`, not `set`.
+
 - **Bitemporal claims** (lg-962.4; SPEC §4.1, §5.4; design review §2.6,
   §6 item 6, P9, L5). `retracted D` closes a version's transaction time,
   so a correction restates the window it corrects (disjointness is per

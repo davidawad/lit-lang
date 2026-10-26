@@ -272,7 +272,7 @@ impl Cx<'_, '_> {
     }
 
     /// The cause standard `r`: one of the closed set (L2007 otherwise).
-    fn standard(&mut self, r: &RefPath) -> Option<CauseStandard> {
+    pub(super) fn standard(&mut self, r: &RefPath) -> Option<CauseStandard> {
         let text = r.display();
         let found = CauseStandard::ALL.into_iter().find(|s| s.name() == text);
         if found.is_none() {

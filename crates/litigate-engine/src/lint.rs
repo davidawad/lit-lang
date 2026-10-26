@@ -3,7 +3,7 @@
 //! diagnostic an author (human or agent) can act on.
 
 use serde::Serialize;
-use std::collections::{HashMap, HashSet};
+use std::collections::{BTreeSet, HashMap, HashSet};
 
 use crate::cite::{CiteOutcome, SourceCorpus};
 use crate::model::{Graph, NodeKind, Pack, RawEdge};
@@ -226,14 +226,8 @@ fn lint_pack_nodes(p: &Pack, push: &mut Push<'_>) {
         if !terminal && !outs.is_empty() && outs.iter().all(|e| e.actor != "applicant") {
             let with = outs.iter().filter(|e| e.probability.is_some()).count();
             if with == outs.len() {
-                let s: f64 = outs.iter().filter_map(|e| e.probability).sum();
-                if (s - 1.0).abs() > 1e-3 {
-                    push(
-                        "error",
-                        "probability-sum",
-                        at.clone(),
-                        format!("chance node probabilities sum to {s:.3}"),
-                    );
+                if let Some(message) = probability_sum(&outs) {
+                    push("error", "probability-sum", at.clone(), message);
                 }
             } else if is_fact {
                 // A node tagged `fact` is a matter fact knowable at filing
@@ -281,6 +275,54 @@ fn lint_pack_nodes(p: &Pack, push: &mut Push<'_>) {
 /// an office's time-bar determination). Check the same thing on
 /// just the interrupt (non-applicant) edges -- scenario/plan.rs's `chooser()`
 /// reads the same `authored` array `chance()` does.
+/// Why a chance node's out-edges are not a distribution, if they are not.
+///
+/// Edges gated by `requires`/`forbids` draw only where an earlier edge set
+/// (or did not set) those flags, so the sum is checked once per context, a
+/// set of the node's gating flags, over the edges it enables; a context
+/// enabling none draws nothing and is skipped. The context count is
+/// capped: past it the node is checked as if ungated.
+fn probability_sum(outs: &[&RawEdge]) -> Option<String> {
+    const MAX_GATES: usize = 12;
+    let gates: Vec<&str> = outs
+        .iter()
+        .flat_map(|e| e.requires.iter().chain(&e.forbids))
+        .map(String::as_str)
+        .collect::<BTreeSet<_>>()
+        .into_iter()
+        .collect();
+    let gates = if gates.len() > MAX_GATES {
+        vec![]
+    } else {
+        gates
+    };
+    (0..1_usize << gates.len()).find_map(|mask| {
+        let set: Vec<&str> = gates
+            .iter()
+            .enumerate()
+            .filter(|(i, _)| mask >> i & 1 == 1)
+            .map(|(_, g)| *g)
+            .collect();
+        let live: Vec<f64> = outs
+            .iter()
+            .filter(|e| {
+                gates.is_empty()
+                    || (e.requires.iter().all(|r| set.contains(&r.as_str()))
+                        && !e.forbids.iter().any(|f| set.contains(&f.as_str())))
+            })
+            .filter_map(|e| e.probability)
+            .collect();
+        let s: f64 = live.iter().sum();
+        let context = if gates.is_empty() {
+            String::new()
+        } else {
+            format!(" with flags {{{}}} set", set.join(","))
+        };
+        (!live.is_empty() && (s - 1.0).abs() > 1e-3)
+            .then(|| format!("chance node probabilities sum to {s:.3}{context}"))
+    })
+}
+
 fn lint_mixed_fact_node(outs: &[&RawEdge], at: &str, push: &mut Push<'_>) {
     let interrupts: Vec<&RawEdge> = outs
         .iter()

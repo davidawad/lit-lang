@@ -67,6 +67,24 @@ chance loop: \"L\" { a \"A\" -> loop, b \"B\" -> t p 1 }",
     insta::assert_debug_snapshot!(out);
 }
 
+/// Edges gated by `requires`/`forbids` are a distribution per flag
+/// context (lg-teqz): `ok` draws one distribution in each, `both` sees two
+/// at once when `a` and `b` are both set, `bare` none where neither is,
+/// `holed` overflows only where `a` is set, `sparse` enables nothing where
+/// `a` is unset (not checked), and `wide` gates on too many flags.
+#[test]
+fn gated_chance_probabilities_sum_to_one_per_flag_context() {
+    let out = check_body(
+        "chance ok: \"K\" { a \"A\" -> t p 1/2 { requires [a] }, b \"B\" -> t p 1/2 { requires [a] }, c \"C\" -> t p 1 { forbids [a] } }\n\
+chance both: \"B\" { a \"A\" -> t p 1 { requires [a] }, b \"B\" -> t p 1 { requires [b] }, c \"C\" -> t p 1 { forbids [a, b] } }\n\
+chance bare: \"N\" { a \"A\" -> t p 1 { requires [a] }, c \"C\" -> t p 1/2 { forbids [a] } }\n\
+chance holed: \"H\" { a \"A\" -> t p ? { requires [a] }, b \"B\" -> t p 1 { requires [a] }, c \"C\" -> t p 1/2, d \"D\" -> t p 1/2 { forbids [a] } }\n\
+chance sparse: \"S\" { a \"A\" -> t p 1 { requires [a] } }\n\
+chance wide: \"W\" { a \"A\" -> t p 1 { requires [g0, g1, g2, g3, g4, g5, g6, g7, g8, g9, g10, g11, g12] } }",
+    );
+    insta::assert_debug_snapshot!(out);
+}
+
 #[test]
 fn edge_probabilities_are_constants_in_the_unit_interval() {
     let out = check_body(

@@ -12,6 +12,9 @@ use std::collections::{BTreeMap, BTreeSet};
 
 type Fields<'f> = BTreeMap<&'f str, &'f Field>;
 
+/// Most gating flags one chance node's contexts are enumerated over.
+const MAX_GATES: usize = 12;
+
 const VALENCES: [&str; 4] = ["good", "caution", "bad", "neutral"];
 
 impl Cx<'_, '_> {
@@ -241,19 +244,76 @@ impl Cx<'_, '_> {
     /// are `Dist<Edges(n)>` minus its self edges, which carry no `p`
     /// (L2008). Its known probabilities sum to exactly 1, or to at most 1
     /// while any is a hole. No other node carries `p` (L2008).
+    ///
+    /// Edges gated by `requires`/`forbids` make the distribution
+    /// conditional on the flags an earlier edge set (`Dist[E | C]`, design
+    /// review 2026-10-23 §2.11): the check runs once per context, a set of
+    /// the node's gating flags, over the edges that context enables. A
+    /// context enabling none draws nothing there, so it is not checked.
     fn probability_sum(&mut self, n: &NodeItem, edges: &[Edge], chance: bool) {
         if !chance {
             return;
         }
         let drawn: Vec<&Edge> = edges.iter().filter(|e| e.to != n.name.text).collect();
-        let known: Vec<Rational> = drawn
+        let gates: Vec<&str> = drawn
+            .iter()
+            .flat_map(|e| e.requires.iter().chain(&e.forbids))
+            .map(String::as_str)
+            .collect::<BTreeSet<_>>()
+            .into_iter()
+            .collect();
+        if gates.len() > MAX_GATES {
+            self.report(
+                Report::new(
+                    C::InvalidDistribution,
+                    n.name.range,
+                    format!(
+                        "chance node `{}` conditions its probabilities on {} flags, more than the {MAX_GATES} whose contexts can be checked",
+                        n.name.text,
+                        gates.len()
+                    ),
+                )
+                .note("split the node, or gate its edges on fewer flags"),
+            );
+            return;
+        }
+        for mask in 0..1_usize << gates.len() {
+            let set: Vec<&str> = gates
+                .iter()
+                .enumerate()
+                .filter(|(i, _)| mask >> i & 1 == 1)
+                .map(|(_, g)| *g)
+                .collect();
+            let live: Vec<&Edge> = drawn
+                .iter()
+                .copied()
+                .filter(|e| {
+                    e.requires.iter().all(|r| set.contains(&r.as_str()))
+                        && !e.forbids.iter().any(|f| set.contains(&f.as_str()))
+                })
+                .collect();
+            let skip = if gates.is_empty() {
+                edges.is_empty()
+            } else {
+                live.is_empty()
+            };
+            if !skip && !self.context_sum(n, &live, (!gates.is_empty()).then_some(&set)) {
+                return;
+            }
+        }
+    }
+
+    /// `dist-exact` for the edges `live` one flag context (`set`, `None`
+    /// when no edge is gated) enables; false once it has reported.
+    fn context_sum(&mut self, n: &NodeItem, live: &[&Edge], set: Option<&Vec<&str>>) -> bool {
+        let known: Vec<Rational> = live
             .iter()
             .filter_map(|e| match &e.probability {
                 Some(Authored::Known(p)) => Some(*p),
                 _ => None,
             })
             .collect();
-        let open = drawn
+        let open = live
             .iter()
             .any(|e| matches!(e.probability, Some(Authored::Hole(_)) | None));
         let one = Rational::integer(1);
@@ -262,37 +322,36 @@ impl Cx<'_, '_> {
         } else {
             "refinement `Dist<Edges(n)> = {m | Σ m(e) = 1}` over the edges other than self edges"
         };
-        match q::sum(known) {
-            Ok(total) if !open && total != one && !edges.is_empty() => {
-                self.report(
-                    Report::new(
-                        C::InvalidDistribution,
-                        n.name.range,
-                        format!(
-                            "probabilities of chance node `{}` sum to {}, not exactly 1",
-                            n.name.text,
-                            q::display(total)
-                        ),
-                    )
-                    .note(refinement),
-                );
+        let context = match set {
+            None => String::new(),
+            Some(set) if set.is_empty() => " with none of its gating flags set".to_owned(),
+            Some(set) => format!(" with only flags {{{}}} set", set.join(", ")),
+        };
+        let message = match q::sum(known) {
+            Ok(total) if !open && total != one => format!(
+                "probabilities of chance node `{}` sum to {}, not exactly 1{context}",
+                n.name.text,
+                q::display(total)
+            ),
+            Ok(total) if open && q::cmp(total, one).is_gt() => format!(
+                "known probabilities of `{}` already sum to {}{context}",
+                n.name.text,
+                q::display(total)
+            ),
+            Ok(_) => return true,
+            Err(e) => {
+                self.report(Report::new(C::ArithmeticError, n.name.range, e.message()));
+                return false;
             }
-            Ok(total) if open && q::cmp(total, one).is_gt() => {
-                self.report(
-                    Report::new(
-                        C::InvalidDistribution,
-                        n.name.range,
-                        format!(
-                            "known probabilities of `{}` already sum to {}",
-                            n.name.text,
-                            q::display(total)
-                        ),
-                    )
-                    .note(refinement),
-                );
-            }
-            Ok(_) => {}
-            Err(e) => self.report(Report::new(C::ArithmeticError, n.name.range, e.message())),
+        };
+        let mut report =
+            Report::new(C::InvalidDistribution, n.name.range, message).note(refinement);
+        if set.is_some() {
+            report = report.note(
+                "each set of the node's `requires`/`forbids` flags draws from the edges it enables; gate the edges so one context enables one distribution (`forbids [x]` on the others)",
+            );
         }
+        self.report(report);
+        false
     }
 }

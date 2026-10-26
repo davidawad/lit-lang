@@ -297,3 +297,82 @@ fn a_plain_chance_node_without_the_fact_tag_still_gets_chance_unquantified() {
     assert!(d.iter().any(|x| x.code == "chance-unquantified"));
     assert!(!d.iter().any(|x| x.code == "fact-no-prior"));
 }
+
+/// The sums of the consent-gated `ruling` (`requires`/`forbids` on
+/// `consented`) and, when `rr` is not exclusive of `consented`, the context
+/// that sees both distributions at once.
+fn gated_ruling_sums(rr_forbids: &str) -> Vec<String> {
+    let p = pack(&format!(
+        r#"{{
+                "schemaVersion": 2, "id": "demo", "title": "Demo", "startNodeId": "consent",
+                "nodes": [
+                    {{"id": "consent", "label": "Consent", "kind": "decision"}},
+                    {{"id": "ruling", "label": "Ruling", "kind": "state"}},
+                    {{"id": "a", "label": "A", "kind": "terminal", "payoff": 1.0}},
+                    {{"id": "b", "label": "B", "kind": "terminal", "payoff": 0.0}}
+                ],
+                "edges": [
+                    {{"id": "yes", "from": "consent", "to": "ruling", "label": "yes", "actor": "applicant", "sets": ["consented"]}},
+                    {{"id": "no", "from": "consent", "to": "ruling", "label": "no", "actor": "applicant", "sets": ["declined"]}},
+                    {{"id": "fa", "from": "ruling", "to": "a", "label": "a", "actor": "office", "probability": 0.5, "requires": ["consented"]}},
+                    {{"id": "fb", "from": "ruling", "to": "b", "label": "b", "actor": "office", "probability": 0.5, "requires": ["consented"]}},
+                    {{"id": "ra", "from": "ruling", "to": "a", "label": "a", "actor": "office", "probability": 0.7, "requires": ["declined"], "forbids": [{rr_forbids}]}},
+                    {{"id": "rb", "from": "ruling", "to": "b", "label": "b", "actor": "office", "probability": 0.3, "requires": ["declined"], "forbids": [{rr_forbids}]}},
+                    {{"id": "va", "from": "ruling", "to": "a", "label": "a", "actor": "office", "probability": 0.1, "forbids": ["consented", "declined"]}},
+                    {{"id": "vb", "from": "ruling", "to": "b", "label": "b", "actor": "office", "probability": 0.9, "forbids": ["consented", "declined"]}}
+                ]
+            }}"#
+    ));
+    let g = Graph::compile(
+        std::slice::from_ref(&p),
+        &LinkFile::default(),
+        &CompileOptions::default(),
+    )
+    .unwrap();
+    lint(&g, &[p])
+        .into_iter()
+        .filter(|x| x.code == "probability-sum")
+        .map(|x| format!("{}: {}", x.at, x.message))
+        .collect()
+}
+
+#[test]
+fn a_gated_chance_node_sums_to_one_per_flag_context() {
+    assert_eq!(gated_ruling_sums(r#""consented""#), Vec::<String>::new());
+    assert_eq!(
+        gated_ruling_sums(""),
+        ["demo::ruling: chance node probabilities sum to 2.000 with flags {consented,declined} set"]
+    );
+}
+
+#[test]
+fn a_node_gated_on_too_many_flags_is_summed_as_if_ungated() {
+    let edges: Vec<String> = (0..13)
+        .map(|i| {
+            format!(
+                r#"{{"id": "e{i}", "from": "s", "to": "t", "label": "e", "actor": "office", "probability": 0.5, "requires": ["f{i}"]}}"#
+            )
+        })
+        .collect();
+    let p = pack(&format!(
+        r#"{{
+                "schemaVersion": 2, "id": "demo", "title": "Demo", "startNodeId": "s",
+                "nodes": [
+                    {{"id": "s", "label": "S", "kind": "state"}},
+                    {{"id": "t", "label": "T", "kind": "terminal", "payoff": 0.0}}
+                ],
+                "edges": [{}]
+            }}"#,
+        edges.join(",")
+    ));
+    let g = Graph::compile(
+        std::slice::from_ref(&p),
+        &LinkFile::default(),
+        &CompileOptions::default(),
+    )
+    .unwrap();
+    assert!(lint(&g, &[p])
+        .iter()
+        .any(|x| x.code == "probability-sum"
+            && x.message == "chance node probabilities sum to 6.500"));
+}

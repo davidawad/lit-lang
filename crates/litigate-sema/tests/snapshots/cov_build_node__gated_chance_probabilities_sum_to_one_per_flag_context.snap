@@ -1,0 +1,10 @@
+---
+source: crates/litigate-sema/tests/cov_build_node.rs
+expression: out
+---
+[
+    "pkgs/demo/main.lit:11:8 L2003 probabilities of chance node `both` sum to 2, not exactly 1 with only flags {a, b} set",
+    "pkgs/demo/main.lit:12:8 L2003 probabilities of chance node `bare` sum to 1/2, not exactly 1 with none of its gating flags set",
+    "pkgs/demo/main.lit:13:8 L2003 known probabilities of `holed` already sum to 3/2 with only flags {a} set",
+    "pkgs/demo/main.lit:15:8 L2003 chance node `wide` conditions its probabilities on 13 flags, more than the 12 whose contexts can be checked",
+]

@@ -416,6 +416,14 @@ shares one `base_id`, which is how a calibration entry (`docs/CALIBRATION.md`)
 targets one edge by its authored id and lands on every flagged copy at once,
 not just the one whose exact id matches.
 
+**Conditional chance draws.** A chance node's out-edges may carry
+`requires`/`forbids` too, so an earlier choice changes the odds at a node
+every option reaches: each product-graph copy keeps only the edges its
+flag-set enables, and those are its distribution. `litgraph lint`'s
+`probability-sum` checks the sum once per context (each set of the node's
+gating flags, up to 12; a context enabling no edge is skipped) and names
+the context that fails.
+
 **Reading flags in expressions.** `flag("x")` is available in edge
 (cost/mask/probability-transform) and terminal (utility) expressions — see
 `docs/COST_FUNCTIONS.md`. On an edge it reads the source node's flag-set; on

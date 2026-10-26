@@ -957,7 +957,17 @@ compute the same values (before 1.0.0, `^` and `~` coincide).
   exactly 1 (`dist-exact`, L2003), or to at most 1 while one is a hole. A
   self edge carries no `p` and is not part of the distribution, so a
   chance node whose only edges are self edges sums to 0. Holes are allowed
-  only in `dev`. `discretion`
+  only in `dev`. A chance edge gated by `requires`/`forbids` draws only
+  where an earlier edge set (or did not set) those flags, so the node's
+  distribution is conditional on them (`Dist[E | C]`): `dist-exact`
+  holds per context, each set of the node's gating flags, over the edges
+  it enables, and a context enabling none is not checked. This is how a
+  decision option scopes a fact to later draws (a consent that makes the
+  ruling a final order, a declination that sends it to another judge):
+  the options reach the same node but not the same odds. Contexts are
+  checked without reachability, so gates must be exclusive where flags
+  can co-occur (`forbids [x]` on the other edges); a node gated on more
+  than 12 flags is L2003. `discretion`
   marks a tribunal-discretion draw. It is verification metadata only.
 - `outcome`, `payoff`, and `payoff_by_flag` are valid only on `terminal`
   (L2007).

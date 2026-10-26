@@ -71,7 +71,18 @@ pub struct Layer {
     pub in_force: bool,
     /// The overruling withdrawing it, and from when.
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub overruled_by: Option<(String, String)>,
+    pub overruled_by: Option<Overruled>,
+}
+
+/// An overruling of a world's precedent layer.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+pub struct Overruled {
+    /// The overruling package.
+    pub by: String,
+    /// The overruling's date, from which the precedent's claims are
+    /// withdrawn (to every case still open, Harper v. Virginia Dep't of
+    /// Taxation, 509 U.S. 86 (1993)).
+    pub from: String,
 }
 
 /// A checked world file.
@@ -405,7 +416,7 @@ fn overrulings(
     layers: &[(PackageInput, &Manifest)],
     families: &[Family],
     diagnostics: &mut Vec<Diagnostic>,
-) -> BTreeMap<String, (String, String)> {
+) -> BTreeMap<String, Overruled> {
     let by_name: BTreeMap<&str, &Manifest> =
         layers.iter().map(|(_, m)| (m.name.as_str(), *m)).collect();
     let mut out = BTreeMap::new();
@@ -446,7 +457,13 @@ fn overrulings(
                 ));
                 continue;
             }
-            out.insert(target.clone(), (o.name.clone(), i.date.clone()));
+            out.insert(
+                target.clone(),
+                Overruled {
+                    by: o.name.clone(),
+                    from: i.date.clone(),
+                },
+            );
         }
     }
     out

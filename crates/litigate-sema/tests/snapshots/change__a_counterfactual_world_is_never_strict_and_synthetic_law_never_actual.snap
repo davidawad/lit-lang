@@ -1,0 +1,26 @@
+---
+source: crates/litigate-sema/tests/change.rs
+expression: rows
+---
+[
+    (
+        "a synthetic layer in an actual world",
+        [
+            "w.world:1:11 L1014 layer `what-if` is not authoritative (a synthetic what-if): it may appear only in a counterfactual world",
+            "layer what-if emergency-declaration in force",
+        ],
+    ),
+    (
+        "a counterfactual world under strict",
+        [
+            "w.world:1:12 L1014 a counterfactual world is never checked under the strict profile: its law is not the law in force",
+            "layer what-if emergency-declaration in force",
+        ],
+    ),
+    (
+        "a counterfactual world under dev",
+        [
+            "layer what-if emergency-declaration in force",
+        ],
+    ),
+]

@@ -1,0 +1,51 @@
+---
+source: crates/litigate-sema/tests/change.rs
+expression: rows
+---
+[
+    (
+        "in its own circuit",
+        [
+            "layer ca1-dicta binding precedent in force",
+            "layer ca1-rule binding precedent in force",
+        ],
+    ),
+    (
+        "in a sister circuit",
+        [
+            "w.world:1:11 L9009 precedent `ca1-rule` is persuasive in this world (`ca1` precedent does not bind in the `civil` family at `ca2`): its binding effects are not in force here",
+            "layer ca1-dicta persuasive precedent in force",
+            "layer ca1-rule persuasive precedent not in force",
+        ],
+    ),
+    (
+        "overruled en banc",
+        [
+            "layer ca1-rule binding precedent not in force (overruled by en-banc from 2020-01-01)",
+            "layer en-banc overruling in force",
+        ],
+    ),
+    (
+        "overruled by the Supreme Court",
+        [
+            "layer ca1-rule binding precedent not in force (overruled by scotus-rev from 2020-01-01)",
+            "layer scotus-rev overruling in force",
+        ],
+    ),
+    (
+        "a sister circuit cannot overrule it",
+        [
+            "pkgs/sister/Lit.toml:30:1 L2010 `ca2` cannot overrule `ca1` precedent `ca1-rule`: an overruling is by the same court (en banc) or one whose precedent binds it",
+            "layer ca1-rule binding precedent in force",
+            "layer sister overruling in force",
+        ],
+    ),
+    (
+        "an overruling of an order",
+        [
+            "pkgs/of-an-order/Lit.toml:30:1 L2010 `of-an-order` overrules `order`, which is not a precedent",
+            "layer of-an-order overruling in force",
+            "layer order case-order in force",
+        ],
+    ),
+]

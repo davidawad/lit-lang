@@ -1,0 +1,49 @@
+---
+source: crates/litigate-sema/tests/change.rs
+expression: rows
+---
+[
+    (
+        "a designated Supreme Court precedent interprets",
+        [],
+    ),
+    (
+        "a designated circuit precedent interprets",
+        [],
+    ),
+    (
+        "a district decision interprets",
+        [
+            "pkgs/p/rules.lit:5:11 L2010 a package of class `persuasive precedent` cannot defeat another package's default\n    note: its class permits declare, set-prior\n    note: `interpret` is permitted to: base, amendment, local-rule, standing-order, case-order, binding precedent",
+        ],
+    ),
+    (
+        "a nonprecedential decision interprets",
+        [
+            "pkgs/p/rules.lit:5:11 L2010 a package of class `persuasive precedent` cannot defeat another package's default\n    note: its class permits declare, set-prior\n    note: `interpret` is permitted to: base, amendment, local-rule, standing-order, case-order, binding precedent",
+        ],
+    ),
+    (
+        "a binding precedent waives what is delegated to its rung",
+        [],
+    ),
+    (
+        "a binding precedent waives what is not delegated to its rung",
+        [
+            "pkgs/p/rules.lit:5:54 L3004 `waived` (StandingOrder) overrides `fed::answer-period` (FederalRule), but `fed::answer-period` does not delegate to StandingOrder: missing `delegable { to StandingOrder, op extend }`\n    note @7:1: `fed::answer-period@2009-12-01` [2009-12-01, ..) delegates to no StandingOrder\n    note: only a rule's own text can delegate; `override` cannot grant itself the power\n    fix @7:87-7:87: \" delegable { to StandingOrder, op extend }\"",
+        ],
+    ),
+    (
+        "a binding precedent prescribes",
+        [
+            "pkgs/p/rules.lit:5:10 L2010 a package of class `binding precedent` cannot prescribe a time limit or how time is counted\n    note: its class permits declare, interpret, recharacterize, invalidate, waive, set-prior\n    note: `prescribe` is permitted to: base, amendment, local-rule, general-order, standing-order, case-order",
+        ],
+    ),
+    (
+        "a designation before the decision",
+        [
+            "pkgs/p/Lit.toml:30:14 L1004 a decision is designated precedential on or after its `date`",
+            "pkgs/p/rules.lit:2:8 L1006 module `fed.rules` belongs to package `fed`, which is not a dependency\n    note: add `fed = { version = \"^x.y.z\", path = \"...\" }` to `[dependencies]` in Lit.toml",
+        ],
+    ),
+]

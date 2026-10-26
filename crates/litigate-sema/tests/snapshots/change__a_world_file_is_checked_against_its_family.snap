@@ -1,0 +1,66 @@
+---
+source: crates/litigate-sema/tests/change.rs
+expression: rows
+---
+[
+    (
+        "not toml",
+        [
+            "w.world:1:11 L1013 invalid world file: unclosed array, expected `]`",
+        ],
+    ),
+    (
+        "unknown key",
+        [
+            "w.world:2:1 L1013 invalid world file: unknown field `place`, expected one of `modality`, `layers`, `location`",
+        ],
+    ),
+    (
+        "unknown modality",
+        [
+            "w.world:1:12 L1013 `modality` is `actual` or `counterfactual`, found `hypothetical`",
+        ],
+    ),
+    (
+        "no layers",
+        [
+            "w.world:1:10 L1013 a world has at least one layer",
+        ],
+    ),
+    (
+        "an unknown layer and family",
+        [
+            "w.world:1:18 L1013 layer `ghost` is not a loaded package",
+            "w.world:4:10 L1013 `criminal` is not a forum family of `core`'s matrix",
+            "layer fed base in force",
+        ],
+    ),
+    (
+        "a circuit family without a circuit",
+        [
+            "w.world:4:10 L1013 a world in the `civil` family names its `circuit`: circuit precedent binds per circuit there",
+            "layer fed base in force",
+        ],
+    ),
+    (
+        "a circuit outside the family",
+        [
+            "w.world:5:11 L1013 `ca9` is not a circuit of the `civil` family (ca1, ca2)",
+            "layer fed base in force",
+        ],
+    ),
+    (
+        "a circuit in a family without circuits",
+        [
+            "w.world:5:11 L1013 the `claims` family has no regional circuits",
+            "layer fed base in force",
+        ],
+    ),
+    (
+        "an actual world with a local rule",
+        [
+            "layer fed base in force",
+            "layer lr local-rule in force",
+        ],
+    ),
+]

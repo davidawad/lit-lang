@@ -1,0 +1,49 @@
+---
+source: crates/litigate-sema/tests/change.rs
+expression: rows
+---
+[
+    (
+        "precedent without a court",
+        [
+            "the `precedent` instrument names its `court` (a forum-family court id such as `scotus` or `ca9`)",
+        ],
+    ),
+    (
+        "overruling without a court or target",
+        [
+            "the `overruling` instrument names its `court` (a forum-family court id such as `scotus` or `ca9`)",
+            "an overruling names the precedent packages it `overrules`",
+        ],
+    ),
+    (
+        "overruling of nothing",
+        [
+            "an overruling `overrules` at least one precedent package",
+        ],
+    ),
+    (
+        "a court on a case order",
+        [
+            "`court` names the court of a `precedent` or `overruling` only",
+        ],
+    ),
+    (
+        "a designation and an overruled package on a case order",
+        [
+            "only a `precedent` is `designated` precedential",
+            "only an `overruling` `overrules`",
+        ],
+    ),
+    (
+        "a bad court id and designation date",
+        [
+            "court `Supreme Court` must be a kebab-case id",
+            "`designated` must be a YYYY-MM-DD date, found `2020-02-30`",
+        ],
+    ),
+    (
+        "a synthetic layer",
+        [],
+    ),
+]

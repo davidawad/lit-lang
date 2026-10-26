@@ -1,0 +1,249 @@
+---
+source: crates/litigate-cli/tests/change_examples.rs
+expression: worlds
+---
+[
+  {
+    "path": "docs/litigate/examples/change/worlds/bowles.world",
+    "world": {
+      "modality": "actual",
+      "layers": [
+        "change-bowles-v-russell",
+        "change-thompson-v-ins"
+      ],
+      "location": {
+        "family": "circuit-appellate",
+        "circuit": "ca6"
+      }
+    },
+    "layers": [
+      {
+        "name": "change-bowles-v-russell",
+        "version": "1.0.0",
+        "class": "overruling",
+        "in_force": true
+      },
+      {
+        "name": "change-thompson-v-ins",
+        "version": "1.0.0",
+        "class": "binding precedent",
+        "in_force": false,
+        "overruled_by": {
+          "by": "change-bowles-v-russell",
+          "from": "2007-06-14"
+        }
+      }
+    ]
+  },
+  {
+    "path": "docs/litigate/examples/change/worlds/cofc-general-order.world",
+    "world": {
+      "modality": "actual",
+      "layers": [
+        "change-cofc-general-order-2025-02"
+      ],
+      "location": {
+        "family": "cofc"
+      }
+    },
+    "layers": [
+      {
+        "name": "change-cofc-general-order-2025-02",
+        "version": "1.0.0",
+        "class": "general-order",
+        "in_force": true
+      }
+    ]
+  },
+  {
+    "path": "docs/litigate/examples/change/worlds/dcolo-cancino.world",
+    "world": {
+      "modality": "actual",
+      "layers": [
+        "change-cancino-perez-scheduling-order",
+        "change-frcp-2009-amendment",
+        "change-frcp-base"
+      ],
+      "location": {
+        "family": "district-civil",
+        "court": "d-colo",
+        "circuit": "ca10"
+      }
+    },
+    "layers": [
+      {
+        "name": "change-cancino-perez-scheduling-order",
+        "version": "1.0.0",
+        "class": "case-order",
+        "in_force": true
+      },
+      {
+        "name": "change-frcp-2009-amendment",
+        "version": "1.0.0",
+        "class": "amendment",
+        "in_force": true
+      },
+      {
+        "name": "change-frcp-base",
+        "version": "1.0.0",
+        "class": "base",
+        "in_force": true
+      }
+    ]
+  },
+  {
+    "path": "docs/litigate/examples/change/worlds/fedcir-guidance.world",
+    "world": {
+      "modality": "actual",
+      "layers": [
+        "change-fedcir-practice-note-26"
+      ],
+      "location": {
+        "family": "federal-circuit"
+      }
+    },
+    "layers": [
+      {
+        "name": "change-fedcir-practice-note-26",
+        "version": "1.0.0",
+        "class": "guidance",
+        "in_force": true
+      }
+    ]
+  },
+  {
+    "path": "docs/litigate/examples/change/worlds/frcp87-what-if.world",
+    "world": {
+      "modality": "counterfactual",
+      "layers": [
+        "change-frcp-2009-amendment",
+        "change-frcp-base",
+        "change-frcp87-what-if"
+      ],
+      "location": {
+        "family": "district-civil",
+        "circuit": "ca2"
+      }
+    },
+    "layers": [
+      {
+        "name": "change-frcp-2009-amendment",
+        "version": "1.0.0",
+        "class": "amendment",
+        "in_force": true
+      },
+      {
+        "name": "change-frcp-base",
+        "version": "1.0.0",
+        "class": "base",
+        "in_force": true
+      },
+      {
+        "name": "change-frcp87-what-if",
+        "version": "1.0.0",
+        "class": "emergency-declaration",
+        "in_force": true
+      }
+    ]
+  },
+  {
+    "path": "docs/litigate/examples/change/worlds/ndcal-breyer.world",
+    "world": {
+      "modality": "actual",
+      "layers": [
+        "change-breyer-standing-order",
+        "change-frcp-2009-amendment",
+        "change-frcp-base"
+      ],
+      "location": {
+        "family": "district-civil",
+        "court": "d-ndcal",
+        "circuit": "ca9",
+        "judge": "Breyer"
+      }
+    },
+    "layers": [
+      {
+        "name": "change-breyer-standing-order",
+        "version": "1.0.0",
+        "class": "standing-order",
+        "in_force": true
+      },
+      {
+        "name": "change-frcp-2009-amendment",
+        "version": "1.0.0",
+        "class": "amendment",
+        "in_force": true
+      },
+      {
+        "name": "change-frcp-base",
+        "version": "1.0.0",
+        "class": "base",
+        "in_force": true
+      }
+    ]
+  },
+  {
+    "path": "docs/litigate/examples/change/worlds/ptab-light-wonder.world",
+    "world": {
+      "modality": "actual",
+      "layers": [
+        "change-light-wonder-paper-30",
+        "change-ptab-base"
+      ],
+      "location": {
+        "family": "ptab"
+      }
+    },
+    "layers": [
+      {
+        "name": "change-light-wonder-paper-30",
+        "version": "1.0.0",
+        "class": "binding precedent",
+        "in_force": true
+      },
+      {
+        "name": "change-ptab-base",
+        "version": "1.0.0",
+        "class": "base",
+        "in_force": true
+      }
+    ]
+  },
+  {
+    "path": "docs/litigate/examples/change/worlds/sdny-2026.world",
+    "world": {
+      "modality": "actual",
+      "layers": [
+        "change-frcp-2009-amendment",
+        "change-frcp-base",
+        "change-sdny-local-civil-rules"
+      ],
+      "location": {
+        "family": "district-civil",
+        "court": "d-sdny",
+        "circuit": "ca2"
+      }
+    },
+    "layers": [
+      {
+        "name": "change-frcp-2009-amendment",
+        "version": "1.0.0",
+        "class": "amendment",
+        "in_force": true
+      },
+      {
+        "name": "change-frcp-base",
+        "version": "1.0.0",
+        "class": "base",
+        "in_force": true
+      },
+      {
+        "name": "change-sdny-local-civil-rules",
+        "version": "1.0.0",
+        "class": "local-rule",
+        "in_force": true
+      }
+    ]
+  }
+]

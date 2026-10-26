@@ -160,6 +160,36 @@ and priced by `voi` (EVPI/EVPPI/EVSI as expected regret). Method, citations
 and exactness limits (per-node credibility, cyclic nodes, risk-neutral
 valuation, public information) are in `docs/UNCERTAINTY.md`.
 
+## Per-decision opponent models
+
+`opponent` and `opponent_objective` model every opponent decision the same
+way, so under the defaults a stipulation the opponent would accept is
+always refused and stipulating never beats moving. `scenario.opponent_models`
+(node ref → model) says how the opponent decides at one node where only
+they choose:
+
+- `{"model": "adversarial"}` minimizes our value there, whatever
+  `opponent` says, and stays zero-sum even under `opponent_objective`
+  (`equilibrium::Ctx::best_option` and `explain`'s `regret` both branch on
+  it).
+- `{"model": "chance", "probabilities": {edge ref: p}}` makes the response
+  a draw: a named edge takes its probability (e.g. a calibrated acceptance
+  rate), the node's unnamed opponent edges split the rest by `prob_fill`,
+  and with no edge named the authored probabilities are used, filled. It is
+  a draw under `opponent_objective` too.
+- `{"model": "own-objective", "payoffs": {edge ref: usd}}` restricts the
+  opponent to the edges with the highest payoff to them; unlisted edges are
+  never taken and a tie goes against us. The payoff is per decision and
+  includes the continuation the author judges: it is not propagated, unlike
+  `opponent_objective`'s terminal values.
+
+A model at a node where we also move, or where the opponent has no edge,
+or an own-objective model whose listed edges are all inactive, is
+`opponent-model-unused` and the node follows the defaults. An entry reaches
+every state-flag copy of its node, as `facts` does. A `.case` matter does
+not write it (`analysis` refuses node refs as strings; SPEC §8.3).
+`tests/opponent_models.rs` is the worked example.
+
 ## General-sum opponents
 
 `scenario.opponent_objective` (a terminal expression, e.g. `"node.opp_fees +

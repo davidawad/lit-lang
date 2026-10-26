@@ -2581,9 +2581,9 @@ fix), and so is a field given twice:
 A value of the wrong shape is L4007 at the value. `start`, `perspective`,
 `facts`, `payoffs`, `fee_shifts`, and `observe` have dedicated blocks (L4007;
 `fee_shifts` is `stakes`' `fee_shift`).
-`probabilities` and `policy` would name engine nodes and edges by string,
-so a matter does not write them (L4007): it states what it knows with
-`facts` and `beliefs`. An engine option's type is the engine's own:
+`probabilities`, `policy` and `opponent_models` would name engine nodes
+and edges by string, so a matter does not write them (L4007): it states
+what it knows with `facts` and `beliefs`. An engine option's type is the engine's own:
 the lowerer checks each option alone against `litgraph::scenario::Scenario`
 (`deny_unknown_fields`), and a serde error is L4007 at the option, with
 the serde message as a note. Engine expressions are parsed with litgraph's

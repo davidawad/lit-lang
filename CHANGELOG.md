@@ -28,6 +28,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   timeline runs `litigate timeline`. `just emacs-test`, part of `just
   ci`, runs its ERT suite with `LITGRAPH_IT_REQUIRE=1` against the debug
   `litigate`, Emacs and Graphviz from nixpkgs.
+- **Per-decision opponent models** (lg-hgrj; docs/CRITIQUE.md).
+  `scenario.opponent_models` maps a node where only the opponent chooses
+  to `adversarial` (the default behaviour, now zero-sum there even under
+  `opponent_objective`), `chance` with calibrated probabilities (e.g. a
+  stipulation's acceptance rate), or `own-objective` with the opponent's
+  own payoff per response, so stipulating can beat moving. `explain`'s
+  `who_decides` names the model and `provenance.modes` echoes it; an entry
+  that cannot apply warns `opponent-model-unused`.
 - **Legal change as declared instrument classes, per forum family, in
   worlds** (lg-fq2.1; docs/litigate/CHANGE.md, SPEC §5.7-§5.8). New
   classes `general-order` and `emergency-declaration`. `lit/core`'s

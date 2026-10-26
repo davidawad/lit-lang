@@ -220,7 +220,7 @@ fn provenance(
 ) -> Value {
     let mut params = metrics::default_params();
     params.extend(sc.params.clone());
-    json!({
+    let mut out = json!({
         "engine": ENGINE,
         "api_version": API_VERSION,
         "packs": selected.iter().map(|(p, h)| json!({ "id": p.id, "schema_version": p.schema_version, "fingerprint": h, "sources": p.sources.len() })).collect::<Vec<_>>(),
@@ -236,7 +236,11 @@ fn provenance(
         // Which values were calibrated, and from where — empty unless
         // `scenario.calibration` named at least one set.
         "calibration": calibration,
-    })
+    });
+    if !sc.opponent_models.is_empty() {
+        out["modes"]["opponent_models"] = json!(sc.opponent_models);
+    }
+    out
 }
 
 type Out = (Value, Vec<Warn>, Value);

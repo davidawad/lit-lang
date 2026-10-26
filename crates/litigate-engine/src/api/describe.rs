@@ -113,6 +113,7 @@ pub fn describe(catalog: &Catalog) -> Value {
             "facts": "{node ref: edge ref} force a `fact`-tagged chance node to its true branch (unset uses the authored prior + warns `fact-unset`)",
             "mixed": "nature-first (default; falls back to act-or-wait) | act-or-wait | self-only | optimistic",
             "opponent": "auto | adversarial | chance",
+            "opponent_models": "{node ref: {model: adversarial} | {model: chance, probabilities?: {edge ref: p}} | {model: own-objective, payoffs: {edge ref: usd}}} how the opponent decides at one node where only they choose (e.g. a calibrated chance a stipulation is accepted, or their own payoff of each response); overrides opponent and, there, opponent_objective; unused entries warn opponent-model-unused",
             "prob_fill": "residual | uniform",
             "objective": "{type: expected} | {type: cara, a} | {type: worst} | {type: cvar, alpha, grid?, y_lo?, y_hi?} (optimizes CVaR_alpha, not just reports it; y_lo/y_hi override the default grid bound, set together; see docs/CRITIQUE.md) | {type: robust, credibility?, radius?, samples?, seed?} (worst case over each chance node's Dirichlet credible L1 set; solve adds nominal vs robust value and policy changes; see docs/UNCERTAINTY.md)",
             "discount_annual": "number",

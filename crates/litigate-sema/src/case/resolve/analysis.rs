@@ -67,7 +67,7 @@ pub const DEDICATED: [&str; 6] = [
 
 /// `Scenario` fields that key engine nodes or edges by string, which a
 /// matter does not write.
-pub const UNTYPED: [&str; 2] = ["probabilities", "policy"];
+pub const UNTYPED: [&str; 3] = ["probabilities", "policy", "opponent_models"];
 
 impl R<'_, '_> {
     pub(super) fn analysis(&mut self, block: &SyntaxNode) -> Analysis {

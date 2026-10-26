@@ -7,7 +7,8 @@
 
 use std::collections::HashSet;
 
-use super::{Control, MixedMode, NodePlan, OpponentMode, ProbFill, Scenario, Warning};
+use super::opponent::Models;
+use super::{Control, MixedMode, ModelKind, NodePlan, OpponentMode, ProbFill, Scenario, Warning};
 use crate::model::{Graph, NodeIx, Role};
 
 /// Inputs shared by every node's plan.
@@ -21,6 +22,8 @@ pub(super) struct PlanInputs<'a> {
     /// chance or mixed (choice+chance) nodes with one are known-set rather
     /// than falling back silently.
     pub fact_nodes: &'a HashSet<NodeIx>,
+    /// `scenario.opponent_models`, resolved.
+    pub models: &'a Models,
 }
 
 /// Plans for every node, the effective per-edge draw probabilities, and warnings.
@@ -117,25 +120,73 @@ impl PlanInputs<'_> {
         // Who chooses, and what interrupts them. When we have a move, the
         // opponent's and the world's edges are interrupts at this node;
         // `opponent` mode governs nodes where only the opponent acts.
-        if !mine.is_empty() {
-            return self.chooser(n, Control::Me, mine, &[opp, nat].concat(), out);
-        }
-        if !opp.is_empty() {
-            // A general-sum opponent is always a self-interested chooser
-            // (their equilibrium choice is computed from their own
-            // objective, not modeled by draws), regardless of `opponent`.
-            let as_chance = self.sc.opponent_objective.is_none()
-                && match self.sc.opponent {
-                    OpponentMode::Chance => true,
-                    OpponentMode::Adversarial => false,
-                    OpponentMode::Auto => opp.iter().all(|&e| self.authored[e].is_some()),
-                };
-            if !as_chance {
-                return self.chooser(n, Control::Opponent, opp, &nat, out);
+        let model = self.models.kind.get(&n).copied();
+        if !mine.is_empty() || opp.is_empty() {
+            if model.is_some() {
+                self.unused_model(out, n, "only the opponent chooses");
             }
-            return self.chance(n, &outs, out);
+            if !mine.is_empty() {
+                return self.chooser(n, Control::Me, mine, &[opp, nat].concat(), out);
+            }
+            return self.chance(n, &nat, out);
         }
-        self.chance(n, &nat, out)
+        if let Some(kind) = model {
+            if let Some(p) = self.modeled(n, kind, &outs, &opp, &nat, out) {
+                return NodePlan {
+                    model: Some(kind),
+                    ..p
+                };
+            }
+        }
+        // A general-sum opponent is always a self-interested chooser
+        // (their equilibrium choice is computed from their own
+        // objective, not modeled by draws), regardless of `opponent`.
+        let as_chance = self.sc.opponent_objective.is_none()
+            && match self.sc.opponent {
+                OpponentMode::Chance => true,
+                OpponentMode::Adversarial => false,
+                OpponentMode::Auto => opp.iter().all(|&e| self.authored[e].is_some()),
+            };
+        if !as_chance {
+            return self.chooser(n, Control::Opponent, opp, &nat, out);
+        }
+        self.chance(n, &outs, out)
+    }
+
+    /// The plan of an opponent-only node under its `opponent_models` entry;
+    /// `None` (warned) when an own-objective model lists no active edge.
+    fn modeled(
+        &self,
+        n: NodeIx,
+        kind: ModelKind,
+        outs: &[usize],
+        opp: &[usize],
+        nat: &[usize],
+        out: &mut Plans,
+    ) -> Option<NodePlan> {
+        match kind {
+            ModelKind::Adversarial => {
+                Some(self.chooser(n, Control::Opponent, opp.to_vec(), nat, out))
+            }
+            ModelKind::Chance => Some(self.chance(n, outs, out)),
+            ModelKind::OwnObjective => {
+                let best = self.models.best(opp);
+                if best.is_empty() {
+                    self.unused_model(out, n, "its payoffs name an active opponent edge");
+                    return None;
+                }
+                Some(self.chooser(n, Control::Opponent, best, nat, out))
+            }
+        }
+    }
+
+    fn unused_model(&self, out: &mut Plans, n: NodeIx, needs: &str) {
+        self.warn(
+            out,
+            n,
+            "opponent-model-unused",
+            format!("scenario.opponent_models applies only where {needs}; this node follows `opponent` instead"),
+        );
     }
 
     /// True if `n` is tagged `fact` in its pack: a chance (or mixed

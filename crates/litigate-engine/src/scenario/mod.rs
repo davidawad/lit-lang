@@ -12,6 +12,7 @@ mod belief;
 mod fee;
 mod library;
 mod limits;
+mod opponent;
 mod plan;
 mod resolve;
 mod view;
@@ -22,6 +23,7 @@ pub use library::{
     DocketEvent, EventRelation, NamedScenario, ScenarioParty, ScenarioSource,
     SCENARIO_SCHEMA_VERSION,
 };
+pub use opponent::{ModelKind, OpponentModel};
 pub use plan::fill;
 pub use view::View;
 
@@ -205,6 +207,13 @@ pub struct Scenario {
     pub mixed: MixedMode,
     /// Opponent model where only the opponent chooses.
     pub opponent: OpponentMode,
+    /// Node ref → how the opponent decides at that node (one where only
+    /// the opponent chooses): `adversarial`, a `chance` draw with
+    /// calibrated probabilities, or `own-objective` with their own payoffs
+    /// per edge. Overrides `opponent` there and, at that node,
+    /// `opponent_objective`; a node with no entry follows them.
+    #[serde(skip_serializing_if = "BTreeMap::is_empty")]
+    pub opponent_models: BTreeMap<String, OpponentModel>,
     /// Missing-probability fill.
     pub prob_fill: ProbFill,
     /// Objective.
@@ -298,6 +307,8 @@ pub struct NodePlan {
     pub minimize: bool,
     /// Act-or-wait: the chooser may instead WAIT, letting these world edges fire.
     pub wait: Vec<(usize, f64)>,
+    /// The `scenario.opponent_models` entry this node follows, if any.
+    pub model: Option<ModelKind>,
 }
 
 impl NodePlan {
@@ -309,6 +320,7 @@ impl NodePlan {
             choice_mass: 0.0,
             minimize: false,
             wait: vec![],
+            model: None,
         }
     }
 }

@@ -4,6 +4,7 @@
 use std::collections::{BTreeMap, HashSet};
 
 use super::belief::{self, Belief};
+use super::opponent::Models;
 use super::plan::PlanInputs;
 use super::resolve::{
     active_edges, dist_to_terminal, edge_env, params_of, probabilities, ViewParts,
@@ -185,7 +186,9 @@ impl<'g> View<'g> {
             payoff: &payoff,
         };
         let (overrides, fact_nodes) = fact_overrides(g, sc)?;
-        let authored = probabilities(g, sc, &parts, &overrides)?;
+        let mut authored = probabilities(g, sc, &parts, &overrides)?;
+        let models = Models::resolve(g, sc)?;
+        models.authored(g, &role, &mut authored);
         let mut forced = BTreeMap::new();
         for (n, e) in &sc.policy {
             let ni = g.node(n)?;
@@ -198,6 +201,7 @@ impl<'g> View<'g> {
             role: &role,
             authored: &authored,
             fact_nodes: &fact_nodes,
+            models: &models,
         }
         .build();
         let belief = Belief::build(g, sc, &plans.plan)?;

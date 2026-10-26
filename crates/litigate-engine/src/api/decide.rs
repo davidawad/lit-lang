@@ -12,7 +12,7 @@ use super::Warn;
 use crate::algo::{chain, cvar, equilibrium, mdp, sim};
 use crate::error::Result;
 use crate::model::NodeIx;
-use crate::scenario::{Control, NodePlan, Objective, View, WAIT};
+use crate::scenario::{Control, ModelKind, NodePlan, Objective, View, WAIT};
 
 type Out = Result<(Value, Vec<Warn>)>;
 
@@ -166,15 +166,19 @@ pub(super) fn simulate_op(v: &View, start: NodeIx, metrics: &[String], o: &sim::
 /// Who acts at a node, in plain language. `Control::Opponent` is adversarial
 /// (minimizes our value) unless `scenario.opponent_objective` is set, in
 /// which case the opponent maximizes their own payoff instead — see
-/// `equilibrium.rs`.
-fn who_decides(control: Control, general_sum: bool) -> &'static str {
-    match control {
-        Control::Me => "you",
-        Control::Opponent if general_sum => "opponent (own payoff, general-sum equilibrium)",
-        Control::Opponent => "opponent (adversarial)",
-        Control::Chance => "tribunal/chance",
-        Control::Terminal => "nobody (terminal)",
-        Control::Sink => "nobody (dead end)",
+/// `equilibrium.rs`. A `scenario.opponent_models` entry says how the
+/// opponent decides at its node, whatever the defaults.
+fn who_decides(plan: &NodePlan, general_sum: bool) -> &'static str {
+    match (plan.control, plan.model) {
+        (Control::Opponent, Some(ModelKind::Adversarial)) => "opponent (adversarial)",
+        (Control::Opponent, Some(_)) => "opponent (own payoffs at this decision)",
+        (Control::Chance, Some(_)) => "opponent (chance: calibrated response)",
+        (Control::Me, _) => "you",
+        (Control::Opponent, _) if general_sum => "opponent (own payoff, general-sum equilibrium)",
+        (Control::Opponent, _) => "opponent (adversarial)",
+        (Control::Chance, _) => "tribunal/chance",
+        (Control::Terminal, _) => "nobody (terminal)",
+        (Control::Sink, _) => "nobody (dead end)",
     }
 }
 
@@ -196,7 +200,8 @@ fn option_q_of(v: &View, n: NodeIx, e: usize, q: &[f64]) -> f64 {
 /// our `q` with `plan.minimize`'s adversarial sign flip — using `opp_q` here
 /// is exactly the fix `NodePlan::minimize` can't express, since it stays
 /// `true` at every `Control::Opponent` node regardless of
-/// `scenario.opponent_objective` (see `plan.rs`).
+/// `scenario.opponent_objective` (see `plan.rs`). An `adversarial`
+/// `scenario.opponent_models` node stays zero-sum under either.
 #[allow(clippy::too_many_arguments)]
 fn regret(
     v: &View,
@@ -207,7 +212,7 @@ fn regret(
     sol: &mdp::Solution,
     opp_q: Option<&[f64]>,
 ) -> f64 {
-    if plan.control == Control::Opponent {
+    if plan.control == Control::Opponent && plan.model != Some(ModelKind::Adversarial) {
         if let Some(oq) = opp_q {
             return option_q_of(v, n, best, oq) - option_q_of(v, n, e, oq);
         }
@@ -424,7 +429,7 @@ pub(super) fn explain_op(v: &View, named: NodeIx, start: NodeIx) -> Out {
     let mut result = json!({
         "node": { "id": node.id, "label": node.label, "kind": node.kind, "cite": node.cite, "note": node.note },
         "control": plan.control,
-        "who_decides": who_decides(plan.control, opp_q.is_some()),
+        "who_decides": who_decides(plan, opp_q.is_some()),
         "value": r(sol.value[n]),
         "interrupt_mass": r(1.0 - plan.choice_mass),
         "options": options.into_iter().map(|x| x.1).collect::<Vec<_>>(),

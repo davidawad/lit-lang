@@ -46,7 +46,7 @@ use crate::error::Result;
 use crate::expr::{self, Expr};
 use crate::metrics::{PathVars, TerminalEnv};
 use crate::model::NodeIx;
-use crate::scenario::{Control, Objective, View, WAIT};
+use crate::scenario::{Control, ModelKind, Objective, View, WAIT};
 
 /// Result of resolving `v`: `self`'s solution plus the opponent's values.
 #[derive(Debug, Clone, Serialize)]
@@ -259,11 +259,13 @@ impl Ctx<'_> {
     /// go to the option nearer a terminal, exactly like `mdp::Ctx::backup`.
     fn best_option(&self, n: NodeIx, value: &[f64], opp_value: &[f64]) -> Option<(f64, usize)> {
         let p = &self.v.plan[n];
+        // An `adversarial` opponent model keeps its node zero-sum: that
+        // opponent minimizes our value instead of maximizing their own.
         let crit = |e: usize| -> f64 {
-            if p.control == Control::Opponent {
-                self.opp_q(e, opp_value)
-            } else {
-                self.self_q(e, value)
+            match (p.control, p.model) {
+                (Control::Opponent, Some(ModelKind::Adversarial)) => -self.self_q(e, value),
+                (Control::Opponent, _) => self.opp_q(e, opp_value),
+                _ => self.self_q(e, value),
             }
         };
         let forced = if p.control == Control::Me {

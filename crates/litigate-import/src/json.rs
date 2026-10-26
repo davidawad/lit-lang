@@ -7,7 +7,7 @@ use serde_json::{Map, Value};
 
 /// Fields that name engine nodes or edges by string, which `analysis`
 /// does not type.
-const UNTYPED: [&str; 2] = ["probabilities", "policy"];
+const UNTYPED: [&str; 3] = ["probabilities", "policy", "opponent_models"];
 
 /// The engine parameters typed as a `Rate` (SPEC §8.3 `Params`), with the
 /// duration suffix of their time unit.

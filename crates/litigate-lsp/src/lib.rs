@@ -85,8 +85,10 @@ struct State {
     /// The last generation whose analysis completed. Several notifications
     /// can enqueue refresh handlers while one check owns `host`; once the
     /// first handler checks the newest generation, the queued handlers must
-    /// not replay that same (potentially expensive) workspace check.
-    completed_generation: Mutex<Option<u64>>,
+    /// not replay that same (potentially expensive) workspace check. Set
+    /// before the check lets go of `host`: the next handler in the queue
+    /// takes `host` before the one that checked is scheduled again.
+    completed_generation: Arc<Mutex<Option<u64>>>,
 }
 
 /// The language server.
@@ -207,10 +209,16 @@ impl Server {
             (generation, versions)
         };
         let latest = Arc::clone(&self.state.generation);
+        let completed = Arc::clone(&self.state.completed_generation);
         let checked = tokio::task::spawn_blocking(move || {
             let cancelled = || latest.load(Ordering::SeqCst) != generation;
             let (complete, analysis) = host.run(&cancelled);
-            complete.then(|| diagnostics::publishable(analysis))
+            let fresh = complete.then(|| diagnostics::publishable(analysis));
+            if complete {
+                *lock(&completed) = Some(generation);
+            }
+            drop(host);
+            fresh
         })
         .await;
         // A cancelled check publishes nothing: the change that cancelled it
@@ -218,7 +226,6 @@ impl Server {
         let Ok(Some(fresh)) = checked else {
             return;
         };
-        *lock(&self.state.completed_generation) = Some(generation);
         let sends: Vec<(Url, Vec<Diagnostic>)> = {
             let mut published = lock(&self.published);
             let mut sends: Vec<(Url, Vec<Diagnostic>)> = published

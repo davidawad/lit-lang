@@ -40,3 +40,39 @@ fn a_definition_needs_a_text() {
     assert_eq!(Server::definition_at(&a, "loose.lit", start), Some(0));
     assert_eq!(Server::definition_at(&a, "gone.lit", start), None);
 }
+
+/// Refreshes queued behind a check of the newest generation answer from
+/// it rather than checking it again: the generation is marked complete
+/// before the check lets go of the host, which hands it straight to the
+/// next refresh in the queue.
+#[tokio::test]
+async fn refreshes_queued_behind_a_check_share_it() {
+    let mut client = None;
+    let (_service, _socket) = LspService::new(|c| {
+        client = Some(c.clone());
+        Server::new(c)
+    });
+    let server = Arc::new(Server::new(client.expect("the service built a client")));
+    let root = std::env::temp_dir().join(format!("litigate-lsp-queued-{}", std::process::id()));
+    lock(&server.state.docs).insert(
+        root.join("loose.lit"),
+        Open {
+            text: "module loose\n".into(),
+            version: 1,
+        },
+    );
+    // A check in progress, as far as the refreshes can tell.
+    let held = server.state.host.lock().await;
+    let queued: Vec<_> = (0..3)
+        .map(|_| {
+            let server = Arc::clone(&server);
+            tokio::spawn(async move { server.refresh().await })
+        })
+        .collect();
+    tokio::task::yield_now().await;
+    drop(held);
+    for refresh in queued {
+        refresh.await.expect("the refresh ran");
+    }
+    assert_eq!(server.state.host.lock().await.checks, 1);
+}

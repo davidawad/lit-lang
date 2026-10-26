@@ -7,9 +7,9 @@
 
 #![allow(clippy::unwrap_used, clippy::expect_used)]
 
-use litgraph::algo::{mdp, sim};
-use litgraph::model::{CompileOptions, Graph, LinkFile, Pack};
-use litgraph::scenario::{FeeShift, Scenario, View};
+use litigate_engine::algo::{mdp, sim};
+use litigate_engine::model::{CompileOptions, Graph, LinkFile, Pack};
+use litigate_engine::scenario::{FeeShift, Scenario, View};
 use serde_json::{json, Value};
 
 /// We won (litigation cost 300), then choose: move for fees (100 of our
@@ -33,7 +33,7 @@ fn pack(fee_shift: &Value) -> Value {
     })
 }
 
-fn graph(fee_shift: &Value) -> litgraph::Result<Graph> {
+fn graph(fee_shift: &Value) -> litigate_engine::Result<Graph> {
     let p: Pack = serde_json::from_value(pack(fee_shift)).expect("pack parses");
     Graph::compile(&[p], &LinkFile::default(), &CompileOptions::default())
 }

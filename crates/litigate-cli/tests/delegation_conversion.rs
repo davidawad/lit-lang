@@ -26,11 +26,13 @@ use support::{copy_dir, litigate_in, repo, scratch};
 /// The legacy meaning of `delegable_to [L]`: every operation.
 const LEGACY_OPS: &str = "op [extend, shorten, set, suspend, compute_method]";
 
-/// Clauses converted mechanically: lg-962.4 converted 99 on its base;
+/// Clauses in the converted form: lg-962.4 converted 99 on its base;
 /// lg-flu.29 then removed the four on the certiorari periods (frap, cafc)
 /// and the Federal Circuit PTAB and TTAB notice-of-appeal periods, now
-/// extended only by a Justice or the Director.
-const CONVERTED: usize = 94;
+/// extended only by a Justice or the Director; lg-962.10.1 added two in
+/// the same form, on the FRAP 32(a)(7) and 37 C.F.R. § 42.24 filing
+/// limits (FRAP 32(e), § 42.24(a)(2)).
+const CONVERTED: usize = 96;
 
 /// There are no extra corrections in this corpus: the district-court
 /// notice-of-appeal period is authored once in `appeal-periods.lit`.

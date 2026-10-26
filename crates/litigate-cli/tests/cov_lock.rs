@@ -194,3 +194,62 @@ fn a_pin_naming_no_locked_row_is_stale() {
         @r#""Lit.lock: `frcp-rule12-example` depends on `core 9.9.9`, which names no locked package""#
     );
 }
+
+/// A `Lit.lock` in format 1 (lg-1od3): `check` reports L1007 naming
+/// `litigate lock DIR` with a machine-applicable fix, and `fix` writes
+/// what that command writes, after which `check` passes. For a package
+/// lock and for a matter lock.
+#[test]
+fn a_format_1_lock_is_upgraded_by_fix() {
+    let dir = example("lock-format-1", "", None);
+    let v1 = std::fs::read_to_string(
+        support::repo().join("crates/litigate-cli/tests/fixtures/lock-format-1/Lit.lock"),
+    )
+    .unwrap();
+    for (target, lock) in [
+        ("lit/examples", "lit/examples/Lit.lock"),
+        ("cases/examples", "cases/examples/Lit.lock"),
+    ] {
+        let current = std::fs::read_to_string(dir.join(lock)).unwrap();
+        std::fs::write(dir.join(lock), &v1).unwrap();
+        let stale = litigate_in(&dir, &["check", target]);
+        assert_eq!(stale.code, 2, "{}", stale.stdout);
+        assert!(
+            stale.stdout.contains(&format!(
+                "{lock}:1:1: L1007 Lit.lock format 1 is not supported (expected 2): run `litigate lock {target}`"
+            )),
+            "{}",
+            stale.stdout
+        );
+        let l1007: Vec<&serde_json::Value> = stale.json["diagnostics"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .filter(|d| d["code"] == "L1007" && d["span"]["file"] == lock)
+            .collect();
+        assert!(!l1007.is_empty(), "{}", stale.stdout);
+        for d in &l1007 {
+            assert_eq!(
+                d["message"],
+                format!(
+                    "Lit.lock format 1 is not supported (expected 2): run `litigate lock {target}` to upgrade it"
+                )
+            );
+            let fix = &d["fixes"][0];
+            assert_eq!(fix["applicability"], "machine_applicable", "{d}");
+            assert_eq!(fix["edits"][0]["replacement"], current.as_str(), "{d}");
+        }
+        let locked = litigate_in(&dir, &["lock", "--locked", target]);
+        assert_eq!(locked.code, 2, "{}", locked.stdout);
+        assert_eq!(locked.json["diagnostics"][0]["message"], l1007[0]["message"]);
+        assert_eq!(locked.json["diagnostics"][0]["fixes"], l1007[0]["fixes"]);
+        let fixed = litigate_in(&dir, &["fix", target]);
+        assert_eq!(fixed.code, 0, "{}{}", fixed.stdout, fixed.stderr);
+        assert_eq!(fixed.json["result"]["changed_files"], serde_json::json!([lock]));
+        assert_eq!(std::fs::read_to_string(dir.join(lock)).unwrap(), current);
+        let checked = litigate_in(&dir, &["check", target]);
+        assert_eq!(checked.code, 0, "{}", checked.stdout);
+        let locked = litigate_in(&dir, &["lock", "--locked", target]);
+        assert_eq!(locked.code, 0, "{}", locked.stdout);
+    }
+}

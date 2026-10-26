@@ -1,7 +1,7 @@
 //! Package digests and the deterministic, Merkle `Lit.lock` (SPEC §4.2).
 use crate::db::span::{Report, TextRange};
 use crate::hir;
-use litigate_base::DiagnosticCode as C;
+use litigate_base::{Applicability, DiagnosticCode as C};
 use serde::Deserialize;
 use serde_json::Value;
 use sha2::{Digest, Sha256};
@@ -371,6 +371,30 @@ impl LockFile {
     }
 }
 
+/// L1007 for `text`, a lock in a format older than [`FORMAT`]: it names
+/// `litigate lock DIR` and carries the machine-applicable fix replacing
+/// the whole lock with `upgraded`, the text that command writes there.
+/// `None` for a lock in this format, a newer one, or no readable format.
+#[must_use]
+pub fn upgrade(text: &str, dir: &str, upgraded: impl FnOnce() -> String) -> Option<Report> {
+    let version = LockFile::format(text).ok().filter(|v| *v < FORMAT)?;
+    let end = u32::try_from(text.len()).unwrap_or(u32::MAX);
+    Some(
+        Report::new(
+            C::StaleLock,
+            TextRange::default(),
+            format!(
+                "Lit.lock format {version} is not supported (expected {FORMAT}): run `litigate lock {dir}` to upgrade it"
+            ),
+        )
+        .fix(
+            TextRange::new(0, end),
+            upgraded(),
+            Applicability::MachineApplicable,
+        ),
+    )
+}
+
 /// L1007 for unparseable lock text.
 fn invalid(e: &toml::de::Error) -> Report {
     Report::new(
@@ -530,6 +554,30 @@ mod tests {
                 Some((C::StaleLock, message.to_owned())),
                 "{text}"
             );
+        }
+    }
+
+    #[test]
+    fn only_an_older_format_is_upgraded() {
+        let v1 = "version = 1\n\n[[package]]\nname = \"core\"\n";
+        let report = upgrade(v1, "lit/core", || "version = 2\n".to_owned());
+        assert_eq!(
+            report,
+            Some(
+                Report::new(
+                    C::StaleLock,
+                    TextRange::default(),
+                    "Lit.lock format 1 is not supported (expected 2): run `litigate lock lit/core` to upgrade it",
+                )
+                .fix(
+                    TextRange::new(0, 39),
+                    "version = 2\n",
+                    Applicability::MachineApplicable
+                )
+            )
+        );
+        for current in ["version = 2", "version = 3", "version = "] {
+            assert_eq!(upgrade(current, ".", || unreachable!()), None, "{current}");
         }
     }
 

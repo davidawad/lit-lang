@@ -125,7 +125,12 @@ pub fn fix(args: &Args) -> Outcome {
         })
         .collect();
     // Fixes into files the session has no source for are dropped.
-    let sources: BTreeMap<String, String> = c.session.sources().into_iter().collect();
+    let sources: BTreeMap<String, String> = c
+        .session
+        .sources()
+        .into_iter()
+        .chain(c.session.lock_sources())
+        .collect();
     let applied = apply(&sources, candidates);
     let changed: Vec<(&String, &String)> = applied
         .texts

@@ -10,7 +10,7 @@
 use crate::clock::{self, Clocks};
 use crate::hirx;
 use crate::report;
-use crate::ws::{CaseText, Session};
+use crate::ws::{lock_path, CaseText, Session};
 use litigate_base::{Diagnostic, FileId, LineIndex, Profile, Severity};
 use litigate_lower::{LoweredCase, Lowerer};
 use litigate_sema::case::{Env, Obligation, Status, Step};
@@ -150,14 +150,6 @@ impl CaseCheck {
     }
 }
 
-/// The `Lit.lock` path beside matter `path`.
-fn lock_path(path: &str) -> String {
-    match path.rsplit_once('/') {
-        Some((dir, _)) => format!("{dir}/Lit.lock"),
-        None => "Lit.lock".to_owned(),
-    }
-}
-
 /// The matter's lock, or the L1007 for one that does not parse.
 fn lock(case: &CaseText) -> Result<Option<LockFile>, Diagnostic> {
     let Some(text) = case.lock.as_deref() else {
@@ -166,6 +158,47 @@ fn lock(case: &CaseText) -> Result<Option<LockFile>, Diagnostic> {
     LockFile::parse(text)
         .map(Some)
         .map_err(|r| r.to_diagnostic(&FileId(lock_path(&case.path)), &LineIndex::new(text)))
+}
+
+/// Gives the L1007 of `check`'s lock, when it is in an older format, the
+/// fix that upgrades it: the lock `litigate lock DIR` writes for the
+/// session's matters in that directory.
+pub fn upgrade_lock(session: &Session, check: &mut CaseCheck) {
+    let file = lock_path(&check.path);
+    let Some(text) = session
+        .cases
+        .iter()
+        .find(|c| c.path == check.path)
+        .and_then(|c| c.lock.as_deref())
+    else {
+        return;
+    };
+    let dir = file.strip_suffix("/Lit.lock").unwrap_or(".");
+    let upgraded = || {
+        session
+            .matter_lock(session.cases.iter().filter(|c| lock_path(&c.path) == file))
+            .render()
+    };
+    let Some(report) = litigate_sema::pkg::lock::upgrade(text, dir, upgraded) else {
+        return;
+    };
+    let fixed = report.to_diagnostic(&FileId(file.clone()), &LineIndex::new(text));
+    for d in check
+        .diagnostics
+        .iter_mut()
+        .filter(|d| d.code == fixed.code && d.span.file == fixed.span.file)
+    {
+        let (old, new) = (report::example(d), report::example(&fixed));
+        for e in check.findings.iter_mut().flat_map(|f| &mut f.examples) {
+            if *e == old {
+                e.clone_from(&new);
+            }
+        }
+        *d = Diagnostic {
+            severity: d.severity,
+            ..fixed.clone()
+        };
+    }
 }
 
 /// Whether the matter's source writes `start`.

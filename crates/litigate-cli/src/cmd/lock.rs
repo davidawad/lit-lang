@@ -5,7 +5,7 @@
 use crate::out::{Failure, Outcome, Report};
 use crate::ws::{self, CaseText, Session};
 use litigate_base::{Diagnostic, FileId, LineIndex};
-use litigate_sema::pkg::lock::LockFile;
+use litigate_sema::pkg::lock::{upgrade, verify, LockFile};
 use serde_json::{json, Value};
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
@@ -112,9 +112,13 @@ fn matters(session: &Session, paths: &[PathBuf], locked: bool, root: bool) -> Ou
     Ok(report)
 }
 
-/// L1007 when the lock at `file` is missing or differs from `expected`.
+/// L1007 when the lock at `file` is missing, in an older format, or
+/// differs from `expected`.
 fn stale(file: &str, existing: Option<&str>, expected: &LockFile) -> Option<Diagnostic> {
-    litigate_sema::pkg::lock::verify(existing, expected)
+    let dir = file.strip_suffix("/Lit.lock").unwrap_or(".");
+    existing
+        .and_then(|t| upgrade(t, dir, || expected.render()))
+        .map_or_else(|| verify(existing, expected), Err)
         .err()
         .map(|r| {
             r.to_diagnostic(

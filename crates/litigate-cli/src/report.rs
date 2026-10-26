@@ -14,7 +14,8 @@ fn rank(status: S) -> u8 {
     }
 }
 
-fn example(d: &Diagnostic) -> String {
+/// A finding's example of `d`: `file:line:col: CODE message`.
+pub(crate) fn example(d: &Diagnostic) -> String {
     format!(
         "{}:{}:{}: {} {}",
         d.span.file.0,

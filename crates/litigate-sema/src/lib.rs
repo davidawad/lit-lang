@@ -69,7 +69,12 @@ pub fn lock_diagnostics(
             .to_owned(),
     );
     let text = pkg.lock_text(db).clone().unwrap_or_default();
-    pkg::lock::verify(pkg.lock_text(db).as_deref(), &expected)
+    let dir = file.0.strip_suffix("/Lit.lock").unwrap_or(".");
+    // A lock in an older format is upgraded by what `litigate lock` writes.
+    pkg.lock_text(db)
+        .as_deref()
+        .and_then(|t| pkg::lock::upgrade(t, dir, || expected.render()))
+        .map_or_else(|| pkg::lock::verify(pkg.lock_text(db).as_deref(), &expected), Err)
         .err()
         .map(|r| vec![r.to_diagnostic(&file, &litigate_base::LineIndex::new(&text))])
         .unwrap_or_default()

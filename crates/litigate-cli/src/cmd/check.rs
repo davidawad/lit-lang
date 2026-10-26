@@ -136,7 +136,11 @@ pub fn check_session_with(
     let cases: Vec<CaseCheck> = inputs
         .iter()
         .take_while(|_| !cancelled())
-        .map(|c| case_check(&session.db, session.ws, *c, build).clone())
+        .map(|c| {
+            let mut check = case_check(&session.db, session.ws, *c, build).clone();
+            crate::matter::upgrade_lock(&session, &mut check);
+            check
+        })
         .collect();
     let worlds: Vec<WorldCheck> = session
         .worlds

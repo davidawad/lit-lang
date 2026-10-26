@@ -268,6 +268,15 @@ pub struct CaseText {
     pub lock: Option<String>,
 }
 
+/// The `Lit.lock` path beside matter `path`.
+#[must_use]
+pub fn lock_path(path: &str) -> String {
+    match path.rsplit_once('/') {
+        Some((dir, _)) => format!("{dir}/Lit.lock"),
+        None => "Lit.lock".to_owned(),
+    }
+}
+
 /// One `.world` file.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct WorldText {
@@ -604,6 +613,21 @@ impl Session {
         );
         lock.packages.dedup();
         lock
+    }
+
+    /// Every `Lit.lock` text, keyed as its diagnostics name it, for fixes.
+    #[must_use]
+    pub fn lock_sources(&self) -> Vec<(String, String)> {
+        let packages = self.packages.iter().filter_map(|p| {
+            let file = format!("{}/Lit.lock", p.root);
+            let text = p.input.lock_text(&self.db).clone()?;
+            Some((file.trim_start_matches("./").to_owned(), text))
+        });
+        let matters = self
+            .cases
+            .iter()
+            .filter_map(|c| Some((lock_path(&c.path), c.lock.clone()?)));
+        packages.chain(matters).collect()
     }
 
     /// Every source text, for rendering and fixes.

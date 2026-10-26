@@ -840,7 +840,9 @@ package or matter recomputes each row's digests from the sources and the
 L0 texts and fails closed: an invalid or mismatched lock (including
 format 1, and a format 2 lock with a stored `digest`), or a missing one
 where a package with dependencies or a matter needs it, is L1007, never a
-silent relock. A matter's pin records the locked `source` digest
+silent relock. The L1007 of a lock in an older format names `litigate
+lock DIR` and carries a machine-applicable fix replacing the lock with
+what that command writes, so `litigate fix` upgrades it. A matter's pin records the locked `source` digest
 and selects the loaded package of the locked version.
 
 **Merkle root.** The Merkle digest of a row is computed on read, never

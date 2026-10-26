@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 //! Decision ops: solve, explain, chain, simulate.
 
+use std::collections::VecDeque;
+
 use serde_json::{json, Map, Value};
 
 use super::render::{
@@ -262,8 +264,139 @@ fn option_json(v: &View, sol: &mdp::Solution, n: NodeIx, e: usize, opp_q: Option
     j
 }
 
-pub(super) fn explain_op(v: &View, n: NodeIx) -> Out {
+/// Unweighted steps from `from` to every node along active edges (BFS),
+/// `None` where unreachable.
+fn steps_from(v: &View, from: NodeIx) -> Vec<Option<usize>> {
+    let mut dist = vec![None; v.g.nodes.len()];
+    let mut q = VecDeque::from([(from, 0)]);
+    dist[from] = Some(0);
+    while let Some((u, d)) = q.pop_front() {
+        for e in v.outs(u) {
+            let w = v.g.edges[e].to;
+            if dist[w].is_none() {
+                dist[w] = Some(d + 1);
+                q.push_back((w, d + 1));
+            }
+        }
+    }
+    dist
+}
+
+/// The flag context `explain` details at `named` (`node`, or the start when
+/// `node` was omitted), and why. A flagged copy named by its own id is
+/// explained as named. A base node id resolves in the replayed context:
+/// the copy carrying the start's flags when the start reaches it, else the
+/// copy the start reaches first (flags set on the way), else, when the
+/// start reaches no copy, the base node itself.
+fn flag_context(
+    v: &View,
+    named: NodeIx,
+    start: NodeIx,
+    family: &[NodeIx],
+    dist: &[Option<usize>],
+) -> (NodeIx, &'static str) {
+    if named == start {
+        return (named, "replayed");
+    }
+    if !v.g.nodes[named].flags.is_empty() {
+        return (named, "named");
+    }
+    let flags = &v.g.nodes[start].flags;
+    let reached = family.iter().filter_map(|&i| dist[i].map(|d| (d, i)));
+    if let Some(&i) = family
+        .iter()
+        .find(|&&i| dist[i].is_some() && &v.g.nodes[i].flags == flags)
+    {
+        (i, "replayed")
+    } else if let Some((_, i)) = reached.min() {
+        (i, "reached")
+    } else {
+        (named, "unreached")
+    }
+}
+
+/// The chosen option's id and label at `n`, `None` where nobody chooses.
+fn chosen_json(v: &View, sol: &mdp::Solution, n: NodeIx) -> Value {
+    sol.choice.get(&n).map_or(
+        Value::Null,
+        |&e| json!({ "id": choice_id(v, e), "label": choice_label(v, e) }),
+    )
+}
+
+/// The authored edge `n`'s chosen option instantiates (`WAIT` as itself).
+fn chosen_base(v: &View, sol: &mdp::Solution, n: NodeIx) -> Option<String> {
+    sol.choice.get(&n).map(|&e| {
+        if e == WAIT {
+            "WAIT".to_owned()
+        } else {
+            v.g.edges[e].base_id.clone()
+        }
+    })
+}
+
+/// `explain`'s `context` and `other_contexts` for a node with flagged
+/// copies: the explained copy's flags and how it was picked, then the
+/// copies the start reaches (nearest first) with their value and chosen
+/// option, and a count of those it never reaches.
+fn contexts_json(
+    v: &View,
+    sol: &mdp::Solution,
+    n: NodeIx,
+    basis: &str,
+    family: &[NodeIx],
+    dist: &[Option<usize>],
+) -> (Value, Value) {
+    let node = &v.g.nodes[n];
+    let context = json!({
+        "base_id": node.base_id,
+        "flags": node.flags,
+        "basis": basis,
+        "reachable": dist[n].is_some(),
+    });
+    let mine = chosen_base(v, sol, n);
+    let mut reached: Vec<(usize, NodeIx)> = family
+        .iter()
+        .filter(|&&i| i != n)
+        .filter_map(|&i| dist[i].map(|d| (d, i)))
+        .collect();
+    reached.sort_by(|a, b| {
+        a.0.cmp(&b.0)
+            .then_with(|| v.g.nodes[a.1].id.cmp(&v.g.nodes[b.1].id))
+    });
+    let reachable: Vec<Value> = reached
+        .iter()
+        .map(|&(d, i)| {
+            json!({
+                "id": v.g.nodes[i].id,
+                "flags": v.g.nodes[i].flags,
+                "steps": d,
+                "value": r(sol.value[i]),
+                "chosen": chosen_json(v, sol, i),
+                "same_choice": chosen_base(v, sol, i) == mine,
+            })
+        })
+        .collect();
+    let others = json!({
+        "count": family.len() - 1,
+        "unreached": family.len() - 1 - reachable.len(),
+        "reachable": reachable,
+    });
+    (context, others)
+}
+
+/// `explain` at `named`, solved from `start`. A node the state-flag
+/// product copied (`docs/PACK_SCHEMA.md#state-flags`) is explained in one
+/// flag context ([`flag_context`]) and the other contexts summarized
+/// ([`contexts_json`]).
+pub(super) fn explain_op(v: &View, named: NodeIx, start: NodeIx) -> Out {
     let (sol, opp_q) = solve(v)?;
+    let family = v.g.node_family(named);
+    let grouped = (family.len() > 1).then(|| {
+        let dist = steps_from(v, start);
+        let (n, basis) = flag_context(v, named, start, &family, &dist);
+        (n, contexts_json(v, &sol, n, basis, &family, &dist))
+    });
+    let n = grouped.as_ref().map_or(named, |g| g.0);
     let node = &v.g.nodes[n];
     let plan = &v.plan[n];
     let mut options: Vec<(f64, Value)> = v
@@ -288,7 +421,7 @@ pub(super) fn explain_op(v: &View, n: NodeIx) -> Out {
         .iter()
         .filter(|w| w.at.as_deref() == Some(node.id.as_str()))
         .collect();
-    let result = json!({
+    let mut result = json!({
         "node": { "id": node.id, "label": node.label, "kind": node.kind, "cite": node.cite, "note": node.note },
         "control": plan.control,
         "who_decides": who_decides(plan.control, opp_q.is_some()),
@@ -297,5 +430,9 @@ pub(super) fn explain_op(v: &View, n: NodeIx) -> Out {
         "options": options.into_iter().map(|x| x.1).collect::<Vec<_>>(),
         "warnings_here": here,
     });
+    if let Some((_, (context, others))) = grouped {
+        result["context"] = context;
+        result["other_contexts"] = others;
+    }
     Ok((result, convergence_warnings(v, &sol)))
 }

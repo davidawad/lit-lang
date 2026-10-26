@@ -418,6 +418,18 @@ shares one `base_id`, which is how a calibration entry (`docs/CALIBRATION.md`)
 targets one edge by its authored id and lands on every flagged copy at once,
 not just the one whose exact id matches.
 
+**`explain` groups a node's copies.** At a node with flagged copies,
+`explain` details one copy and summarizes the rest. A base id resolves to
+the replayed context: the copy carrying the start's flags (`from`, else
+`scenario.start`) when the start reaches it (`context.basis: "replayed"`),
+else the copy the start reaches in the fewest steps (`"reached"`), else
+the base node itself (`"unreached"`); a flagged id is explained as named
+(`"named"`). `other_contexts` lists the other copies the start reaches,
+nearest first, each with its flags, `steps`, `value`, `chosen` option and
+whether that option instantiates the same authored edge (`same_choice`),
+and counts the copies it never reaches (`unreached`). A node without
+flagged copies has neither field.
+
 **Conditional chance draws.** A chance node's out-edges may carry
 `requires`/`forbids` too, so an earlier choice changes the odds at a node
 every option reaches: each product-graph copy keeps only the edges its

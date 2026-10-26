@@ -120,10 +120,12 @@ pub enum Op {
     },
     /// Who decides at a node, and every option with value, regret, cost and what follows.
     Explain {
-        /// Node (default: start).
+        /// Node (default: start). A base id of a node with state-flag
+        /// copies resolves to the copy in the start's flag context.
         #[serde(default)]
         node: Option<String>,
-        /// Start override.
+        /// Start override: the default node, and the flag context a base
+        /// `node` id resolves in.
         #[serde(default)]
         from: Option<String>,
     },

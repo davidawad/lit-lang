@@ -131,7 +131,7 @@ pub fn describe(catalog: &Catalog) -> Value {
             "validate": "resolve packs + scenario without running anything",
             "graph": "{node?} nodes/edges (neighborhood if node)",
             "metric": "{spec, top?} evaluate a metric on every edge — test custom functions here",
-            "explain": "{node?, from?} who decides, every option with q/regret/cost/what-happens-next",
+            "explain": "{node?, from?} who decides, every option with q/regret/cost/what-happens-next; at a node with state-flag copies, a base id is explained in the replayed context (`context`) and the other copies summarized (`other_contexts`)",
             "solve": "{from?, full_policy?, all_values?, max_steps?} value + best line; adds cvar/zeta/alpha/grid under objective cvar, or opponent_value(s) when scenario.opponent_objective is set",
             "chain": "{from?, metrics?, top?} absorption probabilities + expected totals under the optimal policy",
             "simulate": "{from?, runs?, seed?, metrics?, alpha?, max_steps?, sample_durations?, samples?} outcome distribution, CVaR, P(loss)",

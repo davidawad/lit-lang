@@ -329,11 +329,12 @@ fn dispatch(req: &Request, catalog: &Catalog, g: &Graph, packs: &[Pack], sc: &Sc
         Op::Graph { node } => with_view(g, sc, |v| plain(explore::graph_op(v, node.as_deref()))),
         Op::Metric { spec, top } => with_view(g, sc, |v| plain(explore::metric_op(v, spec, *top))),
         Op::Explain { node, from } => with_view(g, sc, |v| {
+            let start = start_of(v, from.as_ref())?;
             let n = match node {
                 Some(x) => v.g.node(x)?,
-                None => start_of(v, from.as_ref())?,
+                None => start,
             };
-            decide::explain_op(v, n)
+            decide::explain_op(v, n, start)
         }),
         Op::Solve {
             from,

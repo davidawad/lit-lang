@@ -208,18 +208,12 @@ pub fn library_in(src: &dyn Source, dirs: &[PathBuf]) -> Vec<(String, PathBuf)> 
         .collect()
 }
 
-/// Library packages that are links packages (SPEC §8.4) able to compose
-/// something between `used` packages: those depending on two or more of
+/// Library packages in `src` that are links packages (SPEC §8.4) able to
+/// compose something between `used` packages: those depending on two or more of
 /// them. A links package joining a used package only to packages a matter
 /// does not use composes nothing for it, so it is not loaded at all.
 #[must_use]
-pub fn links_packages(lib: &[String], cases: &[PathBuf], used: &BTreeSet<String>) -> Vec<PathBuf> {
-    links_packages_in(&Disk, lib, cases, used)
-}
-
-/// [`links_packages`] in `src`.
-#[must_use]
-pub fn links_packages_in(
+pub fn links_packages(
     src: &dyn Source,
     lib: &[String],
     cases: &[PathBuf],

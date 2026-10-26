@@ -216,7 +216,7 @@ A generated fragment is `schemaVersion` 4 and carries a
 Fragments are embedded at build time (key `clock/<file>`; the embedded
 packs carry the hand-authored and generated fragments together) and read
 from `<packs dir>/clock/` by `--packs-dir`/`LITGRAPH_PACKS`; in-memory
-catalogs (`Catalog::from_files`, `litgraph-wasm`'s `handle_with_packs`)
+catalogs (`Catalog::from_files`, `litigate-wasm`'s `handle_with_packs`)
 take them as files named `clock/<file>.json`. A source with no `clock/`
 files gets the embedded hand-authored library (no generated fragment). Fragments merge in file-name order; a fragment that fails
 to parse or validate, or redefines an id already loaded, is skipped and

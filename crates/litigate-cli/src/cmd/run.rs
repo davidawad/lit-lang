@@ -130,12 +130,9 @@ pub(crate) fn compile(
     let used = used_by(src, &targets.cases);
     if links {
         // Links compose between whichever packs are loaded, as `links.json` does.
-        targets.packages.extend(crate::ws::links_packages_in(
-            src,
-            lib,
-            &targets.cases,
-            &used,
-        ));
+        targets
+            .packages
+            .extend(crate::ws::links_packages(src, lib, &targets.cases, &used));
     }
     let c = checked_targets(src, &targets, Profile::Dev, &Options::default(), lib)?;
     let session = &c.session;

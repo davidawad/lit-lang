@@ -93,7 +93,7 @@ The canonical format (`litigate fmt', SPEC §10) uses two."
     "priority" "url" "bearer" "designated" "interpretation" "trigger" "extend" "waive" "after_expiry" "never"
     "removes" "elects" "extends" "waives" "to" "where" "forums"
     "forward_holidays" "declared_holidays" "quote"
-    "words" "pages" "lines" "certificate" "excludes" "ecf"
+    "words" "pages" "lines" "certificate" "excludes" "ecf" "for" "paper"
     "delegable" "op" "unlock" "characterization" "retracted" "unknown_before" "commenced" "spawn" "joins"
     "lock" "against" "Rule"
     "given" "expect" "on")

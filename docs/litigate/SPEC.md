@@ -164,10 +164,11 @@ Punct        = "::" | "->" | "=>" | "==" | "!=" | "<=" | ">=" | "&&" | "||" | ".
   L0010 with a machine-applicable fix to the matching symbolic operator,
   and `not` produces L0012 with a fix to `!`. One spelling keeps
   expressions uniform across guards, rules and matters. The formatter
-  never emits word operators in expressions. `limit`, `certificate` and `excludes` are
-  reserved the same way for filing requirements, as L0011 (§3.7); their
-  list is `litigate_syntax::FILING_WORDS`. `requires` stays the edge
-  field keyword.
+  never emits word operators in expressions. `limit`, `certificate` and
+  `excludes` are keywords of a filing requirement (§3.7) and nothing
+  else: anywhere an identifier could stand they are L0011. Their list is
+  `litigate_syntax::FILING_WORDS`. `requires` stays the edge field
+  keyword.
 - **Edition marker.** A file may begin with `edition 2026` (`EditionDecl`,
   §3.1-§3.2), before `module` or `case`; anywhere else it is L0001. A year
   the compiler does not know is L0008. A file without a marker is edition
@@ -218,8 +219,9 @@ GroupDecl    = "group", Ident, ":", String ;
 TypeDecl     = "type", Ident, "=", Type, [ WhereClause ] ;   (* WhereClause: §3.5 *)
 EnumDecl     = "enum", Ident, "{", Ident, { ",", Ident }, [","], "}" ;
 EventDecl    = "event", Ident, "(", [ Param, { ",", Param }, [","] ], ")",
-               [ EventEffect ] ;
-EventEffect  = ( "removes" | "elects" ), Ident | "extends", Ref, "to", Ident | "waives", Ref ;
+               { EventEffect } ;
+EventEffect  = ( "removes" | "elects" ), Ident | "extends", Ref, "to", Ident | "waives", Ref
+             | "paper", Ref ;                    (* the paper filed: §3.7 *)
 Param        = Ident, ":", Type, [ WhereClause ] ;
 
 NodeDecl     = NodeKw, Ident, ":", String, { NodeClause }, [ NodeBody ] ;
@@ -522,7 +524,7 @@ otherwise):
   §3.1); an edge or link declaration has no such slot. The tree-sitter
   grammar parses it as `guard_op` (`authority_clause` for `by Level`).
 
-### 3.7 Reserved: filing requirements
+### 3.7 Filing requirements
 
 A paper's filing requirements are rule text: how long it may be (FRAP
 32(a)(7)(B)(i): a principal brief "contains no more than 13,000 words"),
@@ -532,133 +534,132 @@ ECF event it is filed under. Like a deadline, each has effective dates and
 is modified by local rules, standing orders and case orders (FRAP 32(e):
 "by local rule or order in a particular case"). So a filing requirement is
 a cited, versioned `.lit` declaration, not a separate file format (PM
-ruling 2026-10-24 on lg-litigate-epic-tuq.29). The form is reserved now so
-that adding it is additive: no file accepted today can change meaning or
-stop parsing when it lands (lg-962.10, which also adds `litigate
-lint-filing`).
+ruling 2026-10-24 on lg-litigate-epic-tuq.29). It was reserved (L0011)
+until lg-962.10.1 gave it a meaning; no file accepted while it was
+reserved changed meaning.
 
 ```ebnf
-LimitDecl    = "limit", Ref, { VersionClause | Relation | Cite }, LimitBody,
-               { VersionClause | Relation | Cite } ;    (* reserved: L0011 *)
+LimitDecl    = "limit", Ident, { VersionClause | Relation | Cite }, LimitBody,
+               { VersionClause | Relation | Cite } ;
 LimitBody    = "{", { LimitEntry, Sep }, "}" ;
-LimitEntry   = ( "words" | "pages" | "lines" ), "<=", ( Number | Hole ), { Cite }
-             | "requires", "certificate", Ref, { Cite }
+LimitEntry   = Measure, "<=", ( Number | Hole ), { Cite }
+             | "requires", "certificate", Ident,
+               [ "for", "[", Measure, { ",", Measure }, [","], "]" ], { Cite }
              | "excludes", "[", [ Excluded, { ",", Excluded }, [","] ], "]", { Cite }
              | "ecf", ( String | Hole ), { Cite } ;
-Excluded     = Ref | Hole ;
+Measure      = "words" | "pages" | "lines" ;
+Excluded     = Ident | Hole ;
 ```
 
-For example, from the vendored FRAP text (`sources/frap.txt`):
+The grammar accepts a `Ref` where `Ident` is written above (so a layer
+written `limit local::brief` still parses); sema requires the plain
+identifier (L2007). From `lit/frap/filing.lit`, against the vendored FRAP
+text (`sources/frap.txt`):
 
 ```lit
-limit principal-brief delegable_to [LocalRule, CaseOrder] {
+limit principal-brief delegable { to [LocalRule, CaseOrder], op set } {
+  pages <= 30 cite "FRAP 32(a)(7)(A)"
   words <= 13_000 cite "FRAP 32(a)(7)(B)(i)"
-  requires certificate compliance cite "FRAP 32(g)(1)"
-  excludes [cover-page, disclosure-statement, table-of-contents,
-            table-of-citations, oral-argument-statement, addendum,
-            certificate-of-counsel, signature-block, proof-of-service,
-            ?("any item specifically excluded by these rules or by local rule")]
-    cite "FRAP 32(f)"
-  ecf ?("the court's CM/ECF event for a principal brief")
-} cite "FRAP 32(e)"
+  lines <= 1_300 cite "FRAP 32(a)(7)(B)(i)"
+  requires certificate compliance for [words, lines] cite "FRAP 32(g)(1)"
+  excludes [cover-page, disclosure-statement, table-of-contents, table-of-citations, statement-regarding-oral-argument, addendum, certificate-of-counsel, signature-block, proof-of-service, ?("any item specifically excluded by these rules or by local rule")] cite "FRAP 32(f)"
+} effective [2016-12-01, ..) unknown_before 2016-12-01 cite "FRAP 32(a)(7)"
+
+event PrincipalBriefFiled() paper principal-brief
 ```
 
-Semantics, fixed now for the implementation to follow:
+Semantics:
 
 - **The paper kind.** `limit k` declares the filing requirements of
-  papers of kind `k`. Declarations with the same name are versions of
-  one logical declaration (§5.4); how an event or edge names the kind of
-  paper it files is fixed by lg-962.10.
-- **Entries.** `words <= N`, `pages <= N` and `lines <= N` bound the
-  paper's count of that measure. `requires certificate c` says the paper
-  must include a certificate of kind `c`. `excludes [...]` lists the parts
-  of a paper that do not count toward any of its bounds; every other part
-  counts (FRAP 32(f): headings, footnotes and quotations count). `ecf`
-  names an ECF event code under which the paper is filed. ECF codes are
-  data (strings), never keywords: each court's CM/ECF has its own list.
-  Each entry may carry its own `cite`; the declaration's cite and
-  versions cover the entries that have none. Whether several bounds in
-  one body are alternatives (FRAP 32(a)(7): 30 pages, or 13,000 words, or
-  1,300 monospaced lines) or cumulative is not fixed by this reservation:
-  lg-962.10 decides it against the vendored rules, and until then a body
-  with more than one bound has no meaning.
-- **Holes, fail-closed.** A number, ECF code or excluded item the
-  vendored sources do not settle is a hole (§8.1), never a guess. A
-  bound that is a hole judges no paper within or over it. A hole in
-  `excludes` stands for parts not yet identified; excluding more can only
-  lower a count, so a paper within its bound stays within, and one over
-  it is unknown rather than over.
+  papers of kind `k`, a name in the value namespace (§4.3). Declarations
+  with the same name are versions of one logical declaration (§5.4).
+  An event names the kind of paper it files with `paper k` (§3.1
+  `EventEffect`, PM ruling on lg-962.10): `k` must resolve to a `limit`
+  (L1002 when it does not resolve, L2001 when it names another kind of
+  declaration), at most once per event (L2007). An event without
+  `paper` files no paper the language knows.
+- **Bounds.** `words <= N`, `pages <= N` and `lines <= N` bound the
+  paper's count of that measure: `N` is a whole number above zero or a
+  hole (L2001 otherwise), each measure at most once per body (L2007).
+  `lines` counts lines of monospaced type (FRAP 32(a)(7)(B)(i), 32(g)(1)):
+  a paper in a proportionally spaced face has no line count. Several
+  bounds in one body are **alternatives**, as the vendored rules write
+  them (FRAP 32(a)(7)(A): 30 pages "unless it complies with" (B); (B)(i):
+  13,000 words "or" 1,300 lines): a paper within any one bound is within
+  the limit, and over the limit only when over every one. Cumulative
+  bounds (a paper must be within each) have no form yet; neither
+  vendored rule here needs one.
+- **Certificates.** `requires certificate c` says the paper must include
+  a certificate of kind `c` (a plain identifier, data like an ECF code),
+  each kind at most once per body (L2007). `for [m, ...]` narrows it to
+  a paper that relies on one of those bounds: within one of them and
+  within none of the body's other bounds (FRAP 32(g)(1): "a brief
+  submitted under ... 32(a)(7)(B)"). Each measure named must be bounded
+  in the same body and named once (L2007). Without `for`, the paper must
+  always carry it (37 C.F.R. § 42.24(d)).
+- **Exclusions.** `excludes [...]` lists the parts of a paper that do not
+  count toward any of its bounds; every other part counts (FRAP 32(f):
+  headings, footnotes and quotations count). At most one per body, each
+  part once (L2007). A part the vendored sources do not name is a hole.
+- **ECF codes.** `ecf` names an ECF event code under which the paper is
+  filed. ECF codes are data (strings), never keywords: each court's
+  CM/ECF has its own list. Each code at most once (L2007).
+- **Cites, fail-closed.** Each entry may carry one `cite` (L2007 for a
+  second); the declaration's cite covers the entries that have none.
+  `cite-resolves` (§7) holds every bound and every named exclusion to its
+  cited vendored text, as it holds a `quote` (§5.3): the cited section
+  must contain the bound's number and measure as the rules write them
+  (`13_000` words is "13,000 words", thousands grouped by commas), and
+  each excluded part's name with hyphens read as spaces
+  (`statement-regarding-oral-argument` is "statement regarding oral
+  argument"); otherwise L1010. So a number or a part the vendored sources
+  do not settle must be written as a hole (§8.1), never a guess. A bound
+  that is a hole judges no paper within or over it. A hole in `excludes`
+  stands for parts not yet identified; excluding more can only lower a
+  count, so a paper within its bound stays within, and one over it is
+  unknown rather than over. `hir::Limit::{bound, length, requires}` are
+  these rules over a paper's counts.
 - **Versions.** Each version is in force on its `effective` interval and
   recorded at its `known_at` (§5.4); an unversioned declaration takes its
-  rule's or package's defaults. A paper is checked against the version in
-  force on the date it is filed, at the query's `known_at`.
+  package's defaults, and `unknown_before` marks the dates before the
+  earliest vendored text as not encoded (L3010). A paper is checked
+  against the version in force on the date it is filed, at the query's
+  `known_at`.
 - **Modification layers.** A local rule, standing order, general order or
   case order changes a limit the way it changes a deadline: a layer
   declares a `limit` for the same paper kind with its authority and a
-  relation to the base (`override frap::principal-brief`,
-  `supersedes ...`), and selection is §5.5's, over the union of layers
-  (design review 2026-10-23 §3.4), never file order. Displacing a limit
-  needs a capability (L3004): the base's authority, or a `delegable_to`
+  relation to the base (`override frap::principal-brief`, `supersedes
+  ...`), and selection is §5.5's, over the union of layers (design review
+  2026-10-23 §3.4), never file order. Displacing a limit needs a
+  capability (L3004): the base's authority, or a `delegable` capability
   on the base naming the layer's level, as FRAP 32(e) delegates length to
-  local rules and case orders.
-- **Timeline and worlds.** The timeline op (`docs/litigate/TIMELINE.md`)
-  checks a filed paper against the requirements in force, in each world,
-  under that world's layers: a world that assumes an order granting leave
-  to exceed a limit sees the order's limit, and the docket world does
-  not. lg-962.10 reports this within the frozen `litigate.timeline/1`
-  fields; if they cannot carry it, that is a schema version question, not
-  an added field.
-
-Today:
-
-- `LimitDecl` is a top-level item of a `.lit` file only (`LitFile`,
-  §3.1); a `rule` body, a `.case` and a links package have no such slot.
-- `limit`, `certificate` and `excludes` are reserved words (§2): L0011
-  wherever they appear, in the slot or as an identifier. Only the whole
-  word is reserved (`no-transcript-certificate` and `"limit"` are fine).
-  `words`, `pages`, `lines` and `ecf` are contextual keywords of the body
-  only, and `requires` stays the edge field keyword (§3.1). `limit` is
-  an item keyword for recovery, but is never offered in an "expected"
-  message or a keyword fix.
-- Every form is parsed in full, into a `LimitDecl` node with
-  `LimitBound`, `CertificateReq`, `Exclusions` and `EcfCode` entries, so
-  the rest of the file still parses and the LSP keeps working. The lexer
-  reports each reserved word as L0011, whose message begins `reserved:
-  filing requirements`; the parser reports nothing more for a well-formed
-  form. Like any L0xxx error it stops formatting and lowering. The
-  reserved slot accepts any sequence of version clauses, relations and
-  cites on either side of the body; which are required, and their
-  canonical position (§10), are fixed when the declaration lands.
-- The tree-sitter grammar parses the slot (`limit_decl`, `limit_body`,
-  `limit_bound`, `certificate_req`, `exclusions`, `exclusion_list`,
-  `ecf_code`) so editors highlight it; the compiler rejects it.
-
-### 3.7 Reserved: filing requirements
-
-Filing limits record requirements of a filed document, including a
-certificate of compliance and exclusions from a word, page or line count.
-Electronic filing codes are data supplied by a forum. The declarations
-below are parsed into their typed syntax nodes so editors and later
-implementations can preserve them, but remain reserved and fail closed
-with L0011; they do not yet authorize or validate a filing.
-
-```lit
-/// FRAP 32(a)(7) and 32(f)-(g).
-limit principal-brief override frap::brief delegable_to [CaseOrder] effective [1998-12-01, ..) {
-  words <= 13_000 cite "FRAP 32(a)(7)(B)(i)"
-  lines <= 1300
-  pages <= ?("local rule")
-  requires certificate compliance cite "FRAP 32(g)(1)"
-  excludes [cover-page, table-of-contents, ?("local rule")] cite "FRAP 32(f)"
-  ecf "brief"
-  ecf ?("district ECF code")
-} supersedes local::old-brief cite "FRAP 32" known_at 2026-10-24
-```
-
-The parser reserves `limit`, `certificate` and `excludes`. Each form is
-parsed far enough to produce its dedicated syntax nodes and one L0011,
-without a syntax error; the error prevents formatting and lowering. The
-`ecf` value is data, not a forum rule inferred by the compiler.
+  local rules and case orders. A `limit` prescribes (§5.7, effect
+  `prescribe`). Showing the layer that set each limit on a timeline and
+  in alternate worlds is lg-962.10.3.
+- **Lowering.** A pack carries the version of each `limit` in force at
+  the build dates as `filingLimits` (`docs/PACK_SCHEMA.md`): `{id, cite,
+  bounds: [{measure, max, cite}], certificates: [{kind, for, cite}],
+  excludes: {items, cite}, ecf: [{code, cite}]}`, in module then source
+  order. A hole is absent there and listed in `lowered.holes`
+  (`/filingLimits/i/bounds/j/max`, `/filingLimits/i/excludes/open/n`,
+  `/filingLimits/i/ecf/j/code`), with each cite no amendment history
+  proves (§7). The source map has one entry per limit. An event's paper
+  kind is HIR only (events have no pack form); `litigate lint-filing`
+  reads both from HIR (lg-962.10.2).
+- **Keywords.** `limit` is an item keyword of a `.lit` file only
+  (`LitFile`, §3.1); a `rule` body, a `.case` and a links package have no
+  such slot. `limit`, `certificate` and `excludes` are keywords there and
+  nowhere else: anywhere an identifier could stand they are L0011, whose
+  message begins `reserved: filing-requirement keyword`
+  (`litigate_syntax::FILING_WORDS`). Only the whole word is reserved
+  (`no-transcript-certificate`, `certificate-of-counsel` and `"limit"` are
+  fine). `words`, `pages`, `lines`, `ecf` and `for` are contextual
+  keywords of the body, `paper` of an event declaration, and `requires`
+  stays the edge field keyword (§3.1).
+- The tree-sitter grammar parses the declaration (`limit_decl`,
+  `limit_body`, `limit_bound`, `certificate_req`, `measure_list`,
+  `exclusions`, `exclusion_list`, `ecf_code`) and an event's
+  `event_paper`.
 
 ## 4. Packages, modules, names
 
@@ -1083,6 +1084,11 @@ nothing.
 An unknown parameter is L1002, a parameter of the wrong type L2001, a
 second effect or a `to` without `extends` L2007, and `extends` without
 `to` L2007.
+
+Beside its effect, an event may name the kind of paper it files, `paper
+k`, where `k` is a `limit` declaration (§3.7). It is not an effect: it
+changes nothing in a matter, and says which filing requirements a paper
+filed by the event is checked against.
 
 `match` must be
 exhaustive with no unreachable arms (L2005). There is no null, implicit
@@ -1995,7 +2001,7 @@ and needs no solver. The effects a declaration has:
 | Effect | Declaration form |
 |---|---|
 | `declare` | a node, type, enum, event, rule, default, transition, or an exception to a default of its own package |
-| `prescribe` | a deadline, a counting rule, a calendar |
+| `prescribe` | a deadline, a counting rule, a calendar, a filing limit (§3.7) |
 | `rank` | an `authority` chain |
 | `version` | `supersedes` or `revives` naming another package's declaration |
 | `override` | `override` or `notwithstanding` naming another package's declaration |
@@ -2710,7 +2716,7 @@ unchanged, and is graded `error`; anything else is rejected.
 | L0008 | unknown edition | | |
 | L0009 | reserved refinement | | |
 | L0010 | guard-operation keyword | | |
-| L0011 | reserved filing requirement | | |
+| L0011 | filing-requirement keyword | | |
 | L0012 | word boolean operator | | |
 | L1001 | duplicate name | L3007 | no version in force |
 | L1002 | unresolved name | L3008 | invalid transition |
@@ -3195,7 +3201,7 @@ gets one row per condition when the conditions classify differently.
 | C80 | L5008 an edge out of a reachable node is enabled in no reachable marking (§7) | verify | c | O16. |
 | C81 | L5009 after an edge creating a duty's obligation no marking enabling its `within` edge is reachable (§7) | verify | c | O16. |
 | C82 | L9006 a `.case` event declares no id (§5.6) | sema | a | Syntactic: the event line has no `Ident ":"` before its date. |
-| C83 | L0011 filing requirement (`limit`, `requires certificate`, `excludes`) before lg-962.10 adds it (§3.7) | syntax | a | Grammar: a reserved slot that always rejects. |
+| C83 | L0011 `limit`, `certificate` or `excludes` outside a filing requirement (§3.7) | syntax | a | Grammar: a keyword outside its one slot. |
 | C84 | L0012 `not` in expression position (§3.3) | syntax | a | The expression grammar accepts symbolic `!` only; a machine-applicable fix makes the intended unary form explicit. |
 | C85 | L1011 no choice of loaded versions satisfies the requirements (§4.2) | sema | c | Version solving (PubGrub) over the set of loaded packages, an external artefact. |
 | C86 | L1012 a release's bump is smaller than its computed class needs (§4.4) | cli | c | Compares two releases of a package. |

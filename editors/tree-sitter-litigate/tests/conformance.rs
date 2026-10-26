@@ -214,59 +214,60 @@ fn guard_operations_parse_here_and_in_the_compiler() {
     }
 }
 
-/// The reserved filing requirements (SPEC §3.7): the grammar gives a
-/// `limit` declaration and each body entry a node so editors highlight
-/// them, and the compiler rejects them with L0011 only (once per reserved
-/// word), so the slot never shadows another error.
+/// Filing requirements (SPEC §3.7): the grammar gives a `limit`
+/// declaration, each body entry and an event's paper kind a node, and the
+/// compiler parses the same text without error.
 #[test]
-fn reserved_filing_limits_parse_here_and_are_l0011_in_the_compiler() {
-    for (entry, node, reserved) in [
-        (
-            "words <= 13_000 cite \"FRAP 32(a)(7)(B)(i)\"",
-            "limit_bound",
-            1,
-        ),
-        ("pages <= ?(\"local rule\")", "limit_bound", 1),
-        ("lines <= 1300", "limit_bound", 1),
+fn filing_limits_parse_here_and_in_the_compiler() {
+    for (entry, node) in [
+        ("words <= 13_000 cite \"FRAP 32(a)(7)(B)(i)\"", "limit_bound"),
+        ("pages <= ?(\"local rule\")", "limit_bound"),
+        ("lines <= 1300", "limit_bound"),
         (
             "requires certificate compliance cite \"FRAP 32(g)(1)\"",
             "certificate_req",
-            2,
+        ),
+        (
+            "requires certificate compliance for [words, lines] cite \"FRAP 32(g)(1)\"",
+            "measure_list",
         ),
         (
             "excludes [cover-page, ?(\"local rule\")] cite \"FRAP 32(f)\"",
             "exclusion_list",
-            2,
         ),
-        ("ecf \"code\"", "ecf_code", 1),
-        ("ecf ?(\"district ECF event code\")", "ecf_code", 1),
+        ("ecf \"code\"", "ecf_code"),
+        ("ecf ?(\"district ECF event code\")", "ecf_code"),
     ] {
         let source = format!(
-            "module m\nlimit brief effective [1998-12-01, ..) {{\n  {entry}\n}} cite \"FRAP 32\"\nstart s\n"
+            "module m\nlimit brief effective [1998-12-01, ..) {{\n  {entry}\n}} cite \"FRAP 32\"\n\
+             event BriefFiled() paper brief\nstart s\n"
         );
         let tree = parse(&source);
         assert!(syntax_errors(&tree).is_empty(), "{source}");
         assert!(find(tree.root_node(), "limit_decl").is_some(), "{source}");
         assert!(find(tree.root_node(), node).is_some(), "{source}");
+        assert!(find(tree.root_node(), "event_paper").is_some(), "{source}");
         let compiled = litigate_syntax::parse_lit(&source);
-        let codes: Vec<&str> = compiled.errors().iter().map(|e| e.code.as_str()).collect();
-        assert_eq!(codes, vec!["L0011"; reserved], "{source}");
-        for error in compiled.errors() {
-            assert!(error.message.starts_with(litigate_syntax::RESERVED_FILING));
-        }
+        assert!(compiled.errors().is_empty(), "{source}");
     }
     // A local rule or order displaces a limit through the relations (§5.5).
-    let source = "module m\nlimit local::brief override frap::brief {\n  words <= ?\n} \
+    let source = "module m\nlimit brief override frap::brief {\n  words <= ?\n} \
                   cite ?(\"local rule\")\n";
     let tree = parse(source);
     assert!(syntax_errors(&tree).is_empty(), "{source}");
     assert!(find(tree.root_node(), "relation").is_some(), "{source}");
+    assert!(litigate_syntax::parse_lit(source).errors().is_empty(), "{source}");
+    // Outside the declaration the filing words stay reserved (L0011).
+    let source = "module m\nstart limit\n";
     let codes: Vec<&str> = litigate_syntax::parse_lit(source)
         .errors()
         .iter()
         .map(|e| e.code.as_str())
         .collect();
     assert_eq!(codes, ["L0011"], "{source}");
+    for error in litigate_syntax::parse_lit(source).errors() {
+        assert!(error.message.starts_with(litigate_syntax::RESERVED_FILING));
+    }
 }
 
 /// Lexical rejection parity (SPEC §2): input the compiler rejects as an

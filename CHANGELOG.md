@@ -35,6 +35,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   strict or a synthetic layer in an actual one (L1014). One example
   package per class for the deadline domain, over vendored instrument
   text (`docs/litigate/examples/change/`, `sources/change-*.txt`).
+- **Filing limits and certificates are part of the language**
+  (lg-962.10.1, SPEC §3.7). `limit k { words|pages|lines <= N, requires
+  certificate c [for [measures]], excludes [...], ecf "code" }` parses,
+  type-checks and lowers; it was reserved (L0011) by lg-962.9. Bounds are
+  alternatives (FRAP 32(a)(7)(A): 30 pages "unless it complies with"
+  (B)), `lines` counts monospaced lines, and `requires certificate
+  compliance for [words, lines]` binds a certificate to the type volume
+  (FRAP 32(g)(1)). Fail-closed: `cite-resolves` holds each bound's number
+  ("13,000 words") and each excluded part ("cover page") to the cited
+  vendored text (L1010), so a value the sources do not settle must be a
+  hole; an open exclusion list leaves a paper over its bound unknown, not
+  over. An event names the paper it files, `event PrincipalBriefFiled()
+  paper principal-brief` (L1002/L2001 unless it is a `limit`). Limits are
+  versioned like any declaration and lower to the pack's new optional
+  `filingLimits`, holes in `lowered.holes`. `lit/frap` declares FRAP
+  32(a)(7)'s principal brief (30 pages, 13,000 words or 1,300 lines,
+  FRAP 32(f)'s exclusions with "any item specifically excluded by these
+  rules or by local rule" as a hole) and `lit/ptab` 37 C.F.R. § 42.24's
+  IPR petition (14,000 words, the word-count certificate), each with
+  `unknown_before` at its amendment. L0011 now marks `limit`,
+  `certificate` and `excludes` only outside the declaration. The
+  tree-sitter grammar (`measure_list`, `event_paper`) and editor
+  highlights follow.
+
 - **A package's instrument class is part of its type** (lg-962.5).
   `kind` in `Lit.toml` (`base`, the default, `amendment`, `local-rule`,
   `standing-order`, `case-order`, `guidance`, `precedent`, `overruling`)

@@ -78,8 +78,11 @@ module.exports = {
     'event',
     field('name', $.identifier),
     $.param_list,
-    optional(field('effect', $.event_effect)),
+    repeat(choice(field('effect', $.event_effect), field('paper', $.event_paper))),
   ),
+
+  // SPEC §3.7: the kind of paper the event files, a `limit` declaration.
+  event_paper: $ => seq('paper', field('kind', $.ref)),
 
   // SPEC §5.2: the one effect an event type may declare.
   event_effect: $ => choice(
@@ -338,8 +341,7 @@ module.exports = {
   authority_clause: $ => seq('by', field('level', $.identifier)),
 
   // SPEC §3.7: filing requirements (a paper kind's length limits,
-  // certificates, exclusions and ECF event codes) are reserved. They parse
-  // here so editors highlight them; the compiler rejects them (L0011).
+  // certificates, exclusions and ECF event codes).
   limit_decl: $ => seq(
     'limit',
     field('paper', $.ref),
@@ -364,7 +366,16 @@ module.exports = {
     repeat($.cite),
   ),
 
-  certificate_req: $ => seq('requires', 'certificate', field('kind', $.ref), repeat($.cite)),
+  certificate_req: $ => seq(
+    'requires',
+    'certificate',
+    field('kind', $.ref),
+    optional(seq('for', field('measures', $.measure_list))),
+    repeat($.cite),
+  ),
+
+  // The bounds a certificate goes with.
+  measure_list: $ => commaList('[', choice('words', 'pages', 'lines'), ']'),
 
   // What does not count toward the limit; a hole where unvendored.
   exclusions: $ => seq('excludes', field('items', $.exclusion_list), repeat($.cite)),

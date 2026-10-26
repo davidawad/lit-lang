@@ -1,5 +1,5 @@
 ================================================================================
-Reserved filing requirements
+Filing requirements
 ================================================================================
 
 module frap.length
@@ -9,10 +9,12 @@ limit principal-brief effective [1998-12-01, ..) {
   words <= 13_000 cite "FRAP 32(a)(7)(B)(i)"
   lines <= 1300 cite "FRAP 32(a)(7)(B)(i)"
   pages <= 30 cite "FRAP 32(a)(7)(A)"
-  requires certificate compliance cite "FRAP 32(g)(1)"
+  requires certificate compliance for [words, lines] cite "FRAP 32(g)(1)"
   excludes [cover-page, table-of-contents, ?("any item excluded by local rule")] cite "FRAP 32(f)"
   ecf ?("district ECF event code")
 } cite "FRAP 32"
+
+event PrincipalBriefFiled() paper principal-brief
 
 start s
 
@@ -51,6 +53,7 @@ start s
         (certificate_req
           (ref
             (identifier))
+          (measure_list)
           (cite
             (string
               (string_content))))
@@ -73,5 +76,11 @@ start s
       (cite
         (string
           (string_content))))
+    (event_decl
+      (identifier)
+      (param_list)
+      (event_paper
+        (ref
+          (identifier))))
     (start_decl
       (identifier))))

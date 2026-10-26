@@ -152,22 +152,7 @@ impl<'a> Context<'a> {
                 }),
                 _ => None,
             };
-            let edges: Vec<CiteOf<'_>> = match d {
-                Declaration::Node(n) => n
-                    .edges
-                    .iter()
-                    .flat_map(|e| {
-                        [e.authority.as_deref(), sourced(e.basis.as_ref())]
-                            .into_iter()
-                            .flatten()
-                            .map(|c| (c, e.span.as_ref(), false, None))
-                    })
-                    .chain(
-                        sourced(n.basis.as_ref()).map(|c| (c, n.meta.span.as_ref(), false, None)),
-                    )
-                    .collect(),
-                _ => Vec::new(),
-            };
+            let edges = edge_cites(d);
             let limited = match d {
                 Declaration::Limit(l) => limit_cites(l),
                 _ => Vec::new(),
@@ -188,6 +173,24 @@ impl<'a> Context<'a> {
                     quote,
                 })
         })
+    }
+}
+
+/// The `authority` and `basis sourced(..)` cites on a node and its edges.
+fn edge_cites(d: &Declaration) -> Vec<CiteOf<'_>> {
+    match d {
+        Declaration::Node(n) => n
+            .edges
+            .iter()
+            .flat_map(|e| {
+                [e.authority.as_deref(), sourced(e.basis.as_ref())]
+                    .into_iter()
+                    .flatten()
+                    .map(|c| (c, e.span.as_ref(), false, None))
+            })
+            .chain(sourced(n.basis.as_ref()).map(|c| (c, n.meta.span.as_ref(), false, None)))
+            .collect(),
+        _ => Vec::new(),
     }
 }
 

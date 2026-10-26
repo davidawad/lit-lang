@@ -26,13 +26,23 @@ fn with_pack(name: &str) -> PathBuf {
     dir
 }
 
-/// `dir/p.json`, the built frcp pack without its extension grants (pack
-/// v5), which import reports rather than spells (L6002).
+/// `dir/p.json`, the built frcp pack without its extension grants and
+/// designated windows (pack v5), which import reports rather than spells
+/// (L6002).
 fn legacy_frcp(dir: &Path) {
     let built = Path::new(litgraph_packs::PACKS_DIR).join("frcp-civil-procedure.json");
     let mut pack: Value = serde_json::from_str(&std::fs::read_to_string(built).unwrap()).unwrap();
     for edge in pack["edges"].as_array_mut().unwrap() {
-        if let Some(d) = edge.get_mut("deadline").and_then(Value::as_object_mut) {
+        let Some(edge) = edge.as_object_mut() else {
+            continue;
+        };
+        if edge
+            .get("deadline")
+            .and_then(|d| d.get("designated"))
+            .is_some()
+        {
+            edge.remove("deadline");
+        } else if let Some(d) = edge.get_mut("deadline").and_then(Value::as_object_mut) {
             d.remove("extensions");
         }
     }

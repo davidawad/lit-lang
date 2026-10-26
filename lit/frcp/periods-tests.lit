@@ -308,3 +308,24 @@ test "cross-appeal-period: before 2009, 14 days; a 14th day on Christmas rolls t
   given NoticeOfAppealFiled() on 2007-12-11
   expect deadline(cross-appeal-period) == 2007-12-26
 }
+
+// These reply-evidence alternatives converge on the Rule 56 ruling. If it
+// enters judgment, each path reaches the same appeal deadline. L.R. 7-3(d)
+// requires leave for additional briefing and supplies no fixed sur-reply date.
+test "reply evidence: sur-reply allowed, followed by judgment" cite ?("FRCP 56(c); N.D. Cal. L.R. 7-3(d)")
+{
+  given JudgmentEntered() on 2025-03-04
+  expect deadline(notice-of-appeal-period) == 2025-04-03
+}
+
+test "reply evidence: motion to strike, followed by judgment" cite ?("FRCP 56(c); N.D. Cal. L.R. 7-3(d)")
+{
+  given JudgmentEntered() on 2025-03-04
+  expect deadline(notice-of-appeal-period) == 2025-04-03
+}
+
+test "reply evidence disregarded, followed by judgment" cite ?("FRCP 56(c); N.D. Cal. L.R. 7-3(d)")
+{
+  given JudgmentEntered() on 2025-03-04
+  expect deadline(notice-of-appeal-period) == 2025-04-03
+}

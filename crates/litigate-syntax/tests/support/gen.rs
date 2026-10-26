@@ -3,7 +3,9 @@
 use litigate_syntax::ast::{
     AstNode, AuthorityDecl, DeadlineDecl, EnumDecl, Expr, GroupDecl, Literal, NodeDecl, Ratio,
 };
-use litigate_syntax::{Parse, SyntaxKind};
+use litigate_syntax::{
+    Parse, SyntaxKind, FILING_WORDS, GUARD_OP_WORDS, REFINEMENT_WORDS, RESERVED_WORDS,
+};
 use proptest::prelude::*;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -56,10 +58,28 @@ pub struct Edge {
     pub within: Option<String>,
 }
 
+/// Plain identifiers the grammar still rejects where the generator puts
+/// identifiers: `not` (L0012 as an expression, e.g. a deadline's event
+/// argument), the later-edition words (L0007), and the refinement (L0009),
+/// guard-operation (L0010) and filing (L0011) words.
+pub fn excluded_words() -> Vec<&'static str> {
+    let mut words = vec!["not"];
+    words.extend(RESERVED_WORDS);
+    words.extend(REFINEMENT_WORDS);
+    words.extend(GUARD_OP_WORDS);
+    words.extend(FILING_WORDS);
+    words
+}
+
+/// True when `word` may stand as a generated identifier: no keyword (they
+/// are contextual but avoided) and no [`excluded_words`] entry.
+pub fn is_ident(word: &str) -> bool {
+    SyntaxKind::from_keyword(word).is_none() && !excluded_words().contains(&word)
+}
+
 fn ident() -> impl Strategy<Value = String> {
-    "[a-z][a-z0-9_]{0,5}(-[a-z0-9]{1,3})?".prop_filter("keywords are contextual but avoided", |s| {
-        SyntaxKind::from_keyword(s).is_none()
-    })
+    "[a-z][a-z0-9_]{0,5}(-[a-z0-9]{1,3})?"
+        .prop_filter("keywords and reserved words are avoided", |s| is_ident(s))
 }
 
 fn label() -> impl Strategy<Value = String> {

@@ -353,5 +353,57 @@ fn machine_applicable_fixes_repair_obvious_mistakes() {
     }
 }
 
+/// Regression (lg-scsc): the program generator once drew `not` as a
+/// deadline's event argument, which the grammar rejects (L0012; `!` is the
+/// negation operator). Pins that input and every other word `gen` now
+/// excludes: each one fails to parse as an argument, so none may be drawn.
+#[test]
+fn generator_excludes_words_the_grammar_rejects_as_identifiers() {
+    let program = |arg: &str| gen::Program {
+        items: vec![gen::Item::Deadline {
+            name: "a".to_owned(),
+            days: 1,
+            event: "a".to_owned(),
+            args: vec![arg.to_owned()],
+            rule: "a".to_owned(),
+        }],
+        layout: vec![0],
+    };
+    let excluded = gen::excluded_words();
+    assert_eq!(
+        excluded,
+        [
+            "not",
+            "world",
+            "layer",
+            "precedent",
+            "overrule",
+            "lock",
+            "where",
+            "and",
+            "or",
+            "limit",
+            "certificate",
+            "excludes",
+        ]
+    );
+    for word in excluded {
+        assert!(!gen::is_ident(word), "{word}");
+        let text = program(word).print();
+        assert!(
+            !parse(&text, FileKind::Lit).is_ok(),
+            "{word} parses: {text}"
+        );
+    }
+    let text = program("not").print();
+    assert!(parse(&text, FileKind::Lit)
+        .errors()
+        .iter()
+        .any(|error| error.code.as_str() == "L0012"));
+    assert!(gen::is_ident("not-a") && gen::is_ident("nott"));
+    let text = program("nott").print();
+    assert!(parse(&text, FileKind::Lit).is_ok(), "{text}");
+}
+
 #[path = "support/gen.rs"]
 mod gen;

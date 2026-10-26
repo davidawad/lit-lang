@@ -1062,6 +1062,8 @@ fn an_overruled_precedent_is_in_force_until_the_overruling() {
         .find(|l| l.name == "en-banc")
         .unwrap()
         .in_force_at("2000-01-01", None));
+}
+
 /// A binding Supreme Court precedent's recharacterization of `fed`'s
 /// answer period.
 const RECHARACTERIZES: &str = "recharacterize held: answer-period characterization claim_processing effective [2020-02-01, ..) cite \"Demo\"";

@@ -241,11 +241,17 @@ fn a_format_1_lock_is_upgraded_by_fix() {
         }
         let locked = litigate_in(&dir, &["lock", "--locked", target]);
         assert_eq!(locked.code, 2, "{}", locked.stdout);
-        assert_eq!(locked.json["diagnostics"][0]["message"], l1007[0]["message"]);
+        assert_eq!(
+            locked.json["diagnostics"][0]["message"],
+            l1007[0]["message"]
+        );
         assert_eq!(locked.json["diagnostics"][0]["fixes"], l1007[0]["fixes"]);
         let fixed = litigate_in(&dir, &["fix", target]);
         assert_eq!(fixed.code, 0, "{}{}", fixed.stdout, fixed.stderr);
-        assert_eq!(fixed.json["result"]["changed_files"], serde_json::json!([lock]));
+        assert_eq!(
+            fixed.json["result"]["changed_files"],
+            serde_json::json!([lock])
+        );
         assert_eq!(std::fs::read_to_string(dir.join(lock)).unwrap(), current);
         let checked = litigate_in(&dir, &["check", target]);
         assert_eq!(checked.code, 0, "{}", checked.stdout);

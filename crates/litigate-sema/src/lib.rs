@@ -74,7 +74,10 @@ pub fn lock_diagnostics(
     pkg.lock_text(db)
         .as_deref()
         .and_then(|t| pkg::lock::upgrade(t, dir, || expected.render()))
-        .map_or_else(|| pkg::lock::verify(pkg.lock_text(db).as_deref(), &expected), Err)
+        .map_or_else(
+            || pkg::lock::verify(pkg.lock_text(db).as_deref(), &expected),
+            Err,
+        )
         .err()
         .map(|r| vec![r.to_diagnostic(&file, &litigate_base::LineIndex::new(&text))])
         .unwrap_or_default()

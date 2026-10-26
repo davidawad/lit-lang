@@ -119,4 +119,3 @@ fn a_rule_index_keeps_its_bracket_and_a_lock_its_list() {
         "{out}"
     );
 }
-

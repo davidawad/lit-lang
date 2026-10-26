@@ -184,7 +184,13 @@ fn fee_shifts_resolve_beside_stakes() {
         &["2010-01-04 Benched(complaint) by p"],
         "stakes { answered: 0.usd fee_shift 1, defaulted: 0.usd fee_shift 0.25 }",
     );
-    let checked = check(&text, fixture(), Some(&lock(fixture())), &NoClock, Profile::Dev);
+    let checked = check(
+        &text,
+        fixture(),
+        Some(&lock(fixture())),
+        &NoClock,
+        Profile::Dev,
+    );
     assert!(checked.ok(), "{:?}", checked.diagnostics);
     let case = checked.case.expect("resolves");
     let fraction = |s: &str| rational::parse_decimal(s).expect("decimal");

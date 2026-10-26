@@ -199,6 +199,7 @@ fn case_of(named: &Value) -> Case {
         events: Vec::new(),
         facts,
         stakes,
+        fee_shifts: BTreeMap::new(),
         observations: observe
             .into_iter()
             .map(|(node, counts)| Observation {

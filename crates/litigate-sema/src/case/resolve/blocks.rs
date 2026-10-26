@@ -9,21 +9,28 @@ use litigate_syntax::{SyntaxKind as K, SyntaxNode};
 use std::collections::BTreeMap;
 
 impl R<'_, '_> {
-    /// Record entries keyed by a node reference: (node, value node).
+    /// Record entries keyed by a node reference: (node, key range, value node).
     fn keyed(&mut self, block: &SyntaxNode) -> Vec<(String, TextRange, SyntaxNode)> {
+        self.entries(block)
+            .into_iter()
+            .filter_map(|(node, key, f)| Some((node, key, field_value(&f)?)))
+            .collect()
+    }
+
+    /// Record fields keyed by a node reference that have a value or a
+    /// `fee_shift` field: (node, key range, field).
+    fn entries(&mut self, block: &SyntaxNode) -> Vec<(String, TextRange, SyntaxNode)> {
         let Some(record) = child(block, K::RecordExpr) else {
             return Vec::new();
         };
         children(&record, K::RecordField)
             .filter_map(|f| {
                 // A field starts at its key; only its value can be missing.
-                let (Some(key), Some(value)) = (
-                    child(&f, K::Ref).and_then(|r| ref_path(&r)),
-                    field_value(&f),
-                ) else {
+                let key = child(&f, K::Ref).and_then(|r| ref_path(&r))?;
+                if field_value(&f).is_none() && child(&f, K::Field).is_none() {
                     return None;
-                };
-                Some((self.node(&key)?, key.range, value))
+                }
+                Some((self.node(&key)?, key.range, f))
             })
             .collect()
     }
@@ -66,7 +73,13 @@ impl R<'_, '_> {
         facts
     }
 
-    pub(super) fn stakes(&mut self, block: &SyntaxNode, text: &str) -> BTreeMap<String, Stake> {
+    /// The `stakes` block: each terminal's stake, and the fee-shift
+    /// fractions its entries give (`j: 1.usd fee_shift 0.5`).
+    pub(super) fn stakes(
+        &mut self,
+        block: &SyntaxNode,
+        text: &str,
+    ) -> (BTreeMap<String, Stake>, BTreeMap<String, Rational>) {
         if let Some(close) = child(block, K::RecordExpr)
             .and_then(|r| r.last_token())
             .filter(|t| t.kind() == K::RBrace)
@@ -94,7 +107,15 @@ impl R<'_, '_> {
             self.spans.stakes_end = Some((self.s(insert), prefix, suffix));
         }
         let mut stakes = BTreeMap::new();
-        for (node, _, value) in self.keyed(block) {
+        let mut fee_shifts = BTreeMap::new();
+        for (node, key, f) in self.entries(block) {
+            if let Some(v) = child(&f, K::Field).and_then(|s| self.fee_shift(&s)) {
+                fee_shifts.insert(node.clone(), v);
+            }
+            let Some(value) = field_value(&f) else {
+                self.spans.stakes.insert(node, self.s(key));
+                continue;
+            };
             let range = sig(&value);
             self.spans.stakes.insert(node.clone(), self.s(range));
             let written: String = value.text().to_string().split_whitespace().collect();
@@ -114,7 +135,23 @@ impl R<'_, '_> {
                 )),
             }
         }
-        stakes
+        (stakes, fee_shifts)
+    }
+
+    /// A stake's `fee_shift` fraction, in `[0, 1]`.
+    fn fee_shift(&mut self, field: &SyntaxNode) -> Option<Rational> {
+        let (text, range) = super::token_text(field, K::Number)?;
+        let value = rational::parse_decimal(&text)
+            .ok()
+            .filter(|r| rational::is_probability(*r));
+        if value.is_none() {
+            self.out.push(Report::new(
+                C::ArithmeticError,
+                range,
+                format!("fee_shift {text} is not a fraction in [0, 1]"),
+            ));
+        }
+        value
     }
 
     /// The `observe` and `prior` entries of `beliefs`, each with its node

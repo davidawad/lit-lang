@@ -97,7 +97,7 @@ impl Cx<'_, '_> {
                 self.not_allowed(f, why);
             }
         }
-        for key in ["payoff", "payoff_by_flag"] {
+        for key in ["payoff", "payoff_by_flag", "fee_shift"] {
             if let Some(f) = fields.get(key).filter(|_| !terminal) {
                 self.not_allowed(f, "on non-terminal nodes");
             }
@@ -122,10 +122,19 @@ impl Cx<'_, '_> {
                 }
             }
         }
+        let fee_shift = match fields
+            .get("fee_shift")
+            .and_then(|f| first_expr(f))
+            .and_then(|e| self.constant(e, &Type::Probability))
+        {
+            Some(Value::Probability(f)) => Some(f),
+            _ => None,
+        };
         NodeKind::Terminal {
             outcomes: self.idents(clauses.get("outcome")),
             payoff,
             payoff_by_flag: by_flag,
+            fee_shift,
         }
     }
 

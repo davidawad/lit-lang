@@ -204,6 +204,17 @@ fn scenario(
     if !payoffs.is_empty() {
         put("payoffs", Value::Object(payoffs));
     }
+    let fee_shifts: Map<String, Value> = case
+        .fee_shifts
+        .iter()
+        .filter_map(|(terminal, f)| {
+            sink.number(*f, None)
+                .map(|v| (terminal.clone(), Value::from(v)))
+        })
+        .collect();
+    if !fee_shifts.is_empty() {
+        put("fee_shifts", Value::Object(fee_shifts));
+    }
     let observe: Map<String, Value> = case
         .observations
         .iter()

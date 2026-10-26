@@ -70,16 +70,20 @@ pub(crate) fn edge(e: &hir::Edge, primed: bool) -> Option<Basis> {
 
 /// The label of a node's numbers.
 pub(crate) fn node(n: &hir::Node) -> Option<Basis> {
-    let (payoff, by_flag) = match &n.kind {
+    let (payoff, others) = match &n.kind {
         hir::NodeKind::Terminal {
             payoff,
             payoff_by_flag,
+            fee_shift,
             ..
-        } => (payoff.as_ref(), !payoff_by_flag.is_empty()),
+        } => (
+            payoff.as_ref(),
+            !payoff_by_flag.is_empty() || fee_shift.is_some(),
+        ),
         _ => (None, false),
     };
     let hole = matches!(payoff, Some(Authored::Hole(_)));
-    let numbers = payoff.is_some() || by_flag || !n.attrs.is_empty();
+    let numbers = payoff.is_some() || others || !n.attrs.is_empty();
     of(numbers, hole, n.basis.as_ref())
 }
 

@@ -2152,6 +2152,22 @@
     }
   },
   {
+    "type": "fee_shift",
+    "named": true,
+    "fields": {
+      "fraction": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "number",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "field_expression",
     "named": true,
     "fields": {
@@ -3373,6 +3389,10 @@
             "named": false
           },
           {
+            "type": "fee_shift",
+            "named": false
+          },
+          {
             "type": "formerly",
             "named": false
           },
@@ -4404,7 +4424,7 @@
       },
       "value": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "signed_money",
@@ -4416,6 +4436,16 @@
           }
         ]
       }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "fee_shift",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -5264,6 +5294,10 @@
   },
   {
     "type": "false",
+    "named": false
+  },
+  {
+    "type": "fee_shift",
     "named": false
   },
   {

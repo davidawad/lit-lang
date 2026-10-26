@@ -58,6 +58,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `crates/litigate-cli/tests/round_trip.rs` compiles and solves every
   `lit/` package and every `cases/` matter.
 
+- **Fee-shifting terminals offset our own hours, by statute and per
+  matter** (lg-vwwr). A `.lit` terminal's `fee_shift f` (pack
+  `feeShift`, a fraction in `[0, 1]`) is the governing statute's default
+  share of our accumulated cost, the fee motion's own hours included,
+  that a fee award recovers when the matter ends there; a `.case` stake
+  takes `fee_shift f` (`j: 0.usd fee_shift 0.5`, or `j: fee_shift 0.5`
+  alone) to override it for the matter (`scenario.fee_shifts`).
+  `scenario.fee_shift` now replaces the packs' fractions; `solve` and
+  `simulate` use the per-terminal fraction, so a fee motion is no longer
+  valued at the gross award less its own cost. A fee-shift fraction
+  outside `[0, 1]` is an error.
 - **A designated due date the matter does not record is `unknown`, never
   `open`** (lg-flu.46). A notice of institution whose answer date is `?`
   leaves the TTAB answer period with status `unknown` at `as_of` and the

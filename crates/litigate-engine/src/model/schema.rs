@@ -349,6 +349,16 @@ pub struct RawNode {
     /// order wins. See `docs/PACK_SCHEMA.md#state-flags`.
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub payoff_by_flag: BTreeMap<String, f64>,
+    /// Fee shifting at this terminal (v2): the fraction of our accumulated
+    /// cost (the litigation hours and the fee motion's own) a fee award
+    /// recovers when the matter ends here, as the governing statute sets it
+    /// by default (e.g. `1` for a prevailing civil-rights plaintiff under
+    /// 42 U.S.C. § 1988). A payoff is the gross award; this offsets the
+    /// cost of getting it. In `[0, 1]`, terminals only; a scenario's
+    /// `fee_shift` or `fee_shifts` overrides it. See
+    /// `docs/COST_FUNCTIONS.md#fee-shifting`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub fee_shift: Option<f64>,
 }
 
 fn default_actor() -> String {

@@ -9,6 +9,7 @@
 //! it had to take as a structured [`Warning`].
 
 mod belief;
+mod fee;
 mod library;
 mod limits;
 mod plan;
@@ -16,6 +17,7 @@ mod resolve;
 mod view;
 
 pub use belief::{Belief, Group, GroupKind, PriorSource, Uncertainty, DEFAULT_CONCENTRATION};
+pub use fee::DEFAULT_ELIGIBLE;
 pub use library::{
     DocketEvent, EventRelation, NamedScenario, ScenarioParty, ScenarioSource,
     SCENARIO_SCHEMA_VERSION,
@@ -209,8 +211,12 @@ pub struct Scenario {
     pub objective: Objective,
     /// Annual discount rate applied along `elapsed` time (e.g. 0.08).
     pub discount_annual: Option<f64>,
-    /// Fee shifting.
+    /// Fee shifting at every eligible terminal; replaces the fractions packs
+    /// author on their terminals (`feeShift`, the statutory default).
     pub fee_shift: Option<FeeShift>,
+    /// Terminal ref → fee-shift fraction for this matter (`.case` stakes'
+    /// `fee_shift`); overrides both `fee_shift` and the pack's default there.
+    pub fee_shifts: BTreeMap<String, f64>,
     /// Named calibration set(s) to apply, in order (see `calibration/*.json`;
     /// `litgraph schema calibration`). Each entry's probability/duration/node
     /// attr becomes "authored" exactly as if hand-typed into the pack — the

@@ -65,6 +65,11 @@ pub enum NodeKind {
         payoff: Option<Authored<Money>>,
         /// Payoff override keyed by state flag (`payoffByFlag`).
         payoff_by_flag: BTreeMap<String, Money>,
+        /// `fee_shift`: the fraction of our accumulated cost a fee award
+        /// recovers when the matter ends here, as the governing statute
+        /// sets it by default (`feeShift`).
+        #[serde(default, skip_serializing_if = "Option::is_none")]
+        fee_shift: Option<Rational>,
     },
 }
 

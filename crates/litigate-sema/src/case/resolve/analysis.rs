@@ -56,7 +56,14 @@ pub const FIELDS: [&str; 17] = [
 ];
 
 /// `Scenario` fields with a dedicated `.case` block.
-pub const DEDICATED: [&str; 5] = ["start", "perspective", "facts", "payoffs", "observe"];
+pub const DEDICATED: [&str; 6] = [
+    "start",
+    "perspective",
+    "facts",
+    "payoffs",
+    "fee_shifts",
+    "observe",
+];
 
 /// `Scenario` fields that key engine nodes or edges by string, which a
 /// matter does not write.

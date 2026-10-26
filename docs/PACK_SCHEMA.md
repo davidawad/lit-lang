@@ -87,6 +87,7 @@ the exact JCS text that digests and litigatable hashes are taken over.
 | `tags` | string[] | **v2** free-form node tags for any node (not just terminals), e.g. `["entry","router"]`. Expressions see a node's `outcome` ∪ `tags` as one set: `tag("x")` on a terminal, `to_tag("x")`/`from_tag("x")` on an edge testing its target/source node |
 | `attrs` | `{string: number}` | **v2** free numeric attributes exposed to custom functions as `node.<name>` |
 | `payoffByFlag` | `{string: number}` | **v2**, terminals only. Overrides `payoff` on a flagged product-graph copy of this terminal: if the copy carries one of these keys as a set flag, its payoff is that value instead of `payoff`. See [State flags](#state-flags) |
+| `feeShift` | number in `[0, 1]` | **v2**, terminals only. Fee shifting by the governing statute's default: the fraction of our accumulated cost (the litigation hours and the fee motion's own) a fee award recovers when the matter ends here. `payoff` stays the gross amount; `solve`/`simulate` offset the cost of reaching it. A scenario's `fee_shift` replaces it at every terminal, its `fee_shifts` at one. See [docs/COST_FUNCTIONS.md](COST_FUNCTIONS.md#fee-shifting) |
 
 ## Edges
 

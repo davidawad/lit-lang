@@ -33,6 +33,10 @@ pub struct Case {
     pub facts: BTreeMap<String, String>,
     /// Qualified terminal to stake.
     pub stakes: BTreeMap<String, Stake>,
+    /// Qualified terminal to its fee-shift fraction for this matter (a
+    /// stake's `fee_shift`; lowers to `scenario.fee_shifts`).
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub fee_shifts: BTreeMap<String, Rational>,
     /// Observed chance outcomes.
     pub observations: Vec<Observation>,
     /// Declared priors the observations update (`beliefs { prior .. }`).

@@ -62,6 +62,9 @@ pub struct Node {
     /// through so the product-graph compiler can resolve it per copy).
     #[serde(skip_serializing_if = "BTreeMap::is_empty")]
     pub payoff_by_flag: BTreeMap<String, f64>,
+    /// Authored fee-shift fraction at a terminal (`RawNode::fee_shift`).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub fee_shift: Option<f64>,
     /// Engine-created (the `#end` twin of a continued terminal).
     pub synthetic: bool,
     /// State flags set at this compiled copy (empty for the base graph, or

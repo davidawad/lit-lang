@@ -1276,6 +1276,27 @@
               "name": "key",
               "content": {
                 "type": "STRING",
+                "value": "fee_shift"
+              }
+            },
+            {
+              "type": "FIELD",
+              "name": "value",
+              "content": {
+                "type": "SYMBOL",
+                "name": "number"
+              }
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "key",
+              "content": {
+                "type": "STRING",
                 "value": "basis"
               }
             },
@@ -1402,6 +1423,15 @@
                 "content": {
                   "type": "STRING",
                   "value": "payoff_by_flag"
+                },
+                "named": true,
+                "value": "identifier"
+              },
+              {
+                "type": "ALIAS",
+                "content": {
+                  "type": "STRING",
+                  "value": "fee_shift"
                 },
                 "named": true,
                 "value": "identifier"
@@ -6354,25 +6384,68 @@
           "value": ":"
         },
         {
-          "type": "FIELD",
-          "name": "value",
-          "content": {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "SYMBOL",
-                "name": "signed_money"
-              },
-              {
-                "type": "ALIAS",
-                "content": {
-                  "type": "STRING",
-                  "value": "unvalued"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "FIELD",
+                  "name": "value",
+                  "content": {
+                    "type": "CHOICE",
+                    "members": [
+                      {
+                        "type": "SYMBOL",
+                        "name": "signed_money"
+                      },
+                      {
+                        "type": "ALIAS",
+                        "content": {
+                          "type": "STRING",
+                          "value": "unvalued"
+                        },
+                        "named": true,
+                        "value": "unvalued"
+                      }
+                    ]
+                  }
                 },
-                "named": true,
-                "value": "unvalued"
-              }
-            ]
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "fee_shift"
+                    },
+                    {
+                      "type": "BLANK"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "SYMBOL",
+              "name": "fee_shift"
+            }
+          ]
+        }
+      ]
+    },
+    "fee_shift": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "fee_shift"
+        },
+        {
+          "type": "FIELD",
+          "name": "fraction",
+          "content": {
+            "type": "SYMBOL",
+            "name": "number"
           }
         }
       ]

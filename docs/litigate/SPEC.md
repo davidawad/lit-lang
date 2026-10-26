@@ -228,6 +228,7 @@ NodeBody     = "{", { (NodeField | EdgeDecl), Sep }, "}" ;
 NodeField    = "group", Ident | "note", String | "valence", Ident
              | "court_listener_url", String | "tags", IdList | "attrs", NumRecord
              | "payoff", (SignedMoney | Hole) | "payoff_by_flag", MoneyRecord
+             | "fee_shift", Number
              | "basis", Expr                         (* §5.1 "Basis" *)
              | "formerly", IdList ;
 EdgeDecl     = (Ident | "_"), String, "->", Ref, { EdgeClause }, [ EdgeFields ] ;
@@ -338,7 +339,9 @@ PartiesBlock = "parties", "{", { Ident, ":", Ident, Ident, Sep }, "}" ;
 EventsBlock  = "events", "{", { [ Ident, ":" ], Date, [ "docket", Number ], CallExpr, ("by" | "on"), Ident,
                [ Cite ] }, "}" ;
 FactsBlock   = "facts", "{", { Ref, ":", Ref, Sep }, "}" ;
-StakesBlock  = "stakes", "{", { Ref, ":", (SignedMoney | "unvalued"), Sep }, "}" ;
+StakesBlock  = "stakes", "{", { Ref, ":", ( (SignedMoney | "unvalued"), [ FeeShift ]
+               | FeeShift ), Sep }, "}" ;
+FeeShift     = "fee_shift", Number ;
 BeliefsBlock = "beliefs", "{", { ("prior" | "observe"), Ref, ":", "{", { Ref, ":", Number, Sep },
                "}", Sep }, "}" ;
 AnalysisBlock= "analysis", RecordExpr ;
@@ -1001,8 +1004,17 @@ compute the same values (before 1.0.0, `^` and `~` coincide).
   can co-occur (`forbids [x]` on the other edges); a node gated on more
   than 12 flags is L2003. `discretion`
   marks a tribunal-discretion draw. It is verification metadata only.
-- `outcome`, `payoff`, and `payoff_by_flag` are valid only on `terminal`
-  (L2007).
+- `outcome`, `payoff`, `payoff_by_flag`, and `fee_shift` are valid only
+  on `terminal` (L2007).
+- A terminal's `payoff` is the gross amount the matter ends with. Its
+  `fee_shift f`, a `Probability` (L2006 outside `[0, 1]`), is the share
+  of our accumulated cost, the fee motion's own hours included, that a
+  fee award recovers when the matter ends there, as the governing statute
+  sets it by default (`fee_shift 1` with `cite "42 U.S.C. 1988(b)"` for a
+  prevailing civil-rights plaintiff; a discretionary award such as
+  17 U.S.C. 505 states the fraction the package expects). A terminal
+  without one recovers nothing unless the matter says otherwise
+  (`stakes`' `fee_shift`, or `analysis { fee_shift: .. }`, §8.3).
 - An edge's actor is its own `by`, else the node's `by`, else `either`.
   A node is a choice or a draw, never both: `p` is allowed only on the
   edges of a `chance` node, and on a link leaving a `chance` node or a
@@ -1915,7 +1927,12 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
   in `strict` too, and needs no entry. A `payoff ?` hole is not a value,
   so its terminal still needs a stake. A stake on a terminal with an
   authored payoff overrides that payoff for the matter
-  (`scenario.payoffs`, §8.3); the package is not changed.
+  (`scenario.payoffs`, §8.3); the package is not changed. An entry's
+  `fee_shift f` (`f` in `[0, 1]`, L2006 otherwise) overrides the
+  terminal's fee-shift fraction for the matter (`scenario.fee_shifts`);
+  `t: fee_shift f` alone gives no stake, so the terminal still needs a
+  value from its package or another entry. Either form must name a
+  terminal (L4004).
 - `beliefs { observe node: { edge: count } }`: node must be a chance node, edges
   its own (L4006).
 - `beliefs { prior node: { edge: α } }` declares the Dirichlet prior the
@@ -2233,6 +2250,7 @@ Anything without a lowering is L6001.
 | `state`/`chance` / `decision` / `terminal` | `RawNode.kind` `state` / `decision` / `terminal`, always written |
 | node `group`, `note`, `valence`, `court_listener_url`, `tags`, `attrs` | same-named `RawNode` fields (`courtListenerUrl`) |
 | `outcome`, `payoff`, `payoff_by_flag` | `RawNode.outcome`, `payoff`, `payoffByFlag` (major units) |
+| terminal `fee_shift` | `RawNode.feeShift` (a number in `[0, 1]`) |
 | edge, in node order then edge order | `Pack.edges[]`: `from` = enclosing node, `id` (omitted for `_`), `to`, `label`, `actor` |
 | `p`, `effort`, `cost` | `RawEdge.probability`, `hours`, `cost` |
 | `authority` | `RawEdge.authority` (string, cite text, or cite-hole reason) |
@@ -2394,6 +2412,7 @@ loader (`ClockLibrary::from_json`), so an invalid one is L6001.
 | `perspective` | `scenario.perspective` actor-to-role map: `perspective party` lists only the actors whose role differs from the primary package's roles (which must be loaded, else L6001); an explicit `{ actor: role }` map is emitted as written |
 | `facts` | `scenario.facts` qualified node to qualified edge |
 | `stakes` | `scenario.payoffs` qualified terminal to major-unit number; a terminal without a stake keeps its pack-authored `payoff` (§5.6) and is not listed |
+| `stakes` entry `fee_shift f` | `scenario.fee_shifts` qualified terminal to `f` |
 | `beliefs` `observe` | `scenario.observe` qualified node to `{qualified edge: count}` |
 | `beliefs` `prior node: { e: α }` | `scenario.probabilities` each outcome edge to its mean `α / Σα`, and `scenario.uncertainty.concentration` the node to `Σα` (L6004 when exact arithmetic overflows) |
 | the packs of the `uses` closure, as built at the matter's dates | `lowered.basis` `[{pointer: "/scenario", basis}]`: the join over every node's and edge's numbers (§5.1 "basis"), the probabilities of a node with a `prior` the matter's estimate; absent when the packs hold no number |
@@ -2420,7 +2439,8 @@ fix), and so is a field given twice:
 | `mixed`, `opponent`, `prob_fill`, `objective`, `fee_shift`, `uncertainty` | engine options: numbers, strings, booleans, records and lists |
 
 A value of the wrong shape is L4007 at the value. `start`, `perspective`,
-`facts`, `payoffs`, and `observe` have dedicated blocks (L4007).
+`facts`, `payoffs`, `fee_shifts`, and `observe` have dedicated blocks (L4007;
+`fee_shifts` is `stakes`' `fee_shift`).
 `probabilities` and `policy` would name engine nodes and edges by string,
 so a matter does not write them (L4007): it states what it knows with
 `facts` and `beliefs`. An engine option's type is the engine's own:

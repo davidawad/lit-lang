@@ -24,6 +24,7 @@ pub(crate) const NODE_FIELDS: &[Spec] = &[
     (KwAttrs, Some(num_record)),
     (KwPayoff, Some(money_or_hole)),
     (KwPayoffByFlag, Some(money_record)),
+    (KwFeeShift, Some(number)),
     (KwBasis, Some(bound)),
     (KwFormerly, Some(id_list)),
 ];
@@ -404,9 +405,15 @@ pub(crate) fn number_value(p: &mut Parser<'_>) -> bool {
     number(p)
 }
 
-/// Value of a stake: signed money or `unvalued`.
+/// Value of a stake: signed money or `unvalued`, then an optional
+/// `fee_shift Number` field; or the field alone.
 pub(crate) fn stake_value(p: &mut Parser<'_>) -> bool {
-    signed_money(p) || super::values::keyword_literal(p, &[KwUnvalued])
+    let valued = signed_money(p) || super::values::keyword_literal(p, &[KwUnvalued]);
+    let shifted = p.at_kw(KwFeeShift);
+    if shifted {
+        keyword_field(p, KwFeeShift, Some(number));
+    }
+    valued || shifted
 }
 
 /// `patch Ident PatchFields` inside an instance: typed edge fields, each

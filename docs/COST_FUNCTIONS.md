@@ -82,6 +82,7 @@ with existing variables; **data** = expressible once packs carry the `attrs`;
 | per-matter payoff | `scenario.payoffs` | built-in |
 | outcome-class weighting | `tag('win') * payoff`, `tag('settlement') * payoff * 0.9` | expression |
 | fee shifting (§ 285, EAJA, 1927, Rule 37, contract) | `fee_shift: {fraction, eligible: "tag('fee-eligible')"}`, exact under policy via policy iteration | built-in |
+| statutory fee shifting (42 U.S.C. 1988, 17 U.S.C. 505, ...) | a terminal's `feeShift` (`.lit` `fee_shift`), the statute's default; per matter `fee_shifts` (`.case` stakes' `fee_shift`); see [Fee shifting](#fee-shifting) | built-in |
 | Rule 68 offer-of-judgment cost shift | `settle` op's `rule68: {offer, costs, eligible?}` (FRCP/RCFC 68(d); see docs/SETTLEMENT.md); or `fee_shift` with `eligible: "payoff < offer"` and a costs-only fraction | built-in |
 | prejudgment interest, damages that grow with time | `payoff * (1+r)^(elapsed_total/365)` (see "Path-dependent terminal variables" below) | expression (exact in `simulate`; `solve`/`chain` see `elapsed_total` as 0) |
 | collectability / judgment-proof defendant | `payoff * collect_p` | expression |
@@ -109,6 +110,30 @@ with existing variables; **data** = expressible once packs carry the `attrs`;
 |---|---|---|
 | price sanctions exposure out | `tag('sanctions') ? 1e9 : hours * rate + fees` | expression |
 | Rule 11 / 1927 / inherent-power risk | `attr('sanction_p', 0) * attr('sanction_usd', 0) + hours * rate + fees` | data |
+
+## Fee shifting
+
+A terminal's payoff is a gross number: "fees awarded" ends the matter with
+the award, but the hours spent getting there (the litigation, and the fee
+motion's own) are still spent. Fee shifting offsets them. Each terminal
+carries a fee-shift fraction `f`, the share of our accumulated cost a fee
+award recovers when the matter ends there:
+
+1. `scenario.fee_shifts[terminal]` (a `.case` stake's `fee_shift`), else
+2. `scenario.fee_shift.fraction` if `scenario.fee_shift` is set and its
+   `eligible` expression (default `tag('fee-eligible')`) selects the
+   terminal, 0 if it is set and does not, else
+3. the pack's `feeShift` on the terminal (`.lit`: `fee_shift 1` beside
+   `cite "42 U.S.C. 1988(b)"`), the statute's default, else 0.
+
+`solve` charges our edge `e` its cost times `1 − E[f]`, the expected
+fraction at the terminal the matter ends at from `e`'s target under the
+current policy, and iterates to a fixed policy (`fee_shift_rounds`).
+`simulate` credits `f × (our spend on the path)` at the terminal reached.
+So a fee motion whose award recovers its own hours is worth the award,
+not the award less the motion. `objective: cvar` and a general-sum
+`opponent_objective` use unadjusted cost and warn when any fraction is
+set.
 
 ## Path-dependent terminal variables
 

@@ -8,7 +8,7 @@ use super::plan::PlanInputs;
 use super::resolve::{
     active_edges, dist_to_terminal, edge_env, params_of, probabilities, ViewParts,
 };
-use super::{limits, resolve_spec, NodePlan, Objective, Scenario, Warning};
+use super::{fee, limits, resolve_spec, NodePlan, Objective, Scenario, Warning};
 use crate::error::{Error, Result};
 use crate::expr::{self, Expr};
 use crate::metrics::{self, EdgeEnv, PathVars, TerminalEnv};
@@ -37,6 +37,10 @@ pub struct View<'g> {
     /// path-dependent variables (`simulate` uses this; `utility` above is the
     /// Markov (path vars = 0) value `solve`/`chain` use).
     pub utility_expr: Expr,
+    /// Fee-shift fraction per node: the share of our accumulated cost a fee
+    /// award recovers when the matter ends there (0 off-terminal; see
+    /// `scenario::fee`).
+    pub fee: Vec<f64>,
     /// Scenario cost metric per edge (NaN if inactive).
     pub cost: Vec<f64>,
     /// Expected elapsed days per edge.
@@ -176,6 +180,7 @@ impl<'g> View<'g> {
         plans.warnings.extend(observed);
         plans.warnings.extend(hole_warnings(g));
         let start = sc.start.as_deref().map_or(Ok(g.start), |s| g.node(s))?;
+        let fee = fee::fractions(g, sc, &payoff, &params)?;
         let mut view = View {
             g,
             sc: sc.clone(),
@@ -187,6 +192,7 @@ impl<'g> View<'g> {
             payoff,
             utility: vec![0.0; g.nodes.len()],
             utility_expr: Expr::Num(0.0),
+            fee,
             cost: vec![],
             elapsed: vec![],
             plan: plans.plan,
@@ -225,7 +231,8 @@ impl<'g> View<'g> {
                 ),
             });
         }
-        self.warnings.extend(limits::cvar_limits(sc));
+        let fee_shifting = self.fee_shifting();
+        self.warnings.extend(limits::cvar_limits(sc, fee_shifting));
         if let Objective::Robust { radius: None, .. } = sc.objective {
             let uncertain = self.belief.uncertain();
             let ws =
@@ -233,8 +240,18 @@ impl<'g> View<'g> {
                     .estimated_warnings(self.g, &uncertain, "the robust ambiguity radius");
             self.warnings.extend(ws);
         }
-        self.warnings.extend(limits::opponent_objective_limits(sc));
+        self.warnings
+            .extend(limits::opponent_objective_limits(sc, fee_shifting));
         Ok(())
+    }
+
+    /// True if a fee award offsets cost anywhere: the scenario sets
+    /// `fee_shift`/`fee_shifts`, or a pack authors a nonzero `feeShift`.
+    #[must_use]
+    pub fn fee_shifting(&self) -> bool {
+        self.sc.fee_shift.is_some()
+            || !self.sc.fee_shifts.is_empty()
+            || self.fee.iter().any(|f| *f != 0.0)
     }
 
     fn utilities(&mut self) -> Result<(Vec<f64>, Expr)> {

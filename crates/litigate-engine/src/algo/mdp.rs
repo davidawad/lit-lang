@@ -19,20 +19,21 @@
 //! more exact than v1's whole-graph sweeps.
 //!
 //! Fee shifting is exact for a fixed policy: our cost on an edge is recovered
-//! in proportion to the probability of ending at a fee-eligible terminal from
-//! that edge's target, `c'(e) = c(e)·(1 − f·P_elig(e.to))`. Because
-//! P_elig depends on the policy, we alternate solve ↔ evaluate until the
+//! in proportion to the expected fee-shift fraction of the terminal the
+//! matter ends at from that edge's target, `c'(e) = c(e)·(1 − E[f](e.to))`
+//! (`f` per terminal: `View::fee`; with one fraction at every eligible
+//! terminal this is `f·P_elig(e.to)`). A choice also changes what is
+//! recovered of the spend already behind it, so our choices weigh that too
+//! (`algo::fee`). Because E[f] depends on the policy, we alternate solve ↔ evaluate until the
 //! policy stops changing (policy iteration).
 
 use serde::Serialize;
 use std::collections::BTreeMap;
 
-use crate::algo::robust;
 use crate::algo::structure::{is_cyclic, scc};
+use crate::algo::{fee, robust};
 use crate::error::Result;
-use crate::expr;
-use crate::metrics::TerminalEnv;
-use crate::model::{NodeIx, Role};
+use crate::model::NodeIx;
 use crate::scenario::{Control, Objective, View, WAIT};
 
 /// Tolerances for the cyclic (SCC-local) value-iteration backup.
@@ -101,6 +102,10 @@ struct Ctx<'a> {
     worst: bool,
     /// `Objective::Robust`: per-node L1 ambiguity radius over each draw.
     radius: Option<&'a [f64]>,
+    /// Fee shifting: per edge, what choosing it adds to the recovery of the
+    /// spend already behind its node (`algo::fee`); weighed by our choices,
+    /// never part of a value.
+    bonus: Option<&'a [f64]>,
 }
 
 impl Ctx<'_> {
@@ -144,6 +149,16 @@ impl Ctx<'_> {
                 self.q(e, value)
             }
         };
+        let bonus = |e: usize| match self.bonus {
+            Some(b) if p.control == Control::Me => {
+                if e == WAIT {
+                    p.wait.iter().map(|&(w, pr)| pr * b[w]).sum()
+                } else {
+                    b[e]
+                }
+            }
+            _ => 0.0,
+        };
         let mut best: Option<(f64, usize)> = None;
         if let Some(f) = forced {
             best = Some((q_of(f), f));
@@ -164,7 +179,7 @@ impl Ctx<'_> {
             };
             let options = p.choices.iter().copied().chain(q_wait.map(|_| WAIT));
             for e in options {
-                let q = q_of(e);
+                let q = q_of(e) + bonus(e);
                 let better = match best {
                     None => true,
                     Some((b, be)) => {
@@ -183,6 +198,7 @@ impl Ctx<'_> {
                 }
             }
         }
+        let best = best.map(|(_, e)| (q_of(e), e));
         let terms: Vec<(f64, f64)> = p
             .draws
             .iter()
@@ -240,6 +256,7 @@ pub(crate) fn aggregate(cara: Option<f64>, worst: bool, terms: &[(f64, f64)]) ->
 fn solve_with(
     v: &View,
     cost: &[f64],
+    bonus: Option<&[f64]>,
     radius: Option<&[f64]>,
     opts: &SolveOptions,
 ) -> (Vec<f64>, BTreeMap<NodeIx, usize>, Vec<NodeIx>, usize) {
@@ -263,6 +280,7 @@ fn solve_with(
         cara,
         worst: v.sc.objective == Objective::Worst,
         radius,
+        bonus,
     };
     let n = v.g.nodes.len();
     let mut value = vec![0.0; n];
@@ -367,8 +385,9 @@ pub fn absorb_prob(v: &View, choice: &BTreeMap<NodeIx, usize>, target: &[f64]) -
     p
 }
 
-/// Solves the stochastic game over `v`: values, optimal policy, and (if
-/// `v.sc.fee_shift` is set) the fee-shift-adjusted costs it converged on.
+/// Solves the stochastic game over `v`: values, optimal policy, and (if a
+/// fee award offsets cost anywhere, `View::fee_shifting`) the
+/// fee-shift-adjusted costs it converged on.
 ///
 /// ```
 /// use litigate_engine::algo::mdp;
@@ -391,8 +410,7 @@ pub fn absorb_prob(v: &View, choice: &BTreeMap<NodeIx, usize>, target: &[f64]) -
 /// ```
 ///
 /// # Errors
-/// Propagates any error evaluating the fee-eligibility expression, or an
-/// invalid `objective: robust` credibility/radius.
+/// An invalid `objective: robust` credibility/radius.
 pub fn solve(v: &View, opts: &SolveOptions) -> Result<Solution> {
     let base = v.cost.clone();
     let radii = match v.sc.objective {
@@ -405,8 +423,8 @@ pub fn solve(v: &View, opts: &SolveOptions) -> Result<Solution> {
         _ => None,
     };
     let radius = radii.as_deref();
-    let Some(fs) = v.sc.fee_shift.clone() else {
-        let (value, choice, unconverged, iterations) = solve_with(v, &base, radius, opts);
+    if !v.fee_shifting() {
+        let (value, choice, unconverged, iterations) = solve_with(v, &base, None, radius, opts);
         let q = q_values(v, &base, &value);
         return Ok(Solution {
             value,
@@ -418,33 +436,15 @@ pub fn solve(v: &View, opts: &SolveOptions) -> Result<Solution> {
             fee_shift_rounds: 0,
             cost: base,
         });
-    };
-    let elig_src = fs
-        .eligible
-        .clone()
-        .unwrap_or_else(|| "tag('fee-eligible')".into());
-    let elig_expr = expr::parse(&elig_src)?;
-    let elig: Vec<f64> = (0..v.g.nodes.len())
-        .map(|n| {
-            if !v.g.nodes[n].is_terminal() {
-                return Ok(0.0);
-            }
-            let x = elig_expr.eval(&TerminalEnv {
-                g: v.g,
-                n,
-                payoff: v.payoff[n],
-                params: &v.params,
-                path: crate::metrics::PathVars::default(),
-            })?;
-            Ok(if x == 0.0 { 0.0 } else { 1.0 })
-        })
-        .collect::<Result<_>>()?;
+    }
     let mut cost = base.clone();
+    let mut bonus: Option<Vec<f64>> = None;
     let mut prev: Option<BTreeMap<NodeIx, usize>> = None;
     let mut rounds = 0;
     loop {
         rounds += 1;
-        let (value, choice, unconverged, iterations) = solve_with(v, &cost, radius, opts);
+        let (value, choice, unconverged, iterations) =
+            solve_with(v, &cost, bonus.as_deref(), radius, opts);
         let stable = prev.as_ref() == Some(&choice);
         if stable || rounds >= 25 {
             let q = q_values(v, &cost, &value);
@@ -459,16 +459,9 @@ pub fn solve(v: &View, opts: &SolveOptions) -> Result<Solution> {
                 cost,
             });
         }
-        let pe = absorb_prob(v, &choice, &elig);
-        cost = (0..base.len())
-            .map(|e| {
-                if v.role[e] == Role::Me && v.active[e] {
-                    base[e] * (1.0 - fs.fraction * pe[v.g.edges[e].to])
-                } else {
-                    base[e]
-                }
-            })
-            .collect();
+        let adjusted = fee::adjust(v, &choice, &base);
+        cost = adjusted.cost;
+        bonus = Some(adjusted.bonus);
         prev = Some(choice);
     }
 }

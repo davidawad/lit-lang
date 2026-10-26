@@ -164,6 +164,13 @@ impl Graph {
                     }),
                 (None, false) => (0.0, PayoffSource::Default),
             };
+            if let Some(f) = n.fee_shift {
+                if kind != NodeKind::Terminal || !(0.0..=1.0).contains(&f) {
+                    return Err(Error::Invalid(format!(
+                        "node {qid}: feeShift {f} must be a fraction in [0, 1] on a terminal"
+                    )));
+                }
+            }
             self.node_ix.insert(qid.clone(), self.nodes.len());
             self.nodes.push(Node {
                 id: qid.clone(),
@@ -181,6 +188,7 @@ impl Graph {
                 tags: n.tags.clone(),
                 attrs: n.attrs.clone(),
                 payoff_by_flag: n.payoff_by_flag.clone(),
+                fee_shift: n.fee_shift,
                 synthetic: false,
                 flags: vec![],
                 base_id: qid,

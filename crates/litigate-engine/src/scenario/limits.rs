@@ -51,7 +51,9 @@ pub(super) fn fee_shift_path_vars(sc: &Scenario) -> Result<Option<Warning>> {
     let Some(fs) = sc.fee_shift.clone() else {
         return Ok(None);
     };
-    let src = fs.eligible.unwrap_or_else(|| "tag('fee-eligible')".into());
+    let src = fs
+        .eligible
+        .unwrap_or_else(|| super::DEFAULT_ELIGIBLE.into());
     let ex = expr::parse(&src)?;
     Ok(path_var_warning_for(
         &format!("fee_shift.eligible `{src}`"),
@@ -64,7 +66,7 @@ pub(super) fn fee_shift_path_vars(sc: &Scenario) -> Result<Option<Warning>> {
 /// policy-dependent cost adjustment or with a general-sum opponent; warn
 /// rather than silently ignoring any of the three. See `docs/CRITIQUE.md`
 /// ("CVaR-optimal policies").
-pub(super) fn cvar_limits(sc: &Scenario) -> Vec<Warning> {
+pub(super) fn cvar_limits(sc: &Scenario, fee_shifting: bool) -> Vec<Warning> {
     if !matches!(sc.objective, Objective::Cvar { .. }) {
         return vec![];
     }
@@ -82,7 +84,7 @@ pub(super) fn cvar_limits(sc: &Scenario) -> Vec<Warning> {
             "objective cvar ignores `discount_annual`: the augmented-state solve assumes an undiscounted additive total".into(),
         );
     }
-    if sc.fee_shift.is_some() {
+    if fee_shifting {
         warn(
             "cvar-ignores-fee-shift",
             "objective cvar ignores `fee_shift`: it uses unadjusted cost".into(),
@@ -101,9 +103,9 @@ pub(super) fn cvar_limits(sc: &Scenario) -> Vec<Warning> {
 /// cost; it doesn't run `fee_shift`'s policy-iteration cost adjustment
 /// (defined in terms of `self`'s policy only). See `docs/CRITIQUE.md`
 /// ("General-sum opponents").
-pub(super) fn opponent_objective_limits(sc: &Scenario) -> Vec<Warning> {
+pub(super) fn opponent_objective_limits(sc: &Scenario, fee_shifting: bool) -> Vec<Warning> {
     let mut out = vec![];
-    if sc.opponent_objective.is_some() && sc.fee_shift.is_some() {
+    if sc.opponent_objective.is_some() && fee_shifting {
         out.push(Warning {
             code: "opponent-objective-ignores-fee-shift",
             at: None,

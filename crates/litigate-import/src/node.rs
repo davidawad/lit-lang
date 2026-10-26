@@ -86,6 +86,13 @@ impl Spelling<'_> {
             let record = self.num_record(&node.payoff_by_flag, &at, true);
             fields.push(format!("payoff_by_flag {record}"));
         }
+        if let Some(fee_shift) = node.fee_shift {
+            let at = format!("{pointer}/feeShift");
+            fields.push(format!(
+                "fee_shift {}",
+                self.issues.spell(text::number(fee_shift), &at, "fee shift")
+            ));
+        }
         fields
     }
 
@@ -132,11 +139,12 @@ impl Spelling<'_> {
         if !terminal
             && (!node.outcome.is_empty()
                 || node.payoff.is_some()
-                || !node.payoff_by_flag.is_empty())
+                || !node.payoff_by_flag.is_empty()
+                || node.fee_shift.is_some())
         {
             self.issues.report(
                 &pointer,
-                "`outcome`, `payoff` and `payoffByFlag` are valid only on terminals (SPEC §5.1)",
+                "`outcome`, `payoff`, `payoffByFlag` and `feeShift` are valid only on terminals (SPEC §5.1)",
             );
         }
         let actor = plurality_actor(edges);

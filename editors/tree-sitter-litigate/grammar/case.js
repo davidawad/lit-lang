@@ -96,8 +96,17 @@ module.exports = {
   stake_entry: $ => seq(
     field('node', $.ref),
     ':',
-    field('value', choice($.signed_money, alias('unvalued', $.unvalued))),
+    choice(
+      seq(
+        field('value', choice($.signed_money, alias('unvalued', $.unvalued))),
+        optional($.fee_shift),
+      ),
+      $.fee_shift,
+    ),
   ),
+
+  // This matter's fee-shift fraction at the terminal.
+  fee_shift: $ => seq('fee_shift', field('fraction', $.number)),
 
   beliefs_block: $ => seq('beliefs', braced(choice($.prior, $.observation))),
 

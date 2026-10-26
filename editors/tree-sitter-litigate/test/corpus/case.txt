@@ -43,7 +43,7 @@ events {
   answer: 2025-03-21 Answered() by b
 }
 facts { cofc::time-barred: cofc::not-barred, x: y }
-stakes { judgment: -2_000_000.usd, other: unvalued, cafc@cofc::win: 1.50.usd }
+stakes { judgment: -2_000_000.usd fee_shift 1, other: unvalued, cafc@cofc::win: 1.50.usd, fees: fee_shift 0.5 }
 beliefs {
   prior sj: { e1: 6, e2: 4.5 }
   observe sj: { e1: 3, e2: 1 }
@@ -167,7 +167,9 @@ analysis {
         (ref
           (identifier))
         (signed_money
-          (money)))
+          (money))
+        (fee_shift
+          (number)))
       (stake_entry
         (ref
           (identifier))
@@ -178,7 +180,12 @@ analysis {
           (identifier)
           (identifier))
         (signed_money
-          (money))))
+          (money)))
+      (stake_entry
+        (ref
+          (identifier))
+        (fee_shift
+          (number))))
     (beliefs_block
       (prior
         (ref

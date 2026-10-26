@@ -386,7 +386,7 @@ fn own_edge_is(e: &crate::hir::Edge, fact: &str) -> bool {
 }
 
 /// Stakes are exhaustive over reachable terminals (L4004); `unvalued` is
-/// an error in `strict`; a stake must name a terminal.
+/// an error in `strict`; a stake (or its `fee_shift`) must name a terminal.
 pub(super) fn stakes(
     case: &Case,
     graph: &Graph<'_>,
@@ -396,11 +396,13 @@ pub(super) fn stakes(
     out: &mut Vec<Diagnostic>,
 ) {
     let known_at = case.known_at.as_deref();
-    for (id, stake) in &case.stakes {
+    let named: std::collections::BTreeSet<&String> =
+        case.stakes.keys().chain(case.fee_shifts.keys()).collect();
+    for id in named {
         let span = spans.at(spans.stakes.get(id), &case.id);
         match graph.node_at(id, &case.as_of, known_at) {
             Some(n) if matches!(n.kind, NodeKind::Terminal { .. }) => {
-                if *stake == Stake::Unvalued && profile == Profile::Strict {
+                if case.stakes.get(id) == Some(&Stake::Unvalued) && profile == Profile::Strict {
                     out.push(error(
                         C::MissingStake,
                         span,

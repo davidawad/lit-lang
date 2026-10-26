@@ -158,6 +158,8 @@ module.exports = {
     seq(field('key', 'attrs'), field('value', $.num_record)),
     seq(field('key', 'payoff'), field('value', choice($.signed_money, $.hole))),
     seq(field('key', 'payoff_by_flag'), field('value', $.money_record)),
+    // The statute's default fee-shift fraction at a terminal.
+    seq(field('key', 'fee_shift'), field('value', $.number)),
     // Where the node's numbers come from (design review §2.10).
     seq(field('key', 'basis'), field('value', $._expression)),
     seq(field('key', 'formerly'), field('value', $.id_list)),

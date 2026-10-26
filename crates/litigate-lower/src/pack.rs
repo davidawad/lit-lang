@@ -137,15 +137,16 @@ fn node(sink: &mut Sink, n: &hir::Node) -> RawNode {
             ),
         );
     }
-    let (kind, outcome, payoff, payoff_by_flag) = match &n.kind {
+    let (kind, outcome, payoff, payoff_by_flag, fee_shift) = match &n.kind {
         hir::NodeKind::State | hir::NodeKind::Chance { .. } => {
-            (NodeKind::State, Vec::new(), None, BTreeMap::new())
+            (NodeKind::State, Vec::new(), None, BTreeMap::new(), None)
         }
-        hir::NodeKind::Decision => (NodeKind::Decision, Vec::new(), None, BTreeMap::new()),
+        hir::NodeKind::Decision => (NodeKind::Decision, Vec::new(), None, BTreeMap::new(), None),
         hir::NodeKind::Terminal {
             outcomes,
             payoff,
             payoff_by_flag,
+            fee_shift,
         } => (
             NodeKind::Terminal,
             outcomes.clone(),
@@ -157,6 +158,7 @@ fn node(sink: &mut Sink, n: &hir::Node) -> RawNode {
                 .iter()
                 .filter_map(|(flag, m)| Some((flag.clone(), sink.money(m, span)?)))
                 .collect(),
+            fee_shift.and_then(|f| sink.number(f, span)),
         ),
     };
     RawNode {
@@ -173,6 +175,7 @@ fn node(sink: &mut Sink, n: &hir::Node) -> RawNode {
         tags: n.tags.clone(),
         attrs: edge::attrs(sink, &n.attrs, span),
         payoff_by_flag,
+        fee_shift,
     }
 }
 

@@ -7,6 +7,8 @@ pub mod chain;
 pub mod cvar;
 /// Seeded Gamma / Dirichlet / multinomial sampling for the uncertainty ops.
 pub mod dirichlet;
+/// Fee shifting under a fixed policy: recovered cost and the spend behind a choice.
+pub(crate) mod fee;
 /// General-sum opponents: subgame-perfect equilibrium by backward induction.
 pub mod equilibrium;
 /// Stochastic-game solver (value iteration over SCCs).

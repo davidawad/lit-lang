@@ -12,10 +12,9 @@ use std::collections::BTreeMap;
 use crate::algo::chain::step_dist;
 use crate::algo::mdp::Solution;
 use crate::error::Result;
-use crate::expr;
-use crate::metrics::{PathVars, TerminalEnv};
+use crate::metrics::PathVars;
 use crate::model::{NodeIx, Role};
-use crate::scenario::{Control, FeeShift, View};
+use crate::scenario::{Control, View};
 
 /// Summary statistics of a sampled distribution.
 #[derive(Debug, Clone, Serialize)]
@@ -200,8 +199,6 @@ fn simulate_run(
     v: &View,
     start: NodeIx,
     dists: &[Vec<(usize, f64)>],
-    fee: Option<&FeeShift>,
-    elig: &[bool],
     metrics: &[(String, Vec<f64>)],
     elapsed_ix: Option<usize>,
     o: &SimOptions,
@@ -245,10 +242,7 @@ fn simulate_run(
         u = v.g.edges[pick].to;
         steps += 1;
     }
-    let recovery = match fee {
-        Some(f) if elig[u] => f.fraction * my_spent,
-        _ => 0.0,
-    };
+    let recovery = v.fee[u] * my_spent;
     let terminal = (v.plan[u].control == Control::Terminal).then_some(u);
     let term_value = match terminal {
         Some(t) => v.utility_at(
@@ -271,33 +265,12 @@ fn simulate_run(
     })
 }
 
-/// Builds the fee-eligibility indicator per node (true only for
-/// fee-eligible terminals), if the scenario has a `fee_shift`.
-fn fee_eligibility(v: &View, fee: Option<&FeeShift>) -> Result<Vec<bool>> {
-    let Some(f) = fee else {
-        return Ok(vec![false; v.g.nodes.len()]);
-    };
-    let ex = expr::parse(f.eligible.as_deref().unwrap_or("tag('fee-eligible')"))?;
-    (0..v.g.nodes.len())
-        .map(|n| {
-            Ok(v.g.nodes[n].is_terminal()
-                && ex.eval(&TerminalEnv {
-                    g: v.g,
-                    n,
-                    payoff: v.payoff[n],
-                    params: &v.params,
-                    path: PathVars::default(),
-                })? != 0.0)
-        })
-        .collect()
-}
-
 /// Monte Carlo-simulates `o.runs` trajectories under policy `sol` from
 /// `start`, sampling the given `metrics` alongside net outcome.
 ///
 /// # Errors
-/// Propagates any error evaluating the fee-eligibility expression or (per
-/// run) the terminal utility expression.
+/// Propagates any error evaluating (per run) the terminal utility
+/// expression.
 pub fn simulate(
     v: &View,
     sol: &Solution,
@@ -309,8 +282,6 @@ pub fn simulate(
     let dists: Vec<Vec<(usize, f64)>> = (0..v.g.nodes.len())
         .map(|n| step_dist(v, &sol.choice, n))
         .collect();
-    let fee = v.sc.fee_shift.clone();
-    let elig = fee_eligibility(v, fee.as_ref())?;
     let mut nets = Vec::with_capacity(o.runs);
     let mut per_metric: Vec<Vec<f64>> = vec![Vec::with_capacity(o.runs); metrics.len()];
     let mut terms: BTreeMap<NodeIx, usize> = BTreeMap::new();
@@ -323,8 +294,6 @@ pub fn simulate(
             v,
             start,
             &dists,
-            fee.as_ref(),
-            &elig,
             metrics,
             elapsed_ix,
             o,

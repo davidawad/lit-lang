@@ -441,12 +441,142 @@ terminal default-judgment-entered: "DEFAULT JUDGMENT ENTERED" outcome [win, defa
   payoff 900_000.usd
 }
 
-terminal voluntary-dismissal: "VOLUNTARY / STIPULATED DISMISSAL" outcome [settlement, voluntary] cite "FRCP 41(a)"
+state voluntary-dismissal: "VOLUNTARY / STIPULATED DISMISSAL" by applicant cite "FRCP 41(a)"
 {
   group pleading-group
-  note "Plaintiff may dismiss without a court order by filing a notice of dismissal before the opposing party serves either an answer or a summary-judgment motion (41(a)(1)(A)(i)), or by a stipulation signed by all parties who have appeared (41(a)(1)(A)(ii)) -- the common vehicle for a negotiated settlement. Otherwise dismissal requires a court order, typically on terms the court considers proper (41(a)(2)). A first 41(a)(1) dismissal is without prejudice unless the notice/stipulation states otherwise; a SECOND dismissal of the same claim operates as an adjudication on the merits (the 'two-dismissal rule,' 41(a)(1)(B)) -- not itself further modeled here. PLACEHOLDER PAYOFF: $400,000, override per matter, matching this project's settlement tier -- per this terminal's own note, 'the common vehicle for a negotiated settlement.'"
+  note "Plaintiff may dismiss without a court order by filing a notice of dismissal before the opposing party serves either an answer or a summary-judgment motion (41(a)(1)(A)(i)), or by a stipulation signed by all parties who have appeared (41(a)(1)(A)(ii)) -- the common vehicle for a negotiated settlement. Otherwise dismissal requires a court order, typically on terms the court considers proper (41(a)(2)). A first 41(a)(1) dismissal is without prejudice unless the notice/stipulation states otherwise; a SECOND dismissal of the same claim operates as an adjudication on the merits (the 'two-dismissal rule,' 41(a)(1)(B)). Waetzig v. Halliburton Energy Services, Inc., 604 U.S. 305 (2025), holds a Rule 41(a) voluntary dismissal without prejudice is a final proceeding reachable by Rule 60(b)."
+  edge-voluntary-dismissal-final "Leave dismissal undisturbed" -> voluntary-dismissal-final {
+    authority cite "FRCP 41(a)"
+    effort 0.hours
+  }
+  edge-voluntary-dismissal-rule60-motion "Move for relief from the dismissal under Rule 60(b)" -> rule60-dismissal-motion {
+    authority cite "FRCP 60(b)"
+    effort 8.hours
+    cost 2_500.usd
+  }
+  edge-voluntary-dismissal-refile "Refile the same claim in a later action" -> rule41d-refiling {
+    authority cite "FRCP 41(d)"
+    effort 12.hours
+    cost 2_500.usd
+  }
+  edge-voluntary-dismissal-fees "Seek attorney's fees as a prevailing party under an applicable fee-shifting statute" -> dismissal-fee-motion {
+    authority cite "FRCP 54(d)(2)"
+    effort 6.hours
+    cost 1_500.usd
+  }
+}
+
+terminal voluntary-dismissal-final: "VOLUNTARY DISMISSAL LEFT IN PLACE" outcome [settlement, voluntary] cite "FRCP 41(a)"
+{
+  group pleading-group
+  note "Dismissal remains in force. A first Rule 41(a)(1) dismissal is ordinarily without prejudice unless the notice or stipulation says otherwise. PLACEHOLDER PAYOFF: $400,000, override per matter."
   valence good
   payoff 400_000.usd
+}
+
+decision rule60-dismissal-motion: "Rule 60(b) Motion After Rule 41(a)(1) Notice" by applicant cite "FRCP 60(b)"
+{
+  group pleading-group
+  note "Waetzig holds that a Rule 41(a) voluntary dismissal without prejudice is a final proceeding within Rule 60(b), including a dismissal by notice. It decides availability of Rule 60(b), not entitlement to relief; Rule 60(b)'s grounds and time limits still govern. The court's discretionary ruling is not assigned a probability here."
+  edge-rule60-dismissal-motion-relief-granted "Court grants Rule 60(b) relief on just terms" -> rule60-relief-granted {
+    authority cite "FRCP 60(b)"
+    effort 0.hours
+    valence good
+  }
+  edge-rule60-dismissal-motion-relief-denied "Court denies Rule 60(b) relief" -> rule60-relief-denied {
+    authority cite "FRCP 60(b)"
+    effort 0.hours
+    valence bad
+  }
+}
+
+state rule60-relief-granted: "Rule 60(b) Relief Granted" by court cite "FRCP 60(b)"
+{
+  group pleading-group
+  note "The court may relieve a party or its legal representative from a final judgment, order, or proceeding on just terms. The appropriate terms and further proceedings depend on the order; the engine models reopening and a return to the pending-action posture without asserting the underlying claim's merits."
+  edge-rule60-relief-granted-reopened-case "Proceed in the reopened action on the terms ordered" -> final-judgment-entered {
+    authority cite "FRCP 60(b)"
+    effort 0.hours
+  }
+}
+
+state rule60-relief-denied: "Rule 60(b) Relief Denied" by applicant cite "FRCP 60(b)"
+{
+  group pleading-group
+  note "Rule 60(b) relief denied. The ruling may be appealable under 28 U.S.C. § 1291; the notice period runs from entry of the order under FRAP 4(a), subject to jurisdictional and preservation limits."
+  edge-rule60-relief-denied-appeal "Appeal the order denying Rule 60(b) relief" -> notice-of-appeal-window {
+    authority cite "FRAP 4(a)(1)(A)"
+    effort 4.hours
+    cost 605.usd
+  }
+  edge-rule60-relief-denied-final "Do not appeal the denial" -> rule60-denial-final {
+    authority cite "FRCP 60(b)"
+    effort 0.hours
+  }
+}
+
+terminal rule60-denial-final: "Rule 60(b) Denial Left in Place" outcome [loss, procedural-default] cite "FRCP 60(b)"
+{
+  group pleading-group
+  note "The Rule 60(b) motion was denied and no appeal is pursued in this modeled path."
+  valence bad
+  payoff 0.usd
+}
+
+decision rule41d-refiling: "Refiling After Voluntary Dismissal" by applicant cite "FRCP 41(d)"
+{
+  group pleading-group
+  note "If a plaintiff who previously dismissed an action in any court files an action based on or including the same claim against the same defendant, Rule 41(d) requires the court to order payment of all or part of the costs of the previous action and may stay the new action until payment. The order is discretionary as to amount and stay; no probability is assigned."
+  edge-rule41d-refiling-costs-ordered "Court orders all or part of prior-action costs, with a possible stay pending payment" -> rule41d-costs-ordered {
+    authority cite "FRCP 41(d)"
+    effort 0.hours
+  }
+  edge-rule41d-refiling-no-costs "Court does not order prior-action costs" -> refiling-proceeds {
+    authority cite "FRCP 41(d)"
+    effort 0.hours
+  }
+}
+
+terminal rule41d-costs-ordered: "Rule 41(d) Costs Ordered on Refiling" outcome [cost, refiling] cite "FRCP 41(d)"
+{
+  group pleading-group
+  note "Prior-action costs are ordered and the court may stay the later action until payment. The amount is case-specific and is not guessed by this pack."
+  valence bad
+}
+
+terminal refiling-proceeds: "Refiling Proceeds" outcome [refiling] cite "FRCP 41(d)"
+{
+  group pleading-group
+  note "The later action proceeds without a Rule 41(d) cost order."
+  valence good
+}
+
+decision dismissal-fee-motion: "Post-Dismissal Fee Motion" by applicant cite "FRCP 54(d)(2)"
+{
+  group pleading-group
+  note "Prevailing-party status depends on the fee-shifting statute and the legal effect of the dismissal. CRST holds a defendant need not win on the merits to prevail where the plaintiff's challenge is rebuffed. Cadkin holds, under the Copyright Act in the Ninth Circuit, a defendant is not a prevailing party when the plaintiff remains free to refile after voluntary dismissal without prejudice. These holdings do not make every voluntary dismissal a fee award; entitlement and amount remain statute- and case-specific."
+  edge-dismissal-fee-motion-defendant-prevails "Court finds defendant is a prevailing party under the governing statute" -> dismissal-fees-eligible {
+    authority cite "FRCP 54(d)(2)"
+    effort 0.hours
+  }
+  edge-dismissal-fee-motion-no-prevailing-party "Court finds no prevailing party on this dismissal" -> dismissal-fees-ineligible {
+    authority cite "FRCP 54(d)(2)"
+    effort 0.hours
+  }
+}
+
+terminal dismissal-fees-eligible: "Fee Motion Eligible for Statutory Discretionary Analysis" outcome [fees, prevailing-party] cite "FRCP 54(d)(2)"
+{
+  group pleading-group
+  note "Prevailing-party threshold is met; the fee statute may still require additional findings and leaves the amount or award to the court."
+  valence good
+}
+
+terminal dismissal-fees-ineligible: "No Prevailing-Party Fee Eligibility" outcome [fees, no-prevailing-party] cite "FRCP 54(d)(2)"
+{
+  group pleading-group
+  note "The fee-shifting statute's prevailing-party threshold is not met on the modeled ruling."
+  valence bad
 }
 
 decision amendment-as-of-right-window: "Rule 15(a)(1) Amendment-as-of-Right Window" by applicant cite "FRCP 15(a)(1)(B)"

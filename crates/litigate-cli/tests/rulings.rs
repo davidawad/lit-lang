@@ -37,7 +37,7 @@ fn frcp(name: &str, as_of: &str, events: &[&str]) -> Run {
             "case ruling\nuses frcp-civil-procedure ^2024.12.0\nas_of {as_of}\nsummary \"s\"\n\n\
              parties {{\n  plaintiff: applicant Corporation\n  judge: court Tribunal\n}}\n\n\
              events {{\n{events}}}\n\n\
-             stakes {{ frcp-civil-procedure::appeal-window-blown: 0.usd }}\n"
+             stakes {{ frcp-civil-procedure::appeal-window-blown: 0.usd, frcp-civil-procedure::rule41d-costs-ordered: 0.usd, frcp-civil-procedure::refiling-proceeds: 0.usd, frcp-civil-procedure::dismissal-fees-eligible: 0.usd, frcp-civil-procedure::dismissal-fees-ineligible: 0.usd }}\n"
         ),
     )
     .unwrap();

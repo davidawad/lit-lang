@@ -50,12 +50,17 @@ fn matter(
         let _ = writeln!(s, "  {e}");
         s
     });
+    let post_dismissal_stakes = if uses.contains("frcp-civil-procedure") {
+        ", frcp-civil-procedure::rule41d-costs-ordered: 0.usd, frcp-civil-procedure::refiling-proceeds: 0.usd, frcp-civil-procedure::dismissal-fees-eligible: 0.usd, frcp-civil-procedure::dismissal-fees-ineligible: 0.usd"
+    } else {
+        ""
+    };
     std::fs::write(
         dir.join("cases/ext.case"),
         format!(
             "case ext\nuses {uses}\nas_of 2026-06-01\nsummary \"s\"\n\n\
              parties {{\n{parties}}}\n\n\
-             events {{\n{events}}}\n\nstakes {{ {stake}: 0.usd }}\n"
+             events {{\n{events}}}\n\nstakes {{ {stake}: 0.usd{post_dismissal_stakes} }}\n"
         ),
     )
     .unwrap();

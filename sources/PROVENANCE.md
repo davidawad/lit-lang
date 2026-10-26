@@ -663,3 +663,14 @@ by a heading line, then the verbatim body text up to the next `## ` line.
 
 - Fetched 2026-10-26 from `tile.loc.gov/storage-services/service/ll/usrep/usrep375/usrep375384/usrep375384.pdf` (the U.S. Reports, Library of Congress), `pdftotext -layout`, every non-blank line kept with its leading spaces dropped; no wording changed. The precedent the overruling example (Bowles v. Russell, `sources/change-corpus/rulings/bowles-scotus-2007.txt`) withdraws.
 - sha256 (this file): `adb3b1d49b1a12c14f58d973942a3dc62825bb5287c56df17f4ed0eac64f9cc9`
+### Post-dismissal opinions (`waetzig-v-halliburton.txt`, `crst-v-eeoc.txt`, `cadkin-v-loose.txt`)
+
+- Waetzig is the Supreme Court's official slip opinion (No. 23-971, decided
+  2025-02-26), downloaded from supremecourt.gov and extracted with
+  `pdftotext -layout`; sha256 `4325f20a34f4be3e51cc2b96eea4ef6ca20b8e50a1834ad8b5d51701853789ff`.
+- CRST is U.S. Reports vol. 578, pp. 419-436, downloaded from GovInfo and
+  extracted with `pdftotext -layout`; sha256
+  `3598727ae67d2b2a67986920aedf82b13435dadf4e1ab45a5b915c69f3a34b40`.
+- Cadkin is the Ninth Circuit's official published opinion, No. 08-55311,
+  downloaded from ca9.uscourts.gov and extracted with `pdftotext -layout`;
+  sha256 `52a8a2fa29edf0fed607bda629e6e8788a22e7b272d16ffd31f1fff4274e106b`.

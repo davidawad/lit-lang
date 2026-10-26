@@ -108,10 +108,7 @@ fn a_format_1_lock_carries_the_upgrade_as_a_fix() {
         litigate_base::Applicability::MachineApplicable
     );
     assert_eq!(fix.edits[0].span.file.0, "pkgs/app/Lit.lock");
-    assert_eq!(
-        (fix.edits[0].span.line, fix.edits[0].span.end_line),
-        (1, 6)
-    );
+    assert_eq!((fix.edits[0].span.line, fix.edits[0].span.end_line), (1, 6));
     assert_eq!(
         fix.edits[0].replacement,
         litigate_sema::render_lock(&db, ws, pkg)

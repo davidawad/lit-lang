@@ -620,13 +620,13 @@ impl Session {
     pub fn lock_sources(&self) -> Vec<(String, String)> {
         let packages = self.packages.iter().filter_map(|p| {
             let file = format!("{}/Lit.lock", p.root);
-            let text = p.input.lock_text(&self.db).clone()?;
-            Some((file.trim_start_matches("./").to_owned(), text))
+            let file = file.trim_start_matches("./").to_owned();
+            p.input.lock_text(&self.db).clone().map(|text| (file, text))
         });
         let matters = self
             .cases
             .iter()
-            .filter_map(|c| Some((lock_path(&c.path), c.lock.clone()?)));
+            .filter_map(|c| c.lock.clone().map(|text| (lock_path(&c.path), text)));
         packages.chain(matters).collect()
     }
 

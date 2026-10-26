@@ -162,26 +162,22 @@ fn lock(case: &CaseText) -> Result<Option<LockFile>, Diagnostic> {
 
 /// Gives the L1007 of `check`'s lock, when it is in an older format, the
 /// fix that upgrades it: the lock `litigate lock DIR` writes for the
-/// session's matters in that directory.
-pub fn upgrade_lock(session: &Session, check: &mut CaseCheck) {
+/// session's matters in that directory. `None` when there is nothing to
+/// upgrade.
+pub fn upgrade_lock(session: &Session, check: &mut CaseCheck) -> Option<()> {
     let file = lock_path(&check.path);
-    let Some(text) = session
-        .cases
-        .iter()
-        .find(|c| c.path == check.path)
-        .and_then(|c| c.lock.as_deref())
-    else {
-        return;
-    };
     let dir = file.strip_suffix("/Lit.lock").unwrap_or(".");
     let upgraded = || {
         session
             .matter_lock(session.cases.iter().filter(|c| lock_path(&c.path) == file))
             .render()
     };
-    let Some(report) = litigate_sema::pkg::lock::upgrade(text, dir, upgraded) else {
-        return;
-    };
+    let text = session
+        .cases
+        .iter()
+        .find(|c| c.path == check.path)
+        .and_then(|c| c.lock.as_deref())?;
+    let report = litigate_sema::pkg::lock::upgrade(text, dir, upgraded)?;
     let fixed = report.to_diagnostic(&FileId(file.clone()), &LineIndex::new(text));
     for d in check
         .diagnostics
@@ -189,16 +185,18 @@ pub fn upgrade_lock(session: &Session, check: &mut CaseCheck) {
         .filter(|d| d.code == fixed.code && d.span.file == fixed.span.file)
     {
         let (old, new) = (report::example(d), report::example(&fixed));
-        for e in check.findings.iter_mut().flat_map(|f| &mut f.examples) {
-            if *e == old {
-                e.clone_from(&new);
-            }
-        }
+        check
+            .findings
+            .iter_mut()
+            .flat_map(|f| &mut f.examples)
+            .filter(|e| **e == old)
+            .for_each(|e| e.clone_from(&new));
         *d = Diagnostic {
             severity: d.severity,
             ..fixed.clone()
         };
     }
+    Some(())
 }
 
 /// Whether the matter's source writes `start`.

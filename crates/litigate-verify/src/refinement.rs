@@ -36,11 +36,10 @@ fn check(cx: &Context<'_>, e: &EventType) -> Option<Diagnostic> {
     };
     let (to, _) = &e.params[*param];
     // Only a refinement of the new due date claims a bound.
-    let claim = e.refinements.iter().find(|r| {
-        let mut names = false;
-        refine::visit_refs(&r.predicate, &mut |n| names |= n == to);
-        names
-    })?;
+    let claim = e
+        .refinements
+        .iter()
+        .find(|r| refine::refs(&r.predicate).iter().any(|(n, _)| n == to))?;
     let span = cx.span_or_manifest(claim.predicate.span.as_ref());
     for version in cx.deadline_versions(deadline) {
         let ceilings: Option<Vec<&Bound>> = version
@@ -173,11 +172,9 @@ fn is_bound_date(name: &str) -> bool {
 /// Whether a refinement of `e` reads `name` (a counterexample shows the
 /// values the claim depends on).
 fn refine_reads(e: &EventType, name: &str) -> bool {
-    e.refinements.iter().any(|r| {
-        let mut found = false;
-        refine::visit_refs(&r.predicate, &mut |n| found |= n == name);
-        found
-    })
+    e.refinements
+        .iter()
+        .any(|r| refine::refs(&r.predicate).iter().any(|(n, _)| *n == name))
 }
 
 /// The variants of enum `name` (as the package spells it).

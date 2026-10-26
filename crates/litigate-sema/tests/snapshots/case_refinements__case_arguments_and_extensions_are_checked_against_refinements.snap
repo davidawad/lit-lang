@@ -11,7 +11,7 @@ expression: out
         "13:29 L2013 `Stipulated`: method = Personal, days = 45 does not satisfy the refinement `method == Mail || days <= 3`\n    note: the refinement of parameter `method` of `Stipulated` (SPEC §3.5)",
     ],
     "an order past its refinement, within the rule's bound: refused at replay": [
-        "13:14 L2013 `Ordered`: until = 2011-02-10, prescribed_due = 2011-01-14, grant_order_entered = 2011-01-10 does not satisfy the refinement `until <= prescribed_due + 14.days && until > grant_order_entered`\n    note: the refinement of parameter `until` of `Ordered` (SPEC §3.5)\n    note: `answer` runs 10 calendar days from `Served(Mail)` on 2011-01-04 under `oc@2009-12-01`, service by mail",
+        "13:14 L2013 `Ordered`: until = 2011-02-10, prescribed_due = 2011-01-14, grant_order_entered = 2011-01-10, current_due = 2011-01-14 does not satisfy the refinement `until <= prescribed_due + 14.days && until > grant_order_entered && until > current_due`\n    note: the refinement of parameter `until` of `Ordered` (SPEC §3.5)\n    note: `answer` runs 10 calendar days from `Served(Mail)` on 2011-01-04 under `oc@2009-12-01`, service by mail",
         "trace Triggered Served(Mail) sigma::open -> sigma::open",
         "obligation sigma::answer Lapsed None",
     ],
@@ -26,6 +26,12 @@ expression: out
         "trace Extended Ordered(2011-01-20) sigma::open -> sigma::open",
         "trace Took Answered() sigma::open -> sigma::done via sigma::answer",
         "obligation sigma::answer Discharged Some(\"2011-01-20\")",
+    ],
+    "an unknown date: its refinement is not judged": [
+        "ok: start sigma::open",
+        "trace Triggered Served(Mail) sigma::open -> sigma::open",
+        "trace Took Noticed(?) sigma::open -> sigma::open via sigma::notice",
+        "obligation sigma::answer Lapsed None",
     ],
     "within every refinement: the stipulation is taken": [
         "ok: start sigma::open",

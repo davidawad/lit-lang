@@ -23,9 +23,12 @@ type Cap = {n: Number | n > 0 && n <= 30}
 event Served(method: Method)
 event Answered()
 event Stipulated(days: Cap, method: Method where method == Mail || days <= 3)
+/// A date of this century.
+type Recent = Date where it >= 2000-01-01
 /// An order may extend the answer at most 14 days past its prescribed
 /// due date, though the rule allows 30.
-event Ordered(until: Date where until <= prescribed_due + 14.days && until > grant_order_entered) extends answer to until
+event Ordered(until: Recent where until <= prescribed_due + 14.days && until > grant_order_entered && until > current_due) extends answer to until
+event Noticed(on: Recent)
 
 counting oc cite \"FRCP 6(a)\" { exclude_trigger_day, include_last_day, holidays ocal }
 calendar ocal { new-year: fixed(1, 1) effective [1870-06-28, ..) observed nearest_weekday }
@@ -39,6 +42,7 @@ state open: \"Open\"
 {
   answer \"Answer\" -> done by Defendant { event Answered(), within answer }
   stipulate \"Stipulate\" -> open by Plaintiff { event Stipulated() }
+  notice \"Notice\" -> open by Plaintiff { event Noticed() }
 }
 
 terminal done: \"Done\" { payoff 0.usd }
@@ -113,6 +117,10 @@ fn case_arguments_and_extensions_are_checked_against_refinements() {
                 "2011-01-04 Served(Mail) on d",
                 "2011-01-10 Ordered(?) by c cite \"Order\"",
             ],
+        ),
+        (
+            "an unknown date: its refinement is not judged",
+            &["2011-01-04 Served(Mail) on d", "2011-01-06 Noticed(?) by p"],
         ),
         (
             "an order within its refinement extends the answer",

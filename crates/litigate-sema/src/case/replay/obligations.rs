@@ -28,17 +28,28 @@ use std::fmt::Write as _;
 /// How an `extends`/`waives` event transforms an obligation.
 #[derive(Debug, Clone, Copy)]
 pub(super) enum Transform<'e> {
-    /// `extends d to p`, with the event's argument for `p`.
-    Extend(Option<&'e Expr>),
+    /// `extends d to p`, with the event's argument for `p`, its type and
+    /// arguments.
+    Extend(Option<&'e Expr>, Refined<'e>),
     /// `waives d`.
     Waive,
+}
+
+/// An `extends` event's type and arguments: its refinements naming a
+/// bound date are judged per instance (SPEC §3.5).
+#[derive(Debug, Clone, Copy)]
+pub(super) struct Refined<'e> {
+    /// The event's type.
+    pub ty: &'e crate::hir::EventType,
+    /// The call's arguments.
+    pub args: &'e [Expr],
 }
 
 impl Transform<'_> {
     /// The capability it needs, as a verb.
     fn verb(self) -> &'static str {
         match self {
-            Self::Extend(_) => "extend",
+            Self::Extend(..) => "extend",
             Self::Waive => "waive",
         }
     }
@@ -46,7 +57,7 @@ impl Transform<'_> {
     /// The verb's participle.
     fn done(self) -> &'static str {
         match self {
-            Self::Extend(_) => "extended",
+            Self::Extend(..) => "extended",
             Self::Waive => "waived",
         }
     }
@@ -657,6 +668,11 @@ impl<'g> Cx<'_, 'g> {
             .collect();
         drop(events);
         let new = self.new_due(k, &q, how).ok()?;
+        let by = match how {
+            Transform::Extend(_, by) => Some(by),
+            Transform::Waive => None,
+        };
+        let new = new.zip(by);
         // Each grant licenses the transform when every open instance is
         // within its window and bound; the first that does is recorded,
         // with the request each instance's grant read. Otherwise the most
@@ -683,7 +699,7 @@ impl<'g> Cx<'_, 'g> {
             self.out.extend(refusal.map(|(_, e)| e));
             return None;
         };
-        let Some(new) = new else {
+        let Some((new, _)) = new else {
             self.close(&open, Status::Waived, source);
             return Some(Effect::Waived);
         };
@@ -721,14 +737,17 @@ impl<'g> Cx<'_, 'g> {
         how: Transform<'e>,
     ) -> Result<Option<&'e str>, ()> {
         match how {
-            Transform::Extend(Some(Expr {
-                kind:
-                    ExprKind::Literal {
-                        value: Value::Date(new),
-                    },
-                ..
-            })) => Ok(Some(new.as_str())),
-            Transform::Extend(_) => {
+            Transform::Extend(
+                Some(Expr {
+                    kind:
+                        ExprKind::Literal {
+                            value: Value::Date(new),
+                        },
+                    ..
+                }),
+                _,
+            ) => Ok(Some(new.as_str())),
+            Transform::Extend(..) => {
                 let action = display(&self.sorted[k].1.action);
                 let d = error(
                     C::InvalidCaseEvent,
@@ -767,7 +786,7 @@ impl<'g> Cx<'_, 'g> {
         let grants = self.grants(&w, d, &event.date, how);
         if grants.is_empty() {
             let lock = d.extend.iter().find(|x| x.lock().is_some());
-            let e = if let (Some(lock), Transform::Extend(_)) = (lock, how) {
+            let e = if let (Some(lock), Transform::Extend(..)) = (lock, how) {
                 error(
                     C::InvalidCaseEvent,
                     self.at(k, |e| e.action.as_ref()),
@@ -830,7 +849,7 @@ impl<'g> Cx<'_, 'g> {
             unlocked || !d.extend.iter().any(|x| x.locks(&g.meta.authority))
         };
         match how {
-            Transform::Extend(_) => d
+            Transform::Extend(..) => d
                 .extend
                 .iter()
                 .chain(emergency.iter().filter(reaches).flat_map(|g| &g.extend))
@@ -857,7 +876,7 @@ impl<'g> Cx<'_, 'g> {
         i: usize,
         due: &Due,
         grant: Grant<'_>,
-        new: Option<&str>,
+        new: Option<(&str, Refined<'_>)>,
     ) -> Result<Option<String>, (u8, Diagnostic)> {
         let event = self.sorted[k].1;
         let o = &self.obligations[i];
@@ -901,7 +920,7 @@ impl<'g> Cx<'_, 'g> {
             },
             None => None,
         };
-        let Some(new) = new else {
+        let Some((new, by)) = new else {
             return Ok(request);
         };
         if new <= current.as_str() {
@@ -913,7 +932,7 @@ impl<'g> Cx<'_, 'g> {
                 ),
             );
         }
-        if let Some(d) = self.unrefined(k, &counted, &current) {
+        if let Some(d) = self.unrefined(k, by, &counted, &current) {
             return Err((3, d.note(how)));
         }
         let Some(ceiling) = grant.ceiling else {
@@ -944,37 +963,38 @@ impl<'g> Cx<'_, 'g> {
     /// type naming a bound date that its arguments and the instance's
     /// dates (`counted` prescribed, `current` as last extended; the
     /// order's date `grant_order_entered`) do not satisfy, as L2013.
-    fn unrefined(&self, k: usize, counted: &str, current: &str) -> Option<Diagnostic> {
+    fn unrefined(
+        &self,
+        k: usize,
+        by: Refined<'_>,
+        counted: &str,
+        current: &str,
+    ) -> Option<Diagnostic> {
         let event = self.sorted[k].1;
-        let ExprKind::Call { callee, args } = &event.action.kind else {
-            return None;
+        let dates = [
+            ("prescribed_due", counted),
+            ("current_due", current),
+            ("grant_order_entered", event.date.as_str()),
+        ];
+        let env = |n: &str| {
+            let arg = by.ty.params.iter().position(|(p, _)| p == n);
+            let date = dates.iter().find(|(d, _)| *d == n);
+            arg.and_then(|i| by.args.get(i))
+                .and_then(|e| refinement::eval::term(e, &|_| None))
+                .or_else(|| refinement::eval::of(&Value::Date(date?.1.to_owned())))
         };
-        let (pack, name) = callee
-            .split_once("::")
-            .unwrap_or((self.graph.primary(), callee.as_str()));
-        let ty = self.graph.event_type(pack, name)?;
-        let env = |n: &str| match ty.params.iter().position(|(p, _)| p == n) {
-            Some(i) => match &args.get(i)?.kind {
-                ExprKind::Literal { value } => Some(value.clone()),
-                _ => None,
-            },
-            None => match n {
-                "prescribed_due" => Some(Value::Date(counted.to_owned())),
-                "current_due" => Some(Value::Date(current.to_owned())),
-                _ => Some(Value::Date(event.date.clone())),
-            },
-        };
-        let r = ty.refinements.iter().find(|r| {
+        let r = by.ty.refinements.iter().find(|r| {
             refinement::names_bound_date(&r.predicate)
                 && refinement::eval(&r.predicate, &env) == Some(false)
         })?;
+        let name = &by.ty.name;
         Some(
             error(
                 C::RefinementViolated,
                 self.at(k, |e| e.action.as_ref()),
-                refinement::message(callee, r, &env),
+                refinement::message(name, r, &env),
             )
-            .note(refinement::origin(callee, r)),
+            .note(refinement::origin(name, r)),
         )
     }
 

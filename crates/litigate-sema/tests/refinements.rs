@@ -39,7 +39,8 @@ type Recent = Date where it >= 2020-01-01
 event Extended(days: Short where days != 45.days, on: Recent, method: Method where method == Mail || on > 2024-01-01)
 event Paid(amount: Money<usd> where amount >= 100.usd && 2 * amount <= 1_000.usd, odds: Probability where odds <= 1/2)
 event Spans(from: Date, to: Date where to - from <= 30.days && 3.days + from <= to, hours: Hours where -hours < 0.hours && hours / 2 <= 4.hours)
-event Flags(urgent: Bool where urgent || true, n: Number where !(n < 0) && n != 7, m: Method where Mail != m || urgent)",
+event Flags(urgent: Bool where urgent || true, n: Number where !(n < 0) && n != 7, m: Method where Mail != m || urgent || (m) == Personal)
+event Renamed(b: Number, a: {x: Number | !(x > b) && -x < 1 && x == x})",
     );
     assert_eq!(out, Vec::<String>::new());
 }
@@ -103,6 +104,70 @@ fn predicates_outside_the_qualifier_grammar_are_l2011() {
         (
             "event E(a: Date where a + a < 2024-01-01)",
             &["10:23 L2012 `+` of `Date` and `Date` is outside the refinement qualifier grammar | <grammar>"],
+        ),
+        (
+            "event E(a: Number where deadline(x).nominal > a)",
+            &["10:25 L2012 a field projection is outside the refinement qualifier grammar | <grammar>"],
+        ),
+        (
+            "event E(a: Number where [1] == a)",
+            &["10:25 L2012 a record or list is outside the refinement qualifier grammar | <grammar>"],
+        ),
+        (
+            "event E(a: Number where cite \"X\" == a)",
+            &["10:30 L2012 this expression is outside the refinement qualifier grammar | <grammar>"],
+        ),
+        (
+            "event E(a: Number where !zz)",
+            &["10:26 L2012 a refinement cannot name `zz` | it may name only `a`, and constants"],
+        ),
+        (
+            "event E(a: Number where zz && a > 1)",
+            &["10:25 L2012 a refinement cannot name `zz` | it may name only `a`, and constants"],
+        ),
+        (
+            "event E(a: Number where a > 1 && zz)",
+            &["10:34 L2012 a refinement cannot name `zz` | it may name only `a`, and constants"],
+        ),
+        (
+            "event E(a: Number where -zz < 1)",
+            &["10:26 L2012 a refinement cannot name `zz` | it may name only `a`, and constants"],
+        ),
+        (
+            "event E(a: Bool where -a == false)",
+            &["10:23 L2012 `-` on `Bool` is outside the refinement qualifier grammar | <grammar>"],
+        ),
+        (
+            "event E(a: Number where zz + 1 > 1 || 1 + zz > 1 || zz * 2 > 1 || 2 * zz > 1)",
+            &[
+                "10:25 L2012 a refinement cannot name `zz` | it may name only `a`, and constants",
+                "10:43 L2012 a refinement cannot name `zz` | it may name only `a`, and constants",
+                "10:53 L2012 a refinement cannot name `zz` | it may name only `a`, and constants",
+                "10:71 L2012 a refinement cannot name `zz` | it may name only `a`, and constants",
+            ],
+        ),
+        (
+            "event E(a: Date where 3.court_days + a > 2024-01-01)",
+            &["10:23 L2012 a date moves by calendar days in a refinement, not by `Days<CourtDays>` | other units count through a counting rule, which a refinement does not run"],
+        ),
+        (
+            "event E(a: Bool where a + a == true)",
+            &["10:23 L2012 `+` of `Bool` and `Bool` is outside the refinement qualifier grammar | <grammar>"],
+        ),
+        (
+            "event E(a: Bool where 2 * a == true || a * 2 == true)",
+            &[
+                "10:23 L2012 `*` of `Number` and `Bool` is not linear: one factor must be a constant number | <grammar>",
+                "10:42 L2012 `*` of `Bool` and `Number` is not linear: one factor must be a constant number | <grammar>",
+            ],
+        ),
+        (
+            "event E(a: Date where 2 * a < 2024-01-01)",
+            &["10:23 L2012 `*` of `Number` and `Date` is outside the refinement qualifier grammar | <grammar>"],
+        ),
+        (
+            "type T = {d: Days<CalendarDays> | d > 1.court_days}",
+            &["10:35 L2004 cannot compare `Days<CalendarDays>` with `Days<CourtDays>` | "],
         ),
         (
             "event E(a: Number where zz)",
@@ -237,6 +302,12 @@ state y: \"Y\" { _ \"go\" -> t { event Extended(31.days) } }",
             ],
         ),
         (
+            // `false && ?` is false: the counterexample names what it read.
+            "event P(a: Number, b: Number where a < 0 && b > 1)
+state x: \"X\" { _ \"go\" -> t { event P(5) } }",
+            &["11:36 L2013 `P`: a = 5 does not satisfy the refinement `a < 0 && b > 1` | the refinement of parameter `b` of `P` (SPEC §3.5)"],
+        ),
+        (
             // A pattern's omitted argument is open: the refinement reading it
             // is not decided there.
             "event Extended(days: Days<CalendarDays>, method: Method where method == Mail || days <= 3.days)
@@ -255,18 +326,20 @@ start s
 enum Method { Personal, Mail }
 type MailOnly = {m: Method | m == Mail}
 type Cap = Number where it <= 30
+type Pos = Number where !(-it >= 0)
 default ceiling when true => 3
 state s: \"S\" { _ \"go\" -> t }
 terminal t: \"T\"
 ";
     let user = "module user
-import base.{ Method, MailOnly, Cap }
+import base.{ Method, MailOnly, Cap, Pos }
 import base
 start s
 event Sent(how: MailOnly, days: Cap)
 event Both(how: MailOnly where how != Mail)
 event Over(n: Number where n < base.ceiling)
-state s: \"S\" { a \"A\" -> t { event Sent(Personal, 40) }, b \"B\" -> t { event Sent(Mail, 3) } }
+event Count(k: Pos)
+state s: \"S\" { a \"A\" -> t { event Sent(Personal, 40) }, b \"B\" -> t { event Sent(Mail, 3) }, c \"C\" -> t { event Count(0) } }
 terminal t: \"T\"
 ";
     let (db, ws) = workspace(&[
@@ -278,8 +351,9 @@ terminal t: \"T\"
         [
             "pkgs/user/main.lit:6:26 L2014 no `Both(..)` satisfies its refinements: `how != Mail` contradicts `how == Mail` (from type `base::MailOnly`)",
             "pkgs/user/main.lit:7:32 L2012 `base.ceiling`, not a constant, is outside the refinement qualifier grammar",
-            "pkgs/user/main.lit:8:40 L2013 `Sent`: how = Personal does not satisfy the refinement `how == Mail`",
-            "pkgs/user/main.lit:8:50 L2013 `Sent`: days = 40 does not satisfy the refinement `days <= 30`",
+            "pkgs/user/main.lit:9:40 L2013 `Sent`: how = Personal does not satisfy the refinement `how == Mail`",
+            "pkgs/user/main.lit:9:50 L2013 `Sent`: days = 40 does not satisfy the refinement `days <= 30`",
+            "pkgs/user/main.lit:9:118 L2013 `Count`: k = 0 does not satisfy the refinement `!(-k >= 0)`",
         ]
     );
 }

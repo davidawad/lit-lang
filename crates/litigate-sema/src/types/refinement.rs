@@ -47,21 +47,30 @@ pub fn bound_dates() -> Vec<(String, Type)> {
 /// evaluated only once a matter's due dates are counted (replay).
 #[must_use]
 pub fn names_bound_date(pred: &hir::Expr) -> bool {
-    let mut found = false;
-    visit_refs(pred, &mut |name| {
-        found |= DateRef::ALL.iter().any(|d| d.name() == name);
-    });
-    found
+    refs(pred)
+        .iter()
+        .any(|(n, _)| DateRef::ALL.iter().any(|d| d.name() == *n))
 }
 
-/// Calls `f` with every name `e` references.
-pub fn visit_refs(e: &hir::Expr, f: &mut dyn FnMut(&str)) {
+/// Each name `e` reads, with its type, in the order first read.
+#[must_use]
+pub fn refs(e: &hir::Expr) -> Vec<(&str, &Type)> {
+    let mut out = Vec::new();
+    collect_refs(e, &mut out);
+    out
+}
+
+fn collect_refs<'e>(e: &'e hir::Expr, out: &mut Vec<(&'e str, &'e Type)>) {
     match &e.kind {
-        hir::ExprKind::Ref { target } => f(target),
-        hir::ExprKind::Unary { operand, .. } => visit_refs(operand, f),
+        hir::ExprKind::Ref { target } => {
+            if out.iter().all(|(n, _)| n != target) {
+                out.push((target, &e.ty));
+            }
+        }
+        hir::ExprKind::Unary { operand, .. } => collect_refs(operand, out),
         hir::ExprKind::Binary { lhs, rhs, .. } => {
-            visit_refs(lhs, f);
-            visit_refs(rhs, f);
+            collect_refs(lhs, out);
+            collect_refs(rhs, out);
         }
         _ => {}
     }
@@ -106,9 +115,8 @@ fn localize_in(e: &mut hir::Expr, f: &dyn Fn(&str) -> String) {
             value: Value::Variant(v),
         } => {
             // `Enum::variant`: the enum's name is what a view spells.
-            if let Some((en, variant)) = v.rsplit_once("::") {
-                *v = format!("{}::{variant}", f(en));
-            }
+            let (en, variant) = v.rsplit_once("::").unwrap_or_default();
+            *v = format!("{}::{variant}", f(en));
         }
         hir::ExprKind::Unary { operand, .. } => localize_in(operand, f),
         hir::ExprKind::Binary { lhs, rhs, .. } => {
@@ -492,7 +500,8 @@ impl Typer<'_, '_, '_> {
                 display(&r.ty)
             );
             if l.ty == Type::Date || r.ty == Type::Date {
-                return self.outside(at, &operation).map(|e| e.ty);
+                self.outside(at, &operation);
+                return None;
             }
             let what = if op == BinaryOp::Div {
                 "divisor"
@@ -673,7 +682,7 @@ pub fn ground(
     let env = |name: &str| {
         args.iter()
             .find(|(p, _, _)| *p == name)
-            .and_then(|(_, v, _)| v.cloned())
+            .and_then(|(_, v, _)| v.and_then(eval::of))
     };
     if eval(&r.predicate, &env) != Some(false) {
         return;
@@ -688,19 +697,14 @@ pub fn ground(
 /// The L2013 report of refinement `r` of `event`, false under `env`: the
 /// values of the names it reads, as a counterexample.
 #[must_use]
-pub fn violation(
-    event: &str,
-    r: &Refinement,
-    env: &dyn Fn(&str) -> Option<Value>,
-    at: TextRange,
-) -> Report {
+pub fn violation(event: &str, r: &Refinement, env: eval::Env<'_>, at: TextRange) -> Report {
     Report::new(C::RefinementViolated, at, message(event, r, env)).note(origin(event, r))
 }
 
 /// The message of an L2013: the values refinement `r` of `event` reads
 /// under `env`, and the refinement.
 #[must_use]
-pub fn message(event: &str, r: &Refinement, env: &dyn Fn(&str) -> Option<Value>) -> String {
+pub fn message(event: &str, r: &Refinement, env: eval::Env<'_>) -> String {
     format!(
         "`{event}`: {} does not satisfy the refinement `{}`",
         witnesses(&r.predicate, env),
@@ -710,38 +714,12 @@ pub fn message(event: &str, r: &Refinement, env: &dyn Fn(&str) -> Option<Value>)
 
 /// `name = value` for each name `pred` reads that `env` knows, in order.
 #[must_use]
-pub fn witnesses(pred: &hir::Expr, env: &dyn Fn(&str) -> Option<Value>) -> String {
-    let mut names: Vec<String> = Vec::new();
-    visit_refs(pred, &mut |n| {
-        if !names.iter().any(|m| m == n) {
-            names.push(n.to_owned());
-        }
-    });
-    let mut types = std::collections::BTreeMap::new();
-    types_of(pred, &mut types);
-    names
-        .iter()
-        .filter_map(|n| {
-            let v = eval::of(&env(n)?)?;
-            Some(format!("{n} = {}", eval::show(types.get(n.as_str())?, &v)))
-        })
+pub fn witnesses(pred: &hir::Expr, env: eval::Env<'_>) -> String {
+    refs(pred)
+        .into_iter()
+        .filter_map(|(n, ty)| env(n).map(|v| format!("{n} = {}", eval::show(ty, &v))))
         .collect::<Vec<_>>()
         .join(", ")
-}
-
-/// The type of each name `e` reads.
-fn types_of<'e>(e: &'e hir::Expr, out: &mut std::collections::BTreeMap<&'e str, Type>) {
-    match &e.kind {
-        hir::ExprKind::Ref { target } => {
-            out.insert(target, e.ty.clone());
-        }
-        hir::ExprKind::Unary { operand, .. } => types_of(operand, out),
-        hir::ExprKind::Binary { lhs, rhs, .. } => {
-            types_of(lhs, out);
-            types_of(rhs, out);
-        }
-        _ => {}
-    }
 }
 
 /// Where refinement `r` of `event` was declared, for a note.

@@ -34,12 +34,32 @@ pub fn of(v: &Value) -> Option<Val> {
     })
 }
 
+/// Each name's value, for [`eval`]: `None` when it is not known (a hole,
+/// an omitted argument, a bound date not yet counted).
+pub type Env<'e> = &'e dyn Fn(&str) -> Option<Val>;
+
+impl Val {
+    fn not(self) -> Option<Self> {
+        match self {
+            Self::Bool(b) => Some(Self::Bool(!b)),
+            _ => None,
+        }
+    }
+
+    fn num(self) -> Option<Rational> {
+        match self {
+            Self::Num(n) => Some(n),
+            _ => None,
+        }
+    }
+}
+
 /// Whether `pred` holds with each name's value given by `env`; `None`
-/// when it depends on a value `env` does not know (a hole, a bound date
-/// not yet counted) or exact arithmetic overflows. `&&` and `||` decide
-/// when one side does (`false && ?` is false).
+/// when it depends on a value `env` does not know or exact arithmetic
+/// overflows. `&&` and `||` decide when one side does (`false && ?` is
+/// false). An expression outside the qualifier grammar is `None`.
 #[must_use]
-pub fn eval(pred: &hir::Expr, env: &dyn Fn(&str) -> Option<Value>) -> Option<bool> {
+pub fn eval(pred: &hir::Expr, env: Env<'_>) -> Option<bool> {
     match term(pred, env)? {
         Val::Bool(b) => Some(b),
         _ => None,
@@ -48,26 +68,21 @@ pub fn eval(pred: &hir::Expr, env: &dyn Fn(&str) -> Option<Value>) -> Option<boo
 
 /// The value of `e` under `env`; `None` as for [`eval`].
 #[must_use]
-pub fn term(e: &hir::Expr, env: &dyn Fn(&str) -> Option<Value>) -> Option<Val> {
+pub fn term(e: &hir::Expr, env: Env<'_>) -> Option<Val> {
     match &e.kind {
         ExprKind::Literal { value } => of(value),
-        ExprKind::Ref { target } => of(&env(target)?),
-        ExprKind::Unary { op, operand } => match (op, term(operand, env)?) {
-            (UnaryOp::Not, Val::Bool(b)) => Some(Val::Bool(!b)),
-            (UnaryOp::Neg, Val::Num(n)) => q::neg(n).ok().map(Val::Num),
-            _ => None,
-        },
+        ExprKind::Ref { target } => env(target),
+        ExprKind::Unary {
+            op: UnaryOp::Not,
+            operand,
+        } => term(operand, env)?.not(),
+        ExprKind::Unary { operand, .. } => q::neg(term(operand, env)?.num()?).ok().map(Val::Num),
         ExprKind::Binary { op, lhs, rhs } => binary(*op, lhs, rhs, env),
         _ => None,
     }
 }
 
-fn binary(
-    op: BinaryOp,
-    lhs: &hir::Expr,
-    rhs: &hir::Expr,
-    env: &dyn Fn(&str) -> Option<Value>,
-) -> Option<Val> {
+fn binary(op: BinaryOp, lhs: &hir::Expr, rhs: &hir::Expr, env: Env<'_>) -> Option<Val> {
     if matches!(op, BinaryOp::And | BinaryOp::Or) {
         // `false && ?` is false and `true || ?` true: the side that decides
         // decides alone.
@@ -82,22 +97,14 @@ fn binary(
         };
     }
     let (a, b) = (term(lhs, env)?, term(rhs, env)?);
-    let ordering = |a: &Val, b: &Val| match (a, b) {
-        (Val::Num(x), Val::Num(y)) => Some(q::cmp(*x, *y)),
-        _ => None,
-    };
-    let (Val::Num(x), Val::Num(y)) = (&a, &b) else {
-        return match op {
-            BinaryOp::Eq => Some(Val::Bool(a == b)),
-            BinaryOp::Ne => Some(Val::Bool(a != b)),
-            _ => None,
-        };
-    };
-    let (x, y) = (*x, *y);
-    let holds = |want: &[Ordering]| ordering(&a, &b).map(|o| Val::Bool(want.contains(&o)));
     match op {
-        BinaryOp::Eq => holds(&[Ordering::Equal]),
-        BinaryOp::Ne => holds(&[Ordering::Less, Ordering::Greater]),
+        BinaryOp::Eq => return Some(Val::Bool(a == b)),
+        BinaryOp::Ne => return Some(Val::Bool(a != b)),
+        _ => {}
+    }
+    let (x, y) = (a.num()?, b.num()?);
+    let holds = |want: &[Ordering]| Some(Val::Bool(want.contains(&q::cmp(x, y))));
+    match op {
         BinaryOp::Lt => holds(&[Ordering::Less]),
         BinaryOp::Le => holds(&[Ordering::Less, Ordering::Equal]),
         BinaryOp::Gt => holds(&[Ordering::Greater]),
@@ -155,11 +162,9 @@ pub const fn suffix(u: DayUnit) -> &'static str {
 #[must_use]
 pub fn render(e: &hir::Expr) -> String {
     match &e.kind {
-        ExprKind::Literal { value } => match value {
-            Value::Date(d) => d.clone(),
-            Value::Variant(v) => v.rsplit("::").next().unwrap_or(v).to_owned(),
-            other => of(other).map_or_else(|| "?".to_owned(), |v| show(&e.ty, &v)),
-        },
+        ExprKind::Literal { value } => {
+            of(value).map_or_else(|| "?".to_owned(), |v| show(&e.ty, &v))
+        }
         ExprKind::Ref { target } => target.clone(),
         ExprKind::Unary { op, operand } => {
             let sym = if *op == UnaryOp::Not { "!" } else { "-" };

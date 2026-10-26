@@ -8,7 +8,7 @@ use crate::db::parse::tree::{Expr as Src, ExprKind as S, RefPath};
 use crate::db::span::{Report, TextRange};
 use crate::hir::{Expr, ExprKind, Type, Value};
 use crate::resolve::suggest::nearest;
-use crate::types::rational;
+use crate::types::{rational, refinement};
 use litigate_base::{Applicability, DiagnosticCode as C, Span};
 
 /// Converts a range to a span.
@@ -122,14 +122,12 @@ fn refined(
     out: &mut Vec<Report>,
 ) {
     let value = |name: &str| {
-        let i = ty.params.iter().position(|(p, _)| p == name)?;
-        match &typed.get(i)?.kind {
-            ExprKind::Literal { value } => Some(value.clone()),
-            _ => None,
-        }
+        let i = ty.params.iter().position(|(p, _)| p == name);
+        i.and_then(|i| typed.get(i))
+            .and_then(|e| refinement::eval::term(e, &|_| None))
     };
     for r in &ty.refinements {
-        if crate::types::refinement::eval(&r.predicate, &value) != Some(false) {
+        if refinement::eval(&r.predicate, &value) != Some(false) {
             continue;
         }
         let at = ty
@@ -138,7 +136,7 @@ fn refined(
             .position(|(p, _)| *p == r.binder)
             .and_then(|i| args.get(i))
             .map(|a| a.range);
-        out.extend(at.map(|at| crate::types::refinement::violation(callee, r, &value, at)));
+        out.extend(at.map(|at| refinement::violation(callee, r, &value, at)));
     }
 }
 

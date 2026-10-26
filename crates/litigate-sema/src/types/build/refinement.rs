@@ -113,13 +113,10 @@ impl Cx<'_, '_> {
     }
 
     /// L2014 at the last conjunct of `core`, the others as located notes.
+    /// The solver names at least one assertion of an unsatisfiable
+    /// question: each conjunct's domain is satisfiable alone.
     fn vacuous(&mut self, subject: &str, shown: &[Located], core: &[usize]) {
         let members: Vec<&Located> = core.iter().filter_map(|&i| shown.get(i)).collect();
-        // A refinement with no satisfying value is its own core; the solver
-        // always names at least one assertion of an unsatisfiable question.
-        let Some(((last, at), rest)) = members.split_last() else {
-            return;
-        };
         let text = |r: &Refinement| {
             let via = r
                 .via
@@ -128,22 +125,23 @@ impl Cx<'_, '_> {
                 .unwrap_or_default();
             format!("`{}`{via}", refine::render(&r.predicate))
         };
+        let (rest, last) = members.split_at(members.len().saturating_sub(1));
+        let (shown_last, at) = (
+            last.iter().map(|(r, _)| text(r)).collect::<String>(),
+            last.iter().map(|(_, at)| *at).next().unwrap_or_default(),
+        );
         let message = if rest.is_empty() {
-            format!(
-                "no {subject} satisfies its refinement {}: the type is empty",
-                text(last)
-            )
+            format!("no {subject} satisfies its refinement {shown_last}: the type is empty")
         } else {
             format!(
-                "no {subject} satisfies its refinements: {} contradicts {}",
-                text(last),
+                "no {subject} satisfies its refinements: {shown_last} contradicts {}",
                 rest.iter()
                     .map(|(r, _)| text(r))
                     .collect::<Vec<_>>()
                     .join(" and ")
             )
         };
-        let mut report = Report::new(C::VacuousRefinement, *at, message);
+        let mut report = Report::new(C::VacuousRefinement, at, message);
         for (r, range) in rest {
             report = report.note_at(*range, format!("contradicted: {}", text(r)));
         }

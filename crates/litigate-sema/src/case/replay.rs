@@ -12,8 +12,8 @@ use super::graph::{base, display, pack_of, Graph};
 use super::spans::{error, CaseSpans, EventSpans};
 use super::{Effect, Obligation, Step};
 use crate::hir::{
-    Case, Declaration, Edge, Event, EventEffect, EventParty, Expr, ExprKind, Node, NodeKind,
-    Removal, Type, Value,
+    Case, Declaration, Edge, Event, EventEffect, EventParty, EventType, Expr, ExprKind, Node,
+    NodeKind, Removal, Type, Value,
 };
 use crate::temporal::condition::matches;
 use crate::temporal::transition::Seq;
@@ -25,7 +25,11 @@ mod facts;
 mod obligations;
 mod removal;
 
-use obligations::Transform;
+use obligations::{Refined, Transform};
+
+/// An event whose type declares an effect: the declaring pack, the type,
+/// its effect, and the call's arguments.
+type Effected<'g, 'c> = (String, &'g EventType, &'g EventEffect, &'c [Expr]);
 mod within;
 
 /// Replay outcome.
@@ -308,6 +312,7 @@ impl<'c, 'g> Cx<'c, 'g> {
             self.effect_of(&e.action),
             Some((
                 _,
+                _,
                 EventEffect::Elects { .. } | EventEffect::Removes { .. },
                 _
             ))
@@ -498,7 +503,7 @@ impl<'c, 'g> Cx<'c, 'g> {
         k: usize,
         tracks: Vec<(String, &'g Node)>,
         ended: bool,
-        (pack, effect, args): (String, &'g EventEffect, &'c [Expr]),
+        (pack, ty, effect, args): Effected<'g, 'c>,
     ) -> Option<Vec<String>> {
         if ended {
             self.illegal(k, &tracks);
@@ -508,7 +513,8 @@ impl<'c, 'g> Cx<'c, 'g> {
             EventEffect::Removes { param } => self.remove(k, args.get(*param)),
             EventEffect::Elects { param } => self.elect(k, args.get(*param)),
             EventEffect::Extends { deadline, param } => {
-                self.transform(k, &pack, deadline, Transform::Extend(args.get(*param)))
+                let how = Transform::Extend(args.get(*param), Refined { ty, args });
+                self.transform(k, &pack, deadline, how)
             }
             EventEffect::Waives { deadline } => {
                 self.transform(k, &pack, deadline, Transform::Waive)
@@ -652,21 +658,22 @@ impl<'c, 'g> Cx<'c, 'g> {
 
     /// The declared effect of event `k`'s type, with the pack declaring
     /// the type and the event's arguments (SPEC §5.2).
-    fn effect(&self, k: usize) -> Option<(String, &'g EventEffect, &'c [Expr])> {
+    fn effect(&self, k: usize) -> Option<Effected<'g, 'c>> {
         self.effect_of(&self.sorted[k].1.action)
     }
 
-    /// The effect the type of `action` declares, with its pack and the
-    /// call's arguments.
-    fn effect_of(&self, action: &'c Expr) -> Option<(String, &'g EventEffect, &'c [Expr])> {
+    /// The effect the type of `action` declares, with its pack, the type
+    /// and the call's arguments.
+    fn effect_of(&self, action: &'c Expr) -> Option<Effected<'g, 'c>> {
         let ExprKind::Call { callee, args } = &action.kind else {
             return None;
         };
         let (pack, name) = callee
             .split_once("::")
             .unwrap_or((self.graph.primary(), callee.as_str()));
-        let effect = self.graph.event_type(pack, name)?.effect.as_ref()?;
-        Some((pack.to_owned(), effect, args))
+        let ty = self.graph.event_type(pack, name)?;
+        let effect = ty.effect.as_ref()?;
+        Some((pack.to_owned(), ty, effect, args))
     }
 
     /// Event `k` takes `edge` (written in `pack`) from `posture`: its

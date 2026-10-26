@@ -45,28 +45,39 @@ pub enum Decision {
     Unknown(String),
 }
 
+/// The solver's work budget: `litigate-smt`'s default, a deterministic
+/// resource limit rather than a timeout.
+pub const RLIMIT: u32 = 10_000_000;
+
 /// Whether `preds` (typed `Bool`, over `vars`) can all hold at once.
+#[must_use]
+pub fn decide(vars: &[Var<'_>], preds: &[hir::Expr]) -> Decision {
+    decide_within(RLIMIT, vars, preds)
+}
+
+/// [`decide`] under work budget `rlimit`.
 #[cfg(target_arch = "wasm32")]
 #[must_use]
-pub fn decide(_vars: &[Var<'_>], _preds: &[hir::Expr]) -> Decision {
+pub fn decide_within(_rlimit: u32, _vars: &[Var<'_>], _preds: &[hir::Expr]) -> Decision {
     Decision::Unknown("this build links no SMT solver (wasm)".into())
 }
 
-/// Whether `preds` (typed `Bool`, over `vars`) can all hold at once.
+/// [`decide`] under work budget `rlimit` (`litigate_smt::Z3::with_rlimit`).
 #[cfg(not(target_arch = "wasm32"))]
 #[must_use]
-pub fn decide(vars: &[Var<'_>], preds: &[hir::Expr]) -> Decision {
-    match encode(vars, preds) {
-        Ok(query) => match solve(&query) {
-            Ok(litigate_smt::Outcome::Sat(model)) => Decision::Sat(witness(vars, &model)),
-            Ok(litigate_smt::Outcome::Unsat(core)) => Decision::Unsat(
-                core.iter()
-                    .filter_map(|l| l.strip_prefix('p')?.parse().ok())
-                    .collect(),
-            ),
-            Ok(litigate_smt::Outcome::Unknown(why)) => Decision::Unknown(why),
-            Err(e) => Decision::Unknown(e.to_string()),
-        },
+pub fn decide_within(rlimit: u32, vars: &[Var<'_>], preds: &[hir::Expr]) -> Decision {
+    use litigate_smt::{Backend, Outcome};
+    let outcome = encode(vars, preds).and_then(|query| {
+        litigate_smt::Z3::with_rlimit(rlimit).and_then(|mut z3| z3.check(&query))
+    });
+    match outcome {
+        Ok(Outcome::Sat(model)) => Decision::Sat(witness(vars, &model)),
+        Ok(Outcome::Unsat(core)) => Decision::Unsat(
+            core.iter()
+                .filter_map(|l| l.strip_prefix('p')?.parse().ok())
+                .collect(),
+        ),
+        Ok(Outcome::Unknown(why)) => Decision::Unknown(why),
         Err(e) => Decision::Unknown(e.to_string()),
     }
 }
@@ -75,50 +86,27 @@ pub fn decide(vars: &[Var<'_>], preds: &[hir::Expr]) -> Decision {
 #[cfg(not(target_arch = "wasm32"))]
 fn witness(vars: &[Var<'_>], model: &litigate_smt::Model) -> Vec<(String, String)> {
     vars.iter()
-        .filter_map(|v| {
-            let r = model.get(v.name)?;
+        .map(|v| {
+            // A model values every declared variable.
+            let r = model.get(v.name).copied().unwrap_or(R::ZERO);
             let n = crate::hir::Rational {
                 numerator: r.numer(),
                 denominator: r.denom().unsigned_abs(),
             };
-            let value = match (v.ty, v.variants) {
-                (Type::Boolean, _) => Val::Bool(n.numerator != 0),
-                (Type::Named(_), Some(names)) => Val::Variant(
-                    usize::try_from(n.numerator)
-                        .ok()
-                        .and_then(|i| names.get(i))
+            let value = match v.ty {
+                Type::Boolean => Val::Bool(n.numerator != 0),
+                // Its domain holds an enum's index among its variants.
+                Type::Named(_) => Val::Variant(
+                    v.variants
+                        .and_then(|names| names.get(usize::try_from(n.numerator).ok()?))
                         .cloned()
-                        .unwrap_or_else(|| "another variant".into()),
+                        .unwrap_or_default(),
                 ),
-                (Type::Named(_), None) => Val::Variant("another variant".into()),
                 _ => Val::Num(n),
             };
-            Some((v.name.to_owned(), show(v.ty, &value)))
+            (v.name.to_owned(), show(v.ty, &value))
         })
         .collect()
-}
-
-#[cfg(not(target_arch = "wasm32"))]
-thread_local! {
-    /// The pinned solver, its answers cached by content hash: an LSP
-    /// session asks the same questions on every keystroke.
-    static SOLVER: std::cell::RefCell<Option<litigate_smt::Cached<litigate_smt::Z3>>> =
-        const { std::cell::RefCell::new(None) };
-}
-
-#[cfg(not(target_arch = "wasm32"))]
-fn solve(query: &Query) -> Result<litigate_smt::Outcome, litigate_smt::Error> {
-    use litigate_smt::Backend;
-    SOLVER.with(|cell| {
-        let mut slot = cell.borrow_mut();
-        if slot.is_none() {
-            *slot = Some(litigate_smt::Cached::new(litigate_smt::Z3::new()?));
-        }
-        slot.as_mut()
-            .map_or(Err(litigate_smt::Error::Solver("no solver".into())), |s| {
-                s.check(query)
-            })
-    })
 }
 
 /// A linear form `Σ cᵢ·xᵢ + c` over the question's variables.
@@ -248,8 +236,6 @@ impl<'v> Encoder<'v> {
                     BinaryOp::Gt => Cmp::Gt,
                     _ => Cmp::Ge,
                 };
-                // An enum constant is its index among the other side's
-                // variants.
                 let variants = self.variants_of(lhs).or_else(|| self.variants_of(rhs));
                 let (l, r) = (self.term(lhs, variants)?, self.term(rhs, variants)?);
                 Formula::cmp(self.lin(&l), cmp, self.lin(&r))
@@ -273,29 +259,28 @@ impl<'v> Encoder<'v> {
     }
 
     fn lin(&self, l: &Lin) -> LinExpr {
+        // A term's variables are declared: `term` checked each.
         l.terms
             .iter()
-            .filter_map(|(n, c)| Some((self.vars.get(n)?, c)))
-            .fold(LinExpr::from(l.constant), |acc, ((x, _), c)| {
-                acc.plus(*c, x)
+            .fold(LinExpr::from(l.constant), |acc, (n, c)| {
+                acc.plus(*c, &self.vars[n].0)
             })
     }
 
     fn term(&self, e: &hir::Expr, variants: Option<&[String]>) -> Result<Lin, litigate_smt::Error> {
         Ok(match &e.kind {
-            ExprKind::Literal { value } => Lin::constant(match value {
-                Value::Variant(v) => {
-                    let name = v.rsplit("::").next().unwrap_or(v);
+            ExprKind::Literal { value } => Lin::constant(match super::eval::of(value) {
+                Some(Val::Num(n)) => rational(n)?,
+                Some(Val::Bool(b)) => R::int(i64::from(b)),
+                // An enum constant is its index among the other side's
+                // variants.
+                Some(Val::Variant(name)) => {
                     let index = variants
-                        .and_then(|vs| vs.iter().position(|x| x == name))
-                        .ok_or_else(|| litigate_smt::Error::UndeclaredVar(name.to_owned()))?;
-                    R::int(i64::try_from(index).map_err(|_| litigate_smt::Error::Overflow)?)
+                        .and_then(|vs| vs.iter().position(|x| *x == name))
+                        .ok_or_else(|| litigate_smt::Error::UndeclaredVar(name.clone()))?;
+                    R::int(i64::try_from(index).unwrap_or(i64::MAX))
                 }
-                other => match super::eval::of(other) {
-                    Some(Val::Num(n)) => rational(n)?,
-                    Some(Val::Bool(b)) => R::int(i64::from(b)),
-                    _ => return Err(litigate_smt::Error::Solver("not a term".into())),
-                },
+                None => return Err(litigate_smt::Error::Solver("not a term".into())),
             }),
             ExprKind::Ref { target } => {
                 self.var(target)?;

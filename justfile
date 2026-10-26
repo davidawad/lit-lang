@@ -129,6 +129,11 @@ cov-litigate *CRATES=litigate_crates:
 cov-gate-test:
     scripts/cov-gate self-test
 
+# GitHub-mirrors-GitLab sync verdicts against throwaway bare repositories,
+# including the divergence refusal (maintenance/mirror-sync/README.md).
+mirror-sync-test:
+    scripts/mirror-sync self-test
+
 # Ten-minute local parser and case-input fuzz smoke (five minutes each).
 fuzz:
     mkdir -p crates/litigate-syntax/fuzz/corpus/parse crates/litigate-syntax/fuzz/corpus/case_replay
@@ -242,7 +247,7 @@ nix-check:
 
 # The single CI entry point: fast, deterministic gates only. Coverage,
 # audit, and deny hit the network/build cache so they're last.
-ci: fmt-check lint cov-gate-test lit-sync-check tree-sitter-test test ts-test doctest cov cov-litigate audit deny
+ci: fmt-check lint cov-gate-test mirror-sync-test lit-sync-check tree-sitter-test test ts-test doctest cov cov-litigate audit deny
     @echo "ci: all gates passed"
 
 # The per-bead gate (scripts/ci-scoped): global checks (fmt, typos,

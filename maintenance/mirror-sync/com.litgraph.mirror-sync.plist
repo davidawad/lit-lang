@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  The durable GitHub-mirrors-GitLab job on carbon (lg-litigate-epic-tuq.29.1).
+  Replace /PATH/TO/litgraph with carbon's clone (its `gitlab` and `github`
+  remotes reach both over carbon's SSH key), then:
+    cp maintenance/mirror-sync/com.litgraph.mirror-sync.plist ~/Library/LaunchAgents/
+    launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.litgraph.mirror-sync.plist
+  One `scripts/mirror-sync once` pass every 120 s; each verdict line is
+  appended to the log. A MIRROR_DIVERGED pass pushes nothing, and neither
+  does any later one until a person reconciles the two mains.
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.litgraph.mirror-sync</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/PATH/TO/litgraph/scripts/mirror-sync</string>
+    <string>once</string>
+  </array>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>MIRROR_REPO</key>
+    <string>/PATH/TO/litgraph</string>
+    <key>PATH</key>
+    <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+  </dict>
+  <key>StartInterval</key>
+  <integer>120</integer>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>StandardOutPath</key>
+  <string>/tmp/litgraph-mirror-sync.log</string>
+  <key>StandardErrorPath</key>
+  <string>/tmp/litgraph-mirror-sync.log</string>
+</dict>
+</plist>

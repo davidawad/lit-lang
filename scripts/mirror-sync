@@ -1,0 +1,194 @@
+#!/usr/bin/env bash
+# GitHub main mirrors GitLab main (lg-litigate-epic-tuq.29.1). Run on carbon
+# over carbon's existing SSH key: no token, no deploy credential. Whenever the
+# two mains differ it plain-pushes GitLab main to GitHub main; it never
+# forces. If GitHub main is not an ancestor of GitLab main the mirror has
+# diverged: it pushes nothing and exits 3 so the PM is told.
+#
+# Usage:
+#   scripts/mirror-sync once
+#       One pass. Prints exactly one verdict line and exits:
+#         IN_SYNC <sha>                 0  both mains at <sha>
+#         MIRRORED <old>..<new>         0  GitHub main fast-forwarded
+#         MIRROR_DIVERGED <gh> <gl>     3  GitHub main not an ancestor of
+#                                          GitLab main; nothing pushed
+#         MIRROR_FAILED <reason>        1  fetch or push failed
+#   scripts/mirror-sync loop [seconds]
+#       The interim session loop: `once` every <seconds> (default 120),
+#       forever. Stops at the first MIRROR_DIVERGED (exit 3); a failed pass
+#       is retried on the next tick.
+#   scripts/mirror-sync self-test
+#       Every verdict, against throwaway bare repositories.
+#
+# Environment:
+#   MIRROR_REPO    the clone to work in (default: this script's repository)
+#   MIRROR_FROM    remote that is the source of truth (default: gitlab)
+#   MIRROR_TO      remote that mirrors it (default: github)
+#   MIRROR_BRANCH  branch mirrored on both (default: main)
+#
+# Only refs/mirror-sync/* in MIRROR_REPO are written; the working tree, the
+# index and every branch are left alone.
+set -euo pipefail
+
+self="${BASH_SOURCE[0]}"
+
+usage() {
+  sed -n '/^# Usage:/,/^# Environment:/p' "$self" | sed '$d' | sed 's/^# \{0,1\}//' >&2
+  exit 2
+}
+
+sync_once() {
+  local repo from to branch src dst
+  repo="${MIRROR_REPO:-$(cd "$(dirname "$self")" && git rev-parse --show-toplevel)}"
+  from="${MIRROR_FROM:-gitlab}"
+  to="${MIRROR_TO:-github}"
+  branch="${MIRROR_BRANCH:-main}"
+  g() { git -C "$repo" "$@"; }
+  if ! g fetch -q --no-tags "$from" "+refs/heads/$branch:refs/mirror-sync/from" 2> /dev/null; then
+    echo "MIRROR_FAILED fetch $from $branch"
+    return 1
+  fi
+  if ! g fetch -q --no-tags "$to" "+refs/heads/$branch:refs/mirror-sync/to" 2> /dev/null; then
+    echo "MIRROR_FAILED fetch $to $branch"
+    return 1
+  fi
+  src="$(g rev-parse refs/mirror-sync/from)"
+  dst="$(g rev-parse refs/mirror-sync/to)"
+  if [ "$src" = "$dst" ]; then
+    echo "IN_SYNC $src"
+    return 0
+  fi
+  if ! g merge-base --is-ancestor "$dst" "$src"; then
+    echo "MIRROR_DIVERGED $to/$branch=$dst $from/$branch=$src"
+    return 3
+  fi
+  # A plain push: if GitHub main moved since the fetch the remote refuses
+  # the non-fast-forward, and the next pass decides again.
+  if ! g push -q "$to" "$src:refs/heads/$branch" 2> /dev/null; then
+    echo "MIRROR_FAILED push $to $branch"
+    return 1
+  fi
+  echo "MIRRORED $dst..$src"
+}
+
+sync_loop() {
+  local interval="${1:-120}" status
+  case "$interval" in '' | *[!0-9]* | 0) usage ;; esac
+  while :; do
+    status=0
+    sync_once || status=$?
+    [ "$status" -ne 3 ] || return 3
+    sleep "$interval"
+  done
+}
+
+self_test() {
+  local tmp failures=0
+  tmp="$(mktemp -d)"
+  # shellcheck disable=SC2064 # expand $tmp now
+  trap "rm -rf '$tmp'" EXIT
+  export GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_NOSYSTEM=1
+  export GIT_AUTHOR_NAME=t GIT_AUTHOR_EMAIL=t@t GIT_COMMITTER_NAME=t GIT_COMMITTER_EMAIL=t@t
+  git init -q --bare -b main "$tmp/gitlab.git"
+  git init -q --bare -b main "$tmp/github.git"
+  git init -q -b main "$tmp/work"
+  git init -q -b main "$tmp/mirror"
+  git -C "$tmp/work" remote add gitlab "$tmp/gitlab.git"
+  git -C "$tmp/work" remote add github "$tmp/github.git"
+  git -C "$tmp/mirror" remote add gitlab "$tmp/gitlab.git"
+  git -C "$tmp/mirror" remote add github "$tmp/github.git"
+  commit() { git -C "$tmp/work" commit -q --allow-empty -m "$1"; git -C "$tmp/work" rev-parse HEAD; }
+  head_of() { git --git-dir="$tmp/$1.git" rev-parse refs/heads/main 2> /dev/null || echo none; }
+  check() {
+    local desc="$1" want_status="$2" want_line="$3" want_github="$4" line status=0
+    shift 4
+    # Any further argument is a function definition (a stub) for this pass.
+    line="$(
+      [ "$#" -eq 0 ] || eval "$*"
+      MIRROR_REPO="$tmp/mirror" sync_once
+    )" || status=$?
+    if [ "$status" != "$want_status" ] || [ "$line" != "$want_line" ] \
+      || [ "$(head_of github)" != "$want_github" ]; then
+      echo "mirror-sync self-test: $desc: want $want_status '$want_line' github=$want_github," \
+        "got $status '$line' github=$(head_of github)" >&2
+      failures=$((failures + 1))
+    fi
+  }
+  local a b c d x
+  a="$(commit a)"
+  git -C "$tmp/work" push -q gitlab main
+  git -C "$tmp/work" push -q github main
+  check "both at the same commit" 0 "IN_SYNC $a" "$a"
+  b="$(commit b)"
+  c="$(commit c)"
+  git -C "$tmp/work" push -q gitlab main
+  check "GitLab ahead: fast-forward" 0 "MIRRORED $a..$c" "$c"
+  check "after mirroring" 0 "IN_SYNC $c" "$c"
+  # GitHub gains a commit GitLab never had: diverged, nothing pushed.
+  git -C "$tmp/work" reset -q --hard "$b"
+  x="$(commit x)"
+  git -C "$tmp/work" push -q -f github main
+  git -C "$tmp/work" reset -q --hard "$c"
+  d="$(commit d)"
+  git -C "$tmp/work" push -q gitlab main
+  check "diverged: refused" 3 "MIRROR_DIVERGED github/main=$x gitlab/main=$d" "$x"
+  # GitHub strictly ahead of GitLab is divergence too: never rewound.
+  git -C "$tmp/work" push -q -f github "$d:refs/heads/main"
+  git -C "$tmp/work" push -q -f gitlab "$c:refs/heads/main"
+  check "GitHub ahead: refused" 3 "MIRROR_DIVERGED github/main=$d gitlab/main=$c" "$d"
+  # A push the remote refuses is a failure, not a verdict about history.
+  git -C "$tmp/work" push -q -f github "$a:refs/heads/main"
+  git -C "$tmp/work" push -q -f gitlab "$d:refs/heads/main"
+  printf '#!/bin/sh\nexit 1\n' > "$tmp/github.git/hooks/pre-receive"
+  chmod +x "$tmp/github.git/hooks/pre-receive"
+  check "push rejected" 1 "MIRROR_FAILED push github main" "$a"
+  rm "$tmp/github.git/hooks/pre-receive"
+  check "push accepted again" 0 "MIRRORED $a..$d" "$d"
+  # GitHub moves between the fetch and the push: the plain push is refused,
+  # never forced over it.
+  git -C "$tmp/work" push -q -f github "$a:refs/heads/main"
+  # shellcheck disable=SC2016 # expanded by eval in check
+  check "GitHub moved after the fetch" 1 "MIRROR_FAILED push github main" "$x" \
+    'git() {
+      [ "$3" != push ] || command git -C "$tmp/work" push -q -f github "$x:refs/heads/main"
+      command git "$@"
+    }'
+  # A remote that cannot be fetched fails without pushing.
+  check_missing() {
+    local line status=0
+    line="$(MIRROR_REPO="$tmp/mirror" MIRROR_FROM=nowhere sync_once)" || status=$?
+    if [ "$status" != 1 ] || [ "$line" != "MIRROR_FAILED fetch nowhere main" ]; then
+      echo "mirror-sync self-test: missing remote: got $status '$line'" >&2
+      failures=$((failures + 1))
+    fi
+  }
+  check_missing
+  # The loop stops at divergence instead of retrying it.
+  git -C "$tmp/work" push -q -f github "$x:refs/heads/main"
+  local status=0
+  MIRROR_REPO="$tmp/mirror" sync_loop 1 > /dev/null || status=$?
+  if [ "$status" != 3 ] || [ "$(head_of github)" != "$x" ]; then
+    echo "mirror-sync self-test: loop on divergence: want 3 github=$x, got $status github=$(head_of github)" >&2
+    failures=$((failures + 1))
+  fi
+  # The mirror clone's branches and working tree are untouched.
+  if [ -n "$(git -C "$tmp/mirror" for-each-ref refs/heads)" ]; then
+    echo "mirror-sync self-test: wrote a branch in MIRROR_REPO" >&2
+    failures=$((failures + 1))
+  fi
+  if [ "$failures" -ne 0 ]; then
+    echo "mirror-sync self-test: $failures verdict(s) wrong" >&2
+    return 1
+  fi
+  echo "mirror-sync self-test: fast-forwards mirror, divergence and failures push nothing"
+}
+
+[ "$#" -gt 0 ] || usage
+cmd="$1"
+shift
+case "$cmd" in
+  once) [ "$#" -eq 0 ] || usage; sync_once ;;
+  loop) [ "$#" -le 1 ] || usage; sync_loop "$@" ;;
+  self-test) [ "$#" -eq 0 ] || usage; self_test ;;
+  *) usage ;;
+esac

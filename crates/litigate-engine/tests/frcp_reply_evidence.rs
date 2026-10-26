@@ -24,7 +24,7 @@ fn q(id: &str) -> String {
 }
 
 /// The successful result of `op` on the embedded FRCP pack.
-fn run(op: Value) -> Value {
+fn run(op: &Value) -> Value {
     let catalog = litgraph_packs::catalog().expect("embedded packs");
     let req: Request = serde_json::from_value(json!({ "packs": [P], "op": op })).unwrap();
     let resp = handle(&req, &catalog);
@@ -34,7 +34,7 @@ fn run(op: Value) -> Value {
 
 /// `(edge, role, to, authority)` of every edge out of `node`, sorted.
 fn out_edges(node: &str) -> Vec<(String, String, String, String)> {
-    let graph = run(json!({ "op": "graph", "node": q(node) }));
+    let graph = run(&json!({ "op": "graph", "node": q(node) }));
     let mut edges: Vec<_> = graph["edges"]
         .as_array()
         .unwrap()
@@ -51,7 +51,7 @@ fn out_edges(node: &str) -> Vec<(String, String, String, String)> {
 
 /// The edge sequences of the paths from `from` to `to`.
 fn paths(from: &str, to: &str) -> Vec<Vec<String>> {
-    let result = run(json!({ "op": "path", "from": q(from), "to": q(to), "k": 50 }));
+    let result = run(&json!({ "op": "path", "from": q(from), "to": q(to), "k": 50 }));
     result["paths"]
         .as_array()
         .unwrap()
@@ -80,7 +80,7 @@ fn reply_evidence_path(via: &[&str]) -> bool {
 #[test]
 fn reply_evidence_filed_and_its_ruling_are_reachable_from_the_start_node() {
     for node in ["reply-evidence-filed", "reply-evidence-ruling"] {
-        let result = run(json!({ "op": "path", "to": q(node) }));
+        let result = run(&json!({ "op": "path", "to": q(node) }));
         let paths = result["paths"].as_array().unwrap();
         assert!(!paths.is_empty(), "no path from the start node to {node}");
         assert_eq!(paths[0]["end"]["id"], q(node));
@@ -176,7 +176,7 @@ fn no_response_to_reply_evidence_goes_straight_to_sj_ruling() {
 #[test]
 fn neither_reply_evidence_node_sets_a_deadline() {
     for node in ["reply-evidence-filed", "reply-evidence-ruling"] {
-        let due = run(json!({ "op": "deadlines", "trigger": "2025-03-04", "node": q(node) }));
+        let due = run(&json!({ "op": "deadlines", "trigger": "2025-03-04", "node": q(node) }));
         assert_eq!(due["count"], 0, "{node}: {due}");
     }
 }

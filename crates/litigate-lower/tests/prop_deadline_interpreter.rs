@@ -161,11 +161,7 @@ fn clock(holidays: &[Holiday]) -> (EngineClock, String) {
                 month: h.month,
                 day: h.day,
             },
-            observed: if h.observed {
-                template.observed.clone()
-            } else {
-                None
-            },
+            observed: if h.observed { template.observed } else { None },
             ..template.clone()
         })
         .collect();

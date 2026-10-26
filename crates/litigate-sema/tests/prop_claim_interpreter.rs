@@ -86,3 +86,76 @@ proptest! {
         prop_assert_eq!(actual, reference(&claims, year));
     }
 }
+
+/// The selection timeline must not depend on source identity or unrelated items.
+#[test]
+fn renaming_reordering_and_irrelevant_items_preserve_selection_timeline() {
+    let claims = vec![
+        Claim {
+            start: 2010,
+            end: 2020,
+        },
+        Claim {
+            start: 2016,
+            end: 2025,
+        },
+    ];
+    let original = program(&claims);
+    let renamed = original.replace("module demo.rules", "module renamed.package");
+    let with_irrelevant = format!("{original}\nenum Unused {{ filing, hearing }}\n");
+    let reversed = {
+        let mut lines: Vec<_> = original.lines().map(str::to_owned).collect();
+        let first = lines
+            .iter()
+            .position(|line| line.starts_with("deadline target:"))
+            .unwrap();
+        let rest = lines.split_off(first);
+        let (header, deadlines) = rest.split_at(1);
+        lines.extend(header.iter().cloned());
+        lines.extend(deadlines.iter().rev().cloned());
+        lines.join("\n")
+    };
+    let expected = (2009..2029)
+        .map(|year| reference(&claims, year))
+        .collect::<Vec<_>>();
+    for source in [original, renamed, with_irrelevant, reversed] {
+        let package = pkg(
+            "demo",
+            "FederalRule",
+            "2009-01-01",
+            &[],
+            &[("rules.lit", &source)],
+        );
+        let (db, ws) = workspace(&[package]);
+        let checked = litigate_sema::check_workspace(&db, ws);
+        let packages: Vec<_> = checked
+            .iter()
+            .filter_map(|item| item.package.as_ref())
+            .collect();
+        assert_eq!(
+            packages.len(),
+            1,
+            "metamorphic input must typecheck: {:?}",
+            checked
+                .iter()
+                .flat_map(|item| &item.diagnostics)
+                .collect::<Vec<_>>()
+        );
+        let world = World::from_packages(&packages);
+        let key = Key {
+            pack: "demo".into(),
+            name: "target".into(),
+        };
+        let timeline = (2009..2029)
+            .map(|year| {
+                let mut active = active_claimants(&world, &key, &format!("{year:04}-06-01"))
+                    .into_iter()
+                    .map(|index| world.decls[index].meta.id.clone())
+                    .collect::<Vec<_>>();
+                active.sort();
+                active
+            })
+            .collect::<Vec<_>>();
+        assert_eq!(timeline, expected);
+    }
+}

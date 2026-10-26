@@ -2,18 +2,21 @@
 //! the filing linter): replay the matter with a proposed filing added and
 //! report what the engine would make of it, before it is filed. The
 //! filing is an error when replay rejects it: not a legal move from the
-//! posture on that date (L4001), or past the due date of the obligation
-//! it discharges (L4002). Otherwise the result lists the obligations it
+//! marking on that date, a move on none of the matter's concurrent tracks
+//! (L4001, SPEC §5.6), or past the due date of the obligation it
+//! discharges (L4002). Otherwise the result lists the obligations it
 //! discharges and the deadlines it triggers, with their due dates.
 //!
 //! Each obligation open before the filing carries its `moves`, the
-//! actions that protect it (SPEC §9.3): the acts out of the matter's
-//! posture that discharge it (`file`), the extension grants of the
+//! actions that protect it (SPEC §9.3): the acts out of any track of the
+//! matter's marking that discharge it (`file`), the extension grants of the
 //! version counting it, each with the request it rests on (`extend`),
 //! and the order events that exercise them (`orders`). Proposing one of
 //! them through `lint-filing` judges it.
 //!
-//! The matter itself must check clean first. Diagnostics are then every
+//! The matter itself must check clean first, but for the missing
+//! lowering (L6001) of a package with concurrent tracks: replay, not the
+//! build, judges a filing. Diagnostics are then every
 //! error of the matter with the filing, and the warnings the filing adds
 //! to the matter as of the filing date. The filing's own line is written
 //! here, not by the user. Its id is taken from the same L9006 fix that
@@ -136,13 +139,16 @@ fn orders(law: &[&hir::Package], deadline: &str) -> Vec<String> {
         .collect()
 }
 
-/// The node versions of `case`'s replayed posture in force on its
-/// `as_of`, each with its pack id.
-fn posture<'p>(law: &[&'p hir::Package], case: &hir::Case) -> Vec<(&'p str, &'p hir::Node)> {
-    case.start
-        .as_deref()
-        .and_then(|s| s.split_once("::"))
-        .into_iter()
+/// The node versions of `case`'s replayed `marking` in force on its
+/// `as_of`, one per concurrent track (SPEC §5.6), each with its pack id.
+fn posture<'p>(
+    law: &[&'p hir::Package],
+    case: &hir::Case,
+    marking: &[String],
+) -> Vec<(&'p str, &'p hir::Node)> {
+    marking
+        .iter()
+        .filter_map(|m| m.split_once("::"))
         .flat_map(|(pack, node)| {
             law.iter()
                 .filter(move |p| p.manifest.pack_id == pack)
@@ -156,7 +162,7 @@ fn posture<'p>(law: &[&'p hir::Package], case: &hir::Case) -> Vec<(&'p str, &'p 
         .collect()
 }
 
-/// The moves that protect `s`: the acts out of the posture (`nodes`)
+/// The moves that protect `s`: the acts out of the marking (`nodes`)
 /// that discharge it, the grants that extend it, and their orders.
 fn moves(law: &[&hir::Package], nodes: &[(&str, &hir::Node)], s: &Scheduled) -> Value {
     let file: Vec<Value> = nodes
@@ -181,6 +187,27 @@ fn moves(law: &[&hir::Package], nodes: &[(&str, &hir::Node)], s: &Scheduled) -> 
     json!({"file": file, "extend": extend, "orders": orders(law, &s.deadline)})
 }
 
+/// Whether `d` bears on the filing. A package with concurrent tracks has
+/// no lowering (L6001) but checks and replays, and replay is what judges
+/// a filing, so that error neither blocks the lint nor is reported.
+fn judged(d: &Diagnostic) -> bool {
+    d.code != DiagnosticCode::LoweringUnsupported
+}
+
+/// The obligation instances of `c`: every instance replay counted when
+/// nothing but a missing lowering is wrong with the matter, else its
+/// schedule (empty unless it lowers).
+fn scheduled(c: &CaseCheck) -> &[Scheduled] {
+    if c.diagnostics
+        .iter()
+        .any(|d| d.severity == Severity::Error && judged(d))
+    {
+        &c.schedule
+    } else {
+        &c.counted
+    }
+}
+
 /// Whether `known` already has a diagnostic like `d` (spans move with
 /// the inserted line, so they are not compared).
 fn known(known: &[Diagnostic], d: &Diagnostic) -> bool {
@@ -194,6 +221,7 @@ pub(super) fn added(at: &CaseCheck, filed: &CaseCheck) -> Vec<Diagnostic> {
     filed
         .diagnostics
         .iter()
+        .filter(|d| judged(d))
         .filter(|d| match d.severity {
             Severity::Error => true,
             _ => !known(&at.diagnostics, d),
@@ -284,19 +312,19 @@ pub(super) fn changes<'a>(
     let nodes = at
         .case
         .as_ref()
-        .map(|case| posture(law, case))
+        .map(|case| posture(law, case, &at.marking))
         .unwrap_or_default();
+    let (before, after) = (scheduled(at), scheduled(filed));
     Changes {
         replay: filed
             .replay
             .iter()
             .filter(|s| !at.replay.contains(s))
             .collect(),
-        discharges: filed
-            .schedule
+        discharges: after
             .iter()
             .filter_map(|s| {
-                at.schedule
+                before
                     .iter()
                     .find(|o| key(o) == key(s) && o.status != s.status)
                     .map(|o| {
@@ -306,14 +334,12 @@ pub(super) fn changes<'a>(
                     })
             })
             .collect(),
-        triggers: filed
-            .schedule
+        triggers: after
             .iter()
-            .filter(|s| !at.schedule.iter().any(|o| key(o) == key(s)))
+            .filter(|s| !before.iter().any(|o| key(o) == key(s)))
             .map(entry)
             .collect(),
-        open_before: at
-            .schedule
+        open_before: before
             .iter()
             .filter(|s| s.status == Status::Open)
             .map(|s| {
@@ -367,6 +393,7 @@ pub fn lint_filing(args: &Args) -> Outcome {
             .iter()
             .flat_map(|(_, v)| v.diagnostics.iter().cloned())
             .chain(before.diagnostics.iter().cloned())
+            .filter(judged)
             .collect(),
         ..Report::default()
     };

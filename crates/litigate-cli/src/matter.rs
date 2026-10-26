@@ -111,6 +111,10 @@ pub struct CaseCheck {
     pub findings: Vec<Finding>,
     /// Replay trace.
     pub replay: Vec<Step>,
+    /// The marking at `as_of` (SPEC §5.6): the node of each concurrent
+    /// track, the replayed `start` first; empty when replay did not reach
+    /// `as_of`.
+    pub marking: Vec<String>,
     /// Deadlines the events triggered, with their due dates (empty unless
     /// the matter lowers).
     pub schedule: Vec<Scheduled>,
@@ -360,6 +364,7 @@ pub fn check_under<'a>(
         diagnostics,
         findings,
         replay: verified.checked.trace,
+        marking: verified.checked.marking,
         schedule,
         counted,
     }

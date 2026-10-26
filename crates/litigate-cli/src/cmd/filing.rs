@@ -134,8 +134,8 @@ fn generated_filing_line(
     let candidate_text = &checked.session.cases[2].text;
     let filing_line = filing_line_number(candidate_text, line)?;
     let candidate_case = &checked.cases[2];
-    let generated = generated_id(&candidate_case.diagnostics, filing_line, date)?;
-    Ok((checked.session, format!("{generated}: {line}")))
+    generated_id(&candidate_case.diagnostics, filing_line, date)
+        .map(|generated| (checked.session, format!("{generated}: {line}")))
 }
 
 /// What the filing changed.

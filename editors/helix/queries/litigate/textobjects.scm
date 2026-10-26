@@ -17,6 +17,8 @@
   (calendar_decl)
   (transition_decl)
   (grant_decl)
+  (recharacterize_decl)
+  (invalidate_decl)
   (default_decl)
   (exception_decl)
   (event_decl)

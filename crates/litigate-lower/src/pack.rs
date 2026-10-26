@@ -218,7 +218,8 @@ fn dangling(
 ) {
     let present = |id: &str| id.contains("::") || nodes.iter().any(|n| n.id == id);
     let as_of = &build.selection.as_of;
-    if !present(start) {
+    // A modification layer declaring no node has no start (sema, L1008).
+    if !start.is_empty() && !present(start) {
         sink.error(
             C::NoVersionInForce,
             None,

@@ -566,3 +566,43 @@ rule duty answer Rule[FederalRule, base, [2009-12-01, ..), _, [2009-12-01, ..)] 
             (cite
               (string
                 (string_content)))))))))
+Recharacterizations and invalidations
+================================================================================
+
+module a
+
+recharacterize harrow: base::review-period characterization claim_processing effective [2024-05-16, ..) cite "Harrow"
+
+invalidate no-doctrine: doctrine effective [2007-06-14, ..) cite "Bowles"
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (recharacterize_decl
+      (identifier)
+      (ref
+        (identifier)
+        (identifier))
+      (identifier)
+      (effective_clause
+        (interval
+          (date)
+          (open_end)))
+      (cite
+        (string
+          (string_content))))
+    (invalidate_decl
+      (identifier)
+      (ref
+        (identifier))
+      (effective_clause
+        (interval
+          (date)
+          (open_end)))
+      (cite
+        (string
+          (string_content))))))

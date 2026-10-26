@@ -6,8 +6,9 @@ use crate::db::parse::tree::{EdgeItem, Expr, ExprKind, Field, Item, Name, TestSt
 use crate::db::span::Report;
 use crate::hir::{
     Authority, BinaryOp, DefaultRule, EnumDecl, EventType, Exception, ExceptionKind, Expectation,
-    Link, Test, Type, TypeAlias, Value,
+    Invalidation, Link, Recharacterization, Test, Type, TypeAlias, Value,
 };
+use crate::resolve::sig::{clause, clauses_of};
 use crate::resolve::sig::ValueKind;
 use crate::types::ty;
 use litigate_base::DiagnosticCode as C;
@@ -113,6 +114,66 @@ impl Cx<'_, '_> {
             conclusion,
             priority,
         })
+    }
+
+    /// `recharacterize r: d characterization c`: `d` another package's
+    /// deadline.
+    pub fn recharacterization(
+        &mut self,
+        item: &Item,
+        rule: Option<&Item>,
+        name: &Name,
+        target: &crate::db::parse::tree::RefPath,
+    ) -> Option<Recharacterization> {
+        let meta = self.meta(name, None, item, rule);
+        let target = self.value_ref(target, "deadline", |k| matches!(k, ValueKind::Deadline));
+        let characterization = clause(clauses_of(item), "characterization")
+            .and_then(|f| self.characterization(f))?;
+        Some(Recharacterization {
+            meta,
+            target: self.foreign(target?, name, "recharacterizes")?,
+            characterization: characterization.kind,
+        })
+    }
+
+    /// `invalidate i: d`: `d` another package's declaration of a claim
+    /// (not a node, an instance or another invalidation).
+    pub fn invalidation(
+        &mut self,
+        item: &Item,
+        rule: Option<&Item>,
+        name: &Name,
+        target: &crate::db::parse::tree::RefPath,
+    ) -> Option<Invalidation> {
+        let meta = self.meta(name, None, item, rule);
+        let target = self.value_ref(target, "rule, deadline, default or exception", |k| {
+            !matches!(
+                k,
+                ValueKind::Node { .. } | ValueKind::Instance(_) | ValueKind::Invalidation
+            )
+        })?;
+        Some(Invalidation {
+            meta,
+            target: self.foreign(target, name, "invalidates")?,
+        })
+    }
+
+    /// `target` when another package declares it; else L1004 at `name`: a
+    /// package changes its own declarations by versioning them.
+    fn foreign(&mut self, target: String, name: &Name, verb: &str) -> Option<String> {
+        if target.contains("::") {
+            return Some(target);
+        }
+        self.report(Report::new(
+            C::InvalidField,
+            name.range,
+            format!(
+                "`{}` {verb} `{target}`, a declaration of its own package: a package changes \
+                 its own declarations by versioning them (`effective`, `supersedes`)",
+                name.text
+            ),
+        ));
+        None
     }
 
     /// `test "name" { given E on D, expect A op B }`.

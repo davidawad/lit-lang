@@ -26,7 +26,7 @@ beliefs { prior mtd-ruling: { granted: 1, denied: 3 }, observe mtd-ruling: { gra
 analysis { params: { rate: 650.usd / 1.hours, opp_rate: 550.usd / 1.hours } }
 "#;
 
-const LIT: [(&str, &str, &str, &str); 28] = [
+const LIT: [(&str, &str, &str, &str); 30] = [
     ("edition", "Optional first line of a .lit or .case file naming its language edition; absent means 2026 (L0008 for an unknown year).", "edition 2026", "not emitted"),
     ("module", "Names the module; the first line of every .lit file.", "module demo.rules", "not emitted"),
     ("import", "Brings another module's declarations into scope.", "import demo.counting.{rule6}", "not emitted"),
@@ -54,6 +54,8 @@ const LIT: [(&str, &str, &str, &str); 28] = [
     ("exception", "A rebutting or undercutting exception to a default.", "exception local rebuts standing when has_event(Answered(complaint)) => 7.days priority 2", "not emitted (verification)"),
     ("test", "An inline test: given events, expected values (`litigate test`).", "test \"answer due 21 days after personal service\" cite \"R. 12(a)(1)(A)(i)\"\n{\n  given Served(complaint, Personal) on 2025-03-03\n  expect deadline(answer-period) == 2025-03-24\n}", "not emitted (tests-pass obligation)"),
     ("grant", "An emergency capability grant: for a bounded window, the deadlines it names gain its `extend`/`waive` grants and `delegable` capabilities, and `unlock` lifts their locks; never wider than its own authority (L3004).", "grant emergency on [answer-period] effective [2020-03-15, 2020-06-13) cite \"R. 87(c)(2)\"\n{\n  unlock\n  extend { by Court, discretion GoodCause, to grant_order_entered + 30.days }\n}", "not emitted (replay and verification)"),
+    ("recharacterize", "A new characterization of another package's deadline over its window (a binding precedent's holding that a limit is or is not jurisdictional): the deadline's text stands. Its target is a deadline of another package (a package versions its own); its class row must have `recharacterize` (L2010).", "recharacterize harrow-7703: review-period characterization claim_processing effective [2024-05-16, ..) cite \"Harrow v. Department of Defense, 601 U.S. 480 (2024)\"", "not emitted (verification)"),
+    ("invalidate", "Withdraws another package's declaration over its window (an annulment; a precedent invalidating a rule or a doctrine). Its target is a rule, deadline, default, exception or other claim of another package, never a node; its class row must have `invalidate` (L2010).", "invalidate no-unique-circumstances: unique-circumstances effective [2007-06-14, ..) cite \"Bowles v. Russell, 551 U.S. 205 (2007)\"", "not emitted (verification)"),
     ("version", "Effective intervals, corpus dates (`known_at`, `retracted`: transaction time), applicability (`commenced [from, to)`: proceedings commenced then), `unknown_before D` (earlier law not encoded: a hole, L3010), and relations on any rule-bearing declaration.", "deadline d: 20.days from Served(complaint) counted_by rule6 effective [2007-12-01, 2009-12-01) known_at 2007-04-30 supersedes d@1993-12-01", "only the version selected by --as-of/--known-at is emitted"),
 ];
 

@@ -108,6 +108,8 @@ impl<'a> Context<'a> {
         self.declarations().flat_map(|d| {
             let meta = meta_of(d).or(match d {
                 Declaration::Grant(g) => Some(&g.meta),
+                Declaration::Recharacterize(r) => Some(&r.meta),
+                Declaration::Invalidate(i) => Some(&i.meta),
                 _ => None,
             });
             let imported = meta.is_some_and(|m| m.imported);

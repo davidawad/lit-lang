@@ -63,6 +63,8 @@ pub fn decl_id(decl: &Declaration) -> Option<String> {
         Declaration::Authority(a) => Some(a.name.clone()),
         Declaration::Instance(i) => Some(i.name.clone()),
         Declaration::Grant(g) => Some(g.meta.id.clone()),
+        Declaration::Recharacterize(r) => Some(r.meta.id.clone()),
+        Declaration::Invalidate(i) => Some(i.meta.id.clone()),
         _ => None,
     })
 }
@@ -93,6 +95,8 @@ pub fn decl_kind(decl: &Declaration) -> &'static str {
         Declaration::Test(_) => "test",
         Declaration::Grant(_) => "grant",
         Declaration::Limit(_) => "limit",
+        Declaration::Recharacterize(_) => "recharacterize",
+        Declaration::Invalidate(_) => "invalidate",
     }
 }
 

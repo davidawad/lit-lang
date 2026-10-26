@@ -150,6 +150,16 @@ impl Lower {
             K::TestDecl => self.test(node)?,
             K::GrantDecl => self.grant(node)?,
             K::LimitDecl => ItemKind::Limit(self.limit(node)?),
+            K::RecharacterizeDecl => ItemKind::Recharacterize(
+                ident(node)?,
+                path_of(&node_of(node, K::Ref)?),
+                self.clauses(node),
+            ),
+            K::InvalidateDecl => ItemKind::Invalidate(
+                ident(node)?,
+                path_of(&node_of(node, K::Ref)?),
+                self.clauses(node),
+            ),
             _ => return None,
         };
         Some(Item {

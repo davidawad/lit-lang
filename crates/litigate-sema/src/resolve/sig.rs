@@ -44,6 +44,10 @@ pub enum ValueKind {
     Transition,
     /// Emergency capability grant.
     Grant,
+    /// Recharacterization of another package's deadline.
+    Recharacterization,
+    /// Invalidation of another package's declaration.
+    Invalidation,
     /// Rule wrapper.
     Rule,
     /// Pack instance `base@origin` and its base pack id.
@@ -65,6 +69,8 @@ impl ValueKind {
             Self::Exception(_) => "exception",
             Self::Transition => "transition",
             Self::Grant => "grant",
+            Self::Recharacterization => "recharacterization",
+            Self::Invalidation => "invalidation",
             Self::Rule => "rule",
             Self::Instance(_) => "instance",
             Self::Limit => "filing limit",
@@ -149,6 +155,8 @@ pub fn clauses_of(item: &Item) -> &[Field] {
         | ItemKind::Default(_, c, _, _)
         | ItemKind::Test(_, c, _)
         | ItemKind::Grant(_, c, _)
+        | ItemKind::Recharacterize(_, _, c)
+        | ItemKind::Invalidate(_, _, c)
         | ItemKind::Deadline { clauses: c, .. }
         | ItemKind::Exception { clauses: c, .. } => c,
         ItemKind::Limit(l) => &l.clauses,
@@ -216,6 +224,10 @@ pub fn value_of(item: &Item) -> Option<(&str, ValueKind)> {
         ItemKind::Rule(_, name, ..) => (name.text.as_str(), ValueKind::Rule),
         ItemKind::Grant(name, ..) => (name.text.as_str(), ValueKind::Grant),
         ItemKind::Limit(l) if l.name.is_simple() => (l.name.head.text.as_str(), ValueKind::Limit),
+        ItemKind::Recharacterize(name, ..) => {
+            (name.text.as_str(), ValueKind::Recharacterization)
+        }
+        ItemKind::Invalidate(name, ..) => (name.text.as_str(), ValueKind::Invalidation),
         _ => return None,
     })
 }

@@ -13,7 +13,8 @@ macro_rules! items {
     () => {
         "one of `module`, `import`, `package`, `start`, `group`, `type`, `enum`, `event`, \
          `state`, `decision`, `chance`, `terminal`, `link`, `instance`, `rule`, `deadline`, \
-         `counting`, `calendar`, `transition`, `authority`, `default`, `exception`, `test`, `limit`, or `grant`"
+         `counting`, `calendar`, `transition`, `authority`, `default`, `exception`, `test`, \
+         `limit`, `grant`, `recharacterize`, or `invalidate`"
     };
 }
 
@@ -287,7 +288,7 @@ const LINKS_INSTANCES_AND_RULES: Cases = &[
         (
             "module m\nrule duty r { 5 }\n",
             &[
-                "L0001 2:15-2:16 expected one of `start`, `group`, `type`, `enum`, `event`, `state`, `decision`, `chance`, `terminal`, `link`, `instance`, `rule`, `deadline`, `counting`, `calendar`, `transition`, `authority`, `default`, `exception`, `test`, `grant`, or `}`, found `5`",
+                "L0001 2:15-2:16 expected one of `start`, `group`, `type`, `enum`, `event`, `state`, `decision`, `chance`, `terminal`, `link`, `instance`, `rule`, `deadline`, `counting`, `calendar`, `transition`, `authority`, `default`, `exception`, `test`, `grant`, `recharacterize`, `invalidate`, or `}`, found `5`",
             ],
         ),
 ];

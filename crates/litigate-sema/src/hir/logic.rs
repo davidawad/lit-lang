@@ -187,6 +187,31 @@ pub struct Exception {
     pub priority: Option<u32>,
 }
 
+/// A new characterization of another package's deadline (docs/litigate/
+/// CHANGE.md §2.8; Harrow v. Department of Defense, 601 U.S. 480 (2024)):
+/// the deadline's text stands, and in a world holding this declaration
+/// its character is `characterization` over this declaration's window.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Recharacterization {
+    /// Its metadata (its window, its authority's `cite`).
+    pub meta: Metadata,
+    /// The deadline, `pack::id`.
+    pub target: String,
+    /// The character it gives the deadline.
+    pub characterization: super::CharacterKind,
+}
+
+/// The withdrawal of another package's declaration over this
+/// declaration's window (docs/litigate/CHANGE.md §2.8, §2.10): an
+/// annulment, or a precedent invalidating a rule or a doctrine.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Invalidation {
+    /// Its metadata (its window, its authority's `cite`).
+    pub meta: Metadata,
+    /// The declaration withdrawn, `pack::id`.
+    pub target: String,
+}
+
 /// Exception semantics.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]

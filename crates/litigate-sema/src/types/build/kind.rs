@@ -91,6 +91,14 @@ fn declared<'d>(item: &Item, decl: &'d Declaration) -> Vec<Use<'d>> {
             out.push((Effect::GrantCap, name, None));
             Some(&g.meta)
         }
+        Declaration::Recharacterize(r) => {
+            out.push((Effect::Recharacterize, name, None));
+            Some(&r.meta)
+        }
+        Declaration::Invalidate(i) => {
+            out.push((Effect::Invalidate, name, None));
+            Some(&i.meta)
+        }
         Declaration::Authority(_) => {
             out.push((Effect::Rank, name, None));
             None

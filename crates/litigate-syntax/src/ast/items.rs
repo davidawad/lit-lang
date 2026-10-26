@@ -41,6 +41,8 @@ impl Item {
                 | ExceptionDecl
                 | TestDecl
                 | GrantDecl
+                | RecharacterizeDecl
+                | InvalidateDecl
         )
         .then_some(Self(node))
     }
@@ -227,7 +229,9 @@ clause_accessors!(
     super::DefaultDecl,
     super::ExceptionDecl,
     super::TestDecl,
-    super::GrantDecl
+    super::GrantDecl,
+    super::RecharacterizeDecl,
+    super::InvalidateDecl
 );
 
 impl NodeDecl {

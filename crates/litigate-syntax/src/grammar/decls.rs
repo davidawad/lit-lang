@@ -1,5 +1,6 @@
 //! Rule-bearing declarations: `rule`, `deadline`, `counting`, `calendar`,
-//! `transition`, `default`, `exception`, `test`, `link`, `instance`.
+//! `transition`, `default`, `exception`, `test`, `link`, `instance`,
+//! `grant`, `recharacterize`, `invalidate`.
 use super::clauses::{clauses, expect_header_end, keyword_field, version_clause, Clauses};
 use super::expr::{require_expr, EXPR_START};
 use super::fields::{
@@ -24,6 +25,8 @@ pub(crate) fn decl(p: &mut Parser<'_>, kw: SyntaxKind) {
         KwDefault => default(p),
         KwException => exception(p),
         KwGrant => grant(p),
+        KwRecharacterize => recharacterize(p),
+        KwInvalidate => invalidate(p),
         _ => test(p),
     }
 }
@@ -146,6 +149,33 @@ fn grant(p: &mut Parser<'_>) {
         if require_body(p, &clause_keywords) {
             field_list(p, super::fields::GRANT_FIELDS);
         }
+    }
+    p.finish();
+}
+
+/// `recharacterize id ":" Ref characterization Ident {Version | Cite}`.
+fn recharacterize(p: &mut Parser<'_>) {
+    p.start(RecharacterizeDecl);
+    p.bump_as(KwRecharacterize);
+    if p.expect(Ident) && p.expect(Colon) && require(p, reference, &[Ident]) {
+        if p.at_kw(KwCharacterization) {
+            keyword_field(p, KwCharacterization, Some(reference));
+        } else {
+            p.error_expected(&[KwCharacterization]);
+        }
+        let keywords = clauses(p, Clauses::CALENDAR);
+        expect_header_end(p, &keywords);
+    }
+    p.finish();
+}
+
+/// `invalidate id ":" Ref {Version | Cite}`.
+fn invalidate(p: &mut Parser<'_>) {
+    p.start(InvalidateDecl);
+    p.bump_as(KwInvalidate);
+    if p.expect(Ident) && p.expect(Colon) && require(p, reference, &[Ident]) {
+        let keywords = clauses(p, Clauses::CALENDAR);
+        expect_header_end(p, &keywords);
     }
     p.finish();
 }

@@ -9,7 +9,8 @@ use support::diag::check_all;
 const ITEMS: &str = "one of `module`, `import`, `package`, `start`, `group`, `type`, \
                      `enum`, `event`, `state`, `decision`, `chance`, `terminal`, `link`, \
                      `instance`, `rule`, `deadline`, `counting`, `calendar`, `transition`, \
-                     `authority`, `default`, `exception`, `test`, `limit`, or `grant`";
+                     `authority`, `default`, `exception`, `test`, `limit`, `grant`, \
+                     `recharacterize`, or `invalidate`";
 
 const EXPR: &str = "one of an identifier, a number, a string, a date `YYYY-MM-DD`, or `(`";
 

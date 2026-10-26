@@ -94,6 +94,8 @@ ast_node!(DefaultDecl, DefaultDecl);
 ast_node!(ExceptionDecl, ExceptionDecl);
 ast_node!(TestDecl, TestDecl);
 ast_node!(GrantDecl, GrantDecl);
+ast_node!(RecharacterizeDecl, RecharacterizeDecl);
+ast_node!(InvalidateDecl, InvalidateDecl);
 ast_node!(VersionClause, VersionClause);
 ast_node!(Relation, Relation);
 ast_node!(Ref, Ref);

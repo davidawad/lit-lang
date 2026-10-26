@@ -2,8 +2,9 @@
 use super::{
     child, child_after, children, fields_of, keyword, token, AstNode, CalendarDecl, CallExpr, Cite,
     CountingDecl, DeadlineDecl, DefaultDecl, ExceptionDecl, ExpectStmt, Expr, Field, GivenStmt,
-    GrantDecl, Hole, HolidayDecl, InstanceDecl, Literal, PatchDecl, Ref, RuleDecl, TestDecl, Token,
-    TransitionArm, TransitionDecl, VersionClause,
+    GrantDecl, Hole, HolidayDecl, InstanceDecl, InvalidateDecl, Literal, PatchDecl,
+    RecharacterizeDecl, Ref, RuleDecl, TestDecl, Token, TransitionArm, TransitionDecl,
+    VersionClause,
 };
 use crate::ast::items::Item;
 use crate::syntax_kind::SyntaxKind;
@@ -111,6 +112,28 @@ impl GrantDecl {
     #[must_use]
     pub fn fields(&self) -> Vec<Field> {
         fields_of(self.syntax())
+    }
+}
+
+impl RecharacterizeDecl {
+    /// The deadline it recharacterizes.
+    #[must_use]
+    pub fn target(&self) -> Option<Ref> {
+        child(self.syntax())
+    }
+
+    /// The new characterization (`jurisdictional` or `claim_processing`).
+    #[must_use]
+    pub fn characterization(&self) -> Option<Ref> {
+        child::<Field>(self.syntax()).and_then(|field| field.value_ref())
+    }
+}
+
+impl InvalidateDecl {
+    /// The declaration it invalidates.
+    #[must_use]
+    pub fn target(&self) -> Option<Ref> {
+        child(self.syntax())
     }
 }
 

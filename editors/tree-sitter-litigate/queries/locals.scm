@@ -26,6 +26,8 @@
 (holiday_decl name: (identifier) @local.definition.field)
 (transition_decl name: (identifier) @local.definition.function)
 (grant_decl name: (identifier) @local.definition.function)
+(recharacterize_decl name: (identifier) @local.definition.function)
+(invalidate_decl name: (identifier) @local.definition.function)
 (default_decl name: (identifier) @local.definition.function)
 (exception_decl name: (identifier) @local.definition.function)
 (import_list (identifier) @local.definition.import)

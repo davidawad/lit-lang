@@ -33,7 +33,8 @@ pub use graph::{
 pub use kind::{Cell, Effect, Family, Instrument, Kind, Row, Scope};
 pub use logic::{
     Authority, DefaultRule, DelegatedOp, Delegation, EnumDecl, EventEffect, EventType, Exception,
-    ExceptionKind, Expectation, Metadata, Refinement, Relation, Rule, RuleKind, Test, TypeAlias,
+    ExceptionKind, Expectation, Invalidation, Metadata, Recharacterization, Refinement, Relation,
+    Rule, RuleKind, Test, TypeAlias,
 };
 pub use temporal::{
     Adoption, Anchor, Bound, BoundDates, Calendar, Capability, CauseStandard, Chain, CharacterKind,
@@ -258,6 +259,10 @@ pub enum Declaration {
     Grant(Grant),
     /// A paper kind's filing requirements (SPEC §3.7).
     Limit(Limit),
+    /// A new characterization of another package's deadline.
+    Recharacterize(Recharacterization),
+    /// The withdrawal of another package's declaration.
+    Invalidate(Invalidation),
 }
 
 #[cfg(test)]

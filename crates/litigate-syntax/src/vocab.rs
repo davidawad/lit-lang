@@ -29,6 +29,8 @@ pub const LIT_ITEM_KEYWORDS: &[SyntaxKind] = &[
     KwTest,
     KwLimit,
     KwGrant,
+    KwRecharacterize,
+    KwInvalidate,
 ];
 
 /// Item keywords of reserved declarations: anchors for recovery, but left
@@ -86,6 +88,8 @@ pub(crate) const fn is_decl(kind: SyntaxKind) -> bool {
             | TestDecl
             | LimitDecl
             | GrantDecl
+            | RecharacterizeDecl
+            | InvalidateDecl
     )
 }
 

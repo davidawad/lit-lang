@@ -11,6 +11,7 @@
   "state" "decision" "chance" "terminal" "link" "instance" "rule"
   "deadline" "counting" "calendar" "transition" "authority" "default"
   "exception" "test" "limit" "grant"
+  "recharacterize" "invalidate"
   "case" "uses" "as_of" "known_at" "summary" "notes" "source" "perspective"
   "parties" "events" "facts" "stakes" "beliefs" "prior" "observe" "analysis"
 ] @keyword
@@ -108,6 +109,8 @@
 (holiday_decl name: (identifier) @property)
 (transition_decl name: (identifier) @function)
 (grant_decl name: (identifier) @function)
+(recharacterize_decl name: (identifier) @function)
+(invalidate_decl name: (identifier) @function)
 (default_decl name: (identifier) @function)
 (exception_decl name: (identifier) @function)
 (instance_decl base: (identifier) @module)

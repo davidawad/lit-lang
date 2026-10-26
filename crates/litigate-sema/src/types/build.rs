@@ -79,6 +79,8 @@ pub fn item_name(item: &Item) -> Option<&Name> {
         | ItemKind::Calendar(n, _, _)
         | ItemKind::Transition(n, _, _, _)
         | ItemKind::Grant(n, _, _)
+        | ItemKind::Recharacterize(n, _, _)
+        | ItemKind::Invalidate(n, _, _)
         | ItemKind::Default(n, _, _, _) => Some(n),
         ItemKind::Node(n) => Some(&n.name),
         ItemKind::Deadline { name, .. } | ItemKind::Exception { name, .. } => Some(name),
@@ -527,6 +529,12 @@ fn items(cx: &mut Cx<'_, '_>, top: &Item, context: &ModuleContext) -> DeclCheck 
             ItemKind::Grant(name, clauses, fields) => cx
                 .grant(item, rule, name, clauses, fields)
                 .map(Declaration::Grant),
+            ItemKind::Recharacterize(name, target, _) => cx
+                .recharacterization(item, rule, name, target)
+                .map(Declaration::Recharacterize),
+            ItemKind::Invalidate(name, target, _) => cx
+                .invalidation(item, rule, name, target)
+                .map(Declaration::Invalidate),
         };
         if let Some(d) = &d {
             out.effects = out

@@ -356,6 +356,11 @@ pub enum ItemKind {
     Grant(Name, Vec<Field>, Vec<Field>),
     /// `limit k clauses { entries } clauses`.
     Limit(LimitItem),
+    /// `recharacterize r: d characterization c clauses`: the
+    /// `characterization` field among the clauses.
+    Recharacterize(Name, RefPath, Vec<Field>),
+    /// `invalidate i: d clauses`.
+    Invalidate(Name, RefPath, Vec<Field>),
 }
 
 /// Declaration with doc comment and range.
@@ -761,6 +766,11 @@ impl Ranges for ItemKind {
                 fields.ranges_mut(f);
             }
             Self::Limit(l) => l.ranges_mut(f),
+            Self::Recharacterize(name, target, clauses) | Self::Invalidate(name, target, clauses) => {
+                name.ranges_mut(f);
+                target.ranges_mut(f);
+                clauses.ranges_mut(f);
+            }
         }
     }
 }

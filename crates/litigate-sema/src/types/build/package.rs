@@ -140,6 +140,7 @@ pub fn check_package(db: &dyn salsa::Database, pkg: PackageInput) -> PackageChec
         &checks,
         &starts,
         m.is_some_and(|m| m.links),
+        m.is_some_and(|m| !m.kind.is_base()),
         to_span(&manifest_file, &index, find(text, "[package]")),
     ));
     sort_diagnostics(&mut diagnostics);
@@ -188,12 +189,15 @@ pub fn check_package(db: &dyn salsa::Database, pkg: PackageInput) -> PackageChec
     }
 }
 
-/// One `start` (none in a links package), no nodes in a links package,
-/// and a pack identity in the manifest of a package with nodes.
+/// One `start` (none in a links package, nor in a modification layer
+/// declaring no node: it changes other packages' law and has no procedure
+/// of its own), no nodes in a links package, and a pack identity in the
+/// manifest of a package with nodes.
 fn shape(
     checks: &[&ModuleCheck],
     starts: &[&(Option<String>, litigate_base::Span)],
     links_manifest: bool,
+    layer: bool,
     manifest_span: litigate_base::Span,
 ) -> Vec<Diagnostic> {
     let mut diagnostics = Vec::new();
@@ -213,7 +217,7 @@ fn shape(
                 "a links package (one with `link` or `instance`) must declare no nodes",
             ));
         }
-    } else if starts.is_empty() {
+    } else if starts.is_empty() && !(layer && checks.iter().all(|c| c.first_node.is_none())) {
         diagnostics.push(Diagnostic::error(
             C::InvalidStart,
             manifest_span,

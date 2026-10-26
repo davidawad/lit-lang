@@ -75,7 +75,7 @@ The canonical format (`litigate fmt', SPEC §10) uses two."
   '("edition" "module" "import" "package" "start" "group" "type" "enum" "event"
     "state" "decision" "chance" "terminal" "link" "instance" "rule"
     "deadline" "counting" "calendar" "transition" "authority" "default"
-    "exception" "test" "limit" "grant"
+    "exception" "test" "limit" "grant" "recharacterize" "invalidate"
     "case" "uses" "as_of" "known_at" "summary" "notes" "source" "perspective"
     "parties" "events" "facts" "stakes" "beliefs" "prior" "observe" "analysis")
   "Keywords that open a declaration.")
@@ -145,7 +145,8 @@ The canonical format (`litigate fmt', SPEC §10) uses two."
      (party_decl name: (identifier) @font-lock-variable-name-face)
      (case_event id: (identifier) @font-lock-variable-name-face)
      ([(rule_decl) (deadline_decl) (counting_decl) (calendar_decl)
-       (transition_decl) (default_decl) (exception_decl) (grant_decl)]
+       (transition_decl) (default_decl) (exception_decl) (grant_decl)
+       (recharacterize_decl) (invalidate_decl)]
       name: (identifier) @font-lock-function-name-face)
      (instance_decl base: (identifier) @font-lock-constant-face)
      (instance_decl origin: (identifier) @font-lock-constant-face)
@@ -283,7 +284,7 @@ On a line of their own they stay at their parent's indentation.")
   '("module_decl" "package_decl" "group_decl" "type_decl" "enum_decl"
     "event_decl" "authority_decl" "node_decl" "link_decl" "instance_decl"
     "rule_decl" "counting_decl" "calendar_decl" "transition_decl"
-    "grant_decl" "test_decl" "case_file" "source_decl" "parties_block" "events_block"
+    "grant_decl" "recharacterize_decl" "invalidate_decl" "test_decl" "case_file" "source_decl" "parties_block" "events_block"
     "facts_block" "stakes_block" "beliefs_block" "analysis_block")
   "Top-level declaration node types (defuns).")
 
@@ -319,6 +320,7 @@ PRED, when given, further filters matching nodes."
     ("Counting" "counting_decl") ("Calendar" "calendar_decl")
     ("Holiday" "holiday_decl")
     ("Transition" "transition_decl") ("Grant" "grant_decl")
+    ("Change" "recharacterize_decl" "invalidate_decl")
     ("Default" "default_decl") ("Exception" "exception_decl")
     ("Test" "test_decl") ("Party" "party_decl"))
   "Imenu categories and the node types listed under each.")

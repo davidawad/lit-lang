@@ -56,6 +56,8 @@ module.exports = {
     $.exception_decl,
     $.test_decl,
     $.grant_decl,
+    $.recharacterize_decl,
+    $.invalidate_decl,
   ),
 
   start_decl: $ => seq('start', field('node', $.identifier)),
@@ -530,6 +532,26 @@ module.exports = {
     field('targets', $.id_list),
     repeat(choice($._version_clause, $.cite)),
     field('body', $.grant_body),
+  ),
+
+  // A new characterization of another package's deadline (SPEC §5.7).
+  recharacterize_decl: $ => seq(
+    'recharacterize',
+    field('name', $.identifier),
+    ':',
+    field('target', $.ref),
+    'characterization',
+    field('characterization', $.identifier),
+    repeat(choice($._version_clause, $.cite)),
+  ),
+
+  // The withdrawal of another package's declaration (SPEC §5.7).
+  invalidate_decl: $ => seq(
+    'invalidate',
+    field('name', $.identifier),
+    ':',
+    field('target', $.ref),
+    repeat(choice($._version_clause, $.cite)),
   ),
 
   grant_body: $ => braced(choice(

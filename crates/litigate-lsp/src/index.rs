@@ -161,7 +161,9 @@ fn declares(kind: K) -> Option<Space> {
         | K::AuthorityDecl
         | K::DefaultDecl
         | K::ExceptionDecl
-        | K::GrantDecl => Some(Space::Decl),
+        | K::GrantDecl
+        | K::RecharacterizeDecl
+        | K::InvalidateDecl => Some(Space::Decl),
         K::PartyDecl => Some(Space::Party),
         K::Param | K::HolidayDecl | K::CaseFile => Some(Space::Local),
         K::EdgeDecl => Some(Space::Edge(String::new())),

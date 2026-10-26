@@ -403,6 +403,8 @@ impl Spans for Declaration {
             Self::Test(x) => x.spans_mut(f),
             Self::Grant(x) => x.spans_mut(f),
             Self::Limit(x) => x.spans_mut(f),
+            Self::Recharacterize(x) => x.meta.spans_mut(f),
+            Self::Invalidate(x) => x.meta.spans_mut(f),
             Self::Authority(_) | Self::TypeAlias(_) | Self::Enum(_) | Self::Event(_) => {}
         }
     }

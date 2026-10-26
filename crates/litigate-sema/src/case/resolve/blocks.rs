@@ -13,7 +13,7 @@ impl R<'_, '_> {
     fn keyed(&mut self, block: &SyntaxNode) -> Vec<(String, TextRange, SyntaxNode)> {
         self.entries(block)
             .into_iter()
-            .filter_map(|(node, key, f)| Some((node, key, field_value(&f)?)))
+            .filter_map(|(node, key, f)| field_value(&f).map(|v| (node, key, v)))
             .collect()
     }
 
@@ -26,10 +26,11 @@ impl R<'_, '_> {
         children(&record, K::RecordField)
             .filter_map(|f| {
                 // A field starts at its key; only its value can be missing.
-                let key = child(&f, K::Ref).and_then(|r| ref_path(&r))?;
-                if field_value(&f).is_none() && child(&f, K::Field).is_none() {
+                let given = child(&f, K::Field).is_some() || field_value(&f).is_some();
+                let (Some(key), true) = (child(&f, K::Ref).and_then(|r| ref_path(&r)), given)
+                else {
                     return None;
-                }
+                };
                 Some((self.node(&key)?, key.range, f))
             })
             .collect()

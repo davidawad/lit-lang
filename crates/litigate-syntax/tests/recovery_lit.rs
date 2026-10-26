@@ -84,7 +84,7 @@ fn edges_and_links() {
                 &[
                     "L0001 2:27-2:29 expected one of `group`, `note`, `valence`, \
                    `court_listener_url`, `tags`, `attrs`, `payoff`, `payoff_by_flag`, \
-                   `basis`, `formerly`, an identifier, or `}`, found `by`",
+                   `fee_shift`, `basis`, `formerly`, an identifier, or `}`, found `by`",
                 ],
             ),
             (

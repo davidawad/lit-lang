@@ -19,6 +19,20 @@ expression: table
     "facts: a block with no record": [
         "14:7 L0001 expected `{`, found `nothing`",
     ],
+    "stakes: a fee_shift beside a stake, and alone, which is no stake": [
+        "14:63 L4004 terminal `alpha::defaulted` is reachable from `alpha::bench` but has no stake\n    note: give it a value, or `unvalued` while drafting (an error in strict)\n    fix @14:63-14:63 HasPlaceholders: \", defaulted: unvalued\"",
+        "trace Took Benched(complaint) alpha::intake -> alpha::bench via alpha::to-bench",
+    ],
+    "stakes: a fee_shift names a terminal": [
+        "14:45 L4004 `alpha::staged` is not a terminal in force on 2011-06-01; only terminals take stakes",
+        "trace Took Benched(complaint) alpha::intake -> alpha::bench via alpha::to-bench",
+    ],
+    "stakes: a fee_shift outside [0, 1]": [
+        "14:36 L2006 fee_shift 1.5 is not a fraction in [0, 1]",
+    ],
+    "stakes: a fee_shift with no fraction": [
+        "14:35 L0001 expected a number, found `,`",
+    ],
     "stakes: a multi-line block takes the missing stake on its own line": [
         "16:1 L4004 terminal `alpha::defaulted` is reachable from `alpha::bench` but has no stake\n    note: give it a value, or `unvalued` while drafting (an error in strict)\n    fix @16:1-16:1 HasPlaceholders: \"  defaulted: unvalued\\n\"",
         "trace Took Benched(complaint) alpha::intake -> alpha::bench via alpha::to-bench",
@@ -32,6 +46,9 @@ expression: table
     "stakes: an empty block takes the missing stake after the brace": [
         "14:9 L4004 terminal `alpha::defaulted` is reachable from `alpha::bench` but has no stake\n    note: give it a value, or `unvalued` while drafting (an error in strict)\n    fix @14:9-14:9 HasPlaceholders: \" defaulted: unvalued\"",
         "trace Took Benched(complaint) alpha::intake -> alpha::bench via alpha::to-bench",
+    ],
+    "stakes: an entry with neither a stake nor a fee_shift": [
+        "14:20 L0001 expected an identifier, found `,`",
     ],
     "stakes: an unterminated block still resolves its entries": [
         "14:8 L0002 unclosed `{`: expected `}`\n    fix @14:43-14:43 MachineApplicable: \"}\"",

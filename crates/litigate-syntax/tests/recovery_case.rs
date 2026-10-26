@@ -74,6 +74,26 @@ fn beliefs_need_a_reference_and_a_colon() {
 }
 
 #[test]
+fn stakes_take_a_fee_shift_with_a_value_or_alone() {
+    let both = case("^1.0.0", "stakes { j: 1.usd fee_shift 0.5, k: unvalued fee_shift 1 }\n");
+    let alone = case("^1.0.0", "stakes { j: fee_shift 1 }\n");
+    let no_fraction = case("^1.0.0", "stakes { j: 1.usd fee_shift }\n");
+    let nothing = case("^1.0.0", "stakes { j: }\n");
+    check_all(
+        FileKind::Case,
+        &[
+            (&both, &[]),
+            (&alone, &[]),
+            (
+                &no_fraction,
+                &["L0001 5:29-5:30 expected a number, found `}`"],
+            ),
+            (&nothing, &["L0001 5:13-5:14 expected an identifier, found `}`"]),
+        ],
+    );
+}
+
+#[test]
 fn case_items() {
     // Line 5 holds the item under test, after the three required items.
     let cases: [(&str, &[&str]); 14] = [

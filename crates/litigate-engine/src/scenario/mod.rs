@@ -216,6 +216,7 @@ pub struct Scenario {
     pub fee_shift: Option<FeeShift>,
     /// Terminal ref → fee-shift fraction for this matter (`.case` stakes'
     /// `fee_shift`); overrides both `fee_shift` and the pack's default there.
+    #[serde(skip_serializing_if = "BTreeMap::is_empty")]
     pub fee_shifts: BTreeMap<String, f64>,
     /// Named calibration set(s) to apply, in order (see `calibration/*.json`;
     /// `litgraph schema calibration`). Each entry's probability/duration/node

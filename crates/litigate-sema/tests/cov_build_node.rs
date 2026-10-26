@@ -28,7 +28,7 @@ state rich: \"Rich\" by Plaintiff {\n\
   a \"A\" -> done { within dl { extendable false }, effort 2.hours, cost 3.usd, event Served(complaint), duration 13.5.days, valence bad }\n\
   b \"B\" -> done by either { deadline 5.court_days { extendable true, extension_authority \"Court\", counting \"frap26\" }, duration { min 1.days, mode 2.5.days }, action_id \"x\", note \"m\", tags [t], sets [s], clears [c], requires [r], forbids [f], authority cite \"FRCP 6(a)\" }\n\
 }\n\
-terminal done: \"Done\" outcome [won] { valence neutral, payoff ?(\"tbd\"), payoff_by_flag { won: 5.usd, lost: -2.usd } }\n\
+terminal done: \"Done\" outcome [won] { valence neutral, payoff ?(\"tbd\"), payoff_by_flag { won: 5.usd, lost: -2.usd }, fee_shift 0.5 }\n\
 state good: \"Good\" { valence good }",
         &["rich", "done", "good"],
     );
@@ -41,8 +41,8 @@ fn node_fields_report_placement_values_and_duplicates() {
         "state v1: \"V\" { valence zzzzzz }\n\
 state v2: \"V\" { valence good.x }\n\
 state a1: \"A\" { attrs { a: 1, a: 2, b: 99999999999999999999 } }\n\
-state p1: \"P\" discretion outcome [x] { payoff 1.usd, payoff_by_flag { a: 1.usd } }\n\
-terminal p2: \"P\" { payoff_by_flag { a: 1.005.usd, b: 2.usd } }\n\
+state p1: \"P\" discretion outcome [x] { payoff 1.usd, payoff_by_flag { a: 1.usd }, fee_shift 1 }\n\
+terminal p2: \"P\" { payoff_by_flag { a: 1.005.usd, b: 2.usd }, fee_shift 1.5 }\n\
 state f1: \"F\" { tags [fact] }\n\
 state f2: \"F\" { tags [other] }\n\
 state f3: \"F\" { tags [fact]\n  a \"A\" -> t p 1/2, b \"B\" -> t p 1/2 }\n\

@@ -62,7 +62,7 @@ fn pack(id: &str, edit: impl FnOnce(&mut Value)) -> Input {
 #[test]
 fn package_structure_errors_name_their_json_pointer() {
     let terminal_only =
-        "`outcome`, `payoff` and `payoffByFlag` are valid only on terminals (SPEC §5.1)";
+        "`outcome`, `payoff`, `payoffByFlag` and `feeShift` are valid only on terminals (SPEC §5.1)";
     let inputs = [
         pack("noforum", |p| {
             p.as_object_mut().map(|o| o.remove("forum"));
@@ -72,6 +72,7 @@ fn package_structure_errors_name_their_json_pointer() {
         pack("flagged", |p| {
             p["nodes"][0]["payoffByFlag"] = json!({"late": 5});
         }),
+        pack("shifted", |p| p["nodes"][0]["feeShift"] = json!(0.5)),
     ];
     assert_eq!(
         reported(&inputs),
@@ -88,6 +89,7 @@ fn package_structure_errors_name_their_json_pointer() {
                 "/forum"
             ),
             at("packs/outcome.json", terminal_only, "/nodes/0"),
+            at("packs/shifted.json", terminal_only, "/nodes/0"),
         ]
     );
 }

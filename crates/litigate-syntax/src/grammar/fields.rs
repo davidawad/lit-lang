@@ -411,7 +411,10 @@ pub(crate) fn stake_value(p: &mut Parser<'_>) -> bool {
     let valued = signed_money(p) || super::values::keyword_literal(p, &[KwUnvalued]);
     let shifted = p.at_kw(KwFeeShift);
     if shifted {
-        keyword_field(p, KwFeeShift, Some(number));
+        p.start(Field);
+        p.bump_as(KwFeeShift);
+        require(p, number, &[Number]);
+        p.finish();
     }
     valued || shifted
 }

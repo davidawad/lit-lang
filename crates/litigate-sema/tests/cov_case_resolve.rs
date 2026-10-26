@@ -6,6 +6,7 @@ mod cov_case_support;
 use cov_case_support::{check, fixture, lock, matter, outcome, run, ALPHA_ONLY, STAKES};
 use litigate_base::Profile;
 use litigate_sema::case::NoClock;
+use litigate_sema::types::rational;
 use std::collections::BTreeMap;
 
 const SERVED: &str = "2010-01-04 Served(complaint, Mail) on d";
@@ -122,6 +123,26 @@ fn block_values_table() {
             "stakes {\n  answered: 0.usd\n}",
         ),
         ("stakes: an empty block takes the missing stake after the brace", "stakes {}"),
+        (
+            "stakes: a fee_shift beside a stake, and alone, which is no stake",
+            "stakes { answered: 0.usd fee_shift 1, defaulted: fee_shift 0.5 }",
+        ),
+        (
+            "stakes: a fee_shift outside [0, 1]",
+            "stakes { answered: 0.usd fee_shift 1.5, defaulted: 0.usd }",
+        ),
+        (
+            "stakes: a fee_shift with no fraction",
+            "stakes { answered: 0.usd fee_shift, defaulted: 0.usd }",
+        ),
+        (
+            "stakes: a fee_shift names a terminal",
+            "stakes { answered: 0.usd, defaulted: 0.usd, staged: fee_shift 1 }",
+        ),
+        (
+            "stakes: an entry with neither a stake nor a fee_shift",
+            "stakes { answered: , defaulted: 0.usd }",
+        ),
         ("facts: a block with no record", "facts nothing\nstakes { answered: 0.usd, defaulted: 0.usd }"),
         (
             "beliefs: an observation with no node",
@@ -153,6 +174,28 @@ fn block_values_table() {
         })
         .collect();
     insta::assert_debug_snapshot!(table);
+}
+
+#[test]
+fn fee_shifts_resolve_beside_stakes() {
+    let text = matter(
+        ALPHA_ONLY,
+        "",
+        &["2010-01-04 Benched(complaint) by p"],
+        "stakes { answered: 0.usd fee_shift 1, defaulted: 0.usd fee_shift 0.25 }",
+    );
+    let checked = check(&text, fixture(), Some(&lock(fixture())), &NoClock, Profile::Dev);
+    assert!(checked.ok(), "{:?}", checked.diagnostics);
+    let case = checked.case.expect("resolves");
+    let fraction = |s: &str| rational::parse_decimal(s).expect("decimal");
+    assert_eq!(
+        case.fee_shifts,
+        BTreeMap::from([
+            ("alpha::answered".to_owned(), fraction("1")),
+            ("alpha::defaulted".to_owned(), fraction("0.25")),
+        ])
+    );
+    assert_eq!(case.stakes.len(), 2);
 }
 
 /// A matter with a syntax error resolves no `Case`; the resolver skips the

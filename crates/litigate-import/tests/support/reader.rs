@@ -282,6 +282,7 @@ pub fn node(decl: &ast::NodeDecl) -> (Value, Vec<Value>) {
         }
         take(&mut f, "court_listener_url", "courtListenerUrl", &mut out);
         take(&mut f, "payoff_by_flag", "payoffByFlag", &mut out);
+        take(&mut f, "fee_shift", "feeShift", &mut out);
         for edge in body
             .syntax()
             .children()

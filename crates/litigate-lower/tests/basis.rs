@@ -159,6 +159,17 @@ fn a_scenario_joins_every_number_it_rests_on() {
         name: "Jane Roe".into(),
     });
     assert_eq!(scenario_basis(&pkg, &acme()), at(Basis::Expert));
+    // So has one that only shifts fees.
+    if let hir::NodeKind::Terminal {
+        payoff_by_flag,
+        fee_shift,
+        ..
+    } = &mut node_mut(&mut pkg, "dismissed").kind
+    {
+        payoff_by_flag.clear();
+        *fee_shift = Some(Rational::integer(1));
+    }
+    assert_eq!(scenario_basis(&pkg, &acme()), at(Basis::Expert));
     node_mut(&mut pkg, "dismissed").basis = Some(sourced.clone());
     node_mut(&mut pkg, "mtd-ruling").edges[0].basis = Some(hir::Basis::Calibrated {
         dataset: "d".into(),

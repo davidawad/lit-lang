@@ -1073,8 +1073,9 @@ const INVALIDATES: &str = "invalidate gone: open effective [2020-02-01, ..) cite
 fn base(body: &str) -> LoadedPackage {
     let mut p = layer("b", "base", "civil", "FederalRule", "", body);
     p.manifest = p.manifest.replacen("kind = \"base\"\n", "", 1);
-    let at = p.manifest.find("\n[sources.order]").expect("sources");
-    p.manifest.truncate(at);
+    if let Some(at) = p.manifest.find("\n[sources.order]") {
+        p.manifest.truncate(at);
+    }
     p
 }
 
@@ -1320,7 +1321,7 @@ fn a_recharacterization_binds_only_where_its_precedent_does() {
     let rows: Vec<(&str, Vec<String>)> = vec![
         (
             "in its own circuit",
-            shown(&world(&[ca1.clone()], &at("ca1"), Profile::Dev)),
+            shown(&world(std::slice::from_ref(&ca1), &at("ca1"), Profile::Dev)),
         ),
         (
             "in a sister circuit",

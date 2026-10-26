@@ -71,6 +71,20 @@ impl Lower {
         ))
     }
 
+    /// `recharacterize r: d clauses` or `invalidate i: d clauses`.
+    fn change(&mut self, node: &SyntaxNode) -> Option<ItemKind> {
+        let make = if node.kind() == K::RecharacterizeDecl {
+            ItemKind::Recharacterize
+        } else {
+            ItemKind::Invalidate
+        };
+        Some(make(
+            ident(node)?,
+            path_of(&node_of(node, K::Ref)?),
+            self.clauses(node),
+        ))
+    }
+
     /// One declaration (top level or inside a `rule`); `None` for nodes that
     /// are not declarations or are missing a required part. Each declaration
     /// is parsed left to right and stops at its first missing part, so only
@@ -150,16 +164,7 @@ impl Lower {
             K::TestDecl => self.test(node)?,
             K::GrantDecl => self.grant(node)?,
             K::LimitDecl => ItemKind::Limit(self.limit(node)?),
-            K::RecharacterizeDecl => ItemKind::Recharacterize(
-                ident(node)?,
-                path_of(&node_of(node, K::Ref)?),
-                self.clauses(node),
-            ),
-            K::InvalidateDecl => ItemKind::Invalidate(
-                ident(node)?,
-                path_of(&node_of(node, K::Ref)?),
-                self.clauses(node),
-            ),
+            K::RecharacterizeDecl | K::InvalidateDecl => self.change(node)?,
             _ => return None,
         };
         Some(Item {

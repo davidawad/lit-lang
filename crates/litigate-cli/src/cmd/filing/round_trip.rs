@@ -120,8 +120,8 @@ fn authored(used: &[&hir::Package], events: &BTreeSet<String>) -> String {
     )
 }
 
-/// The name and typing errors checking `matters` reports, each with the
-/// line it is on.
+/// The syntax, name and typing errors checking `matters` reports, each
+/// with the line it is on.
 fn rejected(session: Session, matters: Vec<CaseText>) -> Vec<String> {
     let mut session = session;
     let lock = session.matter_lock(&matters).render();
@@ -144,7 +144,9 @@ fn rejected(session: Session, matters: Vec<CaseText>) -> Vec<String> {
                 .filter(|d| {
                     matches!(
                         d.code,
-                        DiagnosticCode::UnresolvedName | DiagnosticCode::TypeMismatch
+                        DiagnosticCode::UnexpectedToken
+                            | DiagnosticCode::UnresolvedName
+                            | DiagnosticCode::TypeMismatch
                     )
                 })
                 .map(|d| {

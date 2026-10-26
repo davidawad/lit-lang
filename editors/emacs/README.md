@@ -1,9 +1,9 @@
-# litgraph-emacs
+# litgraph for Emacs
 
 Emacs front end for [litgraph](https://github.com/davidawad/litgraph), the Rust
-engine that models litigation procedure as a stochastic game on a graph. It
-takes one JSON request and returns one JSON response; this package makes that
-comfortable from Emacs:
+engine that models litigation procedure as a stochastic game on a graph. Its
+raw interface, `litigate engine`, takes one JSON request and returns one JSON
+response; this package makes that comfortable from Emacs:
 
 - run **any** op asynchronously, with completion for ops, packs, scenarios,
   node ids, edge ids, metrics and parameters, all read from the binary itself
@@ -16,7 +16,13 @@ comfortable from Emacs:
 - a **timeline** of any `.case` or `.lit` file, `magit-log --graph` style:
   worlds (alternate timelines) as branches, layers you can switch off;
 - scenario JSON editing with flymake validation and completion;
-- an Org Babel backend, `#+begin_src litgraph`.
+- an Org Babel backend, `#+begin_src litgraph`;
+- `litigate-ts-mode`, the tree-sitter major mode for `.lit` and `.case`
+  files (`litigate-ts-mode.el`; see [`../README.md`](../README.md) for its
+  grammar and language server setup).
+
+This package used to live in its own repository, litgraph-emacs; it was
+imported here, history included, at its `996543d`.
 
 Nothing blocks Emacs: every call is a `make-process` with a timeout.
 
@@ -27,24 +33,33 @@ Nothing blocks Emacs: every call is a `make-process` with a timeout.
 ## Requirements
 
 - Emacs 29.1 or newer (uses the built-in `transient`, `flymake`, `json`).
-- The `litgraph` binary: `brew install davidawad/tap/litgraph`, or see the
-  litgraph README. Ops `settle`, `posterior` and `voi` need a build that has
-  them; the menu greys out what your binary lacks.
+- The `litigate` binary: `cargo install --path crates/litigate-cli` from a
+  checkout of this repository. Every engine call runs `litigate engine ...`
+  (`litgraph-engine-arguments`); the timeline runs `litigate timeline`.
+- Packs: `litigate engine` compiles its packs from `lit/` and its scenario
+  library from `cases/` in the directory it runs in. Emacs runs it in
+  `litgraph-project-directory`, else in the nearest directory above the
+  current buffer's that holds `lit/` (a litgraph checkout, or your own
+  project). Set `litgraph-packs-dir` and `litgraph-scenarios-dir` to a
+  prebuilt set (`just lit-sync` writes one to `target/lit-build/packs` and
+  `target/lit-build/scenarios`) to skip that compile on every call.
 - Optional: Graphviz (`dot`) for the inline graph image (a text tree is shown
   without it, and always in a terminal frame).
 
 ## Install
 
-The package is a directory of files: `litgraph.el` (core), `litgraph-view.el`,
+The package is the `editors/emacs` directory of this repository:
+`litgraph.el` (core, the package's main file), `litgraph-view.el`,
 `litgraph-graph.el`, `litgraph-org.el`, `litgraph-scenario.el`,
-`litgraph-menu.el`, `litgraph-timeline.el` and `ob-litgraph.el`. Entry points
-are autoloaded.
+`litgraph-menu.el`, `litgraph-timeline.el`, `ob-litgraph.el` and
+`litigate-ts-mode.el`. Entry points are autoloaded.
 
 **use-package with `:vc`** (Emacs 30; `package-vc` in 29):
 
 ```elisp
 (use-package litgraph
-  :vc (:url "https://github.com/davidawad/litgraph-emacs" :rev :newest)
+  :vc (:url "https://github.com/davidawad/litgraph" :lisp-dir "editors/emacs"
+       :rev :newest)
   :bind-keymap ("C-c L" . litgraph-command-map)
   :custom
   (litgraph-default-scenario "cofc-1498-patent-case"))
@@ -54,21 +69,21 @@ are autoloaded.
 
 ```elisp
 (straight-use-package
- '(litgraph :type git :host github :repo "davidawad/litgraph-emacs"
-            :files ("*.el")))
+ '(litgraph :type git :host github :repo "davidawad/litgraph"
+            :files ("editors/emacs/*.el")))
 ```
 
 **elpaca**:
 
 ```elisp
-(elpaca (litgraph :host github :repo "davidawad/litgraph-emacs"
-                  :files ("*.el")))
+(elpaca (litgraph :host github :repo "davidawad/litgraph"
+                  :files ("editors/emacs/*.el")))
 ```
 
 **From a local clone**:
 
 ```elisp
-(add-to-list 'load-path "~/projects/Lawyering/litgraph-emacs")
+(add-to-list 'load-path "/path/to/litgraph/editors/emacs")
 (require 'litgraph-autoloads nil t) ; after `make autoloads', or just:
 (autoload 'litgraph-menu "litgraph-menu" nil t)
 (global-set-key (kbd "C-c L") #'litgraph-menu)
@@ -108,7 +123,7 @@ context is applied to every op, including graph and deadlines.
 
 `r` (or `M-x litgraph-run-op`) runs any op: complete its name, then answer its
 required arguments; optional ones are chosen from a list (or all asked with a
-prefix argument). Argument types and help come from `litgraph schema request`.
+prefix argument). Argument types and help come from `litigate engine schema request`.
 
 ## Result buffers
 
@@ -274,7 +289,7 @@ is bound when `litigate-mode` (or the older `litigate-ts-mode`) loads.
 - Files named `*.litgraph.json` open in `litgraph-scenario-json-mode`; for
   other JSON files, `M-x litgraph-scenario-mode` or add
   `litgraph-scenario-maybe-enable` to `js-json-mode-hook`.
-- Flymake runs `litgraph validate` on the buffer text (unsaved edits count):
+- Flymake runs `litigate engine validate` on the buffer text (unsaved edits count):
   JSON syntax errors first, then the engine's errors (unknown fields, missing
   edges, wrong types), located on the offending token where the message allows.
   `litgraph-flymake-warnings` also shows engine warnings.
@@ -325,7 +340,9 @@ reproducible. Warnings are reported in the echo area.
 
 | variable | meaning |
 |----------|---------|
-| `litgraph-executable` | binary name or path (Homebrew paths are tried when it is not on `exec-path`) |
+| `litgraph-executable` | `litigate` binary name or path (Homebrew and `~/.cargo/bin` paths are tried when it is not on `exec-path`) |
+| `litgraph-engine-arguments` | arguments before every engine call (`("engine")`) |
+| `litgraph-project-directory` | where the engine runs and compiles `lit/` and `cases/` (nil: the nearest directory holding `lit/`) |
 | `litgraph-packs-dir` | exported as `LITGRAPH_PACKS` |
 | `litgraph-scenarios-dir` | exported as `LITGRAPH_SCENARIOS` |
 | `litgraph-default-scenario` / `litgraph-default-packs` | used until you pick your own |
@@ -335,8 +352,13 @@ reproducible. Warnings are reported in the echo area.
 
 ## Development
 
+From the repository root, `just emacs-test` (part of `just ci`) byte-compiles
+the package, runs checkdoc and runs the ERT suite with `LITGRAPH_IT_REQUIRE=1`
+against the debug `litigate`, with Emacs and Graphviz from
+`nix shell nixpkgs#emacs-nox nixpkgs#graphviz`. In this directory:
+
 ```
-make test       # ERT: stubbed process layer + real binary when installed
+make test       # ERT: stubbed process layer + real litigate when installed
 make compile    # byte-compile, warnings are errors
 make lint       # checkdoc + package-lint (PACKAGE_LINT_DIR=... or installed into .deps/)
 make all
@@ -344,22 +366,22 @@ make all
 
 Unit tests replace `litgraph-process-function` with a stub that answers from
 recorded real output in `test/fixtures/`; integration tests
-(`test/litgraph-integration-test.el`) skip themselves when no `litgraph`
-binary is found.
+(`test/litgraph-integration-test.el`) skip themselves when no `litigate`
+binary is found, and fail instead under `LITGRAPH_IT_REQUIRE=1`. Without
+`LITGRAPH_PACKS`/`LITGRAPH_SCENARIOS` they compile this repository's `lit/`
+and `cases/` on every call, which a debug build does slowly.
+`test/litigate-ts-mode-test.el` is litigate-ts-mode's suite; it needs the
+tree-sitter grammar, so `cargo nextest run -p litigate-editors` builds the
+grammar and runs it.
 
 The timeline tests render `test/fixtures/timeline-ttab-opposition.json`, the
 example of the frozen timeline schema; `timeline.v1.schema.json` beside it is
-the schema itself (both copied from litgraph `docs/litigate/`, main
-`6efcc35`), and the tests check the renderer's statuses and layer classes
-against its enums. When the schema changes, copy both again. The timeline
-integration test skips only when `litigate` is absent from PATH; an installed
-binary that lacks the `timeline` op fails the test. It runs on
-`test/fixtures/timeline-project/cases/examples/acme.case`, synced from the
-litgraph engine at `527253abd5bf74af700b9bd32fc4f4aa26b072c5`, or on
-`LITGRAPH_TIMELINE_FILE`. To refresh it from that checkout, run
-`make fixtures-sync LITGRAPH_DIR=/path/to/litgraph`; set `LITGRAPH_SHA` to sync
-from another engine revision. The target verifies the checkout revision and
-copies the case, lockfile, and Lit package files while preserving their layout.
+the schema itself (both copied from `docs/litigate/` at `6efcc35`), and the
+tests check the renderer's statuses and layer classes against its enums. When
+the schema changes, copy both again. The timeline integration test runs on
+`test/fixtures/timeline-project/cases/examples/acme.case`, a copy of this
+repository's `cases/examples` and `lit/examples`, or on
+`LITGRAPH_TIMELINE_FILE`; `make fixtures-sync` refreshes the copy.
 
 ## License
 

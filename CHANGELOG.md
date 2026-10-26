@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **The Emacs front end is in this repository** (lg-dfv4.5).
+  litgraph-emacs (`litgraph-menu`, result buffers, deadlines to Org,
+  Graphviz graphs, scenario editing, Org Babel, `litgraph-timeline`) is
+  imported with its history into `editors/emacs`, one package with
+  `litigate-ts-mode`. Every engine call runs `litigate engine` (in the
+  nearest directory holding `lit/`, `litgraph-project-directory`); the
+  timeline runs `litigate timeline`. `just emacs-test`, part of `just
+  ci`, runs its ERT suite with `LITGRAPH_IT_REQUIRE=1` against the debug
+  `litigate`, Emacs and Graphviz from nixpkgs.
 - **Legal change as declared instrument classes, per forum family, in
   worlds** (lg-fq2.1; docs/litigate/CHANGE.md, SPEC §5.7-§5.8). New
   classes `general-order` and `emergency-declaration`. `lit/core`'s

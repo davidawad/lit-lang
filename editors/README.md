@@ -80,6 +80,16 @@ and the pinned `tree-sitter-cli`, run through `npx` when it isn't on
    declarations. `treesit-font-lock-level` 4 enables all highlighting
    (operators, brackets, plain identifiers).
 
+4. The rest of the package. `editors/emacs` is one Emacs package, `litgraph`:
+   besides `litigate-ts-mode` it holds the litgraph front end (the
+   `litgraph-menu` transient, result buffers, deadlines to Org, Graphviz
+   graphs, scenario editing, Org Babel, and the `litgraph-timeline`
+   buffer). Every command that runs the engine calls `litigate engine`;
+   the timeline calls `litigate timeline`. With the package autoloads
+   loaded, `C-c C-t` in a `litigate-ts-mode` buffer opens the file's
+   timeline. See
+   [`emacs/README.md`](emacs/README.md).
+
 **Test.** `editors/litigate-editors/tests/emacs.rs` builds the grammar into a
 scratch directory for the `emacs` on `PATH` and byte-compiles the mode with
 warnings as errors. It then runs the ERT suite in `emacs --batch`, which:
@@ -95,6 +105,10 @@ warnings as errors. It then runs the ERT suite in `emacs --batch`, which:
 
 It skips (logged to `$TEST_SKIP_LOG`) when Emacs is missing or lacks
 tree-sitter.
+
+The front end's ERT suite (`emacs/test/litgraph-*-test.el`) runs from
+`just emacs-test`, part of `just ci`: Emacs and Graphviz from nixpkgs, the
+integration tests against the debug `litigate` with `LITGRAPH_IT_REQUIRE=1`.
 
 ## Helix
 

@@ -3,8 +3,9 @@
 //! `.lit`/`.case` source, with no filesystem.
 //!
 //! [`litigate`] runs the `litigate` command line over an in-memory file
-//! tree: `check`, `build`, `run`, the op subcommands (`solve`, `chain`,
-//! ...) and `engine`, each compiling the matters and packages it names.
+//! tree: `check`, `build`, `worlds`, `run`, the op subcommands (`solve`,
+//! `chain`, ...) and `engine`, each compiling the matters and packages it
+//! names.
 //! The repository's `lit/` library and `cases/` matters are embedded;
 //! [`handle`], [`validate`] and [`describe`] answer engine requests over
 //! them compiled (once per instance), as `litigate engine q` does at the
@@ -131,8 +132,8 @@ pub fn describe() -> String {
 /// Runs the `litigate` CLI over an in-memory file tree and returns a
 /// `LitigateRun` (`{code, stdout, stderr, files}`) as JSON. `args_json` is
 /// the argument array without the program name (`["solve",
-/// "cases/x.case"]`); `check`, `build`, `run`, the op subcommands and
-/// `engine` run. `files_json` maps repository-relative paths to texts;
+/// "cases/x.case"]`); `check`, `build`, `worlds` (alternate timelines),
+/// `run`, the op subcommands and `engine` run. `files_json` maps repository-relative paths to texts;
 /// with `with_library`, the embedded `lit/` library fills in every `lit/`
 /// path the caller does not give. `build --out DIR` writes into `files`,
 /// never to a disk. Output is JSON unless `--format human`.

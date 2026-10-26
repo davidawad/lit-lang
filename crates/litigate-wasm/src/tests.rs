@@ -122,6 +122,50 @@ fn litigate_checks_builds_and_runs_over_the_embedded_library() {
 }
 
 #[test]
+fn litigate_runs_a_matter_in_alternate_worlds() {
+    let examples = "../../docs/litigate/examples";
+    let files: BTreeMap<String, String> = [
+        "timelines/rule-59e.case",
+        "timelines/rule-59e.world",
+        "timelines/Lit.lock",
+        "timelines/post-judgment/Lit.toml",
+        "timelines/post-judgment/Lit.lock",
+        "timelines/post-judgment/post-judgment.lit",
+        "change/base/Lit.toml",
+        "change/base/Lit.lock",
+        "change/base/base.lit",
+        "change/amendment/Lit.toml",
+        "change/amendment/Lit.lock",
+        "change/amendment/amendment.lit",
+    ]
+    .iter()
+    .map(|f| {
+        let text = std::fs::read_to_string(format!("{examples}/{f}")).unwrap_or_default();
+        (format!("docs/litigate/examples/{f}"), text)
+    })
+    .collect();
+    let files = serde_json::to_value(files).unwrap_or_default();
+    let run = run(
+        &[
+            "worlds",
+            "docs/litigate/examples/timelines/rule-59e.case",
+            "--world",
+            "docs/litigate/examples/timelines/rule-59e.world",
+            "--path",
+            "docs/litigate/examples",
+        ],
+        &files,
+        true,
+    );
+    assert_eq!(run.code, 0, "{}{}", run.stdout, run.stderr);
+    let out = parse(&run.stdout);
+    assert_eq!(
+        out["result"]["filings"][0]["worlds"],
+        json!({"timely": ["w1"], "late": ["w2"]})
+    );
+}
+
+#[test]
 fn litigate_files_override_the_library_and_failures_exit_1() {
     let broken = json!({ "lit/examples/rule12.lit": "state" });
     assert_eq!(run(&["check", "lit/examples"], &broken, true).code, 2);

@@ -466,11 +466,6 @@ impl<'a> Graph<'a> {
         self.qualify(pack, &edge.to)
     }
 
-    /// Whether `id` is the pack id of a dependency that is not used.
-    pub fn is_dependency(&self, id: &str) -> bool {
-        self.deps.iter().any(|p| p.manifest.pack_id == id)
-    }
-
     /// Every event type of the used packages, then of their dependencies
     /// (vocabulary: an event starting a dependency's period that a used
     /// package's chain follows): (pack id, declaration).
@@ -693,7 +688,7 @@ pub fn display(e: &Expr) -> String {
 
 /// The transitive dependencies of `used` among `loaded`, by package name,
 /// excluding `used` itself; each once, in discovery order.
-fn dependencies<'a>(used: &[&'a Package], loaded: &[&'a Package]) -> Vec<&'a Package> {
+pub(super) fn dependencies<'a>(used: &[&'a Package], loaded: &[&'a Package]) -> Vec<&'a Package> {
     let mut seen: BTreeSet<&str> = used.iter().map(|p| p.manifest.name.as_str()).collect();
     let mut out: Vec<&'a Package> = Vec::new();
     let mut frontier: Vec<&'a Package> = used.to_vec();

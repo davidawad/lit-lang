@@ -14,7 +14,7 @@
 //! exactly as `lint-filing` replays a proposed filing. The matter itself
 //! must check clean first; `--out` writes the advanced matter.
 use super::check::check_session;
-use super::filing::{added, changes, generated_filing_line};
+use super::filing::{added, changes, generated_filing_line, vocabulary, Law};
 use crate::docket::{self, Entry, Form, Param, Party, Verdict};
 use crate::filing;
 use crate::hirx;
@@ -127,7 +127,15 @@ fn replay(
     let diagnostics = added(at, filed);
     let accepted = !diagnostics.iter().any(|d| d.severity == Severity::Error);
     let law = c.session.hir_of(&c.session.closure(at.packages.clone()));
-    let ch = changes(at, filed, &law);
+    let vocabulary = vocabulary(&c.session.hir(), at);
+    let ch = changes(
+        at,
+        filed,
+        Law {
+            law: &law,
+            vocabulary: &vocabulary,
+        },
+    );
     let fields = vec![
         (
             "event",

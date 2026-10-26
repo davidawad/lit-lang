@@ -120,9 +120,8 @@ fn scope_of(file: &str, text: &str, checked: &Checked) -> FileScope {
     }
     let visible = litigate_syntax::parse_case(text)
         .case_file()
-        .and_then(|f| f.uses())
-        .map(|u| {
-            u.items()
+        .map(|f| {
+            f.use_items()
                 .iter()
                 .filter_map(|i| i.package().map(|t| t.text().to_owned()))
                 .collect()

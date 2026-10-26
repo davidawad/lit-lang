@@ -13,6 +13,7 @@ pub mod deadline;
 mod drawn;
 mod event;
 mod graph;
+pub mod names;
 mod prior;
 mod replay;
 pub mod resolve;

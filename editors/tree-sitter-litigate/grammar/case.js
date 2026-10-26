@@ -12,7 +12,7 @@ module.exports = {
   case_file: $ => seq(
     'case',
     field('name', $.identifier),
-    $.uses_decl,
+    repeat1($.uses_decl),
     $.as_of_decl,
     optional($.known_at_decl),
     $.summary_decl,

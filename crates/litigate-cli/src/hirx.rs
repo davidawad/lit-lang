@@ -167,15 +167,20 @@ fn arg_key(e: &Expr) -> String {
     }
 }
 
+/// The event constructor as written and argument keys of a call
+/// expression.
+#[must_use]
+pub fn event_call(e: &Expr) -> Option<(&str, Vec<String>)> {
+    match &e.kind {
+        ExprKind::Call { callee, args } => Some((callee, args.iter().map(arg_key).collect())),
+        _ => None,
+    }
+}
+
 /// The event constructor and argument keys of a call expression.
 #[must_use]
 pub fn event_parts(e: &Expr) -> Option<(String, Vec<String>)> {
-    match &e.kind {
-        ExprKind::Call { callee, args } => {
-            Some((local(callee).to_owned(), args.iter().map(arg_key).collect()))
-        }
-        _ => None,
-    }
+    event_call(e).map(|(callee, args)| (local(callee).to_owned(), args))
 }
 
 /// True when `event` matches `pattern`: the same constructor, and every
@@ -193,8 +198,14 @@ pub fn matches(pattern: &Expr, event: &Expr) -> bool {
 /// Renders an event call as source-like text (`Served(complaint, Mail)`).
 #[must_use]
 pub fn event_text(e: &Expr) -> String {
-    event_parts(e).map_or_else(String::new, |(callee, args)| {
-        format!("{callee}({})", args.join(", "))
+    event_text_as(e, |callee| local(callee).to_owned())
+}
+
+/// [`event_text`] with the constructor as written (`pack::Name` outside
+/// its package) spelled by `callee`.
+pub fn event_text_as(e: &Expr, callee: impl FnOnce(&str) -> String) -> String {
+    event_call(e).map_or_else(String::new, |(name, args)| {
+        format!("{}({})", callee(name), args.join(", "))
     })
 }
 

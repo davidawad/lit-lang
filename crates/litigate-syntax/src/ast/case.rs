@@ -24,10 +24,20 @@ fn literal_token(node: &Node) -> Option<Token> {
 }
 
 impl CaseFile {
-    /// `uses` pins.
+    /// The first `uses` declaration.
     #[must_use]
     pub fn uses(&self) -> Option<UsesDecl> {
         child(self.syntax())
+    }
+
+    /// Every pin of every `uses` declaration, in order (the first is the
+    /// primary package): a matter may write one `uses` per package.
+    #[must_use]
+    pub fn use_items(&self) -> Vec<UseItem> {
+        children::<UsesDecl>(self.syntax())
+            .iter()
+            .flat_map(UsesDecl::items)
+            .collect()
     }
 
     /// `as_of` date.

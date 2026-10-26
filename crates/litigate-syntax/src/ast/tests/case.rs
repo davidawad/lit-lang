@@ -72,6 +72,19 @@ fn every_version_operator_is_recognized() {
     assert_eq!(reqs, [version(">=", "1.0.0"), version("=", "2.3.4")]);
 }
 
+#[test]
+fn a_matter_may_write_one_uses_per_package() {
+    let file =
+        case("case c\nuses a ^1.0.0\nuses b ^2.0.0, c ^3.0.0\nas_of 2025-01-01\nsummary \"S\"\n");
+    let packages: Vec<_> = file
+        .use_items()
+        .iter()
+        .filter_map(|pin| text(pin.package()))
+        .collect();
+    assert_eq!(packages, ["a", "b", "c"]);
+    assert_eq!(file.uses().expect("uses").items().len(), 1);
+}
+
 /// The requirement of the single pin of a recovered `uses p <req>` header.
 fn recovered_requirement(req: &str) -> Option<VersionReq> {
     let parsed = parse_case(&format!(

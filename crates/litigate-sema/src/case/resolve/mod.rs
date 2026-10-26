@@ -276,8 +276,11 @@ impl<'g> R<'_, 'g> {
 
     /// `uses` pins through `Lit.lock`; builds the graph of used packages.
     fn uses(&mut self, root: &SyntaxNode) -> Option<Vec<crate::hir::PackagePin>> {
-        let items: Vec<SyntaxNode> =
-            child(root, K::UsesDecl).map(|u| children(&u, K::UseItem).collect())?;
+        // A matter may write one `uses` per package: the pins are every
+        // declaration's, in order.
+        let decls: Vec<SyntaxNode> = children(root, K::UsesDecl).collect();
+        let items: Vec<SyntaxNode> = (!decls.is_empty())
+            .then(|| decls.iter().flat_map(|u| children(u, K::UseItem)).collect())?;
         let mut pins = Vec::new();
         let mut used = Vec::new();
         for item in &items {

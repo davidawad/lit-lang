@@ -12,7 +12,9 @@
 //! matter's marking that discharge it (`file`), the extension grants of the
 //! version counting it, each with the request it rests on (`extend`),
 //! and the order events that exercise them (`orders`). Proposing one of
-//! them through `lint-filing` judges it.
+//! them through `lint-filing` judges it: each is printed as the matter
+//! names it (bare when unambiguous, else `pack::Name`), and an act whose
+//! pattern leaves a parameter open is listed once per complete event.
 //!
 //! A filing that is a request a grant reads (a stipulation, a motion to
 //! extend) is listed under `pending`: each obligation it is now the
@@ -36,8 +38,8 @@ use crate::ws::{self, CaseText, Session};
 use litigate_base::{Diagnostic, DiagnosticCode, Profile, Severity};
 use litigate_engine::clock::Date;
 use litigate_lower::Options;
-use litigate_sema::case::{Pending, Status, Step};
-use litigate_sema::hir::{self, DeadlineWindow, Declaration, EventEffect, Extension};
+use litigate_sema::case::{names, Pending, Status, Step};
+use litigate_sema::hir::{self, DeadlineWindow, Declaration, EventEffect, Extension, Type};
 use serde_json::{json, Value};
 
 /// What `lint-filing` was asked for.
@@ -89,8 +91,9 @@ fn pending(p: &Pending) -> Value {
 /// standard, in which window (`before_expiry`: on or before the current
 /// due date, judged on the request's date when it names one;
 /// `after_expiry`: after it, on motion; `any`), the request it rests on
-/// (`on M()`), and a bounded grant's ceiling; `None` for a lock.
-fn grant(e: &Extension) -> Option<Value> {
+/// (`on M()`, spelled by `request`), and a bounded grant's ceiling;
+/// `None` for a lock.
+fn grant(e: &Extension, request: impl FnOnce(&hir::Expr) -> String) -> Option<Value> {
     let (by, standard, window, motion, until) = match e {
         Extension::Bounded {
             by,
@@ -130,30 +133,140 @@ fn grant(e: &Extension) -> Option<Value> {
     };
     Some(json!({
         "by": by, "standard": standard, "window": window,
-        "request": motion.as_ref().map(|m| hirx::event_text(&m.event)), "until": until,
+        "request": motion.as_ref().map(|m| request(&m.event)), "until": until,
     }))
 }
 
-/// The version of `s`'s deadline that counted it, among `law`.
-fn counted_by<'p>(law: &[&'p hir::Package], s: &Scheduled) -> Option<&'p hir::Deadline> {
+/// The version (`id@from`) of `deadline` that counted an instance, among
+/// `law`, with its pack id.
+fn counted_by<'p>(
+    law: &[&'p hir::Package],
+    deadline: &str,
+    version: &str,
+) -> Option<(&'p str, &'p hir::Deadline)> {
     law.iter()
-        .filter(|p| s.deadline.starts_with(&format!("{}::", p.manifest.pack_id)))
-        .flat_map(|p| hirx::deadlines(p, &s.deadline))
-        .find(|d| format!("{}@{}", d.meta.id, d.meta.effective.from) == s.version)
+        .filter(|p| deadline.starts_with(&format!("{}::", p.manifest.pack_id)))
+        .flat_map(|p| hirx::deadlines(p, deadline).map(|d| (p.manifest.pack_id.as_str(), d)))
+        .find(|(_, d)| format!("{}@{}", d.meta.id, d.meta.effective.from) == version)
 }
 
-/// The events of `law` that extend `deadline` (`extends d to p`).
-fn orders(law: &[&hir::Package], deadline: &str) -> Vec<String> {
+/// The events of `law` that extend `deadline` (`extends d to p`), named
+/// as the matter seeing `vocabulary` writes them.
+fn orders(law: &[&hir::Package], vocabulary: &[&hir::Package], deadline: &str) -> Vec<String> {
     law.iter()
-        .flat_map(|p| hirx::declarations(p))
-        .filter_map(|d| match d {
+        .flat_map(|p| hirx::declarations(p).map(move |d| (p.manifest.pack_id.as_str(), d)))
+        .filter_map(|(pack, d)| match d {
             Declaration::Event(hir::EventType {
                 name,
                 effect: Some(EventEffect::Extends { deadline: d, .. }),
                 ..
-            }) if hirx::local(d) == hirx::local(deadline) => Some(name.clone()),
+            }) if hirx::local(d) == hirx::local(deadline) => {
+                Some(names::spell(vocabulary, pack, name))
+            }
             _ => None,
         })
+        .collect()
+}
+
+/// The constructor `callee`, written in `pack`'s view, as the matter
+/// seeing `vocabulary` writes it: bare when that is unambiguous, else
+/// qualified (`names::spell`), so `lint-filing` and the `.case` accept
+/// what is printed. With its pack and local name.
+fn constructor<'c>(
+    vocabulary: &[&hir::Package],
+    pack: &'c str,
+    callee: &'c str,
+) -> (&'c str, &'c str, String) {
+    let (pack, name) = callee.split_once("::").unwrap_or((pack, callee));
+    (pack, name, names::spell(vocabulary, pack, name))
+}
+
+/// Event pattern `e`, written in `pack`'s view, as the matter writes it,
+/// its arguments as given.
+fn written(vocabulary: &[&hir::Package], pack: &str, e: &hir::Expr) -> String {
+    hirx::event_text_as(e, |callee| constructor(vocabulary, pack, callee).2)
+}
+
+/// The values a matter may write for a parameter of type `t` (in `pack`'s
+/// view) that a pattern leaves open: each variant of an enum, either
+/// boolean, or an unknown date (`?`); `None` for any other type.
+fn values(vocabulary: &[&hir::Package], pack: &str, t: &Type) -> Option<Vec<String>> {
+    match t {
+        Type::Named(n) => {
+            let (pack, name) = n.split_once("::").unwrap_or((pack, n));
+            vocabulary
+                .iter()
+                .filter(|p| p.manifest.pack_id == pack)
+                .flat_map(|p| hirx::declarations(p))
+                .find_map(|d| match d {
+                    Declaration::Enum(e) if e.name == name => Some(e.variants.clone()),
+                    _ => None,
+                })
+        }
+        Type::Boolean => Some(vec!["true".to_owned(), "false".to_owned()]),
+        Type::Date => Some(vec!["?".to_owned()]),
+        _ => None,
+    }
+}
+
+/// The complete events pattern `e` (written in `pack`'s view) stands for,
+/// as the matter seeing `vocabulary` writes them: the parameters it leaves
+/// open (`BriefServed(Principal)` of `BriefServed(brief, method)`) given
+/// each value [`values`] lists, so each is a filing `lint-filing` and the
+/// `.case` accept. The pattern alone when an open parameter has no list.
+fn completions(vocabulary: &[&hir::Package], pack: &str, e: &hir::Expr) -> Vec<String> {
+    hirx::event_call(e)
+        .into_iter()
+        .flat_map(|(callee, given)| {
+            let (pack, name, spelled) = constructor(vocabulary, pack, callee);
+            let params = vocabulary
+                .iter()
+                .filter(|p| p.manifest.pack_id == pack)
+                .flat_map(|p| hirx::declarations(p))
+                .find_map(|d| match d {
+                    Declaration::Event(t) if t.name == name => Some(t.params.as_slice()),
+                    _ => None,
+                })
+                .unwrap_or_default();
+            let open: Option<Vec<Vec<String>>> = params
+                .iter()
+                .skip(given.len())
+                .map(|(_, t)| values(vocabulary, pack, t))
+                .collect();
+            let calls = open
+                .unwrap_or_default()
+                .iter()
+                .fold(vec![given], |calls, vals| {
+                    calls
+                        .iter()
+                        .flat_map(|c| {
+                            vals.iter()
+                                .map(move |v| [c.as_slice(), std::slice::from_ref(v)].concat())
+                        })
+                        .collect()
+                });
+            calls
+                .into_iter()
+                .map(move |args| format!("{spelled}({})", args.join(", ")))
+        })
+        .collect()
+}
+
+/// The packages whose event names the matter `at` sees among `all`
+/// (`names::vocabulary`), primary first.
+pub(super) fn vocabulary<'p>(all: &[&'p hir::Package], at: &CaseCheck) -> Vec<&'p hir::Package> {
+    at.case
+        .as_ref()
+        .map(|case| names::vocabulary(&used(all, case), all))
+        .unwrap_or_default()
+}
+
+/// The packages of `all` the matter `case` uses, primary first.
+fn used<'p>(all: &[&'p hir::Package], case: &hir::Case) -> Vec<&'p hir::Package> {
+    case.uses
+        .iter()
+        .filter_map(|u| all.iter().find(|p| p.manifest.pack_id == u.pack_id))
+        .copied()
         .collect()
 }
 
@@ -180,29 +293,52 @@ fn posture<'p>(
         .collect()
 }
 
-/// The moves that protect `s`: the acts out of the marking (`nodes`)
-/// that discharge it, the grants that extend it, and their orders.
-fn moves(law: &[&hir::Package], nodes: &[(&str, &hir::Node)], s: &Scheduled) -> Value {
+/// What names a move: the law, and the vocabulary of the matter its
+/// events are printed for.
+#[derive(Clone, Copy)]
+pub(super) struct Law<'a, 'p> {
+    /// The matter's packages and their dependencies.
+    pub(super) law: &'a [&'p hir::Package],
+    /// The packages whose event names the matter sees, primary first.
+    pub(super) vocabulary: &'a [&'p hir::Package],
+}
+
+/// The moves that protect an instance of `deadline` counted by `version`:
+/// the acts out of the posture (`nodes`) that discharge it, the grants
+/// that extend it, and their orders.
+fn moves(law: Law<'_, '_>, nodes: &[(&str, &hir::Node)], deadline: &str, version: &str) -> Value {
     let file: Vec<Value> = nodes
         .iter()
         .flat_map(|(pack, n)| n.edges.iter().map(move |e| (pack, e)))
         .filter(|(_, e)| {
             matches!(&e.deadline, Some(hir::EdgeDeadline {
-                window: DeadlineWindow::Declared { deadline }, ..
-            }) if hirx::local(deadline) == hirx::local(&s.deadline))
+                window: DeadlineWindow::Declared { deadline: d }, ..
+            }) if hirx::local(d) == hirx::local(deadline))
         })
-        .map(|(pack, e)| {
-            json!({
-                "edge": e.id.as_ref().map(|id| format!("{pack}::{id}")),
-                "event": e.event.as_ref().map(hirx::event_text),
-            })
+        .flat_map(|(pack, e)| {
+            let edge = e.id.as_ref().map(|id| format!("{pack}::{id}"));
+            let events = e
+                .event
+                .as_ref()
+                .map(|ev| completions(law.vocabulary, pack, ev));
+            match events {
+                Some(events) => events
+                    .into_iter()
+                    .map(|event| json!({"edge": edge, "event": event}))
+                    .collect(),
+                None => vec![json!({"edge": edge, "event": null})],
+            }
         })
         .collect();
-    let extend: Vec<Value> = counted_by(law, s)
+    let extend: Vec<Value> = counted_by(law.law, deadline, version)
         .into_iter()
-        .flat_map(|d| d.extend.iter().filter_map(grant))
+        .flat_map(|(pack, d)| {
+            d.extend
+                .iter()
+                .filter_map(move |e| grant(e, |m| written(law.vocabulary, pack, m)))
+        })
         .collect();
-    json!({"file": file, "extend": extend, "orders": orders(law, &s.deadline)})
+    json!({"file": file, "extend": extend, "orders": orders(law.law, law.vocabulary, deadline)})
 }
 
 /// Whether `d` bears on the filing. A package with concurrent tracks has
@@ -312,12 +448,12 @@ pub(super) struct Changes<'a> {
 pub(super) fn changes<'a>(
     at: &'a CaseCheck,
     filed: &'a CaseCheck,
-    law: &[&hir::Package],
+    law: Law<'_, '_>,
 ) -> Changes<'a> {
     let nodes = at
         .case
         .as_ref()
-        .map(|case| posture(law, case, &at.marking))
+        .map(|case| posture(law.law, case, &at.marking))
         .unwrap_or_default();
     Changes {
         replay: filed
@@ -363,7 +499,7 @@ pub(super) fn changes<'a>(
             .filter(|s| s.status == Status::Open)
             .map(|s| {
                 let mut e = entry(s);
-                e["moves"] = moves(law, &nodes, s);
+                e["moves"] = moves(law, &nodes, &s.deadline, &s.version);
                 e
             })
             .collect(),
@@ -428,7 +564,15 @@ pub fn lint_filing(args: &Args) -> Outcome {
         .collect();
     report.diagnostics = added(at, filed);
     let law = c.session.hir_of(&c.session.closure(at.packages.clone()));
-    let changes = changes(at, filed, &law);
+    let vocabulary = vocabulary(&c.session.hir(), at);
+    let changes = changes(
+        at,
+        filed,
+        Law {
+            law: &law,
+            vocabulary: &vocabulary,
+        },
+    );
     report.result = json!({
         "case": filed.case.as_ref().map(|c| c.id.clone()),
         "filing": {"date": date, "event": args.event, "mode": args.mode, "party": args.party, "line": line},
@@ -440,6 +584,9 @@ pub fn lint_filing(args: &Args) -> Outcome {
     });
     Ok(report)
 }
+
+#[cfg(test)]
+mod round_trip;
 
 #[cfg(test)]
 mod tests {
@@ -477,7 +624,7 @@ mod tests {
             },
         ]
         .iter()
-        .map(|e| grant(e).map(|g| g["window"].clone()))
+        .map(|e| grant(e, hirx::event_text).map(|g| g["window"].clone()))
         .collect();
         assert_eq!(
             windows,
@@ -490,11 +637,98 @@ mod tests {
             ]
         );
         assert_eq!(
-            grant(&bounded(false)),
+            grant(&bounded(false), hirx::event_text),
             Some(json!({
                 "by": "justice", "standard": null, "window": "before_expiry", "request": null,
                 "until": {"offset": {"from": "prescribed_due", "days": 60}},
             }))
+        );
+    }
+
+    #[test]
+    fn an_open_parameter_is_completed_from_its_type_or_left_open() {
+        let pkg = testkit::hir_with(
+            "enum Side { left, right }\n\
+             event Flagged(side: Side, flag: Bool, on: Date)\n\
+             event Noted(side: Side, text: String)\n",
+        );
+        let vocabulary = [&pkg];
+        let pack = pkg.manifest.pack_id.as_str();
+        let call = |callee: &str, args: &[&str]| hir::Expr {
+            ty: Type::Unit,
+            kind: hir::ExprKind::Call {
+                callee: callee.into(),
+                args: args
+                    .iter()
+                    .map(|a| hir::Expr {
+                        ty: Type::Unit,
+                        kind: hir::ExprKind::Literal {
+                            value: hir::Value::Variant((*a).into()),
+                        },
+                        span: None,
+                    })
+                    .collect(),
+            },
+            span: None,
+        };
+        assert_eq!(
+            completions(&vocabulary, pack, &call("Flagged", &["left"])),
+            ["Flagged(left, true, ?)", "Flagged(left, false, ?)"]
+        );
+        // A string has no list of values: the pattern is printed as is.
+        assert_eq!(
+            completions(&vocabulary, pack, &call("Noted", &[])),
+            ["Noted()"]
+        );
+        assert_eq!(
+            values(&vocabulary, pack, &Type::Named("Missing".into())),
+            None
+        );
+        assert_eq!(
+            completions(
+                &vocabulary,
+                pack,
+                &hir::Expr {
+                    ty: Type::Unit,
+                    kind: hir::ExprKind::Ref { target: "x".into() },
+                    span: None
+                }
+            ),
+            Vec::<String>::new()
+        );
+    }
+
+    #[test]
+    fn an_act_without_an_event_is_a_move_with_none() {
+        let pkg = testkit::hir_with("");
+        let mut node = hirx::nodes(&pkg)
+            .into_iter()
+            .find(|n| {
+                n.edges
+                    .iter()
+                    .any(|e| e.event.is_some() && e.deadline.is_some())
+            })
+            .cloned()
+            .expect("an act within a deadline");
+        for e in &mut node.edges {
+            e.event = None;
+        }
+        let law = [&pkg];
+        let pack = pkg.manifest.pack_id.clone();
+        let moves = moves(
+            Law {
+                law: &law,
+                vocabulary: &law,
+            },
+            &[(pack.as_str(), &node)],
+            &format!("{pack}::answer-period"),
+            "answer-period@none",
+        );
+        assert!(
+            moves["file"]
+                .as_array()
+                .is_some_and(|f| !f.is_empty() && f.iter().all(|m| m["event"].is_null())),
+            "{moves}"
         );
     }
 

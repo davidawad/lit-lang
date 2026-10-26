@@ -9,7 +9,7 @@ use litigate_base::DiagnosticCode;
 
 /// `(keyword, node kind, repeatable)` in the required §3.2 order.
 const ORDER: &[(SyntaxKind, SyntaxKind, bool)] = &[
-    (KwUses, UsesDecl, false),
+    (KwUses, UsesDecl, true),
     (KwAsOf, AsOfDecl, false),
     (KwKnownAt, KnownAtDecl, false),
     (KwSummary, SummaryDecl, false),
@@ -27,7 +27,7 @@ const ORDER: &[(SyntaxKind, SyntaxKind, bool)] = &[
 
 const REQUIRED: [SyntaxKind; 3] = [KwUses, KwAsOf, KwSummary];
 
-/// `CaseFile = "case" Ident UsesDecl "as_of" Date ...`.
+/// `CaseFile = "case" Ident UsesDecl {UsesDecl} "as_of" Date ...`.
 pub(crate) fn case_file(p: &mut Parser<'_>) {
     p.start_root(CaseFile);
     super::edition(p);

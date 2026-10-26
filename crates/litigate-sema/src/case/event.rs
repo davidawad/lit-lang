@@ -1,12 +1,14 @@
 //! Typing a case event call against the used packages' event types, and
 //! their dependencies' (SPEC
-//! §5.2: case events are complete constructor calls). The result is HIR in
+//! §5.2: case events are complete constructor calls), named as
+//! [`names`] reads them. The result is HIR in
 //! the primary package's view: a name declared in the primary package is
 //! bare, any other is `pack::Name`.
 use super::graph::Graph;
+use super::names::{self, Resolution};
 use crate::db::parse::tree::{Expr as Src, ExprKind as S, RefPath};
 use crate::db::span::{Report, TextRange};
-use crate::hir::{Expr, ExprKind, Type, Value};
+use crate::hir::{EventType, Expr, ExprKind, Type, Value};
 use crate::resolve::suggest::nearest;
 use crate::types::{rational, refinement};
 use litigate_base::{Applicability, DiagnosticCode as C, Span};
@@ -14,17 +16,54 @@ use litigate_base::{Applicability, DiagnosticCode as C, Span};
 /// Converts a range to a span.
 pub(super) type ToSpan<'a> = &'a dyn Fn(TextRange) -> Span;
 
-/// Splits `q::Name` into `(pack, Name)` when `q` is a used pack or a
-/// dependency of one.
-fn split(graph: &Graph<'_>, path: &RefPath) -> (String, String) {
-    let text = path.display();
-    match text.split_once("::") {
-        Some((p, rest))
-            if graph.packages.iter().any(|k| k.manifest.pack_id == p) || graph.is_dependency(p) =>
-        {
-            (p.to_owned(), rest.to_owned())
+/// The event `path` names among the used packages and their
+/// dependencies ([`names::resolve`]), with its pack, or the report why
+/// it names none.
+fn split<'a>(graph: &Graph<'a>, path: &RefPath) -> Result<(&'a str, &'a EventType), Report> {
+    let vocabulary: Vec<_> = graph.vocabulary().collect();
+    match names::resolve(&vocabulary, &path.display()) {
+        Resolution::Event(pack, ty) => Ok((pack, ty)),
+        Resolution::Missing(pack, name) => {
+            let names: Vec<&str> = graph
+                .event_types()
+                .filter(|(p, _)| *p == pack)
+                .map(|(_, t)| t.name.as_str())
+                .collect();
+            let mut r = Report::new(
+                C::UnresolvedName,
+                path.range,
+                format!("`{pack}` declares no event `{name}`"),
+            );
+            if let Some(best) = nearest(&name, names.iter().copied()) {
+                r = r.fix(
+                    path.range,
+                    spelled(graph, &pack, best),
+                    Applicability::MaybeIncorrect,
+                );
+            }
+            Err(r.note(format!("events: {}", names.join(", "))))
         }
-        _ => (graph.primary().to_owned(), text),
+        Resolution::Ambiguous(all) => {
+            let name = path.display();
+            let r = Report::new(
+                C::UnresolvedName,
+                path.range,
+                format!(
+                    "`{name}` is an event of {} packages: write one of {}",
+                    all.len(),
+                    all.iter()
+                        .map(|q| format!("`{q}`"))
+                        .collect::<Vec<_>>()
+                        .join(", ")
+                ),
+            )
+            .note(
+                "a bare event name is the primary package's, else the one package that declares it",
+            );
+            Err(all.into_iter().fold(r, |r, q| {
+                r.fix(path.range, q, Applicability::MaybeIncorrect)
+            }))
+        }
     }
 }
 
@@ -45,28 +84,14 @@ pub(super) fn call(
     span: ToSpan<'_>,
     out: &mut Vec<Report>,
 ) -> Option<Expr> {
-    let (pack, name) = split(graph, callee);
-    let Some(ty) = graph.event_type(&pack, &name) else {
-        let names: Vec<&str> = graph
-            .event_types()
-            .filter(|(p, _)| *p == pack)
-            .map(|(_, t)| t.name.as_str())
-            .collect();
-        let mut r = Report::new(
-            C::UnresolvedName,
-            callee.range,
-            format!("`{pack}` declares no event `{name}`"),
-        );
-        if let Some(best) = nearest(&name, names.iter().copied()) {
-            r = r.fix(
-                callee.range,
-                spelled(graph, &pack, best),
-                Applicability::MaybeIncorrect,
-            );
+    let (pack, ty) = match split(graph, callee) {
+        Ok(found) => found,
+        Err(r) => {
+            out.push(r);
+            return None;
         }
-        out.push(r.note(format!("events: {}", names.join(", "))));
-        return None;
     };
+    let name = ty.name.as_str();
     if args.len() != ty.params.len() {
         let sig: Vec<String> = ty
             .params
@@ -94,9 +119,9 @@ pub(super) fn call(
     let typed: Option<Vec<Expr>> = args
         .iter()
         .zip(&ty.params)
-        .map(|(a, (_, t))| argument(graph, &pack, a, t, span, out))
+        .map(|(a, (_, t))| argument(graph, pack, a, t, span, out))
         .collect();
-    let callee = spelled(graph, &pack, &name);
+    let callee = spelled(graph, pack, name);
     if let Some(typed) = &typed {
         refined(&callee, ty, typed, args, out);
     }

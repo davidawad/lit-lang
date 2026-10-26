@@ -184,3 +184,320 @@ url = "https://www.uspto.gov/learning-and-resources/operating-status"
 path = "sources/uspto-closures.txt"
 path_sha256 = "23ebcf53195a7a766c7a69fd417e2e936612435709b3f1f99a23a14e6224ae86"
 as_of = "2026-10-24"
+
+# The forum-family class matrix (docs/litigate/CHANGE.md §3; design review
+# 2026-10-23 §2.5 item 4): data, not compiler code. A family lists the
+# package forums in it, the courts whose precedential decisions bind there
+# (`@circuit`: the regional circuit of a world's location), and one cell per
+# instrument class that exists there. A class with no cell does not exist
+# in the family (L2011); a cell's `row` narrows the class's effect row
+# (SPEC §5.7) and can never widen it. Every `cite` and `example` is from
+# the lg-fq2.1 research register (fetched 2026-10-23).
+
+[family.district-civil]
+title = "Federal district court, civil (FRCP)"
+forums = ["frcp"]
+precedent = ["scotus", "@circuit"]
+circuits = ["ca1", "ca2", "ca3", "ca4", "ca5", "ca6", "ca7", "ca8", "ca9", "ca10", "ca11", "cadc"]
+
+[family.district-civil.class.base]
+cite = "28 U.S.C. §§ 2072, 2074; FRCP"
+example = "https://www.law.cornell.edu/rules/frcp/rule_6"
+
+[family.district-civil.class.amendment]
+cite = "28 U.S.C. § 2074(a); 28 U.S.C. § 2071(b) for a local rule's amendment"
+example = "https://www.supremecourt.gov/orders/courtorders/frcv23_3eah.pdf"
+
+[family.district-civil.class.local-rule]
+cite = "28 U.S.C. § 2071; FRCP 83(a)"
+example = "https://cand.uscourts.gov/media-library/uploads/local-rule/civil-local-rules"
+
+[family.district-civil.class.general-order]
+cite = "FRCP 83(b); N.D. Cal. Civ. L.R. 1-2(c)"
+example = "https://www.nysd.uscourts.gov/sites/default/files/pdf/standing-orders/M10-468%20Standing%20Order%20Shutdown%20Fridays.pdf"
+
+[family.district-civil.class.standing-order]
+cite = "FRCP 83(b)"
+example = "https://cand.uscourts.gov/sites/default/files/standing-orders/General-Standing-Order-Judge-Charles-R.-Breyer-rev-7-16-2025.pdf"
+
+[family.district-civil.class.case-order]
+cite = "FRCP 6(b), 16(b)"
+example = "https://www.govinfo.gov/content/pkg/USCOURTS-cod-1_25-cv-00090/pdf/USCOURTS-cod-1_25-cv-00090-0.pdf"
+
+[family.district-civil.class.emergency-declaration]
+cite = "FRCP 87(b)(1)(C): a declaration is limited to a stated period of no more than 90 days"
+example = "https://www.supremecourt.gov/orders/courtorders/frcv23_3eah.pdf"
+window_days = 90
+
+[family.district-civil.class.guidance]
+cite = "Advisory Committee Notes, published with the rules but not prescribed under 28 U.S.C. § 2072"
+example = "https://www.law.cornell.edu/rules/frcp/rule_6"
+
+[family.district-civil.class.precedent]
+cite = "Hutto v. Davis, 454 U.S. 370 (1982); Camreta v. Greene, 563 U.S. 692 n.7 (2011)"
+example = "https://tile.loc.gov/storage-services/service/ll/usrep/usrep551/usrep551205/usrep551205.pdf"
+
+[family.district-civil.class.overruling]
+cite = "Rodriguez de Quijas v. Shearson/American Express, Inc., 490 U.S. 477, 484 (1989)"
+example = "https://tile.loc.gov/storage-services/service/ll/usrep/usrep551/usrep551205/usrep551205.pdf"
+
+[family.district-criminal]
+title = "Federal district court, criminal (FRCrimP)"
+forums = ["frcrimp"]
+precedent = ["scotus", "@circuit"]
+circuits = ["ca1", "ca2", "ca3", "ca4", "ca5", "ca6", "ca7", "ca8", "ca9", "ca10", "ca11", "cadc"]
+
+[family.district-criminal.class.base]
+cite = "28 U.S.C. § 2072; FRCrimP; 18 U.S.C. § 3161"
+example = "https://www.law.cornell.edu/rules/frcrmp/rule_45"
+
+[family.district-criminal.class.amendment]
+cite = "28 U.S.C. § 2074(a)"
+example = "https://www.supremecourt.gov/orders/courtorders/frcr23_d1pf.pdf"
+
+[family.district-criminal.class.local-rule]
+cite = "28 U.S.C. § 2071; FRCrimP 57(a)"
+example = "https://www.nysd.uscourts.gov/sites/default/files/local_rules/2026-01-02%20-%20EDNY%20and%20SDNY%20Joint%20Local%20Rules%20As%20Amended.pdf"
+
+[family.district-criminal.class.general-order]
+cite = "FRCrimP 57(b)"
+example = "https://www.nysd.uscourts.gov/sites/default/files/pdf/standing-orders/M10-468%20Standing%20Order%20Shutdown%20Fridays.pdf"
+
+[family.district-criminal.class.standing-order]
+cite = "FRCrimP 57(b)"
+example = "https://cand.uscourts.gov/sites/default/files/standing-orders/General-Standing-Order-Judge-Charles-R.-Breyer-rev-7-16-2025.pdf"
+
+[family.district-criminal.class.case-order]
+cite = "FRCrimP 45(b)(1); 18 U.S.C. § 3161(h)(7)"
+example = "https://www.govinfo.gov/content/pkg/USCOURTS-mnd-0_25-cr-00012/pdf/USCOURTS-mnd-0_25-cr-00012-0.pdf"
+
+[family.district-criminal.class.emergency-declaration]
+cite = "FRCrimP 62(b)(1)(C): a declaration is limited to a stated period of no more than 90 days"
+example = "https://www.supremecourt.gov/orders/courtorders/frcr23_d1pf.pdf"
+window_days = 90
+
+[family.district-criminal.class.guidance]
+cite = "Advisory Committee Notes, published with the rules but not prescribed under 28 U.S.C. § 2072"
+example = "https://www.law.cornell.edu/rules/frcrmp/rule_45"
+
+[family.district-criminal.class.precedent]
+cite = "Hutto v. Davis, 454 U.S. 370 (1982); Griffith v. Kentucky, 479 U.S. 314 (1987)"
+example = "https://tile.loc.gov/storage-services/service/ll/usrep/usrep479/usrep479314/usrep479314.pdf"
+
+[family.district-criminal.class.overruling]
+cite = "Rodriguez de Quijas v. Shearson/American Express, Inc., 490 U.S. 477, 484 (1989)"
+example = "https://tile.loc.gov/storage-services/service/ll/usrep/usrep521/usrep521203/usrep521203.pdf"
+
+[family.circuit-appellate]
+title = "Regional court of appeals (FRAP and circuit rules)"
+forums = ["frap"]
+precedent = ["scotus", "@circuit"]
+circuits = ["ca1", "ca2", "ca3", "ca4", "ca5", "ca6", "ca7", "ca8", "ca9", "ca10", "ca11", "cadc"]
+
+[family.circuit-appellate.class.base]
+cite = "28 U.S.C. §§ 2072, 2107; FRAP"
+example = "https://www.law.cornell.edu/rules/frap/rule_26"
+
+[family.circuit-appellate.class.amendment]
+cite = "28 U.S.C. § 2074(a); FRAP 47(a)(1) for a circuit rule's amendment"
+example = "https://cdn.ca9.uscourts.gov/datastore/uploads/frap-June%201%202026.pdf"
+
+[family.circuit-appellate.class.local-rule]
+cite = "FRAP 47(a); 28 U.S.C. § 2071(c)(2)"
+example = "https://cdn.ca9.uscourts.gov/datastore/uploads/frap-June%201%202026.pdf"
+
+# FRAP 47(a)(1): a generally applicable direction to parties "must be in a
+# local rule rather than an internal operating procedure or standing order".
+[family.circuit-appellate.class.general-order]
+cite = "FRAP 47(a)(1): a generally applicable direction to parties must be in a local rule"
+example = "https://cdn.ca9.uscourts.gov/datastore/uploads/rules/general_orders/general_orders_20250625.pdf"
+row = ["declare"]
+
+[family.circuit-appellate.class.standing-order]
+cite = "FRAP 47(a)(1): a generally applicable direction to parties must be in a local rule"
+row = ["declare"]
+
+[family.circuit-appellate.class.case-order]
+cite = "FRAP 2(a), 26(b), 47(b)"
+
+[family.circuit-appellate.class.emergency-declaration]
+cite = "FRAP 2(b)"
+
+[family.circuit-appellate.class.guidance]
+cite = "Circuit handbooks and practice guides, which FRAP 47(a)(1) does not make rules"
+
+[family.circuit-appellate.class.precedent]
+cite = "28 U.S.C. § 46(c); FRAP 32.1; Ninth Cir. R. 36-3(a)"
+example = "https://tile.loc.gov/storage-services/service/ll/usrep/usrep551/usrep551205/usrep551205.pdf"
+
+[family.circuit-appellate.class.overruling]
+cite = "28 U.S.C. § 46(c); FRAP 40(c)"
+example = "https://tile.loc.gov/storage-services/service/ll/usrep/usrep551/usrep551205/usrep551205.pdf"
+
+[family.federal-circuit]
+title = "Court of Appeals for the Federal Circuit"
+forums = ["cafc"]
+precedent = ["scotus", "cafc", "ccpa", "ct-cl"]
+
+[family.federal-circuit.class.base]
+cite = "FRAP; 28 U.S.C. § 1295; 35 U.S.C. §§ 141-142; 19 U.S.C. § 1337(c)"
+example = "https://www.law.cornell.edu/uscode/text/28/1295"
+
+[family.federal-circuit.class.amendment]
+cite = "Fed. Cir. R. 47(a)(2)-(3)"
+example = "https://www.cafc.uscourts.gov/wp-content/uploads/RulesProceduresAndForms/FederalCircuitRules/FederalCircuitRulesofPractice.pdf"
+
+[family.federal-circuit.class.local-rule]
+cite = "Fed. Cir. R. 47; FRAP 47(a); 28 U.S.C. § 2071"
+example = "https://www.cafc.uscourts.gov/wp-content/uploads/RulesProceduresAndForms/FederalCircuitRules/FederalCircuitRulesofPractice.pdf"
+
+# Fed. Cir. R. 26(a)(1) makes a day the clerk's office is closed "by order of
+# the court or the chief judge" a legal holiday: such an order prescribes.
+[family.federal-circuit.class.general-order]
+cite = "Fed. Cir. R. 26(a)(1), 47(c); FRAP 47(a)(1)"
+row = ["declare", "prescribe"]
+
+[family.federal-circuit.class.standing-order]
+cite = "Fed. Cir. R. 47(c); FRAP 47(a)(1)"
+row = ["declare"]
+
+[family.federal-circuit.class.case-order]
+cite = "Fed. Cir. R. 26(b); FRAP 26(b)"
+
+[family.federal-circuit.class.emergency-declaration]
+cite = "FRAP 2(b)"
+
+[family.federal-circuit.class.guidance]
+cite = "Fed. Cir. Practice Notes; Internal Operating Procedures, which bind the court's process, not litigants"
+example = "https://www.cafc.uscourts.gov/wp-content/uploads/RulesProceduresAndForms/InternalOperatingProcedures/InternalOperatingProcedures.pdf"
+
+[family.federal-circuit.class.precedent]
+cite = "Fed. Cir. R. 32.1; IOP 10; Newell Cos. v. Kenney Mfg. Co., 864 F.2d 757 (Fed. Cir. 1988); South Corp. v. United States, 690 F.2d 1368 (Fed. Cir. 1982) (en banc)"
+example = "https://www.cafc.uscourts.gov/opinions-orders/23-1142.OPINION.4-30-2024_2310031.pdf"
+
+[family.federal-circuit.class.overruling]
+cite = "Fed. Cir. IOP 13; 28 U.S.C. § 46(c)"
+
+# RCFC are the court's own rules (28 U.S.C. § 2503(b)), not local rules
+# under a national code: there is no local-rule layer, and no FRCP 87.
+[family.cofc]
+title = "Court of Federal Claims (RCFC)"
+forums = ["cofc"]
+precedent = ["scotus", "cafc", "ct-cl"]
+
+[family.cofc.class.base]
+cite = "28 U.S.C. §§ 2501, 2503(b); RCFC"
+example = "https://www.uscfc.uscourts.gov/sites/cfc/files/Rules%2010.08.26.pdf"
+
+[family.cofc.class.amendment]
+cite = "RCFC 83(a)"
+example = "https://www.uscfc.uscourts.gov/sites/cfc/files/Rules%2010.08.26.pdf"
+
+[family.cofc.class.general-order]
+cite = "RCFC 83(b); RCFC 6(a)(6)"
+example = "https://www.uscfc.uscourts.gov/sites/cfc/files/general-orders/2025.10.06%20General%20Order%20re%202025%20day%20after%20Thanksgiving.pdf"
+
+[family.cofc.class.standing-order]
+cite = "RCFC 83(b)"
+
+[family.cofc.class.case-order]
+cite = "RCFC 6(b), 6.1"
+example = "https://www.govinfo.gov/content/pkg/USCOURTS-cofc-1_16-cv-00932/pdf/USCOURTS-cofc-1_16-cv-00932-2.pdf"
+
+[family.cofc.class.guidance]
+cite = "RCFC Rules Committee Notes (2002)"
+example = "https://www.uscfc.uscourts.gov/sites/cfc/files/Rules%2010.08.26.pdf"
+
+[family.cofc.class.precedent]
+cite = "28 U.S.C. § 1295(a)(3); Reidell v. United States, 47 Fed. Cl. 209 (2000)"
+example = "https://tile.loc.gov/storage-services/service/ll/usrep/usrep552/usrep552130/usrep552130.pdf"
+
+[family.cofc.class.overruling]
+cite = "28 U.S.C. § 1295(a)(3): only the Federal Circuit or the Supreme Court"
+
+# 37 C.F.R. parts 1, 41, 42: no local rules, no standing orders; the Board
+# acts by regulation, order (42.5) and Director-designated precedent.
+[family.ptab]
+title = "Patent Trial and Appeal Board (AIA trials)"
+forums = ["ptab"]
+precedent = ["scotus", "cafc", "ccpa", "ptab"]
+
+[family.ptab.class.base]
+cite = "35 U.S.C. §§ 2(b)(2), 21(b), 316(a); 37 C.F.R. parts 1, 41, 42, 90"
+example = "https://www.law.cornell.edu/cfr/text/37/42.5"
+
+[family.ptab.class.amendment]
+cite = "35 U.S.C. § 316(a); notice-and-comment rulemaking"
+example = "https://www.federalregister.gov/documents/2018/10/11/2018-22006/changes-to-the-claim-construction-standard-for-interpreting-claims-in-trial-proceedings-before-the"
+
+[family.ptab.class.case-order]
+cite = "37 C.F.R. § 42.5(a), (c)"
+example = "https://www.uspto.gov/sites/default/files/documents/ipr2021-01064_order_extending_due_dates.pdf"
+
+[family.ptab.class.guidance]
+cite = "PTAB SOP 2 (Director policy directives bind Board judges); Consolidated Trial Practice Guide"
+example = "https://www.uspto.gov/sites/default/files/documents/Director_Institution_of_AIA_Trial_Proceedings.pdf"
+
+[family.ptab.class.precedent]
+cite = "PTAB SOP 2, Rev. 11 (designation with the Director's approval)"
+example = "https://www.uspto.gov/sites/default/files/documents/ipr2025-01072-dr-paper_30.pdf"
+
+[family.ptab.class.overruling]
+cite = "PTAB SOP 2, Rev. 11, § III (de-designation); 28 U.S.C. § 1295(a)(4)(A)"
+
+[family.ttab]
+title = "Trademark Trial and Appeal Board (inter partes)"
+forums = ["ttab"]
+precedent = ["scotus", "cafc", "ccpa", "ttab"]
+
+[family.ttab.class.base]
+cite = "15 U.S.C. § 1123; 37 C.F.R. part 2"
+example = "https://www.law.cornell.edu/cfr/text/37/2.196"
+
+[family.ttab.class.amendment]
+cite = "15 U.S.C. § 1123; notice-and-comment rulemaking"
+example = "https://www.federalregister.gov/documents/2016/10/07/2016-23092/miscellaneous-changes-to-trademark-trial-and-appeal-board-rules-of-practice"
+
+[family.ttab.class.case-order]
+cite = "37 C.F.R. §§ 2.120(a)(1), 2.121(a)"
+example = "https://ttabvue.uspto.gov/ttabvue/ttabvue-91250429-OPP-16.pdf"
+
+[family.ttab.class.guidance]
+cite = "TBMP § 101.05 (not binding on the Board); TMEP"
+example = "https://www.uspto.gov/sites/default/files/documents/tbmp-Master-June2026.pdf"
+
+[family.ttab.class.precedent]
+cite = "TBMP § 101.03; Official Gazette notice of Jan. 23, 2007"
+example = "https://ttabvue.uspto.gov/ttabvue/ttabvue-91250429-OPP-16.pdf"
+
+[family.ttab.class.overruling]
+cite = "15 U.S.C. § 1071(a); 28 U.S.C. § 1295(a)(4)(B)"
+
+# ALJ ground rules are issued in each investigation, below later orders
+# (Inv. No. 337-TA-1236, Order No. 2): a case order, not a standing order.
+[family.itc]
+title = "International Trade Commission (Section 337)"
+forums = ["itc"]
+precedent = ["scotus", "cafc"]
+
+[family.itc.class.base]
+cite = "19 U.S.C. § 1337; 19 C.F.R. parts 201, 210"
+example = "https://www.law.cornell.edu/cfr/text/19/210.6"
+
+[family.itc.class.amendment]
+cite = "19 U.S.C. § 1335; notice-and-comment rulemaking"
+example = "https://www.federalregister.gov/documents/2025/01/03/2024-31242/practice-and-procedure-rules-of-general-application-safeguards-antidumping-and-countervailing-duty"
+
+[family.itc.class.case-order]
+cite = "19 C.F.R. §§ 201.14(b), 210.6(a), 210.51(a)"
+example = "https://cdn.ymaws.com/itctla.org/resource/collection/5E7D12B0-4749-4F72-9F58-8FC7DF0569F2/337-TA-1236,_GR__Elliot_.pdf"
+
+[family.itc.class.guidance]
+cite = "USITC Section 337 FAQs (background only)"
+example = "https://www.usitc.gov/intellectual_property/documents/337_faqs.pdf"
+
+[family.itc.class.precedent]
+cite = "19 U.S.C. § 1337(c); 28 U.S.C. § 1295(a)(6): Federal Circuit review"
+
+[family.itc.class.overruling]
+cite = "19 U.S.C. § 1337(c); 28 U.S.C. § 1295(a)(6)"

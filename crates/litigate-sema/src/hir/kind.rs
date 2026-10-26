@@ -19,10 +19,21 @@ pub enum Kind {
     Amendment,
     /// A court's local rules (FRCP 83(a)(1)).
     LocalRule,
+    /// A court-wide order: a general order, a chief judge's standing order
+    /// (S.D.N.Y. M10-468, COFC General Order 2025-02). Court-scoped where a
+    /// standing order is judge-scoped; on the same rung, since both
+    /// regulate practice consistently with the rules (FRCP 83(b), RCFC
+    /// 83(b)).
+    GeneralOrder,
     /// A judge's standing order.
     StandingOrder,
     /// An order in one case.
     CaseOrder,
+    /// A Judicial Conference emergency declaration (FRCP 87, FRCrimP 62,
+    /// FRAP 2(b)): it grants capabilities, such as extending a locked
+    /// period, to the courts it designates for a bounded window, and does
+    /// nothing else.
+    EmergencyDeclaration,
     /// Guidance binding the actors `binds` and no one else (design review
     /// §2.5 item 3): it may set the priors of their draws and nothing
     /// else, never a party's duty.
@@ -56,12 +67,14 @@ pub enum Scope {
 
 impl Kind {
     /// Every class name `Lit.toml` accepts, in declaration order.
-    pub const NAMES: [&'static str; 8] = [
+    pub const NAMES: [&'static str; 10] = [
         "base",
         "amendment",
         "local-rule",
+        "general-order",
         "standing-order",
         "case-order",
+        "emergency-declaration",
         "guidance",
         "precedent",
         "overruling",
@@ -80,12 +93,35 @@ impl Kind {
             Self::Base => "base",
             Self::Amendment => "amendment",
             Self::LocalRule => "local-rule",
+            Self::GeneralOrder => "general-order",
             Self::StandingOrder => "standing-order",
             Self::CaseOrder => "case-order",
+            Self::EmergencyDeclaration => "emergency-declaration",
             Self::Guidance { .. } => "guidance",
             Self::Precedent { .. } => "precedent",
             Self::Overruling => "overruling",
         }
+    }
+
+    /// The class named `name` in `Lit.toml`: guidance binding no one yet,
+    /// precedent at its widest (binding) scope. `None` for an unknown name.
+    #[must_use]
+    pub fn from_name(name: &str) -> Option<Self> {
+        Some(match name {
+            "base" => Self::Base,
+            "amendment" => Self::Amendment,
+            "local-rule" => Self::LocalRule,
+            "general-order" => Self::GeneralOrder,
+            "standing-order" => Self::StandingOrder,
+            "case-order" => Self::CaseOrder,
+            "emergency-declaration" => Self::EmergencyDeclaration,
+            "guidance" => Self::Guidance { binds: Vec::new() },
+            "precedent" => Self::Precedent {
+                scope: Scope::Binding,
+            },
+            "overruling" => Self::Overruling,
+            _ => return None,
+        })
     }
 
     /// The authority level a modification layer's package must have: its
@@ -95,7 +131,7 @@ impl Kind {
     pub fn level(&self) -> Option<&'static str> {
         match self {
             Self::LocalRule => Some("LocalRule"),
-            Self::StandingOrder => Some("StandingOrder"),
+            Self::GeneralOrder | Self::StandingOrder => Some("StandingOrder"),
             Self::CaseOrder => Some("CaseOrder"),
             _ => None,
         }
@@ -120,6 +156,9 @@ impl Kind {
             Self::Amendment => Row::ALL.without(E::Rank),
             Self::LocalRule | Self::StandingOrder => layer.with(E::GrantCap),
             Self::CaseOrder => layer,
+            // Court-wide practice: no matter facts, no priors of its own.
+            Self::GeneralOrder => Row::of(&[E::Declare, E::Prescribe, E::Override, E::Waive]),
+            Self::EmergencyDeclaration => Row::of(&[E::Declare, E::GrantCap]),
             Self::Precedent {
                 scope: Scope::Binding,
             } => Row::of(&[
@@ -141,13 +180,15 @@ impl Kind {
 
     /// One value of each class, binding and persuasive precedent apart.
     #[must_use]
-    pub fn classes() -> [Self; 9] {
+    pub fn classes() -> [Self; 11] {
         [
             Self::Base,
             Self::Amendment,
             Self::LocalRule,
+            Self::GeneralOrder,
             Self::StandingOrder,
             Self::CaseOrder,
+            Self::EmergencyDeclaration,
             Self::Guidance { binds: Vec::new() },
             Self::Precedent {
                 scope: Scope::Binding,
@@ -285,6 +326,12 @@ impl Effect {
         }
     }
 
+    /// The effect named `name` ([`Effect::name`]).
+    #[must_use]
+    pub fn from_name(name: &str) -> Option<Self> {
+        Self::ALL.into_iter().find(|e| e.name() == name)
+    }
+
     fn bit(self) -> u16 {
         1 << (self as u16)
     }
@@ -317,6 +364,18 @@ impl Row {
         Self(self.0 & !effect.bit())
     }
 
+    /// The effects of `self` and of `other`.
+    #[must_use]
+    pub fn union(self, other: Self) -> Self {
+        Self(self.0 | other.0)
+    }
+
+    /// Whether every effect of `self` is in `other`.
+    #[must_use]
+    pub fn within(self, other: Self) -> bool {
+        self.0 & !other.0 == 0
+    }
+
     /// Whether `effect` is in the row.
     #[must_use]
     pub fn has(self, effect: Effect) -> bool {
@@ -343,4 +402,102 @@ pub struct Instrument {
     /// Its designation (an order or rule number, a reporter cite).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub designation: Option<String>,
+    /// The issuing court's id in the forum-family matrix (`scotus`, `ca9`,
+    /// `cafc`, `ptab`): precedent and overruling only, where binding scope
+    /// is computed from it.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub court: Option<String>,
+    /// When a precedent was designated precedential (PTAB SOP 2; a
+    /// published opinion's date where the legend is the designation).
+    /// Absent, the decision is nonprecedential and binds nowhere.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub designated: Option<String>,
+    /// The precedent packages an overruling withdraws.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub overrules: Vec<String>,
+    /// False for a synthetic what-if layer: it may appear only in a
+    /// counterfactual world (design review §2.5 item 2).
+    #[serde(default = "yes", skip_serializing_if = "is_yes")]
+    pub authoritative: bool,
+}
+
+fn yes() -> bool {
+    true
+}
+
+#[allow(clippy::trivially_copy_pass_by_ref)] // serde's skip_serializing_if signature
+fn is_yes(b: &bool) -> bool {
+    *b
+}
+
+/// One forum family's column of the class matrix (`[family.*]` in
+/// `lit/core`'s `Lit.toml`; docs/litigate/CHANGE.md §3): which classes
+/// exist there, what each may do there, and whose precedent binds there.
+/// Data, not compiler code (design review §2.5 item 4).
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Family {
+    /// Its id (`district-civil`, `cofc`, `ptab`).
+    pub id: String,
+    /// What it is.
+    pub title: String,
+    /// The package `forum`s in it.
+    pub forums: Vec<String>,
+    /// The courts whose precedential decisions bind in it; `@circuit` is
+    /// the regional circuit of a world's location.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub precedent: Vec<String>,
+    /// The values a location's `circuit` takes in it.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub circuits: Vec<String>,
+    /// One cell per class that exists in it.
+    pub classes: Vec<Cell>,
+}
+
+/// One cell of the matrix: a class that exists in a forum family.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Cell {
+    /// The class (a [`Kind::NAMES`] entry).
+    pub class: String,
+    /// The instrument that makes the class exist in the family.
+    pub cite: String,
+    /// A real instrument of the class there (a URL).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub example: Option<String>,
+    /// The effects the class has in the family, when narrower than its
+    /// row ([`Kind::row`]); absent, the row.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub row: Option<Vec<Effect>>,
+    /// The longest window, in days, a grant of the class may have
+    /// (FRCP 87(b)(1)(C): an emergency declaration's 90 days).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub window_days: Option<u32>,
+}
+
+impl Family {
+    /// Its cell for `kind`, if the class exists in it.
+    #[must_use]
+    pub fn cell(&self, kind: &Kind) -> Option<&Cell> {
+        self.classes.iter().find(|c| c.class == kind.name())
+    }
+
+    /// Whether a precedential decision of `court` binds in the family at
+    /// `circuit` (a world's location); with no circuit, whether it binds
+    /// at some location of the family.
+    #[must_use]
+    pub fn binds(&self, court: &str, circuit: Option<&str>) -> bool {
+        self.precedent.iter().any(|p| {
+            p == court
+                || (p == "@circuit"
+                    && circuit
+                        .map_or_else(|| self.circuits.iter().any(|c| c == court), |c| c == court))
+        })
+    }
+}
+
+impl Cell {
+    /// The effects the class has here: its `row`, else `ceiling`.
+    #[must_use]
+    pub fn row(&self, ceiling: Row) -> Row {
+        self.row.as_ref().map_or(ceiling, |r| Row::of(r))
+    }
 }

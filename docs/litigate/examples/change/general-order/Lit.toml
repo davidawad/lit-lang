@@ -1,0 +1,36 @@
+# Change example (docs/litigate/CHANGE.md §4): a general order. Court of
+# Federal Claims General Order No. 2025-02 closes the court on Friday,
+# November 28, 2025, and treats the day as a legal holiday for RCFC 6. A
+# court-wide order, not a judge's: the class records the court scope.
+[package]
+name = "change-cofc-general-order-2025-02"
+version = "1.0.0"
+language = 1
+pack_id = "change-cofc-general-order-2025-02"
+forum = "cofc"
+authority = "StandingOrder"
+title = "Change example: COFC General Order No. 2025-02"
+in_force = "2025-11-28"
+known_at = "2026-10-26"
+kind = "general-order"
+
+[package.roles]
+court = "nature"
+
+[package.instrument]
+source = "go-2025-02"
+issuer = "United States Court of Federal Claims"
+date = "2025-10-06"
+designation = "General Order No. 2025-02"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../../../../../lit/core" }
+
+[sources.go-2025-02]
+title = "U.S. Court of Federal Claims, General Order No. 2025-02 (Oct. 6, 2025)"
+url = "https://www.uscfc.uscourts.gov/sites/cfc/files/general-orders/2025.10.06%20General%20Order%20re%202025%20day%20after%20Thanksgiving.pdf"
+path = "sources/change-cofc-general-order-2025-02.txt"
+path_sha256 = "3928c4ed72588200af3a643584ab3456806bedd3acf116a6d4a463df52ca0a27"
+as_of = "2025-10-06"
+cite_prefixes = ["COFC"]
+section_heading = "COFC {n}"

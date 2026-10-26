@@ -1,0 +1,38 @@
+# Change example (docs/litigate/CHANGE.md §4): a local rule. S.D.N.Y. and
+# E.D.N.Y. Joint Local Civil Rule 6.1(a) (effective January 2, 2026) fixes
+# the time to serve opposing papers on a discovery motion, a period the FRCP
+# leaves open, counted under FRCP 6, "unless provided otherwise ... by the
+# court in a judge's individual practices or in a direction in a particular
+# case": it delegates the period to a standing order and to a case order.
+[package]
+name = "change-sdny-local-civil-rules"
+version = "1.0.0"
+language = 1
+pack_id = "change-sdny-local-civil-rules"
+forum = "frcp"
+authority = "LocalRule"
+title = "Change example: S.D.N.Y./E.D.N.Y. Local Civil Rule 6.1(a)"
+in_force = "2026-01-02"
+known_at = "2026-10-26"
+kind = "local-rule"
+
+[package.roles]
+court = "nature"
+
+[package.instrument]
+source = "sdny-lcvr"
+issuer = "United States District Courts for the Southern and Eastern Districts of New York"
+date = "2026-01-02"
+designation = "Local Civil Rule 6.1"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../../../../../lit/core" }
+
+[sources.sdny-lcvr]
+title = "Joint Local Rules of the S.D.N.Y. and E.D.N.Y., effective January 2, 2026 (Local Civil Rule 6)"
+url = "https://www.nysd.uscourts.gov/sites/default/files/local_rules/2026-01-02%20-%20EDNY%20and%20SDNY%20Joint%20Local%20Rules%20As%20Amended.pdf"
+path = "sources/change-sdny-edny-local-civil-rule-6.txt"
+path_sha256 = "d7ea4a0e259c8609c98efe869d04776cb7e9ca119c701c3760679a01e3110aae"
+as_of = "2026-01-02"
+cite_prefixes = ["S.D.N.Y. Local Civ. R."]
+section_heading = "S.D.N.Y. Local Civ. R. {n}"

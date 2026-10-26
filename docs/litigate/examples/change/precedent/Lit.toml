@@ -1,0 +1,44 @@
+# Change example (docs/litigate/CHANGE.md §4): a precedent. In Light &
+# Wonder, Inc. v. Evolution Malta Ltd., IPR2025-01072, Paper 30 (June 22,
+# 2026), designated precedential on June 22, 2026, the Director waived the
+# § 42.75(c)(1) period for requesting Director Review of a decision to
+# institute, "going forward", extending it from 14 days to 30 under
+# § 42.5(b). Its effect is a waiver: a prospective override that needs the
+# delegation § 42.5(b) gives (docs/litigate/CHANGE.md §2.8). Its scope is
+# computed: PTAB precedent binds in the `ptab` family.
+[package]
+name = "change-light-wonder-paper-30"
+version = "1.0.0"
+language = 1
+pack_id = "change-light-wonder-paper-30"
+forum = "ptab"
+authority = "CaseOrder"
+title = "Change example: Light & Wonder, Paper 30 (precedential)"
+in_force = "2026-06-22"
+known_at = "2026-10-26"
+kind = "precedent"
+
+[package.roles]
+court = "nature"
+
+[package.instrument]
+source = "paper-30"
+issuer = "Director of the United States Patent and Trademark Office"
+date = "2026-06-22"
+designation = "IPR2025-01072, Paper 30 (precedential, designated June 22, 2026)"
+court = "ptab"
+designated = "2026-06-22"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../../../../../lit/core" }
+change-ptab-base = { version = "^1.0.0", path = "../ptab-base" }
+mpep-prosecution = { version = "^0.1.0", path = "../../../../../lit/mpep" }
+
+[sources.paper-30]
+title = "Light & Wonder, Inc. v. Evolution Malta Ltd., IPR2025-01072, Paper 30 (Director June 22, 2026)"
+url = "https://www.uspto.gov/sites/default/files/documents/ipr2025-01072-dr-paper_30.pdf"
+path = "sources/change-light-wonder-ipr2025-01072-paper-30.txt"
+path_sha256 = "1e32fb02af2ee2caeb5956f0fb21a93eb5c2ffa6dc3289ec4a73c5902df4edc5"
+as_of = "2026-06-22"
+cite_prefixes = ["Light & Wonder"]
+section_heading = "Light & Wonder IPR2025-01072 Paper {n}"

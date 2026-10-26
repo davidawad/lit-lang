@@ -121,6 +121,7 @@ pub fn check_package(db: &dyn salsa::Database, pkg: PackageInput) -> PackageChec
     if let (Some(_), Some(ws)) = (m, ws) {
         reports.extend(dependency_reports(db, ws, pkg, text));
     }
+    reports.extend(crate::change::class_reports(db, pkg, text));
     let checks: Vec<&ModuleCheck> = pkg.files(db).iter().map(|f| check_module(db, *f)).collect();
     let mut diagnostics: Vec<Diagnostic> = reports
         .iter()

@@ -83,6 +83,8 @@ registry! {
     UnboundCite = "L1010" => "A citation does not resolve through a declared source binding",
     UnresolvedDependencies = "L1011" => "No choice of loaded package versions satisfies every dependency requirement",
     IncompatibleRelease = "L1012" => "A release's version bump is smaller than its computed compatibility class requires",
+    InvalidWorld = "L1013" => "A world file is malformed, names a layer that is not loaded, or has a location its forum family does not have",
+    NotActualLaw = "L1014" => "A counterfactual world is checked under the strict profile, or a non-authoritative layer is in an actual world",
     TypeMismatch = "L2001" => "The expression type does not match the required type",
     InvalidOperation = "L2002" => "This operation is not permitted for the operand domain types",
     InvalidDistribution = "L2003" => "A distribution must cover every enum variant exactly once and sum to one",
@@ -93,6 +95,7 @@ registry! {
     InvalidProbability = "L2008" => "An edge probability is outside [0,1], on a self edge, on an edge that is not a draw's, or missing at a chance node",
     InvalidCapability = "L2009" => "A capability is not allowed by the deadline's characterization: a jurisdictional limit admits no waiver, no unbounded extension, and no delegation",
     ForbiddenEffect = "L2010" => "A declaration has an effect its package's instrument class (`kind` in Lit.toml) does not permit",
+    ClassOutsideFamily = "L2011" => "An instrument class does not exist in its forum family, or exceeds the bound of its matrix cell",
     EffectiveOverlap = "L3001" => "Two versions of the same declaration overlap in in-force time",
     EffectiveGap = "L3002" => "A declaration version gap is not explicitly declared",
     UnresolvedPrecedence = "L3003" => "Conflicting rules remain unordered after relations and canons are applied",
@@ -139,6 +142,7 @@ registry! {
     UndeclaredEventId = "L9006" => "A case event declares no id, so its timeline key changes when its date or docket number is corrected",
     FormerName = "L9007" => "A reference uses an id the declaration had before it was renamed (`formerly`)",
     CiteProvedByHistory = "L9008" => "A cite's vendored text, dated after its version took effect, is that version's text: the vendored amendment history records no amendment in between",
+    PrecedentNotBinding = "L9009" => "A precedent layer does not bind at the world's location: it is persuasive there, and its binding effects are not in force",
 }
 
 /// What `explain` says of an [`DiagnosticCode::Unknown`] code.
@@ -200,9 +204,13 @@ impl DiagnosticCode {
     #[must_use]
     pub const fn severity(self, profile: Profile) -> Severity {
         match (self, profile) {
-            (Self::AnonymousEdge | Self::UndeclaredEventId | Self::CiteProvedByHistory, _) => {
-                Severity::Info
-            }
+            (
+                Self::AnonymousEdge
+                | Self::UndeclaredEventId
+                | Self::CiteProvedByHistory
+                | Self::PrecedentNotBinding,
+                _,
+            ) => Severity::Info,
             (
                 Self::UnusedDeclaration
                 | Self::ObligationBreached

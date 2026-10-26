@@ -55,10 +55,21 @@ pub fn legal_checks(db: &dyn salsa::Database, pkg: PackageInput) -> Vec<Diagnost
     let Ok(own) = manifest(db, pkg) else {
         return Vec::new();
     };
+    checks_over(db, &closure(db, pkg, &own.manifest), &[0])
+}
+
+/// Temporal and precedence diagnostics for the packages at `own` of the
+/// world `packages` makes (a package's closure, or a world file's layers
+/// with theirs: docs/litigate/CHANGE.md §5), sorted.
+pub fn checks_over(
+    db: &dyn salsa::Database,
+    packages: &[(PackageInput, &Manifest)],
+    own: &[usize],
+) -> Vec<Diagnostic> {
     let mut world = World::default();
     let mut files: BTreeMap<String, SourceFile> = BTreeMap::new();
     let mut by_pack = Vec::new();
-    for (p, m) in closure(db, pkg, &own.manifest) {
+    for &(p, m) in packages {
         for f in p.files(db) {
             files.insert(f.path(db), *f);
         }
@@ -70,8 +81,14 @@ pub fn legal_checks(db: &dyn salsa::Database, pkg: PackageInput) -> Vec<Diagnost
         world.add(PackInfo::of(m), modules);
     }
     let loc = Source { db, files, by_pack };
-    let mut out = super::check(&world, &loc, 0);
+    let mut out: Vec<Diagnostic> = own
+        .iter()
+        .flat_map(|&i| super::check(&world, &loc, i))
+        .collect();
     crate::db::span::sort_diagnostics(&mut out);
+    if own.len() > 1 {
+        out.dedup();
+    }
     out
 }
 

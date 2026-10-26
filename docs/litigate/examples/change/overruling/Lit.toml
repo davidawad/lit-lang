@@ -1,0 +1,38 @@
+# Change example (docs/litigate/CHANGE.md §4): an overruling. Bowles v.
+# Russell, 551 U.S. 205 (2007): "we overrule Harris Truck Lines and Thompson
+# to the extent they purport to authorize an exception to a jurisdictional
+# rule". The same court withdraws its own precedent from June 14, 2007; under
+# Harper v. Virginia Dep't of Taxation, 509 U.S. 86 (1993), the rule it
+# announces governs every case still open on direct review.
+[package]
+name = "change-bowles-v-russell"
+version = "1.0.0"
+language = 1
+pack_id = "change-bowles-v-russell"
+forum = "frap"
+authority = "FederalRule"
+title = "Change example: Bowles v. Russell overrules Thompson"
+in_force = "2007-06-14"
+known_at = "2026-10-26"
+kind = "overruling"
+
+[package.roles]
+court = "nature"
+
+[package.instrument]
+source = "bowles"
+issuer = "Supreme Court of the United States"
+date = "2007-06-14"
+designation = "551 U.S. 205"
+court = "scotus"
+overrules = ["change-thompson-v-ins"]
+
+[dependencies]
+core = { version = "^1.0.0", path = "../../../../../lit/core" }
+
+[sources.bowles]
+title = "Bowles v. Russell, 551 U.S. 205 (2007)"
+url = "https://tile.loc.gov/storage-services/service/ll/usrep/usrep551/usrep551205/usrep551205.pdf"
+path = "sources/change-corpus/rulings/bowles-scotus-2007.txt"
+path_sha256 = "2216e8f6185a31a7ee2757d4eee47744ebe3fa74a68a0d87d25297f6a7cda923"
+as_of = "2007-06-14"

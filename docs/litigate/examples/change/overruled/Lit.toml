@@ -1,0 +1,39 @@
+# Change example (docs/litigate/CHANGE.md §4): the precedent an overruling
+# withdraws. Thompson v. INS, 375 U.S. 384 (1964) (per curiam), excused a
+# late notice of appeal where the appellant relied on the district court's
+# statement that his post-trial motions were timely: the "unique
+# circumstances" doctrine.
+[package]
+name = "change-thompson-v-ins"
+version = "1.0.0"
+language = 1
+pack_id = "change-thompson-v-ins"
+forum = "frap"
+authority = "FederalRule"
+title = "Change example: Thompson v. INS (unique circumstances)"
+in_force = "1964-01-06"
+known_at = "2026-10-26"
+kind = "precedent"
+
+[package.roles]
+court = "nature"
+
+[package.instrument]
+source = "thompson"
+issuer = "Supreme Court of the United States"
+date = "1964-01-06"
+designation = "375 U.S. 384"
+court = "scotus"
+designated = "1964-01-06"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../../../../../lit/core" }
+
+[sources.thompson]
+title = "Thompson v. INS, 375 U.S. 384 (1964)"
+url = "https://tile.loc.gov/storage-services/service/ll/usrep/usrep375/usrep375384/usrep375384.pdf"
+path = "sources/change-thompson-v-ins-375-us-384.txt"
+path_sha256 = "adb3b1d49b1a12c14f58d973942a3dc62825bb5287c56df17f4ed0eac64f9cc9"
+as_of = "1964-01-06"
+cite_prefixes = ["Thompson v. INS,"]
+section_heading = "Thompson v. INS, {n}"

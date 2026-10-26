@@ -22,6 +22,8 @@ pub struct Targets {
     pub packages: Vec<PathBuf>,
     /// `.case` files.
     pub cases: Vec<PathBuf>,
+    /// `.world` files (docs/litigate/CHANGE.md §5).
+    pub worlds: Vec<PathBuf>,
     /// Every `.lit` and `.case` file named or found.
     pub files: Vec<PathBuf>,
 }
@@ -52,6 +54,7 @@ fn walk(src: &dyn Source, dir: &Path, out: &mut Targets) -> std::io::Result<()> 
                     out.files.push(path);
                 }
                 Some("lit") => out.files.push(path),
+                Some("world") => out.worlds.push(path),
                 _ => {}
             }
         }
@@ -70,8 +73,8 @@ fn package_of(src: &dyn Source, file: &Path) -> Option<PathBuf> {
 /// Classifies `paths` (files or directories, searched recursively).
 ///
 /// # Errors
-/// A path that does not exist, or a file that is not `.lit`, `.case`, or
-/// `Lit.toml`, or a `.lit` file outside any package.
+/// A path that does not exist, or a file that is not `.lit`, `.case`,
+/// `.world`, or `Lit.toml`, or a `.lit` file outside any package.
 pub fn discover(paths: &[String]) -> Result<Targets, Failure> {
     discover_in(&Disk, paths)
 }
@@ -100,6 +103,7 @@ pub fn discover_in(src: &dyn Source, paths: &[String]) -> Result<Targets, Failur
                 out.cases.push(path.clone());
                 out.files.push(path);
             }
+            Some("world") => out.worlds.push(path),
             Some("lit") => {
                 let dir = package_of(src, &path).ok_or_else(|| {
                     Failure::new(format!(
@@ -116,12 +120,17 @@ pub fn discover_in(src: &dyn Source, paths: &[String]) -> Result<Targets, Failur
             }
             _ => {
                 return Err(Failure::new(format!(
-                    "{raw}: not a .lit, .case, or Lit.toml file"
+                    "{raw}: not a .lit, .case, .world, or Lit.toml file"
                 )))
             }
         }
     }
-    for list in [&mut out.packages, &mut out.cases, &mut out.files] {
+    for list in [
+        &mut out.packages,
+        &mut out.cases,
+        &mut out.worlds,
+        &mut out.files,
+    ] {
         list.sort();
         list.dedup();
     }
@@ -259,6 +268,15 @@ pub struct CaseText {
     pub lock: Option<String>,
 }
 
+/// One `.world` file.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct WorldText {
+    /// Repository-relative path.
+    pub path: String,
+    /// Contents.
+    pub text: String,
+}
+
 /// Everything loaded for one command.
 pub struct Session {
     /// The database.
@@ -269,6 +287,8 @@ pub struct Session {
     pub packages: Vec<Pkg>,
     /// Matters.
     pub cases: Vec<CaseText>,
+    /// Worlds.
+    pub worlds: Vec<WorldText>,
     /// The verification cache: only for a session read from disk.
     pub cache: Option<crate::cache::Cache>,
     /// Reused Salsa inputs for matter texts.
@@ -286,6 +306,14 @@ pub(crate) fn uses_of(text: &str) -> Vec<String> {
                 .filter_map(|i| i.package().map(|t| t.text().to_owned()))
                 .collect()
         })
+        .unwrap_or_default()
+}
+
+/// Package names a `.world` text names as layers (none when it does not
+/// parse: its check reports why).
+pub(crate) fn layers_of(text: &str) -> Vec<String> {
+    litigate_sema::change::world::parse_world(text)
+        .map(|(w, _)| w.layers.into_iter().collect())
         .unwrap_or_default()
 }
 
@@ -337,11 +365,34 @@ impl Session {
                 })
             })
             .collect::<Result<Vec<_>, Failure>>()?;
-        let wanted: BTreeSet<String> = cases.iter().flat_map(|c| uses_of(&c.text)).collect();
+        let worlds = targets
+            .worlds
+            .iter()
+            .map(|p| {
+                Ok(WorldText {
+                    path: shown_in(src, p),
+                    text: src
+                        .read_to_string(p)
+                        .map_err(|e| Failure::new(format!("{}: {e}", p.display())))?,
+                })
+            })
+            .collect::<Result<Vec<_>, Failure>>()?;
+        // A world's layers are packages: the loaded ones, else the library's.
+        let wanted: BTreeSet<String> = cases
+            .iter()
+            .flat_map(|c| uses_of(&c.text))
+            .chain(worlds.iter().flat_map(|w| layers_of(&w.text)))
+            .collect();
         let mut roots: Vec<PathBuf> = targets.packages.iter().map(|p| root.join(p)).collect();
         if !wanted.is_empty() {
+            let near: Vec<PathBuf> = targets
+                .cases
+                .iter()
+                .chain(&targets.worlds)
+                .cloned()
+                .collect();
             roots.extend(
-                library_in(src, &library_for_in(src, lib, &targets.cases))
+                library_in(src, &library_for_in(src, lib, &near))
                     .into_iter()
                     .filter(|(name, _)| wanted.contains(name))
                     .map(|(_, dir)| root.join(dir)),
@@ -363,6 +414,7 @@ impl Session {
             ws,
             packages,
             cases,
+            worlds,
             cache: src
                 .on_disk()
                 .then(|| crate::cache::Cache::from_env(&root))
@@ -396,6 +448,7 @@ impl Session {
             ws,
             packages,
             cases,
+            worlds: Vec::new(),
             cache: None,
             case_files: Vec::new(),
         }

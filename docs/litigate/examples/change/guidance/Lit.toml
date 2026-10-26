@@ -1,0 +1,37 @@
+# Change example (docs/litigate/CHANGE.md §4): guidance. The Federal
+# Circuit's Practice Note to Rule 26 states its own practice: "The court
+# cannot waive the deadlines for filing a notice of appeal or petition for
+# review". Guidance binds only the actors it names (`binds`); here the court,
+# whose draw it fixes. It prescribes nothing and imposes no duty.
+[package]
+name = "change-fedcir-practice-note-26"
+version = "1.0.0"
+language = 1
+pack_id = "change-fedcir-practice-note-26"
+forum = "cafc"
+authority = "LocalRule"
+title = "Change example: Federal Circuit Practice Note to Rule 26"
+in_force = "2026-10-06"
+known_at = "2026-10-26"
+kind = "guidance"
+
+[package.roles]
+court = "nature"
+
+[package.instrument]
+source = "fedcir"
+issuer = "United States Court of Appeals for the Federal Circuit"
+date = "2026-10-06"
+designation = "Practice Note to Rule 26"
+binds = ["court"]
+
+[dependencies]
+core = { version = "^1.0.0", path = "../../../../../lit/core" }
+
+[sources.fedcir]
+title = "Federal Circuit Rules of Practice (with Practice Notes)"
+url = "https://www.cafc.uscourts.gov/wp-content/uploads/RulesProceduresAndForms/FederalCircuitRules/FederalCircuitRulesofPractice.pdf"
+path = "sources/fedcir-rules.txt"
+path_sha256 = "f38803d4f0370b737c9fcc85f2013b757a6a7648609637c88e652322de75b1a9"
+cite_prefixes = ["Fed. Cir. R."]
+section_heading = "Fed. Cir. R. {n}"

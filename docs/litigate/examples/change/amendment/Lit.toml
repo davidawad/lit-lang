@@ -1,0 +1,39 @@
+# Change example (docs/litigate/CHANGE.md §4): an amendment. The Supreme
+# Court's order of March 26, 2009 amended FRCP 59(e) from 10 days to 28,
+# effective December 1, 2009, "and shall govern in all proceedings thereafter
+# commenced and, insofar as just and practicable, all proceedings then
+# pending". It produces the next version of the base declaration, never a
+# parallel world.
+[package]
+name = "change-frcp-2009-amendment"
+version = "1.0.0"
+language = 1
+pack_id = "change-frcp-2009-amendment"
+forum = "frcp"
+authority = "FederalRule"
+title = "Change example: the 2009 FRCP time amendments (Rule 59(e))"
+in_force = "2009-12-01"
+known_at = "2026-10-26"
+kind = "amendment"
+
+[package.roles]
+court = "nature"
+
+[package.instrument]
+source = "order-2009"
+issuer = "Supreme Court of the United States"
+date = "2009-03-26"
+designation = "Order of March 26, 2009, effective December 1, 2009 (28 U.S.C. § 2074(a))"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../../../../../lit/core" }
+change-frcp-base = { version = "^1.0.0", path = "../base" }
+
+[sources.order-2009]
+title = "Supreme Court order of March 26, 2009 amending the FRCP, with the amended rule text"
+url = "https://www.supremecourt.gov/orders/courtorders/frcv09.pdf"
+path = "sources/change-frcv-2009-amendments-excerpt.txt"
+path_sha256 = "0eb155fa9a5911540a1b4a5f1784c944c235f6fd5fa9fe8da29ba716cc6b9690"
+as_of = "2009-12-01"
+cite_prefixes = ["FRCP (2009)"]
+section_heading = "FRCP (2009) Rule {n}"

@@ -1,0 +1,40 @@
+# Change example (docs/litigate/CHANGE.md §4): the base layer. Three FRCP
+# periods the other example layers act on, each from the vendored rule text:
+# Rule 12(a)(1)(A)(i) (delegated to a case order by Rule 6(b)), Rule 56(b)
+# ("Unless a different time is set by local rule or the court orders
+# otherwise"), and Rule 59(e) as restyled in 2007 (10 days, locked by Rule
+# 6(b)(2)), which the 2009 amendment replaces.
+[package]
+name = "change-frcp-base"
+version = "1.0.0"
+language = 1
+pack_id = "change-frcp-base"
+forum = "frcp"
+authority = "FederalRule"
+title = "Change example: FRCP base periods"
+in_force = "2007-12-01"
+known_at = "2026-10-26"
+
+[package.roles]
+court = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../../../../../lit/core" }
+
+[sources.frcp]
+title = "Federal Rules of Civil Procedure, as amended to Dec. 1, 2024"
+url = "https://www.uscourts.gov/sites/default/files/2025-02/federal-rules-of-civil-procedure-dec-1-2024_0.pdf"
+path = "sources/frcp.txt"
+path_sha256 = "cb9a19a0ad99acdbd04f46acd3893bb96fbd34c9a8f66de57f5d171dbd268b44"
+as_of = "2024-12-01"
+cite_prefixes = ["FRCP"]
+section_heading = "Rule {n}"
+
+[sources.frcp-2007]
+title = "Federal Rules of Civil Procedure as restyled, effective Dec. 1, 2007 (order of Apr. 30, 2007)"
+url = "https://www.supremecourt.gov/orders/courtorders/frcv07p.pdf"
+path = "sources/change-frcv-2007-restyled-excerpt.txt"
+path_sha256 = "a7287e6fd94acc165ac1eb4a5cdd5c9f404acc3abfe01182cbfb490c3d766f6e"
+as_of = "2007-12-01"
+cite_prefixes = ["FRCP (2007)"]
+section_heading = "FRCP (2007) Rule {n}"

@@ -14,6 +14,8 @@ pub struct Cx<'s, 'a> {
     pub ck: Checker<'s, 'a>,
     /// Package manifest, when valid.
     pub manifest: Option<&'s Manifest>,
+    /// The package's class where its forum family has it, when valid.
+    pub class: Option<&'s crate::change::ClassIndex>,
     /// `::` qualification allowed (links package).
     pub links: bool,
     /// Pack id of the link being built: its actors are that pack's.

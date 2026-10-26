@@ -1,0 +1,24 @@
+module change-breyer-standing-order.copies
+
+import core.frcp6.{ frcp6 }
+
+/// A standing order is judge-scoped (docs/litigate/CHANGE.md §2.5): it
+/// prescribes only what a rule or local rule leaves to it.
+start copies
+
+terminal copies: "Judge Breyer's General Standing Order (no procedure)"
+
+/// A document is electronically filed.
+event DocumentFiled()
+
+/// The courtesy chambers copy is due "no later than noon on the court day
+/// following the day that the document was electronically filed": one day
+/// under FRCP 6(a)(1), rolled past weekends and legal holidays to the next
+/// court day. The noon hour is not modelled (day granularity).
+deadline courtesy-copy-period: 1.days after DocumentFiled() counted_by frcp6 effective [2025-07-16, ..) cite "Breyer General Standing Order"
+
+test "a Friday filing's courtesy copy is due Monday" cite "Breyer General Standing Order"
+{
+  given DocumentFiled() on 2025-08-08
+  expect deadline(courtesy-copy-period) == 2025-08-11
+}

@@ -1,0 +1,30 @@
+# Change example (docs/litigate/CHANGE.md §4): the PTAB base the precedent
+# acts on. 37 C.F.R. § 42.75(c)(1) times a request for Director Review of a
+# decision to institute by § 42.71(d)(1): 14 days; § 42.5(b) lets the Board
+# waive a requirement of part 42.
+[package]
+name = "change-ptab-base"
+version = "1.0.0"
+language = 1
+pack_id = "change-ptab-base"
+forum = "ptab"
+authority = "Regulation"
+title = "Change example: PTAB Director Review timing"
+in_force = "2025-01-01"
+known_at = "2026-10-26"
+
+[package.roles]
+court = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../../../../../lit/core" }
+mpep-prosecution = { version = "^0.1.0", path = "../../../../../lit/mpep" }
+
+[sources.cfr-37-42]
+title = "37 C.F.R. §§ 42.5, 42.71, 42.75 (eCFR, current as of 2026-10-20)"
+url = "https://www.ecfr.gov/api/versioner/v1/full/2026-10-20/title-37.xml?part=42"
+path = "sources/change-cfr-37-42-5-71-75-2026-10-20.txt"
+path_sha256 = "9fda502b4d2026074b411da4c2556222780ccda8154a57275373b42faa9628ee"
+as_of = "2026-10-20"
+cite_prefixes = ["37 C.F.R. (2026)"]
+section_heading = "37 C.F.R. (2026) § {n}"

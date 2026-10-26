@@ -1,0 +1,25 @@
+module change-ptab-base.review
+
+import core.authority.{ CaseOrder }
+import mpep.deadlines.{ uspto-1-7 }
+
+/// The PTAB base the precedent example acts on (docs/litigate/CHANGE.md
+/// §4).
+start review
+
+terminal review: "PTAB Director Review timing (no procedure)"
+
+/// The Board enters a decision to institute a trial.
+event InstitutionDecided()
+
+/// 37 C.F.R. § 42.75(c)(1): a request for Director Review is filed within
+/// the § 42.71(d) time, 14 days of the entry of a decision to institute
+/// (§ 42.71(d)(1)). § 42.5(b): "The Board may waive or suspend a
+/// requirement of parts 1, 41, and 42": the Board's orders may set it.
+deadline director-review-period: 14.days after InstitutionDecided() counted_by uspto-1-7 effective [2025-01-01, ..) delegable { to CaseOrder, op set } cite "37 C.F.R. (2026) 42.75(c)(1); 37 C.F.R. (2026) 42.71(d)(1)"
+
+test "a Director Review request is due 14 days after institution" cite "37 C.F.R. (2026) 42.71(d)(1)"
+{
+  given InstitutionDecided() on 2026-03-02
+  expect deadline(director-review-period) == 2026-03-16
+}

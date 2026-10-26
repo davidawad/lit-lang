@@ -1,0 +1,18 @@
+module change-fedcir-practice-note-26.notes
+
+/// Guidance binds the actors it names and moves only their priors
+/// (docs/litigate/CHANGE.md §2.9): it prescribes nothing, and imposes no
+/// duty on a party.
+start waive-late-notice
+
+terminal waived: "The late notice is excused"
+terminal not-waived: "The late notice stands untimely"
+
+/// Practice Note to Rule 26: "The court cannot waive the deadlines for
+/// filing a notice of appeal or petition for review, even if the document
+/// was deposited in the mail in a timely fashion."
+chance waive-late-notice: "Court asked to waive a late notice of appeal" by court cite "Fed. Cir. R. 26"
+{
+  waive "Waives the deadline" -> waived p 0
+  refuse "Refuses" -> not-waived p 1
+}

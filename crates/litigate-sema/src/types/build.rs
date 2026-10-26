@@ -327,6 +327,8 @@ pub struct DeclCheck {
     pub reports: Vec<Report>,
     /// Holes and their reasons.
     pub holes: Vec<(TextRange, Option<String>)>,
+    /// Every effect its declarations have (SPEC §5.7).
+    pub effects: hir::Row,
     /// Decisions in information sets, checked across the module.
     infos: Vec<InfoMember>,
 }
@@ -376,6 +378,7 @@ pub fn check_decl_at<'db>(
     let mut cx = Cx {
         ck,
         manifest: m,
+        class: crate::change::class_index(db, file.package(db)).as_ref(),
         links: context.links,
         link_from: None,
     };
@@ -481,6 +484,9 @@ fn items(cx: &mut Cx<'_, '_>, top: &Item, context: &ModuleContext) -> DeclCheck 
             ItemKind::Authority(chain) => {
                 for a in Cx::authorities(chain) {
                     let a = Declaration::Authority(a);
+                    out.effects =
+                        out.effects
+                            .union(kind::row_of(item, &a, cx.class.map(|c| &c.kind)));
                     kind::check(cx, item, &a);
                     out.declarations.push(a);
                 }
@@ -517,6 +523,9 @@ fn items(cx: &mut Cx<'_, '_>, top: &Item, context: &ModuleContext) -> DeclCheck 
                 .map(Declaration::Grant),
         };
         if let Some(d) = &d {
+            out.effects = out
+                .effects
+                .union(kind::row_of(item, d, cx.class.map(|c| &c.kind)));
             kind::check(cx, item, d);
         }
         out.declarations.extend(d);

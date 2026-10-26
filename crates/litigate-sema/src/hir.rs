@@ -28,7 +28,7 @@ pub use graph::{
     Basis, DeadlineWindow, Edge, EdgeDeadline, EdgePatch, GuardOp, GuardOpKind, Instance, Link,
     Node, NodeKind, TriangularDuration, Valence,
 };
-pub use kind::{Effect, Instrument, Kind, Row, Scope};
+pub use kind::{Cell, Effect, Family, Instrument, Kind, Row, Scope};
 pub use logic::{
     Authority, DefaultRule, DelegatedOp, Delegation, EnumDecl, EventEffect, EventType, Exception,
     ExceptionKind, Expectation, Metadata, Relation, Rule, RuleKind, Test, TypeAlias,
@@ -109,6 +109,10 @@ pub struct Manifest {
     /// (`[package.instrument]`).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub instrument: Option<Instrument>,
+    /// The forum-family class matrix (`[family.*]`), which only `core`
+    /// declares (docs/litigate/CHANGE.md §3).
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub families: Vec<Family>,
 }
 
 /// `[[cite_syntax.*]]` tables in declared order.

@@ -8,6 +8,7 @@ use crate::ws::{self, Session};
 use litigate_base::{Diagnostic, Profile};
 use litigate_lower::Options;
 use litigate_lower::{EngineClock, Lowerer};
+use litigate_sema::change::world::{check_world, WorldCheck};
 use litigate_sema::pkg::source::{Disk, Source};
 use litigate_verify::{Finding, Obligation};
 use serde_json::{json, Value};
@@ -20,6 +21,8 @@ pub struct Checked {
     pub verdicts: Vec<(String, Verdict)>,
     /// Per matter.
     pub cases: Vec<CaseCheck>,
+    /// Per world (docs/litigate/CHANGE.md §5).
+    pub worlds: Vec<WorldCheck>,
     /// Every diagnostic.
     pub diagnostics: Vec<Diagnostic>,
     /// Obligation findings.
@@ -135,11 +138,20 @@ pub fn check_session_with(
         .take_while(|_| !cancelled())
         .map(|c| case_check(&session.db, session.ws, *c, build).clone())
         .collect();
-    let complete = verdicts.len() == session.packages.len() && cases.len() == inputs.len();
+    let worlds: Vec<WorldCheck> = session
+        .worlds
+        .iter()
+        .take_while(|_| !cancelled())
+        .map(|w| check_world(&session.db, session.ws, &w.path, &w.text, profile))
+        .collect();
+    let complete = verdicts.len() == session.packages.len()
+        && cases.len() == inputs.len()
+        && worlds.len() == session.worlds.len();
     let diagnostics: Vec<Diagnostic> = verdicts
         .iter()
         .flat_map(|(_, v)| v.diagnostics.iter().cloned())
         .chain(cases.iter().flat_map(|c| c.diagnostics.iter().cloned()))
+        .chain(worlds.iter().flat_map(|w| w.diagnostics.iter().cloned()))
         .collect();
     let parts: Vec<&[Finding]> = verdicts
         .iter()
@@ -151,6 +163,7 @@ pub fn check_session_with(
         session,
         verdicts,
         cases,
+        worlds,
         diagnostics,
         findings,
         profile,
@@ -168,6 +181,7 @@ impl Checked {
             .iter()
             .flat_map(|p| p.files.iter().map(|(f, _)| f.clone()))
             .chain(self.cases.iter().map(|c| c.path.clone()))
+            .chain(self.worlds.iter().map(|w| w.path.clone()))
             .collect();
         files.sort();
         files
@@ -206,6 +220,11 @@ impl Checked {
     }
 }
 
+/// A world's summary: its file, the world, and its layers as it has them.
+fn world_summary(w: &WorldCheck) -> Value {
+    json!({"path": w.path, "world": w.world, "layers": w.layers})
+}
+
 /// `litigate check` over `src`.
 pub fn check(
     src: &dyn Source,
@@ -227,6 +246,7 @@ pub fn check(
         .filter(|p| p.requested)
         .flat_map(|p| p.files.iter().map(|(f, _)| f.clone()))
         .chain(c.session.cases.iter().map(|case| case.path.clone()))
+        .chain(c.session.worlds.iter().map(|w| w.path.clone()))
         .collect();
     let package_by_file: std::collections::BTreeMap<String, String> = c
         .session
@@ -238,14 +258,18 @@ pub fn check(
                 .map(move |(f, _)| (f.clone(), p.name.clone()))
         })
         .collect();
+    let mut result = json!({
+        "profile": profile_name,
+        "files": c.files(),
+        "obligations": c.findings,
+        "packages": c.packages(),
+        "cases": c.cases.iter().map(CaseCheck::summary).collect::<Vec<_>>(),
+    });
+    if !c.worlds.is_empty() {
+        result["worlds"] = c.worlds.iter().map(world_summary).collect();
+    }
     Ok(Report {
-        result: json!({
-            "profile": profile_name,
-            "files": c.files(),
-            "obligations": c.findings,
-            "packages": c.packages(),
-            "cases": c.cases.iter().map(CaseCheck::summary).collect::<Vec<_>>(),
-        }),
+        result,
         provenance: c.provenance(dates.as_of.as_deref(), dates.known_at.as_deref()),
         sources: c.session.sources(),
         diagnostics: c.diagnostics,

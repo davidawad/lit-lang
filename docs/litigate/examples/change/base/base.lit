@@ -1,0 +1,55 @@
+module change-frcp-base.periods
+
+import core.authority.{ LocalRule, CaseOrder }
+import core.frcp6.{ frcp6 }
+
+/// A base layer declares rules from nothing (docs/litigate/CHANGE.md §2.1).
+/// It declares no procedure of its own.
+start periods
+
+terminal periods: "FRCP base periods (no procedure)"
+
+/// The summons and complaint are served (FRCP 4).
+event ProcessServed()
+/// Discovery closes.
+event DiscoveryClosed()
+/// Judgment is entered (FRCP 58).
+event JudgmentEntered()
+
+/// FRCP 12(a)(1)(A)(i): an answer is due 21 days after service of the
+/// summons and complaint. FRCP 6(b)(1) lets the court extend it, in one
+/// case: an order, never a local rule.
+deadline answer-period: 21.days after ProcessServed() counted_by frcp6 effective [2009-12-01, ..) delegable { to CaseOrder, op set } cite "FRCP 12(a)(1)(A)(i)"
+
+test "an answer is due 21 days after service" cite "FRCP 12(a)(1)(A)(i)"
+{
+  given ProcessServed() on 2025-03-03
+  expect deadline(answer-period) == 2025-03-24
+}
+
+/// FRCP 56(b): "Unless a different time is set by local rule or the court
+/// orders otherwise", a summary-judgment motion may be filed until 30 days
+/// after the close of all discovery. The rule delegates the period to a
+/// local rule and to an order in the case, and to nothing else.
+deadline sj-motion-period: 30.days after DiscoveryClosed() counted_by frcp6 effective [2010-12-01, ..) delegable { to LocalRule, op set } delegable { to CaseOrder, op set } cite "FRCP 56(b)"
+
+test "a summary-judgment motion is due 30 days after discovery closes" cite "FRCP 56(b)"
+{
+  given DiscoveryClosed() on 2025-06-02
+  expect deadline(sj-motion-period) == 2025-07-02
+}
+
+/// FRCP 59(e) as restyled effective December 1, 2007: 10 days after entry
+/// of the judgment, which FRCP 6(b)(2) forbids extending. The 2009
+/// amendment (`change-frcp-2009-amendment`) replaces it from December 1,
+/// 2009.
+deadline alter-amend-period: 10.days after JudgmentEntered() counted_by frcp6 effective [2007-12-01, ..) cite "FRCP (2007) 59(e)"
+{
+  extend { never cite "FRCP (2007) 6(b)(2)" }
+}
+
+test "before 2009 a Rule 59(e) motion is due 10 days after entry, weekends excluded" cite "FRCP (2007) 59(e)"
+{
+  given JudgmentEntered() on 2008-03-03
+  expect deadline(alter-amend-period) == 2008-03-17
+}

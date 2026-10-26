@@ -1,0 +1,20 @@
+module change-frcp87-what-if.grants
+
+import change-frcp-2009-amendment.rule59.{ alter-amend-period-2009 }
+
+/// An emergency declaration grants capabilities for a bounded window and
+/// does nothing else (docs/litigate/CHANGE.md §2.7). This one is synthetic
+/// (`authoritative = false`): a counterfactual world's layer.
+start grants
+
+terminal grants: "A what-if FRCP 87 declaration (no procedure)"
+
+/// For a declared Civil Rules emergency of 90 days (FRCP 87(b)(1)(B)), a
+/// court may by order extend the Rule 59(e) time, which Rule 6(b)(2)
+/// otherwise locks, "for a period of no more than 30 days after entry of
+/// the order" (FRCP 87(c)(2)(A)).
+grant rule-59e-emergency on [alter-amend-period-2009] effective [2026-03-02, 2026-05-31) cite "FRCP 87(c)(2)(A)"
+{
+  unlock
+  extend { by court, max 30.days, discretion GoodCause }
+}

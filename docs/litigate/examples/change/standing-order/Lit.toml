@@ -1,0 +1,37 @@
+# Change example (docs/litigate/CHANGE.md §4): a judge's standing order.
+# Judge Charles R. Breyer's General Standing Order (N.D. Cal., rev. July 16,
+# 2025) requires a courtesy copy of every filing by noon on the court day
+# after it is electronically filed; N.D. Cal. Civ. L.R. 5-1(d)(7) leaves
+# chambers copies to "a standing order of the assigned Judge".
+[package]
+name = "change-breyer-standing-order"
+version = "1.0.0"
+language = 1
+pack_id = "change-breyer-standing-order"
+forum = "frcp"
+authority = "StandingOrder"
+title = "Change example: Judge Breyer's General Standing Order (courtesy copies)"
+in_force = "2025-07-16"
+known_at = "2026-10-26"
+kind = "standing-order"
+
+[package.roles]
+court = "nature"
+
+[package.instrument]
+source = "breyer"
+issuer = "Judge Charles R. Breyer, United States District Court for the Northern District of California"
+date = "2025-07-16"
+designation = "General Standing Order (rev. 7-16-2025)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../../../../../lit/core" }
+
+[sources.breyer]
+title = "Judge Charles R. Breyer, General Standing Order (N.D. Cal., rev. July 16, 2025)"
+url = "https://cand.uscourts.gov/sites/default/files/standing-orders/General-Standing-Order-Judge-Charles-R.-Breyer-rev-7-16-2025.pdf"
+path = "sources/change-breyer-general-standing-order-2025.txt"
+path_sha256 = "a36186c206ae59a2578f63e45ba8af6c998a4dcdbc27da1da0729aab4b315283"
+as_of = "2025-07-16"
+cite_prefixes = ["Breyer"]
+section_heading = "Breyer {n}"

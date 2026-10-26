@@ -1,0 +1,27 @@
+module change-sdny-local-civil-rules.motions
+
+import core.authority.{ StandingOrder, CaseOrder }
+import core.frcp6.{ frcp6 }
+
+/// A local rule may prescribe what the national rules leave open and give
+/// capabilities to the layers below it (docs/litigate/CHANGE.md §2.3). It
+/// never changes how FRCP 6 counts (FRCP 6, 2009 Committee Note; Local
+/// Civil Rule 6.4 is withdrawn).
+start local-rules
+
+terminal local-rules: "S.D.N.Y./E.D.N.Y. Local Civil Rule 6.1 (no procedure)"
+
+/// Moving papers on a motion under FRCP 26 through 37 or 45(d)(3) are
+/// served.
+event DiscoveryMotionServed()
+
+/// Local Civil Rule 6.1(a)(2): opposing papers within seven days after
+/// service of the moving papers, counted under FRCP 6, unless a judge's
+/// individual practices or a direction in the case provide otherwise.
+deadline discovery-opposition-period: 7.days after DiscoveryMotionServed() counted_by frcp6 effective [2026-01-02, ..) delegable { to StandingOrder, op set } delegable { to CaseOrder, op set } cite "S.D.N.Y. Local Civ. R. 6.1(a)"
+
+test "opposing papers are due seven days after service" cite "S.D.N.Y. Local Civ. R. 6.1(a)"
+{
+  given DiscoveryMotionServed() on 2026-03-02
+  expect deadline(discovery-opposition-period) == 2026-03-09
+}

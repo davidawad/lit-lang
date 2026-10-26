@@ -52,6 +52,8 @@ struct RawManifest {
     #[serde(default)]
     sources: Ordered<Spanned<RawSource>>,
     cite_syntax: Option<Spanned<cite_syntax::RawCiteSyntax>>,
+    #[serde(default)]
+    family: Ordered<Spanned<family::RawFamily>>,
 }
 
 #[derive(Deserialize)]
@@ -87,6 +89,10 @@ struct RawInstrument {
     date: Spanned<String>,
     designation: Option<String>,
     binds: Option<Spanned<Vec<String>>>,
+    court: Option<Spanned<String>>,
+    designated: Option<Spanned<String>>,
+    overrules: Option<Spanned<Vec<String>>>,
+    authoritative: Option<bool>,
 }
 
 #[derive(Deserialize)]
@@ -219,6 +225,7 @@ pub fn parse_manifest(text: &str) -> Result<ParsedManifest, Vec<Report>> {
         });
     }
     let (kind, instrument) = kind(&mut c, p, &roles, &sources);
+    let families = family::check(&mut c, p.name.get_ref(), &raw.family);
     if !c.reports.is_empty() {
         return Err(c.reports);
     }
@@ -249,6 +256,7 @@ pub fn parse_manifest(text: &str) -> Result<ParsedManifest, Vec<Report>> {
         links,
         kind,
         instrument,
+        families,
     };
     Ok(ParsedManifest {
         manifest,
@@ -469,27 +477,24 @@ fn kind(
         .instrument
         .as_ref()
         .and_then(|i| i.get_ref().binds.as_ref());
-    let kind = match p.kind.as_ref().map(|n| n.get_ref().as_str()) {
-        None | Some("base") => Kind::Base,
-        Some("amendment") => Kind::Amendment,
-        Some("local-rule") => Kind::LocalRule,
-        Some("standing-order") => Kind::StandingOrder,
-        Some("case-order") => Kind::CaseOrder,
-        Some("guidance") => Kind::Guidance {
+    let name = p.kind.as_ref().map_or("base", |n| n.get_ref().as_str());
+    let kind = match Kind::from_name(name) {
+        Some(Kind::Guidance { .. }) => Kind::Guidance {
             binds: binds.map(|b| b.get_ref().clone()).unwrap_or_default(),
         },
-        // Binding scope is computed from the court hierarchy at a world's
-        // location, which this edition does not model: fail closed.
-        Some("precedent") => Kind::Precedent {
+        // Binding scope is computed from the court hierarchy (the forum
+        // families of `core`, a world's location), never declared: the
+        // manifest alone makes a precedent persuasive, failing closed.
+        Some(Kind::Precedent { .. }) => Kind::Precedent {
             scope: Scope::Persuasive,
         },
-        Some("overruling") => Kind::Overruling,
-        Some(other) => {
-            let why = if other == "hypothetical" {
+        Some(kind) => kind,
+        None => {
+            let why = if name == "hypothetical" {
                 "`hypothetical` is the modality of a world, not a file kind: a counterfactual world may hold a layer of any kind".to_owned()
             } else {
                 format!(
-                    "`kind` must be one of {}, found `{other}`",
+                    "`kind` must be one of {}, found `{name}`",
                     Kind::NAMES.map(|n| format!("`{n}`")).join(", ")
                 )
             };
@@ -575,15 +580,72 @@ fn instrument(
         || "`issuer` must name who issued the instrument".to_owned(),
     );
     c.date("date", &raw.date);
+    decision(c, kind, raw);
     Some(Instrument {
         source: source.clone(),
         issuer: raw.issuer.get_ref().clone(),
         date: raw.date.get_ref().clone(),
         designation: raw.designation.clone(),
+        court: raw.court.as_ref().map(|c| c.get_ref().clone()),
+        designated: raw.designated.as_ref().map(|d| d.get_ref().clone()),
+        overrules: raw
+            .overrules
+            .as_ref()
+            .map(|o| o.get_ref().clone())
+            .unwrap_or_default(),
+        authoritative: raw.authoritative.unwrap_or(true),
     })
 }
 
+/// A judicial decision's keys (docs/litigate/CHANGE.md §2.8-§2.9): a
+/// precedent or overruling names its `court`, from which binding scope is
+/// computed; only a precedent is `designated` precedential, on or after
+/// its decision; only an overruling `overrules`, and names what.
+fn decision(c: &mut Checker, kind: &Kind, raw: &RawInstrument) {
+    let decision = matches!(kind, Kind::Precedent { .. } | Kind::Overruling);
+    let at = range(&raw.source);
+    match &raw.court {
+        Some(court) => c.check(decision, range(court), || {
+            "`court` names the court of a `precedent` or `overruling` only".to_owned()
+        }),
+        None => c.check(!decision, at, || {
+            format!(
+                "a `{}` names its `court` (a forum-family court id such as `scotus` or `ca9`)",
+                kind.name()
+            )
+        }),
+    }
+    if let Some(court) = &raw.court {
+        c.check(is_kebab(court.get_ref()), range(court), || {
+            format!("court `{}` must be a kebab-case id", court.get_ref())
+        });
+    }
+    if let Some(d) = &raw.designated {
+        c.check(matches!(kind, Kind::Precedent { .. }), range(d), || {
+            "only a `precedent` is `designated` precedential".to_owned()
+        });
+        c.date("designated", d);
+        c.check(d.get_ref() >= raw.date.get_ref(), range(d), || {
+            "a decision is designated precedential on or after its `date`".to_owned()
+        });
+    }
+    let overruling = matches!(kind, Kind::Overruling);
+    match &raw.overrules {
+        Some(o) => c.check(overruling && !o.get_ref().is_empty(), range(o), || {
+            if overruling {
+                "an overruling `overrules` at least one precedent package".to_owned()
+            } else {
+                "only an `overruling` `overrules`".to_owned()
+            }
+        }),
+        None => c.check(!overruling, at, || {
+            "an overruling names the precedent packages it `overrules`".to_owned()
+        }),
+    }
+}
+
 mod cite_syntax;
+mod family;
 
 #[cfg(test)]
 mod tests;

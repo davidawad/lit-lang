@@ -1,0 +1,30 @@
+module change-cancino-perez-scheduling-order.schedule
+
+import core.frcp6.{ frcp6 }
+
+/// A case order is case-scoped (docs/litigate/CHANGE.md §2.6): it sets
+/// dates in one case, under a rule's delegation, and states the matter's
+/// facts. A date it designates is the order's, never a counted period.
+start schedule
+
+terminal schedule: "Cancino-Perez scheduling order (no procedure)"
+
+/// The scheduling order is entered, setting `amend-by` as the deadline to
+/// join parties and amend pleadings (FRCP 16(b)(3)(A)).
+event SchedulingOrderEntered(amend-by: Date)
+
+/// ECF No. 42 § 9.a: the deadline to join parties and amend pleadings, the
+/// date the order designates. A later motion needs good cause under FRCP
+/// 16(b)(4) (ECF No. 45).
+deadline join-amend-deadline: 0.days from SchedulingOrderEntered() counted_by frcp6 effective [2025-01-01, ..) cite "Cancino-Perez v. McCoy Global ECF 45; FRCP 16(b)(3)(A)"
+{
+  designated amend-by
+}
+
+// ECF No. 45 does not state when ECF No. 42 was entered: any entry date
+// before June 20, 2025 designates the same deadline.
+test "the scheduling order's date is the deadline to amend" cite "Cancino-Perez v. McCoy Global ECF 45"
+{
+  given SchedulingOrderEntered(2025-06-20) on 2025-04-01
+  expect deadline(join-amend-deadline) == 2025-06-20
+}

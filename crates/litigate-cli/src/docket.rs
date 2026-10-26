@@ -27,7 +27,7 @@ pub struct Entry {
 }
 
 /// The entries of a docket: a JSON array of entries, or an object holding
-/// one under `docket_entries` or `results` (a RECAP / CourtListener
+/// one under `docket_entries` or `results` (a RECAP / `CourtListener`
 /// export). Each entry is an object; only `entry_number`, `date_filed`
 /// and `description` are read, and the rest is kept as written.
 ///

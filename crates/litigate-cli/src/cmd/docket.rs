@@ -152,15 +152,92 @@ fn merge(to: &mut Value, from: Value) {
     }
 }
 
+/// The docket file's entries, in docket order (date, then entry number).
+fn load(path: &str) -> Result<Vec<Entry>, Failure> {
+    let fail = |e: &dyn std::fmt::Display| Failure::new(format!("{path}: {e}"));
+    let raw = std::fs::read_to_string(path).map_err(|e| fail(&e))?;
+    let doc: Value = serde_json::from_str(&raw).map_err(|e| fail(&e))?;
+    let mut entries = docket::entries(&doc).map_err(|e| fail(&e))?;
+    entries.sort_by(|a, b| (&a.date, a.number).cmp(&(&b.date, b.number)));
+    Ok(entries)
+}
+
+/// What every entry is matched against: the matter's event forms and
+/// parties, and the docket numbers it already records.
+struct Matter {
+    forms: Vec<Form>,
+    parties: Vec<Party>,
+    recorded: Vec<u64>,
+}
+
+/// A supported event: `(call, mode, party, date)`.
+type Event<'v> = (&'v str, &'v str, &'v str, String);
+
+/// An entry that does not advance the matter: its status and why.
+type Unsettled = (&'static str, Option<String>);
+
+/// The event `entry` supports, else its status and the reason.
+fn settled<'v>(
+    matter: &Matter,
+    entry: &Entry,
+    verdict: &'v Verdict,
+) -> Result<Event<'v>, Unsettled> {
+    if entry.number.is_some_and(|n| matter.recorded.contains(&n)) {
+        return Err(("recorded", None));
+    }
+    let date = entry.date.as_deref().map(Date::parse_iso);
+    match (verdict, date) {
+        (Verdict::Unmatched, _) => Err(("unmatched", None)),
+        (Verdict::Ambiguous(why), _) => Err(("ambiguous", Some(why.clone()))),
+        (Verdict::Incomplete(why), _) => Err(("incomplete", Some(why.clone()))),
+        (Verdict::Supported(..), None) => Err(("incomplete", Some("no `date_filed`".to_owned()))),
+        (Verdict::Supported(..), Some(Err(e))) => {
+            Err(("incomplete", Some(format!("`date_filed`: {e}"))))
+        }
+        (Verdict::Supported(call, mode, party), Some(Ok(day))) => {
+            Ok((call, mode, party, day.to_iso()))
+        }
+    }
+}
+
+/// `entry`'s report row, advancing `current` when replay accepts it.
+fn match_entry(
+    session: Session,
+    matter: &Matter,
+    current: &mut CaseText,
+    entry: &Entry,
+) -> Result<(Session, Value), Failure> {
+    let (candidates, verdict) = docket::judge(&entry.text, &matter.forms, &matter.parties);
+    let (session, mut r) = match settled(matter, entry, &verdict) {
+        Err((status, reason)) => {
+            let mut r = row(entry, status);
+            if let Some(reason) = reason {
+                r["reason"] = Value::from(reason);
+            }
+            (session, r)
+        }
+        Ok((call, mode, party, day)) => {
+            let (session, replayed) = replay(session, current, (entry, &day), (call, mode, party))?;
+            let status = if replayed.text.is_some() {
+                "advanced"
+            } else {
+                "rejected"
+            };
+            let mut r = row(entry, status);
+            merge(&mut r, replayed.fields);
+            if let Some(text) = replayed.text {
+                current.text = text;
+            }
+            (session, r)
+        }
+    };
+    r["candidates"] = json!(candidates);
+    Ok((session, r))
+}
+
 /// `litigate match-docket`.
 pub fn match_docket(args: &Args) -> Outcome {
-    let raw = std::fs::read_to_string(&args.docket)
-        .map_err(|e| Failure::new(format!("{}: {e}", args.docket)))?;
-    let doc: Value =
-        serde_json::from_str(&raw).map_err(|e| Failure::new(format!("{}: {e}", args.docket)))?;
-    let mut entries =
-        docket::entries(&doc).map_err(|e| Failure::new(format!("{}: {e}", args.docket)))?;
-    entries.sort_by(|a, b| (&a.date, a.number).cmp(&(&b.date, b.number)));
+    let entries = load(&args.docket)?;
     let mut session = ws::discover(std::slice::from_ref(&args.case))
         .and_then(|targets| Session::load(&targets, &args.lib))?;
     let original = session
@@ -186,62 +263,24 @@ pub fn match_docket(args: &Args) -> Outcome {
     };
     // Each entry carries the diagnostics its own replay adds.
     report.diagnostics.clear();
-    let forms = forms(&c.session, &c.cases[0].packages);
-    let parties: Vec<Party> = hcase
-        .parties
-        .iter()
-        .map(|p| Party {
-            id: p.id.clone(),
-            actor: p.actor.clone(),
-        })
-        .collect();
+    let matter = Matter {
+        forms: forms(&c.session, &c.cases[0].packages),
+        parties: hcase
+            .parties
+            .iter()
+            .map(|p| Party {
+                id: p.id.clone(),
+                actor: p.actor.clone(),
+            })
+            .collect(),
+        recorded: hcase.events.iter().filter_map(|e| e.docket).collect(),
+    };
     let mut session = c.session;
     let mut current = original;
     let mut rows = Vec::new();
     for entry in &entries {
-        let (candidates, verdict) = docket::judge(&entry.text, &forms, &parties);
-        let date = entry.date.as_deref().map(Date::parse_iso);
-        let (mut r, reason) = match (&verdict, &date) {
-            _ if entry
-                .number
-                .is_some_and(|n| hcase.events.iter().any(|e| e.docket == Some(n))) =>
-            {
-                (row(entry, "recorded"), None)
-            }
-            (Verdict::Unmatched, _) => (row(entry, "unmatched"), None),
-            (Verdict::Ambiguous(why), _) => (row(entry, "ambiguous"), Some(why.clone())),
-            (Verdict::Incomplete(why), _) => (row(entry, "incomplete"), Some(why.clone())),
-            (Verdict::Supported(..), None) => {
-                (row(entry, "incomplete"), Some("no `date_filed`".to_owned()))
-            }
-            (Verdict::Supported(..), Some(Err(e))) => {
-                (row(entry, "incomplete"), Some(format!("`date_filed`: {e}")))
-            }
-            (Verdict::Supported(call, mode, party), Some(Ok(day))) => {
-                let (s, replayed) = replay(
-                    session,
-                    &current,
-                    (entry, &day.to_iso()),
-                    (call, mode, party),
-                )?;
-                session = s;
-                let status = if replayed.text.is_some() {
-                    "advanced"
-                } else {
-                    "rejected"
-                };
-                let mut r = row(entry, status);
-                merge(&mut r, replayed.fields);
-                if let Some(text) = replayed.text {
-                    current.text = text;
-                }
-                (r, None)
-            }
-        };
-        r["candidates"] = json!(candidates);
-        if let Some(reason) = reason {
-            r["reason"] = Value::from(reason);
-        }
+        let (s, r) = match_entry(session, &matter, &mut current, entry)?;
+        session = s;
         rows.push(r);
     }
     if let Some(out) = &args.out {

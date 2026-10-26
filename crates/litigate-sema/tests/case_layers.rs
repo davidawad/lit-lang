@@ -10,7 +10,7 @@ mod case_support;
 use case_support::{clock, lock, render, repo_root};
 use litigate_base::Profile;
 use litigate_sema::case::{check_under, resolve, CheckedCase, Env, Status};
-use litigate_sema::hir::Package;
+use litigate_sema::hir::{Declaration, Package, Relation};
 use std::sync::OnceLock;
 
 /// The example's packages: the post-judgment procedure, the FRCP base,
@@ -44,6 +44,11 @@ fn named(name: &str) -> &'static Package {
 
 /// The example matter, with `uses` as given, checked with `layers`.
 fn checked(uses: &str, layers: &[&str]) -> CheckedCase {
+    checked_in(packages(), uses, layers)
+}
+
+/// [`checked`] over `packages`.
+fn checked_in(packages: &[Package], uses: &str, layers: &[&str]) -> CheckedCase {
     let text =
         std::fs::read_to_string(repo_root().join("docs/litigate/examples/timelines/rule-59e.case"))
             .unwrap_or_default()
@@ -51,14 +56,22 @@ fn checked(uses: &str, layers: &[&str]) -> CheckedCase {
                 "uses change-post-judgment ^1.0.0, change-frcp-base ^1.0.0",
                 uses,
             );
-    let refs: Vec<&Package> = packages().iter().collect();
-    let lock = lock(packages());
+    let refs: Vec<&Package> = packages.iter().collect();
+    let lock = lock(packages);
     let resolved = resolve("cases/t.case", &text, &refs, Some(&lock));
     let case = resolved
         .case
         .unwrap_or_else(|| panic!("{:?}", resolved.diagnostics));
-    let layers: Vec<&Package> = layers.iter().map(|n| named(n)).collect();
-    let clock = clock(packages());
+    let layers: Vec<&Package> = layers
+        .iter()
+        .map(|n| {
+            refs.iter()
+                .copied()
+                .find(|p| p.manifest.name == *n)
+                .unwrap_or_else(|| named(n))
+        })
+        .collect();
+    let clock = clock(packages);
     let env = Env {
         packages: &refs,
         lock: Some(&lock),
@@ -117,4 +130,32 @@ fn a_used_amendment_counts_the_base_instance_under_its_period() {
         ["change-frcp-base::alter-amend-period Discharged"]
     );
     assert!(c.obligations.iter().all(|o| o.status == Status::Discharged));
+}
+
+#[test]
+fn a_relation_that_displaces_nothing_is_no_claim() {
+    // `subject_to` yields to its target; it claims nothing, so the base's
+    // period still opens its own instance.
+    let mut edited = packages().to_vec();
+    for p in edited
+        .iter_mut()
+        .filter(|p| p.manifest.name == "change-frcp-base")
+    {
+        for m in &mut p.modules {
+            for d in &mut m.declarations {
+                if let Declaration::Deadline(x) = d {
+                    if x.meta.id == "alter-amend-period" {
+                        x.meta
+                            .relations
+                            .push(Relation::SubjectTo("answer-period".into()));
+                    }
+                }
+            }
+        }
+    }
+    let c = checked_in(&edited, OWN, &[]);
+    assert_eq!(
+        obligations(&c),
+        ["change-frcp-base::alter-amend-period Late"]
+    );
 }

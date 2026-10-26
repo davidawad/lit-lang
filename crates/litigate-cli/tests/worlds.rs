@@ -13,7 +13,7 @@ use serde_json::{json, Value};
 use std::collections::BTreeMap;
 use std::fmt::Write as _;
 use std::path::Path;
-use support::repo;
+use support::{chmod, litigate_in, repo, scratch};
 
 const CASE: &str = "docs/litigate/examples/timelines/rule-59e.case";
 const WORLD: &str = "docs/litigate/examples/timelines/rule-59e.world";
@@ -268,6 +268,14 @@ fn bad_arguments_are_usage_errors() {
             vec!["worlds", CASE, "--world", WORLD, "--known-at", "2009-13-01"],
             "2009-13-01",
         ),
+        (
+            vec!["worlds", "nope.case", "--world", WORLD],
+            "nope.case: no such file or directory",
+        ),
+        (
+            vec!["worlds", CASE, "--world", "nope.world"],
+            "nope.world: no such file or directory",
+        ),
         (vec!["worlds", WORLD, "--world", WORLD], "not a .case file"),
         (vec!["worlds", CASE, "--world", CASE], "not a .world file"),
         (
@@ -280,4 +288,17 @@ fn bad_arguments_are_usage_errors() {
         assert!(out.stderr.contains(why), "{args:?}: {}", out.stderr);
     }
     assert!(Path::new(&repo().join(CASE)).is_file());
+}
+
+#[cfg(unix)]
+#[test]
+fn an_unreadable_world_file_fails_loading() {
+    let dir = scratch("worlds-unreadable");
+    std::fs::write(dir.join("m.case"), "case m\n").unwrap();
+    std::fs::write(dir.join("w.world"), example(WORLD)).unwrap();
+    chmod(&dir.join("w.world"), 0o000);
+    let run = litigate_in(&dir, &["worlds", "m.case", "--world", "w.world"]);
+    chmod(&dir.join("w.world"), 0o644);
+    assert_eq!(run.code, 1, "{}", run.stdout);
+    assert!(run.stderr.contains("Permission denied"), "{}", run.stderr);
 }

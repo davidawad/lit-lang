@@ -74,8 +74,8 @@ pub(crate) fn ref_path(node: &SyntaxNode) -> Option<RefPath> {
 /// refinement the parser could not complete (it reported why).
 pub(crate) fn type_ref(node: &SyntaxNode) -> Option<TypeRef> {
     if node.kind() == K::RefinedType {
-        let mut base = type_ref(&types(node).next()?)?;
         let binder = token_of(node, K::Ident)?;
+        let mut base = type_ref(&types(node).next()?)?;
         let predicate = Lower.expr(&expr_children(node).next()?)?;
         base.refinements.push(Qualifier {
             binder: name(&binder),

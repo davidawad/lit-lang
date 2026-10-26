@@ -78,6 +78,7 @@ fn none(_: &str) -> Option<Val> {
 }
 
 #[test]
+#[allow(clippy::too_many_lines)] // one table row per operator
 fn every_operator_evaluates_exactly() {
     let x = |n: i64| Some(Val::Num(Rational::integer(n)));
     let env = |name: &str| match name {
@@ -172,6 +173,12 @@ fn every_operator_evaluates_exactly() {
         ),
         (bin(BinaryOp::Lt, var("m", Type::Number), a()), None),
         (un(UnaryOp::Not, a()), None),
+        (un(UnaryOp::Not, var("u", Type::Boolean)), None),
+        (
+            bin(BinaryOp::Lt, un(UnaryOp::Neg, var("u", Type::Number)), a()),
+            None,
+        ),
+        (bin(BinaryOp::Lt, a(), var("m", Type::Number)), None),
         (
             bin(BinaryOp::Lt, un(UnaryOp::Neg, var("t", Type::Number)), a()),
             None,
@@ -304,6 +311,11 @@ fn the_solver_tier_reports_a_witness_by_type() {
         var("f", Type::Boolean),
         bin(
             BinaryOp::Eq,
+            var("f", Type::Boolean),
+            lit(Type::Boolean, Value::Boolean(true)),
+        ),
+        bin(
+            BinaryOp::Eq,
             lit(method.clone(), Value::Variant("Method::Mail".into())),
             var("m", method.clone()),
         ),
@@ -333,6 +345,7 @@ fn the_solver_tier_reports_a_witness_by_type() {
 }
 
 #[test]
+#[allow(clippy::too_many_lines)] // one table row per case
 fn a_question_outside_the_grammar_is_unknown_with_its_reason() {
     let (number, flag, date, method) = (
         Type::Number,

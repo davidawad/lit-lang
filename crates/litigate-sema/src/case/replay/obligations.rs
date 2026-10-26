@@ -45,7 +45,15 @@ pub(super) struct Refined<'e> {
     pub args: &'e [Expr],
 }
 
-impl Transform<'_> {
+impl<'e> Transform<'e> {
+    /// An extension's type and arguments.
+    const fn refined(self) -> Option<Refined<'e>> {
+        match self {
+            Self::Extend(_, by) => Some(by),
+            Self::Waive => None,
+        }
+    }
+
     /// The capability it needs, as a verb.
     fn verb(self) -> &'static str {
         match self {
@@ -667,12 +675,7 @@ impl<'g> Cx<'_, 'g> {
             .map(|&i| self.count(i, pack, d, &events, k))
             .collect();
         drop(events);
-        let new = self.new_due(k, &q, how).ok()?;
-        let by = match how {
-            Transform::Extend(_, by) => Some(by),
-            Transform::Waive => None,
-        };
-        let new = new.zip(by);
+        let new = self.new_due(k, &q, how).ok()?.zip(how.refined());
         // Each grant licenses the transform when every open instance is
         // within its window and bound; the first that does is recorded,
         // with the request each instance's grant read. Otherwise the most
@@ -978,10 +981,12 @@ impl<'g> Cx<'_, 'g> {
         ];
         let env = |n: &str| {
             let arg = by.ty.params.iter().position(|(p, _)| p == n);
-            let date = dates.iter().find(|(d, _)| *d == n);
             arg.and_then(|i| by.args.get(i))
                 .and_then(|e| refinement::eval::term(e, &|_| None))
-                .or_else(|| refinement::eval::of(&Value::Date(date?.1.to_owned())))
+                .or_else(|| {
+                    let date = dates.iter().find(|(d, _)| *d == n);
+                    date.and_then(|(_, v)| refinement::eval::of(&Value::Date((*v).to_owned())))
+                })
         };
         let r = by.ty.refinements.iter().find(|r| {
             refinement::names_bound_date(&r.predicate)

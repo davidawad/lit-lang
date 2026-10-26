@@ -544,12 +544,10 @@ pub fn inherited(scope: &Scope<'_>, t: &TypeRef, binder: Option<&str>) -> Vec<Lo
     if super::ty::BUILTINS.contains(&t.name.text.as_str()) {
         return Vec::new();
     }
-    let Ok((alias, found)) = scope.user_type(&t.name, &[]) else {
+    let found = scope.user_type(&t.name, &[]).ok();
+    let Some((alias, found)) = found.filter(|(_, f)| matches!(f.item, TypeSig::Alias(_))) else {
         return Vec::new();
     };
-    if !matches!(found.item, TypeSig::Alias(_)) {
-        return Vec::new();
-    }
     let view = |n: &str| scope.localize_name(found.sig, n);
     found
         .sig

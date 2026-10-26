@@ -98,7 +98,9 @@ fn witness(vars: &[Var<'_>], model: &litigate_smt::Model) -> Vec<(String, String
                 // Its domain holds an enum's index among its variants.
                 Type::Named(_) => Val::Variant(
                     v.variants
-                        .and_then(|names| names.get(usize::try_from(n.numerator).ok()?))
+                        .and_then(|names| {
+                            names.get(usize::try_from(n.numerator).unwrap_or(usize::MAX))
+                        })
                         .cloned()
                         .unwrap_or_default(),
                 ),

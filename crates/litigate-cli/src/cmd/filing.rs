@@ -329,4 +329,35 @@ mod tests {
             "could not generate a stable id for the proposed filing"
         );
     }
+
+    #[test]
+    fn a_proposed_filing_gets_a_generated_id_or_a_failure() {
+        let session = || testkit::example_locked("", testkit::ACME, None);
+        let original = session().cases[0].clone();
+        let date = "2025-06-02";
+        let at = CaseText {
+            text: crate::filing::with_as_of(&original.text, date),
+            ..original.clone()
+        };
+        let proposed = format!("{date} Hearing() by widget");
+        let line = generated_filing_line(session(), &original, &at, date, &proposed)
+            .map(|(_, line)| line)
+            .ok();
+        assert!(
+            line.as_deref()
+                .is_some_and(|line| line.ends_with(&format!(": {proposed}"))),
+            "{line:?}"
+        );
+        let multiline = format!("{date} Hearing(\n) by widget");
+        for (proposed, expected) in [
+            ("not an event", "is not one event"),
+            (multiline.as_str(), "could not locate the proposed filing"),
+        ] {
+            let error = generated_filing_line(session(), &original, &at, date, proposed)
+                .err()
+                .map(|error| error.0)
+                .unwrap_or_default();
+            assert!(error.contains(expected), "{proposed}: {error}");
+        }
+    }
 }

@@ -725,11 +725,46 @@ state summary-judgment-motion: "Motion for Summary Judgment Filed" by applicant 
   group pretrial-motions-group
   note "The movant must show there is no genuine dispute as to any material fact and that it is entitled to judgment as a matter of law. A party may move for summary judgment on the whole case or on any claim, defense, or part of either. If the nonmovant shows by affidavit that it cannot present facts essential to justify its opposition, the court may defer or deny the motion, allow more discovery, or issue another appropriate order (Rule 56(d))."
   court_listener_url "https://www.courtlistener.com/opinion/111722/celotex-corp-v-catrett-administratrix-of-the-estate-of-catrett/"
-  edge-summary-judgment-motion-sj-briefing-complete "Complete Rule 56 briefing" -> sj-briefing-complete {
+  edge-summary-judgment-motion-sj-briefing-complete "Reply relies on the existing record" -> sj-briefing-complete {
     authority cite "FRCP 56(c)"
     effort 60.hours
     cost 12_000.usd
   }
+  edge-summary-judgment-motion-reply-evidence-filed "Submit new evidence with the reply" -> reply-evidence-filed {
+    authority cite "FRCP 56(c)(1); 56(c)(4)"
+    effort 8.hours
+    cost 2_000.usd
+    note "A declaration or other material submitted for the first time with a reply can prompt an objection that the opponent had no fair chance to answer. Rule 56 does not create an automatic sur-reply right; local rules and case-specific orders control, so the opponent may need leave."
+  }
+}
+
+state reply-evidence-filed: "New Evidence Submitted With Reply" by applicant cite "FRCP 56(c)(1); 56(c)(4)"
+{
+  group pretrial-motions-group
+  note "The nonmovant can seek leave to file a sur-reply addressing the new evidence or move to strike it. These are responses to preserve a fair opportunity to address material offered for the first time on reply; neither is automatically granted, and local rules and the scheduling order matter. The court may also decline to consider material that cannot be presented in an admissible form or give an opportunity to respond."
+  edge-reply-evidence-filed-sur-reply-requested "Seek leave to file a focused sur-reply" -> reply-evidence-ruling {
+    authority cite "FRCP 56(c)(2); 56(c)(4)"
+    effort 5.hours
+    cost 1_500.usd
+  }
+  edge-reply-evidence-filed-motion-to-strike-filed "Move to strike the new reply evidence" -> reply-evidence-ruling {
+    authority cite "FRCP 56(c)(2); 56(c)(4)"
+    effort 5.hours
+    cost 1_500.usd
+  }
+  edge-reply-evidence-filed-no-response "Do not seek additional briefing" -> sj-ruling {
+    authority cite "FRCP 56(a); 56(c)"
+    effort 0.hours
+  }
+}
+
+decision reply-evidence-ruling: "Court Resolves Reply-Evidence Request" by examiner cite "FRCP 56(c)(2); 56(c)(4)"
+{
+  group pretrial-motions-group
+  note "The court may allow a focused sur-reply, strike or disregard the challenged material, or deny the request and proceed on the existing briefing. The request is discretionary and governed by the applicable local rules and case-specific orders."
+  edge-reply-evidence-ruling-sur-reply-allowed "Allow response and consider the new evidence after supplemental briefing" -> sj-ruling
+  edge-reply-evidence-ruling-evidence-excluded "Exclude or disregard the new reply evidence" -> sj-ruling
+  edge-reply-evidence-ruling-request-denied "Deny further briefing or striking; decide on the submitted record" -> sj-ruling
 }
 
 state sj-briefing-complete: "Summary Judgment Briefing Complete" by office cite "FRCP 56(c)"

@@ -1,10 +1,15 @@
-;;; litgraph-integration-test.el --- Tests against the real litgraph binary -*- lexical-binding: t; -*-
+;;; litgraph-integration-test.el --- Tests against the real litigate binary -*- lexical-binding: t; -*-
 
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 
 ;;; Commentary:
 
-;; Tests skip unavailable tools unless LITGRAPH_IT_REQUIRE=1.
+;; Tests run the `litigate' on PATH (`litigate engine' for engine
+;; calls, `litigate timeline' for the timeline) and skip unavailable
+;; tools unless LITGRAPH_IT_REQUIRE=1.  The engine compiles its packs
+;; from the nearest `lit/' (this repository's) on every call unless
+;; LITGRAPH_PACKS and LITGRAPH_SCENARIOS name a prebuilt set, as `just
+;; emacs-test' does (target/lit-build from `just lit-sync').
 
 ;;; Code:
 
@@ -21,7 +26,7 @@
   "Run BODY against the real binary with a clean session, or skip/fail."
   (declare (indent 0))
   `(let ((binary (litgraph-test-real-binary)))
-     (unless binary (litgraph-test-skip-or-fail "litgraph binary not installed"))
+     (unless binary (litgraph-test-skip-or-fail "litigate binary not installed"))
      (let ((litgraph-executable binary)
            (litgraph--cache (make-hash-table :test #'equal))
            (litgraph-scenario nil) (litgraph-packs nil) (litgraph-params nil)
@@ -175,6 +180,26 @@
           (accept-process-output nil 0.05)))
       (should (stringp result))
       (should (string-match-p "<svg" result)))))
+
+(ert-deftest litgraph-it-project-directory-compiles-lit ()
+  ;; With no prebuilt packs, `litigate engine' compiles lit/ in the
+  ;; project directory: here the timeline fixture's lit/examples.
+  (litgraph-it
+    (let ((process-environment
+           (seq-remove (lambda (e) (string-match-p "\\`LITGRAPH_\\(PACKS\\|SCENARIOS\\)=" e))
+                       process-environment))
+          (litgraph-packs-dir nil) (litgraph-scenarios-dir nil)
+          (litgraph-project-directory
+           (expand-file-name "fixtures/timeline-project" litgraph-test-dir)))
+      (let ((response (litgraph-request-sync
+                       (litgraph-obj "op" (litgraph-obj "op" "describe")))))
+        (should (equal (mapcar (lambda (pack) (litgraph-get pack 'id))
+                               (litgraph-get response 'result 'packs))
+                       '("frcp-rule12-example"))))
+      (let ((response (litgraph-request-sync
+                       (litgraph-obj "packs" ["frcp-rule12-example"]
+                                     "op" (litgraph-obj "op" "solve")))))
+        (should (litgraph-get response 'ok))))))
 
 (defun litgraph-it--timeline-binary ()
   "Return the installed `litigate' executable, or nil if it is absent."

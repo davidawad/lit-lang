@@ -6,7 +6,8 @@
 
 ;; The unit tests never start the real binary.  They replace
 ;; `litgraph-process-function' with `litgraph-test-stub', which answers from
-;; recorded real litgraph output in test/fixtures/.
+;; recorded real engine output in test/fixtures/.  The integration tests
+;; run the `litigate' binary on PATH.
 
 ;;; Code:
 
@@ -38,6 +39,10 @@
 (defvar litgraph-test-calls nil
   "The (ARGS . INPUT) of every stubbed process call, newest first.")
 
+(defvar litgraph-test-commands nil
+  "The (EXECUTABLE . PREFIX) of every stubbed process call, newest first.
+PREFIX is `litgraph-engine-arguments' at the time of the call.")
+
 (defvar litgraph-test-op-fixtures
   '(("describe" . "describe") ("solve" . "solve") ("chain" . "chain")
     ("graph" . "graph-cofc") ("tornado" . "tornado") ("simulate" . "simulate")
@@ -55,14 +60,16 @@
     (if (hash-table-p op) (gethash "op" op) op)))
 
 (defvar litgraph-test-validate-fixture "validate-unknown-field"
-  "Fixture returned to `litgraph validate' calls.")
+  "Fixture returned to `litigate engine validate' calls.")
 
 (defvar litgraph-test-timeline-fixture "timeline-ttab-opposition"
-  "Fixture returned to `litgraph timeline' calls.")
+  "Fixture returned to `litigate timeline' calls.")
 
 (defun litgraph-test-stub (args input callback)
   "Stand-in for `litgraph--spawn': answer ARGS/INPUT from fixtures via CALLBACK."
   (push (cons args input) litgraph-test-calls)
+  (push (cons litgraph-executable litgraph-engine-arguments)
+        litgraph-test-commands)
   (pcase args
     (`("describe") (funcall callback 0 (litgraph-test-fixture "describe") ""))
     (`("schema" "request")
@@ -105,6 +112,7 @@
   (declare (indent 0))
   `(let ((litgraph-process-function #'litgraph-test-stub)
          (litgraph-test-calls nil)
+         (litgraph-test-commands nil)
          (litgraph--cache (make-hash-table :test #'equal))
          (litgraph-scenario nil) (litgraph-packs nil) (litgraph-params nil)
          (litgraph-default-scenario nil) (litgraph-default-packs nil)
@@ -112,11 +120,11 @@
      ,@body))
 
 (defun litgraph-test-real-binary ()
-  "Path of the real litgraph binary, or nil.
+  "Path of the real `litigate' binary, or nil.
 Set LITGRAPH_SKIP_INTEGRATION=1 to pretend there is none."
   (unless (getenv "LITGRAPH_SKIP_INTEGRATION")
-    (or (executable-find "litgraph")
-        (let ((path "/opt/homebrew/bin/litgraph"))
+    (or (executable-find "litigate")
+        (let ((path "/opt/homebrew/bin/litigate"))
           (and (file-executable-p path) path)))))
 
 (provide 'litgraph-test-helper)

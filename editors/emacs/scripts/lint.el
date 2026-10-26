@@ -1,4 +1,4 @@
-;;; lint.el --- checkdoc and package-lint driver for litgraph-emacs -*- lexical-binding: t; -*-
+;;; lint.el --- checkdoc and package-lint driver for the litgraph Emacs package -*- lexical-binding: t; -*-
 
 ;; Run through the Makefile:  make lint
 

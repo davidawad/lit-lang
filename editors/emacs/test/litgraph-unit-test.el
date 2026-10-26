@@ -135,6 +135,70 @@
     (should-not (seq-some (lambda (e) (string-prefix-p "LITGRAPH_PACKS=" e))
                           (seq-take (litgraph--environment) 1)))))
 
+(ert-deftest litgraph-engine-calls-go-through-litigate-engine ()
+  (should (equal (default-value 'litgraph-executable) "litigate"))
+  (should (equal (default-value 'litgraph-engine-arguments) '("engine")))
+  (litgraph-test-with-stub
+    (litgraph-request-sync (litgraph-build-request "chain" "s"))
+    (should (equal (car litgraph-test-commands) '("litigate" "engine")))))
+
+(defmacro litgraph-test-with-project (root &rest body)
+  "Run BODY with ROOT bound to a fresh directory holding lit/ and cases/."
+  (declare (indent 1))
+  `(let ((,root (file-name-as-directory (make-temp-file "lg-project" t))))
+     (unwind-protect
+         (progn
+           (make-directory (expand-file-name "lit/pack" ,root) t)
+           (make-directory (expand-file-name "cases/sub" ,root) t)
+           ,@body)
+       (delete-directory ,root t))))
+
+(ert-deftest litgraph-project-root-is-nearest-lit-directory ()
+  (litgraph-test-with-project root
+    (let ((litgraph-project-directory nil))
+      (let ((default-directory (expand-file-name "cases/sub/" root)))
+        (should (file-equal-p (litgraph-project-root) root)))
+      (let ((default-directory (expand-file-name "lit/pack/" root)))
+        ;; lit/pack has no lit/ of its own; lit/ sits one level higher.
+        (should (file-equal-p (litgraph-project-root) root)))
+      (let ((default-directory (expand-file-name "no-such-dir/" root)))
+        (should-not (litgraph-project-root))))
+    (let ((litgraph-project-directory (expand-file-name "cases" root))
+          (default-directory root))
+      (should (equal (litgraph-project-root)
+                     (file-name-as-directory (expand-file-name "cases" root)))))))
+
+(ert-deftest litgraph-spawn-runs-litigate-engine-in-project-root ()
+  ;; A stand-in executable that echoes its arguments and directory.
+  (litgraph-test-with-project root
+    (let* ((script (expand-file-name "fake-litigate" root))
+           (litgraph-executable script)
+           (litgraph-project-directory nil)
+           (litgraph-timeout 30)
+           (default-directory (expand-file-name "cases/sub/" root))
+           (result nil))
+      (with-temp-file script
+        (insert "#!/bin/sh\n"
+                "printf '{\"ok\":true,\"result\":{\"args\":\"%s\",\"pwd\":\"%s\"}}' \"$*\" \"$(pwd -P)\"\n"))
+      (set-file-modes script #o755)
+      (litgraph--spawn '("q" "-") "{}"
+                       (lambda (exit stdout _stderr)
+                         (setq result (cons exit (litgraph-parse stdout)))))
+      (let ((deadline (+ (float-time) 30)))
+        (while (and (not result) (< (float-time) deadline))
+          (accept-process-output nil 0.05)))
+      (should (equal (car result) 0))
+      (should (equal (litgraph-get (cdr result) 'result 'args) "engine q -"))
+      (should (file-equal-p (litgraph-get (cdr result) 'result 'pwd) root)))))
+
+(ert-deftest litgraph-cache-key-names-the-engine ()
+  (litgraph-test-with-project root
+    (let ((litgraph-project-directory nil))
+      (should-not (equal (let ((default-directory root))
+                           (litgraph--cache-key 'describe))
+                         (let ((default-directory temporary-file-directory))
+                           (litgraph--cache-key 'describe)))))))
+
 (ert-deftest litgraph-executable-missing-is-user-error ()
   (let ((litgraph-executable "definitely-not-a-real-binary-xyz")
         (litgraph-fallback-directories nil))

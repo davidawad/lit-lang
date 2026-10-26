@@ -269,7 +269,7 @@ nix-check:
 
 # The single CI entry point: fast, deterministic gates only. Coverage,
 # audit, and deny hit the network/build cache so they're last.
-ci: fmt-check lint cov-gate-test mirror-sync-test lit-sync-check tree-sitter-test test ts-test doctest cov cov-litigate audit deny
+ci: fmt-check lint cov-gate-test mirror-sync-test lit-sync-check tree-sitter-test test emacs-test ts-test doctest cov cov-litigate audit deny
     @echo "ci: all gates passed"
 
 # The per-bead gate (scripts/ci-scoped): global checks (fmt, typos,
@@ -412,3 +412,18 @@ tree-sitter-generate:
 # $TEST_SKIP_LOG) when that editor is not installed.
 editors-test:
     cargo nextest run -p litigate-editors
+
+# The litgraph Emacs package (editors/emacs): byte-compile with warnings as
+# errors, checkdoc, then its ERT suite (stubbed unit tests and the
+# integration tests) with LITGRAPH_IT_REQUIRE=1, so a missing tool fails
+# instead of skipping. The integration tests run the debug `litigate`
+# (`litigate engine` over the packs and scenarios `lit-sync` built,
+# `litigate timeline`); Emacs and Graphviz come from nixpkgs.
+emacs-test: lit-sync
+    #!/usr/bin/env bash
+    set -euo pipefail
+    cargo build -q -p litigate-cli
+    target="$(cargo metadata --format-version 1 --no-deps | jq -r .target_directory)"
+    PATH="$target/debug:$PATH" LITGRAPH_IT_REQUIRE=1 \
+      LITGRAPH_PACKS="$PWD/{{lit_build_dir}}/packs" LITGRAPH_SCENARIOS="$PWD/{{lit_build_dir}}/scenarios" \
+      nix shell nixpkgs#emacs-nox nixpkgs#graphviz -c make -C editors/emacs compile checkdoc test

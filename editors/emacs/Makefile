@@ -1,10 +1,16 @@
-# litgraph-emacs -- developer targets.
+# The litgraph Emacs package (editors/emacs) -- developer targets.
 #
 #   make test      ERT unit tests (process layer stubbed) plus integration
-#                  tests against the real `litgraph' binary when installed
+#                  tests against the real `litigate' binary when installed
+#                  (LITGRAPH_IT_REQUIRE=1 fails instead of skipping; `just
+#                  emacs-test' from the repository root runs it that way)
 #   make compile   byte-compile with warnings as errors
 #   make lint      checkdoc and package-lint
 #   make all       compile, lint, test
+#
+# litigate-ts-mode's own suite (test/litigate-ts-mode-test.el) needs the
+# tree-sitter grammar; `cargo nextest run -p litigate-editors' builds it
+# and runs that suite.
 #
 # package-lint is looked up in PACKAGE_LINT_DIR, else in .deps/, else
 # installed there from MELPA (needs network).
@@ -13,11 +19,14 @@ EMACS ?= emacs
 BATCH  = $(EMACS) -Q --batch -L .
 SRC    = litgraph.el litgraph-view.el litgraph-graph.el litgraph-org.el \
          litgraph-scenario.el litgraph-menu.el litgraph-timeline.el \
-         ob-litgraph.el
-TESTS  = $(wildcard test/*-test.el)
+         ob-litgraph.el litigate-ts-mode.el
+# litigate-ts-mode keeps its own `litigate-ts-mode-' prefix (it is
+# usable on its own, and editors/litigate-editors tests it on its own),
+# which package-lint would flag under this package's `litgraph-' prefix.
+LINT_SRC = $(filter-out litigate-ts-mode.el,$(SRC))
+TESTS  = $(wildcard test/litgraph-*-test.el)
 PACKAGE_LINT_DIR ?=
-LITGRAPH_DIR ?=
-LITGRAPH_SHA ?= 527253abd5bf74af700b9bd32fc4f4aa26b072c5
+REPO   = ../..
 
 .PHONY: all test compile lint checkdoc package-lint autoloads clean deps fixtures-sync
 
@@ -40,20 +49,17 @@ checkdoc:
 	$(BATCH) -l scripts/lint.el -f litgraph-lint-checkdoc $(SRC)
 
 package-lint: deps
-	$(BATCH) -l scripts/lint.el --eval '(litgraph-lint-package-lint "$(PACKAGE_LINT_DIR)")' $(SRC)
+	$(BATCH) -l scripts/lint.el --eval '(litgraph-lint-package-lint "$(PACKAGE_LINT_DIR)")' $(LINT_SRC)
 
 deps:
 	@true
 
-# Sync the real timeline integration project from the pinned litgraph checkout.
+# Sync the timeline integration project from this repository's examples.
 fixtures-sync:
-	@test -n "$(LITGRAPH_DIR)" || { echo "set LITGRAPH_DIR to a litgraph checkout" >&2; exit 2; }
-	@test "$$(git -C "$(LITGRAPH_DIR)" rev-parse HEAD)" = "$(LITGRAPH_SHA)" || { echo "litgraph checkout must be at $(LITGRAPH_SHA)" >&2; exit 2; }
 	rm -rf test/fixtures/timeline-project/cases/examples test/fixtures/timeline-project/lit/examples
 	mkdir -p test/fixtures/timeline-project/cases test/fixtures/timeline-project/lit
-	cp -R "$(LITGRAPH_DIR)/cases/examples" test/fixtures/timeline-project/cases/
-	cp -R "$(LITGRAPH_DIR)/lit/examples" test/fixtures/timeline-project/lit/
-	printf '%s\n' "$(LITGRAPH_SHA)" > .litgraph-rev
+	cp -R "$(REPO)/cases/examples" test/fixtures/timeline-project/cases/
+	cp -R "$(REPO)/lit/examples" test/fixtures/timeline-project/lit/
 
 autoloads:
 	$(BATCH) --eval '(loaddefs-generate default-directory "litgraph-autoloads.el")' || \

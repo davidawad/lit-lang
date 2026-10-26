@@ -7,7 +7,7 @@
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "29.1") (transient "0.4.0"))
 ;; Keywords: tools, convenience, law
-;; URL: https://github.com/davidawad/litgraph-emacs
+;; URL: https://github.com/davidawad/litgraph
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 
 ;; This file is not part of GNU Emacs.
@@ -28,8 +28,9 @@
 ;;; Commentary:
 
 ;; litgraph models litigation procedure as a stochastic game on a graph.
-;; Its command line program takes one JSON request and returns one JSON
-;; response.  This package brings that into Emacs:
+;; Its engine, `litigate engine' (the raw interface of the `litigate'
+;; command line), takes one JSON request and returns one JSON response.
+;; This package brings that into Emacs:
 ;;
 ;;  - `litgraph-menu' (a transient) is the front door.  Pick a scenario and
 ;;    packs, then run any op.  Nothing ever blocks Emacs: every call is an
@@ -48,6 +49,9 @@
 ;;  - `litgraph-scenario-mode' edits scenario JSON with flymake validation
 ;;    (litgraph-scenario.el).
 ;;  - `ob-litgraph' evaluates request JSON in Org source blocks.
+;;  - `litgraph-timeline' shows a .case or .lit file's timeline
+;;    (`litigate timeline'; litgraph-timeline.el).
+;;  - `litigate-ts-mode' edits .lit and .case files (litigate-ts-mode.el).
 ;;
 ;; This file holds the shared core: customization, the process layer, request
 ;; construction, and the cache of engine metadata used for completion.
@@ -78,9 +82,24 @@
   :prefix "litgraph-"
   :link '(url-link "https://github.com/davidawad/litgraph"))
 
-(defcustom litgraph-executable "litgraph"
-  "Name or absolute path of the litgraph binary."
+(defcustom litgraph-executable "litigate"
+  "Name or absolute path of the `litigate' binary."
   :type 'string)
+
+(defcustom litgraph-engine-arguments '("engine")
+  "Arguments put before every engine call.
+`litigate engine' is the engine's raw JSON interface; the engine
+calls (`q', `validate', `schema', `describe', ...) follow it."
+  :type '(repeat string))
+
+(defcustom litgraph-project-directory nil
+  "Directory whose `lit/' and `cases/' the engine compiles.
+`litigate engine' builds its packs from `lit/' and its scenario
+library from `cases/' in the directory it runs in, unless
+`litgraph-packs-dir' and `litgraph-scenarios-dir' name prebuilt
+ones.  Nil looks for the nearest directory holding `lit/', starting
+from `default-directory'."
+  :type '(choice (const :tag "Nearest with lit/" nil) directory))
 
 (defcustom litgraph-fallback-directories
   '("/opt/homebrew/bin" "/usr/local/bin" "~/.cargo/bin" "~/.nix-profile/bin")
@@ -91,12 +110,12 @@ often lacks the Homebrew prefix on its path."
 
 (defcustom litgraph-packs-dir nil
   "Directory of pack JSON files, exported as LITGRAPH_PACKS.
-Nil uses the packs embedded in the binary."
+Nil compiles them from `lit/' (see `litgraph-project-directory')."
   :type '(choice (const :tag "Embedded packs" nil) directory))
 
 (defcustom litgraph-scenarios-dir nil
   "Directory of named scenarios, exported as LITGRAPH_SCENARIOS.
-Nil uses the scenario library embedded in the binary."
+Nil compiles them from `cases/' (see `litgraph-project-directory')."
   :type '(choice (const :tag "Embedded library" nil) directory))
 
 (defcustom litgraph-default-scenario nil
@@ -282,15 +301,16 @@ and its op is replaced."
 
 (defvar litgraph-process-function #'litgraph--spawn
   "Function (ARGS INPUT CALLBACK) that runs the binary asynchronously.
-INPUT is a string or nil.  CALLBACK is called with (EXIT STDOUT STDERR)
-when the process ends, where EXIT is an exit status, or the symbol
-`timeout' or `signal'.  Tests replace this to stub out the binary.")
+ARGS follow `litgraph-engine-arguments'.  INPUT is a string or nil.
+CALLBACK is called with (EXIT STDOUT STDERR) when the process ends,
+where EXIT is an exit status, or the symbol `timeout' or `signal'.
+Tests replace this to stub out the binary.")
 
 (defvar litgraph--processes nil
   "Live litgraph processes.")
 
 (defun litgraph-executable-path ()
-  "Absolute path to the litgraph binary, or signal a `user-error'."
+  "Absolute path to the `litigate' binary, or signal a `user-error'."
   (or (and (file-name-absolute-p litgraph-executable)
            (file-executable-p litgraph-executable)
            litgraph-executable)
@@ -300,8 +320,20 @@ when the process ends, where EXIT is an exit status, or the symbol
                                        litgraph-fallback-directories))))
         (executable-find litgraph-executable))
       (user-error
-       "Cannot find `%s'; install litgraph or set `litgraph-executable'"
+       "Cannot find `%s'; install litigate or set `litgraph-executable'"
        litgraph-executable)))
+
+(defun litgraph-project-root ()
+  "The directory the engine runs in, or nil if there is none.
+That is `litgraph-project-directory', else the nearest directory
+holding `lit/' at or above `default-directory'."
+  (if litgraph-project-directory
+      (file-name-as-directory (expand-file-name litgraph-project-directory))
+    (when (and (file-directory-p default-directory)
+               (not (file-remote-p default-directory)))
+      (locate-dominating-file
+       default-directory
+       (lambda (dir) (file-directory-p (expand-file-name "lit" dir)))))))
 
 (defun litgraph--environment ()
   "The process environment for a litgraph call."
@@ -319,11 +351,11 @@ Call CALLBACK with (EXIT STDOUT STDERR) when done.  Return the process."
   (let* ((out (generate-new-buffer " *litgraph-out*" t))
          (err (generate-new-buffer " *litgraph-err*" t))
          (process-environment (litgraph--environment))
-         (default-directory (if (file-directory-p default-directory)
-                                (if (file-remote-p default-directory)
-                                    temporary-file-directory
-                                  default-directory)
-                              temporary-file-directory))
+         (default-directory (or (litgraph-project-root)
+                                (if (and (file-directory-p default-directory)
+                                         (not (file-remote-p default-directory)))
+                                    default-directory
+                                  temporary-file-directory)))
          (done nil)
          (timer nil)
          (proc
@@ -331,7 +363,8 @@ Call CALLBACK with (EXIT STDOUT STDERR) when done.  Return the process."
            :name "litgraph"
            :buffer out
            :stderr err
-           :command (cons (litgraph-executable-path) args)
+           :command (cons (litgraph-executable-path)
+                          (append litgraph-engine-arguments args))
            :coding 'utf-8-unix
            :connection-type 'pipe
            :noquery t
@@ -467,7 +500,8 @@ Emacs stays responsive to timers and process output meanwhile, and
 
 (defun litgraph--cache-key (&rest parts)
   "Return a cache key: PARTS plus what identifies the engine build."
-  (cl-list* litgraph-executable litgraph-packs-dir litgraph-scenarios-dir parts))
+  (cl-list* litgraph-executable litgraph-engine-arguments litgraph-packs-dir
+            litgraph-scenarios-dir (litgraph-project-root) parts))
 
 (defun litgraph--fetch-cached (key args input callback &optional errback)
   "Call CALLBACK with the cached response for KEY, fetching via ARGS and INPUT."

@@ -43,12 +43,16 @@ CI runs the same recipe, so a clean `just ci` locally means CI should pass.
   engine; the CLI crate is thin and not gated the same way):
   `just cov`; its `cov: litgraph TOTAL lines ...` line is the gated number
   (AGENTS.md, "Reading the coverage result").
-- **Formal verification**: Kani harnesses (`#[cfg(kani)]` / `#[kani::proof]`
-  in `crates/litigate-engine`) for properties worth proving, not just testing —
-  numerical invariants, no-panic guarantees on untrusted input. Run with
-  `just verify-kani`. Zero harnesses today is a valid state (the recipe
-  passes trivially); add one whenever you find a property proptest can only
-  sample.
+- **Formal verification** (not part of `just ci`): Kani harnesses
+  (`#[cfg(kani)]` / `#[kani::proof]`) in `crates/litigate-engine` and
+  `crates/litigate-sema` for properties worth proving, not just testing —
+  numerical invariants, date arithmetic, no-panic guarantees on untrusted
+  input (`just verify-kani`); Verus proofs of the counting laws over a model
+  of the day-count semantics in `crates/litigate-verify/verus/`
+  (`just verify-verus`); `just verify` runs both. Add a harness whenever
+  you find a property proptest can only sample. Mutation testing:
+  `just mutants` (focused lane on sema) and `just mutants-all` (every
+  litigate crate, hours).
 - **Supply chain**: `cargo audit` and `cargo deny check` (`just audit`,
   `just deny`) must pass — see `deny.toml` for the license/advisory policy.
 - **File size**: keep source files under ~500 lines; split by

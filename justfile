@@ -156,16 +156,38 @@ machete:
 
 # --- formal verification ---------------------------------------------------
 
-# Kani harnesses live behind #[cfg(kani)] in crates/litigate-engine/src/proofs.rs.
-# The workspace `rust-version` (1.93) matches kani-verifier 0.67's bundled
-# nightly (rustc 1.93.0-nightly), so `cargo kani` builds. Keep harnesses
-# bounded: CBMC cannot tractably unwind std collections/string formatting.
-verify-kani:
-    cargo kani -p litigate-engine
+# Not part of `ci` (each lane needs its own toolchain); `verify` runs both
+# provers. Design review §3.7 lists the metatheory still to prove in Lean.
+verify: verify-kani verify-verus
 
-# Focused mutation lane for temporal, precedence, and case semantics.
+# Kani harnesses live behind #[cfg(kani)]: the engine's in
+# crates/litigate-engine/src/proofs.rs and clock/, litigate-sema's beside the
+# date arithmetic (types/date/proofs.rs) and window algebra
+# (temporal/interval/proofs.rs). The workspace `rust-version` (1.93) matches
+# kani-verifier 0.67's bundled nightly (rustc 1.93.0-nightly), so `cargo
+# kani` builds. Keep harnesses bounded: CBMC cannot tractably unwind std
+# collections/string formatting. `just verify-kani litigate-sema` for one crate.
+kani_crates := "litigate-engine litigate-sema"
+
+verify-kani *CRATES=kani_crates:
+    for crate in {{CRATES}}; do cargo kani -p "$crate"; done
+
+# Verus proofs of the counting laws (design review §3.7 item 6) over a model
+# of the day-count semantics: roll lands on the first open day, counting is
+# monotone, FRCP 6(d) service days follow the roll, the backward roll is the
+# mirrored forward roll, and the Gregorian 400-year cycle is whole weeks.
+verify-verus:
+    verus crates/litigate-verify/verus/counting.rs
+
+# Focused mutation lane for date arithmetic, temporal, precedence, and case
+# semantics (cargo-mutants; not part of `ci`).
 mutants:
-    cargo mutants -p litigate-sema -f 'crates/litigate-sema/src/temporal/interval.rs' -f 'crates/litigate-sema/src/temporal/transition.rs' -f 'crates/litigate-sema/src/precedence/conflict.rs' -f 'crates/litigate-sema/src/case/event.rs' -f 'crates/litigate-sema/src/case/replay.rs' -f 'crates/litigate-sema/src/case/validate.rs' --re '.*(Window::contains|Window::overlaps|Window::within|governing|Cx.*order|Cx.*deadline|claim|declared|canon|winner|active_claimants).*' -j 4 --timeout 120
+    cargo mutants -p litigate-sema -f 'crates/litigate-sema/src/types/date.rs' -f 'crates/litigate-sema/src/temporal/interval.rs' -f 'crates/litigate-sema/src/temporal/transition.rs' -f 'crates/litigate-sema/src/precedence/conflict.rs' -f 'crates/litigate-sema/src/case/event.rs' -f 'crates/litigate-sema/src/case/replay.rs' -f 'crates/litigate-sema/src/case/validate.rs' --re '.*(days_in_month|days_from_civil|civil|Window::contains|Window::overlaps|Window::within|governing|Cx.*order|Cx.*deadline|claim|declared|canon|winner|active_claimants).*' -j 4 --timeout 120
+
+# Full mutation sweep over litigate crates, one at a time (hours; manual).
+# `just mutants-all litigate-lower` for one crate.
+mutants-all *CRATES=litigate_crates:
+    for crate in {{CRATES}}; do cargo mutants -p "$crate" -j 4 --timeout 120; done
 
 # --- benchmarking (optional, not part of `ci`) -----------------------------
 

@@ -147,6 +147,9 @@ pub fn day_number(date: &str) -> Option<i64> {
     Some(era * 146_097 + doe)
 }
 
+#[cfg(kani)]
+mod proofs;
+
 #[cfg(test)]
 mod tests {
     use super::*;

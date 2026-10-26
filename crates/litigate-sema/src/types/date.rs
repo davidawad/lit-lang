@@ -58,6 +58,13 @@ fn days_from_civil(y: u32, m: u32, d: u32) -> i64 {
 
 /// The date `days` after 1970-01-01, as `YYYY-MM-DD` (`civil_from_days`).
 fn civil_from_days(days: i64) -> String {
+    let (y, m, d) = civil(days);
+    format!("{y:04}-{m:02}-{d:02}")
+}
+
+/// `(year, month, day)` of the date `days` after 1970-01-01 (H. Hinnant's
+/// `civil_from_days`).
+fn civil(days: i64) -> (i64, i64, i64) {
     let z = days + 719_468;
     let era = z.div_euclid(146_097);
     let doe = z - era * 146_097;
@@ -67,8 +74,11 @@ fn civil_from_days(days: i64) -> String {
     let d = doy - (153 * mp + 2) / 5 + 1;
     let m = if mp < 10 { mp + 3 } else { mp - 9 };
     let y = yoe + era * 400 + i64::from(m <= 2);
-    format!("{y:04}-{m:02}-{d:02}")
+    (y, m, d)
 }
+
+#[cfg(kani)]
+mod proofs;
 
 /// The date `days` calendar days after valid ISO date `text`.
 #[must_use]

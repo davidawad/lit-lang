@@ -84,9 +84,15 @@ scope_of() {
 base_of() {
   if [ -n "${1:-}" ]; then
     git rev-parse --verify "$1^{commit}"
-  else
-    git merge-base origin/main HEAD
+    return
   fi
+  # Pods clone one branch, so origin/main may not exist yet: fetch it into
+  # its own ref (a refspec, so a single-branch clone's config is untouched).
+  if ! git rev-parse --verify -q origin/main > /dev/null; then
+    git fetch -q origin "+refs/heads/main:refs/remotes/origin/main" >&2 ||
+      { echo "ci-scoped: no origin/main and it could not be fetched; pass BASE" >&2; return 1; }
+  fi
+  git merge-base origin/main HEAD
 }
 
 # Every path changed since BASE: committed (BASE...HEAD, renames as a

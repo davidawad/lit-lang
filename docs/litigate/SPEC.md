@@ -147,10 +147,12 @@ Punct        = "::" | "->" | "=>" | "==" | "!=" | "<=" | ">=" | "&&" | "||" | ".
   window on purpose (§4.3).
 - **Reserved words.** `world`, `layer`, `precedent`, `overrule` and
   `lock` are reserved for constructs a later edition adds (worlds and
-  layers, precedent effects, locks against named authorities). They lex as
-  `Ident` but are L0007 wherever they appear, so no source written today
-  collides with that syntax. (`delegable`, `grant` and `characterization`,
-  reserved before, are the capability syntax of §5.3 and §5.5.) Only
+  layers, precedent effects). They lex as `Ident` but are L0007 wherever
+  they appear, so no source written today collides with that syntax.
+  `lock` is a keyword in one slot, a deadline's `lock against [...]`
+  option (§5.3), and stays L0007 everywhere else. (`delegable`, `grant`
+  and `characterization`, reserved before, are the capability syntax of
+  §5.3 and §5.5.) Only
   the whole word is reserved: `world-court` and `"world"` are fine. The
   list is `litigate_syntax::RESERVED_WORDS`. `where` is reserved the same
   way for refinements, but is L0009 rather than L0007 (§3.5); its list is
@@ -261,8 +263,10 @@ InstanceField= "pack", Ident | "note", String | "remove_edges", IdList
              | "patch", Ident, PatchFields ;
 PatchFields  = "{", { (EdgeField | GuardOp), Sep }, "}" ;  (* GuardOp: §3.6 *)
 
-RuleDecl     = "rule", ("duty" | "power" | "liability"), Ident, { VersionClause
-             | Relation | Cite }, "{", { Item, Sep }, "}" ;
+RuleDecl     = "rule", ("duty" | "power" | "liability"), Ident, [ RuleIndex ],
+               { VersionClause | Relation | Cite }, "{", { Item, Sep }, "}" ;
+RuleIndex    = "Rule", "[", Index, { ",", Index }, [ "," ], "]" ;  (* five: §5.4 *)
+Index        = "_" | Interval | Ref ;
 DeadlineDecl = "deadline", Ident, ":", Duration, ("from" | "after" | "before"),
                Expr, "counted_by", Ref, { VersionClause | Relation | Cite },
                [ DeclOpts ] ;
@@ -270,7 +274,8 @@ DeclOpts     = "{", { ( "extendable", Bool | "extension_authority", (String | Ho
              | "note", String | "bearer", Ref | "trigger", ( Ref | CallExpr )
              | "designated", Ref | "interpretation", String
              | ("extend" | "waive"), Capability | "forum", Ref
-             | "characterization", Ident, [ Cite ] ), Sep }, "}" ;
+             | "characterization", Ident, [ Cite ]
+             | "lock", "against", IdList, [ Cite ] ), Sep }, "}" ;
 Capability   = "{", { ( "by", Ref | "max", Duration | "to", Expr
              | "discretion", Ident | "after_expiry" | "on", CallExpr
              | "within", Expr | "never", Cite | "interpretation", String ), Sep }, "}" ;
@@ -1200,6 +1205,21 @@ creates (design review 2026-10-23 §2.4, §2.7):
     so no local rule or order grants an extension there. An emergency
     `grant` that `unlock`s the deadline (§5.5) lifts the lock for its
     window.
+  - `lock against [L, ...] cite "X"` (named-authority lock, design review
+    §2.4): rule `X` forbids the extension to the authorities `L` only.
+    Each `L` is an authority level (L1002) at or below the deadline's
+    own (L3004 for a higher or unranked one: a rule never binds an
+    authority above it); the list is not empty and the cite is required
+    (L2007); a deadline has one lock, so `lock` beside `extend { never
+    ... }` is L2007, and a second `lock` is L2007. It refuses what
+    `never` refuses, but only to a claimant whose authority it names: a
+    lower authority's displacement (L3004) and an emergency grant's
+    extension in replay (L4001) or at check (L3004, without `unlock`).
+    FRAP 26(b) and FRCP 6(b)(2) bind the courts (`lock against
+    [LocalRule, StandingOrder, CaseOrder]`), so an emergency grant at the
+    rule's own level reaches the period without `unlock`; `never` binds
+    that level too. The corpus keeps `never` until each lock is read
+    against its text.
 
   The cause standard `S` is a closed set: `GoodCause`, `ExcusableNeglect`,
   `GoodCauseOrExcusableNeglect` (FRAP 4(a)(5)(A)(ii)), or
@@ -1417,6 +1437,18 @@ must cover the package lifetime. A gap is legal only when declared with
 version with `from <= as_of < to`, among versions the corpus held on the
 query's `known_at` (latest when omitted) that apply to the query's
 proceeding. No version is L3007, or L3010 before `unknown_before`.
+
+**The rule index.** `rule duty r Rule[a, s, v, k, ap]` writes a rule's
+type indices (design review §2.3) in one place: `v` (valid time) is its
+`effective` interval, `k` (transaction time) is `[known_at, ..)`, open,
+since a retraction belongs to the version it retracts (L2007 for a closed
+one), and `ap` (applicability) is its `commenced` window. They are sugar:
+the rule then has those clauses, and writing one beside its index is
+L2007. `a` (authority) and `s` (scope, the instrument class) state what
+the rule's declarations already are, their package's `authority` and
+`kind` (§5.7), and another value is L2007 (an undeclared authority
+L1002). There are five indices, each `_` for its default (L2007 for
+another count, or a name where an interval stands or the reverse).
 
 **Cite text across versions.** Let E be the declaration version's `from`
 date and D the vendored source binding's `as_of`. When E < D, the cite is
@@ -3371,9 +3403,19 @@ as follows (each moved obligation has negative tests:
    extension (product construction) is future work, and no corpus package
    declares a track yet.
 
-Not done here: the indexed `Rule[a, s, v, k, ap]` surface sugar (review
-§6 item 20, CAN-ADD-LATER) and workflow-soundness checks on the net (item
-27).
+Not done here: workflow-soundness checks on the net (item 27).
+
+Follow-ups (lg-962.11): `lock against [L, ...] cite "X"`, a lock binding
+only the authorities it names (§5.3; `lock` stays reserved elsewhere);
+the indexed `Rule[a, s, v, k, ap]` surface sugar over items 2 and 6
+(§5.4; review §6 item 20); and the FRCP 87(b)(1)(C) cap on an emergency
+declaration's grants, checked against the vendored rule (`sources/frcp.txt`,
+Rule 87, eff. Dec. 1, 2023: "limited to a stated period of no more than
+90 days"). The cap was already data, the district-civil family's
+`emergency-declaration` cell's `window_days = 90` in `lit/core/Lit.toml`
+(L2011, §5.7, lg-fq2.1), so no hole is left for it. The corpus keeps its
+`never` locks: which of FRCP 6(b)(2) and FRAP 26(b) bind the rule's own
+level is read per rule before any becomes a named lock.
 
 ### 13.10 Status: instrument classes (lg-962.5)
 

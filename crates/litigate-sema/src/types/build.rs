@@ -240,7 +240,7 @@ pub fn check_module(db: &dyn salsa::Database, file: SourceFile) -> ModuleCheck {
             reason: reason.clone(),
         })
         .collect();
-    let has_error = reports.iter().any(|r| !r.code.is_lint());
+    let has_error = reports.iter().any(|r| !r.graded());
     let mut diagnostics: Vec<Diagnostic> = reports
         .iter()
         .map(|r| r.to_diagnostic(&file_id, &map))

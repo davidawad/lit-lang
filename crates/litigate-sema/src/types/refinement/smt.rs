@@ -9,10 +9,10 @@
 //! linear arithmetic, which Z3 decides under a deterministic work budget;
 //! running out of it is `unknown`, a hole (L2014), never a pass. A wasm
 //! build links no solver: there every question is `unknown`.
-use super::eval::{show, Val};
 use crate::hir::{self, Type};
 #[cfg(not(target_arch = "wasm32"))]
 use {
+    super::eval::{show, Val},
     crate::hir::{BinaryOp, ExprKind, UnaryOp, Value},
     crate::types::date,
     litigate_smt::{Cmp, Formula, LinExpr, Query, Rational as R},
@@ -205,7 +205,7 @@ impl<'v> Encoder<'v> {
                 let last = date::day_number("9999-12-31").unwrap_or_default();
                 Some(range(int(first), int(last)))
             }
-            (Type::Probability, _) | (Type::Boolean, _) => Some(range(int(0), int(1))),
+            (Type::Probability | Type::Boolean, _) => Some(range(int(0), int(1))),
             (Type::Named(_), Some(names)) => {
                 let n = i64::try_from(names.len()).unwrap_or(i64::MAX);
                 Some(range(int(0), int(n - 1)))

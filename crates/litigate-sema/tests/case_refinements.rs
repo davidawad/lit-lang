@@ -67,12 +67,12 @@ fn run(events: &[&str]) -> Vec<String> {
     let packages = sigma();
     let checked = check(&text, packages, Some(&lock(packages)), &Plus, Profile::Dev);
     let mut out = outcome(&checked);
-    out.extend(
-        checked
-            .obligations
-            .iter()
-            .map(|o| format!("obligation {} {:?} {:?}", o.deadline, o.status, o.extended_to)),
-    );
+    out.extend(checked.obligations.iter().map(|o| {
+        format!(
+            "obligation {} {:?} {:?}",
+            o.deadline, o.status, o.extended_to
+        )
+    }));
     out
 }
 
@@ -81,23 +81,38 @@ fn case_arguments_and_extensions_are_checked_against_refinements() {
     let rows: &[(&str, &[&str])] = &[
         (
             "an argument outside its alias's refinement and another's: both at their argument",
-            &["2011-01-04 Served(Mail) on d", "2011-01-06 Stipulated(45, Personal) by p"],
+            &[
+                "2011-01-04 Served(Mail) on d",
+                "2011-01-06 Stipulated(45, Personal) by p",
+            ],
         ),
         (
             "within every refinement: the stipulation is taken",
-            &["2011-01-04 Served(Mail) on d", "2011-01-06 Stipulated(2, Personal) by p"],
+            &[
+                "2011-01-04 Served(Mail) on d",
+                "2011-01-06 Stipulated(2, Personal) by p",
+            ],
         ),
         (
             "a refinement reading two arguments",
-            &["2011-01-04 Served(Mail) on d", "2011-01-06 Stipulated(10, Personal) by p"],
+            &[
+                "2011-01-04 Served(Mail) on d",
+                "2011-01-06 Stipulated(10, Personal) by p",
+            ],
         ),
         (
             "an order past its refinement, within the rule's bound: refused at replay",
-            &["2011-01-04 Served(Mail) on d", "2011-01-10 Ordered(2011-02-10) by c cite \"Order\""],
+            &[
+                "2011-01-04 Served(Mail) on d",
+                "2011-01-10 Ordered(2011-02-10) by c cite \"Order\"",
+            ],
         ),
         (
             "an order to an unknown date: the refinement is not judged",
-            &["2011-01-04 Served(Mail) on d", "2011-01-10 Ordered(?) by c cite \"Order\""],
+            &[
+                "2011-01-04 Served(Mail) on d",
+                "2011-01-10 Ordered(?) by c cite \"Order\"",
+            ],
         ),
         (
             "an order within its refinement extends the answer",

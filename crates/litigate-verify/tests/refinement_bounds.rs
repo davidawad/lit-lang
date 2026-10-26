@@ -81,3 +81,19 @@ fn a_refinement_admitting_an_extension_past_the_bound_is_a_counterexample() {
           until = 1970-02-01 exceeds max(prescribed_due + 30.days, grant_order_entered + 14.days) = 1970-01-31"]
     );
 }
+
+#[test]
+fn an_undecided_bound_is_a_hole() {
+    let (status, messages) = found(&program(
+        " where until <= prescribed_due + 30.days || (until - prescribed_due) * 9_223_372_036_854_775_807 * 2 > 0.days",
+    ));
+    // Undecided is a hole: an error in strict (sema's own L2014 on the
+    // event is aggregated beside it).
+    assert_eq!(status, Some(ObligationStatus::Failed));
+    assert_eq!(
+        messages,
+        [
+            "9:33 L2014 the SMT tier did not decide whether `Extended` stays within the bound of `answer-period`: exact arithmetic overflowed i64"
+        ]
+    );
+}

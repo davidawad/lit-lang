@@ -642,6 +642,19 @@ pub fn event(
 /// value (when it folds), and its range.
 pub type Argument<'v> = (&'v str, Option<&'v Value>, TextRange);
 
+/// [`ground`] for each of `refinements`.
+pub fn ground_all(
+    ck: &mut Checker<'_, '_>,
+    event: &str,
+    refinements: Option<&Vec<Refinement>>,
+    args: &[Argument<'_>],
+    call: TextRange,
+) {
+    for r in refinements.into_iter().flatten() {
+        ground(ck, event, r, args, call);
+    }
+}
+
 /// Tier 1 on an event call `event(args)` written at `call`: L2012 when
 /// refinement `r` is false of the arguments' values. A refinement naming
 /// an argument that is not constant (a hole, a pattern's open argument)

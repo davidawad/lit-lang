@@ -409,6 +409,40 @@ impl<'s, 'a> Checker<'s, 'a> {
         self.event_call(callee, args, false, r)
     }
 
+    /// L2001: event `name(params)` called with `found` arguments.
+    fn arity(
+        &mut self,
+        name: &str,
+        params: &[(String, Option<Type>)],
+        found: usize,
+        partial: bool,
+        r: TextRange,
+    ) {
+        let need = if partial {
+            format!("at most {}", params.len())
+        } else {
+            params.len().to_string()
+        };
+        self.report(
+            Report::new(
+                C::TypeMismatch,
+                r,
+                format!(
+                    "`{name}` takes {need} argument{}, found {found}",
+                    if params.len() == 1 { "" } else { "s" },
+                ),
+            )
+            .note(format!(
+                "`{name}({})`",
+                params
+                    .iter()
+                    .map(|(p, t)| format!("{p}: {}", t.as_ref().map_or("?".into(), display)))
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            )),
+        );
+    }
+
     /// An event constructor call; `partial` permits omitted trailing
     /// arguments (patterns in deadline triggers and edge `event`).
     pub fn event_call(
@@ -467,30 +501,7 @@ impl<'s, 'a> Checker<'s, 'a> {
             args.len() == params.len()
         };
         if !arity_ok {
-            let need = if partial {
-                format!("at most {}", params.len())
-            } else {
-                params.len().to_string()
-            };
-            self.report(
-                Report::new(
-                    C::TypeMismatch,
-                    r,
-                    format!(
-                        "`{name}` takes {need} argument{}, found {}",
-                        if params.len() == 1 { "" } else { "s" },
-                        args.len()
-                    ),
-                )
-                .note(format!(
-                    "`{name}({})`",
-                    params
-                        .iter()
-                        .map(|(p, t)| format!("{p}: {}", t.as_ref().map_or("?".into(), display)))
-                        .collect::<Vec<_>>()
-                        .join(", ")
-                )),
-            );
+            self.arity(&name, &params, args.len(), partial, r);
         }
         let checked: Vec<Checked> = args
             .iter()
@@ -501,14 +512,12 @@ impl<'s, 'a> Checker<'s, 'a> {
             })
             .collect();
         if arity_ok {
-            let values: Vec<(&str, Option<&Value>, TextRange)> = params
+            let values: Vec<super::refinement::Argument<'_>> = params
                 .iter()
                 .zip(checked.iter().zip(args))
                 .map(|((p, _), (c, a))| (p.as_str(), c.value.as_ref(), a.range))
                 .collect();
-            for refinement in refinements.into_iter().flatten() {
-                super::refinement::ground(self, &name, refinement, &values, r);
-            }
+            super::refinement::ground_all(self, &name, refinements, &values, r);
         }
         let args: Vec<hir::Expr> = checked.into_iter().map(|c| c.hir).collect();
         let ty = arity_ok.then(|| Type::Named(name.clone()));

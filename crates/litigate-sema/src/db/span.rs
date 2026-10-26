@@ -233,16 +233,22 @@ impl Report {
         self
     }
 
+    /// A lint, or an undecided refinement (a hole, L2014): graded by
+    /// profile, so it does not stop a dev build; any other report is an
+    /// error.
+    #[must_use]
+    pub fn graded(&self) -> bool {
+        self.code.is_lint() || self.code == DiagnosticCode::RefinementUndecided
+    }
+
     /// Converts to a located diagnostic: located notes become labels.
-    /// Sema codes are all errors except the lint range, which is graded
-    /// as in `dev` (callers grade it by profile).
+    /// Sema codes are all errors except the [`Self::graded`] ones, graded
+    /// as in `dev` (callers grade them by profile).
     #[must_use]
     pub fn to_diagnostic(&self, file: &FileId, at: &(impl Positions + ?Sized)) -> Diagnostic {
         let span = |range: TextRange| at.span(file, range);
         let mut d = Diagnostic::error(self.code, span(self.range), self.message.clone());
-        // A lint, or an undecided refinement (a hole): graded by profile,
-        // so a dev check still builds.
-        if self.code.is_lint() || self.code == DiagnosticCode::RefinementUndecided {
+        if self.graded() {
             d.severity = self.code.severity(Profile::Dev);
         }
         for (range, message) in &self.notes {

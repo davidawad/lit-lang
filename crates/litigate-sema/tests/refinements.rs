@@ -265,3 +265,25 @@ terminal t: \"T\"
         ]
     );
 }
+
+/// A question the SMT tier does not decide (here, exact arithmetic past
+/// `i64` while building it) is a hole: L2014, a warning in the dev
+/// profile and an error in strict, never a pass.
+#[test]
+fn an_undecided_refinement_is_a_hole() {
+    let found = diagnostics("event E(a: Number where (a * 9_223_372_036_854_775_807) * 2 > 1)");
+    assert_eq!(
+        found,
+        ["10:19 L2014 the SMT tier did not decide whether any `E(..)` satisfies its refinements: exact arithmetic overflowed i64 | an undecided refinement is a hole, never a pass: simplify the predicates (fewer disjunctions, smaller constants)"]
+    );
+    let text =
+        format!("{PRELUDE}event E(a: Number where (a * 9_223_372_036_854_775_807) * 2 > 1)\n");
+    let (db, ws) = workspace(&[package("demo", &[], &[("main.lit", &text)])]);
+    let checks = litigate_sema::check_workspace(&db, ws);
+    let d = &checks[0].diagnostics[0];
+    assert_eq!(d.severity, litigate_base::Severity::Warning);
+    assert!(
+        checks[0].package.is_some(),
+        "a hole does not stop the build"
+    );
+}

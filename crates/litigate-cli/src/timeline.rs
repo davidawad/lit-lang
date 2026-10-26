@@ -233,10 +233,10 @@ impl<'a> Builder<'a> {
         };
         let citations = Citations::of_package(pkg, Some(crate::verdict::corpus()));
         for proof in citations.proofs(cite, from) {
+            // A row repeated in another world repeats its proof: once.
             let at = (source.cloned(), proof);
-            if !self.proofs.contains(&at) {
-                self.proofs.push(at);
-            }
+            self.proofs.retain(|p| *p != at);
+            self.proofs.push(at);
         }
     }
 

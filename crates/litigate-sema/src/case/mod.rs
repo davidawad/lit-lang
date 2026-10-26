@@ -230,14 +230,30 @@ pub fn check_source(file: &str, text: &str, env: Env<'_>) -> CheckedCase {
 
 /// Checks a resolved matter against the loaded packages.
 #[must_use]
-pub fn check(mut case: hir::Case, spans: &CaseSpans, env: Env<'_>) -> CheckedCase {
+pub fn check(case: hir::Case, spans: &CaseSpans, env: Env<'_>) -> CheckedCase {
+    check_under(case, spans, env, &[])
+}
+
+/// [`check`] in a world (docs/litigate/CHANGE.md §5): `layers` are the
+/// world's layers in force, packages among `env.packages`. They join the
+/// law the matter's packages see, with their dependencies, so a layer's
+/// amendment, override, waiver or grant governs the matter's deadlines
+/// where precedence selects it; a layer's own deadlines are replayed only
+/// in a matter that `uses` it.
+#[must_use]
+pub fn check_under<'a>(
+    mut case: hir::Case,
+    spans: &CaseSpans,
+    env: Env<'a>,
+    layers: &[&'a Package],
+) -> CheckedCase {
     let mut out = Vec::new();
     case.removals.clear();
     dates(&case, spans, &mut out);
     let Some(used) = validate::pins(&case, env.packages, env.lock, spans, &mut out) else {
         return done(case, out, Replayed::default());
     };
-    let mut graph = Graph::new(used, env.packages);
+    let mut graph = Graph::under(used, layers, env.packages);
     // The matter is one proceeding, commenced on its first event: a
     // version applying only to proceedings commenced in a window (SPEC
     // §5.4) is judged by that date throughout.

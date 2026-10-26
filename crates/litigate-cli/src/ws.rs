@@ -309,11 +309,14 @@ pub(crate) fn uses_of(text: &str) -> Vec<String> {
         .unwrap_or_default()
 }
 
-/// Package names a `.world` text names as layers (none when it does not
-/// parse: its check reports why).
+/// Package names a `.world` text names as layers, its choice points' too
+/// (none when it does not parse: its check reports why).
 pub(crate) fn layers_of(text: &str) -> Vec<String> {
     litigate_sema::change::world::parse_world(text)
-        .map(|(w, _)| w.layers.into_iter().collect())
+        .map(|(w, _)| {
+            let choices = litigate_sema::change::choice::layers(&w.choices).cloned();
+            w.layers.iter().cloned().chain(choices).collect()
+        })
         .unwrap_or_default()
 }
 
@@ -351,6 +354,20 @@ impl Session {
     /// # Errors
     /// I/O errors reading inputs.
     pub fn load_in(src: &dyn Source, targets: &Targets, lib: &[String]) -> Result<Self, Failure> {
+        Self::load_layers_in(src, targets, lib, &[])
+    }
+
+    /// [`Session::load_in`], also loading the library packages named
+    /// `layers` (a world's layers given outside a `.world` file).
+    ///
+    /// # Errors
+    /// I/O errors reading inputs.
+    pub fn load_layers_in(
+        src: &dyn Source,
+        targets: &Targets,
+        lib: &[String],
+        layers: &[String],
+    ) -> Result<Self, Failure> {
         let root = src.root()?;
         let cases = targets
             .cases
@@ -382,6 +399,7 @@ impl Session {
             .iter()
             .flat_map(|c| uses_of(&c.text))
             .chain(worlds.iter().flat_map(|w| layers_of(&w.text)))
+            .chain(layers.iter().cloned())
             .collect();
         let mut roots: Vec<PathBuf> = targets.packages.iter().map(|p| root.join(p)).collect();
         if !wanted.is_empty() {

@@ -66,7 +66,19 @@ pub fn verify_case_source(file: &str, text: &str, env: Env<'_>) -> VerifiedCase 
 /// case).
 #[must_use]
 pub fn verify_case(case: hir::Case, spans: &CaseSpans, env: Env<'_>) -> VerifiedCase {
-    let checked = case::check(case, spans, env);
+    verify_case_under(case, spans, env, &[])
+}
+
+/// [`verify_case`] in a world whose `layers` join the matter's law
+/// ([`case::check_under`]).
+#[must_use]
+pub fn verify_case_under<'a>(
+    case: hir::Case,
+    spans: &CaseSpans,
+    env: Env<'a>,
+    layers: &[&'a hir::Package],
+) -> VerifiedCase {
+    let checked = case::check_under(case, spans, env, layers);
     verified(checked, spans, env.profile)
 }
 

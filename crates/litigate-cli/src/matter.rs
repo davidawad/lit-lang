@@ -187,9 +187,15 @@ fn is_error(d: &Diagnostic) -> bool {
     d.severity == Severity::Error
 }
 
-/// Checks and verifies `case` under `env`, at `at`'s dates where given.
-fn verify(case: &CaseText, env: Env, at: At) -> VerifiedCase {
-    if at.as_of.is_none() && at.known_at.is_none() {
+/// Checks and verifies `case` under `env` in a world of `layers`, at
+/// `at`'s dates where given.
+fn verify<'a>(
+    case: &CaseText,
+    env: Env<'a>,
+    layers: &[&'a hir::Package],
+    at: At,
+) -> VerifiedCase {
+    if at.as_of.is_none() && at.known_at.is_none() && layers.is_empty() {
         return litigate_verify::verify_case_source(&case.path, &case.text, env);
     }
     let resolved = litigate_sema::case::resolve(&case.path, &case.text, env.packages, env.lock);
@@ -201,7 +207,8 @@ fn verify(case: &CaseText, env: Env, at: At) -> VerifiedCase {
             if let Some(known_at) = at.known_at {
                 hcase.known_at = Some(known_at.to_owned());
             }
-            let mut verified = litigate_verify::verify_case(hcase, &resolved.spans, env);
+            let mut verified =
+                litigate_verify::verify_case_under(hcase, &resolved.spans, env, layers);
             verified.checked.diagnostics.extend(resolved.diagnostics);
             verified
         }
@@ -240,6 +247,22 @@ pub fn check_packages(
     profile: Profile,
     at: At,
 ) -> CaseCheck {
+    check_under(all, &[], case, clocks, profile, at)
+}
+
+/// [`check_packages`] in a world (docs/litigate/CHANGE.md §5) whose
+/// `layers` in force, among `all`, join the law the matter's packages see:
+/// replay judges its events, and the schedule counts its deadlines, under
+/// the versions the layers make govern.
+#[must_use]
+pub fn check_under<'a>(
+    all: &[&'a hir::Package],
+    layers: &[&'a hir::Package],
+    case: &CaseText,
+    clocks: &Clocks,
+    profile: Profile,
+    at: At,
+) -> CaseCheck {
     let engine = crate::cmd::check::engine(all);
     // CLI-side findings: an unreadable lock, and lowering errors.
     let (lock, mut own) = match lock(case) {
@@ -252,7 +275,7 @@ pub fn check_packages(
         clock: &engine,
         profile,
     };
-    let verified = verify(case, env, at);
+    let verified = verify(case, env, layers, at);
     let mut diagnostics = verified.diagnostics();
     let mut checked_case = verified.checked.case;
     if let Some(c) = checked_case
@@ -284,7 +307,7 @@ pub fn check_packages(
     // is an error, and its deadline still has a due date); the schedule is
     // that of a matter that lowers.
     let counted = match checked_case.as_ref() {
-        Some(c) => schedule(&used, clocks, c, &verified.checked.obligations),
+        Some(c) => schedule(&used, layers, clocks, c, &verified.checked.obligations),
         None => Vec::new(),
     };
     let schedule = if lowered.is_some() {
@@ -317,15 +340,20 @@ pub fn check_packages(
 
 /// Every obligation instance replay created (SPEC §5.6), in creation
 /// order, counted from its own trigger under the declaration governing it
-/// then among the used packages (`clock::due`: precedence and transitions
-/// applied).
+/// then among the used packages and the world's `layers` (`clock::due`:
+/// precedence and transitions applied).
 fn schedule(
     packages: &[&hir::Package],
+    layers: &[&hir::Package],
     clocks: &Clocks,
     case: &hir::Case,
     obligations: &[Obligation],
 ) -> Vec<Scheduled> {
-    let names: Vec<&str> = packages.iter().map(|p| p.manifest.name.as_str()).collect();
+    let names: Vec<&str> = packages
+        .iter()
+        .chain(layers)
+        .map(|p| p.manifest.name.as_str())
+        .collect();
     let world = clocks.scope(&names);
     let mut out: Vec<Scheduled> = Vec::new();
     for pkg in packages {

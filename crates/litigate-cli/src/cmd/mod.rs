@@ -16,6 +16,7 @@ mod test;
 mod timeline;
 mod value;
 mod where_;
+mod worlds;
 
 pub use explain::phase;
 
@@ -23,8 +24,8 @@ use crate::cli::Command;
 use crate::out::Outcome;
 use litigate_sema::pkg::source::Source;
 
-/// Runs `command`; `check` and `build` read (and write) `src`, every other
-/// command the disk.
+/// Runs `command`; `check`, `build` and `worlds` read (and `build`
+/// writes) `src`, every other command the disk.
 // One arm per subcommand, each only unpacking its arguments.
 #[allow(clippy::too_many_lines)]
 pub fn dispatch(command: Command, src: &dyn Source) -> Outcome {
@@ -175,6 +176,28 @@ pub fn dispatch(command: Command, src: &dyn Source) -> Outcome {
             world,
             lib: library.lib,
         }),
+        Command::Worlds {
+            case,
+            world,
+            paths,
+            layers,
+            vary,
+            as_of,
+            known_at,
+            library,
+        } => worlds::worlds(
+            src,
+            &worlds::Args {
+                case,
+                world,
+                paths,
+                layers,
+                vary,
+                as_of,
+                known_at,
+                lib: library.lib,
+            },
+        ),
         Command::Import { inputs, out } => import::import(&inputs, &out),
         Command::Fix {
             paths,

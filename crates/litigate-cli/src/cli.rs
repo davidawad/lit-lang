@@ -462,6 +462,37 @@ pub enum Command {
         #[command(flatten)]
         library: Library,
     },
+    /// Alternate timelines: replay a matter in every world a `.world` file
+    /// spans (its layers, one option per choice point) at `--as-of` and
+    /// `--known-at`, and report which filings are timely in which worlds.
+    Worlds {
+        /// The `.case` file.
+        case: String,
+        /// The `.world` file: layers, location, modality, choice points.
+        #[arg(long, value_name = "FILE")]
+        world: String,
+        /// Package directories (or directories searched for packages) to
+        /// load besides the library (repeatable).
+        #[arg(long = "path", value_name = "PATH")]
+        paths: Vec<String>,
+        /// Add this layer to every world (repeatable).
+        #[arg(long = "layer", value_name = "NAME")]
+        layers: Vec<String>,
+        /// Make this layer a choice point: every world with and without it
+        /// (repeatable).
+        #[arg(long, value_name = "NAME")]
+        vary: Vec<String>,
+        /// Judge the matter at this date instead of its `as_of`.
+        #[arg(long, value_name = "DATE")]
+        as_of: Option<String>,
+        /// Select the versions recorded by this date instead of the
+        /// matter's `known_at`.
+        #[arg(long, value_name = "DATE")]
+        known_at: Option<String>,
+        /// Shared options.
+        #[command(flatten)]
+        library: Library,
+    },
     /// Turn legacy pack / links / scenario JSON into `.lit` / `.case` source.
     Import {
         /// JSON files.
@@ -517,6 +548,7 @@ impl Command {
             Self::Compat { .. } => "compat",
             Self::Query { .. } => "query",
             Self::Timeline { .. } => "timeline",
+            Self::Worlds { .. } => "worlds",
             Self::Import { .. } => "import",
             Self::Fix { .. } => "fix",
         }

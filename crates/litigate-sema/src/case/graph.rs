@@ -44,7 +44,26 @@ impl<'a> Graph<'a> {
     /// pattern, written in the links package, is respelled into the view
     /// of that pack (an instance `base@origin` reads in `base`'s view).
     pub fn new(packages: Vec<&'a Package>, loaded: &[&'a Package]) -> Self {
-        let deps = dependencies(&packages, loaded);
+        Self::under(packages, &[], loaded)
+    }
+
+    /// [`Graph::new`] in a world whose `layers` (docs/litigate/CHANGE.md
+    /// §5) join the law the used packages see, with their dependencies:
+    /// their versions, supersessions, overrides, exceptions and grants
+    /// take part in selection like a dependency's, and like a
+    /// dependency's their own triggers are never replayed. A layer the
+    /// matter uses is only used.
+    pub fn under(packages: Vec<&'a Package>, layers: &[&'a Package], loaded: &[&'a Package]) -> Self {
+        let mut deps: Vec<&'a Package> = Vec::new();
+        for l in layers {
+            let name = l.manifest.name.as_str();
+            let seen = packages.iter().chain(&deps).any(|p| p.manifest.name == name);
+            if !seen {
+                deps.push(l);
+            }
+        }
+        let roots = [packages.as_slice(), deps.as_slice()].concat();
+        deps.extend(dependencies(&roots, loaded));
         // The law the used packages see, as `check` and lowering select it
         // (`World::closure`): their dependencies' versioned declarations
         // (a chain's base deadline, a counting rule and its transitions)
@@ -281,6 +300,10 @@ impl<'a> Graph<'a> {
     /// `qualified` (precedence and transitions applied), with the
     /// qualified id of the logical declaration it is a version of: a
     /// claimant that displaces `qualified` has its own.
+    ///
+    /// A declaration superseded by another logical declaration (an
+    /// amendment layer's) is governed by the one superseding it
+    /// ([`temporal::governing`]).
     pub fn governing(
         &self,
         qualified: &str,
@@ -319,7 +342,8 @@ impl<'a> Graph<'a> {
 
     /// The declarations the version of `qualified` in force on `date`
     /// displaces by an `override` or `notwithstanding` claim (SPEC §5.5),
-    /// qualified.
+    /// or supersedes when they are other logical declarations (an
+    /// amendment layer's new version of a base declaration), qualified.
     pub fn claims(&self, qualified: &str, date: &str, known_at: Option<&str>) -> Vec<String> {
         let version = temporal::select(&self.world, &Self::key(qualified), date, known_at).ok();
         version
@@ -334,6 +358,10 @@ impl<'a> Graph<'a> {
                         Relation::Override(x) | Relation::Notwithstanding(x) => {
                             let k = self.world.target(pack, x).key;
                             Some(format!("{}::{}", k.pack, k.name))
+                        }
+                        Relation::Supersedes(x) => {
+                            let k = self.world.target(pack, x).key;
+                            (k != self.world.key(v)).then(|| format!("{}::{}", k.pack, k.name))
                         }
                         _ => None,
                     })

@@ -31,7 +31,7 @@ mod net;
 mod report;
 mod sema;
 
-pub use matter::{verify_case, verify_case_source, VerifiedCase};
+pub use matter::{verify_case, verify_case_source, verify_case_under, VerifiedCase};
 pub use report::{
     Evidence, Finding, Obligation, ObligationStatus, VerificationReport, MAX_EXAMPLES,
 };

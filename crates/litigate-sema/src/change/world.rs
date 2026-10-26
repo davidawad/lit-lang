@@ -3,7 +3,9 @@
 //! modality, written as a `.world` file. The layers merge as a set (order
 //! and repetition in the file mean nothing); precedence comes from the
 //! instruments, never from the file. `as_of` and `known_at` are query
-//! coordinates, not world fields.
+//! coordinates, not world fields. A world may also declare choice points
+//! (`[choice.ID]`, [`super::choice`]): the alternate worlds it spans.
+use super::choice::{self, Choices};
 use super::{families, family_of, scope};
 use crate::db::ids::DeclId;
 use crate::db::inputs::{PackageInput, Workspace};
@@ -54,6 +56,10 @@ pub struct World {
     pub layers: BTreeSet<String>,
     /// Its location.
     pub location: Location,
+    /// Its choice points, by id: each a set of named options, an option a
+    /// set of layers ([`super::choice`]). Empty: the world is one world.
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub choices: Choices,
 }
 
 /// One layer as the world has it.
@@ -72,6 +78,27 @@ pub struct Layer {
     /// The overruling withdrawing it, and from when.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub overruled_by: Option<Overruled>,
+    /// Whether its claims apply at the location, overruled or not: false
+    /// only for a precedent that does not bind there yet has binding
+    /// effects.
+    #[serde(skip)]
+    pub applies: bool,
+}
+
+impl Layer {
+    /// Whether its claims are in force in a matter judged at `as_of` with
+    /// the corpus known at `known_at` (`None`: the latest): an overruling
+    /// withdraws a precedent from its date, retroactively for every case
+    /// still open (Harper v. Virginia Dep't of Taxation, 509 U.S. 86
+    /// (1993)), so a matter judged before that date, or at a `known_at`
+    /// before it, still has it.
+    #[must_use]
+    pub fn in_force_at(&self, as_of: &str, known_at: Option<&str>) -> bool {
+        self.applies
+            && self.overruled_by.as_ref().is_none_or(|o| {
+                o.from.as_str() > as_of || known_at.is_some_and(|k| o.from.as_str() > k)
+            })
+    }
 }
 
 /// An overruling of a world's precedent layer.
@@ -104,6 +131,7 @@ struct RawWorld {
     modality: Option<Spanned<String>>,
     layers: Spanned<Vec<Spanned<String>>>,
     location: Spanned<RawLocation>,
+    choice: Option<choice::Raw>,
 }
 
 #[derive(Deserialize)]
@@ -115,13 +143,14 @@ struct RawLocation {
     judge: Option<String>,
 }
 
-fn range<T>(s: &Spanned<T>) -> TextRange {
+pub(super) fn range<T>(s: &Spanned<T>) -> TextRange {
     let span = s.span();
     let f = |n: usize| u32::try_from(n).unwrap_or(u32::MAX);
     TextRange::new(f(span.start), f(span.end))
 }
 
-/// Parses a `.world` text: its world and where each layer is named.
+/// Parses a `.world` text: its world and where each layer (a choice
+/// point's too) is named.
 ///
 /// # Errors
 /// The L1013 reports of a malformed file.
@@ -170,9 +199,15 @@ pub fn parse_world(text: &str) -> Result<(World, BTreeMap<String, TextRange>), V
     if let Some(m) = &raw.modality {
         at.insert("@modality".to_owned(), range(m));
     }
+    let layers: BTreeSet<String> = at.keys().filter(|k| !k.starts_with('@')).cloned().collect();
+    let choices = match &raw.choice {
+        Some(c) => choice::parse(c, &layers, &mut at)?,
+        None => Choices::new(),
+    };
     let world = World {
         modality,
-        layers: at.keys().filter(|k| !k.starts_with('@')).cloned().collect(),
+        layers,
+        choices,
         location: Location {
             family: l.family.get_ref().clone(),
             court: l.court.clone(),
@@ -212,7 +247,10 @@ fn effects_of(db: &dyn salsa::Database, pkg: PackageInput) -> Row {
 }
 
 /// Checks the world file `text` at `path` against the packages of `ws`
-/// under `profile` (docs/litigate/CHANGE.md §5).
+/// under `profile` (docs/litigate/CHANGE.md §5): the world its `layers`
+/// make, and every layer its choice points name is a loaded package. The
+/// worlds the choices span are checked one by one where they are run
+/// ([`super::choice::enumerate`]).
 #[must_use]
 pub fn check_world(
     db: &dyn salsa::Database,
@@ -223,21 +261,60 @@ pub fn check_world(
 ) -> WorldCheck {
     let file = FileId(path.to_owned());
     let index = LineIndex::new(text);
+    let (world, at) = match parse_world(text) {
+        Ok(parsed) => parsed,
+        Err(reports) => {
+            return WorldCheck {
+                path: path.to_owned(),
+                world: None,
+                layers: Vec::new(),
+                diagnostics: reports
+                    .iter()
+                    .map(|r| r.to_diagnostic(&file, &index))
+                    .collect(),
+            };
+        }
+    };
+    let fixed = World {
+        choices: Choices::new(),
+        ..world.clone()
+    };
+    let mut out = check_parsed(db, ws, path, text, &fixed, &at, profile);
+    let all = loaded(db, ws);
+    let unknown = choice::layers(&world.choices).filter(|name| !all.contains_key(*name));
+    out.diagnostics.extend(unknown.map(|name| {
+        Report::new(
+            C::InvalidWorld,
+            at[name],
+            format!("layer `{name}` is not a loaded package"),
+        )
+        .to_diagnostic(&file, &index)
+    }));
+    sort_diagnostics(&mut out.diagnostics);
+    out.world = Some(world);
+    out
+}
+
+/// Checks `world`, parsed from `text` at `path` (`at`: where each of its
+/// layers and location keys is named), against the packages of `ws` under
+/// `profile`.
+#[must_use]
+pub fn check_parsed(
+    db: &dyn salsa::Database,
+    ws: Workspace,
+    path: &str,
+    text: &str,
+    world: &World,
+    at: &BTreeMap<String, TextRange>,
+    profile: Profile,
+) -> WorldCheck {
+    let file = FileId(path.to_owned());
+    let index = LineIndex::new(text);
     let mut out = WorldCheck {
         path: path.to_owned(),
         world: None,
         layers: Vec::new(),
         diagnostics: Vec::new(),
-    };
-    let (world, at) = match parse_world(text) {
-        Ok(parsed) => parsed,
-        Err(reports) => {
-            out.diagnostics = reports
-                .iter()
-                .map(|r| r.to_diagnostic(&file, &index))
-                .collect();
-            return out;
-        }
     };
     let mut reports: Vec<Report> = Vec::new();
     let all = loaded(db, ws);
@@ -257,7 +334,7 @@ pub fn check_world(
         })
         .collect();
     let families: &[Family] = layers.first().map_or(&[], |(p, _)| families(db, *p));
-    let family = location(&world, &at, families, &mut reports);
+    let family = location(world, at, families, &mut reports);
     if world.modality == Modality::Counterfactual && profile == Profile::Strict {
         reports.push(Report::new(
             C::NotActualLaw,
@@ -268,11 +345,7 @@ pub fn check_world(
     }
     let mut located: Vec<Diagnostic> = Vec::new();
     let overrulings = overrulings(db, &layers, families, &mut located);
-    let here = Here {
-        world: &world,
-        at: &at,
-        family,
-    };
+    let here = Here { world, at, family };
     let (checked, fits): (Vec<Layer>, Vec<bool>) = layers
         .iter()
         .map(|&(pkg, m)| here.layer(db, pkg, m, overrulings.get(&m.name), &mut reports))
@@ -292,7 +365,7 @@ pub fn check_world(
         .collect();
     out.diagnostics.extend(merged(db, &visible));
     sort_diagnostics(&mut out.diagnostics);
-    out.world = Some(world);
+    out.world = Some(world.clone());
     out
 }
 
@@ -347,6 +420,7 @@ impl Here<'_> {
             class: kind.label().to_owned(),
             in_force: fits && overruled_by.is_none(),
             overruled_by: overruled_by.cloned(),
+            applies: fits,
         };
         (layer, fits)
     }

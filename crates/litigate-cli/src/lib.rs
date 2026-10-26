@@ -63,7 +63,7 @@ where
 
 /// The commands [`execute_in`] runs: the ones that only read their inputs
 /// and write build outputs, both through the source.
-pub const IN_MEMORY_COMMANDS: [&str; 2] = ["check", "build"];
+pub const IN_MEMORY_COMMANDS: [&str; 3] = ["check", "build", "worlds"];
 
 /// [`execute`] over `src` instead of the disk, for hosts with no
 /// filesystem (WebAssembly): paths resolve in `src`, `build` writes into

@@ -10,6 +10,7 @@ use crate::db::span::{Report, TextRange};
 use crate::hir::{Cell, Family, Kind, Manifest, Row, Scope};
 use litigate_base::DiagnosticCode as C;
 
+pub mod choice;
 pub mod world;
 
 /// A package's class where it is checked: its kind with a precedent's

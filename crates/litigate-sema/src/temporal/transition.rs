@@ -20,6 +20,7 @@ use super::world::{error, span_of, DiagnosticExt, Key, Locate, World};
 use crate::hir::{Declaration, Expr, Transition, TransitionArm};
 use crate::precedence::select::{select, Unselected};
 use litigate_base::{Diagnostic, DiagnosticCode as C};
+use std::collections::BTreeSet;
 
 /// Where an event falls among the events of its date (SPEC §5.6).
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
@@ -101,11 +102,37 @@ pub fn transition_for(world: &World<'_>, key: &Key, from: &str) -> Option<usize>
 /// are `events`: the selected declaration on the event's date, through the
 /// transition amending it if the matter was pending. The transition reads
 /// the history of `events[at]`: itself and every event that
-/// [precedes](MatterEvent::precedes) it, whatever the slice order.
+/// [precedes](MatterEvent::precedes) it, whatever the slice order. A
+/// declaration superseded by another logical declaration (`supersedes`
+/// across declarations: an amendment layer's new version of a base
+/// declaration, docs/litigate/CHANGE.md §2.2) is governed by the one
+/// superseding it, as by a displacing claimant, to the end of the chain.
 ///
 /// # Errors
 /// [`Ungoverned`] when nothing is selected or a transition fails.
 pub fn governing(
+    world: &World<'_>,
+    key: &Key,
+    events: &[MatterEvent<'_>],
+    at: usize,
+    known_at: Option<&str>,
+) -> Result<Governing, Ungoverned> {
+    let mut key = key.clone();
+    let mut seen = BTreeSet::new();
+    loop {
+        match governing_one(world, &key, events, at, known_at) {
+            Err(Ungoverned::Inactive(Inactive::Superseded(s)))
+                if world.key(s.by) != key && seen.insert(key.clone()) =>
+            {
+                key = world.key(s.by);
+            }
+            found => return found,
+        }
+    }
+}
+
+/// [`governing`] for `key` alone: its own versions and claimants.
+fn governing_one(
     world: &World<'_>,
     key: &Key,
     events: &[MatterEvent<'_>],

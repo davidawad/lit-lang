@@ -40,6 +40,19 @@ pub mod timeline;
 pub mod verdict;
 pub mod ws;
 
+/// What `--version` prints after the program name: the package version,
+/// the git commit built from, and whether the tree was `clean` or `dirty`
+/// (`build.rs`; `unknown` outside a git checkout), e.g.
+/// `0.6.0 (commit 06a430f…, clean)`, since installs go by sha.
+pub const VERSION: &str = concat!(
+    env!("CARGO_PKG_VERSION"),
+    " (commit ",
+    env!("LITIGATE_GIT_COMMIT"),
+    ", ",
+    env!("LITIGATE_GIT_TREE"),
+    ")"
+);
+
 pub use cmd::check::{check_session, check_session_with, Checked};
 pub use litigate_base::LitigateRun;
 
@@ -281,6 +294,33 @@ mod tests {
         let printed = run(&["litigate", "explain", "L3004"], false);
         let envelope: serde_json::Value = serde_json::from_str(&printed.stdout).unwrap_or_default();
         assert_eq!(envelope["result"]["code"], "L3004");
+    }
+
+    #[test]
+    fn version_names_the_commit_and_whether_the_tree_was_dirty() {
+        let commit = env!("LITIGATE_GIT_COMMIT");
+        assert!(
+            commit == "unknown"
+                || (commit.len() == 40 && commit.bytes().all(|b| b.is_ascii_hexdigit())),
+            "{commit}"
+        );
+        assert!(["clean", "dirty", "unknown"].contains(&env!("LITIGATE_GIT_TREE")));
+        for args in [
+            &["litigate", "--version"][..],
+            &["litigate", "engine", "--version"],
+        ] {
+            let printed = run(args, false);
+            assert_eq!(printed.code, 0);
+            assert!(
+                printed.stdout.contains(&format!(" (commit {commit}, ")),
+                "{}",
+                printed.stdout
+            );
+            assert!(printed
+                .stdout
+                .trim_end()
+                .ends_with(concat!(env!("LITIGATE_GIT_TREE"), ")")));
+        }
     }
 
     #[test]

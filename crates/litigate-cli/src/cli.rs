@@ -6,7 +6,7 @@ use litigate_base::Profile;
 #[derive(Debug, Parser)]
 #[command(
     name = "litigate",
-    version,
+    version = crate::VERSION,
     about = "Check, compile, and query litigate rule modules (.lit) and matters (.case)"
 )]
 pub struct Cli {

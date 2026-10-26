@@ -26,7 +26,7 @@ use std::path::Path;
 #[derive(Debug, Parser)]
 #[command(
     name = "litigate engine",
-    version,
+    version = crate::VERSION,
     about = "The engine's raw interface: litigation procedure graphs as stochastic games over packs and named scenarios. JSON in, JSON out.",
     after_help = "Ops: describe packs lint validate graph metric explain solve chain simulate path pareto sweep tornado calibration posterior voi structure deadlines settle compare batch.\nRun `litigate engine describe` for the full machine-readable manual; `litigate <op> CASE` runs an op on a compiled matter."
 )]

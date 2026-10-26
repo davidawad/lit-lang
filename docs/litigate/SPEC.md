@@ -42,6 +42,38 @@ language, or a dependent type theory.
 Strictness is the product: when a rule here doesn't permit something, reject
 it.
 
+### 0.1 Scope boundary
+
+`litigate` models litigation procedure: the rules that govern a matter, its
+deadlines and obligations, and the moves available to parties and tribunals.
+Its graph may represent procedural outcomes as chances when an outcome is
+uncertain, and those odds may be calibrated from docket data. A chance is
+appropriate only for uncertainty about a modeled procedural event or party
+or court move; calibration supplies evidence about that event, not a license
+to model every uncertainty surrounding a client or case.
+
+Circumstances outside the proceeding are not rule or graph vocabulary. This
+includes client finances, settlement psychology, counsel availability, and
+collateral business events. They must not become package rules, procedural
+nodes, or purported procedural probabilities. When such a circumstance is
+relevant to a particular analysis, the user may express its effect as a
+matter-specific scenario parameter or payoff (§5.6), set by hand. For
+example, a user's financial constraint may change the value they assign to
+an outcome; it does not create a court event or alter a deadline. The engine
+does not estimate those inputs or claim that they are calibrated legal
+outcomes.
+
+For feature triage, ask what the proposed input describes. If it changes a
+rule, deadline, obligation, or available party/court move, it belongs in the
+procedure model and needs appropriate legal authority or empirical support.
+If it describes an external circumstance that changes only a party's
+valuation or analysis assumptions, it belongs in that matter's scenario
+parameters or payoffs. If it requires the engine to source, infer, or
+forecast an external circumstance itself, it is outside the language's
+scope. This boundary does not prevent a user from supplying a relevant
+scenario assumption; it keeps that assumption distinct from authored law
+and calibrated procedural odds.
+
 ## 1. Compiler and dependency choices
 
 | Crate | Owns |

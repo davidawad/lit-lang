@@ -356,7 +356,7 @@ mod tests {
     use super::*;
 
     fn obj(v: Value) -> JsonObject {
-        v.as_object().cloned().unwrap_or_default()
+        serde_json::from_value(v).unwrap_or_default()
     }
 
     fn line(name: &str, v: Value) -> Result<Vec<String>, String> {

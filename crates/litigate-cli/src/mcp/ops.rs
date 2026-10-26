@@ -107,6 +107,7 @@ fn op_input_schema(variant: &Value) -> Value {
 
 /// Every op tool, then [`RAW_TOOL`]. An op tool's description is the
 /// engine manual's own for that op.
+#[must_use]
 pub fn tools() -> Vec<Value> {
     // The manual's op descriptions do not depend on the packs.
     let manual = Catalog::from_files(String::new(), [])
@@ -218,7 +219,7 @@ mod tests {
     const LIB: &str = "tests/fixtures/cov-cmds/lit";
 
     fn obj(v: Value) -> Map<String, Value> {
-        v.as_object().cloned().unwrap_or_default()
+        serde_json::from_value(v).unwrap_or_default()
     }
 
     #[test]

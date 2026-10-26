@@ -124,14 +124,17 @@ overrides (`{"extends": "<id>", ...}`). The vendored L0 source corpus
 (`sources/*.txt`, see `sources/PROVENANCE.md`) is embedded the same way;
 override it with `LITGRAPH_SOURCES=<dir>`.
 
-Driving this from an MCP-capable agent instead of the CLI: `litgraph-mcp`
-(`crates/litgraph-mcp`) is the same contract over stdio — every op above is
-its own MCP tool, plus a generic `litgraph` tool for a raw request; packs,
-`links.json`, the named scenario library, and this manual are MCP resources
-(`litgraph://packs/<id>`, `litgraph://links`, `litgraph://scenarios`,
-`litgraph://scenarios/<id>`, `litgraph://describe`). `claude mcp add
-litgraph -- litgraph-mcp` wires it into Claude Code; see the README's "MCP
-server" section for other clients.
+Driving this from an MCP-capable agent instead of the CLI: `litigate mcp`
+is the same contract over stdio (this repository's `.mcp.json` registers
+it). Every engine op is its own MCP tool run on a compiled matter
+(`{target, set?, lib?, no_links?, ...op fields}`, as `litigate run`),
+`litigate_engine` takes a raw request over the compiled library, the
+`litigate_*` tools above drive the authoring language, and the compiled
+packs, links, named scenarios and engine manual are MCP resources
+(`litigate://packs/<id>`, `litigate://links`, `litigate://scenarios`,
+`litigate://scenarios/<id>`, `litigate://describe`). `claude mcp add
+litigate -- litigate mcp` wires it into Claude Code; see the README's "MCP
+server" section for other clients. `litgraph-mcp` is deprecated.
 
 Every response: `{ok, api_version, op, result, warnings, provenance,
 elapsed_ms}` or `{ok:false, api_version, op, error:{code, message, hint},

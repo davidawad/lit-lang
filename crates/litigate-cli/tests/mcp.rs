@@ -2,6 +2,7 @@
 //! by a real MCP client (`rmcp`): `initialize`, `tools/list`, an op on a
 //! compiled matter, the raw engine tool, the authoring tools and the
 //! resources. Every tool `litgraph-mcp` serves has its equivalent here.
+#![allow(clippy::expect_used)]
 use rmcp::model::{
     CallToolRequestParams, CallToolResult, ReadResourceRequestParams, ResourceContents,
 };

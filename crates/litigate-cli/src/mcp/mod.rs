@@ -73,7 +73,9 @@ type RpcError = (i64, String);
 
 /// An MCP tool description.
 fn tool(name: &str, description: &str, input_schema: Value) -> Value {
-    json!({"name": name, "description": description, "inputSchema": input_schema})
+    let mut tool = json!({"name": name, "description": description});
+    tool["inputSchema"] = input_schema;
+    tool
 }
 
 /// A `litigate`-style failure envelope for a call that never produced one.
@@ -300,7 +302,8 @@ mod tests {
     }
 
     fn request(server: &Server, method: &str, params: Value) -> Value {
-        let message = json!({"jsonrpc": "2.0", "id": 7, "method": method, "params": params});
+        let mut message = json!({"jsonrpc": "2.0", "id": 7, "method": method});
+        message["params"] = params;
         server.handle(&message.to_string()).unwrap_or_default()
     }
 

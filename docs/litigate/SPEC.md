@@ -2860,6 +2860,7 @@ All commands accept `--format json|human` (default `human` on a TTY, else
 | `query` | `KIND` (`nodes\|edges\|deadlines\|holes\|cites\|versions`), `--match TEXT`, `--limit N`, `--cursor C` | `{matches:[{id, kind, span, cite, in_force}], next_cursor}` |
 | `import` | `JSON...`, `--out DIR` | `{files:[{path, from}], warnings}`; output must round-trip under §8.6 (L6002 otherwise) |
 | `lsp` | `--stdio` | LSP session (no envelope); `initializationOptions` `{profile, asOf, knownAt, debounceMs}`; custom requests `litigate/status`, `litigate/worlds` (the selected world and those the workspace names) and `litigate/selectWorld {asOf, knownAt}` |
+| `mcp` | `--lib DIR`, `--cases DIR` (repeatable) | MCP session over stdio (no envelope; newline-delimited JSON-RPC): one tool per engine op on a compiled matter (`{target, set?, lib?, no_links?, ...op fields}`, as `run`), `litigate_engine` (a raw engine request over the packs and scenarios `engine` compiles), `litigate_describe` `litigate_check` `litigate_build` `litigate_where` `litigate_timeline` `litigate_explain`; each returns its command's envelope, a tool error when the command would exit non-zero; the compiled packs, links, named scenarios and engine manual as `litigate://` resources |
 
 `build` writes pack `ID` to `packs/ID.json` (its source map to
 `packs/ID.map.json`, its clock fragment to `packs/clock/ID.json`); `--pack-file

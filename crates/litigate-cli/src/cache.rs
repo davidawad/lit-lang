@@ -2,8 +2,10 @@
 //! dependencies at digest Z" is a build-cache fact, never a `Lit.lock`
 //! one: an entry is keyed by the Merkle root of X's resolution (X's own
 //! digests and every dependency's, computed on read), the profile, the
-//! build dates, source corpus and the compiler, so a change to any
-//! dependency's digest or source text misses every dependent's entry. Only
+//! build dates, source corpus and the compiler (its version and the digest
+//! of its executable), so a change to any dependency's digest or source
+//! text misses every dependent's entry, and so does an upgraded compiler
+//! over the same tree. Only
 //! a session read from disk uses it;
 //! CI (`CI` set) re-verifies from scratch, neither reading nor writing it.
 use litigate_base::Diagnostic;
@@ -11,6 +13,7 @@ use litigate_verify::{Verification, VerificationReport};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::path::{Path, PathBuf};
+use std::sync::OnceLock;
 
 /// Where entries live under the working directory unless `LITIGATE_CACHE`
 /// names another directory.
@@ -20,7 +23,6 @@ pub const DEFAULT_DIR: &str = "target/litigate/verified";
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Cache {
     dir: PathBuf,
-    compiler: String,
 }
 
 /// One stored verification.
@@ -47,14 +49,13 @@ impl Cache {
         let dir = dir.unwrap_or(DEFAULT_DIR);
         (!in_ci && dir != "off").then(|| Self {
             dir: root.join(dir),
-            compiler: compiler(),
         })
     }
 
-    /// The entry file for `key`.
+    /// The entry file for `key`, under this compiler.
     fn path(&self, key: &[&str]) -> PathBuf {
         let mut hasher = Sha256::new();
-        for part in std::iter::once(self.compiler.as_str()).chain(key.iter().copied()) {
+        for part in std::iter::once(compiler()).chain(key.iter().copied()) {
             hasher.update((part.len() as u64).to_be_bytes());
             hasher.update(part.as_bytes());
         }
@@ -89,21 +90,36 @@ impl Cache {
     }
 }
 
-/// This compiler: its version and its executable's size and modification
-/// time, so a rebuilt compiler never reads another build's entries.
-fn compiler() -> String {
-    let meta = std::env::current_exe().and_then(std::fs::metadata).ok();
-    let modified = meta
-        .as_ref()
-        .and_then(|m| m.modified().ok())
-        .and_then(|t| t.duration_since(std::time::UNIX_EPOCH).ok())
-        .unwrap_or_default();
-    format!(
-        "{} {} {}",
-        env!("CARGO_PKG_VERSION"),
-        meta.map_or(0, |m| m.len()),
-        modified.as_nanos()
-    )
+/// This compiler: its version and the SHA-256 of its executable's bytes,
+/// so an upgraded or rebuilt compiler never reads another build's entries,
+/// even one installed with the same size and modification time. Computed
+/// once per process, on the first lookup; an executable that cannot be
+/// read keys on its version with a marker no readable build produces.
+fn compiler() -> &'static str {
+    static COMPILER: OnceLock<String> = OnceLock::new();
+    COMPILER.get_or_init(|| {
+        identity(
+            env!("CARGO_PKG_VERSION"),
+            std::env::current_exe()
+                .and_then(std::fs::read)
+                .ok()
+                .as_deref(),
+        )
+    })
+}
+
+/// The compiler identity of `version` built as `exe`.
+fn identity(version: &str, exe: Option<&[u8]>) -> String {
+    let digest = exe.map_or_else(
+        || "unreadable".to_owned(),
+        |bytes| {
+            format!(
+                "sha256:{}",
+                litigate_sema::pkg::lock::hex(&Sha256::digest(bytes))
+            )
+        },
+    );
+    format!("{version} {digest}")
 }
 
 #[cfg(test)]
@@ -216,5 +232,17 @@ mod tests {
         assert_eq!(cache.verified(&["k"], fresh), fresh());
         assert!(!cache.path(&["k"]).exists());
         let _ = std::fs::remove_file(&dir);
+    }
+
+    #[test]
+    fn the_compiler_is_its_version_and_executable_digest() {
+        let a = identity("1.0.0", Some(b"build a"));
+        // Same version, same size, other bytes: another compiler.
+        assert_ne!(a, identity("1.0.0", Some(b"build b")));
+        assert_ne!(a, identity("1.0.1", Some(b"build a")));
+        assert_eq!(a, identity("1.0.0", Some(b"build a")));
+        assert!(a.starts_with("1.0.0 sha256:"), "{a}");
+        assert_eq!(identity("1.0.0", None), "1.0.0 unreadable");
+        assert!(compiler().starts_with(concat!(env!("CARGO_PKG_VERSION"), " sha256:")));
     }
 }

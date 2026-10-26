@@ -43,7 +43,12 @@ fn tree(name: &str) -> std::path::PathBuf {
 /// `litigate --format json ARGS` in `dir` with the cache in `cache/` and
 /// `CI` as given.
 fn litigate(dir: &Path, ci: Option<&str>, args: &[&str]) -> support::Run {
-    let mut cmd = assert_cmd::Command::cargo_bin("litigate").unwrap();
+    litigate_as(&assert_cmd::cargo::cargo_bin("litigate"), dir, ci, args)
+}
+
+/// [`litigate`] running the executable at `bin`.
+fn litigate_as(bin: &Path, dir: &Path, ci: Option<&str>, args: &[&str]) -> support::Run {
+    let mut cmd = assert_cmd::Command::new(bin);
     cmd.current_dir(dir)
         .env("LITIGATE_CACHE", "cache")
         .env_remove("CI");
@@ -122,4 +127,61 @@ fn ci_neither_reads_nor_writes_the_cache() {
     );
     let fresh = litigate(&dir, Some("1"), &["check", "lit/app"]);
     assert_eq!(fresh.json, local.json);
+}
+
+/// Writes `bytes` as the executable `bin` modified at `mtime`, as an
+/// install over the previous binary does.
+fn install(bin: &Path, bytes: &[u8], mtime: std::time::SystemTime) {
+    use std::os::unix::fs::PermissionsExt as _;
+    let tmp = bin.with_extension("new");
+    std::fs::write(&tmp, bytes).unwrap();
+    std::fs::set_permissions(&tmp, std::fs::Permissions::from_mode(0o755)).unwrap();
+    std::fs::File::options()
+        .write(true)
+        .open(&tmp)
+        .unwrap()
+        .set_modified(mtime)
+        .unwrap();
+    std::fs::rename(&tmp, bin).unwrap();
+}
+
+#[test]
+fn an_upgraded_compiler_never_reads_the_old_ones_entries() {
+    let dir = tree("cache-upgrade");
+    std::fs::create_dir_all(dir.join("bin")).unwrap();
+    let bin = dir.join("bin/litigate");
+    let built = std::fs::read(assert_cmd::cargo::cargo_bin("litigate")).unwrap();
+    let mtime = std::time::SystemTime::UNIX_EPOCH + std::time::Duration::from_secs(1);
+    install(&bin, &built, mtime);
+    let first = litigate_as(&bin, &dir, None, &["check", "lit/app"]);
+    assert_eq!(first.code, 0, "{}", first.stdout);
+    let cached = entries(&dir);
+    assert_eq!(cached.len(), 2, "{cached:?}");
+    // What the old compiler concluded, stored: an L1007 its successor no
+    // longer finds. The old compiler reads its own entries back.
+    let planted = r#"{"report":{"obligations":[],"profile":"dev"},"diagnostics":[{"code":"L1007","severity":"error","span":{"file":"lit/app/Lit.lock","line":1,"col":1,"end_line":1,"end_col":1},"message":"Lit.lock does not match the resolved package graph"}]}"#;
+    for name in &cached {
+        std::fs::write(dir.join("cache").join(name), planted).unwrap();
+    }
+    let old = litigate_as(&bin, &dir, None, &["check", "lit/app"]);
+    assert_eq!(old.code, 2, "{}", old.stdout);
+    assert_eq!(old.json["diagnostics"][0]["code"], "L1007");
+    // The upgrade: other bytes (in the unloaded `.comment` section) of the
+    // same size, installed with the same modification time over the same
+    // tree. It verifies afresh: no L1007, and entries of its own.
+    let mut upgraded = built.clone();
+    let at = upgraded
+        .windows(b"rustc version".len())
+        .position(|w| w == b"rustc version")
+        .unwrap();
+    upgraded[at] = b'R';
+    install(&bin, &upgraded, mtime);
+    let new = litigate_as(&bin, &dir, None, &["check", "lit/app"]);
+    assert_eq!(new.code, 0, "{}", new.stdout);
+    assert_eq!(new.json, first.json);
+    assert_eq!(entries(&dir).len(), 4);
+    assert_eq!(
+        litigate_as(&bin, &dir, None, &["lock", "--locked", "lit/app"]).code,
+        0
+    );
 }

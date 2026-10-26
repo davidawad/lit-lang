@@ -60,6 +60,11 @@ expect_used = "warn"
 dbg_macro = "deny"
 todo = "deny"
 
+# The verification cache keys on the SHA-256 of the litigate executable,
+# hashed on every check: fast in test and coverage builds too.
+[profile.dev.package.sha2]
+opt-level = 3
+
 [profile.release]
 lto = "thin"
 codegen-units = 1

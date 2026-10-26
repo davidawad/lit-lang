@@ -640,6 +640,14 @@ in_force_until = "2030-01-01"   # optional default effective end (exclusive)
 known_at = "2025-01-01"         # default corpus date
 unknown_before = "2009-12-01"   # optional; no declaration's law is encoded before (§5.4)
 counting = "frcp6"              # optional; Pack.counting (v3): a counting-rule id
+kind = "base"                   # optional; the instrument class (§5.7), default base
+
+[package.instrument]            # required exactly when kind is not base (§5.7)
+source = "order"                # a [sources.*] key with a vendored `path`
+issuer = "..."                  # who issued it
+date = "2024-01-01"             # when it was issued or entered
+designation = "..."             # optional; an order or rule number, a reporter cite
+binds = ["court"]               # guidance only, and required there: actors it binds
 
 [package.roles]                 # actor -> "self" | "opponent" | "nature"; Pack.roles
 applicant = "self"
@@ -675,6 +683,20 @@ requirement naming its own `MAJOR.MINOR.PATCH`). What a version bump may
 change is not declared by the author but computed (§4.4), so `^1.2.0`
 admits exactly the releases with no interface change since 1.2.0 and
 `~1.2.0` those that also compute the same values.
+
+`kind` is the class of the instrument the package encodes, and it types
+the package (§5.7). It is one of `base`, `amendment`, `local-rule`,
+`standing-order`, `case-order`, `guidance`, `precedent` and `overruling`.
+A class other than `base` is justified, never only asserted:
+`[package.instrument]` names the instrument's vendored text (`source`, a
+`[sources.*]` key with a `path`), its issuer and date (design review
+2026-10-23 §2.5 item 1). A `local-rule`, `standing-order` or `case-order`
+package has the `authority` of that rung of the `lit/core` lattice
+(`LocalRule`, `StandingOrder`, `CaseOrder`). `guidance` names the actors it
+binds (`binds`, `[package.roles]` keys), and only guidance does.
+`hypothetical` is not a kind: it is the modality of a world, in which a
+layer of any kind may appear (§2.5 item 2). A links manifest has neither
+key. Each violation is L1004.
 
 `counting` and `cite_syntax` mirror the pack-level fields litgraph added in
 schema v3 (`docs/PACK_SCHEMA.md`, "Citation syntax (v3)"). A
@@ -1824,6 +1846,55 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
 - `analysis`: litgraph `Scenario` fields that have no dedicated block (§8.3).
 - Posture is replayed, never asserted.
 
+### 5.7 Instrument classes
+
+A package's `kind` (§4.1) is an index on its type: each class has an
+effect row, and every declaration's effects must be in its package's row,
+or the declaration is L2010 (design review 2026-10-23 §2.5). The check is
+set inclusion over a closed finite set, per declaration, so it terminates
+and needs no solver. The effects a declaration has:
+
+| Effect | Declaration form |
+|---|---|
+| `declare` | a node, type, enum, event, rule, default, transition, or an exception to a default of its own package |
+| `prescribe` | a deadline, a counting rule, a calendar |
+| `rank` | an `authority` chain |
+| `version` | `supersedes` or `revives` naming another package's declaration |
+| `override` | `override` or `notwithstanding` naming another package's declaration |
+| `interpret` | an exception to another package's default or exception |
+| `grant-cap` | a `delegable` clause, a deadline's `extend` or `waive` grant, a `grant` |
+| `set-prior` | `p` on an edge of a chance node |
+| `add-fact` | a `fact`-tagged node |
+| `recharacterize`, `invalidate`, `waive` | no form in language 1 (a precedent's effects, lg-fq2.1) |
+
+A test has no effect, and `subject_to` displaces nothing. The rows are
+the forum-independent ceiling (`litigate_sema::hir::Kind::row`); a forum
+family's matrix (lg-fq2.1) can only narrow them:
+
+| Class | Row |
+|---|---|
+| `base` | every effect |
+| `amendment` | every effect but `rank` |
+| `local-rule`, `standing-order` | `declare prescribe override interpret waive grant-cap set-prior add-fact` |
+| `case-order` | `declare prescribe override interpret waive set-prior add-fact` |
+| `guidance` | `declare set-prior`, the prior only of a draw by an actor it `binds` |
+| `precedent`, binding | `declare interpret recharacterize invalidate waive set-prior` |
+| `precedent`, persuasive | `declare set-prior` |
+| `overruling` | `declare invalidate` |
+
+So the authority lattice is ordered by base law alone; a layer never
+versions the text it modifies; persuasive authority is evidence and
+moves a prior only; guidance never imposes a duty on anyone, and binds
+no one it does not name. A permitted displacing effect still needs its
+capability (§5.5, L3004): the row says what a class may ever do, the
+capability whether this instrument may do it to that target. A
+precedent's binding scope is computed from the court hierarchy at a
+world's location index, never declared; language 1 has no location
+index, so every `precedent` package is persuasive. The L2010 diagnostic
+is at the clause performing the effect (else the declaration's name),
+once per effect per declaration, and its notes give the class's row and
+the classes that permit the effect.
+
 ## 6. Types and permitted operations
 
 All arithmetic is exact over i64 numerators/u64 denominators. Overflow,
@@ -2426,6 +2497,7 @@ unchanged, and is graded `error`; anything else is rejected.
 | | | L5009 | obligation unconsumable |
 | L2008 | invalid probability | L6001 | lowering unsupported |
 | L2009 | invalid capability (characterization) | L3010 | not encoded (`unknown_before`) |
+| L2010 | forbidden effect (instrument class) | | |
 | L9001 | rule without test | L6002 | semantic diff |
 | L9002 | hole present | L6003 | invalid engine expression |
 | L9003 | anonymous edge | L6004 | non-finite number |
@@ -2875,6 +2947,8 @@ gets one row per condition when the conditions classify differently.
 | C86 | L1012 a release's bump is smaller than its computed class needs (§4.4) | cli | c | Compares two releases of a package. |
 | C87 | L9007 a matter names a former id (§4.3) | sema | a | Name resolution: `formerly` adds the old id to the declaration's identity. |
 | C88 | L9008 a timeline row's cite, its vendored text dated after its version, is proved by a pinned amendment history (§5.4) | cli | c | Reads the vendored eCFR versions list, an external artefact, as cite-resolves does. |
+| C89 | L2010 a declaration's effect is outside its package's class row (§5.7) | sema | a | Index `Package<Kind>`: `effects(d) ⊆ row(kind(pkg(d)))`, set inclusion over the closed effect set; guidance's prior also needs `actor ∈ binds` (finite membership). Done (lg-962.5). |
+| C90 | L1004 a `kind` not justified by its instrument, a layer's kind off its authority rung, `binds` off guidance, `hypothetical` as a kind (§4.1) | sema | a | `Manifest<Kind>` is a closed record: a non-base kind carries `Instrument {source ∈ vendored sources, issuer, date}`; `Kind::level` fixes a layer's authority. |
 
 ### 13.4 SPEC rules with no code of their own
 
@@ -3072,3 +3146,29 @@ as follows (each moved obligation has negative tests:
 Not done here: the indexed `Rule[a, s, v, k, ap]` surface sugar (review
 §6 item 20, CAN-ADD-LATER) and workflow-soundness checks on the net (item
 27).
+
+### 13.10 Status: instrument classes (lg-962.5)
+
+Design review 2026-10-23 §2.5 and §6 items 7 and 21, decided as follows
+(negative tests: `litigate-sema/tests/kinds.rs`):
+
+1. **Kind as a type index.** `Lit.toml` `kind` types the package
+   (`hir::Manifest::kind`, `hir::Kind`, `#[non_exhaustive]`), and each
+   class's effect row is checked by set inclusion per declaration (§5.7,
+   L2010). The corpus packages are all `base` (no `kind` key), so nothing
+   in `lit/` changes; which corpus packages are another class is lg-fq2.1's
+   call, against their instruments.
+2. **Justified, not self-declared.** A non-base kind needs
+   `[package.instrument]` naming vendored text, issuer and date; binding
+   scope is never declared: every `precedent` is persuasive until a
+   world's location index ι computes it (lg-fq2.1).
+3. **`hypothetical` is a world modality** and is rejected as a kind
+   (L1004).
+4. **Guidance binds addressees**: `Guidance[binds]` may set the prior of
+   a draw only by an actor in `binds` (L2010 otherwise).
+
+Not done here, for lg-fq2.1: the per-forum-family matrix as data in
+`lit/core` (`Kind[forum_family]`, e.g. no local-rule layer in a forum
+without one), the location index, the `recharacterize`, `invalidate` and
+`waive` forms, `.world` files and the counterfactual modality, and
+whether a modification layer may omit its own `start` node.

@@ -9,6 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **A package's instrument class is part of its type** (lg-962.5).
+  `kind` in `Lit.toml` (`base`, the default, `amendment`, `local-rule`,
+  `standing-order`, `case-order`, `guidance`, `precedent`, `overruling`)
+  indexes the package, each class has an effect row (SPEC §5.7), and a
+  declaration with an effect outside its package's row is the new type
+  error L2010: a local rule that orders the authority lattice, a case
+  order that delegates or supersedes another package's text, a
+  persuasive precedent that prescribes, overrides, interprets or states a
+  fact, guidance that prescribes or sets the prior of a draw by an actor
+  it does not bind. A non-base kind is justified by
+  `[package.instrument]` (vendored `source`, `issuer`, `date`); a layer's
+  kind fixes its `authority`; `hypothetical` is rejected as a kind (a
+  world modality, design review §2.5); each is L1004. Every `precedent`
+  is persuasive until lg-fq2.1 computes binding scope. No corpus package
+  changes class.
 - **A designated due date the matter does not record is `unknown`, never
   `open`** (lg-flu.46). A notice of institution whose answer date is `?`
   leaves the TTAB answer period with status `unknown` at `as_of` and the

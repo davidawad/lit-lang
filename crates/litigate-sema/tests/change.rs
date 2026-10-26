@@ -1185,6 +1185,12 @@ fn a_recharacterization_or_invalidation_names_another_packages_claim() {
         ),
         ("an invalidated node", p("invalidate i: l")),
         (
+            "a recharacterized recharacterization",
+            p(&format!(
+                "{RECHARACTERIZES}\nrecharacterize again: held characterization jurisdictional"
+            )),
+        ),
+        (
             "an invalidated invalidation",
             p(&format!("{INVALIDATES}\ninvalidate again: gone")),
         ),

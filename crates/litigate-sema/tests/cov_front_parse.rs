@@ -87,6 +87,10 @@ const DROPPED: &[&str] = &[
     "grant on [d] { unlock }",
     "grant { unlock }",
     "grant g on [d]",
+    "recharacterize : d characterization jurisdictional",
+    "recharacterize r:",
+    "invalidate : d",
+    "invalidate i:",
 ];
 
 #[test]

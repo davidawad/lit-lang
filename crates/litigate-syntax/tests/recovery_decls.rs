@@ -523,6 +523,22 @@ fn recharacterizations_and_invalidations() {
                 &["L0001 3:1-3:1 expected an identifier, found end of file"],
             ),
             (
+                "module m\ninvalidate : d\n",
+                &["L0001 2:12-2:13 expected an identifier, found `:`"],
+            ),
+            (
+                "module m\ninvalidate i: 5\n",
+                &["L0001 2:15-2:16 expected an identifier, found `5`"],
+            ),
+            (
+                "module m\ninvalidate i: d invalidate j: e\n",
+                &[],
+            ),
+            (
+                "module m\ninvalidate i: d\nstray\n",
+                &[concat!("L0001 3:1-3:6 expected ", items!(), ", found `stray`")],
+            ),
+            (
                 "module m\ninvalidate i d\n",
                 &["L0001 2:14-2:15 expected `:`, found `d`"],
             ),

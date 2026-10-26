@@ -2556,6 +2556,47 @@
                         ]
                       }
                     ]
+                  },
+                  {
+                    "type": "SEQ",
+                    "members": [
+                      {
+                        "type": "FIELD",
+                        "name": "key",
+                        "content": {
+                          "type": "STRING",
+                          "value": "lock"
+                        }
+                      },
+                      {
+                        "type": "STRING",
+                        "value": "against"
+                      },
+                      {
+                        "type": "FIELD",
+                        "name": "value",
+                        "content": {
+                          "type": "SYMBOL",
+                          "name": "id_list"
+                        }
+                      },
+                      {
+                        "type": "CHOICE",
+                        "members": [
+                          {
+                            "type": "FIELD",
+                            "name": "cite",
+                            "content": {
+                              "type": "SYMBOL",
+                              "name": "cite"
+                            }
+                          },
+                          {
+                            "type": "BLANK"
+                          }
+                        ]
+                      }
+                    ]
                   }
                 ]
               },
@@ -3944,6 +3985,22 @@
           }
         },
         {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "index",
+              "content": {
+                "type": "SYMBOL",
+                "name": "rule_index"
+              }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
           "type": "REPEAT",
           "content": {
             "type": "CHOICE",
@@ -4007,6 +4064,109 @@
         {
           "type": "STRING",
           "value": "}"
+        }
+      ]
+    },
+    "rule_index": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "Rule"
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "["
+            },
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SEQ",
+                  "members": [
+                    {
+                      "type": "CHOICE",
+                      "members": [
+                        {
+                          "type": "ALIAS",
+                          "content": {
+                            "type": "STRING",
+                            "value": "_"
+                          },
+                          "named": true,
+                          "value": "wildcard"
+                        },
+                        {
+                          "type": "SYMBOL",
+                          "name": "interval"
+                        },
+                        {
+                          "type": "SYMBOL",
+                          "name": "ref"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "REPEAT",
+                      "content": {
+                        "type": "SEQ",
+                        "members": [
+                          {
+                            "type": "STRING",
+                            "value": ","
+                          },
+                          {
+                            "type": "CHOICE",
+                            "members": [
+                              {
+                                "type": "ALIAS",
+                                "content": {
+                                  "type": "STRING",
+                                  "value": "_"
+                                },
+                                "named": true,
+                                "value": "wildcard"
+                              },
+                              {
+                                "type": "SYMBOL",
+                                "name": "interval"
+                              },
+                              {
+                                "type": "SYMBOL",
+                                "name": "ref"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "CHOICE",
+                      "members": [
+                        {
+                          "type": "STRING",
+                          "value": ","
+                        },
+                        {
+                          "type": "BLANK"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
+            },
+            {
+              "type": "STRING",
+              "value": "]"
+            }
+          ]
         }
       ]
     },

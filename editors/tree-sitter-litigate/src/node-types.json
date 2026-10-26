@@ -1263,6 +1263,10 @@
             "named": false
           },
           {
+            "type": "lock",
+            "named": false
+          },
+          {
             "type": "trigger",
             "named": false
           },
@@ -1292,6 +1296,10 @@
           },
           {
             "type": "capability",
+            "named": true
+          },
+          {
+            "type": "id_list",
             "named": true
           },
           {
@@ -4140,6 +4148,16 @@
           }
         ]
       },
+      "index": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "rule_index",
+            "named": true
+          }
+        ]
+      },
       "kind": {
         "multiple": false,
         "required": true,
@@ -4199,6 +4217,29 @@
         },
         {
           "type": "unknown_before_clause",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "rule_index",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "interval",
+          "named": true
+        },
+        {
+          "type": "ref",
+          "named": true
+        },
+        {
+          "type": "wildcard",
           "named": true
         }
       ]
@@ -5023,6 +5064,10 @@
     "named": false
   },
   {
+    "type": "Rule",
+    "named": false
+  },
+  {
     "type": "[",
     "named": false
   },
@@ -5040,6 +5085,10 @@
   },
   {
     "type": "after_expiry",
+    "named": false
+  },
+  {
+    "type": "against",
     "named": false
   },
   {
@@ -5399,6 +5448,10 @@
   },
   {
     "type": "link",
+    "named": false
+  },
+  {
+    "type": "lock",
     "named": false
   },
   {

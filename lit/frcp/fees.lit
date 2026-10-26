@@ -32,6 +32,20 @@ import frcp.periods.{ ExtendedPeriod, ExtensionMoved, JudgmentEntered, TimeChang
 //   `post-trial-motion-window`): the motion is collateral to the merits, so
 //   the post-judgment motion and appeal clocks run on from the same posture.
 //
+// - Supplement: a protective motion states the grounds and the amount
+//   sought or a fair estimate of it (54(d)(2)(B)(ii)-(iii)); the
+//   submissions on the value of services may follow, since "the court may
+//   decide issues of liability for fees before receiving" them
+//   (54(d)(2)(C)). The court's order setting when they are due,
+//   `FeeSupplementScheduled(due)`, opens `fee-supplement-period`, due on
+//   the date the order states; a later such order supersedes it. The full
+//   motion, `FeeMotionSupplemented()`, supplements or amends the protective
+//   one through a `within fee-supplement-period` edge and discharges that
+//   later deadline. It is the same motion, not a second one: the filing
+//   edge carries the motion's hours, the supplement edge none, and the
+//   edges' flags let the motion be filed once and supplemented once after
+//   it, so a protective motion and its supplement count the hours once.
+//
 // The grants are declared stipulation first, then motion, then the court
 // acting unasked, so an extension records the move that licensed it: its
 // `request_made` is the stipulation's or the motion's date.
@@ -47,6 +61,14 @@ event FeeMotionFiled()
 /// The court extends the time to move for attorney's fees to `until` (FRCP
 /// 54(d)(2)(B), 6(b)(1)).
 event FeeMotionPeriodExtended(until: Date) extends fee-motion-period to until
+
+/// The court sets when the submissions supplementing a fee motion are due,
+/// on `due` (FRCP 54(d)(2)(B): "Unless a statute or a court order provides
+/// otherwise"; 54(d)(2)(C)).
+event FeeSupplementScheduled(due: Date)
+/// The movant supplements or amends its fee motion with the full motion,
+/// the submissions on the value of services (FRCP 54(d)(2)(C)).
+event FeeMotionSupplemented()
 
 /// Rule 54(d)(2)(B)(i): the fee motion is due 14 days after entry of
 /// judgment, unless a statute or a court order provides otherwise. Rule 54
@@ -72,4 +94,27 @@ test "fee-motion-period: a last day on a legal holiday (2025-06-19) rolls forwar
 {
   given JudgmentEntered() on 2025-06-05
   expect deadline(fee-motion-period) == 2025-06-20
+}
+
+/// The full motion supplementing a protective fee motion is due on the date
+/// the court's order sets (FRCP 54(d)(2)(B), (C)): no rule counts it, so
+/// the order's date is the instance's due date and `0.days` its least time.
+/// A later order setting another date supersedes the open instance.
+deadline fee-supplement-period: 0.days from FeeSupplementScheduled() counted_by frcp6 effective [2009-12-01, ..) cite "FRCP 54(d)(2)(C)"
+{
+  designated due
+  trigger latest
+}
+
+test "fee-supplement-period: due on the date the court's order sets" cite "FRCP 54(d)(2)(C)"
+{
+  given FeeSupplementScheduled(2025-07-21) on 2025-06-20
+  expect deadline(fee-supplement-period) == 2025-07-21
+}
+
+test "fee-supplement-period: a set day on a Saturday rolls to Monday" cite "FRCP 6(a)(1)(C)"
+{
+  given FeeSupplementScheduled(2025-07-19) on 2025-06-20
+  expect deadline(fee-supplement-period).nominal == 2025-07-19
+  expect deadline(fee-supplement-period) == 2025-07-21
 }

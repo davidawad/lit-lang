@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **A protective fee motion is supplemented, not filed twice** (lg-4nma;
+  `lit/frcp/fees.lit`). The court's order setting when the full motion is
+  due, `FeeSupplementScheduled(due)`, opens `fee-supplement-period` on the
+  date it states (FRCP 54(d)(2)(B), (C); a later order supersedes it), and
+  `FeeMotionSupplemented()` through the new
+  `edge-*-fee-motion-supplemented` edges discharges it. The filing edge
+  carries the motion's 15 hours and the supplement none; flags let the
+  motion be filed once and supplemented once after it, so a protective
+  motion and its full motion count the hours once.
+
 - **The Emacs front end is in this repository** (lg-dfv4.5).
   litgraph-emacs (`litgraph-menu`, result buffers, deadlines to Org,
   Graphviz graphs, scenario editing, Org Babel, `litgraph-timeline`) is

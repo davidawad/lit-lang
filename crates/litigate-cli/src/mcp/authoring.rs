@@ -360,7 +360,7 @@ mod tests {
     }
 
     fn line(name: &str, v: Value) -> Result<Vec<String>, String> {
-        argv(spec(name).ok_or("no such tool")?, &obj(v))
+        argv(spec(name).unwrap(), &obj(v))
     }
 
     #[test]
@@ -381,6 +381,13 @@ mod tests {
             assert_eq!(tool["inputSchema"]["additionalProperties"], json!(false));
         }
         assert!(spec("describe").is_none());
+    }
+
+    #[test]
+    fn an_argument_built_at_run_time_is_the_const_one() {
+        // `arg` runs at compile time for every tool; once here too.
+        let paths = arg("paths", PATHS.kind, PATHS.spell, true, PATHS.doc);
+        assert_eq!(format!("{paths:?}"), format!("{PATHS:?}"));
     }
 
     #[test]
@@ -436,6 +443,11 @@ mod tests {
             (
                 "litigate_check",
                 json!({"paths": "lit"}),
+                "array of strings",
+            ),
+            (
+                "litigate_check",
+                json!({"paths": ["lit", 1]}),
                 "array of strings",
             ),
             (

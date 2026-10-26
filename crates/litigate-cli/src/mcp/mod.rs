@@ -232,7 +232,11 @@ fn initialize(params: &Value) -> Value {
 ///
 /// # Errors
 /// Reading `input` or writing `output` failed.
-pub fn serve(server: &Server, input: impl BufRead, mut output: impl Write) -> std::io::Result<()> {
+pub fn serve(
+    server: &Server,
+    input: &mut dyn BufRead,
+    output: &mut dyn Write,
+) -> std::io::Result<()> {
     for line in input.lines() {
         let line = line?;
         if line.trim().is_empty() {
@@ -253,8 +257,8 @@ pub fn main(args: &[OsString]) -> ExitCode {
     let (stdin, stdout) = (std::io::stdin(), std::io::stdout());
     ExitCode::from(run(
         args,
-        stdin.lock(),
-        stdout.lock(),
+        &mut stdin.lock(),
+        &mut stdout.lock(),
         &mut std::io::stderr(),
     ))
 }
@@ -262,8 +266,8 @@ pub fn main(args: &[OsString]) -> ExitCode {
 /// [`main`] over `input` and `output`, messages to `errors`: the exit code.
 fn run(
     args: &[OsString],
-    input: impl BufRead,
-    mut output: impl Write,
+    input: &mut dyn BufRead,
+    output: &mut dyn Write,
     errors: &mut dyn Write,
 ) -> u8 {
     let argv = std::iter::once(OsString::from("litigate mcp")).chain(args.iter().cloned());
@@ -271,7 +275,7 @@ fn run(
         Ok(cli) => cli,
         Err(e) => {
             // Help and `--version` are answers, not failures.
-            let sink: &mut dyn Write = if e.use_stderr() { errors } else { &mut output };
+            let sink: &mut dyn Write = if e.use_stderr() { errors } else { &mut *output };
             let _ = write!(sink, "{}", e.render());
             return u8::from(e.use_stderr());
         }
@@ -392,6 +396,20 @@ mod tests {
         );
         let failed = request(&s, "tools/call", json!({"name": "solve"}));
         assert_eq!(failed["result"]["isError"], json!(true));
+        let broken =
+            std::env::temp_dir().join(format!("litigate-mcp-broken-{}.case", std::process::id()));
+        let _ = std::fs::write(&broken, "case broken\nuses nothing-at-all ^9.9.9\n");
+        let target = broken.display().to_string();
+        let unchecked = request(
+            &s,
+            "tools/call",
+            json!({"name": "chain", "arguments": {"target": target}}),
+        );
+        let _ = std::fs::remove_file(&broken);
+        assert_eq!(unchecked["result"]["isError"], json!(true), "{unchecked}");
+        let envelope = &unchecked["result"]["structuredContent"];
+        assert_eq!(envelope["ok"], json!(false), "{unchecked}");
+        assert_eq!(envelope["diagnostics"][0]["severity"], json!("error"));
     }
 
     #[test]
@@ -465,7 +483,7 @@ mod tests {
     fn session(args: &[&str], input: &[u8]) -> (u8, String, String) {
         let args: Vec<OsString> = args.iter().map(OsString::from).collect();
         let (mut output, mut errors) = (Vec::new(), Vec::new());
-        let code = run(&args, input, &mut output, &mut errors);
+        let code = run(&args, &mut { input }, &mut output, &mut errors);
         let text = |b: Vec<u8>| String::from_utf8(b).unwrap_or_default();
         (code, text(output), text(errors))
     }
@@ -495,7 +513,11 @@ mod tests {
         assert!(errors.starts_with("litigate mcp: "), "{errors}");
         let ping = b"{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"ping\"}\n".as_slice();
         for flush_only in [false, true] {
-            let served = serve(&Server::default(), ping, Broken { flush_only });
+            let served = serve(
+                &Server::default(),
+                &mut { ping },
+                &mut Broken { flush_only },
+            );
             assert!(served.is_err(), "{flush_only}");
         }
         assert_eq!(main(&[OsString::from("--version")]), ExitCode::SUCCESS);

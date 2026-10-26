@@ -207,6 +207,18 @@ decision rule12-response-window: "Rule 12 Response Window" by applicant cite "FR
     duration { min 3.1.days, mode 10.5.days, max 21.days }
     valence good
   }
+  edge-rule12-response-window-special-appearance "Appear specially to oppose a motion while reserving Rule 12(b)(2)/(5) defenses" -> special-appearance-waiver-risk {
+    authority cite "FRCP 12(b); 12(h)(1)"
+    effort 30.hours
+    cost 8_000.usd
+    within answer-period {
+      extendable true
+      extension_authority "FRCP 6(b) stipulation or court order"
+      note "Modeled as a pre-answer appearance in the response window."
+    }
+    duration { min 3.1.days, mode 10.5.days, max 21.days }
+    note "Distinct option with option-scoped waiver-risk chance for appearing to oppose a motion while reserving personal-jurisdiction and service defenses."
+  }
   12b-motion-filed "File pre-answer Rule 12(b) motion instead of answering" -> motion-to-dismiss-filed {
     authority cite "FRCP 12(b)"
     effort 30.hours
@@ -224,6 +236,19 @@ decision rule12-response-window: "Rule 12 Response Window" by applicant cite "FR
     authority cite "FRCP 55(a)"
     effort 0.hours
     valence bad
+  }
+}
+
+chance special-appearance-waiver-risk: "Waiver Risk After Special Appearance" by examiner discretion cite "FRCP 12(h)(1)"
+{
+  group pleading-group
+  note "Rule 12(h)(1) governs waiver when a defense is omitted from the required motion or pleading. Whether an appearance to oppose a motion waives a reserved defense can depend on the conduct and circumstances; the chance models that uncertain risk. The 5% prior is an approximate teaching estimate, not a docket-derived rate; estimate vintage 2026-10-26. Replace it with matter-specific evidence when available."
+  edge-special-appearance-waiver-risk-waived "Court treats the appearance as waiver of the reserved defense" -> motion-to-dismiss-filed p 0.05 {
+    authority cite "FRCP 12(h)(1)"
+    sets [waived-12h-defenses]
+  }
+  edge-special-appearance-waiver-risk-preserved "Court preserves the reserved defense" -> motion-to-dismiss-filed p 0.95 {
+    authority cite "FRCP 12(h)(1)"
   }
 }
 

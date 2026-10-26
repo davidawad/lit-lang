@@ -37,7 +37,9 @@ fn well_formed_refinements_are_accepted() {
         "type Short = {d: Days<CalendarDays> | d > 0.days && d <= 60.days}
 type Recent = Date where it >= 2020-01-01
 event Extended(days: Short where days != 45.days, on: Recent, method: Method where method == Mail || on > 2024-01-01)
-event Paid(amount: Money<usd> where amount >= 100.usd && 2 * amount <= 1_000.usd, odds: Probability where odds <= 1/2)",
+event Paid(amount: Money<usd> where amount >= 100.usd && 2 * amount <= 1_000.usd, odds: Probability where odds <= 1/2)
+event Spans(from: Date, to: Date where to - from <= 30.days && 3.days + from <= to, hours: Hours where -hours < 0.hours && hours / 2 <= 4.hours)
+event Flags(urgent: Bool where urgent || true, n: Number where !(n < 0) && n != 7, m: Method where Mail != m || urgent)",
     );
     assert_eq!(out, Vec::<String>::new());
 }
@@ -95,8 +97,24 @@ fn predicates_outside_the_qualifier_grammar_are_l2011() {
             &["10:23 L2011 `-` on `Date` is outside the refinement qualifier grammar | <grammar>"],
         ),
         (
+            "event E(a: Date where a / 2 < 2024-01-01)",
+            &["10:23 L2011 `/` of `Date` and `Number` is outside the refinement qualifier grammar | <grammar>"],
+        ),
+        (
             "event E(a: Date where a + a < 2024-01-01)",
             &["10:23 L2011 `+` of `Date` and `Date` is outside the refinement qualifier grammar | <grammar>"],
+        ),
+        (
+            "event E(a: Number where zz)",
+            &["10:25 L2011 a refinement cannot name `zz` | it may name only `a`, and constants"],
+        ),
+        (
+            "event E(a: Number where a > 1.234.usd)",
+            &["10:29 L2006 `usd` has 2 minor-unit digits; `1.234` has 3 | "],
+        ),
+        (
+            "event E(m: Method where m == Method.Fax)",
+            &["10:37 L1002 `Method` has no variant `Fax` | variants: Personal, Mail"],
         ),
         (
             "event E(a: Days<CalendarDays> where b > 1.days)",

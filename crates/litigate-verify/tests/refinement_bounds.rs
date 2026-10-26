@@ -13,6 +13,11 @@ use support::{edit, outcome, verify_one};
 /// past its prescribed due date, or 14 days past the order, whichever is
 /// later, and an order event refined by `refinement`.
 fn program(refinement: &str) -> String {
+    with_params(&format!("until: Date{refinement}"))
+}
+
+/// [`program`] with the order event's parameters `params`.
+fn with_params(params: &str) -> String {
     let lit = edit(
         "  deadline answer-period: 21.days from Served(complaint) counted_by frcp6\n",
         "  deadline answer-period: 21.days from Served(complaint) counted_by frcp6 {\n    \
@@ -21,7 +26,7 @@ fn program(refinement: &str) -> String {
     lit.replace(
         "event Answered(document: Document)\n",
         &format!(
-            "event Answered(document: Document)\nevent Extended(until: Date{refinement}) extends answer-period to until\n"
+            "event Answered(document: Document)\nevent Extended({params}) extends answer-period to until\n"
         ),
     )
 }
@@ -96,4 +101,36 @@ fn an_undecided_bound_is_a_hole() {
             "9:33 L2014 the SMT tier did not decide whether `Extended` stays within the bound of `answer-period`: exact arithmetic overflowed i64"
         ]
     );
+}
+
+/// The counterexample names every value the claim reads, in its type's
+/// spelling: an enum's variant, a `Bool`, a number.
+#[test]
+fn a_counterexample_spells_each_value_by_its_type() {
+    let (status, messages) = found(&with_params(
+        "until: Date where until <= prescribed_due + 30.days || (consented && how == Mail && odds > 1/2), \
+         how: ServiceMethod, consented: Bool, odds: Number",
+    ));
+    assert_eq!(status, Some(ObligationStatus::Failed));
+    assert_eq!(messages.len(), 1, "{messages:?}");
+    for value in ["how = Mail", "consented = true", "odds = "] {
+        assert!(messages[0].contains(value), "{value}: {messages:?}");
+    }
+}
+
+/// A discretionary extension has no ceiling, so a refinement cannot exceed
+/// it; a refinement of the event's other parameters claims nothing about
+/// the new due date.
+#[test]
+fn only_a_bounded_deadline_and_a_refined_due_date_are_checked() {
+    let discretionary = program(" where until <= prescribed_due + 45.days").replace(
+        "to max(prescribed_due + 30.days, grant_order_entered + 14.days)",
+        "discretion GoodCause",
+    );
+    assert_eq!(
+        found(&discretionary),
+        (Some(ObligationStatus::Passed), vec![])
+    );
+    let other = with_params("until: Date, days: Number where days <= 45");
+    assert_eq!(found(&other), (Some(ObligationStatus::Passed), vec![]));
 }

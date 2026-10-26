@@ -102,45 +102,9 @@ fn exceeds(
     ));
     let within: Vec<hir::Expr> = ceilings.iter().map(|b| below(to, b)).collect();
     preds.push(not(or(within)));
-    let shown: Vec<String> = ceilings.iter().map(|b| b.display()).collect();
     match smt::decide(&smt_vars, &preds) {
         smt::Decision::Unsat(_) => None,
-        smt::Decision::Sat(model) => {
-            let value = |n: &str| model.iter().find(|(m, _)| m == n).map(|(_, v)| v.as_str());
-            let dates = hir::BoundDates {
-                prescribed_due: value("prescribed_due").unwrap_or_default(),
-                current_due: value("current_due").unwrap_or_default(),
-                grant_order_entered: value("grant_order_entered").unwrap_or_default(),
-            };
-            let given: Vec<String> = model
-                .iter()
-                .filter(|(n, _)| n != to && (refine_reads(e, n) || is_bound_date(n)))
-                .map(|(n, v)| format!("{n} = {v}"))
-                .collect();
-            let past: Vec<String> = ceilings
-                .iter()
-                .map(|b| format!("{} = {}", b.display(), b.date(dates).unwrap_or_default()))
-                .collect();
-            Some(
-                emit(
-                    C::RefinementViolated,
-                    cx.profile,
-                    span.clone(),
-                    format!(
-                        "`{}` admits an extension of `{deadline}` past its bound: when {}, {to} = {} exceeds {}",
-                        e.name,
-                        given.join(", "),
-                        value(to).unwrap_or_default(),
-                        past.join(" and ")
-                    ),
-                )
-                .note(format!(
-                    "the refinements of `{}` claim every extension it records is within `{deadline}`'s `extend` bound; tighten them to entail `{to} <= {}`",
-                    e.name, shown[0]
-                ))
-                .note("replay refuses an extension past its bound (L4001), so a refinement admitting one is a declaration error"),
-            )
-        }
+        smt::Decision::Sat(model) => Some(counterexample(cx, e, to, deadline, ceilings, span, &model)),
         smt::Decision::Unknown(why) => Some(
             emit(
                 C::RefinementUndecided,
@@ -154,6 +118,51 @@ fn exceeds(
             .note("an undecided refinement is a hole, never a pass"),
         ),
     }
+}
+
+/// L2012 for model `model` of the question: the values the claim reads,
+/// `to`'s, and each ceiling's date there.
+fn counterexample(
+    cx: &Context<'_>,
+    e: &EventType,
+    to: &str,
+    deadline: &str,
+    ceilings: &[&Bound],
+    span: &Span,
+    model: &[(String, String)],
+) -> Diagnostic {
+    let value = |n: &str| model.iter().find(|(m, _)| m == n).map(|(_, v)| v.as_str());
+    let dates = hir::BoundDates {
+        prescribed_due: value("prescribed_due").unwrap_or_default(),
+        current_due: value("current_due").unwrap_or_default(),
+        grant_order_entered: value("grant_order_entered").unwrap_or_default(),
+    };
+    let given: Vec<String> = model
+        .iter()
+        .filter(|(n, _)| n != to && (refine_reads(e, n) || is_bound_date(n)))
+        .map(|(n, v)| format!("{n} = {v}"))
+        .collect();
+    let past: Vec<String> = ceilings
+        .iter()
+        .map(|b| format!("{} = {}", b.display(), b.date(dates).unwrap_or_default()))
+        .collect();
+    emit(
+                    C::RefinementViolated,
+                    cx.profile,
+                    span.clone(),
+                    format!(
+                        "`{}` admits an extension of `{deadline}` past its bound: when {}, {to} = {} exceeds {}",
+                        e.name,
+                        given.join(", "),
+                        value(to).unwrap_or_default(),
+                        past.join(" and ")
+                    ),
+                )
+                .note(format!(
+                    "the refinements of `{}` claim every extension it records is within `{deadline}`'s `extend` bound; tighten them to entail `{to} <= {}`",
+                    e.name, ceilings[0].display()
+                ))
+                .note("replay refuses an extension past its bound (L4001), so a refinement admitting one is a declaration error")
 }
 
 /// Whether `name` is a bound date.

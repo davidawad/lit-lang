@@ -484,7 +484,16 @@ impl Typer<'_, '_, '_> {
             BinaryOp::Mul | BinaryOp::Div if constant(r) && scalable(&l.ty) => Some(l.ty.clone()),
             _ => None,
         };
-        if ty.is_none() {
+        let Some(ty) = ty else {
+            let operation = format!(
+                "`{}` of `{}` and `{}`",
+                super::ops::symbol(op),
+                display(&l.ty),
+                display(&r.ty)
+            );
+            if l.ty == Type::Date || r.ty == Type::Date {
+                return self.outside(at, &operation).map(|e| e.ty);
+            }
             let what = if op == BinaryOp::Div {
                 "divisor"
             } else {
@@ -494,17 +503,12 @@ impl Typer<'_, '_, '_> {
                 Report::new(
                     C::InvalidRefinement,
                     at,
-                    format!(
-                        "`{}` of `{}` and `{}` is not linear: one {what} must be a constant number",
-                        super::ops::symbol(op),
-                        display(&l.ty),
-                        display(&r.ty)
-                    ),
+                    format!("{operation} is not linear: one {what} must be a constant number"),
                 )
                 .note(GRAMMAR),
             );
             return None;
-        }
+        };
         if op == BinaryOp::Div
             && eval::term(r, &|_| None) == Some(eval::Val::Num(Rational::integer(0)))
         {
@@ -515,7 +519,7 @@ impl Typer<'_, '_, '_> {
             ));
             return None;
         }
-        ty
+        Some(ty)
     }
 }
 

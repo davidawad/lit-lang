@@ -158,7 +158,7 @@ fn predicates_outside_the_qualifier_grammar_are_l2011() {
             "event E(a: Bool where 2 * a == true || a * 2 == true)",
             &[
                 "10:23 L2012 `*` of `Number` and `Bool` is not linear: one factor must be a constant number | <grammar>",
-                "10:42 L2012 `*` of `Bool` and `Number` is not linear: one factor must be a constant number | <grammar>",
+                "10:40 L2012 `*` of `Bool` and `Number` is not linear: one factor must be a constant number | <grammar>",
             ],
         ),
         (
@@ -378,4 +378,28 @@ fn an_undecided_refinement_is_a_hole() {
         checks[0].package.is_some(),
         "a hole does not stop the build"
     );
+}
+
+/// A refinement the parser could not complete is reported there (L0001,
+/// L0002) and nowhere else: sema, which runs on the recovered tree, drops
+/// it rather than cascading.
+#[test]
+fn an_incomplete_refinement_is_only_a_syntax_error() {
+    for body in [
+        "type T = {d: | d > 1}",
+        "type T = {: Days<CalendarDays> | d > 1.days}",
+        "type T = {d: Days<CalendarDays> | }",
+        "type T = {d: Days<CalendarDays> | d >}",
+        "type T = List<{d: | d}>",
+        "type T = Days<CalendarDays> where",
+        "type T = Days<CalendarDays> where it >",
+        "event E(a: {d: | d > 1}, b: Number)",
+    ] {
+        let found = diagnostics(body);
+        assert!(!found.is_empty(), "{body}");
+        assert!(
+            found.iter().all(|d| d.contains(" L000")),
+            "{body}: {found:?}"
+        );
+    }
 }

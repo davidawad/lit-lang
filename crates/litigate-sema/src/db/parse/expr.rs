@@ -70,38 +70,30 @@ pub(crate) fn ref_path(node: &SyntaxNode) -> Option<RefPath> {
 
 /// `Name<Args>` from a `TypeExpr` node (the grammar's `type_expr` starts
 /// every one with its name), or the base of a `RefinedType` node
-/// `{x: T | p}` with `p` as its outermost refinement.
-pub(crate) fn type_ref(node: &SyntaxNode) -> TypeRef {
+/// `{x: T | p}` with `p` as its outermost refinement; `None` for a
+/// refinement the parser could not complete (it reported why).
+pub(crate) fn type_ref(node: &SyntaxNode) -> Option<TypeRef> {
     if node.kind() == K::RefinedType {
-        let mut base = types(node).next().map_or_else(
-            || TypeRef {
-                name: head(node),
-                args: Vec::new(),
-                range: significant_range(node),
-                refinements: Vec::new(),
-            },
-            |t| type_ref(&t),
-        );
-        let binder = token_of(node, K::Ident).map(|t| name(&t));
-        let predicate = super::expr::expr_children(node)
-            .next()
-            .and_then(|e| Lower.expr(&e));
-        if let Some((binder, predicate)) = binder.zip(predicate) {
-            base.refinements.push(Qualifier {
-                binder,
-                predicate,
-                range: significant_range(node),
-            });
-        }
-        return base;
+        let mut base = type_ref(&types(node).next()?)?;
+        let binder = token_of(node, K::Ident)?;
+        let predicate = Lower.expr(&expr_children(node).next()?)?;
+        base.refinements.push(Qualifier {
+            binder: name(&binder),
+            predicate,
+            range: significant_range(node),
+        });
+        return Some(base);
     }
-    TypeRef {
+    let args = node_of(node, K::TypeArgs).map_or_else(
+        || Some(Vec::new()),
+        |a| types(&a).map(|t| type_ref(&t)).collect(),
+    );
+    Some(TypeRef {
         name: head(node),
-        args: node_of(node, K::TypeArgs)
-            .map_or_else(Vec::new, |a| types(&a).map(|t| type_ref(&t)).collect()),
+        args: args?,
         range: significant_range(node),
         refinements: Vec::new(),
-    }
+    })
 }
 
 /// The type children of `node` (`TypeExpr` or `RefinedType`), in order.
@@ -114,7 +106,7 @@ fn types(node: &SyntaxNode) -> impl Iterator<Item = SyntaxNode> {
 /// `where` clause (SPEC §3.5) as its outermost refinement; the clause's
 /// predicate names the value `binder`.
 pub(crate) fn declared_type(node: &SyntaxNode, binder: Name) -> Option<TypeRef> {
-    let mut t = type_ref(&types(node).next()?);
+    let mut t = type_ref(&types(node).next()?)?;
     let clause = node_of(node, K::WhereClause);
     if let Some((clause, predicate)) = clause.as_ref().and_then(|c| {
         let e = Lower.expr(&expr_children(c).next()?)?;

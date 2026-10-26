@@ -12,10 +12,10 @@ use crate::ws::{self, CaseText, Session};
 use crate::{check_session, filing};
 use litigate_base::{DiagnosticCode, Profile, Severity};
 use litigate_lower::Options;
-use litigate_sema::case::names::{self, Resolution};
+use litigate_sema::case::names;
 use litigate_sema::hir::{self, Type};
 use serde_json::Value;
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::Write as _;
 
 /// The date every fed-back move is filed on.
@@ -53,6 +53,7 @@ fn printed(all: &[&hir::Package], used: &[&hir::Package]) -> BTreeSet<String> {
             _ => None,
         })
     });
+    let signatures = signatures(&vocabulary);
     let mut out = BTreeSet::new();
     for (deadline, version) in deadlines {
         let m = moves(law, &nodes, &deadline, &version);
@@ -76,27 +77,36 @@ fn printed(all: &[&hir::Package], used: &[&hir::Package]) -> BTreeSet<String> {
         out.extend(
             orders
                 .filter_map(Value::as_str)
-                .map(|o| order(&vocabulary, o)),
+                .map(|o| order(&signatures, o)),
         );
     }
     out
 }
 
-/// An order as `lint-filing` names it, completed with an argument of each
-/// of its parameter types (none when the name resolves to no event: the
-/// matter then reports it).
-fn order(vocabulary: &[&hir::Package], name: &str) -> String {
-    let args: Vec<&str> = match names::resolve(vocabulary, name) {
-        Resolution::Event(_, ty) => ty
-            .params
-            .iter()
-            .map(|(p, t)| match t {
-                Type::Date => DATE,
-                other => panic!("order `{name}`: no argument for `{p}: {other:?}`"),
-            })
-            .collect(),
-        _ => Vec::new(),
-    };
+/// The parameters of every event type of `vocabulary`, by name.
+fn signatures<'p>(vocabulary: &[&'p hir::Package]) -> BTreeMap<&'p str, &'p [(String, Type)]> {
+    vocabulary
+        .iter()
+        .flat_map(|p| hirx::declarations(p))
+        .filter_map(|d| match d {
+            hir::Declaration::Event(e) => Some((e.name.as_str(), e.params.as_slice())),
+            _ => None,
+        })
+        .collect()
+}
+
+/// An order as `lint-filing` names it, completed with a date for each of
+/// its parameters (an order's are the dates it extends to).
+fn order(signatures: &BTreeMap<&str, &[(String, Type)]>, name: &str) -> String {
+    let args: Vec<&str> = signatures
+        .get(hirx::local(name))
+        .into_iter()
+        .flat_map(|params| params.iter())
+        .map(|(p, t)| {
+            assert_eq!(*t, Type::Date, "order `{name}`: parameter `{p}`");
+            DATE
+        })
+        .collect();
     format!("{name}({})", args.join(", "))
 }
 
@@ -138,23 +148,23 @@ fn rejected(session: Session, matters: Vec<CaseText>) -> Vec<String> {
         .iter()
         .zip(&checked.session.cases)
         .flat_map(|(c, text)| {
-            c.diagnostics
-                .iter()
-                .filter(|d| d.severity == Severity::Error)
-                .filter(|d| {
-                    matches!(
+            c.diagnostics.iter().map(|d| {
+                let rejects = d.severity == Severity::Error
+                    && matches!(
                         d.code,
                         DiagnosticCode::UnexpectedToken
                             | DiagnosticCode::UnresolvedName
                             | DiagnosticCode::TypeMismatch
-                    )
-                })
-                .map(|d| {
-                    let line = text.text.lines().nth(d.span.line as usize - 1);
-                    format!("{}: {} ({})", c.path, d.message, line.unwrap_or("").trim())
-                })
-                .collect::<Vec<_>>()
+                    );
+                let line = text
+                    .text
+                    .lines()
+                    .nth(d.span.line.saturating_sub(1) as usize);
+                let shown = format!("{}: {} ({})", c.path, d.message, line.unwrap_or("").trim());
+                (rejects, shown)
+            })
         })
+        .filter_map(|(rejects, shown)| rejects.then_some(shown))
         .collect()
 }
 

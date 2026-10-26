@@ -93,7 +93,7 @@ fn pending(p: &Pending) -> Value {
 /// `after_expiry`: after it, on motion; `any`), the request it rests on
 /// (`on M()`, spelled by `request`), and a bounded grant's ceiling;
 /// `None` for a lock.
-fn grant(e: &Extension, request: impl FnOnce(&hir::Expr) -> String) -> Option<Value> {
+fn grant(e: &Extension, request: &dyn Fn(&hir::Expr) -> String) -> Option<Value> {
     let (by, standard, window, motion, until) = match e {
         Extension::Bounded {
             by,
@@ -335,7 +335,7 @@ fn moves(law: Law<'_, '_>, nodes: &[(&str, &hir::Node)], deadline: &str, version
         .flat_map(|(pack, d)| {
             d.extend
                 .iter()
-                .filter_map(move |e| grant(e, |m| written(law.vocabulary, pack, m)))
+                .filter_map(move |e| grant(e, &|m| written(law.vocabulary, pack, m)))
         })
         .collect();
     json!({"file": file, "extend": extend, "orders": orders(law.law, law.vocabulary, deadline)})
@@ -624,7 +624,7 @@ mod tests {
             },
         ]
         .iter()
-        .map(|e| grant(e, hirx::event_text).map(|g| g["window"].clone()))
+        .map(|e| grant(e, &hirx::event_text).map(|g| g["window"].clone()))
         .collect();
         assert_eq!(
             windows,
@@ -637,7 +637,7 @@ mod tests {
             ]
         );
         assert_eq!(
-            grant(&bounded(false), hirx::event_text),
+            grant(&bounded(false), &hirx::event_text),
             Some(json!({
                 "by": "justice", "standard": null, "window": "before_expiry", "request": null,
                 "until": {"offset": {"from": "prescribed_due", "days": 60}},
@@ -724,11 +724,12 @@ mod tests {
             &format!("{pack}::answer-period"),
             "answer-period@none",
         );
-        assert!(
-            moves["file"]
-                .as_array()
-                .is_some_and(|f| !f.is_empty() && f.iter().all(|m| m["event"].is_null())),
-            "{moves}"
+        assert_eq!(
+            moves["file"],
+            json!([
+                {"edge": format!("{pack}::answer"), "event": null},
+                {"edge": format!("{pack}::move-dismiss"), "event": null},
+            ])
         );
     }
 

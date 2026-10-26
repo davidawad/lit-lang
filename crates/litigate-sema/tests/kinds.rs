@@ -407,7 +407,10 @@ fn a_filing_limit_prescribes() {
     let limit = "limit brief { words <= 13_000 }";
     let found = diagnostics(&[
         ("local-rule", layer("local-rule", "LocalRule", "", limit)),
-        ("precedent", layer("precedent", "CaseOrder", "", limit)),
+        (
+            "precedent",
+            layer("precedent", "CaseOrder", "court = \"ca9\"\n", limit),
+        ),
     ]);
     assert_eq!(found["local-rule"], Vec::<String>::new());
     assert!(

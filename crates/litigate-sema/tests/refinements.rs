@@ -392,6 +392,7 @@ fn an_incomplete_refinement_is_only_a_syntax_error() {
         "type T = {d: Days<CalendarDays> | }",
         "type T = {d: Days<CalendarDays> | d >}",
         "type T = List<{d: | d}>",
+        "type T = {a: {b: | b > 1} | a > 1}",
         "type T = Days<CalendarDays> where",
         "type T = Days<CalendarDays> where it >",
         "event E(a: {d: | d > 1}, b: Number)",

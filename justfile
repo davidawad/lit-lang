@@ -38,9 +38,9 @@ tree-sitter-merge-driver:
     git config merge.tsgenerate.name "generated tree-sitter parser: keep ours, then just tree-sitter-generate"
     git config merge.tsgenerate.driver true
 
-# Run the CLI (release build) with any extra args, e.g. `just run describe`.
+# Run `litigate` (release build) with any extra args, e.g. `just run solve cases/frcp-civil-case.case`.
 run *ARGS:
-    cargo run --release -p litgraph-cli -- {{ARGS}}
+    cargo run --release -p litigate-cli -- {{ARGS}}
 
 # --- formatting & linting -----------------------------------------------
 

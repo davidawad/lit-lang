@@ -75,12 +75,19 @@ deep-merged); the CLI's `--scenario <name|file|json>` and `--set` do the same.
 
 ## Quickstart
 
+`litigate` is the one command line: it compiles a matter (`.case`) or a
+rule package (`lit/<forum>`) and runs any engine op on the result.
+
 ```bash
-cargo build --release
-./target/release/litgraph describe                 # the manual
-./target/release/litgraph packs                     # what's loaded + data quality
-./target/release/litgraph explain --packs cofc --arg node=complaint-filed
-./target/release/litgraph q '{
+cargo install --path crates/litigate-cli          # binary: litigate
+litigate solve cases/cofc-1498-patent-case.case   # value + best line
+litigate chain cases/cofc-1498-patent-case.case --set rate=900
+litigate explain cases/frcp-civil-case.case --arg node=frcp-civil-procedure::pre-filing
+litigate sweep cases/frcp-civil-case.case --arg param=rate --arg lo=100 --arg hi=1500
+litigate deadlines lit/frcp --arg trigger=2025-01-06 --arg reachable=true  # a package: its pack
+litigate solve lit/links                          # a links package: the graph it composes
+litigate engine describe                          # the engine's raw interface: the manual
+litigate engine q '{
   "packs": ["cofc", "cafc"],
   "scenario": {
     "params": { "rate": 850 },
@@ -90,8 +97,13 @@ cargo build --release
   },
   "op": { "op": "simulate", "runs": 50000 }
 }'
-./target/release/litgraph chain --scenario cofc-1498-patent-case --set rate=900
 ```
+
+Every op is a subcommand (`solve chain simulate path pareto sweep tornado
+calibration posterior voi structure deadlines settle compare graph metric
+lint`, plus `explain` given a path), and `litigate run TARGET --op '{...}'`
+takes an op object. The `litgraph` binary is deprecated: it forwards to
+`litigate engine` and will be removed.
 
 Runnable requests live in [`examples/`](examples/) — a 28 U.S.C. § 1498
 patent case in the Court of Federal Claims through the Federal Circuit:
@@ -107,7 +119,7 @@ patent case in the Court of Federal Claims through the Federal Circuit:
 | `cofc-1498-settle.json` | settlement range, predicted prices, when the surplus peaks, a Rule 68 offer ([docs/SETTLEMENT.md](docs/SETTLEMENT.md)) |
 
 ```bash
-./target/release/litgraph q - < examples/cofc-1498-chain.json
+litigate engine q - < examples/cofc-1498-chain.json
 ```
 
 ## Install
@@ -139,21 +151,35 @@ building from source with nix/devenv.
 
 ### CLI
 
-`litgraph q '<json>'` or `litgraph q - < request.json` (equivalently
-`litgraph run request.json`) sends one request envelope and prints one
-response envelope. Shorthand subcommands (`describe`, `packs`, `lint`,
-`explain --packs ... --arg node=...`) build the envelope for you. `--packs`
-accepts pack ids or `all` (default all). `litgraph schema <kind>` prints a
-document's JSON Schema; `litgraph validate <file|->` checks a pack,
-`links.json`, scenario, or request file (kind auto-detected, or forced with
-`--kind`) and exits `2` if it's invalid. Exit codes throughout: `0` ok,
-`2` the request failed or the document is invalid, `1` usage/I/O error.
+`litigate <op> TARGET` compiles a `.case` matter, a `.lit` file's
+package, or a package directory and runs one engine op on it: `--arg k=v`
+sets op arguments, `--set k=v` overrides scenario params (composed onto a
+matter's own via `extends`), `--no-links` leaves the links packages out.
+The result is the engine's response inside `litigate`'s envelope; a target
+that fails its check is not run.
+
+`litigate engine` is the engine's raw JSON interface over packs and named
+scenarios, for debugging and tools: `litigate engine q '<json>'` or
+`litigate engine q - < request.json` (equivalently `litigate engine run
+request.json`) sends one request envelope and prints one response
+envelope. Shorthand subcommands (`describe`, `packs`, `lint`, `explain
+--packs ... --arg node=...`) build the envelope for you. Its packs and
+scenario library are compiled from `lit/` and `cases/` (`--lib`,
+`--cases`) unless `--packs-dir`/`$LITGRAPH_PACKS` or
+`--scenarios-dir`/`$LITGRAPH_SCENARIOS` names a directory. `litigate
+engine schema <kind>` prints a document's JSON Schema; `litigate engine
+validate <file|->` checks a pack, `links.json`, scenario, or request file
+(kind auto-detected, or forced with `--kind`) and exits `2` if it's
+invalid. Exit codes throughout: `0` ok, `2` the request failed or the
+document is invalid, `1` usage/I/O error. The deprecated `litgraph`
+binary is `litigate engine` with the packs built in.
 
 ### Library
 
 The engine is a Rust library crate (`litigate-engine`, in
 [`crates/litigate-engine`](crates/litigate-engine)), internal to the
-`litigate` compiler and not published; `litgraph-cli` is a thin binary over
+`litigate` compiler and not published; `litigate engine` (and the
+deprecated `litgraph` shim over it) is a thin layer over
 `litigate_engine::api::handle`. Add it as a path or git dependency to embed
 the solver, the expression language, or the pack loader directly — nothing
 about the CLI is required.

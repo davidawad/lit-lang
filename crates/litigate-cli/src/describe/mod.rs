@@ -421,7 +421,7 @@ pub fn document() -> Describe {
         envelope: EnvelopeInfo {
             fields: ["schema_version", "ok", "op", "result", "diagnostics", "provenance", "elapsed_ms"].map(str::to_owned).to_vec(),
             diagnostic: "schema_version 2: {code, severity, span:{file, line, col, end_line, end_col}, message, labels:[{span, message}], notes:[{message}], fixes:[{message?, edits:[{span, replacement}], applicability}], derivation?:{rule, fact, span?, premises}, fingerprint, profile?, world:{name, as_of?, known_at?}}; sorted by (file, line, col, code); a well-formed code (L and four digits) outside the registry decodes; every L3xxx error carries a derivation; ok is false iff an error diagnostic exists, and result is kept alongside errors".to_owned(),
-            exit_codes: ["0: ok", "2: the input ran and failed (error diagnostics, or a litgraph ok:false from run)", "1: usage or I/O failure (message on stderr, no envelope)"].map(str::to_owned).to_vec(),
+            exit_codes: ["0: ok", "2: the input ran and failed (error diagnostics, or an engine ok:false from run or an op command)", "1: usage or I/O failure (message on stderr, no envelope)"].map(str::to_owned).to_vec(),
             formats: "--format json|human; default human on a terminal, json otherwise".to_owned(),
         },
     }

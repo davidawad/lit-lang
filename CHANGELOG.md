@@ -41,6 +41,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   world modality, design review §2.5); each is L1004. Every `precedent`
   is persuasive until lg-fq2.1 computes binding scope. No corpus package
   changes class.
+- **One command line: `litigate`** (lg-9lrj). Every engine op is a
+  `litigate` subcommand on a compiled matter or package: `litigate solve
+  CASE`, `chain`, `simulate`, `path`, `pareto`, `sweep`, `tornado`,
+  `calibration`, `posterior`, `voi`, `structure`, `deadlines`, `settle`,
+  `compare`, `graph`, `metric`, `lint`, and `explain` given a path
+  rather than a diagnostic code; `--arg k=v` sets op arguments and
+  `--set k=v` overrides scenario params. `litigate run` and the op
+  subcommands take a `.lit` file or package directory too (its pack under
+  the default scenario; a links package, the graph it composes).
+  `litigate engine` is the engine's raw JSON-in/JSON-out interface (the
+  former `litgraph` CLI: `q`, `run`, `validate`, `schema`, shorthand ops),
+  printing the engine response itself; its packs and named scenarios are
+  compiled from `--lib` (default `lit`) and `--cases` (default `cases`)
+  unless a directory or `$LITGRAPH_PACKS`/`$LITGRAPH_SCENARIOS` names one.
+  `crates/litigate-cli/tests/round_trip.rs` compiles and solves every
+  `lit/` package and every `cases/` matter.
+
 - **A designated due date the matter does not record is `unknown`, never
   `open`** (lg-flu.46). A notice of institution whose answer date is `?`
   leaves the TTAB answer period with status `unknown` at `as_of` and the
@@ -360,6 +377,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `extension_authority ?("TTAB answer-time extension authority")`, which
   is the pack's `deadline/extensionAuthority` hole. The Board's reset
   (§ 2.106(a)) stays a `CaseOrder` layer.
+
+### Deprecated
+
+- **The `litgraph` binary** (lg-9lrj) is a shim forwarding to `litigate
+  engine` with the packs and scenarios built in (same output and exit
+  codes; a deprecation note on standard error). Call `litigate` instead;
+  the shim goes with lg-dfv4.7.
 
 ### Fixed
 

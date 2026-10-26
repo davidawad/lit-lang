@@ -5,8 +5,29 @@ this file is the operating manual.
 
 ## Commands
 
+`litigate` is the one command line (lg-9lrj). Every engine op is a
+subcommand on a compiled matter or package, and `litigate engine` is the
+engine's raw JSON interface, the commands below (`litigate engine q ...`,
+`litigate engine describe`, ...); its packs and named scenarios are
+compiled from `lit/` and `cases/` unless `--packs-dir`/`$LITGRAPH_PACKS`
+(`--scenarios-dir`/`$LITGRAPH_SCENARIOS`) names a directory. The
+`litgraph` binary is a deprecated shim for `litigate engine` with the
+packs built in; write new callers against `litigate`.
+
 ```bash
-cargo build --release                      # binary: target/release/litgraph
+litigate solve cases/cofc-1498-patent-case.case          # any op on a compiled matter
+litigate sweep cases/frcp-civil-case.case --arg param=rate --set opp_rate=500
+litigate explain cases/frcp-civil-case.case --arg node=frcp-civil-procedure::pre-filing
+litigate chain lit/cofc                                  # a package: its pack, default scenario
+litigate solve lit/links                                 # a links package: the graph it composes
+litigate engine q '{"packs":["cofc"],"op":{"op":"solve"}}'   # a raw request
+```
+
+The raw interface (`litigate engine ARGS`; the deprecated `litgraph ARGS`
+is the same with the packs built in):
+
+```bash
+cargo build --release                      # binaries: target/release/litigate (and the litgraph shim)
 cargo test                                 # unit + parity (vs the TS engine) + feature tests
 litgraph describe                          # the full manual as JSON — start here (lists scenario_library)
 litgraph schema request                    # JSON Schema (draft 2020-12) of request|response|scenario|named-scenario|pack|links

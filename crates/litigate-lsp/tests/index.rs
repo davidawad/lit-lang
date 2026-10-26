@@ -106,6 +106,18 @@ fn unknown_names_resolve_to_nothing() {
     assert!(target(&index, "lit/p/a.lit", a, "nowhere").is_none());
 }
 
+#[test]
+fn a_declaration_without_its_name_declares_nothing() {
+    // A state whose name was cut, as an edit in progress leaves it: a
+    // declaration node with no identifier.
+    let unnamed = "module p.c\n\nstate : \"Nameless\" { }\n";
+    let (index, _) = index(&[("a.lit", A), ("b.lit", B), ("c.lit", unnamed)], None);
+    let declared =
+        |d: &&litigate_lsp::index::Def| d.file == "lit/p/c.lit" && d.space == Space::Decl;
+    assert_eq!(index.defs.iter().filter(declared).count(), 0);
+    assert!(index.defs.iter().any(|d| d.name == "shared"));
+}
+
 proptest! {
     #![proptest_config(ProptestConfig::with_cases(24))]
     #[test]

@@ -130,6 +130,7 @@ fn layer(
     let module = name.replace('-', "_");
     let text = format!(
         "module {module}.rules
+import core.authority.{{CaseOrder}}
 import fed.rules.{{answer-period, open, c6, cal, Served}}
 start l
 state l: \"L\"
@@ -416,6 +417,15 @@ fn a_precedents_scope_is_computed_from_its_court() {
             )]),
         ),
         (
+            "a binding precedent's waiver delegates further",
+            diagnostics(&[precedent(
+                "p",
+                "scotus",
+                true,
+                "deadline waived: 30.days from Served() counted_by c6 override answer-period delegable { to CaseOrder, op set }",
+            )]),
+        ),
+        (
             "a binding precedent prescribes",
             diagnostics(&[precedent(
                 "p",
@@ -627,6 +637,14 @@ fn a_world_file_is_checked_against_its_family() {
             )),
         ),
         (
+            "a family without circuits, and none named",
+            shown(&world(
+                &[],
+                &located("\"fed\"", "family = \"claims\""),
+                Profile::Dev,
+            )),
+        ),
+        (
             "an actual world with a local rule",
             shown(&world(
                 &[lr],
@@ -756,6 +774,22 @@ fn precedent_binds_per_circuit_and_an_overruling_withdraws_it() {
             )),
         ),
         (
+            "never designated, in its own circuit",
+            shown(&world(
+                &[precedent("undesignated", "ca1", false, INTERPRETS)],
+                &located("\"undesignated\"", &at("ca1")),
+                Profile::Dev,
+            )),
+        ),
+        (
+            "at a location in no family",
+            shown(&world(
+                &packs,
+                &located("\"ca1-rule\"", "family = \"nowhere\""),
+                Profile::Dev,
+            )),
+        ),
+        (
             "an overruling of an order",
             shown(&world(
                 &packs,
@@ -834,4 +868,35 @@ fn a_key_is_found_on_its_own_line() {
     let r = key_range(text, "kind");
     assert_eq!(&text[r.start as usize..r.end as usize], "kind = \"x\"");
     assert_eq!(key_range(text, "absent"), TextRange::default());
+}
+
+#[test]
+fn a_world_reads_the_newest_valid_version_of_each_layer() {
+    let mut old = layer("lr", "local-rule", "civil", "LocalRule", "", "");
+    old.root = "pkgs/lr-old".to_owned();
+    let mut new = layer("lr", "local-rule", "civil", "LocalRule", "", "");
+    new.root = "pkgs/lr-new".to_owned();
+    new.manifest = new
+        .manifest
+        .replacen("version = \"1.0.0\"", "version = \"1.1.0\"", 1);
+    let mut broken = layer("broken", "local-rule", "civil", "LocalRule", "", "");
+    broken.manifest = broken
+        .manifest
+        .replace("[package]", "[package]\nnot_a_key = 1");
+    let at = located("\"lr\"", "family = \"civil\"\ncircuit = \"ca1\"");
+    for order in [[old.clone(), new.clone()], [new.clone(), old.clone()]] {
+        let mut packs = order.to_vec();
+        packs.push(broken.clone());
+        let w = world(&packs, &at, Profile::Dev);
+        assert_eq!(w.layers[0].version, "1.1.0");
+    }
+    // An instrument read back without `authoritative` is authoritative.
+    let i: litigate_sema::hir::Instrument =
+        serde_json::from_str(r#"{"source": "s", "issuer": "i", "date": "2020-01-01"}"#)
+            .expect("instrument");
+    assert!(i.authoritative && i.overrules.is_empty());
+    assert_eq!(
+        serde_json::to_value(&i).expect("json"),
+        serde_json::json!({"source": "s", "issuer": "i", "date": "2020-01-01"})
+    );
 }

@@ -1,0 +1,95 @@
+---
+source: crates/litigate-sema/tests/kinds.rs
+expression: rows
+---
+[
+    (
+        "valid",
+        [],
+    ),
+    (
+        "hypothetical",
+        [
+            "9:8 L1004 `hypothetical` is the modality of a world, not a file kind: a counterfactual world may hold a layer of any kind",
+        ],
+    ),
+    (
+        "unknown",
+        [
+            "9:8 L1004 `kind` must be one of `base`, `amendment`, `local-rule`, `standing-order`, `case-order`, `guidance`, `precedent`, `overruling`, found `world`",
+        ],
+    ),
+    (
+        "authority",
+        [
+            "9:8 L1004 a `local-rule` package has authority `LocalRule`, found `StandingOrder`",
+        ],
+    ),
+    (
+        "no instrument",
+        [
+            "9:8 L1004 kind `standing-order` must be justified by its instrument: add `[package.instrument]` with `source`, `issuer` and `date`",
+        ],
+    ),
+    (
+        "instrument on base",
+        [
+            "24:1 L1004 `[package.instrument]` justifies a `kind` other than `base`",
+        ],
+    ),
+    (
+        "explicit base with instrument",
+        [
+            "25:1 L1004 `[package.instrument]` justifies a `kind` other than `base`",
+        ],
+    ),
+    (
+        "explicit base",
+        [],
+    ),
+    (
+        "source not vendored",
+        [
+            "26:10 L1004 instrument source `elsewhere` must be a `[sources.*]` key with a vendored `path`",
+        ],
+    ),
+    (
+        "empty issuer, bad date",
+        [
+            "27:10 L1004 `issuer` must name who issued the instrument",
+            "28:8 L1004 `date` must be a YYYY-MM-DD date, found `2020-13-01`",
+        ],
+    ),
+    (
+        "binds outside guidance",
+        [
+            "29:9 L1004 `binds` names the addressees of guidance only",
+        ],
+    ),
+    (
+        "guidance without binds",
+        [
+            "9:8 L1004 guidance names the actors it binds: add `binds = [...]` to `[package.instrument]`",
+        ],
+    ),
+    (
+        "guidance binds nobody, or a stranger",
+        [
+            "29:9 L1004 guidance binds at least one actor",
+        ],
+    ),
+    (
+        "guidance binds a stranger",
+        [
+            "29:9 L1004 `Clerk` is not a `[package.roles]` actor",
+        ],
+    ),
+    (
+        "links package",
+        [
+            "7:8 L1004 `kind` needs a pack identity: a links package's manifest has only `name`, `version`, `language`, `in_force`, `known_at`, and `[dependencies]` (add `pack_id` if this is a pack)",
+            "9:1 L1004 `package.instrument` needs a pack identity: a links package's manifest has only `name`, `version`, `language`, `in_force`, `known_at`, and `[dependencies]` (add `pack_id` if this is a pack)",
+            "10:10 L1004 instrument source `order` must be a `[sources.*]` key with a vendored `path`",
+        ],
+    ),
+]

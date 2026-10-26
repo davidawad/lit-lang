@@ -89,6 +89,7 @@ registry! { 79;
     InvalidField = "L2007" => "A field is unknown, duplicated, or not allowed on this declaration kind",
     InvalidProbability = "L2008" => "An edge probability is outside [0,1], on a self edge, on an edge that is not a draw's, or missing at a chance node",
     InvalidCapability = "L2009" => "A capability is not allowed by the deadline's characterization: a jurisdictional limit admits no waiver, no unbounded extension, and no delegation",
+    ForbiddenEffect = "L2010" => "A declaration has an effect its package's instrument class (`kind` in Lit.toml) does not permit",
     EffectiveOverlap = "L3001" => "Two versions of the same declaration overlap in in-force time",
     EffectiveGap = "L3002" => "A declaration version gap is not explicitly declared",
     UnresolvedPrecedence = "L3003" => "Conflicting rules remain unordered after relations and canons are applied",

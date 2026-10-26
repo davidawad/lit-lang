@@ -9,6 +9,7 @@ mod delegation;
 mod edge;
 mod imports;
 mod instance;
+mod kind;
 mod logic;
 mod node;
 mod obligation;
@@ -478,11 +479,11 @@ fn items(cx: &mut Cx<'_, '_>, top: &Item, context: &ModuleContext) -> DeclCheck 
                 .transition(item, rule, n, amends, arms)
                 .map(Declaration::Transition),
             ItemKind::Authority(chain) => {
-                out.declarations.extend(
-                    Cx::authorities(chain)
-                        .into_iter()
-                        .map(Declaration::Authority),
-                );
+                for a in Cx::authorities(chain) {
+                    let a = Declaration::Authority(a);
+                    kind::check(cx, item, &a);
+                    out.declarations.push(a);
+                }
                 None
             }
             ItemKind::Default(n, _, when, then) => Some(Declaration::Default(
@@ -515,6 +516,9 @@ fn items(cx: &mut Cx<'_, '_>, top: &Item, context: &ModuleContext) -> DeclCheck 
                 .grant(item, rule, name, clauses, fields)
                 .map(Declaration::Grant),
         };
+        if let Some(d) = &d {
+            kind::check(cx, item, d);
+        }
         out.declarations.extend(d);
     }
     out

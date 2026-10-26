@@ -13,6 +13,7 @@ mod case;
 pub(crate) use case::own_name;
 mod expr;
 mod graph;
+mod kind;
 mod logic;
 pub mod spans;
 mod temporal;
@@ -27,6 +28,7 @@ pub use graph::{
     Basis, DeadlineWindow, Edge, EdgeDeadline, EdgePatch, GuardOp, GuardOpKind, Instance, Link,
     Node, NodeKind, TriangularDuration, Valence,
 };
+pub use kind::{Effect, Instrument, Kind, Row, Scope};
 pub use logic::{
     Authority, DefaultRule, DelegatedOp, Delegation, EnumDecl, EventEffect, EventType, Exception,
     ExceptionKind, Expectation, Metadata, Relation, Rule, RuleKind, Test, TypeAlias,
@@ -99,6 +101,14 @@ pub struct Manifest {
     /// empty and `roles` and `sources` are empty.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub links: bool,
+    /// The instrument class (`package.kind`, SPEC §4.1): the index that
+    /// decides which effects the package's declarations may have (§5.7).
+    #[serde(default, skip_serializing_if = "Kind::is_base")]
+    pub kind: Kind,
+    /// The instrument justifying a class other than `base`
+    /// (`[package.instrument]`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub instrument: Option<Instrument>,
 }
 
 /// `[[cite_syntax.*]]` tables in declared order.

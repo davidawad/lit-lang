@@ -2,7 +2,9 @@
 //! missing required keys, and ill-typed or invalid values are all L1004.
 use super::semver::{Requirement, Version};
 use crate::db::span::{Report, TextRange};
-use crate::hir::{ActorRole, CiteSyntax, Interval, Manifest, SourceBinding};
+use crate::hir::{
+    ActorRole, CiteSyntax, Instrument, Interval, Kind, Manifest, Scope, SourceBinding,
+};
 use crate::types::date;
 use litigate_base::DiagnosticCode as C;
 use serde::de::{Deserializer, MapAccess, Visitor};
@@ -72,6 +74,19 @@ struct RawPackage {
     known_at: Spanned<String>,
     // The date before which no declaration's law is encoded (SPEC §4.1).
     unknown_before: Option<Spanned<String>>,
+    // The instrument class and the instrument justifying it (SPEC §4.1).
+    kind: Option<Spanned<String>>,
+    instrument: Option<Spanned<RawInstrument>>,
+}
+
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct RawInstrument {
+    source: Spanned<String>,
+    issuer: Spanned<String>,
+    date: Spanned<String>,
+    designation: Option<String>,
+    binds: Option<Spanned<Vec<String>>>,
 }
 
 #[derive(Deserialize)]
@@ -183,7 +198,7 @@ pub fn parse_manifest(text: &str) -> Result<ParsedManifest, Vec<Report>> {
     let empty = Ordered::default();
     let roles = roles(&mut c, p.roles.as_ref().map_or(&empty, |r| r.get_ref()));
     let (dependencies, dependency_paths) = dependencies(&mut c, &raw.dependencies);
-    let sources = raw
+    let sources: Vec<SourceBinding> = raw
         .sources
         .0
         .iter()
@@ -203,6 +218,7 @@ pub fn parse_manifest(text: &str) -> Result<ParsedManifest, Vec<Report>> {
             )
         });
     }
+    let (kind, instrument) = kind(&mut c, p, &roles, &sources);
     if !c.reports.is_empty() {
         return Err(c.reports);
     }
@@ -231,6 +247,8 @@ pub fn parse_manifest(text: &str) -> Result<ParsedManifest, Vec<Report>> {
         counting: text_of(&p.counting),
         cite_syntax,
         links,
+        kind,
+        instrument,
     };
     Ok(ParsedManifest {
         manifest,
@@ -310,6 +328,8 @@ fn identity(c: &mut Checker, text: &str, raw: &RawManifest) -> bool {
         ("counting", p.counting.as_ref().map(range)),
         ("cite_syntax", raw.cite_syntax.as_ref().map(range)),
         ("sources", raw.sources.0.first().map(|(_, s)| range(s))),
+        ("kind", p.kind.as_ref().map(range)),
+        ("package.instrument", p.instrument.as_ref().map(range)),
     ];
     for (key, found) in pack_only {
         if let Some(found) = found {
@@ -432,6 +452,135 @@ fn source(c: &mut Checker, id: &str, s: &Spanned<RawSource>) -> SourceBinding {
         cite_prefixes: raw.cite_prefixes.clone(),
         section_heading: raw.section_heading.as_ref().map(|p| p.get_ref().clone()),
     }
+}
+
+/// The instrument class and its justification (SPEC §4.1, design review
+/// 2026-10-23 §2.5): a class other than `base` needs the instrument that
+/// makes it one ([`instrument`]); a modification layer's class names its
+/// package's authority; guidance names the actors it binds;
+/// `hypothetical` is a world modality.
+fn kind(
+    c: &mut Checker,
+    p: &RawPackage,
+    roles: &BTreeMap<String, ActorRole>,
+    sources: &[SourceBinding],
+) -> (Kind, Option<Instrument>) {
+    let binds = p
+        .instrument
+        .as_ref()
+        .and_then(|i| i.get_ref().binds.as_ref());
+    let kind = match p.kind.as_ref().map(|n| n.get_ref().as_str()) {
+        None | Some("base") => Kind::Base,
+        Some("amendment") => Kind::Amendment,
+        Some("local-rule") => Kind::LocalRule,
+        Some("standing-order") => Kind::StandingOrder,
+        Some("case-order") => Kind::CaseOrder,
+        Some("guidance") => Kind::Guidance {
+            binds: binds.map(|b| b.get_ref().clone()).unwrap_or_default(),
+        },
+        // Binding scope is computed from the court hierarchy at a world's
+        // location, which this edition does not model: fail closed.
+        Some("precedent") => Kind::Precedent {
+            scope: Scope::Persuasive,
+        },
+        Some("overruling") => Kind::Overruling,
+        Some(other) => {
+            let why = if other == "hypothetical" {
+                "`hypothetical` is the modality of a world, not a file kind: a counterfactual world may hold a layer of any kind".to_owned()
+            } else {
+                format!(
+                    "`kind` must be one of {}, found `{other}`",
+                    Kind::NAMES.map(|n| format!("`{n}`")).join(", ")
+                )
+            };
+            c.check(
+                false,
+                p.kind.as_ref().map(range).unwrap_or_default(),
+                || why,
+            );
+            return (Kind::Base, None);
+        }
+    };
+    let at = p.kind.as_ref().map(range).unwrap_or_default();
+    if let Some(level) = kind.level() {
+        let authority = p.authority.as_ref().map(|a| a.get_ref().as_str());
+        c.check(authority == Some(level), at, || {
+            format!(
+                "a `{}` package has authority `{level}`, found `{}`",
+                kind.name(),
+                authority.unwrap_or_default()
+            )
+        });
+    }
+    let guidance = matches!(kind, Kind::Guidance { .. });
+    match binds {
+        Some(b) if !guidance => c.check(false, range(b), || {
+            "`binds` names the addressees of guidance only".to_owned()
+        }),
+        Some(b) => {
+            c.check(!b.get_ref().is_empty(), range(b), || {
+                "guidance binds at least one actor".to_owned()
+            });
+            for actor in b.get_ref() {
+                c.check(roles.contains_key(actor), range(b), || {
+                    format!("`{actor}` is not a `[package.roles]` actor")
+                });
+            }
+        }
+        None => c.check(!guidance, at, || {
+            "guidance names the actors it binds: add `binds = [...]` to `[package.instrument]`"
+                .to_owned()
+        }),
+    }
+    let instrument = instrument(c, &kind, at, p.instrument.as_ref(), sources);
+    (kind, instrument)
+}
+
+/// The instrument `[package.instrument]` names: present exactly when the
+/// class is not `base`, its text vendored under a `[sources.*]` key.
+fn instrument(
+    c: &mut Checker,
+    kind: &Kind,
+    at: TextRange,
+    raw: Option<&Spanned<RawInstrument>>,
+    sources: &[SourceBinding],
+) -> Option<Instrument> {
+    let Some(i) = raw else {
+        c.check(kind.is_base(), at, || {
+            format!(
+                "kind `{}` must be justified by its instrument: add `[package.instrument]` with \
+                 `source`, `issuer` and `date`",
+                kind.name()
+            )
+        });
+        return None;
+    };
+    c.check(!kind.is_base(), range(i), || {
+        "`[package.instrument]` justifies a `kind` other than `base`".to_owned()
+    });
+    let raw = i.get_ref();
+    let source = raw.source.get_ref();
+    c.check(
+        sources.iter().any(|s| &s.id == source && s.path.is_some()),
+        range(&raw.source),
+        || {
+            format!(
+                "instrument source `{source}` must be a `[sources.*]` key with a vendored `path`"
+            )
+        },
+    );
+    c.check(
+        !raw.issuer.get_ref().trim().is_empty(),
+        range(&raw.issuer),
+        || "`issuer` must name who issued the instrument".to_owned(),
+    );
+    c.date("date", &raw.date);
+    Some(Instrument {
+        source: source.clone(),
+        issuer: raw.issuer.get_ref().clone(),
+        date: raw.date.get_ref().clone(),
+        designation: raw.designation.clone(),
+    })
 }
 
 mod cite_syntax;

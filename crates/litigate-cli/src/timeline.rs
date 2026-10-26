@@ -557,6 +557,32 @@ fn obligation_status(
     }
 }
 
+/// `state` of instance `s`'s row, saying so when a filed request awaits
+/// the order a grant of its deadline licenses (its pending move).
+fn awaiting(mut state: TimelineStatus, s: &Scheduled) -> TimelineStatus {
+    if let Some(p) = &s.pending {
+        let pending = format!("filed, awaiting order: {} on {}", p.request, p.date);
+        state.reason = Some(match state.reason {
+            Some(r) => format!("{r}; {pending}"),
+            None => pending,
+        });
+    }
+    state
+}
+
+/// The reason of event `i`'s row when it is a request some instance of
+/// `counted` awaits an order on: the deadlines it is the pending move of.
+fn awaited(counted: &[Scheduled], i: usize) -> Option<String> {
+    let mut of: Vec<&str> = counted
+        .iter()
+        .filter(|s| s.pending.as_ref().is_some_and(|p| p.event == i))
+        .map(|s| s.deadline.as_str())
+        .collect();
+    of.sort_unstable();
+    of.dedup();
+    (!of.is_empty()).then(|| format!("pending move of {}: filed, awaiting order", of.join(", ")))
+}
+
 /// An open instance: `open`, or `unknown` with why when it has no date.
 fn status_open(due: Option<&str>, as_of: &str) -> TimelineStatus {
     match due {
@@ -676,7 +702,7 @@ fn events(
             date: Some(e.date.clone()),
             due: None,
             label: format!("{text} {relation} {}", e.party),
-            status: status(RowState::None, None),
+            status: status(RowState::None, awaited(&m.counted, i)),
             cite: e
                 .authority
                 .clone()
@@ -735,6 +761,7 @@ fn deadlines(
                         s.unknown.as_deref().unwrap_or_default()
                     ));
                 }
+                let state = awaiting(state, s);
                 made[n] = Some(b.deadline_row(0, pkg, decl, None, state, trigger));
             }
             continue;
@@ -742,7 +769,10 @@ fn deadlines(
         let Some((pkg, decl)) = b.counted_by(s) else {
             continue;
         };
-        let state = obligation_status(s.status, ended, Some(&due), &b.as_of, &name);
+        let state = awaiting(
+            obligation_status(s.status, ended, Some(&due), &b.as_of, &name),
+            s,
+        );
         let row = b.deadline_row(0, pkg, decl, Some(due), state, trigger);
         made[n] = Some(row);
         if let (Status::Superseded, Some(j)) = (s.status, s.closed_by) {

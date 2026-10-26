@@ -23,6 +23,7 @@ use std::collections::BTreeMap;
 
 mod facts;
 mod obligations;
+mod pending;
 mod removal;
 
 use obligations::{Refined, Transform};
@@ -172,6 +173,7 @@ pub(super) fn replay(
         }
         cx.tracks_at_as_of(m);
         cx.at_as_of();
+        cx.pending_at_as_of();
     }
     let marking = marking.unwrap_or_default();
     Replayed {

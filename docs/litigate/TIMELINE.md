@@ -136,7 +136,12 @@ What fills the document today:
   deadlines governing its options that no event has triggered, `unknown`.
   A matter with errors (a late act) still lists its counted deadlines.
   A restarted period names the instance its later trigger created, and an
-  absorbed one the `later_of` instance, as `replaced_by`.
+  absorbed one the `later_of` instance, as `replaced_by`. An instance
+  awaiting an order on a request one of its deadline's grants reads (a
+  stipulation or motion to extend, `on M()`, with no order or `unless`
+  denial since) keeps its state, its reason saying `filed, awaiting
+  order: <Request> on <date>`; the request's own event row says whose
+  pending move it is.
 - **Worlds.** One fork row at the replayed posture (`unknown` until an
   outcome is recorded) and one world per option still open: `chance` for
   a chance node (with `probability` when authored), `election` for a

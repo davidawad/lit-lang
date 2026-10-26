@@ -13,7 +13,7 @@ use crate::report;
 use crate::ws::{lock_path, CaseText, Session};
 use litigate_base::{Diagnostic, FileId, LineIndex, Profile, Severity};
 use litigate_lower::{LoweredCase, Lowerer};
-use litigate_sema::case::{Env, Obligation, Status, Step};
+use litigate_sema::case::{Env, Obligation, Pending, Status, Step};
 use litigate_sema::hir;
 use litigate_sema::pkg::lock::LockFile;
 use litigate_sema::temporal::MatterEvent;
@@ -75,6 +75,10 @@ pub struct Scheduled {
     /// the order's date.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub request_made: Option<String>,
+    /// The filed request awaiting the order a grant of its deadline
+    /// licenses (a stipulation, a motion to extend): its pending move.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pending: Option<Pending>,
     /// How replay ended it, or `open` at `as_of`; `unknown`, never
     /// `open` or `lapsed`, when the trigger left its designated due date
     /// unknown.
@@ -424,6 +428,7 @@ fn schedule(
                 extended_to: o.extended_to.clone(),
                 extended_under: o.extended_under,
                 request_made: o.request_made.clone(),
+                pending: o.pending.clone(),
                 status: o.status,
                 trigger_event: o.trigger,
                 closed_by: o.closed_by,

@@ -86,6 +86,14 @@ pub struct Obligation {
     /// 90.3(c)(1), 2.145(e)(1)).
     #[serde(skip_serializing_if = "Option::is_none")]
     pub request_made: Option<String>,
+    /// The request an `extend` grant of its deadline reads (`on M()`: a
+    /// stipulation, a motion to extend) that the matter filed after the
+    /// trigger and after the last order extending it, with no denial
+    /// (`unless D()`) since: the move pending on it at `as_of`, filed and
+    /// awaiting order. `None` once the order or the denial arrives, and
+    /// for an instance an event ended.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pending: Option<Pending>,
     /// How it ended, or `open`.
     /// The date its deadline's law is encoded from, when the trigger
     /// precedes every recorded version (`unknown_before`, SPEC §5.4): its
@@ -104,6 +112,23 @@ pub struct Obligation {
     /// The trigger's service-method candidates (replay-internal).
     #[serde(skip)]
     pub(crate) candidates: Vec<String>,
+    /// Sorted index of the last order that extended it (replay-internal):
+    /// a request before it has been answered.
+    #[serde(skip)]
+    pub(crate) answered: Option<usize>,
+}
+
+/// A filed request awaiting the order that a grant of its deadline
+/// licenses (SPEC §9.3: a deadline's pending move).
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize)]
+pub struct Pending {
+    /// Source index of the request event in [`hir::Case::events`].
+    #[serde(skip)]
+    pub event: usize,
+    /// The request as written (`ExtensionStipulated()`).
+    pub request: String,
+    /// Its date.
+    pub date: String,
 }
 
 /// How an obligation instance ended.

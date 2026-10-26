@@ -14,6 +14,11 @@
 //! and the order events that exercise them (`orders`). Proposing one of
 //! them through `lint-filing` judges it.
 //!
+//! A filing that is a request a grant reads (a stipulation, a motion to
+//! extend) is listed under `pending`: each obligation it is now the
+//! pending move of, filed and awaiting order; every entry says so in its
+//! own `pending` until the order extending it or the denial arrives.
+//!
 //! The matter itself must check clean first, but for the missing
 //! lowering (L6001) of a package with concurrent tracks: replay, not the
 //! build, judges a filing. Diagnostics are then every error of the
@@ -31,7 +36,7 @@ use crate::ws::{self, CaseText, Session};
 use litigate_base::{Diagnostic, DiagnosticCode, Profile, Severity};
 use litigate_engine::clock::Date;
 use litigate_lower::Options;
-use litigate_sema::case::{Status, Step};
+use litigate_sema::case::{Pending, Status, Step};
 use litigate_sema::hir::{self, DeadlineWindow, Declaration, EventEffect, Extension};
 use serde_json::{json, Value};
 
@@ -57,14 +62,27 @@ fn key(s: &Scheduled) -> (&str, &str, &str) {
     (&s.deadline, &s.trigger, &s.trigger_date)
 }
 
-/// An obligation instance with its due date, or why it has none.
+/// An obligation instance with its due date, or why it has none, and
+/// the filed request awaiting an order on it (`pending`), if any.
 fn entry(s: &Scheduled) -> Value {
     let due = ics::due_of(s);
     json!({
         "deadline": s.deadline, "trigger": s.trigger, "trigger_date": s.trigger_date,
         "due": due.clone().ok().map(Date::to_iso), "unknown": due.err(),
-        "status": ics::status_name(s),
+        "status": ics::status_name(s), "pending": s.pending.as_ref().map(pending),
     })
+}
+
+/// The request `s` awaits an order on, and its date.
+fn request(s: &Scheduled) -> Option<(&str, &str)> {
+    s.pending
+        .as_ref()
+        .map(|p| (p.request.as_str(), p.date.as_str()))
+}
+
+/// A pending move: the request, filed and awaiting order.
+fn pending(p: &Pending) -> Value {
+    json!({"request": p.request, "date": p.date, "state": "filed, awaiting order"})
 }
 
 /// One `extend` grant as a move: who exercises it, under what cause
@@ -284,6 +302,7 @@ pub(super) struct Changes<'a> {
     pub(super) replay: Vec<&'a Step>,
     pub(super) discharges: Vec<Value>,
     pub(super) triggers: Vec<Value>,
+    pub(super) pending: Vec<Value>,
     pub(super) open_before: Vec<Value>,
 }
 
@@ -324,6 +343,18 @@ pub(super) fn changes<'a>(
             .schedule
             .iter()
             .filter(|s| !at.schedule.iter().any(|o| key(o) == key(s)))
+            .map(entry)
+            .collect(),
+        pending: filed
+            .schedule
+            .iter()
+            .filter(|s| {
+                s.pending.is_some()
+                    && !at
+                        .schedule
+                        .iter()
+                        .any(|o| key(o) == key(s) && request(o) == request(s))
+            })
             .map(entry)
             .collect(),
         open_before: at
@@ -404,7 +435,8 @@ pub fn lint_filing(args: &Args) -> Outcome {
         "as_of": filed.case.as_ref().map(|c| c.as_of.clone()),
         "accepted": !report.has_errors(),
         "replay": changes.replay, "discharges": changes.discharges,
-        "triggers": changes.triggers, "open_before": changes.open_before,
+        "triggers": changes.triggers, "pending": changes.pending,
+        "open_before": changes.open_before,
     });
     Ok(report)
 }

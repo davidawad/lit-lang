@@ -76,7 +76,7 @@ impl<'e> Transform<'e> {
 /// before and after its due date, its date bound, if any, and the motion
 /// it requires, if any.
 #[derive(Debug, Clone, Copy)]
-struct Grant<'g> {
+pub(super) struct Grant<'g> {
     by: &'g str,
     before: bool,
     after: bool,
@@ -84,7 +84,7 @@ struct Grant<'g> {
     /// discretion (and for a waiver, which has no extent).
     ceiling: Option<&'g Bound>,
     /// The motion the grant requires.
-    motion: Option<&'g Motion>,
+    pub(super) motion: Option<&'g Motion>,
     /// When the motion must be made.
     moved: Moved,
     /// The cause standard the grant applies, if it states one.
@@ -479,11 +479,13 @@ impl<'g> Cx<'_, 'g> {
                 extended_to: None,
                 extended_under: None,
                 request_made: None,
+                pending: None,
                 unencoded: unencoded.map(str::to_owned),
                 status: Status::Open,
                 closed_by: None,
                 at: k,
                 candidates: candidates.to_vec(),
+                answered: None,
             });
         }
     }
@@ -711,6 +713,7 @@ impl<'g> Cx<'_, 'g> {
             o.extended_to = Some(new.to_owned());
             o.extended_under = grant.standard;
             o.request_made = request;
+            o.answered = Some(k);
         }
         if let Some(why) = grant.interpretation {
             // The rule reaches the period only as the author reads it (FRCP
@@ -843,7 +846,13 @@ impl<'g> Cx<'_, 'g> {
     /// those of the emergency grants in force on `date` reaching it; an
     /// emergency extension reaches a deadline locked against its grant's
     /// authority only when a grant also lifts the lock (`unlock`).
-    fn grants(&self, w: &str, d: &'g Deadline, date: &str, how: Transform<'_>) -> Vec<Grant<'g>> {
+    pub(super) fn grants(
+        &self,
+        w: &str,
+        d: &'g Deadline,
+        date: &str,
+        how: Transform<'_>,
+    ) -> Vec<Grant<'g>> {
         let emergency =
             self.graph
                 .emergency(w, &d.meta.authority, date, self.case.known_at.as_deref());

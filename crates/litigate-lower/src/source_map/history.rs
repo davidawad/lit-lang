@@ -13,7 +13,7 @@
 //! provenance. A cite with a section no history proves is a hole (SPEC
 //! §7); [`Citations::unproven`] says why, naming the amendment.
 use super::{sha256_hex, Citations, L0Section, Pin};
-use litgraph::cite::corpus::Section;
+use litigate_engine::cite::corpus::Section;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 

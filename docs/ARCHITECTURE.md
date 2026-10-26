@@ -61,7 +61,7 @@ different set with `$LITGRAPH_PACKS` or `--packs-dir` (`Catalog::load`).
   checkable. `litgraph lint`'s `unverifiable-cite` diagnostic checks this
   mechanically: it normalizes the cite, resolves it against the vendored
   L0 text a `sources[].path` points at, and (if `note` quotes a phrase)
-  fuzzy-matches the quote within that span — see `crates/litgraph/src/cite/`
+  fuzzy-matches the quote within that span — see `crates/litigate-engine/src/cite/`
   and `sources/PROVENANCE.md`.
 - **L1a → L1b**: `litigate check` types the rules, selects the versions in
   force on the build dates, and verifies them; `litigate build` writes the
@@ -237,7 +237,7 @@ section for client setup (Claude Code, Claude Desktop, generic clients).
 
 ## Deadline clock
 
-`crates/litgraph/src/clock/` computes concrete due dates from a pack-authored
+`crates/litigate-engine/src/clock/` computes concrete due dates from a pack-authored
 `deadline` (`docs/PACK_SCHEMA.md`'s `Deadline.length`/`unit`) and a trigger
 date, independent of the graph/scenario layers above — a deadline is a fact
 about a forum's procedure, not a scenario-dependent quantity.
@@ -302,7 +302,7 @@ today's: a pre-2009 FRCP 6 short-period count, for instance, is not modeled.
   induction) — see `docs/CRITIQUE.md`'s "CVaR-optimal policies" and
   "General-sum opponents" sections.
 - ~~Cite verification: every `authority` resolves to a span in an L0
-  source.~~ Shipped (`crates/litgraph/src/cite/`, `sources/*.txt`,
+  source.~~ Shipped (`crates/litigate-engine/src/cite/`, `sources/*.txt`,
   `unverifiable-cite` lint diagnostic). Remaining: wire `sources[].path`
   on each pack to the vendored text (no pack does yet — see
   `sources/PROVENANCE.md`'s "deliberately not vendored" section and the

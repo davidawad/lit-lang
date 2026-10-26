@@ -1,7 +1,7 @@
 //! Minimal programs checked, lowered, and verified in memory.
 #![allow(dead_code)]
-use litgraph::cite::SourceCorpus;
 use litigate_base::Profile;
+use litigate_engine::cite::SourceCorpus;
 use litigate_lower::{Lowerer, Options};
 use litigate_sema::db::inputs::create_workspace;
 use litigate_sema::pkg::load::{LoadedFile, LoadedPackage};
@@ -133,7 +133,7 @@ pub fn verify_edited_in(
 /// pack another front end might produce), and verifies it in `strict`.
 pub fn verify_pack_edited(
     lit: &str,
-    edit: impl FnOnce(&mut litgraph::model::Pack),
+    edit: impl FnOnce(&mut litigate_engine::model::Pack),
 ) -> Verification {
     let mut db = LitDatabase::default();
     let ws = create_workspace(&mut db, &[pkg("demo", "FederalRule", &[], lit)]);

@@ -130,7 +130,7 @@ fn a_shared_library_rule_needs_no_fragment() {
     };
     assert_eq!(
         (pack.schema_version, pack.counting.as_deref()),
-        (litgraph::model::PACK_SCHEMA_VERSION, Some("frcp6"))
+        (litigate_engine::model::PACK_SCHEMA_VERSION, Some("frcp6"))
     );
 }
 
@@ -178,7 +178,7 @@ fn edge_values_without_a_lowering() {
 }
 
 /// `p` lowered to its pack.
-fn pack_of(p: &hir::Package) -> Box<litgraph::model::Pack> {
+fn pack_of(p: &hir::Package) -> Box<litigate_engine::model::Pack> {
     let lowered = lower(p, &Options::default()).unwrap_or_else(|d| panic!("{d:#?}"));
     let Document::Pack(pack) = lowered.document else {
         panic!("expected a pack")
@@ -223,7 +223,7 @@ fn designate(p: &mut hir::Package) {
 }
 
 /// The `deadline` of each edge of `p`'s pack that has one.
-fn deadlines(p: &hir::Package) -> Vec<litgraph::model::Deadline> {
+fn deadlines(p: &hir::Package) -> Vec<litigate_engine::model::Deadline> {
     pack_of(p)
         .edges
         .into_iter()
@@ -244,7 +244,7 @@ fn a_designated_deadline_lowers_to_a_designated_window() {
     assert!(
         found.iter().all(|d| d.length.is_none()
             && d.designated
-                == Some(litgraph::model::Designated {
+                == Some(litigate_engine::model::Designated {
                     min_period: 21.0,
                     source_event: "Noticed".into(),
                     source_event_arg: "due".into(),
@@ -370,8 +370,8 @@ fn grants() -> Vec<hir::Extension> {
 }
 
 /// [`grants`] as pack extension bounds.
-fn bounds() -> Vec<litgraph::model::ExtensionBound> {
-    use litgraph::model::{
+fn bounds() -> Vec<litigate_engine::model::ExtensionBound> {
+    use litigate_engine::model::{
         CauseStandard, DateBound, DateRef, ExtensionBound, ExtensionWindow, Motion,
     };
     let due = |days| DateBound::Offset {
@@ -452,7 +452,7 @@ fn extension_grants_lower_to_extension_bounds() {
     // The pack reads back with them (schema v5).
     let pack = pack_of(&p);
     let text = serde_json::to_string(&pack).unwrap_or_default();
-    let back = litgraph::model::Pack::from_json(&text).unwrap_or_else(|e| panic!("{e}"));
+    let back = litigate_engine::model::Pack::from_json(&text).unwrap_or_else(|e| panic!("{e}"));
     assert_eq!(back.edges, pack.edges);
 }
 
@@ -679,7 +679,7 @@ fn an_instance_transform_lowers_to_engine_syntax() {
                 .values()
                 .next()
                 .and_then(|i| i.payoff_transform.clone())
-                .inspect(|t| assert!(litgraph::expr::parse(t).is_ok(), "{t}"))
+                .inspect(|t| assert!(litigate_engine::expr::parse(t).is_ok(), "{t}"))
                 .unwrap_or_default(),
             other @ Document::Pack(_) => panic!("{other:?}"),
         },
@@ -770,7 +770,7 @@ fn a_counting_rule_library_lowers_every_rule() {
     };
     assert_eq!(
         (pack.schema_version, pack.counting.as_deref()),
-        (litgraph::model::PACK_SCHEMA_VERSION, None)
+        (litigate_engine::model::PACK_SCHEMA_VERSION, None)
     );
     let (clock, map) = lowered.clock.unwrap_or_else(|| panic!("no fragment"));
     let rules: Vec<&str> = clock.counting_rules.iter().map(|r| r.id.as_str()).collect();

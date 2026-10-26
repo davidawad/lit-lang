@@ -1,7 +1,7 @@
 //! `semantic_diff` (SPEC §8.6): defaults, number spelling and edge
 //! grouping are invisible; every real change is reported once, against
 //! the id it belongs to.
-use litgraph::model::{LinkFile, Pack};
+use litigate_engine::model::{LinkFile, Pack};
 use litigate_lower::{
     semantic_diff, semantic_diff_json, semantic_diff_links, ChangeKind, DocumentKind,
 };
@@ -185,7 +185,7 @@ proptest! {
         // Source groups edges under their node: reversing the groups while
         // keeping each group's order is invisible.
         let mut b = a.clone();
-        let mut groups: Vec<Vec<litgraph::model::RawEdge>> = Vec::new();
+        let mut groups: Vec<Vec<litigate_engine::model::RawEdge>> = Vec::new();
         for e in b.edges.drain(..) {
             match groups.last_mut() {
                 Some(g) if g[0].from == e.from => g.push(e),

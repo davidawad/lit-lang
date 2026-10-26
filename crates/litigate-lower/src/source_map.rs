@@ -7,9 +7,9 @@
 //! binding), its expression (the binding's `as_of`, whose text the
 //! binding's `path_sha256` pins) and the pinpoint, with the SHA-256 of the
 //! cited section's text once that text is verified against the pin.
-use litgraph::cite::{parse_cite_string, CiteGrammar, Family, SourceCorpus};
-use litgraph::model::{CiteCode, CiteRuleForm, CiteSyntax};
 use litigate_base::Span;
+use litigate_engine::cite::{parse_cite_string, CiteGrammar, Family, SourceCorpus};
+use litigate_engine::model::{CiteCode, CiteRuleForm, CiteSyntax};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};

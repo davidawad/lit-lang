@@ -3,8 +3,8 @@
 //! history records no amendment in (E, D]. An amendment exactly at E holds,
 //! one exactly at D or strictly between breaks, and a missing, unpinned,
 //! stale or unreadable history proves nothing.
-use litgraph::cite::SourceCorpus;
-use litgraph::model::CiteSyntax;
+use litigate_engine::cite::SourceCorpus;
+use litigate_engine::model::CiteSyntax;
 use litigate_lower::source_map::{sha256_hex, Amendment, Citations, L0Section, Proof};
 use litigate_sema::hir::SourceBinding;
 

@@ -4,8 +4,8 @@
 use crate::analysis::Analysis;
 use crate::cite::{self, Located};
 use crate::index::{Def, Space};
-use litgraph::cite::SourceCorpus;
 use litigate_cli::hirx;
+use litigate_engine::cite::SourceCorpus;
 use litigate_sema::db::ids::WorldId;
 use litigate_sema::hir::{self, DayUnit, Declaration, NodeKind, Type};
 use litigate_sema::precedence::worlds::{world_selection, Resolution};

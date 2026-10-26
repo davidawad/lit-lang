@@ -17,8 +17,8 @@
 use std::collections::BTreeMap;
 use std::sync::OnceLock;
 
-use litgraph::api::{self, Catalog};
 use litigate_cli::LitigateRun;
+use litigate_engine::api::{self, Catalog};
 use serde_json::{json, Value};
 use wasm_bindgen::prelude::wasm_bindgen;
 
@@ -85,7 +85,7 @@ pub fn validate(doc_json: &str, kind: Option<String>) -> String {
     }
 }
 
-/// JSON Schema for a `litgraph::api::SCHEMA_KINDS` kind: `request`, `response`,
+/// JSON Schema for a `litigate_engine::api::SCHEMA_KINDS` kind: `request`, `response`,
 /// `scenario`, `named-scenario`, `pack`, `links`, `calibration` or `clock`.
 #[wasm_bindgen]
 #[must_use]

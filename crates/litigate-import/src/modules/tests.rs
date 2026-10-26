@@ -1,5 +1,5 @@
 use super::{sections, Section};
-use litgraph::model::{Group, Pack, RawEdge, RawNode};
+use litigate_engine::model::{Group, Pack, RawEdge, RawNode};
 
 fn pack(nodes: &[(&str, Option<&str>)], edges: &[(&str, &str)]) -> Pack {
     Pack {

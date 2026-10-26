@@ -1,8 +1,8 @@
 //! Source-map citations (SPEC §4.3, §8.6): a source's `section_heading`
 //! template, bindings that share a heading template (the one whose
 //! vendored file holds the heading wins), and shorthands without a source.
-use litgraph::cite::SourceCorpus;
-use litgraph::model::{CiteCode, CiteRuleForm, CiteShorthand, CiteSyntax};
+use litigate_engine::cite::SourceCorpus;
+use litigate_engine::model::{CiteCode, CiteRuleForm, CiteShorthand, CiteSyntax};
 use litigate_lower::source_map::{sha256_hex, Citations, Pin};
 use litigate_sema::hir::SourceBinding;
 

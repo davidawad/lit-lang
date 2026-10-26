@@ -4,8 +4,8 @@
 //! example's test dates through the engine's own interpreter.
 mod support;
 
-use litgraph::cite::SourceCorpus;
-use litgraph::clock::{
+use litigate_engine::cite::SourceCorpus;
+use litigate_engine::clock::{
     compute_due_date, ClockConfig, Date, DayDeadline, Direction, ServiceMethod, Unit,
 };
 use litigate_lower::{render, Document, LoweredPackage, Lowerer, Options};
@@ -28,7 +28,7 @@ fn example_pack_snapshot() {
     };
     let text = render(pack).unwrap_or_default();
     insta::assert_snapshot!("example_pack", text);
-    let reread = litgraph::Pack::from_json(&text).unwrap_or_else(|e| panic!("{e}"));
+    let reread = litigate_engine::Pack::from_json(&text).unwrap_or_else(|e| panic!("{e}"));
     assert_eq!(&reread, pack.as_ref());
     insta::assert_snapshot!("example_pack_map", render_map(&lowered.source_map));
 }

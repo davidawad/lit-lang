@@ -5,7 +5,7 @@
 //! being money.
 use crate::issues::Issues;
 use crate::text;
-use litgraph::expr::{self, Expr};
+use litigate_engine::expr::{self, Expr};
 
 /// Precedence levels shared by litgraph and `.lit` expressions.
 const SUM: u8 = 1;

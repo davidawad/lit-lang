@@ -4,8 +4,8 @@
 //! diagnostic names the amendment that broke the proof.
 mod support;
 
-use litgraph::cite::SourceCorpus;
 use litigate_base::Profile;
+use litigate_engine::cite::SourceCorpus;
 use litigate_lower::source_map::sha256_hex;
 use litigate_verify::{Checked, Obligation, ObligationStatus};
 use support::{pkg_with_sources, verify_in, BASE, FRCP};

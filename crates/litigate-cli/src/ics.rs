@@ -8,7 +8,7 @@
 //! re-export updates the same calendar entry; `DTSTAMP` is the matter's
 //! `as_of`, never the wall clock.
 use crate::matter::Scheduled;
-use litgraph::clock::Date;
+use litigate_engine::clock::Date;
 use sha2::{Digest, Sha256};
 use std::fmt::Write;
 

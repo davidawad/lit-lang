@@ -199,7 +199,7 @@ fn without_a_verdict_a_cite_resolves_through_the_manifest() {
     let mut host = support::host(&root);
     let a = host.analyze();
     let pkg = a.hir("frcp-rule12-example").unwrap();
-    let corpus = litgraph::cite::SourceCorpus::embedded_ref();
+    let corpus = litigate_engine::cite::SourceCorpus::embedded_ref();
     let located = litigate_lsp::cite::locate(pkg, None, "FRCP 12(b)(6)", 1, corpus);
     let summary: Vec<(String, Option<String>, Vec<String>)> = located
         .into_iter()

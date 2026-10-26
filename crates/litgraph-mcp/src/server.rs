@@ -5,7 +5,7 @@
 //! than the `#[tool_router]`/`#[resource_router]` macros) because the
 //! tool set is generated at runtime from the engine's own `Op` schema.
 
-use litgraph::api::Catalog;
+use litigate_engine::api::Catalog;
 use rmcp::model::{
     CallToolRequestParams, CallToolResponse, CallToolResult, Implementation,
     ListResourceTemplatesResult, ListResourcesResult, ListToolsResult, PaginatedRequestParams,
@@ -20,7 +20,7 @@ use crate::{litigate, ops, resources};
 
 /// The MCP server: a loaded [`Catalog`] plus the tool/resource surface in
 /// [`crate::ops`] and [`crate::resources`]. A thin wrapper over
-/// [`litgraph::api::handle`] end to end -- this type holds no state of its
+/// [`litigate_engine::api::handle`] end to end -- this type holds no state of its
 /// own beyond the packs.
 #[derive(Debug, Clone)]
 pub struct LitgraphServer {
@@ -108,7 +108,7 @@ impl ServerHandler for LitgraphServer {
                 None,
             ));
         };
-        // Every response is `litgraph::api::Response` (`Serialize`), so
+        // Every response is `litigate_engine::api::Response` (`Serialize`), so
         // this can only fail for pathological non-UTF8-safe content that
         // the engine never produces; fall back rather than unwrap/panic.
         let value = serde_json::to_value(&response)

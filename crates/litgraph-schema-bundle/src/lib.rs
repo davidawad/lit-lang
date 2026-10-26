@@ -11,12 +11,12 @@
 //! the source of truth: `packages/litigate-ts` generates its TypeScript
 //! types from this output (`just ts-gen`) and CI fails when they are stale.
 
-use litgraph::api::{CalibrationSet, Request, Response, Validation};
-use litgraph::clock::ClockLibrary;
-use litgraph::model::{LinkFile, Pack};
-use litgraph::scenario::{NamedScenario, Scenario};
 use litigate_base::timeline::Timeline;
 use litigate_base::{Envelope, LitigateRun};
+use litigate_engine::api::{CalibrationSet, Request, Response, Validation};
+use litigate_engine::clock::ClockLibrary;
+use litigate_engine::model::{LinkFile, Pack};
+use litigate_engine::scenario::{NamedScenario, Scenario};
 use litigate_lower::source_map::SourceMap;
 use schemars::{JsonSchema, SchemaGenerator};
 use serde_json::{json, Map, Value};
@@ -38,7 +38,7 @@ fn kind<T: JsonSchema>(key: &'static str, name: &'static str) -> Kind {
 }
 
 /// Every kind in the bundle, in output order. The litgraph kinds use the
-/// names `litgraph schema <kind>` uses (`litgraph::api::SCHEMA_KINDS`).
+/// names `litgraph schema <kind>` uses (`litigate_engine::api::SCHEMA_KINDS`).
 fn kinds() -> Vec<Kind> {
     vec![
         kind::<Request>("request", "Request"),
@@ -131,12 +131,12 @@ mod tests {
     #[test]
     fn every_litgraph_schema_kind_is_bundled_as_published() {
         let b = bundle();
-        for kind in litgraph::api::SCHEMA_KINDS {
+        for kind in litigate_engine::api::SCHEMA_KINDS {
             let name = b["properties"][kind]["$ref"]
                 .as_str()
                 .and_then(|r| r.strip_prefix("#/$defs/"))
                 .unwrap_or_else(|| panic!("kind {kind} missing from the bundle"));
-            let mut published = litgraph::api::schema(kind).unwrap();
+            let mut published = litigate_engine::api::schema(kind).unwrap();
             let published = published.as_object_mut().unwrap();
             published.remove("$schema");
             published.remove("$defs");

@@ -2,8 +2,8 @@
 //! source (SPEC §8.1 and §8.4 read in reverse).
 use crate::issues::Issues;
 use crate::text;
-use litgraph::cite::normalize::{parse_cite_string, CiteGrammar};
-use litgraph::model::{Deadline, Duration, NodeKind, RawEdge, RawNode};
+use litigate_engine::cite::normalize::{parse_cite_string, CiteGrammar};
+use litigate_engine::model::{Deadline, Duration, NodeKind, RawEdge, RawNode};
 use std::collections::BTreeMap;
 
 /// What one import needs to spell nodes and edges.

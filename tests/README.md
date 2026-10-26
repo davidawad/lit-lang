@@ -1,15 +1,15 @@
 # How litgraph is tested
 
-The Rust test code lives in `crates/litgraph/tests/` (integration tests, one
-binary per file) and next to the code in `crates/litgraph/src/` (unit tests
+The Rust test code lives in `crates/litigate-engine/tests/` (integration tests, one
+binary per file) and next to the code in `crates/litigate-engine/src/` (unit tests
 in `#[cfg(test)]` modules). This directory holds the **data** the tests read:
 readable fixtures and snapshots a reviewer can open without reading Rust.
 
 ```bash
 cargo nextest run --workspace                          # everything
-cargo test -p litgraph --test famous_cases             # just the famous cases
-cargo test -p litgraph --test golden                   # just the golden graphs
-UPDATE_EXPECT=1 cargo test -p litgraph --test famous_cases   # rewrite story snapshots
+cargo test -p litigate-engine --test famous_cases             # just the famous cases
+cargo test -p litigate-engine --test golden                   # just the golden graphs
+UPDATE_EXPECT=1 cargo test -p litigate-engine --test famous_cases   # rewrite story snapshots
 ```
 
 ## The layers, from most readable to most thorough

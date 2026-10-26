@@ -4,9 +4,9 @@
 use super::build::text;
 use super::check::checked_targets;
 use crate::out::{Failure, Outcome, Report};
-use litgraph::api::{handle, Catalog, Request};
-use litgraph::clock::ClockLibrary;
 use litigate_base::Profile;
+use litigate_engine::api::{handle, Catalog, Request};
+use litigate_engine::clock::ClockLibrary;
 use litigate_lower::{Document, Options};
 use serde_json::{json, Value};
 use std::collections::BTreeSet;
@@ -112,7 +112,7 @@ pub fn run(case: &str, op: &str, links: bool, lib: &[String]) -> Outcome {
         .and_then(|catalog| Ok((catalog, request?)))?;
     catalog.clock = clock;
     let scenario_text = serde_json::to_string(&lowered.scenario).unwrap_or_default();
-    let fingerprint = litgraph::api::fingerprint(scenario_text.as_bytes());
+    let fingerprint = litigate_engine::api::fingerprint(scenario_text.as_bytes());
     catalog.scenarios_origin = "litigate".into();
     catalog.scenarios.push((
         format!("{}.json", lowered.scenario.id),

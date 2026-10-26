@@ -2,13 +2,13 @@
 use crate::diag::Sink;
 use crate::source_map::{Citations, CiteMap, Entry, SourceMap};
 use crate::Build;
-use litgraph::model::{pointer_token, BasisLabel, Hole, Role};
-use litgraph::scenario::{
+use litigate_base::DiagnosticCode as C;
+use litigate_engine::model::{pointer_token, BasisLabel, Hole, Role};
+use litigate_engine::scenario::{
     DocketEvent, EventRelation, NamedScenario, ScenarioParty, ScenarioSource,
     SCENARIO_SCHEMA_VERSION,
 };
-use litgraph::Scenario;
-use litigate_base::DiagnosticCode as C;
+use litigate_engine::Scenario;
 use litigate_sema::hir::{self, EventParty, Perspective, Stake};
 use serde_json::{Map, Value};
 use std::collections::BTreeMap;
@@ -307,7 +307,7 @@ fn expressions(sink: &mut Sink, analysis: &hir::Analysis) {
                 .map(|(k, e)| (format!("utilities.{k}"), e)),
         );
     for (field, e) in named {
-        if let Err(why) = litgraph::expr::parse(&e.text) {
+        if let Err(why) = litigate_engine::expr::parse(&e.text) {
             sink.error_with(
                 C::InvalidEngineExpression,
                 e.span.as_ref(),

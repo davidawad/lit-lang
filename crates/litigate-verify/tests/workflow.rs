@@ -47,11 +47,11 @@ fn a_start_tagged_entry_is_one_root() {
 fn a_pack_edge_naming_no_node_of_the_pack_is_not_a_transition() {
     let v = verify_pack_edited(BASE, |pack| {
         let edge = pack.edges[0].clone();
-        pack.edges.push(litgraph::model::RawEdge {
+        pack.edges.push(litigate_engine::model::RawEdge {
             from: "ghost".into(),
             ..edge.clone()
         });
-        pack.edges.push(litgraph::model::RawEdge {
+        pack.edges.push(litigate_engine::model::RawEdge {
             to: "ghost".into(),
             ..edge
         });

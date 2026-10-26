@@ -190,7 +190,7 @@ the gate (`scripts/cov-gate`) over fixed known-low and known-ok inputs.
 ## Layout
 
 ```
-crates/litgraph/src/
+crates/litigate-engine/src/
   model/      packs → compiled graph (schema, links, namespacing, continuations)
   expr/       custom-function language (lexer, parser)
   metrics.rs  built-in metrics/utilities/params (as expressions) + variable envs

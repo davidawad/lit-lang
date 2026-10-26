@@ -9,7 +9,7 @@
 //! below, added in a follow-up to the initial packs/links/describe set,
 //! are the worked example).
 
-use litgraph::api::{self, Catalog};
+use litigate_engine::api::{self, Catalog};
 use rmcp::model::{Resource, ResourceContents};
 use serde_json::{json, to_string_pretty};
 

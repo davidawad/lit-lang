@@ -18,7 +18,7 @@ use std::process::ExitCode;
 
 use anyhow::{bail, Context, Result};
 use clap::Parser;
-use litgraph::api::{self, Catalog};
+use litigate_engine::api::{self, Catalog};
 use serde_json::{json, Map, Value};
 
 #[derive(Parser)]

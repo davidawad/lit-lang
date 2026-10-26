@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-//! One MCP tool per engine [`Op`](litgraph::api::Op), plus the generic
-//! `litgraph` tool that takes a raw [`Request`](litgraph::api::Request).
+//! One MCP tool per engine [`Op`](litigate_engine::api::Op), plus the generic
+//! `litgraph` tool that takes a raw [`Request`](litigate_engine::api::Request).
 //!
 //! Every tool's input schema is *sliced* out of the engine's own
 //! `schemars` schema for `Request` (via `litgraph schema request`'s
@@ -8,7 +8,7 @@
 //! `Op` enum is a serde-internally-tagged `oneOf`, one variant per op, so
 //! finding the variant whose `properties.op.const` equals the op name and
 //! stripping the `op` tag gives exactly that op's arguments — the same
-//! shape `litgraph::api::Op`'s own `Deserialize` accepts, with the shared
+//! shape `litigate_engine::api::Op`'s own `Deserialize` accepts, with the shared
 //! request-level fields (`packs`, `links`, `no_continuations`, `scenario`)
 //! merged in. If a field is added to an `Op` variant, this schema picks it
 //! up automatically; nothing here needs editing.
@@ -17,13 +17,13 @@
 //! links?, no_continuations?, scenario?, ...op fields}`; [`call_op`]
 //! reassembles the full `{packs, links, no_continuations, scenario, op:
 //! {op: name, ...}}` envelope and hands it to
-//! [`litgraph::api::handle_json`] as text, so parsing, validation, and
+//! [`litigate_engine::api::handle_json`] as text, so parsing, validation, and
 //! error shaping are 100% the engine's own — this module never
-//! constructs an [`litgraph::api::Op`] or [`litgraph::api::Request`] by hand.
+//! constructs an [`litigate_engine::api::Op`] or [`litigate_engine::api::Request`] by hand.
 
 use std::sync::OnceLock;
 
-use litgraph::api::{self, Catalog, Response};
+use litigate_engine::api::{self, Catalog, Response};
 use rmcp::model::{JsonObject, Tool};
 use serde_json::{json, Map, Value};
 
@@ -154,7 +154,7 @@ fn generic_tool() -> Tool {
 
 /// Every tool this server exposes: one per [`op_names`], plus
 /// [`GENERIC_TOOL`]. Descriptions are the exact text
-/// `litgraph::api::describe`'s `"ops"` map uses for each op, so a tool's
+/// `litigate_engine::api::describe`'s `"ops"` map uses for each op, so a tool's
 /// description can't drift from the CLI's own manual either.
 #[must_use]
 pub fn tools(catalog: &Catalog) -> Vec<Tool> {
@@ -174,7 +174,7 @@ pub fn tools(catalog: &Catalog) -> Vec<Tool> {
 /// flat arguments (`{packs?, links?, no_continuations?, scenario?,
 /// ...op fields}`) and run it. Never panics: an unknown field, bad type,
 /// or engine error all come back as `ok: false` in the returned envelope,
-/// exactly as `litgraph::api::handle_json` already guarantees.
+/// exactly as `litigate_engine::api::handle_json` already guarantees.
 #[must_use]
 pub fn call_op(catalog: &Catalog, name: &str, arguments: Option<JsonObject>) -> Response {
     let mut args = arguments.unwrap_or_default();

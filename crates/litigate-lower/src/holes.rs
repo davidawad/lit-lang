@@ -2,7 +2,7 @@
 //! source wrote in an emitted field becomes a `lowered.holes` entry whose
 //! pointer names that field in the document, so a dev build's gaps stay
 //! visible as gaps instead of reading as fields nobody authored.
-use litgraph::model::{pointer_token, Hole};
+use litigate_engine::model::{pointer_token, Hole};
 use std::collections::BTreeMap;
 
 /// The litgraph field a dotted `.lit` field path is emitted as, as a JSON

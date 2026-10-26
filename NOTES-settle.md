@@ -5,7 +5,7 @@ Settlement prediction from the game the engine already solves: new op
 
 ## What was built
 
-- `crates/litgraph/src/algo/settle/`
+- `crates/litigate-engine/src/algo/settle/`
   - `value.rs`: each side's certainty equivalent (walk-away point) under the
     solved general-sum equilibrium policy, under its own payoffs, costs and
     risk attitude (expected / CARA / worst exact; CVaR by seeded Monte Carlo).
@@ -22,7 +22,7 @@ Settlement prediction from the game the engine already solves: new op
     *Marek v. Chesny* scope).
   - `mod.rs`: options, validation, timing (range along the likely line, peak
     surplus, first settle node, policy changes, option value).
-- `crates/litgraph/src/api/settle.rs`: op rendering and warnings
+- `crates/litigate-engine/src/api/settle.rs`: op rendering and warnings
   (`settle-zero-sum`, `settle-cvar-sampled`, `settle-cvar-policy`,
   `settle-truncated`, `not-converged`). `settle` shows up in
   `litgraph describe`, `litgraph schema request`, the CLI (`litgraph settle`),

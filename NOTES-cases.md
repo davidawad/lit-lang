@@ -3,7 +3,7 @@
 ## What was built
 
 - **Ten famous cases** in `tests/cases/<slug>.json`, run by
-  `crates/litgraph/tests/famous_cases.rs`:
+  `crates/litigate-engine/tests/famous_cases.rs`:
 
   | Case | Forums walked | Exercises |
   |---|---|---|
@@ -26,7 +26,7 @@
   historical filing dates, which are recorded alongside for contrast). The
   rendered story is an `expect-test` snapshot, `tests/cases/<slug>.story.txt`.
 - **Seven golden graphs** in `tests/golden/`, run by
-  `crates/litgraph/tests/golden.rs`: 2-6 nodes each, covering `solve` (2),
+  `crates/litigate-engine/tests/golden.rs`: 2-6 nodes each, covering `solve` (2),
   `chain` (2), `simulate`, `path` (k-shortest) and min-cut. Each has an
   `arithmetic` list, is checked through the JSON contract to 1e-9, and
   uses a derived 3-standard-error tolerance for sampled `simulate` stats.
@@ -95,8 +95,8 @@ Each case file's `quirks` list records the forced steps that apply to it.
 
 - The brief names `tests/famous_cases.rs`. Cargo only compiles integration
   tests inside a crate, so the test binaries are
-  `crates/litgraph/tests/famous_cases.rs` (plus `famous_cases/case.rs` and
-  `render.rs`) and `crates/litgraph/tests/golden.rs`. The **data** lives
+  `crates/litigate-engine/tests/famous_cases.rs` (plus `famous_cases/case.rs` and
+  `render.rs`) and `crates/litigate-engine/tests/golden.rs`. The **data** lives
   where the brief put it, in the root `tests/` next to
   `tests/fixtures/ts-parity/`.
 - **"Route assumed" steps.** The walk must take some edge at every fork.

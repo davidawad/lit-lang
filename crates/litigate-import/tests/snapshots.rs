@@ -3,8 +3,8 @@
 //! lossless spelling.
 mod support;
 
-use litgraph::model::{LinkFile, Pack};
-use litgraph::scenario::NamedScenario;
+use litigate_engine::model::{LinkFile, Pack};
+use litigate_engine::scenario::NamedScenario;
 use litigate_import::{import, Input};
 use serde_json::{json, Value};
 use std::fmt::Write as _;

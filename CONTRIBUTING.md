@@ -44,7 +44,7 @@ CI runs the same recipe, so a clean `just ci` locally means CI should pass.
   `just cov`; its `cov: litgraph TOTAL lines ...` line is the gated number
   (AGENTS.md, "Reading the coverage result").
 - **Formal verification**: Kani harnesses (`#[cfg(kani)]` / `#[kani::proof]`
-  in `crates/litgraph`) for properties worth proving, not just testing —
+  in `crates/litigate-engine`) for properties worth proving, not just testing —
   numerical invariants, no-panic guarantees on untrusted input. Run with
   `just verify-kani`. Zero harnesses today is a valid state (the recipe
   passes trivially); add one whenever you find a property proptest can only
@@ -52,7 +52,7 @@ CI runs the same recipe, so a clean `just ci` locally means CI should pass.
 - **Supply chain**: `cargo audit` and `cargo deny check` (`just audit`,
   `just deny`) must pass — see `deny.toml` for the license/advisory policy.
 - **File size**: keep source files under ~500 lines; split by
-  responsibility (see `crates/litgraph/src/model/` for the pattern — a
+  responsibility (see `crates/litigate-engine/src/model/` for the pattern — a
   `mod.rs` plus `schema.rs`/`links.rs`/`graph.rs`/`resolve.rs`) rather than
   growing one file indefinitely.
 - **Commits**: [Conventional Commits](https://www.conventionalcommits.org/)

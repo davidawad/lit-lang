@@ -1,7 +1,7 @@
 //! `Lit.toml` for an imported package (SPEC §4.1), written by hand so the
 //! comments that tell the porter what is a placeholder survive.
 use crate::links::role_name as role;
-use litgraph::model::{CiteCode, Pack};
+use litigate_engine::model::{CiteCode, Pack};
 use std::fmt::Write as _;
 
 /// The version every imported package starts at.

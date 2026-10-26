@@ -42,9 +42,9 @@ pub mod text;
 mod transform;
 
 use issues::Issues;
-use litgraph::model::{LinkFile, Pack};
-use litgraph::scenario::NamedScenario;
 use litigate_base::{Diagnostic, DiagnosticCode, FileId, Label, LineIndex};
+use litigate_engine::model::{LinkFile, Pack};
+use litigate_engine::scenario::NamedScenario;
 use litigate_syntax::FileKind;
 use serde::de::DeserializeOwned;
 use serde_json::{Map, Value};
@@ -306,7 +306,7 @@ fn detect(value: &Value) -> Option<Doc> {
 fn parse<T: DeserializeOwned>(
     input: &Input,
     issues: &mut Issues,
-    validate: impl Fn(&str) -> litgraph::Result<()>,
+    validate: impl Fn(&str) -> litigate_engine::Result<()>,
 ) -> Option<T> {
     match serde_json::from_str::<T>(&input.text) {
         Ok(value) => match validate(&input.text) {

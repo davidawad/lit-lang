@@ -1,0 +1,41 @@
+[package]
+name = "litigate-engine"
+description = "The litigate compiler's engine (formerly litgraph): litigation procedure graphs as stochastic games — compose forums, weight with custom functions, solve, simulate."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme.workspace = true
+keywords.workspace = true
+categories.workspace = true
+publish = false
+build = "build.rs"
+
+[lints]
+workspace = true
+
+[features]
+# Embed the vendored L0 source texts (`sources/*.txt`, a few MB) so `lint`
+# can verify cites with no directory at runtime. Off for size-sensitive
+# builds such as WebAssembly; `LITGRAPH_SOURCES` still works without it.
+default = ["embed-sources"]
+embed-sources = []
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+schemars.workspace = true
+thiserror.workspace = true
+rand.workspace = true
+rand_chacha.workspace = true
+sha2.workspace = true
+
+[dev-dependencies]
+# The repository's packs and scenarios, built from lit/ and cases/ (a
+# dev-dependency cycle cargo allows: litgraph-packs builds on this crate).
+litgraph-packs = { path = "../litgraph-packs" }
+expect-test = "1"
+proptest.workspace = true

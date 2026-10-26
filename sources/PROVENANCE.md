@@ -38,7 +38,7 @@ time.
 
 Each `.txt` file is one or more sections, each starting at column 0 with
 `## <canonical ref>` (matching the ref strings `litgraph::cite::normalize`
-produces — see `crates/litgraph/src/cite/normalize.rs`), optionally followed
+produces — see `crates/litigate-engine/src/cite/normalize.rs`), optionally followed
 by a heading line, then the verbatim body text up to the next `## ` line.
 
 ## Files
@@ -143,7 +143,7 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   II "United States International Trade Commission", 2024-04-01 edition),
   same method and same `<SECTION>`/`<SECTNO>`/`<SUBJECT>`/`<P>` parse as
   `cfr-37-part42.txt` below. Resolves `itc-337.json`'s internal
-  `cfr210.N.x` shorthand (see `crates/litgraph/src/cite/normalize.rs`'s
+  `cfr210.N.x` shorthand (see `crates/litigate-engine/src/cite/normalize.rs`'s
   `try_itc_cfr_slug`), which needs the pack's `forum: "itc"` field to
   disambiguate — set as part of this same pass.
 - sha256 (this file): `92d29ab6a95dc52eaaa5b4fa5b1d0991131546e01612bc83f8e365f40420c99e`

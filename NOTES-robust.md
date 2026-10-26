@@ -73,7 +73,7 @@ into a private `RUSTUP_HOME`.
   were left untouched.
 - `cargo nextest run --workspace`: 519 passed, 1 skipped. `cargo test
   --doc`: ok.
-- `cargo llvm-cov nextest -p litgraph --fail-under-lines 97`: 98.05% lines.
+- `cargo llvm-cov nextest -p litigate-engine --fail-under-lines 97`: 98.05% lines.
 - No `.rs` file over 500 lines. SPDX header and `//!` doc on every new file.
   No unwrap/expect outside tests.
 - `cargo deny check`: advisories, bans, licenses, sources ok.

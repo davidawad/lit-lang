@@ -14,8 +14,8 @@ use crate::links::role_name;
 use crate::manifest::{IN_FORCE_PLACEHOLDER, VERSION};
 use crate::text;
 use crate::Emitted;
-use litgraph::model::{Pack, Role};
-use litgraph::scenario::{DocketEvent, EventRelation, NamedScenario};
+use litigate_engine::model::{Pack, Role};
+use litigate_engine::scenario::{DocketEvent, EventRelation, NamedScenario};
 use serde_json::{Map, Value};
 use std::collections::BTreeMap;
 
@@ -113,8 +113,8 @@ impl Holes {
 /// Whether `source`'s `as_of` is what a hole with `hole`'s reason lowers
 /// to: the reason, or the empty string for a bare `?`.
 fn as_of_matches(
-    source: &litgraph::scenario::ScenarioSource,
-    hole: &litgraph::model::Hole,
+    source: &litigate_engine::scenario::ScenarioSource,
+    hole: &litigate_engine::model::Hole,
 ) -> bool {
     source.as_of.as_deref() == Some(hole.reason.as_deref().unwrap_or_default())
 }
@@ -125,7 +125,7 @@ fn unescape_token(token: &str) -> String {
 }
 
 fn source_text(
-    source: &litgraph::scenario::ScenarioSource,
+    source: &litigate_engine::scenario::ScenarioSource,
     hole: Option<&Option<String>>,
 ) -> String {
     let mut fields = Vec::new();

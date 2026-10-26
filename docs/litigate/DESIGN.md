@@ -471,7 +471,7 @@ This contract is designed for an agent that knows nothing at the start.
 
 ## 9. Engine de-hardcoding (before the language)
 
-The goal is that `crates/litgraph/src` contains no forum knowledge.
+The goal is that `crates/litigate-engine/src` contains no forum knowledge.
 
 1. **Data-driven clock.** Add a `CountingRule` and `HolidayCalendar` IR to the
    pack schema (v3, additive), referenced by a pack's `counting` field. A

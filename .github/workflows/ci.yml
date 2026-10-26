@@ -125,7 +125,7 @@ jobs:
       # Below the justfile's cov_floor fails the job, as do the gate's
       # self-checks (an unreachable floor and a known-low input must fail).
       - run: just cov
-      - run: cargo llvm-cov report -p litgraph --lcov --output-path lcov.info
+      - run: cargo llvm-cov report -p litigate-engine --lcov --output-path lcov.info
       - uses: actions/upload-artifact@v7
         with:
           name: coverage-lcov
@@ -169,7 +169,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: model-checking/kani-github-action@v1
         with:
-          args: "-p litgraph"
+          args: "-p litigate-engine"
 
   docker:
     runs-on: ubuntu-latest

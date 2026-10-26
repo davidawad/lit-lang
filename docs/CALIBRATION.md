@@ -9,7 +9,7 @@ split packs themselves use.
 ## The file format: `calibration/*.json`
 
 A calibration set is one JSON file, embedded into the binary at build time
-exactly like `packs/*.json` (see `crates/litgraph/build.rs`), and
+exactly like `packs/*.json` (see `crates/litigate-engine/build.rs`), and
 overridable at runtime the same way packs are: `$LITGRAPH_CALIBRATION` (or
 the CLI's `--calibration-dir`) points at a directory of `*.json` files
 instead. `litgraph schema calibration` gives the JSON Schema;
@@ -139,7 +139,7 @@ stop early rather than silently returning a partial ranking.
 
 The two lists use different units (dollars vs. days) and are reported
 separately rather than force-ranked into one list — see the source comment
-in `crates/litgraph/src/api/calibration/gaps.rs` for why.
+in `crates/litigate-engine/src/api/calibration/gaps.rs` for why.
 
 ## The first calibration set
 

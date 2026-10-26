@@ -139,7 +139,7 @@ all three (`(1+r)^0 == 1`: no interest is applied) and `litgraph
 validate`/every op that resolves a scenario reports a `path-variable-in-markov`
 warning when the utility (or a `fee_shift.eligible` expression, which is
 always Markov) references one of them. Only
-[`simulate`](../crates/litgraph/src/algo/sim.rs) knows the actual sampled
+[`simulate`](../crates/litigate-engine/src/algo/sim.rs) knows the actual sampled
 trajectory and evaluates the utility expression per run with the real
 accumulated values — use `simulate`, not `solve`/`chain`, whenever the
 answer should reflect exact prejudgment interest or time-growing damages.
@@ -152,4 +152,4 @@ See `examples/cofc-prejudgment-interest-sim.json`.
 3. If it needs data the packs lack, add an `attrs` key to the edges (schema v2)
    and default it with `attr('x', 0)` so older packs still evaluate.
 4. If it is broadly useful, add it to `METRICS`/`UTILITIES` in
-   `crates/litgraph/src/metrics.rs` — it then shows up in `describe`.
+   `crates/litigate-engine/src/metrics.rs` — it then shows up in `describe`.

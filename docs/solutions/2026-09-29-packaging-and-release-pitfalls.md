@@ -6,7 +6,7 @@ artifact.
 
 ## Every packaging context must carry every embedded data directory
 
-**Problem.** `crates/litgraph/build.rs` embeds `packs/`, `scenarios/`,
+**Problem.** `crates/litigate-engine/build.rs` embeds `packs/`, `scenarios/`,
 `calibration/` and `sources/`. The nix flake's crane source filter and the
 Dockerfile each copied only `packs/`, so those builds embedded an empty
 scenario library and no sources. Nothing failed until a nix test happened to

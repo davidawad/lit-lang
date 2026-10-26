@@ -1,10 +1,10 @@
 //! Calendar declarations as engine holiday calendars (SPEC §8.2).
 use crate::diag::Sink;
-use litgraph::clock::calendar::{
+use litigate_base::{DiagnosticCode as C, Span};
+use litigate_engine::clock::calendar::{
     Cycle, Effective, Holiday, HolidayDate as EngineDate, Observance as EngineObservance, Weekday,
 };
-use litgraph::clock::{Date, HolidayCalendar};
-use litigate_base::{DiagnosticCode as C, Span};
+use litigate_engine::clock::{Date, HolidayCalendar};
 use litigate_sema::hir::{self, HolidayDate, Observance};
 
 fn date(sink: &mut Sink, text: &str) -> Option<Date> {

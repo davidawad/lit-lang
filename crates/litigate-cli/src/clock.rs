@@ -4,7 +4,7 @@
 //! path serves `test`, case replay, and `explain-value`, so they cannot
 //! disagree with the engine.
 use crate::hirx;
-use litgraph::clock::{
+use litigate_engine::clock::{
     compute_due_date, ClockConfig, ClockLibrary, ComputedDeadline, Date, DayDeadline, Direction,
     ServiceMethod, Unit,
 };

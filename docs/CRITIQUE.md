@@ -1,7 +1,7 @@
 # What was wrong with the v1 engine, and what changed
 
 v1 = `civ-pro-the-gathering/src/lib/graph` + `content/statecharts`. The port
-reproduces v1 exactly when asked to (`crates/litgraph/tests/parity.rs`: value
+reproduces v1 exactly when asked to (`crates/litigate-engine/tests/parity.rs`: value
 iteration, per-edge Q, absorbing chain, Dijkstra, min cut, dominators, SCCs,
 Pareto — all 6 packs), so every difference below is a deliberate, switchable
 semantic change, not drift.
@@ -101,7 +101,7 @@ reward, the inner expectation becomes an ordinary backward induction once
 the state is augmented with `y`, the "remaining budget" `ζ` minus the value
 accumulated so far: taking an edge shifts `y ↦ y + cost(edge)`, and at a
 terminal the local objective `−(1/alpha)·max(y − utility(terminal), 0)`
-depends on `y` alone. `crates/litgraph/src/algo/cvar.rs` runs one SCC-ordered
+depends on `y` alone. `crates/litigate-engine/src/algo/cvar.rs` runs one SCC-ordered
 backward-induction pass (the same `scc`/`is_cyclic` decomposition as
 `mdp::solve`) computing `W(node, y)` on a discretized grid of `y`; because
 the recursion doesn't reference `ζ` except at the boundary, every candidate

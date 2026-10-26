@@ -3,9 +3,9 @@
 //! or edge, else from the same resolver the lowering uses for it; each
 //! section is then narrowed to the cite's pinpoint (`12(a)(1)(A)(i)`) in
 //! the vendored corpus text.
-use litgraph::cite::{parse_cite_string, CiteGrammar, SourceCorpus};
-use litgraph::model::CiteSyntax;
 use litigate_cli::verdict::Verdict;
+use litigate_engine::cite::{parse_cite_string, CiteGrammar, SourceCorpus};
+use litigate_engine::model::CiteSyntax;
 use litigate_lower::source_map::{Citations, L0Section};
 use litigate_lower::Document;
 use litigate_sema::hir;

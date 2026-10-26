@@ -3,12 +3,12 @@
 //! rules (SPEC §8.2), so a matter is judged by the arithmetic its scenario
 //! runs under.
 use crate::{LoweredPackage, Lowerer};
-use litgraph::clock::cycle::endless_roll;
-use litgraph::clock::{
+use litigate_base::Diagnostic;
+use litigate_engine::clock::cycle::endless_roll;
+use litigate_engine::clock::{
     compute_due_date, ClockConfig, ClockLibrary, ComputedDeadline, Date, DayDeadline, Direction,
     ServiceMethod, Unit,
 };
-use litigate_base::Diagnostic;
 use litigate_sema::case::{Clock, DueRequest};
 use litigate_sema::hir;
 use std::collections::BTreeMap;

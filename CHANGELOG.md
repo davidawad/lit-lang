@@ -286,6 +286,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **The engine crate is `litigate-engine`** (lg-dfv4.1). `crates/litgraph`
+  is now `crates/litigate-engine`, an internal library of the `litigate`
+  compiler (`publish = false`); Rust callers name it `litigate_engine::`
+  instead of `litgraph::`. Its public API, behaviour, and the `litgraph`,
+  `litgraph-mcp` and wasm frontends are unchanged.
+
 - **A designated deadline's extension is no longer a hole** (lg-flu.33,
   superseding lg-flu.32's lowering). The answer edges of `lit/ttab` now
   carry their `designated` window, so `deadline/extendable` and

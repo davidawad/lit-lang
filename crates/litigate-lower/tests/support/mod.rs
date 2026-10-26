@@ -250,7 +250,7 @@ pub fn lowered(pkg: &hir::Package) -> litigate_lower::LoweredPackage {
 }
 
 /// The pack of a lowered rule package.
-pub fn pack_of(lowered: &litigate_lower::LoweredPackage) -> &litgraph::Pack {
+pub fn pack_of(lowered: &litigate_lower::LoweredPackage) -> &litigate_engine::Pack {
     match &lowered.document {
         litigate_lower::Document::Pack(p) => p,
         litigate_lower::Document::Links(_) => panic!("expected a pack"),
@@ -258,7 +258,7 @@ pub fn pack_of(lowered: &litigate_lower::LoweredPackage) -> &litgraph::Pack {
 }
 
 /// The clock fragment of a lowered rule package.
-pub fn clock_of(lowered: &litigate_lower::LoweredPackage) -> &litgraph::clock::ClockLibrary {
+pub fn clock_of(lowered: &litigate_lower::LoweredPackage) -> &litigate_engine::clock::ClockLibrary {
     lowered
         .clock
         .as_ref()

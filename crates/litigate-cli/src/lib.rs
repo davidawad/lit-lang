@@ -85,7 +85,7 @@ pub fn execute_in_memory(
     args: &[String],
 ) -> LitigateRun {
     let mut files: std::collections::BTreeMap<String, String> = files.into_iter().collect();
-    for (path, text) in &litgraph::cite::SourceCorpus::embedded_ref().files {
+    for (path, text) in &litigate_engine::cite::SourceCorpus::embedded_ref().files {
         files.entry(path.clone()).or_insert_with(|| text.clone());
     }
     let tree = MemoryTree::new(files);

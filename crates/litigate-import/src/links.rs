@@ -4,8 +4,8 @@ use crate::issues::Issues;
 use crate::node::Spelling;
 use crate::text;
 use crate::Emitted;
-use litgraph::cite::normalize::CiteGrammar;
-use litgraph::model::{CiteSyntax, Instance, LinkFile, RawEdge, Role, PACK_SCHEMA_VERSION};
+use litigate_engine::cite::normalize::CiteGrammar;
+use litigate_engine::model::{CiteSyntax, Instance, LinkFile, RawEdge, Role, PACK_SCHEMA_VERSION};
 use std::collections::BTreeMap;
 
 /// Packs known to this import: pack id to (package directory, citation
@@ -138,7 +138,7 @@ fn instance_text(name: &str, instance: &Instance, spelling: &mut Spelling<'_>) -
     let uses_stake = instance
         .payoff_transform
         .as_deref()
-        .and_then(|t| litgraph::expr::parse(t).ok())
+        .and_then(|t| litigate_engine::expr::parse(t).ok())
         .is_some_and(|e| e.vars().iter().any(|v| v == "stake"));
     if let Some(stake) = instance.stake {
         let at = format!("{pointer}/stake");

@@ -5,8 +5,8 @@
 //! the original (SPEC §8.6).
 mod support;
 
-use litgraph::model::{LinkFile, Pack};
-use litgraph::scenario::NamedScenario;
+use litigate_engine::model::{LinkFile, Pack};
+use litigate_engine::scenario::NamedScenario;
 use litigate_import::Input;
 use litigate_syntax::{format, parse, FileKind};
 use support::{

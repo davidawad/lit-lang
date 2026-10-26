@@ -5,7 +5,7 @@
 #![allow(clippy::unwrap_used)]
 mod support;
 
-use litgraph::api::{handle, Catalog, Request};
+use litigate_engine::api::{handle, Catalog, Request};
 use serde_json::{json, Value};
 use std::path::Path;
 use support::{litigate, scratch};

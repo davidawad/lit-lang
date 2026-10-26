@@ -3,11 +3,11 @@
 //! built from `lit/` and `cases/` at compile time (`build.rs`, the
 //! arguments in `build.args`) and embedded, so no generated file is
 //! committed. The binaries (`litgraph`, `litgraph-mcp`, `litgraph-wasm`)
-//! hand these to [`litgraph::api::Catalog`]; tests read them through
+//! hand these to [`litigate_engine::api::Catalog`]; tests read them through
 //! [`catalog`] or, for a directory, [`PACKS_DIR`] and [`SCENARIOS_DIR`].
 
-use litgraph::api::Catalog;
-use litgraph::error::Result;
+use litigate_engine::api::Catalog;
+use litigate_engine::error::Result;
 
 include!(concat!(env!("OUT_DIR"), "/embedded.rs"));
 

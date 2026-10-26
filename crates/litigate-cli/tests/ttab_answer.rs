@@ -500,7 +500,7 @@ fn the_generated_pack_carries_the_designated_answer_window() {
     assert_eq!(holes, Vec::<&str>::new());
     // The engine reads the pack, and a deadline query reports the window
     // as each matter's, not a date counted from the notice.
-    let loaded = litgraph::model::Pack::from_json(&pack.to_string()).unwrap();
+    let loaded = litigate_engine::model::Pack::from_json(&pack.to_string()).unwrap();
     assert!(loaded.edges[answers[0]]
         .deadline
         .as_ref()

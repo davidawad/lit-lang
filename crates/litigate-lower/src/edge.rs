@@ -1,11 +1,11 @@
 //! HIR edges to `RawEdge` (SPEC §8.1), shared by packs and links.
 use crate::diag::Sink;
 use crate::select::Selection;
-use litgraph::model::{
+use litigate_base::{DiagnosticCode as C, Span};
+use litigate_engine::model::{
     CauseStandard, DateBound, DateRef, Deadline, Designated, Duration, ExtensionBound,
     ExtensionWindow, Motion, RawEdge,
 };
-use litigate_base::{DiagnosticCode as C, Span};
 use litigate_sema::hir::{
     self, Authored, DayUnit, DeadlineWindow, Declaration, Direction, Extension, Rational, Valence,
 };

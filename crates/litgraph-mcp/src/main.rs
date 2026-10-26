@@ -10,8 +10,8 @@ use std::process::ExitCode;
 
 use anyhow::Context;
 use clap::Parser;
-use litgraph::api::Catalog;
 use litgraph_mcp::LitgraphServer;
+use litigate_engine::api::Catalog;
 use rmcp::transport::stdio;
 use rmcp::ServiceExt;
 

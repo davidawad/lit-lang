@@ -13,7 +13,7 @@
 //!
 //! ```
 //! use litigate_lower::{render, semantic_diff};
-//! use litgraph::Pack;
+//! use litigate_engine::Pack;
 //!
 //! let pack = Pack::from_json(r#"{"schemaVersion": 2, "id": "demo", "title": "Demo",
 //!   "startNodeId": "a", "nodes": [{"id": "a", "label": "A"}], "edges": []}"#)
@@ -44,15 +44,15 @@ pub use diff::{
     semantic_diff_scenarios, Change, ChangeKind, DocumentKind,
 };
 pub use engine_clock::EngineClock;
-pub use litgraph::clock::ClockLibrary;
-pub use litgraph::model::{LinkFile, Pack};
-pub use litgraph::scenario::NamedScenario;
+pub use litigate_engine::clock::ClockLibrary;
+pub use litigate_engine::model::{LinkFile, Pack};
+pub use litigate_engine::scenario::NamedScenario;
 pub use source_map::{Generated, SourceMap};
 
 use diag::Sink;
-use litgraph::cite::SourceCorpus;
-use litgraph::model::{Hole, Lowered, Pin};
 use litigate_base::{Diagnostic, DiagnosticCode};
+use litigate_engine::cite::SourceCorpus;
+use litigate_engine::model::{Hole, Lowered, Pin};
 use litigate_sema::hir;
 use litigate_sema::temporal::World;
 use select::Selection;
@@ -335,7 +335,7 @@ fn manifest_file(pkg: &hir::Package) -> String {
 /// # Errors
 /// L6005 when the value cannot be serialized.
 pub fn render_scenario(named: &NamedScenario) -> Result<String, Box<Diagnostic>> {
-    let defaults = object(&litgraph::Scenario::default());
+    let defaults = object(&litigate_engine::Scenario::default());
     let mut scenario = object(&named.scenario);
     scenario.retain(|k, v| defaults.get(k) != Some(v));
     let mut value = object(named);
@@ -358,7 +358,7 @@ fn object<T: Serialize>(value: &T) -> serde_json::Map<String, serde_json::Value>
 /// # Errors
 /// L6005 when the value cannot be serialized.
 pub fn render<T: Serialize>(value: &T) -> Result<String, Box<Diagnostic>> {
-    value_of(value).map(|v| litgraph::canonical::to_jcs_pretty(&v))
+    value_of(value).map(|v| litigate_engine::canonical::to_jcs_pretty(&v))
 }
 
 /// The exact JCS text (RFC 8785) of `value`, which digests are taken over.
@@ -366,7 +366,7 @@ pub fn render<T: Serialize>(value: &T) -> Result<String, Box<Diagnostic>> {
 /// # Errors
 /// L6005 when the value cannot be serialized.
 pub fn canonical<T: Serialize>(value: &T) -> Result<String, Box<Diagnostic>> {
-    value_of(value).map(|v| litgraph::canonical::to_jcs(&v))
+    value_of(value).map(|v| litigate_engine::canonical::to_jcs(&v))
 }
 
 /// `value` as a JSON tree, or L6005.

@@ -7,7 +7,7 @@
 //! imports must be acyclic (L1003), so runs whose nodes reach each other
 //! both ways are merged, together with every run between them, until the
 //! module graph is a DAG.
-use litgraph::model::Pack;
+use litigate_engine::model::Pack;
 use std::collections::BTreeMap;
 use std::ops::Range;
 

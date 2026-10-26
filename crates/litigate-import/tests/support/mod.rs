@@ -3,8 +3,8 @@
 #![allow(dead_code)]
 pub mod reader;
 
-use litgraph::model::{local_edge_ids, LinkFile, NodeKind, Pack};
-use litgraph::scenario::NamedScenario;
+use litigate_engine::model::{local_edge_ids, LinkFile, NodeKind, Pack};
+use litigate_engine::scenario::NamedScenario;
 use litigate_import::{import, ImportedFile, Input};
 use litigate_syntax::ast::{self, AstNode};
 use litigate_syntax::{FileKind, SyntaxKind};
@@ -421,7 +421,7 @@ pub fn normalize_pack(mut pack: Pack) -> Value {
             .position(|n| n.id == id)
             .unwrap_or(usize::MAX)
     };
-    let mut keyed: Vec<(usize, litgraph::model::RawEdge)> = pack
+    let mut keyed: Vec<(usize, litigate_engine::model::RawEdge)> = pack
         .edges
         .drain(..)
         .map(|e| (position(&e.from), e))

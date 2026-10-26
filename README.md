@@ -151,7 +151,7 @@ document's JSON Schema; `litgraph validate <file|->` checks a pack,
 
 ### Library
 
-The engine is a normal Rust crate (`litgraph`, in [`crates/litgraph`](crates/litgraph));
+The engine is a normal Rust crate (`litgraph`, in [`crates/litigate-engine`](crates/litigate-engine));
 `litgraph-cli` is a thin binary over `litgraph::api::handle`. Add it as a
 path or git dependency to embed the solver, the expression language, or the
 pack loader directly — nothing about the CLI is required.
@@ -217,7 +217,7 @@ independently).
 is a litigation-procedure training game and the proof-of-concept front end
 for this engine: litgraph was extracted from its original TypeScript graph
 library, rewritten in Rust, and verified node-for-node against the original
-implementation (`crates/litgraph/tests/parity.rs`, golden fixtures in
+implementation (`crates/litigate-engine/tests/parity.rs`, golden fixtures in
 [`tests/fixtures/ts-parity/`](tests/fixtures/ts-parity/)) before any
 semantic changes were made. The game supplies the packs and the UI; litgraph
 supplies the graph, the solver, and the JSON contract.

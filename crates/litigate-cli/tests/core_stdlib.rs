@@ -8,7 +8,7 @@
 #![allow(clippy::unwrap_used, clippy::expect_used)]
 mod support;
 
-use litgraph::clock::{
+use litigate_engine::clock::{
     compute_due_date, compute_hour_deadline, Clock, ClockConfig, ClockLibrary, ComputedDeadline,
     Date, DayDeadline, Direction, HourDeadline, ServiceMethod, Unit,
 };
@@ -80,7 +80,7 @@ fn methods(_id: &str) -> &'static [ServiceMethod] {
 
 /// Everything a computation reports except the trace text, which each
 /// library words from its own citations.
-fn outcome(r: litgraph::error::Result<ComputedDeadline>) -> Result<[String; 6], String> {
+fn outcome(r: litigate_engine::error::Result<ComputedDeadline>) -> Result<[String; 6], String> {
     r.map(|c| {
         [
             c.anchor_date,

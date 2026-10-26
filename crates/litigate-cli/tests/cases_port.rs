@@ -7,7 +7,7 @@
 #![allow(clippy::unwrap_used)]
 mod support;
 
-use litgraph::api::{handle, Request};
+use litigate_engine::api::{handle, Request};
 use serde_json::{json, Value};
 use support::{litigate, repo};
 

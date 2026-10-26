@@ -4,11 +4,11 @@ use crate::edge::{self, EdgeCx};
 use crate::holes;
 use crate::source_map::{Citations, Entry, SourceMap};
 use crate::Build;
-use litgraph::model::{
+use litigate_base::{DiagnosticCode as C, Span};
+use litigate_engine::model::{
     local_edge_ids, CiteCode, CiteRuleForm, CiteShorthand, CiteSyntax, Group, Hole, NodeKind, Pack,
     RawEdge, RawNode, Role, Source, PACK_SCHEMA_VERSION,
 };
-use litigate_base::{DiagnosticCode as C, Span};
 use litigate_sema::hir::{self, ActorRole, Authored, Declaration};
 use std::collections::BTreeMap;
 

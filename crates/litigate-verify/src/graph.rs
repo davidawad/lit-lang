@@ -7,10 +7,10 @@
 //! walk over its raw edges.
 use crate::diag::{emit, note};
 use crate::Context;
-use litgraph::algo::structure;
-use litgraph::model::{CompileOptions, Graph, LinkFile, NodeKind, Pack};
-use litgraph::scenario::{Scenario, View};
 use litigate_base::{Diagnostic, DiagnosticCode as C};
+use litigate_engine::algo::structure;
+use litigate_engine::model::{CompileOptions, Graph, LinkFile, NodeKind, Pack};
+use litigate_engine::scenario::{Scenario, View};
 use litigate_sema::hir;
 use std::collections::{BTreeMap, BTreeSet, VecDeque};
 

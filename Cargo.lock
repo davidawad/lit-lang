@@ -909,29 +909,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "47d9d19d1d6efa0109d2f65ff4c85cddd50bd572e5a00127ab10987290bcefae"
 
 [[package]]
-name = "litgraph"
-version = "0.6.0"
-dependencies = [
- "expect-test",
- "litgraph-packs",
- "proptest",
- "rand 0.8.8",
- "rand_chacha 0.3.1",
- "schemars",
- "serde",
- "serde_json",
- "sha2",
- "thiserror",
-]
-
-[[package]]
 name = "litgraph-cli"
 version = "0.6.0"
 dependencies = [
  "anyhow",
  "clap",
- "litgraph",
  "litgraph-packs",
+ "litigate-engine",
  "serde",
  "serde_json",
 ]
@@ -942,9 +926,9 @@ version = "0.6.0"
 dependencies = [
  "anyhow",
  "clap",
- "litgraph",
  "litgraph-packs",
  "litigate-cli",
+ "litigate-engine",
  "rmcp",
  "schemars",
  "serde_json",
@@ -955,16 +939,16 @@ dependencies = [
 name = "litgraph-packs"
 version = "0.6.0"
 dependencies = [
- "litgraph",
  "litigate-cli",
+ "litigate-engine",
 ]
 
 [[package]]
 name = "litgraph-schema-bundle"
 version = "0.6.0"
 dependencies = [
- "litgraph",
  "litigate-base",
+ "litigate-engine",
  "litigate-lower",
  "schemars",
  "serde_json",
@@ -975,9 +959,9 @@ name = "litgraph-wasm"
 version = "0.6.0"
 dependencies = [
  "getrandom 0.2.17",
- "litgraph",
  "litgraph-packs",
  "litigate-cli",
+ "litigate-engine",
  "litigate-sema",
  "serde",
  "serde_json",
@@ -1002,9 +986,9 @@ dependencies = [
  "assert_cmd",
  "clap",
  "insta",
- "litgraph",
  "litgraph-packs",
  "litigate-base",
+ "litigate-engine",
  "litigate-import",
  "litigate-lower",
  "litigate-sema",
@@ -1029,13 +1013,29 @@ dependencies = [
 ]
 
 [[package]]
+name = "litigate-engine"
+version = "0.6.0"
+dependencies = [
+ "expect-test",
+ "litgraph-packs",
+ "proptest",
+ "rand 0.8.8",
+ "rand_chacha 0.3.1",
+ "schemars",
+ "serde",
+ "serde_json",
+ "sha2",
+ "thiserror",
+]
+
+[[package]]
 name = "litigate-import"
 version = "0.6.0"
 dependencies = [
  "insta",
- "litgraph",
  "litgraph-packs",
  "litigate-base",
+ "litigate-engine",
  "litigate-sema",
  "litigate-syntax",
  "proptest",
@@ -1052,9 +1052,9 @@ name = "litigate-lower"
 version = "0.6.0"
 dependencies = [
  "insta",
- "litgraph",
  "litgraph-packs",
  "litigate-base",
+ "litigate-engine",
  "litigate-import",
  "litigate-sema",
  "proptest",
@@ -1069,9 +1069,9 @@ name = "litigate-lsp"
 version = "0.6.0"
 dependencies = [
  "insta",
- "litgraph",
  "litigate-base",
  "litigate-cli",
+ "litigate-engine",
  "litigate-lower",
  "litigate-sema",
  "litigate-syntax",
@@ -1129,8 +1129,8 @@ name = "litigate-verify"
 version = "0.6.0"
 dependencies = [
  "insta",
- "litgraph",
  "litigate-base",
+ "litigate-engine",
  "litigate-lower",
  "litigate-sema",
  "proptest",

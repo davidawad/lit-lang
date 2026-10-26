@@ -20,9 +20,9 @@
 use crate::context::Cite;
 use crate::diag::{emit, note};
 use crate::Context;
-use litgraph::cite::{parse_cite_string, CiteGrammar, SourceCorpus};
-use litgraph::model::Pack;
 use litigate_base::{Diagnostic, DiagnosticCode as C, Profile, Severity, Span};
+use litigate_engine::cite::{parse_cite_string, CiteGrammar, SourceCorpus};
+use litigate_engine::model::Pack;
 use litigate_lower::source_map::{Citations, L0Section, Pin};
 use litigate_sema::Hole;
 

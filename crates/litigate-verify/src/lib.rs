@@ -39,9 +39,9 @@ pub use sema::obligation_of;
 
 pub(crate) use context::{same_expr, Context};
 
-use litgraph::cite::SourceCorpus;
-use litgraph::model::Pack;
 use litigate_base::{Diagnostic, Profile};
+use litigate_engine::cite::SourceCorpus;
+use litigate_engine::model::Pack;
 use litigate_lower::{Document, LoweredPackage, Lowerer, Options, SourceMap};
 use litigate_sema::{hir, PackageCheck};
 use report::{Builder, Obligation as O};

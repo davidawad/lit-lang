@@ -1,7 +1,7 @@
 # Clock library: sources and interpretive choices
 
 The counting rules and holiday calendars in this directory were ported from
-the hard-coded `crates/litgraph/src/clock/{general,itc,holidays}.rs` modules
+the hard-coded `crates/litigate-engine/src/clock/{general,itc,holidays}.rs` modules
 (themselves ported from `civ-pro-the-gathering`'s `src/engine/clock/`,
 re-verified against the rule text 2026-09-28). The computed dates and every
 trace string are unchanged; see "Changes from the hard-coded clock" for the

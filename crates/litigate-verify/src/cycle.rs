@@ -4,13 +4,13 @@
 //! (weekends and its calendar's observed holidays) never end would not
 //! terminate. Whether they end is a property of every date, decided
 //! exactly by Gregorian-cycle enumeration
-//! (`litgraph::clock::cycle::ClosedRun`), on the clock fragment lowering
+//! (`litigate_engine::clock::cycle::ClosedRun`), on the clock fragment lowering
 //! emits for each counting-rule version. An unbounded or undecided run is
 //! L3009 (`well-typed`).
 use crate::diag::emit;
 use crate::Context;
-use litgraph::clock::cycle::{ClosedRun, MAX_PERIOD_YEARS};
 use litigate_base::{Diagnostic, DiagnosticCode as C};
+use litigate_engine::clock::cycle::{ClosedRun, MAX_PERIOD_YEARS};
 use litigate_lower::Lowerer;
 use litigate_sema::hir::Declaration;
 use litigate_sema::temporal::World;

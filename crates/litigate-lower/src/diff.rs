@@ -10,9 +10,9 @@
 //! unlike pack edges they have no node list to regroup under). Source maps and the generated marker are sidecars and
 //! never part of a document, and a document's format version and `lowered`
 //! header (pins, dates, world digest, holes) are provenance, not meaning.
-use litgraph::clock::ClockLibrary;
-use litgraph::model::{local_edge_ids, LinkFile, NodeKind, Pack, RawEdge};
-use litgraph::scenario::NamedScenario;
+use litigate_engine::clock::ClockLibrary;
+use litigate_engine::model::{local_edge_ids, LinkFile, NodeKind, Pack, RawEdge};
+use litigate_engine::scenario::NamedScenario;
 use serde::{Deserialize, Serialize};
 use serde_json::{Map, Value};
 use std::collections::{BTreeMap, BTreeSet};

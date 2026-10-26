@@ -1981,7 +1981,7 @@ formatting (L9004).
 ## 8. Lowering contract
 
 Lowering produces values of litgraph's own serde types
-(`crates/litgraph/src/model/schema.rs`, `model/links.rs`,
+(`crates/litigate-engine/src/model/schema.rs`, `model/links.rs`,
 `scenario/library.rs`) and serializes them. It never writes JSON by hand.
 Anything without a lowering is L6001.
 
@@ -2067,7 +2067,7 @@ whose holes leave a number open.
 
 ### 8.2 Clock IR (pack schema v3, clock schema 4)
 
-The engine's landed clock (DESIGN §9.1, `crates/litgraph/src/clock`) is the
+The engine's landed clock (DESIGN §9.1, `crates/litigate-engine/src/clock`) is the
 target. `Pack.counting` is a string: the id of a `CountingRule` in
 litgraph's shared *clock library* (`packs/clock/*.json`,
 `docs/PACK_SCHEMA.md` "Clock library"), a set of fragments

@@ -22,7 +22,7 @@ over the exports of `src/lib/graph/index.ts` and `src/lib/statechart.ts`.
 
 Frozen copies of `packs/<id>.json` **as of schema v1** (byte-for-byte, taken
 before the v2 migration that authored payoffs/hours/durations/roles/sources
-onto these six packs). `crates/litgraph/tests/parity.rs` loads the pack from
+onto these six packs). `crates/litigate-engine/tests/parity.rs` loads the pack from
 here, not from the live `packs/` directory, because the golden output above
 is only valid against the exact content that produced it: an authored
 `payoff` (replacing the heuristic), authored `hours` (replacing an absent

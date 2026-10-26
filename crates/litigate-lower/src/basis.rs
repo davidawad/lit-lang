@@ -6,7 +6,7 @@
 //! so an analysis is never better sourced than its worst input. The
 //! probabilities of a node the matter gives a `prior` are the matter's
 //! own estimate instead.
-use litgraph::model::{Basis, BasisLabel};
+use litigate_engine::model::{Basis, BasisLabel};
 use litigate_sema::hir::{self, Authored};
 
 /// The label `b` gives the object at `pointer`.

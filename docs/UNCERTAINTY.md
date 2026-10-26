@@ -18,7 +18,7 @@ before committing would be worth.
 ## The belief model
 
 Every node whose plan draws from a distribution gets a Dirichlet
-(`crates/litgraph/src/scenario/belief.rs`). These nodes are:
+(`crates/litigate-engine/src/scenario/belief.rs`). These nodes are:
 
 - a **chance node**: its draws;
 - a **nature-first interrupt**: the interrupt edges plus a residual slot,

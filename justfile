@@ -3,7 +3,7 @@
 
 set shell := ["bash", "-euo", "pipefail", "-c"]
 
-# Line coverage floor for the pure-logic `litgraph` crate.
+# Line coverage floor for the pure-logic `litigate-engine` crate.
 cov_floor := "97"
 
 default:
@@ -75,7 +75,7 @@ proptest:
 cov_lock := 'target="$(cargo metadata --format-version 1 --no-deps | jq -r .target_directory)"; mkdir -p "$target"; exec 9> "$target/llvm-cov.lock"; if command -v flock > /dev/null; then flock 9; fi'
 
 # The per-file table, then the verdict: scripts/cov-gate's, on the one
-# JSON summary it prints from ("cov: litgraph TOTAL lines P% (covered/count)
+# JSON summary it prints from ("cov: litigate-engine TOTAL lines P% (covered/count)
 # >= floor F%: pass"); cargo-llvm-cov's --fail-under-lines on the same data
 # must agree. Then the self-checks: an unreachable floor (100.01) and a
 # known-low input must fail.
@@ -85,22 +85,23 @@ cov:
     scripts/cov-gate self-test
     {{cov_lock}}
     cargo llvm-cov clean --workspace
-    cargo llvm-cov nextest -p litgraph --no-report
-    cargo llvm-cov report -p litgraph --summary-only
-    json="$(cargo llvm-cov report -p litgraph --json --summary-only)"
-    scripts/cov-gate lines {{cov_floor}} litgraph <<<"$json"
-    cargo llvm-cov report -p litgraph --summary-only --fail-under-lines {{cov_floor}} > /dev/null
-    if cargo llvm-cov report -p litgraph --summary-only --fail-under-lines 100.01 > /dev/null 2>&1; then
+    cargo llvm-cov nextest -p litigate-engine --no-report
+    cargo llvm-cov report -p litigate-engine --summary-only
+    json="$(cargo llvm-cov report -p litigate-engine --json --summary-only)"
+    scripts/cov-gate lines {{cov_floor}} litigate-engine <<<"$json"
+    cargo llvm-cov report -p litigate-engine --summary-only --fail-under-lines {{cov_floor}} > /dev/null
+    if cargo llvm-cov report -p litigate-engine --summary-only --fail-under-lines 100.01 > /dev/null 2>&1; then
       echo "cov self-check: floor not enforced (cargo llvm-cov report --fail-under-lines 100.01 passed)" >&2
       exit 1
     fi
-    scripts/cov-gate reject-low lines {{cov_floor}} litgraph <<<"$json"
+    scripts/cov-gate reject-low lines {{cov_floor}} litigate-engine <<<"$json"
 
 cov-html:
-    cargo llvm-cov nextest -p litgraph --html --open
+    cargo llvm-cov nextest -p litigate-engine --html --open
 
 # Every litigate-* crate, each measured by its own tests, must stay at 100%
-# lines, regions and branches -- no exclusions. Branch coverage needs a
+# lines, regions and branches -- no exclusions. (litigate-engine, the
+# renamed litgraph engine, keeps the `cov` floor above.) Branch coverage needs a
 # nightly toolchain (`rustup toolchain install nightly -c llvm-tools-preview`).
 litigate_crates := "litigate-base litigate-syntax litigate-sema litigate-lower litigate-verify litigate-import litigate-cli litigate-lsp litigate-smt"
 
@@ -150,12 +151,12 @@ machete:
 
 # --- formal verification ---------------------------------------------------
 
-# Kani harnesses live behind #[cfg(kani)] in crates/litgraph/src/proofs.rs.
+# Kani harnesses live behind #[cfg(kani)] in crates/litigate-engine/src/proofs.rs.
 # The workspace `rust-version` (1.93) matches kani-verifier 0.67's bundled
 # nightly (rustc 1.93.0-nightly), so `cargo kani` builds. Keep harnesses
 # bounded: CBMC cannot tractably unwind std collections/string formatting.
 verify-kani:
-    cargo kani -p litgraph
+    cargo kani -p litigate-engine
 
 # Focused mutation lane for temporal, precedence, and case semantics.
 mutants:

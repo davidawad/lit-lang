@@ -6,8 +6,8 @@ use crate::modules::{sections, Section};
 use crate::node::Spelling;
 use crate::text;
 use crate::Emitted;
-use litgraph::cite::normalize::CiteGrammar;
-use litgraph::model::{Pack, RawEdge, PACK_SCHEMA_VERSION};
+use litigate_engine::cite::normalize::CiteGrammar;
+use litigate_engine::model::{Pack, RawEdge, PACK_SCHEMA_VERSION};
 use std::collections::{BTreeMap, BTreeSet};
 
 /// Imports `pack` into the package directory `dir` (also the root module

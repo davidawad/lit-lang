@@ -5,9 +5,9 @@
 //! `Case::removals`.
 mod support;
 
-use litgraph::model::world_digest;
-use litgraph::scenario::{EventRelation, NamedScenario};
 use litigate_base::DiagnosticCode;
+use litigate_engine::model::world_digest;
+use litigate_engine::scenario::{EventRelation, NamedScenario};
 use litigate_lower::{render_scenario, semantic_diff_scenarios, Lowerer};
 use litigate_sema::hir::{
     Case, CaseSource, EngineExpr, EngineOption, Event, EventParty, Expr, ExprKind, Observation,
@@ -339,10 +339,10 @@ fn removals_deactivate_engine_edges() {
         litigate_lower::Document::Pack(p) => *p,
         litigate_lower::Document::Links(_) => panic!("a rule package"),
     };
-    let graph = litgraph::Graph::compile(
+    let graph = litigate_engine::Graph::compile(
         &[pack],
-        &litgraph::model::LinkFile::default(),
-        &litgraph::model::CompileOptions::default(),
+        &litigate_engine::model::LinkFile::default(),
+        &litigate_engine::model::CompileOptions::default(),
     )
     .unwrap_or_else(|e| panic!("{e}"));
     let mut case = acme();
@@ -355,7 +355,7 @@ fn removals_deactivate_engine_edges() {
     let lowered = lowerer
         .case(&case, "cases/examples/acme.case")
         .unwrap_or_else(|d| panic!("{d:#?}"));
-    let view = litgraph::scenario::View::new(&graph, &lowered.scenario.scenario)
+    let view = litigate_engine::scenario::View::new(&graph, &lowered.scenario.scenario)
         .unwrap_or_else(|e| panic!("{e}"));
     let removed = graph
         .edge("frcp-rule12-example::move-dismiss")
@@ -518,7 +518,7 @@ fn a_matter_records_its_world_docket_and_holes() {
 fn analysis_fields_are_the_engine_scenario_fields() {
     use litigate_sema::case::resolve::analysis::{DEDICATED, FIELDS, UNTYPED};
     let schema =
-        serde_json::to_value(schemars::schema_for!(litgraph::Scenario)).unwrap_or_default();
+        serde_json::to_value(schemars::schema_for!(litigate_engine::Scenario)).unwrap_or_default();
     let mut engine: Vec<&str> = schema["properties"]
         .as_object()
         .into_iter()

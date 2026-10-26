@@ -3,10 +3,10 @@ use crate::diag::Sink;
 use crate::edge::{self, EdgeCx};
 use crate::source_map::{Citations, Entry, GuardOpTrace, GuardTrace, SourceMap};
 use crate::Build;
-use litgraph::model::{
+use litigate_base::{DiagnosticCode as C, Span};
+use litigate_engine::model::{
     local_edge_ids, pointer_token, Hole, Instance, LinkFile, Pack, RawEdge, LINKS_SCHEMA_VERSION,
 };
-use litigate_base::{DiagnosticCode as C, Span};
 use litigate_sema::guard;
 use litigate_sema::hir::{self, Declaration};
 use serde_json::{Map, Value};
@@ -68,7 +68,11 @@ pub(crate) fn links(
         links: links.iter().map(|(e, _)| e.clone()).collect(),
         lowered: Some(lowered.with_basis(basis)),
     };
-    let citations = Citations::new(litgraph::model::CiteSyntax::default(), &[], build.corpus);
+    let citations = Citations::new(
+        litigate_engine::model::CiteSyntax::default(),
+        &[],
+        build.corpus,
+    );
     let link_entries = links
         .iter()
         .zip(local_edge_ids(&file.links))

@@ -4,7 +4,7 @@
 //! probabilities its own estimate.
 mod support;
 
-use litgraph::model::{Basis, BasisLabel};
+use litigate_engine::model::{Basis, BasisLabel};
 use litigate_lower::{Document, Lowerer, Options};
 use litigate_sema::hir::{self, Authored, Declaration, Prior, Rational};
 use support::{acme, corpus, decls_mut, example, imported_hir, lowered, node_mut, pack_of, usd};

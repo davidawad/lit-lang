@@ -89,11 +89,11 @@ fn import_check_run_matches_litgraph() {
     );
     assert_eq!(ours.code, 0, "{}", ours.stdout);
     let catalog = litgraph_packs::catalog().unwrap();
-    let request: litgraph::api::Request = serde_json::from_value(
+    let request: litigate_engine::api::Request = serde_json::from_value(
         serde_json::json!({"scenario": "cofc-1498-patent-case", "op": {"op": "solve"}}),
     )
     .unwrap();
-    let theirs = litgraph::api::handle(&request, &catalog);
+    let theirs = litigate_engine::api::handle(&request, &catalog);
     assert!(theirs.ok);
     assert_eq!(
         ours.json["result"]["result"]["value"],

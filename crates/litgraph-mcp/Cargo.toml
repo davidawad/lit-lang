@@ -1,6 +1,6 @@
 [package]
 name = "litgraph-mcp"
-description = "MCP (Model Context Protocol) stdio server for litgraph: one tool per engine op, litigate_* tools for the authoring toolchain, packs/links/the manual as resources, thin wrapper over litgraph::api::handle."
+description = "MCP (Model Context Protocol) stdio server for litgraph: one tool per engine op, litigate_* tools for the authoring toolchain, packs/links/the manual as resources, thin wrapper over litigate_engine::api::handle."
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -22,7 +22,7 @@ path = "src/main.rs"
 
 [dependencies]
 litgraph-packs = { path = "../litgraph-packs" }
-litgraph = { path = "../litgraph" }
+litigate-engine = { path = "../litigate-engine" }
 # The `litigate_*` tools run the authoring toolchain through its library.
 litigate-cli = { path = "../litigate-cli" }
 serde_json.workspace = true

@@ -17,8 +17,8 @@
 //! unevaluated test is not a passing one.
 use crate::diag::{emit, note};
 use crate::{same_expr, Context};
-use litgraph::clock::{self, ClockConfig, ClockLibrary, DayDeadline, Unit};
 use litigate_base::{Diagnostic, DiagnosticCode as C};
+use litigate_engine::clock::{self, ClockConfig, ClockLibrary, DayDeadline, Unit};
 use litigate_lower::Lowerer;
 use litigate_sema::hir::{self, BinaryOp, Declaration, Expr, ExprKind, Value};
 use litigate_sema::precedence::select::select;

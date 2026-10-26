@@ -1,7 +1,7 @@
 //! The SPEC §12 worked example (`lit/examples`), and the report embedded
 //! in its litigatable.
-use litgraph::cite::SourceCorpus;
 use litigate_base::Profile;
+use litigate_engine::cite::SourceCorpus;
 use litigate_lower::Options;
 use litigate_verify::{check_package, Checked, Obligation, ObligationStatus};
 use std::path::Path;
@@ -65,7 +65,7 @@ fn the_report_is_embedded_in_the_litigatable() {
     assert_eq!(litigatable.verification, dev.verification.report);
     assert_eq!(litigatable.ir.id, "frcp-rule12-example");
     let json = serde_json::to_value(&litigatable).unwrap_or_default();
-    let back: litigate_verify::Litigatable<litgraph::model::Pack> =
+    let back: litigate_verify::Litigatable<litigate_engine::model::Pack> =
         serde_json::from_value(json).unwrap_or_else(|e| panic!("{e}"));
     assert_eq!(back, litigatable);
     insta::assert_json_snapshot!(litigatable, {

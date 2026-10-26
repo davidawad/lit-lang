@@ -13,13 +13,13 @@ mod calendar;
 use crate::diag::Sink;
 use crate::source_map::{Citations, Entry, SourceMap};
 use crate::Build;
-use litgraph::clock::calendar::Weekday;
-use litgraph::clock::rule::{
+use litigate_base::{DiagnosticCode as C, Span};
+use litigate_engine::clock::calendar::Weekday;
+use litigate_engine::clock::rule::{
     AnchorKind, CountUnit, EndOfMonth, Hours, MinLength, Months, Period, Roll, ServiceExtension,
     Step, Toward,
 };
-use litgraph::clock::{ClockLibrary, CountingRule, ServiceMethod, Unit};
-use litigate_base::{DiagnosticCode as C, Span};
+use litigate_engine::clock::{ClockLibrary, CountingRule, ServiceMethod, Unit};
 use litigate_sema::hir::{self, Anchor, DayUnit, Declaration, RollOn, ServiceTime};
 
 /// The clock fragment of `pkg` and its source map: counting rule `only`
@@ -42,7 +42,7 @@ pub(crate) fn fragment(
         .collect();
     let first = rules.first()?;
     let mut library = ClockLibrary {
-        schema_version: litgraph::clock::library::CLOCK_SCHEMA_VERSION,
+        schema_version: litigate_engine::clock::library::CLOCK_SCHEMA_VERSION,
         calendars: Vec::new(),
         counting_rules: Vec::new(),
         lowered: Some(build.lowered(Vec::new())),

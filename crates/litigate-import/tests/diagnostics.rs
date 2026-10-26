@@ -4,9 +4,9 @@
 //! a generated file the formatter rejects, v2 holes and docket events with
 //! no `.case` spelling. All are L6002 errors at the
 //! input file.
-use litgraph::model::{Hole, LinkFile, Lowered, Pack, Pin};
-use litgraph::scenario::NamedScenario;
 use litigate_base::{DiagnosticCode, Severity};
+use litigate_engine::model::{Hole, LinkFile, Lowered, Pack, Pin};
+use litigate_engine::scenario::NamedScenario;
 use litigate_import::{import, Input};
 use serde::de::DeserializeOwned;
 use serde_json::{json, Value};

@@ -33,7 +33,7 @@ fuzz_target!(|data: &[u8]| {
         ) {
             if let Document::Pack(pack) = lowered.document {
                 let text = render(&pack).expect("lowered pack serializes");
-                let roundtrip = litgraph::model::Pack::from_json(&text)
+                let roundtrip = litigate_engine::model::Pack::from_json(&text)
                     .expect("lowered pack is accepted by the engine");
                 assert!(litigate_lower::semantic_diff(&pack, &roundtrip).is_empty());
             }

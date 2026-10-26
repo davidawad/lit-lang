@@ -326,7 +326,7 @@ changes how a citation parses. Resolution still searches every vendored
 `sources[].path` the pack declares.
 
 Engine source carries no forum knowledge: the
-`no_forum_literals_in_engine` test (`crates/litgraph/tests/no_forum_literals.rs`)
+`no_forum_literals_in_engine` test (`crates/litigate-engine/tests/no_forum_literals.rs`)
 fails if any pack id or forum key from `packs/*.json` appears in
 `crates/*/src` outside test code.
 
@@ -507,7 +507,7 @@ needs, its sourced facts, and the engine scenario itself (rates, stakes,
 perspective, masks, payoffs, probabilities, policy, modeling modes — the same
 `scenario` object a request carries; `litgraph schema scenario` gives its
 full shape). It is embedded into the binary the same way packs are
-(`crates/litgraph/build.rs`); `$LITGRAPH_SCENARIOS` or `--scenarios-dir`
+(`crates/litigate-engine/build.rs`); `$LITGRAPH_SCENARIOS` or `--scenarios-dir`
 override it at runtime, independently of `$LITGRAPH_PACKS`/`--packs-dir`.
 
 | field | type | notes |

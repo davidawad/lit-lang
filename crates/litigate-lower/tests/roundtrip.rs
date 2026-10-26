@@ -3,7 +3,7 @@
 //! semantically equal to the original (SPEC §8.6, §8.7).
 mod support;
 
-use litgraph::cite::SourceCorpus;
+use litigate_engine::cite::SourceCorpus;
 use litigate_lower::{render, semantic_diff, semantic_diff_links, Document, Lowerer, Options};
 use support::{built_path, corpus, imported_hir, legacy, repo_root};
 
@@ -26,12 +26,12 @@ fn import_then_lower_is_semantically_equal() {
             });
         let changes = match &lowered.document {
             Document::Pack(pack) => {
-                let expected = litgraph::Pack::from_json(&original)
+                let expected = litigate_engine::Pack::from_json(&original)
                     .unwrap_or_else(|e| panic!("{origin}: {e}"));
                 semantic_diff(&expected, pack)
             }
             Document::Links(links) => {
-                let expected: litgraph::model::LinkFile =
+                let expected: litigate_engine::model::LinkFile =
                     serde_json::from_str(&original).unwrap_or_else(|e| panic!("{origin}: {e}"));
                 semantic_diff_links(&expected, links)
             }
@@ -54,7 +54,7 @@ fn lowered_output_compiles_in_the_engine() {
     let refs: Vec<&litigate_sema::hir::Package> = packages.iter().map(|(_, p)| p).collect();
     let lowerer = Lowerer::new(&refs);
     let mut packs = Vec::new();
-    let mut links = litgraph::model::LinkFile::default();
+    let mut links = litigate_engine::model::LinkFile::default();
     for pkg in &refs {
         let lowered = lowerer
             .package(pkg, &Options::default())
@@ -62,7 +62,9 @@ fn lowered_output_compiles_in_the_engine() {
         match &lowered.document {
             Document::Pack(p) => {
                 let text = render(p).unwrap_or_default();
-                packs.push(litgraph::Pack::from_json(&text).unwrap_or_else(|e| panic!("{e}")));
+                packs.push(
+                    litigate_engine::Pack::from_json(&text).unwrap_or_else(|e| panic!("{e}")),
+                );
             }
             Document::Links(l) => {
                 let text = render(l).unwrap_or_default();
@@ -70,8 +72,11 @@ fn lowered_output_compiles_in_the_engine() {
             }
         }
     }
-    let graph =
-        litgraph::Graph::compile(&packs, &links, &litgraph::model::CompileOptions::default());
+    let graph = litigate_engine::Graph::compile(
+        &packs,
+        &links,
+        &litigate_engine::model::CompileOptions::default(),
+    );
     assert!(graph.is_ok(), "{:?}", graph.err());
 }
 

@@ -74,8 +74,8 @@ impl From<std::io::Error> for Failure {
     }
 }
 
-impl From<litgraph::Error> for Failure {
-    fn from(error: litgraph::Error) -> Self {
+impl From<litigate_engine::Error> for Failure {
+    fn from(error: litigate_engine::Error) -> Self {
         Self(error.to_string())
     }
 }
@@ -253,7 +253,7 @@ mod tests {
     fn io_and_engine_errors_become_their_messages() {
         let io = std::io::Error::new(std::io::ErrorKind::NotFound, "gone");
         assert_eq!(Failure::from(io), Failure::new("gone"));
-        let engine = litgraph::Error::Invalid("bad pack".into());
+        let engine = litigate_engine::Error::Invalid("bad pack".into());
         assert_eq!(Failure::from(engine), Failure::new("invalid: bad pack"));
     }
 

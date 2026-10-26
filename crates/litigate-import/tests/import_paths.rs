@@ -6,8 +6,8 @@
 //! where losslessness is.
 mod support;
 
-use litgraph::model::{Hole, LinkFile, Lowered, Pack, Pin};
-use litgraph::scenario::NamedScenario;
+use litigate_engine::model::{Hole, LinkFile, Lowered, Pack, Pin};
+use litigate_engine::scenario::NamedScenario;
 use litigate_import::{ImportedFile, Input};
 use serde_json::{json, Value};
 use support::{

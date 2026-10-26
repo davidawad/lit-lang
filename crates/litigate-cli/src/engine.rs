@@ -341,6 +341,18 @@ mod tests {
     }
 
     #[test]
+    fn a_scenario_file_that_is_not_text_is_an_error() {
+        let file = std::env::temp_dir().join(format!(
+            "litigate-engine-scenario-binary-{}.json",
+            std::process::id()
+        ));
+        let _ = std::fs::write(&file, [0xff, 0xfe]);
+        let path = file.to_string_lossy().into_owned();
+        assert!(message(scenario_arg(&path)).starts_with(&format!("reading {path}: ")));
+        let _ = std::fs::remove_file(&file);
+    }
+
+    #[test]
     fn read_input_names_a_missing_file() {
         assert!(message(read_input(Some("no/such/request.json")))
             .starts_with("reading no/such/request.json: "));

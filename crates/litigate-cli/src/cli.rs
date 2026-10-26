@@ -522,3 +522,27 @@ impl Command {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn every_op_subcommand_runs_the_engine_op_it_is_named_for() {
+        let ops = EngineOp::augment_subcommands(clap::Command::new("ops"));
+        let names: Vec<&str> = ops.get_subcommands().map(clap::Command::get_name).collect();
+        assert_eq!(names.len(), 17);
+        for name in names {
+            let cli = Cli::try_parse_from(["litigate", name, "x.case"]);
+            let command = cli.map(|c| c.command).ok();
+            let Some(Command::Op(op)) = &command else {
+                panic!("{name}: {command:?}");
+            };
+            assert_eq!(
+                (op.parts().0, op.parts().1.target.as_str()),
+                (name, "x.case")
+            );
+            assert_eq!(command.as_ref().map(Command::name), Some(name));
+        }
+    }
+}

@@ -9,6 +9,7 @@ use crate::out::{Failure, Outcome, Report};
 use litigate_base::Profile;
 use litigate_engine::api::{fingerprint, handle, Catalog, Request};
 use litigate_engine::clock::ClockLibrary;
+use litigate_engine::scenario::NamedScenario;
 use litigate_lower::{Document, Options};
 use serde_json::{json, Map, Value};
 use std::collections::BTreeSet;
@@ -175,26 +176,35 @@ pub(crate) fn compile(paths: &[String], links: bool, lib: &[String]) -> Result<C
         }
     }
     // `from_files` records unreadable files in the catalog rather than failing.
-    let mut catalog = Catalog::from_files("litigate".into(), files)?;
-    catalog.clock = clock;
-    catalog.scenarios_origin = "litigate".into();
-    let mut scenarios = Vec::new();
-    for lowered in c.cases.iter().filter_map(|m| m.lowered.as_ref()) {
-        let scenario = &lowered.scenario;
-        let scenario_text = serde_json::to_string(scenario).unwrap_or_default();
-        catalog.scenarios.push((
-            format!("{}.json", scenario.id),
-            scenario.clone(),
-            fingerprint(scenario_text.as_bytes()),
-        ));
-        scenarios.push(scenario.id.clone());
-    }
-    Ok(Compiled {
-        report,
-        catalog,
-        scenarios,
-        packs,
-    })
+    Catalog::from_files("litigate".into(), files)
+        .map(|mut catalog| {
+            catalog.clock = clock;
+            catalog.scenarios_origin = "litigate".into();
+            catalog.scenarios = c
+                .cases
+                .iter()
+                .filter_map(|m| m.lowered.as_ref())
+                .map(|lowered| named_scenario(&lowered.scenario))
+                .collect();
+            Compiled {
+                report,
+                scenarios: catalog.scenarios.iter().map(|s| s.1.id.clone()).collect(),
+                catalog,
+                packs,
+            }
+        })
+        .map_err(Failure::from)
+}
+
+/// A matter's lowered scenario as a catalog entry: `(file name,
+/// scenario, content fingerprint)`.
+fn named_scenario(scenario: &NamedScenario) -> (String, NamedScenario, String) {
+    let text = serde_json::to_string(scenario).unwrap_or_default();
+    (
+        format!("{}.json", scenario.id),
+        scenario.clone(),
+        fingerprint(text.as_bytes()),
+    )
 }
 
 /// `litigate run` (and each op subcommand): `op` on `target`, a matter

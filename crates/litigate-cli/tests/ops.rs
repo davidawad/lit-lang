@@ -8,7 +8,7 @@
 mod support;
 
 use serde_json::{json, Value};
-use support::{litigate, repo, Run};
+use support::{example, litigate, litigate_in, repo, Run};
 
 const ACME: &str = "cases/examples/acme.case";
 const RULING: &str = "frcp-rule12-example::mtd-ruling";
@@ -51,6 +51,15 @@ fn an_op_runs_on_a_package_directory_or_one_of_its_files() {
         "chain",
     );
     assert_eq!(set["result"]["start"], dir["result"]["start"]);
+}
+
+#[test]
+fn a_package_that_fails_its_check_is_not_run() {
+    let dir = example("ops-broken-package", "frobnicate", None);
+    let run = litigate_in(&dir, &["solve", "lit/examples"]);
+    assert_eq!(run.code, 2, "{}{}", run.stdout, run.stderr);
+    assert_eq!(run.json["ok"], false);
+    assert!(run.json.get("result").is_none(), "{}", run.stdout);
 }
 
 #[test]
@@ -101,6 +110,30 @@ fn the_engine_compiles_its_catalog_from_the_library() {
 }
 
 #[test]
+fn the_engine_reads_matters_from_cases_by_default() {
+    let dir = example("ops-engine-cases", "", None);
+    let run = litigate_in(
+        &dir,
+        &["engine", "describe", "--lib", "lit/examples", "--compact"],
+    );
+    assert_eq!(run.code, 0, "{}", run.stderr);
+    let library = &run.json["result"]["scenario_library"];
+    assert!(library.to_string().contains("acme-v-widget"), "{library}");
+    let missing = engine(&[
+        "describe",
+        "--lib",
+        "lit/examples",
+        "--cases",
+        "no/such/cases",
+    ]);
+    assert_eq!(missing.code, 1);
+    assert_eq!(
+        missing.stderr,
+        "litigate engine: no/such/cases: no such file or directory\n"
+    );
+}
+
+#[test]
 fn named_directories_replace_the_compiled_halves() {
     let packs = litgraph_packs::PACKS_DIR;
     let scenarios = litgraph_packs::SCENARIOS_DIR;
@@ -118,6 +151,11 @@ fn named_directories_replace_the_compiled_halves() {
     let half = engine(&args);
     assert_eq!(half.json["result"]["packs_source"], packs);
     assert_eq!(half.json["result"]["scenarios_source"], "litigate");
+    let mut args = vec!["describe", "--scenarios-dir", scenarios];
+    args.extend(EXAMPLE);
+    let other = engine(&args);
+    assert_eq!(other.json["result"]["packs_source"], "litigate");
+    assert_eq!(other.json["result"]["scenarios_source"], scenarios);
     let missing = engine(&["describe", "--packs-dir", "/no/such/packs"]);
     assert_eq!(missing.code, 1);
     assert!(
@@ -144,6 +182,21 @@ fn variables_name_directories_too() {
     assert_eq!(out.status.code(), Some(0));
     let v: Value = serde_json::from_slice(&out.stdout).unwrap();
     assert_eq!(v["op"], "chain");
+}
+
+#[test]
+fn standard_input_that_is_not_text_is_an_error() {
+    let out = assert_cmd::Command::cargo_bin("litigate")
+        .unwrap()
+        .current_dir(repo())
+        .args(["engine", "q", "-", "--packs-dir", litgraph_packs::PACKS_DIR])
+        .args(["--scenarios-dir", litgraph_packs::SCENARIOS_DIR])
+        .write_stdin(vec![0xff, 0xfe])
+        .output()
+        .unwrap();
+    assert_eq!(out.status.code(), Some(1));
+    let err = String::from_utf8_lossy(&out.stderr);
+    assert!(err.starts_with("litigate engine: "), "{err}");
 }
 
 #[test]

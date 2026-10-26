@@ -165,6 +165,12 @@ fn unreadable_inputs_fail_loading() {
     chmod(&dir.join("lit/examples/Lit.toml"), 0o644);
     assert_eq!(pkg.code, 1);
     insta::assert_snapshot!(pkg.stderr, @"litigate check: Permission denied (os error 13)");
+    std::fs::write(dir.join("w.world"), "layers = [\"frcp-rule12-example\"]\n").unwrap();
+    chmod(&dir.join("w.world"), 0o000);
+    let world = litigate_in(&dir, &["check", "w.world"]);
+    chmod(&dir.join("w.world"), 0o644);
+    assert_eq!(world.code, 1);
+    insta::assert_snapshot!(world.stderr, @"litigate check: w.world: Permission denied (os error 13)");
 }
 
 /// Runs `litigate --format json ARGS` from a working directory that no

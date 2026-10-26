@@ -496,16 +496,45 @@ The goal is that `crates/litigate-engine/src` contains no forum knowledge.
 
 ## 10. What else compiles from this (later epics)
 
-These are not in this epic, but the IR is designed so each is just another
-lowering:
+These are not in this epic. Keep each as a separate follow-on task after the
+core compiler lands; none is a prerequisite for compiling or analyzing a
+`.lit` package or `.case` matter. The shared boundary is the verified case,
+its replayed event history, derived deadlines and posture, plus the existing
+litgraph analysis API. Each task consumes that boundary without adding forum
+rules to the engine.
 
-- `.ics` deadline calendars
-- filing linters (page and word limits, certificates; ECF code lists)
-- NLP docket-entry matchers that advance a `.case` from a PACER/RECAP feed
-- agent action sets as MCP tools: only the moves legal at the derived posture
-- calibration from replayed RECAP dockets
-- simulating rule-amendment impact across a corpus of cases
-- litgraph-ts typed bindings over `litgraph-wasm`
+1. **Deadline calendars (`.ics`).** Consume a compiled case and emit an RFC
+   5545 calendar for open deadlines, with reminders as an output option.
+   Unknown due dates remain explicitly unscheduled; the export must not
+   invent dates. Keep calendar serialization and CLI options in the calendar
+   lowering, with tests for date-only deadlines and unscheduled obligations.
+2. **Filing linter.** Accept a proposed filing, filing date and actor; replay
+   it against the case to report whether it is a legal move, whether it is
+   timely, which obligation it discharges, and which deadlines it triggers.
+   Filing-specific checks include page and word limits, required
+   certificates, and ECF code lists. It must use typed filing/event rules
+   from the packages rather than infer legal meaning from event names.
+3. **Docket matcher.** Match PACER/RECAP docket entries to declared event
+   forms and advance a `.case` only when the match is supported. Preserve the
+   source entry and match confidence for review; ambiguous or unmatched
+   entries remain unresolved instead of silently changing posture. This is
+   the NLP integration boundary, separate from deterministic case replay.
+4. **Agent action sets.** Project the current typed marking onto a party and
+   expose only the moves legal for that party and posture as MCP actions.
+   Action sets depend on the markings and firing-sequence model in §2.8;
+   they are not a separate source of procedural rules.
+5. **RECAP replay calibration.** Derive calibration observations from
+   replayed, sourced docket histories and emit the existing calibration
+   format. Keep provenance and selection criteria with each estimate; do not
+   treat docket matching as ground truth without review.
+6. **Rule-amendment impact.** Recompile a corpus of pinned cases under
+   selected rule versions and compare their outcomes, deadlines and paths.
+   Report the selected version/world and changed results so the analysis is
+   reproducible.
+7. **`litgraph-ts`.** Provide typed TypeScript bindings over
+   `litgraph-wasm`, generated from the public request/response contract.
+   This is a language/tooling task and needs the repository's explicit
+   TypeScript language-preference exception before implementation begins.
 
 ## 11. Migration and acceptance
 

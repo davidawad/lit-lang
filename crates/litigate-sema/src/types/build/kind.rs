@@ -74,6 +74,10 @@ fn declared<'d>(item: &Item, decl: &'d Declaration) -> Vec<Use<'d>> {
             out.push((Effect::Prescribe, name, None));
             Some(&c.meta)
         }
+        Declaration::Limit(l) => {
+            out.push((Effect::Prescribe, name, None));
+            Some(&l.meta)
+        }
         Declaration::Exception(e) => {
             let effect = if foreign(&e.target) {
                 Effect::Interpret

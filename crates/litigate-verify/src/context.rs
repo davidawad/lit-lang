@@ -3,6 +3,7 @@ use crate::diag::start_of;
 use litigate_base::{Profile, Span};
 use litigate_sema::hir::{self, Declaration, RuleKind};
 use litigate_sema::temporal::world::meta_of;
+use std::borrow::Cow;
 
 /// One package being verified, with the workspace it resolves in.
 pub(crate) struct Context<'a> {
@@ -100,7 +101,9 @@ impl<'a> Context<'a> {
     /// `historical`), a deadline's adopting rule (`forum F cite "X" quote
     /// "..."`, in its window, with the words it quotes), edge `authority`s
     /// and the cites of `basis sourced(..)` on nodes and edges (imported
-    /// with their node, in its window), and test `cite`s (no window).
+    /// with their node, in its window), test `cite`s (no window), and the
+    /// entries of a filing limit with the words each must find
+    /// ([`limit_cites`]).
     pub fn cites(&self) -> impl Iterator<Item = Cite<'a>> {
         self.declarations().flat_map(|d| {
             let meta = meta_of(d).or(match d {
@@ -142,7 +145,7 @@ impl<'a> Context<'a> {
                         a.cite.as_str(),
                         x.meta.span.as_ref(),
                         a.historical,
-                        a.quote.as_deref(),
+                        a.quote.as_deref().map(Cow::Borrowed),
                     )
                 }),
                 _ => None,
@@ -163,8 +166,13 @@ impl<'a> Context<'a> {
                     .collect(),
                 _ => Vec::new(),
             };
+            let limited = match d {
+                Declaration::Limit(l) => limit_cites(l),
+                _ => Vec::new(),
+            };
             own.into_iter()
                 .chain(test)
+                .chain(limited)
                 .chain(adoption)
                 .chain(edges)
                 .chain(delegated)
@@ -182,7 +190,68 @@ impl<'a> Context<'a> {
 }
 
 /// A cite's text, span, `historical` mark, and quoted words.
-type CiteOf<'a> = (&'a str, Option<&'a Span>, bool, Option<&'a str>);
+type CiteOf<'a> = (&'a str, Option<&'a Span>, bool, Option<Cow<'a, str>>);
+
+/// The cites of a filing limit's entries (SPEC §3.7), each its own or
+/// else the declaration's, with the words its vendored text must hold: a
+/// bound's number and measure as the rules write them (`13,000 words`),
+/// and each excluded part named, hyphens read as spaces (`cover page`).
+/// A hole cites nothing and quotes nothing.
+fn limit_cites(l: &hir::Limit) -> Vec<CiteOf<'_>> {
+    let decl = l.meta.cite.as_deref();
+    let span = l.meta.span.as_ref();
+    let mut out = Vec::new();
+    for b in &l.bounds {
+        let Some(text) = b.cite.as_deref().or(decl) else {
+            continue;
+        };
+        let quote = match &b.max {
+            hir::Authored::Known(n) => Some(Cow::Owned(format!(
+                "{} {}",
+                grouped(*n),
+                b.measure.as_str()
+            ))),
+            hir::Authored::Hole(_) => None,
+        };
+        out.push((text, b.span.as_ref().or(span), false, quote));
+    }
+    for c in &l.certificates {
+        if let Some(text) = c.cite.as_deref() {
+            out.push((text, c.span.as_ref().or(span), false, None));
+        }
+    }
+    if let Some(x) = &l.excludes {
+        if let Some(text) = x.cite.as_deref().or(decl) {
+            let at = x.span.as_ref().or(span);
+            out.push((text, at, false, None));
+            out.extend(x.items.iter().filter_map(|item| match item {
+                hir::Authored::Known(part) => {
+                    Some((text, at, false, Some(Cow::Owned(part.replace('-', " ")))))
+                }
+                hir::Authored::Hole(_) => None,
+            }));
+        }
+    }
+    for e in &l.ecf {
+        if let Some(text) = e.cite.as_deref() {
+            out.push((text, e.span.as_ref().or(span), false, None));
+        }
+    }
+    out
+}
+
+/// `n` with its thousands grouped by commas, as the rules write counts.
+fn grouped(n: u64) -> String {
+    let digits = n.to_string();
+    let mut out = String::new();
+    for (i, c) in digits.chars().enumerate() {
+        if i > 0 && (digits.len() - i) % 3 == 0 {
+            out.push(',');
+        }
+        out.push(c);
+    }
+    out
+}
 
 /// The cite a `basis sourced("...")` rests on.
 fn sourced(basis: Option<&hir::Basis>) -> Option<&str> {
@@ -193,7 +262,7 @@ fn sourced(basis: Option<&hir::Basis>) -> Option<&str> {
 }
 
 /// One cite of a package.
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone)]
 pub(crate) struct Cite<'a> {
     /// The cite text.
     pub text: &'a str,
@@ -207,7 +276,7 @@ pub(crate) struct Cite<'a> {
     pub imported: bool,
     /// The words of the cited text it quotes (`quote "..."`), which its
     /// vendored section must hold.
-    pub quote: Option<&'a str>,
+    pub quote: Option<Cow<'a, str>>,
 }
 
 fn declarations(pkg: &hir::Package) -> impl Iterator<Item = &Declaration> {

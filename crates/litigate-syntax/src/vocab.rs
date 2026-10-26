@@ -31,9 +31,10 @@ pub const LIT_ITEM_KEYWORDS: &[SyntaxKind] = &[
     KwGrant,
 ];
 
-/// Item keywords of reserved declarations (`limit`, SPEC §3.7): anchors
-/// for recovery, but left out of "expected" lists and keyword fixes.
-pub const RESERVED_ITEM_KEYWORDS: &[SyntaxKind] = &[KwLimit];
+/// Item keywords of reserved declarations: anchors for recovery, but left
+/// out of "expected" lists and keyword fixes. None is reserved today
+/// (`limit`, SPEC §3.7, was until filing requirements landed).
+pub const RESERVED_ITEM_KEYWORDS: &[SyntaxKind] = &[];
 
 /// Top-level item keywords of `.case` files.
 pub const CASE_ITEM_KEYWORDS: &[SyntaxKind] = &[

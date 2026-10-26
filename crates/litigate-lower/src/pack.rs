@@ -255,6 +255,7 @@ pub(crate) fn pack(
     let mut nodes = Vec::new();
     let mut edges: Vec<(RawEdge, &hir::Edge)> = Vec::new();
     let mut origins = Vec::new();
+    let mut limits: Vec<&hir::Limit> = Vec::new();
     for d in &decls {
         match d {
             Declaration::Node(n) => {
@@ -266,6 +267,7 @@ pub(crate) fn pack(
                         .map(|e| (edge::edge(&cx, sink, n.meta.id.clone(), e), e)),
                 );
             }
+            Declaration::Limit(l) => limits.push(l),
             Declaration::Link(_) | Declaration::Instance(_) => sink.error(
                 C::InvalidField,
                 None,
@@ -281,9 +283,14 @@ pub(crate) fn pack(
         "/edges",
         edges.iter().map(|(_, e)| e.basis.as_ref()),
     ));
-    let lowered = build
-        .lowered(lowered_holes(build, pkg, &syntax, &origins, &edges))
-        .with_basis(basis);
+    let mut holes = lowered_holes(build, pkg, &syntax, &origins, &edges);
+    let filing_limits = limits
+        .iter()
+        .enumerate()
+        .map(|(i, l)| crate::filing::limit(l, &format!("/filingLimits/{i}"), &mut holes))
+        .collect();
+    holes.extend(limit_holes(build, pkg, &syntax, &limits));
+    let lowered = build.lowered(holes).with_basis(basis);
     let pack = Pack {
         schema_version: PACK_SCHEMA_VERSION,
         id: m.pack_id.clone(),
@@ -306,9 +313,10 @@ pub(crate) fn pack(
         cite_syntax: syntax,
         nodes,
         edges: edges.iter().map(|(e, _)| e.clone()).collect(),
+        filing_limits,
         lowered: Some(lowered),
     };
-    let map = pack_map(build, pkg, &pack, &origins, &edges);
+    let map = pack_map(build, pkg, &pack, &origins, &edges, &limits);
     (pack, map)
 }
 
@@ -356,6 +364,52 @@ fn lowered_holes(
     node_holes.chain(edge_holes).collect()
 }
 
+/// The holes of the filing limits' cites (`limits`, in pack order) no
+/// vendored amendment history proves were their text when their version
+/// took effect (SPEC §7), as for nodes.
+fn limit_holes(
+    build: &Build<'_, '_>,
+    pkg: &hir::Package,
+    syntax: &CiteSyntax,
+    limits: &[&hir::Limit],
+) -> Vec<Hole> {
+    let citations = Citations::new(syntax.clone(), &pkg.manifest.sources, build.corpus);
+    let none = BTreeMap::new();
+    let mut out = Vec::new();
+    for (i, l) in limits.iter().enumerate() {
+        let base = format!("/filingLimits/{i}");
+        let from = &l.meta.effective.from;
+        let cite = l.meta.cite.as_deref().filter(|_| !l.meta.historical);
+        out.extend(unproven(&citations, &base, "cite", cite, &none, from));
+        let entries = l
+            .bounds
+            .iter()
+            .enumerate()
+            .map(|(j, b)| (format!("{base}/bounds/{j}"), b.cite.as_deref()))
+            .chain(
+                l.certificates
+                    .iter()
+                    .enumerate()
+                    .map(|(j, c)| (format!("{base}/certificates/{j}"), c.cite.as_deref())),
+            )
+            .chain(
+                l.excludes
+                    .iter()
+                    .map(|x| (format!("{base}/excludes"), x.cite.as_deref())),
+            )
+            .chain(
+                l.ecf
+                    .iter()
+                    .enumerate()
+                    .map(|(j, e)| (format!("{base}/ecf/{j}"), e.cite.as_deref())),
+            );
+        for (at, cite) in entries {
+            out.extend(unproven(&citations, &at, "cite", cite, &none, from));
+        }
+    }
+    out
+}
+
 /// The hole of the cite at `base`/`field` (`cite`, of a version in force
 /// from `from`) when no vendored amendment history proves its text was the
 /// text then (SPEC §7); none when the cite is written as a hole.
@@ -383,6 +437,7 @@ fn pack_map(
     pack: &Pack,
     nodes: &[&hir::Node],
     edges: &[(RawEdge, &hir::Edge)],
+    limits: &[&hir::Limit],
 ) -> SourceMap {
     let citations = Citations::new(
         pack.cite_syntax.clone(),
@@ -424,7 +479,14 @@ fn pack_map(
         kind: "pack".to_owned(),
         id: pack.id.clone(),
         package: Some(build.package_ref(pkg)),
-        entries: node_entries.chain(edge_entries).collect(),
+        entries: node_entries
+            .chain(edge_entries)
+            .chain(
+                limits.iter().enumerate().map(|(i, l)| {
+                    crate::filing::entry(&citations, l, format!("/filingLimits/{i}"))
+                }),
+            )
+            .collect(),
         ..build.map_header()
     }
 }

@@ -92,6 +92,7 @@ pub fn decl_kind(decl: &Declaration) -> &'static str {
         Declaration::Event(_) => "event",
         Declaration::Test(_) => "test",
         Declaration::Grant(_) => "grant",
+        Declaration::Limit(_) => "limit",
     }
 }
 

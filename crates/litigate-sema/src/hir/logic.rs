@@ -253,6 +253,10 @@ pub struct EventType {
     /// or elect an option, extend an obligation, or waive one.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub effect: Option<EventEffect>,
+    /// The kind of paper the event files (`paper k`, SPEC §3.7): the
+    /// `limit` declaring its filing requirements, by canonical name.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub paper: Option<String>,
 }
 
 /// What an event does to a matter besides taking an edge (SPEC §5.2).

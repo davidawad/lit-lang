@@ -46,6 +46,8 @@ pub enum ValueKind {
     Rule,
     /// Pack instance `base@origin` and its base pack id.
     Instance(Option<String>),
+    /// A paper kind's filing requirements (`limit`, SPEC §3.7).
+    Limit,
 }
 
 impl ValueKind {
@@ -63,6 +65,7 @@ impl ValueKind {
             Self::Grant => "grant",
             Self::Rule => "rule",
             Self::Instance(_) => "instance",
+            Self::Limit => "filing limit",
         }
     }
 }
@@ -143,6 +146,7 @@ pub fn clauses_of(item: &Item) -> &[Field] {
         | ItemKind::Grant(_, c, _)
         | ItemKind::Deadline { clauses: c, .. }
         | ItemKind::Exception { clauses: c, .. } => c,
+        ItemKind::Limit(l) => &l.clauses,
         _ => &[],
     }
 }
@@ -206,6 +210,7 @@ pub fn value_of(item: &Item) -> Option<(&str, ValueKind)> {
         ItemKind::Transition(name, ..) => (name.text.as_str(), ValueKind::Transition),
         ItemKind::Rule(_, name, ..) => (name.text.as_str(), ValueKind::Rule),
         ItemKind::Grant(name, ..) => (name.text.as_str(), ValueKind::Grant),
+        ItemKind::Limit(l) if l.name.is_simple() => (l.name.head.text.as_str(), ValueKind::Limit),
         _ => return None,
     })
 }

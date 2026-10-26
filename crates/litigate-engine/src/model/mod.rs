@@ -15,6 +15,7 @@
 mod cite_syntax;
 mod continuations;
 mod entities;
+mod filing;
 mod flags;
 mod graph;
 mod links;
@@ -24,6 +25,7 @@ mod schema;
 
 pub use cite_syntax::{CiteCode, CiteRuleForm, CiteShorthand, CiteSyntax};
 pub use entities::{CompileOptions, Edge, Node, PackMeta, PayoffSource, DEFAULT_MAX_PRODUCT_NODES};
+pub use filing::{EcfCode, FilingBound, FilingCertificate, FilingExclusions, FilingLimit, Measure};
 pub use graph::{heuristic_payoff, qualify, EdgeIx, Graph, NodeIx};
 pub use links::{local_edge_ids, merge_patch, Instance, LinkFile, LINKS_SCHEMA_VERSION};
 pub(crate) use lowered::check_header;

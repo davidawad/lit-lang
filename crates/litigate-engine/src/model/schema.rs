@@ -518,6 +518,10 @@ pub struct Pack {
     pub nodes: Vec<RawNode>,
     /// Edges.
     pub edges: Vec<RawEdge>,
+    /// Filing requirements of the forum's papers in force at the build
+    /// dates (v5, optional: data the analyses do not read).
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub filing_limits: Vec<super::FilingLimit>,
     /// Build provenance and explicit holes of a compiled pack (v4).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub lowered: Option<Lowered>,

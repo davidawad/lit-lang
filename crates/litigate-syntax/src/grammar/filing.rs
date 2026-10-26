@@ -1,9 +1,8 @@
-//! Reserved filing requirements (SPEC §3.7): `limit paper-kind { ... }`
-//! with its length bounds, certificates, exclusions and ECF event codes.
-//! Parsed in full so the rest of the file parses, then rejected as L0011
-//! until lg-962.10 implements them. `limit`, `certificate` and `excludes`
-//! are reserved words the lexer already reports; nothing here reports
-//! L0011 a second time.
+//! Filing requirements (SPEC §3.7): `limit paper-kind { ... }` with its
+//! length bounds, certificates, exclusions and ECF event codes. `limit`,
+//! `certificate` and `excludes` are keywords only here: the lexer reports
+//! them as L0011 everywhere, and the parse drops that error for each one
+//! this grammar reads as a keyword.
 use super::clauses::{clauses, Clauses};
 use super::values::{cite, hole, number, reference, require, string};
 use super::{brace_list, delimited_node, Sep};
@@ -34,6 +33,29 @@ pub(crate) fn limit(p: &mut Parser<'_>) {
     p.finish();
 }
 
+/// `"[" Measure { "," Measure } [","] "]"`: the bounds a certificate goes
+/// with.
+fn measures(p: &mut Parser<'_>) {
+    if !p.at(LBracket) {
+        p.error_expected(&[LBracket]);
+        return;
+    }
+    delimited_node(
+        p,
+        IdList,
+        (LBracket, RBracket),
+        Sep::Required,
+        &MEASURES,
+        &mut |p| match p.at_any_kw(&MEASURES) {
+            Some(measure) => {
+                p.bump_as(measure);
+                true
+            }
+            None => false,
+        },
+    );
+}
+
 /// One `limit` body entry, each with its own `{Cite}`.
 fn entry(p: &mut Parser<'_>) -> bool {
     if let Some(measure) = p.at_any_kw(&MEASURES) {
@@ -45,8 +67,9 @@ fn entry(p: &mut Parser<'_>) -> bool {
     } else if p.at_kw(KwRequires) {
         p.start(CertificateReq);
         p.bump_as(KwRequires);
-        if p.expect_kw(KwCertificate) {
-            require(p, reference, &[Ident]);
+        if p.expect_kw(KwCertificate) && require(p, reference, &[Ident]) && p.at_kw(KwFor) {
+            p.bump_as(KwFor);
+            measures(p);
         }
     } else if p.at_kw(KwExcludes) {
         p.start(Exclusions);

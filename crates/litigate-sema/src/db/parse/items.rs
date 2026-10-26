@@ -1,8 +1,8 @@
 //! Module header and declarations (SPEC §3.1).
 use super::expr::{expr_children, is_expr, path_of, type_ref};
 use super::tree::{
-    ArmItem, EdgeItem, HolidayItem, Import, Item, ItemKind, ItemTree, Name, NodeItem,
-    PackageHeader, TestStmt,
+    ArmItem, EdgeItem, HolidayItem, Import, Item, ItemKind, ItemTree, LimitEntry, LimitEntryKind,
+    LimitItem, Name, NodeItem, PackageHeader, TestStmt,
 };
 use super::{
     docs, elements, head, ident, label, name, node_of, nodes_after, nodes_of, range,
@@ -145,6 +145,7 @@ impl Lower {
             K::ExceptionDecl => self.exception(node)?,
             K::TestDecl => self.test(node)?,
             K::GrantDecl => self.grant(node)?,
+            K::LimitDecl => ItemKind::Limit(self.limit(node)?),
             _ => return None,
         };
         Some(Item {
@@ -293,6 +294,50 @@ impl Lower {
         })
     }
 
+    /// `limit k clauses { entries } clauses`: the clauses may lead or
+    /// follow the body. An entry missing its value is left out.
+    fn limit(&mut self, node: &SyntaxNode) -> Option<LimitItem> {
+        let name = path_of(&node_of(node, K::Ref)?);
+        let entries = node_of(node, K::FieldList)?
+            .children()
+            .filter_map(|e| self.limit_entry(&e))
+            .collect();
+        Some(LimitItem {
+            name,
+            clauses: self.clauses(node),
+            entries,
+        })
+    }
+
+    fn limit_entry(&mut self, node: &SyntaxNode) -> Option<LimitEntry> {
+        let kind = match node.kind() {
+            K::LimitBound => LimitEntryKind::Bound(head(node), self.expr(&value_child(node)?)?),
+            K::CertificateReq => LimitEntryKind::Certificate(
+                path_of(&node_of(node, K::Ref)?),
+                node_of(node, K::IdList).map(|l| {
+                    elements(&l)
+                        .filter_map(SyntaxElement::into_token)
+                        .filter(|t| t.kind().is_keyword())
+                        .map(|t| name(&t))
+                        .collect()
+                }),
+            ),
+            K::Exclusions => LimitEntryKind::Excludes(
+                node_of(node, K::IdList)?
+                    .children()
+                    .filter_map(|e| self.expr(&e))
+                    .collect(),
+            ),
+            K::EcfCode => LimitEntryKind::Ecf(self.expr(&value_child(node)?)?),
+            _ => return None,
+        };
+        Some(LimitEntry {
+            kind,
+            cites: self.clauses_in(nodes_of(node, K::CiteExpr)),
+            range: significant_range(node),
+        })
+    }
+
     fn test(&mut self, node: &SyntaxNode) -> Option<ItemKind> {
         let stmts = node
             .children()
@@ -320,4 +365,10 @@ fn import(node: &SyntaxNode) -> Option<Import> {
         names: node_of(node, K::ImportList).map(|l| idents(&l)),
         range: significant_range(node),
     })
+}
+
+/// The value of a `limit` body entry: its first expression that is not
+/// one of its cites.
+fn value_child(node: &SyntaxNode) -> Option<SyntaxNode> {
+    expr_children(node).find(|n| n.kind() != K::CiteExpr)
 }

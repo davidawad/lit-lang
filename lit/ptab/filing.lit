@@ -1,0 +1,18 @@
+module ptab.filing
+
+import core.authority.{ CaseOrder }
+
+/// A petition requesting inter partes review: 14,000 words (37 C.F.R.
+/// § 42.24(a)(1)(i)), counting any statement of material facts but not the
+/// parts § 42.24(a)(1) lists (`word-count` is the certificate of word
+/// count: "a certificate of service or word count"). A paper whose length
+/// is a type-volume limit certifies its word count (§ 42.24(d)), and the
+/// Board may waive the count on motion (§ 42.24(a)(2)). Word counts
+/// replaced page limits effective May 2, 2016 (81 FR 18750 (Apr. 1,
+/// 2016)), whose text is not vendored, so a petition filed earlier has no
+/// encoded limit (`unknown_before`) rather than this one.
+limit ipr-petition delegable { to CaseOrder, op set } {
+  words <= 14_000 cite "37 C.F.R. § 42.24(a)(1)(i)"
+  requires certificate word-count cite "37 C.F.R. § 42.24(d)"
+  excludes [table-of-contents, table-of-authorities, mandatory-notices, certificate-of-service, word-count, appendix-of-exhibits, claim-listing] cite "37 C.F.R. § 42.24(a)(1)"
+} effective [2016-05-02, ..) unknown_before 2016-05-02 cite "37 C.F.R. § 42.24"

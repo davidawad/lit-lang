@@ -121,6 +121,7 @@ pub(crate) const EVENT_EFFECTS: &[Spec] = &[
     (KwExtends, Some(reference)),
     (KwTo, Some(reference)),
     (KwWaives, Some(reference)),
+    (KwPaper, Some(reference)),
 ];
 
 pub(crate) const COUNTING_ITEMS: &[Spec] = &[

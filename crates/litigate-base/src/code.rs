@@ -69,7 +69,7 @@ registry! {
     UnknownEdition = "L0008" => "The edition marker names an edition this compiler does not know",
     ReservedRefinement = "L0009" => "Refinement syntax (`{x: T | p}` or a `where` clause) is reserved for the SMT tier and not yet accepted",
     ReservedGuardOp = "L0010" => "`and` or `or` used outside a typed guard operation of a patch (`when and p`, `when or p`), the only place they are keywords",
-    ReservedFilingRequirement = "L0011" => "A filing requirement (`limit paper { words <= N }`, `requires certificate kind`, `excludes [...]`) is reserved and not yet accepted",
+    ReservedFilingRequirement = "L0011" => "`limit`, `certificate` or `excludes` used outside a top-level filing requirement (`limit paper { words <= N, requires certificate kind, excludes [...] }`), the only place they are keywords",
     BooleanWordOperator = "L0012" => "Use `!` for boolean negation; `not` is not an expression operator",
     DuplicateName = "L1001" => "A declaration name is duplicated in the same namespace",
     UnresolvedName = "L1002" => "A referenced declaration or imported module could not be resolved",

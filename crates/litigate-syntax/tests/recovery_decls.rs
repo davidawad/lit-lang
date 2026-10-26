@@ -13,7 +13,7 @@ macro_rules! items {
     () => {
         "one of `module`, `import`, `package`, `start`, `group`, `type`, `enum`, `event`, \
          `state`, `decision`, `chance`, `terminal`, `link`, `instance`, `rule`, `deadline`, \
-         `counting`, `calendar`, `transition`, `authority`, `default`, `exception`, `test`, or `grant`"
+         `counting`, `calendar`, `transition`, `authority`, `default`, `exception`, `test`, `limit`, or `grant`"
     };
 }
 

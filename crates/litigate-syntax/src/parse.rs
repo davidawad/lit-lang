@@ -170,6 +170,7 @@ pub fn parse(text: &str, kind: FileKind) -> Parse {
     }
     let (green, parse_errors) = parser.finish_file();
     licensed_keywords(&green, &mut errors);
+    licensed_filing_words(&green, &mut errors);
     let lexical = errors.clone();
     errors.extend(parse_errors.into_iter().filter(|error| {
         !lexical.iter().any(|lex| {
@@ -215,6 +216,25 @@ fn licensed_keywords(green: &GreenNode, errors: &mut Vec<SyntaxError>) {
             e.code,
             DiagnosticCode::ReservedGuardOp | DiagnosticCode::ReservedWord
         ) || !keywords.contains(&e.range)
+    });
+}
+
+/// Drops the lexer's L0011 for each `limit`, `certificate` and `excludes`
+/// the parser read as a keyword of a top-level filing requirement (SPEC
+/// §3.7): the only place they may stand.
+fn licensed_filing_words(green: &GreenNode, errors: &mut Vec<SyntaxError>) {
+    let keywords: Vec<_> = SyntaxNode::new_root(green.clone())
+        .descendants_with_tokens()
+        .filter(|t| {
+            matches!(
+                t.kind(),
+                SyntaxKind::KwLimit | SyntaxKind::KwCertificate | SyntaxKind::KwExcludes
+            )
+        })
+        .map(|t| t.text_range())
+        .collect();
+    errors.retain(|e| {
+        e.code != DiagnosticCode::ReservedFilingRequirement || !keywords.contains(&e.range)
     });
 }
 

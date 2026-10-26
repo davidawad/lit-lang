@@ -187,6 +187,7 @@ pub fn meta_of(d: &Declaration) -> Option<&Metadata> {
         Declaration::Default(x) => Some(&x.meta),
         Declaration::Exception(x) => Some(&x.meta),
         Declaration::Transition(x) => Some(&x.meta),
+        Declaration::Limit(x) => Some(&x.meta),
         _ => None,
     }
 }

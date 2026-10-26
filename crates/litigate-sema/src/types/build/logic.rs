@@ -246,7 +246,7 @@ impl Cx<'_, '_> {
         }
     }
 
-    /// `event E(p: T) [effect]`.
+    /// `event E(p: T) [effect] [paper k]`.
     pub fn event(
         &mut self,
         name: &Name,
@@ -270,11 +270,17 @@ impl Cx<'_, '_> {
             }
             out.push((p.text.clone(), resolved?));
         }
+        let paper = effect
+            .iter()
+            .find(|f| f.key.text == "paper")
+            .and_then(|f| super::cx::first_ref(Some(&f)))
+            .and_then(|r| self.value_ref(r, "filing limit", |k| matches!(k, ValueKind::Limit)));
         let effect = self.effect(name, &out, effect);
         Some(EventType {
             name: name.text.clone(),
             params: out,
             effect,
+            paper,
         })
     }
 

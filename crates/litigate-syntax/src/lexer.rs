@@ -113,15 +113,16 @@ pub const GUARD_OP_WORDS: [&str; 2] = ["and", "or"];
 /// Message prefix of every L0010 diagnostic (SPEC §3.6).
 pub const RESERVED_GUARD_OP: &str = "reserved: guard-operation keyword";
 
-/// Words reserved for filing requirements (SPEC §3.7): `limit` declares a
+/// The keywords of filing requirements (SPEC §3.7): `limit` declares a
 /// paper kind's length limits, `requires certificate` the certificates it
-/// must carry, `excludes` what does not count toward a limit. L0011
-/// wherever they appear, in the grammar's `limit` slot as well as anywhere
-/// an identifier could stand. `requires` stays the edge field keyword.
+/// must carry, `excludes` what does not count toward a limit. They are
+/// keywords only in a top-level `limit` declaration; anywhere else, where
+/// an identifier could stand, they are L0011. `requires` stays the edge
+/// field keyword.
 pub const FILING_WORDS: [&str; 3] = ["limit", "certificate", "excludes"];
 
 /// Message prefix of every L0011 diagnostic (SPEC §3.7).
-pub const RESERVED_FILING: &str = "reserved: filing requirements";
+pub const RESERVED_FILING: &str = "reserved: filing-requirement keyword";
 
 /// Lexes `text` into a lossless token stream plus lexical errors.
 #[must_use]
@@ -232,8 +233,8 @@ impl Lexer<'_> {
                         end,
                         format!(
                             "{RESERVED_FILING}: `{text}` belongs to a paper's filing requirements \
-                             (length limits, certificates, exclusions), which a later change adds; \
-                             it cannot be written or used as an identifier"
+                             (length limits, certificates, exclusions) only in a top-level `limit` \
+                             declaration; it cannot be used as an identifier"
                         ),
                     );
                 } else if RESERVED_WORDS.contains(&text) {

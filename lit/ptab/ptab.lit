@@ -1,5 +1,7 @@
 module ptab
 
+import ptab.filing.{ ipr-petition }
+
 package ptab-patent-trial-appeal-board { forum ptab, authority Regulation }
 
 group pre-petition-group: "Pre-Petition Posture"
@@ -30,7 +32,7 @@ event PatentGranted()
 /// petitioner, its real party in interest, or a privy (35 U.S.C. § 315(b)).
 event ComplaintServed()
 event PgrPetitionFiled()
-event IprPetitionFiled()
+event IprPetitionFiled() paper ipr-petition
 /// A petition for inter partes review accompanied by a motion for joinder
 /// to an instituted IPR (35 U.S.C. § 315(c); 37 C.F.R. § 42.122(b)).
 event JoinderMotionFiled()

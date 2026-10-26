@@ -7,6 +7,7 @@ mod cx;
 pub(crate) use cx::refs;
 mod delegation;
 mod edge;
+mod filing;
 mod imports;
 mod index;
 mod instance;
@@ -80,6 +81,7 @@ pub fn item_name(item: &Item) -> Option<&Name> {
         | ItemKind::Default(n, _, _, _) => Some(n),
         ItemKind::Node(n) => Some(&n.name),
         ItemKind::Deadline { name, .. } | ItemKind::Exception { name, .. } => Some(name),
+        ItemKind::Limit(l) if l.name.is_simple() => Some(&l.name.head),
         _ => None,
     }
 }
@@ -480,6 +482,7 @@ fn items(cx: &mut Cx<'_, '_>, top: &Item, context: &ModuleContext) -> DeclCheck 
                 .counting(item, rule, n, fields)
                 .map(Declaration::Counting),
             ItemKind::Calendar(n, _, h) => cx.calendar(item, rule, n, h).map(Declaration::Calendar),
+            ItemKind::Limit(l) => cx.limit(item, rule, l).map(Declaration::Limit),
             ItemKind::Transition(n, amends, _, arms) => cx
                 .transition(item, rule, n, amends, arms)
                 .map(Declaration::Transition),

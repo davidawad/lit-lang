@@ -56,6 +56,7 @@ pub(crate) fn unresolved(
                 .chain(unkeyed)
                 .chain(
                     cite.quote
+                        .as_deref()
                         .and_then(|q| unquoted(cx, corpus, text, q, &sections, &span)),
                 )
                 .map(|d| exempt(d, cite.imported, cx.profile))

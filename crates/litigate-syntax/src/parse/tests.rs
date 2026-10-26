@@ -337,25 +337,15 @@ fn limited(item: &str) -> super::Parse {
 }
 
 #[test]
-fn filing_limits_parse_into_their_slot_and_are_reserved() {
+fn filing_limits_parse_into_their_slot() {
     let parsed = limited(
         "/// FRAP 32(a)(7) and 32(f)-(g).\nlimit principal-brief effective [1998-12-01, ..) {\n  \
          words <= 13_000 cite \"FRAP 32(a)(7)(B)(i)\"\n  lines <= 1300\n  pages <= ?(\"local \
-         rule\")\n  requires certificate compliance cite \"FRAP 32(g)(1)\"\n  excludes \
-         [cover-page, table-of-contents, ?(\"local rule\")] cite \"FRAP 32(f)\"\n  ecf \
+         rule\")\n  requires certificate compliance for [words, lines] cite \"FRAP 32(g)(1)\"\n  \
+         excludes [cover-page, table-of-contents, ?(\"local rule\")] cite \"FRAP 32(f)\"\n  ecf \
          \"brief\"\n  ecf ?(\"district ECF code\")\n} cite \"FRAP 32\" known_at 2026-10-24",
     );
-    assert_eq!(codes(&parsed), ["L0011", "L0011", "L0011"]);
-    for error in parsed.errors() {
-        assert!(error.message.starts_with(crate::RESERVED_FILING));
-    }
-    for (error, word) in parsed
-        .errors()
-        .iter()
-        .zip(["limit", "certificate", "excludes"])
-    {
-        assert!(error.message.contains(&format!("`{word}`")), "{word}");
-    }
+    assert!(parsed.is_ok(), "{:?}", codes(&parsed));
     let kinds = node_kinds(&parsed);
     assert!(!kinds.contains(&SyntaxKind::Error), "{kinds:?}");
     let count = |kind| kinds.iter().filter(|k| **k == kind).count();
@@ -381,6 +371,7 @@ fn filing_limits_parse_into_their_slot_and_are_reserved() {
         SyntaxKind::KwLines,
         SyntaxKind::KwRequires,
         SyntaxKind::KwCertificate,
+        SyntaxKind::KwFor,
         SyntaxKind::KwExcludes,
         SyntaxKind::KwEcf,
     ] {
@@ -400,7 +391,7 @@ fn a_filing_limit_takes_relations_on_either_side_of_its_body() {
         "limit local::brief override frap::brief delegable_to [CaseOrder] {\n  words <= ?\n} \
          supersedes local::old-brief cite ?(\"local rule\")",
     );
-    assert_eq!(codes(&parsed), ["L0011"]);
+    assert!(parsed.is_ok(), "{:?}", codes(&parsed));
     let kinds = node_kinds(&parsed);
     assert!(!kinds.contains(&SyntaxKind::Error), "{kinds:?}");
     let relations = kinds.iter().filter(|k| **k == SyntaxKind::Relation).count();
@@ -409,38 +400,33 @@ fn a_filing_limit_takes_relations_on_either_side_of_its_body() {
 
 #[test]
 fn a_malformed_filing_limit_reports_where_it_breaks() {
-    for (item, expected) in [
-        ("limit", vec!["L0011", "L0001"]),
-        ("limit \"brief\"", vec!["L0011", "L0001"]),
-        ("limit brief", vec!["L0011", "L0001"]),
-        ("limit brief { words 13000 }", vec!["L0011", "L0001"]),
-        ("limit brief { words <= }", vec!["L0011", "L0001"]),
-        (
-            "limit brief { requires compliance }",
-            vec!["L0011", "L0001"],
-        ),
-        (
-            "limit brief { requires certificate }",
-            vec!["L0011", "L0011", "L0001"],
-        ),
-        (
-            "limit brief { excludes cover-page }",
-            vec!["L0011", "L0011", "L0001"],
-        ),
-        ("limit brief { ecf }", vec!["L0011", "L0001"]),
-        ("limit brief { note \"x\" }", vec!["L0011", "L0001"]),
+    for item in [
+        "limit",
+        "limit \"brief\"",
+        "limit brief",
+        "limit brief { words 13000 }",
+        "limit brief { words <= }",
+        "limit brief { requires compliance }",
+        "limit brief { requires certificate }",
+        "limit brief { requires certificate c for words }",
+        "limit brief { requires certificate c for [words, note] }",
+        "limit brief { excludes cover-page }",
+        "limit brief { ecf }",
+        "limit brief { note \"x\" }",
     ] {
-        assert_eq!(codes(&limited(item)), expected, "{item}");
+        assert_eq!(codes(&limited(item)), ["L0001"], "{item}");
     }
 }
 
 #[test]
-fn filing_words_are_reserved_everywhere_but_only_as_whole_words() {
+fn filing_words_are_reserved_outside_their_declaration_but_only_as_whole_words() {
     for source in [
         "module m\nstart limit\n",
         "module m\ngroup certificate: \"x\"\n",
         "module m\nstate s: \"S\" {\n  go \"Go\" -> s { requires [excludes] }\n}\n",
         "module m\nstate s: \"S\" {\n  go \"Go\" -> s { requires certificate service }\n}\n",
+        "module m\nrule duty r {\n  limit brief { words <= 1 }\n}\n",
+        "module m\nlimit brief { words <= 1, excludes [certificate] }\n",
     ] {
         let parsed = parse_lit(source);
         assert!(codes(&parsed).contains(&"L0011"), "{source}");
@@ -460,27 +446,46 @@ fn filing_words_are_reserved_everywhere_but_only_as_whole_words() {
     // `requires` stays the edge field; the body words stay identifiers.
     assert!(parse_lit(
         "module m\nstart no-transcript-certificate\ngroup words: \"limit\"\n\
-         state s: \"S\" {\n  go \"Go\" -> s { requires [ecf, pages, lines] }\n}\n"
+         state s: \"S\" {\n  go \"Go\" -> s { requires [ecf, pages, lines, paper, for] }\n}\n"
     )
     .is_ok());
 }
 
 #[test]
-fn the_spec_filing_limit_example_parses_and_is_only_reserved() {
+fn an_event_names_the_kind_of_paper_it_files() {
+    let parsed = parse_lit(
+        "module m\nevent BriefFiled() paper principal-brief\nevent Waived() waives d paper p\n",
+    );
+    assert!(parsed.is_ok(), "{:?}", codes(&parsed));
+    let papers = parsed
+        .syntax()
+        .descendants_with_tokens()
+        .filter(|t| t.kind() == SyntaxKind::KwPaper)
+        .count();
+    assert_eq!(papers, 2);
+    assert_eq!(codes(&parse_lit("module m\nevent E() paper\n")), ["L0001"]);
+}
+
+#[test]
+fn the_spec_filing_limit_example_parses() {
     let spec = include_str!("../../../../docs/litigate/SPEC.md");
-    let section = &spec[spec
-        .find("### 3.7 Reserved: filing requirements")
-        .expect("§3.7")..];
+    let section = &spec[spec.find("### 3.7 Filing requirements").expect("§3.7")..];
     let body = section
         .split("```lit\n")
         .nth(1)
         .and_then(|rest| rest.split("```").next())
         .expect("a lit example in §3.7");
     let parsed = limited(body.trim_end());
-    assert_eq!(codes(&parsed), ["L0011", "L0011", "L0011"], "{body}");
+    assert!(parsed.is_ok(), "{:?}\n{body}", codes(&parsed));
     let kinds = node_kinds(&parsed);
     assert!(!kinds.contains(&SyntaxKind::Error), "{kinds:?}");
     assert!(kinds.contains(&SyntaxKind::Relation));
+    let formatted =
+        crate::format(&parsed.syntax().text().to_string(), crate::FileKind::Lit).expect("formats");
+    assert_eq!(
+        crate::format(&formatted, crate::FileKind::Lit).expect("formats"),
+        formatted
+    );
 }
 
 #[test]

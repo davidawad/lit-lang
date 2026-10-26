@@ -222,6 +222,41 @@ pub struct ArmItem {
     pub range: TextRange,
 }
 
+/// `limit k clauses { entries } clauses` (SPEC §3.7).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LimitItem {
+    /// The paper kind, as written (a plain identifier declares one).
+    pub name: RefPath,
+    /// Version, relation and cite clauses on either side of the body.
+    pub clauses: Vec<Field>,
+    /// Body entries in source order.
+    pub entries: Vec<LimitEntry>,
+}
+
+/// One entry of a `limit` body, with its own cites.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LimitEntry {
+    /// What the entry says.
+    pub kind: LimitEntryKind,
+    /// Its `cite` clauses.
+    pub cites: Vec<Field>,
+    /// Range.
+    pub range: TextRange,
+}
+
+/// The shapes of a `limit` body entry.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum LimitEntryKind {
+    /// `words|pages|lines <= N` (`N` a number or a hole).
+    Bound(Name, Expr),
+    /// `requires certificate c [for [measures]]`.
+    Certificate(RefPath, Option<Vec<Name>>),
+    /// `excludes [item, ?("reason"), ...]`.
+    Excludes(Vec<Expr>),
+    /// `ecf "code"` or `ecf ?("reason")`.
+    Ecf(Expr),
+}
+
 /// Test statement.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum TestStmt {
@@ -302,6 +337,8 @@ pub enum ItemKind {
     /// `grant g on [targets] clauses { fields }`: header clauses (the
     /// `on` targets among them), then the body.
     Grant(Name, Vec<Field>, Vec<Field>),
+    /// `limit k clauses { entries } clauses`.
+    Limit(LimitItem),
 }
 
 /// Declaration with doc comment and range.
@@ -687,7 +724,41 @@ impl Ranges for ItemKind {
                 clauses.ranges_mut(f);
                 fields.ranges_mut(f);
             }
+            Self::Limit(l) => l.ranges_mut(f),
         }
+    }
+}
+
+impl Ranges for LimitItem {
+    fn ranges_mut(&mut self, f: &mut dyn FnMut(&mut TextRange)) {
+        let Self {
+            name,
+            clauses,
+            entries,
+        } = self;
+        name.ranges_mut(f);
+        clauses.ranges_mut(f);
+        entries.ranges_mut(f);
+    }
+}
+
+impl Ranges for LimitEntry {
+    fn ranges_mut(&mut self, f: &mut dyn FnMut(&mut TextRange)) {
+        let Self { kind, cites, range } = self;
+        match kind {
+            LimitEntryKind::Bound(measure, max) => {
+                measure.ranges_mut(f);
+                max.ranges_mut(f);
+            }
+            LimitEntryKind::Certificate(kind, measures) => {
+                kind.ranges_mut(f);
+                measures.ranges_mut(f);
+            }
+            LimitEntryKind::Excludes(items) => items.ranges_mut(f),
+            LimitEntryKind::Ecf(code) => code.ranges_mut(f),
+        }
+        cites.ranges_mut(f);
+        f(range);
     }
 }
 

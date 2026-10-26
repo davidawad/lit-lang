@@ -6,7 +6,7 @@
 //! compile error here until it is visited or explicitly skipped.
 use super::{
     Calendar, Counting, Declaration, DefaultRule, Edge, EdgePatch, Exception, Expectation, Expr,
-    ExprKind, Extension, Instance, Link, Metadata, Motion, Node, Rule, Test, Transition,
+    ExprKind, Extension, Instance, Limit, Link, Metadata, Motion, Node, Rule, Test, Transition,
     TransitionArm,
 };
 use litigate_base::Span;
@@ -362,6 +362,31 @@ impl Spans for Test {
     }
 }
 
+impl Spans for Limit {
+    fn spans_mut(&mut self, f: &mut dyn FnMut(&mut Span)) {
+        let Self {
+            meta,
+            bounds,
+            certificates,
+            excludes,
+            ecf,
+        } = self;
+        meta.spans_mut(f);
+        for b in bounds {
+            b.span.spans_mut(f);
+        }
+        for c in certificates {
+            c.span.spans_mut(f);
+        }
+        if let Some(x) = excludes {
+            x.span.spans_mut(f);
+        }
+        for e in ecf {
+            e.span.spans_mut(f);
+        }
+    }
+}
+
 impl Spans for Declaration {
     fn spans_mut(&mut self, f: &mut dyn FnMut(&mut Span)) {
         match self {
@@ -377,6 +402,7 @@ impl Spans for Declaration {
             Self::Transition(x) => x.spans_mut(f),
             Self::Test(x) => x.spans_mut(f),
             Self::Grant(x) => x.spans_mut(f),
+            Self::Limit(x) => x.spans_mut(f),
             Self::Authority(_) | Self::TypeAlias(_) | Self::Enum(_) | Self::Event(_) => {}
         }
     }

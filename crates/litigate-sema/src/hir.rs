@@ -12,6 +12,7 @@ use std::collections::BTreeMap;
 mod case;
 pub(crate) use case::own_name;
 mod expr;
+mod filing;
 mod graph;
 mod kind;
 mod logic;
@@ -24,6 +25,7 @@ pub use case::{
     PackagePin, Param, Party, Perspective, Prior, Rate, RateUnit, Removal, Stake,
 };
 pub use expr::{BinaryOp, Expr, ExprKind, Pattern, UnaryOp};
+pub use filing::{CertificateReq, Counts, Ecf, Exclusions, LengthBound, Limit, Measure, Verdict};
 pub use graph::{
     Basis, DeadlineWindow, Edge, EdgeDeadline, EdgePatch, GuardOp, GuardOpKind, Instance, Link,
     Node, NodeKind, TriangularDuration, Valence,
@@ -254,6 +256,8 @@ pub enum Declaration {
     Test(Test),
     /// Emergency capability grant.
     Grant(Grant),
+    /// A paper kind's filing requirements (SPEC §3.7).
+    Limit(Limit),
 }
 
 #[cfg(test)]

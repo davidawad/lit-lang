@@ -648,6 +648,10 @@ issuer = "..."                  # who issued it
 date = "2024-01-01"             # when it was issued or entered
 designation = "..."             # optional; an order or rule number, a reporter cite
 binds = ["court"]               # guidance only, and required there: actors it binds
+court = "ca9"                   # precedent and overruling only, required there
+designated = "2024-02-01"       # precedent only: designated precedential (absent: binds nowhere)
+overrules = ["pkg"]             # overruling only, required there: the precedents it withdraws
+authoritative = false           # optional, default true; false: a synthetic what-if layer
 
 [package.roles]                 # actor -> "self" | "opponent" | "nature"; Pack.roles
 applicant = "self"
@@ -675,6 +679,18 @@ code = "cfr"                    # "usc" | "cfr"
 title = 19
 section_parts = 2
 source = "cfr-210"              # optional
+
+[family.district-civil]         # core only: the forum-family class matrix (§5.7)
+title = "..."
+forums = ["frcp"]               # the package forums in the family, each in one family
+precedent = ["scotus", "@circuit"]  # courts whose designated precedent binds; @circuit: ι's
+circuits = ["ca1", "ca2"]       # the values a world's circuit takes (needed by @circuit)
+
+[family.district-civil.class.local-rule]  # one cell per class that exists in the family
+cite = "28 U.S.C. § 2071"       # the instrument making it exist
+example = "https://..."         # optional; a real instrument of the class there
+row = ["declare"]               # optional; narrows the class's row, never widens it
+window_days = 90                # emergency-declaration only: its grants' longest window
 ```
 
 A `[dependencies]` requirement is `^`, `~`, `>=` or `=` plus a version,
@@ -685,18 +701,30 @@ admits exactly the releases with no interface change since 1.2.0 and
 `~1.2.0` those that also compute the same values.
 
 `kind` is the class of the instrument the package encodes, and it types
-the package (§5.7). It is one of `base`, `amendment`, `local-rule`,
-`standing-order`, `case-order`, `guidance`, `precedent` and `overruling`.
+the package (§5.7; docs/litigate/CHANGE.md §2). It is one of `base`,
+`amendment`, `local-rule`, `general-order`, `standing-order`,
+`case-order`, `emergency-declaration`, `guidance`, `precedent` and
+`overruling`.
 A class other than `base` is justified, never only asserted:
 `[package.instrument]` names the instrument's vendored text (`source`, a
 `[sources.*]` key with a `path`), its issuer and date (design review
-2026-10-23 §2.5 item 1). A `local-rule`, `standing-order` or `case-order`
-package has the `authority` of that rung of the `lit/core` lattice
-(`LocalRule`, `StandingOrder`, `CaseOrder`). `guidance` names the actors it
-binds (`binds`, `[package.roles]` keys), and only guidance does.
+2026-10-23 §2.5 item 1). A `local-rule`, `general-order`, `standing-order`
+or `case-order` package has the `authority` of that rung of the
+`lit/core` lattice (`LocalRule`, `StandingOrder` for both orders,
+`CaseOrder`). `guidance` names the actors it binds (`binds`,
+`[package.roles]` keys), and only guidance does. A `precedent` or
+`overruling` names its `court` (a kebab-case id the forum families use);
+only a precedent is `designated`, on or after its `date`; only an
+overruling `overrules`, at least one package. `authoritative = false`
+marks a synthetic layer, admitted only to a counterfactual world (§5.8).
 `hypothetical` is not a kind: it is the modality of a world, in which a
 layer of any kind may appear (§2.5 item 2). A links manifest has neither
-key. Each violation is L1004.
+key. Only the package named `core` declares `[family.*]`: ids and court
+ids kebab-case, every family with at least one forum and a `base` cell,
+a forum in one family, `@circuit` only with `circuits`, cells of known
+classes with a non-empty `cite`, an `https` `example`, a `row` of
+effects inside the class's own, and `window_days` (positive) only on
+`emergency-declaration`. Each violation is L1004.
 
 `counting` and `cite_syntax` mirror the pack-level fields litgraph added in
 schema v3 (`docs/PACK_SCHEMA.md`, "Citation syntax (v3)"). A
@@ -1879,18 +1907,21 @@ and needs no solver. The effects a declaration has:
 | `grant-cap` | a `delegable` clause, a deadline's `extend` or `waive` grant, a `grant` |
 | `set-prior` | `p` on an edge of a chance node |
 | `add-fact` | a `fact`-tagged node |
-| `recharacterize`, `invalidate`, `waive` | no form in language 1 (a precedent's effects, lg-fq2.1) |
+| `waive` | in a `precedent` package, `override` or `notwithstanding` naming another package's declaration: the waiver is that relation (a prospective override under the target's delegation), and the period the declaration states is the waiver's, not a `prescribe` of its own |
+| `recharacterize`, `invalidate` | no declaration form in language 1; an overruling's `invalidate` is its `overrules` list (§5.8) |
 
 A test has no effect, and `subject_to` displaces nothing. The rows are
 the forum-independent ceiling (`litigate_sema::hir::Kind::row`); a forum
-family's matrix (lg-fq2.1) can only narrow them:
+family's matrix can only narrow them:
 
 | Class | Row |
 |---|---|
 | `base` | every effect |
 | `amendment` | every effect but `rank` |
 | `local-rule`, `standing-order` | `declare prescribe override interpret waive grant-cap set-prior add-fact` |
+| `general-order` | `declare prescribe override waive` |
 | `case-order` | `declare prescribe override interpret waive set-prior add-fact` |
+| `emergency-declaration` | `declare grant-cap` |
 | `guidance` | `declare set-prior`, the prior only of a draw by an actor it `binds` |
 | `precedent`, binding | `declare interpret recharacterize invalidate waive set-prior` |
 | `precedent`, persuasive | `declare set-prior` |
@@ -1902,12 +1933,81 @@ moves a prior only; guidance never imposes a duty on anyone, and binds
 no one it does not name. A permitted displacing effect still needs its
 capability (§5.5, L3004): the row says what a class may ever do, the
 capability whether this instrument may do it to that target. A
-precedent's binding scope is computed from the court hierarchy at a
-world's location index, never declared; language 1 has no location
-index, so every `precedent` package is persuasive. The L2010 diagnostic
-is at the clause performing the effect (else the declaration's name),
-once per effect per declaration, and its notes give the class's row and
-the classes that permit the effect.
+precedent's binding scope is computed from the court hierarchy, never
+declared: binding when it is `designated` and its `court` is among the
+`precedent` courts of its forum's family (`@circuit` matching any of the
+family's `circuits`), else persuasive; a world narrows it at its location
+(§5.8). The L2010 diagnostic is at the clause performing the effect
+(else the declaration's name), once per effect per declaration, and its
+notes give the class's row and the classes that permit the effect.
+
+**The forum-family matrix.** `lit/core`'s `[family.*]` tables (§4.1;
+docs/litigate/CHANGE.md §3) are data, not compiler code (design review
+§2.5 item 4). A package's family is the one listing its `forum`. Where
+`core` declares a matrix:
+
+- a non-base package whose family has no cell for its class, or whose
+  forum is in no family, is L2011 at its manifest's `kind` (notes: the
+  family's classes);
+- a cell's `row` narrows the class: an effect in the class's row but not
+  the cell's is L2010, its note naming the family and the cell's cite
+  (FRAP 47(a)(1) narrows a circuit standing order to `declare`);
+- a `grant` of a class whose cell has `window_days` is L2011 when it is
+  open-ended or its `effective` window is longer (FRCP 87(b)(1)(C): an
+  emergency declaration's 90 days).
+
+Without a matrix (a library with no `[family.*]`), the class rows apply
+alone. Base packages need no family. The class a package has where it is
+checked is the salsa query `litigate_sema::change::class_index`.
+
+### 5.8 Worlds
+
+A world is a `.world` file (TOML) naming a set of layers, a location
+index and a modality, `W = (Λ, ι, μ)` (design review 2026-10-23 §3.2;
+docs/litigate/CHANGE.md §5):
+
+```toml
+modality = "actual"          # optional: actual (default) | counterfactual
+layers = ["pkg-a", "pkg-b"]  # package names, at least one; a set
+[location]
+family = "district-civil"    # a [family.*] id of core
+court = "d-sdny"             # optional
+circuit = "ca2"              # required when the family's precedent has @circuit; one of its circuits
+judge = "..."                # optional
+```
+
+Unknown keys are rejected. `as_of` and `known_at` are query coordinates,
+never world fields. `litigate_sema::change::world::check_world` checks
+one world against the loaded packages (the highest version of each name):
+
+- **Set merge.** `layers` is a set: order and repetition change nothing
+  (the same `World`, layers and diagnostics); each layer brings its
+  dependencies. The temporal and precedence diagnostics (§5.4, §5.5) of
+  the merged layers that no layer has alone are the world's: a conflict
+  only the set makes (L3003 between two independent local rules
+  overriding one delegated period).
+- **Location.** A malformed file, an unknown modality, an empty or
+  unknown layer, an unknown family, a missing `circuit` where the family
+  needs one, or a circuit the family does not list is L1013.
+- **Scope at ι.** A precedent layer's scope is recomputed at the world's
+  family and circuit. A precedent that is persuasive there but has an
+  effect outside the persuasive row is reported L9009 (info) at its
+  layer, and its layer is not in force in the world.
+- **Overruling.** An overruling layer withdraws each precedent layer it
+  `overrules` from its `date` (reported `overruled_by {by, from}`, not in
+  force). Its court must be the precedent's own or one whose precedent
+  binds at the precedent's court in the precedent's family; otherwise,
+  or when the target is not a precedent, L2010 at its manifest's
+  `overrules`.
+- **Modality.** In an `actual` world a layer whose instrument has
+  `authoritative = false` is L1014; a `counterfactual` world is L1014
+  under the strict profile and admits any layer under dev.
+
+`litigate check` discovers `.world` files with packages and matters; a
+world's layers resolve among the loaded packages, else among the library
+packages (`--lib`, default `lit`, and the nearest `lit` above the world
+file). Its result adds `worlds: [{path, world, layers: [{name, version,
+class, in_force, overruled_by?}]}]` when any world was checked.
 
 ## 6. Types and permitted operations
 
@@ -2493,6 +2593,8 @@ unchanged, and is graded `error`; anything else is rejected.
 | L1010 | unbound cite | L4007 | invalid analysis |
 | L1011 | unresolved dependencies | | |
 | L1012 | incompatible release | | |
+| L1013 | invalid world | | |
+| L1014 | not actual law (counterfactual world, synthetic layer) | | |
 | L2001 | type mismatch | L4008 | start conflict |
 | | | L4009 | obligation breached |
 | | | L4010 | timeliness unknown |
@@ -2512,6 +2614,7 @@ unchanged, and is graded `error`; anything else is rejected.
 | L2008 | invalid probability | L6001 | lowering unsupported |
 | L2009 | invalid capability (characterization) | L3010 | not encoded (`unknown_before`) |
 | L2010 | forbidden effect (instrument class) | | |
+| L2011 | class outside its forum family | | |
 | L9001 | rule without test | L6002 | semantic diff |
 | L9002 | hole present | L6003 | invalid engine expression |
 | L9003 | anonymous edge | L6004 | non-finite number |
@@ -2520,10 +2623,11 @@ unchanged, and is graded `error`; anything else is rejected.
 | L9006 | undeclared event id | | |
 | L9007 | former name | | |
 | L9008 | cite proved by its amendment history | | |
+| L9009 | precedent not binding at the world's location | | |
 
 Severity (`DiagnosticCode::severity(profile)`): every non-L9 code except
 L4009, L4010, L4011, L4012, L4013, L4014 and L3010 is `error`. L9003,
-L9006 and L9008 are `info`. L4009, L4010, L4011, L4012, L4013, L4014,
+L9006, L9008 and L9009 are `info`. L4009, L4010, L4011, L4012, L4013, L4014,
 L9005 and L9007 are `warning`. L9001, L9002, L9004 and L3010 (a hole in
 the corpus) are `warning` in `dev` and `error` in `strict`.
 
@@ -2607,7 +2711,7 @@ All commands accept `--format json|human` (default `human` on a TTY, else
 | `describe` | | `{language_version, grammar, types, builtins, diagnostic_codes:[{code, explain}], commands}` |
 | `lock` | `[PKG_DIR]`, `--locked`, `--root` | `{lockfile, changed, packages:[{name,version,digest}]}` (a directory of matters: `{lockfiles:[{lockfile, changed, cases, packages}]}`); `--locked` fails (L1007) instead of writing; `--root` verifies as `--locked` does and adds `root`, the lock's Merkle root computed on read (§4.2; `null` when stale) |
 | `compat` | `OLD NEW` (two package directories) | `{package, old:{version, semantic}, new:{version, semantic}, class, required, declared, ok, changes:[{class, kind, what, now?}]}` per §4.4; L1012 when the bump is too small |
-| `check` | `PATHS...`, `--profile dev\|strict` (default `dev`), `--as-of`, `--known-at` | `{profile, files, obligations:[Finding], packages}` |
+| `check` | `PATHS...` (packages, `.lit`, `.case`, `.world`), `--profile dev\|strict` (default `dev`), `--as-of`, `--known-at` | `{profile, files, obligations:[Finding], packages, cases}`, and `worlds:[{path, world, layers}]` when a `.world` was checked (§5.8) |
 | `build` | `PKG_OR_CASE...`, `--profile dev\|strict` (default `dev`), `--as-of`, `--known-at`, `--out DIR`, `--pack-file ID=STEM` (repeatable) | `{outputs:{packs:[path], links:[path], clock:[path], scenarios:[path], source_maps:[path], litigatables:[path]}, litigatable_hash, litigatables, obligations}` |
 | `fmt` | `PATHS...`, `--check` | `{files:[{path, changed}]}`; `--check` reports L9004 instead of writing |
 | `explain` | `CODE` | `{code, explanation, severity:{dev, strict}}` |
@@ -2963,6 +3067,11 @@ gets one row per condition when the conditions classify differently.
 | C88 | L9008 a timeline row's cite, its vendored text dated after its version, is proved by a pinned amendment history (§5.4) | cli | c | Reads the vendored eCFR versions list, an external artefact, as cite-resolves does. |
 | C89 | L2010 a declaration's effect is outside its package's class row (§5.7) | sema | a | Index `Package<Kind>`: `effects(d) ⊆ row(kind(pkg(d)))`, set inclusion over the closed effect set; guidance's prior also needs `actor ∈ binds` (finite membership). Done (lg-962.5). |
 | C90 | L1004 a `kind` not justified by its instrument, a layer's kind off its authority rung, `binds` off guidance, `hypothetical` as a kind (§4.1) | sema | a | `Manifest<Kind>` is a closed record: a non-base kind carries `Instrument {source ∈ vendored sources, issuer, date}`; `Kind::level` fixes a layer's authority. |
+| C91 | L2011 a class its forum family has no cell for, a forum in no family, an emergency grant beyond its cell's window (§5.7) | sema | a | `Kind[family]`: `cell(family(forum(pkg)), kind) ≠ ⊥` is finite lookup in `core`'s data; the window is interval length against a constant. Done (lg-fq2.1). |
+| C92 | L2010 an effect a family's cell narrows away; a precedent's scope computed from court and designation; an overruling by a court that does not bind the precedent's (§5.7, §5.8) | sema | a | Row intersection with the cell's; `binding ⟺ designated ∧ court ∈ precedent(family)[@circuit := ι]`, finite membership. Done (lg-fq2.1). |
+| C93 | L1013 a malformed world, unknown layer or family, a circuit the family lacks or needs (§5.8) | sema | a | `World = (Set<Layer>, ι, μ)` a closed record; `ι.circuit ∈ circuits(family)` finite membership. Done (lg-fq2.1). |
+| C94 | L1014 a counterfactual world under strict, a non-authoritative layer in an actual world (§5.8) | sema | a | Modality as an index: `World<Actual>` admits `Layer<authoritative>` only; `Profile::Strict` admits `World<Actual>` only. Done (lg-fq2.1). |
+| C95 | L9009 a precedent persuasive at a world's location with binding effects (§5.8) | sema | a | `effects(pkg) ⊆ row(Precedent[scope(ι)])`, set inclusion. Done (lg-fq2.1). |
 
 ### 13.4 SPEC rules with no code of their own
 
@@ -3187,4 +3296,31 @@ Not done here, for lg-fq2.1: the per-forum-family matrix as data in
 `lit/core` (`Kind[forum_family]`, e.g. no local-rule layer in a forum
 without one), the location index, the `recharacterize`, `invalidate` and
 `waive` forms, `.world` files and the counterfactual modality, and
-whether a modification layer may omit its own `start` node.
+whether a modification layer may omit its own `start` node. §13.11
+records what lg-fq2.1 did of these.
+
+### 13.11 Status: forum families and worlds (lg-fq2.1)
+
+docs/litigate/CHANGE.md is the model; negative tests are
+`litigate-sema/tests/change.rs` (and `kinds.rs` for the rows), the
+examples `crates/litigate-cli/tests/change_examples.rs`.
+
+1. **Classes.** `general-order` (the `StandingOrder` rung, court scope)
+   and `emergency-declaration` (`declare grant-cap`) join §5.7.
+2. **The matrix is data** in `lit/core/Lit.toml` (`[family.*]`, §4.1):
+   eight federal families, each cell cited and, where verified, with a
+   real example; cells narrow rows (FRAP 47(a)(1)), COFC, PTAB, TTAB and
+   the ITC have no local-rule layer, and emergency grants are bounded
+   (L2011).
+3. **Binding scope is computed** from `court`, `designated` and the
+   family's `precedent` courts, at a world's circuit (§5.7, §5.8).
+4. **Worlds** (§5.8): a set of layers, a location index and a modality,
+   with set-merge conflicts, overrulings (`overrules`), L9009, L1013 and
+   L1014.
+5. **Waive** is a precedent's `override`/`notwithstanding`, licensed by
+   the target's delegation (L3004).
+
+Still open: declaration forms for `recharacterize` and a precedent's
+`invalidate`; a `.case` that runs under a world, and enumeration across
+worlds (lg-fq2.4); the 2009 Committee Note golden tests (lg-fq2.5); and a
+modification layer without its own placeholder `start`.

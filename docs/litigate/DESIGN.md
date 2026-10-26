@@ -231,6 +231,13 @@ waiver, unbounded extension or delegation at all. Within one authority, Catala-s
 non-overlapping or explicitly prioritized. Together this is Governatori and
 Rotolo's temporal defeasible logic, made static.
 
+Every modification of base law is its own package with a declared
+instrument class (`kind` in `Lit.toml`: amendment, local rule, general
+order, standing order, case order, emergency declaration, guidance,
+precedent, overruling), checked against the per-forum-family matrix in
+`lit/core`, and layered in a world (a set of layers at a location, in a
+modality): [CHANGE.md](CHANGE.md), SPEC §5.7-§5.8.
+
 Refinements from the library research (`research/library-ideas.md`):
 
 - **Two-stage conflict resolution.** First declared relations apply, then

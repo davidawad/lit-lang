@@ -9,6 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Legal change as declared instrument classes, per forum family, in
+  worlds** (lg-fq2.1; docs/litigate/CHANGE.md, SPEC §5.7-§5.8). New
+  classes `general-order` and `emergency-declaration`. `lit/core`'s
+  `Lit.toml` carries the class matrix of the eight federal forum families
+  as data (`[family.*]`: forums, binding courts, circuits, one cited cell
+  per class with a real example, narrowed rows, the emergency window): a
+  class its family lacks is the new L2011, as is an emergency grant
+  beyond 90 days; a narrowed row is L2010. A precedent's binding scope is
+  computed from its `court` and `designated` date, never declared, and
+  its `override` is its waiver. A `.world` file is a set of layers, a
+  location index and a modality: `litigate check` reports each world's
+  layers, the precedents that do not bind at its circuit (L9009), the
+  precedents an overruling withdraws, conflicts only the merged layers
+  have, a malformed world (L1013), and a counterfactual world under
+  strict or a synthetic layer in an actual one (L1014). One example
+  package per class for the deadline domain, over vendored instrument
+  text (`docs/litigate/examples/change/`, `sources/change-*.txt`).
 - **A package's instrument class is part of its type** (lg-962.5).
   `kind` in `Lit.toml` (`base`, the default, `amendment`, `local-rule`,
   `standing-order`, `case-order`, `guidance`, `precedent`, `overruling`)

@@ -617,3 +617,49 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   wording changed. The TBMP binds no one: it restates the Board's practice
   under 37 C.F.R. Part 2.
 - sha256 (this file): `84d70300d5b36ac966e3b65513b86726ebc5fc04c0b97218704a3c55f02a3e86`
+
+
+### `change-frcv-2007-restyled-excerpt.txt` — FRCP as restyled effective December 1, 2007: the order and Rules 6(b), 59(e)
+
+- The Supreme Court's order of April 30, 2007 and the restyled text of Rule 6(b) and Rule 59(e), the lg-fq2.1 base example's pre-2009 Rule 59(e) (10 days, locked by 6(b)(2)). Lines taken from `sources/change-corpus/rules/scotus/frcv07p.txt` (the supremecourt.gov order PDF `frcv07p.pdf`, see that corpus's MANIFEST.json), blank lines and running page headers dropped; no wording changed. Sections `## FRCP (2007) Order`, `## FRCP (2007) Rule 6`, `## FRCP (2007) Rule 59`.
+- sha256 (this file): `a7287e6fd94acc165ac1eb4a5cdd5c9f404acc3abfe01182cbfb490c3d766f6e`
+
+### `change-frcv-2009-amendments-excerpt.txt` — FRCP amendments effective December 1, 2009: the order and Rules 6(b)(2), 59(e)
+
+- The Supreme Court's order of March 26, 2009 (with its pending-case clause) and the amended text of Rule 6(b)(2) and Rule 59(e) (28 days), the lg-fq2.1 amendment example's instrument. Lines taken from `sources/change-corpus/rules/scotus/frcv09.txt` (supremecourt.gov `frcv09.pdf`), blank lines dropped; no wording changed.
+- sha256 (this file): `0eb155fa9a5911540a1b4a5f1784c944c235f6fd5fa9fe8da29ba716cc6b9690`
+
+### `change-sdny-edny-local-civil-rule-6.txt` — S.D.N.Y./E.D.N.Y. Joint Local Civil Rules 6.1 and 6.4 (effective January 2, 2026)
+
+- Fetched 2026-10-26 from `www.nysd.uscourts.gov/sites/default/files/local_rules/2026-01-02%20-%20EDNY%20and%20SDNY%20Joint%20Local%20Rules%20As%20Amended.pdf` (sha256 `439b9e2c67fd4ca1d1be65a7f28ca53707820bcbabb4b459323ade1a773607af`), `pdftotext -layout`, the text of Local Civil Rule 6.1 and the withdrawn 6.4 with leading spaces and blank lines dropped; no wording changed. The local-rule example's instrument.
+- sha256 (this file): `d7ea4a0e259c8609c98efe869d04776cb7e9ca119c701c3760679a01e3110aae`
+
+### `change-cofc-general-order-2025-02.txt` — U.S. Court of Federal Claims General Order No. 2025-02 (Oct. 6, 2025)
+
+- The order's operative text as quoted verbatim in the lg-fq2.1 research register (fetched 2026-10-23 from `www.uscfc.uscourts.gov/sites/cfc/files/general-orders/2025.10.06%20General%20Order%20re%202025%20day%20after%20Thanksgiving.pdf`); a command-line fetch on 2026-10-26 was refused by the court's firewall, so the PDF itself is not hashed here. The general-order example's instrument.
+- sha256 (this file): `3928c4ed72588200af3a643584ab3456806bedd3acf116a6d4a463df52ca0a27`
+
+### `change-breyer-general-standing-order-2025.txt` — Judge Charles R. Breyer, General Standing Order (N.D. Cal., rev. July 16, 2025), two paragraphs
+
+- The courtesy-copy and scheduling paragraphs as quoted verbatim in the lg-fq2.1 research register (fetched 2026-10-23 from `cand.uscourts.gov/sites/default/files/standing-orders/General-Standing-Order-Judge-Charles-R.-Breyer-rev-7-16-2025.pdf`); a command-line fetch on 2026-10-26 was refused by the court's firewall. The standing-order example's instrument.
+- sha256 (this file): `a36186c206ae59a2578f63e45ba8af6c998a4dcdbc27da1da0729aab4b315283`
+
+### `change-cancino-perez-d-colo-ecf-45.txt` — Cancino-Perez v. McCoy Global, Inc., No. 1:25-cv-00090 (D. Colo.), ECF No. 45 (July 10, 2025), page 1
+
+- Fetched 2026-10-26 from `www.govinfo.gov/content/pkg/USCOURTS-cod-1_25-cv-00090/pdf/USCOURTS-cod-1_25-cv-00090-0.pdf` (sha256 `bb04e7bb83ecd5df14b961703ff01dab86f715f45778048bb192391c76b896bc`), `pdftotext -layout`, the caption and opening paragraphs (which recite the scheduling order's June 20, 2025 deadline, ECF No. 42 § 9.a) with blank lines dropped; no wording changed. A public court record; the case-order example's instrument.
+- sha256 (this file): `dbb6f366760d5397318eb4284f3d0cb7ced95e87b16651c1a9d165d442b002c9`
+
+### `change-cfr-37-42-5-71-75-2026-10-20.txt` — 37 C.F.R. §§ 42.5, 42.71, 42.75 (eCFR, as of 2026-10-20)
+
+- Fetched 2026-10-26 from the eCFR versioner API (`www.ecfr.gov/api/versioner/v1/full/2026-10-20/title-37.xml?section=42.5`, `...=42.71`, `...=42.75`), XML tags stripped, one line per paragraph; no wording changed. Headings `## 37 C.F.R. (2026) § N` keep them apart from `cfr-37-part42.txt`, which predates § 42.75. The PTAB base example's text.
+- sha256 (this file): `9fda502b4d2026074b411da4c2556222780ccda8154a57275373b42faa9628ee`
+
+### `change-light-wonder-ipr2025-01072-paper-30.txt` — Light & Wonder, Inc. v. Evolution Malta Ltd., IPR2025-01072, Paper 30 (Director June 22, 2026), excerpt
+
+- Fetched 2026-10-26 from `www.uspto.gov/sites/default/files/documents/ipr2025-01072-dr-paper_30.pdf` (sha256 `5cba76995e71eae32656892dde2c1e92265f9bac30be3254f51e48e4f1407c80`), `pdftotext -layout`, the caption and the waiver paragraph (pages 1 and 3-4), footnote markers omitted; no wording changed. Designated precedential June 22, 2026 (PTAB precedential and informative decisions page, per the research register). The precedent example's instrument.
+- sha256 (this file): `1e32fb02af2ee2caeb5956f0fb21a93eb5c2ffa6dc3289ec4a73c5902df4edc5`
+
+### `change-thompson-v-ins-375-us-384.txt` — Thompson v. INS, 375 U.S. 384 (1964) (per curiam)
+
+- Fetched 2026-10-26 from `tile.loc.gov/storage-services/service/ll/usrep/usrep375/usrep375384/usrep375384.pdf` (the U.S. Reports, Library of Congress), `pdftotext -layout`, every non-blank line kept with its leading spaces dropped; no wording changed. The precedent the overruling example (Bowles v. Russell, `sources/change-corpus/rulings/bowles-scotus-2007.txt`) withdraws.
+- sha256 (this file): `adb3b1d49b1a12c14f58d973942a3dc62825bb5287c56df17f4ed0eac64f9cc9`

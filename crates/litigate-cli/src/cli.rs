@@ -290,7 +290,7 @@ pub enum Command {
     Op(EngineOp),
     /// The engine's raw JSON-in/JSON-out interface over packs and named
     /// scenarios (`litigate engine q '<request>'`, `litigate engine solve
-    /// --packs cofc`, `litigate engine --help`), for debugging and tools;
+    /// --packs ID,ID`, `litigate engine --help`), for debugging and tools;
     /// prints the engine response, not an envelope.
     #[command(disable_help_flag = true)]
     Engine {

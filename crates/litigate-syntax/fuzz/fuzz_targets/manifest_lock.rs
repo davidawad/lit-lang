@@ -9,9 +9,11 @@ fuzz_target!(|data: &[u8]| {
         return;
     };
     if let Ok(lock) = LockFile::parse(text) {
-        // A normalized lock must survive its canonical serialization.
+        // A normalized lock must survive its canonical serialization. The
+        // reader accepts rows and lists in any order, so normalize first.
+        let lock = LockFile::new(lock.packages);
         let reparsed = LockFile::parse(&lock.render()).expect("rendered lock parses");
-        assert_eq!(reparsed, LockFile::new(lock.packages));
+        assert_eq!(reparsed, lock);
     }
     let _ = parse_manifest(text);
 });

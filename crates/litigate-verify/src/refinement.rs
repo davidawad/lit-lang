@@ -101,7 +101,7 @@ fn exceeds(
         date("prescribed_due"),
     ));
     let within: Vec<hir::Expr> = ceilings.iter().map(|b| below(to, b)).collect();
-    preds.push(not(or(within)));
+    preds.push(not(join(BinaryOp::Or, false, within)));
     match smt::decide(&smt_vars, &preds) {
         smt::Decision::Unsat(_) => None,
         smt::Decision::Sat(model) => Some(counterexample(cx, e, to, deadline, ceilings, span, &model)),
@@ -246,18 +246,15 @@ fn not(e: hir::Expr) -> hir::Expr {
     )
 }
 
-/// The disjunction of `es` (they are never empty).
-fn or(es: Vec<hir::Expr>) -> hir::Expr {
-    es.into_iter()
-        .reduce(|a, b| cmp(BinaryOp::Or, a, b))
-        .unwrap_or_else(|| {
-            expr(
-                Type::Boolean,
-                ExprKind::Literal {
-                    value: Value::Boolean(false),
-                },
-            )
-        })
+/// `es` joined by `op` onto its unit `unit` (`false ||`, `true &&`).
+fn join(op: BinaryOp, unit: bool, es: impl IntoIterator<Item = hir::Expr>) -> hir::Expr {
+    let unit = expr(
+        Type::Boolean,
+        ExprKind::Literal {
+            value: Value::Boolean(unit),
+        },
+    );
+    es.into_iter().fold(unit, |a, b| cmp(op, a, b))
 }
 
 /// `to <= b`: `max` is a disjunction, `min` a conjunction.
@@ -273,18 +270,7 @@ fn below(to: &str, b: &Bound) -> hir::Expr {
             date(to),
             binary(Type::Date, BinaryOp::Sub, date(from.name()), days(*n)),
         ),
-        Bound::Max(xs) => or(xs.iter().map(|x| below(to, x)).collect()),
-        Bound::Min(xs) => xs
-            .iter()
-            .map(|x| below(to, x))
-            .reduce(|a, b| cmp(BinaryOp::And, a, b))
-            .unwrap_or_else(|| {
-                expr(
-                    Type::Boolean,
-                    ExprKind::Literal {
-                        value: Value::Boolean(true),
-                    },
-                )
-            }),
+        Bound::Max(xs) => join(BinaryOp::Or, false, xs.iter().map(|x| below(to, x))),
+        Bound::Min(xs) => join(BinaryOp::And, true, xs.iter().map(|x| below(to, x))),
     }
 }

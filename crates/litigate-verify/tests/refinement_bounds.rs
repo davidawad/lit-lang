@@ -134,3 +134,26 @@ fn only_a_bounded_deadline_and_a_refined_due_date_are_checked() {
     let other = with_params("until: Date, days: Number where days <= 45");
     assert_eq!(found(&other), (Some(ObligationStatus::Passed), vec![]));
 }
+
+/// `min` is a conjunction of ceilings and `x - N.days` counts back: an
+/// early order lowers the bound below what the refinement admits.
+#[test]
+fn a_min_bound_counts_every_ceiling() {
+    let lit = program(" where until <= prescribed_due + 20.days").replace(
+        "to max(prescribed_due + 30.days, grant_order_entered + 14.days)",
+        "to min(prescribed_due + 20.days, grant_order_entered - 1.days)",
+    );
+    let (status, messages) = found(&lit);
+    assert_eq!(status, Some(ObligationStatus::Failed));
+    assert_eq!(messages.len(), 1, "{messages:?}");
+    assert!(
+        messages[0]
+            .contains("exceeds min(prescribed_due + 20.days, grant_order_entered - 1.days) = "),
+        "{messages:?}"
+    );
+    let entailed = lit.replace(
+        "where until <= prescribed_due + 20.days",
+        "where until <= prescribed_due + 20.days && until < grant_order_entered",
+    );
+    assert_eq!(found(&entailed), (Some(ObligationStatus::Passed), vec![]));
+}

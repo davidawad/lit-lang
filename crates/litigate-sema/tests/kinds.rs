@@ -130,7 +130,7 @@ fn each_class_rejects_the_operations_outside_its_row() {
                 "case-order",
                 "CaseOrder",
                 "",
-                "deadline mine: 7.days from Served() counted_by c6 { extend { by Court, discretion GoodCause } }\ngrant g on [mine] effective [2020-01-01, 2020-02-01) cite \"Order\" { unlock }",
+                "deadline mine: 7.days from Served() counted_by c6 { extend { by Court, discretion GoodCause } }\ndeadline waivable: 7.days from Served() counted_by c6 { waive { by Court } }\ngrant g on [mine] effective [2020-01-01, 2020-02-01) cite \"Order\" { unlock }",
             ),
         ),
         // Replacing a declaration in time is an amendment's, not a layer's.

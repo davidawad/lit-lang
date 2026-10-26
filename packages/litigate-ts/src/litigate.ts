@@ -66,7 +66,8 @@ export class Litigate {
 
   /**
    * Runs `litigate ARGS` (no program name) over `files`, exactly as the
-   * CLI over a disk holding them. Only `check` and `build` run.
+   * CLI over a disk holding them. Only `check`, `build` and `worlds`
+   * (alternate timelines) run.
    */
   run(args: readonly string[], files: Files = {}, library = true): LitigateRun {
     const json = this.#wasm.litigate(JSON.stringify(args), JSON.stringify(files), library);

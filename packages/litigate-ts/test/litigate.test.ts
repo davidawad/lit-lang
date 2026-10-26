@@ -79,12 +79,12 @@ describe("build matches the CLI", () => {
     );
   });
 
-  it("runs only check and build", () => {
+  it("runs only check, build and worlds", () => {
     const run = lit.run(["explain", "L3004"]);
     expect(run).toStrictEqual({
       code: 1,
       stdout: "",
-      stderr: "litigate explain: only check and build run over an in-memory source\n",
+      stderr: "litigate explain: only check, build and worlds run over an in-memory source\n",
       files: {},
     });
   });

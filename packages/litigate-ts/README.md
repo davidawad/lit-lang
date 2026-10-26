@@ -87,7 +87,8 @@ lit.run(["--format", "human", "check", "cases"], files);  // raw LitigateRun {co
   `crates/litgraph-wasm/build.rs`); it fills in every `lit/` path `files`
   does not give, so a matter's `uses` resolve. Pass `library: false` to
   check only what you pass.
-- Only `check` and `build` run; any other command exits 1.
+- Only `check`, `build` and `worlds` (alternate timelines,
+  docs/litigate/CHANGE.md §5.1) run; any other command exits 1.
 - On the Rust side the loaders read a `litigate_sema::pkg::source::Source`:
   `Disk` for the CLI, `MemoryTree` here (`litigate_cli::execute_in_memory`).
 - `test/litigate.test.ts` checks and builds the repository's `lit/` and

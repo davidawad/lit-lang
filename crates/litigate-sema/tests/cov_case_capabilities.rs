@@ -133,7 +133,7 @@ fn character_and_emergency_grants_in_replay() {
     let below = edited(|g| g.meta.authority = "CaseOrder".into());
     let rows: &[(&str, &[Package], &str, &[&str])] = &[
         (
-            "claim-processing: a late answer is a forfeitable objection (L4010, warning)",
+            "claim-processing: a late answer is a forfeitable objection (L4013, warning)",
             kappa(),
             "",
             &[

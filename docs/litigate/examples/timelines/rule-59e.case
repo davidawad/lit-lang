@@ -1,0 +1,18 @@
+case rule-59e-motion
+uses change-post-judgment ^1.0.0, change-frcp-base ^1.0.0
+as_of 2010-04-30
+summary "A synthetic matter: judgment entered March 1, 2010, and a Rule 59(e) motion filed 24 days later."
+notes "Synthetic facts, no real parties. Run it under rule-59e.world (`litigate worlds`): timely in a world holding the 2009 amendment (28 days, due March 29, 2010), late in one without it (10 days, due March 11, 2010)."
+
+perspective movant-co
+
+parties {
+  movant-co: movant Corporation
+}
+
+events {
+  judgment: 2010-03-01 change-frcp-base::JudgmentEntered() on movant-co
+  motion: 2010-03-25 AlterAmendMoved() by movant-co
+}
+
+stakes { motion-filed: 0.usd, judgment-stands: 0.usd }

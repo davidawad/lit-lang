@@ -43,7 +43,7 @@ test "a summary-judgment motion is due 30 days after discovery closes" cite "FRC
 /// of the judgment, which FRCP 6(b)(2) forbids extending. The 2009
 /// amendment (`change-frcp-2009-amendment`) replaces it from December 1,
 /// 2009.
-deadline alter-amend-period: 10.days after JudgmentEntered() counted_by frcp6 effective [2007-12-01, ..) cite "FRCP (2007) 59(e)"
+deadline alter-amend-period: 10.days after JudgmentEntered() counted_by frcp6 effective [2007-12-01, ..) known_at 2007-04-30 cite "FRCP (2007) 59(e)"
 {
   extend { never cite "FRCP (2007) 6(b)(2)" }
 }

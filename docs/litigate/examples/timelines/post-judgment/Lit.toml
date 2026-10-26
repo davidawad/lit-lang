@@ -1,0 +1,31 @@
+# A procedure over the base periods (docs/litigate/CHANGE.md §4): the step
+# a Rule 59(e) motion takes, so a matter's filing is judged against the
+# period its world's layers govern (lg-fq2.4). Its law is the base's: it
+# declares no period of its own.
+[package]
+name = "change-post-judgment"
+version = "1.0.0"
+language = 1
+pack_id = "change-post-judgment"
+forum = "frcp"
+authority = "FederalRule"
+title = "Change example: a Rule 59(e) motion after judgment"
+in_force = "2007-12-01"
+known_at = "2026-10-26"
+
+[package.roles]
+movant = "self"
+court = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../../../../../lit/core" }
+change-frcp-base = { version = "^1.0.0", path = "../../change/base" }
+
+[sources.frcp-2007]
+title = "Federal Rules of Civil Procedure as restyled, effective Dec. 1, 2007 (order of Apr. 30, 2007)"
+url = "https://www.supremecourt.gov/orders/courtorders/frcv07p.pdf"
+path = "sources/change-frcv-2007-restyled-excerpt.txt"
+path_sha256 = "a7287e6fd94acc165ac1eb4a5cdd5c9f404acc3abfe01182cbfb490c3d766f6e"
+as_of = "2007-12-01"
+cite_prefixes = ["FRCP (2007)"]
+section_heading = "FRCP (2007) Rule {n}"

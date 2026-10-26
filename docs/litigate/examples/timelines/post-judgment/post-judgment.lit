@@ -1,0 +1,25 @@
+module change-post-judgment.motions
+
+import change-frcp-base.periods.{ alter-amend-period }
+
+/// After judgment is entered (FRCP 58) the losing party may move to alter
+/// or amend it within the Rule 59(e) period, which the layers of a world
+/// govern: 10 days under the 2007 text, 28 days once the 2009 amendment is
+/// in force and known. Its versions are known from the order of April 30,
+/// 2007 that promulgated the restyled rule.
+start judgment
+
+/// A motion to alter or amend the judgment is filed (FRCP 59(e)).
+event AlterAmendMoved()
+
+decision judgment: "Judgment entered: move to alter or amend it?" by movant effective [2007-12-01, ..) known_at 2007-04-30 cite "FRCP (2007) 59(e)"
+{
+  move "Move to alter or amend the judgment" -> motion-filed {
+    event AlterAmendMoved()
+    within alter-amend-period
+  }
+  forgo "Let the judgment stand" -> judgment-stands
+}
+
+terminal motion-filed: "Rule 59(e) motion filed" effective [2007-12-01, ..) known_at 2007-04-30
+terminal judgment-stands: "The judgment stands" effective [2007-12-01, ..) known_at 2007-04-30

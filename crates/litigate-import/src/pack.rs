@@ -41,7 +41,6 @@ pub(crate) fn import_pack(pack: &Pack, from: &str, dir: &str, issues: &mut Issue
         let id = issues.ident(&group.id, &format!("/groups/{index}/id"), false);
         root.push(format!("group {id}: {}", text::string(&group.label)));
     }
-    files.push(Emitted::lit(format!("{dir}/{dir}.lit"), root.join("\n\n")));
     let parts = sections(pack);
     let width = parts.len().to_string().len().max(2);
     let section_of = section_index(pack, &parts);
@@ -59,6 +58,8 @@ pub(crate) fn import_pack(pack: &Pack, from: &str, dir: &str, issues: &mut Issue
     }
     let grammar = CiteGrammar::new(&pack.cite_syntax);
     let mut spelling = Spelling { grammar, issues };
+    root.extend(spelling.limits(pack));
+    files.push(Emitted::lit(format!("{dir}/{dir}.lit"), root.join("\n\n")));
     let layout = Layout {
         pack,
         dir,

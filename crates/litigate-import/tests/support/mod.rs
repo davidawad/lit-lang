@@ -106,6 +106,7 @@ struct Modules {
     groups: Vec<Value>,
     nodes: Vec<Value>,
     edges: Vec<Value>,
+    limits: Vec<Value>,
     start: Option<String>,
 }
 
@@ -114,6 +115,7 @@ fn read_modules(files: &[&ImportedFile]) -> Modules {
     let mut groups = Vec::new();
     let mut nodes = Vec::new();
     let mut edges = Vec::new();
+    let mut limits = Vec::new();
     let mut start = None;
     let mut modules: Vec<&&ImportedFile> =
         files.iter().filter(|f| is_ext(&f.path, "lit")).collect();
@@ -133,6 +135,7 @@ fn read_modules(files: &[&ImportedFile]) -> Modules {
                         .map(|t| ast::unescape(t.text()));
                     groups.push(json!({ "id": id, "label": label }));
                 }
+                SyntaxKind::LimitDecl => limits.push(reader::limit(&child)),
                 SyntaxKind::StartDecl => {
                     start = ast::StartDecl::cast(child.clone())
                         .and_then(|s| s.target())
@@ -152,6 +155,7 @@ fn read_modules(files: &[&ImportedFile]) -> Modules {
         groups,
         nodes,
         edges,
+        limits,
         start,
     }
 }
@@ -183,6 +187,7 @@ pub fn read_pack(files: &[&ImportedFile]) -> Pack {
         groups,
         nodes,
         edges,
+        limits,
         start,
     } = read_modules(files);
     let counting = get("counting");
@@ -213,6 +218,9 @@ pub fn read_pack(files: &[&ImportedFile]) -> Pack {
     sources_and_cite_syntax(&manifest, &mut pack);
     pack.insert("nodes".into(), Value::Array(nodes));
     pack.insert("edges".into(), Value::Array(edges));
+    if !limits.is_empty() {
+        pack.insert("filingLimits".into(), Value::Array(limits));
+    }
     let text = Value::Object(pack).to_string();
     Pack::from_json(&text).unwrap_or_else(|e| panic!("read-back pack is invalid: {e}"))
 }

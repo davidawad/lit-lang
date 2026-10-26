@@ -376,3 +376,94 @@ pub fn links(text: &str) -> Value {
     }
     json!({ "instances": instances, "links": links })
 }
+
+/// The first `cite` directly under `node`, as its text (a hole's reason).
+fn cite_of(node: &SyntaxNode) -> Option<Value> {
+    node.children()
+        .find(|n| n.kind() == SyntaxKind::CiteExpr)
+        .map(|c| value(&c))
+}
+
+/// Keyword and identifier tokens directly under `node`, in order.
+fn words(node: &SyntaxNode) -> Vec<String> {
+    node.children_with_tokens()
+        .filter_map(rowan::NodeOrToken::into_token)
+        .filter(|t| t.kind() == SyntaxKind::Ident || t.kind().is_keyword())
+        .map(|t| t.text().to_owned())
+        .collect()
+}
+
+/// A `limit` declaration as a `filingLimits` entry (SPEC §3.7): each
+/// entry field for field, a hole left out as lowering leaves it.
+pub fn limit(node: &SyntaxNode) -> Value {
+    let mut out = Map::new();
+    let id = node
+        .children()
+        .find(|n| n.kind() == SyntaxKind::Ref)
+        .map(|r| text_of(&r));
+    out.insert("id".into(), json!(id));
+    if let Some(cite) = cite_of(node) {
+        out.insert("cite".into(), cite);
+    }
+    let (mut bounds, mut certificates, mut ecf) = (Vec::new(), Vec::new(), Vec::new());
+    let entries = node
+        .children()
+        .find(|n| n.kind() == SyntaxKind::FieldList)
+        .into_iter()
+        .flat_map(|b| b.children());
+    for entry in entries {
+        let mut item = Map::new();
+        if let Some(cite) = cite_of(&entry) {
+            item.insert("cite".into(), cite);
+        }
+        let literal = entry.children().find(|n| n.kind() == SyntaxKind::Literal);
+        match entry.kind() {
+            SyntaxKind::LimitBound => {
+                item.insert("measure".into(), json!(words(&entry).first()));
+                if let Some(n) = literal.map(|l| text_of(&l).replace('_', "")) {
+                    item.insert("max".into(), json!(n.parse::<u64>().ok()));
+                }
+                bounds.push(Value::Object(item));
+            }
+            SyntaxKind::CertificateReq => {
+                let kind = entry
+                    .children()
+                    .find(|n| n.kind() == SyntaxKind::Ref)
+                    .map(|r| text_of(&r));
+                item.insert("kind".into(), json!(kind));
+                if let Some(list) = entry.children().find(|n| n.kind() == SyntaxKind::IdList) {
+                    item.insert("for".into(), json!(words(&list)));
+                }
+                certificates.push(Value::Object(item));
+            }
+            SyntaxKind::Exclusions => {
+                let items: Vec<String> = entry
+                    .children()
+                    .filter(|n| n.kind() == SyntaxKind::IdList)
+                    .flat_map(|l| l.children())
+                    .filter(|n| n.kind() == SyntaxKind::Ref)
+                    .map(|r| text_of(&r))
+                    .collect();
+                item.insert("items".into(), json!(items));
+                out.insert("excludes".into(), Value::Object(item));
+            }
+            SyntaxKind::EcfCode => {
+                if let Some(code) = literal {
+                    item.insert("code".into(), value(&code));
+                }
+                ecf.push(Value::Object(item));
+            }
+            _ => {}
+        }
+    }
+    for (key, list) in [
+        ("bounds", bounds),
+        ("certificates", certificates),
+        ("ecf", ecf),
+    ] {
+        if !list.is_empty() {
+            out.insert(key.into(), Value::Array(list));
+        }
+    }
+    Value::Object(out)
+}

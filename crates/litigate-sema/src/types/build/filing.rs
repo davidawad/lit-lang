@@ -153,8 +153,8 @@ impl Cx<'_, '_> {
         true
     }
 
-    /// The entry's cite: its first `cite` (a cite hole is recorded as a
-    /// hole and cites nothing); at most one.
+    /// The entry's cite: its first `cite`, at most one, and a citation:
+    /// a cite hole adds nothing to the declaration's own (L2007).
     fn entry_cite(&mut self, cites: &[Field]) -> Option<String> {
         for extra in cites.iter().skip(1) {
             self.report(Report::new(
@@ -163,11 +163,18 @@ impl Cx<'_, '_> {
                 "a limit entry has at most one `cite`",
             ));
         }
-        let first = cites.first();
-        match first.and_then(super::cx::first_expr).map(|e| &e.kind) {
+        let first = cites.first()?;
+        match super::cx::first_expr(first).map(|e| &e.kind) {
             Some(ExprKind::Cite(text, _)) => Some(text.clone()),
             _ => {
-                self.string_or_hole(first.as_ref());
+                self.report(
+                    Report::new(
+                        C::InvalidField,
+                        first.range,
+                        "a limit entry's cite is a citation, not a hole",
+                    )
+                    .note("leave the entry uncited (the declaration's cite covers it), or write the value the sources do not settle as a hole"),
+                );
                 None
             }
         }

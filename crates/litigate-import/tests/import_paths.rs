@@ -489,3 +489,70 @@ fn a_v2_scenario_with_only_unvalued_stakes_writes_a_stakes_block() {
         [("/scenario/payoffs/p::c".to_owned(), None)]
     );
 }
+
+/// A pack whose `filingLimits` hold `limits`, its `lowered` header
+/// listing `holes` (SPEC §3.7).
+fn limited(id: &str, limits: Value, holes: Vec<Hole>) -> Input {
+    let pin = Pin {
+        name: id.into(),
+        version: "0.1.0".into(),
+        digest: format!("sha256:{}", "0".repeat(64)),
+    };
+    let lowered = Lowered::new(vec![pin], "2026-02-01".into(), None, holes);
+    pack(id, |p| {
+        p["schemaVersion"] = json!(5);
+        p["filingLimits"] = limits;
+        p["lowered"] = json!(lowered);
+    })
+}
+
+#[test]
+fn a_filing_limit_imports_with_its_holes_and_reads_back() {
+    let hole = |pointer: &str, reason: Option<&str>| Hole {
+        pointer: pointer.into(),
+        reason: reason.map(str::to_owned),
+    };
+    let input = limited(
+        "lim",
+        json!([{
+            "id": "brief", "cite": "FRAP 32",
+            "bounds": [{"measure": "pages"}, {"measure": "words", "max": 13000}],
+            "certificates": [{"kind": "compliance", "for": ["words"]}, {"kind": "service"}],
+            "excludes": {"items": ["cover-page"]},
+            "ecf": [{}, {"code": "brief"}]
+        }]),
+        vec![
+            hole("/filingLimits/0/bounds/0/max", Some("local rule")),
+            hole("/filingLimits/0/ecf/0/code", None),
+            hole("/filingLimits/0/excludes/open/0", Some("any item")),
+        ],
+    );
+    let files = import_ok(std::slice::from_ref(&input));
+    let root = text(&files, "lit/lim/lim.lit");
+    assert!(
+        root.contains(
+            "/// imported\nlimit brief {\n  pages <= ?(\"local rule\")\n  words <= 13000\n  \
+             requires certificate compliance for [words]\n  requires certificate service\n  \
+             excludes [cover-page, ?(\"any item\")]\n  ecf ?\n  ecf \"brief\"\n} \
+             cite ?(\"FRAP 32\")\n"
+        ),
+        "{root}"
+    );
+    assert_pack_round_trips(&input, &files, "lit/lim");
+}
+
+#[test]
+fn a_filing_limit_entry_cite_with_no_spelling_is_l6002() {
+    let input = limited(
+        "lim",
+        json!([{"id": "brief", "bounds": [{"measure": "words", "max": 1, "cite": "Local Rule 9"}]}]),
+        Vec::new(),
+    );
+    let diagnostics = litigate_import::import(&[input]).err().unwrap_or_default();
+    assert!(
+        diagnostics.iter().any(|d| d.code.as_str() == "L6002"
+            && d.message.contains("no exact .lit spelling")
+            && format!("{d:?}").contains("`/filingLimits/0/bounds/0/cite`")),
+        "{diagnostics:#?}"
+    );
+}

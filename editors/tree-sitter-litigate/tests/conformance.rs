@@ -220,7 +220,10 @@ fn guard_operations_parse_here_and_in_the_compiler() {
 #[test]
 fn filing_limits_parse_here_and_in_the_compiler() {
     for (entry, node) in [
-        ("words <= 13_000 cite \"FRAP 32(a)(7)(B)(i)\"", "limit_bound"),
+        (
+            "words <= 13_000 cite \"FRAP 32(a)(7)(B)(i)\"",
+            "limit_bound",
+        ),
         ("pages <= ?(\"local rule\")", "limit_bound"),
         ("lines <= 1300", "limit_bound"),
         (
@@ -256,7 +259,10 @@ fn filing_limits_parse_here_and_in_the_compiler() {
     let tree = parse(source);
     assert!(syntax_errors(&tree).is_empty(), "{source}");
     assert!(find(tree.root_node(), "relation").is_some(), "{source}");
-    assert!(litigate_syntax::parse_lit(source).errors().is_empty(), "{source}");
+    assert!(
+        litigate_syntax::parse_lit(source).errors().is_empty(),
+        "{source}"
+    );
     // Outside the declaration the filing words stay reserved (L0011).
     let source = "module m\nstart limit\n";
     let codes: Vec<&str> = litigate_syntax::parse_lit(source)

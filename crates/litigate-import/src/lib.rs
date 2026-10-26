@@ -31,6 +31,7 @@
 //! # Ok::<(), String>(())
 //! ```
 mod case;
+mod filing;
 mod issues;
 mod json;
 mod links;

@@ -154,8 +154,8 @@ Punct        = "::" | "->" | "=>" | "==" | "!=" | "<=" | ">=" | "&&" | "||" | ".
   and `characterization`, reserved before, are the capability syntax of
   §5.3 and §5.5.) Only
   the whole word is reserved: `world-court` and `"world"` are fine. The
-  list is `litigate_syntax::RESERVED_WORDS`. `where` is reserved the same
-  way for refinements, but is L0009 rather than L0007 (§3.5); its list is
+  list is `litigate_syntax::RESERVED_WORDS`. `where` is the keyword of a
+  refinement clause (§3.5) and is L0009 anywhere else; its list is
   `litigate_syntax::REFINEMENT_WORDS`. `and` and `or` are keywords of the
   typed guard operations of a patch (`when and`, `when or`, §3.6) and
   nothing else: anywhere an identifier could stand they are L0010. Their
@@ -216,7 +216,7 @@ Item         = StartDecl | GroupDecl | TypeDecl | EnumDecl | EventDecl | NodeDec
              | ExceptionDecl | TestDecl | GrantDecl ;
 StartDecl    = "start", Ident ;
 GroupDecl    = "group", Ident, ":", String ;
-TypeDecl     = "type", Ident, "=", Type, [ WhereClause ] ;   (* WhereClause: §3.5 *)
+TypeDecl     = "type", Ident, "=", Type, [ WhereClause ] ;   (* refinements: §3.5 *)
 EnumDecl     = "enum", Ident, "{", Ident, { ",", Ident }, [","], "}" ;
 EventDecl    = "event", Ident, "(", [ Param, { ",", Param }, [","] ], ")",
                { EventEffect } ;
@@ -411,40 +411,103 @@ only the symbolic operators.
 - Lowering never runs on a file with L0xxx errors. Sema runs on the
   recovered tree so the LSP still works.
 
-### 3.5 Reserved: refinement syntax
+### 3.5 Refinements
 
-Refinement types `{x: B | φ}` (§13.6) are discharged today by ground
-evaluation and Gregorian-cycle enumeration, which need no surface syntax.
-A user-written qualifier belongs to the SMT tier (lg-962.2, design review
-2026-10-23 §2.2), which has none yet. Its two forms are reserved now so
-that adding them later is additive: no file accepted today can change
-meaning or stop parsing when they land.
+A refinement restricts a type by a predicate: `{x: B | φ}` is the values
+`x` of base type `B` for which `φ` holds (design review 2026-10-23 §2.2).
+Closed terms are refined without syntax (`Probability`, §6; distributions,
+counting rules, §13.6); these two forms let an author state one, on an
+alias or an event's parameter, and are discharged by exact evaluation and
+the SMT tier (lg-962.2, `litigate-smt`).
 
 ```ebnf
-RefinedType  = "{", Ident, ":", Type, "|", Expr, "}" ;   (* reserved: L0009 *)
-WhereClause  = "where", Expr ;                          (* reserved: L0009 *)
+RefinedType  = "{", Ident, ":", Type, "|", Expr, "}" ;
+WhereClause  = "where", Expr ;
 ```
 
-- `RefinedType` is an alternative of `Type`, so it may stand wherever a
-  type does: `type Short = {d: Days | d <= 60.days}`,
-  `event Served(on: {t: Date | t >= 2026-01-01})`, or as a type argument.
-- `WhereClause` follows the type of a `Param` or of a `TypeDecl`:
-  `event Served(on: Date where on >= 2026-01-01)`. What its predicate may
-  name, and the qualifier grammar of `φ` in either form, are fixed by the
-  edition that adds refinements (lg-962.8); the reserved slot accepts any
-  `Expr`.
-- `where` is a reserved word (§2): L0009 wherever it appears, in the slot
-  or as an identifier. Only the whole word is reserved (`where-filed` and
-  `"where"` are fine). `|` is a punctuation token; outside a
-  `RefinedType` it is L0001.
-- Both forms are parsed in full, into `RefinedType` and `WhereClause`
-  nodes, so the rest of the file still parses and the LSP keeps working;
-  each is then rejected with L0009, whose message begins
-  `reserved: refinements (SMT tier)`. Like any L0xxx error it stops
-  formatting and lowering. A malformed form reports L0001/L0002 as usual,
-  at most one error per position (§3.4).
+- **Where they stand.** `RefinedType` is an alternative of `Type`; it is
+  accepted as a `TypeDecl`'s type (`type Short = {d: Days<CalendarDays> |
+  d <= 60.days}`) and as a `Param`'s (`event Served(on: {t: Date | t >=
+  2026-01-01})`). `WhereClause` follows a `Param`'s type (`event
+  Extended(days: Number where days <= 30)`) or a `TypeDecl`'s (`type
+  Recent = Date where it >= 2020-01-01`). Elsewhere, as a type argument
+  (`List<{x: T | p}>`), a refinement is L2012: values inside a container
+  are not checked. A base may itself be refined (`{a: {b: Number | b > 0}
+  | a < 9}`); its predicates all apply.
+- **What a predicate names.** In `{x: B | φ}`, `x`; in a parameter's
+  `where`, the parameter. On an event, every parameter of the event is in
+  scope in each of its predicates (`event E(from: Date, to: Date where to
+  >= from)`). In a type declaration's `where`, the value is `it`. An event
+  that `extends d to p` (§5.2) may also name the dates its deadline's
+  extension bounds are counted from: `prescribed_due`, `current_due` and
+  `grant_order_entered` (§5.3). Constants and enum variants (`Mail`,
+  `Method.Mail`) are the only other names; any other is L2012.
+- **Qualifier grammar.** A predicate is a `Bool`: comparisons `== != < <=
+  > >=` of linear terms over `Number`, `Probability`, `Hours`, `Money`,
+  `Days<U>` and `Date` (equal types, a `Number` beside a `Probability`);
+  `==`/`!=` of enums and `Bool`s; a `Bool` parameter; `true`, `false`; and
+  `&&`, `||`, `!` over those. A linear term is a name, a literal, `+`/`-`
+  of one type, unary `-`, and `*` or `/` by a constant `Number`. A date
+  moves by calendar days only (`d + 14.days`, `d - 3.days`), and `d1 - d2`
+  is the calendar days between: other units count through a counting rule,
+  which a refinement does not run. A call, `match`, field, record, list,
+  `%`, hole, a product of two non-constants, or a `String`/`EdgeRef`
+  comparison is L2012; a type error is L2001/L2004 as in any expression.
+  So every predicate is quantifier-free linear arithmetic over finitely
+  many variables (QF_LIA/QF_LRA with finite enums), and every check below
+  terminates.
+- **Aliases.** A refined alias refines every parameter of its type: the
+  parameter inherits its predicates (an alias of a refined alias inherits
+  both), read in the using package's view.
+- **Satisfiable (SMT tier).** The predicates of an alias, and those of an
+  event's parameters together, must admit a value: no satisfying value is
+  L2014 at the last conflicting predicate, naming an unsat core (each
+  top-level `&&` conjunct is its own assertion), the others as labelled
+  secondary spans. Each variable ranges over its domain: an enum over its
+  variants, a `Bool` over 0 and 1, a probability over `[0, 1]`, a date
+  over `0001-01-01..=9999-12-31`.
+- **Arguments (exact).** An event call's constant arguments, in a `.lit`
+  file (an edge's `event`, a trigger pattern, a test's `given`) or a
+  `.case` event, are evaluated against each predicate of the event: a
+  false one is L2013 at its parameter's argument, with the values it read
+  (``Stipulated`: days = 45 does not satisfy the refinement `days <= 30``).
+  A predicate reading an argument that is not constant (a pattern's
+  omitted argument, a `?` date) is not decided there. `&&`/`||` decide when
+  one side does.
+- **Bound dates (replay).** A predicate naming a bound date is evaluated
+  when replay judges the extension, per open instance: a false one refuses
+  the extension with L2013 (as a bound past its ceiling is refused, §5.3).
+- **Delegation bounds (SMT tier).** An `extends d to p` event whose
+  predicates read `p` claims every extension it records is within `d`'s
+  `extend` bounds. For each version of `d` whose extensions are all
+  bounded (`max N.days`, `to B`), `litigate-verify` asks whether the
+  event's predicates, `current_due >= prescribed_due`, and `p` past every
+  ceiling hold together; a model is L2013 with the counterexample (``when
+  prescribed_due = 1970-01-01, …, until = 1970-02-01 exceeds
+  max(prescribed_due + 30.days, grant_order_entered + 14.days) =
+  1970-01-31``), recorded under `well-typed`. A version with a
+  discretionary extension (no ceiling) or none bounds nothing and is not
+  checked.
+- **Undecided is a hole.** The solver runs under a deterministic work
+  budget, not a timeout. `unknown` (the budget, exact arithmetic past
+  `i64` while building the question, or a wasm build, which links no
+  solver) is L2015: a hole, `warning` in `dev` and `error` in `strict`,
+  never a pass. Answers are cached by the canonical question's content
+  hash and the solver version.
+- **Representation.** Typed HIR keeps each predicate as a `Refinement
+  {binder, predicate, via}` on `TypeAlias.refinements` and
+  `EventType.refinements` (the parameter it refines, the typed `Bool`
+  expression over parameter names, and the alias it came from); both are
+  omitted from JSON when empty, so an unrefined package's HIR and pack are
+  unchanged. Lowering ignores them: the engine sees only checked values.
+- `where` is a keyword only in the `WhereClause` slot; anywhere else, as
+  an identifier, it is L0009 (`reserved: refinement keyword`). Only the
+  whole word is reserved (`where-filed` and `"where"` are fine). `|` is a
+  punctuation token; outside a `RefinedType` it is L0001. A malformed form
+  reports L0001/L0002 as usual, at most one error per position (§3.4).
+  `litigate fmt` keeps `{x: T | p}` on its line.
 - The tree-sitter grammar parses both forms (`refined_type`,
-  `where_clause`) so editors highlight them; the compiler rejects them.
+  `where_clause`) so editors highlight them.
 
 ### 3.6 Typed guard operations in patches
 
@@ -2716,7 +2779,7 @@ unchanged, and is graded `error`; anything else is rejected.
 | L0006 | dangling doc comment | L3006 | precedence cycle |
 | L0007 | reserved word | | |
 | L0008 | unknown edition | | |
-| L0009 | reserved refinement | | |
+| L0009 | `where` outside a refinement clause | | |
 | L0010 | guard-operation keyword | | |
 | L0011 | filing-requirement keyword | | |
 | L0012 | word boolean operator | | |
@@ -2754,6 +2817,10 @@ unchanged, and is graded `error`; anything else is rejected.
 | L2009 | invalid capability (characterization) | L3010 | not encoded (`unknown_before`) |
 | L2010 | forbidden effect (instrument class) | | |
 | L2011 | class outside its forum family | | |
+| L2012 | invalid refinement (qualifier grammar) | | |
+| L2013 | refinement violated (counterexample) | | |
+| L2014 | vacuous refinement (unsat core) | | |
+| L2015 | refinement undecided (a hole) | | |
 | L9001 | rule without test | L6002 | semantic diff |
 | L9002 | hole present | L6003 | invalid engine expression |
 | L9003 | anonymous edge | L6004 | non-finite number |
@@ -2765,10 +2832,11 @@ unchanged, and is graded `error`; anything else is rejected.
 | L9009 | precedent not binding at the world's location | | |
 
 Severity (`DiagnosticCode::severity(profile)`): every non-L9 code except
-L4009, L4010, L4011, L4012, L4013, L4014 and L3010 is `error`. L9003,
-L9006, L9008 and L9009 are `info`. L4009, L4010, L4011, L4012, L4013, L4014,
-L9005 and L9007 are `warning`. L9001, L9002, L9004 and L3010 (a hole in
-the corpus) are `warning` in `dev` and `error` in `strict`.
+L4009, L4010, L4011, L4012, L4013, L4014, L3010 and L2015 is `error`.
+L9003, L9006, L9008 and L9009 are `info`. L4009, L4010, L4011, L4012,
+L4013, L4014, L9005 and L9007 are `warning`. L9001, L9002, L9004, L3010
+(a hole in the corpus) and L2015 (an undecided refinement, a hole) are
+`warning` in `dev` and `error` in `strict`.
 
 ### 9.2 Shapes
 
@@ -3198,7 +3266,7 @@ gets one row per condition when the conditions classify differently.
 | C74 | L0007 reserved word used as an identifier (§2) | syntax | a | Lexical grammar. |
 | C75 | L0008 unknown edition (§2) | syntax | a | Grammar: `Edition` is a closed set per compiler. |
 | C76 | L4009 a duty's instance borne by a party is open past its due date at `as_of` (§5.6) | sema | c | Linearity of the instance is by construction (each ends once); whether it is past due needs the clock at `as_of`, as C49. |
-| C77 | L0009 refinement syntax (`{x: T \| p}` or `where`) used before the SMT tier adds it (§3.5) | syntax | a | Grammar: a reserved slot that always rejects. |
+| C77 | L0009 `where` outside a refinement clause (§3.5) | syntax | a | Grammar: `where` is a keyword only in the `WhereClause` slot. |
 | C78 | L0010 `and`/`or` outside a typed guard operation of a patch (§3.6) | syntax | a | Grammar: a keyword outside its one slot. |
 | C79 | L5007 a reachable marking of the procedure net reaches no terminal; more markings than the bound (§7) | verify | c | O16. |
 | C80 | L5008 an edge out of a reachable node is enabled in no reachable marking (§7) | verify | c | O16. |
@@ -3217,6 +3285,10 @@ gets one row per condition when the conditions classify differently.
 | C93 | L1013 a malformed world, unknown layer or family, a circuit the family lacks or needs (§5.8) | sema | a | `World = (Set<Layer>, ι, μ)` a closed record; `ι.circuit ∈ circuits(family)` finite membership. Done (lg-fq2.1). |
 | C94 | L1014 a counterfactual world under strict, a non-authoritative layer in an actual world (§5.8) | sema | a | Modality as an index: `World<Actual>` admits `Layer<authoritative>` only; `Profile::Strict` admits `World<Actual>` only. Done (lg-fq2.1). |
 | C95 | L9009 a precedent persuasive at a world's location with binding effects (§5.8) | sema | a | `effects(pkg) ⊆ row(Precedent[scope(ι)])`, set inclusion. Done (lg-fq2.1). |
+| C96 | L2012 a refinement predicate outside the qualifier grammar, naming what it may not, or as a type argument (§3.5) | sema | a | Typing in the qualifier grammar: linear terms, enum and `Bool` tests; a closed scope of the binder, the event's parameters and an `extends` event's bound dates. Done (lg-962.8). |
+| C97 | L2013 an argument (`.lit` pattern or test, `.case` event, a bound date at replay) falsifies its parameter's refinement; an extension refinement admits a date past its deadline's bound (§3.5) | sema, verify | b | Ground arguments by exact evaluation (tier 1); the delegation bound by QF_LIA over the bound dates, a model the counterexample (tier 3). Done (lg-962.8). |
+| C98 | L2014 no value satisfies an alias's or an event's refinements (§3.5) | sema | b | QF_LIA/QF_LRA with finite enums (tier 3): unsat, with a minimal core. Done (lg-962.8). |
+| C99 | L2015 the SMT tier does not decide a refinement question (§3.5) | sema, verify | b | The hole of tier 3: the solver's deterministic budget, `i64` overflow building the query, or no solver (wasm); never a pass. Done (lg-962.8). |
 
 ### 13.4 SPEC rules with no code of their own
 
@@ -3289,11 +3361,13 @@ The (b) rows above are discharged in two tiers before any solver
 
 Version disjointness (O3, C33), intervals (R8) and day amounts (R7) were
 already ground checks with their own codes; they are unchanged. The SMT
-tier (lg-962.2) remains for open terms only: parameterised values and
-delegation bounds. No refinement surface syntax is added: tiers 1 and 2
-need none, and a user-written qualifier would add a grammar form whose
-only consumer today would be the solver tier. Its forms are reserved
-instead (§3.5, L0009, lg-962.7), so adding them is additive.
+tier (lg-962.2) is for open terms only: parameterised values and
+delegation bounds. Its surface syntax, reserved by lg-962.7, is the
+refinement of §3.5 (lg-962.8, C96-C99): a user-written qualifier on an
+alias or an event's parameter, checked by exact evaluation where the
+values are known (arguments, and bound dates at replay) and by the solver
+where they are open (satisfiability, extension refinements within their
+delegation bounds).
 
 ### 13.7 Status: node kinds (lg-flu.9)
 

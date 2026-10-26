@@ -59,6 +59,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   tree-sitter grammar (`measure_list`, `event_paper`) and editor
   highlights follow.
 
+- **Refinements** (lg-962.8; SPEC §3.5, design review 2026-10-23 §2.2,
+  §2.4). The reserved forms are the language's refinements: `type Short =
+  {d: Days<CalendarDays> | d <= 60.days}`, `type Recent = Date where it >=
+  2020-01-01`, and `event Extended(days: Cap, how: Method where how ==
+  Mail || days <= 3)`. A predicate is typed into HIR (`Refinement` on
+  `TypeAlias.refinements` and `EventType.refinements`, omitted when empty)
+  in a qualifier grammar of linear comparisons, enum and `Bool` tests, so
+  every check terminates; anything else is the new L2012. An event's
+  predicates may read all its parameters, an `extends` event's also
+  `prescribed_due`, `current_due` and `grant_order_entered`, and a refined
+  alias refines every parameter of its type, across packages. Discharge:
+  constant arguments in `.lit` patterns and tests and in `.case` events
+  are evaluated exactly (L2013 at the argument, with its values); a
+  bound-date predicate refuses an extension at replay (L2013); the SMT
+  tier (`litigate-smt`, now a dependency of `litigate-sema` off wasm)
+  rejects refinements no value meets (L2014, with an unsat core as
+  labelled spans) and, in `litigate-verify`, an extension refinement that
+  admits a date past its deadline's `extend` bounds (L2013 with the
+  counterexample). The solver's `unknown` is L2015, a hole: `warning` in
+  `dev`, `error` in `strict`, never a pass; a wasm build has no solver and
+  reports every such question as L2015. `where` is now L0009 only outside
+  its clause (message `reserved: refinement keyword`), and `litigate fmt`
+  keeps `{x: T | p}` on one line.
 - **A package's instrument class is part of its type** (lg-962.5).
   `kind` in `Lit.toml` (`base`, the default, `amendment`, `local-rule`,
   `standing-order`, `case-order`, `guidance`, `precedent`, `overruling`)

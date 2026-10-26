@@ -4,10 +4,24 @@ version = 2
 name = "change-bowles-v-russell"
 version = "1.0.0"
 language = 1
-source = "sha256:b904f20392dcc70d2da023c0c245beeb692e5da68371e6fb34f0231bd7ad3153"
-semantic = "sha256:740d8674771252f39494d0c2ca687c592c007ec1f220921e500368e49fee8196"
+source = "sha256:3d9584a7eb4422363fc27b95da7c0e70e2289f22a8dcb33407b1a98813b878c7"
+semantic = "sha256:6a8835cce2c677830095b86ecbfe5d8d0be93b35ef1f84fdea542c3d00284729"
 texts = [
     "bowles sources/change-corpus/rulings/bowles-scotus-2007.txt sha256:2216e8f6185a31a7ee2757d4eee47744ebe3fa74a68a0d87d25297f6a7cda923",
+]
+dependencies = [
+    "change-thompson-v-ins 1.0.0",
+    "core 1.0.0",
+]
+
+[[package]]
+name = "change-thompson-v-ins"
+version = "1.0.0"
+language = 1
+source = "sha256:2bf37536a133a04d8083f01799484f006b6883f25ebd1d51ffae12c390817264"
+semantic = "sha256:bce70084b68cc68ea5bbad3fa7cfba092786ee981ae093c52e17fe564824389e"
+texts = [
+    "thompson sources/change-thompson-v-ins-375-us-384.txt sha256:adb3b1d49b1a12c14f58d973942a3dc62825bb5287c56df17f4ed0eac64f9cc9",
 ]
 dependencies = [
     "core 1.0.0",

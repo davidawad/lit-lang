@@ -319,14 +319,16 @@ impl Cx<'_, '_> {
         match self.ck.scope.value(r) {
             Ok((name, found)) if want(&found.item.kind) => Some(name),
             Ok((_, found)) => {
+                let noun = found.item.kind.noun();
+                let article = if noun.starts_with(['a', 'e', 'i', 'o', 'u']) {
+                    "an"
+                } else {
+                    "a"
+                };
                 self.report(Report::new(
                     C::TypeMismatch,
                     r.range,
-                    format!(
-                        "`{}` is a {}, expected a {what}",
-                        r.display(),
-                        found.item.kind.noun()
-                    ),
+                    format!("`{}` is {article} {noun}, expected a {what}", r.display()),
                 ));
                 None
             }

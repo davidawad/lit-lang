@@ -164,9 +164,17 @@ fn recharacterize(p: &mut Parser<'_>) {
             p.error_expected(&[KwCharacterization]);
         }
         let keywords = clauses(p, Clauses::CALENDAR);
-        expect_header_end(p, &keywords);
+        expect_end(p, &keywords);
     }
     p.finish();
+}
+
+/// After a declaration with no body: a word on the same line that is not
+/// an item keyword is a misplaced or misspelled clause (L0001).
+fn expect_end(p: &mut Parser<'_>, keywords: &[SyntaxKind]) {
+    if p.at(Ident) && !p.newline_before() && p.at_any_kw(p.item_keywords()).is_none() {
+        p.error_expected(keywords);
+    }
 }
 
 /// `invalidate id ":" Ref {Version | Cite}`.
@@ -175,7 +183,7 @@ fn invalidate(p: &mut Parser<'_>) {
     p.bump_as(KwInvalidate);
     if p.expect(Ident) && p.expect(Colon) && require(p, reference, &[Ident]) {
         let keywords = clauses(p, Clauses::CALENDAR);
-        expect_header_end(p, &keywords);
+        expect_end(p, &keywords);
     }
     p.finish();
 }

@@ -224,9 +224,7 @@ pub fn value_of(item: &Item) -> Option<(&str, ValueKind)> {
         ItemKind::Rule(_, name, ..) => (name.text.as_str(), ValueKind::Rule),
         ItemKind::Grant(name, ..) => (name.text.as_str(), ValueKind::Grant),
         ItemKind::Limit(l) if l.name.is_simple() => (l.name.head.text.as_str(), ValueKind::Limit),
-        ItemKind::Recharacterize(name, ..) => {
-            (name.text.as_str(), ValueKind::Recharacterization)
-        }
+        ItemKind::Recharacterize(name, ..) => (name.text.as_str(), ValueKind::Recharacterization),
         ItemKind::Invalidate(name, ..) => (name.text.as_str(), ValueKind::Invalidation),
         _ => return None,
     })

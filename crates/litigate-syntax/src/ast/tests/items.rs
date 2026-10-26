@@ -508,3 +508,34 @@ fn id_lists_decode_string_entries() {
     assert_eq!(replaces.items().len(), 1);
     assert_eq!(replaces.strings(), ["anon\n1"]);
 }
+
+#[test]
+fn recharacterizations_and_invalidations_expose_their_parts() {
+    let file = lit("module m\nrecharacterize r: p::d characterization claim_processing effective [2024-05-16, ..) cite \"X\"\ninvalidate i: e cite \"Y\"\n");
+    let items = file.items();
+    let r = items
+        .iter()
+        .find_map(|item| super::super::RecharacterizeDecl::cast(item.syntax().clone()))
+        .expect("recharacterization");
+    assert_eq!(r.target().map(|t| t.text()).as_deref(), Some("p::d"));
+    assert_eq!(
+        r.characterization().map(|c| c.text()).as_deref(),
+        Some("claim_processing")
+    );
+    assert_eq!((r.cites().len(), r.version_clauses().len()), (1, 1));
+    let i = items
+        .iter()
+        .find_map(|item| super::super::InvalidateDecl::cast(item.syntax().clone()))
+        .expect("invalidation");
+    assert_eq!(i.target().map(|t| t.text()).as_deref(), Some("e"));
+    assert!(i.relations().is_empty());
+    let bare = parse_lit("module m\nrecharacterize r: d\n")
+        .lit_file()
+        .expect("lit root");
+    let r = bare
+        .items()
+        .iter()
+        .find_map(|item| super::super::RecharacterizeDecl::cast(item.syntax().clone()))
+        .expect("recharacterization");
+    assert!(r.characterization().is_none());
+}

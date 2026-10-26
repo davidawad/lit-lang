@@ -1,0 +1,58 @@
+---
+source: crates/litigate-sema/tests/change.rs
+expression: rows
+---
+[
+    (
+        "a binding precedent recharacterizes another package's deadline",
+        [],
+    ),
+    (
+        "a binding precedent invalidates another package's default",
+        [],
+    ),
+    (
+        "an overruling invalidates",
+        [],
+    ),
+    (
+        "an overruling recharacterizes",
+        [
+            "pkgs/o/rules.lit:6:16 L2010 a package of class `overruling` cannot recharacterize another package's deadline\n    note: its class permits declare, invalidate\n    note: `recharacterize` is permitted to: base, amendment, binding precedent",
+        ],
+    ),
+    (
+        "a persuasive precedent recharacterizes",
+        [
+            "pkgs/p/rules.lit:6:16 L2010 a package of class `persuasive precedent` cannot recharacterize another package's deadline\n    note: its class permits declare, set-prior\n    note: `recharacterize` is permitted to: base, amendment, binding precedent",
+        ],
+    ),
+    (
+        "a persuasive precedent invalidates",
+        [
+            "pkgs/p/rules.lit:6:12 L2010 a package of class `persuasive precedent` cannot invalidate another instrument's claims\n    note: its class permits declare, set-prior\n    note: `invalidate` is permitted to: base, amendment, binding precedent, overruling",
+        ],
+    ),
+    (
+        "a case order recharacterizes",
+        [
+            "pkgs/co/rules.lit:6:16 L2010 a package of class `case-order` cannot recharacterize another package's deadline\n    note: its class permits declare, prescribe, override, interpret, waive, set-prior, add-fact\n    note: `recharacterize` is permitted to: base, amendment, binding precedent",
+        ],
+    ),
+    (
+        "a local rule invalidates",
+        [
+            "pkgs/lr/rules.lit:6:12 L2010 a package of class `local-rule` cannot invalidate another instrument's claims\n    note: its class permits declare, prescribe, override, interpret, waive, grant-cap, set-prior, add-fact\n    note: `invalidate` is permitted to: base, amendment, binding precedent, overruling",
+        ],
+    ),
+    (
+        "guidance invalidates",
+        [
+            "pkgs/g/rules.lit:6:12 L2010 a package of class `guidance` cannot invalidate another instrument's claims\n    note: its class permits declare, set-prior\n    note: `invalidate` is permitted to: base, amendment, binding precedent, overruling",
+        ],
+    ),
+    (
+        "a base package recharacterizes and invalidates",
+        [],
+    ),
+]

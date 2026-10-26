@@ -1,0 +1,26 @@
+---
+source: crates/litigate-sema/tests/change.rs
+expression: rows
+---
+[
+    (
+        "a precedent declaring nothing",
+        [],
+    ),
+    (
+        "a precedent declaring an event and a recharacterization",
+        [],
+    ),
+    (
+        "a case order declaring a node",
+        [
+            "pkgs/x/Lit.toml:1:1 L1008 the package declares no `start` node",
+        ],
+    ),
+    (
+        "a base package declaring no node",
+        [
+            "pkgs/b/Lit.toml:1:1 L1008 the package declares no `start` node",
+        ],
+    ),
+]

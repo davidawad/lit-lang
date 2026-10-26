@@ -91,6 +91,30 @@ obligation!(
     one(&capability_cites("FRCP 99(b)"))
 );
 
+/// `demo` and a later package recharacterizing and invalidating its
+/// answer period, each citing `cite`.
+fn change_cites(cite: &str) -> Vec<LoadedPackage> {
+    let later = format!(
+        "module later.main\n\
+         import demo.main.{{answer-period}}\n\
+         start l\n\
+         terminal l: \"L\" {{ payoff 0.usd }}\n\
+         recharacterize held: answer-period characterization claim_processing cite \"{cite}\"\n\
+         invalidate gone: answer-period cite \"{cite}\"\n"
+    );
+    vec![
+        pkg("demo", "FederalRule", &[], BASE),
+        pkg("later", "FederalRule", &["demo"], &later),
+    ]
+}
+
+obligation!(
+    cite_resolves_for_recharacterizations_and_invalidations,
+    Obligation::CiteResolves,
+    change_cites("FRCP 6(b)"),
+    change_cites("FRCP 99(b)")
+);
+
 /// An `entry` island that routes to two versions of `late`.
 fn versions(first: &str, second: &str) -> String {
     with(&format!(

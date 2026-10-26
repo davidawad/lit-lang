@@ -293,6 +293,35 @@ mod tests {
     }
 
     #[test]
+    fn a_recharacterization_and_an_invalidation_have_ids_and_kinds() {
+        let pkg = crate::testkit::hir_with("");
+        let mut meta = deadlines(&pkg, "answer-period")
+            .next()
+            .unwrap()
+            .meta
+            .clone();
+        meta.id = "held".into();
+        let r = Declaration::Recharacterize(hir::Recharacterization {
+            meta: meta.clone(),
+            target: "other::d".into(),
+            characterization: hir::CharacterKind::ClaimProcessing,
+        });
+        assert_eq!(
+            (decl_id(&r).as_deref(), decl_kind(&r)),
+            (Some("held"), "recharacterize")
+        );
+        meta.id = "gone".into();
+        let i = Declaration::Invalidate(hir::Invalidation {
+            meta,
+            target: "other::d".into(),
+        });
+        assert_eq!(
+            (decl_id(&i).as_deref(), decl_kind(&i)),
+            (Some("gone"), "invalidate")
+        );
+    }
+
+    #[test]
     fn selection_honours_dates_and_known_at() {
         let pkg = crate::testkit::hir_with("");
         let meta = &deadlines(&pkg, "answer-period").next().unwrap().meta;

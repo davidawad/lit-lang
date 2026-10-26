@@ -1,8 +1,13 @@
 module change-thompson-v-ins.doctrine
 
 // The overruled precedent (docs/litigate/CHANGE.md §4): Thompson's
-// "unique circumstances", stated as the fact it turns on.
+// "unique circumstances", stated as the fact it turns on and the excuse it
+// gives.
 
 /// The district court assured the appellant that a post-trial motion was
 /// timely, and the appellant relied on it (Thompson v. INS, 375 U.S. 384).
 event TimelinessAssured()
+
+/// Where the court assured the appellant that the post-trial motion was
+/// timely, the late notice of appeal is excused.
+default unique-circumstances cite "Thompson v. INS, 375 U.S. 384" when has_event(TimelinessAssured()) => true

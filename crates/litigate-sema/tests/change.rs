@@ -1062,4 +1062,270 @@ fn an_overruled_precedent_is_in_force_until_the_overruling() {
         .find(|l| l.name == "en-banc")
         .unwrap()
         .in_force_at("2000-01-01", None));
+/// A binding Supreme Court precedent's recharacterization of `fed`'s
+/// answer period.
+const RECHARACTERIZES: &str = "recharacterize held: answer-period characterization claim_processing effective [2020-02-01, ..) cite \"Demo\"";
+
+/// The same precedent's invalidation of `fed`'s default.
+const INVALIDATES: &str = "invalidate gone: open effective [2020-02-01, ..) cite \"Demo\"";
+
+/// A base package `b` of forum `civil` over `fed`, with `body`.
+fn base(body: &str) -> LoadedPackage {
+    let mut p = layer("b", "base", "civil", "FederalRule", "", body);
+    p.manifest = p.manifest.replacen("kind = \"base\"\n", "", 1);
+    let at = p.manifest.find("\n[sources.order]").expect("sources");
+    p.manifest.truncate(at);
+    p
+}
+
+#[test]
+#[allow(clippy::too_many_lines)] // one table row per case
+fn recharacterize_and_invalidate_are_typed_against_the_class_rows() {
+    let overruling = |body: &str| {
+        layer(
+            "o",
+            "overruling",
+            "civil",
+            "CaseOrder",
+            "court = \"scotus\"\noverrules = [\"p\"]\n",
+            body,
+        )
+    };
+    let rows: Vec<(&str, Vec<String>)> = vec![
+        // Harrow v. Department of Defense, 601 U.S. 480 (2024): a binding
+        // precedent holds a limit not jurisdictional.
+        (
+            "a binding precedent recharacterizes another package's deadline",
+            diagnostics(&[precedent("p", "scotus", true, RECHARACTERIZES)]),
+        ),
+        // Bowles v. Russell, 551 U.S. 205 (2007), of "unique circumstances".
+        (
+            "a binding precedent invalidates another package's default",
+            diagnostics(&[precedent("p", "scotus", true, INVALIDATES)]),
+        ),
+        (
+            "an overruling invalidates",
+            diagnostics(&[overruling(INVALIDATES)]),
+        ),
+        (
+            "an overruling recharacterizes",
+            diagnostics(&[overruling(RECHARACTERIZES)]),
+        ),
+        // Camreta v. Greene: a district decision binds no one.
+        (
+            "a persuasive precedent recharacterizes",
+            diagnostics(&[precedent("p", "d-mass", true, RECHARACTERIZES)]),
+        ),
+        (
+            "a persuasive precedent invalidates",
+            diagnostics(&[precedent("p", "scotus", false, INVALIDATES)]),
+        ),
+        (
+            "a case order recharacterizes",
+            diagnostics(&[layer(
+                "co",
+                "case-order",
+                "civil",
+                "CaseOrder",
+                "",
+                RECHARACTERIZES,
+            )]),
+        ),
+        (
+            "a local rule invalidates",
+            diagnostics(&[layer(
+                "lr",
+                "local-rule",
+                "civil",
+                "LocalRule",
+                "",
+                INVALIDATES,
+            )]),
+        ),
+        (
+            "guidance invalidates",
+            diagnostics(&[layer(
+                "g",
+                "guidance",
+                "civil",
+                "CaseOrder",
+                "binds = [\"Court\"]\n",
+                INVALIDATES,
+            )]),
+        ),
+        (
+            "a base package recharacterizes and invalidates",
+            diagnostics(&[base(&format!("{RECHARACTERIZES}\n{INVALIDATES}"))]),
+        ),
+    ];
+    insta::assert_debug_snapshot!(rows);
+}
+
+#[test]
+fn a_recharacterization_or_invalidation_names_another_packages_claim() {
+    let p = |body: &str| diagnostics(&[precedent("p", "scotus", true, body)]);
+    let rows: Vec<(&str, Vec<String>)> = vec![
+        (
+            "a recharacterized default",
+            p("recharacterize r: open characterization claim_processing"),
+        ),
+        (
+            "an unknown characterization",
+            p("recharacterize r: answer-period characterization sometimes"),
+        ),
+        ("no characterization", p("recharacterize r: answer-period")),
+        (
+            "an unresolved target",
+            p("recharacterize r: nowhere characterization jurisdictional"),
+        ),
+        (
+            "its own package's deadline",
+            p("deadline own: 3.days from Served() counted_by c6\nrecharacterize r: own characterization jurisdictional"),
+        ),
+        ("an invalidated node", p("invalidate i: l")),
+        (
+            "an invalidated invalidation",
+            p(&format!("{INVALIDATES}\ninvalidate again: gone")),
+        ),
+        (
+            "its own package's default",
+            p("default mine when true => true\ninvalidate i: mine"),
+        ),
+        (
+            "an invalidated counting rule and calendar",
+            p("invalidate i: c6\ninvalidate j: cal"),
+        ),
+    ];
+    insta::assert_debug_snapshot!(rows);
+}
+
+#[test]
+fn a_recharacterization_and_an_invalidation_are_in_the_hir() {
+    use litigate_sema::hir::{CharacterKind, Declaration};
+    let all = [
+        core(),
+        fed(),
+        precedent(
+            "p",
+            "scotus",
+            true,
+            &format!("{RECHARACTERIZES}\n{INVALIDATES}"),
+        ),
+    ];
+    let (db, ws) = workspace(&all);
+    let p = ws.packages(&db)[2];
+    let checked = litigate_sema::db::queries::check_package(&db, p);
+    let package = checked.package.as_ref().expect("checks");
+    let decls: Vec<&Declaration> = package
+        .modules
+        .iter()
+        .flat_map(|m| &m.declarations)
+        .collect();
+    let r = decls
+        .iter()
+        .find_map(|d| match d {
+            Declaration::Recharacterize(r) => Some(r),
+            _ => None,
+        })
+        .expect("recharacterization");
+    assert_eq!(
+        (
+            r.meta.id.as_str(),
+            r.target.as_str(),
+            r.characterization,
+            r.meta.effective.from.as_str(),
+            r.meta.cite.as_deref()
+        ),
+        (
+            "held",
+            "fed::answer-period",
+            CharacterKind::ClaimProcessing,
+            "2020-02-01",
+            Some("Demo")
+        )
+    );
+    let i = decls
+        .iter()
+        .find_map(|d| match d {
+            Declaration::Invalidate(i) => Some(i),
+            _ => None,
+        })
+        .expect("invalidation");
+    assert_eq!(
+        (i.meta.id.as_str(), i.target.as_str()),
+        ("gone", "fed::open")
+    );
+}
+
+#[test]
+fn a_layer_declaring_no_node_needs_no_start() {
+    let unstarted = |kind: &str, body: &str| {
+        let mut p = layer(
+            "x",
+            kind,
+            "civil",
+            "CaseOrder",
+            "court = \"scotus\"\ndesignated = \"2020-02-01\"\n",
+            body,
+        );
+        for f in &mut p.files {
+            f.text = f.text.replace("start l\nstate l: \"L\"\n", "");
+        }
+        if kind != "precedent" {
+            p.manifest = p
+                .manifest
+                .replace("court = \"scotus\"\ndesignated = \"2020-02-01\"\n", "");
+        }
+        p
+    };
+    let rows: Vec<(&str, Vec<String>)> = vec![
+        (
+            "a precedent declaring nothing",
+            diagnostics(&[unstarted("precedent", "")]),
+        ),
+        (
+            "a precedent declaring an event and a recharacterization",
+            diagnostics(&[unstarted(
+                "precedent",
+                &format!("event Assured()\n{RECHARACTERIZES}"),
+            )]),
+        ),
+        (
+            "a case order declaring a node",
+            diagnostics(&[unstarted("case-order", "terminal t: \"T\"")]),
+        ),
+        (
+            "a base package declaring no node",
+            diagnostics(&[{
+                let mut p = base("");
+                for f in &mut p.files {
+                    f.text = f.text.replace("start l\nstate l: \"L\"\n", "");
+                }
+                p
+            }]),
+        ),
+    ];
+    insta::assert_debug_snapshot!(rows);
+}
+
+#[test]
+fn a_recharacterization_binds_only_where_its_precedent_does() {
+    let ca1 = precedent("ca1-holding", "ca1", true, RECHARACTERIZES);
+    let at = |circuit: &str| {
+        located(
+            "\"ca1-holding\"",
+            &format!("family = \"civil\"\ncircuit = \"{circuit}\""),
+        )
+    };
+    let rows: Vec<(&str, Vec<String>)> = vec![
+        (
+            "in its own circuit",
+            shown(&world(&[ca1.clone()], &at("ca1"), Profile::Dev)),
+        ),
+        (
+            "in a sister circuit",
+            shown(&world(&[ca1], &at("ca2"), Profile::Dev)),
+        ),
+    ];
+    insta::assert_debug_snapshot!(rows);
 }

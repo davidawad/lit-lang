@@ -485,3 +485,58 @@ fn grants_and_delegations() {
         ],
     );
 }
+
+/// Recharacterizations (`recharacterize r: d characterization c`) and
+/// invalidations (`invalidate i: d`): each missing part reports where it
+/// was expected.
+#[test]
+fn recharacterizations_and_invalidations() {
+    check_all(
+        FileKind::Lit,
+        &[
+            (
+                "module m\nrecharacterize r: p::d characterization claim_processing effective [2024-05-16, ..) cite \"X\"\n",
+                &[],
+            ),
+            (
+                "module m\ninvalidate i: d effective [2007-06-14, ..) cite \"X\"\n",
+                &[],
+            ),
+            (
+                "module m\nrecharacterize : d characterization jurisdictional\n",
+                &["L0001 2:16-2:17 expected an identifier, found `:`"],
+            ),
+            (
+                "module m\nrecharacterize r d characterization jurisdictional\n",
+                &["L0001 2:18-2:19 expected `:`, found `d`"],
+            ),
+            (
+                "module m\nrecharacterize r: 5 characterization jurisdictional\n",
+                &["L0001 2:19-2:20 expected an identifier, found `5`"],
+            ),
+            (
+                "module m\nrecharacterize r: d effective [2024-05-16, ..)\n",
+                &["L0001 2:21-2:30 expected `characterization`, found `effective`"],
+            ),
+            (
+                "module m\nrecharacterize r: d characterization\n",
+                &["L0001 3:1-3:1 expected an identifier, found end of file"],
+            ),
+            (
+                "module m\ninvalidate i d\n",
+                &["L0001 2:14-2:15 expected `:`, found `d`"],
+            ),
+            (
+                "module m\ninvalidate i: d efective [2007-06-14, ..)\n",
+                &["L0001 2:17-2:25 expected one of `effective`, `known_at`, `retracted`, \
+                   `unknown_before`, `commenced`, or `cite`, found `efective` | note: did you \
+                   mean `effective`? | fix 2:17-2:25 \"effective\""],
+            ),
+            (
+                "module m\ninvalidate i: d effective [2007-06-14, ..) cite \"X\" stray\n",
+                &["L0001 2:53-2:58 expected one of `effective`, `known_at`, `retracted`, \
+                   `unknown_before`, `commenced`, or `cite`, found `stray`"],
+            ),
+        ],
+    );
+}

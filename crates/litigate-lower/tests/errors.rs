@@ -794,3 +794,23 @@ fn a_counting_rule_library_lowers_every_rule() {
     p.manifest.counting = Some("rcfc6".into());
     only(&p, C::LoweringUnsupported, "names counting rule `rcfc6`");
 }
+
+#[test]
+fn a_layer_with_no_node_and_no_start_lowers_to_an_empty_pack() {
+    // Bowles v. Russell (docs/litigate/examples/change/overruling) declares
+    // an invalidation and no node, so no `start`: nothing dangles.
+    let all = load_hir(&["docs/litigate/examples/change/overruling"]);
+    let refs: Vec<&hir::Package> = all.iter().collect();
+    let bowles = all
+        .iter()
+        .find(|p| p.manifest.name == "change-bowles-v-russell")
+        .unwrap_or_else(|| panic!("no Bowles"));
+    assert!(bowles.start.is_empty());
+    let lowered = Lowerer::new(&refs)
+        .package(bowles, &Options::default())
+        .unwrap_or_else(|e| panic!("{e:?}"));
+    let Document::Pack(pack) = lowered.document else {
+        panic!("not a pack")
+    };
+    assert!(pack.nodes.is_empty() && pack.start_node_id.is_empty());
+}

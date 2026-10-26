@@ -8,8 +8,8 @@ use crate::hir::{
     Authority, BinaryOp, DefaultRule, EnumDecl, EventType, Exception, ExceptionKind, Expectation,
     Invalidation, Link, Recharacterization, Test, Type, TypeAlias, Value,
 };
-use crate::resolve::sig::{clause, clauses_of};
 use crate::resolve::sig::ValueKind;
+use crate::resolve::sig::{clause, clauses_of};
 use crate::types::ty;
 use litigate_base::DiagnosticCode as C;
 use std::collections::{BTreeMap, BTreeSet};
@@ -127,8 +127,8 @@ impl Cx<'_, '_> {
     ) -> Option<Recharacterization> {
         let meta = self.meta(name, None, item, rule);
         let target = self.value_ref(target, "deadline", |k| matches!(k, ValueKind::Deadline));
-        let characterization = clause(clauses_of(item), "characterization")
-            .and_then(|f| self.characterization(f))?;
+        let characterization =
+            clause(clauses_of(item), "characterization").and_then(|f| self.characterization(f))?;
         Some(Recharacterization {
             meta,
             target: self.foreign(target?, name, "recharacterizes")?,

@@ -1,0 +1,59 @@
+---
+source: crates/litigate-sema/tests/change.rs
+expression: rows
+---
+[
+    (
+        "a recharacterized default",
+        [
+            "pkgs/p/rules.lit:6:19 L2001 `open` is a default, expected a deadline",
+        ],
+    ),
+    (
+        "an unknown characterization",
+        [
+            "pkgs/p/rules.lit:6:50 L2007 `sometimes` is not a characterization: expected `jurisdictional` or `claim_processing`",
+        ],
+    ),
+    (
+        "no characterization",
+        [
+            "pkgs/p/rules.lit:7:1 L0001 expected `characterization`, found end of file",
+        ],
+    ),
+    (
+        "an unresolved target",
+        [
+            "pkgs/p/rules.lit:6:19 L1002 cannot find name `nowhere`",
+        ],
+    ),
+    (
+        "its own package's deadline",
+        [
+            "pkgs/p/rules.lit:6:10 L2010 a package of class `binding precedent` cannot prescribe a time limit or how time is counted\n    note: its class permits declare, interpret, recharacterize, invalidate, waive, set-prior\n    note: `prescribe` is permitted to: base, amendment, local-rule, general-order, standing-order, case-order",
+            "pkgs/p/rules.lit:7:16 L2007 `r` recharacterizes `own`, a declaration of its own package: a package changes its own declarations by versioning them (`effective`, `supersedes`)",
+        ],
+    ),
+    (
+        "an invalidated node",
+        [
+            "pkgs/p/rules.lit:6:15 L2001 `l` is a node, expected a rule, deadline, default or exception",
+        ],
+    ),
+    (
+        "an invalidated invalidation",
+        [
+            "pkgs/p/rules.lit:7:19 L2001 `gone` is an invalidation, expected a rule, deadline, default or exception",
+        ],
+    ),
+    (
+        "its own package's default",
+        [
+            "pkgs/p/rules.lit:7:12 L2007 `i` invalidates `mine`, a declaration of its own package: a package changes its own declarations by versioning them (`effective`, `supersedes`)",
+        ],
+    ),
+    (
+        "an invalidated counting rule and calendar",
+        [],
+    ),
+]

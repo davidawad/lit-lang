@@ -1,0 +1,134 @@
+module post.dismissal
+
+import core.frcp6.{ frcp6 }
+
+package post-dismissal { forum frcp, authority FederalRule }
+
+start pending
+
+// The synthetic posture (lg-60eq). The plaintiff files a Rule 41(a)(1)(A)(i)
+// notice of dismissal stated to be with prejudice, then a Rule 60(b) motion
+// the same day to undo it. The defendant was never served; it appears
+// specially, without waiving service (FRCP 12(h)(1)), to oppose the motion.
+// The matter is assigned to a magistrate judge, so the defendant must say
+// whether it consents (28 U.S.C. 636(c)), and its fee clock may be running.
+//
+// Consent. A magistrate judge decides a dispositive motion with final effect
+// only on the consent of every party (28 U.S.C. 636(c)(1)); a defendant,
+// even unserved, is a party whose consent is needed, and a ruling entered
+// without it is void (Williams v. King, 875 F.3d 500 (9th Cir. 2017)).
+// Silence is therefore the worst option: the ruling stays exposed until
+// later conduct implies consent, and implied consent must itself be shown
+// on the record (Roell v. Withrow, 538 U.S. 580 (2003)). Declining sends
+// the motion to a district judge, whose ruling is final either way.
+//
+// Fee clock. A fee motion is due 14 days after entry of judgment (FRCP
+// 54(d)(2)(B)(i); N.D. Cal. Civ. L.R. 54-5(a)). Whether a with-prejudice
+// notice, which needs no order, starts that clock is a question no
+// vendored source answers (lit/frcp/fees.lit), so the eval declares the
+// reading a careful defendant must plan for, a clock running from the
+// notice, and leaves which reading the court takes to a draw. A protective
+// filing inside the 14 days answers either reading.
+//
+// The numbers are illustrative, not calibrated.
+enum Prejudice { WithPrejudice, WithoutPrejudice }
+
+/// The plaintiff files a notice of dismissal before an answer or a motion
+/// for summary judgment is served (FRCP 41(a)(1)(A)(i)).
+event DismissalNoticed(prejudice: Prejudice)
+/// A motion for relief from a judgment, order or proceeding (FRCP 60(b)).
+event ReliefMoved()
+/// A party appears only to contest a matter, without waiving service.
+event AppearedSpecially()
+/// A motion for attorney's fees is filed (FRCP 54(d)(2)(A)).
+event FeeMotionFiled()
+
+/// The conservative reading of the fee clock: 14 days from the notice.
+deadline fee-motion-period: 14.days after DismissalNoticed(WithPrejudice) counted_by frcp6 cite "FRCP 54(d)(2)(B)"
+
+test "fee clock: 14 days after a notice filed 2026-09-01" cite "FRCP 54(d)(2)(B)"
+{
+  given DismissalNoticed(WithPrejudice) on 2026-09-01
+  expect deadline(fee-motion-period) == 2026-09-15
+}
+
+state pending: "Action pending; defendant unserved" cite "FRCP 4(m)"
+{
+  noticed "Plaintiff files a notice of dismissal" -> dismissed by Plaintiff {
+    event DismissalNoticed(WithPrejudice)
+  }
+}
+
+state dismissed: "Dismissed with prejudice by notice" cite "FRCP 41(a)(1)(A)(i)"
+{
+  moved "Plaintiff moves for relief from the dismissal" -> relief-pending by Plaintiff {
+    event ReliefMoved()
+  }
+}
+
+state relief-pending: "Rule 60(b) motion pending" cite "FRCP 60(b)"
+{
+  appeared "Defendant appears specially to oppose" -> consent by Defendant {
+    event AppearedSpecially()
+  }
+}
+
+decision consent: "Consent to a magistrate judge" by Defendant cite "FRCP 73(b)(1)"
+{
+  consent "Consent" -> fee-step { cost 100.usd, sets [consented] }
+  decline "Decline consent" -> fee-step { cost 100.usd, sets [declined] }
+  silence "Say nothing" -> fee-step
+}
+
+decision fee-step: "Fee clock" by Defendant cite "FRCP 54(d)(2)(B)"
+{
+  protective "File the fee motion protectively" -> assign {
+    event FeeMotionFiled()
+    cost 1_500.usd
+    sets [fees-preserved]
+    within fee-motion-period
+  }
+  nothing "Wait for a ruling on the Rule 60(b) motion" -> assign
+}
+
+chance assign: "Who decides the Rule 60(b) motion" by Court cite "FRCP 73(a)"
+{
+  magistrate "Stays with the magistrate judge" -> conduct p 1 { forbids [declined] }
+  reassigned "Reassigned to a district judge" -> district p 1 { requires [declined] }
+}
+
+decision conduct: "Litigate before the magistrate judge" by Defendant cite "Roell v. Withrow, 538 U.S. 580 (2003)"
+{
+  appear "Argue the motion without objecting, and litigate implied consent" -> magistrate {
+    cost 2_000.usd
+    sets [consented]
+  }
+  stand "Stand on the papers" -> magistrate
+}
+
+chance magistrate: "Magistrate judge rules" by Court discretion cite "FRCP 73(a)"
+{
+  final-denied "Denied (final order)" -> stands p 1/2 { requires [consented] }
+  final-granted "Granted (final order)" -> reopened p 1/2 { requires [consented] }
+  void-denied "Denied, open to vacatur" -> stands p 3/10 { forbids [consented] }
+  void-granted "Granted, or a denial vacated" -> reopened p 7/10 { forbids [consented] }
+}
+
+chance district: "District judge rules" by Court discretion cite "FRCP 60(b)"
+{
+  denied "Denied" -> stands p 7/10
+  granted "Granted" -> reopened p 3/10
+}
+
+chance stands: "The dismissal stands: is the fee motion timely?" by Court cite "FRCP 54(d)(2)(B)"
+{
+  preserved "Fee motion on file in time" -> fees-awarded p 1 { requires [fees-preserved] }
+  ran "The notice started the clock; the 14 days ran" -> fees-forfeited p 1/2 {
+    forbids [fees-preserved]
+  }
+  open "The clock waits for a judgment" -> fees-awarded p 1/2 { forbids [fees-preserved] }
+}
+
+terminal fees-awarded: "Dismissal stands; fees awarded" outcome [win, fees]
+terminal fees-forfeited: "Dismissal stands; fee motion untimely" outcome [win]
+terminal reopened: "Action reopened" outcome [loss]

@@ -1,0 +1,23 @@
+case post-dismissal
+uses post-dismissal ^0.1.0
+as_of 2026-09-03
+summary "An unserved defendant, appearing specially after a with-prejudice Rule 41(a)(1)(A)(i) notice and a same-day Rule 60(b) motion, decides on 636(c) consent and its fee clock."
+notes "Synthetic eval (lg-60eq). Public law only: the parties, dates and amounts are invented. The fee award is the defense's pre-dismissal fees plus, at fee_shift 1, every cost the tree charges, the fee motion's own included."
+perspective defendant
+
+parties {
+  plaintiff: Plaintiff Person
+  defendant: Defendant Corporation
+}
+
+events {
+  notice-1: 2026-09-01 docket 41 DismissalNoticed(WithPrejudice) by plaintiff
+  relief-1: 2026-09-01 docket 42 ReliefMoved() by plaintiff
+  special-1: 2026-09-02 docket 43 AppearedSpecially() by defendant
+}
+
+stakes {
+  post-dismissal::fees-awarded: 30_000.usd fee_shift 1
+  post-dismissal::fees-forfeited: 0.usd
+  post-dismissal::reopened: -50_000.usd
+}

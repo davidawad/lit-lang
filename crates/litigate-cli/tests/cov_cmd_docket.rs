@@ -8,7 +8,7 @@ mod support_cmds;
 
 use serde_json::{json, Value};
 use std::path::{Path, PathBuf};
-use support_cmds::{copy_dir, fixture, litigate_in, scratch};
+use support_cmds::{copy_dir, fixture, litigate_in, repo, scratch};
 
 /// Widget was served (docket 3).
 const MATTER: &str = r#"case dk-matter
@@ -183,5 +183,36 @@ fn every_failure_is_a_usage_error() {
         unwritable.stderr.contains("no/such/dir/x.case"),
         "{}",
         unwritable.stderr
+    );
+}
+
+#[test]
+fn a_dependency_event_is_matched_in_the_matter_view() {
+    // The PTAB matter uses `cafc` too: its events are written `cafc::Event`.
+    let dir = scratch("docket-ptab");
+    let docket = dir.join("docket.json");
+    let entries = json!([
+        {"entry_number": 13, "date_filed": "2026-08-21", "description": "Appeal docketed on owner"},
+        {"entry_number": 14, "date_filed": "2026-08-22", "description": "Cert period extended by owner"},
+    ]);
+    std::fs::write(&docket, entries.to_string()).unwrap();
+    let r = litigate_in(
+        &repo(),
+        &[
+            "match-docket",
+            "cases/ptab-ipr-defense.case",
+            docket.to_str().unwrap(),
+        ],
+    );
+    assert_eq!(r.code, 0, "{}", r.stdout);
+    let thirteen = entry(&r.json, 13);
+    assert_eq!(thirteen["status"], "advanced", "{thirteen}");
+    assert_eq!(thirteen["event"]["call"], "cafc::Docketed()");
+    assert_eq!(thirteen["event"]["mode"], "on");
+    let fourteen = entry(&r.json, 14);
+    assert_eq!(fourteen["status"], "incomplete");
+    assert_eq!(
+        fourteen["reason"],
+        "argument `until`: a `Date` is not read from docket text"
     );
 }

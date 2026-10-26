@@ -95,7 +95,7 @@ struct Replayed {
     /// The matter with the entry, when replay accepted it.
     text: Option<String>,
     /// The entry's report fields.
-    fields: Value,
+    fields: Vec<(&'static str, Value)>,
 }
 
 /// Replays the matter `current` with the event `(call, mode, party)` of
@@ -128,11 +128,16 @@ fn replay(
     let accepted = !diagnostics.iter().any(|d| d.severity == Severity::Error);
     let law = c.session.hir_of(&c.session.closure(at.packages.clone()));
     let ch = changes(at, filed, &law);
-    let fields = json!({
-        "event": {"call": call, "mode": mode, "party": party, "line": line},
-        "diagnostics": diagnostics,
-        "replay": ch.replay, "discharges": ch.discharges, "triggers": ch.triggers,
-    });
+    let fields = vec![
+        (
+            "event",
+            json!({"call": call, "mode": mode, "party": party, "line": line}),
+        ),
+        ("diagnostics", json!(diagnostics)),
+        ("replay", json!(ch.replay)),
+        ("discharges", json!(ch.discharges)),
+        ("triggers", json!(ch.triggers)),
+    ];
     let text = accepted.then(|| c.session.cases[2].text.clone());
     Ok((c.session, Replayed { text, fields }))
 }
@@ -143,13 +148,6 @@ fn row(entry: &Entry, status: &str) -> Value {
         "entry_number": entry.number, "date_filed": entry.date,
         "description": entry.text, "source": entry.source, "status": status,
     })
-}
-
-/// Sets `to[key]` for each `(key, value)` of object `from`.
-fn merge(to: &mut Value, from: Value) {
-    if let (Some(to), Value::Object(from)) = (to.as_object_mut(), from) {
-        to.extend(from);
-    }
 }
 
 /// The docket file's entries, in docket order (date, then entry number).
@@ -224,7 +222,9 @@ fn match_entry(
                 "rejected"
             };
             let mut r = row(entry, status);
-            merge(&mut r, replayed.fields);
+            for (key, value) in replayed.fields {
+                r[key] = value;
+            }
             if let Some(text) = replayed.text {
                 current.text = text;
             }

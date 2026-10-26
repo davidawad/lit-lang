@@ -14,9 +14,10 @@
 //! (`ok: false`, or a nonzero `code`), never thrown.
 //!
 //! ```js
-//! import init, { handle, litigate } from "litigate-wasm";
+//! import init, { describe, handle, litigate } from "litigate-wasm";
 //! await init();
-//! const resp = JSON.parse(handle(JSON.stringify({ scenario: "cofc-bid-protest", op: { op: "solve" } })));
+//! const name = JSON.parse(describe()).result.scenario_library[0].id; // any compiled matter
+//! const resp = JSON.parse(handle(JSON.stringify({ scenario: name, op: { op: "solve" } })));
 //! const run = JSON.parse(litigate(JSON.stringify(["solve", "cases/x.case"]), JSON.stringify({ "cases/x.case": text }), true));
 //! ```
 

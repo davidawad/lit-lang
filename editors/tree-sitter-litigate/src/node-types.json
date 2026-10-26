@@ -848,6 +848,16 @@
             "named": true
           }
         ]
+      },
+      "measures": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "measure_list",
+            "named": true
+          }
+        ]
       }
     },
     "children": {
@@ -1883,7 +1893,7 @@
     "named": true,
     "fields": {
       "effect": {
-        "multiple": false,
+        "multiple": true,
         "required": false,
         "types": [
           {
@@ -1898,6 +1908,16 @@
         "types": [
           {
             "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "paper": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "event_paper",
             "named": true
           }
         ]
@@ -1956,6 +1976,22 @@
         "types": [
           {
             "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "event_paper",
+    "named": true,
+    "fields": {
+      "kind": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "ref",
             "named": true
           }
         ]
@@ -3176,6 +3212,11 @@
         }
       ]
     }
+  },
+  {
+    "type": "measure_list",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "module_decl",
@@ -5350,6 +5391,10 @@
     "named": false
   },
   {
+    "type": "for",
+    "named": false
+  },
+  {
     "type": "forbids",
     "named": false
   },
@@ -5548,6 +5593,10 @@
   },
   {
     "type": "pages",
+    "named": false
+  },
+  {
+    "type": "paper",
     "named": false
   },
   {

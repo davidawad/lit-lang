@@ -547,20 +547,45 @@
           "name": "param_list"
         },
         {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "FIELD",
-              "name": "effect",
-              "content": {
-                "type": "SYMBOL",
-                "name": "event_effect"
+          "type": "REPEAT",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "FIELD",
+                "name": "effect",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "event_effect"
+                }
+              },
+              {
+                "type": "FIELD",
+                "name": "paper",
+                "content": {
+                  "type": "SYMBOL",
+                  "name": "event_paper"
+                }
               }
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
+            ]
+          }
+        }
+      ]
+    },
+    "event_paper": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "paper"
+        },
+        {
+          "type": "FIELD",
+          "name": "kind",
+          "content": {
+            "type": "SYMBOL",
+            "name": "ref"
+          }
         }
       ]
     },
@@ -3683,11 +3708,120 @@
           }
         },
         {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": "for"
+                },
+                {
+                  "type": "FIELD",
+                  "name": "measures",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "measure_list"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
           "type": "REPEAT",
           "content": {
             "type": "SYMBOL",
             "name": "cite"
           }
+        }
+      ]
+    },
+    "measure_list": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "["
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "STRING",
+                      "value": "words"
+                    },
+                    {
+                      "type": "STRING",
+                      "value": "pages"
+                    },
+                    {
+                      "type": "STRING",
+                      "value": "lines"
+                    }
+                  ]
+                },
+                {
+                  "type": "REPEAT",
+                  "content": {
+                    "type": "SEQ",
+                    "members": [
+                      {
+                        "type": "STRING",
+                        "value": ","
+                      },
+                      {
+                        "type": "CHOICE",
+                        "members": [
+                          {
+                            "type": "STRING",
+                            "value": "words"
+                          },
+                          {
+                            "type": "STRING",
+                            "value": "pages"
+                          },
+                          {
+                            "type": "STRING",
+                            "value": "lines"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "STRING",
+                      "value": ","
+                    },
+                    {
+                      "type": "BLANK"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": "]"
         }
       ]
     },

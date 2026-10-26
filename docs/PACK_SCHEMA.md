@@ -425,10 +425,10 @@ the replayed context: the copy carrying the start's flags (`from`, else
 else the copy the start reaches in the fewest steps (`"reached"`), else
 the base node itself (`"unreached"`); a flagged id is explained as named
 (`"named"`). `other_contexts` lists the other copies the start reaches,
-nearest first, each with its flags, `steps`, `value`, `chosen` option and
-whether that option instantiates the same authored edge (`same_choice`),
-and counts the copies it never reaches (`unreached`). A node without
-flagged copies has neither field.
+nearest first (then by id), each with its flags, `steps`, `value`,
+`chosen` option and whether that option instantiates the same authored
+edge (`same_choice`), and counts the copies it never reaches
+(`unreached`). A node without flagged copies has neither field.
 
 **Conditional chance draws.** A chance node's out-edges may carry
 `requires`/`forbids` too, so an earlier choice changes the odds at a node

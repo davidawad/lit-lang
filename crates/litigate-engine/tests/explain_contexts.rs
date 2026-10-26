@@ -13,7 +13,8 @@ use litigate_engine::api::{handle, Catalog, Op, Request};
 use serde_json::{json, Value};
 
 /// `start` reaches `mid` directly with no flag, or through `late` having
-/// set `f`; under `f` the win pays -5, so `mid{f}` stops instead. `hold`
+/// set `f` (and maybe `g`); under `f` the win pays -5, so `mid{f}` stops
+/// instead. `hold`
 /// is act-or-wait: waiting lets the office drift it to the win.
 fn catalog() -> Catalog {
     let pack = json!({
@@ -33,6 +34,7 @@ fn catalog() -> Catalog {
             {"id": "flagged", "from": "start", "to": "late", "label": "flagged", "actor": "applicant", "sets": ["f"]},
             {"id": "direct", "from": "start", "to": "hold", "label": "direct", "actor": "applicant"},
             {"id": "late-on", "from": "late", "to": "mid", "label": "late on", "actor": "applicant"},
+            {"id": "late-on-g", "from": "late", "to": "mid", "label": "late on g", "actor": "applicant", "sets": ["g"]},
             {"id": "late-hold", "from": "late", "to": "hold", "label": "late hold", "actor": "applicant"},
             {"id": "go", "from": "mid", "to": "win", "label": "go", "actor": "applicant"},
             {"id": "stop", "from": "mid", "to": "lose", "label": "stop", "actor": "applicant"},
@@ -86,14 +88,24 @@ fn a_base_id_is_explained_in_the_replayed_context_and_the_rest_summarized() {
         x["context"],
         json!({"base_id": "ctx::mid", "flags": [], "basis": "replayed", "reachable": true})
     );
-    assert_eq!(x["other_contexts"]["count"], 1);
-    assert_eq!(x["other_contexts"]["unreached"], 0);
+    // `mid{g}` hangs off the base `late`, which the start never reaches.
+    assert_eq!(x["other_contexts"]["count"], 3);
+    assert_eq!(x["other_contexts"]["unreached"], 1);
     assert_eq!(
         reachable(&x),
-        [("ctx::mid{f}".to_owned(), 2, json!("ctx::stop{f}"), false)]
+        [
+            (
+                "ctx::mid{f,g}".to_owned(),
+                2,
+                json!("ctx::stop{f,g}"),
+                false
+            ),
+            ("ctx::mid{f}".to_owned(), 2, json!("ctx::stop{f}"), false),
+        ]
     );
-    assert_eq!(x["other_contexts"]["reachable"][0]["value"], 0.0);
-    assert_eq!(x["other_contexts"]["reachable"][0]["flags"], json!(["f"]));
+    // Equally near copies list by id.
+    assert_eq!(x["other_contexts"]["reachable"][1]["value"], 0.0);
+    assert_eq!(x["other_contexts"]["reachable"][1]["flags"], json!(["f"]));
 }
 
 #[test]
@@ -112,7 +124,7 @@ fn a_base_id_the_start_never_reaches_is_explained_as_itself() {
     assert_eq!(x["node"]["id"], "ctx::mid");
     assert_eq!(x["context"]["basis"], "unreached");
     assert_eq!(x["context"]["reachable"], false);
-    assert_eq!(x["other_contexts"]["unreached"], 1);
+    assert_eq!(x["other_contexts"]["unreached"], 3);
 }
 
 #[test]
@@ -122,7 +134,10 @@ fn a_flagged_id_is_explained_as_named() {
     assert_eq!(x["context"]["basis"], "named");
     assert_eq!(
         reachable(&x),
-        [("ctx::mid".to_owned(), 1, json!("ctx::go"), false)]
+        [
+            ("ctx::mid".to_owned(), 1, json!("ctx::go"), false),
+            ("ctx::mid{f,g}".to_owned(), 2, json!("ctx::stop{f,g}"), true),
+        ]
     );
 }
 
@@ -131,7 +146,7 @@ fn a_flagged_start_is_the_replayed_context() {
     let x = explain(None, Some("ctx::mid{f}"));
     assert_eq!(x["node"]["id"], "ctx::mid{f}");
     assert_eq!(x["context"]["basis"], "replayed");
-    assert_eq!(x["other_contexts"]["unreached"], 1);
+    assert_eq!(x["other_contexts"]["unreached"], 3);
 
     let win = explain(Some("win"), Some("ctx::mid{f}"));
     assert_eq!(win["node"]["id"], "ctx::win{f}");
@@ -143,7 +158,10 @@ fn contexts_nobody_chooses_at_carry_no_choice_and_wait_compares_as_wait() {
     let win = explain(Some("win"), None);
     assert_eq!(
         reachable(&win),
-        [("ctx::win{f}".to_owned(), 3, Value::Null, true)]
+        [
+            ("ctx::win{f,g}".to_owned(), 3, Value::Null, true),
+            ("ctx::win{f}".to_owned(), 3, Value::Null, true),
+        ]
     );
     assert_eq!(win["other_contexts"]["reachable"][0]["chosen"], Value::Null);
 

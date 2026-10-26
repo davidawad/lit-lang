@@ -194,6 +194,47 @@ impl Citations<'_> {
             )
         })
     }
+
+    /// What proves `text`, cited by a version in force from `effective`,
+    /// was that version's text: for each of its sections whose vendored
+    /// text postdates `effective` and a history proves, that history named
+    /// as the evidence. Empty when no section needed (or had) a proof.
+    #[must_use]
+    pub fn proofs(&self, text: &str, effective: &str) -> Vec<String> {
+        let sections = self
+            .map(Some(&text.to_owned()))
+            .map_or_else(Vec::new, |m| m.sections);
+        let mut proved: Vec<String> = sections
+            .iter()
+            .filter_map(|s| match self.prove(s, effective) {
+                Proof::Holds(h) => Some(proof(text, s, &h)),
+                _ => None,
+            })
+            .collect();
+        proved.dedup();
+        proved
+    }
+}
+
+/// `text`'s section `section` proved by `history` (SPEC §4.3), as a
+/// timeline names the evidence.
+fn proof(text: &str, section: &L0Section, history: &History) -> String {
+    let source = section.source.as_deref().unwrap_or_default();
+    let d = section.as_of.as_deref().unwrap_or_default();
+    format!(
+        "`{text}`: {} (source `{source}` as of {d}) is the text in force from {}: \
+         `## {PREFIX}{}` in `{}` line {} (sha256 {}, read {}) records version {} \
+         and no amendment in ({}, {d}]",
+        section.heading,
+        history.effective,
+        section.heading,
+        history.path,
+        history.line,
+        history.sha256,
+        history.as_of,
+        history.version,
+        history.effective,
+    )
 }
 
 /// Why `proof` of `section` fails, naming the first amendment that breaks

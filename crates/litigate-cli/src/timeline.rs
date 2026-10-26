@@ -23,6 +23,7 @@ use litigate_base::timeline::{
     TimelineWorld, TIMELINE_SCHEMA,
 };
 use litigate_base::{Diagnostic, DiagnosticCode, Severity, Span};
+use litigate_lower::source_map::Citations;
 use litigate_sema::case::{Effect, Status};
 use litigate_sema::hir::{self, DeadlineWindow, Declaration, NodeKind};
 use std::collections::{BTreeMap, BTreeSet};
@@ -181,6 +182,9 @@ struct Builder<'a> {
     /// The docket's deadline rows nothing has triggered, by draft index,
     /// with their qualified deadline ids.
     untriggered: Vec<(usize, String)>,
+    /// Each amendment history proving a row's cite (SPEC §4.3), at the
+    /// row's source: an L9008 note of the timeline.
+    proofs: Vec<(Option<TimelineSpan>, String)>,
 }
 
 impl<'a> Builder<'a> {
@@ -210,6 +214,29 @@ impl<'a> Builder<'a> {
             forks: vec![None],
             supersedes: Vec::new(),
             untriggered: Vec::new(),
+            proofs: Vec::new(),
+        }
+    }
+
+    /// Records each vendored amendment history proving that `cite` (of
+    /// `pkg`, cited by a version in force from `from`) was that version's
+    /// text, at `source`.
+    fn prove(
+        &mut self,
+        pkg: &hir::Package,
+        cite: Option<&str>,
+        from: &str,
+        source: Option<&TimelineSpan>,
+    ) {
+        let Some(cite) = cite else {
+            return;
+        };
+        let citations = Citations::of_package(pkg, Some(crate::verdict::corpus()));
+        for proof in citations.proofs(cite, from) {
+            let at = (source.cloned(), proof);
+            if !self.proofs.contains(&at) {
+                self.proofs.push(at);
+            }
         }
     }
 
@@ -241,6 +268,23 @@ impl<'a> Builder<'a> {
     fn push(&mut self, row: Draft) -> usize {
         self.rows.push(row);
         self.rows.len() - 1
+    }
+
+    /// Pushes `row`, whose cite (of `pkg`) a version in force from `from`
+    /// makes, recording what proves it.
+    fn push_cited(&mut self, row: Draft, pkg: &hir::Package, from: &str) -> usize {
+        self.prove(pkg, row.cite.as_deref(), from, row.source.as_ref());
+        self.push(row)
+    }
+
+    /// An L9008 note for each recorded proof.
+    fn proof_notes(&self) -> impl Iterator<Item = TimelineDiagnostic> + '_ {
+        self.proofs.iter().map(|(at, proof)| TimelineDiagnostic {
+            code: DiagnosticCode::CiteProvedByHistory.as_str().to_owned(),
+            severity: TimelineSeverity::Note,
+            message: proof.clone(),
+            source: at.clone(),
+        })
     }
 
     /// The loaded package with pack id `pack`.
@@ -306,24 +350,28 @@ impl<'a> Builder<'a> {
             || format!("event:{}", event_name(&decl.trigger)),
             |t| self.rows[t].key.clone(),
         );
-        let row =
-            Draft {
-                key: format!("{}@{cause}", decl_key(pkg, &decl.meta.id)),
-                world,
-                kind: RowKind::Deadline,
-                date: None,
-                due,
-                label: deadline_label(decl),
-                status: state,
-                cite: decl.meta.cite.clone().or_else(|| {
-                    hirx::rule_of(pkg, &decl.meta.id).and_then(|r| r.meta.cite.clone())
-                }),
-                source: self.source(decl.meta.span.as_ref()),
-                layer,
-                trigger,
-                replaced_by: None,
-            };
-        self.push(row)
+        // The cite and the version citing it: the deadline's, else its
+        // counting rule's.
+        let cited = Some(&decl.meta)
+            .filter(|m| m.cite.is_some())
+            .or_else(|| hirx::rule_of(pkg, &decl.meta.id).map(|r| &r.meta));
+        let row = Draft {
+            key: format!("{}@{cause}", decl_key(pkg, &decl.meta.id)),
+            world,
+            kind: RowKind::Deadline,
+            date: None,
+            due,
+            label: deadline_label(decl),
+            status: state,
+            cite: cited.and_then(|m| m.cite.clone()),
+            source: self.source(decl.meta.span.as_ref()),
+            layer,
+            trigger,
+            replaced_by: None,
+        };
+        // No cite (no `cited`) has nothing to prove.
+        let from = cited.map_or("", |m| m.effective.from.as_str());
+        self.push_cited(row, pkg, from)
     }
 
     /// Unknown rows in `world` for the deadlines governing `node`'s
@@ -370,7 +418,8 @@ impl<'a> Builder<'a> {
     }
 
     /// The timeline.
-    fn finish(self, source: TimelineSource, diagnostics: Vec<TimelineDiagnostic>) -> Timeline {
+    fn finish(self, source: TimelineSource, mut diagnostics: Vec<TimelineDiagnostic>) -> Timeline {
+        diagnostics.extend(self.proof_notes());
         // Each world's rows in date order (undated last), creation order
         // breaking ties; worlds in order.
         let mut order: Vec<usize> = (0..self.rows.len()).collect();
@@ -603,10 +652,10 @@ fn events(
                     .is_some_and(|p| hirx::matches(p, &e.action))
                     && target(pkg, &x.to) == s.to
             })?;
-            Some((pkg, edge))
+            Some((pkg, node, edge))
         });
         let layer = taken
-            .map(|(p, _)| p.manifest.name.clone())
+            .map(|(p, _, _)| p.manifest.name.clone())
             .or_else(|| {
                 m.counted
                     .iter()
@@ -631,12 +680,17 @@ fn events(
             cite: e
                 .authority
                 .clone()
-                .or_else(|| taken.and_then(|(_, x)| x.authority.clone())),
+                .or_else(|| taken.and_then(|(_, _, x)| x.authority.clone())),
             source: b.source(spans.events.get(i).and_then(|s| s.whole.as_ref())),
             layer,
             trigger: None,
             replaced_by: None,
         };
+        // The edge's authority is in force with its node's version.
+        if let Some((pkg, node, edge)) = taken.filter(|_| e.authority.is_none()) {
+            let from = &node.meta.effective.from;
+            b.prove(pkg, edge.authority.as_deref(), from, row.source.as_ref());
+        }
         let row = b.push(row);
         if step.is_some_and(|s| s.effect == Effect::Took) {
             moved = Some(row);
@@ -809,7 +863,7 @@ fn fork(
         trigger,
         replaced_by: None,
     };
-    let fork_at = b.push(fork_row);
+    let fork_at = b.push_cited(fork_row, pkg, &node.meta.effective.from);
     for edge in options {
         let world = b.worlds.len();
         b.worlds.push(TimelineWorld {
@@ -842,7 +896,7 @@ fn fork(
             trigger: Some(fork_at),
             replaced_by: None,
         };
-        let taken = b.push(taken);
+        let taken = b.push_cited(taken, pkg, &node.meta.effective.from);
         if let Some(event) = &edge.event {
             triggered(b, world, taken, event);
         }
@@ -1036,6 +1090,12 @@ fn retain(t: &mut Timeline, dropped: &[String], dead: &[String]) {
     t.edges.retain(|e| {
         !dead.contains(&e.world) && !dropped.contains(&e.from) && !dropped.contains(&e.to)
     });
+    // A proof is evidence for a row's cite: it goes with the last row at
+    // its source.
+    let proof = DiagnosticCode::CiteProvedByHistory.as_str();
+    let rows = &t.rows;
+    t.diagnostics
+        .retain(|d| d.code != proof || rows.iter().any(|r| r.source == d.source));
 }
 
 /// An error (L1001) for each row whose `key` an earlier row of its world

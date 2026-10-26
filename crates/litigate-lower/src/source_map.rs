@@ -230,6 +230,15 @@ pub struct Citations<'c> {
 }
 
 impl<'c> Citations<'c> {
+    /// The citations of `pkg`: its `[[cite_syntax.*]]` and source
+    /// bindings, located in `corpus` when given. The pack's own lowering
+    /// reports a bad citation syntax.
+    #[must_use]
+    pub fn of_package(pkg: &litigate_sema::hir::Package, corpus: Option<&'c SourceCorpus>) -> Self {
+        let syntax = crate::pack::cite_syntax(&mut crate::diag::Sink::new(""), &pkg.manifest);
+        Self::new(syntax, &pkg.manifest.sources, corpus)
+    }
+
     /// Citations written in the pack's `syntax` or bound by a source's
     /// `cite_prefixes` (with its `section_heading`, `{n}` the section;
     /// SPEC §4.3), located in `corpus` when given.

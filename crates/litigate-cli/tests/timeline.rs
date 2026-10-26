@@ -573,6 +573,80 @@ fn a_rule_module_lists_its_deadlines_undated() {
     assert_eq!(default["as_of"], "2026-10-19");
 }
 
+/// The messages of `t`'s diagnostics with `code` at the row labelled
+/// `label` (by its prefix).
+fn at_row(t: &Value, code: &str, label: &str) -> Vec<String> {
+    let rows = t["rows"].as_array().unwrap();
+    let row = rows
+        .iter()
+        .find(|r| r["label"].as_str().unwrap().starts_with(label))
+        .unwrap();
+    t["diagnostics"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .filter(|d| d["code"] == code && d["source"] == row["source"])
+        .map(|d| d["message"].as_str().unwrap().to_owned())
+        .collect()
+}
+
+#[test]
+fn a_cite_an_amendment_history_proves_names_it_as_the_evidence() {
+    // lg-flu.40: the 2017-01-14 answer period cites § 2.105(a), whose
+    // vendored text is the 2026 one; the vendored eCFR versions list of
+    // § 2.105 records no amendment after 2017-01-14, so it is the 2017
+    // text, and the timeline names that list (an L9008 note at the row).
+    let t = timeline(&["lit/ttab/ttab.lit", "--as-of", "2026-10-19"]);
+    let answer = at_row(&t, "L9008", "answer-period:");
+    assert_eq!(answer.len(), 1, "{answer:?}");
+    let proof = &answer[0];
+    for part in [
+        "`37 CFR 2.105(a)`: 37 C.F.R. § 2.105 (source `cfr2` as of 2026-10-19)",
+        "is the text in force from 2017-01-14",
+        "`## versions 37 C.F.R. § 2.105` in `sources/ecfr-versions-title-37.txt` line ",
+        "records version 2017-01-14 and no amendment in (2017-01-14, 2026-10-19]",
+    ] {
+        assert!(proof.contains(part), "{proof}");
+    }
+    let note = t["diagnostics"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|d| d["code"] == "L9008")
+        .unwrap();
+    assert_eq!(note["severity"], "note");
+    // § 2.120 was amended effective 2017-07-21: the disclosure period's
+    // cite is a hole naming that amendment, and nothing proves it.
+    assert!(at_row(&t, "L9008", "disclosure-period:").is_empty());
+    let hole = at_row(&t, "L9002", "disclosure-period:");
+    assert!(
+        hole.iter()
+            .any(|h| h.contains("amended effective 2017-07-21 (version 2017-07-21")),
+        "{hole:?}"
+    );
+}
+
+#[test]
+fn a_proof_goes_with_the_rows_of_its_layer() {
+    let file = "cases/ttab-opposition-applicant-defense.case";
+    let proofs = |t: &Value| {
+        t["diagnostics"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .filter(|d| d["code"] == "L9008")
+            .count()
+    };
+    let all = timeline(&[file]);
+    assert!(proofs(&all) > 0, "{all:#}");
+    // An event cites the authority of the edge it took, in force with
+    // that edge's node.
+    assert_eq!(at_row(&all, "L9008", "ExtensionRequested(Ninety)").len(), 1);
+    let off = timeline(&[file, "--layers=-ttab-trademark-trial-and-appeal-board"]);
+    assert!(off["rows"].as_array().unwrap().is_empty());
+    assert_eq!(proofs(&off), 0, "{off:#}");
+}
+
 #[test]
 fn as_of_judges_statuses_at_another_date() {
     let t = timeline(&[

@@ -24,7 +24,7 @@ Its dates show the shape only; it is not a statement of any matter's deadlines.
 | `worlds` | The docket world first, then one world per alternate timeline. |
 | `rows` | Events, deadlines and fork points, each in exactly one world. |
 | `edges` | Links between rows of one world. |
-| `diagnostics` | Errors and warnings from building the timeline. |
+| `diagnostics` | Errors and warnings from building the timeline, and the notes naming the amendment history that proves a row's cite. |
 
 ## Layers
 
@@ -113,7 +113,8 @@ litigate timeline cases/ptab-ipr-defense.case --world w2 --layers=-cafc
 Over MCP the same command is the `litigate_timeline` tool (`file`, `as_of`,
 `known_at`, `layers`, `world`, `lib`). The document is the envelope's
 `result` (the envelope's `diagnostics` are every diagnostic of the check;
-the document's are the errors and the source file's own warnings). A
+the document's are the errors, the source file's own warnings, and the
+cite proofs below). A
 matter that does not resolve, a module whose package does not check, or
 a timeline with a layer whose authority is not in its lattice has no
 `result`.
@@ -153,6 +154,16 @@ What fills the document today:
   declares it.
 - **Rows of a module.** Each deadline the `.lit` file declares that is in
   force at `as_of`, `unknown` (a rule module records no events).
+- **Cite proofs** (lg-flu.40, SPEC §5.4). A row's cite whose vendored
+  text is dated D, after the version citing it took effect at E, is that
+  version's text only when a pinned amendment history (the eCFR versions
+  list in `sources/ecfr-versions-title-37.txt`) records no amendment in
+  (E, D]. Each history so proving a row's cite is an L9008 `note` at the
+  row's `source`, naming the history's file, heading line, hash, read
+  date and the version on or before E: the cite's provenance. A cite
+  nothing proves is a hole (L9002), reported by `check`, and in the
+  document when the timeline is of its own `.lit` file. A disabled layer's
+  rows take their notes with them.
 - **Keys.** A rule or node id is module-qualified (`ttab.opposition-period`,
   `frcp.pleading-to-trial.service-window`). An event that declares an id
   is keyed `event:<Name>@<id>`; one that does not (L9006, whose fix

@@ -46,7 +46,9 @@ fn every_registered_code_exercises_its_stable_views() {
             let severity = code.severity(profile);
             if matches!(
                 code,
-                DiagnosticCode::AnonymousEdge | DiagnosticCode::UndeclaredEventId
+                DiagnosticCode::AnonymousEdge
+                    | DiagnosticCode::UndeclaredEventId
+                    | DiagnosticCode::CiteProvedByHistory
             ) {
                 assert_eq!(severity, Severity::Info);
             } else if matches!(

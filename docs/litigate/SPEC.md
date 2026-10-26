@@ -1310,6 +1310,10 @@ package defaults. Declarations with the same name are versions of one
 logical declaration. Their intervals must be pairwise disjoint (L3001) and
 must cover the package lifetime. A gap is legal only when declared with
 `supersedes`/`revives` (L3002). A query at `(as_of, known_at)` selects the
+version with `from <= as_of < to`, among versions the corpus held on the
+query's `known_at` (latest when omitted) that apply to the query's
+proceeding. No version is L3007, or L3010 before `unknown_before`.
+
 **Cite text across versions.** Let E be the declaration version's `from`
 date and D the vendored source binding's `as_of`. When E < D, the cite is
 proved only if a source binding pins an eCFR versioner history for that
@@ -1321,11 +1325,10 @@ first breaking amendment's Federal Register citation and effective date
 when available. A cite marked `historical` is an explicit exception. The
 source map records the proving history's repository path, heading line,
 block hash, read date, and last version on or before E; it is copied into
-lowered cite provenance and the matter timeline. No Federal Register
+lowered cite provenance (the source map's `history`) and the timeline (an
+L9008 note at each row whose cite it proves, §9.1). No Federal Register
 instrument is authority unless its text is itself vendored.
-version with `from <= as_of < to`, among versions the corpus held on the
-query's `known_at` (latest when omitted) that apply to the query's
-proceeding. No version is L3007, or L3010 before `unknown_before`.
+
 A version's `known_at` is when the corpus can show it was known: its
 promulgation date where a source the package binds dates one, else the
 date the version was recorded, never an earlier guess (ruling
@@ -2430,13 +2433,13 @@ unchanged, and is graded `error`; anything else is rejected.
 | L9005 | unused declaration | | |
 | L9006 | undeclared event id | | |
 | L9007 | former name | | |
+| L9008 | cite proved by its amendment history | | |
 
 Severity (`DiagnosticCode::severity(profile)`): every non-L9 code except
-L4009, L4010, L4011 and L4012 is `error`. L9003 and L9006 are `info`. L4009, L4010, L4011, L4012, L9005 and L9007 are `warning`. L9001, L9002, and L9004 are
-L4009, L4010, L4011, L4012, L4013, L4014 and L3010 is `error`. L9003 and
-L9006 are `info`. L4009, L4010, L4011, L4012, L4013, L4014 and L9005 are
-`warning`. L9001, L9002, L9004 and L3010 (a hole in the corpus) are
-`warning` in `dev` and `error` in `strict`.
+L4009, L4010, L4011, L4012, L4013, L4014 and L3010 is `error`. L9003,
+L9006 and L9008 are `info`. L4009, L4010, L4011, L4012, L4013, L4014,
+L9005 and L9007 are `warning`. L9001, L9002, L9004 and L3010 (a hole in
+the corpus) are `warning` in `dev` and `error` in `strict`.
 
 ### 9.2 Shapes
 
@@ -2871,6 +2874,7 @@ gets one row per condition when the conditions classify differently.
 | C85 | L1011 no choice of loaded versions satisfies the requirements (§4.2) | sema | c | Version solving (PubGrub) over the set of loaded packages, an external artefact. |
 | C86 | L1012 a release's bump is smaller than its computed class needs (§4.4) | cli | c | Compares two releases of a package. |
 | C87 | L9007 a matter names a former id (§4.3) | sema | a | Name resolution: `formerly` adds the old id to the declaration's identity. |
+| C88 | L9008 a timeline row's cite, its vendored text dated after its version, is proved by a pinned amendment history (§5.4) | cli | c | Reads the vendored eCFR versions list, an external artefact, as cite-resolves does. |
 
 ### 13.4 SPEC rules with no code of their own
 

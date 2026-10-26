@@ -409,6 +409,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   versions and no history for FRCP, FRAP, RCFC, U.S.C. or 19 C.F.R. is
   vendored), so `litigate check --profile strict lit/core` reports them.
   An unvendored dated binding keeps lg-flu.6's window rule (L1010).
+  `litigate timeline` names the evidence too: each history proving a
+  row's cite is an L9008 note (new, `info`) at the row's source, naming
+  the history's file, line, hash, read date and version on or before E;
+  the frozen `litigate.timeline/1` schema is unchanged (data, not fields).
 
 - **Law not encoded before a date, pre-2009 FRAP 4, declared USPTO
   closures, and outcomes read from the docket** (lg-flu.26; design review

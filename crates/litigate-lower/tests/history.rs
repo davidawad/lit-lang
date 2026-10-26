@@ -258,3 +258,23 @@ fn the_proving_history_goes_into_the_source_map() {
     assert!(undated.sections.iter().all(|s| s.history.is_none()));
     assert_eq!(c.map_at(None, Some("2017-01-14")), None);
 }
+
+#[test]
+fn each_proving_history_is_named_once_as_the_evidence() {
+    let history = block("1", "2026-10-24", &["2017-01-01"]);
+    let f = Fixture::new(&history, Some(D), true);
+    let c = f.citations();
+    // Rule 1 twice is one proof; Rule 2 has no history, so none.
+    let proofs = c.proofs("R. 1(a); R. 1(b); R. 2", "2017-01-14");
+    assert_eq!(proofs.len(), 1, "{proofs:?}");
+    let sha = sha256_hex(history.trim_end().split_once('\n').map_or("", |(_, b)| b));
+    let expected = format!(
+        "`R. 1(a); R. 1(b); R. 2`: Rule 1 (source `rules` as of {D}) is the text in force \
+         from 2017-01-14: `## versions Rule 1` in `sources/hist.txt` line 1 (sha256 {sha}, \
+         read 2026-10-24) records version 2017-01-01 and no amendment in (2017-01-14, {D}]"
+    );
+    assert_eq!(proofs[0], expected);
+    // A text not after the version needs no proof; an unparsed one has none.
+    assert!(c.proofs("R. 1(a)", D).is_empty());
+    assert!(c.proofs("no rule here", "2017-01-14").is_empty());
+}

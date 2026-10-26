@@ -55,7 +55,7 @@ macro_rules! registry {
     };
 }
 
-registry! { 78;
+registry! { 79;
     UnexpectedToken = "L0001" => "The token is not valid at this position in the grammar",
     UnterminatedLiteral = "L0002" => "A string, block comment, or other delimited literal was not closed",
     InvalidToken = "L0003" => "The source contains a character sequence that is not a token",
@@ -134,6 +134,7 @@ registry! { 78;
     UnusedDeclaration = "L9005" => "The declaration or import is never used",
     UndeclaredEventId = "L9006" => "A case event declares no id, so its timeline key changes when its date or docket number is corrected",
     FormerName = "L9007" => "A reference uses an id the declaration had before it was renamed (`formerly`)",
+    CiteProvedByHistory = "L9008" => "A cite's vendored text, dated after its version took effect, is that version's text: the vendored amendment history records no amendment in between",
 }
 
 /// What `explain` says of an [`DiagnosticCode::Unknown`] code.
@@ -195,7 +196,9 @@ impl DiagnosticCode {
     #[must_use]
     pub const fn severity(self, profile: Profile) -> Severity {
         match (self, profile) {
-            (Self::AnonymousEdge | Self::UndeclaredEventId, _) => Severity::Info,
+            (Self::AnonymousEdge | Self::UndeclaredEventId | Self::CiteProvedByHistory, _) => {
+                Severity::Info
+            }
             (
                 Self::UnusedDeclaration
                 | Self::ObligationBreached

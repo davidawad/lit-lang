@@ -114,9 +114,7 @@ fn declaring<'p>(build: &Build<'_, 'p>, calendar: &hir::Calendar) -> Option<&'p 
 /// The source-map entry of one generated rule or calendar declared in
 /// `pkg`, its cite located through `pkg`'s sources.
 fn entry(build: &Build<'_, '_>, pkg: &hir::Package, pointer: &str, meta: &hir::Metadata) -> Entry {
-    // The pack's own lowering reports a bad citation syntax.
-    let syntax = crate::pack::cite_syntax(&mut Sink::new(""), &pkg.manifest);
-    let citations = Citations::new(syntax, &pkg.manifest.sources, build.corpus);
+    let citations = Citations::of_package(pkg, build.corpus);
     Entry {
         pointer: pointer.to_owned(),
         id: meta.id.clone(),

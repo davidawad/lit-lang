@@ -4,7 +4,7 @@
 //! them), and `a` and `s` state the authority and the instrument class the
 //! rule's declarations already have from their package, checked here.
 use super::cx::Cx;
-use crate::db::parse::tree::{Atom, ExprKind, Field, Item};
+use crate::db::parse::tree::{Atom, ExprKind, Field, Item, Name};
 use crate::db::span::{Report, TextRange};
 use crate::hir::Kind;
 use crate::resolve::sig::clauses_of;
@@ -49,9 +49,7 @@ impl Cx<'_, '_> {
             match (i, atom) {
                 (_, Atom::Fields(_)) => {}
                 (0, Atom::Expr(e)) => match &e.kind {
-                    ExprKind::Ref(r) if r.is_simple() => {
-                        self.authority_index(&r.head.text, r.head.clone())
-                    }
+                    ExprKind::Ref(r) if r.is_simple() => self.authority_index(&r.head),
                     _ => self.misplaced(i, *range),
                 },
                 (1, Atom::Expr(e)) => match &e.kind {
@@ -75,8 +73,9 @@ impl Cx<'_, '_> {
 
     /// L1002 for an undeclared authority, L2007 for one other than the
     /// package's.
-    fn authority_index(&mut self, level: &str, name: crate::db::parse::tree::Name) {
-        if let Err(e) = self.ck.scope.authority(&name) {
+    fn authority_index(&mut self, name: &Name) {
+        let level = name.text.as_str();
+        if let Err(e) = self.ck.scope.authority(name) {
             self.ck.report(e);
             return;
         }

@@ -365,6 +365,7 @@ fn grants() -> Vec<hir::Extension> {
         },
         Extension::NonExtendable {
             authority: "FRCP 6(b)(2)".into(),
+            against: Vec::new(),
         },
     ]
 }

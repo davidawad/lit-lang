@@ -31,8 +31,9 @@ const LEGACY_OPS: &str = "op [extend, shorten, set, suspend, compute_method]";
 /// and the Federal Circuit PTAB and TTAB notice-of-appeal periods, now
 /// extended only by a Justice or the Director; lg-962.10.1 added two in
 /// the same form, on the FRAP 32(a)(7) and 37 C.F.R. § 42.24 filing
-/// limits (FRAP 32(e), § 42.24(a)(2)).
-const CONVERTED: usize = 96;
+/// limits (FRAP 32(e), § 42.24(a)(2)); lg-red5 one, on the FRAP 40(d)(1)
+/// United States party rehearing period.
+const CONVERTED: usize = 97;
 
 /// There are no extra corrections in this corpus: the district-court
 /// notice-of-appeal period is authored once in `appeal-periods.lit`.

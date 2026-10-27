@@ -508,7 +508,7 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   dropped). No wording changed. Used by `packs/ttab-trademark-trial-and-appeal-board.json`.
 - sha256 (this file): `66402ce5e48bf2a9aa039058b3bfc181d3511b9e94137fac8b6a3d84a26b33a7`
 
-### `cfr-37-part2-answer-time-history.txt` — 37 C.F.R. §§ 2.105, 2.106 and 2.113 (TTAB answer time) as of January 13 and 14, 2017
+### `cfr-37-part2-answer-time-history.txt` — 37 C.F.R. §§ 2.105, 2.106, 2.113 and 2.116 (TTAB answer time) as of January 13 and 14, 2017
 
 - The dates `lit/ttab`'s answer-time deadlines are in force from. For each
   section, `## 37 C.F.R. (eCFR versions) § N` opens with a bracketed line
@@ -533,7 +533,19 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   § 2.113 `465446e09efbf10073a05610c2e5aeab43ca72a8f2f6c5979e89dcc4b484539c`).
   Each `<HEAD>` and `<P>` became one line, tags stripped, entities decoded,
   whitespace collapsed. No wording changed.
-- sha256 (this file): `93e7715ba5a605f480efdb1b9d82191fc1cfff00a242e066710adcfd298260f8`
+- § 2.116 (the Federal Rules of Civil Procedure govern inter partes
+  procedure "wherever applicable and appropriate", which `lit/ttab`'s
+  answer-time extension reads FRCP 6(b)(1)(A) through), fetched 2026-10-24
+  the same way: the version list
+  `/api/versioner/v1/versions/title-37.json?section=2.116` (sha256
+  `b30211620065f5d4a4612b29c270bb2ae6f3e80a55cb5e19d292906c55930910`;
+  versions 2017-01-01 and 2017-01-14 only), and the section at 2017-01-14
+  (`ce683532c79bc3168c1b103f204c4bada23fa3c32c09c368551b9a5790a65683`; the
+  2026-10-19 response is byte-identical) and 2017-01-13
+  (`44b401f931dd4498c0d6316539f4c778e551b8976deb8682338c2bbf62f75a41`).
+  Paragraph (a) reads the same in both; the 2017 amendment (81 FR 69975)
+  changed (c) and (e)-(g) only.
+- sha256 (this file): `2e5f7e43fa7ffe053c139a3c49f967c0d996652a0db371859c55fd30d1bc1a66`
 
 ### `cfr-37-part2-history.txt` — 37 C.F.R. §§ 2.119, 2.128 and 2.196 as in force on dated eCFR points in time
 
@@ -643,23 +655,39 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   - § 42.207: `492b8169f500af5691e238c57d13fc70a5bd49fb1bee44f0bdfc55519c354619`
 - sha256 (this file): `083c3103173ebdc82ab3caa6b704469dd825b22ddfe1419ff8855d4f56d42058`
 
-### `scotus-rules.txt` — Rules of the Supreme Court of the United States 13, 29 and 30 (adopted December 5, 2022, effective January 1, 2023)
+### `scotus-rules.txt` — Rules of the Supreme Court of the United States 13, 29 and 30 (adopted February 17, 2026, effective March 16, 2026)
 
-- The cert-petition period (Rule 13), service (Rule 29) and computation of
-  time (Rule 30) `lit/core`'s `sup-ct-30` counting rule and the FRAP and
-  Federal Circuit cert periods cite, one `## Sup. Ct. R. N.P` section per
-  numbered paragraph, each restating its rule's heading as its first line.
-- Fetched 2026-10-23 from `www.supremecourt.gov/filingandrules/2023RulesoftheCourt.pdf`
-  (sha256 `05f435c766fd596333828846d097828238ff89a266c24e3afca9ecd2fb9c19db`),
-  `pdftotext` (no `-layout`), running headers and page numbers stripped,
-  lines joined into one line per numbered paragraph. The PDF's text layer
-  drops the "fi" ligature (so "file" reads "f-l-e"); it was restored word
-  by word (file, filed, filing, filers, first, final, specified, specific,
-  justified, office, officer, suffices, identifiable, confined, defined,
-  certified, certificate, affidavit, Notifications), and two line-break
-  hyphens inside words ("inter- nal", "ear- lier") were joined. No other
-  wording changed.
-- sha256 (this file): `94c56e4ee8ec59d5cf857f1271ee689de1568421ab67e19b71bb823b5feecbb4`
+- The cert-petition period and its extension (Rule 13), service (Rule 29)
+  and computation and extension of time (Rule 30) `lit/core`'s `sup-ct-30`
+  counting rule and the FRAP and Federal Circuit cert periods cite, one
+  `## Sup. Ct. R. N.P` section per numbered paragraph, each restating its
+  rule's heading as its first line.
+- Fetched 2026-10-24 from `www.supremecourt.gov/filingandrules/2026RulesoftheCourt_WEB.pdf`
+  (sha256 `5200e38d590cc40929cb719987c936dc529717b4037259d1b63a2309cb6b0f32`),
+  the edition the Court's Rules page lists as current, `pdftotext -layout`,
+  running headers and page numbers stripped, lines joined into one line
+  per numbered paragraph. The text layer keeps the "fi" and "fl"
+  ligatures as U+FB01 and U+FB02; they are spelled out. A line-break
+  hyphen was dropped when the joined word appears in the 2023 edition's
+  text, and kept when the hyphenated word does (one: "cross-petition" in
+  13.4); the five others were dropped by reading ("subsections" and
+  "submission", new in 29.2, and "identifiable", "office", "officer",
+  split at a ligature). No other wording changed.
+- Against the 2023 edition (`2023RulesoftheCourt.pdf`, adopted December 5,
+  2022, effective January 1, 2023, sha256
+  `05f435c766fd596333828846d097828238ff89a266c24e3afca9ecd2fb9c19db`,
+  vendored here before as sha256
+  `94c56e4ee8ec59d5cf857f1271ee689de1568421ab67e19b71bb823b5feecbb4`),
+  Rules 13 and 30 and Rule 29's paragraphs 1, 3, 4, 5 and 7 are word for
+  word the same; 29.2 (an electronic submission is timely, paper copies
+  within three days) and 29.6 (stock ticker symbols) are the only changes,
+  as the Court's "Revisions to Rules of the Supreme Court" of the same
+  date (`www.supremecourt.gov/filingandrules/2026_Rules_Revisions.pdf`,
+  sha256 `b05a3a77c71708fb390e8e90ad2720cca2b0dc9fb827294b2d4f4ab00b56292f`,
+  revising Rules 14, 15, 24, 29 and 48 only) states. So 30.1's computation
+  and 13.5's and 30.2's extension timing read the same from January 1,
+  2023.
+- sha256 (this file): `881464325decc0ce5cc63ae4bac10facc84766e266dbff30454186f78dc3d5f2`
 
 ### `scotus-rules-2023.txt` — Rules of the Supreme Court 29.3 and 30.1 (adopted December 5, 2022, effective January 1, 2023)
 
@@ -685,13 +713,18 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   running page headers removed). No wording changed. Used by the TTAB pack.
 - sha256 (this file): `9ea6b13b33cf0bb61a2a1ea337097c0981665d4d30a045fece2a77324dae6c4c`
 
-### `tbmp.txt` — Trademark Trial and Appeal Board Manual of Procedure §§ 112 and 113.05 (June 2026)
+### `tbmp.txt` — Trademark Trial and Appeal Board Manual of Procedure §§ 112, 113.05 and 509 (June 2026)
 
 - The TBMP sections the TTAB package's chained briefing periods (§ 112:
   a period running from a prior due date counts from "the actual due date
   ..., not the adjusted date under 37 C.F.R. § 2.196") and its service rule
-  (§ 113.05: no added time after service by mail) cite, one `## TBMP § N`
-  section each, the section's own heading as its first line.
+  (§ 113.05: no added time after service by mail) cite, and § 509 (motions
+  to extend or reopen time, 509 through 509.02: FRCP 6(b) "made applicable
+  to Board proceedings by 37 C.F.R. § 2.116(a)"), which the answer-time
+  extension cites as practice guidance, one `## TBMP § N` section each
+  (each numbered subsection its own), the section's own heading as its
+  first line. § 509 opens with the rule texts the manual reprints (FRCP
+  6(b), 37 C.F.R. §§ 2.120(a), 2.121, 2.127(a)), kept as printed.
 - Fetched 2026-10-23 from
   `www.uspto.gov/sites/default/files/documents/tbmp-Master-June2026.pdf`
   (sha256 `015cf2b665d74b25080321f67dad7ffebe412118f6f0460ec3530f4801639b8e`,
@@ -699,8 +732,31 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   `pdftotext` (no `-layout`); running page headers and page numbers
   removed and each section's NOTES (its footnoted authorities) omitted. No
   wording changed. The TBMP binds no one: it restates the Board's practice
-  under 37 C.F.R. Part 2.
-- sha256 (this file): `84d70300d5b36ac966e3b65513b86726ebc5fc04c0b97218704a3c55f02a3e86`
+  under 37 C.F.R. Part 2. § 509 was cut the same way on 2026-10-24 from
+  the same PDF (digest checked again), with form feeds dropped.
+- sha256 (this file): `39df33edc821a318331129cdc6730ac961cd962d7d3f3f1c758309465eb21d86`
+
+### `fr-uspto-90-3-history.txt` — 37 C.F.R. § 90.3 as added in 2012 (77 FR 48612, 48677-48678)
+
+- The text of § 90.3 in force from September 16, 2012 to March 29, 2024,
+  which `usc-cfr-prosecution-fragments.txt` (the current text) cannot
+  give: one `## 77 FR <page>` section per printed page, each opening with
+  a bracketed line naming the issue, page and FR Doc. number; everything
+  after it is the printed text, verbatim except for line joining, `Sec.`
+  printed as `§`, the GPO text's doubled backtick and apostrophe quotes
+  as straight double quotes, and its `----` as an em dash. Page 48612 carries the rule's summary and effective date;
+  48677-48678 the amendatory instruction adding Part 90 and § 90.3 in
+  full, including the verbatim "appeal of commencing" in (c)(1)(ii).
+- Fetched 2026-10-24 from `www.govinfo.gov`'s Federal Register HTML
+  rendering of FR Doc. 2012-17900
+  (`https://www.govinfo.gov/content/pkg/FR-2012-08-14/html/2012-17900.htm`,
+  sha256 `230a9429a1acfe78b073b0d75d9a2a08e8ecfa8eecfce3a22ab8f163e82aaae9`),
+  whose `[[Page N]]` markers give the page.
+- How the version list was found: the federalregister.gov API's rules
+  with a CFR reference to 37 C.F.R. Part 90 are exactly two, 77 FR 48612
+  (2012-17900, effective 2012-09-16) and 89 FR 22084 (2024-06659,
+  effective 2024-03-29), matching the current section's history line.
+- sha256 (this file): `86152eebd93a8b638b25c9263e235194c7400797d2840e73d59da0977e4f4d74`
 
 
 ### `change-frcv-2007-restyled-excerpt.txt` — FRCP as restyled effective December 1, 2007: the order and Rules 6(b), 59(e)

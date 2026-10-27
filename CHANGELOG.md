@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **docs/COVERAGE.md, the per-jurisdiction coverage table, generated**
+  (lg-wvlf.2). `litigate coverage [ROOT]` (`just coverage`) walks `lit/`
+  and `outlines/` and writes one row per `lit/` package and per US state,
+  DC and territory (56 rows, zero until modeled): rules modeled
+  (`deadline` and `rule` declarations), precedents modeled (bound case
+  cites: case-titled `[sources.*]` bindings and distinct
+  `court_listener_url` opinions), expect tests (`test` blocks) and status
+  (`none`, `outline`, or `promoted` when a `lit/` package has a state
+  outline's `forum`), under a top line counting the states with a promoted
+  package. `--check` writes nothing and exits 2 when the committed table
+  is stale; `just coverage-check` runs it in `just ci`, `just ci-scoped`
+  and the CI `lit-sync` job.
 - **An act can be legal from any posture while its own deadline is open**
   (lg-xqu8; SPEC §5.6). An edge marked `anytime` (`oppose "File the
   opposition" -> fee-clock { event OppositionFiled(), within

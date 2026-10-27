@@ -309,6 +309,15 @@ pub enum Command {
         #[command(flatten)]
         library: Library,
     },
+    /// Write `docs/COVERAGE.md`, the per-jurisdiction coverage table,
+    /// from a repository's `lit/` and `outlines/`.
+    Coverage {
+        /// Repository root (default `.`).
+        root: Option<String>,
+        /// Exit 2 instead of writing when the committed table is stale.
+        #[arg(long)]
+        check: bool,
+    },
     /// Format `.lit` / `.case` files canonically.
     Fmt {
         /// Files or directories.
@@ -587,6 +596,7 @@ impl Command {
             Self::Check { .. } => "check",
             Self::Build { .. } => "build",
             Self::Test { .. } => "test",
+            Self::Coverage { .. } => "coverage",
             Self::Fmt { .. } => "fmt",
             Self::Run { .. } => "run",
             Self::Op(op) => op.parts().0,

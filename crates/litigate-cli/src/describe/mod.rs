@@ -257,7 +257,7 @@ const BUILTINS: [(&str, &str); 15] = [
 /// What `run`, every engine op subcommand, and `explain` on a path return.
 const ENGINE_RESPONSE: &str = "the engine's response verbatim: {ok, api_version, op, result, warnings, provenance, elapsed_ms}; exit 2 when it is ok:false";
 
-const RESULTS: [(&str, &str); 21] = [
+const RESULTS: [(&str, &str); 22] = [
     ("describe", "this document"),
     (
         "lock",
@@ -266,6 +266,7 @@ const RESULTS: [(&str, &str); 21] = [
     ("check", "{profile, files, obligations:[{obligation, passed, detail}], packages, cases:[{path, id, start, replay, deadlines}]}"),
     ("build", "{outputs:{packs, links, clock, scenarios, source_maps, litigatables}, litigatable_hash, litigatables:[{package, path, content_hash}], obligations}"),
     ("test", "{passed, failed, tests:[{package, name, cite, span, passed, expectations:[{text, passed, actual, expected, steps}]}]}"),
+    ("coverage", "{path, changed, promoted_states, federal:[{dir, name, rules, precedents, tests}], jurisdictions:[{name, kind, status, packages, rules, precedents, tests}]}; status is promoted | outline | none; --check writes nothing and exits 2 when docs/COVERAGE.md is stale"),
     ("fmt", "{files:[{path, changed}]}"),
     ("run", ENGINE_RESPONSE),
     ("engine", "no envelope: the engine's raw response on stdout (`litigate engine describe` is its manual); exit 0 ok, 2 ok:false or invalid, 1 usage or I/O"),

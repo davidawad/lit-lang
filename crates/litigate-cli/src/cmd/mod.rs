@@ -3,6 +3,7 @@ mod build;
 mod calendar;
 pub(crate) mod check;
 mod compat;
+mod coverage;
 mod diff;
 mod docket;
 mod explain;
@@ -64,6 +65,7 @@ pub fn dispatch(command: Command, src: &dyn Source) -> Outcome {
             filter,
             library,
         } => test::test(&paths, filter.as_deref(), &library.lib),
+        Command::Coverage { root, check } => coverage::coverage(root.as_deref(), check),
         Command::Fmt { paths, check } => fmt::fmt(&paths, check),
         Command::Run { case, op, flags } => run::run(src, &case, &op, &flags),
         Command::Op(op) => {

@@ -763,3 +763,10 @@ by a heading line, then the verbatim body text up to the next `## ` line.
 - Edition: title page: "Internal Operating Procedures, Revised February 26, 2024"; the IOPs linked from https://www.ca8.uscourts.gov/rules-procedures.
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 358fd9ee631e7ec9423c8ff94b2f7f2c6ce82d1a48e2a567afa2c487883b89b8. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
+
+### `frap/frap.txt` — Federal Rules of Appellate Procedure
+
+- Source: https://www.uscourts.gov/sites/default/files/document/federal-rules-of-appellate-procedure.pdf (official site; 80 pages, sha256 a6f417607a71c05a3a54df68a43ec67e691dcf276c46a415e78038ae4f9305f4).
+- Edition: title page: "Federal Rules of Appellate Procedure with Forms, December 1, 2025" (House Judiciary Committee Print No. 2, 119th Cong.; foreword: "as amended to December 1, 2025"); the current FRAP PDF linked from https://www.uscourts.gov/rules-policies/current-rules-practice-procedure/federal-rules-appellate-procedure.
+- Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with OCR (pdftoppm 300 dpi, tesseract 5.5.3, --psm 6) because the PDF's Type 3 fonts carry no text mapping (pdftotext yields glyph noise); unedited OCR, so verify any quoted value against the PDF.
+- Extract sha256 1d5a3ff17813cc8cb47c3cdab65adf8db170a8a71b3aae2b187e151975415017. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.

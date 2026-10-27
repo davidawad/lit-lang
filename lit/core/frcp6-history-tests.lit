@@ -30,8 +30,10 @@ event ThirdPartyComplaintExtensionMoved()
 
 /// Both periods are extendable under FRCP 6(b)(1): for good cause before
 /// they expire, and on motion for excusable neglect after; the rule sets
-/// no numeric ceiling.
-deadline removal-answer: 7.days after NoticeOfRemovalFiled() counted_by frcp6 cite "FRCP 81(c)(2)(C)"
+/// no numeric ceiling. Both are the periods of the 2009 amendments (adopted
+/// March 26, 2009, effective December 1, 2009), which lengthened 81(c)(2)'s
+/// 5 days to 7 and 14(a)(1)'s 10 days to 14; neither rule is amended since.
+deadline removal-answer: 7.days after NoticeOfRemovalFiled() counted_by frcp6 effective [2009-12-01, ..) known_at 2009-03-26 cite "FRCP 81(c)(2)(C)"
 {
   forum frcp
   extend { by Court, discretion GoodCause }
@@ -39,7 +41,7 @@ deadline removal-answer: 7.days after NoticeOfRemovalFiled() counted_by frcp6 ci
   extend { by Court, discretion ExcusableNeglect, after_expiry, on RemovalAnswerExtensionMoved() }
 }
 
-deadline third-party-complaint: 14.days after AnswerServed() counted_by frcp6 cite "FRCP 14(a)(1)"
+deadline third-party-complaint: 14.days after AnswerServed() counted_by frcp6 effective [2009-12-01, ..) known_at 2009-03-26 cite "FRCP 14(a)(1)"
 {
   forum frcp
   extend { by Court, discretion GoodCause }

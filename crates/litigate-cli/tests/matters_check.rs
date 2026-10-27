@@ -250,7 +250,9 @@ fn a_corpus_older_than_the_pin_names_the_stale_binary() {
             d["code"] == "L1010" && d["message"].as_str().unwrap().contains("source `scotus`")
         })
         .collect();
-    assert_eq!(stale.len(), 5, "{stale:#?}");
+    // `lit/core`'s cites through `scotus`: the current `sup-ct-30` version
+    // and three tests (its 2023 version cites the 2023 Rules).
+    assert_eq!(stale.len(), 4, "{stale:#?}");
     assert!(
         errors
             .iter()

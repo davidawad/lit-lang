@@ -124,8 +124,10 @@ counting frcp6 effective [2001-12-01, 2005-12-01) known_at 2001-04-23 supersedes
 /// The 2005 amendment (adopted April 25, 2005, effective December 1, 2005):
 /// the 3 days "are added after the prescribed period would otherwise expire
 /// under subdivision (a)", the order the pipeline uses (2005 Committee
-/// Note); restyled in 2007 as 6(a)(2) and 6(d).
-counting frcp6 effective [2005-12-01, 2009-12-01) known_at 2005-04-25 supersedes frcp6@2001-12-01 cite "FRCP (2008 ed.) 6(a)(2)"
+/// Note); restyled in 2007 as 6(a)(2) and 6(d). The 2008 edition prints
+/// the restyled text of December 1, 2007, changes the 2007 Committee Note
+/// calls "stylistic only": a later text, cited for 2005-2007 on purpose.
+counting frcp6 effective [2005-12-01, 2009-12-01) known_at 2005-04-25 supersedes frcp6@2001-12-01 cite "FRCP (2008 ed.) 6(a)(2)" historical
 {
   exclude_trigger_day
   include_last_day
@@ -188,8 +190,35 @@ counting frcp6 effective [2009-12-01, 2016-12-01) known_at 2009-03-26 supersedes
 /// consented to)" only (the amendment as printed in volume 578 of the U.S.
 /// Reports; Committee Note, "to remove service by electronic means under
 /// Rule 5(b)(2)(E) from the modes of service that allow 3 added days").
-/// Electronic service adds nothing.
-counting frcp6 effective [2016-12-01, ..) known_at 2016-04-28 supersedes frcp6@2009-12-01 cite "FRCP 6(a)"
+/// Electronic service adds nothing (2017 ed.).
+counting frcp6 effective [2016-12-01, 2023-12-01) known_at 2016-04-28 supersedes frcp6@2009-12-01 cite "FRCP (2017 ed.) 6(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCP (2017 ed.) 6(d)"
+  holidays us-federal-holidays
+  forums [frcp]
+  allow_hours
+  end_of_month clamp
+}
+
+/// The 2023 amendment (adopted April 24, 2023, effective December 1, 2023)
+/// adds Juneteenth National Independence Day to 6(a)(6)(A)'s list. The
+/// count is unchanged: `us-federal-holidays` has observed it since June 17,
+/// 2021, when Congress declared it a holiday (6(a)(6)(B)).
+counting frcp6 effective [2023-12-01, ..) known_at 2023-04-24 supersedes frcp6@2016-12-01 cite "FRCP 6(a)"
 {
   exclude_trigger_day
   include_last_day

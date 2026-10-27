@@ -35,7 +35,11 @@ module core.calendar
 /// which belong to a district's own calendar and, from 2009, extend only
 /// forward-counted periods. Where a last day falls on such a day, the date
 /// computed here is the earlier one, never a later one.
-calendar us-federal-holidays cite "5 U.S.C. § 6103(a)"
+///
+/// The cite is today's § 6103 (2023 ed.), whose credits and amendment
+/// notes date each entry's window: a later text, cited for the whole
+/// history on purpose.
+calendar us-federal-holidays cite "5 U.S.C. § 6103(a)" historical
 {
   // Executive Order 11582 § 3(a), February 11, 1971; § 6103(b)(1).
   new-years-day-before-1971: fixed(1, 1) effective [1894-06-28, 1971-02-11)
@@ -72,8 +76,11 @@ calendar us-federal-holidays cite "5 U.S.C. § 6103(a)"
 /// (September 6, 1966; the uncodified Pub. L. 85-1 of 1957 preceded it). It
 /// states only the Sunday shift; observing a Saturday Inauguration Day on
 /// the Friday before, as § 6103(b)(1) does for every other holiday, is the
-/// interpretive choice `packs/clock/SOURCES-NOTES.md` records.
-calendar rcfc-legal-holidays cite "RCFC 6(a)(6)(A)"
+/// interpretive choice `packs/clock/SOURCES-NOTES.md` records. The cite is
+/// today's RCFC 6, whose Rules Committee Notes record its changes since
+/// 2002 (Juneteenth added in 2022): a later text, cited for the whole
+/// history on purpose.
+calendar rcfc-legal-holidays cite "RCFC 6(a)(6)(A)" historical
 {
   new-years-day: fixed(1, 1) effective [1894-06-28, ..) observed nearest_weekday
   inauguration-day: every(4, 1965, 1, 20) effective [1966-09-06, ..) observed nearest_weekday

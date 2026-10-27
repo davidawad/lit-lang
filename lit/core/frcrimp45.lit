@@ -41,15 +41,10 @@ counting frcrimp45 effective [2023-12-01, ..) known_at 2023-04-24 cite "FRCrimP 
   allow_hours
 }
 
-deadline frcrimp45-14-days: 14.days after Served() counted_by frcrimp45 cite "FRCrimP 45(a)(1)"
-{
-  forum frcrimp
-}
-
-deadline frcrimp45-7-days-before: 7.days before Scheduled() counted_by frcrimp45 cite "FRCrimP 45(a)(5)"
-{
-  forum frcrimp
-}
+// Fixtures cite nothing: they are periods for the tests, not rules in
+// force, and each test cites the rule it checks.
+deadline frcrimp45-14-days: 14.days after Served() counted_by frcrimp45 { forum frcrimp }
+deadline frcrimp45-7-days-before: 7.days before Scheduled() counted_by frcrimp45 { forum frcrimp }
 
 test "fourteen days count every day" cite "FRCrimP 45(a)(1)(B)"
 {

@@ -116,7 +116,7 @@ fn ttab_check_human_output_groups_library_noise_and_verbose_restores_it() {
 
     let json = run(&["--format", "json", "check", "cases/e2e-ttab-short.case"]);
     let document: serde_json::Value = serde_json::from_slice(&json.stdout).unwrap();
-    assert_eq!(document["diagnostics"].as_array().unwrap().len(), 182);
+    assert_eq!(document["diagnostics"].as_array().unwrap().len(), 125);
     assert!(document["diagnostics"]
         .as_array()
         .unwrap()

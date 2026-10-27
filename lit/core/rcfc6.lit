@@ -69,7 +69,35 @@ counting rcfc6 effective [2010-01-11, 2017-08-01) known_at 2010-01-11 supersedes
 /// (2017 Amendment note): the 3 days follow service "under RCFC 5(b)(2)(C)
 /// (mail), (D) (leaving with the clerk), or (F) (other means consented
 /// to)" only, so electronic service adds nothing.
-counting rcfc6 effective [2017-08-01, ..) known_at 2017-08-01 supersedes rcfc6@2010-01-11 cite "RCFC 6(a)"
+counting rcfc6 effective [2017-08-01, 2024-07-29) known_at 2017-08-01 supersedes rcfc6@2010-01-11 cite "RCFC 6 (2017 Amendment note)" historical
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "RCFC 6 (2017 Amendment note)"
+  holidays rcfc-legal-holidays
+  forums [cofc]
+  allow_hours
+  end_of_month clamp
+}
+
+/// RCFC 6 as last amended July 29, 2024 (its credits). The 2024 Amendment
+/// note records that 6(a)(6) added Juneteenth National Independence Day in
+/// 2022 as an administrative amendment. The count is unchanged:
+/// `rcfc-legal-holidays` has observed it since June 17, 2021, when
+/// Congress declared it a holiday.
+counting rcfc6 effective [2024-07-29, ..) known_at 2024-07-29 supersedes rcfc6@2017-08-01 cite "RCFC 6(a)"
 {
   exclude_trigger_day
   include_last_day
@@ -92,30 +120,13 @@ counting rcfc6 effective [2017-08-01, ..) known_at 2017-08-01 supersedes rcfc6@2
   end_of_month clamp
 }
 
-deadline rcfc6-1-day: 1.days after Served() counted_by rcfc6 cite "RCFC 6(a)(1)"
-{
-  forum cofc
-}
-
-deadline rcfc6-10-days: 10.days after Served() counted_by rcfc6 cite "RCFC 6(a)(1)"
-{
-  forum cofc
-}
-
-deadline rcfc6-14-days: 14.days after Served() counted_by rcfc6 cite "RCFC 6(a)(1)"
-{
-  forum cofc
-}
-
-deadline rcfc6-26-days: 26.days after Served() counted_by rcfc6 cite "RCFC 6(a)(1)"
-{
-  forum cofc
-}
-
-deadline rcfc6-2-days-before: 2.days before Scheduled() counted_by rcfc6 cite "RCFC 6(a)(5)"
-{
-  forum cofc
-}
+// Fixtures cite nothing: they are periods for the tests, not rules in
+// force, and each test cites the rule it checks.
+deadline rcfc6-1-day: 1.days after Served() counted_by rcfc6 { forum cofc }
+deadline rcfc6-10-days: 10.days after Served() counted_by rcfc6 { forum cofc }
+deadline rcfc6-14-days: 14.days after Served() counted_by rcfc6 { forum cofc }
+deadline rcfc6-26-days: 26.days after Served() counted_by rcfc6 { forum cofc }
+deadline rcfc6-2-days-before: 2.days before Scheduled() counted_by rcfc6 { forum cofc }
 
 test "an ordinary fourteen-day period matches FRCP 6" cite "RCFC 6(a)(1)"
 {

@@ -62,17 +62,7 @@ impl<'a> Context<'a> {
     /// The package declaring `target` (`<pack-id>::<id>` or a local id)
     /// and its local id there.
     pub fn owner<'t>(&self, target: &'t str) -> (&'a hir::Package, &'t str) {
-        target
-            .split_once("::")
-            .and_then(|(pack, id)| {
-                self.packages
-                    .iter()
-                    .copied()
-                    .chain(std::iter::once(self.package))
-                    .find(|p| p.manifest.pack_id == pack)
-                    .map(|p| (p, id))
-            })
-            .unwrap_or((self.package, target))
+        owner(self.package, self.packages, target)
     }
 
     /// Every version of deadline `target`.
@@ -101,11 +91,12 @@ impl<'a> Context<'a> {
     /// `historical`), a deadline's adopting rule (`forum F cite "X" quote
     /// "..."`, in its window, with the words it quotes), edge `authority`s
     /// and the cites of `basis sourced(..)` on nodes and edges (imported
-    /// with their node, in its window), test `cite`s (no window), and the
-    /// entries of a filing limit with the words each must find
-    /// ([`limit_cites`]).
+    /// with their node, in its window), a transition's cites (in the window
+    /// of the version it amends), test `cite`s (no window), and the entries
+    /// of a filing limit with the words each must find ([`limit_cites`]).
     pub fn cites(&self) -> impl Iterator<Item = Cite<'a>> {
-        self.declarations().flat_map(|d| {
+        let (package, packages) = (self.package, self.packages);
+        self.declarations().flat_map(move |d| {
             let meta = meta_of(d).or(match d {
                 Declaration::Grant(g) => Some(&g.meta),
                 Declaration::Recharacterize(r) => Some(&r.meta),
@@ -113,7 +104,13 @@ impl<'a> Context<'a> {
                 _ => None,
             });
             let imported = meta.is_some_and(|m| m.imported);
-            let window = meta.map(|m| &m.effective);
+            // A transition has no version of its own: it speaks from the
+            // version it amends, not from its package's `in_force`.
+            let amended = match d {
+                Declaration::Transition(t) => amended(package, packages, t),
+                _ => None,
+            };
+            let window = amended.or(meta.map(|m| &m.effective));
             let own =
                 meta.and_then(|m| Some((m.cite.as_deref()?, m.span.as_ref(), m.historical, None)));
             // A delegation's and a characterization's own authority, at
@@ -282,6 +279,40 @@ pub(crate) struct Cite<'a> {
     /// The words of the cited text it quotes (`quote "..."`), which its
     /// vendored section must hold.
     pub quote: Option<Cow<'a, str>>,
+}
+
+/// The package declaring `target` (`<pack-id>::<id>` or a local id) among
+/// `package` and `packages`, and its local id there.
+fn owner<'a, 't>(
+    package: &'a hir::Package,
+    packages: &[&'a hir::Package],
+    target: &'t str,
+) -> (&'a hir::Package, &'t str) {
+    target
+        .split_once("::")
+        .and_then(|(pack, id)| {
+            packages
+                .iter()
+                .copied()
+                .chain(std::iter::once(package))
+                .find(|p| p.manifest.pack_id == pack)
+                .map(|p| (p, id))
+        })
+        .unwrap_or((package, target))
+}
+
+/// The in-force window of the version transition `t` amends (`id@from`).
+fn amended<'a>(
+    package: &'a hir::Package,
+    packages: &[&'a hir::Package],
+    t: &hir::Transition,
+) -> Option<&'a hir::Interval> {
+    let (target, from) = t.amendment.rsplit_once('@')?;
+    let (pkg, id) = owner(package, packages, target);
+    declarations(pkg)
+        .filter_map(meta_of)
+        .find(|m| m.id == id && m.effective.from == from)
+        .map(|m| &m.effective)
 }
 
 fn declarations(pkg: &hir::Package) -> impl Iterator<Item = &Declaration> {

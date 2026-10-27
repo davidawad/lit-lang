@@ -109,30 +109,13 @@ counting itc210 effective [2013-05-20, ..) known_at 2013-04-19 supersedes itc210
   forums [itc]
 }
 
-deadline itc210-1-day: 1.days after Served() counted_by itc210 cite "19 C.F.R. § 201.14(a)"
-{
-  forum itc
-}
-
-deadline itc210-3-days: 3.days after Served() counted_by itc210 cite "19 C.F.R. § 201.14(a)"
-{
-  forum itc
-}
-
-deadline itc210-5-days: 5.days after Served() counted_by itc210 cite "19 C.F.R. § 201.14(a)"
-{
-  forum itc
-}
-
-deadline itc210-12-days: 12.days after Served() counted_by itc210 cite "19 C.F.R. § 210.43(a)(1)"
-{
-  forum itc
-}
-
-deadline itc210-20-days: 20.days after Served() counted_by itc210 cite "19 C.F.R. § 210.13(a)"
-{
-  forum itc
-}
+// Fixtures cite nothing: they are periods for the tests, not rules in
+// force, and each test cites the rule it checks.
+deadline itc210-1-day: 1.days after Served() counted_by itc210 { forum itc }
+deadline itc210-3-days: 3.days after Served() counted_by itc210 { forum itc }
+deadline itc210-5-days: 5.days after Served() counted_by itc210 { forum itc }
+deadline itc210-12-days: 12.days after Served() counted_by itc210 { forum itc }
+deadline itc210-20-days: 20.days after Served() counted_by itc210 { forum itc }
 
 test "twenty days from a Monday" cite "19 C.F.R. § 201.14(a)"
 {

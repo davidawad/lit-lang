@@ -121,31 +121,162 @@ fn expressible(id: &str, direction: Direction, unit: Unit) -> bool {
     id != "itc210" || (direction == Direction::Forward && unit == Unit::Calendar)
 }
 
-/// `lit/core` checks clean in `dev`. Its only strict failures are holes:
-/// cites whose vendored text postdates the version citing it with no
-/// vendored amendment history to prove the text unamended (SPEC §7).
+/// `lit/core` checks clean in `dev` and in `strict`: no hole, so no
+/// jurisdiction package inherits one from it (lg-9iz0).
 #[test]
-fn strict_check_of_lit_core_fails_only_on_unproved_cites() {
+fn strict_check_of_lit_core_passes() {
     let dev = litigate(&["check", "lit/core"]);
     assert_eq!(dev.code, 0, "{}", dev.stdout);
     let run = litigate(&["check", "--profile", "strict", "lit/core"]);
+    assert_eq!(run.code, 0, "{}", run.stdout);
     let result = &run.json["result"];
     for f in result["obligations"].as_array().unwrap() {
         // A rule package has no events, so only case replay is skipped.
         let skipped = f["name"] == "case-replay" && f["status"] == "skipped";
-        let holes = f["name"] == "holes";
-        assert!(f["status"] == "passed" || skipped || holes, "{f}");
+        assert!(f["status"] == "passed" || skipped, "{f}");
     }
     let core = &result["packages"][0];
     assert_eq!(core["name"], "core");
     assert_eq!(core["tests"]["failed"], 0);
     assert!(core["tests"]["passed"].as_u64().unwrap() >= 100, "{core}");
-    let diagnostics = run.json["diagnostics"].as_array().unwrap();
-    assert_eq!(core["holes"].as_u64(), Some(diagnostics.len() as u64));
-    for d in diagnostics {
-        assert_eq!(d["code"], "L5002", "{d}");
-        let message = d["message"].as_str().unwrap();
-        assert!(message.contains("is not proved the text in force"), "{d}");
+    assert_eq!(core["holes"].as_u64(), Some(0), "{core}");
+    assert_eq!(run.json["diagnostics"], serde_json::json!([]));
+}
+
+/// How a version's cite of a text vendored after it took effect is proved
+/// that version's text (SPEC §4.3).
+enum Proof {
+    /// By the section's history in `sources/rule-amendment-history.txt`.
+    History,
+    /// By citing an expression of this source binding, dated on or before
+    /// the version.
+    Dated(&'static str),
+}
+
+/// The counting-rule versions whose cites were holes until each was proved
+/// (lg-9iz0): the current ones by their amendment histories, the ones
+/// before their last amendment by the edition that printed their text.
+const PROVED: [(&str, Proof); 9] = [
+    ("frcp6@2016-12-01", Proof::Dated("frcp-2017")),
+    ("frcp6@2023-12-01", Proof::History),
+    ("frap26@2016-12-01", Proof::Dated("frap-2017")),
+    ("frap26@2023-12-01", Proof::History),
+    ("rcfc6@2024-07-29", Proof::History),
+    ("frcrimp45@2023-12-01", Proof::History),
+    ("itc210@2013-05-20", Proof::History),
+    ("sup-ct-30@2023-01-01", Proof::Dated("scotus-2023")),
+    ("sup-ct-30@2026-03-16", Proof::Dated("scotus")),
+];
+
+#[test]
+fn each_version_cites_a_text_proved_in_force_when_it_took_effect() {
+    for (id, proof) in PROVED {
+        let run = litigate(&["where", id, "--path", "lit/core"]);
+        assert_eq!(run.code, 0, "{id}: {}", run.stdout);
+        let from = id.split_once('@').unwrap().1;
+        let result = &run.json["result"];
+        let version = &result["versions"][0];
+        assert_eq!(version["in_force"]["from"], from, "{id}: {version}");
+        match proof {
+            // A version in force today: its lowered cite carries the proof.
+            Proof::History => {
+                let sections = result["source"]["sections"].as_array().unwrap();
+                assert!(!sections.is_empty(), "{id}: {result}");
+                for s in sections {
+                    let h = &s["history"];
+                    assert_eq!(h["path"], "sources/rule-amendment-history.txt", "{id}: {s}");
+                    assert_eq!(h["effective"], from, "{id}: {s}");
+                    assert!(h["version"].as_str().unwrap() <= from, "{id}: {s}");
+                }
+            }
+            Proof::Dated(binding) => {
+                let b = core()
+                    .manifest
+                    .sources
+                    .iter()
+                    .find(|b| b.id == binding)
+                    .unwrap_or_else(|| panic!("{binding}"));
+                let cite = version["cite"].as_str().unwrap();
+                assert!(
+                    b.cite_prefixes.iter().any(|p| cite.starts_with(&format!("{p} "))),
+                    "{id}: {cite} through {binding}"
+                );
+                assert!(b.as_of.as_deref().unwrap() <= from, "{id}: {binding}");
+            }
+        }
+    }
+}
+
+/// The FRCP 81(c)(2)(C) and 14(a)(1) periods are the 2009 amendments' 7
+/// and 14 days, in force from December 1, 2009, not from the package's
+/// 1963 `in_force`; their histories prove neither rule amended since
+/// (lg-9iz0).
+#[test]
+fn the_removal_answer_and_impleader_periods_are_the_2009_texts() {
+    for id in ["removal-answer", "third-party-complaint"] {
+        let x = core()
+            .modules
+            .iter()
+            .flat_map(|m| &m.declarations)
+            .find_map(|d| match d {
+                Declaration::Deadline(x) if x.meta.id == id => Some(x),
+                _ => None,
+            })
+            .unwrap_or_else(|| panic!("{id}"));
+        assert_eq!(x.meta.effective.from, "2009-12-01", "{id}");
+        assert_eq!(x.meta.effective.to, None, "{id}");
+        assert_eq!(x.meta.effective.known_at, "2009-03-26", "{id}");
+    }
+}
+
+/// The cites marked `historical`: a later edition, or a committee note,
+/// reporting the text of a version or calendar on purpose (lg-9iz0).
+#[test]
+fn later_texts_cited_for_earlier_versions_are_marked_historical() {
+    let historical = |kind: &str, id: &str, from: Option<&str>| {
+        core()
+            .modules
+            .iter()
+            .flat_map(|m| &m.declarations)
+            .filter_map(|d| match (kind, d) {
+                ("counting", Declaration::Counting(x)) => Some(&x.meta),
+                ("calendar", Declaration::Calendar(x)) => Some(&x.meta),
+                _ => None,
+            })
+            .find(|m| m.id == id && from.is_none_or(|f| m.effective.from == f))
+            .unwrap_or_else(|| panic!("{kind} {id}@{from:?}"))
+            .historical
+    };
+    // The 2008 edition prints FRCP 6 as restyled in 2007, FRAP 26 as
+    // amended in 2005; RCFC 6's 2017 Amendment note reports the 2017 text.
+    assert!(historical("counting", "frcp6", Some("2005-12-01")));
+    assert!(historical("counting", "frap26", Some("2002-12-01")));
+    assert!(historical("counting", "rcfc6", Some("2017-08-01")));
+    // Today's texts, with the notes that date each holiday's window.
+    assert!(historical("calendar", "us-federal-holidays", None));
+    assert!(historical("calendar", "rcfc-legal-holidays", None));
+}
+
+/// A fixture period is no rule in force: it cites nothing, and the tests
+/// using it cite the rule they check (lg-9iz0).
+#[test]
+fn fixture_periods_cite_no_rule() {
+    let rules = [
+        "frcp6-", "frap26-", "rcfc6-", "itc210-", "frcrimp45-", "sup-ct-30-",
+    ];
+    let fixtures: Vec<&hir::Deadline> = core()
+        .modules
+        .iter()
+        .flat_map(|m| &m.declarations)
+        .filter_map(|d| match d {
+            Declaration::Deadline(x) if rules.iter().any(|r| x.meta.id.starts_with(r)) => Some(x),
+            _ => None,
+        })
+        .filter(|x| x.meta.id != "frcp6-1-year")
+        .collect();
+    assert!(fixtures.len() >= 40, "{}", fixtures.len());
+    for x in fixtures {
+        assert_eq!(x.meta.cite, None, "{}", x.meta.id);
     }
 }
 

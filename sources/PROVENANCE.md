@@ -305,6 +305,49 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   its end.
 - sha256 (this file): `a55dd4c3b28e99491083474806c9e8bb621e4fd43b2fddf5c4359d1202f03f20`
 
+### `usc-28-app-2017-time.txt` — FRCP 6 and FRAP 26 as printed in the 2017 edition of 28 U.S.C. App.
+
+- The texts `lit/core`'s 2016 versions of `frcp6` and `frap26` took effect
+  with (each as amended December 1, 2016, the last amendment its credits
+  list): `## FRCP (2017 ed.) Rule 6` and `## FRAP (2017 ed.) Rule 26`, each
+  rule's text, amendment credits and Committee Notes. Not canonical refs,
+  as in `usc-28-app-time-history.txt`.
+- Fetched 2026-10-27 from `www.govinfo.gov`'s official United States Code
+  (GPO), 2017 Edition (current through January 12, 2018), granules
+  `USCODE-2017-title28-app-federalru-dup1-rule6.htm` (sha256
+  `43524cf8ac34d6e27356597cf5307a61b5fb0e6fd3516addc1fd7f12d5a9a740`) and
+  `USCODE-2017-title28-app-federalru-rule26.htm`
+  (`6702848ddfeb87f0b06830920aa5ee4d71dd76249c5b0187cc50055a0b214c93`).
+  Everything from the page's section head to its end, one line per
+  paragraph, tags stripped, entities decoded, runs of spaces collapsed.
+- sha256 (this file): `5d927c0a1b91b1a30a949a272c164ea6826cfebf6eac917da9a676732b22844d`
+
+### `rule-amendment-history.txt` — amendment histories of the sections `lit/core`'s current versions cite
+
+- One `## versions <heading>` block per section (SPEC §4.3): an `as_of`
+  line, then the section's amendments as a `content_versions` list
+  (`date` and `amendment_date` the effective date, `issue_date` the order
+  or publication date). Each is transcribed from the section's printed
+  amendment credits, read as of the date the `as_of` line gives:
+  - `Rule 6`, `Rule 14`, `Rule 81`, `Rule 86` (FRCP) and `Fed. R. Crim. P.
+    45`: the "As amended ..., eff. ..." line closing each rule in
+    `frcp.txt` and `frcrimp.txt` (as amended to December 1, 2024).
+  - `FRAP 26`: the credits of the 2024 edition of 28 U.S.C. App. (current
+    through January 6, 2025), granule
+    `USCODE-2024-title28-app-federalru-rule26.htm` (sha256
+    `1b1e1f0b76345262b3e275d5c2d5cfff2d47b813bdc1b0921ce96ed8a58fb878`),
+    fetched 2026-10-27; `frap.txt` prints none.
+  - `RCFC 6`: "As revised and reissued May 1, 2002; as amended June 20,
+    2006, Nov. 3, 2008, Jan. 11, 2010, Aug. 1, 2017, July 29, 2024" in
+    `rcfc.txt` (no issue dates printed).
+  - `19 C.F.R. § 201.14`: the source note in `cfr-19-part201.txt` (41 FR
+    17710; 56 FR 11923; 68 FR 32975; 76 FR 61941), each dated by the
+    effective date its notice gives in `fr-usitc-time-history.txt` (May
+    27, 1976; August 4, 2003; November 7, 2011), except 56 FR 11923, whose
+    effective date is not vendored and which is dated by publication
+    (March 21, 1991).
+- sha256 (this file): `e6aef2e7672430dd698945d200c41a1988ef4f78ba7bfc0a2d7eae8e216362b8`
+
 ### `usc-28-app-frap4-history.txt` — FRAP 4 as printed in the 2008 and 2011 editions of 28 U.S.C. App.
 
 - The pre-December 1, 2009 text of FRAP 4 and its amendment history, which
@@ -617,6 +660,21 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   hyphens inside words ("inter- nal", "ear- lier") were joined. No other
   wording changed.
 - sha256 (this file): `94c56e4ee8ec59d5cf857f1271ee689de1568421ab67e19b71bb823b5feecbb4`
+
+### `scotus-rules-2023.txt` — Rules of the Supreme Court 29.3 and 30.1 (adopted December 5, 2022, effective January 1, 2023)
+
+- The service and computation-of-time paragraphs `lit/core`'s 2023 version
+  of `sup-ct-30` cites: `## Sup. Ct. R. (2023) 29.3`, `## Sup. Ct. R.
+  (2023) 30.1`, each restating its rule's heading as its first line.
+- Fetched 2026-10-27 from `www.supremecourt.gov/filingandrules/2023RulesoftheCourt.pdf`
+  (sha256 `05f435c766fd596333828846d097828238ff89a266c24e3afca9ecd2fb9c19db`),
+  `pdftotext -layout`, running headers and page numbers stripped, lines
+  joined into one line per paragraph, line-break hyphens joined. The
+  text layer drops the "fi" ligature; it was restored word by word (filing,
+  file, suffices, office, first-class, identifiable). No other wording
+  changed. Both paragraphs read word for word as in the 2026 Rules
+  (`scotus-rules.txt`).
+- sha256 (this file): `c83977038d4c8be8e5d79f492e532c289ff112202db06f2784b994ca524f575b`
 
 ### `usc-15-lanham.txt` — Lanham Act sections (12 sections of 15 U.S.C.)
 

@@ -1038,8 +1038,9 @@ Cargo.lock does, and `litigate lock` regenerates it.
   text as amended to that date and is taken as still current when the
   window opens; a binding without `as_of` has no date to compare. Edge
   `authority` cites are held to their node's window, test cites to none,
-  and a deadline's adopting cite (`forum F cite "X"`, §5.3) to its
-  deadline's.
+  a deadline's adopting cite (`forum F cite "X"`, §5.3) to its
+  deadline's, and a transition's cites, which have no version clause, to
+  the window of the version it `amends`.
 - A cite given with `quote "..."` (a deadline's adopting rule, §5.3) is
   cited for those words: one vendored section it resolves to must hold
   them, compared with whitespace runs collapsed, else L1010.
@@ -1547,8 +1548,11 @@ another count, or a name where an interval stands or the reverse).
 
 **Cite text across versions.** Let E be the declaration version's `from`
 date and D the vendored source binding's `as_of`. When E < D, the cite is
-proved only if a source binding pins an eCFR versioner history for that
-exact section, read at or after D, with no amendment effective in (E, D].
+proved only if a source binding pins an amendment history for that
+exact section (an eCFR versioner history, or one transcribed from the
+section's printed amendment credits: a court rule's "As amended" line, a
+C.F.R. section's source note), read at or after D, with no amendment
+effective in (E, D].
 An amendment effective exactly at E establishes the cited version; one at
 D or strictly between E and D breaks the proof. Missing or unusable history
 also fails closed: the cite becomes a hole, and its diagnostic names the

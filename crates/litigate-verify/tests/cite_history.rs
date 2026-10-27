@@ -33,6 +33,12 @@ fn block(n: u32, dates: &[&str]) -> String {
 /// Rules 6 and 12 (unamended since 1990, BASE's effective date) and Rule 8
 /// as `rule8` lists it (absent when `None`).
 fn checked(cite: &str, rule8: Option<&[&str]>) -> Checked {
+    let decls = format!("default cited effective [{E}, ..) {cite} when true => 1\n");
+    checked_with(&decls, rule8)
+}
+
+/// [`BASE`] plus `decls`, checked as [`checked`] checks its default.
+fn checked_with(decls: &str, rule8: Option<&[&str]>) -> Checked {
     let mut history = block(6, &["1990-01-01"]) + &block(12, &["1990-01-01"]);
     if let Some(dates) = rule8 {
         history += &block(8, dates);
@@ -46,7 +52,7 @@ fn checked(cite: &str, rule8: Option<&[&str]>) -> Checked {
         ),
         sha256_hex(&history),
     );
-    let lit = format!("{BASE}\ndefault cited effective [{E}, ..) {cite} when true => 1\n");
+    let lit = format!("{BASE}\n{decls}");
     let embedded = SourceCorpus::embedded_ref().files.clone();
     let corpus = SourceCorpus::from_files(embedded.into_iter().chain([(HISTORY.into(), history)]));
     let pkg = pkg_with_sources("demo", "FederalRule", &[], &sources, &lit);
@@ -132,4 +138,27 @@ fn a_historical_or_written_hole_cite_is_not_held_to_the_history() {
     // The written hole is the only hole.
     let c = checked("cite ?(\"FRCP 8(c)\")", None);
     assert_eq!(holes(&c), ["strict does not permit holes: FRCP 8(c)"]);
+}
+
+/// A transition has no version clause: its cites speak from the version it
+/// amends, not from its package's `in_force` (1990 here). Rule 8, amended
+/// in 2000, is proved for a transition amending a version of E.
+#[test]
+fn a_transition_is_held_to_the_window_of_the_version_it_amends() {
+    let decls = format!(
+        "event PriorRuleOrdered()\n\
+         default cited effective [1990-01-01, {E}) cite \"FRCP 6(a)\" when true => 0\n\
+         default cited effective [{E}, ..) supersedes cited@1990-01-01 cite \"FRCP 6(a)\" when true => 1\n\
+         transition cited-pending amends cited@{E} cite \"FRCP 8(c)\"\n\
+         {{\n  unless has_event(PriorRuleOrdered()) -> cited@1990-01-01\n  otherwise -> cited@{E}\n}}\n"
+    );
+    proved(&checked_with(&decls, Some(&["1990-01-01", "2000-01-01"])));
+    // An amendment after the amended version took effect still breaks it.
+    let c = checked_with(&decls, Some(&["1990-01-01", "2020-03-01"]));
+    let found = holes(&c);
+    assert_eq!(found.len(), 1, "{found:?}");
+    assert!(
+        found[0].contains(&format!("`FRCP 8(c)` is not proved the text in force from {E}")),
+        "{found:?}"
+    );
 }

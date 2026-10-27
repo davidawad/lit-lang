@@ -75,7 +75,7 @@ fn worlds(files: BTreeMap<String, String>, args: &[&str]) -> (LitigateRun, Value
     .map(|s| (*s).to_owned())
     .collect();
     all.extend(args.iter().map(|s| (*s).to_owned()));
-    let run = litigate_cli::execute_in_memory(files, &all);
+    let run = litigate_cli::execute_in_memory(files, &all, None);
     let json = serde_json::from_str(&run.stdout).unwrap_or(Value::Null);
     (run, json)
 }
@@ -263,7 +263,7 @@ fn a_world_package_or_matter_that_fails_is_reported() {
 fn bad_arguments_are_usage_errors() {
     let run = |args: &[&str]| {
         let args: Vec<String> = args.iter().map(|s| (*s).to_owned()).collect();
-        litigate_cli::execute_in_memory(files(&[]), &args)
+        litigate_cli::execute_in_memory(files(&[]), &args, None)
     };
     for (args, why) in [
         (

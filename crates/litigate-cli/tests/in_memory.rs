@@ -51,11 +51,17 @@ fn untimed(stdout: &str) -> String {
     }
 }
 
-/// The binary at the repository root, and the same arguments in memory.
+/// The today both sides judge deadlines at (lg-2ie2): pinned, never the
+/// wall clock, and later than the matters' `as_of`s, so `check` runs the
+/// judge-at-today path (L4016, `judged_at`) on both.
+const TODAY: &str = "2026-10-27";
+
+/// The binary at the repository root, and the same arguments in memory,
+/// both judging deadlines at [`TODAY`].
 fn both(args: &[&str]) -> (LitigateRun, LitigateRun) {
     let out = assert_cmd::Command::cargo_bin("litigate")
         .unwrap()
-        .env("LITIGATE_TODAY", "2000-01-01")
+        .env("LITIGATE_TODAY", TODAY)
         .current_dir(repo())
         .args(args)
         .output()
@@ -67,7 +73,7 @@ fn both(args: &[&str]) -> (LitigateRun, LitigateRun) {
         files: BTreeMap::new(),
     };
     let args: Vec<String> = args.iter().map(|a| (*a).to_owned()).collect();
-    let mut memory = litigate_cli::execute_in_memory(repo_files(), &args);
+    let mut memory = litigate_cli::execute_in_memory(repo_files(), &args, Some(TODAY));
     memory.stdout = untimed(&memory.stdout);
     (native, memory)
 }
@@ -216,7 +222,7 @@ fn engine_serves_the_compiled_lit_and_cases_in_memory() {
 fn engine_reads_no_directory_in_memory() {
     for flag in ["--packs-dir", "--scenarios-dir", "--calibration-dir"] {
         let args = ["engine".into(), "describe".into(), flag.into(), "x".into()];
-        let run = litigate_cli::execute_in_memory(repo_files(), &args);
+        let run = litigate_cli::execute_in_memory(repo_files(), &args, None);
         assert_eq!((run.code, run.stdout.as_str()), (1, ""));
         assert_eq!(
             run.stderr,
@@ -229,7 +235,7 @@ fn engine_reads_no_directory_in_memory() {
         .filter(|(path, _)| path.starts_with("lit/"))
         .collect();
     let args = ["engine".into(), "describe".into(), "--compact".into()];
-    let run = litigate_cli::execute_in_memory(lit, &args);
+    let run = litigate_cli::execute_in_memory(lit, &args, None);
     let response: Value = serde_json::from_str(&run.stdout).unwrap();
     assert_eq!(response["result"]["scenario_library"], Value::Array(vec![]));
     assert!(!response["result"]["packs"].as_array().unwrap().is_empty());
@@ -237,12 +243,13 @@ fn engine_reads_no_directory_in_memory() {
 
 #[test]
 fn other_commands_do_not_run_in_memory() {
-    let run = litigate_cli::execute_in_memory(repo_files(), &["explain".into(), "L3004".into()]);
+    let run =
+        litigate_cli::execute_in_memory(repo_files(), &["explain".into(), "L3004".into()], None);
     assert_eq!(run.code, 1);
     assert_eq!(
         run.stderr,
         "litigate explain: only check, build, worlds, run, engine and the op subcommands run over an in-memory source\n"
     );
-    let usage = litigate_cli::execute_in_memory([], &["frobnicate".into()]);
+    let usage = litigate_cli::execute_in_memory([], &["frobnicate".into()], None);
     assert_eq!((usage.code, usage.stdout.as_str()), (1, ""));
 }

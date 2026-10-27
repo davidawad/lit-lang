@@ -613,6 +613,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **Wasm `litigate check` judges deadlines at today, as native does**
+  (lg-2ie2). lg-rpmf made the native binary judge `check` and
+  `timeline` at its `LITIGATE_TODAY` or system date, but the wasm
+  entry point had no today, so it left lapsed deadlines open and
+  `just ts-test` failed 4 of 72. `litigate_cli::execute_in_memory`
+  and `execute_in` now take `today`, and the wasm `litigate` binding
+  passes it through to the same judge-at-today path; the TypeScript
+  `Litigate.run`/`check`/`build` take `today` (default today's UTC
+  date). The parity tests (`test/litigate.test.ts`, the
+  `in_memory` integration test) pin one today on both sides, never the
+  wall clock. `just ci-scoped` runs `just ts-test` whenever
+  `crates/litigate-wasm`, `crates/litigate-cli` or
+  `packages/litigate-ts` changes.
+
 - **A stale `as_of` no longer hides a passed deadline** (lg-rpmf).
   `litigate check` and `litigate timeline` judge deadlines at today
   (`--today DATE`, else `LITIGATE_TODAY`, else the system date in UTC;

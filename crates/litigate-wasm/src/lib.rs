@@ -18,7 +18,7 @@
 //! await init();
 //! const name = JSON.parse(describe()).result.scenario_library[0].id; // any compiled matter
 //! const resp = JSON.parse(handle(JSON.stringify({ scenario: name, op: { op: "solve" } })));
-//! const run = JSON.parse(litigate(JSON.stringify(["solve", "cases/x.case"]), JSON.stringify({ "cases/x.case": text }), true));
+//! const run = JSON.parse(litigate(JSON.stringify(["solve", "cases/x.case"]), JSON.stringify({ "cases/x.case": text }), true, "2026-10-27"));
 //! ```
 
 use std::collections::BTreeMap;
@@ -138,9 +138,19 @@ pub fn describe() -> String {
 /// with `with_library`, the embedded `lit/` library fills in every `lit/`
 /// path the caller does not give. `build --out DIR` writes into `files`,
 /// never to a disk. Output is JSON unless `--format human`.
+/// `check` judges deadlines at `today` (a `YYYY-MM-DD` date) unless told a
+/// date, the path the native binary runs at its own today (lg-rpmf);
+/// absent, at each matter's `as_of` (this target has no clock).
+// `wasm_bindgen`'s JS-interop ABI needs owned `Option<String>` here, not `Option<&str>`.
+#[allow(clippy::needless_pass_by_value)]
 #[wasm_bindgen]
 #[must_use]
-pub fn litigate(args_json: &str, files_json: &str, with_library: bool) -> String {
+pub fn litigate(
+    args_json: &str,
+    files_json: &str,
+    with_library: bool,
+    today: Option<String>,
+) -> String {
     let failed = |message: String| LitigateRun {
         code: 1,
         stderr: format!("litigate: {message}\n"),
@@ -158,7 +168,7 @@ pub fn litigate(args_json: &str, files_json: &str, with_library: bool) -> String
                 .filter(|_| with_library)
                 .map(|(path, text)| ((*path).to_owned(), (*text).to_owned()));
             // The caller's files come last, so they win over the library's.
-            litigate_cli::execute_in_memory(library.chain(files), &args)
+            litigate_cli::execute_in_memory(library.chain(files), &args, today.as_deref())
         }
     };
     to_string(&run)

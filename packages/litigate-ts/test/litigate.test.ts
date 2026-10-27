@@ -1,7 +1,8 @@
 // `litigate check`/`build`/ops/`engine` through the wasm over the
 // repository's lit/ and cases/ trees, in memory, must give the native
 // `litigate` CLI's output over the disk (elapsed_ms aside), and `build` the
-// files the CLI writes.
+// files the CLI writes. Both judge deadlines at one pinned TODAY, never
+// the wall clock (lg-2ie2).
 import { spawnSync } from "node:child_process";
 import { readdirSync, readFileSync, rmSync, statSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -11,6 +12,13 @@ import { type Files, type LitigateEnvelope, type LitigateResult, type LitigateRu
 const repo = fileURLToPath(new URL("../../../", import.meta.url));
 const bin = process.env["LITIGATE_BIN"] ?? `${repo}target/debug/litigate`;
 const lit = loadNode().litigate;
+
+/**
+ * The date both sides judge deadlines at: the native binary's
+ * `LITIGATE_TODAY`, the wasm's `today`. Later than the matters' `as_of`s,
+ * so `check` runs the judge-at-today path (L4016, `judged_at`) on both.
+ */
+const TODAY = "2026-10-27";
 
 /** Every file under `dir` (repository-relative), by repository-relative path. */
 function tree(dir: string, base = repo): Record<string, string> {
@@ -27,7 +35,8 @@ const files: Files = { ...tree("lit"), ...tree("cases") };
 
 /** A native run, untimed. */
 function nativeRun(args: readonly string[]): LitigateRun {
-  const out = spawnSync(bin, args, { cwd: repo, encoding: "utf8", maxBuffer: 1 << 30 });
+  const env = { ...process.env, LITIGATE_TODAY: TODAY };
+  const out = spawnSync(bin, args, { cwd: repo, encoding: "utf8", env, maxBuffer: 1 << 30 });
   if (out.error !== undefined) throw new Error(`${bin}: ${out.error.message} (set LITIGATE_BIN or run \`just ts-test\`)`);
   return untimedRun({ code: out.status ?? -1, stdout: out.stdout, stderr: out.stderr, files: {} });
 }
@@ -61,7 +70,7 @@ describe("check matches the CLI", () => {
   ] as const)("%s", (_, paths, options) => {
     const args = [...("profile" in options ? ["--profile", options.profile] : []), ...paths];
     const expected = native(["check", ...args]);
-    expect(untimed(lit.check(paths, { ...options, files }))).toStrictEqual(expected);
+    expect(untimed(lit.check(paths, { ...options, files, today: TODAY }))).toStrictEqual(expected);
   });
 
   it("finds a matter's packages in the embedded library", () => {
@@ -70,7 +79,8 @@ describe("check matches the CLI", () => {
     const accepted = Object.keys(cases).filter((p) => p.endsWith(".case") && p !== "cases/e2e-ttab-short.case");
     const expected = native(["check", ...accepted]);
     expect(expected.code).toBe(0);
-    expect(untimed(lit.check(accepted, { files: cases }))).toStrictEqual(expected);
+    expect(expected.envelope?.diagnostics.some((d) => d.code === "L4016")).toBe(true);
+    expect(untimed(lit.check(accepted, { files: cases, today: TODAY }))).toStrictEqual(expected);
     expect(lit.library()["lit/frcp/Lit.toml"]).toBe(files["lit/frcp/Lit.toml"]);
     expect(lit.check(["cases"], { files: cases, library: false }).code).toBe(2);
   });
@@ -87,7 +97,7 @@ describe("build matches the CLI", () => {
     const expected = native(["build", "--out", out, ...names, ...inputs]);
     expect(expected.code).toBe(0);
     const packFiles = { cafc: "cafc-federal-circuit", cofc: "cofc-court-of-federal-claims" };
-    const built = lit.build(inputs, { files, out, packFiles });
+    const built = lit.build(inputs, { files, out, packFiles, today: TODAY });
     expect(untimed({ ...built, files: {} })).toStrictEqual(expected);
     expect(built.files).toStrictEqual(tree(out));
     expect(built.files[`${out}/packs/frcp-civil-procedure.json`]).toBe(
@@ -115,13 +125,13 @@ describe("ops and engine match the CLI", () => {
   ] as const)("%s", (_, args) => {
     const expected = nativeRun(args);
     expect(expected.code).toBe(0);
-    expect(untimedRun(lit.run(args, files, false))).toStrictEqual(expected);
+    expect(untimedRun(lit.run(args, files, false, TODAY))).toStrictEqual(expected);
   });
 
   it("compiles a matter from the embedded library and cases alone", () => {
     const cases = lit.cases();
     expect(cases["cases/frcp-civil-case.case"]).toBe(files["cases/frcp-civil-case.case"]);
-    const solved = untimedRun(lit.run(["solve", "cases/frcp-civil-case.case"], cases));
+    const solved = untimedRun(lit.run(["solve", "cases/frcp-civil-case.case"], cases, true, TODAY));
     expect(solved).toStrictEqual(nativeRun(["--format", "json", "solve", "cases/frcp-civil-case.case"]));
   });
 });

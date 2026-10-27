@@ -95,6 +95,11 @@ lit.run(["engine", "q", JSON.stringify(request)], files);  // a raw engine reque
   the wasm (by `crates/litigate-wasm/build.rs`); the library fills in
   every `lit/` path `files` does not give, so a matter's `uses` resolve.
   Pass `library: false` to check only what you pass.
+- `check` judges deadlines at `today` (default: today's UTC date), the
+  same path the native binary runs at its `LITIGATE_TODAY` or system
+  date: a matter whose `as_of` is older has each deadline past due by
+  then lapse, with an L4016 warning. Pass `today` (the fourth argument of
+  `run`) to pin it; an explicit `asOf` turns it off.
 - Only `check`, `build`, `worlds` (alternate timelines,
   docs/litigate/CHANGE.md §5.1), `run`, the op subcommands and `engine`
   run; any other command exits 1. `engine` serves the packs and matters compiled

@@ -68,6 +68,18 @@ build_inputs='{
   "tests/": ["litigate-engine"]
 }'
 
+# Paths whose change can move the wasm away from the native CLI (lg-2ie2):
+# the wasm entry point, the CLI crate holding the shared check path both
+# run, and the TypeScript package over the wasm. Any of them runs
+# `just ts-test`, the parity test of wasm `lit.check` against native
+# `litigate check`, as a full scope does.
+ts_triggers='^(crates/litigate-wasm/|crates/litigate-cli/|packages/litigate-ts/)'
+
+# changed paths on stdin, scope label -> 0 when `just ts-test` runs.
+ts_scoped() {
+  [ "$1" = full ] || grep -qE "$ts_triggers"
+}
+
 # metadata JSON file, changed paths on stdin -> `full`, `none` or the
 # scoped package names, sorted, one per line.
 scope_of() {
@@ -307,6 +319,11 @@ run() {
     skip tree-sitter-test "editors/tree-sitter-litigate unchanged"
   fi
   stage check cargo check --workspace --all-targets
+  if ts_scoped "$label" <<<"$files"; then
+    stage ts-test just ts-test
+  else
+    skip ts-test "litigate-wasm, litigate-cli and packages/litigate-ts unchanged"
+  fi
   # The change impact report (lg-8fdj.3): every expect test under
   # tests/expect run at BASE and here, and each deadline, verdict and
   # expectation that moved, per forum, in the log for the reviewer. It
@@ -453,6 +470,22 @@ self_test() {
   expect "cli litgraph-packs litigate-engine" "tests/ snapshots are the engine's" tests/golden/x.json
   expect "none" "a nested Cargo.lock is not the root one" docs/Cargo.lock
   expect "full" "a mixed change with a trigger is full" docs/a.md justfile
+
+  ts_expect() {
+    local want="$1" desc="$2" label="$3" got=no
+    shift 3
+    if printf '%s\n' "$@" | ts_scoped "$label"; then got=yes; fi
+    if [ "$got" != "$want" ]; then
+      echo "ci-scoped self-test: ts-test: $desc: want $want, got $got" >&2
+      failures=$((failures + 1))
+    fi
+  }
+  ts_expect yes "the wasm entry point runs ts-test" litigate-wasm crates/litigate-wasm/src/lib.rs
+  ts_expect yes "the shared check path runs ts-test" litigate-cli crates/litigate-cli/src/cmd/check.rs
+  ts_expect yes "the TypeScript package runs ts-test" none packages/litigate-ts/test/litigate.test.ts
+  ts_expect yes "a full scope runs ts-test" full justfile
+  ts_expect no "another crate does not" litigate-smt crates/litigate-smt/src/lib.rs
+  ts_expect no "docs do not" none docs/litigate/SPEC.md
 
   # This workspace, against cargo's own reverse-dependency tree.
   cargo metadata --format-version 1 --no-deps > "$real"

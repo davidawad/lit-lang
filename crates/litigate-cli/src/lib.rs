@@ -93,29 +93,33 @@ fn runs_in_memory(command: &cli::Command) -> bool {
 /// it, and output is never a terminal's. Only [`IN_MEMORY_COMMANDS`] and
 /// the op subcommands run, compiling the matter or package in `src` (and
 /// `engine` its `lit/` and `cases/`); any other command is a usage
-/// failure (exit 1).
-pub fn execute_in<I, T>(src: &dyn Source, args: I) -> Printed
+/// failure (exit 1). `check` judges deadlines at `today` unless told a
+/// date, as the binary does at its own today ([`main`]); `None` judges
+/// them at each matter's `as_of`.
+pub fn execute_in<I, T>(src: &dyn Source, args: I, today: Option<&str>) -> Printed
 where
     I: IntoIterator<Item = T>,
     T: Into<OsString> + Clone,
 {
     let args = args.into_iter().map(Into::into).collect();
-    execute_with(args, Format::Json, false, src, true, None)
+    execute_with(args, Format::Json, false, src, true, today)
 }
 
 /// [`execute_in`] over a [`MemoryTree`] of `(path, text)` files; `args`
 /// leave out the program name. The run carries what `build` wrote. The
 /// vendored L0 texts the binary embeds (`sources/*.txt`) are in the tree
 /// unless `files` gives its own, so a lock pins the same texts it pins
-/// over the repository (SPEC §4.2).
+/// over the repository (SPEC §4.2). `today` is [`execute_in`]'s.
 pub fn execute_in_memory(
     files: impl IntoIterator<Item = (String, String)>,
     args: &[String],
+    today: Option<&str>,
 ) -> LitigateRun {
     let tree = memory_tree(files);
     let printed = execute_in(
         &tree,
         std::iter::once("litigate").chain(args.iter().map(String::as_str)),
+        today,
     );
     LitigateRun {
         code: printed.code,

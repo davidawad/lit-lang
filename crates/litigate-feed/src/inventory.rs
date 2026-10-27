@@ -351,7 +351,7 @@ pub fn build_elements(
     let mut args = vec!["build".to_owned()];
     args.extend(built.iter().map(|p| p.dir.clone()));
     args.extend(["--out".to_owned(), "feed-build".to_owned()]);
-    let run = litigate_cli::execute_in_memory(files, &args);
+    let run = litigate_cli::execute_in_memory(files, &args, None);
     if run.code != 0 {
         return Err(format!(
             "`litigate {}` failed (exit {}): {}{}",

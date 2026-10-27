@@ -216,7 +216,7 @@ fn compiled() -> Catalog {
             .map(str::to_owned),
     );
     args.extend(["--out", "out"].map(str::to_owned));
-    let run = litigate_cli::execute_in_memory(sources, &args);
+    let run = litigate_cli::execute_in_memory(sources, &args, None);
     assert_eq!(run.code, 0, "{}{}", run.stdout, run.stderr);
     let mut files: Vec<(String, String)> = run
         .files

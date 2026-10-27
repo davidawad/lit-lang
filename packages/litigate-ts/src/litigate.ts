@@ -7,7 +7,7 @@ import type { LitigateEnvelope, LitigateRun, Profile } from "./generated/schemas
 
 /** The litigate-wasm functions this module calls. */
 export interface LitigateWasm {
-  litigate(args_json: string, files_json: string, with_library: boolean): string;
+  litigate(args_json: string, files_json: string, with_library: boolean, today?: string): string;
   litigate_library(): string;
   litigate_cases(): string;
 }
@@ -34,6 +34,12 @@ export interface CheckOptions {
   readonly asOf?: string;
   /** `--known-at DATE`. */
   readonly knownAt?: string;
+  /**
+   * The date `check` judges deadlines at, as the native binary judges them
+   * at its `LITIGATE_TODAY` or system date (default: today's UTC date;
+   * an explicit `asOf` turns it off).
+   */
+  readonly today?: string;
   /** `--lib DIR` library directories (default `lit`). */
   readonly lib?: readonly string[];
 }
@@ -70,10 +76,12 @@ export class Litigate {
    * Runs `litigate ARGS` (no program name) over `files`, exactly as the
    * CLI over a disk holding them. `check`, `build`, `worlds` (alternate
    * timelines), `run`, the op subcommands (`solve`, `chain`, ...) and
-   * `engine` run; any other command exits 1.
+   * `engine` run; any other command exits 1. `check` judges deadlines
+   * at `today` unless told a date, as the native binary does at its own
+   * today (default: today's UTC date).
    */
-  run(args: readonly string[], files: Files = {}, library = true): LitigateRun {
-    const json = this.#wasm.litigate(JSON.stringify(args), JSON.stringify(files), library);
+  run(args: readonly string[], files: Files = {}, library = true, today: string = utcToday()): LitigateRun {
+    const json = this.#wasm.litigate(JSON.stringify(args), JSON.stringify(files), library, today);
     return parse<LitigateRun>(json);
   }
 
@@ -100,7 +108,7 @@ export class Litigate {
   }
 
   #envelope(args: readonly string[], options: CheckOptions): LitigateResult {
-    const run = this.run(["--format", "json", ...args], options.files, options.library);
+    const run = this.run(["--format", "json", ...args], options.files, options.library, options.today);
     const files: Record<string, string> = {};
     for (const [path, text] of Object.entries(run.files)) if (text !== undefined) files[path] = text;
     const result = { code: run.code, stderr: run.stderr, files };
@@ -116,6 +124,11 @@ function flags(options: CheckOptions): string[] {
   if (options.knownAt !== undefined) out.push("--known-at", options.knownAt);
   for (const dir of options.lib ?? []) out.push("--lib", dir);
   return out;
+}
+
+/** Today's date in UTC (`YYYY-MM-DD`), the native binary's default today. */
+function utcToday(): string {
+  return new Date().toISOString().slice(0, 10);
 }
 
 /** The binding's JSON, typed by the Rust type it was serialized from. */

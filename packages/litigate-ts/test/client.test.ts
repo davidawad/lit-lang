@@ -43,8 +43,8 @@ function fake(reply: string): LitgraphWasm & { calls: string[][] } {
     validate: answer("validate"),
     schema: answer("schema"),
     describe: answer("describe"),
-    litigate: (args: string, files: string, library: boolean) => {
-      calls.push(["litigate", args, files, String(library)]);
+    litigate: (args: string, files: string, library: boolean, today?: string) => {
+      calls.push(["litigate", args, files, String(library), String(today)]);
       return reply;
     },
     litigate_library: answer("litigate_library"),
@@ -111,10 +111,13 @@ describe("Litigate over fake bindings", () => {
       profile: "strict",
       asOf: "2025-01-01",
       knownAt: "2025-02-01",
+      today: "2025-03-01",
       lib: ["lit", "more"],
     });
     expect(built).toStrictEqual({ code: 0, stderr: "", files: { "o/a.json": "{}" }, envelope });
+    lit.check(["cases"], { today: "2026-10-27" });
     lit.check(["cases"]);
+    expect(wasm.calls.pop()?.[4]).toBe(new Date().toISOString().slice(0, 10));
     expect(wasm.calls).toStrictEqual([
       [
         "litigate",
@@ -125,8 +128,9 @@ describe("Litigate over fake bindings", () => {
         ]),
         JSON.stringify({ "lit/frcp/Lit.toml": "" }),
         "false",
+        "2025-03-01",
       ],
-      ["litigate", JSON.stringify(["--format", "json", "check", "cases"]), "{}", "true"],
+      ["litigate", JSON.stringify(["--format", "json", "check", "cases"]), "{}", "true", "2026-10-27"],
     ]);
   });
 

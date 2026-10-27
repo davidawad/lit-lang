@@ -12,7 +12,8 @@ fn untimed(mut v: Value) -> Value {
 
 fn run(args: &[&str], files: &Value, with_library: bool) -> LitigateRun {
     let args = serde_json::to_string(args).unwrap_or_default();
-    serde_json::from_str(&litigate(&args, &files.to_string(), with_library)).unwrap_or_default()
+    serde_json::from_str(&litigate(&args, &files.to_string(), with_library, None))
+        .unwrap_or_default()
 }
 
 /// One matter (with its lock) from the embedded `cases/`.
@@ -122,6 +123,57 @@ fn litigate_checks_builds_and_runs_over_the_embedded_library() {
 }
 
 #[test]
+fn litigate_check_judges_deadlines_at_the_today_it_is_given() {
+    let path = "cases/ttab-opposition-applicant-defense.case";
+    let files = matter(path).to_string();
+    let args = |extra: &[&str]| {
+        let mut args = vec!["check"];
+        args.extend_from_slice(extra);
+        args.push(path);
+        serde_json::to_string(&args).unwrap_or_default()
+    };
+    let codes = |today: Option<&str>, extra: &[&str]| -> Vec<Value> {
+        let run: LitigateRun = serde_json::from_str(&litigate(
+            &args(extra),
+            &files,
+            true,
+            today.map(str::to_owned),
+        ))
+        .unwrap_or_default();
+        let out = parse(&run.stdout);
+        let diagnostics = out["diagnostics"].as_array().cloned().unwrap_or_default();
+        diagnostics.iter().map(|d| d["code"].clone()).collect()
+    };
+    let stale = json!("L4016");
+    // Judged at a today later than the matter's `as_of`, as the binary is.
+    assert!(codes(Some("2026-10-27"), &[]).contains(&stale));
+    // No today, or an explicit `--as-of`: judged at the matter's `as_of`.
+    assert!(!codes(None, &[]).contains(&stale));
+    assert!(!codes(Some("2026-10-27"), &["--as-of", "2026-10-24"]).contains(&stale));
+    // The same path as the native one, through `execute_in_memory`.
+    let native = litigate_cli::execute_in_memory(
+        serde_json::from_str::<BTreeMap<String, String>>(&files)
+            .unwrap_or_default()
+            .into_iter()
+            .chain(
+                EMBEDDED_LIBRARY
+                    .iter()
+                    .map(|(p, t)| ((*p).to_owned(), (*t).to_owned())),
+            ),
+        &["check".to_owned(), path.to_owned()],
+        Some("2026-10-27"),
+    );
+    let wasm: LitigateRun = serde_json::from_str(&litigate(
+        &args(&[]),
+        &files,
+        true,
+        Some("2026-10-27".into()),
+    ))
+    .unwrap_or_default();
+    assert_eq!(untimed(parse(&wasm.stdout)), untimed(parse(&native.stdout)));
+}
+
+#[test]
 fn litigate_runs_a_matter_in_alternate_worlds() {
     let examples = "../../docs/litigate/examples";
     let files: BTreeMap<String, String> = [
@@ -176,7 +228,7 @@ fn litigate_files_override_the_library_and_failures_exit_1() {
         "litigate check: lit: no such file or directory\n"
     );
     let bad = |args: &str, files: &str| -> LitigateRun {
-        serde_json::from_str(&litigate(args, files, true)).unwrap_or_default()
+        serde_json::from_str(&litigate(args, files, true, None)).unwrap_or_default()
     };
     assert!(bad("{}", "{}").stderr.starts_with("litigate: args must be"));
     assert!(bad("[]", "[]")

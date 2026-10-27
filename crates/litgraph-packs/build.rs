@@ -22,7 +22,7 @@ fn main() {
     for dir in ["lit", "cases"] {
         collect(&repo, &repo.join(dir), &mut sources);
     }
-    let run = litigate_cli::execute_in_memory(sources, &args);
+    let run = litigate_cli::execute_in_memory(sources, &args, None);
     assert!(
         run.code == 0,
         "`litigate {}` failed (exit {}); fix lit/ or cases/ (after a merge, \

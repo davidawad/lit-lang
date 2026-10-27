@@ -18,7 +18,10 @@ import frap.{ notice-group }
 /// motion and notice"; FRAP 26(b)(1) locks out any other extension.
 rule duty criminal-notice-of-appeal effective [2009-12-01, ..) known_at 2009-03-26 cite "FRAP 4(b)(1)(A)"
 {
-  deadline notice-criminal-period: 14.days after EnteredBelow() counted_by frap26 delegable { to CaseOrder, op set } cite "FRAP 4(b)(1)(A)"
+  deadline notice-criminal-period: 14.days after EnteredBelow() counted_by frap26 delegable {
+    to CaseOrder
+    op set
+  } cite "FRAP 4(b)(1)(A)"
   {
     extend { by court, discretion GoodCauseOrExcusableNeglect, max 30.days, after_expiry }
     extend { never cite "FRAP 26(b)(1)" }

@@ -14,7 +14,10 @@ import frap.{ mandate-group }
 /// the window the mandate edges wait out.
 rule duty issue-mandate effective [2009-12-01, ..) known_at 2009-03-26 cite "FRAP 41(b)"
 {
-  deadline mandate-period: 7.days after RehearingClosed() counted_by frap26 delegable { to CaseOrder, op set } cite "FRAP 41(b)"
+  deadline mandate-period: 7.days after RehearingClosed() counted_by frap26 delegable {
+    to CaseOrder
+    op set
+  } cite "FRAP 41(b)"
 }
 
 test "the mandate issues 7 days after the rehearing time expires" cite "FRAP 41(b)"

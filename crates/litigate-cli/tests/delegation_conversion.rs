@@ -32,8 +32,9 @@ const LEGACY_OPS: &str = "op [extend, shorten, set, suspend, compute_method]";
 /// extended only by a Justice or the Director; lg-962.10.1 added two in
 /// the same form, on the FRAP 32(a)(7) and 37 C.F.R. § 42.24 filing
 /// limits (FRAP 32(e), § 42.24(a)(2)); lg-red5 one, on the FRAP 40(d)(1)
-/// United States party rehearing period.
-const CONVERTED: usize = 97;
+/// United States party rehearing period. The FRCP 54(d)(2)(B) fee clause
+/// is formatted as a top-level multiline block and counts too (lg-3vd1).
+const CONVERTED: usize = 98;
 
 /// There are no extra corrections in this corpus: the district-court
 /// notice-of-appeal period is authored once in `appeal-periods.lit`.
@@ -72,18 +73,28 @@ fn widen_all(dir: &Path) -> usize {
             n += widen_all(&path);
         } else if path.extension().is_some_and(|e| e == "lit" || e == "case") {
             let text = std::fs::read_to_string(&path).unwrap();
+            let lines: Vec<&str> = text.split_inclusive('\n').collect();
             let mut out = String::with_capacity(text.len());
-            for line in text.split_inclusive('\n') {
+            for (i, line) in lines.iter().enumerate() {
+                // The formatter writes a long delegation as a multiline
+                // block, at any depth: `delegable {`, `to L`, `op set`, `}`.
+                let multiline = line.trim() == "op set"
+                    && i >= 2
+                    && lines[i - 2].trim_end().ends_with("delegable {")
+                    && lines[i - 1].trim_start().starts_with("to ")
+                    && lines
+                        .get(i + 1)
+                        .is_some_and(|l| l.trim_start().starts_with('}'));
+                if multiline {
+                    let indent = &line[..line.len() - line.trim_start().len()];
+                    let _ = writeln!(out, "{indent}{LEGACY_OPS}");
+                    n += 1;
+                    continue;
+                }
                 let (line, k) = widen(line);
                 out.push_str(&line);
                 n += k;
             }
-            // The formatter writes a long delegation as a multiline block.
-            // Keep the round-trip check independent of that layout.
-            let multiline = "\n    op set\n  }".to_owned();
-            let widened = format!("\n    {LEGACY_OPS}\n  }}");
-            n += out.matches(&multiline).count();
-            out = out.replace(&multiline, &widened);
             std::fs::write(&path, out).unwrap();
         }
     }

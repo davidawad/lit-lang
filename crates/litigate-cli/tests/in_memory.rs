@@ -6,7 +6,7 @@
 #![allow(clippy::unwrap_used)]
 mod support;
 
-use litigate_cli::{IN_MEMORY_COMMANDS, LitigateRun};
+use litigate_cli::{LitigateRun, IN_MEMORY_COMMANDS};
 use serde_json::Value;
 use std::collections::BTreeMap;
 use std::path::Path;

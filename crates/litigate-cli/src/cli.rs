@@ -382,6 +382,22 @@ pub enum Command {
         #[command(flatten)]
         library: Library,
     },
+    /// The moves a party may legally make in a matter's posture: each
+    /// edge out of the replayed marking it may take, kept only when replay
+    /// accepts it on the date.
+    Actions {
+        /// The `.case` file.
+        case: String,
+        /// The party whose moves are listed.
+        #[arg(long, value_name = "PARTY")]
+        party: String,
+        /// The date the moves would be made (default: the matter's `as_of`).
+        #[arg(long, value_name = "DATE")]
+        date: Option<String>,
+        /// Shared options.
+        #[command(flatten)]
+        library: Library,
+    },
     /// Match PACER/RECAP docket entries to declared event forms and advance
     /// the matter only by the entries the text supports and replay accepts.
     MatchDocket {
@@ -602,6 +618,7 @@ impl Command {
             Self::Op(op) => op.parts().0,
             Self::Calendar { .. } => "calendar",
             Self::LintFiling { .. } => "lint-filing",
+            Self::Actions { .. } => "actions",
             Self::MatchDocket { .. } => "match-docket",
             Self::Where { .. } => "where",
             Self::Explain { .. } => "explain",

@@ -33,6 +33,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   action under New Jersey's six-year period (N.J.S.A. 2A:14-1): FRCP
   12(a)'s 21-day answer governs, not R. 4:6-1(a)'s 35 days, and a
   commencement after six years is L4002.
+- **Agent action sets** (lg-litigate-epic-tuq.29.3; DESIGN §10). `litigate
+  actions CASE --party PARTY [--date DATE]`, and the MCP tool
+  `litigate_actions`, project a matter's replayed marking onto one party:
+  each edge out of the posture (and each `anytime` edge) whose actor the
+  party plays is completed into event lines, replayed into the matter as
+  `lint-filing` replays a filing, and listed only when replay accepts it,
+  with what it discharges and triggers. A move that is not legal for the
+  party on that date is absent, not refused when filed; the rules are the
+  packages' and replay's, none are added.
+
 - **An act can be legal from any posture while its own deadline is open**
   (lg-xqu8; SPEC §5.6). An edge marked `anytime` (`oppose "File the
   opposition" -> fee-clock { event OppositionFiled(), within

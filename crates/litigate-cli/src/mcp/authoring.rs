@@ -209,6 +209,35 @@ const TOOLS: &[Spec] = &[
         ],
     },
     Spec {
+        name: "litigate_actions",
+        command: "actions",
+        doc: "The agent action set of a `.case` matter (DESIGN §10): its replayed marking projected onto one party, as the moves that party may legally make in that posture on the date. Each candidate edge out of the marking (and each `anytime` edge) whose actor the party plays is replayed into the matter as `lint-filing` would replay it; only the accepted ones are listed, so an illegal or late move is absent. Returns `{case, party, actor, as_of, marking, actions:[{event, mode, party, date, line, edge:{id, label, actor, to, authority, anytime}, discharges, triggers}]}`; an action's `line` is the event line to record. The matter must check clean first.",
+        args: &[
+            arg(
+                "case",
+                Kind::Text,
+                Spell::Positional,
+                true,
+                "The `.case` file.",
+            ),
+            arg(
+                "party",
+                Kind::Text,
+                Spell::Flag("--party"),
+                true,
+                "The party (its id in the matter's `parties` block) whose moves are listed.",
+            ),
+            arg(
+                "date",
+                Kind::Text,
+                Spell::Flag("--date"),
+                false,
+                "YYYY-MM-DD: the date the moves would be made (default: the matter's `as_of`; a later date moves `as_of`).",
+            ),
+            LIB,
+        ],
+    },
+    Spec {
         name: "litigate_explain",
         command: "explain",
         doc: "The long explanation of a litigate diagnostic code (e.g. `L3004`), with its severity under each profile.",
@@ -374,6 +403,7 @@ mod tests {
                 "litigate_build",
                 "litigate_where",
                 "litigate_timeline",
+                "litigate_actions",
                 "litigate_explain"
             ]
         );
@@ -500,6 +530,34 @@ mod tests {
         .unwrap_or_default();
         assert!(is_error, "{envelope}");
         assert_eq!(envelope["ok"], json!(false));
+    }
+
+    #[test]
+    fn actions_names_the_party_and_date_as_flags() {
+        assert_eq!(
+            line(
+                "litigate_actions",
+                json!({"case": "a.case", "party": "widget", "date": "2025-03-10"})
+            ),
+            Ok([
+                "litigate",
+                "--format",
+                "json",
+                "actions",
+                "--party",
+                "widget",
+                "--date",
+                "2025-03-10",
+                "--",
+                "a.case"
+            ]
+            .map(str::to_owned)
+            .to_vec())
+        );
+        let required = tools()
+            .find(|t| t["name"] == "litigate_actions")
+            .map(|t| t["inputSchema"]["required"].clone());
+        assert_eq!(required, Some(json!(["case", "party"])));
     }
 
     #[test]

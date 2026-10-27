@@ -1,4 +1,5 @@
 //! One module per subcommand; [`dispatch`] routes the parsed command.
+mod actions;
 mod build;
 mod calendar;
 pub(crate) mod check;
@@ -115,6 +116,17 @@ pub fn dispatch(command: Command, src: &dyn Source) -> Outcome {
                 },
             })
         }
+        Command::Actions {
+            case,
+            party,
+            date,
+            library,
+        } => actions::actions(&actions::Args {
+            case,
+            party,
+            date,
+            lib: library.lib,
+        }),
         Command::MatchDocket {
             case,
             docket,

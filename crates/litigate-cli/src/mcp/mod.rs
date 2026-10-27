@@ -5,7 +5,8 @@
 //!   package, as `litigate run TARGET --op ...` runs it ([`ops`]);
 //!   `litigate_engine` takes a raw engine request, for debugging.
 //! - The `litigate_*` tools are the authoring toolchain: `describe`,
-//!   `check`, `build`, `where`, `timeline` and `explain` ([`authoring`]).
+//!   `check`, `build`, `where`, `timeline`, `actions` (a party's legal
+//!   moves) and `explain` ([`authoring`]).
 //! - The library's compiled packs, links, named scenarios and the engine
 //!   manual are resources under `litigate://` URIs ([`resources`]).
 //!
@@ -39,7 +40,7 @@ const INVALID_PARAMS: i64 = -32602;
 const INTERNAL_ERROR: i64 = -32603;
 const RESOURCE_NOT_FOUND: i64 = -32002;
 
-const INSTRUCTIONS: &str = "Litigation procedure as a checked language, over MCP. Start with `litigate_describe` (the language and CLI contract) and the `describe` op or the `litigate://describe` resource (the engine manual). Every engine op tool (`solve`, `chain`, `simulate`, `explain`, ...) runs on a compiled matter: `{target, set?, lib?, no_links?, ...op fields}`, `target` a `.case` matter (its scenario) or a package (`.lit` file or package directory); it returns the `litigate` envelope {schema_version, ok, op, result, diagnostics, provenance, elapsed_ms} with the engine's response {ok, api_version, op, result, warnings, provenance, elapsed_ms} as `result`. `litigate_check`, `litigate_build`, `litigate_where`, `litigate_timeline` and `litigate_explain` drive the authoring language (`lit/*.lit` rules, `cases/*.case` matters). `litigate_engine` runs a raw engine request over the library's compiled packs and named scenarios, for debugging. A failed call (error diagnostics, an engine `ok: false`, bad arguments) is a tool error carrying the same envelope. Paths resolve against the server's working directory.";
+const INSTRUCTIONS: &str = "Litigation procedure as a checked language, over MCP. Start with `litigate_describe` (the language and CLI contract) and the `describe` op or the `litigate://describe` resource (the engine manual). Every engine op tool (`solve`, `chain`, `simulate`, `explain`, ...) runs on a compiled matter: `{target, set?, lib?, no_links?, ...op fields}`, `target` a `.case` matter (its scenario) or a package (`.lit` file or package directory); it returns the `litigate` envelope {schema_version, ok, op, result, diagnostics, provenance, elapsed_ms} with the engine's response {ok, api_version, op, result, warnings, provenance, elapsed_ms} as `result`. `litigate_check`, `litigate_build`, `litigate_where`, `litigate_timeline` and `litigate_explain` drive the authoring language (`lit/*.lit` rules, `cases/*.case` matters). `litigate_actions {case, party, date?}` is a party's action set: only the moves replay accepts from the matter's posture on the date, each with the event line to record. `litigate_engine` runs a raw engine request over the library's compiled packs and named scenarios, for debugging. A failed call (error diagnostics, an engine `ok: false`, bad arguments) is a tool error carrying the same envelope. Paths resolve against the server's working directory.";
 
 /// `litigate mcp`: serve the toolchain over MCP on standard input and
 /// output.
@@ -357,7 +358,7 @@ mod tests {
         unique.sort_unstable();
         unique.dedup();
         assert_eq!(unique.len(), names.len());
-        assert_eq!(names.len(), ops::op_names().len() + 1 + 6);
+        assert_eq!(names.len(), ops::op_names().len() + 1 + 7);
         for name in ["solve", "describe", "litigate_engine", "litigate_check"] {
             assert!(names.contains(&name), "{name}");
         }

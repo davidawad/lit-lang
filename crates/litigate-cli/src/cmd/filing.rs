@@ -220,7 +220,7 @@ fn values(vocabulary: &[&hir::Package], pack: &str, t: &Type) -> Option<Vec<Stri
 /// open (`BriefServed(Principal)` of `BriefServed(brief, method)`) given
 /// each value [`values`] lists, so each is a filing `lint-filing` and the
 /// `.case` accept. The pattern alone when an open parameter has no list.
-fn completions(vocabulary: &[&hir::Package], pack: &str, e: &hir::Expr) -> Vec<String> {
+pub(super) fn completions(vocabulary: &[&hir::Package], pack: &str, e: &hir::Expr) -> Vec<String> {
     hirx::event_call(e)
         .into_iter()
         .flat_map(|(callee, given)| {
@@ -280,7 +280,7 @@ fn used<'p>(all: &[&'p hir::Package], case: &hir::Case) -> Vec<&'p hir::Package>
 /// `as_of`, each with its pack id: those of the node version of each
 /// concurrent track (SPEC §5.6), then the `anytime` edges of the used
 /// packages' other nodes, legal from any posture.
-fn posture<'p>(
+pub(super) fn posture<'p>(
     law: &[&'p hir::Package],
     case: &hir::Case,
     marking: &[String],
@@ -361,7 +361,7 @@ fn moves(law: Law<'_, '_>, edges: &[(&str, &hir::Edge)], deadline: &str, version
 
 /// Whether `known` already has a diagnostic like `d` (spans move with
 /// the inserted line, so they are not compared).
-fn known(known: &[Diagnostic], d: &Diagnostic) -> bool {
+pub(super) fn known(known: &[Diagnostic], d: &Diagnostic) -> bool {
     let like = |x: &Diagnostic| (x.code, x.severity, x.message.clone());
     known.iter().any(|k| like(k) == like(d))
 }

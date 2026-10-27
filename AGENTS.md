@@ -85,6 +85,9 @@ litigate lint-filing cases/ptab-ipr-defense.case 'PreliminaryResponseFiled()' --
 litigate lint-filing cases/ptab-ipr-defense.case 'IprPetitionFiled()' --date 2026-09-10 --by petitioner \
   --words 13500 --certificate word-count     # the paper's limit (or --document FILE): violations with
                                             # their cite and layer; --paper KIND only if the event declares none
+litigate actions cases/e2e-ttab-ok.case --party opposer
+                                            # the party's action set: only the moves replay accepts from the posture
+                                            # (illegal or late moves are absent); MCP tool `litigate_actions`
 litigate match-docket cases/ptab-ipr-defense.case recap.json --out advanced.case
                                             # PACER/RECAP entries matched to declared event forms; only a supported,
                                             # replay-accepted match advances the matter; the rest stay unresolved

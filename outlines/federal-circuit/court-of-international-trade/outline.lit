@@ -1,0 +1,220 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+// Sources: USCIT Rules (cit.uscourts.gov, fetched 2026-10-26); 28 U.S.C. sections
+// (cornell LII headings, fetched 2026-10-26). Key decisions are unverified.
+module outline-cit
+
+start jurisdiction-check
+
+decision jurisdiction-check: "Jurisdiction and limitations" by court cite ?("28 U.S.C. § 1581; 28 U.S.C. § 2636")
+{
+  note "OUTLINE. Civil actions under 28 U.S.C. § 1581 (a) through (i) are the court's jurisdiction. Commencement must meet the § 2636 limitations period, which differs by subsection. Verify the period for each subsection. Key decision (verify): Norcal/Crowley Logistics v. United States, 8 F.4th 1322 (Fed. Cir. 2021) (exclusive jurisdiction under § 1581(i)). Verify before citing."
+  edge-jurisdiction-check-commence "Within limitations" -> commence {
+    authority cite ?("28 U.S.C. § 2636")
+  }
+  edge-jurisdiction-check-dismissed "Outside § 1581 or time-barred" -> dismissed-jurisdiction {
+    authority cite ?("28 U.S.C. § 2636")
+  }
+}
+
+state commence: "Summons and complaint filed" by applicant cite ?("USCIT R. 3")
+{
+  note "OUTLINE. An action is commenced by filing a summons, a complaint, or both, per USCIT R. 3. Confirm the subsection and the filing requirements for each § 1581 subsection."
+  edge-commence-service "Summons issued" -> service {
+    authority cite ?("USCIT R. 4")
+  }
+}
+
+state service: "Summons and complaint served" by applicant cite ?("USCIT R. 4")
+{
+  note "OUTLINE. Service of the summons and complaint, the time to serve, and the methods are holes. Confirm each against USCIT R. 4 and the service rules for actions against the United States."
+  edge-service-answer-due "Service completed" -> answer-due {
+    authority cite ?("USCIT R. 4")
+  }
+  edge-service-dismissed "Service not made in time" -> dismissed-service {
+    authority cite ?("USCIT R. 4")
+  }
+}
+
+decision answer-due: "Answer or Rule 12 motion due" by office cite ?("USCIT R. 12(a)")
+{
+  note "OUTLINE. The answer period under USCIT R. 12(a) is a hole. Rule 12(b) defenses and objections are raised by motion."
+  edge-answer-due-answer "Answer filed" -> pleadings-closed {
+    authority cite ?("USCIT R. 12(a)")
+  }
+  edge-answer-due-rule12 "Rule 12 motion filed" -> rule12-ruling {
+    authority cite ?("USCIT R. 12(b)")
+  }
+  edge-answer-due-default "No answer or motion" -> default-judgment {
+    authority cite ?("USCIT R. 55")
+  }
+}
+
+decision rule12-ruling: "Ruling on Rule 12 motion" by court cite ?("USCIT R. 12(b)")
+{
+  note "OUTLINE. A Rule 12(b) motion may dismiss for lack of subject-matter jurisdiction or failure to state a claim. Key decision (verify): Bell Atlantic Corp. v. Twombly, 550 U.S. 544 (2007) (pleading standard, applied by analogy)."
+  edge-rule12-ruling-dismissed "Motion granted" -> dismissed-rule12 {
+    authority cite ?("USCIT R. 12(b)")
+  }
+  edge-rule12-ruling-pleadings "Motion denied" -> pleadings-closed {
+    authority cite ?("USCIT R. 12(b)")
+  }
+}
+
+state pleadings-closed: "Pleadings closed; scheduling" by court cite ?("USCIT R. 16")
+{
+  note "OUTLINE. Scheduling and management conference after the pleadings close. The reply or answer timing and any amendment under USCIT R. 15 are holes."
+  edge-pleadings-closed-discovery "Scheduling order entered" -> discovery {
+    authority cite ?("USCIT R. 16")
+  }
+}
+
+state discovery: "Discovery" by applicant cite ?("USCIT R. 26")
+{
+  note "OUTLINE. Disclosure and discovery under USCIT R. 26 through R. 37. Discovery is often not used in § 1581(c) agency-record actions. Verify the scope and time limits for each case type."
+  edge-discovery-disposition "Discovery closed" -> disposition-path {
+    authority cite ?("USCIT R. 26")
+  }
+}
+
+decision disposition-path: "Disposition path by action type" by court cite ?("28 U.S.C. § 2640")
+{
+  note "OUTLINE. Standard of review under 28 U.S.C. § 2640 turns on the type of action. Agency-record actions go to USCIT R. 56.1 or 56.2. Other actions go to summary judgment or trial. Key decision (verify): Universal Camera Corp. v. NLRB, 340 U.S. 474 (1951) (substantial evidence on the record as a whole, cited for 5 U.S.C. § 706(2)(E))."
+  edge-disposition-agency-record "Action on the agency record (§ 1581(c))" -> agency-record {
+    authority cite ?("USCIT R. 56.2")
+  }
+  edge-disposition-summary-judgment "Other civil action" -> summary-judgment {
+    authority cite ?("USCIT R. 56")
+  }
+  edge-disposition-settled "Parties settle" -> settled {
+    authority cite ?("USCIT R. 41")
+  }
+}
+
+state agency-record: "Agency record filed; motion for judgment on the agency record" by applicant cite ?("USCIT R. 56.2")
+{
+  note "OUTLINE. Under USCIT R. 56.2 the agency record is filed and a motion for judgment on the agency record is briefed. The filing period and page or word limits are holes. Confirm the rule text for § 1581(c) actions against USCIT R. 56.1 for other agency-record actions."
+  edge-agency-record-ruling "Motion briefed" -> agency-judgment-ruling {
+    authority cite ?("USCIT R. 56.2")
+  }
+}
+
+decision agency-judgment-ruling: "Judgment on the agency record" by court cite ?("USCIT R. 56.2; 28 U.S.C. § 2640(a)")
+{
+  note "OUTLINE. The court decides whether the agency action is supported by substantial evidence or is otherwise not in accordance with law. Remand is a possible result. The remand procedure is a hole."
+  edge-agency-judgment-entered "Judgment on the agency record" -> judgment-entered {
+    authority cite ?("USCIT R. 56.2")
+  }
+  edge-agency-judgment-remand "Remand to agency" -> remanded {
+    authority cite ?("USCIT R. 56.2")
+  }
+}
+
+decision summary-judgment: "Motion for summary judgment" by court cite ?("USCIT R. 56")
+{
+  note "OUTLINE. Summary judgment standard and the filing period are holes. Key decision (verify): Celotex Corp. v. Catrett, 477 U.S. 317 (1986) (movant without evidentiary burden)."
+  edge-summary-judgment-granted "Granted in full" -> judgment-entered {
+    authority cite ?("USCIT R. 56")
+  }
+  edge-summary-judgment-denied "Denied in whole or part" -> trial-stage {
+    authority cite ?("USCIT R. 56")
+  }
+}
+
+state trial-stage: "Trial or submission on the record" by court cite ?("USCIT R. 52; USCIT R. 39")
+{
+  note "OUTLINE. Trial by the court without a jury. Findings and conclusions are required under USCIT R. 52 after a bench trial. The format (on the record or live testimony) is a hole."
+  edge-trial-stage-findings "Trial completed" -> findings {
+    authority cite ?("USCIT R. 52")
+  }
+}
+
+state findings: "Findings of fact and conclusions of law" by court cite ?("USCIT R. 52(a)")
+{
+  note "OUTLINE. Findings and conclusions are stated under USCIT R. 52(a). The timing is a hole."
+  edge-findings-judgment "Findings entered" -> judgment-entered {
+    authority cite ?("USCIT R. 52(a)")
+  }
+}
+
+state remanded: "Remanded to agency" by court cite ?("USCIT R. 56.2")
+{
+  note "OUTLINE. A remand order returns the case to the agency for further action. Reconsideration and return of the record are holes. The action returns to the court after the agency acts."
+  edge-remanded-disposition "Agency acts and case returns" -> disposition-path {
+    authority cite ?("USCIT R. 56.2")
+  }
+}
+
+decision judgment-entered: "Judgment entered" by applicant cite ?("USCIT R. 58")
+{
+  note "OUTLINE. Judgment is entered under USCIT R. 58. Post-judgment motions and appeal run from the entry date. The entry-date mechanics are holes."
+  edge-judgment-post-trial "Post-judgment motion filed" -> post-trial-ruling {
+    authority cite ?("USCIT R. 59; USCIT R. 60")
+  }
+  edge-judgment-appeal "No post-judgment motion; appeal" -> notice-of-appeal {
+    authority cite ?("28 U.S.C. § 1295(a)(5)")
+  }
+}
+
+decision post-trial-ruling: "Ruling on new trial or relief from judgment" by court cite ?("USCIT R. 59; USCIT R. 60")
+{
+  note "OUTLINE. New trial, alter or amend, and relief from judgment under USCIT R. 59 and R. 60. The filing periods are holes. Verify the leading standard under USCIT R. 59."
+  edge-post-trial-denied "Motion denied" -> notice-of-appeal {
+    authority cite ?("USCIT R. 59")
+  }
+  edge-post-trial-granted "Motion granted; judgment revised" -> judgment-entered {
+    authority cite ?("USCIT R. 59")
+  }
+}
+
+state notice-of-appeal: "Notice of appeal to the Federal Circuit" by applicant cite ?("28 U.S.C. § 1295(a)(5)")
+{
+  note "OUTLINE. Appeal to the Federal Circuit under 28 U.S.C. § 1295(a)(5). The notice period and extension rules are holes. Verify the Federal Rules of Appellate Procedure that apply to appeals from the CIT."
+  edge-notice-of-appeal-cafc "Notice filed" -> cafc-review {
+    authority cite ?("FRAP 4(a)(1)(A)")
+  }
+}
+
+state cafc-review: "Federal Circuit review" by court cite ?("28 U.S.C. § 1295(a)(5)")
+{
+  note "OUTLINE. Federal Circuit review of the CIT judgment is covered by the Federal Circuit packages and is not outlined here."
+  edge-cafc-review-decided "Decision issued" -> appeal-decided {
+    authority cite ?("28 U.S.C. § 1295(a)(5)")
+  }
+}
+
+terminal default-judgment: "Default judgment" outcome [loss] cite ?("USCIT R. 55")
+{
+  note "OUTLINE. Default and default judgment under USCIT R. 55. Setting aside default is a hole."
+  payoff ?
+}
+
+terminal dismissed-jurisdiction: "Dismissed for lack of jurisdiction or limitations" outcome [loss] cite ?("28 U.S.C. § 2636")
+{
+  note "OUTLINE. Dismissal for lack of jurisdiction or untimely commencement. Key decision (verify): Norcal/Crowley Logistics v. United States, 8 F.4th 1322 (Fed. Cir. 2021)."
+  payoff ?
+}
+
+terminal dismissed-service: "Dismissed for failure to serve" outcome [loss] cite ?("USCIT R. 4")
+{
+  note "OUTLINE. Dismissal for failure to serve in time under USCIT R. 4."
+  payoff ?
+}
+
+terminal dismissed-rule12: "Dismissed on Rule 12 motion" outcome [loss] cite ?("USCIT R. 12(b)")
+{
+  note "OUTLINE. Dismissal on a Rule 12(b) motion."
+  payoff ?
+}
+
+terminal settled: "Settled or dismissed by agreement" outcome [settle] cite ?("USCIT R. 41")
+{
+  note "OUTLINE. Dismissal by stipulation under USCIT R. 41."
+  payoff ?
+}
+
+terminal appeal-decided: "Federal Circuit decision on appeal" outcome [decided] cite ?("28 U.S.C. § 1295(a)(5)")
+{
+  note "OUTLINE. The Federal Circuit outcome is outlined in the Federal Circuit packages."
+  payoff ?
+}

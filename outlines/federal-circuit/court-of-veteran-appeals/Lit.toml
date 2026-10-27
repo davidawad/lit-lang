@@ -1,0 +1,34 @@
+[package]
+name = "outline-cavc"
+version = "0.0.1"
+language = 1
+pack_id = "outline-cavc"
+forum = "cavc"
+authority = "FederalRule"
+title = "OUTLINE: United States Court of Appeals for Veterans Claims"
+description = "Outline only: structure, cites and holes. Every value is a hole until verified against vendored rule text. Rules text fetched 2026-10-26 from uscourts.cavc.gov (Rules of Practice and Procedure, file dated 2026-10-01)."
+in_force = "2026-10-01"
+known_at = "2026-10-01"
+unknown_before = "2026-10-01"
+jurisdiction = "United States Court of Appeals for Veterans Claims"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+# Statute cites bind to the U.S. Code title by prefix. No vendored text is
+# declared yet, so these bindings name the section URL and retrieval date only.
+[sources.usc-28]
+title = "28 U.S.C. (United States Code, Title 28), sections cited in this outline; LII headings fetched 2026-10-26"
+url = "https://www.law.cornell.edu/uscode/text/28"
+as_of = "2026-10-26"
+cite_prefixes = ["28 U.S.C."]
+section_heading = "28 U.S.C. § {n}"
+
+[sources.usc-38]
+title = "38 U.S.C. (United States Code, Title 38), sections cited in this outline; LII headings fetched 2026-10-26"
+url = "https://www.law.cornell.edu/uscode/text/38"
+as_of = "2026-10-26"
+cite_prefixes = ["38 U.S.C."]
+section_heading = "38 U.S.C. § {n}"

@@ -40,7 +40,8 @@ fn second_keyword(node: &SyntaxNode) -> Option<Name> {
 fn type_alias(node: &SyntaxNode) -> Option<ItemKind> {
     let it = Name {
         text: "it".into(),
-        range: node_of(node, K::WhereClause).map_or(range(node.text_range()), |c| head(&c).range),
+        range: node_of(node, K::WhereClause)
+            .map_or(range(node.text_range()), |c| head(&c).range),
     };
     Some(ItemKind::TypeAlias(ident(node)?, declared_type(node, it)?))
 }

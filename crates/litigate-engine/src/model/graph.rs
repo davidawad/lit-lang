@@ -41,6 +41,9 @@ pub struct Graph {
     pub sample_size: BTreeMap<EdgeIx, (String, u64)>,
     pub(super) node_ix: HashMap<String, NodeIx>,
     pub(super) edge_ix: HashMap<String, EdgeIx>,
+    /// Qualified `spawn` and `joins` nodes by qualified edge id, for the
+    /// edges that declare either, until `expand_tracks` consumes them.
+    pub(super) tracks: HashMap<String, (Vec<String>, Vec<String>)>,
 }
 
 /// A node's `feeShift` must be a fraction in `[0, 1]`, on a terminal.
@@ -124,6 +127,7 @@ impl Graph {
             sample_size: BTreeMap::new(),
             node_ix: HashMap::new(),
             edge_ix: HashMap::new(),
+            tracks: HashMap::new(),
         };
         for p in packs {
             g.add_pack(p, false)?;
@@ -135,6 +139,9 @@ impl Graph {
         }
         g.add_links(&lf.links)?;
         g.canonicalize();
+        if !g.tracks.is_empty() {
+            g.expand_tracks(opts.max_product_nodes)?;
+        }
         if !opts.no_flags
             && g.edges.iter().any(|e| {
                 !e.sets.is_empty()
@@ -286,6 +293,16 @@ impl Graph {
         let (f, t) = (lookup(from, "from")?, lookup(to, "to")?);
         if self.edge_ix.contains_key(id) {
             return Err(Error::Invalid(format!("duplicate edge id {id}")));
+        }
+        if !e.spawn.is_empty() || !e.joins.is_empty() {
+            if link {
+                return Err(Error::Invalid(format!(
+                    "link {id}: a link cannot spawn or join concurrent tracks"
+                )));
+            }
+            let nodes = |ns: &[String]| ns.iter().map(|n| qualify(pack, n)).collect();
+            self.tracks
+                .insert(id.to_string(), (nodes(&e.spawn), nodes(&e.joins)));
         }
         self.edge_ix.insert(id.to_string(), self.edges.len());
         self.edges.push(Edge {

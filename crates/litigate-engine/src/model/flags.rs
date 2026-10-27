@@ -158,7 +158,7 @@ impl Graph {
         let mut nn = src.clone();
         nn.id = format!("{}{suffix}", src.id);
         nn.local_id = format!("{}{suffix}", src.local_id);
-        nn.base_id.clone_from(&src.id);
+        nn.base_id.clone_from(&src.base_id);
         nn.flags = flags.iter().cloned().collect();
         if nn.is_terminal() {
             if let Some((_, v)) = nn.payoff_by_flag.iter().find(|(k, _)| flags.contains(*k)) {

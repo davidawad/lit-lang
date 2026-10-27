@@ -436,6 +436,16 @@ pub struct RawEdge {
     /// graph (v2).
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub forbids: Vec<String>,
+    /// Pack nodes where taking this edge also starts a concurrent track
+    /// each (a token of the marking). Compiled into a product graph over
+    /// markings; see `docs/PACK_SCHEMA.md#concurrent-tracks`. Not on links.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub spawn: Vec<String>,
+    /// Pack nodes whose tracks this edge joins: it exists only in markings
+    /// where each holds another track's token, and taking it consumes them.
+    /// Not on links.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub joins: Vec<String>,
 }
 
 /// A primary source a pack was authored from.

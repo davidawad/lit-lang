@@ -48,12 +48,6 @@ pub(crate) fn attrs(
 /// `e`, leaving `from` to `from`.
 pub(crate) fn edge(cx: &EdgeCx<'_, '_>, sink: &mut Sink, from: String, e: &hir::Edge) -> RawEdge {
     let span = e.span.as_ref();
-    if !e.spawn.is_empty() || !e.joins.is_empty() {
-        sink.unsupported(
-            span,
-            "concurrent tracks (`spawn`, `joins`) have no lowering in the litgraph schema: the engine walks one track, so a package declaring them checks and replays but does not build",
-        );
-    }
     let probability = match &e.probability {
         Some(Authored::Known(p)) => sink.number(*p, span),
         Some(Authored::Hole(_)) | None => None,
@@ -94,6 +88,8 @@ pub(crate) fn edge(cx: &EdgeCx<'_, '_>, sink: &mut Sink, from: String, e: &hir::
         clears: e.clears.clone(),
         requires: e.requires.clone(),
         forbids: e.forbids.clone(),
+        spawn: e.spawn.clone(),
+        joins: e.joins.clone(),
     }
 }
 

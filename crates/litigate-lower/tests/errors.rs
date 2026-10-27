@@ -156,13 +156,13 @@ fn edge_values_without_a_lowering() {
     }));
     only(&p, C::LoweringUnsupported, "`eur`");
 
-    // Concurrent tracks have no engine lowering yet.
+    // Concurrent tracks lower: the engine expands their markings.
     let mut p = example();
     node(&mut p, "respond").edges[2].spawn = vec!["answered".into()];
-    only(&p, C::LoweringUnsupported, "concurrent tracks");
+    assert_eq!(codes(&p), []);
     let mut p = example();
     node(&mut p, "respond").edges[2].joins = vec!["answered".into()];
-    only(&p, C::LoweringUnsupported, "concurrent tracks");
+    assert_eq!(codes(&p), []);
 
     let mut p = example();
     for d in decls(&mut p) {

@@ -72,8 +72,10 @@ pub struct Node {
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub flags: Vec<String>,
     /// The unflagged (`flags` empty) qualified id this node is a copy of.
-    /// Equal to `id` when `flags` is empty. Lets output project a flagged
-    /// product-graph node back to the base pack node an author wrote.
+    /// Equal to `id` when `flags` is empty, except at a marking of several
+    /// concurrent tracks: there the node of the track that moves (or `id`
+    /// once every track has ended). Lets output project a product-graph node
+    /// back to the base pack node an author wrote.
     pub base_id: String,
 }
 
@@ -158,8 +160,9 @@ pub struct Edge {
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub forbids: Vec<String>,
     /// The unflagged (pre-product-expansion) qualified id this edge is a
-    /// copy of. Equal to `id` when the graph has no state-flag product
-    /// (or for the empty-flag instantiation of a flagged edge). Lets a
+    /// copy of. Equal to `id` when the graph has no state-flag or
+    /// concurrent-track product (or for the empty-flag, one-track
+    /// instantiation of the edge). Lets a
     /// consumer that wants "every copy of this edge" — e.g. calibration,
     /// which authors one value for the edge a pack describes, not one per
     /// flag-history it can be taken under — find them all.
@@ -200,9 +203,10 @@ pub struct PackMeta {
     pub node_ids: Vec<String>,
 }
 
-/// Hard cap on compiled `(node, flag-set)` product states. Chosen generously
-/// above every real pack combination; a graph that hits it gets a clear
-/// error rather than an unbounded compile.
+/// Hard cap on compiled product states (`(node, flag-set)` pairs, and the
+/// markings of concurrent tracks). Chosen generously above every real pack
+/// combination; a graph that hits it gets a clear error rather than an
+/// unbounded compile.
 pub const DEFAULT_MAX_PRODUCT_NODES: usize = 20_000;
 
 /// Compilation switches.
@@ -211,9 +215,11 @@ pub struct CompileOptions {
     /// Keep terminals with out-edges absorbing (v1 semantics) instead of
     /// turning them into choices with an explicit `accept` edge.
     pub no_continuations: bool,
-    /// Hard cap on compiled `(node, flag-set)` product states (see
-    /// [`DEFAULT_MAX_PRODUCT_NODES`]). Ignored when no edge declares
-    /// `sets`/`clears`/`requires`/`forbids`, or when `no_flags` is set.
+    /// Hard cap on compiled product states (see
+    /// [`DEFAULT_MAX_PRODUCT_NODES`]): the markings of concurrent tracks
+    /// (ignored when no edge declares `spawn`/`joins`), then the
+    /// `(node, flag-set)` pairs (ignored when no edge declares
+    /// `sets`/`clears`/`requires`/`forbids`, or when `no_flags` is set).
     pub max_product_nodes: usize,
     /// Ignore every edge's `sets`/`clears`/`requires`/`forbids` and compile
     /// the graph exactly as if no pack declared any (v1/no-memory

@@ -22,6 +22,7 @@ mod links;
 mod lowered;
 mod resolve;
 mod schema;
+mod tracks;
 
 pub use cite_syntax::{CiteCode, CiteRuleForm, CiteShorthand, CiteSyntax};
 pub use entities::{CompileOptions, Edge, Node, PackMeta, PayoffSource, DEFAULT_MAX_PRODUCT_NODES};

@@ -85,27 +85,14 @@ impl SourceCorpus {
         self.files.is_empty()
     }
 
-    /// Every `*.txt` in `dir`, keyed by `sources/<file name>` (matching how
+    /// Every `*.txt` in `dir`, keyed by `sources/<relative path>` (matching how
     /// `Pack.sources[].path` names embedded files).
     ///
     /// # Errors
     /// Unreadable directory.
     pub fn load(dir: &Path) -> Result<SourceCorpus> {
-        let read =
-            std::fs::read_dir(dir).map_err(|e| Error::Io(format!("{}: {e}", dir.display())))?;
         let mut files = vec![];
-        for entry in read.filter_map(std::result::Result::ok) {
-            let p = entry.path();
-            if p.extension().is_some_and(|x| x == "txt") {
-                let text = std::fs::read_to_string(&p)
-                    .map_err(|e| Error::Io(format!("{}: {e}", p.display())))?;
-                let name = p
-                    .file_name()
-                    .map(|n| n.to_string_lossy().to_string())
-                    .unwrap_or_default();
-                files.push((format!("sources/{name}"), text));
-            }
-        }
+        load_dir(dir, dir, &mut files)?;
         Ok(SourceCorpus::from_files(files))
     }
 
@@ -147,7 +134,15 @@ fn parse_sections(text: &str) -> Vec<Section> {
     let mut sections = vec![];
     let mut current: Option<(String, String)> = None;
     for line in text.lines() {
-        if let Some(heading) = line.strip_prefix("## ") {
+        let rule_heading = line.trim().strip_prefix("RULE ").and_then(|line| {
+            line.split_once(':')
+                .map(|(number, _)| format!("Local Rule {}", number.trim()))
+        });
+        if let Some(heading) = line
+            .strip_prefix("## ")
+            .map(str::to_string)
+            .or(rule_heading)
+        {
             if let Some((h, body)) = current.take() {
                 sections.push(Section {
                     heading: h,
@@ -167,6 +162,28 @@ fn parse_sections(text: &str) -> Vec<Section> {
         });
     }
     sections
+}
+
+fn load_dir(root: &Path, dir: &Path, files: &mut Vec<(String, String)>) -> Result<()> {
+    let read = std::fs::read_dir(dir).map_err(|e| Error::Io(format!("{}: {e}", dir.display())))?;
+    for entry in read.filter_map(std::result::Result::ok) {
+        let path = entry.path();
+        if path.is_dir() {
+            load_dir(root, &path, files)?;
+        } else if path.extension().is_some_and(|x| x == "txt") {
+            let text = std::fs::read_to_string(&path)
+                .map_err(|e| Error::Io(format!("{}: {e}", path.display())))?;
+            let relative = path.strip_prefix(root).unwrap_or(&path).to_string_lossy();
+            files.push((
+                format!(
+                    "sources/{}",
+                    relative.replace(std::path::MAIN_SEPARATOR, "/")
+                ),
+                text,
+            ));
+        }
+    }
+    Ok(())
 }
 
 #[cfg(test)]
@@ -238,7 +255,10 @@ Rule 13 — Counterclaim and Crossclaim
     fn embedded_corpus_loads_and_has_known_sections() {
         let corpus = SourceCorpus::embedded();
         assert!(corpus.has_file("sources/frcp.txt"));
+        assert!(corpus.has_file("sources/ca8/ca8-local-rules.txt"));
         assert!(!corpus.lookup_all("Rule 12").is_empty());
+        assert!(!corpus.lookup_all("FRAP 31").is_empty());
+        assert!(!corpus.lookup_all("Local Rule 34A").is_empty());
         assert!(!corpus.lookup_all("37 C.F.R. § 42.108").is_empty());
         assert!(!corpus.lookup_all("19 U.S.C. § 1337").is_empty());
     }

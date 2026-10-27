@@ -7,31 +7,23 @@ start notice-filed
 
 state notice-filed: "Notice of appeal filed" by applicant cite "FRAP 3(a)(1)"
 {
-  edge-notice-filed-briefing "Appeal docketed" -> briefing {
-    authority cite "FRAP 12(c)"
-  }
+  edge-notice-filed-briefing "Appeal docketed" -> briefing { authority cite "FRAP 12(c)" }
 }
 
 state briefing: "Briefing" cite "FRAP 31(a)(1)"
 {
   note "Eighth Circuit local rules supplement the Federal Rules of Appellate Procedure; consult Local Rules 28A, 30A, and 32A for circuit-specific brief and appendix requirements."
-  edge-briefing-argument "Briefs complete" -> argument {
-    authority cite "8th Cir. R. 34A"
-  }
+  edge-briefing-argument "Briefs complete" -> argument { authority cite "8th Cir. R. 34A" }
 }
 
 state argument: "Oral argument or submission" cite "FRAP 34"
 {
-  edge-argument-decision "Submitted" -> decision {
-    authority cite "FRAP 36(a)"
-  }
+  edge-argument-decision "Submitted" -> decision { authority cite "FRAP 36(a)" }
 }
 
 decision decision: "Court decision" by court cite "FRAP 36(a)"
 {
-  edge-decision-judgment "Judgment entered" -> rehearing {
-    authority cite "FRAP 40(d)(1)"
-  }
+  edge-decision-judgment "Judgment entered" -> rehearing { authority cite "FRAP 40(d)(1)" }
 }
 
 decision rehearing: "Rehearing election" by applicant cite "FRAP 40(d)(1)"
@@ -41,7 +33,7 @@ decision rehearing: "Rehearing election" by applicant cite "FRAP 40(d)(1)"
   }
 }
 
-state mandate: "Mandate issued" by office cite "FRAP 41(a)"
+terminal mandate: "Mandate issued" outcome [final] by office cite "FRAP 41(a)"
 {
   note "The Internal Operating Procedures describe the court's internal assignment, panel, and decisional practices; they do not create filing deadlines."
 }

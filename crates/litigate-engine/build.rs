@@ -47,7 +47,7 @@ fn main() {
     );
 }
 
-/// Embed every `*.<ext>` file directly inside `dir` (non-recursive) as a
+/// Embed every `*.<ext>` file inside `dir` recursively as a
 /// `pub static <ident>: &[(&str, &str)]`, key optionally prefixed with
 /// `key_prefix` (e.g. `"sources/"` so the key matches `Pack.sources[].path`
 /// exactly), written to `out_file`.
@@ -70,14 +70,15 @@ fn embed_dir(
             dir.display()
         )
     });
-    let mut entries: Vec<PathBuf> = read.filter_map(|e| e.ok().map(|e| e.path())).collect();
-    entries.retain(|p| p.extension().is_some_and(|x| x == ext));
+    let mut entries = Vec::new();
+    collect_files(read, ext, &mut entries);
     entries.sort();
     let mut src = format!("/// {doc}\npub static {ident}: &[(&str, &str)] = &[\n");
     for p in &entries {
         println!("cargo:rerun-if-changed={}", p.display());
-        let name = p.file_name().and_then(|n| n.to_str()).unwrap_or_default();
-        let key = key_prefix.map_or_else(|| name.to_string(), |prefix| format!("{prefix}{name}"));
+        let name = p.strip_prefix(dir).unwrap_or(p).to_string_lossy();
+        let name = name.replace(std::path::MAIN_SEPARATOR, "/");
+        let key = key_prefix.map_or_else(|| name.clone(), |prefix| format!("{prefix}{name}"));
         let abs = p.canonicalize().unwrap_or_else(|_| p.clone());
         let _ = writeln!(
             src,
@@ -88,5 +89,17 @@ fn embed_dir(
     src.push_str("];\n");
     if let Err(e) = std::fs::write(out_file, src) {
         panic!("writing {}: {e}", out_file.display());
+    }
+}
+
+fn collect_files(read: std::fs::ReadDir, ext: &str, entries: &mut Vec<PathBuf>) {
+    for path in read.filter_map(|entry| entry.ok().map(|entry| entry.path())) {
+        if path.is_dir() {
+            if let Ok(children) = std::fs::read_dir(&path) {
+                collect_files(children, ext, entries);
+            }
+        } else if path.extension().is_some_and(|x| x == ext) {
+            entries.push(path);
+        }
     }
 }

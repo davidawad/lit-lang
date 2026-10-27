@@ -41,3 +41,10 @@
 - Edition: "Includes Amendments through March 31, 2022" (as stated on the document; linked as Title II from https://www.lasc.org/DistrictCourtRules, which lists no later edition).
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 983800770573ad23b6d0928311be213fb8c441efd64143440a8a4ef05fc6a9dd. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
+
+### `la-district-court/la-district-court-rules-title-i.txt` — Louisiana District Court Rules, Title I (Proceedings in District, Family, Juvenile Courts)
+
+- Source: https://www.lasc.org/rules/dist.ct/Title_I.pdf (official site; 20 pages, sha256 6ef8e13a0d37a036db89e7b3c805af665780c8e13cfe678c61671d7afef8ff21).
+- Edition: "Includes Amendments through May 10, 2023" (as stated on the document; linked as Title I from https://www.lasc.org/DistrictCourtRules, which lists no later edition).
+- Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
+- Extract sha256 e7d9704ae9fcc6c4853e8af6a972829f39b99446d0684feced6f15d898a856fd. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.

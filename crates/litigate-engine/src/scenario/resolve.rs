@@ -6,7 +6,7 @@
 //! none of them read or write a `View` directly, so they're kept separate
 //! from its query methods.
 
-use std::collections::{BTreeMap, VecDeque};
+use std::collections::{BTreeMap, HashSet, VecDeque};
 
 use super::Scenario;
 use crate::error::{Error, Result};
@@ -96,6 +96,10 @@ pub(super) fn probabilities(
     overrides: &BTreeMap<String, f64>,
 ) -> Result<Vec<Option<f64>>> {
     let mut authored: Vec<Option<f64>> = g.edges.iter().map(|e| e.probability).collect();
+    // Only package-authored, non-overridden siblings absorb an override's
+    // mass: a hole that an earlier override filled is itself an override,
+    // and rescaling it would zero it out (lg-w0o0).
+    let overridden: HashSet<usize> = overrides.keys().map(|r| g.edge(r)).collect::<Result<_>>()?;
     for (r, &p) in overrides {
         let e = g.edge(r)?;
         if !(0.0..=1.0).contains(&p) {
@@ -106,7 +110,7 @@ pub(super) fn probabilities(
         let others: Vec<usize> = g.out[g.edges[e].from]
             .iter()
             .copied()
-            .filter(|&o| o != e && authored[o].is_some())
+            .filter(|&o| o != e && !overridden.contains(&o) && authored[o].is_some())
             .collect();
         let rest: f64 = others.iter().filter_map(|&o| authored[o]).sum();
         let target_rest = (rest + authored[e].unwrap_or(0.0) - p).max(0.0);

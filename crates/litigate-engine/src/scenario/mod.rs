@@ -187,7 +187,8 @@ pub struct Scenario {
     pub mask: Option<String>,
     /// Edge refs to delete.
     pub remove_edges: Vec<String>,
-    /// Edge ref → probability; authored siblings are rescaled to keep the node's mass.
+    /// Edge ref → probability; package-authored, non-overridden siblings are
+    /// rescaled to keep the node's mass.
     pub probabilities: BTreeMap<String, f64>,
     /// Edge expression rewriting `p` on every world edge (NaN = unauthored;
     /// non-finite results keep the original). Chance nodes are renormalized.

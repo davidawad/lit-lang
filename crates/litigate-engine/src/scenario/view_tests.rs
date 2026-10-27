@@ -267,3 +267,61 @@ fn a_fee_shift_reaches_every_flagged_copy_of_its_terminal() {
         assert_eq!(v.fee[n], 0.5, "{}", g.nodes[n].id);
     }
 }
+
+/// Two chance edges with no package probability (holes) under one node.
+const HOLES_JSON: &str = r#"{
+    "schemaVersion": 2, "id": "demo", "title": "Demo", "startNodeId": "draw",
+    "nodes": [
+        {"id": "draw", "label": "Draw", "kind": "decision"},
+        {"id": "a", "label": "A", "kind": "terminal", "payoff": 1.0},
+        {"id": "b", "label": "B", "kind": "terminal", "payoff": 0.0}
+    ],
+    "edges": [
+        {"id": "e-a", "from": "draw", "to": "a", "label": "a", "actor": "office"},
+        {"id": "e-b", "from": "draw", "to": "b", "label": "b", "actor": "office"}
+    ]
+}"#;
+
+/// lg-w0o0: overriding A=0.5 then B=0.5 on all-hole siblings must keep
+/// A at 0.5, not rescale it to `0 + 0 - 0.5 → 0`.
+#[test]
+fn overriding_hole_siblings_keeps_each_override() {
+    let g = fact_pack(HOLES_JSON);
+    let sc = Scenario {
+        probabilities: BTreeMap::from([("demo::e-a".into(), 0.5), ("demo::e-b".into(), 0.5)]),
+        ..Scenario::default()
+    };
+    let v = View::new(&g, &sc).unwrap();
+    assert_eq!(v.prob[g.edge("demo::e-a").unwrap()], Some(0.5));
+    assert_eq!(v.prob[g.edge("demo::e-b").unwrap()], Some(0.5));
+}
+
+/// An override never rescales another override; only package-authored,
+/// non-overridden siblings absorb the change in mass.
+#[test]
+fn a_later_override_does_not_rescale_an_earlier_one() {
+    let json = r#"{
+        "schemaVersion": 2, "id": "demo", "title": "Demo", "startNodeId": "draw",
+        "nodes": [
+            {"id": "draw", "label": "Draw", "kind": "decision"},
+            {"id": "a", "label": "A", "kind": "terminal", "payoff": 1.0},
+            {"id": "b", "label": "B", "kind": "terminal", "payoff": 0.5},
+            {"id": "c", "label": "C", "kind": "terminal", "payoff": 0.0}
+        ],
+        "edges": [
+            {"id": "e-a", "from": "draw", "to": "a", "label": "a", "actor": "office", "probability": 0.2},
+            {"id": "e-b", "from": "draw", "to": "b", "label": "b", "actor": "office", "probability": 0.3},
+            {"id": "e-c", "from": "draw", "to": "c", "label": "c", "actor": "office", "probability": 0.5}
+        ]
+    }"#;
+    let g = fact_pack(json);
+    let sc = Scenario {
+        probabilities: BTreeMap::from([("demo::e-a".into(), 0.5), ("demo::e-b".into(), 0.3)]),
+        ..Scenario::default()
+    };
+    let v = View::new(&g, &sc).unwrap();
+    for (id, want) in [("demo::e-a", 0.5), ("demo::e-b", 0.3), ("demo::e-c", 0.2)] {
+        let got = v.prob[g.edge(id).unwrap()].unwrap();
+        assert!((got - want).abs() < 1e-12, "{id} = {got}, want {want}");
+    }
+}

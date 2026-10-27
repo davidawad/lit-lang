@@ -1,0 +1,7 @@
+
+### `d-wyo/d-wyo-local-civil-rules-2022.txt` — D. Wyo. Local Civil Rules (USDCLR)
+
+- Source: https://www.wyd.uscourts.gov/sites/wyd/files/local_rules/2022%20Civil%20Local%20Rules%20-%20FINAL.pdf (official site; 95 pages, sha256 babc2b430a2fec4469b29c6ef0078a1a6d02b8105348a0691189c64bd373aeda).
+- Edition: Local Civil Rules, January 2022 (title page); https://www.wyd.uscourts.gov/court-info/local-rules-and-orders/local-rules lists "CIVIL LOCAL RULES - Revised January 2022" as current (only the criminal rules were revised August 2026); fetched with plain curl (no browser identity); robots.txt allows the path (Crawl-delay 10 honored).
+- Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
+- Extract sha256 7426b22750d4d951a550db7bb4df187bb5c5e6b564f669a579be5af36b1f9d01. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.

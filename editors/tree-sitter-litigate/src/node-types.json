@@ -94,6 +94,10 @@
         "named": true
       },
       {
+        "type": "calibration_decl",
+        "named": true
+      },
+      {
         "type": "counting_decl",
         "named": true
       },
@@ -575,6 +579,290 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "calibrated_value",
+    "named": true,
+    "fields": {
+      "attr": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "body": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "calibrated_value_body",
+            "named": true
+          }
+        ]
+      },
+      "key": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "attr",
+            "named": false
+          },
+          {
+            "type": "duration",
+            "named": false
+          },
+          {
+            "type": "p",
+            "named": false
+          }
+        ]
+      },
+      "target": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "ref",
+            "named": true
+          }
+        ]
+      },
+      "value": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "duration",
+            "named": true
+          },
+          {
+            "type": "duration_range",
+            "named": true
+          },
+          {
+            "type": "fraction",
+            "named": true
+          },
+          {
+            "type": "hole",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
+          {
+            "type": "parenthesized_expression",
+            "named": true
+          },
+          {
+            "type": "signed_number",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "calibrated_value_body",
+    "named": true,
+    "fields": {
+      "key": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "method",
+            "named": false
+          },
+          {
+            "type": "n",
+            "named": false
+          },
+          {
+            "type": "source",
+            "named": false
+          }
+        ]
+      },
+      "value": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "number",
+            "named": true
+          },
+          {
+            "type": "string",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "calibration_body",
+    "named": true,
+    "fields": {
+      "key": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "note",
+            "named": false
+          }
+        ]
+      },
+      "value": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "string",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "calibrated_value",
+          "named": true
+        },
+        {
+          "type": "calibration_source",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "calibration_decl",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "calibration_body",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "title": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "string",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "calibration_source",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "calibration_source_body",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "title": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "string",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "calibration_source_body",
+    "named": true,
+    "fields": {
+      "key": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "retrieved",
+            "named": false
+          },
+          {
+            "type": "url",
+            "named": false
+          },
+          {
+            "type": "vintage",
+            "named": false
+          }
+        ]
+      },
+      "value": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "date",
+            "named": true
+          },
+          {
+            "type": "interval",
+            "named": true
+          },
+          {
+            "type": "string",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -5351,6 +5639,10 @@
     "named": false
   },
   {
+    "type": "attr",
+    "named": false
+  },
+  {
     "type": "attrs",
     "named": false
   },
@@ -5389,6 +5681,10 @@
   },
   {
     "type": "calendar",
+    "named": false
+  },
+  {
+    "type": "calibration",
     "named": false
   },
   {
@@ -5710,6 +6006,10 @@
     "named": false
   },
   {
+    "type": "method",
+    "named": false
+  },
+  {
     "type": "min",
     "named": false
   },
@@ -5724,6 +6024,10 @@
   {
     "type": "money",
     "named": true
+  },
+  {
+    "type": "n",
+    "named": false
   },
   {
     "type": "never",
@@ -5874,6 +6178,10 @@
     "named": false
   },
   {
+    "type": "retrieved",
+    "named": false
+  },
+  {
     "type": "revives",
     "named": false
   },
@@ -6012,6 +6320,10 @@
   {
     "type": "version_req",
     "named": true
+  },
+  {
+    "type": "vintage",
+    "named": false
   },
   {
     "type": "waive",

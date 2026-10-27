@@ -302,3 +302,162 @@ fn an_unreadable_world_file_fails_loading() {
     assert_eq!(run.code, 1, "{}", run.stdout);
     assert!(run.stderr.contains("Permission denied"), "{}", run.stderr);
 }
+
+/// The example world with its Rule 59(e) choice declared a contested
+/// question: synthetic pseudo-counts, 3 for the 2009 amendment and 1
+/// without it.
+fn contested() -> String {
+    format!(
+        "{}\n[contested.rule-59e-2009]\nbasis = \"estimate\"\nprior = {{ with = 3, without = 1 }}\n",
+        example(WORLD)
+    )
+}
+
+/// Each world id `json` lists with the option it takes at `choice`.
+fn taking(json: &Value, choice: &str, option: &str) -> Vec<Value> {
+    json["result"]["worlds"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .filter(|w| w["choices"][choice] == option)
+        .map(|w| w["id"].clone())
+        .collect()
+}
+
+#[test]
+fn a_contested_choice_lowers_to_a_chance_node_whose_branches_are_its_worlds() {
+    // The contested question beside an uncontested toggle: four worlds,
+    // one chance node (the contested question's), two timelines (the
+    // toggle's options), each weighing the draw.
+    let world = contested();
+    let (run, json) = worlds(
+        files(&[(WORLD, &world)]),
+        &["--vary", "change-frcp87-what-if"],
+    );
+    assert_eq!(run.code, 0, "{}{}", run.stdout, run.stderr);
+    let chance = json["result"]["chance"].as_array().unwrap();
+    assert_eq!(chance.len(), 1, "{chance:?}");
+    let node = &chance[0];
+    assert_eq!(node["node"], "choice.rule-59e-2009");
+    assert_eq!(node["basis"], "estimate");
+    let branches: Vec<(Value, Value, Value)> = node["branches"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|b| (b["option"].clone(), b["exact"].clone(), b["worlds"].clone()))
+        .collect();
+    assert_eq!(
+        branches,
+        [
+            (
+                json!("with"),
+                json!("3/4"),
+                json!(taking(&json, "rule-59e-2009", "with"))
+            ),
+            (
+                json!("without"),
+                json!("1/4"),
+                json!(taking(&json, "rule-59e-2009", "without"))
+            ),
+        ]
+    );
+    assert_eq!(branches[0].2, json!(["w1", "w3"]));
+    // The uncontested toggle is no node: it splits the timelines.
+    let timelines = json["result"]["timelines"].as_array().unwrap();
+    let shown: Vec<(Value, Value, Value)> = timelines
+        .iter()
+        .map(|t| (t["choices"].clone(), t["worlds"].clone(), t["filings"].clone()))
+        .collect();
+    assert_eq!(
+        shown,
+        [
+            (
+                json!({"change-frcp87-what-if": "with"}),
+                json!([{"id": "w1", "p": 0.75}, {"id": "w2", "p": 0.25}]),
+                json!({"motion": {"timely": 1.0}}),
+            ),
+            (
+                json!({"change-frcp87-what-if": "without"}),
+                json!([{"id": "w3", "p": 0.75}, {"id": "w4", "p": 0.25}]),
+                json!({"motion": {"timely": 0.75, "late": 0.25}}),
+            ),
+        ]
+    );
+}
+
+#[test]
+fn an_uncontested_choice_stays_worlds() {
+    // The example's choice is a change toggled: no chance node, and each
+    // of its worlds is a timeline of its own, certain.
+    let (run, json) = worlds(files(&[]), &[]);
+    assert_eq!(run.code, 0, "{}", run.stdout);
+    assert_eq!(json["result"]["chance"], json!([]));
+    let timelines: Vec<(Value, Value)> = json["result"]["timelines"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|t| (t["choices"].clone(), t["filings"].clone()))
+        .collect();
+    assert_eq!(
+        timelines,
+        [
+            (
+                json!({"rule-59e-2009": "with"}),
+                json!({"motion": {"timely": 1.0}})
+            ),
+            (
+                json!({"rule-59e-2009": "without"}),
+                json!({"motion": {"late": 1.0}})
+            ),
+        ]
+    );
+}
+
+#[test]
+fn a_malformed_contested_question_fails_the_world_file() {
+    for (table, why) in [
+        (
+            "[contested.ghost]\n",
+            "`contested.ghost` names no choice point",
+        ),
+        (
+            "[contested.rule-59e-2009]\nprior = { with = 0, without = 1 }\n",
+            "is a positive integer, found 0",
+        ),
+        (
+            "[contested.rule-59e-2009]\nprior = { with = 1 }\n",
+            "gives option `without` no pseudo-count",
+        ),
+        (
+            "[contested.rule-59e-2009]\nprior = { with = 1, without = 1, maybe = 1 }\n",
+            "has no option `maybe`",
+        ),
+        (
+            "[contested.rule-59e-2009]\nbasis = \"hunch\"\n",
+            "`basis` is one of sourced, calibrated, expert, estimate",
+        ),
+        (
+            "[contested.rule-59e-2009]\nbasis = \"expert\"\n",
+            "has basis `expert`: name its `source`",
+        ),
+        (
+            "[contested.rule-59e-2009]\nsource = \"a guess\"\n",
+            "is an estimate: it has no `source`",
+        ),
+    ] {
+        let world = format!("{}\n{table}", example(WORLD));
+        let (run, _) = worlds(files(&[(WORLD, &world)]), &[]);
+        assert_eq!(run.code, 2, "{table}: {}", run.stdout);
+        assert!(run.stdout.contains(why), "{table}: {}", run.stdout);
+    }
+    // A sourced prior names its source and is reported with it.
+    let world = format!(
+        "{}\n[contested.rule-59e-2009]\nbasis = \"sourced\"\nsource = \"Fed. R. Civ. P. 59(e) (2009)\"\n",
+        example(WORLD)
+    );
+    let (run, json) = worlds(files(&[(WORLD, &world)]), &[]);
+    assert_eq!(run.code, 0, "{}", run.stdout);
+    let node = &json["result"]["chance"][0];
+    assert_eq!(node["source"], "Fed. R. Civ. P. 59(e) (2009)");
+    assert_eq!(node["branches"][0]["exact"], "1/2");
+}

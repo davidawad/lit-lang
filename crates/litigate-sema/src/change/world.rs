@@ -5,7 +5,7 @@
 //! instruments, never from the file. `as_of` and `known_at` are query
 //! coordinates, not world fields. A world may also declare choice points
 //! (`[choice.ID]`, [`super::choice`]): the alternate worlds it spans.
-use super::choice::{self, Choices};
+use super::choice::{self, Choices, Contests};
 use super::{families, family_of, scope};
 use crate::db::ids::DeclId;
 use crate::db::inputs::{PackageInput, Workspace};
@@ -60,6 +60,10 @@ pub struct World {
     /// set of layers ([`super::choice`]). Empty: the world is one world.
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub choices: Choices,
+    /// The choice points that are contested questions, by id, with their
+    /// priors ([`super::choice::chances`]).
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub contested: Contests,
 }
 
 /// One layer as the world has it.
@@ -132,6 +136,7 @@ struct RawWorld {
     layers: Spanned<Vec<Spanned<String>>>,
     location: Spanned<RawLocation>,
     choice: Option<choice::Raw>,
+    contested: Option<choice::RawContests>,
 }
 
 #[derive(Deserialize)]
@@ -204,10 +209,15 @@ pub fn parse_world(text: &str) -> Result<(World, BTreeMap<String, TextRange>), V
         Some(c) => choice::parse(c, &layers, &mut at)?,
         None => Choices::new(),
     };
+    let contested = match &raw.contested {
+        Some(c) => choice::parse_contested(c, &choices, &mut at)?,
+        None => Contests::new(),
+    };
     let world = World {
         modality,
         layers,
         choices,
+        contested,
         location: Location {
             family: l.family.get_ref().clone(),
             court: l.court.clone(),
@@ -277,6 +287,7 @@ pub fn check_world(
     };
     let fixed = World {
         choices: Choices::new(),
+        contested: Contests::new(),
         ..world.clone()
     };
     let mut out = check_parsed(db, ws, path, text, &fixed, &at, profile);
@@ -290,9 +301,45 @@ pub fn check_world(
         )
         .to_diagnostic(&file, &index)
     }));
+    out.diagnostics
+        .extend(settled(db, &world, &at, &all).map(|r| r.to_diagnostic(&file, &index)));
     sort_diagnostics(&mut out.diagnostics);
     out.world = Some(world);
     out
+}
+
+/// L1013 for each contested question of `world` one of whose readings is
+/// a precedent binding at its location: a controlling precedent settles
+/// the question there, so it is no chance (design review §3.4).
+fn settled<'a>(
+    db: &'a dyn salsa::Database,
+    world: &'a World,
+    at: &'a BTreeMap<String, TextRange>,
+    all: &'a BTreeMap<String, (PackageInput, &Manifest)>,
+) -> impl Iterator<Item = Report> + 'a {
+    world.contested.keys().flat_map(move |id| {
+        let options = world.choices.get(id).into_iter().flat_map(|o| o.values());
+        options.flatten().filter_map(move |name| {
+            let (pkg, m) = all.get(name)?;
+            let Kind::Precedent { .. } = m.kind else {
+                return None;
+            };
+            let family = families(db, *pkg)
+                .iter()
+                .find(|f| f.id == world.location.family);
+            let circuit = world.location.circuit.as_deref();
+            (scope(m, family, circuit) == crate::hir::Scope::Binding).then(|| {
+                Report::new(
+                    C::InvalidWorld,
+                    at.get(&format!("@contested.{id}")).copied().unwrap_or_default(),
+                    format!(
+                        "precedent `{name}` binds at the world's location: it settles \
+                         contested question `{id}` there"
+                    ),
+                )
+            })
+        })
+    })
 }
 
 /// Checks `world`, parsed from `text` at `path` (`at`: where each of its

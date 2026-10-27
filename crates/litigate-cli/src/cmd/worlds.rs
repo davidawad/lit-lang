@@ -10,6 +10,14 @@
 //! timely, late, unjudged, untimed or rejected, and the worlds grouped by
 //! identical outcomes.
 //!
+//! A contested question (a choice point the file declares
+//! `[contested.ID]`: unsettled law at ι) lowers to a chance node whose
+//! branches are its options, each with its prior's probability and the
+//! worlds taking it (design review §3.4, §6 item 23). The uncontested
+//! choice points stay worlds: each `timelines` entry is one combination
+//! of them, with the probability of each filing's outcome there over the
+//! contested draws.
+//!
 //! A world's own errors (two of its layers in unresolved conflict, a
 //! synthetic layer in an actual world) leave its law undetermined: its
 //! filings are `undetermined` there, never judged. A late filing is an
@@ -335,6 +343,38 @@ impl Query<'_> {
             .collect();
         (per_filing, outcomes)
     }
+
+    /// Each world of the uncontested choice points of `world` with its
+    /// worlds' probabilities, and each filing's probability of each
+    /// outcome there, the contested questions' draws weighed, from `runs`
+    /// of the worlds `ids`.
+    fn timelines(&self, world: &World, runs: &[Run], ids: &[&str]) -> Vec<Value> {
+        choice::timelines(world)
+            .iter()
+            .map(|t| {
+                let fates = |i: usize| {
+                    let mut by: BTreeMap<Timeliness, f64> = BTreeMap::new();
+                    for (id, p) in &t.worlds {
+                        if let Some(run) = ids.iter().position(|w| w == id).map(|k| &runs[k]) {
+                            *by.entry(run.fates[i]).or_default() += p;
+                        }
+                    }
+                    by.iter()
+                        .map(|(t, p)| (json!(t).as_str().unwrap_or_default().to_owned(), json!(p)))
+                        .collect::<serde_json::Map<_, _>>()
+                };
+                json!({
+                    "choices": t.choices,
+                    "worlds": t.worlds.iter()
+                        .map(|(id, p)| json!({"id": id, "p": p}))
+                        .collect::<Vec<_>>(),
+                    "filings": self.filings.iter().enumerate()
+                        .map(|(i, f)| (f.key.clone(), Value::Object(fates(i))))
+                        .collect::<serde_json::Map<_, _>>(),
+                })
+            })
+            .collect()
+    }
 }
 
 /// A report of `diagnostics` only: the query could not run.
@@ -425,6 +465,7 @@ pub fn worlds(src: &dyn Source, args: &Args) -> Outcome {
     let runs: Vec<Run> = alternates.iter().map(|a| query.run(a)).collect();
     let ids: Vec<&str> = alternates.iter().map(|a| a.id.as_str()).collect();
     let (per_filing, outcomes) = query.outcomes(&runs, &ids);
+    let timelines = query.timelines(&world, &runs, &ids);
     let result = json!({
         "case": case.id,
         "world": file.path,
@@ -436,6 +477,8 @@ pub fn worlds(src: &dyn Source, args: &Args) -> Outcome {
         "worlds": runs.into_iter().map(|r| r.entry).collect::<Vec<_>>(),
         "filings": per_filing,
         "outcomes": outcomes,
+        "chance": choice::chances(&world),
+        "timelines": timelines,
     });
     Ok(Report {
         result,

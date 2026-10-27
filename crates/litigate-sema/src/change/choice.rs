@@ -7,6 +7,12 @@
 //! a choice among readings of unsettled law (a circuit split) is a
 //! contested question, one reading per world.
 //!
+//! A choice point the file also declares `[contested.ID]` is a contested
+//! question: its options are drawn, not chosen, so it lowers to a chance
+//! node ([`chances`]) whose branches weigh its options by a
+//! basis-labelled prior; the uncontested choice points stay alternate
+//! worlds ([`timelines`]), each weighing the worlds its draws reach.
+//!
 //! The enumeration is exhaustive and finite: the product of the option
 //! counts, at most [`MAX_WORLDS`]. Each world is the stratified model the
 //! checker already computes (SPEC §0), so no solver is needed to list the
@@ -15,7 +21,7 @@ use super::world::{check_parsed, range, World, WorldCheck};
 use crate::db::inputs::Workspace;
 use crate::db::span::{Report, TextRange};
 use litigate_base::{DiagnosticCode as C, Profile};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
 use toml::Spanned;
 
@@ -190,13 +196,287 @@ pub fn enumerate(
             let one = World {
                 layers: combination.layers.clone(),
                 choices: Choices::new(),
+                contested: Contests::new(),
                 ..world.clone()
             };
             Alternate {
-                id: format!("w{}", i + 1),
+                id: world_id(i),
                 check: check_parsed(db, ws, path, text, &one, at, profile),
                 combination,
             }
         })
         .collect()
+}
+
+/// The bases a contested question's prior may have (design review
+/// §2.10): read from a source, measured on a dataset, an expert's, or an
+/// estimate.
+pub const BASES: [&str; 4] = ["sourced", "calibrated", "expert", "estimate"];
+
+/// The prior of a contested question (design review §3.4, §6 item 23): a
+/// choice point whose options are readings of unsettled law at the
+/// world's location, drawn by the tribunal rather than chosen by anyone.
+#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Contest {
+    /// Its basis, one of [`BASES`].
+    pub basis: String,
+    /// What the basis rests on (a cite, `dataset@date`, an expert); none
+    /// for an estimate.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub source: Option<String>,
+    /// Each option's Dirichlet pseudo-count, by option name: every option
+    /// of the choice, positive; 1 each when the file gives none.
+    pub prior: BTreeMap<String, u64>,
+}
+
+/// Contested questions by choice id.
+pub type Contests = BTreeMap<String, Contest>;
+
+/// A `[contested.ID]` table as written.
+#[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(super) struct RawContest {
+    basis: Option<Spanned<String>>,
+    source: Option<Spanned<String>>,
+    prior: Option<Spanned<BTreeMap<String, Spanned<i64>>>>,
+}
+
+/// `[contested.ID]` tables as written.
+pub(super) type RawContests = BTreeMap<String, Spanned<RawContest>>;
+
+/// Parses the `[contested.ID]` tables `raw` of a world whose choice points
+/// are `choices`, recording each at `@contested.ID` in `at`.
+///
+/// # Errors
+/// The L1013 reports of a malformed one: not a choice point, an unknown
+/// basis, a source missing (or given for an estimate), or a prior that is
+/// not a positive pseudo-count for exactly each option.
+pub(super) fn parse_contested(
+    raw: &RawContests,
+    choices: &Choices,
+    at: &mut BTreeMap<String, TextRange>,
+) -> Result<Contests, Vec<Report>> {
+    let mut out = Contests::new();
+    let mut reports: Vec<Report> = Vec::new();
+    let mut bad = |at: TextRange, message: String| {
+        reports.push(Report::new(C::InvalidWorld, at, message));
+    };
+    for (id, table) in raw {
+        let here = range(table);
+        at.insert(format!("@contested.{id}"), here);
+        let Some(options) = choices.get(id) else {
+            bad(
+                here,
+                format!("`contested.{id}` names no choice point: declare `[choice.{id}]`"),
+            );
+            continue;
+        };
+        let table = table.get_ref();
+        let basis = table
+            .basis
+            .as_ref()
+            .map_or("estimate", |b| b.get_ref().as_str());
+        let basis_at = table.basis.as_ref().map_or(here, range);
+        if !BASES.contains(&basis) {
+            bad(
+                basis_at,
+                format!("`basis` is one of {}, found `{basis}`", BASES.join(", ")),
+            );
+        }
+        let source = table.source.as_ref().map(|s| s.get_ref().clone());
+        match (&source, basis) {
+            (Some(_), "estimate") => bad(
+                table.source.as_ref().map_or(here, range),
+                format!("contested question `{id}` is an estimate: it has no `source`"),
+            ),
+            (None, b) if b != "estimate" && BASES.contains(&b) => bad(
+                basis_at,
+                format!("contested question `{id}` has basis `{b}`: name its `source`"),
+            ),
+            _ => {}
+        }
+        let mut prior: BTreeMap<String, u64> = options.keys().map(|o| (o.clone(), 1)).collect();
+        if let Some(given) = &table.prior {
+            for option in options.keys().filter(|o| !given.get_ref().contains_key(*o)) {
+                bad(
+                    range(given),
+                    format!("the prior of `{id}` gives option `{option}` no pseudo-count"),
+                );
+            }
+            for (option, alpha) in given.get_ref() {
+                if !options.contains_key(option) {
+                    bad(
+                        range(alpha),
+                        format!("choice `{id}` has no option `{option}`"),
+                    );
+                } else if let Ok(a @ 1..) = u64::try_from(*alpha.get_ref()) {
+                    prior.insert(option.clone(), a);
+                } else {
+                    bad(
+                        range(alpha),
+                        format!(
+                            "the pseudo-count of `{id}` option `{option}` is a positive integer, \
+                             found {}",
+                            alpha.get_ref()
+                        ),
+                    );
+                }
+            }
+        }
+        out.insert(
+            id.clone(),
+            Contest {
+                basis: basis.to_owned(),
+                source,
+                prior,
+            },
+        );
+    }
+    if reports.is_empty() {
+        Ok(out)
+    } else {
+        Err(reports)
+    }
+}
+
+/// The id of the world at `index` of [`combinations`].
+fn world_id(index: usize) -> String {
+    format!("w{}", index + 1)
+}
+
+/// One branch of a chance node: an option of a contested question, its
+/// probability, and the worlds that take it.
+#[derive(Debug, Clone, PartialEq, Serialize)]
+pub struct Branch {
+    /// The option.
+    pub option: String,
+    /// Its pseudo-count.
+    pub alpha: u64,
+    /// Its probability, exact: `alpha / Σ alpha`, reduced, as `n/d`.
+    pub exact: String,
+    /// Its probability.
+    pub p: f64,
+    /// The worlds taking it, by id.
+    pub worlds: Vec<String>,
+}
+
+/// A contested question lowered to a chance node (a `chance discretion`
+/// draw by the tribunal, design review §2.11, §3.4): its branches are its
+/// options, each weighted by its prior's mean.
+#[derive(Debug, Clone, PartialEq, Serialize)]
+pub struct Chance {
+    /// Its node id: `choice.ID`.
+    pub node: String,
+    /// The choice point.
+    pub choice: String,
+    /// Its prior's basis.
+    pub basis: String,
+    /// What the basis rests on.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub source: Option<String>,
+    /// Its branches, in option order.
+    pub branches: Vec<Branch>,
+}
+
+fn gcd(a: u64, b: u64) -> u64 {
+    if b == 0 {
+        a
+    } else {
+        gcd(b, a % b)
+    }
+}
+
+/// `n / d` as a probability (exact text and nearest float).
+#[allow(clippy::cast_precision_loss)]
+fn ratio(n: u64, d: u64) -> (String, f64) {
+    let g = gcd(n, d).max(1);
+    (format!("{}/{}", n / g, d / g), n as f64 / d as f64)
+}
+
+/// The chance node of each contested question of `world`, its branches'
+/// worlds those [`combinations`] (and [`enumerate`]) give the ids of.
+/// An uncontested choice point lowers to no node: its options stay
+/// alternate worlds ([`timelines`]).
+#[must_use]
+pub fn chances(world: &World) -> Vec<Chance> {
+    let combos = combinations(world);
+    world
+        .contested
+        .iter()
+        .filter_map(|(id, contest)| {
+            let options = world.choices.get(id)?;
+            let total = contest.prior.values().fold(0u64, |s, a| s.saturating_add(*a));
+            let branches = options
+                .keys()
+                .map(|option| {
+                    let alpha = contest.prior.get(option).copied().unwrap_or(1);
+                    let (exact, p) = ratio(alpha, total);
+                    let worlds = combos
+                        .iter()
+                        .enumerate()
+                        .filter(|(_, c)| c.choices.get(id) == Some(option))
+                        .map(|(i, _)| world_id(i))
+                        .collect();
+                    Branch {
+                        option: option.clone(),
+                        alpha,
+                        exact,
+                        p,
+                        worlds,
+                    }
+                })
+                .collect();
+            Some(Chance {
+                node: format!("choice.{id}"),
+                choice: id.clone(),
+                basis: contest.basis.clone(),
+                source: contest.source.clone(),
+                branches,
+            })
+        })
+        .collect()
+}
+
+/// One world of the uncontested choices: the option taken at each, and
+/// the alternate worlds its contested questions' draws reach, each with
+/// the probability of its draws.
+#[derive(Debug, Clone, PartialEq, Serialize)]
+pub struct Timeline {
+    /// The option taken at each uncontested choice point.
+    pub choices: BTreeMap<String, String>,
+    /// Each world it holds, by id, with its probability in the timeline.
+    pub worlds: Vec<(String, f64)>,
+}
+
+/// The worlds of `world`'s uncontested choice points, in combination
+/// order; each holds every combination of its contested ones, weighted by
+/// their [`chances`]. Without a contested question each is one world, of
+/// probability 1.
+#[must_use]
+pub fn timelines(world: &World) -> Vec<Timeline> {
+    let chances = chances(world);
+    let p_of = |choice: &str, option: &str| {
+        chances
+            .iter()
+            .find(|c| c.choice == choice)
+            .and_then(|c| c.branches.iter().find(|b| b.option == option))
+            .map_or(1.0, |b| b.p)
+    };
+    let mut out: Vec<Timeline> = Vec::new();
+    for (i, combo) in combinations(world).iter().enumerate() {
+        let (contested, fixed): (BTreeMap<_, _>, BTreeMap<_, _>) = combo
+            .choices
+            .iter()
+            .map(|(k, v)| (k.clone(), v.clone()))
+            .partition(|(k, _)| world.contested.contains_key(k));
+        let p = contested.iter().map(|(k, v)| p_of(k, v)).product();
+        match out.iter_mut().find(|t| t.choices == fixed) {
+            Some(t) => t.worlds.push((world_id(i), p)),
+            None => out.push(Timeline {
+                choices: fixed,
+                worlds: vec![(world_id(i), p)],
+            }),
+        }
+    }
+    out
 }

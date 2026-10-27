@@ -1,0 +1,40 @@
+---
+source: crates/litigate-sema/tests/change.rs
+assertion_line: 1101
+expression: "(combos, lowered, timelines)"
+---
+(
+    [
+        "{\"local\": \"with\", \"split\": \"ca1\"}",
+        "{\"local\": \"with\", \"split\": \"ca2\"}",
+        "{\"local\": \"without\", \"split\": \"ca1\"}",
+        "{\"local\": \"without\", \"split\": \"ca2\"}",
+    ],
+    [
+        (
+            "choice.split",
+            [
+                (
+                    "ca1",
+                    "2/3",
+                    [
+                        "w1",
+                        "w3",
+                    ],
+                ),
+                (
+                    "ca2",
+                    "1/3",
+                    [
+                        "w2",
+                        "w4",
+                    ],
+                ),
+            ],
+        ),
+    ],
+    [
+        "{\"local\": \"with\"} [(\"w1\", 0.6666666666666666), (\"w2\", 0.3333333333333333)]",
+        "{\"local\": \"without\"} [(\"w3\", 0.6666666666666666), (\"w4\", 0.3333333333333333)]",
+    ],
+)

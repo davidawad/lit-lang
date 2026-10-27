@@ -1338,3 +1338,67 @@ fn a_recharacterization_binds_only_where_its_precedent_does() {
     ];
     insta::assert_debug_snapshot!(rows);
 }
+
+#[test]
+fn a_contested_question_lowers_to_a_chance_node_and_a_toggle_stays_worlds() {
+    // Two readings (synthetic: a designated ca1 precedent and an
+    // undesignated one), neither binding at ca2, are contested there; a
+    // local rule toggled is not.
+    let ca1 = precedent("ca1-reading", "ca1", true, INTERPRETS);
+    let ca2 = precedent("ca2-reading", "ca1", false, INTERPRETS);
+    let lr = layer("lr", "local-rule", "civil", "LocalRule", "", "");
+    let split = "\n[choice.split]\nca1 = [\"ca1-reading\"]\nca2 = [\"ca2-reading\"]\n\n\
+                 [choice.local]\nwithout = []\nwith = [\"lr\"]\n\n\
+                 [contested.split]\nbasis = \"expert\"\nsource = \"a synthetic survey\"\n\
+                 prior = { ca1 = 2, ca2 = 1 }\n";
+    let text = chosen("\"fed\"", "family = \"civil\"\ncircuit = \"ca2\"", split);
+    let (w, _) = parse_world(&text).unwrap();
+    let combos: Vec<String> = choice::combinations(&w)
+        .iter()
+        .map(|c| format!("{:?}", c.choices))
+        .collect();
+    let chances = choice::chances(&w);
+    let lowered: Vec<(String, Vec<(String, String, Vec<String>)>)> = chances
+        .iter()
+        .map(|c| {
+            let branches = c
+                .branches
+                .iter()
+                .map(|b| (b.option.clone(), b.exact.clone(), b.worlds.clone()))
+                .collect();
+            (c.node.clone(), branches)
+        })
+        .collect();
+    let timelines: Vec<String> = choice::timelines(&w)
+        .iter()
+        .map(|t| format!("{:?} {:?}", t.choices, t.worlds))
+        .collect();
+    insta::assert_debug_snapshot!((combos, lowered, timelines));
+    // Each branch's worlds take its option.
+    for branch in &chances[0].branches {
+        for id in &branch.worlds {
+            let i: usize = id[1..].parse().unwrap();
+            assert_eq!(
+                choice::combinations(&w)[i - 1].choices["split"],
+                branch.option
+            );
+        }
+    }
+    let all = [ca1, ca2, lr];
+    let checked = world(&all, &text, Profile::Dev);
+    assert_eq!(shown(&checked), ["layer fed base in force"]);
+    let json = serde_json::to_value(checked.world.as_ref().unwrap()).unwrap();
+    assert_eq!(json["contested"]["split"]["prior"]["ca1"], 2);
+    // At ca1 its own circuit's precedent controls: the question is
+    // settled there, no chance.
+    let at_ca1 = text.replace("circuit = \"ca2\"", "circuit = \"ca1\"");
+    let settled: Vec<String> = shown(&world(&all, &at_ca1, Profile::Dev))
+        .into_iter()
+        .filter(|d| d.contains("L1013"))
+        .collect();
+    assert_eq!(settled.len(), 1, "{settled:?}");
+    assert!(
+        settled[0].contains("precedent `ca1-reading` binds at the world's location"),
+        "{settled:?}"
+    );
+}

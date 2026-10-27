@@ -1,5 +1,6 @@
 ---
 source: crates/litigate-cli/tests/worlds.rs
+assertion_line: 96
 expression: "json[\"result\"]"
 ---
 {
@@ -149,6 +150,41 @@ expression: "json[\"result\"]"
       ],
       "filings": {
         "motion": "late"
+      }
+    }
+  ],
+  "chance": [],
+  "timelines": [
+    {
+      "choices": {
+        "rule-59e-2009": "with"
+      },
+      "worlds": [
+        {
+          "id": "w1",
+          "p": 1.0
+        }
+      ],
+      "filings": {
+        "motion": {
+          "timely": 1.0
+        }
+      }
+    },
+    {
+      "choices": {
+        "rule-59e-2009": "without"
+      },
+      "worlds": [
+        {
+          "id": "w2",
+          "p": 1.0
+        }
+      ],
+      "filings": {
+        "motion": {
+          "late": 1.0
+        }
       }
     }
   ]

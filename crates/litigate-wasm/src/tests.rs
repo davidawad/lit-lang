@@ -93,17 +93,11 @@ fn litigate_checks_builds_and_runs_over_the_embedded_library() {
         (&envelope["op"], &envelope["result"]["ok"]),
         (&json!("chain"), &json!(true))
     );
-    let engine = run(
-        &[
-            "engine",
-            "q",
-            r#"{"scenario":"frcp-civil-case","op":{"op":"solve"}}"#,
-        ],
-        &files,
-        true,
-    );
-    assert_eq!(engine.code, 0, "{}", engine.stderr);
-    assert_eq!(parse(&engine.stdout)["op"], json!("solve"));
+    let solved = run(&["run", path, "--op", r#"{"op":"solve"}"#], &files, true);
+    assert_eq!(solved.code, 0, "{}", solved.stderr);
+    assert_eq!(parse(&solved.stdout)["result"]["op"], json!("solve"));
+    let gone = run(&["engine", "describe"], &files, true);
+    assert_eq!(gone.code, 1);
     let library = parse(&litigate_library());
     assert_eq!(
         library

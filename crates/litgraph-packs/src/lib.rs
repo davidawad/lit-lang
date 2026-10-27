@@ -2,9 +2,9 @@
 //! The repository's packs, `links.json`, clock library, calibration sets
 //! and named scenarios, built from `lit/` and `cases/` at compile time
 //! (`build.rs`, the arguments in `build.args`) and embedded, so no
-//! generated file is committed. The binaries (`litgraph`, `litgraph-mcp`, `litgraph-wasm`)
-//! hand these to [`litigate_engine::api::Catalog`]; tests read them through
-//! [`catalog`] or, for a directory, [`PACKS_DIR`] and [`SCENARIOS_DIR`].
+//! generated file is committed. Tests hand these to
+//! [`litigate_engine::api::Catalog`] through [`catalog`] or, for a
+//! directory, [`PACKS_DIR`] and [`SCENARIOS_DIR`].
 
 use litigate_engine::api::Catalog;
 use litigate_engine::error::Result;
@@ -31,8 +31,7 @@ pub fn default_source() -> Result<Catalog> {
 
 /// [`Catalog::resolve`] over [`PACKS`] and [`SCENARIOS`]: each half from
 /// its flag (`--packs-dir`, `--scenarios-dir`), else its variable
-/// (`$LITGRAPH_PACKS`, `$LITGRAPH_SCENARIOS`), else embedded. The
-/// `litgraph` and `litgraph-mcp` binaries load their catalog with this.
+/// (`$LITGRAPH_PACKS`, `$LITGRAPH_SCENARIOS`), else embedded.
 ///
 /// # Errors
 /// As [`Catalog::resolve`].

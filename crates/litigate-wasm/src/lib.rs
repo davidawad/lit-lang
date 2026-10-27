@@ -3,13 +3,13 @@
 //! `.lit`/`.case` source, with no filesystem.
 //!
 //! [`litigate`] runs the `litigate` command line over an in-memory file
-//! tree: `check`, `build`, `worlds`, `run`, the op subcommands (`solve`,
-//! `chain`, ...) and `engine`, each compiling the matters and packages it
+//! tree: `check`, `build`, `worlds`, `run` and the op subcommands
+//! (`solve`, `chain`, ...), each compiling the matters and packages it
 //! names.
 //! The repository's `lit/` library and `cases/` matters are embedded;
 //! [`handle`], [`validate`] and [`describe`] answer engine requests over
-//! them compiled (once per instance), as `litigate engine q` does at the
-//! repository root. [`handle_with_packs`] runs a request against
+//! them compiled (once per instance), as the op subcommands compile a
+//! matter at the repository root. [`handle_with_packs`] runs a request against
 //! caller-supplied pack documents. Errors come back inside the response
 //! (`ok: false`, or a nonzero `code`), never thrown.
 //!
@@ -40,10 +40,10 @@ fn embedded() -> impl Iterator<Item = (String, String)> {
         .map(|(path, text)| ((*path).to_owned(), (*text).to_owned()))
 }
 
-/// The packs and named scenarios `files` compile to, as `litigate engine`
-/// serves them: its `lit/` packages and `cases/` matters.
+/// The packs and named scenarios `files` compile to: its `lit/` packages
+/// and `cases/` matters.
 fn compile(files: impl IntoIterator<Item = (String, String)>) -> Result<Catalog, Failure> {
-    litigate_cli::engine::compiled(&litigate_cli::memory_tree(files), &[], &[])
+    litigate_cli::library::compiled(&litigate_cli::memory_tree(files), &[], &[])
 }
 
 /// The embedded sources compiled, once.
@@ -79,7 +79,7 @@ fn validate_in(catalog: Result<&Catalog, &Failure>, doc_json: &str, kind: Option
 }
 
 /// Run an engine request (JSON string) against the embedded `lit/` and
-/// `cases/` compiled; returns the response JSON, as `litigate engine q`.
+/// `cases/` compiled; returns the response JSON.
 #[wasm_bindgen]
 #[must_use]
 pub fn handle(request_json: &str) -> String {
@@ -134,7 +134,7 @@ pub fn describe() -> String {
 /// `LitigateRun` (`{code, stdout, stderr, files}`) as JSON. `args_json` is
 /// the argument array without the program name (`["solve",
 /// "cases/x.case"]`); `check`, `build`, `worlds` (alternate timelines),
-/// `run`, the op subcommands and `engine` run. `files_json` maps repository-relative paths to texts;
+/// `run` and the op subcommands run. `files_json` maps repository-relative paths to texts;
 /// with `with_library`, the embedded `lit/` library fills in every `lit/`
 /// path the caller does not give. `build --out DIR` writes into `files`,
 /// never to a disk. Output is JSON unless `--format human`.

@@ -30,7 +30,7 @@ fn owned(files: EmbeddedFiles) -> impl Iterator<Item = (String, String)> {
 /// A pack or `links.json` file that failed to parse. Recorded, not fatal: a
 /// single malformed file must not take every op down for every user of the
 /// binary, so [`Catalog::from_files`] skips it and keeps loading the rest
-/// (`litgraph packs`/`describe` surface these; a request that names the
+/// (the `packs` and `describe` ops surface these; a request that names the
 /// broken pack gets an ordinary `NotFound` — it was simply never loaded —
 /// not a global failure).
 #[derive(Debug, Clone, Serialize, JsonSchema)]

@@ -37,8 +37,8 @@ fn kind<T: JsonSchema>(key: &'static str, name: &'static str) -> Kind {
     }
 }
 
-/// Every kind in the bundle, in output order. The litgraph kinds use the
-/// names `litgraph schema <kind>` uses (`litigate_engine::api::SCHEMA_KINDS`).
+/// Every kind in the bundle, in output order. The engine kinds use the
+/// names of `litigate_engine::api::SCHEMA_KINDS`.
 fn kinds() -> Vec<Kind> {
     vec![
         kind::<Request>("request", "Request"),

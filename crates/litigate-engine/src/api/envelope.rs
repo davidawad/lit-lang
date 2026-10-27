@@ -75,7 +75,7 @@ pub(super) fn hint(e: &Error) -> &'static str {
             "a forced or optimal choice loops forever; add a mask or policy to break the cycle"
         }
         Error::Parse(_) => {
-            "see `litgraph schema <request|scenario|pack|links>` for the exact shape"
+            "see the request, scenario, pack or links JSON Schema (`schemas` in the describe op) for the exact shape"
         }
         _ => "",
     }

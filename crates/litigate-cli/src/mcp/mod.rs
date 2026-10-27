@@ -2,8 +2,7 @@
 //! server, newline-delimited JSON-RPC 2.0 on standard input and output.
 //!
 //! - Every engine op is a tool run on a compiled `.case` matter or
-//!   package, as `litigate run TARGET --op ...` runs it ([`ops`]);
-//!   `litigate_engine` takes a raw engine request, for debugging.
+//!   package, as `litigate run TARGET --op ...` runs it ([`ops`]).
 //! - The `litigate_*` tools are the authoring toolchain: `describe`,
 //!   `check`, `build`, `where`, `timeline`, `actions` (a party's legal
 //!   moves) and `explain` ([`authoring`]).
@@ -40,7 +39,7 @@ const INVALID_PARAMS: i64 = -32602;
 const INTERNAL_ERROR: i64 = -32603;
 const RESOURCE_NOT_FOUND: i64 = -32002;
 
-const INSTRUCTIONS: &str = "Litigation procedure as a checked language, over MCP. Start with `litigate_describe` (the language and CLI contract) and the `describe` op or the `litigate://describe` resource (the engine manual). Every engine op tool (`solve`, `chain`, `simulate`, `explain`, ...) runs on a compiled matter: `{target, set?, lib?, no_links?, ...op fields}`, `target` a `.case` matter (its scenario) or a package (`.lit` file or package directory); it returns the `litigate` envelope {schema_version, ok, op, result, diagnostics, provenance, elapsed_ms} with the engine's response {ok, api_version, op, result, warnings, provenance, elapsed_ms} as `result`. `litigate_check`, `litigate_build`, `litigate_where`, `litigate_timeline` and `litigate_explain` drive the authoring language (`lit/*.lit` rules, `cases/*.case` matters). `litigate_actions {case, party, date?}` is a party's action set: only the moves replay accepts from the matter's posture on the date, each with the event line to record. `litigate_engine` runs a raw engine request over the library's compiled packs and named scenarios, for debugging. A failed call (error diagnostics, an engine `ok: false`, bad arguments) is a tool error carrying the same envelope. Paths resolve against the server's working directory.";
+const INSTRUCTIONS: &str = "Litigation procedure as a checked language, over MCP. Start with `litigate_describe` (the language and CLI contract) and the `describe` op or the `litigate://describe` resource (the engine manual). Every engine op tool (`solve`, `chain`, `simulate`, `explain`, ...) runs on a compiled matter: `{target, set?, lib?, no_links?, ...op fields}`, `target` a `.case` matter (its scenario) or a package (`.lit` file or package directory); it returns the `litigate` envelope {schema_version, ok, op, result, diagnostics, provenance, elapsed_ms} with the engine's response {ok, api_version, op, result, warnings, provenance, elapsed_ms} as `result`. `litigate_check`, `litigate_build`, `litigate_where`, `litigate_timeline` and `litigate_explain` drive the authoring language (`lit/*.lit` rules, `cases/*.case` matters). `litigate_actions {case, party, date?}` is a party's action set: only the moves replay accepts from the matter's posture on the date, each with the event line to record. A failed call (error diagnostics, an engine `ok: false`, bad arguments) is a tool error carrying the same envelope. Paths resolve against the server's working directory.";
 
 /// `litigate mcp`: serve the toolchain over MCP on standard input and
 /// output.
@@ -55,8 +54,8 @@ struct Cli {
     /// default `lit`).
     #[arg(long = "lib", value_name = "DIR")]
     lib: Vec<String>,
-    /// Directory of `.case` matters whose scenarios `litigate_engine` and
-    /// the resources serve (repeatable; default `cases`).
+    /// Directory of `.case` matters whose scenarios the resources serve
+    /// (repeatable; default `cases`).
     #[arg(long = "cases", value_name = "DIR")]
     cases: Vec<String>,
 }
@@ -106,7 +105,7 @@ fn invalid(message: impl Into<String>) -> RpcError {
 
 impl Server {
     /// A server compiling packages from `lib` and matters from `cases`
-    /// (each defaulting as `litigate engine` does).
+    /// (defaults `lit` and `cases`).
     #[must_use]
     pub fn new(lib: Vec<String>, cases: Vec<String>) -> Self {
         Self {
@@ -121,8 +120,7 @@ impl Server {
     fn catalog(&self) -> Result<&Catalog, &str> {
         self.catalog
             .get_or_init(|| {
-                crate::engine::library_catalog(self.lib.clone(), self.cases.clone())
-                    .map_err(|f| f.0)
+                crate::library::library_catalog(&self.lib, &self.cases).map_err(|f| f.0)
             })
             .as_ref()
             .map_err(String::as_str)
@@ -181,8 +179,6 @@ impl Server {
         };
         let (envelope, is_error) = if let Some(called) = authoring::call(name, &args) {
             called
-        } else if name == ops::RAW_TOOL {
-            ops::call_raw(self.catalog(), args)
         } else if ops::op_names().iter().any(|op| op == name) {
             ops::call(name, args, &self.lib)
         } else {
@@ -358,10 +354,11 @@ mod tests {
         unique.sort_unstable();
         unique.dedup();
         assert_eq!(unique.len(), names.len());
-        assert_eq!(names.len(), ops::op_names().len() + 1 + 7);
-        for name in ["solve", "describe", "litigate_engine", "litigate_check"] {
+        assert_eq!(names.len(), ops::op_names().len() + 7);
+        for name in ["solve", "describe", "litigate_check"] {
             assert!(names.contains(&name), "{name}");
         }
+        assert!(!names.contains(&"litigate_engine"));
     }
 
     #[test]
@@ -389,11 +386,15 @@ mod tests {
             json!({"name": "litigate_explain", "arguments": {"code": "L3004"}}),
         );
         assert_eq!(explained["result"]["isError"], json!(false));
-        let raw = json!({"name": "litigate_engine", "arguments": {"op": {"op": "packs"}}});
-        let packs = request(&s, "tools/call", raw);
+        let packs = request(
+            &s,
+            "tools/call",
+            json!({"name": "packs", "arguments": {"target": case}}),
+        );
         assert_eq!(
-            packs["result"]["structuredContent"]["result"][0]["id"],
-            json!("cov-pack")
+            packs["result"]["structuredContent"]["result"]["result"][0]["id"],
+            json!("cov-pack"),
+            "{packs}"
         );
         let failed = request(&s, "tools/call", json!({"name": "solve"}));
         assert_eq!(failed["result"]["isError"], json!(true));
@@ -460,7 +461,7 @@ mod tests {
             assert_eq!(reply["error"]["code"], json!(INTERNAL_ERROR), "{reply}");
         }
         let raw = request(&s, "tools/call", json!({"name": "litigate_engine"}));
-        assert_eq!(raw["result"]["isError"], json!(true), "{raw}");
+        assert_eq!(raw["error"]["code"], json!(INVALID_PARAMS), "{raw}");
     }
 
     /// A writer failing on `write` or, with `flush_only`, on `flush`.

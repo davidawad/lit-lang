@@ -1,4 +1,4 @@
-//! `check`, `build`, `run`, the op subcommands and `engine` over an
+//! `check`, `build`, `run` and the op subcommands over an
 //! in-memory copy of the repository's `lit/` and `cases/` print exactly
 //! what the binary prints over the disk (the wall-clock `elapsed_ms`
 //! aside), and `build` returns the files the binary writes.
@@ -176,69 +176,29 @@ fn ops_compile_the_matter_or_package_in_memory() {
 }
 
 #[test]
-fn engine_serves_the_compiled_lit_and_cases_in_memory() {
-    // The whole `lit/` and `cases/` once; the rest over the worked example.
-    let (native, memory) = both(&[
-        "engine",
-        "q",
-        r#"{"scenario":"cofc-1498-patent-case","op":{"op":"solve"}}"#,
-        "--compact",
-    ]);
-    assert_eq!(memory, native);
-    let response: Value = serde_json::from_str(&native.stdout).unwrap();
-    assert_eq!(response["ok"], Value::from(true));
-    let example = [
-        "--lib",
-        "lit/examples",
-        "--cases",
-        "cases/examples",
-        "--compact",
-    ];
+fn request_ops_run_on_compiled_source_in_memory() {
+    // The ops the raw engine interface served (lg-dfv4.7): the manual,
+    // the pack list and a solve over the whole library.
     for args in [
+        &["run", "cases/cofc-1498-patent-case.case", "--op", "solve"][..],
+        &["run", "lit/examples", "--op", "describe"],
+        &["run", "cases/examples/acme.case", "--op", "packs"],
         &[
-            "engine",
-            "q",
-            r#"{"scenario":"acme-v-widget","op":{"op":"solve"}}"#,
-        ][..],
-        &["engine", "describe"],
-        &[
-            "engine",
-            "chain",
-            "--scenario",
-            "acme-v-widget",
+            "run",
+            "cases/examples/acme.case",
+            "--op",
+            "validate",
             "--set",
-            "rate=900",
+            "rate=1",
         ],
-        &["engine", "validate", r#"{"params":{"rate":1}}"#],
-        &["engine", "run", "cases/examples/acme.case"],
-        &["engine", "schema", "scenario"],
     ] {
-        let (native, memory) = both(&[args, &example[..]].concat());
+        let (native, memory) = both(&[&["--format", "json"][..], args].concat());
         assert_eq!(memory, native, "{args:?}");
+        assert_eq!(native.code, 0, "{args:?}: {}", native.stdout);
     }
-}
-
-#[test]
-fn engine_reads_no_directory_in_memory() {
-    for flag in ["--packs-dir", "--scenarios-dir", "--calibration-dir"] {
-        let args = ["engine".into(), "describe".into(), flag.into(), "x".into()];
-        let run = litigate_cli::execute_in_memory(repo_files(), &args, None);
-        assert_eq!((run.code, run.stdout.as_str()), (1, ""));
-        assert_eq!(
-            run.stderr,
-            format!("litigate engine: {flag} names a directory on disk; over an in-memory source the packs and scenarios are the compiled `--lib` and `--cases`\n")
-        );
-    }
-    // With no `cases/` there is no scenario library, only the packs.
-    let lit: BTreeMap<String, String> = repo_files()
-        .into_iter()
-        .filter(|(path, _)| path.starts_with("lit/"))
-        .collect();
-    let args = ["engine".into(), "describe".into(), "--compact".into()];
-    let run = litigate_cli::execute_in_memory(lit, &args, None);
-    let response: Value = serde_json::from_str(&run.stdout).unwrap();
-    assert_eq!(response["result"]["scenario_library"], Value::Array(vec![]));
-    assert!(!response["result"]["packs"].as_array().unwrap().is_empty());
+    let gone =
+        litigate_cli::execute_in_memory(repo_files(), &["engine".into(), "describe".into()], None);
+    assert_eq!((gone.code, gone.stdout.as_str()), (1, ""));
 }
 
 #[test]
@@ -248,7 +208,7 @@ fn other_commands_do_not_run_in_memory() {
     assert_eq!(run.code, 1);
     assert_eq!(
         run.stderr,
-        "litigate explain: only check, build, worlds, run, engine and the op subcommands run over an in-memory source\n"
+        "litigate explain: only check, build, worlds, run and the op subcommands run over an in-memory source\n"
     );
     let usage = litigate_cli::execute_in_memory([], &["frobnicate".into()], None);
     assert_eq!((usage.code, usage.stdout.as_str()), (1, ""));

@@ -10,7 +10,7 @@
 //!
 //! Two views are printed, because they answer different questions:
 //!
-//! 1. **Strict** (what `litgraph lint` actually reports): a cite only
+//! 1. **Strict** (what the `lint` op actually reports): a cite only
 //!    verifies if its pack's own `sources[].path` points at vendored text.
 //!    As of the lg-hc9 wiring pass, every pack's `sources[].path` is wired to
 //!    the corpus it needs (see `sources/PROVENANCE.md`), so this is now
@@ -85,7 +85,7 @@ fn report_cite_verification_across_all_embedded_packs() {
         per_pack.len()
     );
     println!(
-        "strict (litgraph lint today): {strict_verified} verified, {strict_unresolvable} unresolvable, {out_of_scope} out-of-scope (case law/other)"
+        "strict (the lint op today): {strict_verified} verified, {strict_unresolvable} unresolvable, {out_of_scope} out-of-scope (case law/other)"
     );
     println!(
         "corpus reach (diagnostic — ignores sources[].path wiring): {corpus_reach_hits}/{} unresolvable citations have a matching heading somewhere in the vendored corpus",

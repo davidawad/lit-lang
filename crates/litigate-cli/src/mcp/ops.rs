@@ -1,6 +1,5 @@
 //! One MCP tool per engine op, run on a compiled matter or package as
-//! `litigate run TARGET --op ...` runs it, plus the raw-request
-//! [`RAW_TOOL`] for debugging.
+//! `litigate run TARGET --op ...` runs it.
 //!
 //! An op tool's input schema is sliced out of the engine's own `schemars`
 //! schema for [`Request`](api::Request): the `Op` variant whose `op` const
@@ -10,17 +9,13 @@
 //! parses every request (an unknown field is an error naming the valid
 //! ones).
 
-use super::{failure, reply};
+use super::reply;
 use crate::cli::{Library, OpFlags};
 use crate::out::Failure;
 use litigate_engine::api::{self, Catalog};
 use litigate_sema::pkg::source::Disk;
 use serde_json::{json, Map, Value};
 use std::sync::OnceLock;
-
-/// The raw-request tool: a [`Request`](api::Request) verbatim over the
-/// library's packs and named scenarios, as `litigate engine q` runs it.
-pub const RAW_TOOL: &str = "litigate_engine";
 
 fn request_schema() -> &'static Value {
     static SCHEMA: OnceLock<Value> = OnceLock::new();
@@ -106,15 +101,15 @@ fn op_input_schema(variant: &Value) -> Value {
     })
 }
 
-/// Every op tool, then [`RAW_TOOL`]. An op tool's description is the
-/// engine manual's own for that op.
+/// Every op tool. An op tool's description is the engine manual's own
+/// for that op.
 #[must_use]
 pub fn tools() -> Vec<Value> {
     // The manual's op descriptions do not depend on the packs.
     let manual = Catalog::from_files(String::new(), [])
         .map(|empty| api::describe(&empty))
         .unwrap_or_default();
-    let mut out: Vec<Value> = variants()
+    variants()
         .map(|variant| {
             let name = name_of(variant);
             let doc = manual["ops"][name].as_str().unwrap_or_default();
@@ -123,13 +118,7 @@ pub fn tools() -> Vec<Value> {
             );
             super::tool(name, &doc, op_input_schema(variant))
         })
-        .collect();
-    out.push(super::tool(
-        RAW_TOOL,
-        "Run a raw engine request `{packs?, links?, no_continuations?, scenario?, op}` verbatim over the packs and named scenarios compiled from the library (`lit/` and `cases/`, or `$LITGRAPH_PACKS`/`$LITGRAPH_SCENARIOS`), as `litigate engine q` does; for debugging. Returns the engine's response.",
-        request_schema().clone(),
-    ));
-    out
+        .collect()
 }
 
 /// A matter field of the wrong type.
@@ -196,22 +185,6 @@ pub fn call(name: &str, mut args: Map<String, Value>, lib: &[String]) -> (Value,
     reply(name, outcome, started.elapsed_ms())
 }
 
-/// Runs a raw request over `catalog` (the library's, or why it did not
-/// load): the engine's response and whether it is not `ok`.
-#[must_use]
-pub fn call_raw(catalog: Result<&Catalog, &str>, args: Map<String, Value>) -> (Value, bool) {
-    match catalog {
-        Ok(catalog) => {
-            let response = api::handle_json(&Value::Object(args).to_string(), catalog);
-            (
-                serde_json::to_value(&response).unwrap_or_default(),
-                !response.ok,
-            )
-        }
-        Err(message) => (failure("engine", message), true),
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -224,13 +197,13 @@ mod tests {
     }
 
     #[test]
-    fn every_engine_op_is_a_tool_and_the_raw_request_one_more() {
+    fn every_engine_op_is_a_tool_and_no_raw_request_one() {
         let names: Vec<Value> = tools().iter().map(|t| t["name"].clone()).collect();
         for op in ["describe", "solve", "chain", "explain", "validate", "batch"] {
             assert!(names.contains(&json!(op)), "missing {op}");
         }
-        assert_eq!(names.len(), op_names().len() + 1);
-        assert_eq!(names.last(), Some(&json!(RAW_TOOL)));
+        assert_eq!(names.len(), op_names().len());
+        assert!(!names.contains(&json!("litigate_engine")));
     }
 
     #[test]
@@ -317,16 +290,5 @@ mod tests {
             assert!(is_error, "{args}");
             assert_eq!(envelope["error"]["message"], json!(expected), "{args}");
         }
-    }
-
-    #[test]
-    fn the_raw_tool_runs_a_request_or_reports_the_library() {
-        let catalog = Catalog::from_files("empty".into(), []).unwrap();
-        let (response, is_error) = call_raw(Ok(&catalog), obj(json!({"op": {"op": "describe"}})));
-        assert!(is_error, "an empty catalog is refused: {response}");
-        assert_eq!(response["op"], json!("describe"));
-        let (envelope, is_error) = call_raw(Err("no packs"), Map::new());
-        assert!(is_error);
-        assert_eq!(envelope["error"]["message"], json!("no packs"));
     }
 }

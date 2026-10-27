@@ -40,7 +40,7 @@ pub struct Envelope<T> {
     pub elapsed_ms: f64,
 }
 
-/// One `litigate` invocation over an in-memory file tree (litgraph-wasm's
+/// One `litigate` invocation over an in-memory file tree (litigate-wasm's
 /// `litigate`): what the CLI prints and exits with, and the files it wrote.
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 pub struct LitigateRun {

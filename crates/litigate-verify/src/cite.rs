@@ -12,7 +12,7 @@
 //! the pack's citation syntax plus the bindings' `cite_prefixes`), so the
 //! verdict here and the sidecar can never disagree. Case citations and
 //! other text the parser treats as out of scope are not rule cites and are
-//! never checked (the same policy as `litgraph lint`).
+//! never checked (the same policy as the engine's `lint` op).
 //!
 //! A cite of a declaration `litigate import` marked `/// imported` is
 //! exempt in `dev`: its failures are warnings, so a freshly imported pack

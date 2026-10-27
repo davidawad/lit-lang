@@ -257,7 +257,7 @@ const BUILTINS: [(&str, &str); 15] = [
 /// What `run`, every engine op subcommand, and `explain` on a path return.
 const ENGINE_RESPONSE: &str = "the engine's response verbatim: {ok, api_version, op, result, warnings, provenance, elapsed_ms}; exit 2 when it is ok:false";
 
-const RESULTS: [(&str, &str); 24] = [
+const RESULTS: [(&str, &str); 23] = [
     ("describe", "this document"),
     (
         "lock",
@@ -269,7 +269,6 @@ const RESULTS: [(&str, &str); 24] = [
     ("test", "{passed, failed, tests:[{package, name, cite, span, passed, expectations:[{text, passed, actual, expected, steps}]}]}; with --impact BASE (at the repository root): {base, tests, changed, changes:[{forum, case, world, field, before, after}]}, every value of the expect tests under tests/expect/<forum>/<name>.toml that differs between git revision BASE and the working tree (`-`: none on that side), as a table per forum in human output; a change never fails it"),
     ("fmt", "{files:[{path, changed}]}"),
     ("run", ENGINE_RESPONSE),
-    ("engine", "no envelope: the engine's raw response on stdout (`litigate engine describe` is its manual); exit 0 ok, 2 ok:false or invalid, 1 usage or I/O"),
     ("calendar", "{case, as_of, written, events:[{uid, deadline, due, status, trigger, trigger_date, authority, counting, counting_cite}], unscheduled:[{deadline, trigger, trigger_date, status, reason}], ics}; open deadlines only unless --all; a due date that is unknown is never given one"),
     ("lint-filing", "{case, filing:{date, event, mode, party, line}, as_of, accepted, replay:[step], discharges:[{deadline, due, before, status}], triggers:[{deadline, trigger, trigger_date, due, unknown, status, pending}], pending:[{deadline, trigger, trigger_date, due, unknown, status, pending:{request, date, state}}], open_before:[{deadline, trigger, trigger_date, due, unknown, status, pending, moves:{file:[{edge, event}], extend:[{by, standard, window, request, until}], orders}}], paper?:{kind, kind_from, limit, cite, layer:{package, pack, authority, version}, counts:{words, pages, lines, source}, length, bounds:[{measure, max, count, verdict, cite}], certificates:[{kind, for, cite, required, carried}], violations:[{limit, requirement, certificate?, cite, layer, message}], holes:[{what, reason}]}}; diagnostics are the ones the filing adds (L4001 not a legal move, L4002 late); the matter must check clean first; `paper` only with --words/--pages/--lines/--document/--paper/--certificate, and a violation exits 2"),
     ("actions", "{case, party, actor, as_of, marking, actions:[{event, mode, party, date, line, edge:{id, label, actor, to, authority, anytime}, discharges, triggers}]}; the moves the party may legally make from the replayed marking on --date: each edge it may take, completed as lint-filing prints it, listed only when replay accepts it, so an illegal or late move is absent; the matter must check clean first"),

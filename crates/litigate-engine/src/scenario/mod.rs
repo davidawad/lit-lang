@@ -229,7 +229,7 @@ pub struct Scenario {
     #[serde(skip_serializing_if = "BTreeMap::is_empty")]
     pub fee_shifts: BTreeMap<String, f64>,
     /// Named calibration set(s) to apply, in order (`calibration` sets
-    /// declared in `lit/`; `litgraph schema calibration`). Each entry's probability/duration/node
+    /// declared in `lit/`; the `calibration` schema). Each entry's probability/duration/node
     /// attr becomes "authored" exactly as if hand-typed into the pack — the
     /// usual probability-fill/renormalization and duration fallbacks still
     /// apply on top. A ref that doesn't resolve (its pack wasn't loaded) is

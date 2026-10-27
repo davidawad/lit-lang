@@ -1,7 +1,7 @@
 //! End to end: the `litigate` binary's `mcp` subcommand driven over stdio
 //! by a real MCP client (`rmcp`): `initialize`, `tools/list`, an op on a
-//! compiled matter, the raw engine tool, the authoring tools and the
-//! resources. Every tool `litgraph-mcp` serves has its equivalent here.
+//! compiled matter, the authoring tools and the resources. There is no
+//! raw-request tool: every op runs on compiled source (lg-dfv4.7).
 #![allow(clippy::expect_used)]
 use rmcp::model::{
     CallToolRequestParams, CallToolResult, ReadResourceRequestParams, ResourceContents,
@@ -72,12 +72,10 @@ async fn initialize_advertises_tools_and_resources() {
 }
 
 #[tokio::test]
-async fn every_litgraph_mcp_tool_has_an_equivalent() {
+async fn every_op_and_authoring_tool_is_listed() {
     let client = connect(|_| {}).await;
     let tools = client.list_all_tools().await.expect("tools/list");
     let names: Vec<&str> = tools.iter().map(|t| t.name.as_ref()).collect();
-    // `litgraph-mcp`'s op tools keep their names; its raw `litgraph` tool
-    // is `litigate_engine`; its `litigate_*` tools are unchanged.
     let ops = [
         "describe",
         "packs",
@@ -110,9 +108,10 @@ async fn every_litgraph_mcp_tool_has_an_equivalent() {
         "litigate_timeline",
         "litigate_explain",
     ];
-    for name in ops.iter().chain(&authoring).chain(&["litigate_engine"]) {
+    for name in ops.iter().chain(&authoring) {
         assert!(names.contains(name), "missing `{name}` in {names:?}");
     }
+    assert!(!names.contains(&"litigate_engine"), "{names:?}");
     let solve = tools.iter().find(|t| t.name == "solve").expect("solve");
     let props = solve.input_schema["properties"]
         .as_object()
@@ -182,41 +181,6 @@ async fn every_op_tool_runs_on_a_compiled_matter() {
 }
 
 #[tokio::test]
-async fn the_raw_engine_tool_runs_a_request_over_the_library() {
-    let client = connect(|_| {}).await;
-    let result = call(&client, "litigate_engine", json!({"op": {"op": "solve"}})).await;
-    let response = structured(&result);
-    assert_eq!(result.is_error, Some(false), "{response}");
-    assert_eq!(response["op"], json!("solve"));
-    let named = json!({"scenario": "cov-matter", "op": {"op": "chain"}});
-    let response = structured(&call(&client, "litigate_engine", named).await);
-    assert_eq!(response["ok"], json!(true), "{response}");
-    client.cancel().await.expect("cancel");
-}
-
-#[tokio::test]
-async fn litgraph_packs_names_the_raw_tools_packs() {
-    let packs = PathBuf::from(litgraph_packs::PACKS_DIR);
-    let client = connect(|cmd| {
-        cmd.env("LITGRAPH_PACKS", &packs);
-    })
-    .await;
-    let response = structured(
-        &call(
-            &client,
-            "litigate_engine",
-            json!({"op": {"op": "describe"}}),
-        )
-        .await,
-    );
-    assert_eq!(
-        response["result"]["packs_source"],
-        json!(packs.display().to_string())
-    );
-    client.cancel().await.expect("cancel");
-}
-
-#[tokio::test]
 async fn resources_serve_the_compiled_library() {
     let client = connect(|_| {}).await;
     let resources = client.list_all_resources().await.expect("resources/list");
@@ -249,7 +213,7 @@ async fn resources_serve_the_compiled_library() {
 #[tokio::test]
 async fn a_library_that_does_not_load_is_a_protocol_error_not_a_crash() {
     let client = connect(|cmd| {
-        cmd.env("LITGRAPH_PACKS", "/no/such/litigate-packs-dir");
+        cmd.args(["--cases", "/no/such/litigate-cases-dir"]);
     })
     .await;
     assert!(client.list_all_resources().await.is_err());

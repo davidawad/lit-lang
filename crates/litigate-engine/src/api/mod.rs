@@ -103,9 +103,9 @@ pub struct Request {
     pub max_product_nodes: usize,
     /// The matter: an inline scenario object (unknown fields rejected, as
     /// always), a string naming a scenario from the library
-    /// (`litgraph describe` lists them), or `{"extends": "<name>", ...}`
+    /// (the `describe` op lists them), or `{"extends": "<name>", ...}`
     /// composing a named scenario with inline overrides deep-merged
-    /// (RFC 7386) on top. See `litgraph schema request` and
+    /// (RFC 7386) on top. See the `request` schema and
     /// `docs/PACK_SCHEMA.md`.
     #[serde(default)]
     #[schemars(schema_with = "scenario_ref_schema")]

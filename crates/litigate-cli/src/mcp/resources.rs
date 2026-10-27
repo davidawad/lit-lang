@@ -96,7 +96,7 @@ mod tests {
     fn catalog() -> Catalog {
         let lib = vec!["tests/fixtures/cov-cmds/lit".to_owned()];
         let cases = vec!["tests/fixtures/cov-cmds/cases".to_owned()];
-        crate::engine::library_catalog(lib, cases).unwrap()
+        crate::library::library_catalog(&lib, &cases).unwrap()
     }
 
     fn text(contents: Option<Value>) -> Value {

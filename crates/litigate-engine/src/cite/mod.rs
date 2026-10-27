@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 //! Cite verification against L0 sources (`docs/ARCHITECTURE.md`'s tower).
 //!
-//! `litgraph lint` should be able to tell an author (human or agent) not
+//! The `lint` op should be able to tell an author (human or agent) not
 //! just "this edge has an authority cite" but "that cite is checkable, and
 //! here it is in the primary text" — or, if not, exactly why not. Three
 //! pieces:

@@ -15,7 +15,7 @@ pub struct Cli {
     pub format: Option<Format>,
     /// The operation.
     #[command(subcommand)]
-    pub command: Invocation,
+    pub command: Command,
 }
 
 /// Output format.
@@ -118,7 +118,7 @@ pub struct OpArgs {
     pub flags: OpFlags,
 }
 
-/// The engine ops (`litigate engine describe` documents their arguments),
+/// The engine ops (the `describe` op documents their arguments),
 /// each run on a compiled matter or package. `explain` is the
 /// `explain` command given a path instead of a diagnostic code.
 #[derive(Debug, Subcommand)]
@@ -204,25 +204,6 @@ pub enum QueryKind {
     Versions,
     /// Declarations that override another (`override`, `notwithstanding`, `supersedes`).
     Overrides,
-}
-
-/// What `litigate` was asked to run: an envelope command, or the
-/// engine's raw interface, which prints its own response.
-#[derive(Debug, Subcommand)]
-pub enum Invocation {
-    /// A subcommand that prints one envelope.
-    #[command(flatten)]
-    Envelope(Command),
-    /// The engine's raw JSON-in/JSON-out interface over packs and named
-    /// scenarios (`litigate engine q '<request>'`, `litigate engine solve
-    /// --packs ID,ID`, `litigate engine --help`), for debugging and tools;
-    /// prints the engine response, not an envelope.
-    #[command(disable_help_flag = true)]
-    Engine {
-        /// The engine command and its arguments.
-        #[arg(trailing_var_arg = true, allow_hyphen_values = true, num_args = 0..)]
-        args: Vec<String>,
-    },
 }
 
 /// `lint-filing`'s paper: its counts, the certificates it carries, and
@@ -714,7 +695,7 @@ mod tests {
         assert_eq!(names.len(), 17);
         // The envelope name, engine op and target `argv` parses to, if an op.
         let op = |argv: &[&str]| match &Cli::try_parse_from(argv).map(|c| c.command) {
-            Ok(Invocation::Envelope(command @ Command::Op(op))) => {
+            Ok(command @ Command::Op(op)) => {
                 Some((command.name(), op.parts().0, op.parts().1.target.clone()))
             }
             _ => None,
@@ -725,7 +706,6 @@ mod tests {
                 Some((name, name, "x.case".to_owned()))
             );
         }
-        // The engine's raw interface takes a request, never a matter.
-        assert_eq!(op(&["litigate", "engine", "solve", "x.case"]), None);
+        assert_eq!(op(&["litigate", "check", "x.case"]), None);
     }
 }

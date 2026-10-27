@@ -5,9 +5,7 @@
 //!
 //! Exit codes mirror the engine's: `0` ok, `2` the input ran and failed
 //! (an error diagnostic, or an engine `ok: false` from `run` or an op
-//! subcommand), `1` usage or I/O failure. `litigate engine` is the
-//! engine's own raw interface ([`engine`]) and prints its response, not an
-//! envelope.
+//! subcommand), `1` usage or I/O failure.
 //!
 //! ```
 //! let printed = litigate_cli::execute(["litigate", "--format", "json", "explain", "L3004"]);
@@ -22,11 +20,11 @@ pub mod clock;
 mod cmd;
 pub mod describe;
 pub mod docket;
-pub mod engine;
 pub mod filing;
 pub mod hirx;
 pub mod ics;
 pub mod inline_tests;
+pub mod library;
 pub mod matter;
 pub mod mcp;
 pub mod out;
@@ -80,7 +78,7 @@ where
 /// The commands [`execute_in`] runs, besides the op subcommands
 /// (`solve`, `chain`, ...): the ones that only read their inputs and write
 /// build outputs, both through the source.
-pub const IN_MEMORY_COMMANDS: [&str; 5] = ["check", "build", "worlds", "run", "engine"];
+pub const IN_MEMORY_COMMANDS: [&str; 4] = ["check", "build", "worlds", "run"];
 
 /// Whether [`execute_in`] runs `command`: one of [`IN_MEMORY_COMMANDS`] or
 /// an op subcommand.
@@ -91,11 +89,10 @@ fn runs_in_memory(command: &cli::Command) -> bool {
 /// [`execute`] over `src` instead of the disk, for hosts with no
 /// filesystem (WebAssembly): paths resolve in `src`, `build` writes into
 /// it, and output is never a terminal's. Only [`IN_MEMORY_COMMANDS`] and
-/// the op subcommands run, compiling the matter or package in `src` (and
-/// `engine` its `lit/` and `cases/`); any other command is a usage
-/// failure (exit 1). `check` judges deadlines at `today` unless told a
-/// date, as the binary does at its own today ([`main`]); `None` judges
-/// them at each matter's `as_of`.
+/// the op subcommands run, compiling the matter or package in `src`; any
+/// other command is a usage failure (exit 1). `check` judges deadlines at
+/// `today` unless told a date, as the binary does at its own today
+/// ([`main`]); `None` judges them at each matter's `as_of`.
 pub fn execute_in<I, T>(src: &dyn Source, args: I, today: Option<&str>) -> Printed
 where
     I: IntoIterator<Item = T>,
@@ -190,16 +187,7 @@ fn execute_with(
             };
         }
     };
-    let mut command = match cli.command {
-        cli::Invocation::Engine { args } => {
-            return engine::execute_in(
-                src,
-                std::iter::once("litigate engine".to_owned()).chain(args),
-                engine::Builtin::Compiled,
-            )
-        }
-        cli::Invocation::Envelope(command) => command,
-    };
+    let mut command = cli.command;
     if let Some(today) = today {
         command.default_today(today);
     }
@@ -340,33 +328,25 @@ mod tests {
             "{commit}"
         );
         assert!(["clean", "dirty", "unknown"].contains(&env!("LITIGATE_GIT_TREE")));
-        for args in [
-            &["litigate", "--version"][..],
-            &["litigate", "engine", "--version"],
-        ] {
-            let printed = run(args, false);
-            assert_eq!(printed.code, 0);
-            assert!(
-                printed.stdout.contains(&format!(" (commit {commit}, ")),
-                "{}",
-                printed.stdout
-            );
-            assert!(printed
-                .stdout
-                .trim_end()
-                .ends_with(concat!(env!("LITIGATE_GIT_TREE"), ")")));
-        }
-    }
-
-    #[test]
-    fn the_engine_prints_its_own_response_not_an_envelope() {
-        let printed = run(&["litigate", "engine", "--version"], false);
+        let printed = run(&["litigate", "--version"], false);
         assert_eq!(printed.code, 0);
         assert!(
-            printed.stdout.starts_with("litigate engine "),
+            printed.stdout.contains(&format!(" (commit {commit}, ")),
             "{}",
             printed.stdout
         );
+        assert!(printed
+            .stdout
+            .trim_end()
+            .ends_with(concat!(env!("LITIGATE_GIT_TREE"), ")")));
+    }
+
+    #[test]
+    fn there_is_no_raw_json_engine_command() {
+        // Every engine op runs on a compiled matter or package (lg-dfv4.7).
+        let printed = run(&["litigate", "engine", "q", "{}"], false);
+        assert_eq!((printed.code, printed.stdout.as_str()), (1, ""));
+        assert!(printed.stderr.contains("engine"), "{}", printed.stderr);
     }
 
     #[test]

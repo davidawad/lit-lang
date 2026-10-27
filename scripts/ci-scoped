@@ -14,9 +14,13 @@
 #   scripts/ci-scoped scope-of <metadata.json> < changed-files
 #       The scope of a list of changed paths (repo-relative, one per line)
 #       under a `cargo metadata --format-version 1 --no-deps` JSON.
+#   scripts/ci-scoped provenance [BASE]
+#       Every file added under sources/ since BASE has an entry in its
+#       forum's PROVENANCE.md (lg-t86b); one line per file that does not.
 #   scripts/ci-scoped self-test
 #       The scope computation on fixed synthetic workspaces, and on this
-#       one against `cargo tree --invert`.
+#       one against `cargo tree --invert`; the provenance check on a
+#       fixture repo.
 #
 # Scope: a changed file belongs to the workspace package whose directory
 # holds it (the deepest one), or, outside every package, to the packages
@@ -27,10 +31,10 @@
 # scripts, CI config) adds nothing, so only the global checks run.
 set -euo pipefail
 
-self="${BASH_SOURCE[0]}"
+self="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
 
 usage() {
-  sed -n '/^# Usage:/,/^#       one against/p' "$self" | sed 's/^# \{0,1\}//' >&2
+  sed -n '/^# Usage:/,/^#       fixture repo/p' "$self" | sed 's/^# \{0,1\}//' >&2
   exit 2
 }
 
@@ -121,6 +125,92 @@ scope() {
   rm -f "$meta"
 }
 
+# --- provenance --------------------------------------------------------------
+
+# The fetch-first rule (lg-f3q8, lg-t86b): a file added under sources/ is
+# listed in its forum's PROVENANCE.md (sources/<forum>/PROVENANCE.md, or
+# sources/PROVENANCE.md for a top-level file) under a heading naming it,
+# and that entry, up to the next heading, gives the source URL, a
+# retrieval date, the method, and the file's sha256, which must match.
+# Only added files are checked (committed since BASE, staged or
+# untracked); PROVENANCE.md and README.md files are the records, exempt.
+added_sources() {
+  {
+    git diff --name-only --no-renames --diff-filter=A "$1"...HEAD
+    git diff --name-only --no-renames --diff-filter=A HEAD
+    git ls-files --others --exclude-standard
+  } | grep '^sources/' | grep -Ev '(^|/)(PROVENANCE|README)\.md$' | sort -u || true
+}
+
+# PROVENANCE.md, name... -> the entry whose heading names one of the
+# names as a whole path (not as the tail of a longer one), up to the next
+# heading.
+provenance_entry() {
+  awk '
+    BEGIN { for (i = 2; i < ARGC; i++) names[ARGV[i]]; ARGC = 2 }
+    function names_it(line,   n, rest, at, before, after) {
+      for (n in names) {
+        rest = line
+        while ((at = index(rest, n)) > 0) {
+          before = at > 1 ? substr(rest, at - 1, 1) : " "
+          after = substr(rest, at + length(n), 1)
+          if (before ~ /[ \t`(*]/ && (after == "" || after ~ /[ \t`),:*]/)) return 1
+          rest = substr(rest, at + 1)
+        }
+      }
+      return 0
+    }
+    /^#/ { if (found) exit; found = names_it($0) }
+    found { print }
+  ' "$@"
+}
+
+# One file (repo-relative, under sources/) -> 0, or the reasons it fails.
+provenance_of() {
+  local f="$1" rel forum record entry hash why=()
+  rel="${f#sources/}"
+  if [[ "$rel" == */* ]]; then
+    forum="${rel%%/*}"
+    record="sources/$forum/PROVENANCE.md"
+  else
+    record="sources/PROVENANCE.md"
+  fi
+  if [ ! -f "$record" ]; then
+    echo "$f: no $record"
+    return 1
+  fi
+  entry="$(provenance_entry "$record" "$rel" "${f#"$(dirname "$record")"/}")"
+  if [ -z "$entry" ]; then
+    echo "$f: no entry in $record (a heading naming the file)"
+    return 1
+  fi
+  hash="$(sha256sum "$f" | cut -d' ' -f1)"
+  grep -Eq 'https?://' <<<"$entry" || why+=("no source URL")
+  grep -iq 'retriev' <<<"$entry" && grep -Eq '[0-9]{4}-[0-9]{2}-[0-9]{2}' <<<"$entry" ||
+    why+=("no retrieval date (\"Retrieved YYYY-MM-DD\")")
+  grep -Eiq 'pdftotext|curl|wget|fetched|downloaded|extracted|transcribed|converted|copied|saved|method' <<<"$entry" ||
+    why+=("no method (how it was fetched and extracted)")
+  grep -iq "$hash" <<<"$entry" || why+=("sha256 $hash not recorded")
+  if [ "${#why[@]}" -ne 0 ]; then
+    local list
+    list="$(IFS=';'; echo "${why[*]}")"
+    echo "$f: $record entry: ${list//;/; }"
+    return 1
+  fi
+}
+
+provenance() {
+  local base f rc=0 n=0
+  base="$(base_of "${1:-}")"
+  while IFS= read -r f; do
+    if [ -z "$f" ] || [ ! -f "$f" ]; then continue; fi
+    n=$((n + 1))
+    provenance_of "$f" || rc=1
+  done < <(added_sources "$base")
+  echo "provenance: $n added source file(s) checked"
+  return "$rc"
+}
+
 # --- run -------------------------------------------------------------------
 
 failed=()
@@ -195,6 +285,7 @@ run() {
   # Global, always.
   stage fmt-check cargo fmt --all -- --check
   stage typos typos
+  stage provenance provenance "$base"
   stage self-test bash -c "'$self' self-test && '$(dirname "$self")/cov-gate' self-test"
   stage lit-sync-check just lit-sync-check
   stage coverage-check just coverage-check
@@ -342,11 +433,113 @@ self_test() {
   real_case litigate-base
   real_case litigate-sema
   real_case litigate-smt
+  provenance_self_test || failures=$((failures + $?))
   if [ "$failures" -ne 0 ]; then
-    echo "ci-scoped self-test: $failures scope(s) wrong" >&2
+    echo "ci-scoped self-test: $failures case(s) wrong" >&2
     return 1
   fi
   echo "ci-scoped self-test: every scope as expected"
+}
+
+# The provenance check on a fixture repo: a base commit with records, then
+# per case a branch that adds files. Returns the number of wrong cases.
+provenance_self_test() {
+  local dir failures=0
+  dir="$(mktemp -d)"
+  # shellcheck disable=SC2064
+  trap "rm -rf '$dir'" RETURN
+  (
+    set -e
+    cd "$dir"
+    git init -q -b main .
+    git config user.name fixture
+    git config user.email fixture@example.invalid
+    mkdir -p sources/fed-x
+    printf 'old rule\n' > sources/fed-x/old.txt
+    printf '# corpus\n' > sources/PROVENANCE.md
+    # shellcheck disable=SC2016
+    printf '### `fed-x/old.txt`\n\n- Source: https://example.gov/old.pdf\n' > sources/fed-x/PROVENANCE.md
+    git add -A
+    git commit -q -m base
+  ) || { echo "ci-scoped self-test: provenance: fixture repo: git failed" >&2; return 1; }
+
+  # shellcheck disable=SC2016 # backticks are markdown, not expansions
+  # entry FILE URL DATE METHOD HASH -> a PROVENANCE.md entry; "-" omits a field.
+  entry() {
+    printf '\n### `%s` — a rule\n\n' "$1"
+    [ "$2" = - ] || printf -- '- Source: %s (official site).\n' "$2"
+    [ "$3" = - ] || printf -- '- Retrieved %s.\n' "$3"
+    [ "$4" = - ] || printf -- '- %s.\n' "$4"
+    [ "$5" = - ] || printf -- '- Extract sha256 %s.\n' "$5"
+  }
+  sha() { printf '%s' "$1" | sha256sum | cut -d' ' -f1; }
+  # want(pass|fail) desc commit(yes|no) script -> run script on a fresh
+  # branch of the fixture, commit it or not, then the check against main.
+  pcase() {
+    local want="$1" desc="$2" commit="$3" script="$4" got out
+    out="$(
+      cd "$dir"
+      git checkout -q -f main && git clean -q -fdx && git checkout -q -B case
+      eval "$script"
+      if [ "$commit" = yes ]; then git add -A && git commit -q -m case; fi
+      "$self" provenance main 2>&1
+    )" && got=pass || got=fail
+    if [ "$got" != "$want" ]; then
+      echo "ci-scoped self-test: provenance: $desc: want $want, got $got" >&2
+      echo "  | ${out//$'\n'/$'\n'  | }" >&2
+      failures=$((failures + 1))
+    fi
+  }
+  # shellcheck disable=SC2016
+  local m='Fetched with curl; extracted with `pdftotext -layout`'
+  local ok
+  ok="$(sha 'new rule')"
+  pcase pass "an added file with a full entry" yes \
+    "printf 'new rule' > sources/fed-x/new.txt
+     entry fed-x/new.txt https://example.gov/new.pdf 2026-10-27 '$m' $ok >> sources/fed-x/PROVENANCE.md"
+  pcase pass "an entry may name the file relative to its forum" yes \
+    "printf 'new rule' > sources/fed-x/new.txt
+     entry new.txt https://example.gov/new.pdf 2026-10-27 '$m' $ok >> sources/fed-x/PROVENANCE.md"
+  pcase pass "a top-level file is listed in sources/PROVENANCE.md" yes \
+    "printf 'new rule' > sources/new.txt
+     entry new.txt https://example.gov/new.pdf 2026-10-27 '$m' $ok >> sources/PROVENANCE.md"
+  pcase pass "an unlisted file changed, not added, is not checked" yes \
+    "printf 'amended\n' > sources/fed-x/old.txt"
+  pcase pass "a branch adding nothing under sources/" yes "printf x > notes.md"
+  pcase fail "a committed source file with no entry" yes \
+    "printf 'new rule' > sources/fed-x/new.txt"
+  pcase fail "an untracked source file with no entry" no \
+    "printf 'new rule' > sources/fed-x/new.txt"
+  pcase fail "a staged source file with no entry" no \
+    "printf 'new rule' > sources/fed-x/new.txt && git add sources/fed-x/new.txt"
+  pcase fail "a forum with no PROVENANCE.md" yes \
+    "mkdir -p sources/fed-y && printf 'new rule' > sources/fed-y/new.txt"
+  pcase fail "an entry in another forum's record" yes \
+    "mkdir -p sources/fed-y && printf 'new rule' > sources/fed-y/new.txt
+     entry fed-y/new.txt https://example.gov/new.pdf 2026-10-27 '$m' $ok >> sources/fed-x/PROVENANCE.md"
+  pcase fail "an entry naming a longer file only" yes \
+    "printf 'new rule' > sources/fed-x/new.txt
+     entry fed-x/old-new.txt https://example.gov/new.pdf 2026-10-27 '$m' $ok >> sources/fed-x/PROVENANCE.md"
+  pcase fail "a sha256 that does not match" yes \
+    "printf 'new rule' > sources/fed-x/new.txt
+     entry fed-x/new.txt https://example.gov/new.pdf 2026-10-27 '$m' $(sha 'other') >> sources/fed-x/PROVENANCE.md"
+  pcase fail "an entry with no URL" yes \
+    "printf 'new rule' > sources/fed-x/new.txt
+     entry fed-x/new.txt - 2026-10-27 '$m' $ok >> sources/fed-x/PROVENANCE.md"
+  pcase fail "an entry with no retrieval date" yes \
+    "printf 'new rule' > sources/fed-x/new.txt
+     entry fed-x/new.txt https://example.gov/new.pdf - '$m' $ok >> sources/fed-x/PROVENANCE.md"
+  pcase fail "an entry with no method" yes \
+    "printf 'new rule' > sources/fed-x/new.txt
+     entry fed-x/new.txt https://example.gov/new.pdf 2026-10-27 - $ok >> sources/fed-x/PROVENANCE.md"
+  pcase fail "an entry with no sha256" yes \
+    "printf 'new rule' > sources/fed-x/new.txt
+     entry fed-x/new.txt https://example.gov/new.pdf 2026-10-27 '$m' - >> sources/fed-x/PROVENANCE.md"
+  pcase fail "the hash in the next file's entry does not count" yes \
+    "printf 'new rule' > sources/fed-x/new.txt
+     entry fed-x/new.txt https://example.gov/new.pdf 2026-10-27 '$m' - >> sources/fed-x/PROVENANCE.md
+     entry fed-x/other.txt https://example.gov/o.pdf 2026-10-27 '$m' $ok >> sources/fed-x/PROVENANCE.md"
+  return "$failures"
 }
 
 [ "$#" -gt 0 ] || usage
@@ -356,6 +549,7 @@ case "$cmd" in
   run) [ "$#" -le 1 ] || usage; run "$@" ;;
   scope) [ "$#" -le 1 ] || usage; scope "$@" ;;
   scope-of) [ "$#" -eq 1 ] || usage; scope_of "$1" ;;
+  provenance) [ "$#" -le 1 ] || usage; provenance "$@" ;;
   self-test) [ "$#" -eq 0 ] || usage; self_test ;;
   *) usage ;;
 esac
